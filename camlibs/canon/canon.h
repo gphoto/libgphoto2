@@ -96,6 +96,7 @@ typedef enum {
  * @CANON_PS_UNK3: Unknown camera seen in Mac OS X Image Capture
  * @CANON_PS_UNK4: Unknown camera seen in Mac OS X Image Capture
  * @CANON_PS_UNK5: Unknown camera seen in Mac OS X Image Capture
+ * @CANON_EOS_300D: EOS 300D / Digital Rebel / KISS Rebel
  *
  * Enumeration of all camera types currently supported.
  *
@@ -140,8 +141,10 @@ typedef enum {
 	CANON_PS_UNK3,
 	CANON_PS_UNK4,
 	CANON_PS_UNK5,
+	/* other cameras */
 	CANON_PS_S400,
-	CANON_PS_SD100
+	CANON_PS_SD100,
+	CANON_EOS_300D
 } canonCamModel;
 
 /**

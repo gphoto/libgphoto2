@@ -1,3 +1,9 @@
+2003-09-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.c, canon.h, usb.c: Added support for 
+          EOS 300D/Digital Rebel/KISS Digital, thanks to Johan Herland 
+          and T.V.
+
 2003-05-19 Marcus Meissner <marcus@jet.franken.de>
 	
 	* canon.c, canon.h: Added 4 patches with support

@@ -18,6 +18,8 @@ older cameras.
 Cameras supported
 =================
 
+For up-to-date camera support details, see the canon.c source file.
+
  - PowerShot A50 (not tested)
  - PowerShot Pro70
  - PowerShot S10
@@ -45,6 +47,8 @@ Cameras supported
  - EOS 10D
  - Digital IXUS 330
  - Canon MVX2i / Optura 200 MC
+ - EOS 300D / Digital Rebel / KISS Digital
+ - a few newer ones, see output of "gphoto2 --list-cameras | grep Canon"
 
 The following cameras operate either with this driver or in PTP mode
 with the PTP driver:
@@ -52,6 +56,7 @@ with the PTP driver:
  - PowerShot S45 (normal mode)
  - PowerShot G3 (normal mode)
  - PowerShot S230 / Digital IXUS v3 (normal mode)
+ - a few newer ones, see output of "gphoto2 --list-cameras | grep Canon"
   
 Support for the following cameras is mostly there as they were supported
 in gphoto 0.4.x but several API changes and rewrites have probably broken
@@ -65,17 +70,18 @@ It doesn't work with the PowerShot 350. However, the PS350 uses a
 vaguely similar protocol, so some parts of the sources can probably be
 shared.
 
-The following cameras, and probably many cameras to come, operate only
-in PTP mode, so this camera doesn't deal with them at all:
+The following cameras, and probably many cameras to come, operate in
+either PTP and Canon mode depending on the first data packets sent to
+the camera, i.e. depending on whether you use this driver or the PTP
+driver:
 
  - PowerShot A60
  - PowerShot A70
- - PowerShot S400
 
-The new driver doesn't cache much information any more. Still, if the
-camera status changes during a session or if the driver gets stuck for
-some other reason, the caches could be manually flushed using
-"Configure camera".
+The rewritten canon driver doesn't cache much information any
+more. Still, if the camera status changes during a session or if the
+driver gets stuck for some other reason, the caches could be manually
+flushed using "Configure camera".
 
 
 ========================================================================

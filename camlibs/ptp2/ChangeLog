@@ -1,5 +1,11 @@
+2003-09-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* library.c: Added support for
+	  EOS 300D/Digital Rebel/KISS Digital, thanks to Johan Herland
+	  and T.V.
+
 2003-09-20  Marcus Meissner <marcus@jet.franken.de>
-	
+
 	* library.c: Fixed compile. (defined names with - are invalid).
 
 2003-09-19 Mariusz Woloszyn
@@ -7,16 +13,20 @@
 	  internal structures update when uploding files and creating
 	  folders;
 	* TODO: updated
+
 2003-09-17  Marcus Meissner <marcus@jet.franken.de>
 
 	* library.c: Increase timeout for capture. A G5 needs longer than 8 seconds...
 
 2003-09-12 Mariusz Woloszyn
+
 	* library.c: fixed a minor bug that caused error while deleting
 	  folders not in storage subfolder (removed trailing '/' in folder
 	  names); fixed making folders on devices not supporting kodak PTP
-	  extension; some debug improvement; 
+	  extension; some debug improvement;
+
 2003-09-12 Mariusz Woloszyn
+
 	* library.c, ptp-pack.c, ptp.c ptp.h: be proper as hell, changed all
 	  '//' comments to '/* blah */' ;)
 2003-09-12 Mariusz Woloszyn
@@ -26,6 +36,7 @@
 	* ptpcam.c: removed; download libptp2 sources if you need it
 	* Makefile.am: ptpcam.c removed
 	* README: updated for ptpcam.c removal
+	
 2003-09-11  Marcus Meissner <marcus@jet.franken.de>
 
 	* library.c: Note down filename in info struct.
@@ -41,51 +52,76 @@
 	* library.c: Added Sony DSC-P31
 
 2003-08-05 Mariusz Woloszyn
+
 	* library.c: ups... PTP_OFC_EXIF_JPEG thumbnails may not contain
 	  EXIF information... revertig to previous behavior :(
+
 2003-08-05 Mariusz Woloszyn
+
 	* library.c: return thumbnauil when asked for GP_FILE_TYPE_EXIF if
 	  object is PTP_OFC_EXIF_JPEG, otherwise return 
 	  GP_ERROR_NOT_SUPPORTED
+
 2003-08-03 Mariusz Woloszyn
+
 	* library.c: PTP do not offer plain EXIF data; return
 	  GP_ERROR_NOT_SUPPORTED while downloading GP_FILE_TYPE_EXIF.
+
 2003-08-29 Mariusz Woloszyn
+
 	* library.c: allow downloading thumbnail of nonimage objects,
 	  however only in case that the ThumbCompressedSize is greater than 0
+
 2003-08-28 Mariusz Woloszyn
+
 	* library.c: added Canon IXUS 400, thanks to Till Kamppeter
+
 2003-08-28 Mariusz Woloszyn
+
 	* library.c: added Nikon Coolpix 3500, 5000, 3100 & 2100, thanks to
 	  Antti Tuominen
 2003-08-22 Mariusz Woloszyn
 	* library.c: added Nikon CoolPix 4500 and HP PhotoSmart 935, thanks
 	  to T. Kaproncai
+
 2003-07-28 Mariusz Woloszyn
+
 	* library.c: removed Kodak DC290, DX4230, DX4300, changed productID
 	  of Kodak CX4210 and added Nikon Coolpix 5400. Thanks to T.
 	  Kaproncai
+
 2003-07-17 Mariusz Woloszyn
+
 	* library.c: added following cameras: Kodak DC290, Kodak DX4530,
 	  Kodak DX6440, Kodak DX6490, Kodak LS663, Kodak CX4230,
 	  Kodak CX6200, Kodak CX6230, Kodak CX6330, HP PhotoSmart 120,
 	  HP PhotoSmart 620, HP PhotoSmart 735, HP PhotoSmart 812
+
 2003-07-09 Mariusz Woloszyn
+
 	* library.c: added Nikon Coolpix SQ: M. Holzbauer
+
 2003-06-12 Mariusz Woloszyn
+
 	* library.c: added DX6340 explicite support
+
 2003-05-14 Mariusz Woloszyn
+
 	* ptpcam.c: changed test_ptp.c to ptpcam.c;
 	* Makefile.am: changed test_ptp.c to ptpcam.c;
 	* TODO: added the idea of error reporting improvement
 	* README: reorganized a bit
+
 2003-05-13 Mariusz Woloszyn
+
 	* ptp-pack.c: ptp_pack_DPV() fixup;
 	* ptp.c: reorganized reporting errors, added ptp_perror();
 	* ptp.h: added ptp_perror() prototype;
 	* test_ptp.c: reorganized reporting errors; added property setting
 	  support!
+
 2003-05-12 Mariusz Woloszyn
+
 	* ptp.c: fflush(stderr) on error and debug; 
 	  added datatype argument for ptp_getdevicepropvalue();
 	  added ptp_setdevicepropvalue();A
@@ -98,10 +134,14 @@
 	* test_ptp.c: reorganized debug/error output, added more verbose
 	  levels; fixed extension properties debug (only EK supported as for
 	  now); added property supported values output; 
+
 2003-05-09 Mariusz Woloszyn
+
 	* test_ptp.c: added the device reset option (uses class specific
 	  reset)
+
 2003-05-09 Mariusz Woloszyn
+
 	* ptp.h: added some Kodak extension device property codes
 	  definitions
 	* test_ptp.c: added properties listing support and --force option
