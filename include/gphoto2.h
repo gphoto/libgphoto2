@@ -24,6 +24,7 @@
 #include <gphoto2-filesys.h>
 #include <gphoto2-library.h>
 #include <gphoto2-lists.h>
+#include <gphoto2-port.h>
 #include <gphoto2-settings.h>
 #include <gphoto2-widget.h>
 
