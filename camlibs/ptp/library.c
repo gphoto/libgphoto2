@@ -632,12 +632,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* be paranoid, there can be ONLY storage pseudofolders in /, but
 	   check for that! */
 	if (!strncmp(folder,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1)) {
-		/* compute the storageID */
-		char storagetxt[MAXFILENAMELEN];
 		/* be paranoid, allways!!! */
-		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+1) return (GP_ERROR);
-		snprintf(storagetxt,11,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
-		storage=strtol(storagetxt,NULL,16);
+		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+8+1) return (GP_ERROR);
+		storage = strtol(folder + strlen(STORAGE_FOLDER_PREFIX) + 1, NULL, 16);
 	}
 
 
@@ -682,8 +679,9 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				CPR (context, ptp_getstorageinfo(params,
 					storageids.storage[i], &storageinfo));
 			}
-			snprintf(fname, MAXFILENAMELEN, STORAGE_FOLDER_PREFIX"%8.8x",
-			storageids.storage[i]);
+			/* let it be 8 chars and \0, no more :) */
+			snprintf(fname, strlen(STORAGE_FOLDER_PREFIX)+9, STORAGE_FOLDER_PREFIX"%08x",
+				storageids.storage[i]);
 			CR (gp_list_append (list, fname, NULL));
 		}
 		return (GP_OK);
@@ -694,12 +692,9 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* be paranoid, there can be ONLY storage pseudofolders in /, but
 	   check for that! */
 	if (!strncmp(folder,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1)) {
-		/* compute the storageID */
-		char storagetxt[MAXFILENAMELEN];
 		/* be paranoid, allways!!! */
-		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+1) return (GP_ERROR);
-		snprintf(storagetxt,11,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
-		storage=strtol(storagetxt,NULL,16);
+		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+8+1) return (GP_ERROR);
+		storage = strtol(folder + strlen(STORAGE_FOLDER_PREFIX) + 1, NULL, 16);
 	} else return (GP_ERROR);
 	/* Get (parent) folder handle omiting storage pseudofolder */
 	find_folder_handle(folder,parent,data);
