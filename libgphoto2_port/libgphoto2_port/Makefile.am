@@ -1,3 +1,5 @@
+EXTRA_DIST = gphoto2-port-portability-os2.h
+
 INCLUDES = 						\
 	-I$(top_srcdir)					\
 	-I$(top_srcdir)/intl				\
@@ -26,5 +28,3 @@ libgphoto2_portinclude_HEADERS =	\
 	gphoto2-port-version.h		\
 	gphoto2-port-portability.h	\
 	gphoto2-port-result.h
-
-EXTRA_DIST = gphoto2-port-portability-os2.h
