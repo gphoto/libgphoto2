@@ -109,7 +109,7 @@ int main (int argc, char **argv) {
 	gp_file_get_preview(0, f);
 	printf("cli: done!\n");
 
-	gp_file_save(0, "/home/scottf/test.jpg");
+	gp_file_save_to_disk(f, "/home/scottf/test.jpg");
 
 	/* ---------------------------------- */
 	/* Display camera/library information */

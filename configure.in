@@ -32,13 +32,14 @@ dnl Checks for library functions.
 AC_CHECK_FUNCS(mkdir strdup)
 
 AC_OUTPUT(\
-Makefile 
-camlibs/Makefile
-camlibs/barbie/Makefile
-camlibs/fujitsu/Makefile 
-camlibs/directory/Makefile 
-frontends/Makefile
-frontends/command-line/Makefile 
-include/Makefile
+Makefile \
+camlibs/Makefile \
+camlibs/barbie/Makefile \
+camlibs/fujitsu/Makefile \
+camlibs/directory/Makefile \
+frontends/Makefile \
+frontends/command-line/Makefile \
+frontends/libgphoto2_util/Makefile \
+include/Makefile \
 libgphoto2/Makefile \
 )

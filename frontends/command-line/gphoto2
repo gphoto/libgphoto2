@@ -18,12 +18,12 @@ sed_quote_subst='s/\([\\`\\"$\\\\]\)/\\\1/g'
 # if CDPATH is set.
 if test "${CDPATH+set}" = set; then CDPATH=; export CDPATH; fi
 
-relink_command="gcc -g -O2 -I../../include -o \$progdir/\$file main.o interface.o ../../libgphoto2/.libs/libgphoto2.so -ldl -ldl -Wl,--rpath -Wl,/home/scottf/gphoto2/libgphoto2/.libs -Wl,--rpath -Wl,/opt/gphoto2/lib"
+relink_command="gcc -g -O2 -I../../include -o \$progdir/\$file main.o interface.o ../../libgphoto2/.libs/libgphoto2.so -ldl ../libgphoto2_util/.libs/libgphoto2_util.so -ldl -ldl -Wl,--rpath -Wl,/home/scottf/gphoto2/libgphoto2/.libs -Wl,--rpath -Wl,/home/scottf/gphoto2/frontends/libgphoto2_util/.libs -Wl,--rpath -Wl,/opt/gphoto2/lib"
 
 # This environment variable determines our operation mode.
 if test "$libtool_install_magic" = "%%%MAGIC variable%%%"; then
   # install mode needs the following variable:
-  link_against_libtool_libs=' ../../libgphoto2/libgphoto2.la'
+  link_against_libtool_libs=' ../../libgphoto2/libgphoto2.la ../libgphoto2_util/libgphoto2_util.la'
 else
   # When we are sourced in execute mode, $file and $echo are already set.
   if test "$libtool_execute_magic" != "%%%MAGIC variable%%%"; then

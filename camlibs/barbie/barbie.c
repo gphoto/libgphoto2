@@ -20,6 +20,8 @@ char packet_footer[2]           = {0x03};
 char packet_1[4]                = {0x02, 0x01, 0x01, 0x03};
 char packet_2[5]                = {0x02, 0x01, 0x01, 0x01, 0x03};
 
+char glob_camera_model[64];
+
 /* Utility Functions
    =======================================================================
 */
@@ -291,6 +293,8 @@ int camera_init(CameraInit *init) {
 
 	gpio_open(dev);
 
+	strcpy(glob_camera_model, init->model);
+
 	return (barbie_ping());
 }
 
@@ -311,12 +315,12 @@ int camera_close() {
 
 int camera_folder_count () {
 
-	return 0;
+	return 1;
 }
 
 int camera_folder_name (int folder_number, char *folder_name) {
 
-	folder_name[0] = 0;
+	strcpy(folder_name, glob_camera_model);
 
 	return GP_OK;
 }

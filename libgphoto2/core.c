@@ -242,7 +242,7 @@ int gp_file_get (int file_number, CameraFile *file) {
 		return (GP_ERROR);
 
 	gp_file_clean(file);
-	return (glob_c.file_get(file_number, file))
+	return (glob_c.file_get(file_number, file));
 }
 
 int gp_file_get_preview (int file_number, CameraFile *preview) {
