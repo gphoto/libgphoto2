@@ -143,8 +143,15 @@ gp_port_serial_lock (gp_port *dev, const char *port)
 	if (!pid)
 		return (GP_OK);
 
-	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device '%s' is "
-			      "locked by pid %d.", port, pid);
+	/* Tell the user what went wrong */
+	if (pid > 0)
+		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device "
+				      "'%s' is locked by pid %d.", port, pid);
+	else
+		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+				      "dev_lock on '%s' returned %d.", 
+				      port, pid);
+
 	return (GP_ERROR_IO_LOCK);
 
 #else /* !HAVE_LOCKDEV */
@@ -291,8 +298,15 @@ gp_port_serial_unlock (gp_port *dev)
 	if (!pid)
 		return (GP_OK);
 
-	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device '%s' is "
-			      "locked by pid %d.", port, pid);
+	/* Tell the user what went wrong */
+	if (pid > 0)
+		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device "
+				      "'%s' is locked by pid %d.", port, pid);
+	else
+		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+				      "dev_unlock on '%s' returned %d.",
+				      port, pid);
+
 	return (GP_ERROR_IO_LOCK);
 
 #else /* !HAVE_LOCKDEV */
