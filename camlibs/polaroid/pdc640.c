@@ -24,11 +24,12 @@
 #include <string.h>
 
 #include <gphoto2-library.h>
-#include <gphoto2-debug.h> 
 #include <gphoto2-port.h>
 #include <bayer.h>
 
 #include "jd350e.h"
+
+#define GP_MODULE "pdc640"
 
 #define PDC640_PING  "\x01"
 #define PDC640_SPEED "\x69\x0b"
@@ -92,10 +93,7 @@ pdc640_read_packet (GPPort *port, char *buf, int buf_size)
 
 	/* Read the checksum */
 	CHECK_RESULT (gp_port_read (port, &c, 1));
-
-	gp_debug_printf(GP_DEBUG_LOW, "pdc640", 
-			"*** (%d = %d)", checksum, c);
-
+	GP_LOG ("Checksum: %d calculated, %d received", checksum, c);
 	if (checksum != c)
 		return (GP_ERROR_CORRUPTED_DATA);
 
@@ -375,7 +373,7 @@ pdc640_deltadecode (int width, int height, char **rawdata, int *rawsize)
 	int size;
 	int e, d, o, val;
 
-	gp_debug_printf(GP_DEBUG_LOW, "pdc640", "*** deltadecode");
+	GP_LOG ("pdc640_deltacode ()");
 
 	/* Create a buffer to store RGB data in */
 	size = width * height;
@@ -462,18 +460,16 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 
 	/* Evaluate parameters */
 	if (thumbnail) {
-		gp_debug_printf(GP_DEBUG_LOW, "pdc640", 
-				"*** Size: %d Width: %d Height: %d", 
-				size_thumb, width_thumb, height_thumb);
+		GP_LOG ("Size %d, width %d, height %d",
+			size_thumb, width_thumb, height_thumb);
 
 		*size = size_thumb;
 		width = width_thumb;
 		height = height_thumb;
 		cmd = 0x03;
 	} else {
-		gp_debug_printf(GP_DEBUG_LOW, "pdc640", 
-				"*** Size: %d Width: %d Height: %d", 
-				size_pic, width_pic, height_pic);
+		GP_LOG ("Size %d, width %d, height %d",
+			size_pic, width_pic, height_pic);
 
 		*size = size_pic;
 		width = width_pic;
@@ -518,12 +514,11 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 	if (justraw)
 		return(GP_OK);
 
-	gp_debug_printf(GP_DEBUG_LOW, "pdc640", "*** Bayer decode");
-
-	sprintf(ppmheader, "P6\n"
-			   "# CREATOR: gphoto2, pdc640/jd350e library\n"
-			   "%d %d\n"
-			   "255\n", width, height);
+	GP_LOG ("Bayer decode...");
+	sprintf (ppmheader, "P6\n"
+			    "# CREATOR: gphoto2, pdc640/jd350e library\n"
+			    "%d %d\n"
+			    "255\n", width, height);
 
 	/* Allocate memory for Interpolated ppm image */
 	pmmhdr_len = strlen(ppmheader);
@@ -818,8 +813,8 @@ camera_init (Camera *camera)
 	CHECK_RESULT (gp_camera_get_abilities(camera,&abilities) );
 	camera->pl = 0;
 	for( i=0; models[i].model; i++ ){
-		if( strcmp(models[i].model,abilities.model) == 0 ){
-			gp_debug_printf(GP_DEBUG_LOW, "pdc640", "model = %s\n", abilities.model);
+		if (!strcmp(models[i].model, abilities.model)) {
+			GP_LOG ("Model: %s", abilities.model);
 			camera->pl = malloc( sizeof(struct _CameraPrivateLibrary) );
 			if( camera->pl ){
 				*(camera->pl) = models[i].pl;

@@ -1,7 +1,7 @@
 #ifndef __GPHOTO2_PDC320_H__
 #define __GPHOTO2_PDC320_H__
 
-#include <libgphoto2/jpeg.h>
+#include <jpeg.h>
 
 jpeg_quantization_table chrominance = {
   3,  2,  2,  3,  5,  8, 10, 12,

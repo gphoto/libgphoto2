@@ -1,5 +1,9 @@
 2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* pdc320.h pdc640.c: Still fixing includes
+
+2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* pdc640.c: Fix includes.
 
 2001-11-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
