@@ -332,6 +332,7 @@ static struct {
 	{"Canon:Digital IXUS 400 (PTP mode)",   0x04a9, 0x3075},
 	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077},
 	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085},
+	{"Canon:Elura 50 (PTP mode)",           0x04a9, 0x3087},
 		/* 0x3084 is the EOS 300D/Digital Rebel in normal (canon) mode */
 	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099},
 	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099},

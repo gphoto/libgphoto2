@@ -1,3 +1,7 @@
+2004-03-28  Marcus Meissner  <meissner@suse.de>
+
+	* library.c: Added Canon Elura 50 as reported.
+
 2004-03-20  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Digital IXUS 500
