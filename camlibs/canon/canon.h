@@ -102,6 +102,15 @@ struct _CameraPrivateLibrary
 	char **cached_paths; /* only used by A5 */
 };
 
+/* A minimum dirent is :
+ * 2    attributes + 0x00
+ * 4    file date (UNIX localtime)
+ * 4    file size
+ * 1    empty path '' plus NULL byte
+ */
+#define CANON_MINIMUM_DIRENT_SIZE	11
+
+
 
 /*
  * Our driver now supports both USB and serial communications
@@ -151,7 +160,7 @@ int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,
 /*
  *
  */
-struct canon_dir *canon_int_list_directory(Camera *camera, const char *name);
+int canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const char *path);
 void canon_int_free_dir(Camera *camera, struct canon_dir *list);
 int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
 unsigned char *canon_int_get_thumbnail(Camera *camera, const char *name,int *length);
