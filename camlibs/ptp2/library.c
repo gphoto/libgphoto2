@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
@@ -1047,6 +1048,62 @@ static int _put_UINT32_as_time(CameraWidget *widget, PTPPropertyValue *propval) 
 	return (GP_OK);
 }
 
+static int _get_STR_as_time(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
+	time_t		camtime;
+	struct tm	tm;
+	char		capture_date[64],tmp[5];
+
+	/* strptime() is not widely accepted enough to use yet */
+	memset(&tm,0,sizeof(tm));
+	gp_widget_new (GP_WIDGET_DATE, _(name), widget);
+	strncpy(capture_date,dpd->CurrentValue.str,sizeof(capture_date));
+	strncpy (tmp, capture_date, 4);
+	tmp[4] = 0;
+	tm.tm_year=atoi (tmp) - 1900;
+	strncpy (tmp, capture_date + 4, 2);
+	tmp[2] = 0;
+	tm.tm_mon = atoi (tmp) - 1;
+	strncpy (tmp, capture_date + 6, 2);
+	tmp[2] = 0;
+	tm.tm_mday = atoi (tmp);
+	strncpy (tmp, capture_date + 9, 2);
+	tmp[2] = 0;
+	tm.tm_hour = atoi (tmp);
+	strncpy (tmp, capture_date + 11, 2);
+	tmp[2] = 0;
+	tm.tm_min = atoi (tmp);
+	strncpy (tmp, capture_date + 13, 2);
+	tmp[2] = 0;
+	tm.tm_sec = atoi (tmp);
+	camtime = mktime(&tm);
+	gp_widget_set_value (*widget,&camtime);
+	return (GP_OK);
+}
+
+static int _put_STR_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
+	time_t		camtime;
+#ifdef HAVE_GMTIME_R
+	struct tm	xtm;
+#endif
+	struct tm	*pxtm;
+	int		ret;
+	char		asctime[64];
+
+	camtime = 0;
+	ret = gp_widget_get_value (widget,&camtime);
+	if (ret != GP_OK)
+		return ret;
+#ifdef HAVE_GMTIME_R
+	pxtm = gmtime_r (&camtime, &xtm);
+#else
+	pxtm = gmtime (&camtime);
+#endif
+	/* 20020101T123400.0 is returned by the HP Photosmart */
+	sprintf(asctime,"%04d%02d%02dT%02d%02d%02d.0",pxtm->tm_year+1900,pxtm->tm_mon+1,pxtm->tm_mday,pxtm->tm_hour,pxtm->tm_min,pxtm->tm_sec);
+	propval->str = strdup(asctime);
+	return (GP_OK);
+}
+
 static int _put_None(CameraWidget *widget, PTPPropertyValue *dpd) {
 	return (GP_ERROR_NOT_SUPPORTED);
 }
@@ -1070,6 +1127,7 @@ struct submenu camera_settings_menu[] = {
 	{ N_("Camera Model"), PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
 	{ N_("Flash Memory"), PTP_DPC_CANON_FlashMemory, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_MB, _put_None },
 	{ N_("Camera Time"),  PTP_DPC_CANON_UnixTime,    PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
+	{ N_("Camera Time"),  PTP_DPC_DateTime,          0,                PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },
 	{ NULL },
 };
 
