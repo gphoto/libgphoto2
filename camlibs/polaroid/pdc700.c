@@ -135,8 +135,11 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	 * will follow)
 	 */
 	CHECK_RESULT (gp_port_read (camera->port, header, 3));
-	if (header[0] != 0x40)
+	if (header[0] != 0x40) {
+		gp_camera_set_error (camera, _("Received unexpected "
+				     "header (%i)"), header[0]);
 		return (GP_ERROR_CORRUPTED_DATA);
+	}
 	*b_len = (header[2] << 8) | header [1];
 
 	/* Read the remaining bytes */
@@ -273,14 +276,15 @@ pdc700_init (Camera *camera)
 }
 
 static int
-pdc700_picinfo (Camera *camera, int n, PDCPicInfo *info)
+pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info)
 {
 	int buf_len;
 	unsigned char cmd[7];
 	unsigned char buf[2048];
 
+	GP_DEBUG ("Getting info about picture %i...", n);
 	cmd[3] = PDC700_PICINFO;
-	cmd[4] = n && 0xff;
+	cmd[4] = n;
 	cmd[5] = n >> 8;
 	CHECK_RESULT (pdc700_transmit (camera, cmd, 7, buf, &buf_len));
 
@@ -374,8 +378,8 @@ pdc700_info (Camera *camera, PDCInfo *info)
 }
 
 static int
-pdc700_pic (Camera *camera, int n, unsigned char **data, unsigned int *size,
-	    int thumb)
+pdc700_pic (Camera *camera, unsigned int n,
+	    unsigned char **data, unsigned int *size, int thumb)
 {
 	unsigned char cmd[8];
 	int r;
@@ -389,9 +393,10 @@ pdc700_pic (Camera *camera, int n, unsigned char **data, unsigned int *size,
 		return (GP_ERROR_NO_MEMORY);
 
 	/* Get picture data */
+	GP_DEBUG ("Getting picture %i...", n);
 	cmd[3] = (thumb) ? PDC700_THUMB : PDC700_PIC;
 	cmd[4] = PDC700_FIRST;
-	cmd[5] = n & 0xff;
+	cmd[5] = n;
 	cmd[6] = n >> 8;
 	r = pdc700_transmit (camera, cmd, 8, *data, size);
 	if (r < 0) {
