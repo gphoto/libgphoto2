@@ -74,7 +74,7 @@ struct {
 };
 
 int
-camera_id(CameraText *id)
+camera_id (CameraText *id)
 {
     	strcpy (id->text, "SQ chipset camera");
         
@@ -83,7 +83,7 @@ camera_id(CameraText *id)
 
 
 int
-camera_abilities(CameraAbilitiesList *list)
+camera_abilities (CameraAbilitiesList *list)
 {
     	int i;    
     	CameraAbilities a;
@@ -109,7 +109,7 @@ camera_abilities(CameraAbilitiesList *list)
 }
 
 static int
-camera_summary(Camera *camera, CameraText *summary, GPContext *context)
+camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	int num_pics = sq_get_num_pics (camera->pl->data);
 
@@ -151,7 +151,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	Camera *camera = user_data; 
     	int w, h = 0, buffersize, comp_ratio, k;
     
-    	GP_DEBUG("Downloading pictures!\n");    
+    	GP_DEBUG ("Downloading pictures!\n");
 
     	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 

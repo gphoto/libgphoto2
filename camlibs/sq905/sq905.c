@@ -146,10 +146,8 @@ sq_read_data (GPPort *port, char *data, int size)
 {
     	unsigned char msg[size];
 
-    	memset (msg, 0, sizeof(msg));
+    	memset (msg, 0, sizeof (msg));
     	SQWRITE (port, 0x0c, 0x03, size, SQ_GET, 1); 
-    	gp_port_write (port, msg, size);
-    	gp_port_set_timeout (port, 200); 
     	gp_port_read (port, data, size); 
     	return GP_OK;
 }
@@ -159,10 +157,10 @@ sq_read_picture_data (GPPort *port, char *data, int size)
 {
 
 	int remainder = size % 0x8000;
-	int offset = 0; 
+	int offset = 0;
 
-	while  (( offset + 0x8000 < size )) { 	    
-		sq_read_data (port, data + offset, 0x8000); 
+	while ((offset + 0x8000 < size)) {
+		sq_read_data (port, data + offset, 0x8000);
 		offset = offset + 0x8000;
 	}
  	sq_read_data (port, data + offset, remainder);

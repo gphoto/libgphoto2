@@ -1,3 +1,10 @@
+2003-07-15  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.[c]: Some indentation fixes.
+	  (sq_read_data): Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu> tells me that the
+	  gp_port_write and gp_port_set_timeout is not needed here.
+
 2003-07-12  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* library.c
