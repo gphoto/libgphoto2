@@ -47,31 +47,42 @@
 int
 camera_id (CameraText *id) 
 {
-	strcpy(id->text, "Smal:Ultrapocket");
+	strcpy(id->text, "smal");
 	return (GP_OK);
 }
+
+
+struct smal_cameras {
+	char * name;
+	unsigned short idVendor;
+	unsigned short idProduct;
+} smal_cameras [] = {
+	{ "Fuji:Axia Slimshot", USB_VENDOR_ID_SMAL, USB_DEVICE_ID_ULTRAPOCKET },
+	{ "Fuji:Axia Eyeplate", USB_VENDOR_ID_SMAL, USB_DEVICE_ID_ULTRAPOCKET },
+	{ "Logitech:Pocket Digital",USB_VENDOR_ID_SMAL, USB_DEVICE_ID_ULTRAPOCKET },
+	{ "SMaL:Ultra-Pocket",USB_VENDOR_ID_SMAL, USB_DEVICE_ID_ULTRAPOCKET },
+	{ NULL, 0, 0 }
+};
 
 int
 camera_abilities (CameraAbilitiesList *list) 
 {
    CameraAbilities a;
+   int i;
    
    memset(&a, 0, sizeof(a));
-   strcpy(a.model, "Smal:Ultrapocket");
    a.status = GP_DRIVER_STATUS_EXPERIMENTAL; /* highly! */
    a.port     		= GP_PORT_USB;
    a.speed[0] 		= 0;
-   a.usb_vendor		= USB_VENDOR_ID_SMAL;
-   a.usb_product        = USB_DEVICE_ID_ULTRAPOCKET;
    a.operations		= GP_OPERATION_NONE;
    a.file_operations	= GP_FILE_OPERATION_DELETE;
    a.folder_operations	= GP_FOLDER_OPERATION_DELETE_ALL;
-   gp_abilities_list_append(list, a);
-   /* fuji @xia slimshot is just a rebranded SmAL Ultrapocket */
-   /* LB: 01/03 - not quite - it's got a different header */
-   strcpy(a.model, "Fuji:Slimshot");
-   gp_abilities_list_append(list, a);
-   
+   for (i = 0; smal_cameras[i].name; i++) {
+      strcpy(a.model, smal_cameras[i].name);
+      a.usb_vendor	= smal_cameras[i].idVendor;
+      a.usb_product     = smal_cameras[i].idProduct;
+      gp_abilities_list_append(list, a);
+   }
    return (GP_OK);
 }
 
