@@ -52,22 +52,22 @@ AC_CHECK_FUNCS(mkdir strdup strncpy strcpy snprintf sprintf)
 
 AC_PATH_PROG(LIBGPPORT_CONFIG,gphoto2-port-config)
 if test -n "${LIBGPPORT_CONFIG}"; then
+  LIBGPHOTO2_PORT_DIR=""
   CFLAGS="$CFLAGS `$LIBGPPORT_CONFIG --cflags`"
   LIBS="$LIBS `$LIBGPPORT_CONFIG --libs`"
  else
-  AC_MSG_ERROR([
-   ***
-   *** libgphoto2-port is not installed properly. 
-   *** Type "cd libgphoto2_port; make; make install" to see what is wrong
-   ***])
-   exit 1
+  dnl Use the bundled gphoto2_port
+  LIBGPHOTO2_PORT_DIR="libgphoto2_port"
+  CFLAGS="$CFLAGS -I`pwd`/libgphoto2_port/include";
+  LIBS="$LIBS -L`pwd`/libgphoto2_port/libgphoto2_port/.libs -lgphoto2_port";
 fi
-
 
 LIBGPHOTO2_INCLUDEDIR='-I${includedir}'
 LIBGPHOTO2_LIBDIR='-L${libdir}'
 LIBGPHOTO2_LIBS="-lgphoto2"
 LIBGPHOTO2_VERSION=$VERSION
+
+AC_SUBST(LIBGPHOTO2_PORT_DIR)
 
 AC_SUBST(LIBGPHOTO2_INCLUDEDIR)
 AC_SUBST(LIBGPHOTO2_LIBDIR)
