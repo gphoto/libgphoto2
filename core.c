@@ -162,20 +162,15 @@ int gp_frontend_register(CameraStatus status, CameraProgress progress,
 char *gp_result_as_string (int result)
 {
         /* Really an error? */
-        if (result >= 0) 
+        if (result > 0)
 		return _("Unknown error");
 
-//FIXME: Get rid of the following as soon as there is a gp_port_result_as_string...
-	if (result == -1) return _("Generic error");
-	if (result == -2) return _("Timeout error");
-
-//FIXME: When fixing above, fix this, too.
-	/* IO-library error? */
-	if (-result < 100) 
-		return _("Unknown IO-library error");
+        /* IOlib error? Pass through. */
+        if ((result <= 0) && (result >= -99))
+            return gp_port_result_as_string(result);
 
         /* Camlib error? You should have called gp_camera_result_as_string... */
-        if (-result >= 1000) 
+        if (result <= -1000)
 		return _("Unknown camera library error");
 
         /* Do we have an error description? */
