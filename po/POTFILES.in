@@ -8,6 +8,8 @@ camlibs/canon/util.c
 camlibs/digita/digita.c
 camlibs/dimera/dimera3500.c
 camlibs/directory/directory.c
+camlibs/fuji/fuji.c
+camlibs/fuji/library.c
 camlibs/jamcam/jamcam.c
 camlibs/jamcam/library.c
 camlibs/jd11/jd11.c
