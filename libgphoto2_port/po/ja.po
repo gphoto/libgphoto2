@@ -6,86 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 0.5.0\n"
-"POT-Creation-Date: 2002-11-20 19:29+0100\n"
+"POT-Creation-Date: 2002-11-22 13:57+0100\n"
 "PO-Revision-Date: 2002-06-21 00:39+0900\n"
 "Last-Translator: Takeshi Aihana <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=euc-jp\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: libgphoto2_port/gphoto2-port.c:56
-#, c-format
-msgid "The operation '%s' is not supported by this device"
-msgstr "その操作 '%s' はこのデバイスではサポートしていません"
-
-#: libgphoto2_port/gphoto2-port.c:57
-msgid "The port has not yet been initialized"
-msgstr "ポートが未だ初期化されていません"
-
-#: libgphoto2_port/gphoto2-port.c:278
-msgid "open"
-msgstr "open"
-
-#: libgphoto2_port/gphoto2-port.c:301
-msgid "close"
-msgstr "close"
-
-#: libgphoto2_port/gphoto2-port.c:376
-msgid "write"
-msgstr "write"
-
-#: libgphoto2_port/gphoto2-port.c:408
-msgid "read"
-msgstr "read"
-
-#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
-msgid "check_int"
-msgstr "check_int"
-
-#: libgphoto2_port/gphoto2-port.c:581
-msgid "update"
-msgstr "update"
-
-#: libgphoto2_port/gphoto2-port.c:627
-msgid "get_pin"
-msgstr "get_pin"
-
-#: libgphoto2_port/gphoto2-port.c:679
-msgid "set_pin"
-msgstr "set_pin"
-
-#: libgphoto2_port/gphoto2-port.c:694
-msgid "send_break"
-msgstr "send_break"
-
-#: libgphoto2_port/gphoto2-port.c:707
-msgid "flush"
-msgstr "flush"
-
-#: libgphoto2_port/gphoto2-port.c:723
-msgid "find_device"
-msgstr "find_device"
-
-#: libgphoto2_port/gphoto2-port.c:735
-msgid "find_device_by_class"
-msgstr "find_device_by_class"
-
-#: libgphoto2_port/gphoto2-port.c:749
-msgid "clear_halt"
-msgstr "clear_halt"
-
-#: libgphoto2_port/gphoto2-port.c:769
-msgid "msg_write"
-msgstr "msg_write"
-
-#: libgphoto2_port/gphoto2-port.c:789
-msgid "msg_read"
-msgstr "msg_read"
-
-#: libgphoto2_port/gphoto2-port.c:849
-msgid "No error description available"
-msgstr "有効なエラーメッセージがありません"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:266
 #, c-format
@@ -182,64 +109,78 @@ msgstr "デバイスをロックすることが出来ませんでした"
 msgid "Unknown error"
 msgstr "不明なエラー"
 
-#: usb/libusb.c:131
+#: libgphoto2_port/gphoto2-port.c:56
 #, c-format
-msgid "Could not open USB device (%m)."
-msgstr "USB デバイスを開くことが出来ませんでした (%m)。"
+msgid "The operation '%s' is not supported by this device"
+msgstr "その操作 '%s' はこのデバイスではサポートしていません"
 
-#: usb/libusb.c:138
-#, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (e.g. dc2xx or stv680) is using the device and you have read/write "
-"access to the device."
-msgstr ""
-"インタフェース %d (%m) と断定できませんでした。他のプログラムまたは Kernel モ"
-"ジュール (接頭子が dc2xx または stv680) がこのデバイスを使用していないか確認"
-"して、そのデバイスの読み込み/書き込みをしてみて下さい。"
+#: libgphoto2_port/gphoto2-port.c:57
+msgid "The port has not yet been initialized"
+msgstr "ポートが未だ初期化されていません"
 
-#: usb/libusb.c:157
-#, c-format
-msgid "Could not release interface %d (%m)."
-msgstr "インタフェース %d を解放することが出来ませんでした (%m)。"
+#: libgphoto2_port/gphoto2-port.c:278
+msgid "open"
+msgstr "open"
 
-#: usb/libusb.c:164
-#, c-format
-msgid "Could not close USB port (%m)."
-msgstr "USB ポートを閉じることが出来ませんでした (%m)。"
+#: libgphoto2_port/gphoto2-port.c:301
+msgid "close"
+msgstr "close"
 
-#: usb/libusb.c:294
-#, c-format
-msgid "Could not set config %d/%d (%m)"
-msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
+#: libgphoto2_port/gphoto2-port.c:376
+msgid "write"
+msgstr "write"
 
-#: usb/libusb.c:316
-#, c-format
-msgid "Could not set altsetting %d/%d (%m)"
-msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
+#: libgphoto2_port/gphoto2-port.c:408
+msgid "read"
+msgstr "read"
 
-#: usb/libusb.c:391
-#, c-format
-msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "提供ベンダーまたは製品 ID (0x%x,0x%x) は正しくありません。"
+#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
+msgid "check_int"
+msgstr "check_int"
 
-#: usb/libusb.c:439
-#, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"USB デバイス (ベンダー:0x%x 製品: 0x%x) が見つかりませんでした。このデバイス"
-"がコンピュータに接続されているか確認して下さい。"
+#: libgphoto2_port/gphoto2-port.c:581
+msgid "update"
+msgstr "update"
 
-#: usb/libusb.c:547
-#, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"USB デバイス (Class: 0x%x, SubClass: 0x%x, プロトコル: 0x%x) が見つかりません"
-"でした。このデバイスがコンピュータに接続されているか確認して下さい。"
+#: libgphoto2_port/gphoto2-port.c:627
+msgid "get_pin"
+msgstr "get_pin"
+
+#: libgphoto2_port/gphoto2-port.c:679
+msgid "set_pin"
+msgstr "set_pin"
+
+#: libgphoto2_port/gphoto2-port.c:694
+msgid "send_break"
+msgstr "send_break"
+
+#: libgphoto2_port/gphoto2-port.c:707
+msgid "flush"
+msgstr "flush"
+
+#: libgphoto2_port/gphoto2-port.c:723
+msgid "find_device"
+msgstr "find_device"
+
+#: libgphoto2_port/gphoto2-port.c:735
+msgid "find_device_by_class"
+msgstr "find_device_by_class"
+
+#: libgphoto2_port/gphoto2-port.c:749
+msgid "clear_halt"
+msgstr "clear_halt"
+
+#: libgphoto2_port/gphoto2-port.c:769
+msgid "msg_write"
+msgstr "msg_write"
+
+#: libgphoto2_port/gphoto2-port.c:789
+msgid "msg_read"
+msgstr "msg_read"
+
+#: libgphoto2_port/gphoto2-port.c:849
+msgid "No error description available"
+msgstr "有効なエラーメッセージがありません"
 
 #: serial/unix.c:214
 #, c-format
@@ -328,3 +269,62 @@ msgstr "フラッシュ '%s' できませんでした (%m)。"
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "ボーレートを %d にセットできませんでした。"
+
+#: usb/libusb.c:131
+#, c-format
+msgid "Could not open USB device (%m)."
+msgstr "USB デバイスを開くことが出来ませんでした (%m)。"
+
+#: usb/libusb.c:138
+#, c-format
+msgid ""
+"Could not claim interface %d (%m). Make sure no other program or kernel "
+"module (e.g. dc2xx or stv680) is using the device and you have read/write "
+"access to the device."
+msgstr ""
+"インタフェース %d (%m) と断定できませんでした。他のプログラムまたは Kernel モ"
+"ジュール (接頭子が dc2xx または stv680) がこのデバイスを使用していないか確認"
+"して、そのデバイスの読み込み/書き込みをしてみて下さい。"
+
+#: usb/libusb.c:157
+#, c-format
+msgid "Could not release interface %d (%m)."
+msgstr "インタフェース %d を解放することが出来ませんでした (%m)。"
+
+#: usb/libusb.c:164
+#, c-format
+msgid "Could not close USB port (%m)."
+msgstr "USB ポートを閉じることが出来ませんでした (%m)。"
+
+#: usb/libusb.c:294
+#, c-format
+msgid "Could not set config %d/%d (%m)"
+msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
+
+#: usb/libusb.c:316
+#, c-format
+msgid "Could not set altsetting %d/%d (%m)"
+msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
+
+#: usb/libusb.c:391
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "提供ベンダーまたは製品 ID (0x%x,0x%x) は正しくありません。"
+
+#: usb/libusb.c:439
+#, c-format
+msgid ""
+"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
+"is connected to the computer."
+msgstr ""
+"USB デバイス (ベンダー:0x%x 製品: 0x%x) が見つかりませんでした。このデバイス"
+"がコンピュータに接続されているか確認して下さい。"
+
+#: usb/libusb.c:547
+#, c-format
+msgid ""
+"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
+"sure this device is connected to the computer."
+msgstr ""
+"USB デバイス (Class: 0x%x, SubClass: 0x%x, プロトコル: 0x%x) が見つかりません"
+"でした。このデバイスがコンピュータに接続されているか確認して下さい。"
