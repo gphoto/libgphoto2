@@ -16,7 +16,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA   
  */
+
 #include <string.h>
+#include <stdlib.h>
+
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
@@ -64,63 +67,45 @@ int camera_abilities (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera) {
 
 	struct jd350e_s *device = camera->camlib_data;
 
-	/* close serial port */
-	gp_port_close(device->gpiod);
-
-	/* free camera filesystem */
-	gp_filesystem_free(device->fs);
-
-	return (GP_OK);
-}
-
-int camera_folder_list_folders (Camera *camera, const char *folder, 
-				CameraList *list) 
-{
-	/* jd350e_s has no folder support */
-
-	return (GP_OK);
-}
-
-int camera_folder_list_files (Camera *camera, const char *folder, 
-			      CameraList *list) 
-{
-	struct jd350e_s *device = camera->camlib_data;
-	int i, count, result;
-	const char *name;
-
-	result =  jd350e_file_count(device, &count);
-	if (result != GP_OK)
-		return result;
-
-	gp_filesystem_populate(device->fs, "/", "image%02i.pnm", count);
-
-	for(i = 0; i < gp_filesystem_count(device->fs, folder); ++i) {
-		gp_filesystem_name(device->fs, folder, i, &name);
-		gp_list_append(list, name, NULL);
+	if (device) {
+		free (device);
+		camera->camlib_data = NULL;
 	}
 
 	return (GP_OK);
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFileType type, CameraFile *file ) 
+static int file_list_func (CameraFilesystem *fs, const char *folder,
+			   CameraList *list, void *data) 
 {
+	Camera *camera = data;
 	struct jd350e_s *device = camera->camlib_data;
-	int image_no, count, result;
-	char *data;
-	long int size;
+	int count, result;
 
 	result =  jd350e_file_count(device, &count);
 	if (result != GP_OK)
 		return result;
 
-	gp_filesystem_populate(device->fs, "/", "image%02i.pnm", count);
+	gp_list_populate(list, "image%02i.pnm", count);
 
-	image_no = gp_filesystem_number(device->fs, folder, filename);
+	return (GP_OK);
+}
+
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *user_data)
+{
+	Camera *camera = user_data;
+	struct jd350e_s *device = camera->camlib_data;
+	int image_no, result;
+	char *data;
+	long int size;
+
+	image_no = gp_filesystem_number(fs, folder, filename);
 
 	if(image_no < 0)
 		return image_no;
@@ -146,27 +131,28 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 		return result;
 
 	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, "image/pnm"); 
+	gp_file_set_mime_type (file, "image/pnm");
 	gp_file_set_data_and_size (file, data, size);
 
 	return (GP_OK);
 }
 
-int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
+static int camera_capture (Camera *camera, int capture_type,
+			   CameraFilePath *path)
 {
 	/* XXX implement */
 
 	return (GP_ERROR_NOT_SUPPORTED);
 }
 
-int camera_summary (Camera *camera, CameraText *summary) 
+static int camera_summary (Camera *camera, CameraText *summary) 
 {
 	strcpy(summary->text, _("No summary available."));
 
 	return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual) 
+static int camera_manual (Camera *camera, CameraText *manual) 
 {
 	strcpy(manual->text, 
 	_("The JD350e camera uses a proprietary compression method. This driver is\n"
@@ -186,7 +172,7 @@ int camera_manual (Camera *camera, CameraText *manual)
 	return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) 
+static int camera_about (Camera *camera, CameraText *about) 
 {
 	strcpy (about->text, 
 		_("JD350e\n"
@@ -197,7 +183,7 @@ int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-const char* camera_result_as_string (Camera *camera, int result) 
+static const char* camera_result_as_string (Camera *camera, int result) 
 {
 	if (result >= 0) return ("This is not an error...");
 	if (-result < 100) return gp_result_as_string (result);
@@ -206,45 +192,48 @@ const char* camera_result_as_string (Camera *camera, int result)
 
 int camera_init (Camera *camera) 
 {
-        gp_port_settings gpiod_settings;
-        int ret;
+        gp_port_settings settings;
         struct jd350e_s *device;
+	int ret;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        camera->functions->file_get             = camera_file_get;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
+	camera->functions->capture		= camera_capture;
         camera->functions->result_as_string     = camera_result_as_string;
 
         if((device = malloc(sizeof(struct jd350e_s))) == NULL) {
                 return GP_ERROR_NO_MEMORY;
         }
+	device->gpiod = camera->port;
 
         camera->camlib_data = device;
 
-        /* open and configure serial port */
-        if ((ret = gp_port_new(&(device->gpiod), GP_PORT_SERIAL)) < 0)
-            return (ret);
+        /* Configure port */
+        gp_port_timeout_set(camera->port, 1000);
 
-        gp_port_timeout_set(device->gpiod, 1000);
+        strcpy(settings.serial.port, camera->port_info->path);
+        settings.serial.speed = camera->port_info->speed;
+        settings.serial.bits = 8;
+        settings.serial.parity = 0;
+        settings.serial.stopbits = 1;
 
-        strcpy(gpiod_settings.serial.port, camera->port_info->path);
-        gpiod_settings.serial.speed = camera->port_info->speed;
-        gpiod_settings.serial.bits = 8;
-        gpiod_settings.serial.parity = 0;
-        gpiod_settings.serial.stopbits = 1;
+        gp_port_settings_set(camera->port, settings);
 
-        gp_port_settings_set(device->gpiod, gpiod_settings);
-        gp_port_open(device->gpiod);
-
-        /* create camera filesystem */
-        gp_filesystem_new(&device->fs);
+	/* Set up the filesystem */
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
+				      camera);
+	gp_filesystem_set_file_func  (camera->fs, get_file_func, camera);
 
         /* test camera */
-        return  jd350e_ping(device);
+        ret = jd350e_ping(device);
+	if (ret < 0) {
+		free (device);
+		camera->camlib_data = NULL;
+	}
+
+	return (ret);
 }
 

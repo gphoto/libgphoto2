@@ -22,7 +22,6 @@
 
 struct jd350e_s {
 	gp_port *gpiod;
-	CameraFilesystem *fs;
 };
 
 #endif

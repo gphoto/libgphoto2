@@ -1,5 +1,14 @@
 2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/jd3503/library.c: Fix compile warnings by declaring some
+	  functions static.
+	* camlibs/jd350e.c: Here, too. #include <stdlib.h>. Use camera->port
+	  and camera->fs. First in order to avoid problems with port locking
+	  and second for caching.
+	* camlibs/jd350e.h: No filesystem here. Use camera->fs.
+
+2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/konica/library.c: Remove reference to gphoto2-frontend.h.
 
 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>

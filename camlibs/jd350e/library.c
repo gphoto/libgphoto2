@@ -49,7 +49,7 @@
 #define CMD_IO_TIMEOUT		0x02
 #define CMD_BAD_RESPONSE	0x03
 
-int  jd350e_remap_gp_port_error(int error)
+static int  jd350e_remap_gp_port_error(int error)
 {
 	switch(error) {
 	case GP_ERROR_TIMEOUT:
@@ -63,7 +63,7 @@ int  jd350e_remap_gp_port_error(int error)
 	}
 }
 
-unsigned char  jd350e_checksum(const unsigned char *data, int start, int end)
+static unsigned char  jd350e_checksum(const unsigned char *data, int start, int end)
 {
 	unsigned char sum = 0;
 	int i;
@@ -78,7 +78,7 @@ unsigned char  jd350e_checksum(const unsigned char *data, int start, int end)
 	return sum;
 }
 
-int  jd350e_cmd(struct jd350e_s *device, unsigned char cmd, 
+static int jd350e_cmd(struct jd350e_s *device, unsigned char cmd, 
 		unsigned char cmd_len,
 		unsigned char data1, unsigned char data2, unsigned char data3,
 		unsigned char data4, 
@@ -128,7 +128,7 @@ int  jd350e_cmd(struct jd350e_s *device, unsigned char cmd,
 	return CMD_OK;
 }
 
-int  jd350e_try_cmd(struct jd350e_s *device, unsigned char cmd, unsigned char cmd_len,
+static int jd350e_try_cmd(struct jd350e_s *device, unsigned char cmd, unsigned char cmd_len,
 		unsigned char data1, unsigned char data2, unsigned char data3,
 		unsigned char data4, 
 		unsigned char *response, unsigned response_len,
@@ -203,7 +203,7 @@ int  jd350e_file_count(struct jd350e_s *device, int *count)
 	}
 }
 
-int  jd350e_get_image(struct jd350e_s *device, int image_no, int subcmd,
+static int jd350e_get_image(struct jd350e_s *device, int image_no, int subcmd,
 			char **data, int *size, int w, int h, int interpolate)
 {
 	unsigned char set_image_no_response[CMD_SET_IMAGE_NUMBER_RLEN], 
