@@ -42,6 +42,9 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #endif
 #ifdef HAVE_SERIAL
 			"serial "
+#ifdef HAVE_RESMGR
+			"resmgr locking",
+#endif
 #ifdef HAVE_BAUDBOY
 			"baudboy locking",
 #elif HAVE_TTYLOCK
@@ -78,6 +81,11 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 			"serial (for serial cameras)",
 #else
 			"no serial (for serial cameras)",
+#endif
+#ifdef HAVE_RESMGR
+			"resmgr (serial port access and locking)",
+#else
+			"no resmgr (serial port access and locking)",
 #endif
 #ifdef HAVE_BAUDBOY
 			"baudboy (serial port locking)",
