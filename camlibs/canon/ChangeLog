@@ -1,3 +1,7 @@
+2004-09-11  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.[ch]: Added PowerShot A95 as reported.
+
 2004-08-22  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* canon.c,usb.c,library.c: Fixed various gp_log / GP_DEBUG problems.

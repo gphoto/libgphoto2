@@ -63,6 +63,7 @@ typedef enum {
 
 /**
  * canonCamModel
+ * @CANON_PS_A95: PowerShot A95
  * @CANON_PS_A5: PowerShot A5
  * @CANON_PS_A5_ZOOM: PowerShot A5 Zoom
  * @CANON_PS_A50: PowerShot A50
@@ -120,6 +121,7 @@ typedef enum {
  *
  */
 typedef enum {
+  	CANON_PS_A95,
 	CANON_PS_A5,
 	CANON_PS_A5_ZOOM,
 	CANON_PS_A50,
