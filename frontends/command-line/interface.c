@@ -28,7 +28,9 @@ int interface_confirm (char *message) {
 
 int interface_progress (float percentage) {
 
-	if (percentage >= 0)
-		printf("Percent completed: %f\n", percentage);
+	if (percentage >= 0) {
+		printf("Percent completed: %02.01f\r", percentage*100);
+		fflush(stdout);
+	}
 	return (GP_OK);
 }

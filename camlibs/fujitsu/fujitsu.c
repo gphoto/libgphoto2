@@ -12,10 +12,10 @@ void fujitsu_dump_packet (char *packet) {
 	char buf[4096], msg[4096];
 
 	if ((packet[0] == TYPE_COMMAND) ||
-	    (packet[0] == TYPE_SEQUENCE) ||
-	    (packet[0] == TYPE_END)) {
-                length = ((int)packet[2]) |
-			 ((int)packet[3] << 8);
+	    (packet[0] == TYPE_DATA) ||
+	    (packet[0] == TYPE_DATA_END)) {
+                length = ((unsigned char)packet[2]) +
+			 ((unsigned char)packet[3]  * 256);
 		length += 6;
 	} else {
 		switch((unsigned char)packet[0]) {
@@ -45,12 +45,12 @@ void fujitsu_dump_packet (char *packet) {
 	}
 	sprintf(msg, "  packet length: %i", length);
 	debug_print(msg);
-/* DUMPING HERE!!! */
+	if (length > 256)
+		length = 256;
 	strcpy(msg, "  packet: ");
-	for (x=0; x<length; x++) {
-		sprintf(buf, "0x%02x ", (unsigned char)packet[x]);
-		strcat(msg, buf);
-	}
+	for (x=0; x<length; x++)
+		sprintf(msg, "%s 0x%02x ", msg, (unsigned char)packet[x]);
+
 	debug_print(msg);
 
 }
@@ -66,8 +66,8 @@ int fujitsu_valid_type(char b) {
 	    (byte == NAK) ||
 	    (byte == TRM) ||
 	    (byte == TYPE_COMMAND) ||
-	    (byte == TYPE_SEQUENCE) ||
-	    (byte == TYPE_END))
+	    (byte == TYPE_DATA) ||
+	    (byte == TYPE_DATA_END))
 		return (GP_OK);
 	return (GP_ERROR);
 }
@@ -77,9 +77,10 @@ int fujitsu_valid_packet (char *packet) {
 	int length;
 
 	if ((packet[0] == TYPE_COMMAND) ||
-	    (packet[0] == TYPE_SEQUENCE) ||
-	    (packet[0] == TYPE_END)) {
-                length = ((unsigned char)packet[2] & 0xff) | ((unsigned char)packet[3] << 8);
+	    (packet[0] == TYPE_DATA) ||
+	    (packet[0] == TYPE_DATA_END)) {
+                length = ((unsigned char)packet[2]) +
+			 ((unsigned char)packet[3] * 256);
 		length += 6;
 	} else {
 		switch(packet[0]) {
@@ -108,9 +109,10 @@ int fujitsu_write_packet (gpio_device *dev, char *packet) {
 
 	/* Determing packet length */
 	if ((packet[0] == TYPE_COMMAND) ||
-	    (packet[0] == TYPE_SEQUENCE) ||
-	    (packet[0] == TYPE_END)) {
-                length = ((unsigned char)packet[2] & 0xff) | ((unsigned char)packet[3] << 8);
+	    (packet[0] == TYPE_DATA) ||
+	    (packet[0] == TYPE_DATA_END)) {
+                length = ((unsigned char)packet[2]) +
+			 ((unsigned char)packet[3]  * 256);
 		length += 6;
 	} else {
 		length = 1;
@@ -173,20 +175,20 @@ int fujitsu_read_packet (gpio_device *dev, char *packet) {
 		if (fujitsu_valid_type(packet[0])==GP_OK)
 			done = 1;
 	}
-
 	if (r>RETRIES) {
 		debug_print("  read error (too many retries on packet type)");
 		return (GP_ERROR);
 	}
 
 	if ((packet[0] == TYPE_COMMAND) ||
-	    (packet[0] == TYPE_SEQUENCE) ||
-	    (packet[0] == TYPE_END)) {
+	    (packet[0] == TYPE_DATA) ||
+	    (packet[0] == TYPE_DATA_END)) {
 		if (gpio_read(dev, &packet[1], 3)==GPIO_ERROR) {
 			debug_print("  read error (header)");
 			return (GP_ERROR);
 		}
-                length = ((unsigned char)packet[2] & 0xff) | ((unsigned char)packet[3] << 8);
+                length = ((unsigned char)packet[2]) +
+			 ((unsigned char)packet[3]  * 256);
 		length += 6;
 	} else {
 		fujitsu_dump_packet(packet);
@@ -215,8 +217,8 @@ int fujitsu_build_packet (char type, char subtype, int data_length, char *packet
 				packet[1] = SUBTYPE_COMMAND;
 			glob_first_packet = 0;
 			break;
-		case TYPE_SEQUENCE:
-		case TYPE_END:
+		case TYPE_DATA:
+		case TYPE_DATA_END:
 			packet[1] = subtype;
 			break;
 		default:
@@ -224,7 +226,7 @@ int fujitsu_build_packet (char type, char subtype, int data_length, char *packet
 	}
 
 	packet[2] = data_length &  0xff;
-	packet[3] = data_length >> 8;
+	packet[3] = (data_length >> 8) & 0xff;
 
 	return (GP_OK);
 }
@@ -407,12 +409,12 @@ int fujitsu_get_int_register (gpio_device *dev, int reg, int *value) {
 		if (fujitsu_read_packet(dev, buf)==GP_ERROR)
 			return (GP_ERROR);
 
-		if (buf[0] == 0x03) {
+		if (buf[0] == TYPE_DATA_END) {
 			fujitsu_write_ack(dev);
-			r = (int)buf[4] | 
-			   ((int)buf[5] << 8)  | 
-			   ((int)buf[6] << 16) | 
-			   ((int)buf[7] << 24);
+			r =((unsigned char)buf[4]) +
+			   ((unsigned char)buf[5] * 256) +
+			   ((unsigned char)buf[6] * 65536) +
+			   ((unsigned char)buf[7] * 16777216);
 			*value = r;
 			return (GP_OK);
 		} else {
@@ -424,13 +426,13 @@ int fujitsu_get_int_register (gpio_device *dev, int reg, int *value) {
 	return (GP_ERROR);
 }
 
-int fujitsu_set_string_register (gpio_device *dev, int reg, char *string, int length) {
+int fujitsu_set_string_register (gpio_device *dev, int reg, char *s, int length) {
 
-	char packet[4096], buf[2048];
+	char packet[4096], buf[4096];
 	char type;
-	int x=0, seq=0, size=0;
+	int x=0, seq=0, size=0, done, r;
 
-	sprintf(buf, "Setting string in register #%i to \"%s\"", reg, string);
+	sprintf(buf, "Setting string in register #%i to \"%s\"", reg, s);
 	debug_print(buf);
 
 	while (x < length) {
@@ -440,61 +442,135 @@ int fujitsu_set_string_register (gpio_device *dev, int reg, char *string, int le
 		}  else {
 			size = (length-x)>2048? 2048 : length;
 			if (x+size < length)
-				type = TYPE_SEQUENCE;
+				type = TYPE_DATA;
 			   else
-				type = TYPE_END;
+				type = TYPE_DATA_END;
 		}
 		fujitsu_build_packet(type, seq, size, packet);
 
 		if (type == TYPE_COMMAND) {
 			packet[4] = 0x03;
 			packet[5] = reg;
-			memcpy(&packet[6], &string[x], size-2);
+			memcpy(&packet[6], &s[x], size-2);
 			x += size - 2;
 		} else  {
-			packet[2] = seq++;
-			memcpy(&packet[4], &string[x], size);
+			packet[1] = seq++;
+			memcpy(&packet[4], &s[x], size);
 			x += size;
 		}
 
-		if (fujitsu_write_packet(dev, packet)==GP_ERROR)
-			return (GP_ERROR);
+		r = 0; done = 0;
+		while ((r++<RETRIES)&&(!done)) {
+			if (fujitsu_write_packet(dev, packet)==GP_ERROR)
+				return (GP_ERROR);
 
-		if (fujitsu_read_ack(dev)==GP_ERROR)
+			if (fujitsu_read_packet(dev, buf)==GP_ERROR)
+				return (GP_ERROR);
+
+			done = (buf[0] == NAK)? 0 : 1;
+		}
+		if (r > RETRIES) {
+			debug_print("too many NAKs from camera");
 			return (GP_ERROR);
+		}
 	}
 	return (GP_OK);
 }
 
-int fujitsu_get_string_register (gpio_device *dev, int reg, char *string, int *length) {
+int fujitsu_get_string_register (gpio_device *dev, int reg, char *s, int *length) {
 
 	char packet[4096], buf[2048];
-	int done = 0, x, packlength;
+	int done, x, packlength, do_percent;
 
 	sprintf(buf, "Getting string in register #%i", reg);
 	debug_print(buf);
 
+	do_percent = 1;
+	switch (reg) {
+		case 14:
+		        /* Get the size of the current thumbnail */
+	        	if (fujitsu_get_int_register(dev, 12, length)==GP_ERROR) {
+	        	        interface_message("Can not get current image length");
+	        	        return (GP_ERROR);
+		        }
+			break;
+		case 15:
+		        /* Get the size of the current picture */
+	        	if (fujitsu_get_int_register(dev, 12, length)==GP_ERROR) {
+	        	        interface_message("Can not get current image length");
+	        	        return (GP_ERROR);
+		        }
+			break;
+		case 44:
+		        /* Get the size of the current audio */
+			/* will do */
+		default:
+			do_percent = 0;
+	}
+	/* Send request */
 	fujitsu_build_packet(TYPE_COMMAND, 0, 2, packet);
 	packet[4] = 0x04;
 	packet[5] = reg;
-
 	if (fujitsu_write_packet(dev, packet)==GP_ERROR)
 		return (GP_ERROR);
-		
-	x=0;
+
+	/* Read all the data packets */
+	x=0; done=0;
 	while (!done) {
 		if (fujitsu_read_packet(dev, packet)==GP_ERROR)
 			return (GP_ERROR);
+		if (do_percent)
+			gp_progress((float)x/(float)(*length));
 		if (fujitsu_write_ack(dev)==GP_ERROR)
 			return (GP_ERROR);
-		if (packet[0] == TYPE_END)
+		if (packet[0] == TYPE_DATA_END)
 			done = 1;
-		packlength = ((int) packet[2]) |
-			     ((int) packet[3] << 8);
-		memcpy(&string[x], &packet[4], packlength);
+		packlength = ((unsigned char)packet[2]) +
+			     ((unsigned char)packet[3]  * 256);
+		memcpy(&s[x], &packet[4], packlength);
 		x += packlength;
 	}
 
 	*length = x;
+	return (GP_OK);
+}
+
+int fujitsu_delete(gpio_device *dev, int picture_number) {
+
+	char packet[4096], buf[4096];
+	int r, done;
+
+       	if (fujitsu_set_int_register(dev, 4, picture_number)==GP_ERROR) {
+		debug_print("Can not set current image");
+       	        return (GP_ERROR);
+        }
+
+	fujitsu_build_packet(TYPE_COMMAND, 0, 3, packet);
+	packet[4] = 0x02;
+	packet[5] = 0x07;
+	packet[6] = 0x00;
+
+	r=0; done=0;
+	while ((!done)&&(r++<RETRIES)) {
+		if (fujitsu_write_packet(dev, packet)==GP_ERROR)
+			return (GP_ERROR);
+	
+		if (fujitsu_read_packet(dev, buf)==GP_ERROR)
+			return (GP_ERROR);
+
+		done = (buf[0] == NAK)? 0 : 1;
+
+		if (done) {
+			/* read in the ENQ */
+			if (fujitsu_read_packet(dev, buf)==GP_ERROR)
+				return ((buf[0]==ENQ)? GP_OK : GP_ERROR);
+			
+		}
+	}
+	if (r > RETRIES) {
+		debug_print("too many NAKs from camera");
+		return (GP_ERROR);
+	}
+
 	return (GP_OK);
 }

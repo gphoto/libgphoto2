@@ -260,6 +260,7 @@ OPTION_CALLBACK(filename) {
 	debug_print("Setting filename to %s", arg);
 
 	strcpy(glob_filename, arg);
+	glob_filename_override = 1;
 
 	return (GP_OK);
 }
@@ -419,7 +420,7 @@ int get_picture_common(int num, int thumbnail) {
 		gp_file_get(num, f);
 
 	if ((glob_filename_override)&&(strlen(glob_filename)>0))
-		strcpy(filename, glob_filename);
+		sprintf(filename, glob_filename, num);
 	   else if (strlen(f->name)>0)
 		strcpy(filename, f->name);
 	   else {

@@ -33,62 +33,95 @@ int camera_debug_set (int value) {
         return (GP_OK);
 }
 
+char *models[] = {
+	"Agfa ePhoto 307",
+	"Agfa ePhoto 780",
+	"Agfa ePhoto 780C",
+	"Agfa ePhoto 1280",
+	"Agfa ePhoto 1680",
+	"Epson PhotoPC 500",
+	"Epson PhotoPC 550",
+	"Epson PhotoPC 600",
+	"Epson PhotoPC 700",
+	"Epson PhotoPC 800",
+	"Nikon CoolPix 100",
+	"Nikon CoolPix 300",
+	"Nikon CoolPix 600",
+	"Nikon CoolPix 700",
+	"Nikon CoolPix 800",
+	"Nikon CoolPix 900",
+	"Nikon CoolPix 900S",
+	"Nikon CoolPix 950",
+	"Nikon CoolPix 950S",
+	"Olympus D-100Z",
+	"Olympus D-200L",
+	"Olympus D-220L",
+	"Olympus D-300L",
+	"Olympus D-320L",
+	"Olympus D-330R",
+	"Olympus D-340L",
+	"Olympus D-340R",
+	"Olympus D-360L",
+	"Olympus D-400L Zoom",
+	"Olympus D-450Z",
+	"Olympus D-500L",
+	"Olympus D-600L",
+	"Olympus D-620L",
+	"Olympus C-400L",
+	"Olympus C-410L",
+	"Olympus C-800L",
+	"Olympus C-820L",
+	"Olympus C-830L",
+	"Olympus C-840L",
+	"Olympus C-900 Zoom",
+	"Olympus C-900L Zoom",
+	"Olympus C-1000L",
+	"Olympus C-1400L",
+	"Olympus C-2000Z",
+	"Olympus C-3030Z",
+	"Polaroid PDC 640",
+	"Sanyo DSC-X300",
+	"Sanyo DSC-X350",
+	"Sanyo VPC-G200",
+	"Sanyo VPC-G200EX",
+	"Sanyo VPC-G210",
+	"Sanyo VPC-G250",
+	"Sierra Imaging SD640",
+	NULL
+};
+
 int camera_abilities (CameraAbilities *abilities, int *count) {
 
-	*count = 3;
+	int x=0;
+	CameraAbilities a;
 
 	debug_print("getting camera abilities");
 
-	/* Fill in each camera model's abilities */
-	strcpy(abilities[0].model, "Olympus D-220L");
-	abilities[0].serial    = 1;
-	abilities[0].parallel  = 0;
-	abilities[0].usb       = 0;
-	abilities[0].ieee1394 = 0;
-	abilities[0].speed[0] = 19200;
-	abilities[0].speed[1] = 38400;
-	abilities[0].speed[2] = 57600;
-	abilities[0].speed[3] = 115200;
-	abilities[0].speed[4] = 0;
-	abilities[0].capture	= 1;
-	abilities[0].config	= 1;
-	abilities[0].file_delete  = 1;
-	abilities[0].file_preview = 1;
-	abilities[0].file_put   = 0;
+	/* Fill in a template */
+	strcpy(a.model, "");
+	a.serial   = 1;
+	a.parallel = 0;
+	a.usb      = 0;
+	a.ieee1394 = 0;
+	a.speed[0] = 9600;
+	a.speed[1] = 19200;
+	a.speed[2] = 38400;
+	a.speed[3] = 57600;
+	a.speed[4] = 115200;
+	a.speed[5] = 0;
+	a.capture  = 1;
+	a.config   = 0;
+	a.file_delete  = 1;
+	a.file_preview = 1;
+	a.file_put = 0;
 
-	strcpy(abilities[1].model, "Olympus D-320L");
-	abilities[1].serial   = 1;
-	abilities[1].parallel = 0;
-	abilities[1].usb      = 0;
-	abilities[1].ieee1394 = 0;
-	abilities[1].parallel = 0;
-	abilities[1].speed[0] = 19200;
-	abilities[1].speed[1] = 38400;
-	abilities[1].speed[2] = 57600;
-	abilities[1].speed[3] = 115200;
-	abilities[1].speed[4] = 0;
-	abilities[1].capture	= 1;
-	abilities[1].config	= 1;
-	abilities[1].file_delete  = 1;
-	abilities[1].file_preview = 1;
-	abilities[1].file_put   = 0;
+	while (models[x]) {
+		memcpy(&abilities[x], &a, sizeof(a));
+		strcpy(abilities[x].model, models[x]);
+		x++;
+	}
 
-	strcpy(abilities[2].model, "Olympus D-620L");
-	abilities[2].serial   = 1;
-	abilities[2].parallel = 0;
-	abilities[2].usb      = 0;
-	abilities[2].ieee1394 = 0;
-	abilities[2].speed[0] = 19200;
-	abilities[2].speed[1] = 38400;
-	abilities[2].speed[2] = 57600;
-	abilities[2].speed[3] = 115200;
-	abilities[2].speed[4] = 0;
-	abilities[2].capture	= 1;
-	abilities[2].config	= 1;
-	abilities[2].file_delete  = 1;
-	abilities[2].file_preview = 1;
-	abilities[2].file_put   = 0;
-
+	*count = x;
 	return (GP_OK);
 }
 
@@ -115,23 +148,23 @@ int camera_init (CameraInit *init) {
 	gpio_set_settings(glob_dev, settings);
 
 	if (gpio_open(glob_dev)==GPIO_ERROR) {
-		interface_message("Can not open the port");
+		gp_message("Can not open the port");
 		return (GP_ERROR);
 	}
 
 	if (fujitsu_ping(glob_dev)==GP_ERROR) {
-		interface_message("Can not talk to camera");
+		gp_message("Can not talk to camera");
 		return (GP_ERROR);
 	}
 
 	if (fujitsu_set_speed(glob_dev, init->port_settings.speed)==GP_ERROR) {
-		interface_message("Can not set the serial port speed");
+		gp_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
 
 /* Need to establish connection?
 	if (fujitsu_get_int_register(glob_dev, 1, &value)==GP_ERROR) {
-		interface_message("Can not talk to camera after speed change");
+		gp_message("Can not talk to camera after speed change");
 		return (GP_ERROR);
 	}
 */
@@ -143,7 +176,7 @@ int camera_exit () {
 	debug_print("Exiting camera");
 
 	if (fujitsu_set_speed(glob_dev, -1)==GP_ERROR) {
-		interface_message("Can not end camera session");
+		gp_message("Can not end camera session");
 		return (GP_ERROR);
 	}
 
@@ -179,47 +212,86 @@ int camera_file_count () {
 	debug_print("Counting files");
 
 	if (fujitsu_get_int_register(glob_dev, 10, &value)==GP_ERROR) {
-                interface_message("Could not get number of files on camera.");
+                gp_message("Could not get number of files on camera.");
                 return (GP_ERROR);
         }
 
 	return (value);
 }
 
-int camera_file_get (int file_number, CameraFile *file) {
+int camera_file_get_generic (int file_number, CameraFile *file, int thumbnail) {
 
 	char buf[4096];
-	char pic[500000];
-	int length;
-	FILE *f;
+	int length, regl, regd;
 
-	sprintf(buf, "Getting file #%i", file_number);
+	if (thumbnail) {
+		sprintf(buf, "Getting file preview #%i", file_number);
+		regl = 13;
+		regd = 15;
+	}  else {
+		sprintf(buf, "Getting file #%i", file_number);
+		regl = 12;
+		regd = 14;
+	}
 	debug_print(buf);
 
-	if (fujitsu_set_int_register(glob_dev, 4, 1)==GP_ERROR) {
-		interface_message("Can not set current image");
+	/* Set the current picture number */
+	if (fujitsu_set_int_register(glob_dev, 4, file_number+1)==GP_ERROR) {
+		gp_message("Can not set current image");
 		return (GP_ERROR);
 	}
 
-	if (fujitsu_get_string_register(glob_dev, 14, pic, &length)==GP_ERROR) {
-		interface_message("Can not get picture");
+	/* Get the size of the current picture number */
+	if (fujitsu_get_int_register(glob_dev, regl, &length)==GP_ERROR) {
+		gp_message("Can not get current image length");
 		return (GP_ERROR);
 	}
-	f = fopen("/home/scottf/first.jpg", "w");
-	fwrite(pic, sizeof(char), length, f);
-	fclose(f);
+
+	/* Fill in the file structure */
+	file->type = GP_FILE_JPEG;
+	file->size = length;
+	strcpy(file->name, buf);
+
+	/* Allocate the picture */
+	file->data = (char *)malloc(sizeof(char)*(length+16));
+	if (!file->data) {
+		debug_print("Could not allocate picture space");
+		return (GP_ERROR);
+	}
+
+	/* Get the picture filename */
+	if (fujitsu_get_string_register(glob_dev, 79, file->name, &length)==GP_ERROR) {
+		gp_message("Can not get picture filename");
+		return (GP_ERROR);
+	}
+
+	/* In case the register doesn't have the filename, use this one */
+	if (length == 0)
+		sprintf(file->name, "fujitsu-%03i.jpg", file_number);
+
+	/* Prepend the "thumbnail-" prefix */
+	if (thumbnail) {
+		sprintf(buf, "thumbnail-%s", file->name);
+		strcpy(file->name, buf);
+	}
+
+	/* Get the picture data */
+	if (fujitsu_get_string_register(glob_dev, regd, file->data, &length)==GP_ERROR) {
+		gp_message("Can not get picture");
+		return (GP_ERROR);
+	}
 
 	return (GP_OK);
 }
 
+int camera_file_get (int file_number, CameraFile *file) {
+
+	return (camera_file_get_generic(file_number, file, 0));
+}
+
 int camera_file_get_preview (int file_number, CameraFile *preview) {
 
-	char buf[4096];
-
-	sprintf(buf, "Getting file preview #%i", file_number);
-	debug_print(buf);
-
-	return (GP_OK);
+	return (camera_file_get_generic(file_number, preview, 1));
 }
 
 int camera_file_put (CameraFile *file) {
@@ -236,14 +308,14 @@ int camera_file_delete (int file_number) {
 	sprintf(buf, "Deleting file #%i", file_number);
 	debug_print(buf);
 
-	return (GP_ERROR);
+	return (fujitsu_delete(glob_dev, file_number+1));
 }
 
 int camera_config_get (CameraWidget *window) {
 
 	debug_print("Building configuration window");
 
-        return GP_ERROR;
+        return (GP_ERROR);
 }
 
 int camera_config_set (CameraSetting *setting, int count) {

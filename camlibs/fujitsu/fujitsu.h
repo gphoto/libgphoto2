@@ -8,8 +8,8 @@
 
 /* Packet types */
 #define TYPE_COMMAND	0x1b
-#define TYPE_SEQUENCE	0x02
-#define TYPE_END	0x03
+#define TYPE_DATA	0x02
+#define TYPE_DATA_END	0x03
 
 /* Sub-types */
 #define SUBTYPE_COMMAND_FIRST	0x53
