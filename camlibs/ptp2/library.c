@@ -2807,9 +2807,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * functions which set image return pointers to chars.
 	 * However, we calculate a number of unsigned values in this function, 
 	 * so we cannot make it signed either.
-	 * Therefore, we have a number of casts, which is ok, as the casted
-	 * pointers are just generic pointers to "data" anyway.
-	 * If you do not like that, feel free to clean up the datatypes. */
+	 * Therefore, sometimes a "ximage" char* helper, since wild casts of pointers
+	 * confuse the compilers aliasing mechanisms.
+	 * If you do not like that, feel free to clean up the datatypes.
+	 * (TODO for Marcus and 2.2 ;)
+	 */
 	unsigned char * image=NULL;
 	uint32_t object_id;
 	uint32_t size;
@@ -2835,6 +2837,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case	GP_FILE_TYPE_EXIF: {
 		uint32_t offset;
 		uint32_t maxbytes;
+		char 	*ximage = NULL;
 
 		/* Check if we have partial downloads. Otherwise we can just hope
 		 * upstream downloads the whole image to get EXIF data. */
@@ -2843,7 +2846,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		/* could also use Canon partial downloads */
 		CPR (context, ptp_getpartialobject (&camera->pl->params,
 			camera->pl->params.handles.Handler[object_id],
-			0, 10, (char **)((void *)&image)));
+			0, 10, &ximage));
+		image = (unsigned char*)ximage;
 
 		if (!((image[0] == 0xff) && (image[1] == 0xd8))) {	/* SOI */
 			free (image);
@@ -2853,32 +2857,36 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			free (image);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
-		if (0 != strncmp(image+6, "Exif", 4)) {
+		if (0 != memcmp(image+6, "Exif", 4)) {
 			free (image);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
 		offset = 2;
 		maxbytes = (image[4] << 8 ) + image[5];
 		free (image);
-		image = NULL;
+		ximage = NULL;
 		CPR (context, ptp_getpartialobject (&camera->pl->params,
 			camera->pl->params.handles.Handler[object_id],
-			offset, maxbytes, (char **)((void *)&image)));
-		CR (gp_file_set_data_and_size (file, image, maxbytes));
+			offset, maxbytes, &ximage));
+		CR (gp_file_set_data_and_size (file, ximage, maxbytes));
 		break;
 	}
-	case	GP_FILE_TYPE_PREVIEW:
+	case	GP_FILE_TYPE_PREVIEW: {
+		char *ximage = NULL;
+
 		/* If thumb size is 0 then there is no thumbnail at all... */
 		if((size=oi->ThumbCompressedSize)==0) return (GP_ERROR_NOT_SUPPORTED);
 		CPR (context, ptp_getthumb(&camera->pl->params,
 			camera->pl->params.handles.Handler[object_id],
-			(char **)((void *)&image)));
-		CR (gp_file_set_data_and_size (file, image, size));
+			&ximage));
+		CR (gp_file_set_data_and_size (file, ximage, size));
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
 		break;
+	}
+	default: {
+		char *ximage = NULL;
 
-	default:
 		/* we do not allow downloading unknown type files as in most
 		cases they are special file (like firmware or control) which
 		sometimes _cannot_ be downloaded. doing so we avoid errors.*/
@@ -2890,11 +2898,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size=oi->ObjectCompressedSize;
 		CPR (context, ptp_getobject(&camera->pl->params,
 			camera->pl->params.handles.Handler[object_id],
-			(char **)((void *)&image)));
-		CR (gp_file_set_data_and_size (file, image, size));
+			&ximage));
+		CR (gp_file_set_data_and_size (file, ximage, size));
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
 		break;
+	}
 	}
 	CR (set_mimetype (camera, file, oi->ObjectFormat));
 
