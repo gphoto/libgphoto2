@@ -2031,7 +2031,11 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 	info->file.size   = oi->ObjectCompressedSize;
 	strcpy_mime (info->file.type, oi->ObjectFormat);
-	info->file.mtime = oi->ModificationDate;
+	if (oi->ModificationDate != 0) {
+		info->file.mtime = oi->ModificationDate;
+	} else {
+		info->file.mtime = oi->CaptureDate;
+	}
 
 	/* if object is an image */
 	if ((oi->ObjectFormat & 0x0800) != 0) {

@@ -1,4 +1,10 @@
 2005-01-17  Marcus Meissner  <marcus@jet.franken.de>
+	
+	From Dean Brettle <brettle@users.sourceforge.net>
+	* library.c: Use capture date if no modify date is
+	  there.
+	
+2005-01-17  Marcus Meissner  <marcus@jet.franken.de>
 
 	From Vegard Engen <vegard@engen.priv.no>
 	* library.c, ptp.h:
