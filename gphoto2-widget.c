@@ -24,6 +24,7 @@
 #include <string.h>
 
 #include <gphoto2-result.h>
+#include <gphoto2-port-log.h>
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 
@@ -349,8 +350,10 @@ gp_widget_set_value (CameraWidget *widget, void *value)
 	case GP_WIDGET_MENU:
 	case GP_WIDGET_RADIO:
         case GP_WIDGET_TEXT:
+		gp_log (GP_LOG_DEBUG, "gphoto2-widget", "Setting value to "
+			"'%s'...", (char*) value);
 	        if (widget->value_string) {
-                	if (strcmp (widget->value_string, (char*)value) != 0)
+                	if (strcmp (widget->value_string, (char*) value))
                     		widget->changed = 1;
                 	free (widget->value_string);
         	} else
