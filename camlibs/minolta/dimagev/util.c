@@ -78,10 +78,7 @@ unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr) {
 	rgb_current = &(rgb_data[13]);
 
 	/* This is the header for a PPM "rawbits" bitmap of size 80x60. */
-	if ( snprintf(rgb_data, sizeof(rgb_data), "P6\n80 60\n255\n") < 13 ) {
-		fprintf(stderr, "dimagev_ycbcr_to_ppm::failed to printf PPM header\n");
-		return NULL;
-	}
+	strncpy(rgb_data, "P6\n80 60\n255\n", 13);
 
 	for ( count = 0 ; count < 9600 ; count+=4, ycrcb_current+=4, rgb_current+=6 ) {
 		magic_b = ( ( ycrcb_current[2] > 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[0];
