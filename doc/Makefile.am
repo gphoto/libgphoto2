@@ -105,5 +105,5 @@ dist-hook: $(dist_hook_manual)
 	@echo "Dummy $@ target"
 
 all-local: $(man_MANS) $(manual_pdf) $(manual_ps) $(manual_html)
-	-(cd $(manual_dir) && ln -s ../figures)
+	cd $(manual_dir) && rm -f figures && ln -s ../figures figures
 	@echo "Dummy $@ target"
