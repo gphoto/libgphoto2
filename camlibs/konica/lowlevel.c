@@ -51,7 +51,7 @@
 
 #define GP_MODULE "konica"
 
-#define DEFAULT_TIMEOUT	500
+#define DEFAULT_TIMEOUT	1000
 
 /* ESC quotes */
 #define STX	0x02
