@@ -1,5 +1,15 @@
 2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* configure.in: Added polaroid.
+	* camlibs/samsung/samsung.c: Added GP_DRIVER_STATUS_EXPERIMENTAL;
+	* frontends/command-line/main.c: print the EXPERIMENTAL/TESTING flag
+	* include/gphoto2-abilities.h:
+	* libgphoto2/abilities.c: Added CameraDriverStatus
+	* camlibs/polaroid/pdc320.c:
+	* camlibs/polaroid/Makefile.am: New
+
+2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/samsung/Makefile.am:
 	* camlibs/samsung/samsung.c: New but untested. (Just ported it from 
 	old gphoto).

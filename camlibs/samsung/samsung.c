@@ -144,6 +144,7 @@ camera_abilities (CameraAbilitiesList *list)
 		CHECK_RESULT (gp_abilities_new (&a));
 
 		strcpy (a->model, models[i].model);
+		a->status = GP_DRIVER_STATUS_EXPERIMENTAL;
 		a->port     = GP_PORT_SERIAL;
 		a->speed[0] = 0;
 		a->operations        = GP_OPERATION_NONE;

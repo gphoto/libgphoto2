@@ -32,6 +32,12 @@
 typedef gp_port_type CameraPortType; /* GP_PORT_SERIAL, GP_PORT_USB, etc. */
 
 typedef enum {
+	GP_DRIVER_STATUS_PRODUCTION   = 0,
+	GP_DRIVER_STATUS_TESTING      = 1 << 0,
+	GP_DRIVER_STATUS_EXPERIMENTAL = 1 << 1
+} CameraDriverStatus;
+
+typedef enum {
 	GP_OPERATION_NONE               = 0,
 	GP_OPERATION_CAPTURE_IMAGE      = 1 << 0,
 	GP_OPERATION_CAPTURE_VIDEO      = 1 << 1,
@@ -56,6 +62,7 @@ typedef enum {
 
 typedef struct {
 	char model [128];
+	CameraDriverStatus status;
 
 	/* Supported ports and speeds (latter terminated with a value of 0) */
 	CameraPortType port;

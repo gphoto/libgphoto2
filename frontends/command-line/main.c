@@ -296,6 +296,7 @@ OPTION_CALLBACK(list_cameras) {
 
         int x, n;
         const char *buf;
+	CameraAbilities abilities;
 
         cli_debug_print("Listing Cameras");
 
@@ -308,11 +309,23 @@ OPTION_CALLBACK(list_cameras) {
 
         for (x = 0; x < n; x++) {
 		CHECK_RESULT (gp_camera_name (x, &buf));
+		CHECK_RESULT (gp_camera_abilities (x, &abilities));
 
                 if (glob_quiet)
-                        printf("%s\n", buf);
-                   else
-                        printf("\t\"%s\"\n", buf);
+			printf("%s\n", buf);
+		else
+			switch (abilities.status) {
+			case GP_DRIVER_STATUS_TESTING:
+				printf ("\t\"%s\" (TESTING)\n", buf);
+				break;
+			case GP_DRIVER_STATUS_EXPERIMENTAL:
+				printf ("\t\"%s\" (EXPERIMENTAL)\n", buf);
+				break;
+			default:
+			case GP_DRIVER_STATUS_PRODUCTION:
+				printf ("\t\"%s\"\n", buf);
+				break;
+			}
         }
 
         return (GP_OK);
