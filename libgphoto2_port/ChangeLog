@@ -1,3 +1,10 @@
+2001-12-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Tim Waugh <twaugh@redhat.com>:
+
+	* usb/libusb.c: "I think this makes it clearer exactly which kernel
+	  module to unload when dc2xx is loaded."
+
 2001-12-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* configure.in: Comment out check for ltdl.h. See comment in there.
