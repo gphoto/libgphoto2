@@ -1104,6 +1104,37 @@ _put_Canon_AssistLight(CameraWidget *widget, PTPPropertyValue *propval) {
 }
 
 static int
+_get_Canon_FlashMode(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR);
+	gp_widget_add_choice (*widget,_("On"));
+	gp_widget_add_choice (*widget,_("Off"));
+	gp_widget_set_value (*widget,(dpd->CurrentValue.u16?_("On"):_("Off")));
+	return (GP_OK);
+}
+
+static int
+_put_Canon_FlashMode(CameraWidget *widget, PTPPropertyValue *propval) {
+	char *value;
+	int ret;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	if (!strcmp (value, _("On"))) {
+		propval->u8 = 1;
+		return (GP_OK);
+	}
+	if (!strcmp (value, _("Off"))) {
+		propval->u8 = 0;
+		return (GP_OK);
+	}
+	return (GP_ERROR);
+}
+
+static int
 _get_Canon_ExpCompensation(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	float t, b, s, f;
 	int min, max, i;
@@ -1311,6 +1342,8 @@ struct submenu capture_settings_menu[] = {
 	{ N_("Zoom"), "zoom", PTP_DPC_CANON_Zoom, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ZoomRange, _put_Canon_ZoomRange},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_CANON_AssistLight, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AssistLight, _put_Canon_AssistLight},
 	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
+	{ N_("Flash"), "flash", PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_FlashMode, _put_Canon_FlashMode},
+	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ NULL },
 };
 

@@ -1,3 +1,7 @@
+2005-01-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon FlashMode property.
+
 2004-12-22  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Nikon CoolPix 4100 as reported.
