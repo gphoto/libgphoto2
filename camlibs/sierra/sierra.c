@@ -73,6 +73,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Epson PhotoPC 500", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson PhotoPC 550", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson PhotoPC 600", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
+	{"Epson PhotoPC 650", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson PhotoPC 700", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson PhotoPC 800", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson PhotoPC 850z",  SIERRA_MODEL_EPSON,     0x4b8, 0x402, 0},
