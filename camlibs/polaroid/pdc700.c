@@ -487,7 +487,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	const char header[] = "P6\n80 60\n255\n";
 	unsigned char *data = NULL, *ppm;
 
-#if 0
+#if 1
 	if (type == GP_FILE_TYPE_RAW)
 		return (GP_ERROR_NOT_SUPPORTED);
 #endif
@@ -527,7 +527,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 
 	case GP_FILE_TYPE_RAW:
-#if 1
+#if 0
 		CRF (gp_file_set_data_and_size (file, data, size), data);
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
 		break;
