@@ -20,13 +20,15 @@ manual_html = @manual_html@
 
 CLEAN_FILES = $(manual_pdf) $(manual_ps) figures-stamp
 
+MANUAL_SRC = gphoto2.xml faq.xml
+
 EXTRA_DIST = DAEMON build_OS2.txt 					\
 	camlib_devel.lyx 						\
 	camlib_devel-portmon.eps camlib_devel-repeater.eps 		\
 	camlib_devel.sgml camlib_devel.txt camlib_devel-y.eps 		\
 	frontend_devel.lyx frontend_devel.sgml frontend_devel.txt 	\
 	gphoto2-cli.txt							\
-	gphoto2.xml $(man_MANS) $(manual_pdf) $(manual_ps)		\
+	gphoto2.xml faq.xml $(man_MANS) $(manual_pdf) $(manual_ps)	\
 	FAQ
 
 man_MANS = gphoto2.1 gphoto2.3 gphoto2_port.3
@@ -48,10 +50,12 @@ figures-stamp:
 # the build process will barf when xmlto is not present.
 ########################################################################
 
+api/sgml/gphoto2-camera.xml: api/sgml/gphoto2-camera.sgml
+	sgml2xml $< > $@
 
 ########################################################################
 if XMLTOPDF
-gphoto2.pdf: gphoto2.xml figures-stamp
+gphoto2.pdf: $(MANUAL_SRC) figures-stamp
 	test -e $$(basename $<) || ln -s $< # symlink file from srcdir to builddir if required
 	$(XMLTO) pdf $$(basename $<) # work on local file or symlink
 endif
@@ -61,7 +65,7 @@ endif
 ########################################################################
 if XMLTOPS
 # doesn't work if builddir != srcdir
-gphoto2.ps: gphoto2.xml figures-stamp
+gphoto2.ps: $(MANUAL_SRC) figures-stamp
 	test -e $$(basename $<) || ln -s $< # symlink file from srcdir to builddir if required
 	$(XMLTO) ps $$(basename $<) # work on local file or symlink
 endif
@@ -91,7 +95,7 @@ htmldir=@HTML_DIR@
 
 TARGET_DIR=$(htmldir)/manual
 
-manual: gphoto2.xml
+manual: $(MANUAL_SRC)
 	$(XMLTO) html -o "$@" "$<"
 	cd $@ && rm -f figures && ln -s ../figures figures # to view docs in src tree
 	touch "$@"
