@@ -461,6 +461,7 @@ libgphoto2/libgphoto2.pc
 gphoto2-config
 intl/Makefile
 packaging/Makefile
+packaging/linux-hotplug/Makefile
 packaging/rpm/Makefile
 packaging/rpm/package.spec
 po/Makefile.in
