@@ -25,6 +25,16 @@
 
 int QVping     (Camera *camera);
 
+typedef enum {
+	QV_SPEED_115200 =  3,
+	QV_SPEED_57600  =  7,
+	QV_SPEED_38400  = 11,
+	QV_SPEED_19200  = 22,
+	QV_SPEED_9600   = 46
+} QVSpeed;
+
+int QVsetspeed (Camera *camera, QVSpeed speed);
+
 /* Battery level in volts */
 int QVbattery  (Camera *camera, float *battery);
 

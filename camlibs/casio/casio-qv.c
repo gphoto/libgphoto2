@@ -215,7 +215,7 @@ camera_init (Camera *camera, GPContext *context)
 {
 	int result = GP_OK, i;
 	gp_port_settings settings;
-	int speeds[] = {9600, 57600, 19200, 38400};
+	int speeds[] = {9600, 115200, 57600, 38400, 19200};
 
         /* First, set up all the function pointers */
 	camera->functions->summary	= camera_summary;
@@ -230,7 +230,7 @@ camera_init (Camera *camera, GPContext *context)
 	/* Check if the camera is really there */
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
 	CHECK_RESULT (gp_port_set_timeout (camera->port, 1000));
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 5; i++) {
 		settings.serial.speed = speeds[i];
 		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 		result = QVping (camera);

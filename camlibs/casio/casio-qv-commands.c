@@ -27,6 +27,8 @@
 #define DC2 0x12
 #define NAK 0x15
 #define ETB 0x17
+#define UNKNOWN1 0xfe
+#define UNKNOWN2 0xe0
 
 #define CASIO_QV_RETRIES 5
 
@@ -45,8 +47,43 @@ QVping (Camera *camera)
 		result = gp_port_read (camera->port, &c, 1);
 
 		/* If we got ACK, everything is fine. */
-		if ((result >= 0) && (c == ACK))
-			break;
+		if (result >= 0) {
+			switch (c) {
+			case ACK:
+			case ENQ:
+				
+				/*
+				 * According to gphoto, we need to wait
+				 * for ACK. But the camera of 
+				 * David Wolfskill <david@catwhisker.org>
+				 * seems to return ENQ after some NAK.
+				 */
+				return (GP_OK);
+
+			case NAK:
+
+				/* The camera is not yet ready. */
+				break;
+
+			case UNKNOWN1:
+			case UNKNOWN2:
+
+				/* 
+				 * David Wolfskill <david@catwhisker.org>
+				 * has seen those two bytes if one sends
+				 * only ENQs to the camera. The camera first
+				 * answers with some NAKs, then with some
+				 * ACKs, and finally with UNKNOWN1 and 
+				 * UNKNOWN2.
+				 */
+				while (gp_port_read (camera->port, &c, 1) >= 0);
+				break;
+
+			default:
+				while (gp_port_read (camera->port, &c, 1) >= 0);
+				break;
+			}
+		}
 
 		if (++i < CASIO_QV_RETRIES)
 			continue;
@@ -57,8 +94,6 @@ QVping (Camera *camera)
 		/* Return some error code */
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
-
-	return (GP_OK);
 }
 
 static int
@@ -148,6 +183,19 @@ QVblockrecv (Camera *camera, unsigned char *buf, int buf_size)
 		else
 			return (GP_ERROR_CORRUPTED_DATA);
 	}
+
+	return (GP_OK);
+}
+
+int
+QVsetspeed (Camera *camera, QVSpeed speed)
+{
+	unsigned char cmd[3];
+
+	cmd[0] = 'C';
+	cmd[1] = 'B';
+	cmd[3] = (unsigned char) speed;
+	CR (QVsend (camera, cmd, 3, NULL, 0));
 
 	return (GP_OK);
 }
