@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.36  2002/01/03 17:45:58  dfandrich
+ * Changed download to use gp_file_progress to allow user to cancel.
+ *
  * Revision 1.35  2002/01/02 14:49:41  hun
  * Removed redundant memset()s introduced by me :-(
  *
@@ -158,8 +161,8 @@ static char     Dimera_stdhdr[] =
 /* Forward references */
 
 static uint8_t *
-Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
-		       int *width, int *height);
+Dimera_Get_Full_Image (int picnum, int *size, int *width, int *height,
+			Camera *camera, CameraFile *file);
 
 static uint8_t *
 Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera );
@@ -276,8 +279,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder, const char *
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 	case GP_FILE_TYPE_RAW:
-		data = Dimera_Get_Full_Image (num, (int*) &size, camera,
-					      &width, &height);
+		data = Dimera_Get_Full_Image (num, (int*) &size,
+					      &width, &height, camera, file);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		data = Dimera_Get_Thumbnail (num, (int*) &size, camera);
@@ -572,8 +575,8 @@ Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 /* Download a raw Bayer image from the camera and return it in a malloced
 buffer */
 static uint8_t *
-Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
-		       int *width, int *height)
+Dimera_Get_Full_Image (int picnum, int *size, int *width, int *height,
+			Camera *camera, CameraFile *file)
 {
 	static struct mesa_image_arg	ia;
 	int32_t				r;
@@ -667,7 +670,13 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 			gp_camera_set_error(camera, _("Problem downloading image"));
 			return NULL;
 		}
-		gp_camera_progress(camera, ia.row / (*height + 4) );
+		if (gp_file_progress(file, ia.row / (*height + 4) ) < 0)
+		{
+			free( rbuffer );
+			*size = 0;
+			gp_camera_set_error(camera, _("User canceled download"));
+			return NULL;
+		}
 	}
 #else
 	for ( ia.row = 4, b = rbuffer; ia.row < (*height + 4) ;
@@ -695,7 +704,13 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 			gp_camera_set_error(camera, _("Problem downloading image"));
 			return NULL;
 		}
-		gp_camera_progress(camera, ia.row / (*height + 4) );
+		if (gp_file_progress(file, ia.row / (*height + 4) ) < 0)
+		{
+			free( rbuffer );
+			*size = 0;
+			gp_camera_set_error(camera, _("User canceled download"));
+			return NULL;
+		}
 	}
 #endif
 
