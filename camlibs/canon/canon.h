@@ -85,7 +85,7 @@ typedef enum {
  * @CANON_PS_G3: PowerShot G3
  * @CANON_PS_S230: PowerShot S230, Digital IXUS v3
  * @CANON_EOS_10D: EOS 10D
- * @CANON_OPT_200: Optura 200 MC
+ * @CANON_OPT_200: Optura 200 MC, MVX2i
  *
  * Enumeration of all camera types currently supported.
  *

@@ -1,6 +1,135 @@
+2003-04-07 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Update README, TODO, ChangeLog
+	* Support for Optura 200 MC/MVX2i camcorder
+
+2003/04/04 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* CANON_PS_A70 is now CANON_PS_PRO70, to avoid confusion with new
+	  PowerShot A70, a completely different camera.
+	* Added comments with product ID's for A60, A70, which are PTP-only.
+	* Added ID's for EOS 10D; will use same code as EOS D30/D60.
+	* Image key and size (for immediate download from capture) are now
+	  in the CameraPrivateLibrary structure, so they aren't passed as
+	  explicit parameters.
+	* capture_step moved to CameraPrivateLibrary structure to keep track
+	  of interrupt reads during image capture; this was formerly a local
+	  variable in canon_usb_capture_dialogue().
+	* Fixed comment since we now supply a real serial number with each
+	  command packet.
+	* New function canon_usb_set_file_time() to be used after file upload.
+	* New function canon_usb_set_file_attributes().
+	* New functions canon_usb_get_captured_thumbnail(),
+	  canon_usb_get_captured_image(), canon_int_capture_preview(),
+	  is_audio(), canon_int_filename2audioname().
+	* Transfer mode bits are now in enum canonTransferMode.
+	* New enum canonDownloadImageType.
+	* Converted #define's in usb.h to enums
+	* Moved prototypes to end of usb.h, since they now use the enums.
+	* Max read size USB_BULK_READ_SIZE is now 0x1400 to match
+	  Canon software; was 0x3000.
+	* Moved transfer mode bits to from usb.h to canon.h.
+	* Messed with file upload; now sets file time from host file time.
+	  Still doesn't work any better.
+
+2003/02/28 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Removed "capturing" field from CameraPrivateLibrary; it was unused.
+	* EOS capture is no longer flagged as "experimental".
+	* Implemented canon_capture_preview(); it was a no-op.
+
 2003-02-27  Marcus Meissner <marcus@jet.franken.de>
 	
 	* library.c: We support EXIF download.
+
+2003/02/27 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Changed all C++-style comments ("//") to C-style "/* ... */".
+          Gcc allows C++ form in C programs, but it's not quite ANSI.
+	* In canon_int_capture_image(), deduce path and file name of
+	  captured image and return as specified in the API
+	* Added function canon_usb_list_all_dirs() to support path and
+	  file name deduction in canon_int_capture_image().
+
+2003/02/18 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* canon_usb_capture_dialogue() now gets error context
+	* Added extra NUL to end of "delete file" command; this
+	  eliminates an error code 0200000086.
+	* canon_usb_unlock_keys() now gets error context and reports
+	  errors (non-zero status code in 0x50 of reply).
+	* Better error checking in canon_usb_lock_keys(); now we
+	  *do* know what those bytes mean (they are a 32-bit status
+	  code).
+	* Change locking code so that older "default" cameras are
+	  now explicit; the new default is like S45 and G3, on the
+	  assumption that new cameras will probably behave like this.
+	* canon_usb_capture_dialogue() now gets error context to
+	  pass to canon_usb_capture_dialogue().
+
+2003/02/14 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Corrected comment explaining path returned from capture.
+	* Added labels for all values of canonCamModel, for gtk-doc.
+	* Added PowerShot G3 to special-case locking: use non-EOS locking,
+          but no "get photo abilities" command.
+
+2003/02/11 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Tidy comments (esp. for gtk-doc)
+	* Return "*UNKNOWN*" for both path and file names from capture, since
+	  I don't know how to get the information after capture. Previously,
+	  random garbage was returned.
+	* Flag GP_DEBUG messages with name of originating function.
+	* Clean up better on capture error (exit control mode).
+	* Convert many constant #define's to enum's.
+	* Moved many constant #define's from library.h to canon.h.
+	* Moved macro IS_EOS() to canon.h.
+	* Supply unique serial number in each command.
+	* Alter "already awake" initialization for EOS cameras.
+	  This still doesn't work :(.
+	* Alter key locking. EOS cameras are locked just before
+	  "release shutter" command and unlocked as soon as possible
+	  afterward. PowerShot cameras are unlocked at initialization
+	  and can't be unlocked from software. The user must unplug the
+	  USB cable to unlock the keys on these cameras.
+	* Unify polling of interrupt pipe in canon_usb_poll_interrupt_pipe().
+	* Read interrupt pipe to clear it, both before "release shutter"
+	  command and after an error (interrupt messages out of sequence)
+	  in capture.
+	* Increase timeout for "release shutter" command. EOS cameras
+	  sometimes take a long time (>10sec) to complete this command.
+	  Is this because of a buffer flush?
+	* Improve handling of interrupt messages in "release shutter".
+	* Check status at 0x50 in response, where appropriate, and report
+	  a non-zero status code via GP_DEBUG (in canon_usb_dialogue).
+	* Increase MAX_INTERRUPT_TRIES from 4000 to 12000 to allow worst-case
+	  timing: a D60 writing a raw file to CF.
+
+2003/01/27 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Major cleanup of comments to make gtk-doc work.
+	* Moved "defines for error handling" from canon.h to serial.h.
+	* Moved JPEG stream byte #defines from serial.h to canon.h.
+	* Slight update of doc string for screen width (library.c).
+	* Minor improvements to urb-interpret.
+	* Moved MAX_RETRIES from usb.c to usb.h, renamed MAX_INTERRUPT_RETRIES.
+	* Rewrite of interrupt-pipe reads based on new insight
+	  into communication structure.
+	* Now seems to work with EOS D30 as well as PowerShot cameras.
+	  Not yet working with EOS D60.
+	* Commented prototype for dump_hex in util.h, as it isn't actually
+	  defined anywhere.
+	* Created doc/canon-api.sgml, doc/canon-sections.txt
+	  with tentative structure for documentation.
+
+2003/01/13 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Improved some debug logging; added interpretation of power status
+	* Re-inserted "get picture abilities" for non-EOS cameras
+	* Created special case for PowerShot S45, which (like EOS) doesn't
+	  implement the "get picture abilities" command, but (like PowerShot)
+	  uses the base "lock keys" command.
 
 2003-01-10  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
@@ -8,7 +137,22 @@
 	* usb.[ch]: removed CANON_EXPERIMENTAL_CAPTURE #ifdefs
 	* library.[ch]: removed CANON_EXPERIMENTAL_CAPTURE #ifdefs
 	* canon.[ch], serial.c: new serial detection code (with dedicated ID strings)
-	
+
+2003/01/10 Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* Corrected capture sequence, including reads from interrupt pipe.
+	  Tested on PowerShot G2 and S45; *not* working for EOS D30/D60
+	  cameras.
+	* Added function canon_int_get_picture_abilities (currently unused).
+	* New command "EOS get body ID" returns camera serial number.
+	* Added command and response lengths for "Get available shot" and "Get
+	  custom function"
+	* Corrected canon_int_get_battery() when return values are NULL
+	  pointers.
+	* Extended timeout for remote control init, as camera must extend lens.
+	* Corrected spelling in various places.
+	* urb-interpret: fixed a few bugs. Improved handling of interrupt pipe
+	  reads: we now discard those with zero length, but flag and keep others.
 2002-11-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.[ch]: support for PowerShot G3 (A. Marinichev)
