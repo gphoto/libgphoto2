@@ -37,6 +37,8 @@
 #include <string.h>
 #endif
 
+#include <time.h>
+
 /* These better be around. */
 #include <gphoto2.h>
 #include <gpio.h>
@@ -204,6 +206,7 @@ int dimagev_get_camera_data(dimagev_t *dimagev);
 dimagev_data_t *dimagev_import_camera_data(unsigned char *raw_data);
 unsigned char *dimagev_export_camera_data(dimagev_data_t *good_data);
 void dimagev_dump_camera_data(dimagev_data_t *data);
+int dimagev_set_date(dimagev_t *dimagev);
 
 /* These functions are in status.c */
 int dimagev_get_camera_status(dimagev_t *dimagev);
