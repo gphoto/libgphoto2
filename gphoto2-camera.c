@@ -862,6 +862,8 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file)
 {
 	CHECK_NULL (camera && file);
 
+	CHECK_RESULT (gp_file_clean (file));
+
 	if (!camera->functions->capture_preview) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera can "
 			"not capture previews"));
@@ -1162,6 +1164,8 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 		"folder '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file && camera_file);
+
+	CHECK_RESULT (gp_file_clean (file));
 
 	/* Did we get reasonable foldername/filename? */
 	if (strlen (folder) == 0)
