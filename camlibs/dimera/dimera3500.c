@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.27  2001/10/31 08:29:53  dfandrich
+ * * camlibs/dimera/*.c: use renamed get/set functions, gp_camera_set_error
+ *
  * Revision 1.26  2001/10/20 18:05:55  lutz
  * 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -391,11 +394,17 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
 
 	/* We only support root folder */
 	if (strcmp (folder, "/"))
+	{
+		gp_camera_set_error(camera, _("Only root directory is supported"));
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	}
 
 	count = mesa_get_image_count (camera->port);
 	if (count < 0)
+	{
+		gp_camera_set_error(camera, _("Problem getting number of images"));
 		return (count);
+	}
 
 	/*
 	 * Create pseudo file names for each picture in the camera, except
@@ -434,6 +443,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder, const char *
 		data = Dimera_Get_Thumbnail (num, (int*) &size, camera);
 		break;
 	default:
+		gp_camera_set_error(camera, _("Image type is not supported"));
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -486,6 +496,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 	if ( (std_res = mesa_read_image_info( camera->port, num, NULL )) < 0 )
 	{
 		ERROR("Can't get Image Info");
+		gp_camera_set_error(camera, _("Problem getting image information"));
 		return std_res;
 	}
 
@@ -517,7 +528,10 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) {
 
 	if (type != GP_CAPTURE_IMAGE)
+	{
+		gp_camera_set_error(camera, _("Capture type is not supported"));
 		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	if (camera->pl->auto_flash) {
 		CHECK (mesa_snap_picture( camera->port, camera->pl->exposure*4 ));
@@ -574,7 +588,10 @@ static int camera_summary (Camera *camera, CameraText *summary) {
 
 	num = mesa_get_image_count(camera->port);
 	if (num < 0)
+	{
+		gp_camera_set_error(camera, _("Problem getting number of images"));
 		return num;
+	}
 
 	mesa_send_id( camera->port, &Id );
 	mesa_version(camera->port, version_string);
@@ -721,6 +738,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 		if ( (r = mesa_read_image_info( camera->port, picnum, NULL )) < 0 )
 		{
 			ERROR("Can't get Image Info");
+			gp_camera_set_error(camera, _("Problem getting image information"));
 			return NULL;
 		}
 		if ( r )
@@ -738,6 +756,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 		if ( mesa_load_image( camera->port, picnum ) != GP_OK )
 		{
 			ERROR("Image Load failed");
+			gp_camera_set_error(camera, _("Problem reading image from flash"));
 			return NULL;
 		}
 
@@ -755,6 +774,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 	rbuffer = (u_int8_t *)malloc( *size );
 	if ( rbuffer == NULL )
 	{
+		gp_camera_set_error(camera, _("Out of memory"));
 		return NULL;
 	}
 
@@ -792,6 +812,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 				/* retry count exceeded, or other error */
 			free( rbuffer );
 			*size = 0;
+			gp_camera_set_error(camera, _("Problem downloading image"));
 			return NULL;
 		}
 		gp_camera_progress(camera, ia.row / (*height + 4) );
@@ -819,6 +840,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 				/* retry count exceeded, or other error */
 			free( rbuffer );
 			*size = 0;
+			gp_camera_set_error(camera, _("Problem downloading image"));
 			return NULL;
 		}
 		gp_camera_progress(camera, ia.row / (*height + 4) );
@@ -902,6 +924,7 @@ Dimera_Preview( int *size, Camera *camera )
 			sizeof( Dimera_viewhdr ) - 1 )) )
 	{
 		ERROR( "Get Preview, allocation failed" );
+		gp_camera_set_error(camera, _("Out of memory"));
 		return NULL;
 	}
 
@@ -916,6 +939,7 @@ Dimera_Preview( int *size, Camera *camera )
 	{
 		ERROR( "Get Preview, mesa_snap_view failed" );
 		free (image);
+		gp_camera_set_error(camera, _("Problem taking live image"));
 		return NULL;
 	}
 
@@ -961,12 +985,16 @@ int camera_init (Camera *camera) {
         camera->functions->about                = camera_about;
 
 	/* Get the settings and remember the selected speed */
-	gp_port_settings_get (camera->port, &settings);
+	gp_port_get_settings (camera->port, &settings);
 	selected_speed = settings.serial.speed;
 
+	/* TODO: camera->pl can probably be allocated at the end to simplify */
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
+	{
+		gp_camera_set_error(camera, _("Out of memory"));
 		return (GP_ERROR_NO_MEMORY);
+	}
 
         /* Set the default exposure */
 	camera->pl->exposure = DEFAULT_EXPOSURE;
@@ -983,6 +1011,7 @@ int camera_init (Camera *camera) {
                 ERROR("Camera Open Failed");
 		free (camera->pl);
 		camera->pl = NULL;
+		gp_camera_set_error(camera, _("Problem opening port"));
                 return ret;
         }
 
@@ -992,14 +1021,17 @@ int camera_init (Camera *camera) {
                 ERROR("Camera Reset Failed");
 		free (camera->pl);
 		camera->pl = NULL;
+		gp_camera_set_error(camera, _("Problem resetting camera"));
                 return ret;
         }
 
+        debuglog("Setting speed");
         if ( (ret = mesa_set_speed(camera->port, selected_speed)) != GP_OK )
         {
                 ERROR("Camera Speed Setting Failed");
 		free (camera->pl);
 		camera->pl = NULL;
+		gp_camera_set_error(camera, _("Problem setting camera communication speed"));
                 return ret;
         }
 
@@ -1012,11 +1044,13 @@ int camera_init (Camera *camera) {
                 ERROR("No or Unknown Response");
 		free (camera->pl);
 		camera->pl = NULL;
+		gp_camera_set_error(camera, _("No response from camera"));
                 return GP_ERROR_TIMEOUT;
         case GP_ERROR_MODEL_NOT_FOUND:
                 ERROR("Probably a modem");
 		free (camera->pl);
 		camera->pl = NULL;
+		gp_camera_set_error(camera, _("Looks like a modem, not a camera"));
                 return GP_ERROR_MODEL_NOT_FOUND;
         case GP_OK:
                 break;

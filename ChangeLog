@@ -1,3 +1,7 @@
+2001-10-31 Dan Fandrich <dan@coneharvesters.com>
+
+	* camlibs/dimera/*.c: use renamed get/set functions, gp_camera_set_error
+
 2001-10-30  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* README: added a few USB Mass storage cameras.

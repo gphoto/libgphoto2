@@ -8,6 +8,8 @@
 * provided the above notices are retained, intact.
 *
 * Revision History:
+*	See CVS log for later revisions
+*
 *	2001/03/10 - Port to gphoto2				  	  Dan
 *
 *	2000/09/06 - Modified by Gregg Berg <gberg@covconn.net>		  GDB
@@ -160,16 +162,16 @@ mesa_port_open( GPPort *port )
 	GPPortSettings settings;
 
 	debuglog("mesa_port_open()");
-	gp_port_timeout_set(port, 5000);
+	gp_port_set_timeout(port, 5000);
 
-	gp_port_settings_get(port, &settings);
+	gp_port_get_settings(port, &settings);
 
 	settings.serial.speed   = 115200;
 	settings.serial.bits    = 8;
 	settings.serial.parity  = 0;
 	settings.serial.stopbits= 1;
 
-	return gp_port_settings_set(port, settings);
+	return gp_port_set_settings(port, settings);
 }
 
 /* Close the serial port (now done by gphoto2 itself) */
@@ -235,9 +237,9 @@ mesa_set_speed( GPPort *port, int speed )
 	}
 	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
-	gp_port_settings_get(port, &settings);
+	gp_port_get_settings(port, &settings);
 	settings.serial.speed = speed;
-	return gp_port_settings_set(port, settings);
+	return gp_port_set_settings(port, settings);
 }
 
 /* get camera version number */
