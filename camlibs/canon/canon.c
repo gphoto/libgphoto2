@@ -78,13 +78,14 @@
 #define S1M	(1024 * 1024)
 #define S2M	(2 * S1M)
 #define S10M	(10 * S1M)
+#define NO_USB  0
 
 const struct canonCamModelData models[] = {
 	/* *INDENT-OFF* */
-	{"DE300 Canon Inc.",		CANON_PS_A5,		0, 0, 1, S2M, S32K},
-	{"Canon PowerShot A5 Zoom",	CANON_PS_A5_ZOOM,	0, 0, 1, S2M, S32K},
-	{"Canon PowerShot A50",		CANON_PS_A50,		0, 0, 1, S2M, S32K},
-	{"Canon PowerShot Pro70",	CANON_PS_A70,		0, 0, 1, S2M, S32K},
+	{"DE300 Canon Inc.",		CANON_PS_A5,		NO_USB, NO_USB, 1,  S2M, S32K},
+	{"Canon PowerShot A5 Zoom",	CANON_PS_A5_ZOOM,	NO_USB, NO_USB, 1,  S2M, S32K},
+	{"Canon PowerShot A50",		CANON_PS_A50,		NO_USB, NO_USB, 1,  S2M, S32K},
+	{"Canon PowerShot Pro70",	CANON_PS_A70,		NO_USB, NO_USB, 1,  S2M, S32K},
 	{"Canon PowerShot S10",		CANON_PS_S10,		0x04A9, 0x3041, 1, S10M, S32K},
 	{"Canon PowerShot S20",		CANON_PS_S20,		0x04A9, 0x3043, 1, S10M, S32K},
 	{"Canon EOS D30",		CANON_EOS_D30,		0x04A9, 0x3044, 0, S10M, S32K},
@@ -115,6 +116,7 @@ const struct canonCamModelData models[] = {
 	/* *INDENT-ON* */
 };
 
+#undef NO_USB
 #undef S10M
 #undef S2M
 #undef S1M
