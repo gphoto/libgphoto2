@@ -1,3 +1,7 @@
+2002-02-18  Colin Marquardt  <colin@marquardt-home.de>
+
+	* configure.in: Added zh_CN.GB2312 to ALL_LINGUAS.
+
 2002-02-16  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* usb/Makefile.am: Added usb-os2.c to EXTRA_DIST
