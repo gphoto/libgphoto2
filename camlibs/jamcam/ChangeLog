@@ -1,3 +1,7 @@
+2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* jamcam.c: Don't include <libgphoto2/*.>, include <*.h> instead.
+
 2001-11-28  Chris Pinkham <cpinkham@infi.net>
 
 	* jamcam.c: changed driver version to reflect new revision.
