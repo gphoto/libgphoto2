@@ -1,0 +1,21 @@
+Todo
+----
+
+ - Download thrumbnails images
+ - Delete last image / all images
+ - Get image informations ( Size in pixel)
+ - Clean the code 
+ - Find all over commands (if there are)
+ 
+
+
+Already working
+---------------
+
+ - Get camera directory (TOC)
+ - Get camera storage capabilities
+ - Get image size (in bytes)
+ - Download an image from Flash and Cards
+
+
+
