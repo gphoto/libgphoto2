@@ -673,7 +673,7 @@ N_(
 "    that the configuration settings are\n"
 "    complete for your camera, or can contribute\n"
 "    code to support complete configuration,\n"
-"    please contact gphoto-devel@gphoto.net\n"
+"    please contact the developer mailing list.\n"
 );
 
 const CameraDescType oly3040_cam_desc = { oly3040_desc, oly3040_manual,
