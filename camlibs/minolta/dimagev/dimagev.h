@@ -81,7 +81,7 @@
    the eight.three I can.
 */
 #define DIMAGEV_FILENAME_FMT "dv%05i.jpg"
-#define DIMAGEV_THUMBNAIL_FMT "thumb_dv%05i.ppm"
+#define DIMAGEV_THUMBNAIL_FMT "dv%05i.ppm"
 
 /* These values are needed to convert Y:Cb:Cr image data into RGB. */
 /* Salt as needed. */
