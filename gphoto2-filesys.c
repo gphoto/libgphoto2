@@ -1910,8 +1910,9 @@ gp_get_free_memory (GPContext *context, unsigned *free)
 			break;
 		head = tail + 1;
 	} while (n != 2);
+	return (GP_OK);
 
-#elif HAVE_SYSCTL && (__FreeBSD__ || __NetBSD__ || __OpenBSD__)
+#elif HAVE_SYSCTL && (__FreeBSD__ || __NetBSD__ || __OpenBSD__ || __APPLE__ )
 
 	int mib[2] = { CTL_HW, HW_PHYSMEM };
 	int value;
@@ -1922,10 +1923,12 @@ gp_get_free_memory (GPContext *context, unsigned *free)
 		return (GP_ERROR);
 	}
 	*free=value;
+	return (GP_OK);
 
+#else
+#error "No way to measure free memory: you need to customize this for your system"
 #endif
 
-	return (GP_OK);
 }
 
 
