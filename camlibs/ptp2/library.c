@@ -251,6 +251,7 @@ static struct {
 	{"Kodak:CX7430", 0x040a, 0x057b},
 	{"Kodak:CX7530", 0x040a, 0x057c},
 	{"Kodak:DX7440", 0x040a, 0x057d},
+	{"Kodak:DX7590", 0x040a, 0x057f},
 	{"Kodak:CX6445", 0x040a, 0x0584},
 
 	/* HP PTP cameras */

@@ -1,3 +1,7 @@
+2004-12-21  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Kodak DX7590 (bug #1089154)
+
 2004-12-21  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Sony DSC-P51 (bug #1088798)
