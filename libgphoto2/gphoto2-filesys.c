@@ -1340,15 +1340,15 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	CR (gp_file_set_type (file, type));
 	CR (gp_file_set_name (file, filename));
 
+	/* Cache this file */
+	CR (gp_filesystem_set_file_noop (fs, folder, file, context));
+
 	/* If we didn't get a mtime, try to get it from EXIF data */
 	gp_file_get_mtime (file, &t);
 	if (!t) {
 		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
 		gp_file_set_mtime (file, t);
 	}
-
-	/* Cache this file */
-	CR (gp_filesystem_set_file_noop (fs, folder, file, context));
 
 	/*
 	 * Often, thumbnails are of a different mime type than the normal
