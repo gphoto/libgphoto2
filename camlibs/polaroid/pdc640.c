@@ -1,6 +1,6 @@
 /* pdc640.c
  *
- * Copyright © 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * Copyright © 2001 Lutz Müller <lutz@users.sourceforge.net>
  * Copyright © 2002 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
@@ -59,21 +59,21 @@ static struct {
 	int vendor,product;
 	struct _CameraPrivateLibrary	pl;
 } models[] = {
-	{"Polaroid Fun Flash 640", 0, 0, {
+	{"Polaroid:Fun Flash 640", 0, 0, {
 		 	pdc640,
 			BAYER_TILE_RGGB,
 			NULL, // add postprocessor here!
 			"pdc640%04i.ppm"
 		}
 	},
-	{"Jenoptik JD350 entrance", 0, 0, {
+	{"Jenoptik:JD350 entrance", 0, 0, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350e%04i.ppm"
 		}
 	},
-	{"Jenoptik JD350 video", 0xd96, 0x0000, {
+	{"Jenoptik:JD350 video", 0xd96, 0x0000, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,

@@ -62,8 +62,8 @@ static struct {
 	const char *model;
 	unsigned char id;
 } models[] = {
-	{"Polaroid Fun! 320", 0x3f},
-	{"Polaroid 640SE",    0x40},
+	{"Polaroid:Fun! 320", 0x3f},
+	{"Polaroid:640SE",    0x40},
 	{NULL,                0x00}
 };
 

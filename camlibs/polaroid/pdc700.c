@@ -735,7 +735,7 @@ static struct {
 	unsigned short usb_product;
 
 } models[] = {
-	{"Polaroid DC700", 0x784, 0x2888},
+	{"Polaroid:DC700", 0x784, 0x2888},
 	{NULL, 0, 0}
 };
 
