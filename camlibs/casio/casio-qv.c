@@ -223,7 +223,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE | GP_FILE_INFO_PERMISSIONS;
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	strcpy (info->file.type, GP_MIME_JPEG);
-	strcpy (info->preview.type, GP_MIME_JPEG);
+	strcpy (info->preview.type, GP_MIME_PPM);
 	info->file.size = size_pic;
 	info->preview.size = size_thumb;
 
@@ -279,10 +279,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	/* Tell libgphoto2 where to look for the new image */
 	strcpy (path->folder, "/");
 	sprintf (path->name, "CASIO_QV_%03i.jpg",
-		 gp_filesystem_count (camera->fs, "/", context));
-
-	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", path->name,
-					    context));
+		 gp_filesystem_count (camera->fs, "/", context)+1);
 
 	return (GP_OK);
 }
@@ -290,7 +287,16 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
+	CHECK_RESULT (QVsetspeed (camera,9600));
+
 	CHECK_RESULT (QVreset (camera));
+
+	/* power down interface */
+	gp_port_set_pin (camera->port, GP_PIN_RTS, GP_LEVEL_LOW);
+	gp_port_set_pin (camera->port, GP_PIN_DTR, GP_LEVEL_LOW);
+	gp_port_set_pin (camera->port, GP_PIN_CTS, GP_LEVEL_LOW);
+
+	sleep(1);
 
 	return (GP_OK);
 }

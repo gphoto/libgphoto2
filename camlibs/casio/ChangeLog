@@ -1,3 +1,13 @@
+2005-01-10  Michael Haardt <michael@moria.de>
+
+	* casio-qv.c:
+	  corrected preview type to PPM
+		do not explictly append filename of captured image to filesystem
+		reset line speed and power down interface on exit
+	* casio-qv-commands.c:
+	  capture works now
+		ping camera after changing line speed
+
 2004-12-22  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* ycctoppm.c (QVycctoppm): C syntax cleanup
