@@ -26,6 +26,9 @@ OS/2:
 camlibs/barbie:
 	Scott Fritzinger <scottf@unr.edu> 
 
+camlibs/benq:
+	Till Adam <till@adam-lilienthal.de>
+
 camlibs/canon:
 	Philippe Marzouk <philm@users.sourceforge.net>
 
