@@ -59,7 +59,6 @@ typedef enum
 	// ?				= 0x9e20,
 } KCommand;
 
-
 /*
  * The following are the preferences that can be set. The
  * sixteen bits that identify the preference are as follows.
@@ -176,7 +175,6 @@ typedef enum
 	K_PREFERENCE_BEEP
 } KPreference;
 
-
 typedef enum
 {
 	K_POWER_LEVEL_LOW, 
@@ -184,13 +182,11 @@ typedef enum
 	K_POWER_LEVEL_HIGH
 } KPowerLevel;
 
-
 typedef enum
 {
 	K_POWER_SOURCE_BATTERY,
 	K_POWER_SOURCE_AC
 } KPowerSource;
-
 
 typedef enum
 {
@@ -199,13 +195,11 @@ typedef enum
 	K_IMAGE_EXIF
 } KImageType;
 
-
 typedef enum
 {
 	K_DISPLAY_BUILT_IN,
 	K_DISPLAY_TV
 } KDisplay;
-
 
 typedef enum
 {
@@ -260,27 +254,31 @@ typedef enum
 int k_get_io_capability (gp_port *, KBitRate *bit_rates, KBitFlag *bit_flags);
 int k_set_io_capability (gp_port *, KBitRate  bit_rate,  KBitFlag  bit_flags);
 
-int k_erase_all (gp_port *device, guint *number_of_images_not_erased);
+int k_erase_all (gp_port *device, unsigned int *number_of_images_not_erased);
 
 int k_format_memory_card (gp_port *device);
 
 int k_take_picture (
 	gp_port *device,
 	gboolean image_id_long,
-	gulong *image_id, 
-	guint *exif_size,
-	guchar **information_buffer, 
-	guint *information_buffer_size,
+	unsigned long *image_id, 
+	unsigned int *exif_size,
+	unsigned char **information_buffer, 
+	unsigned int *information_buffer_size,
 	gboolean *protected);
 
 
-int k_get_preview (gp_port *device, gboolean thumbnail, guchar **image_buffer, guint *image_buffer_size);
+int k_get_preview (gp_port *device, gboolean thumbnail,
+		   unsigned char **image_buffer,
+		   unsigned int *image_buffer_size);
 
 
-int k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image_id, gboolean protected);
+int k_set_protect_status (gp_port *device, gboolean image_id_long,
+			  unsigned long image_id, gboolean protected);
 
 
-int k_erase_image (gp_port *device, gboolean image_id_long, gulong image_id);
+int k_erase_image (gp_port *device, gboolean image_id_long,
+		   unsigned long image_id);
 
 
 int k_reset_preferences (gp_port *device);
@@ -324,50 +322,43 @@ int k_get_status (gp_port *device, KStatus *status);
 
 int k_get_information (
 	gp_port *device,
-	gchar **model,
-	gchar **serial_number,
-	guchar *hardware_version_major,
-	guchar *hardware_version_minor,
-	guchar *software_version_major, 
-	guchar *software_version_minor,
-	guchar *testing_software_version_major,
-	guchar *testing_software_version_minor,
-	gchar **name,
-	gchar **manufacturer);
-
+	char **model,
+	char **serial_number,
+	unsigned char *hardware_version_major,
+	unsigned char *hardware_version_minor,
+	unsigned char *software_version_major, 
+	unsigned char *software_version_minor,
+	unsigned char *testing_software_version_major,
+	unsigned char *testing_software_version_minor,
+	char **name,
+	char **manufacturer);
 
 int k_get_image_information (
 	gp_port *device,
 	gboolean image_id_long,
-	gulong image_number,
-	gulong *image_id, 
-	guint *exif_size, 
+	unsigned long image_number,
+	unsigned long *image_id, 
+	unsigned int *exif_size, 
 	gboolean *protected, 
-	guchar **information_buffer,
-	guint *information_buffer_size);
-
+	unsigned char **information_buffer,
+	unsigned int *information_buffer_size);
 
 int k_get_image (
 	gp_port *device,
 	gboolean image_id_long,
-	gulong image_id, 
+	unsigned long image_id, 
 	KImageType image_type, 
-	guchar **image_buffer, 
-	guint *image_buffer_size);
+	unsigned char **image_buffer, 
+	unsigned int *image_buffer_size);
 
-
-int k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image_id, gboolean protected);
-
-
+/* Localization */
 int k_localization_tv_output_format_set (gp_port *device,
 					 KTVOutputFormat tv_output_format);
-
-
-int k_localization_date_format_set (gp_port *device, KDateFormat date_format);
-
-
-int k_localization_data_put (gp_port *device, guchar *data, gulong data_size);
-
+int k_localization_date_format_set      (gp_port *device,
+					 KDateFormat date_format);
+int k_localization_data_put             (gp_port *device,
+					 unsigned char *data,
+					 unsigned long data_size);
 
 int k_cancel (gp_port *device, KCommand *command);
 

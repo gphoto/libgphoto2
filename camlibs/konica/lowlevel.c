@@ -1,12 +1,25 @@
-/******************************************************************************/
-/* See lowlevel.h for licence and details.			              */
-/******************************************************************************/
+/* lowlevel.c
+ *
+ * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 
-
-/*************************/
-/* Included header files */
-/*************************/
-#include <gphoto2.h>
+#include <gphoto2-result.h>
+#include <gphoto2-debug.h>
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,73 +27,60 @@
 #include "library.h"
 #include "lowlevel.h"
 
-
-/***************/
-/* Definitions */
-/***************/
 #define DEFAULT_TIMEOUT	500
-#define STX	0x02	/****************/
-#define ETX	0x03	/*		*/
-#define ENQ	0x05	/*		*/
-#define ACK	0x06	/*		*/  
-#define XOFF	0x11	/* ESC quotes.	*/     
-#define XON	0x13	/*		*/ 
-#define NACK	0x15	/*		*/     
-#define ETB	0x17	/*		*/
-#define ESC	0x1b	/****************/
-#define EOT	0x04       
 
+/* ESC quotes */
+#define STX	0x02
+#define ETX	0x03
+#define ENQ	0x05
+#define ACK	0x06
+#define XOFF	0x11
+#define XON	0x13
+#define NACK	0x15
+#define ETB	0x17
+#define ESC	0x1b
 
-/**************/
-/* Prototypes */
-/**************/
-gint l_esc_read (gp_port* device, guchar* c);
+/* Not an ESC quote */
+#define EOT	0x04
 
+#define CHECK(r)      {int ret = (r); if (ret < 0) return (ret);}
+#define CHECK_NULL(r) {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 
-gint l_send (gp_port* device, guchar* send_buffer, guint send_buffer_size);
-
-
-gint l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout);
-
-
-/*************/
-/* Functions */
-/*************/
-gint 
+int 
 l_init (gp_port* device)
 {
 	guchar 	c;
 	gint 	i;
 	gint	result;
 
-	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (device);
 
-	gp_port_timeout_set (device, DEFAULT_TIMEOUT);
+	CHECK (gp_port_timeout_set (device, DEFAULT_TIMEOUT));
 	for (i = 0; ; i++) {
-		/****************/
+
 		/* Write ENQ. 	*/
-		/****************/
-		if ((result = gp_port_write (device, "\5", 1)) != GP_OK) return (result);
+		CHECK (gp_port_write (device, "\5", 1));
 		if ((result = gp_port_read (device, &c, 1)) < 1) {
-			/******************************************************/
-			/* We didn't receive anything. We'll try up to five   */
-			/* time.                                              */
-			/******************************************************/
+
+			/*
+			 * We didn't receive anything. We'll try up to four
+			 * times.
+			 */
 			if (i == 4)
 				return (result);
 			continue;
 		}
 		switch (c) {
 		case ACK:
-			/******************************************************/
-			/* ACK received. We can proceed.                      */
-			/******************************************************/
+
+			/* ACK received. We can proceed. */
 			return (GP_OK);
+
 		default:
-			/******************************************************/
-			/* The camera seems to be sending something. We'll    */
-			/* dump all bytes we get and try again.               */
-			/******************************************************/
+			/*
+			 * The camera seems to be sending something. We'll
+			 * dump all bytes we get and try again.
+			 */
 			while (gp_port_read (device, &c, 1) > 0);
 			i--;
 			break;
@@ -88,47 +88,50 @@ l_init (gp_port* device)
 	}
 }
 
-
-gint 
-l_esc_read (gp_port* device, guchar* c)
+static int 
+l_esc_read (gp_port* device, unsigned char *c)
 {
-	gint result;
-	
-	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (device && c);
 
-	if ((result = gp_port_read (device, c, 1)) < 1) return (result);
-	/**********************************************************************/
-	/* STX, ETX, ENQ, ACK, XOFF, XON, NACK, and ETB have to be masked by  */
-	/* ESC. If we receive one of those (except ETX and ETB) without mask, */
-	/* we will not report an error, as it will be recovered automatically */
-	/* later. If we receive ETX or ETB, we reached the end of the packet  */
-	/* and report a transmission error, so that the error can be          */
-	/* recovered.                                                         */
-	/* If the camera sends us ESC (the mask), we will not count this byte */
-	/* and read a second one. This will be reverted and processed. It     */
-	/* then must be one of STX, ETX, ENQ, ACK, XOFF, XON, NACK, ETB, or   */
-	/* ESC. As before, if it is not one of those, we'll not report an     */
-	/* error, as it will be recovered automatically later.                */
-	/**********************************************************************/
-	if ((*c == STX ) || (*c == ETX) || (*c == ENQ ) || (*c == ACK) || (*c == XOFF) || (*c == XON) || (*c == NACK) || (*c == ETB)) {
+	CHECK (gp_port_read (device, c, 1));
+
+	/*
+	 * STX, ETX, ENQ, ACK, XOFF, XON, NACK, and ETB have to be masked by
+	 * ESC. If we receive one of those (except ETX and ETB) without mask,
+	 * we will not report an error, as it will be recovered automatically
+	 * later. If we receive ETX or ETB, we reached the end of the packet
+	 * and report a transmission error, so that the error can be
+	 * recovered.
+	 * If the camera sends us ESC (the mask), we will not count this byte
+	 * and read a second one. This will be reverted and processed. It
+	 * then must be one of STX, ETX, ENQ, ACK, XOFF, XON, NACK, ETB, or
+	 * ESC. As before, if it is not one of those, we'll not report an
+	 * error, as it will be recovered automatically later.
+	 */
+	if ((*c == STX ) || (*c == ETX) || (*c == ENQ ) || (*c == ACK) ||
+	    (*c == XOFF) || (*c == XON) || (*c == NACK) || (*c == ETB)) {
 		gp_debug_printf (GP_DEBUG_HIGH, "konica", "Wrong ESC masking!");
-		if ((*c == ETX) || (*c == ETB)) return (GP_ERROR_CORRUPTED_DATA);
-
+		if ((*c == ETX) || (*c == ETB))
+			return (GP_ERROR_CORRUPTED_DATA);
 	} else if (*c == ESC) {
-		if ((result = gp_port_read (device, c, 1)) < 1) return (result);
+		CHECK (gp_port_read (device, c, 1));
 		*c = (~*c & 0xff);
-		if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) && (*c != ACK ) && (*c != XOFF) && (*c != XON) && (*c != NACK) && (*c != ETB ) && (*c != ESC))
-			gp_debug_printf (GP_DEBUG_HIGH, "konica", "Wrong ESC masking!");
+		if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) &&
+		    (*c != ACK ) && (*c != XOFF) && (*c != XON) &&
+		    (*c != NACK) && (*c != ETB ) && (*c != ESC))
+			gp_debug_printf (GP_DEBUG_HIGH, "konica",
+					 "Wrong ESC masking!");
 	}
 	return (GP_OK);
 }
 
 
-gint 
-l_send (gp_port* device, guchar* send_buffer, guint send_buffer_size)
+static int
+l_send (gp_port* device, unsigned char *send_buffer,
+	unsigned int send_buffer_size)
 {
-	guchar 	c;
-	guchar 	checksum;
+	unsigned char c;
+	unsigned char checksum;
 	/**********************************************************************/
 	/*  sb: A pointer to the buffer that we will send.                    */
 	/* sbs: Its size.		                                      */
@@ -142,73 +145,70 @@ l_send (gp_port* device, guchar* send_buffer, guint send_buffer_size)
 
 	i = 0;
 	for (;;) {
-		/****************/
-		/* Write ENQ.	*/
-		/****************/
-		if ((result = gp_port_write (device, "\5", 1)) != GP_OK) return (result);
-		/****************/
-		/* Read.	*/
-		/****************/
+
+		/* Write ENQ. */
+		CHECK (gp_port_write (device, "\5", 1));
+
+		/* Read. */
 		if ((result = gp_port_read (device, &c, 1)) < 1) {
-			/************************************/
+
 			/* Let's try for a couple of times. */
-			/************************************/
 			i++;
-			if (i == 5) return (result);
+			if (i == 5)
+				return (result);
 			continue;
 		}
 		switch (c) {
 		case ACK:
-			/****************************************/
-			/* ACK received. We can proceed.	*/
-			/****************************************/
+
+			/* ACK received. We can proceed. */
 			break;
+
 		case NACK:
-			/****************************************/
-			/* NACK received. We'll start from the  */
-			/* beginning.				*/
-			/****************************************/
+
+			/* NACK received. We'll start from the beginning. */
 			continue;
+
 		case ENQ:
-			/******************************************************/
-			/* ENQ received. It seems that the camera would like  */
-			/* to send us data, but we do not want it and         */
-			/* therefore simply reject it. The camera will try    */
-			/* two more times with ENQ to get us to receive data  */
-			/* before finally giving up and sending us ACK.       */
-			/******************************************************/
-			/****************/
+
+			/*
+			 * ENQ received. It seems that the camera would like 
+			 * to send us data, but we do not want it and
+			 * therefore simply reject it. The camera will try
+			 * two more times with ENQ to get us to receive data 
+			 * before finally giving up and sending us ACK.
+			 */
+
 			/* Write NACK.	*/
-			/****************/
 			c = NACK;
-			if ((result = gp_port_write (device, &c, 1)) != GP_OK) return (result);
+			CHECK (gp_port_write (device, &c, 1));
 			for (;;) {
-				if ((result = gp_port_read (device, &c, 1)) < 1) return (result);
+				CHECK (gp_port_read (device, &c, 1));
 				switch (c) {
-				case ENQ: 
-					/**************************************/
-					/* The camera has not yet given up.   */
-					/**************************************/
+				case ENQ:
+
+					/* The camera has not yet given up. */
 					continue;
+
 				case ACK:
-					/**************************************/
-					/* ACK received. We can proceed.      */
-					/**************************************/
+
+					/* ACK received. We can proceed. */
 					break;
+
 				default:
-					/**************************************/
-					/* This should not happen.            */
-					/**************************************/
+
+					/* This should not happen. */
 					return (GP_ERROR_CORRUPTED_DATA);
+
 				}
 				break;
 			}
 			break;
 		default:
-			/******************************************************/
-			/* The camera seems to send us data. We'll            */
-			/* simply dump it and try again.                      */
-			/******************************************************/
+			/*
+			 * The camera seems to send us data. We'll
+			 * simply dump it and try again.
+			 */
 			continue;
 		}
 		break;
@@ -306,7 +306,7 @@ l_send (gp_port* device, guchar* send_buffer, guint send_buffer_size)
 }
 
 
-gint 
+static int 
 l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 {
 	guchar 		c, d;

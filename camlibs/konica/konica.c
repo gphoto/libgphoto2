@@ -110,7 +110,7 @@ k_init (gp_port* device)
 }
 
 int
-k_erase_image (gp_port* device, gboolean image_id_long, gulong image_id)
+k_erase_image (gp_port* device, gboolean image_id_long, unsigned long image_id)
 {
         /************************************************/
         /* Command to erase one image.                  */
@@ -134,10 +134,10 @@ k_erase_image (gp_port* device, gboolean image_id_long, gulong image_id)
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar sb[] = {0x00, 0x80, 0x00, 0x00, 0x02,
+        unsigned char sb[] = {0x00, 0x80, 0x00, 0x00, 0x02,
                        0x00, 0x00, 0x00, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
         if (!image_id_long) {
                 sb[6] = image_id;
@@ -153,7 +153,7 @@ k_erase_image (gp_port* device, gboolean image_id_long, gulong image_id)
 					      0, NULL, NULL), rb);
         }
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -179,14 +179,14 @@ k_format_memory_card (gp_port* device)
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar  sb[] = {0x10, 0x80, 0x00, 0x00, 0x02, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x10, 0x80, 0x00, 0x00, 0x02, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	CHECK_RESULT (l_send_receive (device, sb, 6, &rb, &rbs,
 				      0, NULL, NULL), rb);
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -215,9 +215,9 @@ gint k_erase_all (gp_port* device, guint* number_of_images_not_erased)
         /* 0xXX: Byte 0 of number of images not erased  */
         /* 0xXX: Byte 1 of number of images not erased  */
         /************************************************/
-        guchar  sb[] = {0x20, 0x80, 0x00, 0x00, 0x02, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x20, 0x80, 0x00, 0x00, 0x02, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	CHECK_NULL (number_of_images_not_erased);
 
@@ -225,14 +225,14 @@ gint k_erase_all (gp_port* device, guint* number_of_images_not_erased)
 				      0, NULL, NULL), rb);
 
 	*number_of_images_not_erased = (rb[5] << 8) | rb[4];
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
 
 int
 k_set_protect_status (gp_port *device, gboolean image_id_long,
-		      gulong image_id, gboolean protected)
+		      unsigned long image_id, gboolean protected)
 {
         /************************************************/
         /* Command to set the protect status of one     */
@@ -261,10 +261,10 @@ k_set_protect_status (gp_port *device, gboolean image_id_long,
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar  sb[] = {0x30, 0x80, 0x00, 0x00, 0x02, 0x00,
+        unsigned char sb[] = {0x30, 0x80, 0x00, 0x00, 0x02, 0x00,
                        0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
         if (!image_id_long) {
                 if (protected) sb[8] = 0x01;
@@ -282,7 +282,7 @@ k_set_protect_status (gp_port *device, gboolean image_id_long,
 					      0, NULL, NULL), rb);
         }
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -291,9 +291,9 @@ int
 k_get_image (
         gp_port*        device,
         gboolean        image_id_long,
-        gulong          image_id,
+        unsigned long          image_id,
 	KImageType image_type,
-        guchar**        image_buffer,
+        unsigned char**        image_buffer,
         guint*          image_buffer_size)
 {
         /************************************************/
@@ -327,9 +327,9 @@ k_get_image (
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar sb[] = {0x00, 0x88, 0x00, 0x00, 0x02, 0x00, 0x00,
+        unsigned char sb[] = {0x00, 0x88, 0x00, 0x00, 0x02, 0x00, 0x00,
 		       0x00, 0x00, 0x00};
-        guchar *rb = NULL;
+        unsigned char *rb = NULL;
         guint rbs;
 
 	CHECK_NULL (image_buffer && image_buffer_size);
@@ -359,7 +359,7 @@ k_get_image (
 					image_buffer, image_buffer_size), rb);
         }
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -368,11 +368,11 @@ int
 k_get_image_information (
         gp_port*        device,
         gboolean        image_id_long,
-        gulong          image_number,
-        gulong*         image_id,
+        unsigned long          image_number,
+        unsigned long*         image_id,
         guint*          exif_size,
         gboolean*       protected,
-        guchar**        information_buffer,
+        unsigned char**        information_buffer,
         guint*          information_buffer_size)
 {
         /************************************************/
@@ -412,10 +412,10 @@ k_get_image_information (
         /*              0x01: protected                 */
         /* 0x00: Byte 1 of protect status               */
         /************************************************/
-        guchar  sb[] = {0x20, 0x88, 0x00, 0x00, 0x02, 0x00,
+        unsigned char sb[] = {0x20, 0x88, 0x00, 0x00, 0x02, 0x00,
 			0x00, 0x00, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	CHECK_NULL (image_id && exif_size && protected && information_buffer &&
 		    information_buffer_size);
@@ -425,7 +425,7 @@ k_get_image_information (
                 sb[7] = image_number >> 8;
 		CHECK_RESULT (l_send_receive (device, sb, 8, &rb, &rbs, 1000,
 			information_buffer, information_buffer_size), rb);
-		*image_id = (gulong) ((rb[5] << 8) | rb[4]);
+		*image_id = (unsigned long) ((rb[5] << 8) | rb[4]);
 		*exif_size = (rb[7] << 8) | rb[6];
 		*protected = (rb[8] != 0x00);
         } else {
@@ -441,13 +441,13 @@ k_get_image_information (
 		*protected = (rb[10] != 0x00);
         }
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
 int
 k_get_preview (gp_port* device, gboolean thumbnail,
-	       guchar** image_buffer, guint* image_buffer_size)
+	       unsigned char** image_buffer, guint* image_buffer_size)
 {
         /************************************************/
         /* Command to get the preview from the camera.  */
@@ -470,9 +470,9 @@ k_get_preview (gp_port* device, gboolean thumbnail,
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar  sb[] = {0x40, 0x88, 0x00, 0x00, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x40, 0x88, 0x00, 0x00, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	CHECK_NULL (image_buffer && image_buffer_size);
 
@@ -481,7 +481,7 @@ k_get_preview (gp_port* device, gboolean thumbnail,
         CHECK_RESULT (l_send_receive (device, sb, 6, &rb, &rbs, 5000,
 				      image_buffer, image_buffer_size), rb);
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -509,9 +509,9 @@ k_get_io_capability (gp_port *device,
         /* 0xXX: Byte 0 of supported flags              */
         /* 0xXX: Byte 1 of supported flags              */
         /************************************************/
-        guchar  sb[] = {0x00, 0x90, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x00, 0x90, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	CHECK_NULL (bit_rates && bit_flags);
 
@@ -521,7 +521,7 @@ k_get_io_capability (gp_port *device,
 	*bit_rates = (rb[5] << 8) | rb[4];
 	*bit_flags = (rb[6] << 8) | rb[5];
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -530,12 +530,12 @@ k_get_information (
         gp_port*        device,
         gchar**         model,
         gchar**         serial_number,
-        guchar*         hardware_version_major,
-        guchar*         hardware_version_minor,
-        guchar*         software_version_major,
-        guchar*         software_version_minor,
-        guchar*         testing_software_version_major,
-        guchar*         testing_software_version_minor,
+        unsigned char*         hardware_version_major,
+        unsigned char*         hardware_version_minor,
+        unsigned char*         software_version_major,
+        unsigned char*         software_version_minor,
+        unsigned char*         testing_software_version_major,
+        unsigned char*         testing_software_version_minor,
         gchar**         name,
         gchar**         manufacturer)
 {
@@ -635,10 +635,10 @@ k_get_information (
         /* 0xXX: Byte 28 of manufacturer                */
         /* 0xXX: Byte 29 of manufacturer                */
         /************************************************/
-        guchar  sb[] = {0x10, 0x90, 0x00, 0x00};
+        unsigned char sb[] = {0x10, 0x90, 0x00, 0x00};
         guint   i, j;
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	CHECK_NULL (model && serial_number && hardware_version_major &&
 		    hardware_version_minor && software_version_major &&
@@ -677,7 +677,7 @@ k_get_information (
 	*manufacturer = g_new0 (gchar, i + 1);
 	for (j = 0; j < i; j++) (*manufacturer)[j] = rb[50 + j];
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -744,9 +744,9 @@ k_get_status (gp_port* device, KStatus *status)
         /* 0xXX: Byte 0 of total strobes                */
         /* 0xXX: Byte 1 of total strobes                */
         /************************************************/
-        guchar  sb[] = {0x20, 0x90, 0x00, 0x00, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x20, 0x90, 0x00, 0x00, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	CHECK_NULL (status);
 
@@ -826,7 +826,7 @@ k_get_status (gp_port* device, KStatus *status)
 	status->total_pictures = (rb[31] << 8) | rb[30];
 	status->total_strobes  = (rb[33] << 8) | rb[32];
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -855,9 +855,9 @@ k_get_date_and_time (gp_port *device, KDate *date)
         /* 0xXX: Minute                                 */
         /* 0xXX: Second                                 */
         /************************************************/
-        guchar  sb[] = {0x30, 0x90, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x30, 0x90, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
         CHECK_RESULT (l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL),
 		      rb);
@@ -868,7 +868,7 @@ k_get_date_and_time (gp_port *device, KDate *date)
 	date->minute = rb[8];
 	date->second = rb[9];
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 };
 
@@ -899,9 +899,9 @@ k_get_preferences (gp_port *device, KPreferences *preferences)
         /* 0xXX: Byte 0 of slide show interval          */
         /* 0xXX: Byte 1 of slide show interval          */
         /************************************************/
-        guchar  sb[] = {0x40, 0x90, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x40, 0x90, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
         CHECK_RESULT (l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL),
 		      rb);
@@ -910,7 +910,7 @@ k_get_preferences (gp_port *device, KPreferences *preferences)
 	preferences->beep                   = rb[6];
 	preferences->slide_show_interval    = rb[7];
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -936,9 +936,9 @@ k_set_io_capability (gp_port *device, KBitRate bit_rate, KBitFlag bit_flags)
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar  sb[] = {0x80, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x80, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	sb[4] = bit_rate;
 	sb[5] = bit_rate >> 8;
@@ -947,7 +947,7 @@ k_set_io_capability (gp_port *device, KBitRate bit_rate, KBitFlag bit_flags)
 	CHECK_RESULT (l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL),
 		      rb);
 
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -975,10 +975,10 @@ k_set_date_and_time (gp_port *device, KDate date)
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar  sb[] = {0xb0, 0x90, 0x00, 0x00, 0x00,
+        unsigned char sb[] = {0xb0, 0x90, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
         sb[4] = date.year;
         sb[5] = date.month;
@@ -988,7 +988,7 @@ k_set_date_and_time (gp_port *device, KDate date)
         sb[9] = date.second;
 	CHECK_RESULT (l_send_receive (device, sb, 10, &rb, &rbs, 0, NULL, NULL),
 		      rb);
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -1012,9 +1012,9 @@ k_set_preference (gp_port *device, KPreference preference, unsigned int value)
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar  sb[] = {0xc0, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0xc0, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
         switch (preference) {
 	case K_PREFERENCE_RESOLUTION:
@@ -1053,7 +1053,7 @@ k_set_preference (gp_port *device, KPreference preference, unsigned int value)
 	sb[7] = value >> 8;
 	CHECK_RESULT (l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL),
 		      rb);
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -1075,13 +1075,13 @@ k_reset_preferences (gp_port *device)
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar  sb[] = {0xc1, 0x90, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0xc1, 0x90, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	CHECK_RESULT (l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL),
 		      rb);
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -1090,9 +1090,9 @@ int
 k_take_picture (
         gp_port*        device,
         gboolean        image_id_long,
-        gulong*         image_id,
+        unsigned long*         image_id,
         guint*          exif_size,
-        guchar**        information_buffer,
+        unsigned char**        information_buffer,
         guint*          information_buffer_size,
         gboolean*       protected)
 {
@@ -1126,9 +1126,9 @@ k_take_picture (
         /*              0x01: protected                 */
         /* 0x00: Byte 1 of protect status               */
         /************************************************/
-        guchar  sb[] = {0x00, 0x91, 0x00, 0x00, 0x02, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x00, 0x91, 0x00, 0x00, 0x02, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	CHECK_NULL (image_id && exif_size && protected && information_buffer &&
 		    information_buffer_size);
@@ -1146,7 +1146,7 @@ k_take_picture (
 		*exif_size = (rb[9] << 8) | rb[8];
 		*protected = (rb[10] != 0x00);
 	}
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -1181,9 +1181,9 @@ k_localization_tv_output_format_set (gp_port *device,
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar  sb[] = {0x00, 0x92, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x00, 0x92, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
         switch (tv_output_format) {
         case K_TV_OUTPUT_FORMAT_NTSC:
@@ -1200,7 +1200,7 @@ k_localization_tv_output_format_set (gp_port *device,
         }
         CHECK_RESULT (l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL),
 		      rb);
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
@@ -1234,9 +1234,9 @@ k_localization_date_format_set (gp_port* device, KDateFormat date_format)
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar  sb[] = {0x00, 0x92, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x00, 0x92, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
         switch (date_format) {
         case K_DATE_FORMAT_MONTH_DAY_YEAR:
@@ -1253,12 +1253,13 @@ k_localization_date_format_set (gp_port* device, KDateFormat date_format)
         }
         CHECK_RESULT (l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL),
 		      rb);
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }
 
 int
-k_localization_data_put (gp_port* device, guchar* data, gulong data_size)
+k_localization_data_put (gp_port* device,
+			 unsigned char *data, unsigned long data_size)
 {
         /************************************************/
         /* Command for various localization issues.     */
@@ -1298,12 +1299,12 @@ k_localization_data_put (gp_port* device, guchar* data, gulong data_size)
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        gint            result;
-        guchar*         rb = NULL;
-        guint           rbs;
-        gulong          i, j;
-        static guint    packet_size = 1024;
-        guchar          sb[16 + packet_size];
+        int result;
+        unsigned char *rb = NULL;
+        unsigned int rbs;
+        unsigned long i, j;
+        static unsigned int packet_size = 1024;
+        unsigned char sb[16 + packet_size];
 
 	CHECK_NULL (data);
 	if (data_size < 512)
@@ -1371,7 +1372,7 @@ k_localization_data_put (gp_port* device, guchar* data, gulong data_size)
 			}
 		}
 		CHECK_RESULT (result, rb);
-                g_free (rb);
+                free (rb);
                 i += packet_size;
         }
 }
@@ -1396,15 +1397,15 @@ k_cancel (gp_port* device, KCommand* command)
         /* 0xXX: Byte 0 of cancelled command            */
         /* 0xXX: Byte 1 of cancelled command            */
         /************************************************/
-        guchar  sb[] = {0x00, 0x9e, 0x00, 0x00};
-        guchar* rb = NULL;
-        guint   rbs;
+        unsigned char sb[] = {0x00, 0x9e, 0x00, 0x00};
+        unsigned char *rb = NULL;
+        unsigned int rbs;
 
 	CHECK_NULL (command);
 
 	CHECK_RESULT (l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL),
 		      rb);
 	*command = (rb[5] << 8) | rb[4];
-        g_free (rb);
+        free (rb);
         return (GP_OK);
 }

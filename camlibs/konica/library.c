@@ -46,7 +46,8 @@
 #include "library.h"
 #include "konica.h"
 
-#define CHECK(r) {gint ret = (r); if (ret < 0) return (ret);}
+#define CHECK(r)      {int ret = (r); if (ret < 0) return (ret);}
+#define CHECK_NULL(r) {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 
 static gchar* konica_results[] = {
 /* FOCUSING_ERROR               */ N_("Focusing error"),
@@ -108,12 +109,11 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data)
 {
         KStatus status;
-        guint           i;
-        guchar*         information_buffer = NULL;
-        guint           information_buffer_size;
-        guint           exif_size;
-        gboolean        protected;
-        gulong          image_id;
+        unsigned int i;
+        unsigned char *information_buffer = NULL;
+        unsigned int exif_size, information_buffer_size;
+        gboolean protected;
+        unsigned long image_id;
         char filename[1024];
         int result;
         Camera *camera = data;
@@ -192,16 +192,16 @@ camera_abilities (CameraAbilitiesList* list)
         return (GP_OK);
 }
 
-static gint
+static int
 init_serial_connection (Camera *camera)
 {
-        gint i;
+        int i;
 	KBitRate bit_rates;
 	KBitFlag bit_flags;
-        guint test_bit_rate [10] = {9600, 115200, 57600, 38400, 19200, 4800,
-                                    2400, 1200, 600, 300};
+        unsigned int test_bit_rate [10] = {9600, 115200, 57600, 38400, 19200,
+					   4800, 2400, 1200, 600, 300};
         gp_port_settings settings;
-        guint speed;
+        unsigned int speed;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: "
                          "init_serial_connection ***");
@@ -402,10 +402,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 {
         Camera *camera = data;
         KonicaData *kd = camera->camlib_data;
-        gulong image_id;
-        guint information_buffer_size;
-        guint exif_size;
-        guchar *information_buffer = NULL;
+        unsigned long image_id;
+        unsigned int information_buffer_size, exif_size;
+        unsigned char *information_buffer = NULL;
         gboolean protected;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: get_info_func "
@@ -479,8 +478,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
         if (strlen (filename) != 11)
                 return (GP_ERROR_FILE_NOT_FOUND);
-        if (!strcmp (filename, "??????.jpeg"))
-                return (GP_ERROR_FILE_NOT_FOUND);
         if (strcmp (folder, "/"))
                 return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
@@ -493,12 +490,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
                 CHECK (k_get_image (camera->port, kd->image_id_long, image_id,
-                                    K_THUMBNAIL, (guchar **) &fdata,
+                                    K_THUMBNAIL, (unsigned char **) &fdata,
                                     (guint *) &size));
                 break;
         case GP_FILE_TYPE_NORMAL:
                 CHECK (k_get_image (camera->port, kd->image_id_long, image_id,
-                                    K_IMAGE_EXIF, (guchar **) &fdata,
+                                    K_IMAGE_EXIF, (unsigned char **) &fdata,
                                     (guint *) &size));
                 break;
         default:
@@ -514,24 +511,20 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 static int
 camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 {
-        gchar*          tmp;
-        gulong          image_id;
+        char tmp[] = {0, 0, 0, 0, 0, 0, 0};
+        unsigned long image_id;
         KonicaData*     kd;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_delete ***");
-        g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (filename, GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (camera && folder && filename);
 
+	/* We don't support folders */
         if (strcmp (folder, "/")) return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
         kd = (KonicaData *) camera->camlib_data;
 
-        /* Check if we can get the image id from the filename. */
-        g_return_val_if_fail (filename[0] != '?', GP_ERROR);
-        tmp = g_strndup (filename, 6);
+	/* Extract the image id from the filename */
+	strncpy (tmp, filename, 6);
         image_id = atol (tmp);
-        g_free (tmp);
 
         CHECK (k_erase_image (camera->port, kd->image_id_long, image_id));
         CHECK (gp_filesystem_delete (camera->fs, folder, filename));
@@ -543,17 +536,17 @@ camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 static int
 camera_summary (Camera* camera, CameraText* summary)
 {
-        gchar*          model = NULL;
-        gchar*          serial_number = NULL;
-        guchar          hardware_version_major;
-        guchar          hardware_version_minor;
-        guchar          software_version_major;
-        guchar          software_version_minor;
-        guchar          testing_software_version_major;
-        guchar          testing_software_version_minor;
-        gchar*          name = NULL;
-        gchar*          manufacturer = NULL;
-        KonicaData*     kd;
+        char *model = NULL;
+        char *serial_number = NULL;
+        unsigned char  hardware_version_major;
+        unsigned char  hardware_version_minor;
+        unsigned char  software_version_major;
+        unsigned char  software_version_minor;
+        unsigned char  testing_software_version_major;
+        unsigned char  testing_software_version_minor;
+        char *name = NULL;
+        char *manufacturer = NULL;
+        KonicaData *kd;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: camera_summary "
                          "***");
@@ -594,20 +587,21 @@ camera_capture_preview (Camera* camera, CameraFile* file)
 }
 
 static int
-camera_capture (Camera* camera, gint type, CameraFilePath* path)
+camera_capture (Camera* camera, int type, CameraFilePath* path)
 {
-        KonicaData*     kd;
-        gulong          image_id;
-        gint            exif_size;
-        guchar*         information_buffer = NULL;
-        guint           information_buffer_size;
-        gboolean        protected;
-        gchar*          tmp;
+        KonicaData *kd;
+        unsigned long image_id;
+	int exif_size;
+	unsigned char *information_buffer = NULL;
+	unsigned int information_buffer_size;
+	gboolean protected;
+	char *tmp;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_capture ***");
-        g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (type == GP_OPERATION_CAPTURE_IMAGE, GP_ERROR_NOT_SUPPORTED);
-        g_return_val_if_fail (path,     GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (camera && path);
+
+	/* We only support capturing of images */
+	if (type != GP_OPERATION_CAPTURE_IMAGE)
+		return (GP_ERROR_NOT_SUPPORTED);
 
         kd = (KonicaData *) camera->camlib_data;
 
@@ -617,7 +611,7 @@ camera_capture (Camera* camera, gint type, CameraFilePath* path)
                 &protected));
 
         g_free (information_buffer);
-        tmp = g_strdup_printf ("%06i.jpeg", (gint) image_id);
+        tmp = g_strdup_printf ("%06i.jpeg", (int) image_id);
         strcpy (path->name, tmp);
         g_free (tmp);
         strcpy (path->folder, "/");
@@ -644,8 +638,7 @@ camera_manual (Camera* camera, CameraText* manual)
 static int
 camera_about (Camera* camera, CameraText* about)
 {
-        g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (about,    GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (camera && about);
 
         strcpy (about->text,
                 _("Konica library\n"
@@ -835,7 +828,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
         gp_widget_append (section, widget);
         gp_widget_add_choice (widget, _("Fixed"));
         gp_widget_add_choice (widget, _("Auto"));
-        switch ((guint) (status.focus / 2)) {
+        switch ((unsigned int) (status.focus / 2)) {
         case 1:
                 gp_widget_set_value (widget, _("Auto"));
                 break;
@@ -879,16 +872,15 @@ camera_set_config (Camera *camera, CameraWidget *window)
         KDate date;
         KDateFormat date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
         KTVOutputFormat tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
-        guint           beep = 0;
-        gint            j = 0;
-        unsigned char  *data;
-        long int        data_size;
-        guchar          focus_self_timer = 0;
-        gint            i;
-        gfloat          f;
-        gchar*          c;
-        struct tm*      tm_struct;
-        int             result;
+        unsigned int beep = 0;
+	int i, j = 0;
+        unsigned char *data;
+        long int data_size;
+        unsigned char focus_self_timer = 0;
+	float f;
+        char *c;
+        struct tm *tm_struct;
+        int result;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: "
                          "camera_set_config ***");
@@ -930,7 +922,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &f);
                 CHECK (k_set_preference (camera->port,
-                        K_PREFERENCE_SELF_TIMER_TIME, (gint) f));
+                        K_PREFERENCE_SELF_TIMER_TIME, (int) f));
         }
 
         /* Auto Off Time */
@@ -947,7 +939,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &f);
                 CHECK (k_set_preference (camera->port,
-                                K_PREFERENCE_SLIDE_SHOW_INTERVAL, (gint) f));
+                                K_PREFERENCE_SLIDE_SHOW_INTERVAL, (int) f));
         }
 
         /* Resolution */
@@ -1057,7 +1049,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &f);
                 CHECK (k_set_preference (camera->port,
-                                        K_PREFERENCE_EXPOSURE, (gint) f));
+                                        K_PREFERENCE_EXPOSURE, (int) f));
         }
 
         /* Focus will be set together with self timer. */
@@ -1089,18 +1081,21 @@ camera_set_config (Camera *camera, CameraWidget *window)
         return (GP_OK);
 }
 
-static gchar *
-camera_result_as_string (Camera* camera, gint result)
+static char *
+camera_result_as_string (Camera* camera, int result)
 {
         /* Really an error? */
-        g_return_val_if_fail (result < 0, _("Unknown error"));
+	if (result < 0)
+		return (_("Unknown error"));
 
         /* libgphoto2 error? */
-        if (-result < 1000) return (gp_result_as_string (result));
+        if (-result < 1000)
+		return (gp_result_as_string (result));
 
         /* Our error? */
         if ((0 - result - 1000) <
-                (guint) (sizeof (konica_results) / sizeof (*konica_results)))
+                (unsigned int) (sizeof (konica_results) /
+				sizeof (*konica_results)))
                 return _(konica_results [0 - result - 1000]);
 
         return _("Unknown error");
@@ -1112,13 +1107,13 @@ localization_file_read (Camera *camera, const char *file_name,
                         unsigned char **data, long int *data_size)
 {
         FILE *file;
-        gulong j;
-        gchar f;
-        guchar c[] = "\0\0";
-        gulong line_number;
-        guchar checksum;
-        gulong fcs;
-        guint d;
+        unsigned long j;
+        char f;
+        unsigned char c[] = "\0\0";
+        unsigned long line_number;
+        unsigned char checksum;
+        unsigned long fcs;
+        unsigned int d;
         char path[1024];
 
         strcpy (path, LOCALIZATION);
@@ -1215,20 +1210,21 @@ localization_file_read (Camera *camera, const char *file_name,
         /* FIXME: There's a frame check sequence at (*data)[108]
            and (*data)[109]. I could not figure out how it is
            calculated. */
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "-> %i bytes read.\n", (gint) *data_size);
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "-> %i bytes read.\n",
+			 (int) *data_size);
         return (TRUE);
 }
 
 int
 camera_init (Camera* camera)
 {
-        gint i;
+        int i;
         gboolean image_id_long;
         int inep, outep;
         KonicaData *kd;
         gp_port_settings settings;
 
-        g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (camera);
 
         /* First, set up all the function pointers. */
         camera->functions->exit                 = camera_exit;
