@@ -21,7 +21,7 @@
  */
 #include <stdio.h>
 #include <sys/types.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include <gphoto2-library.h>
 #include "sierra.h"
