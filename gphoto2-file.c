@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
 #include "gphoto2-file.h"
 
 #include <stdlib.h>
@@ -209,12 +210,12 @@ gp_file_open (CameraFile *file, const char *filename)
          * See also the GP_MIME_* definitions.
          */
         static char *mime_table[] = {
-            "jpg",  "jpeg",
-            "tif",  "tiff",
-            "ppm",  "x-portable-pixmap",
-            "pgm",  "x-portable-graymap",
-            "pbm",  "x-portable-bitmap",
-            "png",  "png",
+            "bmp",  GP_MIME_BMP,
+            "jpg",  GP_MIME_JPEG,
+            "tif",  GP_MIME_TIFF,
+            "ppm",  GP_MIME_PPM,
+            "pgm",  GP_MIME_PGM,
+            "png",  GP_MIME_PNG,
             NULL};
 
 	CHECK_NULL (file && filename);
@@ -251,25 +252,27 @@ gp_file_open (CameraFile *file, const char *filename)
         dot = strrchr (filename, '.');
         if (dot) {
             for (i = 0; mime_table[i] ; i+=2)
-#ifdef OS2
-                if (!stricmp (mime_table[i], dot+1)) {
-#else
+#ifdef HAVE_STRCASECMP
                 if (!strcasecmp (mime_table[i], dot+1)) {
+#else
+                if (!stricmp (mime_table[i], dot+1)) {
 #endif
-                    sprintf (file->mime_type,"image/%s", mime_table[i+1]);
+                    strncpy (file->mime_type, mime_table[i+1], sizeof(file->mime_type));
                     break;
                 }
             if (!mime_table[i])
                 /*
                  * We did not found the type in the lookup table,
                  * so we use the file suffix as mime type.
+                 * Note: This should probably use GP_MIME_UNKNOWN instead
+                 * of returning a non-standard type.
                  */
                 sprintf(file->mime_type, "image/%s", dot + 1);
         } else
             /*
              * Damn, no filename suffix...
              */
-            strncpy (file->mime_type, "image/unknown",
+            strncpy (file->mime_type, GP_MIME_UNKNOWN,
 		     sizeof (file->mime_type));
 
         return (GP_OK);
