@@ -294,15 +294,32 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	dimagev=camera->camlib_data;
 
+	switch ( info->type ) {
+		case GP_CAPTURE_VIDEO:
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to capture video");
+			}
+			return GP_ERROR;
+			break;
+		case GP_CAPTURE_PREVIEW: case GP_CAPTURE_IMAGE:
+			/* Proceed with the code below. Since the Dimage V doesn't support
+			grabbing just the input (to the best of my knowledge), we take the
+			pictureeither way. */
+			break;
+		default:
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unkown capture type %02x", info->type);
+			}
+			return GP_ERROR;
+			break;
+		}
+
 	if ( dimagev_shutter(dimagev) == GP_ERROR ) {
 		if ( dimagev->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to open shutter");
 		}
 		return GP_ERROR;
 	}
-
-	printf("Preparing to check status\n");
-	fflush(stdout);
 
 	/* Now check how many pictures are taken, and return the last one. */
 	if ( dimagev_get_camera_status(dimagev) ) {
@@ -312,35 +329,40 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 		return GP_ERROR;
 	}
 
-	printf("Preparing to retrieve image\n");
-	fflush(stdout);
-
-	if ( dimagev_get_picture(dimagev, ( dimagev->status->number_images ), file ) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to retrieve new image");
+	if ( info->type == GP_CAPTURE_PREVIEW ) {
+		if ( dimagev_get_thumbnail(dimagev, ( dimagev->status->number_images ), file ) == GP_ERROR ) {
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to retrieve thumbnail");
+			}
+			return GP_ERROR;
 		}
-		return GP_ERROR;
+		/* The Dimage V always uses EXIF/JPEG for images, RGB for previews. */
+		snprintf(file->type, 63, "image/ppm");
+		/* Always name the image 0, for predictablity reasons. */
+		snprintf(file->name, 63, DIMAGEV_THUMBNAIL_FMT, 0);
 	}
-
-	/* The Dimage V *always* uses EXIF/JPEG. */
-	snprintf(file->type, 63, "image/jpg");
-	/* Always name the image 0, for predictablity reasons. */
-	snprintf(file->name, 63, DIMAGEV_FILENAME_FMT, 0);
+	else if ( info->type == GP_CAPTURE_IMAGE ) {
+		if ( dimagev_get_picture(dimagev, ( dimagev->status->number_images ), file ) == GP_ERROR ) {
+			if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to retrieve new image");
+			}
+			return GP_ERROR;
+		}
+		/* The Dimage V always uses EXIF/JPEG for images, RGB for previews. */
+		snprintf(file->type, 63, "image/jpg");
+		/* Always name the image 0, for predictablity reasons. */
+		snprintf(file->name, 63, DIMAGEV_FILENAME_FMT, 0);
+	}
 	
 	/* Now delete it. */
 	/* If deletion fails, don't bother returning an error, just print an error */
-
-	printf("Now going to delete picture %d\n", dimagev->status->number_images);
-	fflush(stdout);
-	
-	sleep(1);
 
 	if ( dimagev_delete_picture(dimagev, dimagev->status->number_images ) == GP_ERROR ) {
 		if ( dimagev->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to delete new image");
 		}
 		printf("Unable to delete image. Please delete image %d\n", dimagev->status->number_images);
-/*		return GP_ERROR;*/
+		return GP_ERROR_NONCRITICAL;
 	}
 
 	return GP_OK;
