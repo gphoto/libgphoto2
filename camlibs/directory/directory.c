@@ -35,7 +35,10 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	*count = 1;
 
 	strcpy(abilities[0].model, "Directory Browse");
-	abilities[0].port_type  = GP_PORT_NONE;
+	abilities[0].serial   = 0;
+	abilities[0].parallel = 0;
+	abilities[0].usb      = 0;
+	abilities[0].ieee1394 = 0;
 
 	abilities[0].speed[0] = 0;
 

@@ -57,7 +57,11 @@ typedef struct {
 	char model[128];
 
 		/* can the library support the following: */
-	CameraPortType port_type;
+	int serial;
+	int parallel;
+	int usb;
+	int ieee1394;
+		/* set to 1 if supported, 0 if not.		 */
 
 	int speed[64];
 		/* if serial==1, baud rates that this camera	 */

@@ -69,22 +69,24 @@ OPTION_CALLBACK(get_thumbnail);
 
 Option option[] = {
 
-/* Settings 			*/
-{"" , "port",		"path",		"Specify port device",		port,	0},
-{"" , "speed",		"speed",	"Specify serial transfer speed",speed,	0},
-{"" , "camera",		"model",	"Specify camera model",		model,	0},
+/* Settings needed for formatting output */
 {"d", "debug",		"",		"Turn on debugging",		debug,	0},
-{"f", "filename",	"<filename>",	"Specify a filename",		filename,0},
-{"q", "quiet",		"",		"Quiet output",			quiet,	0},
+{"q", "quiet",		"",		"Quiet output (default=verbose)",quiet,0},
 
-/* Display and die functions 	*/
+/* Display and die actions */
 {"h", "help",		"",		"Displays this help screen",	help,	0},
 {"",  "test",		"",		"Verifies gPhoto installation",	test,	0},
 {"",  "list-cameras",	"",		"List supported camera models",	list_cameras,0},
 {"",  "list-ports",	"",		"List supported port devices",	list_ports,0},
-{"",  "abilities",	"",		"Display camera abilities",	abilities, 0},
 
-/* Actions (Depend on settings) */
+/* Settings needed for camera functions */
+{"" , "port",		"path",		"Specify port device",		port,	0},
+{"" , "speed",		"speed",	"Specify serial transfer speed",speed,	0},
+{"" , "camera",		"model",	"Specify camera model",		model,	0},
+{"f", "filename",	"<filename>",	"Specify a filename",		filename,0},
+
+/* Actions that depend on settings */
+{"",  "abilities",	"",		"Display camera abilities",	abilities, 0},
 {"p", "get-picture",	"#", 		"Get picture # from camera", 	get_picture,   0},
 {"t", "get-thumbnail",	"#", 		"Get thumbnail # from camera",	get_thumbnail, 0},
 
@@ -155,45 +157,29 @@ OPTION_CALLBACK(abilities) {
 
 	printf("Abilities for camera:                 : %s\n", 
 		a.model);
-	switch (a.port_type) {
-		case GP_PORT_SERIAL:
-			strcpy(buf, "serial");
-			break;
-		case GP_PORT_PARALLEL:
-			strcpy(buf, "parallel");
-			break;
-		case GP_PORT_USB:
-			strcpy(buf, "usb");
-			break;
-		case GP_PORT_IEEE1394:
-			strcpy(buf, "ieee1394");
-			break;
-		case GP_PORT_IRDA:
-			strcpy(buf, "irda");
-			break;
-		case GP_PORT_SOCKET:
-			strcpy(buf, "socket");
-			break;
-		default:
-			strcpy(buf, "none");
-			break;
-	}
-	printf("Connection type:                      : %s\n", buf);
+        printf("Serial port support                   : %s\n",
+                a.serial == 0? "no":"yes");
+        printf("Parallel port support                 : %s\n",
+                a.parallel == 0? "no":"yes");
+        printf("USB support                           : %s\n",
+                a.usb == 0? "no":"yes");
+        printf("IEEE1394 support                      : %s\n",
+                a.ieee1394 == 0? "no":"yes");
 
 	if (a.speed[0] != 0) {
 	printf("Transfer speeds supported             :\n");
 		do {	
-	printf("                                        :%i\n", a.speed[x]);
+	printf("                                      : %i\n", a.speed[x]);
 			x++;
 		} while (a.speed[x]!=0);
 	}
 	printf("Capture from computer support         : %s\n", 
 		a.capture == 0? "no":"yes");
-	printf("Configuration  support                : %s\n", 
+	printf("Configuration support                 : %s\n", 
 		a.config == 0? "no":"yes");
 	printf("Delete files on camera support        : %s\n", 
 		a.file_delete == 0? "no":"yes");
-	printf("File preview (thumnail) support       : %s\n", 
+	printf("File preview (thumbnail) support      : %s\n", 
 		a.file_preview == 0? "no":"yes");
 	printf("File upload support                   : %s\n", 
 		a.file_put == 0? "no":"yes");

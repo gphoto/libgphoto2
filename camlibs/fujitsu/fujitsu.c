@@ -21,7 +21,10 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	/* Fill in each camera model's abilities */
 
 	strcpy(abilities[0].model, "Olympus D-220L");
-	abilities[0].port_type = GP_PORT_SERIAL;
+	abilities[0].serial    = 1;
+	abilities[0].parallel  = 0;
+	abilities[0].usb       = 0;
+	abilities[0].ieee1394 = 0;
 	abilities[0].speed[0] = 19200;
 	abilities[0].speed[1] = 38400;
 	abilities[0].speed[2] = 57600;
@@ -34,7 +37,11 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].file_put   = 0;
 
 	strcpy(abilities[1].model, "Olympus D-320L");
-	abilities[1].port_type = GP_PORT_SERIAL;
+	abilities[1].serial   = 1;
+	abilities[1].parallel = 0;
+	abilities[1].usb      = 0;
+	abilities[1].ieee1394 = 0;
+	abilities[1].parallel = 0;
 	abilities[1].speed[0] = 19200;
 	abilities[1].speed[1] = 38400;
 	abilities[1].speed[2] = 57600;
@@ -47,7 +54,10 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[1].file_put   = 0;
 
 	strcpy(abilities[2].model, "Olympus D-620L");
-	abilities[2].port_type = GP_PORT_SERIAL;
+	abilities[2].serial   = 1;
+	abilities[2].parallel = 0;
+	abilities[2].usb      = 0;
+	abilities[2].ieee1394 = 0;
 	abilities[2].speed[0] = 19200;
 	abilities[2].speed[1] = 38400;
 	abilities[2].speed[2] = 57600;

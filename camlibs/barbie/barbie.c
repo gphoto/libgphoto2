@@ -269,7 +269,10 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 
 	/* What models do we support? */
 	strcpy(abilities[0].model, "Barbie Camera");
-	abilities[0].port_type  = GP_PORT_SERIAL;
+	abilities[0].serial   = 1;
+	abilities[0].parallel = 0;
+	abilities[0].usb      = 0;
+	abilities[0].ieee1394 = 0;
 
 	abilities[0].speed[0] = 57600;
 	abilities[0].speed[1] = 0;
