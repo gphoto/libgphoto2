@@ -239,6 +239,10 @@ canon_int_switch_camera_off (Camera *camera)
 static int
 camera_exit (Camera *camera)
 {
+	if (camera->port->type == GP_PORT_USB) {
+		canon_usb_unlock_keys (camera);
+	}
+
 	if (camera->pl) {
 		canon_int_switch_camera_off (camera);
 		free (camera->pl);
@@ -276,9 +280,9 @@ update_disk_cache (Camera *camera)
 		return 0;
 	}
 	snprintf (root, sizeof (root), "%s\\", camera->pl->cached_drive);
-	if (!canon_int_get_disk_name_info (camera, root,
-					   &camera->pl->cached_capacity,
-					   &camera->pl->cached_available)) {
+	if (canon_int_get_disk_name_info (camera, root,
+					  &camera->pl->cached_capacity,
+					  &camera->pl->cached_available) != GP_OK) {
 		gp_camera_status (camera, _("No response"));
 		return 0;
 	}
@@ -1361,7 +1365,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
 		if (!check_readiness (camera)) {
 			gp_camera_status (camera, _("Camera unavailable"));
 		} else {
-			if (canon_int_set_time (camera)) {
+			if (canon_int_set_time (camera) == GP_OK) {
 				gp_camera_status (camera, _("time set"));
 			} else {
 				gp_camera_status (camera, _("could not set time"));
