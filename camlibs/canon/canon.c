@@ -98,7 +98,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot Pro70",	CANON_PS_A70,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, "Canon PowerShot Pro70"},
 	{"Canon:PowerShot S10",		CANON_PS_S10,		0x04A9, 0x3041, CAP_NON, S10M, S32K, "Canon PowerShot S10"},
 	{"Canon:PowerShot S20",		CANON_PS_S20,		0x04A9, 0x3043, CAP_NON, S10M, S32K, "Canon PowerShot S20"},
-	{"Canon:EOS D30",		CANON_EOS_D30,		0x04A9, 0x3044, CAP_EXP, S10M, S32K, NULL},
+	{"Canon:EOS D30",		CANON_EOS_D30,		0x04A9, 0x3044, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot S100",	CANON_PS_S100,		0x04A9, 0x3045, CAP_NON, S10M, S32K, NULL},
 	{"Canon:IXY DIGITAL",		CANON_PS_S100,		0x04A9, 0x3046, CAP_NON, S10M, S32K, NULL},
 	{"Canon:Digital IXUS",		CANON_PS_S100,		0x04A9, 0x3047, CAP_NON, S10M, S32K, NULL},
@@ -117,7 +117,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot S30",		CANON_PS_S30,		0x04A9, 0x3057, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A40",		CANON_PS_A40,		0x04A9, 0x3058, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A30",		CANON_PS_A30,		0x04A9,	0x3059, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:EOS D60",		CANON_EOS_D60,		0x04A9, 0x3060, CAP_EXP, S10M, S32K, NULL},
+	{"Canon:EOS D60",		CANON_EOS_D60,		0x04A9, 0x3060, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A100",	CANON_PS_A100,		0x04A9, 0x3061, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A200",	CANON_PS_A200,		0x04A9, 0x3062, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, NULL},
@@ -277,7 +277,8 @@ canon_int_filename2thumbname (Camera *camera, const char *filename)
 	 * file but use the special get_thumbnail_of_xxx function.
 	 */
 	if (!extra_file_for_thumb_of_jpeg && is_jpeg (filename)) {
-		GP_DEBUG ("canon_int_filename2thumbname: thumbnail for JPEG \"%s\" is internal", filename);
+		GP_DEBUG ("canon_int_filename2thumbname: thumbnail for JPEG \"%s\" is internal",
+			  filename);
 		return nullstring;
 	}
 	if (!extra_file_for_thumb_of_crw && is_crw (filename)) {
@@ -652,6 +653,126 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
 }
 
 /**
+ * canon_int_capture_preview
+ * @camera: camera to work with
+ * @data: gets thumbnail image data.
+ * @length: gets length of @data.
+ * @context: context for error reporting
+ *
+ * Directs the camera to capture an image without storing it on the
+ * camera. (remote shutter release via USB). The thumbnail will be
+ * returned in @data. See the 'Protocol' file for details. Capture
+ * through serial port is not (yet) supported.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
+			   GPContext *context)
+{
+	canonTransferMode transfermode = REMOTE_CAPTURE_THUMB_TO_PC;
+
+	int mstimeout = -1;
+	int status;
+
+	int thumb_length, image_length, image_key; /* For possible immediate download */
+
+	switch (camera->port->type) {
+	case GP_PORT_USB:
+
+		gp_port_get_timeout (camera->port, &mstimeout);
+		GP_DEBUG("canon_int_capture_preview: usb port timeout starts at %dms", mstimeout);
+
+		/*
+		 * Send a sequence of CONTROL_CAMERA commands.
+		 */
+
+		gp_port_set_timeout (camera->port, 15000);
+		/* Init, extends camera lens, puts us in remote capture mode */
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_INIT, 0, 0) == GP_ERROR)
+			return GP_ERROR;
+
+		gp_port_set_timeout (camera->port, mstimeout);
+		GP_DEBUG("canon_int_capture_preview: set camera port timeout back to %d seconds...", mstimeout / 1000 );
+
+		/*
+		 * Set the captured image transfer mode.  We have four options
+		 * that we can specify any combo of, captured thumb to PC,
+		 * full to PC, thumb to disk, and full to disk.
+		 *
+		 * The to-PC option will return a length and integer
+		 * key from canon_usb_capture_dialogue() to use in the
+		 * "Download Captured Image" command.
+		 *
+		 */
+		GP_DEBUG ( "canon_int_capture_preview: transfer mode is %x\n", transfermode );
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_SET_TRANSFER_MODE,
+						  0x04, transfermode) == GP_ERROR)
+			return GP_ERROR;
+
+		/* Get release parameters a couple of times, just to
+                   see if that helps. */
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_GET_PARAMS,
+						  0x04, transfermode) == GP_ERROR)
+			return GP_ERROR;
+
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_GET_PARAMS,
+						  0x04, transfermode) == GP_ERROR)
+			return GP_ERROR;
+
+		/* Lock keys here for D30/D60 */
+		if ( IS_EOS(camera->pl->md->model) ) {
+			if(canon_usb_lock_keys(camera,context) < 0) {
+				gp_context_error (context, "lock keys failed.\n");
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+		}
+
+		/* Shutter Release
+		   Can't use normal "canon_int_do_control_command", as
+		   we must read the interrupt pipe before the response
+		   comes back for this commmand. */
+		*data = canon_usb_capture_dialogue ( camera, &status, context, &thumb_length, &image_length, &image_key );
+		if ( *data == NULL ) {
+			/* Try to leave camera in a usable state. */
+			canon_int_do_control_command (camera,
+						      CANON_USB_CONTROL_EXIT,
+						      0, 0);
+			return GP_ERROR;
+		}
+
+		/* Download the thumbnail image. */
+		if ( thumb_length > 0 ) {
+			status = canon_usb_get_captured_thumbnail ( camera, image_key, data, length, context );
+			if ( status < 0 ) {
+				GP_DEBUG ( "canon_int_capture_preview:"
+					 " thumbnail download failed, status= %i", status );
+				return status;
+			}
+		}
+
+		/* End release mode */
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_EXIT,
+						  0, 0) == GP_ERROR)
+			return GP_ERROR;
+
+		break;
+	case GP_PORT_SERIAL:
+		return GP_ERROR_NOT_SUPPORTED;
+		break;
+	GP_PORT_DEFAULT
+	}
+
+	return GP_OK;
+}
+
+/**
  * canon_int_capture_image
  * @camera: camera to work with
  * @path: gets filled in with the path and filename of the captured
@@ -666,17 +787,19 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
  *
  */
 int
-canon_int_capture_image (Camera *camera, CameraFilePath *path, 
+canon_int_capture_image (Camera *camera, CameraFilePath *path,
 			 GPContext *context)
 {
 	unsigned char *data = NULL;
 	unsigned char *initial_state, *final_state; /* For comparing
 						     * before/after
 						     * directories */
+	canonTransferMode transfermode = REMOTE_CAPTURE_FULL_TO_DRIVE;
 	int initial_state_len, final_state_len;
 	int mstimeout = -1;
-	int transfermode = 0x0;
 	int len;
+
+	int thumb_length, image_length, image_key; /* For possible immediate download */
 
 	/* Set default path name */
 	strncpy ( path->name, "*UNKNOWN*", sizeof(path->name) );
@@ -702,7 +825,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 
 		gp_port_set_timeout (camera->port, 15000);
 		/* Init, extends camera lens, puts us in remote capture mode */
-		if (canon_int_do_control_command (camera, 
+		if (canon_int_do_control_command (camera,
 						  CANON_USB_CONTROL_INIT, 0, 0) == GP_ERROR)
 			return GP_ERROR;
 
@@ -710,38 +833,30 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		GP_DEBUG("canon_int_capture_image: set camera port timeout back to %d seconds...", mstimeout / 1000 );
 
 		/*
-		 * Set the captured image transfer mode.  We have four options 
+		 * Set the captured image transfer mode.  We have four options
 		 * that we can specify any combo of, captured thumb to PC,
 		 * full to PC, thumb to disk, and full to disk.
 		 *
-		 * The to-PC option requires that we figure out how to get 
-		 * the alert telling us the data is in the camera buffer.
+		 * The to-PC option will return a length and integer
+		 * key from canon_usb_capture_dialogue() to use in the
+		 * "Download Captured Image" command.
+		 *
 		 */
-		transfermode = REMOTE_CAPTURE_THUMB_TO_DRIVE;
 		GP_DEBUG ( "canon_int_capture_image: transfer mode is %x\n", transfermode );
 		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_SET_TRANSFER_MODE, 
+						  CANON_USB_CONTROL_SET_TRANSFER_MODE,
 						  0x04, transfermode) == GP_ERROR)
 			return GP_ERROR;
-		transfermode = REMOTE_CAPTURE_FULL_TO_DRIVE;
-		GP_DEBUG ( "canon_int_capture_image: transfer mode is %x\n", transfermode );
-		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_SET_TRANSFER_MODE, 
-						  0x04, transfermode) == GP_ERROR)
-			return GP_ERROR;
-		/* Verify that msg points to 
-		   02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
-		   00 00 00 00 00 00 00 00 00 00 00 00 */
 
 		/* Get release parameters a couple of times, just to
                    see if that helps. */
 		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_GET_PARAMS, 
+						  CANON_USB_CONTROL_GET_PARAMS,
 						  0x04, transfermode) == GP_ERROR)
 			return GP_ERROR;
 
 		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_GET_PARAMS, 
+						  CANON_USB_CONTROL_GET_PARAMS,
 						  0x04, transfermode) == GP_ERROR)
 			return GP_ERROR;
 
@@ -757,7 +872,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		   Can't use normal "canon_int_do_control_command", as
 		   we must read the interrupt pipe before the response
 		   comes back for this commmand. */
-		data = canon_usb_capture_dialogue ( camera, &len, context );
+		data = canon_usb_capture_dialogue ( camera, &len, context, &thumb_length, &image_length, &image_key );
 		if ( data == NULL ) {
 			/* Try to leave camera in a usable state. */
 			canon_int_do_control_command (camera,
@@ -765,10 +880,6 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 						      0, 0);
 			return GP_ERROR;
 		}
-
-		/* Verify that msg points to 
-		   02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
-		   00 00 00 00 04 00 00 00 00 00 00 00 */
 
 		/* End release mode */
 		if (canon_int_do_control_command (camera,
@@ -781,7 +892,10 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		   and decode to return real path and file names. */
 		len = canon_usb_list_all_dirs ( camera, &final_state, &final_state_len, context );
 		if ( len < 0 ) {
-			gp_context_error (context,"canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %i", len );
+			gp_context_error ( context,
+					   "canon_int_capture_image:"
+					   " initial canon_usb_list_all_dirs() failed with status %i",
+					   len );
 			return len;
 		}
 
@@ -816,8 +930,8 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 						strncpy ( path->name, new_entry + CANON_DIRENT_NAME,
 							strlen ( new_entry + CANON_DIRENT_NAME ) );
 						strcpy ( path->folder, canon2gphotopath ( camera, path->folder ) );
-						free ( old_entry );
-						free ( new_entry );
+						free ( initial_state );
+						free ( final_state );
 						break;
 					}
 					else {
@@ -1305,7 +1419,7 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 /**
  * gphoto2canonpath:
  * @camera: camera to use
- * @path: gphoto2 path 
+ * @path: gphoto2 path
  * @context: context for error reporting
  *
  * convert gphoto2 path  (e.g.   "/DCIM/116CANON/IMG_1240.JPG")
@@ -1937,7 +2051,7 @@ canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 {
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			return canon_usb_put_file (camera, file, destname, destpath, 
+			return canon_usb_put_file (camera, file, destname, destpath,
 						      context);
 			break;
 		case GP_PORT_SERIAL:
@@ -1984,7 +2098,7 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
 		GP_DEBUG ("canon_int_extract_jpeg_thumb: data is not JFIF, cannot extract thumbnail");
 		return GP_ERROR_CORRUPTED_DATA;
 	}
-	
+
 	/* pictures are JFIF files, we skip the first 2 bytes (0xFF 0xD8)
 	 * first go look for start of JPEG, when that is found we set thumbstart
 	 * to the current position and never look for JPEG begin bytes again.
@@ -2001,15 +2115,15 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
 				thumbsize = i + 2 - thumbstart;
 				break;
 			}
-		
-		}					
+
+		}
 	if (! thumbsize) {
 		gp_context_error (context, "Could not extract JPEG "
 				  "thumbnail from data: No beginning/end");
 		GP_DEBUG ("canon_int_extract_jpeg_thumb: could not find JPEG "
 			  "beginning (offset %s) or end (size %s) in %i bytes of data",
 			  datalen, thumbstart, thumbsize);
-		return GP_ERROR_CORRUPTED_DATA;	  
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	/* now that we know the size of the thumbnail embedded in the JFIF data, malloc() */
@@ -2022,7 +2136,7 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
 	/* and copy */
 	memcpy (*retdata, data + thumbstart, thumbsize);
 	*retdatalen = thumbsize;
-	
+
 	return GP_OK;
 }
 
