@@ -32,6 +32,7 @@ extern "C" {
 #define GP_MIME_PNG       "image/png"
 #define GP_MIME_PGM       "image/x-portable-graymap"
 #define GP_MIME_PPM       "image/x-portable-pixmap"
+#define GP_MIME_PNM       "image/x-portable-anymap"
 #define GP_MIME_JPEG      "image/jpeg"
 #define GP_MIME_TIFF      "image/tiff"
 #define GP_MIME_BMP       "image/bmp"
