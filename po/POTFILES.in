@@ -21,3 +21,4 @@ libgphoto2/gphoto2-result.c
 frontends/command-line/main.c
 frontends/command-line/gphoto2-cmd-config.c
 frontends/command-line/gphoto2-cmd-capture.c
+frontends/command-line/options.c

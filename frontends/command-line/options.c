@@ -1,13 +1,48 @@
+/* options.c
+ *
+ * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 #include <config.h>
+#include "options.h"
+
 #include <stdio.h>
 #include <string.h>
 
 #include "main.h"
 #include "globals.h"
-#include "options.h"
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
 #endif
 
 int option_is_present (char *op, int argc, char **argv) {
@@ -134,28 +169,34 @@ int execute_options (int argc, char **argv) {
         return (GP_OK);
 }
 
-void print_version () {
-	printf(
-	"gPhoto (v%s) - Cross-platform digital camera library.\n"
-	"Copyright (C) 2000,2001 Scott Fritzinger and others\n"
+void
+print_version (void)
+{
+	printf (_("gPhoto (v%s) - Cross-platform digital camera library.\n"
+		  "Copyright (C) 2000,2001 Scott Fritzinger and others\n"
+		  "%s"
+		  "Licensed under the Library GNU Public License (LGPL).\n"),
+		  VERSION,
 #ifdef OS2
-        "OS/2 port by Bart van Leeuwen\n"
+		  _("OS/2 port by Bart van Leeuwen\n")
+#else
+		  ""
 #endif
-	"Licensed under the Library GNU Public License (LGPL).\n",
-	VERSION);
+		  );
 }
 
-void usage () {
-
+void
+usage (void)
+{
         int x=0;
         char buf[128], s[5], l[24], a[16];
 
 	/* Standard licensing stuff */
-	print_version();
-        printf("Usage:\n");
+	print_version ();
+        printf (_("Usage:\n"));
 
-	printf ("Short/long options (& argument)        description\n"
-	        "------------------------------------------------------------------------\n");
+	printf (_("Short/long options (& argument)        description\n"
+	        "------------------------------------------------------------------------\n"));
 
 	/* Run through option and print them out */
 	while (x < glob_option_count) {
@@ -179,6 +220,7 @@ void usage () {
 		printf("%-38s %s\n", buf, option[x].description);
 		x++;
 	}
-	printf( "------------------------------------------------------------------------\n"
-	        "[Use double-quotes around arguments]     [Picture numbers begin one (1)]\n");
+
+	printf (_("------------------------------------------------------------------------\n"
+	        "[Use double-quotes around arguments]     [Picture numbers begin one (1)]\n"));
 }
