@@ -8,6 +8,6 @@ Outstanding items in the gphoto2 dimera driver:
 Bugs:
 
 - flash capacity in --summary shows 0 for newer flash cards
-- newer cameras (e.g. ver. 6.2eL 1999/24) can't download pictures
-(this may have been fixed in dimera3500.c v1.3)
+- image quality is lower than it could be due to suboptimal Bayer CCD
+conversion routine
 
