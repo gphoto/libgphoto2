@@ -291,8 +291,10 @@ Saving file as MVI_5418.AVI                                                     
     <section id="perms-rs232">
       <title>Setting up permissions for serial (<acronym>RS232</acronym>) ports</title>
       <note>
-        I don't have any experience with serial ports for user
-        processes. So take this section with a grain of salt.
+	<simpara>
+	  I don't have any experience with serial ports for user
+	  processes. So take this section with a grain of salt.
+	</simpara>
       </note>
       <para>
         If you have a serial port reserved for the camera, you may just chown
@@ -402,8 +404,7 @@ Saving file as MVI_5418.AVI                                                     
 	  <filename>/proc/sys/kernel/hotplug</filename>.
           If it exists, you have a hotplug enabled kernel. If 
           <screen>
-            <command>cat</command>
-            <parameter>/proc/sys/kernel/hotplug</parameter>
+<prompt>[user@system ~]$ </prompt><command>cat <parameter>/proc/sys/kernel/hotplug</parameter></command>
           </screen>
 	  prints the path to  your hotplug binary (usually 
           <command>/sbin/hotplug</command>) and this binary exists,
@@ -433,11 +434,9 @@ Saving file as MVI_5418.AVI                                                     
               Load your <acronym>USB</acronym> driver and mount the <acronym>USB</acronym> device filesystem,
               i.e. e.g.
               <screen>
-                <prompt># </prompt><command>modprobe</command> <parameter>usb-uhci</parameter>
-                <prompt># </prompt><command>modprobe</command> <parameter>usb-ohci</parameter>
-                <prompt># </prompt><command>mount</command> 
-                <parameter>-t usbdevfs</parameter>
-                <parameter>/proc/bus/usb</parameter>
+<prompt># </prompt><command>modprobe</command> <parameter>usb-uhci</parameter>
+<prompt># </prompt><command>modprobe</command> <parameter>usb-ohci</parameter>
+<prompt># </prompt><command>mount <parameter>-t usbdevfs</parameter> <parameter>/proc/bus/usb</parameter></command>
               </screen>
               Modern distributions like Redhat 7.2 handle this
               automatically if you have your <acronym>USB</acronym> hardware enabled.
@@ -450,9 +449,9 @@ Saving file as MVI_5418.AVI                                                     
             <para>
               Add the output of 
               <screen>
-                <prompt># </prompt><command>gphoto2</command> <parameter>--print-usb-usermap</parameter> 
+<prompt># </prompt><command>gphoto2 <parameter>--print-usb-usermap</parameter></command>
               </screen>
-              to
+              to the file
               <filename>/etc/hotplug/usb.usermap</filename> after
               removing all lines beginning with "usbcam".
             </para>
@@ -477,7 +476,7 @@ Saving file as MVI_5418.AVI                                                     
               <filename class="directory">linux-hotplug/</filename>
               after installation and in the doc dir of the binary
               package. Choose one, adapt it for your needs, and copy
-              it to <filename>/etc/hotplug/usb/usbcam</filename>. The
+              it to the file <filename>/etc/hotplug/usb/usbcam</filename>. The
               directory 
               <filename class="directory">/etc/hotplug</filename>
               should already exists, whereas it may be that you have
@@ -500,7 +499,7 @@ Saving file as MVI_5418.AVI                                                     
                     <systemitem class="library">pam_console</systemitem>
                     access the camera. This works only if you're logging in with
                     <systemitem class="library">pam_console</systemitem>, 
-                    i.e. e.g. using gdm on Redhat Linux.
+                    i.e. e.g. using <command>gdm</command> on Redhat Linux.
                   </simpara>
                 </listitem>
               </varlistentry>
@@ -536,7 +535,7 @@ Saving file as MVI_5418.AVI                                                     
 
           <listitem>
             <para>
-              Make your script file
+              Make the script file you just created and possibly adapted
               <filename>/etc/hotplug/usb/usbcam</filename>
               executable.
             </para>
@@ -568,12 +567,12 @@ Saving file as MVI_5418.AVI                                                     
               <xref linkend="libgphoto2"/> frontend and enjoy:
             </para>
             <screen>
-              <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--list-ports</parameter>
-              <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--auto-detect</parameter>
-              <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--summary</parameter>
-              <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--list-files</parameter>
-              <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--get-all-images</parameter>
-            </screen>
+<prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--list-ports</parameter>
+<prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--auto-detect</parameter>
+<prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--summary</parameter>
+<prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--list-files</parameter>
+<prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--get-all-images</parameter>
+	    </screen>
           </listitem>
 
         </orderedlist>
@@ -587,23 +586,14 @@ Saving file as MVI_5418.AVI                                                     
       <title>Specifying the port and camera you use</title>
 
       <abstract>
-        <para>
-          <systemitem class="library">libgphoto2</systemitem> 
-          identifies a camera by two values:
-          <orderedlist numeration="loweralpha">
-            <listitem>
-              <simpara>the <link linkend="port-names">port</link> it 
-                is connected to</simpara>
-            </listitem>
-            <listitem>
-              <simpara>the <link linkend="camera-names">name</link> of the
-                camera</simpara>
-            </listitem>
-          </orderedlist>
-        </para>
-        <para>
+	<simpara>
+	  <systemitem class="library">libgphoto2</systemitem> 
+	  identifies a camera by two values: the 
+	  <link linkend="port-names">port</link> it is connected to
+	  and the <link linkend="camera-names">name</link> of the
+	  camera.
           How these may be specified is discussed in this chapter.
-        </para>
+        </simpara>
       </abstract>
 
       <section id="port-names">
