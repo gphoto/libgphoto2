@@ -1,5 +1,9 @@
 2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
 
+	* INSTALL: Fix the aclocal command.
+
+2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
+
         * acconfig.h: According to
           http://www.gnu.org/manual/autoconf-2.53/html_mono/autoconf.html,
           this file is obsolete.
