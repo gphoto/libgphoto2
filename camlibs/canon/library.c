@@ -491,11 +491,23 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			for (size = 1; size < datalen; size++)
 				if ((data[size - 1] == JPEG_ESC) && (data[size] == JPEG_END))
 					break;
+			if (! (data[size - 1] == JPEG_ESC) && (data[size] == JPEG_END)) {
+				GP_DEBUG ("JPEG_END not found in %i bytes of data", datalen);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
 			datalen = size + 1;
 			gp_file_set_data_and_size (file, data, datalen);
 			gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
-			strncpy (tempfilename, filename, sizeof(tempfilename));
-			strcpy (strchr (tempfilename, '.'), ".JPG"); /* not really clean */
+			strncpy (tempfilename, filename, sizeof(tempfilename) - 1);
+			tempfilename[sizeof (tempfilename) - 1] = 0;
+			/* 4 is length of .JPG, must be at least X.FOO */
+			if (strlen (tempfilename) > 4)
+				strcpy (tempfilename + strlen (tempfilename) - 4, ".JPG");
+			else {
+				GP_DEBUG ("File name '%s' too short, cannot make it a .JPG",
+					  tempfilename);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
 			gp_file_set_name (file, tempfilename);
 			break;
 		case GP_FILE_TYPE_NORMAL:
@@ -775,7 +787,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	GP_DEBUG ("delete_file_func()");
 
 	_canonfolder = gphoto2canonpath (camera, folder, context);
-	strncpy (canonfolder, _canonfolder, sizeof(canonfolder));
+	strncpy (canonfolder, _canonfolder, sizeof(canonfolder) - 1);
+	canonfolder[sizeof(canonfolder) - 1] = 0;
 
 	if (check_readiness (camera, context) != 1)
 		return GP_ERROR;
@@ -996,8 +1009,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			snprintf (power_str, sizeof (power_str), "%s - %i",
 				  ((pwr_source & CAMERA_MASK_BATTERY) ==
 				   0) ? _("AC adapter") : _("on battery"), pwr_status);
-	} else
+	} else {
 		strncpy (power_str, _("Unavaliable"), sizeof (power_str) - 1);
+		power_str[sizeof (power_str) - 1] = 0;
+	}
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Power (readonly)"), &t);
 	gp_widget_set_value (t, power_str);
@@ -1095,16 +1110,36 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 	       void *data, GPContext *context)
 {
 	Camera *camera = data;
-	char path[2048];
+	char gppath[2048];
+	const char *canonpath;
 	int r;
 
-	strncpy (path, folder, sizeof (path));
-	if (strlen (folder) > 1)
-		strncat (path, "/", sizeof (path));
-	strncat (path, name, sizeof (path));
+	GP_DEBUG ("make_dir_func folder '%s' name '%s'", folder, name);
+	
+	if (strlen (folder) > 1) {
+		/* folder is something more than / */
+	
+		if (strlen (folder) + 1 + strlen (name) > sizeof (gppath) - 1) {
+			GP_DEBUG ("make_dir_func: Arguments too long");
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		
+		sprintf (gppath, "%s/%s", folder, name);
+	} else {
+		if (1 + strlen (name) > sizeof (gppath) - 1) {
+			GP_DEBUG ("make_dir_func: Arguments too long");
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		
+		sprintf (gppath, "/%s", name);
+	}
+	
+	canonpath = gphoto2canonpath (camera, gppath, context);
+	if (canonpath == NULL)
+		return GP_ERROR;
 
-	r = canon_int_directory_operations (camera, path, DIR_CREATE, context);
-	if (r < 0)
+	r = canon_int_directory_operations (camera, canonpath, DIR_CREATE, context);
+	if (r != GP_OK)
 		return (r);
 
 	return (GP_OK);
@@ -1115,16 +1150,36 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 		 void *data, GPContext *context)
 {
 	Camera *camera = data;
-	char path[2048];
+	char gppath[2048];
+	const char *canonpath;
 	int r;
 
-	strncpy (path, folder, sizeof (path));
-	if (strlen (folder) > 1)
-		strncat (path, "/", sizeof (path));
-	strncat (path, name, sizeof (path));
+	GP_DEBUG ("remove_dir_func folder '%s' name '%s'", folder, name);
+	
+	if (strlen (folder) > 1) {
+		/* folder is something more than / */
+	
+		if (strlen (folder) + 1 + strlen (name) > sizeof (gppath) - 1) {
+			GP_DEBUG ("make_dir_func: Arguments too long");
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		
+		sprintf (gppath, "%s/%s", folder, name);
+	} else {
+		if (1 + strlen (name) > sizeof (gppath) - 1) {
+			GP_DEBUG ("make_dir_func: Arguments too long");
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		
+		sprintf (gppath, "/%s", name);
+	}
+	
+	canonpath = gphoto2canonpath (camera, gppath, context);
+	if (canonpath == NULL)
+		return GP_ERROR;
 
-	r = canon_int_directory_operations (camera, path, DIR_REMOVE, context);
-	if (r < 0)
+	r = canon_int_directory_operations (camera, canonpath, DIR_REMOVE, context);
+	if (r != GP_OK)
 		return (r);
 
 	return (GP_OK);
