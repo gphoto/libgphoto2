@@ -1,3 +1,8 @@
+2003-11-16  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* libgphoto2 gphoto2-camera.c, gphoto2-result.c, gphoto2-result.h:
+	  Return GP_ERROR_CAMERA_BUSY if a command or I/O is in progress.
+
 2003-08-27  Christophe Barbe <christophe@ufies.org>
 
 	* libgphoto2/gphoto2-filesys.c: Return the max when unable to know 

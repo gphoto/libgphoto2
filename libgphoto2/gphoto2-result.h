@@ -80,6 +80,13 @@ extern "C" {
 #define GP_ERROR_DIRECTORY_EXISTS    -109
 
 /**
+ * GP_ERROR_CAMERA_BUSY:
+ *
+ * Camera I/O or a command is in progress.
+ **/
+#define GP_ERROR_CAMERA_BUSY    -110
+
+/**
  * GP_ERROR_PATH_NOT_ABSOLUTE:
  * 
  * The specified path is not absolute. This error is reported when the user

@@ -47,6 +47,7 @@ static struct {
 	{GP_ERROR_DIRECTORY_NOT_FOUND, N_("Directory not found")},
 	{GP_ERROR_FILE_NOT_FOUND,      N_("File not found")},
 	{GP_ERROR_DIRECTORY_EXISTS,    N_("Directory exists")},
+	{GP_ERROR_CAMERA_BUSY,         N_("I/O in progress")},
 	{GP_ERROR_PATH_NOT_ABSOLUTE,   N_("Path not absolute")},
 	{GP_ERROR_CANCEL,              N_("Operation cancelled")},
 	{0, NULL}
