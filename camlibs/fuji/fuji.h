@@ -23,6 +23,22 @@
 #define DBG3(x,y,z) gp_debug_printf(GP_DEBUG_HIGH,"Fuji",x,y,z)
 #define DBG4(w,x,y,z) gp_debug_printf(GP_DEBUG_HIGH,"Fuji",w,x,y,z)
 
+struct _CameraPrivateLibrary {
+  int folders;
+  int speed;
+  int first_packet;
+  int type;
+  gp_port* dev;
+  char folder[128];
+  CameraFilesystem *fs;
+  CameraFile *curcamfile;
+  int fuji_initialized; 
+  int fuji_count;
+  int fuji_size;
+  int maxnum;
+  char has_cmd[256];
+};
+
 typedef struct {
   int folders;
   int speed;

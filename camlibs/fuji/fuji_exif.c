@@ -53,7 +53,6 @@
 /* 
    New conversion function, all in memory 
 */
-int fuji_exif_convert(exifparser *exifdat,CameraFile *cfile);
 int fuji_exif_convert(exifparser *exifdat,CameraFile *cfile){
   char *tmpstr[32];
   unsigned char *imagedata,*exifimg,*newimg,*curptr;
@@ -117,14 +116,15 @@ int fuji_exif_convert(exifparser *exifdat,CameraFile *cfile){
     };
     imagedata=exifdat->data+tmp;
     memcpy(newimg,imagedata,dsize);
-    cfile->data=newimg;
-    cfile->size=dsize;
-    strcpy(cfile->mime_type,"image/jpeg");
+    gp_file_set_data_and_size(cfile,newimg,dsize);
+    //cfile->data=newimg;
+    //cfile->size=dsize;
+    //strcpy(cfile->mime_type,"image/jpeg");
     return(GP_OK);
   };
 
   /* Try a TIFF */
-  strcpy(cfile->mime_type,"image/tiff");
+  //strcpy(cfile->mime_type,"image/tiff");
   tmp=gpe_getintval(exifimg,EXIF_StripOffsets); /*imagedata start*/
   if (tmp==-1) {
     DBG("fuji_exif: Tiff or jpeg data not found, skipping");
@@ -175,7 +175,8 @@ int fuji_exif_convert(exifparser *exifdat,CameraFile *cfile){
   memcpy(curptr,imagedata,dataptr);/* write image data after the tags */
   curptr+=dataptr;
 
-  cfile->data=newimg;
-  cfile->size=curptr-newimg;//dataptr;
+  gp_file_set_data_and_size(cfile,newimg,curptr-newimg);
+  //cfile->data=newimg;
+  //cfile->size=curptr-newimg;//dataptr;
   return GP_OK;
 };

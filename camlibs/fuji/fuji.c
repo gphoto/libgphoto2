@@ -113,10 +113,14 @@ static int get_raw_byte (void)
 		/* Refill the buffer */
 	        ret=gp_port_read(thedev,buffer,1);
 		/*ret = read(devfd, buffer, 128);*/
+		DBG2("GOT %d",ret);
 		if (ret == GP_ERROR_IO_TIMEOUT)
 			return -1;  /* timeout */
 		if (ret == GP_ERROR) {
 		  return -1;  /* error */
+		}
+		if (ret <0 ) {
+		  return -1;  /* undocumented error */
 		}
 		pending_input = ret;
 		bufstart = buffer;
@@ -206,6 +210,7 @@ static int attention (void)
 			return 0;
 	}
 	//gp_frontend_status(NULL, "The camera does not respond.");
+	DBG("The camera does not respond.");
 	return(-1);
 }
 
@@ -496,7 +501,7 @@ static int del_frame (int i)
 	return answer[4];
 }
 
-static void get_command_list (FujiData* fjd)
+static void get_command_list (CameraPrivateLibrary* fjd)
 {
 	int i;
 	DBG("Get command list");
@@ -506,7 +511,7 @@ static void get_command_list (FujiData* fjd)
 	  fjd->has_cmd[answer[i]] = 1;
 }
 
-static int get_picture_info(int num,char *name,FujiData *camdata){
+static int get_picture_info(int num,char *name,CameraPrivateLibrary *camdata){
 
           DBG("Getting name...");
 
@@ -599,6 +604,8 @@ static int fix_serial ()
 
         devfd=thedev->device_fd;
 
+	DBG2("Devfd is %d",devfd);
+
 	if (devfd < 0) {
 		DBG("Cannot open device");
 		return(-1);
@@ -621,7 +628,7 @@ static int fix_serial ()
 
 	if (tcsetattr(devfd, TCSANOW, &newt) < 0) {
 	        perror("tcsetattr");
-		DBG2("fix_serial tcsetattr error for",settings.serial.port);
+		DBG2("fix_serial tcsetattr error for %s\n",settings.serial.port);
 		exit(1);
 	}
        return(attention());
@@ -643,7 +650,7 @@ static int fuji_set_max_speed (int newspeed)
   speed=9600; /* The default */
 
   /* Search for speed =< that specified which is supported by the camera*/
-  for (i=0;i+=1;speedlist[i]>0) {
+  for (i=0;speedlist[i]>0;i+=1) {
 
     if (speedlist[i]>newspeed) continue;
 
@@ -670,10 +677,12 @@ static int fuji_set_max_speed (int newspeed)
   return(attention());
 }
 
-static int download_picture(int n,int thumb,CameraFile *file,FujiData *fjd)
+static int download_picture(int n,int thumb,CameraFile *file,CameraPrivateLibrary *fjd)
 {
 	clock_t t1, t2;
 	char name[100];
+	long int file_size;
+	char *data;
 
 	DBG3("download_picture: %d,%s",n,thumb?"thumb":"pic");
 
@@ -691,13 +700,17 @@ static int download_picture(int n,int thumb,CameraFile *file,FujiData *fjd)
 	DBG3("Download :%4d actual bytes vs expected %4d bytes\n", 
 	     fuji_count ,fuji_size);
 
-	file->bytes_read=fuji_count;
-	file->size=fuji_count+(thumb?128:0);/*add room for thumb-decode*/
+	//file->bytes_read=fuji_count;
+	//	file->size=fuji_count+(thumb?128:0);/*add room for thumb-decode*/
+	file_size=fuji_count+(thumb?128:0);
 
-	file->data=malloc(file->size);
-	if (file->data==NULL) return(GP_ERROR);
+	data=malloc(file_size);
 
-	memcpy(file->data,fuji_buffer,fuji_count);
+	if (data==NULL) return(GP_ERROR);
+
+	memcpy(data,fuji_buffer,fuji_count);
+
+	gp_file_set_data_and_size(file,data,file_size);
 
 	t2 = times(0);
 
@@ -830,9 +843,10 @@ static int fuji_configure(){
   return(1);
 };
 
-static int fuji_get_picture (int picture_number,int thumbnail,CameraFile *cfile,FujiData *fjd){
+static int fuji_get_picture (int picture_number,int thumbnail,CameraFile *cfile,CameraPrivateLibrary *fjd){
 
-  unsigned char *buffer;
+  const char *buffer;
+  long int file_size;
 
   exifparser exifdat;
 
@@ -853,7 +867,8 @@ static int fuji_get_picture (int picture_number,int thumbnail,CameraFile *cfile,
 
   DBG("test 2");
 
-  buffer=cfile->data;
+  //buffer=cfile->data;
+  gp_file_get_data_and_size(cfile,&buffer,&file_size);
 
   /* Work on the tags...*/
   exifdat.header=buffer;
@@ -870,7 +885,7 @@ static int fuji_get_picture (int picture_number,int thumbnail,CameraFile *cfile,
 
     //newimage->image_info=malloc(sizeof(char*)*infosize);
 
-    if (cfile->data==NULL) {
+    if (buffer==NULL) {
       DBG("BIG TROUBLE!!! Bad image memory allocation");
       return(GP_ERROR);
     };
@@ -892,8 +907,10 @@ static int fuji_get_picture (int picture_number,int thumbnail,CameraFile *cfile,
     /* Tiff info in thumbnail must be converted to be viewable */
     if (thumbnail) {
       fuji_exif_convert(&exifdat,cfile);
+      gp_file_get_data_and_size(cfile,&buffer,&file_size);
       
-      if (cfile->data==NULL) {
+      //  if (cfile->data==NULL) {
+      if (buffer==NULL) {
 	DBG("Thumbnail conversion error");
 	return(GP_ERROR);
       };
@@ -989,9 +1006,11 @@ static int camera_folder_list	(Camera *camera, char *folder, CameraList *list) {
 static int camera_file_list (Camera *camera, const char *folder, CameraList *list) {
   int i,n;
   char* fn=NULL;
-  FujiData *cs;
+  //FujiData *cs;
+  CameraPrivateLibrary *cs;
 
-  cs=(FujiData*)camera->camlib_data;
+  //cs=(FujiData*)camera->camlib_data;
+  cs=(CameraPrivateLibrary *)camera->pl;
 
   DBG("Camera file list");
   fix_serial();
@@ -1029,6 +1048,30 @@ folder_list_func (CameraFilesystem *fs, const char *folder,
 static int get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,CameraFileInfo *info, void *data)
 {
   DBG2("Info Func %s",folder);
+
+  info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE |
+    GP_FILE_INFO_NAME;
+  info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+
+  /* Name of image */
+  strncpy (info->file.name, "test\0", 5);
+  
+  /* Get the size of the current image */
+  info->file.size = 1;
+  
+  /* Type of image? */
+  /* if (strstr (filename, ".MOV") != NULL) {
+     strcpy (info->file.type, GP_MIME_QUICKTIME);
+     strcpy (info->preview.type, GP_MIME_JPEG);
+     } else if (strstr (filename, ".TIF") != NULL) {
+     strcpy (info->file.type, GP_MIME_TIFF);
+     strcpy (info->preview.type, GP_MIME_TIFF);
+     } else {*/
+     strcpy (info->file.type, GP_MIME_JPEG);
+     strcpy (info->preview.type, GP_MIME_JPEG);
+     //     }
+
+
   return(GP_OK);
 };
 
@@ -1048,9 +1091,10 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 
   Camera *camera = data;
   int num;
-  FujiData *fjd;
+  //FujiData *fjd;
+  CameraPrivateLibrary *fjd;
 
-  fjd=(FujiData*)camera->camlib_data;
+  fjd=camera->pl;
 
 
   curcam=camera;
@@ -1121,7 +1165,7 @@ Known to work with Fuji DX-5,DS-7,MX-10,MX-600,MX-1700,MX-2700,Apple QuickTake 2
 
 int camera_init (Camera *camera) {
         char idstring[256];
-	FujiData *fjd;
+	CameraPrivateLibrary *fjd;
 
 	gp_port_settings settings;
 
@@ -1129,6 +1173,7 @@ int camera_init (Camera *camera) {
 
 	/* First, set up all the function pointers */
 	camera->functions->exit 	= camera_exit;
+	//camera->functions->file_get 	= camera_file_get;
 	//	camera->functions->file_get_preview =  camera_file_get_preview;
 	//	camera->functions->file_put 	= camera_file_put;
 	//camera->functions->file_delete 	= camera_file_delete;
@@ -1139,8 +1184,9 @@ int camera_init (Camera *camera) {
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
-	camera->camlib_data=malloc(sizeof( FujiData));
-	fjd=(FujiData*)camera->camlib_data;
+	//camera->camlib_data=malloc(sizeof( FujiData));
+	camera->pl=malloc(sizeof( CameraPrivateLibrary ));
+	fjd=camera->pl;//(FujiData*)camera->camlib_data;
 
 	/* Set up the CameraFilesystem */
         gp_filesystem_set_list_funcs (camera->fs,
@@ -1153,13 +1199,14 @@ int camera_init (Camera *camera) {
 
 	/* Set up the port */
 	thedev=camera->port;
+	gp_port_settings_get (camera->port, &settings);
 	gp_port_timeout_set(thedev,1000);
 	settings.serial.speed 	 = 9600;
 	settings.serial.bits 	 = 8;
 	settings.serial.parity 	 = 0;
 	settings.serial.stopbits = 1;
 
-	gp_port_settings_set(thedev,settings);
+	gp_port_settings_set(camera->port,settings);
 	//gp_port_open(thedev);
 
 	//DBG2("Initialized port %s",settings.serial.port);
@@ -1184,7 +1231,7 @@ int camera_init (Camera *camera) {
 	  };
 	  
 	  /* could ID camera here and set the relevent variables... */
-	  get_command_list(camera->camlib_data);
+	  get_command_list(camera->pl);
 	  /* For now assume that the user wil not use 2 different fuji cams
 	     in one session */
 	  strcpy(idstring,"Identified ");
