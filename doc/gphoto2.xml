@@ -165,55 +165,58 @@ About this file:
   <chapter id="whatyouneed">
     <title>Finding what you need</title>
     <abstract>
-      <simpara>This chapter lists information about what you need to run gphoto2.This information is intended to assist you in setting up your computer so that you can connect a camera and use libgphoto2 software to download images.</simpara>
+      <para>This chapter lists information about what you need to run gphoto2.This information is intended to assist you in setting up your computer so that you can connect a camera and use libgphoto2 software to download images.</para>
     </abstract>
     <para>What you need:</para>
     <orderedlist>
       <listitem>
-	<simpara>A camera</simpara>
-	<simpara>A list of currently supported cameras is maintained
+	<para>A camera</para>
+	<para>A list of currently supported cameras is maintained
 	  at 
 	  <ulink url="http://www.teaser.fr/~hfiguiere/linux/digicam.html">http://www.teaser.fr/~hfiguiere/linux/digicam.html</ulink>
-	</simpara>
+	</para>
       </listitem>
       <listitem>
-	<simpara>A computer running a Unix-like operating system:</simpara>
+	<para>A computer running a Unix-like operating system:</para>
 	<itemizedlist>
 	  <listitem>
-	    <simpara>BSD (FreeBSD, OpenBSD, NetBSD, ...)</simpara>
+	    <para>BSD (FreeBSD, OpenBSD, NetBSD, ...)</para>
 	  </listitem>
 	  <listitem>
-	    <simpara>Linux (RedHat 7.3, SuSE 8.x, Debian 3.0 Woody)</simpara>
+	    <para>Linux (RedHat 7.3, SuSE 8.x, Debian 3.0 Woody)</para>
 	  </listitem>
 	  <listitem>
-	    <simpara>FIXME: Is there a list somewhere, or can we get
-	      contributions of verified OS's?</simpara>
+	    <para>FIXME: Is there a list somewhere, or can we get
+	      contributions of verified OS's?</para>
 	  </listitem>
 	</itemizedlist>
-	<simpara>For USB cameras, your OS must be supported by
+	<para>For USB cameras, your OS must be supported by
 	  <systemitem class="library">libusb</systemitem>. At
 	  2002-08-29, this is the case for Linux 2.2 and 2.4, FreeBSD
 	  and OpenBSD.
-	</simpara>
+	</para>
       </listitem>
       <listitem>
-	<simpara>libgphoto2 software</simpara>
+	<para>libgphoto2 software</para>
 	<itemizedlist>
 	  <listitem>
-	    <simpara>CVS</simpara>
+	    <para>CVS</para>
 	  </listitem>
 	  <listitem>
-	    <simpara>RPM's</simpara>
+	    <para>RPM's</para>
 	  </listitem>
 	  <listitem>
-	    <simpara>Need descriptions and lists of various forms of
-	      source code and binaries.</simpara>
+	    <para>Need descriptions and lists of various forms of
+	      source code and binaries.</para>
 	  </listitem>
 	</itemizedlist>
       </listitem>
       <listitem>
-	<simpara>FIXME: What else do you need to get
-	  started?</simpara>
+	<para>Whatever cables you need to connect your camera to your computer.</para>
+      </listitem>
+      <listitem>
+	<para>FIXME: What else do you need to get
+	  started?</para>
       </listitem>
     </orderedlist>
   </chapter>
@@ -224,10 +227,10 @@ About this file:
     <title>Quick start</title>
 
     <abstract>
-      <simpara>
+      <para>
         How you quickly get your pictures to your computer,
         assuming somebody has already set up everything correctly.
-      </simpara>
+      </para>
     </abstract>
 
     <para>This chapter assumes that somebody has set up your system
@@ -251,21 +254,46 @@ About this file:
 
     <section id="using_gtkam">
       <title>Using gtkam</title>
-      <simpara>FIXME: gtkam docs under construction. Please report errors, omissions, and constructive suggestions to michael.rensing@shaw.ca</simpara>
+      <para>FIXME: gtkam docs under construction. Please report errors, 
+	omissions, and constructive suggestions to 
+	michael.rensing@shaw.ca</para>
       <abstract>
-      <simpara>gtkam is a graphical front end for the gphoto2 library. It does
- not communicate directly with the camera, but uses gphoto2 to do
- so. As a result, it is necessary to have gphoto2 installed and running
- correctly before gtkam will work.</simpara></abstract>
-      <section>
-	<title>Installation</title>
-	<abstract>
-	  <simpara></simpara>
-	</abstract>
-      </section>
-
-
-      </section>
+	<para>gtkam is a graphical front end for the gphoto2 library. 
+	  It does not communicate directly with the camera, but uses gphoto2 
+	  to do so. As a result, it is necessary to have gphoto2 installed 
+	  and running correctly before gtkam will work.</para>
+      </abstract>
+      <para>If everything is configured correctly, the following steps 
+	should work:</para>
+      <orderedlist>
+	<listitem>
+	  <para>Plug in the connecting cable to your camera and to the 
+	    computer.</para>
+	</listitem>
+	<listitem>
+	  <para>Turn on your camera and switch to the mode which enables 
+	    communication with a computer.</para>
+	</listitem>
+	<listitem>
+	  <para>Run gtkam. This may be from a menu (in RedHat, it's 
+	    <menuchoice>
+	      <guimenu>Main Menu</guimenu>
+	      <guimenuitem>Programs</guimenuitem>
+	      <guimenuitem>Graphics</guimenuitem>
+	      <guimenuitem>gtKam</guimenuitem>
+	    </menuchoice>
+	    ). Otherwise, typing <command>gtkam</command> from the command 
+	    line should start the application.</para>
+	</listitem>
+      </orderedlist>
+      <para>If all is well, you should see your camera listed in the left frame with a plus sign in a box to the left.</para>
+      <para>Click on the plus sign to expand the listings of directories. The number in brackets to the right of the directory name is the number of images detected in that directory.</para>
+      <para>Click on directory containing images, and you should see a listing of the images in the right frame.</para>
+      <sidebar>
+	<title>Troubleshooting</title>
+	<para>If you do not see any images listed, be sure that there are images in the camera. If there are, then you need to do some troubleshooting. Start with <link linkend="FAQ">the FAQ</link>.</para>
+      </sidebar>
+    </section>
     <section id="using-gphoto2">
       <title>Using the <command>gphoto2</command> command line
 	interface (<acronym>CLI</acronym>)</title>
@@ -409,12 +437,12 @@ Saving file as MVI_5418.AVI                                                     
     
     <section id="using-gnome">
       <title>Using Gnome VFS</title>
-      <simpara>FIXME: We need to write this section</simpara>
+      <para>FIXME: We need to write this section</para>
     </section>
 
     <section id="using-kde">
       <title>Using kioslave</title>
-      <simpara>FIXME: We need to write this section</simpara>
+      <para>FIXME: We need to write this section</para>
     </section>
 
   </chapter>
@@ -1862,7 +1890,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>Opens the dialog for saving the selected photos.</simpara>
+		<para>Opens the dialog for saving the selected photos.</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -1874,7 +1902,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>Deletes selected photos from the camera.</simpara>
+		<para>Deletes selected photos from the camera.</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -1886,7 +1914,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>Deletes all photos in the camera</simpara>
+		<para>Deletes all photos in the camera</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -1896,7 +1924,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>Exits gtkam.</simpara>
+		<para>Exits gtkam.</para>
 	      </listitem>
 	    </varlistentry>
 	  </variablelist>
@@ -1913,7 +1941,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>Opens dialog to create new folder (directory).</simpara>
+		<para>Opens dialog to create new folder (directory).</para>
 	      </listitem>
 	    </varlistentry> 
 	  <varlistentry>
@@ -1924,7 +1952,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	    <listitem>
-		<simpara>Opens a dialog to remove (delete) an existing folder (directory).</simpara>
+		<para>Opens a dialog to remove (delete) an existing folder (directory).</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -1935,7 +1963,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>Opens a dialog to identify an image file for uploading to the camera.</simpara>
+		<para>Opens a dialog to identify an image file for uploading to the camera.</para>
 	      </listitem>
 	    </varlistentry>
 	  </variablelist>
@@ -1951,7 +1979,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	    <listitem>
-	      <simpara>Selects all pictures in the camera.</simpara>
+	      <para>Selects all pictures in the camera.</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -1962,9 +1990,9 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>Inverts the selections already made so that previously 
+		<para>Inverts the selections already made so that previously 
 		  unselected images are now selected, and previously selected images
-		  are now unselected.</simpara>
+		  are now unselected.</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -1975,7 +2003,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>Undoes all selections so that no images are selected.</simpara>
+		<para>Undoes all selections so that no images are selected.</para>
 	      </listitem>
 	    </varlistentry>
 	  </variablelist>
@@ -1991,7 +2019,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>Opens a window to allow the user to define the camera and interface being used.</simpara>
+		<para>Opens a window to allow the user to define the camera and interface being used.</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -2002,7 +2030,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara></simpara></listitem></varlistentry>
+		<para>Opens a window to allow the user to trigger the camera to acquire an image. (This feature is not available on my camera, so I would appreciate some input on this item. -mjr)</para></listitem></varlistentry>
 	    <varlistentry>
 	      <term>
 		<menuchoice>
@@ -2011,7 +2039,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara></simpara>
+		<para>Opens a window with configurable options for the camers. This includes the name of the camera, it's owner, the date and time, firmware version, and power status..</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -2022,7 +2050,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara></simpara>
+		<para>Displays a window with information about the camera and it's memory.</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -2033,7 +2061,7 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara></simpara>
+		<para>I'm not sure what this should contain. Anyone? - mjr</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -2044,7 +2072,8 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara></simpara>
+		<para>Displays a window with information about the camera driver and it's authors.</para>
+		<para>This should include contact information for the maintainers of the drivers for your camera.</para>
 	      </listitem>
 	    </varlistentry>
 	  </variablelist>
@@ -2060,16 +2089,36 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>
+		<para>
 		  Opens the logging window which allows the user to select the
-		  type of messages to log. 
-		  Error causes the logging of any error messages 
-		  Verbose
-		  Debug
-		  Data
-		  Save As... opens a dialog to allow the user to save the
-		  information logged in the debug window.
-		  Close Closes the debug window</simpara>
+		  type of messages to log.</para>
+		<variablelist>
+		  
+		  <varlistentry>
+		    <term>Error</term>
+		    <listitem>
+		      <para>causes the logging of any error messages.</para></listitem></varlistentry>
+		  <varlistentry>
+		    <term>Verbose</term>
+		    <listitem>
+		      <para>Increases the amount of information being logged. (I can't see what effect this has. - mjr)</para></listitem></varlistentry>
+		  <varlistentry>
+		    <term>Debug</term>
+		    <listitem>
+		      <para>Causes the logging of progress reports as the software communicates with the camers.</para></listitem></varlistentry>
+		  <varlistentry>
+		    <term>Data</term>
+		    <listitem>
+		      <para>Causes the logging of all data being transferred from the camera. This will generate huge quantities of hexadecimal information.</para></listitem></varlistentry>
+		  <varlistentry>
+		    <term>Save As...</term>
+		    <listitem>
+		      <para>opens a dialog to allow the user to save the
+			information logged in the debug window.</para></listitem></varlistentry>
+		  <varlistentry>
+		    <term>Close</term>
+		    <listitem>
+		      <para>Closes the debug window</para></listitem></varlistentry></variablelist>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -2080,16 +2129,17 @@ Saving file as MVI_5418.AVI                                                     
 		</menuchoice>
 	      </term>
 	      <listitem>
-		<simpara>
+		<para>
 		  Opens the about gtKam window. This gives the current version,
-		  and tells you that:
-		  gtKam was written by:
-		  - Scott Fritzinger &lt;scottf@unr.edu&gt;,
-		  - Lutz Mueller &lt;urc8@rz.uni-carlsruhe.de&gt;,
-		  - and many others
-		  gtKam uses libgphoto2, a library to access a multitude of digital
-		  cameras. More information is available at http://www.gphoto.net.
-		  Enjoy the wonderful world of gphoto!</simpara>
+		  and tells you that:</para>
+		<para>
+		  gtKam was written by:</para>
+		<para>- Scott Fritzinger &lt;scottf@unr.edu&gt;,</para>
+		<para>- Lutz Mueller &lt;urc8@rz.uni-carlsruhe.de&gt;,</para>
+		<para>- and many others</para>
+		<para>gtKam uses libgphoto2, a library to access a multitude of digital
+		  cameras. More information is available at http://www.gphoto.net.</para>
+		<para>Enjoy the wonderful world of gphoto!</para>
 	      </listitem>
 	    </varlistentry>
 	  </variablelist>
