@@ -21,6 +21,17 @@
  *
  * History:
  * $Log$
+ * Revision 1.24  2001/10/19 13:40:28  lutz
+ * 2001-10-19  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs/casio
+ *         * camlibs/polaroid
+ *         * camlibs/barbie
+ *         * camlibs/dimera
+ *         * camlibs/jamcam
+ *         * camlibs/panasonic/coolshot
+ *         * camlibs/samsung: Use camera-fs and get_file_func
+ *
  * Revision 1.23  2001/10/16 22:38:57  lutz
  * 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -382,8 +393,9 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
 	return (gp_list_populate (list, IMAGE_NAME_TEMPLATE, count));
 }
 
-static int camera_file_get (Camera *camera, const char *folder, const char *filename, CameraFileType type, CameraFile *file) {
+static int get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFileType type, CameraFile *file, void *user_data) {
 
+	Camera *camera = user_data;
 	int num, width, height;
 	char *data;
 	long int size;
@@ -488,23 +500,23 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 	return GP_OK;
 }
 
-static int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
+static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) {
         DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 
-	if (capture_type == GP_OPERATION_CAPTURE_IMAGE) {
-		if (cam->auto_flash) {
-			CHECK (mesa_snap_picture( camera->port, cam->exposure*4 ));
-		}
-		else {
-			CHECK (mesa_snap_image( camera->port, cam->exposure*4 ));
-		}
+	if (type != GP_CAPTURE_IMAGE)
+		return (GP_ERROR_NOT_SUPPORTED);
 
-		/* User must download special RAM_IMAGE_TEMPLATE file */
-		strcpy(path->folder, "/");
-		strcpy(path->name, RAM_IMAGE_TEMPLATE);
-		return ( GP_OK );
+	if (cam->auto_flash) {
+		CHECK (mesa_snap_picture( camera->port, cam->exposure*4 ));
 	}
-	return (GP_ERROR);
+	else {
+		CHECK (mesa_snap_image( camera->port, cam->exposure*4 ));
+	}
+
+	/* User must download special RAM_IMAGE_TEMPLATE file */
+	strcpy(path->folder, "/");
+	strcpy(path->name, RAM_IMAGE_TEMPLATE);
+	return ( GP_OK );
 }
 
 static int camera_capture_preview(Camera *camera, CameraFile *file) {
@@ -932,23 +944,11 @@ int camera_init (Camera *camera) {
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->file_get             = camera_file_get;
-        //camera->functions->folder_put_file    = camera_folder_put_file;
-        //camera->functions->file_delete        = camera_file_delete;
-        //camera->functions->folder_delete_all  = camera_folder_delete_all;
-        //camera->functions->config             = camera_config;
-        //camera->functions->get_config         = camera_get_config;
-        //camera->functions->set_config         = camera_set_config;
-        //camera->functions->folder_get_config  = camera_folder_get_config;
-        //camera->functions->folder_set_config  = camera_folder_set_config;
-        //camera->functions->file_get_config    = camera_file_get_config;
-        //camera->functions->file_set_config    = camera_file_set_config;
         camera->functions->capture              = camera_capture;
         camera->functions->capture_preview      = camera_capture_preview;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
-        //camera->functions->result_as_string   = camera_result_as_string;
 
         cam = (DimeraStruct*)malloc(sizeof(DimeraStruct));
         if (cam == NULL)
@@ -965,7 +965,7 @@ int camera_init (Camera *camera) {
         cam->auto_flash = 1;
 
         debuglog("Opening port");
-        if ( (ret = mesa_port_open(camera->port, camera->port_info->path)) != GP_OK)
+        if ( (ret = mesa_port_open(camera->port)) != GP_OK)
         {
                 ERROR("Camera Open Failed");
                 return ret;
@@ -1003,6 +1003,7 @@ int camera_init (Camera *camera) {
 	/* Tell the filesystem where to get listings and info from */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	return (GP_OK);
 }

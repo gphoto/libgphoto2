@@ -157,10 +157,11 @@ static int camera_exit (Camera *camera)
 	return (GP_OK);
 }
 
-static int camera_file_get (Camera *camera, const char *folder,
-			    const char *filename, CameraFileType type,
-			    CameraFile *file)
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *user_data)
 {
+	Camera *camera = user_data;
 	char raw[265000];
 	char ppm[265000 * 3];
 	char tmp_filename[128];
@@ -294,7 +295,6 @@ int camera_init (Camera *camera)
 
 	/* First, set up all the function pointers */
 	camera->functions->exit 	= camera_exit;
-	camera->functions->file_get	= camera_file_get;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
@@ -332,10 +332,13 @@ int camera_init (Camera *camera)
 	/* get number of images */
 	CHECK (count = jamcam_file_count (camera));
 
+	/* Set up the CameraFilesystem */
 	CHECK (gp_filesystem_set_list_funcs (camera->fs,
 		file_list_func, NULL, camera));
 	CHECK (gp_filesystem_set_info_funcs (camera->fs,
 		get_info_func, NULL, camera));
+	CHECK (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+		NULL, camera));
 
 	return (GP_OK);
 }

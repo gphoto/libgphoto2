@@ -87,9 +87,10 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		 CameraFileType type, CameraFile *file)
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *user_data)
 {
+	Camera *camera = user_data;
 	int n;
 	unsigned char *data = NULL;
 	long int size = 0;
@@ -183,8 +184,11 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 static int
-camera_capture (Camera *camera, int type, CameraFilePath *path)
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
 {
+	if (type != GP_CAPTURE_IMAGE)
+		return (GP_ERROR_NOT_SUPPORTED);
+
 	/* Capture the image */
 	CHECK_RESULT (QVcapture (camera));
 
@@ -206,7 +210,6 @@ camera_init (Camera *camera)
 	int speeds[] = {9600, 57600, 19200, 38400};
 
         /* First, set up all the function pointers */
-        camera->functions->file_get     = camera_file_get;
 	camera->functions->summary	= camera_summary;
 	camera->functions->capture      = camera_capture;
         camera->functions->about        = camera_about;
@@ -214,6 +217,7 @@ camera_init (Camera *camera)
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	/* Check if the camera is really there */
 	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));

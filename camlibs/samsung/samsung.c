@@ -163,9 +163,10 @@ camera_exit (Camera *camera)
 }
 
 static int
-camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		 CameraFileType type, CameraFile *file)
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *user_data)
 {
+	Camera *camera = user_data;
 	int i, n, result;
 	unsigned char buffer[SDSC_BLOCKSIZE];
 	long int size;
@@ -275,16 +276,16 @@ camera_result_as_string (Camera *camera, int result)
 int
 camera_init (Camera *camera) 
 {
-	gp_port_settings settings;
+	GPPortSettings settings;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->file_get             = camera_file_get;
         camera->functions->about                = camera_about;
         camera->functions->result_as_string     = camera_result_as_string;
 
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	/* Some settings */
 	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));

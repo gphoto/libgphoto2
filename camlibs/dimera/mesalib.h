@@ -11,6 +11,17 @@
  *
  * History:
  * $Log$
+ * Revision 1.5  2001/10/19 13:40:28  lutz
+ * 2001-10-19  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs/casio
+ *         * camlibs/polaroid
+ *         * camlibs/barbie
+ *         * camlibs/dimera
+ *         * camlibs/jamcam
+ *         * camlibs/panasonic/coolshot
+ *         * camlibs/samsung: Use camera-fs and get_file_func
+ *
  * Revision 1.4  2001/10/16 18:45:10  dfandrich
  * Added CHECK macro to ease error handling
  *
@@ -130,64 +141,64 @@ struct mesa_image_info {
 #define MESA_EEPROM_SZ 49	/* min. buffer length needed for mesa_eeprom_info */
 
 void
-mesa_flush( gp_port *port, int timeout );
+mesa_flush( GPPort *port, int timeout );
 int
-mesa_read( gp_port *port, u_int8_t *b, int s, int timeout2, int timeout1 );
+mesa_read( GPPort *port, u_int8_t *b, int s, int timeout2, int timeout1 );
 int
-mesa_send_command( gp_port *port, u_int8_t *cmd, int n, int ackTimeout );
+mesa_send_command( GPPort *port, u_int8_t *cmd, int n, int ackTimeout );
 int
-mesa_port_open( gp_port *port, char const *device );
+mesa_port_open( GPPort *port );
 int
-mesa_port_close( gp_port *port );
+mesa_port_close( GPPort *port );
 int
-mesa_reset( gp_port *port );
+mesa_reset( GPPort *port );
 int
-mesa_set_speed( gp_port *port, int speed );
+mesa_set_speed( GPPort *port, int speed );
 int
-mesa_version( gp_port *port,char *version_string);
+mesa_version( GPPort *port,char *version_string);
 int
-mesa_transmit_test( gp_port *port );
+mesa_transmit_test( GPPort *port );
 int
-mesa_ram_test( gp_port *port );
+mesa_ram_test( GPPort *port );
 int
-mesa_read_row( gp_port *port, u_int8_t *r, struct mesa_image_arg *s );
+mesa_read_row( GPPort *port, u_int8_t *r, struct mesa_image_arg *s );
 int
-mesa_snap_image( gp_port *port, u_int16_t exposure );
+mesa_snap_image( GPPort *port, u_int16_t exposure );
 int
-mesa_black_levels( gp_port *port, u_int8_t r[2] );
+mesa_black_levels( GPPort *port, u_int8_t r[2] );
 int
-mesa_snap_view( gp_port *port, u_int8_t *r, unsigned int hi_res, unsigned int zoom,
+mesa_snap_view( GPPort *port, u_int8_t *r, unsigned int hi_res, unsigned int zoom,
 	unsigned int row, unsigned int col, u_int16_t exposure,
 	u_int8_t download );
 int
-mesa_set_stopbits( gp_port *port, unsigned int bits );
+mesa_set_stopbits( GPPort *port, unsigned int bits );
 int
-mesa_download_view( gp_port *port, u_int8_t *r, u_int8_t download );
+mesa_download_view( GPPort *port, u_int8_t *r, u_int8_t download );
 int
-mesa_snap_picture( gp_port *port, u_int16_t exposure );
+mesa_snap_picture( GPPort *port, u_int16_t exposure );
 int
-mesa_send_id( gp_port *port, struct mesa_id *id );
+mesa_send_id( GPPort *port, struct mesa_id *id );
 int
-mesa_modem_check( gp_port *port );
+mesa_modem_check( GPPort *port );
 int
-mesa_read_image( gp_port *port, u_int8_t *r, struct mesa_image_arg *s );
+mesa_read_image( GPPort *port, u_int8_t *r, struct mesa_image_arg *s );
 int
-mesa_recv_test( gp_port *port, u_int8_t r[6] );
+mesa_recv_test( GPPort *port, u_int8_t r[6] );
 int
-mesa_get_image_count( gp_port *port );
+mesa_get_image_count( GPPort *port );
 int
-mesa_load_image( gp_port *port, int image);
+mesa_load_image( GPPort *port, int image);
 int
-mesa_eeprom_info( gp_port *port, int long_read, u_int8_t info[MESA_EEPROM_SZ] );
+mesa_eeprom_info( GPPort *port, int long_read, u_int8_t info[MESA_EEPROM_SZ] );
 int32_t
-mesa_read_thumbnail( gp_port *port, int picture, u_int8_t *image );
+mesa_read_thumbnail( GPPort *port, int picture, u_int8_t *image );
 int
-mesa_read_features( gp_port *port, struct mesa_feature *f );
+mesa_read_features( GPPort *port, struct mesa_feature *f );
 int
-mesa_battery_check( gp_port *port );
+mesa_battery_check( GPPort *port );
 int32_t
-mesa_read_image_info( gp_port *port, int i, struct mesa_image_info *info );
+mesa_read_image_info( GPPort *port, int i, struct mesa_image_info *info );
 u_int8_t *
-mesa_get_image( gp_port *port, int image );
+mesa_get_image( GPPort *port, int image );
 
 #endif /* MESALIB_H */

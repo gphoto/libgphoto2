@@ -88,7 +88,7 @@ timediff( struct timeval *t1, struct timeval *t2 )
 /* flush input.  Wait for timeout deci-seconds to pass without input */
 
 void
-mesa_flush( gp_port *port, int timeout )
+mesa_flush( GPPort *port, int timeout )
 {
 	u_int8_t	b[256];
 	struct timeval	start, now;
@@ -107,7 +107,7 @@ mesa_flush( gp_port *port, int timeout )
 
 /* Read exactly this number of bytes from the port within the given timeouts */
 int
-mesa_read( gp_port *port, u_int8_t *b, int s, int timeout2, int timeout1 )
+mesa_read( GPPort *port, u_int8_t *b, int s, int timeout2, int timeout1 )
 {
 	int		n = 0;
 	int		r, t;
@@ -134,7 +134,7 @@ mesa_read( gp_port *port, u_int8_t *b, int s, int timeout2, int timeout1 )
 
 /* Send a command to the camera and read the acknowledgement byte */
 int
-mesa_send_command( gp_port *port, u_int8_t *cmd, int n, int ackTimeout )
+mesa_send_command( GPPort *port, u_int8_t *cmd, int n, int ackTimeout )
 {
 	u_int8_t	c;
 
@@ -155,13 +155,14 @@ mesa_send_command( gp_port *port, u_int8_t *cmd, int n, int ackTimeout )
 
 /* Open the serial port and configure it */
 int
-mesa_port_open( gp_port *port, char const *device )
+mesa_port_open( GPPort *port )
 {
-	gp_port_settings settings;
+	GPPortSettings settings;
 
 	debuglog("mesa_port_open()");
 	gp_port_timeout_set(port, 5000);
-	strcpy(settings.serial.port, device);
+
+	gp_port_settings_get(port, &settings);
 
 	settings.serial.speed   = 115200;
 	settings.serial.bits    = 8;
@@ -173,21 +174,21 @@ mesa_port_open( gp_port *port, char const *device )
 
 /* Close the serial port (now done by gphoto2 itself) */
 int
-mesa_port_close( gp_port *port )
+mesa_port_close( GPPort *port )
 {
 	return GP_OK;
 }
 
 /* reset camera */
 int
-mesa_reset( gp_port *port )
+mesa_reset( GPPort *port )
 {
 	return gp_port_send_break( port, 1 );
 }
 
 /* set camera serial port speed, then our local port speed */
 int
-mesa_set_speed( gp_port *port, int speed )
+mesa_set_speed( GPPort *port, int speed )
 {
 	u_int8_t	b[2];
 	gp_port_settings settings;
@@ -241,7 +242,7 @@ mesa_set_speed( gp_port *port, int speed )
 
 /* get camera version number */
 int
-mesa_version( gp_port *port, char *version_string)
+mesa_version( GPPort *port, char *version_string)
 {
 	u_int8_t	b;
 	u_int8_t	r[3];
@@ -266,7 +267,7 @@ mesa_version( gp_port *port, char *version_string)
 
 /* test camera serial port transmit */
 int
-mesa_transmit_test( gp_port *port )
+mesa_transmit_test( GPPort *port )
 {
 	u_int8_t	b;
 	u_int8_t	r[256];
@@ -291,7 +292,7 @@ mesa_transmit_test( gp_port *port )
 
 /* test camera ram */
 int
-mesa_ram_test( gp_port *port )
+mesa_ram_test( GPPort *port )
 {
 	u_int8_t	b;
 	u_int8_t	r;
@@ -340,7 +341,7 @@ mesa_ram_test( gp_port *port )
  */
 
 int									/*GDB*/
-mesa_read_row( gp_port *port, u_int8_t *r, struct mesa_image_arg *s )	/*GDB*/
+mesa_read_row( GPPort *port, u_int8_t *r, struct mesa_image_arg *s )	/*GDB*/
 {
 	u_int8_t	b[9];
 	int		bytes, i;					/*GDB*/
@@ -393,7 +394,7 @@ mesa_read_row( gp_port *port, u_int8_t *r, struct mesa_image_arg *s )	/*GDB*/
  * exposure is in units of 1/50000 seconds
  */
 int
-mesa_snap_image( gp_port *port, u_int16_t exposure )
+mesa_snap_image( GPPort *port, u_int16_t exposure )
 {
 	u_int8_t	b[3];
 	int		timeout;
@@ -411,7 +412,7 @@ mesa_snap_image( gp_port *port, u_int16_t exposure )
 
 /* return black levels, overwrites image memory */
 int
-mesa_black_levels( gp_port *port, u_int8_t r[2] )
+mesa_black_levels( GPPort *port, u_int8_t r[2] )
 {
 	u_int8_t	b;
 
@@ -448,7 +449,7 @@ mesa_black_levels( gp_port *port, u_int8_t r[2] )
  *
  */
 int
-mesa_snap_view( gp_port *port, u_int8_t *r, unsigned int hi_res,
+mesa_snap_view( GPPort *port, u_int8_t *r, unsigned int hi_res,
 	unsigned int zoom, unsigned int row, unsigned int col, u_int16_t exposure,
 	u_int8_t download )
 {
@@ -525,7 +526,7 @@ mesa_snap_view( gp_port *port, u_int8_t *r, unsigned int hi_res,
  * slows down transmission without using a slower speed.
  */
 int
-mesa_set_stopbits( gp_port *port, unsigned int bits )
+mesa_set_stopbits( GPPort *port, unsigned int bits )
 {
 	u_int8_t	b[2];
 
@@ -537,7 +538,7 @@ mesa_set_stopbits( gp_port *port, unsigned int bits )
 
 /* download viewfinder image ( see mesa_snap_view ) */
 int
-mesa_download_view( gp_port *port, u_int8_t *r, u_int8_t download )
+mesa_download_view( GPPort *port, u_int8_t *r, u_int8_t download )
 {
 	unsigned int	bytes, i;
 	u_int8_t	b[2], cksum;
@@ -598,7 +599,7 @@ mesa_download_view( gp_port *port, u_int8_t *r, u_int8_t download )
  * take a picture, with flash and shutter click
  */
 int
-mesa_snap_picture( gp_port *port, u_int16_t exposure )
+mesa_snap_picture( GPPort *port, u_int16_t exposure )
 {
 	unsigned int	timeout;
 	u_int8_t	b[3];
@@ -617,7 +618,7 @@ mesa_snap_picture( gp_port *port, u_int16_t exposure )
 
 /* Get the camera chipset identification */
 int
-mesa_send_id( gp_port *port, struct mesa_id *id )
+mesa_send_id( GPPort *port, struct mesa_id *id )
 {
 	u_int8_t	b, r[4];
 
@@ -647,7 +648,7 @@ mesa_send_id( gp_port *port, struct mesa_id *id )
  *		 other = error
  */
 int
-mesa_modem_check( gp_port *port )
+mesa_modem_check( GPPort *port )
 {
 	u_int8_t b[3];
 
@@ -691,7 +692,7 @@ mesa_modem_check( gp_port *port )
  */
 
 int
-mesa_read_image( gp_port *port, u_int8_t *r, struct mesa_image_arg *s )
+mesa_read_image( GPPort *port, u_int8_t *r, struct mesa_image_arg *s )
 {
 	u_int8_t	b[14];
 	int		bytes, i;
@@ -748,7 +749,7 @@ mesa_read_image( gp_port *port, u_int8_t *r, struct mesa_image_arg *s )
  *		GP_ERROR_CORRUPTED_DATA - returned bytes do not match
  */
 int
-mesa_recv_test( gp_port *port, u_int8_t r[6] )
+mesa_recv_test( GPPort *port, u_int8_t r[6] )
 {
 	u_int8_t	b[7];
 	int		i;
@@ -771,7 +772,7 @@ mesa_recv_test( gp_port *port, u_int8_t r[6] )
 
 /* Return the number of images in the EEPROM */
 int
-mesa_get_image_count( gp_port *port )
+mesa_get_image_count( GPPort *port )
 {
 	u_int8_t	b;
 	u_int8_t	r[2];
@@ -790,7 +791,7 @@ mesa_get_image_count( gp_port *port )
 
 /* load image from eeprom, into ram */
 int
-mesa_load_image( gp_port *port, int image )
+mesa_load_image( GPPort *port, int image )
 {
 	u_int8_t	b[3];
 
@@ -806,7 +807,7 @@ mesa_load_image( gp_port *port, int image )
  * Bytes 10..16 of info correspond to the Device ID field, bytes 45..51
  */
 int
-mesa_eeprom_info( gp_port *port, int long_read, u_int8_t info[MESA_EEPROM_SZ] )
+mesa_eeprom_info( GPPort *port, int long_read, u_int8_t info[MESA_EEPROM_SZ] )
 {
 	u_int8_t	b;
 
@@ -822,7 +823,7 @@ mesa_eeprom_info( gp_port *port, int long_read, u_int8_t info[MESA_EEPROM_SZ] )
  */
 
 int32_t
-mesa_read_thumbnail( gp_port *port, int picture, u_int8_t *image )
+mesa_read_thumbnail( GPPort *port, int picture, u_int8_t *image )
 {
 	u_int8_t	b[3], checksum = 0;
 	u_int32_t	bytes;
@@ -867,7 +868,7 @@ mesa_read_thumbnail( gp_port *port, int picture, u_int8_t *image )
 
 /* Return the camera's feature bits */
 int
-mesa_read_features( gp_port *port, struct mesa_feature *f )
+mesa_read_features( GPPort *port, struct mesa_feature *f )
 {
 	u_int8_t	b;
 
@@ -880,7 +881,7 @@ mesa_read_features( gp_port *port, struct mesa_feature *f )
 
 /* return percentage battery level */
 int
-mesa_battery_check( gp_port *port )
+mesa_battery_check( GPPort *port )
 {
 	struct mesa_feature	f;
 	int			l, r, rc;
@@ -904,7 +905,7 @@ mesa_battery_check( gp_port *port )
 }
 
 int32_t
-mesa_read_image_info( gp_port *port, int i, struct mesa_image_info *info )
+mesa_read_image_info( GPPort *port, int i, struct mesa_image_info *info )
 {
 	u_int8_t	b[3], r[3];
 	int32_t		bytes;
@@ -938,7 +939,7 @@ mesa_read_image_info( gp_port *port, int i, struct mesa_image_info *info )
  * return and image with raw pixels expanded.
  */
 u_int16_t *
-mesa_get_image( gp_port *port, int image )
+mesa_get_image( GPPort *port, int image )
 {
 	static u_int8_t			buffer[307200];
 	static struct mesa_image_info	info;
@@ -1008,7 +1009,7 @@ mesa_get_image( gp_port *port, int image )
  * return and raw image retransmit on errors
  */
 u_int8_t *
-mesa_get_image( gp_port *port, int image )
+mesa_get_image( GPPort *port, int image )
 {
 	static struct mesa_image_info	info;
 	static struct mesa_image_arg	ia;

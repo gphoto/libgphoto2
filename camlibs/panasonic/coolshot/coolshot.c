@@ -168,10 +168,11 @@ static int camera_exit (Camera *camera)
 	return (GP_OK);
 }
 
-static int camera_file_get (Camera *camera, const char *folder,
-			    const char *filename, CameraFileType type,
-			    CameraFile *file)
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *user_data)
 {
+	Camera *camera = user_data;
 	char data[128000];
 	char ppm_filename[128];
 	int size, n;
@@ -262,23 +263,21 @@ static int camera_about (Camera *camera, CameraText *about)
 int camera_init (Camera *camera)
 {
 	int count;
-	gp_port_settings settings;
+	GPPortSettings settings;
 
 	/* First, set up all the function pointers */
 	camera->functions->exit 	= camera_exit;
-	camera->functions->file_get 	= camera_file_get;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
-	strcpy (settings.serial.port, camera->port_info->path);
+	/* Set up the port */
+	CHECK (gp_port_settings_get (camera->port, &settings));
 	settings.serial.speed 	 = DEFAULT_SPEED;
 	settings.serial.bits 	 = 8;
 	settings.serial.parity 	 = 0;
 	settings.serial.stopbits = 1;
-
 	CHECK (gp_port_settings_set (camera->port, settings));
-
 	CHECK (gp_port_timeout_set (camera->port, TIMEOUT));
 
 	/* check to see if camera is really there */
@@ -294,6 +293,8 @@ int camera_init (Camera *camera)
 		file_list_func, NULL, camera));
 	CHECK (gp_filesystem_set_info_funcs (camera->fs,
 		get_info_func, NULL, camera));
+	CHECK (gp_filesystem_set_file_funcs (camera->fs,
+		get_file_func, NULL, camera));
 
 	/* coolshot_sb sets to default speed if speed == 0 */
 	CHECK (coolshot_sb (camera, camera->port_info->speed));
