@@ -82,16 +82,19 @@ conflicts between to different users accessing the camera.
 2. Choose the right /etc/hotplug/usb/usbcam script for you.
    Example scripts are found in packages/ in the source tree
    and in linux-hotplug/ after installation and in the doc dir of 
-   the binary package.
+   the binary package. Choose one, adapt it for your needs, and copy
+   it to /etc/hotplug/usb/usbcam.
 
    a) The most simple solution is using usbcam.console. This
       changes the permissions so that the user owning /dev/console can
       access the camera. This works if you're logging in with
-      pam_console, i.e. e.g. on Redhat Linux.
+      pam_console, i.e. e.g. using gdm on Redhat Linux. You may want
+      to check with "ls -l /dev/console" whether this usbcam.console
+      will work for you. /dev/console must belong to the user you are
+      logged in as.
 
-   b) If you want only one user to have access to the camera, edit
-      usbcam.group to do a "chown user" instead of the "chgrp camera"
-      and a "chmod 0600" instead of "chmod 0660". 
+   b) If you want only one user to have access to the camera, use
+      usbcam.user and change it accordingly.
 
    c) If you want multiple users to have access to the camera, put all
       of these users in one group - either a special "camera" group or
