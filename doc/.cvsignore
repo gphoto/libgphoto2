@@ -3,5 +3,5 @@ Makefile.in
 Makefile
 *.ced
 *.pdf
-html
+manual
 txt
