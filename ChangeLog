@@ -2,6 +2,7 @@
 
 	* libgphoto2/gphoto2-abilities-list.c: removed the fscking "can't load *.la" message
 	* libgphoto2_port/m4/documentation.m4: removed unnecessary stuff (xmlto, fig2dev, etc.)
+	* configure.in: 2.1.1dev8
 
 2002-10-13  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
