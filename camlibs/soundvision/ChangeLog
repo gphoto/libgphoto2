@@ -1,3 +1,6 @@
+2003-06-14  Dan Fandrich <dan@coneharvesters.com>
+	* soundvision.h: Include _stdint.h to get fixed-size integer types.
+
 2002-02-11  Vince Weaver <vince@deater.net>
         * Completely redid tiger support.  Involved separating out
 	  more functions from Agfa, extensive looking at usb-traces, etc.

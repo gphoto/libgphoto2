@@ -1,6 +1,8 @@
 #ifndef soundvision_H
 #define soundvision_H
 
+#include <_stdint.h>
+
 #define SOUNDVISION_START_TRANSACTION 0x0001
 
 #define SOUNDVISION_SETPC2            0x0004          
