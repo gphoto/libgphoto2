@@ -1,3 +1,8 @@
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/debug.c: Use the debug level from libgphoto2_port instead
+	of keeping an own global variable
+
 2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* configure.in: Check for vsnprintf, too.
