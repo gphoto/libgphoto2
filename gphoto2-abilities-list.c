@@ -142,8 +142,8 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 		if (de) {
 			const char *filename = GP_SYSTEM_FILENAME (de);
 
-			sprintf (buf, "%s%c%s", dir, GP_SYSTEM_DIR_DELIM,
-				 filename);
+			snprintf (buf, sizeof (buf), "%s%c%s", dir,
+				  GP_SYSTEM_DIR_DELIM, filename);
 
 			/* Don't try to open ".*" */
 			if (filename[0] == '.')
