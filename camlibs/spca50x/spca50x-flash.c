@@ -5,6 +5,7 @@
 /*                                                              */
 /* Authors: Till Adam <till@adam-lilienthal.de>                 */
 /*          Ian MacArthur <ian@imm.uklinux.net>                 */
+/*          John Maushammer <gphoto2@maushammer.com>            */
 /* based on work done by:                                       */
 /*          Mark A. Zimmerman <mark@foresthaven.com>            */
 /*                                                              */
@@ -304,8 +305,22 @@ spca500_flash_capture (CameraPrivateLibrary *pl)
 		/* invalidate TOC/info cache */
 		pl->dirty_flash = 1;
 		return GP_OK;
+	} else if (pl->bridge == BRIDGE_SPCA504B_PD) {
+		/* trigger image capture */
+		CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x51, 0x0000, 0x0000,
+					NULL, 0));
+
+		/* wait until the camera is not busy any more */
+		/* spca50x_flash_wait_for_ready doesn't work here */
+		sleep(3);
+		
+		/* invalidate TOC/info cache */
+		pl->dirty_flash = 1;
+		return GP_OK;
 	} else {
-		/* not supported on the 504 style cams */
+		/* not supported on the 504 style cams, but procedure used by
+		 * SPCA504_PD will probably work */
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 }
@@ -346,6 +361,18 @@ spca50x_flash_get_file_name (CameraPrivateLibrary *pl, int index, char *name)
 		memcpy (name+9, p+8, 3);
 		name[12] = '\0';
 	}
+	return GP_OK;
+}
+
+/* extract ascii-encoded number from file name */
+static int
+spca50x_flash_get_number_from_file_name (CameraPrivateLibrary *pl, int index, int *file_number)
+{
+	char name[13];
+
+	CHECK (spca50x_flash_get_file_name (pl, index, name));
+	if(sscanf(&(name[4]), "%d", file_number) != 1)    /* skip "DSC_" */
+		return GP_ERROR;
 	return GP_OK;
 }
 
@@ -765,6 +792,7 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 {
 	uint32_t file_size = 0, aligned_size = 0;
 	uint8_t *p, *buf;
+	int file_number;
 	int align_to;
 
 	if (lib->bridge == BRIDGE_SPCA500) { /* for dsc 350 cams */
@@ -798,12 +826,19 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 			CHECK (gp_port_usb_msg_write (lib->gpdev,
 					0x0a, index+1, 0x000d, NULL, 0x00));
 		} else {
-			CHECK (gp_port_usb_msg_write (lib->gpdev,
+			if(lib->bridge != BRIDGE_SPCA504B_PD) {
+				CHECK (gp_port_usb_msg_write (lib->gpdev,
 					0x54, index+1, 0x0002, NULL, 0x00));
+			} else {
+				CHECK (spca50x_flash_get_number_from_file_name(
+					lib, index, &file_number));
+				CHECK (gp_port_usb_msg_write (lib->gpdev,
+					0x54, file_number, 0x0002, NULL, 0x00));
+			}
 		}
 	}
 
-	if (lib->fw_rev == 1) {
+	if ((lib->fw_rev == 1) || (lib->bridge == BRIDGE_SPCA504B_PD)) {
 		align_to = 0x4000;
 	} else {
 		align_to = 0x2000;

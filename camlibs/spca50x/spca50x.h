@@ -50,8 +50,9 @@ struct SPCA50xFile
 };
 
 typedef enum {
-           BRIDGE_SPCA500,
-	   BRIDGE_SPCA504
+	BRIDGE_SPCA500,
+	BRIDGE_SPCA504,
+	BRIDGE_SPCA504B_PD    /* with specialized pure digital firmware */
 } SPCA50xBridgeChip;
 
 struct _CameraPrivateLibrary

@@ -123,7 +123,9 @@ models[] =
 	{"D-Link:DSC 350+", 0x084d, 0x0003,
 		BRIDGE_SPCA500, SPCA50X_FLASH},
         {"Minton:S-Cam F5", 0x084d, 0x0003,
-	        BRIDGE_SPCA500, SPCA50X_FLASH},
+	        BRIDGE_SPCA500, SPCA50X_FLASH},	
+	{"PureDigital:Ritz Disposable", 0x04fc, 0xffff,
+		BRIDGE_SPCA504B_PD, SPCA50X_FLASH},
 	{NULL, 0, 0, 0, 0}
 };
 
@@ -163,6 +165,9 @@ camera_abilities (CameraAbilitiesList *list)
 			 || a.usb_product == 0xc520)
 				a.operations = GP_OPERATION_CAPTURE_IMAGE;
 		}
+		if (models[x].bridge == BRIDGE_SPCA504B_PD) {
+                            a.operations = GP_OPERATION_CAPTURE_IMAGE;
+                }
 		if (models[x].bridge == BRIDGE_SPCA500) {
 			/* TEST enable capture for the DSC-350 style cams */
 			if (a.usb_vendor == 0x084d) {
@@ -606,13 +611,15 @@ camera_init (Camera *camera, GPContext *context)
 	}
    
 	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) ) {
-		if (camera->pl->bridge == BRIDGE_SPCA504)
+		if ((camera->pl->bridge == BRIDGE_SPCA504) ||
+		    (camera->pl->bridge == BRIDGE_SPCA504B_PD))
 			CHECK (spca50x_flash_init (camera->pl, context));
 	}
-	
-	if (camera->pl->bridge == BRIDGE_SPCA504) {
-		if ( !( abilities.usb_vendor == 0x04fc 
-           && abilities.usb_product == 0x504a ) )
+
+	if ((camera->pl->bridge == BRIDGE_SPCA504) ||
+	    (camera->pl->bridge == BRIDGE_SPCA504B_PD)) {
+//		if (abilities.usb_vendor != 0x04fc && abilities.usb_product != 0x504a )
+		if (!(abilities.usb_vendor == 0x04fc && abilities.usb_product == 0x504a ))
 			ret = spca50x_reset (camera->pl);
 	}
 

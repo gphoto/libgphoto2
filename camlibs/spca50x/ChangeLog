@@ -1,4 +1,8 @@
 2004-02-22 Till Adam  <till@adam-lilienthal.de>
+  * add support for Dakota disposable cameras. This is the 
+    work of John Maushammer <john@maushammer.com>
+
+2004-02-22 Till Adam  <till@adam-lilienthal.de>
   * add support for Pencams without flash via a special camera
     model. --camera "Pencam without flash" works for those cams
     which fail upon autodetection as regular pencams.  
