@@ -11,13 +11,9 @@ main (int argc, char *argv [])
 	Camera *camera;
 
 	/*
-	 * First, initialize gphoto2. gphoto2 will load every camera library,
-	 * check for the supported cameras, and unload it again. After
-	 * this has been done, gphoto2 has a list supported camera models 
-	 * in memory.
+	 * You don't have to initialize libgphoto2 anymore. We do that
+	 * internally.
 	 */
-	printf ("Initializing gphoto2...\n");
-	CHECK (gp_init (GP_DEBUG_NONE));
 
 	/*
 	 * You'll probably want to access your camera. You will first have

@@ -74,8 +74,6 @@ main (int argc, char **argv)
 	int x, count;
 	const char *name;
 
-	CHECK (gp_init (GP_DEBUG_HIGH));
-
 	printf ("*** Creating file system...\n");
 	CHECK (gp_filesystem_new (&fs));
 

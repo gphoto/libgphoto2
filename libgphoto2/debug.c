@@ -1,6 +1,6 @@
-/* gphoto2-core.h
+/* debug.c
  *
- * Copyright (C) 2000 Scott Fritzinger
+ * Copyright (C) 2001 Lutz Müller
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,26 +18,41 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GPHOTO2_CORE_H__
-#define __GPHOTO2_CORE_H__
+#include "gphoto2-debug.h"
 
-#include <gphoto2-list.h>
-#include <gphoto2-abilities.h>
+#include <stdarg.h>
+#include <stdio.h>
 
-/* Initialization is done automatically. */
-int gp_exit           (void);
+int glob_debug = GP_DEBUG_NONE;
 
-int  gp_autodetect (CameraList *list);
+void
+gp_debug_printf (int level, const char *id, const char *format, ...)
+{
+	va_list arg;
 
-/* Retrieve the number of available cameras */
-int gp_camera_count (void);
+	if (glob_debug == GP_DEBUG_NONE)
+		return;
 
-/* Retrieve the name of a particular camera */
-int gp_camera_name  (int camera_number, const char **camera_name);
+	if (glob_debug >= level) {
+		fprintf (stderr, "%s: ", id);
+		va_start (arg, format);
+		vfprintf (stderr, format, arg);
+		va_end (arg);
+		fprintf (stderr, "\n");
+	}
+}
 
-/* Retreive abilities for a given camera */
-int gp_camera_abilities         (int camera_number, CameraAbilities *abilities);
-int gp_camera_abilities_by_name (const char *camera_name,
-				 CameraAbilities *abilities);
+void
+gp_debug_set_level (int level)
+{
+	glob_debug = level;
 
-#endif /* __GPHOTO2_CORE_H__ */
+	/* Initialize the IO library with the given debug level */
+	gp_port_init (level);
+}
+
+int
+gp_debug_get_level (void)
+{
+	return (glob_debug);
+}

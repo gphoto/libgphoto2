@@ -28,6 +28,7 @@ extern "C" {
 #include <gphoto2-port.h>
 #include <gphoto2-camera.h>
 #include <gphoto2-core.h>
+#include <gphoto2-debug.h>
 #include <gphoto2-file.h>
 #include <gphoto2-filesys.h>
 #include <gphoto2-frontend.h>

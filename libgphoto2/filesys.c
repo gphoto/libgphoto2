@@ -27,6 +27,7 @@
 #include "gphoto2-core.h"
 #include "gphoto2-result.h"
 #include "gphoto2-file.h"
+#include "gphoto2-debug.h"
 
 typedef struct {
 	char name [128];

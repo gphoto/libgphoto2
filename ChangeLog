@@ -1,8 +1,21 @@
+2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/jamcam/.cvsignore:
+	* camlibs/sonydscf55/.cvsignore: New
+	* include/gphoto2-debug.h:
+	* libgphoto2/debug.c: Debugging stuff can be found here.
+	* frontends/command-line/main.c: Use gp_debug_set_level and don't
+	use gp_init any more (this is done automatically).
+	* include/Makefile.am:
+	* libgphoto2/Makefile.am: Add the debugging files
+	* include/gphoto2-core.h: Remove debugging and initialization stuff
+	* libgphoto2/core.c: Make gp_init a static function.
+	* (...) Various smaller changes regarding gp_init and gp_debug_*.
+
 2001-09-22  Raymond Penners  <raymond@dotsphinx.com>
 
 	* camlibs/sonydscf55/*: Fixes & eliminated compiler warnings.
 	
-
 2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Carsten Pfeiffer <carpdjih@sp.zrz.tu-berlin.de>

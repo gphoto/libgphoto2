@@ -1,6 +1,6 @@
-/* gphoto2-core.h
+/* gphoto2-debug.h
  *
- * Copyright (C) 2000 Scott Fritzinger
+ * Copyright (C) 2001 Lutz Müller
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,26 +18,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GPHOTO2_CORE_H__
-#define __GPHOTO2_CORE_H__
+#ifndef __GPHOTO2_DEBUG_H__
+#define __GPHOTO2_DEBUG_H__
 
-#include <gphoto2-list.h>
-#include <gphoto2-abilities.h>
+#include <gphoto2-port.h>
 
-/* Initialization is done automatically. */
-int gp_exit           (void);
+/* The debug levels (GP_DEBUG_*) are defined in gphoto2-port.h */
 
-int  gp_autodetect (CameraList *list);
+void gp_debug_printf    (int level, const char *id, const char *format, ...);
 
-/* Retrieve the number of available cameras */
-int gp_camera_count (void);
+void gp_debug_set_level (int level);
+int  gp_debug_get_level (void);
 
-/* Retrieve the name of a particular camera */
-int gp_camera_name  (int camera_number, const char **camera_name);
-
-/* Retreive abilities for a given camera */
-int gp_camera_abilities         (int camera_number, CameraAbilities *abilities);
-int gp_camera_abilities_by_name (const char *camera_name,
-				 CameraAbilities *abilities);
-
-#endif /* __GPHOTO2_CORE_H__ */
+#endif /* __GPHOTO2_DEBUG_H__ */
