@@ -26,6 +26,11 @@
 
 #include <gphoto2-port-log.h>
 
+/**
+ * GPContext:
+ *
+ * The internals of this structure are private.
+ **/
 struct _GPContext
 {
 	GPContextIdleFunc     idle_func;
