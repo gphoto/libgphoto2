@@ -51,12 +51,48 @@ typedef struct {
 	CameraWidget *window;
 } CmdConfig;
 
+#define CHECK(result) {int r=(result);if(r<0)return(r);}
+
 static int show_widget (CmdConfig *cmd_config, CameraWidget *widget);
 
 static int
 set_config (CmdConfig *cmd_config)
 {
-	return (gp_camera_set_config (cmd_config->camera, cmd_config->window));
+	int result, selection;
+	char *msg[10];
+	char *buttons[] = {N_("</B/24>Continue"), N_("</B16>Cancel")};
+	CDKDIALOG *question = NULL;
+
+	result = gp_camera_set_config (cmd_config->camera, cmd_config->window);
+	if (result < 0) {
+		msg[0] = N_("<C></5>Error");
+		msg[1] = "";
+		msg[2] = N_("Could not set configuration:");
+		msg[3] = (char*) gp_result_as_string (result);
+		msg[4] = (char*) gp_camera_get_error (cmd_config->camera);
+		question = newCDKDialog (cmd_config->screen, CENTER, CENTER,
+					 msg, 5, buttons, 2,
+					 COLOR_PAIR (2) | A_REVERSE,
+					 TRUE, TRUE, FALSE);
+		if (!question)
+			return (GP_ERROR);
+		selection = activateCDKDialog (question, 0);
+		if (question->exitType == vNORMAL) {
+			switch (selection) {
+			case 0: /* Continue */
+				destroyCDKDialog (question);
+				return (GP_OK);
+			default:
+				destroyCDKDialog (question);
+				return (result);
+			}
+		} else {
+			destroyCDKDialog (question);
+			return (result);
+		}
+	}
+
+	return (GP_OK);
 }
 
 static int
@@ -130,7 +166,7 @@ show_date (CmdConfig *cmd_config, CameraWidget *date)
 	year = date_info->tm_year + 1900;
 
 	gp_widget_get_label (date, &label);
-	snprintf (title, sizeof (title), "<C></U>%s", label);
+	snprintf (title, sizeof (title), "<C></5>%s", label);
 
 	/* Create the calendar */
 	calendar = newCDKCalendar (cmd_config->screen, CENTER, CENTER, title,
@@ -167,7 +203,7 @@ show_radio (CmdConfig *cmd_config, CameraWidget *radio)
 	int x, count, current = 0, selection, found;
 
 	gp_widget_get_label (radio, &label);
-	snprintf (title, sizeof (title), "<C></U>%s", label);
+	snprintf (title, sizeof (title), "<C></5>%s", label);
 	gp_widget_get_value (radio, &current_value);
 	count = gp_widget_count_choices (radio);
 
@@ -208,6 +244,63 @@ show_radio (CmdConfig *cmd_config, CameraWidget *radio)
 }
 
 static int
+show_text (CmdConfig *cmd_config, CameraWidget *text)
+{
+	CDKENTRY *entry = NULL;
+	const char *label, *value;
+	char title[1024], *info;
+
+	CHECK (gp_widget_get_value (text, &value));
+	CHECK (gp_widget_get_label (text, &label));
+
+	snprintf (title, sizeof (title), "<C></5>%s", label);
+	entry = newCDKEntry (cmd_config->screen, CENTER, CENTER, title,
+			     _("Value: "), A_NORMAL, ' ', vMIXED, 40, 0,
+			     256, TRUE, FALSE);
+	if (!entry)
+		return (GP_ERROR);
+
+	setCDKEntryValue (entry, (char*) value);
+	info = activateCDKEntry (entry, 0);
+	if (entry->exitType == vNORMAL) {
+		gp_widget_set_value (text, info);
+		set_config (cmd_config);
+	}
+
+	destroyCDKEntry (entry);
+	return (GP_OK);
+}
+
+static int
+show_toggle (CmdConfig *cmd_config, CameraWidget *toggle)
+{
+	CDKITEMLIST *list = NULL;
+	int value, selection;
+	const char *label;
+	char title[1024], *info[] = {N_("Yes"), N_("No")};
+
+	CHECK (gp_widget_get_value (toggle, &value));
+	CHECK (gp_widget_get_label (toggle, &label));
+	snprintf (title, sizeof (title), "<C></5>%s", label);
+
+	list = newCDKItemlist (cmd_config->screen, CENTER, CENTER, title, "",
+			       info, 2, 1 - value, TRUE, FALSE);
+	if (!list)
+		return (GP_ERROR);
+
+	selection = activateCDKItemlist (list, 0);
+	if (list->exitType == vNORMAL) {
+		selection = 1 - selection;
+		gp_widget_set_value (toggle, &selection);
+		set_config (cmd_config);
+	}
+
+	destroyCDKItemlist (list);
+
+	return (GP_OK);
+}
+	
+static int
 show_range (CmdConfig *cmd_config, CameraWidget *range)
 {
 	CDKSLIDER *slider = NULL;
@@ -216,13 +309,13 @@ show_range (CmdConfig *cmd_config, CameraWidget *range)
 	char title[1024];
 	int selection;
 
-	gp_widget_get_value (range, &value);
-	gp_widget_get_label (range, &label);
-	snprintf (title, sizeof (title), "<C></U>%s", label);
-	gp_widget_get_range (range, &min, &max, &increment);
+	CHECK (gp_widget_get_value (range, &value));
+	CHECK (gp_widget_get_label (range, &label));
+	snprintf (title, sizeof (title), "<C></5>%s", label);
+	CHECK (gp_widget_get_range (range, &min, &max, &increment));
 
 	slider = newCDKSlider (cmd_config->screen, CENTER, CENTER, title,
-			       _("Value: "), A_REVERSE | COLOR_PAIR (29) | ' ',
+			       _("Value: "), '-',
 			       50, (int) value, min, max,
 			       increment, increment * 10, TRUE,
 			       FALSE);
@@ -246,27 +339,37 @@ show_widget (CmdConfig *cmd_config, CameraWidget *widget)
 	CameraWidget *parent;
 	CameraWidgetType type;
 
-	gp_widget_get_type (widget, &type);
+	CHECK (gp_widget_get_type (widget, &type));
 	switch (type) {
 	case GP_WIDGET_WINDOW:
 	case GP_WIDGET_SECTION:
-		show_section (cmd_config, widget);
+		CHECK (show_section (cmd_config, widget));
 		break;
 	case GP_WIDGET_DATE:
-		show_date (cmd_config, widget);
-		gp_widget_get_parent (widget, &parent);
-		show_widget (cmd_config, parent);
+		CHECK (show_date (cmd_config, widget));
+		CHECK (gp_widget_get_parent (widget, &parent));
+		CHECK (show_widget (cmd_config, parent));
 		break;
 	case GP_WIDGET_MENU:
 	case GP_WIDGET_RADIO:
-		show_radio (cmd_config, widget);
-		gp_widget_get_parent (widget, &parent);
-		show_widget (cmd_config, parent);
+		CHECK (show_radio (cmd_config, widget));
+		CHECK (gp_widget_get_parent (widget, &parent));
+		CHECK (show_widget (cmd_config, parent));
 		break;
 	case GP_WIDGET_RANGE:
-		show_range (cmd_config, widget);
-		gp_widget_get_parent (widget, &parent);
-		show_widget (cmd_config, parent);
+		CHECK (show_range (cmd_config, widget));
+		CHECK (gp_widget_get_parent (widget, &parent));
+		CHECK (show_widget (cmd_config, parent));
+		break;
+	case GP_WIDGET_TEXT:
+		CHECK (show_text (cmd_config, widget));
+		CHECK (gp_widget_get_parent (widget, &parent));
+		CHECK (show_widget (cmd_config, parent));
+		break;
+	case GP_WIDGET_TOGGLE:
+		CHECK (show_toggle (cmd_config, widget));
+		CHECK (gp_widget_get_parent (widget, &parent));
+		CHECK (show_widget (cmd_config, parent));
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);

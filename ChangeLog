@@ -1,3 +1,10 @@
+2001-10-30 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* frontends/command-line/gphoto2-cmd-config.c:
+	  Implement GP_WIDGET_TEXT and GP_WIDGET_TOGGLE
+	* camlibs/directory/directory.c: Expand configuration dialog
+	  for testing purposes. Additions #ifdef'd out.
+
 2001-10-30 Fredrik <fredrik@krixor.xy.org>
 
 	* frontends/command-line/interface.c: Since status messages are

@@ -272,17 +272,29 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 static int
 camera_get_config (Camera *camera, CameraWidget **window)
 {
-        CameraWidget *widget;
+	CameraWidget *widget;
+#if 0
+	CameraWidget *section;
+#endif
         char buf[256];
         int val;
 
-        gp_widget_new (GP_WIDGET_WINDOW, "Dummy", window);
+        gp_widget_new (GP_WIDGET_WINDOW, "Directory Browse", window);
         gp_widget_new (GP_WIDGET_TOGGLE, "View hidden (dot) directories",
                        &widget);
         gp_setting_get ("directory", "hidden", buf);
         val = atoi (buf);
         gp_widget_set_value (widget, &val);
         gp_widget_append (*window, widget);
+
+#if 0
+	gp_widget_new (GP_WIDGET_SECTION, "Testing", &section);
+	gp_widget_append (*window, section);
+
+	gp_widget_new (GP_WIDGET_TEXT, "Text", &widget);
+	gp_widget_set_value (widget, "This is some text.");
+	gp_widget_append (section, widget);
+#endif
 
         return (GP_OK);
 }
