@@ -273,6 +273,10 @@ int camera_init (Camera *camera)
 	fd->speed = camera->port->speed;
 	fd->type  = camera->port->type;
 
+//Remove this once libgphoto2_port is fixed
+if (fd->type == GP_PORT_USB)
+        CHECK_FREE (camera, gp_port_open (fd->dev));
+
 	/* Establish a connection */
 	CHECK_FREE (camera, camera_start (camera));
 
@@ -333,7 +337,7 @@ int camera_start (Camera *camera)
 	 */
 //Remove this once libgphoto2_port is fixed
 if (fd->type != GP_PORT_USB)
-	CHECK (camera, gp_port_open (fd->dev));
+	CHECK (gp_port_open (fd->dev));
 
 	switch (fd->type) {
 	case GP_PORT_SERIAL:
@@ -366,7 +370,7 @@ int camera_stop (Camera *camera)
 	 * to access the camera, too.
 	 */
 //Remove this once libgphoto2_port is fixed
-//if (fd->type != GP_PORT_USB)
+if (fd->type != GP_PORT_USB)
 	CHECK (gp_port_close (fd->dev));
 
 	return (GP_OK);
@@ -431,7 +435,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	CHECK (camera_start (camera));
 
 	/* Set the working folder */
-	CHECK_STOP (sierra_change_folder (camera, folder));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder));
 
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
@@ -525,7 +529,7 @@ int camera_file_get_info (Camera *camera, const char *folder,
 	CHECK (camera_start (camera));
 
 	/* Set the working folder */
-	CHECK_STOP (sierra_change_folder (camera, folder));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder));
 
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
@@ -570,7 +574,7 @@ int camera_folder_delete_all (Camera *camera, const char *folder)
 	CHECK (camera_start (camera));
 
 	/* Set the working folder */
-	CHECK_STOP (sierra_change_folder (camera, folder));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder));
 
 	CHECK_STOP (camera, sierra_delete_all (camera));
 
@@ -603,7 +607,7 @@ int camera_file_delete (Camera *camera, const char *folder,
 	CHECK (camera_start (camera));
 
 	/* Set the working folder */
-	CHECK_STOP (sierra_change_folder (camera, folder));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder));
 
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
 	CHECK_STOP (camera, file_number);
