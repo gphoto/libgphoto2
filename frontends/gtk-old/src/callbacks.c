@@ -163,21 +163,12 @@ void open_directory() {
 	debug_print("open directory");
 }
 
-void save_opened_photo() {
-	debug_print("save opened photo");
-}
-
 void save_selected_photo() {
 	debug_print("save selected photo");
 }
 
 void export_gallery() {
 	debug_print("export gallery");
-
-}
-
-void print_photo() {
-	debug_print("print photo");
 
 }
 
@@ -279,10 +270,27 @@ void select_none() {
 /* Folder Callbacks */
 /* ----------------------------------------------------------- */
 
+void folder_refresh (GtkWidget *widget, gpointer data) {
+
+	GtkWidget *icon_list;
+
+	debug_print("folder refresh");
+
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
+
+	icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
+	gtk_icon_list_clear (GTK_ICON_LIST(icon_list));
+
+	camera_index();
+}
+
 void folder_set (GtkWidget *tree_item, gpointer data) {
 
 	char buf[1024];
 	char *path = (char*)gtk_object_get_data(GTK_OBJECT(tree_item), "path");
+
+	debug_print("folder set");
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
@@ -296,7 +304,7 @@ void folder_set (GtkWidget *tree_item, gpointer data) {
 		return;
 	}
 
-	camera_index_thumbnails();
+	camera_index();
 }
 
 GtkWidget *folder_item (GtkWidget *tree, char *text) {
@@ -349,6 +357,8 @@ void folder_expand (GtkWidget *tree_item, gpointer data) {
 	char *path = (char*)gtk_object_get_data(GTK_OBJECT(tree_item), "path");
 	char buf[1024];
 	int x, count=0;
+
+	debug_print("folder_expand");
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
@@ -618,17 +628,19 @@ camera_select_again:
 	gtk_widget_destroy(window);
 }
 
-void camera_index_common(int thumbnails) {
+void camera_index () {
 
 	CameraFile *f;
 	CameraAbilities a;
-	GtkWidget *icon_list;
+	GtkWidget *icon_list, *camera_tree;
 	GtkIconListItem *item;
 	GdkPixmap *pixmap;
 	GdkBitmap *bitmap;
 	char buf[1024];
-	int x, count=0;
+	int x, count=0, get_thumbnails = 1;
 
+	debug_print("camera index");
+	
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
@@ -654,9 +666,12 @@ void camera_index_common(int thumbnails) {
 		return;
 
 	gtk_icon_list_clear (GTK_ICON_LIST(icon_list));
+	camera_tree = (GtkWidget*) lookup_widget(gp_gtk_main_window, "folder_tree");
 	x=0;
 	gp_progress(0.00);
+	gtk_widget_set_sensitive(camera_tree, FALSE);
 	gtk_widget_show(gp_gtk_progress_window);
+	idle();
 	while ((x<count)&&(GTK_WIDGET_VISIBLE(gp_gtk_progress_window))) {
 		sprintf(buf,"Getting Thumbnail #%04i of %04i", x, count);
 		gp_message(buf);
@@ -664,7 +679,7 @@ void camera_index_common(int thumbnails) {
 		sprintf(buf,"#%04i", x);
 		item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
 			no_thumbnail_xpm,buf,NULL);
-		if ((thumbnails)&&(a.file_preview)) {
+		if ((get_thumbnails)&&(a.file_preview)) {
 			f = gp_file_new();
 			if (gp_file_get_preview(x, f) == GP_OK) {
 				gdk_image_new_from_data(f->data,f->size,1,&pixmap,&bitmap);
@@ -678,20 +693,7 @@ void camera_index_common(int thumbnails) {
 	}
 	gp_progress(0.00);
 	gtk_widget_hide(gp_gtk_progress_window);
-}
-
-void camera_index_thumbnails() {
-
-	debug_print("camera index thumbnails");
-
-	camera_index_common(1);
-}
-
-void camera_index_no_thumbnails() {
-
-	debug_print("camera index no thumbnails");
-
-	camera_index_common(0);
+	gtk_widget_set_sensitive(camera_tree, TRUE);
 }
 
 void camera_download_thumbnails() {
@@ -895,12 +897,6 @@ void on_open_directory_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	open_directory();
 }
 
-
-void on_save_open_photo_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	save_opened_photo();
-}
-
-
 void on_save_photo_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	save_selected_photo();
 }
@@ -909,12 +905,6 @@ void on_save_photo_activate (GtkMenuItem *menuitem, gpointer user_data) {
 void on_html_gallery_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	export_gallery();
 }
-
-
-void on_print_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	print_photo();
-}
-
 
 void on_close_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	close_photo();
@@ -983,16 +973,6 @@ void on_select_none_activate (GtkMenuItem *menuitem, gpointer user_data) {
 
 void on_select_camera_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	camera_select();
-}
-
-
-void on_index_thumbnails_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	camera_index_thumbnails();
-}
-
-
-void on_index_no_thumbnails_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	camera_index_no_thumbnails();
 }
 
 

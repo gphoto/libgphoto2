@@ -10,10 +10,8 @@ void icon_resize(GtkWidget *window);
 /* File operations */
 void open_photo();
 void open_directory();
-void save_opened_photo();
 void save_selected_photo();
 void export_gallery();
-void print_photo();
 void close_photo();
 
 /* Editing operations */
@@ -34,14 +32,13 @@ void select_none();
 /* Folder operations */
 GtkWidget *tree_item_icon (GtkWidget *tree, char *text, char *icon_name);
 GtkWidget *folder_item      (GtkWidget *tree, char *text);
-
+void folder_refresh (GtkWidget *widget, gpointer data);
 void folder_set (GtkWidget *tree_item, gpointer data);
 void folder_expand (GtkWidget *tree_item, gpointer data);
 
 /* Camera operations */
 void camera_select();
-void camera_index_thumbnails();
-void camera_index_no_thumbnails();
+void camera_index();
 void camera_download_thumbnails();
 void camera_download_photos();
 void camera_download_both();
@@ -63,10 +60,8 @@ void help_manual();
 /* Menu callbacks */
 void on_open_photo_activate (GtkMenuItem *menuitem, gpointer user_data);
 void on_open_directory_activate (GtkMenuItem *menuitem, gpointer user_data);
-void on_save_open_photo_activate (GtkMenuItem *menuitem, gpointer user_data);
 void on_save_photo_activate (GtkMenuItem *menuitem, gpointer user_data);
 void on_html_gallery_activate (GtkMenuItem *menuitem, gpointer user_data);
-void on_print_activate (GtkMenuItem *menuitem, gpointer user_data);
 void on_close_activate (GtkMenuItem *menuitem, gpointer user_data);
 void on_exit_activate (GtkMenuItem *menuitem, gpointer user_data);
 void on_flip_horizontal_activate (GtkMenuItem *menuitem, gpointer user_data);

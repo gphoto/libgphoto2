@@ -119,28 +119,19 @@ create_main_window (void)
   GtkWidget *pixmap;
   GtkWidget *label;
   GtkWidget *menubar1;
+  GtkTooltips *tooltip;
   guint tmp_key;
   GtkWidget *file2;
   GtkWidget *file2_menu;
   GtkAccelGroup *file2_menu_accels;
   GtkWidget *open3;
-  GtkWidget *open3_menu;
-  GtkAccelGroup *open3_menu_accels;
-  GtkWidget *photo1;
-  GtkWidget *directory1;
   GtkWidget *save1;
-  GtkWidget *save1_menu;
-  GtkAccelGroup *save1_menu_accels;
-  GtkWidget *opened_photo1;
-  GtkWidget *selected_photo1;
   GtkWidget *separator2;
   GtkWidget *export1;
   GtkWidget *export1_menu;
   GtkAccelGroup *export1_menu_accels;
   GtkWidget *html_gallery1;
   GtkWidget *separator5;
-  GtkWidget *print1;
-  GtkWidget *close1;
   GtkWidget *exit1;
   GtkWidget *edit1;
   GtkWidget *edit1_menu;
@@ -183,12 +174,8 @@ create_main_window (void)
   GtkWidget *tmp_toolbar_icon;
   GtkWidget *open_button;
   GtkWidget *save_button;
-  GtkWidget *print_button;
-  GtkWidget *close_button;
   GtkWidget *label1;
-  GtkWidget *index_button;
-  GtkWidget *index_empty_button;
-  GtkWidget *download_button;
+  GtkWidget *refresh_button;
   GtkWidget *delete_button;
   GtkWidget *label2;
   GtkWidget *configure_button;
@@ -248,94 +235,30 @@ create_main_window (void)
 
   open3 = gtk_menu_item_new_with_label ("");
   tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (open3)->child),
-                                   _("_Open"));
+                                   _("_Open Photo"));
   gtk_widget_add_accelerator (open3, "activate_item", file2_menu_accels,
-                              tmp_key, 0, 0);
+				tmp_key, 0, 0);
   gtk_widget_ref (open3);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "open3", open3,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (open3);
   gtk_container_add (GTK_CONTAINER (file2_menu), open3);
-
-  open3_menu = gtk_menu_new ();
-  gtk_widget_ref (open3_menu);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "open3_menu", open3_menu,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (open3), open3_menu);
-  open3_menu_accels = gtk_menu_ensure_uline_accel_group (GTK_MENU (open3_menu));
-
-  photo1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (photo1)->child),
-                                   _("_Photo..."));
-  gtk_widget_add_accelerator (photo1, "activate_item", open3_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (photo1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "photo1", photo1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (photo1);
-  gtk_container_add (GTK_CONTAINER (open3_menu), photo1);
-  gtk_widget_add_accelerator (photo1, "activate", accel_group,
+  gtk_widget_add_accelerator (open3, "activate", accel_group,
                               GDK_o, GDK_CONTROL_MASK,
-                              GTK_ACCEL_VISIBLE);
-
-  directory1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (directory1)->child),
-                                   _("_Directory..."));
-  gtk_widget_add_accelerator (directory1, "activate_item", open3_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (directory1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "directory1", directory1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (directory1);
-  gtk_container_add (GTK_CONTAINER (open3_menu), directory1);
-  gtk_widget_add_accelerator (directory1, "activate", accel_group,
-                              GDK_d, GDK_CONTROL_MASK,
                               GTK_ACCEL_VISIBLE);
 
   save1 = gtk_menu_item_new_with_label ("");
   tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (save1)->child),
-                                   _("_Save"));
+                                   _("_Save Selected Photos..."));
   gtk_widget_add_accelerator (save1, "activate_item", file2_menu_accels,
-                              tmp_key, 0, 0);
+				GDK_s, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
   gtk_widget_ref (save1);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "save1", save1,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (save1);
   gtk_container_add (GTK_CONTAINER (file2_menu), save1);
-
-  save1_menu = gtk_menu_new ();
-  gtk_widget_ref (save1_menu);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "save1_menu", save1_menu,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (save1), save1_menu);
-  save1_menu_accels = gtk_menu_ensure_uline_accel_group (GTK_MENU (save1_menu));
-
-  opened_photo1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (opened_photo1)->child),
-                                   _("_Opened Photo(s).."));
-  gtk_widget_add_accelerator (opened_photo1, "activate_item", save1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (opened_photo1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "opened_photo1", opened_photo1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (opened_photo1);
-  gtk_container_add (GTK_CONTAINER (save1_menu), opened_photo1);
-  gtk_widget_add_accelerator (opened_photo1, "activate", accel_group,
+  gtk_widget_add_accelerator (save1, "activate", accel_group,
                               GDK_s, GDK_CONTROL_MASK,
-                              GTK_ACCEL_VISIBLE);
-
-  selected_photo1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (selected_photo1)->child),
-                                   _("_Selected Photo(s)..."));
-  gtk_widget_add_accelerator (selected_photo1, "activate_item", save1_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (selected_photo1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "selected_photo1", selected_photo1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (selected_photo1);
-  gtk_container_add (GTK_CONTAINER (save1_menu), selected_photo1);
-  gtk_widget_add_accelerator (selected_photo1, "activate", accel_group,
-                              GDK_i, GDK_CONTROL_MASK,
                               GTK_ACCEL_VISIBLE);
 
   separator2 = gtk_menu_item_new ();
@@ -382,34 +305,6 @@ create_main_window (void)
   gtk_widget_show (separator5);
   gtk_container_add (GTK_CONTAINER (file2_menu), separator5);
   gtk_widget_set_sensitive (separator5, FALSE);
-
-  print1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (print1)->child),
-                                   _("_Print"));
-  gtk_widget_add_accelerator (print1, "activate_item", file2_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (print1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "print1", print1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (print1);
-  gtk_container_add (GTK_CONTAINER (file2_menu), print1);
-  gtk_widget_add_accelerator (print1, "activate", accel_group,
-                              GDK_p, GDK_CONTROL_MASK,
-                              GTK_ACCEL_VISIBLE);
-
-  close1 = gtk_menu_item_new_with_label ("");
-  tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (close1)->child),
-                                   _("_Close"));
-  gtk_widget_add_accelerator (close1, "activate_item", file2_menu_accels,
-                              tmp_key, 0, 0);
-  gtk_widget_ref (close1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "close1", close1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (close1);
-  gtk_container_add (GTK_CONTAINER (file2_menu), close1);
-  gtk_widget_add_accelerator (close1, "activate", accel_group,
-                              GDK_c, GDK_CONTROL_MASK,
-                              GTK_ACCEL_VISIBLE);
 
   exit1 = gtk_menu_item_new_with_label ("");
   tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (exit1)->child),
@@ -783,6 +678,8 @@ create_main_window (void)
   gtk_object_set_data_full (GTK_OBJECT (main_window), "open_button", open_button,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (open_button);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, open_button, "Open a photo", NULL);
 
   tmp_toolbar_icon = create_pixmap (main_window, "save_current_image.xpm");
   save_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
@@ -795,87 +692,47 @@ create_main_window (void)
   gtk_object_set_data_full (GTK_OBJECT (main_window), "save_button", save_button,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (save_button);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, save_button, "Save selected photos", NULL);
 
-  tmp_toolbar_icon = create_pixmap (main_window, "print_image.xpm");
-  print_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("button3"),
-                                NULL, NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_widget_ref (print_button);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "print_button", print_button,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (print_button);
-
-  tmp_toolbar_icon = create_pixmap (main_window, "close_image.xpm");
-  close_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("button4"),
-                                NULL, NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_widget_ref (close_button);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "close_button", close_button,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (close_button);
-
-  label1 = gtk_label_new (_("       "));
+  label1 = gtk_label_new (_("     "));
   gtk_widget_ref (label1);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "label1", label1,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (label1);
   gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar1), label1, NULL, NULL);
 
-  tmp_toolbar_icon = create_pixmap (main_window, "get_index.xpm");
-  index_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
+  tmp_toolbar_icon = create_pixmap (main_window, "refresh.xpm");
+  refresh_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
-                                _("button5"),
+                                _("Refresh"),
                                 NULL, NULL,
                                 tmp_toolbar_icon, NULL, NULL);
-  gtk_widget_ref (index_button);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "index_button", index_button,
+  gtk_widget_ref (refresh_button);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "refresh_button", refresh_button,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (index_button);
-
-  tmp_toolbar_icon = create_pixmap (main_window, "get_index_empty.xpm");
-  index_empty_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("button6"),
-                                NULL, NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_widget_ref (index_empty_button);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "index_empty_button", index_empty_button,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (index_empty_button);
-
-  tmp_toolbar_icon = create_pixmap (main_window, "get_selected_images.xpm");
-  download_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("button7"),
-                                NULL, NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_widget_ref (download_button);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "download_button", download_button,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (download_button);
+  gtk_widget_show (refresh_button);
+  gtk_signal_connect(GTK_OBJECT(refresh_button), "clicked", 
+	GTK_SIGNAL_FUNC(folder_refresh), NULL);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, refresh_button, "Refresh photo index", NULL);
 
   tmp_toolbar_icon = create_pixmap (main_window, "delete_images.xpm");
   delete_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
-                                "",
+                                "Delete",
                                 NULL, NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_widget_ref (delete_button);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "delete_button", delete_button,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (delete_button);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, delete_button, "Delete selected photos", NULL);
 
-  label2 = gtk_label_new (_("       "));
+  label2 = gtk_label_new (_("     "));
   gtk_widget_ref (label2);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "label2", label2,
                             (GtkDestroyNotify) gtk_widget_unref);
@@ -886,15 +743,17 @@ create_main_window (void)
   configure_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
-                                _("button15"),
+                                _("Configure"),
                                 NULL, NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_widget_ref (configure_button);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "configure_button", configure_button,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (configure_button);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, configure_button, "Configure the camera", NULL);
 
-  label5 = gtk_label_new (_("       "));
+  label5 = gtk_label_new (_("     "));
   gtk_widget_ref (label5);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "label5", label5,
                             (GtkDestroyNotify) gtk_widget_unref);
@@ -905,7 +764,7 @@ create_main_window (void)
   exit_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
-                                _("button16"),
+                                _("Exit"),
                                 NULL, NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_widget_ref (exit_button);
@@ -914,6 +773,8 @@ create_main_window (void)
   gtk_signal_connect(GTK_OBJECT(exit_button), "clicked",
 	GTK_SIGNAL_FUNC(main_quit), NULL);
   gtk_widget_show (exit_button);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, exit_button, "Exit gPhoto", NULL);
 
   hpaned1 = gtk_hpaned_new ();
   gtk_widget_ref (hpaned1);
@@ -1033,26 +894,14 @@ create_main_window (void)
   gtk_widget_show (status_bar);
   gtk_box_pack_start (GTK_BOX (vbox1), status_bar, FALSE, FALSE, 0);
 
-  gtk_signal_connect (GTK_OBJECT (photo1), "activate",
+  gtk_signal_connect (GTK_OBJECT (open3), "activate",
                       GTK_SIGNAL_FUNC (on_open_photo_activate),
                       NULL);
-  gtk_signal_connect (GTK_OBJECT (directory1), "activate",
-                      GTK_SIGNAL_FUNC (on_open_directory_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (opened_photo1), "activate",
-                      GTK_SIGNAL_FUNC (on_save_open_photo_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (selected_photo1), "activate",
+  gtk_signal_connect (GTK_OBJECT (save1), "activate",
                       GTK_SIGNAL_FUNC (on_save_photo_activate),
                       NULL);
   gtk_signal_connect (GTK_OBJECT (html_gallery1), "activate",
                       GTK_SIGNAL_FUNC (on_html_gallery_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (print1), "activate",
-                      GTK_SIGNAL_FUNC (on_print_activate),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (close1), "activate",
-                      GTK_SIGNAL_FUNC (on_close_activate),
                       NULL);
   gtk_signal_connect (GTK_OBJECT (exit1), "activate",
                       GTK_SIGNAL_FUNC (on_exit_activate),
