@@ -54,7 +54,7 @@ gp_result_as_string (int result)
 	if ((result <= 0) && (result >= -99))
 		return gp_port_result_as_string (result);
 
-	/* Camlib error? You should have called gp_camera_result_as_string... */
+	/* Camlib error? */
 	if (result <= -1000)
 		return (N_("Unknown camera library error")); 
 

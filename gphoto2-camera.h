@@ -97,9 +97,6 @@ typedef struct {
 	CameraManualFunc  manual;
 	CameraAboutFunc   about;
 
-	/* Error reporting */
-	CameraResultFunc result_as_string;
-
 } CameraFunctions;
 
 /* Those are DEPRECATED */
@@ -151,8 +148,6 @@ int gp_camera_get_port_speed    (Camera *camera);
  *   - get_about           : Get information about authors of the driver*
  *   - capture             : Capture an image                           *
  *   - capture_preview     : Capture a preview                          *
- *                                                                      *
- *   - get_result_as_string: Translate a result into a string           *
  ************************************************************************/
 
 int gp_camera_ref   		 (Camera *camera);
@@ -167,8 +162,6 @@ int gp_camera_get_about		 (Camera *camera, CameraText *about);
 int gp_camera_capture 		 (Camera *camera, CameraCaptureType type,
 				  CameraFilePath *path);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file);
-
-const char *gp_camera_get_result_as_string (Camera *camera, int result);
 
 /************************************************************************
  * Part II:                                                             *
@@ -234,5 +227,9 @@ int gp_camera_set_message_func  (Camera *camera, CameraMessageFunc func,
 int gp_camera_message           (Camera *camera, const char *format, ...);
 int gp_camera_status            (Camera *camera, const char *format, ...);
 int gp_camera_progress          (Camera *camera, float percentage);
+
+/* Error reporting */
+int         gp_camera_set_error (Camera *camera, const char *format, ...);
+const char *gp_camera_get_error (Camera *camera);
 
 #endif /* __GPHOTO2_CAMERA_H__ */

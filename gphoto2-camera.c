@@ -86,6 +86,8 @@ struct _CameraPrivateCore {
 	/* Library handle */
 	void *lh;
 
+	char error[2048];
+
 	unsigned int ref_count;
 };
 
@@ -286,6 +288,7 @@ gp_camera_set_port_path (Camera *camera, const char *port_path)
 		    (!strcmp (port_path, info.path)))
 			return (gp_camera_set_port (camera, &info));
 
+	gp_camera_set_error (camera, _("Could not find port '%s'"), port_path);
 	return (GP_ERROR_UNKNOWN_PORT); 
 }
 
@@ -986,31 +989,6 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file)
 }
 
 /**
- * gp_camera_get_result_as_string:
- * @camera: a #Camera
- * @result: a gphoto2 error code
- *
- * Returns a string representation of supplied @result. This function should
- * be used for every gphoto2 error code returned by a function operating on 
- * a #Camera. This is because camera drivers can generate their own error 
- * codes that cannot be translated by #gp_result_as_string.
- *
- * Return value: a string representation of a gphoto2 error code
- **/
-const char *
-gp_camera_get_result_as_string (Camera *camera, int result)
-{
-        /* Camlib error? */
-        if (result <= -1000 && (camera != NULL)) {
-                if (camera->functions->result_as_string == NULL)
-                        return _("Error description not available");
-                return (camera->functions->result_as_string (camera, result));
-        }
-
-        return (gp_result_as_string (result));
-}
-
-/**
  * gp_camera_folder_list_files:
  * @camera: a #Camera
  * @folder: a folder
@@ -1402,4 +1380,68 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_set_error:
+ * @camera: a #Camera
+ * @format:
+ * ...:
+ *
+ * Saves an error message that can later be retreived by #gp_camera_get_error.
+ * Normally, you would call this function in a camera driver prior 
+ * return in some error code. You don't want to call this function when 
+ * simply passing errors upwards. In frontends, you call this function with
+ * %NULL as error message
+ * every time before calling another camera related function of which you 
+ * will later check the return value. This is to make sure that no previous
+ * error will be reported later on.
+ *
+ * Return value: a gphoto2 error code
+ **/
+int
+gp_camera_set_error (Camera *camera, const char *format, ...)
+{
+	va_list args;
 
+	CHECK_NULL (camera);
+
+	if (format) {
+
+		/* Remember the error message and log it */
+		va_start (args, format);
+		vsnprintf (camera->pc->error, sizeof (camera->pc->error),
+			   format, args);
+		gp_logv (GP_LOG_ERROR, "gphoto2-camera", format, args);
+		va_end (args);
+
+	} else {
+
+		/* Clear the error buffer(s) */
+		camera->pc->error[0] = '\0';
+		if (camera->port)
+			gp_port_set_error (camera->port, NULL);
+	}
+
+	return (GP_OK);
+}
+
+/**
+ * gp_camera_get_error:
+ * @camera: a #Camera
+ *
+ * Retreives an error message. Typically, this function is called by 
+ * frontends in order to provide the user with additional information 
+ * why an operation failed.
+ *
+ * Return value: an error description
+ **/
+const char *
+gp_camera_get_error (Camera *camera)
+{
+	if (strlen (camera->pc->error))
+		return (camera->pc->error);
+
+	if (camera->port)
+		return (gp_port_get_error (camera->port));
+
+	return (N_("No error description available"));
+}
