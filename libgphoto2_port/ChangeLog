@@ -1,5 +1,10 @@
 2001-10-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-port.h: Changed the syntax of gp_port_new to
+	  be consistent with gp_camera_new.
+
+2001-10-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* network
 	* parallel
 	* ieee1394: Removed. Once someone wants to implement those, they can

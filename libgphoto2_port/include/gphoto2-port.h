@@ -21,6 +21,8 @@
 #ifndef __GPHOTO2_PORT_H__
 #define __GPHOTO2_PORT_H__
 
+#include <gphoto2-port-info-list.h>
+
 #ifdef OS2
 #include <gphoto2_port-portability-os2.h>
 #include <os2.h>
@@ -33,8 +35,6 @@
 #include "gphoto2-port-serial.h"
 #include "gphoto2-port-usb.h"
 
-#include "gphoto2-port-result.h"
-
 #ifndef TRUE
 #define TRUE (0==0)
 #endif
@@ -44,13 +44,6 @@
 #endif
 
 #define GP_PORT_MAX_BUF_LEN 4096             /* max length of receive buffer */
-
-/* Specify the types of devices */
-typedef enum {
-    GP_PORT_NONE        =      0,
-    GP_PORT_SERIAL      = 1 << 0,
-    GP_PORT_USB         = 1 << 2,
-} GPPortType;
 
 /* Put the settings together in a union */
 typedef union {
@@ -64,43 +57,13 @@ enum {
 };
 
 typedef struct _GPPort           GPPort;
-typedef struct _GPPortOperations GPPortOperations;
 typedef struct _GPPortPrivateLibrary GPPortPrivateLibrary;
 typedef struct _GPPortPrivateCore    GPPortPrivateCore;
 
-struct _GPPortOperations {
-        int (*init)     (GPPort *);
-        int (*exit)     (GPPort *);
-        int (*open)     (GPPort *);
-        int (*close)    (GPPort *);
-        int (*read)     (GPPort *, char *, int);
-        int (*write)    (GPPort *, char *, int);
-        int (*update)   (GPPort *);
-
-        /* Pointers to devices. Please note these are stubbed so there is
-         no need to #ifdef GP_PORT_* anymore. */
-
-        /* for serial devices */
-        int (*get_pin)   (GPPort *, int, int*);
-        int (*set_pin)   (GPPort *, int, int);
-        int (*send_break)(GPPort *, int);
-        int (*flush)     (GPPort *, int);
-
-        /* for USB devices */
-        int (*find_device)(GPPort * dev, int idvendor, int idproduct);
-        int (*clear_halt) (GPPort * dev, int ep);
-        int (*msg_write)  (GPPort * dev, int request, int value, int index,
-				char *bytes, int size);
-        int (*msg_read)   (GPPort * dev, int request, int value, int index,
-				char *bytes, int size);
-
-};
-
 struct _GPPort {
 
+	/* For your convenience */
 	GPPortType type;
-
-        GPPortOperations *ops;
 
         GPPortSettings settings;
         GPPortSettings settings_pending;
@@ -114,10 +77,12 @@ struct _GPPort {
 /* DEPRECATED */
 typedef GPPort gp_port;
 typedef GPPortSettings gp_port_settings;
-#include "gphoto2-port-info-list.h"
 
-int gp_port_new         (GPPort **dev, GPPortType type);
+int gp_port_new         (GPPort **dev);
 int gp_port_free        (GPPort *dev);
+
+int gp_port_set_info    (GPPort *port, GPPortInfo  info);
+int gp_port_get_info    (GPPort *port, GPPortInfo *info);
 
 int gp_port_open        (GPPort *dev);
 int gp_port_close       (GPPort *dev);

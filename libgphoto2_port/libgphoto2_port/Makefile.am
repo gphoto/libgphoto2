@@ -13,11 +13,12 @@ libgphoto2_port_la_SOURCES =		\
 	gphoto2-port-info-list.c	\
 	gphoto2-port-log.c		\
 	gphoto2-port-library.h		\
-	gp_port.c 			\
-	result.c 			\
+	gphoto2-port.c 			\
+	gphoto2-port-result.c		\
 	portability.c
 
 libgphoto2_portincludedir = $(includedir)/gphoto2
 libgphoto2_portinclude_HEADERS =	\
 	gphoto2-port-info-list.h	\
-	gphoto2-port-log.h
+	gphoto2-port-log.h		\
+	gphoto2-port-result.h

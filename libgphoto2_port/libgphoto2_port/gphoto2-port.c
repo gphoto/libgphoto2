@@ -49,45 +49,85 @@
 
 #define CHECK_RESULT(result) {int r=(result); if (r<0) return (r);}
 #define CHECK_NULL(m) {if (!(m)) return (GP_ERROR_BAD_PARAMETERS);}
-#define CHECK_SUPP(s,o) {if (!(o)) {gp_log (GP_LOG_ERROR, "gphoto2-port", ("The operation '%s' is not supported by this device"), (s)); return (GP_ERROR_NOT_SUPPORTED);}}
+#define CHECK_SUPP(p,s,o) {if (!(o)) {gp_port_set_error ((p), _("The operation '%s' is not supported by this device"), (s)); return (GP_ERROR_NOT_SUPPORTED);}}
+#define CHECK_INIT(p) {if (!(p)->pc->ops) {gp_port_set_error ((p), _("The port has not yet been initialized")); return (GP_ERROR_BAD_PARAMETERS);}}
 
 struct _GPPortPrivateCore {
+	int initialized;
 	char error[2048];
 
+	GPPortInfo info;
+	GPPortOperations *ops;
 	void *lh; /* Library handle */
 };
 
-static int
-gp_port_library_load (GPPort *device, GPPortType type)
+int
+gp_port_new (GPPort **port)
 {
-	GPPortInfo info;
-	int count, result, i;
-	GPPortInfoList *list;
-        GPPortLibraryOperations ops_func;
+	CHECK_NULL (port);
 
-	CHECK_RESULT (gp_port_info_list_new (&list));
-	result = gp_port_info_list_load (list);
-	if (result < 0) {
-		gp_port_info_list_free (list);
-		return (result);
-	}
-	count = gp_port_info_list_count (list);
-	if (count < 0) {
-		gp_port_info_list_free (list);
-		return (count);
-	}
-	for (i = 0; i < count; i++) {
-		gp_port_info_list_get_info (list, i, &info);
-		if (info.type == type)
-			break;
-	}
-	gp_port_info_list_free (list);
-	if (i == count)
-		return (GP_ERROR_UNKNOWN_PORT);
+        gp_log (GP_LOG_DEBUG, "gphoto2-port", "Creating new device...");
 
-	/* Open the correct library */
-	device->pc->lh = GP_SYSTEM_DLOPEN (info.library_filename);
-	if (!device->pc->lh) {
+	*port = malloc (sizeof (GPPort));
+        if (!(*port))
+		return (GP_ERROR_NO_MEMORY);
+        memset (*port, 0, sizeof (GPPort));
+
+	(*port)->pc = malloc (sizeof (GPPortPrivateCore));
+	if (!(*port)->pc) {
+		gp_port_free (*port);
+		return (GP_ERROR_NO_MEMORY);
+	}
+	memset ((*port)->pc, 0, sizeof (GPPortPrivateCore));
+
+        return (GP_OK);
+}
+
+static int
+gp_port_init (GPPort *port)
+{
+	CHECK_NULL (port);
+	CHECK_INIT (port);
+
+	if (port->pc->ops->init)
+		CHECK_RESULT (port->pc->ops->init (port));
+
+	return (GP_OK);
+}
+
+static int
+gp_port_exit (GPPort *port)
+{
+	CHECK_NULL (port);
+	CHECK_INIT (port);
+
+	if (port->pc->ops->exit)
+		CHECK_RESULT (port->pc->ops->exit (port));
+
+	return (GP_OK);
+}
+
+int
+gp_port_set_info (GPPort *port, GPPortInfo info)
+{
+	GPPortLibraryOperations ops_func;
+
+	CHECK_NULL (port);
+
+	memcpy (&port->pc->info, &info, sizeof (GPPortInfo));
+	port->type = info.type;
+
+	/* Clean up */
+	if (port->pc->ops) {
+		gp_port_exit (port);
+		free (port->pc->ops);
+		port->pc->ops = NULL;
+	}
+	if (port->pc->lh)
+		GP_SYSTEM_DLCLOSE (port->pc->lh);
+
+	port->pc->lh = GP_SYSTEM_DLOPEN (info.library_filename);
+	if (!port->pc->lh) {
 		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not load "
 			"'%s' ('%s')", info.library_filename,
 			GP_SYSTEM_DLERROR ());
@@ -95,114 +135,68 @@ gp_port_library_load (GPPort *device, GPPortType type)
 	}
 
 	/* Load the operations */
-	ops_func = GP_SYSTEM_DLSYM (device->pc->lh,
-				    "gp_port_library_operations");
+	ops_func = GP_SYSTEM_DLSYM (port->pc->lh, "gp_port_library_operations");
 	if (!ops_func) {
 		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not find "
 			"'gp_port_library_operations' in '%s' ('%s')",
 			info.library_filename, GP_SYSTEM_DLERROR ());
-		GP_SYSTEM_DLCLOSE (device->pc->lh);
-		device->pc->lh = NULL;
+		GP_SYSTEM_DLCLOSE (port->pc->lh);
+		port->pc->lh = NULL;
 		return (GP_ERROR_LIBRARY);
 	}
-	device->ops = ops_func ();
-	
+	port->pc->ops = ops_func ();
+	gp_port_init (port);
+
+	/* Initialize the settings to some default ones */
+	switch (info.type) {
+	case GP_PORT_SERIAL:
+		strncpy (port->settings.serial.port, info.path,
+			 sizeof (port->settings.serial.port));
+		port->settings.serial.speed = 0;
+		port->settings.serial.bits = 8;
+		port->settings.serial.parity = 0;
+		port->settings.serial.stopbits = 1;
+		gp_port_timeout_set (port, 500);
+		break;
+	case GP_PORT_USB:
+		port->settings.usb.inep = -1;
+		port->settings.usb.outep = -1;
+		port->settings.usb.config = -1;
+		port->settings.usb.interface = 0;
+		port->settings.usb.altsetting = -1;
+		gp_port_timeout_set (port, 5000);
+		break;
+	default:
+		/* Nothing in here */
+		break;
+	}
+	gp_port_settings_set (port, port->settings);
+
 	return (GP_OK);
 }
 
 int
-gp_port_new (GPPort **dev, GPPortType type)
+gp_port_get_info (GPPort *port, GPPortInfo *info)
 {
-	GPPortSettings settings;
-        char buf[1024];
-	int result;
+	CHECK_NULL (port && info);
 
-	CHECK_NULL (dev);
+	memcpy (info, &port->pc->info, sizeof (GPPortInfo));
 
-        gp_log (GP_LOG_DEBUG, "gphoto2-port", "Creating new device...");
-
-        switch(type) {
-        case GP_PORT_SERIAL:
-#ifndef GP_PORT_SUPPORTED_SERIAL
-		return GP_ERROR_IO_SUPPORTED_SERIAL;
-#endif
-		break;
-        case GP_PORT_USB:
-#ifndef GP_PORT_SUPPORTED_USB
-		gp_log (GP_LOG_ERROR, "gphoto2-port", _("libgphoto2_port "
-			"has been compiled without USB support. This probably "
-			"means you didn't have libusb installed prior to "
-			"compilation of gphoto2."));
-		return GP_ERROR_IO_SUPPORTED_USB;
-#endif
-		break;
-        default:
-		return GP_ERROR_UNKNOWN_PORT;
-        }
-
-        *dev = malloc (sizeof (GPPort));
-        if (!(*dev))
-		return (GP_ERROR_NO_MEMORY);
-        memset (*dev, 0, sizeof (GPPort));
-
-	(*dev)->pc = malloc (sizeof (GPPortPrivateCore));
-	if (!(*dev)->pc) {
-		gp_port_free (*dev);
-		return (GP_ERROR_NO_MEMORY);
-	}
-	memset ((*dev)->pc, 0, sizeof (GPPortPrivateCore));
-
-	result = gp_port_library_load (*dev, type);
-	if (result < 0) {
-		gp_port_free (*dev);
-		return (result);
-        }
-
-        (*dev)->type = type;
-        (*dev)->ops->init (*dev);
-
-        switch ((*dev)->type) {
-        case GP_PORT_SERIAL:
-		sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
-		strcpy(settings.serial.port, buf);
-
-		/* Set some default settings */
-		settings.serial.speed = 0;
-		settings.serial.bits = 8;
-		settings.serial.parity = 0;
-		settings.serial.stopbits = 1;
-		gp_port_settings_set (*dev, settings);
-
-		gp_port_timeout_set (*dev, 500);
-		break;
-        case GP_PORT_USB:
-		/* Initialize settings.usb */
-		(*dev)->settings.usb.inep = -1;
-		(*dev)->settings.usb.outep = -1;
-		(*dev)->settings.usb.config = -1;
-		(*dev)->settings.usb.interface = 0;
-		(*dev)->settings.usb.altsetting = -1;
-
-		gp_port_timeout_set (*dev, 5000);
-		break;
-        default:
-		return GP_ERROR_UNKNOWN_PORT;
-        }
-
-        return (GP_OK);
+	return (GP_OK);
 }
 
 int
 gp_port_open (GPPort *dev)
 {
 	CHECK_NULL (dev);
+	CHECK_INIT (dev);
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Opening %s port...",
 		dev->type == GP_PORT_SERIAL ? "SERIAL" : 
 			(dev->type == GP_PORT_USB ? "USB" : ""));
 
-	CHECK_SUPP (_("open"), dev->ops->open);
-	CHECK_RESULT (dev->ops->open (dev));
+	CHECK_SUPP (dev, _("open"), dev->pc->ops->open);
+	CHECK_RESULT (dev->pc->ops->open (dev));
 
 	return GP_OK;
 }
@@ -213,9 +207,10 @@ gp_port_close (GPPort *dev)
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Closing port...");
 
 	CHECK_NULL (dev);
+	CHECK_INIT (dev);
 
-	CHECK_SUPP (_("close"), dev->ops->close);
-        CHECK_RESULT (dev->ops->close(dev));
+	CHECK_SUPP (dev, _("close"), dev->pc->ops->close);
+        CHECK_RESULT (dev->pc->ops->close(dev));
 
 	return (GP_OK);
 }
@@ -227,20 +222,18 @@ gp_port_free (GPPort *dev)
 
 	CHECK_NULL (dev);
 
-	if (dev->ops) {
-
-		/* We don't care if this operation is unsupported or fails */
-		if (dev->ops->exit)
-			dev->ops->exit(dev);
-		free (dev->ops);
-		dev->ops = NULL;
-	}
-
 	if (dev->pc) {
+		if (dev->pc->ops) {
+			gp_port_exit (dev);
+			free (dev->pc->ops);
+			dev->pc->ops = NULL;
+		}
+
 		if (dev->pc->lh) {
 		        GP_SYSTEM_DLCLOSE (dev->pc->lh);
 			dev->pc->lh = NULL;
 		}
+
 		free (dev->pc);
 		dev->pc = NULL;
 	}
@@ -259,12 +252,13 @@ gp_port_write (GPPort *dev, char *data, int size)
 		size, size);
 
 	CHECK_NULL (dev && data);
+	CHECK_INIT (dev);
 
 	gp_log_data ("gphoto2-port", data, size);
 
 	/* Check if we wrote all bytes */
-	CHECK_SUPP (_("write"), dev->ops->write);
-	retval = dev->ops->write (dev, data, size);
+	CHECK_SUPP (dev, _("write"), dev->pc->ops->write);
+	retval = dev->pc->ops->write (dev, data, size);
 	CHECK_RESULT (retval);
 	if ((dev->type != GP_PORT_SERIAL) && (retval != size))
 		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only write %i "
@@ -282,10 +276,11 @@ gp_port_read (GPPort *dev, char *data, int size)
 		size, size);
 
 	CHECK_NULL (dev);
+	CHECK_INIT (dev);
 
 	/* Check if we read as many bytes as expected */
-	CHECK_SUPP (_("read"), dev->ops->read);
-	retval = dev->ops->read (dev, data, size);
+	CHECK_SUPP (dev, _("read"), dev->pc->ops->read);
+	retval = dev->pc->ops->read (dev, data, size);
 	CHECK_RESULT (retval);
 	if (retval != size)
 		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only read %i "
@@ -330,6 +325,7 @@ gp_port_settings_set (GPPort *dev, gp_port_settings settings)
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Setting settings...");
 
 	CHECK_NULL (dev);
+	CHECK_INIT (dev);
 
         /*
 	 * We copy the settings to settings_pending and call update on the 
@@ -337,8 +333,8 @@ gp_port_settings_set (GPPort *dev, gp_port_settings settings)
 	 */
         memcpy (&dev->settings_pending, &settings,
 		sizeof (dev->settings_pending));
-	CHECK_SUPP (_("update"), dev->ops->update);
-        CHECK_RESULT (dev->ops->update (dev));
+	CHECK_SUPP (dev, _("update"), dev->pc->ops->update);
+        CHECK_RESULT (dev->pc->ops->update (dev));
 
         return (GP_OK);
 }
@@ -360,9 +356,10 @@ gp_port_pin_get(GPPort *dev, int pin, int *level)
 		pin);
 
 	CHECK_NULL (dev && level);
+	CHECK_INIT (dev);
 
-	CHECK_SUPP (_("get_pin"), dev->ops->get_pin);
-        CHECK_RESULT (dev->ops->get_pin (dev, pin, level));
+	CHECK_SUPP (dev, _("get_pin"), dev->pc->ops->get_pin);
+        CHECK_RESULT (dev->pc->ops->get_pin (dev, pin, level));
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Level of pin %i: %i",
 		pin, *level);
@@ -377,9 +374,10 @@ gp_port_pin_set (GPPort *dev, int pin, int level)
 		pin, level);
 
 	CHECK_NULL (dev);
+	CHECK_INIT (dev);
 
-	CHECK_SUPP (_("set_pin"), dev->ops->set_pin);
-	CHECK_RESULT (dev->ops->set_pin (dev, pin, level));
+	CHECK_SUPP (dev, _("set_pin"), dev->pc->ops->set_pin);
+	CHECK_RESULT (dev->pc->ops->set_pin (dev, pin, level));
 
 	return (GP_OK);
 }
@@ -391,9 +389,10 @@ gp_port_send_break (GPPort *dev, int duration)
 		"milliseconds)...", duration);
 
 	CHECK_NULL (dev);
+	CHECK_INIT (dev);
 
-        CHECK_SUPP (_("send_break"), dev->ops->send_break);
-        CHECK_RESULT (dev->ops->send_break (dev, duration));
+        CHECK_SUPP (dev, _("send_break"), dev->pc->ops->send_break);
+        CHECK_RESULT (dev->pc->ops->send_break (dev, duration));
 
 	return (GP_OK);
 }
@@ -405,8 +404,8 @@ gp_port_flush (GPPort *dev, int direction)
 
 	CHECK_NULL (dev);
 
-	CHECK_SUPP (_("flush"), dev->ops->flush);
-	CHECK_RESULT (dev->ops->flush (dev, direction));
+	CHECK_SUPP (dev, _("flush"), dev->pc->ops->flush);
+	CHECK_RESULT (dev->pc->ops->flush (dev, direction));
 
         return (GP_OK);
 }
@@ -421,9 +420,10 @@ int gp_port_usb_find_device (GPPort *dev, int idvendor, int idproduct)
 		idvendor, idproduct);
 
 	CHECK_NULL (dev);
+	CHECK_INIT (dev);
 
-	CHECK_SUPP (_("find_device"), dev->ops->find_device);
-	CHECK_RESULT (dev->ops->find_device (dev, idvendor, idproduct));
+	CHECK_SUPP (dev, _("find_device"), dev->pc->ops->find_device);
+	CHECK_RESULT (dev->pc->ops->find_device (dev, idvendor, idproduct));
 
         return (GP_OK);
 }
@@ -433,9 +433,10 @@ int gp_port_usb_clear_halt (GPPort *dev, int ep)
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Clear halt...");
 
 	CHECK_NULL (dev);
+	CHECK_INIT (dev);
 
-	CHECK_SUPP (_("clear_halt"), dev->ops->clear_halt);
-        CHECK_RESULT (dev->ops->clear_halt (dev, ep));
+	CHECK_SUPP (dev, _("clear_halt"), dev->pc->ops->clear_halt);
+        CHECK_RESULT (dev->pc->ops->clear_halt (dev, ep));
 
         return (GP_OK);
 }
@@ -451,9 +452,10 @@ int gp_port_usb_msg_write (GPPort *dev, int request, int value, int index,
 	gp_log_data ("gphoto2-port", bytes, size);
 
 	CHECK_NULL (dev);
+	CHECK_INIT (dev);
 
-	CHECK_SUPP (_("msg_write"), dev->ops->msg_write);
-        retval = dev->ops->msg_write(dev, request, value, index, bytes, size);
+	CHECK_SUPP (dev, _("msg_write"), dev->pc->ops->msg_write);
+        retval = dev->pc->ops->msg_write(dev, request, value, index, bytes, size);
 	CHECK_RESULT (retval);
 
         return (retval);
@@ -469,9 +471,10 @@ int gp_port_usb_msg_read (GPPort *dev, int request, int value, int index,
 		request, value, index, size, size);
 
 	CHECK_NULL (dev);
+	CHECK_INIT (dev);
 
-	CHECK_SUPP (_("msg_read"), dev->ops->msg_read);
-        retval = dev->ops->msg_read (dev, request, value, index, bytes, size);
+	CHECK_SUPP (dev, _("msg_read"), dev->pc->ops->msg_read);
+        retval = dev->pc->ops->msg_read (dev, request, value, index, bytes, size);
 	CHECK_RESULT (retval);
 
 	if (retval != size)

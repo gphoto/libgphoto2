@@ -21,16 +21,23 @@
 #ifndef __GPHOTO2_PORT_INFO_LIST_H__
 #define __GPHOTO2_PORT_INFO_LIST_H__
 
-#include <gphoto2-port.h>
+typedef enum { 
+	GP_PORT_NONE        =      0,
+	GP_PORT_SERIAL      = 1 << 0,
+	GP_PORT_USB         = 1 << 2,
+} GPPortType;
 
-typedef struct {
+typedef struct _GPPortInfo GPPortInfo;
+struct _GPPortInfo {
 	GPPortType type;
 	char name[64];
 	char path[64];
 
 	/* Private */
 	char library_filename[1024];
-} GPPortInfo;
+};
+
+#include <gphoto2-port.h>
 
 /* Internals are private */
 typedef struct _GPPortInfoList GPPortInfoList;

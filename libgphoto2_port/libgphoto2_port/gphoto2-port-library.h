@@ -24,6 +24,35 @@
 #include <gphoto2-port-info-list.h>
 #include <gphoto2-port.h>
 
+typedef struct _GPPortOperations GPPortOperations;
+struct _GPPortOperations {
+        int (*init)     (GPPort *);
+        int (*exit)     (GPPort *);
+        int (*open)     (GPPort *);
+        int (*close)    (GPPort *);
+        int (*read)     (GPPort *, char *, int);
+        int (*write)    (GPPort *, char *, int);
+        int (*update)   (GPPort *);
+
+        /* Pointers to devices. Please note these are stubbed so there is
+         no need to #ifdef GP_PORT_* anymore. */
+
+        /* for serial devices */
+        int (*get_pin)   (GPPort *, int, int*);
+        int (*set_pin)   (GPPort *, int, int);
+        int (*send_break)(GPPort *, int);
+        int (*flush)     (GPPort *, int);
+
+        /* for USB devices */
+        int (*find_device)(GPPort * dev, int idvendor, int idproduct);
+        int (*clear_halt) (GPPort * dev, int ep);
+        int (*msg_write)  (GPPort * dev, int request, int value, int index,
+                                char *bytes, int size);
+        int (*msg_read)   (GPPort * dev, int request, int value, int index,
+                                char *bytes, int size);
+
+};
+
 typedef GPPortType (* GPPortLibraryType) (void);
 typedef int (* GPPortLibraryList)       (GPPortInfoList *list);
 
