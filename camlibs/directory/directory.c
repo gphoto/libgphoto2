@@ -111,6 +111,8 @@ int folder_index() {
 	struct stat s;
 	char *dot, fname[1024];
 
+	dir_num_images = 0;
+
 	dir = opendir(dir_directory);
 	if (!dir)
 		return (GP_ERROR);
