@@ -193,9 +193,9 @@ const struct canonCamModelData models[] = {
 	{"Canon:MVX150i",		CANON_CLASS_5,	0x04A9, 0x307f, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	/* 3080 is in MacOS Info.plist, but I don't know what it is
 	 * --swestin. */
-	{"Canon:Unknown 4",		CANON_CLASS_5,	0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:Optura 10",		CANON_CLASS_5,	0x04A9, 0x3081, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:MVX100i",		CANON_CLASS_5,	0x04A9, 0x3081, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot Unknown 4",	CANON_CLASS_1,	0x04A9, 0x3080, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Optura 10",		CANON_CLASS_1,	0x04A9, 0x3082, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:MVX100i",		CANON_CLASS_1,	0x04A9, 0x3082, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{"Canon:EOS 10D",		CANON_CLASS_4,	0x04A9, 0x3083, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:EOS 300D (normal mode)", CANON_CLASS_4,	0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
@@ -229,7 +229,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:Digital IXUS 500 (normal mode)",CANON_CLASS_5,	0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S500 Digital ELPH (normal mode)",CANON_CLASS_5,	0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:IXY Digital 500 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot A75",			CANON_CLASS_5,	0x04A9, 0x30b5, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot A75",			CANON_CLASS_1,	0x04A9, 0x30b5, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot SD110 Digital ELPH",	CANON_CLASS_1,	0x04A9, 0x30b6, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS IIs",		CANON_CLASS_1,	0x04A9, 0x30b6, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A400",		CANON_CLASS_5,	0x04A9, 0x30b7,	CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -591,9 +591,8 @@ canon_int_identify_camera (Camera *camera, GPContext *context)
 	}
 
 	if (len != 0x4c) {
-		GP_DEBUG ("canon_int_identify_camera: Unexpected amount of data returned "
-			  "(expected %i got %i)", 0x4c, len);
-		return GP_ERROR_CORRUPTED_DATA;
+		GP_DEBUG ("canon_int_identify_camera: Unexpected length returned "
+			  "(expected %i got %i); continuing.", 0x4c, len);
 	}
 
 	/* Store these values in our "camera" structure: */
@@ -716,7 +715,7 @@ canon_int_get_picture_abilities (Camera *camera, GPContext *context)
 	}
 
 	if (len != 0x334) {
-		GP_DEBUG ("canon_int_get_picture_abilities: Unexpected amount of data returned "
+		GP_DEBUG ("canon_int_get_picture_abilities: Unexpected length returned "
 			  "(expected %i got %i)", 0x334, len);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
@@ -855,9 +854,6 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 		if ( status < 0 )
 			return status;
 
-		gp_port_set_timeout (camera->port, mstimeout);
-		GP_DEBUG("canon_int_capture_preview: set camera port timeout back to %d seconds...", mstimeout / 1000 );
-
 		/*
 		 * Set the captured image transfer mode.  We have four options
 		 * that we can specify any combo of, captured thumb to PC,
@@ -872,27 +868,30 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 		status = canon_int_do_control_command (camera,
 						       CANON_USB_CONTROL_SET_TRANSFER_MODE,
 						       0x04, transfermode);
-		if ( status < 0)
+		if ( status < 0 )
 			return status;
+
+		gp_port_set_timeout (camera->port, mstimeout);
+		GP_DEBUG("canon_int_capture_preview: set camera port timeout back to %d seconds...", mstimeout / 1000 );
 
 		/* Get release parameters a couple of times, just to
                    see if that helps. */
 		status = canon_int_do_control_command (camera,
 						       CANON_USB_CONTROL_GET_PARAMS,
 						       0x04, transfermode);
-		if ( status < 0)
+		if ( status < 0 )
 			return status;
 
 		status = canon_int_do_control_command (camera,
 						       CANON_USB_CONTROL_GET_PARAMS,
 						       0x04, transfermode);
-		if ( status < 0)
+		if ( status < 0 )
 			return status;
 
 		/* Lock keys here for D30/D60 */
 		if ( camera->pl->md->model == CANON_CLASS_4 ) {
 			status = canon_usb_lock_keys(camera,context);
-			if( status < 0) {
+			if ( status < 0 ) {
 				gp_context_error (context, _("lock keys failed."));
 				return status;
 			}
@@ -925,7 +924,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 		status = canon_int_do_control_command (camera,
 						       CANON_USB_CONTROL_EXIT,
 						       0, 0);
-		if ( status < 0)
+		if ( status < 0 )
 			return status;
 
 		break;
@@ -961,7 +960,7 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
 	strncpy ( path->folder, _("*UNKNOWN*"), sizeof(path->folder) );
 
 	path->folder[0] = 0; /* Start with null pathname string. */
-	GP_DEBUG ( "canon_int_capture_image: starting directory compare" );
+	GP_DEBUG ( "canon_int_find_new_image: starting directory compare" );
 	while ( le16atoh ( old_entry+CANON_DIRENT_ATTRS ) != 0
 		|| le32atoh ( old_entry + CANON_DIRENT_SIZE ) != 0
 		|| le32atoh ( old_entry + CANON_DIRENT_TIME ) != 0 ) {
@@ -1090,24 +1089,26 @@ int
 canon_int_capture_image (Camera *camera, CameraFilePath *path,
 			 GPContext *context)
 {
+	canonTransferMode transfermode = REMOTE_CAPTURE_FULL_TO_DRIVE;
+
+	int mstimeout = -1;
+	int status;
+
 	unsigned char *data = NULL;
 	unsigned char *initial_state, *final_state; /* For comparing
 						     * before/after
 						     * directories */
-	canonTransferMode transfermode = REMOTE_CAPTURE_FULL_TO_DRIVE;
 	int initial_state_len, final_state_len;
-	int mstimeout = -1;
-	int len, status;
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
 		/* List all directories on the camera to get a
 		   baseline to find the new file. */
-		len = canon_usb_list_all_dirs ( camera, &initial_state, &initial_state_len, context );
+		status = canon_usb_list_all_dirs ( camera, &initial_state, &initial_state_len, context );
 
-		if ( len < 0 ) {
-			gp_context_error (context, _("canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %i"), len );
-			return len;
+		if ( status < 0 ) {
+			gp_context_error (context, _("canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %i"), status );
+			return status;
 		}
 
 		gp_port_get_timeout (camera->port, &mstimeout);
@@ -1121,7 +1122,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		/* Init, extends camera lens, puts us in remote capture mode */
 		status = canon_int_do_control_command (camera,
 						       CANON_USB_CONTROL_INIT, 0, 0);
-		if ( status < 0)
+		if ( status < 0 )
 			return status;
 
 		/*
@@ -1138,7 +1139,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		status = canon_int_do_control_command (camera,
 						       CANON_USB_CONTROL_SET_TRANSFER_MODE,
 						       0x04, transfermode);
-		if ( status < 0)
+		if ( status < 0 )
 			return status;
 
 		gp_port_set_timeout (camera->port, mstimeout);
@@ -1147,14 +1148,14 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		/* Get release parameters a couple of times, just to
                    see if that helps. */
 		status = canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_GET_PARAMS,
-						  0x04, transfermode);
+						       CANON_USB_CONTROL_GET_PARAMS,
+						       0x04, transfermode);
 		if ( status < 0 )
 			return status;
 
 		status = canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_GET_PARAMS,
-						  0x04, transfermode);
+						       CANON_USB_CONTROL_GET_PARAMS,
+						       0x04, transfermode);
 		if ( status < 0 )
 			return status;
 
@@ -1171,19 +1172,19 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		   Can't use normal "canon_int_do_control_command", as
 		   we must read the interrupt pipe before the response
 		   comes back for this commmand. */
-		data = canon_usb_capture_dialogue ( camera, &len, context );
+		data = canon_usb_capture_dialogue ( camera, &status, context );
 		if ( data == NULL ) {
 			/* Try to leave camera in a usable state. */
 			canon_int_do_control_command (camera,
 						      CANON_USB_CONTROL_EXIT,
 						      0, 0);
-			return GP_ERROR_CAMERA_ERROR;
+			return GP_ERROR_OS_FAILURE;
 		}
 
 		/* End release mode */
 		status = canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_EXIT,
-						  0, 0);
+						       CANON_USB_CONTROL_EXIT,
+						       0, 0);
 		if ( status < 0 )
 			return status;
 
