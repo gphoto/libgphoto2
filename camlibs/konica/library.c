@@ -344,9 +344,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
         unsigned char *information_buffer = NULL;
         int protected;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: get_info_func "
-                                                 "***");
-
         CHECK (camera, k_get_image_information (camera->port,
 		camera->pl->image_id_long,
 		gp_filesystem_number (camera->fs, folder, file),

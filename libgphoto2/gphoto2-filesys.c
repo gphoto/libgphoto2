@@ -257,11 +257,10 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file)
 						(fs->folder[x].count + 1)));
 	fs->folder[x].file = new;
 	fs->folder[x].count++;
+	memset (&(fs->folder[x].file[fs->folder[x].count - 1]), 0,
+		sizeof (CameraFilesystemFile));
 	strcpy (fs->folder[x].file[fs->folder[x].count - 1].name, name);
 	fs->folder[x].file[fs->folder[x].count - 1].info_dirty = 1;
-	fs->folder[x].file[fs->folder[x].count - 1].raw = NULL;
-	fs->folder[x].file[fs->folder[x].count - 1].preview = NULL;
-	fs->folder[x].file[fs->folder[x].count - 1].audio = NULL;
 	fs->folder[x].file[fs->folder[x].count - 1].normal = file;
 	gp_file_ref (file);
 
@@ -1303,8 +1302,6 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 
 	CHECK_NULL (fs && folder && filename && info);
 	CHECK_ABS (folder);
-
-	memset (info, 0, sizeof (CameraFileInfo));
 
 	if (!fs->get_info_func) {
 		gp_log (GP_LOG_ERROR, "gphoto2-filesystem",
