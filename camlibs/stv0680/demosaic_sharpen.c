@@ -69,14 +69,6 @@
 
 #include "demosaic_sharpen.h"
 
-/* debug stuff: creates LOTS of output */
-#ifdef DEBUG
-# include <stdio.h>
-# define DPRINTF(fmt, args...) printf (fmt, ## args)
-#else
-# define DPRINTF(fmt, args...) while (0) {}
-#endif
-
 /* we define bayer as 
  * +---> x
  * | 0 1
@@ -270,7 +262,7 @@ void demosaic_sharpen (const int width, const int height,
 			int nbs; col ncol; int othcol; int i; 
 			int skno; int nsumw;
 			int predcol = 0; // Only for DEBUG
-			DPRINTF("(%i,%i)(%p): bay %i, col %i, pat %i, val %i\n", x, y, src_ptr, bayer, colour, nbpts[0], colval);
+			/* DPRINTF("(%i,%i)(%p): bay %i, col %i, pat %i, val %i\n", x, y, src_ptr, bayer, colour, nbpts[0], colval);*/
 			/* Copy own colour */
 			dst_ptr[colour] = colval;
 			/* Now calc weights */
@@ -286,7 +278,7 @@ void demosaic_sharpen (const int width, const int height,
 				} else if (nbpts[0] == NB_TLRB2 && x > 0 && x < width-1 && y > 0 && y < height-1) {
 					coeff = weight (128, myalpha); // assign some small weight
 				}
-				DPRINTF(" (%i,%i)(%p): val %i, diff %i, weight %i\n", nx, ny, src_ptr+addr_off, thisval, abs ((int)colval - thisval), coeff);
+				/*DPRINTF(" (%i,%i)(%p): val %i, diff %i, weight %i\n", nx, ny, src_ptr+addr_off, thisval, abs ((int)colval - thisval), coeff);*/
 				predcol += thisval * coeff;
 				weights[nbs] = coeff;
 				sum_weights += coeff;
@@ -303,7 +295,7 @@ void demosaic_sharpen (const int width, const int height,
 			if (pconv == PATCONV_NONE)
 				abort ();
 			othcol = 0; predcol = 0; nsumw = 0; skno = 0;
-			DPRINTF(" Col %i: pat %i pconv %i\n", ncol, nbpts[1], pconv);
+			/*DPRINTF(" Col %i: pat %i pconv %i\n", ncol, nbpts[1], pconv);*/
 			for (nbs = 0; nbs < n_pos[nbpts[1]].num; nbs++) {
 				off offset = n_pos[nbpts[1]].nb_pts[nbs];
 				const int nx = x + offset.dx;
@@ -315,7 +307,7 @@ void demosaic_sharpen (const int width, const int height,
 				if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
 					thisval = src_ptr[addr_off+ncol];
 					nsumw += eff_weight;
-					DPRINTF("  (%i,%i): val %i, eff_w %6.4f\n", nx, ny, thisval, (double)(eff_weight>>1)/sum_weights);
+					/*DPRINTF("  (%i,%i): val %i, eff_w %6.4f\n", nx, ny, thisval, (double)(eff_weight>>1)/sum_weights);*/
 					othcol  += thisval * eff_weight;
 					predcol += thisval; 
 				} else {
@@ -323,14 +315,14 @@ void demosaic_sharpen (const int width, const int height,
 				}
 			};
 			dst_ptr[ncol] = othcol/nsumw;
-			DPRINTF( " -> val %i (bilin: %i)\n", dst_ptr[ncol], predcol/(n_pos[nbpts[1]].num-skno));
+			/*DPRINTF( " -> val %i (bilin: %i)\n", dst_ptr[ncol], predcol/(n_pos[nbpts[1]].num-skno));*/
 			/* Third colour */
 			ncol = (colour+2)%3;
 			pconv = pconvmap[nbpts[0]][nbpts[2]];
 			if (pconv == PATCONV_NONE)
 				abort ();
 			othcol = 0; predcol = 0; nsumw = 0; skno = 0;
-			DPRINTF(" Col %i: pat %i pconv %i\n", ncol, nbpts[2], pconv);
+			/*DPRINTF(" Col %i: pat %i pconv %i\n", ncol, nbpts[2], pconv);*/
 			for (nbs = 0; nbs < n_pos[nbpts[2]].num; nbs++) {
 				off offset = n_pos[nbpts[2]].nb_pts[nbs];
 				const int nx = x + offset.dx;
@@ -342,7 +334,7 @@ void demosaic_sharpen (const int width, const int height,
 				if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
 					thisval = src_ptr[addr_off+ncol];
 					nsumw += eff_weight;
-					DPRINTF("  (%i,%i): val %i, eff_w %6.4f\n", nx, ny, thisval, (double)(eff_weight>>1)/sum_weights);
+					/*DPRINTF("  (%i,%i): val %i, eff_w %6.4f\n", nx, ny, thisval, (double)(eff_weight>>1)/sum_weights);*/
 					othcol  += thisval * eff_weight;
 					predcol += thisval;
 				} else {
@@ -350,7 +342,7 @@ void demosaic_sharpen (const int width, const int height,
 				}
 			};
 			dst_ptr[ncol] = othcol/nsumw;
-			DPRINTF( " -> val %i (bilin: %i)\n", dst_ptr[ncol], predcol/(n_pos[nbpts[1]].num-skno));
+			/*DPRINTF( " -> val %i (bilin: %i)\n", dst_ptr[ncol], predcol/(n_pos[nbpts[1]].num-skno));*/
 		}
 	}
 }
