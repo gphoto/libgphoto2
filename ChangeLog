@@ -1,3 +1,8 @@
+2001-12-20 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2_port/m4/byteorder.m4
+	* configure.in: added AC_NEED_BYTEORDER_H macro to generate _byteorder.h
+
 2001-12-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* configure.in: Comment out check for ltdl.h. See comment in there.

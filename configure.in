@@ -117,6 +117,9 @@ dnl Create a stdint.h-like file containing size-specific integer definitions
 dnl that will always be available
 AC_NEED_STDINT_H(libgphoto2/_stdint.h)
 
+dnl Create a header file containing NetBSD-style byte swapping macros
+AC_NEED_BYTEORDER_H(libgphoto2/_byteorder.h)
+
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
