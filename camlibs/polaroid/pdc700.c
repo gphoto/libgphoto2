@@ -1064,21 +1064,42 @@ camera_init (Camera *camera)
 	CR (gp_port_get_settings (camera->port, &settings));
 	CR (gp_port_set_timeout (camera->port, 1000));
 
-	for (i = 0; i < 5; i++) {
-		settings.serial.speed = speeds[i];
-		CR (gp_port_set_settings (camera->port, settings));
-		result = pdc700_init (camera);
-		if (result == GP_OK)
-			break;
-	}
-	if (i == 5)
-		return (result);
+	switch (camera->port->type) {
+	case GP_PORT_SERIAL:
 
-	/* Set the speed to the highest one */
-	if (speeds[i] < 115200) {
-		CR (pdc700_baud (camera, 115200));
-		settings.serial.speed = 115200;
+		/* Figure out current speed */
+		for (i = 0; i < 5; i++) {
+			settings.serial.speed = speeds[i];
+			CR (gp_port_set_settings (camera->port, settings));
+			result = pdc700_init (camera);
+			if (result == GP_OK)
+				break;
+		}
+		if (i == 5)
+			return (result);
+
+		/* Set the speed to the highest one */
+		if (speeds[i] < 115200) {
+			CR (pdc700_baud (camera, 115200));
+			settings.serial.speed = 115200;
+			CR (gp_port_set_settings (camera->port, settings));
+		}
+		break;
+	case GP_PORT_USB:
+//FIXME: Those settings are probably wrong.
+		settings.usb.inep       = 0x83;
+		settings.usb.outep      = 0x04;
+		settings.usb.config     = 1;
+		settings.usb.interface  = 0;
+		settings.usb.altsetting = 0;
 		CR (gp_port_set_settings (camera->port, settings));
+		CR (pdc700_init (camera));
+		break;
+	default:
+		gp_camera_set_error (camera, _("The requested port type (%i) "
+				     "is not supported by this driver."),
+				     camera->port->type);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	return (GP_OK);
