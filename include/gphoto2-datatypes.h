@@ -217,6 +217,7 @@ typedef struct {
 	int		bytes_read;
 
 	int 		session;
+	int		ref_count;
 } CameraFile;
 
 /* Entry in a folder on the camera */

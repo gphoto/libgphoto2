@@ -20,6 +20,7 @@ CameraFile* gp_file_new () {
         f->size = 0;
         f->bytes_read = 0;
 	f->session = glob_session_file++;
+	f->ref_count = 0;
 
         return(f);
 }
