@@ -1,2 +1,5 @@
-po2tbl.sed
+*.sed
+*.c
+*.h
+charset.alias
 Makefile
