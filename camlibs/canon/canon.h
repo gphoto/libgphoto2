@@ -29,9 +29,6 @@ typedef enum {
 	CAMERA_POWER_BAD = 4,
 	CAMERA_POWER_OK  = 6
 } canonPowerStatus;
-/* #define CAMERA_POWER_OK     6 */
-/* #define CAMERA_POWER_BAD    4 */
-
 /* #define CAMERA_ON_AC       16 obsolete; we now just use*/
 /* #define CAMERA_ON_BATTERY  48 the bit that makes the difference */
 
@@ -57,12 +54,6 @@ typedef enum {
 	JPEG_A50_SOS = 0xC4,
 	JPEG_END     = 0xD9
 } canonJpegMarkerCode;
-
-/* #define JPEG_ESC        0xFF */
-/* #define JPEG_BEG        0xD8 */
-/* #define JPEG_SOS        0xDB */
-/* #define JPEG_A50_SOS    0xC4 */
-/* #define JPEG_END        0xD9 */
 
 /**
  * canonCamModel
@@ -125,6 +116,43 @@ typedef enum {
 	CANON_PS_S230,
 	CANON_PS_G3
 } canonCamModel;
+
+/**
+ * canonTransferMode:
+ * @REMOTE_CAPTURE_THUMB_TO_PC: Transfer the thumbnail to the host
+ * @REMOTE_CAPTURE_FULL_TO_PC: Transfer the full-size image directly to the host
+ * @REMOTE_CAPTURE_THUMB_TO_DRIVE: Store the thumbnail on the camera storage
+ * @REMOTE_CAPTURE_FULL_TO_DRIVE: Store the full-size image on the camera storage
+ *
+ * Hardware codes to control image transfer in a remote capture
+ * operation. These are bits that may be OR'ed together to get
+ * multiple things to happen at once. For example,
+ * @REMOTE_CAPTURE_THUMB_TO_PC|@REMOTE_CAPTURE_FULL_TO_DRIVE is what
+ * D30Capture uses to store the full image on the camera, but provide
+ * an on-screen thumbnail.
+ *
+ */
+typedef enum {
+	REMOTE_CAPTURE_THUMB_TO_PC    = 0x0001,
+	REMOTE_CAPTURE_FULL_TO_PC     = 0x0002,
+	REMOTE_CAPTURE_THUMB_TO_DRIVE = 0x0004,
+	REMOTE_CAPTURE_FULL_TO_DRIVE  = 0x0008
+} canonTransferMode;
+
+/**
+ * canonDownloadImageType:
+ * @CANON_DOWNLOAD_THUMB: Get just the thumbnail for the image
+ * @CANON_DOWNLOAD_FULL: Get the full image
+ *
+ * Codes for "Download Captured Image" command to tell the camera to
+ * download either the thumbnail or the full image for the most
+ * recently captured image.
+ *
+ */
+typedef enum {
+	CANON_DOWNLOAD_THUMB = 1,
+	CANON_DOWNLOAD_FULL  = 2
+} canonDownloadImageType;
 
 /**
  * CON_CHECK_PARAM_NULL
@@ -207,10 +235,6 @@ struct _CameraPrivateLibrary
 	unsigned char seq_tx;
 	unsigned char seq_rx;
 
-	int capturing; /* whether we are capturing or not
-			  hack to speed up usb_dialogue 
-			  when not capturing [no sleep(2)] */
-
 	/* driver settings
 	 * leave these as int, as gp_widget_get_value sets them as int!
 	 */
@@ -234,8 +258,6 @@ struct _CameraPrivateLibrary
 	int cached_capacity;
 	int cached_available;
 };
-
-/*#define CANON_MINIMUM_DIRENT_SIZE	11*/
 
 /**
  * canonDirentOffset:
@@ -263,11 +285,6 @@ typedef enum {
 	CANON_DIRENT_NAME = 10,
 	CANON_MINIMUM_DIRENT_SIZE
 } canonDirentOffset;
-
-/* #define CANON_DIRENT_ATTRS 0 */
-/* #define CANON_DIRENT_SIZE  2 */
-/* #define CANON_DIRENT_TIME  6 */
-/* #define CANON_DIRENT_NAME 10 */
 
 /**
  * canonDirentAttributeBits:
@@ -300,15 +317,6 @@ typedef enum {
 	CANON_ATTR_RECURS_ENT_DIR     = 0x80
 } canonDirentAttributeBits;
 
-/* #define CANON_ATTR_WRITE_PROTECTED		0x01 */
-/* #define CANON_ATTR_UNKNOWN_2			0x02 */
-/* #define CANON_ATTR_UNKNOWN_4			0x04 */
-/* #define CANON_ATTR_UNKNOWN_8			0x08 */
-/* #define CANON_ATTR_NON_RECURS_ENT_DIR		0x10 */
-/* #define CANON_ATTR_DOWNLOADED			0x20 */
-/* #define CANON_ATTR_UNKNOWN_40			0x40 */
-/* #define CANON_ATTR_RECURS_ENT_DIR		0x80 */
-
 /**
  * canonDirlistFunctionBits:
  * @CANON_LIST_FILES: List files
@@ -324,9 +332,6 @@ typedef enum {
 	CANON_LIST_FOLDERS = 4
 } canonDirlistFunctionBits;
 
-/* #define CANON_LIST_FILES (1 << 1) */
-/* #define CANON_LIST_FOLDERS (1 << 2) */
-
 /**
  * canonDirFunctionCode:
  * @DIR_CREATE: Create the specified directory
@@ -340,10 +345,7 @@ typedef enum {
 	DIR_REMOVE = 1
 } canonDirFunctionCode;
 
-/* #define DIR_CREATE 0 */
-/* #define DIR_REMOVE 1 */
-
-/* These contain the default label for all the 
+/* These macros contain the default label for all the 
  * switch (camera->port->type) statements
  */
 
@@ -419,8 +421,9 @@ char *canon_int_get_disk_name(Camera *camera, GPContext *context);
 
 int canon_int_get_battery(Camera *camera, int *pwr_status, int *pwr_source, GPContext *context);
 
-
 int canon_int_capture_image (Camera *camera, CameraFilePath *path, GPContext *context);
+int canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
+			       GPContext *context);
 
 int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,int *available, GPContext *context);
 
