@@ -37,7 +37,7 @@ dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 dnl ---------------------------------------------------------------------------
 dnl i18n support
 dnl ---------------------------------------------------------------------------
-ALL_LINGUAS="de fr da hu it no ru sl sv uk"
+ALL_LINGUAS="da de fr hu it ja no ru sl sv uk"
 AM_GNU_GETTEXT
 
 dnl ---------------------------------------------------------------------------
