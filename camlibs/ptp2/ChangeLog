@@ -1,3 +1,7 @@
+2004-08-15  Marcus Meissner  <meissner@suse.de>
+	
+	* library.c: Added Canon PowerShot A85.
+
 2004-08-15  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added EOS 1D Mark II
