@@ -276,10 +276,30 @@ int gp_camera_exit () {
 
 int gp_folder_list(char *folder_path, CameraFolderInfo *list) {
 
+	CameraFolderInfo t;
+	int x, y, z, count;
+
 	if (glob_c.folder_list == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.folder_list(folder_path, list));
+	count = glob_c.folder_list(folder_path, list);
+
+	if (count == GP_ERROR)
+		return (GP_ERROR);
+
+	/* Sort the folder list */
+	for (x=0; x<count-1; x++) {
+		for (y=x+1; y<count; y++) {
+			z = strcmp(list[x].name, list[y].name);
+			if (z > 0) {
+				memcpy(&t, &list[x], sizeof(t));
+				memcpy(&list[x], &list[y], sizeof(t));
+				memcpy(&list[y], &t, sizeof(t));
+                        }
+                }
+        }
+
+	return(count);
 }
 
 int gp_folder_set (char *folder_path) {
