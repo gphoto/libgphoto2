@@ -149,7 +149,7 @@ static struct {
 	{"Kodak DC-240 (PTP)",  0x40a, 0x121}, /* Special firmware */
 	{"Kodak DC-4800", 0x40a, 0x160},
 	{"Kodak DX-3500", 0x40a, 0x500},
-	{"Kodak DX-3600", 0, 0},
+	{"Kodak DX-3600", 0x40a, 0x510},
 	{"Kodak DX-3900", 0x40a, 0x170},
 	{"Kodak MC3", 0, 0},
 	{"Sony DSC-P5", 0, 0},
@@ -535,8 +535,6 @@ camera_init (Camera *camera)
 	}
 	/* Get file handles array for filesystem */
 	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &camera->pl->params.handles, 0xffffffff)); // XXX return from all stores
-
-	GP_DEBUG ("ptp_getobjecthandles done");
 
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
