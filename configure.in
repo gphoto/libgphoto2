@@ -44,7 +44,7 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS(mkdir strdup)
+AC_CHECK_FUNCS(mkdir strdup strncpy strcpy snprintf sprintf)
 
 AC_PATH_PROG(LIBGPIO_CONFIG,gpio-config)
 if test -n "${LIBGPIO_CONFIG}"; then
@@ -89,7 +89,7 @@ AC_ARG_WITH(drivers,
   [                            'all' compiles all drivers; ]
   [                            possible drivers are: ]
   [                            barbie, canon, digita, directory, kodak, ]
-  [                            konica, panasonic, sierra sonydscf1, minolta ],
+  [                            konica, minolta, panasonic, sierra sonydscf1 ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
