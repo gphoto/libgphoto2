@@ -27,6 +27,8 @@
 
 #define CHECK_STOP_FREE(camera,result) {int res; SierraData *fd = camera->camlib_data; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); gp_port_free (fd->dev); free (fd); camera->camlib_data = NULL; return (res);}}
 
+#define CHECK_FREE(camera,result) {int res; SierraData *fd = camera->camlib_data; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); gp_port_free (fd->dev); free (fd); camera->camlib_data = NULL; return (res);}}
+
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
 int sierra_change_folder (Camera *camera, const char *folder);
@@ -247,10 +249,10 @@ int camera_init (Camera *camera)
 			return (ret);
 		}
 
-	        CHECK_STOP_FREE (camera, gp_port_usb_find_device (fd->dev, 
+		CHECK_FREE (camera, gp_port_usb_find_device (fd->dev, 
 							vendor, product));
 
-	        CHECK_STOP_FREE (camera, gp_port_timeout_set (fd->dev, 5000));
+		CHECK_FREE (camera, gp_port_timeout_set (fd->dev, 5000));
 
        		settings.usb.inep 	= inep;
        		settings.usb.outep 	= outep;
@@ -266,13 +268,13 @@ int camera_init (Camera *camera)
                 return (GP_ERROR_IO_UNKNOWN_PORT);
 	}
 
-	CHECK_STOP_FREE (camera, gp_port_settings_set (fd->dev, settings));
-	CHECK_STOP_FREE (camera, gp_port_timeout_set (fd->dev, TIMEOUT));
+	CHECK_FREE (camera, gp_port_settings_set (fd->dev, settings));
+	CHECK_FREE (camera, gp_port_timeout_set (fd->dev, TIMEOUT));
 	fd->speed = camera->port->speed;
 	fd->type  = camera->port->type;
 
 	/* Establish a connection */
-	CHECK_STOP_FREE (camera, camera_start (camera));
+	CHECK_FREE (camera, camera_start (camera));
 
 	/* FIXME??? What's that for? */
 	ret = sierra_get_int_register (camera, 1, &value);
@@ -331,7 +333,7 @@ int camera_start (Camera *camera)
 	 */
 //Remove this once libgphoto2_port is fixed
 if (fd->type != GP_PORT_USB)
-	CHECK_STOP (camera, gp_port_open (fd->dev));
+	CHECK (camera, gp_port_open (fd->dev));
 
 	switch (fd->type) {
 	case GP_PORT_SERIAL:
@@ -429,7 +431,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	CHECK (camera_start (camera));
 
 	/* Set the working folder */
-	CHECK (sierra_change_folder (camera, folder));
+	CHECK_STOP (sierra_change_folder (camera, folder));
 
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
@@ -523,7 +525,7 @@ int camera_file_get_info (Camera *camera, const char *folder,
 	CHECK (camera_start (camera));
 
 	/* Set the working folder */
-	CHECK (sierra_change_folder (camera, folder));
+	CHECK_STOP (sierra_change_folder (camera, folder));
 
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
@@ -568,7 +570,7 @@ int camera_folder_delete_all (Camera *camera, const char *folder)
 	CHECK (camera_start (camera));
 
 	/* Set the working folder */
-	CHECK (sierra_change_folder (camera, folder));
+	CHECK_STOP (sierra_change_folder (camera, folder));
 
 	CHECK_STOP (camera, sierra_delete_all (camera));
 
@@ -601,9 +603,10 @@ int camera_file_delete (Camera *camera, const char *folder,
 	CHECK (camera_start (camera));
 
 	/* Set the working folder */
-	CHECK (sierra_change_folder (camera, folder));
+	CHECK_STOP (sierra_change_folder (camera, folder));
 
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
+	CHECK_STOP (camera, file_number);
 
 	CHECK_STOP (camera, sierra_delete (camera, file_number + 1));
 
