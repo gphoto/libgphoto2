@@ -1,0 +1,253 @@
+<!-- ##### SECTION Title ##### -->
+CameraWidget
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT CameraWidget ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gp_widget_new ##### -->
+<para>
+
+</para>
+
+@type: 
+@label: 
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_free ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_ref ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_unref ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_append ##### -->
+<para>
+
+</para>
+
+@widget: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_prepend ##### -->
+<para>
+
+</para>
+
+@widget: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_count_children ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_child ##### -->
+<para>
+
+</para>
+
+@widget: 
+@child_number: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_child_by_label ##### -->
+<para>
+
+</para>
+
+@widget: 
+@label: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_child_by_id ##### -->
+<para>
+
+</para>
+
+@widget: 
+@id: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_root ##### -->
+<para>
+
+</para>
+
+@widget: 
+@root: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_set_info ##### -->
+<para>
+
+</para>
+
+@widget: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_info ##### -->
+<para>
+
+</para>
+
+@widget: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_id ##### -->
+<para>
+
+</para>
+
+@widget: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_type ##### -->
+<para>
+
+</para>
+
+@widget: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_label ##### -->
+<para>
+
+</para>
+
+@widget: 
+@label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_set_value ##### -->
+<para>
+
+</para>
+
+@widget: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_value ##### -->
+<para>
+
+</para>
+
+@widget: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_range ##### -->
+<para>
+
+</para>
+
+@range: 
+@min: 
+@max: 
+@increment: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_add_choice ##### -->
+<para>
+
+</para>
+
+@widget: 
+@choice: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_count_choices ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_get_choice ##### -->
+<para>
+
+</para>
+
+@widget: 
+@choice_number: 
+@choice: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_widget_changed ##### -->
+<para>
+
+</para>
+
+@widget: 
+@Returns: 
+
+

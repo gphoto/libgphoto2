@@ -1250,7 +1250,7 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
  * gp_camera_set_error:
  * @camera: a #Camera
  * @format:
- * ...:
+ * @...:
  *
  * Saves an error message that can later be retrieved by #gp_camera_get_error.
  * Normally, you would call this function in a camera driver prior 

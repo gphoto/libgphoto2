@@ -1,0 +1,100 @@
+<!-- ##### SECTION Title ##### -->
+CameraAbilitiesList
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT CameraAbilitiesList ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gp_abilities_list_new ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_abilities_list_free ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_abilities_list_load ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_abilities_list_detect ##### -->
+<para>
+
+</para>
+
+@list: 
+@info_list: 
+@l: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_abilities_list_count ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_abilities_list_lookup_model ##### -->
+<para>
+
+</para>
+
+@list: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_abilities_list_get_abilities ##### -->
+<para>
+
+</para>
+
+@list: 
+@index: 
+@abilities: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_abilities_list_append ##### -->
+<para>
+
+</para>
+
+@list: 
+@abilities: 
+@Returns: 
+
+

@@ -1,0 +1,629 @@
+<!-- ##### SECTION Title ##### -->
+Camera
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### USER_FUNCTION CameraExitFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraGetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@widget: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraSetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@widget: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFolderGetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@widget: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFolderSetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@widget: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFileGetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@widget: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFileSetConfigFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@widget: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraCaptureFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@type: 
+@path: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraCapturePreviewFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@file: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraSummaryFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@text: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraManualFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@text: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraAboutFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@text: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraResultFunc ##### -->
+<para>
+
+</para>
+
+@camera: 
+@result: 
+@Returns: 
+
+
+<!-- ##### STRUCT CameraPrivateLibrary ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT CameraPrivateCore ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF CameraText ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF CameraFunctions ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT Camera ##### -->
+<para>
+
+</para>
+
+@port: 
+@fs: 
+@functions: 
+@pl: 
+@pc: 
+
+<!-- ##### FUNCTION gp_camera_new ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_ref ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_unref ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_free ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraStatusFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@status: 
+@data: 
+
+
+<!-- ##### FUNCTION gp_camera_set_status_func ##### -->
+<para>
+
+</para>
+
+@camera: 
+@func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraProgressFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@percentage: 
+@data: 
+
+
+<!-- ##### FUNCTION gp_camera_set_progress_func ##### -->
+<para>
+
+</para>
+
+@camera: 
+@func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraMessageFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@msg: 
+@data: 
+
+
+<!-- ##### FUNCTION gp_camera_set_message_func ##### -->
+<para>
+
+</para>
+
+@camera: 
+@func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_set_error ##### -->
+<para>
+
+</para>
+
+@camera: 
+@format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_error ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_status ##### -->
+<para>
+
+</para>
+
+@camera: 
+@format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_progress ##### -->
+<para>
+
+</para>
+
+@camera: 
+@percentage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_message ##### -->
+<para>
+
+</para>
+
+@camera: 
+@format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_set_abilities ##### -->
+<para>
+
+</para>
+
+@camera: 
+@abilities: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_abilities ##### -->
+<para>
+
+</para>
+
+@camera: 
+@abilities: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_set_port_info ##### -->
+<para>
+
+</para>
+
+@camera: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_port_info ##### -->
+<para>
+
+</para>
+
+@camera: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_port_speed ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_set_port_speed ##### -->
+<para>
+
+</para>
+
+@camera: 
+@speed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_init ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
+<!-- ##### TYPEDEF CameraFilePath ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM CameraCaptureType ##### -->
+<para>
+
+</para>
+
+@GP_CAPTURE_IMAGE: 
+@GP_CAPTURE_MOVIE: 
+@GP_CAPTURE_SOUND: 
+
+<!-- ##### FUNCTION gp_camera_capture ##### -->
+<para>
+
+</para>
+
+@camera: 
+@type: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_capture_preview ##### -->
+<para>
+
+</para>
+
+@camera: 
+@file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@window: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_set_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@window: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_list_files ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_list_folders ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_put_file ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_delete_all ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_get_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@window: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_folder_set_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@window: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_file_get ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@type: 
+@camera_file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_file_delete ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_file_get_info ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_file_set_info ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_file_get_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@window: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_file_set_config ##### -->
+<para>
+
+</para>
+
+@camera: 
+@folder: 
+@file: 
+@window: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_manual ##### -->
+<para>
+
+</para>
+
+@camera: 
+@manual: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_summary ##### -->
+<para>
+
+</para>
+
+@camera: 
+@summary: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_camera_get_about ##### -->
+<para>
+
+</para>
+
+@camera: 
+@about: 
+@Returns: 
+
+

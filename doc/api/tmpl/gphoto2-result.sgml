@@ -1,0 +1,81 @@
+<!-- ##### SECTION Title ##### -->
+GPhoto2 error codes
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO GP_ERROR_CORRUPTED_DATA ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_ERROR_PATH_NOT_ABSOLUTE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_ERROR_DIRECTORY_EXISTS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_ERROR_FILE_EXISTS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_ERROR_FILE_NOT_FOUND ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_ERROR_DIRECTORY_NOT_FOUND ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_ERROR_IO ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_ERROR_MODEL_NOT_FOUND ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gp_result_as_string ##### -->
+<para>
+
+</para>
+
+@result: 
+@Returns: 
+
+

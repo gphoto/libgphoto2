@@ -1,0 +1,326 @@
+<!-- ##### SECTION Title ##### -->
+CameraFilesystem
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT CameraFilesystem ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gp_filesystem_new ##### -->
+<para>
+
+</para>
+
+@fs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_free ##### -->
+<para>
+
+</para>
+
+@fs: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemGetFileFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@type: 
+@file: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemDeleteFileFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_file_funcs ##### -->
+<para>
+
+</para>
+
+@fs: 
+@get_file_func: 
+@del_file_func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemInfoFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_info_funcs ##### -->
+<para>
+
+</para>
+
+@fs: 
+@get_info_func: 
+@set_info_func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemPutFileFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@file: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemDeleteAllFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_folder_funcs ##### -->
+<para>
+
+</para>
+
+@fs: 
+@put_file_func: 
+@delete_all_func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION CameraFilesystemListFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@list: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_list_funcs ##### -->
+<para>
+
+</para>
+
+@fs: 
+@file_list_func: 
+@folder_list_func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_list_files ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_list_folders ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_get_file ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@type: 
+@file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_put_file ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_delete_file ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_delete_all ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_get_info ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_set_info ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_number ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_name ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filenumber: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_get_folder ##### -->
+<para>
+
+</para>
+
+@fs: 
+@filename: 
+@folder: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_count ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_reset ##### -->
+<para>
+
+</para>
+
+@fs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_append ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_filesystem_dump ##### -->
+<para>
+
+</para>
+
+@fs: 
+@Returns: 
+
+

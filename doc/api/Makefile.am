@@ -16,7 +16,7 @@ htmldir = @HTML_DIR@
 
 TARGET_DIR=$(htmldir)/$(DOC_MODULE)
 
-all-local: html
+all-local: scan sgml html
 
 scan:
 	cd $(srcdir) && gtkdoc-scan --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR)

@@ -23,15 +23,13 @@ gp_abilities_list_load
 gp_abilities_list_detect
 gp_abilities_list_count
 gp_abilities_list_lookup_model
-gp_abilities_list_get_model
 gp_abilities_list_get_abilities
-gp_abilities_list_dump_libs
 gp_abilities_list_append
 
 </SECTION>
 
 <SECTION>
-<FILE>gphoto2-abilitiies</FILE>
+<FILE>gphoto2-abilities</FILE>
 <TITLE>CameraAbilities</TITLE>
 CameraAbilities
 
@@ -80,6 +78,9 @@ gp_camera_set_progress_func
 CameraMessageFunc
 gp_camera_set_message_func
 
+gp_camera_set_error
+gp_camera_get_error
+
 gp_camera_status
 gp_camera_progress
 gp_camera_message
@@ -87,11 +88,8 @@ gp_camera_message
 gp_camera_set_abilities
 gp_camera_get_abilities
 
-gp_camera_set_port_path
-gp_camera_get_port_path
-
-gp_camera_set_port_name
-gp_camera_get_port_name
+gp_camera_set_port_info
+gp_camera_get_port_info
 
 gp_camera_get_port_speed
 gp_camera_set_port_speed
@@ -102,8 +100,6 @@ CameraFilePath
 CameraCaptureType
 gp_camera_capture
 gp_camera_capture_preview
-
-gp_camera_get_result_as_string
 
 gp_camera_get_config
 gp_camera_set_config
