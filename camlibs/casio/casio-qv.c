@@ -186,7 +186,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text, _("Download program for Casio QV cameras. "
 		"Originally written for gphoto-0.4. Adapted for gphoto2 by "
-		"Lutz Müller <lutz@users.sf.net>."));
+		"Lutz Mueller <lutz@users.sf.net>."));
 
 	return (GP_OK);
 }
