@@ -93,6 +93,9 @@ camlibs/sierra:
 camlibs/sipix:
 	Marcus Meissner <marcus@jet.franken.de>
 
+camlibs/smal:
+	Lee Benfield <lee@benf.org>
+
 camlibs/sonydscf55:
 	Raymond Penners <raymond@dotsphinx.com>
 
