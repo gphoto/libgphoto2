@@ -121,7 +121,7 @@ static const RegisterDescriptorType ep3000z_reg_03[] = {
 };
 #else
 static const ValueNameType ep3000z_reg_03_val_names[] = { 
-	{ {       0 }, "Auto" },
+	{ {       0 }, N_("Auto") },
 	{ {    1250 }, "1/800" },
 	{ {    2000 }, "1/500" },
 	{ {    2500 }, "1/400" },
@@ -165,7 +165,7 @@ static const RegisterDescriptorType ep3000z_reg_03[] = {
  * Register 5: aperature settings. 
  */
 static const ValueNameType ep3000z_reg_05_val_names[] = {
-	{ { 6 }, "auto" },
+	{ { 6 }, N_("auto") },
 	{ { 0 }, "F2.0" },
 	{ { 1 }, "F2.3" },
 	{ { 2 }, "F2.8" },
@@ -185,8 +185,8 @@ static const RegisterDescriptorType ep3000z_reg_05[] = {
  * Register 6: color mode
  */
 static const ValueNameType ep3000z_reg_06_val_names[] = {
-	{ { 1 }, "Color" },
-	{ { 2 }, "Black & White" },
+	{ { 1 }, N_("Color") },
+	{ { 2 }, N_("Black & White") },
 };
 static const RegisterDescriptorType ep3000z_reg_06[] = { 
 	{
@@ -200,11 +200,11 @@ static const RegisterDescriptorType ep3000z_reg_06[] = {
  * Register 7: flash settings
  */
 static const ValueNameType ep3000z_reg_07_val_names[] = {
-	{ { 0 }, "Auto" },
-	{ { 1 }, "Force" },
-	{ { 2 }, "Off" },
-	{ { 3 }, "Red-eye Reduction" },
-	{ { 4 }, "Slow Sync" },
+	{ { 0 }, N_("Auto") },
+	{ { 1 }, N_("Force") },
+	{ { 2 }, N_("Off") },
+	{ { 3 }, N_("Red-eye Reduction") },
+	{ { 4 }, N_("Slow Sync") },
 };
 static const RegisterDescriptorType ep3000z_reg_07[] = { 
 	{
@@ -218,9 +218,9 @@ static const RegisterDescriptorType ep3000z_reg_07[] = {
  * Register 20: white balance.
  */
 static const ValueNameType ep3000z_reg_20_val_names[] = {
-	{ { 0x00 }, "Auto" },
-	{ { 0x01 }, "Fixed" },
-	{ { 0xFF }, "Custom" },
+	{ { 0x00 }, N_("Auto") },
+	{ { 0x01 }, N_("Fixed") },
+	{ { 0xFF }, N_("Custom") },
 };
 static const RegisterDescriptorType ep3000z_reg_20[] = { 
 	{
@@ -267,8 +267,8 @@ static const RegisterDescriptorType ep3000z_reg_24[] = {
  * Register 33: Lens mode.
  */
 static const ValueNameType ep3000z_reg_33_val_names[] = {
-	{ { 0x01 }, "Macro" },
-	{ { 0x02 }, "Normal" },
+	{ { 0x01 }, N_("Macro") },
+	{ { 0x02 }, N_("Normal") },
 };
 static const RegisterDescriptorType ep3000z_reg_33[] = { 
 	{
@@ -288,9 +288,9 @@ static const RegisterDescriptorType ep3000z_reg_33[] = {
  */
 /*
 static const ValueNameType ep3000z_reg_34_val_names[] = {
-	{ { 0x01 }, "Off" },
-	{ { 0x02 }, "Monitor" },
-	{ { 0x03 }, "Normal" },
+	{ { 0x01 }, N_("Off") },
+	{ { 0x02 }, N_("Monitor") },
+	{ { 0x03 }, N_("Normal") },
 };
 static const RegisterDescriptorType ep3000z_reg_34[] = { 
 	{
@@ -337,7 +337,7 @@ static const RegisterDescriptorType ep3000z_reg_38[] = {
  */
 /*
 static const ValueNameType ep3000z_reg_41_val_names[] = {
-	{ { 0 }, "Off" },
+	{ { 0 }, N("Off") },
 	{ { 1 }, "yymmdd" },
 	{ { 2 }, "mmddyy" },
 	{ { 3 }, "ddmmyy" },
@@ -355,14 +355,14 @@ static const RegisterDescriptorType ep3000z_reg_41[] = {
  * Register 53: language setting.
  */
 static const ValueNameType ep3000z_reg_53_val_names[] = {
-	{ { 0x01 }, "Korean" },
-	{ { 0x03 }, "English" },
-	{ { 0x04 }, "French" },
-	{ { 0x05 }, "German" },
-	{ { 0x06 }, "Italian" },
-	{ { 0x07 }, "Japanese" },
-	{ { 0x08 }, "Spanish" },
-	{ { 0x09 }, "Portugese" },
+	{ { 0x01 }, N_("Korean") },
+	{ { 0x03 }, N_("English") },
+	{ { 0x04 }, N_("French") },
+	{ { 0x05 }, N_("German") },
+	{ { 0x06 }, N_("Italian") },
+	{ { 0x07 }, N_("Japanese") },
+	{ { 0x08 }, N_("Spanish") },
+	{ { 0x09 }, N_("Portugese") },
 
 };
 static const RegisterDescriptorType ep3000z_reg_53[] = {
@@ -407,8 +407,8 @@ static const RegisterDescriptorType ep3000z_reg_69[] = {
  * TOCHECK: was not implemented on ep3000z
  */
 /*static const ValueNameType ep3000z_reg_70_val_names[] = {
-	{ { 0x03 }, "Spot" },
-	{ { 0x05 }, "Matrix" },
+	{ { 0x03 }, N_("Spot") },
+	{ { 0x05 }, N_("Matrix") },
 };
 static const RegisterDescriptorType ep3000z_reg_70[] = { 
 	{
@@ -443,7 +443,7 @@ static const RegisterDescriptorType ep3000z_reg_71[] = {
  */
 /*
 static const ValueNameType ep3000z_reg_72_val_names[] = {
-	{ { 0x0000 }, "Off" },
+	{ { 0x0000 }, N_("Off") },
 	{ { 0x0208 }, "1.5x" },
 	{ { 0x0008 }, "2x" },
 	{ { 0x0408 }, "2.5x" },
@@ -463,7 +463,7 @@ static const RegisterDescriptorType ep3000z_reg_72[] = {
  */
 /*
 static const ValueNameType ep3000z_reg_85_val_names[] = {
-	{ { 0 }, "Auto" },
+	{ { 0 }, N_("Auto") },
 	{ { 1 }, "100" },
 	{ { 2 }, "200" },
 	{ { 3 }, "400" },

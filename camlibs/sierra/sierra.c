@@ -1808,6 +1808,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *c)
 		}
 	}
 	/* Get all the string-related info */
+
 	if (sierra_get_string_register (camera, 27, 0, NULL, t, &v, c) >= 0)
 		sprintf (buf, _("%sCamera Model: %s\n"), buf, t);
 	if (sierra_get_string_register (camera, 48, 0, NULL, t, &v, c) >= 0)
@@ -1848,9 +1849,9 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 	switch (camera->pl->model) {
 	case SIERRA_MODEL_CAM_DESC:
 		if (camera->pl->cam_desc->manual == NULL) {
-			strcpy (manual->text, "No camera manual available.\n");
+			strcpy (manual->text, _("No camera manual available.\n"));
 		} else {
-			strcpy (manual->text, camera->pl->cam_desc->manual);
+			strcpy (manual->text, _(camera->pl->cam_desc->manual));
 		}
 		break;
 	case SIERRA_MODEL_EPSON:

@@ -130,7 +130,7 @@ static const RegisterDescriptorType cp880_reg_03[] = {
 };
 #endif
 static const ValueNameType cp880_reg_03_val_names[] = { 
-	{ {       0 }, "Auto" },
+	{ {       0 }, N_("Auto") },
 	{ {    1000 }, "1/1000" },
 	{ {    2000 }, "1/500" },
 	{ {    4000 }, "1/250" },
@@ -164,10 +164,10 @@ static const RegisterDescriptorType cp880_reg_03[] = {
  * Register 5: aperature settings (f-stop)
  */
 static const ValueNameType cp880_reg_05_val_names[] = {
-	{ { 0 }, "Auto" },
-	{ { 1 }, "Low" },
-	{ { 2 }, "Medium" },
-	/* { { 4 }, "High" }, not on a cp880 */
+	{ { 0 }, N_("Auto") },
+	{ { 1 }, N_("Low") },
+	{ { 2 }, N_("Medium") },
+	/* { { 4 }, N_("High") }, not on a cp880 */
 };
 static const RegisterDescriptorType cp880_reg_05[] = { 
 	{
@@ -181,8 +181,8 @@ static const RegisterDescriptorType cp880_reg_05[] = {
  * Register 6: color mode (not tested on cp880)
  */
 static const ValueNameType cp880_reg_06_val_names[] = {
-	{ { 1 }, "Color" },
-	{ { 2 }, "B/W" },
+	{ { 1 }, N_("Color") },
+	{ { 2 }, N_("B/W") },
 };
 static const RegisterDescriptorType cp880_reg_06[] = { 
 	{
@@ -196,11 +196,11 @@ static const RegisterDescriptorType cp880_reg_06[] = {
  * Register 7: flash settings
  */
 static const ValueNameType cp880_reg_07_val_names[] = {
-	{ { 0 }, "Auto" },
-	{ { 1 }, "Force" },
-	{ { 2 }, "Off" },
-	{ { 3 }, "Anti-redeye" },
-	{ { 4 }, "Slow-sync" },
+	{ { 0 }, N_("Auto") },
+	{ { 1 }, N_("Force") },
+	{ { 2 }, N_("Off") },
+	{ { 3 }, N_("Anti-redeye") },
+	{ { 4 }, N_("Slow-sync") },
 };
 static const RegisterDescriptorType cp880_reg_07[] = { 
 	{
@@ -214,12 +214,12 @@ static const RegisterDescriptorType cp880_reg_07[] = {
  * Register 19: Image adjustment.
  */
 static const ValueNameType cp880_reg_19_val_names[] = {
-	{ { 5 }, "Auto" },
-	{ { 0 }, "Normal" },		/* also 0 if chose b+w */
-	{ { 1 }, "Contrast+" },		/* cp880 more contrast */
-	{ { 2 }, "Contrast-" },		/* cp880 less contrast */
-	{ { 3 }, "Brightness+" },	/* cp880 lighten image */
-	{ { 4 }, "Brightness-" },	/* cp880 darken image */
+	{ { 5 }, N_("Auto") },
+	{ { 0 }, N_("Normal") },		/* also 0 if chose b+w */
+	{ { 1 }, N_("Contrast+") },		/* cp880 more contrast */
+	{ { 2 }, N_("Contrast-") },		/* cp880 less contrast */
+	{ { 3 }, N_("Brightness+") },	/* cp880 lighten image */
+	{ { 4 }, N_("Brightness-") },	/* cp880 darken image */
 };
 static const RegisterDescriptorType cp880_reg_19[] = { 
 	{
@@ -244,13 +244,13 @@ static const RegisterDescriptorType cp880_reg_19[] = {
  * It appears this needs the sierra extended protocol to be complete.
  */
 static const ValueNameType cp880_reg_20_val_names[] = {
-	{ { 0x00 }, "Auto" },
-	{ { 0x01 }, "Fine" },	/* fine +3, +2, ... -3 */
-	{ { 0x02 }, "Incandescent" }, /* incan +3 ... -3 */
-	{ { 0x03 }, "Fluorescent" }, /* FL3, FL2, and FL1 */
-	{ { 0x05 }, "Flash" },	/* speedlight/flash +3 ... -3 */
-	{ { 0x06 }, "Preset" },	/* preset automatically by camera, prob range */
-	{ { 0xff }, "Cloudy" }, /* cloudy +3 ... -3 */
+	{ { 0x00 }, N_("Auto") },
+	{ { 0x01 }, N_("Fine") },	/* fine +3, +2, ... -3 */
+	{ { 0x02 }, N_("Incandescent") }, /* incan +3 ... -3 */
+	{ { 0x03 }, N_("Fluorescent") }, /* FL3, FL2, and FL1 */
+	{ { 0x05 }, N_("Flash") },	/* speedlight/flash +3 ... -3 */
+	{ { 0x06 }, N_("Preset") },	/* preset automatically by camera, prob range */
+	{ { 0xff }, N_("Cloudy") }, /* cloudy +3 ... -3 */
 };
 static const RegisterDescriptorType cp880_reg_20[] = { 
 	{
@@ -265,9 +265,9 @@ static const RegisterDescriptorType cp880_reg_20[] = {
  * Register 30: LED mode, can't even read this on a cp880.
  */
 static const ValueNameType cp880_reg_30_val_names[] = {
-	{ { 0x00 }, "Off" },
-	{ { 0x01 }, "On" },
-	{ { 0x02 }, "Blink" },
+	{ { 0x00 }, N_("Off") },
+	{ { 0x01 }, N_("On") },
+	{ { 0x02 }, N_("Blink") },
 };
 static const RegisterDescriptorType cp880_reg_30[] = { 
 	{
@@ -285,9 +285,9 @@ static const RegisterDescriptorType cp880_reg_30[] = {
  * does not turn off the flash.
  */
 static const ValueNameType cp880_reg_33_val_names[] = {
-	{ { 0x01 }, "Macro" },
-	{ { 0x02 }, "Normal" },
-	{ { 0x03 }, "Infinity" },
+	{ { 0x01 }, N_("Macro") },
+	{ { 0x02 }, N_("Normal") },
+	{ { 0x03 }, N_("Infinity") },
 };
 static const RegisterDescriptorType cp880_reg_33[] = { 
 	{
@@ -320,12 +320,12 @@ static const RegisterDescriptorType cp880_reg_33[] = {
  * above kluge.
  */
 static const ValueNameType cp880_reg_34_val_names[] = {
-	{ { 0x01 }, "Off" },	/* turn off lcd while waiting to capture */
-	{ { 0x02 }, "Record" },	/* turn on lcd while waiting to capture */
-	{ { 0x03 }, "Play" },	/* slide-show like mode */
-	{ { 0x06 }, "Preview Thumbnail" },	/* slide-show thumbnail */
-	{ { 0x07 }, "Next" },			/* go to the next image */
-	{ { 0x08 }, "Previous" },		/* go to previous image */
+	{ { 0x01 }, N_("Off") },	/* turn off lcd while waiting to capture */
+	{ { 0x02 }, N_("Record") },	/* turn on lcd while waiting to capture */
+	{ { 0x03 }, N_("Play") },	/* slide-show like mode */
+	{ { 0x06 }, N_("Preview Thumbnail") },	/* slide-show thumbnail */
+	{ { 0x07 }, N_("Next") },			/* go to the next image */
+	{ { 0x08 }, N_("Previous") },		/* go to previous image */
 	/*
 	{ { 0x00 }, "unknown 0x00" },
 	{ { 0x04 }, "unknown 0x04" },
@@ -380,9 +380,9 @@ static const RegisterDescriptorType cp880_reg_38[] = {
  * It appears this needs the sierra extended protocol to be complete.
  */
 static const ValueNameType cp880_reg_53_val_names[] = {
-	{ { 0x03 }, "English" },
-	{ { 0x04 }, "French" },
-	{ { 0x05 }, "German" },
+	{ { 0x03 }, N_("English") },
+	{ { 0x04 }, N_("French") },
+	{ { 0x05 }, N_("German") },
 	/* { { 0x06 }, "Italian" },	not on cp880 */
 	/* { { 0x08 }, "Spanish" },	not on cp880 */
 	/* { { 0x0a }, "Dutch" },	not on cp880 */
@@ -452,10 +452,10 @@ static const RegisterDescriptorType cp880_reg_69[] = {
  * Register 70: exposure meter.
  */
 static const ValueNameType cp880_reg_70_val_names[] = {
-	{ { 0x02 }, "Center-Weighted" },
-	{ { 0x03 }, "Spot" },
-	{ { 0x05 }, "Matrix" },
-	{ { 0x06 }, "Spot-AF" },
+	{ { 0x02 }, N_("Center-Weighted") },
+	{ { 0x03 }, N_("Spot") },
+	{ { 0x05 }, N_("Matrix") },
+	{ { 0x06 }, N_("Spot-AF") },
 };
 static const RegisterDescriptorType cp880_reg_70[] = { 
 	{
@@ -504,13 +504,12 @@ static const ValueNameType cp880_reg_72_mask_hi_val_names[] = {
 	{ { 0x0200 }, "1.60" },
 	{ { 0x0300 }, "2.00" },
 	{ { 0x0400 }, "2.50" },
-	{ { 0x0500 }, "none" },
-
+	{ { 0x0500 }, N_("none") },
 };
 static const ValueNameType cp880_reg_72_mask_lo_val_names[] = {
-	{ { 0x0001 }, "AE-lock" },
-	{ { 0x0002 }, "Fisheye" },
-	{ { 0x0004 }, "Wide" },
+	{ { 0x0001 }, N_("AE-lock") },
+	{ { 0x0002 }, N_("Fisheye") },
+	{ { 0x0004 }, N_("Wide") },
 };
 static const RegisterDescriptorType cp880_reg_72[] = { 
 	{ 
@@ -526,13 +525,13 @@ static const RegisterDescriptorType cp880_reg_72[] = {
 };
 #endif
 static const ValueNameType cp880_reg_72_mask_hi_val_names[] = {
-	{ { 0x00 }, "off" },
-	{ { 0x08 }, "on" },
+	{ { 0x00 }, N_("off") },
+	{ { 0x08 }, N_("on") },
 
 };
 static const ValueNameType cp880_reg_72_mask_lo_val_names[] = {
-	{ { 0x00 }, "off" },
-	{ { 0x01 }, "on" },
+	{ { 0x00 }, N_("off") },
+	{ { 0x01 }, N_("on") },
 };
 
 static const RegisterDescriptorType cp880_reg_72[] = { 

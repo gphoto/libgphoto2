@@ -194,7 +194,7 @@ camera_get_config_cam_desc (Camera *camera, CameraWidget **window,
 	for (indw = 0; indw < 2 /* XXX sizeof () */; indw++) {
 		GP_DEBUG ("%s registers", cam_desc->regset[indw].window_name);
 		gp_widget_new (GP_WIDGET_SECTION,
-			       cam_desc->regset[indw].window_name, &section);
+			       _(cam_desc->regset[indw].window_name), &section);
 		gp_widget_append (*window, section);
 		for (indr = 0; indr < cam_desc->regset[indw].reg_cnt;  indr++) {
 			camera_cam_desc_get_widget (camera,

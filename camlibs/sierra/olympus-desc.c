@@ -143,7 +143,7 @@ static const RegisterDescriptorType oly3040_reg_03[] = {
 };
 #else
 static const ValueNameType oly3040_reg_03_val_names[] = { 
-	{ {       0 }, "Auto" },
+	{ {       0 }, N_("Auto") },
 	{ {    1250 }, "1/800" },
 	{ {    2000 }, "1/500" },
 	{ {    2500 }, "1/400" },
@@ -187,7 +187,7 @@ static const RegisterDescriptorType oly3040_reg_03[] = {
  * In A mode, shutter speed is compensated
  */
 static const ValueNameType oly3040_reg_05_val_names[] = {
-	{ { 0 }, "Auto" },
+	{ { 0 }, N_("Auto") },
 	{ { 1 }, "F1.8" },
 	{ { 2 }, "F2.0" },
 	{ { 3 }, "F2.3" },
@@ -217,11 +217,11 @@ static const RegisterDescriptorType oly3040_reg_05[] = {
  * Register 6: color mode
  */
 static const ValueNameType oly3040_reg_06_val_names[] = {
-	{ { 0 }, "Normal" },
-	{ { 1 }, "B/W" },
-	{ { 2 }, "Sepia" },
-	{ { 3 }, "White board" },
-	{ { 4 }, "Black board" },
+	{ { 0 }, N_("Normal") },
+	{ { 1 }, N_("B/W") },
+	{ { 2 }, N_("Sepia") },
+	{ { 3 }, N_("White board") },
+	{ { 4 }, N_("Black board") },
 };
 static const RegisterDescriptorType oly3040_reg_06[] = { 
 	{
@@ -235,10 +235,10 @@ static const RegisterDescriptorType oly3040_reg_06[] = {
  * Register 7: flash settings
  */
 static const ValueNameType oly3040_reg_07_val_names[] = {
-	{ { 0 }, "Auto" },
-	{ { 1 }, "Force" },
-	{ { 2 }, "Off" },
-	{ { 3 }, "Anti-redeye" },
+	{ { 0 }, N_("Auto") },
+	{ { 1 }, N_("Force") },
+	{ { 2 }, N_("Off") },
+	{ { 3 }, N_("Anti-redeye") },
 };
 static const RegisterDescriptorType oly3040_reg_07[] = { 
 	{
@@ -252,11 +252,11 @@ static const RegisterDescriptorType oly3040_reg_07[] = {
  * Register 20: white balance.
  */
 static const ValueNameType oly3040_reg_20_val_names[] = {
-	{ { 0x00 }, "Auto" },
-	{ { 0x01 }, "Daylight" },
-	{ { 0x02 }, "Fluorescent" },
-	{ { 0x03 }, "Tungsten" },
-	{ { 0xff }, "Cloudy" },
+	{ { 0x00 }, N_("Auto") },
+	{ { 0x01 }, N_("Daylight") },
+	{ { 0x02 }, N_("Fluorescent") },
+	{ { 0x03 }, N_("Tungsten") },
+	{ { 0xff }, N_("Cloudy") },
 };
 static const RegisterDescriptorType oly3040_reg_20[] = { 
 	{
@@ -271,9 +271,9 @@ static const RegisterDescriptorType oly3040_reg_20[] = {
  * Register 33: focus mode.
  */
 static const ValueNameType oly3040_reg_33_val_names[] = {
-	{ { 0x01 }, "Macro" },
-	{ { 0x02 }, "Auto" },
-	{ { 0x03 }, "Manual" },
+	{ { 0x01 }, N_("Macro") },
+	{ { 0x02 }, N_("Auto") },
+	{ { 0x03 }, N_("Manual") },
 };
 static const RegisterDescriptorType oly3040_reg_33[] = { 
 	{
@@ -292,9 +292,9 @@ static const RegisterDescriptorType oly3040_reg_33[] = {
  */
 
 static const ValueNameType oly3040_reg_34_val_names[] = {
-	{ { 0x01 }, "Off" },
-	{ { 0x02 }, "Monitor" },
-	{ { 0x03 }, "Normal" },
+	{ { 0x01 }, N_("Off") },
+	{ { 0x02 }, N_("Monitor") },
+	{ { 0x03 }, N_("Normal") },
 };
 static const RegisterDescriptorType oly3040_reg_34[] = { 
 	{
@@ -366,9 +366,9 @@ static const RegisterDescriptorType oly3040_reg_38[] = {
  */
 /*
 static const ValueNameType oly3040_reg_53_val_names[] = {
-	{ { 0x03 }, "English" },
-	{ { 0x04 }, "French" },
-	{ { 0x05 }, "German" },
+	{ { 0x03 }, N_("English") },
+	{ { 0x04 }, N_("French") },
+	{ { 0x05 }, N_("German") },
 };
 static const RegisterDescriptorType oly3040_reg_53[] = { 
 	{
@@ -409,8 +409,8 @@ static const RegisterDescriptorType oly3040_reg_69[] = {
  * Register 70: exposure meter.
  */
 static const ValueNameType oly3040_reg_70_val_names[] = {
-	{ { 0x03 }, "Spot" },
-	{ { 0x05 }, "Matrix" },
+	{ { 0x03 }, N_("Spot") },
+	{ { 0x05 }, N_("Matrix") },
 };
 static const RegisterDescriptorType oly3040_reg_70[] = { 
 	{
@@ -440,7 +440,7 @@ static const RegisterDescriptorType oly3040_reg_71[] = {
  * Register 72: digital zoom
  */
 static const ValueNameType oly3040_reg_72_val_names[] = {
-	{ { 0x0000 }, "Off" },
+	{ { 0x0000 }, N_("Off") },
 	{ { 0x0208 }, "1.5x" },
 	{ { 0x0008 }, "2x" },
 	{ { 0x0408 }, "2.5x" },
@@ -457,7 +457,7 @@ static const RegisterDescriptorType oly3040_reg_72[] = {
  * Register 85: ISO speed, read only
  */
 static const ValueNameType oly3040_reg_85_val_names[] = {
-	{ { 0 }, "Auto" },
+	{ { 0 }, N_("Auto") },
 	{ { 1 }, "100" },
 	{ { 2 }, "200" },
 	{ { 3 }, "400" },
@@ -490,7 +490,7 @@ static const RegisterDescriptorType oly3040_reg_103[] = {
  * Register 41: time format, read only
  */
 static const ValueNameType oly3040_reg_41_val_names[] = {
-	{ { 0 }, "Off" },
+	{ { 0 }, N_("Off") },
 	{ { 1 }, "yymmdd" },
 	{ { 2 }, "mmddyy" },
 	{ { 3 }, "ddmmyy" },
