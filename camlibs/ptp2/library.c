@@ -338,6 +338,7 @@ static struct {
 	{"Canon:EOS Kiss Digital (PTP mode)",   0x04a9, 0x3099},
 	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309A},
 	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b},
+	{"Canon:Digital IXUS 500 (PTP mode)",   0x04a9, 0x30b4},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)", 0x132b, 0x0001},
