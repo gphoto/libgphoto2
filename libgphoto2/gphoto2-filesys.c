@@ -113,7 +113,13 @@ struct _CameraFilesystem {
 #define CR(result)           {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
-#define CHECK_ABS(f,c)							\
+#define CC(context)							\
+{									\
+	if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)	\
+		return GP_ERROR_CANCEL;					\
+}
+
+#define CA(f,c)							\
 {									\
 	if ((f)[0] != '/') {						\
 		gp_context_error ((c),					\
@@ -197,7 +203,8 @@ delete_all_folders (CameraFilesystem *fs, const char *folder,
 		"all folders from '%s'...", folder);
 
         CHECK_NULL (fs && folder);
-        CHECK_ABS (folder, context);
+	CC (context);
+        CA (folder, context);
 
         for (x = 0; x < fs->count; x++)
                 if (!strncmp (fs->folder[x].name, folder, strlen (folder))) {
@@ -228,7 +235,8 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
 		"Internally appending folder %s...", folder);
 
         CHECK_NULL (fs && folder);
-        CHECK_ABS (folder, context);
+	CC (context);
+        CA (folder, context);
 
         /* Make sure the directory doesn't exist */
 	for (x = 0; x < fs->count; x++)
@@ -396,7 +404,8 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder,
 	CameraList list;
 
 	CHECK_NULL (fs && folder);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	/*
 	 * We are nice to front-end/camera-driver writers - we'll ignore
@@ -468,7 +477,8 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
         int x, y;
 
 	CHECK_NULL (fs && folder);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	/* Check for existence */
 	x = gp_filesystem_folder_number (fs, folder, context);
@@ -613,10 +623,10 @@ gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,
 			  GPContext *context)
 {
 	int x, r;
-/*	CameraList list; */
 
 	CHECK_NULL (fs && folder);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	/* Make sure this folder exists */
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
@@ -680,7 +690,8 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 		"Listing files in '%s'...", folder);
 
 	CHECK_NULL (fs && list && folder);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	gp_list_reset (list);
 
@@ -743,7 +754,8 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 		"Listing folders in '%s'...", folder);
 
 	CHECK_NULL (fs && folder && list);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	gp_list_reset (list);
 
@@ -822,7 +834,8 @@ gp_filesystem_count (CameraFilesystem *fs, const char *folder,
         int x;
 
 	CHECK_NULL (fs && folder);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
 
@@ -848,7 +861,8 @@ gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder,
         int x, y;
 
 	CHECK_NULL (fs && folder && filename);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	/* First of all, do we support file deletion? */
 	if (!fs->delete_file_func) {
@@ -877,7 +891,8 @@ gp_filesystem_delete_file_noop (CameraFilesystem *fs, const char *folder,
 	int x, y;
 
 	CHECK_NULL (fs && folder && filename);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	/* Search the folder and the file */
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
@@ -905,7 +920,8 @@ gp_filesystem_make_dir (CameraFilesystem *fs, const char *folder,
 	char path[2048];
 
 	CHECK_NULL (fs && folder && name);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	if (!fs->make_dir_func)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -934,6 +950,8 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 	CameraList list;
 
 	CHECK_NULL (fs && folder && name);
+	CC (context);
+	CA (folder, context);
 
 	if (!fs->remove_dir_func)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -988,7 +1006,8 @@ gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
 	int x;
 
 	CHECK_NULL (fs && folder && file);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	/* Do we support file upload? */
 	if (!fs->put_file_func) {
@@ -1026,7 +1045,8 @@ gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
         int x;
 
 	CHECK_NULL (fs && folder);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
 	
@@ -1060,7 +1080,8 @@ gp_filesystem_number (CameraFilesystem *fs, const char *folder,
         int x, y;
 
 	CHECK_NULL (fs && folder && filename);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
 
@@ -1094,7 +1115,8 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 		folder, filename);
 
 	CHECK_NULL (fs && folder && filename);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	CR (gp_filesystem_list_files (fs, folder, &list, context));
 	CR (count = gp_list_count (&list));
@@ -1140,6 +1162,7 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 	int x, y;
 
 	CHECK_NULL (fs && filename && folder);
+	CC (context);
 
 	CR (gp_filesystem_scan (fs, "/", filename, context));
 
@@ -1279,7 +1302,8 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	time_t t = 0;
 
 	CHECK_NULL (fs && folder && file && filename);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	CR (gp_file_set_type (file, type));
 	CR (gp_file_set_name (file, filename));
@@ -1509,7 +1533,8 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	time_t t;
 
 	CHECK_NULL (fs && folder && filename && info);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	if (!fs->get_info_func) {
 		gp_context_error (context,
@@ -1568,7 +1593,8 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	int x, y;
 
 	CHECK_NULL (fs && folder && file);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	/* Search folder and file */
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
@@ -1635,7 +1661,8 @@ gp_filesystem_set_info_noop (CameraFilesystem *fs, const char *folder,
 	int x, y;
 
 	CHECK_NULL (fs && folder);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	/* Search folder and file */
 	CR (x = gp_filesystem_folder_number (fs, folder, context));
@@ -1664,7 +1691,8 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	int x, y, result, name, e;
 
 	CHECK_NULL (fs && folder && filename);
-	CHECK_ABS (folder, context);
+	CC (context);
+	CA (folder, context);
 
 	if (!fs->set_info_func) {
 		gp_context_error (context, 
