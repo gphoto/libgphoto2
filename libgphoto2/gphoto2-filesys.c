@@ -58,6 +58,7 @@ typedef struct {
 	CameraFile *normal;
 	CameraFile *raw;
 	CameraFile *audio;
+	CameraFile *exif;
 } CameraFilesystemFile;
 
 typedef struct {
@@ -128,6 +129,10 @@ delete_all_files (CameraFilesystem *fs, int x)
 			if (fs->folder[x].file[y].audio) {
 				gp_file_unref (fs->folder[x].file[y].audio);
 				fs->folder[x].file[y].audio = NULL;
+			}
+			if (fs->folder[x].file[y].exif) {
+				gp_file_unref (fs->folder[x].file[y].exif);
+				fs->folder[x].file[y].exif = NULL;
 			}
 		}
 
@@ -532,6 +537,10 @@ delete_file (CameraFilesystem *fs, int x, int y)
 	if (fs->folder[x].file[y].audio) {
 		gp_file_unref (fs->folder[x].file[y].audio);
 		fs->folder[x].file[y].audio = NULL;
+	}
+	if (fs->folder[x].file[y].exif) {
+		gp_file_unref (fs->folder[x].file[y].exif);
+		fs->folder[x].file[y].exif = NULL;
 	}
 
 	/* Move all files behind one position up */
@@ -1244,6 +1253,11 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 			return (gp_file_copy (file,
 					fs->folder[x].file[y].audio));
 		break;
+	case GP_FILE_TYPE_EXIF:
+		if (fs->folder[x].file[y].exif)
+			return (gp_file_copy (file,
+					fs->folder[x].file[y].exif));
+		break;
 	default:
 		gp_log (GP_LOG_ERROR, "gphoto2-filesystem",
 			_("Unknown file type %i"), type);
@@ -1394,6 +1408,12 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 		if (fs->folder[x].file[y].audio)
 			gp_file_unref (fs->folder[x].file[y].audio);
 		fs->folder[x].file[y].audio = file;
+		gp_file_ref (file);
+		break;
+	case GP_FILE_TYPE_EXIF:
+		if (fs->folder[x].file[y].exif)
+			gp_file_unref (fs->folder[x].file[y].exif);
+		fs->folder[x].file[y].exif = file;
 		gp_file_ref (file);
 		break;
 	default:

@@ -115,7 +115,8 @@ static int localization_file_read (Camera* camera, const char* file_name,
                                    unsigned char** data, long int* data_size);
 
 static int
-get_info (Camera *camera, unsigned int n, CameraFileInfo *info)
+get_info (Camera *camera, unsigned int n, CameraFileInfo *info,
+	  CameraFile *file)
 {
 	unsigned long image_id;
 	unsigned int buffer_size, exif_size;
@@ -126,7 +127,6 @@ get_info (Camera *camera, unsigned int n, CameraFileInfo *info)
 	CHECK (camera, k_get_image_information (camera->port,
 		camera->pl->image_id_long, n, &image_id, &exif_size, &protected,
 		&buffer, &buffer_size));
-	free (buffer);
 
 	info->audio.fields = GP_FILE_INFO_NONE;
 
@@ -143,6 +143,19 @@ get_info (Camera *camera, unsigned int n, CameraFileInfo *info)
 	snprintf (info->file.name, sizeof (info->file.name),
 		  "%06i.jpeg", (int) image_id);
 
+	if (file) {
+		gp_file_set_type (file, GP_FILE_TYPE_EXIF);
+		gp_file_set_name (file, info->file.name);
+
+		/* Make a JPEG file out of it (for parser) */
+		gp_file_append (file, "\xff\xd8", 2);
+		gp_file_append (file, buffer, buffer_size);
+		gp_file_append (file, "\x01", 1);
+		gp_file_append (file, "\xff\xda", 2);
+		gp_file_append (file, "\x00\x02", 2);
+	}
+	free (buffer);
+
 	return (GP_OK);
 }
 
@@ -150,10 +163,12 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data)
 {
+	CameraFile *file;
 	CameraFileInfo info;
         KStatus status;
         unsigned int i;
         Camera *camera = data;
+	int result;
 
         /*
          * We can't get the filename from the camera.
@@ -164,7 +179,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
         for (i = 0; i < status.pictures; i++) {
 
                 /* Get information */
-		CHECK (camera, get_info (camera, i + 1, &info));
+		gp_file_new (&file);
+		result = get_info (camera, i + 1, &info, file);
+		if (result < 0) {
+			gp_file_unref (file);
+			return (result);
+		}
 
                 /*
 		 * Append directly to the filesystem instead of to the list,
@@ -172,6 +192,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		 */
 		gp_filesystem_append (camera->fs, folder, info.file.name);
 		gp_filesystem_set_info_noop (camera->fs, folder, info);
+		gp_filesystem_set_file_noop (camera->fs, folder, file);
+		gp_file_unref (file);
         }
 
         return (GP_OK);
@@ -352,13 +374,23 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
                CameraFileInfo *info, void *data)
 {
         Camera *camera = data;
-        int n;
+	CameraFile *file;
+        int n, result;
 
 	/* We need image numbers starting with 1 */
-	CHECK (camera, n = gp_filesystem_number (camera->fs, folder, filename));
+	n = gp_filesystem_number (camera->fs, folder, filename);
+	if (n < 0)
+		return (n);
 	n++;
 
-	CHECK (camera, get_info (camera, n, info));
+	gp_file_new (&file);
+	result = get_info (camera, n, info, file);
+	if (result < 0) {
+		gp_file_unref (file);
+		return (result);
+	}
+	gp_filesystem_set_file_noop (fs, folder, file);
+	gp_file_unref (file);
 
         return (GP_OK);
 }
