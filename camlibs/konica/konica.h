@@ -233,6 +233,7 @@ typedef enum
  * (qm200, unsigned long).
  */
 int k_init (GPPort *, GPContext *);
+int k_ping (GPPort *, GPContext *);
 
 typedef enum
 {

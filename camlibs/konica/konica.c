@@ -158,9 +158,15 @@ k_check (GPContext *c, const char *rb)
 }
 
 int
+k_ping (GPPort *p, GPContext *c)
+{
+        return (l_ping (p, c));
+}
+
+int
 k_init (GPPort *p, GPContext *c)
 {
-        return (l_init (p, c));
+	return (l_init (p, c));
 }
 
 int

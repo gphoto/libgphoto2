@@ -1,3 +1,7 @@
+2002-05-06  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: ping the camera every minute to prevent shutdown.
+
 2002-03-08  Marcus Meissner <marcus@jet.franken.de>
 	
 	* lowlevel.c: When reading we do not need to escape that much,

@@ -146,8 +146,8 @@ l_ping_rec (GPPort *p, unsigned int level)
 	return (GP_OK);
 }
 
-static int
-l_ping (GPPort *p)
+int
+l_ping (GPPort *p, GPContext *c)
 {
 	return (l_ping_rec (p, 0));
 }
@@ -161,7 +161,7 @@ l_init (GPPort *p, GPContext *c)
 
 	CHECK (gp_port_set_timeout (p, DEFAULT_TIMEOUT));
 	for (i = 0; i < 3; i++) {
-		result = l_ping (p);
+		result = l_ping (p, c);
 		if (result != GP_ERROR_TIMEOUT)
 			break;
 	}
@@ -214,7 +214,7 @@ l_esc_read (GPPort *p, unsigned char *c)
 
 
 static int
-l_send (GPPort *p, unsigned char *send_buffer,
+l_send (GPPort *p, GPContext *context, unsigned char *send_buffer,
 	unsigned int send_buffer_size)
 {
 	unsigned char c;
@@ -230,7 +230,7 @@ l_send (GPPort *p, unsigned char *send_buffer,
 	CHECK_NULL (p && send_buffer);
 
 	/* We need to ping the camera first */
-	CHECK (l_ping (p));
+	CHECK (l_ping (p, context));
 
 	/********************************************************/
 	/* We will write:			 		*/
@@ -624,7 +624,7 @@ l_send_receive (
 		timeout = DEFAULT_TIMEOUT;
 
 	/* Send data. */
-	CHECK (l_send (p, send_buffer, send_buffer_size));
+	CHECK (l_send (p, c, send_buffer, send_buffer_size));
 
         /* Receive data. */
 	if (image_buffer_size)

@@ -24,6 +24,7 @@
 #include <gphoto2-port.h>
 #include <gphoto2-context.h>
 
+int l_ping (GPPort *, GPContext *);
 int l_init (GPPort *, GPContext *);
 
 /*
