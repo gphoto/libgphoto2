@@ -71,11 +71,24 @@
 	* libgphoto2/camera.c: Not all cameras implement delete_all - fall back
 	to deletion one by one then.
 
+2001-07-25  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/kodak/CAMERAS: initial revision.
+
 2001-07-09  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* camlibs/kodak/dc240/dc240.c:
 	* camlibs/kodak/dc240/library.[c,h]: stricter typing of prototypes
-	using const
+	using const.
+
+2001-07-09  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/kodak/dc240/dc240.c: added USB support for DC280, DC3400
+	and DC5000.
+
+2001-07-04  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/kodak/dc240/library.c: close bugs #438161 and #438155.
 
 2000-08-20 15:47  scottf
 
