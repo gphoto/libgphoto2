@@ -1,5 +1,12 @@
 2001-10-20 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
+	* configure.in
+	* include/.cvsignore
+	* libgphoto2_port/configure.in
+	* libgphoto2_port/include/.cvsignore: moved config.h and stamp-h to include/
+
+2001-10-20 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
 	* libgphoto2_port/stamp-h.in: removed as file is generated automatically anyway
 	* libgphoto2_port/doc/Makefile.am
 	* doc/api/Makefile.am: added DESTDIR to installation of html files
