@@ -142,7 +142,7 @@ struct _CameraPrivateLibrary
 /* offsets of fields of direntry in bytes */
 #define CANON_DIRENT_ATTRS 0
 #define CANON_DIRENT_SIZE  2
-#define CANON_DIRENT_TIME  4
+#define CANON_DIRENT_TIME  6
 #define CANON_DIRENT_NAME 10
 
 /* what to list in canon_int_list_directory */
