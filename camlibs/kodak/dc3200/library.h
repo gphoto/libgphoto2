@@ -47,28 +47,28 @@
 #define C57600  0x07
 #define C115200 0x0F
 
-int dc3200_set_speed(DC3200Data *dd, int baudrate);
-int dc3200_setup(DC3200Data *dd);
+int dc3200_set_speed(Camera *camera, int baudrate);
+int dc3200_setup(Camera *camera);
 
-int dc3200_get_data(DC3200Data *dd, u_char **data, u_long *data_len, int command, const char *folder, const char *filename);
+int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command, const char *folder, const char *filename);
 
-int dc3200_send_command(DC3200Data *dd, u_char *cmd, int cmd_len, u_char *ack, int *ack_len);
-int dc3200_recv_response(DC3200Data *dd, u_char *resp, int *resp_len);
+int dc3200_send_command(Camera *camera, u_char *cmd, int cmd_len, u_char *ack, int *ack_len);
+int dc3200_recv_response(Camera *camera, u_char *resp, int *resp_len);
 
-int dc3200_send_packet(DC3200Data *dd, u_char *data, int data_len);
-int dc3200_recv_packet(DC3200Data *dd, u_char *data, int *data_len);
+int dc3200_send_packet(Camera *camera, u_char *data, int data_len);
+int dc3200_recv_packet(Camera *camera, u_char *data, int *data_len);
 
-int dc3200_compile_packet(DC3200Data *dd, u_char **data, int *data_len);
-int dc3200_process_packet(DC3200Data *dd, u_char *data, int *data_len);
+int dc3200_compile_packet(Camera *camera, u_char **data, int *data_len);
+int dc3200_process_packet(Camera *camera, u_char *data, int *data_len);
 
-int dc3200_send_ack(DC3200Data *dd, int seqnum);
-int dc3200_check_ack(DC3200Data *dd, u_char *ack, int ack_len);
+int dc3200_send_ack(Camera *camera, int seqnum);
+int dc3200_check_ack(Camera *camera, u_char *ack, int ack_len);
 
-int dc3200_calc_checksum(DC3200Data *dd, u_char *data, int data_len);
-int dc3200_calc_seqnum(DC3200Data *dd);
+int dc3200_calc_checksum(Camera *camera, u_char *data, int data_len);
+int dc3200_calc_seqnum(Camera *camera);
 
-int dc3200_keep_alive(DC3200Data *dd);
-int dc3200_clear_read_buffer(DC3200Data *dd);
+int dc3200_keep_alive(Camera *camera);
+int dc3200_clear_read_buffer(Camera *camera);
 
 int dump_buffer(unsigned char * buffer, int len, char *title, int bytesperline);
 unsigned long bytes_to_l(int a, int b, int c, int d);

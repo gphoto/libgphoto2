@@ -25,9 +25,7 @@
 
 #define TIMEOUT	        	750
 
-typedef struct {
-        gp_port			*dev;
-	Camera                  *camera;
+struct _CameraPrivateLibrary {
 	int			pkt_seqnum;	/* sequence number */
 	int			cmd_seqnum;	/* command seqnum */
 	int			debug;

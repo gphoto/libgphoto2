@@ -58,7 +58,6 @@ int camera_abilities (CameraAbilitiesList *list)
 int init(Camera *camera)
 {
 	GPPortSettings settings;
-	DC3200Data *dd = camera->camlib_data;
 	int ret, selected_speed;
 
 	ret = gp_port_settings_get (camera->port, &settings);
@@ -79,7 +78,7 @@ int init(Camera *camera)
 
 	gp_port_timeout_set (camera->port, TIMEOUT);
 
-	if (dc3200_set_speed (dd, selected_speed) == GP_ERROR)
+	if (dc3200_set_speed (camera, selected_speed) == GP_ERROR)
 		return GP_ERROR;
 
 	/* Set the new speed */
@@ -92,11 +91,11 @@ int init(Camera *camera)
 	sleep(1);
 
 	/* Try to talk after speed change */
-	if (dc3200_keep_alive(dd) == GP_ERROR)
+	if (dc3200_keep_alive(camera) == GP_ERROR)
 		return GP_ERROR;
 
 	/* setup the camera */
-	if (dc3200_setup(dd) == GP_ERROR)
+	if (dc3200_setup(camera) == GP_ERROR)
 		return GP_ERROR;		
 
 	return GP_OK;
@@ -104,11 +103,9 @@ int init(Camera *camera)
 
 static int camera_exit (Camera *camera)
 {
-	DC3200Data	*dd = camera->camlib_data;
-
-	if (dd) {
-		free (dd);
-		camera->camlib_data = NULL;
+	if (camera->pl) {
+		free (camera->pl);
+		camera->pl = NULL;
 	}
 
 	return (GP_OK);
@@ -117,11 +114,10 @@ static int camera_exit (Camera *camera)
 int check_last_use(Camera *camera)
 {
 	time_t t;
-	DC3200Data *dd = camera->camlib_data;
-	
+
 	time(&t);
 	
-	if(t - dd->last > 9) {
+	if(t - camera->pl->last > 9) {
 		/* we have to re-init the camera */
 		printf(_("camera inactive for > 9 seconds, re-initing.\n"));
 		return init(camera);
@@ -134,7 +130,6 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 			     CameraList *list, void *user_data)
 {
 	Camera 		*camera = user_data;
-	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
 	long		data_len = 0;
 	u_char		*ptr_data_buff;
@@ -145,7 +140,7 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 		return GP_ERROR;
 
 	/* get file list data */
-	res = dc3200_get_data (dd, &data, &data_len, CMD_LIST_FILES, folder, 
+	res = dc3200_get_data (camera, &data, &data_len, CMD_LIST_FILES, folder,
 			       NULL);
 	if (res == GP_ERROR)
 		return GP_ERROR;
@@ -198,14 +193,13 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 	}
 
 	free (data);
-	return (dc3200_keep_alive (dd));
+	return (dc3200_keep_alive (camera));
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *user_data)
 {
 	Camera		*camera = user_data;
-	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
 	long		data_len = 0;
 	u_char		*ptr_data_buff;
@@ -216,7 +210,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		return GP_ERROR;
 
 	/* get file list data */
-	res = dc3200_get_data (dd, &data, &data_len, CMD_LIST_FILES, folder, 
+	res = dc3200_get_data (camera, &data, &data_len, CMD_LIST_FILES, folder,
 			       NULL);
 	if (res == GP_ERROR)
 		return GP_ERROR;
@@ -264,7 +258,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	}
 
 	free(data);
-	return (dc3200_keep_alive(dd));
+	return (dc3200_keep_alive(camera));
 }
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
@@ -272,7 +266,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  CameraFile *file, void *user_data)
 {
 	Camera		*camera = user_data;
-	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
 	long		data_len = 0;
 	int		res;
@@ -282,11 +275,11 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
-		res = dc3200_get_data (dd, &data, &data_len, CMD_GET_PREVIEW,
-				       folder, filename);
+		res = dc3200_get_data (camera, &data, &data_len,
+				       CMD_GET_PREVIEW, folder, filename);
 		break;
 	case GP_FILE_TYPE_NORMAL:
-		res = dc3200_get_data (dd, &data, &data_len, CMD_GET_FILE,
+		res = dc3200_get_data (camera, &data, &data_len, CMD_GET_FILE,
 				       folder, filename);
 		break;
 	default:
@@ -301,7 +294,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	gp_file_append (file, data, data_len);
 
 	free(data);
-	return (dc3200_keep_alive(dd));
+	return (dc3200_keep_alive(camera));
 }
 
 static int camera_manual (Camera *camera, CameraText *manual)
@@ -340,15 +333,11 @@ static const char* camera_result_as_string (Camera *camera, int result)
 
 int camera_init (Camera *camera) 
 {
-        DC3200Data *dd;
 	int ret;
 
-        dd = (DC3200Data*)malloc(sizeof(DC3200Data));
-        if (!dd)
-                return (GP_ERROR_NO_MEMORY);
-	dd->camera = camera;
-	dd->dev = camera->port;
-	camera->camlib_data = dd;
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
@@ -364,10 +353,18 @@ int camera_init (Camera *camera)
         /* initialize the camera */
 	ret = init (camera);
 	if (ret < 0) {
-                free(dd);
+		free (camera->pl);
+		camera->pl = NULL;
                 return (ret);
         }
 
-        return (dc3200_keep_alive(dd));
+        ret = dc3200_keep_alive (camera);
+	if (ret < 0) {
+		free (camera->pl);
+		camera->pl = NULL;
+		return (ret);
+	}
+
+	return (GP_OK);
 }
 

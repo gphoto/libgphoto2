@@ -1,5 +1,9 @@
 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/kodak/dc3200: Prepare for camera->camlib_data removal.
+
+2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/panasonic: Prepare for camera->camlib_data removal. Fix lots
 	  of compile warnings. Remove gp_port_[close,free,new] (sic).
 
