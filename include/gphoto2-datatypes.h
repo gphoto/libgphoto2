@@ -13,6 +13,12 @@
 #define GP_ERROR			-1
 #define GP_ERROR_NONCRITICAL		-2
 
+/* Debugging levels for gp_init */
+#define GP_DEBUG_NONE			0
+#define GP_DEBUG_LOW			1
+#define	GP_DEBUG_MEDIUM			2
+#define GP_DEBUG_HIGH			3
+
 /* Macros
    ---------------------------------------------------------------- */
 

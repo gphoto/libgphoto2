@@ -26,10 +26,15 @@
 
 	int gp_exit();
 
+	/* Debugging functions */
+	/* ============================================================================== */
+	void gp_debug_printf(int level, char *id, char *format, ...);
+		/* Print debugging messages */
+
 	/* Frontend registration */
 	/* ============================================================================== */
 	int gp_frontend_register(CameraStatus status, CameraProgress progress, 
-							  CameraMessage message, CameraConfirm confirm);
+			         CameraMessage message, CameraConfirm confirm);
 		/* register the frontend's feedback functions */
 	
 	/* Port information */
