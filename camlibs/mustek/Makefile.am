@@ -1,5 +1,7 @@
 camlib_LTLIBRARIES = libgphoto2_mustek.la
 
+EXTRA_DIST = AUTHOR
+
 INCLUDES = \
         -I$(top_srcdir)/intl				\
 	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
