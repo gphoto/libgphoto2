@@ -102,7 +102,7 @@ LTV_AGE=0
 	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > t-$@
 	mv t-$@ $@
 
-INCLUDES = -I.. -I. -I$(top_srcdir)/intl
+INCLUDES = -I.. -I. -I$(top_srcdir)/intl -I../libgphoto2_port
 
 all: all-@USE_INCLUDED_LIBINTL@
 all-yes: libintl.$la libintl.h charset.alias ref-add.sed ref-del.sed
