@@ -44,7 +44,6 @@ chunk *mychunk;
 
 chunk *chunk_new_filled(int length, char *data)
 {
-    int x;
     chunk *mychunk;
     printf("Entered chunk_new_filled\n");
     mychunk = chunk_new(length);
