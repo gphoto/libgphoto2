@@ -121,14 +121,7 @@ gp_abilities_list_free (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-#define UGLY_HACK /* E-mail <lutz@users.sourceforge.net> for infos. */
-
 #ifdef HAVE_LTDL
-
-#ifdef UGLY_HACK
-static unsigned char first;
-static CameraList backup;
-#endif
 
 static int
 foreach_func (const char *filename, lt_ptr data)
@@ -138,14 +131,6 @@ foreach_func (const char *filename, lt_ptr data)
 	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
 		"Found '%s'.", filename);
 	gp_list_append (list, filename, NULL);
-
-#ifdef UGLY_HACK
-	if (first) {
-		gp_list_reset (&backup);
-		first = 0;
-	}
-	gp_list_append (&backup, filename, NULL);
-#endif
 
 	return (0);
 }
@@ -184,21 +169,11 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 
 #ifdef HAVE_LTDL
 	CHECK_RESULT (gp_list_reset (&flist));
-#ifdef UGLY_HACK
-	first = 1;
-#endif
 	lt_dlinit ();
 	lt_dladdsearchdir (dir);
 	lt_dlforeachfile (dir, foreach_func, &flist);
 	lt_dlexit ();
 	CHECK_RESULT (count = gp_list_count (&flist));
-#ifdef UGLY_HACK
-	if (!count && (gp_list_count (&backup) > 0))
-		for (i = 0; i < gp_list_count (&backup); i++)
-			if (gp_list_get_name (&backup, i, &filename) >= 0)
-				gp_list_append (&flist, filename, NULL);
-	CHECK_RESULT (count = gp_list_count (&flist));
-#endif
 	gp_log (GP_LOG_DEBUG, "gp-abilities-list", "Found %i "
 		"camera drivers.", count);
 	lt_dlinit ();
