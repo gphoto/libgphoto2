@@ -519,7 +519,7 @@ OPTION_CALLBACK(model)
 }
 
 static void
-debug_func (GPLogLevel level, const char *domain, const char *format,
+debug_func (int level, const char *domain, const char *format,
 	    va_list args, void *data)
 {
 	if (level == GP_LOG_ERROR)
