@@ -1,3 +1,9 @@
+/*
+  Kodak DC 240/280/3400/5000 driver.
+ */
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +24,7 @@ char *dc240_packet_new (int command_byte) {
     return p;
 }
 
-char *dc240_packet_new_path (char *folder, char *filename) {
+char *dc240_packet_new_path (const char *folder, const char *filename) {
 
     char *p;
     char buf[1024];
@@ -261,7 +267,7 @@ int dc240_close (DC240Data *dd) {
     return (retval);
 }
 
-int dc240_get_file_size (DC240Data *dd, char *folder, char *filename, int thumb) {
+int dc240_get_file_size (DC240Data *dd, const char *folder, const char *filename, int thumb) {
 
     CameraFile *f;
     char *p1, *p2;
@@ -363,7 +369,7 @@ int dc240_get_status (DC240Data *dd) {
     return (retval);
 }
 
-int dc240_get_directory_list (DC240Data *dd, CameraList *list, char *folder,
+int dc240_get_directory_list (DC240Data *dd, CameraList *list, const char *folder,
                              unsigned char attrib) {
 
     CameraFile *file;
@@ -410,18 +416,18 @@ int dc240_get_directory_list (DC240Data *dd, CameraList *list, char *folder,
     return (GP_OK);
 }
 
-int dc240_get_folders (DC240Data *dd, CameraList *list, char *folder) {
+int dc240_get_folders (DC240Data *dd, CameraList *list, const char *folder) {
 
     return (dc240_get_directory_list(dd, list, folder, 0x10));
 }
 
-int dc240_get_filenames (DC240Data *dd, CameraList *list, char *folder) {
+int dc240_get_filenames (DC240Data *dd, CameraList *list, const char *folder) {
 
     return (dc240_get_directory_list(dd, list, folder, 0x00));
 }
 
 int dc240_file_action (DC240Data *dd, int action, CameraFile *file,
-                       char *folder, char *filename) {
+                       const char *folder, const char *filename) {
 
     int size=0, thumb=0, retval=GP_OK;
     char *cmd_packet, *path_packet;

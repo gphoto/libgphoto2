@@ -231,7 +231,7 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 {
     DC240Data *dd = camera->camlib_data;
 
-    return (dc240_get_folders (dd, list, (char*) folder));
+    return (dc240_get_folders (dd, list, folder));
 }
 
 int camera_folder_list_files (Camera *camera, const char *folder, 
@@ -239,7 +239,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 {
     DC240Data *dd = camera->camlib_data;
 
-    return (dc240_get_filenames (dd, list, (char*) folder));
+    return (dc240_get_filenames (dd, list, folder));
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename, 
@@ -247,7 +247,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 {
     DC240Data *dd = camera->camlib_data;
 
-    return (dc240_file_action (dd, DC240_ACTION_IMAGE, file, (char*) folder, 
+    return (dc240_file_action (dd, DC240_ACTION_IMAGE, file, folder, 
     			       filename));
 }
 
@@ -266,7 +266,7 @@ int camera_file_delete (Camera *camera, const char *folder,
     DC240Data *dd = camera->camlib_data;
 
     return (dc240_file_action (dd, DC240_ACTION_DELETE, NULL, folder, 
-    			       (char*) filename));
+    			       filename));
 }
 
 #if 0
