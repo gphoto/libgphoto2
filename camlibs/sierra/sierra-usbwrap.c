@@ -41,6 +41,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <_stdint.h>
+
 #include <gphoto2-result.h>
 #include <gphoto2-port-log.h>
 
@@ -405,7 +407,7 @@ usb_wrap_DATA (GPPort *dev, char *sierra_response, int *sierra_len, uw32_t size)
    hdr.length    = uw_value(msg_len);
    hdr.request_type = UW_REQUEST_DATA;
 
-   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) != GP_OK ||
+   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) < GP_OK ||
        gp_port_read(dev, (char*)msg, msg_len) != msg_len)
    {
       GP_DEBUG( "usb_wrap_DATA FAILED" );

@@ -1,5 +1,9 @@
 2002-06-27  Lutz Müller <lutz@users.sourceforge.net>
 
+	* sierra-usbwrap.c: I missed one < GP_OK.
+
+2002-06-27  Lutz Müller <lutz@users.sourceforge.net>
+
 	Selmeczi David <david@esr.elte.hu> fixed the error checks. I added
 	the CR macro and fixed the headers.
 
