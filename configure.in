@@ -157,7 +157,7 @@ AC_SUBST(camlibdir)
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='barbie canon casio digita dimera directory fuji gsmart jamcam jd11 kodak konica largan minolta mustek panasonic pccam600 polaroid ptp ricoh samsung sierra sipix sipixblink sonydscf1 sonydscf55 soundvision stv0680 sx330z'
+camlibs='barbie canon casio digita dimera directory fuji gsmart jamcam jd11 kodak konica largan minolta mustek panasonic pccam600 polaroid ptp ricoh samsung sierra sipix sipixblink sonydscf1 sonydscf55 soundvision spca504_flash stv0680 sx330z'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -174,7 +174,7 @@ AC_ARG_WITH(drivers,
   [                            konica, mustek, largan,]
   [                            minolta, panasonic, pccam600, polaroid, ptp, ]
   [                            ricoh, samsung, sierra, sipix, sonydscf1, sonydscf55,]
-  [                            soundvision, stv0680, sx330z ],
+  [                            soundvision, spca504_flash, stv0680, sx330z ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
@@ -331,7 +331,7 @@ dnl Configure libgphoto2-port
 dnl ---------------------------------------------------------------------------
 AC_CONFIG_SUBDIRS(libgphoto2_port)
 
-AC_OUTPUT([
+AC_OUTPUT([  intl/Makefile po/Makefile.in 
 Makefile
 camlibs/Makefile
 camlibs/barbie/Makefile
@@ -371,6 +371,7 @@ camlibs/sipixblink/Makefile
 camlibs/sonydscf1/Makefile
 camlibs/sonydscf55/Makefile
 camlibs/soundvision/Makefile
+camlibs/spca504_flash/Makefile
 camlibs/stv0680/Makefile
 camlibs/sx330z/Makefile
 tests/Makefile
