@@ -141,10 +141,27 @@ AM_CONDITIONAL(XMLTOPS, false)
 
 # create list of supported formats
 xxx=""
-if test "x$XMLTOHTML_FALSE" = "x#"; then xxx="${xxx} html"; fi
-if test "x$XMLTOMAN_FALSE" = "x#"; then xxx="${xxx} man"; fi
-if test "x$XMLTOPDF_FALSE" = "x#"; then xxx="${xxx} pdf"; fi
-if test "x$XMLTOPS_FALSE" = "x#"; then xxx="${xxx} ps"; fi
+manual_html=""
+manual_pdf=""
+manual_ps=""
+if test "x$XMLTOHTML_FALSE" = "x#"; then
+        xxx="${xxx} html"
+        manual_html=manual
+fi
+if test "x$XMLTOMAN_FALSE" = "x#"; then
+        xxx="${xxx} man"
+fi
+if test "x$XMLTOPDF_FALSE" = "x#"; then
+        xxx="${xxx} pdf"
+        manual_pdf=gphoto2.pdf
+fi
+if test "x$XMLTOPS_FALSE" = "x#"; then 
+        xxx="${xxx} ps"
+        manual_pdf=gphoto2.ps
+fi
+AC_SUBST(manual_html)
+AC_SUBST(manual_pdf)
+AC_SUBST(manual_ps)
 
 if test "x$xxx" != "x"
 then
