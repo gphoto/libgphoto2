@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-01-14 22:31+0100\n"
-"PO-Revision-Date: 2002-01-14 22:39MET\n"
+"POT-Creation-Date: 2002-01-15 22:22+0100\n"
+"PO-Revision-Date: 2002-01-15 22:43MET\n"
 "Last-Translator: Jérôme Fenal <jerome@fenal.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -64,8 +64,8 @@ msgid "Name too long, max is 30 characters!"
 msgstr "Nom trop long, limité à 30 caractères !"
 
 #: camlibs/canon/canon.c:1564
-msgid "File protected"
-msgstr "Fichier protégé en écriture"
+msgid "File protected."
+msgstr "Fichier protégé en écriture."
 
 #: camlibs/canon/library.c:87
 msgid ""
@@ -79,8 +79,8 @@ msgstr ""
 "si vous rencontrez beaucoup d'erreurs de transmission, essayez d'avoir votre "
 "ordinateur aussi calme que possible (c-à-d sans acitivté disque)"
 
-#: camlibs/canon/library.c:154 camlibs/canon/library.c:1043
-#: camlibs/canon/library.c:1056
+#: camlibs/canon/library.c:154 camlibs/canon/library.c:1042
+#: camlibs/canon/library.c:1055
 msgid "Camera unavailable"
 msgstr "Appareil non disponible"
 
@@ -103,7 +103,7 @@ msgid "Invalid index"
 msgstr "Index invalide"
 
 #: camlibs/canon/library.c:316 camlibs/canon/library.c:547
-#: camlibs/canon/library.c:805 camlibs/canon/library.c:873
+#: camlibs/canon/library.c:805 camlibs/canon/library.c:872
 msgid "Could not obtain directory listing"
 msgstr "Impossible d'obtenir le contenu du répertoire"
 
@@ -119,20 +119,20 @@ msgstr ""
 "  %11s octets disponibles"
 
 #: camlibs/canon/library.c:720 camlibs/canon/library.c:725
-#: camlibs/canon/library.c:1005 camlibs/canon/library.c:1011
+#: camlibs/canon/library.c:1004 camlibs/canon/library.c:1010
 msgid "AC adapter"
 msgstr "Transformateur"
 
 #: camlibs/canon/library.c:720 camlibs/canon/library.c:725
-#: camlibs/canon/library.c:1005 camlibs/canon/library.c:1011
+#: camlibs/canon/library.c:1004 camlibs/canon/library.c:1010
 msgid "on battery"
 msgstr "sur piles"
 
-#: camlibs/canon/library.c:721 camlibs/canon/library.c:1007
+#: camlibs/canon/library.c:721 camlibs/canon/library.c:1006
 msgid "power OK"
 msgstr "énergie OK"
 
-#: camlibs/canon/library.c:721 camlibs/canon/library.c:1007
+#: camlibs/canon/library.c:721 camlibs/canon/library.c:1006
 msgid "power bad"
 msgstr "énergie NOK"
 
@@ -203,14 +203,13 @@ msgstr "Erreur à l'effacement du fichier"
 msgid "Error deleting associated thumbnail file"
 msgstr "Erreur à l'effacement de l'imagette associée"
 
-#: camlibs/canon/library.c:857
-msgid ""
-"Speeds greater than 57600 are not supported for uploading to this camera"
+#: camlibs/canon/library.c:856
+msgid "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr ""
 "Les vitesses supérieures à 57600 ne sont pas supportées pour télécharger "
 "vers l'appareil"
 
-#: camlibs/canon/library.c:907
+#: camlibs/canon/library.c:906
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
@@ -218,76 +217,84 @@ msgstr ""
 "Impossible de télécharger, pas de répertoire libre !\n"
 "Le répertoire 999CANON existe et contient déjà une image AUT_9999.JPG."
 
-#: camlibs/canon/library.c:960
+#: camlibs/canon/library.c:927
+msgid "Could not create \\DCIM directory."
+msgstr "Impossible de créer le dossier \\DCIM."
+
+#: camlibs/canon/library.c:933
+msgid "Could not create destination directory."
+msgstr "Impossible d'obtenir le contenu du répertoire destination."
+
+#: camlibs/canon/library.c:959
 msgid "Camera and Driver Configuration"
 msgstr "Configuration de l'appareil et du pilote"
 
-#: camlibs/canon/library.c:962
+#: camlibs/canon/library.c:961
 msgid "Camera"
 msgstr "Appareil"
 
-#: camlibs/canon/library.c:965
+#: camlibs/canon/library.c:964
 msgid "Camera Model (readonly)"
 msgstr "Modèle de l'appareil (lecture seule)"
 
-#: camlibs/canon/library.c:969 camlibs/canon/library.c:1039
+#: camlibs/canon/library.c:968 camlibs/canon/library.c:1038
 msgid "Owner name"
 msgstr "Nom du propriétaire"
 
-#: camlibs/canon/library.c:976 camlibs/canon/library.c:980
-#: camlibs/canon/library.c:985
+#: camlibs/canon/library.c:975 camlibs/canon/library.c:979
+#: camlibs/canon/library.c:984
 msgid "Date and Time (readonly)"
 msgstr "Date et heure (lecture seule)"
 
-#: camlibs/canon/library.c:981
+#: camlibs/canon/library.c:980
 msgid "Error"
 msgstr "Erreur"
 
-#: camlibs/canon/library.c:986
+#: camlibs/canon/library.c:985
 msgid "Unavailable"
 msgstr "Indisponible"
 
-#: camlibs/canon/library.c:990 camlibs/canon/library.c:1052
+#: camlibs/canon/library.c:989 camlibs/canon/library.c:1051
 msgid "Set camera date to PC date"
 msgstr "Mettre l'appareil à la date du PC"
 
-#: camlibs/canon/library.c:993
+#: camlibs/canon/library.c:992
 msgid "Firmware revision (readonly)"
 msgstr "Révision de microcode (lecture seule)"
 
-#: camlibs/canon/library.c:1013
+#: camlibs/canon/library.c:1012
 msgid "Unavaliable"
 msgstr "Indisponible"
 
-#: camlibs/canon/library.c:1017
+#: camlibs/canon/library.c:1016
 msgid "Power (readonly)"
 msgstr "Énergie (lecture seule)"
 
-#: camlibs/canon/library.c:1021
+#: camlibs/canon/library.c:1020
 msgid "Driver"
 msgstr "Pilote"
 
-#: camlibs/canon/library.c:1024 camlibs/canon/library.c:1066
+#: camlibs/canon/library.c:1023 camlibs/canon/library.c:1065
 msgid "List all files"
 msgstr "Liste de tous les fichiers"
 
-#: camlibs/canon/library.c:1046
+#: camlibs/canon/library.c:1045
 msgid "Owner name changed"
 msgstr "Le nom du propriétaire a changé"
 
-#: camlibs/canon/library.c:1048
+#: camlibs/canon/library.c:1047
 msgid "could not change owner name"
 msgstr "ne peut changer le nom du propriétaire"
 
-#: camlibs/canon/library.c:1059
+#: camlibs/canon/library.c:1058
 msgid "time set"
 msgstr "heure mise à jour"
 
-#: camlibs/canon/library.c:1061
+#: camlibs/canon/library.c:1060
 msgid "could not set time"
 msgstr "ne peut mettre à l'heure"
 
-#: camlibs/canon/library.c:1255
+#: camlibs/canon/library.c:1254
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr "Port de type non-supporté, reçu %i = 0x%x. Initialisation impossible."
@@ -324,7 +331,7 @@ msgstr "ERREUR : message inattendu2."
 msgid "Uploading file..."
 msgstr "Téléchargement du fichier..."
 
-#: camlibs/canon/serial.c:964
+#: camlibs/canon/serial.c:964 camlibs/digita/digita.c:256
 msgid "Getting file..."
 msgstr "Récupération du fichier..."
 
@@ -405,21 +412,16 @@ msgstr "Ne peut appliquer les propriétés USB"
 #: camlibs/canon/usb.c:227
 #, c-format
 msgid "Camera not ready, identify camera request failed: %s"
-msgstr ""
-"Appareil pas prêt, la requête d'identification de l'appareil a échoué : %s"
+msgstr "Appareil pas prêt, la requête d'identification de l'appareil a échoué : %s"
 
 #: camlibs/canon/usb.c:235
 #, c-format
 msgid "Camera not ready, could not lock camera keys: %s"
 msgstr "Appareil pas prêt, impossible de vérouiller l'appareil : %s"
 
-#: camlibs/canon/usb.c:566
+#: camlibs/canon/usb.c:569
 msgid "Receiving data..."
 msgstr "Réception des données..."
-
-#: camlibs/canon/usb.c:716
-msgid "Not implemented!"
-msgstr "Non développé"
 
 #: camlibs/digita/digita.c:396
 msgid ""
@@ -431,8 +433,7 @@ msgstr ""
 
 #: camlibs/dimera/dimera3500.c:276
 #, c-format
-msgid ""
-"Only root folder is supported - you requested a file listing for folder '%s'."
+msgid "Only root folder is supported - you requested a file listing for folder '%s'."
 msgstr ""
 "Seul le dossier racine est supporté, vous avez demandé la liste pour le "
 "dossier '%s'."
@@ -647,8 +648,7 @@ msgstr "Problème à la remise à zéro de l'appareil"
 
 #: camlibs/dimera/dimera3500.c:944
 msgid "Problem setting camera communication speed"
-msgstr ""
-"Problème à la configuration du débt de la communication vers l'appareil"
+msgstr "Problème à la configuration du débt de la communication vers l'appareil"
 
 #: camlibs/dimera/dimera3500.c:963
 msgid "Looks like a modem, not a camera"
@@ -1030,7 +1030,7 @@ msgstr "Paramètres persistents"
 
 #. Date
 #: camlibs/konica/library.c:666 camlibs/konica/library.c:878
-#: camlibs/polaroid/pdc700.c:937 camlibs/polaroid/pdc700.c:1003
+#: camlibs/polaroid/pdc700.c:965 camlibs/polaroid/pdc700.c:1031
 msgid "Date and Time"
 msgstr "Date et heure"
 
@@ -1233,7 +1233,7 @@ msgstr "Retardateur (image suivante uniquement)"
 msgid "Could not find localization data at '%s'"
 msgstr "Impossible de trouver l'information de localisation à '%s'"
 
-#: camlibs/konica/library.c:1160
+#: camlibs/konica/library.c:1159
 msgid "Localization file too long!"
 msgstr "Fichier de localisation trop long !"
 
@@ -1425,17 +1425,21 @@ msgstr ""
 msgid "Disconnecting camera."
 msgstr "Déconnexion de l'appareil photo."
 
-#: camlibs/panasonic/dc1000.c:408
+#: camlibs/panasonic/dc1000.c:409
 #, c-format
 msgid "Downloading image %s."
 msgstr "Téléchargement de l'image %s."
 
-#: camlibs/panasonic/dc1000.c:444 camlibs/panasonic/dc1580.c:569
+#: camlibs/panasonic/dc1000.c:422 camlibs/panasonic/dc1580.c:550
+msgid "Getting data..."
+msgstr "Réception des données..."
+
+#: camlibs/panasonic/dc1000.c:450 camlibs/panasonic/dc1580.c:575
 #, c-format
 msgid "Uploading image: %s."
 msgstr "Envoi de l'image: %s."
 
-#: camlibs/panasonic/dc1000.c:455 camlibs/panasonic/dc1580.c:580
+#: camlibs/panasonic/dc1000.c:461 camlibs/panasonic/dc1580.c:586
 #, c-format
 msgid ""
 "File size is %i bytes. The size of the largest file possible to upload is: "
@@ -1444,12 +1448,16 @@ msgstr ""
 "La taille du fichier est de %i octets. La taille du plus grand fichier est "
 "de : %i octets."
 
-#: camlibs/panasonic/dc1000.c:491 camlibs/panasonic/dc1580.c:613
+#: camlibs/panasonic/dc1000.c:474 camlibs/panasonic/dc1580.c:597
+msgid "Uploading..."
+msgstr "Téléchargement du fichier..."
+
+#: camlibs/panasonic/dc1000.c:501 camlibs/panasonic/dc1580.c:623
 #, c-format
 msgid "Deleting image %s."
 msgstr "Destruction de l'image %s."
 
-#: camlibs/panasonic/dc1000.c:504
+#: camlibs/panasonic/dc1000.c:514
 msgid ""
 "Panasonic DC1000 gPhoto library\n"
 "Mariusz Zynel <mariusz@mizar.org>\n"
@@ -1465,12 +1473,12 @@ msgstr ""
 "Fredrik Roubert <roubert@df.lth.se> et\n"
 "Galen Brooks <galen@nine.com>."
 
-#: camlibs/panasonic/dc1580.c:525
+#: camlibs/panasonic/dc1580.c:526
 #, c-format
 msgid "Downloading %s."
 msgstr "Téléchargement de %s."
 
-#: camlibs/panasonic/dc1580.c:625
+#: camlibs/panasonic/dc1580.c:635
 msgid ""
 "Panasonic DC1580 gPhoto library\n"
 "Mariusz Zynel <mariusz@mizar.org>\n"
@@ -1486,98 +1494,98 @@ msgstr ""
 "Fredrik Roubert <roubert@df.lth.se> et\n"
 "Galen Brooks <galen@nine.com>."
 
-#: camlibs/polaroid/pdc700.c:154
+#: camlibs/polaroid/pdc700.c:157
 msgid "normal"
 msgstr "normal"
 
-#: camlibs/polaroid/pdc700.c:154
+#: camlibs/polaroid/pdc700.c:157
 msgid "fine"
 msgstr "fine"
 
-#: camlibs/polaroid/pdc700.c:154
+#: camlibs/polaroid/pdc700.c:157
 msgid "superfine"
 msgstr "très fine"
 
-#: camlibs/polaroid/pdc700.c:156 camlibs/sierra/sierra.c:1294
+#: camlibs/polaroid/pdc700.c:159 camlibs/sierra/sierra.c:1294
 #: camlibs/sierra/sierra.c:1308 camlibs/sierra/sierra.c:1543
 msgid "auto"
 msgstr "automatique"
 
-#: camlibs/polaroid/pdc700.c:156 camlibs/polaroid/pdc700.c:157
+#: camlibs/polaroid/pdc700.c:159 camlibs/polaroid/pdc700.c:160
 msgid "on"
 msgstr "activé"
 
-#: camlibs/polaroid/pdc700.c:156 camlibs/polaroid/pdc700.c:157
+#: camlibs/polaroid/pdc700.c:159 camlibs/polaroid/pdc700.c:160
 msgid "off"
 msgstr "désactivé"
 
-#: camlibs/polaroid/pdc700.c:158
+#: camlibs/polaroid/pdc700.c:161
 msgid "play"
 msgstr "lecture"
 
-#: camlibs/polaroid/pdc700.c:158
+#: camlibs/polaroid/pdc700.c:161
 msgid "record"
 msgstr "enregistrement"
 
-#: camlibs/polaroid/pdc700.c:158
+#: camlibs/polaroid/pdc700.c:161
 msgid "menu"
 msgstr "menu"
 
-#: camlibs/polaroid/pdc700.c:159
+#: camlibs/polaroid/pdc700.c:162
 msgid "battery"
 msgstr "batterie"
 
-#: camlibs/polaroid/pdc700.c:159
+#: camlibs/polaroid/pdc700.c:162
 msgid "a/c adaptor"
 msgstr "transformateur"
 
-#: camlibs/polaroid/pdc700.c:160
+#: camlibs/polaroid/pdc700.c:163
 msgid "9600"
 msgstr "9600"
 
-#: camlibs/polaroid/pdc700.c:160
+#: camlibs/polaroid/pdc700.c:163
 msgid "19200"
 msgstr "19200"
 
-#: camlibs/polaroid/pdc700.c:160
+#: camlibs/polaroid/pdc700.c:163
 msgid "38400"
 msgstr "38400"
 
-#: camlibs/polaroid/pdc700.c:161
+#: camlibs/polaroid/pdc700.c:164
 msgid "57600"
 msgstr "57600"
 
-#: camlibs/polaroid/pdc700.c:161
+#: camlibs/polaroid/pdc700.c:164
 msgid "115200"
 msgstr "115200"
 
-#: camlibs/polaroid/pdc700.c:213
+#: camlibs/polaroid/pdc700.c:216
 #, c-format
 msgid "Received unexpected header (%i)"
 msgstr "Réception d'en-tête incongrue (%i)"
 
-#: camlibs/polaroid/pdc700.c:226
+#: camlibs/polaroid/pdc700.c:229
 msgid "Received unexpected response"
 msgstr "Réception d'une réponse inattendue"
 
-#: camlibs/polaroid/pdc700.c:246
+#: camlibs/polaroid/pdc700.c:250
 msgid "Checksum error"
 msgstr "Erreur sur somme de contrôle"
 
-#: camlibs/polaroid/pdc700.c:276
+#: camlibs/polaroid/pdc700.c:283
 msgid "The camera did not accept the command."
 msgstr "L'appareil a refusé la commande."
 
-#: camlibs/polaroid/pdc700.c:294
+#: camlibs/polaroid/pdc700.c:301
 msgid "Downloading..."
 msgstr "Téléchargement..."
 
-#: camlibs/polaroid/pdc700.c:320
+#: camlibs/polaroid/pdc700.c:336
 #, c-format
 msgid "The camera sent more bytes than expected (%i)"
 msgstr "L'appareil a envoyé plus d'octets que prévu (%i)"
 
-#: camlibs/polaroid/pdc700.c:410
+#: camlibs/polaroid/pdc700.c:438
 #, c-format
 msgid ""
 "Requested information about picture %i (= 0x%x), but got information about "
@@ -1586,7 +1594,7 @@ msgstr ""
 "Ai demandé l'information sur l'image %i (= 0x%x), mais ai reçu en retour "
 "l'information sur l'image %i."
 
-#: camlibs/polaroid/pdc700.c:844
+#: camlibs/polaroid/pdc700.c:872
 #, c-format
 msgid ""
 "%i bytes of an unknown image format have been received. Please write "
@@ -1595,20 +1603,20 @@ msgstr ""
 "%i octets d'une image de format inconnu reçus. Merci d'écrire à <gphoto- "
 "devel@gphoto.org> pour une assistance."
 
-#: camlibs/polaroid/pdc700.c:909 camlibs/sierra/sierra.c:707
+#: camlibs/polaroid/pdc700.c:937 camlibs/sierra/sierra.c:707
 #: camlibs/sierra/sierra.c:1279
 msgid "Camera Configuration"
 msgstr "Configuration de l'appareil"
 
-#: camlibs/polaroid/pdc700.c:910
+#: camlibs/polaroid/pdc700.c:938
 msgid "Settings"
 msgstr "Réglages"
 
-#: camlibs/polaroid/pdc700.c:925
+#: camlibs/polaroid/pdc700.c:953
 msgid "How long will it take until the camera powers off?"
 msgstr "Combien de temps avant l'extinction de l'appareil ?"
 
-#: camlibs/polaroid/pdc700.c:1020
+#: camlibs/polaroid/pdc700.c:1048
 #, c-format
 msgid ""
 "Date: %i/%02i/%02i %02i:%02i:%02i\n"
@@ -1641,11 +1649,10 @@ msgstr ""
 "Exticntion automatique : %i minutes\n"
 "Source énergie : %s"
 
-#: camlibs/polaroid/pdc700.c:1139
+#: camlibs/polaroid/pdc700.c:1167
 #, c-format
 msgid "The requested port type (%i) is not supported by this driver."
-msgstr ""
-"Le type de port demandé (%i) n'est pas supporté par ce pilote logiciel."
+msgstr "Le type de port demandé (%i) n'est pas supporté par ce pilote logiciel."
 
 #: camlibs/samsung/samsung.c:239
 msgid ""
@@ -1654,10 +1661,10 @@ msgid ""
 "ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and "
 "enhanced the port."
 msgstr ""
-"Le pilote pour Samsung digimax 800k driver a été écrit pour gPhoto par James "
-"Mckenzie <james@fishsoup.dhs.org>.Lutz Müller <urc8@rz.uni-karlsruhe.de>  "
-"l'a porté pour gPhoto2. Marcus Meißner <marcus@jet.franken.de> a corrigé et "
-"amélioré le portage."
+"Le pilote pour Samsung digimax 800k driver a été écrit pour gPhoto \n"
+"par James Mckenzie <james@fishsoup.dhs.org>.\n"
+"Lutz Müller <urc8@rz.uni-karlsruhe.de> l'a porté pour gPhoto2.\n"
+"Marcus Meißner <marcus@jet.franken.de> l'a corrigé et amélioré."
 
 #: camlibs/sierra/sierra.c:567
 msgid "The file to be uploaded has a null length"
@@ -2139,108 +2146,108 @@ msgstr ""
 "de Ken-ichi Hayashi\n"
 "Portage gPhoto2 port par Bart van Leeuwen <bart@netage.nl>"
 
-#: camlibs/stv0680/library.c:350 camlibs/stv0680/library.c:384
+#: camlibs/stv0680/library.c:353 camlibs/stv0680/library.c:387
 msgid "Bad exposure (not enough light probably)"
 msgstr "Mauvaise exposition (probablement manque de lumière)"
 
-#: camlibs/stv0680/library.c:512
+#: camlibs/stv0680/library.c:517
 msgid "Information for STV0680 based camera:\n"
 msgstr "Informations pour les appareils basés sur le STV0680 :\n"
 
-#: camlibs/stv0680/library.c:517
+#: camlibs/stv0680/library.c:522
 #, c-format
 msgid "Firmware Revision: %d.%d\n"
 msgstr "Révision de microcode : %d.%d\n"
 
-#: camlibs/stv0680/library.c:521
+#: camlibs/stv0680/library.c:526
 #, c-format
 msgid "ASIC Revision: %d.%d\n"
 msgstr "Révision de l'ASIC : %d.%d\n"
 
-#: camlibs/stv0680/library.c:525
+#: camlibs/stv0680/library.c:530
 #, c-format
 msgid "Sensor ID: %d.%d\n"
 msgstr "ID du capteur : %d.%d\n"
 
 #. HWCONFIG_COMMSLINK_MASK ... not really needed, the user knows, he
 #. * plugged it in.
-#: camlibs/stv0680/library.c:531
+#: camlibs/stv0680/library.c:536
 #, c-format
 msgid "Camera is configured for lights flickering with %dHz.\n"
 msgstr "L'appareil est configuré pour une lumière scintillant à %dHz.\n"
 
-#: camlibs/stv0680/library.c:534
+#: camlibs/stv0680/library.c:539
 #, c-format
 msgid "Memory in camera: %d Mbit.\n"
 msgstr "Mémoire dans l'appereil : %d Mbit.\n"
 
-#: camlibs/stv0680/library.c:538
+#: camlibs/stv0680/library.c:543
 msgid "Camera supports Thumbnails.\n"
 msgstr "L'appareil gère les imagettes.\n"
 
-#: camlibs/stv0680/library.c:540
+#: camlibs/stv0680/library.c:545
 msgid "Camera supports Video.\n"
 msgstr "L'appareil gère la video.\n"
 
-#: camlibs/stv0680/library.c:543
+#: camlibs/stv0680/library.c:548
 msgid "Camera pictures are monochrome.\n"
 msgstr "Les images de l'appareil sont monochrome.\n"
 
 #. Is this useful?
-#: camlibs/stv0680/library.c:545
+#: camlibs/stv0680/library.c:550
 msgid "Camera has memory.\n"
 msgstr "L'appareil embarque de la mémoire.\n"
 
-#: camlibs/stv0680/library.c:547
+#: camlibs/stv0680/library.c:552
 msgid "Camera supports videoformats: "
 msgstr "L'appareil supporte les formats video suivants : "
 
-#: camlibs/stv0680/library.c:553
+#: camlibs/stv0680/library.c:558
 #, c-format
 msgid "Vendor ID: %02x%02x\n"
 msgstr "Identifiant fabricant : %02x%02x\n"
 
-#: camlibs/stv0680/library.c:557
+#: camlibs/stv0680/library.c:562
 #, c-format
 msgid "Product ID: %02x%02x\n"
 msgstr "Identifiant produit : %02x%02x\n"
 
-#: camlibs/stv0680/library.c:564
+#: camlibs/stv0680/library.c:569
 #, c-format
 msgid "Number of Images: %d\n"
 msgstr "Nombre d'images : %d\n"
 
-#: camlibs/stv0680/library.c:567
+#: camlibs/stv0680/library.c:572
 #, c-format
 msgid "Maximum number of Images: %d\n"
 msgstr "Nombre maximum d'images : %d\n"
 
-#: camlibs/stv0680/library.c:570
+#: camlibs/stv0680/library.c:575
 #, c-format
 msgid "Image width: %d\n"
 msgstr "Largeur d'image : %d\n"
 
-#: camlibs/stv0680/library.c:573
+#: camlibs/stv0680/library.c:578
 #, c-format
 msgid "Image height: %d\n"
 msgstr "Hauteur d'image : %d\n"
 
-#: camlibs/stv0680/library.c:576
+#: camlibs/stv0680/library.c:581
 #, c-format
 msgid "Image size: %d\n"
 msgstr "Poids de l'image : %d\n"
 
-#: camlibs/stv0680/library.c:580
+#: camlibs/stv0680/library.c:585
 #, c-format
 msgid "Thumbnail width: %d\n"
 msgstr "Largeur de l'imagette : %d\n"
 
-#: camlibs/stv0680/library.c:581
+#: camlibs/stv0680/library.c:586
 #, c-format
 msgid "Thumbnail height: %d\n"
 msgstr "Hauteur de l'imagette : %d\n"
 
-#: camlibs/stv0680/library.c:582
+#: camlibs/stv0680/library.c:587
 #, c-format
 msgid "Thumbnail size: %d\n"
 msgstr "Poids de l'imagette : %d\n"
@@ -2261,49 +2268,49 @@ msgstr ""
 "Carsten Weinholz <c.weinholz@netcologne.de>\n"
 "Étendu les appareils Aiptek PenCam et autres appareils USB double mode STM."
 
-#: libgphoto2/gphoto2-camera.c:791
+#: libgphoto2/gphoto2-camera.c:729
 msgid "Could not detect any camera"
 msgstr "Impossible de détecter aucun appareil"
 
-#: libgphoto2/gphoto2-camera.c:811
+#: libgphoto2/gphoto2-camera.c:749
 msgid "You have to set the port prior initialization of the camera."
 msgstr "Vous devez spécifier un port avant d'initialiser l'appareil."
 
-#: libgphoto2/gphoto2-camera.c:839
+#: libgphoto2/gphoto2-camera.c:777
 #, c-format
 msgid "Could not load required camera driver '%s'."
 msgstr "Impossible de trouver un pilote pour '%s'."
 
-#: libgphoto2/gphoto2-camera.c:857
+#: libgphoto2/gphoto2-camera.c:795
 #, c-format
 msgid "Camera driver '%s' is missing the 'camera_init' function."
 msgstr "Il manque la fonction 'camera_init' au pilote de l'appareil '%s'."
 
-#: libgphoto2/gphoto2-camera.c:914
+#: libgphoto2/gphoto2-camera.c:852
 msgid "This camera does not offer any configuration options."
 msgstr "Cet appareil ne donne pas ses options de configuration."
 
-#: libgphoto2/gphoto2-camera.c:945
+#: libgphoto2/gphoto2-camera.c:883
 msgid "This camera does not support setting configuration options."
 msgstr "Cet appareil n'est pas configurable."
 
-#: libgphoto2/gphoto2-camera.c:976
+#: libgphoto2/gphoto2-camera.c:914
 msgid "This camera does not support summaries."
 msgstr "Cet appareil ne fournit pas de résumé."
 
-#: libgphoto2/gphoto2-camera.c:1006
+#: libgphoto2/gphoto2-camera.c:944
 msgid "This camera does not offer a manual."
 msgstr "Cet appareil n'offre pas de manuel."
 
-#: libgphoto2/gphoto2-camera.c:1036
+#: libgphoto2/gphoto2-camera.c:974
 msgid "This camera does not provide information about the driver."
 msgstr "Cet appareil n'offre aucune information sur le pilote."
 
-#: libgphoto2/gphoto2-camera.c:1069
+#: libgphoto2/gphoto2-camera.c:1007
 msgid "This camera can not capture."
 msgstr "Cet appareil ne peut être piloté pour la capture."
 
-#: libgphoto2/gphoto2-camera.c:1101
+#: libgphoto2/gphoto2-camera.c:1039
 msgid "This camera can not capture previews."
 msgstr "Cet appareil ne peut fournir de pré-visualisation de la capture."
 
@@ -2325,8 +2332,7 @@ msgstr "Le dossier '%s' ne contient pas de sous-dossier '%s'."
 #: libgphoto2/gphoto2-filesys.c:486
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
-msgstr ""
-"Impossible d'ajouter le fichier '%s' au dossier '%s' car il existe déjà."
+msgstr "Impossible d'ajouter le fichier '%s' au dossier '%s' car il existe déjà."
 
 #: libgphoto2/gphoto2-filesys.c:847
 #, c-format
@@ -2346,8 +2352,7 @@ msgstr ""
 
 #: libgphoto2/gphoto2-filesys.c:949
 #, c-format
-msgid ""
-"There are still subfolders in folder '%s' that you are trying to remove."
+msgid "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr ""
 "Il existe toujours des sous-dossiers dans le dossier '%s' que vous essayez "
 "d'effacer."
@@ -2769,7 +2774,7 @@ msgstr ""
 "--------------------------------------------------------------\n"
 
 #. User didn't specify the port type; try to guess it
-#: frontends/command-line/main.c:496
+#: frontends/command-line/main.c:499
 #, c-format
 msgid ""
 "Ports must look like 'serial:/dev/ttyS0' or 'usb:', but '%s' is missing a "
@@ -2778,63 +2783,62 @@ msgstr ""
 "Les ports doivent ressembler à «serial:/dev/ttyS0» ou «usb:», mais il manque "
 "un «:» à '%s' donc je vais essayer de deviner ce que vous voulez dire."
 
-#: frontends/command-line/main.c:515
+#: frontends/command-line/main.c:518
 #, c-format
 msgid "Guessed port name. Using port '%s' from now on."
 msgstr "Nom du port deviné. Utilisation du port '%s%' à partir de maintenant."
 
-#: frontends/command-line/main.c:546
+#: frontends/command-line/main.c:550
 #, c-format
 msgid "%s(ERROR): "
 msgstr "%s(ERREUR): "
 
-#: frontends/command-line/main.c:598
-msgid ""
-"Recursion is now default and the use of --recurse or -R is now deprecated.\n"
+#: frontends/command-line/main.c:603
+msgid "Recursion is now default and the use of --recurse or -R is now deprecated.\n"
 msgstr ""
 "La récursion est maintenant activée par défaut et l'utilisation de --recurse "
 "ou -R est maintenant obsolète.\n"
 
-#: frontends/command-line/main.c:656
+#: frontends/command-line/main.c:661
 #, c-format
 msgid "Number of pictures in folder %s: %i\n"
 msgstr "Nombre d'images dans le dossier %s: %i\n"
 
-#: frontends/command-line/main.c:689
+#: frontends/command-line/main.c:694
 #, c-format
 msgid "Using filename '%s'..."
 msgstr "Utilisation du nom de fichier '%s'..."
 
 # !!! [y/n] !!! [CM]
-#: frontends/command-line/main.c:715
+#: frontends/command-line/main.c:720
 #, c-format
 msgid "File %s exists. Overwrite? [y|n] "
 msgstr "Le fichier %s existe. L'écraser ? [y|n] "
 
-#: frontends/command-line/main.c:726
+#: frontends/command-line/main.c:731
 msgid "Specify new filename? [y|n] "
 msgstr "Spécifier un nouveau nom de fichier ? [y|n] "
 
-#: frontends/command-line/main.c:735
+#: frontends/command-line/main.c:740
 msgid "Enter new filename: "
 msgstr "Entrez le nouveau nom de fichier : "
 
-#: frontends/command-line/main.c:740
+#: frontends/command-line/main.c:745
 #, c-format
 msgid "Saving file as %s\n"
 msgstr "Enregistrement du fichier sous %s\n"
 
-#: frontends/command-line/main.c:744
+#: frontends/command-line/main.c:749
 #, c-format
 msgid "Can not save file as %s"
 msgstr "Impossible d'enregistrer le fichier sous %s"
 
-#: frontends/command-line/main.c:967
+#: frontends/command-line/main.c:972
 #, c-format
 msgid "New file is in location %s%s%s on the camera\n"
 msgstr "Le nouveau fichier est à l'emplacement %s%s%s sur l'appareil\n"
 
-#: frontends/command-line/main.c:1025
+#: frontends/command-line/main.c:1030
 #, c-format
 msgid ""
 "Camera Summary:\n"
@@ -2843,7 +2847,7 @@ msgstr ""
 "Résumé de l'appareil :\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1037
+#: frontends/command-line/main.c:1042
 #, c-format
 msgid ""
 "Camera Manual:\n"
@@ -2852,7 +2856,7 @@ msgstr ""
 "Manuel de l'appareil :\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1049
+#: frontends/command-line/main.c:1054
 #, c-format
 msgid ""
 "About the library:\n"
@@ -2861,11 +2865,11 @@ msgstr ""
 "À propos de la bibliothèque :\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1106
+#: frontends/command-line/main.c:1111
 msgid "Please specify a model."
 msgstr "Merci de spcéifier un modèle."
 
-#: frontends/command-line/main.c:1134
+#: frontends/command-line/main.c:1139
 #, c-format
 msgid ""
 "The port you specified ('%s') can not be found. Please specify one of the "
@@ -2876,19 +2880,35 @@ msgstr ""
 "l'un des ports trouvé par la commande «gphoto2 --list-ports» et assurez-vous "
 "que la syntaxe est correcte (i.e. avec le préfixe 'serial:' or 'usb:'.)"
 
-#: frontends/command-line/main.c:1151
+#: frontends/command-line/main.c:1156
 msgid "Please specify a port."
 msgstr "Merci de spécifier un port."
 
-#: frontends/command-line/main.c:1197
+#: frontends/command-line/main.c:1201
 msgid "*** Error ***              \n"
 msgstr "*** Erreur ***             \n"
 
-#: frontends/command-line/main.c:1303
+#: frontends/command-line/main.c:1259
+msgid "Press any key to continue.\n"
+msgstr "Appuyez sur une touche pour continuer.\n"
+
+#: frontends/command-line/main.c:1321
 msgid "ERROR: "
 msgstr "ERREUR : "
 
-#: frontends/command-line/main.c:1314
+#: frontends/command-line/main.c:1334
+msgid ""
+"\n"
+"Aborting...\n"
+msgstr ""
+"\n"
+"Abandon...\n"
+
+#: frontends/command-line/main.c:1340
+msgid "Aborted.\n"
+msgstr "Abandonné.\n"
+
+#: frontends/command-line/main.c:1345
 msgid ""
 "\n"
 "Cancelling...\n"
@@ -2896,7 +2916,7 @@ msgstr ""
 "\n"
 "Annulation...\n"
 
-#: frontends/command-line/main.c:1367
+#: frontends/command-line/main.c:1392
 msgid ""
 "gPhoto2 for OS/2 requires you to set the enviroment value CAMLIBS to the "
 "location of the camera libraries. e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n"
@@ -2905,7 +2925,7 @@ msgstr ""
 "CAMLIBS à l'emplacement des bibliothèques de support des appareils, ie. SET "
 "CAMLIBS=C:\\GPHOTO2\\CAM\n"
 
-#: frontends/command-line/main.c:1377
+#: frontends/command-line/main.c:1402
 msgid ""
 "gPhoto2 for OS/2 requires you to set the enviroment value IOLIBS to the "
 "location of the io libraries. e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"
@@ -2914,11 +2934,11 @@ msgstr ""
 "IOLIBS à l'emplacement des bibliothèques de communication, ie. SET "
 "CAMLIBS=C:\\GPHOTO2\\IOLIB\n"
 
-#: frontends/command-line/main.c:1395
+#: frontends/command-line/main.c:1420
 msgid "Operation cancelled.\n"
 msgstr "Opération annulée.\n"
 
-#: frontends/command-line/main.c:1398
+#: frontends/command-line/main.c:1423
 #, c-format
 msgid ""
 "*** Error ('%s') ***       \n"
@@ -2927,7 +2947,7 @@ msgstr ""
 "*** Erreur ('%s') ***      \n"
 "\n"
 
-#: frontends/command-line/main.c:1404
+#: frontends/command-line/main.c:1429
 msgid ""
 "For debugging messages, please use the --debug option.\n"
 "Debugging messages may help finding a solution to your problem.\n"
@@ -2943,7 +2963,7 @@ msgstr ""
 "merci de lancer gphoto2 comme suit :\n"
 "\n"
 
-#: frontends/command-line/main.c:1436
+#: frontends/command-line/main.c:1461
 msgid ""
 "\n"
 "Errors occuring beyond this point are 'expected' on OS/2\n"
@@ -3039,3 +3059,4 @@ msgstr ""
 "---\n"
 "[Utiliser «\"» pour les arg.]     [Les numéros d'images commencent à un "
 "(1)]\n"
+

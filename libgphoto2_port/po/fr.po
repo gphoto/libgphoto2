@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "POT-Creation-Date: 2002-01-14 22:31+0100\n"
-"PO-Revision-Date: 2002-01-14 22:47MET\n"
+"PO-Revision-Date: 2002-01-15 22:30MET\n"
 "Last-Translator: Jérôme Fenal <jerome@fenal.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,25 +15,25 @@ msgstr ""
 
 #: libgphoto2_port/gphoto2-port.c:272
 msgid "open"
-msgstr "ouvert"
+msgstr "ouvrir"
 
 #: libgphoto2_port/gphoto2-port.c:295
 msgid "close"
-msgstr "fermé"
+msgstr "fermer"
 
 #. Check if we wrote all bytes
 #: libgphoto2_port/gphoto2-port.c:373
 msgid "write"
-msgstr "écrit"
+msgstr "écrire"
 
 #. Check if we read as many bytes as expected
 #: libgphoto2_port/gphoto2-port.c:405
 msgid "read"
-msgstr "lit"
+msgstr "lire"
 
 #: libgphoto2_port/gphoto2-port.c:504
 msgid "update"
-msgstr "met à jour"
+msgstr "mettre à jour"
 
 #: libgphoto2_port/gphoto2-port.c:550
 msgid "get_pin"
@@ -78,7 +78,9 @@ msgstr "Pas de description d'erreur disponible"
 #: libgphoto2_port/gphoto2-port-info-list.c:279
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
-msgstr "Ne peut charger aucune bibliothèque d'E/S car '%s' ne peut être ouvert (%m)"
+msgstr ""
+"Ne peut charger aucune bibliothèque d'E/S car '%s' \n"
+"ne peut être ouvert (%m)"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:473
 msgid "Generic Port"
@@ -180,9 +182,10 @@ msgid ""
 "module (i.e. dc2xx) is using the device and you have read/write access to "
 "the device."
 msgstr ""
-"Impossible d'utiliser l'interface %d (%m). Assurez-vous qu'aucun programme "
-"ou module noyau (par ex. dc2xx) n'utilise le périphérique et que vous avez "
-"accès en lecture/écriture au device."
+"Impossible d'utiliser l'interface %d (%m).\n"
+"Assurez-vous qu'aucun programme ou module noyau (par ex. dc2xx) \n"
+"n'utilise le périphérique et que vous avez bien accès \n"
+"en lecture/écriture au descripteur de périphérique."
 
 #: usb/libusb.c:157
 #, c-format
@@ -215,8 +218,8 @@ msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
+"Impossible de trouver le périphérique USB (fabricant 0x%x,\n"
+"produit 0x%x). Assurez-vous qu'il est bien connecté à l'ordinateur."
 
 #: usb/libusb.c:508
 #, c-format
@@ -224,8 +227,9 @@ msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
 "sure this device is connected to the computer."
 msgstr ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
+"Impossible de trouver le périphérique USB (fabricant 0x%x,\n"
+"sous-classe 0x%x, produit 0x%x). Assurez-vous qu'il est bien \n"
+"connecté à l'ordinateur."
 
 #: serial/unix.c:190
 #, c-format
