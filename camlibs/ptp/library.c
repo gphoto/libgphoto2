@@ -150,7 +150,7 @@ static struct {
 	{"Kodak MC3", 0, 0},
 	{"Sony DSC-P5", 0, 0},
 	{"Sony DSC-F707", 0, 0},
-	{"HP PhotoSmart 318", 0, 0},
+	{"HP PhotoSmart 318", 0x3f0, 0x6302},
 	{NULL, 0, 0}
 };
 
