@@ -1,5 +1,11 @@
 2001-10-12 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
+	* frontends/command-line/main.c: added package and version to debug msgs
+	* frontends/command-line/main.c: added --print-usb-usermap command
+	* frontends/command-line/main.h: added definition name of hotplug script
+
+2001-10-12 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
 	* HACKING: reformatted, added not for emacs users
 	* README: added hint to gphoto2-cli.txt
 	* AUTHORS: fixed typo
