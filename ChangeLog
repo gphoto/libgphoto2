@@ -3,6 +3,7 @@
 	* camlibs/canon/canon.c: removed G2 from serial detection list
 	* camlibs/canon/canon.c: split canon_int_ready into usb and serial part
 	* camlibs/canon/library.c: cleaned up the "switch off" stuff
+	* camlibs/konica/lowlevel.c: set_timeout, not timeout_set
 
 2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
