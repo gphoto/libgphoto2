@@ -4,6 +4,10 @@
 	  for_each_subfolder() did not descend into subfolders of
 	  subfolders when recursive.
 
+	* frontends/command-line/main.c: Be even more carefull in
+	  checking the ID passed to the context functions by camera
+	  drivers.
+
 2002-02-08  Christophe Barbé <christophe.barbe@ufies.org>
 
 	* frontends/command-line/main.c: Add usbid option to override 

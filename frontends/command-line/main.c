@@ -1347,7 +1347,7 @@ ctx_progress_update_func (GPContext *context, unsigned int id,
 	unsigned int i, width;
 
 	/* Guard against buggy camera drivers */
-	if (id >= MAX_PROGRESS_STATES)
+	if (id >= MAX_PROGRESS_STATES || id < 0)
 		return;
 
 	width = 66 - strlen (progress_states[id].message);
@@ -1371,6 +1371,10 @@ ctx_progress_update_func (GPContext *context, unsigned int id,
 static void
 ctx_progress_stop_func (GPContext *context, unsigned int id, void *data)
 {
+	/* Guard against buggy camera drivers */
+	if (id >= MAX_PROGRESS_STATES || id < 0)
+		return;
+
 	/* Clear the progress bar. */
 	fprintf (stdout, "%s\r", spaces + (sizeof(spaces) - 80));
 	fflush (stdout);
