@@ -110,7 +110,7 @@ camera_abilities (CameraAbilitiesList* list)
 			a->speed[8]	= 57600;
 			a->speed[9]	= 115200;
 			a->speed[10]	= 0;
-			a->capture	= GP_CAPTURE_IMAGE;
+			a->capture	= GP_CAPTURE_IMAGE | GP_CAPTURE_PREVIEW;
 			a->config	= 1;
 			a->file_delete	= 1;
 			a->file_preview	= 1;
