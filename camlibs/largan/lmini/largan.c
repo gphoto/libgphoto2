@@ -56,7 +56,7 @@ static uint8_t convert_name_to_index (const char * name);
 int
 camera_id (CameraText *id) 
 {
-	strcpy(id->text, "largan");
+	strcpy(id->text, "largan-lmini");
 
 	return (GP_OK);
 }

@@ -44,8 +44,8 @@ static struct largan_baud_rate {
 	int baud;
 	char value;	/* value to be sent in the protocol */
 } bauds [] = { 
+	{19200, 0x02 },	/* default */
 	{38400, 0x03 },
-	{19200, 0x02 },
 	{ 9600, 0x01 },
 	{ 4800, 0x00 },
 	{    0, 0x00 }
@@ -117,14 +117,17 @@ int largan_get_num_pict (Camera * camera)
 
 	ret = largan_send_command (camera, LARGAN_NUM_PICT_CMD, 0, 0);
 	if (ret < 0) {
+		GP_DEBUG ("largan_send_command() failed: %d\n", ret);
 		return -1;
 	}
 	
 	ret = largan_recv_reply (camera, &reply, &code, NULL);
 	if (ret < 0) {
+		GP_DEBUG ("largan_recv_reply() failed: %d\n", ret);
 		return -1;
 	}
 	if (reply != LARGAN_NUM_PICT_CMD) {
+		GP_DEBUG ("Reply incorrect\n");
 		return -1;
 	}
 	return code;
@@ -339,20 +342,44 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 {
 	int ret;
 	uint8_t packet [4];
+	uint8_t	packet_size = 0;
 	memset (packet, 0, sizeof (packet));
 	
-	ret = gp_port_read (camera->port, packet, sizeof(packet));
+	ret = gp_port_read (camera->port, packet, 1);
 	if (ret < GP_OK) {
 		return ret;
+	}
+	switch (packet[0])
+	{
+	case LARGAN_NUM_PICT_CMD:
+		packet_size = 2;
+		break;
+	case LARGAN_GET_PICT_CMD:
+		packet_size = 3;		
+		break;
+	case LARGAN_BAUD_ERASE_CMD:
+		packet_size = 2;
+		break;
+	case LARGAN_CAPTURE_CMD:
+		packet_size = 3;		
+		break;
+	default:
+		packet_size = 0;
+		GP_DEBUG("Unkown reply.\n");
+		break;
 	}
 	if (reply) {
 		*reply = packet[0];
 	}
-	if (code) {
-		*code = packet[1];
+	if (packet_size >= 2) {
+		if (code) {
+			*code = packet[1];
+		}
 	}
-	if (code2) {
-		*code2 = packet[2];
+	if (packet_size >= 3) {
+		if (code2) {
+			*code2 = packet[2];
+		}
 	}
 	return ret;
 }
@@ -363,6 +390,7 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 static int largan_send_command (Camera * camera, uint8_t cmd, uint8_t param1, 
 		uint8_t param2)
 {
+	uint8_t	packet_size = 0;
 	uint8_t packet [3];
 	memset (&packet, 0, sizeof (packet));
 	
@@ -370,6 +398,7 @@ static int largan_send_command (Camera * camera, uint8_t cmd, uint8_t param1,
 
 	switch (cmd) {
 	case LARGAN_NUM_PICT_CMD:
+		packet_size = 1;
 		break;
 	case LARGAN_GET_PICT_CMD:
 		if ((param1 != 0) && (param1 != 1)) {
@@ -378,6 +407,7 @@ static int largan_send_command (Camera * camera, uint8_t cmd, uint8_t param1,
 		}
 		packet[1] = param1;
 		packet[2] = param2;
+		packet_size = 3;
 		break;
 	case LARGAN_BAUD_ERASE_CMD:
 		if ((param1 > 0x11) || ((param1 > 0x03) && (param1 < 0x10))) {
@@ -385,15 +415,17 @@ static int largan_send_command (Camera * camera, uint8_t cmd, uint8_t param1,
 			return GP_ERROR; /* wrong parameter */
 		}
 		packet[1] = param1;
+		packet_size = 2;
 		break;
 	case LARGAN_CAPTURE_CMD:
+		packet_size = 1;
 		break;
 	default:
 		GP_DEBUG ("unknown command\n");
 		return GP_ERROR; /* unknown command */
 	}
 
-	return gp_port_write (camera->port, packet, sizeof (packet));
+	return gp_port_write (camera->port, packet, packet_size);
 }
 
 

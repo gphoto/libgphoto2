@@ -1,3 +1,10 @@
+2003-01-29  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* lmini.c: changed packet handling. More debug. Better return code
+	checking. (still untested).
+
+	* largan.c (camera_id): changed camlib ID.
+
 2002-10-31  Marcus Meissner <meissner@suse.de>
 	
 	* fixed compiler warnings, got rid of unnecessary global variables
