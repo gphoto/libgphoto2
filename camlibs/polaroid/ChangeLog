@@ -1,3 +1,8 @@
+2003-02-04  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c: Skanhex-SX 35 IDs added, USB id for
+	  JD350 entrance added (from Joerg Hackenberg).
+
 2003-01-30  Marcus Meissner <marcus@jet.franken.de>
 	
 	* pdc640.c: Added support for Typhoon Stylocam,

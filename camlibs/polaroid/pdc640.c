@@ -87,7 +87,7 @@ static struct {
 			"pdc640%04i.ppm"
 		}
 	},
-	{"Jenoptik:JD350 entrance", 0, 0, {
+	{"Jenoptik:JD350 entrance", 0x5da, 0x1006, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
