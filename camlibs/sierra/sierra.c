@@ -153,7 +153,6 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->file_list    = camera_file_list;
 	camera->functions->file_get 	= camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
-	camera->functions->file_put 	= camera_file_put;
 	camera->functions->file_delete 	= camera_file_delete;
 	camera->functions->capture 	= camera_capture;
 	camera->functions->summary	= camera_summary;
