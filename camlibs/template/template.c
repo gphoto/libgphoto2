@@ -1,6 +1,26 @@
-#include <string.h>
-#include <gphoto2.h>
-#include <gpio.h>
+/* template.c
+ *
+ * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+#include <config.h>
+
+#include <gphoto2-library.h>
+#include <gphoto2-result.h>
 
 int
 camera_id (CameraText *id) 
@@ -38,27 +58,54 @@ camera_exit (Camera *camera)
 }
 
 static int
-camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		 CameraFile *file)
-{ 
-	return (GP_OK);
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *file) 
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *data)
 {
-	return (GP_OK);
-}
+	Camera *camera = data;
 
-static int
-camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
-{
+	/*
+	 * Get the file from the camera. Use gp_file_set_mime_type,
+	 * gp_file_set_data_and_size, etc.
+	 */
+
 	return (GP_OK);
 }
 
 static int
-camera_file_delete (Camera *camera, const char *folder, const char *filename) 
+put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
+	       void *data)
 {
+	Camera *camera;
+
+	/*
+	 * Upload the file to the camera. Use gp_file_get_data_and_size,
+	 * gp_file_get_name, etc.
+	 */
+
+	return (GP_OK);
+}
+
+static int
+delete_file_func (CameraFilesystem *fs, const char *folder,
+		  const char *filename, void *data)
+{
+	Camera *camera = data;
+
+	/* Delete the file from the camera. */
+
+	return (GP_OK);
+}
+
+static int
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
+{
+	Camera *camera = data;
+
+	/*
+	 * Delete all files in the given folder. If your camera doesn't have
+	 * such a functionality, just don't implement this function.
+	 */
+
 	return (GP_OK);
 }
 
@@ -67,7 +114,7 @@ camera_config_get (Camera *camera, CameraWidget **window)
 {
 	*window = gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration");
 
-	// Append your sections and widgets here.
+	/* Append your sections and widgets here. */
 
 	return (GP_OK);
 }
@@ -75,17 +122,33 @@ camera_config_get (Camera *camera, CameraWidget **window)
 static int
 camera_config_set (Camera *camera, CameraWidget *window) 
 {
-	// Check, if the widget's value have changed.
+	/*
+	 * Check if the widgets' values have changed. If yes, tell the camera.
+	 */
 
 	return (GP_OK);
 }
 
 static int
-camera_capture (Camera *camera, int capture_type, CameraFile *file)
+camera_capture_preview (Camera *camera, CameraFile *file)
 {
-	// Capture image/preview/video and return it in 'file'. Don't store it
-	// anywhere on your camera! If your camera does store the image, 
-	// delete it manually here.
+	/*
+	 * Capture a preview and return the data in the given file (again,
+	 * use gp_file_set_data_and_size, gp_file_set_mime_type, etc.).
+	 * libgphoto2 assumes that previews are NOT stored on the camera's 
+	 * disk. If your camera does, please delete it from the camera.
+	 */
+
+	return (GP_OK);
+}
+
+static int
+camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
+{
+	/*
+	 * Capture an image and tell libgphoto2 where to find it by filling
+	 * out the path.
+	 */
 
 	return (GP_OK);
 }
@@ -93,23 +156,32 @@ camera_capture (Camera *camera, int capture_type, CameraFile *file)
 static int
 camera_summary (Camera *camera, CameraText *summary) 
 {
+	/*
+	 * Fill out the summary with some information about the current 
+	 * state of the camera (like pictures taken, etc.).
+	 */
+
 	return (GP_OK);
 }
 
 static int
 camera_manual (Camera *camera, CameraText *manual) 
 {
+	/*
+	 * If you would like to tell the user some information about how 
+	 * to use the camera or the driver, this is the place to do.
+	 */
+
 	return (GP_OK);
 }
 
 static int
 camera_about (Camera *camera, CameraText *about) 
 {
-	strcpy(about->text, 
-"Library Name
-YOUR NAME <email@somewhere.com>
-Quick description of the library.
-No more than 5 lines if possible.");
+	strcpy (about->text, _("Library Name\n"
+			       "YOUR NAME <email@somewhere.com>\n"
+			       "Quick description of the library.\n"
+			       "No more than 5 lines if possible."));
 
 	return (GP_OK);
 }
@@ -160,9 +232,6 @@ camera_init (Camera *camera)
 {
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->file_get             = camera_file_get;
-        camera->functions->file_get_preview     =  camera_file_get_preview;
-        camera->functions->file_delete          = camera_file_delete;
         camera->functions->config_get           = camera_config_get;
         camera->functions->config_set           = camera_config_set;
         camera->functions->capture              = camera_capture;
@@ -171,13 +240,26 @@ camera_init (Camera *camera)
         camera->functions->about                = camera_about;
         camera->functions->result_as_string     = camera_result_as_string;
 
-	/* Now, tell the filesystem where to get lists and info */
+	/* Now, tell the filesystem where to get lists, files and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
 				      folder_list_func, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, set_info_func,
 				      camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      delete_file_func, camera);
+	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
+					delete_all_func, camera);
 
-	/* Check if the camera is there */
+	/*
+	 * The port is already provided with camera->port (and
+	 * already open). You just have to use functions like
+	 * gp_port_timeout_set, gp_port_settings_get, gp_port_settings_set.
+	 */
+	
+	/*
+	 * Once you have configured the port, you should check if a 
+	 * connection to the camera can be established.
+	 */
 
 	return (GP_OK);
 }

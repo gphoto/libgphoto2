@@ -1,5 +1,9 @@
 2001-10-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/template/template.c: Updated.
+
+2001-10-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* frontends/command-line/interface.c: Don't jump to the next line
 	  for status messages - this disturbs the nice formatting of listings.
 
