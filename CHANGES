@@ -1,5 +1,10 @@
 gphoto2 command-line interface:
+
    * optional readline support
+
+libgphoto2:
+
+   * support for periodic keep-alive-messages
 
 --------------------------------------------------------------------------------
 gphoto2 2.0

@@ -276,18 +276,15 @@ char glob_usb_usermap_script[1024];
 char glob_owd[1024];
 char glob_cwd[1024];
 int  glob_speed;
-int  glob_num=1;
 
 int glob_usbid[5];
 
 Camera    *glob_camera  = NULL;
 GPContext *glob_context = NULL;
 
-static ForEachParams foreach_params;
-static ActionParams  action_params;
+static ForEachParams fparams = {NULL, NULL, NULL, FOR_EACH_FLAGS_RECURSE};
+static ActionParams  aparams;
 
-int  glob_debug;
-int  glob_shell=0;
 int  glob_quiet=0;
 static char glob_filename[128];
 int  glob_stdout=0;
@@ -295,16 +292,11 @@ int  glob_stdout_size=0;
 char glob_cancel = 0;
 static int glob_cols = 80;
 
-static ForEachFlags glob_flags = FOR_EACH_FLAGS_RECURSE;
-
 /* 4) Finally, add your callback function.                              */
 /*    ----------------------------------------------------------------- */
 /*    The callback function is passed "char *arg" to the argument of    */
 /*    command-line option. It must return GP_OK or GP_ERROR.            */
 /*    Again, use the OPTION_CALLBACK(function) macro.                   */
-/*    glob_debug is set if the user types in the "--debug" flag. Use    */
-/*    cli_debug_print(char *format, ...) to display debug output. Use   */
-/*    cli_error_print(char *format, ...) to display error output.       */
 
 OPTION_CALLBACK(license)
 {
@@ -356,12 +348,11 @@ OPTION_CALLBACK(help)
         return GP_OK;
 }
 
-OPTION_CALLBACK(version) {
+OPTION_CALLBACK(version)
+{
+        print_version ();
+        exit (EXIT_SUCCESS);
 
-        cli_debug_print("Displaying version");
-
-        print_version();
-        exit(EXIT_SUCCESS);
         return GP_OK;
 }
 
@@ -470,8 +461,6 @@ OPTION_CALLBACK(list_cameras) {
 	CameraAbilitiesList *al;
         CameraAbilities a;
 
-        cli_debug_print("Listing Cameras");
-
 	CR (gp_abilities_list_new (&al));
 	CR (gp_abilities_list_load (al, glob_context));
         CR (n = gp_abilities_list_count (al));
@@ -520,8 +509,6 @@ OPTION_CALLBACK(print_usb_usermap) {
 	int x, n;
 	CameraAbilitiesList *al;
         CameraAbilities a;
-
-        cli_debug_print("Listing Cameras");
 
 	CR (gp_abilities_list_new (&al));
 	CR (gp_abilities_list_load (al, glob_context));
@@ -574,9 +561,8 @@ OPTION_CALLBACK(print_usb_usermap) {
 
 OPTION_CALLBACK(usb_usermap_script)
 {
-	cli_debug_print("Setting usb.usermap script to \"%s\"", arg);
-
-	strncpy (glob_usb_usermap_script, arg, sizeof (glob_usb_usermap_script) - 1);
+	strncpy (glob_usb_usermap_script, arg,
+		 sizeof (glob_usb_usermap_script) - 1);
 	glob_usb_usermap_script[sizeof (glob_usb_usermap_script) - 1] = 0;
 
 	return (GP_OK);
@@ -622,7 +608,7 @@ OPTION_CALLBACK(list_ports)
 
 OPTION_CALLBACK(filename)
 {
-        cli_debug_print("Setting filename to %s", arg);
+        gp_log (GP_LOG_DEBUG, "main", "Setting filename to %s...", arg);
 
         strncpy (glob_filename, arg, sizeof (glob_filename) - 1);
 
@@ -631,7 +617,7 @@ OPTION_CALLBACK(filename)
 
 OPTION_CALLBACK(port)
 {
-        cli_debug_print("Setting port to %s", arg);
+        gp_log (GP_LOG_DEBUG, "main", "Setting port to '%s'...", arg);
 
 	strncpy (glob_port, arg, sizeof (glob_port) - 1);
 	glob_port[sizeof (glob_port) - 1] = 0;
@@ -658,8 +644,8 @@ OPTION_CALLBACK(port)
 			strcpy (glob_port, "usb:");
 			strncat (glob_port, arg, sizeof(glob_port)-4);
 		}
-		cli_debug_print(_("Guessed port name. Using port '%s' from now on."),
-				glob_port);
+		gp_log (GP_LOG_DEBUG, "main", "Guessed port name. Using port "
+			"'%s' from now on.", glob_port);
 	}
 
         return (GP_OK);
@@ -667,7 +653,7 @@ OPTION_CALLBACK(port)
 
 OPTION_CALLBACK(speed)
 {
-        cli_debug_print("Setting speed to %s", arg);
+	gp_log (GP_LOG_DEBUG, "main", "Setting speed to '%s'...", arg);
 
         glob_speed = atoi (arg);
 
@@ -676,7 +662,7 @@ OPTION_CALLBACK(speed)
 
 OPTION_CALLBACK(model)
 {
-        cli_debug_print("Setting camera model to %s", arg);
+        gp_log (GP_LOG_DEBUG, "main", "Setting camera model to '%s'...", arg);
 
         strncpy (glob_model, arg, sizeof (glob_model) - 1);
         glob_model[sizeof (glob_model) - 1] = 0;
@@ -686,18 +672,18 @@ OPTION_CALLBACK(model)
 
 OPTION_CALLBACK(usbid)
 {
-		cli_debug_print("Overriding USB IDs to %s", arg);
+	gp_log (GP_LOG_DEBUG, "main", "Overriding USB IDs to '%s'...", arg);
 
-		if (sscanf (arg, "0x%x:0x%x=0x%x:0x%x", &glob_usbid[0], &glob_usbid[1],
-			&glob_usbid[2], &glob_usbid[3]) != 4) {
-			printf(_("Use the following syntax a:b=c:d to treat any "
-						"USB device detected as a:b as c:d instead. "
-						"a b c d should be hexadecimal numbers beginning with '0x'.\n"));
-
-			return (GP_ERROR);
-		}
-		glob_usbid[4] = 1;
-		return (GP_OK);
+	if (sscanf (arg, "0x%x:0x%x=0x%x:0x%x", &glob_usbid[0], &glob_usbid[1],
+		    &glob_usbid[2], &glob_usbid[3]) != 4) {
+		printf (_("Use the following syntax a:b=c:d to treat any "
+			  "USB device detected as a:b as c:d instead. "
+			  "a b c d should be hexadecimal numbers beginning "
+			  "with '0x'.\n"));
+		return (GP_ERROR_BAD_PARAMETERS);
+	}
+	glob_usbid[4] = 1;
+	return (GP_OK);
 }
 
 #ifndef DISABLE_DEBUGGING
@@ -720,11 +706,10 @@ debug_func (GPLogLevel level, const char *domain, const char *format,
 
 OPTION_CALLBACK (debug)
 {
-	glob_debug = 1;
-	cli_debug_print("ALWAYS INCLUDE THE FOLLOWING LINE WHEN SENDING DEBUG MESSAGES TO THE MAILING LIST:");
-	cli_debug_print(PACKAGE " " VERSION ": " "Turning on debug mode");
-
 	gp_log_add_func (GP_LOG_ALL, debug_func, NULL);
+	gp_log (GP_LOG_DEBUG, "main", _("ALWAYS INCLUDE THE FOLLOWING LINE "
+		"WHEN SENDING DEBUG MESSAGES TO THE MAILING LIST:"));
+	gp_log (GP_LOG_DEBUG, "main", PACKAGE " " VERSION);
 
 	return (GP_OK);
 }
@@ -732,8 +717,6 @@ OPTION_CALLBACK (debug)
 
 OPTION_CALLBACK(quiet)
 {
-        cli_debug_print("Setting to quiet mode");
-
         glob_quiet=1;
 
         return (GP_OK);
@@ -741,18 +724,15 @@ OPTION_CALLBACK(quiet)
 
 OPTION_CALLBACK(shell)
 {
-        cli_debug_print("Entering shell mode");
-
         CR (set_globals ());
+	CR (shell_prompt (glob_camera));
 
-        glob_shell = 1;
-
-        return (shell_prompt (glob_camera));
+	return (GP_OK);
 }
 
 OPTION_CALLBACK (use_folder)
 {
-        cli_debug_print("Setting folder to %s", arg);
+        gp_log (GP_LOG_DEBUG, "main", "Setting folder to '%s'...", arg);
 
         strncpy (glob_folder, arg, sizeof (glob_folder) - 1);
         glob_folder[sizeof (glob_folder) - 1] = 0;
@@ -762,18 +742,14 @@ OPTION_CALLBACK (use_folder)
 
 OPTION_CALLBACK (recurse)
 {
-        cli_debug_print("Recursion requested, this is now the default");
-
-	glob_flags |= FOR_EACH_FLAGS_RECURSE;
+	fparams.flags |= FOR_EACH_FLAGS_RECURSE;
 
         return (GP_OK);
 }
 
 OPTION_CALLBACK (no_recurse)
 {
-        cli_debug_print("Clearing recursive mode");
-
-	glob_flags &= ~FOR_EACH_FLAGS_RECURSE;
+	fparams.flags &= ~FOR_EACH_FLAGS_RECURSE;
 
         return (GP_OK);
 }
@@ -781,7 +757,7 @@ OPTION_CALLBACK (no_recurse)
 OPTION_CALLBACK (list_folders)
 {
         CR (set_globals ());
-	CR (for_each_folder (&foreach_params, list_folders_action));
+	CR (for_each_folder (&fparams, list_folders_action));
 
 	return (GP_OK);
 }
@@ -806,9 +782,9 @@ OPTION_CALLBACK(show_info)
 	 * directly dump info.
 	 */
 	if (strchr (arg, '.'))
-		return (print_info_action (&action_params, arg));
+		return (print_info_action (&aparams, arg));
 
-	return (for_each_file_in_range (&foreach_params, print_info_action,
+	return (for_each_file_in_range (&fparams, print_info_action,
 					arg));
 }
 
@@ -822,9 +798,9 @@ OPTION_CALLBACK(show_exif)
 	 * directly dump EXIF information.
 	 */
 	if (strchr (arg, '.'))
-		return (print_exif_action (&action_params, arg));
+		return (print_exif_action (&aparams, arg));
 
-	return (for_each_file_in_range (&foreach_params, print_exif_action,
+	return (for_each_file_in_range (&fparams, print_exif_action,
 					arg));
 }
 #endif
@@ -832,7 +808,7 @@ OPTION_CALLBACK(show_exif)
 OPTION_CALLBACK (list_files)
 {
         CR (set_globals ());
-        CR (for_each_folder (&foreach_params, list_files_action));
+        CR (for_each_folder (&fparams, list_files_action));
 
 	return (GP_OK);
 }
@@ -841,8 +817,6 @@ OPTION_CALLBACK (num_files)
 {
         int count;
         CameraList list;
-
-        cli_debug_print ("Counting files");
 
         CR (set_globals ());
         CR (gp_camera_folder_list_files (glob_camera, glob_folder,
@@ -865,6 +839,7 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
         int result;
         char *f;
         const char *name;
+	unsigned int num = 1;
 
         /* Determine the folder and filename */
         strcpy (ofile, "");
@@ -873,14 +848,14 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
         if (strcmp (glob_filename, "")) {
                 if (strchr (glob_filename, '/')) {              /* Check if they specified an output dir */
                         f = strrchr(glob_filename, '/');
-                        strcpy(buf, f+1);                       /* Get the filename */
-                        sprintf(ofile, buf, glob_num++);
+                        strcpy (buf, f+1);                       /* Get the filename */
+                        sprintf (ofile, buf, num++);
                         *f = 0;
-                        strcpy(ofolder, glob_filename);      /* Get the folder */
-                        strcat(ofolder, "/");
+                        strcpy (ofolder, glob_filename);      /* Get the folder */
+                        strcat (ofolder, "/");
                         *f = '/';
                 } else {                                        /* If not, subst and set */
-                        sprintf(ofile, glob_filename, glob_num++);
+                        sprintf (ofile, glob_filename, num++);
                 }
         } else {
                 gp_file_get_name (file, &name);
@@ -987,7 +962,7 @@ save_file_to_file (Camera *camera, GPContext *context, const char *folder,
 int
 get_file_common (char *arg, CameraFileType type )
 {
-        cli_debug_print("Getting %s", arg);
+        gp_log (GP_LOG_DEBUG, "main", "Getting '%s'...", arg);
 
         CR (set_globals ());
 
@@ -1001,23 +976,26 @@ get_file_common (char *arg, CameraFileType type )
 
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
-		return for_each_file_in_range (&foreach_params,
-				save_thumbnail_action, arg);
+		CR (for_each_file_in_range (&fparams, save_thumbnail_action,
+					    arg));
+		break;
         case GP_FILE_TYPE_NORMAL:
-                return for_each_file_in_range (&foreach_params,
-				save_file_action, arg);
+                CR (for_each_file_in_range (&fparams, save_file_action, arg));
+		break;
         case GP_FILE_TYPE_RAW:
-                return for_each_file_in_range (&foreach_params,
-				save_raw_action, arg);
+                CR (for_each_file_in_range (&fparams, save_raw_action, arg));
+		break;
 	case GP_FILE_TYPE_AUDIO:
-		return for_each_file_in_range (&foreach_params,
-				save_audio_action, arg);
+		CR (for_each_file_in_range (&fparams, save_audio_action, arg));
+		break;
 	case GP_FILE_TYPE_EXIF:
-		return for_each_file_in_range (&foreach_params,
-				save_exif_action, arg);
+		CR (for_each_file_in_range (&fparams, save_exif_action, arg));
+		break;
         default:
                 return (GP_ERROR_NOT_SUPPORTED);
         }
+
+	return (GP_OK);
 }
 
 OPTION_CALLBACK (get_file)
@@ -1028,7 +1006,7 @@ OPTION_CALLBACK (get_file)
 OPTION_CALLBACK (get_all_files)
 {
         CR (set_globals ());
-        CR (for_each_file (&foreach_params, save_file_action));
+        CR (for_each_file (&fparams, save_file_action));
 
 	return (GP_OK);
 }
@@ -1041,7 +1019,7 @@ OPTION_CALLBACK (get_thumbnail)
 OPTION_CALLBACK(get_all_thumbnails)
 {
         CR (set_globals ());
-        CR (for_each_file (&foreach_params, save_thumbnail_action));
+        CR (for_each_file (&fparams, save_thumbnail_action));
 
 	return (GP_OK);
 }
@@ -1054,7 +1032,7 @@ OPTION_CALLBACK (get_raw_data)
 OPTION_CALLBACK (get_all_raw_data)
 {
         CR (set_globals ());
-        CR (for_each_file (&foreach_params, save_raw_action));
+        CR (for_each_file (&fparams, save_raw_action));
 
 	return (GP_OK);
 }
@@ -1067,7 +1045,7 @@ OPTION_CALLBACK (get_audio_data)
 OPTION_CALLBACK (get_all_audio_data)
 {
 	CR (set_globals ());
-	CR (for_each_file (&foreach_params, save_audio_action));
+	CR (for_each_file (&fparams, save_audio_action));
 
 	return (GP_OK);
 }
@@ -1077,24 +1055,16 @@ OPTION_CALLBACK (delete_file)
 	CR (set_globals ());
 
 	if (strchr (arg, '.'))
-		return (delete_file_action (&action_params, arg));
+		return (delete_file_action (&aparams, arg));
 
-	return (for_each_file_in_range (&foreach_params, delete_file_action,
+	return (for_each_file_in_range (&fparams, delete_file_action,
 					arg));
 }
 
 OPTION_CALLBACK (delete_all_files)
 {
-	ForEachParams fp;
-
-	memset (&fp, 0, sizeof (ForEachParams));
-	fp.camera = glob_camera;
-	fp.context = glob_context;
-	fp.folder = glob_folder;
-	fp.flags = glob_flags;
-
 	CR (set_globals ());
-	CR (for_each_folder (&fp, delete_all_action));
+	CR (for_each_folder (&fparams, delete_all_action));
 
 	return (GP_OK);
 }
@@ -1104,7 +1074,7 @@ OPTION_CALLBACK (upload_file)
         CameraFile *file;
         int res;
 
-        cli_debug_print("Uploading file");
+        gp_log (GP_LOG_DEBUG, "main", "Uploading file...");
 
         CR (set_globals ());
 
@@ -1135,8 +1105,7 @@ OPTION_CALLBACK (make_dir)
 {
 	CR (set_globals ());
 
-	CR (gp_camera_folder_make_dir (glob_camera,
-						 glob_folder, arg, 
+	CR (gp_camera_folder_make_dir (glob_camera, glob_folder, arg, 
 						 glob_context));
 
 	return (GP_OK);
@@ -1146,8 +1115,7 @@ OPTION_CALLBACK (remove_dir)
 {
 	CR (set_globals ());
 
-	CR (gp_camera_folder_remove_dir (glob_camera,
-						   glob_folder, arg,
+	CR (gp_camera_folder_remove_dir (glob_camera, glob_folder, arg,
 						   glob_context));
 
 	return (GP_OK);
@@ -1353,7 +1321,6 @@ set_globals (void)
 
         /* takes all the settings and sets up the gphoto lib */
 
-        cli_debug_print ("Setting globals...");
         CR (gp_camera_new (&glob_camera));
 #ifdef HAVE_PTHREAD
 	gp_camera_set_timeout_funcs (glob_camera, start_timeout_func,
@@ -1371,11 +1338,12 @@ set_globals (void)
 			gp_abilities_list_get_abilities (al, x, &abilities);
 			if (abilities.usb_vendor==glob_usbid[2]
 					&& abilities.usb_product==glob_usbid[3]) {
-				cli_debug_print ("Overriding USB vendor/product id "
-						 "0x%x/0x%x with 0x%x/0x%x",
-						 abilities.usb_vendor, abilities.usb_product,
-						 glob_usbid[0], glob_usbid[1]);
-
+				gp_log (GP_LOG_DEBUG, "main",
+					"Overriding USB vendor/product id "
+					"0x%x/0x%x with 0x%x/0x%x",
+					abilities.usb_vendor,
+					abilities.usb_product,
+					glob_usbid[0], glob_usbid[1]); 
 				abilities.usb_vendor  = glob_usbid[0];
 				abilities.usb_product = glob_usbid[1];
 				count++;
@@ -1384,7 +1352,8 @@ set_globals (void)
 		}
 
 		if (count) {
-			cli_debug_print ("%d override(s) done.", count);
+			gp_log (GP_LOG_DEBUG, "main",
+				"%d override(s) done.", count);
 			gp_abilities_list_free (al);
 			al = al_mod;
 			al_mod = NULL;
@@ -1488,12 +1457,11 @@ set_globals (void)
 	if (!strncmp (glob_port, "serial:", 7))
 	        CR (gp_camera_set_port_speed (glob_camera, glob_speed));
 
-	memset (&foreach_params, 0, sizeof (ForEachParams));
-	memset (&action_params,  0, sizeof (ActionParams));
-	foreach_params.camera  = action_params.camera  = glob_camera;
-	foreach_params.context = action_params.context = glob_context;
-	foreach_params.folder  = action_params.folder  = glob_folder;
-	foreach_params.flags   =                         glob_flags;
+	memset (&fparams, 0, sizeof (ForEachParams));
+	memset (&aparams,  0, sizeof (ActionParams));
+	fparams.camera  = aparams.camera  = glob_camera;
+	fparams.context = aparams.context = glob_context;
+	fparams.folder  = aparams.folder  = glob_folder;
 
         return (GP_OK);
 }
@@ -1701,7 +1669,6 @@ init_globals (void)
 
         glob_camera = NULL;
         glob_speed = 0;
-        glob_debug = 0;
         glob_quiet = 0;
 
 	glob_context = gp_context_new ();
@@ -1727,22 +1694,6 @@ init_globals (void)
 
 /* Misc functions                                                       */
 /* ------------------------------------------------------------------   */
-
-#ifndef DISABLE_DEBUGGING
-void
-cli_debug_print (char *format, ...)
-{
-        va_list         pvar;
-
-        if (glob_debug) {
-                fprintf(stderr, "cli: ");
-                va_start(pvar, format);
-                vfprintf(stderr, format, pvar);
-                va_end(pvar);
-                fprintf(stderr, "\n");
-        }
-}
-#endif
 
 void
 cli_error_print (char *format, ...)
@@ -1827,10 +1778,6 @@ main (int argc, char **argv)
         if (option_is_present ("q", argc, argv) == GP_OK)
                 glob_quiet = 1;
 
-        /* Peek ahead: Check to see if we need to turn on debugging output */
-        if (option_is_present ("debug", argc, argv) == GP_OK)
-                glob_debug = 1;
-
 #ifdef OS2 /*check if environment is set otherwise quit*/
         if(CAMLIBS==NULL)
         {
@@ -1865,9 +1812,9 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 	if ((option_is_present ("delete-all-files", argc, argv) == GP_OK) ||
 	    (option_is_present ("D", argc, argv) == GP_OK)) {
 		if (option_is_present ("recurse", argc, argv) == GP_OK)
-			glob_flags |= FOR_EACH_FLAGS_RECURSE;
+			fparams.flags |= FOR_EACH_FLAGS_RECURSE;
 		else
-			glob_flags &= ~FOR_EACH_FLAGS_RECURSE;
+			fparams.flags &= ~FOR_EACH_FLAGS_RECURSE;
 	}
 
 	/*
@@ -1876,9 +1823,9 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 	 */
 	if ((option_is_present ("delete-file", argc, argv) == GP_OK) ||
 	    (option_is_present ("d", argc, argv) == GP_OK))
-		glob_flags |= FOR_EACH_FLAGS_REVERSE;
+		fparams.flags |= FOR_EACH_FLAGS_REVERSE;
 	else
-		glob_flags &= ~FOR_EACH_FLAGS_REVERSE;
+		fparams.flags &= ~FOR_EACH_FLAGS_REVERSE;
 
 	/* Now actually do something. */
 	result = execute_options (argc, argv);
@@ -1891,7 +1838,7 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 			fprintf (stderr, _("*** Error ('%s') ***       \n\n"),
 				 gp_result_as_string (result));
 #ifndef DISABLE_DEBUGGING
-			if (!glob_debug) {
+			if (option_is_present ("debug", argc, argv) != GP_OK) {
 				int n;
 				printf (_(
 	"For debugging messages, please use the --debug option.\n"

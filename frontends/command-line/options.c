@@ -88,7 +88,6 @@ verify_options (int argc, char **argv)
         which = 0;
 
 	for (x=1; x<argc; x++) {
-		cli_debug_print("checking \"%s\": \n", argv[x]);
 		match = 0;
 		missing_arg = 0;
 		for (y=0; y<glob_option_count; y++) {

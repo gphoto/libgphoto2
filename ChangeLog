@@ -1,5 +1,9 @@
 2002-05-07  Lutz Müller <lutz@users.sourceforge.net>
 
+	* frontends/command-line: Remove more globals.
+
+2002-05-07  Lutz Müller <lutz@users.sourceforge.net>
+
 	* acconfig.h: #undef HAVE_PTHREAD
 	* configure.in: Check for pthread.
 	* frontends/command-line: Support for gp_camera_set_timeout_funcs.
