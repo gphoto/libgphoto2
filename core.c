@@ -39,6 +39,9 @@
 /* Core functions (for front-ends)
    ---------------------------------------------------------------- */
 
+int gp_camera_init (Camera *camera, CameraInit *init);
+int gp_camera_exit (Camera *camera);
+
 int gp_init (int debug) {
 
 	int x;
@@ -185,24 +188,27 @@ int gp_camera_new (Camera **camera, int camera_number, CameraPortSettings *setti
 
 	CameraInit ci;
 
-	*camera = (Camera*)malloc(sizeof(Camera));
-
 	if (camera_number >= glob_camera_count)
 		return (GP_ERROR);
 
+	*camera = (Camera*)malloc(sizeof(Camera));
+
 	/* Initialize the members */
 	strcpy((*camera)->model, glob_camera[camera_number].name);
-	strcpy((*camera)->folder, "/");
 	(*camera)->debug      = glob_debug;
-	(*camera)->number     = camera_number;
+	(*camera)->port	      = (CameraPortSettings*)malloc(sizeof(CameraPortSettings));
 	(*camera)->abilities  = (CameraAbilities*)malloc(sizeof(CameraAbilities));
 	(*camera)->functions  = (CameraFunctions*)malloc(sizeof(CameraFunctions));
 	(*camera)->library_handle  = NULL;
 	(*camera)->camlib_data     = NULL;
 	(*camera)->frontend_data   = NULL;
 
-	if (load_library(*camera, glob_camera[camera_number].name)==GP_ERROR)
+	memcpy((*camera)->port, settings, sizeof(CameraPortSettings));
+
+	if (load_library(*camera, glob_camera[camera_number].name)==GP_ERROR) {
+		gp_camera_free(*camera);
 		return (GP_ERROR);
+	}
 
 	/* Initialize the camera library */
 	if (glob_debug)
@@ -210,12 +216,29 @@ int gp_camera_new (Camera **camera, int camera_number, CameraPortSettings *setti
 			glob_camera[camera_number].name,
 			glob_camera[camera_number].library);
 	strcpy(ci.model, glob_camera[camera_number].name);
-	memcpy(&ci.port_settings, settings, sizeof(ci.port_settings));
+	memcpy(&ci.port_settings, settings, sizeof(CameraPortSettings));
 
-	if (gp_camera_init(*camera, &ci)==GP_ERROR)
+	if (gp_camera_init(*camera, &ci)==GP_ERROR) {
+		gp_camera_free(*camera);
+		*camera=NULL;
 		return (GP_ERROR);
+	}
 
 	return(GP_OK);
+}
+
+int gp_camera_free(Camera *camera) {
+
+	gp_camera_exit(camera);
+
+	if (camera->port)
+		free(camera->port);
+	if (camera->abilities)
+		free(camera->abilities);
+	if (camera->functions)
+		free(camera->functions);
+
+	return (GP_OK);	
 }
 
 int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortSettings *settings) {
@@ -288,7 +311,6 @@ int gp_camera_folder_set (Camera *camera, char *folder_path) {
 	if (camera->functions->folder_set(camera, folder_path) == GP_ERROR)
 		return (GP_ERROR);
 
-	strcpy(camera->folder, folder_path);
 	return(GP_OK);
 }
 
