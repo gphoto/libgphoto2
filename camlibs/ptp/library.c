@@ -207,6 +207,16 @@ set_mimetype (Camera *camera, CameraFile *file, unsigned short ofc)
 	CHECK (gp_file_set_mime_type (file, "application/x-unknown"));
 	return (GP_OK);
 }
+
+static void
+strcpy_mime(char * dest, unsigned short ofc) {
+	int i;
+
+	for (i = 0; object_formats[i].format_code; i++)
+		if (object_formats[i].format_code == ofc)
+			strcpy(dest, object_formats[i].txt);
+
+}
 	
 struct _CameraPrivateLibrary {
 	PTPParams params;
@@ -337,8 +347,6 @@ static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data)
 {
-// XXX Hacked version works properly for JPG files only!
-// Will be changed in future
 	Camera *camera = data;
 	unsigned char *fdata = NULL;
 	unsigned long image_id;
@@ -349,7 +357,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 
-	// Get image numer
+	// Get file numer
 	image_id = gp_filesystem_number (fs, folder, filename);
 
 	switch (type) {
@@ -379,7 +387,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	CHECK (set_mimetype (camera, file, ptp_objectinfo.ObjectFormat));
-	//CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
 	return (GP_OK);
 }
@@ -425,39 +432,49 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("  AssociationDesc: %d", oi.AssociationDesc);
 	GP_DEBUG ("  SequenceNumber: %d", oi.SequenceNumber);
 
-	info->preview.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
-				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TIME;
-	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
-				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TIME;
-	info->preview.size   = oi.ThumbCompressedSize;
-	info->preview.width  = oi.ThumbPixWidth;
-	info->preview.height = oi.ThumbPixHeight;
+	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE;
+
 	info->file.size   = oi.ObjectCompressedSize;
-	info->file.width  = oi.ImagePixWidth;
-	info->file.height = oi.ImagePixHeight;
+	strcpy_mime (info->file.type, oi.ObjectFormat);
 
-	ptp_getobjectcapturedate (&oi, capture_date);
-	strncpy (tmp, capture_date, 4);
-	tmp[4] = 0;
-	tm.tm_year=atoi (tmp) - 1900;
-	strncpy (tmp, capture_date + 4, 2);
-	tmp[2] = 0;
-	tm.tm_mon = atoi (tmp) - 1;
-	strncpy (tmp, capture_date + 6, 2);
-	tmp[2] = 0;
-	tm.tm_mday = atoi (tmp);
-	strncpy (tmp, capture_date + 9, 2);
-	tmp[2] = 0;
-	tm.tm_hour = atoi (tmp);
-	strncpy (tmp, capture_date + 11, 2);
-	tmp[2] = 0;
-	tm.tm_min = atoi (tmp);
-	strncpy (tmp, capture_date + 13, 2);
-	tmp[2] = 0;
-	tm.tm_sec = atoi (tmp);
-	info->file.time = mktime (&tm);
+	if ((oi.ObjectFormat & 0x0800) != 0) {
+		info->preview.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
+				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TIME|GP_FILE_INFO_TYPE;
+		strcpy_mime(info->preview.type, oi.ThumbFormat);
+		info->preview.size   = oi.ThumbCompressedSize;
+		info->preview.width  = oi.ThumbPixWidth;
+		info->preview.height = oi.ThumbPixHeight;
 
-	return (GP_OK);
+		info->file.fields = info->file.fields|GP_FILE_INFO_WIDTH|GP_FILE_INFO_HEIGHT|
+				GP_FILE_INFO_TIME;
+
+		info->file.size   = oi.ObjectCompressedSize;
+		info->file.width  = oi.ImagePixWidth;
+		info->file.height = oi.ImagePixHeight;
+		
+		ptp_getobjectcapturedate (&oi, capture_date);
+		strncpy (tmp, capture_date, 4);
+		tmp[4] = 0;
+		tm.tm_year=atoi (tmp) - 1900;
+		strncpy (tmp, capture_date + 4, 2);
+		tmp[2] = 0;
+		tm.tm_mon = atoi (tmp) - 1;
+		strncpy (tmp, capture_date + 6, 2);
+		tmp[2] = 0;
+		tm.tm_mday = atoi (tmp);
+		strncpy (tmp, capture_date + 9, 2);
+		tmp[2] = 0;
+		tm.tm_hour = atoi (tmp);
+		strncpy (tmp, capture_date + 11, 2);
+		tmp[2] = 0;
+		tm.tm_min = atoi (tmp);
+		strncpy (tmp, capture_date + 13, 2);
+		tmp[2] = 0;
+		tm.tm_sec = atoi (tmp);
+		info->file.time = mktime (&tm);
+	}
+
+		return (GP_OK);
 }
 
 int
