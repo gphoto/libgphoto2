@@ -641,7 +641,27 @@ typedef struct _PTPCANONFolderEntry PTPCANONFolderEntry;
 #define PTP_DPC_NIKON_LightMeter			0xD10a
 #define PTP_DPC_NIKON_ExposureAperatureLock(ReadOnly)	0xD111
 #define PTP_DPC_NIKON_MaximumShots			0xD103
-
+#define PTP_DPC_NIKON_Beep				0xD160
+#define PTP_DPC_NIKON_AFC				0xD161
+#define PTP_DPC_NIKON_AFLampOff				0xD163
+#define PTP_DPC_NIKON_PADVPMode				0xD164
+#define PTP_DPC_NIKON_ReviewOff				0xD165
+#define PTP_DPC_NIKON_GridDisplay			0xD16c
+#define PTP_DPC_NIKON_AFAreaIllumination		0xD166
+#define PTP_DPC_NIKON_FlashMode				0xD167
+#define PTP_DPC_NIKON_FlashPower			0xD16d
+#define PTP_DPC_NIKON_FlashSignOff			0xD169
+#define PTP_DPC_NIKON_RemoteTimeout			0xD16B
+#define PTP_DPC_NIKON_LowLight				0xD1B0
+#define PTP_DPC_NIKON_ImageCommentString		0xD090
+#define PTP_DPC_NIKON_FlashOpen				0xD1C0
+#define PTP_DPC_NIKON_FlashCharged			0xD1C1
+#define PTP_DPC_NIKON_LensID				0xD0E0
+#define PTP_DPC_NIKON_FocalLengthMin			0xD0E3
+#define PTP_DPC_NIKON_FocalLengthMax			0xD0E4
+#define PTP_DPC_NIKON_MaxApAtMinFocalLength		0xD0E5
+#define PTP_DPC_NIKON_MaxApAtMaxFocalLength		0xD0E6
+#define PTP_DPC_NIKON_FlashExposureCompensation		0xD126
 
 /* Device Property Form Flag */
 
@@ -821,5 +841,9 @@ void ptp_perror			(PTPParams* params, uint16_t error);
 
 const char*
 ptp_get_property_description(PTPParams* params, uint16_t dpc);
+
+int
+ptp_render_property_value(PTPParams* params, uint16_t dpc,
+                          PTPDevicePropDesc *dpd, int length, char *out);
 
 #endif /* __PTP_H__ */

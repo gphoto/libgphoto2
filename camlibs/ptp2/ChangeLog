@@ -1,7 +1,17 @@
+2005-01-24  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c, ptp.c, ptp.h:
+        Merged Nikon property dumping patch from
+	Steve Harris <steve@totl.net>
+
 2005-01-23  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c, ptp.h: Added ptp_event_issupported helper
           function.
+
+	* library.c: Canon IXUS 2 (and some other IXUSs) 
+	  send ObjectRemoved events on deleteobject. We need
+	  to read them or we hang the communication.
 
 2005-01-21  Marcus Meissner  <marcus@jet.franken.de>
 

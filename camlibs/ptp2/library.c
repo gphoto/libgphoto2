@@ -1027,7 +1027,18 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			break;
 		}
 		txt += strlen (txt);
-		_value_to_str (&dpd.CurrentValue, dpd.DataType, txt);
+		ptp_render_property_value(params, dpc, &dpd, sizeof(summary->text) - strlen(summary->text) - 1, txt);
+		if (strlen(txt)) {
+			txt += strlen (txt);
+			sprintf(txt, " (");
+			txt+=2;
+			_value_to_str (&dpd.CurrentValue, dpd.DataType, txt);
+			txt += strlen (txt);
+			sprintf(txt, ")");
+			txt++;
+		} else {
+			_value_to_str (&dpd.CurrentValue, dpd.DataType, txt);
+		}
 		txt += strlen(txt);
 		sprintf(txt,"\n");
 		txt += strlen(txt);
@@ -2116,6 +2127,30 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	CPR (context, ptp_deleteobject(&camera->pl->params,
 		camera->pl->params.handles.Handler[object_id],0));
 
+	/* disabled currently */
+#if 0 
+	/* Needed for Canon IXUS 2 at least, but not for Kodak CX 6230, nor Nikon
+	 * CoolPix 2500. 
+	 * The documentation is not clear on whether this event is sent or not,
+	 * I read it that it is sent when the file vanishes through external
+	 * influences.
+	 * this fix 
+	 */
+	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
+		if (ptp_event_issupported(&camera->pl->params, PTP_OC_DeleteObject)) {
+			PTPContainer event;
+			int ret;
+
+			do {
+				ret = ptp_usb_event_wait (&camera->pl->params, &event);
+				if (	(ret == PTP_RC_OK) &&
+					(event.Code == PTP_EC_ObjectRemoved)
+				)
+					break;
+			} while (ret == PTP_RC_OK);
+		}
+ 	}
+#endif
 	return (GP_OK);
 }
 
