@@ -5,8 +5,7 @@
 
 bin_SCRIPTS = gphoto2-config
 
-EXTRA_DIST = HACKING MAINTAINERS autogen.sh \
-	makefile.os2 os2mak.inc TESTERS
+EXTRA_DIST = HACKING MAINTAINERS makefile.os2 os2mak.inc TESTERS
 
 SUBDIRS = 			\
 	libgphoto2_port 	\
