@@ -113,16 +113,17 @@ int gp_filesystem_delete (CameraFilesystem *fs, char *folder, char *filename) {
 				shift = 1;
 			if ((shift)&&(y<fs->folder[x]->count-1))
 				memcpy( &fs->folder[x]->file[y],
-					&fs->folder[x]->file[y+1], 
-					sizeof(CameraFilesystemFile));
+					&fs->folder[x]->file[y+1],
+					sizeof(fs->folder[x]->file[y]));
 		}
+		if (shift)
+			fs->folder[x]->count -= 1;
 	   }
 	}
 
 	if (!shift)
 		return (GP_ERROR);
 
-	fs->count -= 1;
 	return (GP_OK);
 
 }
