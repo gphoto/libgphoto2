@@ -142,7 +142,12 @@ camera_abilities (CameraAbilitiesList *list)
 			GP_OPERATION_CAPTURE_PREVIEW;
 #endif
 		a.folder_operations =
-			GP_FOLDER_OPERATION_PUT_FILE | GP_FOLDER_OPERATION_MAKE_DIR |
+#ifdef EXPERIMENTAL_UPLOAD
+			GP_FOLDER_OPERATION_PUT_FILE 
+#else
+			(models[i].serial_support?GP_FOLDER_OPERATION_PUT_FILE:0)
+#endif
+			| GP_FOLDER_OPERATION_MAKE_DIR |
 			GP_FOLDER_OPERATION_REMOVE_DIR;
 		a.file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 		gp_abilities_list_append (list, a);
