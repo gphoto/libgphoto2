@@ -99,7 +99,7 @@ g3_channel_read_bytes(
 		int rest = expected;
 		if (rest > 65536) rest = 65536;
 
-		ret = gp_port_read(port, xbuf, rest + 12);
+		ret = gp_port_read(port, xbuf, (rest + 9 + 3) & ~3);
 		if (ret < GP_OK) {
 			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
 			return ret;
