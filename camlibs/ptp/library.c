@@ -581,7 +581,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_PREVIEW:
 		/* Don't allow to get thumb of nonimage objects! */
 		if ((oi->ObjectFormat & 0x0800) == 0) return (GP_ERROR_NOT_SUPPORTED);
-		size=oi->ThumbCompressedSize;
+		/* if no thumb, for some reason */
+		if((size=oi->ThumbCompressedSize)==0) return (GP_ERROR_NOT_SUPPORTED);
 		fdata=malloc(size+PTP_REQ_HDR_LEN);
 		CPR_free (context, ptp_getthumb(&camera->pl->params,
 			camera->pl->params.handles.handler[object_id],
@@ -641,7 +642,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	oi.Filename=(char *)filename;
 	oi.ObjectFormat=get_mimetype(camera, file);
 	oi.ObjectCompressedSize=size;
-	gp_file_get_mtime(file, &oi.CaptureDate);
+	gp_file_get_mtime(file, &oi.ModificationDate);
 	CPR (context, ptp_ek_sendfileobjectinfo (&camera->pl->params,
 		&store, &parent, &handle, &oi));
 	fdata=malloc(size+PTP_REQ_HDR_LEN);
@@ -692,25 +693,26 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	oi=&camera->pl->params.objectinfo[object_id];
 /*	GP_DEBUG ("ObjectInfo for '%s':");
-	GP_DEBUG ("  StorageID: %d", oi.StorageID);
-	GP_DEBUG ("  ObjectFormat: %d", oi.ObjectFormat);
-	GP_DEBUG ("  ObjectCompressedSize: %d", oi.ObjectCompressedSize);
-	GP_DEBUG ("  ThumbFormat: %d", oi.ThumbFormat);
-	GP_DEBUG ("  ThumbCompressedSize: %d", oi.ThumbCompressedSize);
-	GP_DEBUG ("  ThumbPixWidth: %d", oi.ThumbPixWidth);
-	GP_DEBUG ("  ThumbPixHeight: %d", oi.ThumbPixHeight);
-	GP_DEBUG ("  ImagePixWidth: %d", oi.ImagePixWidth);
-	GP_DEBUG ("  ImagePixHeight: %d", oi.ImagePixHeight);
-	GP_DEBUG ("  ImageBitDepth: %d", oi.ImageBitDepth);
-	GP_DEBUG ("  ParentObject: %d", oi.ParentObject);
-	GP_DEBUG ("  AssociationType: %d", oi.AssociationType);
-	GP_DEBUG ("  AssociationDesc: %d", oi.AssociationDesc);
-	GP_DEBUG ("  SequenceNumber: %d", oi.SequenceNumber);
+	GP_DEBUG ("  StorageID: %d", oi->StorageID);
+	GP_DEBUG ("  ObjectFormat: %d", oi->ObjectFormat);
+	GP_DEBUG ("  ObjectCompressedSize: %d", oi->ObjectCompressedSize);
+	GP_DEBUG ("  ThumbFormat: %d", oi->ThumbFormat);
+	GP_DEBUG ("  ThumbCompressedSize: %d", oi->ThumbCompressedSize);
+	GP_DEBUG ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
+	GP_DEBUG ("  ThumbPixHeight: %d", oi->ThumbPixHeight);
+	GP_DEBUG ("  ImagePixWidth: %d", oi->ImagePixWidth);
+	GP_DEBUG ("  ImagePixHeight: %d", oi->ImagePixHeight);
+	GP_DEBUG ("  ImageBitDepth: %d", oi->ImageBitDepth);
+	GP_DEBUG ("  ParentObject: %d", oi->ParentObject);
+	GP_DEBUG ("  AssociationType: %d", oi->AssociationType);
+	GP_DEBUG ("  AssociationDesc: %d", oi->AssociationDesc);
+	GP_DEBUG ("  SequenceNumber: %d", oi->SequenceNumber);
 */
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE;
 
 	info->file.size   = oi->ObjectCompressedSize;
 	strcpy_mime (info->file.type, oi->ObjectFormat);
+	info->file.mtime = oi->ModificationDate;
 
 	if ((oi->ObjectFormat & 0x0800) != 0) {
 		info->preview.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
@@ -727,7 +729,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		info->file.width  = oi->ImagePixWidth;
 		info->file.height = oi->ImagePixHeight;
-		info->file.mtime = oi->CaptureDate;
 	}
 
 		return (GP_OK);

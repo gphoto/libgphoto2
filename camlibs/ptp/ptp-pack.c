@@ -64,6 +64,29 @@ dtoh32ap (PTPParams *params, char *a)
 #define dtoh16(x)	dtoh16p(params,x)
 #define dtoh32(x)	dtoh32p(params,x)
 
+
+static inline char*
+ptp_unpack_string(PTPParams *params, PTPReq *req, uint16_t offset, uint8_t *len)
+{
+	int i;
+	char *string;
+
+	*len=dtoh8a(&req->data[offset]);
+	string=malloc(*len);
+	memset(string, 0, *len);
+	for (i=0;i<*len && i< MAXFILENAMELEN; i++) {
+		string[i]=(char)dtoh16a(&req->data[offset+i*2+1]);
+	}
+	// be paranoid! :)
+	string[*len]=0;
+	return (string);
+}
+
+#define PTP_di_StandardVersion		 0
+#define PTP_di_VendorExtensionID	 2
+#define PTP_di_VendorExtensionVersion	 6
+#define PTP_di_VendorExtensionDesc	 8
+
 #define PTP_oi_StorageID		 0
 #define PTP_oi_ObjectFormat		 4
 #define PTP_oi_ProtectionStatus		 6
@@ -87,9 +110,10 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 {
 	int i;
 	uint8_t filenamelen;
-	uint8_t capturedatelen;
+	uint8_t capturedatelen=0;
+#if 0
 	char *capture_date="20020101T010101"; // XXX Fake date
-
+#endif
 	memset (req, 0, sizeof(PTPReq));
 	htod32a(&req->data[PTP_oi_StorageID],oi->StorageID);
 	htod16a(&req->data[PTP_oi_ObjectFormat],oi->ObjectFormat);
@@ -118,6 +142,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 	 * for example Kodak sets Capture date on the basis of EXIF data.
 	 * Spec says that this field is from perspective of Initiator.
 	 */
+#if 0	// seems now we don't need to data packed in OI dataset... for now ;)
 	capturedatelen=strlen(capture_date);
 	htod8a(&req->data[PTP_oi_Filename+(filenamelen+1)*2],
 		capturedatelen+1);
@@ -130,7 +155,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 		req->data[PTP_oi_Filename+(i+filenamelen+capturedatelen+2)*2+2]=
 		  capture_date[i];
 	}
-
+#endif
 	// XXX this function should return dataset length
 
 	return (PTP_oi_Filename+(filenamelen+1)*2+(capturedatelen+1)*4);
@@ -139,7 +164,6 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 static inline void
 ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 {
-	int i;
 	uint8_t filenamelen;
 	uint8_t capturedatelen;
 	char *capture_date;
@@ -161,28 +185,13 @@ ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 	oi->AssociationType=dtoh16a(&req->data[PTP_oi_AssociationType]);
 	oi->AssociationDesc=dtoh32a(&req->data[PTP_oi_AssociationDesc]);
 	oi->SequenceNumber=dtoh32a(&req->data[PTP_oi_SequenceNumber]);
+	oi->Filename= ptp_unpack_string(params, req, PTP_oi_filenamelen, &filenamelen);
 
-	filenamelen=dtoh8a(&req->data[PTP_oi_filenamelen]);
-	oi->Filename=malloc(filenamelen);
-	memset(oi->Filename, 0, filenamelen);
-	for (i=0;i<filenamelen && i< MAXFILENAMELEN; i++) {
-		oi->Filename[i]=(char)dtoh16a(&req->data[PTP_oi_Filename+i*2]);
-	}
-	// be paranoid! :)
-	oi->Filename[filenamelen]=0;
-
-
-	capturedatelen=dtoh8a(&req->data[PTP_oi_Filename+filenamelen*2]);
-	capture_date=malloc(capturedatelen);
-	memset(capture_date, 0, capturedatelen);
-	for (i=0;i<capturedatelen && i< MAXFILENAMELEN; i++ ) {
-		capture_date[i]=(char)dtoh16a(&req->data[PTP_oi_Filename+(i+filenamelen)*2+1]);
-	}
-
+	capture_date = ptp_unpack_string(params, req, PTP_oi_filenamelen+filenamelen*2+1, &capturedatelen);
 	// subset of ISO 8601, without '.s' tenths of second and
 	// time zone
+	if (capturedatelen>15)
 	{
-	if (capturedatelen<16) return;
 	strncpy (tmp, capture_date, 4);
 	tmp[4] = 0;
 	tm.tm_year=atoi (tmp) - 1900;
@@ -203,6 +212,33 @@ ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 	tm.tm_sec = atoi (tmp);
 	oi->CaptureDate=mktime (&tm);
 	}
+
+	// now it's modification date ;)
+	capture_date = ptp_unpack_string(params, req, PTP_oi_filenamelen+filenamelen*2
+		+capturedatelen*2+2,&capturedatelen);
+	if (capturedatelen>15)
+	{
+	strncpy (tmp, capture_date, 4);
+	tmp[4] = 0;
+	tm.tm_year=atoi (tmp) - 1900;
+	strncpy (tmp, capture_date + 4, 2);
+	tmp[2] = 0;
+	tm.tm_mon = atoi (tmp) - 1;
+	strncpy (tmp, capture_date + 6, 2);
+	tmp[2] = 0;
+	tm.tm_mday = atoi (tmp);
+	strncpy (tmp, capture_date + 9, 2);
+	tmp[2] = 0;
+	tm.tm_hour = atoi (tmp);
+	strncpy (tmp, capture_date + 11, 2);
+	tmp[2] = 0;
+	tm.tm_min = atoi (tmp);
+	strncpy (tmp, capture_date + 13, 2);
+	tmp[2] = 0;
+	tm.tm_sec = atoi (tmp);
+	oi->ModificationDate=mktime (&tm);
+	}
+
 	
 	free(capture_date);
 }
