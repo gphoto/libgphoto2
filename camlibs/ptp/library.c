@@ -146,7 +146,7 @@ static struct {
 	{"Kodak DC-4800", 0x40a, 0x160},
 	{"Kodak DX-3500", 0x40a, 0x500},
 	{"Kodak DX-3600", 0, 0},
-	{"Kodak DX-3900", 0, 0},
+	{"Kodak DX-3900", 0x40a, 0x170},
 	{"Kodak MC3", 0, 0},
 	{"Sony DSC-P5", 0, 0},
 	{"Sony DSC-F707", 0, 0},
@@ -341,6 +341,17 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 }
 
 static int
+set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+		CameraFileInfo *info, void *data)
+{
+//	Camera *camera = data;
+//	PTPObjectInfo objectinfo;
+//	int n;
+
+	return (GP_ERROR);
+}
+
+static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data)
 {
@@ -444,7 +455,7 @@ camera_init (Camera *camera)
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
 					  NULL, camera));
 	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-					  NULL, camera));
+					  set_info_func, camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 					  delete_file_func, camera));
 	CR (gp_filesystem_set_folder_funcs (camera->fs, NULL,

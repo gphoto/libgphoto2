@@ -44,8 +44,6 @@
 #  define N_(String) (String)
 #endif
 
-#define CR(p) {short ret = (p); if (ret != PTP_RC_OK) return (ret);}
-
 static void
 ptp_debug (PTPParams *params, const char *format, ...)
 {  
@@ -152,7 +150,7 @@ ptp_getresp(PTPParams* params, PTPReq* databuf)
 	return ret;
 }
 
-// Iniciates connection with device, opens session
+// Iniciates connection with device
 
 #if 0
 short

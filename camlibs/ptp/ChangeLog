@@ -1,3 +1,6 @@
+2001-12-02  Mariusz Woloszyn
+	* library.c: Updatet vendor & product numbers for Kodak DX-3900.
+
 2001-12-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* library.c: Fix warning
