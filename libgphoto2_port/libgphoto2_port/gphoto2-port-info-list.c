@@ -157,45 +157,63 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 	return (list->count - 1 - generic);
 }
 
-#define UGLY_HACK /* E-mail <lutz@users.sourceforge.net> for infos. */
-
 #ifdef HAVE_LTDL
-
-#define MAX_COUNT 8
-typedef struct _LibrariesList LibrariesList;
-struct _LibrariesList {
-#ifdef UGLY_HACK
-	unsigned char first;
-#endif
-	unsigned int count;
-	char path[MAX_COUNT][1024];
-};
-
-#ifdef UGLY_HACK
-static LibrariesList backup;
-#endif
 
 static int
 foreach_func (const char *filename, lt_ptr data)
 {
-	LibrariesList *list = data;
+	GPPortInfoList *list = data;
+	lt_dlhandle lh;
+	GPPortLibraryType lib_type;
+	GPPortLibraryList lib_list;
+	GPPortType type;
+	unsigned int j, old_size = list->count;
+	int result;
 
-	if (list->count >= MAX_COUNT)
-		return (GP_ERROR_NO_MEMORY);
-
-	strncpy (list->path[list->count], filename,
-		 sizeof (list->path[list->count]));
-	list->count++;
-
-#ifdef UGLY_HACK
-	if (list->first) {
-		memset (&backup, 0, sizeof (backup));
-		list->first = 0;
+	lh = lt_dlopenext (filename);
+	if (!lh) {
+		gp_log (GP_LOG_DEBUG, "gp-port-info-list",
+			"Could not load '%s': '%s'.", filename, lt_dlerror ());
+		return (0);
 	}
-	backup.count = list->count;
-	strncpy (backup.path[list->count - 1], filename,
-		 sizeof (list->path[list->count - 1]) - 1);
-#endif
+
+	lib_type = lt_dlsym (lh, "gp_port_library_type");
+	lib_list = lt_dlsym (lh, "gp_port_library_list");
+	if (!lib_type || !lib_list) {
+		gp_log (GP_LOG_DEBUG, "gp-port-info-list",
+			"Could not find some functions in '%s': '%s'.",
+			filename, lt_dlerror ());
+		lt_dlclose (lh);
+		return (0);
+	}
+
+	type = lib_type ();
+	for (j = 0; j < list->count; j++)
+		if (list->info[j].type == type)
+			break;
+	if (j != list->count) {
+		gp_log (GP_LOG_DEBUG, "gp-port-info-list",
+			"'%s' already loaded", filename);
+		lt_dlclose (lh);
+		return (0);
+	}
+
+	result = lib_list (list);
+	lt_dlclose (lh);
+	if (result < 0) {
+		gp_log (GP_LOG_DEBUG, "gp-port-info-list",
+			"Could not load list: '%s'.",
+			gp_port_result_as_string (result));
+		return (0);
+	}
+
+	for (j = old_size; j < list->count; j++){
+		gp_log (GP_LOG_DEBUG, "gp-port-info-list",
+			"Loaded '%s' ('%s') from '%s'.",
+			list->info[j].name, list->info[j].path,
+			filename);
+		strcpy (list->info[j].library_filename, filename);
+	}
 
 	return (0);
 }
@@ -215,16 +233,13 @@ foreach_func (const char *filename, lt_ptr data)
 int
 gp_port_info_list_load (GPPortInfoList *list)
 {
-	int i, result;
+	int result;
+#ifndef HAVE_LTDL
+	int i;
 	GPPortLibraryType lib_type;
 	GPPortLibraryList lib_list;
 	GPPortType type;
 	unsigned int old_size = list->count;
-#ifdef HAVE_LTDL
-	LibrariesList flist;
-	lt_dlhandle lh;
-	int j;
-#else
 	GP_SYSTEM_DIR d;
 	GP_SYSTEM_DIRENT de;
 	char path[1024];
@@ -237,74 +252,13 @@ gp_port_info_list_load (GPPortInfoList *list)
 		"from '" IOLIBS "'...");
 
 #ifdef HAVE_LTDL
-	flist.count = 0;
-#ifdef UGLY_HACK
-	flist.first = 1;
-#endif
 	lt_dlinit ();
 	lt_dladdsearchdir (IOLIBS);
-	result = lt_dlforeachfile (IOLIBS, foreach_func, &flist);
+	result = lt_dlforeachfile (IOLIBS, foreach_func, list);
 	lt_dlexit ();
 	if (result < 0)
 		return (result);
 
-#ifdef UGLY_HACK
-	if (!flist.count && backup.count)
-		memcpy (&flist, &backup, sizeof (backup));
-#endif
-	gp_log (GP_LOG_DEBUG, "gp-port-info-list", "Found %i IO-driver(s).",
-		flist.count);
-
-	lt_dlinit ();
-	for (i = 0; i < flist.count; i++) {
-		lh = lt_dlopenext (flist.path[i]);
-		if (!lh) {
-			gp_log (GP_LOG_DEBUG, "gp-port-info-list",
-				"Could not load '%s': '%s'.", flist.path[i],
-				lt_dlerror ());
-			continue;
-		}
-
-		lib_type = lt_dlsym (lh, "gp_port_library_type");
-		lib_list = lt_dlsym (lh, "gp_port_library_list");
-		if (!lib_type || !lib_list) {
-			gp_log (GP_LOG_DEBUG, "gp-port-info-list",
-				"Could not find some functions in '%s': '%s'.",
-				flist.path[i], lt_dlerror ());
-			lt_dlclose (lh);
-			continue;
-		}
-
-		type = lib_type ();
-		for (j = 0; j < list->count; j++)
-			if (list->info[j].type == type)
-				break;
-		if (j != list->count) {
-			gp_log (GP_LOG_DEBUG, "gp-port-info-list",
-				"'%s' already loaded", flist.path[j]);
-			lt_dlclose (lh);
-			continue;
-		}
-
-		result = lib_list (list);
-		lt_dlclose (lh);
-		if (result < 0) {
-			gp_log (GP_LOG_DEBUG, "gp-port-info-list",
-				"Could not load list: '%s'.",
-				gp_port_result_as_string (result));
-			continue;
-		}
-
-		for (j = old_size; j < list->count; j++){
-			gp_log (GP_LOG_DEBUG, "gp-port-info-list",
-				"Loaded '%s' ('%s') from '%s'.",
-				list->info[j].name, list->info[j].path,
-				flist.path[i]);
-			strcpy (list->info[j].library_filename, flist.path[i]);
-		}
-		old_size = list->count;
-	}
-	lt_dlexit ();
 #else
 	d = GP_SYSTEM_OPENDIR (IOLIBS);
         if (!d) {
