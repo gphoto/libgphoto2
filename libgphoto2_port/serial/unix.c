@@ -261,7 +261,6 @@ gp_port_serial_lock (gp_port *dev)
 		if (pid == 0 || (kill (pid, 0) == -1 && errno == ESRCH)) {
 			if (unlink (handle->lock_file) == 0) {
 				gp_port_debug_printf (GP_DEBUG_LOW,
-						      dev->debug_level,
 						      "Removed stale lock on "
 						      "'%s' (pid %d).", port,
 						      pid);
