@@ -275,6 +275,8 @@ static struct {
 	{"Sony:DSC-V1 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e},
 
+	{"Sony:DSC-P10 (PTP mode)",   0x054c, 0x0010},
+
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
