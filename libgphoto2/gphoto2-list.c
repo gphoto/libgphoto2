@@ -123,7 +123,7 @@ gp_list_reset (CameraList *list)
 {
 	CHECK_NULL (list);
 
-	gp_list_reset (list);
+	list->count = 0;
 
 	return (GP_OK);
 }
