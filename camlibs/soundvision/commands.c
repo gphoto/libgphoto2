@@ -3,8 +3,9 @@
  *
  *  Command set for the soundvision cameras
  *
- * Copyright 2001-2002 Vince Weaver <vince@deater.net>
+ * Copyright 2001-2003 Vince Weaver <vince@deater.net>
  */
+
 #include "config.h"
 
 #include <stdio.h>
@@ -47,8 +48,8 @@ int32_t soundvision_send_file_command(const char *filename,
     uint8_t file_cmd[16];
     int result;
    
-    htole32a(&file_cmd[0],0xc);       /* Length is "C" little-endian 32 bits */
-    strncpy(&file_cmd[4],filename,12);/* Filename is 12 bytes at the end */
+    htole32a(&file_cmd[0],0xc);        /* Length is 12 little-endian 32 bits */
+    strncpy(&file_cmd[4],filename,12); /* Filename is 12 bytes at the end */
 					  
     result=gp_port_write(dev->gpdev,(char *)&file_cmd,sizeof(file_cmd));
     if (result<0) return result;
@@ -62,65 +63,114 @@ int32_t soundvision_read(CameraPrivateLibrary *dev, void *buffer, int len) {
 }
 
 
-int soundvision_reset(CameraPrivateLibrary *dev) {
-    int ret;
+       /* Reset the camera */
+int soundvision_reset(CameraPrivateLibrary *dev,char *revision, char *status) {
    
-    ret=soundvision_send_command(SOUNDVISION_RESET,0,dev);
-    if (ret<0) return ret;
+    int ret,attempts=0;
+  
+retry_reset:   
+   
+        /* This prevents lockups on tiger !!!! */
+    ret=soundvision_send_command(SOUNDVISION_START_TRANSACTION,0,dev);
+    if (ret<0) goto reset_error;
+   
+       /* First get firmware revision */
+    ret=soundvision_get_revision(dev,revision);
+   
+       /* If camera out of whack, this is where it will hang   */
+       /* If we retry a few times usually after a few timeouts */
+       /* It will get going again                              */
+    if (ret<0) {
+       if (attempts<2) {
+          attempts++;
+          goto retry_reset;
+       }
+       else goto reset_error;
+    }
+   
+
+       /* Dshot 3 camera does 2 extra steps    */
+       /* Seems to enable extra info in status */
+       /* What does it do?  It works w/o it    */
+       /* And other tiger cameras might not    */
+       /* need it.                             */
+#if 0   
+    if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) {
+
+       char result[12];       
+       
+          /* What does 0x405 signify? */
+       ret=soundvision_send_command(SOUNDVISION_SETPC2,0x405,dev);
+       if (ret<0) goto reset_error;
+   
+       ret=soundvision_send_command(SOUNDVISION_INIT2,0,dev);
+       if (ret<0) goto reset_error;
+   
+          /* Read returned value.  Why 0x140,0xf,0x5 ? */
+       ret = soundvision_read(dev, &result, sizeof(result));
+       if (ret<0) goto reset_error;    
+    }
+#endif
+   
+       /* Read the status registers */
+    dev->reset_times++;
+    ret=soundvision_get_status(dev,status);
+    if (ret<0) goto reset_error;
    
     return GP_OK;
+   
+reset_error:
+   
+    GP_DEBUG("Error in soundvision_reset\n");
+    return ret;
+   
 }
 
 int soundvision_get_revision(CameraPrivateLibrary *dev, char *revision) {
  
     int ret;
-    char version[8];
-    /* uint32_t temp; */
-   
-    ret = soundvision_send_command(SOUNDVISION_DONE_TRANSACTION,0,dev);
+    char version[9];
    
     ret = soundvision_send_command(SOUNDVISION_GET_VERSION,0,dev);
     if (ret<0) return ret;
    
-    ret = soundvision_read(dev, &version, sizeof(version));
+    ret = soundvision_read(dev, &version, sizeof(version)-1);
     if (ret<0) return ret;
    
-    strncpy(revision,version,8);
+       /* If null we don't care */
+    if (revision!=NULL) {
+       strncpy(revision,version,8);
+       revision[8]=0;
+    }
    
-    ret=soundvision_reset(dev);
-    if (ret<0) return ret;
-   
-/*    ret = soundvision_read(dev, &temp, sizeof(temp));        
-    if (ret<0) return ret;    */
-    
     return GP_OK;
 }
 
 
-    /* Status is a 60 byte array.  I have no clue what it does */
-int soundvision_get_status(CameraPrivateLibrary *dev, int *taken,
-        int *available, int *rawcount) {
+    /* Status is a 96 byte array.         */
+    /* Haven't been able to decode it yet */
+    /* It changes with every read  though */
+int soundvision_get_status(CameraPrivateLibrary *dev, char *status) {
 
     uint8_t ss[0x60];
     int32_t ret;
 
-   
     ret=soundvision_send_command(SOUNDVISION_STATUS, 0, dev);
-   
-    if (ret < 0) {
-       fprintf(stderr, "soundvision_get_storage_status: error sending command\n");
-       return ret;
-    }
+    if (ret < 0) goto get_status_error;
 
     ret = soundvision_read(dev, (unsigned char *)&ss, sizeof(ss));
-    if (ret < 0) {
-       fprintf(stderr, "soundvision_get_storage_status: error getting count\n");
-       return ret;
+    if (ret < 0) goto get_status_error;
+      
+    if (status!=NULL) {
+       memcpy(status,ss,0x60);
     }
-       
-    soundvision_reset(dev); 
    
     return GP_OK;
+   
+get_status_error:
+    GP_DEBUG("Error getting camera status\n");
+    return ret;
+   
 }
 
 int soundvision_photos_taken(CameraPrivateLibrary *dev) {
@@ -129,285 +179,98 @@ int soundvision_photos_taken(CameraPrivateLibrary *dev) {
     uint32_t numpics;
 
     ret=soundvision_send_command(SOUNDVISION_GET_NUM_PICS, 0, dev);
-
-    if (ret < 0) {
-       fprintf(stderr, "soundvision_get_storage_status: error sending command\n");
-       return ret;
-    }
+    if (ret < 0) goto error_photos_taken;
 
     ret = soundvision_read(dev, &numpics, sizeof(numpics));
-    if (ret < 0) {
-       fprintf(stderr, "soundvision_get_storage_status: error getting count\n");
-       return ret;
-    }
+    if (ret < 0) goto error_photos_taken;
+   
     return le32toh(numpics);
-
+   
+error_photos_taken:
+    GP_DEBUG("Error getting number of photos taken.\n");
+    return ret;
+   
 }
 
 
 int soundvision_get_file_list(CameraPrivateLibrary *dev) {
 
-    char *buffer;
-    int32_t ret, taken, buflen;
-
-    
-    /* It seems we need to do a "reset" packet before reading names?? */
+    int result;
    
-    soundvision_reset(dev);
+    if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) {
+       result=tiger_get_file_list(dev);
+    }
+    else {
+       result=agfa_get_file_list(dev);
+    }
    
-    if ( (taken=soundvision_photos_taken(dev)) < 0)
-       return taken;
-   
-    dev->num_pictures = taken;
-
-    
-    buflen = (taken * 13)+1;  /* 12 char filenames and space for each */
-                              /* plus trailing NULL */
-    
-    buffer = malloc(buflen);
-        
-    if (!buffer) {
-       GP_DEBUG("Could not allocate %i bytes!",
-		       buflen);
-       return GP_ERROR_NO_MEMORY;
-    }
-
-    ret=soundvision_send_command(SOUNDVISION_GET_NAMES, buflen, dev);
-    if (ret < 0) {
-       free(buffer);
-       return ret;
-    }
-
-    ret = soundvision_read(dev, (void *)buffer, buflen);
-    if (ret < 0) {
-       free(buffer);
-       return ret;
-    }
-
-    if (dev->file_list) free(dev->file_list);
-
-    dev->file_list = malloc(taken * 13);
-    if (!dev->file_list) {
-       GP_DEBUG("Could not allocate %i bytes!",
-		       taken*13);
-       free(buffer);
-       return (GP_ERROR_NO_MEMORY);
-    }
-
-    memcpy(dev->file_list, buffer, taken * 13);
-    free(buffer);
-
-#if 0
-    taken=soundvision_photos_taken(dev);
-    soundvision_get_thumb_size(dev,dev->file_list);
-#endif 
-    return GP_OK;
+    return result;
+         
 }
 
 int soundvision_get_thumb_size(CameraPrivateLibrary *dev, const char *filename) {
  
-    int32_t ret,temp;
-    uint32_t size; 
+    int32_t ret;
+
+    if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) 
+       ret=tiger_get_thumb_size(dev,filename);
+    else
+       ret=agfa_get_thumb_size(dev,filename);
    
-    ret=soundvision_send_command(SOUNDVISION_GET_THUMB_SIZE,0,dev);
-    if (ret<0) return ret;
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
-    if (ret<0) return ret;
-       
-    soundvision_send_file_command(filename,dev);
-    if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, &size, sizeof(size));        
-    if (ret<0) return ret;
-    
-    return le32toh(size);
+    return ret;
    
 }
 
 int soundvision_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
 
-    int32_t ret,temp; 
+    int32_t ret; 
+
+    if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) 
+       ret=tiger_get_thumb(dev,filename,data,size);
+    else
+       ret=agfa_get_thumb(dev,filename,data,size);
    
-    ret = soundvision_send_command(SOUNDVISION_GET_THUMB,0,dev);
-    if (ret<0) return ret;
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
-    if (ret<0) return ret;
-       
-    ret=soundvision_send_file_command(filename,dev);
-    if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, data, size);        
-    if (ret<0) return ret;
-#if 0
-           /* Is this needed? */
-        soundvision_photos_taken(dev,&ret);
-   
-        ret=soundvision_send_command(SOUNDVISION_END_OF_THUMB,0,dev);
-        if (ret<0) return ret;
-   
-        ret = soundvision_read(dev, temp_string, 8);        
-        if (ret<0) return ret;   
-#endif   
-   
-    return GP_OK;
+    return ret;
    
 }
 
 int soundvision_get_pic_size(CameraPrivateLibrary *dev, const char *filename) {
  
-    int32_t ret,temp;
-    uint32_t size; 
+    int32_t ret;
+
+    if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) 
+       ret=tiger_get_pic_size(dev,filename);
+    else
+       ret=agfa_get_pic_size(dev,filename);
    
-    ret=soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
-    if (ret<0) return ret;
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
-    if (ret<0) return ret;
-    
-    ret=soundvision_send_file_command(filename,dev);
-    if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, &size, sizeof(size));        
-    if (ret<0) return ret;
-    
-    return le32toh(size);
+    return ret;
    
 }
 
 int soundvision_get_pic(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
    
-    int32_t ret,temp; 
+    int32_t ret; 
    
-    ret = soundvision_send_command(SOUNDVISION_GET_PIC,0,dev);
-    if (ret<0) return ret;
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
-    if (ret<0) return ret;
-    
-    ret=soundvision_send_file_command(filename,dev);
-    if (ret<0) return ret;
+    if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) 
+       ret=tiger_get_pic(dev,filename,data,size);
+    else
+       ret=agfa_get_pic(dev,filename,data,size);
    
-    ret = soundvision_read(dev, data, size);        
-    if (ret<0) return ret;
-
-#if 0
-       /* Have to do this after getting pic ? */
-    ret=soundvision_send_command(SOUNDVISION_DONE_PIC,0,dev);
-    if (ret<0) return ret;
-#endif
-   
-    return GP_OK;
+    return ret;
    
 }
 
-   /* thanks to heathhey3@hotmail.com for sending me the trace */
-   /* to implement this */
 int soundvision_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
    
-    int32_t ret,temp,taken; 
-    uint8_t data[4],*buffer;
-    uint32_t size=4,buflen;
+    int result;
    
-       /* yes, we do this twice?? */
-    taken=soundvision_photos_taken(dev);
-    taken=soundvision_photos_taken(dev);
-    
-    ret = soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
-    if (ret<0) return ret;
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
-    if (ret<0) return ret;
-       
-      /* Some traces show sending other than the file we want deleted? */
-    ret=soundvision_send_file_command(filename,dev);
-    if (ret<0) return ret;
+    if (dev->device_type==SOUNDVISION_TIGERFASTFLICKS) 
+       result=tiger_delete_picture(dev,filename);
+    else
+       result=agfa_delete_picture(dev,filename);
    
-    ret = soundvision_read(dev, data, size);        
-    if (ret<0) return ret;
-   
-          /* Check num taken AGAIN */
-    taken=soundvision_photos_taken(dev);
-  
-    ret = soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
-    if (ret<0) return ret;
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
-    if (ret<0) return ret;
-    
-    ret=soundvision_send_file_command(filename,dev);
-    if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, data, size);        
-    if (ret<0) return ret;
-   
-        /* Check num taken AGAIN */
-    taken=soundvision_photos_taken(dev);
-       
-    ret=soundvision_send_command(SOUNDVISION_DELETE,0,dev);
-    if (ret<0) return ret;
-      
-        /* read ff 0f ??? */
-    ret = soundvision_read(dev, data, size);        
-    if (ret<0) return ret;
-   
-    ret = soundvision_send_file_command(filename,dev);
-    if (ret<0) return ret;
-   
-        /* This is the point we notices that in fact a pic is missing */
-        /* Why do it 4 times??? Timing?? Who knows */
-    taken=soundvision_photos_taken(dev);
-    taken=soundvision_photos_taken(dev);
-    taken=soundvision_photos_taken(dev);
-    taken=soundvision_photos_taken(dev);
-    
-    buflen = (taken * 13)+1;  /* 12 char filenames and space for each */
-                              /* plus trailing NULL */
-    buffer = malloc(buflen);
-        
-    if (!buffer) {
-       GP_DEBUG("Could not allocate %i bytes!",
-		       buflen);
-       return (GP_ERROR_NO_MEMORY);
-    }
-
-    ret=soundvision_send_command(SOUNDVISION_GET_NAMES, buflen,dev);
-    if (ret < 0) {
-       free(buffer);
-       return ret;
-    }
-
-    ret = soundvision_read(dev, (void *)buffer, buflen);
-    if (ret < 0) {
-       free(buffer);
-       return ret;
-    }
-
-    if (dev->file_list) free(dev->file_list);
-    dev->file_list = buffer;
-   
-    ret=soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
-    if (ret<0) return ret;
-    
-       /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
-    if (ret<0) return ret;
-   
-    ret=soundvision_send_file_command(filename,dev);
-    if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, data, size);        
-    if (ret<0) return ret; 
-   
-    return GP_OK;
+    return result;
 
 }

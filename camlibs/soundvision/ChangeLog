@@ -1,3 +1,14 @@
+2002-02-11  Vince Weaver <vince@deater.net>
+        * Completely redid tiger support.  Involved separating out
+	  more functions from Agfa, extensive looking at usb-traces, etc.
+	  delete and image-capture should now work on Tiger.  File upload 
+	  should work but doesn't.  
+	* All attempts to fix the stall upon
+	  subsequent re-running of gphoto2 failed.  It seems to be
+	  somewhat arbitrary.  Sometimes a reset helps, sometimes not.
+        * Agfa-CL18 should work more or less same as before.
+	* Cleaned up a lot of the code.
+
 2002-01-23  Vince Weaver <vince@deater.net>
 	* Add Argus DC-2200
 

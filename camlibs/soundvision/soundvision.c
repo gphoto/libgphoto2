@@ -1,11 +1,14 @@
 /*
  * soundvision.c
  *
+ * For cameras using the Clarity2 chip made by Soundvision Inc.
+ * Made entirely w/o Soundvision's help.  They would not give
+ * documentation.  Reverse-engineered from usb-traces.
+ * 
  * Copyright © 2002-2003 Vince Weaver <vince@deater.net>
  * 
- * based on the digita driver 
- * Copyright © 1999-2000 Johannes Erdfelt
- * Copyright © 1999-2000 VA Linux Systems
+ * Originally based on the digita driver 
+ * Copyright © 1999-2000 Johannes Erdfelt, VA Linux Systems
  */
 
 #include "config.h"
@@ -87,20 +90,32 @@ int camera_abilities(CameraAbilitiesList *list) {
     for(i=0; models[i].name; i++) {
        memset(&a, 0, sizeof(a));
        strcpy(a.model, models[i].name);
-       if (i==1)
-          a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-       else
+       
+          /* Agfa and Dshot types owned by author and tested */
+          /* Others the testing not quite certain            */
+       if ( (models[i].idVendor==0x06bd) || (models[i].idVendor==0x0919))
           a.status = GP_DRIVER_STATUS_PRODUCTION;
+       else
+          a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+       
+          /* For now all are USB.  Have the spec for Serial */
+          /* If ever one shows up                           */
        a.port       = GP_PORT_USB;
        a.speed[0] = 0;
        a.usb_vendor = models[i].idVendor;
        a.usb_product= models[i].idProduct;
-       if (i==1)
-	  a.operations     =    GP_OPERATION_NONE;
-       else
-          a.operations     = 	GP_OPERATION_CAPTURE_IMAGE;
+       
+          /* All should support image capture */
+       a.operations     = 	GP_OPERATION_CAPTURE_IMAGE;
+       
+          /* Folders not supported on any */
        a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
-       /* f_ops will (hopefully) be PUT_FILE for i==1 eventually */
+       
+          /* Dshot compat can upload files */
+       if (models[i].idVendor==0x0919) {
+          a.file_operations|=GP_FOLDER_OPERATION_PUT_FILE;	    
+       }       
+       
        a.file_operations   = 	GP_FILE_OPERATION_PREVIEW | 
 				GP_FILE_OPERATION_DELETE;
 
@@ -110,7 +125,30 @@ int camera_abilities(CameraAbilitiesList *list) {
 }
 
 static int camera_exit (Camera *camera, GPContext *context) {
+
+    GP_DEBUG("MAKE ME GP_DEBUG Reset: %i  pics: %i  odd_command: %i\n",
+	                          camera->pl->reset_times,
+	                          camera->pl->num_pictures,
+	                          camera->pl->odd_command);
+  
+       /* We _must_ reset an even number of times ?? */
+       /* It's more complicated than that.  *sigh*   */
+    if (camera->pl->reset_times==1) {
+       soundvision_reset (camera->pl,NULL,NULL);
+#if 0       
+          /* Odd number of pics */
+       if (camera->pl->num_pictures%2==1) { 
+	  if (!camera->pl->odd_command) 
+	     soundvision_reset (camera->pl,NULL,NULL);
+       }
+       else {
+	  if (camera->pl->odd_command) 
+	     soundvision_reset (camera->pl,NULL,NULL);
+       }
+#endif       
+    }
    
+       
     if (camera->pl) {
 	if (camera->pl->file_list) {
 	    free(camera->pl->file_list);
@@ -150,60 +188,82 @@ static int soundvision_file_get (Camera *camera, const char *filename, int thumb
 			    unsigned char **data, int *size) {
 
     int buflen,throwaway,result;
+   
+    if (thumbnail) GP_DEBUG( "Getting thumbnail '%s'...",filename);
+    else GP_DEBUG( "Getting file '%s'...",filename);
 
-    GP_DEBUG( "Getting file '%s'...",filename);
+    if (camera->pl->device_type==SOUNDVISION_TIGERFASTFLICKS) {
+       result=tiger_set_pc_mode(camera->pl);
+       if (thumbnail) buflen=soundvision_get_thumb_size(camera->pl,filename);
+       else buflen=soundvision_get_pic_size(camera->pl,filename);
+    }
+    else {   
+       soundvision_reset(camera->pl,NULL,NULL);
+          
+          /* Always have to check num photos,
+	   * then pic size no matter what.  Otherwise
+	   * the camera will stop responding 
+	   */
+       throwaway=soundvision_photos_taken(camera->pl);
+       if (throwaway<0) {
+	  result=throwaway;
+	  goto file_get_error;
+       }
+       
+       
+          /* The below two lines might look wrong, but they aren't! */
+       buflen = soundvision_get_pic_size(camera->pl,filename);
+       if (thumbnail) buflen=soundvision_get_thumb_size(camera->pl,filename);
+    }
+   
+   
 
-    soundvision_reset(camera->pl);
-        /* Always have to check num photos,
-	 * then pic size no matter what.  Otherwise
-	 * the camera will stop responding 
-	 */
-   
-    throwaway=soundvision_photos_taken(camera->pl);
-    if (throwaway<0) return throwaway;
-   
-       /* The below two lines might look wrong, but they aren't! */
-    buflen = soundvision_get_pic_size(camera->pl,filename);
-    if (thumbnail) buflen = soundvision_get_thumb_size(camera->pl,filename);
-   
+       
        /* Don't try to download if size equals zero! */
     if (buflen) {
    
        *data = malloc(buflen+1);
         
-       if (!*data) return (GP_ERROR_NO_MEMORY);
-   
+       if (!*data) {
+	  result=GP_ERROR_NO_MEMORY;
+	  goto file_get_error;
+       }
+       
        memset(*data, 0, buflen);
- 
+
        if (thumbnail) {
           result=soundvision_get_thumb(camera->pl, filename, *data, buflen);
           if (result < 0) {
-	     free (*data);
 	     GP_DEBUG("soundvision_get_thumb_failed!");
-	     return result;
-          }
+	     goto file_get_error;
+	  }	     
        }
-       else {
+       else {  
           result=soundvision_get_pic(camera->pl, filename, *data, buflen);
           if (result < 0) {
-	     free(*data);
 	     GP_DEBUG("soundvision_get_pic_failed!");
-             return result;
-          }
+             goto file_get_error;
+	  }	     
        }
+	         
+       if (size)
+          *size = buflen;       
     }
-    if (size)
-       *size = buflen;
-
+      
     return GP_OK;
 
+file_get_error:
+
+    if (*data!=NULL) free(*data);
+    return result;
 }
 
 static int get_file_func (CameraFilesystem *fs, const char *folder, 
 			  const char *filename, CameraFileType type,
 			  CameraFile *file, void *user_data,
 			  GPContext *context) {
-
+    char *pos;
+   
     Camera *camera = user_data;
     unsigned char *data = NULL;
     int size,ret;
@@ -224,9 +284,21 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
     if (!data) return GP_ERROR;
 
     gp_file_set_data_and_size (file, data, size);
+       /* Maybe skip below if EXIF data present? */
     gp_file_set_name (file, filename);
-    gp_file_set_mime_type (file, GP_MIME_JPEG);
-
+   
+       /* As far as I know we only support JPG and MOV */
+       /* Maybe some have MP3???                       */
+    pos=strchr (filename, '.');   
+    if (pos) {
+       if ((!strcmp(pos,".JPG")) || ((!strcmp(pos,".jpg"))))
+	  gp_file_set_mime_type (file, GP_MIME_JPEG);
+       else if (!strcmp(pos,".MOV"))
+	  gp_file_set_mime_type (file, GP_MIME_QUICKTIME);
+       else
+	  gp_file_set_mime_type (file, GP_MIME_UNKNOWN);
+    }
+   
     return GP_OK;
 }
 
@@ -235,10 +307,24 @@ static int camera_summary(Camera *camera, CameraText *summary,
 
     char revision[9];
    
-    soundvision_get_revision(camera->pl,revision);
+    soundvision_reset(camera->pl,revision,NULL);
    
-    sprintf(summary->text, _("Revision: %8s"), revision);
-
+    if (camera->pl->device_type==SOUNDVISION_TIGERFASTFLICKS) {
+       
+       int mem_total,mem_free,num_pics;
+       tiger_get_mem(camera->pl,&num_pics,&mem_total,&mem_free);
+       
+       sprintf(summary->text, _("Firmware Revision: %8s\n"
+				"Pictures:     %i\n"
+				"Memory Total: %ikB\n"
+				"Memory Free:  %ikB\n"),
+				revision,num_pics,mem_total,mem_free);
+    }
+   
+    else {
+	sprintf(summary->text, _("Firmware Revision: %8s"), revision);
+    }
+   
     return GP_OK;
 }
 
@@ -252,15 +338,34 @@ static int camera_about(Camera *camera, CameraText *about, GPContext *context) {
 
     /* Below contributed by Ben Hague <benhague@btinternet.com> */
 static int camera_capture (Camera *camera, CameraCaptureType type,
-			   CameraFilePath *path, GPContext *context)
-{
-    /* this is broken.  We capture image to the camera, but
-     * we don't detect the new filename.  We should detect
-     * it and gp_filesystem_append and return 
-     */
+			   CameraFilePath *path, GPContext *context) {
+   
+    int result;
+   
     if (camera->pl->device_type==SOUNDVISION_AGFACL18)     
-       return (agfa_capture(camera->pl,path));
-    return GP_ERROR_NOT_SUPPORTED;
+       result=agfa_capture(camera->pl,path);
+    else if (camera->pl->device_type==SOUNDVISION_TIGERFASTFLICKS) { 
+       result=tiger_capture(camera->pl,path);
+    }
+    else return GP_ERROR_NOT_SUPPORTED;
+
+   
+    soundvision_get_file_list(camera->pl);
+   
+       /* For some reason last taken picture is first on tiger? */
+       /* Might be last on Agfa.  Who knows.  Craziness.        */
+    if (camera->pl->num_pictures<1) return GP_ERROR;
+      
+    sprintf(path->name,camera->pl->file_list);
+    strcpy (path->folder, "/");
+	  
+	  
+/*    gp_filesystem_append (camera->fs, path->folder,
+			  path->name, context);*/
+
+
+    
+    return GP_OK;
 }
 
 
@@ -279,6 +384,48 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
    
     return GP_OK;
 }
+
+
+static int put_file_func (CameraFilesystem *fs, const char *folder, 
+			  CameraFile *file, void *data, GPContext *context) {
+   
+    Camera *camera=data;
+    const char *filename;
+    const char *data_file;
+    long data_size;
+   
+           /*
+	    * Upload the file to the camera. Use gp_file_get_data_and_size,
+	    * gp_file_get_name, etc.
+	    */
+
+    gp_file_get_name(file, &filename);
+   
+    GP_DEBUG ("*** put_file_func");
+    GP_DEBUG ("*** folder: %s", folder);
+    GP_DEBUG ("*** filename: %s", filename);
+   
+    gp_file_get_data_and_size (file, &data_file, &data_size);
+    if ( data_size == 0) {
+       gp_context_error (context,
+			 _("The file to be uploaded has a null length"));
+       return GP_ERROR_BAD_PARAMETERS;
+    }
+
+    /* Should check memory here */
+   
+   /*        if (available_memory < data_size) {
+       gp_context_error (context,
+			 _("Not enough memory available on the memory card"));
+       return GP_ERROR_NO_MEMORY;
+     }
+   */
+   
+    tiger_upload_file (camera->pl, filename,data_file,data_size);
+   
+    return GP_OK;
+}
+
 
 
 int camera_init(Camera *camera, GPContext *context) {
@@ -303,9 +450,9 @@ int camera_init(Camera *camera, GPContext *context) {
             /* Use the defaults the core parsed */
 
             ret=gp_port_set_settings(camera->port,settings);
-            if (ret<0) return ret;
-       
+            if (ret<0) return ret;       
             break;
+       
        case GP_PORT_SERIAL:
             return GP_ERROR_IO_SUPPORTED_SERIAL;
        default: 
@@ -314,19 +461,28 @@ int camera_init(Camera *camera, GPContext *context) {
 
 				       
    
+       /* Set up camera private library */
     camera->pl = malloc (sizeof (CameraPrivateLibrary));
     if (!camera->pl) return (GP_ERROR_NO_MEMORY);
     memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
     camera->pl->gpdev = camera->port;
 
+   
+       /* Set up the sub-architectures */
+       /* Default to Agfa.  Should we default otherwise? */
     camera->pl->device_type=SOUNDVISION_AGFACL18;
-
     gp_camera_get_abilities (camera, &a);
-    if ((a.usb_vendor==0x919) && (a.usb_product==0x0100)) {
+   
+    if ((a.usb_vendor==0x0919) && (a.usb_product==0x0100)) {
        camera->pl->device_type=SOUNDVISION_TIGERFASTFLICKS;	
     }
-     
-    ret = soundvision_reset (camera->pl);
+
+       /* Keep track.  We _must_ reset an even number of times */
+    camera->pl->reset_times=0;
+    camera->pl->odd_command=0;
+   
+       /* Reset the camera */
+    ret = soundvision_reset (camera->pl,NULL,NULL);
     if (ret < 0) {
 	free (camera->pl);
 	camera->pl = NULL;
@@ -337,6 +493,11 @@ int camera_init(Camera *camera, GPContext *context) {
     gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
     gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func,
 		    		  camera);
+    gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
+				    NULL, NULL, NULL, camera);
+   
+   
 
     return GP_OK;
 }
+
