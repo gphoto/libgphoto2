@@ -271,6 +271,7 @@ static struct {
 	/* P32 reported on May 1st by Justin Alexander <justin (at) harshangel.com> */
 	{"Sony:DSC-P31 (PTP mode)",   0x054c, 0x004e}, 
 	{"Sony:DSC-P32 (PTP mode)",   0x054c, 0x004e}, 
+	{"Sony:DSC-P41 (PTP mode)",   0x054c, 0x004e}, 
 	{"Sony:DSC-P50 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-P52 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-P72 (PTP mode)",   0x054c, 0x004e},
