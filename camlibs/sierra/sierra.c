@@ -375,6 +375,7 @@ int camera_exit (Camera *camera) {
 
 	sierra_debug_print(fd, "Exiting camera");
 
+	gpio_free(fd->dev);
 	free(fd);
 
 	return (GP_OK);
