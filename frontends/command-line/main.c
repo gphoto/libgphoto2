@@ -551,6 +551,7 @@ debug_func (GPLogLevel level, const char *domain, const char *format,
 OPTION_CALLBACK (debug)
 {
 	glob_debug = GP_DEBUG_HIGH;
+	cli_debug_print("ALWAYS INCLUDE THE FOLLOWING LINE WHEN SENDING DEBUG MESSAGES TO THE MAILING LIST:");
 	cli_debug_print(PACKAGE " " VERSION ": " "Turning on debug mode");
 
 	gp_log_add_func (GP_LOG_ALL, debug_func, NULL);
