@@ -1,3 +1,4 @@
+camlibs/agfa/agfa.c
 camlibs/barbie/barbie.c
 camlibs/canon/canon.c
 camlibs/canon/library.c
@@ -7,6 +8,7 @@ camlibs/canon/util.c
 camlibs/digita/digita.c
 camlibs/dimera/dimera3500.c
 camlibs/directory/directory.c
+camlibs/jd11/jd11.c
 camlibs/kodak/dc120/dc120.c
 camlibs/kodak/dc240/dc240.c
 camlibs/kodak/dc3200/dc3200.c
@@ -17,6 +19,8 @@ camlibs/panasonic/dc1580.c
 camlibs/polaroid/pdc700.c
 camlibs/sierra/sierra.c
 camlibs/sonydscf1/sonydscf1.c
+camlibs/stv0680/library.c
+camlibs/stv0680/stv0680.c
 libgphoto2/gphoto2-camera.c
 libgphoto2/gphoto2-filesys.c
 libgphoto2/gphoto2-abilities-list.c

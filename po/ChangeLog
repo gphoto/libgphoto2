@@ -1,3 +1,8 @@
+2002-01-04  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* POTFILES.in: Added agfa, jd11, stv0680 camlib files with 
+	  translatable strings.
+
 2002-01-02  Colin Marquardt  <colin@marquardt-home.de>
 
 	* de.po: Update.
