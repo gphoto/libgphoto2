@@ -195,9 +195,9 @@ usage (void)
 	print_version ();
         printf (_("Usage:\n"));
 
-	printf (_("Short/long options (& argument)        description\n"
-	        "------------------------------------------------------------------------\n"));
-
+	/* Make this 79 characters long. Some languages need the space. */
+	printf (_("Short/long options (& argument)        Description\n"
+		  "--------------------------------------------------------------------------------\n"));
 	/* Run through option and print them out */
 	while (x < glob_option_count) {
 		/* maybe sort these by short option? can't be an in-place sort.
@@ -217,10 +217,15 @@ usage (void)
 		   else
 			sprintf(a, " ");
 		sprintf(buf, " %-4s %s %s", s, l, a);
-		printf("%-38s %s\n", buf, _(option[x].description));
+		/* The format line is made translatable so that some
+		   languages can make the table a bit tighter. Make
+		   sure you only use 79 characters (since #80 is
+		   needed for the line break). */
+		printf(_("%-38s %s\n"), buf, _(option[x].description));
 		x++;
 	}
 
-	printf (_("------------------------------------------------------------------------\n"
-	        "[Use double-quotes around arguments]     [Picture numbers begin one (1)]\n"));
+	/* Make this 79 characters long. Some languages need the space. */
+	printf (_("--------------------------------------------------------------------------------\n"
+		  "[Use double-quotes around arguments]             [Picture numbers begin one (1)]\n"));
 }

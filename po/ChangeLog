@@ -1,3 +1,8 @@
+2001-11-23  Colin Marquardt  <colin@marquardt-home.de>
+
+	* de.po (Message): All command line help table entries are now
+	  translated.
+
 2001-11-21  Colin Marquardt  <colin@marquardt-home.de>
 
 	* de.po: Another update, won't be the last...

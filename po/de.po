@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2001-11-21 23:24+0100\n"
-"PO-Revision-Date: 2001-11-21 23:54+0100\n"
+"POT-Creation-Date: 2001-11-23 00:06+0100\n"
+"PO-Revision-Date: 2001-11-23 00:07+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -191,7 +191,7 @@ msgstr ""
 "Der Verzeichnisname 999CANON existiert und enthält eine Datei namens "
 "AUT_9999.JPG."
 
-#: camlibs/canon/canon.c:1223
+#: camlibs/canon/canon.c:1223 frontends/command-line/main.c:187
 msgid "Configure"
 msgstr "Konfigurieren"
 
@@ -1849,123 +1849,123 @@ msgstr ""
 "Ken-ichi Hayashi\n"
 "Gphoto2-Portierung von Bart van Leeuwen <bart@netage.nl>"
 
-#: libgphoto2/gphoto2-camera.c:347
+#: libgphoto2/gphoto2-camera.c:379
 msgid "You need to set a port prior trying to set the speed"
 msgstr "Sie müssen einen Port setzen, bevor Sie die Datenrate setzen können"
 
-#: libgphoto2/gphoto2-camera.c:353
+#: libgphoto2/gphoto2-camera.c:385
 msgid "You can specify a speed only with serial ports"
 msgstr "Nur mit seriellen Ports können Sie eine Datenrate setzen"
 
-#: libgphoto2/gphoto2-camera.c:552
+#: libgphoto2/gphoto2-camera.c:584
 #, c-format
 msgid "Wrong percentage: %f"
 msgstr "Falsche Prozentangabe: %f"
 
-#: libgphoto2/gphoto2-camera.c:681
+#: libgphoto2/gphoto2-camera.c:715
 msgid "Initializing camera..."
 msgstr "Initialisiere Kamera..."
 
-#: libgphoto2/gphoto2-camera.c:683
+#: libgphoto2/gphoto2-camera.c:717
 #, c-format
 msgid "Initializing '%s'..."
 msgstr "Initialisiere »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:709
+#: libgphoto2/gphoto2-camera.c:743
 msgid "Could not detect any camera"
 msgstr "Konnte keine Kamera finden"
 
-#: libgphoto2/gphoto2-camera.c:729
+#: libgphoto2/gphoto2-camera.c:763
 msgid "You have to set the port prior initialization of the camera"
 msgstr ""
 "Sie müssen einen Port setzen, bevor Sie die Kamera initialisieren können"
 
-#: libgphoto2/gphoto2-camera.c:806
+#: libgphoto2/gphoto2-camera.c:840
 msgid "This camera does not offer any configuration options"
 msgstr "Diese Kamera bietet keine Konfigurationsoptionen"
 
-#: libgphoto2/gphoto2-camera.c:811
+#: libgphoto2/gphoto2-camera.c:845
 msgid "Getting configuration..."
 msgstr "Lade Kamera-Konfiguration..."
 
-#: libgphoto2/gphoto2-camera.c:837
+#: libgphoto2/gphoto2-camera.c:871
 msgid "This camera does not support setting configuration options"
 msgstr "Diese Kamera unterstützt das Setzen von Konfigurationsoptionen nicht"
 
-#: libgphoto2/gphoto2-camera.c:842
+#: libgphoto2/gphoto2-camera.c:876
 msgid "Setting configuration..."
 msgstr "Setze Konfiguration..."
 
-#: libgphoto2/gphoto2-camera.c:868
+#: libgphoto2/gphoto2-camera.c:902
 msgid "This camera does not support summaries"
 msgstr "Diese Kamera unterstützt keine Zusammenfassung"
 
-#: libgphoto2/gphoto2-camera.c:873
+#: libgphoto2/gphoto2-camera.c:907
 msgid "Getting summary..."
 msgstr "Hole Zusammenfassung..."
 
-#: libgphoto2/gphoto2-camera.c:898
+#: libgphoto2/gphoto2-camera.c:932
 msgid "This camera does not offer a manual"
 msgstr "Für diese Kamera existiert kein Handbuch"
 
-#: libgphoto2/gphoto2-camera.c:926
+#: libgphoto2/gphoto2-camera.c:960
 msgid "This camera does not provide information about the driver"
 msgstr "Diese Kamera liefert keine Information über den Treiber"
 
-#: libgphoto2/gphoto2-camera.c:957
+#: libgphoto2/gphoto2-camera.c:991
 msgid "This camera can not capture"
 msgstr "Diese Kamera kann keine Aufnahme machen"
 
-#: libgphoto2/gphoto2-camera.c:991
+#: libgphoto2/gphoto2-camera.c:1025
 msgid "This camera can not capture previews"
 msgstr "Diese Kamera kann keine Vorschaubilder machen"
 
-#: libgphoto2/gphoto2-camera.c:1026
+#: libgphoto2/gphoto2-camera.c:1060
 #, c-format
 msgid "Listing files in '%s'..."
 msgstr "Liste Dateien in »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1056
+#: libgphoto2/gphoto2-camera.c:1090
 #, c-format
 msgid "Listing folders in '%s'..."
 msgstr "Liste Verzeichnisse in »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1083
+#: libgphoto2/gphoto2-camera.c:1117
 #, c-format
 msgid "Deleting all files in '%s'..."
 msgstr "Lösche alle Dateien in »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1110
+#: libgphoto2/gphoto2-camera.c:1144
 #, c-format
 msgid "Uploading file into '%s'..."
 msgstr "Lade Datei nach »%s« hoch..."
 
-#: libgphoto2/gphoto2-camera.c:1149
+#: libgphoto2/gphoto2-camera.c:1183
 #, c-format
 msgid "Getting info for '%s' in folder '%s'..."
 msgstr "Hole Information für »%s« im Verzeichnis »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1246
+#: libgphoto2/gphoto2-camera.c:1280
 #, c-format
 msgid "Getting '%s' from folder '%s'..."
 msgstr "Hole Information für »%s« aus Verzeichnis »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1277
+#: libgphoto2/gphoto2-camera.c:1311
 #, c-format
 msgid "Deleting '%s' from folder '%s'..."
 msgstr "Lösche »%s« aus Verzeichnis »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1303
+#: libgphoto2/gphoto2-camera.c:1337
 #, c-format
 msgid "Creating folder '%s' in folder '%s'..."
 msgstr "Lege Verzeichnis »%s« im Verzeichnis »%s« an..."
 
-#: libgphoto2/gphoto2-camera.c:1329
+#: libgphoto2/gphoto2-camera.c:1363
 #, c-format
 msgid "Removing folder '%s' from folder '%s'..."
 msgstr "Lösche Verzeichnis »%s« aus Verzeichnis »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1402
+#: libgphoto2/gphoto2-camera.c:1436
 msgid "No error description available"
 msgstr "Fehlerbeschreibung nicht verfügbar"
 
@@ -2057,9 +2057,85 @@ msgstr "Verzeichnis existiert bereits"
 msgid "Path not absolute"
 msgstr "Pfadangabe nicht absolut"
 
+#. Settings needed for formatting output
+#: frontends/command-line/main.c:142
+msgid "Turn on debugging"
+msgstr "Schalte Debugging ein"
+
+#: frontends/command-line/main.c:143
+msgid "Quiet output (default=verbose)"
+msgstr "Wenige Ausgaben (Vorgabe=gesprächig)"
+
+#. Display and die actions
+#: frontends/command-line/main.c:147
+msgid "Display version and exit"
+msgstr "Zeige Version und beende"
+
+#: frontends/command-line/main.c:148
+msgid "Displays this help screen"
+msgstr "Zeigt diese Hilfe"
+
+#: frontends/command-line/main.c:149
+msgid "List supported camera models"
+msgstr "Zeige unterstützte Kameramodelle"
+
+#: frontends/command-line/main.c:150
+msgid "Create output for usb.usermap"
+msgstr "Generiere Ausgabe für usb.usermap"
+
+#: frontends/command-line/main.c:151
+msgid "List supported port devices"
+msgstr "Liste unterstützte Port-Geräte"
+
+#: frontends/command-line/main.c:152
+msgid "Send file to stdout"
+msgstr "Sende Datei auf die Standardausgabe"
+
+#: frontends/command-line/main.c:153
+msgid "Print filesize before data"
+msgstr "Dateigröße vor Daten ausgeben"
+
+#: frontends/command-line/main.c:154
+msgid "List auto-detected cameras"
+msgstr "Liste automatisch erkannte Kameras"
+
+#. Settings needed for camera functions
+#: frontends/command-line/main.c:157
+msgid "Specify port device"
+msgstr "Angabe des Port-Geräts"
+
+#: frontends/command-line/main.c:158
+msgid "Specify serial transfer speed"
+msgstr "Angabe der seriellen Datenrate"
+
+#: frontends/command-line/main.c:159
+msgid "Specify camera model"
+msgstr "Angabe des Kameramodells"
+
+#: frontends/command-line/main.c:160
+msgid "Specify a filename"
+msgstr "Angabe des Dateinamens"
+
+#. Actions that depend on settings
+#: frontends/command-line/main.c:163
+msgid "Display camera abilities"
+msgstr "Zeige Kamerafähigkeiten"
+
+#: frontends/command-line/main.c:164
+msgid "Specify camera folder (default=\"/\")"
+msgstr "Angabe des Kameraverzeichnisses (Vorgabe=\"/\")"
+
 #: frontends/command-line/main.c:165
 msgid "Recursively descend through folders"
 msgstr "Steige rekursiv in Verzeichnisse hinab"
+
+#: frontends/command-line/main.c:166
+msgid "List folders in folder"
+msgstr "Liste Verzeichnisse in Verzeichnis"
+
+#: frontends/command-line/main.c:167
+msgid "List files in folder"
+msgstr "Liste Dateien in Verzeichnis"
 
 #: frontends/command-line/main.c:168 frontends/command-line/main.c:169
 msgid "name"
@@ -2072,6 +2148,34 @@ msgstr "Verzeichnis anlegen"
 #: frontends/command-line/main.c:169
 msgid "Remove a directory"
 msgstr "Verzeichnis löschen"
+
+#: frontends/command-line/main.c:170
+msgid "Display number of pictures"
+msgstr "Zeige Anzahl der Bilder"
+
+#: frontends/command-line/main.c:171
+msgid "Get pictures given in range"
+msgstr "Hole Bilder im angegebenen Bereich"
+
+#: frontends/command-line/main.c:172
+msgid "Get all pictures from folder"
+msgstr "Hole alle Bilder im Verzeichnis"
+
+#: frontends/command-line/main.c:173
+msgid "Get thumbnails given in range"
+msgstr "Hole Vorschaubilder im angegebenen Bereich"
+
+#: frontends/command-line/main.c:174
+msgid "Get all thumbnails from folder"
+msgstr "Hole alle Vorschaubilder im Verzeichnis"
+
+#: frontends/command-line/main.c:175
+msgid "Get raw data given in range"
+msgstr "Hole Rohdaten im angegebenen Bereich"
+
+#: frontends/command-line/main.c:176
+msgid "Get all raw data from folder"
+msgstr "Hole alle Rohdaten im Verzeichnis"
 
 #: frontends/command-line/main.c:177
 msgid "Get audio data given in range"
@@ -2095,7 +2199,7 @@ msgstr "Bild auf Kamera hochladen"
 
 #: frontends/command-line/main.c:182
 msgid "Capture a quick preview"
-msgstr "Mache eine Schnellvorschau-Aufnahme"
+msgstr "Mache eine Vorschaubild-Aufnahme"
 
 #: frontends/command-line/main.c:183
 msgid "Capture an image"
@@ -2108,6 +2212,22 @@ msgstr "Eine Filmaufnahme machen"
 #: frontends/command-line/main.c:185
 msgid "Capture an audio clip"
 msgstr "Eine Audioaufnahme machen"
+
+#: frontends/command-line/main.c:189
+msgid "Summary of camera status"
+msgstr "Zusammenfassung des Kamerastatusses"
+
+#: frontends/command-line/main.c:190
+msgid "Camera driver manual"
+msgstr "Anleitung für Kameratreiber"
+
+#: frontends/command-line/main.c:191
+msgid "About the camera driver"
+msgstr "Über den Kameratreiber"
+
+#: frontends/command-line/main.c:192
+msgid "gPhoto shell"
+msgstr "gPhoto-Shell"
 
 #: frontends/command-line/main.c:285 frontends/command-line/main.c:290
 #, c-format
@@ -2460,21 +2580,34 @@ msgstr "OS/2-Portierung von Bart van Leeuwen\n"
 msgid "Usage:\n"
 msgstr "Verwendung:\n"
 
-#: frontends/command-line/options.c:198
+#. Make this 79 characters long. Some languages need the space.
+#: frontends/command-line/options.c:199
 msgid ""
-"Short/long options (& argument)        description\n"
-"------------------------------------------------------------------------\n"
+"Short/long options (& argument)        Description\n"
+"--------------------------------------------------------------------------------\n"
 msgstr ""
-"Kurze/lange Optionen (& Argument)      Beschreibung\n"
-"------------------------------------------------------------------------\n"
+"Kurze/lange Optionen (& Argument)  Beschreibung\n"
+"--------------------------------------------------------------------------------\n"
 
+#. The format line is made translatable so that some
+#. languages can make the table a bit tighter. Make
+#. sure you only use 79 characters (since #80 is
+#. needed for the line break).
 #: frontends/command-line/options.c:224
+#, c-format
+msgid "%-38s %s\n"
+msgstr "%-34s %s\n"
+
+#. Make this 79 characters long. Some languages need the space.
+#: frontends/command-line/options.c:229
 msgid ""
-"------------------------------------------------------------------------\n"
-"[Use double-quotes around arguments]     [Picture numbers begin one (1)]\n"
+"--------------------------------------------------------------------------------\n"
+"[Use double-quotes around arguments]             [Picture numbers begin one "
+"(1)]\n"
 msgstr ""
-"------------------------------------------------------------------------\n"
-"[Doppelte Anführungszeichen um Argumente]    [Bildzählung beginnt mit 1]\n"
+"--------------------------------------------------------------------------------\n"
+"[Doppelte Anführungszeichen um Argumente]            [Bildzählung beginnt "
+"mit 1]\n"
 
 #~ msgid "Debug level"
 #~ msgstr "Debuglevel"
