@@ -1,3 +1,10 @@
+2001-10-21 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* doc/api: Some additions
+	* libgphoto2/Makefile.am
+	* libgphoto2/gphoto2-library.c: Dummy file, needed by gtk-doc
+	* libgphoto2/gphoto2-camera.[c,h]: Updated documentation
+
 2001-10-21 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* libgphoto2_port/libgphoto2_port/gp_port.c: log USB IDs in hex instead of decimal

@@ -40,6 +40,28 @@ CameraAbilities
 <SECTION>
 <FILE>gphoto2-camera</FILE>
 <TITLE>Camera</TITLE>
+
+CameraExitFunc
+
+CameraGetConfigFunc
+CameraSetConfigFunc
+CameraFolderGetConfigFunc
+CameraFolderSetConfigFunc
+CameraFileGetConfigFunc
+CameraFileSetConfigFunc
+
+CameraCaptureFunc
+CameraCapturePreviewFunc
+
+CameraSummaryFunc
+CameraManualFunc
+CameraAboutFunc
+
+CameraResultFunc
+
+CameraPrivateLibrary
+CameraPrivateCore
+
 CameraText
 CameraFunctions
 Camera
@@ -70,6 +92,9 @@ gp_camera_get_port_path
 
 gp_camera_set_port_name
 gp_camera_get_port_name
+
+gp_camera_get_port_speed
+gp_camera_set_port_speed
 
 gp_camera_init
 
@@ -104,24 +129,6 @@ gp_camera_file_set_config
 gp_camera_get_manual
 gp_camera_get_summary
 gp_camera_get_about
-
-</SECTION>
-
-<SECTION>
-<FILE>gphoto2-debug</FILE>
-<TITLE>GPDebug</TITLE>
-
-gp_debug_set_level
-gp_debug_get_level
-
-gp_debug_printf
-
-GPDebugFunc
-gp_debug_set_func
-
-gp_debug_history_get
-gp_debug_history_get_size
-gp_debug_history_set_size
 
 </SECTION>
 

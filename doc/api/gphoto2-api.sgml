@@ -2,7 +2,6 @@
 <!entity hash "#">
 <!entity gphoto2-filesys        SYSTEM "sgml/gphoto2-filesys.sgml">
 <!entity gphoto2-widget         SYSTEM "sgml/gphoto2-widget.sgml">
-<!entity gphoto2-debug          SYSTEM "sgml/gphoto2-debug.sgml">
 <!entity gphoto2-camera         SYSTEM "sgml/gphoto2-camera.sgml">
 <!entity gphoto2-result         SYSTEM "sgml/gphoto2-result.sgml">
 <!entity gphoto2-library        SYSTEM "sgml/gphoto2-library.sgml">
@@ -68,7 +67,6 @@ locking of serial ports. GPhoto2 currently supports
       </para>
 
 &gphoto2-result;
-&gphoto2-debug;
 &gphoto2-abilities;
 &gphoto2-library;
 

@@ -366,7 +366,10 @@ gp_camera_get_port_name (Camera *camera, const char **port_name)
  * Sets the speed. This function is typically used prior initialization 
  * using #gp_camera_init for debugging purposes. Normally, a camera driver
  * will try to figure out the current speed of the camera and set the speed
- * to the optimal one automatically.
+ * to the optimal one automatically. Note that this function only works with 
+ * serial ports. In other words, you have to set the camera's port to a 
+ * serial one (using #gp_camera_set_port_path or #gp_camera_set_port_name)
+ * prior calling this function.
  *
  * Return value: a gphoto2 error code
  **/
@@ -640,7 +643,7 @@ gp_camera_unref (Camera *camera)
  * @camera: a #Camera
  *
  * Frees the camera. This function should never be used. Please use
- * #gp_camera_ref instead.
+ * #gp_camera_unref instead.
  *
  * Return value: a gphoto2 error code
  **/
