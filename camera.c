@@ -168,8 +168,8 @@ gp_camera_init (Camera *camera)
 {
 	int x, count;
         gp_port_info info;
-        CameraList list;
-        CameraListEntry *entry;
+        CameraList *list;
+	const char *model, *port;
 
 	CHECK_NULL (camera);
 
@@ -199,9 +199,11 @@ gp_camera_init (Camera *camera)
 			CHECK_RESULT (gp_autodetect (&list));
 
 			/* Retrieve the first auto-detected camera */
-			entry = gp_list_entry (&list, 0);
-			strcpy (camera->model, entry->name);
-			strcpy (camera->port->path, entry->value);
+			CHECK_RESULT (gp_list_get_name  (list, 0, &model));
+			strcpy (camera->model, model);
+			CHECK_RESULT (gp_list_get_value (list, 0, &port));
+			strcpy (camera->port->path, port);
+			CHECK_RESULT (gp_list_free (list));
 		}
 	
 	        /* Set the port type from the path in case the 	*/
@@ -224,9 +226,11 @@ gp_camera_init (Camera *camera)
 		CHECK_RESULT (gp_autodetect (&list));
 
 		/* Retrieve the first auto-detected camera */
-		entry = gp_list_entry (&list, 0);
-		strcpy (camera->model, entry->name);
-		strcpy (camera->port->path, entry->value);
+		CHECK_RESULT (gp_list_get_name  (list, 0, &model));
+		strcpy (camera->model, model);
+		CHECK_RESULT (gp_list_get_value (list, 0, &port));
+		strcpy (camera->port->path, port);
+		CHECK_RESULT (gp_list_free (list));
 	}
 
 	/* Fill in camera abilities. */
@@ -442,14 +446,16 @@ delete_one_by_one (Camera *camera, const char *folder)
 {
 	CameraList list;
 	int i;
+	const char *name;
 
 	CHECK_NULL (camera && folder);
 
 	CHECK_RESULT (gp_camera_folder_list_files (camera, folder, &list));
 
-	for (i = gp_list_count (&list); i > 0; i--)
-		CHECK_RESULT (gp_camera_file_delete (camera, folder,
-					gp_list_entry (&list, i - 1)->name));
+	for (i = gp_list_count (&list); i > 0; i--) {
+		CHECK_RESULT (gp_list_get_name (&list, i - 1, &name));
+		CHECK_RESULT (gp_camera_file_delete (camera, folder, name));
+	}
 
 	return (GP_OK);
 }

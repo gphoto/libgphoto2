@@ -237,7 +237,7 @@ gp_exit (void)
 }
 
 int
-gp_autodetect (CameraList *list)
+gp_autodetect (CameraList **list)
 {
 	int x = 0;
 	int vendor, product;
@@ -249,22 +249,22 @@ gp_autodetect (CameraList *list)
 	if (gp_port_new (&dev, GP_PORT_USB) != GP_OK)
 		return (GP_ERROR_NO_CAMERA_FOUND);
 
-	list->count = 0;
+	*list = NULL;
 	for (x = 0; x < glob_abilities_list->count; x++) {
 		vendor = glob_abilities_list->abilities[x]->usb_vendor;
 		product = glob_abilities_list->abilities[x]->usb_product;
-		if (vendor) {
+		if (vendor)
 			if (gp_port_usb_find_device (dev, vendor, product)
 					== GP_OK) {
-				gp_list_append (list, glob_abilities_list->abilities[x]->model);
-				strcpy (list->entry[list->count-1].value, "usb:");
+				if (!*list)
+					CHECK_RESULT (gp_list_new (list));
+				gp_list_append (*list, glob_abilities_list->abilities[x]->model, "usb:");
 			}
-		}
 	}
 	
 	gp_port_free (dev);
 	
-	if (list->count)
+	if (*list)
 		return GP_OK;
 	
 	return GP_ERROR_NO_CAMERA_FOUND;

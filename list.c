@@ -25,40 +25,107 @@
 
 #include "gphoto2-result.h"
 
-CameraList *gp_list_new ()
-{
-        CameraList *list;
+#define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
+#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
-        list = (CameraList*)malloc (sizeof (CameraList));
+int
+gp_list_new (CameraList **list)
+{
+	CHECK_NULL (list);
+
+	*list = malloc (sizeof (CameraList));
         if (!list)
-                return NULL;
+		return (GP_ERROR_NO_MEMORY);
 
-        memset (list, 0, sizeof (CameraList));
-        return (list);
+	memset (list, 0, sizeof (CameraList));
+
+	return (GP_OK);
 }
 
-int gp_list_free (CameraList *list) 
+int
+gp_list_free (CameraList *list) 
 {
-        if (list)
-                free (list);
-        return (GP_OK);
-}
-
-int gp_list_append (CameraList *list, char *name)
-{
-        strcpy (list->entry[list->count].name, name);
-
-        list->count += 1;
+	CHECK_NULL (list);
+	
+	free (list);
 
         return (GP_OK);
 }
 
-int gp_list_count (CameraList *list)
+int
+gp_list_append (CameraList *list, const char *name, const char *value)
 {
+	CHECK_NULL (list);
+
+	if (list->count == MAX_ENTRIES)
+		return (GP_ERROR_NO_MEMORY);
+
+	if (name)
+	        strcpy (list->entry[list->count].name, name);
+	if (value)
+		strcpy (list->entry[list->count].value, value);
+
+        list->count++;
+
+        return (GP_OK);
+}
+
+int
+gp_list_count (CameraList *list)
+{
+	CHECK_NULL (list);
+
         return (list->count);
 }
 
-CameraListEntry *gp_list_entry (CameraList *list, int entrynum)
+int
+gp_list_get_name (CameraList *list, int index, const char **name)
 {
-        return (&list->entry [entrynum]);
+	CHECK_NULL (list && name);
+
+	if (index >= list->count)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	*name = list->entry[index].name;
+
+	return (GP_OK);
+}
+
+int
+gp_list_get_value (CameraList *list, int index, const char **value)
+{
+	CHECK_NULL (list && value);
+
+	if (index >= list->count)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	*value = list->entry[index].value;
+
+	return (GP_OK);
+}
+
+int
+gp_list_set_value (CameraList *list, int index, const char *value)
+{
+	CHECK_NULL (list && value);
+
+	if (index >= list->count)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	strcpy (list->entry[index].value, value);
+
+	return (GP_OK);
+}
+
+int
+gp_list_set_name (CameraList *list, int index, const char *name)
+{
+	CHECK_NULL (list && name);
+
+	if (index >= list->count)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	strcpy (list->entry[index].name, name);
+
+	return (GP_OK);
 }
