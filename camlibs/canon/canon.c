@@ -133,6 +133,8 @@ const struct canonCamModelData models[] = {
         /* 0x3071 is S230 in PTP mode */
 	{"Canon:Digital IXUS v3 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, CAP_SUP, S99M, S32K, NULL},
         /* 0x3071 is IXUS v3 in PTP mode */
+	/* 0x3072 probably is the new PowerShot A70 in Canon mode */
+	/* 0x3073 probably is the new PowerShot A70 in PTP mode */
 	{NULL}
 	/* *INDENT-ON* */
 };
