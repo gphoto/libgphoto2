@@ -228,6 +228,10 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	u_int8_t *avi_index, *avi_index_ptr;
 	u_int8_t index_item[16];
 
+	/* FIXME */
+	if (lib->bridge == GSMART_BRIDGE_SPCA500)
+		return GP_ERROR_NOT_SUPPORTED;
+
 	avi = mybuf = start_of_file = data = NULL;
 
 	p = g_file->fat;
@@ -296,8 +300,7 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	data = mybuf;
 
 	/* Iterate over fats and frames in each fat and build a jpeg for
-	 * each frame. Add the jpeg to the avi.
-	 * FIXME Build an index and append it to the file. */
+	 * each frame. Add the jpeg to the avi and write an index entry.  */
 	for (i = g_file->fat_start; i <= g_file->fat_end; i++) {
 		frames_per_fat = ((p[49] & 0xFF) * 0x100 + (p[48] & 0xFF));
 		if (frames_per_fat > 60 || frames_per_fat == 0)
@@ -401,6 +404,10 @@ gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	int size, o_size, file_size;
 	int w, h;
 
+	/* FIXME */
+	if (lib->bridge == GSMART_BRIDGE_SPCA500)
+		return GP_ERROR_NOT_SUPPORTED;
+	
 	p = g_file->fat;
 
 	/* get the position in memory where the image is */
