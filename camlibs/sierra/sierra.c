@@ -26,7 +26,7 @@
 
 #define CHECK_STOP(camera,result) {int res; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); return (res);}}
 
-#define CHECK_STOP_FREE(camera,result) {int res; SierraData *fd = camera->camlib_data; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); gp_port_free (fd->dev); free (fd); return (res);}}
+#define CHECK_STOP_FREE(camera,result) {int res; SierraData *fd = camera->camlib_data; res = result; if (res < 0) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); gp_port_free (fd->dev); free (fd); camera->camlib_data = NULL; return (res);}}
 
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
@@ -194,6 +194,7 @@ int camera_init (Camera *camera)
 		ret = gp_port_new (&(fd->dev), GP_PORT_SERIAL);
 		if (ret != GP_OK) {
 			free (fd);
+			camera->camlib_data = NULL;
 			return (ret);
 		}
 
@@ -220,12 +221,14 @@ int camera_init (Camera *camera)
 		/* Couldn't find the usb information */
 		if ((vendor == 0) && (product == 0)) {
 			free (fd);
+			camera->camlib_data = NULL;
 			return (GP_ERROR_MODEL_NOT_FOUND);
 		}
 
 		ret = gp_port_new (&(fd->dev), GP_PORT_USB);
 		if (ret != GP_OK) {
 			free (fd);
+			camera->camlib_data = NULL;
 			return (ret);
 		}
 
@@ -244,6 +247,7 @@ int camera_init (Camera *camera)
 	default:
 
 		free (fd);
+		camera->camlib_data = NULL;
                 return (GP_ERROR_IO_UNKNOWN_PORT);
 	}
 
@@ -387,13 +391,16 @@ int camera_stop (Camera *camera)
 
 int camera_exit (Camera *camera) 
 {
-//	SierraData *fd = (SierraData*)camera->camlib_data;
-
+	SierraData *fd;
+	
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_exit");
 
-//	gp_port_close (fd->dev);
-//	gp_port_free (fd->dev);
-//	free (fd);
+	if (camera->camlib_data) {
+		fd = (SierraData*)camera->camlib_data;
+		gp_port_close (fd->dev);
+		gp_port_free (fd->dev);
+		free (fd);
+	}
 
 	return (GP_OK);
 }

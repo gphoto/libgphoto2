@@ -608,7 +608,6 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 int sierra_delete_all (Camera *camera)
 {
 	char packet[4096], buf[4096];
-	int ret;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_delete_all");
 
@@ -731,9 +730,8 @@ int sierra_file_count (Camera *camera) {
 
 static int do_capture (Camera *camera, char *packet)
 {
-	SierraData *fd = (SierraData*)camera->camlib_data;
 	char buf[8];
-	int r, ret, done;
+	int r, ret;
 
 	CHECK (sierra_write_packet (camera, packet));
 
