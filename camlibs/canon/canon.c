@@ -186,6 +186,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:EOS Kiss Digital (normal mode)",CANON_EOS_300D, 0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	/* PS G5 uses the same ProductID for PTP and Canon, with protocol autodetection */
 	{"Canon:PowerShot G5 (normal mode)",	CANON_PS_G5,	0x04A9, 0x3085, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	/* Canon MVX3i / Optura Xi uses 308d in PTP mode; 3089 in Canon mode? */
 	{"Canon:PowerShot A80 (normal mode)",CANON_PS_A80,      0x04A9, 0x309A, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S60 (normal mode)", CANON_PS_S60,     0x04A9, 0x30b2, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 500 (normal mode)",CANON_PS_S500,  0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -1024,9 +1025,6 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 						  CANON_USB_CONTROL_INIT, 0, 0) == GP_ERROR)
 			return GP_ERROR;
 
-		gp_port_set_timeout (camera->port, mstimeout);
-		GP_DEBUG("canon_int_capture_image: set camera port timeout back to %d seconds...", mstimeout / 1000 );
-
 		/*
 		 * Set the captured image transfer mode.  We have four options
 		 * that we can specify any combo of, captured thumb to PC,
@@ -1042,6 +1040,9 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 						  CANON_USB_CONTROL_SET_TRANSFER_MODE,
 						  0x04, transfermode) == GP_ERROR)
 			return GP_ERROR;
+
+		gp_port_set_timeout (camera->port, mstimeout);
+		GP_DEBUG("canon_int_capture_image: set camera port timeout back to %d seconds...", mstimeout / 1000 );
 
 		/* Get release parameters a couple of times, just to
                    see if that helps. */
@@ -1577,8 +1578,13 @@ gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
 
 	snprintf (tmp, sizeof (tmp), "%s%s", camera->pl->cached_drive, path);
 
-	/* replace all slashes by backslashes, change case to upper for FAT */
+	/* Convert to upper case, since FAT file system on camera
+	 doesn't do case, and replace all slashes by backslashes */
 	for (p = tmp; *p != '\0'; p++) {
+		if ( *p != (char)toupper ( *p ) )
+			/* We don't allow lower-case in path names. */
+			gp_context_error (context, _("Lower case letters in %s not allowed."),
+					  path );
 		if (*p == '/')
 			*p = '\\';
 		*p = (char) toupper(*p);

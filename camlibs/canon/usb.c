@@ -115,7 +115,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 	GP_DEBUG ("canon_usb_camera_init() initial camera response: %c/'%s'", camstat,
 		  camstat_str);
 
-	/* The 50-byte message seems not to arrive from a D30 */
+	/* The 58-byte message seems not to arrive from a D30 */
 	if ( !IS_EOS(camera->pl->md->model) ) {
 		i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, msg, 0x58);
 		if (i != 0x58) {
@@ -400,6 +400,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 		case CANON_PS_A100:
 		case CANON_PS_A200:
 		case CANON_OPT_200:
+		case CANON_PS_A80:
 			/* Previous default; I doubt that any new
 			 * cameras will work this way, so it now is
 			 * explicit for the older cameras that use
