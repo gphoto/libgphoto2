@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "POT-Creation-Date: 2002-01-26 21:31+0100\n"
-"PO-Revision-Date: 2002-01-15 22:30MET\n"
+"PO-Revision-Date: 2002-02-23 17:02MET\n"
 "Last-Translator: Jérôme Fenal <jerome@fenal.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,11 +16,11 @@ msgstr ""
 #: libgphoto2_port/gphoto2-port.c:56
 #, c-format
 msgid "The operation '%s' is not supported by this device"
-msgstr ""
+msgstr "L'opération '%s' n'est pas supportée par cet appareil"
 
 #: libgphoto2_port/gphoto2-port.c:57
 msgid "The port has not yet been initialized"
-msgstr ""
+msgstr "Ce port n'a pas encore été initialisé"
 
 #: libgphoto2_port/gphoto2-port.c:272
 msgid "open"
