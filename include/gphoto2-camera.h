@@ -162,6 +162,10 @@ struct _Camera {
 int gp_camera_new               (Camera **camera);
 int gp_camera_set_model         (Camera *camera, const char *model);
 int gp_camera_get_model         (Camera *camera, const char **model);
+int gp_camera_set_port_name     (Camera *camera, const char *port_name);
+int gp_camera_get_port_name     (Camera *camera, const char **port_name);
+int gp_camera_set_port_path     (Camera *camera, const char *port_path);
+int gp_camera_get_port_path     (Camera *camera, const char **port_path);
 
 /************************************************************************
  * Part I:                                                              *
