@@ -1751,7 +1751,7 @@ gp_filesystem_lru_clear (CameraFilesystem *fs)
 	GP_DEBUG ("Clearing fscache LRU list...");
 
 	if (fs->lru_first == NULL) {
-		GP_DEBUG ("fscache LRU list already empty", n);
+		GP_DEBUG ("fscache LRU list already empty");
 		return (GP_OK);
 	}
 
@@ -2086,7 +2086,7 @@ gp_filesystem_lru_check (CameraFilesystem *fs)
 	GP_DEBUG ("Checking fscache LRU list integrity...");
 
 	if (fs->lru_first == NULL) {
-		GP_DEBUG ("fscache LRU list empty", n);
+		GP_DEBUG ("fscache LRU list empty");
 		return (GP_OK);
 	}
 

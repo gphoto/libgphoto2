@@ -70,7 +70,7 @@ gp_result_as_string (int result)
 
 	/* IOlib error? Pass through. */
 	if ((result <= 0) && (result >= -99))
-		return (gp_port_result_as_string (result));
+		return gp_port_result_as_string (result);
 
 	/* Camlib error? */
 	if (result <= -1000)
@@ -78,7 +78,7 @@ gp_result_as_string (int result)
 
 	for (i = 0; result_descriptions[i].description; i++)
 		if (result_descriptions[i].result == result)
-			return (result_descriptions[i].description);
+			return _(result_descriptions[i].description);
 
 	return (N_("Unknown error"));
 }
