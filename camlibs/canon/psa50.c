@@ -814,6 +814,10 @@ psa50_usb_dialogue (Camera *camera, char cmd1, char cmd2, int cmd3, int *retlen,
 		lonlen = *(unsigned *) (buffer + 0x6);
 		*retlen = lonlen;
 
+		gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_usb_dialogue: "
+				 "File/thumbnail total length is %d (0x%x) bytes",
+				 lonlen, lonlen);
+
 		/* read max BULK_READ_SIZE bytes */
 		if (lonlen > BULK_READ_SIZE)
 			lonlen = BULK_READ_SIZE;
@@ -1848,14 +1852,12 @@ unsigned char *
 psa50_get_file_usb (Camera *camera, const char *name, int *length)
 {
 	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
-	unsigned char *file = NULL;
+	unsigned char *data = NULL;
 	unsigned char msg[BULK_READ_SIZE];
 	unsigned char *msgg;
-	char newstr[100];
-
-	//    unsigned char *namn;
-	unsigned int total = 0, expect = 0, size = BULK_READ_SIZE;
-	int name_len, len, maxfilesize, status = 0;
+	char payload[100];
+	unsigned int total_file_size = 0, bytes_received = 0, size = BULK_READ_SIZE;
+	int payload_length, len, maxfilesize, bytes_read;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_get_file_usb() called for file '%s'",
 			 name);
@@ -1867,36 +1869,32 @@ psa50_get_file_usb (Camera *camera, const char *name, int *length)
 				 "ERROR: can't continue a fatal error condition detected\n");
 		return NULL;
 	}
-	//      *newstr="12345678";
-	newstr[0] = 0x31;
-	newstr[1] = 0x32;
-	newstr[2] = 0x31;
-	newstr[3] = 0x31;
-	newstr[4] = 0x31;
-	newstr[5] = 0x31;
-	newstr[6] = 0x31;
-	newstr[7] = 0x31;
-	newstr[8] = 0x0;
-	strcat (newstr, name);
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "%s\n", newstr);
-	name_len = strlen (newstr) + 1;
-	intatpos (newstr, 0x0, 0x0);	// get picture
-	intatpos (newstr, 0x4, BULK_READ_SIZE);
-	msgg = psa50_usb_dialogue (camera, 0x01, 0x11, 0x202, &len, newstr, name_len);
+	//      *payload="12345678";
+	payload[0] = 0x31;
+	payload[1] = 0x32;
+	payload[2] = 0x31;
+	payload[3] = 0x31;
+	payload[4] = 0x31;
+	payload[5] = 0x31;
+	payload[6] = 0x31;
+	payload[7] = 0x31;
+	payload[8] = 0x0;
+	strcat (payload, name);
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "payload: %s\n", payload);
+	payload_length = strlen (payload) + 1;
+	intatpos (payload, 0x0, 0x0);	// get picture
+	intatpos (payload, 0x4, BULK_READ_SIZE);
+	msgg = psa50_usb_dialogue (camera, 0x01, 0x11, 0x202, &len, payload, payload_length);
 	if (!msgg) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
 				 "psa50_get_file_usb: psa50_usb_dialogue() "
 				 "returned error (%i).", msgg);
 		return NULL;
 	}
-	if (len < size)
-		memcpy (msg, msgg, len);
-	else
-		memcpy (msg, msgg, size);
 
 	*length = len;
 
-	total = len;
+	total_file_size = len;
 	if (cs->model == CANON_PS_S10 || cs->model == CANON_PS_S20
 	    || cs->model == CANON_PS_G2 || cs->model == CANON_PS_G1
 	    || cs->model == CANON_PS_S300 || cs->model == CANON_PS_S100
@@ -1907,47 +1905,62 @@ psa50_get_file_usb (Camera *camera, const char *name, int *length)
 		maxfilesize = 2000000;
 	}
 
-	if (total > maxfilesize) {
+	if (total_file_size > maxfilesize) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: %d is too big "
 				 "(max reasonable file size for this camera model is %d)\n",
-				 total, maxfilesize);
+				 total_file_size, maxfilesize);
 		return NULL;
 	}
 
-	file = malloc (total);
-	if (!file) {
+	data = malloc (total_file_size);
+	if (!data) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: Alloc problems!\n");
 		perror ("malloc");
 		return NULL;;
 	}
-	while (1) {
-		memcpy (file + expect, msg, size);
 
-		expect += size;
-
-		gp_camera_progress (camera, total ? (expect / (float) total) : 1.);
-		if (expect == total)
-			return file;
-
-		if ((total - expect) < size)
-			size = total - expect;
-
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "calling gp_port_read(), total = %i, expect = %i, size = %i (0x%x)",
-				 total, expect, size, size);
-		/* FIXME: (pm) a direct call to gp_port_read here ??????? */
-		status = gp_port_read (camera->port, msg, size);
-		if (status < 1) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
-					 "gp_port_read() returned error (%i) or no data\n",
-					 status);
-			break;
-		}
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "dialog returned %d bytes (%d total)",
+			 len, total_file_size);
+	if (len > BULK_READ_SIZE) {
+		/* psa50_usb_dialogue() reads one "buffer full" for us,
+		 * but not more so if the returned amount of bytes >
+		 * BULK_READ_SIZE we still only have got BULK_READ_SIZE
+		 * bytes.
+		 */
+		memcpy (data, msgg, BULK_READ_SIZE);
+		bytes_received += BULK_READ_SIZE;
+	} else {
+		memcpy (data, msgg, len);
+		bytes_received += len;
 	}
 
-	free (file);
+	while (bytes_received < total_file_size) {
+		if ((total_file_size - bytes_received) < size)
+			size = total_file_size - bytes_received;
 
-	return NULL;
+		gp_debug_printf (GP_DEBUG_LOW, "canon",
+				 "calling gp_port_read(), total_file_size = %i, "
+				 "bytes_received = %i, size = %i (0x%x)",
+				 total_file_size, bytes_received, size, size);
+		bytes_read = gp_port_read (camera->port, msg, size);
+		if (bytes_read < 1) {
+			gp_debug_printf (GP_DEBUG_LOW, "canon",
+					 "gp_port_read() returned error (%i) or no data\n",
+					 bytes_read);
+			free (data);
+			return NULL;
+		}
+
+		memcpy (data + bytes_received, msg, bytes_read);
+		bytes_received += bytes_read;
+
+		gp_camera_progress (camera,
+				    total_file_size ? (bytes_received /
+						       (float) total_file_size) : 1.);
+
+	}
+
+	return data;
 }
 
 unsigned char *

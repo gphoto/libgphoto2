@@ -1,3 +1,9 @@
+2001-10-12  Fredrik <fredrik@krixor.xy.org>
+
+	* camlibs/canon/psa50.c: more debug output in
+	  psa50_usb_dialogue() and cleanups to psa50_get_file_usb()
+	  (fixes downloading of small files (read: thumbnails)).
+
 2001-10-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include
