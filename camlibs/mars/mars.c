@@ -99,11 +99,19 @@ mars_get_comp_ratio (Info *info, int n)
 	case 0x28:
 	case 0x26:
 	case 0xa8:
-	case 0xa6: return 3;
+	case 0xa6:
+	case 0xa2:
+	case 0x22:
+	case 0xa0:
+	case 0x20: return 3;
 	case  0x8:
 	case 0x88:
 	case  0x6:
-	case 0x86: return 1;
+	case 0x86:
+	case 0x82:
+	case  0x2:
+	case 0x80:
+	case  0x0: return 1;
 	default:
 		GP_DEBUG ("Your camera has unknown resolution settings.\n");
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -114,11 +122,19 @@ int
 mars_get_picture_width (Info *info, int n)
 {
     	switch (info[8*n]) {  
-	case 0x6:
+	case 0x80:
+	case  0x0:
+	case 0xa0:
+	case 0x20: return 176;
+	case  0x6:
 	case 0x26:
 	case 0x86:
 	case 0xa6: return 320;
-	case 0x8:
+	case 0x82:
+	case  0x2:
+	case 0xa2:
+	case 0x22: return 352;
+	case  0x8:
 	case 0x88:
 	case 0x28:
 	case 0xa8: return 640;
