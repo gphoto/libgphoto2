@@ -50,5 +50,5 @@ libgphoto2include_HEADERS =	\
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgphoto2.pc
-EXTRA_DIST = libgphoto2.pc.in gphoto2-library.c
 
+EXTRA_DIST = libgphoto2.pc.in gphoto2-library.c
