@@ -92,7 +92,7 @@ ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
 	req->code = htod16(code);
 	req->trans_id = htod32(params->transaction_id);
 
-	ret=params->write_func ((unsigned char *) req, req->len,
+	ret=params->write_func ((unsigned char *) req, dtoh32(req->len),
 				 params->data);
 	if (databuf==NULL) free (req);
 	if (ret!=PTP_RC_OK) {
