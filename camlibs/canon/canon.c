@@ -818,11 +818,16 @@ int camera_init(Camera *camera, CameraInit *init)
 	camera->functions->file_delete = camera_file_delete;
 	camera->functions->config_get = camera_config_get;
 	camera->functions->config_set = camera_config_set;
-	camera->functions->config    = camera_config;
+	camera->functions->file_config_get = camera_file_config_get;
+	camera->functions->file_config_set = camera_file_config_set;
+	camera->functions->folder_config_get = camera_folder_config_get;
+	camera->functions->folder_config_set = camera_folder_config_set;
+/*	camera->functions->config    = camera_config; */
 	camera->functions->capture   = camera_capture;
 	camera->functions->summary   = camera_summary;
 	camera->functions->manual    = camera_manual;
 	camera->functions->about     = camera_about;
+	camera->functions->result_as_string     = camera_result_as_string;
 	
 	cs = (struct canon_info*)malloc(sizeof(struct canon_info));
 	camera->camlib_data = cs;
@@ -1442,9 +1447,39 @@ int gp_camera_config_set (Camera *camera, CameraWidget *window)
 
 /****************************************************************************/
 	
+int camera_config_set (Camera *camera, CameraWidget *window)
+{
+    return GP_ERROR;
+}
+
 int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info)
 {
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_capture()");
 	
     return GP_ERROR_NOT_SUPPORTED;
+}
+
+int camera_file_config_get (Camera *camera, CameraWidget **window,
+							char *folder, char *filename)
+{
+	return GP_ERROR;
+}
+int camera_file_config_set  (Camera *camera, CameraWidget *window, 
+                                char *folder, char *filename)
+{
+    return GP_ERROR;
+}
+int camera_folder_config_get(Camera *camera, CameraWidget **window,
+                                char *folder)
+{
+    return GP_ERROR;
+}
+int camera_folder_config_set(Camera *camera, CameraWidget *window,
+                                char *folder)
+{
+    return GP_ERROR;
+}
+char *camera_result_as_string (Camera *camera, int result)
+{
+    return NULL;
 }
