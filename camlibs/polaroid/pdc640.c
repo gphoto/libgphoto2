@@ -1,6 +1,7 @@
 /* pdc640.c
  *
  * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * Copyright (C) 2002 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,23 +56,31 @@ struct _CameraPrivateLibrary{
 
 static struct {
 	const char*				model;
+	int vendor,product;
 	struct _CameraPrivateLibrary	pl;
 } models[] = {
-	{"Polaroid Fun Flash 640", {
+	{"Polaroid Fun Flash 640", 0, 0, {
 		 	pdc640,
 			BAYER_TILE_RGGB,
 			NULL, // add postprocessor here!
 			"pdc640%04i.ppm"
 		}
 	},
-	{"Jenoptik JD350 entrance", {
+	{"Jenoptik JD350 entrance", 0, 0, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350e%04i.ppm"
 		}
 	},
-	{NULL}
+	{"Jenoptik JD350 video", 0xd96, 0x0000, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&jd350e_postprocessing,
+			"jd350v%04i.ppm"
+		}
+	},
+	{NULL,}
 };
 
 static int
@@ -104,31 +113,53 @@ static int
 pdc640_transmit (GPPort *port, char *cmd, int cmd_size,
 				   char *buf, int buf_size)
 {
-	char c;
-	int tries, r;
+	int r;
 
-	/* In event of a checksum or timing failure, retry */
-	for (tries = 0; tries < PDC640_MAXTRIES; tries++) {
-		/*
-		 * The first byte returned is always the same as the first byte
-		 * of the command.
-		 */
-		CHECK_RESULT (gp_port_write (port, cmd, cmd_size));
-		r = gp_port_read (port, &c, 1);
-		if ((r < 0) || (c != cmd[0]))
-			continue;
+	if (port->type == GP_PORT_USB) {
+		char xbuf[64];
+		unsigned char xcmd[4];
+		int checksum;
 
-		if (buf) {
-			r = pdc640_read_packet (port, buf, buf_size);
-			if (r < 0)
+		/* USB has always just 3 bytes + 1 byte checksum */
+		memset(xcmd,0,4);memcpy(xcmd,cmd,cmd_size);
+		checksum = (xcmd[0]^0x34)+(xcmd[1]^0xcb)+0x14f+(xcmd[2]^0x67);
+		xcmd[3] = checksum & 0xff;
+		r = gp_port_usb_msg_read( port, 0x10, xcmd[0]|(xcmd[1]<<8),xcmd[2]|(xcmd[3]<<8),xbuf,sizeof(xbuf));
+
+			/* Sometimes we want to read here, sometimes not.
+		if (r < GP_OK)
+			return r;
+			 */
+		if (buf && buf_size)
+			r = gp_port_read( port, buf, (buf_size + 63) & ~63 );
+		return r;
+	} else {
+		char c;
+		int tries;
+
+		/* In event of a checksum or timing failure, retry */
+		for (tries = 0; tries < PDC640_MAXTRIES; tries++) {
+			/*
+			 * The first byte returned is always the same as the first byte
+			 * of the command.
+			 */
+			CHECK_RESULT (gp_port_write (port, cmd, cmd_size));
+			r = gp_port_read (port, &c, 1);
+			if ((r < 0) || (c != cmd[0]))
 				continue;
+
+			if (buf) {
+				r = pdc640_read_packet (port, buf, buf_size);
+				if (r < 0)
+					continue;
+			}
+
+			return (GP_OK);
 		}
-
-		return (GP_OK);
+		return (GP_ERROR_CORRUPTED_DATA);
 	}
-
-	return (GP_ERROR_CORRUPTED_DATA);
 }
+
 
 static int
 pdc640_transmit_pic (GPPort *port, char cmd, int width, int thumbnail,
@@ -136,69 +167,91 @@ pdc640_transmit_pic (GPPort *port, char cmd, int width, int thumbnail,
 {
 	char cmd1[] = {0x61, 0x00};
 	char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x00};
-	int i, packet_size, result, size, ofs;
-	char *data;
 
 	/* First send the command ... */
 	cmd1[1] = cmd;
 	CHECK_RESULT (pdc640_transmit (port, cmd1, 2, NULL, 0));
 
-	/* Set how many scanlines worth of data to get at once */
-	cmd2[4] = 0x06;
+	if (port->type == GP_PORT_USB) {
+		cmd2[1] = (buf_size + 63) >> 6;
+		cmd2[2] = ((buf_size + 63) >> 6) >> 8;
+		return pdc640_transmit (port, cmd2, 4, buf, buf_size);
+	} else {
+		int i, packet_size, result, size, ofs;
+		char *data;
 
-	/* Packet size is a multiple of the image width */
-	packet_size = width * cmd2[4];
+		/* Set how many scanlines worth of data to get at once */
+		cmd2[4] = 0x06;
 
-	/* Allocate memory to temporarily store received data */
-	data = malloc (packet_size);
-	if (!data)
-		return (GP_ERROR_NO_MEMORY);
+		/* Packet size is a multiple of the image width */
+		packet_size = width * cmd2[4];
 
-	/* Now get the packets */
-	ofs = 0;
-	result = GP_OK;
-	for (i = 0; i < buf_size; i += packet_size) {
-		/* Read the packet */
-		result = pdc640_transmit (port, cmd2, 5,
-					data, packet_size);
-		if (result < 0)
-			break;
+		/* Allocate memory to temporarily store received data */
+		data = malloc (packet_size);
+		if (!data)
+			return (GP_ERROR_NO_MEMORY);
 
-		/* Copy from temp buffer -> actual */
-		size = packet_size;
-		if (size > buf_size - i)
-			size = buf_size - i;
-		memcpy(buf + i, data, size);
+		/* Now get the packets */
+		ofs = 0;
+		result = GP_OK;
+		for (i = 0; i < buf_size; i += packet_size) {
+			/* Read the packet */
+			result = pdc640_transmit (port, cmd2, 5,
+						data, packet_size);
+			if (result < 0)
+				break;
 
-		/* Move to next offset */
-		ofs += cmd2[4];
-		cmd2[2] = ofs & 0xFF;
-		cmd2[1] = (ofs >> 8) & 0xFF;
+			/* Copy from temp buffer -> actual */
+			size = packet_size;
+			if (size > buf_size - i)
+				size = buf_size - i;
+			memcpy(buf + i, data, size);
+
+			/* Move to next offset */
+			ofs += cmd2[4];
+			cmd2[2] = ofs & 0xFF;
+			cmd2[1] = (ofs >> 8) & 0xFF;
+		}
+		free (data);
+		return (result);
 	}
-
-	free (data);
-
-	return (result);
 }
 
 static int
-pdc640_transmit_packet (GPPort *port, char cmd, char *buf, int buf_size)
-{
+pdc640_transmit_packet (GPPort *port, char cmd, char *buf, int buf_size) {
 	char cmd1[] = {0x61, 0x00};
-	char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x01};
-
 	/* Send the command and get the packet */
 	cmd1[1] = cmd;
 	CHECK_RESULT (pdc640_transmit (port, cmd1, 2, NULL, 0));
-	CHECK_RESULT (pdc640_transmit (port, cmd2, 5, buf, buf_size));
 
-	return (GP_OK);
+	if (port->type == GP_PORT_USB) {
+		char cmd2[] = {0x15, 0x00, 0x00, 0x00};
+
+		cmd2[1] = ((buf_size+63)/64) & 0xff;
+		cmd2[2] = (((buf_size+63)/64) >> 8) & 0xff;
+		return pdc640_transmit (port, cmd2, 4, buf, buf_size);
+	} else {
+		char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x01};
+
+		return pdc640_transmit (port, cmd2, 5, buf, buf_size);
+	}
 }
+
 
 static int
 pdc640_ping_low (GPPort *port)
 {
 	char cmd[] = {0x01};
+
+	CHECK_RESULT (pdc640_transmit (port, cmd, 1, NULL, 0));
+
+	return (GP_OK);
+}
+
+static int
+pdc640_push_button (GPPort *port)
+{
+	char cmd[] = {0xfd};
 
 	CHECK_RESULT (pdc640_transmit (port, cmd, 1, NULL, 0));
 
@@ -227,6 +280,7 @@ pdc640_speed (GPPort *port, int speed)
 }
 
 #if 0
+/* read version I think */
 static int
 pdc640_unknown5 (GPPort *port)
 {
@@ -242,6 +296,7 @@ pdc640_unknown5 (GPPort *port)
 #endif
 
 #if 0
+/* get calibration param */
 static int
 pdc640_unknown20 (GPPort* port)
 {
@@ -259,8 +314,7 @@ pdc640_caminfo (GPPort *port, int *numpic)
 	char buf[1280];
 
 	CHECK_RESULT (pdc640_transmit_packet (port, 0x40, buf, 1280));
-	*numpic = buf[2];
-
+	*numpic = buf[2]; /* thats the only useful info :( */
 	return (GP_OK);
 }
 
@@ -268,12 +322,16 @@ static int
 pdc640_setpic (GPPort *port, char n)
 {
 	char cmd[2] = {0xf6, 0x00};
-	char buf[8];
 
 	cmd[1] = n;
-	CHECK_RESULT (pdc640_transmit (port, cmd, 2, buf, 7));
+	if (port->type == GP_PORT_USB) {
+		/* USB does not like a bulkread afterwards */
+		return pdc640_transmit (port, cmd, 2, NULL, 0);
+	} else {
+		char buf[8];
 
-	return (GP_OK);
+		return pdc640_transmit (port, cmd, 2, buf, 7);
+	}
 }
 
 static int
@@ -282,7 +340,7 @@ pdc640_picinfo (GPPort *port, char n,
 		int *size_thumb, int *width_thumb, int *height_thumb,
 		int *compression_type )
 {
-	unsigned char buf[32];
+	unsigned char buf[64];
 
 	CHECK_RESULT (pdc640_setpic (port, n));
 	CHECK_RESULT (pdc640_transmit_packet (port, 0x80, buf, 32));
@@ -574,7 +632,6 @@ int
 camera_id (CameraText *id)
 {
 	strcpy (id->text, "pdc640/jd350e");
-
 	return (GP_OK);
 }
 
@@ -587,16 +644,24 @@ camera_abilities (CameraAbilitiesList *list)
 	for (i = 0; models[i].model; i++) {
 		memset(&a, 0, sizeof(a));
 		strcpy (a.model, models[i].model);
-		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-		a.port = GP_PORT_SERIAL;
-		a.speed[0] = 0;
-		a.operations        = GP_OPERATION_NONE;
-		a.file_operations   = GP_FILE_OPERATION_DELETE;
+
+		if (models[i].vendor) {
+			a.status = GP_DRIVER_STATUS_TESTING;
+			a.port = GP_PORT_USB;
+			a.usb_vendor = models[i].vendor;
+			a.usb_product = models[i].product;
+		} else {
+			a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+			a.port = GP_PORT_SERIAL;
+			a.speed[0] = 0;
+		}
+
+		a.operations        = GP_OPERATION_CAPTURE_IMAGE;
+		a.file_operations   = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 
 		CHECK_RESULT (gp_abilities_list_append (list, a));
 	}
-
 	return (GP_OK);
 }
 
@@ -841,28 +906,29 @@ camera_init (Camera *camera, GPContext *context)
 	CHECK_RESULT (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 						delete_file_func, camera));
 
-	/* Open the port */
-	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
-	settings.serial.speed = 9600;
-	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
+	if (camera->port->type == GP_PORT_SERIAL) {
+		/* Open the port */
+		CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
+		settings.serial.speed = 9600;
+		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 
-	/* Start with a low timeout (so we don't have to wait if already initialized) */
-	CHECK_RESULT (gp_port_set_timeout (camera->port, 1000));
+		/* Start with a low timeout (so we don't have to wait if already initialized) */
+		CHECK_RESULT (gp_port_set_timeout (camera->port, 1000));
 
-	/* Is the camera at 9600? */
-	result = pdc640_ping_low (camera->port);
-	if (result == GP_OK)
-		CHECK_RESULT (pdc640_speed (camera->port, 115200));
+		/* Is the camera at 9600? */
+		result = pdc640_ping_low (camera->port);
+		if (result == GP_OK)
+			CHECK_RESULT (pdc640_speed (camera->port, 115200));
 
-	/* Switch to 115200 */
-	settings.serial.speed = 115200;
-	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
+		/* Switch to 115200 */
+		settings.serial.speed = 115200;
+		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 
-	/* Is the camera at 115200? */
-	CHECK_RESULT (pdc640_ping_high (camera->port));
+		/* Is the camera at 115200? */
+		CHECK_RESULT (pdc640_ping_high (camera->port));
 
-	/* Switch to a higher timeout */
-	CHECK_RESULT (gp_port_set_timeout (camera->port, 5000));
-
+		/* Switch to a higher timeout */
+		CHECK_RESULT (gp_port_set_timeout (camera->port, 5000));
+	}
 	return (GP_OK);
 }

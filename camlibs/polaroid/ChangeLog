@@ -1,3 +1,7 @@
+2002-09-15  Marcus Meissner <marcus@jet.franken.de>
+
+	* pdc640.c: Added Jenoptik JD350v(ideo) USB support.
+
 2002-03-22  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch by Andrea Suatoni <a.suatoni@itaca.it>:
