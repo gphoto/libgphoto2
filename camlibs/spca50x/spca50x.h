@@ -61,7 +61,8 @@ struct _CameraPrivateLibrary
 	int storage_media_mask;
 	uint8_t fw_rev;
 	SPCA50xBridgeChip bridge;
-	int num_files;
+	int num_files_on_flash;
+	int num_files_on_sdram;
 	int num_images;
 	int num_movies;
 	int num_fats;

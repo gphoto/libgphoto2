@@ -108,7 +108,7 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 	uint8_t theFat[256];
 
 	lib->num_fats = 0;
-	lib->num_files = 0;
+	lib->num_files_on_sdram = 0;
 
 	if (lib->bridge == BRIDGE_SPCA500){
 		uint8_t lower, upper;
@@ -117,8 +117,8 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 		sleep (1);
 		CHECK (gp_port_usb_msg_read
 				(lib->gpdev, 0, 0, 0xe15,
-				 (uint8_t *) & lib->num_files, 1));
-		LE32TOH (lib->num_files);
+				 (uint8_t *) & lib->num_files_on_sdram, 1));
+		LE32TOH (lib->num_files_on_sdram);
 
 		// get fatscount 
 		CHECK (gp_port_usb_msg_write
@@ -140,7 +140,7 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 				break;
 
 			if (theFat[0] == 0x08 || theFat[0] == 0x00)
-				lib->num_files++;
+				lib->num_files_on_sdram++;
 
 			lib->num_fats++;
 		}
@@ -661,10 +661,10 @@ spca50x_sdram_get_info (CameraPrivateLibrary * lib)
 
 	CHECK (spca50x_sdram_get_file_count_and_fat_count (lib, dramtype));
 		
-	if (lib->num_files > 0) {
+	if (lib->num_files_on_sdram > 0) {
 		CHECK (spca50x_get_FATs (lib, dramtype));
 
-		index = lib->files[lib->num_files - 1].fat_end;
+		index = lib->files[lib->num_files_on_sdram - 1].fat_end;
 		p = lib->fats + SPCA50X_FAT_PAGE_SIZE * index;
 		/* p now points to the fat of the last image of the last file */
 
@@ -810,7 +810,7 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 	}
 
 	lib->fats = malloc (lib->num_fats * SPCA50X_FAT_PAGE_SIZE);
-	lib->files = malloc (lib->num_files * sizeof (struct SPCA50xFile));
+	lib->files = malloc (lib->num_files_on_sdram * sizeof (struct SPCA50xFile));
 
 	p = lib->fats;
 	if (lib->bridge == BRIDGE_SPCA504) {

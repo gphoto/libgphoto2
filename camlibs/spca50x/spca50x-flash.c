@@ -55,7 +55,7 @@ free_files (CameraPrivateLibrary *pl)
 {
 	int i;
 	if (pl->files){
-		for (i = 0; i < pl->num_files; i++){
+		for (i = 0; i < pl->num_files_on_flash; i++){
 			if(pl->files[i].thumb) free (pl->files[i].thumb);
 		}
 		free(pl->files);
@@ -117,9 +117,10 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 		/* TOC has been read already, and stored in the pl, 
 		   so let's not read it again unless "dirty" gets set,
 		   e.g. by a reset, delete or capture action... */
-		*filecount = pl->num_files;
+		*filecount = pl->num_files_on_flash;
 		return GP_OK;
 	}
+	pl->num_files_on_flash = 0;
 
 	if (pl->bridge == BRIDGE_SPCA500) { /* for dsc350 type cams */
 				/* command mode */
@@ -194,7 +195,7 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 		CHECK (gp_port_read (pl->gpdev, pl->flash_toc, toc_size));
 	}
 	/* record that TOC has been updated - clear the "dirty" flag */
-	pl->num_files = *filecount;
+	pl->num_files_on_flash = *filecount;
 	pl->dirty = 0;
 
 	return GP_OK;

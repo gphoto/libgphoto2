@@ -210,7 +210,7 @@ camera_capture (Camera *camera, CameraCaptureType type,
 		CHECK (spca50x_capture (camera->pl));
 		CHECK (spca50x_sdram_get_info (camera->pl));
 		CHECK (spca50x_sdram_get_file_info
-			(camera->pl, camera->pl->num_files - 1, &file));
+			(camera->pl, camera->pl->num_files_on_sdram - 1, &file));
 	
 		/* Add new image name to file list */
 		/* NOTE: these lines moved from below */
@@ -276,7 +276,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 		snprintf (tmp, sizeof (tmp),
 				_("SDRAM:\n Files: %d\n  Images: %4d\n  Movies: %4d\nSpace used: %8d\nSpace free: %8d\n"),
-				camera->pl->num_files, 
+				camera->pl->num_files_on_sdram, 
 				camera->pl->num_images,
 				camera->pl->num_movies, 
 				camera->pl->size_used,
@@ -336,7 +336,7 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 		if (camera->pl->dirty)
 			CHECK (spca50x_sdram_get_info (camera->pl));
 
-		for (i = 0; i < camera->pl->num_files; i++) {
+		for (i = 0; i < camera->pl->num_files_on_sdram; i++) {
 			strncpy (temp_file, camera->pl->files[i].name, 12);
 			temp_file[12] = 0;
 			gp_list_append (list, temp_file, NULL);
