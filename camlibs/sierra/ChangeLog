@@ -1,0 +1,7 @@
+2001-12-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Suggestion from Stefan Höhne <s_hoehne@informatik.uni-kl.de>:
+
+	* library.c: Check for filename == "        ". It seems his 
+	  camera doesn't support filenames.
+	* sierra.c: Add "Olympus C-2500L".

@@ -26,7 +26,7 @@
 #include <string.h>
 #include <time.h>
 
-#include <gphoto2.h>
+#include <gphoto2-port-log.h>
 
 #include "sierra.h"
 #include "sierra-usbwrap.h"
@@ -122,8 +122,7 @@ static int sierra_is_single_byte_packet(char b)
 	    b == TYPE_DATA_END)
 		ret_status = 0;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra",
-			 "* sierra_is_single_byte_packet return %d", ret_status);
+	GP_DEBUG ("* sierra_is_single_byte_packet return %d", ret_status);
 
 	return ret_status;
 }
@@ -175,23 +174,32 @@ int sierra_change_folder (Camera *camera, const char *folder)
 
 int sierra_list_files (Camera *camera, const char *folder, CameraList *list)
 {
-	int count, i, bsize = 0;
-	char buf[1024];
+	int count, i, len = 0;
+	char filename[1024];
 
+	/* We need to change to the folder first */
 	CHECK (sierra_change_folder (camera, folder));
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** counting files in '%s'"
-			 "...", folder);
+
+	/* Then, we count the files */
+	GP_DEBUG ("Counting files in '%s'...", folder);
 	CHECK (sierra_get_int_register (camera, 10, &count));
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** found %i files", count);
+	GP_DEBUG ("... done. Found %i files.", count);
+
+	/*
+	 * Finally, we get the filename of each file. Not that some cameras
+	 * that don't support filenames return 8 blanks instead of 
+	 * reporting an error.
+	 */
 	for (i = 0; i < count; i++) {
+		GP_DEBUG ("Getting filename of file %i...", i + 1);
 		CHECK (sierra_set_int_register (camera, 4, i + 1));
-		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting "
-				 "filename of picture %i...", i);
 		CHECK (sierra_get_string_register (camera, 79, 0, NULL,
-						   buf, &bsize));
-		if (bsize <= 0)
-			sprintf (buf, "P101%04i.JPG", i);
-		CHECK (gp_list_append (list, buf, NULL));
+						   filename, &len));
+		if ((len <= 0) || !strcmp (filename, "        "))
+			snprintf (filename, sizeof (filename),
+				  "P101%04i.JPG", i + 1);
+		GP_DEBUG ("... done ('%s').", filename);
+		CHECK (gp_list_append (list, filename, NULL));
 	}
 
 	return (GP_OK);
@@ -207,8 +215,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list)
 		return (GP_OK);
 
 	CHECK (sierra_change_folder (camera, folder));
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** counting folders "
-			 "in '%s'...", folder);
+	GP_DEBUG ("*** counting folders in '%s'...", folder);
 	CHECK (sierra_get_int_register (camera, 83, &count));
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** found %i folders", count);
 	for (i = 0; i < count; i++) {
@@ -246,7 +253,7 @@ int sierra_get_picture_folder (Camera *camera, char **folder)
 	CameraList *list;
 	const char *name = NULL;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_get_picture_folder");
+	GP_DEBUG ("* sierra_get_picture_folder");
 
 	*folder = NULL;
 
@@ -264,7 +271,7 @@ int sierra_get_picture_folder (Camera *camera, char **folder)
 	CHECK( gp_filesystem_list_folders(camera->fs, "/DCIM", list) );
 	for(i=0 ; i < gp_list_count(list) ; i++) {
 		CHECK( gp_list_get_name(list, i, &name) );
-		gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* check folder %s", name);
+		GP_DEBUG ("* check folder %s", name);
 		if (isdigit(name[0]) && isdigit(name[1]) && isdigit(name[2]))
 			break;
 		name = NULL;
@@ -293,7 +300,7 @@ int sierra_check_battery_capacity (Camera *camera)
 {
 	int ret, capacity;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_check_battery_capacity");
+	GP_DEBUG ("* sierra_check_battery_capacity");
 
 	if ((ret = sierra_get_int_register(camera, 16, &capacity)) != GP_OK) {
 		gp_camera_set_error (camera,
@@ -339,7 +346,7 @@ sierra_write_packet (Camera *camera, char *packet)
 {
 	int x, ret, r, checksum=0, length;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_packet");
+	GP_DEBUG ("* sierra_write_packet");
 
 	/* Determing packet length */
 	if ((packet[0] == TYPE_COMMAND) ||
@@ -388,7 +395,7 @@ sierra_write_nak (Camera *camera)
         char buf[4096];
         int ret;
 
-        gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_nack");
+        GP_DEBUG ("* sierra_write_nack");
 
         buf[0] = NAK;
         ret = sierra_write_packet (camera, buf);
@@ -433,7 +440,7 @@ sierra_read_packet (Camera *camera, char *packet)
 	int y, r = 0, ret_status = GP_ERROR_IO, done = 0, length;
 	int blocksize = 1, bytes_read;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_read_packet");
+	GP_DEBUG ("* sierra_read_packet");
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
@@ -457,7 +464,7 @@ sierra_read_packet (Camera *camera, char *packet)
 		ret_status = GP_ERROR_IO;
 
 		if (r > 0) {
-			gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* reading again...");
+			GP_DEBUG ("* reading again...");
 		}
 
 		/* Clear the USB bus
@@ -472,9 +479,8 @@ sierra_read_packet (Camera *camera, char *packet)
 		else
 			bytes_read = gp_port_read (camera->port, packet, blocksize);
 		
-		gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* bytes_read: %d", bytes_read);
-		gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* packet[0] : %x",
-				 (unsigned char) packet[0]);
+		GP_DEBUG ("* bytes_read: %d", bytes_read);
+		GP_DEBUG ("* packet[0] : %x", (unsigned char) packet[0]);
 
 		/* If an error was encoutered reading data though the bus, try again */
 		if (bytes_read < 0) {
@@ -562,8 +568,7 @@ sierra_build_packet (Camera *camera, char type, char subtype,
 		packet[1] = subtype;
 		break;
 	default:
-		gp_debug_printf (GP_DEBUG_HIGH, "sierra", 
-				 "* unknown packet type!");
+		GP_DEBUG ("* unknown packet type!");
 	}
 
 	packet[2] = data_length &  0xff;
@@ -578,7 +583,7 @@ sierra_write_ack (Camera *camera)
 	char buf[4096];
 	int ret;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_ack");
+	GP_DEBUG ("* sierra_write_ack");
 	
 	buf[0] = ACK;
 	ret = sierra_write_packet (camera, buf);
@@ -592,11 +597,10 @@ int sierra_ping (Camera *camera)
 	int ret, r = 0;
 	char buf[4096];
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_ping");
+	GP_DEBUG ("* sierra_ping");
 
 	if (camera->port->type == GP_PORT_USB) {
-		gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_ping no "
-				 "ping for USB");
+		GP_DEBUG ("* sierra_ping no ping for USB");
 		return (GP_OK);
 	}
 	
@@ -627,8 +631,8 @@ int sierra_set_speed (Camera *camera, int speed)
 {
 	gp_port_settings settings;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_set_speed");
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* speed: %i", speed);
+	GP_DEBUG ("* sierra_set_speed");
+	GP_DEBUG ("* speed: %i", speed);
 
 	camera->pl->first_packet = 1;
 
@@ -737,9 +741,9 @@ int sierra_set_int_register (Camera *camera, int reg, int value)
 	char buf[4096];
 	int ret;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_set_int_register");
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* value:    %i", value);
+	GP_DEBUG ("* sierra_set_int_register");
+	GP_DEBUG ("* register: %i", reg);
+	GP_DEBUG ("* value:    %i", value);
 
 	if (value < 0) {
 		CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 2, p));
@@ -790,8 +794,8 @@ int sierra_get_int_register (Camera *camera, int reg, int *value)
 	char buf[4096];
 	int ret;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_get_int_register");
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
+	GP_DEBUG ("* sierra_get_int_register");
+	GP_DEBUG ("* register: %i", reg);
 
 	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 2, packet));
 
@@ -846,10 +850,9 @@ int sierra_set_string_register (Camera *camera, int reg, const char *s, long int
 	long int x=0;
 	int seq=0, size=0, done, r, ret, do_percent;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", 
-			 "* sierra_set_string_register");
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* value: %s", s);
+	GP_DEBUG ("* sierra_set_string_register");
+	GP_DEBUG ("* register: %i", reg);
+	GP_DEBUG ("* value: %s", s);
 
 	/* Make use of the progress bar when the packet is "large enough" */
 	if (length > MAX_DATA_FIELD_LENGTH) {
@@ -931,11 +934,9 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	unsigned char packet[4096];
 	unsigned int packlength, total = *b_len;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", 
-			 "* sierra_get_string_register");
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* file number: %i", 
-			 file_number);
+	GP_DEBUG ("* sierra_get_string_register");
+	GP_DEBUG ("* register: %i", reg);
+	GP_DEBUG ("* file number: %i", file_number);
 
 	/* Set the current picture number */
 	if (file_number >= 0)
@@ -983,7 +984,7 @@ int sierra_delete_all (Camera *camera)
 {
 	char packet[4096], buf[4096], r, done, ret;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_delete_all");
+	GP_DEBUG ("* sierra_delete_all");
 
 	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, packet));
 
@@ -1020,9 +1021,8 @@ int sierra_delete (Camera *camera, int picture_number)
 	char packet[4096], buf[4096];
 	int r, done, ret;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_delete");
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* picture: %i", 
-			 picture_number);
+	GP_DEBUG ("* sierra_delete");
+	GP_DEBUG ("* picture: %i", picture_number);
 
 	CHECK (sierra_set_int_register (camera, 4, picture_number));
 
@@ -1068,7 +1068,7 @@ int sierra_end_session (Camera *camera)
 	unsigned char c;
 	int r, done;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_end_session");
+	GP_DEBUG ("* sierra_end_session");
 
 	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, packet));
 	packet[4] = 0x02;
@@ -1119,11 +1119,11 @@ int sierra_capture_preview (Camera *camera, CameraFile *file)
 int sierra_capture (Camera *camera, CameraCaptureType type,
 		    CameraFilePath *filepath)
 {
-	int picnum, length = 0;
-	char buf[128];
+	int n, len = 0;
+	char filename[128];
 	const char *folder;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_capture");
+	GP_DEBUG ("* sierra_capture");
 
 	/* We can only capture images */
 	if (type != GP_CAPTURE_IMAGE)
@@ -1134,36 +1134,30 @@ int sierra_capture (Camera *camera, CameraCaptureType type,
 	CHECK (sierra_write_action_command_and_wait(camera, 2));
 
 	/* After picture is taken, register 4 is set to current picture */
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* get picture number...");
-	CHECK (sierra_get_int_register (camera, 4, &picnum));
+	GP_DEBUG ("Getting picture number...");
+	CHECK (sierra_get_int_register (camera, 4, &n));
 
-	/* Get the picture filename */
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra",
-			 "*** getting filename of picture %i...", picnum);
-	CHECK (sierra_get_string_register (camera, 79, 0, NULL, buf, &length));
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* filename: %s", buf);
-
-	/* Set the picture filename and folder */
-	if (length > 0) {
-
-		/*
-		 * Get the folder of the new file. The filesystem doesn't
-		 * know about the new file yet, therefore just format it.
-		 *
-		 * If somebody figures out how to find the location where
-		 * the picture has been taken, this code can be improved.
-		 * Until then...
-		 */
-		CHECK (gp_filesystem_reset (camera->fs));
-		CHECK (gp_filesystem_get_folder (camera->fs, buf, &folder));
-		strcpy (filepath->folder, folder);
-		strcpy (filepath->name, buf);
-
-	} else {
-		/* Filename not supported. May it be possible? */
-		//FIXME: Which filename???
-		strcpy (filepath->name, "");
-	}
+	/*
+	 * We need to tell the frontend where the new image can be found. 
+	 * Unfortunatelly, we can only figure out the filename. Therefore,
+	 * reset the CameraFilesystem and let it search for the filename.
+	 *
+	 * If you know how to figure out where the image gets saved,
+	 * please submit a patch.
+	 *
+	 * Not that some cameras that don't support filenames will return
+	 * 8 blanks instead of reporting an error.
+	 */
+	GP_DEBUG ("Getting filename of file %i...", n);
+	CHECK (sierra_get_string_register (camera, 79, 0, NULL,
+					   filename, &len));
+	if ((len <= 0) || !strcmp (filename, "        "))
+		snprintf (filename, sizeof (filename), "P101%04i.JPG", n);
+	GP_DEBUG ("... done ('%s')", filename);
+	CHECK (gp_filesystem_reset (camera->fs));
+	CHECK (gp_filesystem_get_folder (camera->fs, filename, &folder));
+	strncpy (filepath->folder, folder, sizeof (filepath->folder));
+	strncpy (filepath->name, filename, sizeof (filepath->name));
 
 	return (GP_OK);
 }

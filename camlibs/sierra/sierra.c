@@ -134,7 +134,8 @@ static SierraCamera sierra_cameras[] = {
 	{"Olympus C-2020Z",	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
         {"Olympus C-2040Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x105, 0x83, 0x04, 1},
 	{"Olympus C-2100UZ",    SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0x83, 0x04, 0},
-        {"Olympus C-2500Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 },
+	{"Olympus C-2500L",     SIERRA_MODEL_OLYMPUS,   0, 0, 0, 0, 0 },
+	{"Olympus C-2500Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, 0, 0 }, /* Does this model exist? */
 	{"Olympus C-3000Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0x83, 0x04, 0},
 	{"Olympus C-3030Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0x83, 0x04, 0},
 	{"Panasonic Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT,	0, 0, 0, 0, 0 },
