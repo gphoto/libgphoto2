@@ -1,5 +1,5 @@
 #include <gphoto2.h>
-#include "image.h"
+#include <gphoto2-frontend.h>
 
 int gp_file_image_rotate (CameraFile *old_file, CameraFile *new_file,
 			  int degrees) {
