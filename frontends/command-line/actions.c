@@ -26,7 +26,6 @@ int print_files(char *subfolder, image_action iaction, int reverse) {
 	CameraList filelist;
 	CameraListEntry *entry;
 	int x, res;
-	char buf[64];
 
 	res = gp_camera_folder_list_files (glob_camera, subfolder, &filelist);
 	if (res != GP_OK)
@@ -41,10 +40,26 @@ int print_files(char *subfolder, image_action iaction, int reverse) {
 		entry = gp_list_entry (&filelist, x);
 		if (glob_quiet)
 			printf ("\"%s\"\n", entry->name);
-		   else {
-			sprintf (buf, "%i", x+1);
-			printf ("#%-5s %s\n", buf, entry->name);
-		}
+                else {
+			CameraFileInfo info;
+			if (gp_camera_file_get_info(glob_camera, subfolder, entry->name, &info) == GP_OK) {
+			    printf("#%-5i %-27s", x+1, entry->name);
+			    if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
+			    	printf("%s%s",
+			    		(info.file.permissions & GP_FILE_PERM_READ) ? "r" : "-",
+			    		(info.file.permissions & GP_FILE_PERM_DELETE) ? "d" : "-");
+			    }
+			    if (info.file.fields & GP_FILE_INFO_SIZE)
+			    	printf(" %5d KB", (info.file.size+1023) / 1024);
+			    if ((info.file.fields & GP_FILE_INFO_WIDTH) && +			    	(info.file.fields & GP_FILE_INFO_HEIGHT))
+			    	printf(" %4dx%-4d", info.file.width, info.file.height);
+			    if (info.file.fields & GP_FILE_INFO_TYPE)
+			    	printf(" %s", info.file.type);
+				printf("\n");
+			} else {
+			    printf("#%-5i %s\n", x+1, entry->name);
+			}
+                }
 	}
 	return (GP_OK);
 }

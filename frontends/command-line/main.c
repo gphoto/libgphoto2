@@ -744,6 +744,7 @@ int capture_generic (int type, char *name) {
 
         CameraFilePath path;
         CameraFile* file;
+        char *pathsep;
         int result;
 
         if ((result = set_globals()) != GP_OK)
@@ -764,11 +765,16 @@ int capture_generic (int type, char *name) {
         		return (result);
         	}
 
+                if (strcmp(path.folder, "/") == 0)
+				pathsep = "";
+			else
+				pathsep = "/";
+
         	if (glob_quiet)
-        		printf ("%s/%s\n", path.folder, path.name);
+        		printf ("%s%s%s\n", path.folder, pathsep, path.name);
         	else
-        		printf ("New file is in location %s/%s on the camera\n", 
-				path.folder, path.name);
+        		printf ("New file is in location %s%s%s on the camera\n",
+				path.folder, pathsep, path.name);
         }
 
         return (GP_OK);

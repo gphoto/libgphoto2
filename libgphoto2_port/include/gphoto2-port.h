@@ -300,7 +300,7 @@ struct gp_port {
                 */
 
         int gp_port_send_break (gp_port *dev, int duration);
-                /* send a break (duration is in seconds) */
+                /* send a break (duration is in milli seconds) */
 
         int gp_port_flush (gp_port *dev, int direction);
                 /* Flush either an input or output line */

@@ -560,10 +560,10 @@ static speed_t gp_port_serial_baudconv(int baud)
 
 int gp_port_serial_send_break (gp_port *dev, int duration) {
 
-        /* Duration is in seconds */
+        /* Duration is in milliseconds */
 
 #if HAVE_TERMIOS_H
-        tcsendbreak(dev->device_fd, duration / 3);
+        tcsendbreak(dev->device_fd, duration / 310);
         tcdrain(dev->device_fd);
 #else
         /* ioctl */
