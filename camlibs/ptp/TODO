@@ -1,7 +1,7 @@
 
 Unordered TODO list:
 
--- filesystem implementation.
+-- folders implementation.
 
 -- implementation of GetStorageInfo and GetStorageID's and proper
 interpretation of it's fields, which may be meaningful for driver behavior.
