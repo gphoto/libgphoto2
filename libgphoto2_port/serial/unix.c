@@ -244,7 +244,7 @@ gp_port_library_list (GPPortInfoList *list)
         struct stat s;
 #endif
 #ifdef OS2
-        int fh, option;
+        int r, fh, option;
 #endif
 
         /* Copy in the serial port prefix */
