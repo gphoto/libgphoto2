@@ -81,16 +81,16 @@
 
 */
 
-#define COMM1	0x00
-#define READY	0x10
-#define ACK	0xd1
-#define PACK1	0xd2
+#define COMM1	(unsigned char)0x00
+#define READY	(unsigned char)0x10
+#define ACK		(unsigned char)0xd1
+#define PACK1	(unsigned char)0xd2
 
 /* nice. errors all have upper nibble of 'e' */
-#define	NAK	0xe1
-#define	COMM0	0xe2
-#define PACK0	0xe3
-#define CANCL	0xe4
+#define	NAK		(unsigned char)0xe1
+#define	COMM0	(unsigned char)0xe2
+#define PACK0	(unsigned char)0xe3
+#define CANCL	(unsigned char)0xe4
 
 #define TIMEOUT		1000
 #define SLEEP_TIMEOUT 	50

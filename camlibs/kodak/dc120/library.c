@@ -128,10 +128,11 @@ read_data_write_again:
 				if ((num_packets == 16)&&(x==16))
 					p[0] = CANCL;
 				/* No break on purpose */
-				gp_camera_progress(NULL, file, 100.0 * (float)((x-1)*block_size)/(float)(*size));
+				gp_camera_progress(NULL, file, (float)(100.0 * (float)((x-1)*block_size)/(float)(*size)));
 				break;
 			   default:
 				/* Nada */
+				break;
 			}
 
 			/* Write response */
@@ -164,29 +165,29 @@ int dc120_set_speed (DC120Data *dd, int speed) {
 
 	switch (speed) {
 		case 9600:
-			p[2] = 0x96;
-			p[3] = 0x00;
+			p[2] = (unsigned char)0x96;
+			p[3] = (unsigned char)0x00;
 			settings.serial.speed = 9600;
 			break;
 		case 19200:
-			p[2] = 0x19;
-			p[3] = 0x20;
+			p[2] = (unsigned char)0x19;
+			p[3] = (unsigned char)0x20;
 			settings.serial.speed = 19200;
 			break;
 		case 38400:
-			p[2] = 0x38;
-			p[3] = 0x40;
+			p[2] = (unsigned char)0x38;
+			p[3] = (unsigned char)0x40;
 			settings.serial.speed = 38400;
 			break;
 		case 57600:
-			p[2] = 0x57;
-			p[3] = 0x60;
+			p[2] = (unsigned char)0x57;
+			p[3] = (unsigned char)0x60;
 			settings.serial.speed = 57600;
 			break;
 		case 0: /* Default */
 		case 115200:
-			p[2] = 0x11;
-			p[3] = 0x52;
+			p[2] = (unsigned char)0x11;
+			p[3] = (unsigned char)0x52;
 			settings.serial.speed = 115200;
 			break;
 /* how well supported is 230.4?
@@ -371,7 +372,7 @@ int dc120_wait_for_completion (DC120Data *dd) {
 		   default:
 			done = 1;
 		}
-		gp_camera_progress(NULL, NULL, 100.0*(float)x/25.0);
+		gp_camera_progress(NULL, NULL, (float)(100.0*(float)x/25.0));
 	}
 
 	if (x==25)

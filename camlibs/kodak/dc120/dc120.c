@@ -98,7 +98,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	gpio_set_timeout(dd->dev, TIMEOUT);
 
 	/* Reset the camera to 9600 */
-	gpio_send_break(dd->dev, 1);
+	gpio_send_break(dd->dev, 5);
 
 	/* Wait for it to update */
 	GPIO_SLEEP(1500);
@@ -321,10 +321,10 @@ int camera_manual (Camera *camera, CameraText *manual) {
 /*	DC120Data *dd = camera->camlib_data; */
 
 	strcpy(manual->text, 
-"The Kodak DC120 camera uses the KDC file format
-for storing images. If you want to view the images you
-download from your camera, you will need to download 
-the \"kdc2tiff\" program.
+"The Kodak DC120 camera uses the KDC file format \
+for storing images. If you want to view the images you \
+download from your camera, you will need to download \
+the \"kdc2tiff\" program. \
 It is available from http://kdc2tiff.sourceforge.net");
 
 	return (GP_OK);
@@ -335,9 +335,9 @@ int camera_about (Camera *camera, CameraText *about) {
 /*	DC120Data *dd = camera->camlib_data; */
 
 	strcpy(about->text, 
-"Kodak DC120 Camera Library
-Scott Fritzinger <scottf@gphoto.net>
-Camera Library for the Kodak DC120 camera.
+"Kodak DC120 Camera Library \
+Scott Fritzinger <scottf@gphoto.net> \
+Camera Library for the Kodak DC120 camera. \
 (by popular demand).");
 
 	return (GP_OK);
