@@ -1,3 +1,8 @@
+2002-05-23  Lutz Müller <lutz@users.sourceforge.net>
+
+	* test/test-gp-port.c: More tests.
+	* libgphoto2_port/gphoto2-port.c: Nicer debugging output.
+
 2002-04-22  Marcus Meissner <marcus@jet.franken.de>
 	
 	* serial/unix.c: Unescape 0xff/0xXX parity framing sequences here.

@@ -630,11 +630,45 @@ gp_port_get_pin (GPPort *port, GPPin pin, GPLevel *level)
 	return (GP_OK);
 }
 
+static struct {
+	GPPin pin;
+	unsigned char number;
+	const char *description_short;
+	const char *description_long;
+} PinTable[] = {
+	{GP_PIN_RTS , 7, "RTS" , "Request To Send"    },
+	{GP_PIN_DTR , 4, "DTR" , "Data Terminal Ready"},
+	{GP_PIN_CTS , 8, "CTS" , "Clear To Send"      },
+	{GP_PIN_DSR , 6, "DSR" , "Data Set Ready"     },
+	{GP_PIN_CD  , 1, "CD"  , "Carrier Detect"     },
+	{GP_PIN_RING, 9, "RING", "Ring Indicator"     },
+	{0, 0, NULL, NULL}
+};
+
+static struct {
+	GPLevel level;
+	const char *description;
+} LevelTable[] = {
+	{GP_LEVEL_LOW, "low"},
+	{GP_LEVEL_HIGH, "high"},
+	{0, NULL}
+};
+
 int
 gp_port_set_pin (GPPort *port, GPPin pin, GPLevel level)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Setting pin %i to %i...",
-		pin, level);
+	unsigned int i, j;
+
+	for (i = 0; PinTable[i].description_short; i++)
+		if (PinTable[i].pin == pin)
+			break;
+	for (j = 0; LevelTable[j].description; j++)
+		if (LevelTable[j].level == level)
+			break;
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Setting pin %i "
+		"(%s: '%s') to '%s'...", 
+		PinTable[i].number, PinTable[i].description_short,
+		PinTable[i].description_long, LevelTable[j].description);
 
 	CHECK_NULL (port);
 	CHECK_INIT (port);
