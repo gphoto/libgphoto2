@@ -1,5 +1,5 @@
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
+INCLUDES = -I$(top_srcdir)/libgphoto2
 
 noinst_PROGRAMS =	\
 	test-gphoto2	\
