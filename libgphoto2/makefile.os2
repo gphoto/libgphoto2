@@ -4,7 +4,7 @@ BASEPATH=..
   $(CC) -o $@ $< $(CCFLAGS)
 
 all: start \
-  dll\
+  dll \
   lib \
   end
 
@@ -36,6 +36,6 @@ gphoto2.def: $(OBJS)
    @$(MAKEDEF)
 
 $(BASEPATH)\gphoto2.dll: gphoto2.def $(OBJS)
-  @$(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)
+  $(LINK) $(DLLLINKFLAGS) -o $@ $**  -L..\lib -Zbin-files -ldllib -llibgphoto2_port -lst\check -lgcc
 
 

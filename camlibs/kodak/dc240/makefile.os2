@@ -1,0 +1,20 @@
+BASEPATH=..\..\..
+
+all: start \
+  dll \
+  end
+
+!include $(BASEPATH)\os2mak.inc
+
+dll: $(CAMLIBS)\gpdc240.dll
+
+OBJS=library.o dc240.o
+
+.c.o:
+   $(CC) -o $@ $< $(CCFLAGS)
+
+kodak.def: dc240.o
+   $(MAKEDEF)
+
+$(CAMLIBS)\gpdc240.dll: $(OBJS) kodak.def
+   $(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)

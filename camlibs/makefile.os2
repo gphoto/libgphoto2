@@ -46,9 +46,9 @@ dll:
   @cd panasonic
   @nmake -nologo -f makefile.os2
   @cd..
-  @cd sierra
-  @nmake -nologo -f makefile.os2
-  @cd..
+# @cd sierra
+# @nmake -nologo -f makefile.os2
+# @cd..
   @cd sonydscf1
   @nmake -nologo -f makefile.os2
   @cd..

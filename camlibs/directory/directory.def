@@ -11,6 +11,7 @@ EXPORTS
   "camera_folder_list_folders"
   "camera_folder_list_files"
   "camera_file_get"
+  "camera_file_get_info"
   "camera_file_set_info"
   "camera_get_config"
   "camera_set_config"

@@ -42,4 +42,4 @@ lgp2port.def: $(OBJS)
    @$(MAKEDEF)
 
 $(BASEPATH)\lgp2port.dll: $(OBJS) lgp2port.def
-  @$(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)
+  $(LINK) $(DLLLINKFLAGS) -o $@ $** -ldllib

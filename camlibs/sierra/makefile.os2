@@ -8,7 +8,7 @@ all: start \
 
 dll: ..\gpsierra.dll
 
-OBJS=sierra.o library.o
+OBJS=sierra.o library.o sierra-usbwrap.o
 
 .c.o :
    @$(CC) -o $@ $< $(CCFLAGS)
