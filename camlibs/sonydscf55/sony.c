@@ -17,6 +17,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+
 #include "config.h"
 
 #include <stdio.h>
@@ -423,7 +424,7 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 					break;
 				}
 			} else {
-				/*                                printf("Incomplete packet\n"); */
+				/* printf("Incomplete packet\n"); */
 				ps.buffer[0] = 129;
 				ps.checksum = sony_packet_checksum(&ps);
 			}
@@ -463,7 +464,7 @@ static int sony_baud_set(Camera * camera, long baud)
 
 	GP_DEBUG( "sony_baud_set(%ld)",
 			baud);
-	// FIXME
+	/* FIXME */
 	SetTransferRate[3] = sony_baud_to_id(baud);
 
 	rc = sony_converse(camera, &dp, SetTransferRate, 4);
@@ -482,9 +483,9 @@ static int sony_init_port (Camera *camera)
 {
 	gp_port_settings settings;
 	int rc;
-	
+
 	rc = gp_port_set_timeout (camera->port, 5000);
-	if (rc == GP_OK) { 
+	if (rc == GP_OK) {
 
 		gp_port_get_settings(camera->port, &settings);
 
@@ -509,7 +510,7 @@ static int sony_init_first_contact (Camera *camera)
 	int count = 0;
 	Packet dp;
 	int rc = GP_ERROR;
-	
+
 	for (count = 0; count < 3; count++) {
 		camera->pl->sequence_id = 0;
 
@@ -616,13 +617,13 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 	if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 		return GP_ERROR_CANCEL;
 	}
-	
+
 	rc = gp_file_clean(file);
 	if (rc == GP_OK) {
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
-		// FIXME: There appears to be a file name at dp.buffer+5
-		// after a SelectImage. We could use that for the real
-		// file name instead of our own mockup ("dsc%d.jpg").
+		/* FIXME: There appears to be a file name at dp.buffer+5 */
+		/* after a SelectImage. We could use that for the real */
+		/* file name instead of our own mockup ("dsc%d.jpg"). */
 		sprintf(buffer, SONY_FILE_NAME_FMT, imageid);
 		gp_file_set_name (file, buffer);
 
@@ -650,7 +651,7 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 						break;
 					}
 					gp_context_idle(context);
-					
+
 					sony_converse(camera, &dp,
 						      SendThumbnail, 4);
 
@@ -685,11 +686,11 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 					if (file_type == SONY_FILE_EXIF) {
 						const char *fdata;
 						unsigned long fsize;
-					
+
 						gp_file_get_data_and_size
 							(file, &fdata, &fsize);
-						// FIXME: 4096 is a rather
-						// arbitrary value
+						/* FIXME: 4096 is a rather */
+						/* arbitrary value */
 						if (fsize > 4096)
 							break;
 					}

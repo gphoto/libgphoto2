@@ -16,7 +16,7 @@ struct _CameraPrivateLibrary {
     int  memory_source;
 };
 
-//--------------------------------------------------------------------------/
+/* -------------------------------------------------------------------------- */
 
 int mdc800_openCamera (Camera*);
 int mdc800_closeCamera (Camera*);
@@ -24,7 +24,7 @@ int mdc800_closeCamera (Camera*);
 int mdc800_changespeed (Camera*,int);
 int mdc800_getSpeed (Camera*,int *);
 
-//- Camera must be open for these functions --------------------------------/
+/* - Camera must be open for these functions -------------------------------- */
 
 int mdc800_setTarget (Camera *camera, int);
 
@@ -32,7 +32,7 @@ int mdc800_setTarget (Camera *camera, int);
 int mdc800_getThumbnail (Camera *cam, int nr, void **data,int *size);
 int mdc800_getImage (Camera *cam,int nr, void **data, int *size);
 
-//------- SystemStatus ----------------------------------------------------/
+/* ------- SystemStatus ---------------------------------------------------- */
 
 int mdc800_getSystemStatus(Camera *);
 int mdc800_isCFCardPresent(Camera *);
@@ -45,9 +45,9 @@ int mdc800_isAutoOffEnabled(Camera*);
 
 int mdc800_getStorageSource(Camera*);
 
-//------- Other Functions --------------------------------------------------/
+/* ------- Other Functions -------------------------------------------------- */
 
-// Most of these Function depends on the Storage Source
+/*  Most of these Function depends on the Storage Source */
 
 int mdc800_setDefaultStorageSource(Camera*);
 int mdc800_setStorageSource (Camera *,int);

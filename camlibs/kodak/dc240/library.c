@@ -55,7 +55,7 @@
   #define CANCL	(unsigned char)0xe4
 */
 
-/* system codes */ 
+/* system codes */
 enum {
     DC240_SC_COMPLETE = 0x0,
     DC240_SC_ACK = 0xd1,
@@ -156,14 +156,14 @@ write_again:
     return GP_OK;
 }
 
-static int 
-dc240_packet_read (Camera *camera, char *packet, int size) 
+static int
+dc240_packet_read (Camera *camera, char *packet, int size)
 {
 
     int retval = gp_port_read(camera->port, packet, size);
 
-    /* 
-     * If we try to read data about a non-picture file, we get back 
+    /*
+     * If we try to read data about a non-picture file, we get back
      * a single DC240_SC_ERROR byte.  So, if we're trying to read a packet with
      * size greater than one, but we only get one byte, and it is a
      * DC240_SC_ERROR error, return failure
@@ -180,7 +180,7 @@ dc240_packet_read (Camera *camera, char *packet, int size)
     }
 }
 
-static int dc240_packet_write_ack (Camera *camera) 
+static int dc240_packet_write_ack (Camera *camera)
 {
     int retval;
     unsigned char c;
@@ -192,7 +192,7 @@ static int dc240_packet_write_ack (Camera *camera)
     return GP_OK;
 }
 
-static int dc240_packet_write_nak (Camera *camera) 
+static int dc240_packet_write_nak (Camera *camera)
 {
     int retval;
     unsigned char c;
@@ -214,9 +214,9 @@ static int dc240_wait_for_completion (Camera *camera) {
     while ((x++ < 25)&&(!done)) {
 	retval = dc240_packet_read(camera, p, 1);
 	switch (retval) {
-	case GP_ERROR: 
+	case GP_ERROR:
 	    GP_DEBUG ("GP_ERROR\n");
-	    return (GP_ERROR); 
+	    return (GP_ERROR);
 	    break;
 	case GP_ERROR_TIMEOUT:
 	    GP_DEBUG ("GP_ERROR_TIMEOUT\n");
@@ -226,11 +226,11 @@ static int dc240_wait_for_completion (Camera *camera) {
 	    done = 1;
 	}
     }
-    
+
     if (x==25) {
 	return (GP_ERROR_TIMEOUT);
     }
-    
+
     return GP_OK;
 }
 
@@ -238,7 +238,7 @@ static int dc240_wait_for_completion (Camera *camera) {
   Implement the wait state aka busy case
   See 2.7.2 in the DC240 Host interface Specification
  */
-static int dc240_wait_for_busy_completion (Camera *camera) 
+static int dc240_wait_for_busy_completion (Camera *camera)
 {
     enum {
 	BUSY_RETRIES = 100
@@ -252,10 +252,10 @@ static int dc240_wait_for_busy_completion (Camera *camera)
 	retval = dc240_packet_read(camera, p, 1);
 	switch (retval) {
 	case GP_ERROR:
-	    return retval; 
+	    return retval;
 	    break;
 	case GP_ERROR_IO_READ:
-	case GP_ERROR_TIMEOUT: 
+	case GP_ERROR_TIMEOUT:
 	    /* in busy state, GP_ERROR_IO_READ can happend */
 	    break;
 	default:
@@ -264,17 +264,17 @@ static int dc240_wait_for_busy_completion (Camera *camera)
 	    }
 	}
     }
-    
+
     if (x == BUSY_RETRIES)
 	return (GP_ERROR);
-    
+
     return retval;
 }
 
 
 static int dc240_packet_exchange (Camera *camera, CameraFile *file,
                            char *cmd_packet, char *path_packet,
-                           int *size, int block_size, GPContext *context) 
+                           int *size, int block_size, GPContext *context)
 {
     /* Reads in multi-packet data, appending it to the "file". */
     char check_sum;
@@ -351,7 +351,7 @@ read_data_read_again:
 	    dc240_packet_write_nak (camera);
 	    goto read_data_read_again;
 	}
-	
+
         /* Check for error in command/path */
         if ((unsigned char)packet[0] > DC240_SC_FIRST_ERROR) {
 	    gp_context_progress_stop (context, id);
@@ -401,11 +401,11 @@ read_data_read_again:
 /*
   See 5.1.37
  */
-int dc240_open (Camera *camera) 
+int dc240_open (Camera *camera)
 {
     int retval = GP_OK;
     char *p = dc240_packet_new(0x96);
-    
+
     GP_DEBUG ("dc240_open\n");
 
     retval = dc240_packet_write(camera, p, 8, 1);
@@ -425,7 +425,7 @@ int dc240_open (Camera *camera)
     return retval;
 }
 
-int dc240_close (Camera *camera, GPContext *context) 
+int dc240_close (Camera *camera, GPContext *context)
 {
     char *p = dc240_packet_new(0x97);
     int retval, size = -1;
@@ -466,7 +466,7 @@ static int dc240_get_file_size (Camera *camera, const char *folder, const char *
     return (size);
 }
 
-int dc240_set_speed (Camera *camera, int speed) 
+int dc240_set_speed (Camera *camera, int speed)
 {
     int retval;
     char *p = dc240_packet_new(0x41);
@@ -590,7 +590,7 @@ const char *dc240_get_ac_status_str (uint8_t status)
     case 1:
 	return _("In use");
 	break;
-    default: 
+    default:
 	break;
     }
     return _("Invalid");
@@ -611,7 +611,7 @@ const char * dc240_get_memcard_status_str(uint8_t status)
 	else {
 	    return _("Card is not formatted");
 	}
-    }	
+    }
     else {
 	return _("No card");
     }
@@ -671,10 +671,10 @@ static int dc240_load_status_data_to_table (const uint8_t *fdata, DC240StatusTab
     table->focusMode = fdata[101];
     table->afMode = fdata[102];
     table->awbMode = fdata[103];
-//    table->zoomMag =  ?????
+/* table->zoomMag =  ????? */
     table->exposureMode = fdata[129];
     table->sharpControl = fdata[131];
-//    table->expTime = 
+/* table->expTime = */
     table->fValue = (fdata[136] * 100) + (fdata[137]);
     table->imageEffect = fdata[138];
     table->dateTimeStamp = fdata[139];
@@ -689,7 +689,7 @@ static int dc240_load_status_data_to_table (const uint8_t *fdata, DC240StatusTab
   Return the camera status table.
   See 5.1.29
  */
-int dc240_get_status (Camera *camera, DC240StatusTable *table, GPContext *context) 
+int dc240_get_status (Camera *camera, DC240StatusTable *table, GPContext *context)
 {
     CameraFile *file;
     char *p = dc240_packet_new(0x7F);
@@ -834,7 +834,7 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
   name.
   See also 5.1.19
  */
-int dc240_capture (Camera *camera, CameraFilePath *path, GPContext *context) 
+int dc240_capture (Camera *camera, CameraFilePath *path, GPContext *context)
 {
     CameraFile *file;
     int size = 256;
@@ -845,7 +845,7 @@ int dc240_capture (Camera *camera, CameraFilePath *path, GPContext *context)
 
     /* Take the picture to Flash memory */
     ret = dc240_packet_write(camera, p, 8, 1);
-    free (p); 
+    free (p);
     if (ret != GP_OK) {
 	return ret;
     }
@@ -855,12 +855,12 @@ int dc240_capture (Camera *camera, CameraFilePath *path, GPContext *context)
     if (ret != GP_OK) {
 	return ret;
     }
-    
+
     ret = dc240_wait_for_busy_completion(camera);
     if (ret != GP_OK) {
 	return ret;
     }
- 
+
     /*
      get the last picture taken location (good firmware developers)
      */

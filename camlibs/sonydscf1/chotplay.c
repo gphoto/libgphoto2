@@ -265,7 +265,7 @@ long get_file(char *name, char **data, int format, int verbose)
   u_char buf[0x400];
   u_char jpeg_comment[256];
 
-  //verbose=1;
+  /* verbose=1; */
   F1ok();
 
   F1status(0);
@@ -276,7 +276,7 @@ long get_file(char *name, char **data, int format, int verbose)
 
   if(F1fopen(name) != 0)
     return(0);
-  //printf("camfile: %s\n",name);
+  /* printf("camfile: %s\n",name); */
   if(format == JPEG){
     len = F1fread(buf, 126);
     if( len < 126){
@@ -296,7 +296,7 @@ long get_file(char *name, char **data, int format, int verbose)
     if(len < 0)
       return(0);
     total = total + len;
-//    gp_camera_progress(camera, ((float)total / (float)filelen));
+/* gp_camera_progress(camera, ((float)total / (float)filelen)); */
     if(verbose){
       fprintf(stderr, "%6lu/", total);
       fprintf(stderr, "%6lu", filelen);
@@ -324,7 +324,7 @@ long get_thumbnail(char *name, char **data, int format, int verbose, int n)
   u_char buf[0x1000];
   u_char *p;
   char *ptr;
-  //printf("name %s,%d\n",name,n);
+  /* printf("name %s,%d\n",name,n); */
   p = buf;
 
   F1ok();
@@ -366,7 +366,7 @@ long get_thumbnail(char *name, char **data, int format, int verbose, int n)
   *data=ptr;
   ptr = memcpy(ptr,&buf[256],filelen);
 
-  //write_file(&buf[256], (int) filelen, fp);
+  /* write_file(&buf[256], (int) filelen, fp); */
   return(total);
 }
 
@@ -491,7 +491,7 @@ retry:
   else
     sprintf(name2, "/PIC_CAM/PIC00000/PSN%05d.PMP", picture_index[n]);
 
-  //printf("name %s, name2 %s, %d\n",name,name2,n);
+  /* printf("name %s, name2 %s, %d\n",name,name2,n); */
 
   if(verbose)
     switch(format){

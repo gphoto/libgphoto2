@@ -1,4 +1,4 @@
-// curently this file is included into ptp.c
+/* curently this file is included into ptp.c */
 
 static inline uint16_t
 htod16p (PTPParams *params, uint16_t var)
@@ -16,7 +16,7 @@ static inline void
 htod16ap (PTPParams *params, unsigned char *a, uint16_t val)
 {
 	if (params->byteorder==PTP_DL_LE)
-		htole16a(a,val); else 
+		htole16a(a,val); else
 		htobe16a(a,val);
 }
 
@@ -24,7 +24,7 @@ static inline void
 htod32ap (PTPParams *params, unsigned char *a, uint32_t val)
 {
 	if (params->byteorder==PTP_DL_LE)
-		htole32a(a,val); else 
+		htole32a(a,val); else
 		htobe32a(a,val);
 }
 
@@ -78,7 +78,7 @@ ptp_unpack_string(PTPParams *params, PTPReq *req, uint16_t offset, uint8_t *len)
 		for (i=0;i<*len && i< MAXFILENAMELEN; i++) {
 			string[i]=(char)dtoh16a(&req->data[offset+i*2+1]);
 		}
-		// be paranoid! :(
+		/* be paranoid! :( */
 		string[*len-1]=0;
 	}
 	return (string);
@@ -123,7 +123,7 @@ ptp_unpack_uint16_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint1
 	return n;
 }
 
-// DeviceInfo pack/unpack
+/* DeviceInfo pack/unpack */
 
 #define PTP_di_StandardVersion		 0
 #define PTP_di_VendorExtensionID	 2
@@ -137,17 +137,17 @@ ptp_unpack_DI (PTPParams *params, PTPReq *req, PTPDeviceInfo *di)
 {
 	uint8_t len;
 	unsigned int totallen;
-	
+
 	di->StaqndardVersion = dtoh16a(&req->data[PTP_di_StandardVersion]);
 	di->VendorExtensionID =
 		dtoh32a(&req->data[PTP_di_VendorExtensionID]);
 	di->VendorExtensionVersion =
 		dtoh16a(&req->data[PTP_di_VendorExtensionVersion]);
-	di->VendorExtensionDesc = 
+	di->VendorExtensionDesc =
 		ptp_unpack_string(params, req,
-		PTP_di_VendorExtensionDesc, &len); 
+		PTP_di_VendorExtensionDesc, &len);
 	totallen=len*2+1;
-	di->FunctionalMode = 
+	di->FunctionalMode =
 		dtoh16a(&req->data[PTP_di_FunctionalMode+totallen]);
 	di->OperationsSupported_len = ptp_unpack_uint16_t_array(params, req,
 		PTP_di_OperationsSupported+totallen,
@@ -187,8 +187,8 @@ ptp_unpack_DI (PTPParams *params, PTPReq *req, PTPDeviceInfo *di)
 		&len);
 
 }
-	
-// ObjectHandles array pack/unpack
+
+/* ObjectHandles array pack/unpack */
 
 #define PTP_oh				 0
 
@@ -198,7 +198,7 @@ ptp_unpack_OH (PTPParams *params, PTPReq *req, PTPObjectHandles *oh)
 	oh->n = ptp_unpack_uint32_t_array(params, req, PTP_oh, oh->handler);
 }
 
-// StoreIDs array pack/unpack
+/* StoreIDs array pack/unpack */
 
 #define PTP_sids			 0
 
@@ -209,7 +209,7 @@ ptp_unpack_SIDs (PTPParams *params, PTPReq *req, PTPStorageIDs *sids)
 	sids->storage);
 }
 
-// StorageInfo pack/unpack
+/* StorageInfo pack/unpack */
 
 #define PTP_si_StorageType		 0
 #define PTP_si_FilesystemType		 2
@@ -227,7 +227,7 @@ ptp_unpack_SI (PTPParams *params, PTPReq *req, PTPStorageInfo *si)
 	si->StorageType=dtoh16a(&req->data[PTP_si_StorageType]);
 	si->FilesystemType=dtoh16a(&req->data[PTP_si_FilesystemType]);
 	si->AccessCapability=dtoh16a(&req->data[PTP_si_AccessCapability]);
-	// XXX no dtoh64a !!! skiping next two
+	/* XXX no dtoh64a !!! skiping next two */
 	si->FreeSpaceInImages=dtoh32a(&req->data[PTP_si_FreeSpaceInImages]);
 	si->StorageDescription=ptp_unpack_string(params, req,
 		PTP_si_StorageDescription, &storagedescriptionlen);
@@ -236,7 +236,7 @@ ptp_unpack_SI (PTPParams *params, PTPReq *req, PTPStorageInfo *si)
 		&storagedescriptionlen);
 }
 
-// ObjectInfo pack/unpack
+/* ObjectInfo pack/unpack */
 
 #define PTP_oi_StorageID		 0
 #define PTP_oi_ObjectFormat		 4
@@ -262,7 +262,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 	uint8_t filenamelen;
 	uint8_t capturedatelen=0;
 #if 0
-	char *capture_date="20020101T010101"; // XXX Fake date
+	char *capture_date="20020101T010101"; /* XXX Fake date */
 #endif
 	memset (req, 0, sizeof(PTPReq));
 	htod32a(&req->data[PTP_oi_StorageID],oi->StorageID);
@@ -280,7 +280,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 	htod16a(&req->data[PTP_oi_AssociationType],oi->AssociationType);
 	htod32a(&req->data[PTP_oi_AssociationDesc],oi->AssociationDesc);
 	htod32a(&req->data[PTP_oi_SequenceNumber],oi->SequenceNumber);
-	
+
 	ptp_pack_string(params, oi->Filename, req, PTP_oi_filenamelen, &filenamelen);
 /*
 	filenamelen=(uint8_t)strlen(oi->Filename);
@@ -294,7 +294,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 	 * for example Kodak sets Capture date on the basis of EXIF data.
 	 * Spec says that this field is from perspective of Initiator.
 	 */
-#if 0	// seems now we don't need any data packed in OI dataset... for now ;)
+#if 0	/* seems now we don't need any data packed in OI dataset... for now ;) */
 	capturedatelen=strlen(capture_date);
 	htod8a(&req->data[PTP_oi_Filename+(filenamelen+1)*2],
 		capturedatelen+1);
@@ -308,7 +308,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 		  capture_date[i];
 	}
 #endif
-	// XXX this function should return dataset length
+	/* XXX this function should return dataset length */
 
 	return (PTP_oi_Filename+(filenamelen+1)*2+(capturedatelen+1)*4);
 }
@@ -343,8 +343,8 @@ ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 
 	capture_date = ptp_unpack_string(params, req,
 		PTP_oi_filenamelen+filenamelen*2+1, &capturedatelen);
-	// subset of ISO 8601, without '.s' tenths of second and
-	// time zone
+	/* subset of ISO 8601, without '.s' tenths of second and */
+	/* time zone */
 	if (capturedatelen>15)
 	{
 		strncpy (tmp, capture_date, 4);
@@ -369,7 +369,7 @@ ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 	}
 	free(capture_date);
 
-	// now it's modification date ;)
+	/* now it's modification date ;) */
 	capture_date = ptp_unpack_string(params, req,
 		PTP_oi_filenamelen+filenamelen*2
 		+capturedatelen*2+2,&capturedatelen);

@@ -1,15 +1,15 @@
 /* fuji.c:
- * 
+ *
  * Fuji Camera library for the gphoto project.
- * 
+ *
  * © 2001 Matthew G. Martin <matt.martin@ieee.org>
  *     2002 Lutz Müller <lutz@users.sourceforge.net>
- * 
- * This routine works for Fuji DS-7 and DX-5,7,10 and 
+ *
+ * This routine works for Fuji DS-7 and DX-5,7,10 and
  * MX-500,600,700,1200,1700,2700,2900,  Apple QuickTake 200,
  * Samsung Kenox SSC-350N,Leica Digilux Zoom cameras and possibly others.
  *
- * Preview and take_picture fixes and preview conversion integrated 
+ * Preview and take_picture fixes and preview conversion integrated
  * by Michael Smith <michael@csuite.ns.ca>.
  *
  * This driver was reworked from the "fujiplay" package:
@@ -88,12 +88,12 @@
 		return (GP_ERROR);				\
 	}							\
 }
-						
+
 
 #define STX 0x02 /* Start of data */
 #define ETX 0x03 /* End of data */
 #define EOT 0x04 /* End of session */
-#define ENQ 0x05 /* Enquiry */ 
+#define ENQ 0x05 /* Enquiry */
 #define ACK 0x06
 #define ESC 0x10
 #define ETB 0x17 /* End of transmission block */
@@ -143,7 +143,7 @@ fuji_send (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
         CR (gp_port_write (camera->port, b, 2));
 
         /*
-	 * Escape the data we are going to send. 
+	 * Escape the data we are going to send.
 	 * Calculate the checksum.
 	 */
 	check = (last ? ETX : ETB);
@@ -457,7 +457,7 @@ fuji_id_get (Camera *camera, const char **id, GPContext *context)
 
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_ID_GET;
-	cmd[2] = 0; 
+	cmd[2] = 0;
 	cmd[3] = 0;
 
 	memset (buf, 0, sizeof (buf));
@@ -554,7 +554,7 @@ fuji_pic_get_thumb (Camera *camera, unsigned int i, unsigned char **data,
 }
 
 int
-fuji_pic_get (Camera *camera, unsigned int i, unsigned char **data, 
+fuji_pic_get (Camera *camera, unsigned int i, unsigned char **data,
 	      unsigned int *size, GPContext *context)
 {
 	unsigned char cmd[6];
@@ -793,7 +793,7 @@ fuji_reset (Camera *camera, GPContext *context)
 	unsigned char c = EOT;
 
 	CR (gp_port_write (camera->port, &c, 1));
-	
+
 	return (GP_OK);
 }
 
@@ -922,17 +922,18 @@ static int download_picture(int n,int thumb,CameraFile *file,CameraPrivateLibrar
 		DBG3("Info %3d   %12s ", n, name);
 	}
 	else fuji_size=10500;  /* Probly not same for all cams, better way ? */
-	
+
 	DBG2("calling download for %d bytes",fuji_size);
 
 	t1 = times(0);
 	if (cmd2(0, (thumb?0:0x02), n)==-1) return(GP_ERROR);
 
-	DBG3("Download :%4d actual bytes vs expected %4d bytes\n", 
+	DBG3("Download :%4d actual bytes vs expected %4d bytes\n",
 	     fuji_count ,fuji_size);
 
-	//file->bytes_read=fuji_count;
-	//	file->size=fuji_count+(thumb?128:0);/*add room for thumb-decode*/
+	/* file->bytes_read=fuji_count; */
+	/* add room for thumb-decode */
+	/* file->size=fuji_count+(thumb?128:0); */
 	file_size=fuji_count+(thumb?128:0);
 
 	data=malloc(file_size);
@@ -946,12 +947,12 @@ static int download_picture(int n,int thumb,CameraFile *file,CameraPrivateLibrar
 	t2 = times(0);
 
 	DBG2("%3d seconds, ", (int)(t2-t1) / CLK_TCK);
-	DBG2("%4d bytes/s\n", 
+	DBG2("%4d bytes/s\n",
 		fuji_count * CLK_TCK / (int)(t2-t1));
 
 	if (fjd->has_cmd[17]&&!thumb){
 	if (!thumb&&(fuji_count != fuji_size)){
-	  //gp_frontend_status(NULL,"Short picture file--disk full or quota exceeded\n");
+	/* gp_frontend_status(NULL,"Short picture file--disk full or quota exceeded\n"); */
 	    return(GP_ERROR);
 	  };
 	};
@@ -975,7 +976,7 @@ static int upload_pic (const char *picname)
 
 	fd = fopen(picname, "r");
 	if (fd == NULL) {
-	  //update_status("Cannot open file for upload");
+	  /* update_status("Cannot open file for upload"); */
 		return 0;
 	}
 	if (fstat(fileno(fd), &st) < 0) {

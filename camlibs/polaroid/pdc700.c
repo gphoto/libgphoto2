@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -78,7 +78,7 @@ enum _PDCConf {
 	PDC_CONF_TIME     = 0x05,
 	PDC_CONF_POWEROFF = 0x06,
 	PDC_CONF_SIZE     = 0x07
-	/* I think we have them all... 8 and 9 return failure */ 
+	/* I think we have them all... 8 and 9 return failure */
 };
 
 typedef enum _PDCBaud PDCBaud;
@@ -113,7 +113,7 @@ enum _PDCMode {
 	PDC_MODE_RECORD = 1,
 	PDC_MODE_MENU   = 2
 };
- 
+
 typedef enum _PDCQuality PDCQuality;
 enum _PDCQuality {
 	PDC_QUALITY_NORMAL    = 0,
@@ -164,7 +164,7 @@ struct _PDCPicInfo {
 #define AUTO_POWEROFF _("Auto Power Off (minutes)")
 #define SHOW_CAPTIONS _("Information")
 
-static const char *quality[] = {N_("normal"), N_("fine"), N_("superfine"), 
+static const char *quality[] = {N_("normal"), N_("fine"), N_("superfine"),
 				NULL};
 static const char *flash[]   = {N_("auto"), N_("on"), N_("off"), NULL};
 static const char *bool[]    = {N_("off"), N_("on"), NULL};
@@ -529,7 +529,7 @@ pdc700_info (Camera *camera, PDCInfo *info, GPContext *context)
 	}
 
  	info->auto_poweroff = buf[5];
- 
+
 	/* Mode (make sure we know it) */
 	info->mode = buf[6];
 	if (info->mode < 0 || info->mode > 2) {
@@ -578,7 +578,7 @@ pdc700_info (Camera *camera, PDCInfo *info, GPContext *context)
 
 	/*
 	 * buf[28-31]: We don't know. Below are some samples:
-	 * 
+	 *
 	 * f8 b2 64 03
 	 *
 	 * c6 03 86 28
@@ -668,7 +668,7 @@ pdc700_capture (Camera *camera, GPContext *context)
 	for (try = 0; try < 10; try++)
 	  if ((r = pdc700_info(camera, &info, context)) == GP_OK)
 	    break;
-	
+
         return r;
 };
 
@@ -722,7 +722,7 @@ pdc700_delete (Camera *camera, unsigned int n, GPContext *context)
 }
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy (id->text, "Polaroid DC700");
 
@@ -740,7 +740,7 @@ static struct {
 };
 
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	int i;
 	CameraAbilities a;
@@ -765,7 +765,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 		CR (gp_abilities_list_append (list, a));
 	}
-	
+
 	return (GP_OK);
 }
 
@@ -842,7 +842,7 @@ del_file_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 static int
-get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, 
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
@@ -860,7 +860,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CR (n = gp_filesystem_number (camera->fs, folder, filename, context));
 
 	/* Get the file */
-	CR (pdc700_pic (camera, n + 1, &data, &size, 
+	CR (pdc700_pic (camera, n + 1, &data, &size,
 			(type == GP_FILE_TYPE_NORMAL) ? 0 : 1, context));
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
@@ -936,7 +936,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_about (Camera *camera, CameraText *about, GPContext *context) 
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text, _("Download program for Polaroid DC700 camera. "
 		"Originally written by Ryan Lantzer "
@@ -947,10 +947,10 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 }
 
 /*
- * We encapsulate the process of adding an entire radio control. 
+ * We encapsulate the process of adding an entire radio control.
  */
-static void 
-add_radio (CameraWidget *section, const char *blurb, const char **opt, 
+static void
+add_radio (CameraWidget *section, const char *blurb, const char **opt,
 	   int selected)
 {
 	CameraWidget *child;
@@ -960,11 +960,11 @@ add_radio (CameraWidget *section, const char *blurb, const char **opt,
 
 	for (i = 0; opt[i]; i++)
 		gp_widget_add_choice (child, opt[i]);
-	  
+
 	gp_widget_set_value (child, (void *) opt[selected]);
 	gp_widget_append (section, child);
 }
-  
+
 
 static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
@@ -1023,8 +1023,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	return GP_OK;
 }
 
-static int 
-which_radio_button (CameraWidget *window, const char *label, 
+static int
+which_radio_button (CameraWidget *window, const char *label,
 		    const char * const *opt)
 {
   	CameraWidget *child;
@@ -1093,7 +1093,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		  pdc700_set_date(camera, (time_t) i, context);
 		else
 		  GP_DEBUG ("date widget returned -1, not setting datee/time");
-		//GP_DEBUG ("Implement setting of date & time!");
+		/* GP_DEBUG ("Implement setting of date & time!"); */
 	}
 
 
@@ -1178,7 +1178,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	int result = GP_OK, i;
 	GPPortSettings settings;

@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -197,7 +197,7 @@ static struct {
 	 */
 	{"Kodak:DC4800", 0x040a, 0x0160},
 	/* Below other camers known to be detected by interface class */
-	
+
 	{"Kodak:DC3900", 0x040a, 0x0170},
 	{"Kodak:DX3215", 0x040a, 0x0525},
 	{"Kodak:DX3500", 0x040a, 0x0500},
@@ -229,7 +229,7 @@ static struct {
 	{"Sony:DSC-F707V (PTP mode)", 0x054c, 0x004e},
 	{"Sony:DSC-P30 (PTP mode)", 0x054c, 0x004e},
         /* P32 reported on May 1st by Justin Alexander <justin (at) harshangel.com> */
-        {"Sony:DSC-P32 (PTP mode)", 0x054c, 0x004e}, 
+        {"Sony:DSC-P32 (PTP mode)", 0x054c, 0x004e},
 	{"Sony:DSC-P50 (PTP mode)", 0x054c, 0x004e},
 	{"Sony:DSC-S75 (PTP mode)", 0x054c, 0x004e},
 	{"Sony:DSC-S85 (PTP mode)", 0x054c, 0x004e},
@@ -251,7 +251,7 @@ static struct {
 
 
 	/* (at least some) newer Canon cameras can be switched between
-	 * PTP and "normal" (i.e. Canon) mode 
+	 * PTP and "normal" (i.e. Canon) mode
 	 * Canon PS G3: A. Marinichev, 20 nov 2002
 	 */
 	{"Canon:PowerShot S45 (PTP mode)", 0x04a9, 0x306d},
@@ -345,7 +345,7 @@ get_mimetype (Camera *camera, CameraFile *file)
 			return (object_formats[i].format_code);
 	return (PTP_OFC_Undefined);
 }
-	
+
 struct _CameraPrivateLibrary {
 	PTPParams params;
 };
@@ -544,7 +544,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	if (type != GP_CAPTURE_IMAGE) {
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-	
+
 	if (!ptp_operation_issupported(&camera->pl->params,
 		PTP_OC_InitiateCapture)) return GP_ERROR_NOT_SUPPORTED;
 
@@ -555,7 +555,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		if (event.EventCode==PTP_EC_CaptureComplete) {
 			return GP_OK;
 		}
-	} 
+	}
 	/* we're not going to set path, ptp does not use paths anyway ;) */
 	return GP_ERROR;
 }
@@ -576,10 +576,10 @@ add_dir (Camera *camera, uint32_t parent, uint32_t handle, const char *foldernam
 	strcpy(camera->pl->params.objectinfo[n].Filename, foldername);
 	camera->pl->params.objectinfo[n].ObjectFormat=PTP_OFC_Association;
 	camera->pl->params.objectinfo[n].AssociationType=PTP_AT_GenericFolder;
-	
+
 	camera->pl->params.objectinfo[n].ParentObject=parent;
 }
-#endif 
+#endif
 
 #if 0
 static void
@@ -646,7 +646,7 @@ folder_to_handle(const char *folder, uint32_t storage, uint32_t parent, Camera *
 		return find_child (folder, storage, parent, camera);
 	}
 }
-	
+
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
@@ -690,7 +690,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
 		PTPStorageIDs storageids;
-		
+
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
 			CPR (context, ptp_getstorageids(params,
 				&storageids));
@@ -724,7 +724,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==handler)
-	if ((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) || 
+	if ((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) ||
 		(params->objectinfo[i].StorageID == storage))
 	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
 		params->objectinfo[i].AssociationType!=PTP_AT_Undefined)
@@ -793,7 +793,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
 		break;
-		
+
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
@@ -818,7 +818,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	((PTPData *) camera->pl->params.data)->context = context;
 	memset(&oi, 0, sizeof (PTPObjectInfo));
-	gp_file_get_name (file, &filename); 
+	gp_file_get_name (file, &filename);
 	gp_file_get_data_and_size (file, &object, &intsize);
 	size=(uint32_t)intsize;
 
@@ -828,7 +828,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	/* get parent folder id omiting storage pseudofolder */
 	find_folder_handle(folder,storage,parent,data);
 
-	/* if you desire to put file to root folder, you have to use 
+	/* if you desire to put file to root folder, you have to use
 	 * 0xffffffff instead of 0x00000000 (which means responder decide).
 	 */
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
@@ -1015,7 +1015,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 #if 1
 		{
 		PTPObjectInfo *oi;
-	
+
 		oi=&camera->pl->params.objectinfo[i];
 		GP_DEBUG ("ObjectInfo for '%s':", oi->Filename);
 		GP_DEBUG ("  Object ID: 0x%.4x", camera->pl->params.handles.handler[i]);
@@ -1040,6 +1040,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	}
 	gp_context_progress_stop (context, id);
 
+	/* Used for testing with my camera, which does not support subdirs */
 /*
 	add_dir (camera, 0x00000000, 0xff000000, "DIR1");
 	add_dir (camera, 0x00000000, 0xff000001, "DIR20");
@@ -1048,7 +1049,6 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	move_object_by_number (camera, 0xff000002, 2);
 	move_object_by_number (camera, 0xff000001, 3);
 	move_object_by_number (camera, 0xff000002, 4);
-	// Used for testing with my camera, which does not support subdirs
 */
 	return (GP_OK);
 }

@@ -69,7 +69,7 @@ int dsc_f1_open_cam () {
   }
 
   if (devpath) {
-//    daemonuid();
+/* daemonuid(); */
     F1setfd(opentty(devpath));
   }
   if (F1getfd() < 0)

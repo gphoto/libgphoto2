@@ -39,7 +39,7 @@
 #  define N_(String) (String)
 #endif
 
-//#define DEBUG
+/* #define DEBUG */
 
 /*
  * dc3200_set_speed
@@ -52,10 +52,10 @@ int dc3200_set_speed(Camera *camera, int baudrate)
 	int baudcode = C9600;
 	u_char resp[INI_PACKET_LEN], msg[INI_PACKET_LEN];
 	int resp_len = INI_PACKET_LEN, msg_len = INI_PACKET_LEN;
-	
+
 	msg[0] = 0xAF;
 	msg[1] = 0x00;
-	
+
 	switch(baudrate) {
 	case 9600:
 		baudcode = C9600;
@@ -76,9 +76,9 @@ int dc3200_set_speed(Camera *camera, int baudrate)
 		printf("unsupported baudrate: %d.\n", baudrate);
 		return GP_ERROR;
 	}
-	
+
 	msg[2] = baudcode;
-	
+
 	/* send our preferred baud rate */
 	if(dc3200_send_command(camera, msg, msg_len, resp, &resp_len) == GP_ERROR)
 		return GP_ERROR;
@@ -96,10 +96,10 @@ int dc3200_set_speed(Camera *camera, int baudrate)
 		msg[2] = (resp[2] + 1) / 2;
 		msg_len = INI_PACKET_LEN;
 	}
-	
+
 	if(dc3200_send_command(camera, msg, msg_len, resp, &resp_len) == GP_ERROR)
 		return GP_ERROR;
-	
+
 	if(resp_len == 2) {
 		/* set the handshaked baudrate
 		 * supports only 9600
@@ -112,7 +112,7 @@ int dc3200_set_speed(Camera *camera, int baudrate)
 		/* unknown baud */
 		return GP_ERROR;
 	}
-	
+
 	return GP_ERROR;
 }
 
@@ -132,13 +132,13 @@ int dc3200_setup(Camera *camera)
 	 * version info? ...
 	 *
 	 */
-	 
+
 	u_char cmd1[5] = {0x01, dc3200_calc_seqnum(camera), 0x01, 0x00, 0x0F};
 	u_char cmd2[8] = {0x01, dc3200_calc_seqnum(camera), 0x80, 0x00, 0x01, 0x81, 0x00, 0x03};
 
 	u_char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
 	int ack_len = ACK_PACKET_LEN, resp_len = DEF_PACKET_LEN;
-	
+
 	if(dc3200_send_command(camera, cmd1, sizeof(cmd1), ack, &ack_len) == GP_ERROR)
 		return GP_ERROR;
 	if(dc3200_check_ack(camera, ack, ack_len) == GP_ERROR)
@@ -160,7 +160,7 @@ int dc3200_setup(Camera *camera)
 	/* set the cmd sequence number */
 	camera->pl->cmd_seqnum = 0;
 	camera->pl->rec_seqnum = 0;
-	
+
 	return GP_OK;
 }
 
@@ -173,15 +173,15 @@ int dc3200_setup(Camera *camera)
  *
  */
 
-	/* command to retrieve directory listing 
+	/* command to retrieve directory listing
 	u_char list_pkt[DEF_PACKET_LEN] = {0x01, dc3200_calc_seqnum(camera), 0x80, 0x00, 0x20, 0x03, 26 + strlen(filename),
-							0xc1, 0x50, 0x00, 0x00, 0x00, 0x00, 19 + strlen(filename), 
+							0xc1, 0x50, 0x00, 0x00, 0x00, 0x00, 19 + strlen(filename),
 							0x04, 0x01, 0x00, 0x01, 0x00, 0x01, 0x60, 0x01, 0x00, 0x01, 0x00, 0x05,
 							0x00, 0x00, 0x00, 2 + strlen(filename), 0x01};
 	*/
-	/* command to get the picture 
+	/* command to get the picture
 	u_char get_pkt[DEF_PACKET_LEN] = {0x01, calc_seqnum(), 0x80, 0x00, 0x20, 0x03, 26 + strlen(filename),
-	                        0xC1, 0x50, 0x00, 0x00, 0x00, 0x00, 19 + strlen(filename), 
+	                        0xC1, 0x50, 0x00, 0x00, 0x00, 0x00, 19 + strlen(filename),
 							0x04, 0x01,	0x00, 0x01, 0x01, 0x04, 0x60, 0x10, 0x00, 0x01, 0x00, 0x05,
 							0x00, 0x00, 0x00, 2 + strlen(filename), 0x01};
 	*/
@@ -195,10 +195,10 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 	int data_start_pos = 0;
 	u_char *ptr_data = NULL;
 	u_int pid = 0;
-	
+
 	/* command bytes */
 	u_char cb1=0x00,cb2=0x00,cb3=0x00;
-	
+
 	/* packet parts */
 	u_char pkt_hdr[7];
 	u_char pkt_typ[7];
@@ -209,7 +209,7 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 	int packet_len;
 	char *file = NULL;
 	char *ptr = NULL;
-	
+
 	if(folder) {
 		if(filename) {
 			file = malloc(strlen(folder) + strlen(filename) + 2);
@@ -219,7 +219,7 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 			/* concatenate the folder + filename */
 			strncpy(file, folder, strlen(folder));
 			file[strlen(folder)] = 0;
-			/* append the filename */		
+			/* append the filename */
 			if(folder[strlen(folder)-1] != '\\')
 			strcat(file, "\\");
 			strncat(file, filename, strlen(filename));
@@ -235,12 +235,12 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 	} else {
 		return GP_ERROR;
 	}
-	
+
 	/* change all /'s to \'s */
 	while((ptr = strchr(file, '/'))) {
 		ptr[0] = '\\';
 	}
-	
+
 	/* there should not be a trailing '\', except for root folder */
 	if(strlen(file) > 1 && file[strlen(file)-1] == '\\')
 		file[strlen(file)-1] = 0;
@@ -256,20 +256,20 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 		cb1 = 0x01; cb2 = 0x60; cb3 = 0x01;
 		break;
 	}
-	
+
 	camera->pl->cmd_seqnum++;
 
 	pkt_hdr[0] = 0x01;
 	pkt_hdr[1] = dc3200_calc_seqnum(camera);
 	pkt_hdr[2] = 0x80; pkt_hdr[3] = 0x00; pkt_hdr[4] = 0x20; pkt_hdr[5] = 0x03;
 	pkt_hdr[6] = 26 + strlen(file);
-	
+
 	pkt_typ[0] = 0xC1;
 	pkt_typ[1] = 0x50;
 	pkt_typ[2] = 0x00; pkt_typ[3] = 0x00; pkt_typ[4] = 0x00; pkt_typ[5] = 0x00;
 	pkt_typ[6] = 19 + strlen(file);
-	
-	pkt_cmd[0]  = 0x04; pkt_cmd[1]  =  cb1; /* cmd */  
+
+	pkt_cmd[0]  = 0x04; pkt_cmd[1]  =  cb1; /* cmd */
 	pkt_cmd[2]  = 0x00; pkt_cmd[3]  = 0x01;	/* ??? */
 	pkt_cmd[4]  = (camera->pl->cmd_seqnum >> 8) && 0xff; pkt_cmd[5]  = camera->pl->cmd_seqnum && 0xff; /* SEQ */
 	pkt_cmd[6]  =  cb2; pkt_cmd[7]  =  cb3;	/* cmd */
@@ -289,7 +289,7 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 
 	/* clear packet */
 	memset(packet, 0, packet_len);
-	
+
 	/* copy pkt parts into packet */
 	memcpy(packet, pkt_hdr, sizeof(pkt_hdr));
 	memcpy(packet + sizeof(pkt_hdr), pkt_typ, sizeof(pkt_typ));
@@ -298,7 +298,7 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 	memcpy(packet + sizeof(pkt_hdr) + sizeof(pkt_typ) + sizeof(pkt_cmd) + sizeof(pkt_len), file, strlen(file));
 
 	free(file);
-	
+
 	/* send the command to list files */
 	if(dc3200_send_command(camera, packet, packet_len, ack, &ack_len) == GP_ERROR){
 		free(packet);
@@ -306,22 +306,22 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 	}
 
 	free(packet);
-	
+
 	do {
 		resp_len = DEF_PACKET_LEN;
 		if(dc3200_recv_response(camera, resp, &resp_len) == GP_ERROR) {
 			return GP_ERROR;
 		}
-	
+
 		if(dc3200_send_ack(camera, resp[1]) == GP_ERROR) {
 			return GP_ERROR;
 		}
-		
+
 		if(resp[1] == camera->pl->rec_seqnum)
 			continue;
-			
+
 		camera->pl->rec_seqnum = resp[1];
-		
+
 		/*
 		 * we decide what action to take based on
 		 * the number of packets we are expecting
@@ -340,15 +340,15 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 			num_left = 0;
 			data_start_pos = 31;
 			*data_len -= 1;
-			
+
 			/* allocate a buffer to store all this data */
 			*data = malloc(*data_len);
 			if(*data == NULL) {
 				return GP_ERROR;
 			}
-			
+
 			ptr_data = *data;
-			
+
 			/* copy this portion of the data */
 			memcpy(ptr_data, resp + data_start_pos, resp_len - data_start_pos);
 			/* incr the buff ptr */
@@ -372,9 +372,9 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 			if(*data == NULL) {
 				return GP_ERROR;
 			}
-			
+
 			ptr_data = *data;
-			
+
 			/* copy this portion of the data */
 			memcpy(ptr_data, resp + data_start_pos, resp_len - data_start_pos);
 			/* incr the data ptr */
@@ -399,14 +399,14 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 			/* calculate the number of packets remaining */
 			num_left = bytes_to_l(resp[12], resp[13], resp[14], resp[15]);
 			data_start_pos = 16;
-			
+
 			if(*data == NULL) {
 				return GP_ERROR;
 			}
-			
+
 			/* copy this portion of the data */
 			memcpy(ptr_data, resp + data_start_pos, resp_len - data_start_pos);
-			/*  incr the buff ptr */
+			/* incr the buff ptr */
 			ptr_data += resp_len - data_start_pos;
 
 			/* update gphoto2 frontend */
@@ -431,12 +431,12 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 			if(*data == NULL) {
 				return GP_ERROR;
 			}
-			
+
 			/* copy this portion of the data */
 			memcpy(ptr_data, resp + data_start_pos, resp_len - data_start_pos);
 			/* incr the buff ptr */
 			ptr_data += resp_len - data_start_pos;
-			
+
 			/* update gphoto2 frontend */
 			if(command == CMD_GET_FILE || command == CMD_GET_PREVIEW)
 			{
@@ -518,7 +518,7 @@ int dc3200_send_command(Camera *camera, u_char *cmd, int cmd_len, u_char *ack, i
 	}
 
 	sends = SEND_RETRIES;
-	
+
 	while(sends > 0) {
 		reads = READ_RETRIES;
 		/* check that we are acutally sending a command
@@ -527,11 +527,11 @@ int dc3200_send_command(Camera *camera, u_char *cmd, int cmd_len, u_char *ack, i
 		if(cmd != NULL && cmd_len > 0) {
 			/* clear the read buffer */
 			dc3200_clear_read_buffer(camera);
-			
+
 			/* send the command */
 			dc3200_send_packet(camera, cmd, cmd_len);
 		}
-		
+
 		/* wait for response */
 		while(reads > 0) {
 			if(dc3200_recv_packet(camera, buff, &buff_len) != GP_ERROR) {
@@ -540,24 +540,24 @@ int dc3200_send_command(Camera *camera, u_char *cmd, int cmd_len, u_char *ack, i
 			}
 			reads--;
 		}
-		
+
 		if(received) {
 			if(buff_len > *ack_len) {
 				/* buffer size too small */
 				free(buff);
 				return GP_ERROR;
 			}
-		
+
 			/* sukksess */
 			*ack_len = buff_len;
 			memcpy(ack, buff, buff_len);
 			free(buff);
 			return GP_OK;
-		} else {		
+		} else {
 			sends--;
 		}
 	}
-	
+
 	/* send failed */
 	free(buff);
 	return GP_ERROR;
@@ -585,8 +585,8 @@ int dc3200_send_ack(Camera *camera, int seqnum)
 	u_char ack[ACK_PACKET_LEN];
 	ack[0] = 0x01;
 	ack[1] = seqnum + 16;
-	
-	return dc3200_send_packet(camera, ack, sizeof(ack));		
+
+	return dc3200_send_packet(camera, ack, sizeof(ack));
 }
 
 /*
@@ -609,21 +609,21 @@ int dc3200_check_ack(Camera *camera, u_char *ack, int ack_len)
 int dc3200_send_packet(Camera *camera, u_char *data, int data_len)
 {
 	int res;
-	
+
 	int buff_len = data_len;
 	u_char *buff = NULL;
 
 	buff = malloc(sizeof(u_char) * buff_len);
 	if(!buff)
 		return GP_ERROR;
-	
+
 	memcpy(buff, data, buff_len);
 
 	/* compile this into a packet */
 	res = dc3200_compile_packet(camera, &buff, &buff_len);
 	if(res == GP_ERROR)
 		return res;
-	
+
 #ifdef DEBUG
 	dump_buffer(buff, buff_len, "s", 16);
 #endif
@@ -645,7 +645,7 @@ int dc3200_recv_packet(Camera *camera, u_char *data, int *data_len)
 
 	/* allocate storage for size, checksum, and EOP */
 	u_char *buff = NULL;
-	
+
 	buff = malloc(sizeof(u_char) * (*data_len + 3));
 	if(buff == NULL) {
 		return GP_ERROR;
@@ -681,12 +681,12 @@ int dc3200_recv_packet(Camera *camera, u_char *data, int *data_len)
 		}
 		res = gp_port_read(camera->port, &buff[num_read], 1);
 	}
-	
+
 	if(!complete) {
 		/* packet incomplete */
 		return GP_ERROR;
 	}
-	
+
 #ifdef DEBUG
 	dump_buffer(buff, num_read, "r", 16);
 #endif
@@ -699,10 +699,10 @@ int dc3200_recv_packet(Camera *camera, u_char *data, int *data_len)
 	time(&(camera->pl->last));
 
 	memcpy(data, buff, *data_len);
-		
+
 	/* return with new packet size */
 	*data_len = num_read;
-	
+
 	free(buff);
 	return GP_OK;
 }
@@ -727,13 +727,13 @@ int dc3200_compile_packet(Camera *camera, u_char **data, int *data_len)
 	tmp_ptr = (u_char*)realloc(*data, *data_len);
 	if(tmp_ptr == NULL)
 		return GP_ERROR;
-	
+
 	*data = tmp_ptr;
 
 	/* add length, checksum */
 	(*data)[*data_len - 2] = *data_len - 2;
 	(*data)[*data_len - 1] = dc3200_calc_checksum(camera, *data, *data_len - 1);
-	
+
 	/* this is a hack to fix the 0xFF/0xFE problem.
 	 * we adjust a "don't care" byte so the checksum
 	 * is not 0xFF or 0xFE
@@ -756,7 +756,7 @@ int dc3200_compile_packet(Camera *camera, u_char **data, int *data_len)
 	new_data = (u_char*)malloc(*data_len + count + 3); /* 3 for length, checksum, EOP */
 	if(!new_data)
 		return GP_ERROR;
-	
+
 	j = 0;
 	for(i=0;i<*data_len; i++) {
 		if((*data)[i] == 0xFE || (*data)[i] == 0xFF) {
@@ -773,13 +773,13 @@ int dc3200_compile_packet(Camera *camera, u_char **data, int *data_len)
 	*data_len += count + 1;
 
 	new_data[*data_len - 1] = 0xFF;
-	
+
 	/* free the old packet data */
 	free(*data);
-	
+
 	/* set the ptr */
 	*data = new_data;
-	
+
 	return GP_OK;
 }
 
@@ -796,7 +796,7 @@ int dc3200_process_packet(Camera *camera, u_char *data, int *data_len)
 	int count = 0, i;
 	int length, checksum;
 	u_char *buff;
-	
+
 	if(data == NULL || *data_len < 1) {
 		return GP_ERROR;
 	}
@@ -805,7 +805,7 @@ int dc3200_process_packet(Camera *camera, u_char *data, int *data_len)
 	buff = (u_char*)malloc(sizeof(u_char) * *data_len);
 	if(!buff)
 		return GP_ERROR;
-	
+
 	/* change 0xFE 0x00 | 0x01 -> 0xFF | 0xFE */
 	for(i=0; i<*data_len; i++) {
 		if(data[i] == 0xFE) {
@@ -843,10 +843,10 @@ int dc3200_process_packet(Camera *camera, u_char *data, int *data_len)
 		printf("%02x=%02x %02x=%02x\n", length, count - 3, checksum, dc3200_calc_checksum(camera, data, count - 2));
 		return GP_ERROR;
 	}
-	
+
 	/* adjust packet size, strip length, checksum, EOP */
 	*data_len = count - 3;
-	
+
 	free(buff);
 	return GP_OK;
 }
@@ -908,7 +908,7 @@ int dc3200_keep_alive(Camera *camera)
 	if(dc3200_send_command(camera, ka, sizeof(ka), ak, &ak_len) == GP_ERROR) {
 		return GP_ERROR;
 	}
-	
+
 	/* check the ack (should be same packet) */
 	if(memcmp(ak,ka,ak_len) == 0) {
 		return GP_OK;
@@ -929,17 +929,17 @@ int dc3200_clear_read_buffer(Camera *camera)
 {
 	u_char byte;
 	int count = 0;
-	
+
 	gp_port_set_timeout(camera->port, 0);
-	
+
 	while(gp_port_read(camera->port, &byte, 1) > 0)
 		count++;
-	
+
 	if(count > 0)
 		printf("cleared %d bytes from read buffer\n", count);
-	
+
 	gp_port_set_timeout(camera->port, TIMEOUT);
-	
+
 	return GP_OK;
 }
 
@@ -953,23 +953,23 @@ int dump_buffer(unsigned char * buffer, int len, char * title, int bytesperline)
 {
 	char spacer[80];
 	int i;
-	
+
 	memset(spacer, 0, sizeof(spacer));
 	memset(spacer, ' ', strlen(title)+2);
-	
+
 	printf("%s: ", title);
-	
+
 	for(i=0; i<len; i++) {
 		if(i%bytesperline==0 && i > 0) {
 			printf("\n%s", spacer);
 		}
 		printf("%02x ", buffer[i]);
 	}
-	
+
 	printf("\n");
-	
+
 	printf("%s: ", title);
-	
+
 	for(i=0; i<len; i++) {
 		if(i%bytesperline==0 && i > 0) {
 			printf("\n%s", spacer);
@@ -980,9 +980,9 @@ int dump_buffer(unsigned char * buffer, int len, char * title, int bytesperline)
 			printf(".");
 		}
 	}
-	
+
 	printf("\n");
-	
+
 	return GP_OK;
 }
 

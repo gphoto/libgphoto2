@@ -46,12 +46,12 @@
 #endif
 
 #define CHECK_PTP_RC(result)	{uint16_t r=(result); if (r!=PTP_RC_OK) return r;}
-//#define CHECK_PTP_RC_free(result, free_ptr) {uint16_t r=(result); if (r!=PTP_RC_OK) {return r; free(free_ptr);}}
+/* #define CHECK_PTP_RC_free(result, free_ptr) {uint16_t r=(result); if (r!=PTP_RC_OK) {return r; free(free_ptr);}} */
 
 #if 0
 static void
 ptp_debug (PTPParams *params, const char *format, ...)
-{  
+{
         va_list args;
 
         va_start (args, format);
@@ -60,12 +60,12 @@ ptp_debug (PTPParams *params, const char *format, ...)
         else
                 vfprintf (stderr, format, args);
         va_end (args);
-}  
+}
 #endif
 
 static void
 ptp_error (PTPParams *params, const char *format, ...)
-{  
+{
         va_list args;
 
         va_start (args, format);
@@ -79,11 +79,11 @@ ptp_error (PTPParams *params, const char *format, ...)
         va_end (args);
 }
 
-// Pack / unpack functions
+/* Pack / unpack functions */
 
 #include "ptp-pack.c"
 
-// send / receive functions
+/* send / receive functions */
 
 static uint16_t
 ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
@@ -91,8 +91,8 @@ ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
 	uint16_t ret;
 	PTPReq* req=(databuf==NULL)?
 		malloc(sizeof(PTPReq)):databuf;
-	
-	//req->len = htod32(PTP_REQ_LEN);
+
+	/* req->len = htod32(PTP_REQ_LEN); */
 	req->type = htod16(PTP_TYPE_REQ);
 	req->code = htod16(code);
 	req->trans_id = htod32(params->transaction_id);
@@ -114,7 +114,7 @@ ptp_senddata (PTPParams* params, PTPReq* req, uint16_t code,
 {
 	uint16_t ret;
 	if (req==NULL) return PTP_ERROR_BADPARAM;
-	
+
 	req->len = htod32(writelen);
 	req->type = htod16(PTP_TYPE_DATA);
 	req->code = htod16(code);
@@ -135,7 +135,7 @@ ptp_getdata (PTPParams* params, PTPReq* req, uint16_t code,
 		unsigned int readlen)
 {
 	uint16_t ret;
-	if (req==NULL) return PTP_ERROR_BADPARAM; 
+	if (req==NULL) return PTP_ERROR_BADPARAM;
 
 	memset(req, 0, readlen);
 	ret=params->read_func((unsigned char *) req, readlen, params->data);
@@ -149,7 +149,7 @@ ptp_getdata (PTPParams* params, PTPReq* req, uint16_t code,
 	if (dtoh16(req->code)!=code) {
 		ret = dtoh16(req->code);
 	}
-	if (ret!=PTP_RC_OK) 
+	if (ret!=PTP_RC_OK)
 		ptp_error (params,
 		"PTP: request code 0x%4.4x getting data error 0x%4.4x", code, ret);
 	return ret;
@@ -181,21 +181,21 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
 	return ret;
 }
 
-// major PTP functions
+/* major PTP functions */
 
-// Transaction data phase description
-#define PTP_DP_NODATA		0x0000	// No Data Phase
-#define PTP_DP_SENDDATA		0x0001	// sending data
-#define PTP_DP_GETDATA		0x0002	// geting data
-#define PTP_DP_DATA_MASK	0x00ff	// data phase mask
+/* Transaction data phase description */
+#define PTP_DP_NODATA		0x0000	/* No Data Phase */
+#define PTP_DP_SENDDATA		0x0001	/* sending data */
+#define PTP_DP_GETDATA		0x0002	/* geting data */
+#define PTP_DP_DATA_MASK	0x00ff	/* data phase mask */
 
-// Number of PTP Request phase parameters
-#define PTP_RQ_PARAM0		0x0000	// zero parameters
-#define PTP_RQ_PARAM1		0x0100	// one parameter
-#define PTP_RQ_PARAM2		0x0200	// two parameters
-#define PTP_RQ_PARAM3		0x0300	// three parameters
-#define PTP_RQ_PARAM4		0x0400	// four parameters
-#define PTP_RQ_PARAM5		0x0500	// five parameters
+/* Number of PTP Request phase parameters */
+#define PTP_RQ_PARAM0		0x0000	/* zero parameters */
+#define PTP_RQ_PARAM1		0x0100	/* one parameter */
+#define PTP_RQ_PARAM2		0x0200	/* two parameters */
+#define PTP_RQ_PARAM3		0x0300	/* three parameters */
+#define PTP_RQ_PARAM4		0x0400	/* four parameters */
+#define PTP_RQ_PARAM5		0x0500	/* five parameters */
 
 /**
  * ptp_transaction:
@@ -210,7 +210,7 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
  *
  * Performs PTP transaction. Uses PTPReq* req for Operation Request Phase,
  * sending it to responder and returns Response Phase response there.
- * PTPReq* dataphasebuf buffor is used for PTP Data Phase, depending on 
+ * PTPReq* dataphasebuf buffor is used for PTP Data Phase, depending on
  * unsigned short dataphase is used for sending or receiving data.
  *
  * Return values: Some PTP_RC_* code.
@@ -221,12 +221,12 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 			uint16_t flags, unsigned int datalen,
 			PTPReq* dataphasebuf)
 {
-	if ((params==NULL) || (req==NULL)) 
+	if ((params==NULL) || (req==NULL))
 		return PTP_ERROR_BADPARAM;
 	params->transaction_id++;
-	// calculate the request phase container length
+	/* calculate the request phase container length */
 	req->len=htod32(PTP_REQ_HDR_LEN+((flags>>8)*sizeof(uint32_t)));
-	// send request
+	/* send request */
 	CHECK_PTP_RC(ptp_sendreq(params, req, code));
 	switch (flags&PTP_DP_DATA_MASK) {
 		case PTP_DP_SENDDATA:
@@ -248,20 +248,20 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 	return PTP_RC_OK;
 }
 
-// Enets handling functions
+/* Enets handling functions */
 
-// PTP Events wait for or check mode
-#define PTP_EVENT_CHECK			0x0000	// waits for
-#define PTP_EVENT_CHECK_FAST		0x0001	// checks
+/* PTP Events wait for or check mode */
+#define PTP_EVENT_CHECK			0x0000	/* waits for */
+#define PTP_EVENT_CHECK_FAST		0x0001	/* checks */
 
 static inline uint16_t
 ptp_event (PTPParams* params, PTPEvent* event, int wait)
 {
 	uint16_t ret;
 
-	if ((params==NULL) || (event==NULL)) 
+	if ((params==NULL) || (event==NULL))
 		return PTP_ERROR_BADPARAM;
-	
+
 	switch(wait) {
 		case PTP_EVENT_CHECK:
 			ret=params->check_int_func((unsigned char*) event, PTP_EVENT_LEN, params->data);
@@ -321,7 +321,7 @@ ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 /**
  * ptp_opensession:
  * params:	PTPParams*
- * 		session			- session number 
+ * 		session			- session number
  *
  * Establishes a new session.
  *
@@ -331,7 +331,7 @@ uint16_t
 ptp_opensession (PTPParams* params, uint32_t session)
 {
 	PTPReq req;
-	
+
 	*(int *)(req.data)=htod32(session);
 
 	return ptp_transaction(params, &req, PTP_OC_OpenSession,
@@ -423,7 +423,7 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 	uint16_t ret;
 	PTPReq req;
 	PTPReq oh;
-	
+
 	*(int *)(req.data)=htod32(storage);
 	*(int *)(req.data+4)=htod32(objectformatcode);
 	*(int *)(req.data+8)=htod32(associationOH);
@@ -450,7 +450,7 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 }
 
 uint16_t
-ptp_getobject (PTPParams* params, uint32_t handle, 
+ptp_getobject (PTPParams* params, uint32_t handle,
 			uint32_t size, PTPReq* object)
 {
 	PTPReq req;
@@ -462,7 +462,7 @@ ptp_getobject (PTPParams* params, uint32_t handle,
 
 
 uint16_t
-ptp_getthumb (PTPParams* params, uint32_t handle, 
+ptp_getthumb (PTPParams* params, uint32_t handle,
 			uint32_t size, PTPReq* object)
 {
 	PTPReq req;
@@ -477,7 +477,7 @@ ptp_getthumb (PTPParams* params, uint32_t handle,
  * params:	PTPParams*
  *		handle			- object handle
  *		ofc			- object format code
- * 
+ *
  * Deletes desired objects.
  *
  * Return values: Some PTP_RC_* code.
@@ -499,7 +499,7 @@ ptp_deleteobject (PTPParams* params, uint32_t handle,
  * params:	PTPParams*
  *		storageid		- destination StorageID on Responder
  *		ofc			- object format code
- * 
+ *
  * Causes device to initiate the capture of one or more new data objects
  * according to its current device properties, storing the data into store
  * indicated by storageid. If storageid is 0x00000000, the object(s) will
@@ -516,7 +516,7 @@ ptp_initiatecapture (PTPParams* params, uint32_t storageid,
 	PTPReq req;
 	*(uint32_t *)(req.data)=htod32(storageid);
 	*(uint32_t *)(req.data+4)=htod32(ofc);
-	
+
 	return ptp_transaction(params, &req, PTP_OC_InitiateCapture,
 	PTP_DP_NODATA | PTP_RQ_PARAM2, 0, NULL);
 }
@@ -529,7 +529,7 @@ ptp_initiatecapture (PTPParams* params, uint32_t storageid,
  *		uint32_t* parenthandle 	- Parent ObjectHandle on responder
  * 		uint32_t* handle	- see Return values
  *		PTPObjectInfo* objectinfo- ObjectInfo that is to be sent
- * 
+ *
  * Sends ObjectInfo of file that is to be sent via SendFileObject.
  *
  * Return values: Some PTP_RC_* code.
@@ -541,7 +541,7 @@ ptp_initiatecapture (PTPParams* params, uint32_t storageid,
  *					  for the incoming object
  **/
 uint16_t
-ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store, 
+ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 			uint32_t* parenthandle, uint32_t* handle,
 			PTPObjectInfo* objectinfo)
 {
@@ -552,13 +552,13 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 
 	*(uint32_t *)(req.data)=htod32(*store);
 	*(uint32_t *)(req.data+4)=htod32(*parenthandle);
-	
+
 	size=ptp_pack_OI(params, objectinfo, &req_oi);
 	ret= ptp_transaction(params, &req, PTP_OC_EK_SendFileObjectInfo,
-		PTP_DP_SENDDATA | PTP_RQ_PARAM2, size, &req_oi); 
+		PTP_DP_SENDDATA | PTP_RQ_PARAM2, size, &req_oi);
 	*store=dtoh32a(req.data);
 	*parenthandle=dtoh32a(req.data+4);
-	*handle=dtoh32a(req.data+8); 
+	*handle=dtoh32a(req.data+8);
 	return ret;
 }
 
@@ -568,7 +568,7 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
  *		PTPReq*	object		- object->data contain object
  *					  that is to be sent
  *		uint32_t size		- object size
- *		
+ *
  * Sends object to Responder.
  *
  * Return values: Some PTP_RC_* code.

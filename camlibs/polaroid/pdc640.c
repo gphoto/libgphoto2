@@ -8,10 +8,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -84,14 +84,14 @@ static struct {
 	{"Polaroid Fun Flash 640", 0, 0, {
 		 	pdc640,
 			BAYER_TILE_RGGB,
-			NULL, // add postprocessor here!
+			NULL, /* add postprocessor here! */
 			"pdc640%04i.ppm"
 		}
 	},
 	{"Novatech Digital Camera CC30", 0, 0, {
 		 	pdc640,
 			BAYER_TILE_RGGB,
-			NULL, // add postprocessor here!
+			NULL, /* add postprocessor here! */
 			"pdc640%04i.ppm"
 		}
 	},
@@ -589,7 +589,7 @@ pdc640_deltadecode (int width, int height, char **rawdata, int *rawsize)
 			while (pdc640_getbit(*rawdata, &rawofs, *rawsize, &bit) == 1)
 				ones++;
 
-			/* 
+			/*
 			 * Get the delta value
 			 * (size dictated by number of ones)
 			 */
@@ -607,7 +607,7 @@ pdc640_deltadecode (int width, int height, char **rawdata, int *rawsize)
 				val = (col1 += val);
 
 			data[ofs + x] = val << 1;
-		}		
+		}
 	}
 
 	/* Set new buffer */
@@ -656,12 +656,12 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 		width = width_pic;
 		height = height_pic;
 		switch (compression_type & 3) {
-		case 1: 
-		case 2:	cmd = 0x10;	// delta compressed
+		case 1:
+		case 2:	cmd = 0x10;	/* delta compressed */
 			break;
-		case 0:	cmd = 0x00;	// uncompressed
+		case 0:	cmd = 0x00;	/* uncompressed */
 			break;
-		default:		// unknown compression type
+		default:		/* unknown compression type */
 			GP_DEBUG ("Unknown compression type %d", compression_type & 3);
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
@@ -678,7 +678,7 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 
 	/* Get the raw picture */
 	CHECK_RESULT (pdc640_setpic (camera->port, n));
-	CHECK_RESULT (pdc640_transmit_pic (camera->port, cmd, width, thumbnail, 
+	CHECK_RESULT (pdc640_transmit_pic (camera->port, cmd, width, thumbnail,
 					*data, *size));
 
 	if (thumbnail || (compression_type == 0 )) {
@@ -687,7 +687,7 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 						data, *size));
 	} else if (compression_type & 3) {
 		/* Image data is delta encoded so decode it */
-		CHECK_RESULT (pdc640_deltadecode (width, height, 
+		CHECK_RESULT (pdc640_deltadecode (width, height,
 						  data, size));
 	}
 
@@ -964,7 +964,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 			    GP_FILE_INFO_HEIGHT | GP_FILE_INFO_TYPE;
 	info->file.width  = width_pic;
 	info->file.height = height_pic;
-/*	
+/*
 	info->file.size   = size_pic;
 */
 	info->file.size   = width_pic * height_pic * 3;
@@ -999,7 +999,7 @@ camera_init (Camera *camera, GPContext *context)
 	CameraAbilities abilities;
 
 	/*
-	 * First of all, tell gphoto2 about the functions we 
+	 * First of all, tell gphoto2 about the functions we
 	 * implement (especially camera_exit so that everything
 	 * gets correctly cleaned up even in case of error).
 	 */
@@ -1082,7 +1082,7 @@ static int
 flip_vertical (int width, int height, unsigned char* rgb) {
 	int		i;
 	unsigned char	*buf;
-	
+
 	buf = malloc(width*3);
 	if (!buf) return GP_ERROR_NO_MEMORY;
 	for (i=0;i<height/2;i++) {

@@ -25,12 +25,12 @@
 #include <time.h>
 #include <gphoto2-endian.h>
 
-// PTP datalayer byteorder
+/* PTP datalayer byteorder */
 
 #define PTP_DL_BE			0xF0
 #define	PTP_DL_LE			0x0F
 
-// PTP request/response/data packet structure
+/* PTP request/response/data packet structure */
 
 #define PTP_REQ_LEN			30
 #define PTP_RESP_LEN			sizeof(PTPReq)
@@ -47,14 +47,14 @@ struct _PTPReq {
 };
 typedef struct _PTPReq PTPReq;
 
-// Container types
+/* Container types */
 
 #define PTP_TYPE_REQ                    0x0001
 #define PTP_TYPE_DATA                   0x0002
 #define PTP_TYPE_RESP                   0x0003
 #define PTP_TYPE_EVENT			0x0004
 
-// Vendor IDs
+/* Vendor IDs */
 #define PTP_VENDOR_EASTMAN_KODAK	0x00000001
 #define PTP_VENDOR_SEIKO_EPSON		0x00000002
 #define PTP_VENDOR_AGILENT		0x00000003
@@ -67,7 +67,7 @@ typedef struct _PTPReq PTPReq;
 #define PTP_VENDOR_NIKON		0x0000000A
 #define PTP_VENDOR_CANON		0x0000000B
 
-// Operation Codes
+/* Operation Codes */
 
 #define PTP_OC_Undefined                0x1000
 #define PTP_OC_GetDeviceInfo            0x1001
@@ -98,11 +98,11 @@ typedef struct _PTPReq PTPReq;
 #define PTP_OC_CopyObject               0x101A
 #define PTP_OC_GetPartialObject         0x101B
 #define PTP_OC_InitiateOpenCapture      0x101C
-// Eastman Kodak extension Operation Codes
+/* Eastman Kodak extension Operation Codes */
 #define PTP_OC_EK_SendFileObjectInfo	0x9005
 #define PTP_OC_EK_SendFileObject	0x9006
 
-// Response Codes
+/* Response Codes */
 
 #define PTP_RC_Undefined                0x2000
 #define PTP_RC_OK                       0x2001
@@ -137,18 +137,18 @@ typedef struct _PTPReq PTPReq;
 #define PTP_RC_SessionAlreadyOpened     0x201E
 #define PTP_RC_TransactionCanceled      0x201F
 #define PTP_RC_SpecificationOfDestinationUnsupported            0x2020
-// Eastman Kodak extension Response Codes
+/* Eastman Kodak extension Response Codes */
 #define PTP_RC_EK_FilenameRequired	0xA001
 #define PTP_RC_EK_FilenameConflicts	0xA002
 #define PTP_RC_EK_FilenameInvalid	0xA003
 
-// PTP driver extended ERROR codes
+/* PTP driver extended ERROR codes */
 #define PTP_ERROR_IO			0x02FF
 #define PTP_ERROR_DATA_EXPECTED		0x02FE
 #define PTP_ERROR_RESP_EXPECTED		0x02FD
 #define PTP_ERROR_BADPARAM		0x02FC
 
-// PTP Event Codes
+/* PTP Event Codes */
 
 #define PTP_EC_Undefined		0x4000
 #define PTP_EC_CancelTransaction	0x4001
@@ -166,7 +166,7 @@ typedef struct _PTPReq PTPReq;
 #define PTP_EC_CaptureComplete		0x400D
 #define PTP_EC_UnreportedStatus		0x400E
 
-// PTP event structre (returned by chceck_event)
+/* PTP event structre (returned by chceck_event) */
 
 struct _PTPEvent {
 	uint32_t len;
@@ -178,7 +178,7 @@ struct _PTPEvent {
 };
 typedef struct _PTPEvent PTPEvent;
 
-// PTP device info structure (returned by GetDevInfo)
+/* PTP device info structure (returned by GetDevInfo) */
 
 struct _PTPDeviceInfo {
 	uint16_t StaqndardVersion;
@@ -203,7 +203,7 @@ struct _PTPDeviceInfo {
 };
 typedef struct _PTPDeviceInfo PTPDeviceInfo;
 
-// PTP storageIDs structute (returned by GetStorageIDs)
+/* PTP storageIDs structute (returned by GetStorageIDs) */
 
 struct _PTPStorageIDs {
 	uint32_t n;
@@ -211,7 +211,7 @@ struct _PTPStorageIDs {
 };
 typedef struct _PTPStorageIDs PTPStorageIDs;
 
-// PTP StorageInfo structure (returned by GetStorageInfo)
+/* PTP StorageInfo structure (returned by GetStorageInfo) */
 struct _PTPStorageInfo {
 	uint16_t StorageType;
 	uint16_t FilesystemType;
@@ -224,7 +224,7 @@ struct _PTPStorageInfo {
 };
 typedef struct _PTPStorageInfo PTPStorageInfo;
 
-// PTP objecthandles structure (returned by GetObjectHandles)
+/* PTP objecthandles structure (returned by GetObjectHandles) */
 
 struct _PTPObjectHandles {
 	uint32_t n;
@@ -236,7 +236,7 @@ typedef struct _PTPObjectHandles PTPObjectHandles;
 #define PTP_HANDLER_ROOT	0x00000000
 
 
-// PTP objectinfo structure (returned by GetObjectInfo)
+/* PTP objectinfo structure (returned by GetObjectInfo) */
 
 struct _PTPObjectInfo {
 	uint32_t StorageID;
@@ -263,9 +263,9 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 
 #define MAXFILENAMELEN			255
 
-// PTP Object Format Codes
+/* PTP Object Format Codes */
 
-// ancillary formats
+/* ancillary formats */
 #define PTP_OFC_Undefined			0x3000
 #define PTP_OFC_Association			0x3001
 #define PTP_OFC_Script				0x3002
@@ -279,7 +279,7 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_AVI				0x300A
 #define PTP_OFC_MPEG				0x300B
 #define PTP_OFC_ASF				0x300D
-// image formats
+/* image formats */
 #define PTP_OFC_EXIF_JPEG			0x3801
 #define PTP_OFC_TIFF_EP				0x3802
 #define PTP_OFC_FlashPix			0x3803
@@ -296,11 +296,11 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_TIFF_IT				0x380E
 #define PTP_OFC_JP2				0x380F
 #define PTP_OFC_JPX				0x3810
-// Eastman Kodak extension ancillary format
+/* Eastman Kodak extension ancillary format */
 #define PTP_OFC_EK_M3U				0xb002
 
 
-// PTP Association Types
+/* PTP Association Types */
 
 #define PTP_AT_Undefined			0x0000
 #define PTP_AT_GenericFolder			0x0001
@@ -311,12 +311,12 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_AT_2DPanoramic			0x0006
 #define PTP_AT_AncillaryData			0x0007
 
-// PTP Protection Status
+/* PTP Protection Status */
 
 #define PTP_PS_NoProtection			0x0000
 #define PTP_PS_ReadOnly				0x0001
 
-// PTP Storage Types
+/* PTP Storage Types */
 
 #define PTP_ST_Undefined			0x0000
 #define PTP_ST_FixedROM				0x0001
@@ -324,20 +324,20 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_ST_FixedRAM				0x0003
 #define PTP_ST_RemovableRAM			0x0004
 
-// PTP FilesystemType Values
+/* PTP FilesystemType Values */
 
 #define PTP_FST_Undefined			0x0000
 #define PTP_FST_GenericFlat			0x0001
 #define PTP_FST_GenericHierarchical		0x0002
 #define PTP_FST_DCF				0x0003
 
-// PTP StorageInfo AccessCapability Values
+/* PTP StorageInfo AccessCapability Values */
 
 #define PTP_AC_ReadWrite			0x0000
 #define PTP_AC_ReadOnly				0x0001
 #define PTP_AC_ReadOnly_with_Object_Deletion	0x0002
 
-// Glue stuff
+/* Glue stuff */
 
 typedef short (* PTPIOReadFunc)  (unsigned char *bytes, unsigned int size,
 				  void *data);
@@ -349,7 +349,7 @@ typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args);
 struct _PTPParams {
 	/* data layer byteorder */
 	uint8_t	byteorder;
-	
+
 	/* Custom IO functions */
 	PTPIOReadFunc  read_func;
 	PTPIOWriteFunc write_func;
@@ -374,7 +374,7 @@ struct _PTPParams {
 typedef struct _PTPParams PTPParams;
 
 
-// ptp functions
+/* ptp functions */
 
 uint16_t ptp_event_check	(PTPParams* params, PTPEvent* event);
 uint16_t ptp_event_wait		(PTPParams* params, PTPEvent* event);

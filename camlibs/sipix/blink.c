@@ -139,8 +139,8 @@ decomp_dct(
 			break;
 		case 0xc0: /* Set 1 value in DCT, 9 bit */
 			xinp=((input[inpos+0]&0x1f)<<7)|(input[inpos+1]&0x7f);
-			if (xinp & 0x0800) 
-				xinp |= 0xff00;	
+			if (xinp & 0x0800)
+				xinp |= 0xff00;
 			curinflags = input[inpos+1] & 0xc0;
 			outtable[outpos] = xinp;
 			outpos++;
@@ -370,7 +370,7 @@ _decompressor(
 	var150 = malloc(edi * esi);
 	if (!var150) return 0;
 	goto 100113f3;
-	
+
 100112af:
 	if (cx <= bp) goto 10011262;
 100112b4:
@@ -503,7 +503,7 @@ _10001889(this) {
 	var3c = -3;
 	ebx = ecx - 5;
 	var2c = -5;
-	var88 = ecx+1; 
+	var88 = ecx+1;
 	var34 = 1;
 	vara0 = ecx-2;
 	var24 = -2;
@@ -697,7 +697,7 @@ _xdecomp(arg0, arg4, arg8, argc, arg10, arg14) {
 			xpixels++;
 			while (ypixels < 160) {
 				switch (ycnt % 11) {
-				case 1: case 3: case 5: case 7: case 9: 
+				case 1: case 3: case 5: case 7: case 9:
 					ypixels++;
 					memcpy(outdata, tmpdata, 3);
 					outdata += 3;
@@ -961,12 +961,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	numpics = _get_number_images(camera);
 	if (numpics < GP_OK)
 		return numpics;
-	//gp_list_populate (list, "blink%03i.raw", numpics);
+	/* gp_list_populate (list, "blink%03i.raw", numpics); */
 #if 1
 	for (i=0;i<numpics;i++) {
 		/* we also get the fs info for free, so just set it */
-		info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | 
-				GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+		info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME |
+				GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 				GP_FILE_INFO_SIZE;
 		strcpy(info.file.type,GP_MIME_UNKNOWN);
 		sprintf(info.file.name,"blink%03i.raw",i);
@@ -985,23 +985,23 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			info.file.height	= 480;
 			break;
 		case 1:	/* CIF */
-			info.file.width		= 352;	
+			info.file.width		= 352;
 			info.file.height	= 288;
 			break;
 		case 2:	/* QCIF */
-			info.file.width		= 176;	
+			info.file.width		= 176;
 			info.file.height	= 144;
 			break;
 		case 3:	/* QVGA */
-			info.file.width		= 320;	
+			info.file.width		= 320;
 			info.file.height	= 240;
 			break;
 		case 4:	/* ? */
-			info.file.width		= 800;	
+			info.file.width		= 800;
 			info.file.height	= 592;
 			break;
 		case 5:	/* VGA/4 */
-			info.file.width		= 160;	
+			info.file.width		= 160;
 			info.file.height	= 120;
 			break;
 		default:

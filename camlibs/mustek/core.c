@@ -15,9 +15,9 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
- 
+
 /*
- * gphoto driver for the Mustek MDC800 Digital Camera. The driver 
+ * gphoto driver for the Mustek MDC800 Digital Camera. The driver
  * supports rs232 and USB.
  */
 
@@ -82,7 +82,7 @@ mdc800_sendInitialCommand (Camera *camera, char* answer)
 /*
  * Opens the Camera:
  *     (camera is already opened by gphoto2)
- * (1) send Initial command	
+ * (1) send Initial command
  */
 int mdc800_openCamera (Camera *camera)
 {
@@ -133,7 +133,7 @@ int mdc800_closeCamera (Camera *camera)
 
 
 /*
- * Sets the camera speed to the defined value: 
+ * Sets the camera speed to the defined value:
  * 0: 19200, 1:57600, 2: 115200
  */
 int mdc800_changespeed (Camera *camera,int new)
@@ -198,7 +198,7 @@ int mdc800_getSpeed (Camera *camera, int *speed)
 	ret = gp_port_get_settings(camera->port,&settings);
 	if (ret!=GP_OK) return ret;
 
-	for (rate=0;rate<3;rate++) 
+	for (rate=0;rate<3;rate++)
 	    if (settings.serial.speed == baud_rate[rate])
 		break;
 	if (rate == 3)
@@ -224,9 +224,9 @@ int mdc800_setTarget (Camera *camera,int value)
 int mdc800_getThumbnail (Camera *camera,int index, void **data, int *size)
 {
 	int ret;
-	
+
 	printFnkCall ("(mdc800_getThumbNail) called for %i . \n",index);
-	
+
 	*size = 4096;
 	*data = malloc(4096);
 	if (!*data)
@@ -272,15 +272,15 @@ int mdc800_getImage (Camera *camera, int nr, void **data, int *size)
 	switch (imagesize/1024)
 	{
 	case 48:
-		imagequality=0; 
+		imagequality=0;
 		printCoreNote ("(Economic Quality 506x384)\n");
 		break;
-	case 128:	
-		imagequality=1; 
+	case 128:
+		imagequality=1;
 		printCoreNote ("(Standard Quality 1012x768)\n");
 		break;
-	case 320:  
-		imagequality=2; 
+	case 320:
+		imagequality=2;
 		printCoreNote ("(High Quality 1012x768)\n");
 		break;
 	case 4:
@@ -304,10 +304,10 @@ int mdc800_getImage (Camera *camera, int nr, void **data, int *size)
 
 
 
-//------	SystemStatus of the Camera ------------------------------------------/
+/* ------	SystemStatus of the Camera ------------------------------------------/ */
 
 
-// Load the Status from the camera if necessary
+/* Load the Status from the camera if necessary */
 int mdc800_getSystemStatus (Camera *camera)
 {
 	int ret = GP_OK;
@@ -323,7 +323,7 @@ int mdc800_getSystemStatus (Camera *camera)
 	if (ret!=GP_OK)
 	{
 		printCoreError ("(mdc800_getSystemStatus) request fails.\n");
-		return ret;	
+		return ret;
 	}
 	fprintf(stderr,"mdc800_getSystemStatus leaving.\n");
 	camera->pl->system_flags_valid=1;
@@ -395,7 +395,7 @@ int mdc800_isAutoOffEnabled(Camera *camera)
 	return (((unsigned char)camera->pl->system_flags[1]&8) == 8);
 }
 
-//----- Other fine functions-------------------------------------------------/
+/* ----- Other fine functions------------------------------------------------- */
 
 
 /*
@@ -407,7 +407,7 @@ int mdc800_setStorageSource (Camera *camera,int flag)
 	int ret;
 	if (flag == camera->pl->memory_source)
 		return GP_OK;
-	
+
 	/* Check wether FlashCard is present */
 	if ((flag == 0) && mdc800_isCFCardPresent (camera))
 	{
@@ -452,7 +452,7 @@ int mdc800_setStorageSource (Camera *camera,int flag)
 int mdc800_setDefaultStorageSource (Camera *camera)
 {
 	int ret,source;
-	
+
 	if (camera->pl->memory_source != -1)
 	{
 		source=camera->pl->memory_source;
@@ -509,7 +509,7 @@ int mdc800_setMode (Camera *camera,int m)
 			if (last != m)
 				printCoreNote ("Mode set to Camera Mode.\n");
 			break;
-			
+
 		case 1:
 			ret = mdc800_io_sendCommand(camera->port,COMMAND_SET_PLAYBACK_MODE,0,0,0,0,0);
 			if (ret != GP_OK)
@@ -520,7 +520,7 @@ int mdc800_setMode (Camera *camera,int m)
 			if (last != m)
 				printCoreNote ("Mode set to Payback Mode.\n");
 			break;
-			
+
 	}
 	camera->pl->system_flags_valid=0;
 	return GP_OK;
@@ -535,12 +535,12 @@ int mdc800_setMode (Camera *camera,int m)
 int mdc800_setFlashLight (Camera* camera,int value)
 {
 	int command=0,redeye_flag=0,ret;
-	
+
 	if (mdc800_getFlashLightStatus (camera) == value)
 		return GP_OK;
-	
+
 	redeye_flag=(value&MDC800_FLASHLIGHT_REDEYE) != 0;
-	
+
 	if ((value&MDC800_FLASHLIGHT_ON) != 0)
 		command=COMMAND_SET_FLASHMODE_ON;
 	else if ((value&MDC800_FLASHLIGHT_OFF) != 0)
@@ -594,13 +594,13 @@ int mdc800_enableLCD (Camera*camera,int enable)
 	int ret,command;
 	if (enable == mdc800_isLCDEnabled (camera))
 		return GP_OK;
-	
-	if (enable) 
+
+	if (enable)
 		command=COMMAND_SET_LCD_ON;
 	else
 		command=COMMAND_SET_LCD_OFF;
 
-	camera->pl->system_flags_valid=0;	
+	camera->pl->system_flags_valid=0;
 	ret = mdc800_io_sendCommand (camera->port,command,0,0,0,0,0);
 	if (ret!=GP_OK)
 	{
@@ -653,14 +653,14 @@ int mdc800_getRemainFreeImageCount (Camera *camera,int* h,int* s,int *e)
 {
 	unsigned char data [6];
 	int ret;
-	
+
 	ret = mdc800_io_sendCommand (camera->port,COMMAND_GET_REMAIN_FREE_IMAGE_COUNT,0,0,0,(char*)data,6);
 	if (ret != GP_OK)
 	{
 		printCoreError ("(mdc800_getRemainFreeImageCount) Error sending Command.\n");
 		return ret;
 	}
-	
+
 	if (h != 0)
 		(*h)=(int)((data[0]/16)*1000)+((data[0]%16)*100)+((data[1]/16)*10)+(data[1]%16);
 	if (s != 0)
@@ -672,7 +672,7 @@ int mdc800_getRemainFreeImageCount (Camera *camera,int* h,int* s,int *e)
 
 
 /*
- * Get Image Quallity 
+ * Get Image Quallity
  * 0: Economic, 1:Standard, 2:High
  */
 int mdc800_getImageQuality (Camera *camera, char *retval)
@@ -715,10 +715,10 @@ int mdc800_getWBandExposure (Camera *camera,int* exp, int* wb)
 {
 	char retval[2];
 	int ret;
-	
+
 	/* What's that here is a real diffenrence between USB and RS232 */
 	int toggle= (camera->port->type == GP_PORT_USB);
-	
+
 	ret = mdc800_io_sendCommand(camera->port,COMMAND_GET_WB_AND_EXPOSURE,0,0,0,retval,2);
 	if (ret == GP_OK)
 	{
@@ -740,7 +740,7 @@ int mdc800_setExposure (Camera *camera,int v)
 }
 
 /*
- * Sets the Exposure Mode 
+ * Sets the Exposure Mode
  * 0: MTRX 1:CNTR
  */
 int mdc800_setExposureMode (Camera *camera,int m)
@@ -763,15 +763,15 @@ int mdc800_getExposureMode (Camera *camera,int *retval)
 }
 
 /*
- * Enable, Disable the Menu 
+ * Enable, Disable the Menu
  */
 int mdc800_enableMenu (Camera *camera,int enable)
 {
 	char command=enable?COMMAND_SET_MENU_ON:COMMAND_SET_MENU_OFF;
-	
+
 	if (enable == mdc800_isMenuOn (camera))
 		return GP_OK;
-	camera->pl->system_flags_valid=0;	
+	camera->pl->system_flags_valid=0;
 	return mdc800_io_sendCommand (camera->port,command,0,0,0,0,0);
 }
 
@@ -779,16 +779,16 @@ int mdc800_number_of_pictures (Camera *camera, int *nrofpics)
 {
 	unsigned char answer [2];
 	int ret;
-	
+
 	printFnkCall ("(mdc800_number_of_pictures) called.\n");
-	
+
 	ret= mdc800_setTarget (camera, 1);
 	if (ret != GP_OK)
 	{
 		printAPIError ("(mdc800_number_of_pictures) can't set Target\n");
 		return ret;
 	}
-	
+
 /*
 	if (!mdc800_setMode (1))
 	{

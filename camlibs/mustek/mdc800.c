@@ -125,7 +125,7 @@ static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	       void *data, GPContext *context)
 {
-/*	Camera *camera;*/
+/* Camera *camera;*/
 
 	/*
 	 * Upload the file to the camera. Use gp_file_get_data_and_size,
@@ -325,7 +325,7 @@ int
 camera_init (Camera *camera, GPContext *context)
 {
         /* First, set up all the function pointers */
-        // camera->functions->exit                 = camera_exit;
+        /* camera->functions->exit                 = camera_exit; */
         camera->functions->get_config		= camera_config_get;
         camera->functions->set_config		= camera_config_set;
         camera->functions->capture              = camera_capture;

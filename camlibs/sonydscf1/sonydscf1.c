@@ -34,7 +34,7 @@ int camera_id (CameraText *id) {
 
 int camera_abilities (CameraAbilitiesList *list) {
 
-        //*count = 1;
+        /* *count = 1; */
         CameraAbilities a;
 
         /* Fill in each camera model's abilities */

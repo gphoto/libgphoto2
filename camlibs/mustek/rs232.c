@@ -15,10 +15,10 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
- 
+
 /*
- * gphoto driver for the Mustek MDC800 Digital Camera. The driver 
- * supports rs232 and USB. 
+ * gphoto driver for the Mustek MDC800 Digital Camera. The driver
+ * supports rs232 and USB.
  */
 
 #include <gphoto2-library.h>
@@ -45,7 +45,7 @@ int mdc800_rs232_sendCommand(GPPort *port,char* command, char* buffer, int lengt
 	int fault=0,ret;
 	int i;
 
-	printFnkCall ("(mdc800_rs232_sendCommand) id:%i (%i,%i,%i),answer:%i\n",command[1],command[2],command[3],command[4],length);	
+	printFnkCall ("(mdc800_rs232_sendCommand) id:%i (%i,%i,%i),answer:%i\n",command[1],command[2],command[3],command[4],length);
 
 	usleep(MDC800_DEFAULT_COMMAND_DELAY*1000);
 	gp_port_set_timeout (port, MDC800_DEFAULT_TIMEOUT );
@@ -74,10 +74,10 @@ int mdc800_rs232_sendCommand(GPPort *port,char* command, char* buffer, int lengt
 	if (fault)
 		return GP_ERROR_IO;
 
-	// Receive answer
+	/* Receive answer */
 	if (length)
 	{
-		// Some Commands needs a download.
+		/* Some Commands needs a download. */
 		switch (command[1])
 		{
 			case COMMAND_GET_IMAGE:
@@ -100,7 +100,7 @@ int mdc800_rs232_sendCommand(GPPort *port,char* command, char* buffer, int lengt
 	if (fault)
 		return GP_ERROR_IO;
 
-	// commit 
+	/* commit */
 	if (!(command[1] == COMMAND_CHANGE_RS232_BAUD_RATE)) {
 		if (!mdc800_rs232_waitForCommit(port,command[1]))
 		{
@@ -123,7 +123,7 @@ int mdc800_rs232_waitForCommit (GPPort *port,char commandid)
 {
 	char ch[1];
 	int ret;
-	
+
 	gp_port_set_timeout(port,mdc800_io_getCommandTimeout(commandid));
 	ret = gp_port_read(port,ch,1);
 	if (ret!=1)
@@ -131,7 +131,7 @@ int mdc800_rs232_waitForCommit (GPPort *port,char commandid)
 		printCError ("(mdc800_rs232_waitForCommit) Error receiving commit !\n");
 		return GP_ERROR_IO;
 	}
-	
+
 	if (ch[0] != ANSWER_COMMIT )
 	{
 		printCError ("(mdc800_rs232_waitForCommit) Byte \"%i\" was not the commit !\n",ch[0]);
@@ -147,7 +147,7 @@ int mdc800_rs232_receive (GPPort *port,char* buffer, int b)
 {
 	int ret;
 	gp_port_set_timeout (port,MDC800_DEFAULT_TIMEOUT );
-	
+
 	ret=gp_port_read(port,buffer,b);
 	if (ret!=b)
 	{
@@ -167,9 +167,9 @@ int mdc800_rs232_download (GPPort *port,char* buffer, int size)
 	int checksum,readen=0,i;
 	char DSC_checksum;
 	int numtries=0;
-	
+
 	gp_port_set_timeout(port, MDC800_DEFAULT_TIMEOUT );
-	
+
 	while (readen < size)
 	{
 		if (!mdc800_rs232_receive (port,&buffer[readen],512))
@@ -179,10 +179,10 @@ int mdc800_rs232_download (GPPort *port,char* buffer, int size)
 			checksum=(checksum+(unsigned char) buffer [readen+i])%256;
 		if (gp_port_write (port,(char*) &checksum,1) < GP_OK)
 			return readen;
-		
+
 		if (!mdc800_rs232_receive (port,&DSC_checksum,1))
 			return readen;
-			
+
 
 		if ((char) checksum != DSC_checksum)
 		{
@@ -200,7 +200,7 @@ int mdc800_rs232_download (GPPort *port,char* buffer, int size)
 			numtries=0;
 		}
 	}
-	
+
 
 	{
 		int i,j;

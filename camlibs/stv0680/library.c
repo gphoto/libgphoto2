@@ -1,20 +1,20 @@
 /*
  * STV0680 Vision Camera Chipset Driver
- * Copyright © 2000 Adam Harrison <adam@antispin.org> 
- * 
+ * Copyright © 2000 Adam Harrison <adam@antispin.org>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA   
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "config.h"
@@ -81,7 +81,7 @@ static int stv0680_cmd(GPPort *port, unsigned char cmd,
 	unsigned char rhdr[6];
 	int ret;
 
-	// build command packet
+	/* build command packet */
 	packet[1] = cmd;
 	packet[2] = response_len;
 	packet[3] = data1;
@@ -89,24 +89,24 @@ static int stv0680_cmd(GPPort *port, unsigned char cmd,
 	packet[5] = data3;
 	packet[6] = stv0680_checksum(packet, 1, 5);
 
-	// write to port
+	/* write to port */
 	printf("Writing packet to port\n");
 	if((ret = gp_port_write(port, packet, 8)) < GP_OK)
 		return ret;
 
 	printf("Reading response header\n");
-	// read response header
+	/* read response header */
 	if((ret = gp_port_read(port, rhdr, 6)) != 6)
 		return ret;
 
 	printf("Read response\n");
-	// read response
+	/* read response */
 	if((ret = gp_port_read(port, response, response_len)) != response_len)
 	    return ret;
 
 	printf("Validating packet [0x%X,0x%X,0x%X,0x%X,0x%X,0x%X]\n",
 	       rhdr[0], rhdr[1], rhdr[2], rhdr[3], rhdr[4], rhdr[5]);
-	// validate response
+	/* validate response */
 	if(rhdr[0] != 0x02 || rhdr[1] != cmd ||
 	   rhdr[2] != response_len ||
 	   rhdr[3] != stv0680_checksum(response, 0, response_len - 1) ||
@@ -210,7 +210,7 @@ int stv0680_get_image_raw(GPPort *port, int image_no, CameraFile *file)
 
 	w = (imghdr.width[0]  << 8) | imghdr.width[1];
 	h = (imghdr.height[0] << 8) | imghdr.height[1];
-	size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+	size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) |
 	    (imghdr.size[2]<<8) | imghdr.size[3];
 	raw = malloc(size);
 	if ((ret=gp_port_read(port, raw, size))<0)
@@ -236,7 +236,7 @@ int stv0680_get_image(GPPort *port, int image_no, CameraFile *file)
 
 	/* Despite the documentation saying so, CMDID_UPLOAD_IMAGE does not
 	 * return an image_header. The first 8 byte are correct, but the
-	 * next 8 appear strange. So we call CMDID_GET_IMAGE_HEADER before. 
+	 * next 8 appear strange. So we call CMDID_GET_IMAGE_HEADER before.
 	 */
 	ret = stv0680_try_cmd(port, CMDID_GET_IMAGE_HEADER, image_no,
 		(void*)&imghdr, sizeof(imghdr));
@@ -248,7 +248,7 @@ int stv0680_get_image(GPPort *port, int image_no, CameraFile *file)
 		return ret;
 	w = (imghdr.width[0]  << 8) | imghdr.width[1];
 	h = (imghdr.height[0] << 8) | imghdr.height[1];
-	size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+	size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) |
 	    (imghdr.size[2]<<8) | imghdr.size[3];
 	fine = (imghdr.fine_exposure[0]<<8)|imghdr.fine_exposure[1];
 	coarse = (imghdr.coarse_exposure[0]<<8)|imghdr.coarse_exposure[1];
@@ -268,7 +268,7 @@ int stv0680_get_image(GPPort *port, int image_no, CameraFile *file)
 	if (!tmpdata2) return GP_ERROR_NO_MEMORY;
 	gp_bayer_expand (raw, w, h, tmpdata1, BAYER_TILE_GBRG_INTERLACED);
 	light_enhance(w,h,coarse,imghdr.avg_pixel_value,fine,tmpdata1);
-	//gp_bayer_interpolate (tmpdata1, w, h, BAYER_TILE_GBRG_INTERLACED);
+	/* gp_bayer_interpolate (tmpdata1, w, h, BAYER_TILE_GBRG_INTERLACED); */
 	stv680_hue_saturation (w, h, tmpdata1, tmpdata2 );
 	demosaic_sharpen (w, h, tmpdata2, tmpdata1, 2, BAYER_TILE_GBRG_INTERLACED);
 	sharpen (w, h, tmpdata1, data, 16);
@@ -296,7 +296,7 @@ int stv0680_get_image_preview(GPPort *port, int image_no, CameraFile *file)
 		}
 		rw = (imghdr.width[0]  << 8) | imghdr.width[1];
 		rh = (imghdr.height[0] << 8) | imghdr.height[1];
-		rsize = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+		rsize = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) |
 		    (imghdr.size[2]<<8) | imghdr.size[3];
 		scale = (rw>>8)+1;
 		break;
@@ -308,7 +308,7 @@ int stv0680_get_image_preview(GPPort *port, int image_no, CameraFile *file)
 			return ret;
 		rw = (imghdr.width[0]  << 8) | imghdr.width[1];
 		rh = (imghdr.height[0] << 8) | imghdr.height[1];
-		rsize = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+		rsize = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) |
 		    (imghdr.size[2]<<8) | imghdr.size[3];
 		scale = 0;
 		break;
@@ -408,7 +408,7 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 	coarse = (imghdr.coarse_exposure[0]<<8)|imghdr.coarse_exposure[1];
 	w = (imghdr.width[0]  << 8) | imghdr.width[1];
 	h = (imghdr.height[0] << 8) | imghdr.height[1];
-	*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+	*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) |
 	    (imghdr.size[2]<<8) | imghdr.size[3];
 
 	raw = malloc(*size);
@@ -421,9 +421,9 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 	bayerpre = malloc(((*size)*3));
 	gp_bayer_expand (raw, w, h, bayerpre, BAYER_TILE_GBRG_INTERLACED);
 	light_enhance(w,h,coarse,fine,imghdr.avg_pixel_value,bayerpre);
-	//gp_bayer_interpolate (bayerpre, w, h, BAYER_TILE_GBRG_INTERLACED);
+	/* gp_bayer_interpolate (bayerpre, w, h, BAYER_TILE_GBRG_INTERLACED); */
 	demosaic_sharpen (w, h, bayerpre, *data + strlen(header), 2, BAYER_TILE_GBRG_INTERLACED);
-	//sharpen (w, h, bayerpre,*data + strlen(header), 20);
+	/* sharpen (w, h, bayerpre,*data + strlen(header), 20); */
 	free(bayerpre);
 	free(raw);
 	*size *= 3;
@@ -439,7 +439,7 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 	unsigned char *raw,*bayerpre;
 	int xsize,h,w,i;
 	int ret;
-	struct capmode { 
+	struct capmode {
 	    int mask,w,h,mode;
 	} capmodes[4] = {
 	    { 1, STV0680_CIF_WIDTH,  STV0680_CIF_HEIGHT,  0x000 },
@@ -496,7 +496,7 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 	/* no light enhancement here, we do not get the exposure values? */
 	gp_bayer_decode (raw, w, h, bayerpre, BAYER_TILE_GBRG_INTERLACED);
 	demosaic_sharpen (w, h, bayerpre, *data + strlen(header), 2, BAYER_TILE_GBRG_INTERLACED);
-	//sharpen (w, h, bayerpre,*data + strlen(header), 20);
+	/* sharpen (w, h, bayerpre,*data + strlen(header), 20); */
 	free(raw);
 	free(bayerpre);
 	*size *= 3;

@@ -1,5 +1,3 @@
-
-
 /* test_ptp */
 
 #include <stdio.h>
@@ -77,13 +75,13 @@ PTPParams* ptp_params;
 		exit;
 	}
 	ptp_usb.handle=device_handle;
-	
+
 	ptp_opensession (ptp_params, 1);
 
 	sleep(3);
 	printf("Checking event ep\n");
 
-//	ret=usb_bulk_read(device_handle, eventep, buf, 16384, 5000);
+/* ret=usb_bulk_read(device_handle, eventep, buf, 16384, 5000); */
 
 	ret=ptp_check_int (buf, 16384, ptp_params->data);
 	if (ret<=0) {
@@ -139,4 +137,3 @@ int main(int argc, char ** argv)
 
   return 0;
 }
-

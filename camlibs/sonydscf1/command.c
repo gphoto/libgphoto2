@@ -38,20 +38,20 @@ void wbyte(u_char c)
   dprintf((stderr, "> %02x\n", c));
   temp[0]=c;
   temp[1]='\0';
-  //if (writetty(F1fd, &c, 1) < 0) {
+  /* if (writetty(F1fd, &c, 1) < 0) { */
   if( gp_port_write(dev, (char*)temp, 1) <0) {
     perror("wbyte");
-    //Exit(1);
+    /* Exit(1); */
   }
 }
 
 u_char rbyte()
 {
   u_char        c[2];
-  //if (readtty(F1fd, &c, 1) < 0) {
+  /* if (readtty(F1fd, &c, 1) < 0) { */
   if (gp_port_read(dev,c, 1) <0) {
     perror("rbtyte");
-    //Exit(1);
+    /* Exit(1); */
   }
   dprintf((stderr, "< %02x\n", c));
 
@@ -62,10 +62,10 @@ inline void
 wstr(u_char *p, int len)
 {
   dprintf((stderr, "> len=%d\n", len));
-  //if (writetty(F1fd, p, len) < 0) {
+  /* if (writetty(F1fd, p, len) < 0) { */
   if( gp_port_write(dev, p, len) <0) {
     perror("wstr");
-    //Exit(1);
+    /* Exit(1); */
   }
 }
 
@@ -73,10 +73,10 @@ inline void rstr(u_char *p, int len)
 {
 
   dprintf((stderr, "< len=%d\n", len));
-  //if (readtty(F1fd, p, len) < 0) {
+  /* if (readtty(F1fd, p, len) < 0) { */
   if (gp_port_read(dev,p, len) <0) {
     perror("rstr");
-    //Exit(1);
+    /* Exit(1); */
   }
 }
 
@@ -396,7 +396,7 @@ long F1fseek(long offset, int base)
   return(buf[2]);
 }
 
-long F1fwrite(u_char *data, long len, u_char b) /* this function not work well  */
+long F1fwrite(u_char *data, long len, u_char b) /* this function not work well */
 {
 
   long i = 0;
@@ -583,9 +583,9 @@ int F1reset()
 void Exit(code)
      int code;
 {
-  /*if (!(F1getfd() < 0)){
+  /* if (!(F1getfd() < 0)){
     F1reset();
     closetty(F1getfd());
   } */
-  //exit(code);
+  /* exit(code); */
 }

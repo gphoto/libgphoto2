@@ -1,19 +1,19 @@
-/** demosaic_sharpen.c 
+/** demosaic_sharpen.c
  * when demosaicing the unbayered image,
  * don't just use bilinear interpolation, but weigh
  * the to be guessed values according to the differences
  * of the known value.
  * Of course, smaller differences mean higher weights.
- * 
+ *
  * © Kurt Garloff <garloff@suse.de>, 2002/01/15
  * License: GNU GPL
- * 
+ *
  * Note: Interpolation techniques more intelligent than
  * bilinear inerpolation have been subject to investigations.
  * Those two links came from Jérôme Fenal:
  * http://ise.stanford.edu/class/psych221/99/dixiedog/vision.htm
  * http://www-ise.stanford.edu/~tingchen/main.htm
- * 
+ *
  * From the evaluation, it seems that we should strive to do something like
  * "Linear Interpolation with Laplacian 2nd order color correction terms I".
  *
@@ -21,12 +21,12 @@
  * The reason for this is twofold:
  * - Avoid all possible patent issues
  *   (If I would be American, I would probably want to patent this algo)
- * - Be conservative: By using an interpolation method (with weights bound 
+ * - Be conservative: By using an interpolation method (with weights bound
  *   below 1), we avoid the risk to get artefacts, like e.g. seen in the
- *   smooth hue algorithms, as our interpolated values are always in between 
+ *   smooth hue algorithms, as our interpolated values are always in between
  *   those from the neighbours, just a little closer to the ones we think
  *   fits better.
- * 
+ *
  * Our algorithm:
  * Trying to predict the known value based on the next neighbours with
  * the same colour component will yield weights. To achieve this:
@@ -34,15 +34,15 @@
  * - Choose a function f(|dv|) which prefers points with smaller |dv|
  * - Function should be monotonic and ]0;1[
  * - Sum of weights must be 1, of course
- * 
+ *
  * We choose f(|dv|) = N / (ALPHA + |dv|)
  * and scale with the reciprocal total sum, so we fulfill the conditions.
  * The algorithm is integer only (unless you enable DEBUG)
  * and therefore suitable for FPU-less machines and/or the kernel.
- * 
+ *
  * I've chosen ALPHA = 2 and the results look really good.
- * 
- * ToDo: 
+ *
+ * ToDo:
  * - A similar algorithm in HSI space might be slightly better.
  * - Different weighing functions might do better
  * - Do rigorous performance analysis (quality and computation cost)
@@ -51,26 +51,26 @@
  *   (debugging purposes). Use it or get rid of it for slightly better
  *   performance.
  *
- * I've implemented this algo here as a testbed. It's only tested for 
+ * I've implemented this algo here as a testbed. It's only tested for
  * BAYER_TILE_GBRG_INTERLACED, though it's been designed to be general
  * for all BAYERs in gphoto2. (Hence all those tables ...)
  * It should be moved to the gphoto2 infrastructure to help all
  * cameras, not just mine. It includes the demosaicing, so it should
- * be merged with the gp_bayer_decode (or the bilinear demosaicing 
+ * be merged with the gp_bayer_decode (or the bilinear demosaicing
  * could be removed from the latter) to avoid double work.
- * 
+ *
  * History:
- * 2001-01-15, 0.90, KG, 
+ * 2001-01-15, 0.90, KG,
  *		working for inner points (2,2)-(width-3,height-3)
- * 2001-01-15, 1.00, KG, 
+ * 2001-01-15, 1.00, KG,
  *		handle boundary points
- * 
+ *
  */
 
 #include <stdlib.h>
 #include "demosaic_sharpen.h"
 
-/* we define bayer as 
+/* we define bayer as
  * +---> x
  * | 0 1
  * v 2 3
@@ -81,10 +81,10 @@ typedef enum {
 	RED = 0, GREEN = 1, BLUE = 2
 } col;
 
-/* Don't get confused reading this code; there's lots of 
+/* Don't get confused reading this code; there's lots of
  * indirection through the tables to avoid branches in the code;
  * maybe I love long pipelines too much.
- * If I look at the code long enough, I get confused myself. 
+ * If I look at the code long enough, I get confused myself.
  * The boundary special cases unfortunately do introduce some extra
  * branching. (KG)
  */
@@ -102,7 +102,7 @@ typedef struct _neighbours {
 	unsigned char num;
 	off nb_pts[4];
 } neighbours;
-	
+
 /* possible locations */
 neighbours n_pos[8] = {
 	{	/* NB_DIAG */
@@ -110,7 +110,7 @@ neighbours n_pos[8] = {
 			{-1,-1},
 			{ 1,-1},
 			{-1, 1},
-			{ 1, 1} 
+			{ 1, 1}
 		}
 	},{	/* NB_TLRB */
 		4, {
@@ -151,7 +151,7 @@ typedef struct _t_coeff {
 typedef enum {
 	DIAG_TO_LR = 0, DIAG_TO_TB, TLRB2_TO_DIAG, TLRB2_TO_TLRB, PATCONV_NONE
 } patconv;
-	
+
 
 /* Transfer matrix pattern to pattern */
 t_coeff pat_to_pat[4] = {
@@ -195,16 +195,16 @@ patconv pconvmap[5][5] = {
 };
 
 
-/* Next mapping: col of pixel (0,1,2 = RGB & 
+/* Next mapping: col of pixel (0,1,2 = RGB &
  * index into n_pos for own, own+1, own+2 */
 typedef struct _bayer_desc {
 	col colour;
 	nb_pat idx_pts[3];
 } bayer_desc;
 
-/* T = Bayer Tile, P = Bayer point no 
+/* T = Bayer Tile, P = Bayer point no
  *                T  P                */
-bayer_desc bayers[4][4] = { 
+bayer_desc bayers[4][4] = {
 	{	/* TILE_RGGB */
 		{ RED,   {NB_TLRB2, NB_TLRB, NB_DIAG} },
 		{ GREEN, {NB_DIAG, NB_TB, NB_LR} },
@@ -237,19 +237,19 @@ inline int weight (const unsigned char dx, const int alpha)
 
 /* alpha controls the strength of the weighting; 1 = strongest, 64 = weak */
 void demosaic_sharpen (const int width, const int height,
-		       const unsigned char * const src_region, 
-		       unsigned char * const dest_region, 
+		       const unsigned char * const src_region,
+		       unsigned char * const dest_region,
 		       const int alpha, const BayerTile bt)
 {
 	const unsigned char* src_ptr = src_region;
 	unsigned char* dst_ptr = dest_region;
 	const bayer_desc *bay_des = bayers [bt & 3]; /* Don't care about interlace */
 	int x, y;
-	
+
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++, src_ptr += 3, dst_ptr += 3) {
-			// 3 2
-			// 1 0
+			/* 3 2 */
+			/* 1 0 */
 			const unsigned char bayer = (1^(x&1)) + ((1^(y&1))<<1);
 			const col colour = bay_des[bayer].colour;
 			/* nb_pat[0] is our own pattern */
@@ -260,9 +260,9 @@ void demosaic_sharpen (const int width, const int height,
 			int weights[4]; int sum_weights = 0.0;
 			patconv pconv;
 			/* Calc coeffs for prediction */
-			int nbs; col ncol; int othcol; int i; 
+			int nbs; col ncol; int othcol; int i;
 			int skno; int nsumw;
-			int predcol = 0; // Only for DEBUG
+			int predcol = 0; /*  Only for DEBUG */
 			/* DPRINTF("(%i,%i)(%p): bay %i, col %i, pat %i, val %i\n", x, y, src_ptr, bayer, colour, nbpts[0], colval);*/
 			/* Copy own colour */
 			dst_ptr[colour] = colval;
@@ -277,7 +277,7 @@ void demosaic_sharpen (const int width, const int height,
 					thisval = src_ptr[addr_off+colour];
 					coeff = weight (abs ((int)colval - thisval), myalpha);
 				} else if (nbpts[0] == NB_TLRB2 && x > 0 && x < width-1 && y > 0 && y < height-1) {
-					coeff = weight (128, myalpha); // assign some small weight
+					coeff = weight (128, myalpha); /* assign some small weight */
 				}
 				/*DPRINTF(" (%i,%i)(%p): val %i, diff %i, weight %i\n", nx, ny, src_ptr+addr_off, thisval, abs ((int)colval - thisval), coeff);*/
 				predcol += thisval * coeff;
@@ -310,7 +310,7 @@ void demosaic_sharpen (const int width, const int height,
 					nsumw += eff_weight;
 					/*DPRINTF("  (%i,%i): val %i, eff_w %6.4f\n", nx, ny, thisval, (double)(eff_weight>>1)/sum_weights);*/
 					othcol  += thisval * eff_weight;
-					predcol += thisval; 
+					predcol += thisval;
 				} else {
 					skno++;
 				}
