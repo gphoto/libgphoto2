@@ -234,7 +234,7 @@ static struct {
 };
 
 static int
-set_mimetype (Camera *camera, CameraFile *file, unsigned short ofc)
+set_mimetype (Camera *camera, CameraFile *file, uint16_t ofc)
 {
 	int i;
 
@@ -249,14 +249,31 @@ set_mimetype (Camera *camera, CameraFile *file, unsigned short ofc)
 	return (GP_OK);
 }
 
+
+
 static void
-strcpy_mime(char * dest, unsigned short ofc) {
+strcpy_mime(char * dest, uint16_t ofc) {
 	int i;
 
 	for (i = 0; object_formats[i].format_code; i++)
-		if (object_formats[i].format_code == ofc)
+		if (object_formats[i].format_code == ofc) {
 			strcpy(dest, object_formats[i].txt);
+			return;
+		}
+	strcpy(dest, "application/x-unknown");
+}
 
+static uint32_t
+get_mimetype (Camera *camera, CameraFile *file)
+{
+	int i;
+	const char *mimetype;
+
+	gp_file_get_mime_type (file, &mimetype);
+	for (i = 0; object_formats[i].format_code; i++)
+		if (!strcmp(mimetype,object_formats[i].txt))
+			return (object_formats[i].format_code);
+	return (PTP_OFC_Undefined);
 }
 	
 struct _CameraPrivateLibrary {
@@ -337,7 +354,8 @@ camera_abilities (CameraAbilitiesList *list)
 		a.operations        = GP_OPERATION_NONE;
 		a.file_operations   = GP_FILE_OPERATION_PREVIEW|
 					GP_FILE_OPERATION_DELETE;
-		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
+		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
+			| GP_FOLDER_OPERATION_MAKE_DIR;
 		CR (gp_abilities_list_append (list, a));
 		memset(&a,0, sizeof(a));
 	}
@@ -352,7 +370,8 @@ camera_abilities (CameraAbilitiesList *list)
 	a.operations        = GP_OPERATION_NONE;
 	a.file_operations   = GP_FILE_OPERATION_PREVIEW|
 				GP_FILE_OPERATION_DELETE;
-	a.folder_operations = GP_FOLDER_OPERATION_NONE ;
+	a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
+		| GP_FOLDER_OPERATION_MAKE_DIR;
 	CR (gp_abilities_list_append (list, a));
 
 	return (GP_OK);
@@ -484,6 +503,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	((PTPData *)((Camera *)data)->pl->params.data)->context = context;
 	id = gp_context_progress_start (context, 0, _("Listing files in "
 		"'%s'..."), folder);
+	// Get (parent) folder handle
 	find_folder_handle(folder,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==parent)
@@ -508,6 +528,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	int i;
 
 	((PTPData *)((Camera *)data)->pl->params.data)->context = context;
+	// Get (parent) folder handle
 	find_folder_handle(folder,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==parent)
@@ -526,19 +547,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = data;
 	PTPReq *fdata = NULL;
 	char * image;
-	uint32_t image_id;
+	uint32_t object_id;
 	uint32_t size;
 	PTPObjectInfo * oi;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
 	// Get file number
-	find_folder_handle(folder, image_id, data);
-	image_id = find_child(filename, image_id, camera);
-	if ((image_id=handle_to_n(image_id, camera))==PTP_HANDLER_SPECIAL)
+	find_folder_handle(folder, object_id, data);
+	object_id = find_child(filename, object_id, camera);
+	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	oi=&camera->pl->params.objectinfo[image_id];
+	oi=&camera->pl->params.objectinfo[object_id];
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		if ((oi->ObjectFormat == PTP_OFC_Undefined) ||
@@ -547,7 +568,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size=oi->ObjectCompressedSize;
 		fdata=malloc(size+PTP_REQ_HDR_LEN);
 		CPR_free (context, ptp_getobject(&camera->pl->params,
-			camera->pl->params.handles.handler[image_id],
+			camera->pl->params.handles.handler[object_id],
 			size, fdata), fdata);
 		image=malloc(size);
 		memcpy(image, fdata->data, size);
@@ -563,7 +584,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size=oi->ThumbCompressedSize;
 		fdata=malloc(size+PTP_REQ_HDR_LEN);
 		CPR_free (context, ptp_getthumb(&camera->pl->params,
-			camera->pl->params.handles.handler[image_id],
+			camera->pl->params.handles.handler[object_id],
 			size, fdata), fdata);
 		image=malloc(size);
 		memcpy(image, fdata->data, size);
@@ -600,13 +621,16 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	gp_file_get_data_and_size (file, &object, &intsize);
 	size=(uint32_t)intsize;
 
-	// XXX: put file to root folder on any store (responder decide)!
-	//parent=PTP_HANDLER_SPECIAL; // in this case it means root folder
-	parent=PTP_HANDLER_ROOT; // in this case it means any folder
+	// get parent folder id
+	find_folder_handle(folder,parent,data);
+	/* if you desire to put file to root folder, you have to use 
+	 * 0xffffffff instead of 0x00000000 (which means responder decide).
+	 */
+	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 	store=0x00020001; // FIXME: BUG in Kodak DX3500, you have to specify
 			  // store
-	oi.Filename=filename;
-	oi.ObjectFormat=PTP_OFC_EXIF_JPEG;	// XXX
+	oi.Filename=(char *)filename;
+	oi.ObjectFormat=get_mimetype(camera, file);
 	oi.ObjectCompressedSize=size;
 	CPR (context, ptp_ek_sendfileobjectinfo (&camera->pl->params,
 		&store, &parent, &handle, &oi));
@@ -624,18 +648,18 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 			const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
-	unsigned long image_id;
+	unsigned long object_id;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
 	// Get file number
-	find_folder_handle(folder, image_id, data);
-	image_id = find_child(filename, image_id, camera);
-	if ((image_id=handle_to_n(image_id, camera))==PTP_HANDLER_SPECIAL)
+	find_folder_handle(folder, object_id, data);
+	object_id = find_child(filename, object_id, camera);
+	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	CPR (context, ptp_deleteobject(&camera->pl->params,
-		camera->pl->params.handles.handler[image_id],0));
+		camera->pl->params.handles.handler[object_id],0));
 
 	return (GP_OK);
 }
@@ -646,17 +670,17 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	PTPObjectInfo *oi;
-	uint32_t image_id;
+	uint32_t object_id;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
 	// Get file number
-	find_folder_handle(folder, image_id, data);
-	image_id = find_child(filename, image_id, camera);
-	if ((image_id=handle_to_n(image_id, camera))==PTP_HANDLER_SPECIAL)
+	find_folder_handle(folder, object_id, data);
+	object_id = find_child(filename, object_id, camera);
+	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	oi=&camera->pl->params.objectinfo[image_id];
+	oi=&camera->pl->params.objectinfo[object_id];
 /*	GP_DEBUG ("ObjectInfo for '%s':");
 	GP_DEBUG ("  StorageID: %d", oi.StorageID);
 	GP_DEBUG ("  ObjectFormat: %d", oi.ObjectFormat);
@@ -712,16 +736,18 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	((PTPData *) camera->pl->params.data)->context = context;
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 
-	// blackmagic, obtain ObjectHandle of upper folder
-	// XXX 0xffffffff=root filesystem
-	parent=PTP_HANDLER_ROOT;
+	// get parent folder id
+	find_folder_handle(folder,parent,data);
+	/* if you desire to put file to root folder, you have to use
+	 * 0xffffffff instead of 0x00000000 (which means responder decide).
+	 */
+	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 
 	// any store (responder decides)
-	store=0xffffffff;
+	store=0x00020001;  // FIXME
 	
-	oi.Filename=foldername;
+	oi.Filename=(char *)foldername;
 
-	oi.StorageID=0xffffffff;
 	oi.ObjectFormat=PTP_OFC_Association;
 	oi.ProtectionStatus=PTP_PS_NoProtection;
 	oi.AssociationType=PTP_AT_GenericFolder;
