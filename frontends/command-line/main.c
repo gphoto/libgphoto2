@@ -66,6 +66,7 @@ OPTION_CALLBACK(help);
 OPTION_CALLBACK(version);
 OPTION_CALLBACK(shell);
 OPTION_CALLBACK(list_cameras);
+OPTION_CALLBACK(print_usb_usermap);
 OPTION_CALLBACK(auto_detect);
 OPTION_CALLBACK(list_ports);
 OPTION_CALLBACK(filename);
@@ -116,6 +117,7 @@ Option option[] = {
 {"v", "version",        "",             "Display version and exit",     version,        0},
 {"h", "help",           "",             "Displays this help screen",    help,           0},
 {"",  "list-cameras",   "",             "List supported camera models", list_cameras,   0},
+{"",  "print-usb-usermap", "",         "Create output for usb.usermap", print_usb_usermap, 0},
 {"",  "list-ports",     "",             "List supported port devices",  list_ports,     0},
 {"",  "stdout",         "",             "Send file to stdout",          use_stdout,     0},
 {"",  "stdout-size",    "",             "Print filesize before data",   use_stdout_size,0},
@@ -344,6 +346,42 @@ OPTION_CALLBACK(list_cameras) {
         return (GP_OK);
 }
 
+/* print_usb_usermap
+ *
+ * Print out lines that can be included into usb.usermap 
+ * - for all cams supported by our instance of libgphoto2.
+ *
+ * written after list_cameras 
+ */
+
+OPTION_CALLBACK(print_usb_usermap) {
+
+	int x, n;
+        const char *buf;
+        CameraAbilities abilities;
+
+        cli_debug_print("Listing Cameras");
+
+        CHECK_RESULT (n = gp_camera_count ());
+
+        for (x = 0; x < n; x++) {
+		CHECK_RESULT (gp_camera_name (x, &buf));
+		CHECK_RESULT (gp_camera_abilities (x, &abilities));
+
+		if ((abilities.usb_vendor != 0) && (abilities.usb_product != 0)) {
+			/* FIXME: could there be a usb_vendor or usb_product of 0? */
+			printf(GP_USB_HOTPLUG_SCRIPT "               "
+			       "0x0000      0x%04x   0x%04x    0x0000       "
+			       "0x0000       0x00         0x00            "
+			       "0x00            0x00            0x00               "
+			       "0x00               0x00000000\n",
+			       abilities.usb_vendor, abilities.usb_product);
+		}
+        }
+
+        return (GP_OK);
+}
+
 OPTION_CALLBACK(list_ports)
 {
         gp_port_info info;
@@ -404,12 +442,12 @@ OPTION_CALLBACK(model)
 
 OPTION_CALLBACK (debug)
 {
-        glob_debug = GP_DEBUG_HIGH;
-        cli_debug_print("Turning on debug mode");
+	glob_debug = GP_DEBUG_HIGH;
+	cli_debug_print(PACKAGE " " VERSION ": " "Turning on debug mode");
 
 	gp_debug_set_level (GP_DEBUG_HIGH);
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 OPTION_CALLBACK(quiet)

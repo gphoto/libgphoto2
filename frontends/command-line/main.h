@@ -7,6 +7,8 @@
 #define LONG_OPTION			"--"
 #define MAX_IMAGE_NUMBER                1024
 
+#define GP_USB_HOTPLUG_SCRIPT "usbcam"
+
 #ifdef WIN32
 #include <io.h>
 #define VERSION "2"
