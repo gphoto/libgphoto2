@@ -1,6 +1,11 @@
-#include "gphoto.h"
-#include "util.h"
+#include <dirent.h>
 #include <stdio.h>    
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+
+#include <gphoto2.h>
+#include "util.h"
 
 void hide_dialog (GtkWidget *dialog, gpointer data) {
 
@@ -60,8 +65,10 @@ GtkWidget *gtk_directory_selection_new(char *title) {
 
 	dirsel = gtk_file_selection_new(title);
 	gtk_window_set_position (GTK_WINDOW (dirsel), GTK_WIN_POS_CENTER);
+/*
 	gtk_file_selection_set_filename(GTK_FILE_SELECTION(dirsel),
 		filesel_cwd);
+*/
         gtk_widget_hide(GTK_FILE_SELECTION(dirsel)->selection_entry);
         gtk_widget_hide(GTK_FILE_SELECTION(dirsel)->selection_text);
 
@@ -76,7 +83,7 @@ GtkWidget *gtk_directory_selection_new(char *title) {
 
 	entry = gtk_entry_new();
 	gtk_widget_show(entry);
-	gtk_entry_set_text(GTK_ENTRY(entry), filesel_cwd);
+//	gtk_entry_set_text(GTK_ENTRY(entry), filesel_cwd);
 	gtk_signal_connect(GTK_OBJECT(entry), "changed",
 		GTK_SIGNAL_FUNC(gtk_directory_selection_update),
 		dirsel);
