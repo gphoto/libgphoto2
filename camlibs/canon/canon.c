@@ -717,6 +717,12 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 
 	strcpy(path, cs->cached_drive);
 
+	/* update file cache (if necessary) first */
+	if(!update_dir_cache(camera)) {
+		gp_frontend_status(NULL, _("Could not obtain directory listing"));
+		return GP_ERROR;
+	}
+	
 	if (get_file_path(camera, filename,path) == GP_ERROR) {
 		gp_debug_printf(GP_DEBUG_LOW,"canon","Filename not found!\n");
 		return GP_ERROR;
@@ -1462,6 +1468,7 @@ int camera_init(Camera *camera)
   cs->cached_disk = 0;
   cs->cached_dir = 0;
   cs->dump_packets = 0;
+  cs->cached_tree = NULL;
   
   fprintf(stderr,"canon_initialize()\n");
   
