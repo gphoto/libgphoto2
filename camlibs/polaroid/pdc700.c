@@ -25,9 +25,13 @@
  * one, please contact me so that we can get this stuff up and running.
  */
 
-#include <gphoto2-library.h>
+#include <config.h>
+
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <gphoto2-library.h>
 
 #define PDC700_INIT	0x01
 #define PDC700_INFO	0x02
@@ -68,8 +72,8 @@ static int
 pdc700_read (GPPort *port, unsigned char *cmd, int cmd_len,
 	     unsigned char *buf, int *buf_len, int *status)
 {
-	unsigned char header[3], c;
-	int checksum;
+	unsigned char header[3];
+	int checksum, i;
 
 	/* Finish the command and send it */
 	cmd[0] = 0x40;
@@ -80,35 +84,37 @@ pdc700_read (GPPort *port, unsigned char *cmd, int cmd_len,
 
 	/*
 	 * Read the header (0x40 plus 2 bytes indicating how many bytes
-	 * will follow besides checksum, command confirmation and last packet
-	 * identifier)
+	 * will follow)
 	 */
 	CHECK_RESULT (gp_port_read (port, header, 3));
 	if (header[0] != 0x40)
 		return (GP_ERROR_CORRUPTED_DATA);
 	*buf_len = (header[2] << 8) | header [1];
 
-	/* Read one byte and check if the response is for our command */
-	CHECK_RESULT (gp_port_read (port, &c, 1));
-	if (c != (0x80 | cmd[3]))
+	/* Read the remaining bytes */
+	CHECK_RESULT (gp_port_read (port, buf, *buf_len));
+	
+	/*
+	 * The first byte indicates if this the response for our command. 
+	 */
+	if (buf[0] != (0x80 | cmd[3]))
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	/*
-	 * Read another byte which indicates if other packets will follow 
-	 * (in case of picture transmission)
+	 * The next byte indicates if other packets will follow (in case
+	 * of picture transmission). 
 	 */
-	CHECK_RESULT (gp_port_read (port, &c, 1));
-	*status = c;
+	*status = buf[1];
 
-	/* Read the actual data */
-	if (*buf_len)
-		CHECK_RESULT (gp_port_read (port, buf, *buf_len));
-
-	/* Read the checksum */
-	CHECK_RESULT (gp_port_read (port, &c, 1));
-	checksum = calc_checksum (buf, *buf_len - 1);
-	if (checksum != c)
+	/* Check the checksum */
+	for (checksum = i = 0; i < *buf_len - 1; i++)
+		checksum += buf[i];
+	if (checksum != buf[*buf_len - 1])
 		return (GP_ERROR_CORRUPTED_DATA);
+
+	/* We no longer need the first two bytes and the last byte */
+	memmove (buf, buf + 2, 2);
+	*buf_len -= 3;
 
 	return (GP_OK);
 }
@@ -377,7 +383,7 @@ camera_init (Camera *camera)
 {
 	int result = GP_OK, i;
 	GPPortSettings settings;
-	int speeds[] = {9600, 57600, 19200, 38400};
+	int speeds[] = {9600, 57600, 19200, 38400, 115200};
 
         /* First, set up all the function pointers */
 	camera->functions->summary	= camera_summary;
@@ -389,11 +395,11 @@ camera_init (Camera *camera)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	/* Check if the camera is really there */
-	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
-	CHECK_RESULT (gp_port_timeout_set (camera->port, 1000));
-	for (i = 0; i < 4; i++) {
+	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
+	CHECK_RESULT (gp_port_set_timeout (camera->port, 1000));
+	for (i = 0; i < 5; i++) {
 		settings.serial.speed = speeds[i];
-		CHECK_RESULT (gp_port_settings_set (camera->port, settings));
+		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 		result = pdc700_init (camera->port);
 		if (result == GP_OK)
 			break;
@@ -405,7 +411,7 @@ camera_init (Camera *camera)
 	if (speeds[i] != 57600) {
 		CHECK_RESULT (pdc700_baud (camera->port, 57600));
 		settings.serial.speed = 57600;
-		CHECK_RESULT (gp_port_settings_set (camera->port, settings));
+		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 	}
 
 	return (GP_OK);

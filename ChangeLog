@@ -1,3 +1,9 @@
+2001-11-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/polaroid/pdc700.c: While searching the archives, I found
+	  some dumps and saw that there is something wrong with the logic in
+	  pcd700_read. Why didn't anyone fix?
+
 2001-11-04  Stephane Castejon <scastejo@club-internet.fr>
 
 	* liggphoto2/gphoto2-result.c,h : remove GP_ERROR_LOW_BATTERY
