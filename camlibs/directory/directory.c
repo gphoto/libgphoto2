@@ -85,6 +85,7 @@ int camera_init (Camera *camera)
         camera->functions->folder_list_folders 	= camera_folder_list_folders;
         camera->functions->folder_list_files    = camera_folder_list_files;
         camera->functions->file_get     	= camera_file_get;
+	camera->functions->file_get_info        = camera_file_get_info;
 	camera->functions->file_set_info	= camera_file_set_info;
 	camera->functions->get_config		= camera_get_config;
 	camera->functions->set_config		= camera_set_config;
@@ -118,6 +119,33 @@ int camera_exit (Camera *camera)
         free(d);
 
         return (GP_OK);
+}
+
+int camera_file_get_info (Camera *camera, const char *folder, const char *file,
+		          CameraFileInfo *info)
+{
+	int result;
+	char buf [1024];
+	CameraFile *cam_file;
+
+	sprintf (buf, "%s/%s", folder, file);
+	cam_file = gp_file_new ();
+	result = gp_file_open (cam_file, buf);
+	if (result != GP_OK) {
+		gp_file_free (cam_file);
+		return (result);
+	}
+	
+	info->preview.fields = GP_FILE_INFO_NONE;
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_NAME | 
+			    GP_FILE_INFO_TYPE;
+	strcpy (info->file.type, cam_file->type);
+	strcpy (info->file.name, cam_file->name);
+	info->file.size = cam_file->size;
+
+	gp_file_free (cam_file);
+
+	return (GP_OK);
 }
 
 int camera_file_set_info (Camera *camera, const char *folder, const char *file, 
