@@ -1,5 +1,9 @@
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* frontents/gtk/macros/*: Removed.
+
+2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* frontents/Makefile.am: Remove libpghoto2_frontend from SUBDIRS.
 	* frontents/gtk/*: Removed those ancient files. For GUI frontends, 
 	refer to gtkam or GnoCam. They are distributed separately.
