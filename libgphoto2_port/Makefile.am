@@ -9,7 +9,7 @@ bin_SCRIPTS = gphoto2-port-config
 
 SUBDIRS = po libgphoto2_port test @IOLIB_SUBDIRS@ doc m4
 
-EXTRA_DIST = 		\
+EXTRA_DIST =   		\
 	AUTHORS \
 	ChangeLog \
 	COPYING.LIB \
@@ -19,5 +19,4 @@ EXTRA_DIST = 		\
 	gphoto2-port-config.in \
 	makefile.os2 lgp2port.df
 
-docdir = @DOC_DIR@
 doc_DATA = AUTHORS README NEWS

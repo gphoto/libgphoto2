@@ -16,8 +16,8 @@ AC_MSG_CHECKING([main docdir])
 
 if test "x${with_doc_dir}" != "x"
 then # docdir is given as parameter
-    DOC_DIR="${with_doc_dir}"
-    AC_MSG_RESULT([${DOC_DIR} (from parameter)])
+    docdir="${with_doc_dir}"
+    AC_MSG_RESULT([${docdir} (from parameter)])
 else # otherwise invent a docdir hopefully compatible with system policy
     if test -d "/usr/share/doc"
     then
@@ -36,15 +36,15 @@ else # otherwise invent a docdir hopefully compatible with system policy
     # FIXME: doesn't work properly.
     if ls -d /usr/{share/,}doc/*-[[]0-9[]]* > /dev/null 2>&1
     then
-        DOC_DIR="${maindocdir}/${PACKAGE}-${VERSION}"
-        AC_MSG_RESULT([${DOC_DIR} (redhat style)])
+        docdir="${maindocdir}/${PACKAGE}-${VERSION}"
+        AC_MSG_RESULT([${docdir} (redhat style)])
     else
-        DOC_DIR="${maindocdir}/${PACKAGE}"
-        AC_MSG_RESULT([${DOC_DIR} (default style)])
+        docdir="${maindocdir}/${PACKAGE}"
+        AC_MSG_RESULT([${docdir} (default style)])
     fi
 fi
 
-AC_SUBST(DOC_DIR)
+AC_SUBST(docdir)
 
 ])dnl
 
@@ -124,15 +124,15 @@ dnl ---------------------------------------------------------------------------
 AC_ARG_WITH(html-dir, [  --with-html-dir=PATH      Where to install html docs [default=autodetect]])
 AC_MSG_CHECKING([for html dir])
 if test "x${with_html_dir}" = "x" ; then
-    HTML_DIR="${DOC_DIR}/html"
-    AC_MSG_RESULT([${HTML_DIR} (default)])
+    htmldir="${docdir}/html"
+    AC_MSG_RESULT([${htmldir} (default)])
 else
-    HTML_DIR="${with_html_dir}"
-    AC_MSG_RESULT([${HTML_DIR} (from parameter)])
+    htmldir="${with_html_dir}"
+    AC_MSG_RESULT([${htmldir} (from parameter)])
 fi
-AC_SUBST(HTML_DIR)
-API_DIR="${HTML_DIR}/api"
-AC_SUBST(API_DIR)
+AC_SUBST(htmldir)
+apidocdir="${htmldir}/api"
+AC_SUBST(apidocdir)
 
 dnl ------------------------------------------------------------------------
 dnl try to find xmlto (required for generation of man pages and html docs)

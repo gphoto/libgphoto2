@@ -9,7 +9,6 @@ EXTRA_DIST = HACKING MAINTAINERS makefile.os2 os2mak.inc TESTERS CHANGES
 
 SUBDIRS = libgphoto2_port libgphoto2 camlibs tests po packaging doc
 
-docdir = @DOC_DIR@
 doc_DATA = AUTHORS COPYING README
 
 ########################################################################

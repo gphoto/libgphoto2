@@ -12,9 +12,7 @@ maintainer-clean-local: clean
 
 if ENABLE_GTK_DOC
 
-htmldir=@API_DIR@
-
-TARGET_DIR=$(htmldir)/$(DOC_MODULE)
+TARGET_DIR=$(apidocdir)/$(DOC_MODULE)
 
 all-local: templates sgml html
 
@@ -35,7 +33,7 @@ install-data-local:
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
 	$(INSTALL_DATA) ./html/*.html $(DESTDIR)$(TARGET_DIR)
 	$(INSTALL_DATA) ./html/index.sgml $(DESTDIR)$(TARGET_DIR)
-	gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(DESTDIR)$(htmldir)
+	gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(DESTDIR)$(apidocdir)
 
 dist-hook:
 	(cd $(srcdir) ; tar cvf - html) | (cd $(distdir); tar xf -)

@@ -30,4 +30,32 @@ AC_DEFUN(GPKG_CHECK_LINUX,
 			;;
 	esac
 	AM_CONDITIONAL(HAVE_LINUX, "$is_linux")
+
+	# required for docdir
+	AC_REQUIRE(GP_CHECK_DOC_DIR)
+
+	AC_ARG_WITH(hotplug-doc-dir, [  --with-hotplug-doc-dir=PATH Where to install hotplug scripts as docs [default=autodetect]])
+
+	if test "x${with_hotplug_doc_dir}" != "x"
+	then # given as parameter
+	    hotplugdocdir="${with_hotplug_doc_dir}"
+	    AC_MSG_RESULT([${hotplugdocdir} (from parameter)])
+	else # start at docdir
+	    hotplugdocdir="${docdir}/linux-hotplug"
+	    AC_MSG_RESULT([${hotplugdocdir} (default)])
+	fi
+	AC_SUBST(hotplugdocdir)
+
+	AC_ARG_WITH(hotplug-usermap-dir, [  --with-hotplug-usermap-dir=PATH Where to install hotplug scripts as docs [default=autodetect]])
+
+	if test "x${with_hotplug_usermap_dir}" != "x"
+	then # given as parameter
+	    hotplugusermapdir="${with_hotplug_usermap_dir}"
+	    AC_MSG_RESULT([${hotplugusermapdir} (from parameter)])
+	else # start at docdir
+	    hotplugusermapdir="${docdir}/linux-hotplug"
+	    AC_MSG_RESULT([${hotplugusermapdir} (default)])
+	fi
+
+	AC_SUBST(hotplugusermapdir)
 ])

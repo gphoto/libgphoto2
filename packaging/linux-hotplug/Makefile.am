@@ -3,8 +3,7 @@ EXTRA_DIST = usbcam.console usbcam.group usbcam.user
 # no need to build or install the following on non-linux systems
 if HAVE_LINUX
 
-docdir = @DOC_DIR@/linux-hotplug
-doc_DATA = usbcam.console usbcam.group usbcam.user usbcam.x11-app
+hotplugdoc_DATA = usbcam.console usbcam.group usbcam.user usbcam.x11-app
 
 INCLUDES =	\
 	-I$(top_srcdir)/libgphoto2	\
@@ -19,9 +18,9 @@ print_usb_usermap_LDADD = ../../libgphoto2/libgphoto2.la
 USERMAP = gphoto2-usb.usermap
 
 install-data-local: print-usb-usermap
-	./print-usb-usermap > $(USERMAP)
-	mkdir -p $(DESTDIR)$(docdir)/
-	$(INSTALL_DATA) $(USERMAP) $(DESTDIR)$(docdir)/
+	./print-usb-usermap usbcam > $(USERMAP)
+	mkdir -p $(DESTDIR)$(hotplugusermapdir)/
+	$(INSTALL_DATA) $(USERMAP) $(DESTDIR)$(hotplugusermapdir)/
 
 uninstall-local:
 	rm -f $(DESTDIR)$(docdir)/$(USERMAP)

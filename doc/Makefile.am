@@ -18,6 +18,4 @@ EXTRA_DIST = DAEMON build_OS2.txt 					\
 
 man_MANS = gphoto2.3 gphoto2_port.3
 
-docdir = @DOC_DIR@
-
 doc_DATA = FAQ faq.xml
