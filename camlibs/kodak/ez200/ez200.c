@@ -68,7 +68,7 @@ int ez200_exit (GPPort *port) {
 int ez200_wait_status_ok(GPPort *port) {
 	char c = 0;
 	
-	do READ(port, STATUS, 0, 0, c, 1);
+	do READ(port, STATUS, 0, 0, &c, 1);
 	while (c != 0); /* Wait */
 	
 	return GP_OK;

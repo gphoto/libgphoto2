@@ -1,3 +1,11 @@
+2004-12-15  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* configure.in: 2.1.5
+
+2004-11-26  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* configure.in: 2.1.5rc1
+
 2004-11-26  Theodore Kilgore <kilgota@auburn.edu>
 
 	* camlibs/iclick/*: New camera driver written by T. K. and 
@@ -5,8 +13,6 @@
 	* configure.in: camlibs/iclick hooked up.
 	* AUTHORS: authors of camlibs/iclick added.
 	* MAINTAINERS: listed T. K. as the (current) maintainer. 
-
-
 
 2004-11-18  Lutz Mueller <lutz@users.sourceforge.net>
 

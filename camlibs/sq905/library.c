@@ -63,6 +63,7 @@ struct {
 	{"Mitek CD30P",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"GTW Electronics",   GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Concord Eye-Q Easy",GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Concord Eye-Q Duo", GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},	
 	{"Che-ez Snap",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"PockCam",           GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Magpix B350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
@@ -71,8 +72,9 @@ struct {
 			      GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
         {"iConcepts digital camera" ,
                               GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
+	{"Sakar Kidz Cam",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"ViviCam3350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
-	{"ViviCam5B",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"ViviCam5B",         GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"DC-N130t",          GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"SY-2107C",          GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Argus DC-1730",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x913c},
@@ -239,6 +241,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	Camera *camera = user_data; 
 	int i, w, h, b, entry, frame, is_in_clip;
 	int nb_frames, to_fetch;  
+	int do_preprocess;
 	unsigned char comp_ratio;
 	unsigned char *frame_data; 
 	unsigned char *ppm, *ptr;
@@ -297,6 +300,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (camera->pl->last_fetched_entry > entry) {
 		sq_rewind(camera->port, camera->pl);
 	}
+	do_preprocess = 0;
 	do {
 		to_fetch = camera->pl->last_fetched_entry;
 		if (to_fetch < entry) {
@@ -325,6 +329,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		GP_DEBUG("Fetch entry %i\n", to_fetch);
 		sq_read_picture_data 
 				(camera->port, camera->pl->last_fetched_data, b);
+		do_preprocess = 1;
 		camera->pl->last_fetched_entry = to_fetch;
 	} while (camera->pl->last_fetched_entry<entry);
 
@@ -334,8 +339,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 */
 
 	if (GP_FILE_TYPE_RAW!=type) {
-		sq_preprocess(camera->pl->model, comp_ratio, is_in_clip, 
+		if (do_preprocess) {
+			sq_preprocess(camera->pl->model, comp_ratio, is_in_clip, 
 				frame_data, w, h);
+		}
 		if (comp_ratio>1) sq_decompress (frame_data, b, w, h);
 		/*
 		 * Now put the data into a PPM image file. 

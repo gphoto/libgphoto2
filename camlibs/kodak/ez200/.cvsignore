@@ -1,1 +1,7 @@
 Makefile.in
+library.lo
+libgphoto2_ez200.la
+ez200.lo
+Makefile
+.libs
+.deps

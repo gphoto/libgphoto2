@@ -1,4 +1,10 @@
+2004-12-15   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: added Concord Eye-Q Duo, Sakar Kidz Cam
+	(get_file_func): Conditionnalize pre-processing
+
 2003-11-11 Theodore Kilgore <kilgota@auburn.edu>
+	
 	* postprocess.c: bugfix for release.
 
 2003-11-11 Theodore Kilgore <kilgota@auburn.edu>
