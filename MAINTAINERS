@@ -135,3 +135,6 @@ Translation:
 
 Manual pages:
 	gphoto2 command-line app: Tim Waugh <twaugh@redhat.com>
+
+Other documentation (gphoto2.xml manual):
+        Hans Ulrich Niedermann <gp@n-dimensional.de>
