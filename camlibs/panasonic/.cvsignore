@@ -2,6 +2,7 @@ libgphoto2_panasonic_dc1580.la
 libgphoto2_panasonic_dc1000.la
 dc.lo
 dc1580.lo
+dc1000.lo
 .libs
 .deps
 Makefile

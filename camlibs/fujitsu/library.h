@@ -33,4 +33,5 @@ int fujitsu_ping		(Camera *camera);
 int fujitsu_set_int_register 	(Camera *camera, int reg, int value);
 int fujitsu_get_int_register 	(Camera *camera, int reg, int *value);
 int fujitsu_set_string_register (Camera *camera, int reg, char *s, int length);
-int fujitsu_get_string_register (Camera *camera, int reg, CameraFile *file, char *s, int *length);
+int fujitsu_get_string_register (Camera *camera, int reg, int file_number, 
+				 CameraFile *file, char *s, int *length);

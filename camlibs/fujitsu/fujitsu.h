@@ -9,4 +9,4 @@ typedef struct {
 	CameraFilesystem *fs;
 } FujitsuData;
 
-void debug_print(FujitsuData *fd, char *message);
+void fujitsu_debug_print(FujitsuData *fd, char *message);

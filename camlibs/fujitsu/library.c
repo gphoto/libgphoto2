@@ -41,18 +41,18 @@ void fujitsu_dump_packet (Camera *camera, char *packet) {
 			default:
 				sprintf(buf, "  packet: 0x%02x (UNKNOWN!)", packet[0]);
 		}
-		debug_print(fd, buf);
+		fujitsu_debug_print(fd, buf);
 		return;
 	}
 	sprintf(msg, "  packet length: %i", length);
-	debug_print(fd, msg);
+	fujitsu_debug_print(fd, msg);
 	if (length > 256)
 		length = 256;
 	strcpy(msg, "  packet: ");
 	for (x=0; x<length; x++)
 		sprintf(msg, "%s 0x%02x ", msg, (unsigned char)packet[x]);
 
-	debug_print(fd, msg);
+	fujitsu_debug_print(fd, msg);
 
 }
 
@@ -99,7 +99,7 @@ int fujitsu_valid_packet (Camera *camera, char *packet) {
 		}
 	}
 
-	debug_print(fd, "VALID_PACKET NOT DONE FOR DATA PACKETS!");
+	fujitsu_debug_print(fd, "VALID_PACKET NOT DONE FOR DATA PACKETS!");
 	return (GP_ERROR);
 }
 
@@ -109,7 +109,7 @@ int fujitsu_write_packet (Camera *camera, char *packet) {
 	char buf[4096], p[4096];
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 	
-	debug_print(fd, " fujitsu_write_packet");
+	fujitsu_debug_print(fd, " fujitsu_write_packet");
 
 //	usleep(QUICKSLEEP);
 
@@ -146,16 +146,16 @@ int fujitsu_write_packet (Camera *camera, char *packet) {
 
 		if (ret != GPIO_OK) {
 			if (ret == GPIO_TIMEOUT) {
-				debug_print(fd, " write timed out. trying again.");
+				fujitsu_debug_print(fd, " write timed out. trying again.");
 				if (r++ > RETRIES) {
-					debug_print(fd, " write failed (too many retries)");
+					fujitsu_debug_print(fd, " write failed (too many retries)");
 					return (GP_ERROR);
 				}
 			} else 	if (ret == GPIO_ERROR) {
-				debug_print(fd, " write failed");
+				fujitsu_debug_print(fd, " write failed");
 		                return (GP_ERROR);
 			} else  {
-				debug_print(fd, " write failed (unknown error)");
+				fujitsu_debug_print(fd, " write failed (unknown error)");
 			}
 		} else {
 			r=0;	/* reset retries */
@@ -176,22 +176,32 @@ read_packet_again:
 	buf[0] = 0;
 	packet[0] = 0;
 
-	debug_print(fd, " fujitsu_read_packet");
+	fujitsu_debug_print(fd, " fujitsu_read_packet");
 
 //	usleep(QUICKSLEEP);
+
+	/* For USB support */
+#ifdef GPIO_USB
+	if (fd->type == GP_PORT_USB) {
+		ret = gpio_read(fd->dev, packet, 2070);
+		gpio_usb_clear_halt(fd->dev);
+		fujitsu_dump_packet(camera, packet);
+		return ret;
+	}
+#endif
 
 	done = 0;
 	while (!done && (r++<RETRIES)) {
 		ret = gpio_read(fd->dev, packet, 1);
 		if (ret == GPIO_ERROR) {
-			debug_print(fd, "  read error (packet type)");
+			fujitsu_debug_print(fd, "  read error (packet type)");
 			return (GP_ERROR);
 		}
 		if (fujitsu_valid_type(packet[0])==GP_OK)
 			done = 1;
 	}
 	if (r>RETRIES) {
-		debug_print(fd, "  read error (too many retries on packet type)");
+		fujitsu_debug_print(fd, "  read error (too many retries on packet type)");
 		return (GP_ERROR);
 	}
 
@@ -199,7 +209,7 @@ read_packet_again:
 	    (packet[0] == TYPE_DATA) ||
 	    (packet[0] == TYPE_DATA_END)) {
 		if (gpio_read(fd->dev, &packet[1], 3)==GPIO_ERROR) {
-			debug_print(fd, "  read error (header)");
+			fujitsu_debug_print(fd, "  read error (header)");
 			return (GP_ERROR);
 		}
                 length = ((unsigned char)packet[2]) +
@@ -214,13 +224,13 @@ read_packet_again:
 		ret = gpio_read(fd->dev, &packet[y], 1);
 		if (ret == GPIO_TIMEOUT) {
 			sprintf(msg, "   timeout! (%i)\n", y);
-			debug_print(fd, msg);
+			fujitsu_debug_print(fd, msg);
 			fujitsu_write_nak(camera);
 			goto read_packet_again;
 		}
 
 		if (ret ==GPIO_ERROR) {
-			debug_print(fd, "  read error (data)");
+			fujitsu_debug_print(fd, "  read error (data)");
 			return (GP_ERROR);
 		}
 	}
@@ -238,6 +248,9 @@ int fujitsu_build_packet (Camera *camera, char type, char subtype, int data_leng
 	packet[0] = type;
 	switch (type) {
 		case TYPE_COMMAND:
+			if (fd->type == GP_PORT_USB)
+				/* USB cameras don't care about first packets */
+				fd->first_packet = 0;
 			if (fd->first_packet)
 				packet[1] = SUBTYPE_COMMAND_FIRST;
 			   else
@@ -249,7 +262,7 @@ int fujitsu_build_packet (Camera *camera, char type, char subtype, int data_leng
 			packet[1] = subtype;
 			break;
 		default:
-			debug_print(fd, "unknown packet type");
+			fujitsu_debug_print(fd, "unknown packet type");
 	}
 
 	packet[2] = data_length &  0xff;
@@ -263,17 +276,17 @@ int fujitsu_read_ack(Camera *camera) {
 	char buf[4096];
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
-	debug_print(fd, " fujitsu_read_ack");
+	fujitsu_debug_print(fd, " fujitsu_read_ack");
 
 	if (fujitsu_read_packet(camera, buf)==GP_ERROR) {
-		debug_print(fd, "Could not read ACK");
+		fujitsu_debug_print(fd, "Could not read ACK");
 		return (GP_ERROR);
 	}
 
 	if (buf[0] == ACK)
 		return (GP_OK);
 
-	debug_print(fd, "Could not read ACK");
+	fujitsu_debug_print(fd, "Could not read ACK");
 	return (GP_ERROR);
 }
 
@@ -283,7 +296,7 @@ int fujitsu_write_ack(Camera *camera) {
 	char buf[4096];
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
-	debug_print(fd, " fujitsu_write_ack");
+	fujitsu_debug_print(fd, " fujitsu_write_ack");
 
 	buf[0] = ACK;
 	if (fujitsu_write_packet(camera, buf)==GP_OK) {
@@ -292,8 +305,10 @@ int fujitsu_write_ack(Camera *camera) {
 #endif
 		return (GP_OK);
 	}
-	debug_print(fd, "Could not write ACK");
+	fujitsu_debug_print(fd, "Could not write ACK");
+#ifdef GPIO_USB
 	gpio_usb_clear_halt(fd->dev);
+#endif
 	return (GP_ERROR);
 }
 
@@ -302,7 +317,7 @@ int fujitsu_write_nak(Camera *camera) {
 	char buf[4096];
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
-	debug_print(fd, " fujitsu_write_nak");
+	fujitsu_debug_print(fd, " fujitsu_write_nak");
 
 	buf[0] = NAK;
 	if (fujitsu_write_packet(camera, buf)==GP_OK) {
@@ -312,7 +327,7 @@ int fujitsu_write_nak(Camera *camera) {
 		return (GP_OK);
 	}
 
-	debug_print(fd, "Could not write NAK");
+	fujitsu_debug_print(fd, "Could not write NAK");
 #ifdef GPIO_USB
 	gpio_usb_clear_halt(fd->dev);
 #endif
@@ -328,7 +343,7 @@ int fujitsu_ping(Camera *camera) {
         buf[0] = NUL;
 
 	while (r++ < RETRIES) {
-		debug_print(fd, "pinging the camera");
+		fujitsu_debug_print(fd, "pinging the camera");
 		if (fujitsu_write_packet(camera, buf)==GP_ERROR)
 			return (GP_ERROR);
 
@@ -336,10 +351,10 @@ int fujitsu_ping(Camera *camera) {
 			return (GP_ERROR);
 
 		if (buf[0] == NAK) {
-			debug_print(fd, "ping succeeded");
+			fujitsu_debug_print(fd, "ping succeeded");
 			return (GP_OK);
 		}
-		debug_print(fd, "ping failed");
+		fujitsu_debug_print(fd, "ping failed");
 	}
 	return (GP_ERROR);
 }
@@ -351,7 +366,7 @@ int fujitsu_set_speed(Camera *camera, int speed) {
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
 	sprintf(buf, "Setting speed to %i", speed);
-	debug_print(fd, buf);
+	fujitsu_debug_print(fd, buf);
 
 	fd->first_packet = 1;
 
@@ -405,7 +420,7 @@ int fujitsu_set_int_register (Camera *camera, int reg, int value) {
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
 	sprintf(buf, "Setting register #%i to %i", reg, value);
-	debug_print(fd, buf);
+	fujitsu_debug_print(fd, buf);
 
 	if (value < 0)
 		fujitsu_build_packet(camera, TYPE_COMMAND, 0, 2, p);
@@ -437,7 +452,7 @@ int fujitsu_set_int_register (Camera *camera, int reg, int value) {
 			return (GP_ERROR);
 	}
 
-	debug_print(fd, "too many retries");
+	fujitsu_debug_print(fd, "too many retries");
 
 	fujitsu_set_speed(camera, -1);
 
@@ -452,7 +467,7 @@ int fujitsu_get_int_register (Camera *camera, int reg, int *value) {
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
 	sprintf(buf, "Getting register #%i value", reg);
-	debug_print(fd, buf);
+	fujitsu_debug_print(fd, buf);
 
 	fujitsu_build_packet(camera, TYPE_COMMAND, 0, 2, packet);
 
@@ -488,7 +503,7 @@ int fujitsu_get_int_register (Camera *camera, int reg, int *value) {
 		}
 	}
 
-	debug_print(fd, "too many retries");
+	fujitsu_debug_print(fd, "too many retries");
 	return (GP_ERROR);
 }
 
@@ -501,7 +516,7 @@ int fujitsu_set_string_register (Camera *camera, int reg, char *s, int length) {
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
 	sprintf(buf, "Setting string in register #%i to \"%s\"", reg, s);
-	debug_print(fd, buf);
+	fujitsu_debug_print(fd, buf);
 
 	while (x < length) {
 		if (x==0) {
@@ -547,23 +562,28 @@ int fujitsu_set_string_register (Camera *camera, int reg, char *s, int length) {
 
 		}
 		if (r > RETRIES) {
-			debug_print(fd, "too many NAKs from camera");
+			fujitsu_debug_print(fd, "too many NAKs from camera");
 			return (GP_ERROR);
 		}
 	}
 	return (GP_OK);
 }
 
-int fujitsu_get_string_register (Camera *camera, int reg, CameraFile *file, char *s, int *length) {
+int fujitsu_get_string_register (Camera *camera, int reg, int file_number, 
+				 CameraFile *file, char *s, int *length) {
 
 	char packet[4096], buf[2048];
 	int done, x, packlength, do_percent, l;
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
 	sprintf(buf, "Getting string in register #%i", reg);
-	debug_print(fd, buf);
+	fujitsu_debug_print(fd, buf);
 
 	do_percent = 1;
+        if (fujitsu_set_int_register(camera, 4, file_number)==GP_ERROR) {
+                gp_camera_message(camera, "Can not set current image");
+                return (GP_ERROR);
+        }
 	switch (reg) {
 		case 14:
 		        /* Get the size of the current thumbnail */
@@ -586,6 +606,10 @@ int fujitsu_get_string_register (Camera *camera, int reg, CameraFile *file, char
 		default:
 			do_percent = 0;
 	}
+        if (fujitsu_set_int_register(camera, 4, file_number)==GP_ERROR) {
+                gp_camera_message(camera, "Can not set current image");
+                return (GP_ERROR);
+        }
 	/* Send request */
 	fujitsu_build_packet(camera, TYPE_COMMAND, 0, 2, packet);
 	packet[4] = 0x04;
@@ -641,7 +665,7 @@ int fujitsu_delete(Camera *camera, int picture_number) {
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
        	if (fujitsu_set_int_register(camera, 4, picture_number)==GP_ERROR) {
-		debug_print(fd, "Can not set current image");
+		fujitsu_debug_print(fd, "Can not set current image");
        	        return (GP_ERROR);
         }
 
@@ -668,7 +692,7 @@ int fujitsu_delete(Camera *camera, int picture_number) {
 		}
 	}
 	if (r > RETRIES) {
-		debug_print(fd, "too many NAKs from camera");
+		fujitsu_debug_print(fd, "too many NAKs from camera");
 		return (GP_ERROR);
 	}
 
@@ -710,7 +734,7 @@ int fujitsu_end_session(Camera *camera) {
 		}
 	}
 	if (r > RETRIES) {
-		debug_print(fd, "too many NAKs from camera");
+		fujitsu_debug_print(fd, "too many NAKs from camera");
 		return (GP_ERROR);
 	}
 
