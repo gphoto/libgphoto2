@@ -11,19 +11,37 @@ explicitly required. In fact, you really shouldn't.
 In order to get gphoto2 running after installation, you will probably
 want to read doc/FAQ and doc/gphoto2.txt.
 
+===============================
+Step 0: Preparing configuration
+===============================
+
+If you got your copy of gphoto2 packaged as a .tar.gz or .tar.bz2 tarball, 
+skip this step. If you got gphoto2 from CVS, then you will have to prepare
+step 1, the configuration of the sources. For that, we supply you with
+a script called 'autogen.sh'. This skript is far from being perfect and
+we recommend that you prepare step 1 manually. That is, the following
+commands need to be executed in both gphoto2 and gphoto2/libgphoto2_port:
+
+ - libtoolize --force --copy
+ - gettextize --force --copy
+ - aclocal -I/path/to/macros (these macros typically are in
+   /opt/gnome/share/aclocal or /usr/share/aclocal)
+ - autoheader
+ - automake --add-missing --gnu
+ - autoconf
+
+Not surprisingly, above commands will only work if you have 
+
+ - autoconf
+ - automake (version >= 1.5)
+ - libtool (version >= 1.4)
+ - gettext (version >= 0.10.35)
+
+installed on your system.
 
 =============================
 Step 1: Configure the sources
 =============================
-
-If you got your source tree from CVS (and not from a .tar.gz tarball),
-you will have to run ./autogen.sh instead of ./configure in this
-step. In this case, you will need to have the following software
-installed:
-
-  - autoconf
-  - automake (ver. >= 1.5)
-  - libtool (ver. >= 1.4)
 
 Now run either one of
 
@@ -31,11 +49,6 @@ Now run either one of
   ./configure --prefix=/usr/local
 
      to prepare a tarball source tree for installation in /usr/local
-
-
-  ./autogen.sh --prefix=/usr/local
-
-       to prepare a CVS source tree for installation in /usr/local
 
 
   ./configure --prefix=/home/me/root --with-drivers=ptp,canon
