@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.50)
 AC_INIT(libgphoto2/gphoto2.h)
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(libgphoto2, 2.1.1dev10)
+AM_INIT_AUTOMAKE(libgphoto2, 2.1.1rc1)
 AM_MAINTAINER_MODE
 AC_LIBTOOL_DLOPEN
 
@@ -86,10 +86,10 @@ dnl ---------------------------------------------------------------------------
 AC_PROG_LIBTOOL
 have_ltdl=false
 ltdl_msg="no"
-try_ltdl=true
-AC_ARG_WITH(ltdl, [  --without-ltdl            Don't use ltdl],[
-        if test x$withval = xno; then
-		try_ltdl=false
+try_ltdl=false
+AC_ARG_WITH(ltdl, [  --with-ltdl             Use ltdl],[
+        if test x$withval = xyes; then
+		try_ltdl=true
 	fi])
 if $try_ltdl; then
 	AC_CHECK_LIB(ltdl, lt_dlforeachfile,[
@@ -230,6 +230,9 @@ if $try_pkgconfig; then
 		pkgconfig_msg="yes"
 	fi
 fi
+# guessing directory to install *.pc into
+pkgconfigdir='${libdir}/pkgconfig'
+AC_SUBST(pkgconfigdir)
 
 dnl ---------------------------------------------------------------------------
 dnl libexif: The CameraFilesystem can use libexif for extracting thumbnails
@@ -416,4 +419,7 @@ echo "
 Please check whether the configuration I detected matches what you
 would like to have. E.g. make sure that USB support is there if you
 intend to use USB cameras with $PACKAGE.
+
+Please also check that PKG_CONFIG_PATH contains ${pkgconfigdir} 
+before compiling any libgphoto2 frontend.
 "
