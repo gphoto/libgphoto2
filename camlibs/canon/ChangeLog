@@ -1,3 +1,7 @@
+2002-03-23  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* library.c,Makefile.am: made capture stuff a little easier for testing
+
 2002-03-22  Fredrik <fredrik@krixor.xy.org>
 
 	* canon.c, canon.h: Added support for the A40, reported
