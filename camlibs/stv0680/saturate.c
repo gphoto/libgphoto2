@@ -21,14 +21,7 @@
  * Integrated into gphoto2 by Marcus Meissner <marcus@jet.franken.de>, Dec 2001
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <term.h>
 #include <string.h>
-#include <ctype.h>
-#include <limits.h>
-#include <math.h>
-
 #include "saturate.h"
 
 /* FIXME: should be variable, and user configurable. Which is problematic in 
