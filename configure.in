@@ -33,6 +33,13 @@ AC_PROG_INSTALL
 AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
 
 dnl ---------------------------------------------------------------------------
+dnl Reference definitions
+dnl    required before we do the Makevars hack!
+dnl ---------------------------------------------------------------------------
+
+GP_REFERENCES()dnl
+
+dnl ---------------------------------------------------------------------------
 dnl i18n support (including some hacks)
 dnl ---------------------------------------------------------------------------
 dnl The following is a hack to get gphoto2 to build on gettext-0.10.35 
@@ -51,7 +58,10 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",[The gettext domain we're 
 AC_SUBST(GETTEXT_PACKAGE)
 if test -f po/Makevars.template
 then
-	sed -e "s/^DOMAIN.*/DOMAIN = ${GETTEXT_PACKAGE}/" < po/Makevars.template > po/Makevars
+	sed \
+		-e "s/^DOMAIN.*/DOMAIN = ${GETTEXT_PACKAGE}/" \
+		-e "s/^MSGID_BUGS_ADDRESS.*/MSGID_BUGS_ADDRESS = ${MAIL_GPHOTO_TRANSLATION}/" \
+	< po/Makevars.template > po/Makevars
 	AC_MSG_RESULT([yes. done.])
 else
 	AC_MSG_RESULT([no])
@@ -361,12 +371,6 @@ AC_TRY_COMPILE([
 	AC_MSG_RESULT(yes),
 	AC_MSG_RESULT(no)
 )
-
-dnl ---------------------------------------------------------------------------
-dnl Reference definitions
-dnl ---------------------------------------------------------------------------
-
-GP_REFERENCES()dnl
 
 dnl ---------------------------------------------------------------------------
 dnl Configure libgphoto2-port
