@@ -34,6 +34,12 @@ PROJECT=gphoto2
     DIE=1
 }
 
+(gettextize --version) < /dev/null > /dev/null 2>&1 || {
+    echo
+    echo "You must have gettext installed to compile $PROJECT."
+    DIE=1
+}
+
 if test "$DIE" -eq 1; then
     exit 1
 fi
@@ -63,6 +69,8 @@ do
         echo "Fatal: Could not enter directory $dir."
         exit 1
     fi
+    echo "Running gettextize --force --copy"
+    gettextize --force --copy
     echo "Running aclocal $ACLOCAL_FLAGS"
     aclocal $ACLOCAL_FLAGS
     echo "Running autoheader"
