@@ -105,24 +105,16 @@ AC_ARG_WITH(drivers,
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
-    d=`echo $i | $TR a-z A-Z`
-    eval "CONFIG_DRIVER_$d=y"
-    AC_DEFINE_UNQUOTED(CONFIG_DRIVER_$d)
     SUBDIRS_CAMLIBS="$SUBDIRS_CAMLIBS $i"
   done
-
   AC_MSG_RESULT(all)
 else
   drivers=`echo $drivers | sed 's/,/ /g'`
   for driver in $drivers; do
     if test -n "`echo $camlibs | $GREP -E \"(^| )$driver( |\$)\"`"; then
-      d=`echo $driver | $TR a-z A-Z`
-      eval "CONFIG_DRIVER_$d=y"
-      AC_DEFINE_UNQUOTED(CONFIG_DRIVER_$d)
       SUBDIRS_CAMLIBS="$SUBDIRS_CAMLIBS $driver"
     else
-      echo "Unknown driver $driver, exiting!"
-      exit 1
+      AC_ERROR(Unknown driver $driver!)
     fi
   done
   AC_MSG_RESULT($drivers)
@@ -153,11 +145,6 @@ dnl initialize packaging RPMs
 dnl ************************************************************
 GPKG_CHECK_RPM()dnl
 
-dnl *************************
-dnl Configure libgphoto2-port
-dnl *************************
-AC_CONFIG_SUBDIRS(libgphoto2_port)
-
 dnl ***
 dnl CDK
 dnl ***
@@ -180,9 +167,10 @@ fi
 AM_CONDITIONAL(HAVE_CDK, $have_cdk)
 AC_SUBST(CDK_LIBS)
 
-dnl ****
-dnl jpeg
-dnl ****
+dnl ---------------------------------------------------------------------------
+dnl libjpeg: Right now, libjpeg is only used to interpret JPEG previews in
+dnl          order to feed them to aalib (see below).
+dnl ---------------------------------------------------------------------------
 jpeg_msg=no
 try_jpeg=true
 have_jpeg=false
@@ -212,9 +200,12 @@ fi
 AM_CONDITIONAL(HAVE_JPEG, $have_jpeg)
 AC_SUBST(JPEG_LIBS)
 
-dnl *****
-dnl aalib
-dnl *****
+dnl ---------------------------------------------------------------------------
+dnl aalib: gphoto2 (the frontend) has been designed as a command-line tool.
+dnl	   However, life previews make only sense when you can actually 
+dnl        see the preview. This is where aalib fits in - it gives you the
+dnl        possibility to view life-previews on any console.
+dnl ---------------------------------------------------------------------------
 aa_msg=no
 try_aa=true
 have_aa=false
@@ -235,6 +226,11 @@ fi
 AM_CONDITIONAL(HAVE_AA, $have_aa)
 AC_SUBST(AA_LIBS)
 AC_SUBST(AA_CFLAGS)
+
+dnl ---------------------------------------------------------------------------
+dnl Configure libgphoto2-port
+dnl ---------------------------------------------------------------------------
+AC_CONFIG_SUBDIRS(libgphoto2_port)
 
 AC_OUTPUT([
 Makefile

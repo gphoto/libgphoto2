@@ -14,14 +14,6 @@
 /* Debugging */
 #undef ENABLE_DEBUGGING
 
-/* Needed for driver selection	*/
-#undef CONFIG_DRIVER_BARBIE
-#undef CONFIG_DRIVER_DIRECTORY
-#undef CONFIG_DRIVER_FUJITSU
-#undef CONFIG_DRIVER_KONICA
-#undef CONFIG_DRIVER_PANASONIC
-#undef CONFIG_DRIVER_DIGITA
-
 #undef HAVE_CDK
 #undef HAVE_AA
 #undef HAVE_JPEG
