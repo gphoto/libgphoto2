@@ -58,6 +58,7 @@ struct {
         {"Pretec:dc530",0x0784,0x5300,0},
    
         {"Generic SoundVision:Clarity2",0x0919,0x100,0},
+        {"Argus:DC-2200",0x0919,0x100,0},
         {"CoolCam:CP086",0x0919,0x100,0},
         {"DigitalDream:l'elite",0x0919,0x0100,0},
         {"FujiFilm:@xia ix-100",0x0919,0x0100,0},
