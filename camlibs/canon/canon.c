@@ -295,6 +295,8 @@ filename_to_audio(const char *filename, const char *newext)
 const char *
 canon_int_filename2audioname (Camera *camera, const char *filename)
 {
+	const char *result;
+
 	/* FIXME: I want capabilities */
 	/* FIXME: Do we really have to check the model here? Someone
 	 * could just have inserted the CF card into another camera...
@@ -329,7 +331,7 @@ canon_int_filename2audioname (Camera *camera, const char *filename)
 		return NULL;
 	}
 
-	const char *result = filename_to_audio (filename, ".WAV");
+	result = filename_to_audio (filename, ".WAV");
 
 	GP_DEBUG ("canon_int_filename2audioname: audio for file \"%s\" is external: \"%s\"",
 		  filename, result);
