@@ -328,18 +328,24 @@ uint16_t ptp_opensession  (PTPParams *params, uint32_t session);
 uint16_t ptp_closesession (PTPParams *params);
 
 uint16_t ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids);
+uint16_t ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
+			PTPStorageInfo* storageinfo)
 
 uint16_t ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 			uint32_t objectformatcode, uint32_t associationOH,
 			PTPObjectHandles* objecthandles);
+
 uint16_t ptp_getobjectinfo	(PTPParams *params, uint32_t handle,
 			PTPObjectInfo* objectinfo);
+
 uint16_t ptp_getobject	(PTPParams *params, uint32_t handle,
 			uint32_t size, PTPReq* object);
 uint16_t ptp_getthumb	(PTPParams *params, uint32_t handle,
 			uint32_t size, PTPReq* object);
+
 uint16_t ptp_deleteobject	(PTPParams* params, uint32_t handle,
 			uint32_t ofc);
+
 uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 			uint32_t* parenthandle, uint32_t* handle,
 			PTPObjectInfo* objectinfo);
