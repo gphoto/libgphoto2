@@ -104,8 +104,7 @@ extern long int timezone;
  *  string is copied into @id.
  *
  */
-int
-camera_id (CameraText *id)
+int camera_id (CameraText *id)
 {
 	GP_DEBUG ("camera_id()");
 
@@ -138,7 +137,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 		   "It includes code for communicating over a serial port or USB connection,\n"
 		   " but not (yet) over IEEE 1394 (Firewire().\n"
 		   "It is designed to work with over 70 models as old as the PowerShot A5\n"
-		   " and Pro70 of 1998 and as new as the PowerShot SD20 of 2004.\n"
+		   " and Pro70 of 1998 and as new as the PowerShot A510 of 2005.\n"
 		   "It has not been verified against the EOS 1D or EOS 1Ds.\n"
 		   "For the A50, using 115200 bps may effectively be slower than using 57600\n"
 		   "If you experience a lot of serial transmission errors, try to have your\n"
