@@ -1,3 +1,8 @@
+2002-07-29  Lutz Müller <lutz@users.sourceforge.net>
+
+	* canon.h: Make CVS compile again by adding CANON_PS_A100 to the
+	  enumeration.
+
 2002-07-24  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.c: started to add duplicate cams
