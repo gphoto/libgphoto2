@@ -18,11 +18,11 @@ int camera_abilities (CameraAbilitiesList *list) {
 	strcpy(a->model, "CAMERA MODEL");
 	a->port     = GP_PORT_SERIAL | GP_PORT_USB;
 	a->speed[0] = 0;
-	a->capture  = GP_CAPTURE_NONE;
-	a->config   = 0;
-	a->file_delete  = 0;
-	a->file_preview = 0;
-	a->file_put = 0;
+	a->capture  = GP_CAPTURE_PREVIEW | GP_CAPTURE_VIDEO | GP_CAPTURE_IMAGE;
+	a->config   = 1;
+	a->file_delete  = 1;
+	a->file_preview = 1;
+	a->file_put = 1;
 
 	gp_abilities_list_append(list, a);
 
@@ -44,6 +44,10 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->file_delete 	= camera_file_delete;
 	camera->functions->config_get   = camera_config_get;
 	camera->functions->config_set   = camera_config_set;
+	camera->functions->folder_config_get = camera_folder_config_get;
+	camera->functions->folder_config_set = camera_folder_config_set;
+	camera->functions->file_config_get = camera_file_config_get;
+	camera->functions->file_config_set = camera_file_config_set;
 	camera->functions->capture 	= camera_capture;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
@@ -90,17 +94,49 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 	return (GP_OK);
 }
 
-int camera_config_get (Camera *camera, CameraWidget *window) {
+int camera_config_get (Camera *camera, CameraWidget **window) {
+
+	*window = gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration");
+
+	// Append your sections and widgets here.
 
 	return (GP_OK);
 }
 
-int camera_config_set (Camera *camera, CameraSetting *conf, int count) {
+int camera_config_set (Camera *camera, CameraWidget *window) {
+
+	// Check, if the widget's value have changed.
+
+	return (GP_OK);
+}
+
+int camera_folder_config_get (Camera *camera, CameraWidget **window, char *path) {
+
+	// For example, create a window with a button named "Delete all". 
+
+	return (GP_OK);
+}
+
+int camera_folder_config_set (Camera *camera, CameraWidget *window, char *path) {
+
+	return (GP_OK);
+}
+
+int camera_file_config_get (Camera *camera, CameraWidget **window, char *path, char *file) {
+
+	return (GP_OK);
+}
+
+int camera_file_config_set (Camera *camera, CameraWidget *window, char *path, char *file) {
 
 	return (GP_OK);
 }
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
+
+	// Capture image/preview/video and return it in 'file'. Don't store it
+	// anywhere on your camera! If your camera does store the image, 
+	// delete it manually here.
 
 	return (GP_OK);
 }
