@@ -110,7 +110,7 @@ int fujitsu_write_packet (gpio_device *dev, char *packet) {
 	
 	debug_print(" fujitsu_write_packet");
 
-	usleep(QUICKSLEEP);
+//	usleep(QUICKSLEEP);
 
 	/* Determing packet length */
 	if ((packet[0] == TYPE_COMMAND) ||
@@ -170,7 +170,7 @@ read_packet_again:
 
 	debug_print(" fujitsu_read_packet");
 
-	usleep(QUICKSLEEP);
+//	usleep(QUICKSLEEP);
 
 	done = 0;
 	while (!done && (r++<RETRIES)) {
@@ -364,7 +364,6 @@ int fujitsu_set_speed(gpio_device *dev, int speed) {
 	if (gpio_set_settings(dev, settings)==GPIO_ERROR)
 		return (GP_ERROR);
 
-	usleep(100000);
 	return (GP_OK);
 }
 
