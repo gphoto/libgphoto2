@@ -109,15 +109,13 @@ struct _PDCInfo {
 	unsigned int num_taken, num_free;
 	unsigned char auto_power_off;
 	char version[6];
-	int memory;
+	unsigned char memory;
 	PDCDate date;
 	PDCMode mode;
 	PDCQuality quality;
 	PDCFlash   flash;
 	PDCBaud    speed;
-	PDCBool caption;
-	PDCBool lcd;
-	PDCBool ac_power;
+	PDCBool caption, lcd, ac_power;
 };
 
 typedef struct _PDCPicInfo PDCPicInfo;
