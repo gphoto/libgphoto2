@@ -237,7 +237,6 @@ camera_init (Camera *camera, GPContext *context)
 	GPPortSettings settings;
 	unsigned int speed, i;
 	int result;
-	RicohModel model;
 
 	/* Try to contact the camera */
 	CR (gp_port_set_timeout (camera->port, 5000));
@@ -247,7 +246,7 @@ camera_init (Camera *camera, GPContext *context)
 		GP_DEBUG ("Trying speed %i...", speeds[i].speed);
 		settings.serial.speed = speeds[i].speed;
 		CR (gp_port_set_settings (camera->port, settings));
-		result = ricoh_ping (camera, NULL, &model);
+		result = ricoh_ping (camera, NULL, NULL);
 		if (result == GP_OK)
 			break;
 	}
@@ -271,6 +270,7 @@ camera_init (Camera *camera, GPContext *context)
 		CR (ricoh_set_speed (camera, context, speeds[i].rspeed));
 		settings.serial.speed = speed;
 		CR (gp_port_set_settings (camera->port, settings));
+		CR (ricoh_ping (camera, context, NULL));
 	}
 
 	/* setup the function calls */
