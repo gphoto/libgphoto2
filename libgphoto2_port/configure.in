@@ -184,8 +184,8 @@ if $try_usb; then
 		AC_CHECK_HEADER(usb.h,
 			usb_msg=yes
 			IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
-			IOLIB_LDFLAGS="$IOLIB_LDFLAGS `libusb-config --libs` -lgphoto2_port_usb"
-			IOLIB_CFLAGS="$IOLIB_CFLAGS `libusb-config --cflags`",
+			USB_LDFLAGS="`libusb-config --libs` -lgphoto2_port_usb"
+			USB_CFLAGS="`libusb-config --cflags`",
 			AC_MSG_WARN([
 *** You need the libusb library for USB support
 *** http://download.sourceforge.net/libusb/libusb-0.1.4.tar.gz
@@ -203,10 +203,10 @@ else
 *** http://download.sourceforge.net/libusb/libusb-0.1.4.tar.gz
 ])
 fi
+AC_SUBST(USB_CFLAGS)
+AC_SUBST(USB_LIBS)
 
 AC_SUBST(IOLIB_SUBDIRS)
-AC_SUBST(IOLIB_LDFLAGS)
-AC_SUBST(IOLIB_CFLAGS)
 
 dnl ********
 dnl gtk-doc?
@@ -244,5 +244,5 @@ Configuration
 
 	USB support:          $usb_msg
 
-	Build documenation:   $enable_gtk_doc
+	Build documenation:   $enable_docs
 "

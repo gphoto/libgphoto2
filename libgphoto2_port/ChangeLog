@@ -1,3 +1,10 @@
+2001-11-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in:
+	* serial/Makefile.am
+	* usb/Makefile.am: Clean up Makefiles. Avoid version on io-drivers
+	  (we don't check it anyways)
+
 2001-11-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Marr <marr@shianet.org>:
