@@ -514,7 +514,7 @@ int camera_file_get (
 		(guint *) &file->size))) return (GP_ERROR);
 
 	strcpy (file->type, "image/jpg");
-	sprintf (file->name, "Picture%i.jpg", (int) image_id);
+	sprintf (file->name, "image%i.jpg", (int) image_id);
 	g_free (information_buffer);
 	return (GP_OK);
 }
