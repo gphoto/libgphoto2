@@ -1,3 +1,12 @@
+2001-11-10  Fredrik <fredrik@krixor.xy.org>
+
+	* camlibs/canon/canon.c: Clear all of camera->pl right after
+	  malloc(). psa50_eot needed explicit clearing. This was
+	  causing problems with serial communication.
+	* camlibs/canon/psa50.c: Don't free psa50_serial_dialogue()'s
+	  receive buffer in psa50_get_disk(). This caused us to dump
+	  core when accessing serial canon cameras.
+
 2001-11-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/polaroid/pdc700.c: PPM-thumbnails are 9600 bytes, not

@@ -1601,23 +1601,8 @@ camera_init (Camera *camera)
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
+	memset(camera->pl, 0, sizeof (CameraPrivateLibrary));
 	camera->pl->first_init = 1;
-	camera->pl->uploading = 0;
-	camera->pl->slow_send = 0;
-	camera->pl->cached_ready = 0;
-	camera->pl->cached_disk = 0;
-	camera->pl->cached_dir = 0;
-	camera->pl->dump_packets = 0;
-	camera->pl->cached_tree = NULL;
-
-	/* Figure out the speed (and set to default speed if 0) */
-	if (camera->port->type == GP_PORT_SERIAL) {
-		gp_port_get_settings (camera->port, &settings);
-		camera->pl->speed = settings.serial.speed;
-	} else
-		camera->pl->speed = 0;
-	if (camera->pl->speed == 0)
-		camera->pl->speed = 9600;
 
 	if (gp_setting_get ("canon", "debug", buf) != GP_OK)
 		camera->pl->debug = 1;
@@ -1662,12 +1647,19 @@ camera_init (Camera *camera)
 		default:
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "GPhoto tells us that we should use a RS232 link.\n");
+
+			/* Figure out the speed (and set to default speed if 0) */
+			gp_port_get_settings (camera->port, &settings);
+			camera->pl->speed = settings.serial.speed;
+
+			if (camera->pl->speed == 0)
+				camera->pl->speed = 9600;
+
+			gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera transmission speed : %i\n",
+					 camera->pl->speed);
 			camera->pl->canon_comm_method = CANON_SERIAL_RS232;
 			break;
 	}
-	if (camera->pl->canon_comm_method == CANON_SERIAL_RS232)
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera transmission speed : %i\n",
-				 camera->pl->speed);
 
 
 	/* This is bogus. You don't have to change the path */

@@ -1783,17 +1783,16 @@ psa50_get_disk (Camera *camera)
 		return NULL;
 	}
 	if (camera->pl->canon_comm_method == CANON_SERIAL_RS232) {
-		char *t;
-
-		t = strdup ((char *) msg + 4);	/* @@@ should check length */
-		free (msg);
-		if (!t) {
+		/* this is correct even though it looks a bit funny. psa50_serial_dialogue()
+		 * has a static buffer, strdup() part of that buffer and return to our caller.
+		 */
+		msg = strdup ((char *) msg + 4);	/* @@@ should check length */
+		if (!msg) {
 			GP_DEBUG ("psa50_get_disk: could not allocate %i "
 				  "bytes of memory to hold response",
 				  strlen ((char *) msg + 4));
 			return NULL;
 		}
-		msg = t;
 	}
 
 	GP_DEBUG ("psa50_get_disk: disk '%s'", msg);
