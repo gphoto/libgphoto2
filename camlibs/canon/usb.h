@@ -9,96 +9,140 @@
 #ifndef _CANON_USB_H
 #define _CANON_USB_H
 
-/****************************************************************************
- *
- * prototypes
- *
- ****************************************************************************/
-
-int canon_usb_init (Camera *camera, GPContext *context);
-int canon_usb_camera_init (Camera *camera, GPContext *context);
-int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, 
-	        GPContext *context);
-unsigned char *canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context,
-					   int *thumb_length, int *image_length, int *image_key );
-unsigned char *canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, 
-		const char *payload, int payload_length);
-int canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data, 
-		int *data_length, int max_data_size, const char *payload,
-		int payload_length, int display_status, GPContext *context);
-int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
-int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
-int canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **data, int *length, GPContext *context);
-int canon_usb_get_captured_thumbnail (Camera *camera, const int key, unsigned char **data, int *length, GPContext *context);
-int canon_usb_lock_keys(Camera *camera, GPContext *context);
-int canon_usb_unlock_keys(Camera *camera, GPContext *context);
-int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path, GPContext *context);
-int canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
-			     unsigned int *dirents_length, GPContext *context);
-int canon_usb_ready (Camera *camera);
-int canon_usb_identify (Camera *camera, GPContext *context);
 
 #define USB_BULK_READ_SIZE 0x1400
-#define USB_BULK_WRITE_SIZE 0xC000
+//#define USB_BULK_WRITE_SIZE 0xC000
+#define USB_BULK_WRITE_SIZE 0x1400
 
-#define CANON_USB_FUNCTION_GET_FILE		1
-#define CANON_USB_FUNCTION_IDENTIFY_CAMERA	2
-#define CANON_USB_FUNCTION_GET_TIME		3
-#define CANON_USB_FUNCTION_SET_TIME		4
-#define CANON_USB_FUNCTION_MKDIR		5
-#define CANON_USB_FUNCTION_CAMERA_CHOWN		6
-#define CANON_USB_FUNCTION_RMDIR		7
-#define CANON_USB_FUNCTION_DISK_INFO		8
-#define CANON_USB_FUNCTION_FLASH_DEVICE_IDENT	9
-#define CANON_USB_FUNCTION_POWER_STATUS		10
-#define CANON_USB_FUNCTION_GET_DIRENT		11
-#define CANON_USB_FUNCTION_DELETE_FILE		12
-#define CANON_USB_FUNCTION_SET_ATTR		13
-/* GET_PIC_ABILITIES currently not implemented in gPhoto2 camlibs/canon driver */
-#define CANON_USB_FUNCTION_GET_PIC_ABILITIES	14
-#define CANON_USB_FUNCTION_GENERIC_LOCK_KEYS	15
-#define CANON_USB_FUNCTION_EOS_LOCK_KEYS	16
-#define CANON_USB_FUNCTION_EOS_UNLOCK_KEYS	17
+/**
+ * canonCommandIndex:
+ * @CANON_USB_FUNCTION_GET_FILE: Command to download a file from the camera.
+ * @CANON_USB_FUNCTION_IDENTIFY_CAMERA: Command to read the firmware version and
+ *   strings with the camera type and owner from the camera.
+ * @CANON_USB_FUNCTION_GET_TIME: Command to get the time in Unix time format from the camera.
+ * @CANON_USB_FUNCTION_SET_TIME: Command to set the camera's internal time.
+ * @CANON_USB_FUNCTION_MKDIR: Command to create a directory on the camera storage device.
+ * @CANON_USB_FUNCTION_CAMERA_CHOWN: Change "owner" string on camera
+ * @CANON_USB_FUNCTION_RMDIR: Command to delete a directory from camera storage.
+ * @CANON_USB_FUNCTION_DISK_INFO: Command to get disk information from
+ *   the camera, given a disk designator (e.g. "D:"). Returns total
+ *   capacity and free space.
+ * @CANON_USB_FUNCTION_FLASH_DEVICE_IDENT: Command to request the disk specifier
+ *   (drive letter) for the storage device being used.
+ * @CANON_USB_FUNCTION_POWER_STATUS: Command to query the camera for its power status:
+ *   battery vs. mains, and whether the battery is low.
+ * @CANON_USB_FUNCTION_GET_DIRENT: Get directory entries
+ * @CANON_USB_FUNCTION_DELETE_FILE: Delete file
+ * @CANON_USB_FUNCTION_SET_ATTR: Command to set the attributes of a file on the camera
+ *   (e.g. downloaded, protect from delete).
+ * @CANON_USB_FUNCTION_GET_PIC_ABILITIES: Command to "get picture abilities", which
+ *   seems to be a list of the different sizes and quality of images that are available on
+ *   this camera. Not implemented (and will cause an error) on the EOS cameras
+ *   or on newer PowerShot cameras such as the S45 and G3.
+ * @CANON_USB_FUNCTION_GENERIC_LOCK_KEYS: Command to lock keys (and turn on "PC" indicator)
+ *   on non-EOS cameras.
+ * @CANON_USB_FUNCTION_EOS_LOCK_KEYS: Lock keys (EOS cameras)
+ * @CANON_USB_FUNCTION_EOS_UNLOCK_KEYS: Unlock keys (EOS cameras)
+ * @CANON_USB_FUNCTION_RETRIEVE_CAPTURE: Command to retrieve the last image captured,
+ *   depending on the transfer mode set via %CANON_USB_FUNCTION_CONTROL_CAMERA with
+ *   subcommand %CANON_USB_CONTROL_SET_TRANSFER_MODE.
+ * @CANON_USB_FUNCTION_RETRIEVE_PREVIEW: Command to retrieve a preview image.
+ * @CANON_USB_FUNCTION_CONTROL_CAMERA: Remote camera control (with many subcodes)
+ * @CANON_USB_FUNCTION_UNKNOWN_FUNCTION: Don't know what this is for; it has been sighted in USB
+ *   trace logs for an EOS D30, but not for a D60 or for any PowerShot camera.
+ * @CANON_USB_FUNCTION_EOS_GET_BODY_ID: Command to read the body ID (serial number)
+ *   from an EOS camera.
+ * @CANON_USB_FUNCTION_SET_FILE_TIME: Set file time
+ *
+ * Codes to give to canon_usb_dialogue() or canon_usb_long_dialogue()
+ * to select which command to issue to the camera. See the protocol
+ * document for details.
+ */
+ 
+typedef enum {
+	CANON_USB_FUNCTION_GET_FILE = 1,
+	CANON_USB_FUNCTION_IDENTIFY_CAMERA,
+	CANON_USB_FUNCTION_GET_TIME,
+	CANON_USB_FUNCTION_SET_TIME,
+	CANON_USB_FUNCTION_MKDIR,
+	CANON_USB_FUNCTION_CAMERA_CHOWN,
+	CANON_USB_FUNCTION_RMDIR,
+	CANON_USB_FUNCTION_DISK_INFO,
+	CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,
+	CANON_USB_FUNCTION_POWER_STATUS,
+	CANON_USB_FUNCTION_GET_DIRENT,
+	CANON_USB_FUNCTION_DELETE_FILE,
+	CANON_USB_FUNCTION_SET_ATTR,
+	CANON_USB_FUNCTION_GET_PIC_ABILITIES,
+	CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
+	CANON_USB_FUNCTION_EOS_LOCK_KEYS,
+	CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
+	CANON_USB_FUNCTION_RETRIEVE_CAPTURE,
+	CANON_USB_FUNCTION_RETRIEVE_PREVIEW,
+	CANON_USB_FUNCTION_CONTROL_CAMERA,
+	CANON_USB_FUNCTION_UNKNOWN_FUNCTION,
+	CANON_USB_FUNCTION_EOS_GET_BODY_ID,
+	CANON_USB_FUNCTION_SET_FILE_TIME
+} canonCommandIndex;
 
-#define CANON_USB_FUNCTION_EOS_GET_BODY_ID	22
-
-
-
-#define CANON_USB_FUNCTION_RETRIEVE_CAPTURE     18
-#define CANON_USB_FUNCTION_RETRIEVE_PREVIEW     19
-#define CANON_USB_FUNCTION_CONTROL_CAMERA       20
-#define CANON_USB_FUNCTION_UNKNOWN_FUNCTION	21
-
-/* 
+/**
+ * canonSubcommandIndex:
+ * @CANON_USB_CONTROL_INIT: Enter camera control mode
+ * @CANON_USB_CONTROL_SHUTTER_RELEASE: Release camera shutter (capture still)
+ * @CANON_USB_CONTROL_SET_PARAMS: Set release parameters (AE mode, beep, etc.)
+ * @CANON_USB_CONTROL_SET_TRANSFER_MODE: Set transfer mode for next image
+ *  capture. Either the full image, a thumbnail or both may be either
+ *  stored on the camera, downloaded to the host, or both.
+ * @CANON_USB_CONTROL_GET_PARAMS: Read the same parameters set by
+ *  @CANON_USB_CONTROL_SET_PARAMS.
+ * @CANON_USB_CONTROL_GET_ZOOM_POS: Get the position of the zoom lens
+ * @CANON_USB_CONTROL_SET_ZOOM_POS: Set the position of the zoom lens
+ * @CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE: Get the size of the "extended
+ *   release parameters".
+ * @CANON_USB_CONTROL_GET_EXT_PARAMS: Get the "extended release parameters".
+ * @CANON_USB_CONTROL_EXIT: Leave camera control mode; opposite of
+ *   @CANON_USB_CONTROL_INIT.
+ * @CANON_USB_CONTROL_VIEWFINDER_START: Switch video viewfinder on.
+ * @CANON_USB_CONTROL_VIEWFINDER_STOP: Swictch video viewfinder off.
+ * @CANON_USB_CONTROL_GET_AVAILABLE_SHOT: Get estimated number of images
+ *   that can be captured in current mode before filling flash card.
+ * @CANON_USB_CONTROL_SET_CUSTOM_FUNC:  Not yet seen in USB trace.
+ * @CANON_USB_CONTROL_GET_CUSTOM_FUNC: Read custom functions from an EOS camera
+ * @CANON_USB_CONTROL_GET_EXT_PARAMS_VER:  Not yet seen in USB trace.
+ * @CANON_USB_CONTROL_SET_EXT_PARAMS:  Not yet seen in USB trace.
+ * @CANON_USB_CONTROL_SELECT_CAM_OUTPUT:  Not yet seen in USB trace.
+ * @CANON_USB_CONTROL_DO_AE_AF_AWB:  Not yet seen in USB trace.
+ *
  * CANON_USB_FUNCTION_CONTROL_CAMERA commands are used for a wide range
  * of remote camera control actions.  A control_cmdstruct is defined
  * below for the following remote camera control options.
  */
-#define CANON_USB_CONTROL_INIT                  1
-#define CANON_USB_CONTROL_SHUTTER_RELEASE       2
-#define CANON_USB_CONTROL_SET_PARAMS            3
-#define CANON_USB_CONTROL_SET_TRANSFER_MODE     4
-#define CANON_USB_CONTROL_GET_PARAMS            5
-#define CANON_USB_CONTROL_GET_ZOOM_POS          6
-#define CANON_USB_CONTROL_SET_ZOOM_POS          7
-#define CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE   8
-#define CANON_USB_CONTROL_GET_EXT_PARAMS        9
-#define CANON_USB_CONTROL_EXIT                  10
-#define CANON_USB_CONTROL_VIEWFINDER_START      11
-#define CANON_USB_CONTROL_VIEWFINDER_STOP       12
-#define CANON_USB_CONTROL_GET_AVAILABLE_SHOT    13
-#define CANON_USB_CONTROL_GET_CUSTOM_FUNC       15
-/* unobserved, commands present in canon headers defines */
-#define CANON_USB_CONTROL_SET_CUSTOM_FUNC       14
-#define CANON_USB_CONTROL_GET_EXT_PARAMS_VER    16
-#define CANON_USB_CONTROL_SET_EXT_PARAMS        17
-#define CANON_USB_CONTROL_SELECT_CAM_OUTPUT     18
-#define CANON_USB_CONTROL_DO_AE_AF_AWB          19
+typedef enum {
+	CANON_USB_CONTROL_INIT = 1,
+	CANON_USB_CONTROL_SHUTTER_RELEASE,
+	CANON_USB_CONTROL_SET_PARAMS,
+	CANON_USB_CONTROL_SET_TRANSFER_MODE,
+	CANON_USB_CONTROL_GET_PARAMS,
+	CANON_USB_CONTROL_GET_ZOOM_POS,
+	CANON_USB_CONTROL_SET_ZOOM_POS,
+	CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE,
+	CANON_USB_CONTROL_GET_EXT_PARAMS,
+	CANON_USB_CONTROL_EXIT,
+	CANON_USB_CONTROL_VIEWFINDER_START,
+	CANON_USB_CONTROL_VIEWFINDER_STOP,
+	CANON_USB_CONTROL_GET_AVAILABLE_SHOT,
+	CANON_USB_CONTROL_SET_CUSTOM_FUNC, /* Not yet seen in USB trace */
+	CANON_USB_CONTROL_GET_CUSTOM_FUNC,
+	CANON_USB_CONTROL_GET_EXT_PARAMS_VER, /* Not yet seen in USB trace */
+	CANON_USB_CONTROL_SET_EXT_PARAMS, /* Not yet seen in USB trace */
+	CANON_USB_CONTROL_SELECT_CAM_OUTPUT, /* Not yet seen in USB trace */
+	CANON_USB_CONTROL_DO_AE_AF_AWB, /* Not yet seen in USB trace */
+} canonSubcommandIndex;
 
 
 struct canon_usb_control_cmdstruct 
 {
-	int num;
+	canonSubcommandIndex num;
 	char *description;
 	char subcmd;
 	int cmd_length;
@@ -118,7 +162,7 @@ struct canon_usb_control_cmdstruct
 
 struct canon_usb_cmdstruct 
 {
-	int num;
+	canonCommandIndex num;
 	char *description;
 	char cmd1, cmd2;
 	int cmd3;
@@ -139,6 +183,7 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entries",	0x0b, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",		0x0e, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_SET_FILE_TIME,	"Set file time",		0x0f, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_CONTROL_CAMERA,     "Remote camera control",        0x13, 0x12, 0x201,      0x40},
 	{CANON_USB_FUNCTION_RETRIEVE_CAPTURE,   "Download a captured image",    0x17, 0x12, 0x202,      0x40},
 	{CANON_USB_FUNCTION_RETRIEVE_PREVIEW,   "Download a captured preview",  0x18, 0x12, 0x202,      0x40},
@@ -181,6 +226,37 @@ static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	{CANON_USB_CONTROL_DO_AE_AF_AWB,        "Do AE, AF, and AWB",   0x15,  0x00,  0x00}, 
 	{ 0 }
 };
+
+/****************************************************************************
+ *
+ * prototypes
+ *
+ ****************************************************************************/
+
+int canon_usb_init (Camera *camera, GPContext *context);
+int canon_usb_camera_init (Camera *camera, GPContext *context);
+int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time, GPContext *context);
+int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, 
+	        GPContext *context);
+unsigned char *canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context );
+unsigned char *canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct,
+				   int *return_length, const char *payload, int payload_length);
+int canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned char **data, 
+		int *data_length, int max_data_size, const char *payload,
+		int payload_length, int display_status, GPContext *context);
+int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
+int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
+int canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **data, int *length, GPContext *context);
+int canon_usb_get_captured_thumbnail (Camera *camera, const int key, unsigned char **data, int *length, GPContext *context);
+int canon_usb_lock_keys(Camera *camera, GPContext *context);
+int canon_usb_unlock_keys(Camera *camera, GPContext *context);
+int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path, GPContext *context);
+int canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
+			     unsigned int *dirents_length, GPContext *context);
+int canon_usb_set_file_attributes (Camera *camera, unsigned short attr_bits,
+			       const char *pathname, GPContext *context);
+int canon_usb_ready (Camera *camera);
+int canon_usb_identify (Camera *camera, GPContext *context);
 
 #endif /* _CANON_USB_H */
 
