@@ -19,6 +19,9 @@ drivers (camlibs):
    * added support for Mustek gSmart mini, Mustek gSmart mini 2, Mustek gSmart
        mini 3 and So. Show 301
 
+   * Polaroid driver:
+     - added support for USB Jenoptik JD350v
+
 --------------------------------------------------------------------------------
 gphoto2 2.1.0
 
