@@ -43,9 +43,10 @@ int sony_init(Camera * camera, int ismsac);
 int sony_exit(Camera * camera);
 int sony_image_count(Camera * camera);
 int sony_mpeg_count(Camera * camera);
-int sony_image_get(Camera * camera, int imageid, CameraFile * file);
-int sony_thumbnail_get(Camera * camera, int imageid, CameraFile * file);
-int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info);
+int sony_image_get(Camera * camera, int imageid, CameraFile * file, GPContext *context);
+int sony_thumbnail_get(Camera * camera, int imageid, CameraFile * file, GPContext *context);
+int sony_exif_get(Camera * camera, int imageid, CameraFile * file, GPContext *context);
+int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info, GPContext *context);
 
 #endif				/* SONY_H */
 

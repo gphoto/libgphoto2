@@ -1,5 +1,5 @@
 /* Sony DSC-F55 & MSAC-SR1 - gPhoto2 camera library
- * Copyright (C) 2001 Raymond Penners <raymond@dotsphinx.com>
+ * Copyright (C) 2001, 2002 Raymond Penners <raymond@dotsphinx.com>
  * Copyright (C) 2000 Mark Davies <mdavies@dial.pipex.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -41,6 +41,13 @@
 #define SONY_ESCAPE_CHAR		0x7d
 #define SONY_START_CHAR		0xc0
 #define SONY_END_CHAR		0xc1
+
+enum
+{
+	SONY_FILE_EXIF=0,
+	SONY_FILE_THUMBNAIL,
+	SONY_FILE_IMAGE
+};
 
 static unsigned char START_PACKET = 192;
 static unsigned char END_PACKET = 193;
@@ -597,8 +604,8 @@ int sony_mpeg_count(Camera * camera)
  * Fetches an image.
  */
 static int
-sony_file_get(Camera * camera, int imageid, int thumbnail,
-	      CameraFile * file)
+sony_file_get(Camera * camera, int imageid, int file_type,
+	      CameraFile * file, GPContext *context)
 {
 	int sc;			/* count of bytes to skip at start of packet */
 	Packet dp;
@@ -606,6 +613,10 @@ sony_file_get(Camera * camera, int imageid, int thumbnail,
 	char buffer[128];
 
 	GP_DEBUG( "sony_file_get()");
+	if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+		return GP_ERROR_CANCEL;
+	}
+	
 	rc = gp_file_clean(file);
 	if (rc == GP_OK) {
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
@@ -619,7 +630,7 @@ sony_file_get(Camera * camera, int imageid, int thumbnail,
 
 		rc = sony_converse(camera, &dp, StillImage, 19);
 		if (rc == GP_OK) {
-			if (thumbnail) {
+			if (file_type == SONY_FILE_THUMBNAIL) {
 				sc = 0x247;
 
 				// FIXME
@@ -634,6 +645,12 @@ sony_file_get(Camera * camera, int imageid, int thumbnail,
 				}
 
 				for (;;) {
+					if (gp_context_cancel(context)
+					    == GP_CONTEXT_FEEDBACK_CANCEL) {
+
+						rc = GP_ERROR_CANCEL;
+						break;
+					}
 					sony_converse(camera, &dp,
 						      SendThumbnail, 4);
 
@@ -653,9 +670,28 @@ sony_file_get(Camera * camera, int imageid, int thumbnail,
 				sony_converse(camera, &dp, SendImage, 7);
 
 				for (;;) {
+					if (gp_context_cancel(context)
+					    == GP_CONTEXT_FEEDBACK_CANCEL) {
+
+						rc = GP_ERROR_CANCEL;
+						break;
+					}
 					gp_file_append(file,
 						       (char *) dp.buffer +
 						       sc, dp.length - sc);
+
+					if (file_type == SONY_FILE_EXIF) {
+						const char *fdata;
+						unsigned long fsize;
+					
+						gp_file_get_data_and_size
+							(file, &fdata, &fsize);
+						// FIXME: 4096 is a rather
+						// arbitrary value
+						if (fsize > 4096)
+							break;
+					}
+
 					sc = 7;
 
 					if (3 == dp.buffer[4])
@@ -679,28 +715,40 @@ sony_file_get(Camera * camera, int imageid, int thumbnail,
 /**
  * Fetches an image.
  */
-int sony_thumbnail_get(Camera * camera, int imageid, CameraFile * file)
+int sony_thumbnail_get(Camera * camera, int imageid, CameraFile * file, GPContext *context)
 {
-	return sony_file_get(camera, imageid, TRUE, file);
+	return sony_file_get(camera, imageid, SONY_FILE_THUMBNAIL, file, context);
 }
 
 /**
  * Fetches an image.
  */
-int sony_image_get(Camera * camera, int imageid, CameraFile * file)
+int sony_image_get(Camera * camera, int imageid, CameraFile * file, GPContext *context)
 {
-	return sony_file_get(camera, imageid, FALSE, file);
+	return sony_file_get(camera, imageid, SONY_FILE_IMAGE, file, context);
+}
+
+/**
+ * Fetches EXIF information.
+ */
+int sony_exif_get(Camera * camera, int imageid, CameraFile * file, GPContext *context)
+{
+	return sony_file_get(camera, imageid, SONY_FILE_EXIF, file, context);
 }
 
 
 /**
  * Fetches image details.
  */
-int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info)
+int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info, GPContext *context)
 {
 	unsigned int l = 0;
 	int rc;
 	Packet dp;
+
+	if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+		return GP_ERROR_CANCEL;
+	}
 
 	// FIXME
 	SelectImage[4] = imageid;
@@ -715,7 +763,7 @@ int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info)
 		info->file.size = l;
 		strcpy (info->file.type, GP_MIME_JPEG);
 
-		info->preview.fields = 0;
+		info->preview.fields = GP_FILE_INFO_TYPE;
 	}
 	return rc;
 }

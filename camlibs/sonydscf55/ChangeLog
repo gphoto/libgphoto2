@@ -1,0 +1,5 @@
+2002-03-27  Raymond Penners  <raymond@dotsphinx.com>
+
+	* *.[ch]: Made driver GPContext aware (i.e., operations can now be
+	  cancelled), and added support for EXIF information.
+

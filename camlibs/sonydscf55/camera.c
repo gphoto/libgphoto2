@@ -138,10 +138,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		rc = sony_image_get(camera, num, file);
+		rc = sony_image_get(camera, num, file, context);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		rc = sony_thumbnail_get(camera, num, file);
+		rc = sony_thumbnail_get(camera, num, file, context);
+		break;
+	case GP_FILE_TYPE_EXIF:
+		rc = sony_exif_get(camera, num, file, context);
 		break;
 	default:
 		rc = GP_ERROR_NOT_SUPPORTED;
@@ -170,7 +173,7 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 		return (num);
 
 	num++;
-	return (sony_image_info(camera, num, info));
+	return (sony_image_info(camera, num, info, context));
 }
 
 /**
