@@ -59,12 +59,13 @@ static const struct {
 	const char *extension;
 	const char *mime_type;
 } mime_table[] = {
-	{"jpg", "image/jpeg"}, 
+	{"jpeg", GP_MIME_JPEG},
+	{"jpg",  GP_MIME_JPEG}, 
 	{"tif", "image/tiff"},
 	{"ppm", "image/x-portable-pixmap"},
 	{"pgm", "image/x-portable-graymap"},
 	{"pbm", "image/x-portable-bitmap"},
-	{"png", "image/png"},
+	{"png",  GP_MIME_PNG},
 	{NULL, NULL}
 };
 
