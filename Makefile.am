@@ -9,6 +9,7 @@ libgphoto2_la_SOURCES = 	\
 	gphoto2-abilities-list.c\
 	bayer.c bayer.h		\
 	gphoto2-camera.c	\
+	gphoto2-context.c	\
 	gphoto2-debug.c		\
 	exif.c exif.h		\
 	gphoto2-file.c		\
@@ -30,6 +31,7 @@ libgphoto2include_HEADERS =	\
 	gphoto2.h		\
 	gphoto2-abilities-list.h\
 	gphoto2-camera.h	\
+	gphoto2-context.h	\
 	gphoto2-debug.h		\
 	gphoto2-file.h		\
 	gphoto2-filesys.h	\

@@ -132,17 +132,19 @@ foreach_func (const char *filename, lt_ptr data)
 #endif
 
 static int
-gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
+gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
+			    GPContext *context)
 {
 	CameraLibraryIdFunc id;
 	CameraLibraryAbilitiesFunc ab;
 	CameraText text;
 	int x, old_count, new_count;
+	unsigned int i, n;
+	const char *filename;
 #ifdef HAVE_LTDL
 	CameraList flist;
 	int i, count;
 	lt_dlhandle lh;
-	const char *filename;
 #else
 	GP_SYSTEM_DIR d;
 	GP_SYSTEM_DIRENT de;
@@ -228,6 +230,8 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 		} 
 	}
 #else
+
+	/* Open the directory */
 	d = GP_SYSTEM_OPENDIR (dir);
 	if (!d) {
 		gp_log (GP_LOG_ERROR, "gphoto2-abilities-list",
@@ -235,13 +239,34 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 		return GP_ERROR_LIBRARY;
 	}
 
+	/* Count the files */
+	n = 0;
+	while (GP_SYSTEM_READDIR (d))
+		n++;
+	GP_SYSTEM_CLOSEDIR (d);
+	d = GP_SYSTEM_OPENDIR (dir);
+
+	gp_context_status (context, _("Loading camera drivers from '%s'..."),
+			   dir);
+	i = 0;
 	do {
 
 		/* Read each entry */
 		de = GP_SYSTEM_READDIR (d);
 		if (de) {
-			const char *filename = GP_SYSTEM_FILENAME (de);
 
+			/*
+			 * Tell the frontend about our progress and offer the
+			 * possiblility to cancel.
+			 */
+			i++;
+			gp_context_progress (context, (float) i / (float) n);
+			if (gp_context_cancel (context) ==
+						GP_CONTEXT_FEEDBACK_CANCEL)
+				return (GP_ERROR_CANCEL);
+
+			/* Construct the full path to the file */
+			filename = GP_SYSTEM_FILENAME (de);
 			snprintf (buf, sizeof (buf), "%s%c%s", dir,
 				  GP_SYSTEM_DIR_DELIM, filename);
 
@@ -325,8 +350,9 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 }
 
 /**
- * gp_abilities_list_load:
+ * gp_abilities_list_load_ctx:
  * @list: a #CameraAbilitiesList
+ * @context: a #GPContext
  *
  * Scans the system for camera drivers. All supported camera models will then
  * be added to the @list.
@@ -334,14 +360,20 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
  * Return value: a gphoto2 error code
  **/
 int
-gp_abilities_list_load (CameraAbilitiesList *list)
+gp_abilities_list_load_ctx (CameraAbilitiesList *list, GPContext *context)
 {
 	CHECK_NULL (list);
 
-	CHECK_RESULT (gp_abilities_list_load_dir (list, CAMLIBS));
+	CHECK_RESULT (gp_abilities_list_load_dir (list, CAMLIBS, context));
 	CHECK_RESULT (gp_abilities_list_sort (list));
 
 	return (GP_OK);
+}
+
+int
+gp_abilities_list_load (CameraAbilitiesList *list)
+{
+	return (gp_abilities_list_load_ctx (list, NULL));
 }
 
 static int
