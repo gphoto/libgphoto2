@@ -154,8 +154,11 @@ static struct sgttyb term_old;
 #endif
 
 struct _GPPortPrivateLibrary {
-	int fd; 			/* Device handle */
+	int fd;       /* Device handle */
+	int baudrate; /* Current speed */
 };
+
+static int gp_port_serial_set_baudrate (GPPort *dev, int baudrate);
 
 GPPortType
 gp_port_library_type () 
@@ -421,6 +424,15 @@ gp_port_serial_write(GPPort *dev, char *bytes, int size)
 {
         int len, ret;
 
+	/* The device needs to be opened for that operation */
+	if (!dev->pl->fd)
+		CHECK (gp_port_serial_open (dev));
+
+	/* Make sure we are operating at the specified speed */
+	if (dev->pl->baudrate != dev->settings.serial.speed)
+		CHECK (gp_port_serial_set_baudrate (dev,
+						dev->settings.serial.speed));
+
         len = 0;
         while (len < size) {
 		
@@ -463,6 +475,15 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
         fd_set readfs;          /* file descriptor set */
         int readen = 0;
         int rc;
+
+	/* The device needs to be opened for that operation */
+	if (!dev->pl->fd)
+		CHECK (gp_port_serial_open (dev));
+
+	/* Make sure we are operating at the specified speed */
+	if (dev->pl->baudrate != dev->settings.serial.speed)
+		CHECK (gp_port_serial_set_baudrate (dev,
+						dev->settings.serial.speed));
 
         FD_ZERO (&readfs);
         FD_SET (dev->pl->fd, &readfs);
@@ -677,13 +698,42 @@ gp_port_serial_baudconv (int baudrate)
 static int
 gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
 {
-#ifndef OS2
-#if HAVE_TERMIOS_H
-        struct termios tio;
+#ifdef OS2
+	ULONG rc;
+	ULONG   ulParmLen = 2;     /* Maximum size of the parameter packet */
+#else
+#ifdef HAVE_TERMIOS_H
+	struct termios tio;
+#else
+	struct sgttyb ttyb;
+#endif
+#endif
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
 		"Setting baudrate to %d...", baudrate);
 
+	/*
+	 * We need an open device in order to set the speed. If there is no
+	 * open device, postpone setting of speed.
+	 */
+	dev->pl->baudrate = baudrate;
+	if (!dev->pl->fd)
+		return (GP_OK);
+
+#ifdef OS2
+	rc = DosDevIOCtl (dev->pl->fd,       /* Device handle               */
+			  0x0001,            /* Serial-device control       */
+			  0x0043,            /* Sets bit rate               */
+			  (PULONG) &baudrate,/* Points at bit rate          */
+			  sizeof(baudrate),  /* Max. size of parameter list */
+			  &ulParmLen,        /* Size of parameter packet    */
+			  NULL,              /* No data packet              */
+			  0,                 /* Maximum size of data packet */
+			  NULL);             /* Size of data packet         */
+	if(rc != 0)
+		printf("DosDevIOCtl baudrate error:%d\n",rc);
+#else /* !OS2 */
+#ifdef HAVE_TERMIOS_H
         if (tcgetattr(dev->pl->fd, &tio) < 0) {
 		gp_port_set_error (dev, _("Could not set the baudrate to %d"),
 				   baudrate);
@@ -720,9 +770,7 @@ gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
                 perror("fcntl F_SETFL");
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
-#else
-        struct sgttyb ttyb;
-
+#else /* !HAVE_TERMIOS_H */
         if (ioctl (dev->pl->fd, TIOCGETP, &ttyb) < 0) {
                 perror("ioctl(TIOCGETP)");
                 return GP_ERROR_IO_SERIAL_SPEED;
@@ -736,23 +784,7 @@ gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
 #endif
-#else /*ifndef OS2*/
-
-        ULONG rc;
-        ULONG   ulParmLen = 2;     /* Maximum size of the parameter packet */
-        rc = DosDevIOCtl (dev->pl->fd, /* Device handle                  */
-                      0x0001,       /* Serial-device control          */
-                      0x0043, /* Sets bit rate                  */
-                      (PULONG) &baudrate,   /* Points at bit rate             */
-                      sizeof(baudrate),     /* Maximum size of parameter list */
-                      &ulParmLen,        /* Size of parameter packet       */
-                      NULL,              /* No data packet                 */
-                      0,                 /* Maximum size of data packet    */
-                      NULL);             /* Size of data packet            */
-        if(rc != 0)
-           printf("DosDevIOCtl baudrate error:%d\n",rc);
-
-#endif /*ifndef OS2*/
+#endif
 
         return GP_OK;
 }

@@ -1,5 +1,10 @@
 2001-11-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* serial/unix.c: Only set the baudrate if the device is open. If you
+	  set parameters on device 0, you mess up the console...
+
+2001-11-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in:
 	* serial/Makefile.am
 	* usb/Makefile.am: Clean up Makefiles. Avoid version on io-drivers
