@@ -11,6 +11,7 @@ of new features:
    * Most functions report progress and are cancellable,
    * Support for Samsung 800k, PTP cameras,
    * STV0680 improvements,
+   * Kodak DC3200 fixes,
    * Camera summary for Kodak DC240 driver,
    * and more ...
 
