@@ -312,7 +312,8 @@ gp_camera_abilities (int camera_number, CameraAbilities *abilities)
 }
 
 int
-gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities)
+gp_camera_abilities_by_name (const char *camera_name,
+			     CameraAbilities *abilities)
 {
 	int x;
 
