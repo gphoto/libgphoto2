@@ -804,8 +804,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 		  (long)tmp_time, (long)local_time, (long)tm->tm_gmtoff);
 #else
 	local_time = tmp_time - timezone;
-	GP_DEBUG ("camera_summary: converted %i to localtime %i (timezone is %i)",
-		  tmp_time, local_time, timezone);
+	GP_DEBUG ("camera_summary: converted %ld to localtime %ld (timezone is %ld)",
+		  (long)tmp_time, (long)local_time, (long)timezone);
 #endif
 
 	if (res == GP_OK) {
