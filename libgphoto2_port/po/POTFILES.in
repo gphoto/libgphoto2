@@ -1,4 +1,4 @@
-libgphoto2_port/gp_port.c
+libgphoto2_port/gphoto2-port.c
 libgphoto2_port/gphoto2-port-info-list.c
 libgphoto2_port/gphoto2-port-log.c
 libgphoto2_port/gphoto2-port-result.c
