@@ -56,8 +56,8 @@
 #endif
 
 #define GP_MODULE "gsmart300"
-static int gsmart300_download_data (CameraPrivateLibrary * lib, 
-		int data_type, uint16_t index, unsigned int size, 
+static int gsmart300_download_data (CameraPrivateLibrary * lib,
+		int data_type, uint16_t index, unsigned int size,
 		uint8_t * buf);
 static int gsmart300_get_FATs (CameraPrivateLibrary * lib);
 static int yuv2rgb (int y, int u, int v, int *r, int *g, int *b);
@@ -91,7 +91,7 @@ gsmart300_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 
 	fat_index = 0x1FFF - index;
 
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x03, fat_index, 0x0003, 
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x03, fat_index, 0x0003,
 				      NULL, 0));
 	sleep (1);
 
@@ -105,7 +105,7 @@ gsmart300_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 int
 gsmart300_delete_all (CameraPrivateLibrary * lib)
 {
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x0000, 0x0004, 
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x0000, 0x0004,
 				      NULL, 0));
 	sleep (3);
 
@@ -133,8 +133,8 @@ gsmart300_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 
 	/* decode the image size */
 	flash_size = (p[6] * 0x100 + p[5])*0x200;
-	data_size = (p[13] & 0xff) * 0x10000 
-		  + (p[12] & 0xff) * 0x100 
+	data_size = (p[13] & 0xff) * 0x10000
+		  + (p[12] & 0xff) * 0x100
 		  + (p[11] & 0xff);
 	qIndex = p[7] & 0x07;
 
@@ -145,7 +145,7 @@ gsmart300_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 	if (!mybuf)
 		return GP_ERROR_NO_MEMORY;
 
-	CHECK (gsmart300_download_data (lib, __GS300_PIC, g_file->index, 
+	CHECK (gsmart300_download_data (lib, __GS300_PIC, g_file->index,
 				        flash_size, mybuf));
 
 	/* now build a jpeg */
@@ -155,7 +155,7 @@ gsmart300_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 	start_of_file = lp_jpg;
 
 	/* copy the header from the template */
-	memcpy (lp_jpg, Gsmart_300_JPGDefaultHeader, 
+	memcpy (lp_jpg, Gsmart_300_JPGDefaultHeader,
 			GSMART_JPG_DEFAULT_HEADER_LENGTH);
 
 	/* modify quantization table */
@@ -164,13 +164,13 @@ gsmart300_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 
 	/* modify the image width, height */
 
-	/* NOTE : the picture width and height written on flash is either 
+	/* NOTE : the picture width and height written on flash is either
 	 * 640x480 or 320x240, but the real size id 640x480 for ALL pictures */
 
-	*(lp_jpg + 564) = (640) & 0xFF;      //Image width low byte
-	*(lp_jpg + 563) = (640 >> 8) & 0xFF; //Image width high byte
-	*(lp_jpg + 562) = (480) & 0xFF;      //Image height low byte
-	*(lp_jpg + 561) = (480 >> 8) & 0xFF; //Image height high byte
+	*(lp_jpg + 564) = (640) & 0xFF;      /* Image width low byte */
+	*(lp_jpg + 563) = (640 >> 8) & 0xFF; /* Image width high byte */
+	*(lp_jpg + 562) = (480) & 0xFF;      /* Image height low byte */
+	*(lp_jpg + 561) = (480 >> 8) & 0xFF; /* Image height high byte */
 
 	/* point to real JPG compress data start position and copy */
 	lp_jpg += GSMART_JPG_DEFAULT_HEADER_LENGTH;
@@ -231,14 +231,14 @@ gsmart300_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 
 	t_width = 80;
 	t_height = 60;
-	snprintf (pbm_header, sizeof (pbm_header), "P6 %d %d 255\n", 
+	snprintf (pbm_header, sizeof (pbm_header), "P6 %d %d 255\n",
 		  t_width, t_height);
 
 	/* size needed for download */
 	size = 9728;
 
 	mybuf = malloc (size);
-	CHECK (gsmart300_download_data (lib, __GS300_THUMB, g_file->index, 
+	CHECK (gsmart300_download_data (lib, __GS300_THUMB, g_file->index,
 				        size, mybuf));
 
 	/* effective size of file */
@@ -288,7 +288,7 @@ gsmart300_get_info (CameraPrivateLibrary * lib)
 	CHECK (gsmart300_get_file_count (lib));
 	if (lib->num_files > 0) {
 		CHECK (gsmart300_get_FATs (lib));
-	} 
+	}
 
 	lib->dirty = 0;
 
@@ -309,7 +309,7 @@ int
 gsmart300_reset (CameraPrivateLibrary * lib)
 {
 	GP_DEBUG ("* gsmart300_reset");
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x0000, 0x0003, 
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x0000, 0x0003,
 				      NULL, 0));
 	sleep (1.5);
 	return GP_OK;
@@ -325,19 +325,19 @@ static int gsmart300_download_data (CameraPrivateLibrary * lib, int data_type,
 	uint16_t fat_index = 0x1fff - index;
 	int i;
 
-	if (data_type == __GS300_FAT) 
-		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x03, 
+	if (data_type == __GS300_FAT)
+		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x03,
 					      fat_index, 0x0000, NULL, 0));
-	if (data_type == __GS300_THUMB) 
-		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x0a, 
+	if (data_type == __GS300_THUMB)
+		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x0a,
 					      fat_index, 0x0003, NULL, 0));
-	if (data_type == __GS300_PIC) 
-		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x03, 
+	if (data_type == __GS300_PIC)
+		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x03,
 					      fat_index, 0x0008, NULL, 0));
 	if (data_type == __GS300_INIT  ) {
-		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x00, 
+		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x00,
 					      0x0007, NULL, 0));
-		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x0a, 0x00, 
+		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x0a, 0x00,
 					      0x0001, NULL, 0));
 	}
 
@@ -369,14 +369,14 @@ gsmart300_get_FATs (CameraPrivateLibrary * lib)
 	p = lib->fats;
 
 	while (index < lib->num_files) {
-		CHECK (gsmart300_download_data (lib, __GS300_FAT, index, 
+		CHECK (gsmart300_download_data (lib, __GS300_FAT, index,
 					        FLASH_PAGE_SIZE_300, p));
 		if (p[0] == 0xFF)
 			break;
 		type = p[0];
 		if (type == 0x00) {
 			snprintf (buf, 13, "Image%03d.jpg", index + 1);
-			lib->files[file_index].mime_type = 
+			lib->files[file_index].mime_type =
 				GSMART_FILE_TYPE_IMAGE;
 			lib->files[file_index].index = index;
 			lib->files[file_index].fat = p;

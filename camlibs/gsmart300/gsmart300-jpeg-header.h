@@ -1,18 +1,18 @@
 #ifndef __GSMART_300_JPEG_HEADER_H
 #define __GSMART_300_JPEG_HEADER_H
 
-/* 
+/*
  *  Start from 0 -> 588
  *    7 -  70 : Quantization Table[0]
  *   72 - 135 : Quantization Table[1]
  *  561 - 562 : Image Height(H Byte,L Byte)
  *  563 - 564 : Image Width(H Byte,L Byte)
- */ 
+ */
 #define GSMART_JPG_DEFAULT_HEADER_LENGTH	589
 uint8_t Gsmart_300_JPGDefaultHeader[GSMART_JPG_DEFAULT_HEADER_LENGTH] = {
-	//SOI(Start of Image)
+	/* SOI(Start of Image) */
 	0xFF,0xD8,
-	//DQT(Define Quantization Table)
+	/* DQT(Define Quantization Table) */
 	0xFF,0xDB,
 	0x00,0x84,
 	0x00,
@@ -25,7 +25,7 @@ uint8_t Gsmart_300_JPGDefaultHeader[GSMART_JPG_DEFAULT_HEADER_LENGTH] = {
 	0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,
 	0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,
 	0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,
-	//DHT(Define Huffman Table)
+	/* DHT(Define Huffman Table) */
 	0xFF,0xC4,
 	0x01,0xA2,
 	0x00,0x00,0x01,0x05,0x01,0x01,0x01,0x01,0x01,0x01,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -54,11 +54,11 @@ uint8_t Gsmart_300_JPGDefaultHeader[GSMART_JPG_DEFAULT_HEADER_LENGTH] = {
 	0xA8,0xA9,0xAA,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xC2,0xC3,0xC4,0xC5,
 	0xC6,0xC7,0xC8,0xC9,0xCA,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xE2,0xE3,
 	0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,
-	//SOFn(Start of Frame)
+	/* SOFn(Start of Frame) */
 	0xFF,0xC0,
 	0x00,0x11,
 	0x08,0x00,0x78,0x00,0xA0,0x03,0x01,0x21,0x00,0x02,0x11,0x01,0x03,0x11,0x01,
-	//SOS(Start of Scan)
+	/* SOS(Start of Scan) */
 	0xFF,0xDA,
 	0x00,0x0C,
 	0x03,0x01,0x00,0x02,0x11,0x03,0x11,0x00,0x3F,0x00
@@ -67,7 +67,7 @@ uint8_t Gsmart_300_JPGDefaultHeader[GSMART_JPG_DEFAULT_HEADER_LENGTH] = {
 /* Quantization tables for GSmart300 */
 uint8_t Gsmart_300_QTable[10][64]=
 {
-	// index 0, Q85
+	/* index 0, Q85 */
 	{   5,  3,  4,  4,  4,  3,  5,  4,  4,  4,  5,  5,  5,  6,  7, 12,
 	    8,  7,  7,  7,  7, 15, 11, 11,  9, 12, 17, 15, 18, 18, 17, 15,
 	   17, 17, 19, 22, 28, 23, 19, 20, 26, 21, 17, 17, 24, 33, 24, 26,
@@ -77,7 +77,7 @@ uint8_t Gsmart_300_QTable[10][64]=
 	   30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
 	   30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30 },
 
-	// index 1, Q85
+	/* index 1, Q85 */
 	{   5,  3,  4,  4,  4,  3,  5,  4,  4,  4,  5,  5,  5,  6,  7, 12,
 	    8,  7,  7,  7,  7, 15, 11, 11,  9, 12, 17, 15, 18, 18, 17, 15,
 	   17, 17, 19, 22, 28, 23, 19, 20, 26, 21, 17, 17, 24, 33, 24, 26,
@@ -87,7 +87,7 @@ uint8_t Gsmart_300_QTable[10][64]=
 	   30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
 	   30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30 },
 
-	// index 2, Q80
+	/* index 2, Q80 */
 	{   6,  4,  5,  6,  5,  4,  6,  6,  5,  6,  7,  7,  6,  8, 10, 16,
 	   10, 10,  9,  9, 10, 20, 14, 15, 12, 16, 23, 20, 24, 24, 23, 20,
 	   22, 22, 26, 29, 37, 31, 26, 27, 35, 28, 22, 22, 32, 44, 32, 35,
@@ -97,7 +97,7 @@ uint8_t Gsmart_300_QTable[10][64]=
 	   40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
 	   40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40 },
 
-	// index 3, Q25
+	/* index 3, Q25 */
 	{  32, 22, 24, 28, 24, 20, 32, 28, 26, 28, 36, 34, 32, 38, 48, 80,
 	   52, 48, 44, 44, 48, 98, 70, 74, 58, 80,116,102,122,120,114,102,
 	  112,110,128,144,184,156,128,136,174,138,110,112,160,218,162,174,
@@ -107,7 +107,7 @@ uint8_t Gsmart_300_QTable[10][64]=
 	  198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,
 	  198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198 },
 
-	// index 4, Q70
+	/* index 4, Q70 */
 	{  10,  7,  7,  8,  7,  6, 10,  8,  8,  8, 11, 10, 10, 11, 14, 24,
 	   16, 14, 13, 13, 14, 29, 21, 22, 17, 24, 35, 31, 37, 36, 34, 31,
 	   34, 33, 38, 43, 55, 47, 38, 41, 52, 41, 33, 34, 48, 65, 49, 52,
@@ -117,4 +117,5 @@ uint8_t Gsmart_300_QTable[10][64]=
 	   59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59,
 	   59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59 },
 };
+
 #endif /* __GSMART_300_JPEG_HEADER_H */
