@@ -151,6 +151,15 @@ static struct {
 			"scope%04i.ppm"
 		}
 	},
+	/* http://www.sipixdigital.com/cameras/stylecam/ */
+	/* Ids glanced from downloaded driver / .inf file. */
+	{"SiPix:Stylecam", 0xd64, 0x1001, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&flip_vertical,
+			"style%04i.ppm"
+		}
+	},
 	{NULL,}
 };
 
