@@ -29,31 +29,29 @@ int camera_exit 		(Camera *camera);
 	/* been chosen.						*/
 
 int camera_folder_list		(Camera *camera, 
-				 char *folder_path, 
-				 CameraFolderList *folder);
+				 CameraList *list,
+				 char *folder);
 	/* Returns a list of sub-folders from the 'folder_name'	*/
 	/* folder. The first call will be with folder_name	*/
 	/* set to "/" to get a listing of all the top-level	*/
 	/* top-level folders.					*/
 
-int camera_folder_set		(Camera *camera, 
-				 char *folder_path);
-	/* Sets the current folder path on the camera to 	*/
-	/* camera_path. the folder_path should have been	*/
-	/* obtained from repeat calls to camera_folder_list()	*/
-
-int camera_file_count 		(Camera *camera);
-	/* Returns the number of files in the current folder on */
-	/* the camera.						*/
+int camera_file_list		(Camera *camera, 
+				 CameraList *list,
+				 char *folder);
+	/* Returns a list of file from the 'folder_name'	*/
+	/* folder. 						*/
 
 int camera_file_get 	    	(Camera *camera,
 				 CameraFile *file,
+				 char *folder,
 				 char *filename); 
 	/* Fills in the file struct with a file #file_number	*/
 	/* from the camera.					*/
 
 int camera_file_get_preview 	(Camera *camera, 
 				 CameraFile *file,
+				 char *folder,
 				 char *filename);
 	/* Fills in the file struct with a file preview 	*/
 	/* #file_number	from the camera. The preview is a	*/
@@ -61,7 +59,8 @@ int camera_file_get_preview 	(Camera *camera,
 	/* if supported.					*/
 
 int camera_file_put 	    	(Camera *camera,
-				 CameraFile *file);
+				 CameraFile *file,
+				 char *folder);
 	/* Uploads a file to the current folder on the camera. 	*/
 	/* The user is in charge of converting an image to the	*/
 	/* appropriate format. The camera_manual should explain	*/
@@ -69,6 +68,7 @@ int camera_file_put 	    	(Camera *camera,
 	/* to do the conversion.				*/
 
 int camera_file_delete 		(Camera *camera, 
+				 char *folder,
 				 char *filename);
 	/* Deletes a picture from the current folder on the	*/
 	/* camera. 						*/

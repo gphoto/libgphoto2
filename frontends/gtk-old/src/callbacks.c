@@ -494,7 +494,8 @@ GtkWidget *tree_item_icon (GtkWidget *tree, char *text, char *icon_name) {
 void folder_expand (GtkWidget *tree_item, gpointer data) {
 
 	GtkWidget *tree, *item;
-	CameraFolderInfo list[256];
+	CameraList list;
+	CameraListEntry *entry;
 	char *path = (char*)gtk_object_get_data(GTK_OBJECT(tree_item), "path");
 	char buf[1024];
 	int x, count=0;
@@ -508,7 +509,7 @@ void folder_expand (GtkWidget *tree_item, gpointer data) {
 	if (gtk_object_get_data(GTK_OBJECT(tree_item), "expanded")) return;
 
 	/* Count however many folders are in this folder */
-	if ((count = gp_camera_folder_list(gp_gtk_camera, path, list))==GP_ERROR) {
+	if ((count = gp_camera_folder_list(gp_gtk_camera, path, &list))==GP_ERROR) {
 		sprintf(buf, _("Could not open folder\n%s"), path);
 		gp_camera_message(gp_gtk_camera, buf);
 		return;
@@ -527,11 +528,12 @@ void folder_expand (GtkWidget *tree_item, gpointer data) {
 
 	/* Append the new folders to the new subtree */
 	for (x=0; x<count; x++) {
+		entry = gp_list_entry(list, x);
 		if (strcmp(path, "/")==0)
-			sprintf(buf, "/%s", list[x].name);
+			sprintf(buf, "/%s", entry->name);
 		   else
-			sprintf(buf, "%s/%s", path, list[x].name);
-		item = folder_item(tree, list[x].name);
+			sprintf(buf, "%s/%s", path, entry->name);
+		item = folder_item(tree, entry->name);
 		gtk_object_set_data(GTK_OBJECT(item), "path", strdup(buf));
 	}
 

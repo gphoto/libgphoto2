@@ -57,6 +57,11 @@
 		GP_WIDGET_NONE
 	} CameraWidgetType;
 
+/* Folder list entries */
+	typedef enum {
+		GP_LIST_FOLDER,
+		GP_LIST_FILE
+	} CameraListType;
 
 /* Structures
    ---------------------------------------------------------------- */
@@ -166,25 +171,30 @@
 
 /* Entry in a folder on the camera */
 	typedef struct {
+		CameraListType type;
 		char name[128];
-		int is_folder;
-	} CameraFolderListEntry;
+	} CameraListEntry;
 
 	typedef struct {
 		char folder[1024];
 		int  count;
-		CameraFolderListEntry entry[1024];
-	} CameraFolderList;
+		CameraListEntry entry[1024];
+	} CameraList;
 
 /* Camera filesystem emulation structs */
 	typedef struct {
 		char name[128];
-	} CameraFilesystemEntry;
+	} CameraFilesystemFile;
 
 	typedef struct {
 		int count;
-		char format[64];
-		CameraFilesystemEntry **entry ;
+		char name[128];
+		CameraFilesystemFile **file;
+	} CameraFilesystemFolder;
+
+	typedef struct {
+		int count;
+		CameraFilesystemFolder **folder ;
 	} CameraFilesystem;
 
 /* Settings for the config_set function */
@@ -204,14 +214,13 @@
 	typedef int (*c_abilities)	 (CameraAbilities*,int*);
 	typedef int (*c_init)		 (struct Camera*, CameraInit*);
 	typedef int (*c_exit)		 (struct Camera*);
-	typedef int (*c_folder_list)	 (struct Camera*, char*, CameraFolderList*);
-	typedef int (*c_folder_set)	 (struct Camera*, char*);
-	typedef int (*c_file_count)	 (struct Camera*);
-	typedef int (*c_file_get)	 (struct Camera*, CameraFile*, char*);
-	typedef int (*c_file_get_preview)(struct Camera*, CameraFile*, char*);
-	typedef int (*c_file_put)	 (struct Camera*, CameraFile*);
+	typedef int (*c_folder_list)	 (struct Camera*, CameraList*, char*);
+	typedef int (*c_file_list)	 (struct Camera*, CameraList*, char*);
+	typedef int (*c_file_get)	 (struct Camera*, CameraFile*, char*, char*);
+	typedef int (*c_file_get_preview)(struct Camera*, CameraFile*, char*, char*);
+	typedef int (*c_file_put)	 (struct Camera*, CameraFile*, char*);
+	typedef int (*c_file_delete)	 (struct Camera*, char*, char*);
 	typedef int (*c_capture)	 (struct Camera*, CameraFile*, CameraCaptureInfo *);
-	typedef int (*c_file_delete)	 (struct Camera*, char*);
 	typedef int (*c_config_get)	 (struct Camera*, CameraWidget*);
 	typedef int (*c_config_set)	 (struct Camera*, CameraSetting*, int);
 	typedef int (*c_summary)	 (struct Camera*, CameraText*);
@@ -225,8 +234,7 @@
 		c_init			init;
 		c_exit			exit;
 		c_folder_list		folder_list;
-		c_folder_set		folder_set;
-		c_file_count		file_count;
+		c_file_list		file_list;
 		c_file_get		file_get;
 		c_file_get_preview	file_get_preview;
 		c_file_put		file_put;

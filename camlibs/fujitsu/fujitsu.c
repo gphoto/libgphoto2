@@ -135,8 +135,6 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->exit 	= camera_exit;
 	camera->functions->folder_list  = camera_folder_list;
 	camera->functions->file_list    = camera_file_list;
-	camera->functions->folder_set 	= camera_folder_set;
-	camera->functions->file_count 	= camera_file_count;
 	camera->functions->file_get 	= camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_put 	= camera_file_put;
@@ -257,12 +255,7 @@ int camera_start(Camera *camera) {
 		gp_camera_message(camera, "Can not set the serial port speed");
 		return (GP_ERROR);
 	}
-	if (fd->folders) {
-		if (fujitsu_change_folder(camera, fd->folder)) {
-			gp_camera_message(camera, "Can't change folder");
-			return (GP_ERROR);
-		}
-	}
+	fujitsu_folder_set(camera, fd->folder);
 	return (GP_OK);
 }
 
@@ -296,32 +289,28 @@ int camera_exit (Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_file_list(Camera *camera, char *folder_name, CameraList *list) {
+int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 	int x=0, error=0, count;
 	char buf[1024];
 
-printf("here\n");
-	if ((!fd->folders)&&(strcmp("/", folder_name)!=0))
+	if ((!fd->folders)&&(strcmp("/", folder)!=0))
 		return (GP_ERROR);
-printf("here\n");
 	if (camera_start(camera)==GP_ERROR)
 		return (GP_ERROR);
 
-printf("here\n");
 	if (fd->folders) {
-		if (fujitsu_change_folder(camera, folder_name)) {
+		if (fujitsu_change_folder(camera, folder)) {
 			gp_camera_message(camera, "Can't change folder");
 			return (GP_ERROR);
 		}
 	}
 
-printf("here\n");
-        count = camera_file_count(camera);
+        count = fujitsu_file_count(camera);
 
         /* Populate the filesystem */
-	gp_filesystem_populate(fd->fs, folder_name, "PIC%04i.jpg", count);
+	gp_filesystem_populate(fd->fs, folder, "PIC%04i.jpg", count);
 
 	while ((x<count)&&(!error)) {
 #if 0
@@ -344,7 +333,7 @@ printf("here\n");
 		   else
 #endif
 			/* Filename not supported. Use CameraFileSystem entry */
-			gp_list_append(list, gp_filesystem_name(fd->fs, folder_name, x), 
+			gp_list_append(list, gp_filesystem_name(fd->fs, folder, x), 
 				GP_LIST_FILE);
 		x++;
 	}
@@ -353,7 +342,7 @@ printf("here\n");
         return GP_OK;
 }
 
-int camera_folder_list(Camera *camera, char *folder_name, CameraList *list) {
+int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 	int count, i, bsize;
@@ -367,14 +356,14 @@ int camera_folder_list(Camera *camera, char *folder_name, CameraList *list) {
 	if (camera_start(camera) != GP_OK) /* XXX */
 		return GP_ERROR;
 
-	if ((fujitsu_change_folder(camera, folder_name) != GP_OK) ||
+	if ((fujitsu_change_folder(camera, folder) != GP_OK) ||
 	    (fujitsu_get_int_register(camera, 83, &count) != GP_OK)) {
 		camera_stop(camera);
 		return GP_ERROR;
 	}
 	if (count)
 	for (i = 0; i < count; i++) {
-		if (fujitsu_change_folder(camera, folder_name) != GP_OK) {
+		if (fujitsu_change_folder(camera, folder) != GP_OK) {
 			break;
 		}
 		if (fujitsu_set_int_register(camera, 83, i+1) != GP_OK) {
@@ -393,25 +382,26 @@ int camera_folder_list(Camera *camera, char *folder_name, CameraList *list) {
 	return (GP_OK);
 }
 
-int camera_folder_set(Camera *camera, char *folder_name) {
+int fujitsu_folder_set(Camera *camera, char *folder) {
 
+/* DOUBLE CHECK THIS CODE!!! (after filename reworking!) */
 	char buf[4096];
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
 	/* If the camera doesn't support folders and it was passed something
 	   other than "/", return an error! */
-	if ((!fd->folders)&&(strcmp("/", folder_name)!=0))
+	if ((!fd->folders)&&(strcmp("/", folder)!=0))
 		return (GP_ERROR);
 
 	/* If the camera doesn't support folders and it was passed "/",
 	   then that's OK */
-	if ((!fd->folders)&&(strcmp("/", folder_name)==0))
+	if ((!fd->folders)&&(strcmp("/", folder)==0))
 		return (GP_OK);
 
-	if (folder_name[0] != '/') {
-		strcat(fd->folder, folder_name);
+	if (folder[0] != '/') {
+		strcat(fd->folder, folder);
 	} else {
-		strcpy(fd->folder, folder_name);
+		strcpy(fd->folder, folder);
 	}
 
 	if (fd->folder[strlen(fd->folder)-1] != '/')
@@ -422,16 +412,20 @@ int camera_folder_set(Camera *camera, char *folder_name) {
 	/* TODO: check whether the selected folder is valid.
 		 It should be done after implementing camera_lock/unlock pair */
 	
+	if (fd->folders) {
+		if (fujitsu_change_folder(camera, fd->folder)) {
+			gp_camera_message(camera, "Can't change folder");
+			return (GP_ERROR);
+		}
+	}
+
 	return (GP_OK);
 }
 
-int camera_file_count (Camera *camera) {
+int fujitsu_file_count (Camera *camera) {
 
 	int value;
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
-
-if (camera_start(camera)==GP_ERROR)
-return (GP_ERROR);
 
 	debug_print(fd, "Counting files");
 
@@ -440,14 +434,11 @@ return (GP_ERROR);
                 return (GP_ERROR);
         }
 
-if (camera_stop(camera)==GP_ERROR)
-return (GP_ERROR);
-
 	return (value);
 }
 
 int camera_file_get_generic (Camera *camera, CameraFile *file, 
-	char *filename, int thumbnail) {
+	char *folder, char *filename, int thumbnail) {
 
 	char buf[4096];
 	int length, regl, regd, file_number;
@@ -500,17 +491,17 @@ return (GP_ERROR);
 	return (GP_OK);
 }
 
-int camera_file_get (Camera *camera, CameraFile *file, char *filename) {
+int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) {
 
-	return (camera_file_get_generic(camera, file, filename, 0));
+	return (camera_file_get_generic(camera, file, folder, filename, 0));
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *file, char *filename) {
+int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, char *filename) {
 
-	return (camera_file_get_generic(camera, file, filename, 1));
+	return (camera_file_get_generic(camera, file, folder, filename, 1));
 }
 
-int camera_file_put (Camera *camera, CameraFile *file) {
+int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
@@ -519,7 +510,7 @@ int camera_file_put (Camera *camera, CameraFile *file) {
 	return (GP_ERROR);
 }
 
-int camera_file_delete (Camera *camera, char *filename) {
+int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 	int ret, file_number;
 	char buf[4096];

@@ -81,8 +81,6 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->exit 	= camera_exit;
 	camera->functions->folder_list  = camera_folder_list;
 	camera->functions->file_list    = camera_file_list;
-	camera->functions->folder_set 	= camera_folder_set;
-	camera->functions->file_count 	= camera_file_count;
 	camera->functions->file_get 	= camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_put 	= camera_file_put;
@@ -119,7 +117,7 @@ int camera_exit (Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_file_list(Camera *camera, char *folder_name, CameraList *list) {
+int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 
 	DIR *d;
 	struct dirent *de;
@@ -128,13 +126,13 @@ int camera_file_list(Camera *camera, char *folder_name, CameraList *list) {
 	char buf[1024];
 	int count=0;
 
-	if ((d = opendir(folder_name))==NULL)
+	if ((d = opendir(folder))==NULL)
 		return (GP_ERROR);
 
 	while (de = readdir(d)) {
 		if ((strcmp(de->d_name, "." )!=0) &&
 		    (strcmp(de->d_name, "..")!=0)) {
-			sprintf(buf, "%s/%s", folder_name, de->d_name);
+			sprintf(buf, "%s/%s", folder, de->d_name);
 			if (stat(buf, &st)==0) {
 			   if ((!S_ISDIR(st.st_mode))&&(is_image(de->d_name)))
 				gp_list_append(list, de->d_name, GP_LIST_FILE);
@@ -145,7 +143,7 @@ int camera_file_list(Camera *camera, char *folder_name, CameraList *list) {
 	return (GP_OK);
 }
 
-int camera_folder_list(Camera *camera, char *folder_name, CameraList *list) {
+int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 
 	DIR *d;
 	struct dirent *de;
@@ -154,13 +152,13 @@ int camera_folder_list(Camera *camera, char *folder_name, CameraList *list) {
 	char buf[1024];
 	int count=0;
 
-	if ((d = opendir(folder_name))==NULL)
+	if ((d = opendir(folder))==NULL)
 		return (GP_ERROR);
 
 	while (de = readdir(d)) {
 		if ((strcmp(de->d_name, "." )!=0) &&
 		    (strcmp(de->d_name, "..")!=0)) {
-			sprintf(buf, "%s/%s", folder_name, de->d_name);
+			sprintf(buf, "%s/%s", folder, de->d_name);
 			if (stat(buf, &st)==0) {
 			   if (S_ISDIR(st.st_mode))
 				gp_list_append(list, de->d_name, GP_LIST_FOLDER);
@@ -204,7 +202,7 @@ int folder_index(Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_folder_set(Camera *camera, char *folder_name) {
+int directory_folder_set(Camera *camera, char *folder_name) {
 
 	DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
@@ -213,14 +211,7 @@ int camera_folder_set(Camera *camera, char *folder_name) {
 	return (folder_index(camera));
 }
 
-int camera_file_count (Camera *camera) {
-
-	DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
-
-	return (d->num_images);
-}
-
-int camera_file_get (Camera *camera, CameraFile *file, char *filename) {
+int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) {
 
 	/**********************************/
 	/* file_number now starts at 0!!! */
@@ -229,6 +220,8 @@ int camera_file_get (Camera *camera, CameraFile *file, char *filename) {
 	char buf[1024];
 	DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
+	directory_folder_set(camera, folder);
+
 	sprintf(buf, "%s/%s", d->directory, filename);
 	if (gp_file_open(file, buf)==GP_ERROR)
 		return (GP_ERROR);
@@ -236,7 +229,7 @@ int camera_file_get (Camera *camera, CameraFile *file, char *filename) {
 	return (GP_OK);
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *file, char *filename) {
+int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, char *filename) {
 
 	/**********************************/
 	/* file_number now starts at 0!!! */
@@ -245,6 +238,8 @@ int camera_file_get_preview (Camera *camera, CameraFile *file, char *filename) {
 	char buf[1024];
 	DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
+	directory_folder_set(camera, folder);
+
 	sprintf(buf, "%s/%s", d->directory, filename);
 	if (gp_file_open(file, buf)==GP_ERROR)
 		return (GP_ERROR);
@@ -252,13 +247,13 @@ int camera_file_get_preview (Camera *camera, CameraFile *file, char *filename) {
 	return (GP_OK);
 }
 
-int camera_file_put (Camera *camera, CameraFile *file) {
+int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
 	return (GP_ERROR);
 }
 
 
-int camera_file_delete (Camera *camera, char *filename) {
+int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 	return (GP_ERROR);
 }

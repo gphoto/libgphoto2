@@ -53,8 +53,6 @@ int camera_init(Camera *camera, CameraInit *init) {
 	camera->functions->exit 	= camera_exit;
 	camera->functions->folder_list  = camera_folder_list;
 	camera->functions->file_list    = camera_file_list;
-	camera->functions->folder_set 	= camera_folder_set;
-	camera->functions->file_count 	= camera_file_count;
 	camera->functions->file_get 	= camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_put 	= NULL;
@@ -102,59 +100,31 @@ int camera_exit(Camera *camera) {
 	return GP_OK;
 }
 
-int camera_file_list (Camera *camera, char *folder_name, CameraList *list) {
 
-	int count, x;
-	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
-
-	if (strcmp(folder_name, "/")!=0)
-		return (GP_ERROR);
-
-	count = camera_file_count(camera);
-
-	/* Populate the filesystem */
-	gp_filesystem_populate(b->fs, "/", "mattel%02i.ppm", count);
-
-	for (x=0; x<gp_filesystem_count(b->fs, folder_name); x++) 
-		gp_list_append(list, gp_filesystem_name(b->fs, folder_name, x), GP_LIST_FILE);
-
-	return GP_OK;
-}
-
-int camera_folder_list (Camera *camera, char *folder_name, CameraList *list) {
+int camera_folder_list (Camera *camera, CameraList *list, char *folder) {
 
 	/* there are never any subfolders */
 
 	return GP_OK;
 }
 
-int camera_folder_set (Camera *camera, char *folder_name) {
+int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 
-	/* This should only be called with "/" as the folder_name */
+	int count, x;
+	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
+
+	count = barbie_file_count(b);
+
+	/* Populate the filesystem */
+	gp_filesystem_populate(b->fs, "/", "mattel%02i.ppm", count);
+
+	for (x=0; x<gp_filesystem_count(b->fs, folder); x++) 
+		gp_list_append(list, gp_filesystem_name(b->fs, folder, x), GP_LIST_FILE);
 
 	return GP_OK;
 }
 
-int camera_file_count (Camera *camera) {
-
-	char cmd[4], resp[4];
-	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
-
-	if (b->debug)
-		printf("barbie: Getting the number of pictures\n");
-
-	memcpy(cmd, packet_1, 4);
-
-	cmd[COMMAND_BYTE] = 'I';
-	cmd[DATA1_BYTE]   = 0;
-
-	if (barbie_exchange(b, cmd, 4, resp, 4) != 1)
-		return (0);
-
-	return (resp[DATA1_BYTE]);
-}
-
-int camera_file_get (Camera *camera, CameraFile *file, char *filename) {
+int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) {
 
 	int size, num;
 	char name[16];
@@ -179,7 +149,7 @@ int camera_file_get (Camera *camera, CameraFile *file, char *filename) {
 	return GP_OK;
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *file, char *filename) {
+int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, char *filename) {
 
 	int size, num;
 	char name[24];
@@ -204,13 +174,13 @@ int camera_file_get_preview (Camera *camera, CameraFile *file, char *filename) {
 	return GP_OK;
 }
 
-int camera_file_put (Camera *camera, CameraFile *file) {
+int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
 	return GP_ERROR;
 }
 
 
-int camera_file_delete (Camera *camera, char *filename) {
+int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 	return GP_ERROR;
 }
@@ -256,7 +226,7 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	char *firm;
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
 
-	num = camera_file_count(camera);
+	num = barbie_file_count(b);
 	firm = barbie_read_firmware(b);
 
 	sprintf(summary->text, 

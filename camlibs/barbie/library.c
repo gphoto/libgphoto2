@@ -111,6 +111,24 @@ int barbie_ping(BarbieStruct *b) {
 	return (1);
 }
 
+int barbie_file_count (BarbieStruct *b) {
+
+        char cmd[4], resp[4];
+
+        if (b->debug)
+                printf("barbie: Getting the number of pictures\n");
+
+        memcpy(cmd, packet_1, 4);
+
+        cmd[COMMAND_BYTE] = 'I';
+        cmd[DATA1_BYTE]   = 0;
+
+        if (barbie_exchange(b, cmd, 4, resp, 4) != 1)
+                return (0);
+
+        return (resp[DATA1_BYTE]);
+}
+
 char *barbie_read_firmware(BarbieStruct *b) {
 
 	char cmd[4];

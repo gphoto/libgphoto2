@@ -58,34 +58,33 @@
 	/* ============================================================================== */
 	int gp_camera_free	  (Camera *camera);
 
-	/* Folder operations */
+	/* Folder/File Listing operations */
 	/* ============================================================================== */
 	/* Retrieve the contents of a folder, returns the count */
-	int gp_camera_folder_list(Camera *camera, char *folder_path, CameraFolderList *list);
+	int gp_camera_folder_list(Camera *camera, CameraList *list, char *folder);
+	int gp_camera_file_list(Camera *camera, CameraList *list, char *folder);
 
-	/* Helper for the libraries */
-	int gp_camera_folder_list_append(CameraFolderList *list, char *name, int is_folder);
+	/* Helper for the libraries to add entries to the list */
+	int gp_list_append(CameraList *list, char *name, CameraListType type);
 
-	/* Helper for the frontends */
-	CameraFolderListEntry *gp_camera_folder_list_entry(CameraFolderList *list, int entrynum);
-
-	/* Set the current folder */
-	int gp_camera_folder_set (Camera *camera, char *folder_path);
+	/* Helpers for the frontends to retrieve entries from the list */
+	int gp_list_count(CameraList *list);
+	CameraListEntry *gp_list_entry(CameraList *list, int entrynum);
 
 	/* File transfer functions */
 	/* ============================================================================== */
-	/* Retrieve the number of files in the current folder */
-	int gp_camera_file_count (Camera *camera);
 
 	/* Download a file or a preview from the camera from the current folder*/
-	int gp_camera_file_get 	       (Camera *camera, CameraFile *file, char *filename);
-	int gp_camera_file_get_preview (Camera *camera, CameraFile *file, char *filename);
+	int gp_camera_file_get 	       (Camera *camera, CameraFile *file, 
+					char *folder, char *filename);
+	int gp_camera_file_get_preview (Camera *camera, CameraFile *file,
+					char *folder, char *filename);
 
 	/* Upload a file to the camera */
-	int gp_camera_file_put (Camera *camera, CameraFile *file);
+	int gp_camera_file_put (Camera *camera, CameraFile *file, char *folder);
 
 	/* Delete a file from the current folder */
-	int gp_camera_file_delete (Camera *camera, char *filename);
+	int gp_camera_file_delete (Camera *camera, char *folder, char *filename);
 
 	/* Captures the current view. Basically, it takes a picture */
 	int gp_camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info);
@@ -147,7 +146,7 @@
 	int gp_file_append (CameraFile *file, char *data, int size);
 	int gp_file_get_last_chunk (CameraFile *file, char **data, int *size);
 	
-	/* Camera Filesystem emulation */
+	/* CameraFilesystem emulation */
 	/* ============================================================================== */
 	/* NOTE: These functions are provided for cameras that do not support filenames.  */
 	/* This sets up an emulation layer to let those cameras work properly with the	  */
@@ -157,22 +156,21 @@
 	CameraFilesystem *gp_filesystem_new();
 	int		  gp_filesystem_free(CameraFilesystem *fs);
 
-	/* Quickly populate the filesystem for a given number of files */
-	int gp_filesystem_populate (CameraFilesystem *fs, char *prefix, int count);
+	/* Populate the filesystem for a given number of files */
+	int gp_filesystem_populate (CameraFilesystem *fs, char *folder, char *format, int count);
 
 	/* Delete a file from the filesystem */
-	int gp_filesystem_file_delete (CameraFilesystem *fs, char *filename);
+	int gp_filesystem_delete (CameraFilesystem *fs, char *folder, char *filename);
 
 	/* Retrieve the number of files in the filesystem */
-	int gp_filesystem_count (CameraFilesystem *fs);
+	int gp_filesystem_count (CameraFilesystem *fs, char *folder);
 
 	/* Format (clear out) the filesystem */
 	int gp_filesystem_format (CameraFilesystem *fs);
 
 	/* Return the name/number of a file */
-	char *gp_filesystem_name   (CameraFilesystem *fs, int filenumber);
-	int   gp_filesystem_number (CameraFilesystem *fs, char *filename);
-
+	char *gp_filesystem_name   (CameraFilesystem *fs, char *folder, int filenumber);
+	int   gp_filesystem_number (CameraFilesystem *fs, char *folder, char *filename);
 
 	/* Widget functions */
 	/* ============================================================================== */
