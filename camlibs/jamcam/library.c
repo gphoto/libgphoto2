@@ -1,5 +1,5 @@
 /****************************************************************/
-/* library.c  - Gphoto2 library for the KBGear JamCam v3.0      */
+/* library.c  - Gphoto2 library for the KBGear JamCam v2 and v3 */
 /*                                                              */
 /* Copyright (C) 2001 Chris Pinkham                             */
 /*                                                              */
@@ -34,6 +34,7 @@
 
 struct jamcam_file jamcam_files[1024];
 static int jamcam_count = 0;
+static int jamcam_mmc_card_size = 0;
 
 static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
 	char reply[4];
@@ -55,6 +56,132 @@ static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
 		reply, 4 );
 
 	return( GP_OK );
+}
+
+
+/* get the number of images on the mmc card */
+static int jamcam_mmc_card_file_count (Camera *camera) {
+	char buf[16];
+	unsigned char reply[512];
+	unsigned int position = 0x40000000;
+	int data_incr;
+	int width;
+	int height;
+
+	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_mmc_card_file_count");
+
+	memset( buf, 0, sizeof( buf ));
+
+	switch( camera->port->type ) {
+		default:
+		case GP_PORT_SERIAL:
+			strcpy( buf, "KB00" );
+			buf[4] = ( position       ) & 0xff;
+			buf[5] = ( position >>  8 ) & 0xff;
+			buf[6] = ( position >> 16 ) & 0xff;
+			buf[7] = ( position >> 24 ) & 0xff;
+			jamcam_write_packet( camera, buf, 8 );
+
+			jamcam_read_packet( camera, reply, 16 );
+
+			while( strncmp( reply, "KB", 2 ) == 0 ) {
+				width  = (reply[5] * 256) + reply[4];
+				height = (reply[7] * 256) + reply[6];
+
+				data_incr = 0;
+				data_incr += reply[8];
+				data_incr += reply[9] * 256;
+				data_incr += reply[10] * 256 * 256;
+				data_incr += reply[11] * 256 * 256 * 256;
+
+				jamcam_files[jamcam_count].position = position;
+				jamcam_files[jamcam_count].width = width;
+				jamcam_files[jamcam_count].height = height;
+				jamcam_files[jamcam_count].data_incr = data_incr;
+
+				jamcam_count++;
+
+				position += data_incr;
+
+				buf[4] = ( position       ) & 0xff;
+				buf[5] = ( position >>  8 ) & 0xff;
+				buf[6] = ( position >> 16 ) & 0xff;
+				buf[7] = ( position >> 24 ) & 0xff;
+				jamcam_write_packet( camera, buf, 8 );
+			
+				jamcam_read_packet( camera, reply, 16 );
+			}
+			break;
+
+		case GP_PORT_USB:
+			gp_port_usb_msg_write( camera->port,
+				0xa5,
+				0x0005,
+				0x0000,
+				NULL, 0 );
+
+			jamcam_set_usb_mem_pointer( camera, position );
+
+			CHECK( gp_port_read (camera->port, reply, 0x10 ));
+
+			width  = (reply[13] * 256) + reply[12];
+			height = (reply[15] * 256) + reply[14];
+
+			jamcam_set_usb_mem_pointer( camera, position + 8 );
+
+			CHECK( gp_port_read (camera->port, reply, 0x200 ));
+
+			gp_port_usb_msg_write( camera->port,
+				0xa5,
+				0x0006,
+				0x0000,
+				NULL, 0 );
+
+			while(((unsigned char)reply[0] != 0xff ) &&
+			      ((unsigned char)reply[0] != 0xaa )) {
+				data_incr = 0;
+				data_incr += reply[0];
+				data_incr += reply[1] * 256;
+				data_incr += reply[2] * 256 * 256;
+				data_incr += reply[3] * 256 * 256 * 256;
+
+				jamcam_files[jamcam_count].position = position;
+				jamcam_files[jamcam_count].width = width;
+				jamcam_files[jamcam_count].height = height;
+				jamcam_files[jamcam_count].data_incr = data_incr;
+				jamcam_count++;
+
+				position += data_incr;
+
+				gp_port_usb_msg_write( camera->port,
+					0xa5,
+					0x0005,
+					0x0000,
+					NULL, 0 );
+
+				jamcam_set_usb_mem_pointer( camera, position );
+
+				CHECK( gp_port_read (camera->port, reply, 0x10 ));
+
+				width  = (reply[13] * 256) + reply[12];
+				height = (reply[15] * 256) + reply[14];
+
+				jamcam_set_usb_mem_pointer( camera, position + 8 );
+
+				CHECK( gp_port_read (camera->port, reply, 0x200 ));
+
+				gp_port_usb_msg_write( camera->port,
+					0xa5,
+					0x0006,
+					0x0000,
+					NULL, 0 );
+			}
+			break;
+	}
+
+	gp_debug_printf (GP_DEBUG_LOW, "jamcam",
+		"*** returning with jamcam_count = %d", jamcam_count);
+	return( 0 );
 }
 
 int jamcam_file_count (Camera *camera) {
@@ -115,14 +242,14 @@ int jamcam_file_count (Camera *camera) {
 		case GP_PORT_USB:
 			jamcam_set_usb_mem_pointer( camera, position );
 
-			gp_port_read (camera->port, reply, 0x10 );
+			CHECK( gp_port_read (camera->port, reply, 0x10 ));
 
 			width  = (reply[13] * 256) + reply[12];
 			height = (reply[15] * 256) + reply[14];
 
 			jamcam_set_usb_mem_pointer( camera, position + 8 );
 
-			gp_port_read (camera->port, reply, 0x10 );
+			CHECK( gp_port_read (camera->port, reply, 0x10 ));
 
 			while((unsigned char)reply[0] != 0xff ) {
 				data_incr = 0;
@@ -141,16 +268,20 @@ int jamcam_file_count (Camera *camera) {
 
 				jamcam_set_usb_mem_pointer( camera, position );
 
-				gp_port_read (camera->port, reply, 0x10 );
+				CHECK( gp_port_read (camera->port, reply, 0x10 ));
 
 				width  = (reply[13] * 256) + reply[12];
 				height = (reply[15] * 256) + reply[14];
 
 				jamcam_set_usb_mem_pointer( camera, position + 8 );
 
-				gp_port_read (camera->port, reply, 0x10 );
+				CHECK( gp_port_read (camera->port, reply, 0x10 ));
 			}
 			break;
+	}
+
+	if ( jamcam_mmc_card_size ) {
+		jamcam_count += jamcam_mmc_card_file_count( camera );
 	}
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam",
@@ -208,7 +339,7 @@ int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
 			case GP_PORT_USB:
 				bytes_to_read = bytes_left > USB_PKT_SIZE ? USB_PKT_SIZE : bytes_left;
 				jamcam_set_usb_mem_pointer( camera, start + bytes_read );
-				gp_port_read (camera->port, data + bytes_read, bytes_to_read );
+				CHECK( gp_port_read (camera->port, data + bytes_read, bytes_to_read ));
 				break;
 		}
 				
@@ -238,7 +369,7 @@ int jamcam_request_image( Camera *camera, char *buf, int *len, int number ) {
 
 	if ( camera->port->type == GP_PORT_USB ) {
 		jamcam_set_usb_mem_pointer( camera, position );
-		gp_port_read (camera->port, buf, 120 );
+		CHECK( gp_port_read (camera->port, buf, 120 ));
 
 		position += 8;
 	}
@@ -348,6 +479,8 @@ int jamcam_enq (Camera *camera)
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_enq");
 
+	memset( buf, 0, 16 );
+
 	switch( camera->port->type ) {
 		default:
 		case GP_PORT_SERIAL:
@@ -368,6 +501,10 @@ int jamcam_enq (Camera *camera)
 					return (ret);
 
 				if ( !strncmp( (char *)buf, "KIDB", 4 ))
+					/* OK, so query mmc card size, and return result of that */
+					/* disabled for now until can autodetect camera version 
+					return( jamcam_query_mmc_card( camera ));
+					*/
 					return (GP_OK);
 				else
 					return (GP_ERROR_CORRUPTED_DATA);
@@ -383,9 +520,28 @@ int jamcam_enq (Camera *camera)
 				NULL, 0 );
 			jamcam_set_usb_mem_pointer( camera, 0x0000 );
 
-			gp_port_read( camera->port, (char *)buf, 0x0c );
+			CHECK( gp_port_read( camera->port, (char *)buf, 0x0c ));
 
 			if ( !strncmp( (char *)buf, "KB00", 4 )) {
+				/* found a JamCam v3 camera */
+				/* reply contains 4-bytes showing length of MMC card if any */
+				/* set to 0 if none */
+				jamcam_mmc_card_size = 0;
+				jamcam_mmc_card_size += buf[8];
+				jamcam_mmc_card_size += buf[9] * 256;
+				jamcam_mmc_card_size += buf[10] * 256 * 256;
+				jamcam_mmc_card_size += buf[11] * 256 * 256 * 256;
+
+				if ( jamcam_mmc_card_size ) {
+					gp_debug_printf (GP_DEBUG_LOW, "jamcam",
+						"* jamcam_enq, MMC card size = %d",
+						jamcam_mmc_card_size );
+				}
+
+				return (GP_OK);
+			} else if ( !strncmp( (char *)buf + 8, "KB00", 4 )) {
+				/* found a JamCam v2 camera */
+				/* JamCam v2 doesn't support MMC card so no need to check */
 				return (GP_OK);
 			} else if (( buf[0] == 0xf0 ) &&
 					 ( buf[1] == 0xfd ) &&
@@ -401,14 +557,16 @@ int jamcam_enq (Camera *camera)
 	return (GP_ERROR_IO_TIMEOUT);
 }
 
-int jamcam_who_knows (Camera *camera)
+int jamcam_query_mmc_card (Camera *camera)
 {
 	int ret, r = 0;
 	char buf[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_who_knows");
+	/* FIXME! JamCam v2 doesn't support MMC card so no need to check */
 
-	/* usb port doesn't need this packet */
+	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_query_mmc_card");
+
+	/* usb port doesn't need this packet, this info found in enquiry reply */
 	if ( camera->port->type == GP_PORT_USB ) {
 		return( GP_OK );
 	}
@@ -429,179 +587,21 @@ int jamcam_who_knows (Camera *camera)
 		if (ret != GP_OK)
 			return (ret);
 
+		/* reply is 4-byte int showing length of MMC card if any, 0 if none */
+		jamcam_mmc_card_size = 0;
+		jamcam_mmc_card_size += buf[0];
+		jamcam_mmc_card_size += buf[1] * 256;
+		jamcam_mmc_card_size += buf[2] * 256 * 256;
+		jamcam_mmc_card_size += buf[3] * 256 * 256 * 256;
+
+		if ( jamcam_mmc_card_size ) {
+			gp_debug_printf (GP_DEBUG_LOW, "jamcam",
+				"* jamcam_query_mmc_card, MMC card size = %d",
+				jamcam_mmc_card_size );
+		}
+
 		return (GP_OK);
 	}
 	return (GP_ERROR_IO_TIMEOUT);
 }
 
-
-#if 0
-
-/***********************************************************************/
-/* gamma table correction and bayer routines, hopefully will go into a */
-/* common Gphoto2 area at some point.                                  */
-/***********************************************************************/
-
-
-int gp_create_gamma_table( unsigned char *table, double g ) {
-	int x;
-
-	for( x = 0; x < 256 ; x++ ) {
-		table[x] = ( 255 * pow((double)x/255, g ));
-	}
-
-	return( GP_OK );
-}
-
-int gp_gamma_correct_triple( unsigned char *data, int pixels,
-	unsigned char *red, unsigned char *green, unsigned char *blue ) {
-	int x;
-
-	for( x = 0; x < ( pixels * 3 ); x += 3 ) {
-		data[x+0] = red[data[x+0]];
-		data[x+1] = green[data[x+1]];
-		data[x+2] = blue[data[x+2]];
-	}
-
-	return( GP_OK );
-}
-
-
-int gp_gamma_correct_single( unsigned char *data, int pixels,
-	unsigned char *gtable ) {
-
-	return( gp_gamma_correct_triple( data, pixels, gtable, gtable, gtable ));
-}
-
-static int tile_colors[4][4] =
-	{{ 0, 1, 1, 2},   {1, 0, 2, 1},   {2, 1, 1, 0},   {1, 2, 0, 1}};
-
-#define RED 0
-#define GREEN 1
-#define BLUE 2
-
-static int gp_bayer_expand(int w, int h, unsigned char *raw,
-	unsigned char *output, int tile)
-{
-	int x, y, i;
-	int colour, bayer;
-	char *ptr = raw;
-
-	for(y = 0; y < h; ++y) {
-		for(x = 0; x < w; ++x) {
-			bayer = (x&1?0:1) + (y&1?0:2);
-
-			colour = tile_colors[tile][bayer];
-
-			i = (y * w + x) * 3;
-
-			output[i+RED]    = 0;
-			output[i+GREEN]  = 0;
-			output[i+BLUE]   = 0;
-			output[i+colour] = *(ptr++);
-		}
-	}
-
-	return( GP_OK );
-}
-
-
-#define AD(x, y, w) ((y)*(w)*3+3*(x))
-
-
-static int gp_bayer_interpolate(int w, int h, unsigned char *image, int tile)
-{
-	int x, y, bayer;
-	int p0, p1, p2, p3;
-	int div, value;
-
-	switch( tile ) {
-		default:
-		case BAYER_TILE_RGGB: p0 = 0; p1 = 1; p2 = 2; p3 = 3; break;
-		case BAYER_TILE_GRBG: p0 = 1; p1 = 0; p2 = 3; p3 = 2; break;
-		case BAYER_TILE_BGGR: p0 = 3; p1 = 2; p2 = 1; p3 = 0; break;
-		case BAYER_TILE_GBRG: p0 = 2; p1 = 3; p2 = 0; p3 = 1; break;
-	}
-
-	for(y = 0; y < h; y++) {
-		for(x = 0; x < w; x++) {
-			// work out pixel type
-			bayer = (x&1?0:1) + (y&1?0:2);
-
-			if ( bayer == p0 ) {
-				/* red. green lrtb, blue diagonals */
-				div = value = 0;
-				if ( y )          { value += image[AD(x,y-1,w)+GREEN]; div++; }
-				if ( y < (h - 1)) { value += image[AD(x,y+1,w)+GREEN]; div++; }
-				if ( x )          { value += image[AD(x-1,y,w)+GREEN]; div++; }
-				if ( x < (w - 1)) { value += image[AD(x+1,y,w)+GREEN]; div++; }
-				image[AD(x,y,w)+GREEN] = value / div;
-
-				div = value = 0;
-				if (( y < (h - 1)) && ( x < (w - 1)))
-					{ value += image[AD(x+1,y+1,w)+BLUE]; div++; }
-				if (( y ) && ( x ))
-					{ value += image[AD(x-1,y-1,w)+BLUE]; div++; }
-				if (( y < (h - 1)) && ( x ))
-					{ value += image[AD(x-1,y+1,w)+BLUE]; div++; }
-				if (( y ) && (x < (w - 1)))
-					{ value += image[AD(x+1,y-1,w)+BLUE]; div++; }
-				image[AD(x,y,w)+BLUE] = value / div;
-			} else if ( bayer == p1 ) {
-				/* green. red lr, blue tb */
-				div = value = 0;
-				if ( x < (w - 1)) { value += image[AD(x+1,y,w)+RED]; div++; }
-				if ( x )          { value += image[AD(x-1,y,w)+RED]; div++; }
-				image[AD(x,y,w)+RED] = value / div;
-
-				div = value = 0;
-				if ( y < (h - 1)) { value += image[AD(x,y+1,w)+BLUE]; div++; }
-				if ( y )          { value += image[AD(x,y-1,w)+BLUE]; div++; }
-				image[AD(x,y,w)+BLUE] = value / div;
-			} else if ( bayer == p2 ) {
-				/* green. blue lr, red tb */
-				div = value = 0;
-				if ( x < (w - 1)) { value += image[AD(x+1,y,w)+BLUE]; div++; }
-				if ( x )          { value += image[AD(x-1,y,w)+BLUE]; div++; }
-				image[AD(x,y,w)+BLUE] = value / div;
-
-				div = value = 0;
-				if ( y < (h - 1)) { value += image[AD(x,y+1,w)+RED]; div++; }
-				if ( y )          { value += image[AD(x,y-1,w)+RED]; div++; }
-				image[AD(x,y,w)+RED] = value / div;
-			} else {
-				/* blue. green lrtb, red diagonals */
-				div = value = 0;
-				if ( y )          { value += image[AD(x,y-1,w)+GREEN]; div++; }
-				if ( y < (h - 1)) { value += image[AD(x,y+1,w)+GREEN]; div++; }
-				if ( x )          { value += image[AD(x-1,y,w)+GREEN]; div++; }
-				if ( x < (w - 1)) { value += image[AD(x+1,y,w)+GREEN]; div++; }
-				image[AD(x,y,w)+GREEN] = value / div;
-
-				div = value = 0;
-				if (( y < (h - 1)) && ( x < (w - 1)))
-					{ value += image[AD(x+1,y+1,w)+RED]; div++; }
-				if (( y ) && ( x ))
-					{ value += image[AD(x-1,y-1,w)+RED]; div++; }
-				if (( y < (h - 1)) && ( x ))
-					{ value += image[AD(x-1,y+1,w)+RED]; div++; }
-				if (( y ) && (x < (w - 1)))
-					{ value += image[AD(x+1,y-1,w)+RED]; div++; }
-				image[AD(x,y,w)+RED] = value / div;
-			}
-		}
-	}
-
-	return( GP_OK );
-}
-
-int gp_bayer_decode(int w, int h, unsigned char *input, unsigned char *output,
-	int tile) {
-
-	gp_bayer_expand( w, h, input, output, tile );
-	gp_bayer_interpolate( w, h, output, tile );
-
-	return( GP_OK );
-}
-
-#endif

@@ -1,5 +1,5 @@
 /****************************************************************/
-/* library.h  - Gphoto2 library for the KBGear JamCam v3.0      */
+/* library.h  - Gphoto2 library for the KBGear JamCam v2 and v3 */
 /*                                                              */
 /* Copyright (C) 2001 Chris Pinkham                             */
 /*                                                              */
@@ -44,7 +44,7 @@ struct jamcam_file {
 };
 
 int jamcam_enq(Camera *camera);
-int jamcam_who_knows(Camera *camera);
+int jamcam_query_mmc_card(Camera *camera);
 int jamcam_write_packet(Camera *camera, char *packet, int length);
 int jamcam_read_packet(Camera *camera, char *packet, int length);
 int jamcam_file_count(Camera *camera);
@@ -52,27 +52,5 @@ struct jamcam_file *jamcam_file_info(Camera *camera, int number);
 int jamcam_fetch_memory(Camera *camera, char *data, int start, int length );
 int jamcam_request_image(Camera *camera, char *buf, int *len, int number);
 int jamcam_request_thumbnail(Camera *camera, char *buf, int *len, int number );
-
-#if 0
-/***********************************************************************/
-/* gamma table correction and bayer routines, hopefully will go into a */
-/* common Gphoto2 area at some point.                                  */
-/***********************************************************************/
-
-int gp_create_gamma_table( unsigned char *table, double g );
-int gp_gamma_correct_triple( unsigned char *data, int pixels,
-		unsigned char *red, unsigned char *green, unsigned char *blue );
-int gp_gamma_correct_single( unsigned char *data, int pixels,
-		unsigned char *gtable );
-
-#define BAYER_TILE_RGGB 0
-#define BAYER_TILE_GRBG 1
-#define BAYER_TILE_BGGR 2
-#define BAYER_TILE_GBRG 3
-
-int gp_bayer_decode(int w, int h, unsigned char *input, unsigned char *output,
-	int tile);
-
-#endif
 
 #endif /* __LIBRARY_H__ */

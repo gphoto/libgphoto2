@@ -1,5 +1,5 @@
 /****************************************************************/
-/* jamcam.c - Gphoto2 library for the KBGear JamCam v3.0        */
+/* jamcam.c - Gphoto2 library for the KBGear JamCam v2 and v3   */
 /*                                                              */
 /* Copyright (C) 2001 Chris Pinkham                             */
 /*                                                              */
@@ -51,8 +51,8 @@
 
 #define TIMEOUT	      2000
 
-#define JAMCAM_VERSION "0.3"
-#define JAMCAM_LAST_MOD "09/23/2001 20:53 EST"
+#define JAMCAM_VERSION "0.4"
+#define JAMCAM_LAST_MOD "11/05/2001 15:18 EST"
 
 /* define what cameras we support */
 static struct {
@@ -60,7 +60,7 @@ static struct {
 	int usb_vendor;
 	int usb_product;
 } models[] = {
-	{ "KBGear JamCam v3.0", 0x084E, 0x0001 },
+	{ "KBGear JamCam", 0x084E, 0x0001 },
 	{ NULL, 0, 0 }
 };
 
@@ -295,6 +295,10 @@ int camera_init (Camera *camera)
 	GPPortSettings settings;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_init");
+	gp_debug_printf (GP_DEBUG_LOW, "jamcam",
+		"   * jamcam library for Gphoto2 by Chris Pinkham <cpinkham@infi.net>");
+	gp_debug_printf (GP_DEBUG_LOW, "jamcam",
+		"   * jamcam library v%s, %s", JAMCAM_VERSION, JAMCAM_LAST_MOD );
 
 	/* First, set up all the function pointers */
 	camera->functions->exit 	= camera_exit;
@@ -328,9 +332,6 @@ int camera_init (Camera *camera)
 
 	/* check to see if camera is really there */
 	CHECK (jamcam_enq (camera));
-
-	/* dunno what this send/reply sequence is for, but do it anyway */
-	jamcam_who_knows(camera);
 
 	/* get number of images */
 	CHECK (count = jamcam_file_count (camera));

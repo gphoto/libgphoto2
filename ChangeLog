@@ -1,3 +1,12 @@
+2001-11-05  Chris Pinkham <cpinkham@infi.net>
+
+	* camlibs/jamcam/jamcam.c
+	  camlibs/jamcam/library.c: added initial support for MMC card on
+	  Jamcam v3 cameras.  added more error checking.  changed camera
+	  model string to "KBGear JamCam" instead of
+	  "KBGear JamCam v3.0" since driver supports both v2 and v3
+	  cameras now.
+
 2001-11-05  Marcus Meissner <marcus@jet.franken.de>
 
 	* camlibs/jd11: Implemented progress reporting.
