@@ -30,6 +30,12 @@
 #include <readline/readline.h>
 #endif
 
+#ifndef DISABLE_DEBUGGING
+/* we need these for timestamps of debugging messages */
+#include <time.h>
+#include <sys/time.h>
+#endif
+
 #ifndef WIN32
 #include <signal.h>
 #endif
@@ -639,11 +645,19 @@ OPTION_CALLBACK(usbid)
 }
 
 #ifndef DISABLE_DEBUGGING
+/* time zero for debug log time stamps */
+struct timeval glob_tv_zero = { 0, 0 };
+
 static void
 debug_func (GPLogLevel level, const char *domain, const char *format,
 	    va_list args, void *data)
 {
-	fprintf (stderr, "%s(%i): ", domain, level);
+	struct timeval tv;
+	gettimeofday (&tv,NULL);
+	fprintf (stderr, "%li.%06li %s(%i): ", 
+		 tv.tv_sec - glob_tv_zero.tv_sec, 
+		 (1000000 + tv.tv_usec - glob_tv_zero.tv_usec) % 1000000,
+		 domain, level);
 	vfprintf (stderr, format, args);
 	fprintf (stderr, "\n");
 }
@@ -1564,7 +1578,13 @@ init_globals (void)
 			ctx_progress_start_func, ctx_progress_update_func,
 			ctx_progress_stop_func, NULL);
 
-        return GP_OK;
+#ifndef DISABLE_DEBUGGING
+	/* now is time zero for debug log time stamps */
+	gettimeofday (&glob_tv_zero, NULL);
+	/* here we could output the current time if we wanted to */
+#endif
+
+	return GP_OK;
 }
 
 /* Misc functions                                                       */
