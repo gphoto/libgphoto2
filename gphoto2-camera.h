@@ -175,20 +175,21 @@ int gp_camera_file_delete     	(Camera *camera, const char *folder,
 /* Informing frontends */
 typedef void (* CameraMessageFunc)  (Camera *, const char *msg, void *data);
 typedef void (* CameraStatusFunc)   (Camera *, const char *status, void *data);
-typedef void (* CameraProgressFunc) (Camera *, float percentage, void *data);
 int gp_camera_set_status_func   (Camera *camera, CameraStatusFunc func,
-				 void *data);
-int gp_camera_set_progress_func (Camera *camera, CameraProgressFunc func,
 				 void *data);
 int gp_camera_set_message_func  (Camera *camera, CameraMessageFunc func,
 				 void *data);
 
 int gp_camera_message           (Camera *camera, const char *format, ...);
 int gp_camera_status            (Camera *camera, const char *format, ...);
-int gp_camera_progress          (Camera *camera, float percentage);
 
 /* Error reporting */
 int         gp_camera_set_error (Camera *camera, const char *format, ...);
 const char *gp_camera_get_error (Camera *camera);
+
+/* DEPRECATED */
+typedef void (* CameraProgressFunc) (Camera *, float, void *);
+int gp_camera_set_progress_func     (Camera *, CameraProgressFunc, void *);
+int gp_camera_progress              (Camera *, float);
 
 #endif /* __GPHOTO2_CAMERA_H__ */
