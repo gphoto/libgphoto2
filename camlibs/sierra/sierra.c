@@ -24,7 +24,7 @@ int camera_id (CameraText *id) {
 }
 
 SierraCamera sierra_cameras[] = {
-	/* Camera Model       vendor id, product id, in endpoint, out endpoint */ 
+	/* Camera Model,    USB(vendor id, product id, in endpoint, out endpoint) */ 
 	{"Agfa ePhoto 307", 	0, 0, 0, 0 },
 	{"Agfa ePhoto 780", 	0, 0, 0, 0 },
 	{"Agfa ePhoto 780C", 	0, 0, 0, 0 },
@@ -46,6 +46,7 @@ SierraCamera sierra_cameras[] = {
 	{"Nikon CoolPix 910", 	0, 0, 0, 0 },
 	{"Nikon CoolPix 950", 	0, 0, 0, 0 },
 	{"Nikon CoolPix 950S", 	0, 0, 0, 0 },
+	{"Nikon CoolPix 990",	0x04b0, 0x0102, 0x83, 0x04},
 	{"Olympus D-100Z", 	0, 0, 0, 0 },
 	{"Olympus D-200L", 	0, 0, 0, 0 },
 	{"Olympus D-220L", 	0, 0, 0, 0 },

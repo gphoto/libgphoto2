@@ -194,7 +194,7 @@ read_packet_again:
 		switch (fd->type) {
 #ifdef GPIO_USB
 		   case GP_PORT_USB:
-			blocksize = 256;
+			blocksize = 2054;
 			break;
 #endif
 		   case GP_PORT_SERIAL:
@@ -510,7 +510,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value) {
 		if (buf[0] == DC1)
 			return (GP_ERROR);
 		if (buf[0] == TYPE_DATA_END) {
-//			sierra_write_ack(camera);
+			sierra_write_ack(camera);
 			r =((unsigned char)buf[4]) +
 			   ((unsigned char)buf[5] * 256) +
 			   ((unsigned char)buf[6] * 65536) +
