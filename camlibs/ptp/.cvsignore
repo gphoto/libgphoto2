@@ -1,4 +1,5 @@
 Makefile.in
+Makefile
 .libs
 .deps
 *.so
