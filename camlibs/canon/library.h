@@ -48,10 +48,10 @@ void clear_readiness(Camera *camera);
 
 #define GP_MODULE "canon"
 
-#endif /* _CANON_H */
+#endif /* _LIBRARY_H */
 
 /****************************************************************************
  *
- * End of file: canon.h
+ * End of file: library.h
  *
  ****************************************************************************/
