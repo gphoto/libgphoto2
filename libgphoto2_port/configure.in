@@ -74,13 +74,21 @@ IOLIB_CFLAGS="-DGP_PORT_SUPPORTED_SERIAL"
 
 dnl -----------------------------------------
 dnl Serial port locking: We try to use either
-dnl  (1) ttylock.h
-dnl  (2) lockdev.h
+dnl  (1) baudboy.h
+dnl  (2) ttylock.h
+dnl  (3) lockdev.h
 dnl -----------------------------------------
+baudboy_msg=no
 ttylock_msg=no
 lockdev_msg=no
+try_baudboy_msg=true
 try_ttylock=true
 try_lockdev=true
+AC_ARG_WITH(baudboy, [  --without-baudboy       Use baudboy library],
+	if test x$withval = xno; then
+		try_baudboy=false
+	fi
+)
 AC_ARG_WITH(ttylock, [  --without-ttylock       Use ttylock library],
 	if test x$withval = xno; then
 		try_ttylock=false
@@ -91,6 +99,14 @@ AC_ARG_WITH(lockdev, [  --without-lockdev       Use lockdev library],
 		try_lockdev=false
 	fi
 )
+if $try_baudboy; then
+	AC_CHECK_HEADER(baudboy.h,
+		baudboy_msg=yes
+		try_ttylock=false
+		try_lockdev=false
+		AC_DEFINE(HAVE_BAUDBOY)
+	)
+fi
 if $try_ttylock; then
 	AC_CHECK_HEADER(ttylock.h,
 		AC_MSG_CHECKING(if ttylock needs lockdev)
@@ -200,6 +216,7 @@ Configuration
 	Source code location: ${srcdir}
 	Compiler:             ${CC}
 
+	Use baudboy:          $baudboy_msg
 	Use ttylock:          $ttylock_msg
 	Use lockdev:          $lockdev_msg
 "

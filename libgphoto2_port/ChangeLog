@@ -1,5 +1,11 @@
 2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* acconfig.h:
+	* configure.in:
+	* serial/unix.c: Use baudboy.h if available (Red Hat)
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Thanks to Bill Richardson <bill@riverstonenet.com>:
 
 	* test/Makefile.am: Oops, don't use -lgphoto_port

@@ -14,5 +14,6 @@
 #undef HAVE_RTS_IOCTL
 
 /* Serial port locking */
+#undef HAVE_BAUDBOY
 #undef HAVE_TTYLOCK
 #undef HAVE_LOCKDEV

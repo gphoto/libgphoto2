@@ -50,7 +50,9 @@
 #include <sgtty.h>
 #endif
 
-#if HAVE_TTYLOCK
+#if HAVE_BAUDBOY
+#  include <baudboy.h>
+#elif HAVE_TTYLOCK
 #  include <ttylock.h>
 #elif HAVE_LOCKDEV
 #  include <lockdev.h>
@@ -138,7 +140,7 @@ gp_port_operations *gp_port_library_operations () {
 static int
 gp_port_serial_lock (gp_port *dev)
 {
-#if HAVE_TTYLOCK
+#if HAVE_TTYLOCK || HAVE_BAUDBOY
 	const char *port;
 
 	port = strchr (dev->settings.serial.port, ':');
@@ -295,7 +297,7 @@ gp_port_serial_lock (gp_port *dev)
 static int
 gp_port_serial_unlock (gp_port *dev)
 {
-#if HAVE_TTYLOCK
+#if HAVE_TTYLOCK || HAVE_BAUDBOY
 	const char *port;
 
 	port = strchr (dev->settings.serial.port, ':');
