@@ -1,3 +1,6 @@
+libgphoto2_port.spec
+gphoto2-port-config
+gphoto2portConf.sh
 config.guess
 config.sub
 ltconfig
