@@ -1,3 +1,7 @@
+2002-05-20  Christophe Barbe <christophe.barbe@ufies.org>
+	
+	* camlibs/canon/canon.c: mtime is now converted to UTC as expected.
+
 2002-05-20  Tim Waugh  <twaugh@redhat.com>
 
 	* doc/gphoto2.xml: Add note in gphoto2(1) about how ranges are

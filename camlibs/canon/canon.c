@@ -1169,11 +1169,32 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 		uint8_t *dirent_name;	/* name of dirent */
 		size_t dirent_name_len;	/* length of dirent_name */
 		size_t dirent_ent_size;	/* size of dirent in octets */
+		uint32_t tmp_time;
+		time_t date;
+		struct tm *tm;
 
 		dirent_attrs = le16atoh (pos + CANON_DIRENT_ATTRS);
 		dirent_file_size = le32atoh (pos + CANON_DIRENT_SIZE);
-		dirent_time = le32atoh (pos + CANON_DIRENT_TIME);
 		dirent_name = pos + CANON_DIRENT_NAME;
+
+		/* see canon_int_set_time() for timezone handling */
+		tmp_time = le32atoh (pos + CANON_DIRENT_TIME);
+		if (tmp_time != 0) {
+			/* FIXME: I just want the tm_gmtoff/timezone info */
+			date = time(NULL);
+			tm   = localtime (&date);
+#ifdef HAVE_TM_GMTOFF
+			dirent_time = tmp_time - tm->tm_gmtoff;
+			GP_DEBUG ("canon_int_list_dir: converted %i to UTC %i (tm_gmtoff is %i)",
+				tmp_time, dirent_time, tm->tm_gmtoff);
+#else
+			dirent_time = tmp_time + timezone;
+			GP_DEBUG ("canon_int_list_dir: converted %i to UTC %i (timezone is %i)",
+				tmp_time, dirent_time, timezone);
+#endif
+		} else {
+			dirent_time = tmp_time;
+		}
 
 		is_dir = ((dirent_attrs & CANON_ATTR_NON_RECURS_ENT_DIR) != 0)
 			|| ((dirent_attrs & CANON_ATTR_RECURS_ENT_DIR) != 0);
