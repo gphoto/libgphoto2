@@ -1,0 +1,27 @@
+BASEPATH=..\..
+
+all: start \
+  dll \
+  lib \
+  end
+
+!include $(BASEPATH)\OS2MAK.INC
+
+dll: $(IOLIBS)\giusb.dll
+
+OBJS=usb-os2.o
+
+.c.o:
+   $(CC) -o $@ $< $(CCFLAGS)
+
+lib: $(BASEPATH)\lib\giusb.a
+
+$(BASEPATH)\lib\giusb.a:
+   @implib giusb.lib $(IOLIBS)\giusb.dll
+   @emximp -o $(BASEPATH)\lib\gisusb.a giusb.lib
+
+usb.def: usb-os2.o
+   @$(MAKEDEF)
+
+$(IOLIBS)\giusb.dll: $(OBJS) usb.def
+   @$(LINK) $(DLLLINKFLAGS) -o $@ $** -ldllib

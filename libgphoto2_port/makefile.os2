@@ -4,12 +4,18 @@ all: start \
   dll \
   lib \
   serial\
+  usb \
   end
 
 !include $(BASEPATH)\OS2MAK.INC
 
 serial:
   @cd serial
+  @nmake /nologo -f makefile.os2
+  @cd..
+
+usb:
+  @cd usb
   @nmake /nologo -f makefile.os2
   @cd..
 
