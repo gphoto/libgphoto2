@@ -50,6 +50,9 @@ camlibs/polaroid/pdc320.c:
 camlibs/polaroid/pdc640.c:
 	Chris Byrne <adapt.ihug.co.nz>
 
+camlibs/ptp:
+	Mariusz Woloszyn <emsi@ipartners.pl>
+
 camlibs/sierra:
 	Scott Fritzinger <scottf@unr.edu>
 
@@ -58,9 +61,6 @@ camlibs/sonydscf55:
 
 camlibs/stv0680:
 	Carsten Weinholz <cweinholz@users.sourceforge.net>
-
-camlibs/ptp/:
-	Mariusz Woloszyn <emsi@ipartners.pl>
 
 Bug reports on sourceforge:
 	Hubert Figuiere <hfiguiere@teaser.fr>

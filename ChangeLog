@@ -1,3 +1,7 @@
+2001-11-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* MAINTAINERS: Move camlibs/ptp up to regain alphabetical order.
+
 2001-11-15  Mariusz Woloszyn <emsi@ipartners.pl>
 
 	* camlibs/ptp/: Started PTP support library developement
