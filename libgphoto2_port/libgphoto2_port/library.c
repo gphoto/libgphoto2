@@ -74,48 +74,49 @@ int gp_port_library_list_load(const char *filename, int loaded[], gp_port_info *
         return (GP_OK);
 }
 
-int gp_port_library_list (gp_port_info *list, int *count) {
-
+int
+gp_port_library_list (gp_port_info *list, int *count)
+{
         GP_SYSTEM_DIR d;
         GP_SYSTEM_DIRENT de;
-        int loaded[256];
-        int x;
+        int loaded[256], x;
         char buf[1024];
 
-        *count = 0;
+	*count = 0;
 
+	for (x = 0;x < 256; x++)
+		loaded[x] = 0;
 
-        for (x=0;x<256; x++)
-                loaded[x]=0;
-
-        /* Look for available camera libraries */
-        d = GP_SYSTEM_OPENDIR(IOLIBS);
-        if (!d) {
-                gp_port_debug_printf(GP_DEBUG_LOW,
-                        "couldn't open %s ", IOLIBS);
+	/* Look for available camera libraries */
+	d = GP_SYSTEM_OPENDIR(IOLIBS);
+	if (!d) {
+		gp_port_debug_printf (GP_DEBUG_LOW, "Could not open '%s'",
+				      IOLIBS);
                 return GP_ERROR;
-        }
-        do {
-           /* Read each entry */
-           de = GP_SYSTEM_READDIR(d);
-           if (de) {
+	}
+	do {
+		/* Read each entry */
+		de = GP_SYSTEM_READDIR (d);
+		if (de) {
+			const char *filename = GP_SYSTEM_FILENAME (de);
 #if defined(OS2) || defined(WIN32)
-                sprintf(buf, "%s\\%s", IOLIBS, GP_SYSTEM_FILENAME(de));
+			sprintf(buf, "%s\\%s", IOLIBS, filename);
 #else
-                sprintf(buf, "%s/%s", IOLIBS, GP_SYSTEM_FILENAME(de));
+			sprintf(buf, "%s/%s", IOLIBS, filename);
 #endif
-		/* Don't try to open ".*" */
-		if (*buf && (buf[0] == '.'))
-			continue;
+			/* Don't try to open ".*" */
+			if (filename[0] == '.')
+				continue;
 
-                if (gp_port_library_is_valid(buf) == GP_OK)
-                        gp_port_library_list_load(buf, loaded, list, count);
-           }
-        } while (de);
+			if (gp_port_library_is_valid (buf) == GP_OK)
+				gp_port_library_list_load (buf, loaded, list,
+							   count);
+		}
+	} while (de);
 
-        GP_SYSTEM_CLOSEDIR(d);
+	GP_SYSTEM_CLOSEDIR (d);
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 int gp_port_library_load (gp_port *device, gp_port_type type) {
