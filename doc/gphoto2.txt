@@ -92,6 +92,8 @@ conflicts between to different users accessing the camera.
       a generic "users" group will do - and use that group in the
       "chgrp" line in usbcam.group.
 
+   Don't forget to make the script executable.
+
 4. Plug in the camera and switch it on - your /var/log/messages 
    will now display some messages.
 
@@ -127,7 +129,7 @@ file. Therefore you just use the gphoto2 port "usb:".
 ======================
 
 The model name of the camera does not have to be specified when using
-the "usb:". Otherwise you can specify a camera model like 
-"Canon PowerShot G2". You will be better off choosing the model from
-the list of supported models rather than just trying your camera
-model. 
+the "usb:" port. Otherwise you can specify a camera model like 
+"Canon PowerShot G1". You will be better off choosing the model from
+the list of supported models rather than just trying to type your
+camera model. 
