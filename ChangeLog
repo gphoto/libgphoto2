@@ -1,3 +1,8 @@
+2002-01-28 Christophe Barbé <christophe.barbe@ufies.org>
+
+	* CHANGES: Added with content from beta4 release.
+	* *: Tagged all files included in beta4.
+
 2002-01-27 Dan Fandrich <dan@coneharvesters.com>
 
 	* frontends/command-line/gphoto2-cmd-capture.c: Fixed security problem
