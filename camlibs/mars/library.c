@@ -62,6 +62,8 @@ struct {
         {"Aiptek PenCam VGA+", GP_DRIVER_STATUS_EXPERIMENTAL, 0x08ca, 0x0111},
  	{"Emprex PCD3600", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Vivitar Vivicam 55", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
+	{"Haimei Electronics HE-501A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
+	{"Elta Medi@ digi-cam", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
  	{NULL,0,0}
 };
 
@@ -120,11 +122,11 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 {
 	strcpy(manual->text, 
 	_(
-	"This driver supports cameras with Mars MR97310 chip\n"
-	"and should work with gtkam.\n"
+        "This driver supports cameras with Mars MR97310 chip (and direct\n"
+        "equivalents ??Pixart PACx07??) and should work with gtkam.\n"
 	"The driver allows you to get\n"
 	"   - thumbnails for gtkam\n"
-	"   - full images (640x480 or 320x240PPM format)\n"
+	"   - full images (640x480 or 320x240PPM format) (??352x288 & 176x144??)\n"
 	"The camera does not support deletion of photos, nor uploading\n"
 	"of data. This driver does not support the optional photo\n" 
 	"compression mode.\n" 
@@ -184,7 +186,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	w = mars_get_picture_width (camera->pl->info, k);
     	switch (w) {
 	case 640: h = 480; break;
+	case 352: h = 288; break;
 	case 320: h = 240; break;
+	case 176: h = 144; break;
 	default:  h = 480; break;
 	}
 	
