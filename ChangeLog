@@ -1,3 +1,13 @@
+2002-02-08  Christophe Barbé <christophe.barbe@ufies.org>
+
+	* frontends/command-line/main.c: Add usbid option to override 
+	  vendorID and deviceID for a given vendorID/deviceID couple in
+	  the table describing all supported cameras. This allows us to
+	  quickly validate if a new cam could be supported by an existing
+	  driver.  
+	  This requires from the camlib driver to not use the IDs directly
+	  but the device name instead.
+
 2002-02-08  Lutz Müller <lutz@users.sourceforge.net>
 
 	* frontends/command-line: s/image/file and s/picture/file with 
