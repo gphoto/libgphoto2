@@ -1,5 +1,10 @@
 2001-08-03	Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/camera.c: Even if the camera reports success on 
+	delete_all, check if all pictures have been deleted.
+
+2001-08-03	Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/camera.c: Not all cameras implement delete_all - fall back
 	to deletion one by one then.
 
