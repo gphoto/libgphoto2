@@ -5,7 +5,6 @@
  * USB communication layer.
  *
  * $Id$
- *
  ****************************************************************************/
 
 #include "config.h"
@@ -125,66 +124,81 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 		}
 		return GP_OK;
 	}
-
-	/* set byte 0 in msg to new "canon length" (0x10) (which is total
-	 * packet size - 0x40) and then move the last 0x10 bytes of msg to
-	 * offset 0x40 and write it back to the camera.
-	 */
-	msg[0] = 0x10;
-	memmove (msg + 0x40, msg + 0x48, 0x10);
-
-	i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg, 0x50);
-	if (i != 0x50) {
-		gp_context_error (context,
-				  "Step #3 of initialization failed! "
-				  "(returned %i, expected %i) Camera not operational", i,
-				  0x50);
-		return GP_ERROR_IO_INIT;
-	}
-	GP_DEBUG ("canon_usb_camera_init() "
-		  "PC sign on LCD should be lit now (if your camera has a PC sign)");
-
-	/* We expect to get 0x44 bytes here, but the camera is picky at this stage and
-	 * we must read 0x40 bytes and then read 0x4 bytes more.
-	 */
-	i = gp_port_read (camera->port, buffer, 0x40);
-	if ((i >= 4)
-	    && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
-	    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
-
-		/* We have some reports that sometimes the camera takes a long
-		 * time to respond to the above read request and then comes back with
-		 * the 54 78 00 00 packet, instead of telling us to read four more
-		 * bytes which is the normal 54 78 00 00 packet.
+	else {
+		/* set byte 0 in msg to new "canon length" (0x10) (which is total
+		 * packet size - 0x40) and then move the last 0x10 bytes of msg to
+		 * offset 0x40 and write it back to the camera.
 		 */
+		msg[0] = 0x10;
+		memmove (msg + 0x40, msg + 0x48, 0x10);
+
+		i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg, 0x50);
+		if (i != 0x50) {
+			gp_context_error (context,
+					  "Step #3 of initialization failed! "
+					  "(returned %i, expected %i) Camera not operational", i,
+					  0x50);
+			return GP_ERROR_IO_INIT;
+		}
 
 		GP_DEBUG ("canon_usb_camera_init() "
-			  "expected %i bytes, got %i bytes with \"54 78 00 00\" "
-			  "at the end, so we just ignore the whole bunch and call it a day",
-			  0x40, i);
+			  "PC sign on LCD should be lit now (if your camera has a PC sign)");
 
-		return GP_OK;
+		/* We expect to get 0x44 bytes here, but the camera is picky at this stage and
+		 * we must read 0x40 bytes and then read 0x4 bytes more.
+		 */
+		i = gp_port_read (camera->port, buffer, 0x40);
+		if ((i >= 4)
+		    && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
+		    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
+
+			/* We have some reports that sometimes the camera takes a long
+			 * time to respond to the above read request and then comes back with
+			 * the 54 78 00 00 packet, instead of telling us to read four more
+			 * bytes which is the normal 54 78 00 00 packet.
+			 */
+
+			GP_DEBUG ("canon_usb_camera_init() "
+				  "expected %i bytes, got %i bytes with \"54 78 00 00\" "
+				  "at the end, so we just ignore the whole bunch and call it a day",
+				  0x40, i);
+		}
+		else {
+			if (i != 0x40) {
+				gp_context_error (context,
+						  "Step #4.1 failed! "
+						  "(returned %i, expected %i) Camera not operational", i,
+						  0x40);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+		}
+
+		/* just check if (int) buffer[0] says 0x4 or not, log a warning if it doesn't. */
+		read_bytes = le32atoh (buffer);
+		if (read_bytes != 4)
+			GP_DEBUG ("canon_usb_camera_init() camera says to read %i more bytes, ",
+				  "we would have expected 4 - overriding since some cameras are "
+				  "known not to give correct numbers of bytes.", read_bytes);
+
+		i = gp_port_read (camera->port, buffer, 4);
+		if (i != 4)
+			GP_DEBUG ("canon_usb_camera_init() "
+				  "Step #4.2 of initialization failed! (returned %i, expected %i) "
+				  "Camera might still work though. Continuing.", i, 4);
+
+		do {
+			i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
+		} while ( i < 0x10 && i >= 0 );
+		if ( i != 0x10 ) {
+			GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
+			return GP_ERROR_CORRUPTED_DATA;
+		}
 	}
-	if (i != 0x40) {
-		gp_context_error (context,
-				  "Step #4.1 failed! "
-				  "(returned %i, expected %i) Camera not operational", i,
-				  0x40);
-		return GP_ERROR_CORRUPTED_DATA;
-	}
 
-	/* just check if (int) buffer[0] says 0x4 or not, log a warning if it doesn't. */
-	read_bytes = le32atoh (buffer);
-	if (read_bytes != 4)
-		GP_DEBUG ("canon_usb_camera_init() camera says to read %i more bytes, ",
-			  "we wold have expected 4 - overriding since some cameras are "
-			  "known not to give correct numbers of bytes.", read_bytes);
-
-	i = gp_port_read (camera->port, buffer, 4);
-	if (i != 4)
-		GP_DEBUG ("canon_usb_camera_init() "
-			  "Step #4.2 of initialization failed! (returned %i, expected %i) "
-			  "Camera might still work though. Continuing.", i, 4);
+		if(canon_usb_lock_keys(camera,context) < 0) {
+			gp_context_error (context, "lock keys failed.\n");
+			return GP_ERROR_CORRUPTED_DATA;
+		}
 
 	return GP_OK;
 }
@@ -252,6 +266,12 @@ canon_usb_init (Camera *camera, GPContext *context)
 				  _("Camera not ready, could not lock camera keys: %s"),
 				  gp_result_as_string (res));
 		return res;
+	}
+	res = canon_int_get_battery(camera, NULL, NULL, context);
+	if (res != GP_OK) {
+		gp_context_error (context, _("Camera not ready, get_battery failed: %s"),
+				  gp_result_as_string (res));
+		return res; 
 	}
 
 	return GP_OK;
@@ -357,6 +377,208 @@ canon_usb_unlock_keys (Camera *camera)
 	return GP_OK;
 }
 
+#ifdef CANON_EXPERIMENTAL_CAPTURE
+/**
+ * canon_usb_capture_dialogue:
+ * @camera: the Camera to work with
+ * @canon_funct: integer constant that identifies function we are execute
+ * @return_length: number of bytes to read from the camera as response
+ * @payload: data we are to send to the camera
+ * @payload_length: length of #payload
+ * @Returns: a char * that points to the data read from the camera (or
+ * NULL on failure), and sets what @return_length points to to the number
+ * of bytes read.
+ *
+ * USB version of the #canon_serial_dialogue function.
+ * Special case for the "capture image" command, where we must read the
+ *  interrupt pipe before getting the normal command response.
+ *
+ * We construct a packet with the known command values (cmd{1,2,3}) of
+ * the function requested (#canon_funct) to the camera. If #return_length
+ * exists for this function, we read #return_length bytes back from the
+ * camera and return this camera response to the caller.
+ *
+ * Example :
+ *
+ *	This function gets called with
+ *		#canon_funct = CANON_USB_FUNCTION_SET_TIME
+ *		#payload = already constructed payload with the new time
+ *	we construct a complete command packet and send this to the camera.
+ *	The canon_usb_cmdstruct indicates that command
+ *	CANON_USB_FUNCTION_SET_TIME returns four bytes, so we read those
+ *	four bytes into our buffer and return a pointer to the buffer to
+ *	the caller.
+ *
+ *	This should probably be changed so that the caller supplies a
+ *	unsigned char ** which can be pointed to our buffer and an int
+ *	returned with GP_OK or some error code.
+ *
+ **/
+unsigned char *
+canon_usb_capture_dialogue (Camera *camera, int *return_length )
+{
+	int msgsize, status, i;
+	char cmd1 = 0x13, cmd2 = 0x12, *funct_descr = "";
+	int cmd3 = 0x201, read_bytes = 0x40, read_bytes1 = 0, read_bytes2 = 0;
+	unsigned char packet[1024];	/* used for sending data to camera */
+	static unsigned char buffer[0x9c];	/* used for receiving data from camera */
+	unsigned char buf2[0x17];	     /* for reading from interrupt endpoint */
+
+	int j, canon_subfunc = 0;
+	char subcmd = 0, *subfunct_descr = "";
+	int additional_read_bytes = 0;
+	int n_tries;
+
+	/* clear this to indicate that no data is there if we abort */
+	if (return_length)
+		*return_length = 0;
+
+	/* clearing the receive buffer could be done right before the gp_port_read()
+	 * but by clearing it here we eliminate the possibility that a caller thinks
+	 * data in this buffer is a result of this particular canon_usb_dialogue() call
+	 * if we return error but this is not checked for... good or bad I don't know.
+	 */
+	memset (buffer, 0x00, sizeof (buffer));
+
+	GP_DEBUG ("canon_usb_capture_dialogue()");
+
+	/*
+	 * The CONTROL_CAMERA function is special in that its payload specifies a 
+	 * subcommand, and the size of the return data is dependent on which
+	 * subcommand we're sending the camera.  See "Protocol" file for details.
+	 */
+	i = 0;
+	while (canon_usb_cmd[i].num != 0) {
+		if (canon_usb_cmd[i].num == CANON_USB_FUNCTION_CONTROL_CAMERA) {
+			funct_descr = canon_usb_cmd[i].description;
+			cmd1 = canon_usb_cmd[i].cmd1;
+			cmd2 = canon_usb_cmd[i].cmd2;
+			cmd3 = canon_usb_cmd[i].cmd3;
+			read_bytes = canon_usb_cmd[i].return_length;
+			break;
+		}
+		i++;
+	}
+	if (canon_usb_cmd[i].num == 0) {
+		GP_DEBUG ("canon_usb_capture_dialogue() contained ILLEGAL function %i! Aborting.",
+			  CANON_USB_FUNCTION_CONTROL_CAMERA);
+		return NULL;
+	}
+	GP_DEBUG ("canon_usb_capture_dialogue() cmd 0x%x 0x%x 0x%x (%s)", cmd1, cmd2, cmd3,
+		  funct_descr);
+
+	canon_subfunc = 0x04;
+	j = 0;
+	while (canon_usb_control_cmd[j].num != 0) {
+		if (canon_usb_control_cmd[j].subcmd == canon_subfunc) {
+			subfunct_descr = canon_usb_control_cmd[j].description;
+			subcmd = canon_usb_control_cmd[j].subcmd;
+			additional_read_bytes = canon_usb_control_cmd[j].additional_return_length;
+			break;
+		}
+		j++;
+	}
+	read_bytes += additional_read_bytes;
+
+	GP_DEBUG ("canon_usb_capture_dialogue() called with CONTROL_CAMERA, %s",
+		  canon_usb_control_cmd[j].description);
+
+	if (read_bytes > sizeof (buffer)) {
+		/* If this message is ever printed, chances are that you just added
+		 * a new command to canon_usb_cmd with a return_length greater than
+		 * all the others and did not update the declaration of 'buffer' in
+		 * this function.
+		 */
+		GP_DEBUG ("canon_usb_capture_dialogue() "
+			  "read_bytes %i won't fit in buffer of size %i!", read_bytes,
+			  sizeof (buffer));
+		return NULL;
+	}
+
+	/* OK, we have now checked for all errors I could think of,
+	 * proceed with the actual work.
+	 */
+
+	/* construct packet to send to camera, including the three
+	 * commands, serial number and a payload if one has been supplied
+	 */
+
+	memset (packet, 0x00, sizeof (packet));	/* zero block */
+	htole32a (packet, 0x18);
+	packet[0x40] = 0x2;
+	packet[0x44] = cmd1;
+	packet[0x47] = cmd2;
+	packet[0x50] = canon_subfunc;
+	htole32a (packet + 0x04, cmd3);
+	htole32a (packet + 0x4c, 0x0012c8f8);	/* fake serial number */
+	htole32a (packet + 0x48, 0x18);
+
+	msgsize = 0x58;			     /* TOTAL msg size */
+
+	/* now send the packet to the camera */
+/* 	status = gp_port_usb_msg_write (camera->port, msgsize > 1 ? 0x04 : 0x0c, 0x10, 0, */
+/* 					packet, msgsize); */
+	status = gp_port_usb_msg_write (camera->port,  0x04, 0x10, 0,
+					packet, msgsize);
+	if (status != msgsize) {
+		GP_DEBUG ("canon_usb_capture_dialogue: write failed! (returned %i)\n", status);
+		return NULL;
+	}
+	/* Read response packet: should be 0x5c bytes */
+	/* Divide read_bytes into two parts (two reads): 0x40 bytes and 0x1c bytes.
+	 * This is done because it is how the windows driver does it, and some cameras
+	 * (EOS D30 for example) seem to not like it if we were to read read_bytes
+	 * in a single read instead.
+	 */
+	read_bytes1 = 0x40;
+	read_bytes2 = 0x1c;
+
+	status = gp_port_read (camera->port, buffer, read_bytes1);
+	if (status != read_bytes1) {
+		GP_DEBUG ("canon_usb_dialogue: read 1 failed! (returned %i, expected %i)",
+			  status, read_bytes1);
+		return NULL;
+	}
+
+	status = gp_port_read (camera->port, buffer + 0x40, read_bytes2);
+	if (status != read_bytes2) {
+		GP_DEBUG ("canon_usb_dialogue: read 2 failed! "
+			  "(returned %i, expected %i)", status, read_bytes2);
+		return NULL;
+	}
+
+#define MAX_TRIES 3000
+
+	// Now we need to read from the interrupt pipe. Since we have
+	// to use the short timeout (50 ms), we need to try several
+	// times.
+	for ( n_tries=0; n_tries<MAX_TRIES; n_tries++ ) {
+		// GP_DEBUG ("canon_usb_capture_dialogue: first interrupt packet try %d\n", n_tries);
+		status = gp_port_check_int_fast ( camera->port,
+						  buf2, 0x10 );
+		if ( status == 0x10 )	     /* Did we get the full packet? */
+			break;
+	}
+	GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt packet took %i tries\n", n_tries );
+
+	// Between here, we might need to field one or two
+	// messages if we asked for the image or the thumbnail
+	// to be transferred to the PC.
+
+	for ( n_tries=0; n_tries<10; n_tries++ ) {
+		/*GP_DEBUG ("canon_usb_capture_dialogue: second interrupt packet try %d\n", n_tries);*/
+		status = gp_port_check_int_fast ( camera->port,
+						  buf2, 0x10 );
+		if ( status == 0x10 )	     /* Did we get the full packet? */
+			break;
+	}
+	GP_DEBUG ( "canon_usb_capture_dialogue: second interrupt packet took %i tries\n", n_tries );
+
+	*return_length = 0x1c;
+	return buffer + 0x50;
+}
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
+
 /**
  * canon_usb_dialogue:
  * @camera: the Camera to work with
@@ -399,13 +621,13 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 	char cmd1 = 0, cmd2 = 0, *funct_descr = "";
 	int cmd3 = 0, read_bytes = 0, read_bytes1 = 0, read_bytes2 = 0;
 	unsigned char packet[1024];	/* used for sending data to camera */
-	static unsigned char buffer[0x9c];	/* used for receiving data from camera */
+	static unsigned char buffer[0x384];	/* used for receiving data from camera */
 
 #ifdef CANON_EXPERIMENTAL_CAPTURE
 	int j, canon_subfunc = 0;
 	char subcmd = 0, *subfunct_descr = "";
-	int additional_read_bytes = 0, returned_read_bytes = 0;
-#endif
+	int additional_read_bytes = 0;
+#endif /* CANON_EXPERIMENTAL_CAPTURE */
 
 	/* clear this to indicate that no data is there if we abort */
 	if (return_length)
@@ -443,7 +665,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 
 #ifdef CANON_EXPERIMENTAL_CAPTURE
 	/*
-	 * The CONTROL_CAMERA function is special in that it's payload specifies a 
+	 * The CONTROL_CAMERA function is special in that its payload specifies a 
 	 * subcommand, and the size of the return data is dependent on which
 	 * subcommand we're sending the camera.  See "Protocol" file for details.
 	 */
@@ -528,27 +750,6 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 	/* and, if this canon_funct is known to generate a response from the camera,
 	 * read this response back.
 	 */
-
-#ifdef CANON_EXPERIMENTAL_CAPTURE
-	// TESTING
-
-	if (camera->pl->capturing)
-		sleep(2);
-
-	// OTHER POSSIBLE TEST
-	//if (cmd1 == 0x13 && cmd2 == 0x12 && cmd3 == 0x201) {
-	//	GP_DEBUG ("sleeping 2 sec...");
-	//	sleep(3);
-	//	GP_DEBUG ("...done");
-	//}
-
-	//if (cmd1 == 0x17 && cmd2 == 0x12 && cmd3 == 0x202) {
-	//	GP_DEBUG ("capture command, sleeping 5 sec...");
-	//	sleep(5);
-	//	GP_DEBUG("...done");
-	//}
-#endif
-
 
 	/* Divide read_bytes into two parts (two reads), one that is the highest
 	 * ammount of 0x40 byte blocks we can get, and one that is the modulus (the rest).
