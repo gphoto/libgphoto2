@@ -70,11 +70,21 @@
 				}\
 }
 */
+/* below macro makes a copy of fn without leading character ('/'),
+ * removes the '/' at the end if present, and calls folder_to_handle()
+ * funtion proviging as the first argument the string after the second '/'.
+ * for example if fn is '/store_00010001/DCIM/somefolder/', the macro will
+ * call folder_to_handle() with 'DCIM/somefolder' as the very first argument.
+ * it's used to omit storage pseudofolder and remove trailing '/'
+ */
+
 #define find_folder_handle(fn,s,p,d)	{			\
 		{						\
-		char *backfolder=malloc(strlen(fn));		\
+		int len=strlen(fn);				\
+		char *backfolder=malloc(len);			\
 		char *tmpfolder;				\
-		memcpy(backfolder,fn+1, strlen(fn));		\
+		memcpy(backfolder,fn+1, len);			\
+		if (backfolder[len-2]=='/') backfolder[len-2]='\0';\
 		if ((tmpfolder=strchr(backfolder+1,'/'))==NULL) tmpfolder="/";\
 		p=folder_to_handle(tmpfolder+1,s,0,(Camera *)d);\
 		free(backfolder);				\
@@ -1128,14 +1138,15 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 		(ptp_operation_issupported(params,
 			PTP_OC_EK_SendFileObjectInfo)))
 	{
-		CPR (context, ptp_ek_sendfileobjectinfo (&camera->pl->params,
-			&storage, &parent, &handle, &oi));
+		CPR (context, ptp_ek_sendfileobjectinfo (params, &storage,
+			&parent, &handle, &oi));
+	} else if (ptp_operation_issupported(params, PTP_OC_SendObjectInfo)) {
+		CPR (context, ptp_sendobjectinfo (params, &storage,
+			&parent, &handle, &oi));
+	} else {
+		GP_DEBUG ("The device does not support make folder!");
+		return GP_ERROR_NOT_SUPPORTED;
 	}
-	/* to create folder on kodak camera you don't have to sendfileobject */
-#if 0
-	CPR (context, ptp_ek_sendfileobject (&camera->pl->params,
-		&oi, 18));
-#endif
 	return (GP_OK);
 }
 
@@ -1172,13 +1183,14 @@ init_ptp_fs (Camera *camera, GPContext *context)
 
 		oi=&camera->pl->params.objectinfo[i];
 		GP_DEBUG ("ObjectInfo for '%s':", oi->Filename);
-		GP_DEBUG ("  Object ID: 0x%.4x",
+		GP_DEBUG ("  Object ID: 0x%08x",
 			camera->pl->params.handles.Handler[i]);
-		GP_DEBUG ("  StorageID: 0x%.4x", oi->StorageID);
-		GP_DEBUG ("  ObjectFormat: 0x%.4x", oi->ObjectFormat);
+		GP_DEBUG ("  StorageID: 0x%08x", oi->StorageID);
+		GP_DEBUG ("  ObjectFormat: 0x%04x", oi->ObjectFormat);
+		GP_DEBUG ("  ProtectionStatus: 0x%04x", oi->ProtectionStatus);
 		GP_DEBUG ("  ObjectCompressedSize: %d",
 			oi->ObjectCompressedSize);
-		GP_DEBUG ("  ThumbFormat: 0x%.4x", oi->ThumbFormat);
+		GP_DEBUG ("  ThumbFormat: 0x%04x", oi->ThumbFormat);
 		GP_DEBUG ("  ThumbCompressedSize: %d",
 			oi->ThumbCompressedSize);
 		GP_DEBUG ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
@@ -1186,10 +1198,10 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		GP_DEBUG ("  ImagePixWidth: %d", oi->ImagePixWidth);
 		GP_DEBUG ("  ImagePixHeight: %d", oi->ImagePixHeight);
 		GP_DEBUG ("  ImageBitDepth: %d", oi->ImageBitDepth);
-		GP_DEBUG ("  ParentObject: 0x%.4x", oi->ParentObject);
-		GP_DEBUG ("  AssociationType: 0x%.4x", oi->AssociationType);
-		GP_DEBUG ("  AssociationDesc: 0x%.4x", oi->AssociationDesc);
-		GP_DEBUG ("  SequenceNumber: 0x%.4x", oi->SequenceNumber);
+		GP_DEBUG ("  ParentObject: 0x%08x", oi->ParentObject);
+		GP_DEBUG ("  AssociationType: 0x%04x", oi->AssociationType);
+		GP_DEBUG ("  AssociationDesc: 0x%08x", oi->AssociationDesc);
+		GP_DEBUG ("  SequenceNumber: 0x%08x", oi->SequenceNumber);
 		}
 #endif
 		gp_context_progress_update (context, id,

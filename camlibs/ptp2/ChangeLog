@@ -1,4 +1,9 @@
 2003-09-12 Mariusz Woloszyn
+	* library.c: fixed a minor bug that caused error while deleting
+	  folders not in storage subfolder (removed trailing '/' in folder
+	  names); fixed making folders on devices not supporting kodak PTP
+	  extension; some debug improvement; 
+2003-09-12 Mariusz Woloszyn
 	* library.c, ptp-pack.c, ptp.c ptp.h: be proper as hell, changed all
 	  '//' comments to '/* blah */' ;)
 2003-09-12 Mariusz Woloszyn
