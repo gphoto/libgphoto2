@@ -50,6 +50,8 @@
 #  define N_(String) (String)
 #endif
 
+#define GP_MODULE "libgphoto2"
+
 typedef struct {
 	char name [128];
 	int info_dirty;
@@ -505,11 +507,11 @@ gp_filesystem_dump (CameraFilesystem *fs)
 {
 	int i, j;
 
-	printf ("Dumping Filesystem:\n");
+	GP_DEBUG("Dumping Filesystem:");
 	for (i = 0; i < fs->count; i++) {
-		printf ("  Folder: %s\n", fs->folder[i].name);
+		GP_DEBUG("  Folder: %s", fs->folder[i].name);
 		for (j = 0; j < fs->folder[i].count; j++) {
-			printf ("    %2i: %s\n", j, fs->folder[i].file[j].name);
+			GP_DEBUG("    %2i: %s", j, fs->folder[i].file[j].name);
 		}
 	}
 
