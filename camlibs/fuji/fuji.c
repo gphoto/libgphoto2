@@ -69,7 +69,18 @@
 
 #define GP_MODULE "fuji"
 
-#define CR(result) {int r = (result); if (r < 0) return (r);}
+#define CR(result)    {int r = (result); if (r < 0) return (r);}
+#define CRF(result,d) {int r = (result); if (r < 0) {free (d); return (r);}}
+#define CLEN(buf_len,required)					\
+{								\
+	if (buf_len < required) {				\
+		gp_context_error (context, _("The camera sent "	\
+			"only %i byte(s), but we need at "	\
+			"least %i."), buf_len, required);	\
+		return (GP_ERROR);				\
+	}							\
+}
+						
 
 #define STX 0x02 /* Start of data */
 #define ETX 0x03 /* End of data */
@@ -79,6 +90,8 @@
 #define ESC 0x10
 #define ETB 0x17 /* End of transmission block */
 #define NAK 0x15
+
+#if 0
 
 #define FUJI_GET_PICCOUNT	0x0b
 #define FUJI_CMD_TAKE		0x27
@@ -313,6 +326,7 @@ static int cmd2(
 	b[4] = arg; b[5] = arg>>8;
 	return cmd(camera, context, b, 6, data, len);
 }
+#endif
 
 int
 fuji_ping (Camera *camera, GPContext *context)
@@ -342,6 +356,147 @@ fuji_ping (Camera *camera, GPContext *context)
 	}
 }
 
+static int
+fuji_send (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
+	   unsigned char last, GPContext *context)
+{
+        unsigned char b[1024], check;
+        unsigned int i;
+
+        /* Send header */
+        b[0] = ESC;
+        b[1] = STX;
+        CR (gp_port_write (camera->port, b, 2));
+
+        /*
+	 * Escape the data we are going to send. 
+	 * Calculate the checksum.
+	 */
+	check = (last ? ETX : ETB);
+        memcpy (b, cmd, cmd_len);
+        for (i = 0; i < cmd_len; i++) {
+		check ^= b[i];
+                if (b[i] == ESC) {
+                        memmove (b + i + 1, b + i, cmd_len - i);
+                        b[i] = ESC;
+                        i++;
+                        cmd_len++;
+                }
+        }
+
+        /* Send data */
+        CR (gp_port_write (camera->port, b, cmd_len));
+
+        /* Send footer */
+        b[0] = ESC;
+        b[1] = (last ? ETX : ETB);
+        b[2] = check;
+        CR (gp_port_write (camera->port, b, 3));
+
+	return (GP_OK);
+}
+
+static int
+fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
+	   unsigned char *last, GPContext *context)
+{
+	unsigned char b[1024], check;
+	int i;
+
+	/* Read the header */
+	CR (gp_port_read (camera->port, b, 4));
+	if ((b[0] != ESC) || (b[1] != STX)) {
+		gp_context_error (context, _("Received unexpected data "
+			"(0x%02x, 0x%02)."), b[0], b[1]);
+		return (GP_ERROR_CORRUPTED_DATA);
+	}
+	*buf_len = (b[3] << 8) | b[2];
+
+	/* Read the data. Unescape it. Calculate the checksum. */
+	for (check = i = 0; i < *buf_len; i++) {
+		CR (gp_port_read (camera->port, buf + i, 1));
+		if (b[i] == ESC) {
+			CR (gp_port_read (camera->port, buf + i, 1));
+			if (b[i] != ESC) {
+
+				/* Dump the remaining data */
+				while (gp_port_read (camera->port, b, 1) >= 0);
+
+				gp_context_error (context,
+					_("Wrong escape sequence."));
+				return (GP_ERROR_CORRUPTED_DATA);
+			}
+			check ^= buf[i];
+		}
+	}
+
+	/* Read the footer */
+	CR (gp_port_read (camera->port, b, 3));
+	if (b[0] != ESC) {
+		gp_context_error (context,
+			_("Bad data - got 0x%02x, expected 0x%02x."),
+			b[0], ESC);
+		return (GP_ERROR_CORRUPTED_DATA);
+	}
+	switch (b[1]) {
+	case ETX:
+		*last = 1;
+		break;
+	case ETB:
+		*last = 0;
+		break;
+	default:
+		gp_context_error (context,
+			_("Bad data - got 0x%02x, expected 0x%02x or "
+			  "0x%02x."), b[1], ETX, ETB);
+		return (GP_ERROR_CORRUPTED_DATA);
+	}
+	check ^= b[1];
+	if (check != b[2]) {
+		gp_context_error (context,
+			_("Bad checksum - got 0x%02x, expected 0x%02x."),
+			b[2], check);
+		return (GP_ERROR_CORRUPTED_DATA);
+	}
+
+	return (GP_OK);
+}
+
+static int
+fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
+	       unsigned char *buf, unsigned int *buf_len, GPContext *context)
+{
+	unsigned char last = 0, c;
+	unsigned int b_len = 1024;
+	int r, retries = 0;
+
+	/* Send the command */
+	CR (fuji_send (camera, cmd, cmd_len, 1, context));
+
+	/* Read the response */
+	*buf_len = 0;
+	while (!last) {
+		r = fuji_recv (camera, buf + *buf_len, &b_len, &last, context);
+		if (r < 0) {
+			retries++;
+			while (gp_port_read (camera->port, &c, 1) >= 0);
+			if (++retries > 2)
+				return (r);
+			GP_DEBUG ("Retrying...");
+			c = NAK;
+			CR (gp_port_write (camera->port, &c, 1));
+			continue;
+		}
+
+		/* Acknowledge this packet. */
+		c = ACK;
+		CR (gp_port_write (camera->port, &c, 1));
+		*buf_len += b_len;
+	}
+
+	return (GP_OK);
+}
+
 int
 fuji_get_cmds (Camera *camera, unsigned char *cmds, GPContext *context)
 {
@@ -349,8 +504,23 @@ fuji_get_cmds (Camera *camera, unsigned char *cmds, GPContext *context)
 }
 
 int
-fuji_pic_count (Camera *camera, GPContext *context)
+fuji_pic_count (Camera *camera, unsigned int *n, GPContext *context)
 {
+	unsigned char cmd[4], buf[1024];
+	unsigned int buf_len;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_PIC_COUNT;
+	cmd[2] = 0;
+	cmd[3] = 0;
+	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
+
+	CLEN (buf_len, 2);
+	*n = (buf[1] << 8) | buf[0];
+
+	return (GP_OK);
+
+#if 0
     int numpics, gpr, len = 0;
     char *data = NULL;
 
@@ -362,12 +532,122 @@ fuji_pic_count (Camera *camera, GPContext *context)
     numpics = data[0] + (data[1]<<8);
     if (data) free(data);
     return numpics;
+#endif
 }
 
 int
 fuji_pic_name (Camera *camera, unsigned int i, const char **name,
 	       GPContext *context)
 {
+	static unsigned char buf[1025];
+	unsigned char cmd[6];
+	unsigned int buf_len = 1024;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_PIC_NAME;
+	cmd[2] = 2;
+	cmd[4] = i;
+	cmd[5] = (i >> 8);
+
+	memset (buf, 0, sizeof (buf));
+	CR (fuji_transmit (camera, cmd, 6, buf, &buf_len, context));
+	*name = buf;
+
+	return (GP_OK);
+}
+
+int
+fuji_pic_del (Camera *camera, unsigned int i, GPContext *context)
+{
+	unsigned char cmd[6], buf[1024];
+	unsigned int buf_len;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_PIC_NAME;
+	cmd[2] = 2;
+	cmd[4] = i;
+	cmd[5] = (i >> 8);
+
+	CR (fuji_transmit (camera, cmd, 6, buf, &buf_len, context));
+
+	return (GP_OK);
+}
+
+int
+fuji_pic_size (Camera *camera, unsigned int i, unsigned int *size,
+	       GPContext *context)
+{
+	unsigned char cmd[6], buf[1024];
+	unsigned int buf_len;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_PIC_SIZE;
+	cmd[2] = 2;
+	cmd[4] = i;
+	cmd[5] = (i >> 8);
+
+	CR (fuji_transmit (camera, cmd, 6, buf, &buf_len, context));
+	CLEN (buf_len, 4);
+
+	*size = buf[0] | (buf[1] << 8) | (buf[2] << 16) | (buf[3] << 24);
+
+	return (GP_OK);
+}
+
+int
+fuji_pic_get (Camera *camera, unsigned int i, unsigned char **data, 
+	      unsigned int *size, GPContext *context)
+{
+	unsigned char cmd[6];
+
+	/*
+	 * First, get the size of the picture and allocate the necessary
+	 * memory.
+	 */
+	CR (fuji_pic_size (camera, i, size, context));
+	*data = malloc (sizeof (char) * *size);
+	if (!*data) {
+		gp_context_error (context, _("Could not allocate "
+			"%i byte(s) for downloading the picture."), *size);
+		return (GP_ERROR_NO_MEMORY);
+	}
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_PIC_GET;
+	cmd[2] = 2;
+	cmd[4] = i;
+	cmd[5] = (i >> 8);
+
+	CRF (fuji_transmit (camera, cmd, 6, *data, size, context), data);
+
+	return (GP_OK);
+}
+
+int
+fuji_set_speed (Camera *camera, FujiSpeed speed, GPContext *context)
+{
+	unsigned char cmd[5], buf[1024], c;
+	unsigned int buf_len;
+
+	cmd[0] = 1;
+	cmd[1] = FUJI_CMD_SPEED;
+	cmd[2] = 1;
+	cmd[3] = 0;
+	cmd[4] = speed;
+	CR (fuji_transmit (camera, cmd, 5, buf, &buf_len, context));
+	CLEN (buf_len, 1);
+
+	/* Check the response */
+	if (buf[0] != 0) {
+		gp_context_error (context, _("Could not set speed to "
+			"%i (camera responded with %i)."), speed, buf[0]);
+		return (GP_ERROR);
+	}
+
+	/* Close the connection. */
+	c = EOT;
+	gp_port_write (camera->port, &c, 1);
+	
 	return (GP_OK);
 }
 

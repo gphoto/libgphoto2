@@ -94,7 +94,8 @@ camera_abilities (CameraAbilitiesList *list)
 		a.speed[4] = 115200;
 		a.speed[5] = 0;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-		a.file_operations = GP_FILE_OPERATION_PREVIEW;
+		a.file_operations = GP_FILE_OPERATION_PREVIEW |
+				    GP_FILE_OPERATION_DELETE;
 		a.operations = GP_OPERATION_NONE;
 		CR (gp_abilities_list_append (list, a));
 	}
@@ -122,7 +123,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	const char *name;
 
 	/* Count the pictures on the camera */
-	CR (n = fuji_pic_count (camera, context));
+	CR (fuji_pic_count (camera, &n, context));
 
 	/* Get the name of each file */
 	for (i = 1; i <= n; i++) {
@@ -140,25 +141,61 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = data;
 	int n;
+	unsigned char *d;
+	unsigned int size;
 
 	/* We need file numbers starting with 1 */
 	CR (n = gp_filesystem_number (camera->fs, folder, filename, context));
 	n++;
 
+	CR (fuji_pic_get (camera, n, &d, &size, context));
+	CR (gp_file_set_data_and_size (file, d, size));
+
 	return (GP_OK);
 }
+
+static int
+del_file_func (CameraFilesystem *fs, const char *folder,
+	       const char *filename, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	int n;
+
+	/* We need file numbers starting with 1 */
+	CR (n = gp_filesystem_number (camera->fs, folder, filename, context));
+	n++;
+
+	CR (fuji_pic_del (camera, n, context));
+
+	return (GP_OK);
+}
+
+struct {
+	FujiSpeed speed;
+	unsigned int bit_rate;
+} Speeds[] = {
+	{FUJI_SPEED_115200, 115200},
+	{FUJI_SPEED_57600, 57600},
+	{FUJI_SPEED_38400, 38400},
+	{FUJI_SPEED_19200, 19200},
+	{FUJI_SPEED_9600, 9600},
+	{FUJI_SPEED_9600, 0}
+};
 
 int
 camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
+	unsigned int speed, i;
+	int r;
 
 	/* Setup all function pointers */
 	camera->functions->about = camera_about;
 
-	/* Set up the port */
+	/* Set up the port, but remember the current speed. */
 	CR (gp_port_set_timeout (camera->port, 1000));
 	CR (gp_port_get_settings (camera->port, &settings));
+	speed = settings.serial.speed;
 	settings.serial.speed    = 9600;
 	settings.serial.bits     = 8;
 	settings.serial.parity   = GP_PORT_SERIAL_PARITY_EVEN;
@@ -168,11 +205,40 @@ camera_init (Camera *camera, GPContext *context)
 	/* Set up the filesystem. */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
 					  camera));
-	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL,
-					  camera));
+	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+					  del_file_func, camera));
 
 	/* Is the camera there? */
 	CR (fuji_ping (camera, context));
+
+	if (!speed) {
+
+		/* Set to the highest possible speed. */
+		for (i = 0; Speeds[i].bit_rate; i++) {
+			r = fuji_set_speed (camera, Speeds[i].speed, NULL);
+			if (r >= 0)
+				break;
+		}
+		CR (fuji_ping (camera, context));
+
+	} else {
+
+		/* User specified a speed. Check if the speed is possible */
+		for (i = 0; Speeds[i].bit_rate; i++)
+			if (Speeds[i].bit_rate == speed)
+				break;
+		if (!Speeds[i].bit_rate) {
+			gp_context_error (context, _("Bit rate %i is not "
+				"supported."), speed);
+			return (GP_ERROR_NOT_SUPPORTED);
+		}
+
+		/* Change the speed if necessary. */
+		if (speed != Speeds[i].bit_rate) {
+			CR (fuji_set_speed (camera, Speeds[i].speed, context));
+			CR (fuji_ping (camera, context));
+		}
+	}
 
 	return (GP_OK);
 }
