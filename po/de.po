@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2001-10-23 23:14+0200\n"
-"PO-Revision-Date: 2001-10-23 23:41+02:00\n"
+"POT-Creation-Date: 2001-10-24 21:16+0200\n"
+"PO-Revision-Date: 2001-10-24 21:20+02:00\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1539,11 +1539,11 @@ msgstr "Konnte Port '%s' nicht finden."
 
 #: libgphoto2/gphoto2-camera.c:353
 msgid "You need to set a port prior trying to set the speed"
-msgstr "Sie müssen einen Port setzen, bevor Sie die Datenrate setzen k?nnen"
+msgstr "Sie müssen einen Port setzen, bevor Sie die Datenrate setzen können"
 
 #: libgphoto2/gphoto2-camera.c:359
 msgid "You can specify a speed only with serial ports"
-msgstr "Nur mit seriellen Ports k?nnen Sie eine Datenrate setzen"
+msgstr "Nur mit seriellen Ports können Sie eine Datenrate setzen"
 
 #: libgphoto2/gphoto2-camera.c:682
 msgid "Initializing camera..."
@@ -1624,7 +1624,9 @@ msgstr "Diese Kamera bietet keine Konfigurationsoptionen für Verzeichnisse"
 
 #: libgphoto2/gphoto2-camera.c:1124
 msgid "The camera does not support setting configuration options on folders"
-msgstr "Diese Kamera unterstützt das Setzen von Konfigurationsoptionen für Verzeichnisse nicht"
+msgstr ""
+"Diese Kamera unterstützt das Setzen von Konfigurationsoptionen für "
+"Verzeichnisse nicht"
 
 #: libgphoto2/gphoto2-camera.c:1166
 #, c-format
@@ -1642,7 +1644,9 @@ msgstr "Diese Kamera bietet keine Konfigurationsoptionen für Dateien"
 
 #: libgphoto2/gphoto2-camera.c:1321
 msgid "This camera does not support setting configuration options on files"
-msgstr "Diese Kamera unterstützt das Setzen von Konfigurationsoptionen für Dateien nicht"
+msgstr ""
+"Diese Kamera unterstützt das Setzen von Konfigurationsoptionen für Dateien "
+"nicht"
 
 #: libgphoto2/gphoto2-camera.c:1350
 #, c-format
@@ -1745,22 +1749,39 @@ msgstr "Verzeichnis existiert bereits"
 msgid "Path not absolute"
 msgstr "Pfadangabe nicht absolut"
 
-#: frontends/command-line/main.c:274
+#: frontends/command-line/main.c:284
 msgid "You need to specify a camera model"
 msgstr "Sie müssen ein Kameramodell angeben"
 
-#: frontends/command-line/main.c:342
+#: frontends/command-line/main.c:352
 #, c-format
 msgid "Number of supported cameras: %i\n"
 msgstr "Anzahl der unterstützten Kameras: %i\n"
 
-#: frontends/command-line/main.c:343
+#: frontends/command-line/main.c:353
 msgid "Supported cameras:\n"
 msgstr "Unterstützte Kameras:\n"
 
-#: frontends/command-line/main.c:1109
+#: frontends/command-line/main.c:980
+msgid "Could not detect any camera. Please specify a model."
+msgstr "Konnte keine Kamera finden. Bitte geben Sie ein Modell an."
+
+#: frontends/command-line/main.c:1167
 msgid "For debugging messages, please use the --debug option.\n"
 msgstr "Für Debug-Meldungen verwenden Sie bitte die Option --debug.\n"
+
+#: frontends/command-line/gphoto2-cmd-config.c:92
+msgid "Exit"
+msgstr "Beenden"
+
+#: frontends/command-line/gphoto2-cmd-config.c:94
+msgid "Back"
+msgstr "Zurück"
+
+#: frontends/command-line/gphoto2-cmd-config.c:193
+#: frontends/command-line/gphoto2-cmd-config.c:224
+msgid "Value: "
+msgstr "Wert: "
 
 #~ msgid "Camera type:  %d\n"
 #~ msgstr "Kameratyp:  %d\n"
