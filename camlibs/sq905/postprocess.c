@@ -36,7 +36,8 @@
 
 
 int
-sq_decompress (unsigned char *data, int b, int w, int h)
+sq_decompress (unsigned char *output, unsigned char *data,
+	    int w, int h, int n)
 {
 	/*
 	 * Data arranged in planar form. The format seems 
@@ -52,15 +53,16 @@ sq_decompress (unsigned char *data, int b, int w, int h)
 	unsigned char *red, *green, *blue;
 	unsigned char *mark_redblue; /* Even stores red; odd stores blue */ 
 	unsigned char *mark_green;
-	unsigned char mark, datum = 0; 
-
-
+	unsigned char mark = 0, datum = 0; 
 	int i, j, m;
+
+
 		/* First we spread out the data to size w*h. */
-		for ( i=1; i <= b ; i++ ) data[2*(b-i)] = data[b-i];
+		for ( i=1; i <= w*h/2 ; i++ ) data[2*(w*h/2 -i)] 
+						    = data[w*h/2 - i];
 		/* Then split the bytes ("backwards" because we 
 		 * reversed the data) into the first digits of 2 bytes.*/
-		for ( i=0; i < b ; i++ ) {
+		for ( i=0; i < w*h/2 ; i++ ) {
 			data[2*i + 1] = 16*(data[2*i]/16);
 			data[2*i]     = 16*(data[2*i]%16);
 		}
@@ -84,93 +86,250 @@ sq_decompress (unsigned char *data, int b, int w, int h)
 	if (!green) return GP_ERROR_NO_MEMORY;
 	memcpy (green,data + w*h/2, w*h/2);
 
-	memset(data, 0, w*h);
+	memset(data, 0x0, w*h);
 
 	mark_redblue  = malloc(w);
 	if (!(mark_redblue)) return GP_ERROR_NO_MEMORY;
-	memset (mark_redblue,0x80,w);
+	memset (mark_redblue,0x0,w);
 
 	mark_green= malloc(w);
 	if (!(mark_green)) return GP_ERROR_NO_MEMORY;
-	memset (mark_green,0x80,w);
-	
+	memset (mark_green,0x0,w);
 
-
-	/* Unscrambling the respective colorplanes. This still does not work
-	 * very well. Since we still do not really know what is going on, 
-	 * we make this short and sweet. 
+	/* Unscrambling the respective colorplanes. Then putting them 
+	 * back together. 
 	 */
 
-	for (i = 0; i < w/2 ; i++) {
+	for (m = 0; m < h/2; m++) {
 
-		for (m = 0; m < h/2; m++) {
-			for (j = 0; j < 2; j++) {
-				/* First the greens on the even lines at 
+		for (j = 0; j < 2; j++) {
+
+			for (i = 0; i < w/2 ; i++) {
+				/*		
+				 * First the greens on the even lines at 
 				 * indices 2*i+1, when j=0. Then the greens
 				 * on the odd lines at indices 2*i, when j=1. 
 				 */ 
-	
-		    
-				mark   = mark_green[2*i +1 -j];
-				datum  = green[(2*m+j)*w/2+ i]; 
-
 			
+				datum = green[(2*m+j)*w/2 + i];
+				
+				if (!m && !j) {
 
-				data[(2*m +j)*w + 2*i +1 - j] 
-				= mark + (int)(datum - 0x80);		
-		
-				if ( 
-				(mark + datum < 0x80) 
-				|| (mark + datum > 0x170) 
-
-				)
+					mark_green[2*i] =
+					data[2*i+1] =  
+					MIN(MAX(datum, 0x20), 0xe0);    
 
 
-					mark_green[2*i+1 - j] = 
-					mark_green[2*i +j] = /*sets up next line*/
-					data[(2*m +j)*w + 2*i +1 - j] =
-					datum;
+				} else {
+					mark= mark_green[2*i + 1-j];
+			
+					if (datum >= 0x80) {
+						mark_green[2*i +j] =
+						data[(2*m+j)*w + 2*i +1 - j] =
+						MIN(2*(mark + datum - 0x80) 
+						- (mark*datum)/128., 0xe0);
+					} else {
+						mark_green[2*i +j] =
+						data[(2*m+j)*w + 2*i +1 - j] =
+		    				MAX((mark*datum)/128, 0x20);
+					}
+				}
 
-        			/* Here begin the reds and blues. 
+				mark_green[2*i +j] =
+				data[(2*m+j)*w + 2*i +1 - j] =
+		    		MIN( 256 *
+				pow((float)mark_green[2*i + j]/256., .95),
+				0xe0);
+
+				/*
+        			 * Here begin the reds and blues. 
 				 * Reds in even slots on even-numbered lines.
 				 * Blues in odd slots on odd-numbered lines. 
 				 */
-		
-			
-				mark = mark_redblue[2*i + j];
-				if (j) {			
-				datum =  blue[m*w/2 + i ] ;
-				} else { 
-				datum =  red[m*w/2 + i ] ;
+				
+				if (j)	datum =  blue[m*w/2 + i ] ;
+				else	datum =  red[m*w/2 + i ] ;
+
+				if(!m) {
+					mark_redblue[2*i+j]= 
+					data[j*w +2*i+j]=  
+					MIN(MAX(datum, 0x20), 0xe0);
+				} else {
+					mark = mark_redblue[2*i + j];
+					if (datum >= 0x80) {
+						mark_redblue[2*i +j] =
+						data[(2*m+j)*w + 2*i + j] =
+						MIN(2*(mark + datum - 0x80) 
+						- (mark*datum)
+						/128., 0xe0);
+					    
+					} else {
+					
+						mark_redblue[2*i +j] =
+						data[(2*m+j)*w + 2*i + j] =
+						MAX((mark*datum)/128,0x20);
+					}
+
 				}
-				data[(2*m+j)*w + 2*i +j] 
 
-				= mark + datum - 0x80;
-		
-				if ( !(mark + datum - 80)
+				mark_redblue[2*i + j] =
+				data[(2*m+j)*w + 2*i + j] =
+		    		MIN( 256 *
+				pow((float)mark_redblue[2*i + j]/256., .95),
+				0xe0);
 
 
-				) 
-				
 
-					data[(2*m+j)*w + 2*i +j] = 
-					mark_redblue[2*i+j] = datum;
-				
+			}					
 
-			/* Finished the reds and the blues */
+			/* Averaging of data inputs */
+
+			for (i = 1; i < w/2-1; i++ ) {
+
+				mark_redblue[2*i + j] =
+				data[(2*m+j)*w + 2*i + j] =
+				(data[(2*m+j)*w + 2*i + j] +
+				data[(2*m+j)*w + 2*i -2 + j])/2;
+			
+				if (j) {
+					mark_green[2*i + j] =
+					data[(2*m+j)*w + 2*i +1 - j] =
+					(data[(2*m+j)*w + 2*i +1 - j] +
+					data[(2*m+j)*w + 2*i +3 - j])/2;
+				} else if(m) {
+					mark_green[2*i + j] =
+					data[(2*m+j)*w + 2*i +1 - j] =
+					(data[(2*m+j)*w + 2*i +1 - j] +
+					data[(2*m+j)*w + 2*i -1 - j])/2;
+				}
 			}
+			mark_green[j] =
+			data[(2*m+j)*w +1-j] =
+			(data[(2*m+j)*w +1-j] +
+			data[(2*m+j)*w +3-j])/2;
+
+			mark_redblue[w -2 + j] =
+			data[(2*m+j)*w + w- 2 + j] =
+			(data[(2*m+j)*w + w-2 + j] +
+			data[(2*m+j)*w + w- 2  -2 + j])/2;
+
+			mark_redblue[ j] =
+			data[(2*m+j)*w + j] =
+			(data[(2*m+j)*w + j] +
+			data[(2*m+j)*w + 2 + j])/2;
+
 
 
 		}
-
 	}
+	free (green);
 	free (red);
 	free (blue);
-	free (green);
+
+	/* Some horizontal Bayer interpolation. */
+
+	for (m = 0; m < h/2; m++) {
+		for (j = 0; j < 2; j++) {
+			for (i = 0; i < w/2; i++) {
+
+				/* the known greens */
+				output[3*((2*m+j)*w + 2*i +1 - j) +1] =	
+				data[(2*m+j)*w + 2*i +1 - j];
+				/* known reds and known blues */
+				output[3*((2*m+j)*w + 2*i + j) + 2*j] =
+				data[(2*m+j)*w + 2*i + j];
+
+			}
+			/*
+			 * the interpolated greens (at the even pixels on 
+			 * even lines and odd pixels on odd lines)
+			 */
+			if (!j) {
+			output[3*(2*m*w) +1] =	
+			data[2*m*w + 1 ];
+			output[3*(2*m*w + w - 1) +1] =	
+			data[2*m*w + w - 2 ];
+			}
+			
+			for (i= 1; i < w/2 - 1; i++)		
+				output[3*((2*m+j)*w + 2*i - j) + 1] =
+				(output[3*((2*m+j)*w + 2*i -1 - j) + 1] +
+				output[3*((2*m+j)*w + 2*i +1 - j) + 1])/2;					
+			/*		
+			 * the interpolated reds on even (red-green) lines and
+			 * the interpolated blues on odd (green-blue) lines
+			 */
+			output[3*((2*m+j)*w ) +2*j] =	
+			data[(2*m+j)*w + j];
+			output[3*((2*m+j)*w + w - 1) +2*j] =	
+			data[(2*m+j)*w + w - 1 - 1 + j];
+
+			for (i= 1; i < w/2 -1; i++)		
+	    			output[3*((2*m+j)*w + 2*i +1 -j ) +2*j] =	
+				(output[3*((2*m+j)*w + 2*i - j) + 2*j] +
+				output[3*((2*m+j)*w + 2*i +2 - j) + 2*j])/2;					
+		}
+	}
+	/*
+	 * finally the missing blues, on even-numbered lines
+	 * and reds on odd-numbered lines.
+	 * we just interpolate diagonally for both
+	 */
+	for (m = 0; m < h/2; m++) {
+
+		if ((m) && (h/2 - 1 - m))
+		for (i= 0; i < w; i++)	{	
+		
+			output[3*((2*m)*w + i) +2] =	
+			(output[3*((2*m-1)*w + i-1) + 2] +
+			output[3*((2*m+1)*w +i+1 ) + 2])/2;
+		
+			output[3*((2*m+1)*w + i) +0] =	
+			(output[3*(2*m*w + i-1) + 0] +
+			output[3*((2*m+2)*w +i+1) + 0])/2;
+		}
+	}		
+	
+	for (i= 0; i < w; i++) {	
+		output[3*i +2] = output[3*(w + i) + 2];
+		output[3*(w+i)] = output[3*i];
+	}
+	for (i= 0; i < w; i++)		
+		output[3*((h-1)*w + i) +0] = output[3*((h -2)*w +i) + 0];					
+
+
+	/* Diagonal smoothing */
+
+	for (m = 1; m < h - 1; m++) {
+		
+		for (i= 0; i < w; i++)	{	
+		
+				output[3*(m*w + i) +0] =	
+				(output[3*((m-1)*w + i-1) + 0] +
+				2*output[3*(m*w + i) +0] +
+				output[3*((m+1)*w +i+1 ) + 0])/4;
+
+				output[3*(m*w + i) +1] =	
+				(output[3*((m-1)*w + i-1) + 1] +
+				2*output[3*(m*w + i) +1] +
+				output[3*((m+1)*w +i+1 ) + 1])/4;
+
+				output[3*(m*w + i) +2] =	
+				(output[3*((m-1)*w + i-1) + 2] +
+				2*output[3*(m*w + i) + 2] +
+				output[3*((m+1)*w +i+1 ) + 2])/4;
+		
+
+			}
+	}		
+	
+
+
+
 	return(GP_OK);
 }
 
-/* White balancing and brightness correction routine adapted from 
+/* Brightness correction routine adapted from 
  * camlibs/polaroid/jd350e.c, copyright © 2001 Michael Trawny 
  * <trawny99@users.sourceforge.net>
  */
@@ -202,82 +361,17 @@ sq_postprocess(CameraPrivateLibrary *priv, int width, int height,
 		blue_min=255, blue_max=0, 
 		green_min=255, green_max=0;
 	double
-		min, max, amplify, temp;
+		min, max, amplify; 
 
 	/* determine min and max per color... */
 
-/*	for( y=0; y<height; y++){
+	for( y=0; y<height; y++){
 		for( x=0; x<width; x++ ){
 			MINMAX( RED(rgb,x,y,width), red_min,   red_max  );
 			MINMAX( GREEN(rgb,x,y,width), green_min, green_max);
 			MINMAX( BLUE(rgb,x,y,width), blue_min,  blue_max );
 		}
 	}
-*/
-	/* white balancing ...                               */
-
-	if( (priv->catalog[16*n+9] >= priv->catalog[16*n+10])  ){ 
-/*	if( ((green_max+blue_max)/2 > red_max)  ){  */
-
-		/* outdoor daylight : red color correction curve*/
-		GP_DEBUG( "daylight mode");
-		for( y=0; y<height; y++){
-			for( x=0; x<width; x++ ){
-
-				temp = (float)RED(rgb,x,y,width);
-				RED(rgb,x,y,width) 
-				= (256)*(3*(temp/256.)/2. 
-				- pow(temp/256., 2)/2.);
-
-
-				temp = (float)GREEN(rgb,x,y,width);
-				GREEN(rgb,x,y,width) 
-				= (256)*(3*(temp/256.)/2. 
-				- pow(temp/256., 2)/2.);
-
-
-/*			 RED(rgb,x,y,width) = 
-				MIN(2*(unsigned)RED(rgb,x,y,width),255); */
-			}
-		}
-/*
-		 red_min = MIN(2*(unsigned)red_min,255); 
-		 red_max = MIN(2*(unsigned)red_max,255); 
-*/
-	}
-
-/*
-	else { 
-*/
-		/* indoor electric light */
-/*		GP_DEBUG( "electric light mode");
-		for( y=0; y<height; y++){
-			for( x=0; x<width; x++ ){
-
-				temp = (float)BLUE(rgb,x,y,width);
-				BLUE(rgb,x,y,width) 
-				= (256)*(3*(temp/256.)/2. 
-				- pow(temp/256., 1.8)/2.);
-
-
-
-				temp = (float)GREEN(rgb,x,y,width);
-				GREEN(rgb,x,y,width) 
-				= (256)*(3*(temp/256.)/2. 
-				- pow(temp/256., 2)/2.);
-
-
-
-			}
-		}
-/*
-		blue_min = MIN(2*(unsigned)blue_min,255);
-		blue_max = MIN(2*(unsigned)blue_max,255);
-
-	}
-
-
-*/
 
 	/* determine min and max per color... */
 

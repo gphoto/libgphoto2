@@ -345,7 +345,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			sq_preprocess(camera->pl->model, comp_ratio, is_in_clip, 
 				frame_data, w, h);
 		}
-		if (comp_ratio>1) sq_decompress (frame_data, b, w, h);
+		
 		/*
 		 * Now put the data into a PPM image file. 
 		 */
@@ -356,23 +356,30 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			"# CREATOR: gphoto2, SQ905 library\n"
 			"%d %d\n"
 			"255\n", w, h);
-		ptr = ppm + strlen (ppm);	
+		ptr = ppm + strlen (ppm);
+		if (comp_ratio>1) {
+			sq_decompress (ptr, frame_data, w, h, entry);			
+			sq_postprocess(camera->pl,w, h, ptr, entry);
+		}
 		size = strlen (ppm) + (w * h * 3);
 		GP_DEBUG ("size = %i\n", size);
-		switch (camera->pl->model) {
-		case SQ_MODEL_POCK_CAM:
-			gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_GBRG);
-			break;
-		default:
-				gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
-			break;
-		}
-		/* if (comp_ratio==1) { */
-		/*	sq_postprocess(camera->pl,w, h, ptr, entry); */ /* For compression, the postprocessing interferes */
-		/* } */
-		gp_gamma_fill_table (gtable, .5); 
-		gp_gamma_correct_single (gtable, ptr, w * h); 
-    		gp_file_set_mime_type (file, GP_MIME_PPM);
+
+		if ( comp_ratio == 1) {
+			switch (camera->pl->model) {
+			case SQ_MODEL_POCK_CAM:
+				gp_bayer_decode (frame_data, w , h , 
+						    ptr, BAYER_TILE_GBRG);
+				break;
+			default:
+				gp_bayer_decode (frame_data, w , h , 
+						    ptr, BAYER_TILE_BGGR);
+				break;
+			}
+			gp_gamma_fill_table (gtable, .5); 
+			gp_gamma_correct_single (gtable, ptr, w * h); 
+    		} 
+
+		gp_file_set_mime_type (file, GP_MIME_PPM);
     		gp_file_set_name (file, filename); 
 		gp_file_set_data_and_size (file, ppm, size);
 
