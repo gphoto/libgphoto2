@@ -1,5 +1,7 @@
+*~ .*~
 Makefile
 Makefile.in
 .deps
 .libs
+*.ced
 gphoto2
