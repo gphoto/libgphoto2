@@ -61,12 +61,18 @@ esac
 
 ACLOCAL_FLAGS="-I ${srcdir}/libgphoto2_port/m4 ${ACLOCAL_FLAGS}"
 
+gettext_version=`gettextize --version 2>&1 | sed -n 's/^.*GNU gettext.* \([0-9]*\.[0-9.]*\).*$/\1/p'`
+case $gettext_version in
+0.11.*)
+	gettext_opt="$gettext_opt --intl";;
+esac
+
 for dir in libgphoto2_port .
 do 
    (echo processing "$dir";					\
     cd "$dir";							\
-    echo "Running gettextize --force --copy";			\
-    gettextize --force --copy;					\
+    echo "Running gettextize --force --copy $gettext_opt";	\
+    gettextize --force --copy $gettext_opt;			\
     echo "Running aclocal $ACLOCAL_FLAGS";			\
     aclocal $ACLOCAL_FLAGS;					\
     echo "Running autoheader";					\

@@ -1,5 +1,12 @@
 2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
 
+	Patch by Arnaud Launay <asl@launay.org>, slightly enhanced:
+
+	* autogen.sh: If gettext --version is something like 0.11.*, 
+	  add the --intl option to gettextize.
+
+2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
+
 	* libgphoto2/Makefile.am:
 	* configure.in: Fix (?) -version-info
 
