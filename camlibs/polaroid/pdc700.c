@@ -99,7 +99,7 @@ struct _PDCPicInfo {
 	unsigned char flash;
 };
 
-#define CHECK_RESULT(result) {int r=(result);if(r<0) return (r);}
+#define CR(result) {int r=(result);if(r<0) return (r);}
 #define CRF(result,d)      {int r=(result);if(r<0) {free(d);return(r);}}
 
 /*
@@ -129,7 +129,7 @@ pdc700_send (Camera *camera, unsigned char *cmd, unsigned int cmd_len)
 	cmd[1] = (cmd_len - 3) >> 8;
 	cmd[2] = (cmd_len - 3) & 0xff;
 	cmd[cmd_len - 1] = calc_checksum (cmd + 3, cmd_len - 1 - 3);
-	CHECK_RESULT (gp_port_write (camera->port, cmd, cmd_len));
+	CR (gp_port_write (camera->port, cmd, cmd_len));
 
 	return (GP_OK);
 }
@@ -146,7 +146,7 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	 * Read the header (0x40 plus 2 bytes indicating how many bytes
 	 * will follow)
 	 */
-	CHECK_RESULT (gp_port_read (camera->port, header, 3));
+	CR (gp_port_read (camera->port, header, 3));
 	if (header[0] != 0x40) {
 		gp_camera_set_error (camera, _("Received unexpected "
 				     "header (%i)"), header[0]);
@@ -155,7 +155,7 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	*b_len = (header[2] << 8) | header [1];
 
 	/* Read the remaining bytes */
-	CHECK_RESULT (gp_port_read (camera->port, b, *b_len));
+	CR (gp_port_read (camera->port, b, *b_len));
 
 	/*
 	 * The first byte indicates if this the response for our command.
@@ -196,8 +196,8 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 	unsigned int b_len;
 	unsigned int target = *buf_len;
 
-	CHECK_RESULT (pdc700_send (camera, cmd, cmd_len));
-	CHECK_RESULT (pdc700_read (camera, cmd, b, &b_len, &status,
+	CR (pdc700_send (camera, cmd, cmd_len));
+	CR (pdc700_read (camera, cmd, b, &b_len, &status,
 			(cmd[4] == PDC700_FIRST) ? &sequence_number : NULL));
 
 	/* Copy over the data */
@@ -212,8 +212,8 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 			cmd[4] = PDC700_DONE;
 			cmd[5] = sequence_number;
 			GP_DEBUG ("Fetching sequence %i...", sequence_number);
-			CHECK_RESULT (pdc700_send (camera, cmd, 7));
-			CHECK_RESULT (pdc700_read (camera, cmd, b, &b_len,
+			CR (pdc700_send (camera, cmd, 7));
+			CR (pdc700_read (camera, cmd, b, &b_len,
 						&status, &sequence_number));
 
 			/*
@@ -237,7 +237,7 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 		/* Acknowledge last packet */
 		cmd[4] = PDC700_LAST;
 		cmd[5] = sequence_number;
-		CHECK_RESULT (pdc700_send (camera, cmd, 7));
+		CR (pdc700_send (camera, cmd, 7));
 	}
 
 	return (GP_OK);
@@ -269,7 +269,7 @@ pdc700_baud (Camera *camera, int baud)
 
 	cmd[3] = PDC700_BAUD;
 	cmd[4] = b;
-	CHECK_RESULT (pdc700_transmit (camera, cmd, 6, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 6, buf, &buf_len));
 
 	return (GP_OK);
 }
@@ -282,7 +282,7 @@ pdc700_init (Camera *camera)
 	unsigned char buf[2048];
 
 	cmd[3] = PDC700_INIT;
-	CHECK_RESULT (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
 
 	return (GP_OK);
 }
@@ -298,7 +298,7 @@ pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info)
 	cmd[3] = PDC700_PICINFO;
 	cmd[4] = n;
 	cmd[5] = n >> 8;
-	CHECK_RESULT (pdc700_transmit (camera, cmd, 7, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 7, buf, &buf_len));
 
 	/* We don't know about the meaning of buf[0-1] */
 
@@ -349,7 +349,7 @@ pdc700_info (Camera *camera, PDCInfo *info)
 	unsigned char cmd[5];
 
 	cmd[3] = PDC700_INFO;
-	CHECK_RESULT (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
 
 	/*
 	 * buf[0-6]: We don't know. The following has been seen:
@@ -415,7 +415,7 @@ pdc700_capture (Camera *camera)
         unsigned int buf_len;
 
         cmd[3] = PDC700_CAPTURE;
-        CHECK_RESULT (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
+        CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
 
         return (GP_OK);
 };
@@ -429,7 +429,7 @@ pdc700_pic (Camera *camera, unsigned int n,
 	PDCPicInfo info;
 
 	/* Picture size? Allocate the memory */
-	CHECK_RESULT (pdc700_picinfo (camera, n, &info));
+	CR (pdc700_picinfo (camera, n, &info));
 	*size = thumb ? info.thumb_size : info.pic_size;
 	*data = malloc (sizeof (char) * *size);
 	if (!*data)
@@ -458,7 +458,7 @@ pdc700_delete (Camera *camera, unsigned int n)
 
 	cmd[3] = PDC700_DEL;
 	cmd[4] = n;
-	CHECK_RESULT (pdc700_transmit (camera, cmd, 6, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 6, buf, &buf_len));
 
 	/*
 	 * We get three bytes back but don't know the meaning of those.
@@ -502,7 +502,7 @@ camera_abilities (CameraAbilitiesList *list)
 				      GP_FILE_OPERATION_PREVIEW;
 		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 
-		CHECK_RESULT (gp_abilities_list_append (list, a));
+		CR (gp_abilities_list_append (list, a));
 	}
 	
 	return (GP_OK);
@@ -546,15 +546,15 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
 	int count;
 	char buf[1024];
 
-	CHECK_RESULT (pdc700_capture (camera));
+	CR (pdc700_capture (camera));
 
 	/*
 	 * We don't get any info back. However, we need to tell the
 	 * CameraFilesystem that there is one additional picture.
 	 */
-	CHECK_RESULT (count = gp_filesystem_count (camera->fs, "/"));
+	CR (count = gp_filesystem_count (camera->fs, "/"));
 	snprintf (buf, sizeof (buf), "PDC700%04i.jpg", count + 1);
-	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", buf));
+	CR (gp_filesystem_append (camera->fs, "/", buf));
 
 	/* Now tell the frontend where to look for the image */
 	strncpy (path->folder, "/", sizeof (path->folder));
@@ -571,10 +571,10 @@ del_file_func (CameraFilesystem *fs, const char *folder, const char *file,
 	int n;
 
 	/* We need picture numbers starting with 1 */
-	CHECK_RESULT (n = gp_filesystem_number (fs, folder, file));
+	CR (n = gp_filesystem_number (fs, folder, file));
 	n++;
 
-	CHECK_RESULT (pdc700_delete (camera, n));
+	CR (pdc700_delete (camera, n));
 
 	return (GP_OK);
 }
@@ -585,9 +585,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = user_data;
 	int n;
-	unsigned int size, ppm_size;
-	const char header[] = "P6\n80 60\n255\n";
-	unsigned char *data = NULL, *ppm;
+	unsigned int size;
+	unsigned char *data = NULL;
 
 #if 0
 	if (type == GP_FILE_TYPE_RAW)
@@ -595,44 +594,73 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 #endif
 
 	/* Get the number of the picture from the filesystem */
-	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
+	CR (n = gp_filesystem_number (camera->fs, folder, filename));
 
 	/* Get the file */
-	CHECK_RESULT (pdc700_pic (camera, n + 1, &data, &size, 
-				  (type == GP_FILE_TYPE_NORMAL) ? 0 : 1));
+	CR (pdc700_pic (camera, n + 1, &data, &size, 
+			(type == GP_FILE_TYPE_NORMAL) ? 0 : 1));
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
+
+		/* Files are always JPEG */
 		CRF (gp_file_set_data_and_size (file, data, size), data);
-		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
+		CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
 		break;
+
 	case GP_FILE_TYPE_PREVIEW:
 
 		/*
-		 * Image is a YUF 2:1:1 format: 4 bytes for each 2 pixels.
-		 * Y0 U0 Y1 V0 Y2 U2 Y3 V2 Y4 U4 Y5 V4 ....
-		 * So the first four bytes make up the first two pixels.
-		 * You use Y0, U0, V0 to get pixel0 then Y1, U0, V0 to get
-		 * pixel 2. Then onto the next 4-byte sequence.
+		 * Depending on the protocol version, we have different
+		 * encodings.
 		 */
-		ppm_size = size * 3 / 2;
-		ppm = malloc (sizeof (char) * ppm_size);
-		if (!ppm) {
+		if ((data[0]        == 0xff) && (data[1]        == 0xd8) &&
+		    (data[size - 2] == 0xff) && (data[size - 1] == 0xd9)) {
+
+			/* Image is JPEG */
+			CRF (gp_file_set_data_and_size (file, data, size),
+			     data);
+			CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
+
+		} else if (size == 4800) {
+			const char header[] = "P6\n80 60\n255\n";
+			unsigned char *ppm;
+			unsigned int ppm_size;
+
+			/*
+			 * Image is a YUF 2:1:1 format: 4 bytes for each 2
+			 * pixels. Y0 U0 Y1 V0 Y2 U2 Y3 V2 Y4 U4 Y5 V4 ....
+			 * So the first four bytes make up the first two
+			 * pixels. You use Y0, U0, V0 to get pixel0 then Y1,
+			 * U0, V0 to get pixel 2. Then onto the next 4-byte
+			 * sequence.
+			 */
+			ppm_size = size * 3 / 2;
+			ppm = malloc (sizeof (char) * ppm_size);
+			if (!ppm) {
+				free (data);
+				return (GP_ERROR_NO_MEMORY);
+			}
+			pdc700_expand (data, ppm);
 			free (data);
-			return (GP_ERROR_NO_MEMORY);
+			CRF (gp_file_append (file, header, strlen (header)),
+			     ppm);
+			CRF (gp_file_append (file, ppm, ppm_size), ppm);
+			free (ppm);
+			CR (gp_file_set_mime_type (file, GP_MIME_PPM));
+
+		} else {
+			free (data);
+			gp_camera_set_error (camera, _("Unknown image format. "
+				"Please write <gphoto-devel@gphoto.org> for "
+				"assistance."));
+			return (GP_ERROR);
 		}
-		GP_DEBUG ("Expanding %i bytes to %i bytes", size, ppm_size);
-		pdc700_expand (data, ppm);
-		free (data);
-		CRF (gp_file_append (file, header, strlen (header)), ppm);
-		CRF (gp_file_append (file, ppm, ppm_size), ppm);
-		free (ppm);
-		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
 		break;
 
 	case GP_FILE_TYPE_RAW:
 #if 1
 		CRF (gp_file_set_data_and_size (file, data, size), data);
-		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
+		CR (gp_file_set_mime_type (file, GP_MIME_RAW));
 		break;
 #endif
 	default:
@@ -662,7 +690,7 @@ camera_summary (Camera *camera, CameraText *about)
 	static const char *flash[] = {N_("auto"), N_("on"), N_("off")};
 	PDCInfo info;
 
-	CHECK_RESULT (pdc700_info (camera, &info));
+	CR (pdc700_info (camera, &info));
 
 	sprintf (about->text, _(
 		"Date: %i/%02i/%02i %02i:%02i:%02i\n"
@@ -687,7 +715,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	PDCInfo info;
 
 	/* Fill the list */
-	CHECK_RESULT (pdc700_info (camera, &info));
+	CR (pdc700_info (camera, &info));
 	gp_list_populate (list, "PDC700%04i.jpg", info.num_taken);
 
 	return (GP_OK);
@@ -702,9 +730,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	PDCPicInfo pic_info;
 
 	/* Get the picture number from the CameraFilesystem */
-	CHECK_RESULT (n = gp_filesystem_number (fs, folder, file));
+	CR (n = gp_filesystem_number (fs, folder, file));
 
-	CHECK_RESULT (pdc700_picinfo (camera, n + 1, &pic_info));
+	CR (pdc700_picinfo (camera, n + 1, &pic_info));
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	strcpy (info->file.type, GP_MIME_JPEG);
@@ -734,11 +762,11 @@ camera_init (Camera *camera)
 				      del_file_func, camera);
 
 	/* Check if the camera is really there */
-	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
-	CHECK_RESULT (gp_port_set_timeout (camera->port, 1000));
+	CR (gp_port_get_settings (camera->port, &settings));
+	CR (gp_port_set_timeout (camera->port, 1000));
 	for (i = 0; i < 4; i++) {
 		settings.serial.speed = speeds[i];
-		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
+		CR (gp_port_set_settings (camera->port, settings));
 		result = pdc700_init (camera);
 		if (result == GP_OK)
 			break;
@@ -748,9 +776,9 @@ camera_init (Camera *camera)
 
 	/* Set the speed to the highest one */
 	if (speeds[i] < 57600) {
-		CHECK_RESULT (pdc700_baud (camera, 57600));
+		CR (pdc700_baud (camera, 57600));
 		settings.serial.speed = 57600;
-		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
+		CR (gp_port_set_settings (camera->port, settings));
 	}
 
 	return (GP_OK);
