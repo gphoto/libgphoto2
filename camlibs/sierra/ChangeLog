@@ -1,3 +1,7 @@
+2003-09-17  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: we were closing a context id we never opened. Not good.
+
 2003-09-13  Patrick Mansfield <patmans@users.sourceforge.net>
 	* epson-desc.c: remove unused commented out code.
 
