@@ -154,6 +154,12 @@ camera_init (Camera* camera, CameraInit* init)
 	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_put 		= camera_file_put;
 	camera->functions->file_delete 		= camera_file_delete;
+	camera->functions->file_config_get	= NULL;
+	camera->functions->file_config_set	= NULL;
+	camera->functions->folder_config_get	= NULL;
+	camera->functions->folder_config_set	= NULL;
+	camera->functions->config_get		= camera_config_get;
+	camera->functions->config_set		= camera_config_set;
 	camera->functions->config 	  	= camera_config;
 	camera->functions->capture 		= camera_capture;
 	camera->functions->summary		= camera_summary;
@@ -1114,7 +1120,6 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	}
 
 	/* We are done. */
-	gp_widget_unref (window);
 	return (GP_OK);
 }
 
@@ -1132,7 +1137,9 @@ camera_config (Camera *camera)
 			gp_widget_unref (window);
 	                return (GP_OK);
 	        }
-		return (camera_config_set (camera, window));
+		result = camera_config_set (camera, window);
+		gp_widget_unref (window);
+		return (result);
 	} else {
 		if (window) gp_widget_unref (window);
 		return (result);
