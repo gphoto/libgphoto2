@@ -1,3 +1,8 @@
+2001-09-10  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* libgphoto2_port/usb/libusb.c (gp_port_usb_find_device_lib): if
+	device and vendor IDs are 0, return not found.
+
 2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/kodak/dc240/dc240.c (camera_init): Don't open/close the port.

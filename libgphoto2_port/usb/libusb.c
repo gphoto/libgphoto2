@@ -273,6 +273,13 @@ int gp_port_usb_find_device_lib(gp_port * d, int idvendor, int idproduct)
 {
 	struct usb_bus *bus;
 	struct usb_device *dev;
+
+	/* NULL idvendor and idproduct is not valid. */
+	/* should the USB layer report that ? I don't know. Better to check here */
+	if ((idvendor == 0) || (idproduct == 0)) {
+		return GP_ERROR_IO_USB_FIND;
+	}
+
 	for (bus = usb_busses; bus; bus = bus->next) {
 		for (dev = bus->devices; dev; dev = dev->next) {
 			if ((dev->descriptor.idVendor == idvendor) &&
