@@ -1,6 +1,5 @@
 EXTRA_DIST = sierra.df makefile.os2 PROTOCOL
 
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_sierra.la
 
 INCLUDES =                                              \

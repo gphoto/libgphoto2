@@ -1,6 +1,5 @@
 EXTRA_DIST = barbie.df makefile.os2 main.c compile
 
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_barbie.la
 
 INCLUDES =                                              \

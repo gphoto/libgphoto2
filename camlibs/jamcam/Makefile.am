@@ -1,4 +1,3 @@
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_jamcam.la
 
 INCLUDES =                                              \

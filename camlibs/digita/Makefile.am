@@ -1,6 +1,5 @@
 EXTRA_DIST = digita.df makefile.os2
 
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_digita.la
 
 INCLUDES =                                              \

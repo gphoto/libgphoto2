@@ -1,6 +1,5 @@
 SUBDIRS = localization
 
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_konica.la
 
 EXTRA_DIST = EXPERTS konica.df makefile.os2

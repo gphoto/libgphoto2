@@ -1,6 +1,5 @@
 EXTRA_DIST = sonydscf1.df makefile.os2 readme todo
 
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_sony_dscf1.la
 
 INCLUDES =                                              \

@@ -1,6 +1,5 @@
 EXTRA_DIST = jd11.html
 
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_jd11.la
 
 INCLUDES =                                              \

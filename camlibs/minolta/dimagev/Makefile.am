@@ -1,6 +1,5 @@
 EXTRA_DIST = dimagev.df makefile.os2
 
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_dimagev.la
 
 INCLUDES =                                              \

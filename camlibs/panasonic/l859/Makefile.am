@@ -1,4 +1,3 @@
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_panasonic_l859.la
 
 INCLUDES =                                              \

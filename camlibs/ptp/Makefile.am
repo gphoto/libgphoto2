@@ -1,6 +1,5 @@
 EXTRA_DIST = README ptp-pack.c test_ptp.c
 
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_ptp.la
 
 INCLUDES =                                              \

@@ -1,6 +1,5 @@
 EXTRA_DIST = stv0680.df makefile.os2 CREDITS LICENCE README.pdf 680_commands_and_communication_sdk.pdf.gz
 
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_stv0680.la
 
 INCLUDES =                                              \

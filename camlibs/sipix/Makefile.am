@@ -1,4 +1,3 @@
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_sipix.la
 
 EXTRA_DIST = web2.html

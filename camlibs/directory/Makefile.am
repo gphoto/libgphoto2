@@ -1,6 +1,5 @@
 EXTRA_DIST = directory.df directory.def makefile.os2 makedll.cmd
 
-camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_directory.la
 
 INCLUDES =                                              \
