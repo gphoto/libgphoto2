@@ -15,7 +15,7 @@ AC_PROG_CPP
 AM_PROG_LIBTOOL
 
 dnl Solaris hack for grep and tr
-if test -n `echo $host_os | grep solaris`; then
+if test -n "`echo $host_os | grep [sS]olaris`"; then
   TR=/usr/xpg4/bin/tr
   GREP=/usr/xpg4/bin/grep  
 else
