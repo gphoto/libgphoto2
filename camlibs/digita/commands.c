@@ -41,7 +41,7 @@
 
 static void build_command(struct digita_command *cmd, int length, short command)
 {
-	memset(cmd, sizeof(*cmd), 0);
+	memset(cmd, 0, sizeof(*cmd));
 
 	/* Length is the sizeof the digita_command minus the length */
 	/*  parameter, plus whatever other data we send */
