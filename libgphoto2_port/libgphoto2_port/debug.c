@@ -258,7 +258,7 @@ gp_port_debug_history_set_size (unsigned int size)
 					     sizeof (char) * size);
 
 	if (!new_debug_history)
-		return (GP_ERROR_MEMORY);
+		return (GP_ERROR_NO_MEMORY);
 
 	debug_history_size = size;
 	debug_history = new_debug_history;

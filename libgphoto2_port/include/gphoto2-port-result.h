@@ -27,7 +27,7 @@
 
 #define GP_ERROR                        -1
 #define GP_ERROR_BAD_PARAMETERS		-2
-#define GP_ERROR_MEMORY			-3
+#define GP_ERROR_NO_MEMORY		-3
 #define GP_ERROR_LIBRARY		-4
 
 #define GP_ERROR_TIMEOUT                -10

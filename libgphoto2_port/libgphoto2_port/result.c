@@ -57,7 +57,7 @@ gp_port_result_as_string (int result)
 	GP_ERR_RES (GP_ERROR_IO_SUPPORTED_IEEE1394,
 		    "IEEE1394 port not supported");
 	GP_ERR_RES (GP_ERROR_IO_UNKNOWN_PORT, "Unknown port");
-	GP_ERR_RES (GP_ERROR_MEMORY, "Out of memory");
+	GP_ERR_RES (GP_ERROR_NO_MEMORY, "Out of memory");
 	GP_ERR_RES (GP_ERROR_LIBRARY, "Error loading a required library");
 	GP_ERR_RES (GP_ERROR_IO_INIT, "Error initializing the port");
 	GP_ERR_RES (GP_ERROR_IO_OPEN, "Error opening the port");

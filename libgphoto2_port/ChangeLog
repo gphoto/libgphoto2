@@ -1,3 +1,8 @@
+2001-10-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port-result.h: GP_ERROR_NO_MEMORY
+	* libgphoto2_port/result.c: GP_ERROR_NO_MEMORY
+
 2001-10-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Fredrik <fredrik@krixor.xy.org>:

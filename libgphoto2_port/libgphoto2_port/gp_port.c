@@ -141,7 +141,7 @@ gp_port_new (gp_port **dev, gp_port_type type)
 
         *dev = malloc (sizeof (gp_port));
         if (!(*dev))
-		return (GP_ERROR_MEMORY);
+		return (GP_ERROR_NO_MEMORY);
         memset (*dev, 0, sizeof (gp_port));
 
 	result = gp_port_library_load (*dev, type);
