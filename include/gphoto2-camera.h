@@ -11,17 +11,16 @@ int gp_camera_name  (int camera_number, char *camera_name);
 int gp_camera_abilities	    (int camera_number, CameraAbilities *abilities);
 int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities);
 
-int gp_camera_new 	  (Camera **camera, int camera_number);
-int gp_camera_new_by_name (Camera **camera, char *camera_name);
+int gp_camera_new	(Camera **camera);
 
-int gp_camera_ref   (Camera *camera);
-int gp_camera_unref (Camera *camera);
+int gp_camera_ref   	(Camera *camera);
+int gp_camera_unref 	(Camera *camera);
 
-int gp_camera_free (Camera *camera);
+int gp_camera_free 	(Camera *camera);
 
-int gp_camera_init (Camera *camera);
+int gp_camera_init 	(Camera *camera);
 
-int gp_camera_session (Camera *camera);
+int gp_camera_session 	(Camera *camera);
 	
 int gp_camera_folder_list (Camera *camera, CameraList *list, char *folder);
 int gp_camera_file_list   (Camera *camera, CameraList *list, char *folder);

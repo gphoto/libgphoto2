@@ -780,11 +780,12 @@ int set_globals () {
                 return (GP_ERROR);
         }
 
-        if (gp_camera_new_by_name(&glob_camera, glob_model) != GP_OK) {
-                cli_error_print("Can not create camera data \"%s\"",glob_model);
+        if (gp_camera_new(&glob_camera) != GP_OK) {
+                cli_error_print("Can not create camera data");
                 return (GP_ERROR);
         }
 
+	strcpy (glob_camera->model, glob_model);
 	strcpy (glob_camera->port->path, glob_port);
 	glob_camera->port->speed = glob_speed;
 
@@ -866,6 +867,8 @@ void signal_exit (int signo) {
 
 int main (int argc, char **argv) {
 
+	int result;
+
         /* Initialize the globals */
         init_globals();
 
@@ -916,7 +919,8 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
         gp_init(glob_debug? GP_DEBUG_HIGH: GP_DEBUG_NONE);
         gp_frontend_register(gp_interface_status, gp_interface_progress,
                 gp_interface_message, gp_interface_confirm, NULL);
-        if (execute_options(argc, argv) != GP_OK) {
+        if ((result = execute_options(argc, argv)) != GP_OK) {
+		printf ("gPhoto2 reported the error '%s'\n", gp_result_as_string (result));
 //              if (!glob_quiet)
 //                      usage();
                 exit(EXIT_FAILURE);
