@@ -1,5 +1,11 @@
 2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
 
+	* sierra.c: '#if 0' some code that I don't think is needed at all.
+	* library.c (sierra_init): Logs show that sierra_init does not
+	  start a new session (i.e. no 0x53 instead of 0x43 needed).
+
+2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c (sierra_set_speed): A speed change automatically 
 	  starts a new session.
 

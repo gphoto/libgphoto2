@@ -851,11 +851,7 @@ sierra_init (Camera *camera, GPContext *context)
 		switch (buf[0]) {
 		case SIERRA_PACKET_NAK: 
 
-			/*
-			 * Everything is fine. The next packet is 
-			 * the first packet of this new session.
-			 */
-			camera->pl->first_packet = 1;
+			/* Everything is fine. */
 			return (GP_OK);
 
 		case SIERRA_PACKET_SESSION_END:
