@@ -1,3 +1,7 @@
+2001-08-26  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* configure.in: fixed a typo in the dotlibs value.
+
 2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include/gphoto2-camera.h:

@@ -46,7 +46,7 @@ if test $objdir = ".libs"; then
 	dotlibs=""
 else
 	echo ".libs subdirectory not detected : \$dotlibs=.libs"
-	dotlibs=".lib"
+	dotlibs=".libs"
 fi
 
 dnl Checks for libraries.
