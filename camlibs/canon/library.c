@@ -789,8 +789,8 @@ convert_filename_to_8_3(const char* filename, char* dest)
     }
 }
 
-#endif /* EXPERIMENTAL_UPLOAD */
 
+/* XXX This function should be merged with the other one of the same name */
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data,
 	       GPContext *context)
@@ -912,6 +912,117 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 
 	return canon_int_put_file (camera, file, destname, destpath, context);
 }
+
+#else /* not EXPERIMENTAL_UPLOAD */
+
+static int
+put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data,
+	       GPContext *context)
+{
+	Camera *camera = data;
+	char destpath[300], destname[300], dir[300], dcf_root_dir[10];
+	int j, dirnum = 0, r;
+	char buf[10];
+	CameraAbilities a;
+
+	GP_DEBUG ("camera_folder_put_file()");
+
+	if (camera->port->type == GP_PORT_USB) {
+		gp_context_error (context, "File upload not implemented for USB yet");
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+
+	if (check_readiness (camera, context) != 1)
+		return GP_ERROR;
+
+	gp_camera_get_abilities (camera, &a);
+	if (camera->pl->speed > 57600 && (!strcmp (a.model, "Canon PowerShot A50")
+					  || !strcmp (a.model, "Canon PowerShot Pro70"))) {
+		gp_context_error (context,
+				  _
+				  ("Speeds greater than 57600 are not supported for uploading to this camera"));
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+
+	if (!check_readiness (camera, context)) {
+		return GP_ERROR;
+	}
+
+	for (j = 0; j < sizeof (destpath); j++) {
+		destpath[j] = '\0';
+		dir[j] = '\0';
+		destname[j] = '\0';
+	}
+
+	if (camera->pl->cached_drive == NULL) {
+		camera->pl->cached_drive = canon_int_get_disk_name (camera, context);
+		if (camera->pl->cached_drive == NULL) {
+			gp_context_error (context, _("Could not get flash drive letter"));
+			return GP_ERROR;
+		}
+	}
+
+	sprintf (dcf_root_dir, "%s\\DCIM", camera->pl->cached_drive);
+
+	if (strlen (dir) == 0) {
+		sprintf (dir, "\\100CANON");
+		sprintf (destname, "AUT_0001.JPG");
+	} else {
+		if (strlen (destname) == 0) {
+			sprintf (destname, "AUT_%c%c01.JPG", dir[2], dir[3]);
+		} else {
+			sprintf (buf, "%c%c", destname[6], destname[7]);
+			j = 1;
+			j = atoi (buf);
+			if (j == 99) {
+				j = 1;
+				sprintf (buf, "%c%c%c", dir[1], dir[2], dir[3]);
+				dirnum = atoi (buf);
+				if (dirnum == 999) {
+					gp_context_error (context,
+							  _
+							  ("Could not upload, no free folder name available!\n"
+							   "999CANON folder name exists and has an AUT_9999.JPG picture in it."));
+					return GP_ERROR;
+				} else {
+					dirnum++;
+					sprintf (dir, "\\%03iCANON", dirnum);
+				}
+			} else
+				j++;
+
+			sprintf (destname, "AUT_%c%c%02i.JPG", dir[2], dir[3], j);
+		}
+
+		sprintf (destpath, "%s%s", dcf_root_dir, dir);
+
+		GP_DEBUG ("destpath: %s destname: %s\n", destpath, destname);
+	}
+
+	r = canon_int_directory_operations (camera, dcf_root_dir, DIR_CREATE, context);
+	if (r < 0) {
+		gp_context_error (context, _("Could not create \\DCIM directory."));
+		return (r);
+	}
+
+	r = canon_int_directory_operations (camera, destpath, DIR_CREATE, context);
+	if (r < 0) {
+		gp_context_error (context, _("Could not create destination directory."));
+		return (r);
+	}
+
+
+	j = strlen (destpath);
+	destpath[j] = '\\';
+	destpath[j + 1] = '\0';
+
+	clear_readiness (camera);
+
+	return canon_int_put_file (camera, file, destname, destpath, context);
+}
+
+#endif /* EXPERIMENTAL_UPLOAD */
+
 
 
 /****************************************************************************/
@@ -1219,12 +1330,16 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->seq_tx = 1;
 	camera->pl->seq_rx = 1;
 
+#ifdef EXPERIMENTAL_CAPTURE
 	/* we are currently not capturing, are we? */
 	camera->pl->capturing = FALSE;
+#endif
 
 	/* default to false, i.e. list only known file types, use DCIF filenames */
 	camera->pl->list_all_files = FALSE;
+#ifdef EXPERIMENTAL_UPLOAD
 	camera->pl->upload_keep_filename = FALSE;
+#endif
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
