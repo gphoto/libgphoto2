@@ -33,7 +33,7 @@ As to whether 'autogen.sh' does its job, we are not completely sure.
 
     - libtoolize --force --copy
     - gettextize --force --copy
-    - aclocal -I/path/to/gphoto2/libgphoto2_port/m4 -I/path/to/other/macros
+    - aclocal -I /path/to/gphoto2/libgphoto2_port/m4 -I /path/to/other/macros
       (these other macros typically are in
       /opt/gnome/share/aclocal or /usr/share/aclocal)
     - autoheader
