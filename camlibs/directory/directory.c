@@ -214,12 +214,17 @@ int camera_file_delete (int file_number) {
 	return (GP_ERROR);
 }
 
-int camera_config (CameraSetting *setting, int count) {
+int camera_config_get (char *filename) {
+
+        return GP_ERROR;
+}
+
+int camera_config_set (CameraSetting *setting, int count) {
 
 	return (GP_ERROR);
 }
 
-int camera_capture (int type) {
+int camera_capture (CameraFileType type) {
 
 	return (GP_ERROR);
 }

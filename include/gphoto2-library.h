@@ -80,11 +80,20 @@ int camera_file_delete 		(int file_number);
 	/* Deletes a picture from the current folder on the	*/
 	/* camera. 						*/
 
-int camera_config 		(CameraSetting *conf,
-				 int count);
-	/* Sets configuration values in the library. */
+int camera_config_get		(char *filename);
+	/* Copies in the filename of the configuration dialog	*/
+	/* to use. This allows libraries to have multiple 	*/
+	/* configuration dialogs for different cameras.		*/
 
-int camera_capture 		(int type);
+int camera_config_set		(CameraSetting *conf,
+				 int count);
+	/* Sets configuration values in the library. These	*/
+	/* values are obtained from the configuration dialog.	*/
+
+int camera_capture 		(CameraFileType type);
+	/* Have the camera capture a file of type 'type'. 	*/
+	/* type will be one of the generic CameraFileType's.	*/
+	/* This is used to get live previews.			*/
 
 int camera_summary 		(char *summary);
 int camera_manual 		(char *manual);

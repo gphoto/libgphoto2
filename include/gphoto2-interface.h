@@ -6,7 +6,7 @@
 */
 
 
-/* Functions provided by the front-end interface
+/* Functions required to be provided by the front-end interface
    ---------------------------------------------------------------- */
 
 /* Displays the current status on an operation in the camera */
@@ -20,4 +20,3 @@
 
 /* Displays a configuration */
 	int interface_confirm (char *message);
-

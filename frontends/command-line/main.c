@@ -690,14 +690,15 @@ void usage () {
 
 	/* Standard licensing stuff */
 	printf(
-	"gPhoto2 (v%s)- Cross-platform digital camera library.\n"
+	"\ngPhoto2 (v%s)- Cross-platform digital camera library.\n"
 	"Copyright (C) 2000 Scott Fritzinger\n"
-	"gPhoto is licensed under the Library GNU Public License (LGPL).\n"
+	"Licensed under the Library GNU Public License (LGPL).\n"
 	"Usage:\n", VERSION
 	);
 
 	printf ("Short/long options (& argument)        description\n"
-		"--------------------------------------------------------------------\n");
+	        "------------------------------------------------------------------------\n");
+
 	/* Run through option and print them out */
 	while (x < option_count) {
 		/* maybe sort these by short option? can't be an in-place sort.
@@ -720,9 +721,8 @@ void usage () {
 		printf("%-38s %s\n", buf, option[x].description);
 		x++;
 	}
-	printf( "\nNOTES:\n"
-	  	"  - Use double-quotes around arguments\n"
-		"  - Picture numbers begin at zero (0)\n");
+	printf( "------------------------------------------------------------------------\n"
+	        "[Use double-quotes around arguments] [Picture numbers begin at zero (0)]\n");
 }
 
 /* Misc functions							*/
@@ -778,8 +778,8 @@ int main (int argc, char **argv) {
 	gp_init();
 
 	if (execute_options(argc, argv) == GP_ERROR) {
-		if (!glob_quiet)
-			usage();
+//		if (!glob_quiet)
+//			usage();
 		exit(EXIT_FAILURE);
 	}
 

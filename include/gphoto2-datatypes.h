@@ -16,11 +16,14 @@
 /* File Types */
 typedef enum {
 	GP_FILE_UNKNOWN,
+	GP_FILE_IMAGE,	/* Generic */
 	GP_FILE_JPEG,
 	GP_FILE_TIFF,
 	GP_FILE_FLASHPIX,
 	GP_FILE_PPM,
+	GP_FILE_AUDIO,	/* Generic */
 	GP_FILE_WAV,
+	GP_FILE_MOVIE,	/* Generic */
 	GP_FILE_MPEG,
 	GP_FILE_QUICKTIME
 } CameraFileType;
@@ -35,7 +38,6 @@ typedef enum {
 	GP_PORT_IRDA,
 	GP_PORT_SOCKET
 } CameraPortType;
-
 
 typedef gpio_device_info CameraPortInfo;
 

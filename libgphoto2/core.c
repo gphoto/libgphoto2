@@ -329,10 +329,10 @@ int gp_config_get (char *config_dialog_filename) {
 
 int gp_config_set (CameraSetting *setting, int count) {
 
-	if (glob_c.config == NULL)
+	if (glob_c.config_set == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.config(setting, count));
+	return(glob_c.config_set(setting, count));
 }
 
 int gp_capture (int type) {
