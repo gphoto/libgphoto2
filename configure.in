@@ -143,6 +143,16 @@ fi
 ]
 
 dnl ---------------------------------------------------------------------------
+dnl camlib directory
+dnl ---------------------------------------------------------------------------
+AC_MSG_CHECKING(where to install camlibs)
+AC_ARG_WITH(camlibdir,
+  [  --with-camlibdir=<path>   install camlibs in directory <path> ],
+  camlibdir="$withval", camlibdir='${libdir}/gphoto2')
+AC_MSG_RESULT("$camlibdir")
+AC_SUBST(camlibdir)
+
+dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
 camlibs='barbie canon casio digita dimera directory fuji gsmart jamcam jd11 kodak konica largan minolta mustek panasonic pccam600 polaroid ptp ricoh samsung sierra sipix sipixblink sonydscf1 sonydscf55 soundvision stv0680 sx330z'
