@@ -329,7 +329,7 @@ uint16_t ptp_closesession (PTPParams *params);
 
 uint16_t ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids);
 uint16_t ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
-			PTPStorageInfo* storageinfo)
+			PTPStorageInfo* storageinfo);
 
 uint16_t ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 			uint32_t objectformatcode, uint32_t associationOH,
