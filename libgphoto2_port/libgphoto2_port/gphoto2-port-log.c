@@ -1,4 +1,4 @@
-/* gphoto2-port-log.h
+/* gphoto2-port-log.c
  *
  * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
