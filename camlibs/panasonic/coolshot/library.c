@@ -416,13 +416,13 @@ int coolshot_write_packet (Camera *camera, char *packet) {
 
 	for (r = 0; r < RETRIES; r++) {
 		ret = gp_port_write (camera->port, packet, length);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 
 		return (ret);
 	}
 
-	return (GP_ERROR_IO_TIMEOUT);
+	return (GP_ERROR_TIMEOUT);
 }
 
 
@@ -447,7 +447,7 @@ read_packet_again:
 	for (r = 0; r < RETRIES; r++) {
 
 		bytes_read = gp_port_read (camera->port, packet, blocksize);
-		if (bytes_read == GP_ERROR_IO_TIMEOUT)
+		if (bytes_read == GP_ERROR_TIMEOUT)
 			continue;
 		if (bytes_read < 0)
 			return (bytes_read);
@@ -469,7 +469,7 @@ read_packet_again:
 		}
 
 		bytes_read = gp_port_read (camera->port, packet + 1, 3 );
-		if (bytes_read == GP_ERROR_IO_TIMEOUT)
+		if (bytes_read == GP_ERROR_TIMEOUT)
 			continue;
 		if (bytes_read < 0)
 			return (bytes_read);
@@ -480,7 +480,7 @@ read_packet_again:
 			( strncmp( packet + 2, "SB", 2 ) == 0 )) {
 			/* normal 16-byte packet, so read the other 12 bytes */
 			ret = gp_port_read (camera->port, packet + 4, 12 );
-			if (ret == GP_ERROR_IO_TIMEOUT) {
+			if (ret == GP_ERROR_TIMEOUT) {
 				/* fixme */
 				/*
 				coolshot_nak (camera);
@@ -512,7 +512,7 @@ read_packet_again:
 			/* fixme, error detection */
 
 			x = 0;
-			while(( ret == GP_ERROR_IO_TIMEOUT ) &&
+			while(( ret == GP_ERROR_TIMEOUT ) &&
 			      ( x < RETRIES )) {
 				x++;
 				ret = gp_port_read (camera->port, packet + 8, length );
@@ -524,7 +524,7 @@ read_packet_again:
 		if (done) break;
 	}
 
-	return (GP_ERROR_IO_TIMEOUT);
+	return (GP_ERROR_TIMEOUT);
 }
 
 
@@ -540,12 +540,12 @@ int coolshot_ack (Camera *camera)
 	for (r = 0; r < RETRIES; r++) {
 
 		ret = coolshot_write_packet (camera, buf);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		if (ret == GP_OK)
 			return (ret);
 	}
-	return (GP_ERROR_IO_TIMEOUT);
+	return (GP_ERROR_TIMEOUT);
 }
 
 int coolshot_nak (Camera *camera)
@@ -560,12 +560,12 @@ int coolshot_nak (Camera *camera)
 	for (r = 0; r < RETRIES; r++) {
 
 		ret = coolshot_write_packet (camera, buf);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		if (ret == GP_OK)
 			return (ret);
 	}
-	return (GP_ERROR_IO_TIMEOUT);
+	return (GP_ERROR_TIMEOUT);
 }
 
 int coolshot_enq (Camera *camera)
@@ -580,13 +580,13 @@ int coolshot_enq (Camera *camera)
 	for (r = 0; r < RETRIES; r++) {
 
 		ret = coolshot_write_packet (camera, buf);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		if (ret != GP_OK)
 			return (ret);
 
 		ret = coolshot_read_packet (camera, buf);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		if (ret != GP_OK)
 			return (ret);
@@ -597,7 +597,7 @@ int coolshot_enq (Camera *camera)
 			return (GP_ERROR_CORRUPTED_DATA);
 
 	}
-	return (GP_ERROR_IO_TIMEOUT);
+	return (GP_ERROR_TIMEOUT);
 }
 
 

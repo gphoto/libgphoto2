@@ -135,7 +135,7 @@ static int stv0680_try_cmd(GPPort *port, unsigned char cmd,
 	    while(retries--) {
 		/* data3 was always 0 */
 		switch(ret=stv0680_cmd(port,cmd,(data>>8)&0xff,data&0xff,0,response,response_len)) {
-		case GP_ERROR_IO_TIMEOUT:
+		case GP_ERROR_TIMEOUT:
 		case GP_ERROR_BAD_PARAMETERS:
 			break;
 		default:

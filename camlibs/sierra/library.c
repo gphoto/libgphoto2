@@ -380,13 +380,13 @@ sierra_write_packet (Camera *camera, char *packet)
 	for (r = 0; r < RETRIES; r++) {
 
 		ret = gp_port_write (camera->port, packet, length);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 
 		return (ret);
 	}
 
-	return (GP_ERROR_IO_TIMEOUT);
+	return (GP_ERROR_TIMEOUT);
 }
 
 static int
@@ -532,7 +532,7 @@ sierra_read_packet (Camera *camera, char *packet)
 			}
 
 			/* Retry on IO error only */
-			if (ret_status == GP_ERROR_IO_TIMEOUT) {
+			if (ret_status == GP_ERROR_TIMEOUT) {
 				sierra_write_nak (camera);
 				GP_SYSTEM_SLEEP(10);
 			}
@@ -608,13 +608,13 @@ int sierra_ping (Camera *camera)
 	for (r = 0; r < RETRIES; r++) {
 
 		ret = sierra_write_packet (camera, buf);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		if (ret != GP_OK)
 			return ret;;
 
 		ret = sierra_read_packet (camera, buf);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		if (ret != GP_OK)
 			return ret;
@@ -766,7 +766,7 @@ int sierra_set_int_register (Camera *camera, int reg, int value)
 		CHECK (sierra_write_packet (camera, p));
 
 		ret = sierra_read_packet (camera, buf);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		CHECK (ret);
 
@@ -810,7 +810,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value)
 			CHECK (sierra_write_packet (camera, packet));
 
 		ret = sierra_read_packet (camera, buf);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		CHECK (ret);
 
@@ -892,12 +892,12 @@ int sierra_set_string_register (Camera *camera, int reg, const char *s, long int
 		while ((r++ < RETRIES) && (!done)) {
 
 			ret = sierra_write_packet (camera, packet);
-			if (ret == GP_ERROR_IO_TIMEOUT)
+			if (ret == GP_ERROR_TIMEOUT)
 				continue;
 			CHECK (ret);
 
 			ret = sierra_read_packet (camera, buf);
-			if (ret == GP_ERROR_IO_TIMEOUT)
+			if (ret == GP_ERROR_TIMEOUT)
 				continue;
 			CHECK (ret);
 
@@ -1036,12 +1036,12 @@ int sierra_delete (Camera *camera, int picture_number)
 	while ((!done) && (r++<RETRIES)) {
 
 		ret = sierra_write_packet (camera, packet);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		CHECK (ret);
 
 		ret = sierra_read_packet (camera, buf);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		CHECK (ret);
 

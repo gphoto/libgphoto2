@@ -114,7 +114,7 @@ static int get_raw_byte (void)
 	        ret=gp_port_read(thedev,buffer,1);
 		/*ret = read(devfd, buffer, 128);*/
 		DBG2("GOT %d",ret);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			return -1;  /* timeout */
 		if (ret == GP_ERROR) {
 		  return -1;  /* error */

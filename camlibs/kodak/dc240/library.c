@@ -141,8 +141,7 @@ static int dc240_wait_for_completion (Camera *camera) {
                case GP_ERROR: 
                     return (GP_ERROR); 
                     break;
-               case GP_ERROR_IO_TIMEOUT:
-               case GP_ERROR_TIMEOUT: 
+               case GP_ERROR_TIMEOUT:
                     break;
                default:
                     done = 1;
@@ -178,7 +177,6 @@ static int dc240_wait_for_busy_completion (Camera *camera)
 	case GP_ERROR:
 	    return retval; 
 	    break;
-	case GP_ERROR_IO_TIMEOUT:
 	case GP_ERROR_IO_READ:
 	case GP_ERROR_TIMEOUT: 
 	    /* in busy state, GP_ERROR_IO_READ can happend */
@@ -237,8 +235,7 @@ read_data_read_again:
 
         /* Read the response/data */
         retval = dc240_packet_read(camera, packet, block_size+2);
-        if ((retval ==  GP_ERROR) || (retval == GP_ERROR_TIMEOUT) ||
-          (retval == GP_ERROR_IO_TIMEOUT) ) {
+        if ((retval ==  GP_ERROR) || (retval == GP_ERROR_TIMEOUT)) {
             /* ERROR reading response/data */
             if (retries++ > RETRIES)
                 return (GP_ERROR);

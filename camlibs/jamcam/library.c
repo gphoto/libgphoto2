@@ -499,13 +499,13 @@ int jamcam_write_packet (Camera *camera, char *packet, int length) {
 
 	for (r = 0; r < RETRIES; r++) {
 		ret = gp_port_write (camera->port, packet, length);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 
 		return (ret);
 	}
 
-	return (GP_ERROR_IO_TIMEOUT);
+	return (GP_ERROR_TIMEOUT);
 }
 
 
@@ -519,7 +519,7 @@ int jamcam_read_packet (Camera *camera, char *packet, int length) {
 
 	for (r = 0; r < RETRIES; r++) {
 		bytes_read = gp_port_read (camera->port, packet, length);
-		if (bytes_read == GP_ERROR_IO_TIMEOUT)
+		if (bytes_read == GP_ERROR_TIMEOUT)
 			continue;
 		if (bytes_read < 0)
 			return (bytes_read);
@@ -529,7 +529,7 @@ int jamcam_read_packet (Camera *camera, char *packet, int length) {
 		}
 	}
 
-	return (GP_ERROR_IO_TIMEOUT);
+	return (GP_ERROR_TIMEOUT);
 }
 
 
@@ -549,13 +549,13 @@ int jamcam_enq (Camera *camera)
 				strcpy((char *)buf, "KB99" );
 
 				ret = jamcam_write_packet (camera, (char *)buf, 4);
-				if (ret == GP_ERROR_IO_TIMEOUT)
+				if (ret == GP_ERROR_TIMEOUT)
 					continue;
 				if (ret != GP_OK)
 					return (ret);
 
 				ret = jamcam_read_packet (camera, (char *)buf, 4);
-				if (ret == GP_ERROR_IO_TIMEOUT)
+				if (ret == GP_ERROR_TIMEOUT)
 					continue;
 				if (ret != GP_OK)
 					return (ret);
@@ -609,7 +609,7 @@ int jamcam_enq (Camera *camera)
 			break;
 	}
 
-	return (GP_ERROR_IO_TIMEOUT);
+	return (GP_ERROR_TIMEOUT);
 }
 
 int jamcam_query_mmc_card (Camera *camera)
@@ -629,13 +629,13 @@ int jamcam_query_mmc_card (Camera *camera)
 	for (r = 0; r < RETRIES; r++) {
 
 		ret = jamcam_write_packet (camera, buf, 4);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		if (ret != GP_OK)
 			return (ret);
 
 		ret = jamcam_read_packet (camera, buf, 4);
-		if (ret == GP_ERROR_IO_TIMEOUT)
+		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		if (ret != GP_OK)
 			return (ret);
@@ -651,6 +651,6 @@ int jamcam_query_mmc_card (Camera *camera)
 
 		return (GP_OK);
 	}
-	return (GP_ERROR_IO_TIMEOUT);
+	return (GP_ERROR_TIMEOUT);
 }
 

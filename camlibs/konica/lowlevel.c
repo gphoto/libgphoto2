@@ -51,45 +51,99 @@
 #define CHECK_NULL(r)   {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_FREE(r,f) {int ret = (r); if (ret < 0) {free (f); return (ret);}}
 
+static int
+l_ping_rec (GPPort *device, unsigned int level)
+{
+	unsigned char c;
+
+	/* Write ENQ and read the response. */
+	c = ENQ;
+	CHECK (gp_port_write (device, &c, 1));
+	CHECK (gp_port_read (device, &c, 1));
+	switch (c) {
+	case ACK:
+		return (GP_OK);
+	case NACK:
+
+		/*
+		 * Uh, lets try again a couple of times, but
+		 * make sure we don't recurse forever.
+		 */
+		if (level < 30)
+			return (l_ping_rec (device, level + 1));
+		else
+			return (GP_ERROR_CORRUPTED_DATA);
+	case ENQ:
+		
+		/*
+		 * ENQ received. It seems that the camera would like
+		 * to send us data, but we do not want it and
+		 * therefore simply reject it. The camera will try
+		 * two more times with ENQ to get us to receive data
+		 * before finally giving up and sending us ACK.
+		 */
+
+		/* Write NACK.  */
+		c = NACK;
+		CHECK (gp_port_write (device, &c, 1));
+		for (;;) {
+			CHECK (gp_port_read (device, &c, 1));
+			switch (c) {
+			case ENQ:
+
+				/* The camera has not yet given up. */
+				continue;
+
+			case ACK:
+
+				/* ACK received. We can proceed. */
+				return (GP_OK);
+			default:
+
+				/* This should not happen. */
+				return (GP_ERROR_CORRUPTED_DATA);
+			}
+			break;
+		}
+		break;
+	default:
+
+		/*
+		 * The camera seems to send us data. We'll
+		 * simply ignore it and try again (but make
+		 * sure that we don't loop forever).
+		 */
+		CHECK (gp_port_flush (device, 0));
+		CHECK (gp_port_flush (device, 1));
+		if (level > 50)
+			return (GP_ERROR_CORRUPTED_DATA);
+		else
+			return (l_ping_rec (device, level + 1));
+	}
+
+	return (GP_OK);
+}
+
+static int
+l_ping (GPPort *device)
+{
+	return (l_ping_rec (device, 0));
+}
+
 int 
 l_init (GPPort *device)
 {
-	unsigned char c;
-	int i, result;
-
+	unsigned int i;
+	int result = GP_OK;
 	CHECK_NULL (device);
 
 	CHECK (gp_port_set_timeout (device, DEFAULT_TIMEOUT));
-	for (i = 0; ; i++) {
-
-		/* Write ENQ. 	*/
-		CHECK (gp_port_write (device, "\5", 1));
-		if ((result = gp_port_read (device, &c, 1)) < 1) {
-
-			/*
-			 * We didn't receive anything. We'll try up to four
-			 * times.
-			 */
-			if (i == 4)
-				return (result);
-			continue;
-		}
-		switch (c) {
-		case ACK:
-
-			/* ACK received. We can proceed. */
-			return (GP_OK);
-
-		default:
-			/*
-			 * The camera seems to be sending something. We'll
-			 * dump all bytes we get and try again.
-			 */
-			while (gp_port_read (device, &c, 1) > 0);
-			i--;
+	for (i = 0; i < 3; i++) {
+		result = l_ping (device);
+		if (result != GP_ERROR_TIMEOUT)
 			break;
-		}
 	}
+	return (result);
 }
 
 static int 
@@ -146,6 +200,8 @@ l_send (GPPort *device, unsigned char *send_buffer,
 
 	CHECK_NULL (device && send_buffer);
 
+	CHECK (gp_port_set_timeout (device, 1000));
+#if 0
 	for (;;) {
 
 		/* Write ENQ. */
@@ -215,6 +271,8 @@ l_send (GPPort *device, unsigned char *send_buffer,
 		}
 		break;
 	}
+#endif
+
 	/********************************************************/
 	/* We will write:			 		*/
 	/*  - STX						*/

@@ -1,3 +1,8 @@
+2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs: Remove references to GP_ERROR_IO_TIMEOUT - we use
+	  GP_ERROR_TIMEOUT instead.
+
 2001-12-08  Marcus Meissner <marcus@jet.franken.de>
 	
 	* camlibs/stv0680: Added 'capture-image'. Tried implementing a 
