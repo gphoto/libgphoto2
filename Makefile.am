@@ -1,5 +1,8 @@
 # Process this file with automake to generate a GNU Makefile
 
+########################################################################
+# put file lists and special compile rules here
+
 bin_SCRIPTS = gphoto2-config
 
 EXTRA_DIST = HACKING MAINTAINERS acconfig.h autogen.sh \
@@ -20,9 +23,23 @@ docdir = @DOC_DIR@
 doc_DATA = AUTHORS COPYING README
 
 ########################################################################
+# The following default options for aclocal and automake
+# are required in the top level Makefile.am for the automatic 
+# re-building of the build system files. 
+#
+# It is not sufficient to have these options somewhere in autogen.sh!
+
+# default options for aclocal
+ACLOCAL_AMFLAGS = -I $(top_srcdir)/libgphoto2_port/m4
+# default options for automake - only required in the top Makefile.am
+AUTOMAKE_OPTIONS = gnu
+
+########################################################################
+# The following rules are only interesting if you want to create
+# distribution packages (as source tarballs or system specific packages)
+
 # create .tar.bz2 distribution package for convenience if the
 # $(TAR) on this system supports it. else do nothing.
-
 dist-hook:
 	if [ "x${CDPATH}" != "x" ]; then \
 		echo "You have set CDPATH. If make dist fails, try to unset CDPATH."; \
