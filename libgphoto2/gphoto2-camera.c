@@ -155,8 +155,7 @@ gp_camera_set_model (Camera *camera, const char *model)
 
 	CHECK_RESULT (gp_camera_abilities_by_name (model, &abilities));
 	CHECK_RESULT (gp_camera_set_abilities (camera, abilities));
-	strncpy (camera->model, model, sizeof (camera->model));
-	
+
 	return (GP_OK);
 }
 
@@ -195,9 +194,6 @@ gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 	CHECK_NULL (camera);
 
 	memcpy (&camera->pc->a, &abilities, sizeof (CameraAbilities));
-
-//FIXME: Remove this. Up to now, some camera drivers still need it.
-	strcpy (camera->model, abilities.model);
 
 	return (GP_OK);
 }
@@ -690,13 +686,19 @@ int
 gp_camera_init (Camera *camera)
 {
         CameraList list;
+	CameraAbilities a;
 	const char *model, *port;
 	CameraLibraryInitFunc init_func;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Initializing camera...");
 
 	CHECK_NULL (camera);
-	gp_camera_status (camera, _("Initializing camera..."));
+
+	if (!strcmp (camera->pc->a.model, ""))
+		gp_camera_status (camera, _("Initializing camera..."));
+	else
+		gp_camera_status (camera, _("Initializing '%s'..."),
+				  camera->pc->a.model);
 
 	/*
 	 * If the port or the model hasn't been indicated, try to
@@ -715,6 +717,8 @@ gp_camera_init (Camera *camera)
 				return (GP_ERROR_MODEL_NOT_FOUND);
 
 			CRS (camera, gp_list_get_name  (&list, 0, &model));
+			CRS (camera, gp_camera_abilities_by_name (model, &a));
+			CRS (camera, gp_camera_set_abilities (camera, a));
 			CRS (camera, gp_camera_set_model (camera, model));
 			CRS (camera, gp_list_get_value (&list, 0, &port));
 			CRS (camera, gp_camera_set_port_path (camera, port));

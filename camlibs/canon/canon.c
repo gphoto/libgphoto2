@@ -1207,19 +1207,21 @@ camera_folder_put_file (Camera *camera, const char *folder, CameraFile * file)
 	char destpath[300], destname[300], dir[300], dcf_root_dir[10];
 	int j, dirnum = 0;
 	char buf[10];
+	CameraAbilities a;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_folder_put_file()");
 
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
+	gp_camera_get_abilities (camera, &a);
 	if (cs->speed > 57600 &&
-	    (strcmp (camera->model, "Canon PowerShot A50") == 0
-	     || strcmp (camera->model, "Canon PowerShot Pro70") == 0)) {
+		(!strcmp (a.model, "Canon PowerShot A50") ||
+		 !strcmp (a.model, "Canon PowerShot Pro70"))) {
 		gp_camera_message (camera,
 				   _
 				   ("Speeds greater than 57600 are not supported for uploading to this camera"));
-		return GP_ERROR;
+		return GP_ERROR_NOT_SUPPORTED;
 	}
 
 	if (!check_readiness (camera)) {
