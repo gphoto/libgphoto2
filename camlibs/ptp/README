@@ -2,7 +2,7 @@
 *About this software*
 =====================
 
-This is libptp2!
+This is libptp2 (ptp(1) driver)! This version is obsolete, use ptp2 instead!
 
 This library is under developement yet.
 It's designed to use with gphoto2, but can be easily used with any other

@@ -69,10 +69,13 @@ ptp_error (PTPParams *params, const char *format, ...)
         va_list args;
 
         va_start (args, format);
-        if (params->error_func)
+        if (params->error_func!=NULL)
                 params->error_func (params->data, format, args);
         else
+	{
                 vfprintf (stderr, format, args);
+		fprintf (stderr,"\n");
+	}
         va_end (args);
 }
 

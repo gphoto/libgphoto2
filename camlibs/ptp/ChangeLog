@@ -1,3 +1,10 @@
+2003-04-25 Mariusz Woloszyn
+	* library.c: added perror on gp_port_read() and write error; it
+	  won't hurt
+	* ptp.c: NULL does not have to be 0 bug fixed;
+	  cosmetics error output tuning;
+	* README: marked this code as obsolete
+
 2003-03-27 Mariusz Woloszyn
 	* library.c: added HP PhotoSmart 320
 2003-01-10 Mariusz Woloszyn
