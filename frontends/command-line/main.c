@@ -1350,8 +1350,9 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 			int n;
 			printf (_("For debugging messages, please use the --debug option.\n"
 				  "Debugging messages may help finding a solution to your problem.\n"
-				  "If you intend to send any error or debug messages to the mailing list, \n"
-				  "please run gphoto2 as follows:\n\n"));
+				  "If you intend to send any error or debug messages to the gphoto\n"
+				  "developer mailing list <gphoto-devel@gphoto.org>, please run\n"
+				  "gphoto2 as follows:\n\n"));
 			/* print the exact command line to assist l^Husers */
 			printf ("    env LANG=C gphoto2 --debug");
 			for (n = 1; n < argc; n++) {

@@ -1,3 +1,9 @@
+2002-01-01  Fredrik <fredrik@krixor.xy.org>
+
+	* frontends/command-line/main.c: Better wording in text telling
+	  users to mail the gphoto-devel mailing list when something
+	  goes wrong.
+
 2001-12-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-filesys.[c,h] (gp_filesystem_delete_file_noop):
