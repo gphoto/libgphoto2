@@ -184,7 +184,7 @@ void gp_jpeg_parse(jpeg *myjpeg, chunk *picture)
             gp_jpeg_findactivemarker(&id, &position, picture);
             gp_jpeg_add_marker(myjpeg,picture,0,position-1);
             lastposition=position;
-            position=position++;
+            position++;
         }
         else
         {
