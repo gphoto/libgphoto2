@@ -140,7 +140,7 @@ static struct {
 } models[] = {
 	{"Kodak DC-240 (PTP)",  0x40a, 0x121}, /* Special firmware */
 	{"Kodak DC-4800", 0x40a, 0x160},
-	{"Kodak DX-3500", 0x40b, 0x500},
+	{"Kodak DX-3500", 0x40a, 0x500},
 	{"Kodak DX-3600", 0, 0},
 	{"Kodak DX-3900", 0, 0},
 	{"Kodak MC3", 0, 0},
