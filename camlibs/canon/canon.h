@@ -16,30 +16,59 @@
 # endif
 #endif
 
-/* Battery status values:
+/**
+ * canonPowerStatus:
+ * @CAMERA_POWER_BAD: Value returned if power source is bad
+ *   (i.e. battery is low).
+ * @CAMERA_POWER_OK: Value returned if power source is OK.
+ *
+ * Battery status values
+ *
+ */
+typedef enum {
+	CAMERA_POWER_BAD = 4,
+	CAMERA_POWER_OK  = 6
+} canonPowerStatus;
+/* #define CAMERA_POWER_OK     6 */
+/* #define CAMERA_POWER_BAD    4 */
 
- * hopefully obsolete values first - we now just use the bit 
- * that makes the difference
-
-  obsolete #define CAMERA_ON_AC       16
-  obsolete #define CAMERA_ON_BATTERY  48
-*/
-
-#define CAMERA_POWER_OK     6
-#define CAMERA_POWER_BAD    4
+/* #define CAMERA_ON_AC       16 obsolete; we now just use*/
+/* #define CAMERA_ON_BATTERY  48 the bit that makes the difference */
 
 #define CAMERA_MASK_BATTERY  32
 
-/* Flags to find important points in JFIF or EXIF files */
-#define JPEG_ESC        0xFF
-#define JPEG_BEG        0xD8
-#define JPEG_SOS        0xDB
-#define JPEG_A50_SOS    0xC4
-#define JPEG_END        0xD9
+/**
+ * canonJpegMarkerCode:
+ * @JPEG_ESC: Byte value to flag possible JPEG code.
+ * @JPEG_BEG: Byte value which, immediately after %JPEG_ESC, marks the start
+ *  of JPEG image data in a JFIF file.
+ * @JPEG_SOS: Byte value to flag a JPEG SOS marker.
+ * @JPEG_A50_SOS: Byte value to flag a JPEG SOS marker in a file from
+ *   a PowerShot A50 camera.
+ * @JPEG_END: Byte code to mark the end of a JPEG image?
+ *
+ * Flags to find important points in JFIF or EXIF files
+ *
+ */
+typedef enum {
+	JPEG_ESC     = 0xFF,
+	JPEG_BEG     = 0xD8,
+	JPEG_SOS     = 0xDB,
+	JPEG_A50_SOS = 0xC4,
+	JPEG_END     = 0xD9
+} canonJpegMarkerCode;
 
+/* #define JPEG_ESC        0xFF */
+/* #define JPEG_BEG        0xD8 */
+/* #define JPEG_SOS        0xDB */
+/* #define JPEG_A50_SOS    0xC4 */
+/* #define JPEG_END        0xD9 */
 
 /**
- * Various camera types
+ * canonCamModel
+ *
+ * Enumeration of all camera types currently supported.
+ *
  */
 typedef enum {
 	CANON_PS_A5,
@@ -76,7 +105,7 @@ typedef enum {
  *
  * Checks if the given parameter is NULL. If so, reports through
  *  gp_context_error() (assuming that "context" is defined) and returns
- *  @GP_ERROR_BAD_PARAMETERS from the enclosing function.
+ *  %GP_ERROR_BAD_PARAMETERS from the enclosing function.
  *
  */
 #define CON_CHECK_PARAM_NULL(param) \
@@ -90,7 +119,7 @@ typedef enum {
  * @param: value to check for NULL
  *
  * Checks if the given parameter is NULL. If so, returns
- *  @GP_ERROR_BAD_PARAMETERS from the enclosing function.
+ *  %GP_ERROR_BAD_PARAMETERS from the enclosing function.
  *
  */
 #define CHECK_PARAM_NULL(param) \
@@ -100,8 +129,12 @@ typedef enum {
 	}
 
 
-/*
+/**
  * canonCaptureSupport:
+ * @CAP_NON: No support for capture with this camera
+ * @CAP_SUP: Capture is fully supported for this camera
+ * @CAP_EXP: Capture support for this camera is experimental, i.e. it
+ *    has known problems
  *
  * State of capture support
  *  Non-zero if any support exists, but lets caller know
@@ -175,26 +208,113 @@ struct _CameraPrivateLibrary
 	int cached_available;
 };
 
-/* A minimum dirent is :
- * 2    attributes + 0x00
- * 4    file date (UNIX localtime)
- * 4    file size
- * 1    empty path '' plus NULL byte
+/*#define CANON_MINIMUM_DIRENT_SIZE	11*/
+
+/**
+ * canonDirentOffset:
+ * @CANON_DIRENT_ATTRS: Attribute byte
+ * @CANON_DIRENT_SIZE: 4 byte file size
+ * @CANON_DIRENT_TIME: 4 byte Unix time
+ * @CANON_DIRENT_NAME: Variable length ASCII path name
+ * @CANON_MINIMUM_DIRENT_SIZE: Minimum size of a directory entry,
+ *      including a null byte for an empty path name
+ *
+ * Offsets of fields of direntry in bytes.
+ *  A minimum directory entry is:
+ *  2 bytes attributes,
+ *  4 bytes file date (UNIX localtime),
+ *  4 bytes file size,
+ *  1 byte empty path '' plus NULL byte.
+ *
+ * Wouldn't this be better as a struct?
+ *
  */
-#define CANON_MINIMUM_DIRENT_SIZE	11
+typedef enum {
+	CANON_DIRENT_ATTRS = 0,
+	CANON_DIRENT_SIZE  = 2,
+	CANON_DIRENT_TIME  = 6,
+	CANON_DIRENT_NAME = 10,
+	CANON_MINIMUM_DIRENT_SIZE
+} canonDirentOffset;
 
-/* offsets of fields of direntry in bytes */
-#define CANON_DIRENT_ATTRS 0
-#define CANON_DIRENT_SIZE  2
-#define CANON_DIRENT_TIME  6
-#define CANON_DIRENT_NAME 10
+/* #define CANON_DIRENT_ATTRS 0 */
+/* #define CANON_DIRENT_SIZE  2 */
+/* #define CANON_DIRENT_TIME  6 */
+/* #define CANON_DIRENT_NAME 10 */
 
-/* what to list in canon_int_list_directory */
-#define CANON_LIST_FILES (1 << 1)
-#define CANON_LIST_FOLDERS (1 << 2)
+/**
+ * canonDirentAttributeBits:
+ * @CANON_ATTR_WRITE_PROTECTED: File is write-protected
+ * @CANON_ATTR_UNKNOWN_2: 
+ * @CANON_ATTR_UNKNOWN_4: 
+ * @CANON_ATTR_UNKNOWN_8: 
+ * @CANON_ATTR_NON_RECURS_ENT_DIR: This entry represents a directory
+ *   that was not entered in this listing.
+ * @CANON_ATTR_DOWNLOADED: This file has not yet been downloaded
+ *   (the bit is cleared by the host software).
+ * @CANON_ATTR_UNKNOWN_40: 
+ * @CANON_ATTR_RECURS_ENT_DIR: This entry represents a directory
+ *   that was entered in this listing; look for its contents
+ *   later in the listing.
+ *
+ * Attribute bits in the %CANON_DIRENT_ATTRS byte in each directory
+ *   entry.
+ *
+ */
 
-#define DIR_CREATE 0
-#define DIR_REMOVE 1
+typedef enum {
+	CANON_ATTR_WRITE_PROTECTED    = 0x01,
+	CANON_ATTR_UNKNOWN_2	      = 0x02,
+	CANON_ATTR_UNKNOWN_4	      = 0x04,
+	CANON_ATTR_UNKNOWN_8	      = 0x08,
+	CANON_ATTR_NON_RECURS_ENT_DIR = 0x10,
+	CANON_ATTR_DOWNLOADED	      = 0x20,
+	CANON_ATTR_UNKNOWN_40	      = 0x40,
+	CANON_ATTR_RECURS_ENT_DIR     = 0x80
+} canonDirentAttributeBits;
+
+/* #define CANON_ATTR_WRITE_PROTECTED		0x01 */
+/* #define CANON_ATTR_UNKNOWN_2			0x02 */
+/* #define CANON_ATTR_UNKNOWN_4			0x04 */
+/* #define CANON_ATTR_UNKNOWN_8			0x08 */
+/* #define CANON_ATTR_NON_RECURS_ENT_DIR		0x10 */
+/* #define CANON_ATTR_DOWNLOADED			0x20 */
+/* #define CANON_ATTR_UNKNOWN_40			0x40 */
+/* #define CANON_ATTR_RECURS_ENT_DIR		0x80 */
+
+/**
+ * canonDirlistFunctionBits:
+ * @CANON_LIST_FILES: List files
+ * @CANON_LIST_FOLDERS: List folders
+ *
+ * Software bits to pass in "flags" argument to
+ * canon_int_list_directory(), telling what to list. Bits may be ORed
+ * together to list both files and folders.
+ *
+ */
+typedef enum {
+	CANON_LIST_FILES   = 2,
+	CANON_LIST_FOLDERS = 4
+} canonDirlistFunctionBits;
+
+/* #define CANON_LIST_FILES (1 << 1) */
+/* #define CANON_LIST_FOLDERS (1 << 2) */
+
+/**
+ * canonDirFunctionCode:
+ * @DIR_CREATE: Create the specified directory
+ * @DIR_REMOVE: Remove the specified directory
+ *
+ * Software code to pass to canon_int_directory_operations().
+ *
+ */
+typedef enum {
+	DIR_CREATE = 0,
+	DIR_REMOVE = 1
+} canonDirFunctionCode;
+
+/* #define DIR_CREATE 0 */
+/* #define DIR_REMOVE 1 */
 
 /* These contain the default label for all the 
  * switch (camera->port->type) statements
@@ -245,52 +365,50 @@ struct _CameraPrivateLibrary
  */
 #define GP_PORT_DEFAULT                GP_PORT_DEFAULT_RETURN(GP_ERROR_BAD_PARAMETERS)
 
+/**
+ * IS_EOS
+ * @cam: camera type from camera->pl->md->model
+ *
+ * Checks whether to treat camera as an EOS model; differences in key
+ *  lock/unlock, no "get picture abilities", different interrupt
+ *  sequence on remote capture.
+ * @Returns: 1 if camera is treated as EOS, 0 if otherwise.
+ *
+ * Treat PS 230 as EOS just as a guess; I really don't know.
+ *
+ */
+#define IS_EOS(cam) ( ((cam)==CANON_EOS_D30) \
+                      || ((cam)==CANON_EOS_D60) \
+                      || ((cam)==CANON_PS_S230 ) )
+
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
  * free() it when done.
  */
 
-/**
- * Switches the camera on, detects the model and sets its speed
- */
 int canon_int_ready(Camera *camera, GPContext *context);
 
-/*
- * 
- */
 char *canon_int_get_disk_name(Camera *camera, GPContext *context);
 
-/*
- *
- */
 int canon_int_get_battery(Camera *camera, int *pwr_status, int *pwr_source, GPContext *context);
 
 
-/*
- *
- */
 int canon_int_capture_image (Camera *camera, CameraFilePath *path, GPContext *context);
 
-/*
- *
- */
 int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,int *available, GPContext *context);
 
-/*
- *
- */
-int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, const int flags, GPContext *context);
+int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, const canonDirlistFunctionBits flags, GPContext *context);
 
 int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
 int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, int *length, GPContext *context);
 int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context);
-int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs, GPContext *context);
+int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, canonDirentAttributeBits attrs, GPContext *context);
 int canon_int_delete_file(Camera *camera, const char *name, const char *dir, GPContext *context);
 int canon_serial_end(Camera *camera);
 int canon_serial_off(Camera *camera);
 int canon_int_get_time(Camera *camera, time_t *camera_time, GPContext *context);
 int canon_int_set_time(Camera *camera, time_t date, GPContext *context);
-int canon_int_directory_operations(Camera *camera, const char *path, int action, GPContext *context);
+int canon_int_directory_operations(Camera *camera, const char *path, canonDirFunctionCode action, GPContext *context);
 int canon_int_identify_camera(Camera *camera, GPContext *context);
 int canon_int_set_owner_name(Camera *camera, const char *name, GPContext *context);
 
@@ -308,7 +426,8 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b);
 
 
 
-/* path conversion - needs drive letter, and can therefor not be moved to util.c */
+/* path conversion - needs drive letter, and therefore cannot be moved
+ * to util.c */
 const char *canon2gphotopath(Camera *camera, const char *path);
 const char *gphoto2canonpath(Camera *camera, const char *path, GPContext *context);
 

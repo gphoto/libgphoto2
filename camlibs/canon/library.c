@@ -93,7 +93,16 @@ extern long int timezone;
 #define UPLOAD_BOOL FALSE
 #endif
 
-
+/**
+ * camera_id:
+ * @id: string buffer to receive text identifying camera type
+ *
+ * Standard gphoto2 camlib interface
+ *
+ * Returns:
+ *  string is copied into @id.
+ *
+ */
 int
 camera_id (CameraText *id)
 {
@@ -104,6 +113,17 @@ camera_id (CameraText *id)
 	return GP_OK;
 }
 
+/**
+ * camera_manual
+ * @camera: Camera for which to get manual text (unused)
+ * @manual: Buffer into which to copy manual text
+ * @context: unused
+ *
+ * Returns the "manual" text for cameras supported by this driver.
+ *
+ * Returns: manual text is copied into @manual->text.
+ *
+ */
 static int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
@@ -121,6 +141,16 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 	return GP_OK;
 }
 
+/**
+ * camera_abilities:
+ * @list: list of abilities
+ *
+ * Returns a list of what any of the cameras supported by this driver
+ *   can do. Each entry of the list will represent one camera model.
+ *
+ * Returns: list of abilities in @list
+ *
+ */
 int
 camera_abilities (CameraAbilitiesList *list)
 {
@@ -191,6 +221,17 @@ clear_readiness (Camera *camera)
 	camera->pl->cached_ready = 0;
 }
 
+/**
+ * check_readiness
+ * @camera: the camera to affect
+ * @context: context for error reporting
+ *
+ * Checks the readiness of the camera. If the cached "ready" flag isn't
+ *  set, checks using canon_int_ready().
+ *
+ * Returns: 1 if ready, 0 if not.
+ *
+ */
 static int
 check_readiness (Camera *camera, GPContext *context)
 {
@@ -208,6 +249,14 @@ check_readiness (Camera *camera, GPContext *context)
 	return 0;
 }
 
+/**
+ * canon_int_switch_camera_off
+ * @camera: the camera to affect
+ * @context: context for error reporting
+ *
+ * Switches a serial camera off. Does nothing to a USB camera.
+ *
+ */
 static void
 canon_int_switch_camera_off (Camera *camera, GPContext *context)
 {
@@ -225,11 +274,24 @@ canon_int_switch_camera_off (Camera *camera, GPContext *context)
 	clear_readiness (camera);
 }
 
+/**
+ * camera_exit
+ * @camera: the camera to affect
+ * @context: context for error reporting
+ *
+ * Ends our use of the camera. For USB cameras, unlock keys. For
+ *  serial cameras, switch the camera off and unlock the port.
+ *
+ * Returns: GP_OK
+ *
+ */
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->port->type == GP_PORT_USB) {
-		canon_usb_unlock_keys (camera);
+		/* EOS-class cameras lock keys only for remote
+		   capture, and unlock immediately. */
+		if ( !IS_EOS(camera->pl->md->model) ) canon_usb_unlock_keys (camera);
 	}
 
 	if (camera->pl) {
@@ -241,6 +303,16 @@ camera_exit (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
+/**
+ * camera_capture_preview
+ * @camera: the camera to affect
+ * @context: context for error reporting
+ *
+ * Not implemented: currently does nothing.
+ *
+ * Returns: GP_OK
+ *
+ */
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
@@ -249,6 +321,18 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	return GP_OK;
 }
 
+/**
+ * camera_capture
+ * @camera: the camera to affect
+ * @type: type of capture (only GP_CAPTURE_IMAGE supported)
+ * @path: path on camera to use
+ * @context: context for error reporting
+ *
+ * Captures a single image from the camera.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
@@ -270,6 +354,20 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	return GP_OK;
 }
 
+/**
+ * camera_capture
+ * @camera: the camera to affect
+ * @pwr_status: to receive power status from camera
+ * @pwr_source: to receive power source from camera
+ * @context: context for error reporting
+ *
+ * Gets the power status for the camera.
+ *
+ * Returns: -1 if camera isn't ready; status from canon_int_get_battery() otherwise.
+ *   @pwr_status will contain @CAMERA_POWER_OK if power is OK (i.e. battery isn't low)
+ *   @pwr_source will have bit %CAMERA_MASK_BATTERY set if battery power is used
+ *
+ */
 static int
 canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source, GPContext *context)
 {
@@ -281,6 +379,16 @@ canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 	return canon_int_get_battery (camera, pwr_status, pwr_source, context);
 }
 
+/**
+ * update_disk_cache
+ * @camera: the camera to work on
+ * @context: the context to print on error
+ *
+ * Updates the disk cache for this camera.
+ *
+ * Returns: 1 on success, 0 on failure
+ *
+ */
 static int
 update_disk_cache (Camera *camera, GPContext *context)
 {
@@ -1330,10 +1438,13 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name, voi
  * @camera: the camera to initialize
  * @context: a #GPContext
  *
- * This routine initializes the serial/USB port and also load the
+ * This routine initializes the serial/USB port and also loads the
  * camera settings. Right now it is only the speed that is
  * saved.
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 camera_init (Camera *camera, GPContext *context)
 {

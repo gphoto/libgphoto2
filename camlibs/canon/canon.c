@@ -242,7 +242,7 @@ canon_int_filename2thumbname (Camera *camera, const char *filename)
  * canon_int_directory_operations:
  * @camera: Camera to work on
  * @path: Path to directory on which to operate
- * @action: either %DIR_CREATE or %DIR_REMOVE
+ * @action: #canonDirFunctionCode (either #DIR_CREATE or #DIR_REMOVE)
  * @context: context for error reporting
  *
  * Creates or removes a directory in camera storage.
@@ -255,7 +255,7 @@ canon_int_filename2thumbname (Camera *camera, const char *filename)
  *
  */
 int
-canon_int_directory_operations (Camera *camera, const char *path, int action,
+canon_int_directory_operations (Camera *camera, const char *path, canonDirFunctionCode action,
 				GPContext *context)
 {
 	unsigned char *msg;
@@ -597,10 +597,14 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 	int transfermode = 0x0;
 	int len;
 
+	/* Set default path name */
+	strncpy ( path->name, "*UNKNOWN*", sizeof(path->name) );
+	strncpy ( path->folder, "*UNKNOWN*", sizeof(path->folder) );
+
 	switch (camera->port->type) {
 	case GP_PORT_USB:
 		gp_port_get_timeout (camera->port, &mstimeout);
-		GP_DEBUG("usb port timeout starts at %dms", mstimeout);
+		GP_DEBUG("canon_int_capture_image: usb port timeout starts at %dms", mstimeout);
 
 		/*
 		 * Send a sequence of CONTROL_CAMERA commands.
@@ -613,7 +617,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 			return GP_ERROR;
 
 		gp_port_set_timeout (camera->port, mstimeout);
-		GP_DEBUG("set camera port timeout back to %d seconds...", mstimeout / 1000 );
+		GP_DEBUG("canon_int_capture_image: set camera port timeout back to %d seconds...", mstimeout / 1000 );
 
 		/*
 		 * Set the captured image transfer mode.  We have four options 
@@ -651,11 +655,26 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 						  0x04, transfermode) == GP_ERROR)
 			return GP_ERROR;
 
+		// Lock keys here for D30/D60
+		if ( IS_EOS(camera->pl->md->model) ) {
+			if(canon_usb_lock_keys(camera,context) < 0) {
+				gp_context_error (context, "lock keys failed.\n");
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+		}
+
 		// Shutter Release //
 		// Can't use normal "canon_int_do_control_command", as
 		// we must read the interrupt pipe before the response
 		// comes back for this commmand.
 		data = canon_usb_capture_dialogue ( camera, &len );
+		if ( data == NULL ) {
+			/* Try to leave camera in a usable state. */
+			canon_int_do_control_command (camera,
+						      CANON_USB_CONTROL_EXIT,
+						      0, 0);
+			return GP_ERROR;
+		}
 
 		// Verify that msg points to 
                 // 02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
@@ -667,15 +686,12 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 						  0, 0) == GP_ERROR)
 			return GP_ERROR;
 
-		
 		/*
 		 * This is how the computer responds to the event saying there's a 
 		 * thumbnail capture to download, but I don't know how the event
 		 * is transmitted yet.
 		 */
 		/*
-		//gp_port_set_timeout (camera->port, 10000);
-		//GP_DEBUG("set camera port timeout to 10 seconds...");
 
 		memset (payload, 0, sizeof(payload));
 		payloadlen = 0x10;
@@ -713,7 +729,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
  * @camera: camera to work with
  * @file: file to work on
  * @dir: directory to work in
- * @attrs: attribute bit field
+ * @attrs: #canonDirentAttributeBits with the bits to set
  * @context: context for error reporting
  *
  * Sets a file's attributes. See the 'Protocol' file for details.
@@ -723,7 +739,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
  */
 int
 canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir,
-			       unsigned char attrs, GPContext *context)
+			       canonDirentAttributeBits attrs, GPContext *context)
 {
 	unsigned char payload[300];
 	unsigned char *msg;
@@ -1275,22 +1291,25 @@ debug_fileinfo (CameraFileInfo * info)
 
 /**
  * canon_int_list_directory:
- * @camera:
- * @folder:
- * @list:
- * @flags:
+ * @camera: Camera to access
+ * @folder: Folder on the camera to list
+ * @list: Returns list of folders in this directory
+ * @flags: #canonDirlistFunctionBits specifying to list files, folders, or both
  * @context: context for error reporting
  *
  * Gets the directory tree of a given flash device.
  *
  * Implicitly assumes that uint8_t[] is a char[] for strings.
  *
- * Returns: 
+ * Returns: a gphoto2 status code.
+ *   @list will contain a list of folders (directories) contained in this folder.
+ *   Files will be added to the internal gphoto2 file system only if
+ *     they are image or movie files.
  *
  */
 int
 canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
-			  const int flags, GPContext *context)
+			  const canonDirlistFunctionBits flags, GPContext *context)
 {
 	CameraFileInfo info;
 	int res;
@@ -1305,7 +1324,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 		  canonfolder, list_files ? "files" : "no files",
 		  list_folders ? "folders" : "no folders");
 
-	/* Fetch all directory entrys from the camera */
+	/* Fetch all directory entries from the camera */
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			res = canon_usb_get_dirents (camera, &dirent_data, &dirents_length,

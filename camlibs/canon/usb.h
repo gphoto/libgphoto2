@@ -107,7 +107,7 @@ struct canon_usb_control_cmdstruct
  * will keep reading until an error, a read of non-zero length, or for
  * a maximum of this many times.
  */
-#define MAX_INTERRUPT_TRIES 4000
+#define MAX_INTERRUPT_TRIES 12000
 
 
 
