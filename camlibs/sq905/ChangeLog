@@ -1,5 +1,10 @@
 2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
 
+	* library.c: Reduce memory requirements by first freeing one variable
+	  before allocating memory for another.
+
+2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
+
 	* library.c: Substitute memcpy by for (...) { (...) } on 
 	  request of Theodore Kilgore <kilgota@banach.math.auburn.edu>.
 

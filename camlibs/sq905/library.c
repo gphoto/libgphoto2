@@ -183,10 +183,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
 	memset (p_data, 0, w * h);
 
-	ppm = malloc (w* h * 3 + 256); /* Data + header */
-	if (!ppm) {free (data); free (p_data); return GP_ERROR_NO_MEMORY;}
-	memset (ppm, 0, w * h * 3 + 256);
-
     	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		sq_read_picture_data (camera->port, data, buffersize);
@@ -199,7 +195,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	default:
 		free (data);
 		free (p_data);
-		free (ppm);
 		return GP_ERROR_NOT_SUPPORTED;
     	}
 
@@ -255,6 +250,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	default:
 		for (m = 0; m < buffersize; m++) { p_data[m] = data[m]; }
 	}
+	free (data);
 
 	/*
 	 * Now we want to get our picture into a file on 
@@ -267,11 +263,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         	p_data[w * h - 1 - i] = temp;
     	}    	
 
-	/* Now put the data into a real PPM picture file! 
+	/*
+	 * Now put the data into a real PPM picture file! 
 	 * The results are quite nice if comp_ratio = 1.
 	 * But if comp_ratio=2 this procedure still does 
 	 * give the picture back!
 	 */
+	ppm = malloc (w * h * 3 + 256); /* Data + header */
+	if (!ppm) {free (p_data); return GP_ERROR_NO_MEMORY;}
+	memset (ppm, 0, w * h * 3 + 256);
     	sprintf (ppm,
 		"P6\n"
 		"# CREATOR: gphoto2, SQ905 library\n"
@@ -308,7 +308,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, ppm, size);
 
-	free (data);
 	free (p_data);
 
         return GP_OK;
