@@ -56,7 +56,7 @@ void light_enhance(int vw, int vh, int coarse, int fine, unsigned char *output)
     unsigned int trans[258], v;    
     int tmp1, tmp2, tmp3, whitex=20, whitey=20, j, k;
 
-    double brightness = 0.8; /* FIXME: configurable? */
+    double brightness = 1.0; /* FIXME: configurable? */
     
     /*fprintf(stderr, "(FineExp=%i CoarseExp=%i => filter=", fine, coarse); */
 
@@ -71,9 +71,9 @@ void light_enhance(int vw, int vh, int coarse, int fine, unsigned char *output)
 	/*fprintf(stderr, "fluorescent)\n");*/
     }
     x = brightness;
-    wb[0][0] = 1.00 * x;  wb[0][1] = 1.10 * x;  wb[0][2] = 1.10 * x;
-    wb[1][0] = 1.00 * x;  wb[1][1] = 1.00 * x;  wb[1][2] = 1.00 * x;
-    wb[2][0] = 1.00 * x;  wb[2][1] = 1.17 * x;  wb[2][2] = 1.48 * x;
+    wb[0][0] = 1.08 * x;  wb[0][1] = 1.00 * x;  wb[0][2] = 0.95 * x;
+    wb[1][0] = 1.05 * x;  wb[1][1] = 1.00 * x;  wb[1][2] = 1.00 * x;
+    wb[2][0] = 0.90 * x;  wb[2][1] = 1.00 * x;  wb[2][2] = 1.10 * x;
 	    
     /* find white pixel */
     for (j=0;j<vh;j++)
