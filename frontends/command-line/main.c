@@ -472,6 +472,8 @@ OPTION_CALLBACK(port)
 			strcpy (glob_port, "usb:");
 			strncat (glob_port, arg, sizeof(glob_port)-4);
 		}
+		cli_debug_print("Guessed port name. Using port '%s' from now on.",
+				glob_port);
 	}
 
         return (GP_OK);
@@ -496,14 +498,15 @@ OPTION_CALLBACK(model)
 }
 
 static void
-debug_func (GPLogLevels levels, const char *domain, const char *format,
+debug_func (GPLogLevel level, const char *domain, const char *format,
 	    va_list args, void *data)
 {
-	if (levels & GP_LOG_ERROR)
-		printf ("*** ERROR *** ");
-	printf ("%s: ", domain);
-	vprintf (format, args);
-	printf ("\n");
+	if (level == GP_LOG_ERROR)
+		fprintf (stderr, "%s(ERROR): ", domain);
+	else
+		fprintf (stderr, "%s(%i): ", domain, level);
+	vfprintf (stderr, format, args);
+	fprintf (stderr, "\n");
 }
 
 OPTION_CALLBACK (debug)
@@ -511,8 +514,7 @@ OPTION_CALLBACK (debug)
 	glob_debug = GP_DEBUG_HIGH;
 	cli_debug_print(PACKAGE " " VERSION ": " "Turning on debug mode");
 
-	gp_log_add_func (GP_LOG_DATA | GP_LOG_DEBUG | GP_LOG_ERROR,
-			 debug_func, NULL);
+	gp_log_add_func (GP_LOG_ALL, debug_func, NULL);
 
 	return (GP_OK);
 }
