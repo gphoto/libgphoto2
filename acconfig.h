@@ -20,4 +20,6 @@
 #undef CONFIG_DRIVER_DIGITA
 
 #undef HAVE_CDK
+#undef HAVE_AA
+#undef HAVE_JPEG
 
