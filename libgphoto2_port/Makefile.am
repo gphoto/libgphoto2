@@ -17,7 +17,6 @@ EXTRA_DIST = 		\
 	README \
 	libgphoto2_port.spec \
 	gphoto2-port-config.in \
-	autogen.sh \
 	makefile.os2 lgp2port.df
 
 docdir = @DOC_DIR@
