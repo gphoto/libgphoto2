@@ -330,7 +330,8 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 
 	CHECK (gsmart_get_file_info (camera->pl, n, &file));
 
-	info->file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+	info->file.fields = GP_FILE_INFO_NAME | GP_FILE_INFO_TYPE | GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+	strncpy (info->file.name, filename, sizeof (info->file.name));
 	if (file->mime_type == GSMART_FILE_TYPE_IMAGE) {
 		strcpy (info->file.type, GP_MIME_JPEG);
 		info->preview.width = 160;

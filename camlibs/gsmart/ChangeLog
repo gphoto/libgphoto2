@@ -1,3 +1,9 @@
+Sam Aug 31 20:15:03 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * return name in the file_info as well. Fixes kamera kio-slave
+ * endianess fix reported by Carl Lunde <chlunde@student.matnat.uio.no>
+ * spelling fix 
+
 Thu Aug 22 20:46:02 2002  Till Adam  <till@adam-lilienthal.de>
   
  * add support for avi thumbnails

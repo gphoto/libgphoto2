@@ -75,6 +75,7 @@ gsmart_get_file_count (CameraPrivateLibrary * lib)
 	sleep (1);
 	CHECK (gp_port_usb_msg_read
 	       (lib->gpdev, 0, 0, 0xe15, (u_int8_t *) & lib->num_files, 1));
+	LE32TOH(lib->num_files);
 
 	return (GP_OK);
 }
