@@ -95,7 +95,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A5",	        CANON_PS_A5,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, "DE300 Canon Inc."},
 	{"Canon:PowerShot A5 Zoom",	CANON_PS_A5_ZOOM,	NO_USB, NO_USB, CAP_NON,  S2M, S32K, "Canon PowerShot A5 Zoom"},
 	{"Canon:PowerShot A50",		CANON_PS_A50,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, "Canon PowerShot A50"},
-	{"Canon:PowerShot Pro70",	CANON_PS_A70,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, "Canon PowerShot Pro70"},
+	{"Canon:PowerShot Pro70",	CANON_PS_PRO70,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, "Canon PowerShot Pro70"},
 	{"Canon:PowerShot S10",		CANON_PS_S10,		0x04A9, 0x3041, CAP_NON, S10M, S32K, "Canon PowerShot S10"},
 	{"Canon:PowerShot S20",		CANON_PS_S20,		0x04A9, 0x3043, CAP_NON, S10M, S32K, "Canon PowerShot S20"},
 	{"Canon:EOS D30",		CANON_EOS_D30,		0x04A9, 0x3044, CAP_SUP, S10M, S32K, NULL},
@@ -133,8 +133,14 @@ const struct canonCamModelData models[] = {
         /* 0x3071 is S230 in PTP mode */
 	{"Canon:Digital IXUS v3 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, CAP_SUP, S99M, S32K, NULL},
         /* 0x3071 is IXUS v3 in PTP mode */
-	/* 0x3072 probably is the new PowerShot A70 in Canon mode */
-	/* 0x3073 probably is the new PowerShot A70 in PTP mode */
+	/* A70 product ID for PTP mode is 0x3072; apparently there is
+	 * no "Canon" mode, so this camera will never be supported by
+	 * this driver. */
+	/* A60 product ID for PTP is 0x3074 */
+	/* S400 product ID for PTP mode is 0x3075; there may be no
+	 * "Canon" mode, so it will be supported by the PTP driver,
+	 * not here. */
+	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, NULL},
 	{NULL}
 	/* *INDENT-ON* */
 };
@@ -678,8 +684,6 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 	int mstimeout = -1;
 	int status;
 
-	int thumb_length, image_length, image_key; /* For possible immediate download */
-
 	switch (camera->port->type) {
 	case GP_PORT_USB:
 
@@ -739,7 +743,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 		   Can't use normal "canon_int_do_control_command", as
 		   we must read the interrupt pipe before the response
 		   comes back for this commmand. */
-		*data = canon_usb_capture_dialogue ( camera, &status, context, &thumb_length, &image_length, &image_key );
+		*data = canon_usb_capture_dialogue ( camera, &status, context );
 		if ( *data == NULL ) {
 			/* Try to leave camera in a usable state. */
 			canon_int_do_control_command (camera,
@@ -749,8 +753,8 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 		}
 
 		/* Download the thumbnail image. */
-		if ( thumb_length > 0 ) {
-			status = canon_usb_get_captured_thumbnail ( camera, image_key, data, length, context );
+		if ( camera->pl->thumb_length > 0 ) {
+			status = canon_usb_get_captured_thumbnail ( camera, camera->pl->image_key, data, length, context );
 			if ( status < 0 ) {
 				GP_DEBUG ( "canon_int_capture_preview:"
 					 " thumbnail download failed, status= %i", status );
@@ -800,8 +804,6 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 	int initial_state_len, final_state_len;
 	int mstimeout = -1;
 	int len;
-
-	int thumb_length, image_length, image_key; /* For possible immediate download */
 
 	/* Set default path name */
 	strncpy ( path->name, "*UNKNOWN*", sizeof(path->name) );
@@ -874,7 +876,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		   Can't use normal "canon_int_do_control_command", as
 		   we must read the interrupt pipe before the response
 		   comes back for this commmand. */
-		data = canon_usb_capture_dialogue ( camera, &len, context, &thumb_length, &image_length, &image_key );
+		data = canon_usb_capture_dialogue ( camera, &len, context );
 		if ( data == NULL ) {
 			/* Try to leave camera in a usable state. */
 			canon_int_do_control_command (camera,
