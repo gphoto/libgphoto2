@@ -17,7 +17,7 @@ typedef int (*c_id)		(char *);
 typedef int (*c_abilities)	(CameraAbilities*,int*);
 typedef int (*c_init)		();
 typedef int (*c_exit)		();
-typedef int (*c_folder_list)	(char*,CameraFolderList*);
+typedef int (*c_folder_list)	(char*,CameraFolderInfo*);
 typedef int (*c_folder_set)	(char*);
 typedef int (*c_file_count)	();
 typedef int (*c_file_get)	(int, CameraFile*);
