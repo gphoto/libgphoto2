@@ -2,6 +2,7 @@
 
 	* frontends/command-line/main.c: added option --usb-usermap-script
 	  name which lets user specify the name of the hotplug usb script
+	* configure.in: added --usb-usermap-script justifies increased 2.0.1dev4
 	* doc/gphoto2.txt: added notice about unplugging cam and creating
 	  /etc/hotplug/usb if necessary
 
