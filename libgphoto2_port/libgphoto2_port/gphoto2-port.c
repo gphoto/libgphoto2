@@ -471,9 +471,6 @@ gp_port_check_int_fast (GPPort *port, char *data, int size)
 {
         int retval;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Reading %i=0x%x bytes from inerrupt ep (fast)...",
-		size, size);
-
 	CHECK_NULL (port);
 	CHECK_INIT (port);
 
@@ -481,11 +478,24 @@ gp_port_check_int_fast (GPPort *port, char *data, int size)
 	CHECK_SUPP (port, _("check_int"), port->pc->ops->check_int);
 	retval = port->pc->ops->check_int (port, data, size, FAST_TIMEOUT);
 	CHECK_RESULT (retval);
-	if (retval != size)
+
+	if (retval != size ) {
 		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only read %i "
 			"out of %i byte(s)", retval, size);
-
-	gp_log_data ("gphoto2-port", data, retval);
+#ifdef IGNORE_EMPTY_INTR_READS
+		if ( retval != 0 ) {
+#endif
+			/* For Canon cameras, we will make lots of
+			   reads that will return zero length. Don't
+			   bother to log them as errors. */
+			gp_log (GP_LOG_DEBUG, "gphoto2-port",
+				"Reading %i=0x%x bytes from interrupt ep (fast)...",
+				size, size);
+			gp_log_data ("gphoto2-port", data, retval);
+#ifdef IGNORE_EMPTY_INTR_READS
+		}
+#endif
+	}
 
 	return (retval);
 }
