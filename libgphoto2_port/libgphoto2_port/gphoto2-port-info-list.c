@@ -175,7 +175,7 @@ foreach_func (const char *filename, lt_ptr data)
 	lh = lt_dlopenext (filename);
 	if (!lh) {
 		gp_log (GP_LOG_DEBUG, "gp-port-info-list",
-			"Could not load '%s': '%s'.", filename, lt_dlerror ());
+			_("Could not load '%s': '%s'."), filename, lt_dlerror ());
 		return (0);
 	}
 
@@ -183,7 +183,7 @@ foreach_func (const char *filename, lt_ptr data)
 	lib_list = lt_dlsym (lh, "gp_port_library_list");
 	if (!lib_type || !lib_list) {
 		gp_log (GP_LOG_DEBUG, "gp-port-info-list",
-			"Could not find some functions in '%s': '%s'.",
+			_("Could not find some functions in '%s': '%s'."),
 			filename, lt_dlerror ());
 		lt_dlclose (lh);
 		return (0);
@@ -195,7 +195,7 @@ foreach_func (const char *filename, lt_ptr data)
 			break;
 	if (j != list->count) {
 		gp_log (GP_LOG_DEBUG, "gp-port-info-list",
-			"'%s' already loaded", filename);
+			_("'%s' already loaded"), filename);
 		lt_dlclose (lh);
 		return (0);
 	}
@@ -204,14 +204,14 @@ foreach_func (const char *filename, lt_ptr data)
 	lt_dlclose (lh);
 	if (result < 0) {
 		gp_log (GP_LOG_DEBUG, "gp-port-info-list",
-			"Could not load list: '%s'.",
+			_("Could not load port driver list: '%s'."),
 			gp_port_result_as_string (result));
 		return (0);
 	}
 
 	for (j = old_size; j < list->count; j++){
 		gp_log (GP_LOG_DEBUG, "gp-port-info-list",
-			"Loaded '%s' ('%s') from '%s'.",
+			_("Loaded '%s' ('%s') from '%s'."),
 			list->info[j].name, list->info[j].path,
 			filename);
 		strcpy (list->info[j].library_filename, filename);
@@ -250,8 +250,8 @@ gp_port_info_list_load (GPPortInfoList *list)
 #endif
 
 	CHECK_NULL (list);
-	gp_log (GP_LOG_DEBUG, "gp-port-info-list", "Loading io-drivers "
-		"from '" IOLIBS "'...");
+	gp_log (GP_LOG_DEBUG, "gp-port-info-list", _("Loading io-drivers "
+		"from '%s'..."),IOLIBS);
 
 #ifdef HAVE_LTDL
 	lt_dlinit ();
@@ -297,7 +297,7 @@ gp_port_info_list_load (GPPortInfoList *list)
 				/* *.la or *.a - we cannot load these, so no error msg */
 			} else {
                                 gp_log (GP_LOG_DEBUG, "gphoto2-port-core",
-                                        "'%s' is not a library (%s)", path,
+                                        _("'%s' is not a library (%s)"), path,
                                         GP_SYSTEM_DLERROR ());
 			}
                         continue;
@@ -307,7 +307,7 @@ gp_port_info_list_load (GPPortInfoList *list)
                 lib_list = GP_SYSTEM_DLSYM (lh, "gp_port_library_list");
                 if (!lib_type || !lib_list) {
                         gp_log (GP_LOG_DEBUG, "gphoto2-port-core",
-                                "Could not find some functions in '%s' (%s)",
+                                _("Could not find some functions in '%s' (%s)"),
                                 path, GP_SYSTEM_DLERROR ());
                         GP_SYSTEM_DLCLOSE (lh);
                         continue;
@@ -319,7 +319,7 @@ gp_port_info_list_load (GPPortInfoList *list)
                                 break;
                 if (i != list->count) {
                         gp_log (GP_LOG_DEBUG, "gphoto2-port-core",
-                                "'%s' already loaded", path);
+                                _("'%s' already loaded"), path);
                         GP_SYSTEM_DLCLOSE (lh);
                         continue;
                 }
@@ -327,7 +327,7 @@ gp_port_info_list_load (GPPortInfoList *list)
                 result = lib_list (list);
                 if (result < 0) {
                         gp_log (GP_LOG_DEBUG, "gphoto2-port-core",
-                                "Could not load list (%s)",
+                                _("Could not load list (%s)"),
                                 gp_port_result_as_string (result));
                         GP_SYSTEM_DLCLOSE (lh);
                         continue;
@@ -335,7 +335,7 @@ gp_port_info_list_load (GPPortInfoList *list)
 
                 for (i = old_size; i < list->count; i++){
                         gp_log (GP_LOG_DEBUG, "gphoto2-port-core",
-                                "Loaded '%s' (%s) from '%s'",
+                                _("Loaded '%s' (%s) from '%s'"),
                                 list->info[i].name, list->info[i].path,
                                 filename);
                         strcpy (list->info[i].library_filename, path);
@@ -366,8 +366,8 @@ gp_port_info_list_count (GPPortInfoList *list)
 
 	CHECK_NULL (list);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", "Counting entries "
-		"(%i available)...", list->count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Counting entries "
+		"(%i available)..."), list->count);
 
 	/* Ignore generic entries */
 	count = list->count;
@@ -375,8 +375,8 @@ gp_port_info_list_count (GPPortInfoList *list)
 		if (!strlen (list->info[i].name))
 			count--;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", "%i regular entries "
-		"available.", count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("%i regular entries "
+		"available."), count);
 	return (count);
 }
 
@@ -404,8 +404,8 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 
 	CHECK_NULL (list && path);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", "Looking for "
-		"path '%s' (%i entries available)...", path, list->count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Looking for "
+		"path '%s' (%i entries available)..."), path, list->count);
 
 	/* Exact match? */
 	for (generic = i = 0; i < list->count; i++)
@@ -416,13 +416,13 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 
 	/* Regex match? */
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
-		"Starting regex search for '%s'...", path);
+		_("Starting regex search for '%s'..."), path);
 	for (i = 0; i < list->count; i++) {
 		if (strlen (list->info[i].name))
 			continue;
 
 		gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
-			"Trying '%s'...", list->info[i].path);
+			_("Trying '%s'..."), list->info[i].path);
 
 		/* Compile the pattern */
 #ifdef HAVE_GNU_REGEX
@@ -443,7 +443,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 					"%s", buf);
 			else
 				gp_log (GP_LOG_ERROR, "gphoto2-port-info-list",
-					"regcomp failed");
+					_("regcomp failed"));
 			return (GP_ERROR_UNKNOWN_PORT);
 		}
 #endif
@@ -454,7 +454,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 		regfree (&pattern);
 		if (result < 0) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
-				"re_match failed (%i)", result);
+				_("re_match failed (%i)"), result);
 			continue;
 		}
 #else
@@ -462,7 +462,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 		regfree (&pattern);
 		if (result) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
-				"regexec failed");
+				_("regexec failed"));
 			continue;
 		}
 #endif
@@ -493,8 +493,8 @@ gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
 
 	CHECK_NULL (list && name);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", "Looking up entry "
-		"'%s'...", name);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Looking up entry "
+		"'%s'..."), name);
 
 	/* Ignore generic entries */
 	for (generic = i = 0; i < list->count; i++)
@@ -523,8 +523,8 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 
 	CHECK_NULL (list && info);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", "Getting info of "
-		"entry %i (%i available)...", n, list->count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Getting info of "
+		"entry %i (%i available)..."), n, list->count);
 
 	if (n < 0 || n >= list->count)
 		return (GP_ERROR_BAD_PARAMETERS);

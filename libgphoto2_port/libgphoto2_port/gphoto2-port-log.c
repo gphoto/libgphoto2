@@ -28,6 +28,20 @@
 
 #include <gphoto2-port-result.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
+#  ifdef gettext_noop
+#      define N_(String) gettext_noop (String)
+#  else
+#      define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #ifndef DISABLE_DEBUGGING
 typedef struct {
 	unsigned int id;
@@ -161,19 +175,25 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
 	unsigned char value;
 
 	if (!data) {
-		gp_log (GP_LOG_DATA, domain, "No hexdump (NULL buffer)");
+		gp_log (GP_LOG_DATA, domain, _("No hexdump (NULL buffer)"));
 		return;
 	}
 
 	if (!size) {
-		gp_log (GP_LOG_DATA, domain, "Empty hexdump of empty buffer");
+		gp_log (GP_LOG_DATA, domain, _("Empty hexdump of empty buffer"));
 		return;
+	}
+
+	if (size > 1024*1024) {
+		/* Does not make sense for 200 MB movies */
+		gp_log (GP_LOG_DATA, domain, _("Truncating dump from %d bytes to 1MB"), size);
+		size = 1024*1024;
 	}
 
 	curline = result = malloc ((HEXDUMP_LINE_WIDTH+1)*(((size-1)/16)+1)+1);
 	if (!result) {
-		gp_log (GP_LOG_ERROR, "gphoto2-log", "Malloc for %i bytes "
-			"failed", (HEXDUMP_LINE_WIDTH+1)*(((size-1)/16)+1)+1);
+		gp_log (GP_LOG_ERROR, "gphoto2-log", _("Malloc for %i bytes "
+			"failed"), (HEXDUMP_LINE_WIDTH+1)*(((size-1)/16)+1)+1);
 		return;
 	}
 
@@ -203,7 +223,7 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
         }
         curline[0] = '\0';
 
-	gp_log (GP_LOG_DATA, domain, "Hexdump of %i = 0x%x bytes follows:\n%s",
+	gp_log (GP_LOG_DATA, domain, _("Hexdump of %i = 0x%x bytes follows:\n%s"),
 		size, size, result);
 	free (result);
 }

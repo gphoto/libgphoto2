@@ -5,13 +5,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-04 02:14+0300\n"
+"POT-Creation-Date: 2005-01-04 11:27+0100\n"
 "PO-Revision-Date: 2005-01-04 02:25+0300\n"
 "Last-Translator: Вячеслав Диконов (Vyacheslav Dikonov) <slava@altlinux.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:178
+#, fuzzy, c-format
+msgid "Could not load '%s': '%s'."
+msgstr "Не удалось закрыть '%s' (%m)."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:186
+#, c-format
+msgid "Could not find some functions in '%s': '%s'."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:198
+#: libgphoto2_port/gphoto2-port-info-list.c:322
+#, c-format
+msgid "'%s' already loaded"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:207
+#, fuzzy, c-format
+msgid "Could not load port driver list: '%s'."
+msgstr "Невозможно заблокировать устройство '%s'"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:214
+#, c-format
+msgid "Loaded '%s' ('%s') from '%s'."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:253
+#, c-format
+msgid "Loading io-drivers from '%s'..."
+msgstr ""
 
 #: libgphoto2_port/gphoto2-port-info-list.c:268
 #, c-format
@@ -20,9 +51,77 @@ msgstr ""
 "Невозможно загрузить библиотеку функций обмена данными, потому что "
 "невозможно открыть '%s'(%m) "
 
+#: libgphoto2_port/gphoto2-port-info-list.c:300
+#, c-format
+msgid "'%s' is not a library (%s)"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:310
+#, fuzzy, c-format
+msgid "Could not find some functions in '%s' (%s)"
+msgstr "Не удалось закрыть '%s' (%m)."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:330
+#, fuzzy, c-format
+msgid "Could not load list (%s)"
+msgstr "Не удалось закрыть '%s' (%m)."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:338
+#, c-format
+msgid "Loaded '%s' (%s) from '%s'"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:369
+#, c-format
+msgid "Counting entries (%i available)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:378
+#, c-format
+msgid "%i regular entries available."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:407
+#, c-format
+msgid "Looking for path '%s' (%i entries available)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:419
+#, c-format
+msgid "Starting regex search for '%s'..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:425
+#, c-format
+msgid "Trying '%s'..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:446
+msgid "regcomp failed"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:457
+#, c-format
+msgid "re_match failed (%i)"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:465
+msgid "regexec failed"
+msgstr ""
+
 #: libgphoto2_port/gphoto2-port-info-list.c:472
 msgid "Generic Port"
 msgstr "Обычный порт"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:496
+#, c-format
+msgid "Looking up entry '%s'..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:526
+#, c-format
+msgid "Getting info of entry %i (%i available)..."
+msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:58
 msgid "No error"
@@ -117,70 +216,139 @@ msgstr "Действие '%s' не поддерживается этим уст�
 msgid "The port has not yet been initialized"
 msgstr "Порт ещё не был инициализирован"
 
-#: libgphoto2_port/gphoto2-port.c:280
-msgid "open"
-msgstr "открыть"
+#: libgphoto2_port/gphoto2-port.c:91
+msgid "Creating new device..."
+msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:303
-msgid "close"
-msgstr "закрыть"
+#: libgphoto2_port/gphoto2-port.c:171
+#, fuzzy, c-format
+msgid "Could not load '%s' ('%s')."
+msgstr "Не удалось закрыть '%s' (%m)."
 
-#. Check if we wrote all bytes
-#: libgphoto2_port/gphoto2-port.c:378
-msgid "write"
-msgstr "записать"
+#: libgphoto2_port/gphoto2-port.c:180
+#, fuzzy, c-format
+msgid "Could not load '%s' ('%s')"
+msgstr "Не удалось закрыть '%s' (%m)."
 
-#. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:410
-msgid "read"
-msgstr "прочитать"
+#: libgphoto2_port/gphoto2-port.c:195 libgphoto2_port/gphoto2-port.c:201
+#, c-format
+msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
+msgstr ""
 
-#. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:446 libgphoto2_port/gphoto2-port.c:480
-msgid "check_int"
-msgstr "проверить_прерывание"
+#: libgphoto2_port/gphoto2-port.c:276
+#, c-format
+msgid "Opening %s port..."
+msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:597
-msgid "update"
-msgstr "обновить"
+#: libgphoto2_port/gphoto2-port.c:298
+msgid "Closing port..."
+msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:643
-msgid "get_pin"
-msgstr "получить_pin"
+#: libgphoto2_port/gphoto2-port.c:320
+msgid "Freeing port..."
+msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:695
-msgid "set_pin"
-msgstr "установить_pin"
+#: libgphoto2_port/gphoto2-port.c:369
+#, c-format
+msgid "Writing %i=0x%x byte(s) to port..."
+msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:710
-msgid "send_break"
-msgstr "послать_сигнал_break"
+#: libgphoto2_port/gphoto2-port.c:382
+#, fuzzy, c-format
+msgid "Could only write %i out of %i byte(s)"
+msgstr "Запись в порт невозможна (%m)"
 
-#: libgphoto2_port/gphoto2-port.c:723
-msgid "flush"
-msgstr "сбросить_буферы"
+#: libgphoto2_port/gphoto2-port.c:403
+#, c-format
+msgid "Reading %i=0x%x bytes from port..."
+msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:739
-msgid "find_device"
-msgstr "найти_устройство"
+#: libgphoto2_port/gphoto2-port.c:414 libgphoto2_port/gphoto2-port.c:450
+#: libgphoto2_port/gphoto2-port.c:489 libgphoto2_port/gphoto2-port.c:811
+#, c-format
+msgid "Could only read %i out of %i byte(s)"
+msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:751
-msgid "find_device_by_class"
-msgstr "найти_устройство_в_классе"
+#: libgphoto2_port/gphoto2-port.c:439
+#, c-format
+msgid "Reading %i=0x%x bytes from interrupt endpoint..."
+msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:765
-msgid "clear_halt"
+#: libgphoto2_port/gphoto2-port.c:499
+#, c-format
+msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:524
+#, c-format
+msgid "Setting timeout to %i millisecond(s)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:560
+msgid "Getting timeout..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:564
+#, c-format
+msgid "Current timeout: %i milliseconds"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:586
+msgid "Setting settings..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:637
+#, fuzzy, c-format
+msgid "Getting level of pin %i..."
+msgstr "Невозможно получить уровень pin %i (%m)."
+
+#: libgphoto2_port/gphoto2-port.c:646
+#, c-format
+msgid "Level of pin %i: %i"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:672
+msgid "low"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:673
+msgid "high"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:688
+#, c-format
+msgid "Setting pin %i (%s: '%s') to '%s'..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:705
+#, c-format
+msgid "Sending break (%i milliseconds)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:720
+msgid "Flushing port..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:761
+#, fuzzy
+msgid "Clear halt..."
 msgstr "очистить_условие_halt"
 
-#: libgphoto2_port/gphoto2-port.c:785
-msgid "msg_write"
-msgstr "записать_сообщение"
+#: libgphoto2_port/gphoto2-port.c:778
+#, c-format
+msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
+msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:805
+#: libgphoto2_port/gphoto2-port.c:799
+#, c-format
+msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:806
 msgid "msg_read"
 msgstr "прочесть_сообщение"
 
-#: libgphoto2_port/gphoto2-port.c:865
+#: libgphoto2_port/gphoto2-port.c:866
 msgid "No error description available"
 msgstr "Описание ошибки недоступно"
 
@@ -279,12 +447,10 @@ msgstr "Невозможно установить скорость %d"
 msgid "Could not open USB device (%m)."
 msgstr "Невозможно открыть USB-устройство (%m)."
 
-#. other gphoto instance most likely
 #: usb/libusb.c:196
 msgid "Camera is already in use."
 msgstr "Фотоаппарат уже занят."
 
-#. other gphoto instance most likely
 #: usb/libusb.c:201
 msgid "Camera is supported by USB Storage driver."
 msgstr ""
@@ -367,3 +533,41 @@ msgstr ""
 "Не найдено устройство USB (класс 0x%x, подкласс 0x%x, протокол 0x%x). "
 "Убедитесь, что устройство подключено к компьютеру."
 
+#~ msgid "open"
+#~ msgstr "открыть"
+
+#~ msgid "close"
+#~ msgstr "закрыть"
+
+#~ msgid "write"
+#~ msgstr "записать"
+
+#~ msgid "read"
+#~ msgstr "прочитать"
+
+#~ msgid "check_int"
+#~ msgstr "проверить_прерывание"
+
+#~ msgid "update"
+#~ msgstr "обновить"
+
+#~ msgid "get_pin"
+#~ msgstr "получить_pin"
+
+#~ msgid "set_pin"
+#~ msgstr "установить_pin"
+
+#~ msgid "send_break"
+#~ msgstr "послать_сигнал_break"
+
+#~ msgid "flush"
+#~ msgstr "сбросить_буферы"
+
+#~ msgid "find_device"
+#~ msgstr "найти_устройство"
+
+#~ msgid "find_device_by_class"
+#~ msgstr "найти_устройство_в_классе"
+
+#~ msgid "msg_write"
+#~ msgstr "записать_сообщение"

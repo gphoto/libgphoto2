@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-05 23:02+0200\n"
+"POT-Creation-Date: 2005-01-04 11:27+0100\n"
 "PO-Revision-Date: sab lug 22 11:35:36 CEST 2000\n"
 "Last-Translator: Daniele Medri <madrid@linux.it>\n"
 "Language-Team: Italian <it@li.org>\n"
@@ -14,13 +14,118 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
+#: libgphoto2_port/gphoto2-port-info-list.c:178
+#, fuzzy, c-format
+msgid "Could not load '%s': '%s'."
+msgstr ""
+"Non è possibile aprire:\n"
+"%s"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:186
+#, c-format
+msgid "Could not find some functions in '%s': '%s'."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:198
+#: libgphoto2_port/gphoto2-port-info-list.c:322
+#, c-format
+msgid "'%s' already loaded"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:207
+#, fuzzy, c-format
+msgid "Could not load port driver list: '%s'."
+msgstr "Non è possibile ricevere l'anteprima"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:214
+#, c-format
+msgid "Loaded '%s' ('%s') from '%s'."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:253
+#, c-format
+msgid "Loading io-drivers from '%s'..."
+msgstr ""
+
 #: libgphoto2_port/gphoto2-port-info-list.c:268
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 
+#: libgphoto2_port/gphoto2-port-info-list.c:300
+#, c-format
+msgid "'%s' is not a library (%s)"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:310
+#, fuzzy, c-format
+msgid "Could not find some functions in '%s' (%s)"
+msgstr ""
+"Non è possibile aprire:\n"
+"%s"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:330
+#, fuzzy, c-format
+msgid "Could not load list (%s)"
+msgstr ""
+"Non è possibile aprire:\n"
+"%s"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:338
+#, c-format
+msgid "Loaded '%s' (%s) from '%s'"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:369
+#, c-format
+msgid "Counting entries (%i available)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:378
+#, c-format
+msgid "%i regular entries available."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:407
+#, c-format
+msgid "Looking for path '%s' (%i entries available)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:419
+#, c-format
+msgid "Starting regex search for '%s'..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:425
+#, c-format
+msgid "Trying '%s'..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:446
+msgid "regcomp failed"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:457
+#, c-format
+msgid "re_match failed (%i)"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:465
+msgid "regexec failed"
+msgstr ""
+
 #: libgphoto2_port/gphoto2-port-info-list.c:472
 msgid "Generic Port"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:496
+#, c-format
+msgid "Looking up entry '%s'..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:526
+#, c-format
+msgid "Getting info of entry %i (%i available)..."
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:58
@@ -118,70 +223,142 @@ msgstr ""
 msgid "The port has not yet been initialized"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:278
-msgid "open"
+#: libgphoto2_port/gphoto2-port.c:91
+msgid "Creating new device..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:301
-#, fuzzy
-msgid "close"
-msgstr "Chiudi"
+#: libgphoto2_port/gphoto2-port.c:171
+#, fuzzy, c-format
+msgid "Could not load '%s' ('%s')."
+msgstr ""
+"Non è possibile aprire:\n"
+"%s"
 
-#: libgphoto2_port/gphoto2-port.c:376
-#, fuzzy
-msgid "write"
-msgstr "Stampa"
+#: libgphoto2_port/gphoto2-port.c:180
+#, fuzzy, c-format
+msgid "Could not load '%s' ('%s')"
+msgstr ""
+"Non è possibile aprire:\n"
+"%s"
 
-#: libgphoto2_port/gphoto2-port.c:408
-#, fuzzy
-msgid "read"
-msgstr "Crea"
-
-#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:478
-msgid "check_int"
+#: libgphoto2_port/gphoto2-port.c:195 libgphoto2_port/gphoto2-port.c:201
+#, c-format
+msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:595
-msgid "update"
+#: libgphoto2_port/gphoto2-port.c:276
+#, c-format
+msgid "Opening %s port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:641
-msgid "get_pin"
+#: libgphoto2_port/gphoto2-port.c:298
+msgid "Closing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:693
-msgid "set_pin"
+#: libgphoto2_port/gphoto2-port.c:320
+msgid "Freeing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:708
-msgid "send_break"
+#: libgphoto2_port/gphoto2-port.c:369
+#, c-format
+msgid "Writing %i=0x%x byte(s) to port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:721
-msgid "flush"
+#: libgphoto2_port/gphoto2-port.c:382
+#, fuzzy, c-format
+msgid "Could only write %i out of %i byte(s)"
+msgstr "Non è possibile ritrarre #%i"
+
+#: libgphoto2_port/gphoto2-port.c:403
+#, c-format
+msgid "Reading %i=0x%x bytes from port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:737
-msgid "find_device"
+#: libgphoto2_port/gphoto2-port.c:414 libgphoto2_port/gphoto2-port.c:450
+#: libgphoto2_port/gphoto2-port.c:489 libgphoto2_port/gphoto2-port.c:811
+#, c-format
+msgid "Could only read %i out of %i byte(s)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:749
-msgid "find_device_by_class"
+#: libgphoto2_port/gphoto2-port.c:439
+#, c-format
+msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:763
-msgid "clear_halt"
+#: libgphoto2_port/gphoto2-port.c:499
+#, c-format
+msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:783
-msgid "msg_write"
+#: libgphoto2_port/gphoto2-port.c:524
+#, c-format
+msgid "Setting timeout to %i millisecond(s)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:803
+#: libgphoto2_port/gphoto2-port.c:560
+msgid "Getting timeout..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:564
+#, c-format
+msgid "Current timeout: %i milliseconds"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:586
+msgid "Setting settings..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:637
+#, fuzzy, c-format
+msgid "Getting level of pin %i..."
+msgstr "Non è possibile ritrarre #%i"
+
+#: libgphoto2_port/gphoto2-port.c:646
+#, c-format
+msgid "Level of pin %i: %i"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:672
+msgid "low"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:673
+msgid "high"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:688
+#, c-format
+msgid "Setting pin %i (%s: '%s') to '%s'..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:705
+#, c-format
+msgid "Sending break (%i milliseconds)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:720
+msgid "Flushing port..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:761
+msgid "Clear halt..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:778
+#, c-format
+msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:799
+#, c-format
+msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port.c:806
 msgid "msg_read"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:863
+#: libgphoto2_port/gphoto2-port.c:866
 msgid "No error description available"
 msgstr ""
 
@@ -271,61 +448,96 @@ msgstr ""
 msgid "Could not set the baudrate to %d"
 msgstr "Non è possibile delineare il numero di immagini"
 
-#: usb/libusb.c:131
+#: usb/libusb.c:186
 #, fuzzy, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Non è possibile ricevere l'anteprima"
 
-#: usb/libusb.c:138
+#: usb/libusb.c:196
+msgid "Camera is already in use."
+msgstr ""
+
+#: usb/libusb.c:201
+msgid "Camera is supported by USB Storage driver."
+msgstr ""
+
+#: usb/libusb.c:205
+#, c-format
+msgid "Device has driver '%s' attached, detaching it now."
+msgstr ""
+
+#: usb/libusb.c:208
+#, c-format
+msgid "Could not detach kernel driver '%s' of camera device."
+msgstr ""
+
+#: usb/libusb.c:210
+#, fuzzy
+msgid "Could not query kernel driver of device."
+msgstr "Non è possibile ricevere l'anteprima"
+
+#: usb/libusb.c:217
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (e.g. dc2xx or stv680) is using the device and you have read/write "
-"access to the device."
+"module (such as %s) is using the device and you have read/write access to "
+"the device."
 msgstr ""
 
-#: usb/libusb.c:157
+#: usb/libusb.c:236
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr ""
 
-#: usb/libusb.c:164
+#: usb/libusb.c:243
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr ""
 
-#: usb/libusb.c:294
+#: usb/libusb.c:383
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr ""
 
-#: usb/libusb.c:316
+#: usb/libusb.c:405
 #, fuzzy, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Non è possibile ritrarre #%i"
 
-#: usb/libusb.c:391
+#: usb/libusb.c:497
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 
-#: usb/libusb.c:417
+#: usb/libusb.c:529
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
 "not function with gphoto2. Reference: %s"
 msgstr ""
 
-#: usb/libusb.c:450
+#: usb/libusb.c:562
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
 
-#: usb/libusb.c:558
+#: usb/libusb.c:693
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
 "sure this device is connected to the computer."
 msgstr ""
+
+#, fuzzy
+#~ msgid "close"
+#~ msgstr "Chiudi"
+
+#, fuzzy
+#~ msgid "write"
+#~ msgstr "Stampa"
+
+#, fuzzy
+#~ msgid "read"
+#~ msgstr "Crea"

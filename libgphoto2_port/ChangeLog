@@ -1,3 +1,13 @@
+2005-01-04  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* libpghoto2_port/gphoto2-port.c, gphoto2-port-info-list.c:
+	  Marked up debug strings for translation too.
+	  Removed translation markup from function names.
+
+	* po/*.po: make update-po
+
+	* po/ru.po: Merged new russian translations from Vyacheslav Dikonov. 
+
 2004-10-28  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* libgphoto2_port/gphoto2-port-log.h: Fix build for gcc 2.95
