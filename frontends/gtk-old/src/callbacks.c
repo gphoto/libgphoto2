@@ -272,10 +272,19 @@ void save_selected_photos() {
 			   if (num == 1) {
 				strcpy(fname, path);
 			   } else {
-				if (prefix)
-					sprintf(fname, "%s%s%04i", path, prefix, x);
-				   else
-					sprintf(fname, "%sphoto%04i", path, x);
+				slash = strrchr(f->type, '/');
+				slash++;
+				if (prefix) {
+					if (slash)
+						sprintf(fname, "%s%s%04i.%s", path, prefix, x, slash);
+					  else
+						sprintf(fname, "%s%s%04i", path, prefix, x);
+				} else {
+					if (slash)
+						sprintf(fname, "%sphoto%04i.%s", path, x, slash);
+					   else
+						sprintf(fname, "%sphoto%04i", path, x);
+				}
 			   }
 			}
 			/* check for existing file */
@@ -961,54 +970,63 @@ void camera_configure() {
 
 void camera_show_information() {
 
-	char buf[1024*32];
+	CameraText buf;
+	GtkWidget *message, *message_label;
 
 	debug_print("camera information");
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
-	if (gp_summary(buf)==GP_ERROR) {
+	message = create_message_window_transient();
+	message_label = (GtkWidget*) lookup_widget(message, "message");
+	gtk_label_set_text(GTK_LABEL(message_label), _("Retrieving camera information..."));
+
+	gtk_widget_show(message);
+	idle();
+	if (gp_summary(&buf)==GP_ERROR) {
+		gtk_widget_hide(message);
 		gp_message(_("Could not retrieve camera information"));
 		return;
 	}
+	gtk_widget_hide(message);
 
-	gp_message(buf);
+	gp_message(buf.text);
 }
 
 void camera_show_manual() {
 
-	char buf[1024*32];
+	CameraText buf;
 
 	debug_print("camera manual");
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
-	if (gp_manual(buf)==GP_ERROR) {
+	if (gp_manual(&buf)==GP_ERROR) {
 		gp_message(_("Could not retrieve the camera manual"));
 		return;
 	}
 
-	gp_message(buf);
+	gp_message(buf.text);
 
 }
 
 void camera_show_about() {
 
-	char buf[1024*32];
+	CameraText buf;
 
 	debug_print("camera about");
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
-	if (gp_about(buf)==GP_ERROR) {
+	if (gp_about(&buf)==GP_ERROR) {
 		gp_message(_("Could not retrieve library information"));
 		return;
 	}
 
-	gp_message(buf);
+	gp_message(buf.text);
 }
 
 
