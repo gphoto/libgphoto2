@@ -24,34 +24,20 @@ jpeg_quantization_table luminance = {
  20, 20, 20, 20, 20, 20, 20, 20
 };
 
+/* ID returns 0 , XIRLINK, and 4 byte more */
+#define ID_PDC640SE    "\x0XIRLINK\x2\x1\x3\x1"
+#define ID_PDC320      "\x0XIRLINK\x2\x1\x3\x0"
 
-/*
- * Those are the answers to some of the commands stated below. We should
- * (at some point in the future) understand the contents and compare
- * the return value against them.
- */
+#define PDC320_INIT	0x00
+#define PDC320_ID	0x01
+#define PDC320_STATE	0x02
+#define PDC320_NUM	0x03
+#define PDC320_SIZE	0x04
+#define PDC320_PIC	0x05
+#define PDC320_DEL	0x07
+#define PDC320_ENDINIT	0x0a
+#define PDC320_UNKNOWN3	0x0c
 
-#define ENDINIT_PDC640SE 	"\x0\x78\x0\x0\x2\x10\xf1\xf5"
-#define ENDINIT_PDC320		"\x0\x50\x0\x0\x7\xd0\xf0\xe6"
-
-#define ID_PDC640SE    "\x0\x58\x49\x52\x4c\x49\x4e\x4b\x2\x1\x3\x1\x16\xbf"
-#define ID_PDC320      "\x0\x58\x49\x52\x4c\x49\x4e\x4b\x2\x1\x3\x0\x16\xc0"
-
-// What I got back from someone's PDC640SE test: 02 40 02 80 01 e0 00 05 02 80 01 e0 00 05 00 78
-#define STATE_PDC640SE "\x40\x2\x80\x1\xe0\x0\x5\x2\x80\x1\xe0\x0\x5\x0\x78\x0\x78\x0\x0\x2\x10"
-#define STATE_PDC320   "\x2\x3f\x1\x40\x0\xf0\x0\x5\x1\x40\x0\xf0\x0\x5\x0\x50\x0\x50\x0\x0\x7\xd0\xf0\xe6"
-
-#define PDC320_INIT     "\xe6\xe6\xe6\xe6\xe6\xe6\xe6\xe6\x0\xff\xff"
-#define PDC320_ID                       "\xe6\xe6\xe6\xe6\x1\xfe\xff"
-#define PDC320_STATE                    "\xe6\xe6\xe6\xe6\x2\xfd\xff"
-#define PDC320_NUM                      "\xe6\xe6\xe6\xe6\x3\xfc\xff"
-#define PDC320_SIZE     {0xe6, 0xe6, 0xe6, 0xe6, 0x4, 0x00, 0xfb, 0x0}
-#define PDC320_PIC      {0xe6, 0xe6, 0xe6, 0xe6, 0x5, 0x00, 0xfa, 0x0}
-#define PDC320_DEL                      "\xe6\xe6\xe6\xe6\x7\xf8\xff"
-#define PDC320_ENDINIT                  "\xe6\xe6\xe6\xe6\xa\xf5\xff"
-#define PDC320_UNKNOWN3                 "\xe6\xe6\xe6\xe6\xc\xf3\xf3"
-
-#define ACK 0x06
 
 #define RETRIES 3
 
@@ -84,5 +70,4 @@ static struct {
     "\xBA\xC2\xC3\xC4\xC5\xC6\xC7\xC8" "\xC9\xCA\xD2\xD3\xD4\xD5\xD6\xD7" \
     "\xD8\xD9\xDA\xE1\xE2\xE3\xE4\xE5" "\xE6\xE7\xE8\xE9\xEA\xF1\xF2\xF3" \
     "\xF4\xF5\xF6\xF7\xF8\xF9\xFA"
-
 #endif

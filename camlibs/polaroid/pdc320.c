@@ -24,14 +24,18 @@
  * Lutz Müller <lutz@users.sourceforge.net>
  *
  * Maintained by Nathan Stenzel <nathanstenzel@users.sourceforge.net>
+ *
+ * Original windows drivers available at:
+ *	http://www.polaroid.com/service/software/index.html
  */
 
 #include "config.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
-//#include "jpeghead.h"
+// #include "jpeghead.h"
 #include "pdc320.h"
 //#include <libgphoto2/jpeg.h>
 #include <gphoto2-library.h>
@@ -56,7 +60,6 @@
 #  define N_(String) (String)
 #endif
 
-
 #define GP_MODULE "pdc320"
 
 /*******************************************************************************/
@@ -67,14 +70,11 @@
 /* Notes on what needs work:
  * 	Make a better header that could correct color problems....
  *		or manage to decode, color correct, and save the image.
- *
- * 	Fix some bug where the pdc320_num returns a strange response after
- *		pdc320_delete is called. Perhaps it needs to reset or something
+ * The quantization tables are incorrect for the PDC320.
  */
 
 /*
- * For the PDC640SE, the init sequence is INIT,ID,ENDINIT,STATE,NUM,SIZE,
- * handshake?, PIC.
+ * For the PDC640SE, the init sequence is INIT,ID,ENDINIT,STATE,NUM,SIZE,PIC.
  *
  * During handshake, if the first read byte is not 6 then it is not good. Read
  * the number of bytes mentioned +2 ("FE FF"?)and then INIT and try SIZE
@@ -94,184 +94,230 @@ struct _CameraPrivateLibrary {
 };
 
 static int
-pdc320_id (GPPort *port, const char **model)
-{
-	int i;
-	unsigned char buf[32];
+pdc320_escape(
+	const unsigned char *inbuf, int inbuflen,
+	unsigned char *outbuf
+) {
+	int i,j;
 
-	GP_DEBUG ("*** PDC320_ID ***");
-	CR (gp_port_write (port, PDC320_ID, sizeof (PDC320_ID) - 1));
-	CR (gp_port_read (port, buf, 14));
-	if (model) {
-		*model = _("unknown");
-		for (i = 0; models[i].model; i++)
-			if (buf[1] == models[i].id) {
-				*model = models[i].model;
-				break;
-			}
+	j = 0;
+	for (i=0;i<inbuflen;i++) {
+		switch (inbuf[i]) {
+		case 0xe3:
+			outbuf[j++] = 0xe5;outbuf[j++] = 3;
+			break;
+		case 0xe4:
+			outbuf[j++] = 0xe5;outbuf[j++] = 2;
+			break;
+		case 0xe5:
+			outbuf[j++] = 0xe5;outbuf[j++] = 1;
+			break;
+		case 0xe6:
+			outbuf[j++] = 0xe5;outbuf[j++] = 0;
+			break;
+		default:outbuf[j++] = inbuf[i];
+			break;
+		}
 	}
+	return j;
+}
 
-	return (GP_OK);
+static int
+pdc320_calc_checksum(const unsigned char *buf, int buflen) {
+	int checksum, j;
+
+	checksum = 0;
+	j = 0;
+	for (j=0;j<buflen/2;j++) {
+		checksum += buf[j*2];
+		checksum += buf[j*2+1]<<8;
+	}
+	if (buflen & 1)
+		checksum += buf[buflen-1];
+
+	while (checksum > 0xffff) {
+		checksum =
+			(checksum & 0xffff) + 
+			((checksum >> 16) & 0xffff);
+	}
+	return 0xffff-checksum; /* neg checksum actually */
+}
+
+static int
+pdc320_command(
+	GPPort *port,
+	const unsigned char *cmd, int cmdlen
+) {
+	unsigned char csum[2];
+	int checksum, off, ret;
+	unsigned char *newcmd;
+
+	checksum = pdc320_calc_checksum (cmd, cmdlen);
+	csum[0] = checksum & 0xff;
+	csum[1] = (checksum >> 8) & 0xff;
+	/* 4 times 0xe6, checksum and command, both might be escaped */
+	newcmd = malloc (2*(sizeof(csum)+cmdlen)+4);
+	if (!newcmd)
+		return GP_ERROR_NO_MEMORY;
+	memset (newcmd, 0xe6, 4); off = 4;
+	off += pdc320_escape (cmd, cmdlen, newcmd + off);
+	off += pdc320_escape (csum, 2, newcmd + off);
+	ret = gp_port_write (port, newcmd, off);
+	free(newcmd);
+	return ret;
+}
+
+static int
+pdc320_simple_command (GPPort *port, const unsigned char cmd) {
+	return pdc320_command(port, &cmd, 1);
+}
+
+static int
+pdc320_simple_reply (GPPort *port, const unsigned char expcode,
+	unsigned int replysize, unsigned char *reply
+) {
+	unsigned char csum[2];
+	int calccsum;
+
+	CR (gp_port_read (port, reply, 1));
+	if (reply[0] != expcode) {
+		GP_DEBUG("*** reply got 0x%02x, expected 0x%02x\n",
+			reply[0], expcode
+		);
+		return GP_ERROR;
+	}
+	CR (gp_port_read (port, reply+1, replysize-1));
+	CR (gp_port_read (port, csum, 2));
+	calccsum = pdc320_calc_checksum (reply, replysize);
+	if (calccsum != ((csum[1] << 8) | csum[0])) {
+		fprintf(stderr,"csum %x vs %x\n",calccsum,((csum[0]<<8)|csum[1]));
+		return GP_ERROR;
+	}
+	return GP_OK;
+}
+
+static int
+pdc320_simple_command_reply (GPPort *port,
+	const unsigned char cmd, const unsigned char expcode,
+	unsigned int replysize, unsigned char *reply
+) {
+	CR (pdc320_simple_command (port, cmd));
+	CR (pdc320_simple_reply (port, expcode, replysize, reply));
+	return GP_OK;
 }
 
 static int
 pdc320_init (GPPort *port)
 {
 	unsigned char buf[32];
+	unsigned char e6[4];
+	int i;
 
 	GP_DEBUG ("*** PDC320_INIT ***");
-	CR (gp_port_write (port, PDC320_INIT,
-				     sizeof (PDC320_INIT) - 1));
-	CR (gp_port_read (port, buf, 3));
-#if 0
-	if ((buf[0] != 0x05) || //0x0f?
-	    (buf[1] != 0xfa) ||
-	    (buf[2] != 0xff))
-		return (GP_ERROR_CORRUPTED_DATA);
-#endif
+	
+	/* The initial command is prefixed by 4 raw E6. */
+	memset(e6,0xe6,sizeof(e6));
+	CR (gp_port_write (port, e6, sizeof (e6) ));
 
-	CR (pdc320_id (port, NULL));
-
+	GP_DEBUG ("*** PDC320_INIT ***");
+	CR (pdc320_simple_command_reply (port, PDC320_INIT, 5, 1, buf));
+	GP_DEBUG ("*** PDC320_ID ***");
+	CR (pdc320_simple_command_reply (port, PDC320_ID, 0, 12, buf));
 	GP_DEBUG ("*** PDC320_STATE ***");
-	CR (gp_port_write (port, PDC320_STATE,
-				     sizeof (PDC320_STATE) - 1));
-	CR (gp_port_read (port, buf, 16));
+	CR (pdc320_simple_command_reply (port, PDC320_STATE, 2, 22, buf));
 
+	for (i=0;i<9;i++) {
+		GP_DEBUG ("%d: %d (0x%x)",i,((buf[2+i*2]<<8)|buf[2+2*i+1]), ((buf[2+i*2]<<8)|buf[2+2*i+1]));
+	}
 	GP_DEBUG ("*** PDC320_ENDINIT ***");
-	CR (gp_port_write (port, PDC320_ENDINIT,
-				     sizeof (PDC320_ENDINIT) - 1));
-	CR (gp_port_read (port, buf, 8));
-	return (GP_OK);
+	return pdc320_simple_command_reply (port, PDC320_ENDINIT, 9, 1, buf);
 }
 
 static int
 pdc320_num (GPPort *port)
 {
-	int num;
-	unsigned char buf[4];
+	unsigned char buf[2];
 
-	/* The first byte we get is the number of images on the camera */
-	CR (gp_port_write (port, PDC320_NUM,
-					   sizeof (PDC320_NUM) - 1));
-	CR (gp_port_read (port, buf, 3));
-	num = buf[1];
-
-#if 0
-	if ((buf[1] != 0x01) ||
-	    (buf[2] != 0xfc) ||
-	    (buf[3] != 0xfe))
-		return (GP_ERROR_CORRUPTED_DATA);
-#endif
-
-	GP_DEBUG ("The camera contains %i "
-			 "files.", num);
-
-	return (num);
+	GP_DEBUG ("*** PDC320_NUM ***");
+	CR (pdc320_simple_command_reply (port, PDC320_NUM, 3, 2, buf));
+	GP_DEBUG ("The camera contains %i files.", buf[1]);
+	return buf[1];
 }
 
 static int
 pdc320_delete (GPPort *port)
 {
-	unsigned char buf[7];
+	unsigned char buf[1];
 
-	/*
-	 * For the PDC320, we get 3 bytes (0x8 0xf7 0xff) back. It could
-	 * well be that other cameras send other bytes.
-	 */
-	CR (gp_port_write (port, PDC320_DEL,
-				     sizeof (PDC320_DEL) - 1));
-/* Since the Polaroid 640SE times out here, I will read one byte at a time to
-   find out how many bytes to read.
- * Now, let's see how many bytes it reads before it times out. : )
- */
-/*	CR (gp_port_read (port, buf, 1));
-	CR (gp_port_read (port, buf, 1));
-	CR (gp_port_read (port, buf, 1));
-*/
-	CR (gp_port_read (port, buf, 3));
-#if 0
-	if ((buf[0] != 0x08) ||
-	    (buf[1] != 0xf7) ||
-	    (buf[2] != 0xff))
-		return (GP_ERROR_CORRUPTED_DATA);
-#endif
-
-	return (GP_OK);
+	GP_DEBUG ("*** PDC320_DELETE ***");
+	return pdc320_simple_command_reply(port, PDC320_DEL, 8, 1, buf);
 }
 
 static int
 pdc320_size (Camera *camera, int n)
 {
-	int size, i;
-	unsigned char buf[256];
-	unsigned char cmd[] = PDC320_SIZE;
+	int size;
+	unsigned char buf[5];
+	unsigned char cmd[2];
 
-	cmd[5] = n;		/* n is from 1 on up */
-	cmd[7] = 0xff - n;
+	GP_DEBUG ("*** PDC320_SIZE ***");
+	cmd[0] = PDC320_SIZE;
+	cmd[1] = n;
+	CR (pdc320_command (camera->port, cmd, sizeof (cmd)));
+	CR (pdc320_simple_reply (camera->port, 6, 5, buf));
+	size = (buf[1] << 24) + (buf[2] << 16) + (buf[3] << 8) + buf[4];
+	GP_DEBUG ("Image %i has size %i.", n, size);
+	return (size);
+}
 
-	for (i = 0; i <= RETRIES; i++) {
+/* Unclear. */
+static int
+pdc320_0c (Camera *camera, int n)
+{
+	int size, csum, i;
+	unsigned char buf[3], *xbuf;
+	unsigned char cmd[2];
+	
+	cmd[0] = 0x0c;
+	cmd[1] = n;		/* n is from 1 on up */
 
-		/* Write the command */
-		CR (gp_port_write (camera->port, cmd, sizeof (cmd)));
-
-		/* Read one byte and check if we can continue */
-		CR (gp_port_read (camera->port, buf, 1));
-		if (buf[0] != ACK) {
-
-			/*
-			 * Do we need to dump some bytes here before trying
-			 * again?
-                         * Yes, but how many is not known for the PDC 320.
-			 */
-			switch (camera->pl->model) {
-			case PDC640SE:
-				CR (gp_port_read (camera->port, buf,
-							    buf[0] + 2));
-				CR (pdc320_init (camera->port));
-				break;
-			case PDC320:
-				i = RETRIES;
-				break;
-			}
-			continue;
-		}
-
-		/*
-		 * Ok, everything is fine. Read 6 bytes containing the size
-		 * and return.
-		 */
-		CR (gp_port_read (camera->port, buf, 6));
-		size = (buf[0] << 24) + (buf[1] << 16) + (buf[2] << 8) + buf[3];
-		GP_DEBUG ("Image %i has size "
-				 "%i.", n, size);
-		return (size);
+	/* Write the command */
+	GP_DEBUG ("*** PDC320_0c ***");
+	CR (pdc320_command (camera->port, cmd, sizeof (cmd)));
+	CR (gp_port_read (camera->port, buf, 3));
+	if (buf[0] != 7)
+		return GP_ERROR;
+	size = (buf[1] << 8) | buf[2];
+	xbuf = malloc (size);
+	CR (gp_port_read (camera->port, xbuf, size));
+	for (i=0; i<size; i++) {
+		GP_DEBUG ("buf[%d]=0x%02x", i, xbuf[i]);
 	}
-
-	return (GP_ERROR_CORRUPTED_DATA);
+	CR (gp_port_read (camera->port, buf, 2));
+	csum = (buf[0] << 8) | buf[1];
+	/* checksum is calculated from both, but i am not clear how. */
+	return GP_OK;
 }
 
 static int
 pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 {
-	unsigned char cmd[] = PDC320_PIC;
+	unsigned char cmd[2];
 	unsigned char buf[2048];
 	int remaining, f1, f2, i, len, checksum;
 	int chunksize=2000;
 
 	/* Get the size of the picture and allocate the memory */
-	GP_DEBUG ("Checking size of image %i...",
-			 n);
+	GP_DEBUG ("Checking size of image %i...", n);
 	CR (*size = pdc320_size (camera, n));
 	*data = malloc (sizeof (char) * (*size));
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
 
-	cmd[5] = n;
-	cmd[7] = 0xff - n;
+	cmd[0] = PDC320_PIC;
+	cmd[1] = n;
 
-	CR_FREE (gp_port_write (camera->port, cmd, sizeof (cmd)),
-			   *data);
-
+	CR_FREE (pdc320_command (camera->port, cmd, sizeof (cmd)), *data);
 	switch (camera->pl->model) {
 	case PDC640SE:
 		chunksize = 528;
@@ -325,16 +371,15 @@ camera_abilities (CameraAbilitiesList *list)
 	for (i = 0; models[i].model; i++) {
 		memset(&a, 0, sizeof(a));
 		strcpy (a.model, models[i].model);
-		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-		a.port     = GP_PORT_SERIAL;
-		a.speed[0] = 0;
-		a.operations        = GP_OPERATION_NONE;
-		a.file_operations   = GP_FILE_OPERATION_NONE;
-		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
-
+		a.status		= GP_DRIVER_STATUS_EXPERIMENTAL;
+		a.port			= GP_PORT_SERIAL;
+		a.speed[0]		= 115200;
+		a.speed[1]		= 0;
+		a.operations		= GP_OPERATION_NONE;
+		a.file_operations	= GP_FILE_OPERATION_NONE;
+		a.folder_operations	= GP_FOLDER_OPERATION_DELETE_ALL;
 		CR (gp_abilities_list_append (list, a));
 	}
-
 	return (GP_OK);
 }
 
@@ -363,6 +408,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* Get the file */
 	GP_DEBUG ("Getting file %i...", n);
 	CR (pdc320_pic (camera, n, &data, &size));
+	CR (pdc320_0c (camera, n));
 
 	/* Post-processing */
 	switch (type) {
@@ -401,7 +447,6 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	Camera *camera = data;
 
 	CR (pdc320_delete (camera->port));
-
 	return (GP_OK);
 }
 
@@ -415,7 +460,6 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 		"Lutz Mueller <urc8@rz.uni-karlsruhe.de>.\n"
 		"Polaroid 640SE testing was done by Michael Golden "
 		"<naugrim@juno.com>."));
-
 	return (GP_OK);
 }
 
@@ -429,19 +473,17 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* Fill the list */
 	CR (n = pdc320_num (camera->port));
 	gp_list_populate (list, "PDC320%04i.jpg", n);
-
 	return (GP_OK);
 }
 
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-	const char *model;
+	char buf[12];
 
-	CR (pdc320_id (camera->port, &model));
-	strcpy (summary->text, _("Model: "));
-	strcat (summary->text, model);
-
+	GP_DEBUG ("*** PDC320_ID ***");
+	CR (pdc320_simple_command_reply (camera->port, PDC320_ID, 0, 12, buf));
+	sprintf (summary->text, _("Model: %x, %x, %x, %x"), buf[8],buf[9],buf[10],buf[11]);
 	return (GP_OK);
 }
 
@@ -508,7 +550,5 @@ camera_init (Camera *camera, GPContext *context)
 		camera->pl = NULL;
 		return (result);
 	}
-
 	return (GP_OK);
 }
-
