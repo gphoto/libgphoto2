@@ -132,7 +132,7 @@ int gp_port_usb_open(gp_port *dev)
 	if (ret < 0) {
 		fprintf(stderr, "gp_port_usb_open: could not claim intf %d: "
 			"%s\n", dev->settings.usb.interface, strerror (errno));
-		return GP_ERROR_IO_OPEN;
+		return GP_ERROR_IO_USB_CLAIM;
 	}
 	
 	return GP_OK;

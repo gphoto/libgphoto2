@@ -113,6 +113,10 @@ gp_port_result_as_description (int result)
 		 "The port you specified is unknown to "
 		 "libgphoto2. Please verify that you indicated the right "
 		 "port.");
+	RES_DES (GP_ERROR_IO_USB_CLAIM,
+		 "libgphoto2 was unable to claim an interface (USB). Please "
+		 "make sure another program or module (i.e. dc2xxx) doesn't "
+		 "use the USB device you would like to access.");
 	RES_DES (GP_ERROR_IO_LOCK,
 		 "You should verify if you have write access "
 		 "to /var/lock (try creating a file there). If you don't, "
