@@ -30,10 +30,13 @@ struct _CameraList {
 		char name  [128];
 		char value [128];
 	} entry [MAX_ENTRIES];
+	int ref_count;
 };
 
-int     gp_list_new  (CameraList **list);
-int     gp_list_free (CameraList *list);
+int     gp_list_new   (CameraList **list);
+int     gp_list_ref   (CameraList *list);
+int     gp_list_unref (CameraList *list);
+int     gp_list_free  (CameraList *list);
 
 int	gp_list_count	   (CameraList*);
 int	gp_list_append	   (CameraList*, const char *name, const char *value);

@@ -1,5 +1,10 @@
 2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-list.h
+	* libgphoto2/list.c (gp_list_ref), (gp_list_unref): New
+
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* include/gphoto2-debug.h
 	* libgphoto2/debug.c (gp_debug_history_get_size): New
 
