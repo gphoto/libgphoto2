@@ -56,7 +56,6 @@ l_init (gp_port* device)
 	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 
 	gp_port_timeout_set (device, DEFAULT_TIMEOUT);
-	if ((result = gp_port_open (device)) != GP_OK) return (result);
 	for (i = 0; ; i++) {
 		/****************/
 		/* Write ENQ. 	*/
@@ -67,10 +66,8 @@ l_init (gp_port* device)
 			/* We didn't receive anything. We'll try up to five   */
 			/* time.                                              */
 			/******************************************************/
-			if (i == 4) {
-			        gp_port_close (device);
+			if (i == 4)
 				return (result);
-			}
 			continue;
 		}
 		switch (c) {
@@ -97,7 +94,7 @@ l_exit (gp_port* device)
 {
 	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 	
-	return (gp_port_close (device));
+	return (GP_OK);
 }
 
 

@@ -276,6 +276,7 @@ init_serial_connection (Camera *camera)
 	if (camera->port_info->speed) {
 		settings.serial.speed = camera->port_info->speed;
 		CHECK (gp_port_settings_set (camera->port, settings));
+		CHECK (gp_port_open (camera->port));
 		if (k_init (camera->port) == GP_OK)
 			return (GP_OK);
 	}
@@ -285,11 +286,14 @@ init_serial_connection (Camera *camera)
 				 "%i.\n", test_bit_rate [i]);
 		settings.serial.speed = test_bit_rate [i];
 		gp_port_settings_set (camera->port, settings);
+		CHECK (gp_port_open (camera->port));
 		if (k_init (camera->port) == GP_OK)
 			break;
 	}
-	if (!camera->port_info->speed && (i == 1))
+	if (!camera->port_info->speed && (i == 1)) {
+		CHECK (gp_port_close (camera->port));
 		return (GP_OK);
+	}
 	if (i == 10)
 		return (GP_ERROR_IO);
 
@@ -311,8 +315,10 @@ init_serial_connection (Camera *camera)
 		for (i = 9; i >= 0; i--)
 			if (bit_rate_supported [i])
 				break;
-		if (i < 0)
+		if (i < 0) {
+			CHECK (gp_port_close (camera->port));
 			return (GP_ERROR_IO_SERIAL_SPEED);
+		}
 		camera->port_info->speed = bit_rate [i];
 	} else {
 
@@ -334,8 +340,10 @@ init_serial_connection (Camera *camera)
 			 (speed !=   1200) && (speed !=   2400) &&
 			 (speed !=   4800) && (speed !=   9600) &&
 			 (speed !=  19200) && (speed !=  38400) &&
-			 (speed !=  57600) && (speed != 115200)))
+			 (speed !=  57600) && (speed != 115200))) {
+			CHECK (gp_port_close (camera->port));
 			return (GP_ERROR_IO_SERIAL_SPEED);
+		}
 	}
 
 	/* Request the new speed */
@@ -351,6 +359,7 @@ init_serial_connection (Camera *camera)
 	settings.serial.speed = camera->port_info->speed;
 	CHECK (gp_port_settings_set (camera->port, settings));
 	CHECK (k_init (camera->port));
+	CHECK (gp_port_close (camera->port));
 
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** EXIT: "
 			 "init_serial_connection ***");
