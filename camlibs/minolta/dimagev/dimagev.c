@@ -57,9 +57,9 @@ int camera_abilities (CameraAbilitiesList *list)
 
 	memset(&a, 0, sizeof(a));
 #if defined HAVE_STRNCPY
-	strncpy(a.model, "Minolta Dimage V", sizeof(a.model));
+	strncpy(a.model, "Minolta:Dimage V", sizeof(a.model));
 #else
-	strcpy(a.model, "Minolta Dimage V");
+	strcpy(a.model, "Minolta:Dimage V");
 #endif
 	a.status = GP_DRIVER_STATUS_PRODUCTION;
 	a.port     = GP_PORT_SERIAL;
