@@ -1354,6 +1354,12 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	CHECK (gp_port_set_timeout (camera->port, timeout));
 
 	if (filepath != NULL) {
+		/* 
+		 * After the picture is taken, register 4 is set to the
+		 * current picture.
+		 */ 
+		GP_DEBUG ("Getting picture number.");
+		CHECK (sierra_get_int_register (camera, 4, &n, context));
 		/*
 		 * We need to tell the frontend where the new image can be
 		 * found.  Unfortunatelly, we can only figure out the
