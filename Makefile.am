@@ -28,10 +28,14 @@ doc_DATA = AUTHORS COPYING README
 #
 # It is not sufficient to have these options somewhere in autogen.sh!
 
+# Lutz <lutz@users.sourceforge.net> thinks these flags are no longer
+# necessary. If you have a different opinion, speak up on 
+# gphoto-devel@gphoto.org.
+
 # default options for aclocal
-ACLOCAL_AMFLAGS = -I $(top_srcdir)/libgphoto2_port/m4
+# ACLOCAL_AMFLAGS = -I $(top_srcdir)/libgphoto2_port/m4
 # default options for automake - only required in the top Makefile.am
-AUTOMAKE_OPTIONS = gnu
+# AUTOMAKE_OPTIONS = gnu
 
 ########################################################################
 # The following rules are only interesting if you want to create
@@ -47,7 +51,7 @@ dist-hook:
 
 dist-bzip2:
 	-chmod -R a+r $(distdir)
-	-$(TAR) chojf $(distdir).tar.bz2 $(distdir)
+	-$(TAR) --bzip2 chof $(distdir).tar.bz2 $(distdir)
 
 if ENABLE_RPM
 

@@ -1,3 +1,10 @@
+2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Arnaud Launay <asl@launay.org>, slightly modified:
+
+	* Makefile.am: Get rid of the automake flags, use --bzip2 instead of
+	  -j.
+
 2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
 
 	Patch by Arnaud Launay <asl@launay.org>
