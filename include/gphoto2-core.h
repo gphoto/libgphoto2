@@ -158,26 +158,29 @@
 	/* Retrieve a child pointer from a parent */
 	CameraWidget* gp_widget_child(CameraWidget *parent, int child_number);
 
+	/* Recursively retrieve a child pointer from a parent */
+	CameraWidget* gp_widget_child_by_label(CameraWidget *parent, char *child_label);
+
 	/* Get the type and label of a widget */
 	int   gp_widget_type (CameraWidget *widget);
 	char *gp_widget_label(CameraWidget *widget);
 
+	/* Set and Get the value of a widget */
+	int   gp_widget_value_set (CameraWidget *widget, char *value);
+	char *gp_widget_value_get (CameraWidget *widget);
+
+	/* Range functions          */
+	/* ------------------------ */
+
 	/* Set/get the value of a range widget */
-	int gp_widget_range_set (CameraWidget *range, 
-		float low, float high, float increment, float value);
-	int gp_widget_range_get (CameraWidget *range,
-		float *low, float *high, float *increment, float *value);
+	int gp_widget_range_set (CameraWidget *range, float low, float high, float increment);
+	int gp_widget_range_get (CameraWidget *range, float *low, float *high, float *increment);
 
-	/* Set/get the state of a toggle button (0 or 1) */
-	int gp_widget_toggle_set (CameraWidget *toggle, int active);
-	int gp_widget_toggle_get (CameraWidget *toggle);
-
-	/* Set/get the string of a text entry widget */
-	int   gp_widget_text_set (CameraWidget *text, char *string);
-	char *gp_widget_text_get (CameraWidget *text);
+	/* Menu and Radio functions */
+	/* ------------------------ */
 
 	/* Add a choice to a menu/radio widget */
-	int gp_widget_choice_add (CameraWidget *widget, char *choice, int active);
+	int gp_widget_choice_add (CameraWidget *widget, char *choice);
 
 	/* Retrieve the number of choices in a menu/radio widget */
 	int gp_widget_choice_count (CameraWidget *widget);
@@ -185,8 +188,8 @@
 	/* Retrieve a choice from a menu/radio widget */
 	char *gp_widget_choice (CameraWidget *widget, int choice_number);
 
-	/* Retrieve the active choice from a menu/radio widget */
-	char *gp_widget_choice_active (CameraWidget *widget);
+	/* Debugging output         */
+	/* ------------------------ */	
 
 	/* Debugging output to stdout. Will dump the widget and all children
 	   widgets (and their children, ...) recursively */

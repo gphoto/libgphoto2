@@ -52,16 +52,11 @@ struct CameraWidget;
 
 struct CameraWidget {
 
-	/* Publicly accessible
-	   ------------------------------ */
 	CameraWidgetType type;
 	char		 label[32];
 
-	/* Private (don't access)
-	   ------------------------------ */
 	/* Current value of the widget */
-	float		 value;
-	char		 value_string[128];
+	char		 value[128];
 
 	/* For Radio and Menu */
 	char 		 choice[32][64];
