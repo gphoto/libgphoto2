@@ -41,9 +41,15 @@ if test "$ac_dir" != "$1" && test "$ac_dir" != .; then
   test ! -d "$ac_dir" && mkdir "$ac_dir"
 fi
 
+# We're only interested in the target CPU, but it's not always set
+effective_target="$target"
+if test "x$effective_target" = xNONE ; then
+	effective_target="$host"
+fi
+
 cat > "$1" << EOF
 /* This file is generated automatically by configure */
-/* It is valid only for the system type ${host} */
+/* It is valid only for the system type ${effective_target} */
 
 #ifndef __BYTEORDER_H
 #define __BYTEORDER_H
@@ -54,11 +60,11 @@ dnl First, do an endian check
 AC_C_BIGENDIAN
 
 dnl Look for NetBSD-style extended byte swapping macros
-AC_HAVE_SYMBOL(le32toh,sys/endian.h,
+AC_HAVE_SYMBOL(le32toh,machine/endian.h,
  [HAVE_LE32TOH=1
  cat >> "$1" << EOF
 /* extended byte swapping macros are already available */
-#include <sys/endian.h>
+#include <machine/endian.h>
 
 EOF],
 
@@ -83,9 +89,9 @@ EOF],true)])
 dnl Look for generic byte swapping macros
 
 dnl OpenBSD
-AC_HAVE_SYMBOL(swap32,sys/endian.h,
+AC_HAVE_SYMBOL(swap32,machine/endian.h,
  [cat >> "$1" << EOF
-/* swap32 and swap16 are defined in sys/endian.h */
+/* swap32 and swap16 are defined in machine/endian.h */
 
 EOF],
 
@@ -103,13 +109,13 @@ EOF],
 
    [
 dnl NetBSD
-  	AC_HAVE_SYMBOL(bswap32,sys/endian.h,
-    dnl We're already including sys/endian.h if this test succeeds
+  	AC_HAVE_SYMBOL(bswap32,machine/endian.h,
+    dnl We're already including machine/endian.h if this test succeeds
   	 [cat >> "$1" << EOF
 /* Define generic byte swapping functions */
 EOF
 	if test "$HAVE_LE32TOH" != "1"; then
-		echo '#include <sys/endian.h>'>> "$1"
+		echo '#include <machine/endian.h>'>> "$1"
 	fi
 cat >> "$1" << EOF
 #define swap16(x) bswap16(x)
@@ -277,8 +283,8 @@ cat >> "$1" << EOF
 
 EOF
 
-case "${host_cpu}" in
- i[3456]86)
+case "${effective_target}" in
+ i[3456]86-*)
   cat >> "$1" << EOF
 /* Here are some macros to create integers from a byte array */
 /* These are used to get and put integers from/into a uint8_t array */

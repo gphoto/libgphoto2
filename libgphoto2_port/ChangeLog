@@ -1,3 +1,8 @@
+2002-03-23  Dan Fandrich <dan@coneharvesters.com>
+
+	* m4/byteorder.m4: Added support for cross-compilation.
+	  Changed to look for machine/endian.h instead of sys/endian.h on *BSD.
+
 2003-03-22  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2_port/Makefile.am: Remove "-g" from [C,LD]FLAGS. If you
