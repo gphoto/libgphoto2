@@ -1,3 +1,8 @@
+2002-01-31  Lutz Müller <lutz@users.sourceforge.net>
+
+	* camlibs/ricoh:
+	* configure.in: Initial version. Not working.
+
 2002-01-29  Lutz Müller <lutz@users.sourceforge.net>
 
 	* configure.in: Tell users where to get additional libraries.
