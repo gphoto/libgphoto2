@@ -86,8 +86,6 @@ main (int argc, char **argv)
 	int x, count;
 	const char *name;
 
-	gp_debug_set_level (GP_DEBUG_HIGH);
-
 	printf ("*** Creating file system...\n");
 	CHECK (gp_filesystem_new (&fs));
 
