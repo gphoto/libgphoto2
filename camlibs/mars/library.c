@@ -178,8 +178,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
     	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
-//	gamma_factor = malloc(k);
-//	if (!gamma_factor) return GP_ERROR_NO_MEMORY;
     	/* Resolution must be checked for each individual picture. */
     	comp_ratio = mars_get_comp_ratio (camera->pl->info, k);
     	w = mars_get_picture_width (camera->pl->info, k);
