@@ -495,7 +495,7 @@ camera_summary (Camera *camera, CameraText *about)
 	CHECK_RESULT (pdc700_info (camera, &info));
 
 	sprintf (about->text, _(
-		"Date: %i/%i/%i %i:%i:%i\n"
+		"Date: %02i/%02i/%02i %02i:%02i:%02i\n"
 		"Pictures taken: %i\n"
 		"Free pictures: %i\n"
 		"Software version: %s"),
