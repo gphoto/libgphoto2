@@ -4,6 +4,10 @@
 	  running gcc.
 	* Minor changes to other files to improve portability.
 
+2002-01-04  Hans Ulrich Niedermann <gp@n-dimensional.de>
+	
+	* usb/libusb.c: fixed error message to contain something to report
+
 2002-01-04  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/de.po: Update.
