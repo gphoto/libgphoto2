@@ -84,15 +84,23 @@ erase_all_unprotected_images (Camera* camera, CameraWidget* widget)
 {
 	konica_data_t*	konica_data;
 	gint		not_erased;
+	gint		result;
+	gchar*		tmp;
 
-	konica_data = g_new (konica_data_t, 1);
+	konica_data = (konica_data_t *) camera->camlib_data;
 
-	return (k_erase_all (konica_data->device, &not_erased));
+	result = k_erase_all (konica_data->device, &not_erased);
+	if ((result == GP_OK) && (not_erased > 0)) {
+		tmp = g_strdup_printf (_("%i images were protected and have not been erased."), not_erased);
+		gp_frontend_message (camera, tmp);
+		g_free (tmp);
+	}
+	return (result);
 }
 
 
-int 
-camera_id (CameraText *id)
+gint 
+camera_id (CameraText* id)
 {
 	g_return_val_if_fail (id != NULL, GP_ERROR_BAD_PARAMETERS);
 	strcpy (id->text, "konica");
@@ -100,7 +108,7 @@ camera_id (CameraText *id)
 }
 
 
-int 
+gint 
 camera_abilities (CameraAbilitiesList* list)
 {
 	gint 			i, j;
@@ -136,7 +144,7 @@ camera_abilities (CameraAbilitiesList* list)
 }
 
 
-int 
+gint 
 camera_init (Camera* camera, CameraInit* init)
 {
 	gint 		i, j;
@@ -368,7 +376,7 @@ camera_folder_list (Camera* camera, CameraList* list, gchar* folder)
 }
 
 
-int 
+gint 
 camera_file_list (Camera* camera, CameraList* list, gchar* folder)
 {
 	guint 			self_test_result;
@@ -461,7 +469,7 @@ camera_file_list (Camera* camera, CameraList* list, gchar* folder)
 }
 
 
-int 
+gint 
 camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar* filename, k_image_type_t image_type)
 {
 	gulong 		image_id;
@@ -505,14 +513,14 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 }
 
 
-int 
+gint 
 camera_file_get (Camera* camera, CameraFile* file, gchar* folder, gchar* filename)
 {
 	return (camera_file_get_generic (camera, file, folder, filename, K_IMAGE_EXIF));
 }
 
 
-int 
+gint 
 camera_file_get_preview (Camera* camera, CameraFile* file, gchar* folder, gchar* filename)
 {
 	return (camera_file_get_generic (camera, file, folder, filename, K_THUMBNAIL));
@@ -666,7 +674,8 @@ camera_capture (Camera* camera, CameraFile* file, CameraCaptureInfo* info)
 }
 
 
-int camera_manual (Camera *camera, CameraText *manual)
+gint 
+camera_manual (Camera* camera, CameraText* manual)
 {
 	strcpy(manual->text, "No manual available.");
 
@@ -674,7 +683,8 @@ int camera_manual (Camera *camera, CameraText *manual)
 }
 
 
-int camera_about (Camera *camera, CameraText *about) 
+gint 
+camera_about (Camera* camera, CameraText* about) 
 {
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (about, 	GP_ERROR_BAD_PARAMETERS);
@@ -687,7 +697,7 @@ int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-int 
+gint 
 camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gchar* filename)
 {
 	CameraWidget*	widget;
