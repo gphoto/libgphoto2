@@ -74,7 +74,7 @@ int gp_camera_new (Camera **camera, int camera_number)
 	(*camera)->session    = glob_session_camera++;
         (*camera)->ref_count  = 1;
 
-        if (load_library(*camera, glob_abilities_list->abilities[camera_number]->model)==GP_ERROR) {
+        if (load_library(*camera, glob_abilities_list->abilities[camera_number]->model)!=GP_OK) {
                 gp_camera_free(*camera);
                 return (GP_ERROR);
         }
@@ -193,8 +193,8 @@ int gp_camera_folder_list(Camera *camera, CameraList *list, char *folder)
 
         ret = camera->functions->folder_list(camera, list, folder);
 
-        if (ret == GP_ERROR)
-                return (GP_ERROR);
+        if (ret != GP_OK)
+                return (ret);
 
         /* Sort the folder list */
         for (x=0; x<list->count-1; x++) {
@@ -222,8 +222,8 @@ int gp_camera_file_list(Camera *camera, CameraList *list, char *folder)
         if (camera->functions->file_list == NULL)
                 return (GP_ERROR);
         ret = camera->functions->file_list(camera, list, folder);
-        if (ret == GP_ERROR)
-                return (GP_ERROR);
+        if (ret != GP_OK)
+                return (ret);
 
         /* Sort the file list */
         for (x=0; x<list->count-1; x++) {

@@ -100,7 +100,7 @@ int load_settings () {
 	sprintf(buf, "%s/.gphoto/settings", getenv("HOME"));
 #endif
 
-	if (verify_settings(buf) == GP_ERROR)
+	if (verify_settings(buf) != GP_OK)
 		/* verify_settings will unlink and recreate the settings file */
 		return (GP_OK);
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Loading settings from file \"%s\"", buf);
