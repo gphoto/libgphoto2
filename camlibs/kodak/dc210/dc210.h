@@ -45,6 +45,14 @@ typedef enum {
 } dc210_zoom_type;
 
 typedef struct {
+
+	unsigned char           open;
+	int                     program;
+	int                     space;
+
+} dc210_card_status;
+
+typedef struct {
 	char                    camera_type_id;   
 	char                    firmwareMajor;    
 	char                    firmwareMinor;  
@@ -64,6 +72,7 @@ typedef struct {
 	int                     totalPicturesTaken;     
 	int                     totalFlashesFired;      
 	int                     numPicturesInCamera;    
+	dc210_card_status       card_status;
 	int                     remainingLow;           
 	int                     remainingMedium;        
 	int                     remainingHigh;          
@@ -145,9 +154,9 @@ typedef struct {
 #define DC210_CARD_GET_SUMMARY	    0x92 /* not implemented */
 #define DC210_CARD_READ_THUMB	    0x93 /* implemented */
 #define DC210_CARD_FORMAT	    0x95 /* implemented */
-#define DC210_CARD_OPEN		    0x96 /* implemented */
-#define DC210_CARD_CLOSE	    0x97 /* implemented */
-#define DC210_CARD_GET_STATUS	    0x98 /* is working, returns packet of size 16 */
+#define DC210_OPEN_CARD		    0x96 /* implemented */
+#define DC210_CLOSE_CARD	    0x97 /* implemented */
+#define DC210_CARD_STATUS	    0x98 /* is working, returns packet of size 16 */
 #define DC210_CARD_GET_DIRECTORY    0x99 /* not implemented */
 #define DC210_CARD_READ_FILE	    0x9A /* implemented */
 #define DC210_CARD_UNKNOWN_COMMAND1 0x9C /* not implemented */
@@ -168,7 +177,7 @@ typedef struct {
 #define DC210_BUSY                  0xF0
   
 /* initialization */
-int dc210_initialize (Camera *camera);
+int dc210_init_port (Camera *camera);
 
 /* set procedures */
 int dc210_set_compression (Camera * camera, dc210_compression_type compression);
@@ -176,8 +185,7 @@ int dc210_set_flash (Camera * camera, dc210_flash_type flash, char preflash);
 int dc210_set_zoom (Camera * camera, dc210_zoom_type zoom);
 int dc210_set_file_type (Camera * camera, dc210_file_type_type file_type);
 int dc210_set_resolution (Camera * camera, dc210_resolution_type res);
-void dc210_reset_speed (Camera *camera);
-int dc210_set_speed     (Camera *camera, int speed);
+int dc210_set_speed (Camera *camera, int speed);
 int dc210_set_delay (Camera * camera);
 int dc210_set_exp_compensation (Camera * camera, signed int compensation);
 
@@ -189,9 +197,10 @@ int dc210_get_filenames (Camera *camera, CameraList *list, GPContext *context);
 int dc210_get_picture_number (Camera *camera, const char * filename);
 
 /* picture actions */
+int dc210_take_picture (Camera * camera, GPContext *context);
 int dc210_capture       (Camera *camera, CameraFilePath *path, GPContext *context);
 
-int dc210_download_picture (Camera * camera, CameraFile *file, unsigned int picno, int thumb, GPContext *context);
+int dc210_download_last_picture (Camera * camera, CameraFile *file, GPContext *context);
 int dc210_download_picture_by_name (Camera * camera, CameraFile *file, const char *filename, dc210_picture_type type, GPContext *context);
 
 int dc210_delete_picture (Camera * camera, unsigned int picno);

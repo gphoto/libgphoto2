@@ -640,18 +640,19 @@ int dc210_format_card (Camera * camera, char * album_name, GPContext * context){
 
 };
 
-static int dc210_space_on_card(Camera * camera, int * space){
+static int dc210_get_card_status (Camera * camera, dc210_card_status * card_status){
 
   char cmd[8];
   unsigned char answer[16];
   unsigned char checksum_read, checksum;
-  int i, sectors;
+  int i;
 
-  dc210_cmd_init(cmd, DC210_CARD_GET_STATUS);
+  card_status->open = 0;
+  card_status->program = 0;
+  card_status->space = 0;
 
+  dc210_cmd_init(cmd, DC210_CARD_STATUS);
   dc210_execute_command(camera, cmd);
-
-  *space = -1;
   if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
 
   gp_port_read(camera->port, answer, 16);
@@ -665,10 +666,11 @@ static int dc210_space_on_card(Camera * camera, int * space){
   else
 	  DC210_DEBUG("Card status correctly read.\n");
 
-  sectors = answer[2] * 0x1000000 + answer[3] * 0x10000 + answer[4] * 0x100 + answer[5];
-  *space = sectors >> 2; /* sectorsize seems to be 128, now we get kb */
-
-  DC210_DEBUG("Space on card: %d\n", *space);
+  if (answer[0] & 0x08) card_status->open = 1;
+  DC210_DEBUG("Card status open is %d\n", card_status->open);
+  card_status->program = answer[1] * 0x100 + answer[2];
+  /* set the space in kb */
+  card_status->space = (answer[3] * 0x1000000 + answer[4] * 0x10000 + answer[5] * 0x100 + answer[6]) / 1024;
 
   if (dc210_write_single_char(camera, DC210_CORRECT_PACKET) == GP_ERROR) return GP_ERROR;
   if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
@@ -703,7 +705,7 @@ static int dc210_check_battery (Camera *camera){
 
 };
 
-void dc210_reset_speed (Camera *camera){
+int dc210_init_port (Camera *camera){
 
 	/* sending a break command resets the
 	   speed to 9600 */
@@ -723,7 +725,7 @@ void dc210_reset_speed (Camera *camera){
 	/* ok, run a dummy command; if the camera was off,
 	   this will activate it and set the speed to 9600; 
 	   but the command will return an error */
-	if (dc210_check_battery(camera) == GP_OK) return;
+	if (dc210_check_battery(camera) == GP_OK) return GP_OK;
 
 	/* Fine, the last command didn't work, but we are now
 	   sure, the camera is working, if it is connected
@@ -736,10 +738,10 @@ void dc210_reset_speed (Camera *camera){
 
 	/* Excellent. Now our dummy command should work */
 
-	if (dc210_check_battery(camera) == GP_OK) return;
+	if (dc210_check_battery(camera) == GP_OK) return GP_OK;
 
 	/* My, my, this is not nice. We change the timeout
-	   and try other speeds */
+	   and try other speeds as last resort */
 
 	gp_port_set_timeout (camera->port, 100);
 
@@ -747,16 +749,18 @@ void dc210_reset_speed (Camera *camera){
 		settings.serial.speed = camera_speeds[i];
 		gp_port_set_settings (camera->port, settings);
 
-		if (dc210_check_battery(camera) == GP_OK) break;
+		if (dc210_check_battery(camera) == GP_OK){
+			gp_port_set_timeout (camera->port, TIMEOUT);
+			return GP_OK;
+		};
 
-		DC210_DEBUG("What a pity. Speed %d dos not work.\n", camera_speeds[i]);
+		DC210_DEBUG("What a pity. Speed %d does not work.\n", camera_speeds[i]);
 	};
 
 	/* reset the timeout */
 	gp_port_set_timeout (camera->port, TIMEOUT);
 
-	/* wether it worked or not: it's time to say goodbye */
-	return;
+	return GP_ERROR;
 
 };
 
@@ -783,9 +787,6 @@ int dc210_set_speed (Camera *camera, int speed) {
 		return (GP_ERROR);
 	};
 
-	/* try to get a defined state */
-	dc210_reset_speed (camera);
-
 	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
 
 	gp_port_get_settings (camera->port, &settings);
@@ -798,7 +799,7 @@ int dc210_set_speed (Camera *camera, int speed) {
 
 /****** Picture actions *****/
 
-static int dc210_take_picture 
+int dc210_take_picture 
 (Camera * camera, GPContext * context)
 {
 	char cmd[8];
@@ -863,55 +864,35 @@ int dc210_delete_picture_by_name
 
 };
 
-int dc210_download_picture 
-(Camera * camera, CameraFile *file, unsigned int picno, int thumb, GPContext *context)
+int dc210_download_last_picture 
+(Camera * camera, CameraFile *file, GPContext *context)
 {
 
 	dc210_status status;
 	dc210_picture_info picinfo;
 	char cmd[8];
-	unsigned int pic_offset = picno - 1;
+	unsigned int pic_offset;
 
-	/* this function is not used anymore */
-    
-	if (thumb)
-		dc210_cmd_init(cmd, DC210_GET_THUMB);
-	else
-		dc210_cmd_init(cmd, DC210_GET_PICTURE);
-	
+	if (dc210_get_status(camera, &status) == GP_ERROR) return GP_ERROR;
+	if (status.numPicturesInCamera == 0) return GP_ERROR;
+
+	pic_offset = status.numPicturesInCamera - 1;
+
+	dc210_cmd_init(cmd, DC210_GET_PICTURE);
 	cmd[3] = pic_offset & 0xFF;
 	cmd[2] = (pic_offset >> 8) & 0xFF;
-	if (thumb) cmd[4] = 1; /* rgb colour image instead of cfa */
 
-	if (dc210_get_status(camera, &status) == GP_ERROR)
-		return GP_ERROR;
-
-	if (picno > status.numPicturesInCamera)
-		return GP_ERROR;
-
-	if (dc210_get_picture_info(camera, &picinfo, picno) == GP_ERROR)
+	if (dc210_get_picture_info(camera, &picinfo, status.numPicturesInCamera) == GP_ERROR)
 		return GP_ERROR;
 
 	gp_file_set_name(file, picinfo.image_name);
+	if (picinfo.file_type == DC210_FILE_TYPE_JPEG)
+		gp_file_set_mime_type(file, GP_MIME_JPEG);
 
-	dc210_execute_command(camera, cmd);
-	if (thumb){
-
-		/* The windows bitmaps byte order differs from the one
-		   the camera delivers, so the following seems to be rotated:
-
-		   gp_file_set_mime_type(file, GP_MIME_BMP);
-		   gp_file_append(file, bmpheader, sizeof(bmpheader));
-
-		   We use ppm instead, which is very friendly and needs
-		   nothing more than the correct header */
-
-		gp_file_set_mime_type(file, GP_MIME_PPM);
-		gp_file_append(file, ppmheader, sizeof(ppmheader) - 1);
-		dc210_read_to_file(camera, file, DC210_DOWNLOAD_BLOCKSIZE, 96 * 72 * 3, NULL);
-	}
-	else
-		dc210_read_to_file(camera, file, DC210_DOWNLOAD_BLOCKSIZE, picinfo.picture_size, context);
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+	if (dc210_read_to_file(camera, file, 
+			       DC210_DOWNLOAD_BLOCKSIZE, 
+			       picinfo.picture_size, context) == GP_ERROR) return GP_ERROR;
 
 	return GP_OK;
 
@@ -922,7 +903,13 @@ int dc210_open_card
 {
 
 	char cmd[8];
-	dc210_cmd_init(cmd, DC210_CARD_OPEN);
+	dc210_card_status card_status;
+
+	/* check if card is already opened */
+	dc210_get_card_status(camera, &card_status);
+	if (card_status.open) return GP_OK;
+
+	dc210_cmd_init(cmd, DC210_OPEN_CARD);
 
 	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
 	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
@@ -935,7 +922,7 @@ int dc210_close_card
 {
 
 	char cmd[8];
-	dc210_cmd_init(cmd, DC210_CARD_CLOSE);
+	dc210_cmd_init(cmd, DC210_CLOSE_CARD);
 
 	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
 	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
@@ -1167,6 +1154,9 @@ int dc210_get_status (Camera *camera, dc210_status *status) {
 	   before reading the status table*/
 	dc210_check_battery(camera);
 
+	/* check the card */
+	dc210_get_card_status(camera, &(status->card_status));
+
 	dc210_cmd_init(cmd, DC210_GET_STATUS);
 	
 	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
@@ -1216,11 +1206,8 @@ int dc210_get_status (Camera *camera, dc210_status *status) {
 	status->remainingMedium       = (unsigned char) data[70] * 0x100 + (unsigned char) data[71];
 	status->remainingHigh         = (unsigned char) data[72] * 0x100 + (unsigned char) data[73];
 	strncpy(status->album_name, &data[77], 11);
-
-	if (dc210_space_on_card(camera, &status->card_space) == GP_ERROR)
-		DC210_DEBUG("No card in camera.\n");
-	
 	status->album_name[11] = 0;
+
 	return GP_OK;
 
 }

@@ -1,9 +1,10 @@
 There are still some minor problems/issues:
 
-- Implement a pseudo capturing of previews (by taking a picture
-  to the card, downloading and deleting it) for webcam purposes
 - Check the epoch problem that occurs when setting/reading the
   camera or file time
 - Internationalization
 - Allow switching the thumbnail type in preferences
 - Clean up the code and add some more comments
+
+To tackle these problems I have to update my linux installation,
+so don't expect them too soon.

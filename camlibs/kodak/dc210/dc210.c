@@ -49,8 +49,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a.speed[3] = 57600;
 	a.speed[4] = 115200;
 	a.speed[5] = 0;
-	a.operations        = 	GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
-	a.file_operations   = 	GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
+	a.operations        = 	GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CAPTURE_PREVIEW | GP_OPERATION_CONFIG;
+	a.file_operations   = 	GP_FILE_OPERATION_DELETE |  GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
@@ -460,6 +460,20 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 
 }
 
+static int camera_capture_preview (Camera* camera, CameraFile* file, GPContext *context){
+
+	int fatal_error = 0;
+
+	if (dc210_take_picture(camera, context) == GP_ERROR) return GP_ERROR;
+	if (dc210_download_last_picture(camera, file, context) == GP_ERROR) fatal_error = 1;
+	if (dc210_delete_last_picture(camera) == GP_ERROR) fatal_error = 1;
+
+	if (fatal_error) return GP_ERROR;
+
+	return GP_OK;
+
+};
+
 static int camera_summary (Camera *camera, CameraText *summary,
 			   GPContext *context) 
 {
@@ -589,12 +603,12 @@ static int camera_summary (Camera *camera, CameraText *summary,
 		strcat(summary_string,buff);
 	};
 
-	if (status.card_space == -1)
+	if (status.card_status.open == 0)
 		snprintf(buff, 1024, "No card in camera.\n");
 	else
 		snprintf(buff,1024,"Card name: %s\nFree space on card: %d kilobytes\n",
 			 status.album_name,
-			 status.card_space);
+			 status.card_status.space);
 	
         strcat(summary_string,buff);
 
@@ -636,6 +650,7 @@ int camera_init (Camera *camera, GPContext *context) {
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
 	camera->functions->capture 	= camera_capture;
+	camera->functions->capture_preview      = camera_capture_preview;
 	camera->functions->summary 	= camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
@@ -647,12 +662,9 @@ int camera_init (Camera *camera, GPContext *context) {
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 				      delete_file_func, camera);
 
-	if (dc210_set_speed (camera, 115200) == GP_ERROR) {
-		DC210_DEBUG("Error setting camera speed\n");
-		return GP_ERROR;
-	};
-
-	dc210_open_card(camera);
+	if (dc210_init_port (camera) == GP_ERROR) return GP_ERROR;
+	if (dc210_set_speed (camera, 115200) == GP_ERROR) return GP_ERROR;
+	if (dc210_open_card (camera) == GP_ERROR) return GP_ERROR;
 
         return (GP_OK);
 }
