@@ -2,7 +2,12 @@ $Id$
 
 Outstanding items in the gphoto2 dimera driver:
 
-- make exposure, auto_exposure, auto_flash user-modifyable config options
-- add serial port speed selection
-- may need to put temp.ppm into file list
+- make exposure, auto_exposure, auto_flash user-modifiable config options
+- may need to put /temp.ppm into file list
+
+Bugs:
+
+- flash capacity in --summary shows 0 for newer flash cards
+- newer cameras (e.g. ver. 6.2eL 1999/24) can't download pictures
+(this may have been fixed in dimera3500.c v1.3)
 
