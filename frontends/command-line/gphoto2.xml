@@ -1,0 +1,528 @@
+<?xml version='1.0' ?> <!-- -*- xml -*- -->
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+ "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<reference>
+  <title>gPhoto2</title>
+
+  <refentry>
+    <refentryinfo>
+      <author>
+	<firstname>The gPhoto2</firstname><surname>team</surname>
+      </author>
+
+      <editor>
+	<firstname>Tim</firstname>
+	<surname>Waugh</surname>
+	<affiliation>
+	  <address><email>twaugh@redhat.com</email></address>
+	</affiliation>
+      </editor>
+
+      <date>February 2002</date>
+    </refentryinfo>
+
+    <refmeta>
+      <refentrytitle>gphoto2</refentrytitle>
+      <manvolnum>1</manvolnum>
+    </refmeta>
+
+    <refnamediv>
+      <refname>gphoto2</refname>
+      <refpurpose>command-line gPhoto2 client</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv>
+      <cmdsynopsis>
+	<command>gphoto2</command>
+	<arg choice="opt">--debug</arg>
+	<group choice="opt">
+	  <arg>-q</arg>
+	  <arg>--quiet</arg>
+	</group>
+	<group choice="opt">
+	  <arg>-v</arg>
+	  <arg>--verbose</arg>
+	</group>
+	<group choice="opt">
+	  <arg>-h</arg>
+	  <arg>--help</arg>
+	</group><sbr/>
+	<arg choice="opt">--list-cameras</arg>
+	<arg choice="opt">--print-usb-usermap</arg>
+	<arg choice="opt">--list-ports</arg><sbr/>
+	<arg choice="opt">--stdout</arg>
+	<arg choice="opt">--stdout-size</arg>
+	<arg choice="opt">--auto-detect</arg>
+	<arg choice="opt">--port <replaceable>PATH</replaceable></arg><sbr/>
+	<arg choice="opt">--speed <replaceable>SPEED</replaceable></arg>
+	<arg choice="opt">--camera <replaceable>MODEL</replaceable></arg>
+	<arg choice="opt">--filename <replaceable>FILENAME</replaceable></arg><sbr/>
+	<arg choice="opt">--usbid <replaceable>USBID</replaceable></arg>
+	<group choice="opt">
+	  <arg>-a</arg>
+	  <arg>--abilities</arg>
+	</group>
+	<arg choice="opt">--folder <replaceable>FOLDER</replaceable></arg><sbr/>
+	<group choice="opt">
+	  <group>
+	    <arg>-R</arg>
+	    <arg>--recurse</arg>
+	  </group>
+	  <arg choice="opt">--norecurse</arg>
+	</group>
+	<group choice="opt">
+	  <arg>-l</arg>
+	  <arg>--list-folders</arg>
+	</group><sbr/>
+	<group choice="opt">
+	  <arg>-L</arg>
+	  <arg>--list-files</arg>
+	</group>
+	<group choice="opt">
+	  <arg>-m <replaceable>NAME</replaceable></arg>
+	  <arg>--mkdir <replaceable>NAME</replaceable></arg>
+	</group><sbr/>
+	<group choice="opt">
+	  <arg>-r <replaceable>NAME</replaceable></arg>
+	  <arg>--rmdir <replaceable>NAME</replaceable></arg>
+	</group>
+	<group choice="opt">
+	  <arg>-n</arg>
+	  <arg>--num-files</arg>
+	</group><sbr/>
+	<group choice="opt">
+	  <arg>-p <replaceable>RANGE</replaceable></arg>
+	  <arg>--get-file <replaceable>RANGE</replaceable></arg>
+	</group>
+	<group choice="opt">
+	  <arg>-P</arg>
+	  <arg>--get-all-files</arg>
+	</group><sbr/>
+	<group choice="opt">
+	  <arg>-t <replaceable>RANGE</replaceable></arg>
+	  <arg>--get-thumbnail <replaceable>RANGE</replaceable></arg>
+	</group><sbr/>
+	<group choice="opt">
+	  <arg>-T</arg>
+	  <arg>--get-all-thumbnails</arg>
+	</group><sbr/>
+	<group choice="opt">
+	  <arg>-r <replaceable>RANGE</replaceable></arg>
+	  <arg>--get-raw-data <replaceable>RANGE</replaceable></arg>
+	</group>
+	<arg choice="opt">--get-all-raw-data</arg><sbr/>
+	<arg choice="opt">--get-audio-data <replaceable>RANGE</replaceable></arg>
+	<arg choice="opt">--get-all-audio-data</arg><sbr/>
+	<group choice="opt">
+	  <arg>-d <replaceable>RANGE</replaceable></arg>
+	  <arg>--delete-file <replaceable>RANGE</replaceable></arg>
+	</group>
+	<group choice="opt">
+	  <arg>-D</arg>
+	  <arg>--delete-all-files</arg>
+	</group><sbr/>
+	<group choice="opt">
+	  <arg>-u <replaceable>FILENAME</replaceable></arg>
+	  <arg>--upload-file <replaceable>FILENAME</replaceable></arg>
+	</group>
+	<arg choice="opt">--capture-preview</arg><sbr/>
+	<arg choice="opt">--capture-image</arg>
+	<arg choice="opt">--capture-movie</arg>
+	<arg choice="opt">--capture-sound</arg><sbr/>
+	<arg choice="opt">--capture-show-info <replaceable>RANGE</replaceable></arg><sbr/>
+	<arg choice="opt">--summary</arg>
+	<arg choice="opt">--manual</arg>
+	<arg choice="opt">--about</arg>
+	<arg choice="opt">--shell</arg>
+      </cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1>
+      <title>Description</title>
+
+      <para>gPhoto2 is a cross-platform digital camera library, and
+       <command>gphoto2</command> is a command-line client for
+       it.</para>
+
+      <variablelist>
+	<varlistentry>
+	  <term><option>--debug</option></term>
+	  <listitem>
+	    <para>Turn on debugging.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-q</option>, <option>--quiet</option></term>
+	  <listitem>
+	    <para>Quiet output (default=verbose).</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-v</option>, <option>--version</option></term>
+	  <listitem>
+	    <para>Display version and exit.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-h</option>, <option>--help</option></term>
+	  <listitem>
+	    <para>Display a short usage message.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--list-cameras</option></term>
+	  <listitem>
+	    <para>List supported camera models.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--print-usb-usermap</option></term>
+	  <listitem>
+	    <para>Create output for usb.usermap.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--list-ports</option></term>
+	  <listitem>
+	    <para>List supported port devices.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--stdout</option></term>
+	  <listitem>
+	    <para>Send file to stdout.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--stdout-size</option></term>
+	  <listitem>
+	    <para>Print filesize before data.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--auto-detect</option></term>
+	  <listitem>
+	    <para>List auto-detected cameras.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--port</option> <replaceable>PATH</replaceable></term>
+	  <listitem>
+	    <para>Specify port device.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--speed</option> <replaceable>SPEED</replaceable></term>
+	  <listitem>
+	    <para>Specify serial transfer speed.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--camera</option> <replaceable>MODEL</replaceable></term>
+	  <listitem>
+	    <para>Specify camera model.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--filename</option> <replaceable>FILENAME</replaceable></term>
+	  <listitem>
+	    <para>Specify a filename.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--usbid</option> <replaceable>USBID</replaceable></term>
+	  <listitem>
+	    <para>(Expert only) Override USB IDs.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-a</option>, <option>--abilities</option></term>
+	  <listitem>
+	    <para>Display camera abilities.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-f</option>, <option>--folder</option>
+           <replaceable>FOLDER</replaceable></term>
+	  <listitem>
+	    <para>Specify camera folder (default="/").</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-R</option>, <option>--recurse</option></term>
+	  <listitem>
+	    <para>Recursion (default for download).</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--no-recurse</option></term>
+	  <listitem>
+	    <para>No recursion (default for deletion).</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-l</option>, <option>--list-folders</option></term>
+	  <listitem>
+	    <para>List folders in folder.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-L</option>, <option>--list-files</option></term>
+	  <listitem>
+	    <para>List files in folder.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-m</option>, <option>--mkdir</option>
+	   <replaceable>NAME</replaceable></term>
+	  <listitem>
+	    <para>Create a directory.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-r</option>, <option>--rmdir</option>
+	   <replaceable>NAME</replaceable></term>
+	  <listitem>
+	    <para>Remove a directory.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-n</option>, <option>--num-files</option></term>
+	  <listitem>
+	    <para>Display number of files.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-p</option>, <option>--get-file</option>
+	   <replaceable>RANGE</replaceable></term>
+	  <listitem>
+	    <para>Get files given in range.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-P</option>, <option>--get-all-files</option></term>
+	  <listitem>
+	    <para>Get all files from folder.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-t</option>, <option>--get-thumbnail</option>
+	   <replaceable>RANGE</replaceable></term>
+	  <listitem>
+	    <para>Get thumbnails given in range.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-T</option>, <option>--get-all-thumbnails</option></term>
+	  <listitem>
+	    <para>Get all thumbnails from folder.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-r</option>, <option>--get-raw-data</option>
+	   <replaceable>RANGE</replaceable></term>
+	  <listitem>
+	    <para>Get raw data given in range.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--get-all-raw-data</option></term>
+	  <listitem>
+	    <para>Get all raw data from folder.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--get-audio-data</option>
+	   <replaceable>RANGE</replaceable></term>
+	  <listitem>
+	    <para>Get audio data given in range.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--get-all-audio-data</option></term>
+	  <listitem>
+	    <para>Get all audio data from folder.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--delete-files</option>
+	   <replaceable>RANGE</replaceable></term>
+	  <listitem>
+	    <para>Delete files given in range.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--delete-all-files</option></term>
+	  <listitem>
+	    <para>Delete all files in folder.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>-u</option>, <option>--upload-file</option>
+	   <replaceable>FILENAME</replaceable></term>
+	  <listitem>
+	    <para>Upload a file to camera.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--capture-preview</option></term>
+	  <listitem>
+	    <para>Capture a quick preview.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--capture-image</option></term>
+	  <listitem>
+	    <para>Capture an image.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--capture-movie</option></term>
+	  <listitem>
+	    <para>Capture a movie.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--capture-sound</option></term>
+	  <listitem>
+	    <para>Capture an audio clip.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--show-info</option> <replaceable>RANGE</replaceable></term>
+	  <listitem>
+	    <para>Show info.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--summary</option></term>
+	  <listitem>
+	    <para>Summary of camera status.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--manual</option></term>
+	  <listitem>
+	    <para>Camera driver manual.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--about</option></term>
+	  <listitem>
+	    <para>About the camera driver.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--shell</option></term>
+	  <listitem>
+	    <para>gPhoto shell.  In this interactive environment, the
+	     following commands are available:</para>
+
+	    <variablelist>
+	      <varlistentry>
+		<term>cd</term>
+		<listitem>
+		  <para>Change to a directory on the camera.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>lcd</term>
+		<listitem>
+		  <para>Change to a directory on the local
+		   machine.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>exit, quit, q</term>
+		<listitem>
+		  <para>Exit the gPhoto shell.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>get</term>
+		<listitem>
+		  <para>Download the file to the current directory.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>get-thumbnail</term>
+		<listitem>
+		  <para>Download the thumbnail to the current directory.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>get-raw</term>
+		<listitem>
+		  <para>Download raw data to the current directory.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>help, ?</term>
+		<listitem>
+		  <para>Displays command usage.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>ls</term>
+		<listitem>
+		  <para>List the contents of the current directory on
+		   the camera.</para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+    </refsect1>
+  </refentry>
+</reference>

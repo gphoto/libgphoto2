@@ -1,3 +1,10 @@
+2002-02-12  Tim Waugh <twaugh@redhat.com>
+
+	* MAINTAINERS: Add myself.
+	* frontends/command-line/gphoto2.xml: New file.
+	* frontends/command-line/gphoto2.1: New file.
+	* frontends/command-line/Makefile.am: Install man page.
+
 2002-02-12  Lutz Müller <lutz@users.sourceforge.net>
 
 	* configure.in: Ok, not everybody likes pkg-config. Offer an

@@ -122,3 +122,6 @@ Packaging (RPM):
 
 Translation:
 	Colin Marquardt <colin@marquardt-home.de>
+
+Manual pages:
+	gphoto2 command-line app: Tim Waugh <twaugh@redhat.com>
