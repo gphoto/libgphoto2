@@ -85,6 +85,7 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
 @GP_FILE_OPERATION_PREVIEW: The camera can supply previews of files.
 @GP_FILE_OPERATION_RAW: The camera can supply raw data.
 @GP_FILE_OPERATION_AUDIO: The camera supports audio annotations.
+@GP_FILE_OPERATION_EXIF: 
 
 <!-- ##### ENUM CameraFolderOperation ##### -->
 <para>
@@ -140,6 +141,7 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
 </para>
 
 @list: 
+@context: 
 @Returns: 
 
 
@@ -151,6 +153,7 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
 @list: 
 @info_list: 
 @l: 
+@context: 
 @Returns: 
 
 

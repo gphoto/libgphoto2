@@ -135,6 +135,7 @@ An abstraction of files
 		   data format in order to be able to process the data.
 @GP_FILE_TYPE_AUDIO: A file of this type contains audio data that is 
 		     connected to another file.
+@GP_FILE_TYPE_EXIF: 
 
 <!-- ##### FUNCTION gp_file_get_type ##### -->
 <para>
@@ -303,16 +304,6 @@ An abstraction of files
 @Returns: 
 
 
-<!-- ##### FUNCTION gp_file_get_last_chunk ##### -->
-<para>
-
-</para>
-
-@Param1: 
-@data: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gp_file_set_color_table ##### -->
 <para>
 
@@ -366,9 +357,8 @@ An abstraction of files
 
 @Param1: 
 @data: 
-@Returns: 
-<!-- # Unused Parameters # -->
 @size: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gp_file_set_data_and_size ##### -->
@@ -378,8 +368,7 @@ An abstraction of files
 
 @Param1: 
 @data: 
-@Returns: 
-<!-- # Unused Parameters # -->
 @size: 
+@Returns: 
 
 

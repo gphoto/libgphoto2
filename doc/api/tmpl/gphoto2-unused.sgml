@@ -92,6 +92,24 @@ CameraAbilities
 @widget: 
 @Returns: 
 
+<!-- ##### USER_FUNCTION CameraMessageFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@msg: 
+@data: 
+
+<!-- ##### USER_FUNCTION CameraProgressFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@percentage: 
+@data: 
+
 <!-- ##### USER_FUNCTION CameraResultFunc ##### -->
 <para>
 
@@ -100,6 +118,15 @@ CameraAbilities
 @camera: 
 @result: 
 @Returns: 
+
+<!-- ##### USER_FUNCTION CameraStatusFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@status: 
+@data: 
 
 <!-- ##### MACRO GP_ERROR_IO ##### -->
 <para>
@@ -147,5 +174,91 @@ CameraAbilities
 @camera: 
 @folder: 
 @window: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_get_error ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_message ##### -->
+<para>
+
+</para>
+
+@camera: 
+@format: 
+@Varargs: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_progress ##### -->
+<para>
+
+</para>
+
+@camera: 
+@percentage: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_set_error ##### -->
+<para>
+
+</para>
+
+@camera: 
+@format: 
+@Varargs: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_set_message_func ##### -->
+<para>
+
+</para>
+
+@camera: 
+@func: 
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_set_progress_func ##### -->
+<para>
+
+</para>
+
+@camera: 
+@func: 
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_set_status_func ##### -->
+<para>
+
+</para>
+
+@camera: 
+@func: 
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_camera_status ##### -->
+<para>
+
+</para>
+
+@camera: 
+@format: 
+@Varargs: 
+@Returns: 
+
+<!-- ##### FUNCTION gp_file_get_last_chunk ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@data: 
 @Returns: 
 

@@ -95,8 +95,7 @@ retreiving information about a file, etc.
 @GP_FILE_INFO_HEIGHT: Indicates if height field is valid.
 @GP_FILE_INFO_PERMISSIONS: Indicates if the permissions field is valid.
 @GP_FILE_INFO_STATUS: Indicates if the status field is valid.
-@GP_FILE_INFO_TIME: Indicates if there is information about the creation time
-  of a file available.
+@GP_FILE_INFO_MTIME: 
 @GP_FILE_INFO_ALL: 
 
 <!-- ##### STRUCT CameraFileInfoAudio ##### -->
@@ -134,7 +133,7 @@ retreiving information about a file, etc.
 @width: 
 @height: 
 @status: 
-@time: 
+@mtime: 
 
 <!-- ##### STRUCT CameraFileInfo ##### -->
 <para>
@@ -174,6 +173,7 @@ retreiving information about a file, etc.
 @type: 
 @file: 
 @data: 
+@context: 
 @Returns: 
 
 
@@ -186,6 +186,7 @@ retreiving information about a file, etc.
 @folder: 
 @filename: 
 @data: 
+@context: 
 @Returns: 
 
 
@@ -211,6 +212,7 @@ retreiving information about a file, etc.
 @filename: 
 @info: 
 @data: 
+@context: 
 @Returns: 
 
 
@@ -224,6 +226,7 @@ retreiving information about a file, etc.
 @filename: 
 @info: 
 @data: 
+@context: 
 @Returns: 
 
 
@@ -248,6 +251,7 @@ retreiving information about a file, etc.
 @folder: 
 @file: 
 @data: 
+@context: 
 @Returns: 
 
 
@@ -259,6 +263,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @data: 
+@context: 
 @Returns: 
 
 
@@ -271,6 +276,7 @@ retreiving information about a file, etc.
 @folder: 
 @name: 
 @data: 
+@context: 
 @Returns: 
 
 
@@ -297,6 +303,7 @@ retreiving information about a file, etc.
 @folder: 
 @list: 
 @data: 
+@context: 
 @Returns: 
 
 
@@ -320,6 +327,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @list: 
+@context: 
 @Returns: 
 
 
@@ -331,6 +339,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @list: 
+@context: 
 @Returns: 
 
 
@@ -344,6 +353,7 @@ retreiving information about a file, etc.
 @filename: 
 @type: 
 @file: 
+@context: 
 @Returns: 
 
 
@@ -355,6 +365,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @file: 
+@context: 
 @Returns: 
 
 
@@ -366,6 +377,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @filename: 
+@context: 
 @Returns: 
 
 
@@ -376,6 +388,7 @@ retreiving information about a file, etc.
 
 @fs: 
 @folder: 
+@context: 
 @Returns: 
 
 
@@ -387,6 +400,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @name: 
+@context: 
 @Returns: 
 
 
@@ -398,6 +412,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @name: 
+@context: 
 @Returns: 
 
 
@@ -410,6 +425,7 @@ retreiving information about a file, etc.
 @folder: 
 @filename: 
 @info: 
+@context: 
 @Returns: 
 
 
@@ -422,6 +438,7 @@ retreiving information about a file, etc.
 @folder: 
 @filename: 
 @info: 
+@context: 
 @Returns: 
 
 
@@ -433,6 +450,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @info: 
+@context: 
 @Returns: 
 
 
@@ -444,6 +462,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @filename: 
+@context: 
 @Returns: 
 
 
@@ -456,6 +475,7 @@ retreiving information about a file, etc.
 @folder: 
 @filenumber: 
 @filename: 
+@context: 
 @Returns: 
 
 
@@ -467,6 +487,7 @@ retreiving information about a file, etc.
 @fs: 
 @filename: 
 @folder: 
+@context: 
 @Returns: 
 
 
@@ -477,6 +498,7 @@ retreiving information about a file, etc.
 
 @fs: 
 @folder: 
+@context: 
 @Returns: 
 
 
@@ -497,6 +519,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @filename: 
+@context: 
 @Returns: 
 
 
@@ -508,6 +531,7 @@ retreiving information about a file, etc.
 @fs: 
 @folder: 
 @file: 
+@context: 
 @Returns: 
 
 

@@ -4,7 +4,7 @@
 DOC_MODULE=gphoto2
 
 # The directory containing the source code (if it contains documentation).
-DOC_SOURCE_DIR=$(top_srcdir)/libgphoto2
+DOC_SOURCE_DIR=../../libgphoto2
 
 # include common doc generation rules
 include $(top_srcdir)/libgphoto2_port/doc/DocRules.am

@@ -81,6 +81,7 @@ This section contains functions that have to be implemented by camera drivers.
 </para>
 
 @camera: 
+@context: 
 @Returns: 
 <!-- # Unused Parameters # -->
 @Param1: 
@@ -110,6 +111,7 @@ This section contains functions that have to be implemented by camera drivers.
 </para>
 
 @camera: 
+@context: 
 @Returns: 
 
 

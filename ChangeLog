@@ -1,3 +1,10 @@
+2002-02-06  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2_port/m4/Documentation.m4: Fix copy & paste error
+	* doc/api/Makefile.am
+	* libgphoto2_port/doc/Makefile.am
+	* libgphoto2_port/doc/DocRules.am: Fix --enable-docs
+
 2001-02-04  Fredrik <fredrik@krixor.xy.org>
 
 	* frontends/command-line/actions.[c,h], main.c: Fixed
