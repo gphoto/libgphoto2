@@ -1,0 +1,16 @@
+.cvsignore~
+Makefile
+Makefile.in
+canon-api.html
+scan
+html
+sgml
+canon-scan.c
+canon-scan
+canon-decl.txt
+canon-decl-list.txt
+canon-unused.txt
+canon-undocumented.txt
+html.stamp
+sgml.stamp
+tmpl.stamp

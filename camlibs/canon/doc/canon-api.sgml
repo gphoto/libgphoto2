@@ -1,0 +1,12 @@
+<!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!entity hash "#">
+<!entity canon SYSTEM "sgml/canon.sgml">
+]>
+<book id="index">
+  <bookinfo>
+    <title>The Canon driver reference</title>
+  </bookinfo>
+
+  &canon;
+
+</book>
