@@ -1,3 +1,7 @@
+2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/konica/library.c: Remove reference to gphoto2-frontend.h.
+
 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include/gphoto2-frontend.h
