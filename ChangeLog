@@ -1,3 +1,12 @@
+2001-11-03  Stephane Castejon <scastejo@club-internet.fr>
+
+	* camlibs/sierra/sierra.c,h
+	* camlibs/sierra/library.c,h
+	Add support for the upload feature.
+	Replace gp_port_settings_[get/set] by gp_port_[get/set]_settings
+
+	* liggphoto2/gphoto2-result.c,h : add GP_ERROR_LOW_BATTERY
+
 2001-11-03 Marcus Meissner <marcus@jet.franken.de>
 
 	* camlibs/template/template.c: Make it compile with current libraries.
@@ -40,6 +49,7 @@
 
 	* libgphoto2/gphoto2-filesys.c: Fix bug (folder deletion)
 
+>>>>>>> 1.310
 2001-11-01 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Chris <adapt@ihug.co.nz>:

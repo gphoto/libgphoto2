@@ -65,6 +65,7 @@ gp_result_as_string (int result)
 	GP_ERR_RES (GP_ERROR_FILE_NOT_FOUND, N_("File not found"));
 	GP_ERR_RES (GP_ERROR_DIRECTORY_EXISTS, N_("Directory exists"));
 	GP_ERR_RES (GP_ERROR_PATH_NOT_ABSOLUTE, N_("Path not absolute"));
+	GP_ERR_RES (GP_ERROR_LOW_BATTERY, N_("The battery capacity is too low"));
 
 	return (N_("Unknown error"));
 }
