@@ -1,3 +1,9 @@
+2002-01-09  Fredrik <fredrik@krixor.xy.org>
+
+	* *.{c,h}: Re-indented and removed everything
+	  #ifdef OBSOLETE to make sources clean before gPhoto2
+	  2.0 is released.
+
 2002-01-08  christophe barbé <christophe.barbe.ml@online.fr>
 
 	* usb.c: Change model detection to look at model name instead
