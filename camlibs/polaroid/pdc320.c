@@ -20,33 +20,76 @@
 #include <gphoto2-library.h>
 #include <gphoto2-core.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define PDC320_INIT   {0x6, 0x6, 0x6, 0x6, 0x6, 0x6, 0x6, 0x6, 0xf, 0xff, 0xff}
-#define PDC320_IDENT    {0x6, 0x6, 0x6, 0x6, 0x1,       0xfe, 0xff}
-#define PDC320_UNKNOWN1 {0x6, 0x6, 0x6, 0x6, 0x2,       0xfd, 0xff}
-#define PDC320_NUM      {0x6, 0x6, 0x6, 0x6, 0x3,       0xfc, 0xff}
+//                                                xf?
+#define PDC320_INIT     "\x6\x6\x6\x6\x6\x6\x6\x6\x0\xff\xff"
+#define PDC320_ID                   "\x6\x6\x6\x6\x1\xfe\xff"
+#define PDC320_STATE                "\x6\x6\x6\x6\x2\xfd\xff"
+#define PDC320_NUM                  "\x6\x6\x6\x6\x3\xfc\xff"
 #define PDC320_SIZE     {0x6, 0x6, 0x6, 0x6, 0x4, 0x01, 0xfb, 0xfe}
 #define PDC320_PIC      {0x6, 0x6, 0x6, 0x6, 0x5, 0x01, 0xfa, 0xfe}
-#define PDC320_DELETE   {0x6, 0x6, 0x6, 0x6, 0x7,       0xf8, 0xff}
-#define PDC320_UNKNOWN2 {0x6, 0x6, 0x6, 0x6, 0xa,       0xf5, 0xff}
-#define PDC320_UNKNOWN3 {0x6, 0x6, 0x6, 0x6, 0xc,       0xf3, 0xf3}
+#define PDC320_DEL                  "\x6\x6\x6\x6\x7\xf8\xff"
+#define PDC320_ENDINIT              "\x6\x6\x6\x6\xa\xf5\xff"
+#define PDC320_UNKNOWN3             "\x6\x6\x6\x6\xc\xf3\xf3"
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
 
+static struct {
+	const char *model;
+	unsigned char id;
+} models[] = {
+	{"Polaroid Fun! 320", 0x3f},
+	{"Polaroid 640SE",    0x40},
+	{NULL,                0x00}
+};
+
+static int
+pdc320_id (CameraPort *port, const char **model)
+{
+	int i;
+	unsigned char buf[32];
+
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_ID ***");
+	CHECK_RESULT (gp_port_write (port, PDC320_ID, sizeof (PDC320_ID)));
+	CHECK_RESULT (gp_port_read (port, buf, 32));
+	if (model) {
+		*model = "unknown";
+		for (i = 0; models[i].model; i++)
+			if (buf[1] == models[i].id) {
+				*model = models[i].model;
+				break;
+			}
+	}
+
+	return (GP_OK);
+}
+
 static int
 pdc320_init (CameraPort *port)
 {
-	unsigned char cmd[] = PDC320_INIT;
-	unsigned char buf[3];
+	unsigned char buf[32];
 
-	CHECK_RESULT (gp_port_write (port, cmd, sizeof (cmd)));
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_INIT ***");
+	CHECK_RESULT (gp_port_write (port, PDC320_INIT, sizeof (PDC320_INIT)));
 	CHECK_RESULT (gp_port_read (port, buf, 3));
-
-	if ((buf[0] != 0x0f) ||
+	if ((buf[0] != 0x00) || //0x0f?
 	    (buf[1] != 0xfa) ||
 	    (buf[2] != 0xff))
 		return (GP_ERROR_CORRUPTED_DATA);
+
+	CHECK_RESULT (pdc320_id (port, NULL));
+
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_STATE ***");
+	CHECK_RESULT (gp_port_write (port, PDC320_STATE,
+				     sizeof (PDC320_STATE)));
+	CHECK_RESULT (gp_port_read (port, buf, 32));
+
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_ENDINIT ***");
+	CHECK_RESULT (gp_port_write (port, PDC320_ENDINIT, 
+				     sizeof (PDC320_ENDINIT)));
+	CHECK_RESULT (gp_port_read (port, buf, 32));
 
 	return (GP_OK);
 }
@@ -55,11 +98,10 @@ static int
 pdc320_num (CameraPort *port)
 {
 	int num;
-	unsigned char cmd[] = PDC320_NUM;
 	unsigned char buf[4];
 
 	/* The first byte we get is the number of images on the camera */
-	CHECK_RESULT (gp_port_write (port, cmd, sizeof (cmd)));
+	CHECK_RESULT (gp_port_write (port, PDC320_NUM, sizeof (PDC320_NUM)));
 	CHECK_RESULT (gp_port_read (port, buf, 4));
 	num = buf[0];
 
@@ -78,9 +120,8 @@ static int
 pdc320_delete (CameraPort *port)
 {
 	unsigned char buf[7];
-	unsigned char cmd[] = PDC320_DELETE;
 
-	CHECK_RESULT (gp_port_write (port, cmd, sizeof (cmd)));
+	CHECK_RESULT (gp_port_write (port, PDC320_DEL, sizeof (PDC320_DEL)));
 	CHECK_RESULT (gp_port_read (port, buf, 7));
 
 	if ((buf[0] != 0x08) ||
@@ -169,13 +210,6 @@ camera_id (CameraText *id)
 	return (GP_OK);
 }
 
-static struct {
-	const char *model;
-} models[] = {
-	{"Polaroid DC320"},
-	{NULL}
-};
-
 int
 camera_abilities (CameraAbilitiesList *list) 
 {
@@ -235,9 +269,10 @@ camera_folder_delete_all (Camera *camera, const char *folder)
 static int
 camera_about (Camera *camera, CameraText *about) 
 {
-	strcpy (about->text, "Download program for Polaroid DC320 POS camera. "
+	strcpy (about->text, "Download program for several Polaroid cameras. "
 		"Originally written by Peter Desnoyers "
 		"<pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by "
+		"Nathan Stenzel <nathanstenzel@users.sourceforge.net> and "
 		"Lutz Müller <urc8@rz.uni-karlsruhe.de>.");
 
 	return (GP_OK);
@@ -257,6 +292,18 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
+static int
+camera_summary (Camera *camera, CameraText *summary)
+{
+	const char *model;
+
+	CHECK_RESULT (pdc320_id (camera->port, &model));
+	strcpy (summary->text, "Model: ");
+	strcat (summary->text, model);
+
+	return (GP_OK);
+}
+
 int
 camera_init (Camera *camera) 
 {
@@ -267,6 +314,7 @@ camera_init (Camera *camera)
         camera->functions->file_get          = camera_file_get;
         camera->functions->folder_delete_all = camera_folder_delete_all;
         camera->functions->about             = camera_about;
+	camera->functions->summary           = camera_summary;
 
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
