@@ -78,45 +78,31 @@ typedef struct {
 
 #ifdef HAVE_EXIF
 static time_t
-gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
-                              const char *filename)
+get_exif_mtime (const unsigned char *data, unsigned long size)
 {
-        CameraFile *file;
-        ExifData *ed;
-        ExifEntry *e;
-        const char *data = NULL;
-        unsigned long int size = 0;
-        struct tm ts;
-        time_t t;
+	ExifData *ed;
+	ExifEntry *e;
+	struct tm ts;
+	time_t t;
 
-        if (!fs)
-                return 0;
-
-        gp_file_new (&file);
-        if (gp_filesystem_get_file (fs, folder, filename, GP_FILE_TYPE_EXIF,
-                                    file, NULL) != GP_OK) {
-                GP_DEBUG ("Could not get EXIF data of '%s' in folder '%s'.",
-                          filename, folder);
-                gp_file_unref (file);
-                return 0;
-        }
-
-        gp_file_get_data_and_size (file, &data, &size);
         ed = exif_data_new_from_data (data, size);
-        gp_file_unref (file);
         if (!ed) {
-                GP_DEBUG ("Could not parse EXIF data of '%s' in folder '%s'.",
-                          filename, folder);
+                GP_DEBUG ("Could not parse data for EXIF information.");
                 return 0;
         }
 
         /*
          * HP PhotoSmart C30 has the date and time in ifd_exif.
          */
-        e = exif_content_get_entry (ed->ifd_exif, EXIF_TAG_DATE_TIME_ORIGINAL);
+	e = exif_content_get_entry (ed->ifd0, EXIF_TAG_DATE_TIME);
+	if (!e)
+	        e = exif_content_get_entry (ed->ifd_exif,
+					    EXIF_TAG_DATE_TIME_ORIGINAL);
+	if (!e)
+		e = exif_content_get_entry (ed->ifd_exif, 
+					    EXIF_TAG_DATE_TIME_DIGITIZED);
         if (!e) {
-                GP_DEBUG ("EXIF data of '%s' in folder '%s' "
-                          "has not date/time tag.", filename, folder);
+                GP_DEBUG ("EXIF data has not date/time tag.");
                 exif_data_unref (ed);
                 return 0;
         }
@@ -132,6 +118,34 @@ gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
 
         t = mktime (&ts);
         GP_DEBUG ("Found time in EXIF data: '%s'.", asctime (localtime (&t)));
+
+        return (t);
+}
+
+static time_t
+gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
+                              const char *filename)
+{
+        CameraFile *file;
+        const char *data = NULL;
+        unsigned long int size = 0;
+        time_t t;
+
+        if (!fs)
+                return 0;
+
+        gp_file_new (&file);
+        if (gp_filesystem_get_file (fs, folder, filename, GP_FILE_TYPE_EXIF,
+                                    file, NULL) != GP_OK) {
+                GP_DEBUG ("Could not get EXIF data of '%s' in folder '%s'.",
+                          filename, folder);
+                gp_file_unref (file);
+                return 0;
+        }
+
+        gp_file_get_data_and_size (file, &data, &size);
+        t = get_exif_mtime (data, size);
+        gp_file_unref (file);
 
         return (t);
 }
@@ -1405,6 +1419,8 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	int x, y, r;
 #ifdef HAVE_EXIF
 	time_t t = 0;
+	const char *data;
+	unsigned long int size;
 #endif
 
 	CHECK_NULL (fs && folder && file && filename);
@@ -1495,8 +1511,16 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 #ifdef HAVE_EXIF
 	gp_file_get_mtime (file, &t);
 	if (!t) {
-		GP_DEBUG ("Did not get mtime. Trying EXIF information...");
-		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
+		GP_DEBUG ("Did not get mtime.");
+		if (type == GP_FILE_TYPE_NORMAL) {
+			GP_DEBUG ("Searching data for mtime...");
+			CR (gp_file_get_data_and_size (file, &data, &size));
+			t = get_exif_mtime (data, size);
+		}
+		if (!t) {
+			GP_DEBUG ("Trying EXIF information...");
+			t = gp_filesystem_get_exif_mtime (fs, folder, filename);
+		}
 		gp_file_set_mtime (file, t);
 	}
 #endif
