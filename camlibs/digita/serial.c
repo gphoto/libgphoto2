@@ -179,9 +179,12 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 	struct beacon_ack beacon_ack;
 	struct beacon_comp beacon_comp;
 	int selected_speed;
+	int ret;
 
 	/* Get the settings */
-	gp_port_get_settings(camera->port, &settings);
+	ret = gp_port_get_settings(camera->port, &settings);
+	if (ret < 0)
+		return ret;
 
 	/* Remember the selected speed */
 	selected_speed = settings.serial.speed;
@@ -191,20 +194,26 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 	settings.serial.bits = 8;
 	settings.serial.parity = 0;
 	settings.serial.stopbits = 1;
-	gp_port_set_settings(dev->gpdev, settings);
+	ret = gp_port_set_settings(dev->gpdev, settings);
+	if (ret < 0)
+		return ret;
 
 	dev->send = digita_serial_send;
 	dev->read = digita_serial_read;
 
-//        tcsendbreak(dev->gpdev->device_fd, 4);
+	gp_port_send_break(dev->gpdev, 4);
 
+/*
 	dev->gpdev->settings.serial.speed = 0;
 	gp_port_serial_set_baudrate(dev->gpdev);
+*/
 
 	usleep(50);
 
-	dev->gpdev->settings.serial.speed = selected_speed;
-	gp_port_serial_set_baudrate(dev->gpdev);
+	settings.serial.speed = selected_speed;
+	ret = gp_port_set_settings(dev->gpdev, settings);
+	if (ret < 0)
+		return ret;
 
 	usleep(2000);
 
@@ -244,10 +253,12 @@ printf("%d\n", ntohl(beacon_comp.dataspeed));
 
 	dev->deviceframesize = ntohs(beacon_comp.deviceframesize);
 
-	dev->gpdev->settings.serial.speed = ntohl(beacon_comp.dataspeed);
-	gp_port_serial_set_baudrate(dev->gpdev);
+	settings.serial.speed = ntohl(beacon_comp.dataspeed);
+	ret = gp_port_set_settings(dev->gpdev, settings);
+	if (ret < 0)
+		return ret;
 
-usleep(100000);
+	usleep(100000);
 
 	return 0;
 }
