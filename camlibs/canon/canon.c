@@ -822,7 +822,7 @@ int camera_init(Camera *camera, CameraInit *init)
 	camera->functions->file_config_set = camera_file_config_set;
 	camera->functions->folder_config_get = camera_folder_config_get;
 	camera->functions->folder_config_set = camera_folder_config_set;
-/*	camera->functions->config    = camera_config; */
+	camera->functions->config    = camera_config; 
 	camera->functions->capture   = camera_capture;
 	camera->functions->summary   = camera_summary;
 	camera->functions->manual    = camera_manual;
@@ -1366,11 +1366,11 @@ int camera_config_get(Camera *camera, CameraWidget **window)
 	return GP_OK;
 }
 
-int gp_camera_config(Camera *camera)
+int camera_config(Camera *camera)
 {
 	CameraWidget *window;
 
-	gp_camera_config_get (camera, &window);
+	camera_config_get (camera, &window);
 	
 	/* Prompt the user with the config window */	
 	if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
@@ -1447,11 +1447,6 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 
 /****************************************************************************/
 	
-int camera_config_set (Camera *camera, CameraWidget *window)
-{
-    return GP_ERROR;
-}
-
 int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info)
 {
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_capture()");
