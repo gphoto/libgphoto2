@@ -19,6 +19,8 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#include "config.h"
+
 #include <stdio.h>
 #include <_stdint.h>
 #include <sys/types.h>
@@ -554,7 +556,7 @@ N_(
 "  * custom white balance setup\n"
 "- Configuration has been reverse-engineered with\n"
 "  a PhotoPC 3000z, if your camera acts differently\n"
-"  please send a mail to <gphoto-devel@lists.sourceforge.net> (in English)\n"
+"  please send a mail to " MAIL_GPHOTO_DEVEL " (in English)\n"
 );
 
 const CameraDescType ep3000z_cam_desc = { ep3000z_desc, ep3000z_manual,
