@@ -17,10 +17,10 @@ AC_DEFUN(AC_HAVE_SYMBOL,
 [
 AC_MSG_CHECKING(for $1 in $2)
 AC_EGREP_CPP([symbol is present|\<$1\>],[
- 	#include <$2>
- 	#ifdef $1
+#include <$2>
+#ifdef $1
  	symbol is present
- 	#endif
+#endif
 	], 
 [AC_MSG_RESULT(yes)
 $3
