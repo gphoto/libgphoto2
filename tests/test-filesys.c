@@ -28,8 +28,25 @@
 
 #include <gphoto2-filesys.h>
 #include <gphoto2-result.h>
+#include <gphoto2-port-log.h>
 
 #define CHECK(r) {int ret = r; if (ret < 0) {printf ("Got error: %s\n", gp_result_as_string (ret)); return (1);}}
+
+static void
+log_func (GPLogLevel level, const char *domain,
+	  const char *format, va_list args, void *data)
+{
+	vprintf (format, args);
+	printf ("\n");
+}
+
+static void
+error_func (GPContext *context, const char *format, va_list args, void *data)
+{
+	printf ("### ");
+	vprintf (format, args);
+	printf ("\n");
+}
 
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
@@ -48,7 +65,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 	info->preview.fields = GP_FILE_INFO_NONE;
 	info->file.fields    = GP_FILE_INFO_NAME;
-	strcpy (info->file.name, "Some file on the camera");
+	strcpy (info->file.name, file);
 
 	return (GP_OK);
 }
@@ -108,10 +125,15 @@ main (int argc, char **argv)
 	CameraList list;
 	int x, count;
 	const char *name;
+	GPContext *context;
 
 #ifdef HAVE_MCHECK_H
 	mtrace();
 #endif
+
+	gp_log_add_func (GP_LOG_DEBUG, log_func, NULL);
+	context = gp_context_new ();
+	gp_context_set_error_func (context, error_func, NULL);
 
 	printf ("*** Creating file system...\n");
 	CHECK (gp_filesystem_new (&fs));
@@ -236,6 +258,8 @@ main (int argc, char **argv)
 
 	printf ("*** Freeing file system...\n");
 	CHECK (gp_filesystem_free (fs));
+
+	gp_context_unref (context);
 
 #ifdef HAVE_MCHECK_H
 	muntrace();
