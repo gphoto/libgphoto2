@@ -354,3 +354,10 @@ Configuration (libgphoto2):
 	EXIF support:              $exif_msg
 	Use ltdl.h:                $ltdl_msg
 "
+
+echo "
+
+Please check whether the configuration I detected matches what you
+would like to have. E.g. make sure that USB support is there if you
+intend to use USB cameras with $PACKAGE.
+"
