@@ -1,4 +1,15 @@
-/* All return values are either GP_OK, or a GP_ERROR variation */
+/* All return values are either GP_OK, or a GP_ERROR variation  */
+
+/* NOTE: all the pointers passed in to the camera libraries	*/
+/*       already allocated. here's the default allocations:	*/
+/*		char*			128 characters		*/
+/*		CameraAbilities*	struct allocated	*/
+/*		CameraFolderInfo*	512 entries		*/
+/*		CameraFile*		struct allocated, but 	*/
+/*					you must allocate the	*/
+/*					data.			*/	
+/*		CameraSetting*		allocated enough for	*/
+/*					for 'count' entries.	*/
 
 int camera_id 			(char *id);
 	/* Copies a unique library ID into 'id' 		*/
@@ -29,12 +40,13 @@ int camera_exit 		();
 	/* been chosen.						*/
 
 int camera_folder_list		(char *folder_path, 
-				 CameraFolderList *folder);
+				 CameraFolderInfo *folder);
 	/* Returns a list of sub-folders from the 'folder_name'	*/
 	/* folder. The first call should be with folder_name	*/
 	/* set to "/" to get a listing of all the top-level	*/
 	/* top-level folders. If a folder has pictures in it,   */
-	/* one of the entries in the list should be "<gphotos>" */
+	/* one of the entries in the list should be "<photos>"  */
+	/* It should return the number of entries.		*/
 
 int camera_folder_set		(char *folder_path);
 	/* Sets the current folder path on the camera to 	*/

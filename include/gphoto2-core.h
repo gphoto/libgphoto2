@@ -49,8 +49,8 @@
 	int gp_camera_exit ();
 
 /* Folder operations */
-	/* Retrieve the contents of a folder */
-	int gp_folder_list(char *folder_path, CameraFolderList *list);
+	/* Retrieve the contents of a folder, returns the count */
+	int gp_folder_list(char *folder_path, CameraFolderInfo *list);
 
 	/* Set the current folder */
 	int gp_folder_set (char *folder_path);

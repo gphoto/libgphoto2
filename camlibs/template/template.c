@@ -47,7 +47,7 @@ int camera_exit () {
 	return (GP_OK);
 }
 
-int camera_folder_list(char *folder_name, CameraFolderList *list) {
+int camera_folder_list(char *folder_name, CameraFolderInfo *list) {
 
 	return (GP_OK);
 }

@@ -107,12 +107,8 @@ typedef struct {
 
 typedef struct {
 	char	name[128];
+	/* reserved: "<photos>" */
 } CameraFolderInfo;
-
-typedef struct {
-	int count;
-	CameraFolderInfo entry[512];
-} CameraFolderList;
 
 typedef struct {
 	char name[32];

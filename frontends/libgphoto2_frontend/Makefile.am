@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libgphoto2_util.la
+lib_LTLIBRARIES = libgphoto2_frontend.la
 
 CFLAGS= @CFLAGS@ \
 	-g \
@@ -7,8 +7,8 @@ CFLAGS= @CFLAGS@ \
 	-DCAMLIBS=\"$(pkglibdir)\"
 LDFLAGS = @LDFLAGS@ -g
 
-libgphoto2_util_la_LDFLAGS = -version-info 0:0:0
-libgphoto2_util_la_SOURCES = \
+libgphoto2_frontend_la_LDFLAGS = -version-info 0:0:0
+libgphoto2_frontend_la_SOURCES = \
 			cache.c cache.h \
 			helpers.c helpers.h \
 			image.c image.h

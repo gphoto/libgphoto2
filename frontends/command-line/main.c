@@ -11,15 +11,22 @@
 #include "test.h"
 #include "interface.h"
 
+/* Command-line option functions */
 void usage();
 int  verify_options (int argc, char **argv);
-int  option_count;
+
+/* Standardized output print functions */
 void debug_print (char *message, char *str);
 void error_print (char *message, char *str);
-int set_globals();
-int init_globals();
 
-CameraInit init;
+/* Initializes the globals */
+int  init_globals();
+
+/* Takes the current globals, and sets up the gPhoto lib with them */
+int  set_globals();
+
+
+/* Global variables */
 
 /* Command-line option
    -----------------------------------------------------------------------
@@ -57,6 +64,8 @@ OPTION_CALLBACK(speed);
 OPTION_CALLBACK(model);
 OPTION_CALLBACK(quiet);
 OPTION_CALLBACK(debug);
+OPTION_CALLBACK(list_folders);
+OPTION_CALLBACK(use_folder);
 OPTION_CALLBACK(get_picture);
 OPTION_CALLBACK(get_thumbnail);
 
@@ -70,28 +79,31 @@ OPTION_CALLBACK(get_thumbnail);
 Option option[] = {
 
 /* Settings needed for formatting output */
-{"d", "debug",		"",		"Turn on debugging",		debug,	0},
-{"q", "quiet",		"",		"Quiet output (default=verbose)",quiet,0},
+{"d", "debug",		"",		"Turn on debugging",		debug,		0},
+{"q", "quiet",		"",		"Quiet output (default=verbose)",quiet,		0},
 
 /* Display and die actions */
-{"h", "help",		"",		"Displays this help screen",	help,	0},
-{"",  "test",		"",		"Verifies gPhoto installation",	test,	0},
-{"",  "list-cameras",	"",		"List supported camera models",	list_cameras,0},
-{"",  "list-ports",	"",		"List supported port devices",	list_ports,0},
+{"h", "help",		"",		"Displays this help screen",	help,		0},
+{"",  "test",		"",		"Verifies gPhoto installation",	test,		0},
+{"",  "list-cameras",	"",		"List supported camera models",	list_cameras,	0},
+{"",  "list-ports",	"",		"List supported port devices",	list_ports,	0},
 
 /* Settings needed for camera functions */
-{"" , "port",		"path",		"Specify port device",		port,	0},
-{"" , "speed",		"speed",	"Specify serial transfer speed",speed,	0},
-{"" , "camera",		"model",	"Specify camera model",		model,	0},
-{"f", "filename",	"<filename>",	"Specify a filename",		filename,0},
+{"" , "port",		"path",		"Specify port device",		port,		0},
+{"" , "speed",		"speed",	"Specify serial transfer speed",speed,		0},
+{"" , "camera",		"model",	"Specify camera model",		model,		0},
+{"f", "filename",	"filename",	"Specify a filename",		filename,	0},
 
 /* Actions that depend on settings */
-{"",  "abilities",	"",		"Display camera abilities",	abilities, 0},
-{"p", "get-picture",	"#", 		"Get picture # from camera", 	get_picture,   0},
-{"t", "get-thumbnail",	"#", 		"Get thumbnail # from camera",	get_thumbnail, 0},
+{"",  "abilities",	"",		"Display camera abilities",	abilities, 	0},
+{"",  "list-folders",	"",		"List all folders on the camera",list_folders,	0},
+{"",  "set-folder",	"folder",	"Use the specified folder ",	use_folder,	0},
+{"p", "get-picture",	"#", 		"Get picture # from camera", 	get_picture,	0},
+{"t", "get-thumbnail",	"#", 		"Get thumbnail # from camera",	get_thumbnail,	0},
+
 
 /* End of list 			*/
-{"" , "", 		"",		"",				NULL}
+{"" , "", 		"",		"",				NULL,		0}
 };
 
 /* 3) Add any necessary global variables				*/
@@ -99,8 +111,11 @@ Option option[] = {
 /*    Most flags will set options, like choosing a port, camera model,  */
 /*    etc...								*/
 
+int option_count; /* total number of command-line options */
+
 char glob_port[128];
 char glob_model[64];
+char glob_folder[128];
 int  glob_speed;
 
 int  glob_debug;
@@ -149,7 +164,7 @@ OPTION_CALLBACK(abilities) {
 	}
 
 	if (gp_camera_abilities_by_name(glob_model, &a)==GP_ERROR) {
-		error_print("can't find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
+		error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
 		return (GP_ERROR);
 	}
 
@@ -197,7 +212,7 @@ OPTION_CALLBACK(list_cameras) {
 		debug_print("Listing Cameras", "");
 
 	if ((n = gp_camera_count())==GP_ERROR)
-		error_print("can't retrieve the number of supported cameras!", "");
+		error_print("Could not retrieve the number of supported cameras!", "");
 	if (glob_quiet)
 		printf("%i\n", n);
 	   else
@@ -205,7 +220,7 @@ OPTION_CALLBACK(list_cameras) {
 
 	for (x=0; x<n; x++) {
 		if (gp_camera_name(x, buf)==GP_ERROR)
-			error_print("can't retrieve the name of camera.", "");
+			error_print("Could not retrieve the name of camera.", "");
 		if (glob_quiet)
 			printf("%s\n", buf);
 		   else
@@ -220,12 +235,16 @@ OPTION_CALLBACK(list_ports) {
 	CameraPortInfo info;
 	int x, count;
 
-	count = gp_port_count();
+	if ((count = gp_port_count()) == GP_ERROR) {
+		error_print("Could not get number of ports", "");
+		return (GP_ERROR);
+	}
 	if (!glob_quiet) {
 	  printf("Devices found: %i\n", count);
-	  printf("Path                             Name\n"
+	  printf("Path                             Description\n"
 	         "--------------------------------------------------------------\n");
-	}
+	} else
+	  printf("%i\n", count);
 	for(x=0; x<count; x++) {
 		gp_port_info(x, &info);
 		printf("%-32s %-32s\n",info.path,info.name);
@@ -292,6 +311,49 @@ OPTION_CALLBACK(quiet) {
 	return (GP_OK);
 }
 
+void list_folders_rec (char *path) {
+	/* List all the folders on the camera recursively. */
+
+	CameraFolderInfo fl[512];
+	char buf[1024];
+	int count, x;
+
+	if (strcmp("<photos>", path)==0)
+		return;	
+
+	count = gp_folder_list(path, fl);
+
+	while (x<count) {
+		if (strcmp(fl[x].name, "<photos>")!=0) {
+			sprintf(buf, "%s/%s", path, fl[x].name);
+			printf("%s\n", buf);
+			list_folders_rec(buf);
+			x++;
+		}
+	}
+
+	return;
+}
+
+OPTION_CALLBACK(list_folders) {
+
+	int count;
+
+	
+	if (set_globals() == GP_ERROR)
+		return (GP_ERROR);
+
+	list_folders_rec("/");
+
+	return (GP_OK);
+}
+
+
+OPTION_CALLBACK(use_folder) {
+
+	return (GP_OK);
+}
+
 OPTION_CALLBACK(get_picture) {
 
 	CameraFile *f;
@@ -302,6 +364,7 @@ OPTION_CALLBACK(get_picture) {
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
+	/* 
 	/* gp_file_get(atoi(arg), f);	*/
 	/* if glob_filename_override==1 */
 	/* 	save as glob_filename   */
@@ -342,8 +405,9 @@ int set_globals () {
 	strcpy(s.port, glob_port);
 	s.speed = glob_speed;
 
-	if (strlen(glob_model) > 0)
-		gp_camera_set_by_name(glob_model, &s);
+	gp_camera_set_by_name(glob_model, &s);
+
+	
 }
 
 int init_globals () {
@@ -385,10 +449,6 @@ int verify_options (int argc, char **argv) {
 	char s[5], l[24], buf[32];
 
 	which = 0;
-
-	/* Set up some defaults */
-	strcpy(init.port_settings.port, "/dev/ttyS0");
-	init.port_settings.speed = 57600;
 
 	for (x=1; x<argc; x++) {
 		if (glob_debug) 
@@ -491,7 +551,7 @@ void usage () {
 	"Usage:\n", VERSION
 	);
 
-	printf ("short/long option/argument           description\n"
+	printf ("Short/long options (& argument)        description\n"
 		"--------------------------------------------------------------------\n");
 	/* Run through option and print them out */
 	while (x < option_count) {

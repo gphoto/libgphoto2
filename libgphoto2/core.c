@@ -240,9 +240,12 @@ int gp_camera_exit () {
 	return (ret);
 }
 
-int gp_folder_list(char *folder_path, CameraFolderList *list) {
+int gp_folder_list(char *folder_path, CameraFolderInfo *list) {
 
-	return (GP_OK);
+	if (glob_c.folder_list == NULL)
+		return (GP_ERROR);
+
+	return(glob_c.folder_list(folder_path, list));
 }
 
 int gp_folder_set (char *folder_path) {
@@ -252,6 +255,7 @@ int gp_folder_set (char *folder_path) {
 
 	if (glob_c.folder_set(folder_path) == GP_ERROR)
 		return (GP_ERROR);
+
 	strcpy(glob_folder_path, folder_path);
 	return(GP_OK);
 }

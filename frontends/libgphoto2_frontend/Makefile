@@ -16,7 +16,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ../..
-prefix = /opt/gphoto2
+prefix = /opt/gphoto2/
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/bin
@@ -74,14 +74,14 @@ PACKAGE = gphoto2
 RANLIB = ranlib
 VERSION = 1.90
 
-lib_LTLIBRARIES = libgphoto2_util.la
+lib_LTLIBRARIES = libgphoto2_frontend.la
 
 CFLAGS = -g -O2 	-g 	-Wall 	-I$(top_srcdir)/include 	-DCAMLIBS=\"$(pkglibdir)\"
 
 LDFLAGS =  -g
 
-libgphoto2_util_la_LDFLAGS = -version-info 0:0:0
-libgphoto2_util_la_SOURCES =  			cache.c cache.h 			helpers.c helpers.h 			image.c image.h
+libgphoto2_frontend_la_LDFLAGS = -version-info 0:0:0
+libgphoto2_frontend_la_SOURCES =  			cache.c cache.h 			helpers.c helpers.h 			image.c image.h
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
@@ -92,8 +92,8 @@ LTLIBRARIES =  $(lib_LTLIBRARIES)
 DEFS = -DHAVE_CONFIG_H -I. -I$(srcdir) -I../..
 CPPFLAGS = 
 LIBS = -ldl 
-libgphoto2_util_la_LIBADD = 
-libgphoto2_util_la_OBJECTS =  cache.lo helpers.lo image.lo
+libgphoto2_frontend_la_LIBADD = 
+libgphoto2_frontend_la_OBJECTS =  cache.lo helpers.lo image.lo
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -106,14 +106,14 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 TAR = tar
 GZIP_ENV = --best
 DEP_FILES =  .deps/cache.P .deps/helpers.P .deps/image.P
-SOURCES = $(libgphoto2_util_la_SOURCES)
-OBJECTS = $(libgphoto2_util_la_OBJECTS)
+SOURCES = $(libgphoto2_frontend_la_SOURCES)
+OBJECTS = $(libgphoto2_frontend_la_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .S .c .lo .o .s
 $(srcdir)/Makefile.in: # Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnu frontends/libgphoto2_util/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu frontends/libgphoto2_frontend/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
@@ -177,8 +177,8 @@ distclean-libtool:
 
 maintainer-clean-libtool:
 
-libgphoto2_util.la: $(libgphoto2_util_la_OBJECTS) $(libgphoto2_util_la_DEPENDENCIES)
-	$(LINK) -rpath $(libdir) $(libgphoto2_util_la_LDFLAGS) $(libgphoto2_util_la_OBJECTS) $(libgphoto2_util_la_LIBADD) $(LIBS)
+libgphoto2_frontend.la: $(libgphoto2_frontend_la_OBJECTS) $(libgphoto2_frontend_la_DEPENDENCIES)
+	$(LINK) -rpath $(libdir) $(libgphoto2_frontend_la_LDFLAGS) $(libgphoto2_frontend_la_OBJECTS) $(libgphoto2_frontend_la_LIBADD) $(LIBS)
 
 tags: TAGS
 
@@ -211,14 +211,14 @@ maintainer-clean-tags:
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
-subdir = frontends/libgphoto2_util
+subdir = frontends/libgphoto2_frontend
 
 distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \
 	top_distdir=`cd $(top_distdir) && pwd`; \
 	distdir=`cd $(distdir) && pwd`; \
 	cd $(top_srcdir) \
-	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu frontends/libgphoto2_util/Makefile
+	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu frontends/libgphoto2_frontend/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
