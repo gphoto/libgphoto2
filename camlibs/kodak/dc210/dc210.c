@@ -219,11 +219,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
         gp_widget_new (GP_WIDGET_MENU, _("Zoom"), &widget);
         gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("58 mm"));
-        gp_widget_add_choice (widget, _("51 mm"));
-        gp_widget_add_choice (widget, _("41 mm"));
-        gp_widget_add_choice (widget, _("34 mm"));
-        gp_widget_add_choice (widget, _("29 mm"));
+        gp_widget_add_choice (widget, "58 mm"); /* no need to translate strings with SI units! */
+        gp_widget_add_choice (widget, "51 mm");
+        gp_widget_add_choice (widget, "41 mm");
+        gp_widget_add_choice (widget, "34 mm");
+        gp_widget_add_choice (widget, "29 mm");
         gp_widget_add_choice (widget, _("Macro"));
 
 	switch (status.zoom){
