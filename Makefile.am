@@ -50,11 +50,17 @@ dist-bzip2:
 	-chmod -R a+r $(distdir)
 	-$(TAR) chojf $(distdir).tar.bz2 $(distdir)
 
+if ENABLE_RPM
+
 # create RPM packages
 .PHONY: rpm
 rpm: Makefile
 	$(MAKE) dist
 	$(MAKE) -C packaging/rpm rpm
+
+endif
+
+if MAINTAINER_MODE
 
 # add CVS tags - used only by the project maintainer to tag the files of a
 # released version
@@ -62,3 +68,4 @@ rpm: Makefile
 cvs-tags: Makefile
 	@echo cvs tag "@PACKAGE@-$$(echo '@VERSION@' | sed 's/\./_/g')"
 
+endif

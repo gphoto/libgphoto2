@@ -26,7 +26,7 @@ AM_GNU_GETTEXT
 AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 # same trick as with libdl:
 # if gettext() doesn't require linking against libintl,
-# we don't have to check for dlopen in libintl. Otherwise
+# we don't have to check for gettext in libintl. Otherwise
 # we may even require libintl.
 dnl AC_CHECK_LIB(intl, gettext, [LIBS="$LIBS -lintl"])
 if test "$gettext_without_libintl" != "true"; then
@@ -157,6 +157,11 @@ dnl ********
 dnl build docs?
 dnl ********
 GP_BUILD_DOCS()dnl
+
+dnl ************************************************************
+dnl initialize packaging RPMs
+dnl ************************************************************
+PKG_CHECK_RPM()dnl
 
 dnl *************************
 dnl Configure libgphoto2-port

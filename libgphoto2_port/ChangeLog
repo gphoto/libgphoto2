@@ -1,3 +1,7 @@
+2001-11-29  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* libgphoto2_port/m4/packaging.m4: added packaging macro
+
 2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* po/libgphoto2_port.pot: I'm sick of all the diffs

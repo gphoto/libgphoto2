@@ -1,3 +1,8 @@
+2001-11-29  Hans Ulrich Niedermann <hun@n-dimensional.de>
+	* Makefile.am: enable RPM and CVS rules only when useful
+	* configure.in: init RPM packaging
+	* libgphoto2_port/m4/packaging.m4: added packaging macro
+
 2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-camera.c: Update documentation.
