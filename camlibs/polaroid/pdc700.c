@@ -136,8 +136,8 @@ pdc700_read (Camera *camera, unsigned char *cmd, int cmd_len,
 	}
 
 	/* We no longer need the first two bytes and the last byte */
-	memmove (buf, buf + 2, 2);
 	*buf_len -= 3;
+	memmove (buf, buf + 2, *buf_len);
 
 	return (GP_OK);
 }
@@ -212,7 +212,7 @@ pdc700_picinfo (Camera *camera, int n, int *size_thumb, int *size_pic)
 }
 
 static int
-pdc700_num (Camera *camera, int *num, int *num_free)
+pdc700_info (Camera *camera, int *num, int *num_free, const char **version)
 {
 	int status, buf_len;
 	unsigned char buf[2048];
@@ -223,6 +223,16 @@ pdc700_num (Camera *camera, int *num, int *num_free)
 	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
+	/*
+	 *  0 -  7: ?
+	 *  8 - 13: Some version
+	 * 14 - 15: ?
+	 * 16 - 17: Number of pictures
+	 * 18 - 19: Number of pictures that can be taken
+	 * 20 - 64: ?
+	 */
+	if (version)
+		*version = &buf[8];
 	if (num)
 		*num = buf[16] | (buf[17] << 8);
 	if (num_free)
@@ -357,11 +367,13 @@ static int
 camera_summary (Camera *camera, CameraText *about)
 {
 	int num, num_free;
+	const char *version;
 
-	CHECK_RESULT (pdc700_num (camera, &num, &num_free));
+	CHECK_RESULT (pdc700_info (camera, &num, &num_free, &version));
 
-	sprintf (about->text, "There are %i pictures on the camera. "
-		 "There is place for another %i one(s).", num, num_free);
+	sprintf (about->text, _("There are %i pictures on the camera. "
+		 "There is place for another %i one(s).\n"
+		 "Software version: %s."), num, num_free, version);
 
 	return (GP_OK);
 }
@@ -374,7 +386,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera *camera = data;
 
 	/* Fill the list */
-	CHECK_RESULT (pdc700_num (camera, &num, NULL));
+	CHECK_RESULT (pdc700_info (camera, &num, NULL, NULL));
 	gp_list_populate (list, "PDC700%04i.jpg", num);
 
 	return (GP_OK);
