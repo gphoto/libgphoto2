@@ -167,8 +167,8 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	dimagev->data->play_rec_mode = (unsigned char) 0;
 
 	if ( dimagev_send_data(dimagev) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to set host mode or record mode");
-		return GP_ERROR;
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to set host mode or record mode - non-fatal!");
+/*		return GP_ERROR;*/
 	}
 
 	return GP_OK;
