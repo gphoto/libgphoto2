@@ -9,6 +9,7 @@ typedef enum {
 	SQ_MODEL_ARGUS,
 	SQ_MODEL_POCK_CAM,
 	SQ_MODEL_PRECISION,
+	SQ_MODEL_MAGPIX,
 	SQ_MODEL_UNKNOWN
 } SQModel;
 
@@ -22,6 +23,7 @@ int sq_get_picture_width (SQData *, int n);
 
 unsigned char *sq_read_data         (GPPort *, char *data, int size);
 unsigned char *sq_read_picture_data (GPPort *, char *data, int size);
+
 
 #endif
 

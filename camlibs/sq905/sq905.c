@@ -39,40 +39,36 @@ int
 sq_init (GPPort *port, SQModel *m, SQData *data)
 {
         unsigned char setup_data[0x400][0x10];  
-        unsigned char c[4]; 
+        unsigned char c[0x400]; 
 	unsigned char pic_data[0x400];
 	int i = 0;
  
-	while (i <= 1) {
-
 		SQWRITE (port, 0x0c, 0x06, 0xf0, SQ_PING, 1);	
 		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);     
 		SQREAD (port, 0x0c, 0x07, 0x00, c, 4);     
 		SQWRITE (port, 0x0c, 0x06, 0xa0, c, 1);	
 		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);    
 
-		/* 
-		 * Perhaps the above sequence should be coded as a 
-		 * separate function because it gets used in capture.
-		 */
 		SQWRITE (port, 0x0c, 0x06, 0xf0, SQ_PING, 1);	
 		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);     
 		sq_read_data (port, c, 4);
-
-		/* Different cameras return different strings. */
 		sq_reset (port);
-		SQWRITE (port, 0x0c, 0x06, 0x20, SQ_PING, 1);	
-		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);
+
 		if (m) {
 			if (!memcmp (c, "\x09\x05\x00\x26", 4))
 				*m = SQ_MODEL_ARGUS;
 			else if (!memcmp (c, "\x09\x05\x01\x19", 4))
 				*m = SQ_MODEL_POCK_CAM;
+			else if (!memcmp (c, "\x09\x05\x01\x32", 4))
+				*m = SQ_MODEL_MAGPIX;
 			else if (!memcmp (c, "\x50\x05\x00\x26", 4))
 				*m = SQ_MODEL_PRECISION;
 			else
 				*m = SQ_MODEL_UNKNOWN;
 		}
+
+		SQWRITE (port, 0x0c, 0x06, 0x20, SQ_PING, 1);	
+		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);
 
 		sq_read_data (port, *setup_data, 0x4000);
 		sq_reset (port);
@@ -80,15 +76,6 @@ sq_init (GPPort *port, SQModel *m, SQData *data)
 		SQWRITE (port, 0x0c, 0x06, 0x30, SQ_PING, 1);	
 		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);
 
-		/* We throw the setup data away the first time around, 
-		 * because it is very likely corrupted. We run through 
-		 * this whole sequence twice before using the data.
-		 */     
-
-		if (i==0) memset (setup_data, 0 , sizeof (setup_data));
-		i++;
-	}
-	
 	for (i = 0; i < 0x400; i++) pic_data[i] = setup_data[i][0]; 
 
 	memcpy (data, pic_data, 0x400);
@@ -96,10 +83,10 @@ sq_init (GPPort *port, SQModel *m, SQData *data)
     	return GP_OK; 
 }
 
-
 /* The first appearance of a zero in pic_data gives the number of 
  * pictures taken. 
  */
+
 int
 sq_get_num_pics (SQData *data)
 {
@@ -184,3 +171,4 @@ sq_read_picture_data (GPPort *port, char *data, int size)
 
     	return GP_OK;
 } 
+
