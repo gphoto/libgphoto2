@@ -1,3 +1,7 @@
+2003-10-27  Marcus Meissner <meissner@suse.de>
+
+	* canon.c: PowerShot S50 and A300 got lost somewhere.
+
 2003-09-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.c, canon.h, usb.c, usb.h: Added G5 support
