@@ -27,7 +27,7 @@
 #include <string.h>
 #include "jd350e.h"
 #include "jd350e_red.h"
-//#include "jd350e_blue.h"
+/*#include "jd350e_blue.h"*/
 
 #define THRESHOLD 0xf8
 
@@ -38,6 +38,13 @@
 #define SWAP(a,b) {unsigned char t=(a); (a)=(b); (b)=t;}
 
 #define MINMAX(a,min,max) { (min)=MIN(min,a); (max)=MAX(max,a); }
+
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
 
 
 int jd350e_postprocessing(int width, int height, unsigned char* rgb){
