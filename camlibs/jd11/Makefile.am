@@ -3,7 +3,9 @@ EXTRA_DIST = jd11.html
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_jd11.la
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
+INCLUDES =                                              \
+        -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
+        -I$(top_srcdir)/libgphoto2
 
 libgphoto2_jd11_la_SOURCES = jd11.c serial.h serial.c decomp.h decomp.c
 

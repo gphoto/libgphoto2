@@ -5,10 +5,9 @@ CFLAGS = @CFLAGS@ `glib-config --cflags`
 LDFLAGS = @LDFLAGS@ -lm `glib-config --libs`
 EXTRA_DIST =
 
-INCLUDES =\
- -I$(top_srcdir)/include\
- -DG_LOG_DOMAIN=\"$(PACKAGE)\"\
- -I$(top_srcdir)/libgphoto2
+INCLUDES =                                              \
+        -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
+        -I$(top_srcdir)/libgphoto2
 
 libgphoto2_jamcam_la_SOURCES = \
  jamcam.c \

@@ -3,7 +3,9 @@ EXTRA_DIST = directory.df directory.def makefile.os2 makedll.cmd
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_directory.la
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
+INCLUDES =                                              \
+        -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
+        -I$(top_srcdir)/libgphoto2
 
 libgphoto2_directory_la_SOURCES = directory.c
 

@@ -1,6 +1,6 @@
 EXTRA_DIST = makefile.os2 serial.df
 
-INCLUDES = -I$(top_srcdir)
+INCLUDES = -I$(top_srcdir)/libgphoto2_port
 
 ## Compile the IO library into a shared library
 iolibdir = $(prefix)/lib/gphoto2_port

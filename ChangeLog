@@ -1,3 +1,7 @@
+2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	$builddir != $srcdir fixes.
+
 2001-12-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2: Support for GP_FILE_TYPE_EXIF. Not that there is not

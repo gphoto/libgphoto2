@@ -85,8 +85,8 @@ AC_CHECK_FUNCS(mkdir strdup strncpy strcpy snprintf sprintf vsnprintf)
 
 echo "Using the bundled gphoto2_port library"
 LIBGPHOTO2_PORT_DIR="libgphoto2_port"
-CFLAGS="$CFLAGS -I`pwd` -I`pwd`/libgphoto2_port/libgphoto2_port";
-LIBS="$LIBS -L`pwd`/libgphoto2_port/libgphoto2_port/@dotlibs@ -lgphoto2_port";
+CFLAGS="$CFLAGS -I$(top_srcdir)/libgphoto2_port/libgphoto2_port"
+LIBS="$LIBS -L$(top_srcdir)/libgphoto2_port/libgphoto2_port/@dotlibs@ -lgphoto2_port"
 
 LIBGPHOTO2_INCLUDEDIR='-I${includedir}'
 LIBGPHOTO2_LIBDIR='-L${libdir}'

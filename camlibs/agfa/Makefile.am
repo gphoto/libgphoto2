@@ -3,7 +3,9 @@ EXTRA_DIST = agfa.df
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_agfa.la
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
+INCLUDES =						\
+	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port	\
+	-I$(top_srcdir)/libgphoto2
 
 libgphoto2_agfa_la_SOURCES = agfa.c commands.c agfa.h
 

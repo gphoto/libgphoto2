@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-11-19 00:32+0100\n"
+"POT-Creation-Date: 2001-12-05 22:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,9 +81,13 @@ msgstr ""
 msgid "No error description available"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:169
+#: libgphoto2_port/gphoto2-port-info-list.c:179
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:372
+msgid "Generic Port"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:58
@@ -223,59 +227,69 @@ msgstr ""
 msgid "Could not set interface %d/%d (%m)"
 msgstr ""
 
-#: usb/libusb.c:347
+#: usb/libusb.c:331
+#, c-format
+msgid "The supplied vendor or product id (%i,%i) is not valid."
+msgstr ""
+
+#: usb/libusb.c:350
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
 
-#: serial/unix.c:180
+#: serial/unix.c:176
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr ""
 
-#: serial/unix.c:200
+#: serial/unix.c:185
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr ""
 
-#: serial/unix.c:203
+#: serial/unix.c:188
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr ""
 
-#: serial/unix.c:231
+#: serial/unix.c:210
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr ""
 
-#: serial/unix.c:248
+#: serial/unix.c:222
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 
-#: serial/unix.c:251
+#: serial/unix.c:226
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 
-#: serial/unix.c:386
+#: serial/unix.c:293
+#, c-format
+msgid "Serial Port %i"
+msgstr ""
+
+#: serial/unix.c:376
 #, c-format
 msgid "Failed to open '%s' (%m)"
 msgstr ""
 
-#: serial/unix.c:404
+#: serial/unix.c:395
 #, c-format
 msgid "Could not close device (%s)"
 msgstr ""
 
-#: serial/unix.c:439
+#: serial/unix.c:442
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr ""
 
-#: serial/unix.c:688
+#: serial/unix.c:713
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr ""

@@ -3,7 +3,9 @@ EXTRA_DIST = README main.c
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_ptp.la
 
-INCLUDES = -I$(top_srcdir)/libgphoto2
+INCLUDES =                                              \
+        -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
+        -I$(top_srcdir)/libgphoto2
 
 libgphoto2_ptp_la_SOURCES = ptp.c ptp.h library.c
 

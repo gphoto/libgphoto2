@@ -1,5 +1,5 @@
 EXTRA_DIST = makefile.os2 usb.df
-INCLUDES = -I$(top_srcdir) $(USB_CFLAGS)
+INCLUDES = -I$(top_srcdir)/libgphoto2_port $(USB_CFLAGS)
 
 ## Compile the IO library into a shared library
 iolibdir = $(prefix)/lib/gphoto2_port

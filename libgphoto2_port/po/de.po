@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2001-11-19 00:32+0100\n"
+"POT-Creation-Date: 2001-12-05 22:24+0100\n"
 "PO-Revision-Date: 2001-11-17 04:54+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -90,12 +90,16 @@ msgstr "msg_read"
 msgid "No error description available"
 msgstr "Keine Fehlerbeschreibung verfügbar."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:169
+#: libgphoto2_port/gphoto2-port-info-list.c:179
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 "Konnte keinerlei I/O-Bibliothek laden weil »%s« nicht geöffnet werden konnte "
 "(%m)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:372
+msgid "Generic Port"
+msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:58
 #, fuzzy
@@ -242,7 +246,12 @@ msgstr "Konnte Konfiguration %d/%d nicht setzen (%m)"
 msgid "Could not set interface %d/%d (%m)"
 msgstr "Konnte Schnittstelle %d/%d nicht setzen (%m)"
 
-#: usb/libusb.c:347
+#: usb/libusb.c:331
+#, c-format
+msgid "The supplied vendor or product id (%i,%i) is not valid."
+msgstr ""
+
+#: usb/libusb.c:350
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -252,56 +261,61 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: serial/unix.c:180
+#: serial/unix.c:176
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Konnte Gerät »%s« nicht reservieren"
 
-#: serial/unix.c:200
+#: serial/unix.c:185
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Gerät »%s« ist von PID %d reserviert"
 
-#: serial/unix.c:203
+#: serial/unix.c:188
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Gerät »%s« konnte nicht reserviert werden (dev_lock lieferte %d)"
 
-#: serial/unix.c:231
+#: serial/unix.c:210
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Reservierung von Gerät »%s« konnte nicht freigegeben werden"
 
-#: serial/unix.c:248
+#: serial/unix.c:222
 #, fuzzy, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden, das es von PID %"
 "d reserviert ist."
 
-#: serial/unix.c:251
+#: serial/unix.c:226
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden (dev_unlock "
 "lieferte %d)"
 
-#: serial/unix.c:386
+#: serial/unix.c:293
+#, c-format
+msgid "Serial Port %i"
+msgstr ""
+
+#: serial/unix.c:376
 #, c-format
 msgid "Failed to open '%s' (%m)"
 msgstr "Konnte »%s« nicht öffnen (%m)"
 
-#: serial/unix.c:404
+#: serial/unix.c:395
 #, c-format
 msgid "Could not close device (%s)"
 msgstr "Konnte Gerät nicht schließen (%s)"
 
-#: serial/unix.c:439
+#: serial/unix.c:442
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Konnte nicht auf Port schreiben (%m)"
 
-#: serial/unix.c:688
+#: serial/unix.c:713
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
