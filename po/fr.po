@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
-"POT-Creation-Date: 2003-07-10 16:46-0400\n"
+"POT-Creation-Date: 2003-07-11 14:53+0200\n"
 "PO-Revision-Date: 2003-06-22 23:47+0200\n"
 "Last-Translator: Aurélien Croc <aurelien@ap2c.com>\n"
 "Language-Team: Français\n"
@@ -49,48 +49,52 @@ msgstr ""
 "Mis en oeuvre en utilisant des documents trouvés sur\n"
 "le web. Permission accordée par Vision."
 
-#: camlibs/canon/canon.c:391 camlibs/canon/canon.c:420
+#: camlibs/canon/canon.c:391
 msgid "create"
-msgstr ""
+msgstr "créer"
 
-#: camlibs/canon/canon.c:391 camlibs/canon/canon.c:420
-#, fuzzy
+#: camlibs/canon/canon.c:391
 msgid "remove"
-msgstr "Distante"
+msgstr "enlever"
 
-#: camlibs/canon/canon.c:418
-#, fuzzy, c-format
-msgid "Could not %s directory %s."
-msgstr "Impossible de créer le dossier \\DCIM."
+#: camlibs/canon/canon.c:419
+#, c-format
+msgid "Could not create directory %s."
+msgstr "Impossible de créer le dossier %s."
 
-#: camlibs/canon/canon.c:761
+#: camlibs/canon/canon.c:422
+#, c-format
+msgid "Could not remove directory %s."
+msgstr "Impossible de supprimer le dossier %s."
+
+#: camlibs/canon/canon.c:764 camlibs/canon/canon.c:986 camlibs/canon/usb.c:229
 msgid "lock keys failed."
-msgstr ""
+msgstr "Clefs de blocage manquées."
 
-#: camlibs/canon/canon.c:824 camlibs/canon/canon.c:825
+#: camlibs/canon/canon.c:827 camlibs/canon/canon.c:828
 msgid "*UNKNOWN*"
-msgstr ""
+msgstr "*INCONNU*"
 
-#: camlibs/canon/canon.c:932
+#: camlibs/canon/canon.c:935
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
 "status %i"
 msgstr ""
+"canon_int_capture_image: appel initial à canon_usb_list_all_dirs() en erreur "
+"avec un statut %i"
 
-#: camlibs/canon/canon.c:983 camlibs/canon/usb.c:229
-msgid "lock keys failed.\n"
-msgstr ""
-
-#: camlibs/canon/canon.c:1013
+#: camlibs/canon/canon.c:1016
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
 "i"
 msgstr ""
+"canon_int_capture_image: appel final à canon_usb_list_all_dirs() en erreur "
+"avec un statut %i"
 
-#: camlibs/canon/canon.c:1132
-#, fuzzy, c-format
+#: camlibs/canon/canon.c:1135
+#, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximum 30 characters are "
 "allowed."
@@ -98,31 +102,35 @@ msgstr ""
 "Le nom '%s' (%i caractères) est trop long (%i car.), seuls 30 caractères "
 "sont permis."
 
-#: camlibs/canon/canon.c:1653
+#: camlibs/canon/canon.c:1656
 #, c-format
 msgid "canon_int_list_dir: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
+"canon_int_list_dir: ERREUR: message initial trop court (%i < minimum %i)"
 
-#: camlibs/canon/canon.c:1675
+#: camlibs/canon/canon.c:1678
 msgid ""
 "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
+"canon_int_list_dir: fin du paquet atteinte en examinant la première entrée"
 
-#: camlibs/canon/canon.c:1760
+#: camlibs/canon/canon.c:1763
 msgid "canon_int_list_dir: truncated directory entry encountered"
-msgstr ""
+msgstr "canon_int_list_dir: rencontre d'une entrée de répertoire tronquée"
 
-#: camlibs/canon/canon.c:2071
+#: camlibs/canon/canon.c:2074
 msgid "File protected."
 msgstr "Fichier protégé en écriture."
 
-#: camlibs/canon/canon.c:2142
+#: camlibs/canon/canon.c:2145
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
+"Impossible d'extraire la vignette JPEG des données: les données ne sont pas "
+"en JFIF"
 
-#: camlibs/canon/canon.c:2167
+#: camlibs/canon/canon.c:2170
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
-msgstr ""
+msgstr "Impossible d'extraire la vignette JPEG des données: pas de début/fin"
 
 #: camlibs/canon/library.c:134
 msgid ""
@@ -167,17 +175,17 @@ msgstr "Ne peut obtenir d'information sur le disque : %s"
 #: camlibs/canon/library.c:486
 #, c-format
 msgid "Internal error #1 in get_file_func() (%s line %i)"
-msgstr ""
+msgstr "Erreur interne #1 dans get_file_func() (%s ligne %i)"
 
 #: camlibs/canon/library.c:501
 #, c-format
-msgid "No thumbnail could be fould for %s"
-msgstr ""
+msgid "No thumbnail could be found for %s"
+msgstr "Impossible de trouver une vignette pour %s"
 
 #: camlibs/canon/library.c:545
-#, fuzzy, c-format
-msgid "No audio file could be fould for %s"
-msgstr "Le dossier '%s' ne contient pas de sous-dossier '%s'."
+#, c-format
+msgid "No audio file could be found for %s"
+msgstr "Impossible de trouver un fichier audio pour %s"
 
 #: camlibs/canon/library.c:741
 #, c-format
@@ -367,7 +375,7 @@ msgstr "heure mise à jour"
 msgid "could not set time"
 msgstr "ne peut mettre à l'heure"
 
-#: camlibs/canon/library.c:1543
+#: camlibs/canon/library.c:1545
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr "Port de type non-supporté, reçu %i = 0x%x. Initialisation impossible."
@@ -476,14 +484,14 @@ msgid "Unrecognized response"
 msgstr "Réponse non-reconnue"
 
 #: camlibs/canon/serial.c:1378
-#, fuzzy, c-format
+#, c-format
 msgid "Detected a \"%s\" aka \"%s\""
-msgstr "Détection du '%s'."
+msgstr "Détection d'un \"%s\" alias \"%s\""
 
 #: camlibs/canon/serial.c:1386
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown model \"%s\""
-msgstr "Modèle inconnu"
+msgstr "Modèle inconnu \"%s\""
 
 #: camlibs/canon/serial.c:1408
 msgid "Bad EOT"
@@ -506,7 +514,6 @@ msgid "Error changing speed"
 msgstr "Erreur au changement de vitesse"
 
 #: camlibs/canon/serial.c:1457
-#, fuzzy
 msgid "Error waiting for ACK during initialization retrying"
 msgstr "Erreur à l'attente de l'accusé-réception à la ré-initialisation"
 
@@ -521,11 +528,13 @@ msgstr "Connecté à l'appareil-photo."
 #: camlibs/canon/serial.c:1505
 msgid "ERROR: a fatal error condition was detected, can't continue "
 msgstr ""
+"ERREUR: une condition d'erreur fatale a été détectée, impossible de "
+"continuer "
 
 #: camlibs/canon/serial.c:1521
 #, c-format
 msgid "ERROR: %d is too big"
-msgstr ""
+msgstr "ERREUR: %d est trop gros"
 
 #: camlibs/canon/serial.c:1531
 msgid "Getting thumbnail..."
@@ -533,25 +542,23 @@ msgstr "Récupération de la vignette..."
 
 #: camlibs/canon/usb.c:80
 msgid "NOT RECOGNIZED"
-msgstr ""
+msgstr "NON RECONNU"
 
 #: camlibs/canon/usb.c:94
-#, fuzzy
 msgid "Could not establish initial contact with camera"
 msgstr "Impossible de se connecter à l'appareil."
 
 #: camlibs/canon/usb.c:100
 msgid "Camera was already active"
-msgstr ""
+msgstr "Appareil déjà actif"
 
 #: camlibs/canon/usb.c:103
 msgid "Camera was woken up"
-msgstr ""
+msgstr "Appareil réveillé"
 
 #: camlibs/canon/usb.c:107
-#, fuzzy
 msgid "Unknown (some kind of error))"
-msgstr "Erreur inconnue de la bibliothèque de l'appareil"
+msgstr "Inconnu (une sorte d'erreur))"
 
 #: camlibs/canon/usb.c:111
 #, c-format
@@ -693,15 +700,14 @@ msgid "Out of memory: %d bytes needed."
 msgstr ""
 
 #: camlibs/canon/usb.c:1438
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't read from file \"%s\""
-msgstr "Ne peut obtenir d'information sur le disque : %s"
+msgstr "Impossible de lire le fichier \"%s\""
 
 #: camlibs/canon/usb.c:1481 camlibs/canon/usb.c:1492 camlibs/canon/usb.c:1528
 #: camlibs/canon/usb.c:1539 camlibs/canon/usb.c:1550
-#, fuzzy
 msgid "File upload failed."
-msgstr "Téléchargement du fichier..."
+msgstr "Envoi du fichier raté."
 
 #: camlibs/canon/usb.c:1571
 msgid ""
@@ -717,6 +723,8 @@ msgid ""
 "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
 "too long."
 msgstr ""
+"canon_usb_get_dirents: Impossible de faire tenir la charge dans le buffer, "
+"'%.96s' (tronqué) trop long."
 
 #: camlibs/canon/usb.c:1634
 #, c-format
@@ -724,6 +732,8 @@ msgid ""
 "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
+"canon_usb_get_dirents: canon_usb_long_dialogue n'a pu récupérer les "
+"répertoires, renvoyé %i"
 
 #: camlibs/canon/usb.c:1684
 #, c-format
@@ -731,6 +741,8 @@ msgid ""
 "canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
 "'%.96s' (truncated) too long."
 msgstr ""
+"canon_usb_list_all_dirs: Impossible de faire tenir la charge dans le buffer, "
+"'%.96s' (tronqué) trop long."
 
 #: camlibs/canon/usb.c:1703
 #, c-format
@@ -738,10 +750,12 @@ msgid ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
+"canon_usb_list_all_dirs: canon_usb_long_dialogue n'a pu récupérer les "
+"répertoires, renvoyé %i"
 
 #: camlibs/canon/usb.c:1755
 msgid "canon_usb_set_file_attributes: canon_usb_dialogue failed"
-msgstr ""
+msgstr "canon_usb_set_file_attributes: canon_usb_dialogue raté"
 
 #: camlibs/canon/usb.c:1762
 #, c-format
@@ -749,6 +763,8 @@ msgid ""
 "canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%"
 "08x from camera"
 msgstr ""
+"canon_usb_set_file_attributes: canon_usb_dialogue renvoie un statut d'erreur "
+"0x%08x de l'appareil"
 
 #: camlibs/canon/usb.c:1833
 #, c-format
@@ -756,9 +772,9 @@ msgid "Detected a '%s'."
 msgstr "Détection du '%s'."
 
 #: camlibs/canon/usb.c:1839
-#, fuzzy, c-format
-msgid "Could not identify camera based on name \"%s\""
-msgstr "Ne peut obtenir le nom du disque : %s"
+#, c-format
+msgid "Name \"%s\" from camera does not match any known camera"
+msgstr "Nom \"%s\" de l'appareil ne correspond à aucun appareil connu"
 
 #: camlibs/digita/digita.c:331
 msgid "Unsupported image type"
@@ -3541,9 +3557,8 @@ msgid "EK Video Out"
 msgstr ""
 
 #: camlibs/ptp2/ptpcam.c:548
-#, fuzzy
 msgid "EK Power Saving"
-msgstr "Pas d'indicateur de mise sous tension"
+msgstr "Économie d'énergie EK"
 
 #: camlibs/ptp2/ptpcam.c:549
 msgid "EK UI Language"
@@ -4147,9 +4162,8 @@ msgid "LED Mode"
 msgstr "Mode LED"
 
 #: camlibs/sierra/nikon-desc.c:291
-#, fuzzy
 msgid "Infinity"
-msgstr "Infini/Fish-eye"
+msgstr "Infini"
 
 #: camlibs/sierra/nikon-desc.c:327
 msgid "Preview Thumbnail"
@@ -4214,9 +4228,8 @@ msgid "AE-lock"
 msgstr "Blocage AE"
 
 #: camlibs/sierra/nikon-desc.c:512
-#, fuzzy
 msgid "Fisheye"
-msgstr "Type de fichier"
+msgstr "Oeil de poisson"
 
 #: camlibs/sierra/nikon-desc.c:513
 msgid "Wide"
