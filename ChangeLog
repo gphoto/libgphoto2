@@ -1,3 +1,7 @@
+2002-05-07  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2/gphoto2-camera.c: Fix mem-leak.
+
 2002-05-06  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2/gphoto2-camera.[c,h] (gp_camera_[start,stop]_timeout),
