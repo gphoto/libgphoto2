@@ -15,13 +15,13 @@ Cameras supported
 The new driver works with the following models:
 
  - PowerShot A50 (not tested)
- - PowerShot S10 (not tested)
- - PowerShot S20 (not tested)
+ - PowerShot S10
+ - PowerShot S20
  - PowerShot S30 (not tested, under development)
- - PowerShot S40 (not tested, under development)
- - PowerShot S100 / Digital IXUS (not tested)
+ - PowerShot S40
+ - PowerShot S100 / Digital IXUS
  - PowerShot IXY Digital (not tested)
- - PowerShot S300 / Digital IXUS 300 (not tested)
+ - PowerShot S300 / Digital IXUS 300
  - PowerShot IXY Digital 300  (not tested)
  - PowerShot G1 (not tested)
  - PowerShot G2
@@ -73,7 +73,7 @@ the caches could be manually flushed using "Configure camera".
 Features supported
 ==================
 
-- RS-232 serial cameras (currently not tested)
+- RS-232 serial cameras
 
 - USB cameras (well tested)
 
@@ -110,6 +110,12 @@ or
 
 for details on the file format.
 
+Emile Snyder has implemented most of the remote capture functionality,
+but not everything is understood about these commands yet and some
+camera models have their own will about how well these things work.
+The code is included, but inside #ifdef EXPERIMENTAL_CAPTURE - meaning
+you have to define EXPERIMENTAL_CAPTURE to compile it in. Beware that
+this is work in progress, and no guarantees are given.
 
 ========================================================================
 Change history
