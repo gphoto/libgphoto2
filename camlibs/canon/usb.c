@@ -109,7 +109,7 @@ canon_usb_camera_init (Camera *camera)
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 
-	if (camera->pl->model == CANON_EOS_D30) {
+	if (camera->pl->md->model == CANON_EOS_D30) {
 		if (camstat == 'A') {
 			/* read another 0x50 bytes */
 			i = gp_port_usb_msg_read (camera->port, 0x04, 0x4, 0, msg, 0x50);
@@ -261,7 +261,7 @@ canon_usb_lock_keys (Camera *camera)
 
 	GP_DEBUG ("canon_usb_lock_keys()");
 
-	switch (camera->pl->model) {
+	switch (camera->pl->md->model) {
 		case CANON_PS_S100:
 			GP_DEBUG ("canon_usb_lock_keys: Your camera model does not need the keylock.");
 			break;
@@ -309,7 +309,7 @@ canon_usb_unlock_keys (Camera *camera)
 
 	GP_DEBUG ("canon_usb_unlock_keys()");
 
-	switch (camera->pl->model) {
+	switch (camera->pl->md->model) {
 		case CANON_EOS_D30:
 			memset (payload, 0, sizeof (payload));
 			payload[0] = 0x06;
@@ -631,7 +631,7 @@ int
 canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length)
 {
 	char payload[100];
-	int payload_length, maxfilesize, res;
+	int payload_length, res;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file() called for file '%s'",
 			 name);
@@ -653,20 +653,10 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 	htole32a (payload, 0x0);	// get picture
 	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
 
-	if (camera->pl->model == CANON_PS_S10 || camera->pl->model == CANON_PS_S20
-	    || camera->pl->model == CANON_PS_S30 || camera->pl->model == CANON_PS_S40
-	    || camera->pl->model == CANON_PS_G2 || camera->pl->model == CANON_PS_G1
-	    || camera->pl->model == CANON_PS_S300 || camera->pl->model == CANON_PS_S100
-	    || camera->pl->model == CANON_PS_A10 || camera->pl->model == CANON_PS_A20
-	    || camera->pl->model == CANON_EOS_D30 || camera->pl->model == CANON_PS_PRO90_IS) {
-		maxfilesize = 10000000;
-	} else {
-		maxfilesize = 2000000;
-	}
-
 	/* the 1 is to show status */
 	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
-				       maxfilesize, payload, payload_length, 1);
+				       camera->pl->md->max_picture_size, payload,
+				       payload_length, 1);
 	if (res != GP_OK) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
 				 "canon_usb_get_file: canon_usb_long_dialogue() "
@@ -704,7 +694,8 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 
 	/* 0 is to not show status */
 	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
-				       32 * 1024, payload, payload_length, 0);
+				       camera->pl->md->max_thumbnail_size, payload,
+				       payload_length, 0);
 
 	if (res != GP_OK) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
@@ -743,7 +734,7 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 	 *
 	 * the 0x00 before dirname means 'no recursion'
 	 * NOTE: the first 0x00 after dirname is the NULL byte terminating
-	 * the string, so payload_length is strlen(path) + 4 
+	 * the string, so payload_length is strlen(dirname) + 4 
 	 */
 	if (strlen (path) + 4 > sizeof (payload)) {
 		GP_DEBUG ("canon_usb_get_dirents: "
@@ -806,22 +797,16 @@ canon_usb_identify (Camera *camera)
 		return res;
 	}
 
-	if (a.model != NULL)
-		GP_DEBUG ("canon_usb_identify: Camera previously identified as "
-			  "model '%s' (%d)", a.model, camera->pl->model);
-
-	i = 0;
-	while (models[i].name != NULL) {
-		if (models[i].idVendor && models[i].idProduct &&
-		    (models[i].idVendor == a.usb_vendor &&
-		     models[i].idProduct == a.usb_product)) {
+	for (i = 0; models[i].id_str != NULL; i++) {
+		if (models[i].usb_vendor && models[i].usb_product &&
+		    (models[i].usb_vendor == a.usb_vendor &&
+		     models[i].usb_product == a.usb_product)) {
 			GP_DEBUG ("canon_usb_identify: USB product and vendor ID matches '%s'",
-				  models[i].name);
-			gp_camera_status (camera, "Detected a %s", models[i].name);
-			camera->pl->model = models[i].model;
-			return 0;
+				  models[i].id_str);
+			gp_camera_status (camera, "Detected a %s", models[i].id_str);
+			camera->pl->md = (struct canonCamModelData *) &models[i];
+			return GP_OK;
 		}
-		i++;
 	}
 
 	gp_camera_set_error (camera, "Could not identify camera based on USB id 0x%x/0x%x",

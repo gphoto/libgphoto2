@@ -215,7 +215,7 @@ canon_serial_get_byte (GPPort *gdev)
 	}
 
 	recv = gp_port_read (gdev, cache, 1);
-	if (recv < 0) /* An error occurred */
+	if (recv < 0)		/* An error occurred */
 		return -1;
 
 	cachep = cache;
@@ -721,16 +721,17 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
 	}
 	if (camera->pl->receive_error == NOERROR) {
 		/*we want to be sure the camera U N D E R S T A N D S our packets */
-		if (camera->pl->uploading == 1 && camera->pl->model == CANON_PS_A50)
+		if (camera->pl->uploading == 1 && camera->pl->md->model == CANON_PS_A50)
 			camera->pl->slow_send = 1;
 		if (!canon_serial_send_packet
 		    (camera, PKT_ACK, camera->pl->seq_rx++,
 		     camera->pl->psa50_eot + PKT_HDR_LEN, 0)) {
-			if (camera->pl->uploading == 1 && camera->pl->model == CANON_PS_A50)
+			if (camera->pl->uploading == 1
+			    && camera->pl->md->model == CANON_PS_A50)
 				camera->pl->slow_send = 0;
 			return NULL;
 		}
-		if (camera->pl->uploading == 1 && camera->pl->model == CANON_PS_A50)
+		if (camera->pl->uploading == 1 && camera->pl->md->model == CANON_PS_A50)
 			camera->pl->slow_send = 0;
 		if (total)
 			*total = msg_pos;
@@ -941,7 +942,7 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 	unsigned char *msg;
 	unsigned char name_len;
 	unsigned int total = 0, expect = 0, size;
-	int len, maxfilesize;
+	int len;
 
 	gp_camera_progress (camera, 0);
 	if (camera->pl->receive_error == FATAL_ERROR) {
@@ -962,15 +963,8 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 		}
 		if (!file) {
 			total = le32atoh (msg + 4);
-			if (camera->pl->model == CANON_PS_S20
-			    || camera->pl->model == CANON_PS_G1
-			    || camera->pl->model == CANON_PS_S10) {
-				maxfilesize = 10000000;
-			} else {
-				maxfilesize = 2000000;
-			}
 
-			if (total > maxfilesize) {
+			if (total > camera->pl->md->max_picture_size) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon",
 						 "ERROR: %d is too big\n", total);
 				break;
@@ -1144,6 +1138,7 @@ canon_serial_ready (Camera *camera)
 	int good_ack, speed, try, len, i;
 	char *pkt;
 	int res;
+	char cam_id_str[2000];
 
 	GP_DEBUG ("canon_int_ready()");
 
@@ -1239,32 +1234,30 @@ canon_serial_ready (Camera *camera)
 		gp_camera_status (camera, _("Unrecognized response"));
 		return GP_ERROR;
 	}
-	strncpy (camera->pl->psa50_id, pkt + 26, sizeof (camera->pl->psa50_id) - 1);
+	strncpy (cam_id_str, pkt + 26, sizeof (cam_id_str) - 1);
 
-	GP_DEBUG ("psa50_id : '%s'", camera->pl->psa50_id);
+	GP_DEBUG ("cam_id_str : '%s'", cam_id_str);
 
 	camera->pl->first_init = 0;
 
 	/* Compare what the camera identified itself as with our list of known models */
-	i = 0;
-	while (models[i].name != NULL) {
-		if (!strcmp (models[i].name, camera->pl->psa50_id)) {
+	for (i = 0; models[i].id_str != NULL; i++) {
+		if (!strcmp (models[i].id_str, cam_id_str)) {
 			GP_DEBUG ("canon_usb_identify: Serial ID string matches '%s'",
-				  models[i].name);
-			gp_camera_status (camera, "Detected a %s", models[i].name);
-			camera->pl->model = models[i].model;
+				  models[i].id_str);
+			gp_camera_status (camera, "Detected a %s", models[i].id_str);
+			camera->pl->md = (struct canonCamModelData *) &models[i];
 			break;
 		}
-		i++;
 	}
 
-	if (models[i].name == NULL) {
-		gp_camera_set_error (camera, "Unknown model '%s'", camera->pl->psa50_id);
+	if (models[i].id_str == NULL) {
+		gp_camera_set_error (camera, "Unknown model '%s'", cam_id_str);
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
-	
+
 	/* take care of some model specific things */
-	switch (camera->pl->model) {
+	switch (camera->pl->md->model) {
 		case CANON_PS_A5:
 		case CANON_PS_A5_ZOOM:
 		case CANON_PS_A50:

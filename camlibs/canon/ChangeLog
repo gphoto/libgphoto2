@@ -8,6 +8,17 @@
 	  cameras by using the new _byteorder.h include
 	  provided to us by gphoto2 autoconf.
 
+	* canon.c, canon.h, library.c, serial.c, usb.c :
+	  Put all model data in a canonCamModelData structure
+	  in canon.h so that there is only one place that has
+	  to be changed when adding new models. This is also
+	  a start to defining properties/abilities for cameras
+	  in a central place instead of checking what model
+	  we are talking to everywhere in the code.
+
+	  Output cameras time and the difference between it
+	  and the host computers time in --summary.
+
 2001-12-15  Fredrik <fredrik@krixor.xy.org>
 
 	* library.c, canon.h:

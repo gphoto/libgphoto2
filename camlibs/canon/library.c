@@ -98,16 +98,16 @@ camera_abilities (CameraAbilitiesList *list)
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_abilities()");
 
-	for (i = 0; models[i].name; i++) {
+	for (i = 0; models[i].id_str; i++) {
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
-		strcpy (a.model, models[i].name);
+		strcpy (a.model, models[i].id_str);
 		a.port = 0;
-		if (models[i].idProduct) {
+		if (models[i].usb_vendor && models[i].usb_product) {
 			a.port |= GP_PORT_USB;
-			a.usb_vendor = models[i].idVendor;
-			a.usb_product = models[i].idProduct;
+			a.usb_vendor = models[i].usb_vendor;
+			a.usb_product = models[i].usb_product;
 		}
-		if (models[i].serial) {
+		if (models[i].serial_support) {
 			a.port |= GP_PORT_SERIAL;
 			a.speed[0] = 9600;
 			a.speed[1] = 19200;
@@ -143,8 +143,8 @@ check_readiness (Camera *camera)
 	if (camera->pl->cached_ready)
 		return 1;
 	if (canon_int_ready (camera) == GP_OK) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera type:  %d\n",
-				 camera->pl->model);
+		GP_DEBUG ("Camera type: %s (%d)\n", camera->pl->md->id_str,
+			  camera->pl->md->model);
 		camera->pl->cached_ready = 1;
 		return 1;
 	}
@@ -374,7 +374,7 @@ update_dir_cache (Camera *camera)
 	if (!check_readiness (camera))
 		return 0;
 	camera->pl->cached_images = 0;
-	switch (camera->pl->model) {
+	switch (camera->pl->md->model) {
 		case CANON_PS_A5:
 		case CANON_PS_A5_ZOOM:
 			if (recurse (camera, camera->pl->cached_drive)) {
@@ -470,7 +470,7 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 	if (!check_readiness (camera)) {
 		return GP_ERROR;
 	}
-	switch (camera->pl->model) {
+	switch (camera->pl->md->model) {
 		case CANON_PS_A5:
 		case CANON_PS_A5_ZOOM:
 #if 0
@@ -815,9 +815,11 @@ static int
 camera_summary (Camera *camera, CameraText *summary)
 {
 	char a[20], b[20];
-	char *model;
 	int pwr_source, pwr_status;
-	char power_stats[48], cde[16];
+	char power_str[128];
+	time_t camera_time, camera_local_time;
+	double time_diff;
+	char formatted_camera_time[20];
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_summary()");
 
@@ -831,81 +833,34 @@ camera_summary (Camera *camera, CameraText *summary)
 	pretty_number (camera->pl->cached_capacity, a);
 	pretty_number (camera->pl->cached_available, b);
 
-	model = "Canon PowerShot";
-	switch (camera->pl->model) {
-		case CANON_PS_A5:
-			model = "Canon PowerShot A5";
-			break;
-		case CANON_PS_A5_ZOOM:
-			model = "Canon PowerShot A5 Zoom";
-			break;
-		case CANON_PS_A50:
-			model = "Canon PowerShot A50";
-			break;
-		case CANON_PS_A70:
-			model = "Canon PowerShot A70";
-			break;
-		case CANON_PS_S10:
-			model = "Canon PowerShot S10";
-			break;
-		case CANON_PS_S20:
-			model = "Canon PowerShot S20";
-			break;
-		case CANON_PS_S30:
-			model = "Canon PowerShot S30";
-			break;
-		case CANON_PS_S40:
-			model = "Canon PowerShot S40";
-			break;
-		case CANON_PS_G1:
-			model = "Canon PowerShot G1";
-			break;
-		case CANON_PS_G2:
-			model = "Canon PowerShot G2";
-			break;
-		case CANON_PS_S100:
-			model = "Canon PowerShot S100 / Digital IXUS / IXY DIGITAL";
-			break;
-		case CANON_PS_S300:
-			model = "Canon PowerShot S300 / Digital IXUS 300 / IXY DIGITAL 300";
-			break;
-		case CANON_PS_A10:
-			model = "Canon PowerShot A10";
-			break;
-		case CANON_PS_A20:
-			model = "Canon PowerShot A20";
-			break;
-		case CANON_EOS_D30:
-			model = "Canon EOS D30";
-			break;
-		case CANON_PS_PRO90_IS:
-			model = "Canon Pro90 IS";
-			break;
-	}
-
 	canon_get_batt_status (camera, &pwr_status, &pwr_source);
-	if ((pwr_source & CAMERA_MASK_BATTERY) == 0) {
-		strcpy (power_stats, _("AC adapter "));
-	} else {
-		strcpy (power_stats, _("on battery "));
-	}
+	if (pwr_status == CAMERA_POWER_OK || pwr_status == CAMERA_POWER_BAD)
+		snprintf (power_str, sizeof (power_str), "%s (%s)",
+			  ((pwr_source & CAMERA_MASK_BATTERY) ==
+			   0) ? _("AC adapter") : _("on battery"),
+			  pwr_status == CAMERA_POWER_OK ? _("power OK") : _("power bad"));
+	else
+		snprintf (power_str, sizeof (power_str), "%s - %i",
+			  ((pwr_source & CAMERA_MASK_BATTERY) ==
+			   0) ? _("AC adapter") : _("on battery"), pwr_status);
 
-	switch (pwr_status) {
-		case CAMERA_POWER_OK:
-			strcat (power_stats, _("(power OK)"));
-			break;
-		case CAMERA_POWER_BAD:
-			strcat (power_stats, _("(power low)"));
-			break;
-		default:
-			strcat (power_stats, cde);
-			sprintf (cde, " - %i)", pwr_status);
-			break;
-	}
+	/* canon cameras know nothing about time zones so they (and canon_int_get_time())
+	 * return the time in 'local' time format. we must therefor juggle a bit with it
+	 * to get the difference between the cameras time and our hosts time in seconds
+	 */
+	camera_local_time = canon_int_get_time (camera);
+	camera_time = mktime(gmtime(&camera_local_time));
+	time_diff = difftime(camera_time, time(NULL));
+	
+	strftime (formatted_camera_time, sizeof(formatted_camera_time),
+		  "%Y-%m-%d %H:%M:%S", gmtime(&camera_time));
 
-	sprintf (summary->text,
-		 _("%s\n%s\n%s\nDrive %s\n%11s bytes total\n%11s bytes available\n"), model,
-		 camera->pl->owner, power_stats, camera->pl->cached_drive, a, b);
+	sprintf (summary->text, _("%s\n%s\n%s\n"
+				  "Drive %s\n%11s bytes total\n%11s bytes available\n"
+				  "Time %s (host time %s%i seconds)\n"), camera->pl->md->id_str,
+		 camera->pl->owner, power_str, camera->pl->cached_drive, a, b,
+		 formatted_camera_time, time_diff>=0?"+":"", (int) time_diff);
+
 	return GP_OK;
 }
 
@@ -944,7 +899,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
-	if (camera->pl->model == CANON_PS_A5 || camera->pl->model == CANON_PS_A5_ZOOM) {
+	if (camera->pl->md->model == CANON_PS_A5 || camera->pl->md->model == CANON_PS_A5_ZOOM) {
 		GP_DEBUG ("delete_file_func: deleting "
 			  "pictures disabled for cameras: PowerShot A5, PowerShot A5 ZOOM");
 
@@ -1194,7 +1149,7 @@ static int
 camera_get_config (Camera *camera, CameraWidget **window)
 {
 	CameraWidget *t, *section;
-	char power_stats[48], firm[64];
+	char power_str[128], firm[64];
 	int pwr_status, pwr_source;
 	struct tm *camtm;
 	time_t camtime;
@@ -1237,31 +1192,22 @@ camera_get_config (Camera *camera, CameraWidget **window)
 
 	if (camera->pl->cached_ready == 1) {
 		canon_get_batt_status (camera, &pwr_status, &pwr_source);
-		if ((pwr_source & CAMERA_MASK_BATTERY) == 0) {
-			strcpy (power_stats, _("AC adapter "));
-		} else {
-			strcpy (power_stats, _("on battery "));
-		}
 
-		switch (pwr_status) {
-				char cde[16];
-
-			case CAMERA_POWER_OK:
-				strcat (power_stats, _("(power OK)"));
-				break;
-			case CAMERA_POWER_BAD:
-				strcat (power_stats, _("(power low)"));
-				break;
-			default:
-				strcat (power_stats, cde);
-				sprintf (cde, " - %i)", pwr_status);
-				break;
-		}
+		if (pwr_status == CAMERA_POWER_OK || pwr_status == CAMERA_POWER_BAD)
+			snprintf (power_str, sizeof (power_str), "%s (%s)",
+				  ((pwr_source & CAMERA_MASK_BATTERY) ==
+				   0) ? _("AC adapter") : _("on battery"),
+				  pwr_status ==
+				  CAMERA_POWER_OK ? _("power OK") : _("power bad"));
+		else
+			snprintf (power_str, sizeof (power_str), "%s - %i",
+				  ((pwr_source & CAMERA_MASK_BATTERY) ==
+				   0) ? _("AC adapter") : _("on battery"), pwr_status);
 	} else
-		strcpy (power_stats, _("Power: camera unavailable"));
+		strncpy (power_str, _("Unavaliable"), sizeof (power_str) - 1);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Power"), &t);
-	gp_widget_set_value (t, power_stats);
+	gp_widget_set_value (t, power_str);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Debug"), &section);

@@ -1007,7 +1007,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 			break;
 	}
 
-	switch (camera->pl->model) {
+	switch (camera->pl->md->model) {
 		case CANON_PS_A70:	/* pictures are JFIF files */
 			/* we skip the first FF D8 */
 			i = 3;
@@ -1048,47 +1048,43 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 			exifdat.header = data;
 			exifdat.data = data + 12;
 
-			GP_DEBUG ("Got thumbnail, extracting it with the " "EXIF lib.");
+			GP_DEBUG ("Got thumbnail, extracting it with the EXIF lib.");
 			if (exif_parse_data (&exifdat) > 0) {
-				GP_DEBUG ("Parsed exif data.");
 				data = exif_get_thumbnail (&exifdat);	// Extract Thumbnail
 				if (data == NULL) {
 					int f;
 					char fn[255];
 
 					if (rindex (name, '\\') != NULL)
-						snprintf (fn, sizeof (fn) - 1,
+						snprintf (fn, sizeof (fn),
 							  "canon-death-dump.dat-%s",
 							  rindex (name, '\\') + 1);
 					else
-						snprintf (fn, sizeof (fn) - 1,
+						snprintf (fn, sizeof (fn),
 							  "canon-death-dump.dat-%s", name);
-					fn[sizeof (fn) - 1] = 0;
 
-					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "canon_int_get_thumbnail: "
-							 "Thumbnail conversion error, saving "
-							 "%i bytes to '%s'", total, fn);
+					GP_DEBUG ("canon_int_get_thumbnail: "
+						  "Thumbnail conversion error, saving "
+						  "%i bytes to '%s'", total, fn);
 					/* create with O_EXCL and 0600 for security */
 					if ((f =
 					     open (fn, O_CREAT | O_EXCL | O_RDWR,
 						   0600)) == -1) {
-						gp_debug_printf (GP_DEBUG_LOW, "canon",
-								 "canon_int_get_thumbnail: "
-								 "error creating '%s': %m",
-								 fn);
+						GP_DEBUG ("canon_int_get_thumbnail: "
+							  "error creating '%s': %m", fn);
 						break;
 					}
 					if (write (f, data, total) == -1) {
-						gp_debug_printf (GP_DEBUG_LOW, "canon",
-								 "canon_int_get_thumbnail: "
-								 "error writing to file '%s': %m",
-								 fn);
+						GP_DEBUG ("canon_int_get_thumbnail: "
+							  "error writing to file '%s': %m",
+							  fn);
 					}
 
 					close (f);
 					break;
 				}
+
+				GP_DEBUG ("Parsed EXIF data.");
 				return data;
 			}
 			break;
@@ -1112,9 +1108,9 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 			payload_length = strlen (dir) + strlen (name) + 2;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE, &len,
 						  payload, payload_length);
-			if (! msg)
+			if (!msg)
 				return GP_ERROR;
-				
+
 			break;
 		case CANON_SERIAL_RS232:
 		default:
@@ -1127,14 +1123,14 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 			}
 			break;
 	}
-	
+
 	if (len != 4) {
 		/* XXX should mark folder as dirty since we can't be sure if the file
 		 * got deleted or not
 		 */
 		return GP_ERROR;
 	}
-	
+
 	if (msg[0] == 0x29) {
 		gp_camera_message (camera, _("File protected"));
 		return GP_ERROR;
