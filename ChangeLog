@@ -1,3 +1,7 @@
+2004-10-18  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* TESTERS: add myself as tester for Canon 20D
+
 2004-08-23 Marcus Meissner  <marcus@jet.franken.de>
 	
 	* libgphoto/gphoto-result.h: Add gcc attributes
