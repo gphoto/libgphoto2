@@ -1221,8 +1221,8 @@ int camera_config(Camera *camera)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	CameraWidget *window, *w, *t, *section;
-	char wvalue[256];
-	char power_stats[48], buf[8], firm[64];
+	char *wvalue;
+        char power_stats[48], buf[8], firm[64];
 	int pwr_status, pwr_source;
 	struct tm *camtm;
 	time_t camtime;
@@ -1335,17 +1335,17 @@ int camera_config(Camera *camera)
 	
 	w = gp_widget_child_by_label(window,"Debug level");
 	if (gp_widget_changed(w)) {
-		gp_widget_value_get(w, wvalue);
-		if(strcmp(wvalue,"none") == 0)
-		  cs->debug = 0;
-		else if (strcmp(wvalue,"functions") == 0)
-		  cs->debug = 1;
-		else if (strcmp(wvalue,"complete") == 0)
-		  cs->debug = 9;
-			
-		sprintf(buf,"%i",cs->debug);
-		gp_setting_set("canon", "debug", buf);
-	}
+		gp_widget_value_get(w, &wvalue);
+                if(strcmp(wvalue,"none") == 0)
+                    cs->debug = 0;
+                else if (strcmp(wvalue,"functions") == 0)
+                    cs->debug = 1;
+			else if (strcmp(wvalue,"complete") == 0)
+                            cs->debug = 9;
+
+                sprintf(buf,"%i",cs->debug);
+                gp_setting_set("canon", "debug", buf);
+        }
 
 	w = gp_widget_child_by_label(window,"Dump data by packets to stderr");
 	if (gp_widget_changed(w)) {
@@ -1356,34 +1356,31 @@ int camera_config(Camera *camera)
 	
 	w = gp_widget_child_by_label(window,"Owner name");
 	if (gp_widget_changed(w)) {
-		gp_widget_value_get(w, wvalue);
-		if(!check_readiness(camera)) {
-			gp_frontend_status(camera,"Camera unavailable");
-		} else {
-			if(psa50_set_owner_name(camera, wvalue))
-			  gp_frontend_status(camera, "Owner name changed");
-			else
-			  gp_frontend_status(camera, "could not change owner name");	
-		}
-	}
+	        gp_widget_value_get(w, &wvalue);
+                if(!check_readiness(camera)) {
+                    gp_frontend_status(camera,"Camera unavailable");
+                } else {
+                    if(psa50_set_owner_name(camera, wvalue))
+                        gp_frontend_status(camera, "Owner name changed");
+                    else
+                        gp_frontend_status(camera, "could not change owner name");
+                }
+        }
 	
 	w = gp_widget_child_by_label(window,"Set camera date to PC date");
 	if (gp_widget_changed(w)) {
-		gp_widget_value_get(w, wvalue);
-		if(!check_readiness(camera)) {
-			gp_frontend_status(camera,"Camera unavailable");
-		} else {
-			if(psa50_set_time(camera)) {
-				gp_frontend_status(camera,"time set");
-			} else {
-				gp_frontend_status(camera,"could not set time");
-			}
-		}
-	}
+                gp_widget_value_get(w, &wvalue);
+                if(!check_readiness(camera)) {
+                    gp_frontend_status(camera,"Camera unavailable");
+                } else {
+                    if(psa50_set_time(camera)) {
+                        gp_frontend_status(camera,"time set");
+                    } else {
+                        gp_frontend_status(camera,"could not set time");
+                    }
+                }
+        }
 
-	gp_frontend_status(camera,"settings saved");
-	gp_widget_unref(window);
-	
     return GP_OK;
 }
 

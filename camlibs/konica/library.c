@@ -1100,7 +1100,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	/* Beep */
 	g_assert ((widget = gp_widget_child_by_label (section, "Beep")) != NULL);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, c);
+		gp_widget_value_get (widget, &c);
 		if (strcmp (c, "Off") == 0) beep = 0;
 		else if (strcmp (c, "On") == 0) beep = 1;
 		else g_assert_not_reached ();
@@ -1143,7 +1143,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	/* Resolution */
 	g_assert ((widget = gp_widget_child_by_label (section, "Resolution")) != NULL);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, c);
+		gp_widget_value_get (widget, &c);
 		if (strcmp (c, "High (1152 x 872)") == 0) j = 1;
                 else if (strcmp (c, "Low (576 x 436)") == 0) j = 3;
                 else j = 0;
@@ -1161,7 +1161,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	/* Localization File */
 	g_assert ((widget = gp_widget_child_by_label (section, "Localization File")) != NULL);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, c);
+		gp_widget_value_get (widget, &c);
 	        if (strcmp (c, "") != 0) {
                 	data = NULL;
 			data_size = 0;
@@ -1184,7 +1184,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	/* TV Output Format */
 	g_assert ((widget = gp_widget_child_by_label (section, "TV Output Format")) != NULL);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, c);
+		gp_widget_value_get (widget, &c);
 		if (strcmp (c, "NTSC") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_NTSC;
 		else if (strcmp (c, "PAL") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_PAL;
 		else if (strcmp (c, "Do not display TV menu") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
@@ -1198,7 +1198,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	/* Date Format */
 	g_assert ((widget = gp_widget_child_by_label (section, "Date Format")) != NULL);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, c);
+		gp_widget_value_get (widget, &c);
 		if (strcmp (c, "Month/Day/Year") == 0) date_format = K_DATE_FORMAT_MONTH_DAY_YEAR;
                 else if (strcmp (c, "Day/Month/Year") == 0) date_format = K_DATE_FORMAT_DAY_MONTH_YEAR;
 		else if (strcmp (c, "Year/Month/Day") == 0) date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
@@ -1217,7 +1217,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	/* Flash */
 	g_assert ((widget = gp_widget_child_by_label (section, "Flash")) != NULL);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, c);
+		gp_widget_value_get (widget, &c);
 		if (strcmp (c, "Off") == 0) j = 0;
 		else if (strcmp (c, "On") == 0) j = 1;
                 else if (strcmp (c, "On, red-eye reduction") == 0) j = 5;
@@ -1251,7 +1251,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	/* Self Timer (and Focus) */
 	g_assert ((widget_self_timer = gp_widget_child_by_label (section, "Self Timer")) != NULL);
 	if (gp_widget_changed (widget_focus) && gp_widget_changed (widget_self_timer)) {
-		gp_widget_value_get (widget_focus, c);
+		gp_widget_value_get (widget_focus, &c);
 		if (strcmp (c, "Auto") == 0) focus_self_timer = 2;
 		else if (strcmp (c, "Fixed") == 0) focus_self_timer = 0;
 		else g_assert_not_reached ();

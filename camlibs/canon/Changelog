@@ -1,3 +1,6 @@
+2000-10-13	updated configuration dialog for new widget_value_get/set
+    scottf	conventions
+
 2000-10-13
     philm       destination path and filename are now determined at runtime
                 when uploading (try to follow the JEIDA DCF standard).

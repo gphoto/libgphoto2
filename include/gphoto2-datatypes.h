@@ -98,31 +98,31 @@ struct CameraWidget;
 /* CameraWidget structure */
 typedef struct CameraWidget {
 	CameraWidgetType type;
-	char		label[32];
+	char    label[32];
 	
 	/* Current value of the widget */
-        char		value_string[256];
-        int             value_int;
-        float           value_float;
+        char   *value_string;
+        int     value_int;
+        float   value_float;
 
 	/* For Radio and Menu */
-	char 		choice[WIDGET_CHOICE_MAX][64];
-	int		choice_count;
+	char 	choice[WIDGET_CHOICE_MAX][64];
+	int	choice_count;
 
 	/* For Range */
-	float		min;
-	float 		max;
-	float		increment;
+	float	min;
+	float 	max;
+	float	increment;
 
 	/* Child info */
 	struct CameraWidget	*children[64];
-	int 			 children_count;
+	int 	         	 children_count;
 
 	/* Widget was changed */
-	int 		changed;
+	int 	changed;
 
         /* Reference count */
-        int             ref_count;
+        int     ref_count;
 
 	/* Callback */
 	int (*callback)(struct Camera*, struct CameraWidget*);
