@@ -19,3 +19,16 @@ libgphoto2_la_SOURCES = \
 			settings.c settings.h \
 			util.c util.h \
 			widget.c widget.h
+
+confexecdir=$(libdir)
+confexec_DATA=libgphoto2Conf.sh
+CLEANFILES=libgphoto2Conf.sh
+
+libgphoto2Conf.sh: libgphoto2Conf.sh.in Makefile
+## Use sed and then mv to avoid problems if the user interrupts.
+	sed -e 's?\@LIBGPHOTO2_LIBDIR\@?$(LIBGPHOTO2_LIBDIR)?g' \
+	    -e 's?\@LIBGPHOTO2_INCLUDEDIR\@?$(LIBGPHOTO2_INCLUDEDIR)?g' \
+	    -e 's?\@LIBGPHOTO2_LIBS\@?$(LIBGPHOTO2_LIBS)?g' \
+	    -e 's?\@LIBGPHOTO2_VERSION\@?$(LIBGPHOTO2_VERSION)?g' \
+	      < $(srcdir)/libgphoto2Conf.sh.in > libgphoto2Conf.tmp \
+	  && mv libgphoto2Conf.tmp libgphoto2Conf.sh
