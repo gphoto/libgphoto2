@@ -1,0 +1,66 @@
+#LyX 1.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 2.15
+\textclass linuxdoc
+\language default
+\inputencoding latin1
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+\added_space_top vfill \added_space_bottom vfill 
+gPhoto Camera Library Developer's Guide
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Reverse Engineering the Camera Protocol
+\layout Subsection
+
+Sniffing the Protocol
+\layout Subsection
+
+Making Sense Out of the Protocol
+\layout Section
+
+Understanding the gPhoto2 Structure
+\layout Subsection
+
+Role of the gPhoto2 Core
+\layout Subsection
+
+Role of the Camera Library
+\layout Subsection
+
+Role of the Front-end
+\layout Section
+
+Implementing the Library
+\layout Subsection
+
+Camera Library API
+\layout Subsection
+
+The gPhoto2 IO Library
+\the_end
