@@ -41,6 +41,7 @@ int load_library (char *camera_name) {
 			return (GP_ERROR);
 		}
 		glob_c.id = dlsym(lh, "camera_id");
+		glob_c.debug_set = dlsym(lh, "debug_set");
 		glob_c.abilities = dlsym(lh, "camera_abilities");
 		glob_c.init = dlsym(lh, "camera_init");
 		glob_c.exit = dlsym(lh, "camera_exit");

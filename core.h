@@ -14,6 +14,7 @@ typedef struct {
 } Setting;
 
 typedef int (*c_id)		(char *);
+typedef int (*c_debug_set)	(int);
 typedef int (*c_abilities)	(CameraAbilities*,int*);
 typedef int (*c_init)		();
 typedef int (*c_exit)		();
@@ -37,6 +38,7 @@ typedef int (*c_about)		(char*);
 /* Function pointers to the current library functions */
 typedef struct {
 	c_id			id;
+	c_debug_set		debug_set;
 	c_abilities		abilities;
 	c_init			init;
 	c_exit			exit;

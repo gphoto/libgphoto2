@@ -145,7 +145,34 @@ int gp_port_count() {
 
 int gp_port_info(int port_number, CameraPortInfo *info) {
 
-	return (gpio_get_device_info(port_number, info));
+	gpio_device_info i;
+
+	if (gpio_get_device_info(port_number, &i)==GPIO_ERROR)
+		return (GP_ERROR);
+
+	switch (i.type) {
+		case GPIO_DEVICE_SERIAL:
+			info->type = GP_PORT_SERIAL;
+			break;
+		case GPIO_DEVICE_PARALLEL:
+			info->type = GP_PORT_PARALLEL;
+			break;
+		case GPIO_DEVICE_USB:
+			info->type = GP_PORT_USB;
+			break;
+		case GPIO_DEVICE_IEEE1394:
+			info->type = GP_PORT_IEEE1394;
+			break;
+		case GPIO_DEVICE_SOCKET:
+			info->type = GP_PORT_SOCKET;
+			break;
+		default:
+			info->type = GP_PORT_NONE;
+	}
+	strcpy(info->name, i.name);
+	strcpy(info->path, i.path);
+
+	return (GP_OK);
 }
 
 int gp_camera_count () {
@@ -207,7 +234,12 @@ int gp_camera_set (int camera_number, CameraPortSettings *settings) {
 			glob_camera[camera_number].library);
 	strcpy(ci.model, glob_camera[camera_number].name);
 	memcpy(&ci.port_settings, settings, sizeof(ci.port_settings));
-	gp_camera_init(&ci);
+	if (gp_camera_init(&ci)==GP_ERROR)
+		return (GP_ERROR);
+
+	if (glob_c.debug_set)
+		glob_c.debug_set(glob_debug);
+
 	return(GP_OK);
 }
 
@@ -370,7 +402,7 @@ int gp_about (char *about) {
 /* Configuration file functions (for front-ends and libraries)
    ---------------------------------------------------------------------------- */
 
-int gp_get_setting (char *key, char *value) {
+int gp_setting_get (char *key, char *value) {
 
 	int x;
 
@@ -384,7 +416,7 @@ int gp_get_setting (char *key, char *value) {
 	return(GP_ERROR);
 }
 
-int gp_set_setting (char *key, char *value) {
+int gp_setting_set (char *key, char *value) {
 
 	int x;
 
