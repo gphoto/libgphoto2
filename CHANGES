@@ -4,6 +4,8 @@ drivers (camlibs):
 
    * Ricoh
 
+   * added support for Canon PowerShot A100, Canon PowerShot A200
+
 --------------------------------------------------------------------------------
 gphoto2 2.1.0
 

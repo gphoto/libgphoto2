@@ -1,3 +1,7 @@
+2002-07-29  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.[ch]: support for PowerShot A100, A200
+	
 2002-07-29  Lutz Müller <lutz@users.sourceforge.net>
 
 	* canon.h: Make CVS compile again by adding CANON_PS_A100 to the
