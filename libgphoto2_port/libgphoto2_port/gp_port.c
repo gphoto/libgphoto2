@@ -104,6 +104,26 @@ char *gp_port_result_as_string (int result) {
 
 #undef GP_ERR_RES
 
+#define RES_DES(r,str) {if (result == (r)) return (N_(str));}
+
+char *
+gp_port_result_as_description (int result)
+{
+	RES_DES (GP_ERROR_IO_UNKNOWN_PORT,
+		 "The port you specified is unknown to "
+		 "libgphoto2. Please verify that you indicated the right "
+		 "port.");
+	RES_DES (GP_ERROR_IO_LOCK,
+		 "You should verify if you have write access "
+		 "to /var/lock (try creating a file there). If you don't, "
+		 "you should probably chmod +x /var/lock in order to "
+		 "enable libgphoto2 to create lockfiles there.");
+
+	return (N_("No error description available."));
+}
+
+#undef RES_DES
+
 /*
    Required library functions
    ----------------------------------------------------------------

@@ -1,5 +1,10 @@
 2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-port.h:
+	* libgphoto2_port/gp_port.c (gp_port_result_as_description): New
+
+2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* serial/unix.c: Correctly interpret the return value of dev_[un]lock
 
 2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
