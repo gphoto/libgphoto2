@@ -1660,7 +1660,9 @@ debug_fileinfo (CameraFileInfo * info)
  * @flags: #canonDirlistFunctionBits specifying to list files, folders, or both
  * @context: context for error reporting
  *
- * Gets the directory tree of a given flash device.
+ * Gets the directory tree of a given flash device, unsorted and with
+ * a few missing features (such as correct sorting of files and
+ * correctly associating files with each other).
  *
  * Implicitly assumes that uint8_t[] is a char[] for strings.
  *
@@ -1919,6 +1921,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 					if (!camera->pl->list_all_files
 					    && !is_image (info.file.name)
 					    && !is_movie (info.file.name)) {
+                                                /* FIXME: Find associated main file and add it there */
 						/* do nothing */
 						GP_DEBUG ("Ignored %s/%s", folder,
 							  info.file.name);
