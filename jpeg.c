@@ -18,6 +18,8 @@
  */
 
 #include <stdio.h>
+#include <gphoto2-library.h>
+#include <gphoto2-core.h>
 #include "jpeg.h"
 
 // call example:nullpictureabort(picture,"Picture");
@@ -35,6 +37,13 @@ chunk *mychunk;
     mychunk->data = (char *)malloc(length);
     if (mychunk==NULL) printf("Failed to allocate new chunk!\n");
     return mychunk;
+}
+
+chunk *chunk_new_filled(int length, const char *data)
+{
+    chunk *mychunk;
+    mychunk = chunk_new(length);
+    memcpy(mychunk->data, data, length);
 }
 
 void chunk_destroy(chunk *mychunk)
@@ -127,6 +136,13 @@ void jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end)
     myjpeg->count++;
 }
 
+void jpeg_add_chunk(jpeg *myjpeg, chunk *source)
+{ /* Warning! This points to the added chunk instead of deleting it! */
+    nullpointerabort(source, "Chunk to add");
+    myjpeg->marker[myjpeg->count]=source;
+    myjpeg->count++;
+}
+
 void jpeg_parse(jpeg *myjpeg, chunk *picture)
 {
     int position=0;
@@ -172,7 +188,16 @@ void jpeg_print(jpeg *myjpeg)
     }
 }
 
-chunk *jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3)
+chunk *jpeg_make_start()
+{
+    chunk *temp;
+    temp = chunk_new(2);
+    temp->data[0] = 0xFF;
+    temp->data[1] = JPEG_START;
+    return temp;
+}
+
+chunk *jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3, char q1, char q2, char q3)
 {
     chunk *target;
 
@@ -188,8 +213,22 @@ chunk *jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3)
     target->data[7] = (width&0xff00) >> 8;
     target->data[8] = width&0xff;
     target->data[11]= vh1;
+    target->data[12]= q1;
     target->data[14]= vh2;
+    target->data[15]= q2;
     target->data[17]= vh3;
+    target->data[18]= q3;
+    return target;
+}
+
+chunk *jpeg_makeSsSeAhAl(int huffset1, int huffset2, int huffset3)
+{
+    chunk *target;
+    target= chunk_new_filled("\xFF\xDA\x00\x0C\x03\x01\x00\x02"
+        "\x00\x03\x00\x00\x3F\x00", 14);
+    target->data[6] = huffset1;
+    target->data[8] = huffset2;
+    target->data[10] = huffset3;
     return target;
 }
 
@@ -218,10 +257,16 @@ chunk *jpeg_make_quantization(jpeg_quantization_table *table, int number)
     for (c=z=0; z<8; z++)
         if (z%2)
             for (y=0,x=z; y<=z; x--,y++)
-                temp->data[5+c++] = (*table)[x+y*8];
+                {
+                temp->data[5+c] = (*table)[x+y*8];
+                temp->data[5+63-c++] = (*table)[63-x-y*8];
+                }
         else
             for (x=0,y=z; x<=z; x++,y--)
-                temp->data[5+c++] = (*table)[x+y*8];
+                {
+                temp->data[5+c] = (*table)[x+y*8];
+                temp->data[5+63-c++] = (*table)[63-x-y*8];
+                }
     return temp;
 }
 
@@ -233,14 +278,52 @@ jpeg_quantization_table *jpeg_quantization2table(chunk *qmarker)
     for (c=z=0; z<8; z++)
         if (z%2)
             for (y=0,x=z; y<=z; x--,y++)
+                {
+                (*table)[63-x-y*8] = qmarker->data[5+63-c];
                 (*table)[x+y*8] = qmarker->data[5+c++];
+                }
         else
             for (x=0,y=z; x<=z; x++,y--)
+                {
+                (*table)[63-x-y*8] = qmarker->data[5+63-c];
                 (*table)[x+y*8] = qmarker->data[5+c++];
+                }
     return table;
 }
 
+
+jpeg *jpeg_header(int width, int height,
+    char vh1, char vh2, char vh3,
+    char q1, char q2, char q3,
+    jpeg_quantization_table *quant1, jpeg_quantization_table *quant2,
+    char huffset1, char huffset2, char huffset3,
+    chunk *huff1, chunk *huff2, chunk *huff3, chunk *huff4)
+{
+    jpeg *temp;
+    jpeg_init(temp);
+    jpeg_add_chunk(temp, jpeg_make_start());
+    jpeg_add_chunk(temp, jpeg_make_quantization(quant1, 0));
+    jpeg_add_chunk(temp, jpeg_make_quantization(quant2, 1));
+    jpeg_add_chunk(temp, jpeg_make_SOFC(width,height, vh1,vh2,vh3, q1,q2,q3));
+    jpeg_add_chunk(temp, huff1);
+    jpeg_add_chunk(temp, huff2);
+    jpeg_add_chunk(temp, huff3);
+    jpeg_add_chunk(temp, huff4);
+    jpeg_add_chunk(temp, jpeg_makeSsSeAhAl(huffset1, huffset2, huffset3));
+}
+
 //#define TESTING_JPEG_C
+
+#ifndef TESTING_JPEG_C
+void jpeg_write(CameraFile *file, const char *filename, jpeg *myjpeg)
+{
+    int x;
+    CHECK_RESULT (gp_file_set_name (file, filename));
+    CHECK_RESULT (gp_file_set_mime_type(file, GP_MIME_JPEG));
+    for (x=0; x<myjpeg->count; x++)
+        CHECK_RESULT (gp_file_append(file, myjpeg->marker[x]->data, myjpeg->marker[x]->size));
+}
+#endif
 
 #ifdef TESTING_JPEG_C
 /* TEST CODE SECTION */
