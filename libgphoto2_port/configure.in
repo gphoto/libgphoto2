@@ -81,8 +81,10 @@ if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
 fi
 
 dnl Turn on debugging and catch GNU features incompatible with ANSI C.
-CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
-LDFLAGS="$LDFLAGS -g -Wall"
+if test "$ac_cv_prog_gcc" = "yes"; then
+	CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
+	LDFLAGS="$LDFLAGS -g -Wall"
+fi
 
 dnl Checks for header files.
 AC_HEADER_DIRENT
@@ -223,16 +225,16 @@ if $try_usb; then
                         LIBUSB_VER="`libusb-config --version`")
 		CPPFLAGS="$CPPFLAGS_save"
 	fi
-fi
 
-# This uses non-standard test syntax and will fail on most systems,
-# but it's just informational so any warning can be safely ignored.
-if test "$LIBUSB_VER" \< "0.1.5"; then
-	AC_MSG_WARN([
-*** You need atleast version 0.1.5 of the libusb library for USB support
+	# This 'test' call uses non-standard syntax and will fail on most
+	# systems, but it's just informational so any warning can be ignored.
+	if test "$LIBUSB_VER" \< "0.1.5"; then
+		AC_MSG_WARN([
+*** You need at least version 0.1.5 of the libusb library for USB support
 *** http://libusb.sourceforge.net/
 *** If you cannot find the appropriate version, try CVS
-])
+	])
+	fi
 fi
 
 AC_SUBST(USB_CFLAGS)
