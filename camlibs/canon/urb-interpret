@@ -70,6 +70,18 @@ my %control_subcmd = ( "0x00" => "Camera control init",
 		       "0x15" => "Do AE, AF, and AWB"
 		     );
 
+my %intcode = ( "00" => "unknown 00",
+		"01" => "unknown 01",
+		"02" => "unknown 02",
+		"05" => "unknown 05",
+		"08" => "Thumbnail descriptor",
+		"0a" => "Capture status",
+		"0c" => "Image descriptor",
+		"0e" => "EOS flash write success",
+		"0f" => "Capture complete",
+		"20" => "initialization"
+	      );
+
 my ($file, %urb, %urbdata, %urbpipe);
 
 if ($#ARGV == -1) {
@@ -207,6 +219,9 @@ foreach $file (@ARGV) {
 				    }
 				}
 			    }
+			} elsif ($urbdata{$current_urb}{pipe} eq "2" && hex($byte_offset) == 0x00 ) {
+			    # An interrupt read; let's save the data for later decoding
+			    $urbdata{$current_urb}{intdata} = $hex;
 			}
 
 			if ( $current_lines < 65 ) {
@@ -376,7 +391,14 @@ foreach $file (@ARGV) {
 		if ($op eq "READ") {
 		    if ( defined($length) ) {
 			if ( $pipe eq "2" ) {
-			    printf ( "\n*** URB $current_urb interrupt read 0x%02x bytes ***\n\n", $length );
+			    my $hex = $urbdata{$current_urb}{intdata};
+			    my @h = split ( " ", $hex );
+			    my $code = $h[4];
+			    if ( defined ( $intcode{$code} ) ) {
+				printf ( "\n*** URB $current_urb $intcode{$code} interrupt read 0x%02x bytes ***\n\n", $length );
+			    } else {
+				printf ( "\n*** URB $current_urb $code interrupt read 0x%02x bytes ***\n\n", $length );
+			    }
 			} elsif ($length == 0x40) {
 			    print("\n\n\n\n*** URB $current_urb possible CANON RESPONSE ***\n");
 			} elsif ($length == 0x01) {
