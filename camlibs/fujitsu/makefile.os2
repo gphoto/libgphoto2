@@ -1,0 +1,32 @@
+CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgpio -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H  -DEBUG
+CC=gcc
+
+all: start \
+  dll \
+  end
+
+start:
+  @echo ****
+  @echo   Entering:      $(MAKEDIR)
+  @echo   using CCFLAGS: $(CCFLAGS)
+  @echo ****
+
+end:
+  @echo ****
+  @echo   Done: $(MAKEDIR)
+  @echo ****
+
+dll: ..\gpfujits.dll
+
+library.o : library.c library.h
+   @$(CC) -o $@ library.c $(CCFLAGS)
+
+fujitsu.o : fujitsu.c
+   @$(CC) -o $@ fujitsu.c $(CCFLAGS)
+
+fujitsu.def: fujitsu.o
+   @copy fujitsu.df fujitsu.def
+   @emxexp $** >> fujitsu.def
+
+..\gpfujits.dll: fujitsu.o fujitsu.def library.o
+   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -Le:\emx\lib -lst\check -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldl ..\..\obj\interface.o -lpthreads -lpthrdrtl -lmt\c
