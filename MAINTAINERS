@@ -53,6 +53,9 @@ camlibs/sierra:
 camlibs/sonydscf55:
 	Raymond Penners <raymond@dotsphinx.com>
 
+camlibs/stv0680:
+	Carsten Weinholz <cweinholz@users.sourceforge.net>
+
 Bug reports on sourceforge:
 	Hubert Figuiere <hfiguiere@teaser.fr>
 
@@ -78,4 +81,5 @@ QtKam (?):
 SANE (?):
 	If configured with --with-gphoto2.
 	Pete Fales <psfales@lucent.com>
+
 
