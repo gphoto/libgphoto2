@@ -198,7 +198,8 @@ pdc700_send (Camera *camera, unsigned char *cmd, unsigned int cmd_len)
 static int
 pdc700_read (Camera *camera, unsigned char *cmd,
 	     unsigned char *b, unsigned int *b_len,
-	     unsigned char *status, unsigned char *sequence_number)
+	     unsigned char *status, unsigned char *sequence_number,
+	     GPContext *context)
 {
 	unsigned char header[3], checksum;
 	unsigned int i;
@@ -209,7 +210,7 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	 */
 	CR (gp_port_read (camera->port, header, 3));
 	if (header[0] != 0x40) {
-		gp_camera_set_error (camera, _("Received unexpected "
+		gp_context_error (context, _("Received unexpected "
 				     "header (%i)"), header[0]);
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
@@ -222,7 +223,7 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	 * The first byte indicates if this the response for our command.
 	 */
 	if (b[0] != (0x80 | cmd[3])) {
-		gp_camera_set_error (camera, _("Received unexpected response"));
+		gp_context_error (context, _("Received unexpected response"));
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 
@@ -242,7 +243,7 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	for (checksum = i = 0; i < *b_len - 1; i++)
 		checksum += b[i];
 	if (checksum != b[*b_len - 1]) {
-		gp_camera_set_error (camera, _("Checksum error"));
+		gp_context_error (context, _("Checksum error"));
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 
@@ -255,11 +256,11 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 
 static int
 pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
-		 unsigned char *buf, unsigned int *buf_len)
+		 unsigned char *buf, unsigned int *buf_len, GPContext *context)
 {
 	unsigned char status, b[2048], n;
 	unsigned int b_len, r;
-	unsigned int target = *buf_len;
+	unsigned int target = *buf_len, id;
 	int result;
 
 	status = PDC700_DONE;
@@ -267,12 +268,12 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 		if (status == PDC700_FAIL)
 			GP_DEBUG ("Retrying (%i)...", r);
 		CR (pdc700_send (camera, cmd, cmd_len));
-		CR (pdc700_read (camera, cmd, b, &b_len, &status, &n));
+		CR (pdc700_read (camera, cmd, b, &b_len, &status, &n, context));
 		if (status != PDC700_FAIL)
 			break;
 	}
 	if (status == PDC700_FAIL) {
-		gp_camera_set_error (camera, _("The camera did not accept the "
+		gp_context_error (context, _("The camera did not accept the "
 				     "command."));
 		return (GP_ERROR);
 	}
@@ -289,6 +290,8 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 
 		/* Get those other packets */
 		r = 0;
+		id = gp_context_progress_start (context, target,
+						_("Downloading..."));
 		while ((status != PDC700_LAST) && (r < RETRIES)) {
 			GP_DEBUG ("Fetching sequence %i...", n);
 			cmd[4] = status;
@@ -300,7 +303,7 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 			 * try again.
 			 */
 			result = pdc700_read (camera, cmd, b, &b_len,
-					      &status, &n);
+					      &status, &n, context);
 			if ((result < 0) || (status == PDC700_FAIL)) {
 				r++;
 				continue;
@@ -314,7 +317,7 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 			 * targeted
 			 */
 			if (*buf_len + b_len > target) {
-				gp_camera_set_error (camera, _("The camera "
+				gp_context_error (context, _("The camera "
 					"sent more bytes than expected (%i)"),
 					target);
 				return (GP_ERROR_CORRUPTED_DATA);
@@ -323,8 +326,7 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 			/* Copy over the data */
 			memcpy (buf + *buf_len, b, b_len);
 			*buf_len += b_len;
-			gp_camera_progress (camera,
-					    (float) *buf_len / (float) target);
+			gp_context_progress_update (context, id, *buf_len);
 		}
 
 		/* Check if anything went wrong */
@@ -335,13 +337,15 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 		cmd[4] = PDC700_LAST;
 		cmd[5] = n;
 		CR (pdc700_send (camera, cmd, 7));
+
+		gp_context_progress_stop (context, id);
 	}
 
 	return (GP_OK);
 }
 
 static int
-pdc700_baud (Camera *camera, int baud)
+pdc700_baud (Camera *camera, int baud, GPContext *context)
 {
 	unsigned char cmd[6];
 	unsigned char buf[2048];
@@ -367,26 +371,27 @@ pdc700_baud (Camera *camera, int baud)
 	default:
 		return (GP_ERROR_IO_SERIAL_SPEED);
 	}
-	CR (pdc700_transmit (camera, cmd, 6, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 6, buf, &buf_len, context));
 
 	return (GP_OK);
 }
 
 static int
-pdc700_init (Camera *camera)
+pdc700_init (Camera *camera, GPContext *context)
 {
 	int buf_len;
 	unsigned char cmd[5];
 	unsigned char buf[2048];
 
 	cmd[3] = PDC700_INIT;
-	CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len, context));
 
 	return (GP_OK);
 }
 
 static int
-pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info)
+pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info,
+		GPContext *context)
 {
 	int buf_len;
 	unsigned char cmd[7];
@@ -396,13 +401,13 @@ pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info)
 	cmd[3] = PDC700_PICINFO;
 	cmd[4] = n;
 	cmd[5] = n >> 8;
-	CR (pdc700_transmit (camera, cmd, 7, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 7, buf, &buf_len, context));
 
 	/* We don't know about the meaning of buf[0-1] */
 
 	/* Check if this information is about the right picture */
 	if (n != (buf[2] | (buf[3] << 8))) {
-		gp_camera_set_error (camera, _("Requested information about "
+		gp_context_error (context, _("Requested information about "
 			"picture %i (= 0x%x), but got information about "
 			"picture %i back"), n, cmd[4] | (cmd[5] << 8),
 			buf[2] | (buf[3] << 8));
@@ -440,7 +445,7 @@ pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info)
 }
 
 static int
-pdc700_config (Camera *camera, PDCConf conf, unsigned char value)
+pdc700_config (Camera *camera, PDCConf conf, unsigned char value, GPContext *context)
 {
 	unsigned char cmd[12];
 	unsigned char buf[512];
@@ -450,21 +455,21 @@ pdc700_config (Camera *camera, PDCConf conf, unsigned char value)
 	cmd[4] = conf;
 	cmd[5] = value;
 
-	CR (pdc700_transmit (camera, cmd, 12, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 12, buf, &buf_len, context));
 
 	return GP_OK;
 }
 
 
 static int
-pdc700_info (Camera *camera, PDCInfo *info)
+pdc700_info (Camera *camera, PDCInfo *info, GPContext *context)
 {
 	int buf_len;
 	unsigned char buf[2048];
 	unsigned char cmd[5];
 
 	cmd[3] = PDC700_INFO;
-	CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len, context));
 
 	/*
 	 * buf[0-1,3]: We don't know. The following has been seen:
@@ -569,7 +574,7 @@ pdc700_info (Camera *camera, PDCInfo *info)
 }
 
 static int
-pdc700_capture (Camera *camera)
+pdc700_capture (Camera *camera, GPContext *context)
 {
         unsigned char cmd[5], buf[1024];
         unsigned int buf_len;
@@ -580,7 +585,7 @@ pdc700_capture (Camera *camera)
         cmd[3] = PDC700_CAPTURE;
 	cmd[4] = 0;
 
-        CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
+        CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len, context));
 
 	/*
 	 * This is rather hackish.  The camera needs a little time to recover
@@ -589,7 +594,7 @@ pdc700_capture (Camera *camera)
 	 * I'm leaving this ugly-but-works junk here for now.
 	 */
 	for (try = 0; try < 10; try++)
-	  if ((r = pdc700_info(camera, &info)) == GP_OK)
+	  if ((r = pdc700_info(camera, &info, context)) == GP_OK)
 	    break;
 	
         return r;
@@ -597,14 +602,15 @@ pdc700_capture (Camera *camera)
 
 static int
 pdc700_pic (Camera *camera, unsigned int n,
-	    unsigned char **data, unsigned int *size, unsigned char thumb)
+	    unsigned char **data, unsigned int *size, unsigned char thumb,
+	    GPContext *context)
 {
 	unsigned char cmd[8];
 	int r;
 	PDCPicInfo info;
 
 	/* Picture size? Allocate the memory */
-	CR (pdc700_picinfo (camera, n, &info));
+	CR (pdc700_picinfo (camera, n, &info, context));
 	*size = thumb ? info.thumb_size : info.pic_size;
 	*data = malloc (sizeof (char) * *size);
 	if (!*data)
@@ -616,7 +622,7 @@ pdc700_pic (Camera *camera, unsigned int n,
 	cmd[4] = 0; /* No idea what that byte is for */
 	cmd[5] = n;
 	cmd[6] = n >> 8;
-	r = pdc700_transmit (camera, cmd, 8, *data, size);
+	r = pdc700_transmit (camera, cmd, 8, *data, size, context);
 	if (r < 0) {
 		free (*data);
 		return (r);
@@ -626,14 +632,14 @@ pdc700_pic (Camera *camera, unsigned int n,
 }
 
 static int
-pdc700_delete (Camera *camera, unsigned int n)
+pdc700_delete (Camera *camera, unsigned int n, GPContext *context)
 {
 	unsigned char cmd[6], buf[1024];
 	unsigned int buf_len;
 
 	cmd[3] = PDC700_DEL;
 	cmd[4] = n;
-	CR (pdc700_transmit (camera, cmd, 6, buf, &buf_len));
+	CR (pdc700_transmit (camera, cmd, 6, buf, &buf_len, context));
 
 	/*
 	 * We get three bytes back but don't know the meaning of those.
@@ -730,7 +736,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	int count;
 	char buf[1024];
 
-	CR (pdc700_capture (camera));
+	CR (pdc700_capture (camera, context));
 
 	/*
 	 * We don't get any info back. However, we need to tell the
@@ -758,7 +764,7 @@ del_file_func (CameraFilesystem *fs, const char *folder, const char *file,
 	CR (n = gp_filesystem_number (fs, folder, file, context));
 	n++;
 
-	CR (pdc700_delete (camera, n));
+	CR (pdc700_delete (camera, n, context));
 
 	return (GP_OK);
 }
@@ -783,7 +789,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* Get the file */
 	CR (pdc700_pic (camera, n + 1, &data, &size, 
-			(type == GP_FILE_TYPE_NORMAL) ? 0 : 1));
+			(type == GP_FILE_TYPE_NORMAL) ? 0 : 1, context));
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 
@@ -835,7 +841,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		} else {
 			free (data);
-			gp_camera_set_error (camera, _("%i bytes of an "
+			gp_context_error (context, _("%i bytes of an "
 				"unknown image format have been received. "
 				"Please write <gphoto-devel@gphoto.org> for "
 				"assistance."), size);
@@ -898,7 +904,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	time_t time;
 	struct tm tm;
 
-	CR (pdc700_info (camera, &info));
+	CR (pdc700_info (camera, &info, context));
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
 	gp_widget_new (GP_WIDGET_SECTION, _("Settings"), &section);
@@ -967,30 +973,30 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	if ((i = which_radio_button (window, IMAGE_QUALITY, quality)) >= 0)
 		CR (pdc700_config (camera, PDC_CONF_QUALITY,
-				   (unsigned char) i));
+				   (unsigned char) i, context));
 
 	if ((i = which_radio_button (window, FLASH_SETTING, flash)) >= 0)
 		CR (pdc700_config (camera, PDC_CONF_FLASH,
-				   (unsigned char) i));
+				   (unsigned char) i, context));
 
 	if ((i = which_radio_button (window, LCD_STATE, bool)) >= 0)
 		CR (pdc700_config (camera, PDC_CONF_LCD,
-				   (unsigned char) i));
+				   (unsigned char) i, context));
 
 	if ((i = which_radio_button (window, SELF_TIMER, bool)) >= 0)
 		CR (pdc700_config (camera, PDC_CONF_TIMER,
-				   (unsigned char) i));
+				   (unsigned char) i, context));
 
 	if ((i = which_radio_button (window, SHOW_CAPTIONS, bool)) >= 0)
 		CR (pdc700_config (camera, PDC_CONF_CAPTION,
-				   (unsigned char) i));
+				   (unsigned char) i, context));
 
 	/* Auto poweroff */
 	r = gp_widget_get_child_by_label (window, AUTO_POWEROFF, &child);
 	if ((r == GP_OK) && gp_widget_changed (child)) {
 		gp_widget_get_value (child, &range);
 		CR (pdc700_config (camera, PDC_CONF_POWEROFF,
-				   (unsigned char) range));
+				   (unsigned char) range, context));
 	}
 
 	/* Date and time */
@@ -1008,7 +1014,7 @@ camera_summary (Camera *camera, CameraText *about, GPContext *context)
 {
 	PDCInfo info;
 
-	CR (pdc700_info (camera, &info));
+	CR (pdc700_info (camera, &info, context));
 
 	sprintf (about->text, _(
 		"Date: %i/%02i/%02i %02i:%02i:%02i\n"
@@ -1051,7 +1057,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	PDCInfo info;
 
 	/* Fill the list */
-	CR (pdc700_info (camera, &info));
+	CR (pdc700_info (camera, &info, context));
 	gp_list_populate (list, "PDC700%04i.jpg", info.num_taken);
 
 	return (GP_OK);
@@ -1068,7 +1074,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	/* Get the picture number from the CameraFilesystem */
 	CR (n = gp_filesystem_number (fs, folder, file, context));
 
-	CR (pdc700_picinfo (camera, n + 1, &pic_info));
+	CR (pdc700_picinfo (camera, n + 1, &pic_info, context));
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	strcpy (info->file.type, GP_MIME_JPEG);
@@ -1110,7 +1116,7 @@ camera_init (Camera *camera, GPContext *context)
 		for (i = 0; i < 5; i++) {
 			settings.serial.speed = speeds[i];
 			CR (gp_port_set_settings (camera->port, settings));
-			result = pdc700_init (camera);
+			result = pdc700_init (camera, context);
 			if (result == GP_OK)
 				break;
 		}
@@ -1119,7 +1125,7 @@ camera_init (Camera *camera, GPContext *context)
 
 		/* Set the speed to the highest one */
 		if (speeds[i] < 115200) {
-			CR (pdc700_baud (camera, 115200));
+			CR (pdc700_baud (camera, 115200, context));
 			settings.serial.speed = 115200;
 			CR (gp_port_set_settings (camera->port, settings));
 		}
@@ -1127,10 +1133,10 @@ camera_init (Camera *camera, GPContext *context)
 	case GP_PORT_USB:
 		/* Use the defaults the core parsed */
 		CR (gp_port_set_settings (camera->port, settings));
-		CR (pdc700_init (camera));
+		CR (pdc700_init (camera, context));
 		break;
 	default:
-		gp_camera_set_error (camera, _("The requested port type (%i) "
+		gp_context_error (context, _("The requested port type (%i) "
 				     "is not supported by this driver."),
 				     camera->port->type);
 		return (GP_ERROR_NOT_SUPPORTED);
