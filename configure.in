@@ -172,26 +172,42 @@ dnl initialize packaging RPMs
 dnl ************************************************************
 GPKG_CHECK_RPM()dnl
 
-dnl ***
-dnl CDK
-dnl ***
+dnl ---------------------------------------------------------------------------
+dnl CDK: If you would like to access the camera's configuration using
+dnl      gphoto2, the command-line frontend, you need this. Old versions
+dnl      of CDK don't include fscale, therefore check for it here.
+dnl ---------------------------------------------------------------------------
 cdk_msg=no
 try_cdk=true
 have_cdk=false
-AC_ARG_WITH(cdk, [  --without-cdk           Don't use cdk],
+AC_ARG_WITH(cdk,        [  --without-cdk            Don't use cdk],
 	if test x$withval = xno; then
 		try_cdk=false
 	fi
 )
+cdk_prefix=$prefix
+AC_ARG_WITH(cdk-prefix, [  --with-cdk-prefix=PREFIX Location of cdk],
+	cdk_prefix="$withval")
 if $try_cdk; then
-	AC_CHECK_HEADER(cdk/cdk.h,
+	CPPFLAGS_save="$CPPFLAGS"
+	CPPFLAGS="-I$cdk_prefix/include -I$cdk_prefix/include/cdk $CPPFLAGS"
+	AC_CHECK_HEADER(cdk.h, [
 		have_cdk=true
-		cdk_msg=yes
+		CDK_CFLAGS="-I$cdk_prefix/include"
+		CDK_LIBS="-L$cdk_prefix/lib -lcdk -lncurses"
 		AC_DEFINE(HAVE_CDK)
-		CDK_LIBS="-lcdk -lncurses"
+		LDFLAGS_save="$LDFLAGS"
+		LDFLAGS="$CDK_LIBS"
+		AC_CHECK_LIB(cdk, newCDKFScale, [cdk_msg="yes"], [
+			AC_DEFINE(HAVE_CDK_20010421)
+			cdk_msg="yes (but without fscale)"]
+		)
+		LDFLAGS="$LDFLAGS_save"]
 	)
+	CPPFLAGS="$CPPFLAGS_save"
 fi
 AM_CONDITIONAL(HAVE_CDK, $have_cdk)
+AC_SUBST(CDK_CFLAGS)
 AC_SUBST(CDK_LIBS)
 
 dnl ---------------------------------------------------------------------------

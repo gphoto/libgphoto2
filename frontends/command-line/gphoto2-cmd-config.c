@@ -384,9 +384,9 @@ show_toggle (CmdConfig *cmd_config, CameraWidget *toggle)
 
 	return (GP_OK);
 }
-	
+
 static int
-show_range (CmdConfig *cmd_config, CameraWidget *range)
+show_range_int (CmdConfig *cmd_config, CameraWidget *range)
 {
 	CDKSLIDER *slider = NULL;
 	float value, min, max, increment;
@@ -416,6 +416,68 @@ show_range (CmdConfig *cmd_config, CameraWidget *range)
 	
 	destroyCDKSlider (slider);
 	return (GP_OK);
+}
+
+static int
+show_range_float (CmdConfig *cmd_config, CameraWidget *range)
+{
+#ifdef HAVE_CDK_20010421
+	return (show_range_int (cmd_config, range));
+#else
+        CDKFSCALE *fscale = NULL;
+        float value, min, max, increment;
+        const char *label;
+        char title[1024];
+        float selection;
+	int digits;
+
+        CHECK (gp_widget_get_value (range, &value));
+        CHECK (gp_widget_get_label (range, &label));
+        snprintf (title, sizeof (title), "<C></5>%s", label);
+        CHECK (gp_widget_get_range (range, &min, &max, &increment));
+
+	/* Ugly check for digits follows. */
+	if ((int) (increment * 100.) % 10)
+		digits = 1;
+	else if ((int) (increment * 1000.) % 10)
+		digits = 2;
+	else if ((int) (increment * 10000.) % 10)
+		digits = 3;
+	else
+		digits = 4;
+
+        fscale = newCDKFScale (cmd_config->screen, CENTER, CENTER, title,
+                               _("Value: "), '-',
+                               50, value, min, max,
+                               increment, increment * 10, digits, TRUE,
+                               FALSE);
+        if (!fscale)
+                return (GP_ERROR);
+
+	selection = activateCDKFScale (fscale, 0);
+        if (fscale->exitType == vNORMAL) {
+		value = selection;
+                gp_widget_set_value (range, &value);
+                set_config (cmd_config);
+        }
+
+        destroyCDKFScale (fscale);
+        return (GP_OK);
+#endif
+}
+
+static int
+show_range (CmdConfig *cmd_config, CameraWidget *range)
+{
+	float min, max, increment;
+
+	CHECK (gp_widget_get_range (range, &min, &max, &increment));
+
+	/* Pretty ugly check for number of digits follows. */
+	if ((int) (increment * 10.) % 10)
+		return (show_range_int (cmd_config, range));
+	else
+		return (show_range_float (cmd_config, range));
 }
 
 static int

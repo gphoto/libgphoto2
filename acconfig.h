@@ -14,6 +14,8 @@
 #undef HAVE_LTDL
 
 #undef HAVE_CDK
+#undef HAVE_CDK_20010421
+
 #undef HAVE_AA
 #undef HAVE_JPEG
 

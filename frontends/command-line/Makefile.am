@@ -10,6 +10,7 @@ INCLUDES =						\
 	-DGPHOTO2_LOCALEDIR=\""$(datadir)/locale"\"	\
 	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port	\
 	-I$(top_srcdir)/libgphoto2			\
+	$(CDK_CFLAGS)					\
 	$(AA_CFLAGS)
 
 if HAVE_CDK
@@ -40,8 +41,9 @@ gphoto2_SOURCES = 		\
 gphoto2_LDFLAGS = -export-dynamic
 
 gphoto2_LDADD =						\
+	$(CDK_LIBS)					\
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la\
 	$(top_builddir)/libgphoto2/libgphoto2.la	\
-	$(CDK_LIBS) $(AA_LIBS)				\
+	$(AA_LIBS)					\
 	$(JPEG_LIBS) 					\
 	$(INTLLIBS)

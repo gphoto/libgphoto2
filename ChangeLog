@@ -1,3 +1,11 @@
+2001-12-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Give users the possibility to specify the location
+	  of cdk
+	* frontends/command-line/gphoto2-cmd-config.c: Use fscale if
+	  available
+	* frontends/command-line/main.c: #if -> #ifdef
+
 2001-12-31  Marcus Meissner <marcus@jet.franken.de>
 	
 	* libgphoto2/gphoto2-abilities-list.c (gp_abilitities_list_detect*):

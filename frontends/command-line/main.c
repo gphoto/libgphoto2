@@ -22,7 +22,7 @@
 #include "range.h"
 #include "shell.h"
 
-#if HAVE_CDK
+#ifdef HAVE_CDK
 #include "gphoto2-cmd-config.h"
 #endif
 
@@ -86,7 +86,7 @@ static int set_globals (void);
 /*    Use the OPTION_CALLBACK(function) macro.                          */
 
 OPTION_CALLBACK(abilities);
-#if HAVE_CDK
+#ifdef HAVE_CDK
 OPTION_CALLBACK(config);
 #endif
 OPTION_CALLBACK(help);
@@ -188,7 +188,7 @@ Option option[] = {
 {"" , "capture-image",  "",  N_("Capture an image"),        capture_image,   0},
 {"" , "capture-movie",  "",  N_("Capture a movie "),        capture_movie,   0},
 {"" , "capture-sound",  "",  N_("Capture an audio clip"),   capture_sound,   0},
-#if HAVE_CDK
+#ifdef HAVE_CDK
 {"" , "config",		"",  N_("Configure"),               config,          0},
 #endif
 {"",  "summary",        "",  N_("Summary of camera status"), summary,        0},
@@ -602,7 +602,7 @@ OPTION_CALLBACK (list_folders)
         return for_each_subfolder (glob_folder, print_folder, NULL, glob_recurse);
 }
 
-#if HAVE_CDK
+#ifdef HAVE_CDK
 OPTION_CALLBACK(config)
 {
 	CHECK_RESULT (set_globals ());
