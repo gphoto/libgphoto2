@@ -301,6 +301,8 @@ int camera_summary (Camera *camera, CameraText *summary) {
 
 /*	DC120Data *dd = camera->camlib_data; */
 
+	strcpy(summary->text, "No summary information yet");
+
 	return (GP_OK);
 }
 
