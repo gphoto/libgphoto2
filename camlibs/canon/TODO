@@ -1,10 +1,31 @@
+========================================================================
+List of work that still has to be done on this driver:
+========================================================================
+
+ - switch the camera keys and buttons off while connected
+
+ - make misc. models work on A/C adapter (e.g. G1, 90 IS)
+
+ - make file upload work
+
+ - make downloading raw images work
+
+ - FOLDERS : folders are not supported on the A50 (users have no control on
+   the directory where images are stored on the compact flash) so for the
+   moment the internal directory structure is hidden to gphoto2.
+
+ - A5 support is completely broken, with the new filename based API, the 
+   directory caching mecanism must be completely revisited.
+
+========================================================================
+Old stuff that is already done was moved down a bit by hun:
+========================================================================
+
 08/08/2000 - Notes by Philippe Marzouk <philm@users.sourceforge.net>
  - The driver must be changed to be able to talk to various cameras
    via the Camera *camera struct with each function call (08/15/2000 - done).
  - USB support is broken as libgpio got changed a bit. I can't test it as
    I don't have USB :-( (08/20/2000 - done).
- - A5 support is completely broken, with the new filename based API, the 
-   directory caching mecanism must be completely revisited.
  - Uploading : I'm working on it but there are problems. I will soon 
    include the preliminary support I got for people with S10 and S20 to test
    as it seems easier to get them working (s10sh does it).
@@ -16,6 +37,3 @@
    revision and Compact flash space used/available.
    I don't know if anything else is needed (08/15/2000 - mostly done).
  - Starting a Changelog file (done).
- - FOLDERS : folders are not supported on the A50 (users have no control on
-   the directory where images are stored on the compact flash) so for the
-   moment the internal directory structure is hidden to gphoto2.
