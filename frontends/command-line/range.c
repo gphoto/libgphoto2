@@ -84,13 +84,17 @@ str_grab_nat(const char *str, int *pos)
 	char-s set to 0 (use memset() or bzero()).
 */
 		
-int
-parse_range (const char *range, char *index, GPContext *context)
+static int
+parse_range_rec (const char *range, unsigned int start, char *index,
+		 GPContext *context)
 {
 	int	i = 0, l = -1, r = -1, j;
-	
+	char buf[1024];
+
 	do {
-		switch (range[i]) {
+		strncpy (buf, range, sizeof (buf));
+		strncat (buf, "\n", sizeof (buf));
+		switch (range[start + i]) {
 		case '0':
 		case '1':
 		case '2':
@@ -101,39 +105,63 @@ parse_range (const char *range, char *index, GPContext *context)
 		case '7':
 		case '8':
 		case '9':
-			l = str_grab_nat (range, &i);
+			for (j = 0; j < start + i; j++)
+				strncat (buf, " ", sizeof (buf));
+			l = str_grab_nat (range + start, &i);
+			for (; j < start + i; j++)
+				strncat (buf, "^", sizeof (buf));
 			if (l <= 0) {
-				gp_context_error (context,
-					_("Image IDs must be greater "
-					"than zero. You specified "
-					"%i."), l);
+				gp_context_error (context, _("%s\n"
+					"Image IDs must be a number greater "
+					"than zero."), buf);
 				return (GP_ERROR_BAD_PARAMETERS);
 			}
 			if (l > MAX_IMAGE_NUMBER) {
-				gp_context_error (context,
-					_("Image ID %i too high."), l);
+				gp_context_error (context, _("%s\n"
+					"Image ID %i too high."), buf, l);
 				return (GP_ERROR_BAD_PARAMETERS);
 			}
 			break;
 		
 		case '-' :
-			if (i == 0) {
-				gp_context_error (context,
-					_("Range begins with '-'."));
+
+			/* If we already have r, then something is wrong. */
+			if (r > 0) {
+				for (j = 0; j < start + i; j++)
+					strncat (buf, " ", sizeof (buf));
+				strncat (buf, "^", sizeof (buf));
+				gp_context_error (context, _("%s\n"
+					"Ranges must be separated by ','."),
+					buf);
 				return (GP_ERROR_BAD_PARAMETERS);
 			}
-			i++;		
-			r = str_grab_nat (range, &i);
+
+			/* If we have not l, then something is wrong, too. */
+			if (l <= 0) {
+				for (j = 0; j < start + i; j++)
+					strncat (buf, " ", sizeof (buf));
+				strncat (buf, "^", sizeof (buf));
+				gp_context_error (context, _("%s\n"
+					"Ranges need to start with "
+					"a number."), buf);
+				return (GP_ERROR_BAD_PARAMETERS);
+			}
+
+			i++;
+			for (j = 0; j < start + i; j++)
+				strncat (buf, " ", sizeof (buf));
+			r = str_grab_nat (range + start, &i);
+			for (; j < start + i; j++)
+				strncat (buf, "^", sizeof (buf));
 			if (r <= 0) {
-				gp_context_error (context,
-					_("Image IDs must be greater "
-					"than zero. You specified "
-					"%i or none."), r);
+				gp_context_error (context, _("%s\n"
+					"Image IDs must be a number greater "
+					"than zero."), buf);
 				return (GP_ERROR_BAD_PARAMETERS);
 			}
 			if (r > MAX_IMAGE_NUMBER) {
-				gp_context_error (context,
-					_("Image ID %i too high."), r);
+				gp_context_error (context, _("%s\n"
+					"Image ID %i too high."), buf, r);
 				return (GP_ERROR_BAD_PARAMETERS);
 			}
 			break;
@@ -141,39 +169,51 @@ parse_range (const char *range, char *index, GPContext *context)
 		case '\0' :
 			break; 
 			
-		case ',' :
-			break; 
-	
 		default :
-			gp_context_error (context, _("Unexpected "
-				"character '%c'."), range[i]);
+			for (j = 0; j < start + i; j++)
+				strncat (buf, " ", sizeof (buf));
+			strncat (buf, "^", sizeof (buf));
+			gp_context_error (context, _("%s\n"
+				"Unexpected "
+				"character '%c'."), buf, range[start + i]);
 			return (GP_ERROR_BAD_PARAMETERS);
 		}
-	} while (range[i] != '\0' && range[i] != ',');	/* scan range till its end or ',' */
-	
-	if (i == 0) {
+	} while ((range[start + i] != '\0') &&
+		 (range[start + i] != ','));
 
-		/* Empty range or ',' at the beginning. */
-		gp_context_error (context, _("Bad range."));
-		return (GP_ERROR_BAD_PARAMETERS);
+	if (i) {
+		if (0 < r) { /* update range of bytes */ 
+			if (r < l) {
+				strncpy (buf, range, sizeof (buf));
+				strncat (buf, "\n", sizeof (buf));
+				for (j = 0; j < start; j++)
+					strncat (buf, " ", sizeof (buf));
+				for (; j < start + i; j++)
+					strncat (buf, "^", sizeof (buf));
+				gp_context_error (context, _("%s\n"
+					"Decreasing ranges "
+					"are not allowed. You specified a "
+					"range from %i to %i."), buf, l, r);
+				return (GP_ERROR_BAD_PARAMETERS);
+			}
+
+			for (j = l; j <= r; j++)
+				index[j - 1] ^= 1; /* convert to 0-based numbering */
+		} else  /* update single byte */
+			index[l - 1] ^= 1; /* convert to 0-based numbering */
 	}
-	
-	if (0 < r) { /* update range of bytes */ 
-		if (r < l) {
-			gp_context_error (context, _("Decreasing ranges "
-				"are not allowed. You specified a range from "
-				"%i to %i."), l, r);
-			return (GP_ERROR_BAD_PARAMETERS);
-		}
 
-		for (j = l; j <= r; j++)
-			index[j - 1] ^= 1; /* convert to 0-based numbering */
-	} 
-	else  /* update single byte */
-		index[l - 1] ^= 1; /* convert to 0-based numbering */
-
-	if (range[i] == ',') 
-		return parse_range (&range[i + 1], index, context); /* parse remainder */
+	/*
+	 * If there is another range, parse it.
+	 */
+	if (range[start + i] == ',') 
+		return parse_range_rec (range, start + i + 1, index, context);
 	
 	return (GP_OK);
+}
+
+int
+parse_range (const char *range, char *index, GPContext *context)
+{
+	return (parse_range_rec (range, 0, index, context));
 }
