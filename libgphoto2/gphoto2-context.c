@@ -22,6 +22,7 @@
 #include "gphoto2-context.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include <gphoto2-port-log.h>
 
