@@ -579,15 +579,17 @@ int
 gp_camera_file_get_info (Camera *camera, const char *folder, 
 			 const char *file, CameraFileInfo *info)
 {
+	int result = GP_OK;
+
         if ((camera == NULL) || (info == NULL) || 
 	    (folder == NULL) || (file == NULL))
                 return (GP_ERROR_BAD_PARAMETERS);
 
-        memset(info, 0, sizeof(CameraFileInfo));
+	memset (info, 0, sizeof (CameraFileInfo));
 
 	/* If the camera doesn't support file_info_get, we simply get	*/
 	/* the preview and the file and look for ourselves...		*/
-	if (camera->functions->file_get_info == NULL) {
+	if (!camera->functions->file_get_info) {
 		CameraFile *cfile;
 
 		cfile = gp_file_new ();
@@ -614,10 +616,16 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 
 		gp_file_unref (cfile);
 
-		return (GP_OK);
-	}
+	} else
+		result = camera->functions->file_get_info (camera, folder,
+							   file, info);
 
-        return (camera->functions->file_get_info (camera, folder, file, info));
+	/* We don't trust the camera libraries */
+	info->file.fields |= GP_FILE_INFO_NAME;
+	strcpy (info->file.name, file);
+	info->preview.fields ^= GP_FILE_INFO_NAME; 
+
+	return (result);
 }
 
 int
