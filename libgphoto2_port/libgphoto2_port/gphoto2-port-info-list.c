@@ -467,7 +467,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 #else
 		result = regexec (&pattern, path, 1, &match, 0);
 		regfree (&pattern);
-		if (!result) {
+		if (result) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 				"regexec failed");
 			continue;
