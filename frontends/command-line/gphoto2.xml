@@ -513,6 +513,28 @@
 	      </varlistentry>
 
 	      <varlistentry>
+		<term>show-info</term>
+		<listitem>
+		  <para>Show information.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>delete</term>
+		<listitem>
+		  <para>Delete a file or directory.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>show-exif</term>
+		<listitem>
+		  <para>Show EXIF information (only if compiled with
+		    EXIF support).</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
 		<term>help, ?</term>
 		<listitem>
 		  <para>Displays command usage.</para>
