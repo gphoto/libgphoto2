@@ -696,6 +696,29 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	return (GP_OK);
 }
 
+static inline int
+handle_to_n (uint32_t handle, Camera *camera)
+{
+	int i;
+	for (i = 0; i < camera->pl->params.handles.n; i++)
+		if (camera->pl->params.handles.Handler[i]==handle) return i;
+	/* else not found */
+	return (PTP_HANDLER_SPECIAL);
+}
+
+static inline int
+storage_handle_to_n (uint32_t storage, uint32_t handle, Camera *camera)
+{
+	int i;
+	for (i = 0; i < camera->pl->params.handles.n; i++)
+		if (	(camera->pl->params.handles.Handler[i] == handle) &&
+			(camera->pl->params.objectinfo[i].StorageID == storage)
+		)
+			return i;
+	/* else not found */
+	return (PTP_HANDLER_SPECIAL);
+}
+
 /* add new object to internal driver structures. issued when creating
 folder, uploading objects, or captured images. */
 static int
@@ -724,10 +747,31 @@ add_object (Camera *camera, uint32_t handle, GPContext *context)
 }
 
 static int
+get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char *folder) {
+	int i, ret;
+
+	if (handle == PTP_HANDLER_ROOT)
+		return GP_OK;
+
+	i = storage_handle_to_n (storage, handle, camera);
+	if (i == PTP_HANDLER_SPECIAL)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	ret = get_folder_from_handle (camera, storage, camera->pl->params.objectinfo[i].ParentObject, folder);
+	if (ret != GP_OK)
+		return ret;
+
+	strcat (folder, camera->pl->params.objectinfo[i].Filename);
+	strcat (folder, "/");
+	return (GP_OK);
+}
+
+static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
 	PTPContainer event;
+	uint32_t	newobject = 0x0;
 
 	if (type != GP_CAPTURE_IMAGE) {
 		return GP_ERROR_NOT_SUPPORTED;
@@ -776,6 +820,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	while (event.Code==PTP_EC_ObjectAdded) {
 		/* add newly created object to internal structures */
 		add_object (camera, event.Param1, context);
+		newobject = event.Param1;
 
 		/* I hate workarounds! Nikon is not 100% PTP compatible here! */
 		if (camera->pl->params.deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) 
@@ -792,21 +837,35 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 	gp_context_error (context,_("Received event 0x%04x"),event.Code);
 
-	err:
+err:
 	/* we're not setting *path on error! */
 	return GP_ERROR;
 
-	out:
-	/* we gonna set the *path now... */
+out:
+	/* clear path, so we get defined results even without object info */
+	path->name[0]='\0';
+	path->folder[0]='\0';
 
-	/*
-        CR (gp_filesystem_append (camera->fs, path->folder,
-		path->name, context));
+	if (newobject != 0) {
+		int i;
 
-	*/
+		for (i = camera->pl->params.handles.n ; i--; ) {
+			PTPObjectInfo	*obinfo;
 
+			if (camera->pl->params.handles.Handler[i] != newobject)
+				continue;
+			obinfo = &camera->pl->params.objectinfo[i];
+			strcpy  (path->name,  obinfo->Filename);
+			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
+			get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
+			/* delete last / or we get confused later. */
+			path->folder[ strlen(path->folder)-1 ] = '\0';
+			CR (gp_filesystem_append (camera->fs, path->folder,
+				path->name, context));
+			break;
+		}
+	}
 	return GP_OK;
-
 }
 
 static void
@@ -1521,17 +1580,6 @@ move_object_by_number (Camera *camera, uint32_t parent, int n)
 	camera->pl->params.objectinfo[n].ParentObject=parent;
 }
 #endif
-
-static inline int
-handle_to_n (uint32_t handle, Camera *camera)
-{
-	int i;
-	for (i = 0; i < camera->pl->params.handles.n; i++)
-		if (camera->pl->params.handles.Handler[i]==handle) return i;
-	/* else not found */
-	return (PTP_HANDLER_SPECIAL);
-}
-
 
 static uint32_t
 find_child (const char *file, uint32_t storage, uint32_t handle, Camera *camera)
