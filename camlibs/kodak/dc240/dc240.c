@@ -2,8 +2,6 @@
   Kodak DC 240/280/3400/5000 driver.
   Maintainer:
        Hubert Figuiere <hfiguiere@teaser.fr>
-
-  $Id$
  */
 
 #include <config.h>

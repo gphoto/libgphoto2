@@ -5,8 +5,6 @@
  * Additions 2000 by Philippe Marzouk and Edouard Lafargue
  * USB support, 2000, by Mikael Nyström
  *
- * $Id$
- *
  * This file includes both USB and serial support for the cameras
  * manufactured by Canon. These comprise all (or at least almost all)
  * of the digital models of the IXUS, PowerShot and EOS series.
