@@ -56,7 +56,7 @@ typedef struct _PTPReq PTPReq;
 // Operation Codes
 
 #define PTP_OC_Undefined                0x1000
-#define PTP_OC_GetDevInfo               0x1001
+#define PTP_OC_GetDeviceInfo            0x1001
 #define PTP_OC_OpenSession              0x1002
 #define PTP_OC_CloseSession             0x1003
 #define PTP_OC_GetStorageIDs            0x1004
@@ -361,6 +361,8 @@ typedef struct _PTPParams PTPParams;
 
 uint16_t ptp_event_check	(PTPParams* params, PTPEvent* event);
 uint16_t ptp_event_wait		(PTPParams* params, PTPEvent* event);
+
+uint16_t ptp_getdeviceinfo	(PTPParams* params, PTPDeviceInfo* deviceinfo);
 
 uint16_t ptp_opensession	(PTPParams *params, uint32_t session);
 uint16_t ptp_closesession	(PTPParams *params);

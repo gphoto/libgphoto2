@@ -287,20 +287,35 @@ ptp_event_wait (PTPParams* params, PTPEvent* event) {
 	return PTP_RC_OK;
 }
 
-// PTP operation functions
-
-#if 0
-// Do GetDevInfo (we may use it for some camera_about)
-uint16_t
-ptp_getdevinfo (PTPParams* params, PTPDeviceInfo* devinfo)
-{
-}
-#endif
-
 /**
+ * PTP operation functions
+ *
  * all ptp_ functions should take integer parameters
  * in host byte order!
  **/
+
+
+/**
+ * ptp_getdeviceinfo:
+ * params:	PTPParams*
+ *
+ * Gets device info dataset and fills deviceinfo structure.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
+{
+	uint16_t ret;
+	PTPReq di;
+	PTPReq req;
+
+	ret=ptp_transaction(params, &req, PTP_OC_GetDeviceInfo,
+		PTP_DP_GETDATA | PTP_RQ_PARAM0, PTP_REQ_DATALEN, &di);
+	ptp_unpack_DI(params, &di, deviceinfo);
+	return ret;
+}
+
 
 /**
  * ptp_opensession:
