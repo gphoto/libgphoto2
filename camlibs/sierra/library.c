@@ -1120,14 +1120,17 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 	char packet[4096];
 	char type;
 	long int x=0;
-	int seq=0, size=0, do_percent;
+	int seq=0, size=0; 
+#ifdef GTKAM_RECURSION_FIXED
+	int do_percent;
 	unsigned int id = 0;
+#endif
 
 	GP_DEBUG ("sierra_set_string_register: reg %i, value '%s'", reg, s);
 
+#ifdef GTKAM_RECURSION_FIXED
 	/* Make use of the progress bar when the packet is "large enough" */
 	if (length > MAX_DATA_FIELD_LENGTH) {
-#ifdef RECURSION_REMOVED
 		do_percent = 1;
 		/*
 		 * This code can lead to recursive calls in gtkam - the
@@ -1139,10 +1142,10 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 		 */
 		id = gp_context_progress_start (context, length,
 						_("Sending data..."));
-#endif
 	}
 	else
 		do_percent = 0;
+#endif
 
 	while (x < length) {
 		if (x == 0) {
@@ -1172,13 +1175,15 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 
 		/* Transmit packet */
 		CHECK (sierra_transmit_ack (camera, packet, context));
-#ifdef RECURSION_REMOVED
+#ifdef GTKAM_RECURSION_FIXED
 		if (do_percent)
 			gp_context_progress_update (context, id, x);
 #endif
 	}
+#ifdef GTKAM_RECURSION_FIXED
 	if (do_percent)
 		gp_context_progress_stop (context, id);
+#endif
 
 	return GP_OK;
 }
@@ -1188,11 +1193,13 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 				unsigned int *b_len, GPContext *context)
 {
 	unsigned char p[34816];
-	const char *file_name;
 	unsigned int packlength, total = (b_len) ? *b_len : 0;
-	unsigned int id = 0;
 	int retries, r;
 	static int in_function = 0;
+#ifdef GTKAM_RECURSION_FIXED
+	const char *file_name;
+	unsigned int id = 0;
+#endif
 
 	GP_DEBUG ("sierra_get_string_register:  reg %i, file number %i, "
 		  " total %d, flags 0x%x", reg, fnumber, total,
@@ -1221,10 +1228,12 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	p[5] = reg;
 	CHECK (sierra_write_packet (camera, p, context));
 
+#ifdef GTKAM_RECURSION_FIXED
 	if (file && total) {
 		CHECK (gp_file_get_name(file, &file_name));
 		id = gp_context_progress_start (context, total, file_name);
 	}
+#endif
 
 	/* Read all the data packets */
 	*b_len = 0;
@@ -1267,15 +1276,17 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 
 		if (file) {
 		    CHECK (gp_file_append (file, &p[4], packlength));
-#ifdef GTKAM_IS_MODIFIED
+#ifdef GTKAM_RECURSION_FIXED
 		    if (total)
 			gp_context_progress_update (context, id, *b_len);
 #endif
 		}
 
 	} while (p[0] != SIERRA_PACKET_DATA_END);
+#ifdef GTKAM_RECURSION_FIXED
 	if (file && total)
 		gp_context_progress_stop (context, id);
+#endif
 
 	GP_DEBUG ("sierra_get_string_register: completed OK, *b_len %d",
 		  *b_len);

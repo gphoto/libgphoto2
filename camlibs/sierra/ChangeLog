@@ -1,4 +1,16 @@
 2003-11-03  Patrick Mansfield <patmans@users.sourceforge.net>
+	* library.c: get rid of all progress updates to fix recursion
+	  during capture per bug report 805858 from Harry Mangalam. The
+	  fix sucks, since we now can't update gtkam (like scroll) while
+	  operations are pending, but it fixes the bug.
+
+	  This also gets rid of a bug where do_percent was no longer
+	  getting initialized.
+
+	  This really needs a change to gtkam or the gtkam <-> gphoto
+	  interface, so we do not allow recursion but we do allow updates.
+
+2003-11-03  Patrick Mansfield <patmans@users.sourceforge.net>
 	* sierra.c: mark Epson PhotoPC 650 as SIERRA_NO_51, per bug 
 	  report 831290 from Brian Lee.
 
