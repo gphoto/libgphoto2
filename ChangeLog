@@ -26,6 +26,12 @@
 
 	*  TESTERS: Added Kristian Rink as a tester for the Kodak DC3200.
 
+2002-01-09  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: 2.0beta4dev7
+	* configure.in: output VERSION at configure info
+	* doc/FAQ: Added "Couldn't claim USB interface"
+
 2002-01-09 Dan Fandrich <dan@coneharvesters.com>
 
 	* frontends/command-line/gphoto2-cmd-config.c
@@ -47,7 +53,7 @@
 	* acconfig.h
 	* configure.in: Added test for tm_gmtoff in struct tm
 
-2002-01-06  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2002-01-06  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* doc/FAQ: Added a few FAQs
 	
@@ -72,7 +78,7 @@
 
 	* po/de.po: Update.
 
-2002-01-02  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2002-01-02  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* INSTALL: Added note about libusb requirements (CVS or 0.1.5)
 	+ configure.in: time for 2.0beta4dev6 IMHO
@@ -146,7 +152,7 @@
 	* camlibs/kodak/dc240/library.h
 	* configure.in: renamed _byteorder.h to gphoto2-endian.h
 
-2001-12-24  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-12-24  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: felt like 2.0beta4dev5 - and progress is inevitable.
 	* frontends/command-line/main.h: added constants for USB hotplug matching
@@ -212,7 +218,7 @@
 	  by STM for 'interested developers'. Not officially supported.
 	* camlibs/stv0680/CREDITS, README.pdf: Adjusted.
 
-2001-12-07  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-12-07  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* frontends/command-line/main.c: ENABLE_DEBUGGING -> DISABLE_DEBUGGING
 	* frontends/command-line/main.h: ENABLE_DEBUGGING -> DISABLE_DEBUGGING
@@ -227,7 +233,7 @@
 	* acconfig.h: ENABLE_DEBUGGING -> DISABLE_DEBUGGING. If you don't, 
 	  you don't get any logging in gtkam.
 
-2001-12-07  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-12-07  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: it is time for 2.0beta4dev4
 	* gphoto2-config.in: made it work again
@@ -305,7 +311,7 @@
 
 	* po/de.po: Update.
 
-2001-12-01  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-12-01  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: it is time for 2.0beta4dev3
 	* configure.in: renamed PGK_* to GPKG_*
@@ -317,7 +323,7 @@
 	* doc/api: Move documentation out of the header files into the
 	  templates
 
-2001-11-29  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-29  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* README: Added paragraph about reporting bugs (using LANG=C)
 	
@@ -331,7 +337,7 @@
 	  shared dlopenable libraries when given -lintl and libintl is a
 	  static library.  Now, only use -lintl when linking other targets.
 
-2001-11-29  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-29  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* Makefile.am: enable RPM and CVS rules only when useful
 	* configure.in: init RPM packaging
@@ -349,7 +355,7 @@
 	   * GP_WHATEVER: (colon!)
 	   (...)
 
-2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-27  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* HACKING: we prefer patches against CVS and camlibs should use
 	  their own ChangeLog files
@@ -357,7 +363,7 @@
 	* doc/figures/gphotofs.fig: added sketch of gphotofs idea flash
 	* libgphoto2/gphoto2-file.h: added note about CRW (Canon RaW)
 
-2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-27  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* camlibs/canon/canon.c: removed G2 from serial detection list
 	* camlibs/canon/canon.c: split canon_int_ready into usb and serial part
@@ -386,7 +392,7 @@
 	* camlibs/konica/library.c (set_info_func): Rewrite
 	* libgphoto2: Make *set_info consistent
 
-2001-11-25  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* camlibs/canon/canon.h: define GP_MODULE for abbref gp_log* stuff
 	* camlibs/canon/library.c: use proper MIME heuristics and types
@@ -400,7 +406,7 @@
 	* libgphoto2/gphoto2-filesys.h: Support "downloaded"-flag through
 	  CameraFileStatus.
 
-2001-11-25  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
 	
 	* configure.in: 2.0beta4dev2
 	* camlibs/canon/canon.c: added support for PowerShot S30
@@ -415,13 +421,13 @@
 	* camlibs/canon/canon.c
 	* camlibs/canon/usb.h: small cleanups
 
-2001-11-25  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* camlibs/canon/{canon,library}.[ch]: renamed files according to rules
 	* camlibs/canon/doc/: added developers' docs
 	* po/POTFILES.in: reflect changes in canon file set
 
-2001-11-24  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-24  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: hopefully really correct checks for libdl and libintl
 
@@ -539,7 +545,7 @@
 	    Current is targeted to Olympus ones. Default still display
 	    Olympus message for compatibility.
 
-2001-11-20  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-20  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* HACKING: covertly introducing important policy changes :-)
 
@@ -562,7 +568,7 @@
 
 	* configure.in: Remove gettext hack. Let's see if someone complains...
 
-2001-11-18  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-18  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* INSTALL: added note about RPM temporarily not working
 	* doc/api/Makefile.am
@@ -596,7 +602,7 @@
 	* frontends/command-line/options.c: Mark some more strings for
 	  translation.
 
-2001-11-17  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-17  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: changed package name from gphoto to gphoto2
 	* configure.in: changed version from 2.0beta4 to 2.0beta4dev0 to
@@ -626,7 +632,7 @@
 
 	* libgphoto2_port/po/de.po: Added translation.
 
-2001-11-16  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-16  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	After Scott just released beta3, I tried to tag the correct file
 	revisions as gphoto-2_0beta3.
@@ -1971,7 +1977,7 @@
 
 2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-	Patch from Hans Ulrich Niedermann <hun@n-dimensional.de>:
+	Patch from Hans Ulrich Niedermann <gp@n-dimensional.de>:
 
 	* frontends/command-line: Add --version
 
