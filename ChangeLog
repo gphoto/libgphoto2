@@ -1,3 +1,7 @@
+2002-01-09  Colin Marquardt  <colin@marquardt-home.de>
+
+	*  TESTERS: Added Kristian Rink as a tester for the Kodak DC3200.
+
 2002-01-09 Dan Fandrich <dan@coneharvesters.com>
 
 	* frontends/command-line/gphoto2-cmd-config.c
