@@ -360,11 +360,11 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->folder_list  	= camera_folder_list;
 	camera->functions->file_list 		= camera_file_list;
 	camera->functions->file_get 		= camera_file_get;
-	camera->functions->file_get_preview 	= camera_file_get_preview;
+	camera->functions->file_get_preview 	= NULL;
 	camera->functions->file_put 		= camera_file_put;
 	camera->functions->file_delete 		= camera_file_delete;
-	camera->functions->config 	  	= camera_config;
-	camera->functions->capture 		= camera_capture;
+	camera->functions->config 	  	= NULL;
+	camera->functions->capture 		= NULL;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
 	camera->functions->about 		= camera_about;
@@ -490,11 +490,6 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 	return (GP_OK);
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, char *filename) {
-
-	return GP_ERROR;
-}
-
 int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
@@ -546,16 +541,6 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 		return GP_ERROR;
 
 	return dsc1_delete(dsc, index + 1);
-}
-
-int camera_config (Camera *camera) {
-
-        return GP_ERROR;
-}
-
-int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
-
-	return (GP_ERROR);
 }
 
 int camera_summary (Camera *camera, CameraText *summary) {

@@ -1398,5 +1398,5 @@ int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info)
 {
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_capture()");
 	
-    return GP_ERROR;
+    return GP_ERROR_NOT_SUPPORTED;
 }

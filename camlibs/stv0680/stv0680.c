@@ -187,28 +187,28 @@ int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
 	/* stv0680 has no put support */
 
-	return (GP_ERROR);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 	/* stv0680 has no delete support */
 
-	return (GP_ERROR);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 int camera_config (Camera *camera) {
 
 	/* stv0680 has no configureable options */
 
-	return (GP_ERROR);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	/* XXX implement */
 
-	return (GP_OK);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 int camera_summary (Camera *camera, CameraText *summary) {

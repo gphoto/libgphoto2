@@ -46,9 +46,9 @@ int camera_abilities(CameraAbilitiesList *list)
 		a->port       = GP_PORT_SERIAL | GP_PORT_USB;
 		a->speed[0]   = 57600;
 		a->speed[1]   = 0;
-		a->capture    = 1;
+		a->capture    = 0;
 		a->config     = 0;
-		a->file_delete = 1;
+		a->file_delete = 0;
 		a->file_preview = 1;
 		a->file_put = 0;
 
@@ -394,7 +394,7 @@ int camera_file_put(Camera *camera, CameraFile *file, char *folder)
 	if (!dev)
 		return GP_ERROR;
 
-	return GP_ERROR;
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 int camera_file_delete(Camera *camera, char *folder, char *filename)
@@ -404,7 +404,7 @@ int camera_file_delete(Camera *camera, char *folder, char *filename)
 	if (!dev)
 		return GP_ERROR;
 
-	return GP_ERROR;
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 int camera_config(Camera *camera)
@@ -414,7 +414,7 @@ int camera_config(Camera *camera)
 	if (!dev)
 		return GP_ERROR;
 
-	return GP_ERROR;
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info)
@@ -424,7 +424,7 @@ int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info)
 	if (!dev)
 		return GP_ERROR;
 
-	return GP_ERROR;
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 int camera_summary(Camera *camera, CameraText *summary)

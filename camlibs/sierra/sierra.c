@@ -155,7 +155,6 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_put 	= camera_file_put;
 	camera->functions->file_delete 	= camera_file_delete;
-	camera->functions->config       = camera_config;
 	camera->functions->capture 	= camera_capture;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
@@ -560,15 +559,6 @@ int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, cha
 	return (camera_file_get_generic(camera, file, folder, filename, 1));
 }
 
-int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
-
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
-	sierra_debug_print(fd, "Putting file on camera");
-
-	return (GP_ERROR);
-}
-
 int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 	int ret, file_number;
@@ -591,15 +581,6 @@ if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);
 
 	return (ret);
-}
-
-int camera_config (Camera *camera) {
-
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
-	sierra_debug_print(fd, "Building configuration window");
-
-	return (GP_ERROR);
 }
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
