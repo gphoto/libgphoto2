@@ -67,6 +67,13 @@
 #define snprintf(buf,size,format,arg) sprintf(buf,format,arg)
 #endif
 
+/**
+ * models:
+ *
+ * Contains list of all camera models currently supported with their
+ * respective USD IDs and a flag denoting RS232 serial support.
+ **/
+
 static struct
 {
 	char *name;
@@ -208,14 +215,21 @@ check_readiness (Camera *camera)
 }
 
 static void
-switch_camera_off (Camera *camera)
+canon_int_switch_camera_off (Camera *camera)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "switch_camera_off()");
-
-
+	GP_DEBUG ("switch_camera_off()");
 	gp_camera_status (camera, _("Switching Camera Off"));
 
-	canon_serial_off (camera);
+	switch (camera->port->type) {
+		case GP_PORT_SERIAL:
+			canon_serial_off (camera);
+			break;
+		case GP_PORT_USB:
+		case GP_PORT_NONE:
+		default:
+			// FIXME: What about USB?
+			GP_DEBUG ("Unknown camera->port->type in canon_int_switch_camera_off()");
+	}
 	clear_readiness (camera);
 }
 
@@ -223,8 +237,7 @@ static int
 camera_exit (Camera *camera)
 {
 	if (camera->pl) {
-		if (camera->port->type == GP_PORT_SERIAL)
-			switch_camera_off (camera);
+		canon_int_switch_camera_off (camera);
 		free (camera->pl);
 		camera->pl = NULL;
 	}
