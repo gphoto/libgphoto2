@@ -3,7 +3,9 @@
 # $Id$
 #
 # This script is only of interest for developers who want to analyze
-# USB snoopy dumps of canon camera communication.
+# USB snoopy dumps of canon camera communication made with USB snoopy 0.13
+# (http://www.jps.net/~koma/). There are two slightly different formats
+# recognized.
 #
 
 use strict;
@@ -30,6 +32,12 @@ my %canon_cmd = (
 
 
 my ($file, %urb, %urbdata, %urbpipe);
+
+if ($#ARGV == -1) {
+	print("Syntax: $0 file [file ...]\n");
+	exit(1);
+}
+
 foreach $file (@ARGV) {
 	open(FILE, "< $file") or die("Could not open file '$file' for reading: $!\n");
 
