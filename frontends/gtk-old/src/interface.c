@@ -1229,7 +1229,7 @@ create_main_window (void)
   gtk_object_set_data_full (GTK_OBJECT (main_window), "icons", icons,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (icons);
-  gtk_icon_list_set_selection_mode(GTK_ICON_LIST(icons), GTK_SELECTION_MULTIPLE);
+  gtk_icon_list_set_selection_mode(GTK_ICON_LIST(icons), GTK_SELECTION_BROWSE);
   gtk_container_add (GTK_CONTAINER (viewport2), icons);
   
 /*

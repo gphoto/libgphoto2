@@ -427,11 +427,14 @@ camera_select_again:
 	gtk_widget_destroy(window);
 }
 
+int resize=0;
+
 void camera_index_thumbnails() {
 	
 	GtkWidget *icon_list, *icon, *pixmap;
 	GtkIconListItem *item;
 	char buf[1024];
+	int x;
 
 	debug_print("camera index thumbnails");
 
@@ -440,9 +443,19 @@ void camera_index_thumbnails() {
 
 	icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
 
-	strcpy(buf,"A Thumbnail");
-	item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),nothumbnail_xpm,buf,NULL);
-	gtk_entry_set_editable(GTK_ENTRY(item->entry), FALSE);
+	if (resize) {
+		gtk_widget_hide(icon_list);
+		gtk_widget_show(icon_list);
+		return;
+	}
+
+	GTK_ICON_LIST(icon_list)->is_editable = FALSE;
+	for (x=0; x<10; x++) {
+		sprintf(buf,"Photo #%i", x);
+		item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
+			nothumbnail_xpm,buf,NULL);
+	}
+	resize=1;
 }
 
 void camera_index_no_thumbnails() {
