@@ -1,3 +1,14 @@
+2003-02-03  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	Idea based on a patch in a bug report from Valentin Rusu
+	<sourceforge@valentinrusu.net>, this should also fix other cameras
+	that do not return valid data for register 47.
+
+	* library.c, library.h: added sierra_get_size
+	* sierra.c: call sierra_get_size to get sizes via register 12 or
+	  13, only call sierra_get_pic_info to get sizes for audio files.
+	  Treat 0 length file size as unsupported.
+
 2003-01-30  Lutz Mller <lutz@users.sourceforge.net>
 
 	* sierra.h: SierraCamera is not needed any more.

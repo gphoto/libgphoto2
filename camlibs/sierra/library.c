@@ -1193,8 +1193,8 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	int retries, r;
 	static int in_function = 0;
 
-	GP_DEBUG ("sierra_get_string_register:  reg %i, file number %i,"
-		  " ext protocol %x", reg, fnumber,
+	GP_DEBUG ("sierra_get_string_register:  reg %i, file number %i, "
+		  " total %d, ext protocol %x", reg, fnumber, total,
 		  camera->pl->use_extended_protocol);
 
 	if (in_function != 0) {
@@ -1468,5 +1468,13 @@ int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked,
 	gp_context_error (context, _("Not implemented!"));
 	return GP_ERROR;
 
+	return GP_OK;
+}
+
+int sierra_get_size (Camera *camera, int reg, unsigned int n, int *value,
+		     GPContext *context)
+{
+	CHECK (sierra_set_int_register (camera, 4, n, context));
+	CHECK (sierra_get_int_register (camera, reg, value, context));
 	return GP_OK;
 }

@@ -134,6 +134,8 @@ int sierra_capture_preview 	  (Camera *camera, CameraFile *file,
 				   GPContext *context);
 int sierra_change_folder          (Camera *camera, const char *folder,
 				   GPContext *context);
+int sierra_get_size		  (Camera *camera, int reg, unsigned int n,
+				   int *value, GPContext *context);
 int camera_start		  (Camera *camera, GPContext *context);
 int camera_stop			  (Camera *camera, GPContext *context);
 

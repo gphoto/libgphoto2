@@ -444,7 +444,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int jpeg_size;
 	const char *data, *mime_type;
 	long int size;
-	SierraPicInfo info;
+	int download_size;
+	SierraPicInfo info; /* only for audio */
 
 	/*
 	 * Get the file number from the CameraFileSystem.
@@ -475,16 +476,44 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/*
 	 * We need the file size in order to display progress information.
-	 * Don't make this fatal, as some cameras (at least the
-	 * "Agfa ePhoto307") don't seem to support this command (or better,
-	 * return nothing).
+	 * Since we _can_ run without progress information, make failures
+	 * here not prevent the download - but the failure should still
+	 * show up in any logs.
+	 *
+	 * Some cameras do not return anything useful for register 47, so
+	 * only use it for audio and hope that always works - so if a
+	 * camera can download audio, we are assuming it returns data for
+	 * register 47. If that assumption is ever wrong, try using
+	 * register 43 to get the audio size.
 	 */
-	memset (&info, 0, sizeof (SierraPicInfo));
-	sierra_get_pic_info (camera, n, &info, context);
+	download_size = 0;
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
+	case GP_FILE_TYPE_EXIF:
+		sierra_get_size(camera, 13, n, &download_size, context);
+		break;
+	case GP_FILE_TYPE_NORMAL:
+		sierra_get_size(camera, 12, n, &download_size, context);
+		break;
+	case GP_FILE_TYPE_AUDIO:
+		memset (&info, 0, sizeof (SierraPicInfo));
+		sierra_get_pic_info (camera, n, &info, context);
+		download_size = info.size_audio;
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	/* Get the file */
 	CHECK_STOP (camera, sierra_get_string_register (camera, regd, n,
-					file, NULL, &(info.size_file), context));
+					file, NULL, &download_size,  context));
+	if (download_size == 0) {
+		/*
+		 * Assume a failure. At least coolpix 880 returns no error
+		 * and no data when asked to download audio.
+		 */
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 	CHECK (camera_stop (camera, context));
 
 	/* Now get the data and do some post-processing */
