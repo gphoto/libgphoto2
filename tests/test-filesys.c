@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-#define CHECK(r) {int ret = r; if (ret != GP_OK) {printf ("Got error: %s\n", gp_result_as_string (ret)); return (1);}}
+#define CHECK(r) {int ret = r; if (ret < 0) {printf ("Got error: %s\n", gp_result_as_string (ret)); return (1);}}
 
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
@@ -28,11 +28,51 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	return (GP_OK);
 }
 
+static int
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		void *data)
+{
+	printf ("  -> The camera will list the files in '%s' here.\n", folder);
+
+	if (!strcmp (folder, "/")) {
+		gp_list_append (list, "file1", NULL);
+		gp_list_append (list, "file2", NULL);
+	}
+
+	return (GP_OK);
+}
+
+static int
+folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		  void *data)
+{
+	printf ("  -> The camera will list the folders in '%s' here.\n", 
+		folder);
+
+	if (!strcmp (folder, "/")) {
+		gp_list_append (list, "whatever", NULL);
+		gp_list_append (list, "another", NULL);
+	}
+
+	if (!strcmp (folder, "/whatever")) {
+		gp_list_append (list, "directory", NULL);
+	}
+
+	if (!strcmp (folder, "/whatever/directory")) {
+		gp_list_append (list, "my_special_folder", NULL);
+	}
+
+	return (GP_OK);
+}
+
 int
 main (int argc, char **argv)
 {
 	CameraFilesystem *fs;
 	CameraFileInfo info;
+	CameraList list;
+	int x, count;
+	const char *name;
 
 	CHECK (gp_init (GP_DEBUG_HIGH));
 
@@ -110,6 +150,29 @@ main (int argc, char **argv)
 	CHECK (gp_filesystem_delete (fs, "/whatever", NULL));
 
 	gp_filesystem_dump (fs);
+
+	printf ("*** Formatting the filesystem...\n");
+	CHECK (gp_filesystem_format (fs));
+
+	printf ("*** Setting the listing callbacks...\n");
+	CHECK (gp_filesystem_set_list_funcs (fs, file_list_func,
+					     folder_list_func, NULL));
+
+	printf ("*** Getting file list for folder '/whatever/directory'...\n");
+	CHECK (gp_filesystem_list_folders (fs, "/whatever/directory", &list));
+
+	printf ("*** Getting file list for folder '/whatever/directory' "
+		"again (cached!)...\n");
+	CHECK (gp_filesystem_list_folders (fs, "/whatever/directory", &list));
+
+	printf ("*** Counting the contents...\n");
+	CHECK (count = gp_list_count (&list));
+
+	printf ("*** Listing the contents...\n");
+	for (x = 0; x < count; x++) {
+		CHECK (gp_list_get_name (&list, x, &name));
+		printf (" %i: '%s'\n", x, name);
+	}
 
 	printf ("*** Freeing file system...\n");
 	CHECK (gp_filesystem_free (fs));

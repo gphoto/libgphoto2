@@ -76,6 +76,80 @@ int camera_abilities (CameraAbilitiesList *list)
         return (GP_OK);
 }
 
+static int
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		void *data)
+{
+	GP_SYSTEM_DIR dir;
+	GP_SYSTEM_DIRENT de;
+	char buf[1024], f[1024];
+
+	dir = GP_SYSTEM_OPENDIR ((char*) folder);
+	if (!dir)
+		return (GP_ERROR);
+	
+	/* Make sure we have 1 delimiter */
+	if (folder[strlen(folder)-1] != '/')
+		sprintf (f, "%s%c", folder, '/');
+	else
+		strcpy (f, folder);
+
+	while ((de = GP_SYSTEM_READDIR(dir))) {
+		if (strcmp(GP_SYSTEM_FILENAME(de), "." ) &&
+		    strcmp(GP_SYSTEM_FILENAME(de), "..")) {
+			sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
+			if (GP_SYSTEM_IS_FILE (buf) && (is_image (buf)))
+				gp_list_append (list, GP_SYSTEM_FILENAME (de),
+						NULL);
+		}
+	}
+
+	return (GP_OK);
+}
+
+static int
+folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		  void *data)
+{
+	GP_SYSTEM_DIR dir;
+	GP_SYSTEM_DIRENT de;
+	char buf[1024], f[1024];
+	char *dirname;
+	int view_hidden=1;
+
+	if (gp_setting_get ("directory", "hidden", buf) == GP_OK)
+		view_hidden = atoi (buf);
+
+	dir = GP_SYSTEM_OPENDIR ((char*) folder);
+	if (!dir)
+		return (GP_ERROR);
+
+	/* Make sure we have 1 delimiter */
+	if (folder[strlen(folder)-1] != '/')
+		sprintf (f, "%s%c", folder, '/');
+	else
+		strcpy (f, folder);
+	while ((de = GP_SYSTEM_READDIR (dir))) {
+		if ((strcmp (GP_SYSTEM_FILENAME (de), "." ) != 0) &&
+		    (strcmp (GP_SYSTEM_FILENAME (de), "..") != 0)) {
+			sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
+			dirname = GP_SYSTEM_FILENAME (de);
+			if (GP_SYSTEM_IS_DIR (buf)) {
+				if (dirname[0] != '.')
+					gp_list_append (list,
+							GP_SYSTEM_FILENAME (de),
+							NULL);
+				else if (view_hidden)
+					gp_list_append (list,
+							GP_SYSTEM_FILENAME (de),
+							NULL);
+			}
+		}
+	} 
+
+	return (GP_OK);
+}
+
 int camera_init (Camera *camera)
 {
         int i = 0;
@@ -113,6 +187,10 @@ int camera_init (Camera *camera)
 
         if (gp_setting_get("directory", "hidden", buf) != GP_OK)
                 gp_setting_set("directory", "hidden", "1");
+
+	gp_filesystem_new (&d->fs);
+	gp_filesystem_set_list_funcs (d->fs, file_list_func,
+				      folder_list_func, NULL);
 
         return (GP_OK);
 }
@@ -254,41 +332,9 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 int camera_folder_list_folders (Camera *camera, const char *folder,
                                 CameraList *list)
 {
-        GP_SYSTEM_DIR d;
-        GP_SYSTEM_DIRENT de;
-        char buf[1024], f[1024];
-        char *dirname;
-        int view_hidden=1;
+	DirectoryStruct *d = camera->camlib_data;
 
-        if (gp_setting_get ("directory", "hidden", buf) == GP_OK)
-                view_hidden = atoi(buf);
-        if ((d = GP_SYSTEM_OPENDIR ((char*) folder))==NULL)
-                return (GP_ERROR);
-
-        /* Make sure we have 1 delimiter */
-        if (folder[strlen(folder)-1] != '/')
-                sprintf (f, "%s%c", folder, '/');
-         else
-                strcpy (f, folder);
-
-        while ((de = GP_SYSTEM_READDIR(d))) {
-                if ((strcmp (GP_SYSTEM_FILENAME (de), "." ) != 0) &&
-                    (strcmp (GP_SYSTEM_FILENAME (de), "..") != 0)) {
-                        sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
-                        dirname = GP_SYSTEM_FILENAME(de);
-                        if (GP_SYSTEM_IS_DIR (buf)) {
-                           if (dirname[0] != '.')
-                                gp_list_append (list, GP_SYSTEM_FILENAME (de),
-						NULL);
-                             else
-                               if (view_hidden)
-                                gp_list_append (list, GP_SYSTEM_FILENAME (de),
-						NULL);
-                        }
-                }
-        }
-
-        return (GP_OK);
+	return (gp_filesystem_list_folders (d->fs, folder, list));
 }
 
 static int

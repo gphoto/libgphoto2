@@ -32,10 +32,6 @@ typedef struct _CameraFilesystem CameraFilesystem;
 int gp_filesystem_new	 (CameraFilesystem **fs);
 int gp_filesystem_free	 (CameraFilesystem *fs);
 
-int gp_filesystem_folder_set_dirty (CameraFilesystem *fs, const char *folder,
-				    int dirty);
-int gp_filesystem_folder_is_dirty  (CameraFilesystem *fs, const char *folder);
-
 /* Adding */
 int gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
 			    char *format, int count);
@@ -56,10 +52,24 @@ int gp_filesystem_number       (CameraFilesystem *fs, const char *folder,
 			        const char *filename);
 int gp_filesystem_get_folder   (CameraFilesystem *fs, const char *filename,
 			        const char **folder);
-int gp_filesystem_list_files   (CameraFilesystem *fs, const char *folder,
-				CameraList *list);
-int gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
-				CameraList *list);
+
+/* Listings */
+typedef int (*CameraFilesystemFileListFunc)   (CameraFilesystem *fs,
+					       const char *folder,
+					       CameraList *list,
+					       void *data);
+typedef int (*CameraFilesystemFolderListFunc) (CameraFilesystem *fs,
+					       const char *folder,
+					       CameraList *list,
+					       void *data);
+int gp_filesystem_set_list_funcs (CameraFilesystem *fs,
+				  CameraFilesystemFileListFunc file_list_func,
+				  CameraFilesystemFolderListFunc fo_list_func,
+				  void *data);
+int gp_filesystem_list_files     (CameraFilesystem *fs, const char *folder,
+				  CameraList *list);
+int gp_filesystem_list_folders   (CameraFilesystem *fs, const char *folder,
+				  CameraList *list);
 
 /* File information */
 typedef int (*CameraFilesystemInfoFunc) (CameraFilesystem *fs,

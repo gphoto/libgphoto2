@@ -791,7 +791,8 @@ set_globals (void)
         CHECK_RESULT (gp_camera_new (&glob_camera));
 
 	CHECK_RESULT (gp_camera_set_model (glob_camera, glob_model));
-	CHECK_RESULT (gp_camera_set_port_path (glob_camera, glob_port));
+	if (strcmp (glob_model, "Directory Browse"))
+		CHECK_RESULT (gp_camera_set_port_path (glob_camera, glob_port));
 	glob_camera->port->speed = glob_speed;
 
 	CHECK_RESULT (gp_camera_init (glob_camera));

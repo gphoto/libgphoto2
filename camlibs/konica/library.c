@@ -101,8 +101,9 @@ gboolean localization_file_read (Camera* camera, gchar* file_name, guchar** data
 /* Functions */
 /*************/
 
-static gint
-update_filesystem (Camera* camera)
+static int
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		void *data)
 {
         guint                   self_test_result;
         k_power_level_t         power_level;
@@ -132,16 +133,13 @@ update_filesystem (Camera* camera)
         guint           exif_size;
         gboolean        protected;
         gulong          image_id;
-        KonicaData*  kd;
         gchar*          filename;
+	Camera *camera = data;
+	KonicaData *kd = camera->camlib_data;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica",
-			 "*** Entering update_filesystem ***");
-        g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
-
-        kd = (KonicaData *) camera->camlib_data;
-	gp_filesystem_format (kd->filesystem);
-
+	if (strcmp (folder, "/"))
+		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	
 	CHECK (k_get_status (kd->device, &self_test_result,
                 &power_level, &power_source, &card_status, &display, &card_size,
                 &pictures, &pictures_left, &year, &month, &day, &hour, &minute,
@@ -163,7 +161,7 @@ update_filesystem (Camera* camera)
 			filename = g_strdup ("??????.jpeg");
                 g_free (information_buffer);
                 information_buffer = NULL;
-                gp_filesystem_append (kd->filesystem, "/", filename);
+		gp_list_append (list, filename, NULL);
                 g_free (filename);
         }
 
@@ -188,7 +186,7 @@ erase_all_unprotected_images (Camera* camera, CameraWidget* widget)
                 gp_frontend_status (camera, tmp);
                 g_free (tmp);
         }
-        update_filesystem (camera);
+	gp_filesystem_format (konica_data->filesystem);
         return (result);
 }
 
@@ -526,11 +524,11 @@ camera_init (Camera* camera)
 	gp_filesystem_new (&kd->filesystem);
 	gp_filesystem_set_info_funcs (kd->filesystem, get_info_func,
 				      set_info_func, camera);
+	gp_filesystem_set_list_funcs (kd->filesystem, file_list_func,
+				      NULL, camera);
 
 	kd->device = device;
 	kd->image_id_long = image_id_long;
-
-	update_filesystem (camera);
 
 	return (GP_OK);
 }
