@@ -1,15 +1,14 @@
-SUBDIRS = dscf55
+camlibdir = $(prefix)/lib/gphoto2
+camlib_LTLIBRARIES = libgphoto2_sony_dscf1.la
 
-drivers_LTLIBRARIES = libgphoto_sony_dscf1.la
+INCLUDES = -I$(top_srcdir)/include
 
-CFLAGS = @CFLAGS@ @GTK_CFLAGS@ @GDK_IMLIB_CFLAGS@ 
-
-libgphoto_sony_dscf1_la_SOURCES = tty.c command.c getuint.c \
+libgphoto2_sony_dscf1_la_SOURCES = tty.c command.c getuint.c \
 	chotplay.c dsc_f1.c \
 	tty.h command.h getuint.h chotplay.h pmp.h config.h common.h
 
-libgphoto_sony_dscf1_la_LDFLAGS =\
+libgphoto2_sony_dscf1_la_LDFLAGS =\
  -avoid-version\
  -L$(shell pwd)/$(top_builddir)/libgphoto2/.libs
 
-libgphoto_sony_dscf1_la_LIBADD = -lgphoto2
+libgphoto2_sony_dscf1_la_LIBADD = -lgphoto2

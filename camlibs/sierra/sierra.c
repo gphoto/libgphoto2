@@ -48,6 +48,7 @@ SierraCamera sierra_cameras[] = {
 	{"Nikon CoolPix 950", 	0, 0, 0, 0 },
 	{"Nikon CoolPix 950S", 	0, 0, 0, 0 },
 	{"Nikon CoolPix 990",	0x04b0, 0x0102, 0x83, 0x04},
+	{"Nikon CoolPix 880",	0x04b0, 0x0103, 0x83, 0x04},
 	{"Olympus D-100Z", 	0, 0, 0, 0 },
 	{"Olympus D-200L", 	0, 0, 0, 0 },
 	{"Olympus D-220L", 	0, 0, 0, 0 },
@@ -337,6 +338,7 @@ static int sierra_change_folder(Camera *camera, const char *folder)
 	}
 	strcpy(fd->folder, folder);
 
+
 	return GP_OK;
 }
 
@@ -370,6 +372,7 @@ int camera_exit (Camera *camera) {
 
 	sierra_debug_print(fd, "Exiting camera");
 
+	gpio_close(fd->dev);
 	gpio_free(fd->dev);
 	free(fd);
 
@@ -395,28 +398,31 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 	count = sierra_file_count(camera);
 
 	while ((x<count)&&(!error)) {
-#if 0
-	/* are all filenames *.jpg, or are there *.tif files too? */
+		char buf[128];
+		int length;
+		
+		/* are all filenames *.jpg, or are there *.tif files too? */
 		/* Set the current picture number */
 		if (sierra_set_int_register(camera, 4, x+1)==GP_ERROR) {
-			gp_message("Could not set the picture number");
+			sierra_debug_print(fd, "Could not set the picture number");
 			camera_stop(camera);
 			return (GP_ERROR);
 		}
 		/* Get the picture filename */
-		if (sierra_get_string_register(camera, 79, 0, NULL, buf, &length)==GP_ERROR)
-			gp_message("Could not get filename");
+		if (sierra_get_string_register(camera, 79, 0, NULL, buf, &length)==GP_ERROR) {
+			sierra_debug_print(fd, "Could not get filename");
 			camera_stop(camera);
 			return (GP_ERROR);
 		}
-		if (length > 0)
+		if (length > 0) {
 			/* Filename supported. Use the camera filename */
 			gp_list_append(list, buf, GP_LIST_FILE);
-		   else
-#endif
+			gp_filesystem_append (fd->fs, folder, buf);
+		} else {
 			/* Filename not supported. Use CameraFileSystem entry */
 			gp_list_append(list, gp_filesystem_name(fd->fs, folder, x), 
 				GP_LIST_FILE);
+		}
 		x++;
 	}
 
@@ -458,6 +464,9 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 		if (sierra_get_string_register(camera, 84, 0, NULL, buf, &bsize) != GP_OK) {
 			break;
 		} else {
+			/* remove trailing spaces */
+			for (i = strlen(buf)-1; i >= 0 && buf[i] == ' '; i--)
+				buf[i]='\0';
 			/* append the folder name on to the folder list */
 			gp_list_append(list, buf, GP_LIST_FOLDER);
 		}

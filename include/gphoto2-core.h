@@ -6,6 +6,7 @@
 */
 
 int 	gp_init(int debug);  
+int	gp_is_initialized(void);
 int 	gp_exit();
 
 void 	gp_debug_printf(int level, char *id, char *format, ...);

@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <termios.h>
 #include <fcntl.h>
+#include <string.h>
 #include <sys/time.h>
 #include <errno.h>
 #include <sys/ioctl.h>

@@ -38,7 +38,7 @@
 
 void dump_hex(Camera *camera, const char *msg, const unsigned char *buf, int len)
 {
-	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
+//	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
     int i;
     int nlocal;
     const unsigned char *pc;

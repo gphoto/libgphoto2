@@ -201,7 +201,7 @@ read_packet_again:
 		   default:
 			return (GP_ERROR);
 		}
-		bytes_read = gpio_read(fd->dev, packet, 1);
+		bytes_read = gpio_read(fd->dev, packet, blocksize);
 
 
 		if (bytes_read == GPIO_ERROR) {
@@ -235,6 +235,10 @@ read_packet_again:
 		} else {
 			/* It's a single byte response. dump and validate */
 			sierra_dump_packet(camera, packet);
+#ifdef GPIO_USB
+			if (fd->type == GP_PORT_USB)
+				gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
+#endif
 			return (sierra_valid_packet(camera, packet));
 		}
 		for (y=bytes_read; y < length; y+=blocksize) {
