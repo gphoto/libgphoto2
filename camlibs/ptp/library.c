@@ -194,6 +194,7 @@ static struct {
 	{"Kodak DX-3600", 0x040a, 0x0510},
 	{"Kodak DX-3700", 0x040a, 0x0530},
 	{"Kodak DX-3900", 0x040a, 0x0170},
+	{"Kodak DX-4900", 0x040a, 0x0550},
 	{"Kodak MC3", 0x040a, 0x0400},
 	{"HP PhotoSmart 318", 0x03f0, 0x6302},
 	{"HP PhotoSmart 612", 0x03f0, 0x6302},
@@ -874,6 +875,8 @@ init_ptp_fs (Camera *camera, GPContext *context)
 
 	/* Get file handles array for filesystem */
 	id = gp_context_progress_start (context, 0, "Initializing Camera");
+	/* be paranoid!!! */
+	memset (&camera->pl->params.handles, 0, sizeof(PTPObjectHandles));
 	/* get objecthandles of all objects from all stores */
 	CPR (context, ptp_getobjecthandles
 	(&camera->pl->params, 0xffffffff, 0x000000, 0x000000,
