@@ -9,6 +9,7 @@ camlibs/directory/directory.c
 camlibs/fuji/fuji.c
 camlibs/fuji/library.c
 camlibs/gsmart/library.c
+camlibs/gsmart300/library.c
 camlibs/jamcam/jamcam.c
 camlibs/jamcam/library.c
 camlibs/jd11/jd11.c
@@ -34,6 +35,7 @@ camlibs/panasonic/dc1000.c
 camlibs/panasonic/dc1580.c
 camlibs/panasonic/l859/l859.c
 camlibs/pccam600/library.c
+camlibs/pccam300/library.c
 camlibs/polaroid/pdc320.c
 camlibs/polaroid/pdc640.c
 camlibs/polaroid/pdc700.c
