@@ -583,9 +583,10 @@ camera_about (Camera* camera, CameraText* about, GPContext *context)
 {
 	CHECK_NULL (camera && about);
 
-        strcpy (about->text,
-                _("Konica library\n"
-                "Lutz Müller <urc8@rz.uni-karlsruhe.de>\n"
+	/* Translators: please write 'M"uller' (that is, with u-umlaut)
+	   if your charset allows it.  If not, use "Mueller". */
+        strcpy (about->text, _("Konica library\n"
+                "Lutz Mueller <lutz@users.sourceforge.net>\n"
                 "Support for all Konica and several HP cameras."));
 
         return (GP_OK);

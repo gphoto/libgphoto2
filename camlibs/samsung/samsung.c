@@ -238,10 +238,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
+	/* Translators: please write 'M"uller' and 'Mei"sner' (that
+	   is, with u-umlaut and eszett resp.) if your charset
+	   allows it.  If not, use "Mueller" and "Meissner".  */
 	strcpy (about->text, _("The Samsung digimax 800k driver has "
-		"been written by James Mckenzie "
+		"been written by James McKenzie "
 		"<james@fishsoup.dhs.org> for gphoto. "
-		"Lutz Müller <urc8@rz.uni-karlsruhe.de> ported it to "
+		"Lutz Mueller <lutz@users.sourceforge.net> ported it to "
 		"gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed "
 		"and enhanced the port.")
 		);
