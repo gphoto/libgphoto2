@@ -7,6 +7,7 @@ INCLUDES =                                              \
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
         -I$(top_srcdir)/libgphoto2
 
+EXTRA_libgphoto2_sony_dscf1_la_SOURCES = dsc_f1.c
 libgphoto2_sony_dscf1_la_SOURCES = \
 	command.c getuint.c chotplay.c sonydscf1.c sonydscf1.h \
 	command.h getuint.h chotplay.h pmp.h common.h
