@@ -6,7 +6,7 @@
 DIE=0
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
-test "$srcdir" = "." && srcdir=$(pwd)
+test "$srcdir" = "." && srcdir=`pwd`
 
 PROJECT=gphoto2
 
@@ -49,7 +49,7 @@ if test -z "$*"; then
 fi
 
 
-case $CC in
+case "$CC" in
 *xlc | *xlc\ * | *lcc | *lcc\ *) am_opt=--include-deps;;
 esac
 
@@ -57,8 +57,9 @@ ACLOCAL_FLAGS="-I ${srcdir}/libgphoto2_port/m4 ${ACLOCAL_FLAGS}"
 
 for dir in . libgphoto2_port
 do 
-    echo processing $dir
-    if ! cd $dir; then
+    echo processing "$dir"
+    cd "$dir"
+    if [ $? != 0 ] ; then
         echo "Fatal: Could not enter directory $dir."
         exit 1
     fi
