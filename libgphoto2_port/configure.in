@@ -119,9 +119,9 @@ AC_INLINE
 AC_CONST
 
 AC_CHECK_HEADERS([stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h
-	sys/param.h termios.h sgetty.h ttold.h ioctl-types.h
-	fcntl.h sgtty.h sys/ioctl.h sys/time.h termio.h unistd.h
-	endian.h byteswap.h asm/io.h])
+sys/param.h termios.h sgetty.h ttold.h ioctl-types.h
+fcntl.h sgtty.h sys/ioctl.h sys/time.h termio.h unistd.h
+endian.h byteswap.h asm/io.h])
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS(strerror snprintf vsnprintf)
