@@ -92,12 +92,6 @@ the start of it.
 	<td>Function unclear.</td>
 </tr>
 <tr>
-	<td>SICE DOWNLOAD</td>
-	<td>0xf2 x1 x2</td>
-	<td>x1/x2 is the size? data? of the uploaded firmware.</td>
-	<td>Function unclear. Probably transferring data in 2 byte chunks.</td>
-</tr>
-<tr>
 	<td>QUERY STORAGE FULL</td>
 	<td>0x92</td>
 	<td></td>
@@ -112,4 +106,144 @@ the start of it.
 	<td>lsb/msb is the size. This is followed by a USB bulk write.</td>
 	<td>Unclear.</td>
 </tr>
+<tr>
+	<td>WRITE REG</td>
+	<td>0x81 reg val</td>
+	<td>Sets register reg to value val</td>
+	<td>See pseudo function below.</td>
+</tr>
+<tr>
+	<td>READ REG</td>
+	<td>0xf9 reg</td>
+	<td>Reads register reg</td>
+	<td>1: return value (1 byte)</td>
+</tr>
+<tr>
+	<td>SIMSCANNER</td>
+	<td>0x86 0 0 0</td>
+	<td></td>
+	<td>Only for serial. Whatever it does.</td>
+</tr>
+<tr>
+	<td>DUAL CAPTURE</td>
+	<td>0x87 0</td>
+	<td></td>
+	<td>0: echo (0x87) 1..4: some values.</td>
+</tr>
+<tr>
+	<td>PUSH BUTTON</td>
+	<td>0xfd 0 0</td>
+	<td></td>
+	<td>0: echo (0xfd) 1: reply value.</td>
+</tr>
+<tr>
+	<td>SNAP</td>
+	<td>0x2d</td>
+	<td></td>
+	<td>0: echo (0xfd) 1: reply value.</td>
+</tr>
+<tr>
+	<td>WAIT EXPOSURE</td>
+	<td>0x93</td>
+	<td></td>
+	<td>0: echo (0xfd) 1: return value. Wait for 1.</td>
+</tr>
+<tr>
+	<td>SEND DRAM</td>
+	<td>0x15 lsb1 msb1 lsb2 msb2</td>
+	<td></td>
+	<td>Followed by bulk read. parameters are a bit unclear.</td>
+</tr>
+<tr>
+	<td>LOCK SNAP</td>
+	<td>0x90</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>FREE SNAP</td>
+	<td>0x91</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>RS232 INIT</td>
+	<td>0x01</td>
+	<td></td>
+	<td>Serial only I guess.</td>
+</tr>
+<tr>
+	<td>ERASE IMAGE</td>
+	<td>0x59 x</td>
+	<td></td>
+	<td>With x:
+	<ol start=0>
+	<li>Delete all images.
+	<li>Delete the last image.
+	</ol>
+	</td>
+</tr>
+<tr>
+	<td>NORMAL EXIT</td>
+	<td>0xfc</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>88 Command</td>
+	<td>0x88</td>
+	<td></td>
+	<td></td>
+</tr>
 </table>
+
+<pre>
+
+void
+DOWNLOAD_DATA(type, buffer, size) {
+	SELECT_PICTURE_TYPE(type);
+	SEND_DRAM(buffer, size);
+}
+
+/* Unclear why and how used */
+void
+SEND_USER_COMMAND(cmd, inputbuffer, inputsize, outputbuffer, outputsize) {
+	SEND_PARAMETER(&cmd, 1);
+	if (inputbuffer && inputsize) {
+		SEND_PARAMETER(inputbuffer, inputsize);
+	}
+	if (outputbuffer && outputsize) {
+		SEND_PARAMETER(&outputsize, 4);
+		DOWNLOAD_DATA(0x21, outputbuffer, outputsize);
+	}
+}
+
+void
+WRITE_REG_Command(byte reg, byte val, int porttype) {
+	// strangely different between USB/SERIAL
+	if (porttype == USB) {
+		byte buf[2];
+		buf[0] = reg;
+		buf[1] = val;
+		SEND_PARAMETERk(buf, 2);
+	} else {
+		call_driver(0x81, reg, val);
+	}
+}
+
+void
+take_picture(int checkstoragefull, int locksnapflag, int waitforexpflag) {
+	byte val;
+
+	if (checkstoragefull) QUERY_STORAGE_FULL():
+	if (locksnapflag) LOCK_SNAP();
+	SNAP();
+	if (waitforexpflag) {
+		do {
+			Sleep(500);
+			WAIT_EXPOSURE(&val);
+		} while (val != 1);
+	}
+	if (locksnapflag) FREE_SNAP();
+}
+</pre>
