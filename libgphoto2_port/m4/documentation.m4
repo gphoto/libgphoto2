@@ -135,9 +135,8 @@ AM_CONDITIONAL(XMLTOHTML, xmlto --help | grep html > /dev/null 2>&1)
 AM_CONDITIONAL(XMLTOMAN, xmlto --help | grep man > /dev/null 2>&1)
 
 dnl hack for xmlto pdf not working yet
-dnl AM_CONDITIONAL(XMLTOPDF, xmlto --help | grep pdf > /dev/null 2>&1)
+AM_CONDITIONAL(XMLTOPDF, xmlto --help | grep pdf > /dev/null 2>&1)
 dnl AM_CONDITIONAL(XMLTOPS, xmlto --help | grep ps > /dev/null 2>&1)
-AM_CONDITIONAL(XMLTOPDF, false)
 AM_CONDITIONAL(XMLTOPS, false)
 
 # create list of supported formats
