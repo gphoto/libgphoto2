@@ -678,7 +678,7 @@ int for_each_image_in_range(char *folder, char *range, image_action action) {
 
 int save_picture_to_file(char *folder, char *filename, int thumbnail) {
 
-	char out_filename[1024];
+	char out_filename[1024], buf[1024];
 	CameraFile *file;
 
 	file = gp_file_new();
@@ -698,6 +698,11 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
 		sprintf(out_filename, glob_filename, glob_num++);
 	   else
 		strcpy(out_filename, filename);
+
+	if (thumbnail) {
+		sprintf(buf, "thumb_%s", out_filename);
+		strcpy(out_filename, buf);
+	}
 
 	if (!glob_quiet)
 		printf("Saving %s as %s\n", thumbnail ? "preview" : "image", out_filename);
