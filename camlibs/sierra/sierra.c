@@ -131,7 +131,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Olympus C-2020Z",	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-2040Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105, 1,
 							&oly3040_cam_desc},
-	{"Olympus C-2100UZ",    SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0,
+	{"Olympus C-2100UZ",    SIERRA_MODEL_CAM_DESC,	0x07b4, 0x100, 0,
 							&oly3040_cam_desc},
 	{"Olympus C-2500L",     SIERRA_MODEL_OLYMPUS,   0, 0, 0 },
 /* Does this model really exist?
