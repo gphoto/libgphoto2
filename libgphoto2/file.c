@@ -50,6 +50,13 @@ gp_file_new (CameraFile **file)
 	(*file)->session = glob_session_file++;
 	(*file)->ref_count = 1;
 
+	(*file)->red_table   = NULL;
+	(*file)->green_table = NULL;
+	(*file)->blue_table  = NULL;
+	(*file)->red_size   = 0;
+	(*file)->green_size = 0;
+	(*file)->blue_size  = 0;
+
 	return (GP_OK);
 }
 
