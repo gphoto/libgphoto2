@@ -261,7 +261,6 @@ int gp_camera_file_delete (Camera *camera, char *folder, char *filename)
 
 int gp_camera_config (Camera *camera)
 {
-        int ret;
 
         if (camera->functions->config == NULL)
                 return (GP_ERROR);
