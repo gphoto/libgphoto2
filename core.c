@@ -373,7 +373,7 @@ int gp_set_setting (char *key, char *value) {
 }
 
 
-/* Front-end interaction functions
+/* Front-end interaction functions (libraries calls these!)
    ---------------------------------------------------------------------------- */
 
 int gp_update_status (char *status) {
