@@ -276,12 +276,12 @@ int gp_config_get (char *config_dialog_filename) {
 	return(GP_OK);
 }
 
-int gp_config_set (CameraConfig *config) {
+int gp_config_set (CameraSetting *setting, int count) {
 
 	if (glob_c.config == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.config(config));
+	return(glob_c.config(setting, count));
 }
 
 int gp_capture (int type) {
