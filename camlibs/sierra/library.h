@@ -39,33 +39,44 @@ struct _SierraPicInfo {
 	unsigned int animation_type;
 };
 int sierra_get_pic_info (Camera *camera, unsigned int n,
-			 SierraPicInfo *pic_info);
-int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked);
+			 SierraPicInfo *pic_info, GPContext *context);
+int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked,
+		       GPContext *context);
 
 /* Communications functions */
-int sierra_set_speed		  (Camera *camera, int speed);
+int sierra_set_speed		  (Camera *camera, int speed,
+				   GPContext *context);
 int sierra_end_session		  (Camera *camera);
 int sierra_ping			  (Camera *camera);
-int sierra_get_memory_left        (Camera *camera, int *memory);
-int sierra_check_battery_capacity (Camera *camera);
-int sierra_set_int_register 	  (Camera *camera, int reg, int value);
-int sierra_get_int_register 	  (Camera *camera, int reg, int *value);
-int sierra_set_string_register	  (Camera *camera, int reg, const char *s, long int length);
+int sierra_get_memory_left        (Camera *camera, int *memory,
+				   GPContext *context);
+int sierra_check_battery_capacity (Camera *camera, GPContext *context);
+int sierra_set_int_register 	  (Camera *camera, int reg, int value,
+				   GPContext *context);
+int sierra_get_int_register 	  (Camera *camera, int reg, int *value,
+				   GPContext *context);
+int sierra_set_string_register	  (Camera *camera, int reg, const char *s,
+				   long int length, GPContext *context);
 int sierra_get_string_register	  (Camera *camera, int reg, int file_number,
 				   CameraFile *file,
-				   unsigned char *b, unsigned int *b_len);
-int sierra_delete		  (Camera *camera, int picture_number);
+				   unsigned char *b, unsigned int *b_len,
+				   GPContext *context);
+int sierra_delete		  (Camera *camera, int picture_number,
+				   GPContext *context);
 int sierra_delete_all             (Camera *camera);
 int sierra_capture		  (Camera *camera, CameraCaptureType type, 
 				   CameraFilePath *filepath,
 				   GPContext *context);
-int sierra_capture_preview 	  (Camera *camera, CameraFile *file);
-int sierra_change_folder          (Camera *camera, const char *folder);
+int sierra_capture_preview 	  (Camera *camera, CameraFile *file,
+				   GPContext *context);
+int sierra_change_folder          (Camera *camera, const char *folder,
+				   GPContext *context);
 
 /* Filesystem functions */
-int sierra_list_files         (Camera *camera, const char *folder, CameraList *list);
-int sierra_list_folders       (Camera *camera, const char *folder, CameraList *list);
+int sierra_list_files         (Camera *camera, const char *folder, CameraList *list, GPContext *context);
+int sierra_list_folders       (Camera *camera, const char *folder, CameraList *list, GPContext *context);
 int sierra_get_picture_folder (Camera *camera, char **folder);
-int sierra_upload_file        (Camera *camera, CameraFile *file);
+int sierra_upload_file        (Camera *camera, CameraFile *file,
+			       GPContext *context);
 
 #endif /* __LIBRARY_H__ */

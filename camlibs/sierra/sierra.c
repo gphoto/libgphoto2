@@ -53,15 +53,14 @@
 #  define N_(String) (String)
 #endif
 
-#define CHECK_STOP(camera,result) {int res; res = result; if (res < 0) {camera_stop (camera); gp_log (GP_LOG_DEBUG, "sierra", "Operation failed!"); return (res);}}
+#define CHECK_STOP(camera,result) {int res; res = result; if (res < 0) {camera_stop (camera, context); gp_log (GP_LOG_DEBUG, "sierra", "Operation failed!"); return (res);}}
 
-#define CHECK_STOP_FREE(camera,result) {int res; res = result; if (res < 0) {camera_stop (camera); free (camera->pl); camera->pl = NULL; return (res);}}
+#define CHECK_STOP_FREE(camera,result) {int res; res = result; if (res < 0) {camera_stop (camera, context); free (camera->pl); camera->pl = NULL; return (res);}}
 
 #define CHECK_FREE(camera,result) {int res; res = result; if (res < 0) {free (camera->pl); camera->pl = NULL; return (res);}}
 
-int camera_start(Camera *camera);
-int camera_stop(Camera *camera);
-int sierra_change_folder (Camera *camera, const char *folder);
+int camera_start(Camera *camera, GPContext *context);
+int camera_stop(Camera *camera, GPContext *context);
 int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_size);
 
 /* Useful markers */
@@ -199,9 +198,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data;
 
-	CHECK (camera_start (camera));
-	CHECK_STOP (camera, sierra_list_files (camera, folder, list));
-	return (camera_stop (camera));
+	CHECK (camera_start (camera, context));
+	CHECK_STOP (camera, sierra_list_files (camera, folder, list, context));
+	return (camera_stop (camera, context));
 }
 
 static int
@@ -210,9 +209,9 @@ folder_list_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = data;
 
-	CHECK (camera_start (camera));
-	CHECK_STOP (camera, sierra_list_folders (camera, folder, list));
-	return (camera_stop (camera));
+	CHECK (camera_start (camera, context));
+	CHECK_STOP (camera, sierra_list_folders (camera, folder, list, context));
+	return (camera_stop (camera, context));
 }
 
 static int
@@ -241,9 +240,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	info->file.fields |= GP_FILE_INFO_NAME;
 
 	/* Get information about this image */
-	CHECK (camera_start (camera));
-	CHECK_STOP (camera, sierra_change_folder (camera, folder));
-	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &pic_info));
+	CHECK (camera_start (camera, context));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
+	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &pic_info, context));
 
 	/* Size of file */
 	info->file.fields |= GP_FILE_INFO_SIZE;
@@ -285,7 +284,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (pic_info.locked == SIERRA_LOCKED_NO)
 		info->file.permissions |= GP_FILE_PERM_DELETE;
 
-	return (camera_stop (camera));
+	return (camera_stop (camera, context));
 }
 
 static int
@@ -299,28 +298,28 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
 	n++;
 
-	CHECK (camera_start (camera));
-	CHECK_STOP (camera, sierra_change_folder (camera, folder));
-	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &pic_info));
+	CHECK (camera_start (camera, context));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
+	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &pic_info, context));
 
 	if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
 		if (info.file.permissions & GP_FILE_PERM_DELETE) {
 			if (pic_info.locked == SIERRA_LOCKED_YES) {
 				CHECK_STOP (camera, sierra_set_locked (camera,
-						n, SIERRA_LOCKED_NO));
+						n, SIERRA_LOCKED_NO, context));
 			}
 		} else {
 			if (pic_info.locked == SIERRA_LOCKED_NO) {
 				CHECK_STOP (camera, sierra_set_locked (camera,
-						n, SIERRA_LOCKED_YES));
+						n, SIERRA_LOCKED_YES, context));
 			}
 		}
 	}
 
-	return (camera_stop (camera));
+	return (camera_stop (camera, context));
 }
 
-int camera_start (Camera *camera)
+int camera_start (Camera *camera, GPContext *context)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_start");
 
@@ -331,7 +330,7 @@ int camera_start (Camera *camera)
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
 		CHECK_STOP (camera, sierra_set_speed (camera,
-						      camera->pl->speed));
+						      camera->pl->speed, context));
 		return (GP_OK);
 	case GP_PORT_USB:
 		CHECK_STOP (camera, gp_port_set_timeout (camera->port, 5000));
@@ -341,7 +340,7 @@ int camera_start (Camera *camera)
 	}
 }
 
-int camera_stop (Camera *camera) 
+int camera_stop (Camera *camera, GPContext *context) 
 {
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_stop");
 
@@ -351,7 +350,7 @@ int camera_stop (Camera *camera)
 	 */
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
-		CHECK (sierra_set_speed (camera, -1));
+		CHECK (sierra_set_speed (camera, -1, context));
 		break;
 	default:
 		break;
@@ -409,16 +408,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	/* Set the working folder */
-	CHECK (camera_start (camera));
-	CHECK_STOP (camera, sierra_change_folder (camera, folder));
+	CHECK (camera_start (camera, context));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
 
 	/* We need the file size in order to display progress information */
-	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &info));
+	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &info, context));
 
 	/* Get the file */
 	CHECK_STOP (camera, sierra_get_string_register (camera, regd, n,
-					file, NULL, &(info.size_file)));
-	CHECK (camera_stop (camera));
+					file, NULL, &(info.size_file), context));
+	CHECK (camera_stop (camera, context));
 
 	/* Now get the data and do some post-processing */
 	CHECK (gp_file_get_data_and_size (file, &data, &size));
@@ -479,8 +478,8 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
 	/* Set the working folder and delete all pictures there */
-	CHECK (camera_start (camera));
-	CHECK_STOP (camera, sierra_change_folder (camera, folder));
+	CHECK (camera_start (camera, context));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
 	CHECK_STOP (camera, sierra_delete_all (camera));
 
 	/*
@@ -492,11 +491,11 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	 * pictures, return an error. libgphoto2 will then try to manually
 	 * delete them one-by-one.
 	 */
-	CHECK_STOP (camera, sierra_get_int_register (camera, 10, &count));
+	CHECK_STOP (camera, sierra_get_int_register (camera, 10, &count, context));
 	if (count > 0)
 		return (GP_ERROR);
 
-	return (camera_stop (camera));
+	return (camera_stop (camera, context));
 }
 
 static int
@@ -514,10 +513,10 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
 
 	/* Set the working folder and delete the file */
-	CHECK (camera_start (camera));
-	CHECK_STOP (camera, sierra_change_folder (camera, folder));
-	CHECK_STOP (camera, sierra_delete (camera, n + 1));
-	CHECK (camera_stop (camera));
+	CHECK (camera_start (camera, context));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
+	CHECK_STOP (camera, sierra_delete (camera, n + 1, context));
+	CHECK (camera_stop (camera, context));
 
 	return (GP_OK);
 }
@@ -526,9 +525,9 @@ static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context) 
 {
-	CHECK (camera_start (camera));
+	CHECK (camera_start (camera, context));
 	CHECK_STOP (camera, sierra_capture (camera, type, path, context));
-	CHECK (camera_stop (camera));
+	CHECK (camera_stop (camera, context));
 
 	return (GP_OK);
 }
@@ -536,9 +535,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	CHECK (camera_start (camera));
-	CHECK_STOP (camera, sierra_capture_preview (camera, file));
-	CHECK (camera_stop (camera));
+	CHECK (camera_start (camera, context));
+	CHECK_STOP (camera, sierra_capture_preview (camera, file, context));
+	CHECK (camera_stop (camera, context));
 
 	return (GP_OK);
 }
@@ -564,28 +563,28 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 	/* Check the size */
 	CHECK (gp_file_get_data_and_size (file, &data_file, &data_size));
 	if ( data_size == 0 ) {
-		gp_camera_set_error (camera,
+		gp_context_error (context,
 			_("The file to be uploaded has a null length"));
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
 	/* Initialize the camera */
-	CHECK (camera_start (camera));
+	CHECK (camera_start (camera, context));
 
 	/* Check the battery capacity */
-	CHECK (sierra_check_battery_capacity (camera));
+	CHECK (sierra_check_battery_capacity (camera, context));
 
 	/* Check the available memory */
-	CHECK (sierra_get_memory_left(camera, &available_memory));
+	CHECK (sierra_get_memory_left(camera, &available_memory, context));
 	if (available_memory < data_size) {
-		gp_camera_set_error(camera,
+		gp_context_error (context,
 				    _("Not enough memory available on the memory card"));
 		return GP_ERROR_NO_MEMORY;
 	}
 
 	/* Get the name of the folder containing the pictures */
 	if ( (ret = sierra_get_picture_folder(camera, &picture_folder)) != GP_OK ) {
-		gp_camera_set_error(camera,
+		gp_context_error (context,
 				    _("Cannot retrieve the name of the folder containing the pictures"));
 		return ret;
 	}
@@ -593,7 +592,7 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 	/* Check the destination folder is the folder containing the pictures.
 	   Otherwise, the upload is not supported by the camera. */
 	if ( strcmp(folder, picture_folder) ) {
-		gp_camera_set_error(camera, _("Upload is supported into the '%s' folder only"),
+		gp_context_error (context, _("Upload is supported into the '%s' folder only"),
 				    picture_folder);
 		free(picture_folder);
 		return GP_ERROR_NOT_SUPPORTED;
@@ -605,13 +604,13 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 	   into the picure folder */
 
 	/* Upload the file */
-	CHECK_STOP (camera, sierra_upload_file (camera, file));
+	CHECK_STOP (camera, sierra_upload_file (camera, file, context));
 
-	return (camera_stop (camera));
+	return (camera_stop (camera, context));
 }
 
 // FIXME: Is this function still usefull ?
-static void dump_register (Camera *camera)
+static void dump_register (Camera *camera, GPContext *context)
 {
 	int ret, value, i;
 	const char *description[] = {
@@ -685,7 +684,7 @@ static void dump_register (Camera *camera)
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** Register:");
 	for (i = 0; i < 128; i++) {
-		ret = sierra_get_int_register (camera, i, &value);
+		ret = sierra_get_int_register (camera, i, &value, context);
 		if (ret == GP_OK)
 			gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 					 "***  %3i: %12i (%s)", i, value, 
@@ -703,14 +702,14 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_get_config_olympus");
 
-	CHECK (camera_start (camera));
+	CHECK (camera_start (camera, context));
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
 	gp_widget_new (GP_WIDGET_SECTION, _("Picture Settings"), &section);
 	gp_widget_append (*window, section);
 
 	/* Resolution */
-	ret = sierra_get_int_register (camera, 1, &value);
+	ret = sierra_get_int_register (camera, 1, &value, context);
         if (ret == GP_OK) {
 
 		gp_widget_new (GP_WIDGET_RADIO, _("Resolution"), &child);
@@ -737,7 +736,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
         }
 
 	/* Shutter Speed */
-        ret = sierra_get_int_register (camera, 3, &value);
+        ret = sierra_get_int_register (camera, 3, &value, context);
         if (ret == GP_OK) {
 		
 		gp_widget_new (GP_WIDGET_RANGE, 
@@ -749,7 +748,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
         }
 
 	/* Aperture */
-        ret = sierra_get_int_register (camera, 5, &value);
+        ret = sierra_get_int_register (camera, 5, &value, context);
         if (ret == GP_OK) {
 
 		gp_widget_new (GP_WIDGET_RADIO, _("Aperture"), &child);
@@ -776,7 +775,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
         }
 
 	/* Color Mode */
-        ret = sierra_get_int_register (camera, 6, &value);
+        ret = sierra_get_int_register (camera, 6, &value, context);
         if (ret == GP_OK) {
 
 		// Those values are for a C-2020 Z. If your model differs, we
@@ -808,7 +807,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
         }
 
 	/* Flash Mode */
-	ret = sierra_get_int_register (camera, 7, &value);
+	ret = sierra_get_int_register (camera, 7, &value, context);
         if (ret == GP_OK) {
 
 		gp_widget_new (GP_WIDGET_RADIO, _("Flash Mode"), &child);
@@ -838,7 +837,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
         }
 
 	/* Brightness/Contrast */
-        ret = sierra_get_int_register (camera, 19, &value);
+        ret = sierra_get_int_register (camera, 19, &value, context);
         if (ret == GP_OK) {
 
 		gp_widget_new (GP_WIDGET_RADIO, _("Brightness/Contrast"), 
@@ -869,7 +868,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
         }
 
 	/* White Balance */
-        ret = sierra_get_int_register (camera, 20, &value);
+        ret = sierra_get_int_register (camera, 20, &value, context);
         if (ret == GP_OK) {
 		
 		gp_widget_new (GP_WIDGET_RADIO, _("White Balance"), &child);
@@ -900,7 +899,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
         }
 
 	/* Lens Mode */
-        ret = sierra_get_int_register (camera, 33, &value);
+        ret = sierra_get_int_register (camera, 33, &value, context);
         if (ret == GP_OK) {
 
 		gp_widget_new (GP_WIDGET_RADIO, _("Lens Mode"), &child);
@@ -924,7 +923,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
         }
 
 	/* Spot Metering Mode */
-	ret = sierra_get_int_register (camera, 70, &value);
+	ret = sierra_get_int_register (camera, 70, &value, context);
 	if (ret == GP_OK) {
 		
 		gp_widget_new (GP_WIDGET_RADIO, _("Spot Metering Mode"), 
@@ -946,7 +945,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	}
 
 	/* Zoom */
-	ret = sierra_get_int_register (camera, 72, &value);
+	ret = sierra_get_int_register (camera, 72, &value, context);
 	if (ret == GP_OK) {
 
 		gp_widget_new (GP_WIDGET_RADIO, _("Zoom"), &child);
@@ -978,7 +977,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	gp_widget_append (*window, section);
 
 	/* Auto Off (host) */
-	ret = sierra_get_int_register (camera, 23, &value);
+	ret = sierra_get_int_register (camera, 23, &value, context);
 	if (ret == GP_OK) {
 		
 		gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (host) "
@@ -992,7 +991,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	}
 
 	/* Auto Off (field) */
-	ret = sierra_get_int_register (camera, 24, &value);
+	ret = sierra_get_int_register (camera, 24, &value, context);
 	if (ret == GP_OK) {
 
 		gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (field) "
@@ -1006,7 +1005,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	}
 
 	/* LCD Brightness */
-	ret = sierra_get_int_register (camera, 35, &value);
+	ret = sierra_get_int_register (camera, 35, &value, context);
 	if (ret == GP_OK) {
 		
 		gp_widget_new (GP_WIDGET_RANGE, _("LCD Brightness"), &child);
@@ -1016,7 +1015,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	}
 
 	/* LCD Auto Off */
-	ret = sierra_get_int_register (camera, 38, &value);
+	ret = sierra_get_int_register (camera, 38, &value, context);
 	if (ret == GP_OK) {
 
 		gp_widget_new (GP_WIDGET_RANGE, _("LCD Auto Off (in "
@@ -1026,7 +1025,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 		gp_widget_append (section, child);
 	}
 
-	return (camera_stop (camera));
+	return (camera_stop (camera, context));
 }
 
 static int
@@ -1038,7 +1037,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_set_config");
 
-	CHECK (camera_start (camera));
+	CHECK (camera_start (camera, context));
 
 	/* Resolution */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting resolution");
@@ -1056,7 +1055,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			i = 3;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 1, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 1, i, context));
 	}
 	
 	/* Shutter Speed */
@@ -1065,7 +1064,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 		_("Shutter Speed (microseconds)"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
 		gp_widget_get_value (child, &i);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 3, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 3, i, context));
 	}
 
 	/* Aperture */
@@ -1084,7 +1083,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			i = 3;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 5, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 5, i, context));
 	}
 
 	/* Color Mode */
@@ -1105,7 +1104,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			i = 4;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 6, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 6, i, context));
 	}
 
 	/* Flash Mode */
@@ -1126,7 +1125,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			i = 4;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 7, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 7, i, context));
 	}
 
 	/* Brightness/Contrast */
@@ -1148,7 +1147,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			i = 4;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 19, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 19, i, context));
 	}
 
 	/* White Balance */
@@ -1169,7 +1168,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			i = 4;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 20, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 20, i, context));
 	}
 
 	/* Lens Mode */
@@ -1186,7 +1185,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			i = 3;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 33, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 33, i, context));
         }
 
 	/* Spot Metering Mode */
@@ -1202,7 +1201,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			i = 5;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 33, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 33, i, context));
 	}
 
 	/* Zoom */
@@ -1221,7 +1220,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			i = 1032;
 		} else 
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 72, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 72, i, context));
 	}
 
         /* Auto Off (host) */
@@ -1230,7 +1229,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 					  "(in seconds)"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
 		gp_widget_get_value (child, &i);
-                CHECK_STOP (camera, sierra_set_int_register (camera, 23, i));
+                CHECK_STOP (camera, sierra_set_int_register (camera, 23, i, context));
         }
 
         /* Auto Off (field) */
@@ -1240,7 +1239,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 		"(in seconds)"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
 		gp_widget_get_value (child, &i);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 24, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 24, i, context));
 	}
 
         /* LCD Brightness */
@@ -1249,7 +1248,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 		_("LCD Brightness"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
 		gp_widget_get_value (child, &i);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 35, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 35, i, context));
 	}
 
         /* LCD Auto Off */
@@ -1258,10 +1257,10 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 		_("LCD Auto Off (in seconds)"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
 		gp_widget_get_value (child, &i);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 38, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 38, i, context));
         }
 
-	return (camera_stop (camera));
+	return (camera_stop (camera, context));
 }
 
 
@@ -1275,7 +1274,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_get_config_epson");
 
-	CHECK (camera_start (camera));
+	CHECK (camera_start (camera, context));
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
 
@@ -1283,7 +1282,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 	gp_widget_append (*window, section);
 
 	/* Aperture */
-        ret = sierra_get_int_register (camera, 5, &value);
+        ret = sierra_get_int_register (camera, 5, &value, context);
         if (ret == GP_OK) {
 		gp_widget_new (GP_WIDGET_RADIO, _("Aperture"), &child);
 		gp_widget_add_choice (child, _("F2"));
@@ -1317,7 +1316,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
         }
 
 	/* Flash Mode */
-	ret = sierra_get_int_register (camera, 7, &value);
+	ret = sierra_get_int_register (camera, 7, &value, context);
         if (ret == GP_OK) {
 		gp_widget_new (GP_WIDGET_RADIO, _("Flash Mode"), &child);
 		gp_widget_add_choice (child, _("Auto"));
@@ -1345,7 +1344,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
         }
 
 	/* White Balance */
-        ret = sierra_get_int_register (camera, 20, &value);
+        ret = sierra_get_int_register (camera, 20, &value, context);
         if (ret == GP_OK) {
 		gp_widget_new (GP_WIDGET_RADIO, _("White Balance"), &child);
 		gp_widget_add_choice (child, _("Auto"));
@@ -1371,7 +1370,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 	gp_widget_append (*window, section);
 
 	/* Lens Mode */
-        ret = sierra_get_int_register (camera, 33, &value);
+        ret = sierra_get_int_register (camera, 33, &value, context);
         if (ret == GP_OK) {
 		gp_widget_new (GP_WIDGET_RADIO, _("Lens Mode"), &child);
 		gp_widget_add_choice (child, _("Macro"));
@@ -1390,7 +1389,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
         }
 
 	/* Resolution */
-	ret = sierra_get_int_register (camera, 1, &value);
+	ret = sierra_get_int_register (camera, 1, &value, context);
         if (ret == GP_OK) {
 		gp_widget_new (GP_WIDGET_RADIO, _("Resolution"), &child);
 		gp_widget_add_choice (child, _("Standard"));
@@ -1416,7 +1415,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
         }
 
 	/* Color Mode */
-	ret = sierra_get_int_register (camera, 6, &value);
+	ret = sierra_get_int_register (camera, 6, &value, context);
 	if (ret == GP_OK) {
 		gp_widget_new (GP_WIDGET_RADIO, _("Color Mode"), &child);
 		gp_widget_add_choice (child, _("color"));
@@ -1438,7 +1437,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 	gp_widget_append (*window, section);
 
 	/* Auto Off (host) */
-	ret = sierra_get_int_register (camera, 23, &value);
+	ret = sierra_get_int_register (camera, 23, &value, context);
 	if (ret == GP_OK) {
 		
 		gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (host) "
@@ -1452,7 +1451,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 	}
 
 	/* Auto Off (field) */
-	ret = sierra_get_int_register (camera, 24, &value);
+	ret = sierra_get_int_register (camera, 24, &value, context);
 	if (ret == GP_OK) {
 
 		gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (field) "
@@ -1466,7 +1465,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 	}
 
 	/* Language */
-	ret = sierra_get_int_register (camera, 53, &value);
+	ret = sierra_get_int_register (camera, 53, &value, context);
         if (ret == GP_OK) {
 		gp_widget_new (GP_WIDGET_RADIO, _("Language"), &child);
 		gp_widget_add_choice (child, _("Korean"));
@@ -1503,14 +1502,14 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
         }
 
 	/* Date & Time */
-	ret = sierra_get_int_register (camera, 2, &value);
+	ret = sierra_get_int_register (camera, 2, &value, context);
 	if (ret == GP_OK) {
 		gp_widget_new (GP_WIDGET_DATE, _("Date & Time"), &child);
 		gp_widget_set_value (child, &value);
 		gp_widget_append (section, child);
 	}
 
-	return (camera_stop (camera));
+	return (camera_stop (camera, context));
 }
 
 static int
@@ -1522,7 +1521,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_set_config_epson");
 
-	CHECK (camera_start (camera));
+	CHECK (camera_start (camera, context));
 
 	/* Aperture */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting aperture");
@@ -1545,7 +1544,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 			i = 6;			
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 5, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 5, i, context));
 	}
 
 	/* Flash Mode */
@@ -1565,7 +1564,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 			i = 4;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 7, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 7, i, context));
 	}
 
 	/* White Balance */
@@ -1581,7 +1580,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 			i = 225;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 20, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 20, i, context));
 	}
 
 	/* Lens Mode */
@@ -1596,7 +1595,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 			i = 2;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 33, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 33, i, context));
         }
 
 	/* Resolution */
@@ -1614,7 +1613,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 			i = 34;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 1, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 1, i, context));
 	}
 	
 	/* Color Mode */
@@ -1628,7 +1627,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 			i = 2;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 6, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 6, i, context));
 	}
 
         /* Auto Off (host) */
@@ -1637,7 +1636,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 					  "(in seconds)"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
 		gp_widget_get_value (child, &i);
-                CHECK_STOP (camera, sierra_set_int_register (camera, 23, i));
+                CHECK_STOP (camera, sierra_set_int_register (camera, 23, i, context));
         }
 
         /* Auto Off (field) */
@@ -1647,7 +1646,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 		"(in seconds)"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
 		gp_widget_get_value (child, &i);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 24, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 24, i, context));
 	}
 
 	/* Language */
@@ -1673,7 +1672,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 			i = 9;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 53, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 53, i, context));
 	}
 
 	/* Date & Time */
@@ -1682,10 +1681,10 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 		== GP_OK) &&
 	    gp_widget_changed (child)) {
 		gp_widget_get_value (child, &i);
-		CHECK_STOP (camera, sierra_set_int_register (camera, 2, i));
+		CHECK_STOP (camera, sierra_set_int_register (camera, 2, i, context));
 	}
 
-	return (camera_stop (camera));
+	return (camera_stop (camera, context));
 }
 
 
@@ -1714,58 +1713,58 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_summary");
 
-	CHECK (camera_start (camera));
+	CHECK (camera_start (camera, context));
 
 	/* At least on PhotoPC 3000z, if no card is present near all retrieved
 	   info are either unreadable or invalid... */
-	if (sierra_get_int_register(camera, 51, &value) == GP_OK)
+	if (sierra_get_int_register(camera, 51, &value, context) == GP_OK)
 		if (value == 1) {
 			strcpy (buf, _("NO MEMORY CARD PRESENT\n"));
 			strcpy (summary->text, buf);
-			return (camera_stop(camera));
+			return (camera_stop (camera, context));
 		}
 
 	strcpy(buf, "");
 
 	/* Get all the string-related info */
-	ret = sierra_get_string_register (camera, 27, 0, NULL, t, &value);
+	ret = sierra_get_string_register (camera, 27, 0, NULL, t, &value, context);
 	if (ret == GP_OK)
 		sprintf (buf, _("%sCamera Model: %s\n"), buf, t);
 	
-	ret = sierra_get_string_register (camera, 48, 0, NULL, t, &value);
+	ret = sierra_get_string_register (camera, 48, 0, NULL, t, &value, context);
 	if (ret == GP_OK)
 		sprintf (buf, _("%sManufacturer: %s\n"), buf, t);
 
-	ret = sierra_get_string_register (camera, 22, 0, NULL, t, &value);
+	ret = sierra_get_string_register (camera, 22, 0, NULL, t, &value, context);
 	if (ret == GP_OK)
 		sprintf (buf, _("%sCamera ID: %s\n"), buf, t);
 
-	ret = sierra_get_string_register (camera, 25, 0, NULL, t, &value);
+	ret = sierra_get_string_register (camera, 25, 0, NULL, t, &value, context);
 	if (ret == GP_OK)
 		sprintf (buf, _("%sSerial Number: %s\n"), buf, t);
 
-	ret = sierra_get_string_register (camera, 26, 0, NULL, t, &value);
+	ret = sierra_get_string_register (camera, 26, 0, NULL, t, &value, context);
 	if (ret == GP_OK)
 		sprintf (buf, _("%sSoftware Rev.: %s\n"), buf, t);
 
 	/* Get all the integer information */
-	if (sierra_get_int_register(camera, 40, &value) == GP_OK)
+	if (sierra_get_int_register(camera, 40, &value, context) == GP_OK)
 		sprintf (buf, _("%sFrames Taken: %i\n"), buf, value);
-	if (sierra_get_int_register(camera, 11, &value) == GP_OK)
+	if (sierra_get_int_register(camera, 11, &value, context) == GP_OK)
 		sprintf (buf, _("%sFrames Left: %i\n"), buf, value);
-	if (sierra_get_int_register(camera, 16, &value) == GP_OK)
+	if (sierra_get_int_register(camera, 16, &value, context) == GP_OK)
 		sprintf (buf, _("%sBattery Life: %i\n"), buf, value);
-	if (sierra_get_int_register(camera, 28, &value) == GP_OK)
+	if (sierra_get_int_register(camera, 28, &value, context) == GP_OK)
 		sprintf (buf, _("%sMemory Left: %i bytes\n"), buf, value);
 
 	/* Get date */
-	if (sierra_get_int_register (camera, 2, &value) == GP_OK)
+	if (sierra_get_int_register (camera, 2, &value, context) == GP_OK)
 		sprintf (buf, _("%sDate: %s\n"), buf, 
 			 ctime ((time_t*) &value));
 
 	strcpy (summary->text, buf);
 
-	return (camera_stop(camera));
+	return (camera_stop (camera, context));
 }
 
 static int
@@ -1953,30 +1952,26 @@ int camera_init (Camera *camera, GPContext *context)
         CHECK_FREE (camera, gp_port_set_timeout (camera->port, TIMEOUT));
 
         /* Establish a connection */
-        CHECK_FREE (camera, camera_start (camera));
+        CHECK_FREE (camera, camera_start (camera, context));
 
         /* FIXME??? What's that for? */
-	gp_camera_set_error (camera, NULL);
-        ret = sierra_get_int_register (camera, 1, &value);
+        ret = sierra_get_int_register (camera, 1, &value, context);
         if (ret != GP_OK) {
 		gp_log (GP_LOG_DEBUG, "sierra", "Could not get register 1: %s",
 			gp_camera_get_error (camera));
-		gp_camera_set_error (camera, NULL);
 	}
 
         /* FIXME??? What's that for? "Resetting folder system"? */
-	gp_camera_set_error (camera, NULL);
-        ret = sierra_set_int_register (camera, 83, -1);
+        ret = sierra_set_int_register (camera, 83, -1, context);
         if (ret != GP_OK) {
 		gp_log (GP_LOG_DEBUG, "sierra", "Could not set register 83 "
 			"to -1: %s", gp_camera_get_error (camera));
-		gp_camera_set_error (camera, NULL);
 	}
 
         CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, 50));
 
         /* Folder support? */
-        ret = sierra_set_string_register (camera, 84, "\\", 1);
+        ret = sierra_set_string_register (camera, 84, "\\", 1, context);
         if (ret != GP_OK) {
                 camera->pl->folders = 0;
                 gp_debug_printf (GP_DEBUG_LOW, "sierra", 
@@ -2000,6 +1995,6 @@ int camera_init (Camera *camera, GPContext *context)
 	CHECK_STOP_FREE (camera, gp_filesystem_set_folder_funcs (camera->fs,
 				put_file_func, delete_all_func, NULL, NULL, camera));
 
-        return (camera_stop (camera));
+        return (camera_stop (camera, context));
 }
 

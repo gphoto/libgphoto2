@@ -1,3 +1,7 @@
+2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* *.[c,h]: Remove references to gp_camera_set_error.
+
 2002-01-09  Dan Fandrich <dan@coneharvesters.com>
 
 	* sierra-usbwrap.c: Fixed a pointer arithmetic portability issue.
