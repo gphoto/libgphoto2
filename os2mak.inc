@@ -6,7 +6,8 @@ CC=gcc
 DLLLINKFLAGS=-Zdll -Zmtd -Zcrtdll
 EXELINKFLAGS=-Zmtd -Zcrtdll
 LINK=gcc
-LIBS=-L$(BASEPATH)\lib -Zbin-files -llibgphoto2 -llibgphoto2_port -ldllib -lst\check -lgcc
+#LIBS=-L$(BASEPATH)\lib -Zbin-files -llibgphoto2 -llibgphoto2_port -ldllib -lst\check -lgcc
+LIBS=-L$(BASEPATH)\lib -Zbin-files -llibgphoto2 -llibgphoto2_port -ldllib
 MAKEDEF=copy $*.df $@ >NUL & emxexp $** >> $@
 MKLIB=ar r
 

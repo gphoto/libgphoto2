@@ -50,7 +50,9 @@ int camera_abilities (CameraAbilitiesList *list) {
            if a camera supported multiple ways. */
         strcpy(a->model, "Sony DSC-F1");
         a->port=GP_PORT_SERIAL;
-        a->speed[0] = 0;
+        a->speed[0] = 9600;
+        a->speed[1] = 19200;
+        a->speed[2] = 38400;
         a->operations        =  GP_OPERATION_NONE;
         a->file_operations   =  GP_FILE_OPERATION_DELETE |
                                 GP_FILE_OPERATION_PREVIEW;
@@ -98,7 +100,7 @@ int camera_init (Camera *camera) {
         gp_port_timeout_set(b->dev, 5000);
         strcpy(settings.serial.port, camera->port->path);
 
-        settings.serial.speed   = 38400;
+        settings.serial.speed   = camera->port->speed;
         settings.serial.bits    = 8;
         settings.serial.parity  = 0;
         settings.serial.stopbits= 1;

@@ -17,5 +17,5 @@ directory.def: directory.o
    @$(MAKEDEF)
 
 $(CAMLIBS)\gpdirbrw.dll: $(OBJS) directory.def
-   @$(CC) $(DLLLINKFLAGS) -o $@ $** $(LIBS)
+   @$(CC) $(DLLLINKFLAGS) -o $@ $** $(LIBS) -lst\check -lgcc
 
