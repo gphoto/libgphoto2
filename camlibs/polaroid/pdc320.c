@@ -18,6 +18,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/* Originally written by Peter Desnoyers <pjd@fred.cambridge.ma.us>, 
+ * and adapted for gphoto2 by
+ * Nathan Stenzel <nathanstenzel@users.sourceforge.net> and
+ * Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ * Maintained by Nathan Stenzel <nathanstenzel@users.sourceforge.net>
+ */
+
 #include <gphoto2-library.h>
 #include <gphoto2-core.h>
 #include <stdlib.h>
@@ -178,8 +186,9 @@ pdc320_delete (CameraPort *port)
 }
 
 static int
-pdc320_size (CameraPort *port, int n)
+pdc320_size (Camera *camera, int n)
 {
+	CameraPort port = camera->port;
 	int size, i;
 	unsigned char buf[256];
 	unsigned char cmd[] = PDC320_SIZE;
@@ -196,10 +205,10 @@ pdc320_size (CameraPort *port, int n)
 		CHECK_RESULT (gp_port_read (port, buf, 1));
 		if (buf[0] != ACK) {
 			/*			
-			if (model==PDC640SE) {
+			if (camera->model==PDC640SE) {
 				CHECK_RESULT (gp_port_read (port, buf, buf[0]+2));
 				CHECK_RESULT (pdc320_init(port));
-			} else if (model==PDC320) {
+			} else if (camera->model==PDC320) {
 			// I have no clue else than to flush the whole buffer
 			}
 			*/
@@ -226,8 +235,9 @@ pdc320_size (CameraPort *port, int n)
 }
 
 static int
-pdc320_pic (CameraPort *port, int n, unsigned char **data, int *size)
+pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 {
+	CameraPort port = camera->port;
 	unsigned char cmd[] = PDC320_PIC;
 	unsigned char buf[2048];
 	int remaining, f1, f2, i, len, checksum;
@@ -235,7 +245,7 @@ pdc320_pic (CameraPort *port, int n, unsigned char **data, int *size)
 	/* Get the size of the picture and allocate the memory */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Checking size of image %i...",
 			 n);
-	CHECK_RESULT (*size = pdc320_size (port, n));
+	CHECK_RESULT (*size = pdc320_size (camera, n));
 	*data = malloc (sizeof (char) * (*size));
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
@@ -323,7 +333,7 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 
 	/* Get the file */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Getting file %i...", n);
-	CHECK_RESULT (pdc320_pic (camera->port, n, &data, &size));
+	CHECK_RESULT (pdc320_pic (camera, n, &data, &size));
 
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
 	CHECK_RESULT (gp_file_set_name (file, filename));
@@ -412,5 +422,7 @@ camera_init (Camera *camera)
 
 	return (result);
 }
+
+
 
 
