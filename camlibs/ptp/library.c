@@ -481,10 +481,12 @@ camera_exit (Camera *camera, GPContext *context)
 	/* get port settings */
 	CR (gp_port_get_settings (camera->port, &settings));
 	if (camera->pl) {
+#if 0
 		/* it won't hurt */
 		GP_DEBUG ("Clearing STALL condition on ep: 0x%x",
 		settings.usb.outep);
 		gp_port_usb_clear_halt(camera->port, settings.usb.outep);
+#endif
 		/* close ptp session */
 		ptp_closesession (&camera->pl->params);
 		free (camera->pl);
@@ -699,7 +701,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* Get (parent) folder handle omiting storage pseudofolder */
 	find_folder_handle(folder,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
-	if (params->objectinfo[i].ParentObject==parent)
+	if (params->handles.handler[i]==parent)
 	if ((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) || 
 		(params->objectinfo[i].StorageID == storage))
 	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
@@ -1006,6 +1008,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	
 		oi=&camera->pl->params.objectinfo[i];
 		GP_DEBUG ("ObjectInfo for '%s':", oi->Filename);
+		GP_DEBUG ("  Object ID: 0x%.4x", camera->pl->params.handles.handler[i]);
 		GP_DEBUG ("  StorageID: 0x%.4x", oi->StorageID);
 		GP_DEBUG ("  ObjectFormat: 0x%.4x", oi->ObjectFormat);
 		GP_DEBUG ("  ObjectCompressedSize: %d", oi->ObjectCompressedSize);
