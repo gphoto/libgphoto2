@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "POT-Creation-Date: 2003-07-10 17:22-0400\n"
-"PO-Revision-Date: 2003-07-10 17:31-0400\n"
+"PO-Revision-Date: 2003-07-11 14:45-0400\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgstr "Konnte Verzeichnis >>%s<< nicht löschen."
 
 #: camlibs/canon/canon.c:764 camlibs/canon/canon.c:986 camlibs/canon/usb.c:229
 msgid "lock keys failed."
-msgstr "koennte Tasten nicht sperren."
+msgstr "könnte Tasten nicht sperren."
 
 #: camlibs/canon/canon.c:827 camlibs/canon/canon.c:828
 msgid "*UNKNOWN*"
@@ -125,11 +125,11 @@ msgstr "Datei geschützt."
 #: camlibs/canon/canon.c:2145
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
-"Koennte JPEG Vorschaubild von Daten nicht ausziehen: Daten sind nicht JFIF"
+"Könnte JPEG Vorschaubild von Daten nicht ausziehen: Daten sind nicht JFIF"
 
 #: camlibs/canon/canon.c:2170
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
-msgstr "Koennte JPEG Vorschaubild von Daten nicht ausziehen: keine Anfang/Ende"
+msgstr "Könnte JPEG Vorschaubild von Daten nicht ausziehen: keine Anfang/Ende"
 
 #: camlibs/canon/library.c:134
 msgid ""
@@ -423,8 +423,8 @@ msgid ""
 "canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory "
 "entries"
 msgstr ""
-"\"canon_serial_get_dirents: canon_serial_dialogue koennte "
-"Verzeichniselemente nicht holen \""
+"\"canon_serial_get_dirents: canon_serial_dialogue könnte Verzeichniselemente "
+"nicht holen \""
 
 #: camlibs/canon/serial.c:1131
 #, c-format
@@ -437,11 +437,11 @@ msgstr ""
 #: camlibs/canon/serial.c:1151
 #, c-format
 msgid "canon_serial_get_dirents: Could not allocate %i bytes of memory"
-msgstr "canon_serial_get_dirents: Koennte nicht %i bytes Speicherplatz holen"
+msgstr "canon_serial_get_dirents: Könnte nicht %i bytes Speicherplatz holen"
 
 #: camlibs/canon/serial.c:1171
 msgid "canon_serial_get_dirents: Failed to read another directory entry"
-msgstr "canon_serial_get_dirents: Koennte keine Verzeichniselemente noch lesen"
+msgstr "canon_serial_get_dirents: Könnte keine Verzeichniselemente noch lesen"
 
 #: camlibs/canon/serial.c:1189
 msgid "canon_serial_get_dirents: Truncated directory entry received"
@@ -450,15 +450,15 @@ msgstr "canon_serial_get_dirents: Verkurzte Verzeichniselemente erhalten"
 #: camlibs/canon/serial.c:1216
 msgid "canon_serial_get_dirents: Too many dirents, we must be looping."
 msgstr ""
-"canon_serial_get_dirents: Zu viele Verzeichniselemente, wir muessen in einem "
-"Teufelskres sein."
+"canon_serial_get_dirents: Zu viele Verzeichniselemente, wir müssen in einem "
+"Teufelskreis geraten sein."
 
 #: camlibs/canon/serial.c:1226
 #, c-format
 msgid "canon_serial_get_dirents: Could not resize dirent buffer to %i bytes"
 msgstr ""
-"canon_serial_get_dirents: Koennte Groesse des Verzeichniselementspuffers "
-"nicht auf %i bytes veraendern"
+"canon_serial_get_dirents: Könnte Größe des Verzeichniselementspuffers nicht "
+"auf %i bytes verändern"
 
 #: camlibs/canon/serial.c:1295
 msgid "Error changing speed."
@@ -538,12 +538,12 @@ msgstr "Mit Kamera verbunden"
 
 #: camlibs/canon/serial.c:1505
 msgid "ERROR: a fatal error condition was detected, can't continue "
-msgstr "FEHLER: eine Fatalfehler wuerde empfindet, kann nicht weitermachen"
+msgstr "FEHLER: eine Fatalfehler würde empfindet, kann nicht weitermachen"
 
 #: camlibs/canon/serial.c:1521
 #, c-format
 msgid "ERROR: %d is too big"
-msgstr "FEHLER: %d ist zu gross"
+msgstr "FEHLER: %d ist zu groß"
 
 #: camlibs/canon/serial.c:1531
 msgid "Getting thumbnail..."
@@ -639,7 +639,7 @@ msgid ""
 "canon_usb_lock_keys: Unexpected amount of data returned (%i bytes, expected %"
 "i)"
 msgstr ""
-"canon_usb_lock_keys: Unerwartete Dateilaenge erhalten (%i erhalten, %i "
+"canon_usb_lock_keys: Unerwartete Dateilänge erhalten (%i erhalten, %i "
 "erwartet)"
 
 #: camlibs/canon/usb.c:412
@@ -648,7 +648,7 @@ msgid ""
 "canon_usb_lock_keys: Unexpected return of %i bytes (expected %i) from \"get "
 "picture abilities.\""
 msgstr ""
-"canon_usb_lock_keys: Unerwartete Dateilaenge erhalten (%i erhalten, %i "
+"canon_usb_lock_keys: Unerwartete Dateilänge erhalten (%i erhalten, %i "
 "erwartet) bei >>get picture abilities<<"
 
 #: camlibs/canon/usb.c:466
@@ -657,7 +657,7 @@ msgid ""
 "canon_usb_unlock_keys: Unexpected amount of data returned (%i bytes, "
 "expected %i)"
 msgstr ""
-"canon_usb_unlock_keys: Unerwartete Dateilaenge erhalten (%i erhalten, %i "
+"canon_usb_unlock_keys: Unerwartete Dateilänge erhalten (%i erhalten, %i "
 "erwartet)"
 
 #: camlibs/canon/usb.c:517
@@ -674,31 +674,29 @@ msgid ""
 "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
 "\""
 msgstr ""
-"canon_usb_poll_interrupt_pipe: lesen von Interruptroehre fehlgeschlagen nach "
-"%i versuchen, >>%s<<"
+"canon_usb_poll_interrupt_pipe: lesen vom Interruptrohr fehlgeschlagen nach %"
+"i versuchen, >>%s<<"
 
 #: camlibs/canon/usb.c:668
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
 msgstr ""
-"canon_usb_capture_dialogue: Falsche Paketlaenge 0x%04x fuer "
-"Vorschaubildslaenge"
+"canon_usb_capture_dialogue: Falsche Paketlänge 0x%04x füer Vorschaubildslänge"
 
 #: camlibs/canon/usb.c:679
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
-msgstr ""
-"canon_usb_capture_dialogue: Falsche Paketlaenge 0x%04x fuer Bildslaenge"
+msgstr "canon_usb_capture_dialogue: Falsche Paketlänge 0x%04x für Bildslänge"
 
 #: camlibs/canon/usb.c:699
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
-msgstr "canon_usb_capture_dialogue: erste Interruptspaket ausser Reihenfolge"
+msgstr "canon_usb_capture_dialogue: erste Interruptspaket außer Reihenfolge"
 
 #: camlibs/canon/usb.c:707
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
-msgstr "canon_usb_capture_dialogue: zweite Interruptspaket ausser Reihenfolge"
+msgstr "canon_usb_capture_dialogue: zweite Interruptspaket außer Reihenfolge"
 
 #: camlibs/canon/usb.c:717
 #, c-format
@@ -711,17 +709,17 @@ msgstr ""
 #: camlibs/canon/usb.c:735
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
 msgstr ""
-"canon_usb_capture_dialogue: dritte EOS Interruptspaket ausser Reihenfolge"
+"canon_usb_capture_dialogue: dritte EOS Interruptspaket außer Reihenfolge"
 
 #: camlibs/canon/usb.c:762
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
 msgstr ""
-"canon_usb_capture_dialogue: zweite EOS Interruptspaket ausser Reihenfolge"
+"canon_usb_capture_dialogue: zweite EOS Interruptspaket außer Reihenfolge"
 
 #: camlibs/canon/usb.c:917
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
-msgstr "canon_usb_dialogue: Nutzlast zu gross, passt nicht in Puffer (%i > %i)"
+msgstr "canon_usb_dialogue: Nutzlast zu groß, passt nicht in Puffer (%i > %i)"
 
 #: camlibs/canon/usb.c:1071
 msgid "Receiving data..."
@@ -730,7 +728,7 @@ msgstr "Empfange Daten..."
 #: camlibs/canon/usb.c:1352 camlibs/canon/usb.c:1427 camlibs/canon/usb.c:1448
 #, c-format
 msgid "Out of memory: %d bytes needed."
-msgstr "Speicherplatz fehlt: %d bytes benoetigt."
+msgstr "Speicherplatz fehlt: %d bytes benötigt."
 
 #: camlibs/canon/usb.c:1438
 #, c-format
@@ -764,7 +762,7 @@ msgid ""
 "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
-"canon_usb_get_dirents: canon_usb_long_dialogue koennte keine "
+"canon_usb_get_dirents: canon_usb_long_dialogue könnte keine "
 "Verzeichniselemente holen, status %i"
 
 #: camlibs/canon/usb.c:1684
@@ -782,7 +780,7 @@ msgid ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
-"canon_usb_list_all_dirs: canon_usb_long_dialogue koennte keine "
+"canon_usb_list_all_dirs: canon_usb_long_dialogue könnte keine "
 "Verzeichniselemente holen, status %i"
 
 #: camlibs/canon/usb.c:1755
@@ -2175,7 +2173,7 @@ msgstr "Dieses Varschaubild existiert nicht."
 
 #: camlibs/konica/qm150.c:284
 msgid "Data has been corrupted."
-msgstr "Daten wuerden beschädigt."
+msgstr "Daten würden beschädigt."
 
 #: camlibs/konica/qm150.c:404
 #, c-format
@@ -2211,7 +2209,7 @@ msgstr "Sie müssen im Aufnahmemodus sein, um Bilder aufzunehmen."
 #: camlibs/konica/qm150.c:643
 msgid "No space available to capture new image. You must delete some images."
 msgstr ""
-"Kein Raum fuer Neuaufnahmen vorhanden. Sie muessen einige Bilder erloeschen."
+"Kein Raum für Neuaufnahmen vorhanden. Sie müssen einige Bilder löschen."
 
 #: camlibs/konica/qm150.c:647
 msgid "Can't capture new image. Unknown error"
@@ -3235,7 +3233,7 @@ msgid ""
 msgstr ""
 "PTP2 Bibliothek\n"
 "(c) 2001-2003 Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-"Viel Spass!"
+"Viel Spaß!"
 
 #: camlibs/ptp2/library.c:583
 #, c-format
@@ -5317,9 +5315,6 @@ msgstr "Unbekannter Fehler des Kamera-Treibers"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
-
-#~ msgid "Could not identify camera based on name \"%s\""
-#~ msgstr "Name >>%s<< passt mit keinem bekanntes Modell"
 
 #, fuzzy
 #~ msgid "lock keys failed.\n"
