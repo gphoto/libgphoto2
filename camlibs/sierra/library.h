@@ -17,6 +17,10 @@
 
 #define	RETRIES			10
 
+/* Camera specific error identifiers.
+   The corresponding error descriptions are in sierra.c */
+#define GP_ERROR_BAD_CONDITION  -1000 /* Bad condition for executing commands */
+
 /* Packet functions */
 int sierra_valid_packet (Camera *camera, char *packet);
 int sierra_write_packet (Camera *camera, char *packet);
@@ -34,9 +38,12 @@ int sierra_get_int_register 	(Camera *camera, int reg, int *value);
 int sierra_set_string_register	(Camera *camera, int reg, char *s, int length);
 int sierra_get_string_register	(Camera *camera, int reg, int file_number,
 				 CameraFile *file, char *s, int *length);
-int sierra_folder_set		(Camera *camera, const char *folder);
 int sierra_delete		(Camera *camera, int picture_number);
 int sierra_delete_all           (Camera *camera);
 int sierra_capture		(Camera *camera, int capture_type, 
 				 CameraFilePath *filepath);
 int sierra_capture_preview 	(Camera *camera, CameraFile *file);
+int sierra_change_folder (Camera *camera, const char *folder);
+
+/* Filesystem functions */
+int sierra_update_fs_for_folder (Camera *camera, const char *folder);
