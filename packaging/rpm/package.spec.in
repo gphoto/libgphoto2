@@ -108,7 +108,7 @@ install -d -m755 %{buildroot}/etc/hotplug/usb/
 install -m755 packaging/linux-hotplug/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
 
 @ENABLE_GTK_DOC_TRUE@cp -a %{buildroot}%{_docdir}/%{name}-%{version}/html html
-@ENABLE_GTK_DOC_TRUE@cp -a %{buildroot}%{_docdir}/libgphoto2_port-0.5.0/html/api/gphoto2-port html/api
+@ENABLE_GTK_DOC_TRUE@cp -a %{buildroot}%{_docdir}/libgphoto2_port-0.5.1/html/api/gphoto2-port html/api
 @ENABLE_GTK_DOC_TRUE@find html -name '*.sgml' | xargs rm
 
 
