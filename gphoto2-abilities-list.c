@@ -144,7 +144,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	unsigned int i, p;
 	const char *filename;
 #ifdef HAVE_LTDL
-	CameraList flist;
+	CameraList *flist;
 	int count;
 	lt_dlhandle lh;
 #else
@@ -165,19 +165,20 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 #endif
 
 #ifdef HAVE_LTDL
-	CHECK_RESULT (gp_list_reset (&flist));
+	CHECK_RESULT (gp_list_new (&flist));
+	CHECK_RESULT (gp_list_reset (flist));
 	lt_dlinit ();
 	lt_dladdsearchdir (dir);
-	lt_dlforeachfile (dir, foreach_func, &flist);
+	lt_dlforeachfile (dir, foreach_func, flist);
 	lt_dlexit ();
-	CHECK_RESULT (count = gp_list_count (&flist));
+	CHECK_RESULT (count = gp_list_count (flist));
 	gp_log (GP_LOG_DEBUG, "gp-abilities-list", "Found %i "
 		"camera drivers.", count);
 	lt_dlinit ();
 	p = gp_context_progress_start (context, count,
 		_("Loading camera drivers from '%s'..."), dir);
 	for (i = 0; i < count; i++) {
-		CHECK_RESULT (gp_list_get_name (&flist, i, &filename));
+		CHECK_RESULT (gp_list_get_name (flist, i, &filename));
 		lh = lt_dlopenext (filename);
 		if (!lh) {
 			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
@@ -247,11 +248,13 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		gp_context_progress_update (context, p, i);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 			lt_dlexit ();
+			gp_list_free (flist);
 			return (GP_ERROR_CANCEL); 
 		}
 	}
 	gp_context_progress_stop (context, p);
 	lt_dlexit ();
+	gp_list_free (flist);
 #else
 
 	/* Open the directory */

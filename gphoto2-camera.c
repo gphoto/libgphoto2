@@ -193,6 +193,17 @@
 	}								\
 }
 
+#define CRSL(c,res,ctx,list)						\
+{									\
+	int r = (res);							\
+									\
+	if (r < 0) {							\
+		CAMERA_UNUSED (c,ctx);                              	\
+		gp_list_free (list);					\
+		return (r);						\
+	}								\
+}
+
 #define CHECK_RESULT_OPEN_CLOSE(c,result,ctx)				\
 {									\
 	int r;								\
@@ -627,7 +638,6 @@ gp_camera_free (Camera *camera)
 int
 gp_camera_init (Camera *camera, GPContext *context)
 {
-        CameraList list;
 	CameraAbilities a;
 	const char *model, *port;
 	CameraLibraryInitFunc init_func;
@@ -636,7 +646,6 @@ gp_camera_init (Camera *camera, GPContext *context)
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Initializing camera...");
 
 	CHECK_NULL (camera);
-
 	/*
 	 * Reset the exit_requested flag. If this flag is set, 
 	 * gp_camera_exit will be called as soon as the camera is no
@@ -654,6 +663,11 @@ gp_camera_init (Camera *camera, GPContext *context)
 		GPPortInfoList *il;
 		int m, p;
 		GPPortInfo info;
+        	CameraList *list;
+
+		result = gp_list_new (&list);
+		if (result < GP_OK)
+			return result;
 
 		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Neither "
 			"port nor model set. Trying auto-detection...");
@@ -663,25 +677,27 @@ gp_camera_init (Camera *camera, GPContext *context)
 		gp_abilities_list_load (al, context);
 		gp_port_info_list_new (&il);
 		gp_port_info_list_load (il);
-		gp_abilities_list_detect (al, il, &list, context);
-		if (!gp_list_count (&list)) {
+		gp_abilities_list_detect (al, il, list, context);
+		if (!gp_list_count (list)) {
 			gp_abilities_list_free (al);
 			gp_port_info_list_free (il);
 			gp_context_error (context, _("Could not detect "
 					     "any camera"));
+			gp_list_free (list);
 			return (GP_ERROR_MODEL_NOT_FOUND);
 		}
 
-		gp_list_get_name  (&list, 0, &model);
+		gp_list_get_name  (list, 0, &model);
 		m = gp_abilities_list_lookup_model (al, model);
 		gp_abilities_list_get_abilities (al, m, &a);
 		gp_abilities_list_free (al);
-		CRS (camera, gp_camera_set_abilities (camera, a), context);
-		CRS (camera, gp_list_get_value (&list, 0, &port), context);
+		CRSL (camera, gp_camera_set_abilities (camera, a), context, list);
+		CRSL (camera, gp_list_get_value (list, 0, &port), context, list);
 		p = gp_port_info_list_lookup_path (il, port);
 		gp_port_info_list_get_info (il, p, &info);
 		gp_port_info_list_free (il);
-		CRS (camera, gp_camera_set_port_info (camera, info), context);
+		CRSL (camera, gp_camera_set_port_info (camera, info), context, list);
+		gp_list_free (list);
 	}
 
 	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
