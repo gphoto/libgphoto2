@@ -1,3 +1,7 @@
+2001-11-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/ptp: Basic structure for a new driver.
+
 2001-11-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/polaroid/pdc700.c: Introduce enum PDCConf for better
