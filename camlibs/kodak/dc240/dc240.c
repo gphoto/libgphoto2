@@ -196,10 +196,6 @@ camera_init (Camera *camera)
 	if (ret < 0)
 		return (ret);
 
-	ret = gp_port_open (camera->port);
-	if (ret < 0)
-		return (ret);
-	
 	ret = gp_port_timeout_set (camera->port, TIMEOUT);
 	if (ret < 0)
 		return (ret);
@@ -212,24 +208,18 @@ camera_init (Camera *camera)
 		GP_SYSTEM_SLEEP(1500);
 
 		ret = dc240_set_speed (camera, camera->port_info->speed);
-		if (ret < 0) {
-			gp_port_close (camera->port);
+		if (ret < 0)
 			return (ret);
-		}
 	}
 
 	/* Open the CF card */
 	ret = dc240_open (camera);
-	if (ret < 0) {
-		gp_port_close (camera->port);
+	if (ret < 0)
 		return (ret);
-	}
 	
 	ret = dc240_packet_set_size (camera, HPBS+2);
-	if (ret < 0) {
-		gp_port_close (camera->port);
+	if (ret < 0)
 		return (ret);
-	}
-	
+
 	return (GP_OK);
 }

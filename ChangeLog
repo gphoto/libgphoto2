@@ -1,5 +1,10 @@
 2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/kodak/dc240/dc240.c (camera_init): Don't open/close the port.
+	This is done by libgphoto2.
+
+2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/camera.c
 	(gp_camera_init): Do a simple CHECK_RESULT_OPEN_CLOSE on the init_func
 	(gp_camera_set_port): Set the path if the port is a serial one.
