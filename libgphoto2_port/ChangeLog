@@ -1,3 +1,7 @@
+2001-11-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/Makefile.am: @IOLIB_CFLAGS@ doesn't exist any more.
+
 2001-11-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* serial/unix.c: Only set the baudrate if the device is open. If you

@@ -1,14 +1,15 @@
-## Specify some includes and versioning
-INCLUDES = -I../ $(VERSION_FLAGS) -I$(top_srcdir)/include
-VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\"
-CFLAGS = @CFLAGS@ @IOLIB_CFLAGS@ \
-	-DIOLIBS=\"$(libdir)/gphoto2_port\" \
-	-g
-LDFLAGS = @LDFLAGS@ -g -ldl
+INCLUDES = 					\
+	-I$(top_srcdir)				\
+	-DIOLIBS=\"$(libdir)/gphoto2_port\"
+
+## What is this for?
+CFLAGS = @CFLAGS@ -g
+LDFLAGS = @LDFLAGS@ -g
 
 ## Compile the IO library into a shared library
 lib_LTLIBRARIES = libgphoto2_port.la
 libgphoto2_port_la_LDFLAGS = -version-info @LIBGPPORT_VERSION_INFO@
+libgphoto2_port_la_LIBADD = -ldl
 libgphoto2_port_la_SOURCES =		\
 	gphoto2-port-info-list.c	\
 	gphoto2-port-log.c		\
