@@ -1,5 +1,9 @@
 2001-10-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2_port/gp_port.c: Forot to set default speed to 0
+
+2001-10-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in: Add some more warning flags
 	* include/gphoto2-port.h: More cleanup in preparation of documentation
 	* libgphoto2_port/gp_port.c: Move internals into port->pc

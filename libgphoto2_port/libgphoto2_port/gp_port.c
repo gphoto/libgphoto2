@@ -162,7 +162,7 @@ gp_port_new (GPPort **dev, GPPortType type)
 		strcpy(settings.serial.port, buf);
 
 		/* Set some default settings */
-		settings.serial.speed = 9600;
+		settings.serial.speed = 0;
 		settings.serial.bits = 8;
 		settings.serial.parity = 0;
 		settings.serial.stopbits = 1;
