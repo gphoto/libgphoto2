@@ -28,7 +28,7 @@
 #include "util.h"
 
 /* Debug level */
-int             glob_debug=0;
+int             glob_debug = 0;
 
 /* Camera List */
 CameraAbilitiesList *glob_abilities_list;
@@ -66,53 +66,49 @@ static int have_initted = 0;
 int gp_init (int debug)
 {
         char buf[1024];
-        int x;
+        int x, ret;
 
-        if (have_initted) {
-                gp_debug_printf(GP_DEBUG_LOW, "core",
-                        "Attempt to init gphoto2 a second time");
-                return GP_ERROR;
-        }
+	gp_debug_printf (GP_DEBUG_LOW, "core", "Initializing GPhoto with "
+			 "debug level %i...", debug);
 
-        glob_debug = debug;
+	glob_debug = debug;
+
+        if (have_initted)
+		return (GP_OK);
 
         /* Initialize the globals */
         glob_abilities_list = gp_abilities_list_new();
         glob_setting_count   = 0;
 
-        gp_debug_printf(GP_DEBUG_LOW, "core", "Debug level %i", debug);
-        gp_debug_printf(GP_DEBUG_LOW, "core", "Creating $HOME/.gphoto");
-
         /* Make sure the directories are created */
+	gp_debug_printf (GP_DEBUG_LOW, "core", "Creating $HOME/.gphoto");
 #ifdef WIN32
-        GetWindowsDirectory(buf, 1024);
-        strcat(buf, "\\gphoto");
+        GetWindowsDirectory (buf, 1024);
+        strcat (buf, "\\gphoto");
 #else
-        sprintf(buf, "%s/.gphoto", getenv("HOME"));
+        sprintf (buf, "%s/.gphoto", getenv ("HOME"));
 #endif
-        (void)GP_SYSTEM_MKDIR(buf);
-        gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing gpio");
+        (void)GP_SYSTEM_MKDIR (buf);
 
-        if (gp_port_init(debug) == GP_ERROR)
-                return (GP_ERROR);
+        gp_debug_printf (GP_DEBUG_LOW, "core", "Initializing IO library...");
+        ret = gp_port_init (debug);
+	if (ret != GP_OK)
+		return (ret);
 
         /* Load settings */
-        gp_debug_printf(GP_DEBUG_LOW, "core", "Trying to load settings");
+        gp_debug_printf (GP_DEBUG_LOW, "core", "Trying to load settings...");
         load_settings();
 
-        gp_debug_printf(GP_DEBUG_LOW, "core", "Trying to load libraries");
+        gp_debug_printf (GP_DEBUG_LOW, "core", "Trying to load libraries...");
         load_cameras();
 
-        if (glob_debug) {
-                gp_debug_printf(GP_DEBUG_LOW, "core", "List of cameras found");
-                for (x=0; x<glob_abilities_list->count; x++)
-                        gp_debug_printf(GP_DEBUG_LOW, "core", "\t\"%s\" uses %s",
-                                glob_abilities_list->abilities[x]->model,
-                                glob_abilities_list->abilities[x]->library);
-                if (glob_abilities_list->count == 0)
-                        gp_debug_printf(GP_DEBUG_LOW, "core","\tNone");
-                gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing the gPhoto IO library (libgpio)");
-        }
+        gp_debug_printf (GP_DEBUG_LOW, "core", "Following cameras were found:");
+        for (x = 0; x < glob_abilities_list->count; x++)
+                gp_debug_printf (GP_DEBUG_LOW, "core", "\t\"%s\" uses %s",
+                        glob_abilities_list->abilities[x]->model,
+                        glob_abilities_list->abilities[x]->library);
+        if (glob_abilities_list->count == 0)
+                gp_debug_printf (GP_DEBUG_LOW, "core","\tNone");
 
         have_initted = 1;
         return (GP_OK);
@@ -126,12 +122,12 @@ gp_is_initialized (void)
 
 int gp_exit ()
 {
-        gp_abilities_list_free(glob_abilities_list);
+        gp_abilities_list_free (glob_abilities_list);
 
         return (GP_OK);
 }
 
-void gp_debug_printf(int level, char *id, char *format, ...)
+void gp_debug_printf (int level, char *id, char *format, ...)
 {
         va_list arg;
 
@@ -139,17 +135,17 @@ void gp_debug_printf(int level, char *id, char *format, ...)
                 return;
 
         if (glob_debug >= level) {
-                fprintf(stderr, "%s: ", id);
-                va_start(arg, format);
-                vfprintf(stderr, format, arg);
-                va_end(arg);
-                fprintf(stderr, "\n");
+                fprintf (stderr, "%s: ", id);
+                va_start (arg, format);
+                vfprintf (stderr, format, arg);
+                va_end (arg);
+                fprintf (stderr, "\n");
         }
 }
 
-int gp_frontend_register(CameraStatus status, CameraProgress progress,
-                         CameraMessage message, CameraConfirm confirm,
-                         CameraPrompt prompt)
+int gp_frontend_register (CameraStatus status, CameraProgress progress,
+                          CameraMessage message, CameraConfirm confirm,
+                          CameraPrompt prompt)
 {
         gp_fe_status   = status;
         gp_fe_progress = progress;
@@ -175,7 +171,8 @@ char *gp_result_as_string (int result)
                 return _("Unknown camera library error");
 
         /* Do we have an error description? */
-        if ((-result - 100) < (int) (sizeof (result_string) / sizeof (*result_string)))
+        if ((-result - 100) < (int) (sizeof (result_string) / 
+				     sizeof (*result_string)))
                 return _(result_string[-result - 100]);
 
         return _("Unknown error");

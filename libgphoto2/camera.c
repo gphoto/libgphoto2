@@ -29,7 +29,7 @@ int gp_camera_exit (Camera *camera);
 
 int gp_camera_count ()
 {
-	return(glob_abilities_list->count);
+	return (glob_abilities_list->count);
 } 
 
 int gp_camera_name (int camera_number, char *camera_name)
