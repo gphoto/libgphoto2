@@ -410,7 +410,7 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 			"(0x%02x, 0x%02)."), b[0], b[1]);
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
-	*buf_len = (b[3] << 8) | b[2];
+	*buf_len = ((b[3] << 8) | b[2]) - 3;
 
 	/* Read the data. Unescape it. Calculate the checksum. */
 	for (check = i = 0; i < *buf_len; i++) {
@@ -471,10 +471,30 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 	int r, retries = 0;
 
 	/* Send the command */
-	CR (fuji_send (camera, cmd, cmd_len, 1, context));
+	retries = 0;
+	while (1) {
+		CR (fuji_send (camera, cmd, cmd_len, 1, context));
+
+		/* Receive ACK */
+		CR (gp_port_read (camera->port, &c, 1));
+		if (c == ACK)
+			break;
+		else if (c == NAK) {
+			if (++retries > 2) {
+				gp_context_error (context, _("Camera rejected "
+					"the command."));
+				return (GP_ERROR);
+			}
+		} else {
+			gp_context_error (context, _("Camera sent unexpected "
+				"byte 0x%02x."), c);
+			return (GP_ERROR_CORRUPTED_DATA);
+		}
+	}
 
 	/* Read the response */
 	*buf_len = 0;
+	retries = 0;
 	while (!last) {
 		r = fuji_recv (camera, buf + *buf_len, &b_len, &last, context);
 		if (r < 0) {

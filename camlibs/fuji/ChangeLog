@@ -1,5 +1,9 @@
 2002-04-17  Lutz Müller <lutz@users.sourceforge.net>
 
+	* fuji.c: Fix logic.
+
+2002-04-17  Lutz Müller <lutz@users.sourceforge.net>
+
 	* fuji.[c,h]:
 	* library.c: More functions. Needs testing.
 
