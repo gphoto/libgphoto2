@@ -184,6 +184,9 @@ int gp_port_serial_exit (gp_port *dev) {
 
 int gp_port_serial_open(gp_port * dev)
 {
+#ifdef OS2
+    int fd;
+#endif
     char *port = strchr(dev->settings.serial.port, ':');
     if (!port)
         return GP_ERROR_IO_UNKNOWN_PORT;
@@ -191,7 +194,6 @@ int gp_port_serial_open(gp_port * dev)
 #ifdef __FreeBSD__
         dev->device_fd = open(port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 #elif OS2
-        int fd;
         fd = open(port, O_RDWR | O_BINARY);
         dev->device_fd = open(port, O_RDWR | O_BINARY);
         close(fd);
