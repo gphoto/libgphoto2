@@ -290,7 +290,7 @@ canon_serial_recv_frame (Camera *camera, int *len)
 	 */
 	gp_log (GP_LOG_DATA, "canon", "RECV (without CANON_FBEG and CANON_FEND bytes)");
 	gp_log_data ("canon", buffer, p - buffer);
-	
+
 	if (len)
 		*len = p - buffer;
 	return buffer;
@@ -1000,6 +1000,133 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 	}
 	free (file);
 	return NULL;
+}
+
+int
+canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
+			  unsigned int *dirents_length, const char *path)
+{
+	unsigned char *p, *temp_ch, *data = NULL;
+	int mallocd_bytes, total_size;
+
+	*dirent_data = NULL;
+
+	/* fetch all directory entrys, the first one is a little special */
+	p = canon_serial_dialogue (camera, 0xb, 0x11, dirents_length, "", 1, path,
+				   strlen (path) + 1, "\x00", 2, NULL);
+	if (p == NULL) {
+		gp_camera_set_error (camera, "canon_serial_get_dirents: "
+				     "canon_serial_dialogue failed to fetch directory entrys");
+		return GP_ERROR;
+	}
+
+	/* In the RS232 implementation, we should never get less than 5 bytes */
+	if (*dirents_length < 5) {
+		gp_camera_set_error (camera, "canon_serial_get_dirents: "
+				     "Initial dirent packet too short (only %i bytes)",
+				     *dirents_length);
+		return NULL;
+	}
+
+	/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
+	gp_log (GP_LOG_DATA, "canon", "canon_serial_get_dirents: "
+		"dirent packet received from canon_serial_dialogue:");
+	gp_log_data ("canon", p, *dirents_length);
+
+	/* the first five bytes is only for the RS232 implementation
+	 * of this command, we do not need to copy them so therefore
+	 * we don't need to malloc() them either
+	 */
+	mallocd_bytes = MAX (1024, *dirents_length - 5);
+	data = malloc (mallocd_bytes);
+	if (!data) {
+		gp_camera_set_error (camera, "canon_serial_get_dirents: "
+				     "Could not allocate %i bytes of memory", mallocd_bytes);
+		return GP_ERROR_NO_MEMORY;
+	}
+
+	/* the first five bytes is only for the RS232 implementation
+	 * of this command, do not copy them
+	 */
+	memcpy (data, p + 5, (*dirents_length - 5));
+	total_size = *dirents_length;
+
+	/* p[4] indicates this is not the last packet,
+	 * read additional packets until there are no more
+	 * directory entrys to read
+	 */
+	while (!p[4]) {
+		GP_DEBUG ("p[4] is %i", (int) p[4]);
+		p = canon_serial_recv_msg (camera, 0xb, 0x21, *dirents_length);
+		if (p == NULL) {
+			gp_camera_set_error (camera, "canon_serial_get_dirents: "
+					     "Failed to read another directory entry");
+			free (data);
+			return NULL;
+		}
+
+		/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
+		gp_log (GP_LOG_DATA, "canon", "canon_serial_get_dirents: "
+			"dirent packet received from canon_serial_recv_msg:");
+		gp_log_data ("canon", p, *dirents_length);
+
+		/* the first five bytes is only for the RS232 implementation,
+		 * don't count them when checking dirent size
+		 */
+		if (*dirents_length - 5 < CANON_MINIMUM_DIRENT_SIZE) {
+			gp_camera_set_error (camera, "canon_serial_get_dirents: "
+					     "Truncated directory entry received");
+			free (data);
+			return NULL;
+		}
+
+		/* check if we need to allocate some more memory,
+		 * the first five bytes is only for the RS232
+		 * implementation of this command, don't need to
+		 * malloc for them.
+		 */
+		if (total_size + (*dirents_length - 5) > mallocd_bytes) {
+			/* we allocate 1024 bytes chunks instead
+			 * of the exact number of bytes needed.
+			 * this is OK since we will free this
+			 * before returning from canon_int_list_directory
+			 * (our caller).
+			 */
+			mallocd_bytes += MAX (1024, *dirents_length);
+
+			/* check if we are reading unrealistic ammounts
+			 * of directory entrys so that we don't loop
+			 * forever. 1024 * 1024 is picked out of the blue.
+			 */
+			if (mallocd_bytes > 1024 * 1024) {
+				gp_camera_set_error (camera, "canon_serial_get_dirents: "
+						     "Too many dirents, we must be looping.");
+				free (data);
+				return NULL;
+			}
+
+			temp_ch = realloc (data, mallocd_bytes);
+			if (!temp_ch) {
+				gp_camera_set_error (camera,
+						     "canon_serial_get_dirents: "
+						     "Could not resize dirent buffer "
+						     "to %i bytes", mallocd_bytes);
+				free (data);
+				return NULL;
+			}
+			data = temp_ch;
+		}
+
+		/* the first five bytes is only for the RS232
+		 * implementation of this command, don't copy them.
+		 */
+		memcpy (data + total_size, p + 5, (*dirents_length - 5));
+		total_size += (*dirents_length - 5);
+	}
+	GP_DEBUG ("OK - this was last dirent");
+
+	*dirent_data = data;
+	return GP_OK;
 }
 
 /****************************************************************************

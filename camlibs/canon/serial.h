@@ -37,6 +37,7 @@ unsigned char *canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsig
 
 unsigned char *canon_serial_get_file (Camera *camera, const char *name, int *length);
 int canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath);
+int canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path);
 
 #define MAX_TRIES 10
 
