@@ -61,6 +61,7 @@ static int set_globals (void);
 
 OPTION_CALLBACK(abilities);
 OPTION_CALLBACK(help);
+OPTION_CALLBACK(version);
 OPTION_CALLBACK(shell);
 OPTION_CALLBACK(list_cameras);
 OPTION_CALLBACK(auto_detect);
@@ -110,6 +111,7 @@ Option option[] = {
 
 /* Display and die actions */
 
+{"v", "version",        "",             "Display version and exit",     version,        0},
 {"h", "help",           "",             "Displays this help screen",    help,           0},
 {"",  "list-cameras",   "",             "List supported camera models", list_cameras,   0},
 {"",  "list-ports",     "",             "List supported port devices",  list_ports,     0},
@@ -192,6 +194,15 @@ OPTION_CALLBACK(help) {
         cli_debug_print("Displaying usage");
 
         usage();
+        exit(EXIT_SUCCESS);
+        return GP_OK;
+}
+
+OPTION_CALLBACK(version) {
+
+        cli_debug_print("Displaying version");
+
+        print_version();
         exit(EXIT_SUCCESS);
         return GP_OK;
 }

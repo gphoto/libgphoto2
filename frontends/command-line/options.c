@@ -134,21 +134,25 @@ int execute_options (int argc, char **argv) {
         return (GP_OK);
 }
 
+void print_version () {
+	printf(
+	"gPhoto (v%s) - Cross-platform digital camera library.\n"
+	"Copyright (C) 2000,2001 Scott Fritzinger and others\n"
+#ifdef OS2
+        "OS/2 port by Bart van Leeuwen\n"
+#endif
+	"Licensed under the Library GNU Public License (LGPL).\n",
+	VERSION);
+}
+
 void usage () {
 
         int x=0;
         char buf[128], s[5], l[24], a[16];
 
 	/* Standard licensing stuff */
-	printf(
-	"\ngPhoto (v%s) - Cross-platform digital camera library.\n"
-	"Copyright (C) 2000 Scott Fritzinger\n"
-#ifdef OS2
-        "OS/2 port by Bart van Leeuwen\n"
-#endif
-	"Licensed under the Library GNU Public License (LGPL).\n"
-	"Usage:\n", VERSION
-	);
+	print_version();
+        printf("Usage:\n");
 
 	printf ("Short/long options (& argument)        description\n"
 	        "------------------------------------------------------------------------\n");
