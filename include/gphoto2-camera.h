@@ -30,6 +30,17 @@ int gp_camera_file_get         (Camera *camera, CameraFile *file,
 			   	char *folder, char *filename);
 int gp_camera_file_get_preview (Camera *camera, CameraFile *file, 
 				char *folder, char *filename);
+				
+int gp_camera_file_config_get  (Camera *camera, CameraWidget **window,
+				char *folder, char *filename);
+int gp_camera_file_config_set  (Camera *camera, CameraWidget *window, 
+				char *folder, char *filename);
+int gp_camera_folder_config_get(Camera *camera, CameraWidget **window,
+				char *folder);
+int gp_camera_folder_config_set(Camera *camera, CameraWidget *window,
+				char *folder);
+int gp_camera_config_get       (Camera *camera, CameraWidget **window);
+int gp_camera_config_set       (Camera *camera, CameraWidget *window);
 
 int gp_camera_file_put (Camera *camera, CameraFile *file, char *folder);
 int gp_camera_file_delete (Camera *camera, char *folder, char *filename);
@@ -40,7 +51,7 @@ int gp_camera_summary (Camera *camera, CameraText *summary);
 int gp_camera_manual  (Camera *camera, CameraText *manual);
 int gp_camera_about   (Camera *camera, CameraText *about);
 
-int gp_camera_config (Camera *camera);
+int gp_camera_config (Camera *camera); //Deprecated
 
 char *gp_camera_result_as_string (Camera *camera, int result);
 

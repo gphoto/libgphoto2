@@ -57,6 +57,49 @@ int camera_file_get_preview 	(Camera *camera,
 	/* picture thumbnail, or snippet from a movie/sound	*/
 	/* if supported.					*/
 
+int camera_file_config_get	(Camera *camera,
+				 CameraWidget **window,
+				 char *folder,
+				 char *filename);
+	/* Constructs a window containing various configuration	*/
+	/* options for files like 'protected status' or		*/
+	/* 'rotate'.						*/
+
+int camera_file_config_set	(Camera *camera,
+				 CameraWidget *window,
+				 char *folder,
+				 char *filename);
+	/* Sets the file configuration as given in the window  	*/
+	/* which has previously been constructed by 		*/
+	/* camera_file_config_get and modified (values) by the	*/
+	/* frontend. 						*/
+
+int camera_folder_config_get	(Camera *camera,
+				 CameraWidget **window,
+				 char *folder);
+	/* Constructs a window containing various configuration	*/
+	/* options for folders like 'delete all'.		*/
+
+int camera_folder_config_set 	(Camera *camera,
+				 CameraWidget *window,
+				 char *folder);
+	/* Sets the folder configuration as given in the window	*/
+	/* which has previously been constructed by 		*/
+	/* camera_folder_config_get and modified (values) by  	*/
+	/* the frontend. 					*/
+
+int camera_config_get		(Camera *camera, 
+				 CameraWidget **window);
+	/* Constructs a window containing various configuration	*/
+	/* options for the camera like 'flash'.			*/
+
+int camera_config_set		(Camera *camera,
+				 CameraWidget *window);
+	/* Sets the camera configuration as given in the window	*/
+	/* which has previously been constructed by		*/
+	/* camera_config_get and modified (values) by the 	*/
+	/* frontend.						*/
+
 int camera_file_put 	    	(Camera *camera,
 				 CameraFile *file,
 				 char *folder);
