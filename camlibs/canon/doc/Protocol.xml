@@ -11,12 +11,12 @@
   <!-- ================================================================================ -->
   <!-- This DocBook file was originally created by AbiWord, a free, Open Source word    -->
   <!-- processor, but it needed lots of hacking to make it usable, and to restore the   -->
-  <!-- structure destroyed by AbiWord                                                             -->
+  <!-- structure destroyed by AbiWord,                                                  -->
   <!-- You may obtain more information about AbiWord at www.abisource.com               -->
   <!-- ================================================================================ -->
 
   <title><phrase role="strong">Canon PowerShot Series Transfer
- Protocol Specifications</phrase> Tuesday, January 4, 2005</title>
+ Protocol Specifications</phrase> Wednesday, January 5, 2005</title>
 
   <chapter id="chap.Intro">
     <title>Introduction</title>
@@ -159,14 +159,19 @@
         <para>09 May 2000: first version with both USB and serial protocols described in the same document.</para>
         <para>05 Dec 2002: import to AbiWord for XML output.</para>
         <para>28 Jan 2003: Convert DocBook XML, expand USB information</para>
-	<literallayout>$Log$
-	<literallayout>Revision 1.5  2005/01/04 17:17:11  swestin
-	<literallayout>Fixed various typographical errors.
-	<literallayout>Added info observed from EOS 300D.
-	<literallayout>Regularized structure of USB command descriptions.
-	<literallayout>Added real example of interrupt packet received at camera init.
-	<literallayout>Added formatted example of directory read.
-	<literallayout></literallayout>
+	<literallayout>
+	$Log$
+	Revision 1.6  2005/01/15 21:00:24  swestin
+	Fixed inclusion of CVS log info in document.
+	Added more info on response packet in camera initialization.
+
+	Revision 1.5  2005/01/04 17:17:11  swestin
+	Fixed various typographical errors.
+	Added info observed from EOS 300D.
+	Regularized structure of USB command descriptions.
+	Added real example of interrupt packet received at camera init.
+	Added formatted example of directory read.
+	</literallayout>
       </section>
     </section>
   </chapter>
@@ -775,31 +780,34 @@ xx &lt;directory_name&gt; 00 00 00
 00000050 00 FD 00 00 00 FD 00 00                         ........
         </programlisting>
 
+	<para>The bytes 0x40-0x43 seem to vary from camera to
+	camera: the S20 here has 01&nbsp;00&nbsp;02&nbsp;00. The
+	PowerShot G2 has 01&nbsp;00&nbsp;05&nbsp;03, just the same as
+	the EOS D30, D60, and 300D. The EOS 20D and PowerShot A75 have
+	01&nbsp;06&nbsp;15&nbsp;83. These bytes might identify which
+	version of the protocol is used.</para>
+
 	<para>The USB vendor and product ID are contained in bytes
 	0x44-0x47 of this packet: here 0x04A93043 for vendor 0x04a9,
 	product 0x3043 identifies this as a PowerShot S20.</para>
 
-	<para>The bytes before this seem to vary from camera to
-	camera: the S20 here has 01&nbsp;00&nbsp;02&nbsp;00. The
-	PowerShot G2 has 01&nbsp;00&nbsp;05&nbsp;03, just the same as
-	the EOS D30, D60, and 300D. The EOS 20D has
-	01&nbsp;06&nbsp;15&nbsp;83. These bytes might identify which
-	version of the protocol is used.</para>
-
         <para>The bytes 0x48-0x57 also vary from camera to camera. I
         think they are 4-byte integers, and suspect that they specify
-        maximum transfer sizes in some way:</para>
+        maximum transfer sizes in some way.</para>
 
         <table id="tbl.InitPacketStuff"><title>Unknown contents of response packet</title>
           <tgroup cols="6" align="right" colsep="1" rowsep="1">
+	  <?dbhtml cellspacing="0" ?>
+	  <colspec colwidth="20em*"/>
           <thead>
-            <row><entry>Offset</entry><entry>S20</entry><entry>G2</entry><entry>D30</entry><entry>D60</entry><entry>300D</entry><entry>20D</entry></row>
+            <row><entry>Models</entry><entry>0x40</entry><entry>0x44</entry><entry>0x48</entry><entry>0x4C</entry><entry>0x50</entry><entry>0x54</entry></row>
           </thead>
             <tbody>
-              <row><entry>0x48</entry><entry>0x800 (2048)</entry><entry>0x800 (2048)</entry><entry>0x800 (2048)</entry><entry>0x800 (2048)</entry><entry>0x800 (2048)</entry><entry>0x800 (2048)</entry></row>
-              <row><entry>0x4C</entry><entry>-1</entry><entry>-1</entry><entry>-1</entry><entry>-1</entry><entry>-1</entry><entry>0x10000 (65536)</entry></row>
-              <row><entry>0x50</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>0x54</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry><entry>0x10000 (65536)</entry></row>
+              <row><entry>G1</entry><entry>00 05 07 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>S20</entry><entry>01 00 02 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>G2, D30, D60, 300D, IXUS v</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>A60, A75, A80, A300, S50</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>20D</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
             </tbody>
           </tgroup>
         </table>
