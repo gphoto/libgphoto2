@@ -252,7 +252,7 @@ uninstall:
 
 info dvi:
 
-$(OBJECTS): ../config.h libgnuintl.h
+$(OBJECTS): ../libgphoto2_port/config.h libgnuintl.h
 bindtextdom.$lo finddomain.$lo loadmsgcat.$lo: gettextP.h gettext.h loadinfo.h
 dcgettext.$lo: gettextP.h gettext.h hash-string.h loadinfo.h
 
