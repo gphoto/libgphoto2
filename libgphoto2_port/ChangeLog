@@ -1,3 +1,7 @@
+2001-12-07  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* gphoto2-port-config.in: made it work again
+
 2001-12-01  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* configure.in: help cosmetics
