@@ -1,3 +1,9 @@
+/*
+ * digita.h
+ *
+ * Copyright 1999-2001 Johannes Erdfelt
+ */
+
 #ifndef DIGITA_H
 #define DIGITA_H
 
