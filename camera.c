@@ -573,7 +573,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	/* We don't trust the camera libraries */
 	info->file.fields |= GP_FILE_INFO_NAME;
 	strcpy (info->file.name, file);
-	info->preview.fields ^= GP_FILE_INFO_NAME; 
+	info->preview.fields &= ~GP_FILE_INFO_NAME; 
 
 	return (result);
 }
