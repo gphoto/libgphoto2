@@ -105,6 +105,8 @@
 #define PTP_ERROR_RESP_EXPECTED		0x2FD
 #define PTP_ERROR_BADPARAM		0x2fC
 
+// PTP request fields
+
 #define PTP_REQ_HDR_LEN                 (2*sizeof(int)+2*sizeof(short))
 #define PTP_REQ_DATALEN			16384
 #define MAXFILELEN			256
@@ -198,5 +200,41 @@ short ptp_getthumb	(PTPParams *params, PTPObjectHandles* objecthandles,
 			char* object);
 void ptp_getobjectfilename	(PTPObjectInfo* objectinfo, char* filename);
 void ptp_getobjectcapturedate	(PTPObjectInfo* objectinfo, char* date);
+
+
+// PTP Object Format Codes
+
+// ancillary formats
+#define PTP_OFC_Undefined			0x3000
+#define PTP_OFC_Association			0x3001
+#define PTP_OFC_Script				0x3002
+#define PTP_OFC_Executable			0x3003
+#define PTP_OFC_Text				0x3004
+#define PTP_OFC_HTML				0x3005
+#define PTP_OFC_DPOF				0x3006
+#define PTP_OFC_AIFF	 			0x3007
+#define PTP_OFC_WAV				0x3008
+#define PTP_OFC_MP3				0x3009
+#define PTP_OFC_AVI				0x300A
+#define PTP_OFC_MPEG				0x300B
+#define PTP_OFC_ASF				0x300D
+// image formats
+#define PTP_OFC_EXIF_JPEG			0x3801
+#define PTP_OFC_TIFF_EP				0x3802
+#define PTP_OFC_FlashPix			0x3803
+#define PTP_OFC_BMP				0x3804
+#define PTP_OFC_CIFF				0x3805
+#define PTP_OFC_Undefined_0x3806		0x3806
+#define PTP_OFC_GIF				0x3807
+#define PTP_OFC_JFIF				0x3808
+#define PTP_OFC_PCD				0x3809
+#define PTP_OFC_PICT				0x380A
+#define PTP_OFC_PNG				0x380B
+#define PTP_OFC_Undefined_0x380C		0x380C
+#define PTP_OFC_TIFF				0x380D
+#define PTP_OFC_TIFF_IT				0x380E
+#define PTP_OFC_JP2				0x380F
+#define PTP_OFC_JPX				0x3810
+
 
 #endif /* __PTP_H__ */
