@@ -663,7 +663,9 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
                 }
         } else {
                 gp_file_get_name (file, &name);
-                strcat(ofile, name);
+		strcat (ofile, name);
+		gp_log (GP_LOG_DEBUG, "gphoto2", "Using filename '%s'...",
+			ofile);
         }
 
         switch (type) {

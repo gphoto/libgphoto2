@@ -1,3 +1,8 @@
+2001-11-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/sierra: Improve error reporting. Use register 47 for 
+	  pic-info retrieval. Support GP_FILE_TYPE_AUDIO.
+
 2001-11-08  Chris Pinkham <cpinkham@infi.net>
 
 	* camlibs/jamcam/README

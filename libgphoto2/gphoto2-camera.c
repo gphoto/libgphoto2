@@ -60,7 +60,7 @@
 
 #define CRS(c,res) {int r = (res); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
 
-#define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); gp_camera_status ((c), ""); gp_camera_progress ((c), 0.0); return (r);}; CHECK_CLOSE (c);}
+#define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Operation failed!"); gp_camera_status ((c), ""); gp_camera_progress ((c), 0.0); return (r);}; CHECK_CLOSE (c);}
 #define CHECK_INIT(c) {if (!(c)->pc->lh) {CHECK_RESULT(gp_camera_init(c));}}
 
 struct _CameraPrivateCore {
@@ -470,8 +470,8 @@ gp_camera_progress (Camera *camera, float percentage)
 	CHECK_NULL (camera);
 
 	if ((percentage < 0.) || (percentage > 1.)) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", 
-			"Wrong percentage: %f", percentage);
+		gp_camera_set_error (camera, _("Wrong percentage: %f"),
+				     percentage);
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 
@@ -1169,9 +1169,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 	gp_camera_status (camera, "");
 	gp_camera_progress (camera, 0.0);
 
-	/* We don't trust the camera libraries */
-	CHECK_RESULT (gp_file_set_type (camera_file, type));
-	CHECK_RESULT (gp_file_set_name (camera_file, file));
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Got file '%s'.", file);
 
 	return (GP_OK);
 }

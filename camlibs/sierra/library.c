@@ -10,6 +10,8 @@
 
 #define		QUICKSLEEP	5
 
+#define GP_MODULE "sierra"
+
 /**
  * sierra_valid_type:
  * @b : first byte of the packet to be checked
@@ -67,12 +69,8 @@ int sierra_change_folder (Camera *camera, const char *folder)
 	int st = 0,i = 1;
 	char target[128];
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_change_folder");
-
-	if (!folder || !camera)
-		return GP_ERROR_BAD_PARAMETERS;
-
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
+	GP_DEBUG ("*** sierra_change_folder");
+	GP_DEBUG ("*** folder: %s", folder);
 
 	/*
 	 * Do not issue the command if the camera doesn't support folders 
@@ -113,7 +111,7 @@ int sierra_change_folder (Camera *camera, const char *folder)
 
 int sierra_list_files (Camera *camera, const char *folder, CameraList *list)
 {
-	int count, i, bsize;
+	int count, i, bsize = 0;
 	char buf[1024];
 
 	CHECK (sierra_change_folder (camera, folder));
@@ -698,8 +696,12 @@ int sierra_set_int_register (Camera *camera, int reg, int value)
 			return GP_OK;
 
 		/* DC1 = invalid register or value */
-		if (buf[0] == DC1)
+		if (buf[0] == DC1) {
+			gp_camera_set_error (camera, _("Could not set "
+				"int register %i. Please contact "
+				"<gphoto-devel@gphoto.org>."), reg);
 			return GP_ERROR_BAD_PARAMETERS;
+		}
 	}
 
 	sierra_set_speed (camera, -1);
@@ -735,8 +737,12 @@ int sierra_get_int_register (Camera *camera, int reg, int *value)
 		CHECK (ret);
 
 		/* DC1 = invalid register or value */
-		if (buf[0] == DC1)
+		if (buf[0] == DC1) {
+			gp_camera_set_error (camera, _("Could not get "
+				"register %i. Please contact "
+				"<gphoto-devel@gphoto.org>."), reg);
 			return GP_ERROR_BAD_PARAMETERS;
+		}
 
 		if (buf[0] == TYPE_DATA_END) {
 			ret = sierra_write_ack(camera);
@@ -819,9 +825,13 @@ int sierra_set_string_register (Camera *camera, int reg, const char *s, long int
 			CHECK (ret);
 
 			c = (unsigned char)buf[0];
-			if (c == DC1)
+			if (c == DC1) {
+				gp_camera_set_error (camera, _("Could not "
+					"set string register %i. Please "
+					"contact <gphoto-devel@gphoto.org>."),
+					reg);
 				return GP_ERROR_BAD_PARAMETERS;
-			if (c == ACK) {
+			} else if (c == ACK) {
 				done = 1;
 				if (do_percent)
 					gp_camera_progress (camera, (float)x / (float)length);
@@ -841,10 +851,11 @@ int sierra_set_string_register (Camera *camera, int reg, const char *s, long int
 }
 
 int sierra_get_string_register (Camera *camera, int reg, int file_number, 
-                                CameraFile *file, char *s, int *length) {
+                                CameraFile *file, unsigned char *b,
+				unsigned int *b_len) {
 
-	char packet[4096];
-	int done, x, packlength, do_percent, l;
+	unsigned char packet[4096];
+	unsigned int packlength, total = *b_len;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", 
 			 "* sierra_get_string_register");
@@ -852,33 +863,9 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* file number: %i", 
 			 file_number);
 
-	do_percent = 1;
-
 	/* Set the current picture number */
 	if (file_number >= 0)
 		CHECK (sierra_set_int_register (camera, 4, file_number));
-
-	switch (reg) {
-	case 14:
-
-		/* Get the size of the current image */
-		CHECK (sierra_get_int_register (camera, 12, &l));
-
-		break;
-	case 15:
-	
-		/* Get the size of the current thumbnail */
-		CHECK (sierra_get_int_register (camera, 13, &l));
-
-		break;
-	case 44:
-
-		/* Get the size of the current audio will do */
-		//FIXME
-		break;
-	default:
-		do_percent = 0;
-	}
 
 	/* Build and send the request */
 	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 2, packet));
@@ -887,35 +874,33 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	CHECK (sierra_write_packet (camera, packet));
 
 	/* Read all the data packets */
-	x = 0; done = 0;
-	while (!done) {
+	*b_len = 0;
+	do {
+
+		/* Read one packet */
 		CHECK (sierra_read_packet (camera, packet));
-
-		if (packet[0] == DC1)
+		if (packet[0] == DC1) {
+			gp_camera_set_error (camera, _("Could not get "
+				"string register %i. Please contact "
+				"<gphoto-devel@gphoto.org>."), reg);
 			return GP_ERROR_BAD_PARAMETERS;
-
+		}
 		CHECK (sierra_write_ack (camera));
 
-		packlength = ((unsigned char)packet[2]) +
-			((unsigned char)packet[3]  * 256);
+		packlength = packet[2] | (packet[3] << 8);
+		GP_DEBUG ("Packet length: %d", packlength);
 
-		if (s)
-			memcpy (&s[x], &packet[4], packlength);
+		if (b)
+			memcpy (&b[*b_len], &packet[4], packlength);
+		*b_len += packlength;
 
 		if (file) {
 			CHECK (gp_file_append (file, &packet[4], packlength));
-			if (do_percent)
-				gp_camera_progress (camera,
-					(float)((float)(x+packlength)/(float)(l)));
+			gp_camera_progress (camera,
+				(float) (*b_len) / (float) (total));
 		}
 
-		x += packlength;
-		if (packet[0] == TYPE_DATA_END)
-			done = 1;
-	}
-
-	if (length)
-		*length = x;
+	} while (packet[0] != TYPE_DATA_END);
 
 	return (GP_OK);
 }
@@ -1043,17 +1028,15 @@ int sierra_end_session (Camera *camera)
 
 int sierra_capture_preview (Camera *camera, CameraFile *file)
 {
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_capture_preview");
+	unsigned int size;
 
-	if (file == NULL)
-		return (GP_ERROR_BAD_PARAMETERS);
-	
 	/* Send to the camera the capture request and wait
 	   for the completion */
 	CHECK (sierra_write_action_command_and_wait(camera, 5));
 
 	/* Retrieve the preview and set the MIME type */
-	CHECK (sierra_get_string_register (camera, 14, 0, file, NULL, NULL));
+	CHECK (sierra_get_int_register (camera, 12, &size));
+	CHECK (sierra_get_string_register (camera, 14, 0, file, NULL, &size));
 	CHECK (gp_file_set_mime_type (file, "image/jpeg"));
 
 	return (GP_OK);
@@ -1062,15 +1045,13 @@ int sierra_capture_preview (Camera *camera, CameraFile *file)
 int sierra_capture (Camera *camera, CameraCaptureType type,
 		    CameraFilePath *filepath)
 {
-	int picnum, length;
+	int picnum, length = 0;
 	char buf[128];
 	const char *folder;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_capture");
 
-	/* Various preliminary checks */
-	if (!camera || !filepath)
-		return (GP_ERROR_BAD_PARAMETERS);
+	/* We can only capture images */
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
 
@@ -1130,4 +1111,39 @@ int sierra_upload_file (Camera *camera, CameraFile *file)
 	CHECK (sierra_write_action_command_and_wait (camera, 11));
 
 	return GP_OK;
+}
+
+static unsigned int
+get_int (const unsigned char b[])
+{
+	return (b[0] | (b[1] << 8) | (b[2] << 16) | (b[3] << 24));
+}
+
+int sierra_get_pic_info (Camera *camera, unsigned int n,
+			 SierraPicInfo *pic_info)
+{
+	unsigned char buf[1024];
+	unsigned int buf_len = 0;
+
+	CHECK (sierra_get_string_register (camera, 47, n, NULL, buf, &buf_len));
+	if (buf_len != 32)
+		return (GP_ERROR_CORRUPTED_DATA);
+	pic_info->size_file      = get_int (buf);
+	pic_info->size_preview   = get_int (buf + 4);
+	pic_info->size_audio     = get_int (buf + 8);
+	pic_info->resolution     = get_int (buf + 12);
+	pic_info->locked         = get_int (buf + 16);
+	pic_info->date           = get_int (buf + 20);
+	pic_info->animation_type = get_int (buf + 28);
+
+	/* Make debugging easier */
+	GP_DEBUG ("File size: %d", pic_info->size_file);
+	GP_DEBUG ("Preview size: %i", pic_info->size_preview);
+	GP_DEBUG ("Audio size: %i", pic_info->size_audio);
+	GP_DEBUG ("Resolution: %i", pic_info->resolution);
+	GP_DEBUG ("Locked: %i", pic_info->locked);
+	GP_DEBUG ("Date: %i", pic_info->date);
+	GP_DEBUG ("Animation type: %i", pic_info->animation_type);
+
+	return (GP_OK);
 }

@@ -21,6 +21,7 @@
 #ifndef __GPHOTO2_FILE_H__
 #define __GPHOTO2_FILE_H__
 
+#define GP_MIME_WAV       "audio/wav"
 #define GP_MIME_RAW       "image/x-raw"
 #define GP_MIME_PNG       "image/png"
 #define GP_MIME_PGM       "image/x-portable-graymap"

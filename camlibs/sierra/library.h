@@ -49,6 +49,24 @@ int sierra_write_packet (Camera *camera, char *packet);
 int sierra_read_packet  (Camera *camera, char *packet);
 int sierra_build_packet (Camera *camera, char type, char subtype, int data_length, char *packet);
 
+typedef enum {
+	SIERRA_LOCKED_NO  = 0x00,
+	SIERRA_LOCKED_YES = 0x01
+} SierraLocked;
+
+typedef struct _SierraPicInfo SierraPicInfo;
+struct _SierraPicInfo {
+	unsigned int size_file;
+	unsigned int size_preview;
+	unsigned int size_audio;
+	unsigned int resolution;
+	SierraLocked locked;
+	unsigned int date;
+	unsigned int animation_type;
+};
+int sierra_get_pic_info (Camera *camera, unsigned int n,
+			 SierraPicInfo *pic_info);
+
 /* Communications functions */
 int sierra_set_speed		  (Camera *camera, int speed);
 int sierra_end_session		  (Camera *camera);
@@ -61,7 +79,8 @@ int sierra_set_int_register 	  (Camera *camera, int reg, int value);
 int sierra_get_int_register 	  (Camera *camera, int reg, int *value);
 int sierra_set_string_register	  (Camera *camera, int reg, const char *s, long int length);
 int sierra_get_string_register	  (Camera *camera, int reg, int file_number,
-				   CameraFile *file, char *s, int *length);
+				   CameraFile *file,
+				   unsigned char *b, unsigned int *b_len);
 int sierra_delete		  (Camera *camera, int picture_number);
 int sierra_delete_all             (Camera *camera);
 int sierra_capture		  (Camera *camera, CameraCaptureType type, 
