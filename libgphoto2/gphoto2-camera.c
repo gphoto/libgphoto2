@@ -606,15 +606,12 @@ gp_camera_init (Camera *camera)
 	}
 
 	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
-
-		/* If we don't have a port at this point, return error */
-		if (!camera->port) {
+		switch (camera->port->type) {
+		case GP_PORT_NONE:
+			gp_camera_set_error (camera, _("You have to set the "
+				"port prior initialization of the camera"));
 			gp_camera_status (camera, "");
 			return (GP_ERROR_UNKNOWN_PORT);
-		}
-
-		/* In case of USB, find the device */
-		switch (camera->port->type) {
 		case GP_PORT_USB:
 			CRS (camera, gp_port_usb_find_device (camera->port,
 					camera->pc->a.usb_vendor,
