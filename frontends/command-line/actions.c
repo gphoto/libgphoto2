@@ -21,51 +21,39 @@ int print_folder(char *subfolder, image_action action, int reverse) {
 	return (GP_OK);
 }
 
-int print_files(char *subfolder, image_action iaction, int reverse) {
-
-	CameraList filelist;
-	int x, res;
-
-	res = gp_camera_folder_list_files (glob_camera, subfolder, &filelist);
-	if (res != GP_OK)
-		return (res);
-
-	if (glob_quiet)
-		printf ("%i\n", gp_list_count (&filelist));
-	   else
-		printf ("Files in %s:\n", subfolder);
-
-	for (x = 0; x < gp_list_count (&filelist); x++) {
-		const char *name;
-		gp_list_get_name (&filelist, x, &name);
-		if (glob_quiet)
-			printf ("\"%s\"\n", name);
-                else {
-			CameraFileInfo info;
-			if (gp_camera_file_get_info(glob_camera, subfolder, name, &info) == GP_OK) {
-			    printf("#%-5i %-27s", x+1, name);
-			    if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
-			    	printf("%s%s",
-			    		(info.file.permissions & GP_FILE_PERM_READ) ? "r" : "-",
-			    		(info.file.permissions & GP_FILE_PERM_DELETE) ? "d" : "-");
-			    }
-			    if (info.file.fields & GP_FILE_INFO_SIZE)
-			    	printf(" %5d KB", (info.file.size+1023) / 1024);
-			    if ((info.file.fields & GP_FILE_INFO_WIDTH) && +			    	(info.file.fields & GP_FILE_INFO_HEIGHT))
-			    	printf(" %4dx%-4d", info.file.width, info.file.height);
-			    if (info.file.fields & GP_FILE_INFO_TYPE)
-			    	printf(" %s", info.file.type);
-				printf("\n");
-			} else {
-			    printf("#%-5i %s\n", x+1, name);
-			}
-                }
-	}
-	return (GP_OK);
-}
-
 /* File actions 						*/
 /* ------------------------------------------------------------ */
+
+int print_picture_action(char *folder, char *filename)
+{
+	static int x=0;
+
+	if (glob_quiet)
+		printf ("\"%s\"\n", filename);
+	else {
+		CameraFileInfo info;
+		if (gp_camera_file_get_info(glob_camera, folder, filename, &info) == GP_OK) {
+		    printf("#%-5i %-27s", x+1, filename);
+		    if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
+			printf("%s%s",
+				(info.file.permissions & GP_FILE_PERM_READ) ? "r" : "-",
+				(info.file.permissions & GP_FILE_PERM_DELETE) ? "d" : "-");
+		    }
+		    if (info.file.fields & GP_FILE_INFO_SIZE)
+			printf(" %5d KB", (info.file.size+1023) / 1024);
+		    if ((info.file.fields & GP_FILE_INFO_WIDTH) && +
+			    (info.file.fields & GP_FILE_INFO_HEIGHT))
+			printf(" %4dx%-4d", info.file.width, info.file.height);
+		    if (info.file.fields & GP_FILE_INFO_TYPE)
+			printf(" %s", info.file.type);
+			printf("\n");
+		} else {
+		    printf("#%-5i %s\n", x+1, filename);
+		}
+	}
+	x++;
+	return (GP_OK);
+}
 
 int save_picture_action(char *folder, char *filename) {
 

@@ -18,7 +18,7 @@ for_each_subfolder (char *folder, folder_action faction,
 	CameraList folderlist;
 
 	char	prefix[1024], subfolder[1024];
-	int	i, res;
+	int	i, l, res;
 	
 	prefix[0] = 0;
 	subfolder[0] = 0;
@@ -32,16 +32,15 @@ for_each_subfolder (char *folder, folder_action faction,
 	if (res != GP_OK)
 		return (res);
 
-	if ((glob_quiet)&&(faction == print_folder))
-		printf ("%i\n", gp_list_count(&folderlist));
-	
 	for (i = 0; i < gp_list_count(&folderlist); i++) {
 		const char *name;
 
 		gp_list_get_name (&folderlist, i, &name);
+		while (*prefix && prefix[l=strlen(prefix)-1] == '/')
+			prefix[l] = '\0';
 		sprintf(subfolder, "%s/%s", prefix, name);
 
-		res = faction (subfolder, iaction, recurse);
+		res = faction (subfolder, iaction, 0);
 		if (res != GP_OK)
 			return (res);
 
@@ -63,6 +62,11 @@ for_each_image (char *folder, image_action iaction, int reverse)
 	res = gp_camera_folder_list_files (glob_camera, folder, &filelist);
 	if (res != GP_OK)
 		return (res);
+
+	if (glob_quiet)
+		printf ("%i\n", gp_list_count (&filelist));
+	else
+		printf ("Files in %s:\n", folder);
 
 	if (reverse) {
 		for (i = gp_list_count (&filelist) - 1; 0 <= i; i--) {

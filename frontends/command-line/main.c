@@ -450,12 +450,12 @@ OPTION_CALLBACK (list_folders)
 OPTION_CALLBACK (list_files)
 {
         CHECK_RESULT (set_globals());
-        CHECK_RESULT (print_files (glob_folder, NULL, 0));
+        CHECK_RESULT (for_each_image (glob_folder, print_picture_action, 0));
 
         if (!glob_recurse)
                 return (GP_OK);
 
-        return for_each_subfolder(glob_folder, print_files, NULL, glob_recurse);
+        return for_each_subfolder(glob_folder, for_each_image, print_picture_action, glob_recurse);
 }
 
 OPTION_CALLBACK (num_pictures)
@@ -619,8 +619,12 @@ OPTION_CALLBACK (get_all_pictures)
         cli_debug_print("Getting all pictures");
 
         CHECK_RESULT (set_globals ());
+        CHECK_RESULT (for_each_image (glob_folder, save_picture_action, 0));
 
-        return for_each_image(glob_folder, save_picture_action, 0);
+        if (!glob_recurse)
+                return (GP_OK);
+
+        return for_each_subfolder(glob_folder, for_each_image, save_picture_action, glob_recurse);
 }
 
 OPTION_CALLBACK (get_thumbnail)
@@ -633,8 +637,12 @@ OPTION_CALLBACK(get_all_thumbnails)
         cli_debug_print("Getting all thumbnails");
 
         CHECK_RESULT (set_globals ());
+        CHECK_RESULT (for_each_image (glob_folder, save_thumbnail_action, 0));
 
-        return for_each_image(glob_folder, save_thumbnail_action, 0);
+        if (!glob_recurse)
+                return (GP_OK);
+
+        return for_each_subfolder(glob_folder, for_each_image, save_thumbnail_action, glob_recurse);
 }
 
 OPTION_CALLBACK (get_raw_data)
@@ -645,8 +653,12 @@ OPTION_CALLBACK (get_raw_data)
 OPTION_CALLBACK (get_all_raw_data)
 {
         CHECK_RESULT (set_globals ());
+        CHECK_RESULT (for_each_image (glob_folder, save_raw_action, 0));
 
-        return (for_each_image (glob_folder, save_raw_action, 0));
+        if (!glob_recurse)
+                return (GP_OK);
+
+        return for_each_subfolder(glob_folder, for_each_image, save_raw_action, glob_recurse);
 }
 
 OPTION_CALLBACK (delete_picture)

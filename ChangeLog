@@ -1,3 +1,12 @@
+2001-10-05  Fabrice Bellet <fabrice@gnu.org>
+
+	* command-line/actions.c:
+	* command-line/actions.h:
+	* command-line/foreach.c:
+	* command-line/main.c: The --recurse option should now work
+	with --get-all-thumbnails, --get-all-images, --get-all-raw-data,
+	--list-files and --list-folders.
+
 2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/filesys.c: Only spew debugging messages in case of error -
