@@ -84,6 +84,8 @@ install_data_local_manual = install-data-local-manual
 install-data-local-manual:
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
 	$(INSTALL_DATA) ./manual/*.html $(DESTDIR)$(TARGET_DIR)
+	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)/figures
+	$(INSTALL_DATA) ./figures/*.png $(DESTDIR)$(TARGET_DIR)/figures
 
 dist_hook_manual = dist-hook-manual
 dist-hook-manual:
@@ -105,5 +107,4 @@ dist-hook: $(dist_hook_manual)
 	@echo "Dummy $@ target"
 
 all-local: $(man_MANS) $(manual_pdf) $(manual_ps) $(manual_html)
-	cd $(manual_dir) && rm -f figures && ln -s ../figures figures
 	@echo "Dummy $@ target"

@@ -1,3 +1,8 @@
+2002-06-12  Christophe Barbé <christophe.barbe@ufies.org>
+
+	* doc/Makefile.am: no more figures link. install only png files for the
+	  user manual.
+
 2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
 
 	* configure.in:
