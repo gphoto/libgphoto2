@@ -236,7 +236,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 		  "PC sign on LCD should be lit now (if your camera has a PC sign)");
 
 	read_bytes = 0;
-	return GP_OK;
+	return camstat;
 }
 
 /* Forward reference for use within canon_usb_init() */
@@ -256,7 +256,7 @@ int
 canon_usb_init (Camera *camera, GPContext *context)
 {
 	unsigned char buffer[0x44];
-	int res, id_retry, i, read_bytes;
+	int res, id_retry, i, camstat, read_bytes;
 	GPPortSettings settings;
 
 	GP_DEBUG ("Initializing the (USB) camera.\n");
@@ -273,9 +273,9 @@ canon_usb_init (Camera *camera, GPContext *context)
 		return res;
 	}
 
-	res = canon_usb_camera_init (camera, context);
-	if (res != GP_OK)
-		return res;
+	camstat = canon_usb_camera_init (camera, context);
+	if ( camstat < 0 )
+		return camstat;
 
 	/* We retry the identify camera because sometimes (camstat == 'A'
 	 * in canon_usb_camera_init()) this is necessary to get the camera
@@ -337,26 +337,30 @@ canon_usb_init (Camera *camera, GPContext *context)
 					  gp_result_as_string (res));
 			return res;
 		}
-		do {
-			i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
-			if ( i > 0 )
-				read_bytes += i;
-		} while ( read_bytes < 0x10 && i >= 0 );
-		if ( read_bytes < 0x10 ) {
-			GP_DEBUG ( "canon_usb_camera_init() interrupt read returned only %d bytes, status=%d", read_bytes, i );
-			if ( i < 0 )
-				return GP_ERROR_OS_FAILURE;
-			else
+		if ( camstat == 'C' ) {
+			read_bytes = 0;
+			do {
+				GP_DEBUG ( "canon_usb_camera_init() read_bytes=0x%x", read_bytes );
+				i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
+				if ( i > 0 )
+					read_bytes += i;
+			} while ( read_bytes < 0x10 && i >= 0 );
+			if ( read_bytes < 0x10 ) {
+				GP_DEBUG ( "canon_usb_camera_init() interrupt read returned only %d bytes, status=%d", read_bytes, i );
+				if ( i < 0 )
+					return GP_ERROR_OS_FAILURE;
+				else
+					return GP_ERROR_CORRUPTED_DATA;
+			}
+			else if ( i < 0 ) {
+				GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
 				return GP_ERROR_CORRUPTED_DATA;
+			}
+			else if ( i > 0x10 )
+				GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes );
+			else
+				GP_DEBUG ( "canon_usb_camera_init() interrupt read OK" );
 		}
-		else if ( i < 0 ) {
-			GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
-			return GP_ERROR_CORRUPTED_DATA;
-		}
-		else if ( i > 0x10 )
-			GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes );
-		else
-			GP_DEBUG ( "canon_usb_camera_init() interrupt read OK" );
 	}
 	else {
 		do {
@@ -1699,7 +1703,7 @@ canon_usb_set_file_attributes (Camera *camera, unsigned int attr_bits,
 
 	GP_DEBUG ( "canon_usb_set_file_attributes()" );
 	GP_DEBUG ( "canon_usb_set_file_attributes(): payload is %d=0x%x bytes; string length is %d=0x%x",
-		   payload_length, payload_length, strlen(dir), strlen(dir) );
+		   payload_length, payload_length, (int)strlen(dir), (int)strlen(dir) );
 	/* build payload :
 	 *
 	 * <attr bits> directory 0x00 file 0x00 0x00
