@@ -1,4 +1,26 @@
 ------------------------------------------------------------------------
+libgphoto2-2.1.3
+------------------------------------------------------------------------
+
+On 2003-10-19, after a long time, we have finally released a new
+version of libgphoto2.
+
+Version 2.1.3 now features support for almost 400 digital cameras.
+
+The most important changes since the the 2.1.1 release are:
+
+	- PTP driver rewritten completely
+	- support for lots of new cameras
+	- fixed a nasty segfault bug
+
+See the CHANGES file for a more complete list.
+
+Have fun with your photos!
+
+The gphoto2 team.
+
+
+------------------------------------------------------------------------
 libgphoto2-2.1.1
 ------------------------------------------------------------------------
 
@@ -22,7 +44,7 @@ The gphoto2 team.
 
 
 --------------------------------------------------------------------------------
-				gphoto2-2.0beta4
+gphoto2-2.0beta4
 --------------------------------------------------------------------------------
 
 Hello lovers of digital cameras, gphoto2-beta4 is out! 
