@@ -215,6 +215,7 @@ int camera_file_action (Camera *camera, int action, CameraFile *file, char *fold
 	DC120Data *dd = camera->camlib_data;
 	int picnum=0, album_num=-1, from_card=0;
 	char buf[32];
+	char *dot;
 
 	picnum = gp_filesystem_number(dd->fs, folder, filename);
 
@@ -241,6 +242,15 @@ int camera_file_action (Camera *camera, int action, CameraFile *file, char *fold
 
 	if (album_num == -1)
 		return (GP_ERROR);
+
+	if (action == DC120_ACTION_PREVIEW) {
+		dot = strrchr(filename, '.');
+		if (dot)
+			strcpy(&dot[1], "ppm");
+	}
+
+	if (file)
+		strcpy(file->name, filename);
 
 	return (dc120_file_action(dd, action, from_card, album_num, picnum+1, file));
 }
