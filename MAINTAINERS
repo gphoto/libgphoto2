@@ -20,5 +20,17 @@ camlibs/dimera:
 camlibs/konica:
 	Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+camlibs/kodak/dc120:
+	Scott Fritzinger <scottf@unr.edu>
+
+camlibs/kodak/dc240:
+	Scott Fritzinger <scottf@unr.edu>
+
+camlibs/barbie:
+	Scott Fritzinger <scottf@unr.edu>
+
+camlibs/sierra:
+	Scott Fritzinger <scottf@unr.edu>
+
 Bug reports on sourceforge:
 	Hubert Figuiere <hfiguiere@teaser.fr>
