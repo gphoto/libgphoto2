@@ -30,7 +30,7 @@
 #define LIGHTNESS_DATA  40
 #define SATURATION_DATA 40
 
-const static int default_colors[6][3] =
+static const int default_colors[6][3] =
 {
   { 255,   0,   0 },
   { 255, 255,   0 },
