@@ -614,6 +614,15 @@ int gp_widget_get_child_by_name (CameraWidget *widget, const char *name,
 	return (GP_ERROR_BAD_PARAMETERS);
 }
 
+int gp_widget_get_parent (CameraWidget *widget, CameraWidget **parent)
+{
+	if (!widget || !parent)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	parent = widget->parent;
+
+	return (GP_OK);
+}
 
 /**
  * gp_widget_get_root:
