@@ -32,7 +32,7 @@ int gp_abilities_dump (CameraAbilities *abilities) {
 		abilities->config == 0? "no":"yes");
 	printf("core: Delete files on camera support        : %s\n", 
 		abilities->file_delete == 0? "no":"yes");
-	printf("core: File preview (thumnail) support       : %s\n", 
+	printf("core: File preview (thumbnail) support      : %s\n", 
 		abilities->file_preview == 0? "no":"yes");
 	printf("core: File upload support                   : %s\n", 
 		abilities->file_put == 0? "no":"yes");
