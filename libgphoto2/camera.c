@@ -121,6 +121,7 @@ int gp_camera_new (Camera **camera, int camera_number)
 	(*camera)->abilities->file_preview	= glob_abilities_list->abilities[camera_number]->file_preview;
 	(*camera)->abilities->file_put		= glob_abilities_list->abilities[camera_number]->file_put;
 	(*camera)->abilities->capture		= glob_abilities_list->abilities[camera_number]->capture;
+	(*camera)->abilities->config		= glob_abilities_list->abilities[camera_number]->config;
 
         if ((result = load_library(*camera, glob_abilities_list->abilities[camera_number]->model)) != GP_OK) {
                 gp_camera_free(*camera);
