@@ -2,7 +2,7 @@
 
 	* packaging/usbcam*: moved to packaging/linux-hotplug/*
 	* packaging/Makefile.am: reflect that
-	* configure.in: reflect that
+	* configure.in: reflect that and 2.0.1dev3
 
 2002-03-22  Lutz Müller <lutz@users.sourceforge.net>
 
