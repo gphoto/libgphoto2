@@ -1,3 +1,7 @@
+2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/core.c: Additional debugging stuff.
+
 2001-09-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/core.c: Use "... == GP_OK" instead of "!...". That should
