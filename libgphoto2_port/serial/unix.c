@@ -27,6 +27,7 @@
    Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -47,6 +48,10 @@
 #include <sys/ioctl.h>
 #endif
 #include <sgtty.h>
+#endif
+
+#if HAVE_LOCKDEV
+#include <lockdev.h>
 #endif
 
 #include "../include/gphoto2-port-serial.h"
@@ -131,7 +136,20 @@ gp_port_operations *gp_port_library_operations () {
 static int
 gp_port_serial_lock (gp_port *dev, const char *port)
 {
+#if HAVE_LOCKDEV
+	int pid;
+
+	pid = dev_lock (port);
+	if (!pid)
+		return (GP_OK);
+
+	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device '%s' is "
+			      "locked by pid %d.", port, pid);
+	return (GP_ERROR_IO_LOCK);
+
+#else /* !HAVE_LOCKDEV */
 	DeviceHandle *handle = dev->device_handle;
+
 #ifdef LOCKLIB
 	int result;
 	
@@ -258,11 +276,27 @@ gp_port_serial_lock (gp_port *dev, const char *port)
 #endif /* !LOCKLIB */
 
 	return (GP_OK);
+
+#endif /* !HAVE_LOCKDEV */
 }
 
 static int
 gp_port_serial_unlock (gp_port *dev)
 {
+#if HAVE_LOCKDEV
+	int pid;
+	const char *port = strchr (dev->settings.serial.port, ':');
+
+	pid = dev_unlock (port, 0);
+	if (!pid)
+		return (GP_OK);
+
+	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device '%s' is "
+			      "locked by pid %d.", port, pid);
+	return (GP_ERROR_IO_LOCK);
+
+#else /* !HAVE_LOCKDEV */
+						
 	DeviceHandle *handle = dev->device_handle;
 
 	if (handle->lock_file[0]) {
@@ -275,6 +309,7 @@ gp_port_serial_unlock (gp_port *dev)
 	}
 
 	return (GP_OK);
+#endif /* !HAVE_LOCKDEV */
 }
 
 int

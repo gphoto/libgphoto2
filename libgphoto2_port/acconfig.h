@@ -12,3 +12,4 @@
 #undef HAVE_STPCPY
 
 #undef HAVE_RTS_IOCTL
+#undef HAVE_LOCKDEV

@@ -72,6 +72,26 @@ IOLIB_SUBDIRS="serial"
 IOLIB_LDFLAGS="-Lserial -lgphoto2_port_serial"
 IOLIB_CFLAGS="-DGP_PORT_SUPPORTED_SERIAL"
 
+dnl Check for lockdev
+lockdev_msg=no
+try_lockdev=true
+AC_ARG_WITH(lockdev, [  --without-lockdev       Use lockdev library],
+	if test x$withval = xno; then
+		try_lockdev=false
+	fi
+)
+if $try_lockdev; then
+	AC_MSG_CHECKING(for lockdev)
+	AC_TRY_COMPILE([#include <lockdev.h>], [int foo = 0;],
+		AC_MSG_RESULT(found)
+		AC_DEFINE(HAVE_LOCKDEV)
+		lockdev_msg=yes
+		SERIAL_LDFLAGS=-llockdev,
+		AC_MSG_RESULT(not found)
+	)
+fi
+AC_SUBST(SERIAL_LDFLAGS)
+
 dnl Compile in usb support
 AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
 if test -n "${LIBUSB_CONFIG}"; then
@@ -117,16 +137,28 @@ AC_SUBST(IOLIB_SUBDIRS)
 AC_SUBST(IOLIB_LDFLAGS)
 AC_SUBST(IOLIB_CFLAGS)
 
-AC_OUTPUT( \
-libgphoto2_port.spec \
-Makefile \
-libgphoto2_port/Makefile \
-serial/Makefile \
-parallel/Makefile \
-usb/Makefile \
-ieee1394/Makefile \
-network/Makefile \
-include/Makefile \
-gphoto2-port-config \
-intl/Makefile \
-po/Makefile.in)
+AC_OUTPUT([
+libgphoto2_port.spec
+Makefile
+libgphoto2_port/Makefile
+serial/Makefile
+parallel/Makefile
+usb/Makefile
+ieee1394/Makefile
+network/Makefile
+include/Makefile
+gphoto2-port-config
+intl/Makefile
+po/Makefile.in
+test/Makefile
+])
+
+echo "
+
+Configuration
+
+	Source code location: ${srcdir}
+	Compiler:             ${CC}
+
+	Use liblockdev:       $lockdev_msg
+"

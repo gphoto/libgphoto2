@@ -1,3 +1,14 @@
+2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* test/gphoto2-port-test.c: Renamed into 
+	* test/test-gp-port.c
+	* test/Makefile.am: New
+	* Makefile.am: Add test to SUBDIRS
+	* acconfig.h: #undef HAVE_LOCKDEV
+	* configure.in: Check for lockdev and use it if available
+	* serial/Makefile.am: -llockdev if that is available
+	* serial/unix.c: Use lockdev if available
+
 2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2_port/gp_port.c (gp_port_count): Make sure
