@@ -458,8 +458,10 @@ int dc240_file_action (DC240Data *dd, int action, CameraFile *file,
     free(cmd_packet);
     free(path_packet);
 
-    strcpy(file->name, filename);
-    strcpy(file->type, "image/jpeg");
+    if ((filename) && (file)) {
+	strcpy(file->name, filename);
+	strcpy(file->type, "image/jpeg");
+    }
 
     return (retval);
 }

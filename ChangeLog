@@ -1,3 +1,7 @@
+2001-08-12  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/kodak/dc240/library.c: (dc240_file_action) fix bug #440162
+
 2001-08-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/sierra/library.c: (sierra_delete_all): Move notice about 
