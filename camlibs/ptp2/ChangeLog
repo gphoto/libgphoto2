@@ -1,4 +1,9 @@
-2003-07-09 mariusz Woloszyn
+2003-07-17 Mariusz Woloszyn
+	* library.c: added following cameras: Kodak DC290, Kodak DX4530,
+	  Kodak DX6440, Kodak DX6490, Kodak LS663, Kodak CX4230,
+	  Kodak CX6200, Kodak CX6230, Kodak CX6330, HP PhotoSmart 120,
+	  HP PhotoSmart 620, HP PhotoSmart 735, HP PhotoSmart 812
+2003-07-09 Mariusz Woloszyn
 	* library.c: added Nikon Coolpix SQ: M. Holzbauer
 2003-06-12 Mariusz Woloszyn
 	* library.c: added DX6340 explicite support

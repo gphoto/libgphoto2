@@ -201,6 +201,7 @@ static struct {
 	{"Kodak:DC4800", 0x040a, 0x0160},
 	/* Below other camers known to be detected by interface class */
 	
+	{"Kodak:DC290" , 0x040a, 0x0112},
 	{"Kodak:DX3215", 0x040a, 0x0525},
 	{"Kodak:DX3500", 0x040a, 0x0500},
 	{"Kodak:DX3600", 0x040a, 0x0510},
@@ -209,25 +210,36 @@ static struct {
 	{"Kodak:DX4230", 0x040a, 0x0535},
 	{"Kodak:DX4300", 0x040a, 0x0566},
 	{"Kodak:DX4330", 0x040a, 0x0555},
+	{"Kodak:DX4530", 0x040a, 0x0576},
 	{"Kodak:DX4900", 0x040a, 0x0550},
 	{"Kodak:DX6340", 0x040a, 0x0570},
+	{"Kodak:DX6440", 0x040a, 0x0572},
+	{"Kodak:DX6490", 0x040a, 0x0575},
 	{"Kodak:MC3", 0x040a, 0x0400},
 	{"Kodak:LS420", 0x040a, 0x0540},
 	{"Kodak:LS443", 0x040a, 0x0568},
-	{"Kodak:CX4210", 0x040a, 0x0560},
+	{"Kodak:LS663", 0x040a, 0x0569},
 	{"Kodak:CX4200", 0x040a, 0x0560},
+	{"Kodak:CX4210", 0x040a, 0x0560},
 	/* both above may share the same product IDs???
 	   A Europe/US versions of the same model??? */
 	{"Kodak:CX4230", 0x040a, 0x0535},
 	{"Kodak:CX4300", 0x040a, 0x0566},
+	{"Kodak:CX6200", 0x040a, 0x0574},
+	{"Kodak:CX6230", 0x040a, 0x0573},
+	{"Kodak:CX6330", 0x040a, 0x0571},
 
 
 	/* HP PTP cameras */
+	{"HP:PhotoSmart 120 (PTP mode)", 0x03f0, 0x6502},
 	{"HP:PhotoSmart 318 (PTP mode)", 0x03f0, 0x6302},
 	{"HP:PhotoSmart 320 (PTP mode)", 0x03f0, 0x6602},
 	{"HP:PhotoSmart 612 (PTP mode)", 0x03f0, 0x6302},
+	{"HP:PhotoSmart 620 (PTP mode)", 0x03f0, 0x6802},
 	{"HP:PhotoSmart 715 (PTP mode)", 0x03f0, 0x6402},
 	{"HP:PhotoSmart 720 (PTP mode)", 0x03f0, 0x6702},
+	{"HP:PhotoSmart 735 (PTP mode)", 0x03f0, 0x6a02},
+	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202},
 	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302},
 	{"HP:PhotoSmart 120 (PTP mode)", 0x03f0, 0x6502},
 	/* I got information that all SONY PTP cameras use the same
