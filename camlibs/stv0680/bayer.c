@@ -21,22 +21,30 @@
 #include <math.h>
 #include "bayer.h"
 
+/* Enhanced by Kurt Garloff to do scaling and debayering at the same time. */
 void bayer_unshuffle_preview(int w, int h, int scale, unsigned char *raw, unsigned char *output)
 {
-	int x, y, i, p;
-	int yincr = scale ? scale<<1 : 1;
 
-	for(y = 0; y < h; y+=yincr) {
-		for(x = 0; x < w; ++x) {
-			p = (x & 1 ? raw[(y*w) + (x >> 1)] : raw[(y*w) + (x>>1) + (w >> 1)])>>scale;
+    int x, y, nx, ny;
+    int colour; int rgb[3];
+    int nw = w >> scale;
+    int nh = h >> scale;
+    int incr = 1<<scale;
 
-			i = (((y>>scale) * w + x) * 3)>>scale;
-
-			output[i]   += p;
-			output[i+1] += p;
-			output[i+2] += p;
+    for (ny = 0; ny < nh; ++ny, raw += w<<scale) {
+	for (nx = 0; nx < nw; ++nx, output += 3) {
+	    rgb[0] = 0; rgb[1] = 0; rgb[2] = 0;
+	    for (y = 0; y < incr; ++y) {
+		for (x = 0; x < incr; ++x) {
+		    colour = 1 - (x&1) + (y&1);
+		    rgb[colour] += raw[y*w + (nx<<(scale-1))+(x>>1) + ((x&1)? 0: (w>>1))];
 		}
+	    }
+	    output[0] = rgb[0]>>(2*scale-2);
+	    output[1] = rgb[1]>>(2*scale-1);
+	    output[2] = rgb[2]>>(2*scale-2);
 	}
+    }
 }
 
 /****** gamma correction from trans[], plus hardcoded white balance */

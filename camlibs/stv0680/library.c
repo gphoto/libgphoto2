@@ -195,7 +195,7 @@ int stv0680_file_count(GPPort *port, int *count)
 int stv0680_get_image_raw(GPPort *port, int image_no, char **data, int *size)
 {
 	struct stv680_image_header imghdr;
-	char header[64];
+	char header[80];
 	unsigned char *raw;
 	int h,w,ret;
 
@@ -281,7 +281,7 @@ int stv0680_get_image_preview(GPPort *port, int image_no,
 	struct stv680_image_header imghdr;
 	char header[64];
 	unsigned char *raw;
-	int h,w,scale;
+	int h,w,rh,rw,scale,rsize;
 	int ret;
 
 	switch (port->type) {
@@ -290,9 +290,9 @@ int stv0680_get_image_preview(GPPort *port, int image_no,
 			image_no, (void*)&imghdr, sizeof(imghdr)) < 0)) {
 			return ret;
 		}
-		w = (imghdr.width[0]  << 8) | imghdr.width[1];
-		h = (imghdr.height[0] << 8) | imghdr.height[1];
-		*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+		rw = (imghdr.width[0]  << 8) | imghdr.width[1];
+		rh = (imghdr.height[0] << 8) | imghdr.height[1];
+		rsize = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
 		    (imghdr.size[2]<<8) | imghdr.size[3];
 		scale = (w>>8)+1;
 		break;
@@ -302,29 +302,31 @@ int stv0680_get_image_preview(GPPort *port, int image_no,
 			(void*)&imghdr, sizeof(imghdr));
 		if(ret != GP_OK)
 			return ret;
-		w = (imghdr.width[0]  << 8) | imghdr.width[1];
-		h = (imghdr.height[0] << 8) | imghdr.height[1];
-		*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+		rw = (imghdr.width[0]  << 8) | imghdr.width[1];
+		rh = (imghdr.height[0] << 8) | imghdr.height[1];
+		rsize = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
 		    (imghdr.size[2]<<8) | imghdr.size[3];
 		scale = 0;
 		break;
 	}
-	raw = calloc(1, *size);
-	if ((ret=gp_port_read(port, raw, *size))<0)
+	raw = calloc(1, rsize);
+	if (!raw) return GP_ERROR_NO_MEMORY;
+	if ((ret=gp_port_read(port, raw, rsize))<0) {
+		free(raw);
 		return ret;
-	w >>=scale;
-	h >>=scale;
+	}
+	w = rw >> scale;
+	h = rh >> scale;
 	*size = w * h;
 
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
 	*data = calloc(1,(*size * 3) + strlen(header));
 	strcpy(*data, header);
 
-	bayer_unshuffle_preview(w<<scale, h<<scale, scale, raw, *data + strlen(header));
-	if(pattrec(w, h, *data + strlen(header)) != 0) {
-		// fallback in low memory conditions
-		bayer_demosaic(w, h, *data +strlen(header));
-	}
+	if (!scale)
+	    gp_bayer_decode(raw, rw, rh, *data + strlen(header), BAYER_TILE_GBRG_INTERLACED);
+	else
+	    bayer_unshuffle_preview(rw, rh, scale, raw, *data + strlen(header));
 	free(raw);
 	*size *= 3;
 	*size += strlen(header);
