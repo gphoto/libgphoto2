@@ -109,6 +109,14 @@
 #define GP_PORT_SERIAL_RANGE_HIGH       (0xf)
 #endif
 
+/* OpenBSD */
+/* devices appear to go up to /dev/cuac7, but we just list the first 4 */
+#if defined(__OpenBSD__)
+# define GP_PORT_SERIAL_PREFIX   "/dev/cua%02x"
+# define GP_PORT_SERIAL_RANGE_LOW        0
+# define GP_PORT_SERIAL_RANGE_HIGH       3
+#endif
+
 /* NetBSD */
 #if defined(__NetBSD__)
 #define GP_PORT_SERIAL_PREFIX   "/dev/tty0%i"
