@@ -418,7 +418,7 @@ int camera_config_set (CameraSetting *setting, int count) {
 	return GP_OK;
 }
 
-int camera_capture (CameraFile *file) {
+int camera_capture (CameraFile *file, CameraCaptureInfo *info) {
 /*
 	char cmd[4], resp[4];
 

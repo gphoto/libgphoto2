@@ -24,6 +24,12 @@ typedef enum {
 } CameraPortType;
 
 typedef enum {
+	GP_CAPTURE_IMAGE,
+	GP_CAPTURE_AUDIO,
+	GP_CAPTURE_VIDEO
+} CameraCaptureType;
+
+typedef enum {
 	WIDGET_WINDOW,
 	WIDGET_PAGE,
 	WIDGET_TEXT,
@@ -67,6 +73,12 @@ struct CameraWidget {
 };
 
 typedef struct CameraWidget CameraWidget;
+
+typedef struct {
+	CameraCaptureType type;
+	int duration;
+	int quality;
+} CameraCaptureInfo;
 
 typedef struct {
 	CameraPortType type;

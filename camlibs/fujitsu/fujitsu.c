@@ -385,7 +385,7 @@ return (GP_ERROR);
 	return (GP_ERROR);
 }
 
-int camera_capture (CameraFile *file) {
+int camera_capture (CameraFile *file, CameraCaptureInfo *info) {
 
 	debug_print("Capturing image");
 

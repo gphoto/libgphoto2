@@ -251,7 +251,7 @@ int camera_config_set (CameraSetting *setting, int count) {
 	return (GP_ERROR);
 }
 
-int camera_capture (CameraFile *file) {
+int camera_capture (CameraFile *file, CameraCaptureInfo *info) {
 
 	return (GP_ERROR);
 }

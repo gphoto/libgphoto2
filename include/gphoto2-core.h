@@ -96,7 +96,7 @@
 	int gp_file_free (CameraFile *file);
 
 	/* Captures the current view. Basically, it takes a picture */
-	int gp_capture (int type);
+	int gp_capture (CameraFile *file, CameraCaptureInfo *info);
 
 	/* Camera configuration operations */
 	/* ============================================================================== */
