@@ -257,7 +257,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	int n;
-	SierraPicInfo pic_info;
+	SierraPicInfo i;
 
 	/*
 	 * Get the file number from the CameraFilesystem. We need numbers
@@ -276,24 +276,32 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	info->file.name[sizeof (info->file.name) - 1] = '\0';
 	info->file.fields |= GP_FILE_INFO_NAME;
 
-	/* Get information about this image */
+	/*
+	 * Get information about this image. Don't make this fatal as
+	 * at least the "Agfa ePhoto307" doesn't support this command.
+	 */
 	CHECK (camera_start (camera, context));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
-	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &pic_info, context));
+	memset (&i, 0, sizeof (SierraPicInfo));
+	sierra_get_pic_info (camera, n, &i, context);
 
 	/* Size of file */
-	info->file.fields |= GP_FILE_INFO_SIZE;
-	info->file.size = pic_info.size_file;
+	if (i.size_file) {
+		info->file.fields |= GP_FILE_INFO_SIZE;
+		info->file.size = i.size_file;
+	}
 
 	/* Size of preview */
-	info->preview.fields |= GP_FILE_INFO_SIZE;
-	info->preview.size = pic_info.size_preview;
+	if (i.size_preview) {
+		info->preview.fields |= GP_FILE_INFO_SIZE;
+		info->preview.size = i.size_preview;
+	}
 
 	/* Audio data? */
-	if (pic_info.size_audio) {
+	if (i.size_audio) {
 
 		/* Size */
-		info->audio.size = pic_info.size_audio;
+		info->audio.size = i.size_audio;
 		info->audio.fields |= GP_FILE_INFO_SIZE;
 
 		/* Type */
@@ -318,7 +326,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* Image protected? */
 	info->file.fields |= GP_FILE_INFO_PERMISSIONS;
 	info->file.permissions = GP_FILE_PERM_READ;
-	if (pic_info.locked == SIERRA_LOCKED_NO)
+	if (i.locked == SIERRA_LOCKED_NO)
 		info->file.permissions |= GP_FILE_PERM_DELETE;
 
 	return (camera_stop (camera, context));
@@ -330,23 +338,23 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	int n;
-	SierraPicInfo pic_info;
+	SierraPicInfo i;
 
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
 	n++;
 
 	CHECK (camera_start (camera, context));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
-	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &pic_info, context));
+	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &i, context));
 
 	if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
 		if (info.file.permissions & GP_FILE_PERM_DELETE) {
-			if (pic_info.locked == SIERRA_LOCKED_YES) {
+			if (i.locked == SIERRA_LOCKED_YES) {
 				CHECK_STOP (camera, sierra_set_locked (camera,
 						n, SIERRA_LOCKED_NO, context));
 			}
 		} else {
-			if (pic_info.locked == SIERRA_LOCKED_NO) {
+			if (i.locked == SIERRA_LOCKED_NO) {
 				CHECK_STOP (camera, sierra_set_locked (camera,
 						n, SIERRA_LOCKED_YES, context));
 			}
@@ -465,8 +473,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK (camera_start (camera, context));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
 
-	/* We need the file size in order to display progress information */
-	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &info, context));
+	/*
+	 * We need the file size in order to display progress information.
+	 * Don't make this fatal, as some cameras (at least the
+	 * "Agfa ePhoto307") don't seem to support this command (or better,
+	 * return nothing).
+	 */
+	memset (&info, 0, sizeof (SierraPicInfo));
+	sierra_get_pic_info (camera, n, &info, context);
 
 	/* Get the file */
 	CHECK_STOP (camera, sierra_get_string_register (camera, regd, n,

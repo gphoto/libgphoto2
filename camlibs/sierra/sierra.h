@@ -24,15 +24,6 @@ struct _CameraPrivateLibrary {
 
 struct CameraDescriptor;
 
-typedef struct {
-	char model[64];
-	SierraModel sierra_model;
-	int  usb_vendor;
-	int  usb_product;
-	SierraFlags  flags;
-	struct CameraDesc const *cam_desc;
-} SierraCamera;
-
 #define CHECK(result)					\
 {							\
 	int res = (result);				\

@@ -1,3 +1,8 @@
+2003-01-30  Lutz Mller <lutz@users.sourceforge.net>
+
+	* sierra.h: SierraCamera is not needed any more.
+	* sierra.c: Make some calls non-fatal.
+
 2003-01-29  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* sierra.c: It seems the "Agfa ePhoto307" does not support the 

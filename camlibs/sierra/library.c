@@ -1188,7 +1188,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 {
 	unsigned char p[34816];
 	const char *file_name;
-	unsigned int packlength, total = *b_len;
+	unsigned int packlength, total = (b_len) ? *b_len : 0;
 	unsigned int id = 0;
 	int retries, r;
 	static int in_function = 0;
@@ -1220,7 +1220,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	p[5] = reg;
 	CHECK (sierra_write_packet (camera, p, context));
 
-	if (file) {
+	if (file && total) {
 		CHECK (gp_file_get_name(file, &file_name));
 		id = gp_context_progress_start (context, total, file_name);
 	}
@@ -1265,14 +1265,15 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 		*b_len += packlength;
 
 		if (file) {
-			CHECK (gp_file_append (file, &p[4], packlength));
+		    CHECK (gp_file_append (file, &p[4], packlength));
 #ifdef GTKAM_IS_MODIFIED
+		    if (total)
 			gp_context_progress_update (context, id, *b_len);
 #endif
 		}
 
 	} while (p[0] != SIERRA_PACKET_DATA_END);
-	if (file)
+	if (file && total)
 		gp_context_progress_stop (context, id);
 
 	GP_DEBUG ("sierra_get_string_register: completed OK");
