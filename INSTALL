@@ -19,6 +19,11 @@ The installation procedure should be quite simple:
 
    If you have difficulties building on FreeBSD, try --disable-nls.
 
+   In order to get USB support, you must have libusb installed on
+   your system (http://sourceforge.net/projects/libusb). As of
+   2002-01-01, a current CVS version of libusb (or the upcoming 0.1.5
+   release) is required.
+
    The following software components are optional, and will improve the
    libraries' and/or command-line client's functionality if present:
     libusb -- Universal Serial Bus camera support
