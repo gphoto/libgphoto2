@@ -7,5 +7,5 @@ Name: libgphoto2
 Description: Library for easy access to digital cameras
 Requires:
 Version: @VERSION@
-Libs: -L${libdir} -lgphoto2
+Libs: -L${libdir} -lgphoto2 -lm
 Cflags: -I${includedir}/gphoto2 -I${includedir}

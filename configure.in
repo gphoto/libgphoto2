@@ -12,6 +12,9 @@ AC_PROG_CPP
 AM_PROG_LIBTOOL
 AC_PROG_INSTALL
 
+dnl ---------------------------------------------------------------------------
+dnl i18n support (including some hacks)
+dnl ---------------------------------------------------------------------------
 dnl The following is a hack to get gphoto2 to build on gettext-0.10.35 
 dnl systems - BUILD_INCLUDED_LIBINTL is set only in gettext-0.10.37 which is
 dnl the gettext version provided with gphoto2.
@@ -20,7 +23,6 @@ AC_SUBST(BUILD_INCLUDED_LIBINTL)
 dnl USE_INCLUDED_LIBINTL=no
 dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
-dnl Languages
 ALL_LINGUAS="de"
 AM_GNU_GETTEXT
 
@@ -34,9 +36,13 @@ if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
         AC_CHECK_LIB(intl, gettext, [INTLLIBS="$INTLLIBS -lintl"])
 fi
 
+dnl ---------------------------------------------------------------------------
 dnl Turn on debugging and all warnings
+dnl ---------------------------------------------------------------------------
 CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
 LDFLAGS="$LDFLAGS -g -Wall"
+AC_SUBST(CFLAGS)
+AC_SUBST(LIBS)
 
 dnl Solaris hack for grep and tr
 changequote(, )dnl
@@ -49,10 +55,9 @@ else
 fi
 changequote([, ])dnl
 
-dnl
+dnl ---------------------------------------------------------------------------
 dnl Checks for libraries.
-dnl
-
+dnl ---------------------------------------------------------------------------
 AC_CHECK_FUNC(dlopen, dlopen_without_libdl=true)
 # if dlopen doesn't require linking against libdl (e.g. FreeBSD)
 # we don't have to check for dlopen in libdl any more
@@ -74,27 +79,13 @@ AC_TYPE_SIZE_T
 dnl Checks for library functions.
 AC_CHECK_FUNCS(mkdir strdup strncpy strcpy snprintf sprintf vsnprintf)
 
-LIBGPHOTO2_INCLUDEDIR='-I${includedir}'
-LIBGPHOTO2_LIBDIR='-L${libdir}'
-LIBGPHOTO2_LIBS="-lgphoto2 -lm"
-LIBGPHOTO2_VERSION=$VERSION
-
-AC_SUBST(LIBGPHOTO2_PORT_DIR)
-
-AC_SUBST(LIBGPHOTO2_INCLUDEDIR)
-AC_SUBST(LIBGPHOTO2_LIBDIR)
-AC_SUBST(LIBGPHOTO2_LIBS)
-AC_SUBST(LIBGPHOTO2_VERSION)
-
-AC_SUBST(CFLAGS)
-AC_SUBST(LIBS)
-
 dnl Create a stdint.h-like file containing size-specific integer definitions
 dnl that will always be available
 AC_NEED_STDINT_H(libgphoto2/_stdint.h)
 
-dnl Find out which drivers to compile
-
+dnl ---------------------------------------------------------------------------
+dnl Camera drivers
+dnl ---------------------------------------------------------------------------
 camlibs='agfa barbie canon casio digita dimera directory jamcam jd11 kodak konica minolta panasonic polaroid ptp samsung sierra stv0680 sonydscf1 sonydscf55'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
