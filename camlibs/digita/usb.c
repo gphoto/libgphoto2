@@ -17,20 +17,12 @@
 
 static int digita_usb_read(struct digita_device *dev, void *buffer, int len)
 {
-#ifdef GP_PORT_USB
 	return gp_port_read(dev->gpdev, buffer, len);
-#else
-	return GP_ERROR;
-#endif
 }
 
 static int digita_usb_send(struct digita_device *dev, void *buffer, int len)
 {
-#ifdef GP_PORT_USB
 	return gp_port_write(dev->gpdev, buffer, len);
-#else
-	return GP_ERROR;
-#endif
 }
 
 struct camera_to_usb {
@@ -44,7 +36,6 @@ struct camera_to_usb {
 	{ "Kodak DC290", 0x040A, 0x0112 },
 };
 
-#ifdef GP_PORT_USB
 int digita_usb_probe(struct digita_device *dev, int i)
 {
 	if (i >= sizeof(camera_to_usb) / sizeof(struct camera_to_usb))
@@ -63,11 +54,9 @@ err:
 
 	return -1;
 }
-#endif
 
 int digita_usb_open(struct digita_device *dev, Camera *camera)
 {
-#ifdef GP_PORT_USB
 	gp_port_settings settings;
 	int i;
 
@@ -103,8 +92,5 @@ int digita_usb_open(struct digita_device *dev, Camera *camera)
 	}
 
 	return 0;
-#else
-	return -1;
-#endif
 }
 
