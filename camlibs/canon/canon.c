@@ -186,7 +186,15 @@ int camera_exit(Camera *camera)
 	
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_exit()");
 	
-	switch_camera_off(camera);
+        switch (camera->port->type) {
+	 case GP_PORT_USB:
+                 break;
+	 case GP_PORT_SERIAL:
+                 switch_camera_off(camera);
+                 break;
+	 default:
+                 break;
+	}
 	
 	canon_serial_close(cs->gdev);
 	free(cs);
@@ -611,7 +619,7 @@ static char *canon_get_picture (Camera *camera, char *filename,
 				filename[j+1]='\0';
 				strcat(filename,"THM");
 				sprintf(file,"%s%s",path,filename);
-				fprintf(stderr,"movie thumbnail: %s",file);
+				printf("movie thumbnail: %s\n",file);
 				image = psa50_get_file(camera, file, size);
 			} else {
 				image = psa50_get_thumbnail(camera, file, size);
@@ -766,7 +774,7 @@ int camera_file_get_preview (Camera *camera, const char *folder,
 		path[j+1] = '\0';
 	}
 
-	fprintf(stderr,"name: %s\npath%s\n",filename,path);
+	fprintf(stderr,"name: %s\npath: %s\n",filename,path);
 	data = canon_get_picture (camera, (char*) filename, (char*) path, 1, 
 				  &buflen);
 	if (!data)
