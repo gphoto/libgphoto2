@@ -43,7 +43,7 @@ gp_port_func (GPLogLevels levels, const char *domain,
 {
 	if (debug_func)
 		debug_func ("port", msg, data);
-	else {
+	else if (debug_level == GP_DEBUG_HIGH) {
 		fprintf (stderr, msg);
 		fprintf (stderr, "\n");
 	}
