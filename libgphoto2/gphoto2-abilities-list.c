@@ -290,8 +290,8 @@ gp_abilities_list_sort (CameraAbilitiesList *list)
 
 	for (x = 0; x < list->count - 1; x++)
 		for (y = x + 1; y < list->count; y++)
-			if (strcmp (list->abilities[x]->model,
-				    list->abilities[y]->model) > 0) {
+			if (strcasecmp (list->abilities[x]->model,
+					list->abilities[y]->model) > 0) {
 				t = list->abilities[x];
 				list->abilities[x] = list->abilities[y];
 				list->abilities[y] = t;
@@ -336,7 +336,7 @@ gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 	CHECK_NULL (list && model);
 
 	for (x = 0; x < list->count; x++)
-		if (!strcmp (list->abilities[x]->model, model))
+		if (!strcasecmp (list->abilities[x]->model, model))
 			return (x);
 
 	return (GP_ERROR_MODEL_NOT_FOUND);
