@@ -55,8 +55,8 @@ typedef enum
 	K_TAKE_PICTURE			= 0x9100,
 	K_PUT_LOCALIZATION_FILE		= 0x9200, 
 	K_CANCEL			= 0x9e00
-	// ?				= 0x9e10,
-	// ?				= 0x9e20,
+	/* ?				= 0x9e10, */
+	/* ?				= 0x9e20, */
 } KCommand;
 
 /*
