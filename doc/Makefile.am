@@ -1,4 +1,4 @@
-SUBDIRS = api figures
+SUBDIRS = api
 
 #
 # The intention of these macros, targets, rules, and variables is the
