@@ -1,7 +1,7 @@
 INCLUDES =						\
 	-I$(top_srcdir)					\
 	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port	\
-	-DCAMLIBS=\"$(prefix)/lib/gphoto2/$(VERSION)\"	\
+	-DCAMLIBS=\"$(libdir)/gphoto2/$(VERSION)\"	\
 	-DLOCALEDIR=\"$(datadir)/locale\"
 
 lib_LTLIBRARIES = libgphoto2.la

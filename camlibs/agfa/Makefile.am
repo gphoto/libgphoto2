@@ -1,6 +1,6 @@
 EXTRA_DIST = agfa.df
 
-camlibdir = $(prefix)/lib/gphoto2/$(VERSION)
+camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_agfa.la
 
 INCLUDES =						\

@@ -1,4 +1,4 @@
-camlibdir = $(prefix)/lib/gphoto2/$(VERSION)
+camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_jamcam.la
 
 CFLAGS = @CFLAGS@ `glib-config --cflags`

@@ -1,4 +1,4 @@
-camlibdir = $(prefix)/lib/gphoto2/$(VERSION)
+camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_sony_dscf55.la
 
 INCLUDES =                                              \

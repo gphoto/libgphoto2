@@ -1,3 +1,8 @@
+2002-01-25 Marucs Meissner <marcus@jet.franken.de>
+	
+	* **/Makefile.am: Replaced $(prefix)/lib/ by $(libdir).
+	  (For instance on s390x $(libdir) is $(prefix)/lib64/.)
+
 2002-01-24 Dan Fandrich <dan@coneharvesters.com>
 
 	* libgphoto2/pattrec.c
