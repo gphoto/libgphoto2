@@ -526,6 +526,8 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 	if (strlen (file) == 0)
 		return (GP_ERROR_FILE_NOT_FOUND);
 
+	CHECK_RESULT (gp_file_set_type (camera_file, type));
+
         return (camera->functions->file_get (camera, folder, file, type,
 					     camera_file));
 }
