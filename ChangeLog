@@ -1,3 +1,11 @@
+2002-02-11  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2/gphoto-filesys.c: Previously, we searched thumbnails in
+	  EXIF data if GP_FILE_TYPE_PREVIEW is not supported by the driver. 
+	  Now, we do it the other way round, too: If GP_FILE_TYPE_EXIF is
+	  not supported by the driver, get the thumbnail and search for
+	  EXIF data there.
+
 2002-02-10  Lutz Müller <lutz@users.sourceforge.net>
 
 	* frontends/command-line/actions.[c,h]:
