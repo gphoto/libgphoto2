@@ -25,6 +25,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef HAVE_LTDL
+#include <ltdl.h>
+#endif
+
 #include "gphoto2-result.h"
 #include "gphoto2-port-log.h"
 #include "gphoto2-library.h"
@@ -111,23 +115,114 @@ gp_abilities_list_free (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
+#ifdef HAVE_LTDL
+static int
+foreach_func (const char *filename, lt_ptr data)
+{
+	CameraList *list = data;
+
+	return (gp_list_append (list, filename, NULL));
+}
+#endif
+
 static int
 gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 {
-	GP_SYSTEM_DIR d;
-	GP_SYSTEM_DIRENT de;
-	char buf[1024];
-	void *lh;
 	CameraLibraryIdFunc id;
 	CameraLibraryAbilitiesFunc ab;
 	CameraText text;
 	int x, old_count, new_count;
+#ifdef HAVE_LTDL
+	CameraList flist;
+	int i, count;
+	lt_dlhandle lh;
+	const char *filename;
+#else
+	GP_SYSTEM_DIR d;
+	GP_SYSTEM_DIRENT de;
+	char buf[1024];
+	void *lh;
+#endif
 
 	CHECK_NULL (list && dir);
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
 		"Loading camera libraries in '%s'...", dir);
 
+#ifdef HAVE_LTDL
+	CHECK_RESULT (gp_list_reset (&flist));
+	CHECK_RESULT (lt_dlforeachfile (dir, foreach_func, &flist));
+	CHECK_RESULT (count = gp_list_count (&flist));
+	lt_dlinit ();
+	for (i = 0; i < count; i++) {
+		CHECK_RESULT (gp_list_get_name (&flist, i, &filename));
+		lh = lt_dlopenext (filename);
+		if (!lh) {
+			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+				"Failed to load '%s': %s.", filename,
+				lt_dlerror ());
+			continue;
+		}
+
+		/* camera_id */
+		id = lt_dlsym (lh, "camera_id");
+		if (!id) {
+			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+				"Library '%s' does not seem to "
+				"contain a camera_id function: %s",
+				filename, lt_dlerror ());
+			lt_dlclose (lh);
+			continue;
+		}
+
+		/*
+		 * Make sure the camera driver hasn't been
+		 * loaded yet.
+		 */
+		if (id (&text) != GP_OK) {
+			lt_dlclose (lh);
+			continue;
+		}
+		if (gp_abilities_list_lookup_id (list, text.text) >= 0) {
+			lt_dlclose (lh);
+			continue;
+		} 
+
+		/* camera_abilities */
+		ab = lt_dlsym (lh, "camera_abilities");
+		if (!ab) {
+			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+				"Library '%s' does not seem to "
+				"contain a camera_abilities function: "
+				"%s", filename, lt_dlerror ());
+			lt_dlclose (lh);
+			continue;
+		}
+
+		old_count = gp_abilities_list_count (list);
+		if (old_count < 0) {
+			lt_dlclose (lh);
+			continue;
+		}
+
+		if (ab (list) != GP_OK) {
+			lt_dlclose (lh);
+			continue;
+		}
+
+		lt_dlclose (lh);
+
+		new_count = gp_abilities_list_count (list);
+		if (new_count < 0)
+			continue;
+
+		/* Copy in the core-specific information */
+		for (x = old_count; x < new_count; x++) {
+			strcpy (list->abilities[x].id, text.text);
+			strcpy (list->abilities[x].library, filename);
+		} 
+	}
+#else
 	d = GP_SYSTEM_OPENDIR (dir);
 	if (!d) {
 		gp_log (GP_LOG_ERROR, "gphoto2-abilities-list",
@@ -219,6 +314,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 			}
 		}
 	} while (de);
+#endif
 
 	return (GP_OK);
 }

@@ -29,6 +29,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#ifdef HAVE_LTDL
+#include <ltdl.h>
+#endif
+
 #include "gphoto2-result.h"
 #include "gphoto2-library.h"
 #include "gphoto2-port-log.h"
@@ -227,7 +231,11 @@ struct _CameraPrivateCore {
 	CameraAbilities a;
 
 	/* Library handle */
+#ifdef HAVE_LTDL
+	lt_dlhandle lh;
+#else
 	void *lh;
+#endif
 
 	char error[2048];
 
@@ -278,7 +286,11 @@ gp_camera_exit (Camera *camera)
 	memset (camera->functions, 0, sizeof (CameraFunctions));
 
 	if (camera->pc->lh) {
+#ifdef HAVE_LTDL_H
+		lt_dlclose (camera->pc->lh);
+#else
 		GP_SYSTEM_DLCLOSE (camera->pc->lh);
+#endif
 		camera->pc->lh = NULL;
 	}
 
@@ -851,16 +863,28 @@ gp_camera_init (Camera *camera)
 	/* Load the library. */
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Loading '%s'...",
 		camera->pc->a.library);
+#ifdef HAVE_LTDL
+	camera->pc->lh = lt_dlopenext (camera->pc->a.library);
+#else
 	camera->pc->lh = GP_SYSTEM_DLOPEN (camera->pc->a.library);
+#endif
 	if (!camera->pc->lh) {
 		gp_camera_status (camera, "");
 		return (GP_ERROR_LIBRARY);
 	}
 
 	/* Initialize the camera */
+#ifdef HAVE_LTDL
+	init_func = lt_dlsym (camera->pc->lh, "camera_init");
+#else
 	init_func = GP_SYSTEM_DLSYM (camera->pc->lh, "camera_init");
+#endif
 	if (!init_func) {
+#ifdef HAVE_LTDL
+		lt_dlclose (camera->pc->lh);
+#else
 		GP_SYSTEM_DLCLOSE (camera->pc->lh);
+#endif
 		camera->pc->lh = NULL;
 		gp_camera_status (camera, "");
 		return (GP_ERROR_LIBRARY);
@@ -869,7 +893,11 @@ gp_camera_init (Camera *camera)
 	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
 		result = gp_port_open (camera->port);
 		if (result < 0) {
+#ifdef HAVE_LTDL
+			lt_dlclose (camera->pc->lh);
+#else
 			GP_SYSTEM_DLCLOSE (camera->pc->lh);
+#endif
 			camera->pc->lh = NULL;
 			gp_camera_status (camera, "");
 			return (result);
@@ -879,7 +907,11 @@ gp_camera_init (Camera *camera)
 	result = init_func (camera);
 	if (result < 0) {
 		gp_port_close (camera->port);
+#ifdef HAVE_LTDL
+		lt_dlclose (camera->pc->lh);
+#else
 		GP_SYSTEM_DLCLOSE (camera->pc->lh);
+#endif
 		camera->pc->lh = NULL;
 		memset (camera->functions, 0, sizeof (CameraFunctions));
 		gp_camera_status (camera, "");
