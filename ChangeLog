@@ -1,3 +1,8 @@
+2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Check for vsnprintf, too.
+	* libgphoto2/debug.c: Use vsnprintf if available.
+
 2001-10-05  Fabrice Bellet <fabrice@gnu.org>
 
 	* frontends/command-line/actions.c:
