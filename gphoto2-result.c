@@ -62,7 +62,6 @@ gp_result_as_string (int result)
 	GP_ERR_RES (GP_ERROR_CORRUPTED_DATA, N_("Corrupted data"));
 	GP_ERR_RES (GP_ERROR_FILE_EXISTS, N_("File exists"));
 	GP_ERR_RES (GP_ERROR_MODEL_NOT_FOUND, N_("Unknown model"));
-	GP_ERR_RES (GP_ERROR_NOT_SUPPORTED, N_("Unsupported operation"));
 	GP_ERR_RES (GP_ERROR_DIRECTORY_NOT_FOUND, N_("Directory not found"));
 	GP_ERR_RES (GP_ERROR_FILE_NOT_FOUND, N_("File not found"));
 	GP_ERR_RES (GP_ERROR_DIRECTORY_EXISTS, N_("Directory exists"));

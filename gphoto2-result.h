@@ -28,7 +28,6 @@
 #define GP_ERROR_CORRUPTED_DATA      -102 /* Corrupted data             */
 #define GP_ERROR_FILE_EXISTS         -103 /* File exists                */
 #define GP_ERROR_MODEL_NOT_FOUND     -105 /* Model not found            */
-#define GP_ERROR_NOT_SUPPORTED       -106 /* Some op. is unsupported    */
 #define GP_ERROR_DIRECTORY_NOT_FOUND -107 /* Directory not found        */
 #define GP_ERROR_FILE_NOT_FOUND      -108 /* File not found             */
 #define GP_ERROR_DIRECTORY_EXISTS    -109 /* Directory exists           */
