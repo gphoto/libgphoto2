@@ -75,10 +75,10 @@ static const ValueNameType cp880_reg_01_val_names[] = {
 	 * a nibble for each part?  Just use a the combined resolution + size.
 	 * It would be good to try and break these into two selections.
 	 */
-	{ { 0x01 }, "Basic-VGA" },
+	{ { 0x01 }, "Basic-VGA" },	/* 640 x 480 */
 	{ { 0x02 }, "Normal-VGA" },
 	{ { 0x03 }, "Fine-VGA" },
-	{ { 0x07 }, "Basic-XGA" },
+	{ { 0x07 }, "Basic-XGA" },	/* 1024 x 768 */
 	{ { 0x08 }, "Normal-XGA" },
 	{ { 0x09 }, "Fine-XGA" },
 	{ { 0x11 }, "Basic-Full" },
@@ -91,6 +91,40 @@ static const RegisterDescriptorType cp880_reg_01[] = {
 		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
 		"resolution", N_("Resolution plus Size"),
 		VAL_NAME_INIT (cp880_reg_01_val_names)
+	}
+};
+
+/*
+ * Register 1: resolution/size.
+ */
+static const ValueNameType cp2500_reg_01_val_names[] = {
+	/* 
+	 * These values suck. why didn't they make these maskable, or use
+	 * a nibble for each part?  Just use a the combined resolution + size.
+	 * It would be good to try and break these into two selections.
+	 */
+	{ { 0x01 }, "Basic-VGA" },	/* 640 x 480 */
+	{ { 0x02 }, "Normal-VGA" },
+	{ { 0x03 }, "Fine-VGA" },
+
+	{ { 0x04 }, "Basic-SXGA" },	/* 1280 x 1024 */
+	{ { 0x05 }, "Normal-SXGA" },
+	{ { 0x06 }, "Fine-SXGA" },
+
+	{ { 0x07 }, "Basic-XGA" },	/* 1024 x 768 */
+	{ { 0x08 }, "Normal-XGA" },
+	{ { 0x09 }, "Fine-XGA" },
+
+	{ { 0x0a }, "Basic-UXGA" },	/* 1600 x 1200 aka 2 Megapixel */
+	{ { 0x0b }, "Normal-UXGA" },
+	{ { 0x0c }, "Fine-UXGA" },
+
+};
+static const RegisterDescriptorType cp2500_reg_01[] = { 
+	{
+		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		"resolution", N_("Resolution plus Size"),
+		VAL_NAME_INIT (cp2500_reg_01_val_names)
 	}
 };
 
@@ -585,6 +619,40 @@ static const CameraRegisterType cp880_cam_regs[] = {
 	CAM_REG_TYPE_INIT (cp880, 53, 4, CAM_DESC_DEFAULT, 0), /* language */
 };
 
+/*
+ * All of the register used to modify picture settings. The register value
+ * received from the camera is stored into this data area, so it cannot be
+ * a const.
+ */
+static CameraRegisterType cp2500_pic_regs[] =  {
+	/* camera prefix, register number, size of register */
+	CAM_REG_TYPE_INIT (cp2500, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
+	CAM_REG_TYPE_INIT (cp880, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
+	CAM_REG_TYPE_INIT (cp880, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
+	CAM_REG_TYPE_INIT (cp880, 19, 4, CAM_DESC_DEFAULT, 0), /* brightness/contrast */
+	CAM_REG_TYPE_INIT (cp880, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
+#ifdef REG_30_FAILS
+	CAM_REG_TYPE_INIT (cp880, 30, 4, CAM_DESC_DEFAULT, 0), /* LED mode */
+#endif
+	CAM_REG_TYPE_INIT (cp880, 33, 4, CAM_DESC_DEFAULT, 0), /* focus mode */
+	CAM_REG_TYPE_INIT (cp880, 69, 8, CAM_DESC_DEFAULT, 0), /* exposure compensation */
+	CAM_REG_TYPE_INIT (cp880, 70, 4, CAM_DESC_DEFAULT, 0), /* exposure metering */
+	CAM_REG_TYPE_INIT (cp880, 71, 8, CAM_DESC_DEFAULT, 0), /* optical zoom */
+	CAM_REG_TYPE_INIT (cp880, 72, 4, CAM_DESC_DEFAULT, 0), /* digital zoom + lense +  AE lock */
+};
+
+/*
+ * All of the register used to modify camera settings.
+ */
+static const CameraRegisterType cp2500_cam_regs[] = {
+	CAM_REG_TYPE_INIT (cp880, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
+	CAM_REG_TYPE_INIT (cp880, 34, 4, CAM_DESC_SUBACTION, 
+			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
+	CAM_REG_TYPE_INIT (cp880, 35, 4, CAM_DESC_DEFAULT, 0), /* LCD brightness */
+	CAM_REG_TYPE_INIT (cp880, 53, 4, CAM_DESC_DEFAULT, 0), /* language */
+};
+
+
 static const CameraRegisterSetType cp880_desc[] = {
 	{ 
 		N_("Picture Settings"), 
@@ -593,6 +661,17 @@ static const CameraRegisterSetType cp880_desc[] = {
 	{ 
 		N_("Camera Settings"), 
 		SIZE_ADDR (CameraRegisterType, cp880_cam_regs)
+	},
+};
+
+static const CameraRegisterSetType cp2500_desc[] = {
+	{ 
+		N_("Picture Settings"), 
+		SIZE_ADDR (CameraRegisterType, cp2500_pic_regs)
+	},
+	{ 
+		N_("Camera Settings"), 
+		SIZE_ADDR (CameraRegisterType, cp2500_cam_regs)
 	},
 };
 
@@ -630,3 +709,5 @@ const CameraDescType cp880_cam_desc = { cp880_desc, cp880_manual,
 	SIERRA_EXT_PROTO, }; 
 const CameraDescType cp995_cam_desc = { cp880_desc, cp995_manual,
 	SIERRA_EXT_PROTO, };
+const CameraDescType cp2500_cam_desc = { cp2500_desc, cp880_manual,
+	SIERRA_EXT_PROTO, }; 
