@@ -1,3 +1,7 @@
+2005-04-05  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Pentax Optio 43WR (as reported)
+
 2005-03-20  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Merged in most of the code from:

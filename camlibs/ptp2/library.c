@@ -432,6 +432,9 @@ static struct {
 	/* Ricoh Caplio GX */
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
 
+	/* Pentax cameras */
+	{"Pentax:Optio 43WR",                   0x0a17, 0x000d, 0},
+
 	/* more coming soon :) */
 	{NULL, 0, 0, 0}
 };
