@@ -2,6 +2,8 @@ CCFLAGS=-O2 -c -I.. -I..\include -I..\libgpio\include -Zmtd -Zcrtdll -Zbin-files
 CC=gcc
 MKLIB=ar r
 
+.c.obj:
+  $(CC) $< $(CCFLAGS)
 
 all: start \
   lib \
@@ -29,10 +31,19 @@ lib: ..\lib\libgphoto2.a
 ..\obj\file.o: file.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
-..\obj\fs.o: fs.c
+..\obj\filesys.o: filesys.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
+..\obj\port.o: port.c
+  @$(CC) -o $@ $** $(CCFLAGS)
+
+#.\obj\fs.o: fs.c
+# @$(CC) -o $@ $** $(CCFLAGS)
+
 ..\obj\library.o: library.c
+  @$(CC) -o $@ $** $(CCFLAGS)
+
+..\obj\lists.o: lists.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
 ..\obj\settings.o: settings.c
@@ -44,6 +55,13 @@ lib: ..\lib\libgphoto2.a
 ..\obj\widget.o: widget.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
-..\lib\libgphoto2.a: ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o ..\obj\fs.o
+..\obj\camera.o: camera.c
+  @$(CC) -o $@ $** $(CCFLAGS)
+
+..\obj\frontend.o: frontend.c
+  @$(CC) -o $@ $** $(CCFLAGS)
+
+..\lib\libgphoto2.a: ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\filesys.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o ..\obj\lists.o ..\obj\camera.o ..\obj\frontend.o ..\obj\port.o
+#..\obj\fs.o
   @$(MKLIB) $@ $**
 
