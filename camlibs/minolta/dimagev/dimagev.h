@@ -2,6 +2,8 @@
 *       Minolta Dimage V digital camera communication library         *
 *               Copyright (C) 2000 Gus Hartmann                       *
 *                                                                     *
+*    $Id$                                                             *
+*                                                                     *
 *    This program is free software; you can redistribute it and/or    *
 *    modify it under the terms of the GNU General Public License as   *
 *    published by the Free Software Foundation; either version 2 of   *
@@ -18,6 +20,7 @@
 *    Boston, MA 02111-1307 USA                                        *
 *                                                                     *
 **********************************************************************/
+
 
 #include "config.h"
 
@@ -230,3 +233,4 @@ int dimagev_shutter(dimagev_t *dimagev);
 int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file);
 int dimagev_delete_picture(dimagev_t *dimagev, int file_number);
 int dimagev_delete_all(dimagev_t *dimagev);
+int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file);
