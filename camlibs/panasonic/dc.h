@@ -46,7 +46,6 @@ typedef struct {
 	CameraFilesystem	*fs;
 	char			*buf;
 	int			size;	
-	int			debug;
 } dsc_t;
 
 #define DSC_BLOCKSIZE	  0x400   /* amount of image data transfered in a single packet */
@@ -119,12 +118,10 @@ void dsc_print_message(Camera *camera, char *format, ...);
 /* Pre-procesor macros for verbose messaging and debugging */
 
 #define DEBUG_PRINT(ARGS) \
-	if (dsc->debug) \
-		dsc_debugprint(__FILE__, dsc_msgprintf ARGS ); 
+	dsc_debugprint(__FILE__, dsc_msgprintf ARGS ); 
 
 #define RETURN_ERROR(ERROR, FUNCTION) { \
-	if (dsc->debug) \
-		dsc_errorprint(ERROR, __FILE__, #FUNCTION, __LINE__); \
+	dsc_errorprint(ERROR, __FILE__, #FUNCTION, __LINE__); \
 	return GP_ERROR; \
 	}
 

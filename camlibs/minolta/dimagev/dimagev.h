@@ -197,7 +197,6 @@ typedef struct {
 /* This struct is used as the camera->camlib_data value in this library. */
 typedef struct {
         int size;
-        int debug;
         gpio_device *dev;
         gpio_device_settings settings;
         dimagev_data_t *data;
@@ -209,7 +208,7 @@ typedef struct {
 /* These functions are in packet.c */
 dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, unsigned int seq);
 dimagev_packet *dimagev_read_packet(dimagev_t *dimagev);
-int dimagev_verify_packet(dimagev_packet *p, int debug);
+int dimagev_verify_packet(dimagev_packet *p);
 dimagev_packet *dimagev_strip_packet(dimagev_packet *p);
 void dimagev_dump_packet(dimagev_packet *p);
 unsigned char dimagev_decimal_to_bcd(unsigned char decimal);

@@ -163,7 +163,6 @@ int camera_init (Camera *camera) {
 	camera->camlib_data = fd;
 
 	fd->first_packet = 1;
-	fd->debug = camera->debug;
 
 	sierra_debug_print(fd, "Initializing camera");
 

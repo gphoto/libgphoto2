@@ -35,9 +35,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 	dimagev_dump_camera_status(dimagev->status);
 	/* An image can only be deleted if the card is normal or full. */
 	if ( dimagev->status->card_status > 1 ) {
-		if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::memory card does not permit deletion");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::memory card does not permit deletion");
 		return GP_ERROR;
 	}
 
@@ -46,9 +44,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		dimagev->data->host_mode = 1;
 
 		if ( dimagev_send_data(dimagev) == GP_ERROR ) {
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
 			return GP_ERROR;
 		}
 	}
@@ -59,21 +55,15 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 	command_buffer[1] = (unsigned char)( file_number / 256 );
 	command_buffer[2] = (unsigned char)( file_number % 256 );
 	if ( ( p = dimagev_make_packet(command_buffer, 3, 0) ) == NULL ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to allocate command packet");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to allocate command packet");
 		return GP_ERROR;
 	}
 
 	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to send set_data packet");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to send set_data packet");
 		return GP_ERROR;
 	} else if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::no response from camera");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::no response from camera");
 		return GP_ERROR;
 	}
 		
@@ -83,61 +73,45 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera did not acknowledge transmission\n");
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera did not acknowledge transmission\n");
 			return GP_ERROR;
 			break;
 		case DIMAGEV_CAN:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera cancels transmission\n");
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera cancels transmission\n");
 			return GP_ERROR;
 			break;
 		default:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera responded with unknown value %x\n", char_buffer);
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera responded with unknown value %x\n", char_buffer);
 			return GP_ERROR;
 			break;
 	}
 
 	
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to read packet");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to read packet");
 		return GP_ERROR;
 	}
 
 	if ( ( raw = dimagev_strip_packet(p) ) == NULL ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to strip packet");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to strip packet");
 		return GP_ERROR;
 	}
 	
 	free(p);
 
 	if ( raw->buffer[0] != 0 ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::delete returned error code");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::delete returned error code");
 		return GP_ERROR;
 	}
 
 	char_buffer=DIMAGEV_EOT;
 	if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to send ACK");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to send ACK");
 		return GP_ERROR;
 	}
 
 	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::no response from camera");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::no response from camera");
 		return GP_ERROR;
 	}
 		
@@ -145,21 +119,15 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera did not acknowledge transmission\n");
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera did not acknowledge transmission\n");
 			return GP_ERROR;
 			break;
 		case DIMAGEV_CAN:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera cancels transmission\n");
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera cancels transmission\n");
 			return GP_ERROR;
 			break;
 		default:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera responded with unknown value %x\n", char_buffer);
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::camera responded with unknown value %x\n", char_buffer);
 			return GP_ERROR;
 			break;
 	}

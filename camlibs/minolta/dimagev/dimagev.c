@@ -77,25 +77,18 @@ int camera_init (Camera *camera) {
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
-	if ( camera->debug != 0 ) {
-		printf("dimagev: initializing the camera\n");
-	}
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "initializing the camera\n");
 
 	if ( ( dimagev = (dimagev_t*) malloc(sizeof(dimagev_t))) == NULL ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate dimagev_t");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate dimagev_t");
 		return GP_ERROR;
 	}
 
 	camera->camlib_data = dimagev;
-	dimagev->debug = camera->debug;
 
 	/* Now open a port. */
 	if ( ( dimagev->dev = gpio_new(GPIO_DEVICE_SERIAL) ) == NULL ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate gpio_dev");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate gpio_dev");
 		return GP_ERROR;
 	}
 
@@ -112,9 +105,7 @@ int camera_init (Camera *camera) {
 	dimagev->settings.serial.stopbits = 1;
 
 	if ( ( dimagev->fs = gp_filesystem_new()) == NULL ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate filesystem");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate filesystem");
 		return GP_ERROR;
 	}
 
@@ -122,24 +113,18 @@ int camera_init (Camera *camera) {
 	gpio_open(dimagev->dev);
 
 	if  ( dimagev_get_camera_data(dimagev) == GP_ERROR ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to get current camera data");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to get current camera data");
 		return GP_ERROR;
 	}
 
 	if  ( dimagev_get_camera_status(dimagev) == GP_ERROR ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to get current camera status");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to get current camera status");
 		return GP_ERROR;
 	}
 
 	/* Let's make this non-fatal. An incorrect date doesn't affect much. */
 	if ( dimagev_set_date(dimagev) == GP_ERROR ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
-		}
+		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
 	}
 
 	return GP_OK;
@@ -160,9 +145,7 @@ int camera_exit (Camera *camera) {
 
 	/* This will also send the host mode of zero. */
 	if ( dimagev_set_date(dimagev) == GP_ERROR ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
-		}
+		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
 		return GP_ERROR;
 	}
 
@@ -205,9 +188,7 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 	dimagev = camera->camlib_data;
 
 	if ( dimagev_get_camera_status(dimagev) != GP_OK ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_list::unable to get camera status");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_list::unable to get camera status");
 		return GP_ERROR;
 	}
 
@@ -229,9 +210,7 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 	file_number = gp_filesystem_number(dimagev->fs, folder, filename);
 
 	if ( dimagev_get_picture(dimagev, file_number + 1, file) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_get::unable to retrieve image file");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_get::unable to retrieve image file");
 		return GP_ERROR;
 	}
 
@@ -257,9 +236,7 @@ int camera_file_get_preview (Camera *camera, CameraFile *file,
 	file_number = gp_filesystem_number(dimagev->fs, folder, filename);
 
 	if ( dimagev_get_thumbnail(dimagev, file_number + 1, file) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_get_preview::unable to retrieve image file");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_get_preview::unable to retrieve image file");
 		return GP_ERROR;
 	}
 
@@ -298,9 +275,7 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	switch ( info->type ) {
 		case GP_CAPTURE_VIDEO:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to capture video");
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to capture video");
 			return GP_ERROR;
 			break;
 		case GP_CAPTURE_PREVIEW: case GP_CAPTURE_IMAGE:
@@ -309,33 +284,25 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 			picture either way. */
 			break;
 		default:
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unkown capture type %02x", info->type);
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unkown capture type %02x", info->type);
 			return GP_ERROR;
 			break;
 		}
 
 	if ( dimagev_shutter(dimagev) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to open shutter");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to open shutter");
 		return GP_ERROR;
 	}
 
 	/* Now check how many pictures are taken, and return the last one. */
 	if ( dimagev_get_camera_status(dimagev) ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to get camera status");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to get camera status");
 		return GP_ERROR;
 	}
 
 	if ( info->type == GP_CAPTURE_PREVIEW ) {
 		if ( dimagev_get_thumbnail(dimagev, ( dimagev->status->number_images ), file ) == GP_ERROR ) {
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to retrieve thumbnail");
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to retrieve thumbnail");
 			return GP_ERROR;
 		}
 
@@ -351,9 +318,7 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 	}
 	else if ( info->type == GP_CAPTURE_IMAGE ) {
 		if ( dimagev_get_picture(dimagev, ( dimagev->status->number_images ), file ) == GP_ERROR ) {
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to retrieve new image");
-			}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to retrieve new image");
 			return GP_ERROR;
 		}
 
@@ -371,10 +336,8 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 	/* If deletion fails, don't bother returning an error, just print an error */
 
 	if ( dimagev_delete_picture(dimagev, dimagev->status->number_images ) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to delete new image");
-		}
-		printf("Unable to delete image. Please delete image %d\n", dimagev->status->number_images);
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to delete new image");
+		gp_debug_printf(GP_DEBUG_NONE, "dimagev", "Unable to delete image. Please delete image %d\n", dimagev->status->number_images);
 		return GP_ERROR_NONCRITICAL;
 	}
 
@@ -388,31 +351,23 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	dimagev = camera->camlib_data;
 
 	if ( dimagev_get_camera_status(dimagev) != GP_OK ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_summary::unable to get camera status");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_summary::unable to get camera status");
 		return GP_ERROR;
 	}
 
 	if ( dimagev_get_camera_data(dimagev) != GP_OK ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_summary::unable to get camera data");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_summary::unable to get camera data");
 		return GP_ERROR;
 	}
 
 	if ( dimagev_get_camera_info(dimagev) != GP_OK ) {
-		if ( camera->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_summary::unable to get camera info");
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_summary::unable to get camera info");
 		return GP_ERROR;
 	}
 
-	if ( camera->debug != 0 ) {
-		dimagev_dump_camera_status(dimagev->status);
-		dimagev_dump_camera_data(dimagev->data);
-		dimagev_dump_camera_info(dimagev->info);
-	}
+	dimagev_dump_camera_status(dimagev->status);
+	dimagev_dump_camera_data(dimagev->data);
+	dimagev_dump_camera_info(dimagev->info);
 
 	/* Now put all of the information into a reasonably formatted string. */
 	/* i keeps track of the length. */

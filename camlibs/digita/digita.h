@@ -113,8 +113,6 @@ struct erase_file {
 struct digita_device {
 	gpio_device *gpdev;
 
-	int debug;
-
 	int num_pictures;
 	struct file_item *file_list;
 

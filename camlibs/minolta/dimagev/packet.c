@@ -72,7 +72,7 @@ dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, 
 }
 
 /* dimagev_verify_packet(): return GP_OK if valid packet, GP_ERROR otherwise. */
-int dimagev_verify_packet(dimagev_packet *p, int debug) {
+int dimagev_verify_packet(dimagev_packet *p) {
 	int i=0;
 	unsigned short correct_checksum=0, current_checksum=0;
 
@@ -88,9 +88,7 @@ int dimagev_verify_packet(dimagev_packet *p, int debug) {
 	}
 
 	if ( current_checksum != correct_checksum ) {
-		if ( debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_verify_packet::checksum bytes were %02x%02x, checksum was %d, should be %d", p->buffer[( p->length - 3) ], p->buffer[ ( p->length -2 ) ], current_checksum, correct_checksum);
-		}
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_verify_packet::checksum bytes were %02x%02x, checksum was %d, should be %d", p->buffer[( p->length - 3) ], p->buffer[ ( p->length -2 ) ], current_checksum, correct_checksum);
 		return GP_ERROR;
 	} else {
 		return GP_OK;
@@ -102,42 +100,32 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 	unsigned char char_buffer;
 
 	if ( ( p = malloc(sizeof(dimagev_packet)) ) == NULL ) {
-		if ( dimagev->debug != 0 ) {
-			perror("dimagev_read_packet::unable to allocate packet");
-		}
+		perror("dimagev_read_packet::unable to allocate packet");
 		return NULL;
 	}
 
 	if ( gpio_read(dimagev->dev, p->buffer, 4) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			perror("dimagev_read_packet::unable to read packet header");
-		}
+		perror("dimagev_read_packet::unable to read packet header");
 		return NULL;
 	}
 
 	p->length = ( p->buffer[2] * 256 ) + ( p->buffer[3] );
 
 	if ( gpio_read(dimagev->dev, &(p->buffer[4]), ( p->length - 4)) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			perror("dimagev_read_packet::unable to read packet body");
-		}
+		perror("dimagev_read_packet::unable to read packet body");
 		return NULL;
 	}
 
 	/* Now we *should* have a packet. Let's do a sanity check. */
-	if ( dimagev_verify_packet(p, dimagev->debug) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::got an invalid packet");
-			fprintf(stderr, "dimagev_read_packet::got an invalid packet\n");
-		}
+	if ( dimagev_verify_packet(p) == GP_ERROR ) {
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::got an invalid packet");
+		fprintf(stderr, "dimagev_read_packet::got an invalid packet\n");
 		free(p);
 		
 		/* Send a NAK */
 		char_buffer = DIMAGEV_NAK;
 		if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			perror("dimagev_read_packet::unable to send NAK");
-		}
+		perror("dimagev_read_packet::unable to send NAK");
 		return NULL;
 	}
 		

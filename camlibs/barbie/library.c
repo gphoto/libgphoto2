@@ -24,20 +24,17 @@ char packet_2[5]                = {0x02, 0x01, 0x01, 0x01, 0x03};
 void barbie_packet_dump(BarbieStruct *b, int direction, char *buf, int size) {
 	int x;
 
-	if (!b->debug)
-		return;
-
 	if (direction == 0)
-		printf("barbie: \tRead  Packet (%i): ", size);
+		gp_debug_printf(GP_DEBUG_LOW, "barbie", "\tRead  Packet (%i): ", size);
 	   else
-		printf("barbie: \tWrite Packet (%i): ", size);
+		gp_debug_printf(GP_DEBUG_LOW, "barbie", "\tWrite Packet (%i): ", size);
 	for (x=0; x<size; x++) {
 		if (isalpha(buf[x]))
-			printf("[ '%c' ] ", (unsigned char)buf[x]);
+			gp_debug_printf (GP_DEBUG_LOW, "barbie", "[ '%c' ] ", (unsigned char)buf[x]);
 		   else
-			printf("[ x%02x ] ", (unsigned char)buf[x]);
+			gp_debug_printf (GP_DEBUG_LOW, "barbie", "[ x%02x ] ", (unsigned char)buf[x]);
 	}
-	printf("\n");
+	gp_debug_printf (GP_DEBUG_LOW, "barbie", "\n");
 }
 
 int barbie_write_command(BarbieStruct *b, char *command, int size) {
@@ -56,8 +53,7 @@ int barbie_read_response(BarbieStruct *b, char *response, int size) {
 
 	/* Read the ACK */
 	x=gpio_read(b->dev, &ack, 1);
-	if (b->debug) 
-		barbie_packet_dump(b, 0, &ack, 1);
+	barbie_packet_dump(b, 0, &ack, 1);
 
 	if ((ack != ACK)||(x<0))
 		return (0);
@@ -65,8 +61,7 @@ int barbie_read_response(BarbieStruct *b, char *response, int size) {
 	/* Read the Response */
 	memset(response, 0, size);
 	x=gpio_read(b->dev,response, size);
-	if (b->debug) 
-		barbie_packet_dump(b, 0, response, x);
+	barbie_packet_dump(b, 0, response, x);
 	return (x > 0);
 }
 
@@ -93,8 +88,7 @@ int barbie_ping(BarbieStruct *b) {
 
 	char cmd[4], resp[4];
 
-	if (b->debug)
-		printf("barbie: Pinging the camera\n");
+	gp_debug_printf(GP_DEBUG_LOW, "barbie", "Pinging the camera\n");
 
 	memcpy(cmd, packet_1, 4);
 	cmd[COMMAND_BYTE] = 'E';
@@ -105,8 +99,7 @@ int barbie_ping(BarbieStruct *b) {
 
 	if (resp[DATA1_BYTE] != 'x')
 		return (0);
-	if (b->debug)
-		printf("barbie: ping answered!\n");
+	gp_debug_printf (GP_DEBUG_LOW, "barbie", "Ping answered!\n");
 	return (1);
 }
 
@@ -114,8 +107,7 @@ int barbie_file_count (BarbieStruct *b) {
 
         char cmd[4], resp[4];
 
-        if (b->debug)
-                printf("barbie: Getting the number of pictures\n");
+        gp_debug_printf (GP_DEBUG_LOW, "barbie", "Getting the number of pictures\n");
 
         memcpy(cmd, packet_1, 4);
 
@@ -175,8 +167,7 @@ char *barbie_read_data (BarbieStruct *bs, char *cmd, int cmd_size, int data_type
 		return (0);
 	switch (data_type) {
 		case BARBIE_DATA_FIRMWARE:
-			if (bs->debug)
-				printf("barbie: Getting Firmware\n");
+			gp_debug_printf (GP_DEBUG_LOW, "barbie", "Getting Firmware\n");
 			/* we're getting the firmware revision */
 			*size = resp[2];
 			s = (char *)malloc(sizeof(char)*(*size));
@@ -188,8 +179,7 @@ char *barbie_read_data (BarbieStruct *bs, char *cmd, int cmd_size, int data_type
 			}
 			break;
 		case BARBIE_DATA_PICTURE:
-			if (bs->debug)
-				printf("barbie: Getting Picture\n");
+			gp_debug_printf(GP_DEBUG_LOW, "barbie", "Getting Picture\n");
 			/* we're getting a picture */
 			n1 = (unsigned char)resp[2];
 			n2 = (unsigned char)resp[3];
@@ -240,8 +230,7 @@ printf("\tn1=%i n2=%i n3=%i n4=%i size=%i\n", n1, n2 ,n3, n4, *size);
 				}
 			}
 			*size = z;
-			if (bs->debug)
-				printf("barbie: size=%i\n", *size);
+			gp_debug_printf(GP_DEBUG_LOW, "barbie", "size=%i\n", *size);
 			break;
 		case BARBIE_DATA_THUMBNAIL:
 			break;

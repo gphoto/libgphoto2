@@ -1,5 +1,4 @@
 typedef struct {
-	int debug;
 	int folders;
 	int speed;
 	int first_packet;

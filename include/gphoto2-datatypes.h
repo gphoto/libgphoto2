@@ -265,12 +265,6 @@ typedef struct {
 	CameraFilesystemFolder **folder ;
 } CameraFilesystem;
 
-/* Settings for the config_set function */
-typedef struct {
-	char name[32];
-	char value[128];
-} CameraSetting;
-
 /* Text transferred to/from the camera */
 typedef struct {
 	char text[32*1024];
@@ -332,8 +326,6 @@ typedef struct Camera {
 	char		model[128];
 		
 	CameraPortInfo	*port;
-
-	int 		debug;
 
         int             ref_count;
 

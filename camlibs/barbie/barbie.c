@@ -75,11 +75,6 @@ int camera_init(Camera *camera) {
 	b = (BarbieStruct*)malloc(sizeof(BarbieStruct));
 	camera->camlib_data = b;
 
-	b->debug = camera->debug;
-
-	if (b->debug)
-		printf("barbie: Initializing the camera\n");
-
 	b->dev = gpio_new(GPIO_DEVICE_SERIAL);
 	gpio_set_timeout(b->dev, 5000);
 	strcpy(settings.serial.port, camera->port->path);
@@ -137,9 +132,6 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 	int size, num;
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
 
-	if (b->debug)
-		printf("barbie: Getting a picture\n");
-
 	gp_frontend_progress(camera, NULL, 0.00);
 	
 	strcpy(file->name, filename);
@@ -160,9 +152,6 @@ int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, cha
 
 	int size, num;
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
-
-	if (b->debug)
-		printf("barbie: Getting a preview\n");
 
 	gp_frontend_progress(camera, NULL, 0.00);
 
@@ -200,9 +189,6 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 /*
 	char cmd[4], resp[4];
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
-
-	if (b->debug)
-		printf("barbie: Taking a picture\n");
 
 	memcpy(cmd, packet_1, 4);
 

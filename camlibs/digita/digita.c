@@ -84,8 +84,7 @@ int camera_init(Camera *camera)
 	camera->functions->manual       = camera_manual;
 	camera->functions->about        = camera_about;
 
-	if (camera->debug)
-		fprintf(stderr, "digita: Initializing the camera\n");
+	gp_debug_printf (GP_DEBUG_LOW, "digita", "Initializing the camera\n");
 
 	dev = malloc(sizeof(*dev));
 	if (!dev) {
@@ -110,8 +109,6 @@ int camera_init(Camera *camera)
 		fprintf(stderr, "Couldn't open digita device\n");
 		return GP_ERROR;
 	}
-
-	dev->debug = camera->debug;
 
 	camera->camlib_data = dev;
 

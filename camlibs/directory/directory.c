@@ -203,8 +203,7 @@ int folder_index(Camera *camera) {
                 sprintf(fname, "%s/%s", d->directory, GPIO_FILENAME(de));
                 if (GPIO_IS_FILE(fname)) {
                         strcpy(d->images[d->num_images++], GPIO_FILENAME(de));
-                        if (camera->debug)
-                                printf("directory: found \"%s\"\n", GPIO_FILENAME(de));
+                        gp_debug_printf(GP_DEBUG_LOW, "directory", "found \"%s\"\n", GPIO_FILENAME(de));
                 }
                 de = GPIO_READDIR(dir);
         }

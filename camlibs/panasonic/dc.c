@@ -68,7 +68,7 @@ int dsc1_retrcmd(dsc_t *dsc) {
         if ((s = gpio_read(dsc->dev, dsc->buf, 17)) == GP_ERROR)
                 return GP_ERROR;
 
-        if (dsc->debug && 0 < s)
+        if (0 < s)
                 dsc_dumpmem(dsc->buf, s);
 
         if (s != 17 ||  memcmp(dsc->buf, r_prefix, 12) != 0 )
@@ -99,7 +99,6 @@ int dsc1_retrcmd(dsc_t *dsc) {
 int dsc1_setbaudrate(dsc_t *dsc, int speed) {
 
         u_int8_t        s_bps;
-        int             s;
 
         DEBUG_PRINT(("Setting baud rate to: %i.", speed));
 
@@ -149,7 +148,6 @@ int dsc1_setbaudrate(dsc_t *dsc, int speed) {
 
 int dsc1_getmodel(dsc_t *dsc) {
 
-        int     s;
 
         static const char       response[3] = { 'D', 'S', 'C' };
 
@@ -226,7 +224,7 @@ char *dsc_msgprintf(char *format, ...) {
 
 void dsc_debugprint(char *file, char *message) {
 
-        fprintf(stderr, "%s: %s\n", file, message);
+	gp_debug_printf (GP_DEBUG_LOW, "panasonic", "%s: %s\n", file, message);
 }
 
 void dsc_errorprint(int error, char *file, char *function, int line) {
@@ -245,8 +243,7 @@ void dsc_print_status(Camera *camera, char *format, ...) {
         vsprintf(str, format, pvar);
         va_end(pvar);
 
-        if (camera->debug)
-                dsc_debugprint(__FILE__, str);
+        dsc_debugprint(__FILE__, str);
         gp_frontend_status(camera, str);
 }
 
@@ -259,8 +256,7 @@ void dsc_print_message(Camera *camera, char *format, ...) {
         vsprintf(str, format, pvar);
         va_end(pvar);
 
-        if (camera->debug)
-                dsc_debugprint(__FILE__, str);
+        dsc_debugprint(__FILE__, str);
         gp_frontend_message(camera, str);
 }
 

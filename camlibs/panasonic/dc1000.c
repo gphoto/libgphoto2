@@ -374,15 +374,12 @@ int camera_init (Camera *camera) {
 
 	/* first of all allocate memory for a dsc struct */
 	if ((dsc = (dsc_t*)malloc(sizeof(dsc_t))) == NULL) { 
-		if (camera->debug)
-			dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
+		dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
 		return GP_ERROR; 
 	} 
 	
 	camera->camlib_data = dsc;
 	
-	dsc->debug = camera->debug;
-
 	dsc->dev = gpio_new(GPIO_DEVICE_SERIAL);
 	
 	gpio_set_timeout(dsc->dev, 5000);
@@ -398,16 +395,14 @@ int camera_init (Camera *camera) {
 	
 	/* allocate memory for a dsc read/write buffer */
 	if ((dsc->buf = (char *)malloc(sizeof(char)*(DSC_BUFSIZE))) == NULL) {
-		if (camera->debug)
-			dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
+		dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
 		free(dsc);
 		return GP_ERROR;
 	}
 	
 	/* allocate memory for camera filesystem struct */
 	if ((dsc->fs = gp_filesystem_new()) == NULL) {
-		if (camera->debug)
-			dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
+		dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
 		free(dsc);
 		return GP_ERROR;
 	}
