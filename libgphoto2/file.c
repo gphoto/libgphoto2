@@ -7,33 +7,42 @@
 
 CameraFile* gp_file_new () {
 
-        /*
-        Allocates a new CameraFile
-        */
+    CameraFile *file;
 
-        CameraFile *f;
+    file = (CameraFile*)malloc(sizeof(CameraFile));
+    strcpy(file->type, "unknown/unknown");
+    strcpy(file->name, "");
+    file->data = NULL;
+    file->size = 0;
+    file->bytes_read = 0;
+    file->session = glob_session_file++;
+    file->ref_count = 1;
 
-        f = (CameraFile*)malloc(sizeof(CameraFile));
-        strcpy(f->type, "unknown/unknown");
-        strcpy(f->name, "");
-        f->data = NULL;
-        f->size = 0;
-        f->bytes_read = 0;
-	f->session = glob_session_file++;
-	f->ref_count = 0;
-
-        return(f);
+    return(file);
 }
 
 int gp_file_free (CameraFile *file) {
 
-        /*
-        frees a CameraFile from memory
-        */
+    gp_file_clean(file);
+    free(file);
+    return(GP_OK);
+}
 
-        gp_file_clean(file);
-        free(file);
-        return(GP_OK);
+int gp_file_ref (CameraFile *file) {
+
+    file->ref_count += 1;
+
+    return (GP_OK);
+}
+
+int gp_file_unref (CameraFile *file) {
+
+    file->ref_count -= 1;
+
+    if (file->ref_count == 0)
+        gp_file_free(file);
+
+    return (GP_OK);
 }
 
 int gp_file_session (CameraFile *file) {
