@@ -415,9 +415,9 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 	/* Read the data. Unescape it. Calculate the checksum. */
 	for (check = i = 0; i < *buf_len; i++) {
 		CR (gp_port_read (camera->port, buf + i, 1));
-		if (b[i] == ESC) {
+		if (buf[i] == ESC) {
 			CR (gp_port_read (camera->port, buf + i, 1));
-			if (b[i] != ESC) {
+			if (buf[i] != ESC) {
 
 				/* Dump the remaining data */
 				while (gp_port_read (camera->port, b, 1) >= 0);
