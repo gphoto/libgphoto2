@@ -61,15 +61,15 @@ static const struct {
 } mime_table[] = {
 	{"jpeg", GP_MIME_JPEG},
 	{"jpg",  GP_MIME_JPEG}, 
-	{"tif", "image/tiff"},
-	{"ppm", "image/x-portable-pixmap"},
-	{"pgm", "image/x-portable-graymap"},
+	{"tif",  GP_MIME_TIFF},
+	{"ppm",  GP_MIME_PPM},
+	{"pgm",  GP_MIME_PGM},
 	{"pbm", "image/x-portable-bitmap"},
 	{"png",  GP_MIME_PNG},
 	{NULL, NULL}
 };
 
-//#define DEBUG
+/*#define DEBUG*/
 #define GP_MODULE "directory"
 
 static const char *
