@@ -1,4 +1,8 @@
-2002-05-24  Lutz M@ller <lutz@users.sourceforge.net>
+2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (sierra_check_connection): GP_ERROR_IO_READ is fine, too.
+
+2002-05-24  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: Imitate the behavior of the Windows driver and
 	  check before each sierra_write_packet if the connection is
