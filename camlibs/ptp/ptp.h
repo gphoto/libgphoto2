@@ -313,10 +313,11 @@ struct _PTPParams {
 	/* Data passed to above functions */
 	void *data;
 
-	/* Used by libptp */
+	/* ptp transaction ID */
 	uint32_t transaction_id;
-	PTPObjectHandles handles;
 
+	/* internal structures used by ptp driver */
+	PTPObjectHandles handles;
 	PTPObjectInfo * objectinfo;
 };
 typedef struct _PTPParams PTPParams;

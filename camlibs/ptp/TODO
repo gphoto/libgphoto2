@@ -12,3 +12,6 @@ interpretation of it's fields, which may be meaningful for driver behavior.
 gphoto2 driver.
 
 -- free() all malloced memory upon exit!
+
+-- update params.handles and params.objectinfo structures after upload and
+make folder.

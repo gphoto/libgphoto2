@@ -4,6 +4,11 @@ This library is under developement yet.
 It's designet to use with gphoto2, but can be easily used with any other
 software.
 
+There is a sample test_ptp.c code which shows how to use libptp2 without
+gphoto2. You can use test_ptp.c as a quick startup for your own ptp
+application. Vide library.c to see how to use libptp2.
+Sorry, no docs yet :(
+
 To compile test_ptp.c type:
 cc -g -O2 -g -Wall -I/usr/local/include/libexif -I../../libgphoto2 -I/usr/local/include -g -Wall test_ptp.c -lusb ptp.o -o test_ptp
 
