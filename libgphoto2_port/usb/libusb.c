@@ -88,6 +88,7 @@ static int gp_port_usb_init (GPPort *port)
 	port->pl = malloc (sizeof (GPPortPrivateLibrary));
 	if (!port->pl)
 		return (GP_ERROR_NO_MEMORY);
+	memset (port->pl, 0, sizeof (GPPortPrivateLibrary));
 
 	usb_init ();
 	usb_find_busses ();

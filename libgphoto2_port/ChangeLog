@@ -1,3 +1,8 @@
+2001-10-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* usb/libusb.c: memset port->pl to 0 so that we can later detect
+	  errors
+
 2001-10-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2_port/gphoto2-port-portability.[c,h] (GP_SYSTEM_RMDIR):
