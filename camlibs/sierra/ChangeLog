@@ -1,4 +1,7 @@
 2003-09-13  Patrick Mansfield <patmans@users.sourceforge.net>
+	* epson-desc.c: remove unused commented out code.
+
+2003-09-13  Patrick Mansfield <patmans@users.sourceforge.net>
 	* epson-desc.c sierra.c: get rid of C++ style comments.
 
 2003-08-30  Patrick Mansfield <patmans@users.sourceforge.net>
