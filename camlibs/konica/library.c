@@ -644,14 +644,13 @@ camera_summary (Camera* camera, CameraText* summary)
 
 	if (result == GP_OK) 
 		sprintf (summary->text, 
-			"About the camera:\n"
-			"  Model: %s\n"
-			"  Serial Number: %s,\n"
-			"  Hardware Version: %i.%i\n"
-			"  Software Version: %i.%i\n"
-			"  Testing Software Version: %i.%i\n"
-			"  Name: %s,\n"
-			"  Manufacturer: %s\n",
+			"Model: %s\n"
+			"Serial Number: %s,\n"
+			"Hardware Version: %i.%i\n"
+			"Software Version: %i.%i\n"
+			"Testing Software Version: %i.%i\n"
+			"Name: %s,\n"
+			"Manufacturer: %s\n",
 			model,
 			serial_number,
 			hardware_version_major, 
@@ -827,7 +826,7 @@ camera_file_set_info (Camera* camera, const gchar* folder, const gchar* file, Ca
 			return (result);
 	}
 	
-	return (GP_ERROR_NOT_SUPPORTED);
+	return (GP_OK);
 }
 
 gint 
