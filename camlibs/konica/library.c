@@ -176,6 +176,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		gp_filesystem_set_file_noop (camera->fs, folder, file, context);
 		gp_file_unref (file);
 
+		gp_context_idle (context);
 		gp_context_progress_update (context, id, i + 1);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 			return (GP_ERROR_CANCEL);
@@ -328,6 +329,7 @@ test_speed (Camera *camera, GPContext *context)
 		C(gp_port_set_settings (camera->port, settings));
 		if (k_init (camera->port, context) == GP_OK)
 			break;
+		gp_context_idle (context);
 		gp_context_progress_update (context, id, i + 1);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 			return (GP_ERROR_CANCEL);
