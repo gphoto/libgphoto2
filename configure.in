@@ -452,11 +452,11 @@ if $try_readline; then
 		# we use another function to avoid the configure caching
 		# to kick in.
                 AC_CHECK_LIB(readline, rl_completion_matches, [
-                        have_readline=true
-                        rl_msg="yes (requires explicit -lncurses)"
-             		RL_LIBS="-lreadline -lncurses"
-       			RL_CFLAGS=""],[
-			rl_msg="no (couldn't link against it)"],[-lncurses])
+                    have_readline=true
+                    rl_msg="yes (requires explicit -lncurses)"
+             	    RL_LIBS="-lreadline -lncurses"
+       		    RL_CFLAGS=""],[
+		    rl_msg="no (couldn't link against it or version too old)"],[-lncurses])
         fi
 fi
 if $have_readline; then
