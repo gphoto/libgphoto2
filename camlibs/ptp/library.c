@@ -305,7 +305,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		&camera->pl->params.handles, image_id, &ptp_objectinfo));
 		fdata=malloc(ptp_objectinfo.ObjectCompressedSize);
-		if (objectinfo.ObjectFormat & 0x0800 == 0x0000) return
+		if ((ptp_objectinfo.ObjectFormat & 0x0800) == 0x0000) return
 			(GP_OK);
 		CPR (camera, ptp_getobject(&camera->pl->params,
 		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
@@ -317,7 +317,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		&camera->pl->params.handles, image_id, &ptp_objectinfo));
 		fdata=malloc(ptp_objectinfo.ThumbCompressedSize);
-		if (objectinfo.ObjectFormat & 0x0800 == 0x0000) return
+		if ((ptp_objectinfo.ObjectFormat & 0x0800) == 0x0000) return
 			(GP_OK);
 		CPR (camera, ptp_getthumb(&camera->pl->params,
 		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
