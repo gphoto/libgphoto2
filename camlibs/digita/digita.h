@@ -136,12 +136,10 @@ int digita_get_file_data(struct digita_device *dev, int thumbnail,
 int digita_delete_picture(struct digita_device *dev, struct filename *filename);
 
 /* serial.c */
-int digita_serial_open(struct digita_device *dev, Camera *camera,
-		CameraInit *init);
+int digita_serial_open(struct digita_device *dev, Camera *camera);
 
 /* usb.c */
-int digita_usb_open(struct digita_device *dev, Camera *camera,
-		CameraInit *init);
+int digita_usb_open(struct digita_device *dev, Camera *camera);
 
 #endif
 

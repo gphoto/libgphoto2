@@ -59,7 +59,7 @@ int camera_abilities(CameraAbilitiesList *list)
 	return GP_OK;
 }
 
-int camera_init(Camera *camera, CameraInit *init)
+int camera_init(Camera *camera)
 {
 	struct digita_device *dev;
 	int ret = 0;
@@ -94,15 +94,15 @@ int camera_init(Camera *camera, CameraInit *init)
 	}
 	memset((void *)dev, 0, sizeof(*dev));
 
-	switch (init->port.type) {
+	switch (camera->port->type) {
 	case GP_PORT_USB:
-		ret = digita_usb_open(dev, camera, init);
+		ret = digita_usb_open(dev, camera);
 		break;
 	case GP_PORT_SERIAL:
-		ret = digita_serial_open(dev, camera, init);
+		ret = digita_serial_open(dev, camera);
 		break;
 	default:
-		fprintf(stderr, "Unknown port type %d\n", init->port.type);
+		fprintf(stderr, "Unknown port type %d\n", camera->port->type);
 		return GP_ERROR;
 	}
 

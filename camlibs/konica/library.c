@@ -145,7 +145,7 @@ camera_abilities (CameraAbilitiesList* list)
 
 
 gint 
-camera_init (Camera* camera, CameraInit* init)
+camera_init (Camera* camera)
 {
 	gint 		i, j;
 	guint 		test_bit_rate[10] 	= { 9600, 115200, 57600, 38400, 19200,  4800,  2400,  1200,   600,    300};
@@ -163,7 +163,6 @@ camera_init (Camera* camera, CameraInit* init)
 	gpio_device*		device;
 
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (init, 	GP_ERROR_BAD_PARAMETERS);
 
 	/* First, set up all the function pointers. */
 	camera->functions->id 			= camera_id;
@@ -216,16 +215,16 @@ camera_init (Camera* camera, CameraInit* init)
 	/*          equal the current speed, we will change the current speed */
 	/*          to the given one.                                         */
 
-	strcpy (device_settings.serial.port, init->port.path);
+	strcpy (device_settings.serial.port, camera->port->path);
 	device_settings.serial.bits = 8;
 	device_settings.serial.parity = 0;
 	device_settings.serial.stopbits = 1;
 
 	/* In case we got a speed not 0, let's first 	*/
 	/* test if we do already have the given speed.	*/
-	if (init->port.speed != 0) {
-		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Quick test for given speed %i.\n", init->port.speed);
-		device_settings.serial.speed = init->port.speed;
+	if (camera->port->speed != 0) {
+		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Quick test for given speed %i.\n", camera->port->speed);
+		device_settings.serial.speed = camera->port->speed;
 		gpio_set_settings (device, device_settings);
 		if (k_init (device) == GP_OK) return (GP_OK);
 	}
@@ -239,7 +238,7 @@ camera_init (Camera* camera, CameraInit* init)
 		gpio_set_settings (device, device_settings); 
 		if (k_init (device) == GP_OK) break; 
 	}
-	if ((i == 1) && (init->port.speed == 0)) {
+	if ((i == 1) && (camera->port->speed == 0)) {
 
 		/* We have a speed of 0 and are already communicating at the  */
 		/* highest bit rate possible. What else do we want?           */
@@ -274,7 +273,7 @@ camera_init (Camera* camera, CameraInit* init)
 		gpio_free (device);
 		return (result);
 	}
-	if (init->port.speed == 0) {
+	if (camera->port->speed == 0) {
 
 		/* We are given 0. Set the highest speed. */
 		for (i = 9; i >= 0; i--) if (bit_rate_supported[i]) break;
@@ -303,7 +302,7 @@ camera_init (Camera* camera, CameraInit* init)
 
 	} else {
 		/* Does the camera allow us to set the bit rate to given speed?	*/
-		speed = (guint) init->port.speed;
+		speed = (guint) camera->port->speed;
 		if (    ((speed ==    300) && (!bit_rate_supported[0])) ||
 			((speed ==    600) && (!bit_rate_supported[1])) ||
 			((speed ==   1200) && (!bit_rate_supported[2])) ||
@@ -328,7 +327,7 @@ camera_init (Camera* camera, CameraInit* init)
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
 		/* Now we can set the given speed. */
-		if ((result = k_set_io_capability (device, init->port.speed, TRUE, FALSE, FALSE, FALSE, FALSE)) != GP_OK) {
+		if ((result = k_set_io_capability (device, camera->port->speed, TRUE, FALSE, FALSE, FALSE, FALSE)) != GP_OK) {
 			gpio_free (device);
 			return (result);
 		}

@@ -131,7 +131,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera, CameraInit *init) {
+int camera_init (Camera *camera) {
 
 	int value=0, count;
 #ifdef GPIO_USB
@@ -167,7 +167,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 
 	sierra_debug_print(fd, "Initializing camera");
 
-	switch (init->port.type) {
+	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
 			sierra_debug_print(fd, "Serial Device");
 			fd->dev = gpio_new(GPIO_DEVICE_SERIAL);
@@ -176,7 +176,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 				free(fd);
 				return (GP_ERROR);
 			}
-			strcpy(settings.serial.port, init->port.path);
+			strcpy(settings.serial.port, camera->port->path);
 			settings.serial.speed 	 = 19200;
 			settings.serial.bits 	 = 8;
 			settings.serial.parity 	 = 0;
@@ -186,7 +186,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 		case GP_PORT_USB:
 			/* lookup the USB information */
 			while (strlen(sierra_cameras[x].model)>0) {			
-				if (strcmp(sierra_cameras[x].model, init->model)==0) {
+				if (strcmp(sierra_cameras[x].model, camera->model)==0) {
 					vendor = sierra_cameras[x].usb_vendor;
 					product = sierra_cameras[x].usb_product;
 					inep = sierra_cameras[x].usb_inep;
@@ -234,7 +234,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	}
 
 	gpio_set_timeout(fd->dev, TIMEOUT);
-	fd->type = init->port.type;
+	fd->type = camera->port->type;
 
 	if (gpio_open(fd->dev)==GPIO_ERROR) {
 		gpio_free(fd->dev);
@@ -242,7 +242,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 		return (GP_ERROR);
 	}
 
-	switch (init->port.type) {
+	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
 			if (sierra_ping(camera)==GP_ERROR) {
 				gpio_free(fd->dev);
@@ -250,12 +250,12 @@ int camera_init (Camera *camera, CameraInit *init) {
 				return (GP_ERROR);
 			}
 
-			if (sierra_set_speed(camera, init->port.speed)==GP_ERROR) {
+			if (sierra_set_speed(camera, camera->port->speed)==GP_ERROR) {
 				gpio_free(fd->dev);
 				free (fd);
 				return (GP_ERROR);
 			}
-			fd->speed = init->port.speed;
+			fd->speed = camera->port->speed;
 			break;
 #ifdef GPIO_USB
 		case GP_PORT_USB:

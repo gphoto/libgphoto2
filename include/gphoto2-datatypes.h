@@ -219,16 +219,6 @@ typedef struct {
 	CameraAbilities **abilities;
 } CameraAbilitiesList;
 
-
-/* Initialization data to the camera */
-typedef struct {
-	char model[128]; 		   /* Name of the camera */
-
-	CameraPortInfo port;		   /* Port settings */
-
-	int debug;
-} CameraInit;
-
 /* Camera file structure used for transferring files*/
 typedef struct {
 	char		type[64];
@@ -291,7 +281,7 @@ struct Camera;
 /* Camera function pointers */
 typedef int (*c_id)		 (CameraText *);
 typedef int (*c_abilities)	 (CameraAbilitiesList *);
-typedef int (*c_init)		 (struct Camera*, CameraInit*);
+typedef int (*c_init)		 (struct Camera*);
 typedef int (*c_exit)		 (struct Camera*);
 typedef int (*c_folder_list)	 (struct Camera*, CameraList*, char*);
 typedef int (*c_file_list)	 (struct Camera*, CameraList*, char*);

@@ -764,7 +764,6 @@ OPTION_CALLBACK(about) {
 
 int set_globals () {
         /* takes all the settings and sets up the gphoto lib */
-        CameraPortInfo s;
 
         if (strlen(glob_model) == 0) {
                 cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
@@ -776,9 +775,6 @@ int set_globals () {
                 return (GP_ERROR);
         }
 
-        strcpy(s.path, glob_port);
-        s.speed = glob_speed;
-
         if (gp_camera_abilities_by_name(glob_model, &glob_abilities) != GP_OK) {
                 cli_error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
                 return (GP_ERROR);
@@ -789,7 +785,10 @@ int set_globals () {
                 return (GP_ERROR);
         }
 
-        if (gp_camera_init(glob_camera, &s) != GP_OK) {
+	strcpy (glob_camera->port->path, glob_port);
+	glob_camera->port->speed = glob_speed;
+
+        if (gp_camera_init(glob_camera) != GP_OK) {
                 cli_error_print("Can not initialize the camera \"%s\"",glob_model);
                 return (GP_ERROR);
         }

@@ -52,7 +52,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_init(Camera *camera, CameraInit *init) {
+int camera_init(Camera *camera) {
 
 	gpio_device_settings settings;
 	BarbieStruct *b;
@@ -82,7 +82,7 @@ int camera_init(Camera *camera, CameraInit *init) {
 
 	b->dev = gpio_new(GPIO_DEVICE_SERIAL);
 	gpio_set_timeout(b->dev, 5000);
-	strcpy(settings.serial.port, init->port.path);
+	strcpy(settings.serial.port, camera->port->path);
 
 	settings.serial.speed	= 57600;
 	settings.serial.bits	= 8;

@@ -19,7 +19,7 @@ int gp_camera_unref (Camera *camera);
 
 int gp_camera_free (Camera *camera);
 
-int gp_camera_init (Camera *camera, CameraPortInfo *settings);
+int gp_camera_init (Camera *camera);
 
 int gp_camera_session (Camera *camera);
 	

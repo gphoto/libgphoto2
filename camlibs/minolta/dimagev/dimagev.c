@@ -59,7 +59,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return GP_OK;
 }
 
-int camera_init (Camera *camera, CameraInit *init) {
+int camera_init (Camera *camera) {
 	dimagev_t *dimagev = NULL;
 
 	/* First, set up all the function pointers */
@@ -102,9 +102,9 @@ int camera_init (Camera *camera, CameraInit *init) {
 	gpio_set_timeout(dimagev->dev, 5000);
 
 #if defined HAVE_STRNCPY
-	strncpy(dimagev->settings.serial.port, init->port.path, sizeof(dimagev->settings.serial.port));
+	strncpy(dimagev->settings.serial.port, camera->port->path, sizeof(dimagev->settings.serial.port));
 #else
-	strcpy(dimagev->settings.serial.port, init->port.path);
+	strcpy(dimagev->settings.serial.port, camera->port->path);
 #endif
 	dimagev->settings.serial.speed = 38400;
 	dimagev->settings.serial.bits = 8;

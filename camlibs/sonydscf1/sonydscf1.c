@@ -51,12 +51,12 @@ int camera_abilities (CameraAbilitiesList *list) {
         return (GP_OK);
 }
 
-int camera_init (Camera *camera, CameraInit *init) {
+int camera_init (Camera *camera) {
 
         /*if(glob_debug)
         {*/
          printf("sony dscf1: Initializing the camera\n");
-         printf("port: %s\n",init->port_settings.path);
+         printf("port: %s\n",camera->port->path);
         /*}*/
 
         camera->functions->id           = camera_id;
@@ -86,7 +86,7 @@ int camera_init (Camera *camera, CameraInit *init) {
         printf("3\n");
         gpio_set_timeout(dev, 5000);
         printf("4\n");
-        strcpy(settings.serial.port, init->port_settings.path);
+        strcpy(settings.serial.port, camera->port->path);
         printf("5\n");
         settings.serial.speed   = 38400;
         settings.serial.bits    = 8;
@@ -97,7 +97,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 
         gpio_open(dev);
         printf("6\n");
-        strcpy(glob_camera_model, init->model);
+        strcpy(glob_camera_model, camera->model);
         return (GP_OK);
 }
 

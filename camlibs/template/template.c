@@ -29,7 +29,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera, CameraInit *init) {
+int camera_init (Camera *camera) {
 
 	/* First, set up all the function pointers */
 	camera->functions->id 			= camera_id;

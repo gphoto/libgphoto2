@@ -42,7 +42,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera, CameraInit *init) {
+int camera_init (Camera *camera) {
 
 	gpio_device_settings settings;
 	DC120Data *dd;
@@ -77,7 +77,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 		return (GP_ERROR);
 	}
 
-	strcpy(settings.serial.port, init->port.path);
+	strcpy(settings.serial.port, camera->port->path);
 	settings.serial.speed    = 9600;
 	settings.serial.bits     = 8;
 	settings.serial.parity   = 0;
@@ -103,7 +103,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	/* Wait for it to update */
 	GPIO_SLEEP(1500);
 
-	if (dc120_set_speed(dd, init->port.speed) == GP_ERROR) {
+	if (dc120_set_speed(dd, camera->port->speed) == GP_ERROR) {
 		gpio_close(dd->dev);
 		gpio_free(dd->dev);
 		free(dd);

@@ -41,7 +41,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera, CameraInit *init) {
+int camera_init (Camera *camera) {
 
     gpio_device_settings settings;
     DC240Data *dd;
@@ -70,14 +70,14 @@ int camera_init (Camera *camera, CameraInit *init) {
     camera->functions->manual 	        = camera_manual;
     camera->functions->about 	        = camera_about;
 
-    switch (init->port.type) {
+    switch (camera->port->type) {
     case GP_PORT_SERIAL:
         dd->dev = gpio_new(GPIO_DEVICE_SERIAL);
         if (!dd->dev) {
             free(dd);
             return (GP_ERROR);
         }
-        strcpy(settings.serial.port, init->port.path);
+        strcpy(settings.serial.port, camera->port->path);
         settings.serial.speed    = 9600;
         settings.serial.bits     = 8;
         settings.serial.parity   = 0;
@@ -120,14 +120,14 @@ int camera_init (Camera *camera, CameraInit *init) {
 
     gpio_set_timeout(dd->dev, TIMEOUT);
 
-    if (init->port.type == GP_PORT_SERIAL) {
+    if (camera->port->type == GP_PORT_SERIAL) {
         /* Reset the camera to 9600 */
         gpio_send_break(dd->dev, 1);
 
         /* Wait for it to reset */
         GPIO_SLEEP(1500);
 
-        if (dc240_set_speed(dd, init->port.speed) == GP_ERROR) {
+        if (dc240_set_speed(dd, camera->port->speed) == GP_ERROR) {
             gpio_close(dd->dev);
             gpio_free(dd->dev);
             free(dd);

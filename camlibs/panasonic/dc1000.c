@@ -346,7 +346,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return GP_OK;
 }
 
-int camera_init (Camera *camera, CameraInit *init) {
+int camera_init (Camera *camera) {
 	
 	dsc_t		*dsc = NULL;
 	
@@ -386,7 +386,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	dsc->dev = gpio_new(GPIO_DEVICE_SERIAL);
 	
 	gpio_set_timeout(dsc->dev, 5000);
-	strcpy(dsc->settings.serial.port, init->port.path);
+	strcpy(dsc->settings.serial.port, camera->port->path);
 	dsc->settings.serial.speed 	= 9600; /* hand shake speed */
 	dsc->settings.serial.bits	= 8;
 	dsc->settings.serial.parity	= 0;
@@ -412,7 +412,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 		return GP_ERROR;
 	}
 	
-	return dsc1_connect(dsc, init->port.speed); 
+	return dsc1_connect(dsc, camera->port->speed); 
 		/* connect with selected speed */
 }
 

@@ -65,7 +65,7 @@ err:
 }
 #endif
 
-int digita_usb_open(struct digita_device *dev, Camera *camera, CameraInit *init)
+int digita_usb_open(struct digita_device *dev, Camera *camera)
 {
 #ifdef GPIO_USB
 	gpio_device_settings settings;

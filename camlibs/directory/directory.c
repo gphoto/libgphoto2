@@ -71,7 +71,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         return (GP_OK);
 }
 
-int camera_init (Camera *camera, CameraInit *init) {
+int camera_init (Camera *camera) {
 
         int i=0;
         DirectoryStruct *d;
@@ -102,7 +102,7 @@ int camera_init (Camera *camera, CameraInit *init) {
         for (i=0; i<1024; i++)
                 strcpy(d->images[i], "");
 
-        strcpy(d->directory, init->port.path);
+        strcpy(d->directory, camera->port->path);
         if (strlen(d->directory)==0) {
                 strcpy(d->directory, "/");
         }

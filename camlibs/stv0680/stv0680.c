@@ -51,7 +51,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera, CameraInit *init) {
+int camera_init (Camera *camera) {
 
 	gpio_device_settings gpiod_settings;
 	struct stv0680_s *device;
@@ -84,8 +84,8 @@ int camera_init (Camera *camera, CameraInit *init) {
 	device->gpiod = gpio_new(GPIO_DEVICE_SERIAL);
 	gpio_set_timeout(device->gpiod, 1000);
 
-	strcpy(gpiod_settings.serial.port, init->port.path);
-	gpiod_settings.serial.speed = init->port.speed;
+	strcpy(gpiod_settings.serial.port, camera->port->path);
+	gpiod_settings.serial.speed = camera->port->speed;
 	gpiod_settings.serial.bits = 8;
 	gpiod_settings.serial.parity = 0;
 	gpiod_settings.serial.stopbits = 1;

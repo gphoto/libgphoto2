@@ -12,8 +12,7 @@ int camera_abilities 		(CameraAbilitiesList *list);
 	/* 'count' should be set to the number of cameras the	*/
 	/* library supports.					*/
 
-int camera_init 		(Camera *camera, 
-				 CameraInit *init);
+int camera_init 		(Camera *camera);
 	/* Initializes the library for use. Library uses the 	*/
 	/* information in 'init' to determine what options the  */
 	/* the user has chosen.					*/

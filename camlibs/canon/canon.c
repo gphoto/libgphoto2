@@ -797,7 +797,7 @@ int camera_file_get_preview(Camera *camera, CameraFile *preview, char *folder, c
  * camera settings. Right now it is only the speed that is
  * saved.
  */
-int camera_init(Camera *camera, CameraInit *init)
+int camera_init(Camera *camera)
 {
 	struct canon_info *cs;
 	char buf[8];
@@ -841,7 +841,7 @@ int camera_init(Camera *camera, CameraInit *init)
 	
 	fprintf(stderr,"canon_initialize()\n");
 	
-	cs->speed = init->port.speed;
+	cs->speed = camera->port->speed;
 	/* Default speed */
 	if (cs->speed == 0)
 	  cs->speed = 9600;
@@ -880,7 +880,7 @@ int camera_init(Camera *camera, CameraInit *init)
 		  cs->dump_packets = 0;
 	}
 
-	switch (init->port.type) { 
+	switch (camera->port->type) { 
 	 case GP_PORT_USB:
 		gp_debug_printf(GP_DEBUG_LOW,"canon","GPhoto tells us that we should use a USB link.\n");
 		canon_comm_method = CANON_USB;
@@ -896,7 +896,7 @@ int camera_init(Camera *camera, CameraInit *init)
       gp_debug_printf(GP_DEBUG_LOW,"canon","Camera transmission speed : %i\n", cs->speed);
 	
 
-	return canon_serial_init(camera,init->port.path);
+	return canon_serial_init(camera,camera->port->path);
 }
 
 
