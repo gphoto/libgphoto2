@@ -62,81 +62,113 @@ Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_e
 
 <!-- ##### USER_FUNCTION CameraExitFunc ##### -->
 <para>
-
+  Implement this function in camera drivers if you need to clean up on
+  exit. You need this function for example if you use camera->pl and
+  allocated memory for that on #camera_init. Then, you would free the
+  memory here.
 </para>
 
-@camera: 
-@Returns: 
+@camera:  a #Camera
+@Returns: a GPhoto2 error code
 
 
 <!-- ##### USER_FUNCTION CameraGetConfigFunc ##### -->
 <para>
-
+  Implement this function if your camera supports some configuration
+  operations (like adjusting exposure).
 </para>
 
-@camera: 
+@camera: a #Camera
 @widget: 
-@Returns: 
+@Returns: a GPhoto2 error code
 
 
 <!-- ##### USER_FUNCTION CameraSetConfigFunc ##### -->
 <para>
-
+  If you implement the #CameraGetConfigFunc, you should also implement this
+  function in order to make it possible for frontends to actually adjust
+  configuration options. Parse the @widget tree and check for each item
+  if the value has been changed (using #gp_widget_changed). If this is the
+  case, adjust this configuration option on the camera.
 </para>
 
-@camera: 
-@widget: 
-@Returns: 
+@camera: a #Camera
+@widget: a #CameraWidget created by #gp_camera_get_config
+@Returns: a GPhoto2 error code
 
 
 <!-- ##### USER_FUNCTION CameraCaptureFunc ##### -->
 <para>
-
+  Implement this function if your camera supports remote capturing of images.
+  When capturing an image, this image needs to be saved on the camera. The
+  location of the image on the camera should then be written into
+  supplied @path so that the frontend will know where to get the
+  newly captured image from. Don't forget to tell the #CameraFilesystem
+  (camera->fs) that a new picture is on the camera using
+  #gp_filesystem_append.
 </para>
 
-@camera: 
-@type: 
-@path: 
-@Returns: 
+@camera: a #Camera
+@type: a #CameraCaptureType
+@path: a #CameraFilePath
+@Returns: a GPhoto2 error code
 
 
 <!-- ##### USER_FUNCTION CameraCapturePreviewFunc ##### -->
 <para>
-
+  Implement this function if your camera supports capturing
+  previews of low resolution. Those previews must not be stored on the camera.
+  They need to be written to the supplied @file (using for example
+  #gp_file_set_data_and_size).
 </para>
 
-@camera: 
-@file: 
-@Returns: 
+@camera: a #Camera
+@file: a #CameraFile
+@Returns: a GPhoto2 error code
 
 
 <!-- ##### USER_FUNCTION CameraSummaryFunc ##### -->
 <para>
-
+  Implement this function if your camera provides static information and
+  non-configurable data like serial number or number of pictures taken. All
+  configurable data should be displayed through #CameraGetConfigFunc
+  instead.
 </para>
 
-@camera: 
-@text: 
-@Returns: 
+@camera: a #Camera
+@text:  a #CameraText
+@Returns: a GPhoto2 error code
 
 
 <!-- ##### USER_FUNCTION CameraManualFunc ##### -->
 <para>
-
+  Implement this function if you need to give the user instructions on
+  how to use his camera. Here, you can for example inform the user about known
+  limitations of the protocol.
 </para>
 
-@camera: 
-@text: 
-@Returns: 
+@camera: a #Camera
+@text: a #CameraText
+@Returns: a GPhoto2 error code
 
 
 <!-- ##### USER_FUNCTION CameraAboutFunc ##### -->
+<para>
+  Implement this function if you want to give frontends the possibility to
+  inform users who wrote this driver or who contributed to it.
+</para>
+
+@camera: a #Camera
+@text: a #CameraText
+@Returns: a GPhoto2 error code
+
+
+<!-- ##### USER_FUNCTION CameraPrePostFunc ##### -->
 <para>
 
 </para>
 
 @camera: 
-@text: 
 @Returns: 
 
 
@@ -158,11 +190,23 @@ Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_e
 </para>
 
 
-<!-- ##### TYPEDEF CameraFunctions ##### -->
+<!-- ##### STRUCT CameraFunctions ##### -->
 <para>
-
+  Those functions are optionally. Depending on the features of the protocol,
+  you would implement some functions and leave others out. Tell gphoto2
+  what functions you provide on #camera_init.
 </para>
 
+@pre_func: 
+@post_func: 
+@exit: 
+@get_config: 
+@set_config: 
+@capture: 
+@capture_preview: 
+@summary: 
+@manual: 
+@about: 
 
 <!-- ##### STRUCT Camera ##### -->
 <para>

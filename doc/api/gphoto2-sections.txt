@@ -49,6 +49,8 @@ CameraSummaryFunc
 CameraManualFunc
 CameraAboutFunc
 
+CameraPrePostFunc
+
 CameraPrivateLibrary
 CameraPrivateCore
 
@@ -187,6 +189,20 @@ gp_list_sort
 <FILE>gphoto2-filesys</FILE>
 <TITLE>CameraFilesystem</TITLE>
 CameraFilesystem
+
+CameraFilePermissions
+CameraFileStatus
+
+CameraFileInfoFields
+CameraFileInfoAudio
+CameraFileInfoPreview
+CameraFileInfoFile
+CameraFileInfo
+
+CameraFileInfoFile
+CameraFileInfoPreview
+CameraFileInfoAudio
+CameraFileInfo
 
 gp_filesystem_new
 gp_filesystem_free

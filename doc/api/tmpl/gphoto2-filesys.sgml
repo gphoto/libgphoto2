@@ -53,6 +53,144 @@ retreiving information about a file, etc.
 </para>
 
 
+<!-- ##### ENUM CameraFilePermissions ##### -->
+<para>
+  There are three levels of access permissions: #GP_FILE_PERM_NONE,
+  #GP_FILE_PERM_READ and
+  #GP_FILE_PERM_DELETE. As of now, there is no camera (driver) that 
+  supports first. If #GP_FILE_PERM_DELETE is set, users cannot
+  delete a file using #gp_camera_file_delete or #gp_camera_folder_delete_all.
+</para>
+
+@GP_FILE_PERM_NONE: Neither read nor write access allowed.
+@GP_FILE_PERM_READ: Users can read (download) the file.
+@GP_FILE_PERM_DELETE: Users can delete the file
+@GP_FILE_PERM_ALL: 
+
+<!-- ##### ENUM CameraFileStatus ##### -->
+<para>
+  The #CameraFileStatus tells frontends if a file has already been downloaded
+  (#GP_FILE_STATUS_DOWNLOADED) or not (GP_FILE_STATUS_NOT_DOWNLOADED).
+</para>
+
+@GP_FILE_STATUS_NOT_DOWNLOADED: The file has not yet been downloaded from
+				the camera.
+@GP_FILE_STATUS_DOWNLOADED: The file has been downloaded from the camera
+			    at least once.
+
+<!-- ##### ENUM CameraFileInfoFields ##### -->
+<para>
+  Use this variable to determine which fields of a #CameraFileInfoFile, a
+  #CameraFileInfoPreview, or a #CameraFileInfoAudio are valid.
+</para>
+
+@GP_FILE_INFO_NONE: If set to this value, no field is valid. You would want
+  to use this for example if there are no audio annotations of a picture.
+@GP_FILE_INFO_TYPE: Indicates if there is information about the mime type
+  of a file, the preview, or the audio annotation available.
+@GP_FILE_INFO_NAME: 
+@GP_FILE_INFO_SIZE: Indicates if the size field is valid.
+@GP_FILE_INFO_WIDTH: Indicates if there is information about the width of
+  the file, the preview, or the audio annotation available.
+@GP_FILE_INFO_HEIGHT: Indicates if height field is valid.
+@GP_FILE_INFO_PERMISSIONS: Indicates if the permissions field is valid.
+@GP_FILE_INFO_STATUS: Indicates if the status field is valid.
+@GP_FILE_INFO_TIME: Indicates if there is information about the creation time
+  of a file available.
+@GP_FILE_INFO_ALL: 
+
+<!-- ##### STRUCT CameraFileInfoAudio ##### -->
+<para>
+
+</para>
+
+@fields: 
+@type: 
+@size: 
+@status: 
+
+<!-- ##### STRUCT CameraFileInfoPreview ##### -->
+<para>
+
+</para>
+
+@fields: 
+@type: 
+@size: 
+@width: 
+@height: 
+@status: 
+
+<!-- ##### STRUCT CameraFileInfoFile ##### -->
+<para>
+
+</para>
+
+@fields: 
+@type: 
+@permissions: 
+@name: 
+@size: 
+@width: 
+@height: 
+@status: 
+@time: 
+
+<!-- ##### STRUCT CameraFileInfo ##### -->
+<para>
+
+</para>
+
+@preview: 
+@file: 
+@audio: 
+
+<!-- ##### STRUCT CameraFileInfoFile ##### -->
+<para>
+
+</para>
+
+@fields: 
+@type: 
+@permissions: 
+@name: 
+@size: 
+@width: 
+@height: 
+@status: 
+@time: 
+
+<!-- ##### STRUCT CameraFileInfoPreview ##### -->
+<para>
+
+</para>
+
+@fields: 
+@type: 
+@size: 
+@width: 
+@height: 
+@status: 
+
+<!-- ##### STRUCT CameraFileInfoAudio ##### -->
+<para>
+
+</para>
+
+@fields: 
+@type: 
+@size: 
+@status: 
+
+<!-- ##### STRUCT CameraFileInfo ##### -->
+<para>
+
+</para>
+
+@preview: 
+@file: 
+@audio: 
+
 <!-- ##### FUNCTION gp_filesystem_new ##### -->
 <para>
 
@@ -105,19 +243,6 @@ retreiving information about a file, etc.
 @fs: 
 @get_file_func: 
 @del_file_func: 
-@data: 
-@Returns: 
-
-
-<!-- ##### USER_FUNCTION CameraFilesystemInfoFunc ##### -->
-<para>
-
-</para>
-
-@fs: 
-@folder: 
-@filename: 
-@info: 
 @data: 
 @Returns: 
 

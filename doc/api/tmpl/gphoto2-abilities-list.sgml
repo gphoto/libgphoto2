@@ -46,50 +46,67 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
 
 <!-- ##### ENUM CameraDriverStatus ##### -->
 <para>
-
+  This flag indicates the stability of the driver.
+  #GP_DRIVER_STATUS_EXPERIMENTAL is set initially. Once the driver is ready
+  for testing, the flag #GP_DRIVER_STATUS_TESTING is set. Finally, if testing
+  has shown that the driver is usable and no bugs can be found any longer,
+  the flag is set to #GP_DRIVER_STATUS_PRODUCTION.
 </para>
 
-@GP_DRIVER_STATUS_PRODUCTION: 
-@GP_DRIVER_STATUS_TESTING: 
-@GP_DRIVER_STATUS_EXPERIMENTAL: 
+@GP_DRIVER_STATUS_PRODUCTION: Driver is functional, there are no apparent bugs.
+@GP_DRIVER_STATUS_TESTING: Driver is functional, but needs testing.
+@GP_DRIVER_STATUS_EXPERIMENTAL: Driver is experimental and does not yet
+				work properly.
 
 <!-- ##### ENUM CameraOperation ##### -->
 <para>
-
+  This flag indicates what operations a camera supports. It is useful in case
+  a frontend want to determine what operations a camera supports in order to
+  adjust the GUI for this model. Get the abilities for a specific model
+  from the #CameraAbilitiesList using #gp_abilities_list_get_abilities 
+  or from a #Camera using #gp_camera_get_abilities.
 </para>
 
-@GP_OPERATION_NONE: 
-@GP_OPERATION_CAPTURE_IMAGE: 
-@GP_OPERATION_CAPTURE_VIDEO: 
-@GP_OPERATION_CAPTURE_AUDIO: 
-@GP_OPERATION_CAPTURE_PREVIEW: 
-@GP_OPERATION_CONFIG: 
+@GP_OPERATION_NONE: No operation is supported.
+@GP_OPERATION_CAPTURE_IMAGE: The camera can capture images.
+@GP_OPERATION_CAPTURE_VIDEO: The camera can capture videos.
+@GP_OPERATION_CAPTURE_AUDIO: The camera can capture audio data.
+@GP_OPERATION_CAPTURE_PREVIEW: The camera can capture live previews
+@GP_OPERATION_CONFIG: The camera offers some configuration options.
 
 <!-- ##### ENUM CameraFileOperation ##### -->
 <para>
-
+  Similarly to #CameraOperations, this flag indicates what file operations
+  a specific camera model supports.
 </para>
 
-@GP_FILE_OPERATION_NONE: 
-@GP_FILE_OPERATION_DELETE: 
-@GP_FILE_OPERATION_PREVIEW: 
-@GP_FILE_OPERATION_RAW: 
-@GP_FILE_OPERATION_AUDIO: 
+@GP_FILE_OPERATION_NONE: No file operation supported.
+@GP_FILE_OPERATION_DELETE: The camera can delete files.
+@GP_FILE_OPERATION_PREVIEW: The camera can supply previews of files.
+@GP_FILE_OPERATION_RAW: The camera can supply raw data.
+@GP_FILE_OPERATION_AUDIO: The camera supports audio annotations.
 
 <!-- ##### ENUM CameraFolderOperation ##### -->
 <para>
-
+  Similarly to #CameraFolderOperations, this flag indicates what folder
+  operations a specific camera model supports.
 </para>
 
-@GP_FOLDER_OPERATION_NONE: 
-@GP_FOLDER_OPERATION_DELETE_ALL: 
-@GP_FOLDER_OPERATION_PUT_FILE: 
-@GP_FOLDER_OPERATION_MAKE_DIR: 
-@GP_FOLDER_OPERATION_REMOVE_DIR: 
+@GP_FOLDER_OPERATION_NONE: No operation supported.
+@GP_FOLDER_OPERATION_DELETE_ALL: The camera can delete all pictures of a folder
+				 at once.
+@GP_FOLDER_OPERATION_PUT_FILE: It is possible to upload files.
+@GP_FOLDER_OPERATION_MAKE_DIR: The camera can create directories.
+@GP_FOLDER_OPERATION_REMOVE_DIR: The camera can remove directories.
 
 <!-- ##### TYPEDEF CameraAbilities ##### -->
 <para>
-
+  This structure is used to inform frontends about what abilities a
+  specific camera model has. In addition, it is used by gphoto2 to
+  determine what library to load on #gp_camera_set_abilities.
+  For retreiving abilities of a specific model, create a
+  #CameraAbilitiesList and use #gp_abilities_list_load in order to scan
+  the system for drivers. Then, retreive the #CameraAbilities from this list.
 </para>
 
 

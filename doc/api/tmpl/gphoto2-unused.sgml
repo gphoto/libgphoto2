@@ -60,6 +60,18 @@ CameraAbilities
 @widget: 
 @Returns: 
 
+<!-- ##### USER_FUNCTION CameraFilesystemInfoFunc ##### -->
+<para>
+
+</para>
+
+@fs: 
+@folder: 
+@filename: 
+@info: 
+@data: 
+@Returns: 
+
 <!-- ##### USER_FUNCTION CameraFolderGetConfigFunc ##### -->
 <para>
 
