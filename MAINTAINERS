@@ -65,6 +65,9 @@ camlibs/panasonic
 camlibs/panasonic/coolshot:
 	Chris Pinkham <cpinkham@infi.net>
 
+camlibs/pccam600:
+	Peter Kajberg <pbk@odense.kollegienet.dk>
+
 camlibs/polaroid/pdc320.c:
 	Nathan Stenzel <nathanstenzel@users.sourceforge.net>
 
