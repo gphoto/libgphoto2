@@ -47,20 +47,45 @@ struct camera_to_usb {
 	  unsigned short idVendor;
 	  unsigned short idProduct;
 } camera_to_usb[] = {
+        /* http://www.vvl.co.uk/products/co-processors/680/680.htm */
 	{ "STM USB Dual-mode camera",   0x0553, 0x0202 },
-	{ "IOMagic MagicImage 400",     0x0553, 0x0202 },
+
+	/* You can search in google for them, using either:
+	 * 	AAA 80 CIF
+	 * or 
+	 * 	AAA 26 VGA
+	 * It has been rebranded and rereleased dozens of times.
+	 */
+
 	/* http://www.iomagic.com/support/digitalcameras/magicimage400/magicimage400manual.htm */
+	{ "IOMagic MagicImage 400",     0x0553, 0x0202 },
+	/* http://www.pctekonline.com/phoebsmardig.html */
+	{ "Phoebe Smartcam",            0x0553, 0x0202 },
+	{ "QuickPix QP1",               0x0553, 0x0202 },
 	{ "Hawking DC120 Pocketcam",    0x0553, 0x0202 },
 	{ "Aiptek PenCam Trio",         0x0553, 0x0202 },
+	/* Made by Medion (ALDI hw reseller). Their homepage is broken, so
+	 * no URL. This is the camera I have -Marcus. CIF */
 	{ "Micromaxx Digital Camera",   0x0553, 0x0202 },
+	/* http://www.digitaldreamco.com/shop/elegante.htm, VGA */
 	{ "l'elegante by DigitalDream", 0x0553, 0x0202 },
+	/* http://www.digitaldreamco.com/shop/espion.htm, CIF */
 	{ "l'espion by DigitalDream",   0x0553, 0x0202 },
+	/* http://www.digitaldreamco.com/shop/lesprit.html, CIF */
 	{ "l'esprit by DigitalDream",   0x0553, 0x0202 },
+	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA */
 	{ "la ronde by DigitalDream",   0x0553, 0x0202 },
+
 	{ "AEG Snap 300",               0x0553, 0x0202 },
 	/* http://www.sipix.com/stylecam.shtml, unconfirmed, but the
-	 * feature list reads like the stv680 chipset. */
+	 * feature list reads like the stv680 chipset. VGA */
 	{ "SiPix StyleCam",             0x0553, 0x0202 },
+	/* http://www.umax.de/digicam/AstraPen_SL.htm.
+	 * There is an additional 100K (CIF), 300K (VGA) tag after the name. */
+	{ "UMAX AstraPen",              0x0553, 0x0202 }, /* SV and SL */
+	/* http://www.umax.de/digicam/AstraPix320S.htm, VGA */
+	{ "UMAX AstraPix 320S",         0x0553, 0x0202 },
+
 	{ "Fuji IX-1",                  0x0553, 0x0202 }, /* Unconfirmed */
 	{ "STV0680",                    0x0000, 0x0000 }  /* serial version */
 };
