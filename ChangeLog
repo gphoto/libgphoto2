@@ -1,5 +1,7 @@
 2002-01-04  Colin Marquardt  <colin@marquardt-home.de>
 
+	* configure.in: Add languages for new po files to ALL_LINGUAS.
+
 	* po/de.po: Update.
 
 2002-01-02  Hans Ulrich Niedermann <hun@n-dimensional.de>
