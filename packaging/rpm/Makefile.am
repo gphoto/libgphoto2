@@ -6,6 +6,8 @@
 
 EXTRA_DIST = package.spec.in @PACKAGE@.spec
 
+DISTCLEANFILES = @PACKAGE@.spec
+
 clean-generic:
 	rm -rf BUILD RPMS SPECS SOURCES SRPMS
 

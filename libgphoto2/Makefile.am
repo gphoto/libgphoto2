@@ -51,3 +51,5 @@ libgphoto2include_HEADERS =	\
 pkgconfig_DATA = libgphoto2.pc
 
 EXTRA_DIST = libgphoto2.pc.in gphoto2-library.c
+
+DISTCLEANFILES = _stdint.h gphoto2-endian.h
