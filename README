@@ -73,10 +73,9 @@ Frontends
 ---------
 
 gphoto2 ships with a command line frontend which is quite powerful, 
-especially in combination with scripts. For the GUI lovers, there are for
-example gtkam (GTK based), and GnoCam (GNOME). Additionally, there
-are plugins for other programs available like kio_gphoto (KDE - Konqueror).
+especially in combination with scripts. See gphoto2-cli.txt for a
+short description. 
 
-
-
-
+For the GUI lovers, there are for example gtkam (GTK based), and
+GnoCam (GNOME). Additionally, there are plugins for other programs
+available like kio_gphoto (KDE - Konqueror). 

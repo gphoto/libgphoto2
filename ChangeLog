@@ -1,5 +1,11 @@
 2001-10-12 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
+	* HACKING: reformatted, added not for emacs users
+	* README: added hint to gphoto2-cli.txt
+	* AUTHORS: fixed typo
+
+2001-10-12 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
 	* camlibs/canon/canon.c: added is_crw() function
 	* camlibs/canon/canon.c: moved to 1-bit power source detection
 	* camlibs/canon/psa50.h: moved to 1-bit power source detection

@@ -1,19 +1,31 @@
-If you want to hack on gphoto2 (or a camera driver for gphoto2), please follow some rules to make our work easier:
+If you want to hack on gphoto2 (or a camera driver for gphoto2),
+please follow some rules to make our work easier: 
 
 camlib
 ------
 
-Camera libraries are often very sensitive to changes. Therefore, before you commit any changes, double check with the author that your changes won't break the driver.
+Camera libraries are often very sensitive to changes. Therefore,
+before you commit any changes, double check with the author that your
+changes won't break the driver. 
 
-If you want to write a driver for gphoto2, the easiest way to do so would be to copy over the contents of camlibs/template and fill in your code.
+If you want to write a driver for gphoto2, the easiest way to do so
+would be to copy over the contents of camlibs/template and fill in
+your code. 
 
-Use something like CHECK_RESULT (see for example libgphoto2/filesys.c).
+Use something like CHECK_RESULT (see for example
+libgphoto2/filesys.c).
 
-Let's say you write a driver called sillycam. Please set up a file called sillycam.c containing all gphoto2-specific code (like camera_init) and another two files called library.c and library.h containing the "magic", that is all gp_port_[read,write] functions and the basic logic of the communication. This makes it easier for us to adapt your code if anything should change in the gphoto2-API.
+Let's say you write a driver called sillycam. Please set up a file
+called sillycam.c containing all gphoto2-specific code (like
+camera_init) and another two files called library.c and library.h
+containing the "magic", that is all gp_port_[read,write] functions and
+the basic logic of the communication. This makes it easier for us to
+adapt your code if anything should change in the gphoto2-API. 
 
 Use the port provided by camera->port.
 
-Use the filesystem provided by camera->fs and set up the callbacks so that libgphoto2 can cache listings and file-information.
+Use the filesystem provided by camera->fs and set up the callbacks so
+that libgphoto2 can cache listings and file-information. 
 
 
 libgphoto2
@@ -42,5 +54,31 @@ my_func (int arg)
 	return (GP_OK);
 }
 
-Please always check the return value of gp_-functions! We defined some handy macros all over the place (like CHECK_RESULT) - by using those, you'll avoid lots of if {} else {}.
+Please always check the return value of gp_-functions! We defined some
+handy macros all over the place (like CHECK_RESULT) - by using those,
+you'll avoid lots of if {} else {}. 
 
+Emacs users may define and use a gphoto-c-mode by putting the
+following stuff into their .emacs file:
+
+-----8<------------------------------------------------
+
+;;* gphoto-c-mode
+;;*=====================================================================
+(defun gphoto-c-mode ()
+  "C mode with adjusted defaults for gphoto hacking"
+  (interactive)
+  (c-mode)
+  (c-set-style "linux")
+  (setq indent-tabs-mode t)
+  (font-lock-mode))
+
+;; 
+(setq auto-mode-alist (cons '("/home/user/src/gphoto.*\\.[ch]$" . gphoto-c-mode)
+			    auto-mode-alist))
+
+-----8<------------------------------------------------
+
+Local Variables:
+mode:text
+End:
