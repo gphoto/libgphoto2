@@ -67,7 +67,7 @@ sx330z_fill_toc_page(int8_t *buf,struct traveler_toc_page *toc)
  toc->data1 = *((uint32_t*)buf);		buf += 4;
  toc->always1 = *((uint16_t*)buf);	buf += 2;
 // toc->numEntries=*((uint16_t*)buf);	buf+=2;
- toc->numEntries = buf[0] + buf[1] << 8; buf += 2;
+ toc->numEntries = buf[0] + (buf[1] << 8); buf += 2;
  for (cnt = 0;cnt < 25;cnt++)
  {
   memcpy(toc->entries[cnt].name,buf,12);	buf += 12;
