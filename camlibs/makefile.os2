@@ -31,6 +31,9 @@ dll:
   @cd kodak\dc120
   @nmake -nologo -f makefile.os2
   @cd..\..
+  @cd kodak\dc210
+  @nmake -nologo -f makefile.os2
+  @cd..\..
   @cd kodak\dc240
   @nmake -nologo -f makefile.os2
   @cd..\..

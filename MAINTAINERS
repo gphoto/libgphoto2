@@ -53,6 +53,9 @@ camlibs/kodak/dc120:
 camlibs/kodak/dc240:
 	Hubert Figuiere <hfiguiere@teaser.fr>
 
+camlibs/largan/lmini
+	Hubert Figuiere <hfiguiere@teaser.fr>
+
 camlibs/mustek:
 	Marcus Meissner <marcus@jet.franken.de>
 

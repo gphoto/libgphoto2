@@ -1,416 +1,35 @@
-/*
-  DC 210/215 driver library.
-  by Hubert Figuiere <hfiguiere@teaser.fr>
-  port of gphoto 0.4.x driver.
-
- */
-
-#include "dc210.h"
-#include "config.h"
-#include "library.h"
-
-#include <gphoto2.h>
+#include <config.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gphoto2.h>
 
-#include <errno.h>
+#include "dc210.h"
+#include "library.h"
 
-#ifdef HAVE_SELECT_H
-#include <sys/select.h>
-#endif /* HAVE_SELECT_H */
-
-#ifdef TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
 #else
-#    ifdef HAVE_SYS_TIME_H
-#    include <sys/time.h>
-#    else HAVE_SYS_TIME_H
-#    include <time.h>
-#    endif /* HAVE_SYS_TIME_H */
-#endif /* TIME_WITH_SYS_TIME */
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
-
-static int kodak_dc210_read (DC210Data * dd, unsigned char *buf, int nbytes);
-static int kodak_dc210_write_byte (DC210Data * dd, char b);
-static unsigned char kodak_dc210_checksum(char *packet,int length);
-static int kodak_dc210_set_port_speed(DC210Data * dd, int speed);
-static int kodak_dc210_command_complete (DC210Data * dd);
-static int kodak_dc210_read_packet (DC210Data * dd, char *packet, int length);
-
-static int kodak_dc210_send_command (DC210Data * dd, char command, char arg1, char arg2, char arg3, char arg4)
-{
-    unsigned char ack;
-    int success = TRUE;
-    
-    /* try to write 8 bytes in sequence to the camera */
-    success = success && kodak_dc210_write_byte ( dd, command );
-    success = success && kodak_dc210_write_byte ( dd, 0x00 );
-    success = success && kodak_dc210_write_byte ( dd, arg1 );
-    success = success && kodak_dc210_write_byte ( dd, arg2 );
-    success = success && kodak_dc210_write_byte ( dd, arg3 );
-    success = success && kodak_dc210_write_byte ( dd, arg4 );
-    success = success && kodak_dc210_write_byte ( dd, 0x00 );
-    success = success && kodak_dc210_write_byte ( dd, 0x1A );
-    
-    /* if the command was sent successfully to the camera, continue */
-    if (success)
-    {
-        /* read ack from camera */
-        success = kodak_dc210_read( dd, &ack, 1 );
-        
-        if (success)
-        {
-            /* make sure the ack is okay */
-            if (ack != DC_COMMAND_ACK)
-            {
-                fprintf(stderr,"kodak_dc210_send_command - bad ack from camera\n");
-                success = FALSE;
-            }
-        }
-        else
-        {
-            fprintf(stderr,"kodak_dc210_send_command - failed to read ack from camera\n");
-            success = FALSE;
-        }
-    }
-    else
-    {
-        fprintf(stderr,"kodak_dc210_send_command - failed to send command to camera\n");
-        success = FALSE;
-    }
-    
-    return(success);
-}
-
-/*
-  tell the camera to change the port speed,
-  then set it.
- */
-static int kodak_dc210_set_port_speed(DC210Data * dd, int speed)
-{
-    int success = 0;
-    int arg1, arg2;
-
-    gp_port_settings settings;
-
-    if (gp_port_settings_get (dd->dev, &settings) == GP_ERROR) {
-        return GP_ERROR;
-    }
-    settings.serial.speed = speed;
-
-    switch (speed) {
-    case 9600:
-        arg1 = 0x96;
-        arg2 = 0x00;
-        break;
-    case 19200:
-        arg1 = 0x19;
-        arg2 = 0x20;
-        break;
-    case 38400:
-        arg1 = 0x38;
-        arg2 = 0x40;
-        break;
-    case 57600:
-        arg1 = 0x57;
-        arg2 = 0x60;
-        break;
-    case 115200:
-        arg1 = 0x11;
-        arg2 = 0x52;
-        break;
-    default:
-        /* speed not supported */
-        return GP_ERROR;
-    }
-
-    success = kodak_dc210_send_command(dd, DC_SET_SPEED, arg1, arg2, 0x00, 0x00);
-    if (success) {
-        if (gp_port_settings_set (dd->dev, settings) == GP_ERROR) {
-            return GP_ERROR;
-        }
-    }
-    else {
-        /* unable to change the speed */
-        return GP_ERROR;
-    }
-    return GP_OK;
-}
-
-
-static int kodak_dc210_command_complete (DC210Data * dd)
-{
-    int status = DC_BUSY;
-    int success = TRUE;
-    
-    /* Wait for the camera to be ready. */
-    do
-    {
-        success = kodak_dc210_read(dd, (char *)&status, 1);
-    }
-    while (success && (status == DC_BUSY));
-    
-    if (success)
-    {
-        if (status != DC_COMMAND_COMPLETE)
-        {
-            if (status == DC_ILLEGAL_PACKET)
-            {
-                fprintf(stderr,"kodak_dc210_command_complete - illegal packet received from host\n");
-            }
-            else
-            {
-                fprintf(stderr,"kodak_dc210_command_complete - command not completed\n");
-            }
-            
-            /* status was not command complete - raise an error */
-            success = FALSE;
-        }
-    }
-    else
-    {
-        fprintf(stderr,"kodak_dc210_command_complete - failed to read status byte from camera\n");
-        success = FALSE;
-    }
-    
-    return(success);
-}
-
-static int kodak_dc210_read (DC210Data * dd, unsigned char *buf, int nbytes )
-{
-    return (gp_port_read(dd->dev, buf, nbytes));
-}
-
-
-static int kodak_dc210_write_byte (DC210Data * dd, char b )
-{
-    return (gp_port_read(dd->dev, &b, 1));
-}
-
-static int kodak_dc210_read_packet (DC210Data * dd, char *packet, int length)
-{
-    int success = TRUE;
-    unsigned char sent_checksum;
-    unsigned char computed_checksum;
-    unsigned char control_byte;
-    
-  /* Read the control byte from the camera - and packet coming from
-     the camera must ALWAYS be 0x01 according to Kodak Host Protocol. */
-    if (kodak_dc210_read(dd, &control_byte, 1))
-    {
-        if (control_byte == PKT_CTRL_RECV)
-        {
-            if (kodak_dc210_read(dd, packet, length))
-            {
-                /* read the checksum from the camera */
-                if (kodak_dc210_read(dd, &sent_checksum, 1))
-                {
-                    computed_checksum = kodak_dc210_checksum(packet, length);
-                    
-                    if (sent_checksum != computed_checksum)
-                    {
-                        fprintf(stderr,"kodak_dc210_read_packet: bad checksum %d != %d\n",computed_checksum,sent_checksum);
-                        kodak_dc210_write_byte(dd, DC_ILLEGAL_PACKET);
-                        success = FALSE;
-                    }
-                    else
-                    {
-                        kodak_dc210_write_byte(dd, DC_CORRECT_PACKET);
-                        success = TRUE;
-                    }
-                }
-                else
-                {
-                    fprintf(stderr,"kodak_dc210_read_packet: failed to read checksum byte from camera\n");
-                    success = FALSE;
-                }
-            }
-            else
-            {
-                fprintf(stderr,"kodak_dc210_read_packet: failed to read paket from camera\n");
-                success = FALSE;
-            }
-        }
-        else
-        {
-            fprintf(stderr,"kodak_dc210_read_packet - packet control byte invalid %x\n",control_byte);
-            success = FALSE;
-        }
-    }
-    else
-    {
-        fprintf(stderr,"kodak_dc210_read_packet - failed to read control byte from camera\n");
-        success = FALSE;
-    }
-    
-    return success;
-}
-
-static unsigned char kodak_dc210_checksum(char *packet,int length)
-{
-/* Computes the *primitave* kodak checksum using XOR - yuck. */
-    unsigned char chksum = 0;
-    int i;
-    
-    for (i = 0 ; i < length ; i++)
-    {
-        chksum ^= packet[i];
-    }
-    
-    return chksum;
-}
-
-
-/*
-  open the camera. The port should already be open....
-  set the speed to 115200
- */
-int kodak_dc210_open_camera (DC210Data * dd)
-{
-    int ret;
-
-    ret = kodak_dc210_send_command (dd, DC_INITIALIZE,0x00,0x00,0x00,0x00);
-    ret = kodak_dc210_command_complete (dd);
-    ret = kodak_dc210_set_port_speed (dd, 115200);
-    
-    return ret;
-}
-
-/* Close the camera */
-int kodak_dc210_close_camera (DC210Data * dd) 
-{
-    return kodak_dc210_set_port_speed(dd, 9600);
-}
-
-
-int kodak_dc210_number_of_pictures (DC210Data * dd) 
-{
-    int numPics = 0;
-    struct kodak_dc210_status status;
-    
-    kodak_dc210_get_camera_status (dd, &status);
-    
-    numPics = status.num_pictures;
-    
-    return(numPics);
-}
-
-
-/*
-  Capture a picture and return the index of the picture 
-  in the gphoto form (1 based).
- */
-int kodak_dc210_capture(DC210Data * dd)
-{
-    int ret;
-
-    ret = kodak_dc210_send_command (dd, DC_TAKE_PICTURE,0x00,0x00,0x00,0x00);
-    ret = kodak_dc210_command_complete (dd);
-
-    return kodak_dc210_number_of_pictures(dd);
-}
-
-int kodak_dc210_get_picture_info (DC210Data * dd,
-                                  int picNum,
-                                  struct kodak_dc210_picture_info *picInfo)
-{
-    unsigned char packet[256];
-    
-    picNum--;
-
-    /* send picture info command, receive data, send ack */
-    kodak_dc210_send_command (dd, DC_PICTURE_INFO, 0x00, (char)picNum, 0x00, 0x00);
-    kodak_dc210_read_packet (dd, packet, 256);
-    kodak_dc210_command_complete (dd);
-    
-    picInfo->resolution    = packet[3];
-    picInfo->compression   = packet[4];
-    picInfo->pictureNumber = (packet[6] << 8) + packet[7];
-    
-    picInfo->fileSize      = ((long)packet[8] << 24) + 
-        ((long)packet[9]  << 16) + 
-        ((long)packet[10] << 8) + 
-        (long)packet[11];
-    
-    picInfo->elapsedTime   = ((long)packet[12] << 24) + 
-        ((long)packet[13] << 16) + 
-        ((long)packet[14] << 8) + 
-        (long)packet[15];
-    
-    strncpy(picInfo->fileName, packet + 32, 12);
-    /* TODO handle error codes */
-    return GP_OK;
-}
-
-int kodak_dc210_get_camera_status (DC210Data * dd,
-                                   struct kodak_dc210_status *status)
-{
-    unsigned char packet[256];
-    int success = TRUE;
-    
-    if (kodak_dc210_send_command (dd, DC_STATUS, 0x00,0x00,0x00,0x00))
-    {
-        if (kodak_dc210_read_packet (dd, packet, 256))
-        {
-            kodak_dc210_command_complete (dd);
-            
-            memset((char*)status,0,sizeof(struct kodak_dc210_status));
-            
-            status->camera_type_id        = packet[1];
-            status->firmware_major        = packet[2];
-            status->firmware_minor        = packet[3];
-            status->batteryStatusId       = packet[8];
-            status->acStatusId            = packet[9];
-            
-            /* seconds since unix epoc */
-            status->time = CAMERA_EPOC + (
-                packet[12] * 0x1000000 + 
-                packet[13] * 0x10000 + 
-                packet[14] * 0x100 + 
-                packet[15]) / 2;
-            
-            status->zoomMode              = packet[15];
-            status->flash_charged         = packet[17];
-            status->compression_mode_id   = packet[18];
-            status->flash_mode            = packet[19];
-            status->exposure_compensation = packet[20];
-            status->picture_size          = packet[21];
-            status->file_Type             = packet[22];
-            status->totalPicturesTaken    = packet[25] * 0x100 + packet[26];
-            status->totalFlashesFired     = packet[27] * 0x100 + packet[28];
-            status->num_pictures          = packet[56] * 0x100 + packet[57];
-            strncpy(status->camera_ident,packet + 90,32); 
-        }
-        else
-        {
-            fprintf(stderr,"kodak_dc210_get_camera_status: send command failed\n");
-            success = FALSE;
-        }
-    }
-    else
-    {
-        fprintf(stderr,"kodak_dc210_get_camera_status: send command failed\n");
-        success = FALSE;
-    }
-    
-    return success;
-}
-
-
-int kodak_dc210_get_thumbnail (DC210Data * dd, int picNum, CameraFile *file) 
-{
-    struct kodak_dc210_picture_info picInfo;
-    int i,j;
-    int numRead = 0;
-    int success = TRUE;
-    int fileSize = 20736;
-    int blockSize = 1024;
-    char *picData;
-    char *imData;
-    char bmpHeader[] = {
+int dc210_cmd_error = 0;
+char ppmheader[] = "P6\n96 72\n255\n";
+char bmpheader[] = {
         0x42, 0x4d, 0x36, 0x24, 0x00, 0x00, 0x00, 0x00, 
         0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
 	0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x48, 0x00,
@@ -419,193 +38,1114 @@ int kodak_dc210_get_thumbnail (DC210Data * dd, int picNum, CameraFile *file)
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-
-    /* get information (size, name, etc) about the picture */
-    kodak_dc210_get_picture_info (dd, picNum, &picInfo);
-
-    /* the protocol expects 0..n-1, but this function is supplied 1..n */
-    picNum--;
-    
-    /* allocate space for the thumbnail data */
-    picData = (char *)malloc(fileSize + blockSize);
-    
-    /* allocate space for the image data */
-    imData = (char *)malloc(fileSize + 54);
-    
-    
-    if (kodak_dc210_send_command(dd, DC_PICTURE_THUMBNAIL, 0x00, (char)picNum, 0x01, 0x00))
-    {
-        while (success && (numRead < fileSize))
-        {
-            if (kodak_dc210_read_packet(dd, picData+numRead, blockSize))
-            {
-                numRead += blockSize;
-	    }
-            else
-            {
-                fprintf(stderr,"kodak_dc210_get_thumbnail - bad packet read from camera\n");
-                success = FALSE;
-            }
-        }
-        
-        /* get to see if the thumbnail was retrieved */
-        if (success)
-        {
-            kodak_dc210_command_complete(dd);
-/*            update_progress(100);*/
-            
-            memcpy(imData,bmpHeader, sizeof(bmpHeader));
-            
-            /* reverse the thumbnail data */
-            /* not only is the data reversed but the image is flipped
-             * left to right
-             */
-            for (i = 0; i < 72; i++) {
-                for (j = 0; j < 96; j++) {
-                    imData[i*96*3+j*3+54] = picData[(71-i)*96*3+j*3+2];
-                    imData[i*96*3+j*3+54+1] = picData[(71-i)*96*3+j*3+1];
-                    imData[i*96*3+j*3+54+2] = picData[(71-i)*96*3+j*3];
-                }
-            }
-
-	    gp_file_append (file, imData, fileSize + 54);
-	    gp_file_set_mime_type (file, GP_MIME_BMP);
-	    gp_file_set_type (file, GP_FILE_TYPE_PREVIEW);
-	    strncpy(file->name, picInfo.fileName, 12);
-	    file->name[12] = 0;
-        }
-    }
-    else
-    {
-        fprintf(stderr,"kodak_dc210_get_thumbnail: failed to get thumbnail command to camera\n");
-        success = FALSE;
-    }
-    
-    free (imData);
-    free (picData);
-    
-    return GP_OK;
-}
-
-
-
-int kodak_dc210_get_picture (DC210Data * dd, int picNum, CameraFile *file) 
-/*
-  int kodak_dc210_get_picture (DC210Data * dd, int thumbnail, const char *folder, const char *filename, 
-  CameraFile *file)
-*/
-{
-    int blockSize;
-    int fileSize;
-    int numRead;
-    int numBytes;
-    struct kodak_dc210_picture_info picInfo;
-    char *picData;
-    char name [13];
-    
-    /* get information (size, name, etc) about the picture */
-    kodak_dc210_get_picture_info (dd, picNum, &picInfo);
-    
-    /* DC210 addresses pictures 0..n-1 instead of 1..n */
-    picNum--;
-    
-    /* send the command to start transfering the picture */
-    kodak_dc210_send_command(dd, DC_PICTURE_DOWNLOAD, 0x00, (char)picNum, 0x00, 0x00);
-    
-    fileSize = picInfo.fileSize;
-    blockSize = 1024;
-    picData = (char *)malloc(blockSize);
-    numRead = 0;
-    
-/*        update_progress(0);*/
-    while (numRead < fileSize)
-    {
-	kodak_dc210_read_packet(dd, picData, blockSize);
-	numRead += blockSize;
-	if (numRead > fileSize) {
-	    numBytes = fileSize % blockSize;
-	}
-	else {
-	    numBytes = blockSize;
-	}
-	
-	gp_file_append(file, picData, numBytes);
-
-    }
-    free (picData);
-    fprintf(stderr,"%d/%d\n",numRead,fileSize);
-    kodak_dc210_command_complete (dd);
-
-    gp_file_set_mime_type (file, GP_MIME_JPEG);
-    gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
-    strncpy (name, picInfo.fileName, 12);
-    name[12] = 0;
-    gp_file_set_name (file, name);
-
-    return GP_OK;
-}
-
-int kodak_dc210_delete_picture (DC210Data * dd, int picNum) 
-{
-    picNum--;
-    
-    kodak_dc210_send_command (dd,DC_ERASE_IMAGE_IN_CARD,0x00,(char)picNum,0x00,0x00);
-    kodak_dc210_command_complete (dd);
-    return (1);
-}
-
-/*
-  By default all image on DC210 are in \DCIMAGES. So well list 
-  all the pictures as if they where on a flat file system.
- */
-int kodak_dc210_get_directory_listing (DC210Data *dd, CameraList *list)
-{
-    int ret = GP_OK;
-    int num, i;
-    struct kodak_dc210_picture_info picInfo;
-    char fileName [13];
-
-    num = kodak_dc210_number_of_pictures (dd);
-    for (i = 0; i < num; i++) {
-        ret = kodak_dc210_get_picture_info (dd, i, &picInfo);
-        if (ret == GP_OK) {
-            strncpy (fileName, picInfo.fileName, 12);
-            fileName[12] = 0;
-            gp_list_append(list, fileName, NULL);
-        }
-	else {
-	    gp_debug_printf (GP_DEBUG_LOW, "dc210", 
-			     "kodak_dc210_get_picture_info failed %d", ret);
-	    break;
-	}
-    }
-    return ret;
-}
-
-
-#if 0
-struct Image *kodak_dc210_get_preview () 
-{
-  int numPicBefore;
-  int numPicAfter;
-  struct Image *im = NULL;
-
-  /* find out how many pictures are in the camera so we can
-     make sure a picture was taken later */
-  numPicBefore = kodak_dc210_number_of_pictures();
-
-  /* take a picture -- it returns the picture number taken */
-  numPicAfter = kodak_dc210_take_picture();
-
-  /* if a picture was taken then get the picture from the camera and
-     then delete it */
-  if (numPicBefore + 1 == numPicAfter)
-  {
-    im = kodak_dc210_get_picture (numPicAfter,0);
-    kodak_dc210_delete_picture (numPicAfter);
-  }
-
-  return(im);
-}
+#ifdef DEBUG
+int firststatus = 1;
+char oldstatus[DC210_STATUS_SIZE];
 #endif
 
+/***************************************************************************
+
+ Global in- and output procedures
+
+****************************************************************************/
+
+/* Utility procedures for command execution */
+
+static void dc210_cmd_init
+(char * cmd, unsigned char command_byte)
+{
+	/* utility procedure to initalize a command string */
+
+	memset (cmd, 0, 8);
+
+	cmd[0] = command_byte;
+	cmd[7] = 0x1a;
+
+};
+
+static int dc210_write_single_char 
+(Camera *camera, unsigned char response) 
+{
+	/* utility procedure to write a single character */
+
+	int i;
+
+	for (i=0; i< RETRIES; i++){
+		if (gp_port_write(camera->port, &response, 1) >= 0)
+			return (GP_OK);
+	};
+
+	return GP_ERROR;
+
+};
+
+static int dc210_read_single_char 
+(Camera *camera, unsigned char * response)
+{
+
+	/* utility procedure to read a single character */
+
+	int i;
+	signed char error;
+
+	for (i = 0; i < RETRIES; i++){
+
+		error = gp_port_read(camera->port, response, 1);
+
+		if (error < 0){
+			if (error == GP_ERROR_TIMEOUT)
+				continue;
+			else{
+				DC210_DEBUG("Real bad error reading single character. Errornumber: %d\n", error);
+				return GP_ERROR;
+			};
+		};
+		
+		return GP_OK;
+
+	};
+	
+	return GP_ERROR;
+
+};
+
+/* Command execution */
+
+static int dc210_execute_command 
+(Camera *camera, char *cmd)
+{
+
+	/* This procedure sends a command to the camera and
+	   waits for acknowledgement. Calling procedures have
+	   to check the returncode; if the command succeeded
+	   there are three possible follow ups:
+	   - Read a DC210_COMMAND_COMPLETE in case of
+	     simple commands
+           - Send an additional command package in case of
+	     sophisticated commands
+	   - Read data from the camera
+	   But all this depends on the command and should not
+	   be mixed in this procedure. */
+
+	int i,k ;
+	unsigned char response;
+	signed char error;
+  
+	dc210_cmd_error = DC210_CMD_OKAY;
+
+	for (i = 0; i < RETRIES; i++){
+
+		/* write command */
+		if (gp_port_write(camera->port, cmd, 8) < 0){
+			DC210_DEBUG("Could not write to port.\n");
+			dc210_cmd_error = DC210_WRITE_ERROR;
+			continue; /* try again */
+		};
+
+		for (k = 0; k < RETRIES; k++){
+			error = gp_port_read(camera->port, &response, 1);
+			if (error != 1){
+				if (error == GP_ERROR_TIMEOUT){
+					dc210_cmd_error = DC210_TIMEOUT_ERROR;
+					continue; /* wait a little bit longer */
+				}
+				else{
+					DC210_DEBUG("Real bad error reading answer. Errornumber: %d\n", error);
+					dc210_cmd_error = DC210_READ_ERROR;
+					return error;
+				};
+			};
+			
+			switch (response){
+			case DC210_COMMAND_ACK:
+				DC210_DEBUG("Command 0x%02X acknowledged.\n", (unsigned char) cmd[0]);
+				return GP_OK; break; /* that's fine, just what we expected */
+			case DC210_COMMAND_NAK:
+				DC210_DEBUG("Sorry, but the camera seems not to understand the command 0x%02X\n", (unsigned char) cmd[0]);
+				dc210_cmd_error = DC210_NAK_ERROR;
+				break; /* anyway, send the command again */
+			default:
+				DC210_DEBUG("Strange. Unexpected response for command 0x%02X: 0x%02X\n", (unsigned char) cmd[0], response);
+				dc210_cmd_error = DC210_GARBAGE_ERROR;
+				return GP_ERROR;
+				break;
+			};
+			break;
+		};
+		
+	};
+
+	/* command does definitely not work */
+
+	DC210_DEBUG("Command definitely didn't work.\n");
+	
+	return GP_ERROR;
+
+};
+
+/* appropriate actions to a command */
+
+static int dc210_write_command_packet
+(Camera * camera, char * data)
+{
+
+	unsigned char checksum;
+	int i, error;
+	unsigned char answer;
+
+	/* calculating checksum */
+	checksum = 0;
+	for (i = 0; i < DC210_CMD_DATA_SIZE; i ++){
+		checksum ^= data[i];
+	};
+
+	for (i = 0; i < RETRIES; i++){
+
+		/* write the startbyte */
+		dc210_write_single_char(camera, DC210_CMD_PACKET_FOLLOWING);
+
+		/* write packet */
+		gp_port_write(camera->port, data, DC210_CMD_DATA_SIZE);
+
+		/* write checksum */
+		dc210_write_single_char(camera, checksum);
+
+		/* read answer */
+
+		error = gp_port_read(camera->port, &answer, 1);
+
+		if (error < 0) return GP_ERROR;
+
+		if (answer == DC210_CORRECT_PACKET) return GP_OK;
+		
+		if (answer != DC210_ILLEGAL_PACKET) {
+			DC210_DEBUG("Strange answer to command packet: 0x%02X.\n", answer);
+			return GP_ERROR;
+		};
+
+	};
+
+	DC210_DEBUG("Could not send command packet.\n");
+
+	return GP_ERROR;
+
+};
+
+static int dc210_wait_for_response 
+(Camera *camera, int expect_busy, GPContext *context)
+{
+	/* Waits for a command to finish.
+	   Expects either a timeout, a DC210_BUSY, 
+	   a DC210_COMMAND_COMPLETE od a
+	   DC210_PACKET_FOLLOWING; all other answers
+	   are considered errors */
+
+	unsigned char response;
+	int counter = 0;
+	int progress_id = 0;
+
+	if (context != NULL)
+	  progress_id = gp_context_progress_start (context, expect_busy, _("Waiting..."));
+
+	while (1){
+
+	  if (dc210_read_single_char(camera, &response) < 0){
+		  if (context != 0)
+			  gp_context_progress_stop (context, progress_id);
+		  return GP_ERROR;
+	  };
+
+	  switch (response){
+	  case DC210_BUSY:
+		  /* wait a little bit longer */
+		  if (context != NULL && counter <= expect_busy)
+			  gp_context_progress_update (context, progress_id, counter++);
+		  break;
+	  case DC210_COMMAND_COMPLETE:
+	  case DC210_PACKET_FOLLOWING:
+		  if (context != 0)
+			  gp_context_progress_stop (context, progress_id);
+		  return response;
+		  break;
+	  default:
+		  if (context != 0)
+			  gp_context_progress_stop (context, progress_id);
+		  DC210_DEBUG("Command terminated with errorcode 0x%02X.\n", response);
+		  return GP_ERROR;
+	  };
+	};
+
+};
+
+static int dc210_read_single_block 
+(Camera *camera, unsigned char * b, int blocksize) 
+{
+
+  int i, k, error;
+  char cs_read, cs_computed;
+
+  for (i = 0; i < RETRIES; i++){
+
+    if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR)
+      return GP_ERROR;
+
+    error = 1;
+    for (k = 0; k < RETRIES; k++){
+      if (gp_port_read(camera->port, b, blocksize) < 0){
+	continue;
+      };
+      error = 0;
+      break;
+    };
+  
+    if (error) return GP_ERROR;
+
+    if (dc210_read_single_char(camera, &cs_read) < 0)
+      return GP_ERROR;
+
+    cs_computed = 0;
+    for (k = 0 ; k < blocksize; k++)
+      cs_computed ^= b[k];
+    if (cs_computed == cs_read){
+      dc210_write_single_char(camera, DC210_CORRECT_PACKET);
+      return GP_OK;
+    };
+
+    dc210_write_single_char(camera, DC210_ILLEGAL_PACKET);
+
+  };
+
+  return GP_ERROR;
+
+};
+
+static int dc210_read_to_file
+(Camera *camera, CameraFile * f, long int filesize, GPContext *context) 
+{
+
+  int packets, k, l, fatal_error, packet_following;
+  unsigned int progress_id = 0;
+  unsigned char cs_read, cs_computed;
+  unsigned char b[DC210_DOWNLOAD_BLOCKSIZE];
+  int blocks = filesize / DC210_DOWNLOAD_BLOCKSIZE;
+  int remaining = filesize % DC210_DOWNLOAD_BLOCKSIZE;
+
+  if (remaining) blocks++;
+
+  if (context != NULL)
+	  progress_id = gp_context_progress_start (context, blocks, _("Getting data..."));
+
+  fatal_error = 0;
+  packets = 0;
+  while (1 == (packet_following = dc210_wait_for_response(camera, 0, NULL))){
+	  fatal_error = 1;
+	  for (k = 0; k < RETRIES; k++){
+		  /* read packet */
+		  if (gp_port_read(camera->port, b, DC210_DOWNLOAD_BLOCKSIZE) < 0)
+			  continue;
+		  /* read checksum */
+		  if (dc210_read_single_char(camera, &cs_read) == GP_ERROR)
+			  return GP_ERROR;
+		  /* test checksum */
+		  cs_computed = 0;
+		  for (l = 0 ; l < DC210_DOWNLOAD_BLOCKSIZE; l++)
+			  cs_computed ^= b[l];
+		  if (cs_computed != cs_read){
+			  dc210_write_single_char(camera, DC210_ILLEGAL_PACKET);
+			  continue;
+		  };
+		  /* append to file */
+		  if (packets == blocks - 1 && remaining)
+			  gp_file_append(f, b, remaining);
+		  else
+			  gp_file_append(f, b, DC210_DOWNLOAD_BLOCKSIZE);
+		  /* request next packet */
+		  dc210_write_single_char(camera, DC210_CORRECT_PACKET);
+		  fatal_error = 0;
+		  if (context != NULL)
+			  gp_context_progress_update (context, progress_id, packets);
+		  packets++;
+		  break;
+	  };
+	  if (fatal_error) break;
+  };
+
+  if (packet_following < 0)
+	  fatal_error = 1;
+
+  if (context != 0)
+	  gp_context_progress_stop (context, progress_id);
+
+  if (fatal_error) return GP_ERROR;
+
+  return GP_OK;
+
+};
+
+/***************************************************************************
+
+ Working procedures
+
+****************************************************************************/
+
+/***** Set procedures *****/
+
+static int dc210_set_option (Camera * camera, char command, unsigned int value, int valuesize){
+
+	char cmd[8];
+	dc210_cmd_init(cmd, command);
+
+	switch(valuesize){
+	case 0:
+		break;
+	case 1:
+		cmd[2] = value & 0xFF;
+		break;
+	case 2:
+		cmd[3] = value & 0xFF;
+		cmd[2] = (value >> 8) & 0xFF;
+		break;
+	case 4:
+		cmd[5] = value & 0xFF;
+		cmd[4] = (value >> 8) & 0xFF;
+		cmd[3] = (value >> 16) & 0xFF;
+		cmd[2] = (value >> 24) & 0xFF;
+		break;
+	default:
+		return GP_ERROR;
+	};
+	
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+
+	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
+
+	return GP_OK;
+
+};
+
+int dc210_set_compression (Camera * camera, dc210_compression_type compression){
+
+	return dc210_set_option(camera, DC210_SET_QUALITY, compression, 1);
+
+};
+
+int dc210_set_flash (Camera * camera, dc210_flash_type flash, char preflash){
+
+	if (flash != DC210_FLASH_NONE && preflash){
+		return dc210_set_option(camera, DC210_SET_FLASH, flash + 3, 1);
+	}
+	else
+		return dc210_set_option(camera, DC210_SET_FLASH, flash, 1);
+
+};
+
+int dc210_set_zoom (Camera * camera, dc210_zoom_type zoom){
+
+	return dc210_set_option(camera, DC210_SET_ZOOM, zoom, 1);
+	
+};
+
+int dc210_set_file_type (Camera * camera, dc210_file_type_type file_type){
+
+	return dc210_set_option(camera, DC210_SET_FILE_TYPE, file_type, 1);
+
+};
+
+int dc210_set_resolution (Camera * camera, dc210_resolution_type res){
+
+	return dc210_set_option(camera, DC210_SET_RESOLUTION, res, 1);
+
+};
+
+int dc210_set_delay (Camera * camera){
+
+	/* This function works, but I do no have the slightest idea,
+	   what the effect is / should be.
+	   There is *no* delay, when you execute this function before
+	   capturing. */
+
+	return dc210_set_option(camera, DC210_SET_DELAY, 10, 4);
+
+};
+
+int dc210_set_exp_compensation (Camera * camera, signed int compensation){
+
+	unsigned char param = abs(compensation);
+
+	if (compensation < 0) param |= 0x80;
+
+	return dc210_set_option(camera, DC210_SET_EXPOSURE, param, 1);
+
+};
+
+int dc210_system_time_callback (Camera * camera, CameraWidget * widget, GPContext * context){
+
+	return dc210_set_option(camera, DC210_SET_TIME, (time(NULL) - CAMERA_SET_EPOC) << 1, 4);
+
+};
+
+int dc210_initialize (Camera * camera){
+
+	/* this procedure works, but I don't know, if it has any
+	   effect */
+
+	return dc210_set_option(camera, DC210_INITIALIZE, 0, 0);
+
+};
+
+
+int dc210_format_card (Camera * camera, char * album_name, GPContext * context){
+
+  char data[DC210_CMD_DATA_SIZE];
+  char cmd[8];
+  char * subst;
+  unsigned char answer[16];
+  unsigned char checksum_read, checksum;
+  int i;
+
+  memset (data, 0, DC210_CMD_DATA_SIZE);
+
+  /* Make the album name acceptable - we need at least 8 characters
+     which are not blank and there are no blanks allowed before the
+     last character.
+  */
+  if (album_name != NULL && strlen(album_name) > 0){
+	  strncpy(data, album_name, 11);
+	  /* substitute blanks in the first 8 characters*/
+	  while (NULL != (subst = strchr(data, ' '))) *subst = '_';
+	  if (strlen(data) < 8) strncat(data, "________", 8 - strlen(data));
+  };
+  
+  DC210_DEBUG("Album name is '%s'\n", data);
+
+  dc210_cmd_init(cmd, DC210_CARD_FORMAT);
+
+  dc210_execute_command(camera, cmd);
+  dc210_write_command_packet(camera, data);
+  if (dc210_wait_for_response(camera, 3, context) == GP_ERROR) return GP_ERROR;
+
+  gp_port_read(camera->port, answer, 16);
+  gp_port_read(camera->port, &checksum_read, 1);
+  checksum = 0;
+
+  for (i = 0; i < 16; i++) checksum ^= answer[i];
+  if (checksum_read != checksum) return GP_ERROR;
+
+  DC210_DEBUG("Flash card formated.\n");
+
+  if (dc210_write_single_char(camera, DC210_CORRECT_PACKET) == GP_ERROR) return GP_ERROR;
+  if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
+
+  gp_filesystem_reset(camera->fs);
+
+  return GP_OK;
+
+};
+
+static int dc210_space_on_card(Camera * camera, int * space){
+
+  char cmd[8];
+  unsigned char answer[16];
+  unsigned char checksum_read, checksum;
+  int i, sectors;
+
+  dc210_cmd_init(cmd, DC210_CARD_GET_STATUS);
+
+  dc210_execute_command(camera, cmd);
+
+  *space = -1;
+  if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
+
+  gp_port_read(camera->port, answer, 16);
+  gp_port_read(camera->port, &checksum_read, 1);
+
+  checksum = 0;
+  for (i = 0; i < 16; i++) checksum ^= answer[i];
+
+  if (checksum_read != checksum)
+	  DC210_DEBUG("Error reading card status.\n");
+  else
+	  DC210_DEBUG("Card status correctly read.\n");
+
+  sectors = answer[2] * 0x1000000 + answer[3] * 0x10000 + answer[4] * 0x100 + answer[5];
+  *space = sectors >> 2; /* sectorsize seems to be 128, now we get kb */
+
+  DC210_DEBUG("Space on card: %d\n", *space);
+
+  if (dc210_write_single_char(camera, DC210_CORRECT_PACKET) == GP_ERROR) return GP_ERROR;
+  if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
+
+  return GP_OK;
+
+};
+
+int dc210_format_callback(Camera * camera, CameraWidget * widget, GPContext * context){
+
+	CameraWidget * window;
+	char * album_name;
+
+	gp_widget_get_root(widget, &window);
+
+	gp_widget_get_child_by_label (window, _("Album name"), &widget);
+	gp_widget_get_value (widget, &album_name);
+
+	return dc210_format_card(camera, album_name, context);
+
+};
+
+int dc210_set_speed (Camera *camera, int speed) {
+
+  unsigned char cmd[8];
+  int i;
+  GPPortSettings settings;
+  CameraAbilities abilities;
+  dc210_cmd_init(cmd, DC210_SET_SPEED);
+	
+  switch (speed) {
+  case 0: /* Default */
+  case 9600:
+	  cmd[2] = 0x96; cmd[3] = 0x00; break;
+  case 19200:
+	  cmd[2] = 0x19; cmd[3] = 0x20; break;
+  case 38400:
+	  cmd[2] = 0x38; cmd[3] = 0x40; break;
+  case 57600:
+	  cmd[2] = 0x57; cmd[3] = 0x60; break;
+  case 115200:
+	  cmd[2] = 0x11; cmd[3] = 0x52; break;
+  default:
+	  return (GP_ERROR);
+  };
+
+  gp_port_get_settings (camera->port, &settings);
+
+  /* fast try, if we have initialized the speed already */
+  if (settings.serial.speed != 0){
+	  if (dc210_execute_command(camera, cmd) != GP_ERROR){
+		  settings.serial.speed = speed;
+		  gp_port_set_settings (camera->port, settings);
+		  return GP_OK;
+	  };
+  };
+
+  /* okay, we need to try harder; test all available speed settings */
+
+  settings.serial.bits     = 8;
+  settings.serial.parity   = 0;
+  settings.serial.stopbits = 1;
+  gp_port_set_timeout (camera->port, TIMEOUT);
+
+  gp_camera_get_abilities(camera, &abilities);
+
+  for (i = 0; i < sizeof(abilities.speed); i++){
+
+	  if (abilities.speed[i] == 0) break;
+
+	  DC210_DEBUG("Trying to use speed %d\n", abilities.speed[i]);
+	  settings.serial.speed    = abilities.speed[i];
+
+	  gp_port_set_settings (camera->port, settings);
+	  gp_port_send_break (camera->port, 2);
+
+	  if (dc210_execute_command(camera, cmd) == GP_ERROR){
+		  if (dc210_cmd_error == DC210_GARBAGE_ERROR){
+			  DC210_DEBUG("Obviously the port settings differ between camera and system.\n");
+		  };
+	  }
+	  else{
+		  DC210_DEBUG("Port speed %d seems to work!\n", abilities.speed[i]);
+		  settings.serial.speed = speed;
+		  gp_port_set_settings (camera->port, settings);
+		  return GP_OK;
+	  };
+  };
+  
+  return GP_ERROR;
+  
+}
+
+/****** Picture actions *****/
+
+static int dc210_take_picture (Camera * camera, GPContext * context){
+
+  char cmd[8];
+  dc210_cmd_init(cmd, DC210_TAKE_PICTURE);
+
+  if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+
+  if (dc210_wait_for_response(camera, 5, context) == GP_ERROR)
+    return GP_ERROR;
+
+  return GP_OK;
+
+};
+
+int dc210_delete_picture (Camera * camera, unsigned int picno){
+
+  char cmd[8];
+  dc210_status status;
+  unsigned int pic_offset = picno - 1;
+
+  dc210_cmd_init(cmd, DC210_DELETE_PICTURE);
+  
+  cmd[3] = pic_offset & 0xFF;
+  cmd[2] = (pic_offset >> 8) & 0xFF;
+
+  if (dc210_get_status(camera, &status) == GP_ERROR)
+	  return GP_ERROR;
+
+  if (picno > status.numPicturesInCamera)
+	  return GP_ERROR;
+
+  if (dc210_execute_command(camera, cmd) == GP_ERROR)
+    return GP_ERROR;
+
+  if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR)
+    return GP_ERROR;
+
+  return GP_OK;
+
+};
+
+int dc210_delete_last_picture (Camera * camera ){
+
+  dc210_status status;
+
+  if (dc210_get_status(camera, &status) == GP_ERROR)
+	  return GP_ERROR;
+
+  if (0 == status.numPicturesInCamera)
+	  return GP_ERROR;
+
+  return dc210_delete_picture(camera, status.numPicturesInCamera);
+
+};
+
+int dc210_delete_picture_by_name (Camera * camera, const char * filename ){
+
+	int picno = dc210_get_picture_number(camera, filename);
+
+	if (picno < 1) return GP_ERROR;
+
+	return dc210_delete_picture(camera, picno);
+
+};
+
+int dc210_download_picture 
+(Camera * camera, CameraFile *file, unsigned int picno, int thumb, GPContext *context)
+{
+
+	dc210_status status;
+	dc210_picture_info picinfo;
+	char cmd[8];
+	unsigned int pic_offset = picno - 1;
+    
+	if (thumb)
+		dc210_cmd_init(cmd, DC210_GET_THUMB);
+	else
+		dc210_cmd_init(cmd, DC210_GET_PICTURE);
+	
+	cmd[3] = pic_offset & 0xFF;
+	cmd[2] = (pic_offset >> 8) & 0xFF;
+	if (thumb) cmd[4] = 1; /* colour image instead of grayscale */
+
+	if (dc210_get_status(camera, &status) == GP_ERROR)
+		return GP_ERROR;
+
+	if (picno > status.numPicturesInCamera)
+		return GP_ERROR;
+
+	if (dc210_get_picture_info(camera, &picinfo, picno) == GP_ERROR)
+		return GP_ERROR;
+
+	gp_file_set_name(file, picinfo.image_name);
+
+	dc210_execute_command(camera, cmd);
+	if (thumb){
+
+		/* The windows bitmaps byte order differs from the one
+		   the camera delivers, so the following seems to be rotated:
+
+		   gp_file_set_mime_type(file, GP_MIME_BMP);
+		   gp_file_append(file, bmpheader, sizeof(bmpheader));
+
+		   We use ppm instead, which is very friendly and needs
+		   nothing more than the correct header */
+
+		gp_file_set_mime_type(file, GP_MIME_PPM);
+		gp_file_append(file, ppmheader, sizeof(ppmheader));
+		dc210_read_to_file(camera, file, 96 * 72 * 3, NULL);
+	}
+	else
+		dc210_read_to_file(camera, file, picinfo.picture_size, context);
+
+	return GP_OK;
+
+};
+
+int dc210_download_picture_by_name(Camera * camera, CameraFile *file, const char * filename, int thumb, GPContext *context){
+
+  int picno = 0;
+
+  picno = dc210_get_picture_number(camera, filename);
+
+  if (picno < 1) return GP_ERROR;
+
+  if (dc210_download_picture(camera, file, picno, thumb, context) == GP_ERROR) return GP_ERROR;
+
+  return GP_OK;
+
+};
+
+int dc210_capture (Camera *camera, CameraFilePath *path, GPContext *context) 
+{
+
+	dc210_status status;
+	dc210_picture_info picinfo;
+
+	if (dc210_take_picture(camera, context) == GP_ERROR)
+		return GP_ERROR;
+	
+	if (dc210_get_status(camera, &status) == GP_ERROR) return GP_ERROR;
+	
+	if (dc210_get_picture_info(camera, &picinfo, status.numPicturesInCamera) == GP_ERROR) return GP_ERROR;
+
+	strcpy(path->folder, "/");
+	strcpy(path->name, picinfo.image_name);
+
+	return GP_OK;
+
+};
+
+/***** Retrieve information *****/
+
+int dc210_get_picture_number (Camera *camera, const char * filename){
+
+  dc210_status status;
+  dc210_picture_info picinfo;
+  int i;
+
+  if (dc210_get_status(camera, &status) == GP_ERROR) return -1;
+
+  for (i = 1; i <= status.numPicturesInCamera; i++){
+
+    if (dc210_get_picture_info(camera, &picinfo, i) == GP_ERROR) return -1;
+    
+    if (strcmp(picinfo.image_name, filename) == 0){
+      return i;
+    };
+
+  }; 
+
+  return -1;
+
+};
+
+int dc210_get_filenames (Camera *camera, CameraList *list, GPContext *context) 
+{
+  dc210_status status;
+  dc210_picture_info picinfo;
+  int i;
+
+  if (dc210_get_status(camera, &status) == GP_ERROR)
+    return GP_ERROR;
+
+  if (status.numPicturesInCamera == 0){
+    return GP_OK;
+  };
+
+  for (i = 1; i <= status.numPicturesInCamera; i++){
+    if (dc210_get_picture_info(camera, &picinfo, i)  == GP_ERROR)
+      return GP_ERROR;
+    gp_list_append(list, picinfo.image_name, NULL);
+  };
+
+  return GP_OK;
+
+};
+
+int dc210_get_picture_info (Camera *camera, dc210_picture_info *picinfo, unsigned int picno) {
+
+  char cmd[8];
+  unsigned char data[DC210_PICINFO_SIZE];
+  unsigned int pic_offset = picno - 1;
+
+  dc210_cmd_init(cmd, DC210_GET_PICINFO);
+  cmd[3] = pic_offset & 0xFF;
+  cmd[2] = (pic_offset >> 8) & 0xFF;
+	    
+  if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+
+  if (dc210_read_single_block(camera, data, DC210_PICINFO_SIZE) == GP_ERROR)
+    return GP_ERROR;
+  
+  if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR)
+    return GP_ERROR;
+
+  picinfo->camera_type = data[1];
+  picinfo->file_type = data[2];
+  picinfo->resolution = data[3];
+  picinfo->compression = data[4];
+  picinfo->picture_number = data[6] * 0x100 + data[7];
+  picinfo->picture_size = data[8] * 0x1000000 + data[9] * 0x10000 + data[10] * 0x100 + data[11];
+  picinfo->preview_size = 96 * 72 * 3 + sizeof(ppmheader);
+  picinfo->picture_time = CAMERA_GET_EPOC + ((data[12] * 0x1000000 + data[13] * 0x10000 + data[14] * 0x100 + data[15]) >> 1);
+  picinfo->flash_used = data[16];
+  picinfo->flash = data[17];
+  picinfo->preflash = (data[17] > 2);
+  if (picinfo->preflash) picinfo->flash -= 3;
+  picinfo->zoom = data[21];
+  picinfo->f_number = data[26];
+  picinfo->battery = data[27];
+  picinfo->exposure_time = data[28] * 0x1000000 + data[29] * 0x10000 + data[30] * 0x100 + data[31];
+  strncpy(picinfo->image_name, &data[32], 12);
+  picinfo->image_name[12] = 0;
+		
+  return GP_OK;
+
+};
+
+int dc210_get_status (Camera *camera, dc210_status *status) {
+
+#ifdef DEBUG
+  int i;
+#endif
+
+	char data[DC210_STATUS_SIZE];
+	char cmd[8];
+
+	dc210_cmd_init(cmd, DC210_GET_STATUS);
+	
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+					
+	if (dc210_read_single_block(camera, data, DC210_STATUS_SIZE) == GP_ERROR)
+		return GP_ERROR;
+
+	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR)
+		return GP_ERROR;
+
+#ifdef DEBUG
+	if (firststatus){
+	  firststatus = 0;
+	}
+	else{
+	  for (i = 0; i < DC210_STATUS_SIZE; i++){
+	    if (oldstatus[i] != data[i] && (i < 12 || i > 15)){
+	      DC210_DEBUG("Statusdata differs at offset %03d (old: 0x%02X, new: 0x%02X)\n", 
+		     i, (unsigned char) oldstatus[i], (unsigned char) data[i]);
+	    };
+	  };
+	};
+	memcpy(oldstatus, data, DC210_STATUS_SIZE);
+#endif
+
+	status->firmwareMajor         = data[2];
+	status->firmwareMinor         = data[3];
+	status->fast_preview          = data[8];
+	status->battery               = data[9];
+	status->acstatus              = data[10];
+	
+	/* seconds since unix epoc */
+	status->time = CAMERA_GET_EPOC + ((unsigned char) data[12] * 0x1000000 + 
+					  (unsigned char) data[13] * 0x10000 + 
+					  (unsigned char) data[14] * 0x100 + 
+					  (unsigned char) data[15]) / 2;
+	
+	status->zoom                  = data[16];
+	status->compression_type      = data[19];
+	status->flash                 = data[20];
+	status->exp_compensation      = data[21] & 0x7F;
+	if (data[21] & 0x80) status->exp_compensation *= -1;
+	status->preflash = (data[20] > 2);
+	if (status->preflash) status->flash -= 3;
+	status->resolution            = data[22];
+	status->file_type             = data[23];
+	status->totalPicturesTaken    = (unsigned char) data[25] * 0x100 + (unsigned char) data[26];
+	status->totalFlashesFired     = (unsigned char) data[27] * 0x100 + (unsigned char) data[28];
+	status->numPicturesInCamera   = (unsigned char) data[56] * 0x100 + (unsigned char) data[57];
+	status->remainingLow          = (unsigned char) data[68] * 0x100 + (unsigned char) data[69];
+	status->remainingMedium       = (unsigned char) data[70] * 0x100 + (unsigned char) data[71];
+	status->remainingHigh         = (unsigned char) data[72] * 0x100 + (unsigned char) data[73];
+	strncpy(status->album_name, &data[77], 11);
+
+	if (dc210_space_on_card(camera, &status->card_space) == GP_ERROR)
+		DC210_DEBUG("No card in camera.\n");
+	
+	status->album_name[11] = 0;
+	return GP_OK;
+
+}
+
+/* Debugging stuff, not really needed in the driver */
+
+#ifdef DEBUG
+
+static int dc210_read_dummy_packet(Camera * camera){
+
+	int i;
+	signed char error;
+	unsigned char answer, lastanswer, checksum;
+
+	checksum = 0;
+	lastanswer = 0;
+	for ( i = 0; i < 2048; i++){
+	
+		error = gp_port_read(camera->port, &answer, 1);
+
+		if (error < 0){
+			DC210_DEBUG("Packet read exhausted. Packet size: %d\n", i-1);
+			if (checksum == lastanswer)
+			  DC210_DEBUG("Checksum is okay. Sending okay.\n");
+			else
+			  DC210_DEBUG("Checksum is not okay. Sending correct packet anyway.\n");
+			answer = DC210_CORRECT_PACKET;
+			gp_port_write(camera->port, &answer, 1);
+			return GP_OK;
+		};
+		DC210_DEBUG(" Byte %03d: 0x%02X", i, answer);
+		if (answer > 32)
+		  DC210_DEBUG(" (%c)", answer);
+		DC210_DEBUG("\n");
+		checksum ^= lastanswer;
+		lastanswer = answer;
+	};
+
+	DC210_DEBUG("Packet too long. Sending cancel.\n");
+	answer = DC210_CANCEL;
+	gp_port_write(camera->port, &answer, 1);
+
+	return GP_OK;
+
+};
+
+static int dc210_test_command
+(Camera * camera, unsigned char cmdbyte, unsigned char modifier, unsigned int value, int size){
+	
+	unsigned char cmd[8];
+	unsigned char answer;
+	signed char error;
+	int packetcount = 0;
+	char dummy_cmd_packet[DC210_CMD_DATA_SIZE];
+
+	memset (dummy_cmd_packet, 0, DC210_CMD_DATA_SIZE);
+
+	dc210_cmd_init(cmd, cmdbyte);
+
+	cmd[1] = modifier;
+
+	switch(size){
+	case 0:
+		break;
+	case 1:
+		cmd[2] = value & 0xFF;
+		break;
+	case 2:
+		cmd[3] = value & 0xFF;
+		cmd[2] = (value >> 8) & 0xFF;
+		break;
+	case 4:
+		cmd[5] = value & 0xFF;
+		cmd[4] = (value >> 8) & 0xFF;
+		cmd[3] = (value >> 16) & 0xFF;
+		cmd[2] = (value >> 24) & 0xFF;
+		break;
+	default:
+		return GP_ERROR;
+	};
+
+	/* okay, write the command and wait for acknowledge */
+
+	gp_port_write(camera->port, cmd, 8);
+
+	error = gp_port_read(camera->port, &answer, 1);
+
+	if (error < 0){
+		DC210_DEBUG("Command 0x%02X produced port read error %d",
+		       cmdbyte, error);
+		return GP_OK;
+	};
+
+	switch (answer){
+	case DC210_COMMAND_ACK:
+		DC210_DEBUG("Okay, command 0x%02X acknowledged.\n", cmdbyte);
+		break;
+	case DC210_COMMAND_NAK:
+		DC210_DEBUG("Sorry, command 0x%02X not acknowledged.\n", cmdbyte);
+		return GP_OK;
+	default:
+		DC210_DEBUG("Unexpected response 0x%02X to command 0x%02X.\n", 
+		       answer, cmdbyte);
+		return GP_OK;
+	};
+
+ wait_finish:
+	error = gp_port_read(camera->port, &answer, 1);
+
+	if (error < 0){
+		DC210_DEBUG("Command 0x%02X produced port read error %d\n",
+		       cmdbyte, error);
+		DC210_DEBUG("Probably the command expects a command package.\n");
+		DC210_DEBUG("Sending one...\n");
+		dc210_write_command_packet(camera, dummy_cmd_packet);
+		goto wait_finish;
+	};
+
+	switch(answer){
+	case DC210_COMMAND_COMPLETE:
+		DC210_DEBUG("Okay. Command has been accepted and executed.\n");
+		return GP_OK;
+	case DC210_EXECUTION_ERROR:
+		DC210_DEBUG("Sorry. An error occurred while executing command.\n");
+		return GP_OK;
+	case DC210_CORRECT_PACKET:
+		DC210_DEBUG("Okay. Packet successfully received.\n");
+		goto wait_finish;
+	case DC210_PACKET_FOLLOWING:
+		DC210_DEBUG("My, my, you got more than you bargained for. ");
+		DC210_DEBUG("Awaiting packet...\n");
+		dc210_read_dummy_packet(camera);
+		DC210_DEBUG("Read %d packets.\n", ++packetcount);
+		goto wait_finish;
+	case DC210_BUSY:
+		DC210_DEBUG("Camera is busy.\n");
+		goto wait_finish;
+	default:
+		DC210_DEBUG("Unexpected response 0x%02X to command 0x%02X.\n", 
+		       answer, cmdbyte);
+		return GP_OK;
+	};
+};
+
+int dc210_debug_callback(Camera * camera, CameraWidget * widget, GPContext * context){
+
+	/*CameraFile *file;*/
+	CameraWidget * window;
+	char * s_param1, *s_param2, *s_param3;
+	int param1, param2, param3;
+	int value;
+	dc210_status status;
+
+	gp_widget_get_root(widget, &window);
+
+	gp_widget_get_child_by_label (window, _("Parameter 1"), &widget);
+	gp_widget_get_value (widget, &s_param1);
+	param1 = atoi(s_param1);
+
+	gp_widget_get_child_by_label (window, _("Parameter 2"), &widget);
+	gp_widget_get_value (widget, &s_param2);
+	param2 = atoi(s_param2);
+
+	gp_widget_get_child_by_label (window, _("Parameter 3"), &widget);
+	gp_widget_get_value (widget, &s_param3);
+	param3 = atoi(s_param3);
+
+	/* Put the stuff you want to test here */
+	dc210_get_status(camera, &status);
+	dc210_space_on_card(camera, &value);
+	dc210_get_status(camera, &status);
+
+	return GP_OK;
+
+};
+
+#endif

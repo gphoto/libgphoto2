@@ -311,6 +311,7 @@ camlibs/jamcam/Makefile
 camlibs/jd11/Makefile
 camlibs/kodak/Makefile
 camlibs/kodak/dc120/Makefile
+camlibs/kodak/dc210/Makefile
 camlibs/kodak/dc240/Makefile
 camlibs/kodak/dc3200/Makefile
 camlibs/konica/Makefile
