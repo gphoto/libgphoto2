@@ -61,8 +61,8 @@ int canon_debug_driver = 9;
 /* DO NOT FORGET to update the NUM_ constants after adding a camera */
 
 #define NUM_SERIAL      4
-#define NUM_USB         2
-#define NUM_SERIAL_USB  3
+#define NUM_USB         9
+#define NUM_SERIAL_USB  4
 
 char *models_serial[] = {
         "Canon PowerShot A5",
@@ -308,6 +308,20 @@ static int update_disk_cache(Camera *camera)
 	return 1;
 }
 
+/*
+ * Test whether the name given corresponds
+ * to a thumbnail (.THM)
+ */
+static int is_thumbnail(const char *name)
+{
+	const char *pos;
+
+	gp_debug_printf(GP_DEBUG_LOW,"canon","is_thumbnail(%s)",name);
+
+	pos = strchr(name, '.');
+	if(!pos) return 0;
+	return !strcmp(pos,".THM");
+}
 
 static int is_image(const char *name)
 {
@@ -317,7 +331,7 @@ static int is_image(const char *name)
 
 	pos = strchr(name,'.');
 	if (!pos) return 0;
-	return (!strcmp(pos,".JPG") || !strcmp(pos,".THM"));
+	return (!strcmp(pos,".JPG"));
 }
 
 /*
@@ -405,7 +419,7 @@ static struct psa50_dir *dir_tree(Camera *camera, const char *path)
     if (!dir) return NULL; /* assume it's empty @@@ */
     for (walk = dir; walk->name; walk++) {
         if (walk->is_file) {
-            if (is_image(walk->name) || is_movie(walk->name)) cs->cached_images++;
+            if (is_image(walk->name) || is_movie(walk->name) || is_thumbnail(walk->name)) cs->cached_images++;
         }
         else {
             sprintf(buffer,"%s\\%s",path,walk->name);
@@ -635,11 +649,14 @@ static char *canon_get_picture (Camera *camera, char *filename,
 				strcat(filename,"THM");
 				sprintf(file,"%s%s",path,filename);
 				fprintf(stderr,"movie thumbnail: %s",file);
+				image = psa50_get_file(camera, file, size);
+			} else {
+				image = psa50_get_thumbnail(camera, file, size);
 			}
-			if ( (image = psa50_get_thumbnail(camera, file,size)) == NULL) {
-				free(ptr);
-				return NULL;
-			}
+			
+			free(ptr);
+			if (image) return image;
+			else return NULL;
 		}
 		else {
 			image = psa50_get_file(camera, file,size);
@@ -670,7 +687,7 @@ static int _get_file_path (struct psa50_dir *tree, const char *filename,
 	}
 
 	while(tree->name) {
-		if (!is_image(tree->name) && !is_movie(tree->name) ) { 
+		if (!is_image(tree->name) && !is_movie(tree->name) && !is_thumbnail(tree->name)) { 
 			switch(canon_comm_method) {
 			 case CANON_USB:
 				strcpy(path,tree->name);
@@ -681,7 +698,7 @@ static int _get_file_path (struct psa50_dir *tree, const char *filename,
 				break;
 			}
 		}
-		if ((is_image(tree->name) || (is_movie(tree->name))) && strcmp(tree->name,filename)==0) {
+		if ((is_image(tree->name) || (is_movie(tree->name) || is_thumbnail(tree->name))) && strcmp(tree->name,filename)==0) {
 			return GP_OK;
 		}
 		else if (!tree->is_file) {
@@ -807,22 +824,10 @@ int camera_file_get_preview (Camera *camera, const char *folder,
 
     preview->size = buflen;
 
-    i=0;
-    if (A5==0) {
-        tempfilename[i++]='t';
-        tempfilename[i++]='h';
-        tempfilename[i++]='u';
-        tempfilename[i++]='m';
-        tempfilename[i++]='b';
-        tempfilename[i++]='_';
-    }
-    while(filename[i+1] != '\0') {
-        tempfilename[i] = tolower(filename[i]);
-        i++;
-    }
-
-    tempfilename[i]='\0';
-
+    strcpy(tempfilename, filename);
+    strcat(tempfilename, "\0");
+    strcpy(tempfilename+strlen("IMG_XXXX"), ".JPG\0"); // thumbnails are always jpegs	
+    
     snprintf(preview->name, sizeof(preview->name), "%s",
             tempfilename);
 
@@ -1060,7 +1065,7 @@ int camera_file_delete (Camera *camera, const char *folder,
 			const char *filename)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-	char path[300];
+	char path[300], thumbname[300];
 	int j;
 
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_file_delete()");
@@ -1068,7 +1073,8 @@ int camera_file_delete (Camera *camera, const char *folder,
 	// initialize memory to avoid problems later
 	for (j=0; j < sizeof(path); j++)
 	  path[j] = '\0';
-	
+	memset(thumbname, 0, sizeof(thumbname));
+
 	if(check_readiness(camera) != 1)
 	  return GP_ERROR;
 
@@ -1100,7 +1106,16 @@ int camera_file_delete (Camera *camera, const char *folder,
             return GP_ERROR;
         }
         else {
-			return GP_OK;
+		/* If we have a movie, delete its thumbnail as well */ 
+		if (is_movie(filename)) {
+			strcpy(thumbname, filename);
+			strcpy(thumbname+strlen("MVI_XXXX"), ".THM\0"); 
+			if (psa50_delete_file(camera, thumbname, path)) {
+				gp_frontend_status(NULL, _("error deleting thumbnail"));
+				return GP_ERROR;
+			}
+		}
+		return GP_OK;
         }
     }
     return GP_ERROR;
@@ -1119,7 +1134,7 @@ static int _get_last_dir(struct psa50_dir *tree, char *path, char *temppath)
 	}
 
 	while(tree->name) {
-		if (!is_image(tree->name) && !is_movie(tree->name)) {
+		if (!is_image(tree->name) && !is_movie(tree->name) && !is_thumbnail(tree->name)) {
 			switch(canon_comm_method) {
 			 case CANON_USB:
 				strcpy(path,tree->name);
@@ -1167,7 +1182,7 @@ static int _get_last_picture(struct psa50_dir *tree, char *directory, char *file
 
 	while(tree->name) {
 
-		if (is_image(tree->name) || is_movie(tree->name)) {
+		if (is_image(tree->name) || is_movie(tree->name) || is_thumbnail(tree->name)) {
 			if(strcmp(tree->name,filename)>0)
 			  strcpy(filename,tree->name);
 		}
