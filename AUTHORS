@@ -59,7 +59,7 @@ Fredrik <fredrik@krixor.xy.org>
 Canon driver, all but serial specific things.
 
 Hans Ulrich Niedermann <gp@n-dimensional.de>
-Canon driver, package building, and various other things
+Canon driver, package building, hotplug, and various other things
 
 Christophe Barbé <christophe.barbe@ufies.org>
 Release building and small fixes.
