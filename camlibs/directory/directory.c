@@ -272,13 +272,15 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 int camera_config (Camera *camera) {
 
 	CameraWidget *window, *t;
+	int i;
 	char buf[256];
 
 	window = gp_widget_new(GP_WIDGET_WINDOW, "Directory Configuration");
 
 	t = gp_widget_new(GP_WIDGET_TOGGLE, "View hidden (dot) directories");
 	gp_setting_get("directory", "hidden", buf);
-	gp_widget_value_set(t, buf);
+	i = atoi (buf);
+	gp_widget_value_set(t, &i);
 	gp_widget_append(window, t);
 
         /* Prompt the user with the config window */
@@ -288,13 +290,15 @@ int camera_config (Camera *camera) {
         }
 	t = gp_widget_child_by_label(window, "View hidden (dot) directories");
         if (gp_widget_changed(t)) {
-                gp_widget_value_get (t, buf);
+                gp_widget_value_get (t, &i);
+		sprintf (buf, "%i", i);
                 gp_setting_set("directory", "hidden", buf);
         }
 
 	return (GP_OK);
 #if 0
 	/* Example. shows when debugging is on */
+//FIXME: Syntax of gp_widget_value_get/set has changed!
 
 	/* Create a new section for "Quality" */
 	section = gp_widget_new(GP_WIDGET_SECTION, "Quality");
