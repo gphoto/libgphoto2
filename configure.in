@@ -294,7 +294,7 @@ Configuration (libgphoto2):
 	Source code location:      ${srcdir}
 	Compiler:                  ${CC}
 
-	Build documenation:        $enable_gtk_doc
+	Build documenation:        $enable_docs
 	Config. support (gphoto2): $cdk_msg
 	Preview support (gphoto2): $aa_msg
 	JPEG support:              $jpeg_msg
