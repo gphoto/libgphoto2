@@ -43,7 +43,6 @@
 /*   9 : debug everything, including hex dumps of the packets */
 
 int canon_debug_driver = 9;
-int gphoto2_debug = 0;
 
 /* DO NOT FORGET to update the NUM_ constants after adding a camera */
 
@@ -840,7 +839,6 @@ int camera_init(Camera *camera, CameraInit *init)
 	cs->cached_dir = 0;
 	cs->dump_packets = 0;
 	
-	gphoto2_debug = init->debug;
 	fprintf(stderr,"canon_initialize()\n");
 	
 	cs->speed = init->port.speed;
