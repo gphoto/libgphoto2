@@ -859,9 +859,16 @@ gp_camera_init (Camera *camera)
 			gp_camera_status (camera, "");
 			return (GP_ERROR_UNKNOWN_PORT);
 		case GP_PORT_USB:
-			CRS (camera, gp_port_usb_find_device (camera->port,
+			if (gp_port_usb_find_device (camera->port,
 					camera->pc->a.usb_vendor,
-					camera->pc->a.usb_product));
+					camera->pc->a.usb_product)!=GP_OK)
+					{
+				CRS (camera, gp_port_usb_find_device_by_class
+					(camera->port,
+					camera->pc->a.usb_class,
+					camera->pc->a.usb_subclass,
+					camera->pc->a.usb_protocol));
+					}
 			break;
 		default:
 			break;
