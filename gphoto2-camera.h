@@ -151,8 +151,12 @@ int gp_camera_get_port_name     (Camera *camera, const char **port_name);
 int gp_camera_set_port_path     (Camera *camera, const char  *port_path);
 int gp_camera_get_port_path     (Camera *camera, const char **port_path);
 
-/* Don't use */
+/*
+ * You normally don't use that. If you do, you prevent the camera driver
+ * from selecting the optimal speed
+ */
 int gp_camera_set_port_speed    (Camera *camera, int speed);
+int gp_camera_get_port_speed    (Camera *camera);
 
 /************************************************************************
  * Part I:                                                              *
