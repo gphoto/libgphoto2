@@ -1,6 +1,6 @@
 EXTRA_DIST = kodak.df makefile.os2
 
-camlibdir = $(prefix)/lib/gphoto2
+camlibdir = $(prefix)/lib/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_kodak_dc240.la
 
 INCLUDES =                                              \

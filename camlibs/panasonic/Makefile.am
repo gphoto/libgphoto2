@@ -2,7 +2,7 @@ EXTRA_DIST = panasonic.df makefile.os2 dc1000.df dc1580.df
 
 SUBDIRS = coolshot l859
 
-camlibdir = $(prefix)/lib/gphoto2
+camlibdir = $(prefix)/lib/gphoto2/$(VERSION)
 camlib_LTLIBRARIES =\
  libgphoto2_panasonic_dc1000.la\
  libgphoto2_panasonic_dc1580.la

@@ -146,15 +146,9 @@ get_info (Camera *camera, unsigned int n, CameraFileInfo *info,
 	if (file) {
 		gp_file_set_type (file, GP_FILE_TYPE_EXIF);
 		gp_file_set_name (file, info->file.name);
-
-		/* Make a JPEG file out of it (for parser) */
-		gp_file_append (file, "\xff\xd8", 2);
-		gp_file_append (file, buffer, buffer_size);
-		gp_file_append (file, "\x01", 1);
-		gp_file_append (file, "\xff\xda", 2);
-		gp_file_append (file, "\x00\x02", 2);
-	}
-	free (buffer);
+		gp_file_set_data_and_size (file, buffer, buffer_size);
+	} else
+		free (buffer);
 
 	return (GP_OK);
 }

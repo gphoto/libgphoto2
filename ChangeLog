@@ -1,5 +1,11 @@
 2002-01-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/Makefile.am
+	* camlibs/ * /Makefile.am: Install drivers into versioned
+	  subdirectories.
+
+2002-01-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* frontends/command-line/main.c: Implement proper cancelling of file
 	  down- and upload.
 

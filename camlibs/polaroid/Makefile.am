@@ -1,6 +1,6 @@
 EXTRA_DIST = jpeg.txt jpeghead.h
 
-camlibdir = $(prefix)/lib/gphoto2
+camlibdir = $(prefix)/lib/gphoto2/$(VERSION)
 camlib_LTLIBRARIES =			\
 	libgphoto2_polaroid_pdc320.la	\
 	libgphoto2_polaroid_pdc640.la	\
