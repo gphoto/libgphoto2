@@ -221,7 +221,8 @@ typedef struct {
 	char		*data;
 	int		bytes_read;
 
-	int 		session;
+        int 		session;
+
 	int		ref_count;
 } CameraFile;
 
@@ -309,6 +310,8 @@ typedef struct Camera {
 	CameraPortInfo	*port;
 
 	int 		debug;
+
+        int             ref_count;
 
 	void		*library_handle;
 

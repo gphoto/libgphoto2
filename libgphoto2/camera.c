@@ -72,6 +72,7 @@ int gp_camera_new (Camera **camera, int camera_number)
         (*camera)->camlib_data     = NULL;
         (*camera)->frontend_data   = NULL;
 	(*camera)->session    = glob_session_camera++;
+        (*camera)->ref_count  = 1;
 
         if (load_library(*camera, glob_abilities_list->abilities[camera_number]->model)==GP_ERROR) {
                 gp_camera_free(*camera);
@@ -112,6 +113,24 @@ int gp_camera_free(Camera *camera)
 
         return (GP_OK);
 }
+
+int gp_camera_ref (Camera *camera)
+{
+    camera->ref_count += 1;
+
+    return (GP_OK);
+}
+
+int gp_camera_unref (Camera *camera)
+{
+    camera->ref_count -= 1;
+
+    if (camera->ref_count == 0)
+        gp_camera_free(camera);
+
+    return (GP_OK);
+}
+
 
 int gp_camera_session (Camera *camera)
 {
