@@ -547,7 +547,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
  *
  * Remove first colon from string, if any. Replace it by a space.
  **/
-static int 
+static void
 remove_colon_from_string (char *str)
 {
 	char *ch;
