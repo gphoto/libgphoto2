@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <zlib.h>
+#include <string.h>
 #include <gphoto2.h>
 #include "library.h"
 #include "konica.h"
@@ -35,11 +36,7 @@ char **models[2] = {models_qm100, models_qm200};
 /* Prototypes */
 /**************/
 gboolean error_happened (Camera *camera, k_return_status_t return_status);
-gboolean localization_file_read (
-	Camera *camera, 
-	gchar *file_name, 
-	guchar **data,
-	gulong *data_size);
+gboolean localization_file_read (Camera *camera, gchar *file_name, guchar **data, gulong *data_size);
 
 
 /*************/
@@ -173,7 +170,7 @@ int camera_abilities (CameraAbilitiesList *list)
 			a->speed[8]	= 57600;
 			a->speed[9]	= 115200;
 			a->speed[10]	= 0;
-			a->capture	= 1;
+			a->capture	= GP_CAPTURE_IMAGE;
 			a->config	= 1;
 			a->file_delete	= 1;
 			a->file_preview	= 1;
@@ -188,39 +185,9 @@ int camera_abilities (CameraAbilitiesList *list)
 int camera_init (Camera *camera, CameraInit *init)
 {
 	gint i, j;
-	guint test_bit_rate[10] = {
-		9600, 
-		115200, 
-		57600, 
-		38400, 
-		19200, 
-		4800, 
-		2400, 
-		1200, 
-		600, 
-		300};
-	guint bit_rate[10] = {
-		300, 
-		600, 
-		1200, 
-		2400, 
-		4800, 
-		9600, 
-		19200, 
-		38400, 
-		57600, 
-		115200};
-	gboolean bit_rate_supported[10] = {
-		FALSE, 
-		FALSE, 
-		FALSE, 
-		FALSE, 
-		FALSE, 
-		FALSE, 
-		FALSE, 
-		FALSE, 
-		FALSE, 
-		FALSE}; 
+	guint test_bit_rate[10] = {9600, 115200, 57600, 38400, 19200, 4800, 2400, 1200, 600, 300};
+	guint bit_rate[10] = {300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200};
+	gboolean bit_rate_supported[10] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE}; 
 	gboolean bit_flag_8_bits;
 	gboolean bit_flag_stop_2_bits;
 	gboolean bit_flag_parity_on;
@@ -228,10 +195,13 @@ int camera_init (Camera *camera, CameraInit *init)
 	gboolean bit_flag_use_hw_flow_control;
 	guint speed;
 	konica_data_t *konica_data;
+	gpio_device_settings device_settings;
+	gpio_device *device;
 
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_init ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
 	g_return_val_if_fail (init != NULL, GP_ERROR);
-	if (camera->debug == 1) printf ("*** Entering camera_init.\n");
+
 	/* First, set up all the function pointers. */
 	camera->functions->id 			= camera_id;
 	camera->functions->abilities 		= camera_abilities;
@@ -248,12 +218,15 @@ int camera_init (Camera *camera, CameraInit *init)
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
 	camera->functions->about 		= camera_about;
+
+        /* Create device. */
+        device = gpio_new (GPIO_DEVICE_SERIAL);
+
 	/* Store some data we constantly need. */
 	konica_data = g_new (konica_data_t, 1);
 	camera->camlib_data = konica_data;
-	konica_data->port_settings = init->port;
-	konica_data->debug_flag = (camera->debug == 1);
 	konica_data->filesystem = gp_filesystem_new ();
+	konica_data->device = device;
 	konica_data->image_id_long = FALSE;
 	for (i = 0; i < 2; i++) {
 		for (j = 0; ; j++) {
@@ -273,41 +246,46 @@ int camera_init (Camera *camera, CameraInit *init)
 	/*          will try all possibilities. If the given speed does not   */
 	/*          equal the current speed, we will change the current speed */
 	/*          to the given one.                                         */
+
+	strcpy (device_settings.serial.port, init->port.path);
+	device_settings.serial.bits = 8;
+	device_settings.serial.parity = 0;
+	device_settings.serial.stopbits = 1;
+
 	/* In case we got a speed not 0, let's first 	*/
 	/* test if we do already have the given speed.	*/
 	if (init->port.speed != 0) {
-		if (k_init (konica_data) == K_L_SUCCESS) {
-			if (konica_data->debug_flag) 
-				printf ("*** Leaving camera_init.\n");
-			return (GP_OK);
-		}
+		device_settings.serial.speed = init->port.speed;
+		gpio_set_settings (device, device_settings);
+		if (k_init (device) == K_L_SUCCESS) return (GP_OK);
 	}
+
 	/* We either do have a speed of 0 or are not	*/
 	/* communicating in the given speed. We'll test	*/
 	/* what speed the camera currently uses...	*/
 	for (i = 0; i < 10; i++) {
-		if (konica_data->debug_flag) 
-			printf ("-> Testing speed %i.\n", test_bit_rate[i]);
-		konica_data->port_settings.speed = test_bit_rate[i]; 
-		if (k_init (konica_data) == K_L_SUCCESS) break; 
+		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Testing speed %i.\n", test_bit_rate[i]);
+		device_settings.serial.speed = test_bit_rate[i];
+		gpio_set_settings (device, device_settings); 
+		if (k_init (device) == K_L_SUCCESS) break; 
 	}
 	if ((i == 1) && (init->port.speed == 0)) {
+
 		/* We have a speed of 0 and are already communicating at the  */
 		/* highest bit rate possible. What else do we want?           */
-		if (konica_data->debug_flag) 
-			printf ("*** Leaving camera_init.\n");
 		return (GP_OK);
+
 	}
 	if (i == 10) {
-		gp_frontend_message (
-			camera, 
-			"Could not communicate with camera!");
+		gp_frontend_message (camera, "Could not communicate with camera!");
+		gpio_free (device);
 		return (GP_ERROR);
 	}
+
 	/* ... and what speed it is able to handle.	*/
-	if (konica_data->debug_flag) printf ("-> Getting IO capabilities.\n");
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Getting IO capabilities.\n");
 	if (error_happened (camera, k_get_io_capability (
-		konica_data,
+		device,
 		&bit_rate_supported[0], 
 		&bit_rate_supported[1], 
 		&bit_rate_supported[2],
@@ -322,34 +300,40 @@ int camera_init (Camera *camera, CameraInit *init)
 		&bit_flag_stop_2_bits,
 		&bit_flag_parity_on,
 		&bit_flag_parity_odd,
-		&bit_flag_use_hw_flow_control))) return (GP_ERROR);
+		&bit_flag_use_hw_flow_control))) {
+		gpio_free (device);
+		return (GP_ERROR);
+	}
 	if (init->port.speed == 0) {
-		/* We are given 0. Set 	*/
-		/* the highest speed.	*/
+
+		/* We are given 0. Set the highest speed. */
 		for (i = 9; i >= 0; i--) if (bit_rate_supported[i]) break;
-		if (i < 0) return (GP_ERROR);
-		if (konica_data->debug_flag) 
-			printf ("-> Setting speed to %i.\n", bit_rate[i]);
-		if (error_happened (camera, k_set_io_capability (
-			konica_data,
-			bit_rate[i], 
-			TRUE, 
-			FALSE, 
-			FALSE, 
-			FALSE, 
-			FALSE))) return (GP_ERROR);
-		if (error_happened (camera, k_exit (konica_data)))
+		if (i < 0) {
+			gpio_free (device);
 			return (GP_ERROR);
-                konica_data->port_settings.speed = bit_rate[i];
-                if (error_happened (camera, k_init (konica_data))) 
+		}
+		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Setting speed to %i.\n", bit_rate[i]);
+		if (error_happened (camera, k_set_io_capability (device, bit_rate[i], TRUE, FALSE, FALSE, FALSE, FALSE))) {
+			gpio_free (device);
 			return (GP_ERROR);
-		if (konica_data->debug_flag) 
-			printf ("*** Leaving camera_init.\n");
+		}
+		if (error_happened (camera, k_exit (device))) {
+			gpio_free (device);
+			return (GP_ERROR);
+		}
+                device_settings.serial.speed = bit_rate[i];
+                gpio_set_settings (device, device_settings);
+                if (error_happened (camera, k_init (device))) {
+			gpio_free (device);
+			return (GP_ERROR);
+		}
+
+		/* We were successful! */
 		return (GP_OK);
+
 	} else {
-		/* Does the camera allow us to set */
-		/* the bit rate to given speed?	   */
-		speed = (guint) konica_data->port_settings.speed;
+		/* Does the camera allow us to set the bit rate to given speed?	*/
+		speed = (guint) init->port.speed;
 		if (    ((speed ==    300) && (!bit_rate_supported[0])) ||
 			((speed ==    600) && (!bit_rate_supported[1])) ||
 			((speed ==   1200) && (!bit_rate_supported[2])) ||
@@ -371,23 +355,24 @@ int camera_init (Camera *camera, CameraInit *init)
 			 (speed !=  57600) &&
 			 (speed != 115200))) {
 			gp_frontend_message (camera, "Unsupported speed!");
+			gpio_free (device);
 			return (GP_ERROR);
 		}
 		/* Now we can set the given speed. */
-		if (error_happened (camera, k_set_io_capability (
-			konica_data,
-			konica_data->port_settings.speed, 
-			TRUE, 
-			FALSE, 
-			FALSE, 
-			FALSE, 
-			FALSE))) return (GP_ERROR);
-		if (error_happened (camera, k_exit (konica_data)))
+		if (error_happened (camera, k_set_io_capability (device, init->port.speed, TRUE, FALSE, FALSE, FALSE, FALSE))) {
+			gpio_free (device);
 			return (GP_ERROR);
-		if (error_happened (camera, k_init (konica_data))) 
+		}
+		if (error_happened (camera, k_exit (device))) {
+			gpio_free (device);
 			return (GP_ERROR);
-		if (konica_data->debug_flag) 
-			printf ("*** Leaving camera_init.\n");
+		}
+		if (error_happened (camera, k_init (device))) {
+			gpio_free (device);
+			return (GP_ERROR);
+		}
+
+		/* We were successful! */
 		return (GP_OK);
 	}
 }
@@ -397,15 +382,21 @@ int camera_exit (Camera *camera)
 {
         konica_data_t *konica_data;
 
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_exit ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
+
         konica_data = (konica_data_t *) camera->camlib_data;
-	if (error_happened (camera, k_exit (konica_data))) return (GP_ERROR);
+	if (error_happened (camera, k_exit (konica_data->device))) return (GP_ERROR);
+        if (gpio_free (konica_data->device) == GPIO_ERROR) return (GP_ERROR);
 	return (GP_OK);
 }
 
 
 int camera_folder_list (Camera *camera, CameraList *list, char *folder)
 {
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_folder_list ***");
+	g_return_val_if_fail (camera != NULL, GP_ERROR);
+
 	/* The camera does not support folders. */
 	return (GP_OK);
 }
@@ -438,14 +429,14 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder)
 	guint i;
 	konica_data_t *konica_data;
 
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_list ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
 	g_return_val_if_fail (list != NULL, GP_ERROR);
 	g_return_val_if_fail (folder != NULL, GP_ERROR);
+
 	konica_data = (konica_data_t *) camera->camlib_data;
-	if (konica_data->debug_flag) 
-		printf ("*** Entering camera_file_list.\n");
 	if (error_happened (camera, k_get_status (
-		konica_data,
+		konica_data->device,
 		&self_test_result, 
 		&power_level,
 		&power_source,
@@ -468,20 +459,13 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder)
 		&exposure,
 		&total_pictures,
 		&total_strobes))) return (GP_ERROR);
+
 	/* We can't get the filename from the camera. 	*/
 	/* We'll therefore take fake ones.		*/
-	gp_filesystem_populate (
-		konica_data->filesystem, 
-		"/", 
-		"image%04i.jpg", 
-		(int) pictures);
+	gp_filesystem_populate (konica_data->filesystem, "/", "image%i.jpg", (int) pictures);
 	for (i = 0; i < gp_filesystem_count (konica_data->filesystem, folder); i++)
-		gp_list_append (
-			list, 
-			gp_filesystem_name (konica_data->filesystem, folder, i),
-			GP_LIST_FILE);
-	if (konica_data->debug_flag) 
-		printf ("*** Leaving camera_file_list.\n");
+		gp_list_append (list, gp_filesystem_name (konica_data->filesystem, folder, i), GP_LIST_FILE);
+
 	return (GP_OK);
 }
 
@@ -500,34 +484,38 @@ int camera_file_get (
 	gulong image_number;
 	konica_data_t *konica_data;
 
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get ***");
         g_return_val_if_fail (camera != NULL, GP_ERROR);
         g_return_val_if_fail (file != NULL, GP_ERROR);
         g_return_val_if_fail (folder != NULL, GP_ERROR);
 	g_return_val_if_fail (filename != NULL, GP_ERROR);
+
 	konica_data = (konica_data_t *) camera->camlib_data;
-	if (konica_data->debug_flag) printf ("*** Entering camera_file_get.\n");
-        image_number = gp_filesystem_number (
-                konica_data->filesystem,
-                folder,
-                filename) + 1;
+        image_number = gp_filesystem_number (konica_data->filesystem, folder, filename) + 1;
+
+	/* Get information about the image (especially image id). */
 	if (error_happened (camera, k_get_image_information (
-		konica_data,
+		konica_data->device,
+		konica_data->image_id_long,
 		image_number, 
 		&image_id, 
 		&exif_size, 
 		&protected, 
 		&information_buffer, 
 		&information_buffer_size))) return (GP_ERROR); 
+
+	/* Get the image. */
 	if (error_happened (camera, k_get_image (
-		konica_data,
+		konica_data->device,
+		konica_data->image_id_long,
 		image_id, 
 		K_IMAGE_JPEG, 
 		(guchar **) &file->data, 
 		(guint *) &file->size))) return (GP_ERROR);
-	strcpy(file->type, "image/jpg");
-	sprintf (file->name, "Picture-%i.jpg", (int) image_id);
+
+	strcpy (file->type, "image/jpg");
+	sprintf (file->name, "Picture%i.jpg", (int) image_id);
 	g_free (information_buffer);
-	if (konica_data->debug_flag) printf ("*** Leaving camera_file_get.\n");
 	return (GP_OK);
 }
 
@@ -546,42 +534,46 @@ int camera_file_get_preview (
 	gulong image_number;
 	konica_data_t *konica_data;
 
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_preview ***");
         g_return_val_if_fail (camera != NULL, GP_ERROR);
         g_return_val_if_fail (preview != NULL, GP_ERROR);
         g_return_val_if_fail (folder != NULL, GP_ERROR);
         g_return_val_if_fail (filename != NULL, GP_ERROR);
+
 	konica_data = (konica_data_t *) camera->camlib_data;
-	if (konica_data->debug_flag) 
-		printf ("*** Entering camera_file_get_preview.\n");
-        image_number = gp_filesystem_number (
-                konica_data->filesystem,
-                folder,
-                filename) + 1;
+        image_number = gp_filesystem_number (konica_data->filesystem, folder, filename) + 1;
+
+	/* Get information about the image (especially image id). */
 	if (error_happened (camera, k_get_image_information (
-		konica_data,
+		konica_data->device,
+		konica_data->image_id_long,
 		image_number, 
 		&image_id, 
 		&exif_size, 
 		&protected, 
 		&information_buffer, 
 		&information_buffer_size))) return (GP_ERROR); 
+
+	/* Get the image. */
 	if (error_happened (camera, k_get_image (
-		konica_data,
+		konica_data->device,
+		konica_data->image_id_long,
 		image_id, 
 		K_THUMBNAIL, 
 		(guchar **) &preview->data, 
 		(guint *) &preview->size))) return (GP_ERROR);
-	strcpy(preview->type, "image/jpg");
-	sprintf (preview->name, "Thumbnail-%i.jpg", (int) image_id);
+
+	strcpy (preview->type, "image/jpg");
+	sprintf (preview->name, "thumbnail%i.jpg", (int) image_id);
 	g_free (information_buffer);
-	if (konica_data->debug_flag) 
-		printf ("*** Leaving camera_file_get_preview.\n");
 	return (GP_OK);
 }
 
 
 int camera_file_put (Camera *camera, CameraFile *file, char *folder)
 {
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** camera_file_put ***");
+
 	/* The camera does not support putting files. */
 	return (GP_ERROR);
 }
@@ -597,29 +589,23 @@ int camera_file_delete (Camera *camera, char *folder, char *filename)
 	konica_data_t *konica_data;
 	gulong image_number;
 
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** camera_file_delete ***");
         g_return_val_if_fail (camera != NULL, GP_ERROR);
         g_return_val_if_fail (folder != NULL, GP_ERROR);
         g_return_val_if_fail (filename != NULL, GP_ERROR);
+
 	konica_data = (konica_data_t *) camera->camlib_data;
-	if (konica_data->debug_flag) 
-		printf ("*** Entering camera_file_delete.\n");
-        image_number = gp_filesystem_number (
-                konica_data->filesystem,
-                folder,
-                filename) + 1;
+        image_number = gp_filesystem_number (konica_data->filesystem, folder, filename) + 1;
 	if (error_happened (camera, k_get_image_information (
-		konica_data,
+		konica_data->device,
+		konica_data->image_id_long,
 		image_number, 
 		&image_id, 
 		&exif_size, 
 		&protected, 
 		&information_buffer, 
 		&information_buffer_size))) return (GP_ERROR);
-	if (error_happened (camera, k_erase_image (
-		konica_data, 
-		image_id))) return (GP_ERROR);
-	if (konica_data->debug_flag) 
-		printf ("*** Leaving camera_file_delete.\n");
+	if (error_happened (camera, k_erase_image (konica_data->device, konica_data->image_id_long, image_id))) return (GP_ERROR);
 	return (GP_OK);
 }
 
@@ -643,12 +629,13 @@ int camera_summary (Camera *camera, CameraText *summary)
 	guchar year, month, day, hour, minute, second;
         konica_data_t *konica_data;
 
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** camera_summary ***");
         g_return_val_if_fail (camera != NULL, GP_ERROR);
         g_return_val_if_fail (summary != NULL, GP_ERROR);
+
         konica_data = (konica_data_t *) camera->camlib_data;
-	if (konica_data->debug_flag) printf ("*** Entering camera_summary.\n");
 	if (error_happened (camera, k_get_information (
-		konica_data,
+		konica_data->device,
 		&model, 
 		&serial_number, 
 		&hardware_version_major, 
@@ -660,13 +647,13 @@ int camera_summary (Camera *camera, CameraText *summary)
 		&name, 
 		&manufacturer))) return (GP_ERROR);
         else if (error_happened (camera, k_get_preferences (
-		konica_data,
+		konica_data->device,
 		&shutoff_time, 
 		&self_timer_time, 
 		&beep, 
 		&slide_show_interval))) return (GP_ERROR);
 	else if (error_happened (camera, k_get_date_and_time (
-		konica_data,
+		konica_data->device,
 		&year, 
 		&month, 
 		&day, 
@@ -715,8 +702,6 @@ int camera_summary (Camera *camera, CameraText *summary)
 			hour, 
 			minute, 
 			second);
-		if (konica_data->debug_flag) 
-			printf ("*** Leaving camera_summary.\n");
 		return (GP_OK);
 	}
 }
@@ -724,13 +709,50 @@ int camera_summary (Camera *camera, CameraText *summary)
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) 
 {
-	gp_frontend_message (camera, "Not yet implemented...\n");
-	return (GP_ERROR);
+	konica_data_t *konica_data;
+	gulong image_id;
+	gint exif_size;
+	guchar *information_buffer = NULL;
+	guint information_buffer_size;
+	gboolean protected;
+
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_capture ***");
+	g_return_val_if_fail (camera != NULL, GP_ERROR);
+	g_return_val_if_fail (file != NULL, GP_ERROR);
+
+        konica_data = (konica_data_t *) camera->camlib_data;
+
+	/* Take the picture. */
+	if (error_happened (camera, k_take_picture (
+		konica_data->device, 
+		konica_data->image_id_long, 
+		&image_id, 
+		&exif_size, 
+		&information_buffer, 
+		&information_buffer_size, 
+		&protected)))
+		return (GP_ERROR);
+
+	/* Get the image. */
+        if (error_happened (camera, k_get_image (
+		konica_data->device, 
+		konica_data->image_id_long, 
+		image_id, 
+		K_IMAGE_JPEG, 
+		(guchar **) &file->data, 
+		(guint *) &file->size))) 
+		return (GP_ERROR);
+        strcpy (file->type, "image/jpg");
+	sprintf (file->name, "picture%04i.jpg", (int) image_id); 
+
+	return (GP_OK);
 }
 
 
 int camera_manual (Camera *camera, CameraText *manual)
 {
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_manual ***");
+
 	strcpy(manual->text, "No manual available.");
 
 	return (GP_OK);
@@ -739,19 +761,22 @@ int camera_manual (Camera *camera, CameraText *manual)
 
 int camera_about (Camera *camera, CameraText *about) 
 {
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_about ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
 	g_return_val_if_fail (about != NULL, GP_ERROR);
+
 	strcpy (about->text, 
 		"Konica library\n"
 		"Lutz Müller <urc8@rz.uni-karlsruhe.de>\n"
 		"Support for Konica and HP cameras.");
+
 	return (GP_OK);
 }
 
 
-int camera_config (Camera *camera)
+int camera_config_get (Camera *camera, CameraWidget **window)
 {
-        CameraWidget *window, *widget, *section;
+        CameraWidget *widget, *section;
         guint shutoff_time, self_timer_time, beep, slide_show_interval;
         guint self_test_result;
         k_power_level_t power_level;
@@ -761,14 +786,8 @@ int camera_config (Camera *camera)
         guint card_size;
         guint pictures = 0;
         guint pictures_left;
-        guchar year;
-        guchar month;
-        guchar day;
-        guchar hour;
-        guchar minute;
-        guchar second;
-        guint io_setting_bit_rate;
-        guint io_setting_flags;
+        guchar year, month, day, hour, minute, second;
+        guint io_setting_bit_rate, io_setting_flags;
         guchar flash;
         guchar resolution;
         guchar focus_self_timer;
@@ -776,19 +795,15 @@ int camera_config (Camera *camera)
         guint total_pictures;
         guint total_strobes;
 	konica_data_t *konica_data;
-	gchar buffer[1024];
+	gchar *buffer;
 
-	/************************/
-	/*  Create the window   */
-	/************************/
-
-	window = gp_widget_new (GP_WIDGET_WINDOW, "Konica Configuration");
-
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_config_get ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
-	g_return_val_if_fail (window != NULL, GP_ERROR);
+
+	/* Get the current settings. */
 	konica_data = (konica_data_t *) camera->camlib_data;
         if (error_happened (camera, k_get_status (
-		konica_data, 
+		konica_data->device, 
                 &self_test_result,
                 &power_level,
                 &power_source,
@@ -812,17 +827,28 @@ int camera_config (Camera *camera)
                 &total_pictures,
                 &total_strobes))) return (GP_ERROR);
         if (error_happened (camera, k_get_preferences (
-		konica_data,
+		konica_data->device,
                 &shutoff_time,
                 &self_timer_time,
                 &beep,
                 &slide_show_interval))) return (GP_ERROR);
 
+	/* Create the window. */
+        *window = gp_widget_new (GP_WIDGET_WINDOW, "Konica Configuration");
+
         /************************/
         /* Persistent Settings  */
         /************************/
         section = gp_widget_new (GP_WIDGET_SECTION, "Persistent Settings");
-        gp_widget_append (window, section);
+        gp_widget_append (*window, section);
+
+	/* Date */
+	widget = gp_widget_new (GP_WIDGET_DATE, "Date & Time");
+	gp_widget_append (section, widget);
+	buffer = g_strdup_printf ("%i/%i/%i %i:%i:%i", year, month, day, hour, minute, second);
+	gp_widget_value_set (widget, buffer);
+	g_free (buffer);
+
         /* Beep */
         widget = gp_widget_new (GP_WIDGET_RADIO, "Beep");
         gp_widget_append (section, widget);
@@ -836,24 +862,31 @@ int camera_config (Camera *camera)
 		gp_widget_value_set (widget, "On");
                 break;
         }
+
         /* Self Timer Time */
         widget = gp_widget_new (GP_WIDGET_RANGE, "Self Timer Time");
         gp_widget_append (section, widget);
         gp_widget_range_set (widget, 3, 40, 1);
-	sprintf (buffer, "%i", self_timer_time);
+	buffer = g_strdup_printf ("%i", self_timer_time);
 	gp_widget_value_set (widget, buffer);
+	g_free (buffer);
+
         /* Auto Off Time */
         widget = gp_widget_new (GP_WIDGET_RANGE, "Auto Off Time");
         gp_widget_append (section, widget);
         gp_widget_range_set (widget, 1, 255, 1);
-        sprintf (buffer, "%i", shutoff_time);
+        buffer = g_strdup_printf ("%i", shutoff_time);
 	gp_widget_value_set (widget, buffer);
+	g_free (buffer);
+
         /* Slide Show Interval */
         widget = gp_widget_new (GP_WIDGET_RANGE, "Slide Show Interval");
         gp_widget_append (section, widget);
         gp_widget_range_set (widget, 1, 30, 1);
-	sprintf (buffer, "%i", slide_show_interval);
+	buffer = g_strdup_printf ("%i", slide_show_interval);
 	gp_widget_value_set (widget, buffer);
+	g_free (buffer);
+
         /* Resolution */
         widget = gp_widget_new (GP_WIDGET_RADIO, "Resolution");
         gp_widget_append (section, widget);
@@ -871,33 +904,37 @@ int camera_config (Camera *camera)
 		gp_widget_value_set (widget, "Medium (1152 x 872)");
                 break;
         }
+
 	/****************/
 	/* Localization */
 	/****************/
         section = gp_widget_new (GP_WIDGET_SECTION, "Localization");
-        gp_widget_append (window, section);
+        gp_widget_append (*window, section);
+
         /* Language */
         widget = gp_widget_new (GP_WIDGET_TEXT, "Localization File");
         gp_widget_append (section, widget);
+
 	/* TV output format */
 	widget = gp_widget_new (GP_WIDGET_RADIO, "TV Output Format");
 	gp_widget_append (section, widget);
 	gp_widget_choice_add (widget, "NTSC");
 	gp_widget_choice_add (widget, "PAL");
 	gp_widget_choice_add (widget, "Do not display TV menu");
+
 	/* Date format */
 	widget = gp_widget_new (GP_WIDGET_RADIO, "Date Format");
 	gp_widget_append (section, widget);
 	gp_widget_choice_add (widget, "Month/Day/Year");
 	gp_widget_choice_add (widget, "Day/Month/Year");
 	gp_widget_choice_add (widget, "Year/Month/Day");
+
         /********************************/
         /* Session-persistent Settings  */
         /********************************/
-        section = gp_widget_new (
-                GP_WIDGET_SECTION,
-                "Session-persistent Settings");
-        gp_widget_append (window, section);
+        section = gp_widget_new (GP_WIDGET_SECTION, "Session-persistent Settings");
+        gp_widget_append (*window, section);
+
         /* Flash */
         widget = gp_widget_new (GP_WIDGET_RADIO, "Flash");
         gp_widget_append (section, widget);
@@ -923,12 +960,15 @@ int camera_config (Camera *camera)
 		gp_widget_value_set (widget, "Auto");
                 break;
         }
+
         /* Exposure */
         widget = gp_widget_new (GP_WIDGET_RANGE, "Exposure");
         gp_widget_append (section, widget);
         gp_widget_range_set (widget, 0, 255, 1);
-	sprintf (buffer, "%i", exposure);
+	buffer = g_strdup_printf ("%i", exposure);
 	gp_widget_value_set (widget, buffer);
+	g_free (buffer);
+
         /* Focus */
         widget = gp_widget_new (GP_WIDGET_RADIO, "Focus");
         gp_widget_append (section, widget);
@@ -942,11 +982,13 @@ int camera_config (Camera *camera)
 		gp_widget_value_set (widget, "Fixed");
                 break;
         }
+
         /************************/
         /* Volatile Settings    */
         /************************/
         section = gp_widget_new (GP_WIDGET_SECTION, "Volatile Settings");
-        gp_widget_append (window, section);
+        gp_widget_append (*window, section);
+
         /* Self Timer */
         widget = gp_widget_new (GP_WIDGET_RADIO, "Self Timer");
         gp_widget_append (section, widget);
@@ -961,132 +1003,196 @@ int camera_config (Camera *camera)
                 break;
         }
 
-        /* Prompt the user with the config window */
-        if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
-                gp_widget_free(window);
-                return GP_OK;
-        }
- 
-        /* Append config_set code here and adapt using:
-                int gp_widget_child_by_name(CameraWidget *window, char *child_name);
-                int gp_widget_changed(CameraWidget *widget);
-                char gp_widget_value_get(CameraWidget *widget);
-        */
-
-        return (GP_OK);
+	/* That's it. */
+	return (GP_OK);
 }
-
-
-int camera_config_set (Camera *camera, CameraSetting *setting, int count)
+ 
+int camera_config_set (Camera *camera, CameraWidget *window)
 {
-	guint i, j, focus, self_timer;
-	konica_data_t *konica_data;
-	guchar *data;
-	gulong data_size;
-	k_date_format_t date_format;
-	k_tv_output_format tv_output_format;
+	CameraWidget *section, *widget_focus, *widget_self_timer, *widget;
+	guchar year, month, day, hour, minute, second;
+	k_date_format_t date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
+	k_tv_output_format_t tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
+        gint j = 0;
+        guchar *data;
+        gulong data_size;
+	guchar focus_self_timer = 0;
+        konica_data_t *konica_data;
 
-        g_return_val_if_fail (camera != NULL, GP_ERROR);
-	g_return_val_if_fail (setting != NULL, GP_ERROR);
-	focus = 0;
-	self_timer = 0;
-	konica_data = (konica_data_t *) camera->camlib_data;
-	if (konica_data->debug_flag) printf ("*** Entering camera_config_set.\n");
-	for (i = 0; i < count; i++) {
-		if (konica_data->debug_flag) printf ("-> Setting \"%s\" to \"%s\".\n", setting[i].name, setting[i].value);
-                if (strcmp (setting[i].name, "Beep") == 0) {
-			if (strcmp (setting[i].value, "Off") == 0) j = 0;
-			else j = 1;
-			if (error_happened (camera, k_set_preference (konica_data, K_PREFERENCE_BEEP, j))) return (GP_ERROR);
-                        continue;
-                }
-                if (strcmp (setting[i].name, "Self Timer Time") == 0) {
-                        if (error_happened (camera, k_set_preference (konica_data, K_PREFERENCE_SELF_TIMER_TIME, (guint) atoi (setting[i].value)))) return (GP_ERROR);
-                        continue;
-                }
-                if (strcmp (setting[i].name, "Auto Off Time") == 0) {
-                        if (error_happened (camera, k_set_preference (konica_data, K_PREFERENCE_AUTO_OFF_TIME, (guint) atoi (setting[i].value)))) return (GP_ERROR);
-                        continue;
-                }
-                if (strcmp (setting[i].name, "Slide Show Interval") == 0) {
-                        if (error_happened (camera, k_set_preference (konica_data, K_PREFERENCE_SLIDE_SHOW_INTERVAL, (guint) atoi (setting[i].value)))) return (GP_ERROR);
-                        continue;
-                }
-                if (strcmp (setting[i].name, "Resolution") == 0) {
-			if (strcmp (setting[i].value, "High (1152 x 872)") == 0) j = 1;
-			if (strcmp (setting[i].value, "Low (576 x 436)") == 0) j = 3;
-			else j = 0;
-			if (error_happened (camera, k_set_preference (konica_data, K_PREFERENCE_RESOLUTION, j))) return (GP_ERROR);
-                        continue;
-                }
-		if (strcmp (setting[i].name, "TV Output Format") == 0) {
-			if (strcmp (setting[i].value, "NTSC") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_NTSC;
-			else if (strcmp (setting[i].value, "PAL") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_PAL;
-			else if (strcmp (setting[i].value, "Do not display TV menu") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
-			else continue;
-			if (error_happened (camera, k_localization_tv_output_format_set (konica_data, tv_output_format))) return (GP_ERROR);
-			continue;
-		}
-		if (strcmp (setting[i].name, "Date Format") == 0) {
-			if (strcmp (setting[i].value, "Month/Day/Year") == 0) date_format = K_DATE_FORMAT_MONTH_DAY_YEAR;
-			else if (strcmp (setting[i].value, "Day/Month/Year") == 0) date_format = K_DATE_FORMAT_DAY_MONTH_YEAR;
-			else if (strcmp (setting[i].value, "Year/Month/Day") == 0) date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
-			else continue;
-			if (error_happened (camera, k_localization_date_format_set (konica_data, date_format))) return (GP_ERROR);
-			continue;
-		}
-                if (strcmp (setting[i].name, "Localization File") == 0) {
-                        if (strcmp (setting[i].value, "") != 0) {
-				data = NULL;
-				data_size = 0;
-				/* Read localization file */
-				if (!localization_file_read (camera, setting[i].value, &data, &data_size)) {
-					g_free (data);
-					return (GP_ERROR);
-				}
-				/* Go! */
-				if (error_happened (camera, k_localization_data_put (konica_data, data, data_size))) {
-					g_free (data);
-					return (GP_ERROR);
-				}
-				g_free (data);
-			}
-                        continue;
-                }
-                if (strcmp (setting[i].name, "Flash") == 0) {
-			if (strcmp (setting[i].value, "Off") == 0) j = 0;
-			else if (strcmp (setting[i].value, "On") == 0) j = 1;
-			else if (strcmp (setting[i].value, "On, red-eye reduction") == 0) j = 5;
-			else if (strcmp (setting[i].value, "Auto, red-eye reduction") == 0) j = 6;
-			else j = 2;
-                        if (error_happened (camera, k_set_preference (konica_data, K_PREFERENCE_FLASH, j))) return (GP_ERROR);
-                        continue;
-                }
-                if (strcmp (setting[i].name, "Exposure") == 0) {
-                        if (error_happened (camera, k_set_preference (konica_data, K_PREFERENCE_EXPOSURE, (guint) atoi (setting[i].value)))) return (GP_ERROR);
-                        continue;
-                }
-                if (strcmp (setting[i].name, "Focus") == 0) {
-			if (strcmp (setting[i].value, "Auto") == 0) focus = 2;
-			if (error_happened (camera, k_set_preference (konica_data, K_PREFERENCE_FOCUS_SELF_TIMER, focus + self_timer))) return (GP_ERROR);
-                        continue;
-                }
-                if (strcmp (setting[i].name, "Self Timer") == 0) {
-			if (strcmp (setting[i].value, "Self Timer (only next picture)") == 0) self_timer = 1;
-			if (error_happened (camera, k_set_preference (konica_data, K_PREFERENCE_FOCUS_SELF_TIMER, focus + self_timer))) return (GP_ERROR);
-                        continue;
-                }
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_config_set ***");
+	g_return_val_if_fail (camera != NULL, GP_ERROR);
+	g_return_val_if_fail (window != NULL, GP_ERROR);
+
+        konica_data = (konica_data_t *) camera->camlib_data;
+
+        /************************/
+        /* Persistent Settings  */
+        /************************/
+	section = gp_widget_child_by_label (window, "Persistent Settings");
+
+	/* Date & Time */
+	widget = gp_widget_child_by_label (section, "Date & Time");
+	if (gp_widget_changed (widget)) {
+		year = atoi (strtok (gp_widget_value_get (widget), "/"));
+		month = atoi (strtok (NULL, "/"));
+		day = atoi (strtok (NULL, "/"));
+		hour = atoi (strtok (NULL, " "));
+		minute = atoi (strtok (NULL, ":"));
+		second = atoi (strtok (NULL, ":"));
+		if (error_happened (camera, k_set_date_and_time (konica_data->device, year, month, day, hour, minute, second))) return (GP_ERROR);
 	}
-	if (konica_data->debug_flag) printf ("*** Leaving camera_config_set.\n");
+
+	/* Beep */
+	widget = gp_widget_child_by_label (section, "Beep");
+	if (gp_widget_changed (widget)) {
+		if (strcmp (gp_widget_value_get (widget), "Off") == 0) j = 0;
+		else j = 1;
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_BEEP, j))) return (GP_ERROR);
+	}
+
+	/* Self Timer Time */
+	widget = gp_widget_child_by_label (section, "Self Timer Time");
+	if (gp_widget_changed (widget)) {
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_SELF_TIMER_TIME, (guint) atoi (gp_widget_value_get (widget))))) 
+			return (GP_ERROR);
+	}
+
+	/* Auto Off Time */
+	widget = gp_widget_child_by_label (section, "Auto Off Time");
+	if (gp_widget_changed (widget)) {
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_AUTO_OFF_TIME, (guint) atoi (gp_widget_value_get (widget))))) 
+			return (GP_ERROR);
+	}
+
+	/* Slide Show Interval */
+	widget = gp_widget_child_by_label (section, "Slide Show Interval");
+	if (gp_widget_changed (widget)) {
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_SLIDE_SHOW_INTERVAL, (guint) atoi (gp_widget_value_get (widget))))) 
+			return (GP_ERROR);
+	}
+
+	/* Resolution */
+	widget = gp_widget_child_by_label (section, "Resolution");
+	if (gp_widget_changed (widget)) {
+		if (strcmp (gp_widget_value_get (widget), "High (1152 x 872)") == 0) j = 1;
+                else if (strcmp (gp_widget_value_get (widget), "Low (576 x 436)") == 0) j = 3;
+                else j = 0;
+                if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_RESOLUTION, j))) return (GP_ERROR);
+	}
+
+        /****************/
+        /* Localization */
+        /****************/
+	section = gp_widget_child_by_label (section, "Localization");
+
+	/* Localization File */
+	widget = gp_widget_child_by_label (section, "Localization File");
+	if (gp_widget_changed (widget)) {
+	        if (strcmp (gp_widget_value_get (widget), "") != 0) {
+                	data = NULL;
+			data_size = 0;
+
+			/* Read localization file */
+			if (!localization_file_read (camera, gp_widget_value_get (widget), &data, &data_size)) {
+				g_free (data);
+				return (GP_ERROR);
+			}
+	
+			/* Go! */
+			if (error_happened (camera, k_localization_data_put (konica_data->device, data, data_size))) {
+				g_free (data);
+				return (GP_ERROR);
+			}
+			g_free (data);
+		}
+	}
+
+	/* TV Output Format */
+	widget = gp_widget_child_by_label (section, "TV Output Format");
+	if (gp_widget_changed (widget)) {
+		if (strcmp (gp_widget_value_get (widget), "NTSC") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_NTSC;
+		else if (strcmp (gp_widget_value_get (widget), "PAL") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_PAL;
+		else if (strcmp (gp_widget_value_get (widget), "Do not display TV menu") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
+		else g_assert_not_reached ();
+		if (error_happened (camera, k_localization_tv_output_format_set (konica_data->device, tv_output_format))) return (GP_ERROR);
+	}
+
+	/* Date Format */
+	widget = gp_widget_child_by_label (section, "Date Format");
+	if (gp_widget_changed (widget)) {
+		if (strcmp (gp_widget_value_get (widget), "Month/Day/Year") == 0) date_format = K_DATE_FORMAT_MONTH_DAY_YEAR;
+                else if (strcmp (gp_widget_value_get (widget), "Day/Month/Year") == 0) date_format = K_DATE_FORMAT_DAY_MONTH_YEAR;
+		else if (strcmp (gp_widget_value_get (widget), "Year/Month/Day") == 0) date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
+		else g_assert_not_reached ();
+		if (error_happened (camera, k_localization_date_format_set (konica_data->device, date_format))) return (GP_ERROR);
+	}
+
+        /********************************/
+        /* Session-persistent Settings  */
+        /********************************/
+	section = gp_widget_child_by_label (window, "Session-persistent Settings");
+
+	/* Flash */
+	widget = gp_widget_child_by_label (section, "Flash");
+	if (gp_widget_changed (widget)) {
+		if (strcmp (gp_widget_value_get (widget), "Off") == 0) j = 0;
+		else if (strcmp (gp_widget_value_get (widget), "On") == 0) j = 1;
+                else if (strcmp (gp_widget_value_get (widget), "On, red-eye reduction") == 0) j = 5;
+		else if (strcmp (gp_widget_value_get (widget), "Auto") == 0) j = 2;
+		else if (strcmp (gp_widget_value_get (widget), "Auto, red-eye reduction") == 0) j = 6;
+		else g_assert_not_reached ();
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_FLASH, j))) return (GP_ERROR);
+	}
+
+	/* Exposure */
+	widget = gp_widget_child_by_label (section, "Exposure");
+	if (gp_widget_changed (widget)) {
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_EXPOSURE, (guint) atoi (gp_widget_value_get (widget))))) 
+			return (GP_ERROR);
+	}
+
+	/* Focus will be set together with self timer. */
+	widget_focus = gp_widget_child_by_label (section, "Focus");
+
+        /************************/
+        /* Volatile Settings    */
+        /************************/
+	section = gp_widget_child_by_label (section, "Volatile Settings");
+
+	/* Self Timer (and focus) */
+	widget_self_timer = gp_widget_child_by_label (section, "Self Timer");
+	if (gp_widget_changed (widget_focus) && gp_widget_changed (widget_self_timer)) {
+		if (strcmp (gp_widget_value_get (widget_focus), "Auto") == 0) focus_self_timer = 2;
+		else if (strcmp (gp_widget_value_get (widget_focus), "Fixed") == 0) focus_self_timer = 0;
+		else g_assert_not_reached ();
+		if (strcmp (gp_widget_value_get (widget_self_timer), "Self Timer (only next picture)") == 0) focus_self_timer++;
+		else if (strcmp (gp_widget_value_get (widget_self_timer), "Normal") == 0);
+		else g_assert_not_reached ();
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_FOCUS_SELF_TIMER, focus_self_timer))) return (GP_ERROR);
+	}
+
+	/* We are done. */
 	return (GP_OK);
 }
 
 
-gboolean localization_file_read (
-	Camera *camera, 
-	gchar *file_name, 
-	guchar **data, 
-	gulong *data_size)
+int camera_config (Camera *camera)
+{
+	CameraWidget *window;
+
+	if (camera_config_get (camera, &window) == GP_OK) {
+
+	        /* Prompt the user with the config window. */
+	        if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
+	                gp_widget_free (window);
+	                return (GP_OK);
+	        }
+		return (camera_config_set (camera, window));
+	} else return (GP_ERROR);
+}
+
+
+gboolean localization_file_read (Camera *camera, gchar *file_name, guchar **data, gulong *data_size)
 {
 	FILE *file;
 	gulong j;
@@ -1104,6 +1210,7 @@ gboolean localization_file_read (
 	g_return_val_if_fail (data != NULL, FALSE);
 	g_return_val_if_fail (*data == NULL, FALSE);
 	g_return_val_if_fail (data_size != NULL, FALSE);
+
 	konica_data = (konica_data_t *) camera->camlib_data;
 	if ((file = fopen (file_name, "r")) == NULL) {
 		gp_frontend_message (camera, "Could not open requested localization file!");
@@ -1193,7 +1300,6 @@ gboolean localization_file_read (
 	fcs = 0;
 	g_warning ("Frame check sequence not implemented!");
 	//FIXME: There's a frame check sequence at (*data)[108] and (*data)[109]. I could not figure out how it is calculated.
-	if (konica_data->debug_flag) 
-		printf ("-> %i bytes read.\n", (gint) *data_size);
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "-> %i bytes read.\n", (gint) *data_size);
 	return (TRUE);
 }

@@ -39,10 +39,10 @@ typedef enum {
 /****************************************************************/
 /* Prototypes							*/
 /****************************************************************/
-l_return_status_t l_init (konica_data_t *konica_data);
+l_return_status_t l_init (gpio_device *device);
 
 
-l_return_status_t l_exit (konica_data_t *konica_data);
+l_return_status_t l_exit (gpio_device *device);
 
 
 /****************************************************************/
@@ -65,7 +65,7 @@ l_return_status_t l_exit (konica_data_t *konica_data);
 /*			status, other bytes will follow.	*/
 /****************************************************************/
 l_return_status_t l_send_receive (
-	konica_data_t *konica_data,
+	gpio_device *device,
 	guchar *send_buffer,
 	guint send_buffer_size,
         guchar **receive_buffer, 
@@ -73,7 +73,7 @@ l_return_status_t l_send_receive (
 
 
 l_return_status_t l_send_receive_receive (
-	konica_data_t *konica_data,
+	gpio_device *device,
 	guchar *send_buffer,
 	guint send_buffer_size,
         guchar **image_buffer, 

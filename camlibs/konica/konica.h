@@ -283,7 +283,7 @@ typedef enum {
 	K_TV_OUTPUT_FORMAT_NTSC,
 	K_TV_OUTPUT_FORMAT_PAL,
 	K_TV_OUTPUT_FORMAT_HIDE
-} k_tv_output_format;
+} k_tv_output_format_t;
 
 
 /****************************************************************/
@@ -296,14 +296,14 @@ typedef enum {
 /* for image IDs (qm100, unsigned int), the other one uses four */
 /* (qm200, unsigned long).                                      */
 /****************************************************************/
-k_return_status_t k_init (konica_data_t *konica_data);
+k_return_status_t k_init (gpio_device *device);
 
 
-k_return_status_t k_exit (konica_data_t *konica_data);
+k_return_status_t k_exit (gpio_device *device);
 
 
 k_return_status_t k_get_io_capability (
-	konica_data_t *konica_data,
+	gpio_device *device,
 	gboolean *bit_rate_300,
 	gboolean *bit_rate_600,
 	gboolean *bit_rate_1200,
@@ -322,7 +322,7 @@ k_return_status_t k_get_io_capability (
 
 
 k_return_status_t k_set_io_capability (
-	konica_data_t *konica_data,
+	gpio_device *device,
 	guint bit_rate,
 	gboolean bit_flag_7_or_8_bits,
 	gboolean bit_flag_stop_2_bits,
@@ -331,16 +331,15 @@ k_return_status_t k_set_io_capability (
 	gboolean bit_flag_use_hw_flow_control);
 
 
-k_return_status_t k_erase_all (
-        konica_data_t *konica_data,
-	guint *number_of_images_not_erased);
+k_return_status_t k_erase_all (gpio_device *device, guint *number_of_images_not_erased);
 
 
-k_return_status_t k_format_memory_card (konica_data_t *konica_data);
+k_return_status_t k_format_memory_card (gpio_device *device);
 
 
 k_return_status_t k_take_picture (
-        konica_data_t *konica_data,
+	gpio_device *device,
+	gboolean image_id_long,
 	gulong *image_id, 
 	guint *exif_size,
 	guchar **information_buffer, 
@@ -348,35 +347,23 @@ k_return_status_t k_take_picture (
 	gboolean *protected);
 
 
-k_return_status_t k_get_preview (
-        konica_data_t *konica_data,
-	gboolean thumbnail, 
-	guchar **image_buffer, 
-	guint *image_buffer_size);
+k_return_status_t k_get_preview (gpio_device *device, gboolean thumbnail, guchar **image_buffer, guint *image_buffer_size);
 
 
-k_return_status_t k_set_preference (
-        konica_data_t *konica_data,
-	k_preference_t preference, 
-	guint value);
+k_return_status_t k_set_preference (gpio_device *device, k_preference_t preference, guint value);
 
 
-k_return_status_t k_set_protect_status (
-        konica_data_t *konica_data,
-	gulong image_id, 
-	gboolean protected);
+k_return_status_t k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected);
 
 
-k_return_status_t k_erase_image (
-        konica_data_t *konica_data,
-	gulong image_id);
+k_return_status_t k_erase_image (gpio_device *device, gboolean image_id_long, gulong image_id);
 
 
-k_return_status_t k_reset_preferences (konica_data_t *konica_data);
+k_return_status_t k_reset_preferences (gpio_device *device);
 
 
 k_return_status_t k_get_date_and_time (
-        konica_data_t *konica_data,
+        gpio_device *device,
 	guchar *year, 
 	guchar *month, 
 	guchar *day, 
@@ -386,7 +373,7 @@ k_return_status_t k_get_date_and_time (
 
 
 k_return_status_t k_set_date_and_time (
-        konica_data_t *konica_data,
+	gpio_device *device,
 	guchar year, 
 	guchar month, 
 	guchar day, 
@@ -396,7 +383,7 @@ k_return_status_t k_set_date_and_time (
 
 
 k_return_status_t k_get_preferences (
-        konica_data_t *konica_data,
+	gpio_device *device,
 	guint *shutoff_time, 
 	guint *self_timer_time, 
 	guint *beep, 
@@ -404,7 +391,7 @@ k_return_status_t k_get_preferences (
 
 
 k_return_status_t k_get_status (
-        konica_data_t *konica_data,
+	gpio_device *device,
 	guint *self_test_result, 
 	k_power_level_t	*power_level,
 	k_power_source_t *power_source,
@@ -430,7 +417,7 @@ k_return_status_t k_get_status (
 
 
 k_return_status_t k_get_information (
-        konica_data_t *konica_data,
+	gpio_device *device,
 	gchar **model,
 	gchar **serial_number,
 	guchar *hardware_version_major,
@@ -444,7 +431,8 @@ k_return_status_t k_get_information (
 
 
 k_return_status_t k_get_image_information (
-        konica_data_t *konica_data,
+	gpio_device *device,
+	gboolean image_id_long,
 	gulong image_number,
 	gulong *image_id, 
 	guint *exif_size, 
@@ -454,35 +442,25 @@ k_return_status_t k_get_image_information (
 
 
 k_return_status_t k_get_image (
-        konica_data_t *konica_data,
+	gpio_device *device,
+	gboolean image_id_long,
 	gulong image_id, 
 	k_image_type_t image_type, 
 	guchar **image_buffer, 
 	guint *image_buffer_size);
 
 
-k_return_status_t k_set_protect_status (
-        konica_data_t *konica_data,
-	gulong image_id, 
-	gboolean protected);
+k_return_status_t k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected);
 
 
-k_return_status_t k_localization_tv_output_format_set (
-	konica_data_t *konica_data,
-	k_tv_output_format tv_output_format);
+k_return_status_t k_localization_tv_output_format_set (gpio_device *device, k_tv_output_format_t tv_output_format);
 
 
-k_return_status_t k_localization_date_format_set (
-        konica_data_t *konica_data,
-        k_date_format_t date_format);
+k_return_status_t k_localization_date_format_set (gpio_device *device, k_date_format_t date_format);
 
 
-k_return_status_t k_localization_data_put (
-        konica_data_t *konica_data,
-	guchar *data,
-	gulong data_size);
+k_return_status_t k_localization_data_put (gpio_device *device, guchar *data, gulong data_size);
 
 
-k_return_status_t k_cancel (
-        konica_data_t *konica_data,
-	k_command_t *command);
+k_return_status_t k_cancel (gpio_device *device, k_command_t *command);
+
