@@ -1,7 +1,7 @@
 #ifndef GPIO_OS2_INCLUDED
 #define GPIO_OS2_INCLUDED
-/*#define IOLIBS getenv("IOLIBS")*/
-#define IOLIBS "./libgphoto2_port"
+#define IOLIBS getenv("IOLIBS")
+/*#define IOLIBS "./libgphoto2_port"*/
 #define RTLD_LAZY       0x001
 #ifndef HAVE_TERMIOS_H
 /* c_cflag bit meaning */

@@ -89,7 +89,7 @@ int gp_port_library_list (gp_port_info *list, int *count) {
                 loaded[x]=0;
 
         /* Look for available camera libraries */
-        d = GP_SYSTEM_OPENDIR("E:\\netlabs\\gnome\\gphoto2\\libgphoto2_port");
+        d = GP_SYSTEM_OPENDIR(IOLIBS);
         if (!d) {
                 gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level,
                         "couldn't open %s ", IOLIBS);

@@ -41,5 +41,5 @@ cmdline: ..\..\gphoto2.exe
 ..\..\obj\foreach.o: foreach.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
-..\..\gphoto2.exe: ..\..\obj\interface.o ..\..\obj\script.o ..\..\obj\main.o ..\..\obj\test.o ..\..\lib\libgphoto2.a ..\..\lib\libgphoto2_port.a ..\..\obj\actions.o ..\..\obj\shell.o ..\..\obj\foreach.o ..\..\obj\options.o  ..\..\obj\range.o
-  @$(CC) -O2 $** -o $@ -Zbin-files -Zcrtdll -Zmtd -s -L..\..\lib -llibgphoto2 -llibgphoto2_port -ldllib -lmt\emx
+..\..\gphoto2.exe: ..\..\obj\interface.o ..\..\obj\script.o ..\..\obj\main.o ..\..\obj\test.o ..\..\obj\actions.o ..\..\obj\shell.o ..\..\obj\foreach.o ..\..\obj\options.o  ..\..\obj\range.o
+  @$(CC) -O2 $** -o $@ -Zmtd -Zcrtdll -L..\..\lib -Zbin-files -llibgphoto2 -llibgphoto2_port -ldllib

@@ -59,4 +59,4 @@ lgp2port.def: obj\gp_port.o obj\portability.o obj\library.o
    @emxexp $** >> lgp2port.def
 
 ..\lgp2port.dll: lgp2port.def obj\gp_port.o obj\portability.o obj\library.o
-  @$(CC) -Wall -Zdll -Zcrtdll -Zbin-files -o $@ $** -L..\..\lib -ldllib
+  @$(CC) -Zmtd -Wall -Zdll -Zcrtdll -Zbin-files -o $@ $** -L..\..\lib -ldllib
