@@ -106,7 +106,6 @@ int gp_port_set_timeout  (GPPort *port, int  timeout);
 int gp_port_set_settings (GPPort *port, GPPortSettings  settings);
 int gp_port_get_settings (GPPort *port, GPPortSettings *settings);
 
-typedef enum _GPPin GPPin;
 enum _GPPin {
 	GP_PIN_RTS,
 	GP_PIN_DTR,
@@ -115,12 +114,13 @@ enum _GPPin {
 	GP_PIN_CD,
 	GP_PIN_RING
 };
+typedef enum _GPPin GPPin;
 
-typedef enum _GPLevel GPLevel;
 enum _GPLevel {
 	GP_LEVEL_LOW  = 0,
 	GP_LEVEL_HIGH = 1
 };
+typedef enum _GPLevel GPLevel;
 
 int gp_port_get_pin   (GPPort *port, GPPin pin, GPLevel *level);
 int gp_port_set_pin   (GPPort *port, GPPin pin, GPLevel level);

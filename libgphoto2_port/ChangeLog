@@ -1,3 +1,8 @@
+2002-02-13  Marcus Meissner <marcus@jet.franken.de>
+	
+	* gphoto2-port.h: placed typedefs after the enums (GPPin and GPLevel)
+	  since g++ does not like it.
+	  
 2002-02-11  Lutz Müller <lutz@users.sourceforge.net>
 
 	* doc/DocRules.am: Fix building docs when $(builddir) == $(srcdir).
