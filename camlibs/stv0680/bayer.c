@@ -47,6 +47,24 @@ void bayer_unshuffle(int w, int h, unsigned char *raw, unsigned char *output)
 	}
 }
 
+void bayer_unshuffle_preview(int w, int h, int scale, unsigned char *raw, unsigned char *output)
+{
+	int x, y, i, p;
+	int yincr = scale ? scale<<1 : 1;
+
+	for(y = 0; y < h; y+=yincr) {
+		for(x = 0; x < w; ++x) {
+			p = (x & 1 ? raw[(y*w) + (x >> 1)] : raw[(y*w) + (x>>1) + (w >> 1)])>>scale;
+
+			i = (((y>>scale) * w + x) * 3)>>scale;
+
+			output[i]   += p;
+			output[i+1] += p;
+			output[i+2] += p;
+		}
+	}
+}
+
 #define ISEVEN(a) (((a)&1)!=1)
 #define GETADD(x, y) ((3*(x))+(356*3*(y)))
 #define RED 0
@@ -85,4 +103,6 @@ void bayer_demosaic(int w, int h, unsigned char *image)
 		}
 	}
 }
+
+
 
