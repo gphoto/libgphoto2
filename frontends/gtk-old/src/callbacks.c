@@ -712,8 +712,12 @@ void camera_delete_common(int all) {
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
-
-	if (gp_confirm("Are you sure you want to DELETE the photos?")==0)
+	if (all)
+		strcpy(buf, _("Are you sure you want to DELETE ALL the photos?"));
+	   else
+		strcpy(buf, _("Are you sure you want to DELETE the selected photos?"));
+		
+	if (gp_confirm(buf)==0)
 		return;
 
 	if (gp_setting_get("camera", buf)==GP_ERROR) {
