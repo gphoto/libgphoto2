@@ -2,6 +2,7 @@
 	
 	* camlibs/*/Makefile.am:
 	* libgphoto2/Makefile.am:
+	* libgphoto2/libgphoto2.pc.in:
 	* configure.in: made camlibdir settable by cmdline option
 
 2002-11-01  Hans Ulrich Niedermann  <gp@n-dimensional.de>
