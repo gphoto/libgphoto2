@@ -1,0 +1,37 @@
+========================================================================
+$Id$
+
+This list of testers is intended for driver developers to 
+find people with the required types of cameras to test their drivers.
+Therefore it is sorted by the camera type.
+
+If you create some changes to a special driver have to test the driver 
+on a type of camera you have no access to, you may contact these nice 
+folks.
+
+If you have a camera not yet on this list and want to help develop the 
+gphoto project, we ask you to join the testers. Just tell us at 
+<gphoto-devel@gphoto.org> to include you on this list.
+
+This will mean your name and e-mail will be distributed with every
+source copy of gphoto2 and be published at http://gphoto.org/. 
+
+It will also mean that you will test software that is UNTESTED AND
+POSSIBLY DANGEROUS TO YOUR HARDWARE OR YOUR HEALTH. You will do this
+on YOUR OWN RESPONSIBILITY. 
+
+But it will also mean that you will be able to help develop the driver
+and possibly be the first one to test the long-awaited working driver
+:-)
+
+This said, we developers also continually test our software risking
+thousands of dollars' worth of hardware and our lives. :-)
+
+========================================================================
+
+Canon EOS D30 - David ROBERT <david@ombrepixel.com>
+Canon PowerShot A50 - Philippe Marzouk <pmarzouk@wanadoo.fr>
+Canon PowerShot G2 - Hans Ulrich Niedermann <hun@n-dimensional.de>
+Canon PowerShot Pro90 IS - Tom Young <tyoung3@home.com>
+
+Kodak DC240 - Hubert Figuiere <hfiguiere@teaser.fr>

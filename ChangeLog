@@ -1,5 +1,6 @@
 2001-10-28 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
+	* TESTERS: added list of volunteer testers to the source distribution
 	* frontends/command-line/interface.c: moved status msgs to stderr
 	* libgphoto2/gphoto2-abilities-list.c: don't scan USB for ID 0, 
 	  better (?) error handling and reporting
