@@ -1159,7 +1159,7 @@ camera_summary (Camera *camera, CameraText *text, GPContext *context)
 			break;
 		case 2:
 			strftime(date,sizeof(date),"%Y/%m/%d %H:%M",&tmp);
-			snprintf(date_disp,sizeof(date_disp),_("YYYY/MM/AA"));
+			snprintf(date_disp,sizeof(date_disp),_("YYYY/MM/DD"));
 			break;
 		default:
 			strftime(date,sizeof(date),"%m/%d/%Y %H:%M",&tmp);
