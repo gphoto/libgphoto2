@@ -400,10 +400,10 @@ static int
 fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 	   unsigned char *last, GPContext *context)
 {
-	unsigned char b[1024], check;
+	unsigned char b[1024], check = 0;
 	int i;
 
-	/* Read the header */
+	/* Read the header. The checksum covers the size, too. */
 	CR (gp_port_read (camera->port, b, 4));
 	if ((b[0] != ESC) || (b[1] != STX)) {
 		gp_context_error (context, _("Received unexpected data "
@@ -411,11 +411,13 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 	*buf_len = ((b[2] << 8) | b[3]) - 2;
+	check ^= b[2];
+	check ^= b[3];
 	GP_DEBUG ("We are expecting %i byte(s) data (excluding ESC quotes). "
 		  "Let's read them...", *buf_len);
 
 	/* Read the data. Unescape it. Calculate the checksum. */
-	for (check = i = 0; i < *buf_len; i++) {
+	for (i = 0; i < *buf_len; i++) {
 		CR (gp_port_read (camera->port, buf + i, 1));
 		if (buf[i] == ESC) {
 			CR (gp_port_read (camera->port, buf + i, 1));
@@ -456,14 +458,14 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 	check ^= b[1];
-#if 0
 	if (check != b[2]) {
 		gp_context_error (context,
 			_("Bad checksum - got 0x%02x, expected 0x%02x."),
 			b[2], check);
+#if 0
 		return (GP_ERROR_CORRUPTED_DATA);
-	}
 #endif
+	}
 
 	return (GP_OK);
 }
