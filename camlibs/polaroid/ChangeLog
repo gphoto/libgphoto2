@@ -1,5 +1,10 @@
 2002-03-19  Greg Ingram <ingram@symsys.com>
 
+	* pdc700.c: Added pdc700_set_date() which appears to work.  Is the
+	  date widget working completely?  Added the ability to select image
+	  size (resolution).  The configuration dialog was getting rather too
+	  tall so I split it up onto three sections (tabs).
+	
 	* pdc700.c: Fix off-by-one thinko in get_config where the 
 	  camera's month datum is one-based but tm.tm_mon is
 	  zero-based.
