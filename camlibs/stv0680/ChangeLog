@@ -1,5 +1,10 @@
 2001-04-10  Marcus Meissner <marcus@jet.franken.de>
 	
+	* stv0680.c: Some of those cameras (especially the generic ones 
+	 and the Argus DC-1500) are USB and serial at the same time.
+
+2001-04-10  Marcus Meissner <marcus@jet.franken.de>
+	
 	* stv0680.c: Set the speed on camera_init for serial cameras.
 
 2001-04-05  Marcus Meissner <marcus@jet.franken.de>

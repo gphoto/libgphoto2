@@ -49,9 +49,11 @@ struct camera_to_usb {
 	  char *name;
 	  unsigned short idVendor;
 	  unsigned short idProduct;
+	  int serial;
 } camera_to_usb[] = {
         /* http://www.vvl.co.uk/products/co-processors/680/680.htm */
-	{ "STM USB Dual-mode camera",   0x0553, 0x0202 },
+	{ "STM USB Dual-mode camera",   0x0553, 0x0202, 1 },
+	{ "STV0680",                    0x0553, 0x0202, 1 },
 
 	/* You can search in google for them, using either:
 	 * 	AAA 80 CIF
@@ -61,41 +63,38 @@ struct camera_to_usb {
 	 */
 
 	/* http://www.logitech.com/cf/products/productoverview.cfm/3041 */
-	{ "Logitech Clicksmart 310",    0x0553, 0x0202 },
+	{ "Logitech Clicksmart 310",    0x0553, 0x0202, 0 },
 	/* http://www.iomagic.com/support/digitalcameras/magicimage400/magicimage400manual.htm */
-	{ "IOMagic MagicImage 400",     0x0553, 0x0202 },
+	{ "IOMagic MagicImage 400",     0x0553, 0x0202, 0 },
 	/* http://www.pctekonline.com/phoebsmardig.html */
-	{ "Phoebe Smartcam",            0x0553, 0x0202 },
-	{ "QuickPix QP1",               0x0553, 0x0202 },
-	{ "Hawking DC120 Pocketcam",    0x0553, 0x0202 },
-	{ "Aiptek PenCam Trio",         0x0553, 0x0202 },
+	{ "Phoebe Smartcam",            0x0553, 0x0202, 0 },
+	{ "QuickPix QP1",               0x0553, 0x0202, 0 },
+	{ "Hawking DC120 Pocketcam",    0x0553, 0x0202, 0 },
+	{ "Aiptek PenCam Trio",         0x0553, 0x0202, 0 },
 	/* Made by Medion (ALDI hw reseller). Their homepage is broken, so
 	 * no URL. This is the camera I have -Marcus. CIF */
-	{ "Micromaxx Digital Camera",   0x0553, 0x0202 },
+	{ "Micromaxx Digital Camera",   0x0553, 0x0202, 0 },
 	/* http://www.digitaldreamco.com/shop/elegante.htm, VGA */
-	{ "l'elegante by DigitalDream", 0x0553, 0x0202 },
+	{ "l'elegante by DigitalDream", 0x0553, 0x0202, 0 },
 	/* http://www.digitaldreamco.com/shop/espion.htm, CIF */
-	{ "l'espion by DigitalDream",   0x0553, 0x0202 },
+	{ "l'espion by DigitalDream",   0x0553, 0x0202, 0 },
 	/* http://www.digitaldreamco.com/shop/lesprit.html, CIF */
-	{ "l'esprit by DigitalDream",   0x0553, 0x0202 },
+	{ "l'esprit by DigitalDream",   0x0553, 0x0202, 0 },
 	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA */
-	{ "la ronde by DigitalDream",   0x0553, 0x0202 },
+	{ "la ronde by DigitalDream",   0x0553, 0x0202, 0 },
 
 	/* reported by jerry white */
-	{ "Argus DC-1500",		0x0553, 0x0202 },
+	{ "Argus DC-1500",		0x0553, 0x0202, 1 },
 
-	{ "AEG Snap 300",               0x0553, 0x0202 },
+	{ "AEG Snap 300",               0x0553, 0x0202, 0 },
 	/* SiPix Stylecam looks like stv0680, but reportedly is not  */
 	/* (has USB id 0xd64/0x1001) */
-
 	/* http://www.umax.de/digicam/AstraPen_SL.htm.
 	 * There is an additional 100K (CIF), 300K (VGA) tag after the name. */
-	{ "UMAX AstraPen",              0x0553, 0x0202 }, /* SV and SL */
+	{ "UMAX AstraPen",              0x0553, 0x0202, 0 }, /* SV and SL */
 	/* http://www.umax.de/digicam/AstraPix320S.htm, VGA */
-	{ "UMAX AstraPix 320S",         0x0553, 0x0202 },
-
-	{ "Fuji IX-1",                  0x0553, 0x0202 }, /* Unconfirmed */
-	{ "STV0680",                    0x0000, 0x0000 }  /* serial version */
+	{ "UMAX AstraPix 320S",         0x0553, 0x0202, 0 },
+	{ "Fuji IX-1",                  0x0553, 0x0202, 0 }, /* Unconfirmed */
 };
 
 int camera_id (CameraText *id) 
@@ -117,26 +116,25 @@ int camera_abilities (CameraAbilitiesList *list)
 		memset(&a, 0, sizeof(a));
 		strcpy(a.model, camera_to_usb[i].name);
 
-		if (!camera_to_usb[i].idVendor) {
-			a.status	= GP_DRIVER_STATUS_EXPERIMENTAL;
-			a.port     = GP_PORT_SERIAL;
-			a.speed[0] = 115200;
-			a.speed[1] = 0;
-			a.operations        = GP_OPERATION_CAPTURE_IMAGE;
-			a.file_operations   = GP_FILE_OPERATION_PREVIEW;
-			a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
-		} else {
+		a.port			= 0;
+		/* serial status is experimental, usb status is testing */
+		a.status		= GP_DRIVER_STATUS_EXPERIMENTAL;
+		a.operations		= GP_OPERATION_CAPTURE_IMAGE;
+		a.file_operations	= GP_FILE_OPERATION_PREVIEW;
+		a.folder_operations	= GP_FOLDER_OPERATION_DELETE_ALL;
+
+		if (camera_to_usb[i].idVendor) {
 			a.status = GP_DRIVER_STATUS_TESTING;
-			a.port     = GP_PORT_USB;
-			a.speed[0] = 0;
-			a.operations        = GP_OPERATION_CAPTURE_PREVIEW | 
-			    			GP_OPERATION_CAPTURE_IMAGE;
-			a.file_operations   = GP_FILE_OPERATION_PREVIEW;
-			a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
+			a.port     |= GP_PORT_USB;
+			a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
 			a.usb_vendor  = camera_to_usb[i].idVendor;		
 			a.usb_product = camera_to_usb[i].idProduct;
 		}
-
+		if (camera_to_usb[i].serial) {
+			a.port     |= GP_PORT_SERIAL;
+			a.speed[0] = 115200;
+			a.speed[1] = 0;
+		}
 		gp_abilities_list_append(list, a);
 	}
 
