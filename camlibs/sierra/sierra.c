@@ -1264,6 +1264,7 @@ int camera_init (Camera *camera)
         int x=0, ret;
         int vendor=0, product=0, inep=0, outep=0;
 	GPPortSettings settings;
+	CameraAbilities a;
 
         if (!camera)
                 return (GP_ERROR_BAD_PARAMETERS);
@@ -1299,8 +1300,9 @@ int camera_init (Camera *camera)
         case GP_PORT_USB:
 
                 /* Lookup the USB information */
+		gp_camera_get_abilities (camera, &a);
                 for (x = 0; strlen (sierra_cameras[x].model) > 0; x++) {
-                        if (!strcmp (sierra_cameras[x].model, camera->model)) {
+                        if (!strcmp (sierra_cameras[x].model, a.model)) {
                                 vendor = sierra_cameras[x].usb_vendor;
                                 product = sierra_cameras[x].usb_product;
                                 inep = sierra_cameras[x].usb_inep;

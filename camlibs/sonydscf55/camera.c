@@ -172,15 +172,14 @@ get_info_func (CameraFilesystem *fs, const char *folder,
  */
 int camera_init(Camera * camera)
 {
+	CameraAbilities a;
 	int is_msac, rc;
-
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID, "Initialising %s",
-			camera->model);
 
 	camera->functions->exit = camera_exit;
 	camera->functions->about = camera_about;
 
-	is_msac = !strcmp (camera->model, SONY_MODEL_MSAC_SR1);
+	gp_camera_get_abilities (camera, &a);
+	is_msac = !strcmp (a.model, SONY_MODEL_MSAC_SR1);
 
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
