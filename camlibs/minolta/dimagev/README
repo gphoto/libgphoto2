@@ -7,12 +7,13 @@ community". I am interpreting this "sharing" as the GNU GPL. Minolta takes no
 responsibility for the information they provided me, which is perfectly fair.
 Please see the file COPYING for more information.
 
-I am willing to provide contact names at Minolta for anyone looking for other
-camera specifications; I have no influence of any kind there, and can't
-guarantee any sort of response from them. Copies of this specification are
-available under the aforementioned "share" clause; I will mail them globally,
-and fax them anywhere in the US or Canada. A lot of the information is in the
-code itself, but sometimes the real spec is nice so readers can find my bugs.
+Copies of the Dimage V transfer specification are available under the
+aforementioned "share" clause; I will mail them globally, and fax them
+anywhere in the US or Canada. A lot of the information is in the code
+itself, but sometimes the real spec is nice so readers can find my bugs.
+Minolta has made it clear that they do not wish to release further protocols,
+and recommend that users of unsupported systems purchase SmartMedia readers
+to transfer images.
 
 This library is far from complete. There are plenty of places where better
 sanity checking could be done. I will continue to work on it until I buy a
@@ -40,5 +41,8 @@ Notes on specific functions:
 	the Dimage V thumbnail format; there were other programs to connect, but
 	all (including my earlier attempts) just gave up on the retrieved data.
 	More information on the file format can be obtained in the code itself.
+
+	Deleting all images is now implemented correctly. This beats iterating
+	accross all of them, hands down.
 
 --Gus Hartmann, <gphoto-dimagev@gus-the-cat.org>
