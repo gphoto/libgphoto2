@@ -1,3 +1,10 @@
+2005-02-07  Marcus Meissner  <marcus@jet.franken.de>
+
+	* libgphoto2/gphoto2-filesys.c:
+	  Use the minimum of the 3 exif timestamps (time, capture time,
+	  digitized time). This fixes use on the Traveller SX330Z as
+	  reported.
+
 2005-01-18  Marcus Meisser   <marcus@jet.franken.de>
 
 	* po/ru.po: Update thanks to Vyacheslav Dikonov <sdiconov@mail.ru>
