@@ -29,6 +29,25 @@
 #include "gphoto2-port-library.h"
 #include "gphoto2-port-log.h"
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 GPPortInfo  *port_info = NULL;
 unsigned int port_info_size = 0;
 
@@ -56,8 +75,8 @@ gp_port_core_init (void)
 	d = GP_SYSTEM_OPENDIR (IOLIBS);
 	if (!d) {
 		gp_log (GP_LOG_ERROR, "gphoto2-port-core",
-			"Could not load any io-library because '%s' could "
-			"not be opened (%m)", IOLIBS);
+			_("Could not load any io-library because '%s' could "
+			"not be opened (%m)"), IOLIBS);
 		return (GP_ERROR_LIBRARY);
 	}
 
