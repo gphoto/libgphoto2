@@ -1,0 +1,18 @@
+
+These are just some quick notes.
+
+fuji_get_cmds:
+--------------
+ESC STX
+00 4d 1b 00
+00 02 07 09 0a 0b 0c 0e 0f 11 13 17 19 1b 29 4c 51 80 82 84 86 c0 20 22 2a 2b 2e
+ESC ETX
+9b
+
+fuji_pic_count:
+---------------
+ESC STX
+00 06 02 00
+02 00
+ESC ETX
+05

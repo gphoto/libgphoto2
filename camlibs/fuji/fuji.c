@@ -403,16 +403,30 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 	unsigned char b[1024], check = 0;
 	int i;
 
-	/* Read the header. The checksum covers the size, too. */
-	CR (gp_port_read (camera->port, b, 4));
+	/*
+	 * Read the header. The checksum covers all bytes between
+	 * ESC STX and ESC ET[X,B].
+	 */
+	CR (gp_port_read (camera->port, b, 6));
+
+	/* Verify the header */
 	if ((b[0] != ESC) || (b[1] != STX)) {
 		gp_context_error (context, _("Received unexpected data "
 			"(0x%02x, 0x%02x)."), b[0], b[1]);
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
-	*buf_len = ((b[2] << 8) | b[3]) - 2;
+
+	/*
+	 * We don't know the meaning of b[2] and b[3].
+	 * We have seen 0x00 0x4d and 0x00 0x06.
+	 */
 	check ^= b[2];
 	check ^= b[3];
+
+	/* Determine the length of the packet. */
+	*buf_len = ((b[5] << 8) | b[4]);
+	check ^= b[4];
+	check ^= b[5];
 	GP_DEBUG ("We are expecting %i byte(s) data (excluding ESC quotes). "
 		  "Let's read them...", *buf_len);
 
@@ -462,9 +476,7 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 		gp_context_error (context,
 			_("Bad checksum - got 0x%02x, expected 0x%02x."),
 			b[2], check);
-#if 0
 		return (GP_ERROR_CORRUPTED_DATA);
-#endif
 	}
 
 	return (GP_OK);
@@ -574,31 +586,11 @@ fuji_pic_count (Camera *camera, unsigned int *n, GPContext *context)
 	cmd[3] = 0;
 	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
 
-	CLEN (buf_len, 4);
+	CLEN (buf_len, 2);
 
-	/* The first two bytes are the number of pictures. */
 	*n = (buf[1] << 8) | buf[0];
 
-	/*
-	 * The next two bytes we don't know the meaning of. We have seen
-	 * 0x02 0x00.
-	 */
-
 	return (GP_OK);
-
-#if 0
-    int numpics, gpr, len = 0;
-    char *data = NULL;
-
-    gpr = cmd0 (camera, context, 0, FUJI_GET_PICCOUNT, &data, &len);
-    if (gpr < GP_OK) {
-	if (data) free(data);
-	return gpr;
-    }
-    numpics = data[0] + (data[1]<<8);
-    if (data) free(data);
-    return numpics;
-#endif
 }
 
 int
