@@ -93,7 +93,7 @@ camera_abilities (CameraAbilitiesList *list)
 			       GP_OPERATION_CONFIG;
 		a.file_operations = GP_FILE_OPERATION_DELETE |
 				    GP_FILE_OPERATION_PREVIEW;
-		a.folder_operations = GP_FOLDER_OPERATION_NONE;
+		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
 		CR (gp_abilities_list_append (list, a));
 	}
 
@@ -272,6 +272,22 @@ camera_capture (Camera *camera, CameraCaptureType type,
 	strcpy (path->folder, "/");
 	CR (gp_filesystem_append (camera->fs, path->folder,
 				  path->name, context));
+
+	return (GP_OK);
+}
+
+static int
+put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
+	       void *user_data, GPContext *context)
+{
+	const char *data, *name;
+	unsigned long int size;
+	Camera *camera = user_data;
+
+	CR (gp_file_get_data_and_size (file, &data, &size));
+	CR (gp_file_get_name (file, &name));
+
+	CR (ricoh_put_file (camera, context, name, data, size));
 
 	return (GP_OK);
 }
@@ -567,7 +583,9 @@ camera_init (Camera *camera, GPContext *context)
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 					  del_file_func, camera));
 	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-						NULL, camera));					
+						NULL, camera));
+	CR (gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
+					    NULL, NULL, NULL, camera));
 
 	/*
 	 * Remember the model. It could be that there hasn't been the 

@@ -1,3 +1,8 @@
+2002-07-20  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c:
+	* ricoh.[c,h]: Implement upload.
+
 2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
 
 	* ricoh.c: Simplify by using macros.

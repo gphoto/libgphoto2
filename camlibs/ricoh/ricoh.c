@@ -796,3 +796,63 @@ ricoh_take_pic (Camera *camera, GPContext *context)
 
 	return (GP_OK);
 }
+
+#undef MIN
+#define MIN(x,y) (((x) < (y)) ? (x) : (y))
+
+int
+ricoh_put_file (Camera *camera, GPContext *context, const char *name,
+		const unsigned char *data, unsigned int size)
+{
+	RicohMode mode;
+	unsigned char p[16], len, buf[0xff], block[0xff];
+	unsigned int pic_num, i, pr;
+
+	CR (ricoh_get_mode (camera, context, &mode));
+	if (mode != RICOH_MODE_PLAY)
+		CR (ricoh_set_mode (camera, context, RICOH_MODE_PLAY));
+
+	/* Filename ok? */
+	if (strlen (name) > 12) {
+		gp_context_error (context, _("The filename's length must not "
+			"exceed 12 characters ('%s' has %i characters)."),
+			name, strlen (name));
+		return (GP_ERROR);
+	}
+
+	strncpy (p, name, 12);
+	p[12] = size << 24;
+	p[13] = size << 16;
+	p[14] = size << 8;
+	p[15] = size;
+	CR (ricoh_transmit (camera, context, 0xa1, p, 16, buf, &len));
+	C_LEN (context, len, 2);
+
+	/*
+	 * We just received the picture number of the new file. We don't 
+	 * need it.
+	 */
+	pic_num = buf[0] | (buf[1] << 8);
+
+	/* Now send the data */
+	pr = gp_context_progress_start (context, size, _("Uploading..."));
+	for (i = 0; i < size; i += 128) {
+		memset (block, 0, sizeof (buf));
+		memcpy (block, data + i, MIN (128, size - i));
+		CR (ricoh_transmit (camera, context, 0xa2, block, 128, 
+				    buf, &len));
+		C_LEN (context, len, 0);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
+		gp_context_progress_update (context, pr, MIN (i + 128, size));
+	}
+	gp_context_progress_stop (context, pr);
+
+	/* Finish upload */
+	p[0] = 0x12;
+	p[1] = 0x00;
+	CR (ricoh_transmit (camera, context, 0x50, p, 2, buf, &len));
+	C_LEN (context, len, 0);
+
+	return (GP_OK);
+}

@@ -88,7 +88,9 @@ int ricoh_get_pic   (Camera *camera, GPContext *context, unsigned int n,
 		     RicohFileType type,
 		     unsigned char **data, unsigned int *size);
 
-int ricoh_take_pic  (Camera *camera, GPContext *context);
+int ricoh_take_pic  (Camera *, GPContext *);
+int ricoh_put_file  (Camera *, GPContext *, const char *name,
+		     const unsigned char *data, unsigned int size);
 
 int ricoh_get_date  (Camera *camera, GPContext *context, time_t *time);
 int ricoh_set_date  (Camera *camera, GPContext *context, time_t  time);
