@@ -179,7 +179,8 @@ typedef enum {
 	CANON_EOS_300D,
 	CANON_PS_G5,
 	CANON_OPT_20,
-	CANON_OPT_10
+	CANON_OPT_10,
+	CANON_IXUS_40
 } canonCamModel;
 
 /**

@@ -196,6 +196,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot S410 (normal mode)",CANON_PS_S410,    0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 430 (normal mode)",CANON_PS_S410,  0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A95 (normal mode)",CANON_PS_A95,      0x04A9, 0x30bb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Digital IXUS 40 (normal mode)",CANON_PS_IXUS40, 0x04A9, 0x30bf, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:EOS 20D (normal mode)",CANON_EOS_20D,           0x04A9, 0x30eb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{NULL}
