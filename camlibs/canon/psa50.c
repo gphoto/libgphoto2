@@ -23,7 +23,9 @@
 #include <unistd.h>
 #include <termios.h>
 #include <ctype.h>
-/* #include <db.h> */
+#ifdef OS2
+ #include <db.h>
+#endif
 #include <netinet/in.h>
 #include <gphoto2.h>
 #include "../../libgphoto2/exif.h"
