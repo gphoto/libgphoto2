@@ -101,6 +101,34 @@ static struct {
 			"jd350v%04i.ppm"
 		}
 	},
+	{"ScanHex:SX-35", 0x797, 0x8901, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&jd350e_postprocessing,
+			"jd350v%04i.ppm"
+		}
+	},
+	{"ScanHex:SX-35", 0x797, 0x8909, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&jd350e_postprocessing,
+			"jd350v%04i.ppm"
+		}
+	},
+	{"ScanHex:SX-35", 0x797, 0x8911, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&jd350e_postprocessing,
+			"jd350v%04i.ppm"
+		}
+	},
+	{"ScanHex:SX-35", 0x84d, 0x1001, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&jd350e_postprocessing,
+			"jd350v%04i.ppm"
+		}
+	},
 	{"Typhoon:StyloCam", 0x797, 0x801a, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
@@ -694,9 +722,10 @@ camera_abilities (CameraAbilitiesList *list)
 
 		if (models[i].vendor) {
 			a.status = GP_DRIVER_STATUS_TESTING;
-			a.port = GP_PORT_USB;
+			a.port = GP_PORT_USB | GP_PORT_SERIAL;
 			a.usb_vendor = models[i].vendor;
 			a.usb_product = models[i].product;
+			a.speed[0] = 0;
 		} else {
 			a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 			a.port = GP_PORT_SERIAL;
