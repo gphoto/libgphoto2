@@ -44,21 +44,6 @@ struct _CameraFilesystem {
 
 #define CHECK(result) {int r = result; if (r < 0) return (r);}
 
-static CameraFilesystemFile *
-gp_filesystem_entry_new (const char *filename)
-{
-        CameraFilesystemFile *fse;
-
-        fse = malloc (sizeof (CameraFilesystemFile));
-
-        if (!fse)
-                return (NULL);
-
-        strcpy (fse->name, filename);
-
-        return (fse);
-}
-
 CameraFilesystem *
 gp_filesystem_new (void)
 {
@@ -89,63 +74,69 @@ int
 gp_filesystem_append (CameraFilesystem *fs, const char *folder, 
 		      const char *filename) 
 {
-        int x, folder_num = -1, file_num;
+        int x, y;
 
 	if (!fs || !folder || (*folder != '/'))
 		return (GP_ERROR_BAD_PARAMETERS);
 
-        for (x = 0; x < fs->count; x++)
-                if (!strcmp (fs->folder[x]->name, folder)) {
-                        folder_num = x;
-			break;
-		}
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Appending '%s' to folder "
+			 "'%s'...", filename, folder);
 
-	if (folder_num < 0) {
+	/* Check for existence */
+        for (x = 0; x < fs->count; x++)
+                if (!strcmp (fs->folder[x]->name, folder))
+			break;
+	if (x == fs->count) {
+
 		/* Allocate the folder pointer */
-		fs->folder = realloc(fs->folder,
-			sizeof (CameraFilesystemFolder*) * (fs->count + 1));
-		if (!fs->folder)
+		if (fs->count)
+			fs->folder = realloc (fs->folder,
+				sizeof (CameraFilesystemFolder*) *
+							(fs->count + 1));
+		else
+			fs->folder = malloc (sizeof (CameraFilesystemFolder*));
+		if (!fs->folder) {
+			fs->count = 0;
 			return (GP_ERROR_NO_MEMORY);
+		}
+		fs->count++;
 
 		/* Allocate the actual folder */
-		fs->folder[fs->count] = malloc (sizeof(CameraFilesystemFolder));
-		if (!fs->folder[fs->count])
+		fs->folder[x] = malloc (sizeof (CameraFilesystemFolder));
+		if (!fs->folder[x])
 			return (GP_ERROR_NO_MEMORY); 
 		
 		/* Initialize the folder */
-		strcpy (fs->folder[fs->count]->name, folder);
-		fs->folder[fs->count]->count = 0;
-
-		folder_num = fs->count;
-		fs->count += 1;
+		strcpy (fs->folder[x]->name, folder);
+		fs->folder[x]->count = 0;
 	}
 
 	if (!filename)
 		return (GP_OK);
 
 	/* If file exists, return error */
-	for (x = 0; x < fs->folder[folder_num]->count; x++)
-		if (!strcmp (fs->folder[folder_num]->file[x]->name, filename))
+	for (y = 0; y < fs->folder[x]->count; y++)
+		if (!strcmp (fs->folder[x]->file[y]->name, filename))
 			return (GP_ERROR_FILE_EXISTS);
 
 	/* Allocate a new file in that folder */
-	file_num = fs->folder[folder_num]->count;
-	if (file_num == 0)
-		fs->folder[folder_num]->file = malloc (
-					sizeof (CameraFilesystemFile*));
+	if (!fs->folder[x]->count)
+		fs->folder[x]->file = malloc (sizeof (CameraFilesystemFile*));
 	else
-		fs->folder[folder_num]->file = realloc (
-				fs->folder[folder_num]->file,
-				sizeof(CameraFilesystemFile*) * (file_num + 1));
-	if (!fs->folder[folder_num]->file) {
-		fs->folder[folder_num]->count = 0;
+		fs->folder[x]->file = realloc (fs->folder[x]->file,
+			sizeof(CameraFilesystemFile*) *
+				(fs->folder[x]->count + 1));
+	if (!fs->folder[x]->file) {
+		fs->folder[x]->count = 0;
 		return (GP_ERROR_NO_MEMORY);
 	}
+	fs->folder[x]->count++;
 
         /* Append the file */
-        fs->folder[folder_num]->file [file_num] =
-					gp_filesystem_entry_new (filename);
-        fs->folder[folder_num]->count += 1;
+        fs->folder[x]->file[y] = malloc (sizeof (CameraFilesystemFile));
+	if (!fs->folder[x]->file[y])
+		return (GP_ERROR_NO_MEMORY);
+	strcpy (fs->folder[x]->file [y]->name, filename);
 
         return (GP_OK);
 }
@@ -251,7 +242,7 @@ gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Populating '%s'...", folder);
 
-	/* Delete all files in the folder (if any exist) */
+	/* Delete all files and folders in the folder (if any exist) */
 	gp_filesystem_delete_all (fs, folder);
 
 	/* Search for the folder and create one if it doesn't exist */
@@ -263,8 +254,10 @@ gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
                 /* Allocate the folder pointer */
                 fs->folder = realloc (fs->folder,
 			sizeof (CameraFilesystemFolder*) * (fs->count + 1));
-                if (!fs->folder)
+                if (!fs->folder) {
+			fs->count = 0;
                         return (GP_ERROR_NO_MEMORY);
+		}
 		fs->count++;
 
 		/* Allocate the actual folder */
@@ -276,7 +269,7 @@ gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
 		fs->folder[x]->count = 0;
         }
 
-        /* Allocate the files in that (now empty) folder */
+        /* Allocate the files in that (empty) folder */
         fs->folder[x]->file = malloc (sizeof (CameraFilesystemFile*) * count);
         if (!fs->folder[x]->file)
                 return (GP_ERROR_NO_MEMORY);
@@ -285,7 +278,10 @@ gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
         /* Populate the folder with files */
         for (y = 0; y < count; y++) {
 		sprintf (buf, format, y + 1);
-		fs->folder[x]->file[y] = gp_filesystem_entry_new (buf);
+		fs->folder[x]->file[y] = malloc (sizeof (CameraFilesystemFile));
+		if (!fs->folder[x]->file[y])
+			return (GP_ERROR_NO_MEMORY);
+		strcpy (fs->folder[x]->file[y]->name, buf);
         }
 
         return (GP_OK);
@@ -295,6 +291,9 @@ int
 gp_filesystem_count (CameraFilesystem *fs, const char *folder)
 {
         int x;
+
+	if (!fs || !folder)
+		return (GP_ERROR_BAD_PARAMETERS);
 
         for (x = 0; x < fs->count; x++) {
            if (!strcmp (fs->folder[x]->name, folder))
@@ -342,10 +341,11 @@ gp_filesystem_delete (CameraFilesystem *fs, const char *folder,
 			memcpy (&fs->folder[x]->file[y],
 				&fs->folder[x]->file[y + 1],
 				sizeof (fs->folder[x]->file[y]));
-		
-		/* Free the last one */
+
+		/* Get rid of the last one */
 		fs->folder[x]->count--;
-		free (fs->folder[x]->file[fs->folder[x]->count]);
+		fs->folder[x]->file = realloc (fs->folder[x]->file,
+			sizeof (CameraFilesystemFile) * fs->folder[x]->count);
 	} else {
 
 		/* Move all folders behind one position up */
@@ -355,7 +355,8 @@ gp_filesystem_delete (CameraFilesystem *fs, const char *folder,
 
 		/* Free the last one (files have already been deleted) */
 		fs->count--;
-		free (fs->folder[fs->count]);
+		fs->folder = realloc (fs->folder,
+				sizeof (CameraFilesystemFolder) * fs->count);
 	}
 
 	return (GP_OK);
@@ -365,7 +366,7 @@ int
 gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
 {
 	CameraList list;
-	int x, y;
+	int y;
 	char path [1024];
 
 	if (!fs || !folder)
@@ -385,15 +386,11 @@ gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
 		CHECK (gp_filesystem_delete (fs, path, NULL));
 	}
 
-	/* Delete the contents of the folder */
-	for (x = 0; x < fs->count; x++)
-		if (!strcmp (fs->folder[x]->name, folder)) {
-			for (y = 0; y < fs->folder[x]->count; y++)
-				free (fs->folder[x]->file[y]);
-			//FIXME
-			//free (fs->folder[x]->file);
-			fs->folder[x]->count = 0;
-		}
+	/* Delete the files in this folder */
+	CHECK (gp_filesystem_list_files (fs, folder, &list));
+	for (y = 0; y < gp_list_count (&list); y++)
+		CHECK (gp_filesystem_delete (fs, folder,
+					     gp_list_entry (&list, y)->name));
 
 	return (GP_OK);
 }
@@ -405,6 +402,8 @@ gp_filesystem_format (CameraFilesystem *fs)
 
 	if (!fs)
 		return (GP_ERROR_BAD_PARAMETERS);
+
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Formatting file system...");
 
         for (x = 0; x < fs->count; x++) {
 		for (y = 0; y < fs->folder[x]->count; y++)
@@ -443,7 +442,7 @@ gp_filesystem_number (CameraFilesystem *fs, const char *folder,
                 if (!strcmp(fs->folder[x]->name, folder)) {
                         for (y = 0; y < fs->folder[x]->count; y++) {
                                 if (!strcmp (fs->folder[x]->file[y]->name, 
-					    filename))
+					     filename))
                                         return (y);
                         }
                 }

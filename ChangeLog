@@ -1,5 +1,10 @@
 2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* tests/test-filesys.c: Even more tests
+	* libgphoto2/filesys.c: Fix remaining bugs. It should work now...
+
+2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* tests/test-filesys.c: New
 	* tests/Makefile.am: Compile test-filesys.c
 	* libgphoto2/filesys.c: Several bugfixes - there are still bugs in

@@ -16,6 +16,21 @@ main (int argc, char **argv)
 	printf ("*** Creating file system...\n");
 	fs = gp_filesystem_new ();
 
+	printf ("*** Adding a file...\n");
+	CHECK (gp_filesystem_append (fs, "/", "my.file"));
+
+	gp_filesystem_dump (fs);
+
+	printf ("*** Removing this file...\n");
+	CHECK (gp_filesystem_delete (fs, "/", "my.file"));
+
+	gp_filesystem_dump (fs);
+
+	printf ("*** Removing /...\n");
+	CHECK (gp_filesystem_delete (fs, "/", NULL));
+
+	gp_filesystem_dump (fs);
+
 	printf ("*** Adding some files...\n");
 	CHECK (gp_filesystem_append (fs, "/", NULL));
 	CHECK (gp_filesystem_append (fs, "/whatever", NULL));
