@@ -1,0 +1,14 @@
+2003-05-18  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Model Emprex PCD3800 added. Credits to 
+		     Hisham Muhammad <hisham@apple2.com> 
+
+
+2003-05-02  Theodore Kilgore <kilgota@auburn.edu>
+
+	* mars.c:    Minor changes to lessen memory footprint.
+	* library.c: Minor changes to lessen memory footprint.
+
+2004-05-01  Theodore Kilgore <kilgota@auburn.edu>
+
+	* *.[c,h]: First check-in. 
