@@ -207,7 +207,7 @@ static const ValueNameType oly3040_reg_05_val_names[] = {
 };
 static const RegisterDescriptorType oly3040_reg_05[] = { 
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK, 
 		"aperature", N_("Aperature Settings"),
 		VAL_NAME_INIT (oly3040_reg_05_val_names)
 	}
