@@ -38,8 +38,6 @@ enum _GPContextFeedback {
 
 /* Functions */
 typedef void (* GPContextIdleFunc)     (GPContext *context, void *data);
-typedef void (* GPContextProgressFunc) (GPContext *context, float percentage,
-					void *data);
 typedef void (* GPContextErrorFunc)    (GPContext *context, const char *format,
 					va_list args, void *data);
 typedef void (* GPContextStatusFunc)   (GPContext *context, const char *format,
@@ -49,28 +47,46 @@ typedef GPContextFeedback (* GPContextQuestionFunc) (GPContext *context,
 						     va_list args, void *data);
 typedef GPContextFeedback (* GPContextCancelFunc)   (GPContext *context,
 						     void *data);
+typedef unsigned int (* GPContextProgressStartFunc)  (GPContext *context,
+						      float target,
+						      const char *format,
+						      va_list args, void *data);
+typedef void         (* GPContextProgressUpdateFunc) (GPContext *context,
+						      unsigned int id,
+						      float current,
+						      void *data);
+typedef void         (* GPContextProgressStopFunc)   (GPContext *context,
+						      unsigned int id,
+						      void *data);
 
 /* Setting those functions (frontends) */
-void gp_context_set_idle_func     (GPContext *context,
-			           GPContextIdleFunc func,     void *data);
-void gp_context_set_progress_func (GPContext *context,
-				   GPContextProgressFunc func, void *data);
-void gp_context_set_error_func    (GPContext *context,
-				   GPContextErrorFunc func,    void *data);
-void gp_context_set_status_func   (GPContext *context,
-				   GPContextStatusFunc func,   void *data);
-void gp_context_set_question_func (GPContext *context,
-				   GPContextQuestionFunc func, void *data);
-void gp_context_set_cancel_func   (GPContext *context,
-				   GPContextCancelFunc func,   void *data);
+void gp_context_set_idle_func      (GPContext *context,
+			            GPContextIdleFunc func,     void *data);
+void gp_context_set_progress_funcs (GPContext *context,
+				    GPContextProgressStartFunc  start_func,
+				    GPContextProgressUpdateFunc update_func,
+				    GPContextProgressStopFunc   stop_func,
+				    void *data);
+void gp_context_set_error_func     (GPContext *context,
+				    GPContextErrorFunc func,    void *data);
+void gp_context_set_status_func    (GPContext *context,
+				    GPContextStatusFunc func,   void *data);
+void gp_context_set_question_func  (GPContext *context,
+				    GPContextQuestionFunc func, void *data);
+void gp_context_set_cancel_func    (GPContext *context,
+				    GPContextCancelFunc func,   void *data);
 
 /* Calling those functions (backends) */
 void gp_context_idle     (GPContext *context);
-void gp_context_progress (GPContext *context, float percentage);
 void gp_context_error    (GPContext *context, const char *format, ...);
 void gp_context_status   (GPContext *context, const char *format, ...);
 GPContextFeedback gp_context_question (GPContext *context, const char *format,
 				       ...);
 GPContextFeedback gp_context_cancel   (GPContext *context);
+unsigned int gp_context_progress_start  (GPContext *context, float target,
+					 const char *format, ...);
+void         gp_context_progress_update (GPContext *context, unsigned int id,
+					 float current);
+void         gp_context_progress_stop   (GPContext *context, unsigned int id);
 
 #endif /* __GPHOTO2_CONTEXT_H__ */
