@@ -251,17 +251,23 @@ filename_to_audio(const char *filename, const char *newext)
 			  __FILE__, __LINE__);
 		return NULL;
 	}
-	if (strlen(buf) > 3) {
-		buf[0] = 'S';
-		buf[1] = 'N';
-		buf[2] = 'D';
+	if ((p = strrchr (buf, '_')) == NULL) {
+		GP_DEBUG ("filename_to_audio: No '.' found in filename '%s' "
+			  "in %s line %i.", filename, __FILE__, __LINE__);
+		return NULL;
+	}
+	if ((p - buf) > 3) {
+		p -= 3;
+		p[0] = 'S';
+		p[1] = 'N';
+		p[2] = 'D';
 	}
 	if ((p = strrchr (buf, '.')) == NULL) {
 		GP_DEBUG ("filename_to_audio: No '.' found in filename '%s' "
 			  "in %s line %i.", filename, __FILE__, __LINE__);
 		return NULL;
 	}
-	if (((p - buf) < sizeof (buf) - 4) && strncpy (p, ".THM", 4)) {
+	if (((p - buf) < sizeof (buf) - 4) && strncpy (p, ".WAV", 4)) {
 		GP_DEBUG ("filename_to_audio: New name for '%s' is '%s'",
 			  filename, buf);
 		return buf;
@@ -290,6 +296,9 @@ const char *
 canon_int_filename2audioname (Camera *camera, const char *filename)
 {
 	/* FIXME: I want capabilities */
+	/* FIXME: Do we really have to check the model here? Someone
+	 * could just have inserted the CF card into another camera...
+	 * */
 	switch (camera->pl->md->model) {
 	case CANON_PS_S30:
 	case CANON_PS_S40:
