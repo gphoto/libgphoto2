@@ -68,6 +68,9 @@ struct camera_to_usb {
 	{ "SpyPen Xion",                0x0553, 0x0202, 0 },
 	{ "SpyPen Memo",                0x0553, 0x0202, 0 },
 
+	/* Tested by Priit Laes <amd@tt.ee> */
+	{ "SpyPen Luxo",                0x0553, 0x0202, 0 },
+
 	/* http://www.iomagic.com/support/digitalcameras/magicimage400/magicimage400manual.htm */
 	{ "IOMagic MagicImage 400",     0x0553, 0x0202, 0 },
 	/* http://www.pctekonline.com/phoebsmardig.html */
