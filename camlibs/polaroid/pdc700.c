@@ -714,9 +714,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		} else {
 			free (data);
-			gp_camera_set_error (camera, _("Unknown image format. "
+			gp_camera_set_error (camera, _("%i bytes of an "
+				"unknown image format have been received. "
 				"Please write <gphoto-devel@gphoto.org> for "
-				"assistance."));
+				"assistance."), size);
 			return (GP_ERROR);
 		}
 		break;
