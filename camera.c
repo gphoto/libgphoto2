@@ -30,6 +30,7 @@
 #include "gphoto2-core.h"
 #include "gphoto2-library.h"
 #include "gphoto2-debug.h"
+#include "gphoto2-port-core.h"
 
 #include <config.h>
 #ifdef ENABLE_NLS
@@ -192,13 +193,13 @@ gp_camera_set_port_path (Camera *camera, const char *port_path)
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Setting port path to '%s'",
 			 port_path); 
 	CHECK_RESULT (gp_camera_unset_port (camera));
-	CHECK_RESULT (count = gp_port_count_get ());
+	CHECK_RESULT (count = gp_port_core_count ());
 	for (x = 0; x < count; x++)
-		if ((gp_port_info_get (x, &info) == GP_OK) &&
+		if ((gp_port_core_get_info (x, &info) == GP_OK) &&
 		    (!strcmp (port_path, info.path)))
 			return (gp_camera_set_port (camera, &info));
 
-	return (GP_ERROR_IO_UNKNOWN_PORT); 
+	return (GP_ERROR_UNKNOWN_PORT); 
 }
 
 int
@@ -222,13 +223,13 @@ gp_camera_set_port_name (Camera *camera, const char *port_name)
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Setting port name to '%s'",
 			 port_name);
 	CHECK_RESULT (gp_camera_unset_port (camera));
-	CHECK_RESULT (count = gp_port_count_get ());
+	CHECK_RESULT (count = gp_port_core_count ());
 	for (x = 0; x < count; x++)
-		if ((gp_port_info_get (x, &info) == GP_OK) &&
+		if ((gp_port_core_get_info (x, &info) == GP_OK) &&
 		    (!strcmp (port_name, info.name)))
 			return (gp_camera_set_port (camera, &info));
 
-	return (GP_ERROR_IO_UNKNOWN_PORT);
+	return (GP_ERROR_UNKNOWN_PORT);
 }
 
 int
@@ -447,7 +448,7 @@ gp_camera_init (Camera *camera)
 		/* If we don't have a port at this point, return error */
 		if (!camera->port) {
 			gp_camera_status (camera, "");
-			return (GP_ERROR_IO_UNKNOWN_PORT);
+			return (GP_ERROR_UNKNOWN_PORT);
 		}
 
 		/* Fill in camera abilities. */
