@@ -4,6 +4,7 @@ MKLIB=ar r
 
 
 all: start \
+  dll \
   lib \
   serial\
   end
@@ -38,14 +39,24 @@ parallel:
 
 lib: ..\lib\libgphoto2_port.a
 
-obj\gpio.o: libgphoto2_port\portability.c
+dll: ..\lgp2port.dll
+
+obj\portability.o: libgphoto2_port\portability.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
-obj\port.o: libgphoto2_port\gp_port.c
-  @$(CC) -o $@ $** $(CCFLAGS)
+obj\gp_port.o: libgphoto2_port\gp_port.c
+  @$(CC) -o $@ $** $(CCFLAGS) -DGP_PORT_SUPPORTED_SERIAL
 
 obj\library.o: libgphoto2_port\library.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
-..\lib\libgphoto2_port.a: obj\gpio.o obj\library.o obj\port.o
-  @$(MKLIB) $@ $**
+..\lib\libgphoto2_port.a: ..\lgp2port.dll
+  @implib lgp2port.lib ..\lgp2port.dll
+  @emximp -o $@ lgp2port.lib
+
+lgp2port.def: obj\gp_port.o obj\portability.o obj\library.o
+   @copy lgp2port.df lgp2port.def
+   @emxexp $** >> lgp2port.def
+
+..\lgp2port.dll: lgp2port.def obj\gp_port.o obj\portability.o obj\library.o
+  @$(CC) -Wall -Zdll -Zcrtdll -Zbin-files -o $@ $** -L..\..\lib -ldllib

@@ -946,6 +946,10 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
                 exit(EXIT_FAILURE);
         }
 
+#ifdef OS2
+       printf("\nErrors occuring beyond this point are 'expected' on OS/2\ninvestigation pending\n");
+#endif
+
         /* Exit gPhoto core */
         if (glob_camera)
                gp_camera_free(glob_camera);

@@ -1,26 +1,28 @@
 #include <string.h>
 #include <gphoto2.h>
 
-#include <gpio.h>
+/*#include <gphoto2-port.h>*/
 
 #include "sonydscf1.h"
 
-gpio_device *dev=NULL;
-gpio_device_settings settings;
+/*gpio_device *dev=NULL;
+gpio_device_settings settings;*/
+
+gp_port *dev;
 
 extern int glob_debug;
 char glob_camera_model[64];
 static int all_pic_num = -1;
 
 int camera_id (CameraText *id) {
-
+        printf("->camera id");
         strcpy(id->text, "sonydscf1-bvl");
 
         return (GP_OK);
 }
 
 int camera_debug_set (int onoff) {
-
+        printf("->camera debug");
         if(onoff)
           printf("Setting debugging to on\n");
         glob_debug=onoff;
@@ -31,7 +33,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
         //*count = 1;
         CameraAbilities *a;
-
+        printf("->camera_abilities\n");
         a = gp_abilities_new();
         /* Fill in each camera model's abilities */
         /* Make separate entries for each conneciton type (usb, serial, etc...)
@@ -44,20 +46,22 @@ int camera_abilities (CameraAbilitiesList *list) {
         a->file_delete  = 1;
         a->file_preview = 1;
         a->file_put = 1;
-
-        printf("bla1");
         gp_abilities_list_append(list, a);
-        printf("bla2");
+        printf("<-camera_abilities\n");
         return (GP_OK);
 }
 
 int camera_init (Camera *camera) {
+        gp_port_settings settings;
+        SonyStruct *b;
+        int ret;
+        printf("->camera init\n");
 
-        /*if(glob_debug)
-        {*/
+        if(glob_debug)
+        {
          printf("sony dscf1: Initializing the camera\n");
          printf("port: %s\n",camera->port->path);
-        /*}*/
+        }
 
         camera->functions->id           = camera_id;
         camera->functions->abilities    = camera_abilities;
@@ -69,6 +73,7 @@ int camera_init (Camera *camera) {
         camera->functions->file_get     = camera_file_get;
         camera->functions->file_get_preview =  camera_file_get_preview;
         camera->functions->file_put     = camera_file_put;
+        camera->functions->file_list    = camera_file_list;
         camera->functions->file_delete  = camera_file_delete;
         camera->functions->config_get   = camera_config_get;
         camera->functions->config_set   = camera_config_set;
@@ -76,7 +81,15 @@ int camera_init (Camera *camera) {
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
-        printf("1\n");
+
+        b = (SonyStruct*)malloc(sizeof(SonyStruct));
+        camera->camlib_data = b;
+
+        if ((ret = gp_port_new(&(b->dev), GP_PORT_SERIAL)) < 0) {
+            return (ret);
+        }
+
+        /*printf("1\n");
         if (dev) {
                 gpio_close(dev);
                 gpio_free(dev);
@@ -97,13 +110,30 @@ int camera_init (Camera *camera) {
 
         gpio_open(dev);
         printf("6\n");
-        strcpy(glob_camera_model, camera->model);
+        strcpy(glob_camera_model, camera->model);*/
+        gp_port_timeout_set(b->dev, 5000);
+        strcpy(settings.serial.port, camera->port->path);
+
+        settings.serial.speed   = 38400;
+        settings.serial.bits    = 8;
+        settings.serial.parity  = 0;
+        settings.serial.stopbits= 1;
+
+        gp_port_settings_set(b->dev, settings);
+        gp_port_open(b->dev);
+
+        /* Create the filesystem */
+        b->fs = gp_filesystem_new();
+        dev = b->dev;
+        printf("<-camera init");
         return (GP_OK);
 }
 
 int camera_exit (Camera *camera) {
+        printf("->camera exit");
         if(F1ok())
            return(GP_ERROR);
+        printf("<-camera exit");
         return (F1fclose());
 }
 
@@ -119,7 +149,7 @@ int camera_folder_set(Camera *camera, char *folder_name) {
 }
 
 int camera_file_count (Camera *camera) {
-        //printf("sony dscf1: file count\n");
+        printf("sony dscf1: file count\n");
         if(!F1ok())
            return (GP_ERROR);
 
@@ -144,7 +174,7 @@ int camera_file_get_preview (Camera *camera, CameraFile *preview, char *folder, 
         /**********************************/
         /* file_number now starts at 0!!! */
         /**********************************/
-        //printf("sony dscf1: file get preview\n");
+        printf("sony dscf1: file get preview\n");
         if(!F1ok())
            return (GP_ERROR);
         /*preview->size = get_picture(file_number,&preview->data,JPEG_T,0,camera_file_count(camera));
@@ -158,18 +188,18 @@ int camera_file_put (Camera *camera, CameraFile *file,char *folder) {
 }
 
 int camera_file_delete (Camera *camera,char *folder , char *filename) {
-        //printf("sony dscf1: file delete\n");
+        printf("sony dscf1: file delete\n");
         if(!F1ok())
            return (GP_ERROR);
         /*return (F1deletepicture(file_number));*/
 }
 
-int camera_config_get (Camera *camera, CameraWidget *window) {
+int camera_config_get (Camera *camera, CameraWidget **window) {
         printf("sony dscf1: config get\n");
         return GP_ERROR;
 }
 
-int camera_config_set (Camera *camera, CameraSetting *setting, int count) {
+int camera_config_set (Camera *camera, CameraWidget *window) {
                 printf("sony dscf1: config set\n");
         return (GP_ERROR);
 }
@@ -180,6 +210,7 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 }
 
 int camera_summary (Camera *camera, CameraText *summary) {
+        printf("->camera summary");
         if(!F1ok())
            return (GP_ERROR);
         return (F1newstatus(1, summary->text));
@@ -205,3 +236,18 @@ int camera_about (Camera *camera, CameraText *about) {
         return (GP_OK);
 }
 
+int camera_file_list (Camera *camera, CameraList *list, char *folder) {
+
+        int count, x;
+        SonyStruct *b = (SonyStruct*)camera->camlib_data;
+
+        count = F1howmany();
+
+        /* Populate the filesystem */
+        gp_filesystem_populate(b->fs, "/", "mattel%02i.ppm", count);
+
+        for (x=0; x<gp_filesystem_count(b->fs, folder); x++)
+                gp_list_append(list, gp_filesystem_name(b->fs, folder, x), GP_LIST_FILE);
+
+        return GP_OK;
+}

@@ -33,4 +33,4 @@ serial.def: ..\obj\serial.o
    @emxexp $** >> serial.def
 
 ..\giserial.dll: ..\obj\serial.o serial.def
-   @$(CC) -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\lib -ldllib
+   @$(CC) -Wall -Zdll -Zcrtdll -o $@ $** -L..\..\lib -ldllib

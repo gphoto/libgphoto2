@@ -6,8 +6,11 @@ MKLIB=ar r
   $(CC) $< $(CCFLAGS)
 
 all: start \
+  dll\
   lib \
   end
+
+dll: ..\gphoto2.dll
 
 start:
   @echo ****
@@ -63,5 +66,14 @@ lib: ..\lib\libgphoto2.a
 
 ..\lib\libgphoto2.a: ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\filesys.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o ..\obj\lists.o ..\obj\camera.o ..\obj\frontend.o ..\obj\port.o
 #..\obj\fs.o
-  @$(MKLIB) $@ $**
+  @implib gphoto2.lib ..\gphoto2.dll
+  @emximp -o $@ gphoto2.lib
+
+gphoto2.def: ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\filesys.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o ..\obj\lists.o ..\obj\camera.o ..\obj\frontend.o ..\obj\port.o
+   @copy gphoto2.df gphoto2.def
+   @emxexp $** >> gphoto2.def
+
+..\gphoto2.dll: gphoto2.def ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\filesys.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o ..\obj\lists.o ..\obj\camera.o ..\obj\frontend.o ..\obj\port.o
+  @$(CC) -Wall -Zdll -Zcrtdll -Zbin-files -o $@ $** -L..\lib -ldllib -llibgphoto2_port
+
 

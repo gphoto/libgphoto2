@@ -25,9 +25,9 @@ dll:
   @cd directory
   @nmake -nologo -f makefile.os2
   @cd..
-#  @cd sonydscf1
-#  @nmake -nologo -f makefile.os2
-#  @cd..
+  @cd sonydscf1
+  @nmake -nologo -f makefile.os2
+  @cd..
   @cd minolta\dimagev
   @nmake -nologo -f makefile.os2
   @cd..\..

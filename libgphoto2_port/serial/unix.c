@@ -162,8 +162,8 @@ int gp_port_serial_init (gp_port *dev) {
         /* save previous setttings in to dev->settings_saved */
 #if HAVE_TERMIOS_H
         if (tcgetattr(dev->device_fd, &term_old) < 0) {
-                perror("tcgetattr");
-                return GP_ERROR_IO_INIT;
+                perror("tcgetattr2");
+                /*return GP_ERROR_IO_INIT;*/
         }
 #else
         if (ioctl(dev->device_fd, TIOCGETP, &term_old) < 0) {
@@ -181,9 +181,11 @@ int gp_port_serial_exit (gp_port *dev) {
 
 int gp_port_serial_open(gp_port * dev)
 {
-
+        int fd;
 #ifdef __FreeBSD__
         dev->device_fd = open(dev->settings.serial.port, O_RDWR | O_NOCTTY | O_NONBLOCK);
+#elif OS2
+        dev->device_fd = open(dev->settings.serial.port, O_RDWR);
 #else
         dev->device_fd = open(dev->settings.serial.port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif
@@ -408,7 +410,7 @@ int gp_port_serial_set_baudrate(gp_port * dev)
         struct termios tio;
 
         if (tcgetattr(dev->device_fd, &tio) < 0) {
-                perror("tcgetattr");
+                perror("tcgetattr1");
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
         tio.c_cflag = (tio.c_cflag & ~CSIZE) | CS8;

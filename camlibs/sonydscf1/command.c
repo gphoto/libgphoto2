@@ -13,9 +13,8 @@
 
 #include <gphoto2.h>
 
-#include <gpio.h>
+extern gp_port *dev;
 
-extern gpio_device *dev;
 
 /*#ifdef  0*/
 /*# define dprintf(x)     fprintf x*/
@@ -58,7 +57,7 @@ wbyte(c)
   temp[0]=c;
   temp[1]='\0';
   //if (writetty(F1fd, &c, 1) < 0) {
-  if( gpio_write(dev, (char*)temp, 1) <0) {
+  if( gp_port_write(dev, (char*)temp, 1) <0) {
     perror("wbyte");
     Exit(1);
   }
@@ -70,7 +69,7 @@ rbyte()
   u_char        c[2];
 
   //if (readtty(F1fd, &c, 1) < 0) {
-  if (gpio_read(dev,c, 1) <0) {
+  if (gp_port_read(dev,c, 1) <0) {
     perror("rbtyte");
     Exit(1);
   }
@@ -86,7 +85,7 @@ wstr(p, len)
 {
   dprintf((stderr, "> len=%d\n", len));
   //if (writetty(F1fd, p, len) < 0) {
-  if( gpio_write(dev, p, len) <0) {
+  if( gp_port_write(dev, p, len) <0) {
     perror("wstr");
     Exit(1);
   }
@@ -100,7 +99,7 @@ rstr(p, len)
 
   dprintf((stderr, "< len=%d\n", len));
   //if (readtty(F1fd, p, len) < 0) {
-  if (gpio_read(dev,p, len) <0) {
+  if (gp_port_read(dev,p, len) <0) {
     perror("rstr");
     Exit(1);
   }
