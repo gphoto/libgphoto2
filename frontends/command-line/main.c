@@ -162,7 +162,7 @@ Option option[] = {
 /* Actions that depend on settings */
 {"a", "abilities",      "",             "Display camera abilities",     abilities,      0},
 {"f", "folder",         "folder",       "Specify camera folder (default=\"/\")",use_folder,0},
-{"R", "recurse",        "",             "Recursively descend through folders",recurse,  0},
+{"R", "recurse",        "",             N_("Recursively descend through folders"),recurse,  0},
 {"l", "list-folders",   "",             "List folders in folder",       list_folders,   0},
 {"L", "list-files",     "",             "List files in folder",         list_files,     0},
 {"m", "mkdir", N_("name"), N_("Create a directory"), make_dir, 0},
@@ -282,12 +282,12 @@ OPTION_CALLBACK (auto_detect)
 
         CHECK_RESULT (count = gp_list_count (&list));
 
-        printf("%-30s %-16s\n", "Model", "Port");
-        printf("----------------------------------------------------------\n");
+        printf(_("%-30s %-16s\n"), _("Model"), _("Port"));
+        printf(_("----------------------------------------------------------\n"));
         for (x = 0; x < count; x++) {
                 CHECK_RESULT (gp_list_get_name  (&list, x, &name));
                 CHECK_RESULT (gp_list_get_value (&list, x, &value));
-                printf("%-30s %-16s\n", name, value);
+                printf(_("%-30s %-16s\n"), name, value);
         }
 
         return GP_OK;
@@ -311,37 +311,37 @@ OPTION_CALLBACK (abilities)
 	CHECK_RESULT (gp_abilities_list_free (al));
 
         /* Output a parsing friendly abilities table. Split on ":" */
-        printf("Abilities for camera:            : %s\n",
+        printf(_("Abilities for camera             : %s\n"),
                 abilities.model);
-        printf("Serial port support              : %s\n",
-		(abilities.port & GP_PORT_SERIAL)? "yes":"no");
-        printf("USB support                      : %s\n",
-		(abilities.port & GP_PORT_USB)? "yes":"no");
+        printf(_("Serial port support              : %s\n"),
+		(abilities.port & GP_PORT_SERIAL)? _("yes"):_("no"));
+        printf(_("USB support                      : %s\n"),
+		(abilities.port & GP_PORT_USB)? _("yes"):_("no"));
         if (abilities.speed[0] != 0) {
-        printf("Transfer speeds supported        :\n");
+        printf(_("Transfer speeds supported        :\n"));
 		x = 0;
                 do {
-        printf("                                 : %i\n", abilities.speed[x]);
+        printf(_("                                 : %i\n"), abilities.speed[x]);
                         x++;
                 } while (abilities.speed[x]!=0);
         }
-        printf("Capture choices                  :\n");
+        printf(_("Capture choices                  :\n"));
         if (abilities.operations & GP_OPERATION_CAPTURE_IMAGE)
-            printf("                                 : Image\n");
+            printf(_("                                 : Image\n"));
         if (abilities.operations & GP_OPERATION_CAPTURE_VIDEO)
-            printf("                                 : Video\n");
+            printf(_("                                 : Video\n"));
         if (abilities.operations & GP_OPERATION_CAPTURE_AUDIO)
-            printf("                                 : Audio\n");
+            printf(_("                                 : Audio\n"));
         if (abilities.operations & GP_OPERATION_CAPTURE_PREVIEW)
-            printf("                                 : Preview\n");
-        printf("Configuration support            : %s\n",
-                abilities.operations & GP_OPERATION_CONFIG? "yes":"no");
-        printf("Delete files on camera support   : %s\n",
-                abilities.file_operations & GP_FILE_OPERATION_DELETE? "yes":"no");
-        printf("File preview (thumbnail) support : %s\n",
-                abilities.file_operations & GP_FILE_OPERATION_PREVIEW? "yes":"no");
-        printf("File upload support              : %s\n",
-                abilities.folder_operations & GP_FOLDER_OPERATION_PUT_FILE? "yes":"no");
+            printf(_("                                 : Preview\n"));
+        printf(_("Configuration support            : %s\n"),
+                abilities.operations & GP_OPERATION_CONFIG? _("yes"):_("no"));
+        printf(_("Delete files on camera support   : %s\n"),
+                abilities.file_operations & GP_FILE_OPERATION_DELETE? _("yes"):_("no"));
+        printf(_("File preview (thumbnail) support : %s\n"),
+                abilities.file_operations & GP_FILE_OPERATION_PREVIEW? _("yes"):_("no"));
+        printf(_("File upload support              : %s\n"),
+                abilities.folder_operations & GP_FOLDER_OPERATION_PUT_FILE? _("yes"):_("no"));
 
         return (GP_OK);
 }
@@ -374,14 +374,14 @@ OPTION_CALLBACK(list_cameras) {
                 else
                         switch (a.status) {
                         case GP_DRIVER_STATUS_TESTING:
-                                printf ("\t\"%s\" (TESTING)\n", a.model);
+                                printf (_("\t\"%s\" (TESTING)\n"), a.model);
                                 break;
                         case GP_DRIVER_STATUS_EXPERIMENTAL:
-                                printf ("\t\"%s\" (EXPERIMENTAL)\n", a.model);
+                                printf (_("\t\"%s\" (EXPERIMENTAL)\n"), a.model);
                                 break;
                         default:
                         case GP_DRIVER_STATUS_PRODUCTION:
-                                printf ("\t\"%s\"\n", a.model);
+                                printf (_("\t\"%s\"\n"), a.model);
                                 break;
                         }
         }
@@ -445,9 +445,9 @@ OPTION_CALLBACK(list_ports)
 	}
 
         if (!glob_quiet) {
-          printf("Devices found: %i\n", count);
-          printf("Path                             Description\n"
-                 "--------------------------------------------------------------\n");
+          printf(_("Devices found: %i\n"), count);
+          printf(_("Path                             Description\n"
+                 "--------------------------------------------------------------\n"));
         } else
           printf("%i\n", count);
 
@@ -483,9 +483,9 @@ OPTION_CALLBACK(port)
 	if (strchr(glob_port, ':') == NULL) {
 		/* User didn't specify the port type; try to guess it */
 
-		gp_log (GP_LOG_DEBUG, "main", "Ports must look like "
+		gp_log (GP_LOG_DEBUG, "main", _("Ports must look like "
 		  "'serial:/dev/ttyS0' or 'usb:', but '%s' is missing a colon "
-		  "so I am going to guess what you mean.",
+		  "so I am going to guess what you mean."),
 		glob_port);
 
 		if (strcmp(arg, "usb") == 0) {
@@ -502,7 +502,7 @@ OPTION_CALLBACK(port)
 			strcpy (glob_port, "usb:");
 			strncat (glob_port, arg, sizeof(glob_port)-4);
 		}
-		cli_debug_print("Guessed port name. Using port '%s' from now on.",
+		cli_debug_print(_("Guessed port name. Using port '%s' from now on."),
 				glob_port);
 	}
 
@@ -532,7 +532,7 @@ debug_func (GPLogLevel level, const char *domain, const char *format,
 	    va_list args, void *data)
 {
 	if (level == GP_LOG_ERROR)
-		fprintf (stderr, "%s(ERROR): ", domain);
+		fprintf (stderr, _("%s(ERROR): "), domain);
 	else
 		fprintf (stderr, "%s(%i): ", domain, level);
 	vfprintf (stderr, format, args);
@@ -631,7 +631,7 @@ OPTION_CALLBACK (num_pictures)
         if (glob_quiet)
                 printf ("%i\n", count);
            else
-                printf ("Number of pictures in folder %s: %i\n",
+                printf (_("Number of pictures in folder %s: %i\n"),
                         glob_folder, count);
 
         return (GP_OK);
@@ -664,7 +664,7 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
         } else {
                 gp_file_get_name (file, &name);
 		strcat (ofile, name);
-		gp_log (GP_LOG_DEBUG, "gphoto2", "Using filename '%s'...",
+		gp_log (GP_LOG_DEBUG, "gphoto2", _("Using filename '%s'..."),
 			ofile);
         }
 
@@ -690,7 +690,7 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
 				break;
 
 			do {
-				printf("File %s exists. Overwrite? [y|n] ",buf);
+				printf(_("File %s exists. Overwrite? [y|n] "),buf);
 				fflush(stdout);
 				fgets(c, 1023, stdin);
 			} while ((c[0]!='y')&&(c[0]!='Y')&&
@@ -701,7 +701,7 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
 
 
 			do { 
-				printf("Specify new filename? [y|n] ");
+				printf(_("Specify new filename? [y|n] "));
 				fflush(stdout); 
 				fgets(c, 1023, stdin);
 			} while ((c[0]!='y')&&(c[0]!='Y')&&
@@ -710,16 +710,16 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
 			if (!((c[0]=='y') || (c[0]=='Y')))
 				return (GP_OK);
 
-			printf("Enter new filename: ");
+			printf(_("Enter new filename: "));
 			fflush(stdout);
 			fgets(buf, 1023, stdin);
 			buf[strlen(buf)-1]=0;
                 }
-                printf("Saving file as %s\n", buf);
+                printf(_("Saving file as %s\n"), buf);
         }
 
         if ((result = gp_file_save(file, buf)) != GP_OK)
-                cli_error_print("Can not save file as %s", buf);
+                cli_error_print(_("Can not save file as %s"), buf);
 
         return (result);
 }
@@ -939,7 +939,7 @@ capture_generic (CameraCaptureType type, char *name)
 	if (glob_quiet)
 		printf ("%s%s%s\n", path.folder, pathsep, path.name);
 	else
-		printf ("New file is in location %s%s%s on the camera\n",
+		printf (_("New file is in location %s%s%s on the camera\n"),
 			path.folder, pathsep, path.name);
 
         return (GP_OK);
@@ -997,7 +997,7 @@ OPTION_CALLBACK(summary)
         CHECK_RESULT (set_globals ());
         CHECK_RESULT (gp_camera_get_summary (glob_camera, &buf));
 
-        printf("Camera Summary:\n%s\n", buf.text);
+        printf(_("Camera Summary:\n%s\n"), buf.text);
 
         return (GP_OK);
 }
@@ -1009,7 +1009,7 @@ OPTION_CALLBACK (manual)
         CHECK_RESULT (set_globals ());
         CHECK_RESULT (gp_camera_get_manual (glob_camera, &buf));
 
-        printf ("Camera Manual:\n%s\n", buf.text);
+        printf (_("Camera Manual:\n%s\n"), buf.text);
 
         return (GP_OK);
 }
@@ -1021,7 +1021,7 @@ OPTION_CALLBACK (about)
         CHECK_RESULT (set_globals ());
         CHECK_RESULT (gp_camera_get_about (glob_camera, &buf));
 
-        printf ("About the library:\n%s\n", buf.text);
+        printf (_("About the library:\n%s\n"), buf.text);
 
         return (GP_OK);
 }
@@ -1200,7 +1200,7 @@ cli_error_print (char *format, ...)
 {
         va_list         pvar;
 
-        fprintf(stderr, "ERROR: ");
+        fprintf(stderr, _("ERROR: "));
         va_start(pvar, format);
         vfprintf(stderr, format, pvar);
         va_end(pvar);
@@ -1211,7 +1211,7 @@ static void
 signal_exit (int signo)
 {
         if (!glob_quiet)
-                printf("\nExiting gPhoto...\n");
+                printf(_("\nExiting gPhoto...\n"));
 
 	/* If we've got a camera, unref it */
         if (glob_camera) {
@@ -1260,9 +1260,9 @@ main (int argc, char **argv)
 #ifdef OS2 /*check if environment is set otherwise quit*/
         if(CAMLIBS==NULL)
         {
-printf("gPhoto2 for OS/2 requires you to set the enviroment value CAMLIBS \
+printf(_("gPhoto2 for OS/2 requires you to set the enviroment value CAMLIBS \
 to the location of the camera libraries. \
-e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n");
+e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n"));
                 exit(EXIT_FAILURE);
         }
 #endif
@@ -1270,9 +1270,9 @@ e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n");
 #ifdef OS2 /*check if environment is set otherwise quit*/
         if(IOLIBS==NULL)
         {
-printf("gPhoto2 for OS/2 requires you to set the enviroment value IOLIBS \
+printf(_("gPhoto2 for OS/2 requires you to set the enviroment value IOLIBS \
 to the location of the io libraries. \
-e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
+e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
                 exit(EXIT_FAILURE);
         }
 #endif
@@ -1302,7 +1302,7 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
         }
 
 #ifdef OS2
-//       printf("\nErrors occuring beyond this point are 'expected' on OS/2\ninvestigation pending\n");
+//       printf(_("\nErrors occuring beyond this point are 'expected' on OS/2\ninvestigation pending\n"));
 #endif
 
 	/* Unref existing cameras */

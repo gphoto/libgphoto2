@@ -593,7 +593,7 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 	}
 	free(picture_folder);
 
-	/* It is not required to set the destination folder : the command
+	/* It is not required to set the destination folder: the command
 	   will be ignored by the camera and the uploaded file will be put
 	   into the picure folder */
 
@@ -1479,7 +1479,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window)
                         break;
                 case 5: strcpy (t, _("German"));
                         break;
-                case 6: strcpy (t, _("Itialian"));
+                case 6: strcpy (t, _("Italian"));
                         break;
 		case 7: strcpy (t, _("Japanese"));
 			break;
@@ -1662,7 +1662,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window)
 			i = 7;
 		} else if (strcmp (value, _("Spanish")) == 0) {
 			i = 8;
-		} else if (strcmp (value, _("Porugese")) == 0) {
+		} else if (strcmp (value, _("Portugese")) == 0) {
 			i = 9;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
@@ -1723,37 +1723,37 @@ camera_summary (Camera *camera, CameraText *summary)
 	/* Get all the string-related info */
 	ret = sierra_get_string_register (camera, 27, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf (buf, _("%sCamera Model    : %s\n"), buf, t);
+		sprintf (buf, _("%sCamera Model: %s\n"), buf, t);
 	
 	ret = sierra_get_string_register (camera, 48, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf (buf, _("%sManufacturer    : %s\n"), buf, t);
+		sprintf (buf, _("%sManufacturer: %s\n"), buf, t);
 
 	ret = sierra_get_string_register (camera, 22, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf (buf, _("%sCamera ID       : %s\n"), buf, t);
+		sprintf (buf, _("%sCamera ID: %s\n"), buf, t);
 
 	ret = sierra_get_string_register (camera, 25, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf (buf, _("%sSerial Number   : %s\n"), buf, t);
+		sprintf (buf, _("%sSerial Number: %s\n"), buf, t);
 
 	ret = sierra_get_string_register (camera, 26, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf (buf, _("%sSoftware Rev.   : %s\n"), buf, t);
+		sprintf (buf, _("%sSoftware Rev.: %s\n"), buf, t);
 
 	/* Get all the integer information */
 	if (sierra_get_int_register(camera, 40, &value) == GP_OK)
-		sprintf (buf, _("%sFrames Taken    : %i\n"), buf, value);
+		sprintf (buf, _("%sFrames Taken: %i\n"), buf, value);
 	if (sierra_get_int_register(camera, 11, &value) == GP_OK)
-		sprintf (buf, _("%sFrames Left     : %i\n"), buf, value);
+		sprintf (buf, _("%sFrames Left: %i\n"), buf, value);
 	if (sierra_get_int_register(camera, 16, &value) == GP_OK)
-		sprintf (buf, _("%sBattery Life    : %i\n"), buf, value);
+		sprintf (buf, _("%sBattery Life: %i\n"), buf, value);
 	if (sierra_get_int_register(camera, 28, &value) == GP_OK)
-		sprintf (buf, _("%sMemory Left	: %i bytes\n"), buf, value);
+		sprintf (buf, _("%sMemory Left: %i bytes\n"), buf, value);
 
 	/* Get date */
 	if (sierra_get_int_register (camera, 2, &value) == GP_OK)
-		sprintf (buf, _("%sDate         : %s\n"), buf, 
+		sprintf (buf, _("%sDate: %s\n"), buf, 
 			 ctime ((time_t*) &value));
 
 	strcpy (summary->text, buf);
@@ -1770,13 +1770,13 @@ camera_manual (Camera *camera, CameraText *manual)
 	case SIERRA_MODEL_EPSON:
 		strcpy (manual->text,
 			_("Some notes about Epson cameras:\n"
-			  "- Some parameters are not controlable remotely\n"
+			  "- Some parameters are not controllable remotely:\n"
 			  "  * zoom\n"
 			  "  * focus\n"
 			  "  * custom white balance setup\n"
 			  "- Configuration has been reverse-engineered with\n"
 			  "  a PhotoPC 3000z, if your camera acts differently\n"
-			  "  please send a mail to gphoto-devel@gphoto.org\n"));
+			  "  please send a mail to <gphoto-devel@gphoto.org> (in English)\n"));
 		break;
 	case SIERRA_MODEL_OLYMPUS:
 	default:
@@ -1842,7 +1842,7 @@ int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_s
 	}
    
 	if (soi_marker && sof_marker) {
-		/* Valid JPEG data have been found : build the output table */
+		/* Valid JPEG data has been found: build the output table */
 		*jpeg_size = sof_marker - soi_marker + 2;
 		*jpeg_data = (char*) calloc(*jpeg_size, sizeof(char));
 		memcpy(*jpeg_data, soi_marker, *jpeg_size);

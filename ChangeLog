@@ -1,3 +1,10 @@
+2001-11-21  Colin Marquardt  <colin@marquardt-home.de>
+
+	* frontends/command-line/main.c: Mark up more strings for
+  	  translation.
+
+	* camlibs/sierra/sierra.c: Spelling fixes.
+
 2001-11-21  Marcus Meissner <marcus@jet.franken.de>
 	
 	* camlibs/stv0680/stv0680.html: Collected programming information
