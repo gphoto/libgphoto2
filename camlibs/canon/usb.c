@@ -218,7 +218,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 			if ( i > 0 )
 				read_bytes += i;
 		} while ( read_bytes < 0x10 && i >= 0 );
-		if ( i != 0x10 ) {
+		if ( read_bytes!= 0x10 ) {
 			GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
 			return GP_ERROR_CORRUPTED_DATA;
 		}
