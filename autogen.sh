@@ -4,6 +4,12 @@
 # Raph Levien.
 # Since then, it has been rewritten quite a lot by misc. people.
 
+# Call this file with AUTOCONF_SUFFIX and AUTOMAKE_SUFFIX set
+# if you want us to call a specific version of autoconf or automake. 
+# E.g. if you want us to call automake-1.6 instead of automake (which
+# seems to be quite advisable if your automake is not already version 
+# 1.6) then call this file with AUTOMAKE_SUFFIX set to "-1.6".
+
 DIE=0
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
