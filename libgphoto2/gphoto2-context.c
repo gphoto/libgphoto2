@@ -79,7 +79,7 @@ gp_context_new (void)
 	context->ref_count = 1;
 
 	return (context);
-};
+}
 
 /**
  * gp_context_ref:
@@ -94,7 +94,7 @@ gp_context_ref (GPContext *context)
 		return;
 
 	context->ref_count++;
-};
+}
 
 static void
 gp_context_free (GPContext *context)
@@ -103,7 +103,7 @@ gp_context_free (GPContext *context)
 		return;
 
 	free (context);
-};
+}
 
 /**
  * gp_context_unref (GPContext *context)
@@ -120,7 +120,7 @@ gp_context_unref (GPContext *context)
 	context->ref_count--;
 	if (!context->ref_count)
 		gp_context_free (context);
-};
+}
 
 /**
  * gp_context_idle:
