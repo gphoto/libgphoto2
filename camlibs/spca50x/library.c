@@ -220,10 +220,6 @@ camera_capture (Camera *camera, CameraCaptureType type,
 	/* Now tell the frontend where to look for the image */
 	strncpy (path->folder, "/", sizeof (path->folder) - 1);
 	path->folder[sizeof (path->folder) - 1] = '\0';
-/*	-- these lines moved into the if/else cases above --
-	strncpy (path->name, file->name, sizeof (path->name) - 1);
-	path->name[sizeof (path->name) - 1] = '\0'; 
-*/
 	
 	CHECK (gp_filesystem_append
 	       (camera->fs, path->folder, path->name, context));
@@ -581,6 +577,7 @@ camera_init (Camera *camera, GPContext *context)
 	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 	camera->pl->gpdev = camera->port;
 	camera->pl->dirty_sdram = 1;
+	camera->pl->dirty_flash = 1;
 
 	/* What bridge chip is inside the camera? The gsmart mini is spca500
 	 * based, while the others have a spca50xa */
