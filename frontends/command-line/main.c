@@ -101,7 +101,7 @@ OPTION_CALLBACK(port);
 OPTION_CALLBACK(speed);
 OPTION_CALLBACK(model);
 OPTION_CALLBACK(quiet);
-#ifdef ENABLE_DEBUGGING
+#ifndef DISABLE_DEBUGGING
 OPTION_CALLBACK(debug);
 #endif
 OPTION_CALLBACK(use_folder);
@@ -142,7 +142,7 @@ OPTION_CALLBACK(remove_dir);
 Option option[] = {
 
 /* Settings needed for formatting output */
-#ifdef ENABLE_DEBUGGING
+#ifndef DISABLE_DEBUGGING
 {"",  "debug", "", N_("Turn on debugging"),              debug,         0},
 #endif
 {"q", "quiet", "", N_("Quiet output (default=verbose)"), quiet,         0},
@@ -532,7 +532,7 @@ OPTION_CALLBACK(model)
         return (GP_OK);
 }
 
-#ifdef ENABLE_DEBUGGING
+#ifndef DISABLE_DEBUGGING
 static void
 debug_func (GPLogLevel level, const char *domain, const char *format,
 	    va_list args, void *data)
@@ -1188,7 +1188,7 @@ init_globals (void)
 /* Misc functions                                                       */
 /* ------------------------------------------------------------------   */
 
-#ifdef ENABLE_DEBUGGING
+#ifndef DISABLE_DEBUGGING
 void
 cli_debug_print (char *format, ...)
 {
@@ -1303,7 +1303,7 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 			  "This message may currently still be unrelated to "
 			  "the real error:\n\n"
 			  "%s\n\n"), _(gp_camera_get_error (glob_camera)));
-#ifdef ENABLE_DEBUGGING
+#ifndef DISABLE_DEBUGGING
 		if (!glob_debug) {
 			int n;
 			printf (_("For debugging messages, please use the --debug option.\n"

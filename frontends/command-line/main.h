@@ -23,7 +23,7 @@ typedef struct {
 	int	required;
 } Option;
 
-#ifdef ENABLE_DEBUGGING
+#ifndef DISPABLE_DEBUGGING
 void 	cli_debug_print(char *format, ...);
 #else
 #define cli_debug_print(format, args...) /**/

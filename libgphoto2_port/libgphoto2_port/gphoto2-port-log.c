@@ -28,7 +28,7 @@
 
 #include <gphoto2-port-result.h>
 
-#ifdef ENABLE_DEBUGGING
+#ifndef DISABLE_DEBUGGING
 typedef struct {
 	unsigned int id;
 	GPLogLevel   level;
@@ -259,7 +259,7 @@ gp_log (GPLogLevel level, const char *domain, const char *format, ...)
 	va_end (args);
 }
 
-#else /* ENABLE_DEBUGGING */
+#else /* DISABLE_DEBUGGING */
 
 /*
  * Even if debugging is disabled, we must keep stubs to these functions
@@ -310,4 +310,4 @@ void
 gp_log (GPLogLevel level, const char *domain, const char *format, ...)
 {
 }
-#endif /* ENABLE_DEBUGGING */
+#endif /* DISABLE_DEBUGGING */
