@@ -156,7 +156,8 @@ This sequence initiates the transfer of the photos
 From PC
 0000: 1b 43 02 00 04 0e 12 00 
 From Camera
-This data is variable and is probably important, no idea what it is at this time.
+This  is the EXIF II JPEG Information starting at byte 4
+----: HD P# P# ?? EXIF Starts
 0000: 02 00 00 78 ff d8 ff e1 0c 29 45 78 69 66 00 00 
 0010: 49 49 2a 00 08 00 00 00 0b 00 0e 01 02 00 20 00 
 0020: 00 00 92 00 00 00 0f 01 02 00 10 00 00 00 b2 00 
