@@ -1,3 +1,8 @@
+2002-03-21  Marcus Meissner  <marcus@jet.franken.de>
+
+	* configure.in, libgphoto2_port/configure.in:
+		added AC_INLINE, AC_CONST for platforms that don't have it.
+
 2002-03-13  Colin Marquardt  <colin@marquardt-home.de>
 
 	* configure.in: Added es to ALL_LINGUAS.
