@@ -1,3 +1,7 @@
+2002-10-25  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* usb.c: added fix for EOS D60 unlocking by Fredrik (reported to work)
+
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
