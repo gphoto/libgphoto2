@@ -176,9 +176,10 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
+        /* Translators: please translate "Krauss" to "Krauﬂ" if possible. */
 	strcpy (about->text,
 		_
-		("spca504_flash camlib\n Authors: Till Adam\n <till@adam-lilienthal.de>\nbased on work by Matthias Krauﬂ\nand Mark A. Zimmerman <mark@foresthaven.com>"));
+		("spca504_flash camlib\n Authors: Till Adam\n <till@adam-lilienthal.de>\nbased on work by Matthias Krauss\nand Mark A. Zimmerman <mark@foresthaven.com>"));
 	return GP_OK;
 }
 static int
