@@ -138,7 +138,7 @@ show_date (CmdConfig *cmd_config, CameraWidget *date)
 	gp_widget_get_value (date, &time);
 	date_info = localtime ((time_t *) &time);
 	day = date_info->tm_mday;
-	month = date_info->tm_mon + 1;
+	month = date_info->tm_mon;
 	year = date_info->tm_year + 1900;
 
 	gp_widget_get_label (date, &label);
