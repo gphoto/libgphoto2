@@ -24,6 +24,7 @@ libgphoto2_la_SOURCES = 	\
 	result.c		\
 	setting.c		\
 	widget.c
+libgphoto2_la_LIBADD = -lm
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgphoto-2.0.pc

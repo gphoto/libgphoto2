@@ -427,6 +427,8 @@ int jamcam_who_knows (Camera *camera)
 }
 
 
+#if 0
+
 /***********************************************************************/
 /* gamma table correction and bayer routines, hopefully will go into a */
 /* common Gphoto2 area at some point.                                  */
@@ -594,3 +596,4 @@ int gp_bayer_decode(int w, int h, unsigned char *input, unsigned char *output,
 	return( GP_OK );
 }
 
+#endif

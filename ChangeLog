@@ -1,5 +1,10 @@
 2001-10-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/jamcam: Use libgphoto2/bayer.h and libgphoto2/gamma.h
+	* libgphoto2/Makefile.am: LIBADD -lm
+
+2001-10-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in: -lm
 	* libgphoto2/Makefile.am
 	* libgphoto2/bayer.[c,h]

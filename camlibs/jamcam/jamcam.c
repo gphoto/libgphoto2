@@ -26,7 +26,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include <gphoto2.h>
+#include <libgphoto2/bayer.h>
+#include <libgphoto2/gamma.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -191,9 +194,9 @@ static int camera_file_get (Camera *camera, const char *folder,
 
 		size = strlen( ppm ) + ( height * width * 3 );
 
-		gp_bayer_decode( width, height, raw, ptr, BAYER_TILE_GBRG );
-		gp_create_gamma_table( gtable, 0.5 );
-		gp_gamma_correct_single( ptr, height * width, gtable );
+		gp_bayer_decode(raw, width, height, ptr, BAYER_TILE_GBRG );
+		gp_gamma_fill_table( gtable, 0.5 );
+		gp_gamma_correct_single( gtable, ptr, height * width );
 
 		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
 		CHECK (gp_file_set_name (file, filename));
@@ -215,11 +218,10 @@ static int camera_file_get (Camera *camera, const char *folder,
 
 		size = strlen( ppm ) + ( jc_file->width * jc_file->height * 3 );
 
-		gp_bayer_decode( jc_file->width, jc_file->height, raw, ptr,
+		gp_bayer_decode( raw, jc_file->width, jc_file->height, ptr,
 			BAYER_TILE_GBRG );
-		gp_create_gamma_table( gtable, 0.5 );
-		gp_gamma_correct_single( ptr, jc_file->width * jc_file->height,
-			gtable );
+		gp_gamma_fill_table( gtable, 0.5 );
+		gp_gamma_correct_single( gtable, ptr, jc_file->width * jc_file->height );
 
 		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
 		CHECK (gp_file_set_name (file, filename));

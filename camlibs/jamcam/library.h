@@ -53,6 +53,7 @@ int jamcam_fetch_memory(Camera *camera, char *data, int start, int length );
 int jamcam_request_image(Camera *camera, char *buf, int *len, int number);
 int jamcam_request_thumbnail(Camera *camera, char *buf, int *len, int number );
 
+#if 0
 /***********************************************************************/
 /* gamma table correction and bayer routines, hopefully will go into a */
 /* common Gphoto2 area at some point.                                  */
@@ -71,5 +72,7 @@ int gp_gamma_correct_single( unsigned char *data, int pixels,
 
 int gp_bayer_decode(int w, int h, unsigned char *input, unsigned char *output,
 	int tile);
+
+#endif
 
 #endif __LIBRARY_H__
