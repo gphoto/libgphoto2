@@ -150,6 +150,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
     	Camera *camera = user_data; 
     	int w, h = 0, buffersize, comp_ratio, k;
+    	unsigned char data[buffersize]; 
+    	unsigned char p_data[w * h];
     
     	GP_DEBUG ("Downloading pictures!\n");
 
@@ -169,9 +171,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
     	buffersize = w * h / comp_ratio;
 
-    	unsigned char data[buffersize]; 
     	memset(data,0,buffersize+1); 
-    	unsigned char p_data[w * h];
 
     	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
