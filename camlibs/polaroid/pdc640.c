@@ -20,6 +20,7 @@
 
 #include <gphoto2-library.h>
 #include <gphoto2-debug.h>
+#include <gphoto2-port.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,19 +28,48 @@
 
 #include "libgphoto2/bayer.h"
 
+#include "jd350e.h"
+
 #define PDC640_PING  "\x01"
 #define PDC640_SPEED "\x69\x0b"
-
-#define PDC640_FILESPEC "pdc640%04i.ppm"
 
 #define PDC640_MAXTRIES 3
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
+typedef enum{
+	pdc640,
+	jd350e
+} Model;
+
+typedef int postproc_func(int,int,unsigned char*);
+
+struct _CameraPrivateLibrary{
+	Model			model;
+	BayerTile		bayer_tile;
+	postproc_func*	postprocessor;
+	char*			filespec;
+};
+
+
 static struct {
-	const char *model;
+	const char*				model;
+	struct _CameraPrivateLibrary	pl;
 } models[] = {
-	{"Polaroid Fun Flash 640"},
+	{"Polaroid Fun Flash 640", {
+		 	pdc640,
+			BAYER_TILE_RGGB,
+			NULL, // add postprocessor here!
+			"pdc640%04i.ppm"
+		}
+	},
+	{"Jenoptik JD350 entrance", {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&jd350e_postprocessing,
+			"jd350e%04i.ppm"
+		}
+	},
 	{NULL}
 };
 
@@ -256,7 +286,8 @@ pdc640_setpic (GPPort *port, char n)
 static int
 pdc640_picinfo (GPPort *port, char n,
 		int *size_pic,   int *width_pic,   int *height_pic,
-		int *size_thumb, int *width_thumb, int *height_thumb)
+		int *size_thumb, int *width_thumb, int *height_thumb,
+		int *compression_type )
 {
 	unsigned char buf[32];
 
@@ -271,6 +302,9 @@ pdc640_picinfo (GPPort *port, char n,
 	*size_pic   = buf[2] | (buf[3] << 8) | (buf[4] << 16);
 	*width_pic  = buf[5] | (buf[6] << 8);
 	*height_pic = buf[7] | (buf[8] << 8);
+
+	/* Compression Type */
+	*compression_type = buf[9];
 
 	/* Thumbnail size, width and height */
 	*size_thumb   = buf[25] | (buf[26] << 8) | (buf[27] << 16);
@@ -410,19 +444,21 @@ pdc640_deltadecode (int width, int height, char **rawdata, int *rawsize)
 }
 
 static int
-pdc640_getpic (GPPort *port, int n, int thumbnail, int justraw,
+pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 		char **data, int *size)
 {
 	char cmd, ppmheader[100];
 	int size_pic, width_pic, height_pic;
 	int size_thumb, width_thumb, height_thumb;
-	int height, width, outsize, result;
+	int height, width, outsize, result, pmmhdr_len;
+	int compression_type;
 	char *outdata;
 
 	/* Get the size of the picture */
-	CHECK_RESULT (pdc640_picinfo (port, n,
+	CHECK_RESULT (pdc640_picinfo (camera->port, n,
 				&size_pic,   &width_pic,   &height_pic,
-				&size_thumb, &width_thumb, &height_thumb));
+				&size_thumb, &width_thumb, &height_thumb,
+				&compression_type));
 
 	/* Evaluate parameters */
 	if (thumbnail) {
@@ -442,7 +478,16 @@ pdc640_getpic (GPPort *port, int n, int thumbnail, int justraw,
 		*size = size_pic;
 		width = width_pic;
 		height = height_pic;
-		cmd = 0x10;
+		if( compression_type == 2 ){
+			cmd = 0x10; // delta compressed
+		}
+		else if( compression_type == 0 ){
+			cmd = 0x00; // uncompressed
+		}
+		else{
+			// unknown compression type
+			return (GP_ERROR_CORRUPTED_DATA);
+		}
 	}
 
 	/* Sanity check */
@@ -455,34 +500,34 @@ pdc640_getpic (GPPort *port, int n, int thumbnail, int justraw,
 		return (GP_ERROR_NO_MEMORY);
 
 	/* Get the raw picture */
-	CHECK_RESULT (pdc640_setpic (port, n));
-	CHECK_RESULT (pdc640_transmit_pic (port, cmd, width, thumbnail, 
+	CHECK_RESULT (pdc640_setpic (camera->port, n));
+	CHECK_RESULT (pdc640_transmit_pic (camera->port, cmd, width, thumbnail, 
 					*data, *size));
 
-	/* Just wanted the raw camera data */
-	if (justraw)
-		return(GP_OK);
-
-	if (thumbnail) {
-		/* Process thumbnail data */
+	if (thumbnail || compression_type == 0 ) {
+		/* Process uncompressed data */
 		CHECK_RESULT (pdc640_processtn (width, height,
 						data, *size));
-	} else {
+	} else if( compression_type == 2 ){
 		/* Image data is delta encoded so decode it */
 		CHECK_RESULT (pdc640_deltadecode (width, height, 
 						  data, size));
 	}
 
+	/* Just wanted the raw camera data */
+	if (justraw)
+		return(GP_OK);
+
 	gp_debug_printf(GP_DEBUG_LOW, "pdc640", "*** Bayer decode");
 
 	sprintf(ppmheader, "P6\n"
-			   "# CREATOR: gphoto2, pdc640 library\n"
+			   "# CREATOR: gphoto2, pdc640/jd350e library\n"
 			   "%d %d\n"
 			   "255\n", width, height);
 
 	/* Allocate memory for Interpolated ppm image */
-	result = strlen(ppmheader);
-	outsize = width * height * 3 + result + 1;
+	pmmhdr_len = strlen(ppmheader);
+	outsize = width * height * 3 + pmmhdr_len + 1;
 	outdata = malloc(outsize);
 	if (!outdata)
 		return (GP_ERROR_NO_MEMORY);
@@ -492,10 +537,19 @@ pdc640_getpic (GPPort *port, int n, int thumbnail, int justraw,
 
 	/* Decode and interpolate the Bayer Mask */
 	result = gp_bayer_decode(*data, width, height,
-				&outdata[result], BAYER_TILE_RGGB);
+				&outdata[pmmhdr_len], camera->pl->bayer_tile );
 	if (result < 0) {
 		free (outdata);
 		return (result);
+	}
+
+	/* Call a specific postprocessor if available*/
+	if( camera->pl->postprocessor ){
+		result = camera->pl->postprocessor(width,height,&outdata[pmmhdr_len]);
+		if (result < 0) {
+			free (outdata);
+			return (result);
+		}
 	}
 
 	/* Fix up data pointers */
@@ -529,7 +583,7 @@ pdc640_takepic (GPPort *port)
 int
 camera_id (CameraText *id)
 {
-	strcpy (id->text, "Polaroid Fun Flash 640");
+	strcpy (id->text, "pdc640/jd350e");
 
 	return (GP_OK);
 }
@@ -575,11 +629,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* Get the picture */
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		CHECK_RESULT (pdc640_getpic (camera->port, n, 0, 0, &data, &size));
+		CHECK_RESULT (pdc640_getpic (camera, n, 0, 0, &data, &size));
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
 		break;
 	case GP_FILE_TYPE_RAW:
-		CHECK_RESULT (pdc640_getpic (camera->port, n, 0, 1, &data, &size));
+		CHECK_RESULT (pdc640_getpic (camera, n, 0, 1, &data, &size));
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
 
 		/* Change extension to raw */
@@ -595,7 +649,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		}
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		CHECK_RESULT (pdc640_getpic (camera->port, n, 1, 0, &data, &size));
+		CHECK_RESULT (pdc640_getpic (camera, n, 1, 0, &data, &size));
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
 		break;
 	}
@@ -642,7 +696,10 @@ camera_about (Camera *camera, CameraText *about)
 	strcpy (about->text, "Download program for Polaroid Fun Flash 640. "
 		"Originally written by Chris Byrne <adapt@ihug.co.nz>, "
 		"and adapted for gphoto2 by Lutz Müller "
-		"<urc8@rz.uni-karlsruhe.de>.");
+		"<urc8@rz.uni-karlsruhe.de>."
+		"Protocol enhancements and postprocessing "
+		" for Jenoptik JD350e by Michael Trawny "
+		"<trawny99@users.sourceforge.net>.");
 
 	return (GP_OK);
 }
@@ -670,7 +727,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
 		return (GP_ERROR);
 
 	/* Set the filename */
-        sprintf (path->name, PDC640_FILESPEC, num);
+        sprintf (path->name, camera->pl->filespec, num);
         strcpy (path->folder, "/");
 
 	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", path->name));
@@ -687,7 +744,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* Fill the list */
 	CHECK_RESULT (pdc640_caminfo (camera->port, &n));
-	CHECK_RESULT (gp_list_populate (list, PDC640_FILESPEC, n));
+	CHECK_RESULT (gp_list_populate (list, camera->pl->filespec, n));
 
 	return (GP_OK);
 }
@@ -697,7 +754,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo *info, void *data)
 {
 	Camera *camera = data;
-	int n;
+	int n, dummy;
 	int size_pic, size_thumb;
 	int width_pic, width_thumb, height_pic, height_thumb;
 
@@ -706,7 +763,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 	CHECK_RESULT (pdc640_picinfo (camera->port, n,
 				&size_pic,   &width_pic,   &height_pic,
-				&size_thumb, &width_thumb, &height_thumb));
+				&size_thumb, &width_thumb, &height_thumb,
+				&dummy ));
 
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_WIDTH |
 			    GP_FILE_INFO_HEIGHT | GP_FILE_INFO_TYPE;
@@ -731,8 +789,28 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 int
 camera_init (Camera *camera)
 {
-	int result;
+	int result, i;
 	gp_port_settings settings;
+	CameraAbilities  abilities;	
+
+	CHECK_RESULT (gp_camera_get_abilities(camera,&abilities) );
+	camera->pl = 0;
+	for( i=0; models[i].model; i++ ){
+		if( strcmp(models[i].model,abilities.model) == 0 ){
+			gp_debug_printf(GP_DEBUG_LOW, "pdc640", "model = %s\n", abilities.model);
+			camera->pl = malloc( sizeof(struct _CameraPrivateLibrary) );
+			if( camera->pl ){
+				*(camera->pl) = models[i].pl;
+				break;
+			}
+			else{
+				return (GP_ERROR_NO_MEMORY);
+			}
+		}
+	}
+	if( ! camera->pl ){
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	camera->functions->about   = camera_about;
 	camera->functions->capture = camera_capture;
