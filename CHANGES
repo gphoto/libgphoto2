@@ -1,3 +1,23 @@
+libgphoto2 2.1.2
+
+   * fixed nasty stack overflow/segfault bug
+
+drivers (camlibs):
+
+   * All drivers:
+     - report vendor/model in a new (formatted) fashion
+
+   * Canon driver: 
+     - added support for capturing for consumer class cameras, tested on
+       Canon PowerShot S45, Canon PowerShot G2
+
+   * PTP driver:
+     - fixed some bugs
+
+   * PTP2 driver:
+     - next generation PTP driver added, but not yet in build system
+
+----------------------------------------------------------------------------
 libgphoto2 2.1.1
 
    * separated libgphoto2 sources from gphoto2 command line interface
