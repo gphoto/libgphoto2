@@ -62,6 +62,12 @@ struct camera_to_usb {
 	 * It has been rebranded and rereleased dozens of times.
 	 */
 
+	/* According to: http://www.bazelet.com/generic74.html */
+	{ "SpyPen Axys",                0x0553, 0x0202, 0 },
+	{ "SpyPen Cleo",                0x0553, 0x0202, 0 },
+	{ "SpyPen Xion",                0x0553, 0x0202, 0 },
+	{ "SpyPen Memo",                0x0553, 0x0202, 0 },
+
 	/* http://www.iomagic.com/support/digitalcameras/magicimage400/magicimage400manual.htm */
 	{ "IOMagic MagicImage 400",     0x0553, 0x0202, 0 },
 	/* http://www.pctekonline.com/phoebsmardig.html */
