@@ -44,6 +44,8 @@
 gp_port_info     device_list[256];
 int              device_count;
 
+int initialized = 0;
+
 /* Toggle to turn on/off debugging */
 int              glob_debug_level=0;
 
@@ -113,12 +115,16 @@ int gp_port_init(int debug)
         /* Enumerate all the available devices */
         device_count = 0;
         glob_debug_level = debug;
+	initialized = 1;
         return (gp_port_library_list(device_list, &device_count));
 }
 
 int gp_port_count_get(void)
 {
         gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Device count: %i", device_count);
+	if (!initialized)
+		gp_port_init (glob_debug_level);
+
         return device_count;
 }
 

@@ -1,3 +1,8 @@
+2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gp_port.c (gp_port_count): Make sure
+	libgphoto2_port is initialized.
+
 2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Fredrik <fredrik@krixor.xy.org>
