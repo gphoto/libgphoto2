@@ -1,3 +1,14 @@
+2003-0825 Theodore Kilgore <kilgota@auburn.edu>
+
+	* README.913C: Description of Argus DC-1730 0x2770:0x913c camera.
+	
+	* library.c: Argus DC-1730 0x2770:0x913c added.
+	
+	* sq905.c: data type corrected in sq_access_reg ( )
+	
+	* sq905.h: In sq_access_reg ( ) the "index" is an int. Oops. 
+
+
 2003-06-29 Theodore Kilgore <kilgota@auburn.edu>
 
 	* sq905.c: Major rewrite. Credit to Cedric Cellier 
