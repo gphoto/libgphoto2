@@ -290,6 +290,25 @@ AC_CHECK_FILE(/proc/meminfo, [
 	proc_meminfo=false;
 ])
 
+dnl Check for sysctl()
+AC_MSG_CHECKING([for sysctl on BSD])
+AC_TRY_COMPILE([
+	#include <unistd.h>
+	#include <sys/sysctl.h>
+	#if __FreeBSD__
+	#	 include <sys/types.h>
+	#elif (__NetBSD__ || __OpenBSD__)
+	#	 include <sys/param.h>
+	#endif],
+	[int mib[2] = { CTL_HW, HW_PHYSMEM };
+	int value;
+	size_t valuelen = sizeof(value);
+	sysctl(mib, 2 , &value, &valuelen, NULL, 0)],
+	AC_DEFINE(HAVE_SYSCTL,1,[whether we may use sysctl])
+	AC_MSG_RESULT(yes),
+	AC_MSG_RESULT(no)
+)
+
 dnl ---------------------------------------------------------------------------
 dnl Configure libgphoto2-port
 dnl ---------------------------------------------------------------------------
