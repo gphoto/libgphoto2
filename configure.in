@@ -151,7 +151,7 @@ AC_ARG_WITH(camlibdir,
   camlibdir="$withval", camlibdir='${libdir}/gphoto2')
 AC_MSG_RESULT("$camlibdir")
 AC_SUBST(camlibdir)
-AC_DEFINE(CAMLIBDIR,"$camlibdir",[where to install camlibs])
+AC_DEFINE_UNQUOTED(CAMLIBDIR,"$camlibdir",[where to install camlibs])
 
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
