@@ -225,6 +225,8 @@ if $try_usb; then
 	fi
 fi
 
+# This uses non-standard test syntax and will fail on most systems,
+# but it's just informational so any warning can be safely ignored.
 if test "$LIBUSB_VER" \< "0.1.5"; then
 	AC_MSG_WARN([
 *** You need atleast version 0.1.5 of the libusb library for USB support
