@@ -163,7 +163,7 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 	CHECK( pdrm11_select_file(port, picNum) );
 
 	if(type == GP_FILE_TYPE_PREVIEW) {
-		CHECK(gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_INFO, file, buf, 8));
+		CHECK(gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_INFO, picNum, buf, 8));
 		file_type = buf[4];
 
 		CHECK( gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_THUMBSIZE, picNum, buf, 14) );
