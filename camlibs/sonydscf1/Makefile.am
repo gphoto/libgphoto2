@@ -1,12 +1,11 @@
-camlibdir = $(prefix)/lib/gphoto2
-camlib_LTLIBRARIES = libgphoto2_sonydscf1.la
+SUBDIRS = dscf55
 
-CFLAGS = @CFLAGS@ -g `gpio-config --cflags`
-LDFLAGS = @LDFLAGS@ -g `gpio-config --libs`
-INCLUDES = -I$(top_srcdir)/include
+drivers_LTLIBRARIES = libgphoto_sony_dscf1.la
 
-libgphoto2_sonydscf1_la_SOURCES = chotplay.c chotplay.h command.c command.h \
-	common.h config.h getuint.c getuint.h pmp.h sonydscf1.c sonydscf1.h
+CFLAGS = @CFLAGS@ @GTK_CFLAGS@ @GDK_IMLIB_CFLAGS@ 
 
-libgphoto2_sonydscf1_la_LDFLAGS = -version-info 0:0:0
+libgphoto_sony_dscf1_la_SOURCES = tty.c command.c getuint.c \
+	chotplay.c dsc_f1.c \
+	tty.h command.h getuint.h chotplay.h pmp.h config.h common.h
 
+libgphoto_sony_dscf1_la_LDFLAGS = -version-info 0:0:0

@@ -1,4 +1,4 @@
-CCFLAGS=-O2 -c -I.. -I..\include -I..\libgpio -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
+CCFLAGS=-O2 -c -I.. -I..\include -I..\libgpio\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
 CC=gcc
 MKLIB=ar r
 
@@ -29,6 +29,9 @@ lib: ..\lib\libgphoto2.a
 ..\obj\file.o: file.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
+..\obj\fs.o: fs.c
+  @$(CC) -o $@ $** $(CCFLAGS)
+
 ..\obj\library.o: library.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
@@ -41,6 +44,6 @@ lib: ..\lib\libgphoto2.a
 ..\obj\widget.o: widget.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
-..\lib\libgphoto2.a: ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o
+..\lib\libgphoto2.a: ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o ..\obj\fs.o
   @$(MKLIB) $@ $**
 

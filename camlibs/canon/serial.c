@@ -117,7 +117,7 @@ int canon_serial_init(const char *devname)
     gpio_device_settings settings;
 
   debug_message("Initializing the camera.\n");
-  
+
   gpio_init();
 
   switch (canon_comm_method) {
@@ -255,8 +255,8 @@ int canon_serial_send(const unsigned char *buf, int len, int sleep)
         int i;
     dump_hex("canon_serial_send()", buf, len);
 
-	/* the A50 does not like to get too much data in a row
-	 * The S10 and S20 do not have this problem */
+        /* the A50 does not like to get too much data in a row
+         * The S10 and S20 do not have this problem */
     if (sleep>0 && camera_data.model == CANON_PS_A50) {
       for(i=0;i<len;i++) {
         gpio_write(gdev,buf,1);
@@ -277,7 +277,7 @@ int canon_serial_send(const unsigned char *buf, int len, int sleep)
  */
 void serial_set_timeout(int to)
 {
-	gpio_set_timeout(gdev,to);
+        gpio_set_timeout(gdev,to);
 }
 
 /*****************************************************************************

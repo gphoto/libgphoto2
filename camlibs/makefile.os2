@@ -13,18 +13,18 @@ end:
   @echo ****
 
 dll:
-  @cd canon
-  @nmake -nologo -f makefile.os2
-  @cd..
+# @cd canon
+# @nmake -nologo -f makefile.os2
+# @cd..
   @cd barbie
   @nmake -nologo -f makefile.os2
   @cd..
-  @cd digita
-  @nmake -nologo -f makefile.os2
-  @cd..
-  @cd directory
-  @nmake -nologo -f makefile.os2
-  @cd..
+#  @cd digita
+#  @nmake -nologo -f makefile.os2
+#  @cd..
+#  @cd directory
+#  @nmake -nologo -f makefile.os2
+#  @cd..
   @cd sonydscf1
   @nmake -nologo -f makefile.os2
   @cd..
