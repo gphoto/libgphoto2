@@ -81,7 +81,7 @@ struct canonCamModelData
 	unsigned int max_thumbnail_size;
 };
 
-const struct canonCamModelData models[];
+extern const struct canonCamModelData models[];
 
 #undef S10M
 #undef S2M
@@ -134,8 +134,19 @@ struct _CameraPrivateLibrary
 #define DIR_CREATE 0
 #define DIR_REMOVE 1
 
-/* abbreviation for default branch in switch (camera->port->type) statements */
-#define GP_PORT_DEFAULT	default: GP_DEBUG ("Unsupported port type %i = 0x%x", camera->port->type, camera->port->type); break;
+/* These contain the default label for all the 
+ * switch (camera->port->type) statements
+ */
+#define GP_PORT_DEFAULT_RETURN(RETVAL) \
+		default: \
+			gp_camera_set_error (camera, "Don't know how to handle " \
+					     "camera->port->type value %i aka 0x%x" \
+					     "in %s line %i.", camera->port->type, \
+					     camera->port->type, __FILE__, __LINE__); \
+			return RETVAL; \
+			break;
+
+#define GP_PORT_DEFAULT GP_PORT_DEFAULT_RETURN(GP_ERROR_BAD_PARAMETERS)
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
