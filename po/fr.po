@@ -6,14 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-06-22 23:05+0200\n"
+"POT-Creation-Date: 2003-07-04 19:37+0200\n"
 "PO-Revision-Date: 2003-06-22 23:47+0200\n"
 "Last-Translator: Aurélien Croc <aurelien@ap2c.com>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 "X-Generator: KBabel 1.2beta3\n"
 
 #: camlibs/barbie/barbie.c:149
@@ -63,7 +63,6 @@ msgid "File protected."
 msgstr "Fichier protégé en écriture."
 
 #: camlibs/canon/library.c:134
-#, fuzzy
 msgid ""
 "For the A50, 115200 may not be faster than 57600\n"
 "Folders are NOT supported\n"
@@ -74,7 +73,7 @@ msgstr ""
 "Pour le modèle A50, 115200 ne sera pas plus rapide que 57600\n"
 "Les répertoires ne sont PAS supportés\n"
 "si vous rencontrez beaucoup d'erreurs de transmission, essayez d'avoir votre "
-"ordinateur aussi calme que possible (c-à-d sans acitivté disque)"
+"ordinateur aussi calme que possible (c-à-d sans activité disque)\n"
 
 #: camlibs/canon/library.c:249 camlibs/canon/library.c:1315
 #: camlibs/canon/library.c:1328
@@ -196,7 +195,8 @@ msgid "Error deleting associated thumbnail file"
 msgstr "Erreur à l'effacement de la vignette associée"
 
 #: camlibs/canon/library.c:997 camlibs/canon/library.c:1126
-msgid "Speeds greater than 57600 are not supported for uploading to this camera"
+msgid ""
+"Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr ""
 "Les vitesses supérieures à 57600 ne sont pas supportées pour télécharger "
 "vers l'appareil"
@@ -413,7 +413,7 @@ msgstr ""
 "s"
 
 #: camlibs/canon/usb.c:295
-#, fuzzy, c-format
+#, c-format
 msgid "Camera not ready, get_battery failed: %s"
 msgstr ""
 "Appareil pas prêt, les requêtes d'identification de l'appareil ont échoué : %"
@@ -455,7 +455,8 @@ msgstr ""
 
 #: camlibs/dimera/dimera3500.c:161
 #, c-format
-msgid "Only root folder is supported - you requested a file listing for folder '%s'."
+msgid ""
+"Only root folder is supported - you requested a file listing for folder '%s'."
 msgstr ""
 "Seul le dossier racine est supporté, vous avez demandé la liste pour le "
 "dossier '%s'."
@@ -572,7 +573,6 @@ msgid "internally"
 msgstr "interne"
 
 #: camlibs/dimera/dimera3500.c:425
-#, fuzzy
 msgid ""
 "* Image glitches or problems communicating are\n"
 "  often caused by a low battery.\n"
@@ -584,13 +584,12 @@ msgid ""
 msgstr ""
 "* Les petits problèmes d'image ou de communication sont\n"
 "  souvent causés par une batterie faible.\n"
-"* Les fichiers prises par commande à distance sur cet appareil sont "
-"stockées\n"
+"* Les images prises par commande à distance sur cet appareil sont stockées\n"
 "  en mémoire temporaire et non sur la carte de mémoire Flash.\n"
-"* Le contrôle de l'exposition à la capture de toutes les fichiers est\n"
-"  automatiquement positionnée par la fonction de prévisualisation de la   "
-"capture.\n"
-"* La qualité de l'image est inférieure à ce qu'elle pourrait être.\n"
+"* Le contrôle de l'exposition lors de la capture des images peut être\n"
+"  réglé manuellement ou par mode automatique\n"
+"* La qualité de l'image est actuellement inférieure à ce qu'elle pourrait "
+"être.\n"
 
 #: camlibs/dimera/dimera3500.c:439
 msgid ""
@@ -667,9 +666,8 @@ msgid "Automatic exposure adjustment on preview"
 msgstr "Ajustement automatique du temps d'exposition lors de la prise de vue"
 
 #: camlibs/dimera/dimera3500.c:780 camlibs/dimera/dimera3500.c:805
-#, fuzzy
 msgid "Exposure level on preview"
-msgstr "Mesure de l'exposition"
+msgstr "Mesure de l'exposition en prévisualisation"
 
 #: camlibs/dimera/dimera3500.c:788 camlibs/dimera/dimera3500.c:822
 msgid "Automatic flash on capture"
@@ -685,7 +683,8 @@ msgstr "Problème à la remise à zéro de l'appareil"
 
 #: camlibs/dimera/dimera3500.c:908
 msgid "Problem setting camera communication speed"
-msgstr "Problème à la configuration du débt de la communication vers l'appareil"
+msgstr ""
+"Problème à la configuration du débt de la communication vers l'appareil"
 
 #: camlibs/dimera/dimera3500.c:927
 msgid "Looks like a modem, not a camera"
@@ -741,7 +740,8 @@ msgid "View hidden directories"
 msgstr "Voir les répertoires cachés"
 
 #: camlibs/directory/directory.c:545
-msgid "The Directory Browse \"camera\" lets you index photos on your hard drive."
+msgid ""
+"The Directory Browse \"camera\" lets you index photos on your hard drive."
 msgstr ""
 "Le pseudo appareil 'Directory Browse' vous permet d'indexer les photos\n"
 "sur votre disque."
@@ -827,7 +827,8 @@ msgstr "L'appareil n'accepte pas le nom de fichier '%s'."
 #: camlibs/fuji/fuji.c:675
 #, c-format
 msgid "Could not initialize upload (camera responded with 0x%02x)."
-msgstr "Impossible d'initialiser le téléchargement (l'appareil a répondu 0x%02x)."
+msgstr ""
+"Impossible d'initialiser le téléchargement (l'appareil a répondu 0x%02x)."
 
 #: camlibs/fuji/fuji.c:773
 #, c-format
@@ -926,7 +927,6 @@ msgstr ""
 "l'appareil. Dans ce cas, il s'agit du fichier '%s'."
 
 #: camlibs/gsmart300/library.c:163
-#, fuzzy
 msgid ""
 "gsmart300 library \n"
 "Till Adam <till@adam-lilienthal.de>\n"
@@ -936,25 +936,25 @@ msgid ""
 "provided by Mustek.\n"
 "\n"
 msgstr ""
-"\n"
+"Bibliothèque gsmart300\n"
 "Till Adam <till@adam-lilienthal.de>\n"
-"Support pour la mini-série d'appareils photos  Mustek gSmart basé sur divers "
-"autres modules d'appareils gphoto2 et les sources du pilote windows "
-"gentiment passées par Mustek.\n"
+"Jérôme Lodewyck <jerome.lodewyck@ens.fr>\n"
+"Support pour les appareils photos Mustek gSmart 300\n"
+"basé sur divers autres modules d'appareils gphoto2 et les spécifications "
+"gentiment fournies par Mustek.\n"
 "\n"
 
 #: camlibs/gsmart300/library.c:199
-#, fuzzy, c-format
+#, c-format
 msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
 msgstr ""
 "Type de port non supporté: %d. Ce pilote ne marche qu'avec des appareils "
 "USB.\n"
 
-# Haesslich [Colin]
 #: camlibs/jamcam/jamcam.c:284
-#, fuzzy, c-format
+#, c-format
 msgid "Frames Taken     : %4d\n"
-msgstr "%sPrises de vue : %i\n"
+msgstr "Prises de vue    : %4d\n"
 
 #: camlibs/jamcam/jamcam.c:295
 msgid "jamcam library v"
@@ -1835,7 +1835,9 @@ msgstr "Téléchargement de la photo..."
 
 #: camlibs/konica/qm150.c:533 camlibs/konica/qm150.c:598
 msgid "Can't upload this image to the camera. An error has occured."
-msgstr "Impossible de charger cette photo dans l'appareil photo numérique. Une erreur s'est produite."
+msgstr ""
+"Impossible de charger cette photo dans l'appareil photo numérique. Une "
+"erreur s'est produite."
 
 #: camlibs/konica/qm150.c:640
 msgid "You must be in record mode to capture image."
@@ -1843,7 +1845,9 @@ msgstr "Vous devez être dans le mode enregistrement pour prendre une photo."
 
 #: camlibs/konica/qm150.c:643
 msgid "No space available to capture new image. You must delete some images."
-msgstr "Il n'y a plus de place pour capturer une nouvelle photo. Vous devez supprimer quelques images."
+msgstr ""
+"Il n'y a plus de place pour capturer une nouvelle photo. Vous devez "
+"supprimer quelques images."
 
 #: camlibs/konica/qm150.c:647
 msgid "Can't capture new image. Unknown error"
@@ -1898,7 +1902,7 @@ msgstr "Balance des blancs"
 
 #: camlibs/konica/qm150.c:965 camlibs/konica/qm150.c:976
 msgid "Office"
-msgstr ""
+msgstr "Bureau"
 
 #: camlibs/konica/qm150.c:966 camlibs/konica/qm150.c:973
 msgid "Day-lt"
@@ -1906,15 +1910,15 @@ msgstr "Lumière naturelle"
 
 #: camlibs/konica/qm150.c:981 camlibs/ptp2/ptpcam.c:526
 msgid "Sharpness"
-msgstr ""
+msgstr "Dureté"
 
 #: camlibs/konica/qm150.c:983 camlibs/konica/qm150.c:991
 msgid "Sharp"
-msgstr ""
+msgstr "Dur"
 
 #: camlibs/konica/qm150.c:984 camlibs/konica/qm150.c:994
 msgid "Soft"
-msgstr ""
+msgstr "Doux"
 
 #: camlibs/konica/qm150.c:999 camlibs/sierra/epson-desc.c:189
 #: camlibs/sierra/nikon-desc.c:185
@@ -1923,11 +1927,11 @@ msgstr "Couleur"
 
 #: camlibs/konica/qm150.c:1001 camlibs/konica/qm150.c:1011
 msgid "Light"
-msgstr ""
+msgstr "Lumière"
 
 #: camlibs/konica/qm150.c:1002 camlibs/konica/qm150.c:1014
 msgid "Deep"
-msgstr ""
+msgstr "Profondeur"
 
 #: camlibs/konica/qm150.c:1003 camlibs/konica/qm150.c:1017
 msgid "Black and White"
@@ -2054,7 +2058,9 @@ msgstr ""
 "\n"
 "Si vous avez des problèmes avec ce driver, merci d'envoyer\n"
 "un mail aux auteurs de ce driver.\n"
-"\nMerci d'utiliser GPhoto2 ainsi que les systèmes d'exploitations UNIX/Linux :o)\n"
+"\n"
+"Merci d'utiliser GPhoto2 ainsi que les systèmes d'exploitations UNIX/Linux :"
+"o)\n"
 
 #: camlibs/largan/lmini/largan.c:265
 msgid "There is nothing to summarize for this camera."
@@ -2509,11 +2515,12 @@ msgid ""
 "karlsruhe.de>.\n"
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
 msgstr ""
-"Téléchargé le programme pour quelques appareils photos Polaroïd. Originellement écrit "
-"par Peter Desnoyers <pjd@fred.cambridge.ma.us>, et adapté pour GPhoto2 par Nathan "
-"Stenzel <nathanstenzel@user.sourceforge.net> et Lutz Müeller <urc8rz.uni- "
-"karlsruhe.de>. \n"
-"Les tests du Polaroïd 640SE ont été effectués par Michael Golden <naugrim@juno.com>."
+"Téléchargé le programme pour quelques appareils photos Polaroïd. "
+"Originellement écrit par Peter Desnoyers <pjd@fred.cambridge.ma.us>, et "
+"adapté pour GPhoto2 par Nathan Stenzel <nathanstenzel@user.sourceforge.net> "
+"et Lutz Müeller <urc8rz.uni- karlsruhe.de>. \n"
+"Les tests du Polaroïd 640SE ont été effectués par Michael Golden "
+"<naugrim@juno.com>."
 
 #: camlibs/polaroid/pdc320.c:485
 #, c-format
@@ -2521,7 +2528,6 @@ msgid "Model: %x, %x, %x, %x"
 msgstr "Modèle : %x, %x, %x, %x"
 
 #: camlibs/polaroid/pdc640.c:887
-#, fuzzy
 msgid ""
 "Download program for GrandTek 98x based cameras. Originally written by Chris "
 "Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller <urc8@rz."
@@ -2529,9 +2535,12 @@ msgid ""
 "JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus "
 "Meissner <marcus@jet.franken.de>."
 msgstr ""
-"Téléchargé le programme pour les appareils photos basé sur le GrandTek 98x. Originellement écrit "
-"par Crhis Byrne <adapt@ihug.co.nz>, et adapté pour GPhoto2 par Luts Müeller <urc8@rz.uni-karlsruhe.de>. "
-"Résolution de bugs par Marcus Meissner <marcus@jet.franken.de>."
+"Programme de récupération pour les appareils photos basés sur le GrandTek "
+"98x. Originellement écrit par Chris Byrne <adapt@ihug.co.nz>, et adapté pour "
+"gphoto2 par Lutz Müeller <urc8@rz.uni-karlsruhe.de>. Améliorations du "
+"protocole et traitement post-opératoire pour les Jenoptik JD350e par Michael "
+"Trawny <trawny99@users.sourceforge.net>. Résolution de bugs par Marcus "
+"Meissner <marcus@jet.franken.de>."
 
 #: camlibs/polaroid/pdc700.c:159
 msgid "Image Quality"
@@ -2633,13 +2642,13 @@ msgstr ""
 "l'information sur l'image %i."
 
 #: camlibs/polaroid/pdc700.c:916
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%i bytes of an unknown image format have been received. Please write <gphoto-"
 "devel@lists.sourceforge.net> for assistance."
 msgstr ""
 "%i octets d'une image de format inconnu reçus. Merci d'écrire à <gphoto- "
-"devel@gphoto.org> pour une assistance."
+"devel@lists.sourceforge.net> pour une assistance."
 
 #: camlibs/polaroid/pdc700.c:941
 msgid ""
@@ -2647,9 +2656,9 @@ msgid ""
 "Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz "
 "Mueller <urc8@rz.uni-karlsruhe.de>."
 msgstr ""
-"Téléchargé le programme des appareils photos Polaroïd DC700. Originellement écrit par Ryan "
-"Lantzer <rlantzer@umr.edu> pour GPhoto 4.X. Adapté pour GPhoto2 by Lutz Müeller "
-"<urc8@rz-karlsruhe.de>."
+"Téléchargé le programme des appareils photos Polaroïd DC700. Originellement "
+"écrit par Ryan Lantzer <rlantzer@umr.edu> pour GPhoto 4.X. Adapté pour "
+"GPhoto2 by Lutz Müeller <urc8@rz-karlsruhe.de>."
 
 #: camlibs/polaroid/pdc700.c:997
 msgid "How long will it take until the camera powers off?"
@@ -2695,7 +2704,8 @@ msgstr ""
 #: camlibs/polaroid/pdc700.c:1231
 #, c-format
 msgid "The requested port type (%i) is not supported by this driver."
-msgstr "Le type de port demandé (%i) n'est pas supporté par ce pilote logiciel."
+msgstr ""
+"Le type de port demandé (%i) n'est pas supporté par ce pilote logiciel."
 
 #: camlibs/ptp2/library.c:102
 msgid "PTP Undefined Error"
@@ -2858,12 +2868,14 @@ msgid "PTP Protocol error, response expected"
 msgstr "PTP Errur de protocole, réponse attendue"
 
 #: camlibs/ptp2/library.c:543
-#, fuzzy
 msgid ""
 "PTP2 driver\n"
 "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
 "Enjoy!"
-msgstr "Écrit par Mariusz Woloszyn <emsi@ipartners.pl>."
+msgstr ""
+"Pilote PTP2\n"
+"(c) 2001-2003 par Mariusz Woloszyn <emsi@ipartners.pl>.\n"
+"Bonne chance !"
 
 #: camlibs/ptp2/library.c:579
 #, c-format
@@ -2881,9 +2893,8 @@ msgstr ""
 "Description étendue du vendeur : %s\n"
 
 #: camlibs/ptp2/library.c:619
-#, fuzzy
 msgid "Number of values"
-msgstr "Nombre de fichiers : %d\n"
+msgstr "Nombre de valeurs"
 
 #: camlibs/ptp2/library.c:623
 msgid "Supported values"
@@ -2994,109 +3005,88 @@ msgid "PTP: Invalid Code Format"
 msgstr "PTP Format de code incorrect"
 
 #: camlibs/ptp2/ptp.c:928
-#, fuzzy
 msgid "PTP: Unknown Vendor Code"
-msgstr "PTP Modèle inconnu"
+msgstr "PTP: code vendeur inconnu"
 
 #: camlibs/ptp2/ptp.c:930
-#, fuzzy
 msgid "PTP: Capture Already Terminated"
-msgstr "PTP Capture déjà terminé"
+msgstr "PTP: capture déjà terminée"
 
 #: camlibs/ptp2/ptp.c:931
-#, fuzzy
 msgid "PTP: Device Bus"
-msgstr "PTP Bus des périphériques"
+msgstr "PTP: bus des périphériques"
 
 #: camlibs/ptp2/ptp.c:932
-#, fuzzy
 msgid "PTP: Invalid Parent Object"
-msgstr "PTP Objet père incorrect"
+msgstr "PTP: objet père incorrect"
 
 #: camlibs/ptp2/ptp.c:933
-#, fuzzy
 msgid "PTP: Invalid Device Prop Format"
-msgstr "PTP Format de propriété de périphérique incorrect"
+msgstr "PTP: format de propriété de périphérique incorrect"
 
 #: camlibs/ptp2/ptp.c:934
-#, fuzzy
 msgid "PTP: Invalid Device Prop Value"
-msgstr "PTP Valeur de propriété de périphérique incorrect"
+msgstr "PTP: valeur de propriété de périphérique incorrect"
 
 #: camlibs/ptp2/ptp.c:935
-#, fuzzy
 msgid "PTP: Invalid Parameter"
-msgstr "PTP Paramètre incorrect"
+msgstr "PTP: paramètre incorrect"
 
 #: camlibs/ptp2/ptp.c:936
-#, fuzzy
 msgid "PTP: Session Already Opened"
-msgstr "PTP Session déjà ouverte"
+msgstr "PTP: session déjà ouverte"
 
 #: camlibs/ptp2/ptp.c:937
-#, fuzzy
 msgid "PTP: Transaction Canceled"
-msgstr "PTP Opération annulée"
+msgstr "PTP: opération annulée"
 
 #: camlibs/ptp2/ptp.c:939
-#, fuzzy
 msgid "PTP: Specification Of Destination Unsupported"
-msgstr "PTP Spécification de la destination non supportée "
+msgstr "PTP: Spécification de la destination non supportée "
 
 #: camlibs/ptp2/ptp.c:940
-#, fuzzy
 msgid "PTP: EK Filename Required"
-msgstr "PTP Nom de fichier EK nécessaire"
+msgstr "PTP: Nom de fichier EK nécessaire"
 
 #: camlibs/ptp2/ptp.c:941
-#, fuzzy
 msgid "PTP: EK Filename Conflicts"
-msgstr "PTP Conflit de nom de fichier EK"
+msgstr "PTP: Conflit de nom de fichier EK"
 
 #: camlibs/ptp2/ptp.c:942
-#, fuzzy
 msgid "PTP: EK Filename Invalid"
-msgstr "PTP Nom de fichier EK incorrect"
+msgstr "PTP: Nom de fichier EK incorrect"
 
 #: camlibs/ptp2/ptp.c:944
-#, fuzzy
 msgid "PTP: I/O error"
-msgstr "PTP erreur d'entrée sortie"
+msgstr "PTP: erreur d'entrée sortie"
 
 #: camlibs/ptp2/ptp.c:945
-#, fuzzy
 msgid "PTP: Error: bad parameter"
-msgstr "PTP Erreur: mauvais paramètre"
+msgstr "PTP: Erreur: mauvais paramètre"
 
 #: camlibs/ptp2/ptp.c:946
-#, fuzzy
 msgid "PTP: Protocol error, data expected"
-msgstr "PTP Erreur de protocole, données attendues"
+msgstr "PTP: Erreur de protocole, données attendues"
 
 #: camlibs/ptp2/ptp.c:947
-#, fuzzy
 msgid "PTP: Protocol error, response expected"
-msgstr "PTP Errur de protocole, réponse attendue"
+msgstr "PTP: Erreur de protocole, réponse attendue"
 
 #: camlibs/ptp2/ptpcam.c:503
-#, fuzzy
 msgid "PTP Undefined Property"
-msgstr "PTP Erreur non définie"
+msgstr "PTP propriété non définie"
 
 #: camlibs/ptp2/ptpcam.c:504
-#, fuzzy
 msgid "Battery Level"
-msgstr "%sDurée de vie de la batterie : %i\n"
+msgstr "Niveau de la batterie"
 
 #: camlibs/ptp2/ptpcam.c:505
-#, fuzzy
 msgid "Functional Mode"
 msgstr "Mode d'opération"
 
 #: camlibs/ptp2/ptpcam.c:507
-#, fuzzy
 msgid "Compression Setting"
-msgstr "Compression"
+msgstr "Configuration de la compression"
 
 #: camlibs/ptp2/ptpcam.c:508 camlibs/sierra/epson-desc.c:229
 #: camlibs/sierra/nikon-desc.c:259 camlibs/sierra/olympus-desc.c:265
@@ -3111,14 +3101,13 @@ msgstr "Gain RVB"
 
 #: camlibs/ptp2/ptpcam.c:510
 msgid "F-Number"
-msgstr ""
+msgstr "Numéro-F"
 
 #: camlibs/ptp2/ptpcam.c:511
 msgid "Focal Length"
 msgstr "Longueur de focal"
 
 #: camlibs/ptp2/ptpcam.c:512
-#, fuzzy
 msgid "Focus Distance"
 msgstr "Position du focus"
 
@@ -3128,9 +3117,8 @@ msgid "Focus Mode"
 msgstr "Mode focus"
 
 #: camlibs/ptp2/ptpcam.c:514
-#, fuzzy
 msgid "Exposure Metering Mode"
-msgstr "Mesure de l'exposition"
+msgstr "Mode de mesure de l'exposition"
 
 #: camlibs/ptp2/ptpcam.c:515 camlibs/sierra/sierra.c:931
 #: camlibs/sierra/sierra.c:1232 camlibs/sierra/sierra.c:1441
@@ -3139,40 +3127,36 @@ msgid "Flash Mode"
 msgstr "Mode flash"
 
 #: camlibs/ptp2/ptpcam.c:516
-#, fuzzy
 msgid "Exposure Time"
-msgstr "Temps d'exposition de la lampe"
+msgstr "Temps d'exposition"
 
 #: camlibs/ptp2/ptpcam.c:517
 msgid "Exposure Program Mode"
-msgstr ""
+msgstr "Mode du programme d'exposition"
 
 #: camlibs/ptp2/ptpcam.c:519
 msgid "Exposure Index (film speed ISO)"
-msgstr ""
+msgstr "Index d'exposition (vitesse ISO du film)"
 
 #: camlibs/ptp2/ptpcam.c:521
-#, fuzzy
 msgid "Exposure Bias Compensation"
 msgstr "Compensation de l'exposition"
 
 #: camlibs/ptp2/ptpcam.c:522
-#, fuzzy
 msgid "Date Time"
-msgstr "Date & heure"
+msgstr "Date heure"
 
 #: camlibs/ptp2/ptpcam.c:523
 msgid "Pre-Capture Delay"
-msgstr ""
+msgstr "Délai de pré-capture"
 
 #: camlibs/ptp2/ptpcam.c:524
 msgid "Still Capture Mode"
-msgstr ""
+msgstr "Mode de capture continue"
 
 #: camlibs/ptp2/ptpcam.c:525
-#, fuzzy
 msgid "Contrast"
-msgstr "Contraste-"
+msgstr "Contraste"
 
 #: camlibs/ptp2/ptpcam.c:527 camlibs/sierra/nikon-desc.c:518
 #: camlibs/sierra/nikon-desc.c:541
@@ -3180,9 +3164,8 @@ msgid "Digital Zoom"
 msgstr "Zoom numérique"
 
 #: camlibs/ptp2/ptpcam.c:528
-#, fuzzy
 msgid "Effect Mode"
-msgstr "Enregistrement"
+msgstr "Mode d'effet"
 
 #: camlibs/ptp2/ptpcam.c:529
 msgid "Burst Number"
@@ -3202,36 +3185,32 @@ msgstr ""
 
 # Translation thanks to Martin Kroeker. [Colin]
 #: camlibs/ptp2/ptpcam.c:533
-#, fuzzy
 msgid "Focus Metering Mode"
-msgstr "Mode compte-fil"
+msgstr "Mode de mesure du focus"
 
 #: camlibs/ptp2/ptpcam.c:534
 msgid "Upload URL"
-msgstr ""
+msgstr "URL d'envoi"
 
 #: camlibs/ptp2/ptpcam.c:535
 msgid "Artist"
-msgstr ""
+msgstr "Artiste"
 
 #: camlibs/ptp2/ptpcam.c:536
-#, fuzzy
 msgid "Copyright Info"
-msgstr "Copyright"
+msgstr "Info Copyright"
 
 #: camlibs/ptp2/ptpcam.c:543
 msgid "EK Color Temperature"
-msgstr ""
+msgstr "Température de la couleur EK"
 
 #: camlibs/ptp2/ptpcam.c:545
-#, fuzzy
 msgid "EK Date Time Stamp Format"
-msgstr "Format de date"
+msgstr "Format de date EK"
 
 #: camlibs/ptp2/ptpcam.c:546
-#, fuzzy
 msgid "EK Beep Mode"
-msgstr "Mode LED"
+msgstr "Mode beep EK"
 
 #: camlibs/ptp2/ptpcam.c:547
 msgid "EK Video Out"
@@ -3243,9 +3222,8 @@ msgid "EK Power Saving"
 msgstr "Pas d'indicateur de mise sous tension"
 
 #: camlibs/ptp2/ptpcam.c:549
-#, fuzzy
 msgid "EK UI Language"
-msgstr "Langue"
+msgstr "Langue interface EK"
 
 #: camlibs/ricoh/library.c:215
 msgid ""
@@ -3435,7 +3413,7 @@ msgstr ""
 "sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:75
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Expected %i bytes, got %i. Please report this error to <gphoto-devel@lists."
 "sourceforge.net>."
@@ -3453,20 +3431,19 @@ msgstr ""
 "org>."
 
 #: camlibs/ricoh/ricoh.c:215
-#, fuzzy, c-format
+#, c-format
 msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@gphoto.org>."
 msgstr ""
 "Mauvais caractères (0x%x, 0x%x). Merci de contacter <gphoto-devel@gphoto."
 "org>."
 
 #: camlibs/ricoh/ricoh.c:257 camlibs/ricoh/ricoh.c:326
-#, fuzzy
 msgid ""
 "Camera busy. If the problem persists, please contact <gphoto-devel@lists."
 "sourceforge.net>."
 msgstr ""
 "L'appareil est occupé. Si le problème persiste, merci de contacter <gphoto-"
-"devel@gphoto.org>."
+"devel@lists.sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:292
 msgid ""
@@ -3477,28 +3454,27 @@ msgstr ""
 "devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:308
-#, fuzzy
 msgid ""
 "Communication error even after 2 retries. Please contact <gphoto-devel@lists."
 "sourceforge.net>."
 msgstr ""
 "Délai d'attente dépassé même après 2 tentatives. Contactez <gphoto-"
-"devel@gphoto.org>."
+"devel@lists.sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:340
-msgid "Camera is in wrong mode. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgid ""
+"Camera is in wrong mode. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "L'appareil n'est pas dans le bon mode. Contactez <gphoto-devel@lists."
 "sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:349
-#, fuzzy
 msgid ""
 "Camera did not accept the parameters. Please contact <gphoto-devel@lists."
 "sourceforge.net>."
 msgstr ""
-"L'appareil n'a pas accepté les paramètres. Contactez <gphoto-devel@gphoto."
-"org>."
+"L'appareil n'a pas accepté les paramètres. Contactez <gphoto-devel@lists."
+"sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:355
 msgid ""
@@ -3510,7 +3486,8 @@ msgstr ""
 
 #: camlibs/ricoh/ricoh.c:817
 #, c-format
-msgid "The filename's length must not exceed 12 characters ('%s' has %i characters)."
+msgid ""
+"The filename's length must not exceed 12 characters ('%s' has %i characters)."
 msgstr ""
 "La longueur du fichier ne doit pas dépasser 12 caractères ('%s' a %i "
 "caractères)."
@@ -3673,7 +3650,8 @@ msgstr "Impossible d'obtenir la capacité de la batterie"
 
 #: camlibs/sierra/library.c:301
 #, c-format
-msgid "The battery level of the camera is too low (%d%%). The operation is aborted."
+msgid ""
+"The battery level of the camera is too low (%d%%). The operation is aborted."
 msgstr "Le niveau de la batterie est trop faible (%d%%). Opération annulée."
 
 #: camlibs/sierra/library.c:325
@@ -3711,7 +3689,7 @@ msgstr ""
 "org>."
 
 #: camlibs/sierra/library.c:789
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not transmit packet (error code %i). Please contact <gphoto-"
 "devel@lists.sourceforge.net>."
@@ -3794,14 +3772,13 @@ msgstr "Vitesse de l'obturateur (en secondes)"
 
 #: camlibs/sierra/nikon-desc.c:186 camlibs/sierra/olympus-desc.c:222
 msgid "B/W"
-msgstr ""
+msgstr "N/B"
 
 #: camlibs/sierra/nikon-desc.c:203 camlibs/sierra/olympus-desc.c:242
 msgid "Anti-redeye"
-msgstr ""
+msgstr "Anti yeux rouges"
 
 #: camlibs/sierra/nikon-desc.c:204
-#, fuzzy
 msgid "Slow-sync"
 msgstr "Synchronisation lente"
 
@@ -3816,23 +3793,20 @@ msgid "Contrast-"
 msgstr "Contraste-"
 
 #: camlibs/sierra/nikon-desc.c:222
-#, fuzzy
 msgid "Brightness+"
-msgstr "Luminosité de l'écran LCD"
+msgstr "Luminosité+"
 
 #: camlibs/sierra/nikon-desc.c:223
-#, fuzzy
 msgid "Brightness-"
-msgstr "Luminosité de l'écran LCD"
+msgstr "Luminosité-"
 
 #: camlibs/sierra/nikon-desc.c:228
 msgid "Image Adjustment"
 msgstr "Ajustement de l'image"
 
 #: camlibs/sierra/nikon-desc.c:253
-#, fuzzy
 msgid "Preset"
-msgstr "Portugais"
+msgstr "Pré-configuré"
 
 #: camlibs/sierra/nikon-desc.c:254 camlibs/sierra/olympus-desc.c:260
 #: camlibs/sierra/sierra.c:997 camlibs/sierra/sierra.c:1009
@@ -3842,7 +3816,7 @@ msgstr "Nuageux"
 
 #: camlibs/sierra/nikon-desc.c:271
 msgid "Blink"
-msgstr ""
+msgstr "Clignote"
 
 #: camlibs/sierra/nikon-desc.c:276
 msgid "LED Mode"
@@ -3855,15 +3829,15 @@ msgstr "Infini/Fish-eye"
 
 #: camlibs/sierra/nikon-desc.c:327
 msgid "Preview Thumbnail"
-msgstr ""
+msgstr "Imagette de prévision"
 
 #: camlibs/sierra/nikon-desc.c:328
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: camlibs/sierra/nikon-desc.c:329
 msgid "Previous"
-msgstr ""
+msgstr "Précédent"
 
 #: camlibs/sierra/nikon-desc.c:343
 msgid "Operation Mode"
@@ -3885,19 +3859,19 @@ msgstr "Compensation de l'exposition"
 
 #: camlibs/sierra/nikon-desc.c:456
 msgid "Center-Weighted"
-msgstr ""
+msgstr "Poids centré"
 
 #: camlibs/sierra/nikon-desc.c:457 camlibs/sierra/olympus-desc.c:413
 msgid "Spot"
-msgstr ""
+msgstr "Spot"
 
 #: camlibs/sierra/nikon-desc.c:458 camlibs/sierra/olympus-desc.c:414
 msgid "Matrix"
-msgstr ""
+msgstr "Matrice"
 
 #: camlibs/sierra/nikon-desc.c:459
 msgid "Spot-AF"
-msgstr ""
+msgstr "Spot-AF"
 
 #: camlibs/sierra/nikon-desc.c:464 camlibs/sierra/olympus-desc.c:419
 msgid "Exposure Metering"
@@ -3908,13 +3882,12 @@ msgid "Zoom (in millimeters)"
 msgstr "Zoom (en millimètres)"
 
 #: camlibs/sierra/nikon-desc.c:508
-#, fuzzy
 msgid "none"
-msgstr "Aucune"
+msgstr "Aucun"
 
 #: camlibs/sierra/nikon-desc.c:511
 msgid "AE-lock"
-msgstr ""
+msgstr "Blocage AE"
 
 #: camlibs/sierra/nikon-desc.c:512
 #, fuzzy
@@ -3923,7 +3896,7 @@ msgstr "Type de fichier"
 
 #: camlibs/sierra/nikon-desc.c:513
 msgid "Wide"
-msgstr ""
+msgstr "Large"
 
 #: camlibs/sierra/nikon-desc.c:523
 msgid "Misc exposure/lense settings"
@@ -3983,17 +3956,14 @@ msgstr ""
 "    La récupération des images doit fonctionner correctement.\n"
 
 #: camlibs/sierra/olympus-desc.c:224
-#, fuzzy
 msgid "White board"
 msgstr "Tableau blanc"
 
 #: camlibs/sierra/olympus-desc.c:225
-#, fuzzy
 msgid "Black board"
 msgstr "Tableau noir"
 
 #: camlibs/sierra/olympus-desc.c:257
-#, fuzzy
 msgid "Daylight"
 msgstr "Lumière naturelle"
 
@@ -4003,13 +3973,12 @@ msgid "Tungsten"
 msgstr "Tungstène"
 
 #: camlibs/sierra/olympus-desc.c:277
-#, fuzzy
 msgid "Manual"
-msgstr "Pas de manuel"
+msgstr "Manuel"
 
 #: camlibs/sierra/olympus-desc.c:297
 msgid "Monitor"
-msgstr ""
+msgstr "Moniteur"
 
 #: camlibs/sierra/olympus-desc.c:303
 msgid "LCD Mode"
@@ -4288,7 +4257,8 @@ msgstr "noir & blanc"
 
 #: camlibs/sierra/sierra.c:1850
 msgid "Note: no memory card present, some values may be invalid\n"
-msgstr "Note: absence de carte mémoire, quelques valeurs peuvent être invalides\n"
+msgstr ""
+"Note: absence de carte mémoire, quelques valeurs peuvent être invalides\n"
 
 #: camlibs/sierra/sierra.c:1858
 #, c-format
@@ -4343,9 +4313,8 @@ msgid "%sDate: %s"
 msgstr "%sDate : %s"
 
 #: camlibs/sierra/sierra.c:1897
-#, fuzzy
 msgid "No camera manual available.\n"
-msgstr "Appareil non disponible"
+msgstr "Manuel de l'appareil non disponible.\n"
 
 #: camlibs/sierra/sierra.c:1916
 msgid ""
@@ -4432,6 +4401,9 @@ msgid ""
 "Lee Benfield <lee@benf.org>\n"
 "Driver for accessing the Smal Ultrapocket camera, and OEM versions (slimshot)"
 msgstr ""
+"Smal Ultrapocket\n"
+"Lee Benfield <lee@benf.org>\n"
+"Pilote de contrôle des appareils Smal Ultrapocket, et versions OEM (slimshot)"
 
 #: camlibs/sonydscf1/dsc_f1.c:134
 msgid "Sorry, this function not implemented..."
@@ -4513,11 +4485,15 @@ msgid ""
 "Memory Total: %ikB\n"
 "Memory Free:  %ikB\n"
 msgstr ""
+"Version du firmware: %8s\n"
+"Images:         %i\n"
+"Mémoire totale: %ikB\n"
+"Mémoire libre:  %ikB\n"
 
 #: camlibs/soundvision/soundvision.c:325
-#, fuzzy, c-format
+#, c-format
 msgid "Firmware Revision: %8s"
-msgstr "Révision de microcode : %d.%d\n"
+msgstr "Révision de microcode : %8s"
 
 #: camlibs/soundvision/soundvision.c:333
 msgid ""
@@ -4547,6 +4523,8 @@ msgid ""
 "FLASH:\n"
 " Files: %d\n"
 msgstr ""
+"FLASH:\n"
+" Fichiers: %d\n"
 
 #: camlibs/spca50x/library.c:270
 #, c-format
@@ -4558,14 +4536,18 @@ msgid ""
 "Space used: %8d\n"
 "Space free: %8d\n"
 msgstr ""
+"SDRAM:\n"
+" Fichiers: %d\n"
+"  Images: %4d\n"
+"  Films: %4d\n"
+"Espace utilisé: %8d\n"
+"Espace libre: %8d\n"
 
 #: camlibs/spca50x/library.c:294
-#, fuzzy
 msgid "spca50x library v"
-msgstr "Bibliothèque gsmart v"
+msgstr "Bibliothèque spca50x v"
 
 #: camlibs/spca50x/library.c:295
-#, fuzzy
 msgid ""
 "\n"
 "Till Adam <till@adam-lilienthal.de>\n"
@@ -4575,9 +4557,9 @@ msgid ""
 msgstr ""
 "\n"
 "Till Adam <till@adam-lilienthal.de>\n"
-"Support pour la mini-série d'appareils photos  Mustek gSmart basé sur divers "
-"autres modules d'appareils gphoto2 et les sources du pilote windows "
-"gentiment passées par Mustek.\n"
+"Support pour les appareils photos avec la puce sunplus spca50x basé sur "
+"divers autres modules d'appareils gphoto2 et les informations gentiment "
+"fournies par Mustek.\n"
 "\n"
 
 #: camlibs/stv0674/stv0674.c:207
@@ -4587,6 +4569,10 @@ msgid ""
 "Driver for cameras using the STV0674 processor ASIC.\n"
 "Protocol reverse engineered using SnoopyPro\n"
 msgstr ""
+"STV0674\n"
+"Vincent Sanders <vince@kyllikki.org>\n"
+"Pilote pour les appareils utilisant le processeur STV0674.\n"
+"Protocole recherché en utilisant SnoopyPro\n"
 
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
 msgid "Bad exposure (not enough light probably)"
@@ -4719,6 +4705,10 @@ msgid ""
 "Please send bugreports and comments.\n"
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 msgstr ""
+"Bibliothèque SX330z (Traveler) (et autres appareils Aldi).\n"
+"D'autres appareils comme les Jenoptik, Skanhex, Maginon devraient fonctionner.\n"
+"Envoyez les rapports de bugs et les commentaires à:\n"
+"Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 
 #: camlibs/sx330z/library.c:290
 msgid "sx330z is USB only"
@@ -4743,7 +4733,8 @@ msgstr "Impossible de trouver un pilote pour '%s'"
 #: libgphoto2/gphoto2-camera.c:81
 #, c-format
 msgid "An error occurred in the io-library ('%s'): %s"
-msgstr "Une erreur est intervenue dans la bibliothèque d'entrée-sortie ('%s'): %s"
+msgstr ""
+"Une erreur est intervenue dans la bibliothèque d'entrée-sortie ('%s'): %s"
 
 #: libgphoto2/gphoto2-camera.c:85
 msgid "No additional information available."
@@ -4823,7 +4814,8 @@ msgstr "Le dossier '%s' ne contient pas de sous-dossier '%s'."
 #: libgphoto2/gphoto2-filesys.c:628
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
-msgstr "Impossible d'ajouter le fichier '%s' au dossier '%s' car il existe déjà."
+msgstr ""
+"Impossible d'ajouter le fichier '%s' au dossier '%s' car il existe déjà."
 
 #: libgphoto2/gphoto2-filesys.c:1005
 #, c-format
@@ -4836,7 +4828,8 @@ msgstr ""
 
 #: libgphoto2/gphoto2-filesys.c:1108
 #, c-format
-msgid "There are still subfolders in folder '%s' that you are trying to remove."
+msgid ""
+"There are still subfolders in folder '%s' that you are trying to remove."
 msgstr ""
 "Il existe toujours des sous-dossiers dans le dossier '%s' que vous essayez "
 "d'effacer."
@@ -4875,8 +4868,8 @@ msgstr "Impossible de trouver le fichier '%s'."
 msgid "The filesystem doesn't support getting files"
 msgstr "Ce système de fichier ne supporte pas la récupération des fichiers"
 
-#: libgphoto2/gphoto2-filesys.c:1490 libgphoto2/gphoto2-filesys.c:1998
-#: libgphoto2/gphoto2-filesys.c:2151
+#: libgphoto2/gphoto2-filesys.c:1490 libgphoto2/gphoto2-filesys.c:2001
+#: libgphoto2/gphoto2-filesys.c:2154
 #, c-format
 msgid "Unknown file type %i."
 msgstr "Type de fichier %i inconnu."
@@ -4906,18 +4899,18 @@ msgstr ""
 msgid "An error occured while reading '/proc/meminfo' ('%m')."
 msgstr "Une erreur est arrivée lors de la lecture de '/proc/meminfo' ('%m')."
 
-#: libgphoto2/gphoto2-filesys.c:1921
+#: libgphoto2/gphoto2-filesys.c:1922
 #, c-format
 msgid "sysctl call failed ('%m')."
 msgstr "Erreur lors de l'appel à sysctl() ('%m')."
 
-#: libgphoto2/gphoto2-filesys.c:2254
+#: libgphoto2/gphoto2-filesys.c:2257
 msgid "The filesystem doesn't support setting file information"
 msgstr ""
 "Ce système de fichier ne supporte pas la modification d'informations sur les "
 "fichiers"
 
-#: libgphoto2/gphoto2-filesys.c:2277
+#: libgphoto2/gphoto2-filesys.c:2280
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr ""
 "Les attributs en lecture seule ne peuvent être modifiés (comme la hauteur et "
@@ -4962,86 +4955,3 @@ msgstr "Erreur inconnue de la bibliothèque de l'appareil"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "Erreur inconnue"
-
-#~ msgid ""
-#~ "Expected %i bytes, got %i. Please report this error to <gphoto-"
-#~ "devel@gphoto.org>."
-#~ msgstr ""
-#~ "%i octets attendus, %i reçus. Merci de contacter <gphoto-devel@lists."
-#~ "sourceforge.net>."
-
-#~ msgid ""
-#~ "Communication error even after 2 retries. Please contact <gphoto-"
-#~ "devel@gphoto.org>."
-#~ msgstr ""
-#~ "Erreur de communication même après 2 tentatives. Contactez <gphoto-"
-#~ "devel@gphoto.org>."
-
-#, fuzzy
-#~ msgid "Driver Configuration"
-#~ msgstr "Configuration de l'appareil"
-
-#~ msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
-#~ msgstr "Écrit par Mariusz Woloszyn <emsi@ipartners.pl>."
-
-#, fuzzy
-#~ msgid "(ptp2) Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
-#~ msgstr "Écrit par Mariusz Woloszyn <emsi@ipartners.pl>."
-
-#, fuzzy
-#~ msgid "unknown"
-#~ msgstr "%i (inconnu)"
-
-#~ msgid "Camera not ready, could not lock camera keys: %s"
-#~ msgstr "Appareil pas prêt, impossible de vérouiller l'appareil : %s"
-
-#~ msgid "Revision: %8s"
-#~ msgstr "Révision : %8s"
-
-#~ msgid ""
-#~ "0.1 Traveler SX330z ALDI-cam\n"
-#~ "(many other vendors, like Jenoptik, Skanhex, Maginon should work too.\n"
-#~ "Even the 4100 Cameras could work.\n"
-#~ "Not tested, please report if this driver works with them!)\n"
-#~ msgstr ""
-#~ "Appareil 0.1 Traveler SX330z ALDI\n"
-#~ "(beaucoup d'autres vendeurs, comme Jenoptik, Skanhex, Maginon,\n"
-#~ "devraient également marcher. Même les appareils 4100 pourraient marcher.\n"
-#~ "Non testé, merci de rapporter si ce pilote marche avec!)\n"
-
-#~ msgid ""
-#~ "(Traveler) SX330z Library\n"
-#~ "See summary for more information\n"
-#~ "Dominik Kuhlen <dkuhlen@fhm.edu>\n"
-#~ msgstr ""
-#~ "Pilote (Traveler) SX330z\n"
-#~ "Voyez le résumé pour plus d'informations\n"
-#~ "Dominik Kuhlen <dkuhlen@fhm.edu>\n"
-
-#~ msgid "Not implemented!"
-#~ msgstr "Pas implémenté !"
-
-#~ msgid "%s"
-#~ msgstr "%s"
-
-#~ msgid "9600"
-#~ msgstr "9600"
-
-#~ msgid "19200"
-#~ msgstr "19200"
-
-#~ msgid "38400"
-#~ msgstr "38400"
-
-#~ msgid "57600"
-#~ msgstr "57600"
-
-#~ msgid "115200"
-#~ msgstr "115200"
-
-#~ msgid "VGA (640x480)"
-#~ msgstr "VGA (640x480)"
-
-#~ msgid "XGA (1024x768"
-#~ msgstr "XGA (1024x768"
-
