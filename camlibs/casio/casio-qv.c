@@ -215,13 +215,9 @@ camera_init (Camera *camera)
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 
-	/* Open the port and check if the camera is there */
-	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
-	strcpy (settings.serial.port, camera->port_info->path);
-	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
-	CHECK_RESULT (gp_port_timeout_set (camera->port, 1000));
-
 	/* Check if the camera is really there */
+	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
+	CHECK_RESULT (gp_port_timeout_set (camera->port, 1000));
 	for (i = 0; i < 4; i++) {
 		settings.serial.speed = speeds[i];
 		CHECK_RESULT (gp_port_settings_set (camera->port, settings));

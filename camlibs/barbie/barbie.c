@@ -179,13 +179,12 @@ camera_init (Camera *camera)
                                       camera);
 
         gp_port_timeout_set (camera->port, 5000);
-        strcpy (settings.serial.port, camera->port_info->path);
 
+	gp_port_settings_get (camera->port, &settings);
         settings.serial.speed   = 57600;
         settings.serial.bits    = 8;
         settings.serial.parity  = 0;
         settings.serial.stopbits= 1;
-
         gp_port_settings_set (camera->port, settings);
 
         res = barbie_ping (camera->port);

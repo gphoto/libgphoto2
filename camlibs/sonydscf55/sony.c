@@ -492,7 +492,8 @@ static int sony_init_port (Camera *camera)
 	
 	rc = gp_port_timeout_set (camera->port, 5000);
 	if (rc == GP_OK) { 
-		strcpy(settings.serial.port, camera->port_info->path);
+
+		gp_port_settings_get(camera->port, &settings);
 
 		settings.serial.speed = 9600;
 		settings.serial.bits = 8;

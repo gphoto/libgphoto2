@@ -454,7 +454,6 @@ camera_init (Camera *camera)
 
 	/* Open the port and check if the camera is there */
 	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
-	strcpy (settings.serial.port, camera->port_info->path);
 	if (camera->port_info->speed)
 		settings.serial.speed = camera->port_info->speed;
 	else

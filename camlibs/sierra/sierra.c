@@ -1267,7 +1267,7 @@ int camera_init (Camera *camera)
         int value=0;
         int x=0, ret;
         int vendor=0, product=0, inep=0, outep=0;
-        gp_port_settings settings;
+	GPPortSettings settings;
         SierraData *fd;
 
 
@@ -1295,10 +1295,10 @@ int camera_init (Camera *camera)
         fd->first_packet = 1;
         fd->usb_wrap = 0;
 
+	CHECK_FREE (camera, gp_port_settings_get (camera->port, &settings));
         switch (camera->port->type) {
         case GP_PORT_SERIAL:
 
-                strcpy (settings.serial.port, camera->port_info->path);
                 settings.serial.speed    = 19200;
                 settings.serial.bits     = 8;
                 settings.serial.parity   = 0;
@@ -1346,7 +1346,6 @@ int camera_init (Camera *camera)
         CHECK_FREE (camera, gp_port_settings_set (camera->port, settings));
         CHECK_FREE (camera, gp_port_timeout_set (camera->port, TIMEOUT));
         fd->speed = camera->port_info->speed;
-        camera->port->type  = camera->port->type;
 
         /* Establish a connection */
         CHECK_FREE (camera, camera_start (camera));

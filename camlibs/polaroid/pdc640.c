@@ -750,7 +750,6 @@ camera_init (Camera *camera)
 
 	/* Open the port */
 	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
-	strcpy (settings.serial.port, camera->port_info->path);
 	settings.serial.speed = 9600;
 	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
 

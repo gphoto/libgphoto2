@@ -163,12 +163,6 @@ int camera_init (Camera *camera) {
         gp_port_settings settings;
         SonyStruct *b;
 
-        if(glob_debug)
-        {
-         printf("sony dscf1: Initializing the camera\n");
-         printf("port: %s\n",camera->port_info->path);
-        }
-
         camera->functions->exit         = camera_exit;
 //	camera->functions->capture      = camera_capture;
         camera->functions->summary      = camera_summary;
@@ -183,7 +177,7 @@ int camera_init (Camera *camera) {
 	dev = camera->port;
 
         gp_port_timeout_set(b->dev, 5000);
-        strcpy(settings.serial.port, camera->port_info->path);
+	gp_port_settings_get (camera->port, &settings);
         settings.serial.speed   = camera->port_info->speed;
         settings.serial.bits    = 8;
         settings.serial.parity  = 0;

@@ -288,7 +288,7 @@ static int camera_about (Camera *camera, CameraText *about)
 int camera_init (Camera *camera)
 {
 	int count;
-	gp_port_settings settings;
+	GPPortSettings settings;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_init");
 
@@ -299,28 +299,26 @@ int camera_init (Camera *camera)
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
+	CHECK (gp_port_settings_get (camera->port, &settings));
 	switch( camera->port->type ) {
-		case GP_PORT_SERIAL:
-				strcpy (settings.serial.port, camera->port_info->path);
-				settings.serial.speed 	 = 57600;
-				settings.serial.bits 	 = 8;
-				settings.serial.parity 	 = 0;
-				settings.serial.stopbits = 1;
-				break;
-		case GP_PORT_USB:
-			    settings.usb.inep        = 0x81;
-			    settings.usb.outep       = 0x02;
-			    settings.usb.config      = 1;
-			    settings.usb.interface   = 0;
-			    settings.usb.altsetting  = 0;
-				break;
-		default:
-				fprintf(stderr, "Unknown port type: %d\n", camera->port->type );
-				return( GP_ERROR );
-				break;
+	case GP_PORT_SERIAL:
+		settings.serial.speed 	 = 57600;
+		settings.serial.bits 	 = 8;
+		settings.serial.parity 	 = 0;
+		settings.serial.stopbits = 1;
+		break;
+	case GP_PORT_USB:
+		settings.usb.inep        = 0x81;
+		settings.usb.outep       = 0x02;
+		settings.usb.config      = 1;
+		settings.usb.interface   = 0;
+		settings.usb.altsetting  = 0;
+		break;
+	default:
+		fprintf(stderr, "Unknown port type: %d\n", camera->port->type );
+		return ( GP_ERROR );
+		break;
 	}
-
-
 	CHECK (gp_port_settings_set (camera->port, settings));
 
 	CHECK (gp_port_timeout_set (camera->port, TIMEOUT));

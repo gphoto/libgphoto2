@@ -1201,7 +1201,7 @@ camera_init (Camera* camera)
         int i;
         int image_id_long;
         int inep, outep;
-        gp_port_settings settings;
+        GPPortSettings settings;
 
 	CHECK_NULL (camera);
 
@@ -1227,11 +1227,11 @@ camera_init (Camera* camera)
         outep         = konica_cameras [i].outep;
 
         /* Initiate the connection */
+	CHECK (gp_port_settings_get (camera->port, &settings));
         switch (camera->port->type) {
         case GP_PORT_SERIAL:
 
                 /* Set up the device */
-                strcpy (settings.serial.port, camera->port_info->path);
                 settings.serial.bits = 8;
                 settings.serial.parity = 0;
                 settings.serial.stopbits = 1;
