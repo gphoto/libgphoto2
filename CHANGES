@@ -2,7 +2,7 @@ gphoto2 2.0beta5
 
 Lutz:
 	* Remove libexif and check in configure.in for availability.
-
+	* Sony: Added "Sony DCR-PC100"  
 
 --------------------------------------------------------------------------------
 gphoto2-2.0beta4

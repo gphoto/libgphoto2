@@ -1,5 +1,5 @@
 /* Sony DSC-F55 & MSAC-SR1 - gPhoto2 camera library
- * Copyright (C) 2001 Raymond Penners <raymond@dotsphinx.com>
+ * Copyright (C) 2001, 2002 Raymond Penners <raymond@dotsphinx.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -40,8 +40,9 @@ int camera_id(CameraText * id)
 int camera_abilities(CameraAbilitiesList * list)
 {
 	static const char *models[] = {
-		"Sony DSC-F55",
-		SONY_MODEL_MSAC_SR1
+		SONY_MODEL_DSC_F55,
+		SONY_MODEL_MSAC_SR1,
+		SONY_MODEL_DCR_PC100
 	};
 	int i;
 	CameraAbilities a;
@@ -184,7 +185,7 @@ int camera_init(Camera * camera, GPContext *context)
 	camera->functions->about = camera_about;
 
 	gp_camera_get_abilities (camera, &a);
-	is_msac = !strcmp (a.model, SONY_MODEL_MSAC_SR1);
+	is_msac = strcmp (a.model, SONY_MODEL_DSC_F55);
 
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);

@@ -1,5 +1,5 @@
 /* Sony DSC-F55 & MSAC-SR1 - gPhoto2 camera library
- * Copyright (C) 2001 Raymond Penners <raymond@dotsphinx.com>
+ * Copyright (C) 2001, 2002 Raymond Penners <raymond@dotsphinx.com>
  * Copyright (C) 2000 Mark Davies <mdavies@dial.pipex.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@
 
 #define SONY_CAMERA_ID "sonydscf55"
 #define SONY_MODEL_MSAC_SR1 "Sony MSAC-SR1"
+#define SONY_MODEL_DCR_PC100 "Sony DCR-PC100"
+#define SONY_MODEL_DSC_F55 "Sony DSC-F55"
 
 #define SONY_FILE_NAME_FMT "dsc%05d.jpg"
 
