@@ -708,7 +708,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if ((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) || 
 		(params->objectinfo[i].StorageID == storage))
 	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
-		params->objectinfo[i].AssociationType==PTP_AT_GenericFolder)
+		params->objectinfo[i].AssociationType!=PTP_AT_Undefined)
 		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
 	}
 	}
@@ -891,7 +891,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	oi=&camera->pl->params.objectinfo[object_id];
-/*
+
 	GP_DEBUG ("ObjectInfo for '%s':");
 	GP_DEBUG ("  StorageID: %d", oi->StorageID);
 	GP_DEBUG ("  ObjectFormat: %d", oi->ObjectFormat);
@@ -907,7 +907,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("  AssociationType: %d", oi->AssociationType);
 	GP_DEBUG ("  AssociationDesc: %d", oi->AssociationDesc);
 	GP_DEBUG ("  SequenceNumber: %d", oi->SequenceNumber);
-*/
+
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
 
 	info->file.size   = oi->ObjectCompressedSize;

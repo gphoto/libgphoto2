@@ -1,3 +1,7 @@
+2002-11-27 Mariusz Woloszyn
+	* library.c: let all association types be treated as folders (for
+	  example DX4900 burst mode photos are kept in TimeSequence
+	  association)
 2002-11-26 Mariusz Woloszyn
 	* library.c: one more camera added (thx to Tim Looney)
 2002-11-22 Mariusz Woloszyn
