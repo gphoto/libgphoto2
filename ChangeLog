@@ -1,3 +1,8 @@
+2001-09-07  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* libgphoto2_port/usb/libusb.c (gp_port_usb_close): Fixed a
+	segfault when passed device handle was NULL.
+
 2001-09-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/filesys.c (gp_filesystem_format): Don't request any
