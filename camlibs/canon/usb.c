@@ -89,6 +89,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 	if (i != GP_OK)
 		return i;
 
+	/* Read one byte from the control pipe. */
 	i = gp_port_usb_msg_read (camera->port, 0x0c, 0x55, 0, msg, 1);
 	if (i != 1) {
 		gp_context_error (context, _("Could not establish initial contact with camera"));
@@ -115,61 +116,42 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 	GP_DEBUG ("canon_usb_camera_init() initial camera response: %c/'%s'", camstat,
 		  camstat_str);
 
-	/* The 58-byte message seems not to arrive from a D30 */
-	if ( !IS_EOS(camera->pl->md->model) ) {
-		i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, msg, 0x58);
-		if (i != 0x58) {
-			gp_context_error (context,
-					  _("Step #2 of initialization failed for PowerShot camera! (returned %i, expected %i) "
-					  "Camera not operational"), i, 0x58);
-			return GP_ERROR_CORRUPTED_DATA;
-		}
+	i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, msg, 0x58);
+	if (i != 0x58) {
+		gp_context_error (context,
+				  _("Step #2 of initialization failed for"
+				    " PowerShot camera! (returned %i, expected %i) "
+				    "Camera not operational"), i, 0x58);
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	if (camstat == 'A') {
-		/* read another 0x50 bytes, except from EOS cameras */
-		if ( !IS_EOS(camera->pl->md->model) ) {
-			i = gp_port_usb_msg_read (camera->port, 0x04, 0x4, 0, msg, 0x50);
-			if (i != 0x50) {
-				gp_context_error (context,
-						  _("EOS Step #3 of initialization failed! "
-						  "(returned %i, expected %i) "
-						  "Camera not operational"), i, 0x50);
-				return GP_ERROR_CORRUPTED_DATA;
-			}
+		/* read another 0x50 bytes */
+		i = gp_port_usb_msg_read (camera->port, 0x04, 0x4, 0, msg, 0x50);
+		if (i != 0x50) {
+			gp_context_error (context,
+					  _("EOS Step #3 of initialization failed! "
+					    "(returned %i, expected %i) "
+					    "Camera not operational"), i, 0x50);
+			return GP_ERROR_CORRUPTED_DATA;
 		}
-		return GP_OK;
+
 	}
 	else {
-		/* Read this from EOS camera only if camera wasn't active. */
-		if ( IS_EOS(camera->pl->md->model) ) {
-			i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, msg, 0x58);
-			if (i != 0x58) {
-				gp_context_error (context,
-						  _("Step #2 of initialization failed for EOS camera! (returned %i, expected %i) "
-						  "Camera not operational"), i, 0x58);
-				return GP_ERROR_CORRUPTED_DATA;
-			}
-		}
 		/* set byte 0 in msg to new "canon length" (0x10) (which is total
 		 * packet size - 0x40) and then move the last 0x10 bytes of msg to
 		 * offset 0x40 and write it back to the camera.
 		 */
 		msg[0] = 0x10;
 		memmove (msg + 0x40, msg + 0x48, 0x10);
-
 		i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg, 0x50);
 		if (i != 0x50) {
 			gp_context_error (context,
 					  _("Step #3 of initialization failed! "
-					  "(returned %i, expected %i) Camera not operational"), i,
+					    "(returned %i, expected %i) Camera not operational"), i,
 					  0x50);
 			return GP_ERROR_IO_INIT;
 		}
-
-		GP_DEBUG ("canon_usb_camera_init() "
-			  "PC sign on LCD should be lit now (if your camera has a PC sign)");
-
 		/* We expect to get 0x44 bytes here, but the camera is picky at this stage and
 		 * we must read 0x40 bytes and then read 0x4 bytes more.
 		 */
@@ -193,7 +175,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 			if (i != 0x40) {
 				gp_context_error (context,
 						  _("Step #4.1 failed! "
-						  "(returned %i, expected %i) Camera not operational"), i,
+						    "(returned %i, expected %i) Camera not operational"), i,
 						  0x40);
 				return GP_ERROR_CORRUPTED_DATA;
 			}
@@ -205,31 +187,18 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 			GP_DEBUG ("canon_usb_camera_init() camera says to read %i more bytes, "
 				  "we would have expected 4 - overriding since some cameras are "
 				  "known not to give correct numbers of bytes.", read_bytes);
-
 		i = gp_port_read (camera->port, buffer, 4);
 		if (i != 4)
 			GP_DEBUG ("canon_usb_camera_init() "
 				  "Step #4.2 of initialization failed! (returned %i, expected %i) "
 				  "Camera might still work though. Continuing.", i, 4);
 
-		read_bytes = 0;
-		do {
-			i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
-			if ( i > 0 )
-				read_bytes += i;
-		} while ( read_bytes < 0x10 && i >= 0 );
-		if ( read_bytes!= 0x10 ) {
-			GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
-			return GP_ERROR_CORRUPTED_DATA;
-		}
 	}
 
-	if ( !IS_EOS(camera->pl->md->model) )
-		if(canon_usb_lock_keys(camera,context) < 0) {
-			gp_context_error (context, _("lock keys failed."));
-			return GP_ERROR_CORRUPTED_DATA;
-		}
+	GP_DEBUG ("canon_usb_camera_init() "
+		  "PC sign on LCD should be lit now (if your camera has a PC sign)");
 
+	read_bytes = 0;
 	return GP_OK;
 }
 
@@ -246,7 +215,8 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 int
 canon_usb_init (Camera *camera, GPContext *context)
 {
-	int res, id_retry;
+	unsigned char buffer[0x44];
+	int res, id_retry, i, read_bytes;
 	GPPortSettings settings;
 
 	GP_DEBUG ("Initializing the (USB) camera.\n");
@@ -289,6 +259,29 @@ canon_usb_init (Camera *camera, GPContext *context)
 				  gp_result_as_string (res));
 		return GP_ERROR;
 	}
+
+	do {
+		i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
+		if ( i > 0 )
+			read_bytes += i;
+	} while ( read_bytes < 0x10 && i >= 0 );
+	if ( read_bytes < 0x10 ) {
+		GP_DEBUG ( "canon_usb_camera_init() interrupt read returned only %d bytes, status=%d", read_bytes, i );
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+	else if ( i < 0 ) {
+		GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+	else if ( i > 0x10 )
+		GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes );
+
+	if ( camera->pl->md->model != CANON_CLASS_4
+	     && camera->pl->md->model != CANON_CLASS_6 )
+		if(canon_usb_lock_keys(camera,context) < 0) {
+			gp_context_error (context, _("lock keys failed."));
+			return GP_ERROR_CORRUPTED_DATA;
+		}
 
 	res = canon_int_get_battery(camera, NULL, NULL, context);
 	if (res != GP_OK) {
@@ -358,6 +351,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			break;
 
 		case CANON_CLASS_4:
+		case CANON_CLASS_6:
 			GP_DEBUG ("Locking camera keys and turning off LCD using 'EOS' locking code...");
 
 			memset (payload, 0, sizeof (payload));
@@ -443,7 +437,7 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
 		/* Your camera model does not need unlocking, cannot do unlocking or
 		 * we don't know how to unlock it's keys. 
 		 */
-		GP_DEBUG ("canon_usb_unlock_keys: Not unlocking the kind of camera you have.\n"
+		GP_DEBUG ("canon_usb_unlock_keys: Key unlocking not implemented for this camera model.\n"
 			  "If unlocking works when using the Windows software with your camera,\n"
 			  "please contact %s.", MAIL_GPHOTO_DEVEL);
 	}
@@ -678,7 +672,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 				}
 				camera->pl->capture_step++;
 				/* PowerShot cameras end with this message */
-				if ( !IS_EOS(camera->pl->md->model) )
+				if ( camera->pl->md->model != CANON_CLASS_4 )
 					goto EXIT;
 			}
 			else if ( buf2[12] == 0x0a ) {
