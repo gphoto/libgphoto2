@@ -107,13 +107,29 @@
 			}						\
 }
 
+/* error reporting macro */
 #define ERROR(error) fprintf(stderr,"ERROR: "error);				
+
+/* printing value type */
+#define PTPCAM_PRINT_HEX	00
+#define PTPCAM_PRINT_DEC	01
+
+/* property value printing macros */
+#define PRINT_PROPVAL_DEC(value)	\
+		print_propval(dpd.DataType, value,			\
+		PTPCAM_PRINT_DEC)
+
+#define PRINT_PROPVAL_HEX(value)					\
+		print_propval(dpd.DataType, value,			\
+		PTPCAM_PRINT_HEX)
+
 
 /* requested actions */
 #define ACT_DEVICE_RESET	01
 #define ACT_LIST_DEVICES	02
 #define ACT_LIST_PROPERTIES	03
 #define ACT_GETSET_PROPERTY	04
+
 
 			
 typedef struct _PTP_USB PTP_USB;
@@ -469,7 +485,7 @@ list_devices(short force)
 			dev->config->interface->altsetting->bInterfaceNumber);
 		}
 	}
-	if (!found) printf("\nFound no PTP devices");
+	if (!found) printf("\nFound no PTP devices\n");
 	printf("\n");
 }
 
@@ -590,9 +606,9 @@ list_properties (int busn, int devn, short force)
 }
 
 short
-print_propval (uint16_t datatype, void* value);
+print_propval (uint16_t datatype, void* value, short hex);
 short
-print_propval (uint16_t datatype, void* value)
+print_propval (uint16_t datatype, void* value, short hex)
 {
 	switch (datatype) {
 		case PTP_DTC_INT8:
@@ -605,16 +621,24 @@ print_propval (uint16_t datatype, void* value)
 			printf("%hi",*(int16_t*)value);
 			return 0;
 		case PTP_DTC_UINT16:
-			printf("%hu",*(uint16_t*)value);
+			if (hex==PTPCAM_PRINT_HEX)
+				printf("0x%04hX (%hi)",*(uint16_t*)value,
+					*(uint16_t*)value);
+			else
+				printf("%hi",*(uint16_t*)value);
 			return 0;
 		case PTP_DTC_INT32:
 			printf("%i",*(int32_t*)value);
 			return 0;
 		case PTP_DTC_UINT32:
-			printf("%u",*(uint32_t*)value);
+			if (hex==PTPCAM_PRINT_HEX)
+				printf("0x%08X (%i)",*(uint32_t*)value,
+					*(uint32_t*)value);
+			else
+				printf("%i",*(uint32_t*)value);
 			return 0;
 		case PTP_DTC_STR:
-			printf("%s",(char *)value);
+			printf("\"%s\"",(char *)value);
 	}
 	return -1;
 }
@@ -631,27 +655,27 @@ set_property (PTPParams* params,
 	switch(datatype) {
 	case PTP_DTC_INT8:
 		val=malloc(sizeof(int8_t));
-		*(int8_t*)val=(int8_t)strtol(value,NULL,10);
+		*(int8_t*)val=(int8_t)strtol(value,NULL,0);
 		break;
 	case PTP_DTC_UINT8:
 		val=malloc(sizeof(uint8_t));
-		*(uint8_t*)val=(uint8_t)strtol(value,NULL,10);
+		*(uint8_t*)val=(uint8_t)strtol(value,NULL,0);
 		break;
 	case PTP_DTC_INT16:
 		val=malloc(sizeof(int16_t));
-		*(int16_t*)val=(int16_t)strtol(value,NULL,10);
+		*(int16_t*)val=(int16_t)strtol(value,NULL,0);
 		break;
 	case PTP_DTC_UINT16:
 		val=malloc(sizeof(uint16_t));
-		*(uint16_t*)val=(uint16_t)strtol(value,NULL,10);
+		*(uint16_t*)val=(uint16_t)strtol(value,NULL,0);
 		break;
 	case PTP_DTC_INT32:
 		val=malloc(sizeof(int32_t));
-		*(int32_t*)val=(int32_t)strtol(value,NULL,10);
+		*(int32_t*)val=(int32_t)strtol(value,NULL,0);
 		break;
 	case PTP_DTC_UINT32:
 		val=malloc(sizeof(uint32_t));
-		*(uint32_t*)val=(uint32_t)strtol(value,NULL,10);
+		*(uint32_t*)val=(uint32_t)strtol(value,NULL,0);
 		break;
 	case PTP_DTC_STR:
 		val=(void *)value;
@@ -708,10 +732,16 @@ getset_property (int busn,int devn,uint16_t property,char* value,short force)
 		"Try to reset the camera.\n");
 	printf ("Data type is 0x%04x\n",dpd.DataType);
 	printf ("Current value is ");
-	print_propval(dpd.DataType, dpd.CurrentValue);
+	if (dpd.FormFlag==PTP_DPFF_Enumeration)
+		PRINT_PROPVAL_DEC(dpd.CurrentValue);
+	else 
+		PRINT_PROPVAL_HEX(dpd.CurrentValue);
 	printf("\n");
 	printf ("Factory default value is ");
-	print_propval(dpd.DataType, dpd.FactoryDefaultValue);
+	if (dpd.FormFlag==PTP_DPFF_Enumeration)
+		PRINT_PROPVAL_DEC(dpd.FactoryDefaultValue);
+	else 
+		PRINT_PROPVAL_HEX(dpd.FactoryDefaultValue);
 	printf("\n");
 	printf("The property is ");
 	if (dpd.GetSet==PTP_DPGS_Get)
@@ -724,19 +754,19 @@ getset_property (int busn,int devn,uint16_t property,char* value,short force)
 		{
 			int i;
 			for(i=0;i<dpd.FORM.Enum.NumberOfValues;i++){
-				print_propval(dpd.DataType,
-					dpd.FORM.Enum.SupportedValue[i]);
+				PRINT_PROPVAL_HEX(
+				dpd.FORM.Enum.SupportedValue[i]);
 				printf("\n");
 			}
 		}
 		break;
 	case PTP_DPFF_Range:
 		printf (", within range:\n");
-		print_propval(dpd.DataType, dpd.FORM.Range.MinimumValue);
+		PRINT_PROPVAL_DEC(dpd.FORM.Range.MinimumValue);
 		printf(" - ");
-		print_propval(dpd.DataType, dpd.FORM.Range.MaximumValue);
+		PRINT_PROPVAL_DEC(dpd.FORM.Range.MaximumValue);
 		printf("; step size: ");
-		print_propval(dpd.DataType, dpd.FORM.Range.StepSize);
+		PRINT_PROPVAL_DEC(dpd.FORM.Range.StepSize);
 		printf("\n");
 		break;
 	case PTP_DPFF_None:

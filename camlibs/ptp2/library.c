@@ -808,7 +808,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if ((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) || 
 		(params->objectinfo[i].StorageID == storage))
 	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
-		params->objectinfo[i].AssociationType==PTP_AT_GenericFolder)
+		params->objectinfo[i].AssociationType!=PTP_AT_Undefined)
 		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
 	}
 	}
