@@ -21,10 +21,13 @@
 #ifndef __GPHOTO2_FILE_H__
 #define __GPHOTO2_FILE_H__
 
-#define GP_MIME_RAW  "image/x-raw"
-#define GP_MIME_PNM  "image/pnm"
-#define GP_MIME_PPM  "image/ppm"
-#define GP_MIME_JPEG "image/jpeg"
+#define GP_MIME_RAW       "image/x-raw"
+#define GP_MIME_PNG       "image/png"
+#define GP_MIME_PNM       "image/pnm"
+#define GP_MIME_PPM       "image/ppm"
+#define GP_MIME_JPEG      "image/jpeg"
+#define GP_MIME_TIFF      "image/tiff"
+#define GP_MIME_QUICKTIME "video/quicktime"
 
 typedef enum {
 	GP_FILE_TYPE_PREVIEW,
@@ -72,6 +75,9 @@ int gp_file_free           (CameraFile *file);
 int gp_file_set_name       (CameraFile *file, const char *name);
 int gp_file_set_mime_type  (CameraFile *file, const char *mime_type);
 int gp_file_set_type       (CameraFile *file, CameraFileType type);
+
+int gp_file_detect_mime_type          (CameraFile *file);
+int gp_file_adjust_name_for_mime_type (CameraFile *file);
 
 int gp_file_get_name       (CameraFile *file, const char **name);
 int gp_file_get_mime_type  (CameraFile *file, const char **mime_type);

@@ -635,6 +635,39 @@ gp_filesystem_number (CameraFilesystem *fs, const char *folder,
         return (GP_ERROR_FILE_NOT_FOUND);
 }
 
+static int
+gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
+		    const char *filename)
+{
+	int count, x;
+	CameraList list;
+	const char *name;
+	char path[128];
+
+	CHECK_NULL (fs);
+
+	CHECK_RESULT (gp_filesystem_list_files (fs, folder, &list));
+	CHECK_RESULT (count = gp_list_count (&list));
+	for (x = 0; x < count; x++) {
+		CHECK_RESULT (gp_list_get_name (&list, x, &name));
+		if (filename && !strcmp (filename, name))
+			return (GP_OK);
+	}
+
+	CHECK_RESULT (gp_filesystem_list_folders (fs, folder, &list));
+	CHECK_RESULT (count = gp_list_count (&list));
+	for (x = 0; x < count; x++) {
+		CHECK_RESULT (gp_list_get_name (&list, x, &name));
+		strcpy (path, folder);
+		if (strcmp (path, "/"))
+			strcat (path, "/");
+		strcat (path, name);
+		CHECK_RESULT (gp_filesystem_scan (fs, path, filename));
+	}
+
+	return (GP_OK);
+}
+
 int
 gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename, 
 			  const char **folder)
@@ -642,6 +675,8 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 	int x, y;
 
 	CHECK_NULL (fs && filename && folder);
+
+	CHECK_RESULT (gp_filesystem_scan (fs, "/", filename));
 
 	for (x = 0; x < fs->count; x++)
 		for (y = 0; y < fs->folder[x].count; y++)

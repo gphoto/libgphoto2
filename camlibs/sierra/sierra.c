@@ -163,6 +163,86 @@ int camera_abilities (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
+static int
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+	       void *data)
+{
+	Camera *camera = data;
+
+	CHECK (camera_start (camera));
+	CHECK_STOP (camera, sierra_list_files (camera, folder, list));
+	return (camera_stop (camera));
+}
+
+static int
+folder_list_func (CameraFilesystem *fs, const char *folder,
+		      CameraList *list, void *data)
+{
+	Camera *camera = data;
+
+	CHECK (camera_start (camera));
+	CHECK_STOP (camera, sierra_list_folders (camera, folder, list));
+	return (camera_stop (camera));
+}
+
+static int
+get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileInfo *info, void *data)
+{
+	Camera *camera = data;
+	SierraData *fd = camera->camlib_data;
+	int n, l;
+
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** Getting info:");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** file: %s", filename);
+
+	CHECK (camera_start (camera));
+
+	/* Set the working folder */
+	CHECK_STOP (camera, sierra_change_folder (camera, folder));
+
+	/* Get the file number from the CameraFileSystem */
+	n = gp_filesystem_number (fd->fs, folder, filename);
+	CHECK_STOP (camera, n);
+
+	/* Set the current picture number */
+	CHECK_STOP (camera, sierra_set_int_register (camera, 4, n + 1));
+
+	/* Get the size of the current image */
+	CHECK_STOP (camera, sierra_get_int_register (camera, 12, &l));
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	info->file.size = l;
+
+	/* Type of image? */
+	if (strstr (filename, ".MOV") != NULL) {
+		strcpy (info->file.type, "video/quicktime");
+		strcpy (info->preview.type, "image/jpeg");
+	} else if (strstr (filename, ".TIF") != NULL) {
+		strcpy (info->file.type, "image/tiff");
+		strcpy (info->file.type, "image/tiff");
+	} else {
+		strcpy (info->file.type, "image/jpeg");
+		strcpy (info->file.type, "image/jpeg");
+	}
+
+	/* Get the size of the current thumbnail */
+	CHECK_STOP (camera, sierra_get_int_register (camera, 13, &l));
+	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	info->preview.size = l;
+
+	return (camera_stop (camera));
+}
+
+static int
+set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileInfo *info, void *data)
+{
+	/* Implement for example renaming of files */
+
+	return (GP_ERROR_NOT_SUPPORTED);
+}
+
 int camera_init (Camera *camera) 
 {
 	int value=0;
@@ -309,7 +389,12 @@ int camera_init (Camera *camera)
 	/* We are in "/" */
 	strcpy (fd->folder, "/");
 	CHECK_STOP_FREE (camera, gp_filesystem_new (&fd->fs));
-	CHECK_STOP_FREE (camera, sierra_update_fs_for_folder (camera, "/"));
+	CHECK_STOP_FREE (camera, gp_filesystem_set_list_funcs (fd->fs,
+					file_list_func, folder_list_func,
+					camera));
+	CHECK_STOP_FREE (camera, gp_filesystem_set_info_funcs (fd->fs,
+					get_info_func, set_info_func,
+					camera));
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "************************");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init done ***");
@@ -413,9 +498,9 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 {
         int regl, regd, file_number;
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	char *jpeg_data, *wrk_s;
+	char *jpeg_data;
 	int jpeg_size;
-	const char *data;
+	const char *data, *mime_type;
 	long int size;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_get_generic");
@@ -456,14 +541,12 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 
-		/* Thumbnails are always JPEG file (as far as we know...) */
-		CHECK_STOP (camera, gp_file_set_mime_type (file, "image/jpeg"));
-
-		/* Corrects the file name to reflect that */
-		if ( (wrk_s = rindex(file->name, '.')) ) {
-			*wrk_s = '\0';
-			strcat(file->name, ".JPG");
-		}
+		/*
+		 * Thumbnails are always JPEG files (as far as we know...).
+		 * Correct the filename to reflect that.
+		 */
+		CHECK_STOP (camera, gp_file_set_mime_type (file, GP_MIME_JPEG));
+		CHECK_STOP (camera, gp_file_adjust_name_for_mime_type (file));
 
 		/* 
 		 * Some camera (e.g. Epson 3000z) send the EXIF application
@@ -486,16 +569,15 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 		break;
 	case GP_FILE_TYPE_NORMAL:
 
-		/* Check the file type */
-		if (!memcmp (data, TIFF_SOI_MARKER, 5))
-			CHECK_STOP (camera,
-				    gp_file_set_mime_type (file, "image/tiff"))
-		else if (!memcmp (data, JPEG_SOI_MARKER, 2))
-			CHECK_STOP (camera,
-				    gp_file_set_mime_type (file, "image/jpeg"))
-		else
-			CHECK_STOP (camera,
-				    gp_file_set_mime_type (file, "video/quicktime"));
+		/*
+		 * Detect the mime type. If the resulting mime type is
+		 * GP_MIME_RAW, manually set GP_MIME_QUICKTIME.
+		 */
+		CHECK_STOP (camera, gp_file_detect_mime_type (file));
+		CHECK_STOP (camera, gp_file_get_mime_type (file, &mime_type));
+		if (!strcmp (mime_type, GP_MIME_RAW))
+			CHECK_STOP (camera, gp_file_set_mime_type (file,
+							GP_MIME_QUICKTIME));
 		break;
 
 	default:
@@ -509,54 +591,15 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 int camera_file_get_info (Camera *camera, const char *folder, 
 			  const char *filename, CameraFileInfo *info)
 {
-	int file_number, l;
-	SierraData *fd = (SierraData*)camera->camlib_data;
+	SierraData *fd = camera->camlib_data;
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_file_get_info");
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
-
-	CHECK (camera_start (camera));
-
-	/* Set the working folder */
-	CHECK_STOP (camera, sierra_change_folder (camera, folder));
-
-	/* Get the file number from the CameraFileSystem */
-	file_number = gp_filesystem_number (fd->fs, folder, filename);
-	if (file_number < 0) 
-		return (file_number);
-	
-	/* Set the current picture number */
-	CHECK_STOP (camera, sierra_set_int_register (camera, 4, 
-				                     file_number + 1));
-
-	/* Get the size of the current image */
-	CHECK_STOP (camera, sierra_get_int_register (camera, 12, &l));
-	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
-	info->file.size = l;
-
-	/* Type of image? */
-	if (strstr (filename, ".MOV") != NULL) {
-		strcpy (info->file.type, "video/quicktime");
-		strcpy (info->preview.type, "image/jpeg");
-	} else if (strstr (filename, ".TIF") != NULL) {
-		strcpy (info->file.type, "image/tiff");
-		strcpy (info->file.type, "image/tiff");
-	} else {
-		strcpy (info->file.type, "image/jpeg");
-		strcpy (info->file.type, "image/jpeg");
-	}
-
-	/* Get the size of the current thumbnail */
-	CHECK_STOP (camera, sierra_get_int_register (camera, 13, &l));
-	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
-	info->preview.size = l;
-	
-	return (camera_stop (camera));
+	return (gp_filesystem_get_info (fd->fs, folder, filename, info));
 }
 
 int camera_folder_delete_all (Camera *camera, const char *folder)
 {
+	SierraData *fd = camera->camlib_data;
+
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** sierra_folder_delete_all");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
@@ -575,11 +618,10 @@ int camera_folder_delete_all (Camera *camera, const char *folder)
 	 * nothing in the end. gphoto2 will check if all pictures have deleted,
 	 * therefore we don't handle this case here.
 	 *
-	 * However, we need to update the filesystem so that gphoto2 can
+	 * However, we need to format the filesystem so that gphoto2 can
 	 * handle this case.
 	 */
-
-	CHECK_STOP (camera, sierra_update_fs_for_folder (camera, "/"));
+	CHECK_STOP (camera, gp_filesystem_format (fd->fs));
 	
 	return (camera_stop (camera));
 }

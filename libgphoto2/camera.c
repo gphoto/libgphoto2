@@ -414,11 +414,9 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
 	if (camera->functions->folder_list_files == NULL)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	CHECK_RESULT (gp_list_remove_all (list));
-
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting file list for "
 			 "folder '%s'...", folder);
-	CHECK_RESULT (gp_list_remove_all (list));
+	list->count = 0;
 	CHECK_RESULT (camera->functions->folder_list_files (camera, folder,
 							    list));
 	CHECK_RESULT (gp_list_sort (list));
@@ -437,7 +435,7 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
 	
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting folder list for "
 			 "folder '%s'...", folder);
-	CHECK_RESULT (gp_list_remove_all (list));
+	list->count = 0;
 	CHECK_RESULT (camera->functions->folder_list_folders (camera, folder,
 							      list));
 	CHECK_RESULT (gp_list_sort (list));

@@ -1,5 +1,20 @@
 2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch from Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>:
+
+	* camlibs/sierra/library.[c,h]:
+	* camlibs/sierra/sierra.c: Use the new filesystem to cache file 
+	information and for listing files/folders.
+	* include/gphoto2-file.h:
+	* libgphoto2/file.c (gp_file_detect_mime_type), 
+	(gp_file_adjust_name_for_mime_type): New
+	* libgphoto2/camera.c: list->count = 0;
+	* libpghoto2/filesys.c (gp_filesystem_number): If this function is
+	called, scan the whole filesystem.
+	* tests/test-filesys.c: Test gp_filesystem_get_folder, too.
+
+2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sierra/sierra.c: Now that libgphoto2_port is patched, we
 	can revert the quick fix from two hours ago.
 

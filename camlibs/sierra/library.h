@@ -46,4 +46,5 @@ int sierra_capture_preview 	(Camera *camera, CameraFile *file);
 int sierra_change_folder (Camera *camera, const char *folder);
 
 /* Filesystem functions */
-int sierra_update_fs_for_folder (Camera *camera, const char *folder);
+int sierra_list_files   (Camera *camera, const char *folder, CameraList *list);
+int sierra_list_folders (Camera *camera, const char *folder, CameraList *list);

@@ -365,6 +365,55 @@ gp_file_set_mime_type (CameraFile *file, const char *mime_type)
 }
 
 int
+gp_file_detect_mime_type (CameraFile *file)
+{
+	const char TIFF_SOI_MARKER[] = {(char) 0x49, (char) 0x49, (char) 0x2A,
+				        (char) 0x00, (char) 0x08, '\0' };
+	const char JPEG_SOI_MARKER[] = {(char) 0xFF, (char) 0xD8, '\0' };
+
+	CHECK_NULL (file);
+
+	/* image/tiff */
+	if ((file->size >= 5) && !memcmp (file->data, TIFF_SOI_MARKER, 5))
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_TIFF))
+
+	/* image/jpeg */
+	else if ((file->size >= 2) && !memcmp (file->data, JPEG_SOI_MARKER, 2))
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG))
+
+	else
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
+	
+	return (GP_OK);
+}
+
+int
+gp_file_adjust_name_for_mime_type (CameraFile *file)
+{
+	int x;
+	char *suffix;
+	const char *table[] = {
+		GP_MIME_JPEG, "jpg",
+		GP_MIME_PNG,  "png",
+		GP_MIME_TIFF, "tif", NULL};
+
+	CHECK_NULL (file);
+
+	for (x = 0; table[x]; x += 2)
+		if (!strcmp (file->mime_type, table[x])) {
+
+			/* Search the current suffix and erase it */
+			suffix = rindex (file->name, '.');
+			if (suffix++)
+				*suffix = '\0';
+			strcat (file->name, table[x + 1]);
+			break;
+		}
+	
+	return (GP_OK);
+}
+
+int
 gp_file_set_type (CameraFile *file, CameraFileType type)
 {
 	CHECK_NULL (file);

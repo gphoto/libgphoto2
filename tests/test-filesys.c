@@ -34,7 +34,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	printf ("  -> The camera will list the files in '%s' here.\n", folder);
 
-	if (!strcmp (folder, "/")) {
+	if (!strcmp (folder, "/whatever")) {
 		gp_list_append (list, "file1", NULL);
 		gp_list_append (list, "file2", NULL);
 	}
@@ -173,6 +173,10 @@ main (int argc, char **argv)
 		CHECK (gp_list_get_name (&list, x, &name));
 		printf (" %i: '%s'\n", x, name);
 	}
+
+	printf ("*** Getting folder of 'file1'...\n");
+	CHECK (gp_filesystem_get_folder (fs, "file1", &name));
+	printf ("... found in '%s'.\n", name);
 
 	printf ("*** Freeing file system...\n");
 	CHECK (gp_filesystem_free (fs));

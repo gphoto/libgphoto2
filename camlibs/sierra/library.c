@@ -115,20 +115,11 @@ int sierra_change_folder (Camera *camera, const char *folder)
 	return GP_OK;
 }
 
-int sierra_update_fs_for_folder (Camera *camera, const char *folder)
+int sierra_list_files (Camera *camera, const char *folder, CameraList *list)
 {
-	SierraData *fd = (SierraData*)camera->camlib_data;
-	int i, j, count, bsize;
-	char buf[1024], new_folder[1024];
+	int count, i, bsize;
+	char buf[1024];
 
-	/*
-	 * Append the folder (don't check the result as the folder could 
-	 * exist already) and delete everything in there.
-	 */
-	gp_filesystem_append (fd->fs, folder, NULL);
-	CHECK (gp_filesystem_delete_all (fd->fs, folder));
-
-	/* List the files */
 	CHECK (sierra_change_folder (camera, folder));
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** counting files in '%s'"
 			 "...", folder);
@@ -136,45 +127,46 @@ int sierra_update_fs_for_folder (Camera *camera, const char *folder)
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** found %i files", count);
 	for (i = 0; i < count; i++) {
 		CHECK (sierra_set_int_register (camera, 4, i + 1));
-		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting filename "
-				 "of picture %i...", i);
+		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting "
+				 "filename of picture %i...", i);
 		CHECK (sierra_get_string_register (camera, 79, 0, NULL,
 						   buf, &bsize));
 		if (bsize <= 0)
 			sprintf (buf, "P101%04i.JPG", i);
-		gp_filesystem_append (fd->fs, folder, buf);
+		CHECK (gp_list_append (list, buf, NULL));
 	}
 
-	/* List the folders */
-	if (fd->folders) {
+	return (GP_OK);
+}
 
-		/* 
-		 * Count the folders. We don't need to jump into the folder -
-		 * we already did it.
-		 */
-		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** counting folders "
-				 "in '%s'...", folder);
-		CHECK (sierra_get_int_register (camera, 83, &count));
-		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** found %i folders",
-				 count);
-		for (i = 0; i < count; i++) {
-			CHECK (sierra_change_folder (camera, folder));
-			CHECK (sierra_set_int_register (camera, 83, i + 1));
-			bsize = 1024;
-			gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting "
-					 "name of folder %i...", i + 1);
-			CHECK (sierra_get_string_register (camera, 84, 0, 
-							   NULL, buf, &bsize));
+int sierra_list_folders (Camera *camera, const char *folder, CameraList *list)
+{
+	SierraData *fd = camera->camlib_data;
+	int i, j, count, bsize;
+	char buf[1024];
 
-			/* Remove trailing spaces */
-			for (j = strlen (buf) - 1; j >= 0 && buf[j] == ' '; j--)
-				buf[j] = '\0';
-			strcpy (new_folder, folder);
-			if (strcmp (folder, "/"))
-				strcat (new_folder, "/");
-			strcat (new_folder, buf);
-			sierra_update_fs_for_folder (camera, new_folder);
-		}
+	/* List the folders only if the camera supports them */
+	if (!fd->folders)
+		return (GP_OK);
+
+	CHECK (sierra_change_folder (camera, folder));
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** counting folders "
+			 "in '%s'...", folder);
+	CHECK (sierra_get_int_register (camera, 83, &count));
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** found %i folders", count);
+	for (i = 0; i < count; i++) {
+		CHECK (sierra_change_folder (camera, folder));
+		CHECK (sierra_set_int_register (camera, 83, i + 1));
+		bsize = 1024;
+		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting "
+				 "name of folder %i...", i + 1);
+		CHECK (sierra_get_string_register (camera, 84, 0, 
+						   NULL, buf, &bsize));
+
+		/* Remove trailing spaces */
+		for (j = strlen (buf) - 1; j >= 0 && buf[j] == ' '; j--)
+			buf[j] = '\0';
+		gp_list_append (list, buf, NULL);
 	}
 
 	return (GP_OK);
@@ -993,30 +985,21 @@ int sierra_capture (Camera *camera, int capture_type, CameraFilePath *filepath)
 
 	/* Set the picture filename and folder */
 	if (length > 0) {
-		/* Filename supported. Use the camera filename */
+
+		/*
+		 * Get the folder of the new file. The filesystem doesn't
+		 * know about the new file yet, therefore just format it.
+		 *
+		 * If somebody figures out how to find the location where
+		 * the picture has been taken, this code can be improved.
+		 * Until then...
+		 */
+		CHECK (gp_filesystem_format (fd->fs));
+		CHECK (gp_filesystem_get_folder (fd->fs, buf, &folder));
+		strcpy (filepath->folder, folder);
 		strcpy (filepath->name, buf);
 
-		/* Get the folder the captured image belongs too */
-		if (fd->folders) {
-			/* First, update the filesystem so that it contains
-			   the new picture */
-			CHECK (sierra_update_fs_for_folder (camera, "/"));
-
-			/* Now get the folder */
-			if ( gp_filesystem_get_folder(fd->fs, buf, &folder) == GP_OK ) {
-				strcpy(filepath->folder, folder);
-			}
-			else {
-                                /* Cannot find the captured image within
-                                   the updated filesystem */
-				return GP_ERROR_FILE_NOT_FOUND;
-			}
-		}
-		else {
-			strcpy (filepath->folder, "/");
-		}
-	}
-	else {
+	} else {
 		/* Filename not supported. May it be possible? */
 		//FIXME: Which filename???
 		strcpy (filepath->name, "");
