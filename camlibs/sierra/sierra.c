@@ -76,7 +76,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Epson PhotoPC 700", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson PhotoPC 800", 	SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson PhotoPC 850z",  SIERRA_MODEL_EPSON,     0x4b8, 0x402, 0},
-	{"Epson PhotoPC 3000z", SIERRA_MODEL_EPSON,	0x4b8, 0x403, 0},
+	{"Epson PhotoPC 3000z", SIERRA_MODEL_CAM_DESC,	0x4b8, 0x403, 0, &ep3000z_cam_desc},
 	{"Nikon CoolPix 100", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 700", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
