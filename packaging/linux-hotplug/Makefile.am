@@ -16,4 +16,21 @@ noinst_PROGRAMS = print-usb-usermap
 print_usb_usermap_SOURCE = print-usb-usermap.c
 print_usb_usermap_LDADD = ../../libgphoto2/libgphoto2.la
 
+USERMAP = gphoto2-usb.usermap
+
+install-data-local: print-usb-usermap
+	./print-usb-usermap > $(USERMAP)
+	$(INSTALL_DATA) $(USERMAP) $(DESTDIR)$(docdir)/
+
+uninstall-local:
+	rm -f $(DESTDIR)$(docdir)/$(USERMAP)
+
+else
+
+install-data-local:
+	@echo "Dummy $@ target"
+
+uninstall-local:
+	@echo "Dummy $@ target"
+
 endif

@@ -3,3 +3,4 @@ Makefile Makefile.in
 .deps
 .libs
 print-usb-usermap
+*.usermap
