@@ -109,8 +109,8 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 		case 'E':
 	        default:
 			camstat_str = _("Unknown (some kind of error)");
-		gp_context_error (context, _("Initial camera response '%c' unrecognized"),
-				  camstat);
+			gp_context_error (context, _("Initial camera response '%c' unrecognized"),
+					  camstat);
 		if ( i < 0 )
 			return GP_ERROR_OS_FAILURE;
 		else
@@ -218,6 +218,9 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
+/* Forward reference for use within canon_usb_init() */
+int canon_usb_get_body_id (Camera *camera, GPContext *context);
+
 /**
  * canon_usb_init:
  * @camera: camera to initialize
@@ -279,39 +282,94 @@ canon_usb_init (Camera *camera, GPContext *context)
 			return GP_ERROR_CORRUPTED_DATA;
 	}
 
-	do {
-		i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
-		if ( i > 0 )
-			read_bytes += i;
-	} while ( read_bytes < 0x10 && i >= 0 );
-	if ( read_bytes < 0x10 ) {
-		GP_DEBUG ( "canon_usb_camera_init() interrupt read returned only %d bytes, status=%d", read_bytes, i );
-		if ( i < 0 )
-			return GP_ERROR_OS_FAILURE;
-		else
-			return GP_ERROR_CORRUPTED_DATA;
-	}
-	else if ( i < 0 ) {
-		GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
-		return GP_ERROR_CORRUPTED_DATA;
-	}
-	else if ( i > 0x10 )
-		GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes );
+	if ( camera->pl->md->model == CANON_CLASS_6 ) {
+		unsigned char *c_res;
+		int bytes_read = 0;
 
-	if ( camera->pl->md->model != CANON_CLASS_4
-	     && camera->pl->md->model != CANON_CLASS_6 ) {
-		i = canon_usb_lock_keys(camera,context);
-		if( i < 0 ) {
-			gp_context_error (context, _("lock keys failed."));
-			return i;
+		/* Get body ID here */
+		GP_DEBUG ( "canon_usb_init: camera uses newer protocol, so we get body ID" );
+		res = canon_usb_get_body_id ( camera, context );
+		if ( res <= 0 ) {
+			GP_DEBUG ( "canon_usb_init: \"Get body ID\" failed, code %d", res );
+			return ( res );
 		}
-	}
 
-	res = canon_int_get_battery(camera, NULL, NULL, context);
-	if (res != GP_OK) {
-		gp_context_error (context, _("Camera not ready, get_battery failed: %s"),
-				  gp_result_as_string (res));
-		return res; 
+		GP_DEBUG ( "canon_usb_init: camera uses newer protocol, so we get camera abilities" );
+		c_res = canon_usb_dialogue (camera,
+					    CANON_USB_FUNCTION_GET_PIC_ABILITIES_2,
+					    &bytes_read, NULL, 0); 
+
+		if ( c_res == NULL ) {
+			GP_DEBUG ( "canon_usb_init: \"get picture abilities\" failed; continuing anyway." );
+		}
+		else if ( bytes_read == 0x474 ) {
+			GP_DEBUG ( "canon_usb_init: Got the expected number of bytes back from \"get picture abilities.\"" );
+		} else {
+			gp_context_error ( context,
+					   _("canon_usb_init: "
+					     "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\""),
+					   bytes_read, 0x334 );
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+		res = canon_int_get_battery(camera, NULL, NULL, context);
+		if (res != GP_OK) {
+			gp_context_error (context, _("Camera not ready, get_battery failed: %s"),
+					  gp_result_as_string (res));
+			return res;
+		}
+		do {
+			i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
+			if ( i > 0 )
+				read_bytes += i;
+		} while ( read_bytes < 0x10 && i >= 0 );
+		if ( read_bytes < 0x10 ) {
+			GP_DEBUG ( "canon_usb_camera_init() interrupt read returned only %d bytes, status=%d", read_bytes, i );
+			if ( i < 0 )
+				return GP_ERROR_OS_FAILURE;
+			else
+				return GP_ERROR_CORRUPTED_DATA;
+		}
+		else if ( i < 0 ) {
+			GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+		else if ( i > 0x10 )
+			GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes );
+	}
+	else {
+		do {
+			i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
+			if ( i > 0 )
+				read_bytes += i;
+		} while ( read_bytes < 0x10 && i >= 0 );
+		if ( read_bytes < 0x10 ) {
+			GP_DEBUG ( "canon_usb_camera_init() interrupt read returned only %d bytes, status=%d", read_bytes, i );
+			if ( i < 0 )
+				return GP_ERROR_OS_FAILURE;
+			else
+				return GP_ERROR_CORRUPTED_DATA;
+		}
+		else if ( i < 0 ) {
+			GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+		else if ( i > 0x10 )
+			GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes );
+		if ( camera->pl->md->model != CANON_CLASS_4 ) {
+			i = canon_usb_lock_keys(camera,context);
+			if( i < 0 ) {
+				gp_context_error (context, _("lock keys failed."));
+				return i;
+			}
+		}
+
+		res = canon_int_get_battery(camera, NULL, NULL, context);
+		if (res != GP_OK) {
+			gp_context_error (context, _("Camera not ready, get_battery failed: %s"),
+					  gp_result_as_string (res));
+			return res; 
+		}
+
 	}
 
 	return GP_OK;
@@ -380,7 +438,6 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			break;
 
 		case CANON_CLASS_4:
-		case CANON_CLASS_6:
 			GP_DEBUG ("Locking camera keys and turning off LCD using 'EOS' locking code...");
 
 			memset (payload, 0, sizeof (payload));
@@ -425,6 +482,48 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 				return GP_ERROR_CORRUPTED_DATA;
 			}
 			break;
+		case CANON_CLASS_6:
+			/* Newest variation of protocol, and quite
+			 * different. "Get picture abilities" is
+			 * implemented, but with a different command
+			 * code and a longer buffer returned. */
+			GP_DEBUG ("Camera uses newer protocol: Locking camera keys and turning off LCD...");
+
+			c_res = canon_usb_dialogue (camera,
+						    CANON_USB_FUNCTION_GET_PIC_ABILITIES_2,
+						    &bytes_read, NULL, 0); 
+
+			if ( c_res == NULL ) {
+				GP_DEBUG ( "canon_usb_lock_keys: \"get picture abilities\" failed; continuing anyway." );
+			}
+			else if ( bytes_read == 0x474 ) {
+				GP_DEBUG ( "canon_usb_lock_keys: Got the expected number of bytes back from \"get picture abilities.\"" );
+			} else {
+				gp_context_error ( context,
+						   _("canon_usb_lock_keys: "
+						   "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\""),
+						   bytes_read, 0x334 );
+				return GP_ERROR_CORRUPTED_DATA;
+			} 
+
+			memset (payload, 0, sizeof (payload));
+			payload[0] = 0x06;
+
+			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_LOCK_KEYS,
+						    &bytes_read, payload, 4);
+			if ( c_res == NULL )
+				return GP_ERROR_OS_FAILURE;
+			if (bytes_read == 0x4) {
+				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
+			} else {
+				gp_context_error (context,
+						  _("canon_usb_lock_keys: "
+						  "Unexpected amount of data returned (%i bytes, expected %i)"),
+						  bytes_read, 0x4);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+			break;
+
 
 	}
 
@@ -449,7 +548,8 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
 
 	GP_DEBUG ("canon_usb_unlock_keys()");
 
-	if ( camera->pl->md->model == CANON_CLASS_4 ) {
+	if ( camera->pl->md->model == CANON_CLASS_4
+	     || camera->pl->md->model == CANON_CLASS_6 ) {
 		c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
 					    &bytes_read, NULL, 0);
 		if ( c_res == NULL )
@@ -466,11 +566,82 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
 	}
 	else {
 		/* Your camera model does not need unlocking, cannot do unlocking or
-		 * we don't know how to unlock it's keys. 
+		 * we don't know how to unlock its keys. 
 		 */
 		GP_DEBUG ("canon_usb_unlock_keys: Key unlocking not implemented for this camera model.\n"
 			  "If unlocking works when using the Windows software with your camera,\n"
 			  "please contact %s.", MAIL_GPHOTO_DEVEL);
+	}
+
+	return GP_OK;
+}
+
+/**
+ * canon_usb_get_body_id:
+ * @camera: camera to query
+ * @context: context for error reporting
+ *
+ * Gets the body ID (hardware serial number) from an EOS camera.
+ *
+ * Returns: body ID (hardware serial number of camera) or gphoto2
+ *          error code.
+ *
+ */
+int
+canon_usb_get_body_id (Camera *camera, GPContext *context)
+{
+	unsigned char *c_res;
+	int bytes_read;
+
+	GP_DEBUG ("canon_usb_get_body_id()");
+
+	switch ( camera->pl->md->model ) {
+	case CANON_CLASS_4:
+		c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_GET_BODY_ID,
+					    &bytes_read, NULL, 0);
+		if ( c_res == NULL )
+			return GP_ERROR_OS_FAILURE;
+		else if (bytes_read == 0x58) {
+			int body_id = le32atoh ( c_res+0x54 );
+			GP_DEBUG ("canon_usb_get_body_id: Got the expected number of bytes back.");
+			if ( camera->pl->md->usb_product == 0x3044 )
+				/* EOS D30 is a special case */
+				GP_DEBUG ("canon_usb_get_body_id: body ID is %04x%05d", (body_id>>16)&0xffff, body_id&0xffff );
+			else
+				GP_DEBUG ("canon_usb_get_body_id: body ID is %d", body_id );
+			return ( body_id );
+		} else {
+			gp_context_error (context,
+					  _("canon_usb_get_body_id: "
+					    "Unexpected data length returned (%i bytes, expected %i)"),
+					  bytes_read, 0x58);
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+		break;
+	case CANON_CLASS_6:
+		c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,
+					    &bytes_read, NULL, 0);
+		if ( c_res == NULL )
+			return GP_ERROR_OS_FAILURE;
+		else if (bytes_read == 0x58) {
+			int body_id = le32atoh ( c_res+0x54 );
+			GP_DEBUG ("canon_usb_get_body_id: Got the expected number of bytes back.");
+			GP_DEBUG ("canon_usb_get_body_id: body ID is %010d", body_id );
+			return ( body_id );
+		} else {
+			gp_context_error (context,
+					  _("canon_usb_get_body_id: "
+					    "Unexpected data length returned (%i bytes, expected %i)"),
+					  bytes_read, 0x58);
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+		break;
+	default:
+		/* As far as we know, only EOS models implement the "get body ID" function. */
+		GP_DEBUG ("canon_usb_get_body_id: \"Get body ID\" not implemented for this camera model.\n"
+			  "If the Windows software can read a body ID (hardware serial number) from your camera,\n"
+			  "please contact %s.", MAIL_GPHOTO_DEVEL);
+		break;
 	}
 
 	return GP_OK;
@@ -820,7 +991,7 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 	char cmd1 = 0, cmd2 = 0, *funct_descr = "";
 	int cmd3 = 0, read_bytes = 0, read_bytes1 = 0, read_bytes2 = 0;
 	unsigned char packet[1024];	/* used for sending data to camera */
-	static unsigned char buffer[0x384];	/* used for receiving data from camera */
+	static unsigned char buffer[0x474];	/* used for receiving data from camera */
 
 	int j, canon_subfunc = 0;
 	char subcmd = 0, *subfunct_descr = "";
@@ -946,27 +1117,69 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 	 * read this response back.
 	 */
 
-	/* Divide read_bytes into two parts (two reads), one that is the highest
-	 * ammount of 0x40 byte blocks we can get, and one that is the modulus (the rest).
-	 * This is done because it is how the windows driver does it, and some cameras
-	 * (EOS D30 for example) seem to not like it if we were to read read_bytes
-	 * in a single read instead.
+	/*
+	 * Divide read_bytes into two parts.
+	 *
+	 * - The first read is for the length rounded down to a length
+	 *   divisible by 0x40. The 32 bits starting at the beginning
+	 *   of the buffer may contain the length information; if not,
+	 *   the 32 bits starting at offset 0x48 will contain the
+	 *   length information, which we check against the expected
+	 *   length and log a warning if the two do not agree. We then
+	 *   read the rest of the data, if any, in a single chunk.
+	 *
+	 * - The final read is for the remainder of the data. This
+	 *   can never be longer than 0x37 bytes.
+	 *
+	 * Read three is optional. If the requested length is only
+	 * 0x40, only the first read will be issued.  If the length is
+	 * divisible by 0x40, the second read will be skipped.
+	 *
+	 * We read like this because the Windows driver reads in two
+	 * operations (first and second reads are combined), and some
+	 * cameras (EOS D30 for example) seem to not like it if we
+	 * were to read read_bytes in a single read instead. We check
+	 * the size a safety measure: if we are mistaken about the
+	 * length of data returned for some command, we can work
+	 * around it with just a warning. The "get camera abilities"
+	 * command, in particular, seems to vary from camera to
+	 * camera.
 	 */
 	read_bytes1 = read_bytes - (read_bytes % 0x40);
-	read_bytes2 = read_bytes - read_bytes1;
-
 	status = gp_port_read (camera->port, buffer, read_bytes1);
 	if (status != read_bytes1) {
 		if ( status >= 0 )
-			GP_DEBUG ("canon_usb_dialogue: read 1 of %i bytes failed! (returned %i)",
+			GP_DEBUG ("canon_usb_dialogue: read 1 of 0x%x bytes failed! (returned %i)",
 				  read_bytes1, status);
 		else			     /* Error code */
-			GP_DEBUG ("canon_usb_dialogue: read 1 of %i bytes failed! (%s)",
+			GP_DEBUG ("canon_usb_dialogue: read 1 of 0x%x bytes failed! (%s)",
 				  read_bytes1, gp_result_as_string ( status ) );
 		return NULL;
 	}
 
-	if (read_bytes2) {
+	int reported_length = le32atoh (buffer);
+	if ( reported_length == 0 ) {
+		/* No length at start of packet. Did we read enough to
+		 * see the length later on? */
+		GP_DEBUG ( "canon_usb_dialogue: no length at start of packet." );
+		if ( read_bytes1 >= 0x50 ) {
+			reported_length = le32atoh (buffer+0x48);
+			GP_DEBUG ( "canon_usb_dialogue: got length from offset 0x48." );
+		}
+	}
+	GP_DEBUG ("canon_usb_dialogue: camera reports 0x%x bytes (0x%x total)",
+		  reported_length, reported_length+0x40 );
+
+	if ( reported_length > 0 && reported_length+0x40 != read_bytes ) {
+		GP_LOG ( GP_LOG_VERBOSE, _("canon_usb_dialogue:"
+					   " expected 0x%x bytes, but camera reports 0x%x"),
+			 read_bytes, reported_length+0x40 );
+		read_bytes = reported_length+0x40;
+	}
+
+	read_bytes2 = read_bytes - read_bytes1;
+
+	if ( read_bytes2 > 0 ) {
 		status = gp_port_read (camera->port, buffer + read_bytes1, read_bytes2);
 		if (status != read_bytes2) {
 			if ( status >= 0 )
@@ -974,7 +1187,7 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 					  read_bytes2, status);
 			else			     /* Error code */
 				GP_DEBUG ("canon_usb_dialogue: read 2 of %i bytes failed! (%s)",
-				  read_bytes2, gp_result_as_string ( status ) );
+					  read_bytes2, gp_result_as_string ( status ) );
 			return NULL;
 		}
 	}
