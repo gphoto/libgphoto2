@@ -1,5 +1,13 @@
 2001-11-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch from Greg Ingram <ingram@symsys.com>, unfortunatelly without
+	ChangeLog entry...
+
+	* camlibs/polaroid/pdc700.c: Report lcd state and caption (?) in 
+	  the camera_summary.
+
+2001-11-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sierra: Clean up header files (hide internals, make
 	  functions static)
 

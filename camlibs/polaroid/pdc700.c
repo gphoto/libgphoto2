@@ -71,6 +71,12 @@ enum _PDCBaud {
 	PDC_BAUD_57600 = 0x03
 };
 
+typedef enum _PDCBool PDCBool;
+enum _PDCBool {
+	PDC_BOOL_OFF = 0,
+	PDC_BOOL_ON  = 1
+};
+
 typedef struct _PDCDate PDCDate;
 struct _PDCDate {
 	unsigned char year, month, day; /* Years since 1980 */
@@ -94,11 +100,14 @@ enum _PDCFlash {
 typedef struct _PDCInfo PDCInfo;
 struct _PDCInfo {
 	unsigned int num_taken, num_free;
+	unsigned int auto_power_off;
 	char version[6];
 	PDCDate date;
 	PDCQuality quality;
 	PDCFlash   flash;
 	PDCBaud    speed;
+	PDCBool caption;
+	PDCBool lcd;
 };
 
 typedef struct _PDCPicInfo PDCPicInfo;
@@ -396,21 +405,31 @@ pdc700_info (Camera *camera, PDCInfo *info)
 		info->speed = PDC_BAUD_9600;
 	}
 
+	/* Caption/Information state (make sure it's valid) */
+	info->caption = buf[27];
+	if (info->caption != 0 && info->caption != 1) {
+		GP_DEBUG ("Unknown caption state: %i", info->caption);
+		info->caption = PDC_BOOL_OFF;
+	}
+
 	/*
-	 * buf[27-63]: We don't know:
+	 * buf[28-32]: We don't know. Below are some samples:
 	 * 
-	 * 00 f8 b2 64 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00
-	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 * f8 b2 64 03 00
 	 *
-	 * 00 c6 03 86 28 00 00 01 00 00 00 00 00 00 00 00 00 00 00
-	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 * c6 03 86 28 00
 	 *
-	 * 00 3a 7f 65 83 00 00 01 00 00 00 00 00 00 00 00 00 00 00 
-	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 * 3a 7f 65 83 00
 	 *
-	 * 00 23 25 66 83 00 00 01 00 00 00 00 00 00 00 00 00 00 00
-	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 * 23 25 66 83 00
 	 */
+
+	/* LCD state (make sure it's valid) */
+	info->lcd = buf[33];
+	if (info->lcd != 0 && info->lcd != 1) {
+		GP_DEBUG ("Unknown LCD state %i", info->lcd);
+		info->quality = PDC_BOOL_OFF;
+	}
 
 	/* Quality (make sure we know it) */
 	info->quality = buf[34];
@@ -418,6 +437,8 @@ pdc700_info (Camera *camera, PDCInfo *info)
 		GP_DEBUG ("Unknown quality: %i", info->quality);
 		info->quality = PDC_QUALITY_NORMAL;
 	}
+
+	/* Here follow lots of 0s */
 
 	return (GP_OK);
 }
@@ -702,6 +723,7 @@ camera_summary (Camera *camera, CameraText *about)
 	static const char *quality[] = {N_("normal"), N_("fine"),
 					N_("superfine")};
 	static const char *flash[] = {N_("auto"), N_("on"), N_("off")};
+	static const char *bool[] = {N_("off"), N_("on")};
 	PDCInfo info;
 
 	CR (pdc700_info (camera, &info));
@@ -712,11 +734,17 @@ camera_summary (Camera *camera, CameraText *about)
 		"Free pictures: %i\n"
 		"Software version: %s\n"
 		"Image quality: %s\n"
-		"Flash setting: %s"),
+		"Flash setting: %s\n"
+		"Information: %s\n"
+		"LCD: %s\n"
+		"Auto power off: %i minutes"),
 		info.date.year + 1980, info.date.month, info.date.day,
 		info.date.hour, info.date.minute, info.date.second,
 		info.num_taken, info.num_free, info.version,
-		quality[info.quality], flash[info.flash]);
+		quality[info.quality], flash[info.flash],
+		bool[info.caption],
+		bool[info.lcd],
+		info.auto_power_off);
 
 	return (GP_OK);
 }
