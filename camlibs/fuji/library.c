@@ -161,7 +161,7 @@ camera_init (Camera *camera, GPContext *context)
 	CR (gp_port_get_settings (camera->port, &settings));
 	settings.serial.speed    = 9600;
 	settings.serial.bits     = 8;
-	settings.serial.parity   = 0;
+	settings.serial.parity   = GP_PORT_SERIAL_PARITY_EVEN;
 	settings.serial.stopbits = 1;
 	CR (gp_port_set_settings (camera->port, settings));
 
