@@ -1,3 +1,8 @@
+2002-01-11  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* *.[ch]: checked in rewritten driver which uses GPFilesystem
+		  directly (from the hun branch)
+	
 2002-01-08  Dan Fandrich <dan@coneharvesters.com>
 
 	* Makefile.am: Removed redundant CFLAGS and LDFLAGS lines
@@ -42,7 +47,7 @@
 	* usb.c: Don't keylock G1 cameras, they do not
 	  support it. Reported by Jarno Elonen.
 
-2001-12-24  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-12-24  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* library.c: stop reporting broken camera abilities
 
@@ -197,14 +202,14 @@
 	  canon_usb_keylock() and also do things in a slightly
 	  different order.
 
-2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-27  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* README: added note about CRW (raw) support
 	* canon.c: added support for PowerShot S40
 	* canon.h: added support for PowerShot S40
 	* library.c: added support for PowerShot S40
 	
-2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-27  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* ChangeLog: created new file
 	* Changelog: declared deprecated
