@@ -258,10 +258,10 @@ const struct canonCamModelData models[] = {
 	{"Canon:EOS 20D (normal mode)",		CANON_CLASS_6,	0x04A9, 0x30eb, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	/* 0x30ec is EOS 20D in PTP mode */
 
-	/* Don't really know if this is PTP or Canon mode, or shared. */
-	{"Canon:EOS 350D (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30ef, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:Digital Rebel XT (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30ef, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon: EOS Kiss Digital N (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30ef, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:EOS 350D (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Digital Rebel XT (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:EOS Kiss Digital N (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30ee, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	/* 30ef is EOS 350D/Digital Rebel XT/EOS Kiss Digital N in PTP mode. */
 	{NULL}
 	/* *INDENT-ON* */
 };
