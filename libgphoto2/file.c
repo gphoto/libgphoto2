@@ -393,6 +393,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 	int x;
 	char *suffix;
 	const char *table[] = {
+		GP_MIME_RAW, "raw",
 		GP_MIME_JPEG, "jpg",
 		GP_MIME_PNG,  "png",
 		GP_MIME_TIFF, "tif", NULL};

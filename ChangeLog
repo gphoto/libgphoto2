@@ -1,5 +1,12 @@
 2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/dimera/dimera3500.c (camera_file_get): Use
+	gp_file_adjust_name_for_mime_type
+	* libgphoto2/file.c (gp_file_adjust_name_for_mime_type):
+	GP_MIME_RAW -> *.raw
+
+2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/agfa.c:
 	* camlibs/commands.c:
 	* camlibs/commands.h: Use a macro CHECK for most of the simple

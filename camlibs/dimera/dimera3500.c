@@ -21,6 +21,14 @@
  *
  * History:
  * $Log$
+ * Revision 1.16  2001/08/30 20:10:40  lutz
+ * 2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs/dimera/dimera3500.c (camera_file_get): Use
+ *         gp_file_adjust_name_for_mime_type
+ *         * libgphoto2/file.c (gp_file_adjust_name_for_mime_type):
+ *         GP_MIME_RAW -> *.raw
+ *
  * Revision 1.15  2001/08/30 10:47:51  lutz
  * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -374,6 +382,8 @@ static int camera_file_get (Camera *camera, const char *folder, const char *file
 		gp_file_set_mime_type (file, GP_MIME_RAW); 
 		break;
 	}
+
+	gp_file_adjust_name_for_mime_type (file);
 
 	return GP_OK;
 }
