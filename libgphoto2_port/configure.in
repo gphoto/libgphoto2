@@ -330,7 +330,6 @@ GP_CHECK_DOC_DIR()dnl
 GP_BUILD_DOCS()dnl
 
 AC_OUTPUT([
-libgphoto2_port.spec
 Makefile
 libgphoto2_port/Makefile
 serial/Makefile
