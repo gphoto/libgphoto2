@@ -327,6 +327,8 @@ static struct {
 	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099},
 	{"Canon:EOS Kiss Digital (PTP mode)",   0x04a9, 0x3099},
 
+	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b},
+
 	/* more coming soon :) */
 	{NULL, 0, 0}
 };
