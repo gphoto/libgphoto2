@@ -195,26 +195,14 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 	return (ret);
 }
 
-static int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
+static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) 
 {
 	dimagev_t *dimagev;
 
 	dimagev=camera->camlib_data;
 
-	switch ( capture_type ) {
-		case GP_OPERATION_CAPTURE_VIDEO:
-			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unable to capture video");
-			return GP_ERROR_BAD_PARAMETERS;
-		case GP_OPERATION_CAPTURE_PREVIEW: 
-		case GP_OPERATION_CAPTURE_IMAGE:
-			/* Proceed with the code below. Since the Dimage V doesn't support
-			grabbing just the input (to the best of my knowledge), we take the
-			picture either way. */
-			break;
-		default:
-			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unkown capture type %02x", capture_type);
-			return GP_ERROR_BAD_PARAMETERS;
-		}
+	if (type != GP_CAPTURE_IMAGE)
+		return (GP_ERROR_NOT_SUPPORTED);
 
 	if ( dimagev_shutter(dimagev) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unable to open shutter");
@@ -227,24 +215,16 @@ static int camera_capture (Camera *camera, int capture_type, CameraFilePath *pat
 		return GP_ERROR_IO;
 	}
 
-	if ( capture_type == GP_OPERATION_CAPTURE_PREVIEW ) {
 #if defined HAVE_SNPRINTF
-		snprintf(path->folder, sizeof(path->folder), "/");
-		snprintf(path->name, sizeof(path->name), DIMAGEV_THUMBNAIL_FMT, dimagev->status->number_images);
+	snprintf(path->folder, sizeof(path->folder), "/");
+	snprintf(path->name, sizeof(path->name), DIMAGEV_FILENAME_FMT, dimagev->status->number_images);
 #else
-		sprintf(path->folder, "/");
-		sprintf(path->name, DIMAGEV_THUMBNAIL_FMT, dimagev->status->number_images);
-#endif
-	} else if (capture_type == GP_OPERATION_CAPTURE_IMAGE) {
-#if defined HAVE_SNPRINTF
-		snprintf(path->folder, sizeof(path->folder), "/");
-		snprintf(path->name, sizeof(path->name), DIMAGEV_FILENAME_FMT, dimagev->status->number_images);
-#else
-		sprintf(path->folder, "/");
-		sprintf(path->name, DIMAGEV_FILENAME_FMT, dimagev->status->number_images);
+	sprintf(path->folder, "/");
+	sprintf(path->name, DIMAGEV_FILENAME_FMT, dimagev->status->number_images);
 #endif
 
-	}
+	/* Tell the CameraFilesystem about this picture */
+	gp_filesystem_append (camera->fs, path->folder, path->name);
 
 	return GP_OK;
 }
@@ -509,18 +489,13 @@ int camera_init (Camera *camera)
         camera->camlib_data = dimagev;
 	dimagev->dev = camera->port;
 
+	/* configure the port */
         gp_port_timeout_set(dimagev->dev, 5000);
-
-#if defined HAVE_STRNCPY
-        strncpy(dimagev->settings.serial.port, camera->port->path, sizeof(dimagev->settings.serial.port));
-#else
-        strcpy(dimagev->settings.serial.port, camera->port_info->path);
-#endif
+	gp_port_settings_get(camera->port, &(dimagev->settings));
         dimagev->settings.serial.speed = 38400;
         dimagev->settings.serial.bits = 8;
         dimagev->settings.serial.parity = 0;
         dimagev->settings.serial.stopbits = 1;
-
         gp_port_settings_set(dimagev->dev, dimagev->settings);
 
         if  ( dimagev_get_camera_data(dimagev) < GP_OK ) {

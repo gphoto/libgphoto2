@@ -1584,8 +1584,10 @@ camera_result_as_string (Camera *camera, int result)
 int
 camera_init (Camera *camera)
 {
+	GPPortSettings settings;
 	struct canon_info *cs;
 	char buf[8];
+	const char *path;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_init()");
 
@@ -1626,8 +1628,12 @@ camera_init (Camera *camera)
 
 	fprintf (stderr, "canon_initialize()\n");
 
-	cs->speed = camera->port_info->speed;
-	/* Default speed */
+	/* Figure out the speed (and set to default speed if 0) */
+	if (camera->port->type == GP_PORT_SERIAL) {
+		gp_port_settings_get (camera->port, &settings);
+		cs->speed = settings.serial.speed;
+	} else
+		cs->speed = 0;
 	if (cs->speed == 0)
 		cs->speed = 9600;
 
@@ -1683,5 +1689,7 @@ camera_init (Camera *camera)
 				 cs->speed);
 
 
-	return canon_serial_init (camera, camera->port_info->path);
+	/* This is bogus. You don't have to change the path */
+	gp_camera_get_port_path (camera, &path);
+	return canon_serial_init (camera, path);
 }

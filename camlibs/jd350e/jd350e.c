@@ -180,9 +180,7 @@ int camera_init (Camera *camera)
 
         /* Configure port */
         gp_port_timeout_set(camera->port, 1000);
-
 	gp_port_settings_get(camera->port, &settings);
-        settings.serial.speed = camera->port_info->speed;
         settings.serial.bits = 8;
         settings.serial.parity = 0;
         settings.serial.stopbits = 1;

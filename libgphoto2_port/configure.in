@@ -37,7 +37,7 @@ ALL_LINGUAS=""
 AM_GNU_GETTEXT
 
 dnl Turn on debugging and catch GNU features incompatible with ANSI C.
-CFLAGS="$CFLAGS -g -Wall"
+CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
 LDFLAGS="$LDFLAGS -g -Wall"
 
 dnl Checks for header files.

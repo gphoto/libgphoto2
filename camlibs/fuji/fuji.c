@@ -51,6 +51,8 @@
 
 extern unsigned char *fuji_exif_convert(exifparser *exifdat,CameraFile *cfile);
 
+#warning Do not use globals - they break pretty much every GUI for gphoto2,
+#warning including Konqueror (KDE) and Nautilus (GNOME).
 static gp_port *thedev;
 
 static int pictures;
@@ -1039,10 +1041,12 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	return (GP_ERROR_NOT_SUPPORTED);
 }
 
-static int camera_file_get (Camera *camera, const char *folder,
-		     const char *filename, CameraFileType type, 
-		     CameraFile *file) { 
+static int
+get_file_func (CameraFilesystem *fs, const char *folder,
+	       const char *filename, CameraFileType type, CameraFile *file,
+	       void *data) { 
 
+  Camera *camera = data;
   int num;
   FujiData *fjd;
 
@@ -1125,9 +1129,6 @@ int camera_init (Camera *camera) {
 
 	/* First, set up all the function pointers */
 	camera->functions->exit 	= camera_exit;
-	//	camera->functions->folder_list_folders  = camera_folder_list;
-	//	camera->functions->folder_list_files	= camera_file_list;
-	camera->functions->file_get 	= camera_file_get;
 	//	camera->functions->file_get_preview =  camera_file_get_preview;
 	//	camera->functions->file_put 	= camera_file_put;
 	//camera->functions->file_delete 	= camera_file_delete;
@@ -1141,23 +1142,18 @@ int camera_init (Camera *camera) {
 	camera->camlib_data=malloc(sizeof( FujiData));
 	fjd=(FujiData*)camera->camlib_data;
 
-        gp_filesystem_new (&camera->fs);
+	/* Set up the CameraFilesystem */
         gp_filesystem_set_list_funcs (camera->fs,
                                         file_list_func, folder_list_func,
                                         camera);
         gp_filesystem_set_info_funcs (camera->fs,
 	                                        get_info_func, set_info_func,
 	                              camera);
-	//gp_filesystem_set_file_funcs(camera->fs,,)
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
-	gp_port_new(camera->port, GP_PORT_SERIAL);
+	/* Set up the port */
 	thedev=camera->port;
 	gp_port_timeout_set(thedev,1000);
-	if (!thedev) {
-	  gp_port_free(thedev);
-	  return (GP_ERROR);
-	}
-	strcpy(settings.serial.port, camera->port_info->path);
 	settings.serial.speed 	 = 9600;
 	settings.serial.bits 	 = 8;
 	settings.serial.parity 	 = 0;

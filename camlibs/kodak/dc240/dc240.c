@@ -171,7 +171,7 @@ camera_about (Camera *camera, CameraText *about)
 int
 camera_init (Camera *camera) 
 {
-	int ret;
+	int ret, selected_speed = 0;
 	GPPortSettings settings;
 	
 	/* First, set up all the function pointers */
@@ -192,6 +192,10 @@ camera_init (Camera *camera)
 		return (ret);
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
+
+		/* Remember the selected speed */
+		selected_speed = settings.serial.speed;
+
 		settings.serial.speed    = 9600;
 		settings.serial.bits     = 8;
 		settings.serial.parity   = 0;
@@ -223,7 +227,7 @@ camera_init (Camera *camera)
 		/* Wait for it to reset */
 		GP_SYSTEM_SLEEP(1500);
 
-		ret = dc240_set_speed (camera, camera->port_info->speed);
+		ret = dc240_set_speed (camera, selected_speed);
 		if (ret < 0)
 			return (ret);
 	}

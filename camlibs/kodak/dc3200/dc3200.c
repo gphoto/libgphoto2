@@ -59,11 +59,14 @@ int init(Camera *camera)
 {
 	GPPortSettings settings;
 	DC3200Data *dd = camera->camlib_data;
-	int ret;
+	int ret, selected_speed;
 
 	ret = gp_port_settings_get (camera->port, &settings);
 	if (ret < 0)
 		return (ret);
+
+	/* Remember the selected speed */
+	selected_speed = settings.serial.speed;
 
 	settings.serial.speed    = 9600;
 	settings.serial.bits     = 8;
@@ -76,11 +79,11 @@ int init(Camera *camera)
 
 	gp_port_timeout_set (camera->port, TIMEOUT);
 
-	if (dc3200_set_speed(dd, camera->port_info->speed) == GP_ERROR)
+	if (dc3200_set_speed (dd, selected_speed) == GP_ERROR)
 		return GP_ERROR;
 
-	/* set the new speed */
-	settings.serial.speed = camera->port_info->speed;
+	/* Set the new speed */
+	settings.serial.speed = selected_speed;
 	ret = gp_port_settings_set (camera->port, settings);
 	if (ret < 0)
 		return (ret);

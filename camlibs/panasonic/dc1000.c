@@ -516,7 +516,7 @@ static int camera_about (Camera *camera, CameraText *about)
 
 int camera_init (Camera *camera) {
 
-        int ret;
+        int ret, selected_speed;
         dsc_t           *dsc = NULL;
         
         /* First, set up all the function pointers */
@@ -545,12 +545,18 @@ int camera_init (Camera *camera) {
         }
         
         gp_port_timeout_set(camera->port, 5000);
-        strcpy(dsc->settings.serial.port, camera->port_info->path);
+
+	/* Get the settings */
+	gp_port_settings_get(camera->port, &(dsc->settings));
+
+	/* Remember the selected speed */
+	selected_speed = dsc->settings.serial.speed;
+
+	/* Set the initial settings */
         dsc->settings.serial.speed      = 9600; /* hand shake speed */
         dsc->settings.serial.bits       = 8;
         dsc->settings.serial.parity     = 0;
         dsc->settings.serial.stopbits   = 1;
-
         gp_port_settings_set(camera->port, dsc->settings);
 
         /* allocate memory for a dsc read/write buffer */
@@ -567,8 +573,8 @@ int camera_init (Camera *camera) {
 	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
 				        NULL, camera);
         
-        return dsc1_connect(camera, camera->port_info->speed); 
-                /* connect with selected speed */
+	/* Connect with selected speed */
+        return dsc1_connect(camera, selected_speed); 
 }
 
 

@@ -289,8 +289,7 @@ camera_init (Camera *camera)
 
 	/* Some settings */
 	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
-	if (camera->port_info->speed)
-		settings.serial.speed = camera->port_info->speed;
+	/* Should we adjust anything here? */
 	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
 	CHECK_RESULT (gp_port_timeout_set (camera->port, SDSC_TIMEOUT));
 

@@ -59,6 +59,10 @@ static char *coolshot_cameras[] = {
 	""
 };
 
+struct _CameraPrivateLibrary {
+	int speed;
+};
+
 int camera_id (CameraText *id)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_id");
@@ -108,7 +112,7 @@ static int camera_start (Camera *camera)
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_start");
 
 	/* coolshot_sb sets to default speed if speed == 0 */
-	CHECK (coolshot_sb (camera, camera->port_info->speed));
+	CHECK (coolshot_sb (camera, camera->pl->speed));
 	return( GP_OK );
 }
 
@@ -163,7 +167,10 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 
 static int camera_exit (Camera *camera)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_exit");
+	if (camera->pl) {
+		free (camera->pl);
+		camera->pl = NULL;
+	}
 
 	return (GP_OK);
 }
@@ -271,8 +278,13 @@ int camera_init (Camera *camera)
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
-	/* Set up the port */
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+
+	/* Set up the port and remember the requested speed */
 	CHECK (gp_port_settings_get (camera->port, &settings));
+	camera->pl->speed = settings.serial.speed;
 	settings.serial.speed 	 = DEFAULT_SPEED;
 	settings.serial.bits 	 = 8;
 	settings.serial.parity 	 = 0;
@@ -297,7 +309,7 @@ int camera_init (Camera *camera)
 		get_file_func, NULL, camera));
 
 	/* coolshot_sb sets to default speed if speed == 0 */
-	CHECK (coolshot_sb (camera, camera->port_info->speed));
+	CHECK (coolshot_sb (camera, camera->pl->speed));
 
 	return (camera_stop (camera));
 }

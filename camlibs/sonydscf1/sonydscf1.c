@@ -170,13 +170,13 @@ int camera_init (Camera *camera) {
 	//FIXME: This won't work with several frontends. NO GLOBALS PLEASE!
 	dev = camera->port;
 
-        gp_port_timeout_set(camera->port, 5000);
+	/* Configure the port */
+        gp_port_timeout_set (camera->port, 5000);
 	gp_port_settings_get (camera->port, &settings);
-        settings.serial.speed   = camera->port_info->speed;
         settings.serial.bits    = 8;
         settings.serial.parity  = 0;
         settings.serial.stopbits= 1;
-        gp_port_settings_set(camera->port, settings);
+        gp_port_settings_set (camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);

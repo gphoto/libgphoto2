@@ -151,7 +151,7 @@ static const char* camera_result_as_string (Camera *camera, int result)
 
 int camera_init (Camera *camera) 
 {
-        gp_port_settings gpiod_settings;
+	GPPortSettings settings;
         int ret;
 
         /* First, set up all the function pointers */
@@ -162,12 +162,11 @@ int camera_init (Camera *camera)
 
 	/* Configure serial port */
         gp_port_timeout_set(camera->port, 1000);
-	gp_port_settings_get(camera->port, &gpiod_settings);
-        gpiod_settings.serial.speed = camera->port_info->speed;
-        gpiod_settings.serial.bits = 8;
-        gpiod_settings.serial.parity = 0;
-        gpiod_settings.serial.stopbits = 1;
-        gp_port_settings_set(camera->port, gpiod_settings);
+	gp_port_settings_get(camera->port, &settings);
+        settings.serial.bits = 8;
+        settings.serial.parity = 0;
+        settings.serial.stopbits = 1;
+        gp_port_settings_set(camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);

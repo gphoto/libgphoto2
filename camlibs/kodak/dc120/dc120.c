@@ -55,21 +55,14 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera) {
 
 	DC120Data *dd = camera->camlib_data;
 
-	if (!dd)
-		return (GP_OK);
-
-	gp_filesystem_free(dd->fs);
-
-	if (dd->dev) {
-		if (gp_port_close(dd->dev) == GP_ERROR)
-			{ /* camera did a bad, bad thing */ }
-		gp_port_free(dd->dev);
+	if (dd) {
+		free (dd);
+		camera->camlib_data = NULL;
 	}
-	free(dd);
 
 	return (GP_OK);
 }
@@ -134,8 +127,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	return (retval);
 }
 
-int camera_file_action (Camera *camera, int action, CameraFile *file, 
-			const char *folder, const char *filename) 
+static int camera_file_action (Camera *camera, int action, CameraFile *file,
+			       const char *folder, const char *filename) 
 {
 	DC120Data *dd = camera->camlib_data;
 	int picnum=0, album_num=-1, from_card=0;
@@ -202,7 +195,6 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 			     const char *filename, void *data) 
 {
 	Camera *camera = data;
-	DC120Data *dd = camera->camlib_data;
 	int retval;
 
 	retval = camera_file_action (camera, DC120_ACTION_DELETE, NULL, folder, 
@@ -212,7 +204,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 #if 0
-int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
+int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) {
 
 	DC120Data *dd = camera->camlib_data;
 
@@ -220,7 +212,7 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
 }
 #endif
 
-int camera_summary (Camera *camera, CameraText *summary) 
+static int camera_summary (Camera *camera, CameraText *summary) 
 {
 /*	DC120Data *dd = camera->camlib_data; */
 
@@ -229,7 +221,7 @@ int camera_summary (Camera *camera, CameraText *summary)
 	return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual) 
+static int camera_manual (Camera *camera, CameraText *manual) 
 {
 	strcpy (manual->text, 
 		_("The Kodak DC120 camera uses the KDC file format "
@@ -241,7 +233,7 @@ int camera_manual (Camera *camera, CameraText *manual)
 	return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) 
+static int camera_about (Camera *camera, CameraText *about) 
 {
 	strcpy(about->text, 
 		_("Kodak DC120 Camera Library\n"
@@ -254,17 +246,18 @@ int camera_about (Camera *camera, CameraText *about)
 
 int camera_init (Camera *camera) {
 
-        gp_port_settings settings;
+        GPPortSettings settings;
         DC120Data *dd;
-        int ret;
+	int speed;
 
         if (!camera)
                 return (GP_ERROR);
 
         dd = (DC120Data*)malloc(sizeof(DC120Data));
         if (!dd)
-                return (GP_ERROR);
+                return (GP_ERROR_NO_MEMORY);
 	dd->camera = camera;
+	dd->dev = camera->port;
 
         /* First, set up all the function pointers */
         camera->functions->exit         = camera_exit;
@@ -277,48 +270,29 @@ int camera_init (Camera *camera) {
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 				      delete_file_func, camera);
 
-        if ((ret= gp_port_new(&(dd->dev), GP_PORT_SERIAL)) < 0) {
-                free(dd);
-                return (ret);
-        }
-
-        strcpy(settings.serial.port, camera->port_info->path);
+	/* Configure the port (remember the speed) */
+	gp_port_settings_get (camera->port, &settings);
+	speed = settings.serial.speed;
         settings.serial.speed    = 9600;
         settings.serial.bits     = 8;
         settings.serial.parity   = 0;
         settings.serial.stopbits = 1;
-
-        if (gp_port_settings_set(dd->dev, settings) == GP_ERROR) {
-                gp_port_free(dd->dev);
-                free(dd);
-                return (GP_ERROR);
-        }
-
-        if (gp_port_open(dd->dev) == GP_ERROR) {
-                gp_port_free(dd->dev);
-                free(dd);
-                return (GP_ERROR);
-        }
-
-        gp_port_timeout_set(dd->dev, TIMEOUT);
+        gp_port_settings_set (camera->port, settings);
+        gp_port_timeout_set (camera->port, TIMEOUT);
 
         /* Reset the camera to 9600 */
-        gp_port_send_break(dd->dev, 2);
+        gp_port_send_break (camera->port, 2);
 
         /* Wait for it to update */
         GP_SYSTEM_SLEEP(1500);
 
-        if (dc120_set_speed(dd, camera->port_info->speed) == GP_ERROR) {
-                gp_port_close(dd->dev);
-                gp_port_free(dd->dev);
+        if (dc120_set_speed (dd, speed) == GP_ERROR) {
                 free(dd);
                 return (GP_ERROR);
         }
 
         /* Try to talk after speed change */
         if (dc120_get_status(dd) == GP_ERROR) {
-                gp_port_close(dd->dev);
-                gp_port_free(dd->dev);
                 free(dd);
                 return (GP_ERROR);
         }

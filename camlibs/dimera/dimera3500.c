@@ -21,6 +21,13 @@
  *
  * History:
  * $Log$
+ * Revision 1.25  2001/10/20 12:36:11  lutz
+ * 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs: Instead of camera->port_info->speed, use
+ *           settings.serial.speed. That lets us ...
+ *         * libgphoto2/gphoto2-camera.[c,h]: ... remove camera->port_info
+ *
  * Revision 1.24  2001/10/19 13:40:28  lutz
  * 2001-10-19  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -937,8 +944,9 @@ Dimera_Preview( int *size, Camera *camera )
 
 int camera_init (Camera *camera) {
 
+	GPPortSettings settings;
         DimeraStruct *cam;
-        int ret;
+        int ret, selected_speed;
 
         debuglog("camera_init()");
 
@@ -949,6 +957,10 @@ int camera_init (Camera *camera) {
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
+
+	/* Get the settings and remember the selected speed */
+	gp_port_settings_get (camera->port, &settings);
+	selected_speed = settings.serial.speed;
 
         cam = (DimeraStruct*)malloc(sizeof(DimeraStruct));
         if (cam == NULL)
@@ -978,8 +990,7 @@ int camera_init (Camera *camera) {
                 return ret;
         }
 
-        
-        if ( (ret = mesa_set_speed(camera->port, camera->port_info->speed)) != GP_OK )
+        if ( (ret = mesa_set_speed(camera->port, selected_speed)) != GP_OK )
         {
                 ERROR("Camera Speed Setting Failed");
                 return ret;

@@ -1291,10 +1291,14 @@ int camera_init (Camera *camera)
         switch (camera->port->type) {
         case GP_PORT_SERIAL:
 
+		/* Remember the speed */
+		camera->pl->speed = settings.serial.speed;
+
                 settings.serial.speed    = 19200;
                 settings.serial.bits     = 8;
                 settings.serial.parity   = 0;
                 settings.serial.stopbits = 1;
+
                 break;
 
         case GP_PORT_USB:
@@ -1339,7 +1343,6 @@ int camera_init (Camera *camera)
 
         CHECK_FREE (camera, gp_port_settings_set (camera->port, settings));
         CHECK_FREE (camera, gp_port_timeout_set (camera->port, TIMEOUT));
-        camera->pl->speed = camera->port_info->speed;
 
         /* Establish a connection */
         CHECK_FREE (camera, camera_start (camera));

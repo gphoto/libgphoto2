@@ -469,9 +469,7 @@ camera_init (Camera *camera)
 
 	/* Open the port and check if the camera is there */
 	gp_port_settings_get (camera->port, &settings);
-	if (camera->port_info->speed)
-		settings.serial.speed = camera->port_info->speed;
-	else
+	if (!settings.serial.speed)
 		settings.serial.speed = 115200;
 	gp_port_settings_set (camera->port, settings);
 	gp_port_timeout_set (camera->port, 30000);

@@ -17,14 +17,21 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-#include <gphoto2-library.h>
-#include <gphoto2-core.h>
-#include <gphoto2-debug.h>
+
+#include <config.h>
+#include "library.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
+#include <gphoto2-library.h>
+#include <gphoto2-core.h>
+#include <gphoto2-debug.h>
+#include <gphoto2-port-log.h>
+
+#include "konica.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -33,16 +40,17 @@
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
-#    define _(String) (String)
 #    define N_(String) (String)
-#  endif
+#  endif 
 #else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
-
-#include "library.h"
-#include "konica.h"
 
 #define CHECK(r)      {int ret = (r); if (ret < 0) return (ret);}
 #define CHECK_NULL(r) {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
@@ -197,11 +205,8 @@ init_serial_connection (Camera *camera)
 	KBitFlag bit_flags;
         unsigned int test_bit_rate [10] = {9600, 115200, 57600, 38400, 19200,
 					   4800, 2400, 1200, 600, 300};
-        gp_port_settings settings;
+        GPPortSettings settings;
         unsigned int speed;
-
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: "
-                         "init_serial_connection ***");
 
         CHECK (gp_port_settings_get (camera->port, &settings));
 
@@ -219,31 +224,41 @@ init_serial_connection (Camera *camera)
          * current speed to the given one.
          */
 
-        if (camera->port_info->speed) {
-                settings.serial.speed = camera->port_info->speed;
-                CHECK (gp_port_settings_set (camera->port, settings));
+	
+	speed = settings.serial.speed;
+        if (speed) {
+		gp_log (GP_LOG_DEBUG, "konica", "Looking for camera at "
+			"speed %d", speed);
                 if (k_init (camera->port) == GP_OK)
                         return (GP_OK);
-        }
+
+		gp_log (GP_LOG_DEBUG, "konica", "Speed %d has been requested, "
+			"but the camera could not be contacted at that speed",
+			speed);
+	}
 
         for (i = 0; i < 10; i++) {
-                gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Testing speed "
-                                 "%i.\n", test_bit_rate [i]);
+		gp_log (GP_LOG_DEBUG, "konica", "Testing speed %d",
+			test_bit_rate [i]);
                 settings.serial.speed = test_bit_rate [i];
                 gp_port_settings_set (camera->port, settings);
                 if (k_init (camera->port) == GP_OK)
                         break;
         }
-        if (!camera->port_info->speed && (i == 1))
+	if (i == 10)
+		return (GP_ERROR_IO);
+
+	/*
+	 * If we are not given a speed and we are communicating at the 
+	 * highest one, return.
+	 */
+        if (!speed && (i == 1))
                 return (GP_OK);
-        if (i == 10)
-                return (GP_ERROR_IO);
 
         /* What are the camera's abilities? */
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Getting IO "
-                         "capabilities...\n");
+	gp_log (GP_LOG_DEBUG, "konica", "Getting IO capabilities...");
         CHECK (k_get_io_capability (camera->port, &bit_rates, &bit_flags));
-        if (!camera->port_info->speed) {
+        if (!speed) {
 
                 /* Set the highest possible speed */
                 for (i = 9; i >= 0; i--)
@@ -254,44 +269,44 @@ init_serial_connection (Camera *camera)
 		bit_rates = (1 << i);
 		switch (i) {
 		case 0:
-			camera->port_info->speed = 300;
+			speed = 300;
 			break;
 		case 1:
-			camera->port_info->speed = 600;
+			speed = 600;
 			break;
 		case 2:
-			camera->port_info->speed = 1200;
+			speed = 1200;
 			break;
 		case 3:
-			camera->port_info->speed = 2400;
+			speed = 2400;
 			break;
 		case 4:
-			camera->port_info->speed = 4800;
+			speed = 4800;
 			break;
 		case 5:
-			camera->port_info->speed = 9600;
+			speed = 9600;
 			break;
 		case 6:
-			camera->port_info->speed = 19200;
+			speed = 19200;
 			break;
 		case 7:
-			camera->port_info->speed = 38400;
+			speed = 38400;
 			break;
 		case 8:
-			camera->port_info->speed = 57600;
+			speed = 57600;
 			break;
 		case 9:
-			camera->port_info->speed = 115200;
+			speed = 115200;
 			break;
 		default:
 			return (GP_ERROR_IO_SERIAL_SPEED);
 		}
         } else {
 
-                /* Does the camera allow us to set the bit rate to the
+                /*
+		 * Does the camera allow us to set the bit rate to the
                  * given one?
                  */
-                speed = camera->port_info->speed;
 		if (((speed ==    300) && (!(bit_rates & (1 << 0)))) ||
                     ((speed ==    600) && (!(bit_rates & (1 << 1)))) ||
                     ((speed ==   1200) && (!(bit_rates & (1 << 2)))) ||
@@ -340,18 +355,13 @@ init_serial_connection (Camera *camera)
         }
 
         /* Request the new speed */
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Setting new speed (%x)"
-			 "...", bit_rates);
 	bit_flags = K_BIT_FLAG_8_BITS;
         CHECK (k_set_io_capability (camera->port, bit_rates, bit_flags));
 
         /* Reconnect */
-        settings.serial.speed = camera->port_info->speed;
+        settings.serial.speed = speed;
         CHECK (gp_port_settings_set (camera->port, settings));
         CHECK (k_init (camera->port));
-
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** EXIT: "
-                         "init_serial_connection ***");
 
         return (GP_OK);
 }

@@ -619,7 +619,7 @@ static int camera_about (Camera *camera, CameraText *about) {
 
 int camera_init (Camera *camera) {
 
-        int             ret;
+        int ret, speed;
 	GPPortSettings settings;
 
         /* First, set up all the function pointers */
@@ -630,6 +630,7 @@ int camera_init (Camera *camera) {
 
         gp_port_timeout_set(camera->port, 2000);
 	gp_port_settings_get(camera->port, &settings);
+	speed = settings.serial.speed;
 	settings.serial.speed      = 9600; /* hand shake speed */
 	settings.serial.bits       = 8;
 	settings.serial.parity     = 0;
@@ -648,7 +649,7 @@ int camera_init (Camera *camera) {
 	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func,
 					camera);
 
-        ret = l859_connect(camera, camera->port_info->speed);
+        ret = l859_connect (camera, speed);
 	if (ret < 0) {
 		free (camera->pl);
 		camera->pl = NULL;

@@ -642,7 +642,7 @@ int camera_init (Camera *camera)
 {
         
         dsc_t           *dsc = NULL;
-        int             result;
+        int             result, selected_speed;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
@@ -659,13 +659,18 @@ int camera_init (Camera *camera)
         camera->camlib_data = dsc;
 
         CHECK (gp_port_timeout_set(camera->port, 5000));
-        
-        strcpy(dsc->settings.serial.port, camera->port_info->path);
+
+	/* Get the settings */
+	CHECK (gp_port_settings_get(camera->port, &(dsc->settings)));
+
+	/* Remember the selected speed */
+	selected_speed = dsc->settings.serial.speed;
+
+	/* Set the initial settings */
         dsc->settings.serial.speed      = 9600; /* hand shake speed */
         dsc->settings.serial.bits       = 8;
         dsc->settings.serial.parity     = 0;
         dsc->settings.serial.stopbits   = 1;
-
         CHECK (gp_port_settings_set(camera->port, dsc->settings));
 
       	CHECK (gp_filesystem_set_list_funcs (camera->fs,
@@ -683,9 +688,9 @@ int camera_init (Camera *camera)
                 free(dsc);
                 return GP_ERROR;
         }        
-        
-        return dsc2_connect(camera, camera->port_info->speed);
-                /* connect with selected speed */
+
+	/* Connect with the selected speed */
+        return dsc2_connect(camera, selected_speed);
 }
 
 /* End of dc1580.c */

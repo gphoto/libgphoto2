@@ -129,11 +129,6 @@ typedef struct _CameraPrivateFrontend CameraPrivateFrontend;
 
 struct _Camera {
 
-	/*
-	 * Don't use. It'll disappear sooner or later
-	 */
-	GPPortInfo     *port_info;
-
 	/* Don't use */
 	void            *camlib_data;
 
