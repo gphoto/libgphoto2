@@ -75,6 +75,9 @@ camlibs/panasonic
 camlibs/panasonic/coolshot:
 	Chris Pinkham <cpinkham@infi.net>
 
+camlibs/pccam300:
+	Miah Gregory <mace@darksilence.net>
+
 camlibs/pccam600:
 	Peter Kajberg <pbk@odense.kollegienet.dk>
 
