@@ -1,3 +1,8 @@
+2001-10-24 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* gphoto.spec.in: hotplug dependency is a prereq not a requires
+	  (patch by Tim Waugh <twaugh@redhat.com>)
+
 2001-10-25 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/canon/serial.[c,h]: No need to set the port path anywhere.

@@ -8,7 +8,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Source: http://www.gphoto.org/dist/%{name}-%{version}.tar.gz
 Url: http://www.gphoto.org/
 Requires: libusb >= 0.0.4
-Requires: hotplug
+PreReq: hotplug
 Provides: libgphoto2
 BuildRequires: libusb-devel
 BuildRequires: gtk-doc
@@ -32,6 +32,7 @@ Other (GUI) frontends are available seperately.
 %package devel
 Summary: Headers and links to compile against the libgphoto2 library.
 Requires: %{name} = %{version}
+Provides: libgphoto2-devel
 Group: Development/Libraries
 
 %description devel
@@ -117,6 +118,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libgphoto-2.0.pc
 /etc/hotplug/usb/usbcam
 
+#
+# FIXME: When updating from one RPM to a newer one,
+#        the cams get (correctly) removed from usb.usermap but not
+#        added again.
+#
+
 %post
 # add supported cameras to /etc/hotplug/usb.usermap
 grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
@@ -143,6 +150,10 @@ mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 
 ##### Change log
 %changelog
+* Thu Oct 25 2001 Tim Waugh <twaugh@redhat.com>
+- hotplug dependency is a prereq not a requires (the package scripts
+  need it)
+
 * Sun Oct 14 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
 - integrated spec file into source package
 
