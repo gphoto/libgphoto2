@@ -31,6 +31,7 @@ struct _GPPortOperations {
         int (*open)     (GPPort *);
         int (*close)    (GPPort *);
         int (*read)     (GPPort *,       char *, int);
+        int (*check_event) (GPPort *,       char *, int);
         int (*write)    (GPPort *, const char *, int);
         int (*update)   (GPPort *);
 

@@ -53,7 +53,7 @@ struct _GPPortSettingsSerial {
 
 typedef struct _GPPortSettingsUSB GPPortSettingsUSB;
 struct _GPPortSettingsUSB {
-	int inep, outep;
+	int inep, outep, eventep;
 	int config;
 	int interface;
 	int altsetting;
