@@ -1,5 +1,9 @@
 2001-11-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* gphoto2-port-config.in: Remove another reference to IOLIB_CFLAGS...
+
+2001-11-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* serial/unix.c: Always set the speed at the beginning - don't assume
 	  it to be at 9600.
 
