@@ -130,13 +130,12 @@ get_info (Camera *camera, unsigned int n, CameraFileInfo *info)
 
 	info->audio.fields = GP_FILE_INFO_NONE;
 
-	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
-	info->preview.size = buffer_size;
+	info->preview.fields = GP_FILE_INFO_TYPE;
 	strcpy (info->preview.type, GP_MIME_JPEG);
 
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS |
 			    GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
-	info->file.size = exif_size;
+	info->file.size = exif_size * 1000;
 	info->file.permissions = GP_FILE_PERM_READ;
 	if (!protected)
 		info->file.permissions |= GP_FILE_PERM_DELETE;
