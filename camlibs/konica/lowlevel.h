@@ -18,6 +18,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#ifndef __KONICA_LOWLEVEL_H__
+#define __KONICA_LOWLEVEL_H__
+
+#include <gphoto2-port.h>
+
 int l_init (gp_port* device);
 
 /*
@@ -44,3 +49,5 @@ int l_send_receive (gp_port *device,
 	unsigned char **receive_buffer, unsigned int *receive_buffer_size,
 	unsigned int timeout,
 	unsigned char **image_buffer, unsigned int *image_buffer_size);
+
+#endif /* __KONICA_LOWLEVEL_H__ */

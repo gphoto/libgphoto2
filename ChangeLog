@@ -1,5 +1,11 @@
 2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-debug.h: #include <gphoto2-port-debug.h>
+	* include/gphoto2-result.h: #include <gphoto2-port-result.h>
+	* libgphoto2/debug.c: #include <gphoto2-port.h>
+
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/debug.c: Move debugging stuff to libgphoto2_port so
 	that those messages get saved, too.
 

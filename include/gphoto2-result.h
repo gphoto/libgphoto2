@@ -22,7 +22,7 @@
 #define __GPHOTO2_RESULT_H__
 
 /* Additional error codes are defined here */
-#include <gphoto2-port.h>
+#include <gphoto2-port-result.h>
 
 #define GP_ERROR_BAD_PARAMETERS      -100 /* for checking function-param. */
 #define GP_ERROR_IO                  -101 /* IO problem                 */
