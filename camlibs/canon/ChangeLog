@@ -1,3 +1,9 @@
+2002-01-04  Dan Fandrich <dan@coneharvesters.com>
+
+	* util.h: added MIN and MAX definitions
+	* library.c: added support for locale-specific thousands separator
+	* canon.c: added support for tm.tm_gmtoff to get time zone offset
+
 2002-01-04  Fredrik <fredrik@krixor.xy.org>
 
 	* canon.c, canon.h:

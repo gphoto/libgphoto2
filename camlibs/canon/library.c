@@ -32,6 +32,9 @@
 #include <sys/stat.h>
 #include <termios.h>
 #include <time.h>
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
 
 #include <gphoto2.h>
 
@@ -788,6 +791,15 @@ pretty_number (int number, char *buffer)
 {
 	int len, tmp, digits;
 	char *pos;
+#ifdef HAVE_LOCALE_H
+	/* We should really use ->grouping as well */
+	char thousands_sep = *localeconv()->thousands_sep;
+
+	if (thousands_sep == '\0')
+		thousands_sep = '\'';
+#else
+	const char thousands_sep = '\''
+#endif
 
 	len = 0;
 	tmp = number;
@@ -804,7 +816,7 @@ pretty_number (int number, char *buffer)
 		*--pos = (number % 10) + '0';
 		number /= 10;
 		if (++digits == 3) {
-			*--pos = '\'';
+			*--pos = thousands_sep;
 			digits = 0;
 		}
 	}

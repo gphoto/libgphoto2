@@ -22,9 +22,13 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include <time.h>
 #include <unistd.h>
 #include <ctype.h>
+#ifdef TM_IN_SYS_TIME 
+#include <sys/time.h>
+#else
+#include <time.h>
+#endif
 #ifdef OS2
 #include <db.h>
 #endif
@@ -104,8 +108,10 @@ const struct canonCamModelData models[] =
 #undef S1M
 #undef S32K
 
+#ifndef HAVE_TM_GMTOFF 
 /* needed for time conversions in canon_int_set_time() */
 extern long int timezone;
+#endif
 
 
 /************************************************************************
@@ -488,16 +494,22 @@ canon_int_set_time (Camera *camera, time_t date)
 	int len;
 	char payload[12];
 	time_t new_date;
+	struct tm *tm;
 
 	GP_DEBUG ("canon_int_set_time: %i=0x%x %s", (unsigned int) date, (unsigned int) date, 
 		asctime (localtime (&date)));
 
 	/* call localtime() just to get 'extern long timezone' set */
-	localtime (&date);
+	tm = localtime (&date);
 
 	/* convert to local UNIX timestamp since canon cameras know nothing about timezones */
 	/* XXX what about DST? do we need to check for that here? */
+
+#ifdef HAVE_TM_GMTOFF 
+	new_date = date - tm->tm_gmtoff;
+#else
 	new_date = date - timezone;
+#endif
 	
 	memset (payload, 0, sizeof(payload));
 	
