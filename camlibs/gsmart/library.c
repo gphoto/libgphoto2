@@ -87,7 +87,11 @@ models[] =
 	, {
 	"Mustek:gSmart mini 3", 0x055f, 0xc520, GSMART_BRIDGE_SPCA504A}
 	, {
-	"So. Show 301", 0x0ec7, 0x1008, GSMART_BRIDGE_SPCA504A}
+	"So.:Show 301", 0x0ec7, 0x1008, GSMART_BRIDGE_SPCA504A}
+	, {
+	"Aiptek:1.3 mega PocketCam", 0x04fc, 0x504b, GSMART_BRIDGE_SPCA504B}
+	, {
+	"Maxwell:Max Pocket", 0x04fc, 0x504b, GSMART_BRIDGE_SPCA504B}
 	, {
 	NULL, 0, 0}
 };

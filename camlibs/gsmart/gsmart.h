@@ -46,7 +46,8 @@ struct GsmartFile
 
 typedef enum {
            GSMART_BRIDGE_SPCA500,
-	   GSMART_BRIDGE_SPCA504A
+	   GSMART_BRIDGE_SPCA504A,
+	   GSMART_BRIDGE_SPCA504B
 } GsmartBridgeChip;
 
 struct _CameraPrivateLibrary
@@ -57,6 +58,7 @@ struct _CameraPrivateLibrary
 	int num_files;
 	int num_images;
 	int num_movies;
+	int num_fats;
 	int size_used;
 	int size_free;
 	u_int8_t *fats;
@@ -65,7 +67,6 @@ struct _CameraPrivateLibrary
 
 int gsmart_reset (CameraPrivateLibrary * lib);
 int gsmart_capture (CameraPrivateLibrary * lib);
-int gsmart_get_file_count (CameraPrivateLibrary * lib);
 int gsmart_get_info (CameraPrivateLibrary * lib);
 int gsmart_delete_file (CameraPrivateLibrary * lib, unsigned int index);
 int gsmart_delete_all (CameraPrivateLibrary * lib);
