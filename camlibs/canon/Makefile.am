@@ -1,6 +1,6 @@
 SUBDIRS = doc
 
-EXTRA_DIST = .indent.pro canon.df makefile.os2 Protocol
+EXTRA_DIST = .indent.pro canon.df makefile.os2 Protocol ChangeLog
 
 camlibdir = $(libdir)/gphoto2/$(VERSION)
 camlib_LTLIBRARIES = libgphoto2_canon.la
