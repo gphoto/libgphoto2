@@ -359,7 +359,7 @@ gp_camera_set_message_func (Camera *camera, CameraMessageFunc func,
 int
 gp_camera_status (Camera *camera, const char *format, ...)
 {
-	char buffer[1024];
+	char buffer[2048];
 	va_list arg;
 
 	CHECK_NULL (camera && format);

@@ -85,6 +85,7 @@ show_section (CmdConfig *cmd_config, CameraWidget *section)
 		gp_widget_get_label (child, &label);
 		items[x + 1] = copyChar ((char *) label);
 	}
+	count++;
 	scroll = newCDKScroll (cmd_config->screen, CENTER, CENTER, RIGHT,
 			       10, 50, title,
 			       items, count, NUMBERS, A_REVERSE, TRUE, FALSE);
@@ -163,17 +164,30 @@ show_radio (CmdConfig *cmd_config, CameraWidget *radio)
 	CDKITEMLIST *list = NULL;
 	const char *label, *value, *current_value;
 	char title[1024], *items[100];
-	int x, count, current = 0, selection;
+	int x, count, current = 0, selection, found;
 
 	gp_widget_get_label (radio, &label);
 	snprintf (title, sizeof (title), "<C></U>%s", label);
 	gp_widget_get_value (radio, &current_value);
 	count = gp_widget_count_choices (radio);
+
+	/* Check if the current value is in the list */
+	current = found = 0;
 	for (x = 0; x < count; x++) {
 		gp_widget_get_choice (radio, x, &value);
-		items[x] = copyChar ((char *) value);
-		if (!strcmp (current_value, value))
+		if (!strcmp (value, current_value)) {
 			current = x;
+			found = 1;
+			break;
+		}
+	}
+	if (!found)
+		items[0] = copyChar ((char *) current_value);
+
+	/* Add all items */
+	for (x = 0; x < count; x++) {
+		gp_widget_get_choice (radio, x, &value);
+		items[x + 1 - found] = copyChar ((char *) value);
 	}
 
 	list = newCDKItemlist (cmd_config->screen, CENTER, CENTER,

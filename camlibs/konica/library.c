@@ -211,7 +211,7 @@ init_serial_connection (Camera *camera)
         GPPortSettings settings;
         unsigned int speed;
 
-        CHECK (camera, gp_port_settings_get (camera->port, &settings));
+        CHECK (camera, gp_port_get_settings (camera->port, &settings));
 
         /* Speed:
          *
@@ -244,7 +244,7 @@ init_serial_connection (Camera *camera)
 		gp_log (GP_LOG_DEBUG, "konica", "Testing speed %d",
 			test_bit_rate [i]);
                 settings.serial.speed = test_bit_rate [i];
-                gp_port_settings_set (camera->port, settings);
+                gp_port_set_settings (camera->port, settings);
                 if (k_init (camera->port) == GP_OK)
                         break;
         }
@@ -366,7 +366,7 @@ init_serial_connection (Camera *camera)
         /* Reconnect */
 	gp_log (GP_LOG_DEBUG, "konica", "Reconnecting at speed %d", speed);
         settings.serial.speed = speed;
-        CHECK (camera, gp_port_settings_set (camera->port, settings));
+        CHECK (camera, gp_port_set_settings (camera->port, settings));
         CHECK (camera, k_init (camera->port));
 
         return (GP_OK);
@@ -962,9 +962,11 @@ camera_set_config (Camera *camera, CameraWidget *window)
         gp_widget_get_child_by_label (window, _("Localization"), &section);
 
         /* Localization File */
-        gp_widget_get_child_by_label (section, _("Language"), &widget);
-        if (gp_widget_changed (widget)) {
-                gp_widget_get_value (widget, &c);
+        CHECK (camera, gp_widget_get_child_by_label (section, _("Language"),
+						     &widget));
+	CHECK (camera, result = gp_widget_changed (widget));
+	if (result) {
+		CHECK (camera, gp_widget_get_value (widget, &c));
                 if (strcmp (c, _("None selected"))) {
                         data = NULL;
                         data_size = 0;
@@ -1099,9 +1101,13 @@ localization_file_read (Camera *camera, const char *file_name,
         strcpy (path, LOCALIZATION);
         strcat (path, "/");
         strcat (path, file_name);
+	gp_log (GP_LOG_DEBUG, "konica", "Uploading '%s'...", path);
         file = fopen (path, "r");
-        if (!file)
+        if (!file) {
+		gp_camera_set_error (camera, _("Could not find localization "
+			"data at '%s'"), path);
                 return (GP_ERROR_FILE_NOT_FOUND);
+	}
 
         /* Allocate the memory */
         *data_size = 0;
@@ -1178,21 +1184,21 @@ localization_file_read (Camera *camera, const char *file_name,
 
         /* Calculate and check checksum. */
         checksum = 0;
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Checksum not implemented!");
+	gp_log (GP_LOG_DEBUG, "konica", "Checksum not implemented!");
         /*FIXME: There's a checksum at (*data)[100]. I could not
           figure out how it is calculated. */
 
         /* Calculate and check frame check sequence. */
         fcs = 0;
 
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "Frame check sequence "
-			 "not implemented!");
+	gp_log (GP_LOG_DEBUG, "konica", "Frame check sequence "
+		"not implemented!");
         /* FIXME: There's a frame check sequence at (*data)[108]
            and (*data)[109]. I could not figure out how it is
            calculated. */
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "-> %i bytes read.\n",
-			 (int) *data_size);
-        return (TRUE);
+        gp_log (GP_LOG_DEBUG, "konica", "-> %i bytes read.\n",
+		(int) *data_size);
+        return (GP_OK);
 }
 
 int
@@ -1226,7 +1232,7 @@ camera_init (Camera* camera)
         outep         = konica_cameras [i].outep;
 
         /* Initiate the connection */
-	CHECK (camera, gp_port_settings_get (camera->port, &settings));
+	CHECK (camera, gp_port_get_settings (camera->port, &settings));
         switch (camera->port->type) {
         case GP_PORT_SERIAL:
 
@@ -1234,7 +1240,7 @@ camera_init (Camera* camera)
                 settings.serial.bits = 8;
                 settings.serial.parity = 0;
                 settings.serial.stopbits = 1;
-                CHECK (camera, gp_port_settings_set (camera->port, settings));
+                CHECK (camera, gp_port_set_settings (camera->port, settings));
 
                 /* Initiate the serial connection */
                 CHECK (camera, init_serial_connection (camera));
@@ -1248,7 +1254,7 @@ camera_init (Camera* camera)
                 settings.usb.config    = 1;
                 settings.usb.interface = 0;
                 settings.usb.altsetting = 0;
-                CHECK (camera, gp_port_settings_set (camera->port, settings));
+                CHECK (camera, gp_port_set_settings (camera->port, settings));
 
                 /* Initiate the connection */
                 CHECK (camera, k_init (camera->port));

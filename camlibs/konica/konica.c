@@ -1313,6 +1313,9 @@ k_localization_data_put (GPPort *device,
         static unsigned int packet_size = 1024;
         unsigned char sb[16 + packet_size];
 
+	gp_log (GP_LOG_DEBUG, "konica", "Uploading %i bytes localization "
+		"data...", data_size);
+
 	CHECK_NULL (data);
 	if (data_size < 512)
 		return (GP_ERROR_BAD_PARAMETERS);
