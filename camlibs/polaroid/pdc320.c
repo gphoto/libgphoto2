@@ -42,8 +42,8 @@
  *		or manage to decode, color correct, and save the image.
  *
  * Notes on what needs work for the Polaroid 640SE:
- *	The tests gave totally wrong frame numbers.
- *	Needs to be retested with CORRECT buffer size.
+ * 	Make a better header that could correct color problems....
+ *		or manage to decode, color correct, and save the image.
  *	The delete-all-raw-data timed out
  */
 
@@ -383,7 +383,7 @@ if (type == GP_FILE_TYPE_RAW) {
     }
 //  if (camera->model==PDC640SE) {
     if (camera->model[9]=='6') {
-	CHECK_RESULT (gp_file_append(file, SOFC0_640x488, jpegheader[4].size));	
+	CHECK_RESULT (gp_file_append(file, SOFC0_640x248, jpegheader[4].size));	
 //  } else if (camera->model==PDC320) {
     } else if (camera->model[9]=='F') {
 	CHECK_RESULT (gp_file_append(file, SOFCO_320x128, jpegheader[4].size));
@@ -476,6 +476,7 @@ camera_init (Camera *camera)
 
 	return (GP_OK);
 }
+
 
 
 
