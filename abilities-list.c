@@ -25,23 +25,29 @@
 #include "gphoto2-core.h"
 #include "gphoto2-result.h"
 
-CameraAbilitiesList *gp_abilities_list_new ()
-{
-        CameraAbilitiesList *list;
-	
-	list = malloc (sizeof (CameraAbilitiesList));
-	if (!list)
-		return (NULL);
-	
-	list->count = 0;
-	list->abilities = NULL;
+#define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
+#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+#define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
-	return (list);
+int
+gp_abilities_list_new (CameraAbilitiesList **list)
+{
+	CHECK_NULL (list);
+
+	CHECK_MEM (*list = malloc (sizeof (CameraAbilitiesList)));
+
+	(*list)->count = 0;
+	(*list)->abilities = NULL;
+
+	return (GP_OK);
 }
 
-int gp_abilities_list_free (CameraAbilitiesList *list)
+int
+gp_abilities_list_free (CameraAbilitiesList *list)
 {
 	int x;
+
+	CHECK_NULL (list);
 
 	/* TODO: OS/2 Port crashes here... maybe compiler setting */
 
@@ -52,9 +58,12 @@ int gp_abilities_list_free (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-int gp_abilities_list_dump (CameraAbilitiesList *list)
+int
+gp_abilities_list_dump (CameraAbilitiesList *list)
 {
 	int x;
+
+	CHECK_NULL (list);
 	
 	for (x = 0; x < list->count; x++) {
 		gp_debug_printf (GP_DEBUG_LOW, "core", "Camera #%i:", x);
@@ -64,20 +73,48 @@ int gp_abilities_list_dump (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-int gp_abilities_list_append (CameraAbilitiesList *list,
-			      CameraAbilities *abilities)
+int
+gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities *abilities)
 {
+	CHECK_NULL (list && abilities);
+
 	if (!list->abilities)
 		list->abilities = malloc (sizeof (CameraAbilities*));
 	else
 		list->abilities = realloc (list->abilities,
 				sizeof (CameraAbilities*) * (list->count + 1));
+	CHECK_MEM (list->abilities);
 
-	if (!list->abilities)
-		return (GP_ERROR_NO_MEMORY);
-	
 	list->abilities [list->count] = abilities;
 	list->count++;
-	
+
+	return (GP_OK);
+}
+
+int
+gp_abilities_list_count (CameraAbilitiesList *list)
+{
+	CHECK_NULL (list);
+
+	return (list->count);
+}
+
+int
+gp_abilities_list_sort (CameraAbilitiesList *list)
+{
+	CameraAbilities *t;
+	int x, y;
+
+	CHECK_NULL (list);
+
+	for (x = 0; x < list->count - 1; x++)
+		for (y = x + 1; y < list->count; y++)
+			if (strcmp (list->abilities[x]->model,
+				    list->abilities[y]->model) > 0) {
+				t = list->abilities[x];
+				list->abilities[x] = list->abilities[y];
+				list->abilities[y] = t;
+			}
+
 	return (GP_OK);
 }

@@ -146,29 +146,16 @@ load_cameras_search (char *directory)
 static int
 load_cameras (void)
 {
-	int x, y, z;
-	CameraAbilities *t;
-
 	/* Where should we search for camera libraries? */
 
 	/* The installed camera library directory */
-	load_cameras_search (CAMLIBS);
+	CHECK_RESULT (load_cameras_search (CAMLIBS));
 
 	/* Current directory */
 	/* load_cameras_search("."); */
 
         /* Sort the camera list */
-        for (x=0; x<glob_abilities_list->count-1; x++) {
-                for (y=x+1; y<glob_abilities_list->count; y++) {
-                        z = strcmp(glob_abilities_list->abilities[x]->model, 
-				   glob_abilities_list->abilities[y]->model);
-                        if (z > 0) {
-			  t = glob_abilities_list->abilities[x];
-			  glob_abilities_list->abilities[x] = glob_abilities_list->abilities[y];
-			  glob_abilities_list->abilities[y] = t;
-                        }
-                }
-        }
+	CHECK_RESULT (gp_abilities_list_sort (glob_abilities_list));
 
 	return GP_OK;
 }
@@ -188,7 +175,7 @@ gp_init (int debug)
 		return (GP_OK);
 
         /* Initialize the globals */
-        glob_abilities_list = gp_abilities_list_new ();
+	CHECK_RESULT (gp_abilities_list_new (&glob_abilities_list));
 
         /* Make sure the directories are created */
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Creating $HOME/.gphoto");
@@ -208,7 +195,7 @@ gp_init (int debug)
         load_settings();
 
         gp_debug_printf (GP_DEBUG_LOW, "core", "Trying to load libraries...");
-        load_cameras ();
+        CHECK_RESULT (load_cameras ());
 
         gp_debug_printf (GP_DEBUG_LOW, "core", "Following cameras were found:");
         for (x = 0; x < glob_abilities_list->count; x++)
