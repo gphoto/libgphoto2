@@ -142,7 +142,8 @@ int pdrm65_get_pict(GPPort *port, const char *pic_number, CameraFile *file)
 	char pic_buf[JPEG_CHUNK];
 	uint8_t *image;
 	int pic_size = 0;
-	int data_remaining = 0;
+	int rcvd_packets;
+	int packet_counter = 0;
 	
 	int image_number = atoi(pic_number);
 	
@@ -166,10 +167,10 @@ int pdrm65_get_pict(GPPort *port, const char *pic_number, CameraFile *file)
 	
 	pdrm65_select_file(port, image_number);
 	
-	pic_size = ( (in_buf[6]*(256*256)) + (in_buf[5]*256) + in_buf[4] );
-	GP_DEBUG("Picture is size %d KBytes", pic_size);
+	pic_size = ( (atoi(&in_buf[6])*(256*256)) + (atoi(&in_buf[5])*256) + atoi(&in_buf[4]) );
+	GP_DEBUG("Picture is size %d Bytes", pic_size);
+	GP_DEBUG("Picture with headers is %d KBytes", pic_size + (((pic_size / JPEG_CHUNK)+1) * 60));
 	
-	image = malloc(pic_size + (((pic_size / JPEG_CHUNK)+1)*60));
 	
 	//1b 43 02 00 04 0e 12 00
 	//out_bf[0-1]=0x1b 0x43
@@ -180,33 +181,30 @@ int pdrm65_get_pict(GPPort *port, const char *pic_number, CameraFile *file)
 	out_buf[6]=0x12;
 	out_buf[7]=0x00;
 	gp_port_write(port,out_buf,8);
-	while(data_remaining < sizeof(image))
+	packet_counter = (pic_size / JPEG_CHUNK);
+	image = malloc(JPEG_CHUNK + 60);
+	
+	for (rcvd_packets = 0; rcvd_packets <= packet_counter; rcvd_packets++)
 	{
-		GP_DEBUG("Size of image = %d, data_remaining = %d", sizeof(image), data_remaining);
 		//Get EXIF Header information for this packet
 		gp_port_read(port, in_buf, 64);
-		memcpy(image+data_remaining, &in_buf[4],60);
+		memcpy(image+(rcvd_packets*(JPEG_CHUNK+60)), &in_buf[4], 60);
 				
-		if ((pic_size - data_remaining) > JPEG_CHUNK)
+		if (rcvd_packets != packet_counter)
 		{
 			gp_port_read(port, pic_buf, JPEG_CHUNK);
-			memcpy(image+data_remaining+60, pic_buf, JPEG_CHUNK);
-			data_remaining += (JPEG_CHUNK + 60);
+			memcpy(image+(rcvd_packets*(JPEG_CHUNK+60))+60, pic_buf, JPEG_CHUNK);
+			realloc(image, JPEG_CHUNK + 60);
 		}
 		else
 		{
-			gp_port_read(port, pic_buf, (pic_size - data_remaining));
-			memcpy(image+(pic_size-data_remaining+60), in_buf, (pic_size - data_remaining));
-			data_remaining += (pic_size - data_remaining + 60 );
+			gp_port_read(port, pic_buf, (pic_size - (rcvd_packets * JPEG_CHUNK)));
+			memcpy(image+(rcvd_packets*(JPEG_CHUNK+60))+60, pic_buf,(pic_size - (rcvd_packets * JPEG_CHUNK)));
+			realloc(image, JPEG_CHUNK + 60);
 		}
-
 		gp_port_read(port, in_buf, 6);
 		gp_port_write(port, &ok, 1);
-		
-		
-		
-		GP_DEBUG("data_remaining = %d, sizeof image = %d, size of pic_size = %d", data_remaining, sizeof(image), pic_size);
-		
+
 	}
 	gp_file_set_mime_type(file, GP_MIME_EXIF);
 	gp_file_set_data_and_size(file, image, pic_size);
