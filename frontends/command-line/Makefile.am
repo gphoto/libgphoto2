@@ -6,7 +6,9 @@ CFLAGS = @CFLAGS@ -g
 
 INCLUDES =						\
 	-DGPHOTO2_LOCALEDIR=\""$(datadir)/locale"\"	\
-	-I$(top_srcdir)/include 
+	-I$(top_srcdir)/include				\
+	-I$(top_srcdir)/libgphoto2			\
+	-I$(top_srcdir)
 
 LDFLAGS = @LDFLAGS@ -g 
 gphoto2_SOURCES = 		\

@@ -5,6 +5,9 @@ html
 sgml
 gphoto2-scan.c
 gphoto2-scan
+gphoto2-decl.txt
+gphoto2-decl-list.txt
+gphoto2-unused.txt
 html.stamp
 sgml.stamp
 
