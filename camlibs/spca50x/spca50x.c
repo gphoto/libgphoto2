@@ -6,6 +6,8 @@
 /*                                                              */
 /* Author: Till Adam <till@adam-lilienthal.de>                  */
 /*                                                              */
+/* Pure digital support: John Maushammer <www.maushammer.com>   */
+/*                                                              */
 /* This library is free software; you can redistribute it       */
 /* and/or modify it under the terms of the GNU Library General  */
 /* Public License as published by the Free Software Foundation; */
@@ -73,16 +75,54 @@ spca50x_detect_storage_type (CameraPrivateLibrary *lib)
 
 	for (i=0;i<3;i++)
 	{
-		CHECK (gp_port_usb_msg_read (lib->gpdev, 0x28, 0x0000,
-					i, &buf[i], 0x01));
+		buf[i] = 0;  /* if no data returned, assume no capability */
+		CHECK (gp_port_usb_msg_read (lib->gpdev, 0x28, 0x0000, 
+					i, &buf[i], 0x01)); 
 	}
 
 	if (buf[0]) lib->storage_media_mask |= SPCA50X_SDRAM;
 	if (buf[1]) lib->storage_media_mask |= SPCA50X_FLASH;
 	if (buf[2]) lib->storage_media_mask |= SPCA50X_CARD;
-	GP_DEBUG("SPCA50x: has_sdram: 0x%x has_flash 0x%x has_card: 0x%x\n"
-			, buf[0], buf[1], buf[2]);
+	GP_DEBUG("SPCA50x: has_sdram: 0x%x has_flash 0x%x has_card: 0x%x\n",
+			buf[0], buf[1], buf[2]);
 
+	return GP_OK;
+}
+
+int
+spca50x_pd_enable (CameraPrivateLibrary * lib)
+{
+	uint8_t buf[9];
+	uint8_t writebyte;
+	uint32_t bcd_serial;
+	uint32_t return_value;
+
+	GP_DEBUG ("Pure digital additional initialization");
+	CHECK (gp_port_usb_msg_read (lib->gpdev, 0x2d, 0x0000, 0x0001,
+		(char*)buf, 0x08));
+	bcd_serial = ((buf[0] & 0x0f) << 28) |
+		((buf[1] & 0x0f) << 24) |
+		((buf[2] & 0x0f) << 20) |
+		((buf[3] & 0x0f) << 16) |
+		((buf[4] & 0x0f) << 12) |
+		((buf[5] & 0x0f) << 8) |
+		((buf[6] & 0x0f) << 4) |
+		((buf[7] & 0x0f) << 0);
+	GP_DEBUG ("Camera serial number = %08x", bcd_serial);
+	return_value = ~bcd_serial << 2;
+	GP_DEBUG ("return value = %08x", return_value);
+	writebyte = return_value & 0xff;
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x2d, 0x0000, 0x0000,
+		(char*)&writebyte, 0x01));
+	writebyte = (return_value >> 8) & 0xff;
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x2d, 0x0000, 0x0001,
+		(char*)&writebyte, 0x01));
+	writebyte = (return_value >> 16) & 0xff;
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x2d, 0x0000, 0x0002,
+		(char*)&writebyte, 0x01));
+	writebyte = (return_value >> 24) & 0xff;
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x2d, 0x0000, 0x0003,
+		(char*)&writebyte, 0x01));
 	return GP_OK;
 }
 
@@ -106,6 +146,9 @@ spca50x_reset (CameraPrivateLibrary * lib)
 		CHECK (gp_port_usb_msg_write(lib->gpdev, 0, 0,
 					0x0d04, NULL, 0));
 		CHECK (gp_port_usb_msg_write(lib->gpdev, 0x1e, 0, 0, NULL, 0));
+		if (lib->bridge == BRIDGE_SPCA504B_PD) {
+ 			CHECK (spca50x_pd_enable (lib));
+		}
 	}
 	usleep(200000);
 	return GP_OK;
@@ -145,8 +188,8 @@ int
 spca50x_capture (CameraPrivateLibrary * lib)
 {
 	sleep (2);
-	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0x06, 0x0000, 0x0003, NULL, 0));
+        CHECK (gp_port_usb_msg_write
+		(lib->gpdev, 0x06, 0x0000, 0x0003, NULL, 0));
 	sleep (3);
 	return GP_OK;
 }
