@@ -1,3 +1,7 @@
+2001-10-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-list.[c,h]: Documented.
+
 2001-10-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-abilities-list.[c,h]: Simplified, expose fewer
@@ -5,9 +9,12 @@
 
 2001-10-12 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
-	* libgphoto2_port/libgphoto2_port/gp_port.c: more detailed debug output for *_write and *_read
-	* libgphoto2_port/usb/libusb.c: removed the last fprintf, fixed missing "%s" in string
-	* libgphoto2_port/usb/libusb.c: added call notification at GP_DEBUG_HIGH for most methods
+	* libgphoto2_port/libgphoto2_port/gp_port.c: more detailed debug
+	  output for *_write and *_read
+	* libgphoto2_port/usb/libusb.c: removed the last fprintf, fixed
+	  missing "%s" in string
+	* libgphoto2_port/usb/libusb.c: added call notification at
+	  GP_DEBUG_HIGH for most methods
 
 2001-10-12 Hans Ulrich Niedermann <gp@n-dimensional.de>
 

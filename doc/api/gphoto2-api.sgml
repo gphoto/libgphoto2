@@ -5,6 +5,7 @@
 <!entity gphoto2-core    SYSTEM "sgml/gphoto2-core.sgml">
 <!entity gphoto2-camera  SYSTEM "sgml/gphoto2-camera.sgml">
 <!entity gphoto2-setting SYSTEM "sgml/gphoto2-setting.sgml">
+<!entity gphoto2-list    SYSTEM "sgml/gphoto2-list.sgml">
 ]>
 
 <book id="index">
@@ -83,6 +84,7 @@ locking of serial ports. GPhoto2 currently supports
       <sect1 id="GeneralPurposeObjects">
 	<title>Objects used by both frontends and camera drivers</title>
 	&gphoto2-widget;
+	&gphoto2-list;
       </sect1>
 
   </chapter>

@@ -477,7 +477,7 @@ gp_camera_init (Camera *camera)
 	camera->library_handle = GP_SYSTEM_DLOPEN (camera->abilities->library);
 	if (!camera->library_handle) {
 		gp_camera_status (camera, "");
-		return (GP_ERROR);
+		return (GP_ERROR_LIBRARY);
 	}
 
 	/* Initialize the camera */
@@ -630,7 +630,7 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
 	GP_DEBUG ("ENTER: gp_camera_folder_list_files");
 	CHECK_NULL (camera && folder && list);
 
-	list->count = 0;
+	gp_list_reset (list);
 
 	/* Check first if the camera driver uses the filesystem */
 	CHECK_OPEN (camera);
@@ -648,7 +648,7 @@ if (list->count)
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting file list for "
 			 "folder '%s'...", folder);
-	list->count = 0;
+	gp_list_reset (list);
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_list_files (
 							camera, folder, list));
 	CHECK_RESULT (gp_list_sort (list));
@@ -666,7 +666,7 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
 	GP_DEBUG ("ENTER: gp_camera_folder_list_folders");
 	CHECK_NULL (camera && folder && list);
 
-	list->count = 0;
+	gp_list_reset (list);
 
 	/* Check first if the camera driver uses the filesystem */
 	CHECK_OPEN (camera);
@@ -684,7 +684,7 @@ if (list->count)
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting folder list for "
 			 "folder '%s'...", folder);
-	list->count = 0;
+	gp_list_reset (list);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_list_folders(
 						camera, folder, list));

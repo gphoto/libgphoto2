@@ -38,10 +38,11 @@ int     gp_list_ref   (CameraList *list);
 int     gp_list_unref (CameraList *list);
 int     gp_list_free  (CameraList *list);
 
-int	gp_list_count	   (CameraList*);
-int	gp_list_append	   (CameraList*, const char *name, const char *value);
-int     gp_list_remove_all (CameraList*);
-int     gp_list_sort       (CameraList*);
+int	gp_list_count	   (CameraList *list);
+int	gp_list_append	   (CameraList *list,
+			    const char *name, const char *value);
+int     gp_list_reset      (CameraList *list);
+int     gp_list_sort       (CameraList *list);
 
 int gp_list_get_name  (CameraList *list, int index, const char **name);
 int gp_list_get_value (CameraList *list, int index, const char **value);
