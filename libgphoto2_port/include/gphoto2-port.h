@@ -51,7 +51,10 @@ typedef union {
         gp_port_network_settings        network;
         gp_port_usb_settings            usb;
         gp_port_ieee1394_settings       ieee1394;
-} gp_port_settings;
+} GPPortSettings;
+
+/* Don't use - DEPRECATED */
+typedef GPPortSettings gp_port_settings;
 
 enum {
         GP_PORT_USB_ENDPOINT_IN,
