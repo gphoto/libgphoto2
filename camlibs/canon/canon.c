@@ -1462,11 +1462,11 @@ canon_int_set_time (Camera *camera, time_t date, GPContext *context)
 #ifdef HAVE_TM_GMTOFF
         new_date = date + tm->tm_gmtoff;
         GP_DEBUG ("canon_int_set_time: converted %ld to localtime %ld (tm_gmtoff is %ld)",
-                  date, new_date, (long)tm->tm_gmtoff);
+                  (long)date, (long)new_date, (long)tm->tm_gmtoff);
 #else
         new_date = date - timezone;
-        GP_DEBUG ("canon_int_set_time: converted %i to localtime %i (timezone is %i)",
-                  date, new_date, timezone);
+        GP_DEBUG ("canon_int_set_time: converted %ld to localtime %ld (timezone is %ld)",
+                  (long)date, (long)new_date, (long)timezone);
 #endif
 
         memset (payload, 0, sizeof (payload));
@@ -1963,12 +1963,12 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                         tm   = localtime (&date);
 #ifdef HAVE_TM_GMTOFF
                         dirent_time = tmp_time - tm->tm_gmtoff;
-                        GP_DEBUG ("canon_int_list_dir: converted %i to UTC %i (tm_gmtoff is %ld)",
-                                tmp_time, dirent_time, (long)tm->tm_gmtoff);
+                        GP_DEBUG ("canon_int_list_dir: converted %ld to UTC %ld (tm_gmtoff is %ld)",
+                                (long)tmp_time, (long)dirent_time, (long)tm->tm_gmtoff);
 #else
                         dirent_time = tmp_time + timezone;
-                        GP_DEBUG ("canon_int_list_dir: converted %i to UTC %i (timezone is %i)",
-                                tmp_time, dirent_time, timezone);
+                        GP_DEBUG ("canon_int_list_dir: converted %ld to UTC %ld (timezone is %ld)",
+                                (long)tmp_time, (long)dirent_time, (long)timezone);
 #endif
                 } else {
                         dirent_time = tmp_time;
