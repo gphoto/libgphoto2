@@ -49,9 +49,8 @@
 int 
 l_init (gp_port* device)
 {
-	guchar 	c;
-	gint 	i;
-	gint	result;
+	unsigned char c;
+	int i, result;
 
 	CHECK_NULL (device);
 
@@ -136,14 +135,12 @@ l_send (gp_port* device, unsigned char *send_buffer,
 	/*  sb: A pointer to the buffer that we will send.                    */
 	/* sbs: Its size.		                                      */
 	/**********************************************************************/
-	guchar*	sb; 	
-	guint	sbs;
-	gint 	i;
-	gint 	result;
+	unsigned char *sb; 	
+	unsigned int sbs;
+	int result, i = 0;
 
-	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (device && send_buffer);
 
-	i = 0;
 	for (;;) {
 
 		/* Write ENQ. */
@@ -309,92 +306,92 @@ l_send (gp_port* device, unsigned char *send_buffer,
 static int 
 l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 {
-	guchar 		c, d;
-	gboolean 	error_flag;
-	guint 		i, j, rbs_internal;
-	guchar 		checksum;
-	gint 		result;
+	unsigned char c, d;
+	gboolean error_flag;
+	unsigned int i, j, rbs_internal;
+	unsigned char checksum;
+	int result;
 
-	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (device && rb && rbs);
 
 	for (i = 0; ; ) {
-		gp_port_timeout_set (device, timeout);
-		if ((result = gp_port_read (device, &c, 1)) < 1) return (result);
-		gp_port_timeout_set (device, DEFAULT_TIMEOUT);
+		CHECK (gp_port_timeout_set (device, timeout));
+		CHECK (gp_port_read (device, &c, 1));
+		CHECK (gp_port_timeout_set (device, DEFAULT_TIMEOUT));
 		switch (c) {
 		case ENQ:
-			/******************************************************/
-			/* ENQ received. We can proceed.                      */
-			/******************************************************/
+
+			/* ENQ received. We can proceed. */
 			break;
+
 		case ACK:
-			/******************************************************/
-			/* ACK received. We'll try again at most ten times.   */
-			/******************************************************/
+
+			/* ACK received. We'll try again at most ten times. */
 			if (i == 9) {
-				/**********************************************/
-				/* The camera hangs! Although it could be     */
-				/* that the camera accepts one of the         */
-				/* commands                                   */
-				/*  - KONICA_CANCEL,                          */
-				/*  - KONICA_GET_IO_CAPABILITY, and           */
-				/*  - KONICA_SET_IO_CAPABILITY,               */
-				/* we can not get the camera back to working  */
-				/* correctly.                                 */
-				/**********************************************/
+
+				/*
+				 * The camera hangs! Although it could be
+				 * that the camera accepts one of the
+				 * commands
+				 *  - KONICA_CANCEL,
+				 *  - KONICA_GET_IO_CAPABILITY, and
+				 *  - KONICA_SET_IO_CAPABILITY,
+				 * we can not get the camera back to working
+				 * correctly.
+				 */
 				return (GP_ERROR_CORRUPTED_DATA);
+
 			}
 			i++;
 			break;
 		default:
-			/******************************************************/
-			/* We'll dump this data until we get ENQ (then, we'll */
-			/* proceed) or nothing any more (then, we'll report   */
-			/* error).                                            */
-			/******************************************************/
+			/*
+			 * We'll dump this data until we get ENQ (then, we'll
+			 * proceed) or nothing any more (then, we'll report
+			 * error).
+			 */
 			for (;;) {
-				if ((result = gp_port_read (device, &c, 1)) < 0) return (result); 
-				if (c == ENQ) break;
+				CHECK (gp_port_read (device, &c, 1));
+				if (c == ENQ)
+					break;
 			}
 			break;
 		}
-		if (c == ENQ) break;
+		if (c == ENQ)
+			break;
 	}
-	/**************/
+
 	/* Write ACK. */
-	/**************/
-	if ((result = gp_port_write (device, "\6", 1)) != GP_OK) return (result);
+	CHECK (gp_port_write (device, "\6", 1));
 	for (*rbs = 0; ; ) {
 		for (j = 0; ; j++) {
-			if ((result = gp_port_read (device, &c, 1)) < 1) return (result);
+			CHECK (gp_port_read (device, &c, 1));
 			switch (c) {
 			case STX:
-				/**********************************************/
-				/* STX received. We can proceed.              */
-				/**********************************************/
+
+				/* STX received. We can proceed. */
 				break;
+
 			default:
-				/**********************************************/
-				/* We'll dump this data and try again.        */
-				/**********************************************/
+
+				/* We'll dump this data and try again. */
 				continue;
+
 			}
-			/******************************************************/
-			/* Read 2 bytes for size (low order byte, high order  */
-			/* byte) plus ESC quotes.                             */
-			/******************************************************/
-			result = l_esc_read (device, &c);
-			if (result != GP_OK) return (result);
+
+			/*
+			 * Read 2 bytes for size (low order byte, high order
+			 * byte) plus ESC quotes.
+			 */
+			CHECK (l_esc_read (device, &c));
 			checksum = c;
-			result = l_esc_read (device, &d);
-			if (result != GP_OK) return (result);
+			CHECK (l_esc_read (device, &d));
 			checksum += d;
 			rbs_internal = (d << 8) | c;
 			if (*rbs == 0) *rb = g_new (guchar, rbs_internal);
 			else *rb = g_renew (guchar, *rb, *rbs + rbs_internal);
-			/******************************************************/
-			/* Read 'rbs_internal' bytes data plus ESC quotes.    */
-			/******************************************************/
+
+			/* Read 'rbs_internal' bytes data plus ESC quotes. */
 			error_flag = FALSE;
 			for (i = 0; i < rbs_internal; i++) {
 				result = l_esc_read (device, &((*rb)[*rbs + i]));
@@ -409,163 +406,159 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 					error_flag = TRUE;
         	                        break;
 				case GP_OK:
-					/**************************************/
-					/* We can proceed.                    */
-					/**************************************/
+
+					/* We can proceed. */
 					checksum += (*rb)[*rbs + i];
 					break;
+
 				default:
 					return (result);
 				}
-				if (error_flag) break;
+				if (error_flag)
+					break;
 			}
 			if (!error_flag) {
-				if ((result = gp_port_read (device, &d, 1)) < 1) return (result);
+				CHECK (gp_port_read (device, &d, 1));
 				switch (d) {
 				case ETX:
-					/**************************************/
-					/* ETX received. This is the last     */
-					/* packet.                            */
-					/**************************************/
+
+					/*
+					 * ETX received. This is the last
+					 * packet.
+					 */
 					break;
+
 				case ETB:
-					/**************************************/
-					/* ETB received. There are more       */
-					/* packets to come.                   */
-					/**************************************/
+
+					/*
+					 * ETB received. There are more
+					 * packets to come.
+					 */
 					break;
+
 				default:
-					/**************************************/
-					/* We get more bytes than expected.   */
-					/* Nothing serious, as we will simply */
-					/* dump all bytes until we receive    */
-					/* ETX or ETB. Later, we'll read the  */
-					/* checksum with ESC quotes and       */
-					/* reject the packet.                 */
-					/**************************************/
+
+					/*
+					 * We get more bytes than expected.
+					 * Nothing serious, as we will simply
+					 * dump all bytes until we receive
+					 * ETX or ETB. Later, we'll read the
+					 * checksum with ESC quotes and
+					 * reject the packet.
+					 */
 					while ((d != ETX) && (d != ETB)) {
-						if ((result = gp_port_read (device, &d, 1)) < 1) return (result);
+						CHECK (gp_port_read (device,
+								     &d, 1));
 					}
 					error_flag = TRUE;
 					break;
 				}
 			}
 			checksum += d;
-			/******************************************************/
-			/* Read 1 byte for checksum plus ESC quotes.          */
-			/******************************************************/
-			if ((result = l_esc_read (device, &c)) != GP_OK) return (result);
+
+			/* Read 1 byte for checksum plus ESC quotes. */
+			CHECK (l_esc_read (device, &c));
 			if ((c == checksum) && (!error_flag)) {
 				*rbs += rbs_internal;
-				/****************/
-				/* Write ACK.	*/
-				/****************/
-				if ((result = gp_port_write (device, "\6", 1)) != GP_OK) return (result);
+
+				/* Write ACK. */
+				CHECK (gp_port_write (device, "\6", 1));
 				break;
+
 			} else {
-				/**********************************************/
-				/* Checksum wrong or transmission error. The  */
-				/* camera will send us the data at the most   */
-				/* three times.                               */
-				/**********************************************/
-				if (j == 2) return (GP_ERROR_CORRUPTED_DATA);
-				/****************/
-				/* Write NACK.	*/
-				/****************/
+
+				/*
+				 * Checksum wrong or transmission error. The
+				 * camera will send us the data at the most
+				 * three times.
+				 */
+				if (j == 2)
+					return (GP_ERROR_CORRUPTED_DATA);
+
+				/* Write NACK. */
 				c = NACK;
-				if ((result = gp_port_write (device, &c, 1)) != GP_OK) return (result);
+				CHECK (gp_port_write (device, &c, 1));
 				continue;
 			}
 		}
-		if ((result = gp_port_read (device, &c, 1)) < 1) return (result);
+		CHECK (gp_port_read (device, &c, 1));
 		switch (c) {
 			case EOT:
-				/**********************************************/
-				/* EOT received. We can proceed.              */
-				/**********************************************/
+
+				/* EOT received. We can proceed. */
 				break;
+
 			default:
-				/**********************************************/
-				/* Should not happen.                         */
-				/**********************************************/
+
+				/* Should not happen. */
 				return (GP_ERROR_CORRUPTED_DATA);
 		}
-		/**************************************************************/
-		/* Depending on d, we will either continue to receive data or */
-		/* stop.						      */
-		/*  - ETX:  We are all done. 				      */
-		/*  - ETB:  We expect more data.			      */
-		/*  - else: Should not happen.				      */
-		/**************************************************************/
+		/*
+		 * Depending on d, we will either continue to receive data or
+		 * stop.
+		 * 
+		 *  - ETX:  We are all done.
+		 *  - ETB:  We expect more data.
+		 *  - else: Should not happen.
+		 */
 		switch (d) {
 		case ETX:
-			/******************************************************/
-			/* We are all done.				      */
-			/******************************************************/
+
+			/* We are all done. */
 			return (GP_OK);
+
 		case ETB:
-			/******************************************************/
-			/* We expect more data.                               */
-			/******************************************************/
-			/****************/
-			/* Read ENQ.	*/
-			/****************/
-			if ((result = gp_port_read (device, &c, 1)) < 1) return (result);
+
+			/* We expect more data. Read ENQ. */
+			CHECK (gp_port_read (device, &c, 1));
 			switch (c) {
 			case ENQ:
-				/**********************************************/
-				/* ENQ received. We can proceed.              */
-				/**********************************************/
+
+				/* ENQ received. We can proceed. */
 				break;
+
 			default:
-				/**********************************************/
-				/* Should not happen.                         */
-				/**********************************************/
+
+				/* Should not happen. */
 				return (GP_ERROR_CORRUPTED_DATA);
 			}
-			/****************/
-			/* Write ACK.	*/
-			/****************/
-			if ((result = gp_port_write (device, "\6", 1)) != GP_OK) return (result);
+
+			/* Write ACK. */
+			CHECK (gp_port_write (device, "\6", 1));
 			break;
+
 		default:
-			/******************************************************/
-			/* Should not happen.                                 */
-			/******************************************************/
+
+			/* Should not happen. */
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
 	}
-
 }
 
 
-gint 
+int 
 l_send_receive (
 	gp_port*	device,
-	guchar*		send_buffer, 
-	guint		send_buffer_size, 
-	guchar**	receive_buffer, 
-        guint*		receive_buffer_size,
-	guint		timeout, 
-	guchar**        image_buffer,
-	guint*          image_buffer_size)
+	unsigned char *send_buffer, unsigned int send_buffer_size, 
+	unsigned char **receive_buffer, unsigned int *receive_buffer_size,
+	unsigned int timeout,
+	unsigned char **image_buffer, unsigned int *image_buffer_size)
 {
-	gint result;
-
-	if (timeout == 0) timeout = DEFAULT_TIMEOUT;
+	if (!timeout)
+		timeout = DEFAULT_TIMEOUT;
 
 	/* Send data. */
-        result = l_send (device, send_buffer, send_buffer_size);
-        if (result != GP_OK) return (result);
-	
+	CHECK (l_send (device, send_buffer, send_buffer_size));
+
         /* Receive data. */
-        result = l_receive (device, receive_buffer, receive_buffer_size, timeout);
-        if (result != GP_OK) return (result);
-	
+	CHECK (l_receive (device, receive_buffer, receive_buffer_size,
+			  timeout));
+
 	/* Check if we've received the control data. */
-	if (*receive_buffer_size > 1) {
-		if (((*receive_buffer)[0] == send_buffer[0]) && ((*receive_buffer)[1] == send_buffer[1])) return (GP_OK);
-	}
+	if ((*receive_buffer_size > 1) &&
+	    (((*receive_buffer)[0] == send_buffer[0]) &&
+	     ((*receive_buffer)[1] == send_buffer[1])))
+	    return (GP_OK);
 
 	/* We didn't receive control data yet. */
 	*image_buffer = *receive_buffer; 
@@ -573,11 +566,13 @@ l_send_receive (
 	*receive_buffer = NULL;
 	
 	/* Receive control data. */
-        result = l_receive (device, receive_buffer, receive_buffer_size, DEFAULT_TIMEOUT);
-	if (result != GP_OK) return (result);
+	CHECK (l_receive (device, receive_buffer, receive_buffer_size,
+			  DEFAULT_TIMEOUT));
 
 	/* Sanity check: Did we receive the right control data? */
-	g_return_val_if_fail (((*receive_buffer)[0] == send_buffer[0]) && ((*receive_buffer)[1] == send_buffer[1]), GP_ERROR_CORRUPTED_DATA);
+	if (((*receive_buffer)[0] != send_buffer[0]) ||
+	    ((*receive_buffer)[1] != send_buffer[1]))
+		return (GP_ERROR_CORRUPTED_DATA);
 	
 	return (GP_OK);
 }
