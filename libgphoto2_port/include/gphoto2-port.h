@@ -61,6 +61,8 @@
 #define GP_ERROR_IO_USB_CLEAR_HALT      -22
 #define GP_ERROR_IO_USB_FIND            -23
 
+#define GP_ERROR_IO_LOCK		-24
+
 /* Debugging definitions for init */
 #define GP_DEBUG_NONE           0
 #define GP_DEBUG_LOW            1

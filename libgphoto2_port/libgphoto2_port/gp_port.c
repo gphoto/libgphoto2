@@ -95,6 +95,7 @@ char *gp_port_result_as_string (int result) {
     GP_ERR_RES(-21, "Error flushing the serial line");
     GP_ERR_RES(-22, "Error clearing a halt condition on the USB port");
     GP_ERR_RES(-23, "Could not find the requested device on the USB port");
+    GP_ERR_RES(-24, "Could not lock the device");
 
     return (N_("Unknown error"));
 }
@@ -130,8 +131,8 @@ int gp_port_info_get(int device_number, gp_port_info *info)
         return GP_OK;
 }
 
-int gp_port_new(gp_port **dev, gp_port_type type)
-        /* Create a new IO device */
+int
+gp_port_new (gp_port **dev, gp_port_type type)
 {
         gp_port_settings settings;
         char buf[1024];
@@ -224,68 +225,65 @@ int gp_port_new(gp_port **dev, gp_port_type type)
         return (GP_OK);
 }
 
-int gp_port_debug_set (gp_port *dev, int debug_level)
+int
+gp_port_debug_set (gp_port *dev, int debug_level)
 {
         dev->debug_level = debug_level;
 
         return (GP_OK);
 }
 
-int gp_port_open (gp_port *dev)
-        /* Open a device for reading/writing */
+int
+gp_port_open (gp_port *dev)
 {
         int retval = 0;
+
+	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, 
+			      "Opening port...");
 
 	/* I don't know what to report here... */
 	if (!dev)
 		return (GP_OK);
 
         /* Try to open device */
-        retval = dev->ops->open(dev);
-        if (retval == GP_OK) {
+        retval = dev->ops->open (dev);
+	if (retval < 0)
+		return (retval);
 
-                /* Now update the settings */
-                retval = dev->ops->update(dev);
-                if (retval != GP_OK) {
-                        dev->device_fd = 0;
-                        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
-                                "gp_port_open: update error");
-                        return GP_ERROR;
-                }
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_open: OK");
-		
-		/* Set the default timeout */
-		gp_port_timeout_set (dev, dev->timeout);
+	/* Now update the settings */
+	retval = dev->ops->update (dev);
+	if (retval != GP_OK) {
+		dev->device_fd = 0;
+		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+				      "gp_port_open: update error");
+		return retval;
+	}
+	
+	/* Set the default timeout */
+	gp_port_timeout_set (dev, dev->timeout);
 
-                return GP_OK;
-        }
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_open: open error");
-        return GP_ERROR;
+	return GP_OK;
 }
 
-int gp_port_close (gp_port *dev)
-        /* Close the device to prevent reading/writing */
+int
+gp_port_close (gp_port *dev)
 {
         int retval = 0;
+
+	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+			      "Closing port...");
 
 	/* I don't know what to report here... */
         if (!dev)
 		return (GP_OK);
 
-        if (dev->type == GP_PORT_SERIAL && dev->device_fd == 0) {
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_close: OK");
-                return GP_OK;
-        }
-
         retval = dev->ops->close(dev);
         dev->device_fd = 0;
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
-                "gp_port_close: close %s", retval == GP_OK? "ok":"error");
         return retval;
 }
 
-int gp_port_free (gp_port *dev)
-        /* Frees a device struct */
+int
+gp_port_free (gp_port *dev)
 {
         int retval;
 
@@ -304,8 +302,8 @@ int gp_port_free (gp_port *dev)
         return GP_OK;
 }
 
-int gp_port_write(gp_port *dev, char *bytes, int size)
-        /* Called to write "bytes" to the IO device */
+int
+gp_port_write(gp_port *dev, char *bytes, int size)
 {
         int x, retval;
         char t[8];
@@ -332,10 +330,8 @@ int gp_port_write(gp_port *dev, char *bytes, int size)
         return (retval);
 }
 
-int gp_port_read(gp_port *dev, char *bytes, int size)
-        /* Reads data from the device into the "bytes" buffer.
-           "bytes" should be large enough to hold all the data.
-         */
+int
+gp_port_read (gp_port *dev, char *bytes, int size)
 {
         int x, retval;
         char t[8];
@@ -363,7 +359,8 @@ int gp_port_read(gp_port *dev, char *bytes, int size)
         return (retval);
 }
 
-int gp_port_timeout_set(gp_port *dev, int millisec_timeout)
+int
+gp_port_timeout_set (gp_port *dev, int millisec_timeout)
 {
         dev->timeout = millisec_timeout;
 
@@ -373,7 +370,8 @@ int gp_port_timeout_set(gp_port *dev, int millisec_timeout)
         return GP_OK;
 }
 
-int gp_port_timeout_get(gp_port *dev, int *millisec_timeout)
+int
+gp_port_timeout_get (gp_port *dev, int *millisec_timeout)
 {
         *millisec_timeout = dev->timeout;
 
@@ -383,7 +381,8 @@ int gp_port_timeout_get(gp_port *dev, int *millisec_timeout)
         return GP_OK;
 }
 
-int gp_port_settings_set(gp_port *dev, gp_port_settings settings)
+int
+gp_port_settings_set (gp_port *dev, gp_port_settings settings)
 {
         int retval;
 
@@ -397,10 +396,10 @@ int gp_port_settings_set(gp_port *dev, gp_port_settings settings)
 }
 
 
-int gp_port_settings_get(gp_port *dev, gp_port_settings * settings)
+int
+gp_port_settings_get (gp_port *dev, gp_port_settings * settings)
 {
-        memcpy(settings, &(dev->settings), sizeof(gp_port_settings));
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_get_settings: ok");
+        memcpy (settings, &(dev->settings), sizeof(gp_port_settings));
 
         return GP_OK;
 }

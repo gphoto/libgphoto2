@@ -33,6 +33,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
+#include <signal.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -56,6 +57,10 @@ static struct termios term_old;
 #else
 static struct sgttyb term_old;
 #endif
+
+typedef struct {
+	char lock_file[MAXPATHLEN];
+} DeviceHandle;
 
 /* Serial prototypes
    ------------------------------------------------------------------ */
@@ -111,9 +116,170 @@ gp_port_operations *gp_port_library_operations () {
         return (ops);
 }
 
-int gp_port_library_list (gp_port_info *list, int *count) {
+#ifndef LOCK_DIR
+#  ifdef __linux__
+#    define LOCK_DIR        "/var/lock"
+#  else
+#    ifdef SVR4
+#      define LOCK_DIR        "/var/spool/locks"
+#    else
+#      define LOCK_DIR        "/var/spool/lock"
+#    endif
+#  endif
+#endif
 
+static int
+gp_port_serial_lock (gp_port *dev, const char *port)
+{
+	DeviceHandle *handle = dev->device_handle;
+#ifdef LOCKLIB
+	int result;
+	
+	result = mklock (port, (void *) 0);
+	if (result == 0) {
+		strlcpy (handle->lock_file, sizeof (lock_file), port);
+		return (GP_OK);
+	} else if (result > 0) {
+		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+				      "Port '%s' is locked by pid %d!",
+				      port, result);
+		return (GP_ERROR_IO_LOCK);
+	} else {
+		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+				      "Cannot create lock file for '%s'!",
+				      handle->lock_file);
+		return (GP_ERROR_IO_LOCK);
+	}
 
+#else /* LOCKLIB */
+	char lock_buffer[12];
+	int fd, pid, n; 
+#ifdef SVR4
+	struct stat sbuf;
+	
+	if (stat (port, &sbuf) < 0) {
+		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+				      "Cannot get device number for '%s': %m!",
+				      port);
+		return (GP_ERROR_IO_LOCK);
+	}
+	
+	if ((sbuf.st_mode & S_IFMT) != S_IFCHR) {
+		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+				      "Cannot lock '%s': Not a character "
+				      "device!", port);
+		return (GP_ERROR_IO_LOCK);
+	}
+	
+	slprintf (handle->lock_file, sizeof (handle->lock_file),
+		  "%s/LK.%03d.%03d.%03d", LOCK_DIR, major (sbuf.st_dev),
+		  major (sbuf.st_rdev), minor (sbuf.st_rdev));
+#else /* SVR4 */
+	char *p;
+	
+	if ((p = strrchr (port, '/')) != NULL)
+		port = p + 1;
+	sprintf (handle->lock_file, "%s/LCK..%s", LOCK_DIR, port);
+#endif /* !SVR4 */
+	
+	while ((fd = open (handle->lock_file, O_EXCL | O_CREAT | O_RDWR,
+			   0644)) < 0) {
+		if (errno != EEXIST) {
+			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+					      "Cannot create lock file '%s': "
+					      "%m", handle->lock_file);
+			break;
+		}
+		
+		/* Read the lock file to find out who has the device locked. */
+		fd = open (handle->lock_file, O_RDONLY, 0);
+		if (fd < 0) {
+			if (errno == ENOENT) /* This is just a timing problem */
+				continue;
+			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+					      "Cannot open existing lock file "
+					      "'%s': %m", handle->lock_file);
+			break;
+		}
+#ifndef LOCK_BINARY
+		n = read (fd, lock_buffer, 11);
+#else /* !LOCK_BINARY */
+		n = read (fd, &pid, sizeof (pid));
+#endif /* !LOCK_BINARY */
+		close (fd);
+		fd = -1;
+		if (n <= 0) {
+			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+					      "Cannot read pid from lock "
+					      "file '%s'", handle->lock_file);
+			break;
+		} 
+		
+		/* See if the process still exists. */
+#ifndef LOCK_BINARY
+		lock_buffer[n] = 0;
+		pid = atoi (lock_buffer);
+#endif /* !LOCK_BINARY */
+		if (pid == getpid ())
+			return 1;      /* somebody else locked it for us */
+		if (pid == 0 || (kill (pid, 0) == -1 && errno == ESRCH)) {
+			if (unlink (handle->lock_file) == 0) {
+				gp_port_debug_printf (GP_DEBUG_LOW,
+						      dev->debug_level,
+						      "Removed stale lock on "
+						      "'%s' (pid %d).", port,
+						      pid);
+				continue;
+			}
+			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+					      "Could not remove stale lock "
+					      "on '%s'", port);
+		} else
+			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+					      "Device '%s' is locked by pid "
+					      "%d", port, pid);
+		break;
+	}
+
+	if (fd < 0) {
+		handle->lock_file[0] = 0;
+		return (GP_ERROR_IO_LOCK);
+	}
+	
+	pid = getpid ();
+#ifndef LOCK_BINARY
+	sprintf (lock_buffer, "%10d\n", pid);
+	write (fd, lock_buffer, 11);
+#else /* !LOCK_BINARY */
+	write (fd, &pid, sizeof (pid));
+#endif /* !LOCK_BINARY */
+	close (fd);
+	
+#endif /* !LOCKLIB */
+
+	return (GP_OK);
+}
+
+static int
+gp_port_serial_unlock (gp_port *dev)
+{
+	DeviceHandle *handle = dev->device_handle;
+
+	if (handle->lock_file[0]) {
+#ifdef LOCKLIB
+		rmlock (handle->lock_file, NULL);
+#else
+		unlink (handle->lock_file);
+#endif
+		handle->lock_file[0] = 0;
+	}
+
+	return (GP_OK);
+}
+
+int
+gp_port_library_list (gp_port_info *list, int *count)
+{
         char buf[1024], prefix[1024];
         int x, fd;
 #ifdef __linux
@@ -161,7 +327,11 @@ int gp_port_library_list (gp_port_info *list, int *count) {
 /* Serial API functions
    ------------------------------------------------------------------ */
 
-int gp_port_serial_init (gp_port *dev) {
+int
+gp_port_serial_init (gp_port *dev)
+{
+	DeviceHandle *handle;
+
         /* save previous setttings in to dev->settings_saved */
 #if HAVE_TERMIOS_H
         if (tcgetattr(dev->device_fd, &term_old) < 0) {
@@ -174,23 +344,57 @@ int gp_port_serial_init (gp_port *dev) {
                 return GP_ERROR_IO_INIT;
         }
 #endif
+
+	handle = malloc (sizeof (DeviceHandle));
+	handle->lock_file[0] = 0;
+	dev->device_handle = handle;
+	
         return GP_OK;
 }
 
-int gp_port_serial_exit (gp_port *dev) {
-        /* ... */
-        return GP_OK;
-}
-
-int gp_port_serial_open(gp_port * dev)
+int gp_port_serial_exit (gp_port *dev)
 {
+	if (!dev)
+		return (GP_OK);
+
+	if (dev->device_handle) {
+		free (dev->device_handle);
+		dev->device_handle = NULL;
+	}
+		
+        return GP_OK;
+}
+
+int
+gp_port_serial_open (gp_port *dev)
+{
+	int result, max_tries = 5, i;
 #ifdef OS2
-    int fd;
+	int fd;
 #endif
-    char *port = strchr(dev->settings.serial.port, ':');
-    if (!port)
-        return GP_ERROR_IO_UNKNOWN_PORT;
-    port++;
+	char *port;
+
+	/* Ports are named "serial:/dev/whatever/port" */
+	port = strchr (dev->settings.serial.port, ':');
+	if (!port)
+		return GP_ERROR_IO_UNKNOWN_PORT;
+	port++;
+
+	result = gp_port_serial_lock (dev, port);
+	if (result != GP_OK) {
+		for (i = 0; i < max_tries; i++) {
+			result = gp_port_serial_lock (dev, port);
+			if (result == GP_OK)
+				break;
+			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+					      "Failed to get a lock, trying "
+					      "again...");
+			sleep (1);
+		}
+		if (result != GP_OK)
+			return (result);
+	}
+
 #ifdef __FreeBSD__
         dev->device_fd = open(port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 #elif OS2
@@ -199,7 +403,7 @@ int gp_port_serial_open(gp_port * dev)
         close(fd);
         //printf("fd %d for %s\n",dev->device_fd,dev->settings.serial.port);
 #else
-        dev->device_fd = open(port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
+        dev->device_fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif
         if (dev->device_fd == -1) {
                 fprintf(stderr, "gp_port_serial_open: failed to open ");
@@ -214,12 +418,28 @@ int gp_port_serial_open(gp_port * dev)
         return GP_OK;
 }
 
-int gp_port_serial_close(gp_port * dev)
+int
+gp_port_serial_close (gp_port * dev)
 {
-        if (close(dev->device_fd) == -1) {
-                perror("gp_port_serial_close: tried closing device file descriptor");
-                return GP_ERROR_IO_CLOSE;
-        }
+	int result;
+
+	if (!dev)
+		return (GP_OK);
+
+	if (dev->device_fd) {
+		if (close (dev->device_fd) == -1) {
+			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+					      "Could not close device!");
+	                return GP_ERROR_IO_CLOSE;
+	        }
+		dev->device_fd = 0;
+	}
+
+	/* Unlock the port */
+	result = gp_port_serial_unlock (dev);
+	if (result < 0)
+		return (result);
+
         return GP_OK;
 }
 
