@@ -27,7 +27,7 @@
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
-#include "libgphoto2/bayer.h"
+#include <bayer.h>
 
 #include "serial.h"
 #include "decomp.h"
