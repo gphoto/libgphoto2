@@ -4,7 +4,7 @@
 /*                                                              */
 /*                                                              */
 /* Authors: Till Adam <till@adam-lilienthal.de>                 */
-/*                                                              */
+/*          Ian MacArthur <ian@imm.uklinux.net>                 */
 /* based on work done by:                                       */
 /*          Mark A. Zimmerman <mark@foresthaven.com>            */
 /*                                                              */
@@ -39,6 +39,28 @@
 #include "spca50x.h"
 #include "spca50x-flash.h"
 
+/* forward declarations... local to this file */
+static int
+spca500_flash_84D_get_file_info (CameraPrivateLibrary * lib, int index,
+							int *w, int *h, int *t, int *sz);
+
+/* dsc-350_get_file func. */
+static int
+spca500_flash_84D_get_file (CameraPrivateLibrary * pl,
+		uint8_t ** data, unsigned int *len, int index, int thumbnail);
+
+/*****************************************************************************/
+static void 
+free_files (CameraPrivateLibrary *pl)
+{
+	int i;
+	if (pl->files){
+		for (i = 0; i < pl->num_files; i++){
+			if(pl->files[i].thumb) free (pl->files[i].thumb);
+		}
+		free(pl->files);
+	}
+}
 
 static int
 spca50x_flash_wait_for_ready(CameraPrivateLibrary *pl)
@@ -48,14 +70,39 @@ spca50x_flash_wait_for_ready(CameraPrivateLibrary *pl)
 	uint8_t ready = 0;
 	while (timeout--) {
 		sleep(1);
-		if (pl->fw_rev == 1) {
-			CHECK (gp_port_usb_msg_read (pl->gpdev, 0x0b, 0x0000, 0x0004, 
-				(char*)&ready, 0x01));
+		if (pl->bridge == BRIDGE_SPCA500) {
+			CHECK (gp_port_usb_msg_read (pl->gpdev,
+							0x00, 0x0000, 0x0101,
+							(char*)&ready, 0x01));
 		} else {
-			CHECK (gp_port_usb_msg_read (pl->gpdev, 0x21, 0x0000, 0x0000, 
-				(char*)&ready, 0x01));
+			if (pl->fw_rev == 1) {
+				CHECK (gp_port_usb_msg_read (pl->gpdev,
+							0x0b, 0x0000, 0x0004,
+							(char*)&ready, 0x01));
+			} else {
+				CHECK (gp_port_usb_msg_read (pl->gpdev,
+							0x21, 0x0000, 0x0000,
+							(char*)&ready, 0x01));
+			}
 		}
-		if (ready) 
+		if (ready)
+			return GP_OK;
+	}
+	return GP_ERROR;
+}
+
+static int
+spca500_flash_84D_wait_while_busy(CameraPrivateLibrary *pl)
+{
+	int timeout = 30;
+	uint8_t ready = 0;
+	while (timeout--) {
+		sleep(1);
+	CHECK (gp_port_usb_msg_read (pl->gpdev,
+					0x00, 0x0000, 0x0100,
+					(char*)&ready, 0x01));
+
+		if (ready == 0)
 			return GP_OK;
 	}
 	return GP_ERROR;
@@ -66,47 +113,89 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 {
 	uint16_t n_toc_entries;
 	int toc_size = 0;
-		
-	if (pl->fw_rev == 1) {
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x0b, 0x0000, 0x0000, 
-					(char*)&n_toc_entries, 0x02));
-		/* Each file gets two toc entries, one for the image, one for the
-		 * thumbnail */
-		LE16TOH (n_toc_entries);
-		*filecount = n_toc_entries/2;
-	} else {
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x54, 0x0000, 0x0000, 
-					(char*)&n_toc_entries, 0x02));
-		LE16TOH (n_toc_entries);
-		*filecount = n_toc_entries;
-	}
-	/* If empty, return now */
-	if (n_toc_entries == 0)
-		return GP_OK;
 
-	/* Request the TOC */
-
-	if (pl->fw_rev == 1) {
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x0a, n_toc_entries, 0x000c, 
+	if (pl->bridge == BRIDGE_SPCA500) { /* for dsc350 type cams */
+		if (pl->dirty == 0){
+			/* TOC has been read already, and stored in the pl, 
+			   so let's not read it again unless "dirty" gets set,
+			   e.g. by a reset, delete or capture action... */
+			*filecount = pl->num_files;
+			return GP_OK;
+		}
+		/* command mode */
+		CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x00, 0x0080, 0x0100,
 					NULL, 0x00));
-	} else {
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x54, n_toc_entries, 0x0001, 
+		/* trigger TOC upload */
+		CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x05, 0x0000, 0x000d,
 					NULL, 0x00));
-	}
-	/* slurp it in. Supposedly there's 32 bytes in each entry. */
-	toc_size = n_toc_entries * 32;
-	/* align */
-	if (toc_size % 512 != 0)
-		toc_size = ((toc_size / 512) + 1) * 512;
+		toc_size = 0x100; /* always 256 for the dsc-350 cams */
+	} else {
 
-	if (pl->flash_toc) 
+		if (pl->fw_rev == 1) {
+			CHECK (gp_port_usb_msg_read (pl->gpdev,
+						0x0b, 0x0000, 0x0000,
+						(char*)&n_toc_entries, 0x02));
+			/* Each file gets two toc entries, one for the image,
+			   one for the thumbnail */
+			LE16TOH (n_toc_entries);
+			*filecount = n_toc_entries/2;
+		} else {
+			CHECK (gp_port_usb_msg_read (pl->gpdev,
+						0x54, 0x0000, 0x0000,
+						(char*)&n_toc_entries, 0x02));
+			LE16TOH (n_toc_entries);
+			*filecount = n_toc_entries;
+		}
+		/* If empty, return now */
+		if (n_toc_entries == 0)
+			return GP_OK;
+
+		/* Request the TOC */
+		if (pl->fw_rev == 1) {
+			CHECK (gp_port_usb_msg_read (pl->gpdev, 0x0a,
+						n_toc_entries, 0x000c,
+						NULL, 0x00));
+		} else {
+			CHECK (gp_port_usb_msg_read (pl->gpdev, 0x54,
+						n_toc_entries, 0x0001,
+						NULL, 0x00));
+		}
+		/* slurp it in. Supposedly there's 32 bytes in each entry. */
+		toc_size = n_toc_entries * 32;
+
+		/* align */
+		if (toc_size % 512 != 0)
+			toc_size = ((toc_size / 512) + 1) * 512;
+	}
+	if (pl->flash_toc)
 		free (pl->flash_toc);
 	pl->flash_toc = malloc(toc_size);
 	if (!pl->flash_toc)
 		return GP_ERROR_NO_MEMORY;
-	CHECK (spca50x_flash_wait_for_ready(pl));
-	CHECK (gp_port_read (pl->gpdev, pl->flash_toc, toc_size));
 
+	CHECK (spca50x_flash_wait_for_ready(pl));
+
+	if (pl->bridge == BRIDGE_SPCA500) { /* For dsc350 type cams */
+		/* read the TOC from the cam */
+		CHECK (gp_port_read (pl->gpdev, pl->flash_toc, toc_size));
+		/* reset to idle */
+		CHECK (gp_port_usb_msg_write(pl->gpdev, 0x00, 0x0000, 0x0100, NULL, 0x0));
+		*filecount = (int)pl->flash_toc[10];
+		pl->num_files = *filecount;
+		/* Now, create the files info buffer */
+		free_files(pl);
+		/* NOTE: using calloc to ensure new block is "empty" */
+		pl->files = calloc (1, pl->num_files * sizeof (struct SPCA50xFile));
+		if (!pl->files)
+			return GP_ERROR_NO_MEMORY;
+		/* record that TOC has been updated - clear the "dirty" flag */
+		pl->dirty = 0;
+	} else { /* all other cams with flash... */
+		/* read the TOC from the cam */
+		CHECK (gp_port_read (pl->gpdev, pl->flash_toc, toc_size));
+	}
 	return GP_OK;
 }
 
@@ -115,56 +204,523 @@ int
 spca50x_flash_get_filecount (CameraPrivateLibrary *pl, int *filecount)
 {
 	uint16_t response = 0;
-	
-	if (pl->fw_rev == 1) {
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x0b, 0x0000, 0x0000, 
-					(char*)&response, 0x02));
-		/* Each file gets two toc entries, one for the image, one for the
-		 * thumbnail */
-		LE16TOH (response);
-		*filecount = response/2;
+
+	if (pl->bridge == BRIDGE_SPCA500) { /* dsc350 cams */
+		return spca50x_flash_get_TOC (pl, filecount);
 	} else {
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x54, 0x0000, 0x0000, 
-					(char*)&response, 0x02));
-		LE16TOH (response);
-		*filecount = response;
+		if (pl->fw_rev == 1) {
+			CHECK (gp_port_usb_msg_read (pl->gpdev,
+						0x0b, 0x0000, 0x0000,
+						(char*)&response, 0x02));
+			/* Each file gets two toc entries, one for the
+			   image, one for the thumbnail */
+			LE16TOH (response);
+			*filecount = response/2;
+		} else {
+			CHECK (gp_port_usb_msg_read (pl->gpdev,
+						0x54, 0x0000, 0x0000,
+						(char*)&response, 0x02));
+			LE16TOH (response);
+			*filecount = response;
+		}
 	}
 	return GP_OK;
 }
 
 int
+spca500_flash_delete_file (CameraPrivateLibrary *pl, int index)
+{
+	if (pl->bridge == BRIDGE_SPCA500) {
+		/* command mode */
+		CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x00, 0x0080, 0x0100,
+					NULL, 0x00));
+	
+		/* trigger image delete */
+		CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x07, (index + 1), 0x000a,
+					NULL, 0x00));
+	
+		/* reset to idle */
+		CHECK (gp_port_usb_msg_write(pl->gpdev, 0x00, 0x0000, 0x0100, NULL, 0x0));
+	
+		/* invalidate TOC/info cache */
+		pl->dirty = 1;
+		return GP_OK;
+	} else {
+		/* not supported on the 504 style cams */
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+} /* spca500_flash_delete_file */
+
+int
 spca50x_flash_delete_all (CameraPrivateLibrary *pl, GPContext *context)
 {
-	if (pl->fw_rev == 1) {
-		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x1, 0x0, 0x1, NULL, 0x0));
+	if (pl->bridge == BRIDGE_SPCA500) { /* dsc350 cams */
+		/* command mode */
+		CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x00, 0x0080, 0x0100,
+					NULL, 0x00));
+
+		/* delete all command */
+		CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x07, 0xffff, 0x000a,
+					NULL, 0x00));
+
+		/* wait until the camera is not busy any more */
+		CHECK (spca500_flash_84D_wait_while_busy(pl));
 	} else {
-		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x52, 0x0, 0x0, NULL, 0x0));
+		if (pl->fw_rev == 1) {
+			CHECK (gp_port_usb_msg_write (pl->gpdev, 0x1, 0x0, 0x1, NULL, 0x0));
+		} else {
+			CHECK (gp_port_usb_msg_write (pl->gpdev, 0x52, 0x0, 0x0, NULL, 0x0));
+		}
 	}
+
+	/* invalidate TOC/info cache */
+	pl->dirty = 1;
 	return GP_OK;
 }
 
+int
+spca500_flash_capture (CameraPrivateLibrary *pl)
+{
+	if (pl->bridge == BRIDGE_SPCA500) {
+		/* command mode */
+		CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x00, 0x0080, 0x0100,
+					NULL, 0x00));
+	
+		/* trigger image capture */
+		CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x03, 0x0000, 0x0004,
+					NULL, 0x00));
+	
+		/* wait until the camera is not busy any more */
+		CHECK (spca500_flash_84D_wait_while_busy(pl));
+	
+		/* invalidate TOC/info cache */
+		pl->dirty = 1;
+		return GP_OK;
+	} else {
+		/* not supported on the 504 style cams */
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+}
 
 int
 spca50x_flash_get_file_name (CameraPrivateLibrary *pl, int index, char *name)
 {
 	uint8_t *p;
+	if (pl->bridge == BRIDGE_SPCA500) {
+		char p[14];
+		int w, h, type, size;
 
-	if (pl->fw_rev == 1) {
-		p = pl->flash_toc + index*2*32;
+		memset (p, 0, sizeof(p));
+		/* dsc350 - get the file info, so we can set the file type 
+	           correctly */
+		spca500_flash_84D_get_file_info (pl, index, &w, &h, &type, &size);
+		if (type < 3){ // for single images
+			snprintf (p, sizeof(p), "Img%03d.jpg", (index + 1));
+		}
+		else if (type < 6){ // for multi-frame images
+			snprintf (p, sizeof(p), "Img%03d-4.jpg", (index + 1));
+		}
+		else if (type < 8){ // for avi
+			snprintf (p, sizeof(p), "Mov%03d.avi", (index + 1));
+		}
+		else{
+			snprintf (p, sizeof(p), "Unknown");
+		}
+		memcpy (name, p, sizeof(p) );
 	} else {
-		p = pl->flash_toc + index*32;
+		if (pl->fw_rev == 1) {
+			p = pl->flash_toc + index*2*32;
+		} else {
+			p = pl->flash_toc + index*32;
+		}
+		memcpy (name, p, 8);
+		name[8] = '.';
+		memcpy (name+9, p+8, 3);
+		name[12] = '\0';
 	}
-	memcpy (name, p, 8);
-	name[8] = '.';
-	memcpy (name+9, p+8, 3);
-	name[12] = '\0';
 	return GP_OK;
 }
+
+static int
+spca500_flash_84D_get_file_info (CameraPrivateLibrary * pl, int index,
+							int *w, int *h, int *t, int *sz)
+{
+	char hdr[260];
+	char waste[260];
+	int i;
+	unsigned long size;
+
+	/* First, check if the info. is already buffered in the cam private lib
+	 * We DO NOT want to be fetching the entire thumbnail just to get the file size...*/
+	 if ((pl->dirty == 0) && (pl->files[index].type != 0)){
+		 /* This file must have been checked before */
+		*w = pl->files[index].width ;
+		*h = pl->files[index].height ;
+		*t = pl->files[index].type ;
+		*sz = pl->files[index].size ;
+		return GP_OK;
+	 } else if (pl->dirty != 0){ /* should never happen, but just in case... */
+		CHECK(spca50x_flash_get_TOC (pl, &i));
+		if ( index >= i){ 
+			/* asking for a picture that doesn't exist */
+			return GP_ERROR;
+		}
+	 }
+
+	/* ...else we must query the cam the hard way... */
+	/* command mode */
+	CHECK (gp_port_usb_msg_write (pl->gpdev,
+				0x00, 0x0080, 0x0100,
+				NULL, 0x00));
+	/* trigger Thumbnail upload */
+	CHECK (gp_port_usb_msg_write (pl->gpdev,
+				0x07, (index + 1), 0x0000,
+				NULL, 0x00));
+	/* NOTE: must use (index + 1) here as the cam indexes images from 1, 
+	 * whereas libgphoto2 indexes from 0.... */
+
+	/* wait for ready */
+	CHECK (spca50x_flash_wait_for_ready(pl));
+	/* read the header from the cam */
+	CHECK (gp_port_read (pl->gpdev, hdr, 256)); // always 256 for the DSC-350+
+
+	/* Read the rest of the header... and discard it */
+	CHECK (gp_port_read (pl->gpdev, waste, 256));
+
+	/* Now we have to read in the thumbnail data anyway - 
+	   so we might as well store it for later */
+	{
+		int j;
+		uint8_t * buf;
+		if (pl->files[index].thumb){
+			free (pl->files[index].thumb); /* discard any previous thumbnail data */
+			pl->files[index].thumb = NULL;
+		}
+		buf = malloc (38 * 256); /* create a new buffer to hold the thumbnail data */
+		if (buf){
+			j = 0;
+			for (i = 0; i < 38; i++) { /* Now read in the image data */
+				/* read a buffer from the cam */
+				CHECK (gp_port_read (pl->gpdev, (char *)&buf[j], 256));
+				j += 256;
+			}
+			pl->files[index].thumb = buf;
+		} else { /* couldn't get a buffer - read in the data anyway and discard it */
+			for (i = 0; i < 38; i++) {/* Thumbnails ALWAYS download 38 blocks...*/
+				CHECK (gp_port_read (pl->gpdev, waste, 256));
+			}
+			pl->files[index].thumb = NULL;
+		}
+	} /* end of thumbnail storing loop */
+
+	/* reset to idle */
+	CHECK (gp_port_usb_msg_write(pl->gpdev, 0x00, 0x0000, 0x0100,
+			NULL, 0x0));
+
+	/* OK, now we have a hdr we can work with... */
+	/* try and get the size */
+	size =  ((unsigned long)hdr[15] & 0xff)
+	     + (((unsigned long)hdr[16] & 0xff) << 8)
+		 + (((unsigned long)hdr[17] & 0xff) << 16);
+	*sz = size;
+
+	/* Try and determine the file type */
+	/* Should enumerate the possible types properly, somewhere... */
+	i = (int)hdr[2]; /* should be the file type */
+	*t = i;
+	switch (i){
+	case 0: // this will be 320 x 240 single-frame
+		*w = 320;
+		*h = 240;
+		break;
+	case 1: // this will be 640 x 480 single-frame
+		*w = 640;
+		*h = 480;
+		break;
+	case 2: // this will be 1024 x 768 single-frame
+/* These are actually 640x480 pics - the win driver just expands them 
+ * in the host before it stores them... What should we do here? Continue with that
+ * pretence, or tell the user the truth? */
+		//*w = 1024; 
+		//*h = 768;
+		*w = 640; 
+		*h = 480;
+		break;
+	case 3: // this will be 320 x 240 multi-frame
+		*w = 320;
+		*h = 240;
+		break;
+	case 4: // this will be 640 x 480 multi-frame
+		*w = 640;
+		*h = 480;
+		break;
+	case 5: // this will be 1024 x 768 multi-frame
+/* See notes above! */
+		//*w = 1024; 
+		//*h = 768;
+		*w = 640; 
+		*h = 480;
+		break;
+	case 6: // ??? TAKE A GUESS!!! 160 x 120 avi ??? MUST verify this sometime....
+		*w = 160;
+		*h = 120;
+		break;
+	case 7: // this is 320 x 240 avi
+		*w = 320;
+		*h = 240;
+		break;
+	default:
+		*t = 99; // or something equally invalid...
+		*w = 0;
+		*h = 0;
+		*sz = 0; // if we don't know what it is, it can't have a size!
+		break;
+	}
+
+	/* now add this new set of data to the info_cache */
+	if (pl->dirty == 0){
+		/* Only update the files cache if it exists, i.e. if dirty is zero */
+		/* We should never get here if dirty is set, however ! */
+		pl->files[index].type = *t;
+		pl->files[index].width = *w;
+		pl->files[index].height = *h;
+		pl->files[index].size = *sz;
+	}
+
+	return GP_OK;
+
+} /* end of spca500_flash_84D_get_file_info */
+
+static int
+spca50x_process_thumbnail (CameraPrivateLibrary *lib,	// context
+		uint8_t ** data, unsigned int *len,			// return these items
+		uint8_t * buf, uint32_t file_size, int index)	// input these items
+{
+	uint32_t alloc_size, true_size, w, h, hdrlen;
+	uint8_t *tmp, *rgb_p, *yuv_p;
+	uint8_t *p2 = lib->flash_toc + index*2*32;
+
+	if (lib->bridge == BRIDGE_SPCA500) { /* for dsc 350 cams */
+		w = 80; /* Always seems to be 80 x 60 for the DSC-350 cams */
+		h = 60;
+	} else {
+		/* thumbnails are generated from dc coefficients and are
+		 * therefore w/8 x h/8
+		 * Since the dimensions of the thumbnail in the TOC are
+		 * always [0,0], Use the TOC entry for the full image.
+		 */
+		w = ((p2[0x0c] & 0xff) + (p2[0x0d] & 0xff) * 0x100) / 8;
+		h = ((p2[0x0e] & 0xff) + (p2[0x0f] & 0xff) * 0x100) / 8;
+	}
+
+	/* Allow for a long header; get the true length later.
+	 */
+	hdrlen = 15;
+	alloc_size = w * h * 3 + hdrlen;
+	tmp = malloc (alloc_size);
+	if (!tmp)
+		return GP_ERROR_NO_MEMORY;
+
+	/* Write the header and get its length. Then, verify that
+	 * we allocated enough memory.
+	 * This should never fail; it would be nice to have an error
+	 * code like GP_ERROR_CAMLIB_INTERNAL for cases like this.
+	 */
+	hdrlen = snprintf(tmp, alloc_size, "P6 %d %d 255\n", w, h);
+	true_size = w * h * 3 + hdrlen;
+	if ( true_size > alloc_size )
+		return GP_ERROR;
+
+	yuv_p = buf;
+	rgb_p = tmp + hdrlen;
+	while (yuv_p < buf + file_size) {
+		uint32_t u, v, y, y2;
+		uint32_t r, g, b;
+
+		y = yuv_p[0];
+		y2 = yuv_p[1];
+		u = yuv_p[2];
+		v = yuv_p[3];
+
+		CHECK (yuv2rgb (y, u, v, &r, &g, &b));
+		*rgb_p++ = r;
+		*rgb_p++ = g;
+		*rgb_p++ = b;
+
+		CHECK (yuv2rgb (y2, u, v, &r, &g, &b));
+		*rgb_p++ = r;
+		*rgb_p++ = g;
+		*rgb_p++ = b;
+
+		yuv_p += 4;
+	}
+	free (buf);
+	*data = tmp;
+	*len = true_size;
+	
+	return GP_OK;
+} /* spca50x_process_thumbnail */
+
+static int
+spca50x_flash_process_image (CameraPrivateLibrary *pl,	// context
+		uint8_t ** data, unsigned int *len,				// return these items
+		uint8_t * buf, uint32_t buf_size, int index)	// input these items
+{
+	uint8_t *lp_jpg;
+	uint8_t qIndex = 0, format;
+	int file_size;
+
+	int w = pl->files[index].width;
+	int h = pl->files[index].height;
+
+	/* qindex == 2 seems to be right for all the dsc350 images - so far!!! */
+	qIndex = 2 ; // FIXME - what to do about Qtable stuff?
+
+	/* decode the image size */
+	if (w > 320){
+		format = 0x21; // for 640 size images
+	} else {
+		format = 0x22; // for 320 x 240 size images
+	}
+
+	file_size = buf_size + SPCA50X_JPG_DEFAULT_HEADER_LENGTH + 1024 * 10;
+
+	/* now build a jpeg */
+	lp_jpg = malloc (file_size);
+	if (!lp_jpg)
+		return GP_ERROR_NO_MEMORY;
+		
+	create_jpeg_from_data (lp_jpg, buf, qIndex, w,
+			       h, format, buf_size, &file_size,
+			       0, 0);
+	free (buf);
+	lp_jpg = realloc (lp_jpg, file_size);
+	*data = lp_jpg;
+	*len = file_size;
+
+	return (GP_OK);
+}
+
+static int
+spca500_flash_84D_get_file (CameraPrivateLibrary * pl,
+		uint8_t ** data, unsigned int *len, int index, int thumbnail)
+{
+	char tbuf[260];		// for the file data blocks
+	int i, j;		// general loop vars
+	int blks;		// number of 256 byte blocks to fetch
+	unsigned int sz;	// number of bytes in image
+	uint8_t *buf;		// buffer for the read data
+	int type;		// type of image reported by header
+	int w, h;		// width, height of file being read
+	int true_len;		// length determined by actually counting the loaded data!
+
+	/* Check the info. first, so we KNOW the file type before we start to download it...! */
+	/* NOTE: The check should be really easy, as the info ought to be in the files info cache */
+	spca500_flash_84D_get_file_info (pl, index, &w, &h, &type, &sz);
+	if (type >= 3) { /* for now, only support single frame still images */
+		return GP_ERROR_NOT_SUPPORTED;
+		/* what to do for multi-frame images? (type 3, 4, 5) or avi's? (6, 7) */
+	}
+
+	/* OK, we've decided what type of file it is, now lets upload it... */
+	if ((thumbnail != 0) && (pl->files[index].thumb != NULL)){
+		/* We can cheat here - we already have the thumbnail data in a cache, so don't load it again */
+		blks = 38;
+		buf = pl->files[index].thumb;
+		pl->files[index].thumb = NULL; /* we will release buf, so this pointer must be "emptied" */
+	}
+	else {
+		/* We need to download this data from the cam... */
+		/* set command mode */
+		CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x00, 0x0080, 0x0100,
+					NULL, 0x00));
+	
+		/* trigger image upload */
+		if (thumbnail){
+			CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x07, (index + 1), 0x0000,  // code 0 gets the thumbnail
+					NULL, 0x00));
+		} else {
+			/* code for different image types...? */
+			CHECK (gp_port_usb_msg_write (pl->gpdev,
+					0x07, (index + 1), 0x0001, // code 1 gets the main image
+					NULL, 0x00));
+		}
+	
+		/* wait for ready */
+		CHECK (spca50x_flash_wait_for_ready(pl));
+	
+		/* read the header from the cam */
+		CHECK (gp_port_read (pl->gpdev, tbuf, 256)); // always 256 for the DSC-350+
+	
+		/* Read the rest of the header... and discard it */
+		CHECK (gp_port_read (pl->gpdev, tbuf, 256));
+	
+		if (thumbnail){
+			blks = 38 ; /* always 38 blocks in a thumbnail with this setup */
+			sz = 0; /* unknown, it's NOT recorded in the header or TOC as such... */
+			/* Note the width/height of the thumbnail is fixed at 80 x 60 I believe. */
+		}
+		else { /* full image... */
+			/* find nearest EVEN number of blocks bigger than the size */
+			blks = (sz / 256) + 1;
+			if ((blks & 1) != 0){ /* block count is odd, not allowed */
+				blks += 1;
+			}
+		}
+	
+		/* create a buffer to hold all the read in data */
+		buf = malloc (blks * 256);
+		if (!buf){
+			return GP_ERROR_NO_MEMORY;
+		}
+	
+		j = 0; //k = 0;
+		/* Now read in the image data */
+		for (i = 0; i < blks; i++) {
+			/* read a buffer from the cam */
+			CHECK (gp_port_read (pl->gpdev, (char *)&buf[j], 256));
+			j += 256;
+		}
+	
+		/* OK, that's all the data read in, set cam to idle */
+		CHECK (gp_port_usb_msg_write(pl->gpdev, 0x00, 0x0000, 0x0100, NULL, 0x0));
+	}
+
+	/* Count how many bytes file really is! We use this to discard the padding zeros */
+	sz = (blks * 256) - 1;
+	/* look for the last non-zero byte in the file... 
+	 * I hope the file never *really* ends with a zero!*/
+	while (buf[sz] == 0) {
+		sz -= 1;
+	}
+	true_len = sz + 1;
+
+	if (thumbnail) { /* post processing of thumbnail data */
+		CHECK(spca50x_process_thumbnail (pl, data, len, buf, true_len, index));
+	} else { /* post processing of single frame images */
+		CHECK(spca50x_flash_process_image (pl, data, len, buf, true_len, index));
+	}
+	return GP_OK;
+} /* end of spca500_flash_84D_get_file */
+
 
 int
 spca50x_flash_get_file_dimensions (CameraPrivateLibrary *pl, int index, int *w, int *h)
 {
 	uint8_t *p;
+
+	if (pl->bridge == BRIDGE_SPCA500) { /* for dsc 350 cams */
+		int type, size;
+		return spca500_flash_84D_get_file_info (pl, index, w, h, &type, &size);
+	}
 
 	if (pl->fw_rev == 1) {
 		p = pl->flash_toc + index*2*32;
@@ -179,8 +735,13 @@ spca50x_flash_get_file_dimensions (CameraPrivateLibrary *pl, int index, int *w, 
 
 int
 spca50x_flash_get_file_size (CameraPrivateLibrary *pl, int index, int *size)
-{	
+{
 	uint8_t *p;
+
+	if (pl->bridge == BRIDGE_SPCA500) { /* for dsc350 cams */
+		int type, w, h;
+		return spca500_flash_84D_get_file_info (pl, index, &w, &h, &type, size);
+	}
 
 	if (pl->fw_rev == 1) {
 		p = pl->flash_toc + index*2*32;
@@ -188,25 +749,28 @@ spca50x_flash_get_file_size (CameraPrivateLibrary *pl, int index, int *size)
 		p = pl->flash_toc + index*32;
 	}
 
-	*size =   (p[0x1c] & 0xff) 
+	*size =   (p[0x1c] & 0xff)
 		+ (p[0x1d] & 0xff) * 0x100
 		+ (p[0x1e] & 0xff) * 0x10000
 		+ (p[0x1f] & 0xff) * 0x1000000;
-	
+
 	return GP_OK;
 }
 
 int
-spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context, 
+spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 		uint8_t ** data, unsigned int *len, int index, int thumbnail)
 {
 	uint32_t file_size = 0, aligned_size = 0;
 	uint8_t *p, *buf;
-	uint8_t *tmp, *rgb_p, *yuv_p;
+
+	if (lib->bridge == BRIDGE_SPCA500) { /* for dsc 350 cams */
+		return spca500_flash_84D_get_file (lib, data, len, index, thumbnail);
+	}
 
 	if (lib->fw_rev != 1 && thumbnail)
 		return GP_ERROR_NOT_SUPPORTED;
-	
+
 	if (thumbnail) {
 		p = lib->flash_toc + (index*2+1) * 32;
 	} else {
@@ -217,21 +781,21 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 		}
 	}
 
-	aligned_size = file_size = 
-		  (p[0x1c] & 0xff) 
-		+ (p[0x1d] & 0xff) * 0x100 
+	aligned_size = file_size =
+		  (p[0x1c] & 0xff)
+		+ (p[0x1d] & 0xff) * 0x100
 		+ (p[0x1e] & 0xff) * 0x10000;
 
-	/* Trigger download of image data */
+	/* Trigger upload of image data */
 	if (thumbnail) {
-		CHECK (gp_port_usb_msg_write (lib->gpdev, 
+		CHECK (gp_port_usb_msg_write (lib->gpdev,
 					0x0c, index+1, 0x0006, NULL, 0x00));
 	} else {
 		if (lib->fw_rev == 1) {
-			CHECK (gp_port_usb_msg_write (lib->gpdev, 
+			CHECK (gp_port_usb_msg_write (lib->gpdev,
 					0x0a, index+1, 0x000d, NULL, 0x00));
 		} else {
-			CHECK (gp_port_usb_msg_write (lib->gpdev, 
+			CHECK (gp_port_usb_msg_write (lib->gpdev,
 					0x54, index+1, 0x0002, NULL, 0x00));
 		}
 	}
@@ -239,7 +803,7 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 	if (file_size % 8192 != 0)
 		aligned_size = ((file_size / 8192) + 1) * 8192;
 
-	buf = malloc (aligned_size); 
+	buf = malloc (aligned_size);
 	if (!buf)
 		return GP_ERROR_NO_MEMORY;
 
@@ -248,61 +812,7 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 	/* For images, we are done now, thumbnails need to be converted from
 	 * yuv to rgb and a pbm header added. */
 	if (thumbnail) {
-		int alloc_size, true_size, w, h, hdrlen;
-		uint8_t *p2 = lib->flash_toc + index*2*32;
-
-		/* thumbnails are generated from dc coefficients and are
-		 * therefor w/8 x h/8
-		 * Since the dimensions of the thumbnail in the TOC are
-		 * always [0,0], Use the TOC entry for the full image.
-		 */
-		w = ((p2[0x0c] & 0xff) + (p2[0x0d] & 0xff) * 0x100) / 8; 
-		h = ((p2[0x0e] & 0xff) + (p2[0x0f] & 0xff) * 0x100) / 8;
-
-		/* Allow for a long header; get the true length later.
-		 */
-		hdrlen = 15;
-		alloc_size = w * h * 3 + hdrlen;
-		tmp = malloc (alloc_size);
-		if (!tmp)
-			return GP_ERROR_NO_MEMORY;
-
-		/* Write the header and get its length. Then, verify that
-		 * we allocated enough memory.
-		 * This should never fail; it would be nice to have an error
-		 * code like GP_ERROR_CAMLIB_INTERNAL for cases like this.
-		 */
-		hdrlen = snprintf(tmp, alloc_size, "P6 %d %d 255\n", w, h);	
-		true_size = w * h * 3 + hdrlen;
-		if ( true_size > alloc_size )
-			return GP_ERROR;
-
-		yuv_p = buf;
-		rgb_p = tmp + hdrlen;
-		while (yuv_p < buf + file_size) {
-			unsigned int u, v, y, y2;
-			unsigned int r, g, b;
-
-			y = yuv_p[0];
-			y2 = yuv_p[1];
-			u = yuv_p[2];
-			v = yuv_p[3];
-
-			CHECK (yuv2rgb (y, u, v, &r, &g, &b));
-			*rgb_p++ = r;
-			*rgb_p++ = g;
-			*rgb_p++ = b;
-
-			CHECK (yuv2rgb (y2, u, v, &r, &g, &b));
-			*rgb_p++ = r;
-			*rgb_p++ = g;
-			*rgb_p++ = b;
-
-			yuv_p += 4;
-		}
-		free (buf);
-		*data = tmp;
-		*len = true_size;
+		CHECK(spca50x_process_thumbnail (lib, data, len, buf, file_size, index));
 	} else {
 		*data = buf;
 		*len = file_size;
@@ -317,14 +827,20 @@ int
 spca50x_flash_close (CameraPrivateLibrary *pl, GPContext *context)
 {
 	if (pl->fw_rev == 1) {
-		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x01, 0x2306, 
+		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x01, 0x2306,
 					NULL, 0x00));
-		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x00, 0x0d04, 
+		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x00, 0x0d04,
 					NULL, 0x00));
 	} else {
 		/* Anything we need to do? */
 
 	}
+
+	if (pl->dirty == 0){ 
+		/* check if we need to free the file info buffers */
+		free_files(pl);
+	}
+	pl->dirty = 1;
 	return GP_OK;
 }
 
@@ -411,41 +927,41 @@ spca50x_flash_init (CameraPrivateLibrary *pl, GPContext *context)
 	int i;
 
 	if (pl->fw_rev == 1) {
-		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x0000, 0x2000, 
+		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x0000, 0x2000,
 					NULL, 0x00));
-		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x0013, 0x2301, 
+		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x0013, 0x2301,
 					NULL, 0x00));
-		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x0001, 0x2883, 
+		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x0001, 0x2883,
 					NULL, 0x00));
 
 		for (i=0 ; i<len ; i++) {
-			CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 
-						jpReg[i].val, jpReg[i].reg, 
+			CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00,
+						jpReg[i].val, jpReg[i].reg,
 						NULL, 0x00));
-			CHECK (gp_port_usb_msg_read (pl->gpdev, 0x00, 0x0000, 
-						jpReg[i].reg, bytes, 0x01));	   
+			CHECK (gp_port_usb_msg_read (pl->gpdev, 0x00, 0x0000,
+						jpReg[i].reg, bytes, 0x01));
 		}
-		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x0001, 0x2501, 
+		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x0001, 0x2501,
 					NULL, 0x00));
-		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x0000, 0x2306, 
+		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x00, 0x0000, 0x2306,
 					NULL, 0x00));
-		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x08, 0x0000, 0x0006, 
+		CHECK (gp_port_usb_msg_write (pl->gpdev, 0x08, 0x0000, 0x0006,
 					NULL, 0x00));
 
-		/* Read the same thing thrice, for whatever reason. 
+		/* Read the same thing thrice, for whatever reason.
 		 * From working on getting iso traffic working with this chip, I've found
 		 * out, that 0x01, 0x0000, 0x0001 polls the chip for completion of a
 		 * command. Unfortunately it is of yet unclear, what the exact procedure
 		 * is. Until we know, let's keep this here. */
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x01, 0x0000, 0x0001, 
+		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x01, 0x0000, 0x0001,
 					bytes, 0x01));
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x01, 0x0000, 0x0001, 
+		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x01, 0x0000, 0x0001,
 					bytes, 0x01));
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x01, 0x0000, 0x0001, 
+		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x01, 0x0000, 0x0001,
 					bytes, 0x01));
 
 		/* Set to idle? */
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x01, 0x0000, 0x000f, 
+		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x01, 0x0000, 0x000f,
 					NULL, 0x00));
 
 	} else {
@@ -456,16 +972,16 @@ spca50x_flash_init (CameraPrivateLibrary *pl, GPContext *context)
 		int i;
 
 		/* firmware detection */
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x20, 0x0000, 0x0000, 
+		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x20, 0x0000, 0x0000,
 					bytes, 0x01));
-		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x20, 0x0000, 0x0000, 
+		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x20, 0x0000, 0x0000,
 					bytes, 0x05));
 		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x21, 0x0000, 0x0000,
 					bytes, 0x01));
 
-		/* 
+		/*
 		 * The cam is supposed to sync up with the computer time here
-		 * somehow, or at least that's what we think. 
+		 * somehow, or at least that's what we think.
 		 */
 
 		time(&t);
@@ -477,7 +993,7 @@ spca50x_flash_init (CameraPrivateLibrary *pl, GPContext *context)
 		bytes[3] = 0;               /* what is that? either 0x0 or 0x6 */
 		bytes[4] = ftm->tm_mday;
 		bytes[5] = ftm->tm_mon+1;
-		bytes[6] = ftm->tm_year-100; /* stupido. Year is 1900 + tm_year. 
+		bytes[6] = ftm->tm_year-100; /* stupido. Year is 1900 + tm_year.
 						We need two digits only. */
 
 
@@ -486,9 +1002,11 @@ spca50x_flash_init (CameraPrivateLibrary *pl, GPContext *context)
 				ftm->tm_hour,ftm->tm_min,ftm->tm_sec);
 
 		for (i=0;i<7;i++)
-			CHECK (gp_port_usb_msg_write (pl->gpdev, 0x29, 0x0000, 
+			CHECK (gp_port_usb_msg_write (pl->gpdev, 0x29, 0x0000,
 						i, bytes+i, 0x01));
 
 	}
+
+	pl->dirty = 1;
 	return GP_OK;
 }

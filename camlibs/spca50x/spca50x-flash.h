@@ -35,6 +35,10 @@ int spca50x_flash_get_file_size(CameraPrivateLibrary *pl, int index, int *size);
 int spca50x_flash_get_filecount(CameraPrivateLibrary *pl, int *filecount);
 int spca50x_flash_delete_all (CameraPrivateLibrary *pl, GPContext *context);
 
+/* for testing */
+int spca500_flash_delete_file (CameraPrivateLibrary *pl, int index);
+int spca500_flash_capture (CameraPrivateLibrary *pl);
+
 #endif 
 
 

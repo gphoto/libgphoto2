@@ -115,10 +115,10 @@ models[] =
 	{"Benq:DC1300", 0x04a5, 0x3003,
 	        BRIDGE_SPCA504, 0 },
 	/* Some other 500a cams with flash */
-/*	{"Trust Familycam 300", 0x084d, 0x0003,
+	{"Trust Familycam 300", 0x084d, 0x0003,
 		BRIDGE_SPCA500, SPCA50X_FLASH},	
 	{"D-Link DSC 350+", 0x084d, 0x0003,
-		BRIDGE_SPCA500, SPCA50X_FLASH},	*/
+		BRIDGE_SPCA500, SPCA50X_FLASH},
        // This is reported to work, but I can't reach the reporter and don't
        // know the id's. Presumably this is also a 0x084d 0x0003 like the two
        // above.
@@ -164,6 +164,12 @@ camera_abilities (CameraAbilitiesList *list)
 			 || a.usb_product == 0xc520)
 				a.operations = GP_OPERATION_CAPTURE_IMAGE;
 		}
+		if (models[x].bridge == BRIDGE_SPCA500) {
+			/* TEST enable capture for the DSC-350 style cams */
+			if (a.usb_vendor == 0x084d) {
+				a.operations = GP_OPERATION_CAPTURE_IMAGE;
+			}
+		}
 		gp_abilities_list_append (list, a);
 
 		ptr = models[++x].model;
@@ -183,18 +189,42 @@ camera_capture (Camera *camera, CameraCaptureType type,
 	gp_camera_get_abilities (camera, &a);
 	if (!a.operations & GP_OPERATION_CAPTURE_IMAGE)
 		return GP_ERROR_NOT_SUPPORTED;
-	
-	CHECK (spca50x_capture (camera->pl));
-	CHECK (spca50x_sdram_get_info (camera->pl));
-	CHECK (spca50x_sdram_get_file_info
-	       (camera->pl, camera->pl->num_files - 1, &file));
 
+	if (cam_has_flash(camera->pl))
+	{
+		int fc;
+		char tmp [14];
+
+		CHECK(spca500_flash_capture (camera->pl));
+		CHECK(spca50x_flash_get_TOC (camera->pl, &fc));
+		/* assume new pic is the last one in the cam...*/
+		CHECK(spca50x_flash_get_file_name (camera->pl, (fc - 1), tmp));
+
+		/* Add new image name to file list */
+		/* NOTE: these lines moved from below */
+		strncpy (path->name, tmp, sizeof (path->name) - 1);
+		path->name[sizeof (path->name) - 1] = '\0';
+	}
+	else
+	{
+		CHECK (spca50x_capture (camera->pl));
+		CHECK (spca50x_sdram_get_info (camera->pl));
+		CHECK (spca50x_sdram_get_file_info
+			(camera->pl, camera->pl->num_files - 1, &file));
+	
+		/* Add new image name to file list */
+		/* NOTE: these lines moved from below */
+		strncpy (path->name, file->name, sizeof (path->name) - 1);
+		path->name[sizeof (path->name) - 1] = '\0';
+	}
 	/* Now tell the frontend where to look for the image */
 	strncpy (path->folder, "/", sizeof (path->folder) - 1);
 	path->folder[sizeof (path->folder) - 1] = '\0';
+/*	-- these lines moved into the if/else cases above --
 	strncpy (path->name, file->name, sizeof (path->name) - 1);
-	path->name[sizeof (path->name) - 1] = '\0';
-
+	path->name[sizeof (path->name) - 1] = '\0'; 
+*/
+	
 	CHECK (gp_filesystem_append
 	       (camera->fs, path->folder, path->name, context));
 	return GP_OK;
@@ -473,8 +503,9 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		CHECK (spca50x_flash_get_filecount 
 					(camera->pl, &flash_file_count));
 	}
-	if (n < flash_file_count)
-		return GP_ERROR;
+	if (n < flash_file_count) {
+		return spca500_flash_delete_file (camera->pl, n);
+	}
 	
 	CHECK (c = gp_filesystem_count (camera->fs, folder, context));
 	if (n + 1 != c) {
@@ -570,9 +601,11 @@ camera_init (Camera *camera, GPContext *context)
 	if (camera->pl->fw_rev > 1) {
 		CHECK (spca50x_detect_storage_type (camera->pl));
 	}
-	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) )
-		CHECK (spca50x_flash_init (camera->pl, context));
-	
+	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) ) {
+		if (camera->pl->bridge == BRIDGE_SPCA504)
+			CHECK (spca50x_flash_init (camera->pl, context));
+	}
+
 	ret = spca50x_reset (camera->pl);
 	if (ret < 0) {
 		gp_context_error (context, _("Could not reset camera.\n"));

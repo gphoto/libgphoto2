@@ -44,6 +44,9 @@ struct SPCA50xFile
 	int fat_end;
 	uint8_t *fat;
 	int mime_type;
+	int type; /* not necessarily the same thing as mime_type! */
+	unsigned int size;
+	uint8_t *thumb; /* used to cache the thumbnail data, for some cams */
 };
 
 typedef enum {

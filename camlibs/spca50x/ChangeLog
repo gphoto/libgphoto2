@@ -1,3 +1,7 @@
+Wed Jun 04 18:39:02 2003  Till Adam  <till@adam-lilienthal.de>
+  * add support for spca500 based cams with flash storage, courtesy
+    of Ian MacArthur <ian@imm.uklinux.net>
+
 Wed Jun 04 18:26:23 2003  Till Adam  <till@adam-lilienthal.de>
   * use ids to detect the model instead of strcmp which fails
     after the : change

@@ -91,10 +91,12 @@ spca50x_reset (CameraPrivateLibrary * lib)
 {
 	GP_DEBUG ("* spca50x_reset");
 	if (lib->bridge == BRIDGE_SPCA500) {
-		/* This is not reset but "Change Mode to Idle (Clear Buffer)"
-		 * Cant hurt, I guess. */
-		CHECK (gp_port_usb_msg_write
-		       (lib->gpdev, 0x02, 0x0000, 0x07, NULL, 0));
+		if (lib->storage_media_mask & SPCA50X_SDRAM) {
+			/* This is not reset but "Change Mode to Idle
+			 * (Clear Buffer)" Cant hurt, I guess. */
+			CHECK (gp_port_usb_msg_write
+				(lib->gpdev, 0x02, 0x0000, 0x07, NULL, 0));
+		}
 	} else if (lib->fw_rev == 1) {
 		CHECK (gp_port_usb_msg_write
 		       (lib->gpdev, 0x02, 0x0000, 0x0003, NULL, 0));
