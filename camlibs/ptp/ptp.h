@@ -163,6 +163,9 @@ struct _PTPObjectHandles {
 };
 typedef struct _PTPObjectHandles PTPObjectHandles;
 
+#define PTP_HANDLER_SPECIAL	0xffffffff
+#define PTP_HANDLER_ROOT	0x00000000
+
 
 // PTP objectinfo structure (returned by GetObjectInfo)
 

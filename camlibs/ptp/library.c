@@ -383,6 +383,33 @@ add_dir (Camera *camera, uint32_t parent, uint32_t handle, const char *filename)
 	camera->pl->params.objectinfo[n].ParentObject=parent;
 }
 
+static void
+move_object_by_handle (Camera *camera, uint32_t parent, uint32_t handle)
+{
+	int n;
+
+	for (n=0; n<camera->pl->params.handles.n; n++)
+		if (camera->pl->params.handles.handler[n]==handle) break;
+	if (n==camera->pl->params.handles.n) return;
+	camera->pl->params.objectinfo[n].ParentObject=parent;
+}
+
+static void
+move_object_by_number (Camera *camera, uint32_t parent, int n)
+{
+	if (n>=camera->pl->params.handles.n) return;
+	camera->pl->params.objectinfo[n].ParentObject=parent;
+}
+
+static inline int
+handle_to_n (uint32_t handle, Camera *camera)
+{
+	int i;
+	for (i = 0; i < camera->pl->params.handles.n; i++)
+		if (camera->pl->params.handles.handler[i]==handle) return i;
+	return (PTP_HANDLER_SPECIAL); // NOT FOUND
+}
+
 
 static uint32_t
 find_child (const char *file, uint32_t handle, Camera *camera)
@@ -395,7 +422,7 @@ find_child (const char *file, uint32_t handle, Camera *camera)
 			if (!strcmp(oi[i].Filename,file))
 				return (camera->pl->params.handles.handler[i]);
 	}
-	return 0xffffffff;  // NOT FOUND
+	return (PTP_HANDLER_SPECIAL);  // NOT FOUND
 }
 
 
@@ -403,8 +430,8 @@ static uint32_t
 folder_to_handle(const char *folder, uint32_t parent, Camera *camera)
 {
 	char *c;
-	if (!strlen(folder)) return 0x00000000;
-	if (!strcmp(folder,"/")) return 0x00000000;
+	if (!strlen(folder)) return PTP_HANDLER_ROOT;
+	if (!strcmp(folder,"/")) return PTP_HANDLER_ROOT;
 
 	c=strchr(folder+1,'/');
 	if (c!=NULL) {
@@ -421,19 +448,18 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
-	Camera *camera = data;
-	uint32_t parent;
+	PTPParams *params = &((Camera *)data)->pl->params;
 	char *backfolder=malloc(strlen(folder));
+	uint32_t parent;
 	int i;
 	
 	memcpy(backfolder,folder+1, strlen(folder));
-	parent=folder_to_handle(backfolder,0, camera);
+	parent=folder_to_handle(backfolder,0, (Camera *)data);
 	free(backfolder);
-	if (!strcmp(folder,"/"))
-	for (i = 0; i < camera->pl->params.handles.n; i++) {
-	if (( camera->pl->params.objectinfo[i].ObjectFormat & 0x0800) != 0)
-	if (camera->pl->params.objectinfo[i].ParentObject==parent)
-		CR (gp_list_append (list, camera->pl->params.objectinfo[i].Filename, NULL));
+	for (i = 0; i < params->handles.n; i++) {
+	if (params->objectinfo[i].ParentObject==parent)
+	if ((params->objectinfo[i].ObjectFormat & 0x0800) != 0)
+		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
 	}
 
 	return (GP_OK);
@@ -443,21 +469,20 @@ static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
-	Camera *camera = data;
-	PTPObjectInfo * oi = ((Camera*)data)->pl->params.objectinfo;
-	int i;
-	uint32_t parent;
+	PTPParams *params = &((Camera *)data)->pl->params;
 	char *backfolder=malloc(strlen(folder));
+	uint32_t parent;
+	int i;
 
 	memcpy(backfolder,folder+1, strlen(folder));
-	parent=folder_to_handle(backfolder,0, camera);
+	parent=folder_to_handle(backfolder,0, (Camera *)data);
 	free(backfolder);
-	gp_filesystem_dump(fs);
-	for (i = 0; i < ((Camera*)data)->pl->params.handles.n; i++) {
-	if (oi[i].ObjectFormat==PTP_OFC_Association &&
-		oi[i].AssociationType==PTP_AT_GenericFolder)
-	if (camera->pl->params.objectinfo[i].ParentObject==parent)
-			CR (gp_list_append (list, oi[i].Filename, NULL));
+	//gp_filesystem_dump(fs);
+	for (i = 0; i < params->handles.n; i++) {
+	if (params->objectinfo[i].ParentObject==parent)
+	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
+		params->objectinfo[i].AssociationType==PTP_AT_GenericFolder)
+		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
 	}
 	return (GP_OK);
 }
@@ -468,13 +493,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	PTPReq *fdata = NULL;
+	char *backfolder=malloc(strlen(folder));
 	char * image;
-	unsigned long image_id;
+	uint32_t image_id;
 	uint32_t size;
 
 
 	// Get file number
-	image_id = gp_filesystem_number (fs, folder, filename);
+	memcpy(backfolder,folder+1, strlen(folder));
+	image_id = folder_to_handle(backfolder, 0, camera);
+	free(backfolder);
+	image_id = find_child(filename, image_id, camera);
+	if ((image_id=handle_to_n(image_id, camera))==PTP_HANDLER_SPECIAL)
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	// don't try to download ancillary objects!
 	if (( camera->pl->params.objectinfo[image_id].ObjectFormat & 0x0800) == 0) return (GP_OK);
@@ -543,10 +574,19 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	PTPObjectInfo *oi;
-	int n;
+	char *backfolder=malloc(strlen(folder));
+	uint32_t image_id;
 
-	CR (n = gp_filesystem_number (fs, folder, filename));
-	oi=&camera->pl->params.objectinfo[n];
+
+	// Get file number
+	memcpy(backfolder,folder+1, strlen(folder));
+	image_id = folder_to_handle(backfolder, 0, camera);
+	free(backfolder);
+	image_id = find_child(filename, image_id, camera);
+	if ((image_id=handle_to_n(image_id, camera))==PTP_HANDLER_SPECIAL)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	oi=&camera->pl->params.objectinfo[image_id];
 /*	GP_DEBUG ("ObjectInfo for '%s':");
 	GP_DEBUG ("  StorageID: %d", oi.StorageID);
 	GP_DEBUG ("  ObjectFormat: %d", oi.ObjectFormat);
@@ -601,7 +641,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 
 	// blackmagic, obtain ObjectHandle of upper folder
 	// XXX 0xffffffff=root filesystem
-	parent=0x00000000;
+	parent=PTP_HANDLER_ROOT;
 
 	// any store (responder decides)
 	store=0xffffffff;
@@ -634,12 +674,16 @@ init_ptp_fs (Camera *camera)
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		camera->pl->params.handles.handler[i], &camera->pl->params.objectinfo[i]));
 	}
-
+/*
 	add_dir (camera, 0x00000000, 0xff000000, "DIR1");
 	add_dir (camera, 0x00000000, 0xff000001, "DIR20");
 	add_dir (camera, 0xff000000, 0xff000002, "subDIR1");
 	add_dir (camera, 0xff000002, 0xff000003, "subsubDIR1");
-
+	move_object_by_number (camera, 0xff000002, 2);
+	move_object_by_number (camera, 0xff000001, 3);
+	move_object_by_number (camera, 0xff000002, 4);
+	// Used for testing with my camera, which does not support subdirs
+*/
 	return (GP_OK);
 }
 
