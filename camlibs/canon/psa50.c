@@ -1697,7 +1697,7 @@ int psa50_delete_file(Camera *camera, const char *name, const char *dir)
  */
 int psa50_put_file_usb(Camera *camera, CameraFile *file, char *destname, char *destpath) 
 {
-    gp_interface_message(NULL,"Not implemented!");
+    gp_camera_message(NULL,"Not implemented!");
     return GP_ERROR;
 }
 

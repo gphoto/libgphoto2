@@ -1,6 +1,8 @@
 2000-08-20
     philm       USB now works thanks to the help of James Tappin and
                 Tuomas Jormola.
+                make use of gp_setting_set/get to save/get settings
+                (only debug for the moment).
 2000-08-17
     philm       fixed USB compilation but does it work ?
 2000-08-15

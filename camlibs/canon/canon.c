@@ -1074,14 +1074,14 @@ static char *canon_get_picture(Camera *camera, char *filename, char *path, int t
 static int _get_file_path(struct psa50_dir *tree, char *filename, char *path)
 {
 
-    if (tree==NULL) return GP_ERROR;    
- 
+  if (tree==NULL) return GP_ERROR;    
+  
 	if (canon_comm_method !=  CANON_USB) {
-    path = strchr(path,0);
-    *path = '\\';
+		path = strchr(path,0);
+		*path = '\\';
 	}
 
-    while(tree->name) {
+	while(tree->name) {
 		if (!is_image(tree->name)) { 
 			switch(canon_comm_method) {
 			 case CANON_USB:
@@ -1089,20 +1089,20 @@ static int _get_file_path(struct psa50_dir *tree, char *filename, char *path)
 				break;
 			 case CANON_SERIAL_RS232:
 			 default:
-            strcpy(path+1,tree->name);
+				strcpy(path+1,tree->name);
 				break;
 			}
 		}
-        if (is_image(tree->name) && strcmp(tree->name,filename)==0) {
-            return GP_OK;
-        }
-		else if (!tree->is_file) {
-            if (_get_file_path(tree->user,filename, path) == GP_OK)
-                   return GP_OK;
+		if (is_image(tree->name) && strcmp(tree->name,filename)==0) {
+			return GP_OK;
 		}
-        tree++;
-    }
-
+		else if (!tree->is_file) {
+			if (_get_file_path(tree->user,filename, path) == GP_OK)
+			  return GP_OK;
+		}
+		tree++;
+	}
+	
 	return GP_ERROR;	
 }
 
@@ -1130,8 +1130,8 @@ int camera_file_get(Camera *camera, CameraFile *file, char *folder, char *filena
     }
 
     if (canon_comm_method != CANON_USB) {
-    j = strrchr(path,'\\') - path;
-    path[j+1] = '\0';     
+      j = strrchr(path,'\\') - path;
+      path[j+1] = '\0';     
     } else {
       j = strchr(path,'\0') - path;
       path[j] = '\\';     
@@ -1167,14 +1167,14 @@ int camera_file_get_preview(Camera *camera, CameraFile *preview, char *folder, c
     }
 
     if (canon_comm_method != CANON_USB) {
-    j = strrchr(path,'\\') - path;
-    path[j+1] = '\0';        
+      j = strrchr(path,'\\') - path;
+      path[j+1] = '\0';        
     } else {
       j = strchr(path,'\0') - path;
       path[j] = '\\';     
       path[j+1] = '\0';
     }
-	
+
     data = canon_get_picture(camera, filename, path, 1, &buflen);
     if (!data)
         return GP_ERROR;
@@ -1246,9 +1246,10 @@ int camera_file_count(Camera *camera)
  */
 int camera_init(Camera *camera, CameraInit *init)
 {
-	char fname[1024];
-	FILE *conf;
+//	char fname[1024];
+//	FILE *conf;
 	struct canon_info *cs;
+	char buf[8];
 	
 	/* First, set up all the function pointers */
 	camera->functions->id                = camera_id;
@@ -1284,51 +1285,34 @@ int camera_init(Camera *camera, CameraInit *init)
 	if (cs->speed == 0)
 	  cs->speed = 9600;
 	
-	setFileName(fname);
-	if ((conf = fopen(fname, "r"))) {
-		char buf[256];
-		char *sp, *vp;
-		while ((sp = fgets(buf, sizeof(buf)-1, conf)) != NULL) {
-			if (*sp == '#' || *sp == '*')
-			  continue;
-			sp = strtok(buf, " \t\r\n");
-			if (!sp)
-			  continue;    /* skip blank lines */
-			vp = strtok(NULL, " \t\r\n");
-			if (!vp) {
-				printf("No value for %s - ignored\n", sp);
-				continue;
-			}
+	if (gp_setting_get("canon","debug",buf) != GP_OK)
+	  cs->debug = 1; // by default debug functions
 			
-//			if (camera->debug == 1) {
-				if (strncmp(vp, "0", 1) == 0)
-				  cs->debug = 0;
-				if (strncmp(vp, "1", 1) == 0)
-				  cs->debug = 1;
-				if (strncmp(vp, "1", 1) == 0)
-				  cs->debug = 1;
-				if (strncmp(vp, "2", 1) == 0)
-				  cs->debug = 2;
-				if (strncmp(vp, "3", 1) == 0)
-				  cs->debug = 3;
-				if (strncmp(vp, "4", 1) == 0)
-				  cs->debug = 4;
-				if (strncmp(vp, "5", 1) == 0)
-				  cs->debug = 5;
-				if (strncmp(vp, "6", 1) == 0)
-				  cs->debug = 6;
-				if (strncmp(vp, "7", 1) == 0)
-				  cs->debug = 7;
-				if (strncmp(vp, "8", 1) == 0)
-				  cs->debug = 8;
-				if (strncmp(vp, "9", 1) == 0)
-				  cs->debug = 9;
-				fprintf(stderr,"Debug level: %i\n",cs->debug);
-//			}
-//			cs->debug = 1;
-		}
-        fclose(conf);
-	}
+	if (strncmp(buf, "0", 1) == 0)
+	  cs->debug = 0;
+	if (strncmp(buf, "1", 1) == 0)
+	  cs->debug = 1;
+	if (strncmp(buf, "1", 1) == 0)
+	  cs->debug = 1;
+	if (strncmp(buf, "2", 1) == 0)
+	  cs->debug = 2;
+	if (strncmp(buf, "3", 1) == 0)
+	  cs->debug = 3;
+	if (strncmp(buf, "4", 1) == 0)
+	  cs->debug = 4;
+	if (strncmp(buf, "5", 1) == 0)
+	  cs->debug = 5;
+	if (strncmp(buf, "6", 1) == 0)
+	  cs->debug = 6;
+	if (strncmp(buf, "7", 1) == 0)
+	  cs->debug = 7;
+	if (strncmp(buf, "8", 1) == 0)
+	  cs->debug = 8;
+	if (strncmp(buf, "9", 1) == 0)
+	  cs->debug = 9;
+	fprintf(stderr,"Debug level: %i\n",cs->debug);
+
+
 	switch (init->port_settings.type) { 
 	 case GP_PORT_USB:
 		debug_message(camera,"GPhoto tells us that we should use a USB link.\n");
@@ -1671,6 +1655,7 @@ int camera_config_set(Camera *camera, CameraSetting *setting, int count)
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	int i=0;
 	int new_debug = 0;
+	char buf[8];
 	
 	for (i=0;i<count;i++) {
 		debug_message(camera,"settings[%i] : %s = %s\n",i,setting[i].name,
@@ -1692,7 +1677,9 @@ int camera_config_set(Camera *camera, CameraSetting *setting, int count)
 	}
 	if (cs->debug != new_debug) {
 		cs->debug = new_debug;
-		save_rcfile(camera);
+//		save_rcfile(camera);
+		sprintf(buf,"%i",new_debug);
+		gp_setting_set("canon", "debug", buf);
 	}
 	
     return GP_OK;
