@@ -204,6 +204,16 @@ pdc700_picinfo (Camera *camera, int n, int *size_thumb, int *size_pic)
 	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
+	/*
+	 * What we got back:
+	 *  0 -  3: ?
+	 *  4 -  7: Picture size
+	 *  8 - 17: ?
+	 * 18 - 21: Thumbnail size
+	 * 22: ?
+	 * 23 - 28: Version
+	 * 29 - 63: ?
+	 */
 	*size_pic = buf[4] | (buf[5] << 8) | (buf[6] << 16) | (buf[7] << 24);
 	*size_thumb = buf[18] | (buf[19] <<  8) | (buf[20] << 16) |
 						  (buf[21] << 24);
