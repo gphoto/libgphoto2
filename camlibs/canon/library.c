@@ -546,6 +546,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 						  canon_path);
 				ret = GP_ERROR;
 			}
+			break;
 		case GP_FILE_TYPE_PREVIEW:
 #ifdef HAVE_EXIF
 			/* Check if we have libexif, it is an image and it is not

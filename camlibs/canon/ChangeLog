@@ -1,3 +1,8 @@
+2003-05-06 Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c,canon.c: 2 bug fixes for audio files from
+	  Ben Low <ben@bdlow.net>.
+
 2003-04-07 Stephen H. Westin <westin@graphics.cornell.edu>
 
 	* Update README, TODO, ChangeLog
