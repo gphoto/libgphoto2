@@ -203,6 +203,8 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 
 	/* Remember the selected speed */
 	selected_speed = settings.serial.speed;
+	if (!selected_speed)
+		selected_speed = 115200;	/* Try the maximum speed */
 
 	/* Set the settings */
 	settings.serial.speed = 9600;
