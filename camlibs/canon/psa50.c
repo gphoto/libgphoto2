@@ -1471,7 +1471,7 @@ unsigned char *psa50_get_file_serial(Camera *camera, const char *name,int *lengt
             total = get_int(msg+4);
                 if(cs->model == CANON_PS_S20 || cs->model==CANON_PS_G1 
                 	|| cs->model == CANON_PS_S10) {
-                        maxfilesize=3000000;
+                        maxfilesize=10000000;
                 }
                 else {
                         maxfilesize=2000000;
@@ -1548,7 +1548,7 @@ unsigned char *psa50_get_file_usb(Camera *camera, const char *name,int *length)
       total=len;
       if(cs->model == CANON_PS_S20 || cs->model == CANON_PS_G1
 	 || cs->model == CANON_PS_S10) {
-	maxfilesize=3000000;
+	maxfilesize=10000000;
       } else {
 	maxfilesize=2000000;
       }
