@@ -199,14 +199,14 @@ int gpe_dump_exif(exifparser *exifdata);
 #define EXIF_ExifImageWidth             0xA002
 #define EXIF_ExifImageLength            0xA003
 #define EXIF_InteroperabilityOffset     0xA005
-#define EXIF_FlashEnergy                0xA20B  # 0x920B in TIFF/EP
-#define EXIF_SpatialFrequencyResponse   0xA20C  # 0x920C    -  -
-#define EXIF_FocalPlaneXResolution      0xA20E  # 0x920E    -  -
-#define EXIF_FocalPlaneYResolution      0xA20F  # 0x920F    -  -
-#define EXIF_FocalPlaneResolutionUnit   0xA210  # 0x9210    -  -
-#define EXIF_SubjectLocation            0xA214  # 0x9214    -  -
-#define EXIF_ExposureIndex              0xA215  # 0x9215    -  -
-#define EXIF_SensingMethod              0xA217  # 0x9217    -  -
+#define EXIF_FlashEnergy                0xA20B  /* 0x920B in TIFF/EP */
+#define EXIF_SpatialFrequencyResponse   0xA20C  /* 0x920C    -  - */
+#define EXIF_FocalPlaneXResolution      0xA20E  /* 0x920E    -  - */
+#define EXIF_FocalPlaneYResolution      0xA20F  /* 0x920F    -  - */
+#define EXIF_FocalPlaneResolutionUnit   0xA210  /* 0x9210    -  - */
+#define EXIF_SubjectLocation            0xA214  /* 0x9214    -  - */
+#define EXIF_ExposureIndex              0xA215  /* 0x9215    -  - */
+#define EXIF_SensingMethod              0xA217  /* 0x9217    -  - */
 #define EXIF_FileSource                 0xA300
 #define EXIF_SceneType                  0xA301
 
