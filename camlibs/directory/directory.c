@@ -63,7 +63,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         a->capture   = GP_CAPTURE_NONE;
         a->config    = 1;
         a->file_delete  = 0;
-        a->file_preview = 1;
+        a->file_preview = 0;
         a->file_put  = 0;
 
         gp_abilities_list_append(list, a);
@@ -85,17 +85,11 @@ int camera_init (Camera *camera, CameraInit *init) {
         camera->functions->folder_list  	= camera_folder_list;
         camera->functions->file_list    	= camera_file_list;
         camera->functions->file_get     	= camera_file_get;
-        camera->functions->file_get_preview 	= camera_file_get_preview;
-	camera->functions->file_config_get 	= NULL;
-	camera->functions->file_config_set 	= NULL;
-	camera->functions->folder_config_get	= NULL;
-	camera->functions->folder_config_set	= NULL;
 	camera->functions->config_get		= camera_config_get;
 	camera->functions->config_set		= camera_config_set;
         camera->functions->file_put     	= camera_file_put;
         camera->functions->file_delete  	= camera_file_delete;
         camera->functions->config       	= camera_config;
-        camera->functions->capture      	= camera_capture;
         camera->functions->summary      	= camera_summary;
         camera->functions->manual       	= camera_manual;
         camera->functions->about        	= camera_about;
@@ -247,25 +241,6 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
         return (GP_OK);
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, char *filename) {
-
-        /**********************************/
-        /* file_number now starts at 0!!! */
-        /**********************************/
-
-        char buf[1024];
-        int result;
-        DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
-
-        directory_folder_set(camera, folder);
-
-        sprintf(buf, "%s/%s", d->directory, filename);
-        if ((result = gp_file_open(file, buf)) != GP_OK)
-                return (result);
-
-        return (GP_OK);
-}
-
 int camera_config_get (Camera *camera, CameraWidget **window) {
 	CameraWidget *widget;
 	char buf[256];
@@ -363,11 +338,6 @@ int camera_config (Camera *camera) {
                 gp_widget_choice_add(t, "Macro");
                 gp_widget_value_set(t, "Macro");
 #endif
-}
-
-int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
-
-        return (GP_ERROR_NOT_SUPPORTED);
 }
 
 int camera_summary (Camera *camera, CameraText *summary) {
