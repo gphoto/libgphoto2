@@ -159,6 +159,13 @@
 #define GP_PORT_SERIAL_RANGE_HIGH  4
 #endif
 
+/* IRIX */
+#if defined(__sgi)
+#define GP_PORT_SERIAL_PREFIX "/dev/ttyd%i"
+#define GP_PORT_SERIAL_RANGE_LOW       1 
+#define GP_PORT_SERIAL_RANGE_HIGH     11
+#endif
+
 /* Others? */
 
 /* Default */
@@ -398,7 +405,7 @@ gp_port_serial_open (GPPort *dev)
         if (dev->pl->fd == -1) {
 		gp_port_set_error (dev, _("Failed to open '%s' (%m)."), port);
 		dev->pl->fd = 0;
-                return GP_ERROR_IO;
+		return GP_ERROR_IO;
         }
 
         return GP_OK;
@@ -711,9 +718,16 @@ gp_port_serial_check_speed (GPPort *dev)
 	if (!dev->pl->fd)
 		return (GP_OK);
 
+#if defined(__sgi)
+	/*
+	 * On IRIX, we need to set the baudrate after closing and
+	 * reopening.
+	 */
+#else
 	/* If baudrate is up to date, do nothing */
 	if (dev->pl->baudrate == dev->settings.serial.speed)
 		return (GP_OK);
+#endif
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
 		"Setting baudrate to %d...", dev->settings.serial.speed);

@@ -1,3 +1,7 @@
+2002-02-21  Lutz Müller <lutz@users.sourceforge.net>
+
+	* serial/unix.c: IRIX fixes.
+
 2002-02-19  Lutz Müller <lutz@users.sourceforge.net>
 
 	* serial/unix.c (gp_port_library_list): Don't check for return
