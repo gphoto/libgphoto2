@@ -5,4 +5,4 @@ Makefile
 *.so
 *.lo
 *.la
-ptp_test
+ptpcam
