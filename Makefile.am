@@ -1,4 +1,5 @@
-INCLUDES =					\
+INCLUDES =						\
+	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port	\
 	-DCAMLIBS=\"$(prefix)/lib/gphoto2\"
 
 lib_LTLIBRARIES = libgphoto2.la
