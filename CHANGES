@@ -10,11 +10,12 @@ gphoto2-2.0beta4
 libgphoto2:
    * Most functions report progress and are cancellable.
    * Camera libraries are now installed in a versioned subdirectories.
-   * Stv0680 improvments.
+   * Stv0680 improvements.
    * Canon: added PowerShot S30 support, CameraFS support, big-endian
 		 systems support, RAW-File support.
-   * Added ptp camera support.
-   * Samsung 800k support.
+   * Added ptp cameras support (Kodak DX series and much more).
+   * Camera Summary for Kodak DC240 driver.
+	* Samsung 800k support.
    * Fixed digita thumbnails bug.
    * French localization.
 
