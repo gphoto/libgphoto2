@@ -1,3 +1,8 @@
+2002-05-17  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* INSTALL: added CDPATH warning, "make rpm" works again
+	* configure.in: added CDPATH warning
+	
 2002-05-07  Lutz Müller <lutz@users.sourceforge.net>
 
 	* frontends/command-line: Remove more globals.
