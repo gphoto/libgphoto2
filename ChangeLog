@@ -1,3 +1,14 @@
+2001-11-14  Greg Ingram <ingram@symsys.com>
+
+	* camlibs/polaroid/pdc700.c: 
+	  - boosted the preferred baudrate to 115200
+	  - discovered the self-timer state datum 
+	  - discovered how to set the camera's configuration, added 
+	    camera_get_config() and camera_set_config() routines and flagged 
+	    the config operation
+	  - added some delaying tactics in pdc700_capture()
+	  - added usb vendor/product ids (no, usb doesn't work yet)
+	
 2001-11-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* cammlibs/agfa/agfa.c: Initialize a.speed[0] to 0 instead of 

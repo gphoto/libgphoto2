@@ -50,7 +50,7 @@
 
 #define PDC700_INIT	0x01
 #define PDC700_INFO	0x02
-
+#define PDC700_CONFIG   0x03
 #define PDC700_BAUD	0x04
 #define PDC700_PICINFO	0x05
 #define PDC700_THUMB	0x06
@@ -58,17 +58,25 @@
 #define PDC700_DEL	0x09
 #define PDC700_CAPTURE  0x0a
 
-
 #define PDC700_FIRST	0x00
 #define PDC700_DONE	0x01
 #define PDC700_LAST	0x02
 
+#define PDC700_SET_FLASH      0x00
+#define PDC700_SET_TIMER      0x01
+#define PDC700_SET_CAPTION    0x02
+#define PDC700_SET_LCD        0x03
+#define PDC700_SET_QUALITY    0x04
+#define PDC700_SET_TIME       0x05
+#define PDC700_SET_POWEROFF   0x06
+
 typedef enum _PDCBaud PDCBaud;
 enum _PDCBaud {
-	PDC_BAUD_9600  = 0x00,
-	PDC_BAUD_19200 = 0x01,
-	PDC_BAUD_38400 = 0x02,
-	PDC_BAUD_57600 = 0x03
+	PDC_BAUD_9600   = 0x00,
+	PDC_BAUD_19200  = 0x01,
+	PDC_BAUD_38400  = 0x02,
+	PDC_BAUD_57600  = 0x03,
+	PDC_BAUD_115200 = 0x04
 };
 
 typedef enum _PDCBool PDCBool;
@@ -94,7 +102,7 @@ enum _PDCMode {
 	PDC_MODE_RECORD = 1,
 	PDC_MODE_MENU   = 2
 };
-
+ 
 typedef enum _PDCQuality PDCQuality;
 enum _PDCQuality {
 	PDC_QUALITY_NORMAL    = 0,
@@ -112,7 +120,7 @@ enum _PDCFlash {
 typedef struct _PDCInfo PDCInfo;
 struct _PDCInfo {
 	unsigned int num_taken, num_free;
-	unsigned char auto_power_off;
+	unsigned char auto_poweroff;
 	char version[6];
 	unsigned char memory;
 	PDCDate date;
@@ -120,7 +128,7 @@ struct _PDCInfo {
 	PDCQuality quality;
 	PDCFlash   flash;
 	PDCBaud    speed;
-	PDCBool caption, lcd, ac_power;
+	PDCBool caption, timer, lcd, ac_power;
 };
 
 typedef struct _PDCPicInfo PDCPicInfo;
@@ -129,6 +137,24 @@ struct _PDCPicInfo {
 	unsigned int pic_size, thumb_size;
 	unsigned char flash;
 };
+
+static int camera_set(Camera *, int, int);
+
+#define IMAGE_QUALITY _("Image Quality")
+#define FLASH_SETTING _("Flash Setting")
+#define LCD_STATE     _("LCD")
+#define SELF_TIMER    _("Self Timer")
+#define AUTO_POWEROFF _("Auto Power Off (minutes)")
+#define SHOW_CAPTIONS _("Information")
+
+static const char *quality[] = {N_("normal"), N_("fine"), N_("superfine"), 
+				NULL};
+static const char *flash[]   = {N_("auto"), N_("on"), N_("off"), NULL};
+static const char *bool[]    = {N_("off"), N_("on"), NULL};
+static const char *mode[]    = {N_("play"), N_("record"), N_("menu"), NULL};
+static const char *power[]   = {N_("battery"), N_("a/c adaptor"), NULL};
+static const char *speed[]   = {N_("9600"), N_("19200"), N_("38400"), 
+				N_("57600"), N_("115200"), NULL};
 
 #define CR(result) {int r=(result);if(r<0) return (r);}
 #define CRF(result,d)      {int r=(result);if(r<0) {free(d);return(r);}}
@@ -229,7 +255,7 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 
 	CR (pdc700_send (camera, cmd, cmd_len));
 	CR (pdc700_read (camera, cmd, b, &b_len, &status,
-			(cmd[4] == PDC700_FIRST) ? &sequence_number : NULL));
+			 (cmd[4] == PDC700_FIRST) ? &sequence_number : NULL));
 
 	/* Copy over the data */
 	*buf_len = b_len;
@@ -283,6 +309,9 @@ pdc700_baud (Camera *camera, int baud)
 
 	cmd[3] = PDC700_BAUD;
 	switch (baud) {
+	case 115200:
+		cmd[4] = PDC_BAUD_115200;
+		break;
 	case 57600:
 		cmd[4] = PDC_BAUD_57600;
 		break;
@@ -377,6 +406,8 @@ pdc700_info (Camera *camera, PDCInfo *info)
 	unsigned char buf[2048];
 	unsigned char cmd[5];
 
+	//camera_set(camera, PDC700_SET_WHAT_IS_02, 0);
+
 	cmd[3] = PDC700_INFO;
 	CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
 
@@ -387,7 +418,7 @@ pdc700_info (Camera *camera, PDCInfo *info)
 	 * 01 20 .. 02
 	 */
 
-	info->memory = buf[2];
+ 	info->memory = buf[2];
 
 	/* Power source state (make sure it's valid) */
 	info->ac_power = buf[4];
@@ -396,8 +427,8 @@ pdc700_info (Camera *camera, PDCInfo *info)
 		info->ac_power = PDC_BOOL_OFF;
 	}
 
-	info->auto_power_off = buf[5];
-
+ 	info->auto_poweroff = buf[5];
+ 
 	/* Mode (make sure we know it) */
 	info->mode = buf[6];
 	if (info->mode < 0 || info->mode > 2) {
@@ -445,22 +476,29 @@ pdc700_info (Camera *camera, PDCInfo *info)
 	}
 
 	/*
-	 * buf[28-32]: We don't know. Below are some samples:
+	 * buf[28-31]: We don't know. Below are some samples:
 	 * 
-	 * f8 b2 64 03 00
+	 * f8 b2 64 03
 	 *
-	 * c6 03 86 28 00
+	 * c6 03 86 28
 	 *
-	 * 3a 7f 65 83 00
+	 * 3a 7f 65 83
 	 *
-	 * 23 25 66 83 00
+	 * 23 25 66 83
 	 */
+
+	/* Timer state (make sure it's valid) */
+	info->timer = buf[32];
+	if (info->timer != 0 && info->timer != 1) {
+		GP_DEBUG ("Unknown timer state %i", info->timer);
+		info->timer = PDC_BOOL_OFF;
+	}
 
 	/* LCD state (make sure it's valid) */
 	info->lcd = buf[33];
 	if (info->lcd != 0 && info->lcd != 1) {
 		GP_DEBUG ("Unknown LCD state %i", info->lcd);
-		info->quality = PDC_BOOL_OFF;
+		info->lcd = PDC_BOOL_OFF;
 	}
 
 	/* Quality (make sure we know it) */
@@ -480,11 +518,26 @@ pdc700_capture (Camera *camera)
 {
         unsigned char cmd[5], buf[1024];
         unsigned int buf_len;
+	int r = 0;
+	int try;
+	PDCInfo info;
 
         cmd[3] = PDC700_CAPTURE;
+	cmd[4] = 0;
+
         CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
 
-        return (GP_OK);
+	/*
+	 * This is rather hackish.  The camera needs a little time to recover
+	 * after taking a picture.  I tried a general-purpose retry thing in
+	 * pdc_transmit, but that got in the way during initialization.  So
+	 * I'm leaving this ugly-but-works junk here for now.
+	 */
+	for (try = 0; try < 10; try++)
+	  if ((r = pdc700_info(camera, &info)) == GP_OK)
+	    break;
+	
+        return r;
 };
 
 static int
@@ -545,9 +598,12 @@ camera_id (CameraText *id)
 
 static struct {
 	const char *model;
+	unsigned short usb_vendor;
+	unsigned short usb_product;
+
 } models[] = {
-	{"Polaroid DC700"},
-	{NULL}
+	{"Polaroid DC700", 0x784, 0x2888},
+	{NULL, 0, 0}
 };
 
 int
@@ -559,18 +615,18 @@ camera_abilities (CameraAbilitiesList *list)
 	for (i = 0; models[i].model; i++) {
 		strcpy (a.model, models[i].model);
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
-		a.port     = GP_PORT_SERIAL;
-
-		/* Supported speeds, terminated with 0 */
+		a.port     = GP_PORT_SERIAL | GP_PORT_USB;
+		a.usb_vendor = models[i].usb_vendor;
+		a.usb_product= models[i].usb_product;
 		a.speed[0] = 9600;
 		a.speed[1] = 19200;
 		a.speed[2] = 38400;
 		a.speed[3] = 57600;
-		a.speed[4] = 0;
-
-		a.operations        = GP_OPERATION_CAPTURE_IMAGE;
+		a.speed[4] = 115200;
+		a.operations        = GP_OPERATION_CAPTURE_IMAGE |
+                                      GP_OPERATION_CONFIG;
 		a.file_operations   = GP_FILE_OPERATION_DELETE |
-				      GP_FILE_OPERATION_PREVIEW;
+		                      GP_FILE_OPERATION_PREVIEW;
 		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 
 		CR (gp_abilities_list_append (list, a));
@@ -754,15 +810,144 @@ camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
+/*
+ * We encapsulate the process of adding an entire radio control. 
+ */
+static void 
+add_radio(CameraWidget *section, const char *blurb, const char **opt, 
+	  int selected)
+{
+	CameraWidget *child;
+
+	int i;
+
+	gp_widget_new (GP_WIDGET_RADIO, blurb, &child);
+
+	for (i = 0; opt[i] != NULL; i++)
+	  gp_widget_add_choice (child, opt[i]);
+	  
+	gp_widget_set_value (child, (void *) opt[selected]);
+	gp_widget_append (section, child);
+}
+  
+
+static int
+camera_get_config (Camera *camera, CameraWidget **window)
+{
+	CameraWidget *child;
+	CameraWidget *section;
+	//int value;
+	float range;
+	PDCInfo info;
+
+	CR (pdc700_info (camera, &info));
+
+	gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
+	gp_widget_new (GP_WIDGET_SECTION, _("Settings"), &section);
+	gp_widget_append (*window, section);
+
+	add_radio(section, IMAGE_QUALITY, quality, info.quality);
+	add_radio(section, FLASH_SETTING, flash,   info.flash);
+	add_radio(section, LCD_STATE,     bool,    info.lcd);
+	add_radio(section, SELF_TIMER,    bool,    info.timer);
+	add_radio(section, SHOW_CAPTIONS, bool,    info.caption);
+
+	gp_widget_new (GP_WIDGET_RANGE, AUTO_POWEROFF, &child);
+	gp_widget_set_range (child, 1, 99, 1);
+	range = info.auto_poweroff;
+	gp_widget_set_value (child, &range);
+	gp_widget_append (section, child);
+
+	gp_widget_set_info (child, _("How long will it take until the "
+				     "camera powers off?"));
+
+	/*
+	 * Wait for the widget to be implemented
+	 gp_widget_new (GP_WIDGET_DATE, _("Date and Time"), &child);
+	 gp_widget_append (section, child);
+	*/
+
+	return GP_OK;
+}
+
+static int 
+which_radio_button(CameraWidget *window, const char *label, 
+		   const char * const *opt)
+{
+  	CameraWidget *child;
+	int i;
+	char *value;
+
+	if (gp_widget_get_child_by_label (window, label, &child) != GP_OK)
+	  return -1;
+
+	if (!gp_widget_changed (child)) 
+	  return -1;
+
+	gp_widget_get_value (child, &value);
+
+	for (i = 0; opt[i] != NULL; i++)
+	  if (strcmp(value, opt[i]) == 0)
+	    return i;
+
+	return -1;
+}
+
+static int
+camera_set(Camera *camera, int setting, int value)
+{
+	unsigned char cmd[12];
+	unsigned char buf[512];
+	int buf_len;
+
+	cmd[3] = PDC700_CONFIG;
+	cmd[4] = setting;
+	cmd[5] = value;
+
+	CR (pdc700_transmit (camera, cmd, 12, buf, &buf_len));
+
+	return GP_OK;
+}
+  
+
+static int
+camera_set_config (Camera *camera, CameraWidget *window)
+{
+  	CameraWidget *child;
+	int i = 0;
+	float range;
+
+	if ((i = which_radio_button(window, IMAGE_QUALITY, quality)) >= 0)
+	  CR (camera_set(camera, PDC700_SET_QUALITY, i));
+
+	if ((i = which_radio_button(window, FLASH_SETTING, flash)) >= 0)
+	  CR (camera_set(camera, PDC700_SET_FLASH, i));
+
+	if ((i = which_radio_button(window, LCD_STATE, bool)) >= 0)
+	  CR (camera_set(camera, PDC700_SET_LCD, i));
+
+	if ((i = which_radio_button(window, SELF_TIMER, bool)) >= 0)
+	  CR (camera_set(camera, PDC700_SET_TIMER, i));
+
+	if ((i = which_radio_button(window, SHOW_CAPTIONS, bool)) >= 0)
+	  CR (camera_set(camera, PDC700_SET_CAPTION, i));
+
+
+	if (gp_widget_get_child_by_label(window, AUTO_POWEROFF, &child) == GP_OK
+	    && gp_widget_changed (child)) {
+	  gp_widget_get_value (child, &range);
+	  i = (int) range;
+	  CR (camera_set(camera, PDC700_SET_POWEROFF, i));
+	}
+
+	/* deal with date & time */
+
+	return GP_OK;
+}
+
 static int
 camera_summary (Camera *camera, CameraText *about)
 {
-	static const char *quality[] = {N_("normal"), N_("fine"),
-					N_("superfine")};
-	static const char *flash[] = {N_("auto"), N_("on"), N_("off")};
-	static const char *bool[] = {N_("off"), N_("on")};
-	static const char *mode[] = {N_("play"), N_("record"), N_("menu")};
-	static const char *power[] = {N_("battery"), N_("a/c adaptor")};
 	PDCInfo info;
 
 	CR (pdc700_info (camera, &info));
@@ -772,24 +957,28 @@ camera_summary (Camera *camera, CameraText *about)
 		"Pictures taken: %i\n"
 		"Free pictures: %i\n"
 		"Software version: %s\n"
+		"Baudrate: %s\n"
 		"Memory: %i megabytes\n"
 		"Camera mode: %s\n"
 		"Image quality: %s\n"
 		"Flash setting: %s\n"
 		"Information: %s\n"
+		"Timer: %s\n"
 		"LCD: %s\n"
 		"Auto power off: %i minutes\n"
 		"Power source: %s"),
-		info.date.year + (!strcmp (info.version, "v2.45")) ? 1980 : 0,
+		info.date.year + ((!strcmp (info.version, "v2.45")) ? 1980 : 0),
 		info.date.month, info.date.day,
 		info.date.hour, info.date.minute, info.date.second,
 		info.num_taken, info.num_free, info.version,
+		speed[info.speed],
 		info.memory,
 		mode[info.mode],
 		quality[info.quality], flash[info.flash],
 		bool[info.caption],
+		bool[info.timer],
 		bool[info.lcd],
-		info.auto_power_off,
+		info.auto_poweroff,
 		power[info.ac_power]);
 
 	return (GP_OK);
@@ -836,12 +1025,14 @@ camera_init (Camera *camera)
 {
 	int result = GP_OK, i;
 	GPPortSettings settings;
-	int speeds[] = {9600, 57600, 19200, 38400};
+	int speeds[] = {115200, 9600, 57600, 19200, 38400};
 
         /* First, set up all the function pointers */
 	camera->functions->capture = camera_capture;
 	camera->functions->summary = camera_summary;
         camera->functions->about   = camera_about;
+	camera->functions->get_config = camera_get_config;
+	camera->functions->set_config = camera_set_config;
 
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
@@ -852,22 +1043,24 @@ camera_init (Camera *camera)
 	/* Check if the camera is really there */
 	CR (gp_port_get_settings (camera->port, &settings));
 	CR (gp_port_set_timeout (camera->port, 1000));
-	for (i = 0; i < 4; i++) {
+
+	for (i = 0; i < 5; i++) {
 		settings.serial.speed = speeds[i];
 		CR (gp_port_set_settings (camera->port, settings));
 		result = pdc700_init (camera);
 		if (result == GP_OK)
 			break;
 	}
-	if (i == 4)
+	if (i == 5)
 		return (result);
 
 	/* Set the speed to the highest one */
-	if (speeds[i] < 57600) {
-		CR (pdc700_baud (camera, 57600));
-		settings.serial.speed = 57600;
+	if (speeds[i] < 115200) {
+		CR (pdc700_baud (camera, 115200));
+		settings.serial.speed = 115200;
 		CR (gp_port_set_settings (camera->port, settings));
 	}
 
 	return (GP_OK);
 }
+ 
