@@ -47,11 +47,14 @@ struct camera_to_usb {
 	  unsigned short idVendor;
 	  unsigned short idProduct;
 } camera_to_usb[] = {
-	{ "STM USB Dual-mode camera", 0x0553, 0x0202 },
-	{ "Aiptek PenCam Trio", 0x0553, 0x0202 },
-	{ "Micromaxx Digital Camera", 0x553, 0x0202 },
-	{ "l'elegante by DigitalDream", 0x553, 0x0202 },
-	{ "STV0680", 0x0, 0x0 }				
+	{ "STM USB Dual-mode camera",   0x0553, 0x0202 },
+	{ "IOMagic MagicImage 400",     0x0553, 0x0202 },
+	{ "Hawking DC120 Pocketcam",    0x0553, 0x0202 },
+	{ "Aiptek PenCam Trio",         0x0553, 0x0202 },
+	{ "Micromaxx Digital Camera",   0x0553, 0x0202 },
+	{ "l'elegante by DigitalDream", 0x0553, 0x0202 },
+	{ "Fuji IX-1",                  0x0553, 0x0202 }, /* Unconfirmed */
+	{ "STV0680",                    0x0000, 0x0000 }  /* serial version */
 };
 
 int camera_id (CameraText *id) 
