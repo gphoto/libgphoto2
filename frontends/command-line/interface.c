@@ -16,7 +16,7 @@ status_func (Camera *camera, const char *status, void *data)
 
 	if (status && *status) {
 		fprintf (stderr, "Status: %s\n", status);
-		fflush(stdout);
+		fflush (stderr);
 	} else {
 
 		/*
