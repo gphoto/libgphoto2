@@ -35,11 +35,10 @@
 #include <stdio.h>
 #include <string.h>
 
-// #include "jpeghead.h"
-#include "pdc320.h"
-//#include <libgphoto2/jpeg.h>
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
+
+#include "pdc320.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -190,7 +189,7 @@ pdc320_simple_reply (GPPort *port, const unsigned char expcode,
 	CR (gp_port_read (port, csum, 2));
 	calccsum = pdc320_calc_checksum (reply, replysize);
 	if (calccsum != ((csum[1] << 8) | csum[0])) {
-		fprintf(stderr,"csum %x vs %x\n",calccsum,((csum[0]<<8)|csum[1]));
+		GP_DEBUG("csum %x vs %x\n",calccsum,((csum[0]<<8)|csum[1]));
 		return GP_ERROR;
 	}
 	return GP_OK;
