@@ -1,3 +1,12 @@
+2001-11-23  Colin Marquardt  <colin@marquardt-home.de>
+
+	* frontends/command-line/options.c (usage): 
+	  Make the help table format string translatable.
+	  Make table lines 79 chars wide.
+
+	* po/de.po (Message): All command line help table entries are now
+	  translated.
+
 2001-11-22  Marcus Meissner <marcus@jet.franken.de>
 
 	* camlibs/stv0680/library.c: file_count can also use 
