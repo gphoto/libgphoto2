@@ -1,5 +1,15 @@
 <SECTION>
+<FILE>gphoto2-port-core</FILE>
+<TITLE>GPhoto2-Port-Core</TITLE>
+GPPortInfo
+gp_port_core_count
+gp_port_core_get_library
+gp_port_core_get_info
+</SECTION>
+
+<SECTION>
 <FILE>gphoto2-port-log</FILE>
+<TITLE>GPhoto2-Port-Log</TITLE>
 GPLogLevels
 GPLogFunc
 gp_log_add_func
