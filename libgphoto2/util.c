@@ -47,7 +47,7 @@ int gp_abilities_clear (CameraAbilities *abilities) {
 	strcpy(abilities->model, "");
 	abilities->port = 0;
 	abilities->speed[0] = 0;
-	abilities->capture = 0;
+	abilities->capture = GP_CAPTURE_NONE;
 	abilities->config = 0;
 	abilities->file_delete = 0;
 	abilities->file_preview = 0;
