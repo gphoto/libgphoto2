@@ -35,6 +35,10 @@ gphoto2, gtkam and GnoCam (see below).
 What is gphoto2 not?
 --------------------
 
+gphoto2 itself is not a GUI application, opposed to gphoto. There are
+GUI frontends for the gphoto2 library, however, such as gtkam for
+example.
+
 gphoto2 can only talk to cameras the language of those it understands. That is,
 if you own a camera that speaks a language that isn't published anywhere and 
 nobody has been able to figure out the meaning of the sentences, gphoto2 cannot
