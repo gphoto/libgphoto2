@@ -1,3 +1,11 @@
+2002-01-14  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c, library.c: More carefull buffer size checking in some
+	  places. We should do a real audit of these.
+
+	* library.c: Fixed mkdir and rmdir functions which did not convert
+	  from gphoto paths to canon paths.
+
 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* *.[c,h]: Replase last call to gp_camera_set_error (I oversaw one
