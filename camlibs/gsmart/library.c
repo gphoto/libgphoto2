@@ -314,7 +314,8 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder,
-	       const char *filename, CameraFileInfo *info, void *data, GPContext *context)
+	       const char *filename, CameraFileInfo *info, 
+	       void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int n;
@@ -326,17 +327,20 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	CHECK (gsmart_get_file_info (camera->pl, n, &file));
 
 	info->file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
-	if (file->mime_type == FILE_TYPE_IMAGE)
+	if (file->mime_type == FILE_TYPE_IMAGE) {
 		strcpy (info->file.type, GP_MIME_JPEG);
-	else if (file->mime_type == FILE_TYPE_AVI)
+		info->preview.width = 160;
+		info->preview.height = 120;
+	} else if (file->mime_type == FILE_TYPE_AVI) {
 		strcpy (info->file.type, GP_MIME_AVI);
+		info->preview.width = 320;
+		info->preview.height = 240;
+	}
 	info->file.width = file->width;
 	info->file.height = file->height;
 
 	info->preview.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
 	strcpy (info->preview.type, GP_MIME_BMP);
-	info->preview.width = 160;
-	info->preview.height = 120;
 
 	return (GP_OK);
 }
@@ -346,12 +350,22 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
-	int index;
+	int n, c;
 
 	/* Get the file number from the CameraFileSystem */
-	CHECK (index = gp_filesystem_number (camera->fs, folder, filename, context));
-	CHECK (gsmart_delete_file (camera->pl, index));
-
+	CHECK (n = gp_filesystem_number 
+	      (camera->fs, folder, filename, context));
+	CHECK (c = gp_filesystem_count (camera->fs, folder, context));
+	if (n + 1 != c) {
+		const char *name;
+		gp_filesystem_name (fs, "/", c - 1, &name, context);
+		gp_context_error (context, 
+		      _("Your camera does only support deleting the last file "
+		        "on the camera. In this case, this is "
+			"file '%s'."), name);
+		return (GP_ERROR);
+	}
+	CHECK (gsmart_delete_file (camera->pl, n));
 	return GP_OK;
 }
 

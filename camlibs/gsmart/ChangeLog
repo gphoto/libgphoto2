@@ -1,3 +1,7 @@
+Tue Aug 13 14:13:27 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * disallow deletion of anything but the last file on the camera
+
 Sat Aug 10 19:03:31 2002  Till Adam  <till@adam-lilienthal.de>
   
  * remove debugging calls

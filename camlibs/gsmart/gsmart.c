@@ -57,8 +57,8 @@
 static int gsmart_mode_set_idle (CameraPrivateLibrary * lib);
 static int gsmart_is_idle (CameraPrivateLibrary * lib);
 static int gsmart_mode_set_download (CameraPrivateLibrary * lib);
-static int gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start, 
-                          unsigned int size, u_int8_t * buf);
+static int gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start,
+				 unsigned int size, u_int8_t * buf);
 static int gsmart_get_FATs (CameraPrivateLibrary * lib);
 static int yuv2rgb (int y, int u, int v, int *r, int *g, int *b);
 
@@ -112,7 +112,6 @@ gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	u_int32_t start;
 	u_int8_t *mybuf;
 	int size, o_size, i, file_size;
-	int f_counter = 0;
 
 	CHECK (gsmart_get_file_info (lib, number, &g_file));
 	/* FIXME implement avi downloading */
@@ -173,7 +172,6 @@ gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		if (value == 0xFF) {
 			*(lp_jpg) = 0x00;
 			lp_jpg++;
-			f_counter++;
 		}
 	}
 	/* Add end of image marker */
@@ -208,7 +206,7 @@ gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 
 	/* FIXME implement avi downloading */
 	if (g_file->mime_type == FILE_TYPE_AVI)
-		return GP_ERROR_NOT_SUPPORTED;
+	      return GP_ERROR_NOT_SUPPORTED;
 
 	p = g_file->fat;
 	quality = p[40] & 0xFF;
@@ -302,19 +300,9 @@ int
 gsmart_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 		      struct GsmartFile **g_file)
 {
-	struct GsmartFile *file;
-	u_int8_t *p;
-
 	if (lib->dirty)
 		CHECK (gsmart_get_info (lib));
-
-	file = &(lib->files[index]);
-	p = file->fat;
-
-	file->width = (p[8] & 0xFF) * 16;
-	file->height = (p[9] & 0xFF) * 16;
-	*g_file = file;
-
+	*g_file = &(lib->files[index]);
 	return GP_OK;
 }
 
@@ -364,8 +352,8 @@ gsmart_mode_set_download (CameraPrivateLibrary * lib)
 }
 
 static int
-gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start, unsigned int size,
-		      u_int8_t * buf)
+gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start,
+		      unsigned int size, u_int8_t * buf)
 {
 
 	u_int8_t foo;
@@ -428,9 +416,6 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 	u_int8_t *p = NULL;
 	u_int8_t buf[14];
 
-	if (!lib->num_files)
-		return GP_OK;
-
 	/* Reset image and movie counter */
 	lib->num_images = lib->num_movies = 0;
 
@@ -448,7 +433,7 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 
 	if (lib->files)
 		free (lib->files);
-	lib->files = malloc (lib->num_files * sizeof(struct GsmartFile));
+	lib->files = malloc (lib->num_files * sizeof (struct GsmartFile));
 
 	if (!gsmart_is_idle (lib))
 		gsmart_mode_set_idle (lib);
@@ -478,20 +463,21 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 		if (p[0] == 0xFF)
 			break;
 		type = p[0];
-		if (type == 0x00) {	/* its an image */
-			snprintf (buf, 13, "Image%03d.jpg", ++lib->num_images);
-			lib->files[file_index].name = strdup (buf);
-			lib->files[file_index].fat_start = index;
-			lib->files[file_index].fat_end = index;
+		if (type == 0x00 || type == 0x08) {
+			if (type == 0x00) {	/* its an image */
+				snprintf (buf, 13, "Image%03d.jpg", ++lib->num_images);
+				lib->files[file_index].mime_type = FILE_TYPE_IMAGE;
+				lib->files[file_index].fat_end = index;
+			} else if (type == 0x08) {	/* its the start of an avi */
+				snprintf (buf, 13, "Movie%03d.avi", ++lib->num_movies);
+				lib->files[file_index].mime_type = FILE_TYPE_AVI;
+			}
 			lib->files[file_index].fat = p;
-			lib->files[file_index].mime_type = FILE_TYPE_IMAGE;
-			file_index++;
-		} else if (type == 0x08) {	/* its the start of an avi */
-			snprintf (buf, 13, "Movie%03d.avi", ++lib->num_movies);
-			lib->files[file_index].name = strdup (buf);
-			lib->files[file_index].mime_type = FILE_TYPE_AVI;
 			lib->files[file_index].fat_start = index;
-			lib->files[file_index].fat = p;
+			lib->files[file_index].name = strdup (buf);
+			lib->files[file_index].width = (p[8] & 0xFF) * 16;
+			lib->files[file_index].height = (p[9] & 0xFF) * 16;
+			lib->files[file_index].name = strdup (buf);
 			file_index++;
 		} else if (type == 0x80) {	/* continuation of an avi */
 			lib->files[file_index - 1].fat_end = index;
