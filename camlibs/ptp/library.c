@@ -708,7 +708,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("  AssociationDesc: %d", oi->AssociationDesc);
 	GP_DEBUG ("  SequenceNumber: %d", oi->SequenceNumber);
 */
-	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE;
+	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
 
 	info->file.size   = oi->ObjectCompressedSize;
 	strcpy_mime (info->file.type, oi->ObjectFormat);
@@ -724,8 +724,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		info->file.fields = info->file.fields |
 				GP_FILE_INFO_WIDTH  |
-				GP_FILE_INFO_HEIGHT |
-				GP_FILE_INFO_MTIME;
+				GP_FILE_INFO_HEIGHT;
 
 		info->file.width  = oi->ImagePixWidth;
 		info->file.height = oi->ImagePixHeight;
