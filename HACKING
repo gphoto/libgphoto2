@@ -34,11 +34,11 @@ Use something like CHECK_RESULT (see for example
 libgphoto2/filesys.c).
 
 Let's say you write a driver called sillycam. Please set up a file
-called sillycam.c containing all gphoto2-specific code (like
-camera_init) and another two files called library.c and library.h
+called library.c containing all gphoto2-specific code (like
+camera_init) and another two files called sillycam.c and sillycam.h
 containing the "magic", that is all gp_port_[read,write] functions and
 the basic logic of the communication. This makes it easier for us to
-adapt your code if anything should change in the gphoto2-API. 
+adapt your code if anything should change in the gphoto2-API.
 
 Use the port provided by camera->port.
 
