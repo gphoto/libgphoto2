@@ -1,3 +1,7 @@
+2003-12-03  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* casio-qv.c (camera_init): hardcode speed to 9600 bauds
+
 2003-09-05  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* PROTOCOL.txt: added protocol description
