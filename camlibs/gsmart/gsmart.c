@@ -53,7 +53,7 @@
 #  define N_(String) (String)
 #endif
 
-#define GP_MODULE
+#define GP_MODULE "gsmartmini2"
 static int gsmart_mode_set_idle (CameraPrivateLibrary * lib);
 static int gsmart_is_idle (CameraPrivateLibrary * lib);
 static int gsmart_mode_set_download (CameraPrivateLibrary * lib);
