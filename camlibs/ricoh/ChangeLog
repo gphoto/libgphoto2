@@ -1,3 +1,12 @@
+2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
+
+	Lots of infos from Martin Fischer <martin.fischer@inka.de>:
+
+	* ricoh.[c,h]
+	* library.c: Correct syntax and name of ricoh_connect and
+	  ricoh_bye. Fix typo in ricoh_get_pic_name. Remember the model
+	  that we get on ricoh_connect.
+
 2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
 
 	* ricoh.c: Flesh out ricoh_get_pic_date.

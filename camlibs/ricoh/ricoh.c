@@ -88,6 +88,13 @@ ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 {
 	unsigned char buf[6];
 	unsigned int i, w, crc = 0;
+	int timeout;
+
+	/* First, make sure there is no data coming from the camera. */
+	CR (gp_port_get_timeout (camera->port, &timeout));
+	CR (gp_port_set_timeout (camera->port, 20));
+	while (gp_port_read (camera->port, buf, 1) >= 0);
+	CR (gp_port_set_timeout (camera->port, timeout));
 
 	/* Write header */
 	buf[0] = DLE;
@@ -273,11 +280,25 @@ ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
 {
         unsigned char ret_cmd;
 	unsigned int r = 0;
+	int result;
  
         while (1) {
                 CR (ricoh_send (camera, context, cmd, 0, data, len));
-                CR (ricoh_recv (camera, context, &ret_cmd, NULL,
-                                ret_data, ret_len));
+                result = ricoh_recv (camera, context, &ret_cmd, NULL,
+				     ret_data, ret_len);
+		switch (result) {
+		case GP_ERROR_TIMEOUT:
+			if (++r > 2) {
+				gp_context_error (context, _("Timeout "
+					"even after 2 retries. Please "
+					"contact <gphoto-devel@gphoto.org>."));
+				return (GP_ERROR_TIMEOUT);
+			}
+			GP_DEBUG ("Timeout! Retrying...");
+			continue;
+		default:
+			CR (result);
+		}
 
 		/* Check if the answer is for our command. */
 		if (cmd != ret_cmd) {
@@ -357,7 +378,8 @@ ricoh_get_mode (Camera *camera, GPContext *context, RicohMode *mode)
 	C_LEN (context, len, 1);
 
 	/* Mode */
-	*mode = buf[0];
+	if (mode)
+		*mode = buf[0];
 
 	return (GP_OK);
 }
@@ -435,7 +457,7 @@ ricoh_get_pic_name (Camera *camera, GPContext *context, unsigned int n,
 
 	GP_DEBUG ("Getting name of picture %i...", n);
 
-	p[0] = 0x03;
+	p[0] = 0x00;
 	p[1] = n >> 0;
 	p[2] = n >> 8;
 	CR (ricoh_transmit (camera, context, 0x95, p, 3, buf, &len));
@@ -532,7 +554,7 @@ ricoh_set_speed (Camera *camera, GPContext *context, RicohSpeed speed)
 }
 
 int
-ricoh_ping (Camera *camera, GPContext *context, RicohModel *model)
+ricoh_connect (Camera *camera, GPContext *context, RicohModel *model)
 {
 	unsigned char p[3], buf[0xff], len;
 
@@ -552,7 +574,7 @@ ricoh_ping (Camera *camera, GPContext *context, RicohModel *model)
 }
 
 int
-ricoh_bye (Camera *camera, GPContext *context)
+ricoh_disconnect (Camera *camera, GPContext *context)
 {
 	unsigned char cmd, buf[0xff], len;
 
@@ -640,23 +662,22 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 int
 ricoh_get_cam_date (Camera *camera, GPContext *context, time_t *date)
 {
-	unsigned char p[1], cmd, buf[0xff], len;
+	unsigned char p[1], buf[0xff], len;
 	struct tm time;
 
 	p[0] = 0xa;
-	CR (ricoh_send (camera, context, 'Q', 0, p, 1));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
+	CR (ricoh_transmit (camera, context, 'Q', p, 1, buf, &len));
 
 	/* the camera only supplies 2 digits for year, so I will
 	 * make the assumption that if less than 90, then it is
 	 * year 2000 or greater */
-	 time.tm_year = ((buf[3] & 0xf0) >> 4) * 10 + (buf[3] & 0xf);
+	 time.tm_year = ((buf[1] & 0xf0) >> 4) * 10 + (buf[1] & 0xf);
 	 if(time.tm_year < 90) time.tm_year += 100;
-	 time.tm_mon = ((buf[4] & 0xf0) >> 4) * 10 + (buf[4] & 0xf) - 1;
-	 time.tm_mday = ((buf[5] & 0xf0) >> 4) * 10 + (buf[5] & 0xf);
-	 time.tm_hour = ((buf[6] & 0xf0) >> 4) * 10 + (buf[6] & 0xf);
-	 time.tm_min = ((buf[7] & 0xf0) >> 4) * 10 + (buf[7] & 0xf);
-	 time.tm_sec = ((buf[8] & 0xf0) >> 4) * 10 + (buf[8] & 0xf);
+	 time.tm_mon =  ((buf[2] & 0xf0) >> 4) * 10 + (buf[2] & 0xf) - 1;
+	 time.tm_mday = ((buf[3] & 0xf0) >> 4) * 10 + (buf[3] & 0xf);
+	 time.tm_hour = ((buf[4] & 0xf0) >> 4) * 10 + (buf[4] & 0xf);
+	 time.tm_min =  ((buf[5] & 0xf0) >> 4) * 10 + (buf[5] & 0xf);
+	 time.tm_sec =  ((buf[6] & 0xf0) >> 4) * 10 + (buf[6] & 0xf);
 	 time.tm_isdst = -1;
 	 *date = mktime(&time);
 
@@ -667,13 +688,14 @@ ricoh_get_cam_date (Camera *camera, GPContext *context, time_t *date)
 int
 ricoh_get_cam_mem (Camera *camera, GPContext *context, int *size)
 {
-	unsigned char p[2], cmd, buf[0xff], len;
+	unsigned char p[2], buf[0xff], len;
 
 	p[0] = 0x00;
 	p[1] = 0x05;
-	CR (ricoh_send (camera, context, 'Q', 0, p, 2));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	*size = buf[5] << 24 | buf[4] << 16 | buf[3] << 8 | buf[2];
+	CR (ricoh_transmit (camera, context, 'Q', p, 2, buf, &len));
+
+	if (size)
+		*size = buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0];
 
 	return (GP_OK);
 }
@@ -682,28 +704,32 @@ ricoh_get_cam_mem (Camera *camera, GPContext *context, int *size)
 int
 ricoh_get_cam_amem (Camera *camera, GPContext *context, int *size)
 {
-	unsigned char p[2], cmd, buf[0xff], len;
+	unsigned char p[2], buf[0xff], len;
 
 	p[0] = 0x00;
 	p[1] = 0x06;
-	CR (ricoh_send (camera, context, 'Q', 0, p, 2));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	*size = buf[5] << 24 | buf[4] << 16 | buf[3] << 8 | buf[2];
+	CR (ricoh_transmit (camera, context, 'Q', p, 2, buf, &len));
+
+	if (size)
+		*size = buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0];
 
 	return (GP_OK);
 }
 
 /* get the camera ID aka copyright message */ 
 int
-ricoh_get_cam_id (Camera *camera, GPContext *context, char *cam_id)
+ricoh_get_cam_id (Camera *camera, GPContext *context, const char **cam_id)
 {
-	unsigned char p[1], cmd, buf[0xff], len;
+	unsigned char p[1], len;
+	static char buf[1024];
 
 	p[0] = 0xf;
-	CR (ricoh_send (camera, context, 'Q', 0, p, 1));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	memmove (cam_id, buf + 2, len - 2);
-	cam_id[len - 2] = 0;
+	CR (ricoh_transmit (camera, context, 'Q', p, 1, buf, &len));
+
+	if (cam_id && *cam_id) {
+		*cam_id = buf;
+		buf[len] = '\0';
+	}
 
 	return (GP_OK);
 }

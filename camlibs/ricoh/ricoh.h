@@ -48,8 +48,8 @@ enum _RicohModel {
 	RICOH_MODEL_ESP80 = 0x400
 };
 
-int ricoh_ping      (Camera *camera, GPContext *context, RicohModel *model);
-int ricoh_bye       (Camera *camera, GPContext *context);
+int ricoh_connect    (Camera *camera, GPContext *context, RicohModel *model);
+int ricoh_disconnect (Camera *camera, GPContext *context);
 
 typedef enum _RicohMode RicohMode;
 enum _RicohMode {
@@ -87,6 +87,7 @@ int ricoh_take_pic  (Camera *camera, GPContext *context);
 int ricoh_get_cam_date  (Camera *camera, GPContext *context, time_t *time);
 int ricoh_get_cam_mem   (Camera *camera, GPContext *context, int *mem);
 int ricoh_get_cam_amem  (Camera *camera, GPContext *context, int *mem);
-int ricoh_get_cam_id    (Camera *camera, GPContext *context, char *cam_id);
+int ricoh_get_cam_id    (Camera *camera, GPContext *context,
+			 const char **cam_id);
 
 #endif /* __RICOH_H__ */

@@ -64,6 +64,9 @@ static struct {
 	{0, NULL}
 };
 
+struct _CameraPrivateLibrary {
+	RicohModel model;
+};
 
 int
 camera_abilities (CameraAbilitiesList *list)
@@ -89,7 +92,12 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
-	ricoh_bye (camera, context);
+	if (camera->pl) {
+		free (camera->pl);
+		camera->pl = NULL;
+	}
+
+	ricoh_disconnect (camera, context);
 
 	return GP_OK;
 }
@@ -187,17 +195,30 @@ camera_summary (Camera *camera, CameraText *about, GPContext *context)
 {
 	int avail_mem, total_mem;
 	time_t camtime;
-	char cam_id[128];
+	char model[128];
+	unsigned int i;
+	const char *cam_id;
 
-	CR (ricoh_get_cam_id   (camera, context, cam_id));
+	CR (ricoh_get_cam_id   (camera, context, &cam_id));
 	CR (ricoh_get_cam_amem (camera, context, &avail_mem));
 	CR (ricoh_get_cam_mem  (camera, context, &total_mem));
 	CR (ricoh_get_cam_date (camera, context, &camtime));
 
-	sprintf(about->text, _("Camera ID: %s\n"
-			       "Memory: %d byte(s) of %d available\n"
-			       "Camera time: %s\n"),
-		cam_id, avail_mem, total_mem, ctime (&camtime));
+	memset (model, 0, sizeof (model));
+	for (i = 0; models[i].model; i++)
+		if (models[i].id == camera->pl->model)
+			break;
+	if (models[i].model)
+		strncpy (model, models[i].model, sizeof (model) - 1);
+	else
+		snprintf (model, sizeof (model) - 1, _("unknown (0x%02x)"),
+			  camera->pl->model);
+
+	sprintf (about->text, _("Model: %s\n"
+			        "Camera ID: %s\n"
+			        "Memory: %d byte(s) of %d available\n"
+			        "Camera time: %s\n"),
+		model, cam_id, avail_mem, total_mem, ctime (&camtime));
 
 	return (GP_OK);
 }
@@ -241,8 +262,9 @@ camera_init (Camera *camera, GPContext *context)
 	GPPortSettings settings;
 	unsigned int speed, i;
 	int result;
+	RicohModel model = 0;
 
-	/* Try to contact the camera */
+	/* Try to contact the camera. */
 	CR (gp_port_set_timeout (camera->port, 5000));
 	CR (gp_port_get_settings (camera->port, &settings));
 	speed = (settings.serial.speed ? settings.serial.speed : 115200);
@@ -250,7 +272,15 @@ camera_init (Camera *camera, GPContext *context)
 		GP_DEBUG ("Trying speed %i...", speeds[i].speed);
 		settings.serial.speed = speeds[i].speed;
 		CR (gp_port_set_settings (camera->port, settings));
-		result = ricoh_ping (camera, NULL, NULL);
+
+		/*
+		 * Note that ricoh_connect can only be called to 
+		 * initialize the connection at 2400 bps. At other
+		 * speeds, a different function needs to be used.
+		 */
+		result = (speeds[i].rspeed == RICOH_SPEED_2400) ? 
+				ricoh_connect (camera, NULL, &model) :
+				ricoh_get_mode (camera, NULL, NULL);
 		if (result == GP_OK)
 			break;
 	}
@@ -274,7 +304,9 @@ camera_init (Camera *camera, GPContext *context)
 		CR (ricoh_set_speed (camera, context, speeds[i].rspeed));
 		settings.serial.speed = speed;
 		CR (gp_port_set_settings (camera->port, settings));
-		CR (ricoh_ping (camera, context, NULL));
+
+		/* Check if the camera is still there. */
+		CR (ricoh_get_mode (camera, context, NULL));
 	}
 
 	/* setup the function calls */
@@ -287,6 +319,17 @@ camera_init (Camera *camera, GPContext *context)
 					  camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 					  del_file_func, camera));
+
+	/*
+	 * Remember the model. It could be that there hasn't been the 
+	 * need to call ricoh_connect. Then we don't have a model. Should
+	 * we disconnect and reconnect in this case?
+	 */
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
+	camera->pl->model = model;
 
 	return (GP_OK);
 }
