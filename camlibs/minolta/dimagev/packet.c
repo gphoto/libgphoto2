@@ -21,7 +21,11 @@
 
 /* $Id$ */
 
+#include <config.h>
+
 #include "dimagev.h"
+
+#define GP_MODULE "dimagev"
 
 /* This function takes an array of unsigned chars, as well as the length, and
    creates a dimagev_packet ready for sending to the camera. Packets must be
@@ -46,7 +50,7 @@ dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, 
 	dimagev_packet *p;
 	
 	if ( ( p = calloc(1, sizeof(dimagev_packet) ) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev","dimagev_make_packet::unable to allocate packet");
+		GP_DEBUG("dimagev_make_packet::unable to allocate packet");
 		return NULL;
 	}
 
@@ -78,7 +82,7 @@ int dimagev_verify_packet(dimagev_packet *p) {
 
 	/* All packets must start with DIMAGEV_STX and end with DIMAGEV_ETX. It's an easy check. */
 	if ( ( p->buffer[0] != (unsigned char) DIMAGEV_STX ) || ( p->buffer[(p->length - 1)] != (unsigned char) DIMAGEV_ETX ) ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_verify_packet::packet missing STX and/or ETX");
+		GP_DEBUG( "dimagev_verify_packet::packet missing STX and/or ETX");
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 
@@ -89,7 +93,7 @@ int dimagev_verify_packet(dimagev_packet *p) {
 	}
 
 	if ( current_checksum != correct_checksum ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_verify_packet::checksum bytes were %02x%02x, checksum was %d, should be %d", p->buffer[( p->length - 3) ], p->buffer[ ( p->length -2 ) ], current_checksum, correct_checksum);
+		GP_DEBUG( "dimagev_verify_packet::checksum bytes were %02x%02x, checksum was %d, should be %d", p->buffer[( p->length - 3) ], p->buffer[ ( p->length -2 ) ], current_checksum, correct_checksum);
 		return GP_ERROR_CORRUPTED_DATA;
 	} else {
 		return GP_OK;
@@ -101,18 +105,18 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 	unsigned char char_buffer;
 
 	if ( ( p = malloc(sizeof(dimagev_packet)) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev","dimagev_read_packet::unable to allocate packet");
+		GP_DEBUG("dimagev_read_packet::unable to allocate packet");
 		return NULL;
 	}
 
 	if ( gp_port_read(dimagev->dev, p->buffer, 4) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to read packet header - will try to send NAK");
+		GP_DEBUG( "dimagev_read_packet::unable to read packet header - will try to send NAK");
 		free(p);
 
 		/* Send a NAK */
 		char_buffer = DIMAGEV_NAK;
 		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to send NAK");
+			GP_DEBUG( "dimagev_read_packet::unable to send NAK");
 			return NULL;
 		}
 
@@ -124,13 +128,13 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 	p->length = ( p->buffer[2] * 256 ) + ( p->buffer[3] );
 
 	if ( gp_port_read(dimagev->dev, &(p->buffer[4]), ( p->length - 4)) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to read packet body - will try to send NAK");
+		GP_DEBUG( "dimagev_read_packet::unable to read packet body - will try to send NAK");
 		free(p);
 
 		/* Send a NAK */
 		char_buffer = DIMAGEV_NAK;
 		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to send NAK");
+			GP_DEBUG( "dimagev_read_packet::unable to send NAK");
 			return NULL;
 		}
 
@@ -141,13 +145,13 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 
 	/* Now we *should* have a packet. Let's do a sanity check. */
 	if ( dimagev_verify_packet(p) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::got an invalid packet - will try to send NAK");
+		GP_DEBUG( "dimagev_read_packet::got an invalid packet - will try to send NAK");
 		free(p);
 		
 		/* Send a NAK */
 		char_buffer = DIMAGEV_NAK;
 		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to send NAK");
+			GP_DEBUG( "dimagev_read_packet::unable to send NAK");
 			return NULL;
 		}
 		
@@ -181,7 +185,7 @@ dimagev_packet *dimagev_strip_packet(dimagev_packet *p) {
 	}
 
 	if ( ( stripped = malloc(sizeof(dimagev_packet)) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev","dimagev_strip_packet::unable to allocate destination packet");
+		GP_DEBUG("dimagev_strip_packet::unable to allocate destination packet");
 		return NULL;
 	}
 

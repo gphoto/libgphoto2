@@ -5,6 +5,7 @@
  *
  * Copyright 2001 Vince Weaver <vince@deater.net>
  */
+#include <config.h>
 
 #include <stdio.h>
 #include <errno.h>
@@ -18,6 +19,8 @@
 #include <gphoto2.h>
 
 #include "agfa.h"
+
+#define GP_MODULE "agfa"
 
     /* Regular commands always 8 bytes long */
 static int agfa_send_command(int command, int argument, CameraPrivateLibrary *dev) {
@@ -159,7 +162,7 @@ int agfa_get_file_list(CameraPrivateLibrary *dev) {
     buffer = malloc(buflen);
         
     if (!buffer) {
-       gp_debug_printf(GP_DEBUG_HIGH,"agfa","Could not allocate %i bytes!",
+       GP_DEBUG("Could not allocate %i bytes!",
 		       buflen);
        return GP_ERROR_NO_MEMORY;
     }
@@ -180,7 +183,7 @@ int agfa_get_file_list(CameraPrivateLibrary *dev) {
 
     dev->file_list = malloc(taken * 13);
     if (!dev->file_list) {
-       gp_debug_printf(GP_DEBUG_HIGH,"agfa","Could not allocate %i bytes!",
+       GP_DEBUG("Could not allocate %i bytes!",
 		       taken*13);
        free(buffer);
        return (GP_ERROR_NO_MEMORY);
@@ -366,7 +369,7 @@ int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
     buffer = malloc(buflen);
         
     if (!buffer) {
-       gp_debug_printf(GP_DEBUG_HIGH,"agfa","Could not allocate %i bytes!",
+       GP_DEBUG("Could not allocate %i bytes!",
 		       buflen);
        return (GP_ERROR_NO_MEMORY);
     }

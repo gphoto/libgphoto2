@@ -50,10 +50,6 @@ extern "C" {
 #include <gphoto2-setting.h>
 #include <gphoto2-widget.h>
 
-/* DEPRECATED */
-#include <gphoto2-debug.h>
-
-
 #ifdef __cplusplus
 }
 #endif

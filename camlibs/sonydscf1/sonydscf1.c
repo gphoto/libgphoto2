@@ -26,8 +26,6 @@
 
 gp_port *dev;
 
-int glob_debug = GP_DEBUG_HIGH;
-
 int camera_id (CameraText *id) {
 
         strcpy(id->text, "sonydscf1-bvl");

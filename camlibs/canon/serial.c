@@ -129,7 +129,7 @@ canon_serial_init (Camera *camera)
 {
 	GPPortSettings settings;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "Initializing the (serial) camera.\n");
+	GP_DEBUG ("Initializing the (serial) camera.\n");
 
 	/* Get the current settings */
 	gp_port_get_settings (camera->port, &settings);
@@ -243,7 +243,7 @@ canon_serial_send_frame (Camera *camera, const unsigned char *pkt, int len)
 	*p++ = CANON_FBEG;
 	while (len--) {
 		if (p - buffer >= sizeof (buffer) - 1) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
+			GP_DEBUG (
 					 "FATAL ERROR: send buffer overflow\n");
 			return -1;
 		}
@@ -279,7 +279,7 @@ canon_serial_recv_frame (Camera *camera, int *len)
 		if (c == CANON_ESC)
 			c = canon_serial_get_byte (camera->port) ^ CANON_XOR;
 		if (p - buffer >= sizeof (buffer)) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
+			GP_DEBUG (
 					 "FATAL ERROR: receive buffer overflow\n");
 			return NULL;
 		}
@@ -343,13 +343,13 @@ canon_serial_recv_packet (Camera *camera, unsigned char *type, unsigned char *se
 	if (!pkt)
 		return NULL;
 	if (raw_length < PKT_HDR_LEN) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: packet truncated\n");
+		GP_DEBUG ("ERROR: packet truncated\n");
 		return NULL;
 	}
 	if (pkt[PKT_TYPE] == PKT_MSG) {
 		length = pkt[PKT_LEN_LSB] | (pkt[PKT_LEN_MSB] << 8);
 		if (length + PKT_HDR_LEN > raw_length - 2) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: invalid length\n");
+			GP_DEBUG ("ERROR: invalid length\n");
 			/*fprintf(stderr,"Sending NACK\n");
 			   canon_serial_send_packet(PKT_NACK,camera->pl->seq_rx++,camera->pl->psa50_eot+PKT_HDR_LEN,0); */
 			camera->pl->receive_error = ERROR_RECEIVED;
@@ -358,7 +358,7 @@ canon_serial_recv_packet (Camera *camera, unsigned char *type, unsigned char *se
 	}
 	crc = pkt[raw_length - 2] | (pkt[raw_length - 1] << 8);
 	if (!canon_psa50_chk_crc (pkt, raw_length - 2, crc)) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: CRC error\n");
+		GP_DEBUG ("ERROR: CRC error\n");
 		return NULL;
 	}
 	if (type)
@@ -396,7 +396,7 @@ canon_serial_wait_for_ack (Camera *camera)
 			return 0;
 		if (seq == camera->pl->seq_tx && type == PKT_ACK) {
 			if (pkt[2] == PKTACK_NACK) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
+				GP_DEBUG (
 						 "ERROR: NACK received\n");
 				return -1;
 			}
@@ -407,7 +407,7 @@ canon_serial_wait_for_ack (Camera *camera)
 		if (type == PKT_EOT) {
 			old_seq = pkt[0];
 			if (camera->pl->receive_error == NOERROR) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
+				GP_DEBUG (
 						 "Old EOT received, sending corresponding ACK\n");
 				if (!canon_serial_send_packet
 				    (camera, PKT_ACK, old_seq,
@@ -418,7 +418,7 @@ canon_serial_wait_for_ack (Camera *camera)
 					return 0;
 				if (seq == old_seq && type == PKT_ACK) {
 					if (pkt[2] == PKTACK_NACK) {
-						gp_debug_printf (GP_DEBUG_LOW, "canon",
+						GP_DEBUG (
 								 "Old EOT acknowledged\n");
 						return -1;
 					}
@@ -435,9 +435,9 @@ canon_serial_wait_for_ack (Camera *camera)
 			return 1;
 		}
 
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
+		GP_DEBUG (
 				 "ERROR: ACK format or sequence error, retrying\n");
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "Sending NACK\n");
+		GP_DEBUG ("Sending NACK\n");
 		canon_serial_send_packet (camera, PKT_NACK, camera->pl->seq_rx++,
 					  camera->pl->psa50_eot + PKT_HDR_LEN, 0);
 		camera->pl->receive_error = ERROR_RECEIVED;
@@ -489,7 +489,7 @@ canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, v
 		len = va_arg (*ap, int);
 
 		if (pos + len - pkt > MAX_MSG_SIZE && camera->pl->uploading != 1) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
+			GP_DEBUG (
 					 "FATAL ERROR: message too big (%i)\n",
 					 pos + len - pkt);
 			return -1;
@@ -537,12 +537,12 @@ canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, v
 				return 0;
 			good_ack = canon_serial_wait_for_ack (camera);
 			if (good_ack == -1) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
+				GP_DEBUG (
 						 "NACK received, retrying command\n");
 			} else if (good_ack == 1) {
 				return good_ack;
 			} else {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
+				GP_DEBUG (
 						 "No ACK received, retrying command\n");
 				if (try == 2) {
 					/* is the camera still there? */
@@ -553,7 +553,7 @@ canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, v
 					good_ack = canon_serial_wait_for_ack (camera);
 					if (good_ack == 0) {
 						camera->pl->receive_error = FATAL_ERROR;
-						gp_debug_printf (GP_DEBUG_LOW, "canon",
+						GP_DEBUG (
 								 "ERROR: FATAL ERROR\n");
 						clear_readiness (camera);
 						return -1;
@@ -597,12 +597,12 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
 		/* uploading is special */
 /*              if (type == PKT_ACK && mtype == 0x3 && dir == 0x21) break; */
 		if (type == PKT_EOT) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
+			GP_DEBUG (
 					 "Old EOT received sending corresponding ACK\n");
 			canon_serial_send_packet (camera, PKT_ACK, frag[0],
 						  camera->pl->psa50_eot + PKT_HDR_LEN, 0);
 		}
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: protocol error, retrying\n");
+		GP_DEBUG ("ERROR: protocol error, retrying\n");
 	}
 	/* we keep the fragment only if there was no error */
 	if (camera->pl->receive_error == NOERROR) {
@@ -611,12 +611,12 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
 		 * not always in the same order */
 /*
 		if (type == PKT_ACK && mtype == 0x3 && dir == 0x21) {
-			gp_debug_printf(GP_DEBUG_LOW,"canon","ignoring ACK received while waiting for MSG\n");
+			GP_DEBUG("ignoring ACK received while waiting for MSG\n");
 			return frag;
 		} 
 */
 		if (len < MSG_HDR_LEN || frag[MSG_02] != 2) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
+			GP_DEBUG (
 					 "ERROR: message format error\n");
 			return NULL;
 		}
@@ -840,15 +840,15 @@ canon_serial_error_type (Camera *camera)
 {
 	switch (camera->pl->receive_error) {
 		case ERROR_LOWBATT:
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
+			GP_DEBUG (
 					 "ERROR: no battery left, Bailing out!\n");
 			break;
 		case FATAL_ERROR:
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
+			GP_DEBUG (
 					 "ERROR: camera connection lost!\n");
 			break;
 		default:
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: malformed message\n");
+			GP_DEBUG ("ERROR: malformed message\n");
 			break;
 	}
 }
@@ -931,7 +931,7 @@ canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext 
 	int len;
 
 	if (camera->pl->receive_error == FATAL_ERROR) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
+		GP_DEBUG (
 				 "ERROR: can't continue a fatal error condition detected\n");
 		return NULL;
 	}
@@ -952,8 +952,7 @@ canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext 
 			total = le32atoh (msg + 4);
 
 			if (total > camera->pl->md->max_picture_size) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "ERROR: %d is too big\n", total);
+				GP_DEBUG ("ERROR: %d is too big\n", total);
 				break;
 			}
 			file = malloc (total);
@@ -966,7 +965,7 @@ canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext 
 		}
 		size = le32atoh (msg + 12);
 		if (le32atoh (msg + 8) != expect || expect + size > total || size > len - 20) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: doesn't fit\n");
+			GP_DEBUG ("ERROR: doesn't fit\n");
 			break;
 		}
 		memcpy (file + expect, msg + 20, size);
@@ -1141,7 +1140,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 
 	/* First of all, we must check if the camera is already on */
 	/*      cts=canon_serial_get_cts();
-	   gp_debug_printf(GP_DEBUG_LOW,"canon","cts : %i\n",cts);
+	   GP_DEBUG("cts : %i\n",cts);
 	   if (cts==32) {  CTS == 32  when the camera is connected. */
 	if (camera->pl->first_init == 0 && camera->pl->cached_ready == 1) {
 		/* First case, the serial speed of the camera is the same as
@@ -1151,7 +1150,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 		     camera->pl->psa50_eot + PKT_HDR_LEN, 0))
 			return GP_ERROR;
 		good_ack = canon_serial_wait_for_ack (camera);
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "good_ack = %i\n", good_ack);
+		GP_DEBUG ("good_ack = %i\n", good_ack);
 		if (good_ack == 0) {
 			/* no answer from the camera, let's try
 			 * at the speed saved in the settings... */
@@ -1173,17 +1172,17 @@ canon_serial_ready (Camera *camera, GPContext *context)
 				return canon_int_ready (camera, context);
 			}
 			if (good_ack == -1) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon", "Received a NACK !\n");
+				GP_DEBUG ("Received a NACK !\n");
 				return GP_ERROR;
 			}
 			gp_context_status (context, _("Camera OK.\n"));
 			return 1;
 		}
 		if (good_ack == -1) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "Received a NACK !\n");
+			GP_DEBUG ("Received a NACK !\n");
 			return GP_ERROR;
 		}
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera replied to ping, proceed.\n");
+		GP_DEBUG ("Camera replied to ping, proceed.\n");
 		return GP_OK;
 	}
 
@@ -1194,7 +1193,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 		/* we try to recover from an error
 		   we go back to 9600bps */
 		if (!canon_serial_change_speed (camera->port, 9600)) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: Error changing speed");
+			GP_DEBUG ("ERROR: Error changing speed");
 			return GP_ERROR;
 		}
 		camera->pl->receive_error = NOERROR;

@@ -28,7 +28,6 @@
 
 #include <gphoto2-filesys.h>
 #include <gphoto2-result.h>
-#include <gphoto2-debug.h>
 
 #define CHECK(r) {int ret = r; if (ret < 0) {printf ("Got error: %s\n", gp_result_as_string (ret)); return (1);}}
 

@@ -19,6 +19,7 @@
 *									  GDB
 * $Id$
 */
+#include <config.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -30,7 +31,8 @@
 #include "gphoto2-endian.h"
 #include "mesalib.h"
 
-#define debuglog(e) gp_debug_printf(GP_DEBUG_LOW, "dimera", "%s", (e))
+#define GP_MODULE "dimera"
+#define debuglog(e) GP_DEBUG( "%s", (e))
 
 #ifdef CONVERT_PIXELS
 static const uint16_t	pixelTable[256] = {
@@ -202,7 +204,7 @@ mesa_set_speed( GPPort *port, int speed )
 	if (speed == 0)
 		speed = 115200;		/* use default speed */
 
-	gp_debug_printf(GP_DEBUG_LOW, "dimera", 
+	GP_DEBUG( 
 	 "mesa_set_speed: speed %d", speed);
 
 	b[0] = SET_SPEED;
@@ -264,7 +266,7 @@ mesa_version( GPPort *port, char *version_string)
 		return GP_ERROR_TIMEOUT;
 	}
 
-	gp_debug_printf(GP_DEBUG_LOW, "dimera", 
+	GP_DEBUG( 
 	 "mesa_version: %02x:%02x:%02x\n", r[0], r[1], r[2] );
 	sprintf(v, "%2x.%02x%c", r[1], r[0], r[2]);
 	/* highest byte must be < MESA_VERSION_SZ */

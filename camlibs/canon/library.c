@@ -72,7 +72,7 @@
 int
 camera_id (CameraText *id)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_id()");
+	GP_DEBUG ("camera_id()");
 
 	strcpy (id->text, "canon");
 
@@ -82,7 +82,7 @@ camera_id (CameraText *id)
 static int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_manual()");
+	GP_DEBUG ("camera_manual()");
 
 	strcpy (manual->text, _("For the A50, 115200 may not be faster than 57600\n"
 				"Folders are NOT supported\n"
@@ -98,7 +98,7 @@ camera_abilities (CameraAbilitiesList *list)
 	int i;
 	CameraAbilities a;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_abilities()");
+	GP_DEBUG ("camera_abilities()");
 
 	for (i = 0; models[i].id_str; i++) {
 		memset (&a, 0, sizeof(a));
@@ -132,7 +132,7 @@ camera_abilities (CameraAbilitiesList *list)
 void
 clear_readiness (Camera *camera)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "clear_readiness()");
+	GP_DEBUG ("clear_readiness()");
 
 	camera->pl->cached_ready = 0;
 }
@@ -140,7 +140,7 @@ clear_readiness (Camera *camera)
 static int
 check_readiness (Camera *camera, GPContext *context)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "check_readiness() cached_ready == %i",
+	GP_DEBUG ("check_readiness() cached_ready == %i",
 			 camera->pl->cached_ready);
 
 	if (camera->pl->cached_ready)
@@ -206,7 +206,7 @@ update_disk_cache (Camera *camera, GPContext *context)
 	char root[10];		/* D:\ or such */
 	int res;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "update_disk_cache()");
+	GP_DEBUG ("update_disk_cache()");
 
 	if (camera->pl->cached_disk)
 		return 1;
@@ -533,7 +533,7 @@ old_get_file_func (CameraFilesystem *fs, const char *folder, const char *filenam
 	int buflen, size, ret;
 	char path[300], tempfilename[300];
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_get() "
+	GP_DEBUG ("camera_file_get() "
 			 "folder '%s' filename '%s'", folder, filename);
 
 	if (check_readiness (camera, context) != 1)
@@ -553,14 +553,13 @@ old_get_file_func (CameraFilesystem *fs, const char *folder, const char *filenam
 	 * is located
 	 */
 	if (get_file_path (camera, filename, path) == GP_ERROR) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_get: "
+		GP_DEBUG ("camera_file_get: "
 				 "Filename '%s' path '%s' not found!", filename, path);
 		return GP_ERROR;
 	}
 #endif
 
-	gp_debug_printf (GP_DEBUG_HIGH, "canon", "camera_file_get: "
-			 "Found picture, '%s' '%s'", path, filename);
+	GP_DEBUG ("camera_file_get: Found picture, '%s' '%s'", path, filename);
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
@@ -571,7 +570,7 @@ old_get_file_func (CameraFilesystem *fs, const char *folder, const char *filenam
 		case GP_PORT_SERIAL:
 			/* find rightmost \ in path */
 			if (strrchr (path, '\\') == NULL) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_get: "
+				GP_DEBUG ("camera_file_get: "
 						 "Could not determine directory part of path '%s'",
 						 path);
 				return GP_ERROR;
@@ -597,7 +596,7 @@ old_get_file_func (CameraFilesystem *fs, const char *folder, const char *filenam
 	}
 
 	if (ret != GP_OK) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_get: "
+		GP_DEBUG ("camera_file_get: "
 				 "canon_get_picture() failed, returned %i", ret);
 		return ret;
 	}
@@ -697,7 +696,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	double time_diff;
 	char formatted_camera_time[20];
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_summary()");
+	GP_DEBUG ("camera_summary()");
 
 	if (check_readiness (camera, context) != 1)
 		return GP_ERROR;
@@ -760,7 +759,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_about()");
+	GP_DEBUG ("camera_about()");
 
 	strcpy (about->text,
 		_("Canon PowerShot series driver by\n"
@@ -843,7 +842,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	char buf[10];
 	CameraAbilities a;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_folder_put_file()");
+	GP_DEBUG ("camera_folder_put_file()");
 
 	if (check_readiness (camera, context) != 1)
 		return GP_ERROR;
@@ -918,7 +917,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 		sprintf (destpath, "%s%s", dcf_root_dir, dir);
 
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "destpath: %s destname: %s\n",
+		GP_DEBUG ("destpath: %s destname: %s\n",
 				 destpath, destname);
 	}
 
@@ -1078,7 +1077,7 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo * info, void *data, GPContext *context)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon get_info_func() "
+	GP_DEBUG ("canon get_info_func() "
 			 "called for '%s'/'%s'", folder, filename);
 
 	info->preview.fields = GP_FILE_INFO_TYPE;
@@ -1200,7 +1199,7 @@ camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon camera_init()");
+	GP_DEBUG ("canon camera_init()");
 
 	/* First, set up all the function pointers */
 	camera->functions->exit = camera_exit;

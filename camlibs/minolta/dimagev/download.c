@@ -21,7 +21,11 @@
 
 /* $Id$ */
 
+#include <config.h>
+
 #include "dimagev.h"
+
+#define GP_MODULE "dimagev"
 
 int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	int length, total_packets, i;
@@ -38,12 +42,12 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		dimagev->data->host_mode = (unsigned char) 1;
 
 		if ( dimagev_send_data(dimagev) < GP_OK ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
+			GP_DEBUG( "dimagev_get_picture::unable to set host mode");
 			return GP_ERROR_IO;
 		}
 	}
 
-	gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::file_number is %d", file_number);
+	GP_DEBUG( "dimagev_get_picture::file_number is %d", file_number);
 
 	/* Maybe check if it exists? Check the file type? */
 	
@@ -52,16 +56,16 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	command_buffer[1] = (unsigned char)( file_number / 256 );
 	command_buffer[2] = (unsigned char)( file_number % 256 );
 	if ( ( p = dimagev_make_packet(command_buffer, 3, 0) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to allocate command packet");
+		GP_DEBUG( "dimagev_get_picture::unable to allocate command packet");
 		return GP_ERROR_NO_MEMORY;
 	}
 
 	if ( gp_port_write(dimagev->dev, p->buffer, p->length) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to send set_data packet");
+		GP_DEBUG( "dimagev_get_picture::unable to send set_data packet");
 		free(p);
 		return GP_ERROR_IO;
 	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::no response from camera");
+		GP_DEBUG( "dimagev_get_picture::no response from camera");
 		free(p);
 		return GP_ERROR_IO;
 	}
@@ -72,24 +76,24 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::camera did not acknowledge transmission");
+			GP_DEBUG( "dimagev_get_picture::camera did not acknowledge transmission");
 			return dimagev_get_picture(dimagev, file_number, file);
 /*			return GP_ERROR_IO;*/
 		case DIMAGEV_CAN:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::camera cancels transmission");
+			GP_DEBUG( "dimagev_get_picture::camera cancels transmission");
 			return GP_ERROR_IO;
 		default:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::camera responded with unknown value %x", char_buffer);
+			GP_DEBUG( "dimagev_get_picture::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
 	}
 
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to read packet");
+		GP_DEBUG( "dimagev_get_picture::unable to read packet");
 		return GP_ERROR_IO;
 	}
 
 	if ( ( r = dimagev_strip_packet(p) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to strip packet");
+		GP_DEBUG( "dimagev_get_picture::unable to strip packet");
 		free(p);
 		return GP_ERROR_NO_MEMORY;
 	}
@@ -101,7 +105,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 
 	/* Allocate an extra byte just in case. */
 	if ( ( data = malloc((size_t)((993 * total_packets) + 1)) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to allocate buffer for file");
+		GP_DEBUG( "dimagev_get_picture::unable to allocate buffer for file");
 		free(r);
 		return GP_ERROR_NO_MEMORY;
 	}
@@ -115,31 +119,31 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 
 		char_buffer=DIMAGEV_ACK;
 		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to send ACK");
+			GP_DEBUG( "dimagev_get_picture::unable to send ACK");
 			return GP_ERROR_IO;
 		}
 	
 		if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
 			/*
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to read packet");
+			GP_DEBUG( "dimagev_get_picture::unable to read packet");
 			return GP_ERROR_IO;
 			*/
 
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::sending NAK to get retry");
+			GP_DEBUG( "dimagev_get_picture::sending NAK to get retry");
 			char_buffer=DIMAGEV_NAK;
 			if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to send NAK");
+				GP_DEBUG( "dimagev_get_picture::unable to send NAK");
 				return GP_ERROR_IO;
 			}
 
 			if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to read packet");
+				GP_DEBUG( "dimagev_get_picture::unable to read packet");
 				return GP_ERROR_IO;
 			}
 		}
 
 		if ( ( r = dimagev_strip_packet(p) ) == NULL ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to strip packet");
+			GP_DEBUG( "dimagev_get_picture::unable to strip packet");
 			free(p);
 			return GP_ERROR_NO_MEMORY;
 		}
@@ -156,12 +160,12 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 
 	char_buffer=DIMAGEV_EOT;
 	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to send ACK");
+		GP_DEBUG( "dimagev_get_picture::unable to send ACK");
 		return GP_ERROR_IO;
 	}
 
 	if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::no response from camera");
+		GP_DEBUG( "dimagev_get_picture::no response from camera");
 		return GP_ERROR_IO;
 	}
 		
@@ -169,13 +173,13 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::camera did not acknowledge transmission");
+			GP_DEBUG( "dimagev_get_picture::camera did not acknowledge transmission");
 			return GP_ERROR_IO;
 		case DIMAGEV_CAN:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::camera cancels transmission");
+			GP_DEBUG( "dimagev_get_picture::camera cancels transmission");
 			return GP_ERROR_IO;
 		default:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::camera responded with unknown value %x", char_buffer);
+			GP_DEBUG( "dimagev_get_picture::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
 	}
 
@@ -184,7 +188,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	exifdat.data = data + 12 ;
 
 	if ( stat_exif(&exifdat) != 0 ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to stat EXIF tags");
+		GP_DEBUG( "dimagev_get_picture::unable to stat EXIF tags");
 		return GP_OK;
 	}
 
@@ -208,7 +212,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		dimagev->data->host_mode = (unsigned char) 1;
 
 		if ( dimagev_send_data(dimagev) < GP_OK ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to set host mode");
+			GP_DEBUG( "dimagev_get_thumbnail::unable to set host mode");
 			return GP_ERROR_IO;
 		}
 	}
@@ -218,16 +222,16 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 	command_buffer[1] = (unsigned char)( file_number / 256 );
 	command_buffer[2] = (unsigned char)( file_number % 256 );
 	if ( ( p = dimagev_make_packet(command_buffer, 3, 0) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to allocate command packet");
+		GP_DEBUG( "dimagev_get_thumbnail::unable to allocate command packet");
 		return GP_ERROR_NO_MEMORY;
 	}
 
 	if ( gp_port_write(dimagev->dev, p->buffer, p->length) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to send set_data packet");
+		GP_DEBUG( "dimagev_get_thumbnail::unable to send set_data packet");
 		free(p);
 		return GP_ERROR_IO;
 	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::no response from camera");
+		GP_DEBUG( "dimagev_get_thumbnail::no response from camera");
 		free(p);
 		return GP_ERROR_IO;
 	}
@@ -238,24 +242,24 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::camera did not acknowledge transmission");
+			GP_DEBUG( "dimagev_get_thumbnail::camera did not acknowledge transmission");
 			return dimagev_get_thumbnail(dimagev, file_number, file);
 /*			return GP_ERROR_IO;*/
 		case DIMAGEV_CAN:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::camera cancels transmission");
+			GP_DEBUG( "dimagev_get_thumbnail::camera cancels transmission");
 			return GP_ERROR_IO;
 		default:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::camera responded with unknown value %x", char_buffer);
+			GP_DEBUG( "dimagev_get_thumbnail::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
 	}
 
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to read packet");
+		GP_DEBUG( "dimagev_get_thumbnail::unable to read packet");
 		return GP_ERROR_IO;
 	}
 
 	if ( ( r = dimagev_strip_packet(p) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to strip packet");
+		GP_DEBUG( "dimagev_get_thumbnail::unable to strip packet");
 		free(p);
 		return GP_ERROR_NO_MEMORY;
 	}
@@ -266,7 +270,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 
 	/* Allocate an extra byte just in case. */
 	if ( ( ycrcb_data = malloc(9600) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to allocate buffer for file");
+		GP_DEBUG( "dimagev_get_thumbnail::unable to allocate buffer for file");
 		free(r);
 		return GP_ERROR_NO_MEMORY;
 	}
@@ -280,19 +284,19 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 
 		char_buffer=DIMAGEV_ACK;
 		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to send ACK");
+			GP_DEBUG( "dimagev_get_thumbnail::unable to send ACK");
 			free(ycrcb_data);
 			return GP_ERROR_IO;
 		}
 	
 		if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to read packet");
+			GP_DEBUG( "dimagev_get_thumbnail::unable to read packet");
 			free(ycrcb_data);
 			return GP_ERROR_IO;
 		}
 
 		if ( ( r = dimagev_strip_packet(p) ) == NULL ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to strip packet");
+			GP_DEBUG( "dimagev_get_thumbnail::unable to strip packet");
 			free(p);
 			free(ycrcb_data);
 			return GP_ERROR_NO_MEMORY;
@@ -305,20 +309,20 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 
 		free(r);
 
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::current file size is %d", size);
+		GP_DEBUG( "dimagev_get_thumbnail::current file size is %d", size);
 	}
 
 	size++;
 
 	char_buffer=DIMAGEV_EOT;
 	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to send ACK");
+		GP_DEBUG( "dimagev_get_thumbnail::unable to send ACK");
 		free(ycrcb_data);
 		return GP_ERROR_IO;
 	}
 
 	if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::no response from camera");
+		GP_DEBUG( "dimagev_get_thumbnail::no response from camera");
 		free(ycrcb_data);
 		return GP_ERROR_IO;
 	}
@@ -327,15 +331,15 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		case DIMAGEV_ACK:
 			break;
 		case DIMAGEV_NAK:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::camera did not acknowledge transmission");
+			GP_DEBUG( "dimagev_get_thumbnail::camera did not acknowledge transmission");
 			free(ycrcb_data);
 			return GP_ERROR_IO;
 		case DIMAGEV_CAN:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::camera cancels transmission");
+			GP_DEBUG( "dimagev_get_thumbnail::camera cancels transmission");
 			free(ycrcb_data);
 			return GP_ERROR_IO;
 		default:
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::camera responded with unknown value %x", char_buffer);
+			GP_DEBUG( "dimagev_get_thumbnail::camera responded with unknown value %x", char_buffer);
 			free(ycrcb_data);
 			return GP_ERROR_IO;
 	}

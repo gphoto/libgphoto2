@@ -18,18 +18,19 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+#include "gphoto2-setting.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "config.h"
-#include "gphoto2-setting.h"
-
 #include "gphoto2-result.h"
-#include "gphoto2-debug.h"
 #include "gphoto2-port-log.h"
 #include "gphoto2-port-portability.h"
+
+#define GP_MODULE "setting"
 
 typedef struct {
 	/* key = value settings */
@@ -106,7 +107,7 @@ verify_settings (char *settings_file)
 	int x, equals;
 
 	if ((f=fopen(settings_file, "r"))==NULL) {
-		gp_debug_printf(GP_DEBUG_LOW, "core", "Can't open settings file for reading");
+		GP_DEBUG ("Can't open settings file for reading");
 		return(0);
 	}
 
@@ -123,7 +124,7 @@ verify_settings (char *settings_file)
 
 			if (equals < 2) {
 				fclose (f);
-				gp_debug_printf(GP_DEBUG_LOW, "core", "Incorrect settings format. resetting\n");
+				GP_DEBUG ("Incorrect settings format. resetting\n");
 				unlink(settings_file);
 				return (GP_ERROR);
 			}
@@ -141,7 +142,7 @@ load_settings (void)
 	char buf[1024], *id, *key, *value;
 
 	/* Make sure the directories are created */
-	gp_debug_printf (GP_DEBUG_LOW, "core", "Creating $HOME/.gphoto");
+	GP_DEBUG ("Creating $HOME/.gphoto");
 #ifdef WIN32
 	GetWindowsDirectory (buf, 1024);
 	strcat (buf, "\\gphoto");
@@ -161,10 +162,10 @@ load_settings (void)
 	if (verify_settings(buf) != GP_OK)
 		/* verify_settings will unlink and recreate the settings file */
 		return (GP_OK);
-	gp_debug_printf(GP_DEBUG_LOW, "core", "Loading settings from file \"%s\"", buf);
+	GP_DEBUG ("Loading settings from file \"%s\"", buf);
 
 	if ((f=fopen(buf, "r"))==NULL) {
-		gp_debug_printf(GP_DEBUG_LOW, "core", "Can't open settings for reading");
+		GP_DEBUG ("Can't open settings for reading");
 		return(GP_ERROR);
 	}
 
@@ -204,7 +205,7 @@ save_settings (void)
 		glob_setting_count, buf);
 
 	if ((f=fopen(buf, "w+"))==NULL) {
-		gp_debug_printf(GP_DEBUG_LOW, "core", "Can't open settings file for writing");
+		GP_DEBUG ("Can't open settings file for writing");
 		return(0);
 	}
 	rewind(f);

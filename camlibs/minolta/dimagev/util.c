@@ -21,7 +21,11 @@
 
 /* $Id$ */
 
+#include <config.h>
+
 #include "dimagev.h"
+
+#define GP_MODULE "dimagev"
 
 /* This function handles the ugliness of converting Y:Cb:Cr data to RGB. The
    return value is a pointer to an array of unsigned chars that has 14413)
@@ -70,7 +74,7 @@ unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr) {
 	unsigned int magic_r, magic_g, magic_b;
 
 	if ( ( rgb_data = malloc( 14413 ) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_ycbcr_to_ppm::unable to allocate buffer for Y:Cb:Cr conversion");
+		GP_DEBUG( "dimagev_ycbcr_to_ppm::unable to allocate buffer for Y:Cb:Cr conversion");
 		return NULL;
 	}
 

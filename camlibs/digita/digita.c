@@ -231,13 +231,13 @@ static char *digita_file_get(Camera *camera, const char *folder,
 	buflen = GFD_BUFSIZE;
 	data = malloc(buflen);
 	if (!data) {
-		gp_debug_printf(GP_DEBUG_HIGH, "digita", "digita_file_get: allocating memory");
+		GP_DEBUG( "digita_file_get: allocating memory");
 		return NULL;
 	}
 	memset(data, 0, buflen);
 
 	if (digita_get_file_data(camera->pl, thumbnail, &fn, &tag, data) < 0) {
-		gp_debug_printf(GP_DEBUG_HIGH, "digita", "digita_get_picture: digita_get_file_data failed");
+		GP_DEBUG( "digita_get_picture: digita_get_file_data failed");
 		return NULL;
 	}
 
@@ -247,7 +247,7 @@ static char *digita_file_get(Camera *camera, const char *folder,
 
 	data = realloc(data, buflen);
 	if (!data) {
-		gp_debug_printf(GP_DEBUG_HIGH, "digita", "digita_file_get: couldn't reallocate memory");
+		GP_DEBUG( "digita_file_get: couldn't reallocate memory");
 		return NULL;
 	}
 
@@ -351,8 +351,8 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 		memcpy((void *)&width, data + 8, 4);
 		width = ntohl(width);
 
-		gp_debug_printf(GP_DEBUG_LOW, "digita", "picture size %dx%d", width, height);
-		gp_debug_printf(GP_DEBUG_LOW, "digita", "data size %d", buflen - 16);
+		GP_DEBUG( "picture size %dx%d", width, height);
+		GP_DEBUG( "data size %d", buflen - 16);
 
 		sprintf(ppmhead,
 			"P6\n"
@@ -445,7 +445,7 @@ int camera_init(Camera *camera, GPContext *context)
 				      folder_list_func, camera);
 	gp_filesystem_set_file_funcs(camera->fs, get_file_func, NULL, camera);
 
-	gp_debug_printf(GP_DEBUG_LOW, "digita", "Initializing the camera");
+	GP_DEBUG( "Initializing the camera");
 
 	camera->pl = malloc(sizeof(CameraPrivateLibrary));
 	if (!camera->pl)
@@ -467,7 +467,7 @@ int camera_init(Camera *camera, GPContext *context)
 	}
 
 	if (ret < 0) {
-		gp_debug_printf(GP_DEBUG_HIGH, "digita", "camera_init: couldn't open digita device");
+		GP_DEBUG( "camera_init: couldn't open digita device");
 		free(camera->pl);
 		camera->pl = NULL;
 		return ret;

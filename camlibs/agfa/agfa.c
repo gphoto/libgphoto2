@@ -40,6 +40,8 @@
 
 #include <gphoto2-port.h>
 
+#define GP_MODULE "agfa"
+
 struct {
    char *name;
    unsigned short idVendor;
@@ -102,11 +104,10 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
     int i;
     char temp_file[14];
 
-    gp_debug_printf (GP_DEBUG_HIGH, "agfa", "camera_file_list %s\n", 
-		     folder);
+    GP_DEBUG ("camera_file_list %s\n", folder);
    
     if (agfa_get_file_list(camera->pl) < 0) {
-       gp_debug_printf (GP_DEBUG_HIGH, "agfa", "Could not agfa_file_list!");
+       GP_DEBUG ("Could not agfa_file_list!");
        return GP_ERROR;
     }
        
@@ -124,7 +125,7 @@ static int agfa_file_get (Camera *camera, const char *filename, int thumbnail,
 
     int buflen,throwaway,result;
 
-    gp_debug_printf(GP_DEBUG_LOW, "agfa", "Getting file '%s'...",filename);
+    GP_DEBUG( "Getting file '%s'...",filename);
 
     agfa_reset(camera->pl);
         /* Always have to check num photos,
@@ -149,7 +150,7 @@ static int agfa_file_get (Camera *camera, const char *filename, int thumbnail,
        result=agfa_get_thumb(camera->pl, filename, *data, buflen);
        if (result < 0) {
 	  free (*data);
-	  gp_debug_printf(GP_DEBUG_LOW,"agfa","agfa_get_thumb_failed!");
+	  GP_DEBUG("agfa_get_thumb_failed!");
 	  return result;
        }
     }
@@ -157,7 +158,7 @@ static int agfa_file_get (Camera *camera, const char *filename, int thumbnail,
        result=agfa_get_pic(camera->pl, filename, *data, buflen);
        if (result < 0) {
 	  free(*data);
-	  gp_debug_printf(GP_DEBUG_LOW,"agfa","agfa_get_pic_failed!");
+	  GP_DEBUG("agfa_get_pic_failed!");
           return result;
        }
     }
@@ -239,7 +240,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
   
     Camera *camera = data;
 
-    gp_debug_printf(GP_DEBUG_LOW,"agfa","Deleting '%s' in '%s'...",filename,folder); 
+    GP_DEBUG("Deleting '%s' in '%s'...",filename,folder); 
    
     agfa_delete_picture(camera->pl,filename);
    
@@ -261,7 +262,7 @@ int camera_init(Camera *camera, GPContext *context) {
     camera->functions->about        = camera_about;
     camera->functions->capture      = camera_capture;
    
-    gp_debug_printf (GP_DEBUG_LOW, "agfa", "Initializing the camera\n");
+    GP_DEBUG ("Initializing the camera\n");
 
     switch (camera->port->type) {
        case GP_PORT_USB:

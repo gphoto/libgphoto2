@@ -402,7 +402,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 		i++;
 	}
 	if (canon_usb_cmd[i].num == 0) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_dialogue() "
+		GP_DEBUG ("canon_usb_dialogue() "
 				 "called for ILLEGAL function %i! Aborting.", canon_funct);
 		return NULL;
 	}
@@ -555,7 +555,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 	 * above, but as the saying goes: better safe than sorry.
 	 */
 	if (bytes_read != 0x40) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
+		GP_DEBUG (
 				 "canon_usb_long_dialogue: canon_usb_dialogue "
 				 "did not return (%i bytes) the number of bytes "
 				 "we expected (%i)!. Aborting.", bytes_read, 0x40);
@@ -569,7 +569,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 					_("Receiving data..."));
 
 	if (max_data_size && (total_data_size > max_data_size)) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_long_dialogue: "
+		GP_DEBUG ("canon_usb_long_dialogue: "
 				 "ERROR: Packet of size %i is too big "
 				 "(max reasonable size specified is %i)",
 				 total_data_size, max_data_size);
@@ -577,7 +577,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 	}
 	*data = malloc (total_data_size);
 	if (!*data) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_long_dialogue: "
+		GP_DEBUG ("canon_usb_long_dialogue: "
 				 "ERROR: Could not allocate %i bytes of memory",
 				 total_data_size);
 		return GP_ERROR_NO_MEMORY;
@@ -588,13 +588,12 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 		if ((total_data_size - bytes_received) < read_bytes)
 			read_bytes = (total_data_size - bytes_received);
 
-		gp_debug_printf (GP_DEBUG_HIGH, "canon",
-				 "calling gp_port_read(), total_data_size = %i, "
+		GP_DEBUG ("calling gp_port_read(), total_data_size = %i, "
 				 "bytes_received = %i, read_bytes = %i (0x%x)",
 				 total_data_size, bytes_received, read_bytes, read_bytes);
 		bytes_read = gp_port_read (camera->port, *data + bytes_received, read_bytes);
 		if (bytes_read < 1) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
+			GP_DEBUG (
 					 "gp_port_read() returned error (%i) or no data\n",
 					 bytes_read);
 			free (*data);
@@ -611,7 +610,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 		}
 
 		if (bytes_read < read_bytes)
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
+			GP_DEBUG (
 					 "WARNING: gp_port_read() resulted in short read "
 					 "(returned %i bytes, expected %i)",
 					 bytes_read, read_bytes);
@@ -635,12 +634,12 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 	char payload[100];
 	int payload_length, res;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file() called for file '%s'",
+	GP_DEBUG ("canon_usb_get_file() called for file '%s'",
 			 name);
 
 	/* 8 is strlen ("12111111") */
 	if (8 + strlen (name) > sizeof (payload) - 1) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file: ERROR: "
+		GP_DEBUG ("canon_usb_get_file: ERROR: "
 				 "Supplied file name '%s' does not fit in payload buffer.",
 				 name);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -650,7 +649,7 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 	 * See the file Protocol in this directory for more information.
 	 */
 	sprintf (payload, "12111111%s", name);
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file: payload %s", payload);
+	GP_DEBUG ("canon_usb_get_file: payload %s", payload);
 	payload_length = strlen (payload) + 1;
 	htole32a (payload, 0x0);	/* get picture */
 	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
@@ -660,7 +659,7 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 				       camera->pl->md->max_picture_size, payload,
 				       payload_length, 1, context);
 	if (res != GP_OK) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
+		GP_DEBUG (
 				 "canon_usb_get_file: canon_usb_long_dialogue() "
 				 "returned error (%i).", res);
 		return res;
@@ -677,7 +676,7 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 
 	/* 8 is strlen ("11111111") */
 	if (8 + strlen (name) > sizeof (payload) - 1) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_thumbnail: ERROR: "
+		GP_DEBUG ("canon_usb_get_thumbnail: ERROR: "
 				 "Supplied file name '%s' does not fit in "
 				 "payload buffer.", name);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -687,7 +686,7 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 	 * See the file Protocol in this directory for more information.
 	 */
 	sprintf (payload, "11111111%s", name);
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_thumbnail: "
+	GP_DEBUG ("canon_usb_get_thumbnail: "
 			 "payload %s", payload);
 	payload_length = strlen (payload) + 1;
 
@@ -700,8 +699,7 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 				       payload_length, 0, context);
 
 	if (res != GP_OK) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "canon_usb_get_thumbnail: canon_usb_long_dialogue() "
+		GP_DEBUG ("canon_usb_get_thumbnail: canon_usb_long_dialogue() "
 				 "returned error (%i).", res);
 		return res;
 	}

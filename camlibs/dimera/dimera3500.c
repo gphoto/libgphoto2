@@ -21,6 +21,13 @@
  *
  * History:
  * $Log$
+ * Revision 1.42  2002/01/15 23:49:38  lutz
+ * 2002-01-16  Lutz Müller <lutz@users.sourceforge.net>
+ *
+ *         Black magic by Marcus Meissner <marcus@jet.franken.de>:
+ *
+ *         find . -type f | xargs grep -l gp_debug_printf | xargs perl -pi -e 's/gp_debug_printf\(\s*GP_DEBUG[^,]*,[^,]*,(.*)$/GP_DEBUG(\1/'
+ *
  * Revision 1.41  2002/01/13 20:34:38  lutz
  * 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -159,12 +166,14 @@
 #  define N_(String) (String)
 #endif
 
+#define GP_MODULE "dimera"
+
 /* Legacy macros */
 /*#define ERROR( s ) { \
 	fprintf( stderr, "%s: %s\n", __FUNCTION__, s ); \
 	error_dialog( s ); }*/
-#define ERROR(e) gp_debug_printf(GP_DEBUG_LOW, "dimera", "%s", (e))
-#define debuglog(e) gp_debug_printf(GP_DEBUG_LOW, "dimera", "%s", (e))
+#define ERROR(e) GP_DEBUG( "%s", (e))
+#define debuglog(e) GP_DEBUG( "%s", (e))
 
 #define update_status(e) ERROR(e)
 
@@ -699,10 +708,10 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 			if ( (s == GP_ERROR_TIMEOUT || s == GP_ERROR_CORRUPTED_DATA) && --retry > 0)
 			{
 				update_status( _("Retransmitting") );
-				gp_debug_printf(GP_DEBUG_LOW, "dimera", "Dimera_Get_Full_Image: retrans"); 
+				GP_DEBUG( "Dimera_Get_Full_Image: retrans"); 
 				continue;
 			}
-			gp_debug_printf(GP_DEBUG_LOW, "dimera",
+			GP_DEBUG(
 				"Dimera_Get_Full_Image: read error %d (retry %d)",s,retry);
 				/* retry count exceeded, or other error */
 			free( rbuffer );
@@ -735,10 +744,10 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 			if ( (s == GP_ERROR_TIMEOUT || s == GP_ERROR_CORRUPTED_DATA) && --retry > 0)
 			{
 				update_status( _("Retransmitting") );
-				gp_debug_printf(GP_DEBUG_LOW, "dimera", "Dimera_Get_Full_Image: retrans"); 
+				GP_DEBUG( "Dimera_Get_Full_Image: retrans"); 
 				continue;
 			}
-			gp_debug_printf(GP_DEBUG_LOW, "dimera",
+			GP_DEBUG(
 				"Dimera_Get_Full_Image: read error %d (retry %d)",s,retry);
 				/* retry count exceeded, or other error */
 			free( rbuffer );
@@ -798,7 +807,7 @@ static unsigned calc_new_exposure(unsigned exposure, unsigned brightness) {
 
 	/* Choose the correct curve for this camera scene */
 	for (i=0; exposure_tables[i].M; ++i) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimera", "brightness %d, %f ", 
+		GP_DEBUG( "brightness %d, %f ", 
 			brightness,
 			exp((double)((brightness/16.0) - exposure_tables[i].b) / exposure_tables[i].M));
 		if (exp((double)((brightness/16.0) - exposure_tables[i].b) / exposure_tables[i].M) > exposure)
@@ -868,14 +877,14 @@ Dimera_Preview( int *size, Camera *camera, GPContext *context )
 	/* Current picture brightness, where 0 is is dark and 255 is bright */
 	brightness = exposure_total / (VIEWFIND_SZ / 16);
 
-	gp_debug_printf(GP_DEBUG_LOW, "dimera",
+	GP_DEBUG(
 		"Average pixel brightness %f, Current exposure value: %d",
 		brightness / 16.0, camera->pl->exposure);
 
 	if (camera->pl->auto_exposure && (brightness < 96 || brightness > 160)) {
 		/* Picture brightness needs to be corrected for next time */
 		camera->pl->exposure = calc_new_exposure(camera->pl->exposure, brightness);
-		gp_debug_printf(GP_DEBUG_LOW, "dimera", "New exposure value: %d", camera->pl->exposure);
+		GP_DEBUG( "New exposure value: %d", camera->pl->exposure);
 	}
 
 	return image;

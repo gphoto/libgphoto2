@@ -26,7 +26,6 @@
 #include <string.h>
 
 #include <gphoto2-result.h>
-#include <gphoto2-debug.h>
 #include <gphoto2-port-log.h>
 
 #define GP_MODULE "konica"
@@ -168,7 +167,7 @@ l_esc_read (GPPort *device, unsigned char *c)
 	 */
 	if ((*c == STX ) || (*c == ETX) || (*c == ENQ ) || (*c == ACK) ||
 	    (*c == XOFF) || (*c == XON) || (*c == NACK) || (*c == ETB)) {
-		gp_debug_printf (GP_DEBUG_HIGH, "konica", "Wrong ESC masking!");
+		GP_DEBUG ("Wrong ESC masking!");
 		if ((*c == ETX) || (*c == ETB))
 			return (GP_ERROR_CORRUPTED_DATA);
 	} else if (*c == ESC) {
@@ -177,8 +176,7 @@ l_esc_read (GPPort *device, unsigned char *c)
 		if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) &&
 		    (*c != ACK ) && (*c != XOFF) && (*c != XON) &&
 		    (*c != NACK) && (*c != ETB ) && (*c != ESC))
-			gp_debug_printf (GP_DEBUG_HIGH, "konica",
-					 "Wrong ESC masking!");
+			GP_DEBUG ("Wrong ESC masking!");
 	}
 	return (GP_OK);
 }

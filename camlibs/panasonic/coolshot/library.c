@@ -51,6 +51,8 @@
 #  define N_(String) (String)
 #endif
 
+#define GP_MODULE "coolshot"
+
 #define	COOL_SLEEP	10000
 
 int packet_size = 500;
@@ -59,7 +61,7 @@ int packet_size = 500;
 int coolshot_sm( Camera *camera ) {
 	char buf[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_sm");
+	GP_DEBUG ("* coolshot_sm");
 
 	memset( buf, 0, sizeof( buf ));
 
@@ -90,8 +92,8 @@ int coolshot_sb( Camera *camera, int speed ) {
 	char buf[16];
 	gp_port_settings settings;
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_sb");
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** speed: %i", speed);
+	GP_DEBUG ("* coolshot_sb");
+	GP_DEBUG ("*** speed: %i", speed);
 
 	memset( buf, 0, sizeof( buf ));
 
@@ -157,7 +159,7 @@ int coolshot_sb( Camera *camera, int speed ) {
 int coolshot_fs( Camera *camera, int number ) {
 	char buf[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_fs");
+	GP_DEBUG ("* coolshot_fs");
 
 	memset( buf, 0, sizeof( buf ));
 
@@ -185,7 +187,7 @@ int coolshot_fs( Camera *camera, int number ) {
 int coolshot_sp( Camera *camera ) {
 	char buf[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_sp");
+	GP_DEBUG ("* coolshot_sp");
 
 	memset( buf, 0, sizeof( buf ));
 
@@ -211,7 +213,7 @@ int coolshot_file_count (Camera *camera) {
 	char buf[16];
 	int count = 0;
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_file_count");
+	GP_DEBUG ("* coolshot_file_count");
 
 	memset( buf, 0, sizeof( buf ));
 
@@ -244,7 +246,7 @@ int coolshot_request_image( Camera *camera, CameraFile *file,
 		char *buf, int *len, int number, GPContext *context ) {
 	char packet[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_request_image");
+	GP_DEBUG ("* coolshot_request_image");
 
 	memset( packet, 0, sizeof( packet ));
 
@@ -279,7 +281,7 @@ int coolshot_request_thumbnail( Camera *camera, CameraFile *file,
 		char *buf, int *len, int number, GPContext *context ) {
 	char packet[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_request_thumbnail");
+	GP_DEBUG ("* coolshot_request_thumbnail");
 
 	memset( packet, 0, sizeof( packet ));
 
@@ -344,7 +346,7 @@ int coolshot_download_image( Camera *camera, CameraFile *file,
 	int last_good = 0;
 	unsigned int id;
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_download_image");
+	GP_DEBUG ("* coolshot_download_image");
 
 	memset( packet, 0, sizeof( packet ));
 
@@ -413,7 +415,7 @@ int coolshot_download_image( Camera *camera, CameraFile *file,
 int coolshot_write_packet (Camera *camera, char *packet) {
 	int x, ret, r, checksum=0, length;
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_write_packet");
+	GP_DEBUG ("* coolshot_write_packet");
 
 	if ( packet[0] == COOLSHOT_PKT ) {
 		/* fixme */
@@ -453,14 +455,14 @@ int coolshot_read_packet (Camera *camera, char *packet) {
 	int blocksize, bytes_read;
 	char buf[4096];
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_read_packet");
+	GP_DEBUG ("* coolshot_read_packet");
 
 read_packet_again:
 	buf[0] = 0;
 	packet[0] = 0;
 
 	if (r > 0)
-		gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* reading again...");
+		GP_DEBUG ("* reading again...");
 
 	done = 0;
 
@@ -555,7 +557,7 @@ int coolshot_ack (Camera *camera)
 	int ret, r = 0;
 	char buf[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_ack");
+	GP_DEBUG ("* coolshot_ack");
 
 	buf[0] = COOLSHOT_ACK;
 
@@ -575,7 +577,7 @@ int coolshot_nak (Camera *camera)
 	int ret, r = 0;
 	char buf[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_nak");
+	GP_DEBUG ("* coolshot_nak");
 
 	buf[0] = COOLSHOT_NAK;
 
@@ -595,7 +597,7 @@ int coolshot_enq (Camera *camera)
 	int ret, r = 0;
 	char buf[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_enq");
+	GP_DEBUG ("* coolshot_enq");
 
 	buf[0] = COOLSHOT_ENQ;
 

@@ -27,7 +27,6 @@
 #include <time.h>
 
 #include <gphoto2-library.h>
-#include <gphoto2-debug.h>
 #include <gphoto2-port-log.h>
 
 #include "konica.h"
@@ -521,7 +520,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
         char *name = NULL;
         char *manufacturer = NULL;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: camera_summary "
+        GP_DEBUG ("*** ENTER: camera_summary "
                          "***");
         CHECK (camera, k_get_information (camera->port, &model, &serial_number,
                 &hardware_version_major, &hardware_version_minor,
@@ -642,7 +641,7 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
         GP_SYSTEM_DIRENT de;
 	unsigned int id;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: "
+        GP_DEBUG ("*** ENTER: "
                          "camera_get_config ***");
 
         /* Get the current settings. */
@@ -865,8 +864,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         struct tm *tm_struct;
         int result;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: "
-                         "camera_set_config ***");
+        GP_DEBUG ("*** ENTER: camera_set_config ***");
 
         /************************/
         /* Persistent Settings  */
@@ -1136,20 +1134,18 @@ localization_file_read (Camera *camera, const char *file_name,
                             (f != '9') && (f != 'A') && (f != 'B') &&
                             (f != 'C') && (f != 'D') && (f != 'E') &&
                             (f != 'F')) {
-                                gp_debug_printf (GP_DEBUG_LOW, "konica",
-                                                 "Error in localization "
-                                                 "file: '%c' in line %i is "
-                                                 "not allowed.", f,
-                                                 (int) line_number);
+                                GP_DEBUG ("Error in localization "
+					  "file: '%c' in line %i is "
+					  "not allowed.", f,
+					  (int) line_number);
                                 fclose (file);
                                 return (GP_ERROR_CORRUPTED_DATA);
                         }
                         c[j] = (char) f;
                         if (j == 1) {
                                 if (sscanf (&c[0], "%X", &d) != 1) {
-                                        gp_debug_printf (GP_DEBUG_LOW,
-                                                         "konica", "Error in "
-                                                         "localization file.");
+					GP_DEBUG ("Error in localization "
+						  "file.");
                                         return (GP_ERROR_CORRUPTED_DATA);
                                 }
                                 (*data)[*data_size] = d;

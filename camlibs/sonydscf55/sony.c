@@ -17,7 +17,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-
+#include <config.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,6 +25,8 @@
 
 #include <gphoto2.h>
 #include "sony.h"
+
+#define GP_MODULE "sony55"
 
 /**
  * Constants
@@ -185,19 +187,19 @@ static int sony_packet_validate(Camera * camera, Packet * p)
 	unsigned char c = sony_packet_checksum(p);
 
 	if (c != p->checksum) {
-		gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+		GP_DEBUG(
 				"sony_packet_validate: invalid checksum");
 		return SONY_INVALID_CHECKSUM;
 	}
 
 	if (129 == p->buffer[0]) {
-		gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+		GP_DEBUG(
 				"sony_packet_validate: resend packet");
 		return SONY_RESEND_PACKET;
 	}
 
 	if (sony_sequence[camera->pl->sequence_id] != p->buffer[0]) {
-		gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+		GP_DEBUG(
 				"sony_packet_validate: invalid sequence");
 		return SONY_INVALID_SEQUENCE;
 	}
@@ -239,7 +241,7 @@ static int sony_packet_read(Camera * camera, Packet * pack)
 	unsigned char byte = 0;
 	static Packet p;
 
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+	GP_DEBUG(
 			"sony_packet_read()");
 	p.length = 0;
 
@@ -296,7 +298,7 @@ static int sony_packet_write(Camera * camera, Packet * p)
 	unsigned short int count;
 	int rc;
 
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+	GP_DEBUG(
 			"sony_packet_write()");
 
 	rc = gp_port_write(camera->port, &START_PACKET, 1);
@@ -341,7 +343,7 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 	int count;
 	int rc;
 
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID, "sony_converse()");
+	GP_DEBUG( "sony_converse()");
 	sony_packet_make(camera, &ps, str, len);
 
 	for (count = 0; count < SONY_CONVERSE_RETRY; count++) {
@@ -358,9 +360,7 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 						break;
 					}
 
-					gp_debug_printf(GP_DEBUG_LOW,
-							SONY_CAMERA_ID,
-							"Checksum invalid");
+					GP_DEBUG ("Checksum invalid");
 					ps.buffer[0] = 129;
 					ps.checksum =
 					    sony_packet_checksum(&ps);
@@ -382,10 +382,7 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 						    out->buffer[0];
 
 					if (sequence_count == 4) {
-						gp_debug_printf
-						    (GP_DEBUG_LOW,
-						     SONY_CAMERA_ID,
-						     "Attempting to reset sequence id - image may be corrupt.");
+						GP_DEBUG ("Attempting to reset sequence id - image may be corrupt.");
 						camera->pl->sequence_id = 0;
 
 						while (sony_sequence
@@ -397,10 +394,7 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 
 						return GP_OK;
 					}
-
-					gp_debug_printf(GP_DEBUG_LOW,
-							SONY_CAMERA_ID,
-							"Invalid Sequence");
+					GP_DEBUG ("Invalid Sequence");
 					ps.buffer[0] = 129;
 					ps.checksum =
 					    sony_packet_checksum(&ps);
@@ -411,18 +405,14 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 					return GP_OK;
 
 				case SONY_RESEND_PACKET:
-					gp_debug_printf(GP_DEBUG_LOW,
-							SONY_CAMERA_ID,
-							"Resending Packet");
+					GP_DEBUG ("Resending Packet");
 					break;
 
 				case GP_OK:
 					return GP_OK;
 
 				default:
-					gp_debug_printf(GP_DEBUG_LOW,
-							SONY_CAMERA_ID,
-							"Unknown Error");
+					GP_DEBUG ("Unknown Error");
 					break;
 				}
 			} else {
@@ -433,7 +423,7 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 		}
 	}
 
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+	GP_DEBUG(
 			"Failed to read packet during transfer.");
 
 	return GP_ERROR;
@@ -464,7 +454,7 @@ static int sony_baud_set(Camera * camera, long baud)
 	Packet dp;
 	int rc;
 
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID, "sony_baud_set(%ld)",
+	GP_DEBUG( "sony_baud_set(%ld)",
 			baud);
 	// FIXME
 	SetTransferRate[3] = sony_baud_to_id(baud);
@@ -518,12 +508,12 @@ static int sony_init_first_contact (Camera *camera)
 
 		rc = sony_converse(camera, &dp, IdentString, 12);
 		if (rc == GP_OK) {
-			gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+			GP_DEBUG(
 					"Init OK");
 			break;
 		}
 		usleep(2000);
-		gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+		GP_DEBUG(
 				"Init - Fail %u", count + 1);
 	}
 	return rc;
@@ -568,7 +558,7 @@ sony_item_count(Camera * camera, unsigned char *from, int from_len)
 	Packet dp;
 	int rc;
 
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID, "sony_item_count()");
+	GP_DEBUG( "sony_item_count()");
 	rc = sony_converse(camera, &dp, SetTransferRate, 4);
 	if (rc == GP_OK) {
 		rc = sony_converse(camera, &dp, from, from_len);
@@ -576,9 +566,7 @@ sony_item_count(Camera * camera, unsigned char *from, int from_len)
 			rc = sony_converse(camera, &dp, SendImageCount, 3);
 			if (rc == GP_OK) {
 				int nr = (int) dp.buffer[5];
-				gp_debug_printf(GP_DEBUG_LOW,
-						SONY_CAMERA_ID,
-						"count = %d", nr);
+				GP_DEBUG ("count = %d", nr);
 				return nr;
 			}
 		}
@@ -617,7 +605,7 @@ sony_file_get(Camera * camera, int imageid, int thumbnail,
 	int rc;
 	char buffer[128];
 
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID, "sony_file_get()");
+	GP_DEBUG( "sony_file_get()");
 	rc = gp_file_clean(file);
 	if (rc == GP_OK) {
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
@@ -638,10 +626,7 @@ sony_file_get(Camera * camera, int imageid, int thumbnail,
 				SelectImage[4] = imageid;
 				sony_converse(camera, &dp, SelectImage, 7);
 
-				gp_debug_printf(GP_DEBUG_LOW,
-						SONY_CAMERA_ID,
-						"XYZ %11.11s",
-						dp.buffer + 5);
+				GP_DEBUG ("XYZ %11.11s", dp.buffer + 5);
 
 				if (camera->pl->msac_sr1) {
 					gp_file_append(file,

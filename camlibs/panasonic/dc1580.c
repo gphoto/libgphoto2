@@ -53,6 +53,8 @@
 #  define __FILE__ "dc1580.c"
 #endif
 
+#define GP_MODULE "dc1580"
+
 /******************************************************************************/
 
 /* Internal utility functions */

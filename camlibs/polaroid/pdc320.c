@@ -26,13 +26,18 @@
  * Maintained by Nathan Stenzel <nathanstenzel@users.sourceforge.net>
  */
 
-#include <gphoto2-library.h>
-#include <gphoto2-debug.h>
+#include <config.h>
+
 #include <stdlib.h>
 #include <string.h>
+
 //#include "jpeghead.h"
 #include "pdc320.h"
 //#include <libgphoto2/jpeg.h>
+#include <gphoto2-library.h>
+#include <gphoto2-port-log.h>
+
+#define GP_MODULE "pdc320"
 
 /*******************************************************************************/
 /* NOTICE: There is a 16x8 block of pixels after the image data.               */
@@ -74,7 +79,7 @@ pdc320_id (GPPort *port, const char **model)
 	int i;
 	unsigned char buf[32];
 
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_ID ***");
+	GP_DEBUG ("*** PDC320_ID ***");
 	CR (gp_port_write (port, PDC320_ID, sizeof (PDC320_ID) - 1));
 	CR (gp_port_read (port, buf, 14));
 	if (model) {
@@ -94,7 +99,7 @@ pdc320_init (GPPort *port)
 {
 	unsigned char buf[32];
 
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_INIT ***");
+	GP_DEBUG ("*** PDC320_INIT ***");
 	CR (gp_port_write (port, PDC320_INIT,
 				     sizeof (PDC320_INIT) - 1));
 	CR (gp_port_read (port, buf, 3));
@@ -107,12 +112,12 @@ pdc320_init (GPPort *port)
 
 	CR (pdc320_id (port, NULL));
 
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_STATE ***");
+	GP_DEBUG ("*** PDC320_STATE ***");
 	CR (gp_port_write (port, PDC320_STATE,
 				     sizeof (PDC320_STATE) - 1));
 	CR (gp_port_read (port, buf, 16));
 
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_ENDINIT ***");
+	GP_DEBUG ("*** PDC320_ENDINIT ***");
 	CR (gp_port_write (port, PDC320_ENDINIT,
 				     sizeof (PDC320_ENDINIT) - 1));
 	CR (gp_port_read (port, buf, 8));
@@ -138,7 +143,7 @@ pdc320_num (GPPort *port)
 		return (GP_ERROR_CORRUPTED_DATA);
 #endif
 
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "The camera contains %i "
+	GP_DEBUG ("The camera contains %i "
 			 "files.", num);
 
 	return (num);
@@ -217,7 +222,7 @@ pdc320_size (Camera *camera, int n)
 		 */
 		CR (gp_port_read (camera->port, buf, 6));
 		size = (buf[0] << 24) + (buf[1] << 16) + (buf[2] << 8) + buf[3];
-		gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Image %i has size "
+		GP_DEBUG ("Image %i has size "
 				 "%i.", n, size);
 		return (size);
 	}
@@ -234,7 +239,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 	int chunksize=2000;
 
 	/* Get the size of the picture and allocate the memory */
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Checking size of image %i...",
+	GP_DEBUG ("Checking size of image %i...",
 			 n);
 	CR (*size = pdc320_size (camera, n));
 	*data = malloc (sizeof (char) * (*size));
@@ -268,7 +273,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 		CR_FREE (gp_port_read (camera->port, buf, 5), *data);
 		f1 = (buf[1] << 8) + buf[2];
 		f2 = (buf[3] << 8) + buf[4];
-		gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Reading frame %d "
+		GP_DEBUG ("Reading frame %d "
 				 "(%d)...", f1, f2);
 
 		/* Read the actual data */
@@ -331,12 +336,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * Get the number of the picture from the filesystem and increment
 	 * since we need a range starting with 1.
 	 */
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Getting number from fs...");
+	GP_DEBUG ("Getting number from fs...");
 	CR (n = gp_filesystem_number (camera->fs, folder, filename, context));
 	n++;
 
 	/* Get the file */
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Getting file %i...", n);
+	GP_DEBUG ("Getting file %i...", n);
 	CR (pdc320_pic (camera, n, &data, &size));
 
 	/* Post-processing */
@@ -348,21 +353,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 	case GP_FILE_TYPE_NORMAL:
 	default:
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Using Nathan Stenzel's experimental jpeg.c\n");
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "About to make jpeg header\n");
+	GP_DEBUG ("Using Nathan Stenzel's experimental jpeg.c\n");
+	GP_DEBUG ("About to make jpeg header\n");
     width = data[4]*256 + data[5];
     height = data[2]*256 + data[3];
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Width=%i\tHeight=%i\n", width, height);
+	GP_DEBUG ("Width=%i\tHeight=%i\n", width, height);
     myjpeg = gp_jpeg_header(width,height/2, 0x11,0x11,0x21, 1,0,0, &chrominance, &luminance,
             0,0,0, chunk_new_filled(HUFF_00), chunk_new_filled(HUFF_10), NULL, NULL);
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Turning the picture data into a chunk data type\n");
+	GP_DEBUG ("Turning the picture data into a chunk data type\n");
     tempchunk = chunk_new(size);
     tempchunk->data = data;
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Adding the picture data to the jpeg structure\n");
+	GP_DEBUG ("Adding the picture data to the jpeg structure\n");
     gp_jpeg_add_marker(myjpeg, tempchunk, 6, size-1);
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Writing the jpeg file\n");
+	GP_DEBUG ("Writing the jpeg file\n");
     gp_jpeg_write(file, filename, myjpeg);
-	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Cleaning up the mess\n");
+	GP_DEBUG ("Cleaning up the mess\n");
     gp_jpeg_destroy(myjpeg);
 
     }

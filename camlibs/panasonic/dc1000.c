@@ -50,6 +50,8 @@
 #  define __FILE__ "dc1000.c"
 #endif
 
+#define GP_MODULE "dc1000"
+
 /******************************************************************************/
 
 /* Internal utility functions */

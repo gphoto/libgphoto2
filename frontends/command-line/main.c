@@ -555,7 +555,7 @@ debug_func (GPLogLevel level, const char *domain, const char *format,
 
 OPTION_CALLBACK (debug)
 {
-	glob_debug = GP_DEBUG_HIGH;
+	glob_debug = 1;
 	cli_debug_print("ALWAYS INCLUDE THE FOLLOWING LINE WHEN SENDING DEBUG MESSAGES TO THE MAILING LIST:");
 	cli_debug_print(PACKAGE " " VERSION ": " "Turning on debug mode");
 
@@ -1381,7 +1381,7 @@ main (int argc, char **argv)
 
         /* Peek ahead: Check to see if we need to turn on debugging output */
         if (option_is_present ("debug", argc, argv) == GP_OK)
-                glob_debug = GP_DEBUG_HIGH;
+                glob_debug = 1;
 
 #ifdef OS2 /*check if environment is set otherwise quit*/
         if(CAMLIBS==NULL)

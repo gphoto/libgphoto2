@@ -1,3 +1,9 @@
+2002-01-16  Lutz Müller <lutz@users.sourceforge.net>
+
+	Black magic by Marcus Meissner <marcus@jet.franken.de>:
+
+	find . -type f | xargs grep -l gp_debug_printf | xargs perl -pi -e 's/gp_debug_printf\(\s*GP_DEBUG[^,]*,[^,]*,(.*)$/GP_DEBUG(\1/'
+
 2002-01-15  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2/*.h: Fix headers: no config.h, ifdef __cplusplus ...

@@ -17,9 +17,13 @@
  * both of the menu buttons until the camera control menu appears.
  * Set it to ON.  This disables the USB mass-storage support.
  */
+#include <config.h>
+#include "sierra-usbwrap.h"
+
 #include <string.h>
 #include <stdlib.h>
-#include "sierra-usbwrap.h"
+
+#define GP_MODULE "sierra"
 
 /*
  * The following things are the way the are just to ensure that USB
@@ -154,18 +158,18 @@ usb_wrap_OK(gp_port* dev, uw_header_t* hdr)
    uw_response_t rsp;
    memset(&rsp, 0, sizeof(rsp));
 
-   gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_OK" );
+   GP_DEBUG( "usb_wrap_OK" );
 
    if (gp_port_read(dev, (char*)&rsp, sizeof(rsp)) != sizeof(rsp))
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "gp_port_read *** FAILED" );
+      GP_DEBUG( "gp_port_read *** FAILED" );
       return GP_ERROR;
    }
 
    if (!UW_EQUAL(rsp.magic, UW_MAGIC_IN) ||
        !UW_EQUAL(rsp.sessionid, hdr->sessionid))
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_OK wrong session *** FAILED" );
+      GP_DEBUG( "usb_wrap_OK wrong session *** FAILED" );
       return GP_ERROR;
    }
 
@@ -179,7 +183,7 @@ usb_wrap_OK(gp_port* dev, uw_header_t* hdr)
        rsp.zero[3] != 0 ||
        rsp.zero[4] != 0)
       {
-        gp_debug_printf( GP_DEBUG_LOW, "sierra", "error: ****  usb_wrap_OK failed" );
+        GP_DEBUG( "error: ****  usb_wrap_OK failed" );
         return GP_ERROR;
       }
    return GP_OK;
@@ -192,7 +196,7 @@ usb_wrap_RDY(gp_port* dev)
    uw_pkout_rdy_t msg;
    int retries = 3;
 
-   gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_RDY" );
+   GP_DEBUG( "usb_wrap_RDY" );
 
 try_rdy_again:
    memset(&hdr, 0, sizeof(hdr));
@@ -209,7 +213,7 @@ try_rdy_again:
    if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) != GP_OK ||
        gp_port_write(dev, (char*)&msg, sizeof(msg)) != GP_OK)
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_RDY *** FAILED" );
+      GP_DEBUG( "usb_wrap_RDY *** FAILED" );
       return GP_ERROR;
    }
 
@@ -217,10 +221,10 @@ try_rdy_again:
    {
       if (!retries--)
       {
-        gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_RDY GIVING UP" );
+        GP_DEBUG( "usb_wrap_RDY GIVING UP" );
         return GP_ERROR;
       }
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_RDY *** RETRYING" );
+      GP_DEBUG( "usb_wrap_RDY *** RETRYING" );
       goto try_rdy_again;
    }
    return GP_OK;
@@ -232,7 +236,7 @@ usb_wrap_STAT(gp_port* dev)
    uw_header_t hdr;
    uw_stat_t msg;
 
-   gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_STAT" );
+   GP_DEBUG( "usb_wrap_STAT" );
 
    memset(&hdr, 0, sizeof(hdr));
    memset(&msg, 0, sizeof(msg));
@@ -246,13 +250,13 @@ usb_wrap_STAT(gp_port* dev)
    if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) != GP_OK ||
        gp_port_read(dev, (char*)&msg, sizeof(msg)) != sizeof(msg))
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_STAT *** FAILED" );
+      GP_DEBUG( "usb_wrap_STAT *** FAILED" );
       return GP_ERROR;
    }
 
    if (!UW_EQUAL(msg.length, hdr.length) || !UW_EQUAL(msg.packet_type, UW_PACKET_STAT))
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_STAT got bad packet *** FAILED" );
+      GP_DEBUG( "usb_wrap_STAT got bad packet *** FAILED" );
       return GP_ERROR;
    }
    
@@ -263,7 +267,7 @@ usb_wrap_STAT(gp_port* dev)
        msg.zero[4] != 0 ||
        msg.zero[5] != 0)
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "warning: usb_wrap_STAT found non-zero bytes (ignoring)" );
+      GP_DEBUG( "warning: usb_wrap_STAT found non-zero bytes (ignoring)" );
    }
 
    return usb_wrap_OK(dev, &hdr);
@@ -276,7 +280,7 @@ usb_wrap_CMND(gp_port* dev, char* sierra_msg, int sierra_len)
    uw_pkout_sierra_hdr_t* msg;
    int msg_len = sizeof(*msg) + sierra_len;
    
-   gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_CMND" );
+   GP_DEBUG( "usb_wrap_CMND" );
    
    msg = (uw_pkout_sierra_hdr_t*)malloc(msg_len);
    memset(&hdr, 0, sizeof(hdr));
@@ -290,13 +294,13 @@ usb_wrap_CMND(gp_port* dev, char* sierra_msg, int sierra_len)
    hdr.request_type = UW_REQUEST_CMND;
    msg->packet_type = UW_PACKET_DATA;
    memcpy((char*)msg + sizeof(*msg), sierra_msg, sierra_len);
-   gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_CMND writing %i + %i",
+   GP_DEBUG( "usb_wrap_CMND writing %i + %i",
                    sizeof(hdr), msg_len);
    
    if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) != GP_OK ||
        gp_port_write(dev, (char*)msg, msg_len) != GP_OK)
    {
-      gp_debug_printf(GP_DEBUG_LOW, "sierra", "usb_wrap_CMND ** WRITE FAILED");
+      GP_DEBUG( "usb_wrap_CMND ** WRITE FAILED");
       free(msg);
       return GP_ERROR;
    }
@@ -311,7 +315,7 @@ usb_wrap_SIZE(gp_port* dev, uw32_t* size)
    uw_header_t hdr;
    uw_size_t msg;
   
-   gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_SIZE" );
+   GP_DEBUG( "usb_wrap_SIZE" );
    memset(&hdr, 0, sizeof(hdr));
    memset(&msg, 0, sizeof(msg));
 
@@ -323,13 +327,13 @@ usb_wrap_SIZE(gp_port* dev, uw32_t* size)
    if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) != GP_OK ||
        gp_port_read(dev, (char*)&msg, sizeof(msg)) != sizeof(msg))
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_SIZE *** FAILED" );
+      GP_DEBUG( "usb_wrap_SIZE *** FAILED" );
       return GP_ERROR;
    }
 
    if (!UW_EQUAL(msg.length, hdr.length) || !UW_EQUAL(msg.packet_type, UW_PACKET_DATA))
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_SIZE got bad packet *** FAILED" );
+      GP_DEBUG( "usb_wrap_SIZE got bad packet *** FAILED" );
       return GP_ERROR;
    }
 
@@ -338,7 +342,7 @@ usb_wrap_SIZE(gp_port* dev, uw32_t* size)
        msg.zero[2] != 0 ||
        msg.zero[3] != 0)
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "warning: usb_wrap_SIZE found non-zero bytes (ignoring)" );
+      GP_DEBUG( "warning: usb_wrap_SIZE found non-zero bytes (ignoring)" );
    }
 
    *size = msg.size;
@@ -353,7 +357,7 @@ usb_wrap_DATA(gp_port* dev, char* sierra_response, int sierra_len, uw32_t size)
    uw_pkout_sierra_hdr_t* msg;
    unsigned int msg_len;
 
-   gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_DATA" );
+   GP_DEBUG( "usb_wrap_DATA" );
 
    msg_len = 0;
    msg_len = msg_len * 256 + (unsigned int)(size.c4);
@@ -363,7 +367,7 @@ usb_wrap_DATA(gp_port* dev, char* sierra_response, int sierra_len, uw32_t size)
 
    if (sierra_len < msg_len - sizeof(*msg))
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_read_packet buffer too small! (%i < %i) *** FAILED", sierra_len, msg_len);
+      GP_DEBUG( "usb_wrap_read_packet buffer too small! (%i < %i) *** FAILED", sierra_len, msg_len);
       return GP_ERROR;
    }
    sierra_len = msg_len - sizeof(*msg);
@@ -381,7 +385,7 @@ usb_wrap_DATA(gp_port* dev, char* sierra_response, int sierra_len, uw32_t size)
    if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) != GP_OK ||
        gp_port_read(dev, (char*)msg, msg_len) != msg_len)
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_DATA FAILED" );
+      GP_DEBUG( "usb_wrap_DATA FAILED" );
       free(msg);
       return GP_ERROR;
    }
@@ -399,13 +403,13 @@ usb_wrap_DATA(gp_port* dev, char* sierra_response, int sierra_len, uw32_t size)
 int
 usb_wrap_write_packet(gp_port* dev, char* sierra_msg, int sierra_len)
 {
-   gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_write_packet" );
+   GP_DEBUG( "usb_wrap_write_packet" );
 
    if (usb_wrap_RDY(dev) != GP_OK ||
        usb_wrap_CMND(dev, sierra_msg, sierra_len) != GP_OK ||
        usb_wrap_STAT(dev) != GP_OK)
    {
-      gp_debug_printf(GP_DEBUG_LOW, "sierra", "usb_wrap_write_packet FAILED");
+      GP_DEBUG( "usb_wrap_write_packet FAILED");
       return GP_ERROR;
    }
    return GP_OK;
@@ -416,14 +420,14 @@ usb_wrap_read_packet(gp_port* dev, char* sierra_response, int sierra_len)
 {
    uw32_t uw_size;
 
-   gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_read_packet" );
+   GP_DEBUG( "usb_wrap_read_packet" );
 
    if (usb_wrap_RDY(dev) != GP_OK ||
        usb_wrap_SIZE(dev, &uw_size) != GP_OK ||
        usb_wrap_DATA(dev, sierra_response, sierra_len, uw_size) != GP_OK ||
        usb_wrap_STAT(dev) != GP_OK)
    {
-      gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_read_packet FAILED" );
+      GP_DEBUG( "usb_wrap_read_packet FAILED" );
       return GP_ERROR;
    }
    return sierra_len;

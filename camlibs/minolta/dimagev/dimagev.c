@@ -21,6 +21,8 @@
 
 /* $Id$ */
 
+#include <config.h>
+
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -37,6 +39,8 @@
 #endif
 
 #include "dimagev.h"
+
+#define GP_MODULE "dimagev"
 
 int camera_id (CameraText *id) 
 {
@@ -85,7 +89,7 @@ static int camera_exit (Camera *camera, GPContext *context)
 
 			/* This will also send the host mode of zero. */
 			if ( dimagev_set_date(camera->pl) < GP_OK ) {
-				gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
+				GP_DEBUG( "camera_init::unable to set camera to system time");
 				return GP_ERROR_IO;
 			}
 			free (camera->pl->data);
@@ -115,12 +119,12 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	int ret;
 
 	if ( dimagev_get_camera_status(camera->pl) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_list::unable to get camera status");
+		GP_DEBUG( "camera_file_list::unable to get camera status");
 		return GP_ERROR_IO;
 	}
 
 	if ((ret = gp_list_populate(list, DIMAGEV_FILENAME_FMT, camera->pl->status->number_images)) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_list::unable to populate list");
+		GP_DEBUG( "camera_file_list::unable to populate list");
 		return ret;
 	}
 		
@@ -160,7 +164,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	}
 
 	if (result < 0) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_get::unable to retrieve image file");
+		GP_DEBUG( "camera_file_get::unable to retrieve image file");
 		return result;
 	}
 
@@ -190,13 +194,13 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	if ( dimagev_shutter(camera->pl) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unable to open shutter");
+		GP_DEBUG( "camera_capture::unable to open shutter");
 		return GP_ERROR_IO;
 	}
 
 	/* Now check how many pictures are taken, and return the last one. */
 	if ( dimagev_get_camera_status(camera->pl) != 0 ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_capture::unable to get camera status");
+		GP_DEBUG( "camera_capture::unable to get camera status");
 		return GP_ERROR_IO;
 	}
 
@@ -238,17 +242,17 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 	int i = 0, count = 0;
 
 	if ( dimagev_get_camera_status(camera->pl) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_summary::unable to get camera status");
+		GP_DEBUG( "camera_summary::unable to get camera status");
 		return GP_ERROR_IO;
 	}
 
 	if ( dimagev_get_camera_data(camera->pl) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_summary::unable to get camera data");
+		GP_DEBUG( "camera_summary::unable to get camera data");
 		return GP_ERROR_IO;
 	}
 
 	if ( dimagev_get_camera_info(camera->pl) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_summary::unable to get camera info");
+		GP_DEBUG( "camera_summary::unable to get camera info");
 		return GP_ERROR_IO;
 	}
 
@@ -446,7 +450,7 @@ int camera_init (Camera *camera, GPContext *context)
         camera->functions->summary              = camera_summary;
         camera->functions->about                = camera_about;
 
-        gp_debug_printf(GP_DEBUG_LOW, "dimagev", "initializing the camera");
+        GP_DEBUG( "initializing the camera");
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
@@ -464,14 +468,14 @@ int camera_init (Camera *camera, GPContext *context)
         gp_port_set_settings(camera->port, settings);
 
         if  ( dimagev_get_camera_data(camera->pl) < GP_OK ) {
-                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to get current camera data");
+                GP_DEBUG( "camera_init::unable to get current camera data");
 		free (camera->pl);
 		camera->pl = NULL;
                 return GP_ERROR_IO;
         }
 
         if  ( dimagev_get_camera_status(camera->pl) < GP_OK ) {
-                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to get current camera status");
+                GP_DEBUG( "camera_init::unable to get current camera status");
 		free (camera->pl);
 		camera->pl = NULL;
                 return GP_ERROR_IO;
@@ -479,7 +483,7 @@ int camera_init (Camera *camera, GPContext *context)
 
         /* Let's make this non-fatal. An incorrect date doesn't affect much. */
         if ( dimagev_set_date(camera->pl) < GP_OK ) {
-                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
+                GP_DEBUG( "camera_init::unable to set camera to system time");
         }
 
 	/* Set up the filesystem */

@@ -1,9 +1,13 @@
+#include <config.h>
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <gphoto2.h>
 #include "barbie.h"
+
+#define GP_MODULE "barbie"
 
 /* packet headers/footers */
 char packet_header[3]           = {0x02, 0x01};
@@ -24,16 +28,16 @@ void barbie_packet_dump(GPPort *port, int direction, char *buf, int size) {
 	int x;
 
 	if (direction == 0)
-		gp_debug_printf(GP_DEBUG_LOW, "barbie", "\tRead  Packet (%i): ", size);
+		GP_DEBUG( "\tRead  Packet (%i): ", size);
 	   else
-		gp_debug_printf(GP_DEBUG_LOW, "barbie", "\tWrite Packet (%i): ", size);
+		GP_DEBUG( "\tWrite Packet (%i): ", size);
 	for (x=0; x<size; x++) {
 		if (isalpha(buf[x]))
-			gp_debug_printf (GP_DEBUG_LOW, "barbie", "[ '%c' ] ", (unsigned char)buf[x]);
+			GP_DEBUG ("[ '%c' ] ", (unsigned char)buf[x]);
 		   else
-			gp_debug_printf (GP_DEBUG_LOW, "barbie", "[ x%02x ] ", (unsigned char)buf[x]);
+			GP_DEBUG ("[ x%02x ] ", (unsigned char)buf[x]);
 	}
-	gp_debug_printf (GP_DEBUG_LOW, "barbie", "\n");
+	GP_DEBUG ("\n");
 }
 
 int barbie_write_command(GPPort *port, char *command, int size) {
@@ -87,7 +91,7 @@ int barbie_ping(GPPort *port) {
 
 	char cmd[4], resp[4];
 
-	gp_debug_printf(GP_DEBUG_LOW, "barbie", "Pinging the camera\n");
+	GP_DEBUG( "Pinging the camera\n");
 
 	memcpy(cmd, packet_1, 4);
 	cmd[COMMAND_BYTE] = 'E';
@@ -98,7 +102,7 @@ int barbie_ping(GPPort *port) {
 
 	if (resp[DATA1_BYTE] != 'x')
 		return (0);
-	gp_debug_printf (GP_DEBUG_LOW, "barbie", "Ping answered!\n");
+	GP_DEBUG ("Ping answered!\n");
 	return (1);
 }
 
@@ -106,7 +110,7 @@ int barbie_file_count (GPPort *port) {
 
         char cmd[4], resp[4];
 
-        gp_debug_printf (GP_DEBUG_LOW, "barbie", "Getting the number of pictures\n");
+        GP_DEBUG ("Getting the number of pictures\n");
 
         memcpy(cmd, packet_1, 4);
 
@@ -166,7 +170,7 @@ char *barbie_read_data (GPPort *port, char *cmd, int cmd_size, int data_type, in
 		return (0);
 	switch (data_type) {
 		case BARBIE_DATA_FIRMWARE:
-			gp_debug_printf (GP_DEBUG_LOW, "barbie", "Getting Firmware\n");
+			GP_DEBUG ("Getting Firmware\n");
 			/* we're getting the firmware revision */
 			*size = resp[2];
 			s = (char *)malloc(sizeof(char)*(*size));
@@ -178,7 +182,7 @@ char *barbie_read_data (GPPort *port, char *cmd, int cmd_size, int data_type, in
 			}
 			break;
 		case BARBIE_DATA_PICTURE:
-			gp_debug_printf(GP_DEBUG_LOW, "barbie", "Getting Picture\n");
+			GP_DEBUG( "Getting Picture\n");
 			/* we're getting a picture */
 			n1 = (unsigned char)resp[2];
 			n2 = (unsigned char)resp[3];
@@ -229,7 +233,7 @@ printf("\tn1=%i n2=%i n3=%i n4=%i size=%i\n", n1, n2 ,n3, n4, *size);
 				}
 			}
 			*size = z;
-			gp_debug_printf(GP_DEBUG_LOW, "barbie", "size=%i\n", *size);
+			GP_DEBUG( "size=%i\n", *size);
 			break;
 		case BARBIE_DATA_THUMBNAIL:
 			break;

@@ -20,14 +20,19 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#include <config.h>
 
-#include <gphoto2-library.h>
-#include <gphoto2-debug.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <gphoto2-library.h>
+#include <gphoto2-port-log.h>
+
 #include "jd350e.h"
 #include "jd350e_red.h"
 /*#include "jd350e_blue.h"*/
+
+#define GP_MODULE "jd350e"
 
 #define THRESHOLD 0xf8
 
@@ -85,7 +90,7 @@ int jd350e_postprocessing(int width, int height, unsigned char* rgb){
 	if( (green_max+blue_max)/2 > red_max ){
 #endif
 		/* outdoor daylight : red color correction curve*/
-		gp_debug_printf(GP_DEBUG_LOW, "jd350e", "daylight mode");
+		GP_DEBUG( "daylight mode");
 		for( y=0; y<height; y++){
 			for( x=0; x<width; x++ ){
 				RED(rgb,x,y,width) = jd350e_red_curve[ RED(rgb,x,y,width) ];
@@ -100,7 +105,7 @@ int jd350e_postprocessing(int width, int height, unsigned char* rgb){
 	}
 	else if( (green_max+red_max)/2 > blue_max ){
 		/* indoor electric light */
-		gp_debug_printf(GP_DEBUG_LOW, "jd350e", "electric light mode");
+		GP_DEBUG( "electric light mode");
 		for( y=0; y<height; y++){
 			for( x=0; x<width; x++ ){
 				BLUE(rgb,x,y,width) = MIN(2*(unsigned)BLUE(rgb,x,y,width),255);

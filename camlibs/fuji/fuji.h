@@ -18,10 +18,10 @@
 
 #define FUJI_MAXBUF_DEFAULT 9000000
 
-#define DBG(x) gp_debug_printf(GP_DEBUG_HIGH,"Fuji",x)
-#define DBG2(x,y) gp_debug_printf(GP_DEBUG_HIGH,"Fuji",x,y)
-#define DBG3(x,y,z) gp_debug_printf(GP_DEBUG_HIGH,"Fuji",x,y,z)
-#define DBG4(w,x,y,z) gp_debug_printf(GP_DEBUG_HIGH,"Fuji",w,x,y,z)
+#define DBG(x) GP_DEBUG(x)
+#define DBG2(x,y) GP_DEBUG(x,y)
+#define DBG3(x,y,z) GP_DEBUG(x,y,z)
+#define DBG4(w,x,y,z) GP_DEBUG(w,x,y,z)
 
 struct _CameraPrivateLibrary {
   int folders;

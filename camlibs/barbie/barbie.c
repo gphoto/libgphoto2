@@ -22,6 +22,8 @@
 
 #include "barbie.h"
 
+#define GP_MODULE "barbie"
+
 extern char packet_1[];
 
 static char *models[] = {

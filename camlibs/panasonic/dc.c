@@ -18,6 +18,7 @@
 
         This is a Panasonic DC series common routines.
 */
+#include <config.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,6 +34,8 @@
 #ifndef __FILE__
 #  define __FILE__ "dc.c"
 #endif
+
+#define GP_MODULE "dc"
 
 int dsc1_sendcmd(Camera *camera, uint8_t cmd, void *data, int size) {
 
@@ -227,7 +230,7 @@ char *dsc_msgprintf(char *format, ...) {
 
 void dsc_errorprint(int error, char *file, int line) {
 
-	gp_debug_printf(GP_DEBUG_LOW, "panasonic",
+	GP_DEBUG(
 		"%s:%u: return code: %i, errno: %i, %s",
 			file, line, error, errno, dsc_strerror(error));
 }

@@ -52,6 +52,8 @@
 #  define N_(String) (String)
 #endif
 
+#define GP_MODULE
+
 struct jamcam_file jamcam_files[1024];
 static int jamcam_count = 0;
 static int jamcam_mmc_card_size = 0;
@@ -81,8 +83,8 @@ static int jamcam_get_int_at_pos( unsigned char *buf, int pos ) {
 static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
 	char reply[4];
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_set_usb_mem_pointer");
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** position:  %d (0x%x)",
+	GP_DEBUG ("* jamcam_set_usb_mem_pointer");
+	GP_DEBUG ("*** position:  %d (0x%x)",
 		position, position);
 
 	gp_port_usb_msg_write( camera->port,
@@ -110,7 +112,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 	int width;
 	int height;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_mmc_card_file_count");
+	GP_DEBUG ("* jamcam_mmc_card_file_count");
 
 	memset( buf, 0, sizeof( buf ));
 
@@ -209,8 +211,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 			break;
 	}
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam",
-		"*** returning with jamcam_count = %d", jamcam_count);
+	GP_DEBUG (		"*** returning with jamcam_count = %d", jamcam_count);
 	return( 0 );
 }
 
@@ -223,7 +224,7 @@ int jamcam_file_count (Camera *camera) {
 	int height;
 	int last_offset_size = 0;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_file_count");
+	GP_DEBUG ("* jamcam_file_count");
 
 	jamcam_count = 0;
 
@@ -308,8 +309,7 @@ int jamcam_file_count (Camera *camera) {
 		jamcam_count += jamcam_mmc_card_file_count( camera );
 	}
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam",
-		"*** returning jamcam_count = %d", jamcam_count);
+	GP_DEBUG (		"*** returning jamcam_count = %d", jamcam_count);
 	return( jamcam_count );
 }
 
@@ -325,10 +325,10 @@ int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 	int res = GP_OK;
 	unsigned int id = 0;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_fetch_memory");
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * start:  %d (0x%x)",
+	GP_DEBUG ("* jamcam_fetch_memory");
+	GP_DEBUG ("  * start:  %d (0x%x)",
 		start, start);
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * length: %d (0x%x)",
+	GP_DEBUG ("  * length: %d (0x%x)",
 		length, length);
 
 	if ( length > 1000 )
@@ -382,7 +382,7 @@ int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 		if ( length > 1000 ) {
 			gp_context_progress_update (context, id, bytes_read);
 			if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-				gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * CANCELED");
+				GP_DEBUG ("  * CANCELED");
 				break;
 			}
 		}
@@ -392,7 +392,7 @@ int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 		gp_context_progress_stop (context, id);
 
 	if ( res == GP_OK ) {
-		gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * returning OK");
+		GP_DEBUG ("  * returning OK");
 	}
 	return( res );
 }
@@ -403,7 +403,7 @@ int jamcam_request_image( Camera *camera, CameraFile *file,
 	int result;
 	char tmp_buf[300000];
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_request_image");
+	GP_DEBUG ("* jamcam_request_image");
 
 	position = jamcam_files[number].position;
 
@@ -456,7 +456,7 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 	int bytes_to_read;
 	unsigned int id;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_request_thumbnail");
+	GP_DEBUG ("* jamcam_request_thumbnail");
 
 	memset( packet, 0, sizeof( packet ));
 
@@ -538,7 +538,7 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 int jamcam_write_packet (Camera *camera, char *packet, int length) {
 	int ret, r;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_write_packet");
+	GP_DEBUG ("* jamcam_write_packet");
 
 	for (r = 0; r < RETRIES; r++) {
 		ret = gp_port_write (camera->port, packet, length);
@@ -556,8 +556,8 @@ int jamcam_read_packet (Camera *camera, char *packet, int length) {
 	int r = 0;
 	int bytes_read;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_read_packet");
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** length: %d (0x%x)",
+	GP_DEBUG ("* jamcam_read_packet");
+	GP_DEBUG ("*** length: %d (0x%x)",
 		length, length);
 
 	for (r = 0; r < RETRIES; r++) {
@@ -581,7 +581,7 @@ int jamcam_enq (Camera *camera)
 	int ret, r = 0;
 	unsigned char buf[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_enq");
+	GP_DEBUG ("* jamcam_enq");
 
 	memset( buf, 0, 16 );
 
@@ -632,8 +632,7 @@ int jamcam_enq (Camera *camera)
 					jamcam_mmc_card_size = jamcam_get_int_at_pos( buf, 8 );
 
 					if ( jamcam_mmc_card_size ) {
-						gp_debug_printf (GP_DEBUG_LOW, "jamcam",
-							"* jamcam_enq, MMC card size = %d",
+						GP_DEBUG (							"* jamcam_enq, MMC card size = %d",
 							jamcam_mmc_card_size );
 					}
 
@@ -660,7 +659,7 @@ int jamcam_query_mmc_card (Camera *camera)
 	int ret, r = 0;
 	char buf[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_query_mmc_card");
+	GP_DEBUG ("* jamcam_query_mmc_card");
 
 	/* usb port doesn't need this packet, this info found in enquiry reply */
 	if ( camera->port->type == GP_PORT_USB ) {
@@ -687,8 +686,7 @@ int jamcam_query_mmc_card (Camera *camera)
 		jamcam_mmc_card_size = jamcam_get_int_at_pos( buf, 0 );
 
 		if ( jamcam_mmc_card_size ) {
-			gp_debug_printf (GP_DEBUG_LOW, "jamcam",
-				"* jamcam_query_mmc_card, MMC card size = %d",
+			GP_DEBUG ("* jamcam_query_mmc_card, MMC card size = %d",
 				jamcam_mmc_card_size );
 		}
 

@@ -306,8 +306,7 @@ canon_int_identify_camera (Camera *camera, GPContext *context)
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0x01, 0x12, &len, NULL);
 			if (!msg) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "canon_int_identify_camera: " "msg error");
+				GP_DEBUG ("canon_int_identify_camera: " "msg error");
 				canon_serial_error_type (camera);
 				return GP_ERROR;
 			}

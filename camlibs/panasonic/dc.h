@@ -99,13 +99,13 @@ void dsc_errorprint(int error, char *file, int line);
 /* Pre-procesor macros for verbose messaging and debugging */
 
 #define DEBUG_PRINT_LOW(ARGS) \
-        gp_debug_printf(GP_DEBUG_LOW, "panasonic", "%s: %s", __FILE__, dsc_msgprintf ARGS );
+        GP_DEBUG( "%s: %s", __FILE__, dsc_msgprintf ARGS );
 
 #define DEBUG_PRINT_MEDIUM(ARGS) \
-        gp_debug_printf(GP_DEBUG_MEDIUM, "panasonic", "%s: %s", __FILE__, dsc_msgprintf ARGS );
+        GP_DEBUG( "%s: %s", __FILE__, dsc_msgprintf ARGS );
 
 #define DEBUG_PRINT_HIGH(ARGS) \
-        gp_debug_printf(GP_DEBUG_HIGH, "panasonic", "%s: %s", __FILE__, dsc_msgprintf ARGS );
+        GP_DEBUG( "%s: %s", __FILE__, dsc_msgprintf ARGS );
 
 #define RETURN_ERROR(ERROR) { \
         dsc_errorprint(ERROR, __FILE__, __LINE__); \

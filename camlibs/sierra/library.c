@@ -31,6 +31,8 @@
 #include "sierra.h"
 #include "sierra-usbwrap.h"
 
+#define GP_MODULE "sierra"
+
 /* Short comm. */
 #define NUL             0x00
 #define ENQ             0x05
@@ -218,13 +220,12 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 	CHECK (sierra_change_folder (camera, folder, context));
 	GP_DEBUG ("*** counting folders in '%s'...", folder);
 	CHECK (sierra_get_int_register (camera, 83, &count, context));
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** found %i folders", count);
+	GP_DEBUG ("*** found %i folders", count);
 	for (i = 0; i < count; i++) {
 		CHECK (sierra_change_folder (camera, folder, context));
 		CHECK (sierra_set_int_register (camera, 83, i + 1, context));
 		bsize = 1024;
-		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting "
-				 "name of folder %i...", i + 1);
+		GP_DEBUG ("*** getting name of folder %i...", i + 1);
 		CHECK (sierra_get_string_register (camera, 84, 0, 
 						   NULL, buf, &bsize, context));
 

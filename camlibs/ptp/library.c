@@ -24,7 +24,6 @@
 #include <stdio.h>
 
 #include <gphoto2-library.h>
-#include <gphoto2-debug.h>
 #include <gphoto2-port-log.h>
 
 #ifdef ENABLE_NLS

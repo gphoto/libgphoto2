@@ -18,6 +18,7 @@
  */
 
 #include <config.h>
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -41,6 +42,8 @@
 
 #include "stv0680.h"
 #include "library.h"
+
+#define GP_MODULE "stv0680"
 
 struct camera_to_usb {
 	  char *name;

@@ -49,6 +49,7 @@
 
 #include "library.h"
 
+#define GP_MODULE "jamcam"
 #define TIMEOUT	      2000
 
 #define JAMCAM_VERSION "0.6"
@@ -66,7 +67,7 @@ static struct {
 
 int camera_id (CameraText *id)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_id");
+	GP_DEBUG ("* camera_id");
 
 	strcpy (id->text, "jamcam");
 
@@ -79,7 +80,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	char *ptr;
 	CameraAbilities a;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_abilities");
+	GP_DEBUG ("* camera_abilities");
 
 	ptr = models[x].model;
 	while (ptr) {
@@ -113,8 +114,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	int count;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* file_list_func");
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** folder: %s", folder);
+	GP_DEBUG ("* file_list_func");
+	GP_DEBUG ("*** folder: %s", folder);
 
 	CHECK (count = jamcam_file_count (camera));
 	CHECK (gp_list_populate (list, "pic_%04i.ppm", count));
@@ -130,9 +131,9 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 	int n;
 	struct jamcam_file *jc_file;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* get_info_func");
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** folder: %s", folder);
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** filename: %s",filename);
+	GP_DEBUG ("* get_info_func");
+	GP_DEBUG ("*** folder: %s", folder);
+	GP_DEBUG ("*** filename: %s",filename);
 
 	/* Get the file number from the CameraFileSystem */
 	CHECK (n = gp_filesystem_number (camera->fs, folder,
@@ -156,7 +157,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 
 static int camera_exit (Camera *camera, GPContext *context)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_exit");
+	GP_DEBUG ("* camera_exit");
 
 	jamcam_file_count (camera);
 	return (GP_OK);
@@ -176,10 +177,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	int width, height;
 	struct jamcam_file *jc_file;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_file_get");
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** folder: %s", folder);
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** filename: %s",filename);
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** type: %d", type);
+	GP_DEBUG ("* camera_file_get");
+	GP_DEBUG ("*** folder: %s", folder);
+	GP_DEBUG ("*** filename: %s",filename);
+	GP_DEBUG ("*** type: %d", type);
 
 	CHECK (n = gp_filesystem_number (camera->fs, folder,
 					 filename, context));
@@ -260,7 +261,7 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 	int count;
 	char tmp[1024];
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_summary");
+	GP_DEBUG ("* camera_summary");
 
 	/* possibly get # pics, mem free, etc. */
 	count = jamcam_file_count (camera);
@@ -273,7 +274,7 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 
 static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_about");
+	GP_DEBUG ("* camera_about");
 
 	strcpy (about->text,
 		_("jamcam library v" JAMCAM_VERSION
@@ -291,11 +292,9 @@ int camera_init (Camera *camera, GPContext *context)
 	int count;
 	GPPortSettings settings;
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_init");
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam",
-		"   * jamcam library for Gphoto2 by Chris Pinkham <cpinkham@infi.net>");
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam",
-		"   * jamcam library v%s, %s", JAMCAM_VERSION, JAMCAM_LAST_MOD );
+	GP_DEBUG ("* camera_init");
+	GP_DEBUG ("   * jamcam library for Gphoto2 by Chris Pinkham <cpinkham@infi.net>");
+	GP_DEBUG ("   * jamcam library v%s, %s", JAMCAM_VERSION, JAMCAM_LAST_MOD );
 
 	/* First, set up all the function pointers */
 	camera->functions->exit 	= camera_exit;

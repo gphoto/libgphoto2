@@ -28,9 +28,10 @@
 
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
-#include <gphoto2-debug.h>
 
 #include "library.h"
+
+#define GP_MODULE "sierra"
 
 #define TIMEOUT	   2000
 
@@ -321,7 +322,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 int camera_start (Camera *camera, GPContext *context)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_start");
+	GP_DEBUG ("*** camera_start");
 
 	/*
 	 * Opening and closing of the port happens in libgphoto2. All we
@@ -342,7 +343,7 @@ int camera_start (Camera *camera, GPContext *context)
 
 int camera_stop (Camera *camera, GPContext *context) 
 {
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_stop");
+	GP_DEBUG ("*** camera_stop");
 
 	/*
 	 * Closing the port happens in libgphoto2. All we do here is
@@ -362,7 +363,7 @@ int camera_stop (Camera *camera, GPContext *context)
 static int
 camera_exit (Camera *camera, GPContext *context) 
 {
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_exit");
+	GP_DEBUG ("*** camera_exit");
 
 	if (camera->pl) {
 		free (camera->pl);
@@ -473,9 +474,9 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	Camera *camera = data;
 	int count;
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+	GP_DEBUG (
 			 "*** sierra_folder_delete_all");
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
+	GP_DEBUG ("*** folder: %s", folder);
 
 	/* Set the working folder and delete all pictures there */
 	CHECK (camera_start (camera, context));
@@ -505,9 +506,9 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	int n;
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_delete");
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
+	GP_DEBUG ("*** sierra_file_delete");
+	GP_DEBUG ("*** folder: %s", folder);
+	GP_DEBUG ("*** filename: %s", filename);
 
 	/* Get the file number from the CameraFilesystem */
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
@@ -556,9 +557,9 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 	gp_file_get_name(file, &filename);
 	
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** put_file_func");
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
+	GP_DEBUG ("*** put_file_func");
+	GP_DEBUG ("*** folder: %s", folder);
+	GP_DEBUG ("*** filename: %s", filename);
 	
 	/* Check the size */
 	CHECK (gp_file_get_data_and_size (file, &data_file, &data_size));
@@ -682,11 +683,11 @@ static void dump_register (Camera *camera, GPContext *context)
 	};
 		
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** Register:");
+	GP_DEBUG ("*** Register:");
 	for (i = 0; i < 128; i++) {
 		ret = sierra_get_int_register (camera, i, &value, context);
 		if (ret == GP_OK)
-			gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+			GP_DEBUG (
 					 "***  %3i: %12i (%s)", i, value, 
 					 description [i]);
 	}
@@ -700,7 +701,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	char t[1024];
 	int ret, value;
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_get_config_olympus");
+	GP_DEBUG ("*** camera_get_config_olympus");
 
 	CHECK (camera_start (camera, context));
 
@@ -1035,12 +1036,12 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	char *value;
 	int i = 0;
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_set_config");
+	GP_DEBUG ("*** camera_set_config");
 
 	CHECK (camera_start (camera, context));
 
 	/* Resolution */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting resolution");
+	GP_DEBUG ("*** setting resolution");
 	if ((gp_widget_get_child_by_label (window, _("Resolution"), &child)
 		== GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1059,7 +1060,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 	
 	/* Shutter Speed */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting shutter speed");
+	GP_DEBUG ("*** setting shutter speed");
 	if ((gp_widget_get_child_by_label (window, 
 		_("Shutter Speed (microseconds)"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1068,7 +1069,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 
 	/* Aperture */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting aperture");
+	GP_DEBUG ("*** setting aperture");
 	if ((gp_widget_get_child_by_label (window, _("Aperture"), &child) 
 		== GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1087,7 +1088,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 
 	/* Color Mode */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting color mode");
+	GP_DEBUG ("*** setting color mode");
 	if ((gp_widget_get_child_by_label (window, _("Color Mode"), &child)
 		== GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1108,7 +1109,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 
 	/* Flash Mode */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting flash mode");
+	GP_DEBUG ("*** setting flash mode");
 	if ((gp_widget_get_child_by_label (window, _("Flash Mode"), &child)
 		== GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1129,7 +1130,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 
 	/* Brightness/Contrast */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+	GP_DEBUG (
 			 "*** setting brightness/contrast");
 	if ((gp_widget_get_child_by_label (window, _("Brightness/Contrast"), 
 		&child) == GP_OK) &&
@@ -1151,7 +1152,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 
 	/* White Balance */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting white balance");
+	GP_DEBUG ("*** setting white balance");
 	if ((gp_widget_get_child_by_label (window, _("White Balance"), &child)
 		== GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1172,7 +1173,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 
 	/* Lens Mode */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting lens mode");
+	GP_DEBUG ("*** setting lens mode");
 	if ((gp_widget_get_child_by_label (window, _("Lens Mode"), &child)
 		== GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1189,7 +1190,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
         }
 
 	/* Spot Metering Mode */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+	GP_DEBUG (
 			 "*** setting spot metering mode");
 	if ((gp_widget_get_child_by_label (window, _("Spot Metering Mode"), 
 		&child) == GP_OK) &&
@@ -1205,7 +1206,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 
 	/* Zoom */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting zoom");
+	GP_DEBUG ("*** setting zoom");
 	if ((gp_widget_get_child_by_label (window, _("Zoom"), &child) 
 		== GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1224,7 +1225,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 
         /* Auto Off (host) */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting auto off (host)");
+	GP_DEBUG ("*** setting auto off (host)");
 	if ((gp_widget_get_child_by_label (window, _("Auto Off (host) "
 					  "(in seconds)"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1233,7 +1234,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
         }
 
         /* Auto Off (field) */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+	GP_DEBUG (
 			 "*** setting auto off (field)");
 	if ((gp_widget_get_child_by_label (window, _("Auto Off (field) "
 		"(in seconds)"), &child) == GP_OK) &&
@@ -1243,7 +1244,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 
         /* LCD Brightness */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting lcd brightness");
+	GP_DEBUG ("*** setting lcd brightness");
 	if ((gp_widget_get_child_by_label (window, 
 		_("LCD Brightness"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1252,7 +1253,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	}
 
         /* LCD Auto Off */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting lcd auto off");
+	GP_DEBUG ("*** setting lcd auto off");
 	if ((gp_widget_get_child_by_label (window, 
 		_("LCD Auto Off (in seconds)"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1272,7 +1273,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 	char t[1024];
 	int ret, value;
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_get_config_epson");
+	GP_DEBUG ("*** camera_get_config_epson");
 
 	CHECK (camera_start (camera, context));
 
@@ -1519,12 +1520,12 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	char *value;
 	int i = 0;
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_set_config_epson");
+	GP_DEBUG ("*** camera_set_config_epson");
 
 	CHECK (camera_start (camera, context));
 
 	/* Aperture */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting aperture");
+	GP_DEBUG ("*** setting aperture");
 	if ((gp_widget_get_child_by_label (window, _("Aperture"), &child) 
 	     == GP_OK) && gp_widget_changed (child)) {
 		gp_widget_get_value (child, &value);
@@ -1548,7 +1549,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	}
 
 	/* Flash Mode */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting flash mode");
+	GP_DEBUG ("*** setting flash mode");
 	if ((gp_widget_get_child_by_label (window, _("Flash Mode"), &child)
 	     == GP_OK) && gp_widget_changed (child)) {
 		gp_widget_get_value (child, &value);
@@ -1568,7 +1569,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	}
 
 	/* White Balance */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting white balance");
+	GP_DEBUG ("*** setting white balance");
 	if ((gp_widget_get_child_by_label (window, _("White Balance"), &child)
 	     == GP_OK) && gp_widget_changed (child)) {
 		gp_widget_get_value (child, &value);
@@ -1584,7 +1585,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	}
 
 	/* Lens Mode */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting lens mode");
+	GP_DEBUG ("*** setting lens mode");
 	if ((gp_widget_get_child_by_label (window, _("Lens Mode"), &child)
 		== GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1599,7 +1600,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
         }
 
 	/* Resolution */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting resolution");
+	GP_DEBUG ("*** setting resolution");
 	if ((gp_widget_get_child_by_label (window, _("Resolution"), &child)
 	     == GP_OK) && gp_widget_changed (child)) {
 		gp_widget_get_value (child, &value);
@@ -1617,7 +1618,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	}
 	
 	/* Color Mode */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting color mode");
+	GP_DEBUG ("*** setting color mode");
 	if ((gp_widget_get_child_by_label (window, _("Color Mode"), &child)
 	     == GP_OK) && gp_widget_changed (child)) {
 		gp_widget_get_value (child, &value);
@@ -1631,7 +1632,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	}
 
         /* Auto Off (host) */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting auto off (host)");
+	GP_DEBUG ("*** setting auto off (host)");
 	if ((gp_widget_get_child_by_label (window, _("Auto Off (host) "
 					  "(in seconds)"), &child) == GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1640,7 +1641,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
         }
 
         /* Auto Off (field) */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+	GP_DEBUG (
 			 "*** setting auto off (field)");
 	if ((gp_widget_get_child_by_label (window, _("Auto Off (field) "
 		"(in seconds)"), &child) == GP_OK) &&
@@ -1650,7 +1651,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	}
 
 	/* Language */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting language");
+	GP_DEBUG ("*** setting language");
 	if ((gp_widget_get_child_by_label (window, _("Language"), &child)
 	     == GP_OK) && gp_widget_changed (child)) {
 		gp_widget_get_value (child, &value);
@@ -1676,7 +1677,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	}
 
 	/* Date & Time */
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting date");
+	GP_DEBUG ("*** setting date");
 	if ((gp_widget_get_child_by_label (window, _("Date & Time"), &child)
 		== GP_OK) &&
 	    gp_widget_changed (child)) {
@@ -1711,7 +1712,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	int value, ret;
 	char t[1024];
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_summary");
+	GP_DEBUG ("*** camera_summary");
 
 	CHECK (camera_start (camera, context));
 
@@ -1770,7 +1771,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 static int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
 {
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_manual");
+	GP_DEBUG ("*** camera_manual");
 
 	switch (camera->pl->model) {
 	case SIERRA_MODEL_EPSON:
@@ -1807,7 +1808,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_about");
+	GP_DEBUG ("*** camera_about");
 	
 	strcpy (about->text, 
 		_("sierra SPARClite library\n"
@@ -1966,12 +1967,10 @@ int camera_init (Camera *camera, GPContext *context)
         ret = sierra_set_string_register (camera, 84, "\\", 1, context);
         if (ret != GP_OK) {
                 camera->pl->folders = 0;
-                gp_debug_printf (GP_DEBUG_LOW, "sierra", 
-                                 "*** folder support: no");
+                GP_DEBUG ("*** folder support: no");
         } else {
 		camera->pl->folders = 1;
-                gp_debug_printf (GP_DEBUG_LOW, "sierra",
-                                 "*** folder support: yes");
+                GP_DEBUG ("*** folder support: yes");
         }
 
         CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, TIMEOUT));

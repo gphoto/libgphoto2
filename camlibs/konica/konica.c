@@ -22,10 +22,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <gphoto2-port-log.h>
+
 #include "library.h"
 #include "lowlevel.h"
 #include "konica.h"
 
+#define GP_MODULE "konica"
 #define CHECK_NULL(r)     {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(r,f) {			\
 	int res = (r);				\
@@ -88,7 +91,7 @@
         case 0x0fff:\
                 return (KONICA_ERROR_UNKNOWN_ERROR);\
         default:\
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica",\
+                GP_DEBUG (\
                         "The camera has just sent an error that has not "\
                         "yet been discovered. Please report the following "\
                         "to the maintainer of this driver with some "\
@@ -772,9 +775,7 @@ k_get_status (GPPort *device, KStatus *status)
 		status->power_level = K_POWER_LEVEL_HIGH;
 		break;
 	default:
-		gp_debug_printf (GP_DEBUG_HIGH, "konica",
-				 "Unknown power level %i!",
-				 rb[6]);
+		GP_DEBUG ("Unknown power level %i!", rb[6]);
 		break;
 	}
 	switch (rb[7]) {
@@ -785,9 +786,7 @@ k_get_status (GPPort *device, KStatus *status)
 		status->power_source = K_POWER_SOURCE_AC;
 		break;
 	default:
-		gp_debug_printf (GP_DEBUG_HIGH, "konica",
-				 "Unknown power source %i!",
-				 rb[7]);
+		GP_DEBUG ("Unknown power source %i!", rb[7]);
 		break;
 	}
 	switch (rb[8]) {
@@ -798,9 +797,7 @@ k_get_status (GPPort *device, KStatus *status)
 		status->card_status = K_CARD_STATUS_NO_CARD;
 		break;
 	default:
-		gp_debug_printf (GP_DEBUG_HIGH, "konica",
-				 "Unknown card status %i!",
-				 rb[8]);
+		GP_DEBUG ("Unknown card status %i!", rb[8]);
 		break;
 	}
 	switch (rb[9]) {
@@ -811,8 +808,7 @@ k_get_status (GPPort *device, KStatus *status)
 		status->display = K_DISPLAY_TV;
 		break;
 	default:
-		gp_debug_printf (GP_DEBUG_HIGH, "konica",
-				 "Unkown display %i!", rb[9]);
+		GP_DEBUG ("Unkown display %i!", rb[9]);
 		break;
 	}
 	status->card_size     = (rb[11] << 8) | rb[10];

@@ -27,7 +27,9 @@
 
 #include "sony.h"
 #include "nls.h"
-#include "gphoto2-camera.h"
+#include <gphoto2-camera.h>
+
+#define GP_MODULE "sonydscf55"
 
 int camera_id(CameraText * id)
 {
@@ -66,7 +68,7 @@ static int camera_exit(Camera * camera, GPContext *context)
 {
 	int rc;
 
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+	GP_DEBUG(
 			"camera_exit()");
 
 	if (camera->pl) {
@@ -100,7 +102,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera *camera = data;
 	int count;
 
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+	GP_DEBUG(
 			"camera_folder_list_files()");
 
 	count = sony_image_count(camera);
@@ -122,7 +124,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int num;
 	int rc = GP_ERROR;
 
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+	GP_DEBUG(
 			"camera_file_get(\"%s/%s\")", folder, filename);
 
 	num = gp_filesystem_number(camera->fs, folder, filename, context);
@@ -130,7 +132,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (num);
 
 	num++;
-	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+	GP_DEBUG(
 			"file %s has id %d", filename, num);
 
 	switch (type) {
