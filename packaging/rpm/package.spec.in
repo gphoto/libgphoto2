@@ -5,6 +5,7 @@
 # RPM spec file for gphoto2
 #
 # TODO list concerning packaging
+# - build and include API docs in -devel package
 # - review and coordinate RPM packaging for gphoto2, libusb, gtkam
 #
 ########################################################################
@@ -13,7 +14,7 @@
 Summary: Software for accessing digital cameras
 Name: @PACKAGE@
 Version: @VERSION@
-Release: 2
+Release: 1
 License: LGPL
 Group: Applications/Multimedia
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -117,10 +118,12 @@ install -d -m755 %{buildroot}/etc/hotplug/usb/
 install -m755 packaging/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
 
 # build file list
-# find %{buildroot} -type f | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.files
+find %{buildroot} -type f -or -type l | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.files
+find %{buildroot} \( -type f -or -type l \) -and -name '*.so*' | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.sofiles
+find %{buildroot} \( -type f -or -type l \) -and \( -name '*.la' -or -name '*.a' \) | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.afiles
 # figure out list of documentation stuff
-# htmldir=$(grep '/html/' < "%{name}-%{version}.files" | sed 's/html\/.*/html/' | sort -u)
-# echo "%docdir ${htmldir}" > %{name}-%{version}.docfiles
+htmldir=$(grep '/html/' < "%{name}-%{version}.files" | sed 's/html\/.*/html/' | sort -u)
+echo "%docdir ${htmldir}" > %{name}-%{version}.docfiles
 
 
 ####################################
@@ -132,21 +135,19 @@ rm -rf "${RPM_BUILD_ROOT}"
 ########################################################################
 
 ####################################
-%files
-# -f %{name}-%{version}.docfiles
+%files -f %{name}-%{version}.sofiles
 %defattr(-,root,root)
 %{_bindir}/gphoto2
-%{_datadir}/gphoto2/konica/*
 %doc doc/gphoto2.txt doc/gphoto2-cli.txt
 %doc AUTHORS README COPYING
-%{_libdir}/libgphoto2.*
-%{_libdir}/gphoto2/*
-%{_libdir}/libgphoto2_port.*
-%{_libdir}/gphoto2_port/*
+# -f #{name}-#{version}.docfiles
+#docdir doc/api/html
+#docdir libgphoto2_port/doc/html
 %{_libdir}/gphoto2portConf.sh
 %{_datadir}/locale/de/LC_MESSAGES/gphoto.mo
 %{_libdir}/pkgconfig/libgphoto-2.0.pc
 /etc/hotplug/usb/usbcam
+%{_datadir}/gphoto2/konica/*
 
 ####################################
 %post
@@ -177,12 +178,13 @@ else
         mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 fi
 
+
 ########################################################################
 # file list and installation for -devel subpackage
 ########################################################################
 
 ####################################
-%files devel
+%files devel -f %{name}-%{version}.afiles
 %defattr(-,root,root)
 %docdir %{_docdir}/%{name}-%{version}/html
 %{_bindir}/gphoto2-config
