@@ -81,7 +81,7 @@ int shell_prompt () {
 	while (!shell_done) {
 		found=0;
 		if (glob_quiet) {
-			printf("> ");
+			printf(">\n");
 		} else {
 			if (strlen(glob_cwd) > 25) {
 				strcpy(buf, "...");
@@ -93,8 +93,7 @@ int shell_prompt () {
 		}
 		fflush(stdout);
 		fgets(buf, 1023, stdin);		/* Get the command/args */
-
-		buf[strlen(buf)]=0;			/* Chop the newline */
+		buf[strlen(buf)-1]=0;			/* Chop the newline */
 
 							/* Extract command and argument */
 		if (shell_arg_count(buf) > 0) {
@@ -126,17 +125,18 @@ int shell_get_new_folder (char *relative_path, char *cd_arg, char *new_folder) {
 
 	char *dir = NULL, *slash = NULL;
 	char tmp_folder[1024];
-	int append = 0;
+	int append = 0, x=0;
 
-	if (cd_arg[0] == '/')				/* Check if path is relative to root */
+	while (isspace(cd_arg[x])) {x++;}
+
+	if (cd_arg[x] == '/')				/* Check if path is relative to root */
 		strcpy(tmp_folder, "/");
 	   else
 		strcpy(tmp_folder, relative_path);
-
 	do {
 		append = 1;
 		if (!dir)				/* Get each directory individually */
-			dir = strtok(cd_arg, "/");
+			dir = strtok(&cd_arg[x], "/");
 		   else
 			dir = strtok(NULL, "/");
 		if (!dir) 
@@ -170,7 +170,7 @@ int shell_get_new_folder (char *relative_path, char *cd_arg, char *new_folder) {
 
 int shell_lcd (char *arg) {
 
-	char tmp_dir[1024], arg_dir[1024];
+	char tmp_dir[1024];
 	int arg_count = shell_arg_count(arg);
 
 	if (!arg_count) {
@@ -180,8 +180,8 @@ int shell_lcd (char *arg) {
 		}
 		strcpy(tmp_dir, getenv("HOME"));
 	} else {
-		shell_arg(arg, 0, arg_dir);
-		shell_get_new_folder(glob_cwd, arg_dir, tmp_dir);
+		/* shell_arg(arg, 0, arg_dir); */
+		shell_get_new_folder(glob_cwd, arg, tmp_dir);
 	}
 
 	if (chdir(tmp_dir)<0) {
@@ -197,22 +197,21 @@ int shell_lcd (char *arg) {
 int shell_cd (char *arg) {
 
 	char tmp_folder[1024];
-	char arg_dir[1024];
 	CameraList list;
 	int arg_count = shell_arg_count(arg);
 
 	if (!arg_count)
 		return (GP_OK);
 
-	shell_arg(arg, 0, arg_dir);
+	/* shell_arg(arg, 0, arg_dir); */
 	
-	if (strlen(arg_dir) > 1023) {
+	if (strlen(arg) > 1023) {
 		cli_error_print("Folder value is too long");
 		return (GP_ERROR);
 	}
 
-	shell_get_new_folder(glob_folder, arg_dir, tmp_folder);	/* Get the new folder value */
-
+	shell_get_new_folder(glob_folder, arg, tmp_folder);	/* Get the new folder value */
+printf("tmp_folder=%s\n", tmp_folder);
 	if (gp_camera_folder_list(glob_camera, &list, tmp_folder) == GP_OK)
 		strcpy(glob_folder, tmp_folder);
 	   else
@@ -225,13 +224,13 @@ int shell_ls (char *arg) {
 
 	CameraList list;
 	CameraListEntry *entry;
-	char buf[1024], tmp_folder[1024], arg_dir[1024];
+	char buf[1024], tmp_folder[1024];
 	int x, y=1;
 	int arg_count = shell_arg_count(arg);
 
 	if (arg_count) {
-		shell_arg(arg, 0, arg_dir);
-		shell_get_new_folder(glob_folder, arg_dir, tmp_folder);
+		/* shell_arg(arg, 0, arg_dir); */
+		shell_get_new_folder(glob_folder, arg, tmp_folder);
 	} else {
 		strcpy(tmp_folder, glob_folder);
 	}
@@ -285,7 +284,7 @@ int shell_ls (char *arg) {
 
 int shell_get_common (char *arg, int thumbnail) {
 
-	char tmp_folder[1024], arg_filename[1024];
+	char tmp_folder[1024];
 	char *slash, *tmp_filename;
 	int arg_count = shell_arg_count(arg);
 
@@ -299,18 +298,18 @@ int shell_get_common (char *arg, int thumbnail) {
 		return (GP_ERROR);
 	}
 
-	shell_arg(arg, 0, arg_filename);
+	/* shell_arg(arg, 0, arg_filename); */
 
-	if (strchr(arg_filename, '/')) {
-		slash = strrchr(arg_filename, '/');
+	if (strchr(arg, '/')) {
+		slash = strrchr(arg, '/');
 		tmp_filename = slash + 1;
 		*slash = 0;
-		if (strlen(arg_filename)==0)
+		if (strlen(arg)==0)
 			strcpy(tmp_folder, "/");
 		   else
 			strcpy(tmp_folder, arg);
 	} else {
-		tmp_filename = arg_filename;
+		tmp_filename = arg;
 		strcpy(tmp_folder, glob_folder);
 	}
 
@@ -324,7 +323,7 @@ int shell_get_thumbnail (char *arg) {
 	shell_get_common (arg, 1);
 
 	return (GP_OK);
-}	
+}
 
 int shell_get (char *arg) {
 
@@ -344,7 +343,6 @@ int shell_help (char *arg) {
 	char arg_cmd[1024];
 	int x=0;
 	int arg_count = shell_arg_count(arg);
-
 
 	if (arg_count > 0) {
 		shell_arg(arg, 0, arg_cmd);

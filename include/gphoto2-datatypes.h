@@ -101,7 +101,9 @@ typedef struct CameraWidget {
 	char		label[32];
 	
 	/* Current value of the widget */
-	char		value[128];
+        char		value_string[256];
+        int             value_int;
+        float           value_float;
 
 	/* For Radio and Menu */
 	char 		choice[WIDGET_CHOICE_MAX][64];
@@ -118,7 +120,10 @@ typedef struct CameraWidget {
 
 	/* Widget was changed */
 	int 		changed;
-	
+
+        /* Reference count */
+        int             ref_count;
+
 	/* Callback */
 	int (*callback)(struct Camera*, struct CameraWidget*);
 

@@ -203,7 +203,7 @@ read_packet_again:
 		   default:
 			return (GP_ERROR);
 		}
-		bytes_read = gpio_read(fd->dev, packet, blocksize);
+		bytes_read = gpio_read(fd->dev, packet, 1);
 
 
 		if (bytes_read == GPIO_ERROR) {
@@ -242,6 +242,7 @@ read_packet_again:
 		for (y=bytes_read; y < length; y+=blocksize) {
 			ret = gpio_read(fd->dev, &packet[y], blocksize);
 			if (ret == GPIO_TIMEOUT) {
+fprintf(stderr, "timeout!!! #################################\n");
 				sierra_write_nak(camera);
 				goto read_packet_again;
 			}
@@ -320,13 +321,15 @@ int sierra_write_ack(Camera *camera) {
 	buf[0] = ACK;
 	if (sierra_write_packet(camera, buf)==GP_OK) {
 #ifdef GPIO_USB
-		gpio_usb_clear_halt(fd->dev);
+		if (fd->type == GP_PORT_USB)
+			gpio_usb_clear_halt(fd->dev);
 #endif
 		return (GP_OK);
 	}
 	sierra_debug_print(fd, "Could not write ACK");
 #ifdef GPIO_USB
-	gpio_usb_clear_halt(fd->dev);
+	if (fd->type == GP_PORT_USB)
+		gpio_usb_clear_halt(fd->dev);
 #endif
 	return (GP_ERROR);
 }
@@ -341,14 +344,16 @@ int sierra_write_nak(Camera *camera) {
 	buf[0] = NAK;
 	if (sierra_write_packet(camera, buf)==GP_OK) {
 #ifdef GPIO_USB
-		gpio_usb_clear_halt(fd->dev);
+		if (fd->type == GP_PORT_USB)
+			gpio_usb_clear_halt(fd->dev);
 #endif
 		return (GP_OK);
 	}
 
 	sierra_debug_print(fd, "Could not write NAK");
 #ifdef GPIO_USB
-	gpio_usb_clear_halt(fd->dev);
+	if (fd->type == GP_PORT_USB)
+		gpio_usb_clear_halt(fd->dev);
 #endif
 	return (GP_ERROR);
 }

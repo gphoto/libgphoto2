@@ -271,7 +271,7 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 int camera_config (Camera *camera) {
 
-	CameraWidget *window, *t, *section;
+	CameraWidget *window, *t;
 	char buf[256];
 
 	window = gp_widget_new(GP_WIDGET_WINDOW, "Directory Configuration");
@@ -287,9 +287,10 @@ int camera_config (Camera *camera) {
                 return GP_OK;
         }
 	t = gp_widget_child_by_label(window, "View hidden (dot) directories");
-
-	if (gp_widget_changed(t))
-		gp_setting_set("directory", "hidden", gp_widget_value_get(t));
+        if (gp_widget_changed(t)) {
+                gp_widget_value_get (t, buf);
+                gp_setting_set("directory", "hidden", buf);
+        }
 
 	return (GP_OK);
 #if 0

@@ -8,6 +8,9 @@
 CameraWidget* 	gp_widget_new  (CameraWidgetType type, char *label);
 int           	gp_widget_free (CameraWidget *widget);
 
+int             gp_widget_ref   (CameraWidget *widget);
+int             gp_widget_unref (CameraWidget *widget);
+
 int 		gp_widget_append  (CameraWidget *parent, CameraWidget *child);
 int 		gp_widget_prepend (CameraWidget *parent, CameraWidget *child);
 
@@ -22,8 +25,8 @@ char*		gp_widget_label(CameraWidget *widget);
 CameraWidgetCallback gp_widget_callback (CameraWidget *widget);
 int 		gp_widget_callback_set (CameraWidget *widget, CameraWidgetCallback callback);
 
-int		gp_widget_value_set (CameraWidget *widget, char *value);
-char*		gp_widget_value_get (CameraWidget *widget);
+int		gp_widget_value_set (CameraWidget *widget, void *value);
+int		gp_widget_value_get (CameraWidget *widget, void *value);
 
 int		gp_widget_range_set (CameraWidget *range, float low,  float high, 
 				     float increment);

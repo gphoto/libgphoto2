@@ -965,7 +965,7 @@ int camera_file_delete(Camera *camera, char *folder, char *filename)
 int camera_file_put(Camera *camera, CameraFile *file, char *folder)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-    char destpath[300], destname[300];
+        char destpath[300], destname[300];
 	int j;
 
 	if(check_readiness(camera) != 1)
@@ -1010,8 +1010,8 @@ int camera_config(Camera *camera)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	CameraWidget *window, *w, *t, *section;
-	char *wvalue;
-	char power_stats[48], buf[8];
+	char wvalue[256];
+        char power_stats[48], buf[8], firm[64];
 	int pwr_status, pwr_source;
 	struct tm *camtm;
 	time_t camtime;
@@ -1030,28 +1030,29 @@ int camera_config(Camera *camera)
 	gp_widget_append(window,section);
 	
 	t = gp_widget_new(GP_WIDGET_TEXT,"Camera Model");
-	strcpy(t->value,cs->ident);
+        gp_widget_value_set (t, cs->ident);
 	gp_widget_append(section,t);
 
 	t = gp_widget_new(GP_WIDGET_TEXT,"Owner name");
-	strcpy(t->value,cs->owner);
-	gp_widget_append(section,t);
+        gp_widget_value_set (t, cs->owner);
+        gp_widget_append(section,t);
 
 	t = gp_widget_new(GP_WIDGET_TEXT, "date");
 	if (cs->cached_ready == 1)
-	  strcpy(t->value,asctime(camtm));
+            gp_widget_value_set (t, asctime(camtm));
 	else
-	  sprintf(t->value,"Unavailable");
+            gp_widget_value_set (t, "Unavailable");
 	gp_widget_append(section,t);
 	
 	t = gp_widget_new(GP_WIDGET_TOGGLE, "Set camera date to PC date");
 	gp_widget_append(section,t);
 	
 	t = gp_widget_new(GP_WIDGET_TEXT,"Firmware revision");
-	sprintf(t->value,"%i.%i.%i.%i",cs->firmwrev[3], 
+	sprintf(firm,"%i.%i.%i.%i",cs->firmwrev[3],
 			cs->firmwrev[2],cs->firmwrev[1],
 			cs->firmwrev[0]);
-	gp_widget_append(section,t);
+        gp_widget_value_set (t, firm);
+        gp_widget_append(section,t);
 	
 	if (cs->cached_ready == 1) {
 		canon_get_batt_status(camera, &pwr_status,&pwr_source);
@@ -1084,7 +1085,7 @@ int camera_config(Camera *camera)
 	  strcpy(power_stats,"Power: camera unavailable");
 	
 	t = gp_widget_new(GP_WIDGET_TEXT,"Power");
-	strcpy(t->value, power_stats);
+        gp_widget_value_set (t, power_stats);
 	gp_widget_append(section,t);
 	
 	section = gp_widget_new(GP_WIDGET_SECTION, "Debug");
@@ -1110,11 +1111,8 @@ int camera_config(Camera *camera)
 
 	t = gp_widget_new(GP_WIDGET_TOGGLE, 
 					  "Dump data by packets to stderr");
-	if(cs->dump_packets == 1)
-	  gp_widget_value_set(t, "1");
-	else
-	  gp_widget_value_set(t, "0");
-	gp_widget_append(section,t);
+        gp_widget_value_set(t, &(cs->dump_packets));
+        gp_widget_append(section,t);
 
 	/* Prompt the user with the config window */	
 	if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
@@ -1124,64 +1122,51 @@ int camera_config(Camera *camera)
 	
 	w = gp_widget_child_by_label(window,"Debug level");
 	if (gp_widget_changed(w)) {
-		wvalue = gp_widget_value_get(w);
-		if(wvalue) {
-			if(strcmp(wvalue,"none") == 0)
-			  cs->debug = 0;
-			else if (strcmp(wvalue,"functions") == 0)
-			  cs->debug = 1;
+		gp_widget_value_get(w, wvalue);
+                if(strcmp(wvalue,"none") == 0)
+                    cs->debug = 0;
+                else if (strcmp(wvalue,"functions") == 0)
+                    cs->debug = 1;
 			else if (strcmp(wvalue,"complete") == 0)
-			  cs->debug = 9;
-			
-			sprintf(buf,"%i",cs->debug);
-			gp_setting_set("canon", "debug", buf);
-		}
-	}
+                            cs->debug = 9;
+
+                sprintf(buf,"%i",cs->debug);
+                gp_setting_set("canon", "debug", buf);
+        }
 
 	w = gp_widget_child_by_label(window,"Dump data by packets to stderr");
 	if (gp_widget_changed(w)) {
-		wvalue = gp_widget_value_get(w);
-		if(wvalue) {
-			if(atoi(wvalue) == 0)
-			  cs->dump_packets = 0;
-			else if (atoi(wvalue) == 1)
-			  cs->dump_packets = 1;
-			
-			sprintf(buf,"%i",cs->dump_packets);
-			gp_setting_set("canon", "dump_packets", buf);
-		}
-	}
-	
+		gp_widget_value_get(w, &(cs->dump_packets));
+       		sprintf(buf,"%i",cs->dump_packets);
+       		gp_setting_set("canon", "dump_packets", buf);
+        }
+
 	w = gp_widget_child_by_label(window,"Owner name");
 	if (gp_widget_changed(w)) {
-		wvalue = gp_widget_value_get(w);
-		if(wvalue) {
-			if(!check_readiness(camera)) {
-				gp_frontend_status(camera,"Camera unavailable");
-			} else {
-				if(psa50_set_owner_name(camera, wvalue))
-				  gp_frontend_status(camera, "Owner name changed");
-				else
-				  gp_frontend_status(camera, "could not change owner name");	
-			}
-		}
-	}
+	        gp_widget_value_get(w, wvalue);
+                if(!check_readiness(camera)) {
+                    gp_frontend_status(camera,"Camera unavailable");
+                } else {
+                    if(psa50_set_owner_name(camera, wvalue))
+                        gp_frontend_status(camera, "Owner name changed");
+                    else
+                        gp_frontend_status(camera, "could not change owner name");
+                }
+        }
 	
 	w = gp_widget_child_by_label(window,"Set camera date to PC date");
 	if (gp_widget_changed(w)) {
-		wvalue = gp_widget_value_get(w);
-		if(wvalue) {			   
-			if(!check_readiness(camera)) {
-				gp_frontend_status(camera,"Camera unavailable");
-			} else {
-				if(psa50_set_time(camera)) {
-					gp_frontend_status(camera,"time set");
-				} else {
-					gp_frontend_status(camera,"could not set time");
-				}
-			}
-		}
-	}
+                gp_widget_value_get(w, wvalue);
+                if(!check_readiness(camera)) {
+                    gp_frontend_status(camera,"Camera unavailable");
+                } else {
+                    if(psa50_set_time(camera)) {
+                        gp_frontend_status(camera,"time set");
+                    } else {
+                        gp_frontend_status(camera,"could not set time");
+                    }
+                }
+        }
 
     return GP_OK;
 }

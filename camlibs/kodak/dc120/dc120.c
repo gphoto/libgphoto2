@@ -167,7 +167,6 @@ int camera_folder_list	(Camera *camera, CameraList *list, char *folder) {
 	if (strcmp(folder, buf)==0)
 		/* From cf card */
 		return (dc120_get_albums(dd, 1, list));
-
 	return (GP_ERROR);
 }
 

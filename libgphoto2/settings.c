@@ -76,7 +76,7 @@ int verify_settings (char *settings_file) {
 
 			if (equals < 2) {
 				fclose (f);
-				printf("Incorrect settings format. resetting\n");
+				gp_debug_printf(GP_DEBUG_LOW, "core", "Incorrect settings format. resetting\n");
 				unlink(settings_file);
 				return (GP_ERROR);
 			}
@@ -103,8 +103,7 @@ int load_settings () {
 	if (verify_settings(buf) == GP_ERROR)
 		/* verify_settings will unlink and recreate the settings file */
 		return (GP_OK);
-	if (glob_debug)
-		printf("core: Loading settings from file \"%s\"\n", buf);
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Loading settings from file \"%s\"", buf);
 
 	if ((f=fopen(buf, "r"))==NULL) {
 		gp_debug_printf(GP_DEBUG_LOW, "core", "Can't open settings for reading");
@@ -143,8 +142,7 @@ int save_settings () {
 
 	sprintf(buf, "%s/.gphoto/settings", getenv("HOME"));
 
-	if (glob_debug)
-		printf("core: Saving settings to file \"%s\"\n", buf);
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Saving settings to file \"%s\"", buf);
 
 	if ((f=fopen(buf, "w+"))==NULL) {
 		gp_debug_printf(GP_DEBUG_LOW, "core", "Can't open settings file for writing");
@@ -168,13 +166,13 @@ int save_settings () {
 int dump_settings () {
 
 	int x;
-	printf("core: All settings:\n");
+	gp_debug_printf(GP_DEBUG_LOW, "core", "All settings:");
 	for (x=0; x<glob_setting_count; x++)
-		printf("core:\t (%s) \"%s\" = \"%s\"\n", glob_setting[x].id,
+		gp_debug_printf(GP_DEBUG_LOW, "core", "\t (%s) \"%s\" = \"%s\"", glob_setting[x].id,
 			glob_setting[x].key,glob_setting[x].value);
 	if (glob_setting_count == 0)
-		printf("core:\tNone\n");
-	printf("core: Total settings: %i\n", glob_setting_count);
+		gp_debug_printf(GP_DEBUG_LOW, "core", "\tNone");
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Total settings: %i", glob_setting_count);
 
 	return (GP_OK);
 }
