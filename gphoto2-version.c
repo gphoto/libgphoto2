@@ -34,7 +34,7 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 #ifdef HAVE_CC
 			HAVE_CC,
 #else
-			"unknown",
+			"unknown cc",
 #endif
 #ifdef HAVE_EXIF
 			"EXIF",
