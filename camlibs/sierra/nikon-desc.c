@@ -619,7 +619,7 @@ N_(
 "Nikon Coolpix 995:\n"
 "    Camera configuration (preferences) for this\n"
 "    camera are incomplete, contact the gphoto\n"
-"    developers at gphoto-devel@gphoto.net\n"
+"    developer mailing list\n"
 "    if you would like to contribute to this\n"
 "    driver.\n\n"
 "    The download should function correctly.\n"
