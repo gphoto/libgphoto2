@@ -73,7 +73,8 @@ struct _CameraPrivateLibrary{
 	char*			filespec;
 };
 
-static int flip_vertical(int width, int height, unsigned char* rgb);
+static int flip_vertical (int width, int height, unsigned char *rgb);
+static int flip_both     (int width, int height, unsigned char *rgb);
 
 static struct {
 	const char*				model;
@@ -156,7 +157,7 @@ static struct {
 	{"SiPix:Stylecam", 0xd64, 0x1001, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
-			&flip_vertical,
+			&flip_both,
 			"style%04i.ppm"
 		}
 	},
@@ -1055,7 +1056,22 @@ camera_init (Camera *camera, GPContext *context)
 }
 
 static int
-flip_vertical(int width, int height, unsigned char* rgb) {
+flip_both (int width, int height, unsigned char *rgb)
+{
+	unsigned char *end, c;
+
+	end = rgb + ((width * height) * 3);
+	while (rgb < end) {
+		c = *rgb;
+		*rgb++ = *--end;
+		*end = c;
+	}
+
+	return GP_OK;
+}
+
+static int
+flip_vertical (int width, int height, unsigned char* rgb) {
 	int		i;
 	unsigned char	*buf;
 	

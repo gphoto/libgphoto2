@@ -1,3 +1,9 @@
+2003-05-15  Lutz Mueller <lutz@users.sourceforge.net>
+
+	Patch by Drew Sullivan <drew@pentagon.ss.org>:
+
+	* pdc640.c: Correctly post-process images taken by a SiPix:Stylecam.
+
 2003-05-13  Marcus Meissner <marcus@jet.franken.de>
 	
 	* pdc640.c, jd350e.c, jd350e.h: Applied Trustcam 350FS
