@@ -88,12 +88,12 @@
  **/
 
 /* SL_* - size limit constants */
-#define KILOBYTE	(1024)
-#define MEGABYTE	(1024 * KILOBYTE)
-#define SL_THUMB	( 100 * KILOBYTE)
-#define SL_PICTURE	(  10 * MEGABYTE)
-#define SL_MOVIE_SMALL	( 100 * MEGABYTE)
-#define SL_MOVIE_LARGE	(2048 * MEGABYTE)
+#define KILOBYTE	(1024U)
+#define MEGABYTE	(1024U * KILOBYTE)
+#define SL_THUMB	( 100U * KILOBYTE)
+#define SL_PICTURE	(  10U * MEGABYTE)
+#define SL_MOVIE_SMALL	( 100U * MEGABYTE)
+#define SL_MOVIE_LARGE	(2048U * MEGABYTE)
 #define NO_USB  0
 
 const struct canonCamModelData models[] = {
