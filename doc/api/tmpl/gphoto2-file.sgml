@@ -1,0 +1,104 @@
+<!-- ##### SECTION Title ##### -->
+CameraFile
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT CameraFile ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gp_file_new ##### -->
+<para>
+
+</para>
+
+@file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_append ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@data: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_get_name ##### -->
+<para>
+
+</para>
+
+@file: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_set_name ##### -->
+<para>
+
+</para>
+
+@file: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_get_type ##### -->
+<para>
+
+</para>
+
+@file: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_get_mime_type ##### -->
+<para>
+
+</para>
+
+@file: 
+@mime_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_adjust_name_for_mime_type ##### -->
+<para>
+
+</para>
+
+@file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_set_data_and_size ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@data: 
+@size: 
+@Returns: 
+
+
