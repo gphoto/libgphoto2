@@ -190,7 +190,7 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, int cmd_len,
 	memcpy (buf, b, b_len);
 
 	if (status != PDC700_DONE) {
-		while (status != PDC700_DONE) {
+		while (status != PDC700_LAST) {
 			cmd[4] = PDC700_DONE;
 			cmd[5] = sequence_number;
 			GP_DEBUG ("Fetching sequence %i...", sequence_number);
