@@ -4,7 +4,7 @@ Makefile
 .libs
 *.lo
 libgphoto2.la
-libgphoto-2.0.pc
+libgphoto2.pc
 stamp-h
 stamp-h.in
 config.h
