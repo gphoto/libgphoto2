@@ -407,6 +407,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		camera->pl->params.handles.handler[image_id],&ptp_objectinfo));
+	// don't try to download ancillary objects!
+	if ((ptp_objectinfo.ObjectFormat & 0x0800) == 0) return (GP_OK);
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		size=le32toh(ptp_objectinfo.ObjectCompressedSize);
