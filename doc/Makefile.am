@@ -104,8 +104,10 @@ install_data_local_manual = install-data-local-manual
 install-data-local-manual: manual figures-stamp
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
 	$(INSTALL_DATA) ./manual/*.html $(DESTDIR)$(TARGET_DIR)
+if ENABLE_FIGURES
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)/figures
 	$(INSTALL_DATA) ./figures/*.png $(DESTDIR)$(TARGET_DIR)/figures
+endif
 
 # copy HTML manual to distribution
 # FIXME: Use $(INSTALL_DATA) instead of $(AMTAR)
