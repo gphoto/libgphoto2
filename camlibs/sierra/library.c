@@ -1352,27 +1352,32 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	   for the completion */
 	CHECK (sierra_action (camera, SIERRA_ACTION_CAPTURE, context));
 	CHECK (gp_port_set_timeout (camera->port, timeout));
-	/*
-	 * We need to tell the frontend where the new image can be found. 
-	 * Unfortunatelly, we can only figure out the filename. Therefore,
-	 * reset the CameraFilesystem and let it search for the filename.
-	 *
-	 * If you know how to figure out where the image gets saved,
-	 * please submit a patch.
-	 *
-	 * Not that some cameras that don't support filenames will return
-	 * 8 blanks instead of reporting an error.
-	 */
-	GP_DEBUG ("Getting filename of file %i.", n);
-	CHECK (sierra_get_string_register (camera, 79, 0, NULL,
-					   filename, &len, context));
-	if ((len <= 0) || !strcmp (filename, "        "))
-		snprintf (filename, sizeof (filename), "P101%04i.JPG", n);
-	GP_DEBUG ("... done ('%s')", filename);
-	CHECK (gp_filesystem_reset (camera->fs));
-	CHECK (gp_filesystem_get_folder (camera->fs, filename, &folder, context));
-	strncpy (filepath->folder, folder, sizeof (filepath->folder));
-	strncpy (filepath->name, filename, sizeof (filepath->name));
+
+	if (filepath != NULL) {
+		/*
+		 * We need to tell the frontend where the new image can be
+		 * found.  Unfortunatelly, we can only figure out the
+		 * filename. Therefore, reset the CameraFilesystem and let
+		 * it search for the filename.
+		 *
+		 * If you know how to figure out where the image gets
+		 * saved, please submit a patch.
+		 *
+		 * Not that some cameras that don't support filenames will
+		 * return 8 blanks instead of reporting an error.
+		 */
+		GP_DEBUG ("Getting filename of file %i.", n);
+		CHECK (sierra_get_string_register (camera, 79, 0, NULL,
+						   filename, &len, context));
+		if ((len <= 0) || !strcmp (filename, "        "))
+			snprintf (filename, sizeof (filename), "P101%04i.JPG", n);
+		GP_DEBUG ("... done ('%s')", filename);
+		CHECK (gp_filesystem_reset (camera->fs));
+		CHECK (gp_filesystem_get_folder (camera->fs, filename,
+						 &folder, context));
+		strncpy (filepath->folder, folder, sizeof (filepath->folder));
+		strncpy (filepath->name, filename, sizeof (filepath->name));
+	}
 
 	GP_DEBUG ("* sierra_capture completed OK");
 	return GP_OK;

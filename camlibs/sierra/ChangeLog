@@ -1,4 +1,10 @@
 2002-11-10  Patrick Mansfield <patmans@users.sourceforge.net>
+	* library.c: Conditionally save the file path on capture.
+	  Note that this requires gp_camera_capture() to allow a NULL
+	  path, else the the sierra_capture is never called with a NULL
+	  path.
+
+2002-11-10  Patrick Mansfield <patmans@users.sourceforge.net>
 	* library.c: Per patch and details from C.A. Marby
 	  <marby@lhasa.harvard.edu>, fix bugs with capture: fix a bug I
 	  introduced, put back the read after action of a SIERRA_PACKET_ENQ.
