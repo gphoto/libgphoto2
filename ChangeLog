@@ -5,6 +5,10 @@
 
 2002-09-01  Lutz Müller <lutz@users.sourceforge.net>
 
+	* MAINTAINERS: Uli does the mailing lists.
+
+2002-09-01  Lutz Müller <lutz@users.sourceforge.net>
+
 	* MAINTAINERS: Arnaud is now responsible for autogen.sh. Added 
 	  myself on top of Scott regarding libgphoto2(_port).
 
