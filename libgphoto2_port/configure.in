@@ -85,10 +85,10 @@ dnl ---------------------------------------------------------------------------
 AC_PROG_LIBTOOL
 have_ltdl=false
 ltdl_msg="no"
-try_ltdl=true
-AC_ARG_WITH(ltdl, [  --without-ltdl            Don't use ltdl],[
-        if test x$withval = xno; then
-                try_ltdl=false
+try_ltdl=false
+AC_ARG_WITH(ltdl, [  --with-ltdl            Use ltdl],[
+        if test x$withval = xyes; then
+                try_ltdl=true
         fi])
 if $try_ltdl; then
         AC_CHECK_LIB(ltdl, lt_dlforeachfile,[
