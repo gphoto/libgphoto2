@@ -237,7 +237,7 @@ gp_camera_unset_port (Camera *camera)
 static int
 gp_camera_set_port (Camera *camera, CameraPortInfo *info)
 {
-	gp_port_settings settings;
+	GPPortSettings settings;
 	CHECK_NULL (camera);
 
 	/*
@@ -376,9 +376,26 @@ gp_camera_get_port_name (Camera *camera, const char **port_name)
 int
 gp_camera_set_port_speed (Camera *camera, int speed)
 {
+	GPPortSettings settings;
+
 	CHECK_NULL (camera);
 
+	if (!camera->port) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("You need to set "
+			"a port prior trying to set the speed"));
+		return (GP_ERROR_BAD_PARAMETERS);
+	}
+
+	if (camera->port->type != GP_PORT_SERIAL) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("You can specify "
+			"a speed only with serial ports"));
+		return (GP_ERROR_BAD_PARAMETERS);
+	}
+
 	camera->port_info->speed = speed;
+	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
+	settings.serial.speed = speed;
+	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
 
 	return (GP_OK);
 }
