@@ -201,18 +201,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_NOT_SUPPORTED;
     	}
 
-    	/* There really ain't no such thing as a "preview" 
-    	 * type with this camera. The only reason this switch 
-    	 * is put here is in order to cure a really nasty 
-    	 * timing problem. The effect is to force a tight linkage 
-    	 * between the downloaded image data and the picture file 
-    	 * into which it is supposed to go. For, otherwise it is 
-    	 * possible (for example) to download two data sets for one 
-    	 * picture, which causes data corruption. The problem only 
-    	 * shows up on some computers. Anyway, the switch turns off 
-    	 * the machine which makes the salt!
-    	 */
-
 	/*
 	 * Data seems to be arranged in planar form.
 	 * The colors are still not quite right, but the
