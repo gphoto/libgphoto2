@@ -125,7 +125,6 @@ typedef enum {
 	CANON_PS_G3,
 	CANON_PS_S50,
 	CANON_PS_S230,
-	CANON_PS_A60,
 	CANON_EOS_10D,
 	CANON_OPT_200
 } canonCamModel;
