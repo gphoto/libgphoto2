@@ -1,3 +1,8 @@
+2003-10-12  Marcus Meissner <marcus@jet.franken.de>
+	
+	  From Joe R <vinnyjojo@yahoo.com>
+	* dc210.c: GP_OPERATION_CAPTURE_IMAGE -> GP_CAPTURE_IMAGE typo.
+
 2002-10-25  Michael Koltan <koltan@gmx.de>
 
 	* Rewrote the initialization procedure

@@ -445,7 +445,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context) {
 
 
-	if (type && type != GP_OPERATION_CAPTURE_IMAGE){
+	if (type && type != GP_CAPTURE_IMAGE){
 		DC210_DEBUG("Unsupported action 0x%.2X\n", type);
 		return (GP_ERROR_NOT_SUPPORTED);
 	};
