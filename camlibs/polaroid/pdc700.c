@@ -83,6 +83,13 @@ struct _PDCDate {
 	unsigned char hour, minute, second;
 };
 
+typedef enum _PDCMode PDCMode;
+enum _PDCMode {
+	PDC_MODE_PLAY   = 0,
+	PDC_MODE_RECORD = 1,
+	PDC_MODE_MENU   = 2
+};
+
 typedef enum _PDCQuality PDCQuality;
 enum _PDCQuality {
 	PDC_QUALITY_NORMAL    = 0,
@@ -102,12 +109,15 @@ struct _PDCInfo {
 	unsigned int num_taken, num_free;
 	unsigned int auto_power_off;
 	char version[6];
+	int memory;
 	PDCDate date;
+	PDCMode mode;
 	PDCQuality quality;
 	PDCFlash   flash;
 	PDCBaud    speed;
 	PDCBool caption;
 	PDCBool lcd;
+	PDCBool ac_power;
 };
 
 typedef struct _PDCPicInfo PDCPicInfo;
@@ -368,11 +378,30 @@ pdc700_info (Camera *camera, PDCInfo *info)
 	CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
 
 	/*
-	 * buf[0-6]: We don't know. The following has been seen:
-	 * 01 12 04 01 00 0a 01
-	 * 01 20 04 02 01 05 01
-	 * 01 20 04 02 01 05 00
+	 * buf[0-1,3]: We don't know. The following has been seen:
+	 * 01 12 .. 01
+	 * 01 20 .. 02
+	 * 01 20 .. 02
 	 */
+
+	info->memory = buf[2];
+
+	/* Power source state (make sure it's valid) */
+	info->ac_power = buf[4];
+	if (info->ac_power != 0 && info->ac_power != 1) {
+		GP_DEBUG ("Unknown power source: %i", info->ac_power);
+		info->ac_power = PDC_BOOL_OFF;
+	}
+
+	info->auto_power_off = buf[5];
+
+	/* Mode (make sure we know it) */
+	info->mode = buf[6];
+	if (info->mode < 0 || info->mode > 2) {
+		GP_DEBUG ("Unknown mode setting: %i", info->mode);
+		/* record mode is the power-on default -gi */
+		info->mode = PDC_MODE_RECORD;
+	}
 
 	/* Flash (make sure we know it) */
 	info->flash = buf[7];
@@ -400,7 +429,7 @@ pdc700_info (Camera *camera, PDCInfo *info)
 
 	/* Speed (kind of bogus as we already know about it) */
 	info->speed = buf[26];
-	if (info->speed < 0 || info->speed > 3) {
+	if (info->speed < 0 || info->speed > 4) {
 		GP_DEBUG ("Unknown speed: %i", info->speed);
 		info->speed = PDC_BAUD_9600;
 	}
@@ -724,6 +753,8 @@ camera_summary (Camera *camera, CameraText *about)
 					N_("superfine")};
 	static const char *flash[] = {N_("auto"), N_("on"), N_("off")};
 	static const char *bool[] = {N_("off"), N_("on")};
+	static const char *mode[] = {N_("play"), N_("record"), N_("menu")};
+	static const char *power[] = {N_("battery"), N_("a/c adaptor")};
 	PDCInfo info;
 
 	CR (pdc700_info (camera, &info));
@@ -733,18 +764,24 @@ camera_summary (Camera *camera, CameraText *about)
 		"Pictures taken: %i\n"
 		"Free pictures: %i\n"
 		"Software version: %s\n"
+		"Memory: %i megabytes\n"
+		"Camera mode: %s\n"
 		"Image quality: %s\n"
 		"Flash setting: %s\n"
 		"Information: %s\n"
 		"LCD: %s\n"
-		"Auto power off: %i minutes"),
+		"Auto power off: %i minutes\n"
+		"Power source: %s"),
 		info.date.year + 1980, info.date.month, info.date.day,
 		info.date.hour, info.date.minute, info.date.second,
 		info.num_taken, info.num_free, info.version,
+		info.memory,
+		mode[info.mode],
 		quality[info.quality], flash[info.flash],
 		bool[info.caption],
 		bool[info.lcd],
-		info.auto_power_off);
+		info.auto_power_off,
+		power[info.ac_power]);
 
 	return (GP_OK);
 }
