@@ -1,3 +1,14 @@
+2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/dimera3500.c: Move the raw->pnm conversion ...
+	* include/gphoto2-file.h:
+	* libgphto2/file.c: ... here. Now, other camera drivers can use this,
+	too.
+	* include/gphoto2-core.c:
+	* libgphoto2/core.c: Small change to make the API consistent.
+	* frontends/command-line/main.c: Add possibility for download of raw
+	data.
+
 2001-08-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include/gphoto2-file.h:

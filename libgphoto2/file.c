@@ -30,6 +30,7 @@ static int glob_session_file = 0;
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+#define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
 int
 gp_file_new (CameraFile **file)
@@ -271,12 +272,31 @@ gp_file_clean (CameraFile *file)
 
         if (file->data != NULL)
                 free(file->data);
-        strcpy (file->name, "");
         file->data = NULL;
+
         file->size = 0;
         file->bytes_read = 0;
 
-        return(GP_OK);
+	strcpy (file->name, "");
+	strcpy (file->header, "");
+
+	if (file->red_table) {
+		free (file->red_table);
+		file->red_table = NULL;
+	}
+	if (file->green_table) {
+		free (file->green_table);
+		file->green_table = NULL;
+	}
+	if (file->blue_table) {
+		free (file->blue_table);
+		file->blue_table = NULL;
+	}
+	file->red_size   = 0;
+	file->blue_size  = 0;
+	file->green_size = 0;
+
+        return (GP_OK);
 }
 
 int
@@ -354,4 +374,170 @@ gp_file_get_type (CameraFile *file, CameraFileType *type)
 	*type = file->type;
 
 	return (GP_OK);
+}
+
+int
+gp_file_set_color_table (CameraFile *file,
+			 const unsigned char *red_table,   int red_size,
+			 const unsigned char *green_table, int green_size,
+			 const unsigned char *blue_table,  int blue_size)
+{
+	CHECK_NULL (file && red_table && green_table && blue_table);
+
+	if (red_size) {
+		CHECK_MEM (file->red_table = malloc (sizeof (char) * red_size));
+		memcpy (file->red_table, red_table, red_size);
+	}
+	if (green_size) {
+		CHECK_MEM (file->green_table = malloc(sizeof(char)*green_size));
+		memcpy (file->green_table, green_table, green_size);
+	}
+	if (blue_size) {
+		CHECK_MEM (file->blue_table = malloc (sizeof (char)*blue_size));
+		memcpy (file->blue_table, blue_table, blue_size);
+	}
+
+	file->red_size   = red_size;
+	file->green_size = green_size;
+	file->blue_size  = blue_size;
+
+	return (GP_OK);
+}
+
+int
+gp_file_set_width_and_height (CameraFile *file, int width, int height)
+{
+	CHECK_NULL (file);
+
+	file->width = width;
+	file->height = height;
+
+	return (GP_OK);
+}
+
+int
+gp_file_set_header (CameraFile *file, const char *header)
+{
+	CHECK_NULL (file && header);
+
+	strcpy (file->header, header);
+
+	return (GP_OK);
+}
+
+static int
+gp_file_chuck_conversion (CameraFile *file, unsigned char *data)
+{
+	int x, y;
+	int p1, p2, p3, p4;
+	int red, green, blue;
+
+	/*
+	 * Added by Chuck -- 12-May-2000
+	 * Convert the colors based on location, and my wacky color table:
+	 *
+	 * Convert the 4 cells into a single RGB pixel.
+	 * Colors are encoded as follows:
+	 * 
+	 * 		000000000000000000........33
+	 * 		000000000011111111........11
+	 * 		012345678901234567........89
+	 * 		----------------------------
+	 * 	000     RGRGRGRGRGRGRGRGRG........RG
+	 * 	001     GBGBGBGBGBGBGBGBGB........GB
+	 * 	002     RGRGRGRGRGRGRGRGRG........RG
+	 * 	003     GBGBGBGBGBGBGBGBGB........GB
+	 * 	...     ............................
+	 * 	238     RGRGRGRGRGRGRGRGRG........RG
+	 * 	239     GBGBGBGBGBGBGBGBGB........GB
+	 *
+	 * NOTE. Above is 320x240 resolution.  Just expand for 640x480.
+	 *
+	 * Use neighboring cells to generate color values for each pixel.
+	 * The neighbors are the (x-1, y-1), (x, y-1), (x-1, y), and (x, y).
+	 * The exception is when x or y are zero then the neighors used are
+	 * the +1 cells.
+	 */
+	
+	for (y = 0;y < file->height; y++)
+		for (x = 0;x < file->width; x++) {
+			p1 = ((y==0?y+1:y-1)*file->width) + (x==0?x+1:x-1);
+			p2 = ((y==0?y+1:y-1)*file->width) +  x;
+			p3 = ( y            *file->width) + (x==0?x+1:x-1);
+			p4 = ( y            *file->width) +  x;
+
+			switch (((y & 1) << 1) + (x & 1)) {
+			case 0: /* even row, even col, red */
+				blue  = file->blue_table [file->data[p1]];
+				green = file->green_table[file->data[p2]];
+				green+= file->green_table[file->data[p3]];
+				red   = file->red_table  [file->data[p4]];
+				break;
+			case 1: /* even row, odd col, green */
+				green = file->green_table[file->data[p1]];
+				blue  = file->blue_table [file->data[p2]];
+				red   = file->red_table  [file->data[p3]];
+				green+= file->green_table[file->data[p4]];
+				break;
+			case 2: /* odd row, even col, green */
+				green = file->green_table[file->data[p1]];
+				red   = file->red_table  [file->data[p2]];
+				blue  = file->blue_table [file->data[p3]];
+				green+=file->green_table [file->data[p4]];
+				break;
+			case 3: /* odd row, odd col, blue */
+			default:
+				red   = file->red_table  [file->data[p1]];
+				green = file->green_table[file->data[p2]];
+				green+= file->green_table[file->data[p3]];
+				blue  = file->blue_table [file->data[p4]];
+				break;
+			}
+			*data++ = (unsigned char) red;
+			*data++ = (unsigned char) (green/2);
+			*data++ = (unsigned char) blue;
+		}
+
+	return (GP_OK);
+}
+
+static int
+gp_file_raw_to_pnm (CameraFile *file)
+{
+	unsigned char *new_data, *b;
+	long int new_size;
+	int result;
+
+	CHECK_NULL (file);
+
+	new_size = file->width * file->height * 3 + strlen (file->header);
+	CHECK_MEM (new_data = malloc (sizeof (char) * new_size));
+
+	strcpy (new_data, file->header);
+
+	b = new_data + strlen (file->header);
+	result = gp_file_chuck_conversion (file, b);
+	if (result != GP_OK) {
+		free (new_data);
+		return (result);
+	}
+
+	free (file->data);
+	file->data = new_data;
+	file->size = new_size;
+	gp_file_set_mime_type (file, GP_MIME_PNM);
+	
+	return (GP_OK);
+}
+
+int
+gp_file_convert (CameraFile *file, const char *mime_type)
+{
+	CHECK_NULL (file && mime_type);
+
+	if (!strcmp (file->mime_type, GP_MIME_RAW) &&
+	    !strcmp (mime_type, GP_MIME_PNM))
+		return (gp_file_raw_to_pnm (file));
+	else
+		return (GP_ERROR_NOT_SUPPORTED);
 }

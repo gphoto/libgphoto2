@@ -21,6 +21,18 @@
  *
  * History:
  * $Log$
+ * Revision 1.10  2001/08/26 10:42:54  lutz
+ * 2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs/dimera3500.c: Move the raw->pnm conversion ...
+ *         * include/gphoto2-file.h:
+ *         * libgphto2/file.c: ... here. Now, other camera drivers can use this,
+ *         too.
+ *         * include/gphoto2-core.c:
+ *         * libgphoto2/core.c: Small change to make the API consistent.
+ *         * frontends/command-line/main.c: Add possibility for download of raw
+ *         data.
+ *
  * Revision 1.9  2001/08/25 18:14:25  lutz
  * 2001-08-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -150,7 +162,8 @@ static char     Dimera_stdhdr[] =
 /* Forward references */
 
 static u_int8_t *
-Dimera_Get_Full_Image( int picnum, int *size, Camera *camera );
+Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
+		       int *width, int *height);
 
 static u_int8_t *
 Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera );
@@ -344,7 +357,7 @@ int camera_folder_list_files(Camera *camera, const char *folder, CameraList *lis
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename, CameraFileType type, CameraFile *file) {
 
-	int num;
+	int num, width, height;
 	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 	char *data;
 	long int size;
@@ -363,10 +376,12 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename, C
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		data = Dimera_Get_Full_Image(num, (int*) &size, camera);
+	case GP_FILE_TYPE_RAW:
+		data = Dimera_Get_Full_Image (num, (int*) &size, camera,
+					      &width, &height);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		data = Dimera_Get_Thumbnail(num, (int*) &size, camera);
+		data = Dimera_Get_Thumbnail (num, (int*) &size, camera);
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -376,8 +391,31 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename, C
 		return GP_ERROR;
 
 	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, PNM_MIME_TYPE); 
 	gp_file_set_data_and_size (file, data, size);
+
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+
+		/* Let gphoto2 do the conversion */
+		gp_file_set_mime_type (file, GP_MIME_RAW);
+		gp_file_set_color_table (file, red_table,   256,
+					       green_table, 256,
+					       blue_table,  256);
+		gp_file_set_width_and_height (file, width, height);
+		if (width == 640)
+			gp_file_set_header (file, Dimera_finehdr);
+		else
+			gp_file_set_header (file, Dimera_stdhdr);
+		gp_file_convert (file, GP_MIME_PNM);
+		break;
+
+	case GP_FILE_TYPE_PREVIEW:
+		gp_file_set_mime_type (file, GP_MIME_PNM);
+		break;
+	case GP_FILE_TYPE_RAW:
+		gp_file_set_mime_type (file, GP_MIME_RAW); 
+		break;
+	}
 
 	return GP_OK;
 }
@@ -602,111 +640,19 @@ Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 }
 
 static u_int8_t *
-Dimera_convert_raw( u_int8_t *rbuffer, int height, int width,
-		int *size )
-{
-	int		x, y;
-	int		p1, p2, p3, p4;
-	int		red, green, blue;
-	u_int8_t	*b,*oimage;
-
-	if ( (oimage = (u_int8_t *)malloc( height*width*3 +
-			sizeof( Dimera_finehdr ) - 1 )) == NULL )
-	{
-		ERROR( "Dimera_convert_raw: alloc failed" );
-		return 0;
-	}
-	if( width == 640 )
-	{
-		strcpy( oimage, Dimera_finehdr );
-	} else {
-		strcpy( oimage, Dimera_stdhdr );
-	}
-
-	b = oimage + sizeof( Dimera_finehdr ) - 1;
-
-	/*
-	   Added by Chuck -- 12-May-2000
-	   Convert the colors based on location, and my wacky
-	   color table
-	*/
-/*									  GDB
-	Convert the 4 cells into a single RGB pixel. 			  GDB
- 									  GDB
-	Colors are encoded as follows:					  GDB
- 									  GDB	
-			000000000000000000........33			  GDB
-			000000000011111111........11			  GDB
-			012345678901234567........89			  GDB
-			----------------------------			  GDB
-		000	RGRGRGRGRGRGRGRGRG........RG			  GDB
-		001	GBGBGBGBGBGBGBGBGB........GB			  GDB
-		002	RGRGRGRGRGRGRGRGRG........RG			  GDB
-		003	GBGBGBGBGBGBGBGBGB........GB			  GDB
-		...	............................			  GDB
-		238	RGRGRGRGRGRGRGRGRG........RG			  GDB
-		239	GBGBGBGBGBGBGBGBGB........GB			  GDB
-									  GDB
-	NOTE. Above is 320x240 resolution.  Just expand for 640x480.	  GDB
-									  GDB
-	Use neighboring cells to generate color values for each pixel.	  GDB
-	The neighbors are the (x-1, y-1), (x, y-1), (x-1, y), and (x, y)  GDB
-	The exception is when x or y are zero then the neighors used are  GDB
-	the +1 cells.							  GDB
- 									  GDB*/
-	for (y=0;y<height;y++) for (x=0;x<width;x++) {
-		p1 = ((y==0?y+1:y-1)*width) + (x==0?x+1:x-1);
-		p2 = ((y==0?y+1:y-1)*width) + x;
-		p3 = (y*width) + (x==0?x+1:x-1);
-		p4 = (y*width) + x;
-
-		switch ( ((y & 1) << 1) + (x & 1) ) {			/*GDB*/
-			case 0: /* even row, even col, red */		/*GDB*/
-				blue  = blue_table[rbuffer[ p1 ]];
-				green = green_table[rbuffer[ p2 ]];
-				green+= green_table[rbuffer[ p3 ]];
-				red   = red_table[rbuffer[ p4 ]];
-				break;
-			case 1: /* even row, odd col, green */		/*GDB*/
-				green = green_table[rbuffer[ p1 ]];
-				blue  = blue_table[rbuffer[ p2 ]];
-				red   = red_table[rbuffer[ p3 ]];
-				green+= green_table[rbuffer[ p4 ]];
-				break;
-			case 2:	/* odd row, even col, green */		/*GDB*/
-				green = green_table[rbuffer[ p1 ]];
-				red   = red_table[rbuffer[ p2 ]];
-				blue  = blue_table[rbuffer[ p3 ]];
-				green+= green_table[rbuffer[ p4 ]];
-				break;
-			case 3:	/* odd row, odd col, blue */		/*GDB*/
-			default:
-				red   = red_table[rbuffer[ p1 ]];
-				green = green_table[rbuffer[ p2 ]];
-				green+= green_table[rbuffer[ p3 ]];
-				blue  = blue_table[rbuffer[ p4 ]];
-				break;
-		}
-		*b++=(unsigned char)red;
-		*b++=(unsigned char)(green/2);
-		*b++=(unsigned char)blue;
-	}
-	
-
-	*size = height*width*3 + sizeof( Dimera_finehdr ) - 1;
-	return oimage;
-}
-
-static u_int8_t *
-Dimera_Get_Full_Image( int picnum, int *size, Camera *camera )
+Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
+		       int *width, int *height)
 {
 	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 	static struct mesa_image_arg	ia;
 	int32_t				r;
-	u_int8_t			*b, *rbuffer, *final_image;
-	int				height, width, hires, s, retry;
+	u_int8_t			*b, *rbuffer = NULL;
+	int				hires, s, retry;
 
 	*size = 0;
+	*width = 0;
+	*height = 0;
+
 	if ( picnum != RAM_IMAGE_NUM )
 	{
 		update_status( "Getting Image Info" );
@@ -718,12 +664,12 @@ Dimera_Get_Full_Image( int picnum, int *size, Camera *camera )
 		if ( r )
 		{
 			hires = FALSE;
-			height = 240;
-			width = 320;
+			*height = 240;
+			*width = 320;
 		} else {
 			hires = TRUE;
-			height = 480;
-			width = 640;
+			*height = 480;
+			*width = 640;
 		}
 
 		update_status( "Loading Image" );
@@ -736,12 +682,12 @@ Dimera_Get_Full_Image( int picnum, int *size, Camera *camera )
 	} else {
 			/* load the snapped image */
 		hires = TRUE;
-		height = 480;
-		width = 640;
+		*height = 480;
+		*width = 640;
 	}
 	update_status( "Downloading Image" );
 
-	rbuffer = (u_int8_t *)malloc( height*width );
+	rbuffer = (u_int8_t *)malloc( *height * *width );
 	if ( rbuffer == NULL )
 	{
 		return 0;
@@ -788,7 +734,7 @@ Dimera_Get_Full_Image( int picnum, int *size, Camera *camera )
 		gp_frontend_progress(camera, NULL, 100 * ia.row / (height + 4) );
 	}
 #else
-	for ( ia.row = 4, b = rbuffer; ia.row < (height + 4) ;
+	for ( ia.row = 4, b = rbuffer; ia.row < (*height + 4) ;
 			ia.row++, b += s )
 	{
 		update_status( "Downloading Image" );
@@ -812,12 +758,11 @@ Dimera_Get_Full_Image( int picnum, int *size, Camera *camera )
 			*size = 0;
 			return 0;
 		}
-		gp_frontend_progress(camera, NULL, 100 * ia.row / (height + 4) );
+		gp_frontend_progress(camera, NULL, 100 * ia.row / (*height + 4) );
 	}
 #endif
-	final_image = Dimera_convert_raw( rbuffer, height, width, size );
-	free( rbuffer );
-	return final_image;
+
+	return (rbuffer);
 }
 
 

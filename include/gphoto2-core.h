@@ -36,7 +36,7 @@ int  gp_autodetect (CameraList **list);
 int gp_camera_count (void);
 
 /* Retrieve the name of a particular camera */
-int gp_camera_name  (int camera_number, char *camera_name);
+int gp_camera_name  (int camera_number, const char **camera_name);
 
 /* Retreive abilities for a given camera */
 int gp_camera_abilities         (int camera_number, CameraAbilities *abilities);

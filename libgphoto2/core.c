@@ -284,13 +284,15 @@ gp_camera_count (void)
 }
 
 int
-gp_camera_name (int camera_number, char *camera_name)
+gp_camera_name (int camera_number, const char **camera_name)
 {
+	CHECK_NULL (camera_name);
+
 	if (camera_number > glob_abilities_list->count)
 		return (GP_ERROR_MODEL_NOT_FOUND);
 
-	strcpy (camera_name,
-			glob_abilities_list->abilities[camera_number]->model);
+	*camera_name = glob_abilities_list->abilities[camera_number]->model;
+
 	return (GP_OK);
 }
 

@@ -21,6 +21,10 @@
 #ifndef __GPHOTO2_FILE_H__
 #define __GPHOTO2_FILE_H__
 
+#define GP_MIME_RAW  "image/x-raw"
+#define GP_MIME_PNM  "image/pnm"
+#define GP_MIME_JPEG "image/jpeg"
+
 typedef enum {
 	GP_FILE_TYPE_PREVIEW,
 	GP_FILE_TYPE_NORMAL,
@@ -35,10 +39,15 @@ struct _CameraFile {
 	char mime_type [64];
 	char name [64];
 	long int size;
-	char *data;
+	unsigned char *data;
 	int bytes_read;
 	int session;
 	int ref_count;
+
+	unsigned char *red_table, *blue_table, *green_table;
+	int red_size, blue_size, green_size;
+	char header [128];
+	int width, height;
 }; 
 
 int gp_file_new            (CameraFile **file);
@@ -67,5 +76,15 @@ int gp_file_set_data_and_size (CameraFile*, char *data, long int size);
 int gp_file_get_data_and_size (CameraFile*, const char **data, long int *size);
 
 int gp_file_copy           (CameraFile *destination, CameraFile *source);
+
+int gp_file_set_color_table  (CameraFile *file,
+			      const unsigned char *red_table,   int red_size,
+			      const unsigned char *green_table, int green_size,
+			      const unsigned char *blue_table,  int blue_size);
+int gp_file_set_width_and_height (CameraFile *file, int width, int height);
+int gp_file_set_header           (CameraFile *file, const char *header);
+
+int gp_file_convert (CameraFile *file, const char *mime_type);
+	
 
 #endif /* __GPHOTO2_FILE_H__ */
