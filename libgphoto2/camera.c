@@ -474,6 +474,8 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
 	CHECK_OPEN (camera);
 	result = gp_filesystem_list_files (camera->fs, folder, list);
 	CHECK_CLOSE (camera);
+//Remove this when camera drivers are updated to use camera->fs
+if (list->count)
 	if (result != GP_ERROR_NOT_SUPPORTED)
 		return (result);
 
@@ -502,6 +504,8 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
 	CHECK_OPEN (camera);
 	result = gp_filesystem_list_folders (camera->fs, folder, list);
 	CHECK_CLOSE (camera);
+//Remove this when camera drivers are updated to use camera->fs
+if (list->count)
 	if (result != GP_ERROR_NOT_SUPPORTED)
 		return (result);
 
