@@ -218,7 +218,8 @@ OPTION_CALLBACK (auto_detect)
 	CameraList* list;
 	const char *name, *value;
 	
-	CHECK_RESULT (gp_autodetect (&list));
+	CHECK_RESULT (gp_list_new (&list));
+	CHECK_RESULT (gp_autodetect (list));
 	CHECK_RESULT (count = gp_list_count (list));
 
 	printf("%-30s %-16s\n", "Model", "Port");
@@ -229,7 +230,8 @@ OPTION_CALLBACK (auto_detect)
 		printf("%-30s %-16s\n", name, value);
 	}
 
-	CHECK_RESULT (gp_list_free (list));
+	/* We don't need to check for error here. */
+	gp_list_free (list);
 
 	return GP_OK;
 }

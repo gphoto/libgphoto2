@@ -194,9 +194,10 @@ gp_camera_init (Camera *camera)
 		/* If the port hasn't been indicated, try to figure it 	*/
 		/* out (USB only). 					*/
 		if (strcmp (camera->port->path, "") == 0) {
+			CHECK_RESULT (gp_list_new (&list));
 			
 			/* Call auto-detect */
-			CHECK_RESULT (gp_autodetect (&list));
+			CHECK_RESULT (gp_autodetect (list));
 
 			/* Retrieve the first auto-detected camera */
 			CHECK_RESULT (gp_list_get_name  (list, 0, &model));
@@ -221,9 +222,10 @@ gp_camera_init (Camera *camera)
 	/* If the model hasn't been indicated, try to figure it out 	*/
 	/* through probing. 						*/
 	if (!strcmp (camera->model, "")) {
+		CHECK_RESULT (gp_list_new (&list));
 
 		/* Call auto-detect */
-		CHECK_RESULT (gp_autodetect (&list));
+		CHECK_RESULT (gp_autodetect (list));
 
 		/* Retrieve the first auto-detected camera */
 		CHECK_RESULT (gp_list_get_name  (list, 0, &model));
