@@ -1352,6 +1352,8 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR);
 	}
 
+	gp_context_status (context, _("Downloading '%s' from folder '%s'..."),
+			   filename, folder);
 	r = fs->get_file_func (fs, folder, filename, type, file,
 			       fs->file_data, context);
 	if ((type == GP_FILE_TYPE_PREVIEW) &&
