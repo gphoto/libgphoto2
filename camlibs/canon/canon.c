@@ -670,7 +670,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		// Can't use normal "canon_int_do_control_command", as
 		// we must read the interrupt pipe before the response
 		// comes back for this commmand.
-		data = canon_usb_capture_dialogue ( camera, &len );
+		data = canon_usb_capture_dialogue ( camera, &len, context );
 		if ( data == NULL ) {
 			/* Try to leave camera in a usable state. */
 			canon_int_do_control_command (camera,
@@ -1738,6 +1738,7 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
 			memcpy (payload, dir, strlen (dir) + 1);
 			memcpy (payload + strlen (dir) + 1, name, strlen (name) + 1);
 			payload_length = strlen (dir) + strlen (name) + 2;
+			payload[payload_length++] = 0; /* Double NUL to end command */
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE, &len,
 						  payload, payload_length);
 			if (!msg)

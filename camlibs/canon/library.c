@@ -291,7 +291,7 @@ camera_exit (Camera *camera, GPContext *context)
 	if (camera->port->type == GP_PORT_USB) {
 		/* EOS-class cameras lock keys only for remote
 		   capture, and unlock immediately. */
-		if ( !IS_EOS(camera->pl->md->model) ) canon_usb_unlock_keys (camera);
+		if ( !IS_EOS(camera->pl->md->model) ) canon_usb_unlock_keys (camera, context);
 	}
 
 	if (camera->pl) {

@@ -332,10 +332,21 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 						    &bytes_read, payload, 4);
 			if (!c_res)
 				return GP_ERROR;
+			if (bytes_read == 0x4) {
+				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
+			} else {
+				gp_context_error (context,
+						  "canon_usb_lock_keys: "
+						  "Unexpected amount of data returned (%i bytes, expected %i)",
+						  bytes_read, 0x4);
+				return GP_ERROR;
+			}
 
 			break;
+
 		case CANON_PS_S45:
 		case CANON_PS_G3:
+		default:
 			/* Special case: doesn't implement "get
                            picture abilities", but isn't an EOS
                            camera, so we have to use the "normal" key
@@ -348,8 +359,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
 						    &bytes_read, NULL, 0);
 			if (bytes_read == 0x4) {
-				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back,"
-					  " unfortunately we don't know what they mean.");
+				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
 			} else {
 				gp_context_error (context,
 						  "canon_usb_lock_keys: "
@@ -358,7 +368,27 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 				return GP_ERROR;
 			}
 			break;
-		default:
+
+		case CANON_PS_A5:
+		case CANON_PS_A5_ZOOM:
+		case CANON_PS_A50:
+		case CANON_PS_S30:
+		case CANON_PS_S40:
+		case CANON_PS_A70:
+		case CANON_PS_S300:
+		case CANON_PS_G2:
+		case CANON_PS_A10:
+		case CANON_PS_A20:
+		case CANON_PS_A30:
+		case CANON_PS_A40:
+		case CANON_PS_S330:
+		case CANON_PS_S200:
+		case CANON_PS_A100:
+		case CANON_PS_A200:
+			/* Previous default; I doubt that any new
+			 * cameras will work this way, so it now is
+			 * explicit for the older cameras that use
+			 * it. */
 			GP_DEBUG ("Locking camera keys and turning off LCD using 'normal' locking code...");
 
 			c_res = canon_usb_dialogue (camera,
@@ -377,7 +407,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
 						    &bytes_read, NULL, 0);
 			if (bytes_read == 0x4) {
-				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back, unfortunately we don't know what they mean.");
+				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
 			} else {
 				gp_context_error (context,
 						  "canon_usb_lock_keys: "
@@ -401,7 +431,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
  *
  */
 int
-canon_usb_unlock_keys (Camera *camera)
+canon_usb_unlock_keys (Camera *camera, GPContext *context)
 {
 	unsigned char *c_res;
 	int bytes_read;
@@ -414,9 +444,17 @@ canon_usb_unlock_keys (Camera *camera)
 		case CANON_PS_S230:
 			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
 						    &bytes_read, NULL, 0);
-			/* Should look at the bytes returned, but I don't know what they mean */
 			if (!c_res)
 				return GP_ERROR;
+			if (bytes_read == 0x4) {
+				GP_DEBUG ("canon_usb_unlock_keys: Got the expected number of bytes back.");
+			} else {
+				gp_context_error (context,
+						  "canon_usb_unlock_keys: "
+						  "Unexpected amount of data returned (%i bytes, expected %i)",
+						  bytes_read, 0x4);
+				return GP_ERROR;
+			}
 
 			break;
 		default:
@@ -477,6 +515,7 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
  * canon_usb_capture_dialogue:
  * @camera: the Camera to work with
  * @return_length: number of bytes to read from the camera as response
+ * @context: context for error reporting
  *
  * USB version of the #canon_serial_dialogue function.
  * Special case for the "capture image" command, where we must read the
@@ -508,7 +547,7 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
  *
  */
 unsigned char *
-canon_usb_capture_dialogue (Camera *camera, int *return_length )
+canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context )
 {
 	int msgsize, status, i;
 	char cmd1 = 0x13, cmd2 = 0x12, *funct_descr = "";
@@ -752,7 +791,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
 				}
 				step++;
 				/* Canon SDK unlocks the keys here for EOS cameras. */
-				if ( canon_usb_unlock_keys ( camera ) < 0 ) {
+				if ( canon_usb_unlock_keys ( camera, context ) < 0 ) {
 					GP_DEBUG ( "canon_usb_capture_dialogue: couldn't unlock keys after capture." );
 					goto FAIL;
 				}
@@ -859,7 +898,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
 	/* Try to purge interrupt pipe, which was left in an unknown state. */
 	for ( i=0; i<5; i++ )
 		status = canon_usb_poll_interrupt_pipe ( camera, buf2, 1000 );
-	canon_usb_unlock_keys ( camera );    /* Ignore status code, as we can't fix it anyway. */
+	canon_usb_unlock_keys ( camera, context );    /* Ignore status code, as we can't fix it anyway. */
 	return NULL;
 }
 
