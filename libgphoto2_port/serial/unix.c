@@ -95,7 +95,7 @@
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
 
 /* Linux */
-#ifdef __linux
+#if defined(__linux__)
 /* devfs is accounted for in the implementation */
 #define GP_PORT_SERIAL_PREFIX   "/dev/ttyS%i"
 #define GP_PORT_SERIAL_RANGE_LOW        0
