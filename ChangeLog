@@ -1,3 +1,17 @@
+2001-10-19 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* libgphoto2_port/libgphoto2_port/Makefile.am: use $(libdir) as library directory
+	* libgphoto2/Makefile.am: moved docs to DOC_DIR
+	* libgphoto2_port/Makefile.am: added m4/ directory, moved docs to DOC_DIR
+	* libgphoto2_port/autogen.sh: add m4/ dir for aclocal
+	* libgphoto2_port/configure.in: add m4/ dir, sourced out doc stuff, new version, check for install
+	* libgphoto2_port/doc/Makefile.am: moved to $(htmldir)
+	* libgphoto2_port/m4/documentation.m4: added sourced out doc stuff
+	* libgphoto2_port/m4/Makefile.am: added
+	* doc/Makefile.am: added docs in DOC_DIR
+	* doc/api/Makefile.am: moved to $(htmldir)
+	* configure.in: sourced out doc stuff, check for install
+	
 2001-10-19 Dan Fandrich <dan@coneharvesters.com>
 
     * frontends/command-line/main.c: Added automatic port type guessing
