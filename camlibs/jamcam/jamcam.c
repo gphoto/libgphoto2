@@ -171,6 +171,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	unsigned char gtable[256];
 	char *ptr;
 	int size = 0, n = 0;
+	int res;
 	int width, height;
 	struct jamcam_file *jc_file;
 
@@ -181,9 +182,9 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
 
-	n = gp_file_progress( file, 0 );
-	if ( n < 0 ) {
-		return( n );
+	res = gp_file_progress( file, 0 );
+	if ( res < 0 ) {
+		return( res );
 	}
 
 	switch (type) {
