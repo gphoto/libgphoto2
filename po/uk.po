@@ -1430,7 +1430,7 @@ msgstr ""
 #, c-format
 msgid ""
 "The camera has just sent an error that has not yet been discovered. Please "
-"report the following to <gphoto-devel@gphoto.org> with additional "
+"report the following to <gphoto-devel@lists.sourceforge.net> with additional "
 "information how you got this error: (0x%x,0x%x). Thank you very much!"
 msgstr ""
 
@@ -2915,62 +2915,62 @@ msgstr "Збереження покажчика ще не п╕дтриму╓ться"
 #: camlibs/ricoh/ricoh.c:66
 #, fuzzy, c-format
 msgid ""
-"Expected %i, got %i. Please report this error to <gphoto-devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+"Expected %i, got %i. Please report this error to <gphoto-devel@lists.sourceforge.net>."
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/ricoh/ricoh.c:75
 #, fuzzy, c-format
 msgid ""
 "Expected %i bytes, got %i. Please report this error to <gphoto-devel@gphoto."
 "org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
 #, fuzzy, c-format
 msgid ""
-"We expected 0x%x but received 0x%x. Please contact <gphoto-devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+"We expected 0x%x but received 0x%x. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/ricoh/ricoh.c:215
 #, fuzzy, c-format
-msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/ricoh/ricoh.c:257 camlibs/ricoh/ricoh.c:326
 #, fuzzy
 msgid ""
 "Camera busy. If the problem persists, please contact <gphoto-devel@gphoto."
 "org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/ricoh/ricoh.c:292
 #, fuzzy
-msgid "Timeout even after 2 retries. Please contact <gphoto-devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+msgid "Timeout even after 2 retries. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/ricoh/ricoh.c:308
 #, fuzzy
 msgid ""
 "Communication error even after 2 retries. Please contact <gphoto-"
 "devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/ricoh/ricoh.c:340
 #, fuzzy
-msgid "Camera is in wrong mode. Please contact <gphoto-devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+msgid "Camera is in wrong mode. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/ricoh/ricoh.c:349
 #, fuzzy
 msgid ""
 "Camera did not accept the parameters. Please contact <gphoto-devel@gphoto."
 "org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/ricoh/ricoh.c:355
 #, fuzzy
-msgid "An unknown error occurred. Please contact <gphoto-devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+msgid "An unknown error occurred. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/ricoh/ricoh.c:817
 #, c-format
@@ -3121,7 +3121,7 @@ msgid ""
 "  * custom white balance setup\n"
 "- Configuration has been reverse-engineered with\n"
 "  a PhotoPC 3000z, if your camera acts differently\n"
-"  please send a mail to <gphoto-devel@gphoto.org> (in English)\n"
+"  please send a mail to <gphoto-devel@lists.sourceforge.net> (in English)\n"
 msgstr ""
 
 #: camlibs/sierra/library.c:144 camlibs/sierra/library.c:1352
@@ -3155,7 +3155,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Transmission of packet timed out even after %i retries. Please contact "
-"<gphoto-devel@gphoto.org>."
+"<gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 
 #: camlibs/sierra/library.c:747 camlibs/sierra/library.c:771
@@ -3165,8 +3165,8 @@ msgstr ""
 #: camlibs/sierra/library.c:762
 #, fuzzy
 msgid ""
-"Packet got rejected by camera. Please contact <gphoto-devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+"Packet got rejected by camera. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/sierra/library.c:789
 #, c-format
@@ -3181,18 +3181,18 @@ msgstr ""
 
 #: camlibs/sierra/library.c:900
 #, fuzzy, c-format
-msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/sierra/library.c:998
 #, fuzzy, c-format
 msgid ""
-"Received unexpected answer (%i). Please contact <gphoto-devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+"Received unexpected answer (%i). Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/sierra/library.c:1060
 #, c-format
-msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
+msgid "Could not get register %i. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 
 #: camlibs/sierra/library.c:1080 camlibs/sierra/library.c:1100
@@ -3208,18 +3208,18 @@ msgstr "Отримання покажчика..."
 #, fuzzy
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact "
-"<gphoto-devel@gphoto.org>."
-msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
+"<gphoto-devel@lists.sourceforge.net>."
+msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@lists.sourceforge.net.\n"
 
 #: camlibs/sierra/library.c:1250
 #, c-format
 msgid ""
-"Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
+"Could not get string register %i. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 
 #: camlibs/sierra/library.c:1483
 #, c-format
-msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@gphoto.org>."
+msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 
 #: camlibs/sierra/nikon-desc.c:128 camlibs/sierra/olympus-desc.c:141

@@ -64,7 +64,7 @@
 {							\
 	if (cmd != target) {				\
 		gp_context_error (context, _("Expected %i, got %i. Please "\
-			"report this error to <gphoto-devel@gphoto.org>."),\
+			"report this error to <gphoto-devel@lists.sourceforge.net>."),\
 			cmd, target);			\
 		return (GP_ERROR_CORRUPTED_DATA);	\
 	}						\
@@ -75,7 +75,7 @@
 		gp_context_error (context, _("Expected "\
 			"%i bytes, got %i. "		\
 			"Please report this error to "	\
-			"<gphoto-devel@gphoto.org>."),	\
+			"<gphoto-devel@lists.sourceforge.net>."),	\
 			target, len);			\
 		return (GP_ERROR_CORRUPTED_DATA);	\
 	}						\
@@ -171,7 +171,7 @@ ricoh_recv (Camera *camera, GPContext *context, unsigned char *cmd,
 			if (buf[0] != DLE) {
 				gp_context_error (context, _("We expected "
 					"0x%x but received 0x%x. Please "
-					"contact <gphoto-devel@gphoto.org>."),
+					"contact <gphoto-devel@lists.sourceforge.net>."),
 						DLE, buf[0]);
 				return (GP_ERROR_CORRUPTED_DATA);
 			}
@@ -185,7 +185,7 @@ ricoh_recv (Camera *camera, GPContext *context, unsigned char *cmd,
 		default:
 			gp_context_error (context, _("We expected "
 				"0x%x but received 0x%x. Please "
-				"contact <gphoto-devel@gphoto.org>."),
+				"contact <gphoto-devel@lists.sourceforge.net>."),
 					STX, buf[1]);
 			return GP_ERROR_CORRUPTED_DATA;
 		}
@@ -256,7 +256,7 @@ ricoh_recv (Camera *camera, GPContext *context, unsigned char *cmd,
 			if (ii >= 4) {
 				gp_context_error (context, _("Camera busy. "
 					"If the problem persists, please "
-					"contact <gphoto-devel@gphoto.org>."));
+					"contact <gphoto-devel@lists.sourceforge.net>."));
 				return (GP_ERROR);
 			}
 			continue;
@@ -291,7 +291,7 @@ ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
 			if (++r > 2) {
 				gp_context_error (context, _("Timeout "
 					"even after 2 retries. Please "
-					"contact <gphoto-devel@gphoto.org>."));
+					"contact <gphoto-devel@lists.sourceforge.net>."));
 				return (GP_ERROR_TIMEOUT);
 			}
 			GP_DEBUG ("Timeout! Retrying...");
@@ -307,7 +307,7 @@ ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
 			if (++r > 2) {
 				gp_context_error (context, _("Communication "
 					"error even after 2 retries. Please "
-					"contact <gphoto-devel@gphoto.org>."));
+					"contact <gphoto-devel@lists.sourceforge.net>."));
 				return (GP_ERROR);
 			}
 			continue;
@@ -325,7 +325,7 @@ ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
 			if (++r >= 4) {
 				gp_context_error (context, _("Camera busy. "
 					"If the problem persists, please "
-					"contact <gphoto-devel@gphoto.org>."));
+					"contact <gphoto-devel@lists.sourceforge.net>."));
 				return (GP_ERROR);
 			}
 			continue;
@@ -339,7 +339,7 @@ ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
 				       (ret_data[1] == 0x00)) {
 			gp_context_error (context, _("Camera is in wrong "
 				"mode. Please contact "
-				"<gphoto-devel@gphoto.org>."));
+				"<gphoto-devel@lists.sourceforge.net>."));
 			return (GP_ERROR);
 		}
 
@@ -348,12 +348,12 @@ ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
 				       (ret_data[1] == 0x00)) {
 			gp_context_error (context, _("Camera did not "
 				"accept the parameters. Please contact "
-				"<gphoto-devel@gphoto.org>."));
+				"<gphoto-devel@lists.sourceforge.net>."));
 			return (GP_ERROR);
 		}
 
 		gp_context_error (context, _("An unknown error occurred. "
-			"Please contact <gphoto-devel@gphoto.org>."));
+			"Please contact <gphoto-devel@lists.sourceforge.net>."));
 		return (GP_ERROR);
         }
 

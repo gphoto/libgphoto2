@@ -1,3 +1,8 @@
+2003-06-22  Christophe Barbe <christophe@ufies.org>
+
+	* gphoto2/main.c, po/*.po:
+	  s/gphoto-devel@gphoto.org/gphoto-devel@lists.sourceforge.net/
+
 2003-05-26  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* configure.in: 2.1.2rc1, with CVS tag

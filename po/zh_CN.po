@@ -1771,11 +1771,11 @@ msgstr "未知的错误。"
 #, c-format
 msgid ""
 "The camera has just sent an error that has not yet been discovered. Please "
-"report the following to <gphoto-devel@gphoto.org> with additional "
+"report the following to <gphoto-devel@lists.sourceforge.net> with additional "
 "information how you got this error: (0x%x,0x%x). Thank you very much!"
 msgstr ""
 "相机刚刚送出了一个尚未发现的错误。请将以下内容以及您如何得到错误：(0x%x,0x%"
-"x) 的附加信息发送到 <gphoto-devel@gphoto.org>。非常感谢您！"
+"x) 的附加信息发送到 <gphoto-devel@lists.sourceforge.net>。非常感谢您！"
 
 # camlibs/konica/library.c:142
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:125
@@ -2721,7 +2721,7 @@ msgid ""
 "%i bytes of an unknown image format have been received. Please write <gphoto-"
 "devel@gphoto.org> for assistance."
 msgstr ""
-"已接收 %i 字节的未知格式图像。请写 Email 到 <gphoto-devel@gphoto.org> 以寻求"
+"已接收 %i 字节的未知格式图像。请写 Email 到 <gphoto-devel@lists.sourceforge.net> 以寻求"
 "帮助。"
 
 #: camlibs/polaroid/pdc700.c:941
@@ -3676,8 +3676,8 @@ msgstr "不支持速度 %i！"
 #: camlibs/ricoh/ricoh.c:66
 #, c-format
 msgid ""
-"Expected %i, got %i. Please report this error to <gphoto-devel@gphoto.org>."
-msgstr "需要 %i，得到 %i。请将此错误报告到 <gphoto-devel@gphoto.org>。"
+"Expected %i, got %i. Please report this error to <gphoto-devel@lists.sourceforge.net>."
+msgstr "需要 %i，得到 %i。请将此错误报告到 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/ricoh/ricoh.c:75
 #: camlibs/ricoh/ricoh.c:75
@@ -3685,56 +3685,56 @@ msgstr "需要 %i，得到 %i。请将此错误报告到 <gphoto-devel@gphoto.or
 msgid ""
 "Expected %i bytes, got %i. Please report this error to <gphoto-devel@gphoto."
 "org>."
-msgstr "需要 %i 字节，得到 %i。请将此错误报告到 <gphoto-devel@gphoto.org>。"
+msgstr "需要 %i 字节，得到 %i。请将此错误报告到 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/ricoh/ricoh.c:165 camlibs/ricoh/ricoh.c:179
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
 #, c-format
 msgid ""
-"We expected 0x%x but received 0x%x. Please contact <gphoto-devel@gphoto.org>."
-msgstr "我们希望得到 0x%x 但收到 0x%x。请联系 <gphoto-devel@gphoto.org>。"
+"We expected 0x%x but received 0x%x. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "我们希望得到 0x%x 但收到 0x%x。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/ricoh/ricoh.c:208
 #: camlibs/ricoh/ricoh.c:215
 #, c-format
-msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@gphoto.org>."
-msgstr "错误的字符 (0x%x，0x%x)。请联系 <gphoto-devel@gphoto.org>。"
+msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "错误的字符 (0x%x，0x%x)。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/ricoh/ricoh.c:250
 #: camlibs/ricoh/ricoh.c:257 camlibs/ricoh/ricoh.c:326
 msgid ""
 "Camera busy. If the problem persists, please contact <gphoto-devel@gphoto."
 "org>."
-msgstr "相机忙。如果问题总是存在，请联系 <gphoto-devel@gphoto.org>。"
+msgstr "相机忙。如果问题总是存在，请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/library.c:620
 #: camlibs/ricoh/ricoh.c:292
-msgid "Timeout even after 2 retries. Please contact <gphoto-devel@gphoto.org>."
-msgstr "两次重试后仍然超时。请联系 <gphoto-devel@gphoto.org>。"
+msgid "Timeout even after 2 retries. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "两次重试后仍然超时。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/library.c:620
 #: camlibs/ricoh/ricoh.c:308
 msgid ""
 "Communication error even after 2 retries. Please contact <gphoto-"
 "devel@gphoto.org>."
-msgstr "两次重试后仍然通讯错误。请联系 <gphoto-devel@gphoto.org>。"
+msgstr "两次重试后仍然通讯错误。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/ricoh/ricoh.c:250
 #: camlibs/ricoh/ricoh.c:340
-msgid "Camera is in wrong mode. Please contact <gphoto-devel@gphoto.org>."
-msgstr "相机处于错误的模式。请联系 <gphoto-devel@gphoto.org>。"
+msgid "Camera is in wrong mode. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "相机处于错误的模式。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/library.c:879
 #: camlibs/ricoh/ricoh.c:349
 msgid ""
 "Camera did not accept the parameters. Please contact <gphoto-devel@gphoto."
 "org>."
-msgstr "相机无法接收参数。请联系 <gphoto-devel@gphoto.org>。"
+msgstr "相机无法接收参数。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/library.c:879
 #: camlibs/ricoh/ricoh.c:355
-msgid "An unknown error occurred. Please contact <gphoto-devel@gphoto.org>."
-msgstr "遇到未知的错误。请联系 <gphoto-devel@gphoto.org>。"
+msgid "An unknown error occurred. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "遇到未知的错误。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 #: camlibs/ricoh/ricoh.c:817
 #, c-format
@@ -3927,7 +3927,7 @@ msgid ""
 "  * custom white balance setup\n"
 "- Configuration has been reverse-engineered with\n"
 "  a PhotoPC 3000z, if your camera acts differently\n"
-"  please send a mail to <gphoto-devel@gphoto.org> (in English)\n"
+"  please send a mail to <gphoto-devel@lists.sourceforge.net> (in English)\n"
 msgstr ""
 "关于爱普生相机的一些事项：\n"
 "- 有些参数无法远程控制：\n"
@@ -3936,7 +3936,7 @@ msgstr ""
 "  * custom white balance setup\n"
 "- 配置是通过对 PhotoPC 3000z 进行反向工程\n"
 "  而得到的。如果您的相机于此不同，请向 \n"
-"  <gphoto-devel@gphoto.org> 发送电子邮件 (用英语)\n"
+"  <gphoto-devel@lists.sourceforge.net> 发送电子邮件 (用英语)\n"
 
 # camlibs/konica/konica.c:80
 #: camlibs/sierra/library.c:144 camlibs/sierra/library.c:1352
@@ -3975,8 +3975,8 @@ msgstr "接收的第一个字节 (0x%x) 非法。"
 #, c-format
 msgid ""
 "Transmission of packet timed out even after %i retries. Please contact "
-"<gphoto-devel@gphoto.org>."
-msgstr "在 %i 次重试后包传输仍然超时。请联系 <gphoto-devel@gphoto.org>。"
+"<gphoto-devel@lists.sourceforge.net>."
+msgstr "在 %i 次重试后包传输仍然超时。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 #: camlibs/sierra/library.c:747 camlibs/sierra/library.c:771
 msgid "Could not transmit packet even after several retries."
@@ -3985,8 +3985,8 @@ msgstr "在几次重试后仍不能传输包。"
 # camlibs/sierra/library.c:657
 #: camlibs/sierra/library.c:762
 msgid ""
-"Packet got rejected by camera. Please contact <gphoto-devel@gphoto.org>."
-msgstr "相机拒绝包。请联系 <gphoto-devel@gphoto.org>。"
+"Packet got rejected by camera. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "相机拒绝包。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/library.c:664
 #: camlibs/sierra/library.c:789
@@ -3994,7 +3994,7 @@ msgstr "相机拒绝包。请联系 <gphoto-devel@gphoto.org>。"
 msgid ""
 "Could not transmit packet (error code %i). Please contact <gphoto-"
 "devel@gphoto.org>."
-msgstr "无法传输包 (错误码 %i)。请联系 <gphoto-devel@gphoto.org>。"
+msgstr "无法传输包 (错误码 %i)。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/library.c:620
 #: camlibs/sierra/library.c:881
@@ -4004,21 +4004,21 @@ msgstr "在两次重试后传输仍然超时。放弃..."
 # camlibs/sierra/library.c:744
 #: camlibs/sierra/library.c:900
 #, c-format
-msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@gphoto.org>."
-msgstr "得到意外的结果 0x%x。请联系 <gphoto-devel@gphoto.org>。"
+msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "得到意外的结果 0x%x。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/library.c:819
 #: camlibs/sierra/library.c:998
 #, c-format
 msgid ""
-"Received unexpected answer (%i). Please contact <gphoto-devel@gphoto.org>."
-msgstr "收到意外的应答 (%i)。请联系 <gphoto-devel@gphoto.org>。"
+"Received unexpected answer (%i). Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "收到意外的应答 (%i)。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/library.c:879
 #: camlibs/sierra/library.c:1060
 #, c-format
-msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
-msgstr "无法读取寄存器 %i。请联系 <gphoto-devel@gphoto.org>。"
+msgid "Could not get register %i. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "无法读取寄存器 %i。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 #: camlibs/sierra/library.c:1080 camlibs/sierra/library.c:1100
 msgid "Too many retries failed."
@@ -4033,21 +4033,21 @@ msgstr "正在发送数据..."
 #: camlibs/sierra/library.c:1201
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact "
-"<gphoto-devel@gphoto.org>."
-msgstr "Sierra 驱动程序不支持递归调用！请联系 <gphoto-devel@gphoto.org>。"
+"<gphoto-devel@lists.sourceforge.net>."
+msgstr "Sierra 驱动程序不支持递归调用！请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/library.c:1010
 #: camlibs/sierra/library.c:1250
 #, c-format
 msgid ""
-"Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
-msgstr "无法读取字符串寄存器 %i。请联系 <gphoto-devel@gphoto.org>。"
+"Could not get string register %i. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "无法读取字符串寄存器 %i。请联系 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/library.c:1157
 #: camlibs/sierra/library.c:1483
 #, c-format
-msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@gphoto.org>."
-msgstr "需要 32 字节，得到 %i。请连线 <gphoto-devel@gphoto.org>。"
+msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "需要 32 字节，得到 %i。请连线 <gphoto-devel@lists.sourceforge.net>。"
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
 #: camlibs/sierra/nikon-desc.c:128 camlibs/sierra/olympus-desc.c:141

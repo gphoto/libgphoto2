@@ -915,7 +915,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			free (data);
 			gp_context_error (context, _("%i bytes of an "
 				"unknown image format have been received. "
-				"Please write <gphoto-devel@gphoto.org> for "
+				"Please write <gphoto-devel@lists.sourceforge.net> for "
 				"assistance."), size);
 			return (GP_ERROR);
 		}

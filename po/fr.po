@@ -1539,11 +1539,11 @@ msgstr "Erreur inconnue."
 #, c-format
 msgid ""
 "The camera has just sent an error that has not yet been discovered. Please "
-"report the following to <gphoto-devel@gphoto.org> with additional "
+"report the following to <gphoto-devel@lists.sourceforge.net> with additional "
 "information how you got this error: (0x%x,0x%x). Thank you very much!"
 msgstr ""
 "L'appareil vient de retourner une erreur inconnue. Merci d'en informer "
-"l'équipe de dévelopement <gphoto-devel@gphoto.org> en expliquant le moyen de "
+"l'équipe de dévelopement <gphoto-devel@lists.sourceforge.net> en expliquant le moyen de "
 "reproduire cette erreur : (0x%x,0x%x). Merci d'avance!"
 
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:125
@@ -3163,9 +3163,9 @@ msgstr "La vitesse %i n'est pas supportée!"
 #: camlibs/ricoh/ricoh.c:66
 #, c-format
 msgid ""
-"Expected %i, got %i. Please report this error to <gphoto-devel@gphoto.org>."
+"Expected %i, got %i. Please report this error to <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
-"%i octets attendus, %i reçus. Merci de contacter <gphoto-devel@gphoto.org>."
+"%i octets attendus, %i reçus. Merci de contacter <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:75
 #, c-format
@@ -3173,19 +3173,19 @@ msgid ""
 "Expected %i bytes, got %i. Please report this error to <gphoto-devel@gphoto."
 "org>."
 msgstr ""
-"%i octets attendus, %i reçus. Merci de contacter <gphoto-devel@gphoto.org>."
+"%i octets attendus, %i reçus. Merci de contacter <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
 #, c-format
 msgid ""
-"We expected 0x%x but received 0x%x. Please contact <gphoto-devel@gphoto.org>."
+"We expected 0x%x but received 0x%x. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Résultat inattendu 0x%x, reçu 0x%x. Merci de contacter <gphoto-devel@gphoto."
 "org>."
 
 #: camlibs/ricoh/ricoh.c:215
 #, c-format
-msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@gphoto.org>."
+msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Mauvais caractères (0x%x, 0x%x). Merci de contacter <gphoto-devel@gphoto."
 "org>."
@@ -3199,7 +3199,7 @@ msgstr ""
 "devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:292
-msgid "Timeout even after 2 retries. Please contact <gphoto-devel@gphoto.org>."
+msgid "Timeout even after 2 retries. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Délai d'attente dépassé même après 2 tentatives. Contactez <gphoto-"
 "devel@gphoto.org>."
@@ -3213,9 +3213,9 @@ msgstr ""
 "devel@gphoto.org>."
 
 #: camlibs/ricoh/ricoh.c:340
-msgid "Camera is in wrong mode. Please contact <gphoto-devel@gphoto.org>."
+msgid "Camera is in wrong mode. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
-"L'appareil n'est pas dans le bon mode. Contactez <gphoto-devel@gphoto.org>."
+"L'appareil n'est pas dans le bon mode. Contactez <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:349
 msgid ""
@@ -3226,8 +3226,8 @@ msgstr ""
 "org>."
 
 #: camlibs/ricoh/ricoh.c:355
-msgid "An unknown error occurred. Please contact <gphoto-devel@gphoto.org>."
-msgstr "Une erreur inconnue est survenue. Contactez <gphoto-devel@gphoto.org>."
+msgid "An unknown error occurred. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "Une erreur inconnue est survenue. Contactez <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:817
 #, c-format
@@ -3378,7 +3378,7 @@ msgid ""
 "  * custom white balance setup\n"
 "- Configuration has been reverse-engineered with\n"
 "  a PhotoPC 3000z, if your camera acts differently\n"
-"  please send a mail to <gphoto-devel@gphoto.org> (in English)\n"
+"  please send a mail to <gphoto-devel@lists.sourceforge.net> (in English)\n"
 msgstr ""
 "Quelques notes à propos des appareils photos Epson :\n"
 "- Certains paramètres ne sont pas configurables à distance :\n"
@@ -3387,7 +3387,7 @@ msgstr ""
 "  * la configuration personnalisée de la balance des blancs\n"
 "- La configuration a été retro-conçue avec un appareil\n"
 "  PhotoPC 3000z, au cas où le vôtre se comporterait différemment,\n"
-"  Merci  de contacter par mail : <gphoto-devel@gphoto.org> (en anglais)\n"
+"  Merci  de contacter par mail : <gphoto-devel@lists.sourceforge.net> (en anglais)\n"
 
 #: camlibs/sierra/library.c:144 camlibs/sierra/library.c:1352
 msgid "No memory card present"
@@ -3420,10 +3420,10 @@ msgstr "Le premier octet reçu (0x%x) n'est pas valide."
 #, c-format
 msgid ""
 "Transmission of packet timed out even after %i retries. Please contact "
-"<gphoto-devel@gphoto.org>."
+"<gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "La transmission du paquet a échoué après %i essais. Merci de contacter "
-"<gphoto-devel@gphoto.org>."
+"<gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:747 camlibs/sierra/library.c:771
 msgid "Could not transmit packet even after several retries."
@@ -3431,7 +3431,7 @@ msgstr "Impossible de transmettre des paquets malgré plusieurs tentatives."
 
 #: camlibs/sierra/library.c:762
 msgid ""
-"Packet got rejected by camera. Please contact <gphoto-devel@gphoto.org>."
+"Packet got rejected by camera. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Paquet rejeté par l'appareil photo. Merci de contacter <gphoto-devel@gphoto."
 "org>."
@@ -3443,7 +3443,7 @@ msgid ""
 "devel@gphoto.org>."
 msgstr ""
 "Impossible de transmettre le paquet (code erreur %i). Merci de contacter "
-"<gphoto-devel@gphoto.org>."
+"<gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:881
 msgid "Transmission timed out even after 2 retries. Giving up..."
@@ -3451,19 +3451,19 @@ msgstr "La transmission du paquet a échoué après 2 essais. On en reste là ..."
 
 #: camlibs/sierra/library.c:900
 #, c-format
-msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@gphoto.org>."
-msgstr "Résultat inattendu 0x%x. Merci de contacter <gphoto-devel@gphoto.org>."
+msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@lists.sourceforge.net>."
+msgstr "Résultat inattendu 0x%x. Merci de contacter <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:998
 #, c-format
 msgid ""
-"Received unexpected answer (%i). Please contact <gphoto-devel@gphoto.org>."
+"Received unexpected answer (%i). Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
-"Réponse inattendue reçue (%i). Merci de contacter <gphoto-devel@gphoto.org>."
+"Réponse inattendue reçue (%i). Merci de contacter <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:1060
 #, c-format
-msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
+msgid "Could not get register %i. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Impossible d'obtenir le registre entier %i. Merci de contacter <gphoto-"
 "devel@gphoto.org>."
@@ -3479,24 +3479,24 @@ msgstr "Envoi des données..."
 #: camlibs/sierra/library.c:1201
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact "
-"<gphoto-devel@gphoto.org>."
+"<gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Les appels récursifs ne sont pas supportés par le pilote sierra ! Contactez "
-"<gphoto-devel@gphoto.org>."
+"<gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:1250
 #, c-format
 msgid ""
-"Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
+"Could not get string register %i. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Impossible d'obtenir le registre chaîne %i. Merci de contacter <gphoto-"
 "devel@gphoto.org>."
 
 #: camlibs/sierra/library.c:1483
 #, c-format
-msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@gphoto.org>."
+msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
-"32 octets attendus, %i reçus. Merci de contacter <gphoto-devel@gphoto.org>."
+"32 octets attendus, %i reçus. Merci de contacter <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/nikon-desc.c:128 camlibs/sierra/olympus-desc.c:141
 msgid "Shutter Speed microseconds (0 auto)"

@@ -1908,7 +1908,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 			  "  * custom white balance setup\n"
 			  "- Configuration has been reverse-engineered with\n"
 			  "  a PhotoPC 3000z, if your camera acts differently\n"
-			  "  please send a mail to <gphoto-devel@gphoto.org> (in English)\n"));
+			  "  please send a mail to <gphoto-devel@lists.sourceforge.net> (in English)\n"));
 		break;
 	case SIERRA_MODEL_OLYMPUS:
 	default:

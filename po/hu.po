@@ -1533,11 +1533,11 @@ msgstr "Ismeretlen hiba."
 #, c-format
 msgid ""
 "The camera has just sent an error that has not yet been discovered. Please "
-"report the following to <gphoto-devel@gphoto.org> with additional "
+"report the following to <gphoto-devel@lists.sourceforge.net> with additional "
 "information how you got this error: (0x%x,0x%x). Thank you very much!"
 msgstr ""
 "A kamera nem értelmezhető hibaüzenetet küldött. Kérjük küldje el az alábbi "
-"adatokat a <gphoto-devel@gphoto.org> címre a hiba bekövetkezésének részletes "
+"adatokat a <gphoto-devel@lists.sourceforge.net> címre a hiba bekövetkezésének részletes "
 "leírásával: (0x%x,0x%x). Köszönjük a segítségét!"
 
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:125
@@ -2338,7 +2338,7 @@ msgid ""
 "devel@gphoto.org> for assistance."
 msgstr ""
 "%i bájtnyi adat érkezett ismeretlen képformátumban. Kérem küldje el a hiba "
-"körülményeinek leírását a <gphoto-devel@gphoto.org> címre."
+"körülményeinek leírását a <gphoto-devel@lists.sourceforge.net> címre."
 
 #: camlibs/polaroid/pdc700.c:941
 msgid ""
@@ -3152,7 +3152,7 @@ msgstr "A megadott sebesség (%i) nem támogatott."
 #: camlibs/ricoh/ricoh.c:66
 #, c-format
 msgid ""
-"Expected %i, got %i. Please report this error to <gphoto-devel@gphoto.org>."
+"Expected %i, got %i. Please report this error to <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "%i helyett %i érkezett. Kérjük jelezze a hibát itt: <gphoto-devel@gphoto."
 "org>."
@@ -3169,14 +3169,14 @@ msgstr ""
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
 #, c-format
 msgid ""
-"We expected 0x%x but received 0x%x. Please contact <gphoto-devel@gphoto.org>."
+"We expected 0x%x but received 0x%x. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "0x%x helyett 0x%x érkezett. Kérjük jelezze a hibát itt: <gphoto-devel@gphoto."
 "org>."
 
 #: camlibs/ricoh/ricoh.c:215
 #, c-format
-msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@gphoto.org>."
+msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Hibás karakterek (0x%x, 0x%x). Kérjük jelezze a hibát ezen a címen: <gphoto-"
 "devel@gphoto.org>."
@@ -3187,13 +3187,13 @@ msgid ""
 "org>."
 msgstr ""
 "A kamera nem tud kéréseket fogadni, mert más feladattal foglalkozik. Ha a "
-"probkléma nem szűnik meg, kérjük jelezze itt: <gphoto-devel@gphoto.org>."
+"probkléma nem szűnik meg, kérjük jelezze itt: <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:292
-msgid "Timeout even after 2 retries. Please contact <gphoto-devel@gphoto.org>."
+msgid "Timeout even after 2 retries. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Időtúllépési hiba történt 2 sikertelen próbálkozás után. Kérjük jelezze a "
-"hibát itt: <gphoto-devel@gphoto.org>."
+"hibát itt: <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:308
 msgid ""
@@ -3201,10 +3201,10 @@ msgid ""
 "devel@gphoto.org>."
 msgstr ""
 "Adatátviteli hiba történt 2 sikertelen próbálkozás után. Kérjük jelezze a "
-"hibát itt: <gphoto-devel@gphoto.org>."
+"hibát itt: <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:340
-msgid "Camera is in wrong mode. Please contact <gphoto-devel@gphoto.org>."
+msgid "Camera is in wrong mode. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "A kamera nem megfelelő módba van kacsolva. További információ: <gphoto-"
 "devel@gphoto.org>."
@@ -3215,10 +3215,10 @@ msgid ""
 "org>."
 msgstr ""
 "A kamera nem fogadta el a paramétereket. Kérjük jelezze a hibát ezen a "
-"címen: <gphoto-devel@gphoto.org>."
+"címen: <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/ricoh/ricoh.c:355
-msgid "An unknown error occurred. Please contact <gphoto-devel@gphoto.org>."
+msgid "An unknown error occurred. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Ismeretlen hiba történt. Kérjük jelezze a hibát ezen a címen: <gphoto-"
 "devel@gphoto.org>."
@@ -3370,7 +3370,7 @@ msgid ""
 "  * custom white balance setup\n"
 "- Configuration has been reverse-engineered with\n"
 "  a PhotoPC 3000z, if your camera acts differently\n"
-"  please send a mail to <gphoto-devel@gphoto.org> (in English)\n"
+"  please send a mail to <gphoto-devel@lists.sourceforge.net> (in English)\n"
 msgstr ""
 "Néhány megjegyzés az Epson kamerákkal kapcsolatban:\n"
 "- Néhány paraméter nem módosítható távolról:\n"
@@ -3379,7 +3379,7 @@ msgstr ""
 "  * egyéni fehéregyensúly-beállítás\n"
 "- A beállításokat a PhotoPC 3000z készüléknél\n"
 "  fejtettem vissza, ha az Ön gépénél nem működik valami,\n"
-"  kérem értesítsen a <gphoto-devel@gphoto.org> címen (angolul)\n"
+"  kérem értesítsen a <gphoto-devel@lists.sourceforge.net> címen (angolul)\n"
 
 #: camlibs/sierra/library.c:144 camlibs/sierra/library.c:1352
 msgid "No memory card present"
@@ -3413,10 +3413,10 @@ msgstr "Az első fogadott bájt (0x%x) érvénytelen."
 #, c-format
 msgid ""
 "Transmission of packet timed out even after %i retries. Please contact "
-"<gphoto-devel@gphoto.org>."
+"<gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Egy csomag átvitele %i próbálkozás után is időtúllépési hibával fejeződött "
-"be. Kérjük jelezze a hibát itt: <gphoto-devel@gphoto.org>."
+"be. Kérjük jelezze a hibát itt: <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:747 camlibs/sierra/library.c:771
 msgid "Could not transmit packet even after several retries."
@@ -3424,7 +3424,7 @@ msgstr "Több próbálkozás után sem sikerült egy csomag átvitele."
 
 #: camlibs/sierra/library.c:762
 msgid ""
-"Packet got rejected by camera. Please contact <gphoto-devel@gphoto.org>."
+"Packet got rejected by camera. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "A kamera visszautasított egy csomagot. Kérjük jelezze a hibát itt: <gphoto-"
 "devel@gphoto.org>."
@@ -3436,7 +3436,7 @@ msgid ""
 "devel@gphoto.org>."
 msgstr ""
 "Egy csomag átvitele nem sikerült (hibakód: %i). Kérjük jelezze a hibát itt: "
-"<gphoto-devel@gphoto.org>."
+"<gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:881
 msgid "Transmission timed out even after 2 retries. Giving up..."
@@ -3446,23 +3446,23 @@ msgstr ""
 
 #: camlibs/sierra/library.c:900
 #, c-format
-msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@gphoto.org>."
+msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
-"Nem várt eredmény: 0x%x. További információ: <gphoto-devel@gphoto.org>."
+"Nem várt eredmény: 0x%x. További információ: <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:998
 #, c-format
 msgid ""
-"Received unexpected answer (%i). Please contact <gphoto-devel@gphoto.org>."
+"Received unexpected answer (%i). Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Nem várt válasz érkezett (%i). Küldjön hibajelentést erre a címre: <gphoto-"
 "devel@gphoto.org>."
 
 #: camlibs/sierra/library.c:1060
 #, c-format
-msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
+msgid "Could not get register %i. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
-"Nem sikerült regisztrálni: %i. További információ: <gphoto-devel@gphoto.org>."
+"Nem sikerült regisztrálni: %i. További információ: <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:1080 camlibs/sierra/library.c:1100
 msgid "Too many retries failed."
@@ -3475,22 +3475,22 @@ msgstr "Adatok küldése..."
 #: camlibs/sierra/library.c:1201
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact "
-"<gphoto-devel@gphoto.org>."
+"<gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Rekurzív hívásokat nem támogat a Sierra-meghajtó! További információ: "
-"<gphoto-devel@gphoto.org>."
+"<gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:1250
 #, c-format
 msgid ""
-"Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
+"Could not get string register %i. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "Egy sztringregiszter (%i) letöltése nem sikerült. Kérjük jelezze a hibát "
-"itt: <gphoto-devel@gphoto.org>."
+"itt: <gphoto-devel@lists.sourceforge.net>."
 
 #: camlibs/sierra/library.c:1483
 #, c-format
-msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@gphoto.org>."
+msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@lists.sourceforge.net>."
 msgstr ""
 "32 bájt helyett %i bájt érkezett. Kérjük jelezze a hibát itt: <gphoto-"
 "devel@gphoto.org>."

@@ -94,7 +94,7 @@ int gp_file_get_data_and_size (CameraFile*, const char **data,
  * the API is subject to change.
  *
  * If you like to do some work on conversion raw -> image/ *, please
- * step forward and write to gphoto-devel@gphoto.org.
+ * step forward and write to gphoto-devel@lists.sourceforge.net.
  */
 typedef enum {
 	GP_FILE_CONVERSION_METHOD_CHUCK

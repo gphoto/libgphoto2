@@ -92,7 +92,7 @@ See gphoto2-manual, section "Setting up your system for use with libgphoto2
 and gphoto2", subsection "Setting up permissions for USB ports".
 
 If the gphoto2 detects the camera but then fails with some error messages
-please report the bug sending the mail to gphoto-devel@gphoto.org or
+please report the bug sending the mail to gphoto-devel@lists.sourceforge.net or
 directly to me at: emsi@emsi.it.pl.
 The mail should contain the full output of gphoto2 -L --debug with locale
 language set to _ENGLISH_.
