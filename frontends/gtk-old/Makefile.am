@@ -3,7 +3,7 @@
 SUBDIRS = intl po src
 
 gphoto2gtkdocdir = $(prefix)/doc/gphoto2_gtk
-gphoto2gtkdoc_DATA = AUTHORS MANUAL
+gphoto2gtkdoc_DATA = AUTHORS COPYING MANUAL
 
 install-data-local:
 	@$(NORMAL_INSTALL)

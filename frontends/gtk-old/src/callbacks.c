@@ -878,6 +878,7 @@ void help_authors() {
 void help_license() {
 	debug_print("help license");
 
+	
 }
 
 void help_manual() {
