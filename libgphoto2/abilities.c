@@ -21,6 +21,7 @@
 #include "gphoto2-abilities.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "gphoto2-result.h"
 #include "gphoto2-core.h"

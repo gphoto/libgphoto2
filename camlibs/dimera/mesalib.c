@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <string.h>
 
 #include "gphoto2.h"
 #include "mesalib.h"

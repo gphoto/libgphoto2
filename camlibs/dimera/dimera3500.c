@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.21  2001/10/16 18:01:35  hun
+ * added #include lines that should have already been there
+ *
  * Revision 1.20  2001/10/11 22:01:25  lutz
  * 2001-10-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -219,6 +222,7 @@
 #include <gphoto2.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "mesalib.h"
 #include "dimeratab.h"
 

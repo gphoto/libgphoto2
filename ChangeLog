@@ -1,5 +1,15 @@
 2001-10-16 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
+	* camlibs/casio/casio-qv.c:
+	* camlibs/dimera/dimera3500.c:
+	* camlibs/dimera/mesalib.c:
+	* camlibs/sonydscf55/sony.c:
+	* libgphoto2/abilities.c:
+	* libgphoto2/gphoto2-abilities-list.c:
+	* tests/test-filesys.c: added #include lines that should have already been there
+
+2001-10-16 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
 	* frontends/command-line/main.c: added package and version to debug msgs
 	* frontends/command-line/main.c: added --print-usb-usermap command
 	* frontends/command-line/main.h: added definition name of hotplug script

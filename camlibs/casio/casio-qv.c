@@ -29,6 +29,7 @@
 #include <gphoto2-core.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "casio-qv-commands.h"
 
