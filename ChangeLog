@@ -1,3 +1,7 @@
+2001-12-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2: Use ltdl.h if available
+
 2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line/Makefile.am: It seems we need to 

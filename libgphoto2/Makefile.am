@@ -22,6 +22,7 @@ libgphoto2_la_SOURCES = 	\
 	gphoto2-widget.c
 libgphoto2_la_LIBADD =\
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la\
+	$(LTDL_LIBS)\
 	-lm $(INTLLIBS)
 
 libgphoto2includedir = $(includedir)/gphoto2
