@@ -16,7 +16,6 @@ libgphoto2_la_SOURCES = 	\
 	exif.c exif.h		\
 	file.c			\
 	filesys.c		\
-	frontend.c		\
 	gamma.c gamma.h		\
 	jpeg.c jpeg.h		\
 	list.c			\

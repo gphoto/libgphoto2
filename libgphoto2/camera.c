@@ -27,7 +27,6 @@
 #include <stdio.h>
 
 #include "gphoto2-result.h"
-#include "gphoto2-frontend.h"
 #include "gphoto2-core.h"
 #include "gphoto2-library.h"
 #include "gphoto2-debug.h"

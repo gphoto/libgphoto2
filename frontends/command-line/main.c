@@ -490,10 +490,9 @@ OPTION_CALLBACK (num_pictures)
 static int
 save_camera_file_to_file (CameraFile *file, CameraFileType type)
 {
-        char out_filename[1024], out_folder[1024], buf[1024], msg[1024];
+        char out_filename[1024], out_folder[1024], buf[1024], c[1024];
         int result;
         char *f;
-        int resp1, resp2;
         const char *name;
 
         /* Determine the folder and filename */
@@ -532,21 +531,36 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
         }
         if (!glob_quiet) {
                 while (GP_SYSTEM_IS_FILE(buf)) {
-                        sprintf(msg, "File %s exists. Overwrite?", buf);
-                        resp1 = gp_frontend_confirm(glob_camera, msg);
-                        if ((resp1==GP_CONFIRM_NO)||(resp1==GP_CONFIRM_NOTOALL)) {
-                                resp2 = gp_frontend_confirm(glob_camera, "Specify new filename?");
-                                if ((resp2==GP_CONFIRM_NO)||(resp2==GP_CONFIRM_NOTOALL)) {
-                                        gp_file_free(file);
-                                        return (GP_OK);
-                                }
-                                printf("Enter new filename: ");
-                                fflush(stdout);
-                                fgets(buf, 1023, stdin);
-                                buf[strlen(buf)-1]=0;
-                        } else {
-                                break;
-                        }
+			if (glob_quiet)
+				break;
+
+			do {
+				printf("File %s exists. Overwrite? [y|n] ",buf);
+				fflush(stdout);
+				fgets(c, 1023, stdin);
+			} while ((c[0]!='y')&&(c[0]!='Y')&&
+				 (c[0]!='n')&&(c[0]!='N'));
+
+			if ((c[0]=='y') || (c[0]=='Y'))
+				break;
+
+
+			do { 
+				printf("Specify new filename? [y|n] ");
+				fflush(stdout); 
+				fgets(c, 1023, stdin);
+			} while ((c[0]!='y')&&(c[0]!='Y')&&
+				 (c[0]!='n')&&(c[0]!='N'));
+
+			if (!((c[0]=='y') || (c[0]=='Y'))) {
+				gp_file_free(file);
+				return (GP_OK);
+			}
+
+			printf("Enter new filename: ");
+			fflush(stdout);
+			fgets(buf, 1023, stdin);
+			buf[strlen(buf)-1]=0;
                 }
                 printf("Saving file as %s\n", buf);
         }
@@ -968,7 +982,6 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
                 exit(EXIT_FAILURE);
         }
 
-        gp_frontend_register (NULL, NULL, NULL, gp_interface_confirm, NULL);
         if ((result = execute_options(argc, argv)) != GP_OK) {
                 printf ("gPhoto2 reported the error '%s'\n",
                         gp_camera_get_result_as_string (glob_camera, result));

@@ -1,5 +1,13 @@
 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-frontend.h
+	* libgphoto2/frontend.c: Removed
+	* frontends/command-line
+	* include/Makefile.am
+	* libgphoto2: Remove references to above
+
+2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/panasonic/dc.c: gp_frontend_status ->
 	  gp_camera_status
 
