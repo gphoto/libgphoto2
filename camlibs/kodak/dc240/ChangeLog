@@ -1,3 +1,9 @@
+2001-12-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* dc240.c:
+	  (camera_init): Kill some warnings.
+	  (camera_capture): Tell the filesystem about the new file.
+
 2001-12-20  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c (dc240_load_status_data_to_table, dc240_get_status): 

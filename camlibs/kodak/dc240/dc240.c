@@ -147,10 +147,22 @@ static int
 camera_capture (Camera *camera, CameraCaptureType type,
 		CameraFilePath *path) 
 {
+	int result;
+
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	return dc240_capture(camera, path);
+	/* Capture the image */
+	result = dc240_capture (camera, path);
+	if (result < 0)
+		return (result);
+
+	/* Tell the filesystem about it */
+	result = gp_filesystem_append (camera->fs, path->folder, path->name);
+	if (result < 0)
+		return (result);
+
+	return (GP_OK);
 }
 
 static int
@@ -229,7 +241,7 @@ camera_init (Camera *camera)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 				      delete_file_func, camera);
 
-	ret = gp_port_settings_get (camera->port, &settings);
+	ret = gp_port_get_settings (camera->port, &settings);
 	if (ret < 0)
 		return (ret);
 	switch (camera->port->type) {
@@ -254,11 +266,11 @@ camera_init (Camera *camera)
 		return (GP_ERROR_UNKNOWN_PORT);
 	}
 	
-	ret = gp_port_settings_set (camera->port, settings);
+	ret = gp_port_set_settings (camera->port, settings);
 	if (ret < 0)
 		return (ret);
 
-	ret = gp_port_timeout_set (camera->port, TIMEOUT);
+	ret = gp_port_set_timeout (camera->port, TIMEOUT);
 	if (ret < 0)
 		return (ret);
 
