@@ -191,14 +191,14 @@ static struct {
 	{"Kodak DX-3700", 0x040a, 0x0530},
 	{"Kodak DX-3900", 0x040a, 0x0170},
 	{"Kodak MC3", 0x040a, 0x0400},
-	{"Sony DSC P5", 0, 0},
+	{"Sony DSC P5", 0x054c, 0x004e},
 	{"Sony DSC F707", 0x054c, 0x004e},
 */	{"HP PhotoSmart 318", 0x03f0, 0x6302},
 	// we're looking for vendor/product IDs of following:
 	{"HP PhotoSmart 612", 0x0000, 0x0000},
 	{"HP PhotoSmart 715", 0x0000, 0x0000},
-	{"Sony DSC P30", 0x0000, 0x0000},
-	{"Sony DSC P50",  0x0000, 0x0000},
+	{"Sony DSC P30", 0x054c, 0x004e},
+	{"Sony DSC P50",  0x054c, 0x004e},
 	// more comming soon :)
 	{NULL, 0, 0}
 };
