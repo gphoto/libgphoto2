@@ -1,5 +1,12 @@
 2001-08-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/konica/library.c: (camera_init): Update the filesystem once
+	at camera_init
+	(camera_folder_list_folders): Use gp_filesystem_list_folders
+	(camera_folder_list_files): Use gp_filesystem_list_files
+
+2001-08-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sierra/library.[c,h]: (do_capture): Return the right location
 	of the picture (on my camera, it is in /DCIM/100OLYMP)
 	(sierra_file_count): Move that function into ...
