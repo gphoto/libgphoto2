@@ -26,6 +26,8 @@ int fujitsu_build_packet (char type, char subtype, int data_length, char *packet
 
 /* Communications functions */
 int fujitsu_set_speed(gpio_device *dev, int speed);
+int fujitsu_delete_picture(gpio_device *dev, int picture_number);
+int fujitsu_end_session(gpio_device *dev);
 int fujitsu_ack(gpio_device *dev);
 int fujitsu_ping(gpio_device *dev);
 int fujitsu_set_int_register (gpio_device *dev, int reg, int value);

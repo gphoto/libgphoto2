@@ -192,6 +192,8 @@ int fujitsu_read_packet (gpio_device *dev, char *packet) {
 		length += 6;
 	} else {
 		fujitsu_dump_packet(packet);
+		if (packet[0] == DC1)
+			return (GP_ERROR);
 		return (fujitsu_valid_packet(packet));
 	}
 
@@ -409,10 +411,6 @@ int fujitsu_get_int_register (gpio_device *dev, int reg, int *value) {
 		if (fujitsu_read_packet(dev, buf)==GP_ERROR)
 			return (GP_ERROR);
 
-		if (buf[0] == DC1)
-			/* Got the packet, bad command */
-			return (GP_ERROR);
-
 		if (buf[0] == TYPE_DATA_END) {
 			fujitsu_write_ack(dev);
 			r =((unsigned char)buf[4]) +
@@ -552,6 +550,41 @@ int fujitsu_delete(gpio_device *dev, int picture_number) {
 	fujitsu_build_packet(TYPE_COMMAND, 0, 3, packet);
 	packet[4] = 0x02;
 	packet[5] = 0x07;
+	packet[6] = 0x00;
+
+	r=0; done=0;
+	while ((!done)&&(r++<RETRIES)) {
+		if (fujitsu_write_packet(dev, packet)==GP_ERROR)
+			return (GP_ERROR);
+	
+		if (fujitsu_read_packet(dev, buf)==GP_ERROR)
+			return (GP_ERROR);
+
+		done = (buf[0] == NAK)? 0 : 1;
+
+		if (done) {
+			/* read in the ENQ */
+			if (fujitsu_read_packet(dev, buf)==GP_ERROR)
+				return ((buf[0]==ENQ)? GP_OK : GP_ERROR);
+			
+		}
+	}
+	if (r > RETRIES) {
+		debug_print("too many NAKs from camera");
+		return (GP_ERROR);
+	}
+
+	return (GP_OK);
+}
+
+int fujitsu_end_session(gpio_device *dev) {
+
+	char packet[4096], buf[4096];
+	int r, done;
+
+	fujitsu_build_packet(TYPE_COMMAND, 0, 3, packet);
+	packet[4] = 0x02;
+	packet[5] = 0x04;
 	packet[6] = 0x00;
 
 	r=0; done=0;

@@ -162,12 +162,11 @@ int camera_init (CameraInit *init) {
 		return (GP_ERROR);
 	}
 
-/* Need to establish connection?
 	if (fujitsu_get_int_register(glob_dev, 1, &value)==GP_ERROR) {
 		gp_message("Can not talk to camera after speed change");
 		return (GP_ERROR);
 	}
-*/
+
 	return (GP_OK);
 }
 
@@ -175,9 +174,9 @@ int camera_exit () {
 
 	debug_print("Exiting camera");
 
-	if (fujitsu_set_speed(glob_dev, -1)==GP_ERROR) {
+	if (fujitsu_end_session(glob_dev)==GP_ERROR) {
 		gp_message("Can not end camera session");
-		return (GP_ERROR);
+		return (GP_ERROR);		
 	}
 
 	return (GP_OK);

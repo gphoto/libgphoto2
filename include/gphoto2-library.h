@@ -34,6 +34,8 @@ int camera_init 		(CameraInit *init);
 	/* Initializes the library for use. Library uses the 	*/
 	/* information in 'init' to determine what options the  */
 	/* the user has chosen.					*/
+	/* If init->port_settings.speed == 0, use a default 	*/
+	/* speed for the camera.				*/
 
 int camera_exit 		();
 	/* Called when library is being closed or another 	*/
