@@ -1,0 +1,14 @@
+KBGear JamCam v3.0
+
+This driver is based upon protocol reverse-engineered
+using Portmon and sniffusb under Windows 98.
+
+For questions/comments, email the library author:
+
+	Chris Pinkham
+	cpinkham@infi.net
+
+
+TODO List
+---------
+

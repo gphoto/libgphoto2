@@ -32,6 +32,9 @@
 
 #include "library.h"
 
+struct jamcam_file jamcam_files[1024];
+static int jamcam_count = 0;
+
 static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
 	char reply[4];
 
@@ -56,11 +59,15 @@ static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
 
 int jamcam_file_count (Camera *camera) {
 	char buf[16];
-	char reply[16];
+	unsigned char reply[16];
 	int position = 0;
-	int count = 0;
+	int data_incr;
+	int width;
+	int height;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_file_count");
+
+	jamcam_count = 0;
 
 	memset( buf, 0, sizeof( buf ));
 
@@ -76,10 +83,24 @@ int jamcam_file_count (Camera *camera) {
 
 			jamcam_read_packet( camera, reply, 16 );
 
-			while((unsigned char)reply[0] != 0xff ) {
-				count++;
+			while( reply[0] != 0xff ) {
+				width  = (reply[5] * 256) + reply[4];
+				height = (reply[7] * 256) + reply[6];
 
-				position += DATA_INCR;
+				data_incr = 0;
+				data_incr += reply[8];
+				data_incr += reply[9] * 256;
+				data_incr += reply[10] * 256 * 256;
+				data_incr += reply[11] * 256 * 256 * 256;
+
+				jamcam_files[jamcam_count].position = position;
+				jamcam_files[jamcam_count].width = width;
+				jamcam_files[jamcam_count].height = height;
+				jamcam_files[jamcam_count].data_incr = data_incr;
+
+				jamcam_count++;
+
+				position += data_incr;
 
 				buf[4] = ( position       ) & 0xff;
 				buf[5] = ( position >>  8 ) & 0xff;
@@ -96,18 +117,34 @@ int jamcam_file_count (Camera *camera) {
 
 			gp_port_read (camera->port, reply, 0x10 );
 
+			width  = (reply[13] * 256) + reply[12];
+			height = (reply[15] * 256) + reply[14];
+
 			jamcam_set_usb_mem_pointer( camera, position + 8 );
 
 			gp_port_read (camera->port, reply, 0x10 );
 
 			while((unsigned char)reply[0] != 0xff ) {
-				count++;
+				data_incr = 0;
+				data_incr += reply[0];
+				data_incr += reply[1] * 256;
+				data_incr += reply[2] * 256 * 256;
+				data_incr += reply[3] * 256 * 256 * 256;
 
-				position += DATA_INCR;
+				jamcam_files[jamcam_count].position = position;
+				jamcam_files[jamcam_count].width = width;
+				jamcam_files[jamcam_count].height = height;
+				jamcam_files[jamcam_count].data_incr = data_incr;
+				jamcam_count++;
+
+				position += data_incr;
 
 				jamcam_set_usb_mem_pointer( camera, position );
 
 				gp_port_read (camera->port, reply, 0x10 );
+
+				width  = (reply[13] * 256) + reply[12];
+				height = (reply[15] * 256) + reply[14];
 
 				jamcam_set_usb_mem_pointer( camera, position + 8 );
 
@@ -116,7 +153,9 @@ int jamcam_file_count (Camera *camera) {
 			break;
 	}
 
-	return( count );
+	gp_debug_printf (GP_DEBUG_LOW, "jamcam",
+		"*** returning jamcam_count = %d", jamcam_count);
+	return( jamcam_count );
 }
 
 int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
@@ -188,30 +227,69 @@ int jamcam_request_image( Camera *camera, char *buf, int *len, int number ) {
 
 	*len = DATA_SIZE;
 
-	position = ( DATA_INCR * ( number - 1 )) + 0x10;
+	position = jamcam_files[number].position + 0x10;
+	*len = jamcam_files[number].width * jamcam_files[number].height;
 
-	jamcam_set_usb_mem_pointer( camera, position );
-	gp_port_read (camera->port, buf, 120 );
+	if ( camera->port->type == GP_PORT_USB ) {
+		jamcam_set_usb_mem_pointer( camera, position );
+		gp_port_read (camera->port, buf, 120 );
 
-	if ( camera->port->type == GP_PORT_USB )
 		position += 8;
+	}
 
 	return( jamcam_fetch_memory( camera, buf, position, *len ));
 }
 
+struct jamcam_file *jamcam_file_info(Camera *camera, int number)
+{
+	return( &jamcam_files[number] );
+}
+
 int jamcam_request_thumbnail( Camera *camera, char *buf, int *len, int number ) {
+	char line[600];
 	char packet[16];
 	int position;
+	int x, y;
+	char *ptr;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_request_thumbnail");
 
 	memset( packet, 0, sizeof( packet ));
 
-	position = ( DATA_INCR * ( number - 1 )) + 0x10;
+	position = jamcam_files[number].position + 0x10;
 
-	*len = 600;
+	*len = 4800;
 
-	return( jamcam_fetch_memory( camera, buf, position, 600 ));
+	ptr = buf;
+
+	/* fetch thumbnail lines and build the thumbnail */
+	position += 10 * jamcam_files[number].width;
+	for( y = 0 ; y < 60 ; y++ ) {
+		jamcam_fetch_memory( camera, line, position,
+			jamcam_files[number].width );
+
+		if ( jamcam_files[number].width == 600 ) {
+			for( x = 22; x < 578 ; x += 7 ) {
+				*(ptr++) = line[x];
+			}
+			position += 7 * 600;
+		} else {
+			for( x = 0; x < 320 ; ) {
+				*(ptr++) = line[x];
+				x += 3;
+				*(ptr++) = line[x];
+				x += 5;
+			}
+
+			if ( y % 2 ) {
+				position += 5 * 320;
+			} else {
+				position += 3 * 320;
+			}
+		}
+	}
+
+	return( GP_OK );
 }
 
 int jamcam_write_packet (Camera *camera, char *packet, int length) {
@@ -298,8 +376,6 @@ int jamcam_enq (Camera *camera)
 			jamcam_set_usb_mem_pointer( camera, 0x0000 );
 
 			gp_port_read( camera->port, (char *)buf, 0x0c );
-
-			fprintf( stderr, "buf = %x %x %x %x\n", buf[0], buf[1], buf[2], buf[3] );
 
 			if ( !strncmp( (char *)buf, "KB00", 4 )) {
 				return (GP_OK);

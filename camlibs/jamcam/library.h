@@ -23,6 +23,9 @@
 /* Boston, MA 02111-1307, USA.                                  */
 /****************************************************************/
 
+#ifndef __LIBRARY_H__
+#define __LIBRARY_H__
+
 #define	RETRIES			10
 
 #define SER_PKT_SIZE 2048
@@ -33,11 +36,19 @@
 
 #define CHECK(result) {int res; res = result; if (res < 0) return (res);}
 
+struct jamcam_file {
+	int position;
+	int width;
+	int height;
+	int data_incr;
+};
+
 int jamcam_enq(Camera *camera);
 int jamcam_who_knows(Camera *camera);
 int jamcam_write_packet(Camera *camera, char *packet, int length);
 int jamcam_read_packet(Camera *camera, char *packet, int length);
 int jamcam_file_count(Camera *camera);
+struct jamcam_file *jamcam_file_info(Camera *camera, int number);
 int jamcam_fetch_memory(Camera *camera, char *data, int start, int length );
 int jamcam_request_image(Camera *camera, char *buf, int *len, int number);
 int jamcam_request_thumbnail(Camera *camera, char *buf, int *len, int number );
@@ -60,3 +71,5 @@ int gp_gamma_correct_single( unsigned char *data, int pixels,
 
 int gp_bayer_decode(int w, int h, unsigned char *input, unsigned char *output,
 	int tile);
+
+#endif __LIBRARY_H__

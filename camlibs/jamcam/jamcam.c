@@ -46,10 +46,9 @@
 #include "library.h"
 
 #define TIMEOUT	      2000
-#define DEFAULT_SPEED 9600
 
-#define JAMCAM_VERSION "0.1"
-#define JAMCAM_LAST_MOD "09/09/2001 21:00 EST"
+#define JAMCAM_VERSION "0.3"
+#define JAMCAM_LAST_MOD "09/23/2001 20:53 EST"
 
 /* define what cameras we support */
 static struct {
@@ -90,7 +89,6 @@ int camera_abilities (CameraAbilitiesList *list)
 		a->operations        = 	GP_OPERATION_NONE;
 		a->file_operations   = 	GP_FILE_OPERATION_PREVIEW;
 
-		/* fixme, believe supports GP_FOLDER_PUT_FILE */
 		a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
 		a->usb_vendor = models[x].usb_vendor;
@@ -100,7 +98,6 @@ int camera_abilities (CameraAbilitiesList *list)
 
 		ptr = models[++x].model;
 	}
-	fprintf( stderr, "and there\n" );
 
 	return (GP_OK);
 }
@@ -125,6 +122,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = data;
 	int n;
+	struct jamcam_file *jc_file;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* get_info_func");
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** folder: %s", folder);
@@ -133,12 +131,18 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 	/* Get the file number from the CameraFileSystem */
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
 
+	jc_file = jamcam_file_info( camera, n );
+
 	/* fixme, get file size also */
 	info->file.fields = GP_FILE_INFO_TYPE;
-	strcpy (info->file.type, GP_MIME_JPEG );
+	strcpy (info->file.type, GP_MIME_PPM);
+	info->file.width = jc_file->width;
+	info->file.height = jc_file->height;
 
 	info->preview.fields = GP_FILE_INFO_TYPE;
-	strcpy (info->preview.type, GP_MIME_JPEG);
+	strcpy (info->preview.type, GP_MIME_PPM);
+	info->preview.width = 80;
+	info->preview.height = 60;
 
 	return (GP_OK);
 }
@@ -160,58 +164,62 @@ static int camera_file_get (Camera *camera, const char *folder,
 	unsigned char gtable[256];
 	char *ptr;
 	int size = 0, n = 0;
-	int length, width;
+	int width, height;
+	struct jamcam_file *jc_file;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_file_get");
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** filename: %s",filename);
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "*** type: %d", type);
 
-	/*
-	 * Get the file number from the CameraFileSystem (and increment 
-	 * because we need numbers starting with 1)
-	 */
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
-	n++;
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 		CHECK (jamcam_request_thumbnail (camera, raw, &size, n));
-		CHECK (gp_file_set_mime_type (file, GP_MIME_RAW));
 
-		strcpy( tmp_filename, "thumb_" );
-		strcat( tmp_filename, filename );
-		tmp_filename[strlen(tmp_filename)-3] = 'r';
-		tmp_filename[strlen(tmp_filename)-2] = 'a';
-		tmp_filename[strlen(tmp_filename)-1] = 'w';
-		CHECK (gp_file_set_name (file, tmp_filename));
+		width = 80;
+		height = 60;
+
+		sprintf( ppm,
+			"P6\n"
+			"# CREATOR: gphoto2, jamcam library\n"
+			"%d %d\n"
+			"255\n", width, height );
+
+		ptr = ppm + strlen( ppm );
+
+		size = strlen( ppm ) + ( height * width * 3 );
+
+		gp_bayer_decode( width, height, raw, ptr, BAYER_TILE_GBRG );
+		gp_create_gamma_table( gtable, 0.5 );
+		gp_gamma_correct_single( ptr, height * width, gtable );
+
+		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
+		CHECK (gp_file_set_name (file, filename));
 		CHECK (gp_file_append (file, ppm, size));
 		break;
 
 	case GP_FILE_TYPE_NORMAL:
 		CHECK (jamcam_request_image (camera, raw, &size, n));
 
-		if ( size == 261600 ) {
-			length = 436;
-			width = 600;
-		} else {
-			length = 218;
-			width = 300;
-		}
+		jc_file = jamcam_file_info (camera, n);
 
 		sprintf( ppm,
 			"P6\n"
-			"# CREATOR: gphoto2, panasonic coolshot library\n"
+			"# CREATOR: gphoto2, jamcam library\n"
 			"%d %d\n"
-			"255\n", width, length );
+			"255\n", jc_file->width, jc_file->height );
 
 		ptr = ppm + strlen( ppm );
 
-		size = strlen( ppm ) + ( length * width * 3 );
+		size = strlen( ppm ) + ( jc_file->width * jc_file->height * 3 );
 
-		gp_bayer_decode( width, length, raw, ptr, BAYER_TILE_GBRG );
+		gp_bayer_decode( jc_file->width, jc_file->height, raw, ptr,
+			BAYER_TILE_GBRG );
 		gp_create_gamma_table( gtable, 0.5 );
-		gp_gamma_correct_single( ptr, length * width, gtable );
+		gp_gamma_correct_single( ptr, jc_file->width * jc_file->height,
+			gtable );
 
 		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
 		CHECK (gp_file_set_name (file, filename));
@@ -284,7 +292,7 @@ int camera_init (Camera *camera)
 
 	/* First, set up all the function pointers */
 	camera->functions->exit 	= camera_exit;
-	camera->functions->file_get 	= camera_file_get;
+	camera->functions->file_get	= camera_file_get;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
@@ -314,9 +322,6 @@ int camera_init (Camera *camera)
 	CHECK (gp_port_settings_set (camera->port, settings));
 
 	CHECK (gp_port_timeout_set (camera->port, TIMEOUT));
-	/*
-	CHECK (gp_port_open( camera->port ));
-	*/
 
 	/* check to see if camera is really there */
 	CHECK (jamcam_enq (camera));
