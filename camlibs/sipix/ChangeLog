@@ -3,6 +3,9 @@
 	* blink2.[ch]: New SiPix Blink2 driver. Downloads
 	  unprocessed JPEG for now (needs a bit work).
 
+	* blink2.c: SiPix Snap should also work, according to
+	  old snoopy trace.
+
 	* Makefile.am: reorganized file layout.
 
 2002-12-04  Marcus Meissner <marcus@jet.franken.de>

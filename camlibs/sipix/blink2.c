@@ -220,6 +220,11 @@ camera_abilities (CameraAbilitiesList *list)
 	a.file_operations	=  GP_FILE_OPERATION_NONE;
 	a.folder_operations	=  GP_FOLDER_OPERATION_NONE;
 	gp_abilities_list_append(list, a);
+
+	a.usb_product		= 0x1010;
+	strcpy(a.model, "SiPix:Snap");
+	gp_abilities_list_append(list, a);
+
 	return (GP_OK);
 }
 

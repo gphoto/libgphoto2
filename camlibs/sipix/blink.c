@@ -47,7 +47,7 @@
 int
 camera_id (CameraText *id)
 {
-	strcpy(id->text, "Sipix Blink");
+	strcpy(id->text, "SiPix Blink");
 	return (GP_OK);
 }
 
@@ -57,21 +57,14 @@ camera_abilities (CameraAbilitiesList *list)
 	CameraAbilities a;
 
 	memset(&a, 0, sizeof(a));
-	strcpy(a.model, "Sipix:Blink");
+	strcpy(a.model, "SiPix:Blink");
 	a.status		= GP_DRIVER_STATUS_EXPERIMENTAL;
 	a.port			= GP_PORT_USB;
 	a.usb_vendor		= 0x0851;
 	a.usb_product		= 0x1542;
-
 	a.operations		= GP_OPERATION_NONE;
 	a.file_operations	= 0;
 	a.folder_operations	= GP_FOLDER_OPERATION_NONE;
-
-	gp_abilities_list_append(list, a);
-
-	a.usb_vendor		= 0x0c77;
-	a.usb_product		= 0x1011;
-	strcpy(a.model, "Sipix:Blink 2");
 	gp_abilities_list_append(list, a);
 	return (GP_OK);
 }
