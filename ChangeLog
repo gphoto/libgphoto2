@@ -1,5 +1,6 @@
 2001-11-18  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
+	* INSTALL: added note about RPM temporarily not working
 	* doc/api/Makefile.am
 	* libgphoto2_port/doc/Makefile.am: sourced out doc generation to
 	  DocRules.am

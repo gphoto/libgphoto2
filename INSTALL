@@ -23,6 +23,9 @@ The installation procedure should be quite simple:
 
    a) make rpm
 
+      (This is not working properly, as of 2001-11-19. We're working 
+       on a fix)
+
       If you're running a RPM based system (e.g. Redhat Linux or SuSE
       Linux), you can build RPM packages and install these. The
       packages will be located in packaging/rpm/RPMS/.
