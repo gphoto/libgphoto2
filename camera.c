@@ -332,12 +332,19 @@ gp_camera_message (Camera *camera, const char *format, ...)
 }
 
 int
-gp_camera_progress (Camera *camera, float progress)
+gp_camera_progress (Camera *camera, float percentage)
 {
 	CHECK_NULL (camera);
 
+	if ((percentage < 0.) || (percentage > 1.)) {
+		gp_debug_printf (GP_DEBUG_LOW, "camera",
+				 "Wrong percentage: %f", percentage);
+		return (GP_ERROR_BAD_PARAMETERS);
+	}
+
 	if (camera->progress_func)
-		camera->progress_func (camera, progress, camera->progress_data);
+		camera->progress_func (camera, percentage,
+				       camera->progress_data);
 
 	return (GP_OK);
 }
