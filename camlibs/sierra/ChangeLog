@@ -1,3 +1,8 @@
+2002-03-28  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: Formatting.
+	* sierra.c: Ping the camera before changing the speed.
+
 2002-03-14  Patrick Mansfield <patman@aracnet.com>
 
 	* sierra.c (camera_get_config_olympus, camera_set_config_olympus):

@@ -322,7 +322,7 @@ sierra_get_memory_left (Camera *camera, int *memory, GPContext *context)
 static int
 sierra_write_packet (Camera *camera, char *packet)
 {
-	int x, ret, r, checksum=0, length;
+	int x, checksum=0, length;
 
 	GP_DEBUG ("* sierra_write_packet");
 
@@ -345,26 +345,13 @@ sierra_write_packet (Camera *camera, char *packet)
 		packet[length-1] = (checksum >> 8) & 0xff; 
 	}
 
-	/* USB */
-	if (camera->port->type == GP_PORT_USB) {
-		if (camera->pl->usb_wrap)
-			return (usb_wrap_write_packet (camera->port, packet, 
-						       length));
-		else
-			return (gp_port_write (camera->port, packet, length));
+	if (camera->pl->usb_wrap) {
+		CHECK (usb_wrap_write_packet (camera->port, packet, length));
+	} else {
+		CHECK (gp_port_write (camera->port, packet, length));
 	}
 
-	/* SERIAL */
-	for (r = 0; r < RETRIES; r++) {
-
-		ret = gp_port_write (camera->port, packet, length);
-		if (ret == GP_ERROR_TIMEOUT)
-			continue;
-
-		return (ret);
-	}
-
-	return (GP_ERROR_TIMEOUT);
+	return (GP_OK);
 }
 
 static int
@@ -721,17 +708,13 @@ sierra_write_ack (Camera *camera)
 	return (GP_OK);
 }
 
-int sierra_ping (Camera *camera, GPContext *context) 
+int
+sierra_ping (Camera *camera, GPContext *context) 
 {
 	char buf[4096], packet[4096];
 
-	GP_DEBUG ("* sierra_ping");
+	GP_DEBUG ("Pinging camera...");
 
-	if (camera->port->type == GP_PORT_USB) {
-		GP_DEBUG ("* sierra_ping no ping for USB");
-		return (GP_OK);
-	}
-	
 	packet[0] = NUL;
 
 	CHECK (sierra_write_packet (camera, packet));
@@ -742,7 +725,7 @@ int sierra_ping (Camera *camera, GPContext *context)
 		return (GP_OK);
 	default:
 		gp_context_error (context, _("Got unexpected result "
-			"%i. Please contact "
+			"0x%x. Please contact "
 			"<gphoto-devel@gphoto.org>."), buf[0]);
 		return GP_ERROR;
 	}

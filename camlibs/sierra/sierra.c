@@ -100,8 +100,9 @@
 	}							\
 }
 
-int camera_start(Camera *camera, GPContext *context);
-int camera_stop(Camera *camera, GPContext *context);
+static int camera_start (Camera *camera, GPContext *context);
+static int camera_stop  (Camera *camera, GPContext *context);
+
 int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_size);
 
 /* Useful markers */
@@ -362,9 +363,12 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	return (camera_stop (camera, context));
 }
 
-int camera_start (Camera *camera, GPContext *context)
+static int
+camera_start (Camera *camera, GPContext *context)
 {
-	GP_DEBUG ("*** camera_start");
+	GPPortSettings settings;
+
+	GP_DEBUG ("Establishing connection...");
 
 	/*
 	 * Opening and closing of the port happens in libgphoto2. All we
@@ -372,18 +376,26 @@ int camera_start (Camera *camera, GPContext *context)
 	 */
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
-		CHECK_STOP (camera, sierra_set_speed (camera,
-						      camera->pl->speed, context));
+
+		/* Let's see if the camera is alive. */
+		CHECK (sierra_ping (camera, context));
+
+		/* If needed, change speed. */
+		if (camera->pl->speed != settings.serial.speed)
+			CHECK (sierra_set_speed (camera, camera->pl->speed,
+						 context));
 		return (GP_OK);
+
 	case GP_PORT_USB:
-		CHECK_STOP (camera, gp_port_set_timeout (camera->port, 5000));
+		CHECK (gp_port_set_timeout (camera->port, 5000));
 		return (GP_OK);
 	default:
 		return (GP_OK);
 	}
 }
 
-int camera_stop (Camera *camera, GPContext *context) 
+static int
+camera_stop (Camera *camera, GPContext *context) 
 {
 	GP_DEBUG ("*** camera_stop");
 
