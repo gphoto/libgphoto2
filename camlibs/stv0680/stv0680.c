@@ -152,7 +152,7 @@ int camera_abilities (CameraAbilitiesList *list)
 		a.folder_operations	= GP_FOLDER_OPERATION_DELETE_ALL;
 
 		if (camera_to_usb[i].idVendor) {
-			a.status = GP_DRIVER_STATUS_TESTING;
+			a.status = GP_DRIVER_STATUS_PRODUCTION;
 			a.port     |= GP_PORT_USB;
 			a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
 			a.usb_vendor  = camera_to_usb[i].idVendor;		
