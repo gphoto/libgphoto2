@@ -47,7 +47,12 @@ As to whether 'autogen.sh' does its job, we are not completely sure.
     - libtool (version >= 1.4)
     - gettext (version >= 0.10.35)
 
-    installed on your system.
+    installed on your system. For example, if you use
+      autoconf 2.53-4
+      automake 1.4-p4-1.1
+      libtool  1.4.2-4
+      gettext  0.10.40-6
+    you are on the right track.
 
 
   Redhat Linux 7.3 user Uli says:
@@ -55,6 +60,14 @@ As to whether 'autogen.sh' does its job, we are not completely sure.
 
     Building currently doesn't work.
 
+
+Regarding the right version of tools needed to build gphoto2 from CVS, we
+know the following:
+
+  gettext
+  -------
+    0.10.40 works on Debian/unstable (reported by Lutz)
+    0.11.2  works (reported by Arnaud), as does probably every 0.11.*
 
 
 =============================
