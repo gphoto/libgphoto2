@@ -1345,10 +1345,10 @@ void help_authors() {
 	sprintf(buf, "%s/AUTHORS", DOCDIR);
 	f = gp_file_new();
 	if (gp_file_open(f, buf)==GP_ERROR) {
-		gp_camera_message(NULL, _("Can't find gPhoto2 GTK AUTHORS file"));
+		gp_camera_message(NULL, _("Can't find gtKam AUTHORS file"));
 		return;
 	}
-	message_window_notebook_append(window, "gPhoto2 GTK Authors", f->data);
+	message_window_notebook_append(window, _("gtKam Authors"), f->data);
 
 	sprintf(buf, "%s/AUTHORS", GPDOCDIR);
 	g = gp_file_new();
@@ -1356,7 +1356,7 @@ void help_authors() {
 		gp_camera_message(NULL, _("Can't find gPhoto2 AUTHORS file"));
 		return;
 	}
-	message_window_notebook_append(window, "gPhoto2 Authors", g->data);
+	message_window_notebook_append(window, _("gPhoto2 Authors"), g->data);
 
 	wait_for_hide(window, ok, NULL);
 
@@ -1380,10 +1380,10 @@ void help_license() {
 	sprintf(buf, "%s/COPYING", DOCDIR);
 	f = gp_file_new();
 	if (gp_file_open(f, buf)==GP_ERROR) {
-		gp_camera_message(NULL, _("Can't find gPhoto2 GTK COPYING file"));
+		gp_camera_message(NULL, _("Can't find gtKam COPYING file"));
 		return;
 	}
-	message_window_notebook_append(window, "gPhoto2 GTK License", f->data);
+	message_window_notebook_append(window, _("gtKam License"), f->data);
 
 	sprintf(buf, "%s/COPYING", GPDOCDIR);
 	g = gp_file_new();
@@ -1391,7 +1391,7 @@ void help_license() {
 		gp_camera_message(NULL, _("Can't find gPhoto2 COPYING file"));
 		return;
 	}
-	message_window_notebook_append(window, "gPhoto2 License", g->data);
+	message_window_notebook_append(window, _("gPhoto2 License"), g->data);
 
 	wait_for_hide(window, ok, NULL);
 
@@ -1417,7 +1417,7 @@ void help_manual() {
 	}
 	window = create_message_window_notebook();
 	ok = (GtkWidget*) lookup_widget(window, "close");
-	message_window_notebook_append(window, "gPhoto2 GTK Manual", f->data);
+	message_window_notebook_append(window, _("gtKam Manual"), f->data);
 
 	wait_for_hide(window, ok, NULL);
 

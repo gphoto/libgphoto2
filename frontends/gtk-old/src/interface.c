@@ -356,7 +356,7 @@ create_main_window (void)
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_object_set_data (GTK_OBJECT (main_window), "main_window", main_window);
-  gtk_window_set_title (GTK_WINDOW (main_window), _("gPhoto2"));
+  gtk_window_set_title (GTK_WINDOW (main_window), _("gtKam"));
   gtk_window_set_position (GTK_WINDOW (main_window), GTK_WIN_POS_CENTER);
   gtk_window_set_default_size (GTK_WINDOW (main_window), 640, 480);
 
@@ -1169,7 +1169,7 @@ create_message_window_long (void)
 
   message_window_long = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (message_window_long), "message_window_long", message_window_long);
-  gtk_window_set_title (GTK_WINDOW (message_window_long), _("gPhoto2"));
+  gtk_window_set_title (GTK_WINDOW (message_window_long), _("gtKam"));
   gtk_window_set_position (GTK_WINDOW (message_window_long), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (message_window_long), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (message_window_long), 400, 400);
@@ -1231,7 +1231,7 @@ create_confirm_window (void)
 
   confirm_window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (confirm_window), "confirm_window", confirm_window);
-  gtk_window_set_title (GTK_WINDOW (confirm_window), _("gPhoto2 Confirmation"));
+  gtk_window_set_title (GTK_WINDOW (confirm_window), _("gtKam Confirmation"));
   gtk_window_set_position (GTK_WINDOW (confirm_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (confirm_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (confirm_window), 350, 200);
@@ -1295,7 +1295,7 @@ create_message_window (void)
 
   message_window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (message_window), "message_window", message_window);
-  gtk_window_set_title (GTK_WINDOW (message_window), _("gPhoto2"));
+  gtk_window_set_title (GTK_WINDOW (message_window), _("gtKam"));
   gtk_window_set_position (GTK_WINDOW (message_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (message_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (message_window), 350, 200);
@@ -1378,7 +1378,7 @@ create_message_window_notebook (void)
 
   message_window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (message_window), "message_window", message_window);
-  gtk_window_set_title (GTK_WINDOW (message_window), _("gPhoto2"));
+  gtk_window_set_title (GTK_WINDOW (message_window), _("gtKam"));
   gtk_window_set_position (GTK_WINDOW (message_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (message_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (message_window), 350, 400);
@@ -1428,7 +1428,7 @@ create_progress_window (void)
 
   message_window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (message_window), "message_window", message_window);
-  gtk_window_set_title (GTK_WINDOW (message_window), _("gPhoto2 Progress"));
+  gtk_window_set_title (GTK_WINDOW (message_window), _("gtKam Progress"));
   gtk_window_set_position (GTK_WINDOW (message_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (message_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (message_window), 350, 200);
@@ -1485,7 +1485,7 @@ create_message_window_transient (void)
 
   message_window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (message_window), "message_window", message_window);
-  gtk_window_set_title (GTK_WINDOW (message_window), _("gPhoto2"));
+  gtk_window_set_title (GTK_WINDOW (message_window), _("gtKam"));
   gtk_window_set_position (GTK_WINDOW (message_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (message_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (message_window), 250, 100);

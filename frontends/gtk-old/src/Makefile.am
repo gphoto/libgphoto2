@@ -4,9 +4,9 @@ INCLUDES = \
 	-I$(top_srcdir)/intl \
 	@GTK_CFLAGS@
 
-bin_PROGRAMS = gphoto2_gtk
+bin_PROGRAMS = gtkam
 
-gphoto2_gtk_SOURCES = \
+gtkam_SOURCES = \
 	main.c \
 	support.c support.h \
 	interface.c interface.h \
@@ -15,4 +15,4 @@ gphoto2_gtk_SOURCES = \
 	gtkiconlist.c gtkiconlist.h \
 	gtkitementry.c gtkitementry.h
 
-gphoto2_gtk_LDADD = @GTK_LIBS@ $(INTLLIBS)
+gtkam_LDADD = @GTK_LIBS@ $(INTLLIBS)
