@@ -4,8 +4,8 @@ INCLUDES = \
 	-I$(top_srcdir)/intl \
 	@GTK_CFLAGS@
 
-CFLAGS = @CFLAGS@ `gphoto2-config --cflags` `gdk-pixbuf-config --cflags`
-LDFLAGS = @LDFLAGS@ `gphoto2-config --libs` `gdk-pixbuf-config --libs`
+CFLAGS = @CFLAGS@ `gphoto2-config --cflags` `gpio-config --cflags` `gdk-pixbuf-config --cflags`
+LDFLAGS = @LDFLAGS@ `gphoto2-config --libs` `gpio-config --libs` `gdk-pixbuf-config --libs`
 
 bin_PROGRAMS = gphoto2_gtk
 
