@@ -837,8 +837,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
-	if ((camera->pl->speed > 57600) && ((camera->pl->model == CANON_PS_A50)
-					    || (camera->pl->model == CANON_PS_A70))) {
+	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_PS_A50)
+					    || (camera->pl->md->model == CANON_PS_A70))) {
 		gp_context_error (context,
 				  _
 				  ("Speeds greater than 57600 are not supported for uploading to this camera"));
@@ -966,8 +966,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
-	if ((camera->pl->speed > 57600) && ((camera->pl->model == CANON_PS_A50)
-					    || (camera->pl->model == CANON_PS_A70))) {
+	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_PS_A50)
+					    || (camera->pl->md->model == CANON_PS_A70))) {
 		gp_context_error (context,
 				  _
 				  ("Speeds greater than 57600 are not supported for uploading to this camera"));
@@ -1329,7 +1329,8 @@ camera_init (Camera *camera, GPContext *context)
 	/* First, set up all the function pointers */
 	camera->functions->exit = camera_exit;
 	camera->functions->capture = camera_capture;
-	camera->functions->capture_preview = NULL;
+	camera->functions->capture_preview = camera_capture_preview;
+	camera->functions->capture_preview = NULL; /* not implemented yet */
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
 	camera->functions->summary = camera_summary;
