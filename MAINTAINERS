@@ -78,6 +78,9 @@ camlibs/samsung:
 camlibs/sierra:
 	Scott Fritzinger <scottf@unr.edu>
 
+camlibs/sipix:
+	Marcus Meissner <marcus@jet.franken.de>
+
 camlibs/sonydscf55:
 	Raymond Penners <raymond@dotsphinx.com>
 

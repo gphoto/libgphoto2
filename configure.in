@@ -154,7 +154,7 @@ fi
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='agfa barbie canon casio digita dimera directory jamcam jd11 kodak konica minolta mustek panasonic polaroid ptp ricoh samsung sierra stv0680 sonydscf1 sonydscf55'
+camlibs='agfa barbie canon casio digita dimera directory jamcam jd11 kodak konica minolta mustek panasonic polaroid ptp ricoh samsung sierra sipix stv0680 sonydscf1 sonydscf55'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -451,6 +451,7 @@ camlibs/ptp/Makefile
 camlibs/ricoh/Makefile
 camlibs/samsung/Makefile
 camlibs/sierra/Makefile
+camlibs/sipix/Makefile
 camlibs/sonydscf1/Makefile
 camlibs/sonydscf55/Makefile
 camlibs/stv0680/Makefile
