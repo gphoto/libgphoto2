@@ -36,7 +36,7 @@ struct _CameraPrivateLibrary {
 #define CAPTURE 0x61
 
 
-int sq_access_reg 		     (GPPort *, unsigned char reg);
+int sq_access_reg 		     (GPPort *, int reg);
 int sq_reset             		(GPPort *);
 int sq_rewind                        (GPPort *, CameraPrivateLibrary *);
 int sq_init                          (GPPort *, CameraPrivateLibrary *);

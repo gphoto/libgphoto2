@@ -46,7 +46,7 @@ sq_read_data (GPPort *port, unsigned char *data, int size)
 }
 
 
-int sq_access_reg (GPPort *port, unsigned char reg) 
+int sq_access_reg (GPPort *port, int reg) 
 {
 	char c;
 	SQWRITE (port, 0x0c, 0x06, reg, zero, 1);	/* Access a register */
