@@ -183,35 +183,35 @@ struct gp_port {
                 /* Initializes the library.
                         return values:
                                   successful: GP_OK
-                                unsuccessful: GP_ERROR
+                                unsuccessful: < 0
                 */
 
         int gp_port_count_get ();
                 /* Get a count of available devices
                         return values:
                                   successful: valid gp_port_list struct
-                                unsuccessful: GP_ERROR
+                                unsuccessful: < 0
                 */
 
         int gp_port_info_get (int device_number, gp_port_info *info);
                 /* Get information about a device
                         return values:
                                   successful: valid gp_port_list struct
-                                unsuccessful: GP_ERROR
+                                unsuccessful: < 0
                 */
 
         int gp_port_new         (gp_port **dev, gp_port_type type);
                 /* Create a new device of type "type"
                         return values:
                                   successful: valid gp_port struct
-                                unsuccessful: GP_ERROR
+                                unsuccessful: < 0
                 */
 
         int gp_port_free        (gp_port *dev);
                 /* Frees an IO device from memory
                         return values:
                                   successful: GP_OK
-                                unsuccessful: GP_ERROR
+                                unsuccessful: < 0
                 */
 
         int gp_port_debug_set (gp_port *dev, int debug_level);
