@@ -29,10 +29,10 @@
  26 (s)		software revision
  27
  28		memory left
- 29
+ 29 (s)		upload data here
  30
  31
- 32
+ 32		set to 0x0FEC000E before uploading a file
  33		lens mode
  34
  35		lcd brightness
@@ -59,6 +59,16 @@
  02 05 00	capture preview
  02 06 00
  02 07 00	delete
+ 02 08 00
+ 02 09 00
+ 02 10 00
+ 02 11 00
+ 02 12 00
+ 02 13 00
+ 02 14 00
+ 02 15 00
+ 02 16 00
+ 02 17 00	upload file (after writing the file into register)
 
  03 yy zz...	set string register yy to value zz...
  04 yy 		get string register yy
