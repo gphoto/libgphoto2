@@ -1,3 +1,8 @@
+2001-10-16 Dan Fandrich <dan@coneharvesters.com>
+
+	* camlibs/dimera/*: added i18n support; improved error returning
+	* po/POTFILES.in: added dimera3500.c
+
 2001-10-16 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* doc/api/.cvsignore: added tmpl directory and .cvsignore~
