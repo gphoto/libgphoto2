@@ -25,35 +25,21 @@
 
 int QVping     (Camera *camera);
 
-typedef enum {
-	QV_SPEED_115200 =  3,
-	QV_SPEED_57600  =  7,
-	QV_SPEED_38400  = 11,
-	QV_SPEED_19200  = 22,
-	QV_SPEED_9600   = 46
-} QVSpeed;
-
-int QVsetspeed (Camera *camera, QVSpeed speed);
-
 /* Battery level in volts */
 int QVbattery  (Camera *camera, float *battery);
-
 int QVrevision (Camera *camera, long int *revision);
 int QVnumpic   (Camera *camera);
 int QVstatus   (Camera *camera, char *status);
-
 int QVdelete   (Camera *camera, int n);
 int QVprotect  (Camera *camera, int n, int on);
 int QVpicattr  (Camera *camera, int n, unsigned char *attr);
 int QVshowpic  (Camera *camera, int n);
 int QVsetpic   (Camera *camera);
 int QVsize     (Camera *camera, long int *size);
-
-int QVgetthumb (Camera *camera, unsigned char **data, unsigned long int *size);
+int QVgetYCCpic(Camera *camera, unsigned char **data, unsigned long int *size);
 int QVgetCAMpic(Camera *camera, unsigned char **data, unsigned long int *size, int fine);
-
 int QVcapture  (Camera *camera);
-
 int QVreset    (Camera *camera);
+int QVsetspeed (Camera *camera, int speed);
 
 #endif /* __CASIO_QV_COMMANDS_H__ */

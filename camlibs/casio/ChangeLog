@@ -1,3 +1,9 @@
+2004-05-03  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* casio-qv.c
+	* casio-qv-commands.[c,h]: New patch by Michael Haardt
+	  <michael@moria.de>. Default speed now 115200.
+
 2004-05-02  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* casio-qv.c (and others): Patch that enables deletion of pictures.

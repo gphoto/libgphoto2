@@ -28,8 +28,15 @@
 
 #include "casio-qv-commands.h"
 #include "camtojpeg.h"
+#include "ycctoppm.h"
 
+#define THUMBNAIL_WIDTH 52
+#define THUMBNAIL_HEIGHT 36
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+
+static int
+get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
+	       CameraFileInfo *info, void *data, GPContext *context);
 
 int
 camera_id (CameraText *id) 
@@ -74,6 +81,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.speed[1] = 19200;
 		a.speed[2] = 38400;
 		a.speed[3] = 57600;
+		a.speed[4] = 115200;
 		a.operations        = GP_OPERATION_NONE;
 		a.file_operations   = GP_FILE_OPERATION_NONE;
 		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
@@ -108,20 +116,28 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (type) {
 	case GP_FILE_TYPE_RAW:
+		CHECK_RESULT (QVgetCAMpic (camera, &data, &size, attr&2));
+		CHECK_RESULT (gp_file_set_mime_type(file, GP_MIME_RAW));
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		CHECK_RESULT (QVgetthumb (camera, &data, &size));
+		CHECK_RESULT (QVgetYCCpic (camera, &cam, &camSize));
+		CHECK_RESULT (QVycctoppm(cam, camSize, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, 2, &data, &size));
+		free(cam);
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
 		break;
 	case GP_FILE_TYPE_NORMAL:
-	default:
 		CHECK_RESULT (QVgetCAMpic (camera, &cam, &camSize, attr&2));
 		CHECK_RESULT ((attr&2 ? QVfinecamtojpeg : QVcamtojpeg)(cam, camSize, &data, &size));
+		free(cam);
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
 		break;
+	default:
+		gp_context_error(context, "Image type %d not supported", type);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
 	CHECK_RESULT (gp_file_set_name (file, filename));
-	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
 	return (GP_OK);
 }
@@ -132,12 +148,20 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 {
         Camera *camera = data;
         int nr ;
+	CameraFileInfo info;
 
-        nr = gp_filesystem_number (fs, folder, filename, context);
+        nr = gp_filesystem_number(fs, folder, filename, context);
         if (nr < 0)
             return nr;
 
-	CHECK_RESULT (QVprotect (camera, nr, 0));
+	CHECK_RESULT (get_info_func(fs, folder, filename, &info, data, context));
+
+        if (info.file.permissions == GP_FILE_PERM_READ) {
+                gp_context_error(context, "Image %s is delete protected.",
+                        filename);
+                return (GP_ERROR);
+        }
+
 	CHECK_RESULT (QVdelete (camera, nr));
 
         return GP_OK;
@@ -187,21 +211,27 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
 	int n, size_thumb, size_pic;
+	unsigned char attr;
 	Camera *camera = data;
 
 	/* Get the picture number from the CameraFilesystem */
 	CHECK_RESULT (n = gp_filesystem_number (fs, folder, file, context));
 
 	/* Get some information */
-	camera = NULL;
 	size_thumb = size_pic = 0;
 
-	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE | GP_FILE_INFO_PERMISSIONS;
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	strcpy (info->file.type, GP_MIME_JPEG);
 	strcpy (info->preview.type, GP_MIME_JPEG);
 	info->file.size = size_pic;
 	info->preview.size = size_thumb;
+
+	CHECK_RESULT (QVpicattr (camera, n, &attr));
+        if (attr&1)
+                info->file.permissions = GP_FILE_PERM_READ;
+        else
+                info->file.permissions = GP_FILE_PERM_ALL;
 
 	return (GP_OK);
 }
@@ -248,7 +278,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 	/* Tell libgphoto2 where to look for the new image */
 	strcpy (path->folder, "/");
-	sprintf (path->name, "CASIO_QV_%04i.jpg",
+	sprintf (path->name, "CASIO_QV_%03i.jpg",
 		 gp_filesystem_count (camera->fs, "/", context));
 
 	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", path->name,
@@ -268,8 +298,8 @@ camera_exit (Camera *camera, GPContext *context)
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	int result = GP_OK;
 	gp_port_settings settings;
+	int selected_speed;
 
         /* First, set up all the function pointers */
         camera->functions->get_config   = camera_config_get;
@@ -286,6 +316,8 @@ camera_init (Camera *camera, GPContext *context)
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
 	/* 1000 is not enough for some operations */
 	CHECK_RESULT (gp_port_set_timeout (camera->port, 2000));
+        selected_speed = settings.serial.speed;
+        if (!selected_speed) selected_speed = 115200;
 	/* protocol always starts with 9600 */
 	settings.serial.speed = 9600;
 	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
@@ -295,7 +327,8 @@ camera_init (Camera *camera, GPContext *context)
 	gp_port_set_pin (camera->port, GP_PIN_CTS, GP_LEVEL_LOW);
 	/* There may be one junk character at this point, but QVping */
 	/* takes care of that. */
-	result = QVping (camera);
+	CHECK_RESULT (QVping (camera));
+	CHECK_RESULT (QVsetspeed (camera,selected_speed));
 
-	return (result);
+	return (GP_OK);
 }

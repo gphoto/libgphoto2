@@ -217,19 +217,6 @@ QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 }
 
 int
-QVsetspeed (Camera *camera, QVSpeed speed)
-{
-	unsigned char cmd[3];
-
-	cmd[0] = 'C';
-	cmd[1] = 'B';
-	cmd[3] = (unsigned char) speed;
-	CR (QVsend (camera, cmd, 3, NULL, 0));
-
-	return (GP_OK);
-}
-
-int
 QVbattery (Camera *camera, float *battery)
 {
 	unsigned char cmd[6];
@@ -329,7 +316,7 @@ QVgetCAMpic (Camera *camera, unsigned char **data, unsigned long int *size, int 
 }
 
 int
-QVgetthumb (Camera *camera, unsigned char **data, unsigned long int *size)
+QVgetYCCpic (Camera *camera, unsigned char **data, unsigned long int *size)
 {
 	unsigned char cmd[2];
 
@@ -363,7 +350,7 @@ QVprotect (Camera *camera, int n, int on)
 	cmd[0] = 'D';
 	cmd[1] = 'Y';
 	cmd[2] = on ? 1 : 0;
-	cmd[3] = n + 1;
+	cmd[3] = n+1;
 	CR (QVsend (camera, cmd, 4, NULL, 0));
 
 	return (GP_OK);
@@ -418,4 +405,29 @@ QVreset (Camera *camera)
 	CR (QVsend (camera, cmd, 2, NULL, 0));
 
         return (GP_OK);
+}
+
+int
+QVsetspeed (Camera *camera, int speed)
+{
+	unsigned char cmd[3];
+        gp_port_settings settings;
+
+	cmd[0] = 'C';
+	cmd[1] = 'B';
+	switch (speed) {
+	case   9600: cmd[2] = 46; break;
+	case  19200: cmd[2] = 22; break;
+	case  38400: cmd[2] = 11; break;
+	case  57600: cmd[2] =  7; break;
+	case 115200: cmd[2] =  3; break;
+	default: return (GP_ERROR_NOT_SUPPORTED);
+	}
+	CR (QVsend (camera, cmd, 3, NULL, 0));
+
+        CR (gp_port_get_settings (camera->port, &settings));
+        settings.serial.speed = speed;
+        CR (gp_port_set_settings (camera->port, settings));
+
+	return (GP_OK);
 }
