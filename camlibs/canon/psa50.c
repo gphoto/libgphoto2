@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <termios.h>
 #include <ctype.h>
-#include <db.h>
+/* #include <db.h> */
 #include <netinet/in.h>
 #include <gphoto2.h>
 #include "../../libgphoto2/exif.h"
