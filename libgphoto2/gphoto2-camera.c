@@ -69,6 +69,7 @@ struct _CameraPrivateCore {
 	/* Some information about the port */
 	char port_name[1024];
 	char port_path[1024];
+	unsigned int speed;
 
 	CameraStatusFunc   status_func;
 	void              *status_data;
@@ -391,8 +392,25 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
 	settings.serial.speed = speed;
 	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
+	camera->pc->speed = speed;
 
 	return (GP_OK);
+}
+
+/** 
+ * gp_camera_get_port_speed:
+ * @camera: a #Camera
+ *
+ * Retreives the current speed.
+ *
+ * Return value: The current speed or a gphoto2 error code
+ **/
+int
+gp_camera_get_port_speed (Camera *camera)
+{
+	CHECK_NULL (camera);
+
+	return (camera->pc->speed);
 }
 
 /**
