@@ -1,4 +1,8 @@
 2003-11-03  Patrick Mansfield <patmans@users.sourceforge.net>
+	* sierra.c: mark Epson PhotoPC 650 as SIERRA_NO_51, per bug 
+	  report 831290 from Brian Lee.
+
+2003-11-03  Patrick Mansfield <patmans@users.sourceforge.net>
 	* nikon-desc.c: update a comment about the behaviour of cp 880 and
 	  register 30.
 
