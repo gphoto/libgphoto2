@@ -66,7 +66,7 @@ gp_log_add_func (GPLogLevels levels, GPLogFunc func, void *data)
 		new_log_funcs = malloc (sizeof (LogFunc));
 	else
 		new_log_funcs = realloc (log_funcs, sizeof (LogFunc) * 
-					 log_funcs_count + 1);
+					 (log_funcs_count + 1));
 	if (!new_log_funcs)
 		return (GP_ERROR_NO_MEMORY);
 
