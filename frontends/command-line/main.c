@@ -14,6 +14,9 @@ void usage();
 int  verify_options (int argc, char **argv);
 int  option_count;
 void debug_print (char *message, char *str);
+void error_print (char *message, char *str);
+int set_globals();
+int init_globals();
 
 CameraInit init;
 
@@ -42,11 +45,13 @@ CameraInit init;
 /*    ----------------------------------------------------------------- */
 /*    Use the OPTION_CALLBACK(function) macro.				*/
 
+OPTION_CALLBACK(abilities);
 OPTION_CALLBACK(help);
 OPTION_CALLBACK(test);
 OPTION_CALLBACK(list);
 OPTION_CALLBACK(filename);
 OPTION_CALLBACK(port);
+OPTION_CALLBACK(speed);
 OPTION_CALLBACK(model);
 OPTION_CALLBACK(quiet);
 OPTION_CALLBACK(debug);
@@ -56,27 +61,29 @@ OPTION_CALLBACK(get_thumbnail);
 /* 2) Add an entry in the option table 				*/
 /*    ----------------------------------------------------------------- */
 /*    Format for option is:						*/
-/*     {"short", "long", "argument", "description", callback_function}, */
+/*     {"short", "long", "argument", "description", callback_function, required}, */
 /*    if it is just a flag, set the argument to "".			*/
 /*    Order is important! Options are exec'd in the order in the table! */
 
 Option option[] = {
 
 /* Settings 			*/
-{"" , "port",		"<port>",	"Specify port device to use",	port},
-{"" , "camera",		"<model>",	"Specify camera model",		model},
-{"d", "debug",		"",		"Turn on debugging",		debug},
-{"f", "filename",	"<filename>",	"Specify a filename",		filename},
-{"q", "quiet",		"",		"Quiet output",			quiet},
+{"" , "port",		"<port>",	"Port device (path, or \"usb\")",port,	0},
+{"" , "speed",		"<speed>",	"Specify serial transfer speed",speed,	0},
+{"" , "camera",		"<model>",	"Specify camera model",		model,	0},
+{"d", "debug",		"",		"Turn on debugging",		debug,	0},
+{"f", "filename",	"<filename>",	"Specify a filename",		filename,0},
+{"q", "quiet",		"",		"Quiet output",			quiet,	0},
 
 /* Display and die functions 	*/
-{"",  "test",		"",		"Verifies gPhoto installation",	test},
-{"h", "help",		"",		"Displays this help screen",	help},
-{"l", "list", 		"",		"List supported cameras",	list},
+{"",  "abilities",	"",		"Display camera abilities",	abilities, 0},
+{"",  "test",		"",		"Verifies gPhoto installation",	test,	0},
+{"h", "help",		"",		"Displays this help screen",	help,	0},
+{"l", "list", 		"",		"List supported cameras",	list,	0},
 
 /* Actions (Depend on settings) */
-{"p", "get-picture",	"#", 		"Get picture # from camera", 	get_picture},
-{"t", "get-thumbnail",	"#", 		"Get thumbnail # from camera",	get_thumbnail},
+{"p", "get-picture",	"#", 		"Get picture # from camera", 	get_picture,   0},
+{"t", "get-thumbnail",	"#", 		"Get thumbnail # from camera",	get_thumbnail, 0},
 
 /* End of list 			*/
 {"" , "", 		"",		"",				NULL}
@@ -87,12 +94,14 @@ Option option[] = {
 /*    Most flags will set options, like choosing a port, camera model,  */
 /*    etc...								*/
 
+char glob_port[128];
+char glob_model[64];
+int  glob_speed;
+
 int  glob_debug;
 int  glob_quiet=0;
 int  glob_filename_override=0;
 char glob_filename[128];
-char glob_port[128];
-char glob_model[64];
 
 
 /* 4) Finally, add your callback function.				*/
@@ -101,7 +110,9 @@ char glob_model[64];
 /*    command-line option. It must return GP_OK or GP_ERROR.		*/
 /*    Again, use the OPTION_CALLBACK(function) macro.			*/
 /*    glob_debug is set if the user types in the "-d/--debug" flag. Use */
-/*    debug_print(char *message, char *arg) to display debug output.    */
+/*    debug_print(char *message, char *arg) to display debug output.Use */
+/*    error_print(char *message, char *arg) to display error output.    */
+
 
 OPTION_CALLBACK(help) {
 
@@ -121,6 +132,73 @@ OPTION_CALLBACK(test) {
 	exit(EXIT_SUCCESS);
 }
 
+OPTION_CALLBACK(abilities) {
+
+	CameraAbilities a;
+	int x=0;
+	char buf[32];
+
+	if (strlen(glob_model)==0) {
+		error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
+		return (GP_ERROR);
+	}
+
+	if (gp_camera_abilities_by_name(glob_model, &a)==GP_ERROR) {
+		error_print("can't find camera \"%s\".\nUse \"--list\" to see available camera models", glob_model);
+		return (GP_ERROR);
+	}
+
+	/* Output a parsing friendly abilities table. Split on ":" */
+
+	printf("Abilities for camera:                 : %s\n", 
+		a.model);
+	switch (a.port_type) {
+		case GP_PORT_SERIAL:
+			strcpy(buf, "serial");
+			break;
+		case GP_PORT_PARALLEL:
+			strcpy(buf, "parallel");
+			break;
+		case GP_PORT_USB:
+			strcpy(buf, "usb");
+			break;
+		case GP_PORT_IEEE1394:
+			strcpy(buf, "ieee1394");
+			break;
+		case GP_PORT_IRDA:
+			strcpy(buf, "irda");
+			break;
+		case GP_PORT_SOCKET:
+			strcpy(buf, "socket");
+			break;
+		default:
+			strcpy(buf, "none");
+			break;
+	}
+	printf("Connection type:                      : %s\n", buf);
+
+	if (a.speed[0] != 0) {
+	printf("Transfer speeds supported             :\n");
+		do {	
+	printf("                                        :%i\n", a.speed[x]);
+			x++;
+		} while (a.speed[x]!=0);
+	}
+	printf("Capture from computer support         : %s\n", 
+		a.capture == 0? "no":"yes");
+	printf("Configuration  support                : %s\n", 
+		a.config == 0? "no":"yes");
+	printf("Delete files on camera support        : %s\n", 
+		a.file_delete == 0? "no":"yes");
+	printf("File preview (thumnail) support       : %s\n", 
+		a.file_preview == 0? "no":"yes");
+	printf("File upload support                   : %s\n", 
+		a.file_put == 0? "no":"yes");
+
+	return (GP_OK);
+}
+
+
 OPTION_CALLBACK(list) {
 
 	int x, n;
@@ -130,20 +208,20 @@ OPTION_CALLBACK(list) {
 		debug_print("Listing Cameras", "");
 
 	if ((n = gp_camera_count())==GP_ERROR)
-                printf("\nERROR: can't retrieve the number of supported cameras!\n\n");
+		error_print("can't retrieve the number of supported cameras!", "");
 	if (glob_quiet)
 		printf("%i\n", n);
 	   else
-	        printf("Number of supported cameras: %i\nSupported cameras:\n", n);
+		printf("Number of supported cameras: %i\nSupported cameras:\n", n);
 
-        for (x=0; x<n; x++) {
-                if (gp_camera_name(x, buf)==GP_ERROR)
-                        printf("\nERROR: can't retrieve the name of camera #%i\n\n", x);
+	for (x=0; x<n; x++) {
+		if (gp_camera_name(x, buf)==GP_ERROR)
+			error_print("can't retrieve the name of camera.", "");
 		if (glob_quiet)
 			printf("%s\n", buf);
 		   else
-	                printf("\t\"%s\"\n", buf);
-        }
+			printf("\t\"%s\"\n", buf);
+	}
 
 	return (GP_OK);
 }
@@ -163,10 +241,17 @@ OPTION_CALLBACK(port) {
 	if (glob_debug)
 		debug_print("Setting port", arg);
 
-	strcpy(init.port_settings.serial_port, "/dev/ttyS0");
-        init.port_settings.serial_baud = 57600;
-
 	strcpy(glob_port, arg);
+
+	return (GP_OK);
+}
+
+OPTION_CALLBACK(speed) {
+
+	if (glob_debug)
+		debug_print("Setting speed", arg);
+
+	glob_speed = atoi(arg);
 
 	return (GP_OK);
 }
@@ -193,6 +278,7 @@ OPTION_CALLBACK(quiet) {
 
 	if (glob_debug)
 		debug_print("Setting to quiet mode", "");
+
 	glob_quiet=1;
 
 	return (GP_OK);
@@ -204,6 +290,9 @@ OPTION_CALLBACK(get_picture) {
 
 	if (glob_debug)
 		debug_print("Getting picture", arg);
+
+	if (set_globals() == GP_ERROR)
+		return (GP_ERROR);
 
 	/* gp_file_get(atoi(arg), f);	*/
 	/* if glob_filename_override==1 */
@@ -228,6 +317,38 @@ OPTION_CALLBACK(get_thumbnail) {
 	return (GP_OK);
 }
 
+int set_globals () {
+	/* takes all the settings and sets up the gphoto lib */
+	CameraPortSettings s;
+
+	if (strlen(glob_model) == 0) {
+		error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
+		return (GP_ERROR);
+	}
+
+	if (strlen(glob_port) == 0) {
+		error_print("Must specify a camera port device using \"%sport device\"",LONG_OPTION);
+		return (GP_ERROR);
+	}
+
+	strcpy(s.port, glob_port);
+	s.speed = glob_speed;
+
+	if (strlen(glob_model) > 0)
+		gp_camera_set_by_name(glob_model, &s);
+}
+
+int init_globals () {
+
+	strcpy(glob_model, "");
+	strcpy(glob_port, "");
+	strcpy(glob_filename, "gphoto");
+
+	glob_speed = 57600;
+	glob_debug = 0;
+	glob_quiet = 0;
+	glob_filename_override = 0;
+}
 
 /* Command-line option functions					*/
 /* ------------------------------------------------------------------	*/
@@ -253,11 +374,13 @@ int verify_options (int argc, char **argv) {
 	   valid and have the correct number of arguments */
 
 	int x, y, match, missing_arg, which;
-	char s[5], l[24];
+	char s[5], l[24], buf[32];
 
 	which = 0;
-	strcpy(init.port_settings.serial_port, "/dev/ttyS0");
-        init.port_settings.serial_baud = 57600;
+
+	/* Set up some defaults */
+	strcpy(init.port_settings.port, "/dev/ttyS0");
+	init.port_settings.speed = 57600;
 
 	for (x=1; x<argc; x++) {
 		if (glob_debug) 
@@ -301,6 +424,20 @@ int verify_options (int argc, char **argv) {
 			return (GP_ERROR);
 		}
 	}
+
+	/* Make sure required options are present */
+	for (x=0; x<option_count; x++) {
+	   if (option[x].required) {
+		if (!option_is_present(option[x].short_id, argc, argv) &&
+		    !option_is_present(option[x].long_id, argc, argv)) {
+			printf("\n\tOption %s%s is required.",
+			 strlen(option[x].short_id)>0? SHORT_OPTION:LONG_OPTION,
+			 strlen(option[x].short_id)>0? option[x].short_id:option[x].long_id);
+			return (GP_ERROR);
+		}
+	   }
+	}
+
 	return (GP_OK);
 }
 
@@ -321,7 +458,7 @@ int execute_options (int argc, char **argv) {
 				   }  else
 					ret=(*option[x].execute)(NULL);
 				   if (ret != GP_OK) {
-					printf("\nERROR: option \"%s\" did not execute properly.\n\n",
+					error_print("Option \"%s\" did not execute properly.",
 						argv[y]);
 					return (GP_ERROR);
 				   }
@@ -376,6 +513,13 @@ void usage () {
 void debug_print(char *message, char *str) {
 
 	printf("cli: %s: %s\n", message, str);
+}
+
+void error_print(char *message, char *str) {
+	
+	printf("\nERROR: ");
+	printf(message, str);
+	printf("\n\n");
 }
 
 /* ------------------------------------------------------------------	*/

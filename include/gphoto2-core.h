@@ -7,8 +7,9 @@
 
 
 /* Save/retrieve library or front-end configuration data. */
-	int gp_get_setting (char *key, char *value);
 	int gp_set_setting (char *key, char *value);
+	int gp_get_setting (char *key, char *value);
+	
 
 
 /* Functions for the front-ends
@@ -32,9 +33,11 @@
 
 	/* Retrieve the camera abilities */
 	int gp_camera_abilities (int camera_number, CameraAbilities *abilities);
+	int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities);
 
 	/* Set the current camera library */
 	int gp_camera_set (int camera_number, CameraPortSettings *port);
+	int gp_camera_set_by_name (char *camera_name, CameraPortSettings *port);
 
 	/* Init/Exit, Open or close a camera */
 	int gp_camera_init (CameraInit *init);

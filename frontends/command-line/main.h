@@ -10,4 +10,5 @@ typedef struct {
 	char	argument[16];
 	char	description[35];
 	OPTION_CALLBACK((*execute));
+	int	required;
 } Option;

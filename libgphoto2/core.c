@@ -153,6 +153,20 @@ int gp_camera_abilities (int camera_number, CameraAbilities *abilities) {
 	return (GP_OK);
 }
 
+int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities) {
+
+	int x=0;
+
+	while (x < glob_camera_count) {
+		if (strcmp(glob_camera[x].name, camera_name)==0)
+			return (gp_camera_abilities(x, abilities));
+		x++;
+	}
+
+	return (GP_ERROR);
+
+}
+
 int gp_camera_set (int camera_number, CameraPortSettings *settings) {
 
 	CameraInit ci;
@@ -175,6 +189,19 @@ int gp_camera_set (int camera_number, CameraPortSettings *settings) {
 	memcpy(&ci.port_settings, settings, sizeof(ci.port_settings));
 	gp_camera_init(&ci);
 	return(GP_OK);
+}
+
+int gp_camera_set_by_name (char *camera_name, CameraPortSettings *settings) {
+
+	int x=0;
+
+	while (x < glob_camera_count) {
+		if (strcmp(glob_camera[x].name, camera_name)==0)
+			return (gp_camera_set(x, settings));
+		x++;
+	}
+
+	return (GP_ERROR);
 }
 
 int gp_camera_init (CameraInit *init) {

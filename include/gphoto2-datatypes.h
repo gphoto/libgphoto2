@@ -27,40 +27,40 @@ typedef enum {
 
 /* Physical Connection Types */
 typedef enum {
-	GP_PORT_DIRECTORY,
+	GP_PORT_NONE,
 	GP_PORT_SERIAL,
-	GP_PORT_USB,
 	GP_PORT_PARALLEL,
-	GP_PORT_IRDA
-} CameraConnectType;
+	GP_PORT_USB,
+	GP_PORT_IEEE1394,
+	GP_PORT_IRDA,
+	GP_PORT_SOCKET
+} CameraPortType;
 
 typedef struct {
-	CameraConnectType type;
-		/* What kind of connection is it? 		 */
-
-	char serial_port[128];
+	char port[128];
 		/* path to serial port device 			 */
+		/* For serial port, "/dev/ttyS0" or variants	 */
+		/* For parallel port, "/dev/lpt0" or variants	 */
+		/* For usb, "usb"				 */
+		/* For ieee1394, "ieee1394"			 */
+		/* For socket, the address (ip or fqdn).	 */
+		/* For directory, the path.			 */
 
-	int serial_baud;
+	int speed;
 		/* Baud rate for serial port camera		 */
 
 	int usb_node;
 		/* dummy for now. need way to specify which USB device */
 
-	char directory_path[128];
-		/* path for directory lib to index		 */
 } CameraPortSettings;
 
 typedef struct {
 	char model[128];
 
 		/* can the library support the following: */
-	int serial;
-	int usb;
-	int parallel;
-	int ieee1394;
+	CameraPortType port_type;
 
-	int serial_baud[64];
+	int speed[64];
 		/* if serial==1, baud rates that this camera	 */
 		/* supports. terminate list with a zero 	 */
 

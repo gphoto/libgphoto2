@@ -269,13 +269,10 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 
 	/* What models do we support? */
 	strcpy(abilities[0].model, "Barbie Camera");
-	abilities[0].serial    = 1;
-	abilities[0].usb       = 0;
-	abilities[0].parallel  = 0;
-	abilities[0].ieee1394  = 0;
+	abilities[0].port_type  = GP_PORT_SERIAL;
 
-	abilities[0].serial_baud[0] = 57600;
-	abilities[0].serial_baud[1] = 0;
+	abilities[0].speed[0] = 57600;
+	abilities[0].speed[1] = 0;
 
 	abilities[0].capture   = 1;
 	abilities[0].config    = 0;
@@ -304,9 +301,9 @@ int camera_init(CameraInit *init) {
 	dev = gpio_new(GPIO_DEVICE_SERIAL);
 	gpio_set_timeout(dev, 5000);
 
-	strcpy(settings.serial.port, init->port_settings.serial_port);
+	strcpy(settings.serial.port, init->port_settings.port);
 
-	settings.serial.speed	= init->port_settings.serial_baud;
+	settings.serial.speed	= init->port_settings.speed;
 	settings.serial.bits	= 8;
 	settings.serial.parity	= 0;
 	settings.serial.stopbits= 1;

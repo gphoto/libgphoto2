@@ -35,12 +35,9 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	*count = 1;
 
 	strcpy(abilities[0].model, "Directory Browse");
-	abilities[0].serial    = 0;
-	abilities[0].usb       = 0;
-	abilities[0].parallel  = 0;
-	abilities[0].ieee1394  = 0;
+	abilities[0].port_type  = GP_PORT_NONE;
 
-	abilities[0].serial_baud[0] = 0;
+	abilities[0].speed[0] = 0;
 
 	abilities[0].capture   = 0;
 	abilities[0].config    = 1;
@@ -60,7 +57,7 @@ int camera_init (CameraInit *init) {
 	for (i=0; i<1024; i++)
 		strcpy(dir_images[i], "");
 
-	strcpy(dir_directory, init->port_settings.directory_path);
+	strcpy(dir_directory, init->port_settings.port);
 	if (strlen(dir_directory)==0) {
 		strcpy(dir_directory, "/");
 	}
