@@ -118,14 +118,14 @@ int camera_exit(Camera *camera) {
 }
 
 
-int camera_folder_list (Camera *camera, const char *folder, CameraList *list) {
+int camera_folder_list_folders (Camera *camera, const char *folder, CameraList *list) {
 
 	/* there are never any subfolders */
 
 	return GP_OK;
 }
 
-int camera_file_list (Camera *camera, const char *folder, CameraList *list) 
+int camera_folder_list_files (Camera *camera, const char *folder, CameraList *list) 
 {
 
 	int count, x;
