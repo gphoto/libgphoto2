@@ -1,5 +1,15 @@
 2005-01-17  Marcus Meissner  <marcus@jet.franken.de>
+
+	From Vegard Engen <vegard@engen.priv.no>
+	* library.c, ptp.h:
 	
+	  Implemented PTP Property handling for:
+	  - generic WhiteBalance
+	  - generic ImageSize
+	  - Nikon Image Comment
+
+2005-01-17  Marcus Meissner  <marcus@jet.franken.de>
+
 	* library.c: Added PowerShot SD200.
 
 2005-01-16  Marcus Meissner  <marcus@jet.franken.de>

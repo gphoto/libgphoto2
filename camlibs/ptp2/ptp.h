@@ -631,6 +631,7 @@ typedef struct _PTPCANONFolderEntry PTPCANONFolderEntry;
 #define PTP_DPC_NIKON_MenusAndPlayback			0xD088
 #define PTP_DPC_NIKON_F6ButtonsAndDials			0xD089
 #define PTP_DPC_NIKON_F7NoCFCard			0xD08a
+#define PTP_DPC_NIKON_ImageComment			0xD090
 #define PTP_DPC_NIKON_AutoImageRotation			0xD092
 #define PTP_DPC_NIKON_ExposureBracketingOnOff		0xD0c0
 #define PTP_DPC_NIKON_ExposureBracketingIntervalDist	0xD0c1
