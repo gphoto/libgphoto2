@@ -1,0 +1,19 @@
+
+Changes since gphoto2 2.0beta3
+
+libgphoto2:
+   * Most functions report progress and are cancellable.
+   * Camera libraries are now installed in a versioned subdirectories.
+   * Stv0680 improvments.
+   * Canon: added PowerShot S30 support, CameraFS support, big-endian
+		 systems support, RAW-File support.
+   * Added ptp camera support.
+   * Samsung 800k support.
+   * Fixed digita thumbnails bug.
+   * French localization.
+
+gphoto2 command-line interface:
+   * Now reports progress information (when user can see it).
+   * Folder recursion is now the default behaviour.
+   * French localization.
+
