@@ -71,7 +71,7 @@ int             gp_port_serial_write(gp_port *dev, char *bytes, int size);
 int             gp_port_serial_update (gp_port *dev);
 
 /* Specific */
-int             gp_port_serial_get_pin(gp_port *dev, int pin);
+int             gp_port_serial_get_pin(gp_port *dev, int pin, int *level);
 int             gp_port_serial_set_pin(gp_port *dev, int pin, int level);
 int             gp_port_serial_send_break (gp_port *dev, int duration);
 
@@ -290,7 +290,7 @@ int gp_port_serial_read(gp_port * dev, char *bytes, int size)
  * Get the status of the lines of the serial port
  *
  */
-int gp_port_serial_get_pin(gp_port * dev, int pin)
+int gp_port_serial_get_pin(gp_port * dev, int pin, int *level)
 {
         int j, bit;
 
@@ -321,7 +321,8 @@ int gp_port_serial_get_pin(gp_port * dev, int pin)
                 perror("gp_port_serial_status (Getting hardware status bits)");
                 return GP_ERROR_IO_PIN;
         }
-        return (j & bit);
+        *level = j & bit;
+        return (GP_OK);
 }
 
 /*

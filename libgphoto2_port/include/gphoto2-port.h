@@ -126,7 +126,7 @@ struct gp_port_operations {
          no need to #ifdef GP_PORT_* anymore. */
 
 	/* for serial and parallel devices */
-	int (*get_pin)	 (gp_port *, int);
+	int (*get_pin)	 (gp_port *, int, int*);
 	int (*set_pin)	 (gp_port *, int, int);
 	int (*send_break)(gp_port *, int);
 
@@ -279,7 +279,7 @@ struct gp_port {
 /* Serial and Parallel specific functions
    -------------------------------------------------------------- */
 
-	int gp_port_pin_get   (gp_port *dev, int pin);
+	int gp_port_pin_get   (gp_port *dev, int pin, int *level);
 		/* Give the status of pin from dev
 			pin values:
 				 see PIN_ constants in the various .h files	

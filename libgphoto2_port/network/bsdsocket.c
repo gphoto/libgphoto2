@@ -35,12 +35,7 @@ int 		gp_port_network_close(gp_port *dev);
 int 		gp_port_network_read(gp_port *dev, char *bytes, int size);
 int 		gp_port_network_write(gp_port *dev, char *bytes, int size);
 
-int		gp_port_network_get_pin(gp_port *dev, int pin);
-int		gp_port_network_set_pin(gp_port *dev, int pin, int level);
-
 int 		gp_port_network_update (gp_port *dev);
-
-int 		gp_port_network_set_baudrate(gp_port *dev);
 
 /* Dynamic library functions
    --------------------------------------------------------------------- */
@@ -108,14 +103,6 @@ int gp_port_network_read(gp_port *dev, char *bytes, int size) {
 }
 
 int gp_port_network_write(gp_port *dev, char *bytes, int size) {
-
-}
-
-int gp_port_network_get_pin(gp_port *dev, int pin) {
-
-}
-
-int gp_port_network_set_pin(gp_port *dev, int pin, int level) {
 
 }
 

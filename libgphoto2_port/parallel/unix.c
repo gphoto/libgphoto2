@@ -47,7 +47,7 @@ int             gp_port_parallel_close(gp_port *dev);
 int             gp_port_parallel_read(gp_port *dev, char *bytes, int size);
 int             gp_port_parallel_write(gp_port *dev, char *bytes, int size);
 
-int             gp_port_parallel_get_pin(gp_port *dev, int pin);
+int             gp_port_parallel_get_pin(gp_port *dev, int pin, int *level);
 int             gp_port_parallel_set_pin(gp_port *dev, int pin, int level);
 
 int             gp_port_parallel_update (gp_port *dev);
@@ -154,7 +154,7 @@ int gp_port_parallel_write(gp_port *dev, char *bytes, int size) {
 
 }
 
-int gp_port_parallel_get_pin(gp_port *dev, int pin) {
+int gp_port_parallel_get_pin(gp_port *dev, int pin, int *level) {
 
 }
 

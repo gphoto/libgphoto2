@@ -101,7 +101,9 @@ int canon_serial_change_speed(gp_port *gdev, int speed)
  ****************************************************************************/
 int canon_serial_get_cts(gp_port *gdev)
 {
-        return gp_port_pin_get(gdev,PIN_CTS);
+    int level;
+    gp_port_pin_get(gdev,PIN_CTS, &level);
+    return (level);
 }
 
 /*****************************************************************************

@@ -392,7 +392,7 @@ int gp_port_settings_get(gp_port *dev, gp_port_settings * settings)
 /* Serial and Parallel-specific functions */
 /* ------------------------------------------------------------------ */
 
-int gp_port_pin_get(gp_port *dev, int pin)
+int gp_port_pin_get(gp_port *dev, int pin, int *level)
 {
 	int retval;
 
@@ -401,7 +401,7 @@ int gp_port_pin_get(gp_port *dev, int pin)
                 return (GP_ERROR);
 	}
 
-        retval = dev->ops->get_pin(dev, pin);
+        retval = dev->ops->get_pin(dev, pin, level);
 	gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, 
 		"gp_port_get_pin: get_pin %s", retval < 0? "error":"ok");
 	return (retval);

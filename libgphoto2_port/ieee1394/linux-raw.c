@@ -35,12 +35,7 @@ int 		gp_port_ieee1394_close(gp_port *dev);
 int 		gp_port_ieee1394_read(gp_port *dev, char *bytes, int size);
 int 		gp_port_ieee1394_write(gp_port *dev, char *bytes, int size);
 
-int		gp_port_ieee1394_get_pin(gp_port *dev, int pin);
-int		gp_port_ieee1394_set_pin(gp_port *dev, int pin, int level);
-
 int 		gp_port_ieee1394_update (gp_port *dev);
-
-int 		gp_port_ieee1394_set_baudrate(gp_port *dev);
 
 
 /* Dynamic library functions
@@ -103,14 +98,6 @@ int gp_port_ieee1394_read(gp_port *dev, char *bytes, int size) {
 }
 
 int gp_port_ieee1394_write(gp_port *dev, char *bytes, int size) {
-
-}
-
-int gp_port_ieee1394_get_pin(gp_port *dev, int pin) {
-
-}
-
-int gp_port_ieee1394_set_pin(gp_port *dev, int pin, int level) {
 
 }
 
