@@ -1,5 +1,12 @@
 2001-11-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch by Peter Jay Salzmann <p@dirac.org> (slightly adapted):
+
+	* camlibs/polaroid/pdc700.c: Tell the user about the current image
+	  quality setting.
+
+2001-11-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-filesys.c: Don't trust the camera libraries,
 	  set name, type, and adjust name for mime type after getting a file.
 

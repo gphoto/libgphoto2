@@ -67,11 +67,19 @@ struct _PDCDate {
 	unsigned char hour, minute, second;
 };
 
+typedef enum _PDCQuality PDCQuality;
+enum _PDCQuality {
+	PDC_QUALITY_NORMAL    = 0,
+	PDC_QUALITY_FINE      = 1,
+	PDC_QUALITY_SUPERFINE = 2
+};
+
 typedef struct _PDCInfo PDCInfo;
 struct _PDCInfo {
 	unsigned int num_taken, num_free;
 	char version[6];
 	PDCDate date;
+	PDCQuality quality;
 };
 
 typedef struct _PDCPicInfo PDCPicInfo;
@@ -373,6 +381,13 @@ pdc700_info (Camera *camera, PDCInfo *info)
 	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 	 */
 
+	/* Quality (make sure we know it) */
+	info->quality = buf[34];
+	if (info->quality < 0 || info->quality > 2) {
+		GP_DEBUG ("Unknown quality: %i", info->quality);
+		info->quality = PDC_QUALITY_NORMAL;
+	}
+
 	return (GP_OK);
 }
 
@@ -554,6 +569,7 @@ camera_about (Camera *camera, CameraText *about)
 static int
 camera_summary (Camera *camera, CameraText *about)
 {
+	static const char *quality[] = {"normal", "fine", "superfine"};
 	PDCInfo info;
 
 	CHECK_RESULT (pdc700_info (camera, &info));
@@ -562,10 +578,12 @@ camera_summary (Camera *camera, CameraText *about)
 		"Date: %02i/%02i/%02i %02i:%02i:%02i\n"
 		"Pictures taken: %i\n"
 		"Free pictures: %i\n"
-		"Software version: %s"),
+		"Software version: %s\n"
+		"Image quality: %s"),
 		info.date.year, info.date.month, info.date.day,
 		info.date.hour, info.date.minute, info.date.second,
-		info.num_taken, info.num_free, info.version);
+		info.num_taken, info.num_free, info.version,
+		quality[info.quality]);
 
 	return (GP_OK);
 }
