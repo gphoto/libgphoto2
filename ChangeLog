@@ -1,5 +1,12 @@
 2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/samsung/Makefile.am:
+	* camlibs/samsung/samsung.c: New but untested. (Just ported it from 
+	old gphoto).
+	* configure.in: Added samsung
+
+2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/camera.c: Add debugging messages
 
 2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
