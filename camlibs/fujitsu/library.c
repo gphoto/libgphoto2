@@ -571,7 +571,6 @@ int fujitsu_get_string_register (gpio_device *dev, int reg, char *s, int *length
 			return (GP_ERROR);
 		if (do_percent)
 			gp_progress((float)x/(float)(*length));
-		usleep(100000);
 		if (fujitsu_write_ack(dev)==GP_ERROR)
 			return (GP_ERROR);
 		packlength = ((unsigned char)packet[2]) +
