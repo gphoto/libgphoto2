@@ -7,7 +7,9 @@
  *
  * This file includes both USB and serial support for the cameras
  * manufactured by Canon. These comprise all (or at least almost all)
- * of the digital models of the IXUS, PowerShot and EOS series.
+ * of the digital models of the IXUS and PowerShot series, and EOS
+ * D30, D60, and 10D. The EOS-1D and EOS-1Ds are not supported; they
+ * use a FireWire (IEEE 1394) interface.
  *
  * We are working at moving serial and USB specific stuff to serial.c
  * and usb.c, keeping the common protocols/busses support in this
@@ -149,8 +151,8 @@ const struct canonCamModelData models[] = {
 	/* reports suggest that they provide 1 interface which does
 	 * both PTP and Canon access modes.
 	 */
-	{"Canon PowerShot A60",         CANON_PS_A60,           0x04A9, 0x3074, CAP_SUP,  S2M, S32K},
-	{"Canon PowerShot A70",         CANON_PS_A70,           0x04A9, 0x3073, CAP_SUP,  S2M, S32K},
+	{"Canon PowerShot A60",         CANON_PS_A60,           0x04A9, 0x3074, CAP_SUP,  S99M, S32K},
+	{"Canon PowerShot A70",         CANON_PS_A70,           0x04A9, 0x3073, CAP_SUP,  S99M, S32K},
 
 	/* S400 product ID for PTP mode is 0x3075; there may be no
 	 * "Canon" mode, so it will be supported by the PTP driver,
@@ -163,7 +165,7 @@ const struct canonCamModelData models[] = {
 	/* Canon MVX2i in some mode is 0x3067 - probably PTP */
 	/* Apparently the MVX2i is the same as Optura 200 MC (Philippe
 	 * Gramoulle), so share the code. */
-	{"Canon:Optura 200 MC",		CANON_OPT_200,		0x04A9, 0x306B, CAP_SUP, S10M, S32K, NULL},
+	{"Canon:Optura 200 MC",		CANON_OPT_200,		0x04A9, 0x306B, CAP_SUP, S99M, S32K, NULL},
 	{NULL}
 	/* *INDENT-ON* */
 };
