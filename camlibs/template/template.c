@@ -18,11 +18,8 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	   if a camera supported multiple ways. */
 
 	strcpy(abilities[0].model, "CAMERA MODEL");
-	abilities[0].serial   = 0;
-	abilities[0].parallel = 0;
-	abilities[0].usb      = 0;
-	abilities[0].ieee1394 = 0;
-	abiltiies[0].network  = 0;
+
+	abilities[0].port     = GP_PORT_NONE;
 
 	abilities[0].speed[0] = 0;
 	abilities[0].capture  = 0;
