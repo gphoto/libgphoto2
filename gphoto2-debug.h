@@ -26,7 +26,9 @@
 #define GP_DEBUG_MEDIUM 2
 #define GP_DEBUG_HIGH 3
 
-/* DEPRECATED. Use gphoto2-port-log */
-void gp_debug_printf    (int level, const char *id, const char *format, ...);
+/** gp_debug_printf:
+ * DEPRECATED. Log your messages via gp_log*() instead
+ */
+void gp_debug_printf (int level, const char *id, const char *format, ...);
 
 #endif /* __GPHOTO2_DEBUG_H__ */
