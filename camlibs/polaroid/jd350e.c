@@ -132,3 +132,22 @@ int jd350e_postprocessing(int width, int height, unsigned char* rgb){
 
 	return GP_OK;
 }
+
+int jd350e_postprocessing_and_flip(int width, int height, unsigned char* rgb){
+	char *tmpline;
+	int y, ret;
+
+	ret = jd350e_postprocessing (width,height,rgb);
+	if (ret < GP_OK)
+		return ret;
+	tmpline = malloc(width*3);
+	if (!tmpline)
+		return GP_ERROR_NO_MEMORY;
+	for( y=0; y<height/2; y++){
+		memcpy (tmpline, rgb+y*width*3, width*3);
+		memcpy (rgb+y*width*3, rgb+(height-y-1)*width*3, width*3);
+		memcpy (rgb+(height-y-1)*width*3, tmpline, width*3);
+	}
+	free(tmpline);
+	return GP_OK;
+}

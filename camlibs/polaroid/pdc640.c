@@ -73,7 +73,7 @@ struct _CameraPrivateLibrary{
 	char*			filespec;
 };
 
-static int rotate180(int width, int height, unsigned char* rgb);
+static int flip_vertical(int width, int height, unsigned char* rgb);
 
 static struct {
 	const char*				model;
@@ -132,14 +132,14 @@ static struct {
 	{"Typhoon:StyloCam", 0x797, 0x801a, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
-			&rotate180,
+			&flip_vertical,
 			"stylo%04i.ppm"
 		}
 	},
 	{"Trust:PowerC@m 350FS", 0x6d6, 0x002e, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
-			&rotate180,
+			&flip_vertical,
 			"trust%04i.ppm"
 		}
 	},
@@ -147,7 +147,7 @@ static struct {
 	{"GrandTek:ScopeCam", 0x797, 0x801c, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
-			&rotate180,
+			&jd350e_postprocessing_and_flip,
 			"scope%04i.ppm"
 		}
 	},
@@ -1025,7 +1025,7 @@ camera_init (Camera *camera, GPContext *context)
 }
 
 static int
-rotate180(int width, int height, unsigned char* rgb) {
+flip_vertical(int width, int height, unsigned char* rgb) {
 	int		i;
 	unsigned char	*buf;
 	
