@@ -6,5 +6,5 @@ Makefile
 libgphoto2_port.la
 config.h.in
 config.h
-stamp.h.in
-stamp.h
+stamp-h.in
+stamp-h
