@@ -476,6 +476,10 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 #define PTP_DPFF_Range			0x01
 #define PTP_DPFF_Enumeration		0x02
 
+// Device Property GetSet type
+#define PTP_DPGS_Get			0x00
+#define PTP_DPGS_GetSet			0x01
+
 // Glue stuff starts here
 
 typedef struct _PTPParams PTPParams;

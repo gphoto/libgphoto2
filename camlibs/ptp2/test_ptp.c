@@ -32,21 +32,46 @@
 
 /* some defines comes here */
 
+/* USB interface class */
 #ifndef USB_CLASS_PTP
 #define USB_CLASS_PTP		6
 #endif
 
-#define CR(result,error) {				\
-			if((result)!=PTP_RC_OK) {	\
-				fprintf(stderr,error);	\
+/* USB control message data phase direction */
+#ifndef USB_DP_HTD
+#define USB_DP_HTD		(0x00 << 7)	// host to device
+#endif
+#ifndef USB_DP_DTH
+#define USB_DP_DTH		(0x01 << 7)	// device to host
+#endif
+
+/* PTP class specific requests */
+#ifndef USB_REQ_DEVICE_RESET
+#define USB_REQ_DEVICE_RESET		0x66
+#endif
+#ifndef USB_REQ_GET_DEVICE_STATUS
+#define USB_REQ_GET_DEVICE_STATUS	0x67
+#endif
+
+/* USB Feature selector HALT */
+#ifndef USB_FEATURE_HALT
+#define USB_FEATURE_HALT	0x00
+#endif
+
+#define CR(result,error) {						\
+			if((result)!=PTP_RC_OK) {			\
+				fprintf(stderr,error);			\
+				usb_release_interface(ptp_usb.handle,	\
+		dev->config->interface->altsetting->bInterfaceNumber);	\
 				return;			\
 			}				\
 }
 
 /* requested actions */
-#define ACT_LIST_DEVICES	01
-#define ACT_LIST_PROPERTIES	02
-#define ACT_SHOW_PROPERTY	03
+#define ACT_DEVICE_RESET	01
+#define ACT_LIST_DEVICES	02
+#define ACT_LIST_PROPERTIES	03
+#define ACT_SHOW_PROPERTY	04
 
 			
 typedef struct _PTP_USB PTP_USB;
@@ -132,6 +157,7 @@ help(char* progname)
 	printf("USAGE: %s [OPTION]\n\n",progname);
 	printf("Options:\n"
 	"	-h, --help		Print this help message\n"
+	"	-r, --reset		Reset the device\n"
 	"	-l, --list-devices	List all PTP devices\n"
 	"	-p, --list-properties	List all PTP device properties "
 					"(e.g. focus mode)\n"
@@ -151,9 +177,9 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data)
 	int result;
 	PTP_USB *ptp_usb=(PTP_USB *)data;
 
-	result=usb_bulk_read(ptp_usb->handle, ptp_usb->inep, bytes, size,10000);
+	result=usb_bulk_read(ptp_usb->handle, ptp_usb->inep, bytes, size,3000);
 	if (result==0)
-	result=usb_bulk_read(ptp_usb->handle, ptp_usb->inep, bytes, size,10000);
+	result=usb_bulk_read(ptp_usb->handle, ptp_usb->inep, bytes, size,3000);
 	if (result >= 0)
 		return (PTP_RC_OK);
 	else 
@@ -289,6 +315,8 @@ init_ptp_usb (PTPParams* ptp_params, PTP_USB* ptp_usb, struct usb_device* dev)
 			exit(0);
 		}
 		ptp_usb->handle=device_handle;
+		usb_claim_interface(device_handle,
+			dev->config->interface->altsetting->bInterfaceNumber);
 	}
 }
 
@@ -368,8 +396,6 @@ list_devices(short force)
 {
 	struct usb_bus *bus;
 	struct usb_device *dev;
-	PTPParams ptp_params;
-	PTP_USB ptp_usb;
 	int found=0;
 
 
@@ -383,6 +409,8 @@ list_devices(short force)
 		{
 			int n;
 			struct usb_endpoint_descriptor *ep;
+			PTPParams ptp_params;
+			PTP_USB ptp_usb;
 			//int inep=0, outep=0, intep=0;
 			PTPDeviceInfo deviceinfo;
 
@@ -426,6 +454,8 @@ list_devices(short force)
 
 			CR(ptp_closesession(&ptp_params),
 				"Could not close session!\n");
+			usb_release_interface(ptp_usb.handle,
+			dev->config->interface->altsetting->bInterfaceNumber);
 		}
 	}
 	if (!found) printf("\nFound no PTP devices");
@@ -485,29 +515,40 @@ list_properties (int busn, int devn, short force)
 				DevicePropertiesSupported[i]);
 	}
 	CR(ptp_closesession(&ptp_params), "Could not close session!\n");
+	usb_release_interface(ptp_usb.handle,
+		dev->config->interface->altsetting->bInterfaceNumber);
 }
 
-void
-print_propcurval (PTPDevicePropDesc* dpd);
-void
-print_propcurval (PTPDevicePropDesc* dpd)
+short
+print_propval (uint16_t datatype, void* value);
+short
+print_propval (uint16_t datatype, void* value)
 {
-	switch (dpd->DataType) {
+	switch (datatype) {
 		case PTP_DTC_INT8:
 		case PTP_DTC_UINT8:
-			printf("%hhi",*(char*)dpd->CurrentValue);
-			break;
+			printf("%hhi",*(char*)value);
+			return 0;
 		case PTP_DTC_INT16:
 		case PTP_DTC_UINT16:
-			printf("%i",*(uint16_t*)dpd->CurrentValue);
-			break;
+			printf("%i",*(uint16_t*)value);
+			return 0;
 		case PTP_DTC_INT32:
 		case PTP_DTC_UINT32:
-			printf("%i",*(uint32_t*)dpd->CurrentValue);
-			break;
+			printf("%i",*(uint32_t*)value);
+			return 0;
 		case PTP_DTC_STR:
-			printf("%s",(char *)dpd->CurrentValue);
+			printf("%s",(char *)value);
 	}
+	return -1;
+}
+
+short
+print_propcurval (PTPDevicePropDesc* dpd);
+short
+print_propcurval (PTPDevicePropDesc* dpd)
+{
+	return (print_propval(dpd->DataType, dpd->CurrentValue));
 }
 
 void
@@ -553,10 +594,135 @@ show_property (int busn, int devn, uint16_t property, short force)
 	printf ("Current value is ");
 	print_propcurval(&dpd);
 	printf("\n");
+	printf("The property is ");
+	if (dpd.GetSet==PTP_DPGS_Get)
+		printf ("read only\n");
+	else
+		printf ("settable\n");
 	CR(ptp_closesession(&ptp_params), "Could not close session!\n"
 	"Try to reset the camera.\n");
+	usb_release_interface(ptp_usb.handle,
+		dev->config->interface->altsetting->bInterfaceNumber);
 }
+
+int
+usb_get_endpoint_status(PTP_USB* ptp_usb, int ep, uint16_t* status);
+int
+usb_get_endpoint_status(PTP_USB* ptp_usb, int ep, uint16_t* status)
+{
+	 return (usb_control_msg(ptp_usb->handle,
+		USB_DP_DTH|USB_RECIP_ENDPOINT, USB_REQ_GET_STATUS,
+		USB_FEATURE_HALT, ep, (char *)status, 2, 3000));
+}
+
+int
+usb_clear_stall_feature(PTP_USB* ptp_usb, int ep);
+int
+usb_clear_stall_feature(PTP_USB* ptp_usb, int ep)
+{
+
+	return (usb_control_msg(ptp_usb->handle,
+		USB_RECIP_ENDPOINT, USB_REQ_CLEAR_FEATURE, USB_FEATURE_HALT,
+		ep, NULL, 0, 3000));
+}
+
+int
+usb_ptp_get_device_status(PTP_USB* ptp_usb, uint16_t* devstatus);
+int
+usb_ptp_get_device_status(PTP_USB* ptp_usb, uint16_t* devstatus)
+{
+	return (usb_control_msg(ptp_usb->handle,
+		USB_DP_DTH|USB_TYPE_CLASS|USB_RECIP_INTERFACE,
+		USB_REQ_GET_DEVICE_STATUS, 0, 0,
+		(char *)devstatus, 4, 3000));
+}
+
+int
+usb_ptp_device_reset(PTP_USB* ptp_usb);
+int
+usb_ptp_device_reset(PTP_USB* ptp_usb)
+{
+	return (usb_control_msg(ptp_usb->handle,
+		USB_TYPE_CLASS|USB_RECIP_INTERFACE,
+		USB_REQ_DEVICE_RESET, 0, 0, NULL, 0, 3000));
+}
+
+void
+reset_device (int busn, int devn, short force);
+void
+reset_device (int busn, int devn, short force)
+{
+	PTPParams ptp_params;
+	PTP_USB ptp_usb;
+	struct usb_device *dev;
+	uint16_t status;
+	uint16_t devstatus[2] = {0,0};
+	int ret;
+
+#ifdef DEBUG
+	printf("dev %i\tbus %i\n",devn,busn);
+#endif
+	dev=find_device(busn,devn,force);
+	if (dev==NULL) {
+		fprintf(stderr,"could not find any device matching given "
+		"bus/dev numbers\n");
+		exit(-1);
+	}
+	find_endpoints(dev,&ptp_usb.inep,&ptp_usb.outep,&ptp_usb.intep);
+
+	init_ptp_usb(&ptp_params, &ptp_usb, dev);
 	
+	// get device status (devices likes that regardless of its result)
+	usb_ptp_get_device_status(&ptp_usb,devstatus);
+	
+	// check the in endpoint status
+	ret = usb_get_endpoint_status(&ptp_usb,ptp_usb.inep,&status);
+	if (ret<0) perror ("usb_get_endpoint_status()");
+	// and clear the HALT condition if happend
+	if (status) {
+		printf("Resetting input pipe!\n");
+		ret=usb_clear_stall_feature(&ptp_usb,ptp_usb.inep);
+		if (ret<0)perror ("usb_clear_stall_feature()");
+	}
+	status=0;
+	// check the out endpoint status
+	ret = usb_get_endpoint_status(&ptp_usb,ptp_usb.outep,&status);
+	if (ret<0) perror ("usb_get_endpoint_status()");
+	// and clear the HALT condition if happend
+	if (status) {
+		printf("Resetting output pipe!\n");
+		ret=usb_clear_stall_feature(&ptp_usb,ptp_usb.outep);
+		if (ret<0)perror ("usb_clear_stall_feature()");
+	}
+	status=0;
+	// check the interrupt endpoint status
+	ret = usb_get_endpoint_status(&ptp_usb,ptp_usb.intep,&status);
+	if (ret<0)perror ("usb_get_endpoint_status()");
+	// and clear the HALT condition if happend
+	if (status) {
+		printf ("Resetting interrupt pipe!\n");
+		ret=usb_clear_stall_feature(&ptp_usb,ptp_usb.intep);
+		if (ret<0)perror ("usb_clear_stall_feature()");
+	}
+
+	// get device status (now there should be some results)
+	ret = usb_ptp_get_device_status(&ptp_usb,devstatus);
+	if (ret<0) 
+		perror ("usb_ptp_get_device_status()");
+	else	{
+		if (devstatus[1]==PTP_RC_OK) 
+			printf ("Device status OK\n");
+		else
+			printf ("Device status 0x%04x\n",devstatus[1]);
+	}
+	
+	// finally reset the device (that clears prevoiusly opened sessions)
+	ret = usb_ptp_device_reset(&ptp_usb);
+	if (ret<0)perror ("usb_ptp_device_reset()");
+
+	usb_release_interface(ptp_usb.handle,
+		dev->config->interface->altsetting->bInterfaceNumber);
+}
 
 /* main program  */
 
@@ -575,6 +741,7 @@ main(int argc, char ** argv)
 		{"bus",1,0,'B'},
 		{"force",0,0,'f'},
 		{"verbose",0,0,'v'},
+		{"reset",0,0,'r'},
 		{"list-devices",0,0,'l'},
 		{"list-properties",0,0,'p'},
 		{"show-property",1,0,'s'},
@@ -582,21 +749,30 @@ main(int argc, char ** argv)
 	};
 	
 	while(1) {
-		opt = getopt_long (argc, argv, "hlpfvs:D:B:", loptions, &option_index);
+		opt = getopt_long (argc, argv, "hlpfvrs:D:B:", loptions, &option_index);
 		if (opt==-1) break;
 	
 		switch (opt) {
 		case 'h':
 			help(argv[0]);
 			break;
-		case 'l':
-			action=ACT_LIST_DEVICES;
+		case 'B':
+			busn=strtol(optarg,NULL,10);
 			break;
 		case 'D':
 			devn=strtol(optarg,NULL,10);
 			break;
-		case 'B':
-			busn=strtol(optarg,NULL,10);
+		case 'f':
+			force=~force;
+			break;
+		case 'v':
+			verbose=~verbose;
+			break;
+		case 'r':
+			action=ACT_DEVICE_RESET;
+			break;
+		case 'l':
+			action=ACT_LIST_DEVICES;
 			break;
 		case 'p':
 			action=ACT_LIST_PROPERTIES;
@@ -604,12 +780,6 @@ main(int argc, char ** argv)
 		case 's':
 			action=ACT_SHOW_PROPERTY;
 			property=strtol(optarg,NULL,16);
-			break;
-		case 'f':
-			force=~force;
-			break;
-		case 'v':
-			verbose=~verbose;
 			break;
 		case '?':
 			break;
@@ -624,6 +794,9 @@ main(int argc, char ** argv)
 		return 0;
 	}
 	switch (action) {
+		case ACT_DEVICE_RESET:
+			reset_device(busn,devn,force);
+			break;
 		case ACT_LIST_DEVICES:
 			list_devices(force);
 			break;
@@ -637,6 +810,3 @@ main(int argc, char ** argv)
 
 	return 0;
 }
-
-
-

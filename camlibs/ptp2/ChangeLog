@@ -1,4 +1,7 @@
 2003-05-09 Mariusz Woloszyn
+	* test_ptp.c: added the device reset option (uses class specific
+	  reset)
+2003-05-09 Mariusz Woloszyn
 	* ptp.h: added some Kodak extension device property codes
 	  definitions
 	* test_ptp.c: added properties listing support and --force option
