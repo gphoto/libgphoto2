@@ -74,6 +74,6 @@ gphoto2.def: ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\filesys.o ..\obj\l
    @emxexp $** >> gphoto2.def
 
 ..\gphoto2.dll: gphoto2.def ..\obj\core.o ..\obj\exif.o ..\obj\file.o ..\obj\filesys.o ..\obj\library.o ..\obj\settings.o ..\obj\util.o ..\obj\widget.o ..\obj\lists.o ..\obj\camera.o ..\obj\frontend.o ..\obj\port.o
-  @$(CC) -Wall -Zdll -Zcrtdll -Zbin-files -o $@ $** -L..\lib -ldllib -llibgphoto2_port
+  @$(CC) -Wall -Zmtd -Zdll -Zcrtdll -Zbin-files -o $@ $** -L..\lib -ldllib -llibgphoto2_port
 
 
