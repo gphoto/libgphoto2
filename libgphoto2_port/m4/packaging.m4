@@ -7,12 +7,12 @@ if test -x "${with_rpmbuild}"
 then
     RPMBUILD="${with_rpmbuild}"
     AC_MSG_RESULT([${RPMBUILD} (from parameter)])
-    AC_SUBST(RPMBUILD)
 else
     AC_MSG_RESULT([using autodetection])
     AC_CHECK_PROGS(RPMBUILD, [rpmbuild rpm], false)
     AC_MSG_RESULT([${RPMBUILD} (autodetect)])
 fi
+AC_SUBST(RPMBUILD)
 AM_CONDITIONAL(ENABLE_RPM, test "$RPMBUILD" != "false")
 
 # whether libusb-devel is installed or not defines whether the RPM

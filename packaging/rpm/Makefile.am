@@ -31,4 +31,4 @@ endif
 	done
 	ln -f "$(top_srcdir)/@PACKAGE@-@VERSION@.tar.gz" SOURCES/
 	ln -f package.spec SPECS/@PACKAGE@-@VERSION@.spec
-	rpm --define "_topdir $$(pwd)" -ba SPECS/@PACKAGE@-@VERSION@.spec
+	@RPMBUILD@ --define "_topdir $$(pwd)" -ba SPECS/@PACKAGE@-@VERSION@.spec
