@@ -252,6 +252,7 @@ static struct {
 	{"HP:PhotoSmart 720 (PTP mode)", 0x03f0, 0x6702},
 	{"HP:PhotoSmart 620 (PTP mode)", 0x03f0, 0x6802},
 	{"HP:PhotoSmart 735 (PTP mode)", 0x03f0, 0x6a02},
+	{"HP:PhotoSmart 635 (PTP mode)", 0x03f0, 0x7102},
 	/* report from Federico Prat Villar <fprat@lsi.uji.es> */
 	{"HP:PhotoSmart 43x (PTP mode)", 0x03f0, 0x7202},
 
