@@ -1,5 +1,13 @@
 2001-09-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-filesys.h:
+	* libgphoto2/filesys.c: Cache files, too.
+	* libgphoto2/camera.c: Use cached files if exist.
+	* camlibs/konica/library.c:
+	* camlibs/sierra/sierra.c: Cache files in the filesystem.
+
+2001-09-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/panasonic/coolshot/coolshot.c: Use gp_list_populate instead
 	of accessing the filesystem. The filesystem is clever enough to do
 	that itself.
