@@ -54,8 +54,7 @@
  */
 int dlink_dsc350f_postprocessing_and_flip_both (int width, int height, unsigned char* rgb) {
 	unsigned char *start, *end, c;
-	char hilow[128];
-	
+
 	int whichcolor = 0;
 	int lowred=255, lowgreen=255, lowblue=255;
 	int hired=0, higreen=0, hiblue=0;
@@ -104,7 +103,6 @@ int dlink_dsc350f_postprocessing_and_flip_both (int width, int height, unsigned 
 	*/
 	
 	/* show the color range of image in debug mode. */
-	sprintf(hilow, "\nred low = %d high = %d\ngreen low = %d high = %d\nblue low = %d high = %d\n", lowred,hired, lowgreen,higreen, lowblue,hiblue);
-	GP_DEBUG(hilow);
+	GP_DEBUG("\nred low = %d high = %d\ngreen low = %d high = %d\nblue low = %d high = %d\n", lowred,hired, lowgreen,higreen, lowblue,hiblue);
 	return GP_OK;
 }

@@ -639,9 +639,7 @@ pdc700_set_date (Camera *camera, time_t time, GPContext *context)
 	cmd[9]  = tm->tm_min;
 	cmd[10] = tm->tm_sec;
 
-	GP_DEBUG (buf);
 	CR (pdc700_transmit (camera, cmd, 12, buf, &buf_len, context));
-
 	return GP_OK;
 }
 
