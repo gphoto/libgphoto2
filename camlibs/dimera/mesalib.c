@@ -27,12 +27,13 @@
 #include <string.h>
 
 #include "gphoto2.h"
+#include "gphoto2-endian.h"
 #include "mesalib.h"
 
 #define debuglog(s) gp_debug_printf(GP_DEBUG_LOW, "dimera", "%s", (s))
 
 #ifdef CONVERT_PIXELS
-static const u_int16_t	pixelTable[256] = {
+static const uint16_t	pixelTable[256] = {
 	0x000, 0x001, 0x002, 0x003, 0x004, 0x005, 0x006, 0x007,
 	0x008, 0x009, 0x00A, 0x00B, 0x00C, 0x00D, 0x00E, 0x00F,
 	0x010, 0x011, 0x012, 0x013, 0x014, 0x015, 0x016, 0x017,
@@ -92,12 +93,15 @@ timediff( struct timeval *t1, struct timeval *t2 )
 void
 mesa_flush( GPPort *port, int timeout )
 {
-	u_int8_t	b[256];
+	uint8_t	b[256];
 	struct timeval	start, now;
 
 	gettimeofday( &start, NULL );
 
-	/* (df) Change this to use gp_port_flush */
+	/* Clear any pending input bytes */
+	gp_port_flush(port, 0);
+
+	/* Wait for silence */
 	do {
 		if ( gp_port_read( port, b, sizeof( b ) ) > 0 )
 			/* reset timer */
@@ -109,7 +113,7 @@ mesa_flush( GPPort *port, int timeout )
 
 /* Read exactly this number of bytes from the port within the given timeouts */
 int
-mesa_read( GPPort *port, u_int8_t *b, int s, int timeout2, int timeout1 )
+mesa_read( GPPort *port, uint8_t *b, int s, int timeout2, int timeout1 )
 {
 	int		n = 0;
 	int		r, t;
@@ -136,9 +140,9 @@ mesa_read( GPPort *port, u_int8_t *b, int s, int timeout2, int timeout1 )
 
 /* Send a command to the camera and read the acknowledgement byte */
 int
-mesa_send_command( GPPort *port, u_int8_t *cmd, int n, int ackTimeout )
+mesa_send_command( GPPort *port, uint8_t *cmd, int n, int ackTimeout )
 {
-	u_int8_t	c;
+	uint8_t	c;
 
 	CHECK (gp_port_write( port, cmd, n ));
 
@@ -192,7 +196,7 @@ mesa_reset( GPPort *port )
 int
 mesa_set_speed( GPPort *port, int speed )
 {
-	u_int8_t	b[2];
+	uint8_t	b[2];
 	gp_port_settings settings;
 
 	if (speed == 0)
@@ -246,10 +250,10 @@ mesa_set_speed( GPPort *port, int speed )
 int
 mesa_version( GPPort *port, char *version_string)
 {
-	u_int8_t	b;
-	u_int8_t	r[3];
+	uint8_t		b;
+	uint8_t		r[3];
 	int		i;
-	char	*v = version_string;
+	char		*v = version_string;
 
 	b = MESA_VERSION;
 
@@ -271,9 +275,9 @@ mesa_version( GPPort *port, char *version_string)
 int
 mesa_transmit_test( GPPort *port )
 {
-	u_int8_t	b;
-	u_int8_t	r[256];
-	int		i;
+	uint8_t		b;
+	uint8_t		r[256];
+	unsigned int	i;
 
 	b = XMIT_TEST;
 
@@ -296,8 +300,8 @@ mesa_transmit_test( GPPort *port )
 int
 mesa_ram_test( GPPort *port )
 {
-	u_int8_t	b;
-	u_int8_t	r;
+	uint8_t	b;
+	uint8_t	r;
 
 	b = RAM_TEST;
 
@@ -343,11 +347,11 @@ mesa_ram_test( GPPort *port )
  */
 
 int									/*GDB*/
-mesa_read_row( GPPort *port, u_int8_t *r, struct mesa_image_arg *s )	/*GDB*/
+mesa_read_row( GPPort *port, uint8_t *r, struct mesa_image_arg *s )	/*GDB*/
 {
-	u_int8_t	b[9];
-	int		bytes, i;					/*GDB*/
-	u_int8_t	checksum = 0;					/*GDB*/
+	uint8_t		b[9];
+	unsigned int	bytes, i;					/*GDB*/
+	uint8_t		checksum = 0;					/*GDB*/
 
 	if ( (bytes = s->send * s->repeat) > 680 )			/*GDB*/
 	{
@@ -355,14 +359,11 @@ mesa_read_row( GPPort *port, u_int8_t *r, struct mesa_image_arg *s )	/*GDB*/
 	}
 
 	b[0] = SEND_RAM;
-	b[1] = s->row;							/*GDB*/
-	b[2] = s->row>>8;						/*GDB*/
-	b[3] = s->start;						/*GDB*/
-	b[4] = s->start>>8;						/*GDB*/
-	b[5] = s->send;							/*GDB*/
-	b[6] = s->skip;							/*GDB*/
-	b[7] = s->repeat;						/*GDB*/
-	b[8] = s->repeat>>8;						/*GDB*/
+	htole16a(&b[1], s->row);
+	htole16a(&b[3], s->start);
+	b[5] = s->send;
+	b[6] = s->skip;
+	htole16a(&b[7], s->repeat);
 
 	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
@@ -396,9 +397,9 @@ mesa_read_row( GPPort *port, u_int8_t *r, struct mesa_image_arg *s )	/*GDB*/
  * exposure is in units of 1/50000 seconds
  */
 int
-mesa_snap_image( GPPort *port, u_int16_t exposure )
+mesa_snap_image( GPPort *port, uint16_t exposure )
 {
-	u_int8_t	b[3];
+	uint8_t		b[3];
 	int		timeout;
 
 	if ( exposure )
@@ -407,16 +408,15 @@ mesa_snap_image( GPPort *port, u_int16_t exposure )
 		timeout = 10;
 
 	b[0] = SNAP_IMAGE;
-	b[1] = exposure;
-	b[2] = exposure >> 8;
+	htole16a(&b[1], exposure);
 	return mesa_send_command( port, b, sizeof( b ), timeout );
 }
 
 /* return black levels, overwrites image memory */
 int
-mesa_black_levels( GPPort *port, u_int8_t r[2] )
+mesa_black_levels( GPPort *port, uint8_t r[2] )
 {
-	u_int8_t	b;
+	uint8_t	b;
 
 	b = SND_BLACK;
 
@@ -451,13 +451,13 @@ mesa_black_levels( GPPort *port, u_int8_t r[2] )
  *
  */
 int
-mesa_snap_view( GPPort *port, u_int8_t *r, unsigned int hi_res,
-	unsigned int zoom, unsigned int row, unsigned int col, u_int16_t exposure,
-	u_int8_t download )
+mesa_snap_view( GPPort *port, uint8_t *r, unsigned int hi_res,
+	unsigned int zoom, unsigned int row, unsigned int col, uint16_t exposure,
+	uint8_t download )
 {
 	unsigned int	timeout, i;
 	unsigned int	bytes = 0;
-	u_int8_t	b[7], cksum;
+	uint8_t		b[7], cksum;
 
 	if ( download <= 47 )
 		bytes = 32;
@@ -492,8 +492,7 @@ mesa_snap_view( GPPort *port, u_int8_t *r, unsigned int hi_res,
 	b[1] = (zoom&3)+(hi_res?0x80:0);
 	b[2] = row;
 	b[3] = col;
-	b[4] = exposure;
-	b[5] = exposure >> 8;
+	htole16a(&b[4], exposure);
 	b[6] = download;
 
 	CHECK (mesa_send_command( port, b, sizeof( b ), timeout ));
@@ -530,7 +529,7 @@ mesa_snap_view( GPPort *port, u_int8_t *r, unsigned int hi_res,
 int
 mesa_set_stopbits( GPPort *port, unsigned int bits )
 {
-	u_int8_t	b[2];
+	uint8_t	b[2];
 
 	b[0] = XTRA_STP_BIT;
 	b[1] = bits;
@@ -540,10 +539,10 @@ mesa_set_stopbits( GPPort *port, unsigned int bits )
 
 /* download viewfinder image ( see mesa_snap_view ) */
 int
-mesa_download_view( GPPort *port, u_int8_t *r, u_int8_t download )
+mesa_download_view( GPPort *port, uint8_t *r, uint8_t download )
 {
 	unsigned int	bytes, i;
-	u_int8_t	b[2], cksum;
+	uint8_t		b[2], cksum;
 
 	if ( download <= 47 )
 		bytes = 32;
@@ -601,10 +600,10 @@ mesa_download_view( GPPort *port, u_int8_t *r, u_int8_t download )
  * take a picture, with flash and shutter click
  */
 int
-mesa_snap_picture( GPPort *port, u_int16_t exposure )
+mesa_snap_picture( GPPort *port, uint16_t exposure )
 {
 	unsigned int	timeout;
-	u_int8_t	b[3];
+	uint8_t		b[3];
 
 	if ( exposure )
 		timeout = (exposure/50000) + 10;
@@ -612,8 +611,7 @@ mesa_snap_picture( GPPort *port, u_int16_t exposure )
 		timeout = 10;
 
 	b[0] = SNAP_PICTURE;
-	b[1] = exposure;
-	b[2] = exposure>>8;
+	htole16a(&b[1], exposure);
 
 	return mesa_send_command( port, b, sizeof( b ), timeout );
 }
@@ -622,7 +620,7 @@ mesa_snap_picture( GPPort *port, u_int16_t exposure )
 int
 mesa_send_id( GPPort *port, struct mesa_id *id )
 {
-	u_int8_t	b, r[4];
+	uint8_t		b, r[4];
 
 	b = SND_ID;
 
@@ -652,7 +650,7 @@ mesa_send_id( GPPort *port, struct mesa_id *id )
 int
 mesa_modem_check( GPPort *port )
 {
-	u_int8_t b[3];
+	uint8_t 	b[3];
 
 	b[0] = 'A';
 	b[1] = 'T';
@@ -684,7 +682,7 @@ mesa_modem_check( GPPort *port )
 
 /*
  * mesa_read_image	- returns all or part of an image in the supplied buffer
- * 	u_int8_t		*r, buffer to return image in.
+ * 	uint8_t		*r, buffer to return image in.
  *	struct mesa_image_arg	*i, download specifier.
  *
  *	return value	>0 number of bytes read
@@ -694,23 +692,20 @@ mesa_modem_check( GPPort *port )
  */
 
 int
-mesa_read_image( GPPort *port, u_int8_t *r, struct mesa_image_arg *s )
+mesa_read_image( GPPort *port, uint8_t *r, struct mesa_image_arg *s )
 {
-	u_int8_t	b[14];
-	int		bytes, i;
-	u_int8_t	checksum = 0;
+	uint8_t		b[14];
+	unsigned long	bytes, i;
+	uint8_t		checksum = 0;
 
 	bytes = s->row_cnt * (s->repeat * s->send);
 
 	b[0]  = SND_IMAGE;
-	b[1]  = s->row;
-	b[2]  = s->row>>8;
-	b[3]  = s->start;
-	b[4]  = s->start>>8;
+	htole16a(&b[1], s->row);
+	htole16a(&b[3], s->start);
 	b[5]  = s->send;
 	b[6]  = s->skip;
-	b[7]  = s->repeat;
-	b[8]  = s->repeat>>8;
+	htole16a(&b[7], s->repeat);
 	b[9]  = s->row_cnt;
 	b[10] = s->inc1;
 	b[11] = s->inc2;
@@ -751,9 +746,9 @@ mesa_read_image( GPPort *port, u_int8_t *r, struct mesa_image_arg *s )
  *		GP_ERROR_CORRUPTED_DATA - returned bytes do not match
  */
 int
-mesa_recv_test( GPPort *port, u_int8_t r[6] )
+mesa_recv_test( GPPort *port, uint8_t r[6] )
 {
-	u_int8_t	b[7];
+	uint8_t		b[7];
 	int		i;
 	
 	b[0] = RCV_TEST;
@@ -776,8 +771,8 @@ mesa_recv_test( GPPort *port, u_int8_t r[6] )
 int
 mesa_get_image_count( GPPort *port )
 {
-	u_int8_t	b;
-	u_int8_t	r[2];
+	uint8_t		b;
+	uint8_t		r[2];
 
 	b = IMAGE_CNT;
 
@@ -788,18 +783,17 @@ mesa_get_image_count( GPPort *port )
 		return GP_ERROR_TIMEOUT;
 	}
 
-	return ( r[0] + (r[1]<<8) );
+	return le16atoh(r);
 }
 
 /* load image from eeprom, into ram */
 int
 mesa_load_image( GPPort *port, int image )
 {
-	u_int8_t	b[3];
+	uint8_t		b[3];
 
 	b[0] = LD_IMAGE;
-	b[1] = image;
-	b[2] = image >> 8;
+	htole16a(&b[1], image);
 
 	return mesa_send_command( port, b, sizeof( b ), 1000 );
 }
@@ -809,9 +803,9 @@ mesa_load_image( GPPort *port, int image )
  * Bytes 10..16 of info correspond to the Device ID field, bytes 45..51
  */
 int
-mesa_eeprom_info( GPPort *port, int long_read, u_int8_t info[MESA_EEPROM_SZ] )
+mesa_eeprom_info( GPPort *port, int long_read, uint8_t info[MESA_EEPROM_SZ] )
 {
-	u_int8_t	b;
+	uint8_t		b;
 
 	b = EEPROM_INFO;
 
@@ -825,15 +819,14 @@ mesa_eeprom_info( GPPort *port, int long_read, u_int8_t info[MESA_EEPROM_SZ] )
  */
 
 int32_t
-mesa_read_thumbnail( GPPort *port, int picture, u_int8_t *image )
+mesa_read_thumbnail( GPPort *port, int picture, uint8_t *image )
 {
-	u_int8_t	b[3], checksum = 0;
-	u_int32_t	bytes;
-	int		standard_res, i;
+	uint8_t		b[3], checksum = 0;
+	uint32_t	bytes;
+	unsigned int	standard_res, i;
 
 	b[0] = SND_THUMB;
-	b[1] = picture&255;
-	b[2] = (picture>>8)&255;
+	htole16a(&b[1], picture);
 
 	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
@@ -872,13 +865,13 @@ mesa_read_thumbnail( GPPort *port, int picture, u_int8_t *image )
 int
 mesa_read_features( GPPort *port, struct mesa_feature *f )
 {
-	u_int8_t	b;
+	uint8_t		b;
 
 	b = FEATURES;
 
 	CHECK (mesa_send_command( port, &b, 1, 10 ));
 
-	return ( mesa_read( port, (u_int8_t *)f, sizeof( *f ), 10, 0 ) );
+	return ( mesa_read( port, (uint8_t *)f, sizeof( *f ), 10, 0 ) );
 }
 
 /* return percentage battery level */
@@ -909,13 +902,12 @@ mesa_battery_check( GPPort *port )
 int32_t
 mesa_read_image_info( GPPort *port, int i, struct mesa_image_info *info )
 {
-	u_int8_t	b[3], r[3];
+	uint8_t		b[3], r[3];
 	int32_t		bytes;
-	int		standard_res;
+	int32_t		standard_res;
 
 	b[0] = SND_IMG_INFO;
-	b[1] = i & 255;
-	b[2] = (i >> 8)&255;
+	htole16a(&b[1], i);
 
 	CHECK (mesa_send_command( port, b, sizeof( b ), 10 ));
 
@@ -940,15 +932,16 @@ mesa_read_image_info( GPPort *port, int i, struct mesa_image_info *info )
 /*
  * return and image with raw pixels expanded.
  */
-u_int16_t *
+uint16_t *
 mesa_get_image( GPPort *port, int image )
 {
-	static u_int8_t			buffer[307200];
+	static uint8_t			buffer[640*480L];
 	static struct mesa_image_info	info;
 	static struct mesa_image_arg	ia;
-	u_int8_t			*b = buffer;
-	u_int16_t			*rbuffer;
-	int				r, size, res, i;
+	uint8_t				*b = buffer;
+	uint16_t			*rbuffer;
+	int				r, res;
+	unsigned long			size, i;
 
 	if ( image != RAM_IMAGE_NUM )
 	{
@@ -975,7 +968,7 @@ mesa_get_image( GPPort *port, int image )
 		res = 0;
 		size = 640*480;
 	}
-	rbuffer = (u_int16_t *)malloc( size*(sizeof (u_int16_t)) );
+	rbuffer = (uint16_t *)malloc( size*(sizeof (uint16_t)) );
 	if ( rbuffer == NULL )
 		return NULL;
 
@@ -1010,14 +1003,14 @@ mesa_get_image( GPPort *port, int image )
 /*
  * return and raw image retransmit on errors
  */
-u_int8_t *
+uint8_t *
 mesa_get_image( GPPort *port, int image )
 {
 	static struct mesa_image_info	info;
 	static struct mesa_image_arg	ia;
-	u_int8_t			*rbuffer, *b;
-	int				r, size, res;
-	int				retry;
+	uint8_t				*rbuffer, *b;
+	int				r, res, retry;
+	unsigned long			size;
 
 	if ( image != RAM_IMAGE_NUM )
 	{
@@ -1044,7 +1037,7 @@ mesa_get_image( GPPort *port, int image )
 		res = 0;
 		size = 640*480;
 	}
-	rbuffer = (u_int8_t *)malloc( size );
+	rbuffer = (uint8_t *)malloc( size );
 	if ( rbuffer == NULL )
 		return NULL;
 	b = rbuffer;
