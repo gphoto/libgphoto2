@@ -5,3 +5,4 @@ lowlevel.lo
 .libs
 .deps
 Makefile
+Makefile.in

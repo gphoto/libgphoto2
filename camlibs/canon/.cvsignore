@@ -6,3 +6,5 @@ psa50.lo
 canon.lo
 .libs
 .deps
+Makefile
+Makefile.in
