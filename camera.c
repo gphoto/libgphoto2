@@ -68,27 +68,20 @@ int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities)
 
 }
 
-int gp_camera_new (Camera **camera, int camera_number)
+int gp_camera_new (Camera **camera)
 {
-	int result;
-
 	if (camera == NULL) return (GP_ERROR_BAD_PARAMETERS);
-
-        if (camera_number >= glob_abilities_list->count) {
-		gp_debug_printf(GP_DEBUG_LOW, "core", "camera_number too big");
-                return (GP_ERROR_MODEL_NOT_FOUND);
-	}
 
         *camera = (Camera*)malloc(sizeof(Camera));
 	if (!*camera) 
 		return (GP_ERROR_NO_MEMORY);
 
         /* Initialize the members */
-        strcpy((*camera)->model, glob_abilities_list->abilities[camera_number]->model);
         (*camera)->port       = (CameraPortInfo*)malloc(sizeof(CameraPortInfo));
 	if (!(*camera)->port) 
 		return (GP_ERROR_NO_MEMORY);
 	(*camera)->port->type = GP_PORT_NONE;
+	strcpy ((*camera)->port->path, "");
         (*camera)->abilities  = (CameraAbilities*)malloc(sizeof(CameraAbilities));
         (*camera)->functions  = (CameraFunctions*)malloc(sizeof(CameraFunctions));
         (*camera)->library_handle  = NULL;
@@ -122,37 +115,7 @@ int gp_camera_new (Camera **camera, int camera_number)
 	(*camera)->functions->result_as_string	= NULL;
 	(*camera)->functions->config		= NULL;
 
-	/* Fill the abilities. */
-	(*camera)->abilities->file_delete	= glob_abilities_list->abilities[camera_number]->file_delete;
-	(*camera)->abilities->file_preview	= glob_abilities_list->abilities[camera_number]->file_preview;
-	(*camera)->abilities->file_put		= glob_abilities_list->abilities[camera_number]->file_put;
-	(*camera)->abilities->capture		= glob_abilities_list->abilities[camera_number]->capture;
-	(*camera)->abilities->config		= glob_abilities_list->abilities[camera_number]->config;
-
-        if ((result = load_library(*camera, glob_abilities_list->abilities[camera_number]->model)) != GP_OK) {
-                gp_camera_free(*camera);
-                return (result);
-        }
-
-        /* Initialize the camera library */
-	gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing \"%s\" (%s)...",
-                        glob_abilities_list->abilities[camera_number]->model,
-                        glob_abilities_list->abilities[camera_number]->library);
-
         return(GP_OK);
-}
-
-int gp_camera_new_by_name (Camera **camera, char *camera_name)
-{
-        int x=0;
-
-        while (x < glob_abilities_list->count) {
-                if (strcmp(glob_abilities_list->abilities[x]->model, camera_name)==0)
-                        return (gp_camera_new(camera, x));
-                x++;
-        }
-
-        return (GP_ERROR_MODEL_NOT_FOUND);
 }
 
 int gp_camera_free(Camera *camera)
@@ -207,24 +170,47 @@ int gp_camera_session (Camera *camera)
 int gp_camera_init (Camera *camera)
 {
 	int x;
+	int result;
+	int camera_number;
 	CameraPortInfo info;
 
 	if (camera == NULL) 
 		return (GP_ERROR_BAD_PARAMETERS);
 		
-        if (camera->functions->init == NULL) {
-                return(GP_ERROR_NOT_SUPPORTED);
+	/* If the model hasn't been indicated, try to figure it out through probing. */
+	if (strcmp (camera->model, "") == 0) {
+		//FIXME: Insert auto-probe here!
+		printf ("*** Auto-probing not implemented! Please specify a model! ***");
+		return (GP_ERROR);
 	}
 
+	/* Fill in camera abilities. */
+	gp_debug_printf (GP_DEBUG_LOW, "core", "Looking up abilities for model %s...", camera->model);
+	for (camera_number = 0; camera_number < glob_abilities_list->count; camera_number++) {
+		if (strcmp (glob_abilities_list->abilities[camera_number]->model, camera->model) == 0)
+			break;
+	}
+	if (camera_number == glob_abilities_list->count)
+		return GP_ERROR_MODEL_NOT_FOUND;
+	camera->abilities->file_delete       = glob_abilities_list->abilities[camera_number]->file_delete;
+	camera->abilities->file_preview      = glob_abilities_list->abilities[camera_number]->file_preview;
+	camera->abilities->file_put          = glob_abilities_list->abilities[camera_number]->file_put;
+	camera->abilities->capture           = glob_abilities_list->abilities[camera_number]->capture;
+	camera->abilities->config            = glob_abilities_list->abilities[camera_number]->config;
+
+	/* Load the library. */
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Loading library %s...", glob_abilities_list->abilities[camera_number]->library);
+	if ((result = load_library(camera)) != GP_OK)
+		return (result);
+
 	/* Set the port type from the path in case the frontend didn't. */
-	if (camera->port->type == GP_PORT_NONE) {
+	if (camera->port->type == GP_PORT_NONE && (strlen (camera->port->path) > 0)) {
 	        for (x=0; x<gp_port_count(); x++) {
         	        gp_port_info(x, &info);
                 	if (strcmp(info.path, camera->port->path)==0)
                         	camera->port->type = info.type;
 	        }
 	}
-
 
         return (camera->functions->init (camera));
 }

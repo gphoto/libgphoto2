@@ -24,13 +24,13 @@ int is_library(char *library_filename)
         return (ret);
 }
 
-int load_library(Camera *camera, char *camera_name)
+int load_library(Camera *camera)
 {
 	void *lh;
 	int x;
 
 	for (x=0; x<glob_abilities_list->count; x++) {
-		if (strcmp(glob_abilities_list->abilities[x]->model, camera_name)==0) {
+		if (strcmp(glob_abilities_list->abilities[x]->model, camera->model)==0) {
 			if ((lh = GPIO_DLOPEN(glob_abilities_list->abilities[x]->library))==NULL) {
 				if (glob_debug)
 					perror("core:\tload_library");
