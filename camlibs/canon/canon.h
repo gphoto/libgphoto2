@@ -117,6 +117,7 @@ typedef enum {
  * @CANON_PS_S400: PowerShot S400, Digital IXUS 400
  * @CANON_PS_SD100: PowerShot SD100, Digital IXUS II
  * @CANON_PS_A400: PowerShot A400
+ * @CANON_EOS_20D: EOS 20D
  *
  * Enumeration of all camera types currently supported.
  *
@@ -161,6 +162,7 @@ typedef enum {
 	CANON_MV630I,
 	CANON_MV650I,
 	CANON_EOS_10D,
+	CANON_EOS_20D,
 	CANON_OPT_200,
 	/* In Mac OS Image Capture, but not yet seen in the wild. */
 	CANON_PS_UNK1,
@@ -474,7 +476,9 @@ typedef enum {
 #define IS_EOS(cam) ( ((cam)==CANON_EOS_D30) \
                       || ((cam)==CANON_EOS_D60) \
                       || ((cam)==CANON_PS_S230) \
-                      || ((cam)==CANON_PS_S400) )
+                      || ((cam)==CANON_PS_S400) \
+		      || ((cam)==CANON_EOS_20D) \
+		)
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
