@@ -179,7 +179,7 @@ int gp_camera_capture 		 (Camera *camera, int capture_type,
 				  CameraFilePath *path);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file);
 
-char *gp_camera_get_result_as_string (Camera *camera, int result);
+const char *gp_camera_get_result_as_string (Camera *camera, int result);
 
 /************************************************************************
  * Part II:                                                             *

@@ -37,8 +37,7 @@
 #define GP_ERROR_NO_CAMERA_FOUND     -110 /* No cameras auto-detected   */
 #define GP_ERROR_PATH_NOT_ABSOLUTE   -111 /* Path not absolute          */
 
-/* Don't free the return values! */
-char *gp_result_as_string      (int result);
-char *gp_result_as_description (int result);
+const char *gp_result_as_string      (int result);
+const char *gp_result_as_description (int result);
 
 #endif /* __GPHOTO2_RESULT_H__ */

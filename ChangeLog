@@ -1,3 +1,10 @@
+2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/result.c:
+	* libgphoto2/camera.c:
+	* include/gphoto2-camera.h:
+	* include/gphoto2-result.h: Put in some consts.
+
 2001-10-03  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* camlibs/kodak/CAMERAS: added latest Kodak DX models.
