@@ -10,9 +10,7 @@ In order to get libgphoto2 running after installation, you will
 probably want to read The gPhoto2 Manual. It is available from the
 homepage:
 
-    http://gphoto.net/
     http://gphoto.org/
-    http://gphoto.com/
     http://gphoto.sourceforge.net/
 
 At lease one of these should work at any time.
@@ -54,11 +52,11 @@ Now run either one of
      to prepare a tarball source tree for installation in (e.g.) /usr/local
 
 
-  ./configure --prefix=/home/me/root --with-drivers=ptp,canon
+  ./configure --prefix=/home/me/root --with-drivers=ptp2,canon
 
        to prepare a tarball source tree for installation in
        /home/me/root and for compilation only of the drivers 
-       for PTP and Canon cameras
+       for PTP and Canon cameras.
 
 or run ./configure --help in order to find out about more
 configuration parameters.
