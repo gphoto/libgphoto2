@@ -128,7 +128,7 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 		// get fatscount 
 		CHECK (gp_port_usb_msg_write
 				(lib->gpdev, 0x05, 0x0000, 0x0008, NULL, 0));
-		sleep (1.0);
+		sleep (1);
 		CHECK (gp_port_usb_msg_read
 				(lib->gpdev, 0, 0, 0x0e19, 
 				 (u_int8_t *) & lower, 1));
@@ -137,8 +137,6 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 				 (u_int8_t *) & upper, 1));
 
 		lib->num_fats = ((upper & 0xFF << 8) | (lower & 0xFF));
-		LE32TOH (lib->num_fats);
-
 	} else {
 		while (1) {
 			CHECK (spca50x_sdram_get_fat_page (lib, lib->num_fats, 

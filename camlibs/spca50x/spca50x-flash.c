@@ -33,6 +33,7 @@
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 #include <gphoto2-port-log.h>
+#include <gphoto2-endian.h>
 
 #define GP_MODULE "spca50x"
 #include "spca50x.h"
@@ -71,10 +72,12 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 					(char*)&n_toc_entries, 0x02));
 		/* Each file gets two toc entries, one for the image, one for the
 		 * thumbnail */
+		LE16TOH (n_toc_entries);
 		*filecount = n_toc_entries/2;
 	} else {
 		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x54, 0x0000, 0x0000, 
 					(char*)&n_toc_entries, 0x02));
+		LE16TOH (n_toc_entries);
 		*filecount = n_toc_entries;
 	}
 	/* If empty, return now */
@@ -118,10 +121,12 @@ spca50x_flash_get_filecount (CameraPrivateLibrary *pl, int *filecount)
 					(char*)&response, 0x02));
 		/* Each file gets two toc entries, one for the image, one for the
 		 * thumbnail */
+		LE16TOH (response);
 		*filecount = response/2;
 	} else {
 		CHECK (gp_port_usb_msg_read (pl->gpdev, 0x54, 0x0000, 0x0000, 
 					(char*)&response, 0x02));
+		LE16TOH (response);
 		*filecount = response;
 	}
 	return GP_OK;
