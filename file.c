@@ -93,7 +93,7 @@ int gp_file_session (CameraFile *file)
 }
 
 int
-gp_file_append (CameraFile *file, char *data, int size)
+gp_file_append (CameraFile *file, const char *data, int size)
 {
         char *t;
 
@@ -103,9 +103,9 @@ gp_file_append (CameraFile *file, char *data, int size)
                 return (GP_ERROR_BAD_PARAMETERS);
 
         if (!file->data)
-		file->data = malloc(sizeof(char) * (size));
+		file->data = malloc (sizeof(char) * (size));
         else {
-		t = realloc (file->data, sizeof(char) * (file->size + size));
+		t = realloc (file->data, sizeof (char) * (file->size + size));
 		if (!t)
 			return GP_ERROR_NO_MEMORY;
 		file->data = t;
@@ -119,7 +119,21 @@ gp_file_append (CameraFile *file, char *data, int size)
 }
 
 int
-gp_file_get_last_chunk (CameraFile *file, char **data, int *size)
+gp_file_set_data_and_size (CameraFile *file, char *data, long int size)
+{
+	CHECK_NULL (file);
+
+	if (file->data)
+		free (file->data);
+	file->data = data;
+	file->size = size;
+	file->bytes_read = size;
+
+	return (GP_OK);
+}
+
+int
+gp_file_get_last_chunk (CameraFile *file, char **data, long int *size)
 {
 	CHECK_NULL (file && data && size);
 
@@ -137,6 +151,17 @@ gp_file_get_last_chunk (CameraFile *file, char **data, int *size)
         *size = file->bytes_read;
 
         return (GP_OK);
+}
+
+int
+gp_file_get_data_and_size (CameraFile *file, const char **data, long int *size)
+{
+	CHECK_NULL (file && data && size);
+
+	*data = file->data;
+	*size = file->size;
+
+	return (GP_OK);
 }
 
 int
@@ -266,6 +291,26 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 
 	memcpy (destination->data, source->data, source->size);
 	destination->size = source->size;
+
+	return (GP_OK);
+}
+
+int
+gp_file_get_name (CameraFile *file, const char **name)
+{
+	CHECK_NULL (file && name);
+
+	*name = file->name;
+
+	return (GP_OK);
+}
+
+int
+gp_file_get_type (CameraFile *file, const char **type)
+{
+	CHECK_NULL (file && type);
+
+	*type = file->type;
 
 	return (GP_OK);
 }

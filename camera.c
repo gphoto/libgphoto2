@@ -458,6 +458,9 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 			 const char *file, CameraFileInfo *info)
 {
 	int result = GP_OK;
+	const char *type;
+	const char *data;
+	long int size;
 
 	CHECK_NULL (camera && folder && file && info);
 
@@ -486,8 +489,10 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 		    == GP_OK) {
 			info->preview.fields |= GP_FILE_INFO_SIZE | 
 						GP_FILE_INFO_TYPE;
-			info->preview.size = cfile->size;
-			strcpy (info->preview.type, cfile->type);
+			gp_file_get_data_and_size (cfile, &data, &size);
+			info->preview.size = size;
+			gp_file_get_type (cfile, &type);
+			strcpy (info->preview.type, type);
 		}
 
 		CHECK_RESULT (gp_file_unref (cfile));
