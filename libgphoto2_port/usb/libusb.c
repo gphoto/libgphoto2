@@ -256,7 +256,8 @@ int gp_port_usb_find_device_lib(gp_port * d, int idvendor, int idproduct)
 		for (dev = bus->devices; dev; dev = dev->next) {
 			if ((dev->descriptor.idVendor == idvendor) &&
 			    (dev->descriptor.idProduct == idproduct)) {
-				d->device_handle = dev;
+                                if (d)
+                                    d->device_handle = dev;
 				return GP_OK;
 			}
 		}
