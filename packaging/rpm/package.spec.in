@@ -6,6 +6,7 @@
 #
 # TODO list concerning packaging
 # - review and coordinate RPM packaging for gphoto2, libusb, gtkam
+# - handle presence/absence of gphoto2.pdf if it cannot be created
 #
 ########################################################################
 
@@ -82,7 +83,8 @@ rm -rf "${RPM_BUILD_DIR}/%{name}-%{version}"
 %build
 %define __libtoolize :
 # FIXME: We should copy the disable- arguments here
-%configure --enable-docs --with-docs-dir=%{buildroot}%{_docdir}/%{name} --with-doc-formats=html,man,pdf
+@ENABLE_GTK_DOC_TRUE@%configure --enable-docs --with-docs-dir=%{buildroot}%{_docdir}/%{name} --with-doc-formats=@doc_formats@
+@ENABLE_GTK_DOC_FALSE@%configure --with-docs-dir=%{buildroot}%{_docdir}/%{name} --with-doc-formats=@doc_formats@
 make
 # --with-html-dir=%{_docdir}/%{name}-%{version}/html
 make
@@ -105,9 +107,9 @@ find $RPM_BUILD_ROOT -name '*.la' | \
 install -d -m755 %{buildroot}/etc/hotplug/usb/
 install -m755 packaging/linux-hotplug/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
 
-cp -a %{buildroot}%{_docdir}/%{name}-%{version}/html html
-cp -a %{buildroot}%{_docdir}/libgphoto2_port-0.5.0/html/api/gphoto2-port html/api
-find html -name '*.sgml' | xargs rm
+@ENABLE_GTK_DOC_TRUE@cp -a %{buildroot}%{_docdir}/%{name}-%{version}/html html
+@ENABLE_GTK_DOC_TRUE@cp -a %{buildroot}%{_docdir}/libgphoto2_port-0.5.0/html/api/gphoto2-port html/api
+@ENABLE_GTK_DOC_TRUE@find html -name '*.sgml' | xargs rm
 
 
 %find_lang %{name}
@@ -142,7 +144,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 %doc doc/gphoto2.txt doc/gphoto2-cli.txt doc/FAQ
 %doc AUTHORS README COPYING
 %doc html/manual
-%doc doc/gphoto2.pdf
+@XMLTOPDF_TRUE@%doc doc/gphoto2.pdf
 %{_bindir}/gphoto2
 /etc/hotplug/usb/usbcam
 %{_datadir}/gphoto2
@@ -186,7 +188,7 @@ fi
 ####################################
 %files devel
 %defattr(-,root,root)
-%doc html/api
+@ENABLE_GTK_DOC_TRUE@%doc html/api
 %{_bindir}/gphoto2-config
 %{_bindir}/gphoto2-port-config
 %{_mandir}/man3/gphoto2*.3*
@@ -201,6 +203,10 @@ fi
 # ChangeLog
 ########################################################################
 %changelog
+* Thu Jun 20 2002 Hans Ulrich Niedermann <gp@n-dimensional.de> 2.1.0rc3-1
+- only --enable-docs and copy API docs if GTK_DOC found
+- use --with-doc-formats from local ./configure call
+
 * Tue May 28 2002 Hans Ulrich Niedermann <gp@n-dimensional.de> 2.0.1dev8-1
 - comment out requirements if not used (gtk-doc, transfig)
 - provide libgphoto2_port - for future compatibility
