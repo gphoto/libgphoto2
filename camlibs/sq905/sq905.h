@@ -8,6 +8,7 @@ typedef unsigned char SQData;
 typedef enum {
 	SQ_MODEL_ARGUS,
 	SQ_MODEL_POCK_CAM,
+	SQ_MODEL_PRECISION,
 	SQ_MODEL_UNKNOWN
 } SQModel;
 

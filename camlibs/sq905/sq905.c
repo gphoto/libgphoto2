@@ -73,6 +73,8 @@ sq_init (GPPort *port, SQModel *m, SQData *data)
 				*m = SQ_MODEL_ARGUS;
 			else if (!memcmp (c, "\x09\x05\x01\x19", 4))
 				*m = SQ_MODEL_POCK_CAM;
+			else if (!memcmp (c, "\x50\x05\x00\x26", 4))
+				*m = SQ_MODEL_PRECISION;
 			else
 				*m = SQ_MODEL_UNKNOWN;
 		}

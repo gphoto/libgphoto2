@@ -65,12 +65,14 @@ struct {
 	{"Gear to go",        GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Mitek CD10" ,       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Mitek CD30P",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
-	{"Magpix B350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
-	{"Jenoptik JDC 350",  GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"GTW Electronics",   GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Concord Eye-Q Easy",GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Che-ez Snap",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"PockCam",           GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Magpix B350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Jenoptik JDC 350",  GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Precision Mini Digital Camera",
+			      GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
 	{NULL,0,0}
 };
 
@@ -285,6 +287,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_GBRG);
 		break;
 	case SQ_MODEL_ARGUS:
+	case SQ_MODEL_PRECISION:
 	default:
 		gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_BGGR);
 		break;

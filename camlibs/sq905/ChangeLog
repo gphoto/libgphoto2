@@ -1,5 +1,10 @@
 2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
 
+	* sq905.[c.h]: Patch by Thodore Kilgore
+	  <kilgota@banach.math.auburn.edu>: Introduce new SQ_MODEL_PRECISION.
+
+2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
+
 	* library.c: Patch by Theodore Kilgore
 	  <kilgota@banach.math.auburn.edu>: Fix postprocessing of files
 	  where comp_ration != 2.
