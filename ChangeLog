@@ -1,3 +1,7 @@
+2002-03-07  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* INSTALL: changed URL to fetch CDK: fix bug #527098
+
 2002-02-26  Marcus Meissner <marcus@jet.franken.de>
 	
 	* libgphoto2/gphoto-camera.c: do gp_close_port() unconditionaly
