@@ -23,6 +23,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "gphoto2-core.h"
 #include "gphoto2-result.h"
