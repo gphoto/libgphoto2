@@ -71,6 +71,14 @@
 				}\
 }
 */
+#define find_folder_handle(fn,p,d)	{			\
+		{						\
+		char *backfolder=malloc(strlen(fn));		\
+		memcpy(backfolder,fn+1, strlen(fn));		\
+		p=folder_to_handle(backfolder,0,(Camera *)d);\
+		free(backfolder);				\
+		}						\
+}
 
 static struct {
 	short n;
@@ -450,13 +458,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
-	char *backfolder=malloc(strlen(folder));
 	uint32_t parent;
 	int i;
 	
-	memcpy(backfolder,folder+1, strlen(folder));
-	parent=folder_to_handle(backfolder,0, (Camera *)data);
-	free(backfolder);
+	find_folder_handle(folder,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==parent)
 	if ((params->objectinfo[i].ObjectFormat & 0x0800) != 0)
@@ -471,14 +476,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
-	char *backfolder=malloc(strlen(folder));
 	uint32_t parent;
 	int i;
 
-	memcpy(backfolder,folder+1, strlen(folder));
-	parent=folder_to_handle(backfolder,0, (Camera *)data);
-	free(backfolder);
-	//gp_filesystem_dump(fs);
+	find_folder_handle(folder,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==parent)
 	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
@@ -494,21 +495,20 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	PTPReq *fdata = NULL;
-	char *backfolder=malloc(strlen(folder));
 	char * image;
 	uint32_t image_id;
 	uint32_t size;
 
 
 	// Get file number
-	memcpy(backfolder,folder+1, strlen(folder));
-	image_id = folder_to_handle(backfolder, 0, camera);
-	free(backfolder);
+	find_folder_handle(folder, image_id, data);
 	image_id = find_child(filename, image_id, camera);
 	if ((image_id=handle_to_n(image_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	// don't try to download ancillary objects!
+	// FIXME: some acillary objects may be downloaded (audio, movie),
+	//  but no previe.
 	if (( camera->pl->params.objectinfo[image_id].ObjectFormat & 0x0800) == 0) return (GP_OK);
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
@@ -561,7 +561,10 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 	// Get file number
-	image_id = gp_filesystem_number (fs, folder, filename);
+	find_folder_handle(folder, image_id, data);
+	image_id = find_child(filename, image_id, camera);
+	if ((image_id=handle_to_n(image_id, camera))==PTP_HANDLER_SPECIAL)
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	CPR (camera, ptp_deleteobject(&camera->pl->params,
 		camera->pl->params.handles.handler[image_id],0));
@@ -575,14 +578,11 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	PTPObjectInfo *oi;
-	char *backfolder=malloc(strlen(folder));
 	uint32_t image_id;
 
 
 	// Get file number
-	memcpy(backfolder,folder+1, strlen(folder));
-	image_id = folder_to_handle(backfolder, 0, camera);
-	free(backfolder);
+	find_folder_handle(folder, image_id, data);
 	image_id = find_child(filename, image_id, camera);
 	if ((image_id=handle_to_n(image_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
