@@ -236,7 +236,7 @@ camera_abilities (CameraAbilitiesList* list)
 			a->speed[9]	= 115200;
 			a->speed[10]	= 0;
 			a->operations	= GP_OPERATION_CONFIG | GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CAPTURE_PREVIEW;
-			a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_CONFIG;
+			a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 			a->folder_operations = GP_FOLDER_OPERATION_CONFIG | GP_FOLDER_OPERATION_DELETE_ALL;
 			gp_abilities_list_append (list, a);
 		}
@@ -280,8 +280,6 @@ camera_init (Camera* camera)
 	camera->functions->file_delete 		= camera_file_delete;
 	camera->functions->file_get_info	= camera_file_get_info;
 	camera->functions->file_set_info	= camera_file_set_info;
-	camera->functions->file_get_config	= camera_file_get_config;
-	camera->functions->file_set_config	= camera_file_set_config;
 	camera->functions->get_config		= camera_get_config;
 	camera->functions->set_config		= camera_set_config;
 	camera->functions->capture		= camera_capture;
@@ -827,96 +825,6 @@ camera_file_set_info (Camera* camera, const gchar* folder, const gchar* file, Ca
 	}
 	
 	return (GP_OK);
-}
-
-gint 
-camera_file_get_config (Camera* camera, const gchar* folder, const gchar* file, CameraWidget** window)
-{
-	CameraWidget*	widget;
-	konica_data_t*	konica_data;
-	gulong		image_id;
-	guint		exif_size;
-	gboolean 	protected;
-	guchar*		information_buffer = NULL;
-	guint		information_buffer_size;
-	gint		result;
-	gint		value_int;
-	
-	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (!*window,	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (file,	GP_ERROR_BAD_PARAMETERS);
-
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_config ***");
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Folder: %s", folder);
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** File: %s", file);
-
-	/* Our cameras don't support folders. */
-	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
-	
-	/* Get some information about the picture. */
-	konica_data = (konica_data_t*) camera->camlib_data;
-	result = k_get_image_information (
-		konica_data->device, 
-		konica_data->image_id_long, 
-		gp_filesystem_number (konica_data->filesystem, folder, file),
-		&image_id, &exif_size, &protected, &information_buffer, &information_buffer_size);
-	if (result != GP_OK) return (result);
-
-	/* Construct the window. */
-	*window = gp_widget_new (GP_WIDGET_WINDOW, file);
-	widget = gp_widget_new (GP_WIDGET_TOGGLE, "Protect");
-	if (protected) value_int = 1;
-	else value_int = 0;
-	gp_widget_value_set (widget, &value_int);
-	gp_widget_append (*window, widget);
-
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Protected: %i", value_int);
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_get_config ***");
-	return (GP_OK);
-}
-
-int
-camera_file_set_config (Camera* camera, const gchar* folder, const gchar* file, CameraWidget* window)
-{
-	CameraWidget* 	widget;
-	gint		result = GP_OK;
-	glong		image_id;
-	gint		value_int;
-	konica_data_t*	konica_data;
-	gchar*		image_id_string;
-
-	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
-
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_set_config ***");
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Folder: %s", folder);
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** File: %s", file);
-
-	/* Our cameras don't support folders. */
-	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
-	
-	/* Some information we need. */
-	konica_data = (konica_data_t*) camera->camlib_data;
-	g_return_val_if_fail (file[0] != '?', GP_ERROR);
-	image_id_string = g_strndup (file, 6);
-	image_id = atol (image_id_string);
-	g_free (image_id_string);
-	
-	/* Protect status? */
-	g_return_val_if_fail (widget = gp_widget_child_by_label (window, _("Protect")), GP_ERROR_BAD_PARAMETERS);
-	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &value_int);
-		gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Protected: changed to %i", value_int);
-		result = k_set_protect_status (konica_data->device, konica_data->image_id_long, image_id, (value_int != 0));
-	}
-
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_set_config ***");
-		
-	return (result);
 }
 
 int
