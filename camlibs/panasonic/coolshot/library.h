@@ -32,7 +32,7 @@
 #define COOLSHOT_ACK	0x06
 #define COOLSHOT_NAK	0x15
 
-#define CHECK(result) {int res; res = result; if (res != GP_OK) return (res);}
+#define CHECK(result) {int res; res = result; if (res < 0) return (res);}
 
 int coolshot_sm           (Camera *camera);
 int coolshot_sb           (Camera *camera, int speed);

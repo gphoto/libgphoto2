@@ -1,5 +1,11 @@
 2001-09-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/panasonic/coolshot/coolshot.c: Use gp_list_populate instead
+	of accessing the filesystem. The filesystem is clever enough to do
+	that itself.
+
+2001-09-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/stv0680/pattrec.[c,h]: Move those files ...
 	* libgphoto2/pattrec.[c,]: ...here.
 

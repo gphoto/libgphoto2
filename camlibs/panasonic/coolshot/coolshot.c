@@ -53,7 +53,7 @@
 #define COOLSHOT_LAST_MOD "09/01/2001 23:03 EST"
 
 /* define what cameras we support */
-char *coolshot_cameras[] = {
+static char *coolshot_cameras[] = {
 	"Panasonic Coolshot KXL-600A",
 	"Panasonic Coolshot KXL-601A",
 	""
@@ -61,7 +61,7 @@ char *coolshot_cameras[] = {
 
 int camera_id (CameraText *id)
 {
-	strcpy(id->text, "coolshot");
+	strcpy (id->text, "coolshot");
 
 	return (GP_OK);
 }
@@ -73,7 +73,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	CameraAbilities *a;
 
 	ptr = coolshot_cameras[x++];
-	while( *ptr ) {
+	while (*ptr) {
 		gp_abilities_new( &a );
 		strcpy (a->model, ptr );
 		a->port     = GP_PORT_SERIAL;
@@ -103,7 +103,7 @@ static int camera_start (Camera *camera)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_start");
 
-	CHECK( coolshot_sb( camera, camera->port_info->speed ));
+	CHECK (coolshot_sb (camera, camera->port_info->speed));
 
 	return( GP_OK );
 }
@@ -112,8 +112,8 @@ static int camera_stop (Camera *camera)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_stop");
 
-	CHECK( coolshot_sb( camera, DEFAULT_SPEED ));
-	return( GP_OK );
+	CHECK (coolshot_sb( camera, DEFAULT_SPEED));
+	return (GP_OK);
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
@@ -126,8 +126,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** folder: %s", folder);
 
 	CHECK (camera_start (camera));
-	count = coolshot_file_count (camera);
-	CHECK (gp_filesystem_populate (fs, "/", "pic_%04i.jpg", count));
+	CHECK (count = coolshot_file_count (camera));
+	CHECK (gp_list_populate (list, "pic_%04i.jpg", count));
 
 	return (camera_stop (camera));
 }
@@ -136,25 +136,23 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 		const char *filename, CameraFileInfo *info, void *data)
 {
 	Camera *camera = data;
-	int file_number;
+	int n;
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** get_info_func");
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** folder: %s", folder);
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** filename: %s", filename);
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** filename: %s",filename);
 
 	CHECK (camera_start (camera));
 
 	/* Get the file number from the CameraFileSystem */
-	file_number = gp_filesystem_number (camera->fs, folder, filename);
-	if (file_number < 0)
-		return (file_number);
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
 
 	/* fixme, get file size also */
 	info->file.fields = GP_FILE_INFO_TYPE;
 	strcpy (info->file.type, GP_MIME_JPEG );
 
 	info->preview.fields = GP_FILE_INFO_TYPE;
-	strcpy (info->preview.type, GP_MIME_JPEG );
+	strcpy (info->preview.type, GP_MIME_JPEG);
 
 	return (camera_stop (camera));
 }
@@ -171,36 +169,39 @@ static int camera_file_get (Camera *camera, const char *folder,
 			    CameraFile *file)
 {
 	char data[128000];
-	int size;
-	int number;
+	int size, n;
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_file_get");
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** folder: %s", folder);
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** filename: %s", filename);
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** filename: %s",filename);
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** type: %d", type);
 
-	CHECK( camera_start(camera));
+	CHECK (camera_start (camera));
 
-	switch( type ) {
-		case GP_FILE_TYPE_PREVIEW:
-		/* fixme, preview/thumbnail downloads full image with this commented...
-				sscanf( filename, "thm_%d.jpg", &number );
-				coolshot_request_thumbnail( camera, data, &size, number );
-				break;
-		*/
+	/*
+	 * Get the file number from the CameraFileSystem (and increment 
+	 * because we need numbers starting with 1)
+	 */
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	n++;
 
-		case GP_FILE_TYPE_NORMAL:
-				sscanf( filename, "pic_%d.jpg", &number );
-				coolshot_request_image( camera, data, &size, number );
-				break;
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
 
-		default:
-			return( GP_ERROR_NOT_SUPPORTED );
+		/* fixme, preview/thumbnail downloads full image... */
+		CHECK (coolshot_request_thumbnail (camera, data, &size, n));
+		break;
+
+	case GP_FILE_TYPE_NORMAL:
+		CHECK (coolshot_request_image (camera, data, &size, n));
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	gp_file_set_mime_type( file, GP_MIME_JPEG );
-	gp_file_set_name( file, filename );
-	gp_file_append(file, data, size);
+	CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
+	CHECK (gp_file_set_name (file, filename));
+	CHECK (gp_file_append (file, data, size));
 
 	return (camera_stop (camera));
 }
@@ -212,13 +213,13 @@ static int camera_summary (Camera *camera, CameraText *summary)
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_summary");
 
-	CHECK( camera_start(camera));
+	CHECK (camera_start (camera));
 
 	/* possibly get # pics, mem free, etc. */
 	count = coolshot_file_count (camera);
 
-	sprintf( tmp, "Frames Taken     : %4d\n", count );
-	strcat( summary->text, tmp );
+	sprintf (tmp, "Frames Taken     : %4d\n", count);
+	strcat (summary->text, tmp );
 
 	return (camera_stop (camera));
 }
@@ -237,7 +238,8 @@ static int camera_about (Camera *camera, CameraText *about)
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_about");
 
 	strcpy (about->text,
-		_("coolshot library v" COOLSHOT_VERSION " " COOLSHOT_LAST_MOD "\n"
+		_("coolshot library v" COOLSHOT_VERSION
+		" " COOLSHOT_LAST_MOD "\n"
 		"Chris Pinkham <cpinkham@infi.net>\n"
 		"Support for Panasonic Coolshot digital cameras\n"
 		"based on reverse engineering serial protocol.\n"
@@ -251,8 +253,6 @@ int camera_init (Camera *camera)
 	int count;
 	gp_port_settings settings;
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_init");
-
 	/* First, set up all the function pointers */
 	camera->functions->exit 	= camera_exit;
 	camera->functions->file_get 	= camera_file_get;
@@ -260,33 +260,29 @@ int camera_init (Camera *camera)
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
-	camera->camlib_data = NULL;
-
 	strcpy (settings.serial.port, camera->port_info->path);
 	settings.serial.speed 	 = DEFAULT_SPEED;
 	settings.serial.bits 	 = 8;
 	settings.serial.parity 	 = 0;
 	settings.serial.stopbits = 1;
 
-	CHECK( gp_port_settings_set (camera->port, settings));
+	CHECK (gp_port_settings_set (camera->port, settings));
 
-	CHECK( gp_port_timeout_set (camera->port, TIMEOUT));
-	CHECK( gp_port_open( camera->port ));
+	CHECK (gp_port_timeout_set (camera->port, TIMEOUT));
+	CHECK (gp_port_open (camera->port));
 
 	/* check to see if camera is really there */
-	CHECK( coolshot_enq (camera));
+	CHECK (coolshot_enq (camera));
 
-	coolshot_sm( camera );
+	coolshot_sm (camera);
 
 	/* get number of images */
-	count = coolshot_file_count (camera);
-	if (count < 0)
-		return (count);
+	CHECK (count = coolshot_file_count (camera));
 
-	CHECK( camera_start (camera));
-	CHECK(gp_filesystem_set_list_funcs (camera->fs,
+	CHECK (camera_start (camera));
+	CHECK (gp_filesystem_set_list_funcs (camera->fs,
 		file_list_func, NULL, camera));
-	CHECK(gp_filesystem_set_info_funcs (camera->fs,
+	CHECK (gp_filesystem_set_info_funcs (camera->fs,
 		get_info_func, NULL, camera));
 
 	return (camera_stop (camera));
