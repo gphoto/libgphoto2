@@ -579,11 +579,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			}
 #endif /* HAVE_EXIF */
 			if (*thumbname == '\0') {
-                                /* file internal thumbnail */
+				/* file internal thumbnail */
 				ret = canon_int_get_thumbnail (camera, canon_path, &data,
 							       &datalen, context);
 			} else {
-                                /* extra thumbnail file */
+				/* extra thumbnail file */
 				ret = canon_int_get_file (camera, thumbname, &data, &datalen,
 							  context);
 			}
@@ -635,7 +635,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	/* do different things with the data fetched above */
-	/* FIXME: For which file type(s) should we gp_file_set_name (file, filename);*? */
+	/* FIXME: For which file type(s) should we gp_file_set_name(file,filename) ? */
 	switch (type) {
 		case GP_FILE_TYPE_PREVIEW:
 			/* Either this camera model does not support EXIF,
@@ -645,7 +645,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			 * in data.
 			 */
 			ret = canon_int_extract_jpeg_thumb (data, datalen, &thumbdata, &datalen, context);
-			
+
 			if (thumbdata != NULL) {
 				/* free old data */
 				free (data);
@@ -683,7 +683,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_file_set_mime_type (file, GP_MIME_JPEG);
 			gp_file_set_data_and_size (file, data, datalen);
 			break;
-#endif /* HAVE_EXIF */			
+#endif /* HAVE_EXIF */
 		default:
 			/* this case should've been caught above anyway */
 			if (data)
