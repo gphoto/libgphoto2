@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 #include <gphoto2-library.h>
 #include <gphoto2-debug.h>
@@ -271,7 +272,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		&camera->pl->params.handles, i, &objectinfo));
-		ptp_objectfilename (&objectinfo, filename);
+		ptp_getobjectfilename (&objectinfo, filename);
 		CR (gp_list_append (list, filename, NULL));
 	}
 
@@ -346,15 +347,49 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = data;
 	PTPObjectInfo objectinfo;
 	int n;
+	char capture_date[MAXFILELEN];
+	struct tm tm;
+	char tmp[16];
 
 	n=gp_filesystem_number (fs, folder, filename);
 	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 	&camera->pl->params.handles, n, &objectinfo));
 
-	info->preview.fields = GP_FILE_INFO_SIZE;
-	info->file.fields = GP_FILE_INFO_SIZE;
+	info->preview.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
+				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TIME;
+	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
+				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TIME;
 	info->preview.size = objectinfo.ThumbCompressedSize;
+	info->preview.width = objectinfo.ThumbPixWidth;
+	info->preview.height = objectinfo.ThumbPixHeight;
 	info->file.size = objectinfo.ObjectCompressedSize;
+	info->file.width = objectinfo.ImagePixWidth;
+	info->file.height = objectinfo.ImagePixHeight;
+
+	ptp_getobjectcapturedate (&objectinfo, capture_date);
+	strncpy(tmp,capture_date,4);
+	tmp[4]=0;
+	tm.tm_year=atoi(tmp)-1900;
+	strncpy(tmp,capture_date+4,2);
+	tmp[2]=0;
+	tm.tm_mon=atoi(tmp)-1;
+	strncpy(tmp,capture_date+6,2);
+	tmp[2]=0;
+	tm.tm_mday=atoi(tmp);
+	strncpy(tmp,capture_date+9,2);
+	tmp[2]=0;
+	tm.tm_hour=atoi(tmp);
+	strncpy(tmp,capture_date+11,2);
+	tmp[2]=0;
+	tm.tm_min=atoi(tmp);
+	strncpy(tmp,capture_date+13,2);
+	tmp[2]=0;
+	tm.tm_sec=atoi(tmp);
+	info->file.time=mktime(&tm);
+//	info->preview.time=mktime(&tm);		// ???
+
+
+
 
 	return (GP_OK);
 }
