@@ -594,7 +594,7 @@ int
 gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
 {
 	int x, r;
-//	CameraList list;
+/*	CameraList list; */
 
 	CHECK_NULL (fs && folder);
 	CHECK_ABS (folder);

@@ -23,17 +23,17 @@
 #include <gphoto2-library.h>
 #include "jpeg.h"
 
-// call example:nullpictureabort(picture,"Picture",0);
+/* call example:nullpictureabort(picture,"Picture",0); */
 #define nullpointerabort(pointer,name,val) \
     if (pointer==NULL) { printf(name " does not exist\n"); return val; }
 
-// call example:nullpictureabortvoid(picture,"Picture");
+/* call example:nullpictureabortvoid(picture,"Picture"); */
 #define nullpointerabortvoid(pointer,name) \
     if (pointer==NULL) { printf(name " does not exist\n"); return; }
 
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
 
-// Determine the number of elements in an array.
+/* Determine the number of elements in an array. */
 #define countof(array) (sizeof(array) / sizeof((array)[0]))
 
 const jpegmarker JPEG_MARKERS[] = {
@@ -54,7 +54,7 @@ chunk *mychunk;
     printf("Entered chunk_new\n");
     mychunk =  (chunk *) malloc(sizeof(chunk));
     mychunk->size=length;
-//    printf("New chunk of size %i\n", mychunk->size);
+/*    printf("New chunk of size %i\n", mychunk->size); */
     mychunk->data = (char *)malloc(length);
     if (mychunk==NULL) printf("Failed to allocate new chunk!\n");
     return mychunk;
@@ -82,7 +82,7 @@ void chunk_destroy(chunk *mychunk)
 void chunk_print(chunk *mychunk)
 {
     int x;
-//    printf("Size=%i\n", mychunk->size);
+/*    printf("Size=%i\n", mychunk->size); */
     nullpointerabortvoid(mychunk, "Chunk");
     for (x=0; x<mychunk->size; x++)
         printf("%hX ", mychunk->data[x]);
@@ -91,25 +91,25 @@ void chunk_print(chunk *mychunk)
 
 char gp_jpeg_findff(int *location, chunk *picture)
 {
-//printf("Entered jpeg_findamarker!!!!!!\n");
+/* printf("Entered jpeg_findamarker!!!!!!\n"); */
     nullpointerabort(picture, "Picture",0);
     while(*location<picture->size)
     {
-//        printf("%hX ",picture->data[*location]);
+/*        printf("%hX ",picture->data[*location]); */
         if (picture->data[*location]==0xff)
         {
-//        printf("return success!\n");
+/*        printf("return success!\n"); */
         return 1;
         }
     (*location)++;
     }
-//    printf("return failure!\n");
+/*    printf("return failure!\n"); */
     return 0;
 }
 
 char gp_jpeg_findactivemarker(char *id, int *location, chunk *picture)
 {
-//    printf("Entered gp_jpeg_findactivemarker!!!!!!!!\n");
+/*    printf("Entered gp_jpeg_findactivemarker!!!!!!!!\n"); */
     nullpointerabort(picture, "Picture",0);
     while(gp_jpeg_findff(location, picture) && ((*location+1)<picture->size))
         if (picture->data[*location+1]) {
@@ -122,11 +122,11 @@ char gp_jpeg_findactivemarker(char *id, int *location, chunk *picture)
 char *gp_jpeg_markername(int c)
 {
     int x;
-//    printf("searching for marker %X in list\n",c);
-//    printf("%i\n", sizeof(markers));
+/*    printf("searching for marker %X in list\n",c); */
+/*    printf("%i\n", sizeof(markers)); */
     for (x=0; x<countof(JPEG_MARKERS); x++)
     {
-//        printf("checking to see if it is marker %X\n", markers[x]);
+/*        printf("checking to see if it is marker %X\n", markers[x]); */
 
         if (c==JPEG_MARKERS[x])
             return (char *)JPEG_MARKERNAMES[x];
@@ -156,9 +156,9 @@ void gp_jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end)
     int length;
     nullpointerabortvoid(picture, "Picture");
     length=(int)(end-start+1);
-//    printf("Add marker #%i starting from %i and ending at %i for a length of %i\n", myjpeg->count, start, end, length);
+/*    printf("Add marker #%i starting from %i and ending at %i for a length of %i\n", myjpeg->count, start, end, length); */
     myjpeg->marker[myjpeg->count] = chunk_new(length);
-//    printf("Read length is: %i\n", myjpeg->marker[myjpeg->count].size);
+/*    printf("Read length is: %i\n", myjpeg->marker[myjpeg->count].size); */
     memcpy(myjpeg->marker[myjpeg->count]->data, picture->data+start, length);
     chunk_print(myjpeg->marker[myjpeg->count]);
     myjpeg->count++;
@@ -217,11 +217,11 @@ void gp_jpeg_print(jpeg *myjpeg)
     }
 }
 
-chunk *gp_jpeg_make_start() //also makes the JFIF marker
+chunk *gp_jpeg_make_start() /* also makes the JFIF marker */
 {
     chunk *temp;
-    // Start marker and
-    // JFIF APPO Marker:Version 1.01, density 1x2 (the 00 01 00 02)
+    /* Start marker and
+       JFIF APPO Marker:Version 1.01, density 1x2 (the 00 01 00 02) */
     temp = chunk_new_filled(20,  "\xFF\xD8"
         "\xFF\xE0\x00\x10\x4A\x46\x49\x46" "\x00\x01\x01\x00\x00\x01\x00\x02" "\x00\x00");
     return temp;
@@ -346,7 +346,7 @@ jpeg *gp_jpeg_header(int width, int height,
     return temp;
 }
 
-//#define TESTING_JPEG_C
+/*#define TESTING_JPEG_C */
 
 #ifndef TESTING_JPEG_C
 char gp_jpeg_write(CameraFile *file, const char *filename, jpeg *myjpeg)

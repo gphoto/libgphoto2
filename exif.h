@@ -48,12 +48,12 @@ typedef struct exif_parser {
 } exifparser;
 
 typedef struct {
-    int tag;            // Tag ID, see exif_tags.h
-    EXIFDataType type;  // Tag data type, see exif_tags.h
-    int size;           // Length of the data, in bytes.
-    char *data;         // The data itself, not an offset
-    int num;     // When type is (s)rational, we
-    int den;   // store the value here...
+    int tag;            /* Tag ID, see exif_tags.h */
+    EXIFDataType type;  /* Tag data type, see exif_tags.h */
+    int size;           /* Length of the data, in bytes. */
+    char *data;         /* The data itself, not an offset */
+    int num;     /* When type is (s)rational, we */
+    int den;   /* store the value here... */
     int intval;
 } ExifData;
 
