@@ -423,7 +423,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
                             GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
         info->file.size = exif_size;
         info->file.permissions = GP_FILE_PERM_READ;
-        if (!protected) info->file.permissions = GP_FILE_PERM_DELETE;
+        if (!protected) info->file.permissions |= GP_FILE_PERM_DELETE;
         strcpy (info->file.type, GP_MIME_JPEG);
         strcpy (info->file.name, file);
 
