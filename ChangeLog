@@ -1,3 +1,9 @@
+2004-11-17  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* configure.in
+	* camlibs/toshiba: Removed on request of Sean Bruno
+	  <sean.bruno@dsl-only.net> (camera is supported by sierra driver).
+
 2004-10-28  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* libgphoto2/gphoto2-context.h: Fix build for gcc 2.95
