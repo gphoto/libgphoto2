@@ -57,7 +57,8 @@ typedef enum {
 struct _CameraPrivateLibrary
 {
 	GPPort *gpdev;
-	int dirty:1;
+	int dirty_sdram:1;
+	int dirty_flash:1;
 	int storage_media_mask;
 	uint8_t fw_rev;
 	SPCA50xBridgeChip bridge;

@@ -166,7 +166,7 @@ spca50x_sdram_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 	sleep (1);
 
 	/* Reread fats the next time it is accessed */
-	lib->dirty = 1;
+	lib->dirty_sdram = 1;
 
 	return GP_OK;
 }
@@ -185,7 +185,7 @@ spca50x_sdram_delete_all (CameraPrivateLibrary * lib)
 	sleep (3);
 
 	/* Reread fats the next time it is accessed */
-	lib->dirty = 1;
+	lib->dirty_sdram = 1;
 	return GP_OK;
 }
 
@@ -680,7 +680,7 @@ spca50x_sdram_get_info (CameraPrivateLibrary * lib)
 
 	lib->size_free =
 		16 * 1024 * 1024 - 0x2800 * SPCA50X_FAT_PAGE_SIZE - lib->size_used;
-	lib->dirty = 0;
+	lib->dirty_sdram = 0;
 	
 	return GP_OK;
 }
@@ -689,7 +689,7 @@ int
 spca50x_sdram_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 		      struct SPCA50xFile **g_file)
 {
-	if (lib->dirty)
+	if (lib->dirty_sdram)
 		CHECK (spca50x_sdram_get_info (lib));
 	*g_file = &(lib->files[index]);
 	return GP_OK;

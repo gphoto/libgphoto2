@@ -271,7 +271,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	}
 	
 	/* possibly get # pics, mem free, etc. if needed */
-	if (cam_has_sdram(camera->pl) && camera->pl->dirty) {
+	if (cam_has_sdram(camera->pl) && camera->pl->dirty_sdram) {
 		CHECK (spca50x_sdram_get_info (camera->pl));
 
 		snprintf (tmp, sizeof (tmp),
@@ -333,7 +333,7 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 		}
 	}
 	if (cam_has_sdram(camera->pl)) {
-		if (camera->pl->dirty)
+		if (camera->pl->dirty_sdram)
 			CHECK (spca50x_sdram_get_info (camera->pl));
 
 		for (i = 0; i < camera->pl->num_files_on_sdram; i++) {
@@ -580,7 +580,7 @@ camera_init (Camera *camera, GPContext *context)
 		return (GP_ERROR_NO_MEMORY);
 	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 	camera->pl->gpdev = camera->port;
-	camera->pl->dirty = 1;
+	camera->pl->dirty_sdram = 1;
 
 	/* What bridge chip is inside the camera? The gsmart mini is spca500
 	 * based, while the others have a spca50xa */

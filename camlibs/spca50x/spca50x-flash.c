@@ -113,7 +113,7 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 {
 	uint16_t n_toc_entries;
 	int toc_size = 0;
-	if (pl->dirty == 0){
+	if (pl->dirty_flash == 0){
 		/* TOC has been read already, and stored in the pl, 
 		   so let's not read it again unless "dirty" gets set,
 		   e.g. by a reset, delete or capture action... */
@@ -196,7 +196,7 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 	}
 	/* record that TOC has been updated - clear the "dirty" flag */
 	pl->num_files_on_flash = *filecount;
-	pl->dirty = 0;
+	pl->dirty_flash = 0;
 
 	return GP_OK;
 }
@@ -247,7 +247,7 @@ spca500_flash_delete_file (CameraPrivateLibrary *pl, int index)
 		CHECK (gp_port_usb_msg_write(pl->gpdev, 0x00, 0x0000, 0x0100, NULL, 0x0));
 	
 		/* invalidate TOC/info cache */
-		pl->dirty = 1;
+		pl->dirty_flash = 1;
 		return GP_OK;
 	} else {
 		/* not supported on the 504 style cams */
@@ -280,7 +280,7 @@ spca50x_flash_delete_all (CameraPrivateLibrary *pl, GPContext *context)
 	}
 
 	/* invalidate TOC/info cache */
-	pl->dirty = 1;
+	pl->dirty_flash = 1;
 	return GP_OK;
 }
 
@@ -302,7 +302,7 @@ spca500_flash_capture (CameraPrivateLibrary *pl)
 		CHECK (spca500_flash_84D_wait_while_busy(pl));
 	
 		/* invalidate TOC/info cache */
-		pl->dirty = 1;
+		pl->dirty_flash = 1;
 		return GP_OK;
 	} else {
 		/* not supported on the 504 style cams */
@@ -360,14 +360,14 @@ spca500_flash_84D_get_file_info (CameraPrivateLibrary * pl, int index,
 
 	/* First, check if the info. is already buffered in the cam private lib
 	 * We DO NOT want to be fetching the entire thumbnail just to get the file size...*/
-	 if ((pl->dirty == 0) && (pl->files[index].type != 0)){
+	 if ((pl->dirty_flash == 0) && (pl->files[index].type != 0)){
 		 /* This file must have been checked before */
 		*w = pl->files[index].width ;
 		*h = pl->files[index].height ;
 		*t = pl->files[index].type ;
 		*sz = pl->files[index].size ;
 		return GP_OK;
-	 } else if (pl->dirty != 0){ /* should never happen, but just in case... */
+	 } else if (pl->dirty_flash != 0){ /* should never happen, but just in case... */
 		CHECK(spca50x_flash_get_TOC (pl, &i));
 		if ( index >= i){ 
 			/* asking for a picture that doesn't exist */
@@ -486,7 +486,7 @@ spca500_flash_84D_get_file_info (CameraPrivateLibrary * pl, int index,
 	}
 
 	/* now add this new set of data to the info_cache */
-	if (pl->dirty == 0){
+	if (pl->dirty_flash == 0){
 		/* Only update the files cache if it exists, i.e. if dirty is zero */
 		/* We should never get here if dirty is set, however ! */
 		pl->files[index].type = *t;
@@ -838,11 +838,11 @@ spca50x_flash_close (CameraPrivateLibrary *pl, GPContext *context)
 
 	}
 
-	if (pl->dirty == 0){ 
+	if (pl->dirty_flash == 0){ 
 		/* check if we need to free the file info buffers */
 		free_files(pl);
 	}
-	pl->dirty = 1;
+	pl->dirty_flash = 1;
 	return GP_OK;
 }
 
@@ -1009,6 +1009,6 @@ spca50x_flash_init (CameraPrivateLibrary *pl, GPContext *context)
 
 	}
 
-	pl->dirty = 1;
+	pl->dirty_flash = 1;
 	return GP_OK;
 }
