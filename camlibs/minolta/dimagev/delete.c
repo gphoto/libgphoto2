@@ -164,19 +164,6 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 			break;
 	}
 
-	if ( dimagev->data->host_mode != 0 ) {
-
-		dimagev->data->host_mode = 0;
-
-		if ( dimagev_send_data(dimagev) == GP_ERROR ) {
-			if ( dimagev->debug != 0 ) {
-				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
-			}
-			return GP_ERROR;
-		}
-	}
-
-
 	return GP_OK;
 }
 
