@@ -1,0 +1,43 @@
+########################################################################
+#   A very short guide to using the gphoto2 command line interface     #
+########################################################################
+
+
+===========
+1. Overview
+===========
+
+The command line interface is named gphoto2 and is installed into your
+${prefix}/bin directory.
+
+When you run gphoto2, you have to specify a command to execute and
+some options that describe how to execute it.
+
+For detailed instructions on how to operate gphoto2, e.g. with serial
+cameras, see 
+
+      http://www.gphoto.org/gphoto2/cli.html
+
+
+========================
+2. Some quick operations
+========================
+
+Some basic commands:
+
+gphoto2 --help
+gphoto2 --list-ports
+gphoto2 --list-cameras
+
+For USB cameras:
+
+gphoto2 --port usb: --auto-detect
+gphoto2 --port usb: --summary
+gphoto2 --port usb: --list-files
+gphoto2 --port usb: --get-image 12-35
+gphoto2 --port usb: --get-all-images
+
+For detailed instructions on how to operate gphoto2, e.g. with serial
+cameras, see 
+
+      http://www.gphoto.org/gphoto2/cli.html

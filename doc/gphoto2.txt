@@ -1,0 +1,166 @@
+########################################################################
+# A short guide to setting up and using gphoto2
+########################################################################
+
+
+===========
+1. Overview
+===========
+
+Gphoto2 consists of two libraries (libgphoto2 and libgphoto2_port) and
+a command line frontend (gphoto2). Other (GUI) frontends are available
+as separate packages.
+
+In order to get access to the camera, your frontend process requires
+write permissions to the respective device special file, e.g. to
+/dev/ttyS3 or /proc/bus/usb/1/012. 
+
+For security reasons, we strongly recommend not to run any gphoto2
+frontend as root. So you have to set up the permissions of your camera
+device accordingly. This is described in chapter 2 - Setting up
+permissions. 
+
+Then you can run your frontend. For the command line gphoto2 frontend,
+this is described in the file gphoto2-cli.txt.
+
+
+=========================
+2. Setting up permissions
+=========================
+
+
+2.1 Serial ports
+================
+
+[ I don't have any experience with serial ports for user processes. So
+  take this section with a grain of salt. ]
+
+If you have a serial port reserved for the camera, you may just chown
+the device file to the user you want to run gphoto2 as.
+
+
+
+2.2 USB ports
+=============
+
+As USB allows hotplugging of devices, there is a mechanism that
+dynamically creates the device files for the devices currently
+connected and switched on.
+
+The operating system has to determine which users may access a device
+dynamically. As the operating system cannot determine this by itself,
+there have to be some helper applications.
+
+
+2.2.1 USB ports on Linux
+========================
+
+On Linux systems, from the 2.4 kernel series on, the kernel supports
+hotplugging. You may have to compile a kernel with hotplug support if
+you're not already running one. You may have to install the hotplug
+package (http://linux-hotplug.n-dimensional.de/) if you don't have it
+already.
+
+You can find out if your kernel has hotplug support by looking for the
+file /proc/sys/kernel/hotplug. If it exists, you have a hotplug
+enabled kernel. If "cat /proc/sys/kernel/hotplug" prints the path to
+your hotplug binary (usually /sbin/hotplug) and this binary exists,
+you are ready to rock.
+
+Note that the following solution does *not* provide real security, but
+it allows you to run gphoto2 as a non-root user and avoids chance
+conflicts between to different users accessing the camera.
+
+1. Add the output of "gphoto2 --print-usb-usermap" to
+   /etc/hotplug/usb.usermap
+
+2. Copy the usbcam script to /etc/hotplug/usb/usbcam
+   The usbcam script is found at the end of this file.
+
+3. Adapt /etc/hotplug/usb/usbcam. This step depends on whether you
+   want one or more users to have access to the camera. 
+
+   a) If you want only one user to have access to the camera, edit
+      /etc/hotplug/usb/usbcam to do a "chown user" instead of the
+      "chgrp camera" and a "chmod 0600" instead of "chmod 0660".
+
+   b) If you want multiple users to have access to the camera, put all
+      of these users in one group - either a special "camera" group or
+      a generic "users" group will do - and use that group in the
+      "chgrp" line in /etc/hotplug/usb/usbcam
+
+4. Plug in camera and switch it on - your /var/log/messages will now
+   display some messages.
+
+5. Run gphoto2 or any other libgphoto2 frontend and enjoy :-)
+
+
+=========================================
+3. Specifying the port and camera you use
+=========================================
+
+libgphoto2 identifies a camera two values:
+a) the port it is connected to
+b) the name of the camera
+
+How these may be specified is discussed in the following paragraphs.
+
+
+3.1 Serial ports
+================
+
+Serial ports are named like "serial:/dev/ttyS2" if you want to use the
+serial device "/dev/ttyS2".
+
+
+3.2 USB ports
+=============
+
+As USB works with auto detection, you do not have to specify a device
+file. Therefore you just use the gphoto2 port "usb:".
+
+
+3.3 Name of the camera
+======================
+
+The model name of the camera does not have to be specified when using
+the "usb:". Otherwise you can specify a camera model like 
+"Canon PowerShot G2". You will be better off choosing the model from
+the list of supported models rather than just trying your camera
+model. 
+
+
+=================
+Appendix A. Files
+=================
+
+A.1 usbcam script
+=================
+
+#!/bin/bash
+# $Id$
+#
+# /etc/hotplug/usb/usbcam
+#
+# Sets up newly plugged in USB camera so that group "camera"
+# can access it from user space
+#
+# Note that for this script to work, you'll need 
+# a) a corresponding line in the file /etc/hotplug/usermap
+# b) a group "camera" where all users allowed access to the
+#    camera are listed
+# c) a Linux kernel supporting hotplug
+# d) the hotplug package
+#
+# In the usermap file, the first field "usb module" should be named 
+# "usbcam".
+# The idVendor and idProduct fields should show the IDs of your Cam.
+# All the other fields can probably just be entered as "0x0".
+#
+# 
+
+if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
+then
+    chgrp camera "${DEVICE}"
+    chmod g+rw "${DEVICE}"
+fi
