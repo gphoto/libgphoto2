@@ -182,7 +182,6 @@ struct gp_port {
 
         char *gp_port_result_as_string (int result);
                 /* Returns a string describing the error */
-	char *gp_port_result_as_description (int result);
 
         int gp_port_init (int debug_level);
                 /* Initializes the library.
