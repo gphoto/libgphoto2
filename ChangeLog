@@ -1,3 +1,10 @@
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	Suggestion from Arnaud Launay <asl@launay.org>:
+
+	* configure.in: Let users specify where to look for libjpeg
+	  (--with-jpeg-prefix).
+
 2002-06-18  Christophe Barbé <christophe.barbe@ufies.org>
 
 	po file from Fabian Mandelbaum <fabman@mandrakesoft.com>

@@ -293,30 +293,40 @@ have_jpeg=false
 AC_ARG_WITH(jpeg, [  --without-jpeg            Don't use jpeg],
 	if test x$withval = xno; then
 		try_jpeg=false
+		jpeg_msg="no (not requested)"
 	fi
 )
+jpeg_prefix=$ac_default_prefix
+AC_ARG_WITH(jpeg-prefix, [  --with-jpeg-prefix=PREFIX Location of jpeg], [
+	jpeg_prefix="$withval"])
 if $try_jpeg; then
-	AC_MSG_CHECKING([for jpeglib.h])
-	AC_TRY_CPP([
-#include <stdio.h>
-#undef PACKAGE
-#undef VERSION
-#undef HAVE_STDDEF_H
-#undef HAVE_STDLIB_H
-#include <jpeglib.h>],
-		jpeg_msg=yes,
-		jpeg_msg=no)
-	AC_MSG_RESULT($jpeg_msg)
-	if test "$jpeg_msg" = yes; then
-		have_jpeg=true
-		AC_DEFINE(HAVE_JPEG,,[whether we use libjpeg])
-		JPEG_LIBS="-ljpeg"
-	fi
-else
-	jpeg_msg="no (not requested)"
+	CPPFLAGS_save="$CPPFLAGS"
+	CPPFLAGS="-I$jpeg_prefix/include"
+	AC_CHECK_HEADER(jpeglib.h, [
+		AC_CHECK_LIB(jpeg, jpeg_read_scanlines, [
+			have_jpeg=true
+			jpeg_msg="yes"
+			AC_DEFINE(HAVE_JPEG,,[whether we use libjpeg])
+			JPEG_LIBS="-ljpeg"
+			JPEG_CFLAGS=$CPPFLAGS
+		], [
+			LDFLAGS_save="$LDFLAGS"
+			LDFLAGS="-L$jpeg_prefix/lib"
+			AC_CHECK_LIB(jpeg, jpeg_stdio_src, [
+				have_jpeg=true
+				jpeg_msg="yes (in '$jpeg_prefix')"
+				AC_DEFINE(HAVE_JPEG,,[whether we use libjpeg])
+				JPEG_LIBS="-L$jpeg_prefix/lib -ljpeg"
+				JPEG_CFLAGS=$CPPFLAGS
+			], [jpeg_msg="no (could not link)"])
+			LDFLAGS=$LDFLAGS_save
+		])
+	])
+	CPPFLAGS=$CPPFLAGS_save
 fi
 AM_CONDITIONAL(HAVE_JPEG, $have_jpeg)
 AC_SUBST(JPEG_LIBS)
+AC_SUBST(JPEG_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl pkg-config: pkg-config is a tool to simplify checks for libraries and
