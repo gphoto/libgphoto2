@@ -98,11 +98,7 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 
 	/* Fill in a template */
 	strcpy(a.model, "");
-	a.serial   = 1;
-	a.parallel = 0;
-	a.usb      = 0;
-	a.ieee1394 = 0;
-	a.network  = 0;
+	a.port     = GP_PORT_SERIAL;
 	a.speed[0] = 9600;
 	a.speed[1] = 19200;
 	a.speed[2] = 38400;

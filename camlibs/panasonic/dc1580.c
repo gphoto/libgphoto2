@@ -365,10 +365,7 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	   if a camera supported multiple ways. */
 
 	strcpy(abilities[0].model, "Panasonic DC1580");
-	abilities[0].serial   = 1;
-	abilities[0].parallel = 0;
-	abilities[0].usb      = 0;
-	abilities[0].ieee1394 = 0;
+	abilities[0].port     = GP_PORT_SERIAL;
 	abilities[0].speed[0] = 9600;
 	abilities[0].speed[1] = 19200;
 	abilities[0].speed[2] = 38400;

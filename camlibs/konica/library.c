@@ -149,10 +149,7 @@ int camera_abilities (CameraAbilities *abilities, int *count)
 	int x = 0;
 	CameraAbilities a;
 
-	a.serial   = 1;
-	a.parallel = 0;
-	a.usb      = 0;
-	a.ieee1394 = 0;
+	a.port	   = GP_PORT_SERIAL;
 	a.speed[0] = 300;
 	a.speed[1] = 600;
 	a.speed[2] = 1200;
@@ -640,5 +637,4 @@ int camera_config_set (CameraSetting *conf, int count)
 	printf ("Not yet implemented...\n");
 	return (GP_ERROR);
 }
-
 

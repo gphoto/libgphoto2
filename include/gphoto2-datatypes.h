@@ -15,18 +15,25 @@
 
 /* Physical Connection Types */
 typedef enum {
-	GP_PORT_NONE,
-	GP_PORT_SERIAL,
-	GP_PORT_PARALLEL,
-	GP_PORT_USB,
-	GP_PORT_IEEE1394,
-	GP_PORT_NETWORK
+	GP_PORT_NONE		= 1 << 0,
+	GP_PORT_SERIAL		= 1 << 1,
+	GP_PORT_PARALLEL	= 1 << 2,
+	GP_PORT_USB		= 1 << 3,
+	GP_PORT_IEEE1394	= 1 << 4,
+	GP_PORT_NETWORK		= 1 << 5
 } CameraPortType;
 
+/* Some macros for determining what type of ports the camera supports */
+#define SERIAL_SUPPORTED(_a)	((_a >> 1)&&0x01)
+#define PARALLEL_SUPPORTED(_a)	((_a >> 2)&&0x01)
+#define USB_SUPPORTED(_a)	((_a >> 3)&&0x01)
+#define IEEE1394_SUPPORTED(_a)	((_a >> 4)&&0x01)
+#define NETWORK_SUPPORTED(_a)	((_a >> 5)&&0x01)
+
 typedef enum {
-	GP_CAPTURE_IMAGE,
-	GP_CAPTURE_AUDIO,
-	GP_CAPTURE_VIDEO
+	GP_CAPTURE_IMAGE	= 1 << 0,
+	GP_CAPTURE_AUDIO 	= 1 << 1,
+	GP_CAPTURE_VIDEO	= 1 << 2
 } CameraCaptureType;
 
 typedef enum {
@@ -103,6 +110,8 @@ typedef struct {
 	char model[128];
 
 		/* can the library support the following: */
+	int port;
+
 	int serial;
 	int parallel;
 	int usb;

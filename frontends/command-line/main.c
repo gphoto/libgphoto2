@@ -185,33 +185,35 @@ OPTION_CALLBACK(abilities) {
 
 	/* Output a parsing friendly abilities table. Split on ":" */
 
-	printf("Abilities for camera:                 : %s\n", 
+	printf("Abilities for camera:            : %s\n", 
 		glob_abilities.model);
-        printf("Serial port support                   : %s\n",
-                glob_abilities.serial == 0? "no":"yes");
-        printf("Parallel port support                 : %s\n",
-                glob_abilities.parallel == 0? "no":"yes");
-        printf("USB support                           : %s\n",
-                glob_abilities.usb == 0? "no":"yes");
-        printf("IEEE1394 support                      : %s\n",
-                glob_abilities.ieee1394 == 0? "no":"yes");
+        printf("Serial port support              : %s\n",
+                SERIAL_SUPPORTED(glob_abilities.port)? "yes":"no");
+        printf("Parallel port support            : %s\n",
+                PARALLEL_SUPPORTED(glob_abilities.port)? "yes":"no");
+        printf("USB support                      : %s\n",
+                USB_SUPPORTED(glob_abilities.port)? "yes":"no");
+        printf("IEEE1394 support                 : %s\n",
+                IEEE1394_SUPPORTED(glob_abilities.port)? "yes":"no");
+        printf("Network support                  : %s\n",
+                NETWORK_SUPPORTED(glob_abilities.port)? "yes":"no");
 
 	if (glob_abilities.speed[0] != 0) {
-	printf("Transfer speeds supported             :\n");
+	printf("Transfer speeds supported        :\n");
 		do {	
-	printf("                                      : %i\n", glob_abilities.speed[x]);
+	printf("                                 : %i\n", glob_abilities.speed[x]);
 			x++;
 		} while (glob_abilities.speed[x]!=0);
 	}
-	printf("Capture from computer support         : %s\n", 
+	printf("Capture from computer support    : %s\n", 
 		glob_abilities.capture == 0? "no":"yes");
-	printf("Configuration support                 : %s\n", 
+	printf("Configuration support            : %s\n", 
 		glob_abilities.config == 0? "no":"yes");
-	printf("Delete files on camera support        : %s\n", 
+	printf("Delete files on camera support   : %s\n", 
 		glob_abilities.file_delete == 0? "no":"yes");
-	printf("File preview (thumbnail) support      : %s\n", 
+	printf("File preview (thumbnail) support : %s\n", 
 		glob_abilities.file_preview == 0? "no":"yes");
-	printf("File upload support                   : %s\n", 
+	printf("File upload support              : %s\n", 
 		glob_abilities.file_put == 0? "no":"yes");
 
 	return (GP_OK);
