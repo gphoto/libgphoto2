@@ -58,76 +58,45 @@ AC_SUBST(CFLAGS)
 AC_SUBST(LIBS)
 
 dnl Find out which drivers to compile
-AC_SUBST(SUBDIRS_DRIVERS)
-CONFIG_DRIVER_BARBIE=0
-CONFIG_DRIVER_DIRECTORY=0
-CONFIG_DRIVER_FUJITSU=0
-CONFIG_DRIVER_KONICA=0
-CONFIG_DRIVER_PANASONIC=0
+camlibs='barbie directory fujitsu konica panasonic digita'
+AC_SUBST(SUBDIRS_CAMLIBS)
+for i in $camlibs; do
+  d=`echo $i | tr a-z A-Z`
+  eval "CONFIG_DRIVER_$d=n"
+done
 AC_MSG_CHECKING(which drivers to compile)
 AC_ARG_WITH(drivers,
   [  --with-drivers=<list>     compile drivers in <list>; ]
   [                         drivers may be separated with commas; ]
   [                         'all' compiles all drivers; ]
   [                         possible drivers are: ]
-  [                         barbie, fujitsu, directory, konica, panasonic ],
+  [                           barbie, digita, directory, fujitsu, ]
+  [                           konica, panasonic ]
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
-        CONFIG_DRIVER_BARBIE=1
-        CONFIG_DRIVER_DIRECTORY=1
-        CONFIG_DRIVER_FUJITSU=1
-        CONFIG_DRIVER_KONICA=1
-	CONFIG_DRIVER_PANASONIC=1
-        AC_DEFINE(CONFIG_DRIVER_BARBIE)
-        AC_DEFINE(CONFIG_DRIVER_DIRECTORY)
-        AC_DEFINE(CONFIG_DRIVER_FUJITSU)
-        AC_DEFINE(CONFIG_DRIVER_KONICA)
-	AC_DEFINE(CONFIG_DRIVER_PANASONIC)
-	AC_MSG_RESULT(all)
+  for i in $camlibs; do
+    d=`echo $i | tr a-z A-Z`
+    eval "CONFIG_DRIVER_$d=y"
+    AC_DEFINE_UNQUOTED(CONFIG_DRIVER_$d)
+    SUBDIRS_CAMLIBS="$SUBDIRS_CAMLIBS $i"
+  done
+
+  AC_MSG_RESULT(all)
 else
-  drivers=`echo $drivers |sed 's/,/ /g'`
-  for driver in $drivers
-  do
-    case "$driver" in
-      barbie)
-                CONFIG_DRIVER_BARBIE=1
-                AC_DEFINE(CONFIG_DRIVER_BARBIE)
-                ;;
-      directory)
-                CONFIG_DRIVER_DIRECTORY=1
-                AC_DEFINE(CONFIG_DRIVER_DIRECTORY)
-                ;;
-      fujitsu)
-                CONFIG_DRIVER_FUJITSU=1
-                AC_DEFINE(CONFIG_DRIVER_FUJITSU)
-                ;;
-      konica)
-                CONFIG_DRIVER_KONICA=1
-                AC_DEFINE(CONFIG_DRIVER_KONICA)
-                ;;
-      panasonic)
-		CONFIG_DRIVER_PANASONIC=1
-		AC_DEFINE(CONFIG_DRIVER_PANASONIC)
-		;;
-      *)
-                echo "Unknown driver $driver, exiting!"
-                exit 1
-                ;;
-    esac
+  drivers=`echo $drivers | sed 's/,/ /g'`
+  for driver in $drivers; do
+    if test -n "`echo $camlibs | grep -E \"(^| )$driver( |\$)\"`"; then
+      d=`echo $driver | tr a-z A-Z`
+      eval "CONFIG_DRIVER_$d=y"
+      AC_DEFINE_UNQUOTED(CONFIG_DRIVER_$d)
+      SUBDIRS_CAMLIBS="$SUBDIRS_CAMLIBS $driver"
+    else
+      echo "Unknown driver $driver, exiting!"
+      exit 1
+    fi
   done
   AC_MSG_RESULT($drivers)
 fi
-AM_CONDITIONAL(CONFIG_DRIVER_BARBIE, test $CONFIG_DRIVER_BARBIE = "1")
-AM_CONDITIONAL(CONFIG_DRIVER_DIRECTORY, test $CONFIG_DRIVER_DIRECTORY = "1")
-AM_CONDITIONAL(CONFIG_DRIVER_FUJITSU, test $CONFIG_DRIVER_FUJITSU = "1")
-AM_CONDITIONAL(CONFIG_DRIVER_KONICA, test $CONFIG_DRIVER_KONICA = "1")
-AM_CONDITIONAL(CONFIG_DRIVER_PANASONIC, test $CONFIG_DRIVER_PANASONIC = "1")
-AC_SUBST(CONFIG_DRIVER_BARBIE)
-AC_SUBST(CONFIG_DRIVER_DIRECTORY)
-AC_SUBST(CONFIG_DRIVER_FUJITSU)
-AC_SUBST(CONFIG_DRIVER_KONICA)
-AC_SUBST(CONFIG_DRIVER_PANASONIC)
-
 
 AC_OUTPUT(\
 Makefile \
@@ -137,6 +106,7 @@ camlibs/fujitsu/Makefile \
 camlibs/directory/Makefile \
 camlibs/panasonic/Makefile \
 camlibs/konica/Makefile \
+camlibs/digita/Makefile \
 frontends/Makefile \
 frontends/command-line/Makefile \
 frontends/libgphoto2_frontend/Makefile \

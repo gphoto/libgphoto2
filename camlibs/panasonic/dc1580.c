@@ -17,6 +17,9 @@
 	Note:
 	
 	This is a Panasonic DC1580 camera gPhoto library source code.
+	
+	An algorithm  for  checksums  borrowed  from  Michael McCormack's  Nikon
+	CoolPix 600 library for gPhoto1.
 */	
  
 #include <stdlib.h>
@@ -36,24 +39,42 @@
 
 /* Internal utility functions */
 
+/* dsc_checksum - establish checksum for size bytes in buffer */
+
+u_int8_t dsc_checksum(char *buffer, int size) {
+
+	int	checksum = 0;
+	int	i;
+	
+	for (i = 1; i < size - 2; i++) {
+		checksum += buffer[i];
+		checksum %= 0x100;
+	}
+	
+	return checksum;
+}
+
 /* dsc_sendcmd - send command with data to DSC */
 
-int dsc_sendcmd(dsc_t *dsc, int cmd, int data, int sequence) {
+int dsc_sendcmd(dsc_t *dsc, u_int8_t cmd, long int data, u_int8_t sequence) {
 
-	char	databuf[16];
+	int	i;
 
-	DBUG_PRINT_3("Sending command: %i, data: %i, sequence: %i", cmd, data, sequence);
+	DBUG_PRINT_3("Sending command: 0x%02x, data: %i, sequence: %i", cmd, data, sequence);
 
-	memset(databuf, 0, 16);
+	memset(dsc->buf, 0, 16);
 
-	databuf[0] = 0x08;
-	databuf[1] = sequence;
-	databuf[2] = 0xff - sequence;
-	databuf[3] = cmd;
-	databuf[4] = data;
-	databuf[14] = cmd + data - 1; /* checksum? */
+	dsc->buf[0] = 0x08;
+	dsc->buf[1] = sequence;
+	dsc->buf[2] = 0xff - sequence;
+	dsc->buf[3] = cmd;
 	
-	return gpio_write(dsc->dev, databuf, 16);
+	for (i = 0; i < sizeof(data); i++) 
+		dsc->buf[4 + i] = (u_int8_t)(data >> 8*i);
+	
+	dsc->buf[14] = dsc_checksum(dsc->buf, 16); 
+	
+	return gpio_write(dsc->dev, dsc->buf, 16);
 }
 
 /* dsc_retrcmd - retrieve command and its data from DSC */
@@ -101,8 +122,7 @@ int dsc_connect(dsc_t *dsc, int speed) {
 
 /* dsc_disconnect - reset camera, free buffers and close files */
 
-int dsc_disconnect(dsc_t *dsc)
-{
+int dsc_disconnect(dsc_t *dsc) {
 	DBUG_PRINT("Disconnecting the camera.");
 	
 	dsc_sendcmd(dsc, DSC_CMD_RESET, 0, 0);
@@ -144,13 +164,17 @@ int dsc_getindex(dsc_t *dsc) {
 int dsc_delete(dsc_t *dsc, int index) {
 	
 	int 	s;
+	char	str[80];
 	
-	DBUG_PRINT_1("Deletting the image of index: %d", index);	
+	DBUG_PRINT_1("Deleting the image of index: %d", index);	
 		
-	if (index < 1 || index > DSC_MAXIMAGE)
+	if (index < 1)
 		DBUG_RETURN(EDSCBADNUM, dsc_delete, GP_ERROR);
 		/* bad image number */
 
+	sprintf(str, "Deleting image #%i.", index);
+	gp_status(str);	
+	
 	dsc_sendcmd(dsc, DSC_CMD_DELETE, index, 0);
 
 	if (dsc_retrcmd(dsc) != DSC_RSP_OK)
@@ -170,7 +194,7 @@ int dsc_selectimage(dsc_t *dsc, int index, int thumbnail)
 	
 	DBUG_PRINT_2("Selecting the image of index: %i, thumbnail: %i", index, thumbnail);	
 	
-	if (index < 1 || index > DSC_MAXIMAGE)
+	if (index < 1)
 		DBUG_RETURN(EDSCBADNUM, dsc_selectimage, GP_ERROR);
 		/* bad image number */
 
@@ -194,33 +218,29 @@ int dsc_selectimage(dsc_t *dsc, int index, int thumbnail)
 
 /* gpio_readimageblock - read #block block (1024 bytes) of an image into buf */
 
-int dsc_readimageblock(dsc_t *dsc, int block, char *buffer)
-{
-	int	size = DSC_BLOCKSIZE; /* always returns 1024 bytes */
-
+int dsc_readimageblock(dsc_t *dsc, int block, char *buffer) {
+	
 	DBUG_PRINT_1("Reading block: %i", block);
 
 	dsc_sendcmd(dsc, DSC_CMD_GET_DATA, block, block);
+
+	if (gpio_read(dsc->dev, dsc->buf, DSC_BUFSIZE) != DSC_BUFSIZE)
+		DBUG_RETURN(EDSCNOANSW, dsc_readimageblock, GP_ERROR);
+		/* no answer from camera */
 	
-	if (gpio_read(dsc->dev, dsc->buf, 4) != 4 ||
-			(u_int8_t)dsc->buf[0] != 1 ||
+	if ((u_int8_t)dsc->buf[0] != 1 ||
 			(u_int8_t)dsc->buf[1] != block ||
-			(u_int8_t)dsc->buf[3] != 5)
+			(u_int8_t)dsc->buf[2] != 0xff - block ||
+			(u_int8_t)dsc->buf[3] != DSC_RSP_DATA ||
+			(u_int8_t)dsc->buf[DSC_BUFSIZE - 2] != dsc_checksum(dsc->buf, DSC_BUFSIZE))
 		DBUG_RETURN(EDSCBADRSP, dsc_readimageblock, GP_ERROR);
 		/* bad response */
 	
-	if (gpio_read(dsc->dev, buffer, size) != size)
-		DBUG_RETURN(EDSCNOANSW, dsc_readimageblock, GP_ERROR);
-		/* no answer from camera */
+	memcpy(buffer, &dsc->buf[4], DSC_BLOCKSIZE);
 	
-	/* checksum */
-	if (gpio_read(dsc->dev, dsc->buf + 4, 2) != 2)
-		DBUG_RETURN(EDSCNOANSW, dsc_readimageblock, GP_ERROR);
-		/* no answer from camera */
+	DBUG_PRINT_1("Block: %d read in.", block);
 	
-	DBUG_PRINT_2("Block: %d of size: %d read in.", block, size);
-	
-	return size;
+	return DSC_BLOCKSIZE;
 }
 
 /* dsc_readimage - read #index image or thumbnail and return its contents */
@@ -242,7 +262,7 @@ char *dsc_readimage(dsc_t *dsc, int index, int thumbnail, int *size) {
 	else
 		strcpy(kind, "image");
 	
-	sprintf(str, "Downloading %s #%i of size: %d bytes\n",
+	sprintf(str, "Downloading %s #%i of size: %d bytes.",
 			kind, index, *size);
 	gp_status(str);
 	gp_progress(0.00);
@@ -257,38 +277,66 @@ char *dsc_readimage(dsc_t *dsc, int index, int thumbnail, int *size) {
 	blocks = (*size - 1)/DSC_BLOCKSIZE + 1;
 			
 	for (i = 0; i < blocks; i++) {
-		if (dsc_readimageblock(dsc, i, &buffer[i*DSC_BLOCKSIZE]) == -1) {
+		if (dsc_readimageblock(dsc, i, &buffer[i*DSC_BLOCKSIZE]) == GP_ERROR) {
 			DBUG_PRINT_1("Error during %s transfer.", kind);
 			sprintf(str, "Error during %s transfer.", kind);
-			gp_messageg(str);
+			gp_message(str);
 			free(buffer);
 			return NULL;
 		}
 		gp_progress((float)(i+1)/(float)blocks);
 	}
 
-	/* gp_progress(0.00); */ /* reset progress bar or not? */
-	
 	return buffer;
 }
 
-/* dsc_setimageres - set image resolution to res 	*/
-/* 	0 - normal 					*/
-/*	1 - fine 					*/
-/*	2 - superfine					*/
+/* dsc_setimagesize - set size of an image to upload to camera */
 
-int dsc_setimageres(dsc_t *dsc, dsc_quality_t res)
-{
-	DBUG_PRINT_1("Setting image resolution to: %i", res);	
+int dsc_setimagesize(dsc_t *dsc, int size) {
 	
-	dsc_sendcmd(dsc, DSC_CMD_SET_RES, res, res);
+	DBUG_PRINT_1("Setting image size to: %i", size);	
+
+	dsc_sendcmd(dsc, DSC_CMD_SET_SIZE, size, 0);
 
 	if (dsc_retrcmd(dsc) != DSC_RSP_OK)
-		DBUG_RETURN(EDSCBADRSP, dsc_setimageres, GP_ERROR);
+		DBUG_RETURN(EDSCBADRSP, dsc_setimagesize, GP_ERROR);
 		/* bad response */
 		
-	DBUG_PRINT_1("Image resolution set to: %i", res);
+	DBUG_PRINT_1("Image size set to: %i", size);
 
+	return GP_OK;
+}
+
+/* gpio_writeimageblock - write size bytes from buffer rounded to 1024 bytes to camera */
+
+int dsc_writeimageblock(dsc_t *dsc, int block, char *buffer, int size) {
+
+	DBUG_PRINT_1("Writing block: %i", block);
+
+	memset(dsc->buf, 0, DSC_BUFSIZE);
+
+	dsc->buf[0] = 0x01;
+	dsc->buf[1] = block;
+	dsc->buf[2] = 0xff - block;
+	dsc->buf[3] = DSC_CMD_SEND_DATA;
+	
+	if (DSC_BLOCKSIZE < size)
+		size = DSC_BLOCKSIZE;
+
+	memcpy(&dsc->buf[4], buffer, size);
+	
+	dsc->buf[DSC_BUFSIZE - 2] = dsc_checksum(dsc->buf, DSC_BUFSIZE);
+
+	if (gpio_write(dsc->dev, dsc->buf, DSC_BUFSIZE) != GP_OK)
+		DBUG_RETURN(EDSCSERRNO, dsc_writeimageblock, GP_ERROR);
+		/* see errno value */
+	
+	if (dsc_retrcmd(dsc) != DSC_RSP_OK)
+		DBUG_RETURN(EDSCNOANSW, dsc_writeimageblock, GP_ERROR);
+		/* no answer from camera */
+		
+	DBUG_PRINT_2("Block: %i of size: %i written.", block, size);
+	
 	return GP_OK;
 }
 
@@ -296,37 +344,37 @@ int dsc_setimageres(dsc_t *dsc, dsc_quality_t res)
 
 int dsc_writeimage(dsc_t *dsc, char *buffer, int size)
 {
-	char	databuf[8];
+	int	blocks, blocksize, i;
 
 	DBUG_PRINT_1("Writing an image of size: %i", size);
+		
+	if ((dsc_setimagesize(dsc, size)) != GP_OK)
+		return GP_ERROR;
+	
+	gp_progress(0.00);
 
-	memset(databuf, 0, 8);
-	
-	databuf[0] = (u_int8_t)(0x000000ff & size);
-	databuf[1] = (u_int8_t)(0x0000ff00 & size);
-	databuf[2] = (u_int8_t)(0x00ff0000 & size);
-	databuf[3] = (u_int8_t)(0xff000000 & size);
-	databuf[4] = DSC_CMD_SEND_DATA;
-	
-	if (glob_debug)
-		dsc_dumpmem(databuf, 5);
-	
-	if (gpio_write(dsc->dev, databuf, 5) != GP_OK)
-		DBUG_RETURN(EDSCSERRNO, dsc_writeimage, GP_ERROR);
-		/* see errno value */
+	blocks = (size - 1)/DSC_BLOCKSIZE + 1;
+			
+	for (i = 0; i < blocks; i++) {
+		blocksize = size - i*DSC_BLOCKSIZE;
+		if (DSC_BLOCKSIZE < blocksize) 
+			blocksize = DSC_BLOCKSIZE;
+		if (dsc_writeimageblock(dsc, i, &buffer[i*DSC_BLOCKSIZE], blocksize) != GP_OK) {
+			DBUG_PRINT("Error during image transfer.");
+			gp_message("Error during image transfer.");
+			return GP_ERROR;
+		}
+		gp_progress((float)(i+1)/(float)blocks);
+	}
 
-	if (gpio_write(dsc->dev, buffer, size) != GP_OK)
-		DBUG_RETURN(EDSCSERRNO, dsc_writeimage, GP_ERROR)
-		/* see errno value */
-	else
-		return GP_OK;
+	return GP_OK;
 }
 
-/* dsc_preview - ??? */
+/* dsc_preview - show selected image on camera's LCD - is it supported? */
 
 int dsc_preview(dsc_t *dsc, int index)
 {
-	if (index < 1 || index > DSC_MAXIMAGE)
+	if (index < 1)
 		DBUG_RETURN(EDSCBADNUM, dsc_preview, GP_ERROR);
 		/* bad image number */
 
@@ -358,7 +406,7 @@ int camera_debug_set (int onoff) {
 
 int camera_abilities (CameraAbilities *abilities, int *count) {
 
-	*count = 1;
+	*count = 2;
 
 	/* Fill in each camera model's abilities */
 	/* Make separate entries for each conneciton type (usb, serial, etc...)
@@ -378,6 +426,20 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].file_preview = 1;
 	abilities[0].file_put = 1;
 
+	strcpy(abilities[1].model, "Nikon CoolPix 600");
+	abilities[1].port     = GP_PORT_SERIAL;
+	abilities[1].speed[1] = 9600;
+	abilities[1].speed[1] = 19200;
+	abilities[1].speed[2] = 38400;
+	abilities[1].speed[3] = 57600;			
+	abilities[1].speed[4] = 115200;	
+	abilities[1].speed[5] = 0;	
+	abilities[1].capture  = 0;
+	abilities[1].config   = 0;
+	abilities[1].file_delete  = 1;
+	abilities[1].file_preview = 1;
+	abilities[1].file_put = 1;
+	
 	return (GP_OK);
 }
 
@@ -385,7 +447,8 @@ int camera_init (CameraInit *init) {
 	
 	dsc_error	dscerror;
 
-	DBUG_PRINT("Initializing Panasonic DC series camera.");
+	DBUG_PRINT("Initializing Panasonic DC1580 compatible camera");
+	gp_status("Initializing camera.");
 
 	if (dsc && dsc->dev) {		
 		gpio_close(dsc->dev);
@@ -416,7 +479,7 @@ int camera_init (CameraInit *init) {
 	strcpy(dsc->model, init->model);
 	
 	/* allocate memory for a dsc read/write buffer */
-	if ((dsc->buf = (char *)malloc(sizeof(char)*(256))) == NULL) {
+	if ((dsc->buf = (char *)malloc(sizeof(char)*(DSC_BUFSIZE))) == NULL) {
 		dscerror.lerror = EDSCSERRNO;
 		dscerror.lerrno = errno;
 		DBUG_PRINT_ERROR(dscerror, camera_init);
@@ -429,7 +492,9 @@ int camera_init (CameraInit *init) {
 }
 
 int camera_exit () {
-
+	
+	gp_status("Disconnecting camera.");
+	
 	dsc_disconnect(dsc);
 	
 	if (dsc->dev) {
@@ -503,23 +568,28 @@ int camera_file_put (CameraFile *file) {
 
 	char	str[80];
 	
+	DBUG_PRINT_2("Uploading image: %s of size: %d bytes", file->name, file->size);
+	
+/*	We can not figure out file type, at least by now.
+
 	if (strcmp(file->type, "image/jpg") != 0) {
 		DBUG_PRINT("JPEG image format allowed only.");
 		sprintf(str, "JPEG image format allowed only.");
 		gp_message(str);
 		return GP_ERROR;		
 	}
-	if (file->size > sizeof(u_int32_t)) {
+*/	
+	if (file->size > DSC_MAXIMAGESIZE) {
 		DBUG_PRINT_1("File size is %i. Too big to fit in the camera memory.", file->size);
 		sprintf(str, "File size is %i. Too big to fit in the camera memory.", file->size);
 		gp_message(str);
 		return GP_ERROR;		
 	}
-	
-	if (dsc_setimageres(dsc, fine))
-		return dsc_writeimage(dsc, file->data, file->size);
-	else
-		return GP_ERROR;
+
+	sprintf(str, "Uploading image: %s of size: %d bytes.", file->name, file->size);
+	gp_status(str);
+		
+	return dsc_writeimage(dsc, file->data, file->size);
 }
 
 int camera_file_delete (int file_number) {
@@ -544,14 +614,14 @@ int camera_capture (CameraFile *file, CameraCaptureInfo *info) {
 
 int camera_summary (CameraText *summary) {
 
-	strcpy(summary->text, "Summary Not Available");
+	strcpy(summary->text, "Summary not available.");
 
 	return (GP_OK);
 }
 
 int camera_manual (CameraText *manual) {
 
-	strcpy(manual->text, "Manual Not Available");
+	strcpy(manual->text, "Manual not available.");
 
 	return (GP_OK);
 }

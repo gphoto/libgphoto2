@@ -60,14 +60,11 @@ typedef struct {
 	char			*buf;
 } dsc_t;
 
-#define DSC_BLOCKSIZE	0x400 /* amount of data transfered in a single packet */
-#define DSC_MAXIMAGE	0xff  /* highest possible number of an image */
+#define DSC_BLOCKSIZE	  0x400   /* amount of image data transfered in a single packet */
+#define DSC_BUFSIZE	  0x406   /* largest possible amount of data transfered in a single packet */
+#define DSC_MAXIMAGESIZE  0xfffff /* largest possible file that can be uploaded */
 
-#ifndef DSC_PAUSE
-#  define DSC_PAUSE	5 /* seconds to wait for camera to redraw screen */
-#endif
-
-#define DSC_READTIMEOUT	2 /* seconds to wait for data from terminal */
+#define DSC_PAUSE	4 /* seconds to wait for camera to redraw screen */
 
 #define DSC_FULLIMAGE	0 
 #define DSC_THUMBNAIL	1

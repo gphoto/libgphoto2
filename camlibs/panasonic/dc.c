@@ -16,7 +16,7 @@
 
 	Note:
 	
-	This is a Panasonic DC1580 camera gPhoto library source code.
+	This is a Panasonic DC series common routines.
 */	
 
 #include <stdio.h>
