@@ -288,6 +288,7 @@ static struct {
 	{"Sony:DSC-P41 (PTP mode)",   0x054c, 0x004e}, 
 	{"Sony:DSC-P43 (PTP mode)",   0x054c, 0x004e}, 
 	{"Sony:DSC-P50 (PTP mode)",   0x054c, 0x004e},
+	{"Sony:DSC-P51 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-P52 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-P71 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-P72 (PTP mode)",   0x054c, 0x004e},
