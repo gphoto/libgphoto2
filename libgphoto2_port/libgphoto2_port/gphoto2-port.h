@@ -30,6 +30,10 @@
 #include <os2.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #ifndef TRUE
 #define TRUE (0==0)
 #endif
@@ -40,26 +44,26 @@
 
 #define GP_PORT_MAX_BUF_LEN 4096             /* max length of receive buffer */
 
+typedef struct _GPPortSettingsSerial GPPortSettingsSerial;
 struct _GPPortSettingsSerial {
 	char port[128];
 	int speed;
 	int bits, parity, stopbits;
 };
-typedef struct _GPPortSettingsSerial GPPortSettingsSerial;
 
+typedef struct _GPPortSettingsUSB GPPortSettingsUSB;
 struct _GPPortSettingsUSB {
 	int inep, outep;
 	int config;
 	int interface;
 	int altsetting;
 };
-typedef struct _GPPortSettingsUSB GPPortSettingsUSB;
 
+typedef union _GPPortSettings GPPortSettings;
 union _GPPortSettings {
 	GPPortSettingsSerial serial;
 	GPPortSettingsUSB usb;
 };
-typedef union _GPPortSettings GPPortSettings;
 
 enum {
         GP_PORT_USB_ENDPOINT_IN,
@@ -69,6 +73,7 @@ enum {
 typedef struct _GPPortPrivateLibrary GPPortPrivateLibrary;
 typedef struct _GPPortPrivateCore    GPPortPrivateCore;
 
+typedef struct _GPPort           GPPort;
 struct _GPPort {
 
 	/* For your convenience */
@@ -82,7 +87,6 @@ struct _GPPort {
 	GPPortPrivateLibrary *pl;
 	GPPortPrivateCore    *pc;
 };
-typedef struct _GPPort           GPPort;
 
 int gp_port_new         (GPPort **port);
 int gp_port_free        (GPPort *port);
@@ -102,6 +106,7 @@ int gp_port_set_timeout  (GPPort *port, int  timeout);
 int gp_port_set_settings (GPPort *port, GPPortSettings  settings);
 int gp_port_get_settings (GPPort *port, GPPortSettings *settings);
 
+typedef enum _GPPin GPPin;
 enum _GPPin {
 	GP_PIN_RTS,
 	GP_PIN_DTR,
@@ -110,13 +115,12 @@ enum _GPPin {
 	GP_PIN_CD,
 	GP_PIN_RING
 };
-typedef enum _GPPin GPPin;
 
+typedef enum _GPLevel GPLevel;
 enum _GPLevel {
 	GP_LEVEL_LOW  = 0,
 	GP_LEVEL_HIGH = 1
 };
-typedef enum _GPLevel GPLevel;
 
 int gp_port_get_pin   (GPPort *port, GPPin pin, GPLevel *level);
 int gp_port_set_pin   (GPPort *port, GPPin pin, GPLevel level);
@@ -140,6 +144,10 @@ const char *gp_port_get_error (GPPort *port);
 typedef GPPort gp_port;
 typedef GPPortSettings gp_port_settings;
 #define PIN_CTS GP_PIN_CTS
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_PORT_H__ */
 
