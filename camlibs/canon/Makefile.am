@@ -10,15 +10,14 @@ INCLUDES =                                              \
         -I$(top_srcdir)/libgphoto2
 
 # Uncomment the CFLAGS line if you want to play around with the
-# experimental capture stuff
+# experimental capture and/or upload stuff
 #
-# NOTE: This may CAUSE DAMAGE!
+# NOTE: This may CAUSE DAMAGE TO THE CAMERA!
 #
-# You may have to do a "make clean install" here.
-# You may also have to add your camera to the list in library.c,
-# method camera_capture()
+# You may have to do a "make clean install" in this directory in order
+# for these features to work.
 #
-# CFLAGS += -DEXPERIMENTAL_CAPTURE
+# CFLAGS += -DEXPERIMENTAL_CAPTURE -DEXPERIMENTAL_UPLOAD
 
 libgphoto2_canon_la_SOURCES =\
  canon.c canon.h\
