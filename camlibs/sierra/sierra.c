@@ -226,7 +226,7 @@ int camera_init (Camera *camera)
 
 		/* Lookup the USB information */
 		for (x = 0; strlen (sierra_cameras[x].model) > 0; x++) {
-			if (strcmp(sierra_cameras[x].model, camera->model)==0) {
+			if (!strcmp (sierra_cameras[x].model, camera->model)) {
 				vendor = sierra_cameras[x].usb_vendor;
 				product = sierra_cameras[x].usb_product;
 				inep = sierra_cameras[x].usb_inep;
@@ -252,8 +252,6 @@ int camera_init (Camera *camera)
 		CHECK_FREE (camera, gp_port_usb_find_device (fd->dev, 
 							vendor, product));
 
-		CHECK_FREE (camera, gp_port_timeout_set (fd->dev, 5000));
-
        		settings.usb.inep 	= inep;
        		settings.usb.outep 	= outep;
        		settings.usb.config 	= 1;
@@ -272,10 +270,6 @@ int camera_init (Camera *camera)
 	CHECK_FREE (camera, gp_port_timeout_set (fd->dev, TIMEOUT));
 	fd->speed = camera->port->speed;
 	fd->type  = camera->port->type;
-
-//Remove this once libgphoto2_port is fixed
-if (fd->type == GP_PORT_USB)
-        CHECK_FREE (camera, gp_port_open (fd->dev));
 
 	/* Establish a connection */
 	CHECK_FREE (camera, camera_start (camera));
@@ -335,8 +329,6 @@ int camera_start (Camera *camera)
 	 * that other programs have the chance to access the
 	 * camera, too.
 	 */
-//Remove this once libgphoto2_port is fixed
-if (fd->type != GP_PORT_USB)
 	CHECK (gp_port_open (fd->dev));
 
 	switch (fd->type) {
@@ -369,8 +361,6 @@ int camera_stop (Camera *camera)
 	 * We close the port here to give other programs the possiblity
 	 * to access the camera, too.
 	 */
-//Remove this once libgphoto2_port is fixed
-if (fd->type != GP_PORT_USB)
 	CHECK (gp_port_close (fd->dev));
 
 	return (GP_OK);
