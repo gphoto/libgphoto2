@@ -1,3 +1,10 @@
+Sat Oct 19 22:52:34 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * another patch from Piotr Pawlow <pp@sieziba.pl> which omits the standard
+   huffmann tables in the mjpeg thereby reducing them in size. This seems
+   to be a standard extension of the mjpeg "standard" and works with the
+   players I've tested
+ 
 Mon Oct 14 20:32:08 2002  Till Adam  <till@adam-lilienthal.de>
  
  * move jpeg creation into function

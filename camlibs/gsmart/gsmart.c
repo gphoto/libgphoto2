@@ -64,7 +64,8 @@ static int gsmart_get_FATs (CameraPrivateLibrary * lib);
 static int yuv2rgb (int y, int u, int v, int *r, int *g, int *b);
 static void create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex,
 				   int w, int h, u_int8_t format,
-				   int original_size, int *size);
+				   int original_size, int *size,
+				   int omit_huffman_table);
 static inline u_int8_t *put_dword (u_int8_t * ptr, u_int32_t value);
 static int gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib,
 				     u_int8_t ** buf, unsigned int *len,
@@ -199,7 +200,7 @@ gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	if (!lp_jpg)
 		return GP_ERROR_NO_MEMORY;
 	create_jpeg_from_data (lp_jpg, mybuf, qIndex, g_file->width,
-			       g_file->height, 0x21, o_size, &file_size);
+			       g_file->height, 0x21, o_size, &file_size, 0);
 
 	free (mybuf);
 	lp_jpg = realloc (lp_jpg, file_size);
@@ -316,7 +317,7 @@ gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
 			/* jpeg starts here */
 			create_jpeg_from_data (avi, data, qIndex, frame_width,
 					       frame_height, 0x22, frame_size,
-					       &length);
+					       &length, 1);
 
 			data += (frame_size + 7) & 0xfffffff8;
 			avi += length;
@@ -433,7 +434,7 @@ gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		return GP_ERROR_NO_MEMORY;
 
 	create_jpeg_from_data (lp_jpg, mybuf, qIndex, g_file->width,
-			       g_file->height, 0x22, o_size, &file_size);
+			       g_file->height, 0x22, o_size, &file_size, 0);
 	free (mybuf);
 	lp_jpg = realloc (lp_jpg, file_size);
 	*buf = lp_jpg;
@@ -859,7 +860,7 @@ yuv2rgb (int y, int u, int v, int *_r, int *_g, int *_b)
 
 static void
 create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex, int w,
-		       int h, u_int8_t format, int o_size, int *size)
+		       int h, u_int8_t format, int o_size, int *size, int omit_huffman_table)
 {
 
 	int i = 0;
@@ -868,23 +869,32 @@ create_jpeg_from_data (u_int8_t * dst, u_int8_t * src, int qIndex, int w,
 
 	start = dst;
 	/* copy the header from the template */
-	memcpy (dst, GsmartJPGDefaultHeader, GSMART_JPG_DEFAULT_HEADER_LENGTH);
+	memcpy (dst, GsmartJPGDefaultHeaderPart1, GSMART_JPG_DEFAULT_HEADER_PART1_LENGTH);
 
 	/* modify quantization table */
 	memcpy (dst + 7, GsmartQTable[qIndex * 2], 64);
 	memcpy (dst + 72, GsmartQTable[qIndex * 2 + 1], 64);
 
+	dst += GSMART_JPG_DEFAULT_HEADER_PART1_LENGTH;
+
+	/* copy Huffman table */
+	if (!omit_huffman_table) {
+	    memcpy (dst, GsmartJPGDefaultHeaderPart2, GSMART_JPG_DEFAULT_HEADER_PART2_LENGTH);
+	    dst += GSMART_JPG_DEFAULT_HEADER_PART2_LENGTH;
+	}
+	memcpy (dst, GsmartJPGDefaultHeaderPart3, GSMART_JPG_DEFAULT_HEADER_PART3_LENGTH);
+
 	/* modify the image width, height */
-	*(dst + 564) = w & 0xFF;	//Image width low byte
-	*(dst + 563) = w >> 8 & 0xFF;	//Image width high byte
-	*(dst + 562) = h & 0xFF;	//Image height low byte
-	*(dst + 561) = h >> 8 & 0xFF;	//Image height high byte
+	*(dst + 8) = w & 0xFF;	//Image width low byte
+	*(dst + 7) = w >> 8 & 0xFF;	//Image width high byte
+	*(dst + 6) = h & 0xFF;	//Image height low byte
+	*(dst + 5) = h >> 8 & 0xFF;	//Image height high byte
 
 	/* set the format */
-	*(dst + 567) = format;
+	*(dst + 11) = format;
 
 	/* point to real JPG compress data start position and copy */
-	dst += GSMART_JPG_DEFAULT_HEADER_LENGTH;
+	dst += GSMART_JPG_DEFAULT_HEADER_PART3_LENGTH;
 
 	for (i = 0; i < o_size; i++) {
 		value = *(src + i) & 0xFF;
