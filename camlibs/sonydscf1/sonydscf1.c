@@ -160,29 +160,23 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 }
 
 int camera_init (Camera *camera) {
-        gp_port_settings settings;
-        SonyStruct *b;
+        GPPortSettings settings;
 
         camera->functions->exit         = camera_exit;
-//	camera->functions->capture      = camera_capture;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
 
-        b = (SonyStruct*)malloc(sizeof(SonyStruct));
-        camera->camlib_data = b;
-	b->dev = camera->port;
-
 	//FIXME: This won't work with several frontends. NO GLOBALS PLEASE!
 	dev = camera->port;
 
-        gp_port_timeout_set(b->dev, 5000);
+        gp_port_timeout_set(camera->port, 5000);
 	gp_port_settings_get (camera->port, &settings);
         settings.serial.speed   = camera->port_info->speed;
         settings.serial.bits    = 8;
         settings.serial.parity  = 0;
         settings.serial.stopbits= 1;
-        gp_port_settings_set(b->dev, settings);
+        gp_port_settings_set(camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
