@@ -72,6 +72,8 @@ int gp_camera_new (Camera **camera, int camera_number)
 {
 	int result;
 
+	if (camera == NULL) return (GP_ERROR_BAD_PARAMETERS);
+
         if (camera_number >= glob_abilities_list->count) {
 		gp_debug_printf(GP_DEBUG_LOW, "core", "camera_number too big");
                 return (GP_ERROR_MODEL_NOT_FOUND);
@@ -91,6 +93,8 @@ int gp_camera_new (Camera **camera, int camera_number)
         (*camera)->frontend_data   = NULL;
 	(*camera)->session    = glob_session_camera++;
         (*camera)->ref_count  = 1;
+	if (!(*camera)->port || !(*camera)->abilities || !(*camera)->functions) 
+		return (GP_ERROR_NO_MEMORY);
 
 	/* Initialize function pointers to NULL.*/
 	(*camera)->functions->id		= NULL;
