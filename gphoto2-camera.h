@@ -106,17 +106,10 @@ typedef struct {
 typedef GPPort     CameraPort;
 typedef GPPortInfo CameraPortInfo;
 
-typedef void (* CameraMessageFunc)  (Camera *, const char *msg, void *data);
-typedef void (* CameraStatusFunc)   (Camera *, const char *status, void *data);
-typedef void (* CameraProgressFunc) (Camera *, float percentage, void *data);
-
 typedef struct _CameraPrivateLibrary  CameraPrivateLibrary;
 typedef struct _CameraPrivateCore     CameraPrivateCore;
 
 struct _Camera {
-
-	/* DEPRECATED */
-	void            *camlib_data;
 
 	/* Those should be accessed only by the camera driver */
 	GPPort           *port;
@@ -228,6 +221,9 @@ int gp_camera_file_delete     	(Camera *camera, const char *folder,
 				 const char *file);
 
 /* Informing frontends */
+typedef void (* CameraMessageFunc)  (Camera *, const char *msg, void *data);
+typedef void (* CameraStatusFunc)   (Camera *, const char *status, void *data);
+typedef void (* CameraProgressFunc) (Camera *, float percentage, void *data);
 int gp_camera_set_status_func   (Camera *camera, CameraStatusFunc func,
 				 void *data);
 int gp_camera_set_progress_func (Camera *camera, CameraProgressFunc func,
