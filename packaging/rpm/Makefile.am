@@ -16,10 +16,10 @@ clean-generic:
 
 rpm: Makefile package.spec
 if RPM_LIBUSB_DEVEL
-	@echo "Building gphoto2 RPM with USB support and dependency on the libusb RPM package."
+	@echo "Building libgphoto2 RPM with USB support and dependency on the libusb RPM package."
 else
 	@echo "#############################################################################"
-	@echo "# Building gphoto2 RPM packages without USB support.                        #"
+	@echo "# Building libgphoto2 RPM packages ***WITHOUT*** USB support.               #"
 	@echo "# Install both the libusb and the libusb-devel RPM package for USB support. #"
 	@echo "#############################################################################"
 	@sleep 3
