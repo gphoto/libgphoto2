@@ -167,7 +167,6 @@ int camera_init (CameraInit *init) {
 		return (GP_ERROR);
 	}
 
-
 	fujitsu_set_int_register(glob_dev, 83, -1);
 
 	gpio_set_timeout(glob_dev, 50);
@@ -179,6 +178,27 @@ int camera_init (CameraInit *init) {
 	if (glob_folders)
 		debug_print("Camera supports folders");
 	gpio_set_timeout(glob_dev, 2000);
+	glob_speed = init->port_settings.speed;
+	return (GP_OK);
+}
+
+int camera_start() {
+
+	if (fujitsu_set_speed(glob_dev, glob_speed)==GP_ERROR) {
+		gp_message("Can not set the serial port speed");
+		return (GP_ERROR);
+	}
+
+	return (GP_OK);
+}
+
+int camera_stop() {
+
+	if (fujitsu_set_speed(glob_dev, -1)==GP_ERROR) {
+		gp_message("Can not set the serial port speed");
+		return (GP_ERROR);
+	}
+
 	return (GP_OK);
 }
 
@@ -235,6 +255,9 @@ int camera_file_get_generic (int file_number, CameraFile *file, int thumbnail) {
 	char buf[4096];
 	int length, regl, regd;
 
+if (camera_start()==GP_ERROR)
+return (GP_ERROR);
+
 	if (thumbnail) {
 		sprintf(buf, "Getting file preview #%i", file_number);
 		regl = 13;
@@ -285,6 +308,9 @@ int camera_file_get_generic (int file_number, CameraFile *file, int thumbnail) {
 		return (GP_ERROR);
 	}
 
+if (camera_stop()==GP_ERROR)
+return (GP_ERROR);
+
 	return (GP_OK);
 }
 
@@ -307,12 +333,21 @@ int camera_file_put (CameraFile *file) {
 
 int camera_file_delete (int file_number) {
 
+	int ret;
 	char buf[4096];
+
+if (camera_start()==GP_ERROR)
+return (GP_ERROR);
 
 	sprintf(buf, "Deleting file #%i", file_number);
 	debug_print(buf);
 
-	return (fujitsu_delete(glob_dev, file_number+1));
+	ret = fujitsu_delete(glob_dev, file_number+1);
+
+if (camera_stop()==GP_ERROR)
+return (GP_ERROR);
+
+	return (ret);
 }
 
 int camera_config_get (CameraWidget *window) {
@@ -324,7 +359,13 @@ int camera_config_get (CameraWidget *window) {
 
 int camera_config_set (CameraSetting *setting, int count) {
 
+if (camera_start()==GP_ERROR)
+return (GP_ERROR);
+
 	debug_print("Setting configuration values");
+
+if (camera_stop()==GP_ERROR)
+return (GP_ERROR);
 
 	return (GP_ERROR);
 }
@@ -341,6 +382,9 @@ int camera_summary (char *summary) {
 	char buf[1024*32];
 	int value;
 	char t[1024];
+
+if (camera_start()==GP_ERROR)
+return (GP_ERROR);
 
 	debug_print("Getting camera summary");
 	strcpy(buf, "");
@@ -479,6 +523,9 @@ int camera_summary (char *summary) {
 		sprintf(buf, "%sLCD AutoOff	: %i seconds\n", buf, value);
 
 	strcpy(summary, buf);
+
+if (camera_stop()==GP_ERROR)
+return (GP_ERROR);
 
 	return (GP_OK);
 }
