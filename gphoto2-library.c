@@ -64,8 +64,8 @@ camera_abilities (CameraAbilitiesList *list)
  * gphoto2 what operations your camera supports and you try to connect
  * to the camera. That is, access @camera->functions directly and set them
  * to your implementation (if you have any). Then, tell the #CameraFilesystem 
- * (available in @camera->fs) how to retreive lists
- * (#gp_filesystem_set_list_funcs), how to retreive or set file information
+ * (available in @camera->fs) how to retrieve lists
+ * (#gp_filesystem_set_list_funcs), how to retrieve or set file information
  * (#gp_filesystem_set_info_funcs), how to get or delete files
  * (#gp_filesystem_set_file_funcs), or how to put files or delete all files
  * in a folder (#gp_filesystem_set_folder_funcs). After that, configure

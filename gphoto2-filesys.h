@@ -70,7 +70,7 @@ int gp_filesystem_append   (CameraFilesystem *fs, const char *folder,
 			    const char *filename);
 int gp_filesystem_reset    (CameraFilesystem *fs);
 
-/* Information retreival */
+/* Information retrieval */
 int gp_filesystem_count	       (CameraFilesystem *fs, const char *folder);
 int gp_filesystem_name         (CameraFilesystem *fs, const char *folder,
 			        int filenumber, const char **filename);

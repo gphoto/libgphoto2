@@ -973,7 +973,7 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
  * @folder_list_func: the function that will return listings of folders
  * @data:
  *
- * Tells the @fs which functions to use to retreive listings of folders 
+ * Tells the @fs which functions to use to retrieve listings of folders 
  * and/or files. Typically, a camera driver would call this function
  * on initialization. Each function can be NULL indicating that this 
  * functionality is not supported. For example, many cameras don't support
@@ -1069,7 +1069,7 @@ gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
  *
  * Downloads the file called @filename from the @folder using the 
  * get_file_func if such a function has been previously supplied. If the 
- * file has been previously downloaded, the file is retreived from cache.
+ * file has been previously downloaded, the file is retrieved from cache.
  *
  * Return value: a gphoto2 error code.
  **/
@@ -1151,12 +1151,12 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 /**
  * gp_filesystem_set_info-funcs:
  * @fs: a #CameraFilesystem
- * @get_info_func: the function to retreive file information
+ * @get_info_func: the function to retrieve file information
  * @set_info_func: the function to set file information
  * @data:
  *
  * Tells the filesystem which functions to call when file information 
- * about a file should be retreived or set. Typically, this function will
+ * about a file should be retrieved or set. Typically, this function will
  * get called by the camera driver on initialization. 
  *
  * Return value: a gphoto2 error code.
