@@ -803,7 +803,7 @@ void camera_index () {
 	gp_progress(0.00);
 	gtk_widget_show(gp_gtk_progress_window);
 	while ((x<count)&&(GTK_WIDGET_VISIBLE(gp_gtk_progress_window))) {
-		sprintf(buf,_("Getting Thumbnail #%04i of %04i"), x, count);
+		sprintf(buf,_("Getting Thumbnail #%04i of %04i"), x+1, count);
 		gp_message(buf);
 		idle();
 		if ((get_thumbnails)&&

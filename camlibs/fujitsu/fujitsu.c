@@ -186,22 +186,21 @@ int camera_init (CameraInit *init) {
 
 int camera_start() {
 
-/*
 	if (fujitsu_set_speed(glob_dev, glob_speed)==GP_ERROR) {
 		gp_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
-*/
+
 	return (GP_OK);
 }
 
 int camera_stop() {
-/*
+
 	if (fujitsu_set_speed(glob_dev, -1)==GP_ERROR) {
 		gp_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
-*/
+
 	return (GP_OK);
 }
 
