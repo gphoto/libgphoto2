@@ -429,6 +429,8 @@ gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 		if (!strcasecmp (list->abilities[x].model, model))
 			return (x);
 
+	gp_log (GP_LOG_ERROR, "gphoto2-abilities-list", _("Could not find "
+		"any driver for '%s'"), model);
 	return (GP_ERROR_MODEL_NOT_FOUND);
 }
 
