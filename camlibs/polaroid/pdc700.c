@@ -23,6 +23,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
@@ -62,13 +63,16 @@
 #define PDC700_DONE	0x01
 #define PDC700_LAST	0x02
 
-#define PDC700_SET_FLASH      0x00
-#define PDC700_SET_TIMER      0x01
-#define PDC700_SET_CAPTION    0x02
-#define PDC700_SET_LCD        0x03
-#define PDC700_SET_QUALITY    0x04
-#define PDC700_SET_TIME       0x05
-#define PDC700_SET_POWEROFF   0x06
+typedef enum _PDCConf PDCConf;
+enum _PDCConf {
+	PDC_CONF_FLASH    = 0x00,
+	PDC_CONF_TIMER    = 0x01,
+	PDC_CONF_CAPTION  = 0x02,
+	PDC_CONF_LCD      = 0x03,
+	PDC_CONF_QUALITY  = 0x04,
+	PDC_CONF_TIME     = 0x05,
+	PDC_CONF_POWEROFF = 0x06
+};
 
 typedef enum _PDCBaud PDCBaud;
 enum _PDCBaud {
@@ -137,8 +141,6 @@ struct _PDCPicInfo {
 	unsigned int pic_size, thumb_size;
 	unsigned char flash;
 };
-
-static int camera_set(Camera *, int, int);
 
 #define IMAGE_QUALITY _("Image Quality")
 #define FLASH_SETTING _("Flash Setting")
@@ -400,13 +402,30 @@ pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info)
 }
 
 static int
+pdc700_config (Camera *camera, PDCConf conf, unsigned char value)
+{
+	unsigned char cmd[12];
+	unsigned char buf[512];
+	int buf_len;
+
+	cmd[3] = PDC700_CONFIG;
+	cmd[4] = conf;
+	cmd[5] = value;
+
+	CR (pdc700_transmit (camera, cmd, 12, buf, &buf_len));
+
+	return GP_OK;
+}
+
+
+static int
 pdc700_info (Camera *camera, PDCInfo *info)
 {
 	int buf_len;
 	unsigned char buf[2048];
 	unsigned char cmd[5];
 
-	//camera_set(camera, PDC700_SET_WHAT_IS_02, 0);
+	//pdc700_config (camera, PDC_CONF_WHAT_IS_02, 0);
 
 	cmd[3] = PDC700_INFO;
 	CR (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
@@ -814,17 +833,16 @@ camera_about (Camera *camera, CameraText *about)
  * We encapsulate the process of adding an entire radio control. 
  */
 static void 
-add_radio(CameraWidget *section, const char *blurb, const char **opt, 
-	  int selected)
+add_radio (CameraWidget *section, const char *blurb, const char **opt, 
+	   int selected)
 {
 	CameraWidget *child;
-
 	int i;
 
 	gp_widget_new (GP_WIDGET_RADIO, blurb, &child);
 
-	for (i = 0; opt[i] != NULL; i++)
-	  gp_widget_add_choice (child, opt[i]);
+	for (i = 0; opt[i]; i++)
+		gp_widget_add_choice (child, opt[i]);
 	  
 	gp_widget_set_value (child, (void *) opt[selected]);
 	gp_widget_append (section, child);
@@ -836,9 +854,10 @@ camera_get_config (Camera *camera, CameraWidget **window)
 {
 	CameraWidget *child;
 	CameraWidget *section;
-	//int value;
 	float range;
 	PDCInfo info;
+	time_t time;
+	struct tm tm;
 
 	CR (pdc700_info (camera, &info));
 
@@ -846,101 +865,101 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_new (GP_WIDGET_SECTION, _("Settings"), &section);
 	gp_widget_append (*window, section);
 
-	add_radio(section, IMAGE_QUALITY, quality, info.quality);
-	add_radio(section, FLASH_SETTING, flash,   info.flash);
-	add_radio(section, LCD_STATE,     bool,    info.lcd);
-	add_radio(section, SELF_TIMER,    bool,    info.timer);
-	add_radio(section, SHOW_CAPTIONS, bool,    info.caption);
+	add_radio (section, IMAGE_QUALITY, quality, info.quality);
+	add_radio (section, FLASH_SETTING, flash,   info.flash);
+	add_radio (section, LCD_STATE,     bool,    info.lcd);
+	add_radio (section, SELF_TIMER,    bool,    info.timer);
+	add_radio (section, SHOW_CAPTIONS, bool,    info.caption);
 
+	/* Auto poweroff */
 	gp_widget_new (GP_WIDGET_RANGE, AUTO_POWEROFF, &child);
-	gp_widget_set_range (child, 1, 99, 1);
-	range = info.auto_poweroff;
+	gp_widget_set_range (child, 1., 99., 1.);
+	range = (float) info.auto_poweroff;
 	gp_widget_set_value (child, &range);
 	gp_widget_append (section, child);
-
 	gp_widget_set_info (child, _("How long will it take until the "
 				     "camera powers off?"));
 
-	/*
-	 * Wait for the widget to be implemented
-	 gp_widget_new (GP_WIDGET_DATE, _("Date and Time"), &child);
-	 gp_widget_append (section, child);
-	*/
+	/* Date and time */
+	tm.tm_year = info.date.year +
+		((!strcmp (info.version, "v2.45")) ? 1980 : 2000) - 1900;
+	tm.tm_mon = info.date.month;
+	tm.tm_mday = info.date.day;
+	tm.tm_hour = info.date.hour;
+	tm.tm_min = info.date.minute;
+	tm.tm_sec = info.date.second;
+	time = mktime (&tm);
+	gp_widget_new (GP_WIDGET_DATE, _("Date and Time"), &child);
+	gp_widget_append (section, child);
+	gp_widget_set_value (child, (int*) &time);
 
 	return GP_OK;
 }
 
 static int 
-which_radio_button(CameraWidget *window, const char *label, 
-		   const char * const *opt)
+which_radio_button (CameraWidget *window, const char *label, 
+		    const char * const *opt)
 {
   	CameraWidget *child;
 	int i;
-	char *value;
+	const char *value;
 
 	if (gp_widget_get_child_by_label (window, label, &child) != GP_OK)
-	  return -1;
+		return -1;
 
-	if (!gp_widget_changed (child)) 
-	  return -1;
+	if (!gp_widget_changed (child))
+		return -1;
 
 	gp_widget_get_value (child, &value);
 
-	for (i = 0; opt[i] != NULL; i++)
-	  if (strcmp(value, opt[i]) == 0)
-	    return i;
+	for (i = 0; opt[i]; i++)
+		if (!strcmp (value, opt[i]))
+			return i;
 
 	return -1;
 }
 
 static int
-camera_set(Camera *camera, int setting, int value)
-{
-	unsigned char cmd[12];
-	unsigned char buf[512];
-	int buf_len;
-
-	cmd[3] = PDC700_CONFIG;
-	cmd[4] = setting;
-	cmd[5] = value;
-
-	CR (pdc700_transmit (camera, cmd, 12, buf, &buf_len));
-
-	return GP_OK;
-}
-  
-
-static int
 camera_set_config (Camera *camera, CameraWidget *window)
 {
   	CameraWidget *child;
-	int i = 0;
+	int i = 0, r;
 	float range;
 
-	if ((i = which_radio_button(window, IMAGE_QUALITY, quality)) >= 0)
-	  CR (camera_set(camera, PDC700_SET_QUALITY, i));
+	if ((i = which_radio_button (window, IMAGE_QUALITY, quality)) >= 0)
+		CR (pdc700_config (camera, PDC_CONF_QUALITY,
+				   (unsigned char) i));
 
-	if ((i = which_radio_button(window, FLASH_SETTING, flash)) >= 0)
-	  CR (camera_set(camera, PDC700_SET_FLASH, i));
+	if ((i = which_radio_button (window, FLASH_SETTING, flash)) >= 0)
+		CR (pdc700_config (camera, PDC_CONF_FLASH,
+				   (unsigned char) i));
 
-	if ((i = which_radio_button(window, LCD_STATE, bool)) >= 0)
-	  CR (camera_set(camera, PDC700_SET_LCD, i));
+	if ((i = which_radio_button (window, LCD_STATE, bool)) >= 0)
+		CR (pdc700_config (camera, PDC_CONF_LCD,
+				   (unsigned char) i));
 
-	if ((i = which_radio_button(window, SELF_TIMER, bool)) >= 0)
-	  CR (camera_set(camera, PDC700_SET_TIMER, i));
+	if ((i = which_radio_button (window, SELF_TIMER, bool)) >= 0)
+		CR (pdc700_config (camera, PDC_CONF_TIMER,
+				   (unsigned char) i));
 
-	if ((i = which_radio_button(window, SHOW_CAPTIONS, bool)) >= 0)
-	  CR (camera_set(camera, PDC700_SET_CAPTION, i));
+	if ((i = which_radio_button (window, SHOW_CAPTIONS, bool)) >= 0)
+		CR (pdc700_config (camera, PDC_CONF_CAPTION,
+				   (unsigned char) i));
 
-
-	if (gp_widget_get_child_by_label(window, AUTO_POWEROFF, &child) == GP_OK
-	    && gp_widget_changed (child)) {
-	  gp_widget_get_value (child, &range);
-	  i = (int) range;
-	  CR (camera_set(camera, PDC700_SET_POWEROFF, i));
+	/* Auto poweroff */
+	r = gp_widget_get_child_by_label (window, AUTO_POWEROFF, &child);
+	if ((r == GP_OK) && gp_widget_changed (child)) {
+		gp_widget_get_value (child, &range);
+		CR (pdc700_config (camera, PDC_CONF_POWEROFF,
+				   (unsigned char) range));
 	}
 
-	/* deal with date & time */
+	/* Date and time */
+	r = gp_widget_get_child_by_label (window, _("Date and Time"), &child);
+	if ((r == GP_OK) && gp_widget_changed (child)) {
+		gp_widget_get_value (child, &i);
+		GP_DEBUG ("Implement setting of date & time!");
+	}
 
 	return GP_OK;
 }
@@ -967,7 +986,8 @@ camera_summary (Camera *camera, CameraText *about)
 		"LCD: %s\n"
 		"Auto power off: %i minutes\n"
 		"Power source: %s"),
-		info.date.year + ((!strcmp (info.version, "v2.45")) ? 1980 : 0),
+		info.date.year + ((!strcmp (info.version, "v2.45")) ? 1980 :
+								      2000),
 		info.date.month, info.date.day,
 		info.date.hour, info.date.minute, info.date.second,
 		info.num_taken, info.num_free, info.version,

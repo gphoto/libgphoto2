@@ -1,3 +1,13 @@
+2001-11-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/polaroid/pdc700.c: Introduce enum PDCConf for better
+	  readability (instead of #define).
+	  (camera_set): Renamed into (pdc700_config) for consistency reasons.
+	  (camera_get_config): Implement date and time here.
+	  (camera_summary): I don't quite get it - this should read 2000 here
+	  instead of 0 for V3.10? If not, please revert this and correct
+	  both the remark in PDCDate and the code in camera_get_config.
+
 2001-11-14  Greg Ingram <ingram@symsys.com>
 
 	* camlibs/polaroid/pdc700.c: 
