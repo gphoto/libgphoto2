@@ -118,11 +118,11 @@
             <row><entry>PowerShot S50</entry><entry>27-Feb-03</entry><entry>yes</entry></row>
             <row><entry>PowerShot A300</entry><entry>27-Feb-03</entry><entry>yes</entry></row>
             <row><entry><simplelist type="vert"><member>PowerShot S400</member>
-		  <member>Digital IXUS 400</member>
+		  <member>Digital IXUS 400</member></simplelist>
 		</entry><entry>27-Feb-03</entry><entry>yes</entry></row>
             <row><entry>EOS 10D</entry><entry>27-Feb-03</entry><entry>yes</entry></row>
             <row><entry><simplelist type="vert"><member>PowerShot SD100</member>
-		  <member>Digital IXUS II</member>
+		  <member>Digital IXUS II</member></simplelist>
 		</entry><entry>02-Apr-03</entry><entry>yes</entry></row>
             <row><entry>PowerShot G5</entry><entry>02-May-03</entry><entry>yes</entry></row>
 
@@ -135,7 +135,7 @@
             <row><entry><simplelist type="vert"><member>PowerShot SD10 Digital ELPH</member>
 		  <member>Digital IXUS i</member>
 		  </simplelist>
-		</entry><entry></entry>12-Sep-03<entry>NO</entry></row>
+		</entry><entry>12-Sep-03</entry><entry>NO</entry></row>
             <row><entry>EOS-1D Mark II</entry><entry>29-Jan-04</entry><entry>NO</entry></row>
             <row><entry><simplelist type="vert"><member>PowerShot S410</member>
 		  <member>Digital IXUS 430</member>
@@ -317,11 +317,15 @@
         <para>28 Jan 2003: Convert DocBook XML, expand USB information</para>
 	<literallayout>
 	$Log$
+	Revision 1.10  2005/03/14 22:52:22  swestin
+	Syntax corrections.
+	More info on EOS 20D.
+
 	Revision 1.9  2005/03/09 17:07:39  swestin
 	Tidied up table of known models.
 	More info on camera initial response message.
 	Corrected length of response from "get photo abilities" in new protocol.
-
+	
 	Revision 1.8  2005/03/08 20:38:40  swestin
 	Added section with list of known cameras.
 	More info on EOS 20D, in various places.
@@ -3666,6 +3670,11 @@ struct {
 
       <para>requesttype=0x0a</para>
 
+      <para>This differs from
+	<link linkend="sec.USBDeleteFile">the command 0x0d</link> in
+	the older protocol; more information is included in the
+	command block.</para>
+
       <para>Command: variable length (here 0x91 bytes)</para>
       <programlisting>
 00000000  51 00 00 00 01 02 00 00 00 00 00 00 00 00 00 00  Q...............
@@ -3686,7 +3695,7 @@ struct {
       <itemizedlist>
         <listitem>
 	  <para>3 zero bytes. The first would terminate the string;
-	    I&rsquo;m guessing that i&rsquo;ts padded out to a word
+	    I&rsquo;m guessing that it&rsquo;s padded out to a word
 	    boundary, or perhaps the three bytes signal the end of the
 	    file list.</para>
 	</listitem>
@@ -3816,6 +3825,11 @@ struct {
 
       <para>requesttype=0x0d</para>
 
+      <para>This seems to be similar to
+	<link linkend="sec.USBDiskInfo">the command 0x09</link> in the
+	older protocol, but note that the device name has no trailing
+	backslash.</para>
+
       <para>Command: variable length (here 0x53 bytes)</para>
       <programlisting>
 00000000  13 00 00 00 01 02 00 00 00 00 00 00 00 00 00 00  ................
@@ -3928,16 +3942,16 @@ struct {
 00000050  00 00 00 00 00 08 77 81 00 05 00 01 43 61 6e 6f  ......w.....Cano
 00000060  6e 20 45 4f 53 20 32 30 44 00 00 00 00 00 00 00  n EOS 20D.......
 00000070  00 00 00 00 00 00 00 00 00 00 00 00 dc ab 10 00  ................
-00000000  3c 1b 82 ff 7c ae 10 00 40 49 b1 ff 70 af 10 00  <...|...@I..p...
+00000000  3c 1b 82 ff 7c ae 10 00 40 49 b1 ff 70 af 10 00  &lt;...|...@I..p...
 00000010  28 82 b1 ff 00 00 00 00 06 00 00 20              (.......... 
       </programlisting>
 
       <para>I don't know what these bytes mean. Bytes 0x84-0x97 are
 	identical to bytes 0x7c-0x8f from <link
-	linkend="sec.USBnewgetCustom">Get Custom Functions.</link>
+	linkend="sec.USBnewEOSGetCustom">Get Custom Functions.</link>
 	This could just be garbage left in the camera's buffer, as
 	this particular command was issued after the first &ldquo;Get
-	Custom Functions.&rquo;
+	Custom Functions.&rdquo;
       </para>
 
     </section>
@@ -4108,7 +4122,7 @@ struct {
       <itemizedlist>
         <listitem><para>First 0x50 bytes are throwable.</para>
         </listitem>
-        <listitem><para>0x54 contains a byte with power status: 0x6=good, 0x4=bad</para></listitem>
+        <listitem><para>0x54 contains a byte with power status. 0x6=good, 0x4=bad</para></listitem>
         <listitem><para>0x57 contains a byte with power type in bit 4:</para>
           <itemizedlist>
             <listitem><para>((value &amp;0x20) == 0) running from ac-adapter</para></listitem>
@@ -4767,7 +4781,8 @@ struct {
       <para>requesttype=0x35</para>
 
       <para>seen with EOS 20D, issued after a 0x25/0x12 command and
-        before either a 0x1d or a 0x36.</para>
+        before either a 0x1d or a 0x36. Could this be &ldquo;lock
+        keys&rdquo;?</para>
 
       <para>Command: 0x50 bytes</para>
       <programlisting>
@@ -4798,7 +4813,8 @@ struct {
 
       <para>seen with EOS 20D, issued after 0x35/0x12. Seems to be
         followed by two 0x25/0x12 commands with lengths 0x89 and
-        0x95.</para>
+        0x95. Could this be &ldquo;unlock
+        keys&rdquo;?</para>
 
       <para>Command: 0x58 bytes</para>
       <programlisting>
