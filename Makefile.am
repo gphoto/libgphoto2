@@ -5,7 +5,7 @@
 
 bin_SCRIPTS = gphoto2-config
 
-EXTRA_DIST = HACKING MAINTAINERS acconfig.h autogen.sh \
+EXTRA_DIST = HACKING MAINTAINERS autogen.sh \
 	makefile.os2 os2mak.inc TESTERS
 
 SUBDIRS = 			\
