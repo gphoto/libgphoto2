@@ -545,8 +545,8 @@ camera_init (Camera *camera)
 
 	/* Make sure our port is a USB port */
 	if (camera->port->type != GP_PORT_USB) {
-		gp_camera_set_error (camera, _("PTP is only possible for "
-			"USB cameras."));
+		gp_camera_set_error (camera, _("PTP is implemented for "
+			"USB cameras only."));
 		return (GP_ERROR_UNKNOWN_PORT);
 	}
 
@@ -578,6 +578,7 @@ camera_init (Camera *camera)
 	ret=ptp_opensession (&camera->pl->params, htole32(1));
 	if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
 		report_result(camera, ret);
+		return (translate_ptp_result(ret));
 	}
 	/* Get file handles array for filesystem */
 	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &camera->pl->params.handles, 0xffffffff)); // XXX return from all stores
