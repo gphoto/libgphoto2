@@ -226,7 +226,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	if (cam_has_flash(camera->pl)  || cam_has_card (camera->pl)) {
 		spca50x_flash_get_filecount(camera->pl, &flash_file_count);
 		snprintf (tmp, sizeof (tmp),
-			"FLASH:\n Files: %d\n", flash_file_count);
+			_("FLASH:\n Files: %d\n"), flash_file_count);
 		strcat (summary->text, tmp);
 	}
 	
@@ -235,7 +235,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 		CHECK (spca50x_sdram_get_info (camera->pl));
 
 		snprintf (tmp, sizeof (tmp),
-				"SDRAM:\n Files: %d\n  Images: %4d\n  Movies: %4d\nSpace used: %8d\nSpace free: %8d\n",
+				_("SDRAM:\n Files: %d\n  Images: %4d\n  Movies: %4d\nSpace used: %8d\nSpace free: %8d\n"),
 				camera->pl->num_files, 
 				camera->pl->num_images,
 				camera->pl->num_movies, 
@@ -468,8 +468,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 		gp_filesystem_name (fs, "/", c - 1, &name, context);
 		gp_context_error (context,
-				  _
-				  ("Your camera does only support deleting the "
+				  _("Your camera does only support deleting the "
 				   "last file on the camera. In this case, this "
 				   "is file '%s'."), name);
 		return (GP_ERROR);
