@@ -148,7 +148,7 @@ then
 	cat %{name}-%{version}.rest.files
 fi
 
-sort %{name}-%{version}.{so,doc,misc}.files \
+cat %{name}-%{version}.{so,doc,misc,i18n}.files \
 	> %{name}-%{version}.files
 
 exit 0
@@ -163,8 +163,9 @@ exit 0
 ########################################################################
 
 ####################################
-%files -f %{name}-%{version}.files -f %{name}.lang
+%files -f %{name}-%{version}.files
 %defattr(-,root,root)
+# FIXME: correct %docxyz markup for doc files
 
 ####################################
 %post
