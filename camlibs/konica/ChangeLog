@@ -1,3 +1,7 @@
+2002-01-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* README: Removed duplicate camera models.
+
 2002-01-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* konica.c: #define PACKET_SIZE instead of using a static variable.
