@@ -1,3 +1,8 @@
+2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-result.[c,h]: Remove
+	  GP_ERROR_IO_TIMEOUT - we already have GP_ERROR_TIMEOUT.
+
 2001-12-07  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* libgphoto2_port/gphoto2-port-log.c: ENABLE_DEBUGGING -> DISABLE_DEBUGGING

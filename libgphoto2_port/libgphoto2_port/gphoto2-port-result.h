@@ -38,7 +38,6 @@
 
 #define GP_ERROR_IO_INIT                -31
 #define GP_ERROR_IO_OPEN                -32
-#define GP_ERROR_IO_TIMEOUT             -33
 #define GP_ERROR_IO_READ                -34
 #define GP_ERROR_IO_WRITE               -35
 #define GP_ERROR_IO_CLOSE               -36

@@ -70,8 +70,6 @@ gp_port_result_as_string (int result)
 	GP_ERR (GP_ERROR_LIBRARY,      N_("Error loading a library"));
 	GP_ERR (GP_ERROR_IO_INIT,      N_("Error initializing the port"));
 	GP_ERR (GP_ERROR_IO_OPEN,      N_("Error opening the port"));
-	GP_ERR (GP_ERROR_IO_TIMEOUT,   N_("Timeout reading from or writing "
-					      "to the port"));
 	GP_ERR (GP_ERROR_IO_READ,   N_("Error reading from the port"));
 	GP_ERR (GP_ERROR_IO_WRITE,  N_("Error writing to the port"));
 	GP_ERR (GP_ERROR_IO_CLOSE,  N_("Error closing the port"));

@@ -487,9 +487,9 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 
 		/* Any data available? */
                 if (!select (dev->pl->fd + 1, &readfs, NULL, NULL, &timeout))
-                        return GP_ERROR_IO_TIMEOUT;
+                        return GP_ERROR_TIMEOUT;
 		if (!FD_ISSET (dev->pl->fd, &readfs))
-			return (GP_ERROR_IO_TIMEOUT);
+			return (GP_ERROR_TIMEOUT);
 
 		/* Read the bytes */
 		now = read (dev->pl->fd, bytes, size - readen);
