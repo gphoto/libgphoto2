@@ -93,6 +93,8 @@
  *   understood.
  * @CANON_USB_FUNCTION_20D_UNKNOWN_4: First seen with EOS 20D, not yet
  *   understood.
+ * @CANON_USB_FUNCTION_SET_ATTR_2: Presumed code to set attribute bits
+ *   for a file on an EOS 20D and its ilk.
  *
  * Codes to give to canon_usb_dialogue() or canon_usb_long_dialogue()
  * to select which command to issue to the camera. See the protocol
@@ -135,6 +137,7 @@ typedef enum {
 	CANON_USB_FUNCTION_20D_UNKNOWN_4,
 	CANON_USB_FUNCTION_20D_UNKNOWN_5,
 	CANON_USB_FUNCTION_DELETE_FILE_2,
+	CANON_USB_FUNCTION_SET_ATTR_2,
 } canonCommandIndex;
 
 /**
@@ -251,7 +254,7 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	/* Command code 0x0e is overloaded: set file attribute (old),
 	 * flash device ID (new). And the response is different: fixed
 	 * length in old, variable length in new. */
-	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",		0x0e, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attributes",		0x0e, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2, "Flash device ident (new)",	0x0e, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_SET_FILE_TIME,	"Set file time",		0x0f, 0x11, 0x201,	0x54},
 	/* Notice the overloaded command code 0x13: remote camera control
@@ -271,9 +274,12 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,	"New EOS get body ID",		0x23, 0x12, 0x201,	0x58},
 	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "New get picture abilities",	0x24, 0x12, 0x201,	0x474},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_3,	"Unknown EOS 20D function",	0x25, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2, "New download a captured image", 0x26, 0x12, 0x202,	0x54},
+	{CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2, "New download a captured image", 0x26, 0x12, 0x202,	0x40},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_4,	"Unknown EOS 20D function",	0x35, 0x12, 0x201,	0x5c},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_5,	"Unknown EOS 20D function",	0x36, 0x12, 0x201,	0x54},
+	/* WARNING: I don't think this is really the right value, but
+	 * it gives no error on EOS 20D -- swestin 22-Mar-05 */
+	{CANON_USB_FUNCTION_SET_ATTR_2,		"Set file attributes (new))", 0x07, 0x11, 0x201,	0x54},
 	{ 0 }
 };
 
@@ -306,6 +312,12 @@ static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	{CANON_USB_CONTROL_SELECT_CAM_OUTPUT,   "Select camera output", 0x14,  0x00,  0x00}, /* LCD (0x1), Video out (0x2), or OFF (0x3) */
 	{CANON_USB_CONTROL_DO_AE_AF_AWB,        "Do AE, AF, and AWB",   0x15,  0x00,  0x00}, 
 	{ 0 }
+};
+
+/* For mapping status codes to intelligible messages */
+struct canon_usb_status {
+	int code;
+	char *message;
 };
 
 /****************************************************************************
