@@ -6,3 +6,4 @@ Makefile.in
 *.la
 .deps
 .libs
+backups
