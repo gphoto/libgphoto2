@@ -4,13 +4,13 @@ INCLUDES = \
 	-I$(top_srcdir)/intl \
 	@GTK_CFLAGS@
 
-bin_PROGRAMS = project5
+bin_PROGRAMS = gphoto2_gtk2
 
-project5_SOURCES = \
+gphoto2_gtk2_SOURCES = \
 	main.c \
 	support.c support.h \
 	interface.c interface.h \
 	callbacks.c callbacks.h \
 	tree_list_util.c tree_list_util.h
 
-project5_LDADD = @GTK_LIBS@ $(INTLLIBS)
+gphoto2_gtk2_LDADD = @GTK_LIBS@ $(INTLLIBS)
