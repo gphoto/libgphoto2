@@ -1,3 +1,11 @@
+2002-04-06  Marcus Meissner <marcus@jet.franken.de>
+	
+	* jd11.c, serial.[ch]:
+	  Use the _noop filesystem functions to store the thumbnail data
+	  we retrieve on getting the number of pictures in the camera, major
+	  speedup for downloading thumbnails.
+	  Provide file info for frontends who use them.
+
 2002-01-04  Marcus Meissner <marcus@jet.franken.de>
 	
 	* jd11.c: Cleaned up comments, say it is ready for

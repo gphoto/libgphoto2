@@ -104,16 +104,12 @@ int camera_abilities (CameraAbilitiesList *list)
 static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data, GPContext *context) 
 {
-	Camera *camera = data;
-	int count, result;
+	Camera *camera = (Camera*)data;
 
-	result =  jd11_file_count(camera->port, &count);
-	if (result != GP_OK)
-		return result;
+	if (strcmp(folder,"/"))
+		return GP_ERROR_BAD_PARAMETERS;
 
-	gp_list_populate(list, "image%02i.pnm", count);
-
-	return (GP_OK);
+	return jd11_index_reader(camera->port, fs, context);
 }
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
@@ -122,38 +118,29 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = user_data;
 	int image_no, result;
-	char *data;
-	long int size;
 
 	image_no = gp_filesystem_number(fs, folder, filename, context);
 
 	if(image_no < 0)
 		return image_no;
 
+	gp_file_set_name (file, filename);
+	gp_file_set_mime_type (file, "image/pnm");
 	switch (type) {
 	case GP_FILE_TYPE_RAW:
-		result =  jd11_get_image_full (camera, file, image_no, &data,
-					    (int*) &size, 1, context);
+		result = jd11_get_image_full(camera,file,image_no,1,context);
 		break;
 	case GP_FILE_TYPE_NORMAL:
-		result =  jd11_get_image_full (camera, file, image_no, &data,
-					    (int*) &size, 0, context);
+		result = jd11_get_image_full(camera,file,image_no,0,context);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		result =  jd11_get_image_preview (camera, file, image_no,
-						&data, (int*) &size, context);
-		break;
+		/* We should never get here, we store the thumbs in the fs... */
+		return (GP_ERROR_NOT_SUPPORTED);
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
-
 	if (result < 0)
 		return result;
-
-	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, "image/pnm");
-	gp_file_set_data_and_size (file, data, size);
-
 	return (GP_OK);
 }
 

@@ -348,93 +348,97 @@ jd11_erase_all(GPPort *port) {
 	return _send_cmd(port,0xffa6);
 }
 
+/* This function reads all thumbnails at once and initializes the whole
+ * camera filesystem. This can be done, because finding out how much 
+ * pictures are on the camera is done by reading the whole preview picture
+ * stream anyway.
+ * And since the file infos are static mostly, why not just set them too at
+ * the same time.
+ */
 int
-jd11_get_image_preview(Camera *camera,CameraFile*file,int nr, char **data, int *size, GPContext *context) {
-	int	xsize,curread=0,ret=0;
-	char	*indexbuf,*src,*dst;
-	int	y;
-	char	header[200];
-	GPPort	*port = camera->port;
-	unsigned int id;
-
-	if (nr < 0) return GP_ERROR_BAD_PARAMETERS;
-
-	ret = jd11_select_index(port);
-	if (ret != GP_OK)
-	    return ret;
-	xsize = jd11_imgsize(port);
-	if (nr > xsize/(64*48)) {
-	    fprintf(stderr,"ERROR: nr %d is larger than %d\n",nr,xsize/64/48);
-	    return GP_ERROR_BAD_PARAMETERS;
-	}
-	xsize = (xsize / (64*48)) * (64*48);
-	indexbuf = malloc(xsize);
-	if (!indexbuf) return GP_ERROR_NO_MEMORY;
-	_send_cmd(port,0xfff1);
-	id = gp_context_progress_start (context, xsize,
-					_("Downloading thumbnail..."));
-	while (1) {
-	    	int readsize = xsize-curread;
-		if (readsize>200) readsize = 200;
-		ret=getpacket(port,indexbuf+curread,readsize);
-		if (ret==0)
-			break;
-		curread+=ret;
-		if (ret<200)
-			break;
-		gp_context_progress_update (context, id, curread);
-		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-		    /* What to do...Just free the stuff we allocated for now.*/
-		    free(indexbuf);
-		    return GP_ERROR_CANCEL;
-		}
-		_send_cmd(port,0xfff1);
-	}
-	gp_context_progress_stop (context, id);
-	strcpy(header,"P5\n# gPhoto2 JD11 thumbnail image\n64 48 255\n");
-	*size = 64*48+strlen(header);
-	*data = malloc(*size);
-	if (!*data) return GP_ERROR_NO_MEMORY;
-	strcpy(*data,header);
-	src = indexbuf+(nr*64*48);
-	dst = (*data)+strlen(header);
-
-	for (y=0;y<48;y++) {
-	    int x,off = 64*y;
-	    for (x=0;x<64;x++)
-		dst[47*64-off+(63-x)] = src[off+x];
-	}
-	free(indexbuf);
-	return GP_OK;
-}
-
-int
-jd11_file_count(GPPort *port,int *count) {
-    int		xsize,curread=0,ret=0;
-    char	tmpbuf[202];
+jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
+    int		i, id, count, xsize, curread=0, ret=0;
+    char	*indexbuf;
 
     ret = jd11_select_index(port);
     if (ret != GP_OK)
 	return ret;
     xsize = jd11_imgsize(port);
     if (!xsize) { /* shortcut, no reading needed */
-	*count = 0;
 	return GP_OK;
     }
-    *count = xsize/(64*48);
-    xsize = *count * (64*48);
+    count = xsize/(64*48);
+    xsize = count * (64*48);
+    indexbuf = malloc(xsize);
+    if (!indexbuf) return GP_ERROR_NO_MEMORY;
+    id = gp_context_progress_start (context, xsize,
+				    _("Downloading thumbnail..."));
     _send_cmd(port,0xfff1);
-    while (curread <= xsize) {
-	int readsize = xsize-curread;
-	if (readsize>200) readsize = 200;
-	ret=getpacket(port,tmpbuf,readsize);
-	if (ret==0)
-	    break;
-	curread+=ret;
-	if (ret<200)
-	    break;
-	_send_cmd(port,0xfff1);
+    while (curread < xsize) {
+	    int readsize = xsize-curread;
+	    if (readsize>200) readsize = 200;
+	    ret=getpacket(port,indexbuf+curread,readsize);
+	    if (ret==0)
+		    break;
+	    curread+=ret;
+	    if (ret<200)
+		    break;
+	    gp_context_progress_update (context, id, curread);
+	    if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+		/* What to do...Just free the stuff we allocated for now.*/
+		free(indexbuf);
+		return GP_ERROR_CANCEL;
+	    }
+	    _send_cmd(port,0xfff1);
     }
+    gp_context_progress_stop (context, id);
+    for (i=0;i<count;i++) {
+	CameraFile	*file;
+	char		*src, fn[20];
+	unsigned char thumb[64*48];
+	int y;
+	CameraFileInfo	info;
+	
+	ret = gp_file_new(&file);
+	if (ret!=GP_OK)
+	    return ret;
+	sprintf(fn,"image%02i.pgm",i);
+	gp_file_set_type (file, GP_FILE_TYPE_PREVIEW);
+	gp_file_set_name(file, fn);
+	gp_file_set_mime_type(file, GP_MIME_PGM);
+	gp_file_append(file, THUMBHEADER, strlen(THUMBHEADER));
+	src = indexbuf+(i*64*48);
+	for (y=0;y<48;y++) {
+	    int x,off = 64*y;
+	    for (x=0;x<64;x++)
+		thumb[47*64-off+(63-x)] = src[off+x];
+	}
+	ret = gp_file_append(file,thumb,sizeof(thumb));
+	if (ret != GP_OK) return ret;
+	ret = gp_filesystem_append(fs, "/", fn, context);
+	if (ret != GP_OK) return ret;
+	ret = gp_filesystem_set_file_noop(fs, "/", file, context);
+	if (ret != GP_OK) return ret;
+
+	/* we also get the fs info for free, so just set it */
+	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | 
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+			GP_FILE_INFO_SIZE;
+	strcpy(info.file.type,"image/pnm");
+	strcpy(info.file.name,fn);
+	info.file.width		= 640;
+	info.file.height	= 480;
+	info.file.size		= 640*480*3+strlen(IMGHEADER);
+	info.preview.fields = GP_FILE_INFO_TYPE |
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+			GP_FILE_INFO_SIZE;
+	strcpy(info.preview.type,GP_MIME_PGM);
+	info.preview.width	= 64;
+	info.preview.height	= 48;
+	info.preview.size	= 64*48+strlen(THUMBHEADER);
+	ret = gp_filesystem_set_info_noop(fs, "/", info, context);
+    }
+    free(indexbuf);
     return GP_OK;
 }
 
@@ -480,10 +484,12 @@ serial_image_reader(Camera *camera,CameraFile *file,int nr,unsigned char ***imag
 
 
 int
-jd11_get_image_full(Camera *camera,CameraFile*file,int nr, char **data, int *size,int raw, GPContext *context) {
+jd11_get_image_full(
+    Camera *camera, CameraFile*file, int nr, int raw, GPContext *context
+) {
     unsigned char	*s,*uncomp[3],**imagebufs;
     int			ret,sizes[3];
-    char		header[200];
+    char		*data;
     int 		h;
 
     ret = serial_image_reader(camera,file,nr,&imagebufs,sizes, context);
@@ -501,10 +507,8 @@ jd11_get_image_full(Camera *camera,CameraFile*file,int nr, char **data, int *siz
 	    picture_decomp_v2(imagebufs[1],uncomp[1],320,480/2);
 	    picture_decomp_v2(imagebufs[2],uncomp[2],320,480/2);
     }
-    strcpy(header,"P6\n# gPhoto2 JD11 thumbnail image\n640 480 255\n");
-    *size = 640*480*3+strlen(header);
-    *data = malloc(*size);
-    strcpy(*data,header);
+    gp_file_append(file, IMGHEADER, strlen(IMGHEADER));
+    data = malloc(640*480*3);
     if (!raw) {
 	unsigned char *bayerpre;
 	s = bayerpre = malloc(640*480);
@@ -523,10 +527,10 @@ jd11_get_image_full(Camera *camera,CameraFile*file,int nr, char **data, int *siz
 		}
 	    }
 	}
-	gp_bayer_decode(bayerpre,640,480,*data+strlen(header),BAYER_TILE_RGGB);
+	gp_bayer_decode(bayerpre,640,480,data,BAYER_TILE_RGGB);
 	free(bayerpre);
     } else {
-	s=(*data)+strlen(header);
+	s=data;
 	for (h=480;h--;) { /* upside down */
 	    int w;
 	    for (w=640;w--;) { /* right to left */
@@ -539,5 +543,7 @@ jd11_get_image_full(Camera *camera,CameraFile*file,int nr, char **data, int *siz
     }
     free(uncomp[0]);free(uncomp[1]);free(uncomp[2]);
     free(imagebufs[0]);free(imagebufs[1]);free(imagebufs[2]);free(imagebufs);
+    gp_file_append(file, data, 640*480*3);
+    free(data);
     return GP_OK;
 }

@@ -24,9 +24,8 @@
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
-extern int jd11_file_count(GPPort *port, int *count);
-extern int jd11_get_image_preview(Camera *camera,CameraFile *file,int nr, char **data, int *size, GPContext *context);
-extern int jd11_get_image_full(Camera *camera,CameraFile *file,int nr, char **data, int *size,int raw, GPContext *context);
+extern int jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context);
+extern int jd11_get_image_full(Camera *camera,CameraFile *file,int nr,int raw, GPContext *context);
 extern int jd11_erase_all(GPPort *port);
 extern int jd11_ping(GPPort *port);
 extern int jd11_float_query(GPPort *port);
@@ -35,4 +34,9 @@ extern int jd11_select_image(GPPort *port, int nr);
 extern int jd11_set_bulb_exposure(GPPort *port, int nr);
 extern int jd11_set_rgb(GPPort *port, float red, float green, float blue);
 extern int jd11_get_rgb(GPPort *port, float *red, float *green, float *blue);
+
+
+#define IMGHEADER "P6\n# gPhoto2 JD11 thumbnail image\n640 480 255\n"
+#define THUMBHEADER "P5\n# gPhoto2 JD11 thumbnail image\n64 48 255\n"
+
 #endif
