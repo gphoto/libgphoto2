@@ -242,12 +242,18 @@ int camera_file_count () {
 
 	int value;
 
+if (camera_start()==GP_ERROR)
+return (GP_ERROR);
+
 	debug_print("Counting files");
 
 	if (fujitsu_get_int_register(glob_dev, 10, &value)==GP_ERROR) {
                 gp_message("Could not get number of files on camera.");
                 return (GP_ERROR);
         }
+
+if (camera_stop()==GP_ERROR)
+return (GP_ERROR);
 
 	return (value);
 }
