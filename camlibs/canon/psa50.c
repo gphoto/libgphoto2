@@ -16,7 +16,6 @@
  * way.
  */
 
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -55,6 +54,20 @@
 #include "crc.h"
 #include "psa50.h"
 #include "canon.h"
+
+/* ========================================================================
+ * function prototype declarations
+ * move these to psa50.h to make them publicly available
+ * ========================================================================
+ */
+
+int psa50_send_frame (Camera *camera, const unsigned char *pkt, int len);
+unsigned char *psa50_recv_frame (Camera *camera, int *len);
+void intatpos (unsigned char *block, int pos, int integer);
+unsigned char *psa50_get_file_serial (Camera *camera, const char *name, int *length);
+int psa50_put_file_usb (Camera *camera, CameraFile * file, char *destname, char *destpath);
+int psa50_put_file_serial (Camera *camera, CameraFile * file, char *destname, char *destpath);
+
 
 #define MAX_TRIES 10
 
