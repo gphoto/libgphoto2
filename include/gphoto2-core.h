@@ -33,7 +33,7 @@ void gp_debug_printf (int level, char *id, char *format, ...);
 int  gp_autodetect (CameraList *list);
 
 /* Retrieve the number of available cameras */
-int gp_camera_count ();
+int gp_camera_count (void);
 
 /* Retrieve the name of a particular camera */
 int gp_camera_name  (int camera_number, char *camera_name);

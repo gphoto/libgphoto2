@@ -1,3 +1,12 @@
+2001-08-20  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
+	* doc/OVERVIEW: Cruft, not up to date, incorrect. Removed.
+	* doc/NOTES: Redundant. Removed.
+	* libgphoto2/camera.c: Be nice to frontend-writers, call gp_init if
+	it hasn't been called yet on gp_camera_new.
+	* libgphoto2/core.c: Same here with gp_autodetect and gp_camera_count.
+	* include/gphoto2-core.h: Kill compile warning
+
 2001-08-20  Lutz MÜller  <urc8@rz.uni-karlsruhe.de>
 
 	* libpghoto2/camera.c: Kill compile warning by declaring gp_camera_exit

@@ -38,7 +38,8 @@ CameraAbilitiesList *glob_abilities_list;
 
 static int have_initted = 0;
 
-int is_library(char *library_filename)
+static int
+is_library (char *library_filename)
 {
 	int ret = GP_OK;
         void *lh;
@@ -54,9 +55,8 @@ int is_library(char *library_filename)
         return (ret);
 }
 
-/* Returns the number of cameras added to the CameraChoice list */
-/* 0 implies an error occurred */
-int load_camera_list(char *library_filename)
+static int
+load_camera_list (char *library_filename)
 {
 	CameraText id;
 	void *lh;
@@ -103,7 +103,8 @@ int load_camera_list(char *library_filename)
 	return x;
 }
 
-int load_cameras_search(char *directory)
+static int
+load_cameras_search (char *directory)
 {
         GP_SYSTEM_DIR d;
         GP_SYSTEM_DIRENT de;
@@ -126,9 +127,9 @@ int load_cameras_search(char *directory)
 		sprintf(buf, "%s%c%s", directory, GP_SYSTEM_DIR_DELIM, GP_SYSTEM_FILENAME(de));
                 gp_debug_printf(GP_DEBUG_LOW, "core", "\tis %s a library? ", buf);
                 /* try to open the library */
-                if (is_library(buf) == GP_OK) {
+                if (is_library (buf) == GP_OK) {
                         gp_debug_printf(GP_DEBUG_LOW, "core", "yes");
-                        load_camera_list(buf);
+                        load_camera_list (buf);
                    } else {
 			gp_debug_printf(GP_DEBUG_LOW, "core", "no. reason: %s", GP_SYSTEM_DLERROR());
                 }
@@ -138,15 +139,16 @@ int load_cameras_search(char *directory)
         return (GP_OK);
 }
 
-int load_cameras() {
-
+static int
+load_cameras (void)
+{
 	int x, y, z;
 	CameraAbilities *t;
 
 	/* Where should we search for camera libraries? */
 
 	/* The installed camera library directory */
-	load_cameras_search(CAMLIBS);
+	load_cameras_search (CAMLIBS);
 
 	/* Current directory */
 	/* load_cameras_search("."); */
@@ -203,7 +205,7 @@ int gp_init (int debug)
         load_settings();
 
         gp_debug_printf (GP_DEBUG_LOW, "core", "Trying to load libraries...");
-        load_cameras();
+        load_cameras ();
 
         gp_debug_printf (GP_DEBUG_LOW, "core", "Following cameras were found:");
         for (x = 0; x < glob_abilities_list->count; x++)
@@ -223,46 +225,56 @@ gp_is_initialized (void)
         return have_initted;
 }
 
-int gp_exit ()
+int
+gp_exit (void)
 {
         gp_abilities_list_free (glob_abilities_list);
 
         return (GP_OK);
 }
 
-int gp_autodetect (CameraList *list)
+int
+gp_autodetect (CameraList *list)
 {
-    int x=0;
-    int status;
-    int found=0;
-    int vendor, product;
-    gp_port *dev;
+	int x = 0, result;
+	int vendor, product;
+	gp_port *dev;
+	
+	if (!list)
+		return (GP_ERROR_BAD_PARAMETERS);
+	
+	/* Be nice to frontend-writers... */
+	if (!gp_is_initialized ())
+		if ((result = gp_init (GP_DEBUG_NONE)) != GP_OK)
+			return (result);
 
-    status = gp_port_new(&dev, GP_PORT_USB);
-    if (status != GP_OK)
-        return status;
+	if ((result = gp_port_new (&dev, GP_PORT_USB)) != GP_OK)
+		return (result);
 
-    for (x=0; x<glob_abilities_list->count; x++) {
-        vendor = glob_abilities_list->abilities[x]->usb_vendor;
-        product = glob_abilities_list->abilities[x]->usb_product;
-        if (vendor) {
-            if (gp_port_usb_find_device(dev, vendor, product)==GP_OK) {
-                gp_list_append(list, glob_abilities_list->abilities[x]->model);
-                strcpy(list->entry[list->count-1].value, "usb:");
-                found = 1;
-            }
-        }
-    }
-
-    gp_port_free(dev);
-
-    if (found)
-        return GP_OK;
-    return GP_ERROR_NO_CAMERA_FOUND;
+	list->count = 0;
+	for (x = 0; x < glob_abilities_list->count; x++) {
+		vendor = glob_abilities_list->abilities[x]->usb_vendor;
+		product = glob_abilities_list->abilities[x]->usb_product;
+		if (vendor) {
+			if (gp_port_usb_find_device (dev, vendor, product)
+					== GP_OK) {
+				gp_list_append (list, glob_abilities_list->abilities[x]->model);
+				strcpy (list->entry[list->count-1].value, "usb:");
+			}
+		}
+	}
+	
+	gp_port_free (dev);
+	
+	if (list->count)
+		return GP_OK;
+	
+	return GP_ERROR_NO_CAMERA_FOUND;
 }
 
 
-void gp_debug_printf (int level, char *id, char *format, ...)
+void
+gp_debug_printf (int level, char *id, char *format, ...)
 {
         va_list arg;
 
@@ -278,12 +290,21 @@ void gp_debug_printf (int level, char *id, char *format, ...)
         }
 }
 
-int gp_camera_count ()
+int
+gp_camera_count (void)
 {
+	int result;
+	
+	/* Be nice to frontend-writers... */
+	if (!gp_is_initialized ())
+		if ((result = gp_init (GP_DEBUG_NONE)) != GP_OK)
+			return (result);
+
 	return (glob_abilities_list->count);
 }
 
-int gp_camera_name (int camera_number, char *camera_name)
+int
+gp_camera_name (int camera_number, char *camera_name)
 {
 	if (glob_abilities_list == NULL)
 		return (GP_ERROR_MODEL_NOT_FOUND);
@@ -296,7 +317,8 @@ int gp_camera_name (int camera_number, char *camera_name)
 	return (GP_OK);
 }
 
-int gp_camera_abilities (int camera_number, CameraAbilities *abilities)
+int
+gp_camera_abilities (int camera_number, CameraAbilities *abilities)
 {
 	memcpy (abilities, glob_abilities_list->abilities[camera_number],
 		sizeof(CameraAbilities));
@@ -307,7 +329,8 @@ int gp_camera_abilities (int camera_number, CameraAbilities *abilities)
 	return (GP_OK);
 }
 
-int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities)
+int
+gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities)
 {
 	int x;
 	
