@@ -54,6 +54,10 @@ struct camera_to_usb {
 	{ "Aiptek PenCam Trio",         0x0553, 0x0202 },
 	{ "Micromaxx Digital Camera",   0x0553, 0x0202 },
 	{ "l'elegante by DigitalDream", 0x0553, 0x0202 },
+	{ "l'espion by DigitalDream",   0x0553, 0x0202 },
+	{ "l'esprit by DigitalDream",   0x0553, 0x0202 },
+	{ "la ronde by DigitalDream",   0x0553, 0x0202 },
+	{ "AEG Snap 300",               0x0553, 0x0202 },
 	{ "Fuji IX-1",                  0x0553, 0x0202 }, /* Unconfirmed */
 	{ "STV0680",                    0x0000, 0x0000 }  /* serial version */
 };
