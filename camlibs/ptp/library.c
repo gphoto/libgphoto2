@@ -686,12 +686,14 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		info->preview.width  = oi->ThumbPixWidth;
 		info->preview.height = oi->ThumbPixHeight;
 
-		info->file.fields = info->file.fields|GP_FILE_INFO_WIDTH|GP_FILE_INFO_HEIGHT|
-				GP_FILE_INFO_TIME;
+		info->file.fields = info->file.fields |
+				GP_FILE_INFO_WIDTH  |
+				GP_FILE_INFO_HEIGHT |
+				GP_FILE_INFO_MTIME;
 
 		info->file.width  = oi->ImagePixWidth;
 		info->file.height = oi->ImagePixHeight;
-		info->file.time = oi->CaptureDate;
+		info->file.mtime = oi->CaptureDate;
 	}
 
 		return (GP_OK);

@@ -272,9 +272,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 #endif
         info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_NAME |
                             GP_FILE_INFO_TYPE | GP_FILE_INFO_PERMISSIONS |
-			    GP_FILE_INFO_TIME;
+			    GP_FILE_INFO_MTIME;
 
-	info->file.time = statbuf.st_mtime;
+	info->file.mtime = statbuf.st_mtime;
 	info->file.permissions = GP_FILE_PERM_NONE;
 	if (statbuf.st_mode & S_IRUSR)
 		info->file.permissions |= GP_FILE_PERM_READ;
@@ -305,11 +305,11 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	if (info.file.fields & GP_FILE_INFO_PERMISSIONS)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	if (info.file.fields & GP_FILE_INFO_TIME) {
+	if (info.file.fields & GP_FILE_INFO_MTIME) {
 		struct utimbuf utimbuf;
 
-		utimbuf.actime  = info.file.time;
-		utimbuf.modtime = info.file.time;
+		utimbuf.actime  = info.file.mtime;
+		utimbuf.modtime = info.file.mtime;
 		if (strlen (folder) == 1)
 			snprintf (path, sizeof (path), "/%s", file);
 		else

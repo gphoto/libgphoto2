@@ -886,13 +886,13 @@ debug_fileinfo (CameraFileInfo * info)
 		GP_DEBUG ("    Perms:  0x%x", info->file.permissions);
 	if ((info->file.fields & GP_FILE_INFO_STATUS) != 0)
 		GP_DEBUG ("    Status: %i", info->file.status);
-	if ((info->file.fields & GP_FILE_INFO_TIME) != 0) {
-		char *p, *time = asctime (gmtime (&info->file.time));
+	if ((info->file.fields & GP_FILE_INFO_MTIME) != 0) {
+		char *p, *time = asctime (gmtime (&info->file.mtime));
 
 		for (p = time; *p != 0; ++p)
 			/* do nothing */ ;
 		*(p - 1) = '\0';
-		GP_DEBUG ("    Time:   %s (%i)", time, info->file.time);
+		GP_DEBUG ("    Time:   %s (%i)", time, info->file.mtime);
 	}
 	GP_DEBUG ("  </CameraFileInfoFile>");
 	GP_DEBUG ("</CameraFileInfo>");
@@ -1084,9 +1084,9 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 
 				/* the date is located at offset 6 and is 4
 				 * bytes long, re-order little/big endian */
-				info.file.time = dirent_time;
-				if (info.file.time != 0)
-					info.file.fields |= GP_FILE_INFO_TIME;
+				info.file.mtime = dirent_time;
+				if (info.file.mtime != 0)
+					info.file.fields |= GP_FILE_INFO_MTIME;
 
 				if (is_file) {
 					/* determine file type based on file name
