@@ -1,3 +1,7 @@
+2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/agfa-cl18/*: Bring it up to date (camera->port and camera->fs)
+
 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/barbie/*: Use camera->port and camera->fs.

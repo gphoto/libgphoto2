@@ -20,113 +20,124 @@
 
 #include <gphoto2-port.h>
 
-    /* Regular commands always 8 bytes long */
-static void build_command(struct agfa_command *cmd, int command, int argument) {
-
-    cmd->length = 8;
-    cmd->command = command;
-    cmd->argument = argument;
+/* Regular commands always 8 bytes long */
+static void
+build_command (struct agfa_command *cmd, int command, int argument)
+{
+	cmd->length = 8;
+	cmd->command = command;
+	cmd->argument = argument;
 }
 
-    /* Filenames are always 12 bytes long */
-static void build_file_command(struct agfa_file_command *cmd, const char *filename) {
-   
-    cmd->length=0x0c;
-    strncpy(cmd->filename,filename,12);
+/* Filenames are always 12 bytes long */
+static void
+build_file_command (struct agfa_file_command *cmd, const char *filename)
+{
+	cmd->length = 0x0c;
+	strncpy (cmd->filename,filename,12);
 }
 
-void agfa_reset(struct agfa_device *dev) {
-    int ret;
-    struct agfa_command cmd;
-   
-    build_command(&cmd,AGFA_RESET,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));   
+int
+agfa_reset (struct agfa_device *dev)
+{
+	struct agfa_command cmd;
+	
+	build_command (&cmd, AGFA_RESET, 0);
+	
+	return (gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd)));
 }
 
-    /* Status is a 60 byte array.  I have no clue what it does */
-int agfa_get_status(struct agfa_device *dev, int *taken,
-        int *available, int *rawcount) {
+/* Status is a 60 byte array.  I have no clue what it does */
+int
+agfa_get_status (struct agfa_device *dev, int *taken,
+		 int *available, int *rawcount)
+{
+	struct agfa_command cmd;
+	unsigned char ss[0x60];
+	int ret;
 
-    struct agfa_command cmd;
-    unsigned char ss[0x60];
-    int ret;
+	build_command (&cmd, AGFA_STATUS, 0);
 
-    build_command(&cmd, AGFA_STATUS, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd)); 
+	if (ret < 0)
+		return (ret);
 
-    ret = agfa_send(dev, &cmd, sizeof(cmd));
-   
-    if (ret < 0) {
-       fprintf(stderr, "agfa_get_storage_status: error sending command\n");
-       return -1;
-    }
+	ret = gp_port_read (dev->gpdev, (unsigned char *)&ss, sizeof (ss));
+	if (ret < 0)
+		return (ret);
 
-    ret = agfa_read(dev, (unsigned char *)&ss, sizeof(ss));
-    if (ret < 0) {
-       fprintf(stderr, "agfa_get_storage_status: error getting count\n");
-       return -1;
-    }
-       
-    agfa_reset(dev); 
-   
-    return 0;
+	return (agfa_reset (dev));
 }
 
-    /* Below contributed by Ben Hague <benhague@btinternet.com> */
+/* Below contributed by Ben Hague <benhague@btinternet.com> */
+int
+agfa_capture (struct agfa_device *dev, CameraFilePath *path)
+{
+	/*
+	 * FIXME: Not fully implemented according to the gphoto2 spec.
+	 * Should also save taken picture and return the location in path,
+	 * but when I try to do that it just hangs
+	 */ 
+	
+	struct agfa_command cmd;
+	int ret, taken;
 
-int agfa_capture(struct agfa_device *dev, const char *path) {
-    /*FIXME: Not fully implemented according to the gphoto2 spec.*/
-    /*Should also save taken picture, and then delete it from the camera*/
-    /*but when I try to do that it just hangs*/
-        
-    struct agfa_command cmd;
-    int ret,taken;
-      
-    printf("Agfa take a picture\n");
-    build_command(&cmd, AGFA_TAKEPIC2,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));
-    build_command(&cmd, AGFA_TAKEPIC1,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));
-    build_command(&cmd, AGFA_TAKEPIC3,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));
-    build_command(&cmd, AGFA_TAKEPIC2,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));
-    
-    /*Not sure if this delay is necessary, but it was used in the windows driver*/
-    /*delay(20); */
-    sleep(20);
-    /*Again, three times in windows driver*/
-    ret = agfa_photos_taken(dev,&taken);
-    ret = agfa_photos_taken(dev,&taken);
-    ret = agfa_photos_taken(dev,&taken);
-    /*This seems to do some kind of reset, but does cause the camera to start responding again*/
-    build_command(&cmd,AGFA_GET_NAMES, 0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));
-    return 0;
+	gp_debug_printf (GP_DEBUG_HIGH, "agfa", "agfa_capture");
+	
+	/*
+	 * 2001/08/30 Lutz Müller <urc8@rz.uni-karlsruhe.de:
+	 * You don't check for results here?
+	 */
+	build_command (&cmd, AGFA_TAKEPIC2, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd));
+	build_command (&cmd, AGFA_TAKEPIC1, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd));
+	build_command (&cmd, AGFA_TAKEPIC3, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd));
+	build_command (&cmd, AGFA_TAKEPIC2, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	
+	/* 
+	 * Not sure if this delay is necessary, but it was used in the windows
+	 * driver
+	 */
+	sleep(20);
+	
+	/* Again, three times in windows driver */
+	ret = agfa_photos_taken (dev,&taken);
+	ret = agfa_photos_taken (dev,&taken);
+	ret = agfa_photos_taken (dev,&taken);
+	
+	/* 
+	 * This seems to do some kind of reset, but does cause the camera to
+	 * start responding again
+	 */
+	build_command (&cmd, AGFA_GET_NAMES, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	
+	return GP_OK;
 }
 
 
-int agfa_photos_taken(struct agfa_device *dev, int *taken) {
-   
-    struct agfa_command cmd;
-    int ret,numpics;
+int
+agfa_photos_taken (struct agfa_device *dev, int *taken)
+{
+	struct agfa_command cmd;
+	int ret, numpics;
+	
+	build_command (&cmd, AGFA_GET_NUM_PICS, 0);
 
-    build_command(&cmd, AGFA_GET_NUM_PICS, 0);
-
-    ret = agfa_send(dev, &cmd, sizeof(cmd));
-   
-    if (ret < 0) {
-       fprintf(stderr, "agfa_get_storage_status: error sending command\n");
-       return -1;
-    }
-
-    ret = agfa_read(dev, &numpics, sizeof(numpics));
-    if (ret < 0) {
-       fprintf(stderr, "agfa_get_storage_status: error getting count\n");
-       return -1;
-    }
-    *taken=numpics;
-
-    return 0;
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd));
+	if (ret < 0)
+		return (ret);
+	
+	ret = gp_port_read (dev->gpdev, (char*)&numpics, sizeof (numpics));
+	if (ret < 0)
+		return (ret);
+	
+	*taken = numpics;
+	
+	return 0;
 }
 
 
@@ -158,13 +169,13 @@ int agfa_get_file_list(struct agfa_device *dev) {
 
     build_command(&cmd,AGFA_GET_NAMES, buflen);
 
-    ret = agfa_send(dev, &cmd, sizeof(cmd));
+    ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
     if (ret < 0) {
        fprintf(stderr, "agfa_get_file_list: error sending command\n");
        return -1;
     }
 
-    ret = agfa_read(dev, (void *)buffer, buflen);
+    ret = gp_port_read (dev->gpdev, (void *)buffer, buflen);
     if (ret < 0) {
        fprintf(stderr, "agfa_get_file_list: error receiving data\n");
        return -1;
@@ -195,7 +206,7 @@ int agfa_get_thumb_size(struct agfa_device *dev, const char *filename) {
     int ret,temp,size; 
    
     build_command(&cmd,AGFA_GET_THUMB_SIZE,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));  
+    ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));  
    
     if (ret<0) {
        printf("Error sending command!\n");
@@ -203,20 +214,20 @@ int agfa_get_thumb_size(struct agfa_device *dev, const char *filename) {
      }
      
        /* always returns ff 0f 00 00 ??? */
-    ret = agfa_read(dev, &temp, sizeof(temp));        
+    ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));        
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
     }   
     
     build_file_command(&file_cmd,filename);
-    ret = agfa_send(dev,&file_cmd, sizeof(file_cmd));
+    ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
     }
    
-    ret = agfa_read(dev, &size, sizeof(size));        
+    ret = gp_port_read (dev->gpdev, (char*)&size, sizeof(size));        
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
@@ -235,7 +246,7 @@ int agfa_get_thumb(struct agfa_device *dev, const char *filename,
 /*    unsigned char temp_string[8]; */
     
     build_command(&cmd,AGFA_GET_THUMB,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));  
+    ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));  
    
     if (ret<0) {
        printf("Error sending command!\n");
@@ -243,20 +254,20 @@ int agfa_get_thumb(struct agfa_device *dev, const char *filename,
     }
      
        /* always returns ff 0f 00 00 ??? */
-    ret = agfa_read(dev, &temp, sizeof(temp));        
+    ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp)); 
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
     }   
     
     build_file_command(&file_cmd,filename);
-    ret = agfa_send(dev,&file_cmd, sizeof(file_cmd));
+    ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
     }
    
-    ret = agfa_read(dev, data, size);        
+    ret = gp_port_read (dev->gpdev, data, size);        
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
@@ -266,13 +277,13 @@ int agfa_get_thumb(struct agfa_device *dev, const char *filename,
         agfa_photos_taken(dev,&ret);
    
         build_command(&cmd,AGFA_END_OF_THUMB,0);
-        ret = agfa_send(dev,&cmd, sizeof(cmd));
+        ret = gp_port_write (dev->gpdev,&cmd, sizeof(cmd));
         if (ret<0) {
 	   printf("Error sending command!\n");
 	   return -1;
 	}
    
-        ret = agfa_read(dev, temp_string, 8);        
+        ret = gp_port_read (dev->gpdev, temp_string, 8);        
         if (ret<0) {
 	   printf("Error sending command!\n");
 	   return -1;
@@ -290,7 +301,7 @@ int agfa_get_pic_size(struct agfa_device *dev, const char *filename) {
     int ret,temp,size; 
    
     build_command(&cmd,AGFA_GET_PIC_SIZE,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));  
+    ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));  
    
     if (ret<0) {
        printf("Error sending command!\n");
@@ -298,20 +309,20 @@ int agfa_get_pic_size(struct agfa_device *dev, const char *filename) {
     }
      
        /* always returns ff 0f 00 00 ??? */
-    ret = agfa_read(dev, &temp, sizeof(temp));        
+    ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));        
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
     }   
     
     build_file_command(&file_cmd,filename);
-    ret = agfa_send(dev,&file_cmd, sizeof(file_cmd));
+    ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
     }
    
-    ret = agfa_read(dev, &size, sizeof(size));        
+    ret = gp_port_read (dev->gpdev, (char*)&size, sizeof(size));        
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
@@ -333,7 +344,7 @@ int agfa_get_pic(struct agfa_device *dev, const char *filename,
 //  agfa_get_pic_size(dev,filename);
    
     build_command(&cmd,AGFA_GET_PIC,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));  
+    ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));  
    
     if (ret<0) {
        printf("Error sending command!\n");
@@ -341,20 +352,20 @@ int agfa_get_pic(struct agfa_device *dev, const char *filename,
     }
      
        /* always returns ff 0f 00 00 ??? */
-    ret = agfa_read(dev, &temp, sizeof(temp));        
+    ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));        
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
     }   
     
     build_file_command(&file_cmd,filename);
-    ret = agfa_send(dev,&file_cmd, sizeof(file_cmd));
+    ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
     }
    
-    ret = agfa_read(dev, data, size);        
+    ret = gp_port_read (dev->gpdev, data, size);        
     if (ret<0) {
        printf("Error sending command!\n");
        return -1;
@@ -363,168 +374,133 @@ int agfa_get_pic(struct agfa_device *dev, const char *filename,
 #if 0
        /* Have to do this after getting pic */
     build_command(&cmd,AGFA_DONE_PIC,0);
-    ret=agfa_send(dev,&cmd,sizeof(cmd));
+    ret=gp_port_write (dev->gpdev,&cmd,sizeof(cmd));
 #endif
    
     return 0;
    
 }
 
-   /* thanks to heathhey3@hotmail.com for sending me the trace */
-   /* to implement this */
-int agfa_delete_picture(struct agfa_device *dev, const char *filename)
+/* thanks to heathhey3@hotmail.com for sending me the trace */
+/* to implement this */
+int
+agfa_delete_picture (struct agfa_device *dev, const char *filename)
 {
-   
-    struct agfa_command cmd;   
-    struct agfa_file_command file_cmd;
-    int ret,temp,taken; 
-    char data[4],*buffer;
-    int size=4,buflen;
-   
-       /* yes, we do this twice?? */
-    agfa_photos_taken(dev,&taken);
-    agfa_photos_taken(dev,&taken);
-    
-    build_command(&cmd,AGFA_GET_PIC_SIZE,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));  
-   
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = agfa_read(dev, &temp, sizeof(temp));        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-    
-      /* Some traces show sending other than the file we want deleted? */
-    build_file_command(&file_cmd,filename);
-    ret = agfa_send(dev,&file_cmd, sizeof(file_cmd));
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-   
-    ret = agfa_read(dev, data, size);        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-          /* Check num taken AGAIN */
-    agfa_photos_taken(dev,&taken);
-  
-    build_command(&cmd,AGFA_GET_PIC_SIZE,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));  
-   
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = agfa_read(dev, &temp, sizeof(temp));        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-    
-    build_file_command(&file_cmd,filename);
-    ret = agfa_send(dev,&file_cmd, sizeof(file_cmd));
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-   
-    ret = agfa_read(dev, data, size);        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
+	struct agfa_command cmd;
+	struct agfa_file_command file_cmd;
+	int ret, temp,taken;
+	char data[4], *buffer;
+	int size=4, buflen;
+	
+	/* yes, we do this twice?? */
+	agfa_photos_taken (dev,&taken);
+	agfa_photos_taken (dev,&taken);
+	
+	build_command (&cmd, AGFA_GET_PIC_SIZE,0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	if (ret < 0)
+		return (ret);
+	
+	/* always returns ff 0f 00 00 ??? */
+	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
+	if (ret < 0)
+		return (ret);
+	
+	/* Some traces show sending other than the file we want deleted? */
+	build_file_command (&file_cmd,filename);
+	ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
+	if (ret < 0)
+		return (ret);
 
-        /* Check num taken AGAIN */
-    agfa_photos_taken(dev,&taken);
-       
-    build_command(&cmd,AGFA_DELETE,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));   
-   
-   
+	ret = gp_port_read (dev->gpdev, data, size);
+	if (ret < 0)
+		return (ret);
+	
+	/* Check num taken AGAIN */
+	agfa_photos_taken (dev, &taken);
+	
+	build_command (&cmd, AGFA_GET_PIC_SIZE, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	if (ret < 0)
+		return (ret);
+
+	/* always returns ff 0f 00 00 ??? */
+	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
+	if (ret < 0)
+		return (ret);
+
+	build_file_command (&file_cmd, filename);
+	ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
+	if (ret < 0)
+		return (ret);
+	
+	ret = gp_port_read (dev->gpdev, data, size);
+	if (ret < 0)
+		return (ret);
+
+	/* Check num taken AGAIN */
+	agfa_photos_taken (dev, &taken);
+
+	build_command (&cmd, AGFA_DELETE, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	if (ret < 0)
+		return (ret);
+
         /* read ff 0f ??? */
-    ret = agfa_read(dev, data, size);        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
+	ret = gp_port_read (dev->gpdev, data, size);
+	if (ret < 0)
+		return (ret);
 
-    build_file_command(&file_cmd,filename);
-    ret = agfa_send(dev,&file_cmd, sizeof(file_cmd));
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
+	build_file_command (&file_cmd, filename);
+	ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
+	if (ret < 0)
+		return (ret);
+
         /* This is the point we notices that in fact a pic is missing */
         /* Why do it 4 times??? Timing?? Who knows */
-    agfa_photos_taken(dev,&taken);
-    agfa_photos_taken(dev,&taken);
-    agfa_photos_taken(dev,&taken);
-    agfa_photos_taken(dev,&taken);
-    
-       /* Why +1 ? */
-    buflen = ((taken+1) * 13)+1;  /* 12 char filenames and space for each */
+	agfa_photos_taken (dev, &taken);
+	agfa_photos_taken (dev, &taken);
+	agfa_photos_taken (dev, &taken);
+	agfa_photos_taken (dev, &taken);
+	
+	/* Why +1 ? */
+	buflen = ((taken+1) * 13)+1;  /* 12 char filenames and space for each */
                               /* plus trailing NULL */
-    buffer = malloc(buflen);
-        
-    if (!buffer) {
-       fprintf(stderr, "agfa_get_file_list: error allocating %d bytes\n", buflen);
-       return -1;
-    }
+	buffer = malloc (buflen);
+	if (!buffer) {
+		gp_debug_printf (GP_DEBUG_HIGH, "agfa", "Could not allocate "
+				 "%i bytes!", buflen);
+		return (GP_ERROR_NO_MEMORY);
+	}
+	
+	build_command (&cmd, AGFA_GET_NAMES, buflen);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	if (ret < 0)
+		return (ret);
+	
+	ret = gp_port_read (dev->gpdev, (void *)buffer, buflen);
+	if (ret < 0) 
+		return (ret);
+	
+	build_command (&cmd, AGFA_GET_PIC_SIZE, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));  
+	if (ret < 0)
+		return (ret);
 
-    build_command(&cmd,AGFA_GET_NAMES, buflen);
+	/* always returns ff 0f 00 00 ??? */
+	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
+	if (ret < 0)
+		return (ret);
+	
+	build_file_command (&file_cmd, filename);
+	ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
+	if (ret < 0)
+		return (ret);
+	
+	ret = gp_port_read (dev->gpdev, data, size);
+	if (ret < 0)
+		return (ret);
 
-    ret = agfa_send(dev, &cmd, sizeof(cmd));
-    if (ret < 0) {
-       fprintf(stderr, "agfa_get_file_list: error sending command\n");
-       return -1;
-    }
-
-    ret = agfa_read(dev, (void *)buffer, buflen);
-    if (ret < 0) {
-       fprintf(stderr, "agfa_get_file_list: error receiving data\n");
-       return -1;
-    }
-
-    build_command(&cmd,AGFA_GET_PIC_SIZE,0);
-    ret = agfa_send(dev, &cmd, sizeof(cmd));  
-   
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = agfa_read(dev, &temp, sizeof(temp));        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-
-    build_file_command(&file_cmd,filename);
-    ret = agfa_send(dev,&file_cmd, sizeof(file_cmd));
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-   
-    ret = agfa_read(dev, data, size);        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-   
-   
-    return 0;
-
+	return (GP_OK);
 }
 
