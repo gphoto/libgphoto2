@@ -22,7 +22,7 @@
 #define __GPHOTO2_FILE_H__
 
 #define GP_MIME_WAV       "audio/wav"
-/** Canon RaW files (CRW). See http://what-the-heck.org/ **/
+/** Canon RaW files (CRW). See FIXME: URI missing for format details **/
 #define GP_MIME_CRW       "image/x-canon-raw"
 #define GP_MIME_RAW       "image/x-raw"
 #define GP_MIME_PNG       "image/png"
