@@ -94,6 +94,100 @@ int canon_serial_get_cts(gp_port *gdev)
 
 /*****************************************************************************
  *
+ * canon_usb_camera_init
+ *
+ * Initializes the USB camera through a series of read/writes
+ *
+ * Returns GP_OK on success.
+ * Returns GP_ERROR on any error.
+ *
+ ****************************************************************************/
+int canon_usb_camera_init(Camera *camera)
+{
+	char msg[0x58];
+	char buffer[0x44];
+	int i;
+	char *camstat_str = "NOT RECOGNIZED";
+	char camstat;
+
+	gp_debug_printf(GP_DEBUG_LOW,"canon","canon_usb_camera_init()");
+	
+	memset(msg, 0, sizeof(msg));
+	memset(buffer, 0, sizeof(buffer));
+
+	i = gp_port_usb_msg_read(camera->port, 0x0c, 0x55, 0, msg, 1);
+	if (i != 1) {
+		fprintf(stderr,"canon_usb_camera_init(): step #1 read failed! (returned %i) "
+			"Camera not operational.\n", i);
+		return GP_ERROR;
+	}
+	camstat = msg[0];
+	switch(camstat)
+	{
+		case 'A':
+			camstat_str = "Camera was already active";
+			break;
+		case 'C':
+			camstat_str = "Camera was woken up";
+			break;
+		case 'I':
+		case 'E':
+			camstat_str = "Unknown (some kind of error)";
+		break;
+	}
+	if (camstat != 'A' && camstat != 'C') {
+		fprintf(stderr, "canon_usb_camera_init(): initial camera response: %c/'%s' "
+			"not 'A' or 'C'. Camera not operational.\n", 
+			camstat, camstat_str);
+		return GP_ERROR;    
+	}
+	gp_debug_printf(GP_DEBUG_LOW,"canon","canon_usb_camera_init(): initial camera response: %c/'%s'", 
+			camstat, camstat_str);
+    
+	i = gp_port_usb_msg_read(camera->port, 0x04, 0x1, 0, msg, 0x58);
+	if (i != 0x58) {
+		fprintf(stderr, "canon_usb_camera_init(): step #2 read failed! (returned %i, expected %i) "
+			"Camera not operational.\n", i, 0x58);
+		return GP_ERROR;
+	}
+	
+	i = gp_port_usb_msg_write(camera->port, 0x04, 0x11, 0, msg+0x48, 0x10);
+	if (i != 0x10) {
+		fprintf(stderr, "canon_usb_camera_serial(): step #3 write failed! (returned %i, expected %i) "
+			"Camera not operational.\n", i, 0x10);
+		return GP_ERROR;
+	}
+	gp_debug_printf(GP_DEBUG_LOW,"canon","canon_usb_camera_init(): PC sign on LCD should be lit now");
+    
+	i = gp_port_read(camera->port, buffer, 0x44);
+
+	if (i > 1 && buffer[0]==0x54) {
+		gp_debug_printf(GP_DEBUG_LOW,"canon","canon_usb_camera_init(): reading some more "
+				"unknown data (0x40 bytes) which we simply discard");
+		i = gp_port_read(camera->port, buffer, 0x40);
+		gp_debug_printf(GP_DEBUG_LOW,"canon","canon_usb_camera_init(): "
+				"%i unknown data bytes read.", i);
+	} else {
+		if (i != 0x44) {
+			fprintf(stderr,"canon_usb_camera_init(): step #4 read failed! (returned %i, expected %i) "
+				"Camera might still work though. Continuing.\n", i, 0x44);
+			/* This 'if buffer[0]==0x54' is undocumented and sporadic.
+			 * I need more data to implement error checking, for now just
+			 * continue like the old code without error checking effectively did.
+			 */
+			/*
+			fprintf(stderr,"canon_usb_camera_init(): step #4 read failed! (returned %i, expected %i) "
+				"Camera not operational.\n", i, 0x44);
+			return GP_ERROR;
+			*/
+		}
+	}
+
+	return GP_OK;
+}
+
+/*****************************************************************************
+ *
  * canon_serial_init
  *
  * Initializes the given serial or USB device.
@@ -107,9 +201,7 @@ int canon_serial_get_cts(gp_port *gdev)
 
 int canon_serial_init(Camera *camera, const char *devname)
 {
-  char msg[65536];
-  //    char mem;
-  char buffer[65536];
+  int res;
   gp_port_settings settings;
   
   gp_debug_printf(GP_DEBUG_LOW,"canon","Initializing the camera.\n");
@@ -117,37 +209,37 @@ int canon_serial_init(Camera *camera, const char *devname)
   switch (canon_comm_method) {
   case CANON_USB:
     
+    res = gp_port_settings_get(camera->port, &settings);
+    if (res != GP_OK) {
+    	fprintf(stderr,"canon_init_serial(): Cannot get USB port settings (returned %i)", res);
+    	return GP_ERROR;
+    }
+    
     settings.usb.inep = 0x81;
     settings.usb.outep = 0x02;
     settings.usb.config = 1;
-    settings.usb.interface = 0;
     settings.usb.altsetting = 0;
     
-    /*      canon_send = canon_usb_send;
-	    canon_read = canon_usb_read; */
+    res = gp_port_settings_set(camera->port, settings);
+    if (res != GP_OK) {
+    	fprintf(stderr,"canon_init_serial(): Cannot apply USB port settings (returned %i) "
+    		"Camera not operational.\n", res);
+    	return GP_ERROR;
+    }
     
-    gp_port_settings_set(camera->port, settings);
- 
-    gp_port_usb_msg_read(camera->port,0x0c,0x55,0,msg,1);
-    //      fprintf(stderr,"%c\n",msg[0]);
-    gp_port_usb_msg_read(camera->port,0x04,0x1,0,msg,0x58);
-    gp_port_usb_msg_write(camera->port,0x04,0x11,0,msg+0x48,0x10);
-    gp_port_read(camera->port, buffer, 0x44);
-    //      fprintf(stderr,"Antal b: %x\n",buffer[0]);
-    if (buffer[0]==0x54)
-      gp_port_read(camera->port, buffer, 0x40);
-    return 0;
-    /* #else
-       return -1;*/
-    
-    return -1;
+    res = canon_usb_camera_init(camera);
+    if (res != GP_OK) {
+	fprintf(stderr,"canon_init_serial(): Cannot initialize camera, canon_usb_camera_init() "
+		"returned %i\n", res);
+	return GP_ERROR;
+    }
     break;
   case CANON_SERIAL_RS232:
   default:
     
     if (!devname) {
       fprintf(stderr, "INVALID device string (NULL)\n");
-      return -1;
+      return GP_ERROR;
     }
     
     gp_debug_printf(GP_DEBUG_LOW,"canon","canon_init_serial(): Using serial port on %s\n", devname);
@@ -160,8 +252,9 @@ int canon_serial_init(Camera *camera, const char *devname)
     
     gp_port_settings_set(camera->port, settings); /* Sets the serial device name */
 
-    return 0;
+    break;
   }
+  return GP_OK;
 }
 
 /*****************************************************************************

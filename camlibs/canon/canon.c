@@ -165,7 +165,7 @@ static int check_readiness(Camera *camera)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	
-	gp_debug_printf(GP_DEBUG_LOW,"canon","check_readiness()");
+	gp_debug_printf(GP_DEBUG_LOW,"canon","check_readiness() cached_ready == %i", cs->cached_ready);
 	
     if (cs->cached_ready) return 1;
     if (psa50_ready(camera)) {
@@ -297,23 +297,31 @@ static int update_disk_cache(Camera *camera)
 static int is_thumbnail(const char *name)
 {
 	const char *pos;
-
-	gp_debug_printf(GP_DEBUG_LOW,"canon","is_thumbnail(%s)",name);
+	int res = 0;
 
 	pos = strchr(name, '.');
-	if(!pos) return 0;
-	return !strcmp(pos,".THM");
+	if (pos)
+		res = (!strcmp(pos,".THM"));
+
+	gp_debug_printf(GP_DEBUG_LOW,"canon","is_thumbnail(%s) == %i", name, res);
+	return (res);
 }
 
+/*
+ * Test whether the name given corresponds
+ * to a movie (.JPG)
+ */
 static int is_image(const char *name)
 {
 	const char *pos;
-
-	gp_debug_printf(GP_DEBUG_LOW,"canon","is_image(%s)",name);
+	int res = 0;
 
 	pos = strchr(name,'.');
-	if (!pos) return 0;
-	return (!strcmp(pos,".JPG"));
+	if (pos)
+		res = (!strcmp(pos,".JPG"));
+
+	gp_debug_printf(GP_DEBUG_LOW,"canon","is_image(%s) == %i", name, res);
+	return(res);
 }
 
 /*
@@ -323,14 +331,15 @@ static int is_image(const char *name)
 static int is_movie(const char *name)
 {
 	const char *pos;
-
-	gp_debug_printf(GP_DEBUG_LOW,"canon","is_movie(%s)",name);
+	int res = 0;
 
 	pos = strchr(name, '.');
-	if(!pos) return 0;
-	return !strcmp(pos,".AVI");
-}
+	if(pos)
+		res = (!strcmp(pos,".AVI"));
 
+	gp_debug_printf(GP_DEBUG_LOW,"canon","is_movie(%s) == %i", name, res);
+	return(res);
+}
 
 
 
@@ -639,24 +648,32 @@ static char *canon_get_picture (Camera *camera, char *filename,
 			}
 			
 			free(ptr);
-			if (image) return image;
-			else return NULL;
+			if (image)
+				return image;
+			return NULL;
 		}
 		else {
 			image = psa50_get_file(camera, file,size);
+			if (image) {
 			j = strrchr(path, '\\') - path;
 			path[j] = '\0';
-			gp_debug_printf(GP_DEBUG_LOW,"canon","We now have to set the \"downloaded\" flag on the  picture\n");
-			gp_debug_printf(GP_DEBUG_LOW,"canon","The old file attributes were: %#x\n",attribs);
+				gp_debug_printf(GP_DEBUG_LOW,"canon","canon_get_picture: We now have to set the \"downloaded\" flag on the picture\n");
+				gp_debug_printf(GP_DEBUG_LOW,"canon","canon_get_picture: The old file attributes were: %#x\n",attribs);
 			attribs = attribs & 0xdf; // 0xdf = !0x20
 			psa50_set_file_attributes(camera,filename,path,attribs);
+			} else {
+				gp_debug_printf(GP_DEBUG_LOW,"canon","canon_get_picture: psa50_get_file() failed!");
 		}
-		if (image) return image;
+		}
+		if (image)
+			return image;
 		//if(receive_error==FATAL_ERROR) clear_readiness();
 		free(image);
 		return NULL;
 		break;
     }
+    /* NOT REACHED */
+    return NULL;
 }
 
 static int _get_file_path (struct psa50_dir *tree, const char *filename, 
@@ -728,7 +745,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	}
 	
 	if (get_file_path(camera, filename,path) == GP_ERROR) {
-		gp_debug_printf(GP_DEBUG_LOW,"canon","Filename not found!\n");
+		gp_debug_printf(GP_DEBUG_LOW,"canon","Filename '%s' path '%s' not found!\n", filename, path);
 		return GP_ERROR;
 	}
 
@@ -1190,8 +1207,11 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_new (GP_WIDGET_TEXT, "date", &t);
 	if (cs->cached_ready == 1) {
 	  camtime = psa50_get_time(camera);
+	  if (camtime != GP_ERROR) {
 	  camtm = gmtime(&camtime);
 	  gp_widget_set_value (t, asctime(camtm));
+	} else
+	  	gp_widget_set_value (t, _("Error"));
 	} else
 	  gp_widget_set_value (t, _("Unavailable"));
 	gp_widget_append (section,t);
@@ -1324,7 +1344,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
     if(!check_readiness(camera)) {
       gp_frontend_status(camera,_("Camera unavailable"));
     } else {
-      if(psa50_set_owner_name(camera, wvalue))
+      if(psa50_set_owner_name(camera, wvalue) == GP_OK)
 	gp_frontend_status(camera, _("Owner name changed"));
       else
 	gp_frontend_status (camera, 
