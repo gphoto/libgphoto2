@@ -3,6 +3,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gphoto2.h>
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "barbie.h"
 
 extern char packet_1[];
@@ -207,7 +223,7 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	num = barbie_file_count(b);
 	firm = barbie_read_firmware(b);
 
-	sprintf(summary->text, "Number of pictures: %i\nFirmware Version: %s", num,firm);
+	sprintf(summary->text, _("Number of pictures: %i\nFirmware Version: %s"), num,firm);
 
 	free(firm);
 
@@ -216,12 +232,12 @@ int camera_summary (Camera *camera, CameraText *summary) {
 
 int camera_manual (Camera *camera, CameraText *manual) {
 
-	strcpy(manual->text, "No manual available.");
+	strcpy(manual->text, _("No manual available."));
 
 	return GP_OK;
 }
 int camera_about (Camera *camera, CameraText *about) {
 
-	strcpy(about->text,"Barbie/HotWheels/WWF\nScott Fritzinger <scottf@unr.edu>\nAndreas Meyer <ahm@spies.com>\nPete Zaitcev <zaitcev@metabyte.com>\n\nReverse engineering of image data by:\nJeff Laing <jeffl@SPATIALinfo.com>\n\nImplemented using documents found on\nthe web. Permission given by Vision.");
+	strcpy(about->text,_("Barbie/HotWheels/WWF\nScott Fritzinger <scottf@unr.edu>\nAndreas Meyer <ahm@spies.com>\nPete Zaitcev <zaitcev@metabyte.com>\n\nReverse engineering of image data by:\nJeff Laing <jeffl@SPATIALinfo.com>\n\nImplemented using documents found on\nthe web. Permission given by Vision."));
 	return GP_OK;
 }

@@ -4,6 +4,21 @@
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "dc240.h"
 #include "library.h"
 
@@ -224,7 +239,7 @@ int camera_summary (Camera *camera, CameraText *summary)
 {
 /*	DC240Data *dd = camera->camlib_data; */
 
-	strcpy(summary->text, "No summary information.");
+	strcpy(summary->text, _("No summary information."));
 
 	return (GP_OK);
 }
@@ -233,7 +248,7 @@ int camera_manual (Camera *camera, CameraText *manual)
 {
 /*	DC240Data *dd = camera->camlib_data; */
 
-	strcpy(manual->text, "No Manual Available");
+	strcpy(manual->text, _("No Manual Available"));
 
 	return (GP_OK);
 }
@@ -243,10 +258,10 @@ int camera_about (Camera *camera, CameraText *about)
 /*	DC240Data *dd = camera->camlib_data; */
 
 	strcpy (about->text, 
-		"Kodak DC240 Camera Library\n"
+		_("Kodak DC240 Camera Library\n"
 		"Scott Fritzinger <scottf@gphoto.net>\n"
 		"Camera Library for the Kodak DC240 camera.\n"
-		"Rewritten and updated for gPhoto2.");
+		"Rewritten and updated for gPhoto2."));
 
 	return (GP_OK);
 }

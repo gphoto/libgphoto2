@@ -16,6 +16,22 @@
 #else
 #define MAXPATHLEN 256
 #endif
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "common.h"
 #include "command.h"
 #include <termios.h>
@@ -115,25 +131,25 @@ struct Image *dsc_f1_get_picture (int picNum, int thumbnail) {
 }
 
 struct Image *dsc_f1_get_preview () {
-        update_status("Sorry this function not implemented..");
+        update_status(_("Sorry this function not implemented.."));
         return(0);
 }
 
 /* Sorry, don't have any config data for DSC-F1 */
 int dsc_f1_configure() {
-    update_status("Sorry, nothing to configure..");
+    update_status(_("Sorry, nothing to configure.."));
     return(1);
 }
 
 /* Not implemented at this time */
 int dsc_f1_take_picture() {
-    update_status("Sorry, taking pictures is not implemented..");
+    update_status(_("Sorry, taking pictures is not implemented.."));
     return(0);
 }
 
 int dsc_f1_number_of_pictures() {
     if ((dsc_f1_open_cam() != 1)) {
-        fprintf(stdout, "Couldn't open camera.\n");
+        fprintf(stdout, _("Couldn't open camera.\n"));
         return(0);
     }
     F1ok();
@@ -147,12 +163,12 @@ int dsc_f1_delete_image (int picNum) {
     int i;
     i = picNum-1;
     if ((dsc_f1_open_cam() != 1))  {
-        fprintf(stdout, "Error opening camera\n");
+        fprintf(stdout, _("Error opening camera\n"));
         return(1);
     }
     F1ok();
     if (all_pic_num < picNum) {
-      fprintf(stderr, "Picture number is too large.\n");
+      fprintf(stderr, _("Picture number is too large.\n"));
       return(1);
     }
     status = F1deletepicture(i);
@@ -163,17 +179,13 @@ int dsc_f1_delete_image (int picNum) {
 
 char *dsc_f1_description () {
     return(
-        "Sony DSC-F1 Digital Camera Support\n
-        M. Adam Kendall <joker@penguinpub.com>\n\n
-        Based on the chotplay CLI interface from\n
-        Ken-ichi Hayashi\n\n
-        This lib may not work. YMMV\n");
+        _("Sony DSC-F1 Digital Camera Support\nM. Adam Kendall <joker@penguinpub.com>\n\nBased on the chotplay CLI interface from\nKen-ichi Hayashi\n\nThis lib may not work. YMMV\n"));
 }
 
 char *dsc_f1_summary () {
     if((dsc_f1_open_cam() != 1)) {
-      fprintf(stdout, "Error opening camera.\n");
-      return("Error opening camera.\n");
+      fprintf(stdout, _("Error opening camera.\n"));
+      return(_("Error opening camera.\n"));
     }
     F1ok();
     F1newstatus(1, status_info);

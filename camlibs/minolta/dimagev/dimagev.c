@@ -21,6 +21,21 @@
 
 /* $Id$ */
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "dimagev.h"
 
 int camera_id (CameraText *id) 
@@ -388,8 +403,8 @@ int camera_summary (Camera *camera, CameraText *summary)
 #else
 	i = sprintf(summary->text,
 #endif
-		"Model:\t\t\tMinolta Dimage V (%s)\n"
-		"Hardware Revision:\t%s\nFirmware Revision:\t%s\n",
+		_("Model:\t\t\tMinolta Dimage V (%s)\n"
+		"Hardware Revision:\t%s\nFirmware Revision:\t%s\n"),
 		dimagev->info->model, dimagev->info->hardware_rev,
 		dimagev->info->firmware_rev);
 
@@ -403,7 +418,7 @@ int camera_summary (Camera *camera, CameraText *summary)
 #else
 	i = sprintf(&(summary->text[count]),
 #endif
-		"Host Mode:\t\t%s\n"
+		_("Host Mode:\t\t%s\n"
 		"Exposure Correction:\t%s\n"
 		"Exposure Data:\t\t%d\n"
 		"Date Valid:\t\t%s\n"
@@ -413,19 +428,19 @@ int camera_summary (Camera *camera, CameraText *summary)
 		"Play/Record Mode:\t%s\n"
 		"Card ID Valid:\t\t%s\n"
 		"Card ID:\t\t%d\n"
-		"Flash Mode:\t\t",
+		"Flash Mode:\t\t"),
 
-		( dimagev->data->host_mode ? "Remote" : "Local" ),
-		( dimagev->data->exposure_valid ? "Yes" : "No" ),
+		( dimagev->data->host_mode ? _("Remote") : _("Local") ),
+		( dimagev->data->exposure_valid ? _("Yes") : _("No") ),
 		(signed char)dimagev->data->exposure_correction,
-		( dimagev->data->date_valid ? "Yes" : "No" ),
+		( dimagev->data->date_valid ? _("Yes") : _("No") ),
 		( dimagev->data->year < 70 ? 2000 + dimagev->data->year : 1900 + dimagev->data->year ),
 		dimagev->data->month, dimagev->data->day, dimagev->data->hour,
 		dimagev->data->minute, dimagev->data->second,
-		( dimagev->data->self_timer_mode ? "Yes" : "No"),
-		( dimagev->data->quality_setting ? "Fine" : "Standard" ),
-		( dimagev->data->play_rec_mode ? "Record" : "Play" ),
-		( dimagev->data->valid ? "Yes" : "No"),
+		( dimagev->data->self_timer_mode ? _("Yes") : _("No")),
+		( dimagev->data->quality_setting ? _("Fine") : _("Standard") ),
+		( dimagev->data->play_rec_mode ? _("Record") : _("Play") ),
+		( dimagev->data->valid ? _("Yes") : _("No")),
 		dimagev->data->id_number );
 
 	if ( i > 0 ) {
@@ -435,16 +450,16 @@ int camera_summary (Camera *camera, CameraText *summary)
 	/* Flash is a special case, a switch is needed. */
 	switch ( dimagev->data->flash_mode ) {
 		case 0:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Automatic\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Automatic\n"));
 			break;
 		case 1:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Force Flash\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Force Flash\n"));
 			break;
 		case 2:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Prohibit Flash\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Prohibit Flash\n"));
 			break;
 		default:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Invalid Value ( %d )\n", dimagev->data->flash_mode);
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Invalid Value ( %d )\n"), dimagev->data->flash_mode);
 			break;
 	}
 
@@ -458,17 +473,17 @@ int camera_summary (Camera *camera, CameraText *summary)
 #else
 	i = sprintf(&(summary->text[count]),
 #endif
-		"Battery Level:\t\t%s\n"
+		_("Battery Level:\t\t%s\n"
 		"Number of Images:\t%d\n"
 		"Minimum Capacity Left:\t%d\n"
 		"Busy:\t\t\t%s\n"
 		"Flash Charging:\t\t%s\n"
-		"Lens Status:\t\t",
-		( dimagev->status->battery_level ? "Not Full" : "Full" ),
+		"Lens Status:\t\t"),
+		( dimagev->status->battery_level ? _("Not Full") : _("Full") ),
 		dimagev->status->number_images,
 		dimagev->status->minimum_images_can_take,
-		( dimagev->status->busy ? "Busy" : "Idle" ),
-		( dimagev->status->flash_charging ? "Charging" : "Ready" )
+		( dimagev->status->busy ? _("Busy") : _("Idle") ),
+		( dimagev->status->flash_charging ? _("Charging") : _("Ready") )
 
 	);
 
@@ -479,16 +494,16 @@ int camera_summary (Camera *camera, CameraText *summary)
 	/* Lens status is another switch. */
 	switch ( dimagev->status->lens_status ) {
 		case 0:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Normal\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Normal\n"));
 			break;
 		case 1: case 2:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Lens direction does not match flash light\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Lens direction does not match flash light\n"));
 			break;
 		case 3:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Lens is not connected\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Lens is not connected\n"));
 			break;
 		default:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Bad value for lens status %d\n", dimagev->status->lens_status);
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Bad value for lens status %d\n"), dimagev->status->lens_status);
 			break;
 	}
 
@@ -497,26 +512,26 @@ int camera_summary (Camera *camera, CameraText *summary)
 	}
 
 	/* Card status is another switch. */
-	i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Card Status:\t\t");
+	i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Card Status:\t\t"));
 	if ( i > 0 ) {
 		count += i;
 	}
 
 	switch ( dimagev->status->card_status ) {
 		case 0:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Normal");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Normal"));
 			break;
 		case 1:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Full");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Full"));
 			break;
 		case 2:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Write-protected");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Write-protected"));
 			break;
 		case 3:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Unsuitable card");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Unsuitable card"));
 			break;
 		default:
-			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Bade value for card status %d", dimagev->status->card_status);
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Bade value for card status %d"), dimagev->status->card_status);
 			break;
 	}
 	
@@ -531,9 +546,9 @@ int camera_summary (Camera *camera, CameraText *summary)
 int camera_manual (Camera *camera, CameraText *manual) 
 {
 #if defined HAVE_STRNCPY
-	strncpy(manual->text, "Manual not available.", sizeof(manual->text));
+	strncpy(manual->text, _("Manual not available."), sizeof(manual->text));
 #else
-	strcpy(manual->text, "Manual not available.");
+	strcpy(manual->text, _("Manual not available."));
 #endif
 	return GP_OK;
 }
@@ -545,10 +560,7 @@ int camera_about (Camera *camera, CameraText *about)
 #else
 	sprintf(about->text,
 #endif
-"Minolta Dimage V Camera Library
-%s
-Gus Hartmann <gphoto@gus-the-cat.org>
-Special thanks to Minolta for the spec.", DIMAGEV_VERSION);
+_("Minolta Dimage V Camera Library\n%s\nGus Hartmann <gphoto@gus-the-cat.org>\nSpecial thanks to Minolta for the spec."), DIMAGEV_VERSION);
 
 	return GP_OK;
 }

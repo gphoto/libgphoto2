@@ -26,6 +26,22 @@
 #include <unistd.h>
 #include <memory.h>
 #include <string.h>
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "dc.h"
 #include "dc1000.h"
 
@@ -349,7 +365,7 @@ int camera_init (Camera *camera) {
         int ret;
         dsc_t     	*dsc = NULL;
 	
-	dsc_print_status(camera, "Initializing camera %s", camera->model);	
+	dsc_print_status(camera, _("Initializing camera %s"), camera->model);	
 
 	/* First, set up all the function pointers */
 	camera->functions->id 			= camera_id;
@@ -417,7 +433,7 @@ int camera_exit (Camera *camera) {
 	
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	
-	dsc_print_status(camera, "Disconnecting camera.");
+	dsc_print_status(camera, _("Disconnecting camera."));
 	
 	dsc1_disconnect(dsc);
 	
@@ -463,7 +479,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int	index, size, rsize, i, s;
 
-	dsc_print_status(camera, "Downloading image %s.", filename);
+	dsc_print_status(camera, _("Downloading image %s."), filename);
 
 	/* index is the 0-based image number on the camera */
 	index = gp_filesystem_number (dsc->fs, folder, filename);
@@ -497,7 +513,7 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 	int	blocks, blocksize, i;
 	int	result;
 		
-	dsc_print_status(camera, "Uploading image: %s.", file->name);	
+	dsc_print_status(camera, _("Uploading image: %s."), file->name);	
 	
 /*	We can not figure out file type, at least by now.
 
@@ -507,9 +523,9 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 	}
 */	
 	if (file->size > DSC_MAXIMAGESIZE) {
-		dsc_print_message (camera, "File size is %i bytes. "
+		dsc_print_message (camera, _("File size is %i bytes. "
 				   "The size of the largest file possible to "
-				   "upload is: %i bytes.", file->size, 
+				   "upload is: %i bytes."), file->size, 
 				   DSC_MAXIMAGESIZE);
 		return GP_ERROR;		
 	}
@@ -545,7 +561,7 @@ int camera_file_delete (Camera *camera, const char *folder,
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int	index;
 
-	dsc_print_status(camera, "Deleting image %s.", filename);
+	dsc_print_status(camera, _("Deleting image %s."), filename);
 
 	/* index is the 0-based image number on the camera */
 	index = gp_filesystem_number (dsc->fs, folder, filename);
@@ -557,14 +573,14 @@ int camera_file_delete (Camera *camera, const char *folder,
 
 int camera_summary (Camera *camera, CameraText *summary) 
 {
-	strcpy(summary->text, "Summary not available.");
+	strcpy(summary->text, _("Summary not available."));
 
 	return (GP_OK);
 }
 
 int camera_manual (Camera *camera, CameraText *manual) 
 {
-	strcpy (manual->text, "Manual not available.");
+	strcpy (manual->text, _("Manual not available."));
 
 	return (GP_OK);
 }
@@ -572,11 +588,11 @@ int camera_manual (Camera *camera, CameraText *manual)
 int camera_about (Camera *camera, CameraText *about) 
 {
 	strcpy(about->text,
-			"Panasonic DC1000 gPhoto library\n"
+			_("Panasonic DC1000 gPhoto library\n"
 			"Mariusz Zynel <mariusz@mizar.org>\n\n"
 			"Based on dc1000 program written by\n"
 			"Fredrik Roubert <roubert@df.lth.se> and\n"
-			"Galen Brooks <galen@nine.com>.");
+			"Galen Brooks <galen@nine.com>."));
 	return (GP_OK);
 }
 

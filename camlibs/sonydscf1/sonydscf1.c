@@ -1,6 +1,21 @@
 #include <string.h>
 #include <gphoto2.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "sonydscf1.h"
 
 gp_port *dev;
@@ -207,7 +222,7 @@ int camera_summary (Camera *camera, CameraText *summary)
 int camera_manual (Camera *camera, CameraText *manual) 
 {
                 /*printf("sony dscf1: manual\n");*/
-        strcpy(manual->text, "Manual Not Available");
+        strcpy(manual->text, _("Manual Not Available"));
 
         return (GP_OK);
 }
@@ -215,12 +230,7 @@ int camera_manual (Camera *camera, CameraText *manual)
 int camera_about (Camera *camera, CameraText *about) 
 {
         strcpy(about->text,
-"Sony DSC-F1 Digital Camera Support\n
-        M. Adam Kendall <joker@penguinpub.com>\n
-        Based on the chotplay CLI interface from\n
-        Ken-ichi Hayashi\n
-        Gphoto2 port by
-        Bart van Leeuwen <bart@netage.nl>");
+_("Sony DSC-F1 Digital Camera Support\nM. Adam Kendall <joker@penguinpub.com>\nBased on the chotplay CLI interface from\nKen-ichi Hayashi\nGphoto2 port by Bart van Leeuwen <bart@netage.nl>"));
 
         return (GP_OK);
 }

@@ -1,1 +1,15 @@
+camlibs/barbie/barbie.c
+camlibs/canon/canon.c
+camlibs/canon/psa50.c
+camlibs/digita/digita.c
+camlibs/kodak/dc120/dc120.c
+camlibs/kodak/dc240/dc240.c
+camlibs/kodak/dc3200/dc3200.c
+camlibs/konica/library.c
+camlibs/minolta/dimagev/dimagev.c
+camlibs/panasonic/dc1000.c
+camlibs/panasonic/dc1580.c
+camlibs/sierra/sierra.c
+camlibs/sonydscf1/dsc_f1.c
+camlibs/sonydscf1/sonydscf1.c
 libgphoto2/core.c

@@ -17,6 +17,21 @@
 
 #include <gphoto2.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "digita.h"
 
 #include <gphoto2-port.h>
@@ -396,23 +411,23 @@ int camera_summary(Camera *camera, CameraText *summary)
         if (digita_get_storage_status(dev, &taken, NULL, NULL) < 0)
                 return 0;
 
-        sprintf(summary->text, "Number of pictures: %d", taken);
+        sprintf(summary->text, _("Number of pictures: %d"), taken);
 
         return GP_OK;
 }
 
 int camera_manual(Camera *camera, CameraText *manual)
 {
-        strcpy(manual->text, "Manual Not Available");
+        strcpy(manual->text, _("Manual Not Available"));
 
         return GP_ERROR;
 }
 
 int camera_about(Camera *camera, CameraText *about)
 {
-        strcpy(about->text, "Digita\n" \
+        strcpy(about->text, _("Digita\n" \
                 "Johannes Erdfelt <johannes@erdfelt.com>\n" \
-                "VA Linux Systems, Inc");
+                "VA Linux Systems, Inc"));
 
         return GP_OK;
 }

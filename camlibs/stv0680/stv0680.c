@@ -20,6 +20,21 @@
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "stv0680.h"
 #include "library.h"
 
@@ -196,14 +211,14 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 
 int camera_summary (Camera *camera, CameraText *summary) 
 {
-	strcpy(summary->text, "No summary available.");
+	strcpy(summary->text, _("No summary available."));
 
 	return (GP_OK);
 }
 
 int camera_manual (Camera *camera, CameraText *manual) 
 {
-	strcpy(manual->text, "No manual available.");
+	strcpy(manual->text, _("No manual available."));
 
 	return (GP_OK);
 }
@@ -211,10 +226,10 @@ int camera_manual (Camera *camera, CameraText *manual)
 int camera_about (Camera *camera, CameraText *about) 
 {
 	strcpy (about->text, 
-		"STV0680\n"
+		_("STV0680\n"
 		"Adam Harrison <adam@antispin.org>\n"
 		"Driver for cameras using the STV0680 processor ASIC.\n"
-		"Protocol reverse engineered using CommLite Beta 5");
+		"Protocol reverse engineered using CommLite Beta 5"));
 
 	return (GP_OK);
 }

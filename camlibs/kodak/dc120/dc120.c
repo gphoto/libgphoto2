@@ -4,11 +4,26 @@
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "dc120.h"
 #include "library.h"
 
-char *dc120_folder_memory = "Internal Memory";
-char *dc120_folder_card   = "CompactFlash Card";
+char *dc120_folder_memory = _("Internal Memory");
+char *dc120_folder_card   = _("CompactFlash Card");
 
 int camera_id (CameraText *id) {
 
@@ -295,7 +310,7 @@ int camera_summary (Camera *camera, CameraText *summary)
 {
 /*	DC120Data *dd = camera->camlib_data; */
 
-	strcpy(summary->text, "No summary information yet");
+	strcpy(summary->text, _("No summary information yet"));
 
 	return (GP_OK);
 }
@@ -303,11 +318,11 @@ int camera_summary (Camera *camera, CameraText *summary)
 int camera_manual (Camera *camera, CameraText *manual) 
 {
 	strcpy (manual->text, 
-		"The Kodak DC120 camera uses the KDC file format "
+		_("The Kodak DC120 camera uses the KDC file format "
 		"for storing images. If you want to view the images you "
 		"download from your camera, you will need to download "
 		"the \"kdc2tiff\" program. "
-		"It is available from http://kdc2tiff.sourceforge.net");
+		"It is available from http://kdc2tiff.sourceforge.net"));
 
 	return (GP_OK);
 }
@@ -315,10 +330,10 @@ int camera_manual (Camera *camera, CameraText *manual)
 int camera_about (Camera *camera, CameraText *about) 
 {
 	strcpy(about->text, 
-		"Kodak DC120 Camera Library\n"
+		_("Kodak DC120 Camera Library\n"
 		"Scott Fritzinger <scottf@gphoto.net>\n"
 		"Camera Library for the Kodak DC120 camera.\n"
-		"(by popular demand).");
+		"(by popular demand)."));
 
 	return (GP_OK);
 }

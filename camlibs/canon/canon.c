@@ -30,6 +30,21 @@
 
 #include <gphoto2.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "util.h"
 #include "serial.h"
 #include "psa50.h"
@@ -82,10 +97,10 @@ int camera_manual(Camera *camera, CameraText *manual)
 {
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_manual()");
 	
-	strcpy(manual->text, "For the A50, 115200 may not be faster than 57600\n"
+	strcpy(manual->text, _("For the A50, 115200 may not be faster than 57600\n"
 		   "Folders are NOT supported\n"
 		   "if you experience a lot of transmissions errors,"
-		   " try to have you computer as idle as possible (ie: no disk activity)");
+		   " try to have you computer as idle as possible (ie: no disk activity)"));
 
 	return GP_OK;
 }
@@ -176,11 +191,11 @@ static int check_readiness(Camera *camera)
 	
     if (cs->cached_ready) return 1;
     if (psa50_ready(camera)) {
-		gp_debug_printf(GP_DEBUG_LOW,"canon","Camera type:  %d\n",cs->model);
+		gp_debug_printf(GP_DEBUG_LOW,"canon",_("Camera type:  %d\n"),cs->model);
 		cs->cached_ready = 1;
 		return 1;
     }
-    gp_frontend_status(NULL, "Camera unavailable");
+    gp_frontend_status(NULL, _("Camera unavailable"));
     return 0;
 }
 
@@ -189,7 +204,7 @@ void switch_camera_off(Camera *camera)
 	gp_debug_printf(GP_DEBUG_LOW,"canon","switch_camera_off()");
 
 	
-	gp_frontend_status(NULL, "Switching Camera Off");
+	gp_frontend_status(NULL, _("Switching Camera Off"));
 
 	psa50_off(camera);
 	clear_readiness(camera);
@@ -225,7 +240,7 @@ char *camera_model_string(Camera *camera)
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_model_string()");
 	
 	if (!check_readiness(camera))
-	  return "Camera unavailable";
+	  return _("Camera unavailable");
 
 	switch (cs->model) {
 	 case CANON_PS_A5:
@@ -245,7 +260,7 @@ char *camera_model_string(Camera *camera)
 	 case CANON_PS_S100:
 		return "Powershot S100 / Digital IXUS / IXY DIGITAL";
 	 default:
-		return "Unknown model !";
+		return _("Unknown model!");
 	}
 }
 
@@ -262,13 +277,13 @@ static int update_disk_cache(Camera *camera)
 	if (!check_readiness(camera)) return 0;
 	disk = psa50_get_disk(camera);
 	if (!disk) {
-		gp_frontend_status(NULL, "No response");
+		gp_frontend_status(NULL, _("No response"));
 		return 0;
 	}
 	strcpy(cs->cached_drive,disk);
 	sprintf(root,"%s\\",disk);
 	if (!psa50_disk_info(camera, root,&cs->cached_capacity,&cs->cached_available)) {
-		gp_frontend_status(NULL, "No response");
+		gp_frontend_status(NULL, _("No response"));
 		return 0;
 	}
 	cs->cached_disk = 1;
@@ -405,7 +420,7 @@ static int compare_a5_paths (const void * p1, const void * p2)
 	
 	gp_debug_printf(GP_DEBUG_LOW,"canon","compare_a5_paths()");
 	
-	printf("Comparing %s to %s\n", s1, s2);
+	printf(_("Comparing %s to %s\n"), s1, s2);
 	
 	ptr = strrchr(s1, '_');
 	if (ptr)
@@ -414,7 +429,7 @@ static int compare_a5_paths (const void * p1, const void * p2)
 	if (ptr)
 	  n2 = strtol(ptr+1, 0, 10);
 	
-	printf("Numbers are %d and %d\n", n1, n2);
+	printf(_("Numbers are %d and %d\n"), n1, n2);
 	
 	if (n1 < n2)
 	  return -1;
@@ -423,7 +438,7 @@ static int compare_a5_paths (const void * p1, const void * p2)
 	else {
 		base1 = strrchr(s1, '\\');
 		base2 = strrchr(s2, '\\');
-		printf("Base 1 is %s and base 2 is %s\n", base1, base2);
+		printf(_("Base 1 is %s and base 2 is %s\n"), base1, base2);
 		return strcmp(base1, base2);
 	}
 }
@@ -444,12 +459,12 @@ static int update_dir_cache(Camera *camera)
     case CANON_PS_A5:
     case CANON_PS_A5_ZOOM:
       if (recurse(camera, cs->cached_drive)) {
-        printf("Before sort:\n");
+        printf(_("Before sort:\n"));
         for (i = 1; i < cs->cached_images; i++) {
           printf("%d: %s\n", i, cs->cached_paths[i]);
         }
         qsort(cs->cached_paths+1, cs->cached_images, sizeof(char *), compare_a5_paths);
-        printf("After sort:\n");
+        printf(_("After sort:\n"));
         for (i = 1; i < cs->cached_images; i++) {
           printf("%d: %s\n", i, cs->cached_paths[i]);
         }
@@ -498,7 +513,7 @@ static int canon_file_list (Camera *camera, const char *folder,
 	gp_debug_printf(GP_DEBUG_LOW,"canon","canon_file_list()");
 	
     if(!update_dir_cache(camera)) {
-        gp_frontend_status(NULL, "Could not obtain directory listing");
+        gp_frontend_status(NULL, _("Could not obtain directory listing"));
         return GP_ERROR;
     }
 
@@ -546,7 +561,7 @@ static char *canon_get_picture (Camera *camera, char *filename,
 #if 0
 		picture_number=picture_number*2-1;
 		if (thumbnail) picture_number+=1;
-		gp_debug_printf(GP_DEBUG_LOW,"canon","Picture number %d\n",picture_number);
+		gp_debug_printf(GP_DEBUG_LOW,"canon",_("Picture number %d\n"),picture_number);
 		
 		image = malloc(sizeof(*image));
 		if (!image) {
@@ -555,7 +570,7 @@ static char *canon_get_picture (Camera *camera, char *filename,
 		}
 		memset(image,0,sizeof(*image));
 		if (!picture_number || picture_number > cached_images) {
-			gp_frontend_status(NULL, "Invalid index");
+			gp_frontend_status(NULL, _("Invalid index"));
 			free(image);
 			return NULL;
 		}
@@ -574,7 +589,7 @@ static char *canon_get_picture (Camera *camera, char *filename,
 		/* For A50 or others */
 		/* clear_readiness(); */
 		if (!update_dir_cache(camera)) {
-			gp_frontend_status(NULL, "Could not obtain directory listing");
+			gp_frontend_status(NULL, _("Could not obtain directory listing"));
 			return 0;
 		}
 		image = malloc(sizeof(*image));
@@ -970,22 +985,22 @@ int camera_summary(Camera *camera, CameraText *summary)
 	canon_get_batt_status(camera, &pwr_status, &pwr_source);
 	switch (pwr_source) {
 	 case CAMERA_ON_AC:
-		strcpy(power_stats, "AC adapter ");
+		strcpy(power_stats, _("AC adapter "));
 		break;
 	 case CAMERA_ON_BATTERY:
-		strcpy(power_stats, "on battery ");
+		strcpy(power_stats, _("on battery "));
 		break;
 	 default:
-		sprintf(power_stats,"unknown (%i",pwr_source);
+		sprintf(power_stats,_("unknown (%i"),pwr_source);
 		break;
 	}
 	
 	switch (pwr_status) {
 	 case CAMERA_POWER_OK:
-		strcat(power_stats, "(power OK)");
+		strcat(power_stats, _("(power OK)"));
 		break;
 	 case CAMERA_POWER_BAD:
-		strcat(power_stats, "(power low)");
+		strcat(power_stats, _("(power low)"));
 		break;
 	 default:
 		strcat(power_stats,cde);
@@ -993,7 +1008,7 @@ int camera_summary(Camera *camera, CameraText *summary)
 		break;
 	}
 	
-    sprintf(summary->text,"%s\n%s\n%s\nDrive %s\n%11s bytes total\n%11s bytes available\n",
+    sprintf(summary->text,_("%s\n%s\n%s\nDrive %s\n%11s bytes total\n%11s bytes available\n"),
       model, cs->owner,power_stats,cs->cached_drive,a,b);
     return GP_OK;
 }
@@ -1005,12 +1020,12 @@ int camera_about(Camera *camera, CameraText *about)
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_about()");
 	
 	strcpy(about->text,
-		   "Canon PowerShot series driver by\n"
+		   _("Canon PowerShot series driver by\n"
 		   "Wolfgang G. Reissnegger,\n"
 		   "Werner Almesberger,\n"
 		   "Edouard Lafargue,\n"
 		   "Philippe Marzouk,\n"
-		   "A5 additions by Ole W. Saastad\n"
+		   "A5 additions by Ole W. Saastad\n")
 		   );
 
 	return GP_OK;
@@ -1038,7 +1053,7 @@ int camera_file_delete (Camera *camera, const char *folder,
         cs->model == CANON_PS_A5_ZOOM)) { /* Tested only on powershot A50 */
 
         if (!update_dir_cache(camera)) {
-            gp_frontend_status(NULL, "Could not obtain directory listing");
+            gp_frontend_status(NULL, _("Could not obtain directory listing"));
             return 0;
         }
         strcpy(path, cs->cached_drive);
@@ -1058,7 +1073,7 @@ int camera_file_delete (Camera *camera, const char *folder,
 
 		fprintf(stderr,"filename: %s\n path: %s\n",filename,path);
         if (psa50_delete_file(camera, filename,path)) {
-            gp_frontend_status(NULL, "error deleting file");
+            gp_frontend_status(NULL, _("error deleting file"));
             return GP_ERROR;
         }
         else {
@@ -1177,7 +1192,7 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 		(strcmp(camera->model,"Canon PowerShot A50") == 0
 		 || strcmp(camera->model, "Canon PowerShot Pro70") == 0)) {
 		gp_frontend_message(camera,
-  "Speeds greater than 57600 are not supported for uploading to this camera");
+  _("Speeds greater than 57600 are not supported for uploading to this camera"));
 		return GP_ERROR;
 	}
 		
@@ -1192,7 +1207,7 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 	}
 
     if(!update_dir_cache(camera)) {
-        gp_frontend_status(NULL, "Could not obtain directory listing");
+        gp_frontend_status(NULL, _("Could not obtain directory listing"));
         return GP_ERROR;
     }
 
@@ -1221,8 +1236,8 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 				sprintf(buf,"%c%c%c",dir[1],dir[2],dir[3]);
 				dirnum = atoi(buf);
 				if (dirnum == 999) {
-					gp_frontend_message(camera,"Could not upload, no free folder name available!\n"
-										"999CANON folder name exists and has an AUT_9999.JPG picture in it.");
+					gp_frontend_message(camera,_("Could not upload, no free folder name available!\n"
+										"999CANON folder name exists and has an AUT_9999.JPG picture in it."));
 					return GP_ERROR;
 				}
 				else {
@@ -1277,14 +1292,14 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_new (GP_WIDGET_WINDOW, "Canon PowerShot Configuration", 
 		       window);
 
-	gp_widget_new (GP_WIDGET_SECTION, "Configure", &section);
+	gp_widget_new (GP_WIDGET_SECTION, _("Configure"), &section);
 	gp_widget_append (*window,section);
 	
-	gp_widget_new (GP_WIDGET_TEXT,"Camera Model", &t);
+	gp_widget_new (GP_WIDGET_TEXT,_("Camera Model"), &t);
 	gp_widget_set_value (t, cs->ident);
 	gp_widget_append (section,t);
 
-	gp_widget_new (GP_WIDGET_TEXT,"Owner name", &t);
+	gp_widget_new (GP_WIDGET_TEXT,_("Owner name"), &t);
 	gp_widget_set_value (t, cs->owner);
 	gp_widget_append (section,t);
 
@@ -1294,13 +1309,13 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	  camtm = gmtime(&camtime);
 	  gp_widget_set_value (t, asctime(camtm));
 	} else
-	  gp_widget_set_value (t, "Unavailable");
+	  gp_widget_set_value (t, _("Unavailable"));
 	gp_widget_append (section,t);
 	
-	gp_widget_new (GP_WIDGET_TOGGLE, "Set camera date to PC date", &t);
+	gp_widget_new (GP_WIDGET_TOGGLE, _("Set camera date to PC date"), &t);
 	gp_widget_append (section,t);
 	
-	gp_widget_new (GP_WIDGET_TEXT,"Firmware revision", &t);
+	gp_widget_new (GP_WIDGET_TEXT,_("Firmware revision"), &t);
 	sprintf (firm,"%i.%i.%i.%i",cs->firmwrev[3], 
 			cs->firmwrev[2],cs->firmwrev[1],
 			cs->firmwrev[0]);
@@ -1311,22 +1326,22 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 		canon_get_batt_status(camera, &pwr_status,&pwr_source);
 		switch (pwr_source) {
 		 case CAMERA_ON_AC:
-			strcpy(power_stats, "AC adapter ");
+			strcpy(power_stats, _("AC adapter "));
 			break;
 		 case CAMERA_ON_BATTERY:
-			strcpy(power_stats, "on battery ");
+			strcpy(power_stats, _("on battery "));
 			break;
 		 default:
-			sprintf(power_stats,"unknown (%i",pwr_source);
+			sprintf(power_stats,_("unknown (%i"),pwr_source);
 			break;
 		}
 		switch (pwr_status) {
 			char cde[16];
 		 case CAMERA_POWER_OK:
-			strcat(power_stats, "(power OK)");
+			strcat(power_stats, _("(power OK)"));
 			break;
 		 case CAMERA_POWER_BAD:
-			strcat(power_stats, "(power low)");
+			strcat(power_stats, _("(power low)"));
 			break;
 		 default:
 			strcat(power_stats,cde);
@@ -1335,17 +1350,17 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 		}
 	}
 	else
-	  strcpy (power_stats,"Power: camera unavailable");
+	  strcpy (power_stats,_("Power: camera unavailable"));
 	
-	gp_widget_new (GP_WIDGET_TEXT,"Power", &t);
+	gp_widget_new (GP_WIDGET_TEXT,_("Power"), &t);
 	gp_widget_set_value (t, power_stats);
 	gp_widget_append (section,t);
 	
-	gp_widget_new (GP_WIDGET_SECTION, "Debug", &section);
+	gp_widget_new (GP_WIDGET_SECTION, _("Debug"), &section);
 	gp_widget_append (*window, section);
 	
-	gp_widget_new (GP_WIDGET_MENU, "Debug level", &t);
-	gp_widget_add_choice (t, "none");
+	gp_widget_new (GP_WIDGET_MENU, _("Debug level"), &t);
+	gp_widget_add_choice (t, "none") ;
 	gp_widget_add_choice (t, "functions");
 	gp_widget_add_choice (t, "complete");
 	switch (cs->debug) {
@@ -1362,7 +1377,7 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	}
 	gp_widget_append (section,t);
 
-	gp_widget_new (GP_WIDGET_TOGGLE, "Dump data by packets to stderr", &t);
+	gp_widget_new (GP_WIDGET_TOGGLE, _("Dump data by packets to stderr"), &t);
 	gp_widget_set_value (t, &(cs->dump_packets));
 	gp_widget_append (section,t);
 
@@ -1395,7 +1410,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
 	gp_debug_printf (GP_DEBUG_LOW,"canon","camera_set_config()");
 
-	gp_widget_get_child_by_label (window,"Debug level", &w);
+	gp_widget_get_child_by_label (window,_("Debug level"), &w);
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &wvalue);
                 if(strcmp(wvalue,"none") == 0)
@@ -1409,7 +1424,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
                 gp_setting_set("canon", "debug", buf);
         }
 
-	gp_widget_get_child_by_label (window,"Dump data by packets to stderr", 
+	gp_widget_get_child_by_label (window,_("Dump data by packets to stderr"), 
 				      &w);
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &(cs->dump_packets));
@@ -1417,35 +1432,35 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 		gp_setting_set("canon", "dump_packets", buf);
 	}
 	
-	gp_widget_get_child_by_label (window,"Owner name", &w);
+	gp_widget_get_child_by_label (window,_("Owner name"), &w);
 	if (gp_widget_changed (w)) {
 	        gp_widget_get_value (w, &wvalue);
                 if(!check_readiness(camera)) {
-                    gp_frontend_status(camera,"Camera unavailable");
+                    gp_frontend_status(camera,_("Camera unavailable"));
                 } else {
                     if(psa50_set_owner_name(camera, wvalue))
-                        gp_frontend_status(camera, "Owner name changed");
+                        gp_frontend_status(camera, _("Owner name changed"));
                     else
                         gp_frontend_status (camera, 
-					    "could not change owner name");
+					    _("could not change owner name"));
                 }
         }
 	
-	gp_widget_get_child_by_label (window,"Set camera date to PC date", &w);
+	gp_widget_get_child_by_label (window,_("Set camera date to PC date"), &w);
 	if (gp_widget_changed (w)) {
                 gp_widget_get_value (w, &wvalue);
                 if(!check_readiness(camera)) {
-                    gp_frontend_status(camera,"Camera unavailable");
+                    gp_frontend_status(camera,_("Camera unavailable"));
                 } else {
                     if(psa50_set_time(camera)) {
-                        gp_frontend_status(camera,"time set");
+                        gp_frontend_status(camera,_("time set"));
                     } else {
-                        gp_frontend_status(camera,"could not set time");
+                        gp_frontend_status(camera,_("could not set time"));
                     }
                 }
         }
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "done configuring camera.\n");
+	gp_debug_printf (GP_DEBUG_LOW, "canon", _("done configuring camera.\n"));
 
 	return GP_OK;
 }

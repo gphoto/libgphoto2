@@ -9,6 +9,21 @@
  *                                                  *
  ****************************************************/
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "dc3200.h"
 #include "library.h"
 
@@ -159,7 +174,7 @@ int check_last_use(Camera *camera)
 	
 	if(t - dd->last > 9) {
 		/* we have to re-init the camera */
-		printf("camera inactive for > 9 seconds, re-initing.\n");
+		printf(_("camera inactive for > 9 seconds, re-initing.\n"));
 		return init(camera);
 	}
 
@@ -352,14 +367,14 @@ int camera_file_get_preview (Camera *camera, const char *folder,
 
 int camera_summary (Camera *camera, CameraText *summary)
 {
-	strcpy(summary->text, "No summary information yet");
+	strcpy(summary->text, _("No summary information yet"));
 	return (GP_OK);
 }
 
 int camera_manual (Camera *camera, CameraText *manual)
 {
 	strcpy (manual->text, 
-		"Known problems:\n"
+		_("Known problems:\n"
 		"\n"
 		"1. If the Kodak DC3200 does not receive a command at least "
 		"every 10 seconds, it will time out, and will have to be "
@@ -369,23 +384,23 @@ int camera_manual (Camera *camera, CameraText *manual)
 		"\n"
 		"2. If you cancel a picture transfer, the driver will be left "
 		"in an unknown state, and will most likely need to be "
-		"reinitialized.");
+		"reinitialized."));
 	return (GP_OK);
 }
 
 int camera_about (Camera *camera, CameraText *about)
 {
 	strcpy	(about->text, 
-		"Kodak DC3200 Driver\n"
+		_("Kodak DC3200 Driver\n"
 		"Donn Morrison <dmorriso@gulf.uvic.ca>\n"
 		"\n"
-		"Questions and comments appreciated.");
+		"Questions and comments appreciated."));
 	return (GP_OK);
 }
 
 char* camera_result_as_string (Camera *camera, int result)
 {
-	if (result >= 0) return ("This is not an error...");
+	if (result >= 0) return (_("This is not an error..."));
 	if (-result < 100) return gp_result_as_string (result);
-	return ("This is a dc3200 specific error.");
+	return (_("This is a dc3200 specific error."));
 }
