@@ -64,8 +64,8 @@ int init(Camera *camera)
 	if (ret < 0)
 		return (ret);
 
-	/* Remember the selected speed */
-	selected_speed = settings.serial.speed;
+	/* Remember the selected speed 0 == fastest */
+	selected_speed = settings.serial.speed == 0 ? 115200 : settings.serial.speed;
 
 	settings.serial.speed    = 9600;
 	settings.serial.bits     = 8;
@@ -310,7 +310,7 @@ static int camera_manual (Camera *camera, CameraText *manual)
 		"\n"
 		"2. If you cancel a picture transfer, the driver will be left "
 		"in an unknown state, and will most likely need to be "
-		"reinitialized."));
+		"re-initialized."));
 	return (GP_OK);
 }
 
