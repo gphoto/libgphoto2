@@ -190,7 +190,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data)
 {
 	Camera *camera = data;
-	SierraData *fd = camera->camlib_data;
 	int n, l;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** Getting info:");
@@ -203,7 +202,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
 
 	/* Get the file number from the CameraFileSystem */
-	n = gp_filesystem_number (fd->fs, folder, filename);
+	n = gp_filesystem_number (camera->fs, folder, filename);
 	CHECK_STOP (camera, n);
 
 	/* Set the current picture number */
@@ -305,7 +304,6 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file)
 {
         int regl, regd, file_number;
-	SierraData *fd = (SierraData*)camera->camlib_data;
 	char *jpeg_data = NULL;
 	int jpeg_size;
 	const char *data, *mime_type;
@@ -315,14 +313,14 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
 
-	CHECK (camera_start (camera));
-
 	/* Set the working folder */
+	CHECK (camera_start (camera));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
+	CHECK (camera_stop (camera));
 
 	/* Get the file number from the CameraFileSystem */
-	file_number = gp_filesystem_number (fd->fs, folder, filename);
-	CHECK_STOP (camera, file_number);
+	file_number = gp_filesystem_number (camera->fs, folder, filename);
+	CHECK (file_number);
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
@@ -334,17 +332,19 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 		regd = 14;
 		break;
 	default:
-		CHECK (camera_stop (camera));
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	/* Fill in the file structure */
-	CHECK_STOP (camera, gp_file_set_name (file, filename));
+	CHECK (gp_file_set_name (file, filename));
 
 	/* Get the picture data */
+	CHECK (camera_start (camera));
 	CHECK_STOP (camera, sierra_get_string_register (camera, regd,
 					file_number + 1, file, NULL, NULL));
-	CHECK_STOP (camera, gp_file_get_data_and_size (file, &data, &size));
+	CHECK (camera_stop (camera));
+
+	CHECK (gp_file_get_data_and_size (file, &data, &size));
 	
 	/* Data postprocessing */
 	switch (type) {
@@ -354,8 +354,8 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 		 * Thumbnails are always JPEG files (as far as we know...).
 		 * Correct the filename to reflect that.
 		 */
-		CHECK_STOP (camera, gp_file_set_mime_type (file, GP_MIME_JPEG));
-		CHECK_STOP (camera, gp_file_adjust_name_for_mime_type (file));
+		CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
+		CHECK (gp_file_adjust_name_for_mime_type (file));
 
 		/* 
 		 * Some camera (e.g. Epson 3000z) send the EXIF application
@@ -370,7 +370,6 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 			gp_file_set_data_and_size (file, jpeg_data, jpeg_size);
 		} else {
 			/* No valid JPEG data found */
-			camera_stop (camera);
 			return GP_ERROR_CORRUPTED_DATA;
 		}
 
@@ -381,36 +380,31 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 		 * Detect the mime type. If the resulting mime type is
 		 * GP_MIME_RAW, manually set GP_MIME_QUICKTIME.
 		 */
-		CHECK_STOP (camera, gp_file_detect_mime_type (file));
-		CHECK_STOP (camera, gp_file_get_mime_type (file, &mime_type));
+		CHECK (gp_file_detect_mime_type (file));
+		CHECK (gp_file_get_mime_type (file, &mime_type));
 		if (!strcmp (mime_type, GP_MIME_RAW))
-			CHECK_STOP (camera, gp_file_set_mime_type (file,
-							GP_MIME_QUICKTIME));
+			CHECK (gp_file_set_mime_type (file, GP_MIME_QUICKTIME));
 		break;
 
 	default:
-		CHECK (camera_stop (camera));
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	return (camera_stop (camera));
+	return (GP_OK);
 }
 
 static int
 camera_folder_delete_all (Camera *camera, const char *folder)
 {
-	SierraData *fd = camera->camlib_data;
-
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** sierra_folder_delete_all");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
+	/* Set the working folder and delete all pictures there */
 	CHECK (camera_start (camera));
-
-	/* Set the working folder */
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
-
 	CHECK_STOP (camera, sierra_delete_all (camera));
+	CHECK (camera_stop (camera));
 
 	/*
 	 * Mick Grant <mickgr@drahthaar.clara.net> found out that his
@@ -422,34 +416,32 @@ camera_folder_delete_all (Camera *camera, const char *folder)
 	 * However, we need to format the filesystem so that gphoto2 can
 	 * handle this case.
 	 */
-	CHECK_STOP (camera, gp_filesystem_format (fd->fs));
+	CHECK (gp_filesystem_format (camera->fs));
 	
-	return (camera_stop (camera));
+	return (GP_OK);
 }
 
 static int
 camera_file_delete (Camera *camera, const char *folder, const char *filename) 
 {
 	int file_number;
-	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_delete");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
 
+	file_number = gp_filesystem_number (camera->fs, folder, filename);
+	CHECK (file_number);
+
+	/* Set the working folder and delete the file */
 	CHECK (camera_start (camera));
-
-	/* Set the working folder */
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
-
-	file_number = gp_filesystem_number (fd->fs, folder, filename);
-	CHECK_STOP (camera, file_number);
-
 	CHECK_STOP (camera, sierra_delete (camera, file_number + 1));
+	CHECK (camera_stop (camera));
 
-	CHECK_STOP (camera, gp_filesystem_delete (fd->fs, folder, filename));
+	CHECK (gp_filesystem_delete (camera->fs, folder, filename));
 
-	return (camera_stop(camera));
+	return (GP_OK);
 }
 
 static int
@@ -1393,11 +1385,10 @@ int camera_init (Camera *camera)
 
         /* We are in "/" */
         strcpy (fd->folder, "/");
-        CHECK_STOP_FREE (camera, gp_filesystem_new (&fd->fs));
-        CHECK_STOP_FREE (camera, gp_filesystem_set_list_funcs (fd->fs,
+        CHECK_STOP_FREE (camera, gp_filesystem_set_list_funcs (camera->fs,
                                         file_list_func, folder_list_func,
                                         camera));
-        CHECK_STOP_FREE (camera, gp_filesystem_set_info_funcs (fd->fs,
+        CHECK_STOP_FREE (camera, gp_filesystem_set_info_funcs (camera->fs,
                                         get_info_func, set_info_func,
                                         camera));
 

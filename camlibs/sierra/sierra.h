@@ -4,7 +4,6 @@ typedef struct {
 	int first_packet;
 	int usb_wrap;  /* 0: packets sent "raw", 1: see sierra-usbwrap.h */
 	char folder[128];
-	CameraFilesystem *fs;
 } SierraData;
 
 typedef struct {
@@ -16,5 +15,5 @@ typedef struct {
 	int  usb_wrap;
 } SierraCamera;
 
-#define CHECK(result) {int res; res = result; if (res != GP_OK) return (res);}
+#define CHECK(result) {int res = (result); if (res < 0) return (res);}
 

@@ -993,8 +993,8 @@ int sierra_capture (Camera *camera, int capture_type, CameraFilePath *filepath)
 		 * the picture has been taken, this code can be improved.
 		 * Until then...
 		 */
-		CHECK (gp_filesystem_format (fd->fs));
-		CHECK (gp_filesystem_get_folder (fd->fs, buf, &folder));
+		CHECK (gp_filesystem_format (camera->fs));
+		CHECK (gp_filesystem_get_folder (camera->fs, buf, &folder));
 		strcpy (filepath->folder, folder);
 		strcpy (filepath->name, buf);
 

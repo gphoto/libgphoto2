@@ -1,5 +1,11 @@
 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Fabrice did it again:
+
+	* camlibs/sierra/*: Actually use camera->fs.
+
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* include/gphotoos2.h:
 	* include/gphoto2-portability-os2.h: Removed. Contents are now ...
 	* include/gphoto2.h: ... here.
