@@ -559,18 +559,26 @@ Saving file as MVI_5418.AVI                                                     
               Choose the right 
               <filename>/etc/hotplug/usb/usbcam</filename>
               script for you.
+	    </para>
+	    <para>
               Example scripts are found in 
-              <filename class="directory">packaging/linux-hotplug</filename> 
-              in the source tree and in 
+              <filename class="directory">packaging/linux-hotplug/</filename> 
+              in the source tree and in the doc dir under
               <filename class="directory">linux-hotplug/</filename>
-              after installation and in the doc dir of the binary
-              package. Choose one, adapt it for your needs, and copy
-              it to the file <filename>/etc/hotplug/usb/usbcam</filename>. The
-              directory 
+              after installation.
+	    </para>
+	    <para>Choose a script which fits your requirements best,
+	      adapt it for your needs, and copy it to the file
+	      <filename>/etc/hotplug/usb/usbcam</filename>.
+	      The directory 
               <filename class="directory">/etc/hotplug</filename>
               should already exists, whereas it may be that you have
               to create the directory 
               <filename class="directory">/etc/hotplug/usb</filename>.
+	      The script <emphasis>must</emphasis> be called
+	      <filename>/etc/hotplug/usb/usbcam</filename>, not
+	      <filename>/etc/hotplug/usb/usbcam.user</filename> or
+	      something similar.
             </para>
             <para>
               All three scripts shipped with gPhoto2 also have extensive
