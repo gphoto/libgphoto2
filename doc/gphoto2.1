@@ -50,7 +50,7 @@ gphoto2 \- command-line gphoto2 client
 \fBgphoto2\fR(3) is a cross-platform digital camera library, and \fBgphoto2\fR(1) is a command-line client for it.
 
 .PP
-Where an option takes a range of files, thumbnails, or other data, they are numbered beginning at 1.
+Where an option takes a range of files, thumbnails, or other data, they are numbered beginning at 1. A range is a comma-separated list of numbers or spans (``\fIfirst\fR-\fIlast\fR''). Ranges are XOR (exclusive or), so that ``1-5,3,7'' is equivalent to ``1,2,4,5,7''.
 
 .TP
 \fB--debug\fR

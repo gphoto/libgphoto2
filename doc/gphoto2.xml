@@ -147,7 +147,11 @@
         it.</para>
 
       <para>Where an option takes a range of files, thumbnails, or
-       other data, they are numbered beginning at 1.</para>
+       other data, they are numbered beginning at 1.  A range is a
+       comma-separated list of numbers or spans
+       (<quote><replaceable>first</replaceable>-<replaceable>last</replaceable></quote>).
+       Ranges are XOR (exclusive or), so that <quote>1-5,3,7</quote>
+       is equivalent to <quote>1,2,4,5,7</quote>.</para>
 
       <variablelist>
 	<varlistentry>
