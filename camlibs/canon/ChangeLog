@@ -14,7 +14,7 @@
 	  fixed, easier to understand and proper error-checking.
 	  This should hopefully not break serial, since this is
 	  almost the same code as I used when debugging other
-	  serial stuff on Philippes computer/camera from 16000
+	  serial stuff on Philippes computer/camera from 1600
 	  km distance a few weeks ago.
 
 	* library.c:
