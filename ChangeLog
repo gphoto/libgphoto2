@@ -1,3 +1,8 @@
+2002-11-21  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* libgphoto2/gphoto2-camera.c: Allow a NULL for the path to be
+	  passed to the camera capture.
+
 2002-11-12  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* libgphoto2/gphoto2-version.c: Use HAVE_CC only if defined.
