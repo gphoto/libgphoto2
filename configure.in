@@ -71,7 +71,7 @@ AC_ARG_WITH(drivers,
   [                         'all' compiles all drivers; ]
   [                         possible drivers are: ]
   [                           barbie, digita, directory, fujitsu, ]
-  [                           konica, panasonic ]
+  [                           konica, panasonic ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
