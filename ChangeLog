@@ -1,5 +1,11 @@
 2001-10-23 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch from Fredrik <fredrik@krixor.xy.org>:
+
+	* libgphoto2/gphoto2-debug.c: Bug fix
+
+2001-10-23 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch from Carsten Weinholz <c.weinholz@netcologne.de>, slightly
 	modified (removed unnecessary //-comments, indentation):
 

@@ -55,5 +55,5 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 #endif
 	va_end (arg);
 
-	gp_log (GP_LOG_DEBUG, id, buffer);
+	gp_log (GP_LOG_DEBUG, id, "%s", buffer);
 }
