@@ -200,7 +200,7 @@ if $try_ttylock; then
 				AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
 				ttylock_msg=yes
 				try_lockdev=false
-				SERIAL_LDFLAGS=-llockdev,
+				SERIAL_LFLAGS=-llockdev,
 				AC_MSG_RESULT(unknown),
 				AC_MSG_RESULT(unknown)
 			),
@@ -213,13 +213,13 @@ if $try_lockdev; then
 		    AC_CHECK_HEADER(lockdev.h,[
 				AC_DEFINE(HAVE_LOCKDEV,1,[Define if you have dev_lock/lockdev based locking.])
 				lockdev_msg=yes
-				SERIAL_LDFLAGS=-llockdev
+				SERIAL_LFLAGS=-llockdev
 			    ]
 		    )
 		]
 	)
 fi
-AC_SUBST(SERIAL_LDFLAGS)
+AC_SUBST(SERIAL_LFLAGS)
 
 dnl ******
 dnl libusb

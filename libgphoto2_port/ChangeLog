@@ -1,3 +1,8 @@
+2002-09-12  Marcus Meissner <marcus@jet.franken.de>
+	
+	* configure.in, serial/Makefile.am: Do not use xx_LDFLAGS, 
+	  automake is unhappy about that.
+
 2002-07-25  Christophe Barbé <christophe.barbe@ufies.org>
 
    po files from Stefan Bj|rnelund <stefanb@update.uu.se>
