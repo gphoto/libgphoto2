@@ -40,7 +40,6 @@ int             glob_setting_count = 0;
 Setting         glob_setting[512];
 
 static int save_settings (void);
-static int dump_settings (void);
 
 #define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
@@ -170,9 +169,6 @@ int load_settings (void)
 		}
 	}
 
-	if (gp_debug_get_level ())
-		dump_settings ();
-
 	return (GP_OK);
 }
 
@@ -207,6 +203,7 @@ save_settings (void)
 	return (GP_OK);
 }
 
+#if 0
 static int dump_settings (void)
 {
 	int x;
@@ -221,3 +218,4 @@ static int dump_settings (void)
 
 	return (GP_OK);
 }
+#endif
