@@ -235,7 +235,7 @@ int shell_ls (char *arg) {
 		strcpy(tmp_folder, glob_folder);
 	}
 
-	if (gp_camera_folder_list(glob_camera, &list, tmp_folder)==GP_ERROR) {
+	if (gp_camera_folder_list(glob_camera, &list, tmp_folder) != GP_OK) {
 		if (arg_count)
 			cli_error_print("Folder %s does not exist", tmp_folder);
 		  else
@@ -258,7 +258,7 @@ int shell_ls (char *arg) {
 		}
 	}
 
-	if (gp_camera_file_list(glob_camera, &list, tmp_folder)==GP_ERROR) {
+	if (gp_camera_file_list(glob_camera, &list, tmp_folder) != GP_OK) {
 		cli_error_print("Could not retrieve the file list");
 		return (GP_ERROR);
 	}

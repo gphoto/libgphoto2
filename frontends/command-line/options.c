@@ -90,7 +90,7 @@ int verify_options (int argc, char **argv) {
 	/* Make sure required options are present */
 	for (x=0; x<glob_option_count; x++) {
 	   if (option[x].required) {
-		if (option_is_present(option[x].short_id, argc, argv)==GP_ERROR) {
+		if (option_is_present(option[x].short_id, argc, argv) != GP_OK) {
 			printf("Option %s%s is required.\n",
 			 strlen(option[x].short_id)>0? SHORT_OPTION:LONG_OPTION,
 			 strlen(option[x].short_id)>0? option[x].short_id:option[x].long_id);
@@ -120,7 +120,7 @@ int execute_options (int argc, char **argv) {
                                         ret=(*option[x].execute)(argv[++y]);
                                    }  else
                                         ret=(*option[x].execute)(NULL);
-                                   if (ret == GP_ERROR) {
+                                   if (ret != GP_OK) {
                                         // cli_error_print("Option \"%s\" did not execute properly.",op);
                                         return (GP_ERROR);
                                    }
