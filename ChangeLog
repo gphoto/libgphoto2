@@ -1,5 +1,10 @@
 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/panasonic/dc.c: gp_frontend_status ->
+	  gp_camera_status
+
+2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/kodak/dc240/library.c: gp_frontend_status ->
 	  gp_camera_status
 
