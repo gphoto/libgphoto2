@@ -1403,7 +1403,9 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 			CameraFile *file, GPContext *context)
 {
 	int x, y, r;
+#ifdef HAVE_EXIF
 	time_t t = 0;
+#endif
 
 	CHECK_NULL (fs && folder && file && filename);
 	CC (context);
@@ -1552,7 +1554,9 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 			GPContext *context)
 {
 	int x, y;
+#ifdef HAVE_EXIF
 	time_t t;
+#endif
 
 	CHECK_NULL (fs && folder && filename && info);
 	CC (context);
