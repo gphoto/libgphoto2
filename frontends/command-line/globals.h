@@ -12,6 +12,7 @@ extern int  		glob_filename_override;
 extern int		glob_option_count;
 extern int 		glob_recurse;
 extern int  		glob_stdout;
+extern int  		glob_stdout_size;
 extern Camera*		glob_camera;
 extern CameraAbilities 	glob_abilities;
 extern Option 		option[];

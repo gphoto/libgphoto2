@@ -72,6 +72,7 @@ OPTION_CALLBACK(debug);
 OPTION_CALLBACK(use_folder);
 OPTION_CALLBACK(recurse);
 OPTION_CALLBACK(use_stdout);
+OPTION_CALLBACK(use_stdout_size);
 OPTION_CALLBACK(list_folders);
 OPTION_CALLBACK(list_files);
 OPTION_CALLBACK(num_pictures);
@@ -108,6 +109,7 @@ Option option[] = {
 {"",  "list-cameras",   "",             "List supported camera models", list_cameras,   0},
 {"",  "list-ports",     "",             "List supported port devices",  list_ports,     0},
 {"",  "stdout",		"",		"Send file to stdout",		use_stdout,	0},
+{"",  "stdout-size",	"",		"Print filesize before data",	use_stdout_size,0},
 
 /* Settings needed for camera functions */
 {"" , "port",           "path",         "Specify port device",          port,           0},
@@ -164,6 +166,7 @@ int  glob_filename_override=0;
 int  glob_recurse=0;
 char glob_filename[128];
 int  glob_stdout=0;
+int  glob_stdout_size=0;
 
 /* 4) Finally, add your callback function.                              */
 /*    ----------------------------------------------------------------- */
@@ -194,7 +197,16 @@ OPTION_CALLBACK(test) {
 
 OPTION_CALLBACK(use_stdout) {
 
+	glob_quiet = 1; /* implied */
 	glob_stdout = 1;
+
+	return GP_OK;
+}
+
+OPTION_CALLBACK(use_stdout_size) {
+
+	glob_stdout_size = 1;
+	use_stdout(arg);
 
 	return GP_OK;
 }
@@ -451,6 +463,8 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
 	}
 
 	if (glob_stdout) {
+		if (glob_stdout_size)
+			printf("%li\n", file->size);
 		fwrite(file->data, sizeof(char), file->size, stdout);
 		gp_file_free(file);
 		return GP_OK;
