@@ -1,7 +1,13 @@
 This directory contains drivers for camerase that use the
 Sound Vision Inc (http://www.soundvisioninc.com)
-"V1 Low-Cost Dual Mode VGA Digital Camera"
-The agfa CL18 is actually an earlier design known as the "1307".
+"Clarity 2" Chipset.
+
+The Agfa ePhoto CL18 type cameras are an earlier design known
+as the "1307" which support 640x480 and USB only.
+
+The Tiger FastFlicks type design is the "V1 Low-Cost Dual Mode VGA 
+Digital Camera" which can do many resolutions, short MOV movies,
+and complact-flash of a sort.
 
 Sound Vision licences the design to many companys, hence
 the wide variety of brands supported by this driver.
@@ -15,6 +21,7 @@ List of Cameras known to work with this driver:
    RCA CDS1005
    
    Tiger Fast Flicks
+   FujiFilm @xia iX-100   (or "Axia ix-100")
    Oregon Scientific DShot II
    Media-Tech mt-406
    Scott APX 30
@@ -23,4 +30,3 @@ Cameras that might work with the proper USB ID's
 
    Polaroid MP3
    Eye Q3X Digital
-   Axia iX-100

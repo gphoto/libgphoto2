@@ -52,6 +52,7 @@ struct {
         {"RCA CDS1005",0x0784,0x0100,0},
         
         {"Tiger Fast Flicks",0x0919,0x0100,0},
+        {"FujiFilm @xia ix-100",0x0919,0x0100,0},
         {"Media-Tech mt-406",0x0919,0x0100,0},
         {"Oregon Scientific DShot II",0x0919,0x0100,0},
         {"Scott APX 30",0x0919,0x0100,0},
