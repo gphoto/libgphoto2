@@ -73,6 +73,7 @@ struct _CameraPrivateLibrary{
 	char*			filespec;
 };
 
+static int rotate180(int width, int height, unsigned char* rgb);
 
 static struct {
 	const char*				model;
@@ -98,6 +99,13 @@ static struct {
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350v%04i.ppm"
+		}
+	},
+	{"Typhoon:StyloCam", 0x797, 0x801a, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&rotate180,
+			"stylo%04i.ppm"
 		}
 	},
 	{NULL,}
@@ -133,10 +141,10 @@ static int
 pdc640_transmit (GPPort *port, char *cmd, int cmd_size,
 				   char *buf, int buf_size)
 {
-	int r;
+	int r, tries;
 
 	if (port->type == GP_PORT_USB) {
-		char xbuf[64];
+		unsigned char xbuf[64];
 		unsigned char xcmd[4];
 		int checksum;
 
@@ -144,18 +152,27 @@ pdc640_transmit (GPPort *port, char *cmd, int cmd_size,
 		memset(xcmd,0,4);memcpy(xcmd,cmd,cmd_size);
 		checksum = (xcmd[0]^0x34)+(xcmd[1]^0xcb)+0x14f+(xcmd[2]^0x67);
 		xcmd[3] = checksum & 0xff;
-		r = gp_port_usb_msg_read( port, 0x10, xcmd[0]|(xcmd[1]<<8),xcmd[2]|(xcmd[3]<<8),xbuf,sizeof(xbuf));
 
+		/* Wait until we get back the echo of the command. */
+		r = gp_port_usb_msg_read( port, 0x10, xcmd[0]|(xcmd[1]<<8),xcmd[2]|(xcmd[3]<<8),xbuf,sizeof(xbuf));
 			/* Sometimes we want to read here, sometimes not.
 		if (r < GP_OK)
 			return r;
 			 */
-		if (buf && buf_size)
-			r = gp_port_read( port, buf, (buf_size + 63) & ~63 );
+		if (buf && buf_size) {
+			/* bulk read things. The JD350v can read in 1 block,
+			 * the Stylocam returns only 64byte blocks here.
+			 */
+			int curr = 0, readsize = (buf_size + 63) & ~63;
+			while (curr < readsize) {
+				r = gp_port_read( port, buf + curr, readsize - curr);
+				if (r < GP_OK) break;
+				curr += r;
+			}
+		}
 		return r;
 	} else {
 		char c;
-		int tries;
 
 		/* In event of a checksum or timing failure, retry */
 		for (tries = 0; tries < PDC640_MAXTRIES; tries++) {
@@ -333,9 +350,9 @@ pdc640_unknown20 (GPPort* port)
 static int
 pdc640_caminfo (GPPort *port, int *numpic)
 {
-	char buf[1280];
+	char buf[1532];
 
-	CHECK_RESULT (pdc640_transmit_packet (port, 0x40, buf, 1280));
+	CHECK_RESULT (pdc640_transmit_packet (port, 0x40, buf, 1532));
 	*numpic = buf[2]; /* thats the only useful info :( */
 	return (GP_OK);
 }
@@ -379,11 +396,16 @@ pdc640_picinfo (GPPort *port, char n,
 	/* Compression Type */
 	*compression_type = buf[9];
 
-	/* Thumbnail size, width and height */
 	*size_thumb   = buf[25] | (buf[26] << 8) | (buf[27] << 16);
+
 	*width_thumb  = buf[28] | (buf[29] << 8);
 	*height_thumb  = buf[30] | (buf[31] << 8);
 
+	/* Even though it should the be the correct size, the Typhoon
+	 * Stylocam returns junk in there. So calculate for ourselves.
+	 */
+	if (*size_thumb > *width_thumb  * *height_thumb)
+		*size_thumb = *width_thumb  * *height_thumb;
 	return (GP_OK);
 }
 
@@ -535,28 +557,31 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 
 	/* Evaluate parameters */
 	if (thumbnail) {
-		GP_DEBUG ("Size %d, width %d, height %d",
-			size_thumb, width_thumb, height_thumb);
+		GP_DEBUG ("Size %d, width %d, height %d, comptype %d",
+			size_thumb, width_thumb, height_thumb,
+			(compression_type>>2) & 3);
 
 		*size = size_thumb;
 		width = width_thumb;
 		height = height_thumb;
-		cmd = 0x03;
+		if ((compression_type >> 2) & 3)
+			cmd = 0x02;
+		else
+			cmd = 0x03;
 	} else {
-		GP_DEBUG ("Size %d, width %d, height %d",
-			size_pic, width_pic, height_pic);
+		GP_DEBUG ("Size %d, width %d, height %d, comptype %d",
+			size_pic, width_pic, height_pic, compression_type & 3);
 
 		*size = size_pic;
 		width = width_pic;
 		height = height_pic;
-		if( compression_type == 2 ){
-			cmd = 0x10; // delta compressed
-		}
-		else if( compression_type == 0 ){
-			cmd = 0x00; // uncompressed
-		}
-		else{
-			// unknown compression type
+		switch (compression_type & 3) {
+		case 2:	cmd = 0x10;	// delta compressed
+			break;
+		case 0:	cmd = 0x00;	// uncompressed
+			break;
+		default:		// unknown compression type
+			GP_DEBUG ("Unknown compression type %d", compression_type & 3);
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
 	}
@@ -565,8 +590,8 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 	if ((*size <= 0) || (width <= 0) || (height <= 0))
 		return (GP_ERROR_CORRUPTED_DATA);
 
-	/* Allocate the memory */
-	*data = malloc (*size * sizeof (char));
+	/* Allocate the memory, including 64byte align */
+	*data = malloc ((*size + 64) * sizeof (char));
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
 
@@ -575,11 +600,11 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 	CHECK_RESULT (pdc640_transmit_pic (camera->port, cmd, width, thumbnail, 
 					*data, *size));
 
-	if (thumbnail || compression_type == 0 ) {
+	if (thumbnail || (compression_type == 0 )) {
 		/* Process uncompressed data */
 		CHECK_RESULT (pdc640_processtn (width, height,
 						data, *size));
-	} else if( compression_type == 2 ){
+	} else if ((compression_type & 3) == 2 ) {
 		/* Image data is delta encoded so decode it */
 		CHECK_RESULT (pdc640_deltadecode (width, height, 
 						  data, size));
@@ -953,4 +978,20 @@ camera_init (Camera *camera, GPContext *context)
 		CHECK_RESULT (gp_port_set_timeout (camera->port, 5000));
 	}
 	return (GP_OK);
+}
+
+static int
+rotate180(int width, int height, unsigned char* rgb) {
+	int		i;
+	unsigned char	*buf;
+	
+	buf = malloc(width*3);
+	if (!buf) return GP_ERROR_NO_MEMORY;
+	for (i=0;i<height/2;i++) {
+		memcpy(buf,rgb+i*width*3,width*3);
+		memcpy(rgb+i*width*3,rgb+(height-i-1)*width*3,width*3);
+		memcpy(rgb+(height-i-1)*width*3,buf,width*3);
+	}
+	free(buf);
+	return GP_OK;
 }

@@ -1,3 +1,8 @@
+2003-01-30  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c: Added support for Typhoon Stylocam,
+	  required some stability fixes for the USB communication.
+
 2003-01-14  Marcus Meissner <marcus@jet.franken.de>
 		
 	* pdc320.c, pdc640.c, pdc700.c: Translate some strings.
