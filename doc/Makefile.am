@@ -1,12 +1,33 @@
 SUBDIRS = api figures
 
+# distribute manual Portable Document Format (PDF) if possible
+if XMLTOPDF
+manual_pdf = gphoto2.pdf
+else
+manual_pdf =
+endif
+
+# distribute manual in PostScript (PS) format if possible
+if XMLTOPS
+manual_ps = gphoto2.ps
+else
+manual_ps =
+endif
+
+# build HTML manual if possible
+if XMLTOHTML
+manual_html = manual
+else
+manual_html =
+endif
+
 EXTRA_DIST = DAEMON build_OS2.txt 					\
 	camlib_devel.lyx 						\
 	camlib_devel-portmon.eps camlib_devel-repeater.eps 		\
 	camlib_devel.sgml camlib_devel.txt camlib_devel-y.eps 		\
 	frontend_devel.lyx frontend_devel.sgml frontend_devel.txt 	\
 	gphoto2-cli.txt gphoto2.txt					\
-	gphoto2.xml $(man_MANS) 					\
+	gphoto2.xml $(man_MANS) $(manual_pdf) $(manual_ps)		\
 	FAQ
 
 man_MANS = gphoto2.1 gphoto2.3 gphoto2_port.3
@@ -15,50 +36,84 @@ docdir = @DOC_DIR@
 
 doc_DATA = gphoto2-cli.txt gphoto2.txt FAQ
 
-# Special rule for regenerating the man page from the XML file.
-# This requires xmlto, which can be obtained from
-# <http://cyberelk.net/tim/xmlto/>.
-if XMLTOMAN
-all-local: $(man_MANS)
 
+########################################################################
+# The following rules are for regenerating man pages, pdf, html and ps
+# docs from gphoto2.xml. This is only done when xmlto is found, which
+# can be obtained from <URL:http://cyberelk.net/tim/xmlto/>.
+#
+# We should not forget the alternative dummy targets, as otherwise
+# the build process will barf when xmlto is not present.
+########################################################################
+
+
+########################################################################
+if XMLTOPDF
+gphoto2.pdf: gphoto2.xml
+	xmlto pdf $<
+endif
+########################################################################
+
+
+########################################################################
+if XMLTOPS
+gphoto2.ps: gphoto2.xml
+	xmlto ps $<
+endif
+########################################################################
+
+
+########################################################################
+if XMLTOMAN
 $(man_MANS): gphoto2.xml
 	xmlto man $<
-
-else
-
-all-local:
-	@echo "Dummy $@ target"
-
 endif
+########################################################################
 
 
 
+########################################################################
 if XMLTOHTML
+
+# do not empty this variable
+manual_dir=manual
+
 htmldir=@HTML_DIR@
 
-TARGET_DIR=$(htmldir)/manual
-
-all-local: manual
+TARGET_DIR=$(htmldir)/$(manual_dir)
 
 manual: gphoto2.xml
-	xmlto html -o $@ $<
-	touch $@
+	xmlto html -o "$@" "$<"
+	touch "$@"
 
-install-data-local:
+clean_local_manual = clean-local-manual
+.PHONY: clean-local-manual
+clean-local-manual:
+	rm -rf "$(manual_dir)/"
+
+install_data_local_manual = install-data-local-manual
+.PHONY: install-data-local-manual
+install-data-local-manual:
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
-	$(INSTALL_DATA) ./manual/*.html $(DESTDIR)$(TARGET_DIR)
+	$(INSTALL_DATA) ./$(manual_dir)/*.html $(DESTDIR)$(TARGET_DIR)
 
-dist-hook:
-	(cd $(srcdir) ; tar cvf - manual) | (cd $(distdir); tar xf -)
-else
+dist_hook_manual = dist-hook-manual
+.PHONY: dist-hook-manual
+dist-hook-manual:
+	(cd $(srcdir) ; tar cvf - $(manual_dir) | (cd $(distdir); tar xf -)
+########################################################################
 
-all-local:
+
+
+########################################################################
+clean-local: $(clean_local_manual)
 	@echo "Dummy $@ target"
 
-install-data-local:
+install-data-local: $(install_data_local_manual)
 	@echo "Dummy $@ target"
 
-dist-hook:
+dist-hook: $(dist_hook_manual)
 	@echo "Dummy $@ target"
 
-endif
+all-local: $(man_MANS) $(manual_pdf) $(manual_ps) $(manual_html)
+	@echo "Dummy $@ target"
