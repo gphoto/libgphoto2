@@ -1,0 +1,13 @@
+
+Unordered TODO list:
+
+-- filesystem implementation.
+
+-- implementation of GetStorageInfo and GetStorageID's and proper
+interpretation of it's fields, which may be meaningful for driver behavior.
+
+-- packing and unpacking functions which interprete whole structures of
+specyfied type (especialy proper extraction of variable length fields).
+
+-- remove ptp error code from library.c, separate ptp protocol code from
+gphoto2 driver.

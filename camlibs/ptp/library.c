@@ -51,7 +51,27 @@
 
 #define GP_MODULE "PTP"
 
+#define CPR(camera,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((camera), r); return (translate_ptp_result (r));}}
+
+#define CPR_free(camera,result, freeptr) {\
+			short r=(result);\
+			if (r!=PTP_RC_OK) {\
+				report_result ((camera), r);\
+				free(freeptr);\
+				return (translate_ptp_result (r));\
+			}\
+}
+
 #define CR(result) {int r=(result);if(r<0) return (r);}
+/*
+#define CR_free(result, freeptr) {\
+			int r=(result);\
+			if(r<0){\
+				free(freeptr);\
+				return(r);\
+				}\
+}
+*/
 
 static struct {
 	short n;
@@ -90,9 +110,12 @@ static struct {
 	{PTP_RC_InvalidDevicePropValue, N_("PTP Invalid Device Prop Value")},
 	{PTP_RC_InvalidParameter, 	N_("PTP Invalid Parameter")},
 	{PTP_RC_SessionAlreadyOpened, 	N_("PTP Session Already Opened")},
-	{PTP_RC_TransactionCanceled, 	N_("PTP TransactionCanceled")},
+	{PTP_RC_TransactionCanceled, 	N_("PTP Transaction Canceled")},
 	{PTP_RC_SpecificationOfDestinationUnsupported,
 			N_("PTP Specification Of Destination Unsupported")},
+	{PTP_RC_EK_FilenameRequired,	N_("PTP EK Filename Required")},
+	{PTP_RC_EK_FilenameConflicts,	N_("PTP EK Filename Conflicts")},
+	{PTP_RC_EK_FilenameInvalid,	N_("PTP EK Filename Invalid")},
 
 	{PTP_ERROR_IO,		  N_("PTP I/O error")},
 	{PTP_ERROR_BADPARAM,	  N_("PTP Error: bad parameter")},
@@ -117,6 +140,8 @@ translate_ptp_result (short result)
 	switch (result) {
 	case PTP_RC_ParameterNotSupported:
 		return (GP_ERROR_BAD_PARAMETERS);
+	case PTP_ERROR_BADPARAM:
+		return (GP_ERROR_BAD_PARAMETERS);
 	case PTP_RC_OK:
 		return (GP_OK);
 	default:
@@ -136,10 +161,6 @@ translate_gp_result (int result)
 		return (PTP_RC_GeneralError);
 	}
 }
-
-#define CPR(camera,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((camera), r); return (translate_ptp_result (r));}}
-#define CHECK(result) {int ret=(result);if(ret<0){return(ret);}}
-
 
 static struct {
 	const char *model;
@@ -202,11 +223,11 @@ set_mimetype (Camera *camera, CameraFile *file, unsigned short ofc)
 	for (i = 0; object_formats[i].format_code; i++)
 		if (object_formats[i].format_code == ofc)
 		{
-			CHECK (gp_file_set_mime_type (file, object_formats[i].txt));
+			CR (gp_file_set_mime_type (file, object_formats[i].txt));
 			return (GP_OK);
 		}
 
-	CHECK (gp_file_set_mime_type (file, "application/x-unknown"));
+	CR (gp_file_set_mime_type (file, "application/x-unknown"));
 	return (GP_OK);
 }
 
@@ -235,6 +256,7 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data)
 	 * read. libptp doesn't need that.
 	 */
 	result = gp_port_read (camera->port, bytes, size);
+	// returned value is little endian
 	if (result >= 0)
 		return (PTP_RC_OK);
 	else
@@ -252,6 +274,7 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	 * write. libptp doesn't need that.
 	 */
 	result = gp_port_write (camera->port, bytes, size);
+	// returned value is little endian
 	if (result >= 0)
 		return (PTP_RC_OK);
 	else
@@ -290,7 +313,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.operations        = GP_OPERATION_NONE;
 		a.file_operations   = GP_FILE_OPERATION_PREVIEW|
 					GP_FILE_OPERATION_DELETE;
-		a.folder_operations = GP_FOLDER_OPERATION_NONE;
+		a.folder_operations = GP_FOLDER_OPERATION_MAKE_DIR;
 		CR (gp_abilities_list_append (list, a));
 	}
 
@@ -333,7 +356,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera *camera = data;
 	PTPObjectInfo objectinfo;
 	int i;
-	char filename[MAXFILELEN];
+	char filename[MAXFILENAMELEN];
 
 
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
@@ -351,39 +374,45 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data)
 {
 	Camera *camera = data;
-	unsigned char *fdata = NULL;
+	PTPReq *fdata = NULL;
+	char * image;
 	unsigned long image_id;
 	PTPObjectInfo ptp_objectinfo;
-
-
-	if (strcmp (folder, "/"))
-		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	uint32_t size;
 
 
 	// Get file number
 	image_id = gp_filesystem_number (fs, folder, filename);
 
+	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
+		camera->pl->params.handles.handler[image_id],&ptp_objectinfo));
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
-		camera->pl->params.handles.handler[image_id],&ptp_objectinfo));
-		fdata=malloc(ptp_objectinfo.ObjectCompressedSize);
-		CPR (camera, ptp_getobject(&camera->pl->params,
-		camera->pl->params.handles.handler[image_id],
-		ptp_objectinfo.ObjectCompressedSize, fdata));
-		CHECK (gp_file_set_data_and_size (file, fdata,
-		ptp_objectinfo.ObjectCompressedSize));
+		size=le32toh(ptp_objectinfo.ObjectCompressedSize);
+		fdata=malloc(size+PTP_REQ_HDR_LEN);
+		CPR_free (camera, ptp_getobject(&camera->pl->params,
+			camera->pl->params.handles.handler[image_id],
+			size, fdata), fdata);
+		image=malloc(size);
+		memcpy(image, fdata->data, size);
+		free(fdata);
+		CR (gp_file_set_data_and_size (file, image, size));
+		// XXX does gp_file_set_data_and_size free image ptr upon
+		// failure??
 		break;
 
 	case GP_FILE_TYPE_PREVIEW:
-		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
-		camera->pl->params.handles.handler[image_id],&ptp_objectinfo));
-		fdata=malloc(ptp_objectinfo.ThumbCompressedSize);
-		CPR (camera, ptp_getthumb(&camera->pl->params,
-		camera->pl->params.handles.handler[image_id],
-		ptp_objectinfo.ThumbCompressedSize, fdata));
-		CHECK (gp_file_set_data_and_size (file, fdata,
-		ptp_objectinfo.ThumbCompressedSize));
+		size=le32toh(ptp_objectinfo.ThumbCompressedSize);
+		fdata=malloc(size+PTP_REQ_HDR_LEN);
+		CPR_free (camera, ptp_getthumb(&camera->pl->params,
+			camera->pl->params.handles.handler[image_id],
+			size, fdata), fdata);
+		image=malloc(size);
+		memcpy(image, fdata->data, size);
+		free(fdata);
+		CR (gp_file_set_data_and_size (file, image, size));
+		// XXX does gp_file_set_data_and_size free image ptr upon
+		// failure??
 		break;
 		
 
@@ -391,7 +420,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	}
 
-	CHECK (set_mimetype (camera, file, ptp_objectinfo.ObjectFormat));
+	CR (set_mimetype (camera, file, ptp_objectinfo.ObjectFormat));
 
 	return (GP_OK);
 }
@@ -423,9 +452,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = data;
 	PTPObjectInfo oi;
 	int n;
-	char capture_date[MAXFILELEN];
-	struct tm tm;
-	char tmp[16];
 
 	CR (n = gp_filesystem_number (fs, folder, filename));
 	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
@@ -448,47 +474,60 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 */
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE;
 
-	info->file.size   = oi.ObjectCompressedSize;
+	info->file.size   = le32toh(oi.ObjectCompressedSize);
 	strcpy_mime (info->file.type, oi.ObjectFormat);
 
-	if ((oi.ObjectFormat & 0x0800) != 0) {
+	if ((le16toh(oi.ObjectFormat) & 0x0800) != 0) {
 		info->preview.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_WIDTH
 				|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_TIME|GP_FILE_INFO_TYPE;
 		strcpy_mime(info->preview.type, oi.ThumbFormat);
-		info->preview.size   = oi.ThumbCompressedSize;
-		info->preview.width  = oi.ThumbPixWidth;
-		info->preview.height = oi.ThumbPixHeight;
+		info->preview.size   = le32toh(oi.ThumbCompressedSize);
+		info->preview.width  = le32toh(oi.ThumbPixWidth);
+		info->preview.height = le32toh(oi.ThumbPixHeight);
 
 		info->file.fields = info->file.fields|GP_FILE_INFO_WIDTH|GP_FILE_INFO_HEIGHT|
 				GP_FILE_INFO_TIME;
 
-		info->file.size   = oi.ObjectCompressedSize;
-		info->file.width  = oi.ImagePixWidth;
-		info->file.height = oi.ImagePixHeight;
-		
-		ptp_getobjectcapturedate (&oi, capture_date);
-		strncpy (tmp, capture_date, 4);
-		tmp[4] = 0;
-		tm.tm_year=atoi (tmp) - 1900;
-		strncpy (tmp, capture_date + 4, 2);
-		tmp[2] = 0;
-		tm.tm_mon = atoi (tmp) - 1;
-		strncpy (tmp, capture_date + 6, 2);
-		tmp[2] = 0;
-		tm.tm_mday = atoi (tmp);
-		strncpy (tmp, capture_date + 9, 2);
-		tmp[2] = 0;
-		tm.tm_hour = atoi (tmp);
-		strncpy (tmp, capture_date + 11, 2);
-		tmp[2] = 0;
-		tm.tm_min = atoi (tmp);
-		strncpy (tmp, capture_date + 13, 2);
-		tmp[2] = 0;
-		tm.tm_sec = atoi (tmp);
-		info->file.time = mktime (&tm);
+		info->file.width  = le32toh(oi.ImagePixWidth);
+		info->file.height = le32toh(oi.ImagePixHeight);
+		info->file.time = ptp_getobjectcapturedate (&oi);
 	}
 
 		return (GP_OK);
+}
+
+static int
+make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
+	       void *data)
+{
+	Camera *camera = data;
+	PTPObjectInfo oi;
+	uint32_t parent;
+	uint32_t store;
+	uint32_t handle;
+
+	memset(&oi, 0, sizeof (PTPObjectInfo));
+
+	// blackmagic, obtain ObjectHandle of upper folder
+	// XXX 0xffffffff=root filesystem
+	parent=htole32(0x00000000);
+
+	// any store (responder decides)
+	store=htole32(0xffffffff);
+	
+	ptp_setobjectfilename(&oi, foldername);
+
+	oi.StorageID=0xffffffff;
+	oi.ObjectFormat=PTP_OFC_Association;
+	oi.ProtectionStatus=PTP_PS_NoProtection;
+	oi.AssociationType=PTP_AT_GenericFolder;
+
+	CPR (camera, ptp_ek_sendfileobjectinfo (&camera->pl->params,
+		&store, &parent, &handle, &oi));
+	printf("Sending association data\n");
+	CPR (camera, ptp_ek_sendfileobject (&camera->pl->params,
+		&oi, 18));
+	return (GP_OK);
 }
 
 int
@@ -529,7 +568,7 @@ camera_init (Camera *camera)
 	CR (gp_port_set_settings (camera->port, settings));
 
 	/* Establish a connection to the camera */
-	ret=ptp_opensession (&camera->pl->params, 1);
+	ret=ptp_opensession (&camera->pl->params, htole32(1));
 	if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
 		report_result(camera, ret);
 	}
@@ -544,7 +583,7 @@ camera_init (Camera *camera)
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 					  delete_file_func, camera));
 	CR (gp_filesystem_set_folder_funcs (camera->fs, NULL,
-					    NULL, NULL,
+					    NULL, make_dir_func,
 					    NULL, camera));
 
 	return (GP_OK);

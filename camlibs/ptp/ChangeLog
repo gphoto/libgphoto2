@@ -1,5 +1,9 @@
 
 2001-12-14 Mariusz Woloszyn
+	* huge parts of code rewriten, added SENDDATA transaction feature,
+	added make directory ability (curently BROKEN!!!)
+
+2001-12-14 Mariusz Woloszyn
 	* file deleting implemented
 
 2001-12-13 Mariusz Woloszyn
