@@ -29,6 +29,7 @@ int canon_usb_lock_keys(Camera *camera);
 int canon_usb_unlock_keys(Camera *camera);
 int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path);
 int canon_usb_ready (Camera *camera);
+int canon_usb_identify (Camera *camera);
 
 #define USB_BULK_READ_SIZE 0x3000
 
