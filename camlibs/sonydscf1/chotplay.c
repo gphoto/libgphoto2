@@ -3,7 +3,6 @@
 #include <string.h>
 #include <errno.h>
 #include <gphoto2.h>
-extern int errno;
 
 #define BINARYFILEMODE
 
@@ -21,11 +20,15 @@ extern int errno;
 #else
 #define MAXPATHLEN 256
 #endif
+#include <termios.h>
+
+#include "chotplay.h"
 #include "common.h"
 #include "command.h"
-#include <termios.h>
+#include "getuint.h"
 #include "pmp.h"
-//#include <io.h>
+
+extern int errno;
 
 #define MAX_PICTURE_NUM 200
 
@@ -191,12 +194,9 @@ int get_picture_information(int *pmx_num, int outit)
   u_char buforg[PMF_MAXSIZ];
   char name[64];
   long len;
-  int i,n;
+  int i, n;
   int j, k;
-  FILE  *outfp;
-  int fh;
-  int offset=0;
-  char *buf = &buforg;
+  char *buf = (char *) &buforg;
 
   sprintf(name, "/PIC_CAM/PIC00000/PIC_INF.PMF");
   F1ok();
@@ -298,8 +298,8 @@ long get_file(char *name, char **data, int format, int verbose)
     total = total + len;
 //    gp_camera_progress(camera, ((float)total / (float)filelen));
     if(verbose){
-      fprintf(stderr, "%6u/", total);
-      fprintf(stderr, "%6u", filelen);
+      fprintf(stderr, "%6lu/", total);
+      fprintf(stderr, "%6lu", filelen);
       fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b");
     }
     /*result = fwrite(buf, sizeof(u_char), (size_t) len, fp);*/
@@ -347,7 +347,7 @@ long get_thumbnail(char *name, char **data, int format, int verbose, int n)
     }
     total = total + len;
     if(verbose){
-      fprintf(stderr, "%4u/", total);
+      fprintf(stderr, "%4lu/", total);
       fprintf(stderr, "%4u", 0x1000);
           fprintf(stderr, "\b\b\b\b\b\b\b\b\b");
     }

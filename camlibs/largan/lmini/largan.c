@@ -276,7 +276,7 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/* Camera *camera = data; */
 
 	/* Get the file info here and write it into <info> */
 

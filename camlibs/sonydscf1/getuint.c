@@ -1,6 +1,8 @@
 #include "config.h"
 #include <sys/types.h>
 
+#include "getuint.h"
+
 u_short
 get_u_short(buf)
      u_char 	*buf;

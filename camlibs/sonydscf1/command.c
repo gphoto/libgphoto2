@@ -1,27 +1,28 @@
-
 #include "config.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
-#include "common.h"
 #include <termios.h>
-
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+
+#include <gphoto2.h>
+
+#include "command.h"
+#include "common.h"
+
 #ifdef DEBUG
 #define dprintf(x) printf x
 #else
 #define dprintf(x)
 #endif
 
-#include <gphoto2.h>
-
 extern gp_port *dev;
 
 
-
-static int      F1fd = -1;
+/* static int      F1fd = -1; */
 static u_char address = 0;
 static u_char sendaddr[8] = { 0x00, 0x22, 0x44, 0x66, 0x88, 0xaa, 0xcc, 0xee };
 static u_char recvaddr[8] = { 0x0e, 0x20, 0x42, 0x64, 0x86, 0xa8, 0xca, 0xec };
@@ -98,7 +99,7 @@ void sendcommand(u_char *p, int len)
   if(address >7 ) address = 0;
 }
 
-void Abort()
+void Abort(void)
 {
   u_char buf[4];
   buf[0] = BOFRAME;
@@ -284,7 +285,7 @@ int F1fopen(char *name)
   buf[1] = 0x0A;
   buf[2] = 0x00;
   buf[3] = 0x00;
-  sprintf(&buf[4], "%s\0", name);
+  snprintf(&buf[4], sizeof(name), "%s", name);
   len = strlen(name) + 5;
   sendcommand(buf, len);
   recvdata(buf, 6);
@@ -459,7 +460,7 @@ u_long F1finfo(char *name)
 
   buf[0] = 0x02;
   buf[1] = 0x0F;
-  sprintf(&buf[2], "%s\0", name);
+  snprintf(&buf[2], sizeof(name), "%s", name);
   len = strlen(name) + 3;
 
   sendcommand(buf, len);
@@ -511,8 +512,8 @@ long F1getdata(char *name, u_char *data, int verbose)
     p = p + len;
     total = total + len;
     if(verbose){
-      fprintf(stderr, "%6d/", total);
-      fprintf(stderr, "%6d", filelen);
+      fprintf(stderr, "%6ld/", total);
+      fprintf(stderr, "%6ld", filelen);
       fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b");
     }
   }

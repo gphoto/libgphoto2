@@ -48,6 +48,7 @@
 #define CHECK_PTP_RC(result)	{uint16_t r=(result); if (r!=PTP_RC_OK) return r;}
 //#define CHECK_PTP_RC_free(result, free_ptr) {uint16_t r=(result); if (r!=PTP_RC_OK) {return r; free(free_ptr);}}
 
+#if 0
 static void
 ptp_debug (PTPParams *params, const char *format, ...)
 {  
@@ -60,6 +61,7 @@ ptp_debug (PTPParams *params, const char *format, ...)
                 vfprintf (stderr, format, args);
         va_end (args);
 }  
+#endif
 
 static void
 ptp_error (PTPParams *params, const char *format, ...)

@@ -248,6 +248,7 @@ pdc640_ping_low (GPPort *port)
 	return (GP_OK);
 }
 
+#if 0
 static int
 pdc640_push_button (GPPort *port)
 {
@@ -257,6 +258,7 @@ pdc640_push_button (GPPort *port)
 
 	return (GP_OK);
 }
+#endif
 
 static int
 pdc640_ping_high (GPPort *port)

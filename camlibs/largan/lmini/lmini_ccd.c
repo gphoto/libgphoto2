@@ -71,6 +71,9 @@ void largan_ccd2dib(char *pData, char *pDib, long dwDibRowBytes, int nCcdFactor)
 
 /************************************************/
 
+    Cb = 0;
+    Cr = 0;
+
     pre_y = 0;
     pre_cb = 0;
     pre_cr = 0;
@@ -191,6 +194,7 @@ static void dhuf(int flag)
     int     temp1;
 
     code_leng = 2;
+    val_leng = 0;
     temp_s = (int) in_string;
     temp_s >>= 14;
 
@@ -263,7 +267,7 @@ static void fetchstr(int shift_bit, int val_flag, int flag)
 {
     int    temp_val;
     int     value1, value2;
-    int     temp;
+    int     temp = 0;
 
     temp_val = (int) in_string;
     temp_val >>= (16 - shift_bit);

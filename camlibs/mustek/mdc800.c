@@ -73,11 +73,13 @@ camera_abilities (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
+#if 0
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
 	return (GP_OK);
 }
+#endif
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
@@ -191,6 +193,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *ctx)
 	return (GP_OK);
 }
 
+#if 0
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
@@ -203,6 +206,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 	return (GP_OK);
 }
+#endif
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,

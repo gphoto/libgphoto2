@@ -88,6 +88,7 @@ _get_number_images(Camera *camera) {
 	return reply[0] | (reply[1]<<8);
 }
 
+#if 0
 static void
 _mult_64words(short *result, short *in, short *mult) {
 	int i;
@@ -95,6 +96,7 @@ _mult_64words(short *result, short *in, short *mult) {
 	for (i=0;i<64;i++)
 		result[i] = in[i] * mult[i];
 }
+#endif
 
 static int
 decomp_dct(
@@ -788,7 +790,7 @@ static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	       void *data, GPContext *context)
 {
-	Camera *camera;
+	/* Camera *camera; */
 
 	/*
 	 * Upload the file to the camera. Use gp_file_get_data_and_size,
@@ -802,7 +804,7 @@ static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/* Camera *camera = data; */
 
 	/* Delete the file from the camera. */
 
@@ -813,7 +815,7 @@ static int
 delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		 GPContext *context)
 {
-	Camera *camera = data;
+	/* Camera *camera = data; */
 
 	/*
 	 * Delete all files in the given folder. If your camera doesn't have
@@ -918,7 +920,7 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/* Camera *camera = data; */
 
 	/* Get the file info here and write it into <info> */
 
@@ -928,7 +930,7 @@ static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo info, void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/* Camera *camera = data; */
 
 	/* Set the file info here from <info> */
 
@@ -940,7 +942,7 @@ static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		  void *data, GPContext *context)
 {
-	Camera *camera = data;
+	/* Camera *camera = data; */
 
 	/* List your folders here */
 
