@@ -159,14 +159,9 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 
 	CHECK_NULL (list && dir);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-		"Loading camera libraries in '%s'...", dir);
-#ifndef HAVE_LTDL
-	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-		"Note that failing to load *.a and *.la is NOT an error!");
-#endif
-
 #ifdef HAVE_LTDL
+	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+		"Using ltdl to load camera libraries in '%s'...", dir);
 	CHECK_RESULT (gp_list_new (&flist));
 	CHECK_RESULT (gp_list_reset (flist));
 	lt_dlinit ();
@@ -259,6 +254,10 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	gp_list_free (flist);
 #else
 
+	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+		"Loading camera libraries in '%s' without ltdl...", dir);
+	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+		"Note that failing to load *.a and *.la is NOT an error!");
 	/* Open the directory */
 	d = GP_SYSTEM_OPENDIR (dir);
 	if (!d) {
