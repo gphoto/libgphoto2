@@ -6,9 +6,9 @@ CFLAGS= @CFLAGS@ \
 	-DCAMLIBS=\"$(pkglibdir)\"
 
 libgphoto2_la_LDFLAGS = -version-info 0:0:0
-libgphoto2_la_SOURCES = cache.c cache.h \
+libgphoto2_la_SOURCES = \
 			core.c core.h \
-			helpers.c helpers.h \
+			file.c file.h \
 			library.c library.h \
 			settings.c settings.h \
 			util.c util.h
