@@ -439,13 +439,25 @@ Saving file as MVI_5418.AVI                                                     
 
         <para>    
           Solution <xref linkend="hotplug"/> has a huge advantage over 
-          <xref linkend="usbdevfs"/>: It doesn't allow the
+          solution <xref linkend="usbdevfs"/>: It doesn't allow the
           user/group to interfere with or eavesdrop on any other
 	  <acronym>USB</acronym> devices which might be attached, such
 	  as <acronym>USB</acronym> keyboards, fingerprint reader or
 	  similar. The following paragraphs thus describe setting up 
           <xref linkend="hotplug"/>.
         </para>
+
+	<note>
+	  <para>The fact that we are using the name "usbcam" for
+	    setting up permissions for gphoto2 has a reason. In fact,
+	    the permission setup you're doing here has nothing to do
+	    with gphoto2 specifically - any user space software
+	    wanting to access your USB camera will be able to make use
+	    of your camera only if the permissions are correctly set
+	    up. So I (hun) chose the identifier and script name
+	    "usbcam" and not "gphoto2cam" or somethink similar.
+	  </para>
+	</note>
 
         <para>
           On Linux systems, from the 2.4 kernel series on, the kernel supports
@@ -551,7 +563,7 @@ Saving file as MVI_5418.AVI                                                     
                 <listitem>
                   <simpara>
                     The most simple solution is using
-                    usbcam.console<filename></filename>. This
+                    <filename>usbcam.console</filename>. This
                     changes the permissions so that the user owning
                     the console according to the 
                     <systemitem class="library">pam_console</systemitem>
