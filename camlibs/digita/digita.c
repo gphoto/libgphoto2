@@ -144,7 +144,7 @@ static int folder_list_func(CameraFilesystem *fs, const char *folder,
 			continue;
 
 		strncpy(tmppath, path, MIN(strlen(path) - 1, PATH_MAX));
-		tmppath[PATH_MAX] = 0;
+		tmppath[strlen(path) - 1] = 0;
 
 		found = 0;
 		for (i1 = 0; i1 < gp_list_count(list); i1++) {
@@ -268,6 +268,35 @@ static char *digita_file_get(Camera *camera, const char *folder,
 	return data;
 }
 
+/* Colorspace conversion is voodoo-magic to me --jerdfelt */
+static void decode_ycc422(unsigned char *input, int width, int height, unsigned char *output)
+{
+	int x, y;
+
+	for (y = 0; y < height; y++) {
+		for (x = 0; x < width / 2; x++) {
+			int _y, u, y1, v, r, g, b;
+
+#define LIMIT(_x) ((((_x)>0xffffff)?0xff0000:(((_x)<=0xffff)?0:(_x)&0xff0000))>>16)
+			u =  *input++ - 128;
+			_y =  *input++ - 16;
+			v =  *input++ - 128;
+			y1 = *input++ - 16;
+			r = 104635 * v;
+			g = -25690 * u + -53294 * v;
+			b = 132278 * u;
+			_y  *= 76310;
+			y1 *= 76310;
+			*output++ = LIMIT(r + _y);
+			*output++ = LIMIT(g + _y);
+			*output++ = LIMIT(b + _y);
+			*output++ = LIMIT(r + y1);
+			*output++ = LIMIT(g + y1);
+			*output++ = LIMIT(b + y1);
+		}
+	}
+}
+
 static int get_file_func(CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
 			  CameraFile *file, void *user_data)
@@ -306,8 +335,9 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 		gp_file_set_mime_type(file, GP_MIME_JPEG);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		/* FIXME: This is bayer, we should be able to use the */
-		/* builtin bayer functions */
+	{
+		char *ppm;
+
 		memcpy((void *)&height, data + 4, 4);
 		height = ntohl(height);
 		memcpy((void *)&width, data + 8, 4);
@@ -316,19 +346,24 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 		gp_debug_printf(GP_DEBUG_LOW, "digita", "picture size %dx%d", width, height);
 		gp_debug_printf(GP_DEBUG_LOW, "digita", "data size %d", buflen - 16);
 
-		memmove(data, data + 16, buflen - 16);
-		buflen -= 16;
+		sprintf(ppmhead,
+			"P6\n"
+			"# CREATOR: gphoto2, digita library\n"
+			"%i %i\n"
+			"255\n", width, height);
+		ppm = malloc(strlen(ppmhead) + (width * height * 3));
+		if (!ppm)
+			return -1;
 
-		gp_file_set_data_and_size(file, data, buflen);
+		strcpy(ppm, ppmhead);
 
-		sprintf(ppmhead, "P6\n%i %i\n255\n", width, height);
-		gp_file_set_mime_type(file, GP_MIME_RAW);
-		gp_file_set_header(file, ppmhead);
-		gp_file_set_width_and_height(file, width, height);
-		gp_file_set_conversion_method(file,
-					GP_FILE_CONVERSION_METHOD_JOHANNES);
-		gp_file_convert(file, GP_MIME_PPM);
+		decode_ycc422(data + 16, width, height, ppm + strlen(ppmhead));
+		free(data);
+
+		gp_file_set_mime_type(file, GP_MIME_PPM);
+		gp_file_set_data_and_size(file, ppm, strlen(ppmhead) + (width * height * 3));
 		break;
+	}
 	default:
 		return GP_ERROR_NOT_SUPPORTED;
 	}
