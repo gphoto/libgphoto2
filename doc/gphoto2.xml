@@ -427,7 +427,7 @@
           identifies a camera by two values:
           <orderedlist numeration="loweralpha">
             <listitem>
-              <simpara>the <link linkend="port-names"port</link> it 
+              <simpara>the <link linkend="port-names">port</link> it 
                 is connected to</simpara>
             </listitem>
             <listitem>
