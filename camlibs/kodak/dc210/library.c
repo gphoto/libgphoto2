@@ -441,12 +441,14 @@ static int dc210_read_to_file
   fatal_error = 0;
   packets = 0;
 
-  while (1 == (packet_following = dc210_wait_for_response(camera, 0, NULL))){
+  packet_following = dc210_wait_for_response(camera, 0, NULL);
+  while (1 == packet_following){
 	  fatal_error = 1;
 	  for (k = 0; k < RETRIES; k++){
 		  /* read packet */
 	          if (gp_port_read(camera->port, b, blocksize) < 0){
 		          dc210_write_single_char(camera, DC210_ILLEGAL_PACKET);
+			  packet_following = dc210_wait_for_response(camera, 0, NULL);
 			  continue;
 		  };
 		  /* read checksum */
@@ -460,6 +462,7 @@ static int dc210_read_to_file
 			  cs_computed ^= b[l];
 		  if (cs_computed != cs_read){
 			  dc210_write_single_char(camera, DC210_ILLEGAL_PACKET);
+			  packet_following = dc210_wait_for_response(camera, 0, NULL);
 			  continue;
 		  };
 		  /* append to file */
@@ -469,6 +472,7 @@ static int dc210_read_to_file
 			  gp_file_append(f, b, blocksize);
 		  /* request next packet */
 		  dc210_write_single_char(camera, DC210_CORRECT_PACKET);
+		  packet_following = dc210_wait_for_response(camera, 0, NULL);
 		  fatal_error = 0;
 		  if (context != NULL)
 			  gp_context_progress_update (context, progress_id, packets);
