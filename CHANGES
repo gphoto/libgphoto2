@@ -8,7 +8,7 @@ drivers (camlibs):
      - report vendor/model in a new (formatted) fashion
 
    * Canon driver: 
-     - added support for capturing for consumer class cameras, tested on
+     - added support for capturing on consumer class cameras, tested on
        Canon PowerShot S45, Canon PowerShot G2
 
    * PTP driver:
