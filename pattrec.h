@@ -22,6 +22,6 @@
 #ifndef __PATTREC_H__
 #define __PATTREC_H__
 
-int pattrec (int w, int h, unsigned char *gfx);
+int pattrec (int w, int h, unsigned char *igfx);
 
 #endif /* __PATTREC_H__ */
