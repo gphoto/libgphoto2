@@ -118,8 +118,8 @@ const struct canonCamModelData models[] = {
 	{"Canon PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, 0, S10M, S32K},
 	{"Canon Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, 0, S10M, S32K},
 	{"Canon Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, 0, S10M, S32K},
-	{"Canon PowerShot S45",		CANON_PS_S45,		0x04A9, 0x306C, 0, S10M, S32K}, /* 0x306D is S45 in PTP mode */
-	{"Canon PowerShot S230",        CANON_PS_S230,          0x04A9, 0x3070, 0, S99M, S32K}, /* 0x3071 is S230 in PTP mode */
+	{"Canon PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, 0, S99M, S32K}, /* 0x306D is S45 in PTP mode */
+	{"Canon PowerShot S230 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, 0, S99M, S32K}, /* 0x3071 is S230 in PTP mode */
 	{NULL}
 	/* *INDENT-ON* */
 };
