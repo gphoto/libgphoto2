@@ -317,36 +317,30 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 			payload_length = 4 + strlen (dir) + 1 + strlen (file) + 1;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_SET_ATTR, &len,
 						  payload, payload_length);
-			if (len == 4) {
-				/* XXX check camera return value (not canon_usb_dialogue return value
-				 * but the bytes in the packet returned)
-				 */
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "canon_int_set_file_attributes: "
-						 "returned four bytes as expected, "
-						 "we should check if they indicate "
-						 "error or not. Returned data :");
-				gp_log_data ("canon", msg, 4);
-			} else {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "canon_int_set_file_attributes: "
-						 "setting attribute failed!");
+			if (! msg)
 				return GP_ERROR;
-			}
 
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0xe, 0x11, &len, attr, 4, dir,
 						     strlen (dir) + 1, file, strlen (file) + 1,
 						     NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
 		GP_PORT_DEFAULT
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return GP_ERROR;
-	}
+	if (len != 4)
+		return GP_ERROR_CORRUPTED_DATA;
+		
+	GP_LOG (GP_LOG_DATA, "canon_int_set_file_attributes: "
+		"returned four bytes as expected, "
+		 "we should check if they indicate "
+		 "error or not. Returned data :");
+	gp_log_data ("canon", msg, 4);
 
 	return GP_OK;
 }
@@ -373,25 +367,30 @@ canon_int_set_owner_name (Camera *camera, const char *name)
 				 "canon_int_set_owner_name: Name too long (%i chars), "
 				 "max is 30 characters!", strlen (name));
 		gp_camera_status (camera, _("Name too long, max is 30 characters!"));
-		return 0;
+		return GP_OK;
 	}
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_CAMERA_CHOWN,
 						  &len, name, strlen (name) + 1);
+			if (! msg)
+				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x05, 0x12, &len, name,
 						     strlen (name) + 1, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
 		GP_PORT_DEFAULT
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return GP_ERROR;
-	}
+	if (len != 4)
+		return GP_ERROR_CORRUPTED_DATA;
+		
 	return canon_int_identify_camera (camera);
 }
 
