@@ -232,17 +232,16 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 
 	/* Will other packets follow? Has the transaction been successful? */
 	*status = b[1];
-	if (*status != PDC_STATUS_FAIL) {
 
-		/*
-		 * In case of PDC700_PIC or PDC700_THUMB, a sequence number 
-		 * (number of next packet) will follow.
-		 */
-		if ((cmd[3] == PDC700_THUMB) || (cmd[3] == PDC700_PIC))
-			*sequence_number = b[2];
-		else
-			sequence_number = NULL;
-	}
+	/*
+	 * If everything went ok and if we are downloading a picture or
+	 * thumbnail, we got a sequence number (number of next packet).
+	 */
+	if ((*status != PDC_STATUS_FAIL) && ((cmd[3] == PDC700_THUMB) ||
+					     (cmd[3] == PDC700_PIC)))
+		*sequence_number = b[2];
+	else
+		sequence_number = NULL;
 
 	/* Check the checksum */
 	for (checksum = i = 0; i < *b_len - 1; i++)
