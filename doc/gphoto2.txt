@@ -58,7 +58,7 @@ there have to be some helper applications.
 On Linux systems, from the 2.4 kernel series on, the kernel supports
 hotplugging. You may have to compile a kernel with hotplug support if
 you're not already running one. You may have to install the hotplug
-package (http://linux-hotplug.n-dimensional.de/) if you don't have it
+package (http://linux-hotplug.sourceforge.net/) if you don't have it
 already.
 
 You can find out if your kernel has hotplug support by looking for the
