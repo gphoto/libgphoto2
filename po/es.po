@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2003-05-26 22:41+0200\n"
+"POT-Creation-Date: 2003-05-26 23:26+0200\n"
 "PO-Revision-Date: 2002-11-21 11:01-0300\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Castellano <traduc@traduc.org>\n"
@@ -46,7 +46,7 @@ msgstr ""
 "Implementado utilizando documentos encontrados\n"
 "en la web. Permiso acrodado por Vision."
 
-#: camlibs/canon/canon.c:1093
+#: camlibs/canon/canon.c:1102
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
@@ -55,7 +55,7 @@ msgstr ""
 "El nombre '%s' (%i caracteres) es muy largo (%i car.), sólo se permiten 30 "
 "caracteres."
 
-#: camlibs/canon/canon.c:2034
+#: camlibs/canon/canon.c:2043
 msgid "File protected."
 msgstr "Archivo protegido."
 
@@ -398,7 +398,7 @@ msgstr "Conectado a la cámara"
 msgid "Getting thumbnail..."
 msgstr "Obteniendo diapositivas..."
 
-#: camlibs/canon/usb.c:259 camlibs/sipixblink/sipixblink.c:1068
+#: camlibs/canon/usb.c:259 camlibs/sipix/blink.c:1068
 #: camlibs/stv0674/stv0674.c:254
 msgid "Could not apply USB settings"
 msgstr "No se puede aplicar las configuraciones USB"
@@ -631,7 +631,7 @@ msgstr "Sin memoria"
 
 #: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
 #: camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:214
-#: camlibs/sipix/web2.c:158 camlibs/smal/ultrapocket.c:126
+#: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:126
 msgid "Downloading image..."
 msgstr "Descargando imagen..."
 
@@ -4150,17 +4150,7 @@ msgstr ""
 "por la utilización de su Olympus C-3030Z\n"
 "para la implementación del soporte USB."
 
-#: camlibs/sipix/sipix.c:199
-msgid ""
-"SiPix Web2\n"
-"Marcus Meissner <marcus@jet.franken.de>\n"
-"Driver for accessing the SiPix Web2 camera."
-msgstr ""
-"SiPix Web2\n"
-"Marcus Meissner <marcus@jet.franken.de>\n"
-"Controlador para acceder la cámara SiPix Web2."
-
-#: camlibs/sipixblink/sipixblink.c:911
+#: camlibs/sipix/blink.c:911
 msgid ""
 "Sipix StyleCam Blink Driver\n"
 "Vincent Sanders <vince@kyllikki.org>\n"
@@ -4169,6 +4159,16 @@ msgstr ""
 "Controlador Sipix StyleCam Blink\n"
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
+
+#: camlibs/sipix/web2.c:629
+msgid ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Driver for accessing the SiPix Web2 camera."
+msgstr ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Controlador para acceder la cámara SiPix Web2."
 
 #: camlibs/smal/smal.c:163
 msgid ""
@@ -4476,7 +4476,7 @@ msgstr "Cargando los controladores para la cámara desde '%s'..."
 msgid "Could not open '%s'"
 msgstr "No se puede abrir '%s'"
 
-#: libgphoto2/gphoto2-abilities-list.c:690
+#: libgphoto2/gphoto2-abilities-list.c:699
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "No se puede encontrar un controlador para '%s'"

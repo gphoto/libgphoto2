@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2003-05-26 22:41+0200\n"
+"POT-Creation-Date: 2003-05-26 23:26+0200\n"
 "PO-Revision-Date: 2002-11-21 11:02+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -49,7 +49,7 @@ msgstr ""
 " 授权。"
 
 # camlibs/canon/canon.c:651
-#: camlibs/canon/canon.c:1093
+#: camlibs/canon/canon.c:1102
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
@@ -57,7 +57,7 @@ msgid ""
 msgstr "名称“%s”(%i 个字符)太长(%i 个字符)，最多允许 30 个字符。"
 
 # camlibs/canon/canon.c:1490
-#: camlibs/canon/canon.c:2034
+#: camlibs/canon/canon.c:2043
 msgid "File protected."
 msgstr "文件已受到保护。"
 
@@ -469,7 +469,7 @@ msgid "Getting thumbnail..."
 msgstr "正在获取缩略图..."
 
 # camlibs/canon/usb.c:215
-#: camlibs/canon/usb.c:259 camlibs/sipixblink/sipixblink.c:1068
+#: camlibs/canon/usb.c:259 camlibs/sipix/blink.c:1068
 #: camlibs/stv0674/stv0674.c:254
 msgid "Could not apply USB settings"
 msgstr "无法应用 USB 设置"
@@ -730,7 +730,7 @@ msgstr "内存耗尽"
 # camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:211
 #: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
 #: camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:214
-#: camlibs/sipix/web2.c:158 camlibs/smal/ultrapocket.c:126
+#: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:126
 msgid "Downloading image..."
 msgstr "正在下载图像..."
 
@@ -4821,17 +4821,7 @@ msgstr ""
 "因为使用了他们的奥林巴斯 C-3030Z\n"
 "以实现 USB 支持。"
 
-#: camlibs/sipix/sipix.c:199
-msgid ""
-"SiPix Web2\n"
-"Marcus Meissner <marcus@jet.franken.de>\n"
-"Driver for accessing the SiPix Web2 camera."
-msgstr ""
-"SiPix Web2\n"
-"Marcus Meissner <marcus@jet.franken.de>\n"
-"用于访问 SiPix Web2 相机的驱动程序。"
-
-#: camlibs/sipixblink/sipixblink.c:911
+#: camlibs/sipix/blink.c:911
 msgid ""
 "Sipix StyleCam Blink Driver\n"
 "Vincent Sanders <vince@kyllikki.org>\n"
@@ -4840,6 +4830,16 @@ msgstr ""
 "Sipix StyleCam Blink 驱动程序\n"
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
+
+#: camlibs/sipix/web2.c:629
+msgid ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Driver for accessing the SiPix Web2 camera."
+msgstr ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"用于访问 SiPix Web2 相机的驱动程序。"
 
 #: camlibs/smal/smal.c:163
 msgid ""
@@ -5182,7 +5182,7 @@ msgid "Could not open '%s'"
 msgstr "无法打开“%s”"
 
 # libgphoto2/gphoto2-abilities-list.c:622
-#: libgphoto2/gphoto2-abilities-list.c:690
+#: libgphoto2/gphoto2-abilities-list.c:699
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "无法为“%s”找到任何驱动程序"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
-"POT-Creation-Date: 2003-05-26 22:41+0200\n"
+"POT-Creation-Date: 2003-05-26 23:26+0200\n"
 "PO-Revision-Date: 2002-01-04 19:25+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -34,14 +34,14 @@ msgid ""
 "the web. Permission given by Vision."
 msgstr ""
 
-#: camlibs/canon/canon.c:1093
+#: camlibs/canon/canon.c:1102
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
 "allowed."
 msgstr ""
 
-#: camlibs/canon/canon.c:2034
+#: camlibs/canon/canon.c:2043
 msgid "File protected."
 msgstr ""
 
@@ -371,7 +371,7 @@ msgstr ""
 msgid "Getting thumbnail..."
 msgstr "Dobivam vzorec %i..."
 
-#: camlibs/canon/usb.c:259 camlibs/sipixblink/sipixblink.c:1068
+#: camlibs/canon/usb.c:259 camlibs/sipix/blink.c:1068
 #: camlibs/stv0674/stv0674.c:254
 #, fuzzy
 msgid "Could not apply USB settings"
@@ -570,7 +570,7 @@ msgstr ""
 
 #: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
 #: camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:214
-#: camlibs/sipix/web2.c:158 camlibs/smal/ultrapocket.c:126
+#: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:126
 #, fuzzy
 msgid "Downloading image..."
 msgstr "Prena¹anje ustavljeno."
@@ -3775,18 +3775,18 @@ msgid ""
 "support implementation."
 msgstr ""
 
-#: camlibs/sipix/sipix.c:199
-msgid ""
-"SiPix Web2\n"
-"Marcus Meissner <marcus@jet.franken.de>\n"
-"Driver for accessing the SiPix Web2 camera."
-msgstr ""
-
-#: camlibs/sipixblink/sipixblink.c:911
+#: camlibs/sipix/blink.c:911
 msgid ""
 "Sipix StyleCam Blink Driver\n"
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
+msgstr ""
+
+#: camlibs/sipix/web2.c:629
+msgid ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Driver for accessing the SiPix Web2 camera."
 msgstr ""
 
 #: camlibs/smal/smal.c:163
@@ -4066,7 +4066,7 @@ msgstr ""
 "Ne morem odpreti:\n"
 " %s"
 
-#: libgphoto2/gphoto2-abilities-list.c:690
+#: libgphoto2/gphoto2-abilities-list.c:699
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr ""

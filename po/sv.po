@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
-"POT-Creation-Date: 2003-05-26 22:41+0200\n"
+"POT-Creation-Date: 2003-05-26 23:26+0200\n"
 "PO-Revision-Date: 2003-01-09 08:13+0100\n"
 "Last-Translator: Stefan Björnelund <stefanb@update.uu.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -48,7 +48,7 @@ msgstr ""
 "Implementerat med hjälp av dokument från\n"
 "nätet. Med tillstånd från Vision."
 
-#: camlibs/canon/canon.c:1093
+#: camlibs/canon/canon.c:1102
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
@@ -56,7 +56,7 @@ msgid ""
 msgstr ""
 "Namnet '%s' (%i tecken) är för långt (%i tecken), maximalt 30 tecken tillåts."
 
-#: camlibs/canon/canon.c:2034
+#: camlibs/canon/canon.c:2043
 msgid "File protected."
 msgstr "Filen skyddad."
 
@@ -397,7 +397,7 @@ msgstr "Ansluten till kamera"
 msgid "Getting thumbnail..."
 msgstr "Hämtar minibild..."
 
-#: camlibs/canon/usb.c:259 camlibs/sipixblink/sipixblink.c:1068
+#: camlibs/canon/usb.c:259 camlibs/sipix/blink.c:1068
 #: camlibs/stv0674/stv0674.c:254
 msgid "Could not apply USB settings"
 msgstr "Kunde inte applicera USB inställningar"
@@ -623,7 +623,7 @@ msgstr "Slut på minne"
 
 #: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
 #: camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:214
-#: camlibs/sipix/web2.c:158 camlibs/smal/ultrapocket.c:126
+#: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:126
 msgid "Downloading image..."
 msgstr "Nerladdning av bild..."
 
@@ -4106,17 +4106,7 @@ msgstr ""
 "Tack till Data Engines (www.dataengines.com)\n"
 "för användingen av deras Olympus C-3030Z för USB-stödet."
 
-#: camlibs/sipix/sipix.c:199
-msgid ""
-"SiPix Web2\n"
-"Marcus Meissner <marcus@jet.franken.de>\n"
-"Driver for accessing the SiPix Web2 camera."
-msgstr ""
-"SiPix Web2\n"
-"Marcus Meissner <marcus@jet.franken.de>\n"
-"Drivrutin för åtkomst av SiPix Web2 kameror."
-
-#: camlibs/sipixblink/sipixblink.c:911
+#: camlibs/sipix/blink.c:911
 msgid ""
 "Sipix StyleCam Blink Driver\n"
 "Vincent Sanders <vince@kyllikki.org>\n"
@@ -4125,6 +4115,16 @@ msgstr ""
 "Sipix StyleCam Blink drivrutin\n"
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
+
+#: camlibs/sipix/web2.c:629
+msgid ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Driver for accessing the SiPix Web2 camera."
+msgstr ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Drivrutin för åtkomst av SiPix Web2 kameror."
 
 #: camlibs/smal/smal.c:163
 msgid ""
@@ -4434,7 +4434,7 @@ msgstr "Laddar kamera-drivrutiner från '%s'..."
 msgid "Could not open '%s'"
 msgstr "Kunde inte öppna '%s'"
 
-#: libgphoto2/gphoto2-abilities-list.c:690
+#: libgphoto2/gphoto2-abilities-list.c:699
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "Kunde inte finna någon drivrutin för '%s'"
