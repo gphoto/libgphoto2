@@ -478,6 +478,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned int datalen;
 	char canon_path[300];
 
+	/* for debugging */
+	char *filetype;
+	char buf[32];
+
 	/* put complete canon path into canon_path */
 	ret = snprintf (canon_path, sizeof (canon_path) - 3, "%s\\%s",
 			gphoto2canonpath (camera, folder, context), filename);
@@ -488,28 +492,40 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR;
 	}
 
+	/* for debugging */
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW: filetype = "thumbnail"; break;
+	case GP_FILE_TYPE_EXIF: filetype = "exif data"; break;
+	case GP_FILE_TYPE_AUDIO: filetype = "audio annotation"; break;
+	case GP_FILE_TYPE_NORMAL: filetype = "file itself"; break;
+	default: snprintf(buf, sizeof(buf), "unknown type %d", type); filetype = buf; break;
+	}
 	GP_DEBUG ("get_file_func: folder '%s' filename '%s' (i.e. '%s'), getting %s",
-		  folder, filename, canon_path,
-		  (type == GP_FILE_TYPE_PREVIEW) ? "thumbnail" : "file itself");
+		  folder, filename, canon_path, filetype);
 
 	/* preparation, if it is _PREVIEW or _EXIF we get the thumbnail name */
-	if (type == GP_FILE_TYPE_PREVIEW || type == GP_FILE_TYPE_EXIF) {
+	if ((type == GP_FILE_TYPE_PREVIEW) || (type == GP_FILE_TYPE_EXIF)) {
 		thumbname = canon_int_filename2thumbname (camera, canon_path);
 		if (thumbname == NULL) {
-			/* no thumbnail available */
 			gp_context_error (context,
 					  _("No thumbnail could be found for %s"),
 					  canon_path);
-			ret = GP_ERROR;
-		} 
+			return(GP_ERROR_FILE_NOT_FOUND);
+		}
 	}
 
-	/* preparation, if it is _PREVIEW or _EXIF we get the thumbnail name */
+	/* preparation, if it is _AUDIO we get the audio file name */
 	if (type == GP_FILE_TYPE_AUDIO) {
 		audioname = canon_int_filename2audioname (camera, canon_path);
+		if (audioname == NULL) {
+			gp_context_error (context,
+					  _("No audio file could be found for %s"),
+					  canon_path);
+			return(GP_ERROR_FILE_NOT_FOUND);
+		}
 	}
 
-	/* fetch image/thumbnail/exif */	
+	/* fetch file/thumbnail/exif/audio/whatever */
 	switch (type) {
 		case GP_FILE_TYPE_NORMAL:
 			ret = canon_int_get_file (camera, canon_path, &data, &datalen,
@@ -535,18 +551,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 							       attr, context);
 			}
 			break;
+
 		case GP_FILE_TYPE_AUDIO:
-			if ((audioname != NULL) && (*audioname != '\0')) {
+			if (*audioname != '\0') {
 				/* extra audio file */
 				ret = canon_int_get_file (camera, audioname, &data, &datalen,
-							  context);				
+							  context);
 			} else {
-				gp_context_error (context,
-						  _("No audio file could be found for %s"),
-						  canon_path);
-				ret = GP_ERROR;
+				/* internal audio file; not handled yet */
+				ret = GP_ERROR_NOT_SUPPORTED;
 			}
 			break;
+
 		case GP_FILE_TYPE_PREVIEW:
 #ifdef HAVE_EXIF
 			/* Check if we have libexif, it is an image and it is not
@@ -563,21 +579,22 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			}
 #endif /* HAVE_EXIF */
 			if (*thumbname == '\0') {
-				/* file internal thumbnail */
+                                /* file internal thumbnail */
 				ret = canon_int_get_thumbnail (camera, canon_path, &data,
 							       &datalen, context);
 			} else {
-				/* extra thumbnail file */
+                                /* extra thumbnail file */
 				ret = canon_int_get_file (camera, thumbname, &data, &datalen,
 							  context);
 			}
 			break;
+
 		case GP_FILE_TYPE_EXIF:
 #ifdef HAVE_EXIF
 			/* the PS A70 does not support EXIF */
 			if (camera->pl->md->model == CANON_PS_PRO70)
 				return (GP_ERROR_NOT_SUPPORTED);
-				
+
 			if (*thumbname == '\0') {
 				/* file internal thumbnail with EXIF data */
 				ret = canon_int_get_thumbnail (camera, canon_path, &data,
@@ -591,7 +608,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			GP_DEBUG ("get_file_func: EXIF file type requested but no libexif");
 			return (GP_ERROR_NOT_SUPPORTED);
 #endif /* HAVE_EXIF */
-			break;		
+			break;
+
 		default:
 			GP_DEBUG ("get_file_func: unsupported file type %i", type);
 			return (GP_ERROR_NOT_SUPPORTED);
@@ -617,7 +635,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	/* do different things with the data fetched above */
-	
+	/* FIXME: For which file type(s) should we gp_file_set_name (file, filename);?
 	switch (type) {
 		case GP_FILE_TYPE_PREVIEW:
 			/* Either this camera model does not support EXIF,
@@ -648,8 +666,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
 			gp_file_set_name (file, filename);
 			break;
-	        case GP_FILE_TYPE_AUDIO:
+
+		case GP_FILE_TYPE_AUDIO:
 			gp_file_set_mime_type (file, GP_MIME_WAV);
+			gp_file_set_data_and_size (file, data, datalen);
+			gp_file_set_name (file, filename);
+			break;
+
 		case GP_FILE_TYPE_NORMAL:
 			gp_file_set_mime_type (file, filename2mimetype (filename));
 			gp_file_set_data_and_size (file, data, datalen);
