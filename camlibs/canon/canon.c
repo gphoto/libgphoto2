@@ -534,58 +534,58 @@ canon_int_serial_ready (Camera *camera)
 	camera->pl->first_init = 0;
 
 	if (!strcmp ("DE300 Canon Inc.", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Powershot A5");
+		gp_camera_status (camera, "PowerShot A5");
 		camera->pl->model = CANON_PS_A5;
 		if (camera->pl->speed > 57600)
 			camera->pl->slow_send = 1;
 		camera->pl->A5 = 1;
 	} else if (!strcmp ("Canon PowerShot A5 Zoom", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Powershot A5 Zoom");
+		gp_camera_status (camera, "PowerShot A5 Zoom");
 		camera->pl->model = CANON_PS_A5_ZOOM;
 		if (camera->pl->speed > 57600)
 			camera->pl->slow_send = 1;
 		camera->pl->A5 = 1;
 	} else if (!strcmp ("Canon PowerShot A50", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a Powershot A50");
+		gp_camera_status (camera, "Detected a PowerShot A50");
 		camera->pl->model = CANON_PS_A50;
 		if (camera->pl->speed > 57600)
 			camera->pl->slow_send = 1;
 	} else if (!strcmp ("Canon PowerShot S20", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a Powershot S20");
+		gp_camera_status (camera, "Detected a PowerShot S20");
 		camera->pl->model = CANON_PS_S20;
 	} else if (!strcmp ("Canon PowerShot G1", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a Powershot G1");
+		gp_camera_status (camera, "Detected a PowerShot G1");
 		camera->pl->model = CANON_PS_G1;
 	} else if (!strcmp ("Canon PowerShot A10", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a Powershot A10");
+		gp_camera_status (camera, "Detected a PowerShot A10");
 		camera->pl->model = CANON_PS_A10;
 	} else if (!strcmp ("Canon PowerShot A20", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a Powershot A20");
+		gp_camera_status (camera, "Detected a PowerShot A20");
 		camera->pl->model = CANON_PS_A20;
 	} else if (!strcmp ("Canon EOS D30", camera->pl->psa50_id)) {
 		gp_camera_status (camera, "Detected a EOS D30");
 		camera->pl->model = CANON_EOS_D30;
 	} else if (!strcmp ("Canon PowerShot Pro90 IS", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a Powershot Pro90 IS");
+		gp_camera_status (camera, "Detected a PowerShot Pro90 IS");
 		camera->pl->model = CANON_PS_PRO90_IS;
 	} else if (!strcmp ("Canon PowerShot Pro70", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a Powershot Pro70");
+		gp_camera_status (camera, "Detected a PowerShot Pro70");
 		camera->pl->model = CANON_PS_A70;
 	} else if ((!strcmp ("Canon DIGITAL IXUS", camera->pl->psa50_id))
 		   || (!strcmp ("Canon IXY DIGITAL", camera->pl->psa50_id))
 		   || (!strcmp ("Canon PowerShot S100", camera->pl->psa50_id))
 		   || (!strcmp ("Canon DIGITAL IXUS v", camera->pl->psa50_id))) {
 		gp_camera_status (camera,
-				  "Detected a Digital IXUS series / IXY DIGITAL / Powershot S100 series");
+				  "Detected a Digital IXUS series / IXY DIGITAL / PowerShot S100 series");
 		camera->pl->model = CANON_PS_S100;
 	} else if ((!strcmp ("Canon DIGITAL IXUS 300", camera->pl->psa50_id))
 		   || (!strcmp ("Canon IXY DIGITAL 300", camera->pl->psa50_id))
 		   || (!strcmp ("Canon PowerShot S300", camera->pl->psa50_id))) {
 		gp_camera_status (camera,
-				  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
+				  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / PowerShot S300");
 		camera->pl->model = CANON_PS_S300;
 	} else {
-		gp_camera_status (camera, "Detected a Powershot S10");
+		gp_camera_status (camera, "Detected a PowerShot S10");
 		camera->pl->model = CANON_PS_S10;
 	}
 
@@ -685,27 +685,27 @@ canon_int_usb_ready (Camera *camera)
 		return GP_ERROR;
 	}
 	if (!strcmp ("Canon PowerShot S20", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a Powershot S20");
+		gp_camera_status (camera, "Detected a PowerShot S20");
 		camera->pl->model = CANON_PS_S20;
 		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot S10", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a Powershot S10");
+		gp_camera_status (camera, "Detected a PowerShot S10");
 		camera->pl->model = CANON_PS_S10;
 		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot S30", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a Powershot S30");
+		gp_camera_status (camera, "Detected a PowerShot S30");
 		camera->pl->model = CANON_PS_S30;
 		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot S40", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a Powershot S40");
+		gp_camera_status (camera, "Detected a PowerShot S40");
 		camera->pl->model = CANON_PS_S40;
 		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot G1", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a Powershot G1");
+		gp_camera_status (camera, "Detected a PowerShot G1");
 		camera->pl->model = CANON_PS_G1;
 		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot G2", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a Powershot G2");
+		gp_camera_status (camera, "Detected a PowerShot G2");
 		camera->pl->model = CANON_PS_G2;
 		return GP_OK;
 	} else if ((!strcmp ("Canon DIGITAL IXUS", camera->pl->ident))
@@ -714,22 +714,22 @@ canon_int_usb_ready (Camera *camera)
 		   || (!strcmp ("Canon PowerShot S100", camera->pl->ident))
 		   || (!strcmp ("Canon DIGITAL IXUS v", camera->pl->ident))) {
 		gp_camera_status (camera,
-				  "Detected a Digital IXUS series / IXY DIGITAL / Powershot S100 series");
+				  "Detected a Digital IXUS series / IXY DIGITAL / PowerShot S100 series");
 		camera->pl->model = CANON_PS_S100;
 		return GP_OK;
 	} else if ((!strcmp ("Canon DIGITAL IXUS 300", camera->pl->ident))
 		   || (!strcmp ("Canon IXY DIGITAL 300", camera->pl->ident))
 		   || (!strcmp ("Canon PowerShot S300", camera->pl->ident))) {
 		gp_camera_status (camera,
-				  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
+				  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / PowerShot S300");
 		camera->pl->model = CANON_PS_S300;
 		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot A10", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a Powershot A10");
+		gp_camera_status (camera, "Detected a PowerShot A10");
 		camera->pl->model = CANON_PS_A10;
 		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot A20", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a Powershot A20");
+		gp_camera_status (camera, "Detected a PowerShot A20");
 		camera->pl->model = CANON_PS_A20;
 		return GP_OK;
 	} else if (!strcmp ("Canon EOS D30", camera->pl->ident)) {

@@ -1,20 +1,20 @@
 (read/print this document with a non-proportional font such as courier)
 
 ============================================
-======   Canon Powershot Series       ======
+======   Canon PowerShot Series       ======
 ====  Transfer Protocol Specifications =====
 ============================================
 
 * About this document
 
-The following  document is an overview  of the Canon  Powershot serial
+The following  document is an overview  of the Canon  PowerShot serial
 and USB transfer protocols. It should be a  valid reference for models
-ranging from Powershot A5  to S20.
+ranging from PowerShot A5  to S20.
 
 No  information present  in this   document was  obtained from  Canon.
 Everything is  the result of observations  and logical analysis. It is
 by no means guaranteed to be accurate, nor even right. Nevertheless, a
-lot of people have managed to communicate with their Powershot cameras
+lot of people have managed to communicate with their PowerShot cameras
 using these commands, so they cannot be completely wrong either !
 
 An  implementation of this   communication  protocol was made  for the

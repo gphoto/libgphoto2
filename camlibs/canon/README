@@ -1,20 +1,20 @@
 This driver  is  for the Canon   PowerShot series. It  works  with the
 following models:
 
- - Powershot A50
- - Powershot S10
- - Powershot S20
- - Powershot S30 (under development)
- - Powershot S40 (under development)
- - Powershot S100/ Digital IXUS
- - Powershot IXY Digital
- - Powershot S300 / Digital IXUS 300
- - Powershot IXY Digital 300  (not tested)
- - Powershot G1
- - Powershot G2
- - Powershot A10 (not tested)
- - Powershot A20 (not tested)
- - Powershot Pro90 IS (not tested)
+ - PowerShot A50
+ - PowerShot S10
+ - PowerShot S20
+ - PowerShot S30 (under development)
+ - PowerShot S40 (under development)
+ - PowerShot S100/ Digital IXUS
+ - PowerShot IXY Digital
+ - PowerShot S300 / Digital IXUS 300
+ - PowerShot IXY Digital 300  (not tested)
+ - PowerShot G1
+ - PowerShot G2
+ - PowerShot A10 (not tested)
+ - PowerShot A20 (not tested)
+ - PowerShot Pro90 IS (not tested)
  - EOS D30 (not tested)
 
 The support of the following cameras is mostly there as they were supported
@@ -22,8 +22,8 @@ in gphoto 0.4.x but an API change broke the support as they handle files a
 little differently. If you are interested in fixing it mail 
 gphoto-devel@gphoto.net or philm@users.sourceforge.net :
  
- - Powershot A5
- - Powershot A5 Zoom
+ - PowerShot A5
+ - PowerShot A5 Zoom
   
 
  It doesn't  work with the  PowerShot  350. However, the  PS350 uses a
@@ -51,8 +51,8 @@ Change history
 Version 9 (17-APRIL-2001)
 ---------
 - support added for
-  Powershot S300 / Digital IXUS 300 /Powershot IXY Digital 300
-  Powershot A10 / Powershot A20
+  PowerShot S300 / Digital IXUS 300 /PowerShot IXY Digital 300
+  PowerShot A10 / PowerShot A20
   EOS D30
 
 

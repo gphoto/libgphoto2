@@ -546,7 +546,7 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "canon_get_picture: downloading "
 					 "pictures disabled for cameras: PowerShot A5, "
-					 "Powershot A5 ZOOM");
+					 "PowerShot A5 ZOOM");
 
 			return GP_ERROR_NOT_SUPPORTED;
 #endif /* 0 */
@@ -875,49 +875,49 @@ camera_summary (Camera *camera, CameraText *summary)
 	pretty_number (camera->pl->cached_capacity, a);
 	pretty_number (camera->pl->cached_available, b);
 
-	model = "Canon Powershot";
+	model = "Canon PowerShot";
 	switch (camera->pl->model) {
 		case CANON_PS_A5:
-			model = "Canon Powershot A5";
+			model = "Canon PowerShot A5";
 			break;
 		case CANON_PS_A5_ZOOM:
-			model = "Canon Powershot A5 Zoom";
+			model = "Canon PowerShot A5 Zoom";
 			break;
 		case CANON_PS_A50:
-			model = "Canon Powershot A50";
+			model = "Canon PowerShot A50";
 			break;
 		case CANON_PS_A70:
-			model = "Canon Powershot A70";
+			model = "Canon PowerShot A70";
 			break;
 		case CANON_PS_S10:
-			model = "Canon Powershot S10";
+			model = "Canon PowerShot S10";
 			break;
 		case CANON_PS_S20:
-			model = "Canon Powershot S20";
+			model = "Canon PowerShot S20";
 			break;
 		case CANON_PS_S30:
-			model = "Canon Powershot S30";
+			model = "Canon PowerShot S30";
 			break;
 		case CANON_PS_S40:
-			model = "Canon Powershot S40";
+			model = "Canon PowerShot S40";
 			break;
 		case CANON_PS_G1:
-			model = "Canon Powershot G1";
+			model = "Canon PowerShot G1";
 			break;
 		case CANON_PS_G2:
-			model = "Canon Powershot G2";
+			model = "Canon PowerShot G2";
 			break;
 		case CANON_PS_S100:
-			model = "Canon Powershot S100 / Digital IXUS / IXY DIGITAL";
+			model = "Canon PowerShot S100 / Digital IXUS / IXY DIGITAL";
 			break;
 		case CANON_PS_S300:
-			model = "Canon Powershot S300 / Digital IXUS 300 / IXY DIGITAL 300";
+			model = "Canon PowerShot S300 / Digital IXUS 300 / IXY DIGITAL 300";
 			break;
 		case CANON_PS_A10:
-			model = "Canon Powershot A10";
+			model = "Canon PowerShot A10";
 			break;
 		case CANON_PS_A20:
-			model = "Canon Powershot A20";
+			model = "Canon PowerShot A20";
 			break;
 		case CANON_EOS_D30:
 			model = "Canon EOS D30";
@@ -990,7 +990,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
-	if (!(camera->pl->model == CANON_PS_A5 || camera->pl->model == CANON_PS_A5_ZOOM)) {	/* Tested only on powershot A50 */
+	if (!(camera->pl->model == CANON_PS_A5 || camera->pl->model == CANON_PS_A5_ZOOM)) {	/* Tested only on PowerShot A50 */
 
 		if (!update_dir_cache (camera)) {
 			gp_camera_status (camera, _("Could not obtain directory listing"));
