@@ -1,0 +1,25 @@
+This directory contains drivers for cameras made by Agfa.
+
+List of Cameras known to work with this driver:
+
+   Agfa ePhoto CL18
+
+List of Agfa cameras handled by the Sierra gphoto2 driver:
+
+   Agfa ePhoto 1280
+   Agfa ePhoto 1680
+   Agfa ePhoto 307
+   Agfa ePhoto 780
+   Agfa ePhoto 780C
+				 
+				 
+List of cameras this driver does NOT work with (yet) because
+they use a completely different protocol:
+
+   Agfa ePhoto CL20
+
+
+When support for other Agfa cameras is added it might involve adding
+a subdirectory structure.
+
+
