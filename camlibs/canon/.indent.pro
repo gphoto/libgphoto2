@@ -18,4 +18,11 @@
 --space-after-while
 -T gp_port
 -T Camera
-
+-T GPPort
+-T CameraFilesystem
+-T CameraList
+-T CameraFileType
+-T CameraFile
+-T CameraText
+-T CameraAbilitiesList
+-T CameraWidget
