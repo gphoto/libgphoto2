@@ -1,5 +1,11 @@
 2002-02-18  Lutz Müller <lutz@users.sourceforge.net>
 
+	Per Gilles Grandou's <gilles@grandou.net> request:
+
+	* #undef HAVE_EXIF
+
+2002-02-18  Lutz Müller <lutz@users.sourceforge.net>
+
 	Reported by Patrick Mansfield <patman@aracnet.com>:
 
 	* library.c (sierra_read_packet): At least Nikon CoolPix 880 sets 

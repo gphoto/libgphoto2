@@ -25,6 +25,13 @@
 #include <string.h>
 #include <time.h>
 
+/*
+ * Per Gilles' request, EXIF support disabled for now.
+ */
+#ifdef HAVE_EXIF
+#undef HAVE_EXIF
+#endif
+
 #ifdef HAVE_EXIF
 #include <libexif/exif-data.h>
 #endif
