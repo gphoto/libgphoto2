@@ -302,27 +302,48 @@ int
 gp_filesystem_delete (CameraFilesystem *fs, const char *folder, 
 		      const char *filename)
 {
-        int x,y, shift = 0;
+        int x, y, shift = 0;
 
         for (x = 0; x < fs->count; x++) {
-           if (!strcmp(fs->folder[x]->name, folder)) {
-                for (y = 0; y < fs->folder[x]->count; y++) {
-                        if (!strcmp(fs->folder[x]->file[y]->name, filename))
-                                shift = 1;
-                        if ((shift)&&(y<fs->folder[x]->count-1))
-                                memcpy( &fs->folder[x]->file[y],
-                                        &fs->folder[x]->file[y+1],
-                                        sizeof(fs->folder[x]->file[y]));
-                }
-                if (shift)
-                        fs->folder[x]->count -= 1;
-           }
-        }
+		if (!strcmp (fs->folder[x]->name, folder)) {
+			for (y = 0; y < fs->folder[x]->count; y++) {
+				if (!strcmp (fs->folder[x]->file[y]->name,
+					     filename))
+					shift = 1;
+				if ((shift) && (y < fs->folder[x]->count - 1))
+					memcpy (&fs->folder[x]->file[y],
+						&fs->folder[x]->file[y + 1],
+						sizeof(fs->folder[x]->file[y]));
+			}
+			if (shift) {
+				fs->folder[x]->count--;
+				free(fs->folder[x]->file[fs->folder[x]->count]);
+				return (GP_OK);
+			}
+		}
+	}
+	
+	return (GP_ERROR_FILE_NOT_FOUND);
+}
 
-        if (!shift)
-                return (GP_ERROR_FILE_NOT_FOUND);
+int
+gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
+{
+	int x, y;
 
-        return (GP_OK);
+	if (!fs || !folder)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	for (x = 0; x < fs->count; x++)
+		if (!strncmp(fs->folder[x]->name, folder, strlen (folder))) {
+			for (y = 0; y < fs->folder[x]->count; y++)
+				free (fs->folder[x]->file[y]);
+			free (fs->folder[x]->file);
+			fs->folder[x]->count = 0;
+			return (GP_OK);
+		}
+
+	return (GP_ERROR_DIRECTORY_NOT_FOUND);
 }
 
 int
@@ -392,7 +413,7 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 		for (y = 0; y < fs->folder[x]->count; y++)
 			if (!strcmp (fs->folder[x]->file[y]->name, filename)) {
 				*folder = fs->folder[x]->name;
-				break;
+				return (GP_OK);
 			}
 
 	return (GP_ERROR_FILE_NOT_FOUND);

@@ -36,10 +36,14 @@ int 		  gp_filesystem_populate (CameraFilesystem *fs,
 int 		  gp_filesystem_append   (CameraFilesystem *fs, 
 					  const char *folder, 
 					  const char *filename);
-int 		  gp_filesystem_format   (CameraFilesystem *fs);
-int 		  gp_filesystem_delete   (CameraFilesystem *fs, 
-					  const char *folder, 
-					  const char *filename);
+
+int 		  gp_filesystem_format     (CameraFilesystem *fs);
+int 		  gp_filesystem_delete     (CameraFilesystem *fs, 
+					    const char *folder, 
+					    const char *filename);
+int               gp_filesystem_delete_all (CameraFilesystem *fs,
+					    const char *folder);
+
 int 		  gp_filesystem_count	 (CameraFilesystem *fs, 
 					  const char *folder);
 char*		  gp_filesystem_name     (CameraFilesystem *fs, 
