@@ -67,7 +67,7 @@ struct models{
   unsigned short idProduct;
   char serial;
 } models[] = {
-  {"Creative PC-CAM600",0x041e,0x400b,0},
+  {"Creative:PC-CAM600",0x041e,0x400b,0},
   {NULL,0,0,0}
 };
 
