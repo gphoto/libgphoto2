@@ -32,14 +32,11 @@ typedef enum {
 	GP_CONFIRM_NOTOALL
 } CameraConfirmValue;
 
-typedef int (* CameraMessage)            (Camera *, char *);
 typedef int (* CameraConfirm)            (Camera *, char *);
 
-int  gp_frontend_register (void *dummy1, void *dummy2,
-			   CameraMessage message, CameraConfirm confirm,
-			   void *dummy3);
+int  gp_frontend_register (void *dummy1, void *dummy2, void *dummy3,
+			   CameraConfirm confirm, void *dummy4);
 
-int gp_frontend_message  (Camera *camera, char *message);
 int gp_frontend_confirm  (Camera *camera, char *message);
 
 #endif /* __GPHOTO2_FRONTEND_H__ */

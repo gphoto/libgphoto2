@@ -1,5 +1,12 @@
 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-[camera,frontend].h
+	* libgphoto2/[camera,frontend].c: gp_frontend_message ->
+	  gp_camera_message
+	* camlibs: Reflect above
+
+2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/polaroid/pdc640.c: Patch from Chris. Don't know what's
 	  inside...
 

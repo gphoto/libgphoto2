@@ -1092,7 +1092,7 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 	if (cs->speed>57600 && 
 		(strcmp(camera->model,"Canon PowerShot A50") == 0
 		 || strcmp(camera->model, "Canon PowerShot Pro70") == 0)) {
-		gp_frontend_message(camera,
+		gp_camera_message(camera,
   _("Speeds greater than 57600 are not supported for uploading to this camera"));
 		return GP_ERROR;
 	}
@@ -1137,7 +1137,7 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 				sprintf(buf,"%c%c%c",dir[1],dir[2],dir[3]);
 				dirnum = atoi(buf);
 				if (dirnum == 999) {
-					gp_frontend_message(camera,_("Could not upload, no free folder name available!\n"
+					gp_camera_message(camera,_("Could not upload, no free folder name available!\n"
 										"999CANON folder name exists and has an AUT_9999.JPG picture in it."));
 					return GP_ERROR;
 				}
@@ -1158,12 +1158,12 @@ int camera_folder_put_file (Camera *camera, const char *folder,
 	}
 	
 	if(!psa50_directory_operations(camera, dcf_root_dir, DIR_CREATE)) {
-		gp_frontend_message(camera,"could not create \\DCIM directory");
+		gp_camera_message(camera,"could not create \\DCIM directory");
 		return GP_ERROR;
 	}
 	
 	if(!psa50_directory_operations(camera,destpath, DIR_CREATE)) {
-		gp_frontend_message(camera,"could not create destination directory");
+		gp_camera_message(camera,"could not create destination directory");
 		return GP_ERROR;
 	}
 	

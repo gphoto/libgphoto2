@@ -258,7 +258,7 @@ void dsc_print_message(Camera *camera, char *format, ...) {
         va_end(pvar);
 
         gp_debug_printf(GP_DEBUG_MEDIUM, "panasonic", "%s\n", str);
-        gp_frontend_message(camera, str);
+        gp_camera_message(camera, str);
 }
 
 /* End of dc.c */

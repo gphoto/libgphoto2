@@ -447,7 +447,6 @@ static int
 camera_folder_delete_all (Camera* camera, const char* folder)
 {
         unsigned int not_erased = 0;
-        char tmp[1024];
 
         if (strcmp (folder, "/"))
                 return (GP_ERROR_DIRECTORY_NOT_FOUND);
@@ -456,9 +455,10 @@ camera_folder_delete_all (Camera* camera, const char* folder)
         CHECK (gp_filesystem_format (camera->fs));
 
         if (not_erased) {
-                sprintf (tmp, _("%i pictures could not be deleted because "
-                         "they are protected!"), not_erased);
-                gp_frontend_message (camera, tmp);
+		gp_camera_message (camera,
+				   _("%i pictures could not be deleted "
+				     "because they are protected!"),
+				   not_erased);
         }
 
         return (GP_OK);
@@ -1175,9 +1175,9 @@ localization_file_read (Camera *camera, const char *file_name,
                                 (*data)[*data_size] = d;
                                 (*data_size)++;
                                 if (*data_size == 65536) {
-                                        gp_frontend_message (
-                                                camera,
-                                                _("Localization file too long!"));
+                                        gp_camera_message (
+						camera,
+						_("Localization file too long!"));
                                         fclose (file);
                                         return (FALSE);
                                 }

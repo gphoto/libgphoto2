@@ -2001,7 +2001,7 @@ int psa50_delete_file(Camera *camera, const char *name, const char *dir)
                 return -1;
     }
         if (msg[0] == 0x29) {
-                gp_frontend_message(camera,_("File protected"));
+                gp_camera_message(camera,_("File protected"));
                 return -1;
         }
 
@@ -2014,7 +2014,7 @@ int psa50_delete_file(Camera *camera, const char *name, const char *dir)
  */
 int psa50_put_file_usb(Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
-    gp_frontend_message(camera,_("Not implemented!"));
+    gp_camera_message(camera,_("Not implemented!"));
     return GP_ERROR;
 }
 

@@ -23,26 +23,15 @@
 #include "gphoto2-result.h"
 
 /* Front-end function pointers */
-CameraMessage  gp_fe_message  = NULL;
 CameraConfirm  gp_fe_confirm  = NULL;
 
 int
-gp_frontend_register (void *dummy1, void *dummy2,
-		      CameraMessage message, CameraConfirm confirm,
-		      void *dummy3)
+gp_frontend_register (void *dummy1, void *dummy2, void *dummy3,
+		      CameraConfirm confirm, void *dummy4)
 {
-	gp_fe_message  = message;
 	gp_fe_confirm  = confirm;
 
 	return (GP_OK);
-}
-
-int
-gp_frontend_message (Camera *camera, char *message)
-{
-	if (gp_fe_message)
-		gp_fe_message(camera, message);
-        return(GP_OK);
 }
 
 int

@@ -455,11 +455,10 @@ int dc120_capture (DC120Data *dd, CameraFile *file) {
 	const char *name;
 
 	/* Take the picture to Flash memory */
-	gp_frontend_message (NULL, "Taking picture...");
 	if (dc120_packet_write(dd, cmd_packet, 8, 1) == GP_ERROR)
 		return (GP_ERROR);
 
-	gp_frontend_message (NULL, "Waiting for completion...");
+	gp_camera_status (dd->camera, "Waiting for completion...");
 	if (dc120_wait_for_completion(dd)==GP_ERROR)
 		return (GP_ERROR);
 
