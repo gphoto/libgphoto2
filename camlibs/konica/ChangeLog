@@ -1,3 +1,7 @@
+2002-01-11  Dan Fandrich <dan@coneharvesters.com>
+
+	* library.c: fgetc() returns type int, not char.
+
 2002-01-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* README: Removed duplicate camera models.

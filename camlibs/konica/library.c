@@ -1049,8 +1049,8 @@ localization_file_read (Camera *camera, const char *file_name,
                         unsigned char **data, long int *data_size)
 {
         FILE *file;
-        unsigned long j;
-        char f;
+        unsigned int j;
+        int f;
         unsigned char c[] = "\0\0";
         unsigned long line_number;
         unsigned char checksum;
@@ -1118,7 +1118,7 @@ localization_file_read (Camera *camera, const char *file_name,
                                 fclose (file);
                                 return (GP_ERROR_CORRUPTED_DATA);
                         }
-                        c[j] = f;
+                        c[j] = (char) f;
                         if (j == 1) {
                                 if (sscanf (&c[0], "%X", &d) != 1) {
                                         gp_debug_printf (GP_DEBUG_LOW,
