@@ -34,8 +34,8 @@ As to whether 'autogen.sh' does its job, we are not completely sure.
     prepare step 1 manually. That is, the following commands need to be
     executed in both gphoto2 and gphoto2/libgphoto2_port: 
 
-    - libtoolize --force --copy
-    - gettextize --force --copy
+    - libtoolize --force
+    - gettextize --force
     - aclocal -I /path/to/gphoto2/libgphoto2_port/m4 -I /path/to/other/macros
       (these other macros typically are in
       /opt/gnome/share/aclocal or /usr/share/aclocal)
