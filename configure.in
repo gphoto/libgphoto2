@@ -137,6 +137,7 @@ camlibs/template/Makefile \
 camlibs/kodak/Makefile \
 camlibs/kodak/dc120/Makefile \
 camlibs/kodak/dc240/Makefile \
+camlibs/kodak/dc3200/Makefile \
 camlibs/minolta/Makefile \
 camlibs/minolta/dimagev/Makefile \
 camlibs/stv0680/Makefile \
