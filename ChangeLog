@@ -1,3 +1,7 @@
+2001-11-20  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* configure.in: hopefully really correct checks for libdl and libintl
+
 2001-11-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* configure.in: Check for mcheck.h

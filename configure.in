@@ -23,6 +23,16 @@ dnl Languages
 ALL_LINGUAS="de"
 AM_GNU_GETTEXT
 
+AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
+# same trick as with libdl:
+# if gettext() doesn't require linking against libintl,
+# we don't have to check for dlopen in libintl. Otherwise
+# we may even require libintl.
+dnl AC_CHECK_LIB(intl, gettext, [LIBS="$LIBS -lintl"])
+if test "$gettext_without_libintl" != "true"; then
+        AC_CHECK_LIB(intl, gettext)
+fi
+
 dnl Turn on debugging and all warnings
 CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
 LDFLAGS="$LDFLAGS -g -Wall"
@@ -47,9 +57,17 @@ else
 	dotlibs=".libs"
 fi
 
+dnl
 dnl Checks for libraries.
-dnl Replaced `main' with a function in -ldl: `dlopen'
-AC_CHECK_LIB(dl, dlopen)
+dnl
+
+AC_CHECK_FUNC(dlopen, dlopen_without_libdl=true)
+# if dlopen doesn't require linking against libdl (e.g. FreeBSD)
+# we don't have to check for dlopen in libdl any more
+if test "$dlopen_without_libdl" != "true"; then
+        AC_CHECK_LIB(dl, dlopen)
+fi
+
 dnl Replace `main' with a function in -libs:
 AC_CHECK_LIB(ibs, main)
 
