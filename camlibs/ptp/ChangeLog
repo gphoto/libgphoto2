@@ -1,6 +1,7 @@
 2003-05-01  Hubert Figuiere  <hfiguiere@teaser.fr>
 
-	* library.c: Add DSC-P32 explicitly
+	* library.c: Add Sony DSC-P32 explicitly
+	  Added CoolPix 2000
 
 2003-04-25 Mariusz Woloszyn
 	* library.c: added perror on gp_port_read() and write error; it

@@ -1,6 +1,7 @@
 2003-05-01  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: add explicitly DSC-P32 (was autodetected)
+	  add Coolpix 2000
 
 2003-04-25 Mariusz Woloszyn
 	* Makefile.am: added ptp_test as noinst_PROGRAMS

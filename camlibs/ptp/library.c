@@ -235,6 +235,8 @@ static struct {
 	{"Sony:DSC-S85 (PTP mode)", 0x054c, 0x004e},
 	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e},
 
+	/* Nikon Coolpix 2000 */
+	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302},
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109},
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
