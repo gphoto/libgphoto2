@@ -51,20 +51,15 @@ sq_init (GPPort *port, SQModel *m, SQData *data)
 		SQWRITE (port, 0x0c, 0x06, 0xa0, c, 1);	
 		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);    
 
-		/*  Perhaps the above sequence should be coded as a 
+		/* 
+		 * Perhaps the above sequence should be coded as a 
 		 * separate function because it gets used in capture.
 		 */
 		SQWRITE (port, 0x0c, 0x06, 0xf0, SQ_PING, 1);	
 		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);     
 		sq_read_data (port, c, 4);
 
-		/*
-		 * If all is well, we receive here "09 05 00 26"  
-		 * Translates to "905 &" 
-		 * 
-		 * Paulo Tribolet Abreu <paulotex@gmx.net> reports that
-		 * his camera returns 09 05 01 19.
-		 */
+		/* Different cameras return different strings. */
 		sq_reset (port);
 		SQWRITE (port, 0x0c, 0x06, 0x20, SQ_PING, 1);	
 		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);

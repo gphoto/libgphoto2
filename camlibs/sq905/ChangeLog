@@ -1,3 +1,10 @@
+2003-10-30  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.c: Give credit to individual people (here 
+	  Paulo Tribolet Abreu <paulotex@gmx.net> who reported a special
+	  model) in the ChangeLog, not all over the code to keep the code
+	  readable.
+
 2003-10-29  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* library.c: Reduce memory requirements by first freeing one variable
