@@ -135,8 +135,8 @@ extern long int timezone;
  **/
 
 /* simulate capabilities */
-#define extra_file_for_thumb_of_jpeg (0 == 1)
-#define extra_file_for_thumb_of_crw (0 == 0)
+#define extra_file_for_thumb_of_jpeg FALSE
+#define extra_file_for_thumb_of_crw TRUE
 
 const char *
 canon_int_filename2thumbname (Camera *camera, const char *filename)
@@ -1180,15 +1180,17 @@ canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int 
  **/
 
 static int
-canon_int_handle_jfif_thumb(const unsigned int total, unsigned char **data)
+canon_int_handle_jfif_thumb(unsigned char *data, const unsigned int total,
+			    unsigned char **retdata)
 {
 	int i, j, in;
 	unsigned char *thumb;
-	if (data == NULL) {
-		GP_DEBUG ("NULL data");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
-	*data = NULL;
+      
+	CHECK_PARAM_NULL(data);
+	CHECK_PARAM_NULL(retdata);
+
+	*retdata = NULL;
+
 	/* pictures are JFIF files */
 	/* we skip the first FF D8 */
 	i = 3;
@@ -1204,22 +1206,22 @@ canon_int_handle_jfif_thumb(const unsigned int total, unsigned char **data)
 	}
 
 	while (i < total) {
-		if (*data[i] == JPEG_ESC) {
-			if (*data[i + 1] == JPEG_BEG &&
-			    ((*data[i + 3] == JPEG_SOS)
-			     || (*data[i + 3] == JPEG_A50_SOS))) {
+		if (data[i] == JPEG_ESC) {
+			if (data[i + 1] == JPEG_BEG &&
+			    ((data[i + 3] == JPEG_SOS)
+			     || (data[i + 3] == JPEG_A50_SOS))) {
 				in = 1;
-			} else if (*data[i + 1] == JPEG_END) {
+			} else if (data[i + 1] == JPEG_END) {
 				in = 0;
-				thumb[j++] = *data[i];
-				thumb[j] = *data[i + 1];
-				*data = thumb;
+				thumb[j++] = data[i];
+				thumb[j] = data[i + 1];
+				*retdata = thumb;
 				return GP_OK;
 			}
 		}
 
 		if (in == 1)
-			thumb[j++] = *data[i];
+			thumb[j++] = data[i];
 		i++;
 
 	}
@@ -1228,13 +1230,17 @@ canon_int_handle_jfif_thumb(const unsigned int total, unsigned char **data)
 
 /**
  * canon_int_handle_exif_thumb:
+ * @data: pointer to the data which contain EXIF data
+ * @length: length of the EXIF data
+ * @retdata: we return the pointer to the thumbnail date here
+ * @Returns: a GP_ERROR code
  *
  * Get information and thumbnail data from EXIF thumbnail.
  * just extracted the code from the old #canon_int_get_thumbnail
  **/
 static int
-canon_int_handle_exif_thumb (unsigned char *data, const char *name, 
-			     const unsigned int length, unsigned char **retdata) {
+canon_int_handle_exif_thumb (unsigned char *data, const unsigned int length, 
+			     unsigned char **retdata) {
 	exifparser exifdat;
 
 	CHECK_PARAM_NULL(data);
@@ -1299,11 +1305,11 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 		 * capabilities or just have a look at the data itself
 		 */
 		case CANON_PS_A70:
-			/* FIXME: This doesnt work */
-			res = canon_int_handle_jfif_thumb(*length, &data);
+			/* XXX does this work? */
+			res = canon_int_handle_jfif_thumb(data, *length, retdata);
 			break;
 		default:
-			res = canon_int_handle_exif_thumb (data, name, *length, retdata);
+			res = canon_int_handle_exif_thumb (data, *length, retdata);
 			break;
 	}
 	if (res != GP_OK) {
