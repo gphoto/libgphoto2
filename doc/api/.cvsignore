@@ -2,6 +2,7 @@
 Makefile
 Makefile.in
 gphoto2-api.html
+scan
 html
 sgml
 tmpl
