@@ -167,7 +167,7 @@ report_result (GPContext *context, short result)
 
 	for (i = 0; ptp_errors[i].txt; i++)
 		if (ptp_errors[i].n == result)
-			gp_context_error (context, dgettext(GETTEXT_PACKAGE, ptp_errors[i].txt));
+			gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_errors[i].txt));
 }
 
 static int
@@ -478,20 +478,20 @@ struct _PTPData {
 typedef struct _PTPData PTPData;
 
 static short
-ptp_read_func (unsigned char *bytes, unsigned int size, void *data)
+ptp_read_func (unsigned char *bytes, unsigned int size, void *data, unsigned int *readbytes)
 {
 	Camera *camera = ((PTPData *)data)->camera;
 	int result;
 
 	/*
-	 * gp_port_read returns (in case of success) the number of bytes
-	 * read. libptp doesn't need that.
+	 * gp_port_read returns (in case of success) the number of bytes read.
 	 */
 	result = gp_port_read (camera->port, bytes, size);
 	if (result==0) result = gp_port_read (camera->port, bytes, size);
-	if (result >= 0)
+	if (result >= 0) {
+		*readbytes = result;
 		return (PTP_RC_OK);
-	else
+	} else
 	{
 		perror("gp_port_read");
 		return (translate_gp_result (result));
@@ -519,26 +519,28 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 }
 
 static short
-ptp_check_int (unsigned char *bytes, unsigned int size, void *data)
+ptp_check_int (unsigned char *bytes, unsigned int size, void *data, unsigned int *rlen)
 {
 	Camera *camera = ((PTPData *)data)->camera;
 	int result;
 
 	/*
 	 * gp_port_check_int returns (in case of success) the number of bytes
-	 * read. libptp doesn't need that.
+	 * read.
 	 */
 
 	result = gp_port_check_int (camera->port, bytes, size);
 	if (result==0) result = gp_port_check_int (camera->port, bytes, size);
-	if (result >= 0)
+	if (result >= 0) {
+		*rlen = result;
 		return (PTP_RC_OK);
-	else
+	} else {
 		return (translate_gp_result (result));
+	}
 }
 
 static short
-ptp_check_int_fast (unsigned char *bytes, unsigned int size, void *data)
+ptp_check_int_fast (unsigned char *bytes, unsigned int size, void *data, unsigned int *rlen)
 {
 	Camera *camera = ((PTPData *)data)->camera;
 	int result;
@@ -550,20 +552,28 @@ ptp_check_int_fast (unsigned char *bytes, unsigned int size, void *data)
 
 	result = gp_port_check_int_fast (camera->port, bytes, size);
 	if (result==0) result = gp_port_check_int_fast (camera->port, bytes, size);
-	if (result >= 0)
+	if (result >= 0) {
+		*rlen = result;
 		return (PTP_RC_OK);
-	else
+	} else {
 		return (translate_gp_result (result));
+	}
 }
 
 
 static void
+#ifdef __GNUC__
+__attribute__((__format__(printf,2,0)))
+#endif
 ptp_debug_func (void *data, const char *format, va_list args)
 {
 	gp_logv (GP_LOG_DEBUG, "ptp", format, args);
 }
 
 static void
+#ifdef __GNUC__
+__attribute__((__format__(printf,2,0)))
+#endif
 ptp_error_func (void *data, const char *format, va_list args)
 {
 	PTPData *ptp_data = data;
@@ -638,6 +648,7 @@ camera_exit (Camera *camera, GPContext *context)
 	}
 	if (camera->port!=NULL)  {
 		/* clear halt */
+		fprintf(stderr,"clearing halt...\n");
 		gp_port_usb_clear_halt
 				(camera->port, GP_PORT_USB_ENDPOINT_IN);
 		gp_port_usb_clear_halt
@@ -775,10 +786,80 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 }
 
+static void
+_value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt) {
+	if (dt == PTP_DTC_STR) {
+		sprintf (txt, "'%s'", data->str);
+		return;
+	}
+	if (dt & PTP_DTC_ARRAY_MASK) {
+		int i;
+
+		sprintf (txt, "a[%d] ", data->a.count);
+		txt += strlen(txt);
+		for ( i=0; i<data->a.count; i++) {
+			_value_to_str(&data->a.v[i], dt & ~PTP_DTC_ARRAY_MASK, txt);
+			txt += strlen(txt);
+			if (i!=data->a.count-1) {
+				sprintf (txt, ",");
+				txt++;
+			}
+		}
+	} else {
+		switch (dt) {
+		case PTP_DTC_UNDEF: 
+			sprintf (txt, "Undefined");
+			break;
+		case PTP_DTC_INT8:
+			sprintf (txt, "%d", data->i8);
+			break;
+		case PTP_DTC_UINT8:
+			sprintf (txt, "%u", data->u8);
+			break; 
+		case PTP_DTC_INT16:
+			sprintf (txt, "%d", data->i16);
+			break;
+		case PTP_DTC_UINT16:
+			sprintf (txt, "%u", data->u16);
+			break;
+		case PTP_DTC_INT32:
+			sprintf (txt, "%d", data->i32);
+			break;
+		case PTP_DTC_UINT32:
+			sprintf (txt, "%u", data->u32);
+			break;
+	/*
+		PTP_DTC_INT64           
+		PTP_DTC_UINT64         
+		PTP_DTC_INT128        
+		PTP_DTC_UINT128      
+	*/
+		default:
+			sprintf (txt, "Unknown %x", dt);
+			break;
+		}
+	}
+	return;
+}
+
+static const char *
+_get_getset(uint8_t gs) {
+	switch (gs) {
+	case PTP_DPGS_Get: return N_("read only");
+	case PTP_DPGS_GetSet: return N_("readwrite");
+	default: return N_("Unknown");
+	}
+	return N_("Unknown");
+}
+
 static int
 camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 {
-	int n;
+	int n, i, j;
+	char *txt;
+	PTPParams *params = &(camera->pl->params);
+	PTPDeviceInfo pdi;
+
 	n = snprintf (summary->text, sizeof (summary->text),
 		_("Model: %s\n"
 		"  device version: %s\n"
@@ -791,79 +872,272 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		camera->pl->params.deviceinfo.SerialNumber,
 		camera->pl->params.deviceinfo.VendorExtensionID,
 		camera->pl->params.deviceinfo.VendorExtensionDesc);
-	if (n>=sizeof(summary->text))
+
+	if (n>=sizeof (summary->text))
 		return GP_OK;
 
-	
+	txt = summary->text + strlen (summary->text);
+
+	/* The information is cached. However, the canon firmware changes
+	 * the available properties in capture mode.
+	 */
+	CPR(context, ptp_getdeviceinfo(&camera->pl->params, &pdi));
+
+        for (i=0;i<pdi.DevicePropertiesSupported_len;i++) {
+		PTPDevicePropDesc dpd;
+		unsigned int dpc = pdi.DevicePropertiesSupported[i];
+		const char *propname = ptp_get_property_description (params, dpc);
+
+		if (propname) {
+			/* string registered for i18n in ptp.c. */
+			sprintf(txt, "%s(0x%04x):", _(propname), dpc);
+		} else {
+			sprintf(txt, "Property 0x%04x:", dpc);
+		}
+		txt = txt+strlen(txt);
+		
+		memset (&dpd, 0, sizeof (dpd));
+		ptp_getdevicepropdesc (params, dpc, &dpd);
+
+		sprintf (txt, "(%s) ",_get_getset(dpd.GetSet));txt += strlen (txt);
+		switch (dpd.FormFlag) {
+		case PTP_DPFF_None:	break;
+		case PTP_DPFF_Range: {
+			sprintf (txt, "Range [");txt += strlen(txt);
+			_value_to_str (&dpd.FORM.Range.MinimumValue, dpd.DataType, txt);
+			txt += strlen(txt);
+			sprintf (txt, " - ");txt += strlen(txt);
+			_value_to_str (&dpd.FORM.Range.MaximumValue, dpd.DataType, txt);
+			txt += strlen(txt);
+			sprintf (txt, ", step ");txt += strlen(txt);
+			_value_to_str (&dpd.FORM.Range.StepSize, dpd.DataType, txt);
+			txt += strlen(txt);
+			sprintf (txt, "] value: ");txt += strlen(txt);
+			txt += strlen(txt);
+			break;
+		}
+		case PTP_DPFF_Enumeration:
+			sprintf (txt, "Enumeration [");txt += strlen(txt);
+			if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
+				sprintf (txt, "\n\t");txt += strlen(txt);
+			}
+			for (j = 0; j<dpd.FORM.Enum.NumberOfValues; j++) {
+				_value_to_str(dpd.FORM.Enum.SupportedValue+j,dpd.DataType,txt);
+				txt += strlen(txt);
+				if (j != dpd.FORM.Enum.NumberOfValues-1) {
+					sprintf (txt, ",");txt += strlen(txt);
+					if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
+						sprintf (txt, "\n\t");txt += strlen(txt);
+					}
+				}
+			}
+			if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
+				sprintf (txt, "\n\t");txt += strlen(txt);
+			}
+			sprintf (txt, "] value: ");txt += strlen(txt);
+			break;
+		}
+		txt += strlen (txt);
+		_value_to_str (&dpd.CurrentValue, dpd.DataType, txt);
+		txt += strlen(txt);
+		sprintf(txt,"\n");
+		txt += strlen(txt);
+        }
 	return (GP_OK);
 }
+
+static int
+have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
+	int i;
+
+	for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len; i++) {
+		if (prop != camera->pl->params.deviceinfo.DevicePropertiesSupported[i])
+			continue;
+		if ((prop & 0xf000) == 0x5000) /* generic property */
+			return 1;
+		if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
+			return 1;
+	}
+	return 0;
+}
+
+typedef int (*get_func)(CameraWidget **widget, char* name, PTPDevicePropDesc *dpd);
+typedef int (*put_func)(CameraWidget *widget, PTPDevicePropDesc *dpd);
+
+static int _get_AUINT8_as_CHAR_ARRAY(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
+	int	j;
+	char value[64];
+
+	gp_widget_new (GP_WIDGET_TEXT, _(name), widget);
+	if (dpd->DataType != PTP_DTC_AUINT8) {
+		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
+	} else {
+		memset(value,0,sizeof(value));
+		for (j=0;j<dpd->CurrentValue.a.count;j++)
+			value[j] = dpd->CurrentValue.a.v[j].u8;
+	}
+	gp_widget_set_value (*widget,value);
+	return (GP_OK);
+}
+
+static int _get_STR(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
+	char value[64];
+
+	gp_widget_new (GP_WIDGET_TEXT, _(name), widget);
+	if (dpd->DataType != PTP_DTC_STR) {
+		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
+		gp_widget_set_value (*widget,value);
+	} else {
+		gp_widget_set_value (*widget,dpd->CurrentValue.str);
+	}
+	return (GP_OK);
+}
+
+
+static int _put_AUINT8_as_CHAR_ARRAY(CameraWidget *widget, PTPDevicePropDesc *dpd) {
+	char *value;
+
+	gp_widget_get_value (widget, &value);
+	fprintf (stderr, "value is %s\n", value);
+	return (GP_OK);
+}
+
+static int _get_UINT32_as_MB(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
+	char value[64];
+
+	gp_widget_new (GP_WIDGET_TEXT, _(name), widget);
+	if (dpd->DataType != PTP_DTC_UINT32) {
+		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
+	} else {
+		sprintf (value,"%i",dpd->CurrentValue.u32/1024/1024);
+	}
+	gp_widget_set_value (*widget,value);
+	return (GP_OK);
+}
+
+static int _get_UINT32_as_time(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
+	time_t	camtime;
+
+	gp_widget_new (GP_WIDGET_DATE, _(name), widget);
+	camtime = dpd->CurrentValue.u32;
+	gp_widget_set_value (*widget,&camtime);
+	return (GP_OK);
+}
+
+static int _put_None(CameraWidget *widget, PTPDevicePropDesc *dpd) {
+	return (GP_ERROR_NOT_SUPPORTED);
+}
+
+struct submenu {
+	char 		*name;
+	uint16_t	propid;
+	uint16_t	vendorid;
+	uint16_t	type;
+	get_func	getfunc;
+	put_func	putfunc;
+};
+
+struct menu {
+	char		*name;
+	struct	submenu	*submenus;
+};
+
+struct submenu camera_settings_menu[] = {
+	{ N_("Camera Owner"), PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
+	{ N_("Camera Model"), PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
+	{ N_("Flash Memory"), PTP_DPC_CANON_FlashMemory, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_MB, _put_None },
+	{ N_("Camera Time"),  PTP_DPC_CANON_UnixTime,    PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_None },
+	{ NULL },
+};
+
+struct menu menus[] = {
+	{ N_("Camera Settings"), camera_settings_menu },
+};
 
 static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *section, *widget;
 	PTPDevicePropDesc dpd;
-	char value[255];
+	int menuno, submenuno;
 
-	memset(&dpd,0,sizeof(dpd));
-	ptp_getdevicepropdesc(&camera->pl->params,PTP_DPC_BatteryLevel,&dpd);
-	GP_DEBUG ("Data Type = 0x%04x",dpd.DataType);
-	GP_DEBUG ("Get/Set = 0x%02x",dpd.GetSet);
-	GP_DEBUG ("Form Flag = 0x%02x",dpd.FormFlag);
-	if (dpd.DataType!=PTP_DTC_UINT8) {
-		ptp_free_devicepropdesc(&dpd);
-		return GP_ERROR_NOT_SUPPORTED;
-	}
-	GP_DEBUG ("Factory Default Value = %0.2x",*(uint8_t *)dpd.FactoryDefaultValue);
-	GP_DEBUG ("Current Value = %0.2x",*(uint8_t *)dpd.CurrentValue);
+	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
+	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
+		gp_widget_new (GP_WIDGET_SECTION, _(menus[menuno].name), &section);
+		gp_widget_append (*window, section);
 
-	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"),
-		window);
-	gp_widget_new (GP_WIDGET_SECTION, _("Power (readonly)"), &section);
-	gp_widget_append (*window, section);
-	switch (dpd.FormFlag) {
-	case PTP_DPFF_Enumeration: {
-		uint16_t i;
-		char tmp[64];
-
-		GP_DEBUG ("Number of values %i",
-			dpd.FORM.Enum.NumberOfValues);
-		gp_widget_new (GP_WIDGET_TEXT, _("Number of values"),&widget);
-		snprintf (value,255,"%i",dpd.FORM.Enum.NumberOfValues);
-		gp_widget_set_value (widget,value);
-		gp_widget_append (section,widget);
-		gp_widget_new (GP_WIDGET_TEXT, _("Supported values"),&widget);
-		value[0]='\0';
-		for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++){
-			snprintf (tmp,6,"|%.3i|",
-			*(uint8_t *)dpd.FORM.Enum.SupportedValue[i]);
-			strncat(value,tmp,6);
+		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
+			struct submenu *cursub = menus[menuno].submenus+submenuno;
+			if (!have_prop(camera,cursub->vendorid,cursub->propid))
+				continue;
+			memset(&dpd,0,sizeof(dpd));
+			ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
+			cursub->getfunc (&widget, cursub->name, &dpd);
+			gp_widget_append (section,widget);
 		}
-		gp_widget_set_value (widget,value);
-		gp_widget_append (section,widget);
-		gp_widget_new (GP_WIDGET_TEXT, _("Current value"),&widget);
-		snprintf (value,255,"%i",*(uint8_t *)dpd.CurrentValue);
-		gp_widget_set_value (widget,value);
-		gp_widget_append (section,widget);
-		break;
-	}
-	case PTP_DPFF_Range: {
-		float value_float;
-                fprintf (stderr,", within range: %d - %d, stepping %d\n", *(uint8_t*)dpd.FORM.Range.MinimumValue, *(uint8_t*)dpd.FORM.Range.MaximumValue, *(uint8_t*)dpd.FORM.Range.StepSize);
-		gp_widget_new (GP_WIDGET_RANGE, _("Power (readonly)"), &widget);
-		gp_widget_append (section,widget);
-		gp_widget_set_range (widget, *(uint8_t*)dpd.FORM.Range.MinimumValue, *(uint8_t*)dpd.FORM.Range.MaximumValue, *(uint8_t*)dpd.FORM.Range.StepSize);
-        	/* this is a write only capability */
-        	value_float = *(uint8_t *)dpd.CurrentValue;
-        	gp_widget_set_value (widget, &value_float);
-        	gp_widget_changed(widget);
-                break;
-	}
-        case PTP_DPFF_None:
-		break;
-	default: break;
 	}
 	ptp_free_devicepropdesc(&dpd);
+#if 0
+	char value[255];
+	if (have_prop(camera,0,PTP_DPC_BatteryLevel)) {
+		memset(&dpd,0,sizeof(dpd));
+		ptp_getdevicepropdesc(&camera->pl->params,PTP_DPC_BatteryLevel,&dpd);
+		GP_DEBUG ("Data Type = 0x%04x",dpd.DataType);
+		GP_DEBUG ("Get/Set = 0x%02x",dpd.GetSet);
+		GP_DEBUG ("Form Flag = 0x%02x",dpd.FormFlag);
+		if (dpd.DataType!=PTP_DTC_UINT8) {
+			ptp_free_devicepropdesc(&dpd);
+			return GP_ERROR_NOT_SUPPORTED;
+		}
+		GP_DEBUG ("Factory Default Value = %0.2x",dpd.FactoryDefaultValue.u8);
+		GP_DEBUG ("Current Value = %0.2x",dpd.CurrentValue.u8);
+
+		gp_widget_new (GP_WIDGET_SECTION, _("Power (readonly)"), &section);
+		gp_widget_append (*window, section);
+		switch (dpd.FormFlag) {
+		case PTP_DPFF_Enumeration: {
+			uint16_t i;
+			char tmp[64];
+
+			GP_DEBUG ("Number of values %i",
+				dpd.FORM.Enum.NumberOfValues);
+			gp_widget_new (GP_WIDGET_TEXT, _("Number of values"),&widget);
+			snprintf (value,255,"%i",dpd.FORM.Enum.NumberOfValues);
+			gp_widget_set_value (widget,value);
+			gp_widget_append (section,widget);
+			gp_widget_new (GP_WIDGET_TEXT, _("Supported values"),&widget);
+			value[0]='\0';
+			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++){
+				snprintf (tmp,6,"|%.3i|",dpd.FORM.Enum.SupportedValue[i].u8);
+				strncat(value,tmp,6);
+			}
+			gp_widget_set_value (widget,value);
+			gp_widget_append (section,widget);
+			gp_widget_new (GP_WIDGET_TEXT, _("Current value"),&widget);
+			snprintf (value,255,"%i",dpd.CurrentValue.u8);
+			gp_widget_set_value (widget,value);
+			gp_widget_append (section,widget);
+			break;
+		}
+		case PTP_DPFF_Range: {
+			float value_float;
+			fprintf (stderr,", within range: %d - %d, stepping %d\n", dpd.FORM.Range.MinimumValue.u8, dpd.FORM.Range.MaximumValue.u8, dpd.FORM.Range.StepSize.u8);
+			gp_widget_new (GP_WIDGET_RANGE, _("Power (readonly)"), &widget);
+			gp_widget_append (section,widget);
+			gp_widget_set_range (widget, dpd.FORM.Range.MinimumValue.u8, dpd.FORM.Range.MaximumValue.u8, dpd.FORM.Range.StepSize.u8);
+			/* this is a write only capability */
+			value_float = dpd.CurrentValue.u8;
+			gp_widget_set_value (widget, &value_float);
+			gp_widget_changed(widget);
+			break;
+		}
+		case PTP_DPFF_None:
+			break;
+		default: break;
+		}
+		ptp_free_devicepropdesc(&dpd);
+	}
+#endif
 	return GP_OK;
 }
 
@@ -1398,8 +1672,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 int
 camera_init (Camera *camera, GPContext *context)
 {
-	/*GPPortSettings settings;*/
-	short ret,i;
+	int ret, i, retried = 0;
 
 	/* Make sure our port is a USB port */
 	if (camera->port->type != GP_PORT_USB) {
@@ -1438,27 +1711,30 @@ camera_init (Camera *camera, GPContext *context)
 	 */
 	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
 	/* do we configure port ???*/
-#if 0	
-	/* Configure the port */
-	CR (gp_port_get_settings (camera->port, &settings));
 
-	/* Use the defaults the core parsed */
-	CR (gp_port_set_settings (camera->port, settings));
-#endif
 	/* Establish a connection to the camera */
 	((PTPData *) camera->pl->params.data)->context = context;
-	ret=ptp_opensession (&camera->pl->params, 1);
-	while (ret==PTP_RC_InvalidTransactionID) {
-		camera->pl->params.transaction_id+=10;
+
+	retried = 0;
+	while (1) {
 		ret=ptp_opensession (&camera->pl->params, 1);
-	}
-	if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
-		report_result(context, ret);
-		return (translate_ptp_result(ret));
+		while (ret==PTP_RC_InvalidTransactionID) {
+			camera->pl->params.transaction_id+=10;
+			ret=ptp_opensession (&camera->pl->params, 1);
+		}
+		if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
+			if (retried < 2) { /* try again */
+				retried++;
+				continue;
+			}
+			report_result(context, ret);
+			return (translate_ptp_result(ret));
+		}
+		break;
 	}
 
 	/* Seems HP does not like getdevinfo outside of session 
-	   although it's legel to do so */
+	   although it's legal to do so */
 	/* get device info */
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
 	&camera->pl->params.deviceinfo));

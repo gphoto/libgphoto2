@@ -1,3 +1,17 @@
+2004-08-25 Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp-pack.c, ptp.c, ptp.h: 
+	  - Added length parameters to the read functionality 
+	    to avoid buffer overflows.
+ 	  - Added PTPPropertyValues as generic property values.
+	  - Rewrote all property handling functions.
+	  - Added property array support.
+	  - Move property names from ptpcam to libptp.
+
+	* library.c:
+	  - Print all available property values with names in --summary
+	  - Started generic configuration handling.
+
 2004-08-15  Marcus Meissner  <meissner@suse.de>
 	
 	* library.c: Added Canon PowerShot A85.
@@ -23,6 +37,7 @@
 
 2004-07-16 Mariusz Woloszyn
 	* ptp.h: Added NIKON extension code by Corey Manders 
+
 2004-06-23  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Kodak LS-473

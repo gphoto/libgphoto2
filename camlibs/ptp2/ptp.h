@@ -390,30 +390,47 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 
 /* Property Describing Dataset, Range Form */
 
+union _PTPPropertyValue {
+	char		*str;	/* malloced */
+	uint8_t		u8;
+	int8_t		i8;
+	uint16_t	u16;
+	int16_t		i16;
+	uint32_t	u32;
+	int32_t		i32;
+	/* XXXX: 64bit and 128 bit signed and unsigned missing */
+	struct array {
+		uint32_t	count;
+		union _PTPPropertyValue	*v;	/* malloced, count elements */
+	} a;
+};
+
+typedef union _PTPPropertyValue PTPPropertyValue;
+
 struct _PTPPropDescRangeForm {
-	void *		MinimumValue;
-	void *		MaximumValue;
-	void *		StepSize;
+	PTPPropertyValue 	MinimumValue;
+	PTPPropertyValue 	MaximumValue;
+	PTPPropertyValue 	StepSize;
 };
 typedef struct _PTPPropDescRangeForm PTPPropDescRangeForm;
 
 /* Property Describing Dataset, Enum Form */
 
 struct _PTPPropDescEnumForm {
-	uint16_t	NumberOfValues;
-	void **		SupportedValue;
+	uint16_t		NumberOfValues;
+	PTPPropertyValue	*SupportedValue;	/* malloced */
 };
 typedef struct _PTPPropDescEnumForm PTPPropDescEnumForm;
 
 /* Device Property Describing Dataset (DevicePropDesc) */
 
 struct _PTPDevicePropDesc {
-	uint16_t	DevicePropertyCode;
-	uint16_t	DataType;
-	uint8_t		GetSet;
-	void *		FactoryDefaultValue;
-	void *		CurrentValue;
-	uint8_t		FormFlag;
+	uint16_t		DevicePropertyCode;
+	uint16_t		DataType;
+	uint8_t			GetSet;
+	PTPPropertyValue	FactoryDefaultValue;
+	PTPPropertyValue	CurrentValue;
+	uint8_t			FormFlag;
 	union	{
 		PTPPropDescEnumForm	Enum;
 		PTPPropDescRangeForm	Range;
@@ -449,16 +466,20 @@ typedef struct _PTPCANONFolderEntry PTPCANONFolderEntry;
 #define PTP_DTC_UINT64		0x0008
 #define PTP_DTC_INT128		0x0009
 #define PTP_DTC_UINT128		0x000A
-#define PTP_DTC_AINT8		0x4001
-#define PTP_DTC_AUINT8		0x4002
-#define PTP_DTC_AINT16		0x4003
-#define PTP_DTC_AUINT16		0x4004
-#define PTP_DTC_AINT32		0x4005
-#define PTP_DTC_AUINT32		0x4006
-#define PTP_DTC_AINT64		0x4007
-#define PTP_DTC_AUINT64		0x4008
-#define PTP_DTC_AINT128		0x4009
-#define PTP_DTC_AUINT128	0x400A
+
+#define PTP_DTC_ARRAY_MASK	0x4000
+
+#define PTP_DTC_AINT8		(PTP_DTC_ARRAY_MASK | PTP_DTC_INT8)
+#define PTP_DTC_AUINT8		(PTP_DTC_ARRAY_MASK | PTP_DTC_UINT8)
+#define PTP_DTC_AINT16		(PTP_DTC_ARRAY_MASK | PTP_DTC_INT16)
+#define PTP_DTC_AUINT16		(PTP_DTC_ARRAY_MASK | PTP_DTC_UINT16)
+#define PTP_DTC_AINT32		(PTP_DTC_ARRAY_MASK | PTP_DTC_INT32)
+#define PTP_DTC_AUINT32		(PTP_DTC_ARRAY_MASK | PTP_DTC_UINT32)
+#define PTP_DTC_AINT64		(PTP_DTC_ARRAY_MASK | PTP_DTC_INT64)
+#define PTP_DTC_AUINT64		(PTP_DTC_ARRAY_MASK | PTP_DTC_UINT64)
+#define PTP_DTC_AINT128		(PTP_DTC_ARRAY_MASK | PTP_DTC_INT128)
+#define PTP_DTC_AUINT128	(PTP_DTC_ARRAY_MASK | PTP_DTC_UINT128)
+
 #define PTP_DTC_STR		0xFFFF
 
 /* Device Properties Codes */
@@ -637,7 +658,7 @@ typedef struct _PTPParams PTPParams;
 
 /* raw write functions */
 typedef short (* PTPIOReadFunc)	(unsigned char *bytes, unsigned int size,
-				 void *data);
+				 void *data, unsigned int *readlen);
 typedef short (* PTPIOWriteFunc)(unsigned char *bytes, unsigned int size,
 				 void *data);
 /*
@@ -649,10 +670,18 @@ typedef uint16_t (* PTPIOSendData)	(PTPParams* params, PTPContainer* ptp,
 					unsigned char *data, unsigned int size);
 typedef uint16_t (* PTPIOGetResp)	(PTPParams* params, PTPContainer* resp);
 typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
-					unsigned char **data);
+					unsigned char **data, unsigned int *recvlen);
 /* debug functions */
-typedef void (* PTPErrorFunc) (void *data, const char *format, va_list args);
-typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args);
+typedef void (* PTPErrorFunc) (void *data, const char *format, va_list args)
+#ifdef __GNUC__
+	__attribute__((__format__(printf,2,0)))
+#endif
+;
+typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args)
+#ifdef __GNUC__
+	__attribute__((__format__(printf,2,0)))
+#endif
+;
 
 struct _PTPParams {
 	/* data layer byteorder */
@@ -696,7 +725,7 @@ uint16_t ptp_usb_senddata	(PTPParams* params, PTPContainer* ptp,
 				unsigned char *data, unsigned int size);
 uint16_t ptp_usb_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_usb_getdata	(PTPParams* params, PTPContainer* ptp, 
-				unsigned char **data);
+				unsigned char **data, unsigned int *readlen);
 uint16_t ptp_usb_event_check	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_usb_event_wait		(PTPParams* params, PTPContainer* event);
 
@@ -737,9 +766,9 @@ uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
 uint16_t ptp_getdevicepropdesc	(PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
 uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint16_t propcode,
-				void** value, uint16_t datatype);
+				PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
-                        	void* value, uint16_t datatype);
+                        	PTPPropertyValue* value, uint16_t datatype);
 
 
 uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
@@ -787,5 +816,7 @@ int ptp_property_issupported	(PTPParams* params, uint16_t property);
 void ptp_free_devicepropdesc	(PTPDevicePropDesc* dpd);
 void ptp_perror			(PTPParams* params, uint16_t error);
 
+const char*
+ptp_get_property_description(PTPParams* params, uint16_t dpc);
 
 #endif /* __PTP_H__ */

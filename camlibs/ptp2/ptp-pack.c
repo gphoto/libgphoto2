@@ -1,4 +1,4 @@
-/* curently this file is included into ptp.c */
+/* currently this file is included into ptp.c */
 
 static inline uint16_t
 htod16p (PTPParams *params, uint16_t var)
@@ -16,7 +16,8 @@ static inline void
 htod16ap (PTPParams *params, unsigned char *a, uint16_t val)
 {
 	if (params->byteorder==PTP_DL_LE)
-		htole16a(a,val); else 
+		htole16a(a,val);
+	else 
 		htobe16a(a,val);
 }
 
@@ -24,7 +25,8 @@ static inline void
 htod32ap (PTPParams *params, unsigned char *a, uint32_t val)
 {
 	if (params->byteorder==PTP_DL_LE)
-		htole32a(a,val); else 
+		htole32a(a,val);
+	else 
 		htobe32a(a,val);
 }
 
@@ -135,7 +137,7 @@ ptp_unpack_uint16_t_array(PTPParams *params, char* data, uint16_t offset, uint16
 #define PTP_di_OperationsSupported	10
 
 static inline void
-ptp_unpack_DI (PTPParams *params, char* data, PTPDeviceInfo *di)
+ptp_unpack_DI (PTPParams *params, char* data, PTPDeviceInfo *di, unsigned int datalen)
 {
 	uint8_t len;
 	unsigned int totallen;
@@ -194,7 +196,7 @@ ptp_unpack_DI (PTPParams *params, char* data, PTPDeviceInfo *di)
 #define PTP_oh				 0
 
 static inline void
-ptp_unpack_OH (PTPParams *params, char* data, PTPObjectHandles *oh)
+ptp_unpack_OH (PTPParams *params, char* data, PTPObjectHandles *oh, unsigned int len)
 {
 	oh->n = ptp_unpack_uint32_t_array(params, data, PTP_oh, &oh->Handler);
 }
@@ -204,7 +206,7 @@ ptp_unpack_OH (PTPParams *params, char* data, PTPObjectHandles *oh)
 #define PTP_sids			 0
 
 static inline void
-ptp_unpack_SIDs (PTPParams *params, char* data, PTPStorageIDs *sids)
+ptp_unpack_SIDs (PTPParams *params, char* data, PTPStorageIDs *sids, unsigned int len)
 {
 	sids->n = ptp_unpack_uint32_t_array(params, data, PTP_sids,
 	&sids->Storage);
@@ -221,7 +223,7 @@ ptp_unpack_SIDs (PTPParams *params, char* data, PTPStorageIDs *sids)
 #define PTP_si_StorageDescription	26
 
 static inline void
-ptp_unpack_SI (PTPParams *params, char* data, PTPStorageInfo *si)
+ptp_unpack_SI (PTPParams *params, char* data, PTPStorageInfo *si, unsigned int len)
 {
 	uint8_t storagedescriptionlen;
 
@@ -320,7 +322,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, char** oidataptr)
 }
 
 static inline void
-ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi)
+ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi, unsigned int len)
 {
 	uint8_t filenamelen;
 	uint8_t capturedatelen;
@@ -406,46 +408,83 @@ ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi)
 }
 
 /* Custom Type Value Assignement (without Length) macro frequently used below */
-#define CTVAL(type,func,target)  {					\
-		*target = malloc(sizeof(type));				\
-		**(type **)target =					\
-			func(data);\
+#define CTVAL(target,func) {			\
+	if (total - *offset < sizeof(target))	\
+		return 0;			\
+	target = func(&data[*offset]);		\
+	*offset += sizeof(target);		\
 }
 
-static inline void
-ptp_unpack_DPV (PTPParams *params, char* data, void** value, uint16_t datatype)
-{
+#define RARR(val,member,func)	{			\
+	int n,j;					\
+	if (total - *offset < sizeof(uint32_t))		\
+		return 0;				\
+	n = dtoh32a (&data[*offset]);			\
+	*offset += sizeof(uint32_t);			\
+							\
+	val->a.count = n;				\
+	val->a.v = malloc(sizeof(val->a.v[0])*n);	\
+	if (!val->a.v) return 0;			\
+	for (j=0;j<n;j++)				\
+		CTVAL(val->a.v[j].member, func);	\
+}
 
+static inline int
+ptp_unpack_DPV (
+	PTPParams *params, unsigned char* data, int *offset, int total,
+	PTPPropertyValue* value, uint16_t datatype
+) {
 	switch (datatype) {
-		case PTP_DTC_INT8:
-			CTVAL(int8_t,dtoh8a,value);
-			break;
-		case PTP_DTC_UINT8:
-			CTVAL(uint8_t,dtoh8a,value);
-			break;
-		case PTP_DTC_INT16:
-			CTVAL(int16_t,dtoh16a,value);
-			break;
-		case PTP_DTC_UINT16:
-			CTVAL(uint16_t,dtoh16a,value);
-			break;
-		case PTP_DTC_INT32:
-			CTVAL(int32_t,dtoh32a,value);
-			break;
-		case PTP_DTC_UINT32:
-			CTVAL(uint32_t,dtoh32a,value);
-			break;
-		/* XXX: other int types are unimplemented */
-		/* XXX: int arrays are unimplemented also */
-		case PTP_DTC_STR:
-		{
-			uint8_t len;
-			(char *)(*value)=ptp_unpack_string(params,data,0,&len);
-			break;
-		}
+	case PTP_DTC_INT8:
+		CTVAL(value->i8,dtoh8a);
+		break;
+	case PTP_DTC_UINT8:
+		CTVAL(value->u8,dtoh8a);
+		break;
+	case PTP_DTC_INT16:
+		CTVAL(value->i16,dtoh16a);
+		break;
+	case PTP_DTC_UINT16:
+		CTVAL(value->u16,dtoh16a);
+		break;
+	case PTP_DTC_INT32:
+		CTVAL(value->i32,dtoh32a);
+		break;
+	case PTP_DTC_UINT32:
+		CTVAL(value->u32,dtoh32a);
+		break;
+	case PTP_DTC_AINT8:
+		RARR(value,i8,dtoh8a);
+		break;
+	case PTP_DTC_AUINT8:
+		RARR(value,u8,dtoh8a);
+		break;
+	case PTP_DTC_AUINT16:
+		RARR(value,u16,dtoh16a);
+		break;
+	case PTP_DTC_AINT16:
+		RARR(value,i16,dtoh16a);
+		break;
+	case PTP_DTC_AUINT32:
+		RARR(value,u32,dtoh32a);
+		break;
+	case PTP_DTC_AINT32:
+		RARR(value,i32,dtoh32a);
+		break;
+	/* XXX: other int types are unimplemented */
+	/* XXX: other int arrays are unimplemented also */
+	case PTP_DTC_STR: {
+		uint8_t len;
+		/* XXX: max size */
+		value->str = ptp_unpack_string(params,data,*offset,&len);
+		*offset += len*2+1;
+		if (!value->str)
+			return 0;
+		break;
 	}
+	}
+	return 1;
 }
-
 
 /* Device Property pack/unpack */
 
@@ -454,215 +493,128 @@ ptp_unpack_DPV (PTPParams *params, char* data, void** value, uint16_t datatype)
 #define PTP_dpd_GetSet			4
 #define PTP_dpd_FactoryDefaultValue	5
 
-/* Custom Type Value Assignement macro frequently used below */
-#define CTVA(type,func,target)  {					\
-		target = malloc(sizeof(type));				\
-		*(type *)target =					\
-			func(&data[PTP_dpd_FactoryDefaultValue+totallen]);\
-			totallen+=sizeof(type);				\
-}
-
-/* Many Custom Types Vale Assignement macro frequently used below */
-
-#define MCTVA(type,func,target,n) {					\
-		uint16_t i;						\
-		for (i=0;i<n;i++) {					\
-			target[i] = malloc(sizeof(type));		\
-			*(type *)target[i] =				\
-			func(&data[PTP_dpd_FactoryDefaultValue+totallen]);\
-			totallen+=sizeof(type);				\
-		}							\
-}
-
-static inline void
-ptp_unpack_DPD (PTPParams *params, char* data, PTPDevicePropDesc *dpd)
+static inline int
+ptp_unpack_DPD (PTPParams *params, char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen)
 {
-	uint8_t len;
-	int totallen=0;
+	int offset=0, ret;
 
+	memset (dpd, 0, sizeof(*dpd));
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_DataType]);
 	dpd->GetSet=dtoh8a(&data[PTP_dpd_GetSet]);
-	dpd->FactoryDefaultValue = NULL;
-	dpd->CurrentValue = NULL;
-	switch (dpd->DataType) {
-		case PTP_DTC_INT8:
-			CTVA(int8_t,dtoh8a,dpd->FactoryDefaultValue);
-			CTVA(int8_t,dtoh8a,dpd->CurrentValue);
-			break;
-		case PTP_DTC_UINT8:
-			CTVA(uint8_t,dtoh8a,dpd->FactoryDefaultValue);
-			CTVA(uint8_t,dtoh8a,dpd->CurrentValue);
-			break;
-		case PTP_DTC_INT16:
-			CTVA(int16_t,dtoh16a,dpd->FactoryDefaultValue);
-			CTVA(int16_t,dtoh16a,dpd->CurrentValue);
-			break;
-		case PTP_DTC_UINT16:
-			CTVA(uint16_t,dtoh16a,dpd->FactoryDefaultValue);
-			CTVA(uint16_t,dtoh16a,dpd->CurrentValue);
-			break;
-		case PTP_DTC_INT32:
-			CTVA(int32_t,dtoh32a,dpd->FactoryDefaultValue);
-			CTVA(int32_t,dtoh32a,dpd->CurrentValue);
-			break;
-		case PTP_DTC_UINT32:
-			CTVA(uint32_t,dtoh32a,dpd->FactoryDefaultValue);
-			CTVA(uint32_t,dtoh32a,dpd->CurrentValue);
-			break;
-		/* XXX: other int types are unimplemented */
-		/* XXX: int arrays are unimplemented also */
-		case PTP_DTC_STR:
-			(char *)dpd->FactoryDefaultValue = ptp_unpack_string
-				(params,data,PTP_dpd_FactoryDefaultValue,&len);
-			totallen=len*2+1;
-			(char *)dpd->CurrentValue = ptp_unpack_string
-				(params, data, PTP_dpd_FactoryDefaultValue + 
-				totallen, &len);
-			totallen+=len*2+1;
-			break;
-	}
-	/* if totallen==0 then Data Type format is not supported by this
-	code or the Data Type is a string (with two empty strings as
-	values). In both cases Form Flag should be set to 0x00 and FORM is
-	not present. */
-	dpd->FormFlag=PTP_DPFF_None;
-	if (totallen==0) return;
 
-	dpd->FormFlag=dtoh8a(&data[PTP_dpd_FactoryDefaultValue+totallen]);
-	totallen+=sizeof(uint8_t);
+	offset = PTP_dpd_FactoryDefaultValue;
+	ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->FactoryDefaultValue, dpd->DataType);
+	if (!ret) goto outofmemory;
+	ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->CurrentValue, dpd->DataType);
+	if (!ret) goto outofmemory;
+
+	/* if offset==0 then Data Type format is not supported by this
+	   code or the Data Type is a string (with two empty strings as
+	   values). In both cases Form Flag should be set to 0x00 and FORM is
+	   not present. */
+
+	dpd->FormFlag=PTP_DPFF_None;
+	if (offset==PTP_dpd_FactoryDefaultValue)
+		return 1;
+
+	dpd->FormFlag=dtoh8a(&data[offset]);
+	offset+=sizeof(uint8_t);
+
 	switch (dpd->FormFlag) {
-		case PTP_DPFF_Range:
-		switch (dpd->DataType) {
-			case PTP_DTC_INT8:
-			CTVA(int8_t,dtoh8a,dpd->FORM.Range.MinimumValue);
-			CTVA(int8_t,dtoh8a,dpd->FORM.Range.MaximumValue);
-			CTVA(int8_t,dtoh8a,dpd->FORM.Range.StepSize);
-			break;
-			case PTP_DTC_UINT8:
-			CTVA(uint8_t,dtoh8a,dpd->FORM.Range.MinimumValue);
-			CTVA(uint8_t,dtoh8a,dpd->FORM.Range.MaximumValue);
-			CTVA(uint8_t,dtoh8a,dpd->FORM.Range.StepSize);
-			break;
-			case PTP_DTC_INT16:
-			CTVA(int16_t,dtoh16a,dpd->FORM.Range.MinimumValue);
-			CTVA(int16_t,dtoh16a,dpd->FORM.Range.MaximumValue);
-			CTVA(int16_t,dtoh16a,dpd->FORM.Range.StepSize);
-			break;
-			case PTP_DTC_UINT16:
-			CTVA(uint16_t,dtoh16a,dpd->FORM.Range.MinimumValue);
-			CTVA(uint16_t,dtoh16a,dpd->FORM.Range.MaximumValue);
-			CTVA(uint16_t,dtoh16a,dpd->FORM.Range.StepSize);
-			break;
-			case PTP_DTC_INT32:
-			CTVA(int32_t,dtoh32a,dpd->FORM.Range.MinimumValue);
-			CTVA(int32_t,dtoh32a,dpd->FORM.Range.MaximumValue);
-			CTVA(int32_t,dtoh32a,dpd->FORM.Range.StepSize);
-			break;
-			case PTP_DTC_UINT32:
-			CTVA(uint32_t,dtoh32a,dpd->FORM.Range.MinimumValue);
-			CTVA(uint32_t,dtoh32a,dpd->FORM.Range.MaximumValue);
-			CTVA(uint32_t,dtoh32a,dpd->FORM.Range.StepSize);
-			break;
-		/* XXX: other int types are unimplemented */
-		/* XXX: int arrays are unimplemented also */
-		/* XXX: does it make any sense: "a range of strings"? */
-		}
+	case PTP_DPFF_Range:
+		ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->FORM.Range.MinimumValue, dpd->DataType);
+		if (!ret) goto outofmemory;
+		ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->FORM.Range.MaximumValue, dpd->DataType);
+		if (!ret) goto outofmemory;
+		ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->FORM.Range.StepSize, dpd->DataType);
+		if (!ret) goto outofmemory;
 		break;
-		case PTP_DPFF_Enumeration:
+	case PTP_DPFF_Enumeration: {
+		int i;
 #define N	dpd->FORM.Enum.NumberOfValues
-		N = dtoh16a(&data[PTP_dpd_FactoryDefaultValue+totallen]);
-		totallen+=sizeof(uint16_t);
-		dpd->FORM.Enum.SupportedValue = malloc(N*sizeof(void *));
-		switch (dpd->DataType) {
-			case PTP_DTC_INT8:
-			MCTVA(int8_t,dtoh8a,dpd->FORM.Enum.SupportedValue,N);
-			break;
-			case PTP_DTC_UINT8:
-			MCTVA(uint8_t,dtoh8a,dpd->FORM.Enum.SupportedValue,N);
-			break;
-			case PTP_DTC_INT16:
-			MCTVA(int16_t,dtoh16a,dpd->FORM.Enum.SupportedValue,N);
-			break;
-			case PTP_DTC_UINT16:
-			MCTVA(uint16_t,dtoh16a,dpd->FORM.Enum.SupportedValue,N);
-			break;
-			case PTP_DTC_INT32:
-			MCTVA(int32_t,dtoh16a,dpd->FORM.Enum.SupportedValue,N);
-			break;
-			case PTP_DTC_UINT32:
-			MCTVA(uint32_t,dtoh16a,dpd->FORM.Enum.SupportedValue,N);
-			break;
-			case PTP_DTC_STR:
-			{
-			int i;
-			for(i=0;i<N;i++)
-			{
-				(char *)dpd->FORM.Enum.SupportedValue[i]=
-					ptp_unpack_string
-					(params,data,PTP_dpd_FactoryDefaultValue
-					+totallen,&len);
-				totallen+=len*2+1;
+		N = dtoh16a(&data[offset]);
+		offset+=sizeof(uint16_t);
+		dpd->FORM.Enum.SupportedValue = malloc(N*sizeof(dpd->FORM.Enum.SupportedValue[0]));
+		if (!dpd->FORM.Enum.SupportedValue)
+			goto outofmemory;
+
+		memset (dpd->FORM.Enum.SupportedValue,0 , N*sizeof(dpd->FORM.Enum.SupportedValue[0]));
+		for (i=0;i<N;i++) {
+			ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->FORM.Enum.SupportedValue[i], dpd->DataType);
+
+			/* Slightly different handling here. The HP PhotoSmart 120
+			 * specifies an enumeration with N in wrong endian
+			 * 00 01 instead of 01 00, so we count the enum just until the
+			 * the end of the packet.
+			 */
+			if (!ret) {
+				if (!i)
+					goto outofmemory;
+				dpd->FORM.Enum.NumberOfValues = i;
+				break;
 			}
-			}
-			break;
+		}
 		}
 	}
+	return 1;
+outofmemory:
+	ptp_free_devicepropdesc(dpd);
+	return 0;
 }
 
 static inline uint32_t
-ptp_pack_DPV (PTPParams *params, void* value, char** dpvptr, uint16_t datatype)
+ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, char** dpvptr, uint16_t datatype)
 {
 	char* dpv=NULL;
 	uint32_t size=0;
 
 	switch (datatype) {
-		case PTP_DTC_INT8:
-			size=sizeof(int8_t);
-			dpv=malloc(size);
-			htod8a(dpv,*(int8_t*)value);
-			break;
-		case PTP_DTC_UINT8:
-			size=sizeof(uint8_t);
-			dpv=malloc(size);
-			htod8a(dpv,*(uint8_t*)value);
-			break;
-		case PTP_DTC_INT16:
-			size=sizeof(int16_t);
-			dpv=malloc(size);
-			htod16a(dpv,*(int16_t*)value);
-			break;
-		case PTP_DTC_UINT16:
-			size=sizeof(uint16_t);
-			dpv=malloc(size);
-			htod16a(dpv,*(uint16_t*)value);
-			break;
-		case PTP_DTC_INT32:
-			size=sizeof(int32_t);
-			dpv=malloc(size);
-			htod32a(dpv,*(int32_t*)value);
-			break;
-		case PTP_DTC_UINT32:
-			size=sizeof(uint32_t);
-			dpv=malloc(size);
-			htod32a(dpv,*(uint32_t*)value);
-			break;
-		/* XXX: other int types are unimplemented */
-		/* XXX: int arrays are unimplemented also */
-		case PTP_DTC_STR:
-		{
-		uint8_t len;
-			size=strlen((char*)value)*2+3;
-			dpv=malloc(size);
-			memset(dpv,0,size);
-			ptp_pack_string(params, (char *)value, dpv, 0, &len);
-		}
+	case PTP_DTC_INT8:
+		size=sizeof(int8_t);
+		dpv=malloc(size);
+		htod8a(dpv,value->i8);
 		break;
+	case PTP_DTC_UINT8:
+		size=sizeof(uint8_t);
+		dpv=malloc(size);
+		htod8a(dpv,value->u8);
+		break;
+	case PTP_DTC_INT16:
+		size=sizeof(int16_t);
+		dpv=malloc(size);
+		htod16a(dpv,value->i16);
+		break;
+	case PTP_DTC_UINT16:
+		size=sizeof(uint16_t);
+		dpv=malloc(size);
+		htod16a(dpv,value->u16);
+		break;
+	case PTP_DTC_INT32:
+		size=sizeof(int32_t);
+		dpv=malloc(size);
+		htod32a(dpv,value->i32);
+		break;
+	case PTP_DTC_UINT32:
+		size=sizeof(uint32_t);
+		dpv=malloc(size);
+		htod32a(dpv,value->u32);
+		break;
+	/* XXX: other int types are unimplemented */
+	/* XXX: int arrays are unimplemented also */
+	case PTP_DTC_STR: {
+		uint8_t len;
+
+		size=strlen(value->str)*2+3;
+		dpv=malloc(size);
+		memset(dpv,0,size);
+		ptp_pack_string(params, value->str, dpv, 0, &len);
+		break;
+	}
 	}
 	*dpvptr=dpv;
 	return size;
 }
-
 
 /*
     PTP USB Event container unpack
@@ -678,7 +630,7 @@ ptp_pack_DPV (PTPParams *params, void* value, char** dpvptr, uint16_t datatype)
 #define PTP_ec_Param3		20
 
 static inline void
-ptp_unpack_EC (PTPParams *params, char* data, PTPUSBEventContainer *ec)
+ptp_unpack_EC (PTPParams *params, char* data, PTPUSBEventContainer *ec, unsigned int len)
 {
 	if (data==NULL)
 		return;
@@ -686,6 +638,7 @@ ptp_unpack_EC (PTPParams *params, char* data, PTPUSBEventContainer *ec)
 	ec->type=dtoh16a(&data[PTP_ec_Type]);
 	ec->code=dtoh16a(&data[PTP_ec_Code]);
 	ec->trans_id=dtoh32a(&data[PTP_ec_TransId]);
+
 	if (ec->length>=(PTP_ec_Param1+4))
 		ec->param1=dtoh32a(&data[PTP_ec_Param1]);
 	else
