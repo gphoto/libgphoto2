@@ -149,10 +149,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
     	Camera *camera = user_data; 
-    	int w, h = 0, buffersize, comp_ratio, k;
-    	unsigned char data[buffersize]; 
-    	unsigned char p_data[w * h];
-    
+    	int i, m, w, h = 0, buffersize, comp_ratio, k;
+    	unsigned char *data; 
+    	unsigned char *p_data = NULL, temp, *ppm;
+	unsigned char gtable[256];
+	char *ptr;
+	int size = 0;
+ 
     	GP_DEBUG ("Downloading pictures!\n");
 
     	/* Get the number of the photo on the camera */
@@ -169,9 +172,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		h = 288;
 		break;
 	}
-    	buffersize = w * h / comp_ratio;
 
-    	memset(data,0,buffersize+1); 
+    	buffersize = w * h / comp_ratio;
+	data = malloc (buffersize + 1);
+	if (!data) return GP_ERROR_NO_MEMORY;
+    	memset (data, 0, buffersize + 1);
+
+	p_data = malloc (w * h);
+	if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
+	memset (p_data, 0, w * h);
+
+	ppm = malloc (w* h * 3);
+	if (!ppm) {free (data); free (p_data); return GP_ERROR_NO_MEMORY;}
+	memset (ppm, 0, w * h * 3);
 
     	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
@@ -181,6 +194,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		sq_read_picture_data (camera->port, data, buffersize);
 		break;
 	default:
+		free (data);
+		free (p_data);
+		free (ppm);
 		return GP_ERROR_NOT_SUPPORTED;
     	}
 
@@ -196,9 +212,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	 * the machine which makes the salt!
     	 */
     
-    	int m = 0;
-
-    	for (m = 0; m < buffersize; m++) { 
+    	for (m = 0; m < buffersize; m++) 
 		switch (comp_ratio) {
 			/* This is an experiment which does not work. 
 			 * But it almost works! 
@@ -213,7 +227,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		default:
 			p_data[m] = data[m];
 		}
-    	}
 
 	/*
 	 * Now we want to get our picture into a file on 
@@ -221,27 +234,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
      	 * Otherwise, the picture will be upside down.  
      	 */
 
-    	int i = 0;    
     	for (i = 0; i <= buffersize/2; ++i) {
-		unsigned char temp;
         	temp = p_data[i];
         	p_data[i] = p_data[buffersize -1 -i];
         	p_data[buffersize - 1 - i] = temp;
     	}    	
-
-        if (!p_data)
-	        return GP_ERROR;
 
 	/* Now put the data into a real PPM picture file! 
 	 * The results are quite nice if comp_ratio = 1.
 	 * But if comp_ratio=2 this procedure still does 
 	 * give the picture back!
 	 */
-
-	char ppm[w* h * 3];
-	unsigned char gtable[256];
-	char *ptr;
-	int size = 0;
 
     	sprintf (ppm,
 		"P6\n"
@@ -270,7 +273,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_gamma_correct_single (gtable, ptr, w * h);
         gp_file_set_mime_type (file, GP_MIME_PPM);
         gp_file_set_name (file, filename); 
-	gp_file_append (file, ppm, size);	
+	gp_file_set_data_and_size (file, ppm, size);
+
+	free (data);
+	free (p_data);
 
         return GP_OK;
 }
