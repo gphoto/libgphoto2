@@ -1,3 +1,10 @@
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Chris Byrne <adapt@ihug.co.nz> found this bug:
+
+	* libgphoto2_port/debug.c: Use "%s" because the string we print can
+	contain characters like "%%%%i%s&%i".
+
 2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2_port/gp_port.c: Print what we received only if we received

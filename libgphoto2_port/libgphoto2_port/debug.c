@@ -166,7 +166,7 @@ gp_port_debug_print_data (int target_debug_level, int debug_level,
 		HEXDUMP_COMPLETE_LINE;
 	}
 	curline[0] = '\0';
-	gp_port_debug_printf (target_debug_level, debug_level, result);
+	gp_port_debug_printf (target_debug_level, debug_level, "%s", result);
 	free (result);
 }
 
