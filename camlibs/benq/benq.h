@@ -16,6 +16,7 @@
 #ifndef __BENQ_H__
 #define __BENQ_H__
 
+#include <inttypes.h>
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
@@ -24,7 +25,7 @@
 struct _CameraPrivateLibrary
 {
 	GPPort *gpdev;
-	u_int8_t *toc;
+	uint8_t *toc;
 };
 
 int benq_init(GPPort *port, GPContext *context);
@@ -32,7 +33,7 @@ int benq_init(GPPort *port, GPContext *context);
 int benq_get_TOC(CameraPrivateLibrary *pl, int *filecount);
 int benq_get_file_name(CameraPrivateLibrary *pl, int index, char *name);
 int benq_get_file (CameraPrivateLibrary *lib, GPContext *context, 
-		u_int8_t **buf, unsigned int *len, int index, int thumbnail);
+		uint8_t **buf, unsigned int *len, int index, int thumbnail);
 int benq_get_file_size(CameraPrivateLibrary *pl, int index, int *size);
 int benq_get_filecount(GPPort *port, int *filecount);
 int benq_delete_all (GPPort *port);

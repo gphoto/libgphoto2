@@ -57,12 +57,12 @@
 
 #define GP_MODULE "gsmart300"
 static int gsmart300_download_data (CameraPrivateLibrary * lib, 
-		int data_type, u_int16_t index, unsigned int size, 
-		u_int8_t * buf);
+		int data_type, uint16_t index, unsigned int size, 
+		uint8_t * buf);
 static int gsmart300_get_FATs (CameraPrivateLibrary * lib);
 static int yuv2rgb (int y, int u, int v, int *r, int *g, int *b);
 static int gsmart300_get_image_thumbnail (CameraPrivateLibrary * lib,
-				       u_int8_t ** buf, unsigned int *len,
+				       uint8_t ** buf, unsigned int *len,
 				       struct GsmartFile *g_file);
 
 #define __GS300_FAT		0
@@ -85,7 +85,7 @@ int
 gsmart300_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 {
 	struct GsmartFile *g_file;
-	u_int16_t fat_index;
+	uint16_t fat_index;
 
 	CHECK (gsmart300_get_file_info (lib, index, &g_file));
 
@@ -116,13 +116,13 @@ gsmart300_delete_all (CameraPrivateLibrary * lib)
 }
 
 int
-gsmart300_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
+gsmart300_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 		     unsigned int *len, unsigned int number)
 {
 	struct GsmartFile *g_file;
-	u_int8_t *p, *lp_jpg, *start_of_file;
-	u_int8_t qIndex, value;
-	u_int8_t *mybuf;
+	uint8_t *p, *lp_jpg, *start_of_file;
+	uint8_t qIndex, value;
+	uint8_t *mybuf;
 	int i;
 	/* NOTE : these varialbes are slightly renamed */
 	int flash_size, data_size, file_size;
@@ -197,7 +197,7 @@ gsmart300_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
 }
 
 int
-gsmart300_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+gsmart300_request_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			  unsigned int *len, unsigned int number, int *type)
 {
 	struct GsmartFile *g_file;
@@ -211,16 +211,16 @@ gsmart300_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 
 
 static int
-gsmart300_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+gsmart300_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			    unsigned int *len, struct GsmartFile *g_file)
 {
 	unsigned int size;
-	u_int8_t *p;
-	u_int8_t *mybuf = NULL;
-	u_int8_t *tmp;
+	uint8_t *p;
+	uint8_t *mybuf = NULL;
+	uint8_t *tmp;
 	unsigned int t_width, t_height;
-	u_int8_t *yuv_p;
-	u_int8_t *rgb_p;
+	uint8_t *yuv_p;
+	uint8_t *rgb_p;
 	unsigned char pbm_header[14];
 
 	p = g_file->fat;
@@ -320,9 +320,9 @@ gsmart300_reset (CameraPrivateLibrary * lib)
 /* buf must be of length n*0x200 */
 /* Pictured are pointed by there index which runs over 0 to npic -1*/
 static int gsmart300_download_data (CameraPrivateLibrary * lib, int data_type,
-				 u_int16_t index, unsigned int size, u_int8_t * buf)
+				 uint16_t index, unsigned int size, uint8_t * buf)
 {
-	u_int16_t fat_index = 0x1fff - index;
+	uint16_t fat_index = 0x1fff - index;
 	int i;
 
 	if (data_type == __GS300_FAT) 
@@ -350,11 +350,11 @@ static int gsmart300_download_data (CameraPrivateLibrary * lib, int data_type,
 static int
 gsmart300_get_FATs (CameraPrivateLibrary * lib)
 {
-	u_int8_t type;
+	uint8_t type;
 	unsigned int index = 0;
 	unsigned int file_index = 0;
-	u_int8_t *p = NULL;
-	u_int8_t buf[14];
+	uint8_t *p = NULL;
+	uint8_t buf[14];
 
 	CHECK (gsmart300_get_file_count(lib));
 

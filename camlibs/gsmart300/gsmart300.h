@@ -28,6 +28,7 @@
 #ifndef __GSMART300_H__
 #define __GSMART300_H__
 #include <gphoto2-camera.h>
+#include <inttypes.h>
 
 #define FLASH_PAGE_SIZE_300 0x200
 #define GSMART_FILE_TYPE_IMAGE 0x00
@@ -40,7 +41,7 @@ struct GsmartFile
 	int width;
 	int height;
 	int index;
-	u_int8_t *fat;
+	uint8_t *fat;
 	int mime_type;
 };
 
@@ -49,7 +50,7 @@ struct _CameraPrivateLibrary
 	GPPort *gpdev;
 	int dirty;
 	int num_files;
-	u_int8_t *fats;
+	uint8_t *fats;
 	struct GsmartFile *files;
 };
 
@@ -60,9 +61,9 @@ int gsmart300_delete_file (CameraPrivateLibrary * lib, unsigned int index);
 int gsmart300_delete_all (CameraPrivateLibrary * lib);
 int gsmart300_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 			  struct GsmartFile **file);
-int gsmart300_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
+int gsmart300_request_file (CameraPrivateLibrary * lib, uint8_t ** buf,
 			 unsigned int *len, unsigned int number);
-int gsmart300_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
+int gsmart300_request_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			      unsigned int *len, unsigned int number, int *type);
 
 #endif /* __GSMART300_H__ */

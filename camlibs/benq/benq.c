@@ -36,7 +36,7 @@ static int
 benq_wait_for_ready(GPPort *port)
 {
 	int timeout = 30;
-	u_int8_t ready = 0;
+	uint8_t ready = 0;
 	while (timeout--) {
 		sleep(1);
 		CHECK (gp_port_usb_msg_read (port, 0x21, 0x0000, 0x0000, 
@@ -50,7 +50,7 @@ benq_wait_for_ready(GPPort *port)
 int
 benq_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 {
-	u_int16_t n_toc_entries;
+	uint16_t n_toc_entries;
 	int toc_size = 0;
 	
 	CHECK (gp_port_usb_msg_read (pl->gpdev, 0x54, 0x0000, 0x0000, 
@@ -84,7 +84,7 @@ benq_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 int
 benq_get_filecount (GPPort *port, int *filecount)
 {
-	u_int16_t response = 0;
+	uint16_t response = 0;
 	CHECK (gp_port_usb_msg_read (port, 0x54, 0x0000, 0x0000, 
 				(char*)&response, 0x02));
 	*filecount = response;
@@ -101,7 +101,7 @@ benq_delete_all (GPPort *port)
 int
 benq_get_file_name (CameraPrivateLibrary *lib, int index, char *name)
 {
-	u_int8_t *p;
+	uint8_t *p;
 
 	p = lib->toc + index*32;
 	memcpy (name, p, 8);
@@ -114,7 +114,7 @@ benq_get_file_name (CameraPrivateLibrary *lib, int index, char *name)
 int
 benq_get_file_size (CameraPrivateLibrary *lib, int index, int *size)
 {	
-	u_int8_t *p;
+	uint8_t *p;
 
 	p = lib->toc + index*32;
 	*size =   (p[0x1c] & 0xff) 
@@ -127,11 +127,11 @@ benq_get_file_size (CameraPrivateLibrary *lib, int index, int *size)
 
 int
 benq_get_file (CameraPrivateLibrary *lib, GPContext *context, 
-		u_int8_t ** data, unsigned int *len, int index, int thumbnail)
+		uint8_t ** data, unsigned int *len, int index, int thumbnail)
 {
-	u_int32_t file_size = 0, aligned_size = 0;
-	u_int32_t addr = 0;
-	u_int8_t *p, *buf;
+	uint32_t file_size = 0, aligned_size = 0;
+	uint32_t addr = 0;
+	uint8_t *p, *buf;
 
 	p = lib->toc + index*32;
 
@@ -167,7 +167,7 @@ benq_get_file (CameraPrivateLibrary *lib, GPContext *context,
 int
 benq_init (GPPort *port, GPContext *context)
 {
-	u_int8_t bytes[7];
+	uint8_t bytes[7];
 	time_t t;
 	struct tm *ftm;
 	int i;
