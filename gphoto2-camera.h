@@ -202,8 +202,4 @@ int gp_camera_set_message_func  (Camera *camera, CameraMessageFunc func,
 int gp_camera_message           (Camera *camera, const char *format, ...);
 int gp_camera_status            (Camera *camera, const char *format, ...);
 
-/* Error reporting */
-int         gp_camera_set_error (Camera *camera, const char *format, ...);
-const char *gp_camera_get_error (Camera *camera);
-
 #endif /* __GPHOTO2_CAMERA_H__ */
