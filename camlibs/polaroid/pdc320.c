@@ -314,7 +314,7 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 {
 	jpeg *myjpeg;
 	chunk *tempchunk;
-	int n, size;
+	int n, size, width, height;
 	unsigned char *data;
 	unsigned char *temp;
 
@@ -344,11 +344,10 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 	default:
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Using Nathan Stenzel's experimental jpeg.c\n");
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "About to make jpeg header\n");
-    if (camera->model[9]=='6')
-        myjpeg = gp_jpeg_header(640,240, 0x11,0x11,0x21, 1,0,0, &chrominance, &luminance,
-            0,0,0, chunk_new_filled(HUFF_00), chunk_new_filled(HUFF_10), NULL, NULL);
-    else if (camera->model[9]=='F')
-        myjpeg = gp_jpeg_header(320,120, 0x11,0x11,0x21, 1,0,0, &chrominance, &luminance,
+    width = data[4]*256 + data[5];
+    height = data[2]*256 + data[3];
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Width=%i\tHeight=%i\n", width, height);
+    myjpeg = gp_jpeg_header(width,height/2, 0x11,0x11,0x21, 1,0,0, &chrominance, &luminance,
             0,0,0, chunk_new_filled(HUFF_00), chunk_new_filled(HUFF_10), NULL, NULL);
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Turning the picture data into a chunk data type\n");
     tempchunk = chunk_new(size);
