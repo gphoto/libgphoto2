@@ -1,3 +1,7 @@
+2004-09-21  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon EOS 20D.
+
 2004-09-11  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Use widget name to mark up config entries.
