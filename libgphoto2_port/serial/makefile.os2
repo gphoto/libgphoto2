@@ -12,7 +12,7 @@ dll: $(IOLIBS)\giserial.dll
 OBJS=unix.o
 
 .c.o:
-   @$(CC) -o $@ $< $(CCFLAGS)
+   $(CC) -o $@ $< $(CCFLAGS)
 
 lib: $(BASEPATH)\lib\giserial.a
 

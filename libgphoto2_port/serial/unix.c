@@ -446,6 +446,7 @@ int gp_port_serial_update(gp_port * dev)
 /* Called to set the baud rate */
 int gp_port_serial_set_baudrate(gp_port * dev)
 {
+#ifndef OS2
 #if HAVE_TERMIOS_H
         struct termios tio;
 
@@ -500,6 +501,23 @@ int gp_port_serial_set_baudrate(gp_port * dev)
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
 #endif
+#else /*ifndef OS2*/
+
+        ULONG rc;
+        ULONG   ulParmLen = 2;     /* Maximum size of the parameter packet */
+        rc = DosDevIOCtl (dev->device_fd, /* Device handle                  */
+                      0x0001,       /* Serial-device control          */
+                      0x0041, /* Sets bit rate                  */
+                      (PULONG) &dev->settings.serial.speed,   /* Points at bit rate             */
+                      sizeof(dev->settings.serial.speed),     /* Maximum size of parameter list */
+                      &ulParmLen,        /* Size of parameter packet       */
+                      NULL,              /* No data packet                 */
+                      0,                 /* Maximum size of data packet    */
+                      NULL);             /* Size of data packet            */
+        if(rc != 0)
+           perror("DosDevIOCtl baudrate error");
+
+#endif /*ifndef OS2*/
 
         return GP_OK;
 }

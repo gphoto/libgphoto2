@@ -4,6 +4,9 @@
 /*#define IOLIBS "./libgphoto2_port"*/
 #define RTLD_LAZY       0x001
 #ifndef HAVE_TERMIOS_H
+#define  INCL_DOSDEVIOCTL   /* DosDevIOCtl values */
+#define IOCTL_ASYNC                        0x0001
+#define ASYNC_SETBAUDRATE                  0x0041
 /* c_cflag bit meaning */
 #define CBAUD   0x0000100f
 #define  B0     0x00000000      /* hang up */
