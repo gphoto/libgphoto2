@@ -358,7 +358,6 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 	int x=0, error=0, count;
 
-	printf("file list\n");
 	if ((!fd->folders)&&(strcmp("/", folder)!=0))
 		return (GP_ERROR);
 

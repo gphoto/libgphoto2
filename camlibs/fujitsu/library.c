@@ -428,7 +428,6 @@ int fujitsu_set_speed (Camera *camera, int speed) {
 		return (GP_ERROR);
 
 	GPIO_SLEEP(10);
-printf("speed change OK\n");
 	return (GP_OK);
 }
 

@@ -69,7 +69,7 @@ int gp_file_save (CameraFile *file, char *filename) {
 
         FILE *fp;
 
-        if ((fp = fopen(filename, "w"))==NULL)
+        if ((fp = fopen(filename, "wb"))==NULL)
                 return (GP_ERROR);
         fwrite(file->data, (size_t)sizeof(char), (size_t)file->size, fp);
         fclose(fp);
