@@ -2,7 +2,7 @@
 				   libgphoto2
 				   ----------
 
-Hello and welcome to the wonderful world of gphoto! This is gphoto2, the 
+Hello and welcome to the wonderful world of gphoto! This is libgphoto2, the 
 successor of gphoto with lots of new features and additional camera
 drivers. 
 
@@ -45,8 +45,9 @@ Then, there are cameras supporting the so-called USB Mass Storage protocol.
 This is a protocol that has been published and lets you access any storage
 device, be it a camera or a disk connected via USB to your computer. As there
 are already drivers for this protocol out there, you don't need an additional
-library like libgphoto2. As of now, the following cameras seem to support the 
-USB Mass Storage protocol:
+library like libgphoto2. As of now, at least the following cameras
+seem to support the USB Mass Storage protocol:
+
  * Casio QV [2x00,3x00,8000]
  * Fuji FinePix S1 Pro, [1400,2400,4700]Zoom, 1300, 4500
  * HP PhotoSmart 315, 618, 912
@@ -59,16 +60,20 @@ USB Mass Storage protocol:
    C-4040Zoom, D-510, E-10
  * Pentax Optio 330
  * Sony DSC-F505(V), DSC-P1, DSC-P5, DSC-P20, DSC-P30, DSC-F707
-Again, those cameras cannot be accessed through libgphoto2.
+
+Again, those cameras *cannot* be accessed through libgphoto2.
 
 Other camera support a protocol called PTP or USB Imaging Devices that has
 been developped by Kodak and other. libgphoto2 does not fully support PTP yet
-and needs some testing. Here is a short list of camera that use this protocol:
+and needs some testing. Here is a short incomplete list of camera that
+use this protocol:
+
  * HP PhotoSmart 318, 612, 715
  * Kodak DC-4800, DX-3215, DX-3500, DX-3600, DX-3700, DX-3900, MC3 and all the
    camera that use Kodak Easy Share(tm) system.
  * Sony DSC-P5, DSC-F707, DSC-P30, DSC-P50, DSC-S75, DSC-S85, MVC-CD300
    (all need user configuration of the camera)
+
 You may try jPhoto <http://jphoto.sourceforge.net/> for ptp cameras
 alternatively if libgphoto2 fails.
 
@@ -89,20 +94,15 @@ The gPhoto2 Manual.
 
 It is available at the following places:
 
- - (non-officially) at
-   http://n-dimensional.de/projects/digicam/The_gPhoto2_Manual/
+ - At the gphoto website: http://gphoto.net/
 
  - In the CVS module gphoto2-manual
-
- - If you are using packages (RPM, DEB, Port, or similar)
-   or compiled yourself:
-   Probably somewhere in /usr/share/doc/*gphoto2*/
 
 The gPhoto2 Manual includes information about setting up USB
 hotplugging.
 
-If you run into problems, you may also consult the doc/FAQ file (or
-wherever your package maintainer put it).
+If you run into problems, you may also consult the FAQ (also included
+in The gPhoto2 Manual).
 
 
 Frontends
@@ -114,7 +114,7 @@ for a short description.
 
 For the GUI lovers, there are for example gtkam (GTK based), and
 GnoCam (GNOME). Additionally, there are plugins for other programs
-available like kio_gphoto (KDE - Konqueror). 
+available like kio_gphoto (KDE - Konqueror).
 
 
 Reporting Bugs

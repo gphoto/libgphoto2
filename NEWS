@@ -1,3 +1,25 @@
+------------------------------------------------------------------------
+libgphoto2-2.1.1
+------------------------------------------------------------------------
+
+On 2002-12-01, after almost five months, we have finally released a new
+version of libgphoto2.
+
+Version 2.1.1 now features support for almost 300 digital cameras.
+
+The most important changes since the the 2.1.0 release are (see
+CHANGES for a complete list):
+
+	- new support for quite a lot of new cameras
+	- improved/fixed support for a lot "old" cameras
+	- libgphoto2 and the gphoto2 command line utility are now
+          separated
+	- also moved documentation to a separate module
+
+Have fun with your photos!
+
+The gphoto2 team.
+
 
 --------------------------------------------------------------------------------
 				gphoto2-2.0beta4
@@ -6,7 +28,7 @@
 Hello lovers of digital cameras, gphoto2-beta4 is out! 
 
 As you probably know, the word beta doesn't keep us from adding lots 
-of new features:   
+of new features:
    * Added/Improved cameras support (Canon PowerShot S30, ...),
    * Most functions report progress and are cancellable,
    * Support for Samsung 800k, PTP cameras,

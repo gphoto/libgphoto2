@@ -1,15 +1,23 @@
 ########################################################################
 # $Id$
 #
-# This file describes how to install gphoto2.
+# This file describes how to install libgphoto2.
 ########################################################################
 
-Follow these steps to build and install gphoto2 from the source
+Follow these steps to build and install libgphoto2 from the source
 code. You don't have to run most of these steps as root, except when
 explicitly required. In fact, you really shouldn't.
 
-In order to get gphoto2 running after installation, you will probably
-want to read doc/FAQ and doc/gphoto2.txt.
+In order to get libgphoto2 running after installation, you will
+probably want to read The gPhoto2 Manual. It is available from the
+homepage:
+
+    http://gphoto.net/
+    http://gphoto.org/
+    http://gphoto.com/
+    http://gphoto.sourceforge.net/
+
+At lease one of these should work at any time.
 
 
 ===============================
@@ -19,60 +27,21 @@ Step 0: Preparing configuration
 If you got your copy of gphoto2 packaged as a .tar.gz or .tar.bz2 tarball, 
 SKIP THIS STEP. 
 
-If you got gphoto2 from CVS, then you will have to prepare for step 1,
+If you got libgphoto2 from CVS, then you will have to prepare for step 1,
 the configuration of the sources.
 
-For that, we supply you with a script called 'autogen.sh'.
+For that, we supply you with a script called 'autogen.sh'. It calls
+several tools in a certain sequence. For autogen.sh to work, you
+require the following tools
 
-As to whether 'autogen.sh' does its job, we are not completely sure.
+	automake
+	autoconf
+	gettext
+	libtool
 
-
-  Debian/Unstable user Lutz says:
-  ===============================
-
-    This skript is far from being perfect and we recommend that you
-    prepare step 1 manually. That is, the following commands need to be
-    executed in both gphoto2 and gphoto2/libgphoto2_port: 
-
-    - libtoolize --force
-    - gettextize --force
-    - aclocal -I /path/to/gphoto2/libgphoto2_port/m4 -I /path/to/other/macros
-      (these other macros typically are in
-      /opt/gnome/share/aclocal or /usr/share/aclocal)
-    - autoheader
-    - automake --add-missing --gnu
-    - autoconf
-
-    Not surprisingly, above commands will only work if you have 
-
-    - autoconf
-    - automake (version >= 1.5)
-    - libtool (version >= 1.4)
-    - gettext (version >= 0.10.35)
-
-    installed on your system. For example, if you use
-      autoconf 2.53-4
-      automake 1.4-p4-1.1
-      libtool  1.4.2-4
-      gettext  0.10.40-6
-    you are on the right track.
-
-
-  Redhat Linux 7.3 user Uli says:
-  ===============================
-
-    ./autogen.sh
-
-    (yeah, autogen works again. we fixed the stuff for the 2.1.0 release)
-
-
-Regarding the right version of tools needed to build gphoto2 from CVS, we
-know the following:
-
-  gettext
-  -------
-    0.10.40 works on Debian/unstable (reported by Lutz)
-    0.11.2  works (reported by Arnaud), as does probably every 0.11.*
+in versions compatible to each other and to libgphoto2. Most
+combinations on current GNU/Linux systems work, whereas BSD systems
+tend to have some compatibility problems.
 
 
 =============================
@@ -102,20 +71,12 @@ for certain platforms.
 The following software components are optional, and will improve the
 libraries' and/or command-line client's functionality if present:
 
-	libusb (ver. >= 0.1.5) -- Universal Serial Bus camera support
+	libusb (ver. >= 0.1.6a) -- Universal Serial Bus camera support
 	    <URL:http://www.sourceforge.net/projects/libusb/>
 
-	gettext (ver. >= 0.10.35) -- internationalization using shared library
-
-	aalib -- picture preview
-	    <URL:http://www.sourceforge.net/projects/aa-project/>
-
-	cdk -- camera configuration dialogs
-	    <URL:http://dickey.his.com/cdk/>
+	gettext (ver. >= 0.10.40) -- internationalization using shared library
 
 	gtk-doc -- documentation built in doc/api/
-
-	jpeglib -- JPEG picture preview
 
 	libexif - EXIF tag support
 	    <URL:http://www.sourceforge.net/projects/libexif>
@@ -140,13 +101,6 @@ The classic way to compile the program is just to run
 
 and wait until the source is built.
 
-If you want to install gphoto2 using RPM, you should be able to run
-
-    make rpm
-
-after making sure that CDPATH is unset. The RPM packages will be
-located in packaging/rpm/RPMS/.
-
 
 ==============================
 Step 3: Installing the program
@@ -163,50 +117,54 @@ current user, you will have to run it as root.
 This installs the software and documentation into the proper
 directories on your system.
 
-In the case you're trying to use RPM packages, find the *.rpm files in
-packaging/rpm/RPMS/ and install them.
-
 
 ====================================================
 Step 4: Installation is finished - now what do I do?
 ====================================================
 
-Note that gphoto2 is not designed to be installed as a setuid/setgid
-program. Running ANY gphoto2 frontend as root or setuid root or in a
-similar fashion will open up a SECURITY HOLE in your system!
+Note that libgphoto2 is not designed to be run by a setuid/setgid
+program. Running ANY libgphoto2 frontend as root or setuid root or in
+a similar fashion will open up a SECURITY HOLE in your system!
 
-Read doc/FAQ if you run into problems.
+If you run into problems, please read the FAQ (at the website) first.
 
-Read doc/gphoto2.txt for more general information about how to
-configure gphoto2.
+For more general information about how to configure libgphoto2, read
+The gPhoto2 Manual (at the website).
 
 If you have permission problems when accessing your camera, read
-doc/gphoto2.txt -- you will probably want to create a new user group
-for the users that are to have camera access and change the
-permissions of the serial or USB device to match.
+the chapter on Permission Setup -- you will probably want to create a
+new user group for the users that are to have camera access and change
+the permissions of the serial or USB device to match.
 
 
 ===============================================
 Appendix A: Platform specific compilation hints
 ===============================================
 
-gphoto2 has been successfully used on many system.  Some systems where it
-has been reported to successfully compile are listed below. Not all, or even
-any, camera libraries have been tested on these systems, so there may be
-endian other other issues that prevent some camera libraries from working.
-Please report any changes to this list to the gphoto2 developer mailing
+libgphoto2 has been successfully used on many system.  Some systems
+where it has been reported to successfully compile are listed
+below. Not all, or even any, camera libraries have been tested on
+these systems, so there may be endian other other issues that prevent
+some camera libraries from working.
+
+Please report any changes to this list to the gphoto developer mailing
 list.  As of this writing, USB support is only available on Linux and
 FreeBSD as those are the only systems on which libusb is available.
 
 General Hints:
 
-If you have build problems in the intl or po directories, try re-running
-configure with the --disable-nls flag.  If configure stops due to an error
-with 'test', try re-running configure with the --without-usb flag.  If
-'make' reports an error, try using GNU make (often called gmake or gnumake)
-instead of the make that comes with your system.  If one camera driver
-has compilation errors, re-run configure with an appropriate --with-drivers=
-flag to prevent that driver from being compiled.
+  - If you have build problems in the intl or po directories, try
+    re-running configure with the --disable-nls flag.
+  - If configure stops due to an error with 'test', try re-running
+    configure with the --without-usb flag.  
+  - If 'make' reports an error, try using GNU make (often called gmake
+    or gnumake) instead of the make that comes with your system.
+  - If one camera driver has compilation errors, re-run configure with
+    an appropriate --with-drivers= flag to prevent that driver from
+    being compiled.
+
+The list of working systems is a little outdated as of 2002-11-20, but
+we have still left it here as a reference.
 
 i386:
   Debian GNU/Linux 2.2
