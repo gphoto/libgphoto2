@@ -531,7 +531,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 int
 camera_init (Camera *camera, GPContext *context)
 {
-	int ret;
+	int ret = 0;
 	int x = 0;
 	char *model;
 
@@ -599,7 +599,13 @@ camera_init (Camera *camera, GPContext *context)
 			CHECK (spca50x_flash_init (camera->pl, context));
 	}
 
-	ret = spca50x_reset (camera->pl);
+
+	if (camera->pl->bridge == BRIDGE_SPCA504) {
+		if (abilities.usb_vendor != 0x04fc 
+       && abilities.usb_product != 0x504a )
+			ret = spca50x_reset (camera->pl);
+	}
+
 	if (ret < 0) {
 		gp_context_error (context, _("Could not reset camera.\n"));
 		free (camera->pl);

@@ -62,6 +62,9 @@ gsmart mini support. His patches went in during the merge.
 
 Hartmut Henkel <hartmut_henkel@gmx.de> helped debug a crash with thumbnails.
 Rupert Levene <r.levene@lancaster.ac.uk> helped debug the merged camlib.
+Norbert Möndjen <Norbert.Moendjen@t-online.de> found out that the pencams
+don't react well to the reset command.
+Walt Boring <waboring@3gstech.com> helped debug the above reset problem.
 
 
 Thanks from the Benq README
