@@ -4,7 +4,8 @@
 # people without aalib or cdk make dist.
 EXTRA_DIST = makefile.os2				\
 	gphoto2-cmd-config.c gphoto2-cmd-config.h	\
-	gphoto2-cmd-capture.c gphoto2-cmd-capture.h
+	gphoto2-cmd-capture.c gphoto2-cmd-capture.h	\
+	gphoto2-cmd-exif.c gphoto2-cmd-exif.h
 
 bin_PROGRAMS = gphoto2
 
@@ -16,7 +17,8 @@ INCLUDES =						\
 	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port	\
 	-I$(top_srcdir)/libgphoto2			\
 	$(CDK_CFLAGS)					\
-	$(AA_CFLAGS)
+	$(AA_CFLAGS)					\
+	$(EXIF_CFLAGS)
 
 if HAVE_CDK
 CDK_FILES = gphoto2-cmd-config.c gphoto2-cmd-config.h
@@ -30,9 +32,16 @@ else
 AA_FILES =
 endif
 
+if HAVE_EXIF
+EXIF_FILES = gphoto2-cmd-exif.c gphoto2-cmd-exif.h
+else
+EXIF_FILES =
+endif
+
 gphoto2_SOURCES = 		\
 	$(AA_FILES)		\
 	$(CDK_FILES)		\
+	$(EXIF_FILES)		\
 	actions.c actions.h 	\
 	foreach.c foreach.h 	\
 	globals.h 		\
