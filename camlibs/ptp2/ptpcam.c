@@ -20,8 +20,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <getopt.h>
 #include <usb.h>
+
+#ifdef HAVE_GETOPT_H
+#include <getopt.h>
+#endif
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -914,8 +917,12 @@ main(int argc, char ** argv)
 	short force=0;
 	uint16_t property=0;
 	char* value=NULL;
-	/* parse options */
+
+/* parse options */
+#ifdef HAVE_GETOPT
 	int option_index = 0,opt;
+	char *optstr = "hlpfrs:D:B:v::";
+#ifdef HAVE_GETOPT_LONG
 	static struct option loptions[] = {
 		{"help",0,0,'h'},
 		{"bus",1,0,'B'},
@@ -930,9 +937,16 @@ main(int argc, char ** argv)
 		{"verbose",2,0,'v'},
 		{0,0,0,0}
 	};
+#endif
+#endif
 	
 	while(1) {
-		opt = getopt_long (argc, argv, "hlpfrs:D:B:v::", loptions, &option_index);
+#ifdef HAVE_GETOPT
+#ifdef HAVE_GETOPT_LONG
+		opt = getopt_long (argc, argv, optstr, loptions, &option_index);
+#else
+		opt = getopt (argc, argv, optstr);
+#endif
 		if (opt==-1) break;
 	
 		switch (opt) {
