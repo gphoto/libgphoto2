@@ -1,0 +1,5 @@
+2002-01-14  Marcus Meissner <marcus@jet.franken.de>
+	
+	[ I bought a Practika QD800, which is the same model. ]
+	* samsung.c: Fixed the porting bugs, the driver now downloads
+	  images correctly.

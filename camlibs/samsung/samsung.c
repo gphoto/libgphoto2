@@ -2,6 +2,7 @@
  *
  * Copyright (C) 2000 James McKenzie
  * Copyright (C) 2001 Lutz Müller
+ * Copyright (C) 2002 Marcus Meissner
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,16 +20,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/*
- * 2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- * Although I ported this library to the gphoto2 architecture, I cannot test
- * it because I don't own this camera. If you own such a camera, it would 
- * be great if you could test this library and report success or failure
- * either directly to me or to gphoto-devel@gphoto.org.
- */
-
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <gphoto2-library.h>
 
@@ -88,6 +81,7 @@ SDSC_receive (GPPort *port, unsigned char *buf, int length)
 			CHECK_RESULT (SDSC_send (port, SDSC_RETRANSMIT));
 			continue;
 		}
+		break;
 	}
 
 	return (result);
@@ -101,7 +95,6 @@ is_null (unsigned char *buf)
 	while (n--)
 		if (*(buf++))
 			return (0);
-
 	return (1);
 }
 
@@ -116,7 +109,6 @@ SDSC_initialize (GPPort *port)
 		CHECK_RESULT (SDSC_send (port, SDSC_START));
 		CHECK_RESULT (SDSC_receive (port, buffer, SDSC_INFOSIZE));
 	} while (!is_null (buffer));
-
 	return (GP_OK);
 }
 
@@ -134,6 +126,7 @@ static struct {
 	{"Samsung digimax 800k"},
 	{"Dynatron Dynacam 800"},
 	{"Jenoptik JD12 800ff"},
+	{"Praktica QD800"},
 	{NULL}
 };
 
@@ -146,16 +139,15 @@ camera_abilities (CameraAbilitiesList *list)
 	for (i = 0; models[i].model; i++) {
 		memset (&a, 0, sizeof(a));
 		strcpy (a.model, models[i].model);
-		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-		a.port     = GP_PORT_SERIAL;
-		a.speed[0] = 0;
-		a.operations        = GP_OPERATION_NONE;
-		a.file_operations   = GP_FILE_OPERATION_NONE;
-		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-		
+		a.status		= GP_DRIVER_STATUS_EXPERIMENTAL;
+		a.port     		= GP_PORT_SERIAL;
+		a.speed[0]		= 115200;
+		a.speed[1]		= 0;
+		a.operations		= GP_OPERATION_NONE;
+		a.file_operations	= GP_FILE_OPERATION_NONE;
+		a.folder_operations	= GP_FOLDER_OPERATION_NONE;
 		CHECK_RESULT (gp_abilities_list_append (list, a));
 	}
-	
 	return (GP_OK);
 }
 
@@ -165,7 +157,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = user_data;
-	int i, n, result;
+	int result, i;
 	unsigned char buffer[SDSC_BLOCKSIZE];
 	long int size;
 	unsigned char *data;
@@ -173,33 +165,34 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (type != GP_FILE_TYPE_NORMAL)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	/* Get the picture number from the filesystem (those start at 0!) */
-	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename,
-						context));
-
 	/* Rewind */
 	CHECK_RESULT (SDSC_initialize (camera->port));
 
 	/* Seek the header of our file */
-	for (i = 0; i <= n; i++) {
+	while (1) {
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_NEXT));
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_START));
 		CHECK_RESULT (SDSC_receive (camera->port, buffer, SDSC_INFOSIZE));
+		if (!strcmp(buffer,filename))
+		    break;
+		if (is_null(buffer)) /* skipped to the end of the camera? */
+		    return GP_ERROR_BAD_PARAMETERS;
 	}
-
+	/* The buffer header has
+	 * filename (8.3 DOS format and \0)
+	 * filesize (as ascii number) and \0
+	 */
 	/* Extract the size of the file and allocate the memory */
-	size = (3 * SDSC_BLOCKSIZE) + buffer[12] - 1;
-	data = malloc (sizeof (char) * size);
+	sscanf(buffer+12,"%ld",&size);
+	data = malloc (size + (3 * SDSC_BLOCKSIZE));
 	if (!data)
 		return (GP_ERROR_NO_MEMORY);
-	
 	/* Put the camera into image mode */
 	CHECK_RESULT (SDSC_send (camera->port, SDSC_BINARY));
 	CHECK_RESULT (SDSC_send (camera->port, SDSC_START));
 
 	/* Read data */
 	for (i = 0; ; i++) {
-
 		/* Read data and check for EOF */
 		result = SDSC_receive (camera->port, buffer, SDSC_BLOCKSIZE);
 		if (result == SDSC_ERROR_EOF)
@@ -211,13 +204,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		/* Copy the data */
 		memcpy (data + (i * SDSC_BLOCKSIZE), buffer, SDSC_BLOCKSIZE);
-
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_BINARY));
 	}
-
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
 	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
-
 	return (GP_OK);
 }
 
@@ -228,8 +218,9 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 		"been written by James Mckenzie "
 		"<james@fishsoup.dhs.org> for gphoto. "
 		"Lutz Müller <urc8@rz.uni-karlsruhe.de> ported it to "
-		"gphoto2 but has not been able to test it. Please "
-		"report success or failure on gphoto-devel@gphoto.org.");
+		"gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed "
+		"and enhanced the port."
+		);
 
 	return (GP_OK);
 }
@@ -238,7 +229,6 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
-	int n;
 	unsigned char buffer[SDSC_INFOSIZE];
 	Camera *camera = data;
 
@@ -246,18 +236,15 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	CHECK_RESULT (SDSC_initialize (camera->port)); 
 
 	/* Count the pictures */
-	for (n = 0; ; n++) {
+	while (1) {
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_NEXT));
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_START));
 		CHECK_RESULT (SDSC_receive (camera->port,
 				buffer, SDSC_INFOSIZE));
 		if (is_null (buffer))
 			break;
+		gp_list_append(list, buffer, NULL);
 	}
-
-	/* Populate the list */
-	gp_list_populate (list, "SDSC%04i.jpg", n);
-
 	return (GP_OK);
 }
 
@@ -275,12 +262,13 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* Some settings */
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
-	/* Should we adjust anything here? */
+	settings.serial.speed   = 115200;
+	settings.serial.bits    = 8;
+	settings.serial.parity  = 0;
+	settings.serial.stopbits= 1;
 	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 	CHECK_RESULT (gp_port_set_timeout (camera->port, SDSC_TIMEOUT));
-
 	/* Open the port and check if the camera is there */
 	CHECK_RESULT (SDSC_initialize (camera->port));
-
 	return (GP_OK);
 }
