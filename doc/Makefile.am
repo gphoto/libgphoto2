@@ -23,7 +23,15 @@ all-local: $(man_MANS)
 
 $(man_MANS): gphoto2.xml
 	xmlto man $<
+
+else
+
+all-local:
+	@echo "Dummy $@ target"
+
 endif
+
+
 
 if XMLTOHTML
 htmldir=@HTML_DIR@
@@ -42,4 +50,15 @@ install-data-local:
 
 dist-hook:
 	(cd $(srcdir) ; tar cvf - manual) | (cd $(distdir); tar xf -)
+else
+
+all-local:
+	@echo "Dummy $@ target"
+
+install-data-local:
+	@echo "Dummy $@ target"
+
+dist-hook:
+	@echo "Dummy $@ target"
+
 endif
