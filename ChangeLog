@@ -1,3 +1,9 @@
+2001-11-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-camera.c: Don't free a camera if it is 
+	  currently in use. This fixes reentrancy crashes in gtkam on
+	  shutdown during an operation.
+
 2001-11-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* frontends/command-line/options.c (usage): 
