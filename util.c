@@ -31,12 +31,12 @@ int gp_abilities_dump (CameraAbilities *abilities) {
 	}
 
         gp_debug_printf(GP_DEBUG_LOW, "core", "Capture choices                       :");
-        x=0;
-        while (abilities->capture[x].type != GP_CAPTURE_NONE) {
-        gp_debug_printf(GP_DEBUG_LOW, "core", "                                      : %s",
-                        abilities->capture[x].name);
-                x++;
-        }
+        if (abilities->capture & GP_CAPTURE_IMAGE)
+            gp_debug_printf(GP_DEBUG_LOW, "core", "                                      : Image\n");
+        if (abilities->capture & GP_CAPTURE_VIDEO)
+            gp_debug_printf(GP_DEBUG_LOW, "core", "                                      : Video\n");
+        if (abilities->capture & GP_CAPTURE_AUDIO)
+            gp_debug_printf(GP_DEBUG_LOW, "core", "                                      : Audio\n");
         gp_debug_printf(GP_DEBUG_LOW, "core", "Configuration  support                : %s",
                 abilities->config == 0? "no":"yes");
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Delete files on camera support        : %s", 
@@ -54,7 +54,7 @@ int gp_abilities_clear (CameraAbilities *abilities) {
 	strcpy(abilities->model, "");
 	abilities->port = 0;
 	abilities->speed[0] = 0;
-	abilities->capture[0].type = GP_CAPTURE_NONE;
+	abilities->capture = GP_CAPTURE_NONE;
 	abilities->config = 0;
 	abilities->file_operations = GP_FILE_OPERATION_NONE;
 	abilities->folder_operations = GP_FOLDER_OPERATION_NONE;
