@@ -1,3 +1,11 @@
+2002-03-04  Lutz Müller <lutz@users.sourceforge.net>
+
+	With the help of Thomas Ronayne <trona@ameritech.net>:
+
+	* konica.c (konica_get_image_info): The C200 needs up to 2 seconds
+	  to respond.
+	* library.c: The image ids for a C200 are 2 bytes long, not 4.
+
 2002-01-29  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.h: Removed.

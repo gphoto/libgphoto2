@@ -66,7 +66,7 @@ static struct {
         {"Konica Q-M200",      1, 0, 0},
         {"HP PhotoSmart C20",  0, 0, 0},
         {"HP PhotoSmart C30",  0, 0, 0},
-        {"HP PhotoSmart C200", 1, 0, 0},
+        {"HP PhotoSmart C200", 0, 0, 0},
         {NULL,                 0, 0, 0}
 };
 

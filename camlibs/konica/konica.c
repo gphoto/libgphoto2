@@ -472,7 +472,7 @@ k_get_image_information (
         if (!image_id_long) {
                 sb[6] = image_number;
                 sb[7] = image_number >> 8;
-		CRF (c, l_send_receive (p, c, sb, 8, &rb, &rbs, 1000,
+		CRF (c, l_send_receive (p, c, sb, 8, &rb, &rbs, 2000,
 			ib, ibs), rb);
 		*image_id = (unsigned long) ((rb[5] << 8) | rb[4]);
 		*exif_size = (rb[7] << 8) | rb[6];
@@ -482,7 +482,7 @@ k_get_image_information (
                 sb[7] = image_number >> 24;
                 sb[8] = image_number;
                 sb[9] = image_number >> 8;
-		CRF (c, l_send_receive (p, c, sb, 10, &rb, &rbs, 1000,
+		CRF (c, l_send_receive (p, c, sb, 10, &rb, &rbs, 2000,
 			ib, ibs), rb);
 		*image_id = (rb[5] << 24) | (rb[4] << 16) |
 			    (rb[7] << 8 ) |  rb[6];
