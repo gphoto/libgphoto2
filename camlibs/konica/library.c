@@ -732,24 +732,27 @@ camera_get_config (Camera* camera, CameraWidget** window)
 	        gp_widget_append (section, widget);
 		while ((de = GP_SYSTEM_READDIR (d))) {
 			name = GP_SYSTEM_FILENAME (de);
-			if (GP_SYSTEM_IS_FILE (name))
+			if (name && (*name != '.'))
 				gp_widget_add_choice (widget, name);
 		}
+		gp_widget_set_value (widget, _("None selected"));
 	}
 
 	/* TV output format */
-	gp_widget_new (GP_WIDGET_RADIO, _("TV Output Format"), &widget);
+	gp_widget_new (GP_WIDGET_MENU, _("TV Output Format"), &widget);
 	gp_widget_append (section, widget);
 	gp_widget_add_choice (widget, _("NTSC"));
 	gp_widget_add_choice (widget, _("PAL"));
 	gp_widget_add_choice (widget, _("Do not display TV menu"));
+	gp_widget_set_value (widget, _("None selected"));
 
 	/* Date format */
-	gp_widget_new (GP_WIDGET_RADIO, _("Date Format"), &widget);
+	gp_widget_new (GP_WIDGET_MENU, _("Date Format"), &widget);
 	gp_widget_append (section, widget);
 	gp_widget_add_choice (widget, _("Month/Day/Year"));
 	gp_widget_add_choice (widget, _("Day/Month/Year"));
 	gp_widget_add_choice (widget, _("Year/Month/Day"));
+	gp_widget_set_value (widget, _("None selected"));
 
         /********************************/
         /* Session-persistent Settings  */
@@ -934,52 +937,60 @@ camera_set_config (Camera *camera, CameraWidget *window)
 	gp_widget_get_child_by_label (section, _("Language"), &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &c);
-                data = NULL;
-		data_size = 0;
+		if (strcmp (c, _("None selected"))) {
+	                data = NULL;
+			data_size = 0;
 
-		/* Read localization file */
-		result = localization_file_read (camera, c, &data, &data_size);
-		if (result != GP_OK) {
+			/* Read localization file */
+			result = localization_file_read (camera, c,
+							 &data, &data_size);
+			if (result != GP_OK) {
+				g_free (data);
+				return (result);
+			}
+
+			/* Go! */
+			result = k_localization_data_put (camera->port,
+							  data, data_size);
 			g_free (data);
-			return (result);
+			CHECK (result);
 		}
-
-		/* Go! */
-		result = k_localization_data_put (camera->port, data,data_size);
-		g_free (data);
-		CHECK (result);
 	}
 
 	/* TV Output Format */
 	gp_widget_get_child_by_label (section, _("TV Output Format"), &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &c);
-		if (!strcmp (c, _("NTSC")))
-			tv_output_format = K_TV_OUTPUT_FORMAT_NTSC;
-		else if (!strcmp (c, _("PAL")))
-			tv_output_format = K_TV_OUTPUT_FORMAT_PAL;
-		else if (!strcmp (c, _("Do not display TV menu")))
-			tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
-		else 
-			g_assert_not_reached ();
-		CHECK (k_localization_tv_output_format_set (camera->port,
-					tv_output_format));
+		if (strcmp (c, _("None selected"))) {
+			if (!strcmp (c, _("NTSC")))
+				tv_output_format = K_TV_OUTPUT_FORMAT_NTSC;
+			else if (!strcmp (c, _("PAL")))
+				tv_output_format = K_TV_OUTPUT_FORMAT_PAL;
+			else if (!strcmp (c, _("Do not display TV menu")))
+				tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
+			else
+				g_assert_not_reached ();
+			CHECK (k_localization_tv_output_format_set (
+					camera->port, tv_output_format));
+		}
 	}
 
 	/* Date Format */
 	gp_widget_get_child_by_label (section, _("Date Format"), &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &c);
-		if (!strcmp (c, _("Month/Day/Year")))
-			date_format = K_DATE_FORMAT_MONTH_DAY_YEAR;
-                else if (!strcmp (c, _("Day/Month/Year")))
-			date_format = K_DATE_FORMAT_DAY_MONTH_YEAR;
-		else if (!strcmp (c, _("Year/Month/Day")))
-			date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
-		else 
-			g_assert_not_reached ();
-		CHECK (k_localization_date_format_set (camera->port, 
+		if (strcmp (c, _("None selected"))) {
+			if (!strcmp (c, _("Month/Day/Year")))
+				date_format = K_DATE_FORMAT_MONTH_DAY_YEAR;
+	                else if (!strcmp (c, _("Day/Month/Year")))
+				date_format = K_DATE_FORMAT_DAY_MONTH_YEAR;
+			else if (!strcmp (c, _("Year/Month/Day")))
+				date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
+			else 
+				g_assert_not_reached ();
+			CHECK (k_localization_date_format_set (camera->port, 
 						       date_format));
+		}
 	}
 
         /********************************/
