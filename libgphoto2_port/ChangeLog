@@ -1,3 +1,8 @@
+2002-03-12  Mariusz Woloszyn
+
+	* changed all _event, eventep to _int and intep as it describes usb
+	  inerrupt endpoint
+
 2002-03-11  Lutz Müller <lutz@users.sourceforge.net>
 
 	* configure.in: Fix versionning.

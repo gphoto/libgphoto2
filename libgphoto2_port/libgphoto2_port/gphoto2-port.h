@@ -53,7 +53,7 @@ struct _GPPortSettingsSerial {
 
 typedef struct _GPPortSettingsUSB GPPortSettingsUSB;
 struct _GPPortSettingsUSB {
-	int inep, outep, eventep;
+	int inep, outep, intep;
 	int config;
 	int interface;
 	int altsetting;
@@ -99,7 +99,7 @@ int gp_port_close       (GPPort *port);
 
 int gp_port_write       (GPPort *port, const char *data, int size);
 int gp_port_read        (GPPort *port,       char *data, int size);
-int gp_port_check_event (GPPort *port,       char *data, int size);
+int gp_port_check_int   (GPPort *port,       char *data, int size);
 
 int gp_port_get_timeout  (GPPort *port, int *timeout);
 int gp_port_set_timeout  (GPPort *port, int  timeout);

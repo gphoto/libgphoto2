@@ -226,14 +226,14 @@ gp_port_usb_read(GPPort *port, char *bytes, int size)
 }
 
 static int
-gp_port_usb_check_event(GPPort *port, char *bytes, int size)
+gp_port_usb_check_int (GPPort *port, char *bytes, int size)
 {
 	int ret;
 
 	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	ret = usb_bulk_read(port->pl->dh, port->settings.usb.eventep,
+	ret = usb_bulk_read(port->pl->dh, port->settings.usb.intep,
 			     bytes, size, port->timeout);
         if (ret < 0)
 		return GP_ERROR_IO_READ;
@@ -416,7 +416,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 					port->settings.usb.inep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_BULK);
 					port->settings.usb.outep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_BULK);
-					port->settings.usb.eventep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_INTERRUPT);
+					port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_INTERRUPT);
 					gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
 						"Detected defaults: config %d, "
 						"interface %d, altsetting %d, "
@@ -560,7 +560,7 @@ gp_port_library_operations (void)
 	ops->close  = gp_port_usb_close;
 	ops->read   = gp_port_usb_read;
 	ops->write  = gp_port_usb_write;
-	ops->check_event = gp_port_usb_check_event;
+	ops->check_int = gp_port_usb_check_int;
 	ops->update = gp_port_usb_update;
 	ops->clear_halt = gp_port_usb_clear_halt_lib;
 	ops->msg_write  = gp_port_usb_msg_write_lib;
