@@ -124,8 +124,8 @@ gp_log_remove_func (int id)
 #define HEXDUMP_MIDDLE (HEXDUMP_INIT_X + 3 * 8 - 1)
 
 /*
- * We are lazy and do our typing only once. Please not that you have to
- * add/remove some lines when increasing/decreasing the values of 
+ * We are lazy and do our typing only once. Please note that you have
+ * to add/remove some lines when increasing/decreasing the values of 
  * HEXDUMP_BLOCK_DISTANCE and/or HEXDUMP_OFFSET_WIDTH.
  */
 #define HEXDUMP_COMPLETE_LINE {\
@@ -153,7 +153,7 @@ gp_log_remove_func (int id)
 void
 gp_log_data (const char *domain, const char *data, unsigned int size)
 {
-	static char hexchars[16] = "0123456789abcdef";
+	const static char hexchars[16] = "0123456789abcdef";
 	char *curline, *result;
 	int x = HEXDUMP_INIT_X;
 	int y = HEXDUMP_INIT_Y;
