@@ -1400,6 +1400,9 @@ int camera_about(Camera *camera, CameraText *about)
 }
 
 /****************************************************************************/
+#if 0
+/* FIXME: (pm) Do we need to update the directory cache and camera_file_list
+          on deletion ? */
 
 /*
  * mark an entry as deleted in the directory cache
@@ -1422,13 +1425,13 @@ int _entry_delete(struct psa50_dir *tree, char *filename)
     while(tree->name) {
         strcpy(tempfile, tree->name);
         fprintf(stderr,"tempfile: %s\n",tempfile);
-//        if(strcmp(tempfile, file)==0) {
-//            sprintf(tree->name,"deleted");
-//            i++;
-//        }
-//        else if (!tree->is_file) {
-//            i += _entry_delete(tree->user, picture_number - i);
-//        }
+        if(strcmp(tempfile, file)==0) {
+            sprintf(tree->name,"deleted");
+            i++;
+        }
+        else if (!tree->is_file) {
+            i += _entry_delete(tree->user, picture_number - i);
+        }
         tree++;
     } 
     return i;
@@ -1438,34 +1441,43 @@ int entry_delete(char *filename)
 {
     return _entry_delete(cached_tree, filename);
 }
-
+#endif
 int camera_file_delete(Camera *camera, char *folder, char *filename)
 {
-        char path[300];
-        char dir[300], atrs;
-        int j;
+    char path[300];
+    int j;
 
         /*clear_readiness();*/
-        if (!check_readiness()) {
-                return 0;
-        }
-        if (!(camera_data.model == CANON_PS_A5 ||
-                camera_data.model == CANON_PS_A5_ZOOM)) { /* this is tested only on powershot A50 */
-
-                if (!update_dir_cache()) {
-                    gp_camera_status(NULL, "Could not obtain directory listing");
-                    return 0;
-                }
-                if (psa50_delete_file(filename,dir)) {
-                    gp_camera_status(NULL, "error deleting file");
-                    return -1;
-                }
-                else {
-                    entry_delete(filename);
-                    return 1;
-                }
-        }
+    if (!check_readiness()) {
         return 0;
+    }
+
+    if (!(camera_data.model == CANON_PS_A5 ||
+        camera_data.model == CANON_PS_A5_ZOOM)) { /* this is tested only on powershot A50 */
+
+        if (!update_dir_cache()) {
+            gp_camera_status(NULL, "Could not obtain directory listing");
+            return 0;
+        }
+        strcpy(path, cached_drive);
+
+        if (get_file_path(filename,path) == GP_ERROR) {
+            debug_message("Filename not found!\n");
+            return GP_ERROR;
+        }
+        j = strrchr(path,'\\') - path;
+        path[j] = '\0';
+
+        if (psa50_delete_file(filename,path)) {
+            gp_camera_status(NULL, "error deleting file");
+            return GP_ERROR;
+        }
+        else {
+     //       entry_delete(filename);
+            return GP_OK;
+        }
+    }
+    return GP_ERROR;
 }
 
 int camera_file_put(Camera *camera, CameraFile *file, char *folder)
