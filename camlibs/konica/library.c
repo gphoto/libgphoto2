@@ -422,11 +422,17 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder)
 	guchar flash;
 	guchar quality;
 	guchar focus;
-	guchar exposure;
-	guint total_pictures;
-	guint total_strobes;
-	guint i;
-	konica_data_t *konica_data;
+	guchar 		exposure;
+	guint 		total_pictures;
+	guint 		total_strobes;
+	guint 		i;
+	guchar* 	information_buffer = NULL;
+	guint		information_buffer_size;
+	guint		exif_size;
+	gboolean	protected;
+	gulong		image_id;
+	konica_data_t*	konica_data;
+	gchar*		filename;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_list ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
@@ -460,11 +466,59 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder)
 		&total_strobes))) return (GP_ERROR);
 
 	/* We can't get the filename from the camera. 	*/
-	/* We'll therefore take fake ones.		*/
-	gp_filesystem_populate (konica_data->filesystem, "/", "image%i.jpg", (int) pictures);
-	for (i = 0; i < gp_filesystem_count (konica_data->filesystem, folder); i++)
-		gp_list_append (list, gp_filesystem_name (konica_data->filesystem, folder, i), GP_LIST_FILE);
+	/* But we decide to call the images		*/
+	/* 'image%6i.jpeg', with the image id as 	*/
+	/* parameter. Therefore, let's get the image	*/
+	/* ids.						*/
+	for (i = 0; i < pictures; i++) {
+	        if (!error_happened (camera, k_get_image_information (
+	                konica_data->device,
+	                konica_data->image_id_long,
+	                i,
+	                &image_id,
+	                &exif_size,
+	                &protected,
+	                &information_buffer,
+	                &information_buffer_size))) filename = g_strdup_printf ("%6i.jpeg", (int) image_id);
+		else filename = g_strdup ("??????.jpg");
+		gp_list_append (list, filename, GP_LIST_FILE);
+		g_free (information_buffer);
+		information_buffer = NULL;
+	}
 
+	return (GP_OK);
+}
+
+
+int camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar* filename, k_image_type_t image_type)
+{
+	gulong 		image_id;
+	gchar		image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
+	konica_data_t*	konica_data;
+	gchar*		tmp;
+
+	konica_data = (konica_data_t *) camera->camlib_data;
+
+	/* Check if we can get the image id from the filename. */
+	if (filename[0] == '?') return (GP_ERROR);
+	memcpy (image_id_string, filename, 6);
+	image_id = atol (image_id_string);
+	
+	/* Get the image. */
+        if (error_happened (camera, k_get_image (
+                konica_data->device,
+                konica_data->image_id_long,
+                image_id,
+                image_type,
+                (guchar **) &file->data,
+                (guint *) &file->size))) return (GP_ERROR);
+
+        strcpy (file->type, "image/jpg");
+	if (image_type == K_THUMBNAIL) {
+		tmp = g_strdup_printf ("%6i-thumbnail.jpg", (int) image_id);
+		strcpy (file->name, tmp);
+		g_free (tmp);
+	}
 	return (GP_OK);
 }
 
@@ -475,97 +529,25 @@ int camera_file_get (
 	char *folder, 
 	char *filename)
 {
-	gulong image_id; 
-	guint exif_size;
-	gboolean protected;
-	guchar *information_buffer = NULL;
-	guint information_buffer_size;
-	gulong image_number;
-	konica_data_t *konica_data;
-
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get ***");
         g_return_val_if_fail (camera != NULL, GP_ERROR);
         g_return_val_if_fail (file != NULL, GP_ERROR);
         g_return_val_if_fail (folder != NULL, GP_ERROR);
 	g_return_val_if_fail (filename != NULL, GP_ERROR);
 
-	konica_data = (konica_data_t *) camera->camlib_data;
-        image_number = gp_filesystem_number (konica_data->filesystem, folder, filename) + 1;
-
-	/* Get information about the image (especially image id). */
-	if (error_happened (camera, k_get_image_information (
-		konica_data->device,
-		konica_data->image_id_long,
-		image_number, 
-		&image_id, 
-		&exif_size, 
-		&protected, 
-		&information_buffer, 
-		&information_buffer_size))) return (GP_ERROR); 
-
-	/* Get the image. */
-	if (error_happened (camera, k_get_image (
-		konica_data->device,
-		konica_data->image_id_long,
-		image_id, 
-		K_IMAGE_EXIF, 
-		(guchar **) &file->data, 
-		(guint *) &file->size))) return (GP_ERROR);
-
-	strcpy (file->type, "image/jpg");
-	sprintf (file->name, "image%i.jpg", (int) image_id);
-	g_free (information_buffer);
-	return (GP_OK);
+	return (camera_file_get_generic (camera, file, folder, filename, K_IMAGE_EXIF));
 }
 
 
-int camera_file_get_preview (
-	Camera *camera, 
-	CameraFile *preview, 
-	char *folder,
-	char *filename)
+int camera_file_get_preview (Camera* camera, CameraFile* file, gchar* folder, gchar* filename)
 {
-	gulong image_id; 
-	guint exif_size;
-	gboolean protected;
-	guchar *information_buffer = NULL;
-	guint information_buffer_size;
-	gulong image_number;
-	konica_data_t *konica_data;
-
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_preview ***");
         g_return_val_if_fail (camera != NULL, GP_ERROR);
-        g_return_val_if_fail (preview != NULL, GP_ERROR);
+        g_return_val_if_fail (file != NULL, GP_ERROR);
         g_return_val_if_fail (folder != NULL, GP_ERROR);
         g_return_val_if_fail (filename != NULL, GP_ERROR);
 
-	konica_data = (konica_data_t *) camera->camlib_data;
-        image_number = gp_filesystem_number (konica_data->filesystem, folder, filename) + 1;
-
-	/* Get information about the image (especially image id). */
-	if (error_happened (camera, k_get_image_information (
-		konica_data->device,
-		konica_data->image_id_long,
-		image_number, 
-		&image_id, 
-		&exif_size, 
-		&protected, 
-		&information_buffer, 
-		&information_buffer_size))) return (GP_ERROR); 
-
-	/* Get the image. */
-	if (error_happened (camera, k_get_image (
-		konica_data->device,
-		konica_data->image_id_long,
-		image_id, 
-		K_THUMBNAIL, 
-		(guchar **) &preview->data, 
-		(guint *) &preview->size))) return (GP_ERROR);
-
-	strcpy (preview->type, "image/jpg");
-	sprintf (preview->name, "thumbnail%i.jpg", (int) image_id);
-	g_free (information_buffer);
-	return (GP_OK);
+	return (camera_file_get_generic (camera, file, folder, filename, K_THUMBNAIL));
 }
 
 
