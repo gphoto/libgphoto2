@@ -168,7 +168,7 @@ int  glob_num=1;
 
 Camera         *glob_camera=NULL;
 
-extern int  glob_debug;
+int  glob_debug;
 int  glob_shell=0;
 int  glob_quiet=0;
 int  glob_filename_override=0;
