@@ -148,14 +148,27 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 	return (GP_OK);
 }
 
+/**
+ * gp_file_get_data_and_size:
+ * @file: a #CameraFile
+ * @data:
+ * @size:
+ *
+ * Get a pointer to the data and the file's size. Both @data and @size can
+ * be NULL and will then be ignored.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_file_get_data_and_size (CameraFile *file, const char **data,
 			   unsigned long int *size)
 {
-	CHECK_NULL (file && data && size);
+	CHECK_NULL (file);
 
-	*data = file->data;
-	*size = file->size;
+	if (data)
+		*data = file->data;
+	if (size)
+		*size = file->size;
 
 	return (GP_OK);
 }
