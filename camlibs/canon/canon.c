@@ -70,7 +70,7 @@
 #define S2M	2 * S1M
 #define S10M	10 * S1M
 
-static const struct canonCamModelData models[] =
+const struct canonCamModelData models[] =
 {
 	/* *INDENT-OFF* */
 	{"DE300 Canon Inc.",		CANON_PS_A5,		0, 0, 1, S2M, S32K},

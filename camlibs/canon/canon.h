@@ -81,7 +81,7 @@ struct canonCamModelData
 	unsigned int max_thumbnail_size;
 };
 
-static const struct canonCamModelData models[];
+const struct canonCamModelData models[];
 
 #undef S10M
 #undef S2M
