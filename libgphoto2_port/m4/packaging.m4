@@ -9,7 +9,7 @@ then
     AC_MSG_RESULT([${RPMBUILD} (from parameter)])
     AC_SUBST(RPMBUILD)
 else
-    AC_MSG_RESULT([using autodectection])
+    AC_MSG_RESULT([using autodetection])
     AC_CHECK_PROGS(RPMBUILD, [rpmbuild rpm], /bin/false)
     AC_MSG_RESULT([${RPMBUILD} (autodetect)])
 fi
