@@ -196,11 +196,7 @@ gp_port_usb_open (GPPort *port)
 		gp_port_set_error (port, _("Camera is already in use."));
 		return GP_ERROR_IO_LOCK;
 	}
-	if (strstr(name,"storage")) {
-		/* other gphoto instance most likely */
-		gp_port_set_error (port, _("Camera is supported by USB Storage driver."));
-		return GP_ERROR_NOT_SUPPORTED;
-	}
+
 	if (ret >= 0) {
 		gp_log (GP_LOG_DEBUG,"libusb",_("Device has driver '%s' attached, detaching it now."), name);
 		ret = usb_detach_kernel_driver_np (port->pl->dh, port->settings.usb.interface);
