@@ -780,6 +780,8 @@ get_picture_common(char *arg, CameraFileType type )
                 return for_each_image_in_range (glob_folder, arg, save_picture_action, 0);
         case GP_FILE_TYPE_RAW:
                 return for_each_image_in_range (glob_folder, arg, save_raw_action, 0);
+	case GP_FILE_TYPE_AUDIO:
+		return for_each_image_in_range (glob_folder, arg, save_audio_action, 0);
         default:
                 return (GP_ERROR_NOT_SUPPORTED);
         }

@@ -1,3 +1,7 @@
+2001-11-11 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* frontends/command-line/main.c: Add a switch for GP_FILE_TYPE_AUDIO.
+
 2001-11-10 Dan Fandrich <dan@coneharvesters.com>
 
 	* libgphoto2/jpeg.[ch]: moved array definitions from .h to .c
