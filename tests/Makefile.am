@@ -1,7 +1,7 @@
 
 INCLUDES =						\
 	-I$(top_srcdir)/libgphoto2			\
-	-I$(top_srcdir)/libgphoto2_port
+	-I$(top_srcdir)/libgphoto2_port/libgphoto2_port
 
 noinst_PROGRAMS =	\
 	test-gphoto2	\
