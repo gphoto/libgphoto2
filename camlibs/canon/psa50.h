@@ -16,11 +16,19 @@
 
 int receive_error;
 
-/* Battery status values: */
+/* Battery status values:
+
+hopefully obsolete values first - we now just use the bit 
+that makes the difference
+
 #define CAMERA_ON_AC       16
 #define CAMERA_ON_BATTERY  48
+*/
+
 #define CAMERA_POWER_OK     6
 #define CAMERA_POWER_BAD    4
+
+#define CAMERA_MASK_BATTERY  32
 
 
 /* @@@ change this to canon_dir when merging with other models */

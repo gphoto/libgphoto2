@@ -1,3 +1,13 @@
+2001-10-12 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* camlibs/canon/canon.c: added is_crw() function
+	* camlibs/canon/canon.c: moved to 1-bit power source detection
+	* camlibs/canon/psa50.h: moved to 1-bit power source detection
+	* camlibs/canon/Protocol: 1-bit power source detection seems to work better
+	* camlibs/canon/Makefile.am: removed util.[ch] from canon driver
+	* camlibs/canon/serial.c: removed dump_hex() and "util.h", added "serial.h"
+	* camlibs/canon/serial.h: added prototype for canon_usb_camera_init()
+
 2001-10-12  Fredrik <fredrik@krixor.xy.org>
 
 	* camlibs/canon/psa50.c: more debug output in

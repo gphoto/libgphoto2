@@ -9,8 +9,7 @@ libgphoto2_canon_la_SOURCES =\
  canon.c canon.h\
  psa50.c psa50.h\
  serial.c serial.h \
- crc.c crc.h\
- util.c util.h
+ crc.c crc.h
 
 libgphoto2_canon_la_LDFLAGS =\
  -avoid-version -g\

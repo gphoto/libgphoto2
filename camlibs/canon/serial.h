@@ -19,6 +19,8 @@ int canon_serial_send(Camera *camera, const unsigned char *buf, int len, int sle
 int canon_serial_get_byte(gp_port *gdev);
 int canon_serial_get_cts(gp_port *gdev);
 
+int canon_usb_camera_init(Camera *camera);
+
 void serial_flush_input(gp_port *gdev);
 void serial_flush_output(gp_port *gdev);
 void serial_set_timeout(gp_port *gdev, int to);

@@ -751,7 +751,13 @@ Data received via bulk_in after a command block: (Power supply status)
 
      First 0x40 bytes is throwable.
      0x54 contains a byte with power status: 0x6=good, 0x4=bad
-     0x57 contains a byte with powertype: 0x10=ac-adaptor, 0x30=battery
+     0x57 contains a byte with powertype in bit 4:
+          ((value & 0x20) == 0)  running from ac-adaptor
+          ((value & 0x20) != 0)  running from battery
+
+Note that the original document claimed for 0x57 that it contained
+"a byte with powertype: 0x10=ac-adaptor, 0x30=battery", whereas a 
+PowerShot G2 just toggles one bit.
 
 ****
 ** Identify Camera request

@@ -24,9 +24,9 @@
 
 #include <gphoto2.h>
 
-#include "util.h"
 #include "psa50.h"
 #include "canon.h"
+#include "serial.h"
 
 
 /****************************************************************************
@@ -281,9 +281,6 @@ canon_serial_send (Camera *camera, const unsigned char *buf, int len, int sleep)
 {
 	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	int i;
-
-	if (cs->dump_packets == 1)
-		dump_hex (camera, "canon_serial_send()", buf, len);
 
 	/* the A50 does not like to get too much data in a row at 115200
 	 * The S10 and S20 do not have this problem */

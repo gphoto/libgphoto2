@@ -347,20 +347,37 @@ is_thumbnail (const char *name)
 
 /*
  * Test whether the name given corresponds
- * to a movie (.JPG)
+ * to an image (.JPG)
  */
 static int
-is_image (const char *name)
+is_image(const char *name)
+{
+	const char *pos;
+	int res = 0;
+
+	pos = strchr(name,'.');
+	if (pos)
+		res = (!strcmp(pos,".JPG"));
+
+	gp_debug_printf(GP_DEBUG_LOW,"canon","is_image(%s) == %i", name, res);
+	return(res);
+}
+
+/*
+ * Test whether the name given corresponds
+ * to a raw CRW image (.CRW)
+ */
+static int is_crw(const char *name)
 {
 	const char *pos;
 	int res = 0;
 
 	pos = strchr (name, '.');
 	if (pos)
-		res = (!strcmp (pos, ".JPG"));
+		res = (!strcmp (pos, ".CRW"));
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "is_image(%s) == %i", name, res);
-	return (res);
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "is_crw(%s) == %i", name, res);
+	return(res);
 }
 
 /*
@@ -978,29 +995,23 @@ camera_summary (Camera *camera, CameraText * summary)
 	}
 
 	canon_get_batt_status (camera, &pwr_status, &pwr_source);
-	switch (pwr_source) {
-		case CAMERA_ON_AC:
+	if ((pwr_source & CAMERA_MASK_BATTERY) == 0) {
 			strcpy (power_stats, _("AC adapter "));
-			break;
-		case CAMERA_ON_BATTERY:
+	} else {
 			strcpy (power_stats, _("on battery "));
-			break;
-		default:
-			sprintf (power_stats, _("unknown (%i"), pwr_source);
-			break;
-	}
+	}		
 
 	switch (pwr_status) {
-		case CAMERA_POWER_OK:
-			strcat (power_stats, _("(power OK)"));
-			break;
-		case CAMERA_POWER_BAD:
-			strcat (power_stats, _("(power low)"));
-			break;
-		default:
-			strcat (power_stats, cde);
-			sprintf (cde, " - %i)", pwr_status);
-			break;
+	 case CAMERA_POWER_OK:
+		strcat(power_stats, _("(power OK)"));
+		break;
+	 case CAMERA_POWER_BAD:
+		strcat(power_stats, _("(power low)"));
+		break;
+	 default:
+		strcat(power_stats,cde);
+		sprintf(cde," - %i)",pwr_status);
+		break;
 	}
 
 	sprintf (summary->text,
@@ -1340,30 +1351,24 @@ camera_get_config (Camera *camera, CameraWidget ** window)
 
 	if (cs->cached_ready == 1) {
 		canon_get_batt_status (camera, &pwr_status, &pwr_source);
-		switch (pwr_source) {
-			case CAMERA_ON_AC:
-				strcpy (power_stats, _("AC adapter "));
-				break;
-			case CAMERA_ON_BATTERY:
-				strcpy (power_stats, _("on battery "));
-				break;
-			default:
-				sprintf (power_stats, _("unknown (%i"), pwr_source);
-				break;
-		}
+		if ((pwr_source & CAMERA_MASK_BATTERY) == 0) {
+			strcpy (power_stats, _("AC adapter "));
+		} else {
+			strcpy (power_stats, _("on battery "));
+		}		
+		
 		switch (pwr_status) {
-				char cde[16];
-
-			case CAMERA_POWER_OK:
-				strcat (power_stats, _("(power OK)"));
-				break;
-			case CAMERA_POWER_BAD:
-				strcat (power_stats, _("(power low)"));
-				break;
-			default:
-				strcat (power_stats, cde);
-				sprintf (cde, " - %i)", pwr_status);
-				break;
+			char cde[16];
+		case CAMERA_POWER_OK:
+			strcat(power_stats, _("(power OK)"));
+			break;
+		case CAMERA_POWER_BAD:
+			strcat(power_stats, _("(power low)"));
+			break;
+		default:
+			strcat(power_stats,cde);
+			sprintf(cde," - %i)",pwr_status);
+			break;
 		}
 	} else
 		strcpy (power_stats, _("Power: camera unavailable"));
