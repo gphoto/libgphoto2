@@ -1,3 +1,9 @@
+2002-01-24 Dan Fandrich <dan@coneharvesters.com>
+
+	* gphoto2-port-log.h
+	* gphoto2-port.h: Removed config.h include (should be done in .c files)
+	* gphoto2-port-portability.c: Added include of config.h 
+
 2002-01-19 Dan Fandrich <dan@coneharvesters.com>
 
 	* configure.in: Replaced AC_TRY_RUN with AC_TRY_LINK in ttylock test
