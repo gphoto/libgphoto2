@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 #include <gphoto2.h>
 #include <time.h>
@@ -163,6 +165,106 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list)
 	}
 
 	return (GP_OK);
+}
+
+/**
+ * sierra_get_picture_folder:
+ * @camera : camera data stucture
+ * @folder : folder name (to be freed by the caller)
+ *     
+ * Return the name of the folder that stores pictures. It is assumed that
+ * the camera conforms with the JEIDA standard. Thus, look for the picture
+ * folder into the /DCIM directory.
+ *
+ * Returns: a gphoto2 error code
+ */
+int sierra_get_picture_folder (Camera *camera, char **folder)
+{
+	int i;
+	CameraList *list;
+	const char *name = NULL;
+
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_get_picture_folder");
+
+	*folder = NULL;
+
+	/* If the camera does not support folders, the picture
+	   folder is the root folder */
+	if (!camera->pl->folders) {
+		*folder = (char*) calloc(2, sizeof(char));
+		strcpy(*folder, "/");
+		return (GP_OK);
+	}
+
+	/* It is assumed that the camera conforms with the JEIDA standard .
+	   Thus, look for the picture folder into the /DCIM directory */
+	CHECK( gp_list_new(&list) );
+	CHECK( gp_filesystem_list_folders(camera->fs, "/DCIM", list) );
+	for(i=0 ; i < gp_list_count(list) ; i++) {
+		CHECK( gp_list_get_name(list, i, &name) );
+		gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* check folder %s", name);
+		if (isdigit(name[0]) && isdigit(name[1]) && isdigit(name[2]))
+			break;
+		name = NULL;
+	}
+	//CHECK( gp_list_free(list) );
+
+	if (name) {
+		*folder = (char*) calloc(strlen(name)+7, sizeof(char));
+		strcpy(*folder, "/DCIM/");
+		strcat(*folder, name);
+		return (GP_OK);
+	}
+	else
+		return GP_ERROR_DIRECTORY_NOT_FOUND;
+}
+
+/**
+ * sierra_check_battery_capacity:
+ * @camera : camera data stucture
+ *     
+ * Check if the battery capacity is high enough.
+ *
+ * Returns: a gphoto2 error code
+ */
+int sierra_check_battery_capacity (Camera *camera)
+{
+	int ret, capacity;
+
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_check_battery_capacity");
+
+	if ((ret = sierra_get_int_register(camera, 16, &capacity)) != GP_OK) {
+		gp_camera_set_error (camera,
+				     _("Cannot retrieve the battery capacity"));
+		return ret;
+	}
+
+	if (capacity < 5)
+		return GP_ERROR_LOW_BATTERY;
+
+	return GP_OK;
+}
+
+/**
+ * sierra_get_memory_left:
+ * @camera : camera data stucture
+ * @memory : memory left
+ *     
+ * Provide the available memory left 
+ *
+ * Returns: a gphoto2 error code
+ */
+int sierra_get_memory_left (Camera *camera, int *memory)
+{
+	int ret;
+
+	if ((ret = sierra_get_int_register(camera, 28, memory)) != GP_OK) {
+		gp_camera_set_error (camera,
+				     _("Cannot retrieve the available memory left"));
+		return ret;
+	}
+
+	return GP_OK;
 }
 
 int sierra_write_packet (Camera *camera, char *packet)
@@ -499,6 +601,59 @@ int sierra_set_speed (Camera *camera, int speed)
 	return GP_OK;
 }
 
+/**
+ * sierra_write_action_command_and_wait:
+ * @camera : camera data stucture
+ * @action_code : action code of the command to be sent
+ *     
+ * Send an action command to the camera (i.e. a command that
+ * is not related to registers). Wait for the Action Complete
+ * Notification.
+ *
+ * Returns: error code
+ *     - GP_OK if the operation is successful,
+ *     - GP_ERROR_BAD_CONDITION if the camera returns an 'Enable to
+ *       Execute Command' status,
+ *     - GP_ERROR_CORRUPTED_DATA if the received data are invalid,
+ *     - GP_ERROR_IO_* on other IO error.
+ */
+static int
+sierra_write_action_command_and_wait (Camera *camera, int action_code)
+{
+	int r, ret;
+	char buf[4096];
+
+	/* Build and send the command packet */
+	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, buf));
+	buf[4] = 0x02;
+	buf[5] = action_code;
+	buf[6] = 0x00;
+	CHECK (sierra_write_packet (camera, buf));
+
+	/* Wait for the Action Complete Notification */
+	for (r = 0; r < RETRIES; r++) {
+		
+		ret = sierra_read_packet (camera, buf);
+		if (ret == GP_OK) {
+			switch ((unsigned char)buf[0]) {
+			case ENQ:
+			case TRM:
+				return GP_OK;
+			case NAK:
+			case ACK:
+				continue;
+			case DC1:
+				/* Unable to execute the command */
+				return GP_ERROR_BAD_CONDITION;
+			default:
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+		}
+	}
+
+	return GP_ERROR_IO;
+}
+
 int sierra_set_int_register (Camera *camera, int reg, int value) 
 {
 	int r=0;
@@ -598,25 +753,36 @@ int sierra_get_int_register (Camera *camera, int reg, int *value)
 	return GP_ERROR_IO;
 }
 
-int sierra_set_string_register (Camera *camera, int reg, char *s, int length) 
+int sierra_set_string_register (Camera *camera, int reg, const char *s, long int length) 
 {
 
 	char packet[4096], buf[4096];
 	char type;
 	unsigned char c;
-	int x=0, seq=0, size=0, done, r, ret;
+	long int x=0;
+	int seq=0, size=0, done, r, ret, do_percent;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", 
 			 "* sierra_set_string_register");
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* value: %s", s);
 
+	/* Make use of the progress bar when the packet is "large enough" */
+	if (length > MAX_DATA_FIELD_LENGTH) {
+		do_percent = 1;
+		gp_camera_progress (camera, 0.0);
+	}
+	else
+		do_percent = 0;
+
 	while (x < length) {
 		if (x == 0) {
 			type = TYPE_COMMAND;
-			size = (length + 2 - x) > 2048? 2048 : length + 2;
+			size = (length + 2 - x) > MAX_DATA_FIELD_LENGTH
+				? MAX_DATA_FIELD_LENGTH : length + 2;
 		}  else {
-			size = (length - x) > 2048? 2048 : length-x;
+			size = (length - x) > MAX_DATA_FIELD_LENGTH
+				? MAX_DATA_FIELD_LENGTH : length-x;
 			if (x + size < length)
 				type = TYPE_DATA;
 			else
@@ -651,8 +817,12 @@ int sierra_set_string_register (Camera *camera, int reg, char *s, int length)
 			c = (unsigned char)buf[0];
 			if (c == DC1)
 				return GP_ERROR_BAD_PARAMETERS;
-			if (c == ACK)
+			if (c == ACK) {
 				done = 1;
+				if (do_percent)
+					gp_camera_progress (camera, (float)x / (float)length);
+			}
+
 			else	{
 				if (c != NAK)
 					return GP_ERROR_IO;
@@ -867,56 +1037,18 @@ int sierra_end_session (Camera *camera)
 	return (GP_OK);
 }
 
-static int do_capture (Camera *camera, char *packet)
-{
-	char buf[8];
-	int r, ret;
-
-	CHECK (sierra_write_packet (camera, packet));
-
-	for (r = 0; r < RETRIES; r++) {
-		
-		ret = sierra_read_packet (camera, buf);
-		if (ret == GP_ERROR_IO_TIMEOUT)
-			continue;
-		CHECK (ret);
-
-		switch ((unsigned char)buf[0]) {
-		case ENQ:
-		case TRM:
-			return GP_OK;
-		case NAK:
-		case ACK:
-			continue;
-		case DC1:
-			/* Occurs when there is no space left on smart-card
-			   or the lens protection is in place...*/
-			return GP_ERROR_BAD_CONDITION;
-		default:
-			return GP_ERROR_CORRUPTED_DATA;
-		}
-	}
-	
-	return (GP_ERROR_IO);
-}
-
 int sierra_capture_preview (Camera *camera, CameraFile *file)
 {
-	char packet[4096];
-
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_capture_preview");
 
 	if (file == NULL)
 		return (GP_ERROR_BAD_PARAMETERS);
 	
-	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, packet));
+	/* Send to the camera the capture request and wait
+	   for the completion */
+	CHECK (sierra_write_action_command_and_wait(camera, 5));
 
-	packet[4] = 0x02;
-	packet[5] = 0x05;
-	packet[6] = 0x00;
-
-	/* Capture the preview, retrieve it and set the MIME type */
-	CHECK (do_capture (camera, packet));
+	/* Retrieve the preview and set the MIME type */
 	CHECK (sierra_get_string_register (camera, 14, 0, file, NULL, NULL));
 	CHECK (gp_file_set_mime_type (file, "image/jpeg"));
 
@@ -927,7 +1059,6 @@ int sierra_capture (Camera *camera, CameraCaptureType type,
 		    CameraFilePath *filepath)
 {
 	int picnum, length;
-	char packet[4096];
 	char buf[128];
 	const char *folder;
 
@@ -939,12 +1070,9 @@ int sierra_capture (Camera *camera, CameraCaptureType type,
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	/* Build and send to the camera the capture request */
-	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 3, packet));
-	packet[4] = 0x02;
-	packet[5] = 0x02;
-	packet[6] = 0x00;
-	CHECK (do_capture (camera, packet));
+	/* Send to the camera the capture request and wait
+	   for the completion */
+	CHECK (sierra_write_action_command_and_wait(camera, 2));
 
 	/* After picture is taken, register 4 is set to current picture */
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* get picture number...");
@@ -979,4 +1107,23 @@ int sierra_capture (Camera *camera, CameraCaptureType type,
 	}
 
 	return (GP_OK);
+}
+
+int sierra_upload_file (Camera *camera, CameraFile *file)
+{
+	const char *data;
+	long data_size;
+
+	/* Put the "magic spell" in register 32 */
+	CHECK (sierra_set_int_register (camera, 32, 0x0FEC000E));
+
+	/* Upload the file */
+	CHECK (gp_file_get_data_and_size (file, &data, &data_size));
+	CHECK (sierra_set_string_register (camera, 29, data, data_size));
+
+	/* Send command to order the transfer into NVRAM and wait
+	   for the completion */
+	CHECK (sierra_write_action_command_and_wait (camera, 11));
+
+	return GP_OK;
 }

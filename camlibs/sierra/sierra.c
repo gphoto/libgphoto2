@@ -25,24 +25,6 @@
 #include <string.h>
 #include <time.h>
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
 
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
@@ -178,7 +160,8 @@ int camera_abilities (CameraAbilitiesList *list)
 					GP_OPERATION_CONFIG;
 		a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
 					GP_FILE_OPERATION_PREVIEW;
-		a.folder_operations = 	GP_FOLDER_OPERATION_DELETE_ALL;
+		a.folder_operations = 	GP_FOLDER_OPERATION_DELETE_ALL |
+					GP_FOLDER_OPERATION_PUT_FILE;
 		a.usb_vendor  = sierra_cameras[x].usb_vendor;
 		a.usb_product = sierra_cameras[x].usb_product;
 		gp_abilities_list_append (list, a);
@@ -477,6 +460,73 @@ camera_capture_preview (Camera *camera, CameraFile *file)
 	CHECK (camera_start (camera));
 	
 	CHECK_STOP (camera, sierra_capture_preview (camera, file));
+
+	return (camera_stop (camera));
+}
+
+static int
+put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, void *data)
+{
+	Camera *camera = data;
+	char *picture_folder;
+	int ret;
+	const char *data_file;
+	long data_size;
+	const char *filename;
+	int available_memory;
+
+	gp_file_get_name(file, &filename);
+	
+
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** put_file_func");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
+	
+	/* Check the size */
+	CHECK (gp_file_get_data_and_size (file, &data_file, &data_size));
+	if ( data_size == 0 ) {
+		gp_camera_set_error(camera,
+				    _("The file to be uploaded has a null length"));
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
+	/* Initialize the camera */
+	CHECK (camera_start (camera));
+
+	/* Check the battery capacity */
+	CHECK (sierra_check_battery_capacity (camera));
+
+	/* Check the available memory */
+	CHECK (sierra_get_memory_left(camera, &available_memory));
+	if (available_memory < data_size) {
+		gp_camera_set_error(camera,
+				    _("Not enough memory available on the memory card"));
+		return GP_ERROR_NO_MEMORY;
+	}
+
+	/* Get the name of the folder containing the pictures */
+	if ( (ret = sierra_get_picture_folder(camera, &picture_folder)) != GP_OK ) {
+		gp_camera_set_error(camera,
+				    _("Cannot retrieve the name of the folder containing the pictures"));
+		return ret;
+	}
+
+	/* Check the destination folder is the folder containing the pictures.
+	   Otherwise, the upload is not supported by the camera. */
+	if ( strcmp(folder, picture_folder) ) {
+		gp_camera_set_error(camera, _("Upload is supported into the '%s' folder only"),
+				    picture_folder);
+		free(picture_folder);
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+	free(picture_folder);
+
+	/* It is not required to set the destination folder : the command
+	   will be ignored by the camera and the uploaded file will be put
+	   into the picure folder */
+
+	/* Upload the file */
+	CHECK_STOP (camera, sierra_upload_file (camera, file));
 
 	return (camera_stop (camera));
 }
@@ -1162,7 +1212,7 @@ camera_summary (Camera *camera, CameraText *summary)
 		sprintf (buf, _("%sSoftware Rev.   : %s\n"), buf, t);
 
 	/* Get all the integer information */
-	if (sierra_get_int_register(camera, 10, &value) == GP_OK)
+	if (sierra_get_int_register(camera, 40, &value) == GP_OK)
 		sprintf (buf, _("%sFrames Taken    : %i\n"), buf, value);
 	if (sierra_get_int_register(camera, 11, &value) == GP_OK)
 		sprintf (buf, _("%sFrames Left     : %i\n"), buf, value);
@@ -1387,7 +1437,7 @@ int camera_init (Camera *camera)
 	CHECK_STOP_FREE (camera, gp_filesystem_set_file_funcs (camera->fs,
 				get_file_func, delete_file_func, camera));
 	CHECK_STOP_FREE (camera, gp_filesystem_set_folder_funcs (camera->fs,
-				NULL, delete_all_func, NULL, NULL, camera));
+				put_file_func, delete_all_func, NULL, NULL, camera));
 
         return (camera_stop (camera));
 }
