@@ -29,9 +29,9 @@ typedef int (*c_file_unlock)	(int);
 typedef int (*c_config_get)	(CameraWidget*);
 typedef int (*c_config_set)	(CameraSetting*, int);
 typedef int (*c_capture)	(CameraFile*, CameraCaptureInfo *);
-typedef int (*c_summary)	(char*);
-typedef int (*c_manual)		(char*);
-typedef int (*c_about)		(char*);
+typedef int (*c_summary)	(CameraText*);
+typedef int (*c_manual)		(CameraText*);
+typedef int (*c_about)		(CameraText*);
 
 
 /* Function pointers to the current library functions */
