@@ -4,6 +4,8 @@
 	* libgphoto2_port/doc/Makefile.am: sourced out doc generation to
 	  DocRules.am
 	* libgphoto2_port/doc/DocRules.am: new file
+	* libgphoto2_port/m4/documentation.m4: disable building docs by
+	  default 
 
 2001-11-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
