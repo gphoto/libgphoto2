@@ -64,7 +64,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         a->config    = 1;
         a->file_delete  = 0;
         a->file_preview = 0;
-        a->file_put  = 1;
+        a->file_put  = 0;
 
         gp_abilities_list_append(list, a);
 
