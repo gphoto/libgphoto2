@@ -83,8 +83,12 @@ been ported to any operating system from MicroSoft.
 How to set up gphoto2
 ---------------------
 
-For information on how to set up gphoto2, see doc/gphoto2.txt.
-This includes information about setting up USB hotplugging.
+For information on how to set up gphoto2, see doc/gphoto2.txt (or
+wherever your package maintainer put this file). It includes
+information about setting up USB hotplugging. 
+
+If you run into problems, you may also consult the doc/FAQ file (or
+wherever your package maintainer put it).
 
 
 Frontends
