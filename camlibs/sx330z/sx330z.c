@@ -51,7 +51,7 @@ sx330z_fill_ack(int8_t *buf, struct traveler_ack *ack)
 {
  ack->always3 = le32toh(*(int32_t*)buf);   buf += 4;
  ack->timestamp = le32toh(*(int32_t*)buf); buf += 4;
- ack->size = le32toh(*(int32_t*)buf);      buf += 4;
+ ack->size = le32toh(*(uint32_t*)buf);     buf += 4;
  ack->dontknow = le32toh(*(int32_t*)buf);  buf += 4;
  return(GP_OK);
 } /* sx330z_fill_ack */
@@ -118,7 +118,7 @@ sx330z_read_block(Camera *camera, GPContext *context, struct traveler_req *req, 
  * Get TOC size
  */
 int 
-sx330z_get_toc_num_pages(Camera *camera, GPContext *context, unsigned int *pages)
+sx330z_get_toc_num_pages(Camera *camera, GPContext *context, uint32_t *pages)
 {
  struct traveler_ack ack;
  uint8_t trxbuf[0x10];
@@ -130,7 +130,7 @@ sx330z_get_toc_num_pages(Camera *camera, GPContext *context, unsigned int *pages
 
  sx330z_fill_ack(trxbuf, &ack); 		/* convert endianness */
 
- *pages = le32toh(ack.size / 0x200 + 1);		/* TOC Pages */
+ *pages = ack.size / 0x200 + 1;		/* TOC Pages */
 
  /* bug in camera ??*/
  if (ack.size == 0x200) (*pages)--;
