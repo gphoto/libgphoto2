@@ -1423,7 +1423,15 @@ int camera_manual (Camera *camera, CameraText *manual)
 
 	strcpy (manual->text, _("Some notes:\n"
 		"(1) Camera Configuration:\n"
-		"    A value of 0 will take the default one (auto).\n"));
+		"    A value of 0 will take the default one (auto).\n"
+		"(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
+		"    and others) have a USB PC Control mode. In order\n"
+		"    to use this mode, the camera must be switched \n"
+		"    into 'USB PC control mode'. To get to the menu \n"
+		"    for switching modes, open the memory card access\n"
+		"    door and then press and hold both of the menu \n"
+		"    buttons until the camera control menu appears.\n"
+		"    Set it to ON."));
 	return (GP_OK);
 }
 
