@@ -68,6 +68,8 @@ typedef int (*c_file_get_config)        (Camera*, const char*,
 		                         const char*, CameraWidget**);
 typedef int (*c_file_set_config)        (Camera*, const char*,
 		                         const char*, CameraWidget*);
+
+/* Don't use */
 typedef int (*c_file_get)               (Camera*, const char*,
 		                         const char*, CameraFileType type,
 					 CameraFile*);
@@ -98,6 +100,8 @@ typedef struct {
 
 	c_file_get_config       file_get_config;
 	c_file_set_config       file_set_config;
+
+	/* Don't use those, use gp_filesystem_set_file_funcs instead */
 	c_file_get              file_get;
 
 	c_result_as_string      result_as_string;

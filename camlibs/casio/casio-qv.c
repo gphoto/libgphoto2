@@ -189,13 +189,12 @@ camera_capture (Camera *camera, int type, CameraFilePath *path)
 	/* Capture the image */
 	CHECK_RESULT (QVcapture (camera));
 
-	/* Tell libgphoto2 that the filesystem changed */
-	CHECK_RESULT (gp_filesystem_reset (camera->fs));
-
 	/* Tell libgphoto2 where to look for the new image */
 	strcpy (path->folder, "/");
 	sprintf (path->name, "CASIO_QV_%04i.jpg",
 		 gp_filesystem_count (camera->fs, "/"));
+
+	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", path->name));
 
 	return (GP_OK);
 }

@@ -1,5 +1,18 @@
 2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/casio/casio-qv.c: On capture, append the file to the 
+	  filesystem
+	* camlibs/polaroid/pdc640.c: Here, too.
+	* include/gphoto2-camera.h: Add some more warnings
+	* libgphoto2/filesys.c:
+	* include/gphoto2-filesys.h: We don't need to expose
+	  gp_filesystem_folder_number, that doesn't make sense
+
+2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Shift the whole library towards exclusively using the
+	CameraFilesystem:
+
 	* camlibs/agfa/agfa.c: delete_file_func, get_file_func
 	* camlibs/canon/canon.c: Add warning that upload and deletion is
 	  broken

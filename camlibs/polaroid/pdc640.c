@@ -673,6 +673,8 @@ camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
         sprintf (path->name, PDC640_FILESPEC, num);
         strcpy (path->folder, "/");
 
+	CHECK_RESULT (gp_filesystem_append (camera->fs, "/", path->name));
+
         return (GP_OK);
 }
 

@@ -63,7 +63,7 @@ struct _CameraFilesystem {
 	void *file_data;
 
 	CameraFilesystemPutFileFunc put_file_func;
-	CameraFilesysetmDeleteAllFunc delete_all_func;
+	CameraFilesystemDeleteAllFunc delete_all_func;
 	void *folder_data;
 };
 
@@ -294,7 +294,7 @@ gp_filesystem_free (CameraFilesystem *fs)
         return (GP_OK);
 }
 
-int
+static int
 gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 {
 	int x, y, len;
@@ -355,13 +355,6 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 	CHECK_RESULT (gp_filesystem_list_folders (fs, buf, &list));
 
 	return (gp_filesystem_folder_number (fs, folder));
-}
-
-int
-gp_filesystem_number (CameraFilesystem *fs, const char *folder,
-		      const char *filename)
-{
-	return (gp_filesystem_file_number (fs, folder, filename));
 }
 
 int
@@ -668,7 +661,7 @@ gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder,
 
 	/* Search the folder and the file */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
-	CHECK_RESULT (y = gp_filesystem_file_number (fs, folder, filename));
+	CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename));
 
 	/* Delete the file */
 	CHECK_RESULT (fs->delete_file_func (fs, folder, filename,
@@ -722,7 +715,7 @@ gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
 }
 
 int
-gp_filesystem_file_number (CameraFilesystem *fs, const char *folder, 
+gp_filesystem_number (CameraFilesystem *fs, const char *folder, 
 		      const char *filename)
 {
 	CameraList list;
@@ -744,7 +737,7 @@ gp_filesystem_file_number (CameraFilesystem *fs, const char *folder,
 	/* The folder is dirty. List all files to make it clean */
 	CHECK_RESULT (gp_filesystem_list_files (fs, folder, &list));
 
-        return (gp_filesystem_file_number (fs, folder, filename));
+        return (gp_filesystem_number (fs, folder, filename));
 }
 
 static int
@@ -838,7 +831,7 @@ gp_filesystem_set_file_funcs (CameraFilesystem *fs,
 int
 gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
 				CameraFilesystemPutFileFunc put_file_func,
-				CameraFilesysetmDeleteAllFunc del_all_func,
+				CameraFilesystemDeleteAllFunc del_all_func,
 				void *data)
 {
 	CHECK_NULL (fs);
@@ -869,7 +862,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 
 	/* Search folder and file */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
-	CHECK_RESULT (y = gp_filesystem_file_number (fs, folder, filename));
+	CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename));
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
@@ -955,7 +948,7 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 
 	/* Search folder and file and get info if needed */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
-	CHECK_RESULT (y = gp_filesystem_file_number (fs, folder, filename));
+	CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename));
 	if (fs->folder[x].file[y].info_dirty) {
 		CHECK_RESULT (fs->get_info_func (fs, folder, filename, 
 						&fs->folder[x].file[y].info,
@@ -985,7 +978,7 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 
 	/* Search folder and file and set info */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
-	CHECK_RESULT (y = gp_filesystem_file_number (fs, folder, filename)); 
+	CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename)); 
 	CHECK_RESULT (fs->set_info_func (fs, folder, filename, info,
 					 fs->info_data));
 

@@ -76,13 +76,8 @@ int gp_filesystem_name         (CameraFilesystem *fs, const char *folder,
 			        int filenumber, const char **filename);
 int gp_filesystem_get_folder   (CameraFilesystem *fs, const char *filename,
 			        const char **folder);
-
-int gp_filesystem_file_number   (CameraFilesystem *fs, const char *folder,
-						       const char *filename);
-int gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder);
-
-/* Don't use... */
-int gp_filesystem_number       (CameraFilesystem *, const char *, const char *);
+int gp_filesystem_number       (CameraFilesystem *, const char *folder,
+				const char *filename);
 
 /* Listings */
 typedef int (*CameraFilesystemListFunc) (CameraFilesystem *fs,
@@ -135,11 +130,11 @@ int gp_filesystem_delete_file    (CameraFilesystem *fs, const char *folder,
 typedef int (*CameraFilesystemPutFileFunc)   (CameraFilesystem *fs,
 					      const char *folder,
 					      CameraFile *file, void *data);
-typedef int (*CameraFilesysetmDeleteAllFunc) (CameraFilesystem *fs,
+typedef int (*CameraFilesystemDeleteAllFunc) (CameraFilesystem *fs,
 					      const char *folder, void *data);
 int gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
 				    CameraFilesystemPutFileFunc put_file_func,
-				    CameraFilesysetmDeleteAllFunc del_all_func,
+				    CameraFilesystemDeleteAllFunc del_all_func,
 				    void *data);
 int gp_filesystem_put_file   (CameraFilesystem *fs, const char *folder,
 			      CameraFile *file);
