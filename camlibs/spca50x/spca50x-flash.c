@@ -765,6 +765,7 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 {
 	uint32_t file_size = 0, aligned_size = 0;
 	uint8_t *p, *buf;
+	int align_to;
 
 	if (lib->bridge == BRIDGE_SPCA500) { /* for dsc 350 cams */
 		return spca500_flash_84D_get_file (lib, data, len, index, thumbnail);
@@ -801,9 +802,15 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 					0x54, index+1, 0x0002, NULL, 0x00));
 		}
 	}
+
+	if (lib->fw_rev == 1) {
+		align_to = 0x400;
+	} else {
+		align_to = 0x200;
+	}
 	/* align */
-	if (file_size % 8192 != 0)
-		aligned_size = ((file_size / 8192) + 1) * 8192;
+	if (file_size % align_to != 0)
+		aligned_size = ((file_size / align_to) + 1) * align_to;
 
 	buf = malloc (aligned_size);
 	if (!buf)
