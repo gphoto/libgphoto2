@@ -83,11 +83,6 @@ struct canonCamModelData
 
 extern const struct canonCamModelData models[];
 
-#undef S10M
-#undef S2M
-#undef S1M
-#undef S32K
-
 struct _CameraPrivateLibrary
 {
 	struct canonCamModelData *md;
