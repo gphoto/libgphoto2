@@ -259,8 +259,7 @@ static char *digita_file_get(Camera *camera, const char *folder,
 
 	gp_camera_progress(camera, 1.00);
 
-	if (size)
-		*size = buflen;
+	*size = buflen;
 
 	return data;
 }
@@ -271,7 +270,7 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = user_data;
 	unsigned char *data;
-	unsigned int *ints, width, height;
+	unsigned int width, height;
 	char ppmhead[64]; 
 	int buflen;
 
@@ -280,12 +279,15 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
+		fprintf(stderr, "Getting picture\n");
 	        data = digita_file_get(camera, folder, filename, 0, &buflen);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		data = digita_file_get(camera, folder, filename, 1, NULL);
+		fprintf(stderr, "Getting thumbnail\n");
+		data = digita_file_get(camera, folder, filename, 1, &buflen);
 		break;
 	default:
+		fprintf(stderr, "Unsupported image type\n");
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
@@ -293,19 +295,27 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 		return GP_ERROR;
 
 	gp_file_set_name(file, filename);
-	gp_file_set_data_and_size(file, data, buflen);
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
+		gp_file_set_data_and_size(file, data, buflen);
 		gp_file_set_mime_type(file, GP_MIME_JPEG);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		ints = (unsigned int *)data;
-		width = ntohl(ints[2]);
-		height = ntohl(ints[1]);
+		/* FIXME: This is bayer, we should be able to use the */
+		/* builtin bayer functions */
+		memcpy((void *)&height, data + 4, 4);
+		height = ntohl(height);
+		memcpy((void *)&width, data + 8, 4);
+		width = ntohl(width);
 
 		gp_debug_printf(GP_DEBUG_LOW, "digita", "picture size %dx%d", width, height);
-		gp_debug_printf(GP_DEBUG_LOW, "digita", "data size %d", ntohl(ints[0]));
+		gp_debug_printf(GP_DEBUG_LOW, "digita", "data size %d", buflen - 16);
+
+		memmove(data, data + 16, buflen - 16);
+		buflen -= 16;
+
+		gp_file_set_data_and_size(file, data, buflen);
 
 		sprintf(ppmhead, "P6\n%i %i\n255\n", width, height);
 		gp_file_set_mime_type(file, GP_MIME_RAW);
