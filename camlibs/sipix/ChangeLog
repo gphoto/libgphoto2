@@ -1,3 +1,8 @@
+2005-03-23  Marcus Meissner <marcus@jet.franken.de>
+	
+	* blink2.c: added delete all and capture image.
+	* blink2.txt: started documenting.
+
 2004-04-01  Marcus Meissner <marcus@jet.franken.de>
 	
 	* merged patch for Snap from Thomas Coffy <karm@happycoders.org>,
