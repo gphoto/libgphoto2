@@ -275,7 +275,7 @@ pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
 {
 	unsigned char cmd[8];
 	unsigned char buf[2048];
-	int len, status, i;
+	int len, status;
 	unsigned char sequence_num;
 	PDCPicInfo info;
 
@@ -295,9 +295,9 @@ pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
 					buf, &len, &status), *data);
 	sequence_num = buf[0];
 	memcpy (*data, buf + 1, len - 1);
+	*size = len - 1;
 
 	/* Get the following packets */
-	i = len - 1;
 	while (status != PDC700_LAST) {
 		cmd[4] = PDC700_DONE;
 		cmd[5] = sequence_num;
@@ -305,8 +305,8 @@ pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
 		CHECK_RESULT_FREE (pdc700_read (camera, cmd, 7,
 						buf, &len, &status), *data);
 		sequence_num = buf[0];
-		memcpy (*data + i, buf + 1, len - 1);
-		i += (len - 1);
+		memcpy (*data + *size, buf + 1, len - 1);
+		*size += len - 1;
 	}
 
 #if 0
