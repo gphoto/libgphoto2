@@ -1,3 +1,5 @@
+2003-04-10 Mariusz Woloszyn
+	* library.c: added Canon A70
 2003-04-03 Mariusz Woloszyn
 	* ptp.c: added ptp_free_devicepropdesc()
 	* ptp.h: added ptp_free_devicepropdesc()
