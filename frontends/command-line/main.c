@@ -11,15 +11,12 @@
 #include "interface.h"
 
 void usage();
+int  verify_options (int argc, char **argv);
 
 /* Command-line option
    -----------------------------------------------------------------------
    (this is funky, but sounded cool to do. it makes sense since this is 
    just a wrapper for a functional/flow-based library)
-
-   - Add command-line option in the following table. 
-   - Don't forget to update option_count!
-   - Order is important! option are parsed in the order in the table.
 
    When main() starts up, it starts parsing the command-line arguments.
    For each argument, it will look up the entry in the following table. if it
@@ -34,34 +31,42 @@ void usage();
 OPTION_CALLBACK(help);
 OPTION_CALLBACK(test);
 OPTION_CALLBACK(filename);
+OPTION_CALLBACK(port);
+OPTION_CALLBACK(model);
 OPTION_CALLBACK(get_picture);
 OPTION_CALLBACK(get_thumbnail);
 
 /* 2) Add an entry in the option table 				*/
 /*    ----------------------------------------------------------------- */
 /*    Format for option is:						*/
-/*     {'short', "long", "argument", "description", callback_function}, */
-/*    if it is just a flag, set the argument to ""			*/
+/*     {"short", "long", "argument", "description", callback_function}, */
+/*    if it is just a flag, set the argument to "".			*/
+/*    -Order is important! Options are parsed in the order in the table-*/
 
 Option option[] = {
 {"h", "help",		"",		"Displays this help screen",	help},
 {"",  "test",		"",		"Verifies gPhoto installation",	test},
 {"f", "filename",	"<filename>",	"Specify a filename",		filename},
+{"" , "port",		"<port>",	"Specify port device to use",	port},
+{"" , "camera",		"<model>",	"Specify camera model",		model},
 {"p", "get-picture",	"#", 		"Get picture # from camera", 	get_picture},
 {"t", "get-thumbnail",	"#", 		"Get thumbnail # from camera",	get_thumbnail},
+{"" , "", 		"",		"",				NULL}
 };
 
 /* 3) Increase option_count by the number of entries you added.	*/
 /*    ----------------------------------------------------------------- */
 /*    (Value should be the total number of entries in the option table.*/
 
-int option_count = 5;
+int option_count = 7;
 
 /* 4) Add any necessary global variables				*/
 /*    ----------------------------------------------------------------- */
 
 int  glob_filename_override=0;
 char glob_filename[128];
+char glob_port[128];
+char glob_model[64];
 
 
 /* 4) Finally, add your callback function.				*/
@@ -71,30 +76,44 @@ char glob_filename[128];
 
 OPTION_CALLBACK(help) {
 
-	printf("help callback\n");
-
 	usage();
+	exit(0);
 }
 
 OPTION_CALLBACK(test) {
-	printf("test callback\n");
 
 	test_gphoto();
-
 	exit(0);
 }
 
 OPTION_CALLBACK(filename) {
 
-	printf ("filename: %s\n", arg);
+	printf("filename: %s\n", arg);
 
 	strcpy(glob_filename, arg);
 }
 
+OPTION_CALLBACK(port) {
+
+	strcpy(glob_port, arg);
+}
+
+OPTION_CALLBACK(model) {
+
+	strcpy(glob_model, arg);
+}
 
 OPTION_CALLBACK(get_picture) {
 
+	CameraFile *f;
+
 	printf ("get_picture: %s\n", arg);
+
+	/* gp_file_get(atoi(arg), f);	*/
+	/* if glob_filename_override==1 */
+	/* 	save as glob_filename   */
+	/*   else			*/
+	/*      save as file->filename  */
 }
 
 OPTION_CALLBACK(get_thumbnail) {
@@ -188,8 +207,6 @@ void usage () {
 		printf("%-38s %s\n", buf, option[x].description);
 		x++;
 	}
-
-	exit(0);
 }
 
 int main (int argc, char **argv) {
@@ -197,9 +214,19 @@ int main (int argc, char **argv) {
 	int x, y;
 	char s[5], l[24];
 
-	if ((argc == 1)||(verify_options(argc, argv)==GP_ERROR))
-		usage();
+	/* Command-line option checking */
+	option_count = 0;
+	while (option[option_count].execute) {option_count++;}
 
+	if ((argc == 1)||(verify_options(argc, argv)==GP_ERROR)) {
+		usage();
+		exit(0);
+	}
+
+	/* Initialize gPhoto */
+	gp_init();
+
+	/* Execute the command-line options */
 	for (x=0; x<option_count; x++) {
 		sprintf(s, "%s%s", SHORT_OPTION, option[x].short_id);
 		sprintf(l, "%s%s", LONG_OPTION, option[x].long_id);
