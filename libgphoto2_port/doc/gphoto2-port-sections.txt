@@ -73,6 +73,7 @@ GP_LOG_VERBOSE
 GP_LOG_DEBUG
 GP_LOG_DATA
 GPLogFunc
+GPLogLevel
 gp_log_add_func
 gp_log_remove_func
 gp_log

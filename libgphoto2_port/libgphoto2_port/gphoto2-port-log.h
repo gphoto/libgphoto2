@@ -24,13 +24,21 @@
 #include <stdarg.h>
 
 /**
+ * GPLogLevel:
+ *
+ * foo bar blah blah
+ **/
+
+typedef enum {
+
+/**
  * GP_LOG_ERROR:
  * 
  * An error occured, i.e. the attempted operation failed. E.g. 
  * "Cannot open device /dev/ttyS1: permission denied"
  * These messages will usually be logged by #gp_port_set_error.
  **/
-#define GP_LOG_ERROR 0
+	GP_LOG_ERROR = 0,
 
 /**
  * GP_LOG_VERBOSE:
@@ -41,7 +49,7 @@
  * the region an bug may be located.
  * E.g. "getting file %s from cam".
  **/
-#define GP_LOG_VERBOSE 1
+	GP_LOG_VERBOSE = 1,
 
 /**
  * GP_LOG_DEBUG:
@@ -49,7 +57,7 @@
  * Debug messages, e.g. "fetching chunk %i/%i of file %s"
  * These messages will usually logged by any kind of code.
  **/
-#define GP_LOG_DEBUG 2
+	GP_LOG_DEBUG = 2,
 
 /**
  * GP_LOG_DATA:
@@ -60,7 +68,8 @@
  * These messages will usually be logged by port interface libraries
  * in their send and receive functions
  **/
-#define GP_LOG_DATA 3
+	GP_LOG_DATA = 3
+} GPLogLevel;
 
 /**
  * GP_LOG_ALL:
@@ -75,11 +84,11 @@
 
 /**
  * GPLogFunc:
- * @level: a gphoto2 log level
+ * @level: a #GPLogLevel
  * @domain: describes the context in which the message was created
  * 	    (driver, src file)
- * @format: the format of the message
- * @args: 
+ * @format: formatting string of the message
+ * @args:   arguments for formatting string
  * @data: some static data, is provided when registering this function with
  * 	  #gp_log_add_func
  *
@@ -87,16 +96,45 @@
  * library, thus
  * being able to digest and process log messages in an appropriate way.
  **/
-typedef void (* GPLogFunc) (int level, const char *domain,
+typedef void (* GPLogFunc) (GPLogLevel level, const char *domain,
 			    const char *format, va_list args, void *data);
-int  gp_log_add_func    (int level, GPLogFunc func, void *data);
+int  gp_log_add_func    (GPLogLevel level, GPLogFunc func, void *data);
 int  gp_log_remove_func (int id);
 
 /* Logging */
-void gp_log      (int level, const char *domain,
+void gp_log      (GPLogLevel level, const char *domain,
 		  const char *format, ...);
-void gp_logv     (int level, const char *domain, const char *format,
+void gp_logv     (GPLogLevel level, const char *domain, const char *format,
 		  va_list args);
 void gp_log_data (const char *domain, const char *data, unsigned int size);
+
+/*#ifndef GP_MODULE
+ *#define GP_MODULE "unknown"
+ *#endif
+ */
+
+/**
+ * GP_LOG:
+ * @level: gphoto2 log level to log message under
+ * @msg: message to log
+ * @params: params to message
+ *
+ * calls #gp_log with an automatically generated domain
+ **/
+
+#define GP_LOG(level, msg, params...) \
+        gp_log(level, GP_MODULE "/" __FILE__, msg, ##params)
+
+/**
+ * GP_DEBUG:
+ * @msg: message to log
+ * @params: params to message
+ *
+ * Logs message at log level #GP_LOG_DEBUG by calling #gp_log() with
+ * an automatically generated domain
+ **/
+
+#define GP_DEBUG(msg, params...) \
+        gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
 
 #endif /* __GPHOTO2_PORT_LOG_H__ */
