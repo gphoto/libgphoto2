@@ -70,14 +70,23 @@
 				}\
 }
 */
-#define find_folder_handle(fn,p,d)	{			\
+#define find_folder_handle(fn,s,p,d)	{			\
 		{						\
 		char *backfolder=malloc(strlen(fn));		\
 		char *tmpfolder;				\
 		memcpy(backfolder,fn+1, strlen(fn));		\
 		if ((tmpfolder=strchr(backfolder+1,'/'))==NULL) tmpfolder="/";\
-		p=folder_to_handle(tmpfolder+1,0,(Camera *)d);\
+		p=folder_to_handle(tmpfolder+1,s,0,(Camera *)d);\
 		free(backfolder);				\
+		}						\
+}
+
+#define folder_to_storage(fn,s) {				\
+		{						\
+		if (!strncmp(fn,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1)) {\
+			if (strlen(fn)<strlen(STORAGE_FOLDER_PREFIX)+8+1) return (GP_ERROR);\
+			s = strtol(fn + strlen(STORAGE_FOLDER_PREFIX)+1, NULL, 16);\
+		} else return (GP_ERROR);			\
 		}						\
 }
 
@@ -584,13 +593,13 @@ handle_to_n (uint32_t handle, Camera *camera)
 
 
 static uint32_t
-find_child (const char *file, uint32_t handle, Camera *camera)
+find_child (const char *file, uint32_t storage, uint32_t handle, Camera *camera)
 {
 	int i;
 	PTPObjectInfo *oi = camera->pl->params.objectinfo;
 
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
-		if (oi[i].ParentObject==handle)
+		if ((oi[i].StorageID==storage) && (oi[i].ParentObject==handle))
 			if (!strcmp(oi[i].Filename,file))
 				return (camera->pl->params.handles.handler[i]);
 	}
@@ -600,7 +609,7 @@ find_child (const char *file, uint32_t handle, Camera *camera)
 
 
 static uint32_t
-folder_to_handle(const char *folder, uint32_t parent, Camera *camera)
+folder_to_handle(const char *folder, uint32_t storage, uint32_t parent, Camera *camera)
 {
 	char *c;
 	if (!strlen(folder)) return PTP_HANDLER_ROOT;
@@ -609,10 +618,10 @@ folder_to_handle(const char *folder, uint32_t parent, Camera *camera)
 	c=strchr(folder,'/');
 	if (c!=NULL) {
 		*c=0;
-		parent=find_child (folder, parent, camera);
-		return folder_to_handle(c+1,parent, camera);
+		parent=find_child (folder, storage, parent, camera);
+		return folder_to_handle(c+1, storage, parent, camera);
 	} else  {
-		return find_child (folder, parent, camera);
+		return find_child (folder, storage, parent, camera);
 	}
 }
 	
@@ -622,7 +631,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
-	uint32_t parent, storage=0x0000000;
+	uint32_t parent, storage;
 	int i;
 
 	/*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
@@ -631,17 +640,11 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (!strcmp(folder, "/")) {
 		return (GP_OK);
 	}
-	/* be paranoid, there can be ONLY storage pseudofolders in /, but
-	   check for that! */
-	if (!strncmp(folder,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1)) {
-		/* be paranoid, allways!!! */
-		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+8+1) return (GP_ERROR);
-		storage = strtol(folder + strlen(STORAGE_FOLDER_PREFIX) + 1, NULL, 16);
-	}
-
+	/* compute storage ID value from folder patch */
+	folder_to_storage(folder,storage);
 
 	/* Get (parent) folder handle omiting storage pseudofolder */
-	find_folder_handle(folder,parent,data);
+	find_folder_handle(folder,storage,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==parent)
 	if (params->objectinfo[i].ObjectFormat != PTP_OFC_Association)
@@ -689,19 +692,16 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		return (GP_OK);
 	}
 	{
-	uint32_t parent,storage=0x0000000;
+	uint32_t handler,storage;
 
-	/* be paranoid, there can be ONLY storage pseudofolders in /, but
-	   check for that! */
-	if (!strncmp(folder,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1)) {
-		/* be paranoid, allways!!! */
-		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+8+1) return (GP_ERROR);
-		storage = strtol(folder + strlen(STORAGE_FOLDER_PREFIX) + 1, NULL, 16);
-	} else return (GP_ERROR);
-	/* Get (parent) folder handle omiting storage pseudofolder */
-	find_folder_handle(folder,parent,data);
+	/* compute storage ID value from folder path */
+	folder_to_storage(folder,storage);
+
+	/* Get folder handle omiting storage pseudofolder */
+	find_folder_handle(folder,storage,handler,data);
+	GP_DEBUG ("folder: %s\nID = 0x%.4x\tstorage = %.4x\n",folder, handler,storage);
 	for (i = 0; i < params->handles.n; i++) {
-	if (params->handles.handler[i]==parent)
+	if (params->objectinfo[i].ParentObject==handler)
 	if ((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) || 
 		(params->objectinfo[i].StorageID == storage))
 	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
@@ -722,13 +722,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	char * image;
 	uint32_t object_id;
 	uint32_t size;
+	uint32_t storage;
 	PTPObjectInfo * oi;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
+	/* compute storage ID value from folder patch */
+	folder_to_storage(folder,storage);
+
 	/* Get file number omiting storage pseudofolder */
-	find_folder_handle(folder, object_id, data);
-	object_id = find_child(filename, object_id, camera);
+	find_folder_handle(folder, storage, object_id, data);
+	object_id = find_child(filename, storage, object_id, camera);
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
@@ -784,7 +788,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	PTPObjectInfo oi;
 	const char *filename, *object;
 	uint32_t parent;
-	uint32_t store;
+	uint32_t storage;
 	uint32_t handle;
 	long int intsize;
 	uint32_t size;
@@ -796,18 +800,11 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	gp_file_get_data_and_size (file, &object, &intsize);
 	size=(uint32_t)intsize;
 
+	/* compute storage ID value from folder patch */
+	folder_to_storage(folder,storage);
+
 	/* get parent folder id omiting storage pseudofolder */
-	find_folder_handle(folder,parent,data);
-	/* in Kodak DX3500 (probably others),
-	 * you _have_ to specify store, so we use
-	 * same as parent folder, or 0x00020001 if root.
-	 * FIXME!
-	 */
-	if ( parent != PTP_HANDLER_ROOT ) {
-		int n = handle_to_n(parent,camera);
-		store = camera->pl->params.objectinfo[n].StorageID;
-	} else
-		store=0x00020001; // FIXME
+	find_folder_handle(folder,storage,parent,data);
 
 	/* if you desire to put file to root folder, you have to use 
 	 * 0xffffffff instead of 0x00000000 (which means responder decide).
@@ -819,7 +816,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	oi.ObjectCompressedSize=size;
 	gp_file_get_mtime(file, &oi.ModificationDate);
 	CPR (context, ptp_ek_sendfileobjectinfo (&camera->pl->params,
-		&store, &parent, &handle, &oi));
+		&storage, &parent, &handle, &oi));
 	fdata=malloc(size+PTP_REQ_HDR_LEN);
 	memcpy(fdata->data, object, size);
 	CPR (context, ptp_ek_sendfileobject (&camera->pl->params,
@@ -835,12 +832,16 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = data;
 	unsigned long object_id;
+	uint32_t storage;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
+	/* compute storage ID value from folder patch */
+	folder_to_storage(folder,storage);
+
 	/* Get file number omiting storage pseudofolder */
-	find_folder_handle(folder, object_id, data);
-	object_id = find_child(filename, object_id, camera);
+	find_folder_handle(folder, storage, object_id, data);
+	object_id = find_child(filename, storage, object_id, camera);
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
@@ -856,12 +857,16 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = data;
 	unsigned long object_id;
+	uint32_t storage;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
+	/* compute storage ID value from folder patch */
+	folder_to_storage(folder,storage);
+
 	/* Get file number omiting storage pseudofolder */
-	find_folder_handle(folder, object_id, data);
-	object_id = find_child(foldername, object_id, camera);
+	find_folder_handle(folder, storage, object_id, data);
+	object_id = find_child(foldername, storage, object_id, camera);
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
@@ -878,33 +883,20 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = data;
 	PTPObjectInfo *oi;
 	uint32_t object_id;
+	uint32_t storage;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
+	/* compute storage ID value from folder patch */
+	folder_to_storage(folder,storage);
+
 	/* Get file number omiting storage pseudofolder */
-	find_folder_handle(folder, object_id, data);
-	object_id = find_child(filename, object_id, camera);
+	find_folder_handle(folder, storage, object_id, data);
+	object_id = find_child(filename, storage, object_id, camera);
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	oi=&camera->pl->params.objectinfo[object_id];
-/*
-	GP_DEBUG ("ObjectInfo for '%s':", filename);
-	GP_DEBUG ("  StorageID: 0x%.4x", oi->StorageID);
-	GP_DEBUG ("  ObjectFormat: 0x%.4x", oi->ObjectFormat);
-	GP_DEBUG ("  ObjectCompressedSize: %d", oi->ObjectCompressedSize);
-	GP_DEBUG ("  ThumbFormat: 0x%.4x", oi->ThumbFormat);
-	GP_DEBUG ("  ThumbCompressedSize: %d", oi->ThumbCompressedSize);
-	GP_DEBUG ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
-	GP_DEBUG ("  ThumbPixHeight: %d", oi->ThumbPixHeight);
-	GP_DEBUG ("  ImagePixWidth: %d", oi->ImagePixWidth);
-	GP_DEBUG ("  ImagePixHeight: %d", oi->ImagePixHeight);
-	GP_DEBUG ("  ImageBitDepth: %d", oi->ImageBitDepth);
-	GP_DEBUG ("  ParentObject: 0x%.4x", oi->ParentObject);
-	GP_DEBUG ("  AssociationType: 0x%.4x", oi->AssociationType);
-	GP_DEBUG ("  AssociationDesc: 0x%.4x", oi->AssociationDesc);
-	GP_DEBUG ("  SequenceNumber: 0x%.4x", oi->SequenceNumber);
-*/
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
 
 	info->file.size   = oi->ObjectCompressedSize;
@@ -938,23 +930,19 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	Camera *camera = data;
 	PTPObjectInfo oi;
 	uint32_t parent;
-	uint32_t store;
+	uint32_t storage;
 	uint32_t handle;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 
+	/* compute storage ID value from folder patch */
+	folder_to_storage(folder,storage);
+
 	/* get parent folder id omiting storage pseudofolder */
-	find_folder_handle(folder,parent,data);
+	find_folder_handle(folder,storage,parent,data);
 
-	/* try to obtain StorageID from parent object */
-	if ( parent != PTP_HANDLER_ROOT ) {
-		int n = handle_to_n(parent,camera);
-		store = camera->pl->params.objectinfo[n].StorageID;
-	} else
-		store=0x00020001;  // FIXME
-
-	/* if you desire to put file to root folder, you have to use
+	/* if you desire to make dir in 'root' folder, you have to use
 	 * 0xffffffff instead of 0x00000000 (which means responder decide).
 	 */
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
@@ -966,7 +954,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	oi.AssociationType=PTP_AT_GenericFolder;
 
 	CPR (context, ptp_ek_sendfileobjectinfo (&camera->pl->params,
-		&store, &parent, &handle, &oi));
+		&storage, &parent, &handle, &oi));
 	/* to create folder on kodak camera you don't have to sendfileobject */
 #if 0
 	CPR (context, ptp_ek_sendfileobject (&camera->pl->params,

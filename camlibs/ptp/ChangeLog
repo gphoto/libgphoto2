@@ -1,3 +1,6 @@
+2002-12-10 Mariusz Woloszyn
+	* library.c: better handling of foldername to handler conversion
+	  (storage id matching was missing)
 2002-11-28 Mariusz Woloszyn
 	* library.c: snprintf() is safer than sprintf()!
 2002-11-27 Mariusz Woloszyn
