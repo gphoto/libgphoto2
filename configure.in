@@ -496,6 +496,15 @@ doc/api/Makefile
 doc/figures/Makefile
 ])
 
+if test "x$CDPATH" != "x"
+then
+        echo
+        echo "************************************************************"
+        echo "* You have CDPATH set. You make have to run \"unset CDPATH\" *"
+        echo "* before running \"make dist\" or \"make rpm\".                *"
+        echo "************************************************************"
+fi
+
 echo "
 
 Configuration (libgphoto2):
