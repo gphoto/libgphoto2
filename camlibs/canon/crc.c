@@ -218,7 +218,7 @@ canon_psa50_gen_crc (const unsigned char *pkt, int len)
 	init = find_init (len);
 	if (init != -1)
 		return chksum (init, len, pkt);
-	fprintf (stderr, "FATAL ERROR: initial CRC value for length %d unknown\n", len);
+	fprintf (stderr, _("FATAL ERROR: initial CRC value for length %d unknown\n"), len);
 	exit (1);
 }
 
@@ -231,7 +231,7 @@ guess (const unsigned char *m, int len, int crc)
 	for (i = 0; i < 0x10000; i++)
 		if (chksum (i, len, m) == crc)
 			return i;
-	fprintf (stderr, "unable to guess initial CRC value\n");
+	fprintf (stderr, _("unable to guess initial CRC value\n"));
 	exit (1);
 }
 
@@ -258,7 +258,7 @@ canon_psa50_chk_crc (const unsigned char *pkt, int len, unsigned short crc)
 		return chksum (init, len, pkt) == crc;
 	this = guess (pkt, len, crc);
 	fprintf (stderr,
-		 "warning: CRC not checked (add len %d, value 0x%04x) #########################\n",
+		 _("warning: CRC not checked (add len %d, value 0x%04x) #########################\n"),
 		 len, this);
 	return 1;
 }

@@ -1115,21 +1115,21 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 
 	*dirent_data = NULL;
 
-	/* fetch all directory entrys, the first one is a little special */
+	/* fetch all directory entries, the first one is a little special */
 	p = canon_serial_dialogue (camera, context, 0xb, 0x11, dirents_length, "", 1, path,
 				   strlen (path) + 1, "\x00", 2, NULL);
 	if (p == NULL) {
 		gp_context_error (context,
-				  "canon_serial_get_dirents: "
-				  "canon_serial_dialogue failed to fetch directory entrys");
+				  _("canon_serial_get_dirents: "
+				  "canon_serial_dialogue failed to fetch directory entries"));
 		return GP_ERROR;
 	}
 
 	/* In the RS232 implementation, we should never get less than 5 bytes */
 	if (*dirents_length < 5) {
 		gp_context_error (context,
-				  "canon_serial_get_dirents: "
-				  "Initial dirent packet too short (only %i bytes)",
+				  _("canon_serial_get_dirents: "
+				  "Initial dirent packet too short (only %i bytes)"),
 				  *dirents_length);
 		return GP_ERROR;
 	}
@@ -1148,8 +1148,8 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 	data = malloc (mallocd_bytes);
 	if (!data) {
 		gp_context_error (context,
-				  "canon_serial_get_dirents: "
-				  "Could not allocate %i bytes of memory", mallocd_bytes);
+				  _("canon_serial_get_dirents: "
+				  "Could not allocate %i bytes of memory"), mallocd_bytes);
 		return GP_ERROR_NO_MEMORY;
 	}
 
@@ -1161,15 +1161,15 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 
 	/* p[4] indicates this is not the last packet,
 	 * read additional packets until there are no more
-	 * directory entrys to read
+	 * directory entries to read
 	 */
 	while (!p[4]) {
 		GP_DEBUG ("p[4] is %i", (int) p[4]);
 		p = canon_serial_recv_msg (camera, 0xb, 0x21, dirents_length, context);
 		if (p == NULL) {
 			gp_context_error (context,
-					  "canon_serial_get_dirents: "
-					  "Failed to read another directory entry");
+					  _("canon_serial_get_dirents: "
+					  "Failed to read another directory entry"));
 			free (data);
 			data = NULL;
 			return GP_ERROR;
@@ -1186,8 +1186,8 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 		 */
 		if (*dirents_length - 5 < CANON_MINIMUM_DIRENT_SIZE) {
 			gp_context_error (context,
-					  "canon_serial_get_dirents: "
-					  "Truncated directory entry received");
+					  _("canon_serial_get_dirents: "
+					  "Truncated directory entry received"));
 			free (data);
 			data = NULL;
 			return GP_ERROR;
@@ -1208,13 +1208,13 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			mallocd_bytes += MAX (1024, *dirents_length);
 
 			/* check if we are reading unrealistic ammounts
-			 * of directory entrys so that we don't loop
+			 * of directory entries so that we don't loop
 			 * forever. 1024 * 1024 is picked out of the blue.
 			 */
 			if (mallocd_bytes > 1024 * 1024) {
 				gp_context_error (context,
-						  "canon_serial_get_dirents: "
-						  "Too many dirents, we must be looping.");
+						  _("canon_serial_get_dirents: "
+						  "Too many dirents, we must be looping."));
 				free (data);
 				data = NULL;
 				return GP_ERROR;
@@ -1223,9 +1223,9 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			temp_ch = realloc (data, mallocd_bytes);
 			if (!temp_ch) {
 				gp_context_error (context,
-						  "canon_serial_get_dirents: "
+						  _("canon_serial_get_dirents: "
 						  "Could not resize dirent buffer "
-						  "to %i bytes", mallocd_bytes);
+						  "to %i bytes"), mallocd_bytes);
 				free (data);
 				data = NULL;
 				return GP_ERROR;
@@ -1375,7 +1375,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 		    !strcmp (models[i].serial_id_string, cam_id_str)) {
 			GP_DEBUG ("canon_serial_ready: Serial ID string matches '%s'",
 				  models[i].serial_id_string);
-			gp_context_status (context, "Detected a \"%s\" aka \"%s\"", 
+			gp_context_status (context, _("Detected a \"%s\" aka \"%s\""), 
 					   models[i].id_str, models[i].serial_id_string);
 			camera->pl->md = (struct canonCamModelData *) &models[i];
 			break;
@@ -1383,7 +1383,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 	}
 
 	if (models[i].id_str == NULL) {
-		gp_context_error (context, "Unknown model '%s'", cam_id_str);
+		gp_context_error (context, _("Unknown model \"%s\""), cam_id_str);
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
 
@@ -1454,8 +1454,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 					  camera->pl->psa50_eot + PKT_HDR_LEN, 0);
 		if (!canon_serial_wait_for_ack (camera)) {
 			gp_context_status (context,
-					   _
-					   ("Error waiting ACK during initialization retrying"));
+					   _("Error waiting for ACK during initialization retrying"));
 		} else
 			break;
 	}
@@ -1503,7 +1502,7 @@ canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **da
 
 	if (camera->pl->receive_error == FATAL_ERROR) {
 		gp_context_error (context,
-				  "ERROR: can't continue a fatal error condition detected");
+				  _("ERROR: a fatal error condition was detected, can't continue "));
 		return GP_ERROR;
 	}
 
@@ -1519,7 +1518,7 @@ canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **da
 
 	total = le32atoh (msg + 4);
 	if (total > 2000000) {	/* 2 MB thumbnails ? unlikely ... */
-		gp_context_error (context, "ERROR: %d is too big", total);
+		gp_context_error (context, _("ERROR: %d is too big"), total);
 		return GP_ERROR;
 	}
 	*data = malloc (total);

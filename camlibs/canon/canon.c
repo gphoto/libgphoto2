@@ -388,7 +388,7 @@ canon_int_directory_operations (Camera *camera, const char *path, canonDirFuncti
 	}
 
 	GP_DEBUG ("canon_int_directory_operations() called to %s the directory '%s'",
-		  canon_usb_funct == CANON_USB_FUNCTION_MKDIR ? "create" : "remove", path);
+		  canon_usb_funct == CANON_USB_FUNCTION_MKDIR ? _("create") : _("remove"), path);
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, canon_usb_funct, &len, path,
@@ -409,15 +409,18 @@ canon_int_directory_operations (Camera *camera, const char *path, canonDirFuncti
 	}
 
 	if (len != 0x4) {
-		GP_DEBUG ("canon_int_directory_operations: Unexpected ammount "
+		GP_DEBUG ("canon_int_directory_operations: Unexpected amount "
 			  "of data returned (expected %i got %i)", 0x4, len);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	if (msg[0] != 0x00) {
-		gp_context_error (context, "Could not %s directory %s.",
-				  canon_usb_funct ==
-				  CANON_USB_FUNCTION_MKDIR ? "create" : "remove", path);
+		if ( canon_usb_funct == CANON_USB_FUNCTION_MKDIR )
+			gp_context_error (context, _("Could not create directory %s."),
+					  path );
+		else
+			gp_context_error (context, _("Could not remove directory %s."),
+					  path);
 		return GP_ERROR;
 	}
 
@@ -466,7 +469,7 @@ canon_int_identify_camera (Camera *camera, GPContext *context)
 	}
 
 	if (len != 0x4c) {
-		GP_DEBUG ("canon_int_identify_camera: Unexpected ammount of data returned "
+		GP_DEBUG ("canon_int_identify_camera: Unexpected amount of data returned "
 			  "(expected %i got %i)", 0x4c, len);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
@@ -758,7 +761,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 		/* Lock keys here for D30/D60 */
 		if ( IS_EOS(camera->pl->md->model) ) {
 			if(canon_usb_lock_keys(camera,context) < 0) {
-				gp_context_error (context, "lock keys failed.\n");
+				gp_context_error (context, _("lock keys failed."));
 				return GP_ERROR_CORRUPTED_DATA;
 			}
 		}
@@ -821,8 +824,8 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
 	unsigned char *old_entry = initial_state, *new_entry = final_state;
 
 	/* Set default path name */
-	strncpy ( path->name, "*UNKNOWN*", sizeof(path->name) );
-	strncpy ( path->folder, "*UNKNOWN*", sizeof(path->folder) );
+	strncpy ( path->name, _("*UNKNOWN*"), sizeof(path->name) );
+	strncpy ( path->folder, _("*UNKNOWN*"), sizeof(path->folder) );
 
 	path->folder[0] = 0; /* Start with null pathname string. */
 	GP_DEBUG ( "canon_int_capture_image: starting directory compare" );
@@ -929,7 +932,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		len = canon_usb_list_all_dirs ( camera, &initial_state, &initial_state_len, context );
 
 		if ( len < 0 ) {
-			gp_context_error (context,"canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %i", len );
+			gp_context_error (context, _("canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %i"), len );
 			return len;
 		}
 
@@ -980,7 +983,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		/* Lock keys here for D30/D60 */
 		if ( IS_EOS(camera->pl->md->model) ) {
 			if(canon_usb_lock_keys(camera,context) < 0) {
-				gp_context_error (context, "lock keys failed.\n");
+				gp_context_error (context, _("lock keys failed."));
 				return GP_ERROR_CORRUPTED_DATA;
 			}
 		}
@@ -1010,8 +1013,8 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		len = canon_usb_list_all_dirs ( camera, &final_state, &final_state_len, context );
 		if ( len < 0 ) {
 			gp_context_error ( context,
-					   "canon_int_capture_image:"
-					   " final canon_usb_list_all_dirs() failed with status %i",
+					   _("canon_int_capture_image:"
+					     " final canon_usb_list_all_dirs() failed with status %i"),
 					   len );
 			return len;
 		}
@@ -1130,7 +1133,7 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 	if (strlen (name) > 30) {
 		gp_context_error (context,
 				  _("Name '%s' (%i characters) "
-				    "too long (%i chars), maximal 30 characters are "
+				    "too long (%i chars), maximum 30 characters are "
 				    "allowed."), name, strlen (name));
 		return GP_ERROR;
 	}
@@ -1300,7 +1303,7 @@ canon_int_set_time (Camera *camera, time_t date, GPContext *context)
 	}
 
 	if (len != 0x4) {
-		GP_DEBUG ("canon_int_set_time: Unexpected ammount of data returned "
+		GP_DEBUG ("canon_int_set_time: Unexpected amount of data returned "
 			  "(expected %i got %i)", 0x4, len);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
@@ -1445,7 +1448,7 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 	}
 
 	if (len < 0x0c) {
-		GP_DEBUG ("canon_int_get_disk_name_info: Unexpected ammount of data returned "
+		GP_DEBUG ("canon_int_get_disk_name_info: Unexpected amount of data returned "
 			  "(expected %i got %i)", 0x0c, len);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
@@ -1650,8 +1653,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 
 	if (dirents_length < CANON_MINIMUM_DIRENT_SIZE) {
 		gp_context_error (context,
-				  "canon_int_list_dir: ERROR: "
-				  "initial message too short (%i < minimum %i)",
+				  _("canon_int_list_dir: ERROR: "
+				    "initial message too short (%i < minimum %i)"),
 				  dirents_length, CANON_MINIMUM_DIRENT_SIZE);
 		free (dirent_data);
 		dirent_data = NULL;
@@ -1672,8 +1675,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 		/* do nothing */ ;
 	if (pos == end_of_data || *pos != 0) {
 		gp_context_error (context,
-				  "canon_int_list_dir: Reached end of packet while "
-				  "examining the first dirent");
+				  _("canon_int_list_dir: Reached end of packet while "
+				   "examining the first dirent"));
 		free (dirent_data);
 		dirent_data = NULL;
 		return GP_ERROR;
@@ -1757,8 +1760,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 				  (pos - dirent_data), (end_of_data - dirent_data),
 				  (end_of_data - dirent_data), CANON_MINIMUM_DIRENT_SIZE);
 			gp_context_error (context,
-					  "canon_int_list_dir: "
-					  "truncated directory entry encountered");
+					  _("canon_int_list_dir: "
+					   "truncated directory entry encountered"));
 			free (dirent_data);
 			dirent_data = NULL;
 			return GP_ERROR;
@@ -2139,8 +2142,8 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
 	*retdatalen = 0;
 
 	if (data[0] != JPEG_ESC || data[1] != JPEG_BEG) {
-		gp_context_error (context, "Could not extract JPEG "
-				  "thumbnail from data: Data is not JFIF");
+		gp_context_error (context, _("Could not extract JPEG "
+					     "thumbnail from data: Data is not JFIF"));
 		GP_DEBUG ("canon_int_extract_jpeg_thumb: data is not JFIF, cannot extract thumbnail");
 		return GP_ERROR_CORRUPTED_DATA;
 	}
@@ -2164,10 +2167,10 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
 
 		}
 	if (! thumbsize) {
-		gp_context_error (context, "Could not extract JPEG "
-				  "thumbnail from data: No beginning/end");
+		gp_context_error (context, _("Could not extract JPEG "
+					     "thumbnail from data: No beginning/end"));
 		GP_DEBUG ("canon_int_extract_jpeg_thumb: could not find JPEG "
-			  "beginning (offset %s) or end (size %s) in %i bytes of data",
+			  "beginning (offset %i) or end (size %i) in %i bytes of data",
 			  datalen, thumbstart, thumbsize);
 		return GP_ERROR_CORRUPTED_DATA;
 	}

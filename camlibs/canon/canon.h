@@ -177,7 +177,7 @@ typedef enum {
  */
 #define CON_CHECK_PARAM_NULL(param) \
 	if (param == NULL) { \
-		gp_context_error (context, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
+		gp_context_error (context, _("NULL parameter \"%s\" in %s line %i"), #param, __FILE__, __LINE__); \
 		return GP_ERROR_BAD_PARAMETERS; \
 	}
 
@@ -191,7 +191,7 @@ typedef enum {
  */
 #define CHECK_PARAM_NULL(param) \
 	if (param == NULL) { \
-		GP_LOG (GP_LOG_ERROR, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
+		GP_LOG (GP_LOG_ERROR, _("NULL parameter \"%s\" in %s line %i"), #param, __FILE__, __LINE__); \
 		return GP_ERROR_BAD_PARAMETERS; \
 	}
 
@@ -373,9 +373,9 @@ typedef enum {
  */
 #define GP_PORT_DEFAULT_RETURN_INTERNAL(return_statement) \
 		default: \
-			gp_context_error (context, "Don't know how to handle " \
+			gp_context_error (context, _("Don't know how to handle " \
 					     "camera->port->type value %i aka 0x%x" \
-					     "in %s line %i.", camera->port->type, \
+					     "in %s line %i."), camera->port->type, \
 					     camera->port->type, __FILE__, __LINE__); \
 			return_statement; \
 			break;

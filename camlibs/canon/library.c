@@ -483,7 +483,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gphoto2canonpath (camera, folder, context), filename);
 	if (ret < 0) {
 		gp_context_error (context,
-				  "Internal error #1 in get_file_func() (%s line %i)",
+				  _("Internal error #1 in get_file_func() (%s line %i)"),
 				  __FILE__, __LINE__);
 		return GP_ERROR;
 	}
@@ -498,7 +498,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (thumbname == NULL) {
 			/* no thumbnail available */
 			gp_context_error (context,
-					  "No thumbnail could be fould for %s",
+					  _("No thumbnail could be fould for %s"),
 					  canon_path);
 			ret = GP_ERROR;
 		} 
@@ -542,7 +542,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 							  context);				
 			} else {
 				gp_context_error (context,
-						  "No audio file could be fould for %s",
+						  _("No audio file could be found for %s"),
 						  canon_path);
 				ret = GP_ERROR;
 			}
@@ -993,8 +993,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_PS_A50)
 					    || (camera->pl->md->model == CANON_PS_PRO70))) {
 		gp_context_error (context,
-				  _
-				  ("Speeds greater than 57600 are not supported for uploading to this camera"));
+				  _("Speeds greater than 57600 are not supported for uploading to this camera"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
@@ -1054,8 +1053,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 				    dirnum = atoi (buf);
 				    if (dirnum == 999 && !camera->pl->upload_keep_filename) {
 					    gp_context_error (context,
-							      _
-							      ("Could not upload, no free folder name available!\n"
+							      _("Could not upload, no free folder name available!\n"
 							       "999CANON folder name exists and has an AUT_9999.JPG picture in it."));
 					    return GP_ERROR;
 				    } else {
@@ -1122,8 +1120,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_PS_A50)
 					    || (camera->pl->md->model == CANON_PS_PRO70))) {
 		gp_context_error (context,
-				  _
-				  ("Speeds greater than 57600 are not supported for uploading to this camera"));
+				  _("Speeds greater than 57600 are not supported for uploading to this camera"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
@@ -1163,8 +1160,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 				dirnum = atoi (buf);
 				if (dirnum == 999) {
 					gp_context_error (context,
-							  _
-							  ("Could not upload, no free folder name available!\n"
+							  _("Could not upload, no free folder name available!\n"
 							   "999CANON folder name exists and has an AUT_9999.JPG picture in it."));
 					return GP_ERROR;
 				} else {
