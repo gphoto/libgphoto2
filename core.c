@@ -412,23 +412,23 @@ int gp_set_setting (char *key, char *value) {
 
 int gp_status (char *status) {
 
-	interface_status(status);
+	gp_interface_status(status);
 	return(GP_OK);
 }
 
 int gp_progress (float percentage) {
 
-	interface_progress(percentage);
+	gp_interface_progress(percentage);
 	return(GP_OK);
 }
 
 int gp_message (char *message) {
 
-	interface_message(message);
+	gp_interface_message(message);
 	return(GP_OK);
 }
 
 int gp_confirm (char *message) {
 
-	return(interface_confirm(message));
+	return(gp_interface_confirm(message));
 }
