@@ -1,0 +1,156 @@
+This is simply a draft for the configuration dialog spec for the camera
+libraries. Please ask questions if something doesn't jive or sucks.
+					-Scott <scottf@unr.edu>
+
+Configuration dialog widgets
+============================================================================
+
+Notebook page:
+	label:		(string) Descriptive label displayed on notebook tab
+				 default="Page #"
+
+	example:
+	<page label="General Settings">
+		<... other widgets ...>
+	</page>
+
+Text input:
+	label:		(string) Descriptive label displayed beside widget
+
+	example:
+	<text label="Camera ID"/>
+
+Range input:
+	label:		(string) Descriptive label displayed beside widget
+	min:		(int)	 Minimum range value
+	max:		(int)	 Maximum range value
+
+	example:
+	<range label="Timeout" min="0" max="255"/>
+
+Toggle input:
+	label:		(string) Descriptive label displayed beside widget
+
+	example:
+	<toggle label="Enable Flash"/>
+
+Radio buttons:
+	label:		(string) Descriptive label displayed beside widget (used to group buttons)
+	choice:		(string) The individual choices in the radio button array
+	
+	example:
+	<radio label="Image Quality" choice="High"/>
+	<radio label="Image Quality" choice="Medium"/>
+	<radio label="Image Quality" choice="Low"/>
+
+Drop-down menu:
+	label:		(string) Descriptive label displayed beside widget (used to group entries)
+	choice:		(string) The individual choices in the radio button array
+	example:
+	<menu label="Port" choice="Serial Port 1"/>
+	<menu label="Port" choice="Serial Port 2"/>
+	<menu label="Port" choice="Serial Port 3"/>
+	<menu label="Port" choice="Serial Port 4"/>
+
+Button input:
+	label:	  	(string) Descriptive label displayed on button
+	callback: 	(string) Name of a function in library to call when pressed.
+				 Function prototype is: int function();
+				 Returns GP_OK or GP_ERROR.
+
+	example:
+	<button label="Take Picture" callback="camera_take_picture"/>
+
+Control statements
+============================================================================
+
+The "if" statement (maybe):
+	logic:	  	(string) Either "and", "or", or "not"
+				 default = "and"
+	Available variables:
+		camera
+		port
+		? any others needed
+
+	* implicit AND with listed
+	* preceed variables with a ! to signal NOT
+	* no nesting of logic operators or <if> statements.
+	* maybe regular expressions? 
+
+	<if logic="and" camera="Olympus D-220L" port="usb">
+		<... put D-220L-specific widgets here ...>
+	</if>
+
+	<if camera="!Nikon 990">
+		<... put widgets that shouldn't be displayed with Nikon 990 ...>
+	</if>
+
+Example
+============================================================================
+
+<page label="Quality">
+	<radio label="Resolution" choice="Standard"/>
+	<radio label="Resolution" choice="High"/>
+	<radio label="Resolution" choice="Best"/>
+	
+	<radio label="Compression" choice="None"/>
+	<radio label="Compression" choice="Low"/>
+	<radio label="Compression" choice="High"/>
+</page>
+<page label="Focus/Lens">
+	<menu label="Flash type" choice="Auto"/>
+	<menu label="Flash type" choice="Red-eye"/>
+	<menu label="Flash type" choice="Force"/>
+	<menu label="Flash type" choice="None"/>
+
+	<radio label="Lens Mode" choice="Normal"/>
+	<radio label="Lens Mode" choice="Macro"/>
+</page>
+<page label="Power Saving">
+	<range label="Docked"   min="0" max="600"/>
+	<range label="Undocked" min="0" max="180"/>
+</page>
+<page label="Miscellaneous">
+	<text label="Camera ID"/>
+	<range label="LCD Brightness" min="0" max="7"/>
+</page>
+
+
+NOTES
+============================================================================
+* The files are read as streams. so, a tag can be multi-lined, like:
+
+	<if logic="or" 
+	    camera="Olympus D-220L"
+	    camera="Olympus D-360L"
+	    camera="Olympus D-620L"
+	    camera="Olympus C-2500L">
+		<... widgets for any of the cameras ...>
+	</if>
+
+makes it a little easier to read and/or follow.
+
+* The front-end will query the camera library about what the values should be
+using camera_config_query(). In the example above, to ask which radio button should
+be chosen for "Resolution", the front-end will call (psuedo-code):
+	
+	gp_config_query("Resolution", value);
+	if value == "Standard"
+		select "Standard" button
+	if value == "High"
+		select "High" button
+	... and so on
+
+this requires a clever interface builder. easiest way is to keep track of each toolkit widget 
+created for the configuration dialog, and attach the 'label' name to it. then, when its
+time to set the configuration dialog to reflect the current camera settings, find that
+toolkit widget and make a call to 'click' that widget. 
+
+When all is done, display the configuration dialog. Or, bring up the dialog and put a button in
+it saying "get camera settings" or something.
+
+* Interfaces should wait to close the configuration dialog until gp_config_set returns.
+If GP_OK is returned, close the window.
+If GP_ERROR is returned, it is expected that the camera libraries have already notified
+the user of an error by using gp_message(). Leave the window open so they can make the necessary
+changes.
