@@ -137,11 +137,20 @@ struct _PTPReq {
 
 typedef struct _PTPDeviceInfo PTPDedviceInfo;
 struct _PTPDeviceInfo {
-	uint16_t StaqndardVersion __attribute__ ((packed));
-	uint32_t VendorExtensionID __attribute__ ((packed));
-	uint16_t VendorExtensionDesc __attribute__ ((packed));
-	char data [PTP_REQ_DATALEN-(2*sizeof(uint16_t))-sizeof(uint32_t)]
-	__attribute__ ((packed));
+	uint16_t StaqndardVersion;
+	uint32_t VendorExtensionID;
+	uint16_t VendorExtensionVersion;
+	char	*VendorExtensionDesc;
+	uint16_t FunctionalMode;
+	uint16_t *OperationsSupported;
+	uint16_t *EventsSupported;
+	uint16_t *DevicePropertiesSupported;
+	uint16_t *CaptureFormats;
+	uint16_t *ImageFormats;
+	char	*Manufacturer;
+	char	*Model;
+	char	*DeviceVersionl;
+	char	*SerialNumber;
 };
 
 
@@ -158,23 +167,25 @@ struct _PTPObjectHandles {
 
 typedef struct _PTPObjectInfo PTPObjectInfo;
 struct _PTPObjectInfo {
-	uint32_t StorageID __attribute__ ((packed));
-	uint16_t ObjectFormat __attribute__ ((packed));
-	uint16_t ProtectionStatus __attribute__ ((packed));
-	uint32_t ObjectCompressedSize __attribute__ ((packed));
-	uint16_t ThumbFormat __attribute__ ((packed));
-	uint32_t ThumbCompressedSize __attribute__ ((packed));
-	uint32_t ThumbPixWidth __attribute__ ((packed));
-	uint32_t ThumbPixHeight __attribute__ ((packed));
-	uint32_t ImagePixWidth __attribute__ ((packed));
-	uint32_t ImagePixHeight __attribute__ ((packed));
-	uint32_t ImageBitDepth __attribute__ ((packed));
-	uint32_t ParentObject __attribute__ ((packed));
-	uint16_t AssociationType __attribute__ ((packed));
-	uint32_t AssociationDesc __attribute__ ((packed));
-	uint32_t SequenceNumber __attribute__ ((packed));
-	uint8_t  filenamelen __attribute__ ((packed));	// makes reading easyier
-	char data[PTP_REQ_DATALEN-53] __attribute__ ((packed));
+	uint32_t StorageID;
+	uint16_t ObjectFormat;
+	uint16_t ProtectionStatus;
+	uint32_t ObjectCompressedSize;
+	uint16_t ThumbFormat;
+	uint32_t ThumbCompressedSize;
+	uint32_t ThumbPixWidth;
+	uint32_t ThumbPixHeight;
+	uint32_t ImagePixWidth;
+	uint32_t ImagePixHeight;
+	uint32_t ImageBitDepth;
+	uint32_t ParentObject;
+	uint16_t AssociationType;
+	uint32_t AssociationDesc;
+	uint32_t SequenceNumber;
+	char 	*Filename;
+	time_t	CaptureDate;
+	time_t	ModificationDate;
+	char	*Keywords;
 };
 
 #define MAXFILENAMELEN			255
@@ -283,8 +294,4 @@ uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 			PTPObjectInfo* objectinfo);
 uint16_t ptp_ek_sendfileobject (PTPParams* params, PTPReq* object,
 			uint32_t size);
-void ptp_getobjectfilename	(PTPObjectInfo* objectinfo, char* filename);
-void ptp_setobjectfilename	(PTPObjectInfo* objectinfo, char* filename);
-time_t ptp_getobjectcapturedate	(PTPObjectInfo* objectinfo);
-
 #endif /* __PTP_H__ */

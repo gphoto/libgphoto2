@@ -372,13 +372,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera *camera = data;
 	PTPObjectInfo objectinfo;
 	int i;
-	char filename[MAXFILENAMELEN];
 
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		camera->pl->params.handles.handler[i], &objectinfo));
-		ptp_getobjectfilename (&objectinfo, filename);
-		CR (gp_list_append (list, filename, NULL));
+		CR (gp_list_append (list, objectinfo.Filename, NULL));
+		free (objectinfo.Filename);
 	}
 
 	return (GP_OK);
@@ -409,6 +408,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		camera->pl->params.handles.handler[image_id],&ptp_objectinfo));
+	free (ptp_objectinfo.Filename);
 	// don't try to download ancillary objects!
 	if ((ptp_objectinfo.ObjectFormat & 0x0800) == 0) return (GP_OK);
 	switch (type) {
@@ -481,6 +481,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CR (n = gp_filesystem_number (fs, folder, filename));
 	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		     camera->pl->params.handles.handler[n], &oi));
+	free(oi.Filename);
 /*	GP_DEBUG ("ObjectInfo for '%s':");
 	GP_DEBUG ("  StorageID: %d", oi.StorageID);
 	GP_DEBUG ("  ObjectFormat: %d", oi.ObjectFormat);
@@ -515,7 +516,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		info->file.width  = oi.ImagePixWidth;
 		info->file.height = oi.ImagePixHeight;
-		info->file.time = ptp_getobjectcapturedate (&oi);
+		info->file.time = oi.CaptureDate;
 	}
 
 		return (GP_OK);
@@ -540,7 +541,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	// any store (responder decides)
 	store=0xffffffff;
 	
-	ptp_setobjectfilename(&oi, foldername);
+	oi.Filename=foldername;
 
 	oi.StorageID=0xffffffff;
 	oi.ObjectFormat=PTP_OFC_Association;
@@ -578,6 +579,7 @@ camera_init (Camera *camera)
 	camera->pl->params.read_func  = ptp_read_func;
 	camera->pl->params.debug_func = ptp_debug_func;
 	camera->pl->params.error_func = ptp_error_func;
+	camera->pl->params.byteorder = PTP_DL_LE;
 	camera->pl->params.data = camera;
 	camera->pl->params.transaction_id=0x01;
 

@@ -49,32 +49,6 @@
 #define CHECK_PTP_RC(result)	{uint16_t r=(result); if (r!=PTP_RC_OK) return r;}
 //#define CHECK_PTP_RC_free(result, free_ptr) {uint16_t r=(result); if (r!=PTP_RC_OK) {return r; free(free_ptr);}}
 
-static inline uint16_t
-htod16 (PTPParams *params, uint16_t var)
-{
-	return ((params->byteorder==PTP_DL_LE)?htole16(var):htobe16(var));
-}
-
-static inline uint32_t
-htod32 (PTPParams *params, uint32_t var)
-{
-	return ((params->byteorder==PTP_DL_LE)?htole32(var):htobe32(var));
-}
-
-static inline uint16_t
-dtoh16 (PTPParams *params, uint16_t var)
-{
-	return ((params->byteorder==PTP_DL_LE)?le16toh(var):be16toh(var));
-}
-
-static inline uint32_t
-dtoh32 (PTPParams *params, uint32_t var)
-{
-	return ((params->byteorder==PTP_DL_LE)?le32toh(var):be32toh(var));
-}
-
-
-
 static void
 ptp_debug (PTPParams *params, const char *format, ...)
 {  
@@ -101,6 +75,12 @@ ptp_error (PTPParams *params, const char *format, ...)
         va_end (args);
 }
 
+// Pack / unpack functions
+
+#include "ptp-pack.c"
+
+// send / receive functions
+
 static uint16_t
 ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
 {
@@ -108,10 +88,10 @@ ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
 	PTPReq* req=(databuf==NULL)?
 		malloc(sizeof(PTPReq)):databuf;
 	
-	req->len = htole32(PTP_REQ_LEN);
-	req->type = PTP_TYPE_REQ;
-	req->code = code;
-	req->trans_id = htole32(params->transaction_id);
+	req->len = htod32(PTP_REQ_LEN);
+	req->type = htod16(PTP_TYPE_REQ);
+	req->code = htod16(code);
+	req->trans_id = htod32(params->transaction_id);
 	params->transaction_id++;
 
 	ret=params->write_func ((unsigned char *) req, PTP_REQ_LEN,
@@ -120,7 +100,7 @@ ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
-		"request code 0x%4x sending req error", le16toh(code));
+		"request code 0x%4x sending req error", code);
 	}
 	return ret;
 }
@@ -132,17 +112,17 @@ ptp_senddata (PTPParams* params, PTPReq* req, uint16_t code,
 	uint16_t ret;
 	if (req==NULL) return PTP_ERROR_BADPARAM;
 	
-	req->len = htole32(writelen);
-	req->type = PTP_TYPE_DATA;
-	req->code = code;
-	req->trans_id = htole32(params->transaction_id);
+	req->len = htod32(writelen);
+	req->type = htod16(PTP_TYPE_DATA);
+	req->code = htod16(code);
+	req->trans_id = htod32(params->transaction_id);
 
 	ret=params->write_func ((unsigned char *) req, writelen,
 				params->data);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
-		"request code 0x%4x sending data error", le16toh(code));
+		"request code 0x%4x sending data error", code);
 	}
 	return ret;
 }
@@ -160,15 +140,15 @@ ptp_getdata (PTPParams* params, PTPReq* req, uint16_t code,
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 	} else
-	if (req->type!=PTP_TYPE_DATA) {
+	if (dtoh16(req->type)!=PTP_TYPE_DATA) {
 		ret = PTP_ERROR_DATA_EXPECTED;
 	} else
-	if (req->code!=code) {
+	if (dtoh16(req->code)!=code) {
 		ret = req->code;
 	}
 	if (ret!=PTP_RC_OK) 
 		ptp_error (params,
-		"request code 0x%4.4x getting data error 0x%4.4x", le16toh(code), le16toh(ret));
+		"request code 0x%4.4x getting data error 0x%4.4x", code, ret);
 	return ret;
 }
 
@@ -185,18 +165,20 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 	} else
-	if (req->type!=PTP_TYPE_RESP) {
+	if (dtoh16(req->type)!=PTP_TYPE_RESP) {
 		ret = PTP_ERROR_RESP_EXPECTED;
 	} else
-	if (req->code!=code) {
+	if (dtoh16(req->code)!=code) {
 		ret = req->code;
 	}
 	if (ret!=PTP_RC_OK)
 		ptp_error (params,
-		"request code 0x%4x getting resp error 0x%4x", le16toh(code), le16toh(ret));
+		"request code 0x%4x getting resp error 0x%4x", code, ret);
 	if (databuf==NULL) free (req);
 	return ret;
 }
+
+// major PTP functions
 
 // Transaction data phase description
 #define PTP_DP_NODATA		0x00	// No Data Phase
@@ -275,7 +257,7 @@ ptp_opensession (PTPParams* params, uint32_t session)
 {
 	PTPReq req;
 	
-	*(int *)(req.data)=session;
+	*(int *)(req.data)=htod32(session);
 
 	return ptp_transaction(params, &req, PTP_OC_OpenSession,
 		PTP_DP_NODATA, 0, NULL);
@@ -308,6 +290,7 @@ ptp_closesession (PTPParams* params)
  *
  * Return values: Some PTP_RC_* code.
  **/
+//     XXX !!! this function prototype gonna change soon!
 // XXX still ObjectFormatCode and ObjectHandle of Assiciation NOT
 //     IMPLEMENTED (parameter 2 and 3)
 uint16_t
@@ -318,7 +301,7 @@ ptp_getobjecthandles (PTPParams* params, PTPObjectHandles* objecthandles,
 	PTPReq req;
 	PTPReq* oh=malloc(sizeof(PTPObjectHandles)+PTP_REQ_HDR_LEN);
 	
-	*(int *)(req.data)=store;
+	*(int *)(req.data)=htod32(store);
 
 	ret=ptp_transaction(params, &req, PTP_OC_GetObjectHandles,
 		PTP_DP_GETDATA, sizeof(PTPObjectHandles), oh);
@@ -332,12 +315,12 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 {
 	uint16_t ret;
 	PTPReq req;
-	PTPReq* oi=malloc(sizeof(PTPObjectInfo)+PTP_REQ_HDR_LEN);
+	PTPReq oi;
 
-	*(int *)(req.data)=handle;
+	*(int *)(req.data)=htod32(handle);
 	ret=ptp_transaction(params, &req, PTP_OC_GetObjectInfo,
-		PTP_DP_GETDATA, sizeof(PTPObjectInfo), oi);
-	memcpy(objectinfo, oi->data, sizeof(PTPObjectInfo));
+		PTP_DP_GETDATA, PTP_REQ_DATALEN, &oi);
+	ptp_unpack_OI(params, &oi, objectinfo);
 	return ret;
 }
 
@@ -347,7 +330,7 @@ ptp_getobject (PTPParams* params, uint32_t handle,
 {
 	PTPReq req;
 
-	*(int *)(req.data)=handle;
+	*(int *)(req.data)=htod32(handle);
 	return ptp_transaction(params, &req, PTP_OC_GetObject,
 		PTP_DP_GETDATA, size, object);
 }
@@ -359,7 +342,7 @@ ptp_getthumb (PTPParams* params, uint32_t handle,
 {
 	PTPReq req;
 
-	*(int *)(req.data)=handle;
+	*(int *)(req.data)=htod32(handle);
 	return ptp_transaction(params, &req, PTP_OC_GetThumb,
 		PTP_DP_GETDATA, size, object);
 }
@@ -379,8 +362,8 @@ ptp_deleteobject (PTPParams* params, uint32_t handle,
 			uint32_t ofc)
 {
 	PTPReq req;
-	*(int *)(req.data)=handle;
-	*(int *)(req.data+4)=ofc;
+	*(uint32_t *)(req.data)=htod32(handle);
+	*(uint32_t *)(req.data+4)=htod32(ofc);
 
 	return ptp_transaction(params, &req, PTP_OC_DeleteObject,
 	PTP_DP_NODATA, 0, NULL);
@@ -413,16 +396,16 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 	PTPReq req;
 	PTPReq req_oi;
 
-	*(int *)(req.data)=*store;
-	*(int *)(req.data+4)=*parenthandle;
+	*(uint32_t *)(req.data)=htod32(*store);
+	*(uint32_t *)(req.data+4)=htod32(*parenthandle);
 	
 	memcpy(req_oi.data, objectinfo, sizeof (PTPObjectInfo));
 	
 	ret= ptp_transaction(params, &req, PTP_OC_EK_SendFileObjectInfo,
 		PTP_DP_SENDDATA, sizeof(PTPObjectInfo), &req_oi); 
-	*store=*(int *)(req.data);
-	*parenthandle=*(int *)(req.data+4);
-	*handle=*(int *)(req.data+8); 
+	*store=dtoh32a(req.data);
+	*parenthandle=dtoh32a(req.data+4);
+	*handle=dtoh32a(req.data+8); 
 	return ret;
 }
 
@@ -446,7 +429,7 @@ ptp_ek_sendfileobject (PTPParams* params, PTPReq* object, uint32_t size)
 		PTP_DP_SENDDATA, size, object);
 }
 
-
+/*
 void
 ptp_getobjectfilename (PTPObjectInfo* objectinfo, char* filename) {
 	int i;
@@ -468,39 +451,4 @@ ptp_setobjectfilename (PTPObjectInfo* objectinfo, char* filename) {
 	 objectinfo->filenamelen=(uint8_t)strlen(filename)+1;
 }
 
-time_t
-ptp_getobjectcapturedate (PTPObjectInfo* objectinfo) {
-	int i;
-	char capture_date[MAXFILENAMELEN];
-	char tmp[16];
-	struct tm tm;
-	int p=objectinfo->filenamelen;
-
-	memset (capture_date, 0, MAXFILENAMELEN);
-
-	for (i=0;i<objectinfo->data[p*2]&&i<MAXFILENAMELEN;i++) {
-		capture_date[i]=objectinfo->data[(i+p)*2+1];
-	}
-	
-	// subset of ISO 8601, without '.s' tenths of second and
-	// time zone
-	strncpy (tmp, capture_date, 4);
-	tmp[4] = 0;
-	tm.tm_year=atoi (tmp) - 1900;
-	strncpy (tmp, capture_date + 4, 2);
-	tmp[2] = 0;
-	tm.tm_mon = atoi (tmp) - 1;
-	strncpy (tmp, capture_date + 6, 2);
-	tmp[2] = 0;
-	tm.tm_mday = atoi (tmp);
-	strncpy (tmp, capture_date + 9, 2);
-	tmp[2] = 0;
-	tm.tm_hour = atoi (tmp);
-	strncpy (tmp, capture_date + 11, 2);
-	tmp[2] = 0;
-	tm.tm_min = atoi (tmp);
-	strncpy (tmp, capture_date + 13, 2);
-	tmp[2] = 0;
-	tm.tm_sec = atoi (tmp);
-	return mktime (&tm);
-}
+*/
