@@ -44,6 +44,8 @@
 
 void clear_readiness(Camera *camera);
 
+#define GP_MODULE "canon"
+
 #endif /* _CANON_H */
 
 /****************************************************************************
