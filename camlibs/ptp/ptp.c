@@ -395,15 +395,9 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 	*(int *)(req.data+4)=*parenthandle;
 	
 	memcpy(req_oi.data, objectinfo, sizeof (PTPObjectInfo));
-	printf("sizeof req = %i\t sizeof objectinfo = %i\n", sizeof(PTPReq),
-	sizeof(PTPObjectInfo));
 	
-	/*
 	ret= ptp_transaction(params, &req, PTP_OC_EK_SendFileObjectInfo,
-		PTP_DP_SENDDATA, sizeof(PTPObjectInfo)-16000, &req_oi); 
-	*/
-	ret= ptp_transaction(params, &req, PTP_OC_SendObjectInfo,
-		PTP_DP_SENDDATA, 158, &req_oi); 
+		PTP_DP_SENDDATA, sizeof(PTPObjectInfo), &req_oi); 
 	*store=*(int *)(req.data);
 	*parenthandle=*(int *)(req.data+4);
 	*handle=*(int *)(req.data+8); 

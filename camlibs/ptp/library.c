@@ -313,7 +313,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.operations        = GP_OPERATION_NONE;
 		a.file_operations   = GP_FILE_OPERATION_PREVIEW|
 					GP_FILE_OPERATION_DELETE;
-		a.folder_operations = GP_FOLDER_OPERATION_MAKE_DIR;
+		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 		CR (gp_abilities_list_append (list, a));
 	}
 
@@ -524,7 +524,6 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 
 	CPR (camera, ptp_ek_sendfileobjectinfo (&camera->pl->params,
 		&store, &parent, &handle, &oi));
-	printf("Sending association data\n");
 	CPR (camera, ptp_ek_sendfileobject (&camera->pl->params,
 		&oi, 18));
 	return (GP_OK);
