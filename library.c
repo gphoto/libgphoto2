@@ -3,10 +3,9 @@
 
 #include <gphoto2.h>
 
-#include "core.h"
+#include "globals.h"
 #include "library.h"
 #include "util.h"
-#include "globals.h"
 
 int is_library(char *library_filename) {
 

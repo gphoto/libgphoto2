@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
-#include "file.h"
-
 
 CameraFile* gp_file_new () {
 

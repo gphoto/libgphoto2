@@ -12,15 +12,18 @@ LDFLAGS = @LDFLAGS@ -g `gpio-config --libs`
 
 libgphoto2_la_LDFLAGS = -version-info 0:0:0
 libgphoto2_la_SOURCES = \
-			core.c core.h \
-			exif.c exif.h \
-			fs.c fs.h \
-			file.c file.h \
-			globals.h \
-			library.c library.h \
-			settings.c settings.h \
-			util.c util.h \
-			widget.c widget.h
+	camera.c \
+	core.c core.h \
+	exif.c exif.h \
+	file.c \
+	filesys.c \
+	globals.h \
+	library.c library.h \
+	lists.c \
+	port.c \
+	settings.c settings.h \
+	util.c util.h \
+	widget.c
 
 confexecdir           = $(libdir)
 confexec_DATA         = libgphoto2Conf.sh
