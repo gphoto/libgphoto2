@@ -20,12 +20,17 @@ Group: Applications/Multimedia
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Source: http://www.gphoto.org/dist/@PACKAGE@-@VERSION@.tar.gz
 Url: http://www.gphoto.org/
-Requires: libusb >= 0.0.4
-PreReq: hotplug
 Provides: libgphoto2
+# absolute requirements
+PreReq: hotplug
+PreReq: grep
+Requires: libusb >= 0.0.4
 BuildRequires: libusb-devel
-BuildRequires: gtk-doc
 BuildRequires: findutils perl
+# the following requirements are optional
+# FIXME: They should be deactivated if not detected on the building system
+BuildRequires: gtk-doc
+# FIXME: the usbcam.console hotplug script requires xdm/kdm/gdm
 
 ####################################
 %description
@@ -90,6 +95,7 @@ FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ;
         --mandir=%{_mandir} \
         --infodir=%{_infodir} \
         --with-html-dir=%{_docdir}/%{name}-%{version}/html
+# FIXME: We should copy the disable- arguments here
 make
 
 ####################################
@@ -119,8 +125,14 @@ install -m755 packaging/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
 
 # build file list
 find %{buildroot} -type f -or -type l | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.files
-find %{buildroot} \( -type f -or -type l \) -and -name '*.so*' | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.sofiles
-find %{buildroot} \( -type f -or -type l \) -and \( -name '*.la' -or -name '*.a' \) | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.afiles
+
+find %{buildroot} \( -type f -or -type l \) -and -name '*.so*' \
+        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.sofiles
+
+find %{buildroot} \( -type f -or -type l \) -and \
+        \( -name '*.la' -or -name '*.a' -or -name '*.h' \) \
+        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.devel-files
+
 # figure out list of documentation stuff
 htmldir=$(grep '/html/' < "%{name}-%{version}.files" | sed 's/html\/.*/html/' | sort -u)
 echo "%docdir ${htmldir}" > %{name}-%{version}.docfiles
@@ -144,7 +156,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 #docdir doc/api/html
 #docdir libgphoto2_port/doc/html
 %{_libdir}/gphoto2portConf.sh
-%{_datadir}/locale/de/LC_MESSAGES/gphoto.mo
+%{_datadir}/locale/de/LC_MESSAGES/@PACKAGE@.mo
 %{_libdir}/pkgconfig/libgphoto-2.0.pc
 /etc/hotplug/usb/usbcam
 %{_datadir}/gphoto2/konica/*
@@ -184,12 +196,11 @@ fi
 ########################################################################
 
 ####################################
-%files devel -f %{name}-%{version}.afiles
+%files devel -f %{name}-%{version}.devel-files
 %defattr(-,root,root)
 %docdir %{_docdir}/%{name}-%{version}/html
 %{_bindir}/gphoto2-config
 %{_bindir}/gphoto2-port-config
-%{_includedir}/gphoto2/*
 
 
 ########################################################################
