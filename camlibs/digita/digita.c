@@ -82,14 +82,15 @@ int camera_abilities(CameraAbilitiesList *list)
         return GP_OK;
 }
 
-int camera_exit (Camera *camera)
+static int camera_exit (Camera *camera)
 {
         return GP_OK;
 }
 
-int camera_folder_list_folders (Camera *camera, const char *folder, 
-				CameraList *list)
+static int folder_list_func (CameraFilesystem *fs, const char *folder,
+			     CameraList *list, void *data)
 {
+	Camera *camera = data;
         struct digita_device *dev = camera->camlib_data;
         int i, i1;
 
@@ -143,9 +144,10 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
         return GP_OK;
 }
 
-int camera_folder_list_files (Camera *camera, const char *folder, 
-			      CameraList *list)
+static int file_list_func (CameraFilesystem *fs, const char *folder,
+			   CameraList *list, void *data)
 {
+	Camera *camera = data;
         struct digita_device *dev = camera->camlib_data;
         int i;
 
@@ -253,9 +255,11 @@ printf("digita: getting %s%s\n", folder, filename);
         return data;
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFileType type, CameraFile *file)
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *user_data)
 {
+	Camera *camera = user_data;
         struct digita_device *dev = camera->camlib_data;
 	unsigned char *data;
 	unsigned int *ints, width, height;
@@ -311,7 +315,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
         return GP_OK;
 }
 
-int camera_summary(Camera *camera, CameraText *summary)
+static int camera_summary(Camera *camera, CameraText *summary)
 {
         struct digita_device *dev = camera->camlib_data;
         int taken;
@@ -327,14 +331,14 @@ int camera_summary(Camera *camera, CameraText *summary)
         return GP_OK;
 }
 
-int camera_manual(Camera *camera, CameraText *manual)
+static int camera_manual(Camera *camera, CameraText *manual)
 {
         strcpy(manual->text, _("Manual Not Available"));
 
         return GP_ERROR;
 }
 
-int camera_about(Camera *camera, CameraText *about)
+static int camera_about(Camera *camera, CameraText *about)
 {
         strcpy(about->text, _("Digita\n" \
                 "Johannes Erdfelt <johannes@erdfelt.com>\n" \
@@ -382,12 +386,14 @@ int camera_init(Camera *camera)
 
         /* First, set up all the function pointers */
         camera->functions->exit         = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        camera->functions->file_get     = camera_file_get;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
+
+	/* Set up the CameraFilesystem */
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
+				      folder_list_func, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
         gp_debug_printf (GP_DEBUG_LOW, "digita", "Initializing the camera\n");
 
