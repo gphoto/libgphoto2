@@ -1,3 +1,9 @@
+2002-03-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: more verbose (and hopefully more
+	  user-understandable) libusb error message and configuration
+	  information, fixed typo
+
 2002-03-12  Mariusz Woloszyn
 
 	* changed all _event, eventep to _int and intep as it describes usb
