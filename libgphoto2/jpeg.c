@@ -7,9 +7,15 @@
 #include <stdio.h>
 
 struct chunk{
-long size;
-unsigned char *data;
+    long size;
+    unsigned char *data;
 };
+
+chunk_new(struct chunk *mychunk, long length)
+{
+    mychunk->size=length;
+    mychunk->data = (char *)malloc(length);
+}
 
 chunk_destroy(struct chunk *mychunk)
 {
@@ -18,8 +24,8 @@ chunk_destroy(struct chunk *mychunk)
 }
 
 struct jpeg {
-int count;
-struct chunk marker[20]; /* I think this should be big enough */
+    int count;
+    struct chunk marker[20]; /* I think this should be big enough */
 };
 
 jpeg_init(struct jpeg *myjpeg)
@@ -36,8 +42,9 @@ jpeg_destroy(struct jpeg *myjpeg)
 }
 
 enum jpegmarker {start, APPO, quantization, huffman, SsSeAhAl};
+
 const char markers[] = {
-start, APPO, quantization, huffman, SsSeAhAl
+    start, APPO, quantization, huffman, SsSeAhAl
 };
 
 char jpeg_findamarker(char *id, long *location, struct chunk picture, long start) {
@@ -74,8 +81,7 @@ void jpeg_add_marker(struct jpeg *myjpeg, struct chunk picture, long location)
         length=position-location+1;
         else
         length=picture.size-location+1;
-    myjpeg->marker[myjpeg->count].size=length;
-    myjpeg->marker[myjpeg->count].data = (char *)malloc(length);
+    chunk_new(&(myjpeg->marker[myjpeg->count]), length);
 // copy info to marker chunk here
     memcpy(myjpeg->marker[myjpeg->count].data, picture.data+location, length);
 //    gp_debug_printf (GP_DEBUG_LOW, "jpeg.c", "JPEG marker 0xFF %c", picture.data[location+1]);
