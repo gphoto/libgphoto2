@@ -1,0 +1,3 @@
+2002-02-13  Lutz Müller <lutz@users.sourceforge.net>
+
+	* sonydsc1.c: Mark driver as EXPERIMENTAL - it is currently broken.

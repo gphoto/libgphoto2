@@ -43,7 +43,7 @@ int camera_abilities (CameraAbilitiesList *list) {
            if a camera supported multiple ways. */
 	memset (&a, 0, sizeof(a));
         strcpy(a.model, "Sony DSC-F1");
-	a.status = GP_DRIVER_STATUS_PRODUCTION;
+	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
         a.port=GP_PORT_SERIAL;
         a.speed[0] = 9600;
         a.speed[1] = 19200;
