@@ -344,9 +344,6 @@ int gp_camera_file_info_get (Camera *camera, CameraFileInfo *info,
 	    (folder == NULL) || (file == NULL))
                 return (GP_ERROR_BAD_PARAMETERS);
 
-        if (camera->functions->file_info_get == NULL)
-                return (GP_ERROR_NOT_SUPPORTED);
-	
         memset(info, 0, sizeof(CameraFileInfo));
 
 	/* If the camera doesn't support file_info_get, we simply get	*/
