@@ -40,6 +40,7 @@
  * Please report if this works
  */
 #define USB_PRODUCT_SX410Z	0x4100
+#define USB_PRODUCT_MEDION	0x4102
 
 /* different requests (are there more ?) */
 #define SX330Z_REQUEST_INIT	0x0001		/* not sure */
