@@ -25,7 +25,7 @@ libgphoto2_la_SOURCES = 	\
 	gphoto2-widget.c
 libgphoto2_la_LIBADD = -lm
 
-libgphoto2includedir = $(prefix)/include/gphoto2
+libgphoto2includedir = $(includedir)/gphoto2
 libgphoto2include_HEADERS =	\
 	gphoto2-abilities-list.h\
 	gphoto2-core.h		\
