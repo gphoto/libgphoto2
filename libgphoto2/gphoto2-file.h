@@ -22,6 +22,8 @@
 #define __GPHOTO2_FILE_H__
 
 #define GP_MIME_WAV       "audio/wav"
+/** Canon RaW files (CRW). See http://what-the-heck.org/ **/
+#define GP_MIME_CRW       "image/x-canon-raw"
 #define GP_MIME_RAW       "image/x-raw"
 #define GP_MIME_PNG       "image/png"
 #define GP_MIME_PGM       "image/x-portable-graymap"
@@ -31,6 +33,13 @@
 #define GP_MIME_BMP       "image/bmp"
 #define GP_MIME_QUICKTIME "video/quicktime"
 #define GP_MIME_AVI       "video/x-msvideo"
+
+/** GP_MIME_UNKNOWN:
+ * For files that are not recognized by our driver yet.
+ * DO NOT use this when you're just too lazy to use the proper MIME
+ * type, or we will feed you to Crud Puppy.
+ **/
+#define GP_MIME_UNKNOWN   "application/octet-stream"
 
 typedef enum {
 	GP_FILE_TYPE_PREVIEW,
