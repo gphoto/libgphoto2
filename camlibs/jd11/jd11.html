@@ -68,7 +68,8 @@ character.
 		f2=r[4]+r[5]*0.1+r[6]*0.01;<br>
 		f3=r[7]+r[8]*0.1+r[9]*0.01;<br>
 		</code><br>
-		Their use is still unknown to me.
+		Their use is still unknown to me.<br>
+		Twain calls it 'LoadGRB'
 	</td>
 </tr>
 
@@ -94,14 +95,15 @@ character.
 		The bytestream looks:
 		</code>0xFF A B C D E F G H I</code><br>
 		The floats are: A.BC D.EF G.HI<br>
-		A...I are binary values between 0 and 9.
+		A...I are binary values between 0 and 9.<br>
+		Twain calls it 'SaveGRB'.
 	</td>
 </tr>
 <tr>
 	<td>0xff 0xa6</td>
 	<td>None</td>
 	<td>No return expected.</td>
-	<td>Delete all images.</td>
+	<td>Deletes all images.</td>
 </tr>
 
 <tr>
@@ -140,19 +142,19 @@ character.
 	<td>0xff 0x72</td>
 	<td>None</td>
 	<td>0xff 0x71</td>
-	<td>Function unknown.</td>
+	<td>The TestDRAM command according to the Twain drivers. Gets a bool reply.</td>
 </tr>
 <tr>
 	<td>0xff 0x73</td>
 	<td>None</td>
-	<td>0xff 0x70</td>
-	<td>Function unknown</td>
+	<td>0xff 0x70/0x71</td>
+	<td>The TestFLASH command according to the Twain drivers. Gets a bool reply.</td>
 </tr>
 <tr>
 	<td>0xff 0x75</td>
 	<td>None</td>
 	<td>0xff70 or 0xff71 or something else.</td>
-	<td>Function unknown. Returns bool?</td>
+	<td>The TestADC command according to the Twain drivers. Gets a bool reply.</td>
 </tr>
 <tr>
 	<td>0xff 0x78</td>
@@ -160,13 +162,17 @@ character.
 	<td>Some data.</td>
 	<td>Appears to take a snapshot and then it should read N packets of
 		data. Strange. There is some text generated and printed into
-		a dialog. I only get back 0xff.</td>
+		a dialog. I only get back 0xff.<br>
+		TWAIN calls it DSC_TestAE.</td>
 </tr>
 <tr>
 	<td>0xff 0x79</td>
 	<td>None</td>
 	<td>0xff 0xXX</td>
-	<td>Function unknown, seems to open/close the shutter in rapid succession.</td>
+	<td>Function unknown, seems to open/close the shutter in rapid succession.<br>
+		TWAIN calls it DSC_AjustAGC.<br>
+		Reads reply.
+	</td>
 </tr>
 <tr>
 	<td>0xff 0x7a</td>

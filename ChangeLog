@@ -1,5 +1,18 @@
 2001-11-01 Marcus Meissner <marcus@jet.franken.de>
 	
+	* camlibs/jd11:
+	  - added Bayer interpolation, kept old mode as 'raw'.
+	  - added configuration widgets and calls for Bulb Exposure Time
+	    and Color Weighting
+	  - fixed number of images for 0 images (was returning 1)
+	  - cleaned up several functions in regard to GP_ return values.
+	  - added resend commands to the packet reader.
+	  - Added the I/O Magic MagicImage 420 as compatible camera.
+	* camlibs/jd11/jd11.html: Added more information gained from the
+	  Twain drivers.
+
+2001-11-01 Marcus Meissner <marcus@jet.franken.de>
+	
 	* frontends/command-line/main.c: x was not set to 0 before listing
 	  serial speeds leading to corrupt output.
 

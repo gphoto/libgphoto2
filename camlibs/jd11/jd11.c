@@ -55,7 +55,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	a.port			= GP_PORT_SERIAL;
 	a.speed[0]		= 115200;
 	a.speed[1]		= 0;
-	a.operations		= GP_OPERATION_NONE ;
+	a.operations		= GP_OPERATION_CONFIG;
 	a.file_operations	= GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations	= GP_FOLDER_OPERATION_DELETE_ALL;
 
@@ -64,6 +64,7 @@ int camera_abilities (CameraAbilitiesList *list)
 
 	/* Reported to be just a rebranded version by Russ Burdick
 	 * <grub@extrapolation.net> */
+	/* from Gallantcom, http://www.gallantcom.com/prodfaq-probe99.htm */
 	strcpy(a.model, "Quark Probe 99");
 	gp_abilities_list_append(list, a);
 
@@ -79,12 +80,12 @@ int camera_abilities (CameraAbilitiesList *list)
 	strcpy(a.model, "Argus DC-2000");
 	gp_abilities_list_append(list, a);
 
-	/* The I/O Magic MagicImage 420 looks similar, but has a USB connector,
-	 * so it is probably a different beast. Leave commented out until
-	 * we know otherwise.
-	 * strcpy(a.model, "I/O Magic MagicImage 420");
-	 * gp_abilities_list_append(list, a);
+	/* The I/O Magic MagicImage 420 has a black cover, but otherwise
+	 * appears to be the same. (Not 100% sure.)
+	 * http://www.iomagic.com/support/digitalcameras/magicimage420/magicimage420main.htm
 	 */
+	strcpy(a.model, "I/O Magic MagicImage 420");
+	gp_abilities_list_append(list, a);
 	return (GP_OK);
 }
 
@@ -118,15 +119,13 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		return image_no;
 
 	switch (type) {
-	    /*
 	case GP_FILE_TYPE_RAW:
-		result =  jd11_get_image_raw (camera->port, image_no, &data,
-					    (int*) &size);
+		result =  jd11_get_image_full (camera->port, image_no, &data,
+					    (int*) &size, 1);
 		break;
-		*/
 	case GP_FILE_TYPE_NORMAL:
 		result =  jd11_get_image_full (camera->port, image_no, &data,
-					    (int*) &size);
+					    (int*) &size, 0);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		result =  jd11_get_image_preview (camera->port, image_no,
@@ -189,6 +188,96 @@ static int camera_about (Camera *camera, CameraText *about)
 
 	return (GP_OK);
 }
+static int camera_config_get (Camera *camera, CameraWidget **window) 
+{
+	CameraWidget *widget,*section;
+	float value_float,red,green,blue;
+	int ret;
+	gp_widget_new (GP_WIDGET_WINDOW, "JD11 Configuration", window);
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Other Settings"), &section);
+	gp_widget_append (*window, section);
+
+
+       /* Bulb Exposure Time */
+	gp_widget_new (GP_WIDGET_RANGE, _("Bulb Exposure Time"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_set_range (widget, 1, 9, 1);
+	/* this is a write only capability */
+	value_float = 1;
+	gp_widget_set_value (widget, &value_float);
+	gp_widget_changed(widget);
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Color Settings"), &section);
+	gp_widget_append (*window, section);
+
+	ret = jd11_get_rgb(camera->port,&red,&green,&blue);
+	if (ret != GP_OK)
+	    return ret;
+	gp_widget_new (GP_WIDGET_RANGE, _("Red"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_set_range (widget, 50, 150, 1);
+	red*=100.0;
+	gp_widget_set_value (widget, &red);
+	gp_widget_changed(widget);
+
+	gp_widget_new (GP_WIDGET_RANGE, _("Green"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_set_range (widget, 50, 150, 1);
+	green*=100.0;
+	gp_widget_set_value (widget, &green);
+	gp_widget_changed(widget);
+
+	gp_widget_new (GP_WIDGET_RANGE, _("Blue"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_set_range (widget, 50, 150, 1);
+	blue*=100.0;
+	gp_widget_set_value (widget, &blue);
+	gp_widget_changed(widget);
+
+	return (GP_OK);
+}
+
+static int camera_config_set (Camera *camera, CameraWidget *window) 
+{
+	float f,red,green,blue;
+	CameraWidget *widget,*section;
+	int ret,changed = 0;
+	/*
+	 * Check if the widgets' values have changed. If yes, tell the camera.
+	 */
+	gp_widget_get_child_by_label (window, _("Other Settings"), &section);
+	gp_widget_get_child_by_label (section,_("Bulb Exposure Time"), &widget);
+	if (gp_widget_changed (widget)) {
+		gp_widget_get_value (widget, &f);
+		ret = jd11_set_bulb_exposure(camera->port,(int)f);
+		if (ret != GP_OK)
+		    return ret;
+	}
+
+	gp_widget_get_child_by_label (window, _("Color Settings"), &section);
+
+	gp_widget_get_child_by_label (section,_("Red"), &widget);
+	changed|=gp_widget_changed (widget);
+	gp_widget_get_value (widget, &red);
+	red/=100.0;
+
+	gp_widget_get_child_by_label (section,_("Green"), &widget);
+	changed|=gp_widget_changed (widget);
+	gp_widget_get_value (widget, &green);
+	green/=100.0;
+
+	gp_widget_get_child_by_label (section,_("Blue"), &widget);
+	changed|=gp_widget_changed (widget);
+	gp_widget_get_value (widget, &blue);
+	blue/=100.0;
+
+	ret = GP_OK;
+	if (changed)
+	    ret =jd11_set_rgb(camera->port,red,green,blue);
+	return ret;
+
+}
 
 int camera_init (Camera *camera) 
 {
@@ -196,9 +285,11 @@ int camera_init (Camera *camera)
 	int ret;
 
         /* First, set up all the function pointers */
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
-        camera->functions->about                = camera_about;
+        camera->functions->summary	= camera_summary;
+        camera->functions->manual	= camera_manual;
+        camera->functions->about	= camera_about;
+	camera->functions->get_config	= camera_config_get;
+	camera->functions->set_config	= camera_config_set;
 
         /* Configure port */
         gp_port_set_timeout(camera->port, 1000);
