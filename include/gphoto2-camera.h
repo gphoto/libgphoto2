@@ -124,6 +124,9 @@ struct _Camera {
 	 */
 	char            model[128];
 
+	/*
+	 * Don't use. It'll disappear sooner or later
+	 */
 	GPPortInfo     *port_info;
 	
 	int             ref_count;
@@ -139,6 +142,7 @@ struct _Camera {
 	GPPort          *port;
 	CameraFilesystem *fs;
 
+	/* Don't use - DEPRECATED */
 	int             session;
 
 	CameraStatusFunc   status_func;
