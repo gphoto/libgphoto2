@@ -25,6 +25,7 @@ camlibs/kodak/dc3200/library.c
 camlibs/konica/konica.c
 camlibs/konica/library.c
 camlibs/konica/lowlevel.c
+camlibs/konica/qm150.c
 camlibs/largan/lmini/largan.c
 camlibs/minolta/dimagev/dimagev.c
 camlibs/mustek/core.c
