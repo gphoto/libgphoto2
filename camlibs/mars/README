@@ -41,6 +41,20 @@ not take full advantage even of the mentioned abilities. There, one has the
 choice either to download all photos, or none. If all are downloaded, then 
 thumbnails are created. The user can then do previews and decide what to save. 
 
+USABILITY OF DRIVER WITH GUI FRONTENDS
+
+The camera library presented here seems to work with gtkam as a frontend. To 
+use gtkam for the first time with the camera, you must choose the camera. 
+For this purpose, after starting gtkam click on "Camera." Then choose 
+"Add Camera." Then "Detect." After this, AFAICT gtkam will be fully functional,
+including in particular the production of thumbnails for the photos. 
+
+The use of digikam as a frontend works almost as well, but for some reason 
+digikam seems unable to display thumbnails from this camera. Anyone who knows 
+what the problem is here, please let me know. Meanwhile, as I said, gtkam seems
+to work without problems. 
+
+
 
 FURTHER DETAILS
 
