@@ -60,7 +60,28 @@
 #define GP_USB_HOTPLUG_MATCH_DEV_SUBCLASS       0x0100
 #define GP_USB_HOTPLUG_MATCH_DEV_PROTOCOL       0x0200
 
-#define CR(result) {int r = (result); if (r < 0) return (r);}
+#ifdef __GNUC__
+#define CR(result) \
+	do { \
+		int r = (result); \
+		if (r < 0) { \
+			fprintf(stderr, "print-usb-usermap: " \
+				"Fatal error running `%s'.\n" \
+				"Aborting.\n", #result ); \
+			return (r); \
+		} \
+	} while (0)
+#else /* !__GNUC__ */
+#define CR(result) \
+	do { \
+		int r = (result); \
+		if (r < 0) { \
+			fprintf(stderr, "print-usb-usermap: " \
+				"Fatal error detected, aborting.\n"); \
+			return (r); \
+		} \
+	} while (0)
+#endif /* __GNUC__ */
 
 /* print-usb-usermap
  *
