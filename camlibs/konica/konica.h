@@ -18,6 +18,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#ifndef __KONICA_H__
+#define __KONICA_H__
+
+#include <gphoto2-port.h>
+#include <gphoto2-context.h>
+
 /*
  * The following are the commands that are supported by the 
  * camera. All other commands will be rejected as unsupported.
@@ -165,60 +171,60 @@ typedef enum
  */
 typedef enum
 {
-	K_PREFERENCE_RESOLUTION,
-	K_PREFERENCE_EXPOSURE,
-	K_PREFERENCE_SELF_TIMER_TIME,
-	K_PREFERENCE_SLIDE_SHOW_INTERVAL,
-	K_PREFERENCE_FLASH,
-	K_PREFERENCE_FOCUS_SELF_TIMER,
-	K_PREFERENCE_AUTO_OFF_TIME,
-	K_PREFERENCE_BEEP
+	K_PREFERENCE_RESOLUTION          = 0xc000,
+	K_PREFERENCE_EXPOSURE            = 0xc002,
+	K_PREFERENCE_SELF_TIMER_TIME     = 0xc004,
+	K_PREFERENCE_SLIDE_SHOW_INTERVAL = 0xc006,
+	K_PREFERENCE_FLASH               = 0xd000,
+	K_PREFERENCE_FOCUS_SELF_TIMER    = 0xd002,
+	K_PREFERENCE_AUTO_OFF_TIME       = 0xd004,
+	K_PREFERENCE_BEEP                = 0xd006
 } KPreference;
 
 typedef enum
 {
-	K_POWER_LEVEL_LOW, 
-	K_POWER_LEVEL_NORMAL,
-	K_POWER_LEVEL_HIGH
+	K_POWER_LEVEL_LOW    = 0x00, 
+	K_POWER_LEVEL_NORMAL = 0x01,
+	K_POWER_LEVEL_HIGH   = 0x02
 } KPowerLevel;
 
 typedef enum
 {
-	K_POWER_SOURCE_BATTERY,
-	K_POWER_SOURCE_AC
+	K_POWER_SOURCE_BATTERY = 0x00,
+	K_POWER_SOURCE_AC      = 0x01
 } KPowerSource;
 
 typedef enum
 {
-	K_THUMBNAIL,
-	K_IMAGE_JPEG,
-	K_IMAGE_EXIF
+	K_THUMBNAIL  = 0x00,
+	K_IMAGE_JPEG = 0x10,
+	K_IMAGE_EXIF = 0x30
 } KImageType;
 
 typedef enum
 {
-	K_DISPLAY_BUILT_IN,
-	K_DISPLAY_TV
+	K_DISPLAY_BUILT_IN = 0x00,
+	K_DISPLAY_TV       = 0x02
 } KDisplay;
 
 typedef enum
 {
-	K_CARD_STATUS_CARD,
-	K_CARD_STATUS_NO_CARD
+	K_CARD_STATUS_CARD    = 0x07,
+	K_CARD_STATUS_NO_CARD = 0x12
 } KCardStatus;
 
 typedef enum
 {
-	K_DATE_FORMAT_MONTH_DAY_YEAR,
-	K_DATE_FORMAT_DAY_MONTH_YEAR,
-	K_DATE_FORMAT_YEAR_MONTH_DAY
+	K_DATE_FORMAT_MONTH_DAY_YEAR = 0x00,
+	K_DATE_FORMAT_DAY_MONTH_YEAR = 0x01,
+	K_DATE_FORMAT_YEAR_MONTH_DAY = 0x02
 } KDateFormat;
 
 typedef enum
 {
-	K_TV_OUTPUT_FORMAT_NTSC,
-	K_TV_OUTPUT_FORMAT_PAL,
-	K_TV_OUTPUT_FORMAT_HIDE
+	K_TV_OUTPUT_FORMAT_NTSC = 0x00,
+	K_TV_OUTPUT_FORMAT_PAL  = 0x01,
+	K_TV_OUTPUT_FORMAT_HIDE = 0x02
 } KTVOutputFormat;
 
 /*
@@ -226,7 +232,7 @@ typedef enum
  * for image IDs (qm100, unsigned int), the other one uses four
  * (qm200, unsigned long).
  */
-int k_init (GPPort *device);
+int k_init (GPPort *, GPContext *);
 
 typedef enum
 {
@@ -251,15 +257,18 @@ typedef enum
 	K_BIT_FLAG_HW_FLOW_CTRL = 1 << 4
 } KBitFlag;
 
-int k_get_io_capability (GPPort *, KBitRate *bit_rates, KBitFlag *bit_flags);
-int k_set_io_capability (GPPort *, KBitRate  bit_rate,  KBitFlag  bit_flags);
+int k_get_io_capability (GPPort *, GPContext *,
+			 KBitRate *bit_rates, KBitFlag *bit_flags);
+int k_set_io_capability (GPPort *, GPContext *,
+			 KBitRate  bit_rate,  KBitFlag  bit_flags);
 
-int k_erase_all (GPPort *device, unsigned int *number_of_images_not_erased);
+int k_erase_all (GPPort *device, GPContext *,
+		 unsigned int *number_of_images_not_erased);
 
-int k_format_memory_card (GPPort *device);
+int k_format_memory_card (GPPort *, GPContext *);
 
 int k_take_picture (
-	GPPort *device,
+	GPPort *device, GPContext *,
 	int image_id_long,
 	unsigned long *image_id, 
 	unsigned int *exif_size,
@@ -268,28 +277,28 @@ int k_take_picture (
 	int *protected);
 
 
-int k_get_preview (GPPort *device, int thumbnail,
+int k_get_preview (GPPort *device, GPContext *, int thumbnail,
 		   unsigned char **image_buffer,
 		   unsigned int *image_buffer_size);
 
 
-int k_set_protect_status (GPPort *device, int image_id_long,
+int k_set_protect_status (GPPort *device, GPContext *, int image_id_long,
 			  unsigned long image_id, int protected);
 
 
-int k_erase_image (GPPort *device, int image_id_long,
+int k_erase_image (GPPort *device, GPContext *, int image_id_long,
 		   unsigned long image_id);
 
 
-int k_reset_preferences (GPPort *device);
+int k_reset_preferences (GPPort *device, GPContext *);
 
 typedef struct {
 	unsigned char year, month, day;
 	unsigned char hour, minute, second;
 } KDate;
 
-int k_get_date_and_time (GPPort *device, KDate *date);
-int k_set_date_and_time (GPPort *device, KDate  date);
+int k_get_date_and_time (GPPort *device, GPContext *, KDate *date);
+int k_set_date_and_time (GPPort *device, GPContext *, KDate  date);
 
 typedef struct {
 	unsigned int shutoff_time;
@@ -298,9 +307,9 @@ typedef struct {
 	unsigned int slide_show_interval;
 } KPreferences;
 
-int k_get_preferences (GPPort *device, KPreferences *preferences);
-int k_set_preference  (GPPort *device, KPreference   preference,
-					unsigned int value);
+int k_get_preferences (GPPort *device, GPContext *, KPreferences *preferences);
+int k_set_preference  (GPPort *device, GPContext *, KPreference   preference,
+		       unsigned int value);
 
 typedef struct {
 	KPowerLevel  power_level;
@@ -317,24 +326,29 @@ typedef struct {
 	unsigned char total_pictures, total_strobes;
 } KStatus;
 
-int k_get_status (GPPort *device, KStatus *status);
+int k_get_status (GPPort *device, GPContext *, KStatus *status);
 
+typedef struct _KVersion KVersion;
+struct _KVersion {
+	unsigned char major;
+	unsigned char minor;
+};
 
-int k_get_information (
-	GPPort *device,
-	char **model,
-	char **serial_number,
-	unsigned char *hardware_version_major,
-	unsigned char *hardware_version_minor,
-	unsigned char *software_version_major, 
-	unsigned char *software_version_minor,
-	unsigned char *testing_software_version_major,
-	unsigned char *testing_software_version_minor,
-	char **name,
-	char **manufacturer);
+typedef struct _KInformation KInformation;
+struct _KInformation {
+	char model[5];
+	char serial_number[11];
+	KVersion hardware;
+	KVersion software;
+	KVersion testing;
+	char name[23];
+	char manufacturer[31];
+};
+
+int k_get_information (GPPort *device, GPContext *, KInformation *info);
 
 int k_get_image_information (
-	GPPort *device,
+	GPPort *device, GPContext *,
 	int image_id_long,
 	unsigned long image_number,
 	unsigned long *image_id, 
@@ -344,7 +358,7 @@ int k_get_image_information (
 	unsigned int *information_buffer_size);
 
 int k_get_image (
-	GPPort *device,
+	GPPort *device, GPContext *,
 	int image_id_long,
 	unsigned long image_id, 
 	KImageType image_type, 
@@ -352,13 +366,14 @@ int k_get_image (
 	unsigned int *image_buffer_size);
 
 /* Localization */
-int k_localization_tv_output_format_set (GPPort *device,
+int k_localization_tv_output_format_set (GPPort *device, GPContext *,
 					 KTVOutputFormat tv_output_format);
-int k_localization_date_format_set      (GPPort *device,
+int k_localization_date_format_set      (GPPort *device, GPContext *,
 					 KDateFormat date_format);
-int k_localization_data_put             (GPPort *device,
+int k_localization_data_put             (GPPort *device, GPContext *,
 					 unsigned char *data,
 					 unsigned long data_size);
 
-int k_cancel (GPPort *device, KCommand *command);
+int k_cancel (GPPort *device, GPContext *, KCommand *command);
 
+#endif /* __KONICA_H__ */

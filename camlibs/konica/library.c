@@ -19,7 +19,6 @@
  */
 
 #include <config.h>
-#include "library.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,41 +49,10 @@
 #  define N_(String) (String)
 #endif
 
-#define CHECK(c,r,context) {int ret=(r);if(ret<0){log_error(context,ret);return(ret);}}
+#define CHECK(c,r,context) {int ret=(r);if(ret<0) return(ret);}
 #define CHECK_NULL(r) {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 
-#define LOG_ERR(c,r,e) {if ((r)==result) gp_context_error((c),(e));}
 #define GP_MODULE "konica"
-
-static void
-log_error (GPContext *c, int result)
-{
-	LOG_ERR (c, KONICA_ERROR_FOCUSING_ERROR, N_("Focusing error"));
-	LOG_ERR (c, KONICA_ERROR_IRIS_ERROR, N_("Iris error"));
-	LOG_ERR (c, KONICA_ERROR_STROBE_ERROR, N_("Strobe error"));
-	LOG_ERR (c, KONICA_ERROR_EEPROM_CHECKSUM_ERROR, N_("EEPROM checksum error"));
-	LOG_ERR (c, KONICA_ERROR_INTERNAL_ERROR1, N_("Internal error (1)"));
-	LOG_ERR (c, KONICA_ERROR_INTERNAL_ERROR2, N_("Internal error (2)"));
-	LOG_ERR (c, KONICA_ERROR_NO_CARD_PRESENT, N_("No card present"));
-	LOG_ERR (c, KONICA_ERROR_CARD_NOT_SUPPORTED, N_("Card not supported"));
-	LOG_ERR (c, KONICA_ERROR_CARD_REMOVED_DURING_ACCESS, N_("Card removed during access"));
-	LOG_ERR (c, KONICA_ERROR_IMAGE_NUMBER_NOT_VALID, N_("Image number not valid"));
-	LOG_ERR (c, KONICA_ERROR_CARD_CAN_NOT_BE_WRITTEN, N_("Card can not be written"));
-	LOG_ERR (c, KONICA_ERROR_CARD_IS_WRITE_PROTECTED, N_("Card is write protected"));
-	LOG_ERR (c, KONICA_ERROR_NO_SPACE_LEFT_ON_CARD, N_("No space left on card"));
-	LOG_ERR (c, KONICA_ERROR_IMAGE_PROTECTED, N_("No image erased as image protected"));
-	LOG_ERR (c, KONICA_ERROR_LIGHT_TOO_DARK, N_("Light too dark"));
-	LOG_ERR (c, KONICA_ERROR_AUTOFOCUS_ERROR, N_("Autofocus error"));
-	LOG_ERR (c, KONICA_ERROR_SYSTEM_ERROR, N_("System error"));
-	LOG_ERR (c, KONICA_ERROR_ILLEGAL_PARAMETER, N_("Illegal parameter"));
-	LOG_ERR (c, KONICA_ERROR_COMMAND_CANNOT_BE_CANCELLED, N_("Command can not be cancelled"));
-	LOG_ERR (c, KONICA_ERROR_LOCALIZATION_DATA_EXCESS, N_("Localization data excess"));
-	LOG_ERR (c, KONICA_ERROR_LOCALIZATION_DATA_CORRUPT, N_("Localization data corrupt"));
-	LOG_ERR (c, KONICA_ERROR_UNSUPPORTED_COMMAND, N_("Unsupported command"));
-	LOG_ERR (c, KONICA_ERROR_OTHER_COMMAND_EXECUTING, N_("Other command executing"));
-	LOG_ERR (c, KONICA_ERROR_COMMAND_ORDER_ERROR, N_("Command order error"));
-	LOG_ERR (c, KONICA_ERROR_UNKNOWN_ERROR, N_("Unknown error"));
-};
 
 static struct {
         const char *model;
@@ -122,7 +90,7 @@ get_info (Camera *camera, unsigned int n, CameraFileInfo *info,
 	int protected;
 
 	GP_DEBUG ("*** Getting info for picture %i...", n);
-	CHECK (camera, k_get_image_information (camera->port,
+	CHECK (camera, k_get_image_information (camera->port, context,
 		camera->pl->image_id_long, n, &image_id, &exif_size, &protected,
 		&buffer, &buffer_size), context);
 
@@ -167,7 +135,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
          * But we decide to call the images %6i.jpeg', with the image id as
          * parameter. Therefore, let's get the image ids.
          */
-        CHECK (camera, k_get_status (camera->port, &status), context);
+        CHECK (camera, k_get_status (camera->port, context, &status), context);
 
 	id = gp_context_progress_start (context, status.pictures,
 					_("Getting file list..."));
@@ -267,7 +235,7 @@ set_speed (Camera *camera, unsigned int speed, GPContext *context)
 	case 0:
 
 		/* Set the highest possible speed */
-		CHECK (camera, k_get_io_capability (camera->port, &bit_rates,
+		CHECK (camera, k_get_io_capability (camera->port, context, &bit_rates,
 						    &bit_flags), context);
 		for (i = 9; i >= 0; i--)
 			if ((1 << i) & bit_rates)
@@ -313,12 +281,12 @@ set_speed (Camera *camera, unsigned int speed, GPContext *context)
 
         /* Request the new speed */
 	bit_flags = K_BIT_FLAG_8_BITS;
-	CHECK (camera, k_set_io_capability (camera->port, bit_rates,
+	CHECK (camera, k_set_io_capability (camera->port, context, bit_rates,
 					    bit_flags), context);
 	gp_log (GP_LOG_DEBUG, "konica", "Reconnecting at speed %d", speed);
 	settings.serial.speed = speed;
 	CHECK (camera, gp_port_set_settings (camera->port, settings), context);
-	CHECK (camera, k_init (camera->port), context);
+	CHECK (camera, k_init (camera->port, context), context);
 
 	return (GP_OK);
 }
@@ -341,7 +309,7 @@ test_speed (Camera *camera, GPContext *context)
 			speeds[i]);
 		settings.serial.speed = speeds[i];
 		CHECK (camera, gp_port_set_settings (camera->port, settings), context);
-		if (k_init (camera->port) == GP_OK)
+		if (k_init (camera->port, context) == GP_OK)
 			break;
 		gp_context_progress_update (context, id, i + 1);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
@@ -376,7 +344,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
                         protected = FALSE;
                 else
                         protected = TRUE;
-                CHECK (camera, k_set_protect_status (camera->port,
+                CHECK (camera, k_set_protect_status (camera->port, context,
 			camera->pl->image_id_long, image_id, protected), context);
         }
 
@@ -430,7 +398,7 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
         if (strcmp (folder, "/"))
                 return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
-        CHECK (camera, k_erase_all (camera->port, &not_erased), context);
+        CHECK (camera, k_erase_all (camera->port, context, &not_erased), context);
 
         if (not_erased) {
 		gp_context_error (context, _("%i pictures could not be "
@@ -465,13 +433,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         /* Get the image. */
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
-                CHECK (camera, k_get_image (camera->port,
+                CHECK (camera, k_get_image (camera->port, context,
 			camera->pl->image_id_long,
 			image_id, K_THUMBNAIL, (unsigned char **) &fdata,
 			(unsigned int *) &size), context);
                 break;
         case GP_FILE_TYPE_NORMAL:
-                CHECK (camera, k_get_image (camera->port,
+                CHECK (camera, k_get_image (camera->port, context,
 			camera->pl->image_id_long,
 			image_id, K_IMAGE_EXIF, (unsigned char **) &fdata,
 			(unsigned int *) &size), context);
@@ -503,7 +471,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	strncpy (tmp, filename, 6);
         image_id = atol (tmp);
 
-        CHECK (camera, k_erase_image (camera->port, camera->pl->image_id_long,
+        CHECK (camera, k_erase_image (camera->port, context, camera->pl->image_id_long,
 			      image_id), context);
 
         return (GP_OK);
@@ -512,26 +480,13 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 static int
 camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 {
-        char *model = NULL;
-        char *serial_number = NULL;
-        unsigned char  hardware_version_major;
-        unsigned char  hardware_version_minor;
-        unsigned char  software_version_major;
-        unsigned char  software_version_minor;
-        unsigned char  testing_software_version_major;
-        unsigned char  testing_software_version_minor;
-        char *name = NULL;
-        char *manufacturer = NULL;
+	KInformation info;
 
         GP_DEBUG ("*** ENTER: camera_summary "
                          "***");
-        CHECK (camera, k_get_information (camera->port, &model, &serial_number,
-                &hardware_version_major, &hardware_version_minor,
-                &software_version_major, &software_version_minor,
-                &testing_software_version_major,
-                &testing_software_version_minor, &name, &manufacturer), context);
+        CHECK (camera, k_get_information (camera->port, context, &info), context);
 
-        sprintf (summary->text,
+	snprintf (summary->text, sizeof (summary->text),
                 _("Model: %s\n"
                 "Serial Number: %s,\n"
                 "Hardware Version: %i.%i\n"
@@ -539,10 +494,11 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
                 "Testing Software Version: %i.%i\n"
                 "Name: %s,\n"
                 "Manufacturer: %s\n"),
-                model, serial_number, hardware_version_major,
-                hardware_version_minor, software_version_major,
-                software_version_minor, testing_software_version_major,
-                testing_software_version_minor, name, manufacturer);
+		info.model, info.serial_number,
+		info.hardware.major, info.hardware.minor,
+		info.software.major, info.software.minor,
+		info.testing.major, info.testing.minor,
+                info.name, info.manufacturer);
 
         return (GP_OK);
 }
@@ -553,7 +509,7 @@ camera_capture_preview (Camera* camera, CameraFile* file, GPContext *context)
         unsigned char *data = NULL;
         long int size = 0;
 
-        CHECK (camera, k_get_preview (camera->port, TRUE,
+        CHECK (camera, k_get_preview (camera->port, context, TRUE,
 			      &data, (unsigned int *) &size), context);
         CHECK (camera, gp_file_set_data_and_size (file, data, size), context);
         CHECK (camera, gp_file_set_mime_type (file, GP_MIME_JPEG), context);
@@ -580,7 +536,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 		return (GP_ERROR_NOT_SUPPORTED);
 
         /* Take the picture. */
-        CHECK (camera, k_take_picture (camera->port, camera->pl->image_id_long,
+        CHECK (camera, k_take_picture (camera->port, context, camera->pl->image_id_long,
 		&image_id, &exif_size, &buffer, &buffer_size, &protected),
 			context);
 	sprintf (path->name, "%06i.jpeg", (int) image_id);
@@ -650,9 +606,9 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
         /* Get the current settings. */
 	id = gp_context_progress_start (context, 2,
 					_("Getting configuration..."));
-        CHECK (camera, k_get_status (camera->port, &status), context);
+        CHECK (camera, k_get_status (camera->port, context, &status), context);
 	gp_context_progress_update (context, id, 1);
-        CHECK (camera, k_get_preferences (camera->port, &preferences), context);
+        CHECK (camera, k_get_preferences (camera->port, context, &preferences), context);
 	gp_context_progress_stop (context, id);
 
         /* Create the window. */
@@ -886,7 +842,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                 date.hour   = tm_struct->tm_hour;
                 date.minute = tm_struct->tm_min;
                 date.second = tm_struct->tm_sec;
-                CHECK (camera, k_set_date_and_time (camera->port, date), context);
+                CHECK (camera, k_set_date_and_time (camera->port, context, date), context);
         }
 
         /* Beep */
@@ -897,7 +853,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                         beep = 0;
                 else
                         beep = 1;
-                CHECK (camera, k_set_preference (camera->port,
+                CHECK (camera, k_set_preference (camera->port, context,
 						 K_PREFERENCE_BEEP,
                                          beep), context);
         }
@@ -906,7 +862,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         gp_widget_get_child_by_label (section, _("Self Timer Time"), &widget);
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &f);
-                CHECK (camera, k_set_preference (camera->port,
+                CHECK (camera, k_set_preference (camera->port, context,
                         K_PREFERENCE_SELF_TIMER_TIME, (int) f), context);
         }
 
@@ -914,7 +870,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         gp_widget_get_child_by_label (section, _("Auto Off Time"), &widget);
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &f);
-                CHECK (camera, k_set_preference (camera->port,
+                CHECK (camera, k_set_preference (camera->port, context,
                                         K_PREFERENCE_AUTO_OFF_TIME, (int) f), context);
         }
 
@@ -923,7 +879,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                                       &widget);
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &f);
-                CHECK (camera, k_set_preference (camera->port,
+                CHECK (camera, k_set_preference (camera->port, context,
                                 K_PREFERENCE_SLIDE_SHOW_INTERVAL, (int) f), context);
         }
 
@@ -937,7 +893,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                         j = 3;
                 else
                         j = 0;
-                CHECK (camera, k_set_preference (camera->port,
+                CHECK (camera, k_set_preference (camera->port, context,
                                         K_PREFERENCE_RESOLUTION, j), context);
         }
 
@@ -966,7 +922,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                         }
 
                         /* Go! */
-                        result = k_localization_data_put (camera->port,
+                        result = k_localization_data_put (camera->port, context,
                                                           data, data_size);
                         free (data);
                         CHECK (camera, result, context);
@@ -987,7 +943,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                         else
 				return (GP_ERROR);
                         CHECK (camera, k_localization_tv_output_format_set (
-                                        camera->port, tv_output_format), context);
+                                        camera->port, context, tv_output_format), context);
                 }
         }
 
@@ -1005,7 +961,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                         else
 				return (GP_ERROR);
                         CHECK (camera, k_localization_date_format_set (
-						camera->port, date_format), context);
+						camera->port, context, date_format), context);
                 }
         }
 
@@ -1029,7 +985,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                         j = 2;
                 else
                         j = 6;
-                CHECK (camera, k_set_preference (camera->port,
+                CHECK (camera, k_set_preference (camera->port, context,
 						 K_PREFERENCE_FLASH, j), context);
         }
 
@@ -1037,7 +993,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         gp_widget_get_child_by_label (section, _("Exposure"), &widget);
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &f);
-                CHECK (camera, k_set_preference (camera->port,
+                CHECK (camera, k_set_preference (camera->port, context,
                                         K_PREFERENCE_EXPOSURE, (int) f), context);
         }
 
@@ -1062,7 +1018,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                 gp_widget_get_value (widget_self_timer, &c);
                 if (!strcmp (c, _("Self Timer (only next picture)")))
                         focus_self_timer++;
-                CHECK (camera, k_set_preference (camera->port,
+                CHECK (camera, k_set_preference (camera->port, context,
                         K_PREFERENCE_FOCUS_SELF_TIMER, focus_self_timer), context);
         }
 
@@ -1261,7 +1217,7 @@ camera_init (Camera* camera, GPContext *context)
                 CHECK (camera, gp_port_set_settings (camera->port, settings), context);
 
                 /* Initiate the connection */
-                CHECK (camera, k_init (camera->port), context);
+                CHECK (camera, k_init (camera->port, context), context);
 
                 break;
         default:

@@ -378,7 +378,6 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 
 			/* Read 'rbs_internal' bytes data plus ESC quotes. */
 			error_flag = 0;
-#if 1
 {
 unsigned int read = 0, r = 0;
 while (read < rbs_internal) {
@@ -430,32 +429,6 @@ while (read < rbs_internal) {
 		break;
 	read += r;
 }}
-#else
-			for (i = 0; i < rbs_internal; i++) {
-				result = l_esc_read (device, &((*rb)[*rbs + i]));
-				switch (result) {
-				case GP_ERROR_CORRUPTED_DATA:
-					/**************************************/
-					/* We already received ETX or ETB.    */
-					/* Later, we'll read the checksum     */
-					/* plus ESC quotes and reject the     */
-					/* packet.                            */
-					/**************************************/
-					error_flag = 1;
-        	                        break;
-				case GP_OK:
-
-					/* We can proceed. */
-					checksum += (*rb)[*rbs + i];
-					break;
-
-				default:
-					return (result);
-				}
-				if (error_flag)
-					break;
-			}
-#endif
 			if (!error_flag) {
 				CHECK (gp_port_read (device, &d, 1));
 				switch (d) {

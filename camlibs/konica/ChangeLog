@@ -1,3 +1,8 @@
+2002-01-29  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.h: Removed.
+	* konica.[c,h]: Prepare support for progress information.
+
 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* library.c: More progress reporting. Remove references to 
