@@ -21,8 +21,10 @@
 #ifndef __GPHOTO2_DEBUG_H__
 #define __GPHOTO2_DEBUG_H__
 
-/* The debug levels (GP_DEBUG_*) are defined here */
-#include <gphoto2-port-debug.h>
+#define GP_DEBUG_NONE 0
+#define GP_DEBUG_LOW 1
+#define GP_DEBUG_MEDIUM 2
+#define GP_DEBUG_HIGH 3
 
 void gp_debug_printf    (int level, const char *id, const char *format, ...);
 

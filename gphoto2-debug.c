@@ -27,17 +27,26 @@
 #include <string.h>
 
 #include <gphoto2-result.h>
-#include <gphoto2-port-debug.h>
+#include <gphoto2-port-log.h>
 #include <gphoto2-port.h>
 
 static GPDebugFunc debug_func      = NULL;
 static void       *debug_func_data = NULL;
 
+static int port_func_set = 0;
+
+static int debug_level = GP_DEBUG_NONE;
+
 static void
-gp_port_func (const char *msg, void *data)
+gp_port_func (GPLogLevels levels, const char *domain,
+	      const char *msg, void *data)
 {
 	if (debug_func)
 		debug_func ("port", msg, data);
+	else {
+		fprintf (stderr, msg);
+		fprintf (stderr, "\n");
+	}
 }
 
 /**
@@ -54,11 +63,6 @@ gp_debug_set_func (GPDebugFunc func, void *data)
 {
 	debug_func      = func;
 	debug_func_data = data;
-
-	if (func)
-		gp_port_debug_set_func (gp_port_func, data);
-	else
-		gp_port_debug_set_func (NULL, NULL);
 }
 
 /**
@@ -80,6 +84,13 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 	char buffer[2048];
 	va_list arg;
 
+	if (!port_func_set)
+		port_func_set = gp_log_add_func (
+			GP_LOG_DEBUG | GP_LOG_ERROR, gp_port_func, NULL);
+
+	if (!gp_log_history_get_size ())
+		gp_log_history_set_size (1024);
+
 	va_start (arg, format);
 #if HAVE_VSNPRINTF
 	vsnprintf (buffer, sizeof (buffer), format, arg);
@@ -88,9 +99,7 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 #endif
 	va_end (arg);
 
-	gp_port_debug_history_append (buffer);
-
-	if (level <= gp_port_debug_get_level ()) {
+	if (level <= debug_level) {
 		if (debug_func) {
 
 			/* Custom debug function */
@@ -118,7 +127,7 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 void
 gp_debug_set_level (int level)
 {
-	gp_port_debug_set_level (level);
+	debug_level = level;
 }
 
 /**
@@ -131,7 +140,7 @@ gp_debug_set_level (int level)
 int
 gp_debug_get_level (void)
 {
-	return (gp_port_debug_get_level ());
+	return (debug_level);
 }
 
 /**
@@ -145,7 +154,7 @@ gp_debug_get_level (void)
 const char *
 gp_debug_history_get (void)
 {
-	return (gp_port_debug_history_get ());
+	return (gp_log_history_get ());
 }
 
 /**
@@ -159,7 +168,7 @@ gp_debug_history_get (void)
 int
 gp_debug_history_set_size (unsigned int size)
 {
-	return (gp_port_debug_history_set_size (size));
+	return (gp_log_history_set_size (size));
 }
 
 /**
@@ -172,5 +181,5 @@ gp_debug_history_set_size (unsigned int size)
 int
 gp_debug_history_get_size (void)
 {
-	return (gp_port_debug_history_get_size ());
+	return (gp_log_history_get_size ());
 }
