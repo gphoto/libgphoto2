@@ -355,6 +355,48 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 }
 
 static int
+gp_port_usb_match_device_by_class(struct usb_device *dev, int class, int subclass, int protocol, int *configno, int *interfaceno, int *altsettingno)
+{
+	int i, i1, i2;
+
+	if (dev->descriptor.bDeviceClass == class &&
+	    (subclass == -1 ||
+	     dev->descriptor.bDeviceSubClass == subclass) &&
+	    (protocol == -1 ||
+	     dev->descriptor.bDeviceProtocol == protocol))
+		return 1;
+
+	for (i = 0; i < dev->descriptor.bNumConfigurations; i++) {
+		struct usb_config_descriptor *config =
+			&dev->config[i];
+
+		for (i1 = 0; i1 < config->bNumInterfaces; i1++) {
+			struct usb_interface *interface =
+				&config->interface[i1];
+
+			for (i2 = 0; i2 < interface->num_altsetting; i2++) {
+				struct usb_interface_descriptor *altsetting =
+					&interface->altsetting[i2];
+
+				if (altsetting->bInterfaceClass == class &&
+				    (subclass == -1 ||
+				     altsetting->bInterfaceSubClass == subclass) &&
+				    (protocol == -1 ||
+				     altsetting->bInterfaceProtocol == protocol)) {
+					*configno = i;
+					*interfaceno = i1;
+					*altsettingno = i2;
+
+					return 2;
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+static int
 gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int protocol)
 {
 	struct usb_bus *bus;
@@ -374,15 +416,10 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 
 	for (bus = usb_busses; bus; bus = bus->next) {
 		for (dev = bus->devices; dev; dev = dev->next) {
-			if (dev->descriptor.bDeviceClass != class)
-				continue;
+			int ret, config, interface, altsetting;
 
-			if (subclass != -1 &&
-			    dev->descriptor.bDeviceSubClass != subclass)
-				continue;
-
-			if (protocol != -1 &&
-			    dev->descriptor.bDeviceProtocol != protocol)
+			ret = gp_port_usb_match_device_by_class(dev, class, subclass, protocol, &config, &interface, &altsetting);
+			if (!ret)
 				continue;
 
 			port->pl->d = dev;

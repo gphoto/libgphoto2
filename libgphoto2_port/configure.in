@@ -219,24 +219,20 @@ if $try_usb; then
 			usb_msg=yes
 			IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
 			USB_LIBS="`libusb-config --libs`"
-			USB_CFLAGS="`libusb-config --cflags`",
-			AC_MSG_WARN([
-*** You need the libusb library for USB support
-*** http://download.sourceforge.net/libusb/libusb-0.1.4.tar.gz
-]))
+			USB_CFLAGS="`libusb-config --cflags`"
+                        LIBUSB_VER="`libusb-config --version`")
 		CPPFLAGS="$CPPFLAGS_save"
-	else
-		AC_MSG_WARN([
-*** You need the libusb library for USB support
-*** http://download.sourceforge.net/libusb/libusb-0.1.4.tar.gz
-])
 	fi
-else 
-	AC_MSG_WARN([ 
-*** You need the libusb library for USB support
-*** http://download.sourceforge.net/libusb/libusb-0.1.4.tar.gz
+fi
+
+if test "$LIBUSB_VER" \< "0.1.5"; then
+	AC_MSG_WARN([
+*** You need atleast version 0.1.5 of the libusb library for USB support
+*** http://libusb.sourceforge.net/
+*** If you cannot find the appropriate version, try CVS
 ])
 fi
+
 AC_SUBST(USB_CFLAGS)
 AC_SUBST(USB_LIBS)
 
