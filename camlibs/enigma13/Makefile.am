@@ -1,7 +1,7 @@
 camlib_LTLIBRARIES = 					\
 	libgphoto2_enigma13.la
 
-EXTRA_DIST = 
+EXTRA_DIST = STATUS protocol.txt
 
 INCLUDES = \
         -I$(top_srcdir)/intl				\
