@@ -1,3 +1,9 @@
+2001-11-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Fix typo (USB_LIBS, not USB_LDFLAGS) *sigh*
+	* usb/Makefile.am: libgphoto2-port-usb.so needs -lusb, therefore add
+	  it using LIBADD (ldopen is not clever enough to figure that out).
+
 2001-11-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* gphoto2-port-config.in: Remove another reference to IOLIB_CFLAGS...

@@ -74,13 +74,6 @@ AC_TRY_COMPILE([#include <ioctl-types.h>], [int foo = TIOCM_RTS;],
 AC_TRY_COMPILE([#include <sys/ioctl.h>], [int foo = TIOCM_RTS;],
 			AC_DEFINE(HAVE_RTS_IOCTL))
 
-GPPORT_LIBDIR='-L${libdir}'
-GPPORT_INCLUDEDIR='-I${includedir}/gphoto2'
-GPPORT_LIBS="-lgphoto2_port"
-AC_SUBST(GPPORT_LIBDIR)
-AC_SUBST(GPPORT_LIBS)
-AC_SUBST(GPPORT_INCLUDEDIR)
-
 dnl ******
 dnl serial
 dnl ******
@@ -194,7 +187,7 @@ if $try_usb; then
 		AC_CHECK_HEADER(usb.h,
 			usb_msg=yes
 			IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
-			USB_LDFLAGS="`libusb-config --libs` -lgphoto2_port_usb"
+			USB_LIBS="`libusb-config --libs`"
 			USB_CFLAGS="`libusb-config --cflags`",
 			AC_MSG_WARN([
 *** You need the libusb library for USB support
@@ -217,6 +210,13 @@ AC_SUBST(USB_CFLAGS)
 AC_SUBST(USB_LIBS)
 
 AC_SUBST(IOLIB_SUBDIRS)
+
+GPPORT_LIBDIR='-L${libdir}'
+GPPORT_INCLUDEDIR='-I${includedir}/gphoto2'
+GPPORT_LIBS="-lgphoto2_port"
+AC_SUBST(GPPORT_LIBDIR)
+AC_SUBST(GPPORT_LIBS)
+AC_SUBST(GPPORT_INCLUDEDIR)
 
 dnl ********
 dnl gtk-doc?
