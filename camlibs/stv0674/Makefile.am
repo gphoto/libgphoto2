@@ -1,4 +1,4 @@
-EXTRA_DIST = Protocol
+EXTRA_DIST = Protocol Changelog
 
 camlib_LTLIBRARIES = libgphoto2_stv0674.la
 
