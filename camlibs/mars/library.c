@@ -64,6 +64,7 @@ struct {
 	{"Vivitar Vivicam 55", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Haimei Electronics HE-501A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
 	{"Elta Medi@ digi-cam", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
+	{"Precision Mini, Model HA513A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
 /*	{"Argus DC-1610", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f}, */
 /*	{"Argus DC-1620", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f}, */
  	{NULL,0,0}
@@ -161,6 +162,16 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	n = mars_get_num_pics (camera->pl->info);
     	gp_list_populate (list, "mrpic%03i.ppm", n);
     	return GP_OK;
+}
+
+static int
+get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileInfo *info, void *data, GPContext *context)
+{
+	info->file.fields = GP_FILE_INFO_TYPE;
+	strcpy (info->file.type, GP_MIME_PPM);
+
+	return (GP_OK);
 }
 
 static int
@@ -337,6 +348,7 @@ camera_init(Camera *camera, GPContext *context)
 
         /* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));

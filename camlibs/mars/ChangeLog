@@ -1,9 +1,24 @@
+<<<<<<< ChangeLog
+2005-01-24  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Added Precision Mini Model HA513A, reported by Alexander Bostrom.
+		     get_info_func() added, patch from Alexander Bostrom 
+		     <alexander@bostrom.net>
+
 2005-01-17  Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: Argus DC-1610/20 do not currently work; commented out.
 
 
 2005-01-14  Theodore Kilgore <kilgota@auburn.edu>
+=======
+2005-01-17  Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Argus DC-1610/20 do not currently work; commented out.
+
+
+2005-01-14  Theodore Kilgore <kilgota@auburn.edu>
+>>>>>>> 1.8
 
 	* library.c: Added Argus DC-1610 and DC-1620.
 
