@@ -18,10 +18,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gphoto2.h>
+#include <config.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <gphoto2.h>
 #include <gphoto2-port-log.h>
 
 #include "library.h"

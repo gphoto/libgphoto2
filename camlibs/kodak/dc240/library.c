@@ -6,11 +6,12 @@
   $Id$
  */
 
-
+#include <config.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 #include <gphoto2-endian.h>

@@ -28,6 +28,8 @@
 
 */
 
+#include <config.h>
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -39,7 +41,9 @@
 #include <sys/times.h>
 #include <errno.h>
 #include <fcntl.h>
+
 #include <gphoto2.h>
+
 #include "fuji.h"
 #include "../../libgphoto2/exif.h"
 

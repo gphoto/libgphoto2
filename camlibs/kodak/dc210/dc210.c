@@ -2,9 +2,11 @@
   DC210 driver
   Copyright (c) 2001 Hubert Figuiere
  */
+
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <string.h>
 #include <time.h>
 
