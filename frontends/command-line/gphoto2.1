@@ -49,7 +49,7 @@ gphoto2 \- command-line gPhoto2 client
 gPhoto2 is a cross-platform digital camera library, and \fBgphoto2\fR is a command-line client for it.
 
 .PP
-In the following options, picture numbers begin at 1.
+Where an option takes a range of files, thumbnails, or other data, they are numbered beginning at 1.
 
 .TP
 \fB--debug\fR
@@ -252,6 +252,18 @@ Download the thumbnail to the current directory.
 .TP
 get-raw
 Download raw data to the current directory.
+
+.TP
+show-info
+Show information.
+
+.TP
+delete
+Delete a file or directory.
+
+.TP
+show-exif
+Show EXIF information (only if compiled with EXIF support).
 
 .TP
 help, ?
