@@ -1,3 +1,8 @@
+2001-10-24 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* doc/gphoto.txt: adapted to new hotplug scripts
+	* packaging/Makefile.am: add hotplug scripts to docs when installing
+
 2001-10-23 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Bug reported by David Robert <david@ombrepixel.com>:

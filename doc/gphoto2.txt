@@ -73,23 +73,27 @@ conflicts between to different users accessing the camera.
 1. Add the output of "gphoto2 --print-usb-usermap" to
    /etc/hotplug/usb.usermap
 
-2. Copy the usbcam script to /etc/hotplug/usb/usbcam
-   The usbcam script is found at the end of this file.
+2. Choose the right /etc/hotplug/usb/usbcam script for you.
+   Example scripts are found in packages/ in the source tree
+   and in linux-hotplug/ after installation and in the doc dir of 
+   the binary package.
 
-3. Adapt /etc/hotplug/usb/usbcam. This step depends on whether you
-   want one or more users to have access to the camera. 
+   a) The most simple solution is using usbcam.console. This
+      changes the permissions so that the user owning /dev/console can
+      access the camera. This works if you're logging in with
+      pam_console, i.e. e.g. on Redhat Linux.
 
-   a) If you want only one user to have access to the camera, edit
-      /etc/hotplug/usb/usbcam to do a "chown user" instead of the
-      "chgrp camera" and a "chmod 0600" instead of "chmod 0660".
+   b) If you want only one user to have access to the camera, edit
+      usbcam.group to do a "chown user" instead of the "chgrp camera"
+      and a "chmod 0600" instead of "chmod 0660". 
 
-   b) If you want multiple users to have access to the camera, put all
+   c) If you want multiple users to have access to the camera, put all
       of these users in one group - either a special "camera" group or
       a generic "users" group will do - and use that group in the
-      "chgrp" line in /etc/hotplug/usb/usbcam
+      "chgrp" line in usbcam.group.
 
-4. Plug in camera and switch it on - your /var/log/messages will now
-   display some messages.
+4. Plug in the camera and switch it on - your /var/log/messages 
+   will now display some messages.
 
 5. Run gphoto2 or any other libgphoto2 frontend and enjoy :-)
 
@@ -127,40 +131,3 @@ the "usb:". Otherwise you can specify a camera model like
 "Canon PowerShot G2". You will be better off choosing the model from
 the list of supported models rather than just trying your camera
 model. 
-
-
-=================
-Appendix A. Files
-=================
-
-
-A.1 usbcam script
-=================
-
-#!/bin/bash
-# $Id$
-#
-# /etc/hotplug/usb/usbcam
-#
-# Sets up newly plugged in USB camera so that group "camera"
-# can access it from user space
-#
-# Note that for this script to work, you'll need 
-# a) a corresponding line in the file /etc/hotplug/usermap
-# b) a group "camera" where all users allowed access to the
-#    camera are listed
-# c) a Linux kernel supporting hotplug
-# d) the hotplug package
-#
-# In the usermap file, the first field "usb module" should be named 
-# "usbcam".
-# The idVendor and idProduct fields should show the IDs of your Cam.
-# All the other fields can probably just be entered as "0x0".
-#
-# 
-
-if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
-then
-    chgrp camera "${DEVICE}"
-    chmod g+rw "${DEVICE}"
-fi
