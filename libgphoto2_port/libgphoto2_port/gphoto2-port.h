@@ -102,15 +102,24 @@ int gp_port_set_timeout  (GPPort *port, int  timeout);
 int gp_port_set_settings (GPPort *port, GPPortSettings  settings);
 int gp_port_get_settings (GPPort *port, GPPortSettings *settings);
 
-#define PIN_RTS 0
-#define PIN_DTR 1
-#define PIN_CTS 2
-#define PIN_DSR 3
-#define PIN_CD  4
-#define PIN_RING 5
+typedef enum _GPPin GPPin;
+enum _GPPin {
+	GP_PIN_RTS,
+	GP_PIN_DTR,
+	GP_PIN_CTS,
+	GP_PIN_DSR,
+	GP_PIN_CD,
+	GP_PIN_RING
+};
 
-int gp_port_get_pin   (GPPort *port, int pin, int *level);
-int gp_port_set_pin   (GPPort *port, int pin, int level);
+typedef enum _GPLevel GPLevel;
+enum _GPLevel {
+	GP_LEVEL_LOW  = 0,
+	GP_LEVEL_HIGH = 1
+};
+
+int gp_port_get_pin   (GPPort *port, GPPin pin, GPLevel *level);
+int gp_port_set_pin   (GPPort *port, GPPin pin, GPLevel level);
 
 int gp_port_send_break (GPPort *port, int duration);
 int gp_port_flush      (GPPort *port, int direction);
@@ -128,7 +137,8 @@ const char *gp_port_get_error (GPPort *port);
 
 /* DEPRECATED */
 typedef GPPort gp_port;
-typedef GPPortSettings gp_port_settings; 
+typedef GPPortSettings gp_port_settings;
+#define PIN_CTS GP_PIN_CTS
 
 #endif /* __GPHOTO2_PORT_H__ */
 

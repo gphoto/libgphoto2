@@ -69,18 +69,11 @@ gp_port_result_as_string (int result)
 	GP_ERR (GP_ERROR_NO_MEMORY,    N_("Out of memory"));
 	GP_ERR (GP_ERROR_LIBRARY,      N_("Error loading a library"));
 	GP_ERR (GP_ERROR_IO_INIT,      N_("Error initializing the port"));
-	GP_ERR (GP_ERROR_IO_OPEN,      N_("Error opening the port"));
 	GP_ERR (GP_ERROR_IO_READ,   N_("Error reading from the port"));
 	GP_ERR (GP_ERROR_IO_WRITE,  N_("Error writing to the port"));
-	GP_ERR (GP_ERROR_IO_CLOSE,  N_("Error closing the port"));
 	GP_ERR (GP_ERROR_IO_UPDATE, N_("Error updating the port settings"));
-	GP_ERR (GP_ERROR_IO_PIN,    N_("Error with the port"));
 	GP_ERR (GP_ERROR_IO_SERIAL_SPEED, N_("Error setting the serial "
 						 "port speed"));
-	GP_ERR (GP_ERROR_IO_SERIAL_BREAK, N_("Error sending a break to the "
-						 "serial port"));
-	GP_ERR (GP_ERROR_IO_SERIAL_FLUSH, N_("Error flushing the serial "
-						 "line"));
 	GP_ERR (GP_ERROR_IO_USB_CLEAR_HALT, N_("Error clearing a halt "
 						"condition on the USB port"));
 	GP_ERR (GP_ERROR_IO_USB_FIND,  N_("Could not find the requested "

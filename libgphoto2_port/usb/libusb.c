@@ -122,8 +122,8 @@ gp_port_usb_open (GPPort *port)
 	 */
         port->pl->dh = usb_open (port->pl->d);
 	if (!port->pl->dh) {
-		gp_port_set_error (port, _("Could not open USB device"));
-		return GP_ERROR_IO_OPEN;
+		gp_port_set_error (port, _("Could not open USB device (%m)."));
+		return GP_ERROR_IO;
 	}
 
 	ret = usb_claim_interface (port->pl->dh,
@@ -149,14 +149,14 @@ gp_port_usb_close (GPPort *port)
 	if (usb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
 		gp_port_set_error (port, _("Could not "
-			"release interface %d (%m)"),
+			"release interface %d (%m)."),
 			port->settings.usb.interface);
-		return (GP_ERROR_IO_CLOSE);
+		return (GP_ERROR_IO);
 	}
 
 	if (usb_close (port->pl->dh) < 0) {
-		gp_port_set_error (port, _("Could not close USB port (%m)"));
-		return (GP_ERROR_IO_CLOSE);
+		gp_port_set_error (port, _("Could not close USB port (%m)."));
+		return (GP_ERROR_IO);
 	}
 
 	port->pl->dh = NULL;

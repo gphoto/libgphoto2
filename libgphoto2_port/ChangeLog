@@ -1,3 +1,8 @@
+2001-12-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Remove some error codes, and move some variable names into the
+	gp-namespace.
+
 2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2_port/gphoto2-port-result.[c,h]: Remove

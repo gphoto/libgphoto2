@@ -499,7 +499,7 @@ gp_port_get_settings (GPPort *port, GPPortSettings *settings)
 }
 
 int
-gp_port_get_pin (GPPort *port, int pin, int *level)
+gp_port_get_pin (GPPort *port, GPPin pin, GPLevel *level)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Getting level of pin %i...",
 		pin);
@@ -517,7 +517,7 @@ gp_port_get_pin (GPPort *port, int pin, int *level)
 }
 
 int
-gp_port_set_pin (GPPort *port, int pin, int level)
+gp_port_set_pin (GPPort *port, GPPin pin, GPLevel level)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Setting pin %i to %i...",
 		pin, level);

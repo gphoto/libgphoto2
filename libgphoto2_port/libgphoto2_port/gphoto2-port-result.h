@@ -37,16 +37,11 @@
 #define GP_ERROR_IO_SUPPORTED_USB       -21
 
 #define GP_ERROR_IO_INIT                -31
-#define GP_ERROR_IO_OPEN                -32
 #define GP_ERROR_IO_READ                -34
 #define GP_ERROR_IO_WRITE               -35
-#define GP_ERROR_IO_CLOSE               -36
 #define GP_ERROR_IO_UPDATE              -37
-#define GP_ERROR_IO_PIN                 -38
 
 #define GP_ERROR_IO_SERIAL_SPEED        -41
-#define GP_ERROR_IO_SERIAL_BREAK        -42
-#define GP_ERROR_IO_SERIAL_FLUSH        -43
 
 #define GP_ERROR_IO_USB_CLEAR_HALT      -51
 #define GP_ERROR_IO_USB_FIND            -52

@@ -359,8 +359,7 @@ gp_port_serial_open (GPPort *dev)
 				"Failed to get a lock, trying again...");
 			sleep (1);
 		}
-		if (result != GP_OK)
-			return (result);
+		CHECK (result);
 	}
 
 #if defined(__FreeBSD__) || defined(__APPLE__)
@@ -373,9 +372,9 @@ gp_port_serial_open (GPPort *dev)
         dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif
         if (dev->pl->fd == -1) {
-		gp_port_set_error (dev, _("Failed to open '%s' (%m)"), port);
+		gp_port_set_error (dev, _("Failed to open '%s' (%m)."), port);
 		dev->pl->fd = 0;
-                return GP_ERROR_IO_OPEN;
+                return GP_ERROR_IO;
         }
 
         return GP_OK;
@@ -384,7 +383,6 @@ gp_port_serial_open (GPPort *dev)
 static int
 gp_port_serial_close (GPPort *dev)
 {
-	int result;
 	const char *path;
 
 	if (!dev)
@@ -392,9 +390,9 @@ gp_port_serial_close (GPPort *dev)
 
 	if (dev->pl->fd) {
 		if (close (dev->pl->fd) == -1) {
-			gp_port_set_error (dev, _("Could not close device "
-					   "(%s)"));
-	                return GP_ERROR_IO_CLOSE;
+			gp_port_set_error (dev, _("Could not close "
+				"'%s' (%m)."), dev->settings.serial.port);
+	                return GP_ERROR_IO;
 	        }
 		dev->pl->fd = 0;
 	}
@@ -402,9 +400,7 @@ gp_port_serial_close (GPPort *dev)
 	/* Unlock the port */
 	path = strchr (dev->settings.serial.port, ':');
 	path++;
-	result = gp_port_serial_unlock (dev, path);
-	if (result < 0)
-		return (result);
+	CHECK (gp_port_serial_unlock (dev, path));
 
         return GP_OK;
 }
@@ -502,91 +498,92 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
         return readen;
 }
 
+#if HAVE_TERMIOS_H
 static int
-gp_port_serial_get_pin (GPPort *dev, int pin, int *level)
+get_termios_bit (GPPort *dev, GPPin pin, int *bit)
 {
-        int j, bit;
-
-        switch(pin) {
-                case PIN_RTS:
-                        bit = TIOCM_RTS;
-                        break;
-                case PIN_DTR:
-                        bit = TIOCM_DTR;
-                        break;
-                case PIN_CTS:
-                        bit = TIOCM_CTS;
-                        break;
-                case PIN_DSR:
-                        bit = TIOCM_DSR;
-                        break;
-                case PIN_CD:
-                        bit = TIOCM_CD;
-                        break;
-                case PIN_RING:
-                        bit = TIOCM_RNG;
-                        break;
-                default:
-                        return GP_ERROR_IO_PIN;
+        switch (pin) {
+        case GP_PIN_RTS:
+                *bit = TIOCM_RTS;
+                break;
+        case GP_PIN_DTR:
+                *bit = TIOCM_DTR;
+                break;
+        case GP_PIN_CTS:
+                *bit = TIOCM_CTS;
+                break;
+        case GP_PIN_DSR:
+                *bit = TIOCM_DSR;
+                break;
+        case GP_PIN_CD:
+                *bit = TIOCM_CD;
+                break;
+        case GP_PIN_RING:
+                *bit = TIOCM_RNG;
+                break;
+        default:
+                gp_port_set_error (dev, _("Unknown pin %i."), pin);
+                return GP_ERROR_IO;
         }
+	return (GP_OK);
+}
+#endif
 
-        if (ioctl(dev->pl->fd, TIOCMGET, &j) < 0) {
-                perror("gp_port_serial_status (Getting hardware status bits)");
-                return GP_ERROR_IO_PIN;
+static int
+gp_port_serial_get_pin (GPPort *dev, GPPin pin, GPLevel *level)
+{
+#if HAVE_TERMIOS_H
+	int j, bit;
+#endif
+
+	if (!dev || !level)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	*level = 0;
+
+#if HAVE_TERMIOS_H
+	CHECK (get_termios_bit (dev, pin, &bit));
+        if (ioctl (dev->pl->fd, TIOCMGET, &j) < 0) {
+		gp_port_set_error (dev, _("Could not get level of pin %i "
+				   "(%m)."), pin);
+                return GP_ERROR_IO;
         }
         *level = j & bit;
+#else
+#warning ACCESSING PINS IS NOT IMPLEMENTED FOR NON-TERMIOS SYSTEMS!
+#endif
+
         return (GP_OK);
 }
 
-/*
-* Set the status of lines in the serial port
-*
-* level is 0 for off and 1 for on
-*
-*/
 static int
-gp_port_serial_set_pin (GPPort *dev, int pin, int level)
+gp_port_serial_set_pin (GPPort *dev, GPPin pin, GPLevel level)
 {
-        int bit,request;
+#if HAVE_TERMIOS_H
+        int bit, request;
+#endif
 
-        switch(pin) {
-                case PIN_RTS:
-                        bit = TIOCM_RTS;
-                        break;
-                case PIN_DTR:
-                        bit = TIOCM_DTR;
-                        break;
-                case PIN_CTS:
-                        bit = TIOCM_CTS;
-                        break;
-                case PIN_DSR:
-                        bit = TIOCM_DSR;
-                        break;
-                case PIN_CD:
-                        bit = TIOCM_CD;
-                        break;
-                case PIN_RING:
-                        bit = TIOCM_RNG;
-                        break;
-                default:
-                        return GP_ERROR_IO_PIN;
-        }
+	if (!dev)
+		return (GP_ERROR_BAD_PARAMETERS);
 
-        switch(level) {
-                case 0:
-                        request = TIOCMBIS;
-                        break;
-                case 1:
-                        request = TIOCMBIC;
-                        break;
-                default:
-                        return GP_ERROR_IO_PIN;
+#if HAVE_TERMIOS_H
+	CHECK (get_termios_bit (dev, pin, &bit));
+        switch (level) {
+	case GP_LEVEL_LOW:
+		request = TIOCMBIS;
+		break;
+	default:
+		request = TIOCMBIC;
+		break;
         }
-
-        if (ioctl (dev->pl->fd, request, &bit) <0) {
-            perror("ioctl(TIOCMBI[CS])");
-            return GP_ERROR_IO_PIN;
-        }
+        if (ioctl (dev->pl->fd, request, &bit) < 0) {
+		gp_port_set_error (dev, _("Could not set level of pin %i to "
+				   "%i (%m)."), pin, level);
+		return GP_ERROR_IO;
+	}
+#else
+#warning ACCESSING PINS IS NOT IMPLEMENTED FOR NON-TERMIOS SYSTEMS!
+#endif
 
         return GP_OK;
 }
@@ -602,11 +599,13 @@ gp_port_serial_flush (GPPort *dev, int direction)
 	CHECK (gp_port_serial_check_speed (dev));
 
 #if HAVE_TERMIOS_H
-	if (tcflush (dev->pl->fd, direction ? TCOFLUSH : TCIFLUSH) < 0)
-		return (GP_ERROR_IO_SERIAL_FLUSH);
+	if (tcflush (dev->pl->fd, direction ? TCOFLUSH : TCIFLUSH) < 0) {
+		gp_port_set_error (dev, _("Could not flush '%s' (%m)."),
+			dev->settings.serial.port);
+		return (GP_ERROR_IO);
+	}
 #else
 #warning SERIAL FLUSH NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
-	return GP_ERROR_IO_SERIAL_FLUSH;
 #endif
 
 	return (GP_OK);
@@ -793,8 +792,7 @@ gp_port_serial_send_break (GPPort *dev, int duration)
         tcsendbreak (dev->pl->fd, duration / 310);
         tcdrain (dev->pl->fd);
 #else
-#  warning SEND BREAK NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
-	return GP_ERROR_IO_SERIAL_BREAK;
+#warning SEND BREAK NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
 #endif
 
         return GP_OK;

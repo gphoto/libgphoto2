@@ -38,8 +38,8 @@ struct _GPPortOperations {
          no need to #ifdef GP_PORT_* anymore. */
 
         /* for serial devices */
-        int (*get_pin)   (GPPort *, int, int*);
-        int (*set_pin)   (GPPort *, int, int);
+        int (*get_pin)   (GPPort *, GPPin, GPLevel*);
+        int (*set_pin)   (GPPort *, GPPin, GPLevel);
         int (*send_break)(GPPort *, int);
         int (*flush)     (GPPort *, int);
 
