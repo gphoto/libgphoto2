@@ -366,8 +366,11 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
         }
 
 	/* Name? */
-	if (info.file.fields & GP_FILE_INFO_NAME)
+	if (info.file.fields & GP_FILE_INFO_NAME) {
+		gp_context_error (context, _("Your camera does not support "
+			"changing filenames."));
 		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
         return (GP_OK);
 }
