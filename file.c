@@ -110,21 +110,21 @@ int gp_file_open (CameraFile *file, char *filename) {
         FILE *fp;
         char *name, *dot;
         long size, size_read;
-	int  i;
-	/*
-	 * mime types that cannot be determined by the filename
-	 * extension. Better hack would be to use library that examine
-	 * file content instead, like gnome-vfs mime handling, or 
-	 * gnome-mime, whatever.
-	 */
-	static char *mime_table[] = {
-	    "jpg",  "jpeg",
-	    "tif",  "tiff",
-	    "ppm",  "x-portable-pixmap",
-	    "pgm",  "x-portable-graymap",
-	    "pbm",  "x-portable-bitmap",
-	    "png",  "x-png",
-	    NULL};
+        int  i;
+        /*
+         * mime types that cannot be determined by the filename
+         * extension. Better hack would be to use library that examine
+         * file content instead, like gnome-vfs mime handling, or
+         * gnome-mime, whatever.
+         */
+        static char *mime_table[] = {
+            "jpg",  "jpeg",
+            "tif",  "tiff",
+            "ppm",  "x-portable-pixmap",
+            "pgm",  "x-portable-graymap",
+            "pbm",  "x-portable-bitmap",
+            "png",  "x-png",
+            NULL};
 
         gp_file_clean(file);
 
@@ -154,25 +154,29 @@ int gp_file_open (CameraFile *file, char *filename) {
            else
                 strcpy(file->name, filename);
 
-	/* MIME lookup */
-	dot = strrchr(filename, '.');
-	if (dot) {
-	    for (i = 0; mime_table[i] ; i+=2)
-		if (!strcasecmp (mime_table[i], dot+1)) {
-		    sprintf (file->type,"image/%s", mime_table[i+1]);
-		    break;
-		}
-	    if (!mime_table[i])
-		/* 
-		 * We did not found the type in the lookup table,
-		 * so we use the file suffix as mime type.
-		 */
-		sprintf(file->type, "image/%s", dot + 1);
-	} else
-	    /*
-	     * Damn, no filename suffix...
-	     */
-	    strcpy(file->type, "image/unknown");
+        /* MIME lookup */
+        dot = strrchr(filename, '.');
+        if (dot) {
+            for (i = 0; mime_table[i] ; i+=2)
+#ifdef OS2
+                if (!stricmp (mime_table[i], dot+1)) {
+#else
+                if (!strcasecmp (mime_table[i], dot+1)) {
+#endif
+                    sprintf (file->type,"image/%s", mime_table[i+1]);
+                    break;
+                }
+            if (!mime_table[i])
+                /*
+                 * We did not found the type in the lookup table,
+                 * so we use the file suffix as mime type.
+                 */
+                sprintf(file->type, "image/%s", dot + 1);
+        } else
+            /*
+             * Damn, no filename suffix...
+             */
+            strcpy(file->type, "image/unknown");
 
         return (GP_OK);
 }
