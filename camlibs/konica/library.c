@@ -132,8 +132,11 @@ camera_abilities (CameraAbilitiesList* list)
 			a->speed[8]	= 57600;
 			a->speed[9]	= 115200;
 			a->speed[10]	= 0;
-			a->capture[0].type = GP_CAPTURE_NONE;
-//			a->capture	= GP_CAPTURE_IMAGE | GP_CAPTURE_PREVIEW;
+			a->capture[0].type = GP_CAPTURE_PREVIEW;
+			strcpy (a->capture[0].name, "Capture Preview");
+			a->capture[1].type = GP_CAPTURE_IMAGE;
+			strcpy (a->capture[1].name, "Capture Image");
+			a->capture[2].type = GP_CAPTURE_NONE;
 			a->config	= 1;
 			a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_CONFIG;
 			a->folder_operations = GP_FOLDER_OPERATION_CONFIG | GP_FOLDER_OPERATION_DELETE_ALL;
@@ -184,7 +187,8 @@ camera_init (Camera* camera)
 	camera->functions->config_get		= camera_config_get;
 	camera->functions->config_set		= camera_config_set;
 	camera->functions->config 	  	= camera_config;
-//	camera->functions->capture 		= camera_capture;
+	camera->functions->capture 		= camera_capture;
+	camera->functions->capture_preview	= camera_capture_preview;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
 	camera->functions->about 		= camera_about;
@@ -614,9 +618,26 @@ camera_summary (Camera* camera, CameraText* summary)
 	return (result);
 }
 
-#if 0
+gint
+camera_capture_preview (Camera* camera, CameraFile* file)
+{
+	konica_data_t*	konica_data;
+	gint		result;
+
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_capture_preview ***");
+	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (file,     GP_ERROR_BAD_PARAMETERS);
+
+	konica_data = (konica_data_t *) camera->camlib_data;
+	result = k_get_preview (konica_data->device, TRUE, (guchar**) &file->data, (guint*) &file->size);
+	if (result == GP_OK)
+		strcpy (file->type, "image/jpeg");
+	
+	return (result);
+}
+
 gint 
-camera_capture (Camera* camera, CameraFile* file, CameraCaptureInfo* info) 
+camera_capture (Camera* camera, CameraFilePath* filepath, CameraCaptureSetting* setting) 
 {
 	konica_data_t*	konica_data;
 	gulong 		image_id;
@@ -625,70 +646,35 @@ camera_capture (Camera* camera, CameraFile* file, CameraCaptureInfo* info)
 	guint 		information_buffer_size;
 	gboolean 	protected;
 	gint		result;
+	gchar*		tmp;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_capture ***");
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (info, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (filepath,	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (setting, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (setting->type == GP_CAPTURE_IMAGE, GP_ERROR_NOT_SUPPORTED);
 
         konica_data = (konica_data_t *) camera->camlib_data;
 
-	/* What are we supposed to do? */
-	switch (info->type) {
-	case GP_CAPTURE_IMAGE:
-
-		/* Take the picture. */
-		result = k_take_picture (
-			konica_data->device, 
-			konica_data->image_id_long, 
-			&image_id, 
-			&exif_size, 
-			&information_buffer, 
-			&information_buffer_size, 
-			&protected);
-		g_free (information_buffer);
-		if (result != GP_OK) return (result);
+	/* Take the picture. */
+	result = k_take_picture (
+		konica_data->device, 
+		konica_data->image_id_long, 
+		&image_id, 
+		&exif_size, 
+		&information_buffer, 
+		&information_buffer_size, 
+		&protected);
+	g_free (information_buffer);
+	if (result != GP_OK) return (result);
 	
-		/* Get the image. */
-	        result = k_get_image (
-			konica_data->device, 
-			konica_data->image_id_long, 
-			image_id, 
-			K_IMAGE_JPEG, 
-			(guchar **) &file->data, 
-			(guint *) &file->size);
-		if (result == GP_OK) {
-			strcpy (file->type, "image/jpeg");
-			strcpy (file->name, "image.jpeg");
-		} else return (result);
+	tmp = g_strdup_printf ("%6i.jpeg", (gint) image_id);
+	strcpy (filepath->name, "image.jpeg");
+	g_free (tmp);
+	strcpy (filepath->folder, "/");
 
-		/* Delete this image. */
-		result = k_erase_image (konica_data->device, konica_data->image_id_long, image_id);
-		
-		return (result);
-
-	case GP_CAPTURE_VIDEO:
-
-		/* Our cameras can't do that. */
-		return (GP_ERROR_NOT_SUPPORTED);
-
-	case GP_CAPTURE_PREVIEW:
-
-		/* Get the preview. */
-		if ((result = k_get_preview (konica_data->device, TRUE, (guchar**) &file->data, (guint*) &file->size)) == GP_OK) {
-			strcpy (file->type, "image/jpeg");
-			strcpy (file->name, "preview.jpeg");
-		}
-		return (result);
-
-	default:
-
-		/* Should not be reached. */
-		g_warning (_("Unknown capture type (%i)!\n"), info->type);
-		return (GP_ERROR_BAD_PARAMETERS);
-	}
+	return (GP_OK);
 }
-#endif
 
 
 gint 
