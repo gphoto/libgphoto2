@@ -80,6 +80,7 @@ gp_port_library_list (GPPortInfoList *list)
 	GPPortInfo info;
 	struct usb_bus *bus;
 	struct usb_device *dev;
+	int nrofdevices = 0;
 
 	/* default port first */
 	info.type = GP_PORT_USB;
@@ -93,7 +94,34 @@ gp_port_library_list (GPPortInfoList *list)
 
 	bus = usb_get_busses();
 	/* Look and enumerate all USB ports. */
-	while (bus) { 
+	while (bus) {
+		for (dev = bus->devices; dev; dev = dev->next) {
+			/* Devices which are definitely not cameras. */
+			if (	(dev->descriptor.bDeviceClass == USB_CLASS_HUB)		||
+				(dev->descriptor.bDeviceClass == USB_CLASS_HID)		||
+				(dev->descriptor.bDeviceClass == USB_CLASS_PRINTER)	||
+				(dev->descriptor.bDeviceClass == USB_CLASS_COMM)
+			)
+				continue;
+			/* Note: We do not skip USB storage. Some devices can support both,
+			 * and the Ricoh erronously reports it.
+			 */ 
+			nrofdevices++;
+		}
+		bus = bus->next;
+	}
+
+	/* If we already added usb:, and have 0 or 1 devices we have nothing to do.
+	 * This should be the standard use case.
+	 */
+	if (nrofdevices <= 1) 
+		return (GP_OK);
+
+	/* Redo the same bus/device walk, but now add the ports with usb:x,y notation,
+	 * so we can address all USB devices.
+	 */
+	bus = usb_get_busses();
+	while (bus) {
 		for (dev = bus->devices; dev; dev = dev->next) {
 			/* Devices which are definitely not cameras. */
 			if (	(dev->descriptor.bDeviceClass == USB_CLASS_HUB)		||
@@ -456,7 +484,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 			if ((dev->descriptor.idVendor == idvendor) &&
 			    (dev->descriptor.idProduct == idproduct)) {
-				int config, interface, altsetting;
+				int config = -1, interface = -1, altsetting = -1;
 
 				port->pl->d = dev;
 
@@ -597,7 +625,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 			continue;
 
 		for (dev = bus->devices; dev; dev = dev->next) {
-			int ret, config, interface, altsetting;
+			int ret, config = -1, interface = -1, altsetting = -1;
 
 			if ((devname[0] != '\0') && strcmp(devname, dev->filename))
 				continue;
