@@ -49,10 +49,9 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[0] = 38400;
 	a->speed[1] = 0;
 	a->capture[0].type = GP_CAPTURE_NONE;
-//	a->capture  = GP_CAPTURE_IMAGE;
 	a->config   = 0;
 	a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
-	a->folder_operations = GP_FOLDER_OPERATION_NONE;
+	a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE | GP_FOLDER_OPERATION_DELETE_ALL;
 
 	gp_abilities_list_append(list, a);
 
@@ -74,6 +73,8 @@ int camera_init (Camera *camera) {
 	camera->functions->file_get 		= camera_file_get;
 	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_delete 		= camera_file_delete;
+	camera->functions->folder_put_file      = camera_folder_put_file;
+	camera->functions->folder_delete_all    = camera_folder_delete_all;
 //	camera->functions->capture 		= camera_capture;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
@@ -343,6 +344,23 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 }
 #endif
 
+int camera_folder_put_file (Camera *camera, CameraFile *file, char *folder) {
+	dimagev_t *dimagev;
+
+	dimagev = camera->camlib_data;
+
+
+	return GP_OK;
+}
+
+int camera_folder_delete_all (Camera *camera, char *folder) {
+	dimagev_t *dimagev;
+
+	dimagev = camera->camlib_data;
+
+	return dimagev_delete_all(dimagev);
+}
+
 int camera_summary (Camera *camera, CameraText *summary) {
 	dimagev_t *dimagev;
 	int i = 0, count = 0;
@@ -375,12 +393,12 @@ int camera_summary (Camera *camera, CameraText *summary) {
 #if defined HAVE_SNPRINTF
 	i = snprintf(summary->text, sizeof(summary->text),
 #else
-	i = snprintf(summary->text,
+	i = sprintf(summary->text,
 #endif
-		"\t\tGeneral Information\nModel:\t\t\t%s Dimage V (%s)\n"
+		"\t\tGeneral Information\nModel:\t\t\tMinolta Dimage V (%s)\n"
 		"Hardware Revision:\t%s\nFirmware Revision:\t%s\n\n",
-		dimagev->info->vendor, dimagev->info->model,
-		dimagev->info->hardware_rev, dimagev->info->firmware_rev);
+		dimagev->info->model, dimagev->info->hardware_rev,
+		dimagev->info->firmware_rev);
 
 	if ( i > 0 ) {
 		count += i;
