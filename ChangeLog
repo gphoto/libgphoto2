@@ -1,3 +1,36 @@
+2001-11-04 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* frontends/command-line/interface.c: clarified comment
+	* frontends/command-line/main.c: added note for user that the
+	  error msg from _set_error may be unrelated to real error
+	* libgphoto2/gphoto2-filesys.c: improved comment for
+	  gp_filesystem_set_file_funcs() 
+	* libgphoto2_port/doc/Makefile.am: added dependencies like in
+	  doc/api/Makefile.am - rebuilds docs now 
+
+	* libgphoto2_port/doc/gphoto2-port-sections.txt
+	* libgphoto2_port/libgphoto2_port/gphoto2-port-log.c
+	* libgphoto2_port/libgphoto2_port/gphoto2-port-log.h:
+	  reintroduced GPLogLevel for log levels instead of int. maintains
+	  source compatibility.
+
+	* libgphoto2_port/usb/libusb.c: fixed classification of success
+	  msg; clarified one error message 
+	
+	* camlibs/sonydscf55/sony.c: prepare for building docs
+
+	* camlibs/canon/canon.c:
+	  - models[] now ends with { NULL, 0, 0, 0 } instead of { 0, 0, 0 }
+	  - is_image now is true for both .JPG and .CRW images
+	  - changed several calls to gp_debug* to GP_DEBUG
+	  - added lots of comments and made existing ones gtkdoc-able
+	  - added debug code to _get_file_path
+	* camlibs/canon/canon.h: #define GP_MODULE "canon"
+	* camlibs/canon/psa50.c:
+	  - added, improved and gtkdoc-abled comments for functions
+	    that are likely to survive restructuring
+	  - changed several calls to gp_debug* to GP_DEBUG
+
 2001-11-03  Stephane Castejon <scastejo@club-internet.fr>
 
 	* camlibs/sierra/sierra.c,h
