@@ -652,7 +652,7 @@ msgstr "Problem bei der Aufnahme eines Live-Bildes"
 #: camlibs/dimera/dimera3500.c:771
 #, fuzzy
 msgid "Driver Configuration"
-msgstr "Kamera-Konfiguration"
+msgstr "Treiber Konfiguration"
 
 #: camlibs/dimera/dimera3500.c:773 camlibs/konica/library.c:803
 #: camlibs/konica/library.c:1036 camlibs/ricoh/library.c:496
@@ -946,7 +946,7 @@ msgstr ""
 #: camlibs/jamcam/jamcam.c:284
 #, fuzzy, c-format
 msgid "Frames Taken     : %4d\n"
-msgstr "%sAufgenommene Bilder: %i\n"
+msgstr "Aufgenommene Bilder: %4d\n"
 
 #: camlibs/jamcam/jamcam.c:295
 msgid "jamcam library v"
@@ -2208,9 +2208,8 @@ msgid ""
 msgstr ""
 
 #: camlibs/polaroid/pdc320.c:106
-#, fuzzy
 msgid "unknown"
-msgstr "%i (unbekannt)"
+msgstr "unbekannt"
 
 #: camlibs/polaroid/pdc320.c:411
 msgid ""
@@ -2863,7 +2862,6 @@ msgid "Aperature Settings"
 msgstr "Blendeneinstellungen"
 
 #: camlibs/sierra/epson-desc.c:188 camlibs/sierra/nikon-desc.c:184
-#, fuzzy
 msgid "Color"
 msgstr "farbig"
 
@@ -3246,9 +3244,8 @@ msgid "Zoom (in millimeters)"
 msgstr "Zoom (in Millimetern)"
 
 #: camlibs/sierra/nikon-desc.c:507
-#, fuzzy
 msgid "none"
-msgstr "Keine"
+msgstr "kein"
 
 #: camlibs/sierra/nikon-desc.c:510
 msgid "AE-lock"
@@ -3870,11 +3867,15 @@ msgid ""
 "Memory Total: %ikB\n"
 "Memory Free:  %ikB\n"
 msgstr ""
+"Firmware-Revision: %8s\n"
+"Bilder:          %i\n"
+"Speicher:        %ikB\n"
+"Freier Speicher: %ikB\n"
 
 #: camlibs/soundvision/soundvision.c:325
-#, fuzzy, c-format
+#, c-format
 msgid "Firmware Revision: %8s"
-msgstr "Firmware-Revision: %d.%d\n"
+msgstr "Firmware-Revision: %8s\n"
 
 #: camlibs/soundvision/soundvision.c:333
 msgid ""
