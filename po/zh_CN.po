@@ -1,13 +1,13 @@
 # Simplified Chinese Translation.
 # Copyright (C) 2000-2002
-# Wang Li <charlesw1234@163.com>, 2002
+# Wang Li <charle@linux.net.cn>, 2002
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-06-13 23:51+0200\n"
-"PO-Revision-Date: 2002-04-06 23:22+0800\n"
-"Last-Translator: Wang Li <charlesw1234@163.com>\n"
+"POT-Creation-Date: 2002-06-18 23:09-0400\n"
+"PO-Revision-Date: 2002-06-15 20:09+0800\n"
+"Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -518,9 +518,8 @@ msgstr "已监测到一个“%s”。"
 
 # camlibs/konica/konica.c:125
 #: camlibs/digita/digita.c:331
-#, fuzzy
 msgid "Unsupported image type"
-msgstr "不支持的命令。"
+msgstr "不支持的图像类型"
 
 # camlibs/digita/digita.c:396
 #: camlibs/digita/digita.c:396
@@ -851,9 +850,9 @@ msgstr "无法删除文件夹“%2$s”中的文件“%1$s”(错误码 %3$i：%
 
 # camlibs/polaroid/pdc700.c:349
 #: camlibs/fuji/fuji.c:85
-#, fuzzy, c-format
+#, c-format
 msgid "The camera sent only %i byte(s), but we need at least %i."
-msgstr "相机发送了比预期更多的字节 (%i)"
+msgstr "相机只发送 %i 个字节，但我们至少需要 %i 个。"
 
 # camlibs/ricoh/library.c:242
 #: camlibs/fuji/fuji.c:126 camlibs/ricoh/library.c:242
@@ -862,47 +861,45 @@ msgstr "无法检测到任何相机。"
 
 # camlibs/polaroid/pdc700.c:229
 #: camlibs/fuji/fuji.c:188
-#, fuzzy, c-format
+#, c-format
 msgid "Received unexpected data (0x%02x, 0x%02x)."
-msgstr "收到意外的头 (%i)"
+msgstr "收到意外的数据 (0x%02x，0x%02x)。"
 
 #: camlibs/fuji/fuji.c:214
 #, c-format
 msgid "Wrong escape sequence: expected 0x%02x, got 0x%02x."
-msgstr ""
+msgstr "错误的 ESC 序列：应为 0x%02x，得到 0x%02x。"
 
 #: camlibs/fuji/fuji.c:231
 #, c-format
 msgid "Bad data - got 0x%02x, expected 0x%02x."
-msgstr ""
+msgstr "错误的数据 - 得到 0x%02x，应为 0x%02x。"
 
 #: camlibs/fuji/fuji.c:244
 #, c-format
 msgid "Bad data - got 0x%02x, expected 0x%02x or 0x%02x."
-msgstr ""
+msgstr "错误的数据 - 得到 0x%02x，应为 0x%02x 或 0x%02x。"
 
 #: camlibs/fuji/fuji.c:251
 #, c-format
 msgid "Bad checksum - got 0x%02x, expected 0x%02x."
-msgstr ""
+msgstr "错误的校验和 - 得到 0x%02x，应为 0x%02x。"
 
 # camlibs/polaroid/pdc700.c:296
 #: camlibs/fuji/fuji.c:289 camlibs/fuji/fuji.c:728
-#, fuzzy
 msgid "Camera rejected the command."
-msgstr "相机不接受命令。"
+msgstr "相机拒绝命令。"
 
 # camlibs/sierra/sierra.c:1048 camlibs/sierra/sierra.c:1510
 #. Camera got fed up and reset itself.
 #: camlibs/fuji/fuji.c:298 camlibs/fuji/fuji.c:737
-#, fuzzy
 msgid "Camera reset itself."
-msgstr "相机设置"
+msgstr "相机自行重置。"
 
 #: camlibs/fuji/fuji.c:302 camlibs/fuji/fuji.c:742
 #, c-format
 msgid "Camera sent unexpected byte 0x%02x."
-msgstr ""
+msgstr "相机发送了意外的字节 0x%02x。"
 
 # camlibs/konica/lowlevel.c:382 camlibs/polaroid/pdc700.c:314
 # camlibs/sierra/library.c:989
@@ -914,50 +911,52 @@ msgstr "正在下载..."
 #: camlibs/fuji/fuji.c:538
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the thumbnail."
-msgstr ""
+msgstr "无法为正在下载的缩略图分配 %i 个字节。"
 
 #: camlibs/fuji/fuji.c:572
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the picture."
-msgstr ""
+msgstr "无法为正在下载的图片分配 %i 个字节。"
 
 # camlibs/polaroid/pdc700.c:296
 #: camlibs/fuji/fuji.c:671
-#, fuzzy, c-format
+#, c-format
 msgid "The camera does not accept '%s' as filename."
-msgstr "相机不接受命令。"
+msgstr "相机不接受作为文件名的“%s”。"
 
 #: camlibs/fuji/fuji.c:675
 #, c-format
 msgid "Could not initialize upload (camera responded with 0x%02x)."
-msgstr ""
+msgstr "无法初始化上载 (相机应答 0x%02x)。"
 
 # libgphoto2/gphoto2-camera.c:850
 #: camlibs/fuji/fuji.c:773
-#, fuzzy, c-format
+#, c-format
 msgid "The camera does not support speed %i."
-msgstr "该相机不支持概要。"
+msgstr "该相机不支持速度 %i。"
 
 #: camlibs/fuji/fuji.c:777
 #, c-format
 msgid "Could not set speed to %i (camera responded with %i)."
-msgstr ""
+msgstr "无法将速度设置为 %i (相机应答 %i)。"
 
 #: camlibs/fuji/library.c:153
 msgid ""
 "Matthew G. Martin\n"
 "Based on fujiplay by Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
 msgstr ""
+"Matthew G. Martin\n"
+"基于 Thierry Bousch <bousch@topo.math.u-psud.fr> 的 fujiplay\n"
 
 # camlibs/ricoh/library.c:252
 #: camlibs/fuji/library.c:317
-#, fuzzy, c-format
+#, c-format
 msgid "Bit rate %i is not supported."
-msgstr "不支持速度 %i！"
+msgstr "不支持位率 %i"
 
 #: camlibs/fuji/library.c:365
 msgid "Configuration for your FUJI camera"
-msgstr ""
+msgstr "配置您的 FUJI 相机"
 
 # camlibs/sierra/sierra.c:1581 camlibs/sierra/sierra.c:1754
 #. Date & Time
@@ -969,25 +968,22 @@ msgstr "日期和时间"
 #. ID
 #: camlibs/fuji/library.c:385 camlibs/fuji/library.c:418
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 # frontends/command-line/actions.c:159
 #: camlibs/fuji/library.c:438
-#, fuzzy
 msgid "Version: "
-msgstr "  访问权限："
+msgstr "版本："
 
 # frontends/command-line/main.c:384
 #: camlibs/fuji/library.c:444
-#, fuzzy
 msgid "Model: "
-msgstr "型号"
+msgstr "型号："
 
 # frontends/command-line/shell.c:779
 #: camlibs/fuji/library.c:451
-#, fuzzy
 msgid "Available memory: "
-msgstr "可用的命令："
+msgstr "可用的内存："
 
 # camlibs/jamcam/jamcam.c:280
 #: camlibs/jamcam/jamcam.c:280
@@ -2386,7 +2382,7 @@ msgstr "未定义的 PTP 错误"
 # camlibs/ptp/library.c:91
 #: camlibs/ptp/library.c:91
 msgid "PTP OK!"
-msgstr ""
+msgstr "PTP OK！"
 
 # camlibs/ptp/library.c:92
 #: camlibs/ptp/library.c:92
@@ -2481,7 +2477,7 @@ msgstr "PTP 存储不可用"
 # camlibs/ptp/library.c:111
 #: camlibs/ptp/library.c:111
 msgid "PTP Specification By Format Unsupported"
-msgstr ""
+msgstr "不支持的 PTP 格式规范"
 
 # camlibs/ptp/library.c:112
 #: camlibs/ptp/library.c:112
@@ -3277,7 +3273,7 @@ msgstr "无法检索剩余可用内存"
 
 #: camlibs/sierra/library.c:336
 msgid "Camera refused 3 times to keep a connection open."
-msgstr ""
+msgstr "相机三次拒绝保持连接打开的请求。"
 
 # camlibs/sierra/library.c:502
 #.
@@ -3299,7 +3295,7 @@ msgstr "在 %i 次重试后包传输仍然超时。请联系 <gphoto-devel@gphot
 
 #: camlibs/sierra/library.c:703 camlibs/sierra/library.c:727
 msgid "Could not transmit packet even after several retries."
-msgstr ""
+msgstr "在几次重试后仍不能传输包。"
 
 # camlibs/sierra/library.c:657
 #: camlibs/sierra/library.c:718
@@ -3317,9 +3313,8 @@ msgstr "无法传输包 (错误码 %i)。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:620
 #: camlibs/sierra/library.c:837
-#, fuzzy
 msgid "Transmission timed out even after 2 retries. Giving up..."
-msgstr "在 %i 次重试后包传输仍然超时。请联系 <gphoto-devel@gphoto.org>。"
+msgstr "在两次重试后传输仍然超时。放弃..."
 
 # camlibs/sierra/library.c:744
 #: camlibs/sierra/library.c:856
@@ -3342,7 +3337,7 @@ msgstr "无法读取寄存器 %i。请联系 <gphoto-devel@gphoto.org>。"
 
 #: camlibs/sierra/library.c:1037 camlibs/sierra/library.c:1057
 msgid "Too many retries failed."
-msgstr ""
+msgstr "重试失败过多。"
 
 # camlibs/sierra/library.c:923
 #: camlibs/sierra/library.c:1090
@@ -3564,9 +3559,9 @@ msgstr "您必须在初始化相机以前设定端口。"
 
 # libgphoto2/gphoto2-camera.c:710
 #: libgphoto2/gphoto2-camera.c:716
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load required camera driver '%s' (%s)."
-msgstr "无法装入必须的相机驱动程序“%s”。"
+msgstr "无法装入必须的相机驱动程序“%s”(%s)。"
 
 # libgphoto2/gphoto2-camera.c:710
 #: libgphoto2/gphoto2-camera.c:725
@@ -3724,20 +3719,20 @@ msgid "Read-only file attributes like width and height can not be changed."
 msgstr "无法改变像宽度和高度这样的只读文件属性。"
 
 # libgphoto2/gphoto2-abilities-list.c:260
-#: libgphoto2/gphoto2-abilities-list.c:206
-#: libgphoto2/gphoto2-abilities-list.c:301
+#: libgphoto2/gphoto2-abilities-list.c:181
+#: libgphoto2/gphoto2-abilities-list.c:276
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "正在从“%s”装入相机驱动程序..."
 
 # libgphoto2/gphoto2-abilities-list.c:248
-#: libgphoto2/gphoto2-abilities-list.c:289
+#: libgphoto2/gphoto2-abilities-list.c:264
 #, c-format
 msgid "Could not open '%s'"
 msgstr "无法打开“%s”"
 
 # libgphoto2/gphoto2-abilities-list.c:622
-#: libgphoto2/gphoto2-abilities-list.c:663
+#: libgphoto2/gphoto2-abilities-list.c:638
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "无法为“%s”找到任何驱动程序"
@@ -3822,7 +3817,7 @@ msgstr "列举支持的相机型号"
 
 #: frontends/command-line/main.c:209
 msgid "usb.usermap script (dflt=\"usbcam\")"
-msgstr ""
+msgstr "usb.usermap 脚本 (dflt=\"usbcam\")"
 
 # frontends/command-line/main.c:196
 #: frontends/command-line/main.c:210
@@ -4043,7 +4038,6 @@ msgstr "作者"
 
 # frontends/command-line/main.c:246
 #: frontends/command-line/main.c:260
-#, fuzzy
 msgid "License"
 msgstr "许可证"
 
@@ -4256,7 +4250,7 @@ msgstr ""
 msgid ""
 "ALWAYS INCLUDE THE FOLLOWING LINE WHEN SENDING DEBUG MESSAGES TO THE MAILING "
 "LIST:"
-msgstr ""
+msgstr "在将调试信息发送到邮件列表的时候总是包含下列行："
 
 # frontends/command-line/main.c:799
 #: frontends/command-line/main.c:829
@@ -4491,14 +4485,14 @@ msgstr "值："
 
 # frontends/command-line/options.c:191
 #: frontends/command-line/options.c:193
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "gPhoto (v%s) - Cross-platform digital camera library.\n"
 "Copyright (C) 2000-2002 Scott Fritzinger and others\n"
 "%sLicensed under the Library GNU Public License (LGPL).\n"
 msgstr ""
 "gPhoto (v%s) - 跨平台数码相机库。\n"
-"Copyright (C) 2000,2001 Scott Fritzinger 及其它人\n"
+"Copyright (C) 2000,2002 Scott Fritzinger 及其它人\n"
 "%s许可证为 库通用公共许可证 (LGPL)。\n"
 
 # frontends/command-line/options.c:197
