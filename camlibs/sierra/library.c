@@ -140,7 +140,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	r = sierra_get_int_register (camera, 51, &i, NULL);
 	if ((r >= 0) && (i == 1)) {
 		gp_context_error (context, _("No memory card present"));
-		return (GP_ERROR_NOT_SUPPORTED);
+		return GP_ERROR_NOT_SUPPORTED;
 	}
 
 	/* We need to change to the folder first */
@@ -153,7 +153,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 
 	/* No files? Then, we are done. */
 	if (!count)
-		return (GP_OK);
+		return GP_OK;
 
 	/*
 	 * Get the filename of the first picture. Note that some cameras
@@ -166,7 +166,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 					&len, context);
 	if ((r < 0) || (len <= 0) || !strcmp (filename, "        ")) {
 		CHECK (gp_list_populate (list, "P101%04i.JPG", count));
-		return (GP_OK);
+		return GP_OK;
 	}
 
 	/*
@@ -185,7 +185,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 		CHECK (gp_list_append (list, filename, NULL));
 	}
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
@@ -196,7 +196,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 
 	/* List the folders only if the camera supports them */
 	if (!camera->pl->folders)
-		return (GP_OK);
+		return GP_OK;
 
 	CHECK (sierra_change_folder (camera, folder, context));
 	GP_DEBUG ("*** counting folders in '%s'...", folder);
@@ -216,7 +216,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 		gp_list_append (list, buf, NULL);
 	}
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 /**
@@ -245,7 +245,7 @@ int sierra_get_picture_folder (Camera *camera, char **folder)
 	if (!camera->pl->folders) {
 		*folder = (char*) calloc(2, sizeof(char));
 		strcpy(*folder, "/");
-		return (GP_OK);
+		return GP_OK;
 	}
 
 	/* It is assumed that the camera conforms with the JEIDA standard .
@@ -263,7 +263,7 @@ int sierra_get_picture_folder (Camera *camera, char **folder)
 		*folder = (char*) calloc(strlen(name)+7, sizeof(char));
 		strcpy(*folder, "/DCIM/");
 		strcat(*folder, name);
-		return (GP_OK);
+		return GP_OK;
 	}
 	else
 		return GP_ERROR_DIRECTORY_NOT_FOUND;
@@ -331,7 +331,7 @@ sierra_check_connection (Camera *camera, GPContext *context)
 
 	/* Only serial cameras close the connection after some timeout. */
 	if (camera->port->type != GP_PORT_SERIAL)
-		return (GP_OK);
+		return GP_OK;
 
 	GP_DEBUG ("Checking if connection is still open");
 	while (1) {
@@ -352,7 +352,7 @@ sierra_check_connection (Camera *camera, GPContext *context)
 			 * If we got GP_ERROR_TIMEOUT or GP_ERROR_IO_READ,
 			 * everything's just fine.
 			 */
-			return (GP_OK);
+			return GP_OK;
 
 		default:
 
@@ -372,7 +372,7 @@ sierra_check_connection (Camera *camera, GPContext *context)
 			if (++r > 2) {
 				gp_context_error (context, _("Camera refused "
 					"3 times to keep a connection open."));
-				return (GP_ERROR);
+				return GP_ERROR;
 			}
 			CHECK (sierra_init (camera, context));
 			CHECK (sierra_set_speed (camera, SIERRA_SPEED_19200,
@@ -385,7 +385,7 @@ sierra_check_connection (Camera *camera, GPContext *context)
 		 * that everything's just fine.
 		 */
 		while (gp_port_read (camera->port, &c, 1) >= 0);
-		return (GP_OK);
+		return GP_OK;
 	}
 }
 
@@ -443,7 +443,7 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 		CHECK (gp_port_write (camera->port, packet, length));
 	}
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 static int
@@ -565,7 +565,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 						GP_PORT_USB_ENDPOINT_IN);
 
 			GP_DEBUG ("Packet read. Returning GP_OK.");
-			return (GP_OK);
+			return GP_OK;
 
 		case SIERRA_PACKET_DATA:
 		case SIERRA_PACKET_DATA_END:
@@ -717,7 +717,7 @@ sierra_read_packet_wait (Camera *camera, char *buf, GPContext *context)
 		CHECK (result);
 
 		GP_DEBUG ("Packet successfully read.");
-		return (GP_OK);
+		return GP_OK;
 	}
 }
 
@@ -764,7 +764,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 				gp_context_error (context, _("Could not "
 					"transmit packet even after several "
 					"retries."));
-				return (GP_ERROR);
+				return GP_ERROR;
 			}
 			
 			/*
@@ -783,7 +783,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 					"transmit packet (error code %i). "
 					"Please contact "
 					"<gphoto-devel@gphoto.org>."), buf[0]);
-				return (GP_ERROR);
+				return GP_ERROR;
 			}
 			GP_DEBUG ("Did not receive ACK. Retrying...");
 			continue;
@@ -814,7 +814,7 @@ sierra_build_packet (Camera *camera, char type, char subtype,
 	packet[2] = data_length &  0xff;
 	packet[3] = (data_length >> 8) & 0xff;
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 static int
@@ -832,7 +832,7 @@ sierra_write_ack (Camera *camera, GPContext *context)
 	CHECK (ret);
 
 	GP_DEBUG ("Successfully wrote acknowledgement.");
-	return (GP_OK);
+	return GP_OK;
 }
 
 int
@@ -846,7 +846,7 @@ sierra_init (Camera *camera, GPContext *context)
 
 	/* Only serial connections need to be initialized. */
 	if (camera->port->type != GP_PORT_SERIAL)
-		return (GP_OK);
+		return GP_OK;
 
 	/*
 	 * It seems that the initialization sequence needs to be sent at
@@ -884,7 +884,7 @@ sierra_init (Camera *camera, GPContext *context)
 		case SIERRA_PACKET_NAK: 
 
 			/* Everything is fine. */
-			return (GP_OK);
+			return GP_OK;
 
 		case SIERRA_PACKET_SESSION_END:
 		default:
@@ -921,7 +921,7 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 
 	/* Only serial connections have different speeds. */
 	if (camera->port->type != GP_PORT_SERIAL)
-		return (GP_OK);
+		return GP_OK;
 
 	/*
 	 * Check that the requested speed is valid. We don't want to bug
@@ -940,15 +940,15 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 		bit_rate = 19200;
 	}
 
-#if 0
 	/*
 	 * Check if we need to change the speed or if we are currently
-	 * using the requested speed.
+	 * using the requested speed. The reason why we are doing that is
+	 * that (at least some) cameras reject the request for a speed if
+	 * they are currently operating at that speed.
 	 */
 	CHECK (gp_port_get_settings (camera->port, &settings));
 	if (settings.serial.speed == bit_rate)
-		return (GP_OK);
-#endif
+		return GP_OK;
 
 	/*
 	 * Tell the camera about the new speed. Note that a speed change
@@ -1015,7 +1015,7 @@ sierra_set_int_register (Camera *camera, int reg, int value,
 	/* Send packet */
 	CHECK (sierra_transmit_ack (camera, p, context));
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *context) 
@@ -1061,7 +1061,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			if (++r > 2) {
 				gp_context_error (context, _("Too many "
 						"retries failed."));
-				return (GP_ERROR);
+				return GP_ERROR;
 			}
 
 			/*
@@ -1081,7 +1081,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			if (++r > 2) {
 				gp_context_error (context, _("Too many "
 					"retries failed."));
-				return (GP_ERROR);
+				return GP_ERROR;
 			}
 
 			/* Tell the camera to send again. */
@@ -1243,7 +1243,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 
 	GP_DEBUG ("sierra_get_string_register: completed OK");
 	in_function = 0;
-	return (GP_OK);
+	return GP_OK;
 }
 
 int
@@ -1261,7 +1261,7 @@ sierra_delete (Camera *camera, int picture_number, GPContext *context)
 	CHECK (sierra_set_int_register (camera, 4, picture_number, context));
 	CHECK (sierra_action (camera, SIERRA_ACTION_DELETE, context));
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int
@@ -1269,7 +1269,7 @@ sierra_end_session (Camera *camera, GPContext *context)
 {
 	CHECK (sierra_action (camera, SIERRA_ACTION_END, context));
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int
@@ -1287,7 +1287,7 @@ sierra_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					   context));
 	CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int
@@ -1303,7 +1303,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 
 	/* We can only capture images */
 	if (type != GP_CAPTURE_IMAGE)
-		return (GP_ERROR_NOT_SUPPORTED);
+		return GP_ERROR_NOT_SUPPORTED;
 
 	/*
 	 * This is a non-fatal check if a memory card is present. Some
@@ -1312,7 +1312,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	r = sierra_get_int_register (camera, 51, &n, context);
 	if ((r >= 0) && (n == 1)) {
 		gp_context_error (context, _("No memory card present"));
-		return (GP_ERROR_NOT_SUPPORTED);
+		return GP_ERROR_NOT_SUPPORTED;
 	}
 
 	/* Send to the camera the capture request and wait
@@ -1354,7 +1354,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	strncpy (filepath->name, filename, sizeof (filepath->name));
 
 	GP_DEBUG ("* sierra_capture completed OK");
-	return (GP_OK);
+	return GP_OK;
 }
 
 int sierra_upload_file (Camera *camera, CameraFile *file, GPContext *context)
@@ -1414,7 +1414,7 @@ int sierra_get_pic_info (Camera *camera, unsigned int n,
 	GP_DEBUG ("Date: %i",           pic_info->date);
 	GP_DEBUG ("Animation type: %i", pic_info->animation_type);
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked,
@@ -1423,7 +1423,7 @@ int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked,
 	CHECK (sierra_set_int_register (camera, 4, n, context));
 
 	gp_context_error (context, _("Not implemented!"));
-	return (GP_ERROR);
+	return GP_ERROR;
 
-	return (GP_OK);
+	return GP_OK;
 }
