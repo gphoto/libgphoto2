@@ -279,7 +279,7 @@ static int
 test_speed (Camera *camera)
 {
 	int i;
-	unsigned int speeds[] = {9600, 115200, 57600, 38400, 19200, 
+	unsigned int speeds[] = {115200, 9600, 57600, 38400, 19200, 
 				 4800, 2400, 1200, 600, 300};
 	GPPortSettings settings;
 
