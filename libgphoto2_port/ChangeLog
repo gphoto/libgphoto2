@@ -1,3 +1,8 @@
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* doc: Create framework for documentation.
+	* libgphoto2_port/gphoto2-port-log.[c,h]: Updated
+
 2001-10-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include/gphoto2-port-result.h: GP_ERROR_NO_MEMORY
