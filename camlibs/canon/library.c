@@ -845,6 +845,11 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	GP_DEBUG ("camera_folder_put_file()");
 
+	if (camera->port->type == GP_PORT_USB) {
+		gp_context_error (context, "File upload not implemented for USB yet");
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+	
 	if (check_readiness (camera, context) != 1)
 		return GP_ERROR;
 
@@ -874,6 +879,14 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	}
 #endif
 
+	if (camera->pl->cached_drive == NULL) {
+		camera->pl->cached_drive = canon_int_get_disk_name(camera, context);
+		if (camera->pl->cached_drive == NULL) {
+			gp_context_error (context, _("Could not get flash drive letter"));
+			return GP_ERROR;
+		}
+	}
+		
 	sprintf (dcf_root_dir, "%s\\DCIM", camera->pl->cached_drive);
 
 #ifdef OBSOLETE
