@@ -52,11 +52,10 @@ int gp_init (int debug)
 #ifdef WIN32
 	GetWindowsDirectory(buf, 1024);
 	strcat(buf, "\\gphoto");
-	(void)_mkdir(buf);
 #else
-        sprintf(buf, "%s/.gphoto", getenv("HOME"));
-        (void)mkdir(buf, 0700);
+	sprintf(buf, "%s/.gphoto", getenv("HOME"));
 #endif
+	(void)GPIO_MKDIR(buf);
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing gpio");
 
         if (gpio_init(debug) == GPIO_ERROR) {
