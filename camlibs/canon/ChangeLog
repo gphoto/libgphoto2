@@ -1,3 +1,8 @@
+2002-07-24  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.c: started to add duplicate cams
+	* library.c: report upload cap only if possible
+
 2002-05-01  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.c, canon.h, usb.c: added support for EOS D60

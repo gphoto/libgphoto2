@@ -1,3 +1,9 @@
+2002-07-24  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: 2.1.1dev3
+	* doc/gphoto2.xml: added reference to CSS stylesheet
+	* doc/docbook-xml.css: added CSS stylesheet for Docbook XML
+
 2002-07-17  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2/libgphoto2.pc.in: Add driverdir variable.
