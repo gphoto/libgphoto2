@@ -83,11 +83,11 @@ ptp_error (PTPParams *params, const char *format, ...)
         va_end (args);
 }
 
-// Pack / unpack functions
+/* Pack / unpack functions */
 
 #include "ptp-pack.c"
 
-// send / receive functions
+/* send / receive functions */
 
 uint16_t
 ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
@@ -250,21 +250,21 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	return ret;
 }
 
-// major PTP functions
+/* major PTP functions */
 
-// Transaction data phase description
-#define PTP_DP_NODATA		0x0000	// No Data Phase
-#define PTP_DP_SENDDATA		0x0001	// sending data
-#define PTP_DP_GETDATA		0x0002	// geting data
-#define PTP_DP_DATA_MASK	0x00ff	// data phase mask
+/* Transaction data phase description */
+#define PTP_DP_NODATA		0x0000	/* No Data Phase */
+#define PTP_DP_SENDDATA		0x0001	/* sending data */
+#define PTP_DP_GETDATA		0x0002	/* geting data */
+#define PTP_DP_DATA_MASK	0x00ff	/* data phase mask */
 
-// Number of PTP Request phase parameters
-#define PTP_RQ_PARAM0		0x0000	// zero parameters
-#define PTP_RQ_PARAM1		0x0100	// one parameter
-#define PTP_RQ_PARAM2		0x0200	// two parameters
-#define PTP_RQ_PARAM3		0x0300	// three parameters
-#define PTP_RQ_PARAM4		0x0400	// four parameters
-#define PTP_RQ_PARAM5		0x0500	// five parameters
+/* Number of PTP Request phase parameters */
+#define PTP_RQ_PARAM0		0x0000	/* zero parameters */
+#define PTP_RQ_PARAM1		0x0100	/* one parameter */
+#define PTP_RQ_PARAM2		0x0200	/* two parameters */
+#define PTP_RQ_PARAM3		0x0300	/* three parameters */
+#define PTP_RQ_PARAM4		0x0400	/* four parameters */
+#define PTP_RQ_PARAM5		0x0500	/* five parameters */
 
 /**
  * ptp_transaction:
@@ -302,9 +302,9 @@ ptp_transaction (PTPParams* params, PTPContainer* ptp,
 	
 	ptp->Transaction_ID=params->transaction_id++;
 	ptp->SessionID=params->session_id;
-	// send request
+	/* send request */
 	CHECK_PTP_RC(params->sendreq_func (params, ptp));
-	// is there a dataphase?
+	/* is there a dataphase? */
 	switch (flags&PTP_DP_DATA_MASK) {
 		case PTP_DP_SENDDATA:
 			CHECK_PTP_RC(params->senddata_func(params, ptp,
@@ -319,16 +319,16 @@ ptp_transaction (PTPParams* params, PTPContainer* ptp,
 		default:
 		return PTP_ERROR_BADPARAM;
 	}
-	// get response
+	/* get response */
 	CHECK_PTP_RC(params->getresp_func(params, ptp));
 	return PTP_RC_OK;
 }
 
-// Enets handling functions
+/* Enets handling functions */
 
-// PTP Events wait for or check mode
-#define PTP_EVENT_CHECK			0x0000	// waits for
-#define PTP_EVENT_CHECK_FAST		0x0001	// checks
+/* PTP Events wait for or check mode */
+#define PTP_EVENT_CHECK			0x0000	/* waits for */
+#define PTP_EVENT_CHECK_FAST		0x0001	/* checks */
 
 static inline uint16_t
 ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
@@ -870,7 +870,7 @@ ptp_property_issupported(PTPParams* params, uint16_t property)
 	return 0;
 }
 
-// ptp structures feeing functions
+/* ptp structures feeing functions */
 
 void
 ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
@@ -896,7 +896,7 @@ void
 ptp_perror(PTPParams* params, uint16_t error) {
 
 	int i;
-	// PTP error descriptions
+	/* PTP error descriptions */
 	static struct {
 		short n;
 		const char *txt;

@@ -1,4 +1,4 @@
-// curently this file is included into ptp.c
+/* curently this file is included into ptp.c */
 
 static inline uint16_t
 htod16p (PTPParams *params, uint16_t var)
@@ -78,7 +78,7 @@ ptp_unpack_string(PTPParams *params, char* data, uint16_t offset, uint8_t *len)
 		for (i=0;i<*len && i< PTP_MAXSTRLEN; i++) {
 			string[i]=(char)dtoh16a(&data[offset+i*2+1]);
 		}
-		// be paranoid! :(
+		/* be paranoid! :( */
 		string[*len-1]=0;
 	}
 	return (string);
@@ -90,7 +90,7 @@ ptp_pack_string(PTPParams *params, char *string, char* data, uint16_t offset, ui
 	int i;
 	*len = (uint8_t)strlen(string);
 	
-	// XXX: check strlen!
+	/* XXX: check strlen! */
 	htod8a(&data[offset],*len+1);
 	for (i=0;i<*len && i< PTP_MAXSTRLEN; i++) {
 		htod16a(&data[offset+i*2+1],(uint16_t)string[i]);
@@ -125,7 +125,7 @@ ptp_unpack_uint16_t_array(PTPParams *params, char* data, uint16_t offset, uint16
 	return n;
 }
 
-// DeviceInfo pack/unpack
+/* DeviceInfo pack/unpack */
 
 #define PTP_di_StandardVersion		 0
 #define PTP_di_VendorExtensionID	 2
@@ -189,7 +189,7 @@ ptp_unpack_DI (PTPParams *params, char* data, PTPDeviceInfo *di)
 		&len);
 }
 	
-// ObjectHandles array pack/unpack
+/* ObjectHandles array pack/unpack */
 
 #define PTP_oh				 0
 
@@ -199,7 +199,7 @@ ptp_unpack_OH (PTPParams *params, char* data, PTPObjectHandles *oh)
 	oh->n = ptp_unpack_uint32_t_array(params, data, PTP_oh, &oh->Handler);
 }
 
-// StoreIDs array pack/unpack
+/* StoreIDs array pack/unpack */
 
 #define PTP_sids			 0
 
@@ -210,7 +210,7 @@ ptp_unpack_SIDs (PTPParams *params, char* data, PTPStorageIDs *sids)
 	&sids->Storage);
 }
 
-// StorageInfo pack/unpack
+/* StorageInfo pack/unpack */
 
 #define PTP_si_StorageType		 0
 #define PTP_si_FilesystemType		 2
@@ -228,7 +228,7 @@ ptp_unpack_SI (PTPParams *params, char* data, PTPStorageInfo *si)
 	si->StorageType=dtoh16a(&data[PTP_si_StorageType]);
 	si->FilesystemType=dtoh16a(&data[PTP_si_FilesystemType]);
 	si->AccessCapability=dtoh16a(&data[PTP_si_AccessCapability]);
-	// XXX no dtoh64a !!! skiping next two
+	/* XXX no dtoh64a !!! skiping next two */
 	si->FreeSpaceInImages=dtoh32a(&data[PTP_si_FreeSpaceInImages]);
 	si->StorageDescription=ptp_unpack_string(params, data,
 		PTP_si_StorageDescription, &storagedescriptionlen);
@@ -237,7 +237,7 @@ ptp_unpack_SI (PTPParams *params, char* data, PTPStorageInfo *si)
 		&storagedescriptionlen);
 }
 
-// ObjectInfo pack/unpack
+/* ObjectInfo pack/unpack */
 
 #define PTP_oi_StorageID		 0
 #define PTP_oi_ObjectFormat		 4
@@ -265,9 +265,9 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, char** oidataptr)
 	uint8_t capturedatelen=0;
 	/* let's allocate some memory first; XXX i'm sure it's wrong */
 	oidata=malloc(PTP_oi_Filename+(strlen(oi->Filename)+1)*2+4);
-	// the caller should free it after use!
+	/* the caller should free it after use! */
 #if 0
-	char *capture_date="20020101T010101"; // XXX Fake date
+	char *capture_date="20020101T010101"; /* XXX Fake date */
 #endif
 	memset (oidata, 0, (PTP_oi_Filename+(strlen(oi->Filename)+1)*2+4));
 	htod32a(&oidata[PTP_oi_StorageID],oi->StorageID);
@@ -299,7 +299,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, char** oidataptr)
 	 * for example Kodak sets Capture date on the basis of EXIF data.
 	 * Spec says that this field is from perspective of Initiator.
 	 */
-#if 0	// seems now we don't need any data packed in OI dataset... for now ;)
+#if 0	/* seems now we don't need any data packed in OI dataset... for now ;)*/
 	capturedatelen=strlen(capture_date);
 	htod8a(&data[PTP_oi_Filename+(filenamelen+1)*2],
 		capturedatelen+1);
@@ -313,7 +313,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, char** oidataptr)
 		  capture_date[i];
 	}
 #endif
-	// XXX this function should return dataset length
+	/* XXX this function should return dataset length */
 	
 	*oidataptr=oidata;
 	return (PTP_oi_Filename+(filenamelen+1)*2+(capturedatelen+1)*4);
@@ -349,8 +349,9 @@ ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi)
 
 	capture_date = ptp_unpack_string(params, data,
 		PTP_oi_filenamelen+filenamelen*2+1, &capturedatelen);
-	// subset of ISO 8601, without '.s' tenths of second and
-	// time zone
+	/* subset of ISO 8601, without '.s' tenths of second and 
+	 * time zone
+	 */
 	if (capturedatelen>15)
 	{
 		strncpy (tmp, capture_date, 4);
@@ -375,7 +376,7 @@ ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi)
 	}
 	free(capture_date);
 
-	// now it's modification date ;)
+	/* now it's modification date ;) */
 	capture_date = ptp_unpack_string(params, data,
 		PTP_oi_filenamelen+filenamelen*2
 		+capturedatelen*2+2,&capturedatelen);
@@ -404,7 +405,7 @@ ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi)
 	free(capture_date);
 }
 
-// Custom Type Value Assignement (without Length) macro frequently used below
+/* Custom Type Value Assignement (without Length) macro frequently used below */
 #define CTVAL(type,func,target)  {					\
 		target = malloc(sizeof(type));				\
 		*(type *)target =					\
@@ -446,14 +447,14 @@ ptp_unpack_DPV (PTPParams *params, char* data, void* value, uint16_t datatype)
 }
 
 
-// Device Property pack/unpack
+/* Device Property pack/unpack */
 
 #define PTP_dpd_DevicePropertyCode	0
 #define PTP_dpd_DataType		2
 #define PTP_dpd_GetSet			4
 #define PTP_dpd_FactoryDefaultValue	5
 
-// Custom Type Value Assignement macro frequently used below
+/* Custom Type Value Assignement macro frequently used below */
 #define CTVA(type,func,target)  {					\
 		target = malloc(sizeof(type));				\
 		*(type *)target =					\
@@ -461,7 +462,7 @@ ptp_unpack_DPV (PTPParams *params, char* data, void* value, uint16_t datatype)
 			totallen+=sizeof(type);				\
 }
 
-// Many Custom Types Vale Assignement macro frequently used below
+/* Many Custom Types Vale Assignement macro frequently used below */
 
 #define MCTVA(type,func,target,n) {					\
 		uint16_t i;						\

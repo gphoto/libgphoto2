@@ -94,7 +94,7 @@
 
 #define STORAGE_FOLDER_PREFIX		"store_"
 
-// PTP error descriptions
+/* PTP error descriptions */
 static struct {
 	short n;
 	const char *txt;
@@ -1197,7 +1197,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	}
 	gp_context_progress_stop (context, id);
 
-/*
+#if 0
 	add_dir (camera, 0x00000000, 0xff000000, "DIR1");
 	add_dir (camera, 0x00000000, 0xff000001, "DIR20");
 	add_dir (camera, 0xff000000, 0xff000002, "subDIR1");
@@ -1205,8 +1205,8 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	move_object_by_number (camera, 0xff000002, 2);
 	move_object_by_number (camera, 0xff000001, 3);
 	move_object_by_number (camera, 0xff000002, 4);
-	// Used for testing with my camera, which does not support subdirs
-*/
+	/* Used for testing with my camera, which does not support subdirs */
+#endif
 	return (GP_OK);
 }
 

@@ -25,12 +25,12 @@
 #include <time.h>
 #include "gphoto2-endian.h"
 
-// PTP datalayer byteorder
+/* PTP datalayer byteorder */
 
 #define PTP_DL_BE			0xF0
 #define	PTP_DL_LE			0x0F
 
-// PTP request/response/event general PTP container (transport independent)
+/* PTP request/response/event general PTP container (transport independent) */
 
 struct _PTPContainer {
 	uint16_t Code;
@@ -48,7 +48,7 @@ struct _PTPContainer {
 };
 typedef struct _PTPContainer PTPContainer;
 
-// PTP USB Bulk-Pipe container
+/* PTP USB Bulk-Pipe container */
 /* USB bulk max max packet length for high speed endpoints */
 #define PTP_USB_BULK_HS_MAX_PACKET_LEN	512
 #define PTP_USB_BULK_HDR_LEN		(2*sizeof(uint32_t)+2*sizeof(uint16_t))
@@ -73,7 +73,7 @@ struct _PTPUSBBulkContainer {
 };
 typedef struct _PTPUSBBulkContainer PTPUSBBulkContainer;
 
-// PTP USB Asynchronous Event Interrupt Data Format
+/* PTP USB Asynchronous Event Interrupt Data Format */
 struct _PTPUSBEventContainer {
 	uint32_t length;
 	uint16_t type;
@@ -86,7 +86,7 @@ struct _PTPUSBEventContainer {
 typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 
 
-// USB container types
+/* USB container types */
 
 #define PTP_USB_CONTAINER_UNDEFINED		0x0000
 #define PTP_USB_CONTAINER_COMMAND		0x0001
@@ -94,7 +94,7 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_USB_CONTAINER_RESPONSE		0x0003
 #define PTP_USB_CONTAINER_EVENT			0x0004
 
-// Vendor IDs
+/* Vendor IDs */
 #define PTP_VENDOR_EASTMAN_KODAK	0x00000001
 #define PTP_VENDOR_SEIKO_EPSON		0x00000002
 #define PTP_VENDOR_AGILENT		0x00000003
@@ -107,7 +107,7 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_VENDOR_NIKON		0x0000000A
 #define PTP_VENDOR_CANON		0x0000000B
 
-// Operation Codes
+/* Operation Codes */
 
 #define PTP_OC_Undefined                0x1000
 #define PTP_OC_GetDeviceInfo            0x1001
@@ -138,11 +138,11 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_CopyObject               0x101A
 #define PTP_OC_GetPartialObject         0x101B
 #define PTP_OC_InitiateOpenCapture      0x101C
-// Eastman Kodak extension Operation Codes
+/* Eastman Kodak extension Operation Codes */
 #define PTP_OC_EK_SendFileObjectInfo	0x9005
 #define PTP_OC_EK_SendFileObject	0x9006
 
-// Response Codes
+/* Response Codes */
 
 #define PTP_RC_Undefined                0x2000
 #define PTP_RC_OK                       0x2001
@@ -177,18 +177,18 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_RC_SessionAlreadyOpened     0x201E
 #define PTP_RC_TransactionCanceled      0x201F
 #define PTP_RC_SpecificationOfDestinationUnsupported            0x2020
-// Eastman Kodak extension Response Codes
+/* Eastman Kodak extension Response Codes */
 #define PTP_RC_EK_FilenameRequired	0xA001
 #define PTP_RC_EK_FilenameConflicts	0xA002
 #define PTP_RC_EK_FilenameInvalid	0xA003
 
-// libptp2 extended ERROR codes
+/* libptp2 extended ERROR codes */
 #define PTP_ERROR_IO			0x02FF
 #define PTP_ERROR_DATA_EXPECTED		0x02FE
 #define PTP_ERROR_RESP_EXPECTED		0x02FD
 #define PTP_ERROR_BADPARAM		0x02FC
 
-// PTP Event Codes
+/* PTP Event Codes */
 
 #define PTP_EC_Undefined		0x4000
 #define PTP_EC_CancelTransaction	0x4001
@@ -206,7 +206,7 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_EC_CaptureComplete		0x400D
 #define PTP_EC_UnreportedStatus		0x400E
 
-// PTP device info structure (returned by GetDevInfo)
+/* PTP device info structure (returned by GetDevInfo) */
 
 struct _PTPDeviceInfo {
 	uint16_t StaqndardVersion;
@@ -231,7 +231,7 @@ struct _PTPDeviceInfo {
 };
 typedef struct _PTPDeviceInfo PTPDeviceInfo;
 
-// PTP storageIDs structute (returned by GetStorageIDs)
+/* PTP storageIDs structute (returned by GetStorageIDs) */
 
 struct _PTPStorageIDs {
 	uint32_t n;
@@ -239,7 +239,7 @@ struct _PTPStorageIDs {
 };
 typedef struct _PTPStorageIDs PTPStorageIDs;
 
-// PTP StorageInfo structure (returned by GetStorageInfo)
+/* PTP StorageInfo structure (returned by GetStorageInfo) */
 struct _PTPStorageInfo {
 	uint16_t StorageType;
 	uint16_t FilesystemType;
@@ -252,7 +252,7 @@ struct _PTPStorageInfo {
 };
 typedef struct _PTPStorageInfo PTPStorageInfo;
 
-// PTP objecthandles structure (returned by GetObjectHandles)
+/* PTP objecthandles structure (returned by GetObjectHandles) */
 
 struct _PTPObjectHandles {
 	uint32_t n;
@@ -264,7 +264,7 @@ typedef struct _PTPObjectHandles PTPObjectHandles;
 #define PTP_HANDLER_ROOT	0x00000000
 
 
-// PTP objectinfo structure (returned by GetObjectInfo)
+/* PTP objectinfo structure (returned by GetObjectInfo) */
 
 struct _PTPObjectInfo {
 	uint32_t StorageID;
@@ -289,13 +289,13 @@ struct _PTPObjectInfo {
 };
 typedef struct _PTPObjectInfo PTPObjectInfo;
 
-// max ptp string length INCLUDING terminating null character
+/* max ptp string length INCLUDING terminating null character */
 
 #define PTP_MAXSTRLEN				255
 
-// PTP Object Format Codes
+/* PTP Object Format Codes */
 
-// ancillary formats
+/* ancillary formats */
 #define PTP_OFC_Undefined			0x3000
 #define PTP_OFC_Association			0x3001
 #define PTP_OFC_Script				0x3002
@@ -309,8 +309,8 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_AVI				0x300A
 #define PTP_OFC_MPEG				0x300B
 #define PTP_OFC_ASF				0x300C
-#define PTP_OFC_QT				0x300D // guessing
-// image formats
+#define PTP_OFC_QT				0x300D /* guessing */
+/* image formats */
 #define PTP_OFC_EXIF_JPEG			0x3801
 #define PTP_OFC_TIFF_EP				0x3802
 #define PTP_OFC_FlashPix			0x3803
@@ -327,11 +327,11 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_TIFF_IT				0x380E
 #define PTP_OFC_JP2				0x380F
 #define PTP_OFC_JPX				0x3810
-// Eastman Kodak extension ancillary format
+/* Eastman Kodak extension ancillary format */
 #define PTP_OFC_EK_M3U				0xb002
 
 
-// PTP Association Types
+/* PTP Association Types */
 
 #define PTP_AT_Undefined			0x0000
 #define PTP_AT_GenericFolder			0x0001
@@ -342,12 +342,12 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_AT_2DPanoramic			0x0006
 #define PTP_AT_AncillaryData			0x0007
 
-// PTP Protection Status
+/* PTP Protection Status */
 
 #define PTP_PS_NoProtection			0x0000
 #define PTP_PS_ReadOnly				0x0001
 
-// PTP Storage Types
+/* PTP Storage Types */
 
 #define PTP_ST_Undefined			0x0000
 #define PTP_ST_FixedROM				0x0001
@@ -355,20 +355,20 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_ST_FixedRAM				0x0003
 #define PTP_ST_RemovableRAM			0x0004
 
-// PTP FilesystemType Values
+/* PTP FilesystemType Values */
 
 #define PTP_FST_Undefined			0x0000
 #define PTP_FST_GenericFlat			0x0001
 #define PTP_FST_GenericHierarchical		0x0002
 #define PTP_FST_DCF				0x0003
 
-// PTP StorageInfo AccessCapability Values
+/* PTP StorageInfo AccessCapability Values */
 
 #define PTP_AC_ReadWrite			0x0000
 #define PTP_AC_ReadOnly				0x0001
 #define PTP_AC_ReadOnly_with_Object_Deletion	0x0002
 
-// Property Describing Dataset, Range Form
+/* Property Describing Dataset, Range Form */
 
 struct _PTPPropDescRangeForm {
 	void *		MinimumValue;
@@ -377,7 +377,7 @@ struct _PTPPropDescRangeForm {
 };
 typedef struct _PTPPropDescRangeForm PTPPropDescRangeForm;
 
-// Property Describing Dataset, Enum Form
+/* Property Describing Dataset, Enum Form */
 
 struct _PTPPropDescEnumForm {
 	uint16_t	NumberOfValues;
@@ -385,7 +385,7 @@ struct _PTPPropDescEnumForm {
 };
 typedef struct _PTPPropDescEnumForm PTPPropDescEnumForm;
 
-// Device Property Describing Dataset (DevicePropDesc)
+/* Device Property Describing Dataset (DevicePropDesc) */
 
 struct _PTPDevicePropDesc {
 	uint16_t	DevicePropertyCode;
@@ -401,7 +401,7 @@ struct _PTPDevicePropDesc {
 };
 typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 
-// DataType Codes 
+/* DataType Codes */
 
 #define PTP_DTC_UNDEF		0x0000
 #define PTP_DTC_INT8		0x0001
@@ -426,7 +426,7 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 #define PTP_DTC_AUINT128	0x400A
 #define PTP_DTC_STR		0xFFFF
 
-// Device Properties Codes
+/* Device Properties Codes */
 
 #define PTP_DPC_Undefined		0x5000
 #define PTP_DPC_BatteryLevel		0x5001
@@ -461,40 +461,40 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 #define PTP_DPC_Artist			0x501E
 #define PTP_DPC_CopyrightInfo		0x501F
 
-// Proprietary vendor extension device property mask
+/* Proprietary vendor extension device property mask */
 #define PTP_DPC_EXTENSION_MASK		0xF000
 #define PTP_DPC_EXTENSION		0xD000
 
-// Vendor Extensions device property codes
+/* Vendor Extensions device property codes */
 
-// Eastman Kodak extension device property codes
+/* Eastman Kodak extension device property codes */
 #define PTP_DPC_EK_ColorTemperature	0xD001
 #define PTP_DPC_EK_DateTimeStampFormat	0xD002
 #define PTP_DPC_EK_BeepMode		0xD003
 #define PTP_DPC_EK_VideoOut		0xD004
 #define PTP_DPC_EK_PowerSaving		0xD005
 #define PTP_DPC_EK_UI_Language		0xD006
-// Canon extension device property codes
+/* Canon extension device property codes */
 #define PTP_DPC_CANON_BeepMode		0xD001
 #define PTP_DPC_CANON_FlashMemory	0xD031
 #define PTP_DPC_CANON_CameraModel	0xD032
 #define PTP_DPC_CANON_UnixTime		0xD034
 
-// Device Property Form Flag
+/* Device Property Form Flag */
 
 #define PTP_DPFF_None			0x00
 #define PTP_DPFF_Range			0x01
 #define PTP_DPFF_Enumeration		0x02
 
-// Device Property GetSet type
+/* Device Property GetSet type */
 #define PTP_DPGS_Get			0x00
 #define PTP_DPGS_GetSet			0x01
 
-// Glue stuff starts here
+/* Glue stuff starts here */
 
 typedef struct _PTPParams PTPParams;
 
-// raw write functions
+/* raw write functions */
 typedef short (* PTPIOReadFunc)	(unsigned char *bytes, unsigned int size,
 				 void *data);
 typedef short (* PTPIOWriteFunc)(unsigned char *bytes, unsigned int size,
@@ -509,7 +509,7 @@ typedef uint16_t (* PTPIOSendData)	(PTPParams* params, PTPContainer* ptp,
 typedef uint16_t (* PTPIOGetResp)	(PTPParams* params, PTPContainer* resp);
 typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
 					unsigned char **data);
-// debug functions
+/* debug functions */
 typedef void (* PTPErrorFunc) (void *data, const char *format, va_list args);
 typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args);
 
@@ -549,7 +549,7 @@ struct _PTPParams {
 	PTPDeviceInfo deviceinfo;
 };
 
-// last, but not least ptp functions
+/* last, but not least ptp functions */
 uint16_t ptp_usb_sendreq	(PTPParams* params, PTPContainer* req);
 uint16_t ptp_usb_senddata	(PTPParams* params, PTPContainer* ptp,
 				unsigned char *data, unsigned int size);
