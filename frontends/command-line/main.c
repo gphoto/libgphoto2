@@ -264,11 +264,11 @@ OPTION_CALLBACK(abilities) {
         printf("Configuration support            : %s\n",
                 abilities.operations & GP_OPERATION_CONFIG? "yes":"no");
         printf("Delete files on camera support   : %s\n",
-                abilities.file_operations | GP_FILE_OPERATION_DELETE? "yes":"no");
+                abilities.file_operations & GP_FILE_OPERATION_DELETE? "yes":"no");
         printf("File preview (thumbnail) support : %s\n",
-                abilities.file_operations | GP_FILE_OPERATION_PREVIEW? "yes":"no");
+                abilities.file_operations & GP_FILE_OPERATION_PREVIEW? "yes":"no");
         printf("File upload support              : %s\n",
-                abilities.folder_operations | GP_FOLDER_OPERATION_PUT_FILE? "yes":"no");
+                abilities.folder_operations & GP_FOLDER_OPERATION_PUT_FILE? "yes":"no");
 
         return (GP_OK);
 }
