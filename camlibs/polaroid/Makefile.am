@@ -13,13 +13,16 @@ libgphoto2_polaroid_pdc640_la_SOURCES = pdc640.c jd350e.h jd350e.c jd350e_red.h 
 libgphoto2_polaroid_pdc700_la_SOURCES = pdc700.c
 
 libgphoto2_polaroid_pdc320_la_LDFLAGS =\
- -avoid-version -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
+ -module -avoid-version\
+ -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
 
 libgphoto2_polaroid_pdc640_la_LDFLAGS =\
- -avoid-version -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
+ -module -avoid-version\
+ -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
 
 libgphoto2_polaroid_pdc700_la_LDFLAGS =\
- -avoid-version -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
+ -module -avoid-version\
+ -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
 
 libgphoto2_polaroid_pdc320_la_LIBADD = -lgphoto2
 libgphoto2_polaroid_pdc640_la_LIBADD = -lgphoto2

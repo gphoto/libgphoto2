@@ -15,7 +15,7 @@ libgphoto2_canon_la_SOURCES =\
  util.c util.h
 
 libgphoto2_canon_la_LDFLAGS =\
- -avoid-version -g\
+ -module -avoid-version -g\
  -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
 
 libgphoto2_canon_la_LIBADD = -lgphoto2

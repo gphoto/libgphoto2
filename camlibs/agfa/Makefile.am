@@ -8,7 +8,7 @@ INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
 libgphoto2_agfa_la_SOURCES = agfa.c commands.c agfa.h
 
 libgphoto2_agfa_la_LDFLAGS =\
- -avoid-version\
+ -module -avoid-version\
  -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
 
 libgphoto2_agfa_la_LIBADD = -lgphoto2

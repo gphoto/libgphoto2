@@ -9,5 +9,5 @@ LDFLAGS = @LDFLAGS@ -g
 ## Compile the IO library into a shared library
 iolibdir = $(prefix)/lib/gphoto2_port
 iolib_LTLIBRARIES = libgphoto2_port_serial.la
-libgphoto2_port_serial_la_LDFLAGS = -version-info @LIBGPPORT_VERSION_INFO@ -DHAVE_TERMIOS_H $(SERIAL_LDFLAGS) 
+libgphoto2_port_serial_la_LDFLAGS = -module -version-info @LIBGPPORT_VERSION_INFO@ -DHAVE_TERMIOS_H $(SERIAL_LDFLAGS) 
 libgphoto2_port_serial_la_SOURCES = unix.c

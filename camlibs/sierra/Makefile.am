@@ -11,7 +11,7 @@ libgphoto2_sierra_la_SOURCES =\
  sierra-usbwrap.c sierra-usbwrap.h
 
 libgphoto2_sierra_la_LDFLAGS =\
- -avoid-version\
+ -module -avoid-version\
  -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
 
 libgphoto2_sierra_la_LIBADD = -lgphoto2

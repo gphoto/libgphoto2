@@ -15,7 +15,7 @@ libgphoto2_jamcam_la_SOURCES = \
  library.c library.h
 
 libgphoto2_jamcam_la_LDFLAGS =\
- -avoid-version\
+ -module -avoid-version\
  -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
 
 libgphoto2_jamcam_la_LIBADD = -lgphoto2 -lm

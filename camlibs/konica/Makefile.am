@@ -16,6 +16,7 @@ libgphoto2_konica_la_SOURCES = \
  library.c library.h
 
 libgphoto2_konica_la_LDFLAGS =\
- -avoid-version -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
+ -module -avoid-version\
+ -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
 
 libgphoto2_konica_la_LIBADD = -lgphoto2

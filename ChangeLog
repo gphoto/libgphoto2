@@ -1,3 +1,36 @@
+2001-10-31 Dan Fandrich <dan@coneharvesters.com>
+
+	* camlibs/agfa/Makefile.am
+	* camlibs/barbie/Makefile.am
+	* camlibs/canon/Makefile.am
+	* camlibs/casio/Makefile.am
+	* camlibs/digita/Makefile.am
+	* camlibs/dimera/Makefile.am
+	* camlibs/directory/Makefile.am
+	* camlibs/fuji/Makefile.am
+	* camlibs/jamcam/Makefile.am
+	* camlibs/jd11/Makefile.am
+	* camlibs/jd350e/Makefile.am
+	* camlibs/kodak/dc120/Makefile.am
+	* camlibs/kodak/dc210/Makefile.am
+	* camlibs/kodak/dc240/Makefile.am
+	* camlibs/kodak/dc3200/Makefile.am
+	* camlibs/konica/Makefile.am
+	* camlibs/minolta/dimagev/Makefile.am
+	* camlibs/panasonic/Makefile.am
+	* camlibs/panasonic/coolshot/Makefile.am
+	* camlibs/panasonic/l859/Makefile.am
+	* camlibs/polaroid/Makefile.am
+	* camlibs/samsung/Makefile.am
+	* camlibs/sierra/Makefile.am
+	* camlibs/sonydscf1/Makefile.am
+	* camlibs/sonydscf55/Makefile.am
+	* camlibs/stv0680/Makefile.am
+	* camlibs/template/Makefile.am
+	* libgphoto2_port/serial/Makefile.am
+	* libgphoto2_port/usb/Makefile.am: added -module flag to libtool link 
+	  command for each library that is dlopen'ed
+
 2001-10-31 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/bayer.c: Remove unused variable
