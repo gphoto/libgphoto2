@@ -105,6 +105,10 @@ AC_SUBST(LIBS)
 
 AC_SUBST(dotlibs)
 
+dnl Create a stdint.h-like file containing size-specific integer definitions
+dnl that will always be available
+AC_NEED_STDINT_H(libgphoto2/_stdint.h)
+
 dnl Find out which drivers to compile
 
 camlibs='agfa barbie canon casio digita dimera directory jamcam jd11 kodak konica minolta panasonic polaroid ptp samsung sierra stv0680 sonydscf1 sonydscf55'
