@@ -767,6 +767,7 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info)
 			(guchar**) &file->data,
 			(guint*) &file->size))) return (GP_ERROR);
 		strcpy (file->type, "image/jpg");
+		strcpy (file->name, "preview.jpg");
 
 		return (GP_OK);
 
