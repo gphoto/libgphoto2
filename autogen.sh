@@ -63,23 +63,26 @@ esac
 
 for dir in libgphoto2_port .
 do 
-   (echo processing "$dir";					\
-    cd "$dir";							\
-    echo "Running gettextize --force --copy $gettext_opt";	\
-    gettextize --force --copy $gettext_opt;			\
-    test -f po/Makevars.template &&				\
-    cp po/Makevars.template po/Makevars;			\
-    echo "Running libtoolize";					\
-    libtoolize --copy --force;					\
-    echo "Running aclocal $ACLOCAL_FLAGS";			\
-    aclocal $ACLOCAL_FLAGS;					\
-    echo "Running autoheader";					\
-    autoheader;							\
-    echo "Running automake --add-missing --gnu $am_opt";	\
-    automake --add-missing --gnu $am_opt;			\
-    echo "Running autoconf";					\
-    autoconf;							\
-   )
+(
+    echo processing "$dir"
+    cd "$dir"
+    echo "Running gettextize --force --copy $gettext_opt"
+    gettextize --force --copy $gettext_opt
+    if test -f po/Makevars.template
+    then
+	cp po/Makevars.template po/Makevars
+    fi
+    echo "Running libtoolize"
+    libtoolize --copy --force
+    echo "Running aclocal $ACLOCAL_FLAGS"
+    aclocal $ACLOCAL_FLAGS
+    echo "Running autoheader"
+    autoheader
+    echo "Running automake --add-missing --gnu $am_opt"
+    automake --add-missing --gnu $am_opt
+    echo "Running autoconf"
+    autoconf
+)
 done
 
 echo 
