@@ -181,6 +181,7 @@ libgphoto2/Makefile
 libgphoto2/libgphoto-2.0.pc
 gphoto2-config
 intl/Makefile
+packaging/Makefile
 po/Makefile.in
 doc/Makefile
 doc/api/Makefile

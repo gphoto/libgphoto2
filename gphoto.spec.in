@@ -1,14 +1,15 @@
-Summary: Library to access digital cameras
+Summary: Software for accessing digital cameras
 Name: @PACKAGE@
 Version: @VERSION@
-Release: 0
+Release: 2
 License: LGPL
 Group: Applications/Multimedia
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Source: http://www.gphoto.org/dist/%{name}-%{version}.tar.gz
 Url: http://www.gphoto.org/
-Requires: libgphoto2
-Requires: libusb
+Requires: libusb >= 0.0.4
+Requires: hotplug
+Provides: libgphoto2
 BuildRequires: libusb-devel
 BuildRequires: gtk-doc
 BuildRequires: findutils perl
@@ -22,31 +23,18 @@ connections. Note that
 a) for some older camera models you must use the old "gphoto" package.
 b) for USB mass storage models you must use the driver in the kernel
 
-This package contains the command-line utility gphoto2.
+This package contains
+i) the library that digital camera applications can use
+ii) the command-line utility gphoto2 
 
-%package -n libgphoto2
-Summary: Library for accessing digital cameras.
-Provides: libgphoto
-Requires: libusb >= 0.0.4
-Group: System Environment/Libraries
+Other (GUI) frontends are available seperately.
 
-%description -n libgphoto2
-The gPhoto2 project is a universal, free application and library
-framework that lets you download images from several different
-digital camera models, including the newer models with USB
-connections. Note that for some older camera models you must use
-the old "gphoto" package.
-
-This package contains the library that digital camera applications
-can use.
-
-%package -n libgphoto2-devel
+%package devel
 Summary: Headers and links to compile against the libgphoto2 library.
-Requires: libgphoto2 = %{version}
-Provides: libgphoto-devel
+Requires: %{name} = %{version}
 Group: Development/Libraries
 
-%description -n libgphoto2-devel
+%description devel
 The gPhoto2 project is a universal, free application and library
 framework that lets you download images from several different
 digital camera models, including the newer models with USB
@@ -102,10 +90,10 @@ make DESTDIR=%{buildroot} \
         infodir=%{_infodir} \
 install
 
-find %{buildroot} -type f | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.files
+install -d -m755 %{buildroot}/etc/hotplug/usb/
+install -m755 packaging/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
 
-%post -p /sbin/ldconfig -n libgphoto2
-%postun -p /sbin/ldconfig -n libgphoto2
+find %{buildroot} -type f | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.files
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -115,11 +103,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_bindir}/gphoto2
-%doc %{_docdir}/%{name}-%{version}/gphoto2-cli.txt
-
-##### libgphoto2
-%files -n libgphoto2
-%defattr(-,root,root)
 %{_datadir}/gphoto2/konica/*
 %doc doc/gphoto2.txt doc/gphoto2-cli.txt
 %doc AUTHORS README COPYING NEWS
@@ -132,9 +115,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gphoto2portConf.sh
 %{_datadir}/locale/de/LC_MESSAGES/gphoto.mo
 %{_libdir}/pkgconfig/libgphoto-2.0.pc
+/etc/hotplug/usb/usbcam
 
-##### libgphoto2-devel
-%files -n libgphoto2-devel
+%post
+# add supported cameras to /etc/hotplug/usb.usermap
+grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
+gphoto2 --print-usb-usermap >> /etc/hotplug/usb.usermap.tmp
+mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
+# register libraries
+/sbin/ldconfig
+
+%preun
+# remove supported cameras from /etc/hotplug/usb.usermap
+grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
+mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
+
+# unregister libraries
+%postun -p /sbin/ldconfig
+
+%files devel
 %defattr(-,root,root)
 %docdir %{_docdir}/%{name}-%{version}/html
 %{_bindir}/gphoto2-config

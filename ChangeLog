@@ -1,3 +1,14 @@
+2001-10-21 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* packages/usbcam.group: added. linux-hotplug script
+	* packages/usbcam.console: added. linux-hotplug script
+	* packages/Makefile.am: added.
+	* packages/.cvsignore: added.
+	* gphoto.spec.in: simplified a bit (only gphoto and 
+	  gphoto-devel, no lib* packages any more). added hotplug support.
+	* configure.in: added packaging/
+	* Makefile.am: added packaging/, added .tar.bz2 dist support
+
 2001-10-22 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line/main.c: Don't use gphoto2-core.h - use

@@ -1,0 +1,27 @@
+#!/bin/bash
+# $Id$
+#
+# /etc/hotplug/usb/usbcam
+#
+# Sets up newly plugged in USB camera so that the user who owns
+# /dev/console can access it from user space
+#
+# Note that for this script to work, you'll need all of the following:
+# a) a line in the file /etc/hotplug/usermap that corresponds to the 
+#    camera you are using. You can get the correct lines for all cameras 
+#    supported by gphoto2 by running "gphoto2 --print-usb-usermap".
+# b) a setup using pam_console that chown's /dev/console to the 
+#    user currently using the "console"
+# c) a Linux kernel supporting hotplug and usbdevfs
+# d) the hotplug package (http://linux-hotplug.sourceforge.net/)
+#
+# In the usermap file, the first field "usb module" should be named 
+# "usbcam" like this script.
+# 
+
+if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
+then
+    user="$(ls -l /dev/console | awk '/\/dev\/console$/ { print $3; }')"
+    chown "${user}" "${DEVICE}"
+    chmod 0600 "${DEVICE}"
+fi
