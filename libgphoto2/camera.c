@@ -18,10 +18,13 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include "gphoto2-camera.h"
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 #include "gphoto2-result.h"
 #include "gphoto2-frontend.h"
@@ -251,6 +254,63 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 }
 
 int
+gp_camera_set_progress_func (Camera *camera, CameraProgressFunc func,
+			     void *data)
+{
+	CHECK_NULL (camera);
+
+	camera->progress_func = func;
+	camera->progress_data = data;
+
+	return (GP_OK);
+}
+
+int
+gp_camera_set_status_func (Camera *camera, CameraStatusFunc func,
+			   void *data)
+{
+	CHECK_NULL (camera);
+
+	camera->status_func = func;
+	camera->status_data = data;
+
+	return (GP_OK);
+}
+
+int
+gp_camera_status (Camera *camera, const char *format, ...)
+{
+	char buffer[1024];
+	va_list arg;
+
+	CHECK_NULL (camera);
+
+	va_start (arg, format);
+#if HAVE_VSNPRINTF
+	vsnprintf (buffer, sizeof (buffer), format, arg);
+#else
+	vsprintf (buffer, format, arg);
+#endif
+	va_end (arg);
+
+	if (camera->status_func)
+		camera->status_func (camera, buffer, camera->status_data);
+
+	return (GP_OK);
+}
+
+int
+gp_camera_progress (Camera *camera, float progress)
+{
+	CHECK_NULL (camera);
+
+	if (camera->progress_func)
+		camera->progress_func (camera, progress, camera->progress_data);
+
+	return (GP_OK);
+}
+
+int
 gp_camera_ref (Camera *camera)
 {
 	CHECK_NULL (camera);
@@ -467,13 +527,19 @@ int
 gp_camera_capture (Camera *camera, int capture_type, 
 		       CameraFilePath *path)
 {
+	int result;
+
 	CHECK_NULL (camera && path);
 
         if (camera->functions->capture == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->capture (camera,
-							capture_type, path));
+	CHECK_OPEN (camera);
+	gp_camera_status (camera, "Capturing image...");
+        result = camera->functions->capture (camera, capture_type, path);
+	gp_camera_status (camera, "");
+	gp_camera_progress (camera, 0.0);
+	CHECK_CLOSE (camera);
 
 	return (GP_OK);
 }
@@ -691,7 +757,11 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 
 	/* Check first if the camera driver supports the filesystem */
 	CHECK_OPEN (camera);
+	gp_camera_status (camera, "Getting info for '%s' in folder '%s'...",
+			  file, folder);
 	result = gp_filesystem_get_info (camera->fs, folder, file, info);
+	gp_camera_status (camera, "");
+	gp_camera_progress (camera, 0.0);
 	CHECK_CLOSE (camera);
 	if (result != GP_ERROR_NOT_SUPPORTED)
 		return (result);
@@ -776,8 +846,12 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 		return (GP_ERROR_FILE_NOT_FOUND);
    
 	CHECK_OPEN (camera);
+	gp_camera_status (camera, "Getting '%s' from folder '%s'...",
+			  file, folder);
 	result = gp_filesystem_get_file (camera->fs, folder, file, type,
 					 camera_file);
+	gp_camera_status (camera, "");
+	gp_camera_progress (camera, 0.0);
 	CHECK_CLOSE (camera);
 	if (result != GP_ERROR_NOT_SUPPORTED)
 		return (result);

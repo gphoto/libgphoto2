@@ -112,6 +112,11 @@ typedef struct {
 typedef gp_port      CameraPort;
 typedef gp_port_info CameraPortInfo;
 
+typedef void (* CameraStatusFunc)   (Camera *camera, const char *status,
+				     void *data);
+typedef void (* CameraProgressFunc) (Camera *camera, float progress,
+				     void *data);
+
 struct _Camera {
 	char            model[128];
 
@@ -131,6 +136,12 @@ struct _Camera {
 	CameraFilesystem *fs;
 
 	int             session;
+
+	CameraStatusFunc   status_func;
+	void              *status_data;
+
+	CameraProgressFunc progress_func;
+	void              *progress_data;
 };
 
 /* Create a new camera device */
@@ -230,5 +241,14 @@ int gp_camera_file_set_config  	(Camera *camera, const char *folder,
 				 const char *file, CameraWidget  *window);
 int gp_camera_file_delete     	(Camera *camera, const char *folder, 
 				 const char *file);
+
+/* Informing frontends */
+int gp_camera_set_status_func   (Camera *camera, CameraStatusFunc func,
+				 void *data);
+int gp_camera_status            (Camera *camera, const char *format, ...);
+
+int gp_camera_set_progress_func (Camera *camera, CameraProgressFunc func,
+				 void *data);
+int gp_camera_progress          (Camera *camera, float progress);
 
 #endif /* __GPHOTO2_CAMERA_H__ */
