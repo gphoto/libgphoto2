@@ -2,16 +2,6 @@ Scott Fritzinger <scottf@scs.unr.edu>
 GUI, HTML gallery, Live Cam! plugins
 Fujitsu chipset library
 
-Eugene Crosser <crosser@average.org>
-Fujitsu chipset protocol
-
-Matt Martin <matt.martin@ieee.org>
-Fuji DS-7 library
-Bug fixing and GUI features
-
-Mike Labriola <mdlabriola@mindless.com>
-Extra HTML gallery export options
-
 Werner Almesberger <almesber@lrc.di.epfl.ch>
 Canon A50 library
 
@@ -25,43 +15,11 @@ Mariusz Zynel <mariusz@mizar.org>
 Panasonic DC1000/DC1580 library, additions to CLI,
 Solaris patches, bug fixing
 
-Ray Newman
-Canon PS350 protocol sniffing
-
-Anne Bezemer <costar@panic.et.tudelft.nl>
-Canon PS350 protocol sniffing
-
-Gus Hartmann <hartmann@cs.wisc.edu>
-Minolta Dimage V library
-
-Gary Ross <gdr@hooked.net>
-Casio QV library
-
-Phill Hugo <phill@gphoto.org>
-Konica Q-M100, HP-C20/30 library
-Rewrote dynamic loaded libraries
-
-Ed Legowski <edlegowski@pobox.com>
-Konica Q-M100, HP-C20/30 library
-
-Toshiki Fujisawa <gphoto@fujisaw.gr.jp>
-Konica Q-M200 library
-FreeBSD 3.2 patches
-
 M. Adam Kendall <joker@penguinpub.com>
 Sony DSC-F1 library
 
 Mark Davies <mdavies@dial.pipex.com>
 Sony DSC-F55E library
-
-Michael McCormack <mccormac@aals27.alcatel.com.au>
-Nikon CoolPix 600 library
-
-Henning Zabel <henning@uni-paderborn.de>
-New Mustek MDC 800 library
-
-Pedro Caria <pmiguel@maquina.com>
-Original Mustek MDC 800 library
 
 Philippe Marzouk <bullmali@afribone.net.ml>
 Canon thumbnail and deletion support
@@ -69,73 +27,8 @@ Canon thumbnail and deletion support
 Edouard Lafargue <lafargue@oslo.geco-prakla.slb.com>
 Canon camera detection, fixes, configuration dialog
 
-Del Simmons <del@gphoto.org>
-Kodak DC20/25 library
-
-TimeCop <timecop@japan.co.jp>
-Enhanced Kodak DC21x support
-
-Bob Paauwe <bpaauwe@bobsplace.com>
-Philips ESP 80 library
-Bug fixing
-
-Cliff Wright <cliff@snipe444.org>
-Ricoh RDC 300/300Z library
-Bug fixing
-
-Rasmus Andersen <rasmus@diku.dk>
-X independent CLI invocation
-Bug fixing
-
-Beat Christen <spiff@longstreet.ch>
-Toshiba PDR M1 library
-
-Warren Baird <wjbaird@bigfoot.com>
-Bug fixing
-
-Brent D. Metz <bmetz@vt.edu>
-Kodak 200/210 library
-
-Brian Hirt <bhirt@loopy.berkhirt.com>
-Kodak 210 library
-
-Mandrake <mandrake@lobotomy.com>
-Kodak DC210 library hacking
-
-Randy D. Scott <scottr@wwa.com>
-Kodak DC240 library
-
-David Brownell <david-b@pacbell.net>
-Kodak DC240 USB library patch
-
-Paul S. Jenner <psj@mustec.eu.org>
-GNU AutoConf scripts
-
-Tuomas Kuosmanen <tigert@gimp.org>
-Misc. toolbar icons
-
 Ole Aamot <ole@gnu.org>
-Mailinglists, web, FAQ, bug fixing
-
-Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>
-Olympus C3030Z USB support
+GNOME configuration support
 
 Bart van Leeuwen <bart@netage.nl>
 OS/2 Port
-
-If you feel left out, then please
-add yourself to the file "AUTHORS",
-or mail <gphoto-devel@gphoto.org>!
-
-The gPhoto project is the easiest
-way for Digital Camera Companies
-to support potential customers.
-
-Emailing the gPhoto developers' list
-<gphoto-devel@gphoto.org> is a good
-place to start in procuring talents.
-
-Often it takes nothing more than open
-access to the technical details and a
-camera or two for testing and/or
-development.
