@@ -1,3 +1,8 @@
+2002-01-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-context.[c,h]: Support for multiple progress
+	  reports at once (especially sub-progress reports).
+
 2002-01-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-filesys.[c,h]: Add a GPContext to all functions 

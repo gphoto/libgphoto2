@@ -1232,11 +1232,38 @@ ctx_error_func (GPContext *context, const char *format, va_list args,
 	fflush   (stderr);
 }
 
-static void
-ctx_progress_func (GPContext *context, float percentage, void *data)
+static float targets[] = {0, 0, 0, 0, 0, 0, 0, 0};
+
+static unsigned int
+ctx_progress_start_func (GPContext *context, float target, 
+			 const char *format, va_list args, void *data)
 {
-	fprintf (stderr, "Progress: %02.01f\r", percentage * 100.);
+	unsigned int id;
+
+	for (id = 0; id < 7; id++)
+		if (!targets[id])
+			break;
+	targets[id] = target;
+
+	vfprintf (stderr, format, args);
+	fprintf  (stderr, "\n");
 	fflush  (stderr);
+
+	return (id);
+}
+
+static void
+ctx_progress_update_func (GPContext *context, unsigned int id,
+			  float current, void *data)
+{
+	printf ("Percent completed: %02.01f\r", current / targets[id]);
+	fflush(stdout);
+}
+
+static void
+ctx_progress_stop_func (GPContext *context, unsigned int id, void *data)
+{
+	targets[id] = 0;
 }
 
 static GPContextFeedback
@@ -1270,10 +1297,13 @@ init_globals (void)
         glob_recurse = 0;
 
 	glob_context = gp_context_new ();
-	gp_context_set_cancel_func   (glob_context, ctx_cancel_func,   NULL);
-	gp_context_set_progress_func (glob_context, ctx_progress_func, NULL);
-	gp_context_set_error_func    (glob_context, ctx_error_func,    NULL);
-	gp_context_set_status_func   (glob_context, ctx_status_func,   NULL);
+	gp_context_set_cancel_func    (glob_context, ctx_cancel_func,   NULL);
+	gp_context_set_progress_funcs (glob_context,
+				       ctx_progress_start_func,
+				       ctx_progress_update_func,
+				       ctx_progress_stop_func, NULL);
+	gp_context_set_error_func     (glob_context, ctx_error_func,    NULL);
+	gp_context_set_status_func    (glob_context, ctx_status_func,   NULL);
 
         return GP_OK;
 }

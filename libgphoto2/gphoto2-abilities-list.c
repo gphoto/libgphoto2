@@ -139,7 +139,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	CameraLibraryAbilitiesFunc ab;
 	CameraText text;
 	int x, old_count, new_count;
-	unsigned int i, n;
+	unsigned int i, n, p;
 	const char *filename;
 #ifdef HAVE_LTDL
 	CameraList flist;
@@ -246,8 +246,8 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	GP_SYSTEM_CLOSEDIR (d);
 	d = GP_SYSTEM_OPENDIR (dir);
 
-	gp_context_status (context, _("Loading camera drivers from '%s'..."),
-			   dir);
+	p = gp_context_progress_start (context, n,
+			_("Loading camera drivers from '%s'..."), dir);
 	i = 0;
 	do {
 
@@ -260,7 +260,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			 * possiblility to cancel.
 			 */
 			i++;
-			gp_context_progress (context, (float) i / (float) n);
+			gp_context_progress_update (context, p, i);
 			if (gp_context_cancel (context) ==
 						GP_CONTEXT_FEEDBACK_CANCEL)
 				return (GP_ERROR_CANCEL);
@@ -344,6 +344,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			}
 		}
 	} while (de);
+	gp_context_progress_stop (context, p);
 #endif
 
 	return (GP_OK);

@@ -28,8 +28,10 @@ struct _GPContext
 	GPContextIdleFunc     idle_func;
 	void                 *idle_func_data;
 
-	GPContextProgressFunc progress_func;
-	void                 *progress_func_data;
+	GPContextProgressStartFunc  progress_start_func;
+	GPContextProgressUpdateFunc progress_update_func;
+	GPContextProgressStopFunc   progress_stop_func;
+	void                       *progress_func_data;
 
 	GPContextErrorFunc    error_func;
 	void                 *error_func_data;
@@ -127,15 +129,46 @@ gp_context_idle (GPContext *context)
 		context->idle_func (context, context->idle_func_data);
 }
 
+unsigned int
+gp_context_progress_start (GPContext *context, float target,
+			   const char *format, ...)
+{
+	va_list args;
+	unsigned int id;
+
+	if (!context)
+		return (0);
+
+	if (context->progress_start_func) {
+		va_start (args, format);
+		id = context->progress_start_func (context, target, format,
+					args, context->progress_func_data);
+		va_end (args);
+	}
+
+	return (0);
+}
+
 void
-gp_context_progress (GPContext *context, float percentage)
+gp_context_progress_update (GPContext *context, unsigned int id, float current)
 {
 	if (!context)
 		return;
 
-	if (context->progress_func)
-		context->progress_func (context, percentage,
-					context->progress_func_data);
+	if (context->progress_update_func)
+		context->progress_update_func (context, id, current,
+					       context->progress_func_data);
+}
+
+void
+gp_context_progress_stop (GPContext *context, unsigned int id)
+{
+	if (!context)
+		return;
+
+	if (context->progress_stop_func)
+		context->progress_stop_func (context, id,
+					     context->progress_func_data);
 }
 
 void
@@ -233,14 +266,19 @@ gp_context_set_idle_func (GPContext *context, GPContextIdleFunc func,
 }
 
 void
-gp_context_set_progress_func (GPContext *context, GPContextProgressFunc func,
-			      void *data)
+gp_context_set_progress_funcs (GPContext *context,
+			       GPContextProgressStartFunc  start_func,
+			       GPContextProgressUpdateFunc update_func,
+			       GPContextProgressStopFunc   stop_func,
+			       void *data)
 {
 	if (!context)
 		return;
 
-	context->progress_func      = func;
-	context->progress_func_data = data;
+	context->progress_start_func  = start_func;
+	context->progress_update_func = update_func;
+	context->progress_stop_func   = stop_func;
+	context->progress_func_data   = data;
 }
 
 void
