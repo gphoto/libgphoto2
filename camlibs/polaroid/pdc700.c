@@ -441,13 +441,10 @@ camera_init (Camera *camera)
 
 	/* Check if the camera is really there */
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
-	CHECK_RESULT (gp_port_set_timeout (camera->port, 2000));
+	CHECK_RESULT (gp_port_set_timeout (camera->port, 1000));
 	for (i = 0; i < 4; i++) {
 		settings.serial.speed = speeds[i];
 		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
-		result = pdc700_init (camera);
-		if (result == GP_OK)
-			break;
 		result = pdc700_init (camera);
 		if (result == GP_OK)
 			break;
