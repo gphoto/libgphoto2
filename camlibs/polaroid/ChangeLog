@@ -1,3 +1,15 @@
+2003-02-25  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc320.c,h: Rewritten the command/reply handling
+	  to a large degree after reverse engineering the
+	  windows driver.
+
+	* pdc320.html: Started documenting the command structure.
+
+2003-02-18  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c: Added ScopeCam (www.meade.com).
+
 2003-02-04  Marcus Meissner <marcus@jet.franken.de>
 	
 	* pdc640.c: Skanhex-SX 35 IDs added, USB id for
