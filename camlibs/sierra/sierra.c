@@ -2035,10 +2035,8 @@ int camera_init (Camera *camera, GPContext *context)
         CHECK_FREE (camera, gp_port_set_settings (camera->port, settings));
         CHECK_FREE (camera, gp_port_set_timeout (camera->port, TIMEOUT));
 
-	if (camera->port->type == GP_PORT_SERIAL) {
-		/* Send initialization sequence */
-		CHECK (sierra_init (camera, context));
-	}
+	/* Send initialization sequence */
+	CHECK (sierra_init (camera, context));
 
         /* Establish a connection */
         CHECK_FREE (camera, camera_start (camera, context));

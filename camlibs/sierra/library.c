@@ -43,6 +43,7 @@ enum _SierraPacket {
 	SIERRA_PACKET_INVALID		= 0x11,
 	NAK				= 0x15,
 	SIERRA_PACKET_COMMAND		= 0x1b,
+	SIERRA_PACKET_WRONG_SPEED	= 0x8c,
 	SIERRA_PACKET_SESSION_ERROR	= 0xfc,
 	SIERRA_PACKET_SESSION_END	= 0xff
 };
@@ -440,8 +441,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		if (result < 0) {
 			GP_DEBUG ("Read failed (%i: '%s').", result,
 				  gp_result_as_string (result));
-			r++;
-			if (r + 1 >= RETRIES) {
+			if (++r > 2) {
 				if (camera->port->type == GP_PORT_USB &&
 				    !camera->pl->usb_wrap)
 					gp_port_usb_clear_halt (camera->port,
@@ -466,6 +466,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		case NAK:
 		case SIERRA_PACKET_SESSION_ERROR:
 		case SIERRA_PACKET_SESSION_END:
+		case SIERRA_PACKET_WRONG_SPEED:
 
 			/* Those are all single byte packets. */
 			if (camera->port->type == GP_PORT_USB &&
@@ -605,8 +606,7 @@ sierra_read_packet_wait (Camera *camera, char *buf, GPContext *context)
 
 		result = sierra_read_packet (camera, buf, context);
 		if (result == GP_ERROR_TIMEOUT) {
-			r++;
-			if (r >= RETRIES) {
+			if (++r > 2) {
 				gp_context_error (context, _("Transmission "
 					"of packet timed out even after "
 					"%i retries. Please contact "
@@ -629,7 +629,7 @@ static int
 sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 {
 	int r = 0;
-	char buf[4096];
+	unsigned char buf[4096];
 
 	while (1) {
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
@@ -648,9 +648,19 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 				"by camera. Please contact "
 				"<gphoto-devel@gphoto.org>."));
 			return GP_ERROR;
+		case SIERRA_PACKET_SESSION_ERROR:
+		case SIERRA_PACKET_SESSION_END:
+		case SIERRA_PACKET_WRONG_SPEED:
+			if (++r > 2) {
+				gp_context_error (context, _("Could not "
+					"transmit packet even after several "
+					"retries."));
+				return (GP_ERROR);
+			}
+			CHECK (sierra_init (camera, context));
+			continue;
 		default:
-			r++;
-			if (r >= RETRIES) {
+			if (++r > 2) {
 				gp_context_error (context, _("Could not "
 					"transmit packet (error code %i). "
 					"Please contact "
@@ -714,10 +724,25 @@ sierra_write_ack (Camera *camera)
 int
 sierra_init (Camera *camera, GPContext *context) 
 {
-	char buf[4096], packet[4096];
+	unsigned char buf[4096], packet[4096];
 	int r = 0;
+	GPPortSettings settings;
 
 	GP_DEBUG ("Sending initialization sequence to the camera...");
+
+	/* Only serial connections need to be initialized. */
+	if (camera->port->type != GP_PORT_SERIAL)
+		return (GP_OK);
+
+	/*
+	 * It seems that the initialization sequence needs to be sent at
+	 * 19200.
+	 */
+	CHECK (gp_port_get_settings (camera->port, &settings));
+	if (settings->serial->speed != 19200) {
+		settings->serial->speed = 19200;
+		CHECK (gp_port_set_settings (camera->port, settings));
+	}
 
 	packet[0] = NUL;
 
@@ -742,7 +767,8 @@ sierra_init (Camera *camera, GPContext *context)
 	}
 }
 
-int sierra_set_speed (Camera *camera, int speed, GPContext *context) 
+int
+sierra_set_speed (Camera *camera, int speed, GPContext *context) 
 {
 	GPPortSettings settings;
 
@@ -881,15 +907,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 
 		case SIERRA_PACKET_SESSION_END:
 		case SIERRA_PACKET_SESSION_ERROR:
-
-			/*
-			 * If this code is reached, the camera has told us
-			 * that it closed the session
-			 * (SIERRA_PACKET_SESSION_END) or that the
-			 * session has already been closed
-			 * (SIERRA_PACKET_SESSION_ERROR). We
-			 * need to reinitialize and try again.
-			 */
+		case SIERRA_PACKET_WRONG_SPEED:
 			if (++r > 2) {
 				gp_context_error (context, _("Too many "
 					"retries failed."));
