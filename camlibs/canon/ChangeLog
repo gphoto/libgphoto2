@@ -1,6 +1,31 @@
+2004-12-19  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.[ch]: Added PowerShot SD70.
+
+2004-12-16  Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* canon.[ch]: Added new protocol class 6 for EOS 20D (not yet implemented).
+	              Removed macro IS_EOS, which is superseded by CANON_CLASS_4.
+
+2004-12-16  Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* urb-interpret: Added some interpretation of interrupt read packets.
+	 
+	* urb-interpret: Updated to interpret output from SniffUSB v1.8, making it
+	  incompatible with (some) older versions. To interpret output of older versions,
+	  use an older version of urb-interpret.
+
 2004-11-17  Marcus Meissner  <marcus@jet.franken.de>
 
 	* canon.[ch]: Added PowerShot SD20.
+
+2004-11-17  Stephen H. Westin <westin@graphics.cornell.edu>
+
+	* canon.[ch]: Significant restructuring: there are now only 5
+	  types of camera, so we should be able to add new cameras without modifying
+	  canon.h.
+
+	  Cleaned up a few type warnings in log message calls.
 
 2004-10-20  Hubert Figuiere  <hfiguiere@teaser.fr>
 
