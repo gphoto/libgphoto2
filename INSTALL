@@ -20,7 +20,8 @@ The installation procedure should be quite simple:
    If you have difficulties building on FreeBSD, try --disable-nls.
 
    The following software components are optional, and will improve the
-   command-line client's functionality if present:
+   libraries' and/or command-line client's functionality if present:
+    libusb -- Universal Serial Bus camera support
 	gettext (ver. >= 0.10.35) -- internationalization using shared library
 	cdk (ver. >= 4.9.10) -- camera configuration dialogs
 	aalib -- picture preview
