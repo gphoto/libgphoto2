@@ -152,8 +152,11 @@ GtkIconListItem *gtk_icon_list_get_active_icon  (GtkIconList *iconlist);
 GtkWidget 	*gtk_icon_list_get_entry	(GtkIconListItem *item);
 GtkWidget 	*gtk_icon_list_get_pixmap	(GtkIconListItem *item);
 void		gtk_icon_list_set_pixmap	(GtkIconListItem *item,
+						 GtkWidget *pixmap);
+/*
 						 GdkPixmap *pixmap,
 						 GdkBitmap *bitmap);
+*/
 void 		gtk_icon_list_set_label		(GtkIconList *iconlist,
                                                  GtkIconListItem *item, 
 						 const gchar *label);

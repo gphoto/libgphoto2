@@ -218,11 +218,14 @@ void folder_set (GtkWidget *tree_item, gpointer data) {
 	char buf[1024];
 	char *path = (char*)gtk_object_get_data(GTK_OBJECT(tree_item), "path");
 
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
+
 	sprintf(buf, "camera folder path = %s", path);
 	debug_print(buf);
 
 	if (gp_folder_set(path)==GP_ERROR) {
-		sprintf(buf, "Could not open folder\n%s", path);
+		sprintf(buf, "Could not open folder:\n%s", path);
 		gp_message(buf);
 		return;
 	}
@@ -409,7 +412,7 @@ void camera_select_update_camera(GtkWidget *entry, gpointer data) {
 				append=1;
 			if ((info.type == GP_PORT_IEEE1394) && (a.ieee1394))
 				append=1;
-			if ((info.type == GP_PORT_SOCKET) && (a.socket))
+			if ((info.type == GP_PORT_NETWORK) && (a.network))
 				append=1;
 			if ((info.type == GP_PORT_USB) && (a.usb))
 				append=1;
@@ -446,7 +449,7 @@ void camera_select_update_camera(GtkWidget *entry, gpointer data) {
 
 	gtk_widget_set_sensitive(GTK_WIDGET(port), FALSE);
 	gtk_widget_set_sensitive(GTK_WIDGET(speed), FALSE);
-	if (a.serial || a.parallel || a.ieee1394 || a.socket || a.usb)
+	if (a.serial || a.parallel || a.ieee1394 || a.network || a.usb)
 		gtk_widget_set_sensitive(GTK_WIDGET(port), TRUE);
 }
 
@@ -551,43 +554,57 @@ camera_select_again:
 	gtk_widget_destroy(window);
 }
 
-int resize=0;
+void camera_index_common(int thumbnails) {
 
-void camera_index_thumbnails() {
-	
-	GtkWidget *icon_list, *icon, *pixmap;
+	CameraFile *f;
+	GtkWidget *icon_list;
 	GtkIconListItem *item;
+	GdkPixmap *pixmap;
+	GdkBitmap *bitmap;
 	char buf[1024];
-	int x;
-
-	debug_print("camera index thumbnails");
+	int x, count=0;
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
 	icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
+	GTK_ICON_LIST(icon_list)->is_editable = FALSE;
 
-	if (resize) {
-		gtk_widget_hide(icon_list);
-		gtk_widget_show(icon_list);
+	if ((count = gp_file_count())==GP_ERROR) {
+		gp_message("Could not retrieve the number of pictures");
 		return;
 	}
 
-	GTK_ICON_LIST(icon_list)->is_editable = FALSE;
-	for (x=0; x<10; x++) {
-		sprintf(buf,"File #%i", x);
+	gtk_icon_list_clear (GTK_ICON_LIST(icon_list));
+	for (x=0; x<count; x++) {
+		sprintf(buf,"#%04i", x);
 		item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
 			no_thumbnail_xpm,buf,NULL);
+		if (thumbnails) {
+			f = gp_file_new();
+			if (gp_file_get(x, f) == GP_OK) {
+				gdk_image_new_from_data(f->data,f->size,1,&pixmap,&bitmap);
+				gtk_pixmap_set(GTK_PIXMAP(item->pixmap), pixmap, bitmap);
+			}
+			gp_file_free(f);
+		}
+		idle();
+		gp_progress(100.0*(float)x/(float)count);
 	}
-	resize=1;
+}
+
+void camera_index_thumbnails() {
+
+	debug_print("camera index thumbnails");
+
+	camera_index_common(1);
 }
 
 void camera_index_no_thumbnails() {
+
 	debug_print("camera index no thumbnails");
 
-	if (!gp_gtk_camera_init)
-		if (camera_set()==GP_ERROR) {return;}
-
+	camera_index_common(0);
 }
 
 void camera_download_thumbnails() {

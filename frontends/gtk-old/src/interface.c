@@ -15,6 +15,7 @@
 #include <gtk/gtk.h>
 #include <gphoto2.h>
 
+#include "globals.h"
 #include "gtkiconlist.h"
 #include "callbacks.h"
 #include "interface.h"
@@ -60,6 +61,10 @@ int gp_interface_status(char *message) {
 }
 
 int gp_interface_progress(float percentage) {
+
+	GtkWidget *progress = (GtkWidget*)lookup_widget(gp_gtk_main_window, "progress_bar");
+
+	gtk_progress_set_percentage(GTK_PROGRESS(progress), percentage/100.0);
 
 	return (GP_OK);
 }

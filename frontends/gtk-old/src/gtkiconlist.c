@@ -1399,12 +1399,18 @@ gtk_icon_list_get_pixmap(GtkIconListItem *item)
 
 void
 gtk_icon_list_set_pixmap(GtkIconListItem *item, 
+			 GtkWidget *pixmap)
+/*
 			 GdkPixmap *pixmap, 
 			 GdkBitmap *mask)
+*/
 {
 
-  if(item->pixmap) gtk_widget_destroy(item->pixmap);  
+  if(item->pixmap) gtk_widget_destroy(item->pixmap);
+  item->pixmap = pixmap;
+/*
   item->pixmap = gtk_pixmap_new(pixmap, mask);
+*/
 
 }
 
