@@ -503,18 +503,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("get_file_func: folder '%s' filename '%s' (i.e. '%s'), getting %s",
 		  folder, filename, canon_path, filetype);
 
-	/* preparation, if it is _PREVIEW or _EXIF we get the thumbnail name */
-	if ((type == GP_FILE_TYPE_PREVIEW) || (type == GP_FILE_TYPE_EXIF)) {
-		thumbname = canon_int_filename2thumbname (camera, canon_path);
-		if (thumbname == NULL) {
-			gp_context_error (context,
-					  _("No thumbnail could be found for %s"),
-					  canon_path);
-			return(GP_ERROR_FILE_NOT_FOUND);
-		}
-	}
-
-	/* preparation, if it is _AUDIO we get the audio file name */
+	/* preparation, if it is _AUDIO we convert the file name to
+	 * the corresponding audio file name. If the name of the audio
+	 * file is supplied, this step will be a no-op. */
 	if (type == GP_FILE_TYPE_AUDIO) {
 		audioname = canon_int_filename2audioname (camera, canon_path);
 		if (audioname == NULL) {
@@ -564,9 +555,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 
 		case GP_FILE_TYPE_PREVIEW:
+			thumbname = canon_int_filename2thumbname (camera, canon_path);
+			if (thumbname == NULL) {
+				/* no thumbnail available */
+				GP_DEBUG (_("%s is a file type for which no thumbnail is provided"));
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
 #ifdef HAVE_EXIF
-			/* Check if we have libexif, it is an image and it is not
-			 * a PS A70 (which does not support EXIF), return not
+			/* Check if we have libexif, it is an image
+			 * and it is not a PowerShot Pro 70 (which
+			 * does not support EXIF), return not
 			 * supported here so that gPhoto2 query for
 			 * GP_FILE_TYPE_EXIF instead
 			 */
@@ -591,9 +589,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		case GP_FILE_TYPE_EXIF:
 #ifdef HAVE_EXIF
-			/* the PS A70 does not support EXIF */
+			/* the PowerShot Pro 70 does not support EXIF */
 			if (camera->pl->md->model == CANON_PS_PRO70)
 				return (GP_ERROR_NOT_SUPPORTED);
+
+			thumbname = canon_int_filename2thumbname (camera, canon_path);
+			if (thumbname == NULL) {
+				/* no thumbnail available */
+				GP_DEBUG (_("%s is a file type for which no thumbnail is provided"));
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
 
 			if (*thumbname == '\0') {
 				/* file internal thumbnail with EXIF data */
