@@ -210,10 +210,15 @@ void folder_set (GtkWidget *tree_item, gpointer data) {
 
 	sprintf(buf, "camera folder path = %s", path);
 	debug_print(buf);
-printf("%s \n", buf);
 
+		
 }
 
+void folder_expand (GtkWidget *tree_item, gpointer data) {
+
+	GtkWidget *tree, *hbox, *pixmap
+
+}
 
 /* Camera operations */
 /* ----------------------------------------------------------- */

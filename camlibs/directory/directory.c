@@ -80,7 +80,7 @@ int camera_folder_list(char *folder_name, CameraFolderInfo *list) {
 	struct stat st;
 	char *ch;
 	char buf[1024];
-	int has_files=0, count=0;
+	int count=0;
 
 	if ((d = opendir(folder_name))==NULL) {
 		sprintf(buf, "Could not access folder %s", folder_name);
@@ -94,14 +94,10 @@ int camera_folder_list(char *folder_name, CameraFolderInfo *list) {
 			if (stat(buf, &st)==0) {
 				if (S_ISDIR(st.st_mode)) {
 					strcpy(list[count++].name, de->d_name);
-				} else  {
-					has_files = 1;
 				}
 			}
 		}
 	}
-	if (has_files)
-		strcpy(list[count++].name, "<photos>");
 
 	return (count);
 }

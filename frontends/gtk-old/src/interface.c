@@ -978,6 +978,7 @@ create_main_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_object_set_data (GTK_OBJECT (tree_item), "path", (gpointer)"/");
   gtk_signal_connect(GTK_OBJECT(tree_item), "select", GTK_SIGNAL_FUNC(folder_set),NULL);
+  gtk_signal_connect(GTK_OBJECT(tree_item), "expand", GTK_SIGNAL_FUNC(folder_expand),NULL);
   gtk_widget_show (tree_item);
   gtk_tree_append(GTK_TREE(tree1), tree_item);
 

@@ -45,11 +45,9 @@ int camera_exit 		();
 int camera_folder_list		(char *folder_path, 
 				 CameraFolderInfo *folder);
 	/* Returns a list of sub-folders from the 'folder_name'	*/
-	/* folder. The first call should be with folder_name	*/
+	/* folder. The first call will be with folder_name	*/
 	/* set to "/" to get a listing of all the top-level	*/
-	/* top-level folders. If a folder has pictures in it,   */
-	/* one of the entries in the list should be "<photos>"  */
-	/* It should return the number of entries.		*/
+	/* top-level folders.					*/
 
 int camera_folder_set		(char *folder_path);
 	/* Sets the current folder path on the camera to 	*/

@@ -32,6 +32,7 @@ void select_none();
 
 /* Folder operations */
 void folder_set (GtkWidget *tree_item, gpointer data);
+void folder_expand (GtkWidget *tree_item, gpointer data);
 
 /* Camera operations */
 void camera_select();
