@@ -46,26 +46,43 @@
  *   battery vs. mains, and whether the battery is low.
  * @CANON_USB_FUNCTION_GET_DIRENT: Get directory entries
  * @CANON_USB_FUNCTION_DELETE_FILE: Delete file
- * @CANON_USB_FUNCTION_SET_ATTR: Command to set the attributes of a file on the camera
- *   (e.g. downloaded, protect from delete).
- * @CANON_USB_FUNCTION_GET_PIC_ABILITIES: Command to "get picture abilities", which
- *   seems to be a list of the different sizes and quality of images that are available on
- *   this camera. Not implemented (and will cause an error) on the EOS cameras
- *   or on newer PowerShot cameras such as S45, G3, G5.
- * @CANON_USB_FUNCTION_GENERIC_LOCK_KEYS: Command to lock keys (and turn on "PC" indicator)
- *   on non-EOS cameras.
+ * @CANON_USB_FUNCTION_SET_ATTR: Command to set the attributes of a
+ *   file on the camera (e.g. downloaded, protect from delete).
+ * @CANON_USB_FUNCTION_GET_PIC_ABILITIES: Command to "get picture
+ *   abilities", which seems to be a list of the different sizes and
+ *   quality of images that are available on this camera. Not
+ *   implemented (and will cause an error) on the EOS cameras or on
+ *   newer PowerShot cameras such as S45, G3, G5.
+ * @CANON_USB_FUNCTION_GENERIC_LOCK_KEYS: Command to lock keys (and
+ *   turn on "PC" indicator) on non-EOS cameras.
  * @CANON_USB_FUNCTION_EOS_LOCK_KEYS: Lock keys (EOS cameras)
  * @CANON_USB_FUNCTION_EOS_UNLOCK_KEYS: Unlock keys (EOS cameras)
- * @CANON_USB_FUNCTION_RETRIEVE_CAPTURE: Command to retrieve the last image captured,
- *   depending on the transfer mode set via %CANON_USB_FUNCTION_CONTROL_CAMERA with
- *   subcommand %CANON_USB_CONTROL_SET_TRANSFER_MODE.
- * @CANON_USB_FUNCTION_RETRIEVE_PREVIEW: Command to retrieve a preview image.
- * @CANON_USB_FUNCTION_CONTROL_CAMERA: Remote camera control (with many subcodes)
- * @CANON_USB_FUNCTION_UNKNOWN_FUNCTION: Don't know what this is for; it has been sighted in USB
- *   trace logs for an EOS D30, but not for a D60 or for any PowerShot camera.
+ * @CANON_USB_FUNCTION_RETRIEVE_CAPTURE: Command to retrieve the last
+ *   image captured, depending on the transfer mode set via
+ *   %CANON_USB_FUNCTION_CONTROL_CAMERA with subcommand
+ *   %CANON_USB_CONTROL_SET_TRANSFER_MODE.
+ * @CANON_USB_FUNCTION_RETRIEVE_PREVIEW: Command to retrieve a preview
+ *   image.
+ * @CANON_USB_FUNCTION_CONTROL_CAMERA: Remote camera control (with
+ *   many subcodes)
+ * @CANON_USB_FUNCTION_UNKNOWN_FUNCTION: Don't know what this is for;
+ *   it has been sighted in USB trace logs for an EOS D30, but not for
+ *   a D60 or for any PowerShot camera.
  * @CANON_USB_FUNCTION_EOS_GET_BODY_ID: Command to read the body ID (serial number)
  *   from an EOS camera.
  * @CANON_USB_FUNCTION_SET_FILE_TIME: Set file time
+ * @CANON_USB_FUNCTION_20D_UNKNOWN_1:  First seen with EOS 20D, not yet understood.
+ * @CANON_USB_FUNCTION_20D_UNKNOWN_2:  First seen with EOS 20D, not yet understood.
+ * @CANON_USB_FUNCTION_EOS_GET_BODY_ID_2: Same function as
+ *   %CANON_USB_FUNCTION_EOS_GET_BODY_ID, but first seen on EOS 20D.
+ * @CANON_USB_FUNCTION_GET_PIC_ABILITIES_2: Same function as
+ *   %CANON_USB_FUNCTION_GET_PIC_ABILITIES, but first seen on EOS 20D.
+ * @CANON_USB_FUNCTION_20D_UNKNOWN_3: First seen with EOS 20D, not yet
+ *   understood.
+ * @CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2: Same function as
+ *   %CANON_USB_FUNCTION_RETRIEVE_CAPTURE, but first seen on EOS 20D.
+ * @CANON_USB_FUNCTION_20D_UNKNOWN_4: First seen with EOS 20D, not yet
+ *   understood.
  *
  * Codes to give to canon_usb_dialogue() or canon_usb_long_dialogue()
  * to select which command to issue to the camera. See the protocol
@@ -95,7 +112,14 @@ typedef enum {
 	CANON_USB_FUNCTION_CONTROL_CAMERA,
 	CANON_USB_FUNCTION_UNKNOWN_FUNCTION,
 	CANON_USB_FUNCTION_EOS_GET_BODY_ID,
-	CANON_USB_FUNCTION_SET_FILE_TIME
+	CANON_USB_FUNCTION_SET_FILE_TIME,
+	CANON_USB_FUNCTION_20D_UNKNOWN_1,
+	CANON_USB_FUNCTION_20D_UNKNOWN_2,
+	CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,
+	CANON_USB_FUNCTION_GET_PIC_ABILITIES_2,
+	CANON_USB_FUNCTION_20D_UNKNOWN_3,
+	CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2,
+	CANON_USB_FUNCTION_20D_UNKNOWN_4,
 } canonCommandIndex;
 
 /**
@@ -144,12 +168,12 @@ typedef enum {
 	CANON_USB_CONTROL_VIEWFINDER_START,
 	CANON_USB_CONTROL_VIEWFINDER_STOP,
 	CANON_USB_CONTROL_GET_AVAILABLE_SHOT,
-	CANON_USB_CONTROL_SET_CUSTOM_FUNC, /* Not yet seen in USB trace */
+	CANON_USB_CONTROL_SET_CUSTOM_FUNC,	/* Not yet seen in USB trace */
 	CANON_USB_CONTROL_GET_CUSTOM_FUNC,
-	CANON_USB_CONTROL_GET_EXT_PARAMS_VER, /* Not yet seen in USB trace */
-	CANON_USB_CONTROL_SET_EXT_PARAMS, /* Not yet seen in USB trace */
-	CANON_USB_CONTROL_SELECT_CAM_OUTPUT, /* Not yet seen in USB trace */
-	CANON_USB_CONTROL_DO_AE_AF_AWB, /* Not yet seen in USB trace */
+	CANON_USB_CONTROL_GET_EXT_PARAMS_VER,	/* Not yet seen in USB trace */
+	CANON_USB_CONTROL_SET_EXT_PARAMS,	/* Not yet seen in USB trace */
+	CANON_USB_CONTROL_SELECT_CAM_OUTPUT,	/* Not yet seen in USB trace */
+	CANON_USB_CONTROL_DO_AE_AF_AWB,		/* Not yet seen in USB trace */
 } canonSubcommandIndex;
 
 
@@ -206,6 +230,13 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_EOS_GET_BODY_ID,	"EOS get body ID",		0x1d, 0x12, 0x201,	0x58},
 	{CANON_USB_FUNCTION_GET_PIC_ABILITIES,	"Get picture abilities",	0x1f, 0x12, 0x201,	0x384},
 	{CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,	"Lock keys and turn off LCD",	0x20, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_20D_UNKNOWN_1,	"Unknown EOS 20D function",	0x21, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_20D_UNKNOWN_2,	"Unknown EOS 20D function",	0x22, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,	"New EOS get body ID",		0x23, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "New get picture abilities",	0x24, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_20D_UNKNOWN_3,	"Unknown EOS 20D function",	0x25, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2, "New download a captured image", 0x26, 0x12, 0x202,	0x54},
+	{CANON_USB_FUNCTION_20D_UNKNOWN_4,	"Unknown EOS 20D function",	0x36, 0x12, 0x201,	0x54},
 	{ 0 }
 };
 
