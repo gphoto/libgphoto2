@@ -30,40 +30,84 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define PDC700_INIT	0x01
+#define PDC700_INFO	0x02
+
+#define PDC700_BAUD	0x04
+#define PDC700_PICINFO	0x05
+#define PDC700_THUMB	0x06
+#define PDC700_PIC	0x07
+
+
+#define PDC700_FIRST	0x00
+#define PDC700_DONE	0x01
+#define PDC700_LAST	0x02
+
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
 
+/*
+ * Every command sent to the camera begins with 0x40 followed by two bytes
+ * indicating the number of following bytes. Then follows the byte that
+ * indicates the command (see above defines), perhaps some parameters. The
+ * last byte is the checksum, the sum of all bytes between length bytes
+ * (3rd one) and the last one (checksum).
+ */
 static int
 calc_checksum (unsigned char *cmd, int len)
 {
-	int loop;
+	int i;
 	unsigned char checksum;
 
-	for (checksum = 0, loop = 3; loop < len; loop++)
-		checksum += cmd[loop];
+	for (checksum = 0, i = 0; i < len; i++)
+		checksum += cmd[i];
 
 	return (checksum);
 }
 
 static int
-pdc700_read (CameraPort *port, unsigned char *buf, int *len)
+pdc700_read (CameraPort *port, unsigned char *cmd, int cmd_len,
+	     unsigned char *buf, int *buf_len, int *status)
 {
 	unsigned char header[3], c;
 	int checksum;
 
-	/* Read the header */
+	/* Finish the command and send it */
+	cmd[0] = 0x40;
+	cmd[1] = (cmd_len - 3) >> 8;
+	cmd[2] = (cmd_len - 3) & 0xff;
+	cmd[cmd_len - 1] = calc_checksum (cmd + 3, cmd_len - 1 - 3);
+	CHECK_RESULT (gp_port_write (port, cmd, cmd_len));
+
+	/*
+	 * Read the header (0x40 plus 2 bytes indicating how many bytes
+	 * will follow besides checksum, command confirmation and last packet
+	 * identifier)
+	 */
 	CHECK_RESULT (gp_port_read (port, header, 3));
 	if (header[0] != 0x40)
 		return (GP_ERROR_CORRUPTED_DATA);
-	*len = (header[2] << 8) | header [1];
-	*len += 2;
+	*buf_len = (header[2] << 8) | header [1];
+
+	/* Read one byte and check if the response is for our command */
+	CHECK_RESULT (gp_port_read (port, &c, 1));
+	if (c != (0x80 | cmd[3]))
+		return (GP_ERROR_CORRUPTED_DATA);
+
+	/*
+	 * Read another byte which indicates if other packets will follow 
+	 * (in case of picture transmission)
+	 */
+	CHECK_RESULT (gp_port_read (port, &c, 1));
+	*status = c;
 
 	/* Read the actual data */
-	CHECK_RESULT (gp_port_read (port, buf, *len));
+	if (*buf_len)
+		CHECK_RESULT (gp_port_read (port, buf, *buf_len));
 
 	/* Read the checksum */
 	CHECK_RESULT (gp_port_read (port, &c, 1));
-	checksum = calc_checksum (buf, *len);
+	checksum = calc_checksum (buf, *buf_len - 1);
 	if (checksum != c)
 		return (GP_ERROR_CORRUPTED_DATA);
 
@@ -75,8 +119,8 @@ pdc700_baud (CameraPort *port, int baud)
 {
 	unsigned char b;
 	unsigned char cmd[6];
-	unsigned char buf[2];
-	int len;
+	unsigned char buf[2048];
+	int status, buf_len;
 
 	switch (baud) {
 	case 57600:
@@ -94,17 +138,10 @@ pdc700_baud (CameraPort *port, int baud)
 		break;
 	}
 
-	cmd[0] = 0x40;
-	cmd[1] = (6 - 3) >> 8;
-	cmd[2] = (6 - 3) & 0xff;
-	cmd[3] = 0x04;				/* Change baud rate */
+	cmd[3] = PDC700_BAUD;
 	cmd[4] = b;
-	cmd[5] = calc_checksum (cmd, 5);
-	CHECK_RESULT (gp_port_write (port, cmd, 6));
-	CHECK_RESULT (pdc700_read (port, buf, &len));
-
-	if ((buf[0] != 0x84) ||
-	    (buf[1] != 0x01))
+	CHECK_RESULT (pdc700_read (port, cmd, 6, buf, &buf_len, &status));
+	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	return (GP_OK);
@@ -113,20 +150,13 @@ pdc700_baud (CameraPort *port, int baud)
 static int
 pdc700_init (CameraPort *port)
 {
-	int len;
+	int status, buf_len;
 	unsigned char cmd[5];
-	unsigned char buf[2];
+	unsigned char buf[2048];
 
-	cmd[0] = 0x40;
-	cmd[1] = (5 - 3) >> 8;
-	cmd[2] = (5 - 3) & 0xff;
-	cmd[3] = 0x01;			/* Init */
-	cmd[4] = calc_checksum (cmd, 4);
-	CHECK_RESULT (gp_port_write (port, cmd, sizeof (cmd)));
-	CHECK_RESULT (pdc700_read (port, buf, &len));
-
-	if ((buf[0] != 0x81) ||
-	    (buf[1] != 0x01))
+	cmd[3] = PDC700_INIT;
+	CHECK_RESULT (pdc700_read (port, cmd, 5, buf, &buf_len, &status));
+	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	return (GP_OK);
@@ -135,27 +165,20 @@ pdc700_init (CameraPort *port)
 static int
 pdc700_picinfo (CameraPort *port, int n, int *size_thumb, int *size_pic)
 {
-	int len;
+	int status, buf_len;
 	unsigned char cmd[7];
-	unsigned char buf[24];
+	unsigned char buf[2048];
 
-	cmd[0] = 0x40;
-	cmd[1] = (7 - 3) >> 8;			/* Size of command */
-	cmd[2] = (7 - 3) & 0xff;
-	cmd[3] = 0x05;				/* Picture info */
-	cmd[4] = n && 0xff;			/* Picture number */
+	cmd[3] = PDC700_PICINFO;
+	cmd[4] = n && 0xff;
 	cmd[5] = n >> 8;
-	cmd[6] = calc_checksum (cmd, 6);	/* Checksum */
-
-	CHECK_RESULT (gp_port_write (port, cmd, sizeof (cmd)));
-	CHECK_RESULT (pdc700_read (port, buf, &len));
-
-	if ((buf[0] != 0x85))
+	CHECK_RESULT (pdc700_read (port, cmd, 7, buf, &buf_len, &status));
+	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
-	*size_pic = buf[6] | (buf[7] << 8) | (buf[8] << 16) | (buf[9] << 24);
-	*size_thumb = buf[20] | (buf[21] <<  8) | (buf[22] << 16) |
-						  (buf[23] << 24);
+	*size_pic = buf[4] | (buf[5] << 8) | (buf[6] << 16) | (buf[7] << 24);
+	*size_thumb = buf[18] | (buf[19] <<  8) | (buf[20] << 16) |
+						  (buf[21] << 24);
 
 	return (GP_OK);
 }
@@ -163,26 +186,19 @@ pdc700_picinfo (CameraPort *port, int n, int *size_thumb, int *size_pic)
 static int
 pdc700_num (CameraPort *port, int *num, int *num_free)
 {
-	int len;
-	unsigned char buf[22];
+	int status, buf_len;
+	unsigned char buf[2048];
 	unsigned char cmd[5];
 
-	cmd[0] = 0x40;
-	cmd[1] = (5 - 3) >> 8;
-	cmd[2] = (5 - 3) & 0xff;
-	cmd[3] = 0x02;				/* Get camera info */
-	cmd[4] = calc_checksum (cmd, 4);
-	CHECK_RESULT (gp_port_write (port, cmd, sizeof (cmd)));
-	CHECK_RESULT (pdc700_read (port, buf, &len));
-
-	if ((buf[0] != 0x82) ||
-	    (buf[1] != 0x01))
+	cmd[3] = PDC700_INFO;
+	CHECK_RESULT (pdc700_read (port, cmd, 5, buf, &buf_len, &status));
+	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	if (num)
-		*num = buf[18] | (buf[19] << 8);
+		*num = buf[16] | (buf[17] << 8);
 	if (num_free)
-		*num_free = buf[20] | (buf[21] << 8);
+		*num_free = buf[18] | (buf[19] << 8);
 
 	return (GP_OK);
 }
@@ -193,54 +209,43 @@ pdc700_pic (CameraPort *port, int n, unsigned char **data, int *size,
 {
 	unsigned char cmd[8];
 	unsigned char buf[2048];
-	int len;
-	int size_thumb, size_pic, done, i;
+	int len, status;
+	int size_thumb, size_pic, i;
 	unsigned char sequence_num;
 
-	cmd[0] = 0x40;
-	cmd[1] = (8 - 3) >> 8;
-	cmd[2] = (8 - 3) & 0xff;
-	cmd[3] = (thumb) ? 0x06 : 0x07;		/* Preview / Picture */
-	cmd[4] = 0x00;
-	cmd[5] = n & 0xff;
-	cmd[6] = n >> 8;
-	cmd[7] = calc_checksum (cmd, 7);
-	CHECK_RESULT (gp_port_write (port, cmd, 8));
-
-	/* Picture size? */
+	/* Picture size? Allocate the memory */
 	CHECK_RESULT (pdc700_picinfo (port, n, &size_thumb, &size_pic));
-
-	/* Allocate the memory */
 	*data = malloc (sizeof (char) * ((thumb) ? size_thumb : size_pic));
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
 
-	/* Get picture data */
-	done = 0;
-	for (i = 0; !done;) {
-		CHECK_RESULT_FREE (pdc700_read (port, buf, &len), *data);
-		if (buf[0] != (0x80 | ((thumb) ? 0x06 : 0x07))) {
-			free (*data);
-			return (GP_ERROR_CORRUPTED_DATA);
-		}
+	/* Get first packet and copy the data (without sequence number) */
+	cmd[3] = (thumb) ? PDC700_THUMB : PDC700_PIC;
+	cmd[4] = PDC700_FIRST;
+	cmd[5] = n & 0xff;
+	cmd[6] = n >> 8;
+	CHECK_RESULT_FREE (pdc700_read (port, cmd, 8,
+					buf, &len, &status), *data);
+	sequence_num = buf[0];
+	memcpy (*data, buf + 1, len - 1);
 
-		/* Is this the last packet? */
-		if (buf[1] == 0x02)
-			done = 1;
-		sequence_num = buf[2];
-		memcpy (*data + i, &buf[3], len - 4);
-		i += (len - 4);
-
-		/* Request the next packet */
-		cmd[0] = 0x40;
-		cmd[1] = (7 - 3) >> 8;
-		cmd[2] = (7 - 3) & 0xff;
-		cmd[3] = (thumb) ? 0x06 : 0x07;		/* Preview / Picture */
-		cmd[4] = (done) ? 0x02 : 0x01;		/* Stop / Cont. */
+	/* Get the following packets */
+	i = len - 1;
+	while (status != PDC700_LAST) {
+		cmd[4] = PDC700_DONE;
 		cmd[5] = sequence_num;
-		cmd[6] = calc_checksum (cmd, 6);
-		CHECK_RESULT_FREE (gp_port_write (port, cmd, 7), *data);
+		CHECK_RESULT_FREE (pdc700_read (port, cmd, 7,
+						buf, &len, &status), *data);
+		sequence_num = buf[0];
+		memcpy (*data + i, buf + 1, len - 1);
+		i += (len - 1);
 	}
+
+	/* Terminate transfer */
+	cmd[4] = PDC700_LAST;
+	cmd[5] = sequence_num;
+	CHECK_RESULT_FREE (pdc700_read (port, cmd, 7, buf, &len, &status),
+			   *data);
 
 	return (GP_OK);
 }
