@@ -1,3 +1,9 @@
+2002-03-19  Greg Ingram <ingram@symsys.com>
+
+	* pdc700.c: Fix off-by-one thinko in get_config where the 
+	  camera's month datum is one-based but tm.tm_mon is
+	  zero-based.
+
 2002-01-15  Lutz Müller <lutz@users.sourceforge.net>
 
 	* pdc700.c: Introduced a bug in last fix...

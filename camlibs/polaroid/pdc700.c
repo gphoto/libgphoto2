@@ -956,7 +956,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	/* Date and time */
 	tm.tm_year = info.date.year +
 		((!strcmp (info.version, "v2.45")) ? 1980 : 2000) - 1900;
-	tm.tm_mon = info.date.month;
+	tm.tm_mon = info.date.month - 1;
 	tm.tm_mday = info.date.day;
 	tm.tm_hour = info.date.hour;
 	tm.tm_min = info.date.minute;
