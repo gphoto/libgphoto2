@@ -169,22 +169,25 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 		CHECK( gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_THUMBSIZE, picNum, buf, 14) );
 		thumbsize = le16atoh( &buf[8] );
 		
-		GP_DEBUG("file_type: %d.", file_type);
-
-		/* XXX having some trouble getting both jpeg and tiff thumbnails to work */
 		/* add 1 to file size only for jpeg thumbnails */
-		/* if(file_type == 1) { */
+		if(file_type == 1) { 
+			GP_DEBUG("thumbnail file_type: %s.", "jpeg");
 			size = (uint32_t)thumbsize + 1;
-		/*
-		} else {
+		} else if(file_type == 2) {
+			/* NOTE: tiff thumbnails are 160x120 pixel 8bpc rgb images, NOT jpegs... */
+			GP_DEBUG("thumbnail file_type: %s.", "tiff");
 			size = (uint32_t)thumbsize;
+		} else {
+			GP_DEBUG("Unknown thumbnail file format!");
+			return(GP_ERROR_NOT_SUPPORTED);
 		}
-		*/
 
-	} else {
+	} else if(type == GP_FILE_TYPE_NORMAL) {
 		CHECK( gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_FILESIZE, picNum, buf, 26) );
-		/* FIXME this is probably wrong on big-endian (camera being 16-bit) */
 		size = le32atoh( &buf[18] );
+	} else {
+		GP_DEBUG("Unsupported file type!");
+		return(GP_ERROR_NOT_SUPPORTED);
 	}
 
 	GP_DEBUG("size: %d 0x%x", size, size);
