@@ -109,7 +109,7 @@ ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 			if (data[i] == 0x10)
 				break;
 		}
-		CR (gp_port_write (camera->port, (char *) data + w, i - w + 1));
+		CR (gp_port_write (camera->port, data + w, i - w + 1));
 		if (data[i] == 0x10)
 			CR (gp_port_write (camera->port, "\x10", 1));
 		w = i + 1;
