@@ -1305,23 +1305,23 @@ main (int argc, char **argv)
         textdomain (PACKAGE);
 
         /* Initialize the globals */
-        init_globals();
+        init_globals ();
 
-        signal(SIGINT, signal_exit);
+        signal (SIGINT, signal_exit);
 
         /* Count the number of command-line options we have */
-        while ((strlen(option[glob_option_count].short_id)>0) ||
-               (strlen(option[glob_option_count].long_id)>0)) {
+        while ((strlen(option[glob_option_count].short_id) > 0) ||
+               (strlen(option[glob_option_count].long_id)  > 0)) {
                 glob_option_count++;
         }
 
         /* Peek ahead: Turn on quiet if they gave the flag */
-        if (option_is_present("q", argc, argv)==GP_OK)
-                glob_quiet=1;
+        if (option_is_present ("q", argc, argv) == GP_OK)
+                glob_quiet = 1;
 
         /* Peek ahead: Check to see if we need to turn on debugging output */
-        if (option_is_present("debug", argc, argv)==GP_OK)
-                glob_debug=GP_DEBUG_HIGH;
+        if (option_is_present ("debug", argc, argv) == GP_OK)
+                glob_debug = GP_DEBUG_HIGH;
 
 #ifdef OS2 /*check if environment is set otherwise quit*/
         if(CAMLIBS==NULL)
@@ -1344,14 +1344,14 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 #endif
 
         /* Peek ahead: Make sure we were called correctly */
-        if ((argc == 1)||(verify_options(argc, argv) != GP_OK)) {
+        if ((argc == 1) || (verify_options (argc, argv) != GP_OK)) {
                 if (!glob_quiet)
-                        usage();
-                exit(EXIT_FAILURE);
+                        usage ();
+                exit (EXIT_FAILURE);
         }
 
 	gp_camera_set_error (glob_camera, NULL);
-	result = execute_options(argc, argv);
+	result = execute_options (argc, argv);
         if (result < 0) {
 		switch (result) {
 		case GP_ERROR_CANCEL:
@@ -1387,6 +1387,12 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 				printf ("\n\n");
 			}
 #endif
+
+			/* Unref the camera and exit */
+			if (glob_camera) {
+				gp_camera_unref (glob_camera);
+				glob_camera = NULL;
+			}
 			exit (EXIT_FAILURE);
 		}
 	}
