@@ -1,3 +1,8 @@
+2002-05-23  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (sierra_init): Don't use sierra_read_packet_wait, 
+	  use sierra_read_packet and resend the request on GP_ERROR_TIMEOUT.
+
 2002-05-22  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c (sierra_init): Portmon logs show that the port

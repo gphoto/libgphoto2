@@ -733,7 +733,7 @@ int
 sierra_init (Camera *camera, GPContext *context) 
 {
 	unsigned char buf[4096], packet[4096];
-	int r = 0;
+	int ret, r = 0;
 	GPPortSettings settings;
 
 	GP_DEBUG ("Sending initialization sequence to the camera...");
@@ -745,6 +745,9 @@ sierra_init (Camera *camera, GPContext *context)
 	/*
 	 * It seems that the initialization sequence needs to be sent at
 	 * 19200. Portmon logs show:
+	 *  - IRP_MJ_CLEANUP
+	 *  - IRP_MJ_CLOSE
+	 *  - IRP_MJ_CREATE Options: Open
 	 *  - IOCTL_SERIAL_SET_BAUD_RATE Rate: 19200
 	 *  - IOCTL_SERIAL_SET_DTR
 	 *  - IOCTL_SERIAL_SET_LINE_CONTROL
@@ -755,21 +758,35 @@ sierra_init (Camera *camera, GPContext *context)
 	 *    Shake:9 Replace:80000080 XonLimit:2048 XoffLimit:512
 	 *  - IOCTL_SERIAL_SET_TIMEOUTS RI:0 RM:0 RC:500 WM:200 WC:800
 	 */
-	CHECK (gp_port_close (camera->port));
-	CHECK (gp_port_open (camera->port));
 	CHECK (gp_port_get_settings (camera->port, &settings));
 	if (settings.serial.speed != 19200) {
 		settings.serial.speed = 19200;
 		CHECK (gp_port_set_settings (camera->port, settings));
 	}
-	CHECK (gp_port_set_pin (camera->port, GP_PIN_DTR, 1));
+	CHECK (gp_port_set_pin (camera->port, GP_PIN_DTR, GP_LEVEL_HIGH));
 
 	packet[0] = NUL;
 
 	while (1) {
+
+		/* Send NUL */
 		CHECK (sierra_write_packet (camera, packet));
-		CHECK (sierra_read_packet_wait (camera, buf, context));
-		
+
+		/* Read the response */
+		ret = sierra_read_packet (camera, buf, context);
+		if (ret == GP_ERROR_TIMEOUT) {
+			if (++r > 2) {
+				gp_context_error (context,
+					_("Transmission timed out even after "
+					  "2 retries. Giving up..."));
+				return (GP_ERROR_TIMEOUT);
+			}
+			GP_DEBUG ("Retrying...");
+			continue;
+		}
+		CHECK (ret);
+
+		/* Interpret the response */
 		switch (buf[0]) {
 		case NAK:
 			return (GP_OK);
@@ -833,7 +850,7 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 	CHECK (gp_port_get_settings (camera->port, &settings));
 	settings.serial.speed = SierraSpeeds[i].bit_rate;
 	CHECK (gp_port_set_settings (camera->port, settings));
-	CHECK (gp_port_set_pin (camera->port, GP_PIN_DTR, 1));
+	CHECK (gp_port_set_pin (camera->port, GP_PIN_DTR, GP_LEVEL_HIGH));
 
 	GP_SYSTEM_SLEEP (10);
 	return GP_OK;
@@ -868,7 +885,9 @@ sierra_action (Camera *camera, SierraAction action, GPContext *context)
 	return GP_OK;
 }
 
-int sierra_set_int_register (Camera *camera, int reg, int value, GPContext *context) 
+int
+sierra_set_int_register (Camera *camera, int reg, int value,
+			 GPContext *context) 
 {
 	char p[4096];
 
