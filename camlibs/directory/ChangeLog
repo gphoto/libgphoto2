@@ -1,3 +1,8 @@
+2002-02-26  Lutz Müller <lutz@users.sourceforge.net>
+
+	* directory.c (delete_file_func): In case of error, tell the user
+	  what went wrong.
+
 2002-02-13  Dan Fandrich <dan@coneharvesters.com>
 
 	* directory.c: Now using MIME type macros.  Replaced // comment.

@@ -551,13 +551,19 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *file, void *data, GPContext *context)
 {
 	char path[2048];
+	int result;
 
 	if (strlen (folder) > 1)
 		snprintf (path, sizeof (path), "%s/%s", folder, file);
 	else
 		snprintf (path, sizeof (path), "/%s", file);
-	if (unlink (path))
+	result = unlink (path);
+	if (result) {
+		gp_context_error (context, _("Could not delete file '%s' "
+			"in folder '%s' (error code %i: %m)."),
+			file, folder, result);
 		return (GP_ERROR);
+	}
 
 	return (GP_OK);
 }
