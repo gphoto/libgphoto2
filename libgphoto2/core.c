@@ -8,6 +8,20 @@
 #include <config.h>
 #endif
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#      define N_(String) gettext_noop (String)
+#  else
+#      define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "core.h"
 #include "library.h"
 #include "settings.h"
@@ -34,6 +48,21 @@ CameraMessage  gp_fe_message  = NULL;
 CameraConfirm  gp_fe_confirm  = NULL;
 CameraPrompt   gp_fe_prompt   = NULL;
 
+static char *result_string[] = {
+	/* GP_OK			*/	N_("No error."),
+	/* GP_ERROR			*/	N_("Generic error."),
+	/* GP_ERROR_NONCRITICAL		*/	N_("Noncritical error (deprecated error message!)"),
+	/* GP_ERROR_BAD_PARAMETERS	*/	N_("Bad parameters"),
+	/* GP_ERROR_IO			*/	N_("I/O problem"),
+	/* GP_ERROR_CORRUPTED_DATA	*/	N_("Corrupted data"),
+	/* GP_ERROR_FILE_EXISTS		*/	N_("File exists"),
+	/* GP_ERROR_NO_MEMORY		*/	N_("Insufficient memory"),
+	/* GP_ERROR_MODEL_NOT_FOUND	*/	N_("Unknown model"),
+	/* GP_ERROR_NOT_SUPPORTED	*/	N_("Unsupported operation"),
+	/* GP_ERROR_DIRECTORY_NOT_FOUND	*/	N_("Directory not found"),
+	/* GP_ERROR_FILE_NOT_FOUND	*/	N_("File not found")
+};
+	
 int gp_init (int debug)
 {
         char buf[1024];
@@ -107,8 +136,8 @@ void gp_debug_printf(int level, char *id, char *format, ...)
 
 int gp_frontend_register(CameraStatus status, CameraProgress progress, 
 			 CameraMessage message, CameraConfirm confirm,
-			 CameraPrompt prompt) {
-
+			 CameraPrompt prompt) 
+{
 	gp_fe_status   = status;
 	gp_fe_progress = progress;
 	gp_fe_message  = message;
@@ -116,5 +145,20 @@ int gp_frontend_register(CameraStatus status, CameraProgress progress,
 	gp_fe_prompt   = prompt;
 
 	return (GP_OK);
+}
+
+char *gp_result_as_string (int result)
+{
+	/* Really an error? */
+	if (result >= 0) return _("Unknown error");
+
+	/* Camlib error? You should have called gp_camera_result_as_string... */
+	if (-result >= 100) return _("Unknown camera library error");
+
+	/* Do we have an error description? */
+	if (-result < (int) (sizeof (result_string) / sizeof (*result_string))) 
+		return _(result_string[-result]);
+
+	return _("Unknown error");
 }
 
