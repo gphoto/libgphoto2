@@ -81,18 +81,23 @@ int for_each_image_in_range(char *folder, char *range, image_action action, int 
 
 	memset(index, 0, MAX_IMAGE_NUMBER);
 	
-	if (parse_range(range, index) != GP_OK) {
+	if ((result = parse_range(range, index)) != GP_OK) {
 		cli_error_print("Invalid range");
-		return (GP_ERROR);
+		return (result);
 	}
 
-	if (gp_camera_file_list(glob_camera, &filelist, folder) != GP_OK)
-		return (GP_ERROR);
+	if ((result = gp_camera_file_list(glob_camera, &filelist, folder)) != GP_OK)
+		return (result);
 
 	for (max = MAX_IMAGE_NUMBER - 1; !index[max]; max--) {}
 	
-	if (gp_list_count(&filelist) < max + 1) 
-		cli_error_print("Picture number %i is too large. Available %i picture(s).", max + 1, gp_list_count(&filelist));
+	if ((result = gp_list_count(&filelist)) < 0)
+		return (result);
+		
+	if (result < max + 1) {
+		cli_error_print("Picture number %i is too large. Available %i picture(s).", max + 1, result);
+		return GP_ERROR_FILE_NOT_FOUND;
+	}
 	
 	if (reverse) {
 		for (i = max; 0 <= i; i--)
