@@ -26,7 +26,7 @@
 */
 
 
-/***********
+/*
  *  Conventions:
  *
  * "tag number" (tagnum) : ID number of a tag (see list just below).
@@ -42,20 +42,20 @@ static int exif_sizetab[13]={
   0,1,1,2,4,8,1,1,2,4,8,4,8
 };
 
-/**************************************************************/
-/* Foward declarations. move to exif.h if you want to export. */
-/**************************************************************/
+/*
+ * Foward declarations. move to exif.h if you want to export.
+ */
 int gpe_getvalue(unsigned char *data,int tagind);
 int gpe_datsize(unsigned char *data,int tagind);
 int gpe_tagnum( char *data,int tagind);
 int gpe_getintval(unsigned char *data, int tagnum);
 
-/**************************************************************/
-/*  Utility functions: get fields in little-endian format,    */
-/* initialize data structures, etc.                           */
-/**************************************************************/
+/*
+ *  Utility functions: get fields in little-endian format,
+ * initialize data structures, etc.
+ */
 
-/**
+/*
  * Convert to Intel-Endian number.
  *
  * data : pointer to the data to convert
@@ -75,7 +75,7 @@ long exif_get_lilend(unsigned char *data, int size){
   return(total);
 };
 
-/**
+/*
  * Convert to  signed Intel-Endian number
  */
 long exif_get_slilend(unsigned char *data, int size){
@@ -94,7 +94,7 @@ long exif_get_slilend(unsigned char *data, int size){
 };
 
 
-/**
+/*
  *  Return "value" of directory entry at tagind
  */
 int gpe_theval(unsigned char *data,int tagind){
@@ -102,7 +102,7 @@ int gpe_theval(unsigned char *data,int tagind){
 };
 
 
-/**
+/*
  *  Set the "value" of directory entry at tagind.
  */
 void gpe_setval(unsigned char *data,int tagind,long newval){
@@ -131,7 +131,7 @@ long exif_next_ifd(unsigned char *exif,int num){
 }
 
 
-/**
+/*
  * Parse an exif data structure and initialise the "exifparser".
  *
  * exifdat : the exif data
@@ -197,9 +197,9 @@ int exif_parse_data(exifparser *exifdat) {
   return exifdat->exiflen;
 }
 
-/**************************************************************/
-/* tag-level functions: get/set tags in the EXIF structure    */
-/**************************************************************/
+/*
+ * tag-level functions: get/set tags in the EXIF structure
+ */
 
 /**
  * Returns the value of a field, identified by its tag and the IFD.
@@ -306,7 +306,7 @@ int exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag
   return 0;
 }
 
-/**
+/*
  * Gets an ASCII tag.
  *
  * Specifying an IFD of '-1' will return the first occurence of
@@ -331,7 +331,7 @@ char * exif_get_ascii_field( int tag_number, int ifd, exifparser *exifdat) {
   }
 }
 
-/**
+/*
  * Gets a numeric tag.
  *
  * Specifying an IFD of '-1' will return the first occurence of
@@ -362,7 +362,7 @@ int exif_get_int_field( int tag_number, int ifd, exifparser *exifdat) {
 }
 
 
-/**
+/*
  * Returns the name of a given tag number
  */
 char *exif_get_tagname(int tag_number) {
@@ -374,12 +374,12 @@ char *exif_get_tagname(int tag_number) {
   return("Unknown");  
 }
 
-/**************************************************************/
-/* Higher-level functions: get/set logical entities, such as  */
-/* comments, thumbnail, etc.                                  */
-/**************************************************************/
+/*
+ * Higher-level functions: get/set logical entities, such as
+ * comments, thumbnail, etc.
+ */
 
-/**
+/*
  * Gets the comment field if it exists.
  */
 int exif_get_comment(exifparser *exifdat, char *comment) {
@@ -398,14 +398,14 @@ int exif_get_comment(exifparser *exifdat, char *comment) {
   return 0;
 }
 
-/**
+/*
  * Sets the comment field if it exists.
  */
 int exif_set_comment(exifparser *exifdat, char *comment) {
   return 0;
 }
 
-/**
+/*
  * Gets the thumbnail of an EXIF image.
  *
  * The returned thumbnail might be in JPEG or TIFF format.
@@ -418,7 +418,7 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
 }
 
 
-/**
+/*
  * Gets the thumbnail of an EXIF image.
  * The thumbnail size is provided
  *
