@@ -323,7 +323,7 @@ long get_thumbnail(char *name, char **data, int format, int verbose, int n)
   u_char buf[0x1000];
   u_char *p;
   char *ptr;
-  printf("name %s,%d\n",name,n);
+  //printf("name %s,%d\n",name,n);
   p = buf;
 
   F1ok();
@@ -490,7 +490,7 @@ retry:
   else
     sprintf(name2, "/PIC_CAM/PIC00000/PSN%05d.PMP", picture_index[n]);
 
-  printf("name %s, name2 %s, %d\n",name,name2,n);
+  //printf("name %s, name2 %s, %d\n",name,name2,n);
 
   if(verbose)
     switch(format){

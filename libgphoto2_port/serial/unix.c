@@ -231,6 +231,7 @@ int gp_port_serial_write(gp_port * dev, char *bytes, int size)
         while (len < size) {    /* Make sure we write all data while handling */
                 /* the harmless errors */
                 if ((ret = write(dev->device_fd, bytes, size - len)) == -1)
+                {        printf("err: %d\n",errno);
                         switch (errno) {
                         case EAGAIN:
                         case EINTR:
@@ -238,8 +239,10 @@ int gp_port_serial_write(gp_port * dev, char *bytes, int size)
                                 break;
                         default:
                                 perror("gp_port_serial_write");
+
                                 return GP_ERROR_IO_WRITE;
                         }
+                   }
                 len += ret;
         }
 
