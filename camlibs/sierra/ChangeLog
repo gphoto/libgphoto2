@@ -1,3 +1,9 @@
+2002-02-08  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (sierra_read_packet): Improve debugging output by
+	  reading several bytes at once. Should make transmission faster,
+	  too.
+
 2002-02-06  Lutz Müller <lutz@users.sourceforge.net>
 
 	* sierra.[c,h]: Lots of additional debugging output.

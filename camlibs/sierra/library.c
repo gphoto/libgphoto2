@@ -415,10 +415,10 @@ sierra_write_nak (Camera *camera)
  *     - GP_ERROR_IO_* on other IO error.
  */
 static int
-sierra_read_packet (Camera *camera, char *packet, GPContext *context)
+sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 {
-	int y, r = 0, ret_status = GP_ERROR_IO, done = 0, length;
-	int blocksize = 1, br;
+	int result;
+	unsigned int i, c, r = 0, length, blocksize = 1, br;
 
 	GP_DEBUG ("Reading packet...");
 
@@ -430,46 +430,43 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 		blocksize = 1;
 		break;
 	default:
-		ret_status = GP_ERROR_UNKNOWN_PORT;
-		done = 1;
+		return (GP_ERROR_UNKNOWN_PORT);
 	}
 
 	/* Try several times before leaving on error... */
-	for (r=0; !done && r<RETRIES; r++) {
-
-		/* Reset the return data packet */
-		memset(packet, 0, sizeof(packet));
-
-		/* Reset the return status */
-		ret_status = GP_ERROR_IO;
+	while (1) {
 
 		/* Clear the USB bus
 		   (what about the SERIAL bus : do we need to flush it?) */
 		if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
-			gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
+			gp_port_usb_clear_halt (camera->port,
+						GP_PORT_USB_ENDPOINT_IN);
 
 		/*
 		 * Read data through the bus. If an error occurred,
 		 * try again.
 		 */
 		if (camera->port->type == GP_PORT_USB && camera->pl->usb_wrap)
-			br = usb_wrap_read_packet (camera->port, packet,
-						   blocksize);
+			result = usb_wrap_read_packet (camera->port, packet,
+						       blocksize);
 		else
-			br = gp_port_read (camera->port, packet, blocksize);
-		if (br < 0) {
-			GP_DEBUG ("Read failed ('%s').",
-				  gp_result_as_string (br));
+			result = gp_port_read (camera->port, packet, blocksize);
+		if (result < 0) {
+			GP_DEBUG ("Read failed (%i: '%s').", result,
+				  gp_result_as_string (result));
+			r++;
 			if (r + 1 >= RETRIES) {
 				if (camera->port->type == GP_PORT_USB &&
 				    !camera->pl->usb_wrap)
 					gp_port_usb_clear_halt (camera->port,
 						GP_PORT_USB_ENDPOINT_IN);
-				return (br);
+				GP_DEBUG ("Giving up...");
+				return (result);
 			}
 			GP_DEBUG ("Retrying...");
 			continue;
 		}
+		br = result;
 
 		/*
 		 * If the first read byte is not known, 
@@ -514,50 +511,89 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 		 * The data packet size is not known yet if the communication
 		 * is performed through the serial bus : read it then.
 		 */
-		if (camera->port->type == GP_PORT_SERIAL) {
-			br = gp_port_read (camera->port, packet + 1, 3);
-			if (br < 0) {
+		if (br < 4) {
+			result = gp_port_read (camera->port,
+					       packet + br, 4 - br);
+			if (result < 0) {
 				if (camera->port->type == GP_PORT_USB &&
 				    !camera->pl->usb_wrap)
 					gp_port_usb_clear_halt (camera->port,
 						GP_PORT_USB_ENDPOINT_IN);
-				return (br);
-			} else
-				br = 4;
+				GP_DEBUG ("Could not read length of "
+					"packet (%i: '%s'). Giving up...",
+					result, gp_result_as_string (result));
+				return (result);
+			}
+			br += result;
 		}
 
 		/*
-		 * Determine the packet length (add 6 for the packet type,
-		 * the packet subtype or sequence, the length
-		 * of data and the checksum, see description).
+		 * Determine the packet length: 2 for packet type and
+		 * subtype or sequence number, 2 for length, the actual
+		 * data, and 2 for the checksum.
 		 */
-		length = (unsigned char) packet[2] +
-			((unsigned char) packet[3] * 256) + 6;
+		length = packet[2] + (packet[3] * 256) + 6;
 
 		/* 
 		 * Read until the end of the packet is reached
-		 * or an IO error occured
+		 * or an error occured.
 		 */
-		for (ret_status = GP_OK, y = br;
-		     ret_status == GP_OK && y < length; y += blocksize) {
-			br = gp_port_read (camera->port, &packet[y], blocksize);
-			if (br < 0)
-				ret_status = br;
+		while (br < length) {
+			result = gp_port_read (camera->port, packet + br,
+					       length - br);
+			if (result == GP_ERROR_TIMEOUT) {
+
+				/* We will retry later on. */
+				GP_DEBUG ("Timeout!");
+
+			} else if (result < 0) {
+				GP_DEBUG ("Could not read remainder of "
+					"packet (%i: '%s'). Giving up...",
+					result, gp_result_as_string (result));
+				return (result);
+			} else
+				br += result;
 		}
 
-		/* Retry on IO error only */
-		if (ret_status == GP_ERROR_TIMEOUT) {
-			GP_DEBUG ("Timeout!");
-			sierra_write_nak (camera);
-			GP_SYSTEM_SLEEP(10);
-		} else
-			break;
+		/*
+		 * If we have, at this point, received the full packet,
+		 * check the checksum. If the checksum is correct, we are
+		 * done.
+		 */
+		if (br == length) {
+			for (c = 0, i = 4; i < br - 2; i++)
+				c += packet[i];
+			c &= 0xffff;
+			if (c == (packet[br - 2] + (packet[br - 1] * 256)))
+				break;
+			GP_DEBUG ("Checksum wrong (calculated 0x%x, "
+				"found 0x%x)!", c,
+				packet[br - 2] + (packet[br - 1] * 256));
+		}
+
+		/*
+		 * We will retry if we couldn't receive the full packet
+		 * (GP_ERROR_TIMEOUT) or if the checksum is wrong.
+		 */
+		r++;
+		if (r + 1 >= RETRIES) {
+			if (camera->port->type == GP_PORT_USB &&
+			    !camera->pl->usb_wrap)
+				gp_port_usb_clear_halt (camera->port,
+						GP_PORT_USB_ENDPOINT_IN);
+			GP_DEBUG ("Giving up...");
+			return ((br == length) ? GP_ERROR_CORRUPTED_DATA :
+						 GP_ERROR_TIMEOUT);
+		}
+		GP_DEBUG ("Retrying...");
+		sierra_write_nak (camera);
+		GP_SYSTEM_SLEEP (10);
 	}
 
 	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
 		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
 
-	return ret_status;
+	return GP_OK;
 }
 
 static int
