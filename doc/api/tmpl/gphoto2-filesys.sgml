@@ -104,9 +104,9 @@ retreiving information about a file, etc.
 </para>
 
 @fields: 
-@type: 
-@size: 
 @status: 
+@size: 
+@type: 
 
 <!-- ##### STRUCT CameraFileInfoPreview ##### -->
 <para>
@@ -114,11 +114,11 @@ retreiving information about a file, etc.
 </para>
 
 @fields: 
-@type: 
+@status: 
 @size: 
+@type: 
 @width: 
 @height: 
-@status: 
 
 <!-- ##### STRUCT CameraFileInfoFile ##### -->
 <para>
@@ -126,13 +126,13 @@ retreiving information about a file, etc.
 </para>
 
 @fields: 
-@type: 
-@permissions: 
-@name: 
+@status: 
 @size: 
+@type: 
 @width: 
 @height: 
-@status: 
+@name: 
+@permissions: 
 @mtime: 
 
 <!-- ##### STRUCT CameraFileInfo ##### -->

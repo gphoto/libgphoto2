@@ -216,6 +216,14 @@ Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_e
 @summary: 
 @manual: 
 @about: 
+@reserved1: 
+@reserved2: 
+@reserved3: 
+@reserved4: 
+@reserved5: 
+@reserved6: 
+@reserved7: 
+@reserved8: 
 
 <!-- ##### STRUCT Camera ##### -->
 <para>
