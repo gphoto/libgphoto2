@@ -1054,6 +1054,38 @@ int psa50_ready(Camera *camera)
       cs->model = CANON_PS_S100;
       A5=0;
       return 1;
+    }
+    else if ((!strcmp("Canon DIGITAL IXUS 300",cs->ident))
+	     || (!strcmp("Canon IXY DIGITAL 300",cs->ident))
+	     || (!strcmp("Canon PowerShot S300",cs->ident))) {
+      gp_frontend_status(camera, "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
+      cs->model = CANON_PS_S100;
+      A5=0;
+      return 1;
+    }
+    else if (!strcmp("Canon PowerShot A10",cs->ident)) {
+      gp_frontend_status(camera, "Detected a Powershot A10");
+      cs->model = CANON_PS_A10;
+      A5 = 0;
+      return 1;
+    }
+    else if (!strcmp("Canon PowerShot A20",cs->ident)) {
+      gp_frontend_status(camera, "Detected a Powershot A20");
+      cs->model = CANON_PS_A20;
+      A5 = 0;
+      return 1;
+    }
+    else if (!strcmp("Canon EOS D30",cs->ident)) {
+      gp_frontend_status(camera, "Detected a EOS D30");
+      cs->model = CANON_PS_EOS_D30;
+      A5 = 0;
+      return 1;
+    }
+    else if (!strcmp("Canon PowerShot Pro90 IS",cs->ident)) {
+      gp_frontend_status(camera, "Detected a PowerShot Pro90 IS");
+      cs->model = CANON_PS_PRO90_IS;
+      A5 = 0;
+      return 1;
     } else {
       printf ("Unknown camera! (%s)\n", cs->ident);
       return 0;
@@ -1176,13 +1208,35 @@ int psa50_ready(Camera *camera)
       gp_frontend_status(camera, "Detected a Powershot G1");
       cs->model = CANON_PS_G1;
       A5 = 0;
+    } else if (!strcmp("Canon PowerShot A10",psa50_id)) {
+      gp_frontend_status(camera, "Detected a Powershot A10");
+      cs->model = CANON_PS_A10;
+      A5 = 0;
+    } else if (!strcmp("Canon PowerShot A20",psa50_id)) {
+      gp_frontend_status(camera, "Detected a Powershot A20");
+      cs->model = CANON_PS_A20;
+      A5 = 0;
+    } else if (!strcmp("Canon EOS D30",psa50_id)) {
+      gp_frontend_status(camera, "Detected a EOS D30");
+      cs->model = CANON_PS_EOS_D30;
+      A5 = 0;
+    } else if (!strcmp("Canon PowerShot Pro90 IS",psa50_id)) {
+      gp_frontend_status(camera, "Detected a Powershot Pro90 IS");
+      cs->model = CANON_PS_PRO90_IS;
+      A5 = 0;
     } else if ((!strcmp("Canon DIGITAL IXUS",psa50_id))
 	       || (!strcmp("Canon IXY DIGITAL",psa50_id))	
-	       || (!strcmp("Canon PowerShot S100",psa50_id))
-	       || (!strcmp("DIGITAL IXUS 300",psa50_id)))
+	       || (!strcmp("Canon PowerShot S100",psa50_id)))
       {
 	gp_frontend_status(camera, "Detected a Digital IXUS / IXY DIGITAL / Powershot S100");
 	cs->model = CANON_PS_S100;
+	A5=0;
+    } else if ((!strcmp("Canon DIGITAL IXUS 300",psa50_id))
+	       || (!strcmp("Canon IXY DIGITAL 300",psa50_id))
+	       || (!strcmp("Canon PowerShot S300",psa50_id)))
+      {
+	gp_frontend_status(camera, "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
+	cs->model = CANON_PS_S300;
 	A5=0;
       } else {
 	gp_frontend_status(camera, "Detected a Powershot S10");

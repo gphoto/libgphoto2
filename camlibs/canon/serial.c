@@ -39,7 +39,16 @@ struct camera_to_usb {
 		{ "Canon Digital IXUS", 0x4A9, 0x3047 },
 		{ "Canon IXY DIGITAL", 0x4A9, 0x3046 },
 		{ "Canon PowerShot S100", 0x4A9, 0x3045 },
-		{ "DIGITAL IXUS 300", 0x4A9, 0x304d }
+                { "Canon Digital IXUS 300", 0x4A9, 0x304D },
+		{ "Canon IXY DIGITAL 300", 0x4A9, 0x304B },
+		{ "Canon PowerShot S300", 0x4A9, 0x304C },
+                { "Canon PowerShot A10", 0x4A9, 0x304F },
+                { "Canon PowerShot A20", 0x4A9, 0x304E },
+                { "Canon EOS D30", 0x4A9, 0x3044 },
+                { "Canon PowerShot Pro90 IS", 0x4A9, 0x3049 }
+
+
+
 };
 /*******  new stuff *********/
 

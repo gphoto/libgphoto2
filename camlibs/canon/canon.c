@@ -75,12 +75,19 @@ char *models_USB[] = {
         "Canon Digital IXUS",
 	"Canon IXY DIGITAL",
         "Canon PowerShot S100",
+        "Canon Digital IXUS 300",
+        "Canon IXY DIGITAL 300",
+        "Canon PowerShot S300",
+        "Canon PowerShot A10",
+        "Canon PowerShot A20",
+        "Canon EOS D30",
         NULL
 };
 char *models_serialandUSB[] = {
         "Canon PowerShot S10",
         "Canon PowerShot S20",
         "Canon PowerShot G1",
+        "Canon PowerShot Pro90 SI",
         NULL
 };
 
@@ -259,6 +266,16 @@ char *camera_model_string(Camera *camera)
 		return "Powershot G1";
 	 case CANON_PS_S100:
 		return "Powershot S100 / Digital IXUS / IXY DIGITAL";
+         case CANON_PS_S300:
+                return "Powershot S300 / Digital IXUS 300 / IXY DIGITAL 300";
+         case CANON_PS_A10:
+                return "Powershot A10";
+         case CANON_PS_A20:
+                return "Powershot A20";
+         case CANON_PS_EOS_D30:
+                return "EOS D30";
+         case CANON_PS_PRO90_IS:
+                return "Powershot Pro90 IS";
 	 default:
 		return _("Unknown model!");
 	}
@@ -980,6 +997,11 @@ int camera_summary(Camera *camera, CameraText *summary)
 	 case CANON_PS_S20:     model = "Canon Powershot S20"; break;
 	 case CANON_PS_G1:      model = "Canon Powershot G1"; break;
 	 case CANON_PS_S100:    model = "Canon Powershot S100 / Digital IXUS / IXY DIGITAL"; break;
+         case CANON_PS_S300:     model = "Canon Powershot S300 / Digital IXUS 300 / IXY DIGITAL 300"; break;
+         case CANON_PS_A10:      model = "Canon Powershot A10"; break;
+         case CANON_PS_A20:      model = "Canon Powershot A20"; break;
+         case CANON_PS_EOS_D30:  model = "Canon EOS D30"; break;
+         case CANON_PS_PRO90_IS: model = "Canon Pro90 IS"; break;
     }
 		
 	canon_get_batt_status(camera, &pwr_status, &pwr_source);
@@ -1025,7 +1047,8 @@ int camera_about(Camera *camera, CameraText *about)
 		   "Werner Almesberger,\n"
 		   "Edouard Lafargue,\n"
 		   "Philippe Marzouk,\n"
-		   "A5 additions by Ole W. Saastad\n")
+		   "A5 additions by Ole W. Saastad\n"
+                   "Holger Klemm\n")
 		   );
 
 	return GP_OK;
