@@ -1,0 +1,64 @@
+The Konica Q-M150 uses a pretty simple serial protocol.
+
+1. Ping command
+
+	Command: ESC X	(1B 58)
+	Reply: ACK	(06)
+
+   Used to test the baudrate.
+
+2. Set Baudrate
+	
+	Command: ESC B <nr>	(1B 42 3x)
+	Reply:	ACK		(06)
+
+   Sets the baudrate. <nr> is an ascii number from 0 to 4.
+   I suspect the mapping is as follows:
+	0 - 9600
+	1 - 19200
+	2 - 38400
+	3 - 57600
+	4 - 115200
+
+   The camera switches baudrate directly after sending the ACK. 
+
+3. Get Camera Info
+
+	Command: ESC S	(1B 53)
+	Reply: 256 byte of data, sample:
+	    03 03 02 00  1F 02 00 01  07 08 01 00  01 00 00 00  00 00 00 83
+	    00 59 00 00  01 00 00 00  01 01 00 01  00 00 23 BD  9C 28 00 00
+	    00 00 00 00  00 00 00 00  00 00 00 00  00 00 00 00  00 00 00 00
+	    ... more 00 ...
+
+	The 00 00 00 83 appear to be the number of images.
+
+4. Get Image Info
+	
+	Command: ESC I <nr> <nr> <nr> <nr>	(1B 49 3x 3x 3x 3x) 
+	Reply:	256 byte of data:
+
+	    03 03 00 84  00 00 20 69  00 01 A6 B1  02 DC 00 83  01 00 00 00
+	    ... more 00 ...
+
+	<nr> is an ascii number, "30 30 34 32" stands for 42.
+	Image start at 1.
+
+
+	Length is in the "00 01 A6 B1" sequence.
+
+	The "00 84" could be a pointer to the next image number (the image
+	queried here is 0x83/131).
+
+4. Download Image
+	
+	Command: ESC G F <nr> <nr> <nr> <nr>	(1B 47 46 3x 3x 3x 3x)
+
+	while (!finished) {
+		Reply: 1 byte, 01 for ok, EOT (04) for end of data.
+		Reply: 512 byte of image data.
+		Reply: 1 byte of checksum.
+		Command: ACK	(06)
+	}
+
+	Loads up to len/512 blocks or up to EOT.
