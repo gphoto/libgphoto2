@@ -163,9 +163,9 @@ gp_port_usb_open (GPPort *port)
 	if (ret < 0) {
 		gp_port_set_error (port, _("Could not claim "
 			"interface %d (%m). Make sure no other program "
-			"or kernel module (e.g. dc2xx or stv680) is using the device "
+			"or kernel module (such as %s) is using the device "
 			"and you have read/write access to the device."),
-			port->settings.usb.interface);
+			port->settings.usb.interface, "sdc2xx, stv680, spca50x");
 		return GP_ERROR_IO_USB_CLAIM;
 	}
 
