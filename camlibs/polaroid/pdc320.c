@@ -33,7 +33,7 @@
 #include <string.h>
 //#include "jpeghead.h"
 #include "pdc320.h"
-#include <libgphoto2/jpeg.h>
+//#include <libgphoto2/jpeg.h>
 
 /*******************************************************************************/
 /* NOTICE: There is a 16x8 block of pixels after the image data.               */
@@ -61,6 +61,7 @@
  */
 
 //                                                        xf?
+
 
 static int
 pdc320_id (CameraPort *port, const char **model)
@@ -341,17 +342,24 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 		break;
 	case GP_FILE_TYPE_NORMAL:
 	default:
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Using Nathan Stenzel's experimental jpeg.c\n");
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "About to make jpeg header\n");
     if (camera->model[9]=='6')
-        myjpeg = gp_jpeg_header(640,240, 11,11,21, 1,0,0, &chrominance, &luminance,
+        myjpeg = gp_jpeg_header(640,240, 0x11,0x11,0x21, 1,0,0, &chrominance, &luminance,
             0,0,0, chunk_new_filled(HUFF_00), chunk_new_filled(HUFF_10), NULL, NULL);
     else if (camera->model[9]=='F')
-        myjpeg = gp_jpeg_header(320,120, 11,11,21, 1,0,0, &chrominance, &luminance,
+        myjpeg = gp_jpeg_header(320,120, 0x11,0x11,0x21, 1,0,0, &chrominance, &luminance,
             0,0,0, chunk_new_filled(HUFF_00), chunk_new_filled(HUFF_10), NULL, NULL);
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Turning the picture data into a chunk data type\n");
     tempchunk = chunk_new(size);
     tempchunk->data = data;
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Adding the picture data to the jpeg structure\n");
     gp_jpeg_add_marker(myjpeg, tempchunk, 6, size-1);
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Writing the jpeg file\n");
     gp_jpeg_write(file, filename, myjpeg);
+	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Cleaning up the mess\n");
     gp_jpeg_destroy(myjpeg);
+
 /* Here is the old code */
 /*    temp=data;
     temp+=6;
@@ -460,20 +468,4 @@ camera_init (Camera *camera)
 
 	return (GP_OK);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
