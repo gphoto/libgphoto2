@@ -69,12 +69,13 @@ struct models{
 } models[] = {
   {"Creative:PC-CAM600",0x041e,0x400b,0},
   {"Creative:PC-CAM750",0x041e,0x4013,0},
+  {"Creative PC-CAM350",0x041e,0x4012,0},
   {NULL,0,0,0}
 };
 
 int camera_id(CameraText *id)
 {
-  strcpy(id->text, "Creative PC-CAM600");
+  strcpy(id->text, "Creative PC-CAM600/750/350");
   return (GP_OK);
 }
 
@@ -99,9 +100,7 @@ int camera_abilities(CameraAbilitiesList *list)
 }
 		     
 static int camera_exit(Camera *camera, GPContext *context){  
-  int ret;
-  ret = pccam600_close(camera->port, context);
-  return ret;
+  return pccam600_close(camera->port, context);
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
@@ -135,22 +134,12 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		{
 		  memcpy(&(file_entry->name)[5],".jpg",4);
 		  strcpy(info.file.type,GP_MIME_JPEG);
-		  info.file.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
-		  if (file_entry->quality == QUALITY_LO)
-		    {
-		      info.file.width = 640;
-		      info.file.height = 480;
-		    }
-		  else if(file_entry->quality == QUALITY_ME)
-		    {
-		      info.file.width = 1024;
-		      info.file.height = 768;
-		    }
+		  info.file.fields = GP_FILE_INFO_TYPE;
 		}
 	      else if (strncmp(temp,"AVI",3) == 0)
 		{
 		  memcpy(&(file_entry->name)[5],".avi",4);
-		  info.file.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+		  info.file.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | GP_FILE_INFO_TYPE;
 		  info.file.height = 352;
 		  info.file.width = 288;
 		  strcpy(info.file.type, GP_MIME_AVI);
@@ -159,6 +148,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		{
 		  memcpy(&(file_entry->name)[5],".wav",4);
 		  strcpy(info.file.type, GP_MIME_WAV);
+		  info.file.fields = GP_FILE_INFO_TYPE;
 		  info.file.height = 0;
 		}
 	      else if (strncmp(temp,"RAW",3) == 0)
@@ -166,7 +156,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		  memcpy(&(file_entry->name)[5],".raw",4);
 		  info.file.width = 1280;
 		  info.file.height = 960;
-		  info.file.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+		  info.file.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | GP_FILE_INFO_TYPE;
 		  strcpy(info.file.type, GP_MIME_RAW);
 		}
 	      strcpy(info.file.name,file_entry->name);

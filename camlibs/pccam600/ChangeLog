@@ -6,6 +6,11 @@
 	
 	Any comments email me at pbk@odense.kollegienet.dk
 
+2004-09-05 Marcus Meissner <marcus@jet.franken.de>
+	
+	Ambigel http://ambigel.blogia.com/ has a pc cam 350, added
+	Removed explicit size handling of JPEGs for now (not really needed).
+	
 2004-01-27 Marcus Meissner <marcus@jet.franken.de>
 
 	Andres Guerrero reports the PC CAM 750 working with this driver,
