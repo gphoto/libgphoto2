@@ -574,11 +574,9 @@ ricoh_connect (Camera *camera, GPContext *context, RicohModel *model)
 int
 ricoh_disconnect (Camera *camera, GPContext *context)
 {
-	unsigned char cmd, buf[0xff], len;
+	unsigned char buf[0xff], len;
 
-	CR (ricoh_send (camera, context, 0x37, 0, NULL, 0));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, 0x37);
+	CR (ricoh_transmit (camera, context, 0x37, NULL, 0, buf, &len));
 	C_LEN (context, len, 2);
 
 	return (GP_OK);
@@ -623,9 +621,8 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	/* Send picture number */
 	p[0] = n >> 0;
 	p[1] = n >> 8;
-	CR (ricoh_send (camera, context, (unsigned char) type, 0, p, 2));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, (unsigned char) type);
+	CR (ricoh_transmit (camera, context, (unsigned char) type,
+			    p, 2, buf, &len));
 	C_LEN (context, len, 18);
 
 	/*
