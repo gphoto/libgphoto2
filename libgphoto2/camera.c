@@ -20,7 +20,7 @@ int gp_camera_count ()
 int gp_camera_name (int camera_number, char *camera_name)
 {
         if (camera_number > glob_abilities_list->count)
-                return (GP_ERROR);
+                return (GP_ERROR_MODEL_NOT_FOUND);
 
         strcpy(camera_name, glob_abilities_list->abilities[camera_number]->model);
         return (GP_OK);
@@ -48,19 +48,22 @@ int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities)
                 x++;
         }
 
-        return (GP_ERROR);
+        return (GP_ERROR_MODEL_NOT_FOUND);
 
 }
 
 int gp_camera_new (Camera **camera, int camera_number)
 {
+	int result;
 
         if (camera_number >= glob_abilities_list->count) {
 		gp_debug_printf(GP_DEBUG_LOW, "core", "camera_number too big");
-                return (GP_ERROR);
+                return (GP_ERROR_MODEL_NOT_FOUND);
 	}
 
         *camera = (Camera*)malloc(sizeof(Camera));
+	if (!*camera) 
+		return (GP_ERROR_NO_MEMORY);
 
         /* Initialize the members */
         strcpy((*camera)->model, glob_abilities_list->abilities[camera_number]->model);
@@ -74,9 +77,9 @@ int gp_camera_new (Camera **camera, int camera_number)
 	(*camera)->session    = glob_session_camera++;
         (*camera)->ref_count  = 1;
 
-        if (load_library(*camera, glob_abilities_list->abilities[camera_number]->model)!=GP_OK) {
+        if ((result = load_library(*camera, glob_abilities_list->abilities[camera_number]->model)) != GP_OK) {
                 gp_camera_free(*camera);
-                return (GP_ERROR);
+                return (result);
         }
 
         /* Initialize the camera library */
@@ -97,7 +100,7 @@ int gp_camera_new_by_name (Camera **camera, char *camera_name)
                 x++;
         }
 
-        return (GP_ERROR);
+        return (GP_ERROR_MODEL_NOT_FOUND);
 }
 
 int gp_camera_free(Camera *camera)
@@ -147,7 +150,7 @@ int gp_camera_init (Camera *camera,  CameraPortInfo *settings)
 
         if (camera->functions->init == NULL) {
 		gp_debug_printf(GP_DEBUG_LOW, "core", "functions->init is NULL");
-                return(GP_ERROR);
+                return(GP_ERROR_NOT_SUPPORTED);
 	}
 
 	/* Copy over the port settings */
@@ -172,7 +175,7 @@ int gp_camera_exit (Camera *camera)
         int ret;
 
         if (camera->functions->exit == NULL)
-                return(GP_ERROR);
+                return(GP_ERROR_NOT_SUPPORTED);
 
         ret = camera->functions->exit(camera);
         close_library(camera);
@@ -189,7 +192,7 @@ int gp_camera_folder_list(Camera *camera, CameraList *list, char *folder)
         list->count = 0;
 
         if (camera->functions->folder_list == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
 
         ret = camera->functions->folder_list(camera, list, folder);
 
@@ -220,7 +223,7 @@ int gp_camera_file_list(Camera *camera, CameraList *list, char *folder)
         list->count = 0;
 
         if (camera->functions->file_list == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
         ret = camera->functions->file_list(camera, list, folder);
         if (ret != GP_OK)
                 return (ret);
@@ -244,7 +247,7 @@ int gp_camera_file_get (Camera *camera, CameraFile *file,
                         char *folder, char *filename)
 {
         if (camera->functions->file_get == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
 
         gp_file_clean(file);
 
@@ -255,7 +258,7 @@ int gp_camera_file_get_preview (Camera *camera, CameraFile *file,
                         char *folder, char *filename)
 {
         if (camera->functions->file_get_preview == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
 
         gp_file_clean(file);
 
@@ -265,7 +268,7 @@ int gp_camera_file_get_preview (Camera *camera, CameraFile *file,
 int gp_camera_file_put (Camera *camera, CameraFile *file, char *folder)
 {
         if (camera->functions->file_put == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
 
         return (camera->functions->file_put(camera, file, folder));
 }
@@ -274,7 +277,7 @@ int gp_camera_file_delete (Camera *camera, char *folder, char *filename)
 {
 
         if (camera->functions->file_delete == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
         return (camera->functions->file_delete(camera, folder, filename));
 }
 
@@ -282,7 +285,7 @@ int gp_camera_config (Camera *camera)
 {
 
         if (camera->functions->config == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
 
         return (camera->functions->config(camera));
 }
@@ -290,7 +293,7 @@ int gp_camera_config (Camera *camera)
 int gp_camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info)
 {
         if (camera->functions->capture == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
 
         gp_file_clean(file);
 
@@ -300,7 +303,7 @@ int gp_camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info
 int gp_camera_summary (Camera *camera, CameraText *summary)
 {
         if (camera->functions->summary == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
 
         return(camera->functions->summary(camera, summary));
 }
@@ -308,7 +311,7 @@ int gp_camera_summary (Camera *camera, CameraText *summary)
 int gp_camera_manual (Camera *camera, CameraText *manual)
 {
         if (camera->functions->manual == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
 
         return(camera->functions->manual(camera, manual));
 }
@@ -316,7 +319,7 @@ int gp_camera_manual (Camera *camera, CameraText *manual)
 int gp_camera_about (Camera *camera, CameraText *about)
 {
         if (camera->functions->about == NULL)
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
 
         return(camera->functions->about(camera, about));
 }

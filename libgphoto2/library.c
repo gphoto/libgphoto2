@@ -81,7 +81,7 @@ int load_camera_list(char *library_filename)
 	load_camera_abilities = (c_abilities)GPIO_DLSYM(lh, "camera_abilities");
 	old_count = glob_abilities_list->count;
 
-        if (load_camera_abilities(glob_abilities_list) == GP_ERROR) {
+        if (load_camera_abilities(glob_abilities_list) != GP_OK) {
                 GPIO_DLCLOSE(lh);
                 return 0;
         }
@@ -110,7 +110,7 @@ int load_cameras_search(char *directory)
         d = GPIO_OPENDIR(directory);
         if (!d) {
                 gp_debug_printf(GP_DEBUG_LOW, "core", "couldn't open %s", directory);
-                return GP_ERROR;
+                return GP_ERROR_DIRECTORY_NOT_FOUND;
         }
 
         do {

@@ -117,3 +117,4 @@ int gp_frontend_register(CameraStatus status, CameraProgress progress,
 
 	return (GP_OK);
 }
+
