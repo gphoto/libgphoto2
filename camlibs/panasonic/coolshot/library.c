@@ -71,7 +71,7 @@ int coolshot_sb( Camera *camera, int speed ) {
 	gp_port_settings settings;
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_sb");
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* speed: %i", speed);
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** speed: %i", speed);
 
 	memset( buf, 0, sizeof( buf ));
 

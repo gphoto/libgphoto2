@@ -49,8 +49,8 @@
 #define TIMEOUT	      2000
 #define DEFAULT_SPEED 9600
 
-#define COOLSHOT_VERSION "0.2"
-#define COOLSHOT_LAST_MOD "09/01/2001 23:03 EST"
+#define COOLSHOT_VERSION "0.3"
+#define COOLSHOT_LAST_MOD "09/02/2001 21:22 EST"
 
 /* define what cameras we support */
 static char *coolshot_cameras[] = {
@@ -103,8 +103,8 @@ static int camera_start (Camera *camera)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_start");
 
+	/* coolshot_sb sets to default speed if speed == 0 */
 	CHECK (coolshot_sb (camera, camera->port_info->speed));
-
 	return( GP_OK );
 }
 
@@ -171,7 +171,7 @@ static int camera_file_get (Camera *camera, const char *folder,
 	char data[128000];
 	int size, n;
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_file_get");
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_file_get");
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** filename: %s",filename);
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** type: %d", type);
@@ -187,9 +187,10 @@ static int camera_file_get (Camera *camera, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
-
-		/* fixme, preview/thumbnail downloads full image... */
+		/* fixme, need to figure out thumbnail format & munge it into a jpeg
 		CHECK (coolshot_request_thumbnail (camera, data, &size, n));
+		*/
+		CHECK (coolshot_request_image (camera, data, &size, n));
 		break;
 
 	case GP_FILE_TYPE_NORMAL:
@@ -284,6 +285,9 @@ int camera_init (Camera *camera)
 		file_list_func, NULL, camera));
 	CHECK (gp_filesystem_set_info_funcs (camera->fs,
 		get_info_func, NULL, camera));
+
+	/* coolshot_sb sets to default speed if speed == 0 */
+	CHECK (coolshot_sb (camera, camera->port_info->speed));
 
 	return (camera_stop (camera));
 }
