@@ -88,8 +88,14 @@ typedef enum {
  * @CANON_PS_G3: PowerShot G3
  * @CANON_PS_S230: PowerShot S230, Digital IXUS v3
  * @CANON_PS_A60: PowerShot A60
+ * @CANON_MV630I: MV630i camcorder
  * @CANON_EOS_10D: EOS 10D
  * @CANON_OPT_200: Optura 200 MC, MVX2i
+ * @CANON_PS_UNK1: Unknown camera seen in Mac OS X Image Capture
+ * @CANON_PS_UNK2: Unknown camera seen in Mac OS X Image Capture
+ * @CANON_PS_UNK3: Unknown camera seen in Mac OS X Image Capture
+ * @CANON_PS_UNK4: Unknown camera seen in Mac OS X Image Capture
+ * @CANON_PS_UNK5: Unknown camera seen in Mac OS X Image Capture
  *
  * Enumeration of all camera types currently supported.
  *
@@ -121,12 +127,19 @@ typedef enum {
 	CANON_PS_A100,
 	CANON_PS_A200,
 	CANON_PS_A300,
+	CANON_PS_S50,
 	CANON_PS_S45,
 	CANON_PS_G3,
-	CANON_PS_S50,
 	CANON_PS_S230,
+	CANON_MV630I,
 	CANON_EOS_10D,
-	CANON_OPT_200
+	CANON_OPT_200,
+	/* In Mac OS Image Capture, but not yet seen in the wild. */
+	CANON_PS_UNK1,
+	CANON_PS_UNK2,
+	CANON_PS_UNK3,
+	CANON_PS_UNK4,
+	CANON_PS_UNK5
 } canonCamModel;
 
 /**
@@ -223,6 +236,7 @@ struct canonCamModelData
 	unsigned short usb_product;
 	canonCaptureSupport usb_capture_support;
 	unsigned int max_picture_size;
+	unsigned int max_movie_size;
 	unsigned int max_thumbnail_size;
 	char *serial_id_string; /* set to NULL if camera doesn't support serial connections */
 };
