@@ -23,8 +23,11 @@ AM_CONDITIONAL(RPM_LIBUSB_DEVEL, rpm -q libusb-devel > /dev/null 2>&1)
 
 AC_DEFUN(GPKG_CHECK_LINUX,
 [
+	# effective_target has to be determined in advance
+	AC_REQUIRE([AC_NEED_BYTEORDER_H])
+
 	is_linux=/bin/false
-	case "$ac_cv_host" in 
+	case "$effective_target" in 
 		*linux*)
 			is_linux=/bin/true
 			;;
