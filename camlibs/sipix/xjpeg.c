@@ -5,6 +5,7 @@
 
 #define APP0	0xe0
 #define APP1	0xe1
+#define APP2	0xe2
 #define DHT	0xc4
 #define SOI	0xd8
 #define DQT	0xdb
@@ -84,6 +85,7 @@ haslength(int marker) {
 	case SOI:	return 0;
 	case APP0:	return 1;
 	case APP1:	return 1;
+	case APP2:	return 1;
 	case DHT:	return 1;
 	case SOS:	return 1;
 	case DQT:	return 1;
@@ -130,7 +132,7 @@ main(int argc, char **argv) {
 	while (1) {
 		m = getmarker();
 		if (m == -1) {
-			fprintf(stderr,":Error, aborting.\n");
+			fprintf(stderr,":Error, end of file, aborting.\n");
 			break;
 		}
 		if (haslength(m))
@@ -197,6 +199,7 @@ main(int argc, char **argv) {
 			skipdata(len-2,1);
 			break;
 		}
+		case APP1: case APP2:
 		case APP0: {
 			char name[5];
 			fprintf(stderr,":APP0(");

@@ -88,19 +88,20 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
-	int	i, ret, numpics;
+	int	i, ret, numpics, bytes;
 	unsigned char	*xbuf, buf[8];
 
 	ret = blink2_getnumpics( camera->port, context, &numpics );
 	if (ret < GP_OK) return ret;
 
-	xbuf = malloc(8*(1+numpics));
+	bytes = ((8*(1+numpics))+0x3f) & ~0x3f;
+	xbuf = malloc(bytes);
 	ret = gp_port_usb_msg_read( camera->port,BLINK2_GET_DIR,0x03,0,buf,8 );
 	if (ret < GP_OK)  {
 		free(xbuf);
 		return ret;
 	}
-	ret = gp_port_read( camera->port, xbuf, 8*(1+numpics));
+	ret = gp_port_read( camera->port, xbuf, bytes);
 	if (ret < GP_OK) {
 		free(xbuf);
 		return ret;
@@ -124,8 +125,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
         int image_no, result;
-	int	i, ret, numpics;
-	unsigned char	*xbuf, buf[8];
+	int	i, ret, numpics, bytes;
+	unsigned char	*xbuf, buf[8], wbuf[0x40];
 
 	struct xaddr {
 		unsigned int type, start,len;
@@ -134,7 +135,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ret = blink2_getnumpics( camera->port, context, &numpics );
 	if (ret < GP_OK) return ret;
 	gp_log(GP_LOG_DEBUG, "blink2","numpics is %d", numpics);
-	xbuf = malloc(8*(1+numpics));
+	bytes = ((8*(1+numpics))+0x3f) & ~0x3f;
+	xbuf = malloc(bytes);
 	if (!xbuf)
 		return GP_ERROR_NO_MEMORY;
 	addrs = (struct xaddr*)malloc(sizeof(struct xaddr)*numpics);
@@ -148,7 +150,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(xbuf);
 		return ret;
 	}
-	ret = gp_port_read( camera->port, xbuf, 8*(1+numpics));
+	/*ret = gp_port_write (camera->port, wbuf, sizeof(wbuf));
+	if (ret < GP_OK) {
+		free(addrs);
+		free(xbuf);
+		return ret;
+	}*/
+	ret = gp_port_read (camera->port, xbuf, bytes);
 	if (ret < GP_OK) {
 		free(addrs);
 		free(xbuf);
@@ -373,7 +381,8 @@ camera_init (Camera *camera, GPContext *context)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 	gp_port_get_settings( camera->port, &settings);
 	settings.usb.interface = 0;
-	ret = gp_port_set_settings( camera->port, settings);
+	settings.usb.altsetting = 0;
+	ret = gp_port_set_settings (camera->port, settings);
 	if (ret < GP_OK) return ret;
 	ret = gp_port_usb_msg_read( camera->port, 0x18, 0x0300, 0x0000, buf, 6);
 	if (ret < GP_OK)
