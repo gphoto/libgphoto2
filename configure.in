@@ -169,7 +169,7 @@ AC_SUBST(camlibdir)
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='barbie canon casio digita dimera directory fuji gsmart gsmart300 jamcam jd11 kodak konica largan minolta mustek panasonic pccam600 polaroid ptp ptp2 ricoh samsung sierra sipix sipixblink smal sonydscf1 sonydscf55 soundvision spca504_flash stv0674 stv0680 sx330z'
+camlibs='barbie benq canon casio digita dimera directory fuji gsmart gsmart300 jamcam jd11 kodak konica largan minolta mustek panasonic pccam600 polaroid ptp ptp2 ricoh samsung sierra sipix sipixblink smal sonydscf1 sonydscf55 soundvision spca504_flash stv0674 stv0680 sx330z'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -181,7 +181,7 @@ AC_ARG_WITH(drivers,
   [                            drivers may be separated with commas; ]
   [                            'all' compiles all drivers; ]
   [                            possible drivers are: ]
-  [                            barbie, canon, casio, digita, dimera,]
+  [                            barbie, benq, canon, casio, digita, dimera,]
   [                            directory, fuji, gsmart, gsmart300, jamcam,] 
   [                            jd11, kodak, konica, mustek, largan,]
   [                            minolta, panasonic, pccam600, polaroid, ptp, ptp2, ]
@@ -346,10 +346,11 @@ dnl Configure libgphoto2-port
 dnl ---------------------------------------------------------------------------
 AC_CONFIG_SUBDIRS(libgphoto2_port)
 
-AC_OUTPUT([ intl/Makefile po/Makefile.in 
+AC_OUTPUT([  intl/Makefile po/Makefile.in 
 Makefile
 camlibs/Makefile
 camlibs/barbie/Makefile
+camlibs/benq/Makefile
 camlibs/canon/Makefile
 camlibs/canon/doc/Makefile
 camlibs/casio/Makefile
