@@ -48,6 +48,10 @@ int		  gp_filesystem_number   (CameraFilesystem *fs,
 					  const char *folder, 
 					  const char *filename);
 
+int               gp_filesystem_get_folder (CameraFilesystem *fs,
+					    const char *filename,
+					    const char **folder);
+
 int gp_filesystem_list_files   (CameraFilesystem *fs, const char *folder,
 				CameraList *list);
 int gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
