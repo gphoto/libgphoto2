@@ -11,7 +11,14 @@ DOC_SOURCE_DIR=$(top_srcdir)/libgphoto2_port
 
 EXTRA_DIST = gphoto2-port-api.sgml gphoto2-port-sections.txt
 
+clean-local:
+	rm -f *~ *.bak *.hierarchy *.signals *.args *-unused.txt
+
+maintainer-clean-local: clean
+	rm -rf sgml html $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt 
+
 if ENABLE_GTK_DOC
+
 htmldir=@HTML_DIR@
 
 TARGET_DIR=$(htmldir)/$(DOC_MODULE)
@@ -30,15 +37,7 @@ sgml:
 html:
 	if ! test -d html ; then mkdir html ; fi
 	-cd html && gtkdoc-mkhtml $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
-endif
 
-clean-local:
-	rm -f *~ *.bak *.hierarchy *.signals *.args *-unused.txt
-
-maintainer-clean-local: clean
-	rm -rf sgml html $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt 
-
-if ENABLE_GTK_DOC
 install-data-local:
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
 	$(INSTALL_DATA) $(srcdir)/html/*.html $(DESTDIR)$(TARGET_DIR)
@@ -49,4 +48,13 @@ dist-hook:
 	(cd $(srcdir) ; tar cvf - html) | (cd $(distdir); tar xf -)
 
 .PHONY : html sgml templates scan
+
+else
+
+dist-hook:
+	@echo "Dummy target $@"
+
+install-data-local:
+	@echo "Dummy target $@"
+
 endif

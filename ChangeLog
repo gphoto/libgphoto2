@@ -1,3 +1,8 @@
+2001-11-10 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* libghoto2_port/doc/Makefile.am
+	* doc/api/Makefile.am: fixed condition rules (added else targets)
+
 2001-11-10  Fredrik <fredrik@krixor.xy.org>
 
 	* camlibs/canon/canon.c: Clear all of camera->pl right after
