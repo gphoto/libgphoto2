@@ -241,7 +241,7 @@ replace_filename_extension(const char *filename, const char *newext)
 	}
 }
 
-static const char *
+static char *
 filename_to_audio(const char *filename, const char *newext)
 {
 	char *p;
