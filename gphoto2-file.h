@@ -39,6 +39,7 @@ extern "C" {
 #define GP_MIME_AVI       "video/x-msvideo"
 #define GP_MIME_CRW       "image/x-canon-raw"
 #define GP_MIME_UNKNOWN   "application/octet-stream"
+#define GP_MIME_EXIF      "application/x-exif"
 
 typedef enum {
 	GP_FILE_TYPE_PREVIEW,

@@ -77,6 +77,10 @@ typedef struct {
 } CameraFilesystemFolder;
 
 #ifdef HAVE_EXIF
+
+static int gp_filesystem_get_file_impl (CameraFilesystem *, const char *,
+		const char *, CameraFileType, CameraFile *, GPContext *);
+
 static time_t
 get_exif_mtime (const unsigned char *data, unsigned long size)
 {
@@ -135,8 +139,8 @@ gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
                 return 0;
 
         gp_file_new (&file);
-        if (gp_filesystem_get_file (fs, folder, filename, GP_FILE_TYPE_EXIF,
-                                    file, NULL) != GP_OK) {
+        if (gp_filesystem_get_file (fs, folder, filename,
+				GP_FILE_TYPE_EXIF, file, NULL) != GP_OK) {
                 GP_DEBUG ("Could not get EXIF data of '%s' in folder '%s'.",
                           filename, folder);
                 gp_file_unref (file);
@@ -148,52 +152,6 @@ gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
         gp_file_unref (file);
 
         return (t);
-}
-#endif
-
-#ifdef HAVE_EXIF
-static int
-gp_filesystem_get_exif_preview (CameraFilesystem *fs, const char *folder,
-                                const char *filename, GPContext *context)
-{
-        CameraFile *file;
-        ExifData *ed;
-        int r;
-        const char *data = NULL;
-        unsigned long int size = 0;
-
-        gp_file_new (&file);
-        r = gp_filesystem_get_file (fs, folder, filename, GP_FILE_TYPE_EXIF,
-                                    file, context);
-        if (r < 0) {
-                GP_DEBUG ("Could not get EXIF data of '%s' in folder '%s'.",
-                          filename, folder);
-                gp_file_unref (file);
-                return (r);
-        }
-
-        gp_file_get_data_and_size (file, &data, &size);
-        ed = exif_data_new_from_data (data, size);
-        gp_file_unref (file);
-        if (!ed) {
-                GP_DEBUG ("Could not parse EXIF data of '%s' in folder '%s'.",
-                          filename, folder);
-                return GP_ERROR_CORRUPTED_DATA;
-        }
-
-        if (ed->data) {
-                file = NULL;
-                gp_file_new (&file);
-                gp_file_set_data_and_size (file, ed->data, ed->size);
-                gp_file_set_type (file, GP_FILE_TYPE_PREVIEW);
-                gp_file_set_name (file, filename);
-                gp_file_detect_mime_type (file);
-                gp_filesystem_set_file_noop (fs, folder, file, context);
-                gp_file_unref (file);
-        }
-        exif_data_unref (ed);
-
-        return (GP_OK);
 }
 #endif
 
@@ -232,6 +190,16 @@ struct _CameraFilesystem {
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CR(result)           {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
+
+#define CU(result,file)			\
+{					\
+	int r = (result);		\
+					\
+	if (r < 0) {			\
+		gp_file_unref (file);	\
+		return (r);		\
+	}				\
+}
 
 #define CC(context)							\
 {									\
@@ -1406,31 +1374,12 @@ gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
 	return (GP_OK);
 }
 
-/**
- * gp_filesystem_get_file:
- * @fs: a #CameraFilesystem
- * @folder: the folder in which the file can be found
- * @filename: the name of the file to download
- * @type: the type of the file
- * @file:
- *
- * Downloads the file called @filename from the @folder using the 
- * get_file_func if such a function has been previously supplied. If the 
- * file has been previously downloaded, the file is retrieved from cache.
- *
- * Return value: a gphoto2 error code.
- **/
-int
-gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
-			const char *filename, CameraFileType type,
-			CameraFile *file, GPContext *context)
+static int
+gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
+			     const char *filename, CameraFileType type,
+			     CameraFile *file, GPContext *context)
 {
-	int x, y, r;
-#ifdef HAVE_EXIF
-	time_t t = 0;
-	const char *data;
-	unsigned long int size;
-#endif
+	int x, y;
 
 	CHECK_NULL (fs && folder && file && filename);
 	CC (context);
@@ -1485,29 +1434,8 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 
 	gp_context_status (context, _("Downloading '%s' from folder '%s'..."),
 			   filename, folder);
-	r = fs->get_file_func (fs, folder, filename, type, file,
-			       fs->file_data, context);
-	if ((type == GP_FILE_TYPE_PREVIEW) &&
-	    (r == GP_ERROR_NOT_SUPPORTED)) {
-
-		/* Try EXIF data */
-#ifdef HAVE_EXIF
-		GP_DEBUG ("Getting previews is not supported. Trying "
-			  "EXIF data...");
-		CR (gp_filesystem_get_exif_preview (fs, folder, filename,
-						    context));
-#else
-		GP_DEBUG ("Getting previews is not supported and "
-			  "libgphoto2 has been compiled without exif "
-			  "support. ");
-		return (r);
-#endif
-	} else if (r < 0) {
-		GP_DEBUG ("Download of '%s' from '%s' (type %i) failed. "
-			  "Reason: '%s'", filename, folder, type,
-			  gp_result_as_string (r));
-		return (r);
-	}
+	CR (fs->get_file_func (fs, folder, filename, type, file,
+			       fs->file_data, context));
 
 	/* We don't trust the camera drivers */
 	CR (gp_file_set_type (file, type));
@@ -1516,30 +1444,142 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	/* Cache this file */
 	CR (gp_filesystem_set_file_noop (fs, folder, file, context));
 
-	/* If we didn't get a mtime, try to get it from EXIF data */
-#ifdef HAVE_EXIF
-	gp_file_get_mtime (file, &t);
-	if (!t) {
-		GP_DEBUG ("Did not get mtime.");
-		if (type == GP_FILE_TYPE_NORMAL) {
-			GP_DEBUG ("Searching data for mtime...");
-			CR (gp_file_get_data_and_size (file, &data, &size));
-			t = get_exif_mtime (data, size);
-		}
-		if (!t) {
-			GP_DEBUG ("Trying EXIF information...");
-			t = gp_filesystem_get_exif_mtime (fs, folder, filename);
-		}
-		gp_file_set_mtime (file, t);
-	}
-#endif
-
 	/*
 	 * Often, thumbnails are of a different mime type than the normal
 	 * picture. In this case, we should rename the file.
 	 */
 	if (type != GP_FILE_TYPE_NORMAL)
 		CR (gp_file_adjust_name_for_mime_type (file));
+
+	return (GP_OK);
+}
+
+/**
+ * gp_filesystem_get_file:
+ * @fs: a #CameraFilesystem
+ * @folder: the folder in which the file can be found
+ * @filename: the name of the file to download
+ * @type: the type of the file
+ * @file:
+ *
+ * Downloads the file called @filename from the @folder using the 
+ * get_file_func if such a function has been previously supplied. If the 
+ * file has been previously downloaded, the file is retrieved from cache.
+ *
+ * Return value: a gphoto2 error code.
+ **/
+int
+gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
+                        const char *filename, CameraFileType type,
+                        CameraFile *file, GPContext *context)
+{
+	int r;
+#ifdef HAVE_EXIF
+	CameraFile *efile;
+	const char *data = NULL;
+	unsigned char *buf;
+	unsigned int buf_size;
+	unsigned long int size = 0;
+	ExifData *ed;
+#endif
+
+	r = gp_filesystem_get_file_impl (fs, folder, filename, type,
+					 file, context);
+
+	if ((r == GP_ERROR_NOT_SUPPORTED) &&
+	    (type == GP_FILE_TYPE_PREVIEW)) {
+
+		/*
+		 * Could not get preview (unsupported operation). Some 
+		 * cameras hide the thumbnail in EXIF data. Check it out.
+		 */
+#ifdef HAVE_EXIF
+		GP_DEBUG ("Getting previews is not supported. Trying "
+			  "EXIF data...");
+		CR (gp_file_new (&efile));
+		CU (gp_filesystem_get_file_impl (fs, folder, filename,
+				GP_FILE_TYPE_EXIF, efile, context), efile);
+		CU (gp_file_get_data_and_size (efile, &data, &size), efile);
+		ed = exif_data_new_from_data (data, size);
+		gp_file_unref (efile);
+		if (!ed) {
+			GP_DEBUG ("Could not parse EXIF data of "
+				"'%s' in folder '%s'.", filename, folder);
+			return (GP_ERROR_CORRUPTED_DATA);
+		}
+		if (!ed->data) {
+			GP_DEBUG ("EXIF data does not contain a thumbnail.");
+			exif_data_unref (ed);
+			return (r);
+		}
+
+		/*
+		 * We found a thumbnail in EXIF data! Those 
+		 * thumbnails are always JPEG. Set up the file.
+		 */
+		r = gp_file_set_data_and_size (file, ed->data, ed->size);
+		if (r < 0) {
+			exif_data_unref (ed);
+			return (r);
+		}
+		ed->data = NULL;
+		ed->size = 0;
+		exif_data_unref (ed);
+		CR (gp_file_set_type (file, GP_FILE_TYPE_PREVIEW));
+		CR (gp_file_set_name (file, filename));
+		CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
+		CR (gp_filesystem_set_file_noop (fs, folder, file, context));
+		CR (gp_file_adjust_name_for_mime_type (file));
+#else
+		GP_DEBUG ("Getting previews is not supported and "
+			"libgphoto2 has been compiled without exif "
+			"support. ");
+		return (r);
+#endif
+	} else if ((r == GP_ERROR_NOT_SUPPORTED) &&
+		   (type == GP_FILE_TYPE_EXIF)) {
+
+		/*
+		 * Some cameras hide EXIF data in thumbnails (!). Check it
+		 * out.
+		 */
+#ifdef HAVE_EXIF
+		GP_DEBUG ("Getting EXIF data is not supported. Trying "
+			  "thumbnail...");
+		CR (gp_file_new (&efile));
+		CU (gp_filesystem_get_file_impl (fs, folder, filename,
+				GP_FILE_TYPE_PREVIEW, efile, context), efile);
+		CU (gp_file_get_data_and_size (efile, &data, &size), efile);
+		ed = exif_data_new_from_data (data, size);
+		gp_file_unref (efile);
+		if (!ed) {
+			GP_DEBUG ("Could not parse EXIF data of thumbnail of "
+				"'%s' in folder '%s'.", filename, folder);
+			return (GP_ERROR_CORRUPTED_DATA);
+		}
+		exif_data_save_data (ed, &buf, &buf_size);
+		exif_data_unref (ed);
+		r = gp_file_set_data_and_size (file, buf, buf_size);
+		if (r < 0) {
+			free (buf);
+			return (r);
+		}
+		CR (gp_file_set_type (file, GP_FILE_TYPE_EXIF));
+		CR (gp_file_set_name (file, filename));
+		CR (gp_file_set_mime_type (file, GP_MIME_EXIF));
+		CR (gp_filesystem_set_file_noop (fs, folder, file, context));
+		CR (gp_file_adjust_name_for_mime_type (file));
+#else
+		GP_DEBUG ("Getting EXIF data is not supported and libgphoto2 "
+			"has been compiled without EXIF support.");
+		return (r);
+#endif
+	} else if (r < 0) {
+		GP_DEBUG ("Download of '%s' from '%s' (type %i) failed. "
+			"Reason: '%s'", filename, folder, type,
+			gp_result_as_string (r));
+		return (r);
+	}
 
 	return (GP_OK);
 }
@@ -1655,6 +1695,11 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	CameraFileType type;
 	const char *filename;
 	int x, y;
+#ifdef HAVE_EXIF
+	time_t t;
+	const char *data;
+	unsigned long int size;
+#endif
 
 	CHECK_NULL (fs && folder && file);
 	CC (context);
@@ -1704,6 +1749,24 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 		gp_context_error (context, _("Unknown file type %i."), type);
 		return (GP_ERROR);
 	}
+
+        /* If we didn't get a mtime, try to get it from EXIF data */
+#ifdef HAVE_EXIF 
+	CR (gp_file_get_mtime (file, &t));
+        if (!t) {
+                GP_DEBUG ("Did not get mtime.");
+                if (type == GP_FILE_TYPE_NORMAL) {
+                        GP_DEBUG ("Searching data for mtime...");
+                        CR (gp_file_get_data_and_size (file, &data, &size));
+                        t = get_exif_mtime (data, size);
+                }
+                if (!t) {
+                        GP_DEBUG ("Trying EXIF information...");
+                        t = gp_filesystem_get_exif_mtime (fs, folder, filename);
+                }
+		CR (gp_file_set_mtime (file, t));
+        }
+#endif
 
 	return (GP_OK);
 }
