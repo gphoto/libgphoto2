@@ -447,6 +447,10 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	info->file.fields =
 		GP_FILE_INFO_NAME | GP_FILE_INFO_TYPE 
 		| GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+	
+	info->file.mtime = 0;
+	info->file.fields |= GP_FILE_INFO_MTIME;
+
 	info->preview.fields =
 		GP_FILE_INFO_TYPE | GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
 	strcpy (info->preview.type, GP_MIME_BMP);
