@@ -36,7 +36,7 @@ int is_image (char *filename)
         dot = strrchr(filename, '.');
         if (dot) {
                 while (extension[x]) {
-                        if (strcmp(extension[x], dot+1)==0)
+                        if (strcasecmp(extension[x], dot+1)==0)
                                 return (1);
                         x++;
                 }
