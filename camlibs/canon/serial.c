@@ -1349,8 +1349,8 @@ canon_serial_ready (Camera *camera, GPContext *context)
 	gp_camera_status (camera, _("Connected to camera"));
 	/* Now is a good time to ask the camera for its owner
 	 * name (and Model String as well)  */
-	canon_int_identify_camera (camera);
-	canon_int_get_time (camera);
+	canon_int_identify_camera (camera, context);
+	canon_int_get_time (camera, context);
 
 	return GP_OK;
 }
@@ -1374,8 +1374,8 @@ canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **da
 	unsigned int total = 0, id;
 	unsigned char *msg;
 
-	CAM_CHECK_PARAM_NULL(length);
-	CAM_CHECK_PARAM_NULL(data);
+	CON_CHECK_PARAM_NULL(length);
+	CON_CHECK_PARAM_NULL(data);
 	*length = 0;
 	*data = NULL;
 

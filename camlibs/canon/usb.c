@@ -222,7 +222,7 @@ canon_usb_init (Camera *camera, GPContext *context)
 	if (res != GP_OK)
 		return res;
 
-	res = canon_int_identify_camera (camera);
+	res = canon_int_identify_camera (camera, context);
 	if (res != GP_OK) {
 		gp_context_error (context, _("Camera not ready, "
 					       "identify camera request failed: %s"),

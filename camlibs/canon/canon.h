@@ -65,9 +65,9 @@ typedef enum {
 	CANON_PS_PRO90_IS
 } canonCamModel;
 
-#define CAM_CHECK_PARAM_NULL(param) \
+#define CON_CHECK_PARAM_NULL(param) \
 	if (param == NULL) { \
-		gp_camera_set_error (camera, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
+		gp_context_error (context, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
 		return GP_ERROR_BAD_PARAMETERS; \
 	}
 
@@ -157,7 +157,7 @@ struct _CameraPrivateLibrary
  */
 #define GP_PORT_DEFAULT_RETURN_INTERNAL(return_statement) \
 		default: \
-			gp_camera_set_error (camera, "Don't know how to handle " \
+			gp_context_error (context, "Don't know how to handle " \
 					     "camera->port->type value %i aka 0x%x" \
 					     "in %s line %i.", camera->port->type, \
 					     camera->port->type, __FILE__, __LINE__); \
@@ -186,12 +186,12 @@ char *canon_int_get_disk_name(Camera *camera, GPContext *context);
 /*
  *
  */
-int canon_int_get_battery(Camera *camera, int *pwr_status, int *pwr_source);
+int canon_int_get_battery(Camera *camera, int *pwr_status, int *pwr_source, GPContext *context);
 
 /*
  *
  */
-int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,int *available);
+int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,int *available, GPContext *context);
 
 /*
  *
@@ -201,15 +201,15 @@ void canon_int_free_dir(Camera *camera, struct canon_dir *list);
 int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
 int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, int *length, GPContext *context);
 int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context);
-int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs);
-int canon_int_delete_file(Camera *camera, const char *name, const char *dir);
+int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs, GPContext *context);
+int canon_int_delete_file(Camera *camera, const char *name, const char *dir, GPContext *context);
 int canon_serial_end(Camera *camera);
 int canon_serial_off(Camera *camera);
-time_t canon_int_get_time(Camera *camera);
-int canon_int_set_time(Camera *camera, time_t date);
+time_t canon_int_get_time(Camera *camera, GPContext *context);
+int canon_int_set_time(Camera *camera, time_t date, GPContext *context);
 int canon_int_directory_operations(Camera *camera, const char *path, int action, GPContext *context);
-int canon_int_identify_camera(Camera *camera);
-int canon_int_set_owner_name(Camera *camera, const char *name);
+int canon_int_identify_camera(Camera *camera, GPContext *context);
+int canon_int_set_owner_name(Camera *camera, const char *name, GPContext *context);
 
 /* path conversion - needs drive letter, and can therefor not be moved to util.c */
 const char *canon2gphotopath(Camera *camera, const char *path);

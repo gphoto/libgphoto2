@@ -156,7 +156,7 @@ check_readiness (Camera *camera, GPContext *context)
 }
 
 static void
-canon_int_switch_camera_off (Camera *camera)
+canon_int_switch_camera_off (Camera *camera, GPContext *context)
 {
 	GP_DEBUG ("switch_camera_off()");
 
@@ -181,7 +181,7 @@ camera_exit (Camera *camera, GPContext *context)
 	}
 
 	if (camera->pl) {
-		canon_int_switch_camera_off (camera);
+		canon_int_switch_camera_off (camera, context);
 		free (camera->pl);
 		camera->pl = NULL;
 	}
@@ -197,7 +197,7 @@ canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 	if (!check_readiness (camera, context))
 		return -1;
 
-	return canon_int_get_battery (camera, pwr_status, pwr_source);
+	return canon_int_get_battery (camera, pwr_status, pwr_source, context);
 }
 
 static int
@@ -220,7 +220,7 @@ update_disk_cache (Camera *camera, GPContext *context)
 	snprintf (root, sizeof (root), "%s\\", camera->pl->cached_drive);
 	res = canon_int_get_disk_name_info (camera, root,
 					    &camera->pl->cached_capacity,
-					    &camera->pl->cached_available);
+					    &camera->pl->cached_available, context);
 	if (res != GP_OK) {
 		gp_context_error (context, _("Could not get disk info: %s"), gp_result_as_string (res));
 		return 0;
@@ -436,7 +436,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					attr |= CANON_ATTR_WRITE_PROTECTED;
 				canon_int_set_file_attributes (camera, filename, 
 							       gphoto2canonpath (camera, folder, context),
-							       attr);
+							       attr, context);
 			}
 			break;
 		case GP_FILE_TYPE_PREVIEW:
@@ -717,7 +717,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 		snprintf (power_str, sizeof (power_str), _("not available: %s"), gp_result_as_string (res));
 	}
 
-	camera_time = canon_int_get_time (camera);
+	camera_time = canon_int_get_time (camera, context);
 	if (camera_time > 0) {
 		time_diff = difftime(camera_time, time(NULL));
 	
@@ -796,7 +796,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	GP_DEBUG ("delete_file_func: "
 		  "filename: %s\nfolder: %s\n", filename, canonfolder);
-	if (canon_int_delete_file (camera, filename, canonfolder) != GP_OK) {
+	if (canon_int_delete_file (camera, filename, canonfolder, context) != GP_OK) {
 		gp_context_error (context, _("Error deleting file"));
 		return GP_ERROR;
 	}
@@ -807,7 +807,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if ((thumbname != NULL) && (*thumbname != '\0')) {
 		GP_DEBUG ("delete_file_func: "
 			  "thumbname: %s\n folder: %s\n", thumbname, canonfolder);
-		if (canon_int_delete_file (camera, thumbname, canonfolder) != GP_OK) {
+		if (canon_int_delete_file (camera, thumbname, canonfolder, context) != GP_OK) {
 			/* XXX should we handle this as an error?
 			 * Probably only in case the camera link died,
 			 * but not if the file just had already been
@@ -958,7 +958,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (section, t);
 
 	if (camera->pl->cached_ready == 1) {
-		camtime = canon_int_get_time (camera);
+		camtime = canon_int_get_time (camera, context);
 		if (camtime >= 0) {
 			gp_widget_new (GP_WIDGET_DATE, _("Date and Time (readonly)"), &t);
 			gp_widget_set_value (t, &camtime);
@@ -1027,7 +1027,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!check_readiness (camera, context)) {
 			gp_camera_status (camera, _("Camera unavailable"));
 		} else {
-			if (canon_int_set_owner_name (camera, wvalue) == GP_OK)
+			if (canon_int_set_owner_name (camera, wvalue, context) == GP_OK)
 				gp_camera_status (camera, _("Owner name changed"));
 			else
 				gp_camera_status (camera, _("could not change owner name"));
@@ -1040,7 +1040,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!check_readiness (camera, context)) {
 			gp_camera_status (camera, _("Camera unavailable"));
 		} else {
-			if (canon_int_set_time (camera, time(NULL)) == GP_OK) {
+			if (canon_int_set_time (camera, time(NULL), context) == GP_OK) {
 				gp_camera_status (camera, _("time set"));
 			} else {
 				gp_camera_status (camera, _("could not set time"));

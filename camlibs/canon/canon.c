@@ -289,7 +289,7 @@ canon_int_directory_operations (Camera *camera, const char *path, int action,
  * This function also gets the firmware revision in the camera struct.
  **/
 int
-canon_int_identify_camera (Camera *camera)
+canon_int_identify_camera (Camera *camera, GPContext *context)
 {
 	unsigned char *msg;
 	int len;
@@ -342,7 +342,7 @@ canon_int_identify_camera (Camera *camera)
  * Gets battery status.
  **/
 int
-canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
+canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPContext *context)
 {
 	unsigned char *msg;
 	int len;
@@ -397,7 +397,7 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
  **/
 int
 canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir,
-			       unsigned char attrs)
+			       unsigned char attrs, GPContext *context)
 {
 	unsigned char payload[300];
 	unsigned char *msg;
@@ -469,7 +469,7 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
  * check that everything went fine.
  **/
 int
-canon_int_set_owner_name (Camera *camera, const char *name)
+canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 {
 	unsigned char *msg;
 	int len;
@@ -508,7 +508,7 @@ canon_int_set_owner_name (Camera *camera, const char *name)
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 		
-	return canon_int_identify_camera (camera);
+	return canon_int_identify_camera (camera, context);
 }
 
 
@@ -527,7 +527,7 @@ canon_int_set_owner_name (Camera *camera, const char *name)
  * elsewhere.
  **/
 time_t
-canon_int_get_time (Camera *camera)
+canon_int_get_time (Camera *camera, GPContext *context)
 {
 	unsigned char *msg;
 	int len;
@@ -581,7 +581,7 @@ canon_int_get_time (Camera *camera)
  */
 
 int
-canon_int_set_time (Camera *camera, time_t date)
+canon_int_set_time (Camera *camera, time_t date, GPContext *context)
 {
 	unsigned char *msg;
 	int len;
@@ -737,16 +737,16 @@ canon_int_get_disk_name (Camera *camera, GPContext *context)
  * Gets available room and max capacity of a disk given by @name.
  **/
 int
-canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, int *available)
+canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, int *available, GPContext *context)
 {
 	unsigned char *msg = NULL;
 	int len, cap, ava;
 
 	GP_DEBUG ("canon_int_get_disk_name_info() name '%s'", name);
 
-	CAM_CHECK_PARAM_NULL(name);
-	CAM_CHECK_PARAM_NULL(capacity);
-	CAM_CHECK_PARAM_NULL(available);
+	CON_CHECK_PARAM_NULL(name);
+	CON_CHECK_PARAM_NULL(capacity);
+	CON_CHECK_PARAM_NULL(available);
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
@@ -1298,8 +1298,8 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 
 	GP_DEBUG ("canon_int_get_thumbnail() called for file '%s'", name);
 
-	CAM_CHECK_PARAM_NULL(retdata);
-	CAM_CHECK_PARAM_NULL(length);
+	CON_CHECK_PARAM_NULL(retdata);
+	CON_CHECK_PARAM_NULL(length);
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
@@ -1517,7 +1517,7 @@ old_canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 #endif
 
 int
-canon_int_delete_file (Camera *camera, const char *name, const char *dir)
+canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPContext *context)
 {
 	unsigned char payload[300];
 	unsigned char *msg;

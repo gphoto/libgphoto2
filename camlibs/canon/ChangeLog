@@ -1,5 +1,10 @@
 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* *.[c,h]: Replase last call to gp_camera_set_error (I oversaw one
+	  hidden in the header file).
+
+2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* *.[c,h]: Replace calls to gp_camera_set_error by gp_context_error.
 
 2002-01-11  Hans Ulrich Niedermann <gp@n-dimensional.de>
