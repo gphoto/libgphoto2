@@ -1,3 +1,8 @@
+2002-02-07  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am:
+	* directory.c: Support GP_FILE_TYPE_EXIF ifdef HAVE_EXIF
+
 2001-12-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* directory.c: Even more debugging.

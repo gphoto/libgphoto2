@@ -27,6 +27,10 @@
 #include <utime.h>
 #include <unistd.h>
 
+#ifdef HAVE_EXIF
+#include <libexif/exif-data.h>
+#endif
+
 #include <gphoto2-setting.h>
 #include <gphoto2-library.h>
 #include <gphoto2-port.h>
@@ -64,7 +68,7 @@ static const struct {
 	{NULL, NULL}
 };
 
-//#define DEBUG
+#define DEBUG
 #define GP_MODULE "directory"
 
 static const char *
@@ -381,7 +385,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *data,
+	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
         char path[1024];
@@ -389,6 +393,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 #ifdef DEBUG
 	unsigned int i, id;
 #endif
+#ifdef HAVE_EXIF
+	ExifData *data;
+	unsigned char *buf;
+	unsigned int buf_len;
+#endif /* HAVE_EXIF */
 
 	if (strlen (folder) == 1)
 		snprintf (path, sizeof (path), "/%s", filename);
@@ -404,6 +413,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		result = gp_file_open (file, path);
 		break;
 #endif
+#ifdef HAVE_EXIF
+	case GP_FILE_TYPE_EXIF:
+		data = exif_data_new_from_file (path);
+		if (!data) {
+			gp_context_error (context, _("Could not open '%s'."),
+					  path);
+			return (GP_ERROR);
+		}
+		exif_data_save_data (data, &buf, &buf_len);
+		exif_data_unref (data);
+		gp_file_set_data_and_size (file, buf, buf_len);
+		return (GP_OK);
+#endif /* HAVE_EXIF */
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
