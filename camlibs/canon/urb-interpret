@@ -26,9 +26,10 @@ my %canon_cmd = (
     "0x06 0x11 0x201" => "Remove directory",
     "0x09 0x11 0x201" => "Disk info request",
     "0x0a 0x11 0x202" => "Flash device ID",
+    "0x0a 0x11 0x201" => "Delete file (new)",
     "0x0a 0x12 0x201" => "Power supply status",
     "0x0b 0x11 0x202" => "Get directory",
-    "0x0d 0x11 0x201" => "Delete file",
+    "0x0d 0x11 0x201" => "Delete file (old) or Disk info request (new)",
     "0x0e 0x11 0x201" => "Set file attribute",
     "0x0e 0x11 0x202" => "Flash Device ID (new)",
     "0x0f 0x11 0x201" => "Set file time",
@@ -38,14 +39,14 @@ my %canon_cmd = (
     "0x1a 0x12 0x201" => "Unknown EOS D30 command",
     "0x1b 0x12 0x201" => "EOS lock keys",
     "0x1c 0x12 0x201" => "EOS unlock keys",
-    "0x1d 0x12 0x201" => "EOS get body ID",
+    "0x1d 0x12 0x201" => "EOS get body ID (old) or Get Custom Functions (new)",
     "0x1f 0x12 0x201" => "Get camera abilities",
     "0x20 0x12 0x201" => "Lock keys, turn off LCD",
     "0x21 0x12 0x201" => "Unknown newer command",
     "0x22 0x12 0x201" => "Unknown newer command",
     "0x23 0x12 0x201" => "Get EOS Body ID (new)",
     "0x24 0x12 0x201" => "Get camera abilities (new)",
-    "0x25 0x12 0x201" => "Unknown newer command",
+    "0x25 0x12 0x201" => "Remote Camera control (new)",
     "0x26 0x12 0x202" => "Get captured image (new)",
     "0x35 0x12 0x201" => "Unknown newer command",
     "0x36 0x12 0x201" => "Unknown newer command"
@@ -142,7 +143,8 @@ foreach $file (@ARGV) {
 	} else {
 	    if ($current_urb > 0) {
 		if ( $line =~ /^(\d+)\s+(\d\d:\d\d:\d\d [AP]M)\s+0000:\s+/
-		     || $line =~ /^(\d+)\s+(\d+\.\d+)\s+0000:\s+/ ) {
+		     || $line =~ /^(\d+)\s+(\d+\.\d+)\s+0000:\s+/
+		     || $line =~ /^\s+00000000:\s+/ ) {
 		    if ( !($dumping_setup) ) {
 			#warn ( "dumping URB data\n" );
 			$dumping_urbdata = 1;
@@ -174,7 +176,8 @@ foreach $file (@ARGV) {
 		    # Within data buffer
 		    my $hex = "";
 		    if ($line =~ /^(\d+)\s+(\d\d:\d\d:\d\d [AP]M)\s+([\da-f]+):((\s[\da-f][\da-f])+)\s+$/
-			|| $line =~ /^(\d+)\s+(\d+\.\d+)\s+([\da-f]+):((\s[\da-f][\da-f])+)\s+$/ ) {
+			|| $line =~ /^(\d+)\s+(\d+\.\d+)\s+([\da-f]+):((\s[\da-f][\da-f])+)\s+$/
+			|| $line =~ /^\s+([\da-f]+):((\s[\da-f][\da-f])+)\s+$/ ) {
 			$seq = $1;
 			$timestamp = $2;
 			$byte_offset = $3;
@@ -235,8 +238,10 @@ foreach $file (@ARGV) {
 			    } elsif (hex($byte_offset) == 0x50) {
 				if ( defined ( $urbdata{$current_urb}{cmd1} )
 				     &&  defined ( $urbdata{$current_urb}{cmd2} ) ) {
-				    if ( $urbdata{$current_urb}{cmd1} eq "0x13"
-					 || $urbdata{$current_urb}{cmd2} eq "0x12" ) {
+				    if ( ( $urbdata{$current_urb}{cmd1} eq "0x13"
+					 && $urbdata{$current_urb}{cmd2} eq "0x12")
+					 || ( $urbdata{$current_urb}{cmd1} eq "0x25"
+					      && $urbdata{$current_urb}{cmd2} eq "0x12") ) {
 					my @h = split(" ", $hex);
 					$urbdata{$current_urb}{subcmd} = "0x$h[0]";
 				    }
@@ -500,7 +505,8 @@ foreach $file (@ARGV) {
 				warn ( "Command string is $cmd at URB $current_urb\n" );
 			    }
 			    elsif ($canon_cmd{$cmd}) {
-				if ( $cmd eq "0x13 0x12 0x201" ) {
+				if ( $cmd eq "0x13 0x12 0x201"
+				     || $cmd eq "0x25 0x12 0x201" ) {
 				    if ( defined($urbdata{$current_urb}{subcmd}) ) {
 					printf("\n\n\n\n*** URB $current_urb CANON COMMAND '$canon_cmd{$cmd}' ($cmd) 0x%02x bytes", $length);
 					if ( $control_subcmd{$urbdata{$current_urb}{subcmd}} ) {
