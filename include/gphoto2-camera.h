@@ -24,6 +24,7 @@
 typedef struct _Camera Camera;
 
 #include <gphoto2-port.h>
+#include <gphoto2-port-core.h>
 
 #include <gphoto2-widget.h>
 #include <gphoto2-list.h>
@@ -107,8 +108,9 @@ typedef struct {
 	c_result_as_string      result_as_string;
 } CameraFunctions;
 
-typedef gp_port      CameraPort;
-typedef gp_port_info CameraPortInfo;
+/* Those are DEPRECATED */
+typedef GPPort     CameraPort;
+typedef GPPortInfo CameraPortInfo;
 
 typedef void (* CameraMessageFunc)  (Camera *, const char *msg, void *data);
 typedef void (* CameraStatusFunc)   (Camera *, const char *status, void *data);
@@ -117,7 +119,7 @@ typedef void (* CameraProgressFunc) (Camera *, float percentage, void *data);
 struct _Camera {
 	char            model[128];
 
-	CameraPortInfo  *port_info;
+	GPPortInfo     *port_info;
 	
 	int             ref_count;
 	
@@ -129,7 +131,7 @@ struct _Camera {
 	void            *camlib_data;
 	void            *frontend_data;
 
-	CameraPort       *port;
+	GPPort          *port;
 	CameraFilesystem *fs;
 
 	int             session;

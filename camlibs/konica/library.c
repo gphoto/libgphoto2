@@ -1269,7 +1269,7 @@ camera_init (Camera* camera)
 
                 break;
         default:
-                return (GP_ERROR_IO_UNKNOWN_PORT);
+                return (GP_ERROR_UNKNOWN_PORT);
         }
 
         /* Store some data we constantly need. */

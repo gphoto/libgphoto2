@@ -23,6 +23,8 @@
 #include "range.h"
 #include "shell.h"
 
+#include "gphoto2-port-core.h"
+
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #endif
@@ -347,7 +349,7 @@ OPTION_CALLBACK(list_ports)
         gp_port_info info;
         int x, count;
 
-        CHECK_RESULT (count = gp_port_count_get ());
+        CHECK_RESULT (count = gp_port_core_count ());
 
         if (!glob_quiet) {
           printf("Devices found: %i\n", count);
@@ -356,7 +358,7 @@ OPTION_CALLBACK(list_ports)
         } else
           printf("%i\n", count);
         for(x = 0; x < count; x++) {
-                CHECK_RESULT (gp_port_info_get (x, &info));
+                CHECK_RESULT (gp_port_core_get_info (x, &info));
                 printf ("%-32s %-32s\n", info.path, info.name);
         }
 

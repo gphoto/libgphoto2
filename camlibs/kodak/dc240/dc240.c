@@ -191,7 +191,7 @@ camera_init (Camera *camera)
 		settings.usb.altsetting = 0;
 		break;
 	default:
-		return (GP_ERROR_IO_UNKNOWN_PORT);
+		return (GP_ERROR_UNKNOWN_PORT);
 	}
 	
 	ret = gp_port_settings_set (camera->port, settings);
