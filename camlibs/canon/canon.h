@@ -77,7 +77,7 @@ typedef enum {
  *		   "get picture abilities".
  * @CANON_CLASS_5: supports lock, no unlock, but not "get picture abilities".
  *                 Examples: S45, G3.
- * @CANON_CLASS_6: major protocol revision. 20D is only model yet seen.
+ * @CANON_CLASS_6: major protocol revision. 20D and 350D use this protocol.
  *
  * Enumeration of all camera types currently supported. Simplified so
  * that all cameras with similar behavior have the same code.
