@@ -181,9 +181,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
 	memset (p_data, 0, w * h);
 
-	ppm = malloc (w* h * 3);
+	ppm = malloc (w* h * 3 + 256); /* Data + header */
 	if (!ppm) {free (data); free (p_data); return GP_ERROR_NO_MEMORY;}
-	memset (ppm, 0, w * h * 3);
+	memset (ppm, 0, w * h * 3 + 256);
 
     	switch (type) {
 	case GP_FILE_TYPE_NORMAL:

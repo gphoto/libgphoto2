@@ -1,3 +1,9 @@
+2003-10-10  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c: Patch by Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu>: Allocate enough bytes for
+	  image data _and_ header.
+
 2003-10-07  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* sq905.c: Patch by Theodore Kilgore <kilgota@banach.math.auburn.edu>,
