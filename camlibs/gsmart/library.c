@@ -77,16 +77,15 @@ static struct
 }
 models[] =
 {
-	{
-	"Mustek gSmart mini 2", 0x055f, 0xc420}
-	, {
-	NULL, 0, 0}
+	{"Mustek gSmart mini 2", 0x055f, 0xc420}, 
+	{"Mustek gSmart mini 3", 0x055f, 0xc520}, 
+	{ NULL, 0, 0}
 };
 
 int
 camera_id (CameraText *id)
 {
-	strcpy (id->text, "gsmartmini2");
+	strcpy (id->text, "gsmartmini");
 	return (GP_OK);
 }
 
