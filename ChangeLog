@@ -1,3 +1,7 @@
+2001-10-21 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* libgphoto2_port/libgphoto2_port/gp_port.c: log USB IDs in hex instead of decimal
+
 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/kodak/dc120: Prepare for camera->camlib_data removal. Fix
