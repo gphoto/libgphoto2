@@ -1,6 +1,7 @@
 2004-01-20  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* ptp.c: As reported by Eric Valette added Canon PowerShot S50.
+	* ptp.c: New sony name, one generic Sony PTP name.
 
 2004-01-18  Marcus Meissner  <marcus@jet.franken.de>
 	
