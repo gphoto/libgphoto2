@@ -8,7 +8,8 @@ camlib_LTLIBRARIES = libgphoto2_canon.la
 INCLUDES =                                              \
         -I$(top_srcdir)/intl				\
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
-        -I$(top_srcdir)/libgphoto2
+        -I$(top_srcdir)/libgphoto2			\
+	-I$(top_builddir)/libgphoto2
 
 libgphoto2_canon_la_SOURCES =\
  canon.c canon.h\
