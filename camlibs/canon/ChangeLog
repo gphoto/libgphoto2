@@ -1,0 +1,11 @@
+2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* README: added note about CRW (raw) support
+	* canon.c: added support for PowerShot S40
+	* canon.h: added support for PowerShot S40
+	* library.c: added support for PowerShot S40
+	
+2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* ChangeLog: created new file
+	* Changelog: declared deprecated
