@@ -127,7 +127,7 @@ translate_gp_result (int result)
 	case GP_ERROR:
 		return (PTP_RC_GeneralError);
 	default:
-		return (PTP_RC_Undefined);
+		return (PTP_RC_OK);
 	}
 }
 
