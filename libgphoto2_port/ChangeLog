@@ -1,5 +1,10 @@
 2001-11-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* serial/unix.c: Always set the speed at the beginning - don't assume
+	  it to be at 9600.
+
+2001-11-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* serial/unix.c: For flush and break, check that the device is open
 	  and at the right speed.
 

@@ -318,8 +318,8 @@ gp_port_serial_init (GPPort *dev)
 		return (GP_ERROR_NO_MEMORY);
 	memset (dev->pl, 0, sizeof (GPPortPrivateLibrary));
 
-	/* Default speed is 9600 */
-	dev->pl->baudrate = 9600;
+	/* There is no default speed. */
+	dev->pl->baudrate = -1;
 
 #if HAVE_TERMIOS_H
         if (tcgetattr (dev->pl->fd, &term_old) < 0) {
