@@ -655,8 +655,7 @@ camera_capture (Camera* camera, CameraFile* file, CameraCaptureInfo* info)
 	case GP_CAPTURE_VIDEO:
 
 		/* Our cameras can't do that. */
-		gp_frontend_message (camera, "Your camera does not support capturing videos.");
-		return (GP_ERROR);
+		return (GP_ERROR_NOT_SUPPORTED);
 
 	case GP_CAPTURE_PREVIEW:
 
@@ -668,6 +667,9 @@ camera_capture (Camera* camera, CameraFile* file, CameraCaptureInfo* info)
 		return (result);
 
 	default:
+
+		/* Should not be reached. */
+		g_warning (_("Unknown capture type (%i)!\n"), info->type);
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 }
@@ -691,7 +693,7 @@ camera_about (Camera* camera, CameraText* about)
 	strcpy (about->text, 
 		"Konica library\n"
 		"Lutz Müller <urc8@rz.uni-karlsruhe.de>\n"
-		"Support for Konica and HP cameras.");
+		"Support for all Konica and several HP cameras.");
 
 	return (GP_OK);
 }
@@ -713,6 +715,7 @@ camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gc
 	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (!*window,	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (file,	GP_ERROR_BAD_PARAMETERS);
 	
 	/* Get some information about the picture. */
 	konica_data = (konica_data_t*) camera->camlib_data;
@@ -747,7 +750,6 @@ camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gch
 	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
-	
 	
 	/* Some information we need. */
 	konica_data = (konica_data_t*) camera->camlib_data;
