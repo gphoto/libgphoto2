@@ -424,7 +424,7 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | 
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
 			GP_FILE_INFO_SIZE;
-	strcpy(info.file.type,"image/pnm");
+	strcpy(info.file.type,GP_MIME_PNM);
 	strcpy(info.file.name,fn);
 	info.file.width		= 640;
 	info.file.height	= 480;

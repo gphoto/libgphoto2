@@ -125,7 +125,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		return image_no;
 
 	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, "image/pnm");
+	gp_file_set_mime_type (file, GP_MIME_PNM);
 	switch (type) {
 	case GP_FILE_TYPE_RAW:
 		result = jd11_get_image_full(camera,file,image_no,1,context);

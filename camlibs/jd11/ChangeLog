@@ -1,3 +1,7 @@
+2002-04-12  Marcus Meissner <marcus@jet.franken.de>
+	* jd11.c, serial.c: Changed image/pnm to correct GP_MIME_PNM, so 
+	  konqueror displays it again.
+
 2002-04-06  Marcus Meissner <marcus@jet.franken.de>
 	
 	* jd11.c, serial.[ch]:
