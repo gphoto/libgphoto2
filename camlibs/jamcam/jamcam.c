@@ -61,7 +61,7 @@ static struct {
 	int usb_vendor;
 	int usb_product;
 } models[] = {
-	{ "KBGear JamCam", 0x084E, 0x0001 },
+	{ "KBGear:JamCam", 0x084E, 0x0001 },
 	{ NULL, 0, 0 }
 };
 

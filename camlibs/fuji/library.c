@@ -57,21 +57,21 @@
 static struct {
 	const char *model;
 } models[] = {
-	{"Apple QuickTake 200"},
-	{"Fuji DS-7"},
-	{"Fuji DX-5"},
-	{"Fuji DX-7"},
-	{"Fuji DX-10"},
-	{"Fuji MX-500"},
-	{"Fuji MX-600"},
-	{"Fuji MX-700"},
-	{"Fuji MX-1200"},
-	{"Fuji MX-1700"},
-	{"Fuji MX-2700"},
-	{"Fuji MX-2900"},
-	{"Leica Digilux Zoom"},
-	{"Samsung Kenox SSC-350N"},
-	{"Toshiba PDR-M1"},
+	{"Apple:QuickTake 200"},
+	{"Fuji:DS-7"},
+	{"Fuji:DX-5"},
+	{"Fuji:DX-7"},
+	{"Fuji:DX-10"},
+	{"Fuji:MX-500"},
+	{"Fuji:MX-600"},
+	{"Fuji:MX-700"},
+	{"Fuji:MX-1200"},
+	{"Fuji:MX-1700"},
+	{"Fuji:MX-2700"},
+	{"Fuji:MX-2900"},
+	{"Leica:Digilux Zoom"},
+	{"Samsung:Kenox SSC-350N"},
+	{"Toshiba:PDR-M1"},
 	{NULL}
 };
 

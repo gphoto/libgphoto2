@@ -100,9 +100,9 @@ struct _CameraPrivateLibrary {
 
 
 static char *models[] = {
-        "Mustek VDC-3500",
-        "Relisys Dimera 3500",
-        "Trust DC-3500",
+        "Mustek:VDC-3500",
+        "Relisys:Dimera 3500",
+        "Trust:DC-3500",
         NULL
 };
 
