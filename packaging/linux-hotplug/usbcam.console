@@ -26,15 +26,16 @@ then
     # New code, using lock files instead of copying /dev/console permissions
     # This also works with non-gdm logins (e.g. on a virtual terminal)
     # Idea and code from Nalin Dahyabhai <nalin@redhat.com>
-    if [ -f /var/run/console.lock ]
-    then
-        CONSOLEOWNER=`cat /var/run/console.lock`
-    elif [ -f /var/lock/console.lock ]
-    then
-        CONSOLEOWNER=`cat /var/lock/console.lock`
-    else
-        CONSOLEOWNER=
-    fi
+    CONSOLEOWNER=""
+    for conlock in \
+    	/var/run/console.lock \
+	/var/run/console/console.lock \
+	/var/lock/console.lock
+    do
+        if [ -f "$conlock" ]; then
+	    CONSOLEOWNER=`cat $conlock`
+	fi
+    done
     if [ -n "$CONSOLEOWNER" ]
     then
         chmod 0000 "${DEVICE}"
