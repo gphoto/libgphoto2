@@ -288,11 +288,8 @@ canon_int_switch_camera_off (Camera *camera, GPContext *context)
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
-	if (camera->port->type == GP_PORT_USB) {
-		/* EOS-class cameras lock keys only for remote
-		   capture, and unlock immediately. */
-		if ( !IS_EOS(camera->pl->md->model) ) canon_usb_unlock_keys (camera, context);
-	}
+	if (camera->port->type == GP_PORT_USB)
+		canon_usb_unlock_keys (camera, context);
 
 	if (camera->pl) {
 		canon_int_switch_camera_off (camera, context);
