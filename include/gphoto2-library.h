@@ -18,11 +18,6 @@ int camera_id 			(char *id);
 	/* multiple libraries can support the same camera. 	*/
 	/* The id is limited to 64 characters.			*/
 
-int camera_debug_set		(int onoff);
-	/* Turns on or off camera library debugging. onoff will */
-	/* be 0 to turn off debugging, or 1 to turn it on. Use  */
-	/* this to set a flag in the library to be very verbose */
-
 int camera_abilities 		(CameraAbilities *abilities, 
 				 int *count);
 	/* Returns the camera abilities for all the cameras 	*/
@@ -36,6 +31,8 @@ int camera_init 		(CameraInit *init);
 	/* the user has chosen.					*/
 	/* If init->port_settings.speed == 0, use a default 	*/
 	/* speed for the camera.				*/
+	/* init->debug will be set to 1 if debugging is turned	*/
+	/* on.							*/
 
 int camera_exit 		();
 	/* Called when library is being closed or another 	*/

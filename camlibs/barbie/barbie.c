@@ -259,13 +259,6 @@ int camera_id (char *id) {
 	return (GP_OK);
 }
 
-int camera_debug_set (int value) {
-
-	glob_debug=value;
-
-	return (GP_OK);
-}
-
 int camera_abilities (CameraAbilities *abilities, int *count) {
 
 	*count = 3;
@@ -297,6 +290,8 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 
 int camera_init(CameraInit *init) {
 
+	glob_debug = init->debug;
+
 	if (glob_debug)
 		printf("barbie: Initializing the camera\n");
 
@@ -304,6 +299,8 @@ int camera_init(CameraInit *init) {
 		gpio_close(dev);
 		gpio_free(dev);
 	}
+
+
 	dev = gpio_new(GPIO_DEVICE_SERIAL);
 	gpio_set_timeout(dev, 5000);
 	strcpy(settings.serial.port, init->port_settings.path);
@@ -313,11 +310,13 @@ int camera_init(CameraInit *init) {
 	settings.serial.parity	= 0;
 	settings.serial.stopbits= 1;
 
+
 	gpio_set_settings(dev, settings);
 
 	gpio_open(dev);
 
 	strcpy(glob_camera_model, init->model);
+
 
 	return (barbie_ping());
 }

@@ -865,10 +865,8 @@ int main (int argc, char **argv) {
 		glob_quiet=1;
 
 	/* Peek ahead: Check to see if we need to turn on debugging output */
-	if (option_is_present("debug", argc, argv)==GP_OK) {
-		gp_debug_set(1);
+	if (option_is_present("debug", argc, argv)==GP_OK)
 		glob_debug=1;
-	}
 
 	/* Peek ahead: Make sure we were called correctly */
 	if ((argc == 1)||(verify_options(argc, argv)==GP_ERROR)) {
@@ -878,7 +876,7 @@ int main (int argc, char **argv) {
 	}
 
 	/* Initialize gPhoto core */
-	gp_init();
+	gp_init(glob_debug);
 
 	if (execute_options(argc, argv) == GP_ERROR) {
 //		if (!glob_quiet)

@@ -17,16 +17,10 @@
 
 	/* Initialize/Quit the gPhoto library */
 	/* ============================================================================== */
-	int gp_init();
+	int gp_init(int debug);
+		/* debugging output:   0=off  1=on */
+
 	int gp_exit();
-
-	/* Debugging options */
-	/* ============================================================================== */
-
-	/* Turn on or off debugging information (very verbose!) in the gPhoto core */
-	int gp_debug_set(int value);
-		/* value=0, debugging off */
-		/* value=1, debugging on  */
 
 	/* Port information */
 	/* ============================================================================== */

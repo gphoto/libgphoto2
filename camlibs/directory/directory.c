@@ -17,7 +17,8 @@ char  dir_directory[1024];
 char  dir_images[1024][1024];
 int   dir_num_images;
 int   dir_get_index;
-int   dir_indexed=0;
+
+int glob_debug;
 
 int camera_id (char *id) {
 
@@ -57,6 +58,8 @@ int camera_init (CameraInit *init) {
 	int i=0;
 
 	dir_num_images = 0;
+
+	glob_debug = init->debug;
 
 	for (i=0; i<1024; i++)
 		strcpy(dir_images[i], "");
@@ -113,7 +116,6 @@ int folder_index() {
 		return (GP_ERROR);
 	de = readdir(dir);
 	while (de) {
-		gp_progress(-1);
 		sprintf(fname, "%s/%s", dir_directory, de->d_name);
 		stat(fname, &s);
                 /* If it's a file ...*/
@@ -122,21 +124,20 @@ int folder_index() {
 			if (dot) {
 			   if (
 			    (strcasecmp(dot, ".gif")==0)||
+			    (strcasecmp(dot, ".tif")==0)||
+			    (strcasecmp(dot, ".tiff")==0)||
 			    (strcasecmp(dot, ".jpg")==0)||
 			    (strcasecmp(dot, ".jpeg")==0)) {
 				strcpy(dir_images[dir_num_images++],
 					de->d_name);
-#ifdef DEBUG
-				printf("directory: found \"%s\"\n", de->d_name);
-#endif
+				if (glob_debug)
+					printf("directory: found \"%s\"\n", de->d_name);
 			   }
 			}
 		}
 		de = readdir(dir);
 	}
 	closedir(dir);
-
-	dir_indexed=1;
 
 	return (GP_OK);
 }
@@ -145,14 +146,10 @@ int camera_folder_set(char *folder_name) {
 
 	strcpy(dir_directory, folder_name);
 
-	return (GP_OK);
+	return (folder_index());
 }
 
 int camera_file_count () {
-
-	if (!dir_indexed)
-		if (folder_index()==GP_ERROR)
-			return (GP_ERROR);
 
 	return (dir_num_images);
 }
@@ -166,10 +163,6 @@ int camera_file_get (int file_number, CameraFile *file) {
 	FILE *fp;
 	long imagesize;
 	char filename[1024];
-
-	if (!dir_indexed)
-		if (folder_index()==GP_ERROR)
-			return (GP_ERROR);
 
 	sprintf(filename, "%s/%s", dir_directory,
 		dir_images[file_number]);
@@ -199,10 +192,6 @@ int camera_file_get_preview (int file_number, CameraFile *preview) {
 	FILE *fp;
 	long int imagesize;
 
-	if (!dir_indexed)
-		if (folder_index()==GP_ERROR)
-			return (GP_ERROR);
-
 	sprintf(filename, "%s/%s", dir_directory,
 		dir_images[file_number]);	
 	fp = fopen(filename, "r");
@@ -222,19 +211,11 @@ int camera_file_get_preview (int file_number, CameraFile *preview) {
 
 int camera_file_put (CameraFile *file) {
 
-	if (!dir_indexed)
-		if (folder_index()==GP_ERROR)
-			return (GP_ERROR);
-
 	return (GP_ERROR);
 }
 
 
 int camera_file_delete (int file_number) {
-
-	if (!dir_indexed)
-		if (folder_index()==GP_ERROR)
-			return (GP_ERROR);
 
 	return (GP_ERROR);
 }

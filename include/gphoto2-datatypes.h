@@ -35,7 +35,7 @@ typedef enum {
 	GP_PORT_PARALLEL,
 	GP_PORT_USB,
 	GP_PORT_IEEE1394,
-	GP_PORT_SOCKET
+	GP_PORT_NETWORK
 } CameraPortType;
 
 typedef enum {
@@ -97,7 +97,7 @@ typedef struct {
 		/* For parallel port, "/dev/lpt0" or variants	 */
 		/* For usb, "inep# outep#"			 */
 		/* For ieee1394, "ieee1394"			 */
-		/* For socket, the address (ip or fqdn).	 */
+		/* For network, the address (ip or fqdn).	 */
 		/* For directory, the path.			 */
 
 	int speed;
@@ -112,7 +112,7 @@ typedef struct {
 	int parallel;
 	int usb;
 	int ieee1394;
-	int socket;
+	int network;
 		/* set to 1 if supported, 0 if not.		 */
 
 	int speed[64];
@@ -140,6 +140,8 @@ typedef struct {
 	char model[128]; 		   /* Name of the camera */
 
 	CameraPortSettings port_settings; 	/* Port settings */
+
+	int debug;	          /* Debugging output 0=off 1=on */
 } CameraInit;
 
 typedef struct {

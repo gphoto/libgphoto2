@@ -18,7 +18,7 @@ int test_gphoto() {
 	/* ----------------------------- */
 	/* Initialize the gPhoto library */
 	/* ----------------------------- */
-	gp_init();
+	gp_init(0);
 
 	/* ---------------------------------------- */
 	/* Retrieve the number of cameras available */

@@ -9,11 +9,6 @@ int camera_id (char *id) {
 	return (GP_OK);
 }
 
-int camera_debug_set (int onoff) {
-
-        return (GP_OK);
-}
-
 int camera_abilities (CameraAbilities *abilities, int *count) {
 
 	*count = 0;

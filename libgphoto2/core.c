@@ -63,10 +63,12 @@
 /* Core functions (for front-ends)
    ---------------------------------------------------------------- */
 
-int gp_init () {
+int gp_init (int debug) {
 
 	int x;
 	char buf[1024];
+
+	glob_debug = debug;
 
 	/* Initialize the globals */
 	glob_camera_number   = 0;
@@ -131,13 +133,6 @@ int gp_exit () {
 	return (GP_OK);
 }
 
-int gp_debug_set (int value) {
-
-	glob_debug = value;
-
-	return (GP_OK);
-}
-
 int gp_port_count() {
 
 	return (gpio_get_device_count());
@@ -163,8 +158,8 @@ int gp_port_info(int port_number, CameraPortInfo *info) {
 		case GPIO_DEVICE_IEEE1394:
 			info->type = GP_PORT_IEEE1394;
 			break;
-		case GPIO_DEVICE_SOCKET:
-			info->type = GP_PORT_SOCKET;
+		case GPIO_DEVICE_NETWORK:
+			info->type = GP_PORT_NETWORK;
 			break;
 		default:
 			info->type = GP_PORT_NONE;
@@ -196,7 +191,7 @@ int gp_camera_abilities (int camera_number, CameraAbilities *abilities) {
 	       sizeof(glob_camera_abilities[camera_number]));
 
 	if (glob_debug)
-		gp_dump_abilities(&glob_camera_abilities[camera_number]);
+		gp_abilities_dump(&glob_camera_abilities[camera_number]);
 
 	return (GP_OK);
 }
@@ -234,11 +229,13 @@ int gp_camera_set (int camera_number, CameraPortSettings *settings) {
 			glob_camera[camera_number].library);
 	strcpy(ci.model, glob_camera[camera_number].name);
 	memcpy(&ci.port_settings, settings, sizeof(ci.port_settings));
+
+	ci.debug = glob_debug;
+
 	if (gp_camera_init(&ci)==GP_ERROR)
 		return (GP_ERROR);
 
-	if (glob_c.debug_set)
-		glob_c.debug_set(glob_debug);
+
 
 	return(GP_OK);
 }
