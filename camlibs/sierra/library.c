@@ -340,16 +340,24 @@ sierra_check_connection (Camera *camera, GPContext *context)
 		CHECK (gp_port_set_timeout (camera->port, 20));
 		r = gp_port_read (camera->port, &c, 1);
 		CHECK (gp_port_set_timeout (camera->port, timeout));
+		switch (r) {
+		case GP_ERROR_TIMEOUT:
+		case GP_ERROR_IO_READ:
 
-		/*
-		 * If we got GP_ERROR_TIMEOUT or GP_ERROR_IO_READ,
-		 * everything's just fine.
-		 */
-		if ((r == GP_ERROR_TIMEOUT) || (GP_ERROR_IO_READ))
+			/*
+			 * If we got GP_ERROR_TIMEOUT or GP_ERROR_IO_READ,
+			 * everything's just fine.
+			 */
 			return (GP_OK);
 
-		/* If any error (except timeout) has occurred, report it. */
-		CHECK (r);
+		default:
+
+			/*
+			 * If any error (except timeout) has occurred, 
+			 * report it.
+			 */
+			CHECK (r);
+		}
 
 		/*
 		 * We have received something. This is not good. Check if
