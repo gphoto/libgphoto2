@@ -1,3 +1,7 @@
+2003-12-27  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Sony DSC-U20
+
 2003-11-26 Mariusz Woloszyn
 	* library.c: make the capture code less sensibe for protocol
 	incompatibility.
