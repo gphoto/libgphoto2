@@ -165,6 +165,8 @@ retreiving information about a file, etc.
 @fs: 
 @put_file_func: 
 @delete_all_func: 
+@make_dir_func: 
+@remove_dir_func: 
 @data: 
 @Returns: 
 
