@@ -261,8 +261,7 @@ static struct {
 	/* report from Federico Prat Villar <fprat@lsi.uji.es> */
 	{"HP:PhotoSmart 43x (PTP mode)", 0x03f0, 0x7202},
 
-	/* I got information that all SONY PTP cameras use the same
-	   product/vendor IDs */
+	/* Most Sony PTP cameras use the same product/vendor IDs. */
 	{"Sony:PTP",                  0x054c, 0x004e},
 	{"Sony:DSC-P5 (PTP mode)",    0x054c, 0x004e},
 	{"Sony:DSC-P10 (PTP mode)",   0x054c, 0x004e},
@@ -276,6 +275,7 @@ static struct {
 	{"Sony:DSC-P52 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-P72 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-P92 (PTP mode)",   0x054c, 0x004e},
+        {"Sony:DSC-P100 (PTP mode)",  0x054c, 0x0010},
 	{"Sony:DSC-S75 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-S85 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-T1 (PTP mode)",    0x054c, 0x004e},
