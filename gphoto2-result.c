@@ -52,19 +52,19 @@ gp_result_as_string (int result)
 {
 	/* IOlib error? Pass through. */
 	if ((result <= 0) && (result >= -99))
-		return gp_port_result_as_string (result);
+		return (gp_port_result_as_string (result));
 
 	/* Camlib error? */
 	if (result <= -1000)
 		return (N_("Unknown camera library error")); 
 
-	GP_ERR_RES (GP_ERROR_CORRUPTED_DATA, N_("Corrupted data"));
-	GP_ERR_RES (GP_ERROR_FILE_EXISTS, N_("File exists"));
-	GP_ERR_RES (GP_ERROR_MODEL_NOT_FOUND, N_("Unknown model"));
+	GP_ERR_RES (GP_ERROR_CORRUPTED_DATA,      N_("Corrupted data"));
+	GP_ERR_RES (GP_ERROR_FILE_EXISTS,         N_("File exists"));
+	GP_ERR_RES (GP_ERROR_MODEL_NOT_FOUND,     N_("Unknown model"));
 	GP_ERR_RES (GP_ERROR_DIRECTORY_NOT_FOUND, N_("Directory not found"));
-	GP_ERR_RES (GP_ERROR_FILE_NOT_FOUND, N_("File not found"));
-	GP_ERR_RES (GP_ERROR_DIRECTORY_EXISTS, N_("Directory exists"));
-	GP_ERR_RES (GP_ERROR_PATH_NOT_ABSOLUTE, N_("Path not absolute"));
+	GP_ERR_RES (GP_ERROR_FILE_NOT_FOUND,      N_("File not found"));
+	GP_ERR_RES (GP_ERROR_DIRECTORY_EXISTS,    N_("Directory exists"));
+	GP_ERR_RES (GP_ERROR_PATH_NOT_ABSOLUTE,   N_("Path not absolute"));
 
 	return (N_("Unknown error"));
 }

@@ -1284,7 +1284,7 @@ gp_camera_set_error (Camera *camera, const char *format, ...)
 		/* Remember the error message and log it */
 		va_start (args, format);
 		vsnprintf (camera->pc->error, sizeof (camera->pc->error),
-			   format, args);
+			   _(format), args);
 		gp_logv (GP_LOG_ERROR, "gphoto2-camera", format, args);
 		va_end (args);
 
