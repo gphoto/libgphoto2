@@ -69,7 +69,9 @@ camera_abilities (CameraAbilitiesList *list)
 	a.file_operations   = 	GP_FILE_OPERATION_DELETE |
 				GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
+/* Deliberately commented out. this driver does not work due to USB interrupts
 	gp_abilities_list_append(list, a);
+ */
 	return (GP_OK);
 }
 
