@@ -48,7 +48,7 @@ static int glob_session_camera = 0;
 
 #define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
-#define CHECK_OPEN(c)              {gp_port_open ((c)->port);}
+#define CHECK_OPEN(c)              {int r = gp_port_open ((c)->port); if (r < 0) return (r);}
 #define CHECK_CLOSE(c)             {gp_port_close ((c)->port);}
 #define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); return (r);}; CHECK_CLOSE (c);}
 #define GP_DEBUG(m) {gp_debug_printf (GP_DEBUG_LOW, "core", (m));}
