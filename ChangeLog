@@ -1,3 +1,9 @@
+2002-01-13  Colin Marquardt  <colin@marquardt-home.de>
+
+	* configure.in: Add fr to ALL_LINGUAS.
+	* po/de.po: Update. 
+	* po/fr.po: New file from Jérôme Fenal <jerome@fenal.org>. Thanks.
+
 2002-01-13 Dan Fandrich <dan@coneharvesters.com>
 
 	* libgphoto2/gphoto2-library.h

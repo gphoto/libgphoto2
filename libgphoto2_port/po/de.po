@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2002-01-04 11:08+0100\n"
-"PO-Revision-Date: 2002-01-04 11:09+0100\n"
+"POT-Creation-Date: 2002-01-13 17:45+0100\n"
+"PO-Revision-Date: 2002-01-13 17:47+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -181,12 +181,12 @@ msgstr "Konnte das Gerät nicht alleinig reservieren"
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
 
-#: usb/libusb.c:125
+#: usb/libusb.c:131
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Konnte USB-Gerät nicht öffnen (%m)."
 
-#: usb/libusb.c:132
+#: usb/libusb.c:138
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -198,32 +198,32 @@ msgstr ""
 "anderes Programm oder Kernelmodul (z.B. dc2xx) das Gerät verwendet und Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
-#: usb/libusb.c:151
+#: usb/libusb.c:157
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Konnte Schnittstelle %d nicht freigeben (%m)."
 
-#: usb/libusb.c:158
+#: usb/libusb.c:164
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Konnte USB-Port nicht schließen (%m)."
 
-#: usb/libusb.c:274
+#: usb/libusb.c:278
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Konnte Konfiguration %d/%d nicht setzen (%m)"
 
-#: usb/libusb.c:296
+#: usb/libusb.c:300
 #, c-format
-msgid "Could not set interface %d/%d (%m)"
-msgstr "Konnte Schnittstelle %d/%d nicht setzen (%m)"
+msgid "Could not set altsetting %d/%d (%m)"
+msgstr "Konnte Alternativ-Setting %d/%d nicht setzen (%m)"
 
-#: usb/libusb.c:332
+#: usb/libusb.c:374
 #, c-format
-msgid "The supplied vendor or product id (%i,%i) is not valid."
-msgstr "Die angegebene Hersteller- oder Produkt-ID (%i,%i) ist nicht gültig."
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
-#: usb/libusb.c:351
+#: usb/libusb.c:412
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -233,7 +233,7 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: usb/libusb.c:434
+#: usb/libusb.c:508
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -244,84 +244,87 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: serial/unix.c:183
+#: serial/unix.c:190
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Konnte Gerät »%s« nicht reservieren"
 
-#: serial/unix.c:192
+#: serial/unix.c:199
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Gerät »%s« ist von PID %d reserviert"
 
-#: serial/unix.c:195
+#: serial/unix.c:202
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Gerät »%s« konnte nicht reserviert werden (dev_lock lieferte %d)"
 
-#: serial/unix.c:217
+#: serial/unix.c:224
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Reservierung von Gerät »%s« konnte nicht freigegeben werden"
 
-#: serial/unix.c:229
+#: serial/unix.c:236
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden, da es von PID %"
 "d reserviert ist."
 
-#: serial/unix.c:233
+#: serial/unix.c:240
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden (dev_unlock "
 "lieferte %d)"
 
-#: serial/unix.c:300
+#: serial/unix.c:307
 #, c-format
 msgid "Serial Port %i"
 msgstr "Serieller Port %i"
 
-#: serial/unix.c:382
+#: serial/unix.c:389
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Konnte »%s« nicht öffnen (%m)."
 
-#: serial/unix.c:400
+#: serial/unix.c:407
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Konnte »%s« nicht schließen (%m)."
 
-#: serial/unix.c:445
+#: serial/unix.c:452
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Konnte nicht auf Port schreiben (%m)"
 
-#: serial/unix.c:532
+#: serial/unix.c:539
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Unbekannter Pin %i."
 
-#: serial/unix.c:554
+#: serial/unix.c:561
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Konnte Level von Pin %i nicht holen (%m)."
 
-#: serial/unix.c:587
+#: serial/unix.c:594
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Konnte Level von Pin %i nicht auf %i setzen (%m)."
 
-#: serial/unix.c:610
+#: serial/unix.c:617
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Konnte »%s« nicht leeren (%m)."
 
-#: serial/unix.c:719
+#: serial/unix.c:726
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
+
+#~ msgid "Could not set interface %d/%d (%m)"
+#~ msgstr "Konnte Schnittstelle %d/%d nicht setzen (%m)"
 
 #~ msgid "Could not close device (%s)"
 #~ msgstr "Konnte Gerät nicht schließen (%s)"

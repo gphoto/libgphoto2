@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-01-04 11:08+0100\n"
+"POT-Creation-Date: 2002-01-13 17:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -178,12 +178,12 @@ msgstr ""
 msgid "Unknown error"
 msgstr ""
 
-#: usb/libusb.c:125
+#: usb/libusb.c:131
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr ""
 
-#: usb/libusb.c:132
+#: usb/libusb.c:138
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -191,116 +191,116 @@ msgid ""
 "the device."
 msgstr ""
 
-#: usb/libusb.c:151
+#: usb/libusb.c:157
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr ""
 
-#: usb/libusb.c:158
+#: usb/libusb.c:164
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr ""
 
-#: usb/libusb.c:274
+#: usb/libusb.c:278
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr ""
 
-#: usb/libusb.c:296
+#: usb/libusb.c:300
 #, c-format
-msgid "Could not set interface %d/%d (%m)"
+msgid "Could not set altsetting %d/%d (%m)"
 msgstr ""
 
-#: usb/libusb.c:332
+#: usb/libusb.c:374
 #, c-format
-msgid "The supplied vendor or product id (%i,%i) is not valid."
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 
-#: usb/libusb.c:351
+#: usb/libusb.c:412
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
 
-#: usb/libusb.c:434
+#: usb/libusb.c:508
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
 "sure this device is connected to the computer."
 msgstr ""
 
-#: serial/unix.c:183
+#: serial/unix.c:190
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr ""
 
-#: serial/unix.c:192
+#: serial/unix.c:199
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr ""
 
-#: serial/unix.c:195
+#: serial/unix.c:202
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr ""
 
-#: serial/unix.c:217
+#: serial/unix.c:224
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr ""
 
-#: serial/unix.c:229
+#: serial/unix.c:236
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 
-#: serial/unix.c:233
+#: serial/unix.c:240
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 
-#: serial/unix.c:300
+#: serial/unix.c:307
 #, c-format
 msgid "Serial Port %i"
 msgstr ""
 
-#: serial/unix.c:382
+#: serial/unix.c:389
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr ""
 
-#: serial/unix.c:400
+#: serial/unix.c:407
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr ""
 
-#: serial/unix.c:445
+#: serial/unix.c:452
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr ""
 
-#: serial/unix.c:532
+#: serial/unix.c:539
 #, c-format
 msgid "Unknown pin %i."
 msgstr ""
 
-#: serial/unix.c:554
+#: serial/unix.c:561
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr ""
 
-#: serial/unix.c:587
+#: serial/unix.c:594
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr ""
 
-#: serial/unix.c:610
+#: serial/unix.c:617
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr ""
 
-#: serial/unix.c:719
+#: serial/unix.c:726
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr ""

@@ -1,15 +1,8 @@
-2001-11-27  gettextize  <bug-gnu-utils@gnu.org>
+2002-01-13  Colin Marquardt  <colin@marquardt-home.de>
 
-	* Makefile.in.in: Upgrade to gettext-0.10.40.
+	* de.po: Update.
 
 2001-11-17  Colin Marquardt  <colin@marquardt-home.de>
 
 	* de.po: New translation. Maybe some other files need to be
                  updated for the translation to be available?
-
-2001-08-28  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.39.
-	* cat-id-tbl.c: Remove file.
-	* stamp-cat-id: Remove file.
-
