@@ -155,9 +155,11 @@ have_serial=true
 baudboy_msg=no
 ttylock_msg=no
 lockdev_msg=no
+resmgr_msg=no
 try_baudboy_msg=true
 try_ttylock=true
 try_lockdev=true
+try_resmgr=true
 AC_ARG_WITH(serial, [  --without-serial        Don't compile in SERIAL support],
 	if test x$withval = xno; then
 		have_serial=false
@@ -165,6 +167,7 @@ AC_ARG_WITH(serial, [  --without-serial        Don't compile in SERIAL support],
 		try_baudboy=false
 		try_ttylock=false
 		try_lockdev=false
+		try_resmgr=false
 	fi
 )
 if $have_serial; then
@@ -177,9 +180,10 @@ esac
 
 dnl -----------------------------------------
 dnl Serial port locking: We try to use either
-dnl  (1) baudboy.h
-dnl  (2) ttylock.h
-dnl  (3) lockdev.h
+dnl  (1) resmgr support
+dnl  (2) baudboy.h
+dnl  (3) ttylock.h
+dnl  (4) lockdev.h
 dnl -----------------------------------------
 AC_ARG_WITH(baudboy, [  --without-baudboy       Don't use baudboy library],
 	if test x$withval = xno; then
@@ -196,6 +200,22 @@ AC_ARG_WITH(lockdev, [  --without-lockdev       Don't use lockdev library],
 		try_lockdev=false
 	fi
 )
+AC_ARG_WITH(resmgr, [  --without-resmgr         Don't use resmgr library],
+	if test x$withval = xno; then
+		try_resmgr=false
+	fi
+)
+
+if $try_resmgr; then
+	AC_CHECK_HEADER(resmgr.h,
+		AC_CHECK_LIB(resmgr, rsm_lock_device,[
+			resmgr_msg=yes
+			SERIAL_LFLAGS="-lresmgr"
+			AC_DEFINE(HAVE_RESMGR,1,[Define if we have the resmgr library.])
+		])
+	)
+fi
+	
 if $try_baudboy; then
 	AC_CHECK_HEADER(baudboy.h,
 		baudboy_msg=yes
@@ -204,6 +224,7 @@ if $try_baudboy; then
 		AC_DEFINE(HAVE_BAUDBOY,1,[Define if you have Baudboy serial locking.])
 	)
 fi
+
 if $try_ttylock; then
 	AC_CHECK_HEADER(ttylock.h,
 		AC_MSG_CHECKING(if ttylock needs lockdev)
@@ -330,6 +351,7 @@ Configuration (libgphoto2_port)
 	SERIAL support:          $serial_msg
 
 	Locking mechanism (for serial ports):
+	Use resmgr:              $resmgr_msg
 	Use baudboy:             $baudboy_msg
 	Use ttylock:             $ttylock_msg
 	Use lockdev:             $lockdev_msg

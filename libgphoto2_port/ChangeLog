@@ -1,3 +1,7 @@
+2002-11-29  Marcus Meissner <meissner@suse.de>
+
+	* serial/unix.c, configure.in: Added support for libresmgr style locking.
+
 2002-11-12  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* libgphoto2_port/gphoto2-port-version.c: Use HAVE_CC only if defined.
