@@ -26,7 +26,6 @@
  */
 
 #include <gphoto2-library.h>
-#include <gphoto2-core.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
