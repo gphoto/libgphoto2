@@ -16,3 +16,4 @@ libgphoto2/gphoto2-camera.c
 libgphoto2/gphoto2-filesys.c
 libgphoto2/gphoto2-abilities-list.c
 libgphoto2/gphoto2-result.c
+frontends/command-line/main.c

@@ -26,23 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <gphoto2-result.h>
 #include <gphoto2-port-log.h>
-#include <gphoto2-port.h>
-
-static int port_func_set = 0;
-
-static int debug_level = GP_DEBUG_NONE;
-
-static void
-gp_port_func (GPLogLevels levels, const char *domain,
-	      const char *msg, void *data)
-{
-	if (debug_level) {
-		fprintf (stderr, msg);
-		fprintf (stderr, "\n");
-	}
-}
 
 /**
  * gp_debug_printf:
@@ -63,11 +47,6 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 	char buffer[2048];
 	va_list arg;
 
-	if (!port_func_set)
-		port_func_set = gp_log_add_func (
-			GP_LOG_DATA | GP_LOG_DEBUG | GP_LOG_ERROR,
-			gp_port_func, NULL);
-
 	va_start (arg, format);
 #if HAVE_VSNPRINTF
 	vsnprintf (buffer, sizeof (buffer), format, arg);
@@ -76,32 +55,5 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 #endif
 	va_end (arg);
 
-	if (level <= debug_level)
-		gp_log (GP_LOG_DEBUG, id, buffer);
-}
-
-/**
- * gp_debug_set_level:
- * @level: a gphoto2 debug level
- *
- * Sets the debugging level. Only debugging messages with a debugging level
- * higher than the given @level will be printed.
- **/
-void
-gp_debug_set_level (int level)
-{
-	debug_level = level;
-}
-
-/**
- * gp_debug_get_level:
- *
- * Gets the current debugging level.
- *
- * Return value: the current gphoto2 debug level or a gphoto2 error code
- **/
-int
-gp_debug_get_level (void)
-{
-	return (debug_level);
+	gp_log (GP_LOG_DEBUG, id, buffer);
 }

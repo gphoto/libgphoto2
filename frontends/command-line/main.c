@@ -1,5 +1,7 @@
 /* $Id$ */
 
+#include <config.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -8,10 +10,6 @@
 
 #ifndef WIN32
 #include <signal.h>
-#endif
-
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
 #endif
 
 #include "main.h"
@@ -28,6 +26,21 @@
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif 
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
 #endif
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
@@ -441,12 +454,22 @@ OPTION_CALLBACK(model)
         return (GP_OK);
 }
 
+static void
+debug_func (GPLogLevels levels, const char *domain, const char *msg,
+	    void *data)
+{
+	if (levels & GP_LOG_ERROR)
+		printf ("*** ERROR *** ");
+	printf ("%s: %s\n", domain, msg);
+}
+
 OPTION_CALLBACK (debug)
 {
 	glob_debug = GP_DEBUG_HIGH;
 	cli_debug_print(PACKAGE " " VERSION ": " "Turning on debug mode");
 
-	gp_debug_set_level (GP_DEBUG_HIGH);
+	gp_log_add_func (GP_LOG_DATA | GP_LOG_DEBUG | GP_LOG_ERROR,
+			 debug_func, NULL);
 
 	return (GP_OK);
 }
@@ -890,7 +913,7 @@ set_globals (void)
 	 * check every single error message returned by gphoto2, we need
 	 * to make sure that we have a serial port.
 	 */
-	if (!strncmp (glob_port, "serial", 6))
+	if (!strncmp (glob_port, "serial:", 7))
 	        CHECK_RESULT (gp_camera_set_port_speed (glob_camera, glob_speed));
 
 	gp_camera_set_status_func (glob_camera, status_func, NULL);
@@ -1031,15 +1054,13 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
                 exit(EXIT_FAILURE);
         }
 
-        if ((result = execute_options(argc, argv)) != GP_OK) {
+	result = execute_options(argc, argv);
+        if (result < 0) {
                 printf ("gPhoto2 reported the error '%s'\n",
                         gp_camera_get_result_as_string (glob_camera, result));
 
-		if (gp_debug_get_level () == GP_DEBUG_NONE) {
-			printf ("Last debugging messages (use --debug for "
-				"more):\n");
-			printf ("%s\n", gp_log_history_get ());
-		}
+		printf ("Last debugging messages (use --debug for more):\n");
+		printf ("%s\n", gp_log_history_get ());
                 exit (EXIT_FAILURE);
         }
 
