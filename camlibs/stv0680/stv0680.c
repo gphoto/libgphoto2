@@ -78,7 +78,6 @@ int camera_init (Camera *camera)
 	camera->functions->folder_list_folders 	= camera_folder_list_folders;
 	camera->functions->folder_list_files   	= camera_folder_list_files;
 	camera->functions->file_get 		= camera_file_get;
-	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
 	camera->functions->about 		= camera_about;
@@ -155,15 +154,12 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFile *file ) 
+                     CameraFileType type, CameraFile *file ) 
 {
 	struct stv0680_s *device = camera->camlib_data;
 	int image_no, count, result;
 	char *data;
 	long int size;
-
-	gp_file_set_name (file, filename);
-	gp_file_set_type (file, "image/pnm");
 
 	result = stv0680_file_count(device, &count);
 	if (result != GP_OK)
@@ -176,42 +172,24 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	if(image_no < 0)
 		return image_no;
 
-	result = stv0680_get_image (device, image_no, &data, 
-				  (int*) &size);
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		result = stv0680_get_image (device, image_no, &data,
+					    (int*) &size);
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		result = stv0680_get_image_preview (device, image_no, &data,
+						    (int*) &size);
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
 	if (result < 0)
 		return result;
-	gp_file_set_data_and_size (file, data, size);
-
-	return (GP_OK);
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *file) 
-{
-
-	struct stv0680_s *device = camera->camlib_data;
-	int image_no, count, result;
-	char *data;
-	long int size;
 
 	gp_file_set_name (file, filename);
-	gp_file_set_type (file, "image/pnm");
-
-	result = stv0680_file_count(device, &count);
-	if (result != GP_OK)
-		return result;
-
-	gp_filesystem_populate(device->fs, "/", "image%02i.pnm", count);
-
-	image_no = gp_filesystem_number(device->fs, folder, filename);
-
-	if(image_no < 0)
-		return image_no;
-
-	result = stv0680_get_image_preview(device, image_no,
-					&data, (int*) &size);
-	if (result < 0)
-		return (result);
+	gp_file_set_mime_type (file, "image/pnm"); 
 	gp_file_set_data_and_size (file, data, size);
 
 	return (GP_OK);

@@ -133,7 +133,7 @@ int camera_file_get_info (Camera *camera, const char *folder, const char *file,
         char buf [1024];
         CameraFile *cam_file;
 	const char *name;
-	const char *type;
+	const char *mime_type;
 	const char *data;
 	long int size;
 
@@ -152,10 +152,10 @@ int camera_file_get_info (Camera *camera, const char *folder, const char *file,
                             GP_FILE_INFO_TYPE;
 
 	gp_file_get_name (cam_file, &name);
-	gp_file_get_type (cam_file, &type);
+	gp_file_get_mime_type (cam_file, &mime_type);
 	gp_file_get_data_and_size (cam_file, &data, &size);
 
-        strcpy (info->file.type, type);
+        strcpy (info->file.type, mime_type);
         strcpy (info->file.name, name);
         info->file.size = size;
 
@@ -329,7 +329,7 @@ directory_folder_set (Camera *camera, const char *folder_name)
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFile *file)
+		     CameraFileType type, CameraFile *file)
 {
         /**********************************/
         /* file_number now starts at 0!!! */
@@ -339,9 +339,13 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
         int result;
         DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
+	if (type != GP_FILE_TYPE_NORMAL)
+		return (GP_ERROR_NOT_SUPPORTED);
+
         directory_folder_set(camera, folder);
 
         sprintf(buf, "%s/%s", d->directory, filename);
+
         if ((result = gp_file_open(file, buf)) != GP_OK)
                 return (result);
 

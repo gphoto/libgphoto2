@@ -21,6 +21,21 @@
  *
  * History:
  * $Log$
+ * Revision 1.9  2001/08/25 18:14:25  lutz
+ * 2001-08-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * include/gphoto2-file.h:
+ *         * include/gphoto2-library.h:
+ *         * include/gphoto2-camera.h: Support for raw data.
+ *         * libpghoto2/file.c: Adjust to above changes.
+ *         * libgphoto2/frontend.c: Kill a warning.
+ *         * libgphoto2/libgphoto-2.0.pc.in: CFlags -> Cflags
+ *         * libgphoto2/widget.c: Include gphoto2-result.h instead of gphoto2.h
+ *         * camlibs/*: Prepare support for download of raw data. Remove lots of
+ *         redundant code (people just copied & pasted the code for file_get
+ *         and file_get_preview...). I hope everything works as it did before.
+ *         * frontend/command-line/*: Prepare support for download of raw data
+ *
  * Revision 1.8  2001/08/24 21:23:11  lutz
  * 2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -230,7 +245,6 @@ int camera_init (Camera *camera) {
 	camera->functions->file_get_info	= camera_file_get_info;
 	camera->functions->file_set_info	= camera_file_set_info;
 	camera->functions->file_get 		= camera_file_get;
-	camera->functions->file_get_preview 	= camera_file_get_preview;
 	//camera->functions->folder_put_file	= camera_folder_put_file;
 	//camera->functions->file_delete 	= camera_file_delete;
 	//camera->functions->folder_delete_all 	= camera_folder_delete_all;
@@ -328,7 +342,7 @@ int camera_folder_list_files(Camera *camera, const char *folder, CameraList *lis
 	return GP_OK;
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename, CameraFile *file) {
+int camera_file_get (Camera *camera, const char *folder, const char *filename, CameraFileType type, CameraFile *file) {
 
 	int num;
 	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
@@ -336,9 +350,6 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename, C
 	long int size;
 
 	gp_frontend_progress(camera, NULL, 0.00);
-
-	gp_file_set_name (file, filename);
-	gp_file_set_type (file, PNM_MIME_TYPE);
 
 	/* Retrieve the number of the photo on the camera */
 	if (strcmp(filename, RAM_IMAGE_TEMPLATE) == 0)
@@ -350,9 +361,22 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename, C
 	if (num < 0)
 		return num;
 
-	data = Dimera_Get_Full_Image(num, (int*) &size, camera);
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		data = Dimera_Get_Full_Image(num, (int*) &size, camera);
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		data = Dimera_Get_Thumbnail(num, (int*) &size, camera);
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
 	if (!data)
-			return GP_ERROR;
+		return GP_ERROR;
+
+	gp_file_set_name (file, filename);
+	gp_file_set_mime_type (file, PNM_MIME_TYPE); 
 	gp_file_set_data_and_size (file, data, size);
 
 	return GP_OK;
@@ -401,28 +425,6 @@ int camera_file_set_info (Camera *camera, const char *folder, const char *filena
 	    return GP_ERROR_NOT_SUPPORTED;
 }
 
-int camera_file_get_preview (Camera *camera, const char *folder, const char *filename, CameraFile *file) {
-        DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
-        int num;
-	long int size;
-	char *data;
-
-        /* Retrieve the number of the photo on the camera */
-        num = gp_filesystem_number(cam->fs, "/", filename);
-		if (num < 0)
-			return num;
-
-	gp_file_set_name (file, filename);
-	gp_file_set_type (file, PNM_MIME_TYPE);
-
-        data = Dimera_Get_Thumbnail(num, (int*) &size, camera);
-        if (!data)
-                return GP_ERROR;
-	gp_file_set_data_and_size (file, data, size);
-
-        return GP_OK;
-}
-
 int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
         DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 
@@ -449,7 +451,7 @@ int camera_capture_preview(Camera *camera, CameraFile *file) {
 	char *data;
 
 	gp_file_set_name (file, RAM_IMAGE_TEMPLATE);
-	gp_file_set_type (file, PNM_MIME_TYPE);
+	gp_file_set_mime_type (file, PNM_MIME_TYPE);
 
         data = Dimera_Preview((int*) &size, camera);
         if (!data)

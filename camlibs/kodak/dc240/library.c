@@ -400,6 +400,7 @@ int dc240_set_speed (DC240Data *dd, int speed) {
     return (GP_OK);
 }
 
+#if 0
 int dc240_get_status (DC240Data *dd) {
 
     CameraFile *file;
@@ -416,6 +417,7 @@ int dc240_get_status (DC240Data *dd) {
 
     return (retval);
 }
+#endif
 
 static int dc240_get_directory_list (DC240Data *dd, CameraList *list, const char *folder,
                              unsigned char attrib) {
@@ -508,7 +510,7 @@ int dc240_file_action (DC240Data *dd, int action, CameraFile *file,
 
     if ((filename) && (file)) {
 	gp_file_set_name (file, filename);
-	gp_file_set_type (file, "image/jpeg");
+	gp_file_set_mime_type (file, "image/jpeg");
     }
 
     return (retval);

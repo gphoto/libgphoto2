@@ -84,7 +84,6 @@ int camera_init (Camera *camera)
     camera->functions->folder_list_folders 	= camera_folder_list_folders;
     camera->functions->folder_list_files	= camera_folder_list_files;
     camera->functions->file_get 		= camera_file_get;
-    camera->functions->file_get_preview 	= camera_file_get_preview;
     camera->functions->file_delete 		= camera_file_delete;
 #if 0
     camera->functions->config_get   	= camera_config_get;
@@ -180,21 +179,24 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 	return (GP_OK);
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFile *file)
-{ 
-	return (GP_OK);
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *file) 
+int camera_file_get (Camera *camera, const char *folder, const char *filename,
+		     CameraFileType type, CameraFile *file) 
 {
     int numPicBefore;
     int numPicAfter;
     struct Image *im = NULL;
 
     DC210Data * dd = (DC210Data *)camera->camlib_data;
-    
+
+    if (type != GP_FILE_TYPE_PREVIEW)
+	    return (GP_ERROR_NOT_SUPPORTED);
+
+    /*
+     * 2001/08/25: Lutz Müller <urc8@rz.uni-karlsruhe.de>
+     * What's happening here? We are supposed to get the file or the preview,
+     * not capturing an image?!? That's totally screwed up... Please fix.
+     */
+
     /* find out how many pictures are in the camera so we can
        make sure a picture was taken later */
     numPicBefore = kodak_dc210_number_of_pictures(dd);

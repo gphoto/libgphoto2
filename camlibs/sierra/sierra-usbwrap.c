@@ -19,7 +19,7 @@
  */
 #include <string.h>
 #include <stdlib.h>
-#include "gphoto2.h"
+#include "sierra-usbwrap.h"
 
 /*
  * The following things are the way the are just to ensure that USB
@@ -269,7 +269,7 @@ usb_wrap_STAT(gp_port* dev)
    return usb_wrap_OK(dev, &hdr);
 }
 
-int
+static int
 usb_wrap_CMND(gp_port* dev, char* sierra_msg, int sierra_len)
 {
    uw_header_t hdr;

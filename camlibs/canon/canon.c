@@ -699,12 +699,12 @@ static int get_file_path (Camera *camera, const char *filename,
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFile *file)
+		     CameraFileType type, CameraFile *file)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-    char *data;
-    int buflen,i,j;
-    char path[300];
+	char *data;
+	int buflen,i,j, size;
+	char path[300], tempfilename[300];
 
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_file_get()");
 	
@@ -712,58 +712,6 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	for (i=0; i < sizeof(path); i++)
 	  path[i] = '\0';
 
-	if(check_readiness(camera) != 1)
-	  return GP_ERROR;
-
-	strcpy(path, cs->cached_drive);
-
-    if (get_file_path(camera, filename,path) == GP_ERROR) {
-        gp_debug_printf(GP_DEBUG_LOW,"canon","Filename not found!\n");
-        return GP_ERROR;
-    }
-
-    if (canon_comm_method != CANON_USB) {
-		j = strrchr(path,'\\') - path;
-		path[j+1] = '\0';
-    } else {
-		j = strchr(path,'\0') - path;
-		path[j] = '\\';     
-		path[j+1] = '\0';
-    }
-
-    data = canon_get_picture (camera, (char*) filename, (char*) path, 0, 
-    			      &buflen);
-    if (!data)
-	  return GP_ERROR;
-
-    file->data = data;
-    if (is_movie(filename))
-	strcpy(file->type, "video/x-msvideo");
-    else
-    	strcpy(file->type, "image/jpeg");
-
-    file->size = buflen;
-
-    snprintf(file->name, sizeof(file->name), "%s",
-        filename);
-
-    return GP_OK;
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *preview)
-{
-	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-	char *data;
-	int buflen,i,j,size;
-	char path[300], tempfilename[300];
-	
-	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_file_get_preview()");
-	
-	// initialize memory to avoid problems later
-	for (i=0; i < sizeof(path); i++)
-	  path[i] = '\0';
-	
 	if(check_readiness(camera) != 1)
 	  return GP_ERROR;
 
@@ -783,36 +731,52 @@ int camera_file_get_preview (Camera *camera, const char *folder,
 		path[j+1] = '\0';
 	}
 
-	fprintf(stderr,"name: %s\npath: %s\n",filename,path);
-	data = canon_get_picture (camera, (char*) filename, (char*) path, 1, 
-				  &buflen);
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		data = canon_get_picture (camera, (char*) filename,
+					  (char*) path, 0, &buflen);
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		data = canon_get_picture (camera, (char*) filename,
+					  (char*) path, 1, &buflen);
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
 	if (!data)
 		return GP_ERROR;
 
-    preview->data = data;
-    strcpy(preview->type, "image/jpeg");
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
+		/* we count the byte returned until the end of the jpeg data
+		   which is FF D9 */
+		/* It would be prettier to get that info from the exif tags */
+		for(size=1;size<buflen;size++)
+			if(data[size-1]==JPEG_ESC) break;
+		buflen = size+1;
+		gp_file_set_data_and_size (file, data, buflen);
+		gp_file_set_mime_type (file, "image/jpeg"); /* always */
+		strcpy(tempfilename, filename);
+		strcat(tempfilename, "\0");
+		strcpy(tempfilename+strlen("IMG_XXXX"), ".JPG\0");
+		gp_file_set_name (file, tempfilename);
+		break;
+	case GP_FILE_TYPE_NORMAL:
+		if (is_movie(filename))
+			gp_file_set_mime_type (file, "video/x-msvideo");
+		else
+			gp_file_set_mime_type (file, "image/jpeg");
+		gp_file_set_data_and_size (file, data, buflen);
+		gp_file_set_name (file, filename);
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
-    /* we count the byte returned until the end of the jpeg data
-       which is FF D9 */
-    /* It would be prettier to get that info from the exif tags     */
-
-    for(size=1;size<buflen;size++)
-    if(data[size]==JPEG_END) {
-        if(data[size-1]==JPEG_ESC) break;
-    }
-    buflen = size+1;
-
-    preview->size = buflen;
-
-    strcpy(tempfilename, filename);
-    strcat(tempfilename, "\0");
-    strcpy(tempfilename+strlen("IMG_XXXX"), ".JPG\0"); // thumbnails are always jpegs	
-    
-    snprintf(preview->name, sizeof(preview->name), "%s",
-            tempfilename);
-
-    return GP_OK;
+	return GP_OK;
 }
+
 /****************************************************************************/
 
 
@@ -837,7 +801,6 @@ int camera_init(Camera *camera)
   camera->functions->folder_list_files   = camera_folder_list_files;
   camera->functions->folder_put_file     = camera_folder_put_file;
   camera->functions->file_get            = camera_file_get;
-  camera->functions->file_get_preview    = camera_file_get_preview;
   camera->functions->file_delete         = camera_file_delete;
   camera->functions->file_get_info       = camera_file_get_info;
   camera->functions->file_set_info       = camera_file_set_info;

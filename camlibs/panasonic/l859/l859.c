@@ -421,7 +421,6 @@ int camera_init (Camera *camera) {
 	camera->functions->folder_list_files   	= camera_folder_list_files;
 	camera->functions->folder_delete_all   	= camera_folder_delete_all;
 	camera->functions->file_get 			= camera_file_get;
-	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_delete			= camera_file_delete;
 	camera->functions->summary				= camera_summary;
 	camera->functions->manual 				= camera_manual;
@@ -590,14 +589,14 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename,
-		     CameraFile *file) {
+		     CameraFileType type, CameraFile *file) {
 
 	l859_t	*dsc = (l859_t *)camera->camlib_data;
 	int		index;
 	int		size;
 	int		i;
 	int		s;
-	char	*buffer;
+	char	buffer[112];
 	int		bufIndex;
 
 	l859_debug("Get File %s", filename);
@@ -607,16 +606,17 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	if (index < 0)
 		return (index);
 
-	if ((size = l859_selectimage(dsc, index)) < 0)
-		return (GP_ERROR);
-
-	if (!(buffer = (char*)malloc(112))) {
-		l859_debug("Unable to allocate memory for image data.");
-		return (int) NULL;
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		size = l859_selectimage(dsc, index);
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		size = l859_selectimage_preview(dsc, index);
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
-
-	gp_file_set_name (file, filename);
-	gp_file_set_type (file, "image/jpeg");
+	if (size < 0)
+		return (size);
 
 	gp_frontend_progress (camera, file, 0.00);
 
@@ -638,61 +638,10 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 				(float)(s)/(float)size*100.0);
 	}
 
-	l859_debug("Camera Get File Done");
-
-	return (GP_OK);
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder,
-			const char *filename, CameraFile *file) {
-
-	l859_t	*dsc = (l859_t *)camera->camlib_data;
-	int		index;
-	int		size;
-	int		i;
-	int		s;
-	char    *buffer;
-	int     bufIndex;
-
-	l859_debug("Get preview image %s.", filename);
-
-	/* index is the 0-based image number on the camera */
-	index = gp_filesystem_number (dsc->fs, folder, filename);
-	if (index < 0)
-		return (index);
-
-	if ((size = l859_selectimage_preview(dsc, index)) < 0)
-		return (GP_ERROR);
-
-	if (!(buffer = (char*)malloc(112))) {
-		l859_debug("Unable to allocate memory for preview image data.");
-		return (int) NULL;
-	}
-
 	gp_file_set_name (file, filename);
-	gp_file_set_type (file, "image/jpeg");
+	gp_file_set_mime_type (file, "image/jpeg"); 
 
-	gp_frontend_progress (camera, file, 0.00);
-
-	for (i = 0, s = 0; s < size; i++) {
-
-		if (l859_sendcmd(dsc, L859_CMD_ACK) != GP_OK)
-			return GP_ERROR;
-		if (l859_retrcmd(dsc) == GP_ERROR)
-			return GP_ERROR;
-
-		for (bufIndex = 3; bufIndex < 115 && s < size; bufIndex++) {
-			buffer[bufIndex - 3] = dsc->buf[bufIndex];
-			s += 1;
-		}
-		l859_debug("Packet Size: %i Data Size: %i", bufIndex - 3, s);
-		gp_file_append (file, buffer, bufIndex - 3);
-
-		gp_frontend_progress (camera, file,
-					(float)(s)/(float)size*100.0);
-	}
-
-	l859_debug("Camera Get File Preview Done");
+	l859_debug("Camera Get File Done");
 
 	return (GP_OK);
 }

@@ -481,7 +481,7 @@ OPTION_CALLBACK(num_pictures) {
 }
 
 static int
-save_camera_file_to_file (CameraFile *file, int thumbnail)
+save_camera_file_to_file (CameraFile *file, CameraFileType type)
 {
         char out_filename[1024], out_folder[1024], buf[1024], msg[1024];
         int result;
@@ -510,11 +510,19 @@ save_camera_file_to_file (CameraFile *file, int thumbnail)
                 strcat(out_filename, name);
         }
 
-        if (thumbnail)
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
                 sprintf(buf, "%sthumb_%s", out_folder, out_filename);
-           else
+		break;
+	case GP_FILE_TYPE_NORMAL:
                 sprintf(buf, "%s%s", out_folder, out_filename);
-
+		break;
+	case GP_FILE_TYPE_RAW:
+		sprintf(buf, "%sraw_%s", out_folder, out_filename);
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
         if (!glob_quiet) {
                 while (GP_SYSTEM_IS_FILE(buf)) {
                         sprintf(msg, "File %s exists. Overwrite?", buf);
@@ -533,16 +541,16 @@ save_camera_file_to_file (CameraFile *file, int thumbnail)
                                 break;
                         }
                 }
-                printf("Saving %s as %s\n", thumbnail ? "preview" : "image", buf);
+                printf("Saving file as %s\n", buf);
         }
         if ((result = gp_file_save(file, buf)) != GP_OK)
-                cli_error_print("Can not save %s as %s", thumbnail ? "preview" : "image", buf);
+                cli_error_print("Can not save file as %s", buf);
 
         return (result);
 }
 
 
-int save_picture_to_file(char *folder, char *filename, int thumbnail) {
+int save_picture_to_file (char *folder, char *filename, CameraFileType type) {
 
         int res;
 
@@ -550,22 +558,11 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
 
 	gp_file_new (&file);
 
-        if (thumbnail) {
-                res = gp_camera_file_get_preview (glob_camera, folder,
-                                                  filename, file);
-                if (res != GP_OK) {
-                        cli_error_print ("Can not get preview for %s.",
-                                         filename);
-                        return (res);
-                }
-         } else {
-                res = gp_camera_file_get_file (glob_camera, folder, filename,
-                                               file);
-                if (res != GP_OK) {
-                        cli_error_print("Can not get picture %s", filename);
-                        return (res);
-                }
-        }
+	res = gp_camera_file_get (glob_camera, folder, filename, type, file);
+	if (res != GP_OK) {
+		cli_error_print ("Can not get %s.", filename);
+		return (res);
+	}
 
         if (glob_stdout) {
 		const char *data;
@@ -580,7 +577,7 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
                 return (GP_OK);
         }
 
-        res = save_camera_file_to_file (file, thumbnail);
+        res = save_camera_file_to_file (file, type);
 
         gp_file_free (file);
 
@@ -593,30 +590,28 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
         thumbnails according to thumbnail argument, and save to files.
 */
 
-int get_picture_common(char *arg, int thumbnail) {
+int get_picture_common(char *arg, CameraFileType type ) {
 
         int result;
 
-        if (thumbnail)
-                cli_debug_print("Getting thumbnail(s) %s", arg);
-        else
-                cli_debug_print("Getting picture(s) %s", arg);
+	cli_debug_print("Getting %s", arg);
 
         if ((result = set_globals()) != GP_OK)
                 return (result);
 
-        if (thumbnail && !glob_camera->abilities->file_operations & GP_FILE_OPERATION_PREVIEW) {
-                cli_error_print("Camera doesn't support picture thumbnails");
-                return (GP_ERROR_NOT_SUPPORTED);
-        }
-
         if (strchr(arg, '.'))
-                return (save_picture_to_file(glob_folder, arg, thumbnail));
+                return (save_picture_to_file(glob_folder, arg, type));
 
-        if (thumbnail)
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
                 return for_each_image_in_range(glob_folder, arg, save_thumbnail_action, 0);
-        else
+	case GP_FILE_TYPE_NORMAL:
                 return for_each_image_in_range(glob_folder, arg, save_picture_action, 0);
+	case GP_FILE_TYPE_RAW:
+		return for_each_image_in_range(glob_folder, arg, save_raw_action, 0);
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 }
 
 OPTION_CALLBACK(get_picture) {
@@ -747,7 +742,7 @@ int capture_generic (int type, char *name) {
                         cli_error_print("Could not capture the preview.");
                         return (result);
                 }
-                save_camera_file_to_file (file, 0);
+                save_camera_file_to_file (file, GP_FILE_TYPE_NORMAL);
                 gp_file_free(file);
         } else {
                 result =  gp_camera_capture (glob_camera, type, &path);

@@ -92,7 +92,6 @@ int camera_init(Camera *camera)
         camera->functions->folder_list_folders  = camera_folder_list_folders;
         camera->functions->folder_list_files    = camera_folder_list_files;
         camera->functions->file_get     = camera_file_get;
-        camera->functions->file_get_preview =  camera_file_get_preview;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
@@ -300,10 +299,13 @@ printf("digita: getting %s%s\n", folder, filename);
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFile *file)
+                     CameraFileType type, CameraFile *file)
 {
         struct digita_device *dev = camera->camlib_data;
-        unsigned char *data;
+	int x, y;
+	unsigned char *data, *buf, *rgb, *ps;
+	unsigned int *ints, width, height;
+	char ppmhead[64]; 
         int buflen;
 
         if (!dev)
@@ -312,65 +314,53 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
         if (folder[0] == '/')
                 folder++;
 
-        data = digita_file_get(camera, folder, filename, 0, &buflen);
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+	        data = digita_file_get(camera, folder, filename, 0, &buflen);
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		data = digita_file_get(camera, folder, filename, 1, NULL);
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
         if (!data)
                 return GP_ERROR;
 
-        file->data = data;
-        file->size = buflen;
+	gp_file_set_name (file, filename);
 
-        strcpy(file->name, filename);
-        strcpy(file->type, "image/jpeg");
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		gp_file_set_mime_type (file, "image/jpeg");
+		gp_file_set_data_and_size (file, data, buflen);
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		ints = (unsigned int *)data;
+		width = ntohl(ints[2]);
+		height = ntohl(ints[1]);
 
-        return GP_OK;
-}
+		fprintf(stderr, "digita: picture size %dx%d\n", width, height);
+		fprintf(stderr, "digita: data size %d\n", ntohl(ints[0]));
 
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *file)
-{
-        struct digita_device *dev = camera->camlib_data;
-        int x, y;
-        unsigned char *data, *buf, *rgb, *ps;
-        unsigned int *ints, width, height;
-        char ppmhead[64];
+		sprintf(ppmhead, "P6\n%i %i\n255\n", width, height);
 
-        if (!dev)
-                return GP_ERROR;
+		buf = malloc((width * height * 3) + strlen(ppmhead));
+		if (!buf) {
+			fprintf(stderr, "error allocating rgb data\n");
+			return GP_ERROR;
+		}
 
-        if (folder[0] == '/')
-                folder++;
+		strcpy(buf, ppmhead);
 
-        data = digita_file_get(camera, folder, filename, 1, NULL);
-        if (!data)
-                return GP_ERROR;
+		rgb = buf + strlen(buf);
 
-        ints = (unsigned int *)data;
-        width = ntohl(ints[2]);
-        height = ntohl(ints[1]);
+		/* Skip over the thumbnail header */
+		ps = data + 16;
+		for (y = 0; y < height; y++) {
+			char *pd = rgb + (width * y * 3);
 
-fprintf(stderr, "digita: picture size %dx%d\n", width, height);
-fprintf(stderr, "digita: data size %d\n", ntohl(ints[0]));
-
-        sprintf(ppmhead, "P6\n%i %i\n255\n",
-                width, height);
-
-        buf = malloc((width * height * 3) + strlen(ppmhead));
-        if (!buf) {
-                fprintf(stderr, "error allocating rgb data\n");
-                return GP_ERROR;
-        }
-
-        strcpy(buf, ppmhead);
-
-        rgb = buf + strlen(buf);
-
-        /* Skip over the thumbnail header */
-        ps = data + 16;
-        for (y = 0; y < height; y++) {
-                char *pd = rgb + (width * y * 3);
-
-                for (x = 0; x < width / 2; x++) {
-                        int _y, u, y1, v, r, g, b;
+			for (x = 0; x < width / 2; x++) {
+				int _y, u, y1, v, r, g, b;
 
 #define LIMIT(_x) ((((_x)>0xffffff)?0xff0000:(((_x)<=0xffff)?0:(_x)&0xff0000))>>16)
 
@@ -385,16 +375,17 @@ _y  *= 76310;
 y1 *= 76310;
 *pd++ = LIMIT(r + _y); *pd++ = LIMIT(g + _y); *pd++ = LIMIT(b + _y);
 *pd++ = LIMIT(r + y1); *pd++ = LIMIT(g + y1); *pd++ = LIMIT(b + y1);
-                }
-        }
 
-        free(data);
+			}
+		}
 
-        file->data = buf;
-        file->size = (width * height * 3) + strlen(ppmhead);
-
-        strcpy(file->type, "image/ppm");
-        strcpy(file->name, filename);
+		free(data);
+		gp_file_set_data_and_size (file, buf,
+				(width * height * 3) + strlen(ppmhead));
+		gp_file_set_mime_type (file, "image/ppm");
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
         return GP_OK;
 }

@@ -186,7 +186,6 @@ int camera_init (Camera *camera)
 	camera->functions->folder_list_files   	= camera_folder_list_files;
 	camera->functions->file_get_info	= camera_file_get_info;
 	camera->functions->file_get 		= camera_file_get;
-	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_delete 		= camera_file_delete;
 	camera->functions->folder_delete_all    = camera_folder_delete_all;
 	camera->functions->capture_preview	= camera_capture_preview;
@@ -398,9 +397,8 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 	return (gp_filesystem_list_folders (fd->fs, folder, list));
 }
 
-static int camera_file_get_generic (Camera *camera, CameraFile *file, 
-				    const char *folder, const char *filename, 
-				    int thumbnail) 
+int camera_file_get (Camera *camera, const char *folder, const char *filename,
+		     CameraFileType type, CameraFile *file)
 {
         int regl, regd, file_number;
 	SierraData *fd = (SierraData*)camera->camlib_data;
@@ -422,12 +420,17 @@ static int camera_file_get_generic (Camera *camera, CameraFile *file,
 	file_number = gp_filesystem_number (fd->fs, folder, filename);
 	CHECK_STOP (camera, file_number);
 
-	if (thumbnail) {
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
 		regl = 13;
 		regd = 15;
-	}  else {
+		break;
+	case GP_FILE_TYPE_NORMAL:
 		regl = 12;
 		regd = 14;
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	/* Fill in the file structure */
@@ -439,10 +442,11 @@ static int camera_file_get_generic (Camera *camera, CameraFile *file,
 	CHECK_STOP (camera, gp_file_get_data_and_size (file, &data, &size));
 	
 	/* Data postprocessing */
-	if (thumbnail) {
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
 
 		/* Thumbnails are always JPEG file (as far as we know...) */
-		CHECK_STOP (camera, gp_file_set_type (file, "image/jpeg"));
+		CHECK_STOP (camera, gp_file_set_mime_type (file, "image/jpeg"));
 
 		/* Corrects the file name to reflect that */
 		if ( (wrk_s = rindex(file->name, '.')) ) {
@@ -467,19 +471,22 @@ static int camera_file_get_generic (Camera *camera, CameraFile *file,
 			camera_stop (camera);
 			return GP_ERROR_CORRUPTED_DATA;
 		}
-	}
-	else {
+
+		break;
+	case GP_FILE_TYPE_NORMAL:
 
 		/* Check the file type */
 		if (!memcmp (data, TIFF_SOI_MARKER, 5))
 			CHECK_STOP (camera,
-				    gp_file_set_type (file, "image/tiff"))
+				    gp_file_set_mime_type (file, "image/tiff"))
 		else if (!memcmp (data, JPEG_SOI_MARKER, 2))
 			CHECK_STOP (camera,
-				    gp_file_set_type (file, "image/jpeg"))
+				    gp_file_set_mime_type (file, "image/jpeg"))
 		else
 			CHECK_STOP (camera,
-				    gp_file_set_type (file, "video/quicktime"))
+				    gp_file_set_mime_type (file, "video/quicktime"));
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	return (camera_stop (camera));
@@ -561,19 +568,6 @@ int camera_folder_delete_all (Camera *camera, const char *folder)
 	CHECK_STOP (camera, sierra_update_fs_for_folder (camera, "/"));
 	
 	return (camera_stop (camera));
-}
-
-int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFile *file) 
-{
-	return (camera_file_get_generic (camera, file, folder, filename, 0));
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename,
-                             CameraFile *file) 
-{
-	return (camera_file_get_generic (camera, file, folder, filename, 1));
 }
 
 int camera_file_delete (Camera *camera, const char *folder, 

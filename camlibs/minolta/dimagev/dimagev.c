@@ -88,7 +88,6 @@ int camera_init (Camera *camera)
 	camera->functions->folder_list_folders 	= camera_folder_list_folders;
 	camera->functions->folder_list_files   	= camera_folder_list_files;
 	camera->functions->file_get 		= camera_file_get;
-	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_delete 		= camera_file_delete;
 	camera->functions->folder_put_file      = camera_folder_put_file;
 	camera->functions->folder_delete_all    = camera_folder_delete_all;
@@ -235,55 +234,44 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFile *file) 
+		     CameraFileType type, CameraFile *file) 
 {
 	dimagev_t *dimagev;
-	int file_number=0;
+	int file_number=0, result;
 
 	dimagev = camera->camlib_data;
 
 	file_number = gp_filesystem_number(dimagev->fs, folder, filename);
+	if (file_number < 0)
+		return (file_number);
 
-	if ( dimagev_get_picture(dimagev, file_number + 1, file) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_get::unable to retrieve image file");
-		return GP_ERROR_IO;
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		gp_file_set_mime_type (file, "image/jpeg");
+		gp_file_set_name (file, filename);
+		result = dimagev_get_picture (dimagev, file_number + 1, file);
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		gp_file_set_mime_type (file, "image/ppm");
+#if defined HAVE_SNPRINTF
+		snprintf(file->name, sizeof(file->name), DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
+#else
+		sprintf(file->name, DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
+#endif 
+		result = dimagev_get_thumbnail (dimagev, file_number + 1, file);
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-#if defined HAVE_SNPRINTF
-	snprintf(file->type, sizeof(file->type), "image/jpg");
-	snprintf(file->name, sizeof(file->name), "%s", filename);
-#else
-	sprintf(file->type, "image/jpg");
-	sprintf(file->name, "%s", filename);
-#endif
+	if (result < 0) {
+		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_get::unable to retrieve image file");
+		return result;
+	}
+
+	gp_file_set_name (file, filename);
 
 	sleep(2);
-	return GP_OK;
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *file) 
-{
-	dimagev_t *dimagev;
-	int file_number=0;
-
-	dimagev = camera->camlib_data;
-
-	file_number = gp_filesystem_number(dimagev->fs, folder, filename);
-
-	if ( dimagev_get_thumbnail(dimagev, file_number + 1, file) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_file_get_preview::unable to retrieve image file");
-		return GP_ERROR_IO;
-	}
-
-	/* The previews are stored in PPM format. See util.c for more details. */
-#if defined HAVE_SNPRINTF
-	snprintf(file->type, sizeof(file->type), "image/ppm");
-	snprintf(file->name, sizeof(file->name), DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
-#else
-	sprintf(file->type, "image/ppm");
-	sprintf(file->name, DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
-#endif
 	return GP_OK;
 }
 

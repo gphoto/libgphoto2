@@ -114,7 +114,6 @@ int camera_init (Camera *camera)
     camera->functions->folder_list_folders      = camera_folder_list_folders;
     camera->functions->folder_list_files	= camera_folder_list_files;
     camera->functions->file_get 	= camera_file_get;
-    camera->functions->file_get_preview = camera_file_get_preview;
     camera->functions->file_delete 	= camera_file_delete;
     camera->functions->capture 	        = camera_capture;
     camera->functions->summary	        = camera_summary;
@@ -243,21 +242,20 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFile *file) 
+		     CameraFileType type, CameraFile *file) 
 {
-    DC240Data *dd = camera->camlib_data;
-
-    return (dc240_file_action (dd, DC240_ACTION_IMAGE, file, folder, 
-    			       filename));
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *file) 
-{
-    DC240Data *dd = camera->camlib_data;
-
-    return (dc240_file_action (dd, DC240_ACTION_PREVIEW, file, folder, 
-    			       (char*) filename));
+	DC240Data *dd = camera->camlib_data;
+	
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		return (dc240_file_action (dd, DC240_ACTION_IMAGE, file,
+					   folder, filename));
+	case GP_FILE_TYPE_PREVIEW:
+		return (dc240_file_action (dd, DC240_ACTION_PREVIEW, file,
+					   folder, (char*) filename));
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 }
 
 int camera_file_delete (Camera *camera, const char *folder, 

@@ -82,7 +82,6 @@ int camera_init (Camera *camera) {
         //camera->functions->folder_set   = camera_folder_set;
         //camera->functions->file_count   = camera_file_count;
         camera->functions->file_get     = camera_file_get;
-        camera->functions->file_get_preview = camera_file_get_preview;
         camera->functions->file_delete  = camera_file_delete;
 //        camera->functions->capture      = camera_capture;
         camera->functions->summary      = camera_summary;
@@ -143,7 +142,7 @@ int camera_file_count (Camera *camera)
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFile *file)
+                     CameraFileType type, CameraFile *file)
 {
         int size, num;
         SonyStruct *b = (SonyStruct*)camera->camlib_data;
@@ -152,48 +151,30 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
         if(!F1ok())
            return (GP_ERROR);
 
-        strcpy(file->name, filename);
-        strcpy(file->type, "image/jpg");
+	gp_file_set_name (file, filename);
+	gp_file_set_mime_type (file, "image/jpeg");
 
         /* Retrieve the number of the photo on the camera */
         num = gp_filesystem_number(b->fs, "/", filename);
 
-        size=get_picture(num,&file->data,JPEG,0,camera_file_count(camera));
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		size = get_picture (num, &file->data, JPEG, 0, 
+				    camera_file_count (camera));
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		size = get_picture (num, &file->data, JPEG_T, TRUE,
+				    camera_file_count (camera));
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
         if (!file->data)
                 return GP_ERROR;
         file->size = size;
+
         return GP_OK;
-
-}
-
-
-int camera_file_get_preview (Camera *camera, const char *folder,
-                             const char *filename, CameraFile *preview)
-{
-        /**********************************/
-        /* file_number now starts at 0!!! */
-        /**********************************/
-        int size, num;
-        SonyStruct *b = (SonyStruct*)camera->camlib_data;
-
-        if(!F1ok())
-           return (GP_ERROR);
-
-
-        strcpy(preview->name, filename);
-        strcpy(preview->type, "image/jpg");
-
-        /* Retrieve the number of the photo on the camera */
-        num = gp_filesystem_number(b->fs, "/", filename);
-        size=get_picture(num,&preview->data,JPEG_T,TRUE,camera_file_count(camera));
-        if (!preview->data)
-                return GP_ERROR;
-        preview->size = size;
-        return GP_OK;
-
-        /*preview->size = get_picture(file_number,&preview->data,JPEG_T,0,camera_file_count(camera));
-        sprintf(preview->name,"PIDX%04d.jpg",file_number);*/
-        return (GP_OK);
 }
 
 int camera_file_delete (Camera *camera, const char *folder ,

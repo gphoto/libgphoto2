@@ -79,7 +79,6 @@ int camera_init(Camera *camera) {
         camera->functions->folder_list_folders  = camera_folder_list_folders;
         camera->functions->folder_list_files    = camera_folder_list_files;
         camera->functions->file_get     = camera_file_get;
-        camera->functions->file_get_preview =  camera_file_get_preview;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
@@ -146,7 +145,7 @@ int camera_folder_list_files (Camera *camera, const char *folder, CameraList *li
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFile *file)
+		     CameraFileType type, CameraFile *file)
 {
 
         int size, num;
@@ -154,40 +153,26 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	char *data;
 
         gp_frontend_progress(camera, NULL, 0.00);
+
+        /* Retrieve the number of the photo on the camera */
+        num = gp_filesystem_number(b->fs, "/", filename);
+
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+	        data = barbie_read_picture(b, num, 0, &size);
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		data = barbie_read_picture(b, num, 1, &size);
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
+        if (!data)
+                return GP_ERROR;
 
 	gp_file_set_name (file, filename);
-	gp_file_set_type (file, "image/ppm");
-
-        /* Retrieve the number of the photo on the camera */
-        num = gp_filesystem_number(b->fs, "/", filename);
-
-        data = barbie_read_picture(b, num, 0, &size);
-        if (!data)
-                return GP_ERROR;
-	gp_file_set_data_and_size (file, data, size);
-
-        return GP_OK;
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder,
-                             const char *filename, CameraFile *file)
-{
-
-        int size, num;
-        BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
-	char *data;
-
-        gp_frontend_progress(camera, NULL, 0.00);
-
-        gp_file_set_name (file, filename);
-	gp_file_set_type (file, "image/ppm");
-
-        /* Retrieve the number of the photo on the camera */
-        num = gp_filesystem_number(b->fs, "/", filename);
-
-        data = barbie_read_picture(b, num, 1, &size);;
-        if (!data)
-                return GP_ERROR;
+	gp_file_set_mime_type (file, "image/ppm"); 
 	gp_file_set_data_and_size (file, data, size);
 
         return GP_OK;

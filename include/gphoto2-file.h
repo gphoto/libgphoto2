@@ -21,11 +21,18 @@
 #ifndef __GPHOTO2_FILE_H__
 #define __GPHOTO2_FILE_H__
 
+typedef enum {
+	GP_FILE_TYPE_PREVIEW,
+	GP_FILE_TYPE_NORMAL,
+	GP_FILE_TYPE_RAW
+} CameraFileType;
+
 typedef struct _CameraFile CameraFile;
 
 /* Don't use this - it'll disappear soon... */
 struct _CameraFile {
-	char type [64];
+	CameraFileType type;
+	char mime_type [64];
 	char name [64];
 	long int size;
 	char *data;
@@ -47,10 +54,12 @@ int gp_file_clean          (CameraFile *file);
 int gp_file_free           (CameraFile *file);
 
 int gp_file_set_name       (CameraFile *file, const char *name);
-int gp_file_set_type       (CameraFile *file, const char *type);
+int gp_file_set_mime_type  (CameraFile *file, const char *mime_type);
+int gp_file_set_type       (CameraFile *file, CameraFileType type);
 
 int gp_file_get_name       (CameraFile *file, const char **name);
-int gp_file_get_type       (CameraFile *file, const char **type);
+int gp_file_get_mime_type  (CameraFile *file, const char **mime_type);
+int gp_file_get_type       (CameraFile *file, CameraFileType *type);
 
 int gp_file_append            (CameraFile*, const char *data,  int size);
 int gp_file_get_last_chunk    (CameraFile*, char **data, long int *size);

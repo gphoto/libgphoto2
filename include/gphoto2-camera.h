@@ -101,9 +101,8 @@ typedef int (*c_file_get_config)        (Camera*, const char*,
 typedef int (*c_file_set_config)        (Camera*, const char*,
 		                         const char*, CameraWidget*);
 typedef int (*c_file_get)               (Camera*, const char*,
-		                         const char*, CameraFile*);
-typedef int (*c_file_get_preview)       (Camera*, const char*,
-		                         const char*, CameraFile*);
+		                         const char*, CameraFileType type,
+					 CameraFile*);
 typedef int (*c_file_delete)            (Camera*, const char*, const char*);
 
 typedef char *(*c_result_as_string)     (Camera*, int);
@@ -133,7 +132,6 @@ typedef struct {
 	c_file_set_info         file_set_info;
 	c_file_get_config       file_get_config;
 	c_file_set_config       file_set_config;
-	c_file_get_preview      file_get_preview;
 	c_file_get              file_get;
 	c_file_delete           file_delete;
 
@@ -230,7 +228,6 @@ int gp_camera_folder_set_config   (Camera *camera, const char *folder,
  *   - get_info   : Get specific information about a file               *
  *   - set_info   : Set specific parameters of a file                   *
  *   - get_file   : Get a file                                          *
- *   - get_preview: Get the preview of a file                           *
  *   - get_config : Get additional configuration options of a file      *
  *   - set_config : Set those additional configuration options          *
  *   - delete     : Delete a file                                       *
@@ -240,10 +237,9 @@ int gp_camera_file_get_info 	(Camera *camera, const char *folder,
 				 const char *file, CameraFileInfo *info);
 int gp_camera_file_set_info 	(Camera *camera, const char *folder, 
 				 const char *file, CameraFileInfo *info);
-int gp_camera_file_get_file 	(Camera *camera, const char *folder, 
-				 const char *file, CameraFile *camera_file);
-int gp_camera_file_get_preview 	(Camera *camera, const char *folder, 
-				 const char *file, CameraFile *camera_file);
+int gp_camera_file_get		(Camera *camera, const char *folder, 
+				 const char *file, CameraFileType type,
+				 CameraFile *camera_file);
 int gp_camera_file_get_config  	(Camera *camera, const char *folder, 
 				 const char *file, CameraWidget **window);
 int gp_camera_file_set_config  	(Camera *camera, const char *folder, 

@@ -478,10 +478,13 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFile *file) 
+		     CameraFileType type, CameraFile *file) 
 {
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int	index, size, rsize, i, s;
+
+	if (type != GP_FILE_TYPE_NORMAL)
+		return (GP_ERROR_NOT_SUPPORTED);
 
 	dsc_print_status(camera, _("Downloading image %s."), filename);
 
@@ -493,8 +496,8 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	if ((size = dsc1_selectimage(dsc, index + 1)) < 0)
 		return (GP_ERROR);
 	
-	strcpy (file->name, filename);
-	strcpy (file->type, "image/jpg");
+	gp_file_set_name (file, filename);
+	gp_file_set_mime_type (file, "image/jpeg");
 
 	gp_frontend_progress (camera, file, 0.00);
 

@@ -91,7 +91,6 @@ int camera_init(Camera *camera) {
     camera->functions->folder_list_folders  = camera_folder_list_folders;
     camera->functions->folder_list_files    = camera_folder_list_files;
     camera->functions->file_get     = camera_file_get;
-    camera->functions->file_get_preview =  camera_file_get_preview;
     camera->functions->summary      = camera_summary;
     camera->functions->manual       = camera_manual;
     camera->functions->about        = camera_about;
@@ -236,7 +235,7 @@ static char *agfa_file_get (Camera *camera, const char *folder,
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFile *file) {
+		     CameraFileType type, CameraFile *file) {
 
     struct agfa_device *dev = camera->camlib_data;
     unsigned char *data;
@@ -246,36 +245,22 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 
     if (folder[0] == '/') folder++;
 
-    data = agfa_file_get(camera, folder, filename, 0, &size);
+    switch (type) {
+    case GP_FILE_TYPE_NORMAL:
+	data = agfa_file_get(camera, folder, filename, 0, &size);
+	break;
+    case GP_FILE_TYPE_PREVIEW:
+	data = agfa_file_get(camera, folder, filename, 1, &size);
+	break;
+    default:
+	return (GP_ERROR_NOT_SUPPORTED);
+    }
     
     if (!data) return GP_ERROR;
 
     gp_file_set_data_and_size (file, data, size);
     gp_file_set_name (file, filename);
-    gp_file_set_type (file, "image/jpeg");
-
-    return GP_OK;
-}
-
-   /* FIXME can easily share code with the preceding procedure */
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *file) {
-
-    struct agfa_device *dev = camera->camlib_data;
-    unsigned char *data;
-    int size;
-   
-    if (!dev) return GP_ERROR;
-
-    if (folder[0] == '/') folder++;
-
-    data = agfa_file_get(camera, folder, filename, 1, &size);
-        
-    if (!data) return GP_ERROR;
-
-    gp_file_set_data_and_size (file, data, size);
-    gp_file_set_type (file, "image/jpeg");
-    gp_file_set_name (file, filename);
+    gp_file_set_mime_type (file, "image/jpeg");
 
     return GP_OK;
 }

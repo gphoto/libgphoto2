@@ -77,7 +77,6 @@ int camera_init (Camera *camera) {
 	camera->functions->folder_list_folders  = camera_folder_list_folders;
 	camera->functions->folder_list_files	= camera_folder_list_files;
 	camera->functions->file_get 	= camera_file_get;
-	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_delete 	= camera_file_delete;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
@@ -269,17 +268,18 @@ int camera_file_action (Camera *camera, int action, CameraFile *file,
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFile *file) 
+		     CameraFileType type, CameraFile *file) 
 {
-	return (camera_file_action (camera, DC120_ACTION_IMAGE, file, folder, 
-				    filename));
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *file) 
-{
-	return (camera_file_action (camera, DC120_ACTION_PREVIEW, file, folder, 
-				    filename));
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		return (camera_file_action (camera, DC120_ACTION_IMAGE, file,
+					    folder, filename));
+	case GP_FILE_TYPE_PREVIEW:
+		return (camera_file_action (camera, DC120_ACTION_PREVIEW, file,
+					    folder, filename));
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
 }
 
 int camera_file_delete (Camera *camera, const char *folder, 

@@ -469,7 +469,6 @@ int camera_init (Camera *camera)
         camera->functions->folder_list_folders  = camera_folder_list_folders;
         camera->functions->folder_list_files    = camera_folder_list_files;
         camera->functions->file_get             = camera_file_get;
-        camera->functions->file_get_preview     = camera_file_get_preview;
         camera->functions->folder_put_file      = camera_folder_put_file;
         camera->functions->file_delete          = camera_file_delete;
         camera->functions->summary              = camera_summary;
@@ -572,30 +571,35 @@ int camera_folder_list_files (Camera *camera, const char *folder,
         return GP_OK;
 }
 
-int camera_file_get_common (Camera *camera, CameraFile *file, 
-			    const char *filename, int thumbnail) 
+int camera_file_get (Camera *camera, const char *folder, const char *filename,
+		     CameraFileType type, CameraFile *file) 
 {
 
         dsc_t   *dsc = (dsc_t *)camera->camlib_data;
         int     index, i, size, blocks, result;
-        char    kind[16];
 
-        if (thumbnail == DSC_THUMBNAIL)
-                strcpy(kind, "thumbnail");
-        else
-                strcpy(kind, "image");
-
-        dsc_print_status(camera, _("Downloading %s %s."), kind, filename);
+        dsc_print_status(camera, _("Downloading %s."), filename);
 
         /* index is the 0-based image number on the camera */
-        if ((index = gp_filesystem_number(dsc->fs, "/", filename)) == GP_ERROR)
-                return GP_ERROR;
+        index = gp_filesystem_number(dsc->fs, "/", filename);
+	if (index < 0)
+		return (index);
 
-        if ((size = dsc2_selectimage(dsc, index + 1, thumbnail)) < 0)
-                return (GP_ERROR);
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
+		size = dsc2_selectimage (dsc, index + 1, DSC_THUMBNAIL);
+		break;
+	case GP_FILE_TYPE_NORMAL:
+		size = dsc2_selectimage (dsc, index + 1, DSC_FULLIMAGE);
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+	if (size < 0)
+		return (size);
 
-        strcpy(file->name, filename);
-        strcpy(file->type, "image/jpg");
+	gp_file_set_name (file, filename);
+	gp_file_set_mime_type (file, "image/jpeg");
 
         gp_frontend_progress(camera, file, 0.00);
 
@@ -611,18 +615,6 @@ int camera_file_get_common (Camera *camera, CameraFile *file,
         }
 
         return (GP_OK);
-}
-
-int camera_file_get (Camera *camera, const char *folder, const char *filename,
-                     CameraFile *file) 
-{
-        return camera_file_get_common(camera, file, filename, DSC_FULLIMAGE);
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *file) 
-{
-        return camera_file_get_common(camera, file, filename, DSC_THUMBNAIL);
 }
 
 int camera_folder_put_file (Camera *camera, const char *folder, 

@@ -69,12 +69,16 @@ int print_files(char *subfolder, image_action iaction, int reverse) {
 
 int save_picture_action(char *folder, char *filename) {
 
-	return (save_picture_to_file(folder, filename, 0));
+	return (save_picture_to_file(folder, filename, GP_FILE_TYPE_NORMAL));
 }
 
 int save_thumbnail_action(char *folder, char *filename) {
 	
-	return (save_picture_to_file(folder, filename, 1));
+	return (save_picture_to_file(folder, filename, GP_FILE_TYPE_PREVIEW));
+}
+
+int save_raw_action(char *folder, char *filename) {
+	return (save_picture_to_file(folder, filename, GP_FILE_TYPE_RAW));
 }
 
 int delete_picture_action(char *folder, char *filename) {

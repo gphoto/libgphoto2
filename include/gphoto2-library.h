@@ -29,9 +29,8 @@ int camera_file_get_info        (Camera *camera, const char *folder,
 int camera_file_set_info	(Camera *camera, const char *folder, 
 				 const char *filename, CameraFileInfo *info);
 int camera_file_get       	(Camera *camera, const char *folder, 
-				 const char *filename, CameraFile *file);
-int camera_file_get_preview	(Camera *camera, const char *folder, 
-				 const char *filename, CameraFile *file);
+				 const char *filename, CameraFileType type,
+				 CameraFile *file);
 int camera_file_delete   	(Camera *camera, const char *folder, 
 				 const char *filename);
 int camera_file_get_config	(Camera *camera, const char *folder, 

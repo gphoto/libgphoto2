@@ -380,7 +380,6 @@ camera_init (Camera* camera)
 	camera->functions->folder_set_config	= camera_folder_set_config;
 	camera->functions->folder_delete_all    = camera_folder_delete_all;
         camera->functions->file_get 		= camera_file_get;
-        camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_delete 		= camera_file_delete;
 	camera->functions->file_get_info	= camera_file_get_info;
 	camera->functions->file_set_info	= camera_file_set_info;
@@ -536,8 +535,9 @@ camera_folder_list_files (Camera* camera, const gchar* folder, CameraList* list)
 }
 
 
-static gint 
-camera_file_get_generic (Camera* camera, CameraFile* file, const gchar* folder, const gchar* filename, k_image_type_t image_type)
+int 
+camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
+		 CameraFileType type, CameraFile *file)
 {
 	gulong 		image_id;
 	gchar*		image_id_string;
@@ -545,14 +545,12 @@ camera_file_get_generic (Camera* camera, CameraFile* file, const gchar* folder, 
 	char *data = NULL;
 	long int size;
 
-	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (filename, GP_ERROR_BAD_PARAMETERS);
-	
-	if (strlen (filename) != 11) 		return (GP_ERROR_FILE_NOT_FOUND);
-	if (!strcmp (filename, "??????.jpeg")) 	return (GP_ERROR_FILE_NOT_FOUND);
-	if (strcmp (folder, "/")) 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	if (strlen (filename) != 11)
+		return (GP_ERROR_FILE_NOT_FOUND);
+	if (!strcmp (filename, "??????.jpeg"))
+		return (GP_ERROR_FILE_NOT_FOUND);
+	if (strcmp (folder, "/"))
+		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_generic ***");
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** folder: %s", folder);
@@ -566,35 +564,28 @@ camera_file_get_generic (Camera* camera, CameraFile* file, const gchar* folder, 
 	g_free (image_id_string);
 	
 	/* Get the image. */
-	CHECK (k_get_image (kd->device, kd->image_id_long, image_id,
-			    image_type, (guchar **) &data,
-			    (guint *) &size));
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
+		CHECK (k_get_image (kd->device, kd->image_id_long, image_id,
+				    K_THUMBNAIL, (guchar **) &data,
+				    (guint *) &size));
+		break;
+	case GP_FILE_TYPE_NORMAL:
+		CHECK (k_get_image (kd->device, kd->image_id_long, image_id,
+				    K_IMAGE_EXIF, (guchar **) &data,
+				    (guint *) &size));
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
 	gp_file_set_data_and_size (file, data, size);
 	gp_file_set_name (file, filename);
-	gp_file_set_type (file, "image/jpeg");
+	gp_file_set_mime_type (file, "image/jpeg");
 
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_get_generic ***");
 	return (GP_OK);
 }
-
-
-gint 
-camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
-		 CameraFile* file)
-{
-	return (camera_file_get_generic (camera, file, folder, filename,
-		                         K_IMAGE_EXIF));
-}
-
-
-gint 
-camera_file_get_preview (Camera* camera, const gchar* folder,
-		         const gchar* filename, CameraFile* file)
-{
-	return (camera_file_get_generic (camera, file, folder, filename,
-				         K_THUMBNAIL));
-}
-
 
 gint 
 camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
@@ -682,7 +673,7 @@ camera_capture_preview (Camera* camera, CameraFile* file)
 	CHECK (k_get_preview (kd->device, TRUE, (guchar**) &data,
 			      (guint*) &size));
 	gp_file_set_data_and_size (file, data, size);
-	gp_file_set_type (file, "image/jpeg");
+	gp_file_set_mime_type (file, "image/jpeg");
 	return (GP_OK);
 }
 

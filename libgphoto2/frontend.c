@@ -29,9 +29,10 @@ CameraMessage  gp_fe_message  = NULL;
 CameraConfirm  gp_fe_confirm  = NULL;
 CameraPrompt   gp_fe_prompt   = NULL;
 
-int gp_frontend_register (CameraStatus status, CameraProgress progress,
-			  CameraMessage message, CameraConfirm confirm,
-			  CameraPrompt prompt)
+int
+gp_frontend_register (CameraStatus status, CameraProgress progress,
+		      CameraMessage message, CameraConfirm confirm,
+		      CameraPrompt prompt)
 {
 	gp_fe_status   = status;
 	gp_fe_progress = progress;
@@ -42,14 +43,16 @@ int gp_frontend_register (CameraStatus status, CameraProgress progress,
 	return (GP_OK);
 }
 
-int gp_frontend_status (Camera *camera, char *status)
+int
+gp_frontend_status (Camera *camera, char *status)
 {
 	if (gp_fe_status)
 		gp_fe_status(camera, status);
         return(GP_OK);
 }
 
-int gp_frontend_progress (Camera *camera, CameraFile *file, float percentage)
+int
+gp_frontend_progress (Camera *camera, CameraFile *file, float percentage)
 {
 	if (gp_fe_progress)
 		gp_fe_progress(camera, file, percentage);
@@ -57,14 +60,16 @@ int gp_frontend_progress (Camera *camera, CameraFile *file, float percentage)
         return(GP_OK);
 }
 
-int gp_frontend_message (Camera *camera, char *message)
+int
+gp_frontend_message (Camera *camera, char *message)
 {
 	if (gp_fe_message)
 		gp_fe_message(camera, message);
         return(GP_OK);
 }
 
-int gp_frontend_confirm (Camera *camera, char *message)
+int
+gp_frontend_confirm (Camera *camera, char *message)
 {
 	if (!gp_fe_confirm)
 		/* return YES. dangerous? */
@@ -72,7 +77,8 @@ int gp_frontend_confirm (Camera *camera, char *message)
         return(gp_fe_confirm(camera, message));
 }
 
-int gp_frontend_prompt_clean_all (CameraWidget *widget)
+static int
+gp_frontend_prompt_clean_all (CameraWidget *widget)
 {
 	CameraWidget *child;
         int x;
@@ -91,7 +97,8 @@ int gp_frontend_prompt_clean_all (CameraWidget *widget)
         return (GP_OK);
 }
 
-int gp_frontend_prompt (Camera *camera, CameraWidget *window)
+int
+gp_frontend_prompt (Camera *camera, CameraWidget *window)
 {
 	gp_frontend_prompt_clean_all(window);
 

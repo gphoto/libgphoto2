@@ -294,7 +294,7 @@ shell_ls (char *arg)
 }
 
 static int
-shell_get_common (char *arg, int thumbnail)
+shell_get_common (char *arg, CameraFileType type)
 {
 	char tmp_folder[1024];
 	char *slash, *tmp_filename;
@@ -325,7 +325,7 @@ shell_get_common (char *arg, int thumbnail)
 		strcpy(tmp_folder, glob_folder);
 	}
 
-	save_picture_to_file(tmp_folder, tmp_filename, thumbnail);
+	save_picture_to_file(tmp_folder, tmp_filename, type);
 
 	return (GP_OK);		
 }
@@ -333,7 +333,7 @@ shell_get_common (char *arg, int thumbnail)
 int
 shell_get_thumbnail (char *arg)
 {
-	shell_get_common (arg, 1);
+	shell_get_common (arg, GP_FILE_TYPE_PREVIEW);
 
 	return (GP_OK);
 }
@@ -342,10 +342,18 @@ int
 shell_get (char *arg)
 {
 
-	shell_get_common (arg, 0);
+	shell_get_common (arg, GP_FILE_TYPE_NORMAL);
 
 	return (GP_OK);
-}	
+}
+
+int
+shell_get_raw (char *arg)
+{
+	shell_get_common (arg, GP_FILE_TYPE_RAW);
+
+	return (GP_OK);
+}
 
 int
 shell_exit (char *arg)

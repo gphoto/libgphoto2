@@ -77,7 +77,6 @@ int camera_init (Camera *camera)
 	camera->functions->folder_list_folders  = camera_folder_list_folders;
 	camera->functions->folder_list_files	= camera_folder_list_files;
 	camera->functions->file_get 		= camera_file_get;
-	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
 	camera->functions->about 		= camera_about;
@@ -317,7 +316,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFile *file)
+		     CameraFileType type, CameraFile *file)
 {
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
@@ -327,41 +326,25 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	if(check_last_use(camera) == GP_ERROR)
 		return GP_ERROR;
 
-	res = dc3200_get_data (dd, &data, &data_len, CMD_GET_FILE, folder, 
-			       filename);
-	if (res == GP_ERROR)
-		return (GP_ERROR);
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
+		res = dc3200_get_data (dd, &data, &data_len, CMD_GET_PREVIEW,
+				       folder, filename);
+		break;
+	case GP_FILE_TYPE_NORMAL:
+		res = dc3200_get_data (dd, &data, &data_len, CMD_GET_FILE,
+				       folder, filename);
+		break;
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+	if (res < 0)
+		return (res);
 
 	if (data == NULL || data_len < 1)
 		return (GP_ERROR);
 
 	gp_file_append (file, data, data_len);
-
-	free(data);
-	return (dc3200_keep_alive(dd));
-}
-
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *file)
-{
-	DC3200Data	*dd = camera->camlib_data;
-	u_char		*data = NULL;
-	long		data_len = 0;
-	int		res;
-
-	if(check_last_use(camera) == GP_ERROR)
-		return GP_ERROR;
-
-	res = dc3200_get_data (dd, &data, &data_len, CMD_GET_PREVIEW, folder, 
-			       filename);
-
-	if (res == GP_ERROR)
-		return (GP_ERROR);
-		
-	if(data == NULL || data_len < 1)
-		return GP_ERROR;
-
-	gp_file_append(file, data, data_len);
 
 	free(data);
 	return (dc3200_keep_alive(dd));

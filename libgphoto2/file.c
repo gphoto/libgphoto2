@@ -40,7 +40,8 @@ gp_file_new (CameraFile **file)
 	if (!*file)
 		return (GP_ERROR_NO_MEMORY);
 
-	strcpy ((*file)->type, "unknown/unknown");
+	(*file)->type = GP_FILE_TYPE_NORMAL;
+	strcpy ((*file)->mime_type, "unknown/unknown");
 	strcpy ((*file)->name, "");
 	(*file)->data = NULL;
 	(*file)->size = 0;
@@ -240,7 +241,7 @@ gp_file_open (CameraFile *file, char *filename)
 #else
                 if (!strcasecmp (mime_table[i], dot+1)) {
 #endif
-                    sprintf (file->type,"image/%s", mime_table[i+1]);
+                    sprintf (file->mime_type,"image/%s", mime_table[i+1]);
                     break;
                 }
             if (!mime_table[i])
@@ -248,12 +249,12 @@ gp_file_open (CameraFile *file, char *filename)
                  * We did not found the type in the lookup table,
                  * so we use the file suffix as mime type.
                  */
-                sprintf(file->type, "image/%s", dot + 1);
+                sprintf(file->mime_type, "image/%s", dot + 1);
         } else
             /*
              * Damn, no filename suffix...
              */
-            strcpy(file->type, "image/unknown");
+            strcpy(file->mime_type, "image/unknown");
 
         return (GP_OK);
 }
@@ -306,11 +307,11 @@ gp_file_get_name (CameraFile *file, const char **name)
 }
 
 int
-gp_file_get_type (CameraFile *file, const char **type)
+gp_file_get_mime_type (CameraFile *file, const char **mime_type)
 {
-	CHECK_NULL (file && type);
+	CHECK_NULL (file && mime_type);
 
-	*type = file->type;
+	*mime_type = file->mime_type;
 
 	return (GP_OK);
 }
@@ -326,11 +327,31 @@ gp_file_set_name (CameraFile *file, const char *name)
 }
 
 int
-gp_file_set_type (CameraFile *file, const char *type)
+gp_file_set_mime_type (CameraFile *file, const char *mime_type)
+{
+	CHECK_NULL (file && mime_type);
+
+	strcpy (file->mime_type, mime_type);
+
+	return (GP_OK);
+}
+
+int
+gp_file_set_type (CameraFile *file, CameraFileType type)
+{
+	CHECK_NULL (file);
+
+	file->type = type;
+
+	return (GP_OK);
+}
+
+int
+gp_file_get_type (CameraFile *file, CameraFileType *type)
 {
 	CHECK_NULL (file && type);
 
-	strcpy (file->type, type);
+	*type = file->type;
 
 	return (GP_OK);
 }
