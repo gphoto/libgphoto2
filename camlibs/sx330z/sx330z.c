@@ -118,7 +118,7 @@ sx330z_read_block(Camera *camera, GPContext *context, struct traveler_req *req, 
  * Get TOC size
  */
 int 
-sx330z_get_toc_num_pages(Camera *camera, GPContext *context, uint32_t *pages)
+sx330z_get_toc_num_pages(Camera *camera, GPContext *context, int32_t *pages)
 {
  struct traveler_ack ack;
  uint8_t trxbuf[0x10];
