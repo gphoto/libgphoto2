@@ -6,7 +6,6 @@
 int gp_dump_abilities (CameraAbilities *abilities) {
 
 	int x=0;
-	char buf[32];
 
 	printf("core: Abilities for camera                  : %s\n", 
 		abilities->model);

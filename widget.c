@@ -53,6 +53,8 @@ CameraWidget*   gp_widget_child(CameraWidget *parent, int child_number) {
 int gp_widget_free(CameraWidget *widget) {
 	/* Recursively delete the widget and all children */
 
+	int x;
+
 	if (widget->children_count == 0)
 		return (GP_OK);
 
