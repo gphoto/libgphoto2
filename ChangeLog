@@ -1,3 +1,10 @@
+2001-11-25  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* camlibs/canon/canon.h: define GP_MODULE for abbref gp_log* stuff
+	* camlibs/canon/library.c: use proper MIME heuristics and types
+	* camlibs/canon/usb.c: switched some log messages to GP_DEBUG()
+	* libgphoto2/gphoto2-file.h: added MIME types for CRW and UNKNOWN
+	
 2001-11-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-filesys.h: Support "downloaded"-flag through
