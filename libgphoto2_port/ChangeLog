@@ -1,5 +1,11 @@
 2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2_port/result.c:
+	* include/gphoto2-port-result.h: #define GP_ERROR_NOT_SUPPORTED
+	* libgphoto2_port/gp_port.c: Clean up in preparation of documentation
+
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* ieee1394/Makefile.am:
 	* serial/Makefile.am:
 	* parallel/Makefile.am:

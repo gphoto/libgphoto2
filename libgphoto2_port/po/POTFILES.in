@@ -1,1 +1,2 @@
 libgphoto2_port/gp_port.c
+libgphoto2_port/gphoto2-port-core.c
