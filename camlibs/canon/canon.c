@@ -179,6 +179,7 @@ static void clear_readiness(void)
 static int check_readiness(void)
 {
     if (cached_ready) return 1;
+	gp_camera_status(NULL, "Connecting to camera");
     if (psa50_ready()) {
       debug_message("Camera type:  %d\n",camera_data.model);
       cached_ready = 1;
@@ -191,26 +192,26 @@ static int check_readiness(void)
 void switch_camera_off(void)
 {
 	gp_camera_status(NULL, "Switching Camera Off");
-        psa50_off();
-        clear_readiness();
+	psa50_off();
+	clear_readiness();
 }
 
 int camera_exit(Camera *camera)
 {
-        CanonDataStruct *cs = (CanonDataStruct*)camera->camlib_data;
-        switch_camera_off();
-
-        free(cs);
-        canon_serial_close();
-        return GP_OK;
+	CanonDataStruct *cs = (CanonDataStruct*)camera->camlib_data;
+	switch_camera_off();
+	
+	free(cs);
+	canon_serial_close();
+	return GP_OK;
 }
 
 int canon_get_batt_status(int *pwr_status, int *pwr_source)
 {
-        if (!check_readiness())
-                return -1;
-
-        return psa50_get_battery(pwr_status, pwr_source);
+	if (!check_readiness())
+	  return -1;
+	
+	return psa50_get_battery(pwr_status, pwr_source);
 }
 #if 0
 static void canon_set_owner(GtkWidget *win,GtkWidget *owner)
@@ -428,7 +429,6 @@ static int update_dir_cache(void)
     }
 }
 
-static int picfiles=0;
 static int _canon_file_list(struct psa50_dir *tree, CameraList *list, char *folder)
 {
 /*
@@ -438,18 +438,13 @@ static int _canon_file_list(struct psa50_dir *tree, CameraList *list, char *fold
 	}
 */
     while (tree->name) {
-        if(is_image(tree->name)) {
-            strcpy(list->entry[picfiles].name,tree->name);
-            list->entry[picfiles].type=GP_LIST_FILE;
-            picfiles++;
-        }
+        if(is_image(tree->name))
+			gp_list_append(list,tree->name,GP_LIST_FILE);
         else if (!tree->is_file) { 
             _canon_file_list(tree->user, list, folder);      
         }
         tree++;
     }
-    sprintf(list->folder,"%s", folder);
-    list->count = picfiles;
 
     return GP_OK;
 }
@@ -1012,11 +1007,11 @@ static char *canon_get_picture(char *filename, char *path, int thumbnail, int *s
     char file[300];
     void *ptr;
 	int j;
-
+	
     if (!check_readiness()) {
 		return NULL;
     }
-
+	
     switch (camera_data.model) {
 	 case CANON_PS_A5:
 	 case CANON_PS_A5_ZOOM:
@@ -1042,7 +1037,7 @@ static char *canon_get_picture(char *filename, char *path, int thumbnail, int *s
 			return NULL;
 		}
 		image = psa50_get_file(cached_paths[picture_number], size);
-		if (image) return image;
+                        if (image) return image;
 		free(image);
 #endif
 		return NULL;
@@ -1058,7 +1053,7 @@ static char *canon_get_picture(char *filename, char *path, int thumbnail, int *s
 		if (!image) {
 			perror("malloc");
 			return NULL;
-		}
+                }
 		memset(image,0,sizeof(*image));
 		
 		sprintf(file,"%s%s",path,filename);
@@ -1095,23 +1090,23 @@ static char *canon_get_picture(char *filename, char *path, int thumbnail, int *s
 static int _get_file_path(struct psa50_dir *tree, char *filename, char *path)
 {
     if (tree==NULL) return GP_ERROR;    
-	
+ 
     path = strchr(path,0);
     *path = '\\';
 
     while(tree->name) {
         if (!is_image(tree->name)) 
-		  strcpy(path+1,tree->name);
+            strcpy(path+1,tree->name);
         if (is_image(tree->name) && strcmp(tree->name,filename)==0) {
             return GP_OK;
         }
         else if (!tree->is_file) 
-		  if (_get_file_path(tree->user,filename, path) == GP_OK)
-			return GP_OK;
+            if (_get_file_path(tree->user,filename, path) == GP_OK)
+                   return GP_OK;
         tree++;
     }
     return GP_ERROR;
-	
+
 }
 
 static int get_file_path(char *filename, char *path)
@@ -1309,7 +1304,7 @@ int camera_init(Camera *camera, CameraInit *init)
                     canon_debug_driver = 9;
                 fprintf(stderr,"Debug level: %i\n",canon_debug_driver);
             }
-		  canon_debug_driver = 9;
+		  canon_debug_driver = 1;
         }
         fclose(conf);
   }
@@ -1518,15 +1513,35 @@ int camera_file_put(Camera *camera, CameraFile *file, char *folder)
 
 int camera_config_get(Camera *camera, CameraWidget *window)
 {
-        return GP_ERROR;
+	CameraWidget *t, *section;
+
+	/* set the window label to something more specific */
+	strcpy(window->label, "Canon PowerShot series");
+	
+	section = gp_widget_new(GP_WIDGET_SECTION, "Owner name");
+	gp_widget_append(window,section);
+	
+	t = gp_widget_new(GP_WIDGET_TEXT,"Owner name");
+	strcpy(t->value,camera_data.owner);
+	gp_widget_append(section,t);
+
+	t = gp_widget_new(GP_WIDGET_TEXT,"Camera Model");
+	strcpy(t->value,camera_data.ident);
+	gp_widget_append(section,t);
+	
+	t = gp_widget_new(GP_WIDGET_TEXT,"Firmware revision");
+	strcpy(t->value,camera_data.firmwrev);
+	gp_widget_append(section,t);
+	
+    return GP_OK;
 }
 
 int camera_config_set(Camera *camera, CameraSetting *setting, int count)
 {
-        return GP_ERROR;
+    return GP_ERROR;
 }
 
 int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info)
 {
-        return GP_ERROR;
+    return GP_ERROR;
 }

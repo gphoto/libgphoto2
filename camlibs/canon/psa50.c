@@ -309,8 +309,15 @@ static int psa50_send_msg(unsigned char mtype,unsigned char dir,
     pkt[MSG_02] = 2;
     pkt[MSG_MTYPE] = mtype;
     pkt[MSG_DIR] = dir;
+/*
+	pkt[12] = 0xE2;
+	pkt[13] = 0xC;
+	pkt[14] = 0xA1;
+	pkt[15] = 0x2;
+*/		
     pos = pkt+MSG_HDR_LEN;
     total = 0;
+
     while (1) {
         const char *str;
         int len;
@@ -933,6 +940,7 @@ int psa50_ready()
     int try,len,speed,good_ack,res;
 //    int cts;
 
+	
     switch (canon_comm_method) {
     case CANON_USB:
       psa50_get_owner_name();
@@ -965,7 +973,7 @@ int psa50_ready()
     case CANON_SERIAL_RS232:
     default:
 
-      serial_set_timeout(1000);  // 1 second is the delay for awakening the camera
+      serial_set_timeout(900);  // 1 second is the delay for awakening the camera
       serial_flush_input();
       serial_flush_output();
 

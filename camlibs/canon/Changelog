@@ -1,12 +1,17 @@
-2000-07-25
-    philm       First port to gphoto2.
-2000-07-28
-    philm       Added detection for Digital Ixus / PowerShot S100 (untested).
-2000-08-05
-    philm       Driver Adapted to new filename based API. broke A5 support.
+2000-08-09
+    philm       changed timeout for initialization from 1000 to 900 because
+                with 1000 it was working on command line but not GUI.
+                started a configure dialog box.
+                changed gp_file_list to use gp_list_append.
 2000-08-08
     philm       Fixed a bug I introduced for setting the attributes bits.
                 Added a fix in canon_serial_send which should speed up some
                 operations (like directory download) for others than A50
-                because A50 does not like to get to much data in a row. 
+                because A50 does not like to get to much data in a row.
                 Created a TODO file.
+2000-08-05
+    philm       Driver Adapted to new filename based API. broke A5 support.
+2000-07-28
+    philm       Added detection for Digital Ixus / PowerShot S100 (untested).
+2000-07-25
+    philm       First port to gphoto2.

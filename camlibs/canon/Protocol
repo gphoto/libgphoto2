@@ -237,6 +237,7 @@ xx 04 xx 00 00 00
 |     indication of the message length. Known values:
 <mseq>          00      empty message (no fragments)
                 01      short message (one fragment)
+                03      used when uploading
                 ff      maximum length data packet, more to follow
                 else    data packet, at end (observed values: 0f, 7f)
 
@@ -306,6 +307,7 @@ the message type. The following combinations have been sighted:
 01      11    aa 06 79 04   Download "thumbnail" request (see below)
 01      21    6a 08 79 04   Image data
 01      21    aa 06 79 04   "Thumbnail" data
+03      11                  Upload file
 03      12    78 f3 64 01   Get Date
 04      12    08 d3 9d 00   Set date
 05      12    fc d2 9d 00   Change Owner name
@@ -502,6 +504,25 @@ if the computer has not received everything, it sends an ACK with an error
 value asking to retransmit one of the eight packet sent. These error values
 are not yet known.
 
+Upload file
+-----------
+
+   The serial upload protocol description is not done yet. These are just
+ ideas on what it could be. Maybe it's right, maybe it's wrong.
+
+   * This command sends a file to the camera.
+
+   * Request structure:
+xx 00 00 00  00 xx 00 00 <name>
+
+Each data block has the following format:
+
+00 00 00 02 XX XX XX XX - YY YY YY YY filename - datablock
+
+   XX XX XX XX : offset within the file for this block
+   YY YY YY YY : len2: length of this block
+   filename : 0-terminated string
+   datablock: the data itself.
 
 Switch Camera off
 -----------------
