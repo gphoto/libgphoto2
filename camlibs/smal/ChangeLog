@@ -9,3 +9,15 @@ Version 0.02
 - Added support for different header types in returned image as observed
 by Vasileios Zografos, on @xia (different faceplate from mine).
 
+2003-08-25 LB
+
+Version 0.03 
+
+Logitech pocket digital - previously someone had marked this as a 
+compatible camera, whereas it wasn't really (different USB id and
+everything!)
+
+Anyway - the logitech has a fairly different protocol, so I've added
+support for that, with the caveat that logitech's imaginary 1024x768
+images are downloaded as 640x480 (the size they're stored on the 
+camera).  If you want to double the size, use the gimp!
