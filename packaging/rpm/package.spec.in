@@ -1,13 +1,19 @@
 ########################################################################
+#
 # $Id$
 #
 # RPM spec file for gphoto2
+#
+# TODO list concerning packaging
+# - review and coordinate RPM packaging for gphoto2, libusb, gtkam
+#
 ########################################################################
 
+####################################
 Summary: Software for accessing digital cameras
 Name: @PACKAGE@
 Version: @VERSION@
-Release: 1
+Release: 2
 License: LGPL
 Group: Applications/Multimedia
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -20,14 +26,7 @@ BuildRequires: libusb-devel
 BuildRequires: gtk-doc
 BuildRequires: findutils perl
 
-########################################################################
-# TODO about packaging
-########################################################################
-#
-# * review and coordinate RPM packaging for gphoto2, libusb, gtkam
-#
-########################################################################
-
+####################################
 %description
 The gPhoto2 project is a universal, free application and library
 framework that lets you download images from several different
@@ -42,12 +41,14 @@ ii) the command-line utility gphoto2
 
 Other (GUI) frontends are available seperately.
 
+####################################
 %package devel
 Summary: Headers and links to compile against the libgphoto2 library.
 Requires: %{name} = %{version}
 Provides: libgphoto2-devel
 Group: Development/Libraries
 
+####################################
 %description devel
 The gPhoto2 project is a universal, free application and library
 framework that lets you download images from several different
@@ -58,10 +59,16 @@ the old "gphoto" package.
 This package contains the files needed to compile applications that
 use libgphoto2.
 
+########################################################################
+# Building and installing the beast into %{buildroot}
+########################################################################
+
+####################################
 %prep
-rm -rf $RPM_BUILD_DIR/%{name}-%{version}
+rm -rf "${RPM_BUILD_DIR}/%{name}-%{version}"
 %setup -q -n %{name}-%{version}
 
+####################################
 %build
 CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ;
 CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ;
@@ -84,8 +91,9 @@ FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ;
         --with-html-dir=%{_docdir}/%{name}-%{version}/html
 make
 
+####################################
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf "${RPM_BUILD_ROOT}"
 
 make DESTDIR=%{buildroot} \
         prefix=%{_prefix} \
@@ -104,24 +112,33 @@ make DESTDIR=%{buildroot} \
         infodir=%{_infodir} \
 install
 
+# we should move that into the proper Makefile.am eventually
 install -d -m755 %{buildroot}/etc/hotplug/usb/
 install -m755 packaging/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
 
-find %{buildroot} -type f | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.files
+# build file list
+# find %{buildroot} -type f | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.files
+# figure out list of documentation stuff
+# htmldir=$(grep '/html/' < "%{name}-%{version}.files" | sed 's/html\/.*/html/' | sort -u)
+# echo "%docdir ${htmldir}" > %{name}-%{version}.docfiles
 
+
+####################################
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf "${RPM_BUILD_ROOT}"
 
+########################################################################
+# file list and installation for main package
+########################################################################
 
-##### gphoto2
+####################################
 %files
+# -f %{name}-%{version}.docfiles
 %defattr(-,root,root)
 %{_bindir}/gphoto2
 %{_datadir}/gphoto2/konica/*
 %doc doc/gphoto2.txt doc/gphoto2-cli.txt
-%doc AUTHORS README COPYING NEWS
-%docdir doc/api/html
-%docdir libgphoto2_port/doc/html
+%doc AUTHORS README COPYING
 %{_libdir}/libgphoto2.*
 %{_libdir}/gphoto2/*
 %{_libdir}/libgphoto2_port.*
@@ -131,23 +148,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libgphoto-2.0.pc
 /etc/hotplug/usb/usbcam
 
-#
-# FIXME: When updating from one RPM to a newer one,
-#        the cams get (correctly) removed from usb.usermap but not
-#        added again.
-#
-
+####################################
 %post
+
 # add supported cameras to /etc/hotplug/usb.usermap
 grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
 gphoto2 --print-usb-usermap >> /etc/hotplug/usb.usermap.tmp
 mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
+
 # register libraries
 /sbin/ldconfig
 
+####################################
 %postun
+
 # unregister libraries
 /sbin/ldconfig
+
 # remove supported cameras from /etc/hotplug/usb.usermap
 # this has to be done in postun as we have to test 
 # whether there is still a usbcam script or not, i.e.
@@ -160,6 +177,11 @@ else
         mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 fi
 
+########################################################################
+# file list and installation for -devel subpackage
+########################################################################
+
+####################################
 %files devel
 %defattr(-,root,root)
 %docdir %{_docdir}/%{name}-%{version}/html
@@ -168,7 +190,9 @@ fi
 %{_includedir}/gphoto2/*
 
 
-##### Change log
+########################################################################
+# ChangeLog
+########################################################################
 %changelog
 * Sat Oct 27 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
 - fixed update behaviour for hotplug list (do not erase it when updating)

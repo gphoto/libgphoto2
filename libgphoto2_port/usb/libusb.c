@@ -178,8 +178,8 @@ gp_port_usb_clear_halt_lib(GPPort *port, int ep)
 		ret=usb_clear_halt(port->pl->dh, port->settings.usb.outep);
 		break;
 	default:
-		gp_log (GP_LOG_DEBUG, "gphoto2-port-usb",
-			"gp_port_usb_clear_halt: bad EndPoint argument");
+		gp_port_set_error (port, "gp_port_usb_clear_halt: "
+				   "bad EndPoint argument");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	return (ret ? GP_ERROR_IO_USB_CLEAR_HALT : GP_OK);
@@ -326,6 +326,9 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 	 * Better to check here.
 	 */
 	if ((idvendor == 0) || (idproduct == 0)) {
+		gp_port_set_error (port, "NOT looking for illegal USB device "
+				   "(vendor 0x%x, product 0x%x)...", 
+				   idvendor, idproduct);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
@@ -334,11 +337,17 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 			if ((dev->descriptor.idVendor == idvendor) &&
 			    (dev->descriptor.idProduct == idproduct)) {
                                     port->pl->d = dev;
+				    gp_port_set_error (port, "Looking for USB device "
+						       "(vendor 0x%x, product 0x%x)... found.", 
+						       idvendor, idproduct);
 				    return GP_OK;
 			}
 		}
 	}
 
+	gp_port_set_error (port, "Looking for USB device "
+			   "(vendor 0x%x, product 0x%x)... not found.", 
+			   idvendor, idproduct);
 	return GP_ERROR_IO_USB_FIND;
 }
 

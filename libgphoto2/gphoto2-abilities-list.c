@@ -275,21 +275,41 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 		case GP_PORT_USB:
 
 			/* Detect USB cameras */
-			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+			gp_log (GP_LOG_VERBOSE, __FILE__,
 				"Auto-detecting USB cameras...");
 			for (x = 0; x < count; x++) {
+				int res;
 				v = list->abilities[x].usb_vendor;
 				p = list->abilities[x].usb_product;
-				if ((gp_port_usb_find_device (port, v, p)
-								== GP_OK)) {
-					gp_log (GP_LOG_DEBUG,
-						"gphoto2-abilities-list",
-						"Found '%s' (%i,%i)",
+				if ( (0 == v) || (0 == p) )
+					continue; /* illegal anyway */
+				res = gp_port_usb_find_device (port, v, p);
+				if (res == GP_OK) {
+					gp_log (GP_LOG_DEBUG, __FILE__,
+						"Found '%s' (0x%x,0x%x)",
 						list->abilities[x].model,
 						v, p);
 					gp_list_append (l,
 						list->abilities[x].model,
 						info.path);
+				} else if (res == GP_ERROR_IO_USB_FIND) {
+					/* "cam not found" is a common
+					 * case when scanning the bus,
+					 * so we just ignore this
+					 * quietly
+					 */
+					gp_port_set_error(port,NULL);
+				} else if (res < 0) {
+					/* another error occured. 
+					 * perhaps we should better
+					 * report this to the calling
+					 * method?
+					 */
+					gp_log (GP_LOG_DEBUG, __FILE__,
+						"gp_port_usb_find_device(vendor=0x%x, "
+						"product=0x%x) returned %i, clearing error message on port",
+						v,p,res);
+					gp_port_set_error(port,NULL);
 				}
 			}
 			break;

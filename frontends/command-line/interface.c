@@ -15,15 +15,14 @@ status_func (Camera *camera, const char *status, void *data)
 		return;
 
 	if (*status) {
-		printf ("Status: %s\r", status);
+		fprintf (stderr, "Status: %s\n", status);
 		fflush(stdout);
 	} else {
-
 		/*
-		 * This is not very clever - if you know any better,
-		 * step forward.
+		 * This is still not very clever - 
+		 * if you know any better, step forward.
 		 */
-		printf ("                                               \r");
+		fprintf (stderr, "Status: OK (i.e. \"\")\n");
 	}
 }
 

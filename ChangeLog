@@ -1,4 +1,17 @@
+2001-10-28 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* frontends/command-line/interface.c: moved status msgs to stderr
+	* libgphoto2/gphoto2-abilities-list.c: don't scan USB for ID 0, 
+	  better (?) error handling and reporting
+	* libgphoto2_port/libgphoto2_port/gphoto2-port.c: removed report 
+	  about param that is only passed on
+	* libgphoto2_port/usb/libusb.c: improved error reporting
+	* packaging/usbcam.console: improved chown/chmod handling 
+	  (race condition removed)
+	* packaging/rpm/package.spec.in: begun support for automatic file lists
+
 2001-10-27 Marcus Meissner <marcus@jet.franken.de>
+
 	* camlibs/jd11: New Jenoptik JD11 driver for gphoto2.
 	* configure.in: added jd11 subdirs
 	* MAINTAINERS: added myself
@@ -16,11 +29,12 @@
 
 	* Makefile.am: moved spec file to packaging/rpm/
 	* Makefile.am: added CDPATH warning, rpm target and cvs-tags target
-	* gphoto.spec.in: moved spec file to packaging/rpm/
+	* gphoto.spec.in: moved spec file to packaging/rpm/package.spec.in
 	* configure.in: added packaging/rpm/Makefile.am
 	* configure.in: moved spec file to packaging/rpm/
-	* packaging/Makefile.am: added rpm/
+	* packaging/Makefile.am: added rpm/, removed README.rpm
 	* packaging/rpm/: new directory with Makefile.am and .cvsignore
+	* packaging/Makefile.am: use @PACKAGE@-@VERSION@.spec for the SRPM file
 	* packaging/README.rpm: removed obsolete how-to-build-a-RPM docs
 	* packaging/rpm/README.rpm: added new this-is-how-our-RPM-works-internally docs
 	* libgphoto2_port/po/POTFILES.in: gphoto2-port.c, not gp_port.c

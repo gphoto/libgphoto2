@@ -21,7 +21,14 @@
 
 if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
 then
-    user="$(ls -l /dev/console | awk '/\/dev\/console$/ { print $3; }')"
-    chown "${user}" "${DEVICE}"
-    chmod 0600 "${DEVICE}"
+    # old code, using traditional parameters
+    # user="$(ls -l /dev/console | awk '/\/dev\/console$/ { print $3; }')"
+    # chown "${user}" "${DEVICE}"
+    # chmod 0600 "${DEVICE}"
+
+    # new code, using GNU style parameters
+    CONSOLE="/dev/console"
+    chown 0000 "${DEVICE}" # precaution against possible race conditions
+    chown --reference "${CONSOLE}" "${DEVICE}"
+    chmod --reference "${CONSOLE}" "${DEVICE}"
 fi

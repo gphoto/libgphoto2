@@ -566,9 +566,6 @@ gp_port_flush (GPPort *port, int direction)
 int
 gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Looking for "
-		"(vendor 0x%x, product 0x%x)...", idvendor, idproduct);
-
 	CHECK_NULL (port);
 	CHECK_INIT (port);
 
