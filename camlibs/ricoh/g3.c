@@ -88,11 +88,13 @@ g3_channel_read_bytes(GPPort *port, int *channel, char **buffer, int expected)
 		*buffer = malloc (expected);
 	else
 		*buffer = realloc (*buffer, expected);
-
 	xbuf = malloc(65536 + 12);
-
+	/* The camera lets us read in packets of at least max 64kb size. */
 	while (expected > 0) {
-		ret = gp_port_read(port, xbuf, 65536 + 12);
+		int rest = expected;
+		if (rest > 65536) rest = 65536;
+
+		ret = gp_port_read(port, xbuf, rest + 12);
 		if (ret < GP_OK) {
 			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
 			return ret;
@@ -121,7 +123,6 @@ g3_channel_write(GPPort *port, int channel, char *buffer, int len)
 {
 	unsigned char *xbuf;
 	int ret, nlen;
-
 
 	nlen = (4 + 4 + len + 1 +  3) & ~3;
 	xbuf = calloc(nlen,1);
@@ -185,9 +186,12 @@ camera_abilities (CameraAbilitiesList *list)
 	a.port		= GP_PORT_USB;
 	a.usb_vendor	= 0x5ca;
 	a.usb_product	= 0x2204;
+
 	a.operations        = 	GP_OPERATION_NONE;
-	a.file_operations   = 	GP_FILE_OPERATION_NONE;
-	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
+	a.file_operations   = 	GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_EXIF;
+	a.folder_operations = 	GP_FOLDER_OPERATION_MAKE_DIR |
+				GP_FOLDER_OPERATION_REMOVE_DIR ;
+
 	gp_abilities_list_append(list, a);
 
 	strcpy(a.model, "Ricoh:Caplio RR30");
@@ -205,27 +209,72 @@ camera_exit (Camera *camera, GPContext *context)
 }
 
 static int
+g3_cwd_command( GPPort *port, const char *folder) {
+	char *cmd, *reply = NULL;
+	int ret;
+
+	cmd = malloc(strlen("CWD ") + strlen(folder) + 2 + 1);
+	sprintf(cmd,"CWD %s", folder);
+	ret = g3_ftp_command_and_reply(port, cmd, &reply);
+	free(cmd);
+	if (ret < GP_OK) {
+		if (reply) free(reply);
+		return ret;
+	}
+	if (reply[0]=='5') /* Failed, most likely no such directory */
+		ret = GP_ERROR_DIRECTORY_NOT_FOUND;
+	free(reply);
+	return ret;
+}
+
+static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
 {
 	Camera *camera = data;
 	char *buf = NULL, *reply = NULL, *cmd =NULL;
-	int ret = GP_OK, channel, bytes, len;
+	int ret, channel, bytes, seek, len;
 
-	cmd = malloc(5 + strlen(folder) + 2 + 1);
-	sprintf(cmd,"CWD %s", folder);
-	ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
-	free(cmd);
+	ret = g3_cwd_command (camera->port, folder);
 	if (ret < GP_OK) goto out;
 
-	cmd = malloc(5 + strlen(filename) + 2 + 1);
-	sprintf(cmd,"RETR %s", filename);
-	ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
-	free(cmd);
-	if (ret < GP_OK) goto out;
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		cmd = malloc(strlen("RETR ") + strlen(filename) + 2 + 1);
+		sprintf(cmd,"RETR %s", filename);
+		ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
+		free(cmd);
+		if (ret < GP_OK) goto out;
+		if (buf[0] != '1') { /* error, most likely file not found */
+			ret = GP_ERROR_FILE_NOT_FOUND;
+			goto out;
+		}
 
-	sscanf(buf, "150 data connection for RETR.(%d)", &bytes);
+		bytes = 0;
+		sscanf(buf, "150 data connection for RETR.(%d)", &bytes);
+		break;
+	case GP_FILE_TYPE_EXIF:
+		if (!strstr(filename,".JPG") && !strstr(filename,".jpg"))
+			return GP_ERROR_NOT_SUPPORTED;
+
+		cmd = malloc(strlen("-SRET ") + strlen(filename) + 2 + 1);
+		sprintf(cmd,"-SRET %s", filename);
+		ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
+		free(cmd);
+		if (ret < GP_OK) goto out;
+		if (buf[0] != '1') { /* error, most likely file not found */
+			ret = GP_ERROR_FILE_NOT_FOUND;
+			goto out;
+		}
+
+		bytes = seek = 0;
+		sscanf(buf, "150 %d byte Seek=%d", &bytes, &seek);
+		bytes += seek;
+		break;
+	default:
+		return GP_ERROR_NOT_SUPPORTED;
+	}
 
 	ret = g3_channel_read_bytes(camera->port, &channel, &buf, bytes); /* data */
 	if (ret < GP_OK) goto out;
@@ -262,13 +311,58 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	char *reply = NULL, *cmd = NULL;
 	int ret;
 
-	cmd = malloc(strlen("CWD ")+strlen(folder)+1);
-	sprintf(cmd,"CWD %s",folder);
+	ret = g3_cwd_command (camera->port, folder);
+	if (ret < GP_OK)
+		return ret;
+
+	cmd = malloc(strlen("DELE ")+strlen(filename)+1);
+	sprintf(cmd,"DELE %s",filename);
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK)
 		goto out;
-	cmd = realloc(cmd,strlen("DELE ")+strlen(filename)+1);
-	sprintf(cmd,"DELE %s",filename);
+out:
+	if (cmd) free(cmd);
+	if (reply) free(reply);
+	return (GP_OK);
+}
+
+static int
+rmdir_func (CameraFilesystem *fs, const char *folder,
+		  const char *name, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	char *reply = NULL, *cmd = NULL;
+	int ret;
+
+	ret = g3_cwd_command (camera->port, folder);
+	if (ret<GP_OK)
+		return ret;
+
+	cmd = realloc(cmd,strlen("RMD ")+strlen(name)+1);
+	sprintf(cmd,"RMD %s",name);
+	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
+	if (ret < GP_OK)
+		goto out;
+out:
+	if (cmd) free(cmd);
+	if (reply) free(reply);
+	return (GP_OK);
+}
+
+static int
+mkdir_func (CameraFilesystem *fs, const char *folder,
+	  const char *name, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	char *reply = NULL, *cmd = NULL;
+	int ret;
+
+	ret = g3_cwd_command (camera->port, folder);
+	if (ret<GP_OK)
+		return ret;
+
+	cmd = realloc(cmd,strlen("MKD ")+strlen(name)+1);
+	sprintf(cmd,"MKD %s",name);
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK)
 		goto out;
@@ -377,12 +471,15 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!strcmp(filename+9,"AVI") || !strcmp(filename+9,"avi"))
 		strcpy(info->file.type,GP_MIME_AVI);
 
+	if (!strcmp(filename+9,"WAV") || !strcmp(filename+9,"wav"))
+		strcpy(info->file.type,GP_MIME_WAV);
+
 	if (!strcmp(filename+9,"MTA") || !strcmp(filename+9,"mta"))
 		strcpy(info->file.type,"text/plain");
 
 	cmd = malloc(6+strlen(folder)+1+strlen(filename)+1);
 	sprintf(cmd, "-FDAT %s/%s", folder,filename);
-	g3_ftp_command_and_reply(camera->port, cmd, &reply);
+	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK) goto out;
 	if (sscanf(reply, "200 date=%d:%d:%d %d:%d:%d",
 			&xtm.tm_year,
@@ -442,6 +539,16 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	char *cmd;
 	int ret = GP_OK;
 
+	if (!strcmp("/",folder)) {
+		/* Lets hope they dont invent more. */
+		/* NLST gives us the default folder back, 
+		 * we could check that too.
+		 */
+		gp_list_append (list, "EXT0", NULL);
+		gp_list_append (list, "IROM", NULL);
+		return GP_OK;
+	}
+
 	cmd = malloc(6 + strlen(folder) + 1);
 	strcpy(cmd, "-NLST ");
 	strcat(cmd, folder);
@@ -458,15 +565,13 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 		for (n=0;n<len/32;n++) {
 			if (buf[n*32+11] == 0x10) {
-				if (buf[n*32] == '.')
+				if (buf[n*32] == '.') /* skip . and .. entries */
 					continue;
 				ret = gp_list_append (list, buf+n*32, NULL);
 				if (ret != GP_OK) goto out;
 			}
 		}
 		/* special case / folder, since we don't get the size data records */
-		if (!strcmp("/",folder) && (len == 5)) /* "/EXT0" */
-			ret = gp_list_append (list, "EXT0", NULL);
 	} else {
 		ret = GP_ERROR_IO;
 	}
@@ -543,8 +648,8 @@ camera_init (Camera *camera, GPContext *context)
 				      camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					NULL, NULL, NULL, camera);
+	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
+					mkdir_func, rmdir_func, camera);
 
 
         gp_port_get_settings(camera->port, &settings);
@@ -571,5 +676,6 @@ camera_init (Camera *camera, GPContext *context)
 	g3_ftp_command_and_reply(camera->port, "-GSID", &buf);
 	g3_ftp_command_and_reply(camera->port, "-GTPN", &buf);
 	g3_ftp_command_and_reply(camera->port, "-DCAP /EXT0", &buf);
+	g3_ftp_command_and_reply(camera->port, "-DCAP /IROM", &buf);
 	return (GP_OK);
 }
