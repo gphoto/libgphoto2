@@ -1,6 +1,7 @@
-2001-12-24  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2002-01-02  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* INSTALL: Added note about libusb requirements (CVS or 0.1.5)
+	+ configure.in: time for 2.0beta4dev6 IMHO
 
 2002-01-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
