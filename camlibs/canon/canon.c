@@ -631,20 +631,34 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
  * into canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
  */
 char *
-gphoto2canonpath (char *path)
+gphoto2canonpath (Camera *camera, char *path)
 {
 	static char tmp[2000];
 	char *p;
 
 	if (path[0] != '/') {
+		GP_DEBUG ("Non-absolute gphoto2 path cannot be converted");
 		return NULL;
 	}
-	strcpy (tmp, "D:");	// FIXME
-	strcpy (tmp + 2, path);
-	for (p = tmp + 2; *p != '\0'; p++) {
+
+	if (camera->pl->cached_drive == NULL)
+		GP_DEBUG ("NULL camera->pl->cached_drive in gphoto2canonpath");
+
+	strcpy (tmp, camera->pl->cached_drive);
+	strcat (tmp, path);
+
+	/* replace all slashes by backslashes */
+	for (p = tmp; *p != '\0'; p++) {
 		if (*p == '/')
 			*p = '\\';
 	}
+
+	/* remove trailing backslash */
+	if ((p > tmp) && (*(p-1) == '\\'))
+		*(p-1) = '\0';
+
+	GP_LOG (GP_LOG_DATA, "gphoto2canonpath: converted '%s' to '%s'", path, tmp);
+
 	return (tmp);
 }
 
@@ -654,9 +668,12 @@ gphoto2canonpath (char *path)
  *
  * convert canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
  * into gphoto2 path        (e.g.   "/DCIM/116CANON/IMG_1240.JPG")
+ *
+ * Assumes @path to start with drive name followed by a colon.
+ * It just drops the drive name.
  */
-char *
-canon2gphotopath (char *path)
+const char *
+canon2gphotopath (Camera *camera, const char *path)
 {
 	static char tmp[2000];
 	char *p;
@@ -664,13 +681,18 @@ canon2gphotopath (char *path)
 	if (!((path[1] == ':') && (path[2] == '\\'))) {
 		return NULL;
 	}
-	// FIXME: just drops the drive letter
-	p = path + 2;
+
+	p = strchr(path, ':') + 1;
 	strcpy (tmp, p);
+
+	/* replace backslashes by slashes */
 	for (p = tmp; *p != '\0'; p++) {
 		if (*p == '\\')
 			*p = '/';
 	}
+
+	GP_LOG (GP_LOG_DATA, "canon2gphotopath: converted '%s' to '%s'", path, tmp);
+
 	return (tmp);
 }
 
