@@ -246,10 +246,7 @@ camera_init (Camera* camera)
 		return (GP_OK);
 
 	}
-	if (i == 10) {
-		gp_port_free (device);
-		return (GP_ERROR_IO);
-	}
+	if (i == 10) return (GP_ERROR_IO);
 
 	/* ... and what speed it is able to handle.	*/
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Getting IO capabilities.\n");
@@ -270,33 +267,22 @@ camera_init (Camera* camera)
 		&bit_flag_parity_on,
 		&bit_flag_parity_odd,
 		&bit_flag_use_hw_flow_control);
-	if (result != GP_OK) {
-		gp_port_free (device);
-		return (result);
-	}
+	if (result != GP_OK) return (result);
+
 	if (camera->port->speed == 0) {
 
 		/* We are given 0. Set the highest speed. */
 		for (i = 9; i >= 0; i--) if (bit_rate_supported[i]) break;
-		if (i < 0) {
-			gp_port_free (device);
-			return (GP_ERROR_NOT_SUPPORTED);
-		}
+		if (i < 0) return (GP_ERROR_NOT_SUPPORTED);
+		
 		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Setting speed to %i.\n", bit_rate[i]);
-		if ((result = k_set_io_capability (device, bit_rate[i], TRUE, FALSE, FALSE, FALSE, FALSE)) != GP_OK) {
-			gp_port_free (device);
-			return (result);
-		}
-		if ((result = k_exit (device)) != GP_OK) {
-			gp_port_free (device);
-			return (result);
-		}
+		if ((result = k_set_io_capability (device, bit_rate[i], TRUE, FALSE, FALSE, FALSE, FALSE)) != GP_OK) return (result);
+
+		if ((result = k_exit (device)) != GP_OK) return (result);
+
                 device_settings.serial.speed = bit_rate[i];
                 gp_port_settings_set (device, device_settings);
-                if ((result = k_init (device)) != GP_OK) {
-			gp_port_free (device);
-			return (result);
-		}
+                if ((result = k_init (device)) != GP_OK) return (result);
 
 		/* We were successful! */
 		return (GP_OK);
@@ -323,23 +309,14 @@ camera_init (Camera* camera)
 			 (speed !=  19200) &&
 			 (speed !=  38400) &&
 			 (speed !=  57600) &&
-			 (speed != 115200))) {
-			gp_port_free (device);
-			return (GP_ERROR_NOT_SUPPORTED);
-		}
+			 (speed != 115200))) return (GP_ERROR_NOT_SUPPORTED);
+
 		/* Now we can set the given speed. */
-		if ((result = k_set_io_capability (device, camera->port->speed, TRUE, FALSE, FALSE, FALSE, FALSE)) != GP_OK) {
-			gp_port_free (device);
-			return (result);
-		}
-		if ((result = k_exit (device)) != GP_OK) {
-			gp_port_free (device);
-			return (result);
-		}
-		if ((result = k_init (device)) != GP_OK) {
-			gp_port_free (device);
-			return (result);
-		}
+		if ((result = k_set_io_capability (device, camera->port->speed, TRUE, FALSE, FALSE, FALSE, FALSE)) != GP_OK) return (result);
+
+		if ((result = k_exit (device)) != GP_OK) return (result);
+		
+		if ((result = k_init (device)) != GP_OK) return (result);
 
 		/* We were successful! */
 		return (GP_OK);
