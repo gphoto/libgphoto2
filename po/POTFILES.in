@@ -2,6 +2,7 @@ camlibs/barbie/barbie.c
 camlibs/canon/canon.c
 camlibs/canon/psa50.c
 camlibs/digita/digita.c
+camlibs/dimera/dimera3500.c
 camlibs/kodak/dc120/dc120.c
 camlibs/kodak/dc240/dc240.c
 camlibs/kodak/dc3200/dc3200.c
