@@ -1,6 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001 Mariusz Woloszyn <emsi@ipartners.pl>
+ * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,6 +49,7 @@
 #endif
 
 #include "ptp.h"
+#include "ptp-bugs.h"
 
 #define GP_MODULE "PTP2"
 
@@ -203,214 +205,215 @@ static struct {
 	const char *model;
 	unsigned short usb_vendor;
 	unsigned short usb_product;
+	unsigned long known_bugs;
 } models[] = {
 	/*
 	 * The very first PTP camera (with special firmware only), also
 	 * called "PTP Prototype", may report non PTP interface class
 	 */
-	{"Kodak:DC240 (PTP mode)",  0x040a, 0x0121},
+	{"Kodak:DC240 (PTP mode)",  0x040a, 0x0121, 0},
 	/*
 	 * Old DC-4800 firmware reported custom interface class, so we have
 	 * to detect it by product/vendor IDs
 	 */
-	{"Kodak:DC4800", 0x040a, 0x0160},
+	{"Kodak:DC4800", 0x040a, 0x0160, 0},
 	/* Below other camers known to be detected by interface class */
 
-	{"Kodak:DX3900", 0x040a, 0x0170},
-	{"Kodak:MC3",    0x040a, 0x0400},
-	{"Kodak:DX3500", 0x040a, 0x0500},
-	{"Kodak:DX3600", 0x040a, 0x0510},
-	{"Kodak:DX3215", 0x040a, 0x0525},
-	{"Kodak:DX3700", 0x040a, 0x0530},
-	{"Kodak:CX4230", 0x040a, 0x0535},
-	{"Kodak:LS420",  0x040a, 0x0540},
-	{"Kodak:DX4900", 0x040a, 0x0550},
-	{"Kodak:DX4330", 0x040a, 0x0555},
-	{"Kodak:CX4200", 0x040a, 0x0560},
-	{"Kodak:CX4210", 0x040a, 0x0560},
-	{"Kodak:LS743",  0x040a, 0x0565},
+	{"Kodak:DX3900", 0x040a, 0x0170, 0},
+	{"Kodak:MC3",    0x040a, 0x0400, 0},
+	{"Kodak:DX3500", 0x040a, 0x0500, 0},
+	{"Kodak:DX3600", 0x040a, 0x0510, 0},
+	{"Kodak:DX3215", 0x040a, 0x0525, 0},
+	{"Kodak:DX3700", 0x040a, 0x0530, 0},
+	{"Kodak:CX4230", 0x040a, 0x0535, 0},
+	{"Kodak:LS420",  0x040a, 0x0540, 0},
+	{"Kodak:DX4900", 0x040a, 0x0550, 0},
+	{"Kodak:DX4330", 0x040a, 0x0555, 0},
+	{"Kodak:CX4200", 0x040a, 0x0560, 0},
+	{"Kodak:CX4210", 0x040a, 0x0560, 0},
+	{"Kodak:LS473",  0x040a, 0x0565, 0},
 	/* both above with different product IDs
 	   normal/retail versions of the same model */
-	{"Kodak:CX4300", 0x040a, 0x0566},
-	{"Kodak:CX4310", 0x040a, 0x0566},
-	{"Kodak:LS753",  0x040a, 0x0567},
-	{"Kodak:LS443",  0x040a, 0x0568},
-	{"Kodak:LS663",  0x040a, 0x0569},
-	{"Kodak:DX6340", 0x040a, 0x0570},
-	{"Kodak:CX6330", 0x040a, 0x0571},
-	{"Kodak:DX6440", 0x040a, 0x0572},
-	{"Kodak:CX6230", 0x040a, 0x0573},
-	{"Kodak:CX6200", 0x040a, 0x0574},
-	{"Kodak:DX6490", 0x040a, 0x0575},
-	{"Kodak:DX4530", 0x040a, 0x0576},
-	{"Kodak:DX7630", 0x040a, 0x0577},
-	{"Kodak:CX7300", 0x040a, 0x0578},
-	{"Kodak:CX7310", 0x040a, 0x0578},
-	{"Kodak:CX7220", 0x040a, 0x0579},
-	{"Kodak:CX7330", 0x040a, 0x057a},
-	{"Kodak:CX7430", 0x040a, 0x057b},
-	{"Kodak:CX7530", 0x040a, 0x057c},
-	{"Kodak:DX7440", 0x040a, 0x057d},
-	{"Kodak:DX7590", 0x040a, 0x057f},
-	{"Kodak:CX6445", 0x040a, 0x0584},
+	{"Kodak:CX4300", 0x040a, 0x0566, 0},
+	{"Kodak:CX4310", 0x040a, 0x0566, 0},
+	{"Kodak:LS753",  0x040a, 0x0567, 0},
+	{"Kodak:LS443",  0x040a, 0x0568, 0},
+	{"Kodak:LS663",  0x040a, 0x0569, 0},
+	{"Kodak:DX6340", 0x040a, 0x0570, 0},
+	{"Kodak:CX6330", 0x040a, 0x0571, 0},
+	{"Kodak:DX6440", 0x040a, 0x0572, 0},
+	{"Kodak:CX6230", 0x040a, 0x0573, 0},
+	{"Kodak:CX6200", 0x040a, 0x0574, 0},
+	{"Kodak:DX6490", 0x040a, 0x0575, 0},
+	{"Kodak:DX4530", 0x040a, 0x0576, 0},
+	{"Kodak:DX7630", 0x040a, 0x0577, 0},
+	{"Kodak:CX7300", 0x040a, 0x0578, 0},
+	{"Kodak:CX7310", 0x040a, 0x0578, 0},
+	{"Kodak:CX7220", 0x040a, 0x0579, 0},
+	{"Kodak:CX7330", 0x040a, 0x057a, 0},
+	{"Kodak:CX7430", 0x040a, 0x057b, 0},
+	{"Kodak:CX7530", 0x040a, 0x057c, 0},
+	{"Kodak:DX7440", 0x040a, 0x057d, 0},
+	{"Kodak:DX7590", 0x040a, 0x057f, 0},
+	{"Kodak:CX6445", 0x040a, 0x0584, 0},
 
 	/* HP PTP cameras */
-	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202},
-	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302},
+	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
+	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302, 0},
 	/* HP PhotoSmart 935: T. Kaproncai, 25 Jul 2003*/
-	{"HP:PhotoSmart 935 (PTP mode)", 0x03f0, 0x4402},
+	{"HP:PhotoSmart 935 (PTP mode)", 0x03f0, 0x4402, 0},
 	/* HP:PhotoSmart 945: T. Jelbert, 2004/03/29	*/
-	{"HP:PhotoSmart 945 (PTP mode)", 0x03f0, 0x4502},
-	{"HP:PhotoSmart 318 (PTP mode)", 0x03f0, 0x6302},
-	{"HP:PhotoSmart 612 (PTP mode)", 0x03f0, 0x6302},
-	{"HP:PhotoSmart 715 (PTP mode)", 0x03f0, 0x6402},
-	{"HP:PhotoSmart 120 (PTP mode)", 0x03f0, 0x6502},
-	{"HP:PhotoSmart 320 (PTP mode)", 0x03f0, 0x6602},
-	{"HP:PhotoSmart 720 (PTP mode)", 0x03f0, 0x6702},
-	{"HP:PhotoSmart 620 (PTP mode)", 0x03f0, 0x6802},
-	{"HP:PhotoSmart 735 (PTP mode)", 0x03f0, 0x6a02},
-	{"HP:PhotoSmart R707 (PTP mode)", 0x03f0, 0x6b02},
-	{"HP:PhotoSmart 635 (PTP mode)", 0x03f0, 0x7102},
+	{"HP:PhotoSmart 945 (PTP mode)", 0x03f0, 0x4502, 0},
+	{"HP:PhotoSmart 318 (PTP mode)", 0x03f0, 0x6302, 0},
+	{"HP:PhotoSmart 612 (PTP mode)", 0x03f0, 0x6302, 0},
+	{"HP:PhotoSmart 715 (PTP mode)", 0x03f0, 0x6402, 0},
+	{"HP:PhotoSmart 120 (PTP mode)", 0x03f0, 0x6502, 0},
+	{"HP:PhotoSmart 320 (PTP mode)", 0x03f0, 0x6602, 0},
+	{"HP:PhotoSmart 720 (PTP mode)", 0x03f0, 0x6702, 0},
+	{"HP:PhotoSmart 620 (PTP mode)", 0x03f0, 0x6802, 0},
+	{"HP:PhotoSmart 735 (PTP mode)", 0x03f0, 0x6a02, 0},	
+	{"HP:PhotoSmart R707 (PTP mode)", 0x03f0, 0x6b02, 0},
+        {"HP:PhotoSmart 635 (PTP mode)", 0x03f0, 0x7102, 0},
 	/* report from Federico Prat Villar <fprat@lsi.uji.es> */
-	{"HP:PhotoSmart 43x (PTP mode)", 0x03f0, 0x7202},
-	{"HP:PhotoSmart M307 (PTP mode)", 0x03f0, 0x7302},
+	{"HP:PhotoSmart 43x (PTP mode)", 0x03f0, 0x7202, 0},
+	{"HP:PhotoSmart M307 (PTP mode)", 0x03f0, 0x7302, 0},
 
 	/* Most Sony PTP cameras use the same product/vendor IDs. */
-	{"Sony:PTP",                  0x054c, 0x004e},
-	{"Sony:DSC-P5 (PTP mode)",    0x054c, 0x004e},
-	{"Sony:DSC-P10 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-F707V (PTP mode)", 0x054c, 0x004e},
-	{"Sony:DSC-F717 (PTP mode)",  0x054c, 0x004e},
-	{"Sony:DSC-F828 (PTP mode)",  0x054c, 0x004e},
-	{"Sony:DSC-P30 (PTP mode)",   0x054c, 0x004e},
+	{"Sony:PTP",                  0x054c, 0x004e, 0},
+	{"Sony:DSC-P5 (PTP mode)",    0x054c, 0x004e, 0},
+	{"Sony:DSC-P10 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-F707V (PTP mode)", 0x054c, 0x004e, 0},
+	{"Sony:DSC-F717 (PTP mode)",  0x054c, 0x004e, 0},
+	{"Sony:DSC-F828 (PTP mode)",  0x054c, 0x004e, 0},
+	{"Sony:DSC-P30 (PTP mode)",   0x054c, 0x004e, 0},
 	/* P32 reported on May 1st by Justin Alexander <justin (at) harshangel.com> */
-	{"Sony:DSC-P31 (PTP mode)",   0x054c, 0x004e}, 
-	{"Sony:DSC-P32 (PTP mode)",   0x054c, 0x004e}, 
-	{"Sony:DSC-P41 (PTP mode)",   0x054c, 0x004e}, 
-	{"Sony:DSC-P43 (PTP mode)",   0x054c, 0x004e}, 
-	{"Sony:DSC-P50 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-P51 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-P52 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-P71 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-P72 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-P92 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-P93 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-P100 (PTP mode)",  0x054c, 0x004e},
-	{"Sony:DSC-P120 (PTP mode)",  0x054c, 0x004e},
-	{"Sony:DSC-S75 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-S85 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-T1 (PTP mode)",    0x054c, 0x004e},
-	{"Sony:DSC-T3 (PTP mode)",    0x054c, 0x004e},
-	{"Sony:DSC-U20 (PTP mode)",   0x054c, 0x004e},
-	{"Sony:DSC-V1 (PTP mode)",    0x054c, 0x004e},
-	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e},
-	{"Sony:MVC-CD500 (PTP mode)", 0x054c, 0x004e},
+	{"Sony:DSC-P31 (PTP mode)",   0x054c, 0x004e, 0}, 
+	{"Sony:DSC-P32 (PTP mode)",   0x054c, 0x004e, 0}, 
+	{"Sony:DSC-P41 (PTP mode)",   0x054c, 0x004e, 0}, 
+	{"Sony:DSC-P43 (PTP mode)",   0x054c, 0x004e, 0}, 
+	{"Sony:DSC-P50 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-P51 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-P52 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-P71 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-P72 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-P92 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-P93 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-P100 (PTP mode)",  0x054c, 0x004e, 0},
+	{"Sony:DSC-P120 (PTP mode)",  0x054c, 0x004e, 0},
+	{"Sony:DSC-S75 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-S85 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-T1 (PTP mode)",    0x054c, 0x004e, 0},
+	{"Sony:DSC-T3 (PTP mode)",    0x054c, 0x004e, 0},
+	{"Sony:DSC-U20 (PTP mode)",   0x054c, 0x004e, 0},
+	{"Sony:DSC-V1 (PTP mode)",    0x054c, 0x004e, 0},
+	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e, 0},
+	{"Sony:MVC-CD500 (PTP mode)", 0x054c, 0x004e, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
-	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109},
+	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
-	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d},
+	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d, 0},
 	/* Nikon CoolPix 4500: T. Kaproncai, 22 Aug 2003 */
-	{"Nikon CoolPix 4500 (PTP mode)", 0x04b0, 0x010b},
+	{"Nikon CoolPix 4500 (PTP mode)", 0x04b0, 0x010b, 0},
 	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
-	{"Nikon:Coolpix 4300 (PTP mode)", 0x04b0, 0x010f},
+	{"Nikon:Coolpix 4300 (PTP mode)", 0x04b0, 0x010f, 0},
 	/* Nikon Coolpix 3500: M. Meissner, 07 May 2003 */
-	{"Nikon:Coolpix 3500 (PTP mode)", 0x04b0, 0x0111},
+	{"Nikon:Coolpix 3500 (PTP mode)", 0x04b0, 0x0111, 0},
 	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
-	{"Nikon:Coolpix 885 (PTP mode)",  0x04b0, 0x0112},
+	{"Nikon:Coolpix 885 (PTP mode)",  0x04b0, 0x0112, 0},
 	/* Nikon Coolpix 5000, Firmware v1.7 or later */
-	{"Nikon:Coolpix 5000 (PTP mode)", 0x04b0, 0x0113},
+	{"Nikon:Coolpix 5000 (PTP mode)", 0x04b0, 0x0113, 0},
 	/* Nikon Coolpix 3100 */
-	{"Nikon:Coolpix 3100 (PTP mode)", 0x04b0, 0x0115},
+	{"Nikon:Coolpix 3100 (PTP mode)", 0x04b0, 0x0115, 0},
 	/* Nikon Coolpix 2100 */
-	{"Nikon:Coolpix 2100 (PTP mode)", 0x04b0, 0x0117},
+	{"Nikon:Coolpix 2100 (PTP mode)", 0x04b0, 0x0117, 0},
 	/* Nikon Coolpix 5400: T. Kaproncai, 25 Jul 2003 */
-	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119},
+	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119, 0},
 	/* Nikon Coolpix 3700: T. Ehlers, 18 Jan 2004 */
-	{"Nikon:Coolpix 3700 (PTP mode)", 0x04b0, 0x011d},
+	{"Nikon:Coolpix 3700 (PTP mode)", 0x04b0, 0x011d, 0},
 	/* Nikon Coolpix 3200 */
-	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121},
+	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121, 0},
 	/* Nikon Coolpix 2200 */
-	{"Nikon:Coolpix 2200 (PTP mode)", 0x04b0, 0x0122},
+	{"Nikon:Coolpix 2200 (PTP mode)", 0x04b0, 0x0122, 0},
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
-	{"Nikon:Coolpix 4100 (PTP mode)", 0x04b0, 0x012d},
-	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202},
+	{"Nikon:Coolpix 4100 (PTP mode)", 0x04b0, 0x012d, 0},
+	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
-	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204},
+	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
 	/* Nikon Coolpix 2000 */
-	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302},
+	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
-	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402},
-	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0406},
+	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
+	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0406, 0},
 
 	/* in pictbridge mode */
-	{"Panasonic:DMC-FZ20",            0x04da, 0x2374},
+	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
 
 	/* From VICTOR <viaaurea@yahoo.es> */
-	{"Olympus:C-350Z",                0x07b4, 0x0114},
-	{"Olympus:D-560Z",                0x07b4, 0x0114},
-	{"Olympus:X-250",                 0x07b4, 0x0114},
+	{"Olympus:C-350Z",                0x07b4, 0x0114, 0},
+	{"Olympus:D-560Z",                0x07b4, 0x0114, 0},
+	{"Olympus:X-250",                 0x07b4, 0x0114, 0},
 
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode
 	 * Canon PS G3: A. Marinichev, 20 nov 2002
 	 */
-	{"Canon:PowerShot S45 (PTP mode)",      0x04a9, 0x306d},
+	{"Canon:PowerShot S45 (PTP mode)",      0x04a9, 0x306d, 0},
 		/* 0x306c is S45 in normal (canon) mode */
-	{"Canon:PowerShot G3 (PTP mode)",       0x04a9, 0x306f},
+	{"Canon:PowerShot G3 (PTP mode)",       0x04a9, 0x306f, 0},
 		/* 0x306e is G3 in normal (canon) mode */
-	{"Canon:PowerShot S230 (PTP mode)",     0x04a9, 0x3071},
+	{"Canon:PowerShot S230 (PTP mode)",     0x04a9, 0x3071, 0},
 		/* 0x3070 is S230 in normal (canon) mode */
-	{"Canon:Digital IXUS v3 (PTP mode)",    0x04a9, 0x3071},
+	{"Canon:Digital IXUS v3 (PTP mode)",    0x04a9, 0x3071, 0},
 		/* it's the same as S230 */
 
-	{"Canon:Digital IXUS 2 (PTP mode)",     0x04a9, 0x3072},
+	{"Canon:Digital IXUS 2 (PTP mode)",     0x04a9, 0x3072, 0},
 
-	{"Canon:PowerShot A70 (PTP)",           0x04a9, 0x3073},
-	{"Canon:PowerShot A60 (PTP)",           0x04a9, 0x3074},
+	{"Canon:PowerShot A70 (PTP)",           0x04a9, 0x3073, 0},
+	{"Canon:PowerShot A60 (PTP)",           0x04a9, 0x3074, 0},
 		/* IXUS 400 has the same PID in both modes, Till Kamppeter */
-	{"Canon:Digital IXUS 400 (PTP mode)",   0x04a9, 0x3075},
-	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077},
-	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085},
-	{"Canon:Elura 50 (PTP mode)",           0x04a9, 0x3087},
+	{"Canon:Digital IXUS 400 (PTP mode)",   0x04a9, 0x3075, 0},
+	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077, 0},
+	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085, 0},
+	{"Canon:Elura 50 (PTP mode)",           0x04a9, 0x3087, 0},
 		/* 0x3084 is the EOS 300D/Digital Rebel in normal (canon) mode */
-	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099},
-	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099},
-	{"Canon:EOS Kiss Digital (PTP mode)",   0x04a9, 0x3099},
-	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309a},
-	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b},
-	{"Canon:PowerShot S1 IS (PTP mode)",    0x04a9, 0x309c},
-	{"Canon:Powershot S60 (PTP mode)",      0x04a9, 0x30b2},
-	{"Canon:Powershot G6 (PTP mode)",       0x04a9, 0x30b3},
-	{"Canon:Digital IXUS 500 (PTP mode)",   0x04a9, 0x30b4},
-	{"Canon:PowerShot S500 (PTP mode)",     0x04a9, 0x30b4},
-	{"Canon:PowerShot A75 (PTP mode)",      0x04a9, 0x30b5},
-	{"Canon:PowerShot SD110 (PTP mode)",    0x04a9, 0x30b6},
-	{"Canon:Digital IXUS IIs (PTP mode)",   0x04a9, 0x30b6},
-	{"Canon:PowerShot A400 (PTP mode)",     0x04a9, 0x30b7},
-	{"Canon:PowerShot A310 (PTP mode)",     0x04a9, 0x30b8},
-	{"Canon:PowerShot A85 (PTP mode)",      0x04a9, 0x30b9},
-	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba},
- 	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba},
- 	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb},
- 	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf},
- 	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0},
- 	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea},
- 	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec},
+	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:EOS Kiss Digital (PTP mode)",   0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309a, 0},
+	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b, 0},
+	{"Canon:PowerShot S1 IS (PTP mode)",    0x04a9, 0x309c, 0},
+	{"Canon:Powershot S60 (PTP mode)",      0x04a9, 0x30b2, 0},
+	{"Canon:Powershot G6 (PTP mode)",       0x04a9, 0x30b3, 0},
+	{"Canon:Digital IXUS 500 (PTP mode)",   0x04a9, 0x30b4, 0},
+	{"Canon:PowerShot S500 (PTP mode)",     0x04a9, 0x30b4, 0},
+	{"Canon:PowerShot A75 (PTP mode)",      0x04a9, 0x30b5, 0},
+	{"Canon:PowerShot SD110 (PTP mode)",    0x04a9, 0x30b6, 0},
+	{"Canon:Digital IXUS IIs (PTP mode)",   0x04a9, 0x30b6, 0},
+	{"Canon:PowerShot A400 (PTP mode)",     0x04a9, 0x30b7, 0},
+	{"Canon:PowerShot A310 (PTP mode)",     0x04a9, 0x30b8, 0},
+	{"Canon:PowerShot A85 (PTP mode)",      0x04a9, 0x30b9, 0},
+	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba, 0},
+ 	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba, 0},
+ 	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb, 0},
+	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf, 0},
+ 	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0, 0},
+ 	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, 0},
+ 	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, PTPBUG_DCIM_WRONG_PARENT},
 
 	/* Konica-Minolta PTP cameras */
-	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001},
-	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007},
-	{"Konica-Minolta:DiMAGE Z3 (PictBridge mode)", 0x132b, 0x0018},
+	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
+	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
+	{"Konica-Minolta:DiMAGE Z3 (PictBridge mode)", 0x132b, 0x0018, 0},
 
 	/* Fuji PTP cameras */
-	{"Fuji:FinePix S7000 (PictBridge mode)",0x04cb, 0x0142},	
+	{"Fuji:FinePix S7000 (PictBridge mode)",0x04cb, 0x0142, 0},
 
 	/* Ricoh Caplio GX */
-	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325},	
+	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
 
 	/* more coming soon :) */
-	{NULL, 0, 0}
+	{NULL, 0, 0, 0}
 };
 
 static struct {
@@ -494,7 +497,8 @@ get_mimetype (Camera *camera, CameraFile *file)
 }
 	
 struct _CameraPrivateLibrary {
-	PTPParams params;
+    PTPParams params;
+    unsigned long bugs;
 };
 
 struct _PTPData {
@@ -1741,30 +1745,35 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
-	PTPParams *params = &((Camera *)data)->pl->params;
-	uint32_t parent, storage=0x0000000;
-	int i;
-
-	/*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
-
-	/* There should be NO files in root folder */
-	if (!strcmp(folder, "/")) {
-		return (GP_OK);
-	}
-	/* compute storage ID value from folder patch */
-	folder_to_storage(folder,storage);
-
-	/* Get (parent) folder handle omiting storage pseudofolder */
-	find_folder_handle(folder,storage,parent,data);
-	for (i = 0; i < params->handles.n; i++) {
-	if (params->objectinfo[i].ParentObject==parent)
-	if (params->objectinfo[i].ObjectFormat != PTP_OFC_Association)
-	if (!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)
-	   || (params->objectinfo[i].StorageID == storage))
-		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
-	}
-
-	return (GP_OK);
+    Camera *camera = (Camera *)data;
+    PTPParams *params = &camera->pl->params;
+    uint32_t parent, storage=0x0000000;
+    int i;
+    
+    /*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
+    
+    /* There should be NO files in root folder */
+    if (!strcmp(folder, "/")) {
+        return (GP_OK);
+    }
+    /* compute storage ID value from folder patch */
+    folder_to_storage(folder,storage);
+    
+    /* Get (parent) folder handle omiting storage pseudofolder */
+    find_folder_handle(folder,storage,parent,data);
+    
+    for (i = 0; i < params->handles.n; i++) {
+	if (params->objectinfo[i].ParentObject==parent) {
+            if (params->objectinfo[i].ObjectFormat != PTP_OFC_Association) {
+                if (!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)
+                    || (params->objectinfo[i].StorageID == storage)) {
+                    CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
+                }
+            }
+        }
+    }
+    
+    return GP_OK;
 }
 
 static int
@@ -2167,30 +2176,36 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	}
 	gp_context_progress_stop (context, id);
 
-	/* Count number of root directory objects */
-	nroot = 0;
-	for (i = 0; i < camera->pl->params.handles.n; i++)
-		if (camera->pl->params.objectinfo[i].ParentObject == 0)
-			nroot++;
-
-	GP_DEBUG("Found %d root directory objects", nroot);
-
-	/* If no root directory objects, look for "DCIM".  This way, we can
-	 * handle cameras that report the wrong ParentObject ID for root
-	 */
-	if (nroot == 0 && camera->pl->params.handles.n > 0)
+        if (DCIM_WRONG_PARENT_BUG(camera->pl))
+        {
+            GP_DEBUG("PTPBUG_DCIM_WRONG_PARENT bug workaround");
+            /* Count number of root directory objects */
+            nroot = 0;
+            for (i = 0; i < camera->pl->params.handles.n; i++) {
+		if (camera->pl->params.objectinfo[i].ParentObject == 0) {
+                    nroot++;
+                }
+            }
+            
+            GP_DEBUG("Found %d root directory objects", nroot);
+            
+            /* If no root directory objects, look for "DCIM".  This way, we can
+             * handle cameras that report the wrong ParentObject ID for root
+             */
+            if (nroot == 0 && camera->pl->params.handles.n > 0) {
 		for (i = 0; i < camera->pl->params.handles.n; i++)
 		{
-			PTPObjectInfo *oi = &camera->pl->params.objectinfo[i];
-
-			if (strcmp(oi->Filename, "DCIM") == 0)
-			{
-				GP_DEBUG("Changing DCIM ParentObject ID from 0x%x to 0",
-					oi->ParentObject);
-				oi->ParentObject = 0;
-			}
+                    PTPObjectInfo *oi = &camera->pl->params.objectinfo[i];
+                    
+                    if (strcmp(oi->Filename, "DCIM") == 0)
+                    {
+                        GP_DEBUG("Changing DCIM ParentObject ID from 0x%x to 0",
+                                 oi->ParentObject);
+                        oi->ParentObject = 0;
+                    }
 		}
-
+            }
+        }
 #if 0
 	add_dir (camera, 0x00000000, 0xff000000, "DIR1");
 	add_dir (camera, 0x00000000, 0xff000001, "DIR20");
@@ -2208,6 +2223,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 int
 camera_init (Camera *camera, GPContext *context)
 {
+    	CameraAbilities a;
 	int ret, i, retried = 0;
 
 	/* Make sure our port is a USB port */
@@ -2242,6 +2258,16 @@ camera_init (Camera *camera, GPContext *context)
 	memset (camera->pl->params.data, 0, sizeof (PTPData));
 	((PTPData *) camera->pl->params.data)->camera = camera;
 	camera->pl->params.byteorder = PTP_DL_LE;
+
+        gp_camera_get_abilities(camera, &a);
+        for (i = 0; models[i].model; i++) {
+            if ((a.usb_vendor == models[i].usb_vendor) &&
+                (a.usb_product == models[i].usb_product)){
+                camera->pl->bugs = models[i].known_bugs;
+                break;
+            }
+        }
+
 
 	/* On large fiels (over 50M) deletion takes over 3 seconds,
 	 * waiting for event after capture may take some time also

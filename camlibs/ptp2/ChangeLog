@@ -1,3 +1,11 @@
+2005-01-21  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* ptp-bugs.h: Added file. 
+
+	* library.c (camera_init): Lookup for PTP bug
+	(init_ptp_fs): Bug specific workaround (EOS 20D + 300D)
+	Added flags for bugs in camera-list.
+
 2005-01-20  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Sony DSC-P120
