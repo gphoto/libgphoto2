@@ -86,11 +86,12 @@ struct camera_to_usb {
 	{ "l'esprit by DigitalDream",   0x0553, 0x0202, 0 },
 	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA */
 	{ "la ronde by DigitalDream",   0x0553, 0x0202, 0 },
-
 	/* reported by jerry white */
-	{ "Argus DC-1500",		0x0553, 0x0202, 1 },
+	{ "Argus DC-1500",              0x0553, 0x0202, 1 },
 
 	{ "AEG Snap 300",               0x0553, 0x0202, 0 },
+	/* reported by Klaus-M. Klingsporn */
+	{ "Aiptek Palm Cam Trio",       0x0553, 0x0202, 0 },
 	/* SiPix Stylecam looks like stv0680, but reportedly is not  */
 	/* (has USB id 0xd64/0x1001) */
 	/* http://www.umax.de/digicam/AstraPen_SL.htm.
