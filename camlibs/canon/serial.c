@@ -171,7 +171,7 @@ int canon_serial_init(Camera *camera, const char *devname)
 		}
 		
 		for (i = 0; i < sizeof(camera_to_usb) / sizeof(struct camera_to_usb); i++) {
-			fprintf(stderr, "digita: %s, %s\n", camera->model,
+			fprintf(stderr, "canon: %s, %s\n", camera->model,
 					camera_to_usb[i].name);
 			
 			if (!strcmp(camera->model, camera_to_usb[i].name))
