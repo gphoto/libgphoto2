@@ -1,7 +1,24 @@
-/*
- * sierra_usbwrap.c
+/* sierra_usbwrap.c
  *
- *  Olympus C-3040Z (and possibly also the C-2040Z and others) have
+ * Copyright (C) 2002 Lutz Müller <lutz@users.sourceforge.net>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ * 
+ *
+ * Olympus C-3040Z (and possibly also the C-2040Z and others) have
  * a USB PC Control mode in which "Sierra" protocol packets are tunneled
  * inside another protocol.  This file implements the wrapper protocol.
  * The (ab)use of USB clear halt is not needed for this protocol.
@@ -17,13 +34,19 @@
  * both of the menu buttons until the camera control menu appears.
  * Set it to ON.  This disables the USB mass-storage support.
  */
+
 #include <config.h>
 #include "sierra-usbwrap.h"
 
 #include <string.h>
 #include <stdlib.h>
 
+#include <gphoto2-result.h>
+#include <gphoto2-port-log.h>
+
 #define GP_MODULE "sierra"
+
+#define CR(result) {int r = (result); if (r < 0) return (r);}
 
 /*
  * The following things are the way the are just to ensure that USB
@@ -153,7 +176,7 @@ typedef struct
  * with a matching session ID.
  */
 static int
-usb_wrap_OK(gp_port* dev, uw_header_t* hdr)
+usb_wrap_OK (GPPort *dev, uw_header_t *hdr)
 {
    uw_response_t rsp;
    memset(&rsp, 0, sizeof(rsp));
@@ -210,8 +233,8 @@ try_rdy_again:
    hdr.request_type = UW_REQUEST_RDY;
    msg.packet_type = UW_PACKET_RDY;
   
-   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) != GP_OK ||
-       gp_port_write(dev, (char*)&msg, sizeof(msg)) != GP_OK)
+   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) < GP_OK ||
+       gp_port_write(dev, (char*)&msg, sizeof(msg)) < GP_OK)
    {
       GP_DEBUG( "usb_wrap_RDY *** FAILED" );
       return GP_ERROR;
@@ -247,7 +270,7 @@ usb_wrap_STAT(gp_port* dev)
    hdr.length    = uw_value(sizeof(msg));
    hdr.request_type = UW_REQUEST_STAT;
   
-   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) != GP_OK ||
+   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) < GP_OK ||
        gp_port_read(dev, (char*)&msg, sizeof(msg)) != sizeof(msg))
    {
       GP_DEBUG( "usb_wrap_STAT *** FAILED" );
@@ -297,8 +320,8 @@ usb_wrap_CMND(gp_port* dev, char* sierra_msg, int sierra_len)
    GP_DEBUG( "usb_wrap_CMND writing %i + %i",
                    sizeof(hdr), msg_len);
    
-   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) != GP_OK ||
-       gp_port_write(dev, (char*)msg, msg_len) != GP_OK)
+   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) < GP_OK ||
+       gp_port_write(dev, (char*)msg, msg_len) < GP_OK)
    {
       GP_DEBUG( "usb_wrap_CMND ** WRITE FAILED");
       free(msg);
@@ -324,7 +347,7 @@ usb_wrap_SIZE(gp_port* dev, uw32_t* size)
    hdr.rw_length = uw_value(sizeof(msg));
    hdr.length    = uw_value(sizeof(msg));
    hdr.request_type = UW_REQUEST_SIZE;
-   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) != GP_OK ||
+   if (gp_port_write(dev, (char*)&hdr, sizeof(hdr)) < GP_OK ||
        gp_port_read(dev, (char*)&msg, sizeof(msg)) != sizeof(msg))
    {
       GP_DEBUG( "usb_wrap_SIZE *** FAILED" );
@@ -351,7 +374,7 @@ usb_wrap_SIZE(gp_port* dev, uw32_t* size)
 }
 
 static int
-usb_wrap_DATA(gp_port* dev, char* sierra_response, int sierra_len, uw32_t size)
+usb_wrap_DATA (GPPort *dev, char *sierra_response, int *sierra_len, uw32_t size)
 {
    uw_header_t hdr;
    uw_pkout_sierra_hdr_t* msg;
@@ -365,12 +388,12 @@ usb_wrap_DATA(gp_port* dev, char* sierra_response, int sierra_len, uw32_t size)
    msg_len = msg_len * 256 + (unsigned int)(size.c2);
    msg_len = msg_len * 256 + (unsigned int)(size.c1);
 
-   if (sierra_len < msg_len - sizeof(*msg))
+   if (*sierra_len < msg_len - sizeof(*msg))
    {
-      GP_DEBUG( "usb_wrap_read_packet buffer too small! (%i < %i) *** FAILED", sierra_len, msg_len);
+      GP_DEBUG( "usb_wrap_read_packet buffer too small! (%i < %i) *** FAILED", *sierra_len, msg_len);
       return GP_ERROR;
    }
-   sierra_len = msg_len - sizeof(*msg);
+   *sierra_len = msg_len - sizeof(*msg);
 
    msg = (uw_pkout_sierra_hdr_t*)malloc(msg_len);
    memset(msg, 0, sizeof(msg));
@@ -389,7 +412,7 @@ usb_wrap_DATA(gp_port* dev, char* sierra_response, int sierra_len, uw32_t size)
       free(msg);
       return GP_ERROR;
    }
-   memcpy(sierra_response, (char*)msg + sizeof(*msg), sierra_len);
+   memcpy(sierra_response, (char*)msg + sizeof(*msg), *sierra_len);
    free(msg);
 
    return usb_wrap_OK(dev, &hdr);
@@ -401,35 +424,29 @@ usb_wrap_DATA(gp_port* dev, char* sierra_response, int sierra_len, uw32_t size)
  * -------------------------------------------------------------------------
  */
 int
-usb_wrap_write_packet(gp_port* dev, char* sierra_msg, int sierra_len)
+usb_wrap_write_packet (GPPort *dev, char *sierra_msg, int sierra_len)
 {
-   GP_DEBUG( "usb_wrap_write_packet" );
+	GP_DEBUG ("usb_wrap_write_packet");
 
-   if (usb_wrap_RDY(dev) != GP_OK ||
-       usb_wrap_CMND(dev, sierra_msg, sierra_len) != GP_OK ||
-       usb_wrap_STAT(dev) != GP_OK)
-   {
-      GP_DEBUG( "usb_wrap_write_packet FAILED");
-      return GP_ERROR;
-   }
-   return GP_OK;
+	CR (usb_wrap_RDY (dev));
+	CR (usb_wrap_CMND (dev, sierra_msg, sierra_len));
+	CR (usb_wrap_STAT (dev));
+	
+	return GP_OK;
 }
 
 int
-usb_wrap_read_packet(gp_port* dev, char* sierra_response, int sierra_len)
+usb_wrap_read_packet (GPPort *dev, char *sierra_response, int sierra_len)
 {
-   uw32_t uw_size;
+	uw32_t uw_size;
 
-   GP_DEBUG( "usb_wrap_read_packet" );
+	GP_DEBUG ("usb_wrap_read_packet");
 
-   if (usb_wrap_RDY(dev) != GP_OK ||
-       usb_wrap_SIZE(dev, &uw_size) != GP_OK ||
-       usb_wrap_DATA(dev, sierra_response, sierra_len, uw_size) != GP_OK ||
-       usb_wrap_STAT(dev) != GP_OK)
-   {
-      GP_DEBUG( "usb_wrap_read_packet FAILED" );
-      return GP_ERROR;
-   }
-   return sierra_len;
+	CR (usb_wrap_RDY (dev));
+	CR (usb_wrap_SIZE (dev, &uw_size));
+	CR (usb_wrap_DATA (dev, sierra_response, &sierra_len, uw_size));
+	CR (usb_wrap_STAT (dev));
+	
+	return sierra_len;
 }
 

@@ -1,3 +1,11 @@
+2002-06-27  Lutz Müller <lutz@users.sourceforge.net>
+
+	Selmeczi David <david@esr.elte.hu> fixed the error checks. I added
+	the CR macro and fixed the headers.
+
+	* sierra-usbwrap.h: Fix header.
+	* sierra-usbwrap.c: Check for gp_* < GP_OK instead of != GP_OK.
+
 2002-06-26  Lutz Müller <lutz@users.sourceforge.net>
 
 	Selmeczi David <david@esr.elte.hu> is working on supporting
