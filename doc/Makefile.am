@@ -110,13 +110,12 @@ if ENABLE_FIGURES
 endif
 
 # copy HTML manual to distribution
-# FIXME: Use $(INSTALL_DATA) instead of $(AMTAR)
 dist_hook_manual = dist-hook-manual
 dist-hook-manual: manual figures-stamp
-	$(AMTAR) cf - manual/*.html | (cd $(distdir); $(AMTAR) xvf -)
-if ENABLE_FIGURES
-	$(AMTAR) cf - figures/*.png | (cd $(distdir)/manual/; $(AMTAR) xvf -)
-endif
+	$(INSTALL_DATA) manual/*.html $(distdir)/
+  if ENABLE_FIGURES
+	$(INSTALL_DATA) figures/*.png $(distdir)/manual/
+  endif
 endif
 ########################################################################
 
