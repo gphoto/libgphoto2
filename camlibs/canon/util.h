@@ -23,7 +23,7 @@
  *
  ****************************************************************************/
 
-//void dump_hex(Camera *camera,const char *msg, const unsigned char *buf, int len);
+/*void dump_hex(Camera *camera,const char *msg, const unsigned char *buf, int len);*/
 
 int is_thumbnail (const char *name);
 int is_audio (const char *name);
