@@ -183,7 +183,7 @@ int canon_int_delete_file(Camera *camera, const char *name, const char *dir);
 int canon_serial_end(Camera *camera);
 int canon_serial_off(Camera *camera);
 time_t canon_int_get_time(Camera *camera);
-int canon_int_set_time(Camera *camera);
+int canon_int_set_time(Camera *camera, time_t date);
 int canon_int_directory_operations(Camera *camera, const char *path, int action);
 int canon_int_identify_camera(Camera *camera);
 int canon_int_set_owner_name(Camera *camera, const char *name);

@@ -1,3 +1,24 @@
+2002-01-04  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c, canon.h:
+	Changed canon_int_get_time() to convert the time to
+	GMT before returning it to the caller to simplify
+	time operations elsewhere.
+
+	Changed canon_int_set_time() to accept the time to
+	set as a parameter instead of always setting it to
+	the computers time. Also use correct endian code
+	to convert it to little endian before sending it to
+	the camera and hopefully convert the time to local
+	timezone before setting it since Canon cameras
+	know nothing about timezone.
+
+	* library.c: Reflect changes to get/set_time.
+
+	* canon.c, library.c: Improve error checking and
+	debug diagnostics when camera does not return the
+	expected ammount of data.
+
 2002-01-01  Fredrik <fredrik@krixor.xy.org>
 
 	* usb.c: Don't keylock G1 cameras, they do not

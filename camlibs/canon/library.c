@@ -202,6 +202,7 @@ static int
 update_disk_cache (Camera *camera)
 {
 	char root[10];		/* D:\ or such */
+	int res;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "update_disk_cache()");
 
@@ -211,14 +212,15 @@ update_disk_cache (Camera *camera)
 		return 0;
 	camera->pl->cached_drive = canon_int_get_disk_name (camera);
 	if (!camera->pl->cached_drive) {
-		gp_camera_status (camera, _("No response"));
+		gp_camera_set_error (camera, _("Could not get disk name: %s"), "No reason available");
 		return 0;
 	}
 	snprintf (root, sizeof (root), "%s\\", camera->pl->cached_drive);
-	if (canon_int_get_disk_name_info (camera, root,
+	res = canon_int_get_disk_name_info (camera, root,
 					  &camera->pl->cached_capacity,
-					  &camera->pl->cached_available) != GP_OK) {
-		gp_camera_status (camera, _("No response"));
+					  &camera->pl->cached_available);
+	if (res != GP_OK) {
+		gp_camera_set_error (camera, _("Could not get disk info: %s"), gp_result_as_string (res));
 		return 0;
 	}
 	camera->pl->cached_disk = 1;
@@ -816,7 +818,7 @@ camera_summary (Camera *camera, CameraText *summary)
 	char a[20], b[20];
 	int pwr_source, pwr_status;
 	char power_str[128];
-	time_t camera_time, camera_local_time;
+	time_t camera_time;
 	double time_diff;
 	char formatted_camera_time[20];
 
@@ -843,16 +845,12 @@ camera_summary (Camera *camera, CameraText *summary)
 			  ((pwr_source & CAMERA_MASK_BATTERY) ==
 			   0) ? _("AC adapter") : _("on battery"), pwr_status);
 
-	/* canon cameras know nothing about time zones so they (and canon_int_get_time())
-	 * return the time in 'local' time format. we must therefor juggle a bit with it
-	 * to get the difference between the cameras time and our hosts time in seconds
-	 */
-	camera_local_time = canon_int_get_time (camera);
-	camera_time = mktime(gmtime(&camera_local_time));
-	time_diff = difftime(camera_time, time(NULL));
+	camera_time = canon_int_get_time (camera);
+
+	time_diff = difftime (camera_time, time(NULL));
 	
-	strftime (formatted_camera_time, sizeof(formatted_camera_time),
-		  "%Y-%m-%d %H:%M:%S", gmtime(&camera_time));
+	strftime (formatted_camera_time, sizeof (formatted_camera_time),
+		  "%Y-%m-%d %H:%M:%S", localtime (&camera_time));
 
 	sprintf (summary->text, _("%s\n%s\n%s\n"
 				  "Drive %s\n%11s bytes total\n%11s bytes available\n"
@@ -1150,7 +1148,6 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
 	int pwr_status, pwr_source;
-	struct tm *camtm;
 	time_t camtime;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_get_config()");
@@ -1171,10 +1168,9 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_new (GP_WIDGET_TEXT, "date", &t);
 	if (camera->pl->cached_ready == 1) {
 		camtime = canon_int_get_time (camera);
-		if (camtime != GP_ERROR) {
-			camtm = gmtime (&camtime);
-			gp_widget_set_value (t, asctime (camtm));
-		} else
+		if (camtime != GP_ERROR)
+			gp_widget_set_value (t, asctime (localtime (&camtime)));
+		else
 			gp_widget_set_value (t, _("Error"));
 	} else
 		gp_widget_set_value (t, _("Unavailable"));
@@ -1242,7 +1238,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
 		if (!check_readiness (camera)) {
 			gp_camera_status (camera, _("Camera unavailable"));
 		} else {
-			if (canon_int_set_time (camera) == GP_OK) {
+			if (canon_int_set_time (camera, time(NULL)) == GP_OK) {
 				gp_camera_status (camera, _("time set"));
 			} else {
 				gp_camera_status (camera, _("could not set time"));

@@ -104,6 +104,10 @@ const struct canonCamModelData models[] =
 #undef S1M
 #undef S32K
 
+/* needed for time conversions in canon_int_set_time() */
+extern long int timezone;
+
+
 /************************************************************************
  * Methods
  ************************************************************************/
@@ -158,8 +162,11 @@ canon_int_directory_operations (Camera *camera, const char *path, int action)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 4)
+	if (len != 0x4) {
+		GP_DEBUG ("canon_int_directory_operations: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x4, len);
 		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	if (msg[0] != 0x00) {
 		gp_camera_set_error (camera, "Could not %s directory %s",
@@ -210,8 +217,11 @@ canon_int_identify_camera (Camera *camera)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 0x4c)
+	if (len != 0x4c) {
+		GP_DEBUG ("canon_int_identify_camera: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x4c, len);
 		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	/* Store these values in our "camera" structure: */
 	memcpy (camera->pl->firmwrev, (char *) msg + 8, 4);
@@ -259,8 +269,11 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 8)
+	if (len != 0x8) {
+		GP_DEBUG ("canon_int_get_battery: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x8, len);
 		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	if (pwr_status)
 		*pwr_status = msg[4];
@@ -333,9 +346,12 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 4)
+	if (len != 0x4) {
+		GP_DEBUG ("canon_int_set_file_attributes: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x4, len);
 		return GP_ERROR_CORRUPTED_DATA;
-		
+	}
+
 	GP_LOG (GP_LOG_DATA, "canon_int_set_file_attributes: "
 		"returned four bytes as expected, "
 		 "we should check if they indicate "
@@ -388,8 +404,11 @@ canon_int_set_owner_name (Camera *camera, const char *name)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 4)
+	if (len != 0x4) {
+		GP_DEBUG ("canon_int_set_owner_name: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x4, len);
 		return GP_ERROR_CORRUPTED_DATA;
+	}
 		
 	return canon_int_identify_camera (camera);
 }
@@ -398,17 +417,17 @@ canon_int_set_owner_name (Camera *camera, const char *name)
 /**
  * canon_int_get_time:
  * @camera: camera to get the current time of
- * @Returns: time of camera (local time)
+ * @Returns: time of camera (local time) or a gphoto2 error code (check
+ *           if less than 0)
  *
  * Get camera's current time.
  *
  * The camera gives time in little endian format, therefore we need
  * to swap the 4 bytes on big-endian machines.
  *
- * Nota: the time returned is not GMT but local time. Therefore,
- * if you use functions like "ctime", it will be translated to local
- * time _a second time_, and the result will be wrong. Only use functions
- * that don't translate the date into localtime, like "gmtime".
+ * Note: the time returned from the camera is not GMT but local time.
+ * We convert it to GMT before returning it to simplify time operations
+ * elsewhere.
  **/
 time_t
 canon_int_get_time (Camera *camera)
@@ -436,41 +455,64 @@ canon_int_get_time (Camera *camera)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 0x10)
-		return GP_ERROR;
+	if (len != 0x10) {
+		GP_DEBUG ("canon_int_get_time: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x10, len);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	date = (time_t) le32atoh (msg+4);
 
 	/* XXX should strip \n at the end of asctime() return data */
 	GP_DEBUG ("Camera time: %s ", asctime (gmtime (&date)));
-	return date;
+
+	/* convert to GMT before returning */
+	return mktime (gmtime (&date));
 }
 
-
+/**
+ * canon_int_set_time:
+ * @camera: camera to get the current time of
+ * @date: the date to set (in GMT)
+ * @Returns: gphoto2 error code
+ *
+ * Set camera's current time.
+ *
+ * Canon cameras know nothing about time zones so we have to convert it to local
+ * time (but still expressed in UNIX time format (seconds since 1970-01-01).
+ */
 int
-canon_int_set_time (Camera *camera)
+canon_int_set_time (Camera *camera, time_t date)
 {
 	unsigned char *msg;
-	int len, i;
-	time_t date;
-	char pcdate[4];
+	int len;
+	char payload[12];
+	time_t new_date;
 
-	date = time (NULL);
-	for (i = 0; i < 4; i++)
-		pcdate[i] = (date >> (8 * i)) & 0xff;
+	GP_DEBUG ("canon_int_set_time: %i=0x%x %s", (unsigned int) date, (unsigned int) date, 
+		asctime (localtime (&date)));
 
+	/* call localtime() just to get 'extern long timezone' set */
+	localtime (&date);
+
+	/* convert to local UNIX timestamp since canon cameras know nothing about timezones */
+	/* XXX what about DST? do we need to check for that here? */
+	new_date = date - timezone;
+	
+	memset (payload, 0, sizeof(payload));
+	
+	htole32a (payload, (unsigned int) new_date);
+	
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_SET_TIME, &len,
-						  NULL, 0);
+						  payload, sizeof (payload));
 			if (!msg)
 				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0x04, 0x12, &len, pcdate,
-						     sizeof (pcdate),
-						     "\x00\x00\x00\x00\x00\x00\x00\x00", 8,
-						     NULL);
+			msg = canon_serial_dialogue (camera, 0x04, 0x12, &len, payload,
+						     sizeof (payload), NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
 				return GP_ERROR;
@@ -480,8 +522,11 @@ canon_int_set_time (Camera *camera)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 0x10)
-		return GP_ERROR;
+	if (len != 0x4) {
+		GP_DEBUG ("canon_int_set_time: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x4, len);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	return GP_OK;
 }
@@ -546,22 +591,27 @@ canon_int_get_disk_name (Camera *camera)
 				canon_serial_error_type (camera);
 				return NULL;
 			}
+
+			if (len < 5)
+				return NULL; /* should be GP_ERROR_CORRUPTED_DATA */
+
+			/* this is correct even though it looks a bit funny. canon_serial_dialogue()
+			 * has a static buffer, strdup() part of that buffer and return to our caller.
+			 */
+			msg = strdup ((char *) msg + 4);	/* @@@ should check length */
+			if (!msg) {
+				GP_DEBUG ("canon_int_get_disk_name: could not allocate %i "
+					  "bytes of memory to hold response",
+					  strlen ((char *) msg + 4));
+				return NULL;
+			}
+
 			break;
 		GP_PORT_DEFAULT_RETURN(NULL)
 	}
 
-	if (camera->port->type == GP_PORT_SERIAL) {
-		/* this is correct even though it looks a bit funny. canon_serial_dialogue()
-		 * has a static buffer, strdup() part of that buffer and return to our caller.
-		 */
-		msg = strdup ((char *) msg + 4);	/* @@@ should check length */
-		if (!msg) {
-			GP_DEBUG ("canon_int_get_disk_name: could not allocate %i "
-				  "bytes of memory to hold response",
-				  strlen ((char *) msg + 4));
-			return NULL;
-		}
-	}
+	if (! msg)
+		return NULL;
 
 	GP_DEBUG ("canon_int_get_disk_name: disk '%s'", msg);
 
@@ -608,10 +658,12 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 		GP_PORT_DEFAULT
 	}
 
-	if (len < 12) {
-		GP_DEBUG ("ERROR: truncated message");
-		return GP_ERROR;
+	if (len != 0x0c) {
+		GP_DEBUG ("canon_int_get_disk_name_info: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x0c, len);
+		return GP_ERROR_CORRUPTED_DATA;
 	}
+
 	cap = le32atoh (msg + 4);
 	ava = le32atoh (msg + 8);
 	if (capacity)
@@ -1200,7 +1252,7 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 		/* XXX should mark folder as dirty since we can't be sure if the file
 		 * got deleted or not
 		 */
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	if (msg[0] == 0x29) {
