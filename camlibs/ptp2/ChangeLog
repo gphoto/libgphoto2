@@ -1,3 +1,9 @@
+2003-09-24 Marcus Meissner 
+
+	* library.c: Use strtoul instead of strtol, or we cant handle
+	  stores with id 0x80000001.
+	  Replaced one check for GetStorageIds by GetStorageInfo.
+
 2003-09-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* library.c: Added support for

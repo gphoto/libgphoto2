@@ -100,7 +100,7 @@
 		{						\
 			if (strlen(fn)<strlen(STORAGE_FOLDER_PREFIX)+8+1) \
 				return (GP_ERROR);		\
-			s = strtol(fn + strlen(STORAGE_FOLDER_PREFIX)+1, NULL, 16);								\
+			s = strtoul(fn + strlen(STORAGE_FOLDER_PREFIX)+1, NULL, 16);								\
 		} else return (GP_ERROR);			\
 		}						\
 }
