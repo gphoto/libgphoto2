@@ -70,6 +70,13 @@
 #  define N_(String) (String)
 #endif
 
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
 #define CR(result) {int r = (result); if (r < 0) return (r);}
 
 /* Takes the current globals, and sets up the gPhoto lib with them */
