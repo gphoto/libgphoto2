@@ -1,3 +1,7 @@
+2002-04-22  Marcus Meissner <marcus@jet.franken.de>
+	
+	* serial/unix.c: Unescape 0xff/0xXX parity framing sequences here.
+
 2002-04-19  Mariusz Woloszyn
 
 	* libgphoto2_port/gphoto2-port-library.h: changed definition of

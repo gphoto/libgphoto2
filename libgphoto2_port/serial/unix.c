@@ -526,10 +526,42 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 		if (!FD_ISSET (dev->pl->fd, &readfs))
 			return (GP_ERROR_TIMEOUT);
 
-		/* Read the bytes */
-		now = read (dev->pl->fd, bytes, size - readen);
-		if (now < 0)
-			return GP_ERROR_IO_READ;
+		if (dev->settings.serial.parity != GP_PORT_SERIAL_PARITY_OFF) {
+		    now = read (dev->pl->fd, bytes, 1);
+		    if (now < 0)
+			    return GP_ERROR_IO_READ;
+		    if (bytes[0] == -1) {
+			now = read (dev->pl->fd, bytes, 1);
+			if (now < 0)
+				return GP_ERROR_IO_READ;
+
+			/* Parity errors are signaled by the serial layer
+			 * as 0xff 0x00 sequence.
+			 *
+			 * 0xff sent by the camera are escaped as
+			 * 0xff 0xff sequence. 
+			 *
+			 * All other 0xff 0xXX sequences are errors.
+			 *
+			 * cf. man tcsetattr, description of PARMRK.
+			 */
+			if (bytes[0] == 0x00) {
+			    gp_port_set_error (dev, _("Parity error."));
+			    return GP_ERROR_IO_READ;
+			}
+			if (bytes[0] != -1) {
+			    gp_port_set_error (dev, _("Unexpected parity response sequence 0xff 0x%02x."), bytes[0]);
+			    return GP_ERROR_IO_READ;
+			}
+			/* Ok, we read 1 byte and it is 0xff */
+			/* FALLTHROUGH */
+		    }
+		} else {
+		    /* Just read the bytes */
+		    now = read (dev->pl->fd, bytes, size - readen);
+		    if (now < 0)
+			    return GP_ERROR_IO_READ;
+		}
 		bytes += now;
 		readen += now;
         }
