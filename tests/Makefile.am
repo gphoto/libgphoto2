@@ -8,7 +8,7 @@ noinst_PROGRAMS =	\
 	test-filesys
 
 test_gphoto2_SOURCE = test-gphoto2.c
-test_gphoto2_LDADD = ../libgphoto2/libgphoto2.la $(INTLLIBS)
+test_gphoto2_LDADD = $(top_builddir)/libgphoto2/libgphoto2.la $(INTLLIBS)
 
 test_filesys_SOURCE = test-filesys.c
-test_filesys_LDADD = ../libgphoto2/libgphoto2.la $(INTLLIBS)
+test_filesys_LDADD = $(top_builddir)/libgphoto2/libgphoto2.la $(INTLLIBS)

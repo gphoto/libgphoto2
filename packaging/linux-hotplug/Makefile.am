@@ -16,6 +16,6 @@ utilsdir = $(libdir)/$(PACKAGE)
 utils_PROGRAMS = print-usb-usermap
 
 print_usb_usermap_SOURCE = print-usb-usermap.c
-print_usb_usermap_LDADD = ../../libgphoto2/libgphoto2.la
+print_usb_usermap_LDADD = $(top_builddir)/libgphoto2/libgphoto2.la
 
 endif

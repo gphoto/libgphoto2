@@ -8,4 +8,4 @@ INCLUDES =			\
 noinst_PROGRAMS = test-gp-port
 
 test_gp_port_SOURCE = test-gp-port.c
-test_gp_port_LDFLAGS = ../libgphoto2_port/libgphoto2_port.la $(INTLLIBS)
+test_gp_port_LDFLAGS = $(top_builddir)/libgphoto2_port/libgphoto2_port.la $(INTLLIBS)
