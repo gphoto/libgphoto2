@@ -255,7 +255,7 @@ int camera_id (char *id) {
 
 int camera_abilities (CameraAbilities *abilities, int *count) {
 
-	*count = 2;
+	*count = 3;
 
 	/* What models do we support? */
 	strcpy(abilities[0].model, "Barbie Camera");
@@ -278,7 +278,10 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].sleep     = 1;
 
 	memcpy(&abilities[1], &abilities[0], sizeof(abilities[0]));
-	strcpy(abilities[1].model, "WWF Camera");
+	strcpy(abilities[1].model, "Hot Wheels Camera");
+
+	memcpy(&abilities[2], &abilities[0], sizeof(abilities[0]));
+	strcpy(abilities[2].model, "WWF Camera");
 
 	return (GP_OK);
 }
