@@ -1,7 +1,7 @@
 /*
- * agfa.c
+ * soundvision.c
  *
- * Copyright (c) 2001 Vince Weaver <vince@deater.net>
+ * Copyright (c) 2002 Vince Weaver <vince@deater.net>
  * 
  * based on the digita driver 
  * Copyright (c) 1999-2000 Johannes Erdfelt
@@ -36,11 +36,11 @@
 #  define N_(String) (String)
 #endif
 
-#include "agfa.h"
+#include "soundvision.h"
 
 #include <gphoto2-port.h>
 
-#define GP_MODULE "agfa"
+#define GP_MODULE "soundvision"
 
 struct {
    char *name;
@@ -48,16 +48,14 @@ struct {
    unsigned short idProduct;
    char serial;
 } models[] = {
-        {"Agfa CL18",0x06bd,0x0403,0},
-        /* Fast Flicks camera, made by Tiger Electronics.                */
-        /* Support added by Dr. William Bland <wjb@abstractnonsense.com> */
+        {"Agfa ePhoto CL18",0x06bd,0x0403,0},
         {"Tiger Fast Flicks",0x0919,0x0100,0},
         {NULL,0,0,0}
 };
 
 int camera_id(CameraText *id) {
         
-    strcpy(id->text, "agfa");
+    strcpy(id->text, "soundvision");
         
     return GP_OK;
 }
@@ -116,8 +114,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
     GP_DEBUG ("camera_file_list %s\n", folder);
    
-    if (agfa_get_file_list(camera->pl) < 0) {
-       GP_DEBUG ("Could not agfa_file_list!");
+    if (soundvision_get_file_list(camera->pl) < 0) {
+       GP_DEBUG ("Could not soundvision_file_list!");
        return GP_ERROR;
     }
        
@@ -130,46 +128,50 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 }
 
 
-static int agfa_file_get (Camera *camera, const char *filename, int thumbnail, 
+static int soundvision_file_get (Camera *camera, const char *filename, int thumbnail, 
 			    unsigned char **data, int *size) {
 
     int buflen,throwaway,result;
 
     GP_DEBUG( "Getting file '%s'...",filename);
 
-    agfa_reset(camera->pl);
+    soundvision_reset(camera->pl);
         /* Always have to check num photos,
 	 * then pic size no matter what.  Otherwise
 	 * the camera will stop responding 
 	 */
    
-    throwaway=agfa_photos_taken(camera->pl);
+    throwaway=soundvision_photos_taken(camera->pl);
     if (throwaway<0) return throwaway;
    
        /* The below two lines might look wrong, but they aren't! */
-    buflen = agfa_get_pic_size(camera->pl,filename);
-    if (thumbnail) buflen = agfa_get_thumb_size(camera->pl,filename);
+    buflen = soundvision_get_pic_size(camera->pl,filename);
+    if (thumbnail) buflen = soundvision_get_thumb_size(camera->pl,filename);
    
-    *data = malloc(buflen+1);
+       /* Don't try to download if size equals zero! */
+    if (buflen) {
+   
+       *data = malloc(buflen+1);
         
-    if (!*data) return (GP_ERROR_NO_MEMORY);
+       if (!*data) return (GP_ERROR_NO_MEMORY);
    
-    memset(*data, 0, buflen);
+       memset(*data, 0, buflen);
  
-    if (thumbnail) {
-       result=agfa_get_thumb(camera->pl, filename, *data, buflen);
-       if (result < 0) {
-	  free (*data);
-	  GP_DEBUG("agfa_get_thumb_failed!");
-	  return result;
+       if (thumbnail) {
+          result=soundvision_get_thumb(camera->pl, filename, *data, buflen);
+          if (result < 0) {
+	     free (*data);
+	     GP_DEBUG("soundvision_get_thumb_failed!");
+	     return result;
+          }
        }
-    }
-    else {
-       result=agfa_get_pic(camera->pl, filename, *data, buflen);
-       if (result < 0) {
-	  free(*data);
-	  GP_DEBUG("agfa_get_pic_failed!");
-          return result;
+       else {
+          result=soundvision_get_pic(camera->pl, filename, *data, buflen);
+          if (result < 0) {
+	     free(*data);
+	     GP_DEBUG("soundvision_get_pic_failed!");
+             return result;
+          }
        }
     }
     if (size)
@@ -190,11 +192,11 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
     switch (type) {
        case GP_FILE_TYPE_NORMAL:
-               ret=agfa_file_get(camera, filename, 0, &data, &size);
+               ret=soundvision_file_get(camera, filename, 0, &data, &size);
                if (ret<0) return ret;
                break;
        case GP_FILE_TYPE_PREVIEW:
-               ret=agfa_file_get(camera, filename, 1, &data, &size);
+               ret=soundvision_file_get(camera, filename, 1, &data, &size);
                if (ret<0) return ret;
                break;
        default:
@@ -213,19 +215,18 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 static int camera_summary(Camera *camera, CameraText *summary,
 			  GPContext *context) {
 
-    int taken;
-
-    taken=agfa_photos_taken(camera->pl);
-    if (taken< 0) return taken;
-
-    sprintf(summary->text, _("Number of pictures: %d"), taken);
+    char revision[9];
+   
+    soundvision_get_revision(camera->pl,revision);
+   
+    sprintf(summary->text, _("Revision: %8s"), revision);
 
     return GP_OK;
 }
 
 static int camera_about(Camera *camera, CameraText *about, GPContext *context) {
         
-    strcpy(about->text, _("Agfa CL18\nVince Weaver <vince@deater.net>\n"));
+    strcpy(about->text, _("Soundvision Driver\nVince Weaver <vince@deater.net>\n"));
 
     return GP_OK;
 }
@@ -239,8 +240,9 @@ static int camera_capture (Camera *camera, CameraCaptureType type,
      * we don't detect the new filename.  We should detect
      * it and gp_filesystem_append and return 
      */
-       
-    return (agfa_capture(camera->pl,path));
+    if (camera->pl->device_type==SOUNDVISION_AGFACL18)     
+       return (agfa_capture(camera->pl,path));
+    return 0;
 }
 
 
@@ -252,10 +254,10 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 
     GP_DEBUG("Deleting '%s' in '%s'...",filename,folder); 
    
-    agfa_delete_picture(camera->pl,filename);
+    soundvision_delete_picture(camera->pl,filename);
    
        /* Update our file list */
-    if (agfa_get_file_list(camera->pl)<0) return GP_ERROR;
+    if (soundvision_get_file_list(camera->pl)<0) return GP_ERROR;
    
     return GP_OK;
 }
@@ -264,6 +266,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 int camera_init(Camera *camera, GPContext *context) {
    
     GPPortSettings settings;
+    CameraAbilities a;
     int ret = 0;
 
        /* First, set up all the function pointers */
@@ -290,13 +293,22 @@ int camera_init(Camera *camera, GPContext *context) {
        default: 
             return GP_ERROR_NOT_SUPPORTED;
     }
-    
+
+				       
+   
     camera->pl = malloc (sizeof (CameraPrivateLibrary));
     if (!camera->pl) return (GP_ERROR_NO_MEMORY);
     memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
     camera->pl->gpdev = camera->port;
-  
-    ret = agfa_reset (camera->pl);
+
+    camera->pl->device_type=SOUNDVISION_AGFACL18;
+
+    gp_camera_get_abilities (camera, &a);
+    if ((a.usb_vendor==0x919) && (a.usb_product==0x0100)) {
+       camera->pl->device_type=SOUNDVISION_TIGERFASTFLICKS;	
+    }
+     
+    ret = soundvision_reset (camera->pl);
     if (ret < 0) {
 	free (camera->pl);
 	camera->pl = NULL;

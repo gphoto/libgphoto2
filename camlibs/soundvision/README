@@ -9,7 +9,6 @@ the wide variety of brands supported by this driver.
 Sound Vision refuses to release documentation, so this driver is based
 entirely on reverse-engineering USB transactions.
 
-
 List of Cameras known to work with this driver:
 
    Agfa ePhoto CL18
@@ -21,23 +20,3 @@ Cameras that might work with the proper USB ID's
    Poloroid MP3
    Eye Q3X Digital
    Axia iX-100
-
-List of Agfa cameras handled by the Sierra gphoto2 driver:
-
-   Agfa ePhoto 1280
-   Agfa ePhoto 1680
-   Agfa ePhoto 307
-   Agfa ePhoto 780
-   Agfa ePhoto 780C
-				 
-				 
-List of cameras this driver does NOT work with (yet) because
-they use a completely different protocol:
-
-   Agfa ePhoto CL20
-
-
-When support for other Agfa cameras is added it might involve adding
-a subdirectory structure.
-
-
