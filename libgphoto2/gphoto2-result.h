@@ -21,12 +21,12 @@
 #ifndef __GPHOTO2_RESULT_H__
 #define __GPHOTO2_RESULT_H__
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 /* Additional error codes are defined here */
 #include <gphoto2-port-result.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /**
  * GP_ERROR_CORRUPTED_DATA:
@@ -92,5 +92,9 @@
 
 
 const char *gp_result_as_string      (int result);
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_RESULT_H__ */

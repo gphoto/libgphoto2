@@ -30,6 +30,10 @@
 #include <gphoto2-list.h>
 #include <gphoto2-file.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 typedef enum {
 	GP_FILE_INFO_NONE            = 0,
 	GP_FILE_INFO_TYPE            = 1 << 0,
@@ -204,5 +208,9 @@ int gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 
 /* For debugging */
 int gp_filesystem_dump         (CameraFilesystem *fs);
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_FILESYS_H__ */

@@ -21,9 +21,9 @@
 #ifndef __GPHOTO2_LIST_H__
 #define __GPHOTO2_LIST_H__
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 #define MAX_ENTRIES 1024
 
@@ -55,5 +55,9 @@ int gp_list_set_name  (CameraList *list, int index, const char *name);
 int gp_list_set_value (CameraList *list, int index, const char *value);
 
 int gp_list_populate  (CameraList *list, const char *format, int count);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_LIST_H__ */

@@ -23,6 +23,10 @@
 
 #include <stdarg.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 typedef struct _GPContext GPContext;
 
 GPContext *gp_context_new (void);
@@ -93,5 +97,9 @@ unsigned int gp_context_progress_start  (GPContext *context, float target,
 void         gp_context_progress_update (GPContext *context, unsigned int id,
 					 float current);
 void         gp_context_progress_stop   (GPContext *context, unsigned int id);
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_CONTEXT_H__ */
