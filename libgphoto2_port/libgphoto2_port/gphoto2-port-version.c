@@ -106,7 +106,7 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #ifdef HAVE_LTDL
 			"ltdl (hopefully with non-buggy libltdl :-)",
 #else
-			"no ltdl (working around bugg libltdl, eh? :-)",
+			"no ltdl (working around buggy libltdl, eh? :-)",
 #endif
 			NULL
 		};
