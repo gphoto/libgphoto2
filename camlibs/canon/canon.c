@@ -733,7 +733,11 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	  return GP_ERROR;
 
     file->data = data;
-    strcpy(file->type, "image/jpeg");
+    if (is_movie(filename))
+	strcpy(file->type, "video/x-msvideo");
+    else
+    	strcpy(file->type, "image/jpeg");
+
     file->size = buflen;
 
     snprintf(file->name, sizeof(file->name), "%s",
