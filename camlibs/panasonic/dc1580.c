@@ -270,7 +270,7 @@ char *dsc_readimage(dsc_t *dsc, int index, int thumbnail, int *size) {
 	if (!(buffer = (char*)malloc(*size))) {
 		DBUG_PRINT_1("Failed to allocate memory for %s data.", kind);
 		sprintf(str, "Failed to allocate memory for %s data.", kind);
-		gp_message(str);
+		gp_camera_message(NULL, str);
 		return NULL;
 	}
 	
@@ -280,7 +280,7 @@ char *dsc_readimage(dsc_t *dsc, int index, int thumbnail, int *size) {
 		if (dsc_readimageblock(dsc, i, &buffer[i*DSC_BLOCKSIZE]) == GP_ERROR) {
 			DBUG_PRINT_1("Error during %s transfer.", kind);
 			sprintf(str, "Error during %s transfer.", kind);
-			gp_message(str);
+			gp_camera_message(NULL, str);
 			free(buffer);
 			return NULL;
 		}
@@ -361,7 +361,7 @@ int dsc_writeimage(dsc_t *dsc, char *buffer, int size)
 			blocksize = DSC_BLOCKSIZE;
 		if (dsc_writeimageblock(dsc, i, &buffer[i*DSC_BLOCKSIZE], blocksize) != GP_OK) {
 			DBUG_PRINT("Error during image transfer.");
-			gp_message("Error during image transfer.");
+			gp_camera_message(NULL, "Error during image transfer.");
 			return GP_ERROR;
 		}
 		gp_progress((float)(i+1)/(float)blocks);
@@ -596,14 +596,14 @@ int camera_file_put (Camera *camera, CameraFile *file) {
 	if (strcmp(file->type, "image/jpg") != 0) {
 		DBUG_PRINT("JPEG image format allowed only.");
 		sprintf(str, "JPEG image format allowed only.");
-		gp_message(str);
+		gp_camera_message(NULL, str);
 		return GP_ERROR;		
 	}
 */	
 	if (file->size > DSC_MAXIMAGESIZE) {
 		DBUG_PRINT_1("File size is %i. Too big to fit in the camera memory.", file->size);
 		sprintf(str, "File size is %i. Too big to fit in the camera memory.", file->size);
-		gp_message(str);
+		gp_camera_message(NULL, str);
 		return GP_ERROR;		
 	}
 
