@@ -27,6 +27,8 @@ typedef int folder_action (const char *subfolder, image_action action,
 
 int print_folder          (const char *subfolder, image_action action,
 			   int reverse);
+int delete_folder_files   (const char *subfolder, image_action action,
+			   int reverse);
 
 int print_picture_action  (const char *folder, const char *filename);
 int save_picture_action   (const char *folder, const char *filename);

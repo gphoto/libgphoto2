@@ -174,8 +174,8 @@ Option option[] = {
 /* Actions that depend on settings */
 {"a", "abilities", "",       N_("Display camera abilities"), abilities,    0},
 {"f", "folder",    "folder", N_("Specify camera folder (default=\"/\")"),use_folder,0},
-{"R", "recurse", "",  N_("Recursion (default - do not use)"), recurse, 0},
-{"", "no-recurse", "",  N_("Turn off recursion"), no_recurse, 0},
+{"R", "recurse", "",  N_("Recursion (default for download)"), recurse, 0},
+{"", "no-recurse", "",  N_("No recursion (default for deletion)"), no_recurse, 0},
 {"l", "list-folders",   "", N_("List folders in folder"), list_folders,   0},
 {"L", "list-files",     "", N_("List files in folder"),   list_files,     0},
 {"m", "mkdir", N_("name"),  N_("Create a directory"),     make_dir,       0},
@@ -609,7 +609,7 @@ OPTION_CALLBACK (recurse)
 {
         cli_debug_print("Recursion requested, this is now the default");
 
-	fprintf (stderr, _("Recursion is now default and the use of --recurse or -R is now deprecated.\n"));
+	glob_recurse = 1;
 
         return (GP_OK);
 }
@@ -654,7 +654,7 @@ OPTION_CALLBACK(show_exif)
 
 OPTION_CALLBACK (list_files)
 {
-        CR (set_globals());
+        CR (set_globals ());
         CR (for_each_image (glob_folder, print_picture_action, 0));
 
         if (!glob_recurse)
@@ -924,13 +924,15 @@ OPTION_CALLBACK (delete_picture)
 
 OPTION_CALLBACK (delete_all_pictures)
 {
-        cli_debug_print("Deleting all pictures");
+	cli_debug_print("Deleting all pictures in '%s'", glob_folder);
 
-        CR (set_globals ());
-        CR (gp_camera_folder_delete_all (glob_camera, glob_folder,
-						   glob_context));
-
-        return (GP_OK);
+	CR (set_globals ());
+	CR (delete_folder_files (glob_folder, NULL, 0));
+	
+	if (!glob_recurse)
+		return (GP_OK);
+		
+	return for_each_subfolder (glob_folder, delete_folder_files, NULL, glob_recurse);
 }
 
 OPTION_CALLBACK (upload_picture)
@@ -1450,6 +1452,18 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
                         usage ();
                 exit (EXIT_FAILURE);
         }
+
+	/*
+	 * Recursion is too dangerous for deletion. Only turn it on if
+	 * explicitely specified.
+	 */
+	if ((option_is_present ("delete-all-images", argc, argv) == GP_OK) ||
+	    (option_is_present ("D", argc, argv) == GP_OK)) {
+		if (option_is_present ("recurse", argc, argv) == GP_OK)
+			glob_recurse = 1;
+		else
+			glob_recurse = 0;
+	}
 
 	result = execute_options (argc, argv);
         if (result < 0) {

@@ -22,6 +22,14 @@ print_folder (const char *subfolder, image_action action, int reverse)
 	return (GP_OK);
 }
 
+int
+delete_folder_files (const char *subfolder, image_action action, int reverse)
+{
+	cli_debug_print("Deleting all files in '%s'", subfolder);
+	
+	return gp_camera_folder_delete_all (glob_camera, subfolder, glob_context);
+}
+
 /* File actions 						*/
 /* ------------------------------------------------------------ */
 
