@@ -1,5 +1,25 @@
-#ifndef _GP_PORT_H_
-#define _GP_PORT_H_
+/* gphoto2-port.h
+ *
+ * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef __GPHOTO2_PORT_H__
+#define __GPHOTO2_PORT_H__
 
 #ifdef OS2
 #include <gphoto2_port-portability-os2.h>
@@ -53,9 +73,6 @@ typedef union {
         gp_port_ieee1394_settings       ieee1394;
 } GPPortSettings;
 
-/* Don't use - DEPRECATED */
-typedef GPPortSettings gp_port_settings;
-
 enum {
         GP_PORT_USB_ENDPOINT_IN,
         GP_PORT_USB_ENDPOINT_OUT
@@ -103,13 +120,6 @@ struct _GPPort {
         GPPortSettings settings;
         GPPortSettings settings_pending;
 
-        int device_fd;
-#ifdef WIN32
-        HANDLE device_handle;
-#else
-        void *device_handle;
-#endif
-	void *device;
         int timeout; /* in milli seconds */
 
 	GPPortPrivateLibrary *pl;
@@ -118,132 +128,41 @@ struct _GPPort {
 
 /* DEPRECATED */
 typedef GPPort gp_port;
-typedef GPPortOperations gp_port_operations;
+typedef GPPortSettings gp_port_settings;
+#include "gphoto2-port-info-list.h"
 
-/* Core functions
-   -------------------------------------------------------------- */
+int gp_port_new         (GPPort **dev, gp_port_type type);
+int gp_port_free        (GPPort *dev);
 
-        int gp_port_new         (GPPort **dev, gp_port_type type);
-                /* Create a new device of type "type"
-                        return values:
-                                  successful: valid gp_port struct
-                                unsuccessful: < 0
-                */
+int gp_port_open        (GPPort *dev);
+int gp_port_close       (GPPort *dev);
 
-        int gp_port_free        (GPPort *dev);
-                /* Frees an IO device from memory
-                        return values:
-                                  successful: GP_OK
-                                unsuccessful: < 0
-                */
+int gp_port_timeout_set  (GPPort *dev, int millisec_timeout);
+int gp_port_timeout_get  (GPPort *dev, int *millisec_timeout);
 
-        int gp_port_open        (GPPort *dev);
-                /* Open the device for reading and writing
-                        return values:
-                                  successful: GP_OK
-                                unsuccessful: GP_ERROR
-                */
+int gp_port_settings_set (GPPort *dev, GPPortSettings  settings);
+int gp_port_settings_get (GPPort *dev, GPPortSettings *settings);
 
-        int gp_port_close       (GPPort *dev);
-                /* Close the device to prevent reading and writing
-                        return values:
-                                  successful: GP_OK
-                                unsuccessful: GP_ERROR
-                */
+int gp_port_write                (GPPort *dev, char *bytes, int size);
+int gp_port_read         (GPPort *dev, char *bytes, int size);
 
-       int gp_port_timeout_set  (GPPort *dev, int millisec_timeout);
-                /* Sets the read/write timeout
-                                  successful: GP_OK
-                                unsuccessful: GP_ERROR
-                */
+int gp_port_pin_get   (GPPort *dev, int pin, int *level);
+int gp_port_pin_set   (GPPort *dev, int pin, int level);
 
-       int gp_port_timeout_get  (GPPort *dev, int *millisec_timeout);
-                /* Sets the read/write timeout
-                                  successful: GP_OK
-                                unsuccessful: GP_ERROR
-                */
+int gp_port_send_break (GPPort *dev, int duration);
+int gp_port_flush      (GPPort *dev, int direction);
 
-       int gp_port_settings_set (GPPort *dev,
-                                 gp_port_settings settings);
-                /* Sets the settings
-                                  successful: GP_OK
-                                unsuccessful: GP_ERROR
-                */
-
-
-       int gp_port_settings_get (GPPort *dev,
-                                 gp_port_settings *settings);
-                /* Returns settings in "settings"
-                                  successful: GP_OK
-                                unsuccessful: GP_ERROR
-                */
-
-       int gp_port_write                (GPPort *dev, char *bytes, int size);
-                /* Writes "bytes" of size "size" to the device
-                        return values:
-                                  successful: GP_OK
-                                unsuccessful: GP_ERROR
-                */
-
-       int gp_port_read         (GPPort *dev, char *bytes, int size);
-                /* Reads "size" bytes in to "bytes" from the device
-                        return values:
-                                  successful: number of bytes read
-                                unsuccessful: GP_ERROR
-                */
-
-
-/* Serial and Parallel specific functions
-   -------------------------------------------------------------- */
-
-        int gp_port_pin_get   (GPPort *dev, int pin, int *level);
-                /* Give the status of pin from dev
-                        pin values:
-                                 see PIN_ constants in the various .h files
-                        return values:
-                                  successful: status
-                                unsuccessful: GP_ERROR
-                */
-
-        int gp_port_pin_set   (GPPort *dev, int pin, int level);
-                /* set the status of pin from dev to level
-                        pin values:
-                                 see PIN_ constants in the various .h files
-                        level values:
-                                        0 for off
-                                        1 for on
-                        return values:
-                                  successful: status
-                                unsuccessful: GP_ERROR
-                */
-
-        int gp_port_send_break (GPPort *dev, int duration);
-                /* send a break (duration is in milli seconds) */
-
-        int gp_port_flush (GPPort *dev, int direction);
-                /* Flush either an input or output line */
-                /* Input line is 0, Output is 1         */
-                /* (think STDIO/STDOUT file descriptors */
-
-/* USB specific functions
-   -------------------------------------------------------------- */
-
-        /* must port libusb to other platforms for this to drop-in */
-        int gp_port_usb_find_device (GPPort * dev, int idvendor, int idproduct);
-        int gp_port_usb_clear_halt  (GPPort * dev, int ep);
-        int gp_port_usb_msg_write   (GPPort * dev, int request, int value,
-		int index, char *bytes, int size);
-        int gp_port_usb_msg_read    (GPPort * dev, int request, int value,
-		int index, char *bytes, int size);
-
-
+int gp_port_usb_find_device (GPPort * dev, int idvendor, int idproduct);
+int gp_port_usb_clear_halt  (GPPort * dev, int ep);
+int gp_port_usb_msg_write   (GPPort * dev, int request, int value,
+			     int index, char *bytes, int size);
+int gp_port_usb_msg_read    (GPPort * dev, int request, int value,
+			     int index, char *bytes, int size);
 
 /* Error reporting */
 int         gp_port_set_error (GPPort *port, const char *format, ...);
 const char *gp_port_get_error (GPPort *port);
 
-#include "gphoto2-port-info-list.h"
-
-#endif /* _GP_PORT_H_ */
+#endif /* __GPHOTO2_PORT_H__ */
 
 

@@ -1,3 +1,8 @@
+2001-10-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* usb/libusb.c:
+	* include/gphoto2-port.h: Cleanup.
+
 2001-10-25  Fredrik <fredrik@krixor.xy.org>
 
 	* libgphoto2_port/gp_port.c: Write number of bytes we are going

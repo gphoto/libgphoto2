@@ -1,5 +1,6 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
-/*
+/* gphoto2-port.c
+ * 
  * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
  * Copyright (C) 1999 Scott Fritzinger <scottf@unr.edu>
  *
@@ -173,7 +174,6 @@ gp_port_new (GPPort **dev, GPPortType type)
         }
 
         (*dev)->type = type;
-        (*dev)->device_fd = 0;
         (*dev)->ops->init (*dev);
 
         switch ((*dev)->type) {
