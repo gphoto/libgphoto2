@@ -36,7 +36,7 @@ About this file:
 <!ENTITY camera SYSTEM "api/sgml/gphoto2-camera.sgml">
 
 ]>
-<book>
+<book id="index">
 
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
@@ -154,7 +154,7 @@ About this file:
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
  
-  <chapter>
+  <chapter id="whatyouneed">
     <title>Finding what you need</title>
     <abstract>
       <simpara>This chapter lists information about what you need to run gphoto2.This information is intended to assist you in setting up your computer so that you can connect a camera and use libgphoto2 software to download images.</simpara>
@@ -240,7 +240,7 @@ About this file:
       <simpara>FIXME: add gtkam docs</simpara>
     </section>
 
-    <section>
+    <section id="using-gphoto2">
       <title>Using the <command>gphoto2</command> command line
 	interface (<acronym>CLI</acronym>)</title>
 
@@ -380,12 +380,12 @@ Saving file as MVI_5418.AVI                                                     
       </para>
     </section>
     
-    <section>
+    <section id="using-gnome">
       <title>Using Gnome VFS</title>
       <simpara>FIXME: We need to write this section</simpara>
     </section>
 
-    <section>
+    <section id="using-kde">
       <title>Using kioslave</title>
       <simpara>FIXME: We need to write this section</simpara>
     </section>
@@ -396,7 +396,7 @@ Saving file as MVI_5418.AVI                                                     
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
 
-  <chapter>
+  <chapter id="FAQ">
     <title>Frequently Asked Questions</title>
     <subtitle>with answers, and not sorted yet</subtitle>
     &faq;
@@ -422,7 +422,7 @@ Saving file as MVI_5418.AVI                                                     
       </para>
     </abstract>
 
-    <section>
+    <section id="system-overview">
       <title>System Overview</title>
       <para>
         gPhoto2 consists of two libraries
@@ -492,7 +492,7 @@ Saving file as MVI_5418.AVI                                                     
       </para>
 
       <!-- ================================================== -->
-      <section>
+      <section id="usb-on-linux">
 
         <title><acronym>USB</acronym> ports on Linux</title>
 
@@ -805,7 +805,7 @@ Saving file as MVI_5418.AVI                                                     
 
     </section>
 
-    <section>
+    <section id="port-and-camera">
 
       <title>Specifying the port and camera you use</title>
 
@@ -878,7 +878,7 @@ Saving file as MVI_5418.AVI                                                     
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
 
-  <chapter>
+  <chapter id="devel">
     <title>Developer Documentation: The Inner Workings</title>
 
     <abstract>
@@ -898,7 +898,7 @@ Saving file as MVI_5418.AVI                                                     
       external documentation.</para>
 
 
-    <section>
+    <section id="software-architecture">
       <title>The gPhoto2 software architecture</title>
       <figure id="architecture-overview">
         <title>The gPhoto2 system architecture</title>
@@ -925,7 +925,7 @@ Saving file as MVI_5418.AVI                                                     
     </section>
 
 
-    <section>
+    <section id="api-libgphoto2">
       <title>The <systemitem class="library">libgphoto2</systemitem>
         <acronym>API</acronym></title>
 
@@ -954,7 +954,7 @@ Saving file as MVI_5418.AVI                                                     
     </section>
 
 
-    <section>
+    <section id="api-camlib">
       <title>The <systemitem class="library">camlib</systemitem>
         <acronym>API</acronym></title>
 
@@ -983,7 +983,7 @@ Saving file as MVI_5418.AVI                                                     
     </section>
 
 
-    <section>
+    <section id="api-libgphoto2_port">
       <title>The <systemitem class="library">libgphoto2_port</systemitem>
         <acronym>API</acronym></title>
 
@@ -1017,7 +1017,7 @@ Saving file as MVI_5418.AVI                                                     
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
 
-  <chapter>
+  <chapter id="future">
     <title>Utopia: A look into the possible future</title>
     
     <abstract>
@@ -1028,7 +1028,7 @@ Saving file as MVI_5418.AVI                                                     
       </para>
     </abstract>
 
-    <section>
+    <section id="language-bindings">
       <title>Language Bindings</title>
       <para>If somebody is interested in writing a
         <systemitem class="library">libgphoto2</systemitem>
@@ -1038,7 +1038,7 @@ Saving file as MVI_5418.AVI                                                     
       </para>
     </section>
 
-    <section>
+    <section id="gphoto2fs">
       <title>The gPhoto2 file system</title>
 
       <figure id="gphoto2fs">
