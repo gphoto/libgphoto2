@@ -1,3 +1,7 @@
+2002-01-08  Dan Fandrich <dan@coneharvesters.com>
+
+	* Makefile.am: Removed redundant CFLAGS and LDFLAGS lines
+
 2002-01-07  Fredrik <fredrik@krixor.xy.org>
 
 	* canon.c: Small fix to Dan's portable timezone code from
