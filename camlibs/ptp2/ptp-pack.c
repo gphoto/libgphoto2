@@ -258,8 +258,9 @@ ptp_unpack_SI (PTPParams *params, char* data, PTPStorageInfo *si)
 #define PTP_oi_Filename			53
 
 static inline int
-ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, char* oidata)
+ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, char** oidataptr)
 {
+	char* oidata;
 	uint8_t filenamelen;
 	uint8_t capturedatelen=0;
 	/* let's allocate some memory first; XXX i'm sure it's wrong */
@@ -313,7 +314,8 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, char* oidata)
 	}
 #endif
 	// XXX this function should return dataset length
-
+	
+	*oidataptr=oidata;
 	return (PTP_oi_Filename+(filenamelen+1)*2+(capturedatelen+1)*4);
 }
 

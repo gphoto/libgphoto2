@@ -121,10 +121,12 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	usbdata.type=htod16(PTP_USB_CONTAINER_DATA);
 	usbdata.code=htod16(ptp->Code);
 	usbdata.trans_id=htod32(ptp->Transaction_ID);
-	memcpy(usbdata.payload.data,data,PTP_USB_BULK_PAYLOAD_LEN);
+	memcpy(usbdata.payload.data,data,
+		(size<PTP_USB_BULK_PAYLOAD_LEN)?size:PTP_USB_BULK_PAYLOAD_LEN);
 	/* send first part of data */
-	ret=params->write_func((unsigned char *)&usbdata,sizeof(usbdata),
-				params->data);
+	ret=params->write_func((unsigned char *)&usbdata, PTP_USB_BULK_HDR_LEN+
+		((size<PTP_USB_BULK_PAYLOAD_LEN)?size:PTP_USB_BULK_PAYLOAD_LEN),
+		params->data);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
@@ -132,6 +134,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 			ptp->Code,ret);
 		return ret;
 	}
+	if (size<=PTP_USB_BULK_PAYLOAD_LEN) return ret;
 	/* if everything OK send the rest */
 	ret=params->write_func (data+PTP_USB_BULK_PAYLOAD_LEN,
 				size-PTP_USB_BULK_PAYLOAD_LEN, params->data);
@@ -629,7 +632,7 @@ ptp_sendobjectinfo (PTPParams* params, uint32_t* store,
 	ptp.Param1=*store;
 	ptp.Param2=*parenthandle;
 	
-	size=ptp_pack_OI(params, objectinfo, oidata);
+	size=ptp_pack_OI(params, objectinfo, &oidata);
 	ret=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &oidata); 
 	free(oidata);
 	*store=ptp.Param1;
@@ -723,7 +726,7 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 	ptp.Param1=*store;
 	ptp.Param2=*parenthandle;
 	
-	size=ptp_pack_OI(params, objectinfo, oidata);
+	size=ptp_pack_OI(params, objectinfo, &oidata);
 	ret=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &oidata); 
 	free(oidata);
 	*store=ptp.Param1;
