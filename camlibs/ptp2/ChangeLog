@@ -1,3 +1,8 @@
+2004-01-10  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* ptp.c: As reported by VICTOR <viaaurea@yahoo.es>,
+	  added Olympus cameras: C-350Z, D-560Z, and X-250 (all the same id).
+
 2004-01-05 Mariusz Woloszyn
 	* ptp.c: sync with libptp2 code.
 

@@ -300,6 +300,10 @@ static struct {
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402},
 
+	/* From VICTOR <viaaurea@yahoo.es> */
+	{"Olympus:C-350Z",                0x07b4, 0x0114},
+	{"Olympus:D-560Z",                0x07b4, 0x0114},
+	{"Olympus:X-250",                 0x07b4, 0x0114},
 
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode
