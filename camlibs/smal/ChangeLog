@@ -1,0 +1,11 @@
+2003-01-06  Lee Benfield <lee@benf.org>
+
+Version 0.01
+
+2003-01-13  LB
+
+Version 0.02
+
+- Added support for different header types in returned image as observed
+by Vasileios Zografos, on @xia (different faceplate from mine).
+
