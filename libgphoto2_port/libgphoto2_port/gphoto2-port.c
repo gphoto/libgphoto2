@@ -657,7 +657,7 @@ gp_port_set_error (GPPort *port, const char *format, ...)
 	if (format) {
 		va_start (args, format);
 		vsnprintf (port->pc->error, sizeof (port->pc->error),
-			   format, args);
+			   _(format), args);
 		gp_logv (GP_LOG_ERROR, "gphoto2-port", format, args);
 		va_end (args);
 	} else

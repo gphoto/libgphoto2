@@ -23,19 +23,24 @@
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
-#  undef _
+#  undef _ 
 #  define _(String) dgettext (PACKAGE, String)
 #  ifdef gettext_noop
-#      define N_(String) gettext_noop (String)
+#    define N_(String) gettext_noop (String)
 #  else
-#      define N_(String) (String)
+#    define N_(String) (String)
 #  endif
 #else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
 
-#define GP_ERR_RES(num,str) {if (result == (num)) return (N_(str));}
+#define GP_ERR(num,str) {if (result == (num)) return (str);}
 
 /**
  * gp_port_result_as_string:
@@ -50,45 +55,43 @@
 const char *
 gp_port_result_as_string (int result)
 {
-	if ((result < -99) || (result > 0))
-		return (N_("Unknown error"));
+	GP_ERR (GP_OK,                   N_("No error"));
+	GP_ERR (GP_ERROR,                N_("Unspecified error"));
+	GP_ERR (GP_ERROR_IO,             N_("I/O problem"));
+	GP_ERR (GP_ERROR_BAD_PARAMETERS, N_("Bad parameters"));
+	GP_ERR (GP_ERROR_NOT_SUPPORTED,  N_("Unsupported operation"));
+	GP_ERR (GP_ERROR_TIMEOUT,        N_("Timeout reading from or "
+						"writing to the port"));
+	GP_ERR (GP_ERROR_IO_SUPPORTED_SERIAL, N_("Serial port not "
+						     "supported"));
+	GP_ERR (GP_ERROR_IO_SUPPORTED_USB, N_("USB port not supported"));
+	GP_ERR (GP_ERROR_UNKNOWN_PORT, N_("Unknown port"));
+	GP_ERR (GP_ERROR_NO_MEMORY,    N_("Out of memory"));
+	GP_ERR (GP_ERROR_LIBRARY,      N_("Error loading a library"));
+	GP_ERR (GP_ERROR_IO_INIT,      N_("Error initializing the port"));
+	GP_ERR (GP_ERROR_IO_OPEN,      N_("Error opening the port"));
+	GP_ERR (GP_ERROR_IO_TIMEOUT,   N_("Timeout reading from or writing "
+					      "to the port"));
+	GP_ERR (GP_ERROR_IO_READ,   N_("Error reading from the port"));
+	GP_ERR (GP_ERROR_IO_WRITE,  N_("Error writing to the port"));
+	GP_ERR (GP_ERROR_IO_CLOSE,  N_("Error closing the port"));
+	GP_ERR (GP_ERROR_IO_UPDATE, N_("Error updating the port settings"));
+	GP_ERR (GP_ERROR_IO_PIN,    N_("Error with the port"));
+	GP_ERR (GP_ERROR_IO_SERIAL_SPEED, N_("Error setting the serial "
+						 "port speed"));
+	GP_ERR (GP_ERROR_IO_SERIAL_BREAK, N_("Error sending a break to the "
+						 "serial port"));
+	GP_ERR (GP_ERROR_IO_SERIAL_FLUSH, N_("Error flushing the serial "
+						 "line"));
+	GP_ERR (GP_ERROR_IO_USB_CLEAR_HALT, N_("Error clearing a halt "
+						"condition on the USB port"));
+	GP_ERR (GP_ERROR_IO_USB_FIND,  N_("Could not find the requested "
+					      "device on the USB port"));
+	GP_ERR (GP_ERROR_IO_USB_CLAIM, N_("Could not claim the USB "
+					      "device"));
+	GP_ERR (GP_ERROR_IO_LOCK,      N_("Could not lock the device"));
 
-	GP_ERR_RES (GP_OK, "No error");
-	GP_ERR_RES (GP_ERROR, "Unspecified error");
-	GP_ERR_RES (GP_ERROR_IO, N_("I/O problem"));
-	GP_ERR_RES (GP_ERROR_BAD_PARAMETERS, N_("Bad parameters"));
-	GP_ERR_RES (GP_ERROR_NOT_SUPPORTED, N_("Unsupported operation"));
-	GP_ERR_RES (GP_ERROR_TIMEOUT,
-		    "Timeout reading from or writing to the port");
-	GP_ERR_RES (GP_ERROR_IO_SUPPORTED_SERIAL, "Serial port not supported");
-	GP_ERR_RES (GP_ERROR_IO_SUPPORTED_USB, "USB port not supported");
-	GP_ERR_RES (GP_ERROR_UNKNOWN_PORT, "Unknown port");
-	GP_ERR_RES (GP_ERROR_NO_MEMORY, "Out of memory");
-	GP_ERR_RES (GP_ERROR_LIBRARY, "Error loading a required library");
-	GP_ERR_RES (GP_ERROR_IO_INIT, "Error initializing the port");
-	GP_ERR_RES (GP_ERROR_IO_OPEN, "Error opening the port");
-	GP_ERR_RES (GP_ERROR_IO_TIMEOUT,
-		    "Timeout reading from or writing to the port");
-	GP_ERR_RES (GP_ERROR_IO_READ, "Error reading from the port");
-	GP_ERR_RES (GP_ERROR_IO_WRITE, "Error writing to the port");
-	GP_ERR_RES (GP_ERROR_IO_CLOSE, "Error closing the port");
-	GP_ERR_RES (GP_ERROR_IO_UPDATE, "Error updating the port settings");
-	GP_ERR_RES (GP_ERROR_IO_PIN, "Error with the port");
-	GP_ERR_RES (GP_ERROR_IO_SERIAL_SPEED,
-		    "Error setting the serial port speed");
-	GP_ERR_RES (GP_ERROR_IO_SERIAL_BREAK,
-		    "Error sending a break to the serial port");
-	GP_ERR_RES (GP_ERROR_IO_SERIAL_FLUSH,
-		    "Error flushing the serial line");
-	GP_ERR_RES (GP_ERROR_IO_USB_CLEAR_HALT,
-		    "Error clearing a halt condition on the USB port");
-	GP_ERR_RES (GP_ERROR_IO_USB_FIND,
-		    "Could not find the requested device on the USB port");
-	GP_ERR_RES (GP_ERROR_IO_USB_CLAIM,
-		    "Could not claim the USB device");
-	GP_ERR_RES (GP_ERROR_IO_LOCK, "Could not lock the device");
-
-	return (N_("Unknown error"));
+	return N_("Unknown error");
 }
 
-#undef GP_ERR_RES
+#undef GP_ERR
