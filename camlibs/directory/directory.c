@@ -176,13 +176,30 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	GP_SYSTEM_DIR dir;
 	GP_SYSTEM_DIRENT de;
-	char buf[1024], f[1024];
+	char buf[1024], f[1024], link[1024];
 	const char *dirname;
 	int view_hidden=1;
 	unsigned int id, n;
+	struct stat st;
 
 	if (gp_setting_get ("directory", "hidden", buf) == GP_OK)
 		view_hidden = atoi (buf);
+
+	/* Check if this is a link */
+	if (lstat (folder, &st) != 0) {
+		gp_context_error (context, _("Could not get information "
+				  "about '%s' (%m)."), folder);
+		return (GP_ERROR);
+	}
+	if (S_ISLNK (st.st_mode)) {
+		if (readlink (folder, link, sizeof (link) < 0)) {
+			gp_context_error (context, _("Could not follow the "
+				"link '%s' (%m)."), folder);
+			return (GP_ERROR);
+		}
+		GP_DEBUG ("Following link '%s' -> '%s'...", folder, link);
+		return (folder_list_func (fs, link, list, data, context));
+	}
 
 	dir = GP_SYSTEM_OPENDIR ((char*) folder);
 	if (!dir)
@@ -237,18 +254,18 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	char path[1024], link[1024];
 	char *name;
 	const char *mime_type;
-	struct stat statbuf;
+	struct stat st;
 
 	if (strlen (folder) == 1)
 		snprintf (path, sizeof (path), "/%s", file);
 	else
 		snprintf (path, sizeof (path), "%s/%s", folder, file);
-	if (lstat (path, &statbuf) != 0) {
+	if (lstat (path, &st) != 0) {
 		gp_context_error (context, _("Could not get information "
 			"about '%s' in '%s' (%m)."), file, folder);
 		return (GP_ERROR);
 	}
-	if (S_ISLNK (statbuf.st_mode)) {
+	if (S_ISLNK (st.st_mode)) {
 		if (readlink (path, link, sizeof (link) < 0)) {
 			gp_context_error (context, _("Could not follow the "
 				"link '%s' in '%s' (%m)."), file, folder);
@@ -274,16 +291,16 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
                             GP_FILE_INFO_TYPE | GP_FILE_INFO_PERMISSIONS |
 			    GP_FILE_INFO_MTIME;
 
-	info->file.mtime = statbuf.st_mtime;
+	info->file.mtime = st.st_mtime;
 	info->file.permissions = GP_FILE_PERM_NONE;
-	if (statbuf.st_mode & S_IRUSR)
+	if (st.st_mode & S_IRUSR)
 		info->file.permissions |= GP_FILE_PERM_READ;
-	if (statbuf.st_mode & S_IWUSR)
+	if (st.st_mode & S_IWUSR)
 		info->file.permissions |= GP_FILE_PERM_DELETE;
         strcpy (info->file.name, file);
-        info->file.size = statbuf.st_size;
+        info->file.size = st.st_size;
 #ifdef DEBUG
-	info->preview.size = statbuf.st_size;
+	info->preview.size = st.st_size;
 #endif
 
 	mime_type = get_mime_type (file);
