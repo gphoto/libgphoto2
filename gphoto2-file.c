@@ -61,21 +61,11 @@ gp_file_new (CameraFile **file)
 	*file = malloc (sizeof (CameraFile));
 	if (!*file)
 		return (GP_ERROR_NO_MEMORY);
+	memset (*file, 0, sizeof (CameraFile));
 
 	(*file)->type = GP_FILE_TYPE_NORMAL;
 	strcpy ((*file)->mime_type, "unknown/unknown");
-	strcpy ((*file)->name, "");
-	(*file)->data = NULL;
-	(*file)->size = 0;
-	(*file)->bytes_read = 0;
 	(*file)->ref_count = 1;
-
-	(*file)->red_table   = NULL;
-	(*file)->green_table = NULL;
-	(*file)->blue_table  = NULL;
-	(*file)->red_size   = 0;
-	(*file)->green_size = 0;
-	(*file)->blue_size  = 0;
 
 	return (GP_OK);
 }
