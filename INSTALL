@@ -11,7 +11,7 @@ The installation procedure should be quite simple:
    step 1).  In this case, you will need to have the following software
    installed:
 	autoconf
-	automake
+	automake (ver. >= 1.5)
 	libtool (ver. >= 1.4)
 
 1) ./configure --prefix=/usr --sysconfdir=/etc
@@ -26,11 +26,12 @@ The installation procedure should be quite simple:
 
    The following software components are optional, and will improve the
    libraries' and/or command-line client's functionality if present:
-    libusb -- Universal Serial Bus camera support
+	libusb (ver. >= 0.1.5) -- Universal Serial Bus camera support
 	gettext (ver. >= 0.10.35) -- internationalization using shared library
 	cdk (ver. >= 4.9.10) -- camera configuration dialogs
 	aalib -- picture preview
 	jpeglib -- JPEG picture preview
+	gtk-doc -- documentation built in doc/api/
 
 2) make install
 
@@ -54,3 +55,79 @@ The installation procedure should be quite simple:
       If you're running a DEB based system (e.g. Debian GNU/Linux),
       you can build .deb packages and install these. The packages will
       be located in FIXME. 
+
+gphoto2 has been successfully used on many system.  Some systems where it
+has been reported to successfully compile are listed below. Not all, or even
+any, camera libraries have been tested on these systems, so there may be
+endian other other issues that prevent some camera libraries from working.
+Please report any changes to this list to the gphoto2 developer mailing
+list.  As of this writing, USB support is only available on Linux and
+FreeBSD as those are the only systems on which libusb is available.
+
+i386:
+  Debian GNU/Linux 2.2
+  Red Hat Linux 7.1
+  Red Hat Linux 4.2
+  TurboLinux 6.5
+  Slackware Linux 8.0
+  FreeBSD 4.3
+	Try the following to configure the optional libraries:
+	  env CFLAGS="-I/usr/local/include" CPPFLAGS="-I/usr/local/include" \
+	  LDFLAGS="-I/usr/local/lib" ./configure --disable-included-nls
+
+Alpha:
+  OpenBSD 3.0
+  NetBSD 1.5.1
+
+PowerPC:
+  Debian GNU/Linux 2.2
+
+Sparc:
+  Debian GNU/Linux 2.2
+  Solaris 8 (gcc)
+  	Configure with this command:
+  		./configure --without-usb
+	and use GNU make to build (gmake).
+
+StrongARM:
+  Intimate/Debian iPAQ GNU/Linux (native gcc)
+  Linux (cross-compiled gcc)
+
+
+The following systems have some problems compiling, but could be made to work
+with some effort.  Many linking problems should be resolved with an
+newer libtool (newer than version 1.4.2):
+
+PowerPC:
+  Apple Darwin (OS X)
+  	Need dlcompat from <URL:http://fink.sourceforge.net>
+  	Configure with this command:
+  	  env CFLAGS="-I/path/to/dlcompat -no-cpp-precomp" \
+  	  LDFLAGS="-L/path/to/dlcompat" ./configure --disable-nls
+
+Itanium:
+  Red Hat 7.1 (gcc)
+  	Need better libtool support.
+  Red Hat 7.1 (Intel ecc)
+  	There are two bugs in this compiler tickled by gphoto2 that prevent
+  	full compilation, but are fairly simple to overcome.
+  Red Hat 7.1 (sgicc)
+  	Need better libtool support.
+
+Alpha:
+  Debian GNU/Linux 2.2
+  	Need better libtool support.
+  Tru64 5.1A
+  	Configure with this command:
+  	  CFLAGS='-D__STDC_VERSION__=0' ./configure --disable-nls
+  	Some build problems related to make (might work with GNU make).
+
+Sparc:
+  Solaris 8 (cc)
+  	Sun's cc doesn't support #warning or # or ## macro features, which
+  	occur several times in the code.
+
+
+Thanks go to SourceForge for their compile farm, and Compaq for their
+TestDrive program which allowed gphoto2 to be tested on many of these
+systems.
