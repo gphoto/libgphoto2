@@ -106,6 +106,7 @@ OPTION_CALLBACK(debug);
 #endif
 OPTION_CALLBACK(use_folder);
 OPTION_CALLBACK(recurse);
+OPTION_CALLBACK(no_recurse);
 OPTION_CALLBACK(use_stdout);
 OPTION_CALLBACK(use_stdout_size);
 OPTION_CALLBACK(list_folders);
@@ -167,7 +168,8 @@ Option option[] = {
 /* Actions that depend on settings */
 {"a", "abilities", "",       N_("Display camera abilities"), abilities,    0},
 {"f", "folder",    "folder", N_("Specify camera folder (default=\"/\")"),use_folder,0},
-{"R", "recurse", "",  N_("Recursively descend through folders"), recurse, 0},
+{"R", "recurse", "",  N_("Recursion (default - do not use)"), recurse, 0},
+{"", "no-recurse", "",  N_("Turn off recursion"), no_recurse, 0},
 {"l", "list-folders",   "", N_("List folders in folder"), list_folders,   0},
 {"L", "list-files",     "", N_("List files in folder"),   list_files,     0},
 {"m", "mkdir", N_("name"),  N_("Create a directory"),     make_dir,       0},
@@ -221,7 +223,7 @@ int  glob_debug;
 int  glob_shell=0;
 int  glob_quiet=0;
 int  glob_filename_override=0;
-int  glob_recurse=0;
+int  glob_recurse=1;
 char glob_filename[128];
 int  glob_stdout=0;
 int  glob_stdout_size=0;
@@ -591,9 +593,18 @@ OPTION_CALLBACK (use_folder)
 
 OPTION_CALLBACK (recurse)
 {
-        cli_debug_print("Setting recursive mode");
+        cli_debug_print("Recursion requested, this is now the default");
 
-        glob_recurse = 1;
+	fprintf (stderr, _("Recursion is now default and the use of --recurse or -R is now deprecated.\n"));
+
+        return (GP_OK);
+}
+
+OPTION_CALLBACK (no_recurse)
+{
+        cli_debug_print("Clearing recursive mode");
+
+        glob_recurse = 0;
 
         return (GP_OK);
 }
@@ -1251,7 +1262,7 @@ init_globals (void)
         glob_debug = 0;
         glob_quiet = 0;
         glob_filename_override = 0;
-        glob_recurse = 0;
+        glob_recurse = 1;
 
 	glob_context = gp_context_new ();
 	gp_context_set_cancel_func    (glob_context, ctx_cancel_func,   NULL);

@@ -1,3 +1,9 @@
+2002-01-14  Fredrik <fredrik@krixor.xy.org>
+
+	* frontends/command-line/main.c: Make folder recursion default.
+	  Kept --recurse but made it a no-op with a warning to stderr
+	  and added --no-recurse to turn recursion off.
+
 2002-01-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-camera.c:
