@@ -65,29 +65,10 @@ int main (int argc, char **argv) {
 	if (gp_camera_abilities(&a) == GP_ERROR)
 		printf("cli: (ERROR) camera_abilities error!\n");
 	
-	/* --------------------------------------- */
-	/* Get the number of folders on the camera */
-	/* --------------------------------------- */
-	n = gp_folder_count();
-	if (n == GP_ERROR)
-		printf("cli: (ERROR) folder_count error!\n");
-#ifdef DEBUG
-	printf("cli: Number of folders: %i\n", n);
-#endif
-
-	/* ------------------------------------ */
-	/* Get the names of each of the folders */
-	/* ------------------------------------ */
-	for (x=0; x<n; x++) {
-		gp_folder_name(x, buf);
-#ifdef DEBUG
-		printf("cli: Folder #%i name: %s\n", x, buf);
-#endif
-	}
 	/* ------------------------------- */
 	/* Set the currently active folder */
 	/* ------------------------------- */
-	if (gp_folder_set(0) == GP_ERROR)
+	if (gp_folder_set("/") == GP_ERROR)
 		printf("Can't set folder!\n");
 
 	/* ----------------------------------------- */
@@ -97,7 +78,7 @@ int main (int argc, char **argv) {
 	if (m == GP_ERROR)
 		printf("cli: (ERROR) file_count error!\n");
 #ifdef DEBUG
-	printf("cli: Number of files in folder #%i: %i\n", n, m);
+	printf("cli: Number of files: %i\n", n);
 #endif
 
 	/* ------------------------------- */

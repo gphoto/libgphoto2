@@ -60,8 +60,7 @@ int camera_init (CameraInit *init) {
 
 	strcpy(dir_directory, init->port_settings.directory_path);
 	if (strlen(dir_directory)==0) {
-		gp_set_setting("dir_directory", getenv("HOME"));
-		strcpy(dir_directory, getenv("HOME"));
+		strcpy(dir_directory, "/");
 	}
 
 	return (GP_OK);
@@ -84,27 +83,19 @@ int camera_close () {
 	return (GP_OK);
 }
 
-int camera_folder_count (int *count) {
+int camera_folder_list(char *folder_name, CameraFolderList *list) {
 
-	return (1);
+	return (GP_ERROR);
 }
 
-int camera_folder_name(int folder_number, char *folder_name) {
-
-	gp_get_setting("dir_directory", dir_directory);
-	strcpy(folder_name, dir_directory);
-
-	return (GP_OK);
-}
-
-int camera_folder_set(int folder_number) {
+int camera_folder_set(char *folder_name) {
 
 	DIR *dir;
 	struct dirent *de;
 	struct stat s;
 	char *dot, fname[1024];
 
-	gp_get_setting("dir_directory", dir_directory);
+	strcpy(dir_directory, folder_name);
 	dir = opendir(dir_directory);
 	if (!dir) {
 		perror("directory: folder_set");
@@ -208,7 +199,7 @@ int camera_file_unlock (int file_number) {
 	return (GP_ERROR);
 }
 
-int camera_config_set (CameraConfig *conf) {
+int camera_config (CameraConfig *config, int config_count) {
 
 	return (GP_ERROR);
 }

@@ -23,10 +23,10 @@
 
 	/* Currently Selected camera/folder */
 	/* ------------------------------------------------ */
-			/* currently selected folder number */
-	int 		glob_folder_number;
 			/* currently selected camera number */
 	int 		glob_camera_number;
+			/* currently selected folder path */
+	char 		glob_folder_path[512];
 
 	/* Camera List */
 	/* ------------------------------------------------ */
@@ -69,7 +69,7 @@ int gp_init () {
 	glob_camera_count    = 0;
 	glob_setting_count   = 0;
 	glob_library_handle  = NULL;
-	glob_folder_number   = 0;
+	strcpy(glob_folder_path, "/");
 	glob_camera_id_count = 0;
 
 	for(x=0; x<512; x++)
@@ -205,30 +205,19 @@ int gp_camera_close () {
 	return(glob_c.close());
 }
 
-int gp_folder_count () {
+int gp_folder_list(char *folder_path, CameraFolderList *list) {
 
-	if (glob_c.folder_count == NULL)
-		return(GP_ERROR);
-
-	return(glob_c.folder_count());
+	return (GP_OK);
 }
 
-int gp_folder_name (int folder_number, char *folder_name) {
-
-	if (glob_c.folder_name == NULL)
-		return (GP_ERROR);
-
-	return(glob_c.folder_name(folder_number, folder_name));
-}
-
-int gp_folder_set (int folder_number) {
+int gp_folder_set (char *folder_path) {
 
 	if (glob_c.folder_set == NULL)
 		return (GP_ERROR);
 
-	if (glob_c.folder_set(folder_number) == GP_ERROR)
+	if (glob_c.folder_set(folder_path) == GP_ERROR)
 		return (GP_ERROR);
-	glob_folder_number = folder_number;
+	strcpy(glob_folder_path, folder_path);
 	return(GP_OK);
 }
 
@@ -285,12 +274,12 @@ int gp_config_get (char *config_dialog_filename) {
 	return(GP_OK);
 }
 
-int gp_config_set (char *config_settings) {
+int gp_config_set (CameraConfig *config, int config_count) {
 
-	if (glob_c.config_set == NULL)
+	if (glob_c.config == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.config_set(config_settings));
+	return(glob_c.config(config, config_count));
 }
 
 int gp_capture (int type) {

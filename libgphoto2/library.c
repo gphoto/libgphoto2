@@ -51,8 +51,7 @@ int load_library (char *camera_name) {
 		glob_c.exit = dlsym(lh, "camera_exit");
 		glob_c.open = dlsym(lh, "camera_open");
 		glob_c.close = dlsym(lh, "camera_close");
-		glob_c.folder_count = dlsym(lh, "camera_folder_count");
-		glob_c.folder_name = dlsym(lh, "camera_folder_name");
+		glob_c.folder_list = dlsym(lh, "camera_folder_list");
 		glob_c.folder_set = dlsym(lh, "camera_folder_set");
 		glob_c.file_count = dlsym(lh, "camera_file_count");
 		glob_c.file_get = dlsym(lh, "camera_file_get");
@@ -60,7 +59,7 @@ int load_library (char *camera_name) {
 		glob_c.file_delete = dlsym(lh, "camera_file_delete");
 		glob_c.file_lock = dlsym(lh, "camera_file_lock");
 		glob_c.file_unlock = dlsym(lh, "camera_file_unlock");
-		glob_c.config_set = dlsym(lh, "camera_config_set");
+		glob_c.config = dlsym(lh, "camera_config");
 		glob_c.capture = dlsym(lh, "camera_capture");
 		glob_c.summary = dlsym(lh, "camera_summary");
 		glob_c.manual = dlsym(lh, "camera_manual");

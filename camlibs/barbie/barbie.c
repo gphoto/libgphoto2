@@ -326,19 +326,13 @@ int camera_close() {
 	return GP_OK;
 }
 
-int camera_folder_count () {
+int camera_folder_list (char *folder_name, CameraFolderList *list) {
 
-	return 1;
+
+	return GP_ERROR;
 }
 
-int camera_folder_name (int folder_number, char *folder_name) {
-
-	strcpy(folder_name, glob_camera_model);
-
-	return GP_OK;
-}
-
-int camera_folder_set (int folder_number) {
+int camera_folder_set (char *folder_name) {
 
 	return GP_OK;
 }
@@ -419,7 +413,7 @@ int camera_file_unlock (int file_number) {
 	return GP_ERROR;
 }
 
-int camera_config_set (CameraConfig *conf) {
+int camera_config (CameraConfig *config, int config_count) {
 
 	return GP_OK;
 }

@@ -111,12 +111,15 @@ typedef struct {
 } CameraFile;
 
 typedef struct {
-	char 		name[128];
-	int		parent;
-} CameraFolder;
+	char	name[128];
+} CameraFolderInfo;
+
+typedef struct {
+	int count;
+	CameraFolderInfo info[512];
+} CameraFolderList;
 
 typedef struct {
 	char *name;
 	char *value;
 } CameraConfig;
-	

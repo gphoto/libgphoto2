@@ -42,14 +42,11 @@
 	int gp_camera_close ();
 
 /* Folder operations */
-	/* Retrieve the number of folders on the camera */
-	int gp_folder_count ();
-
-	/* Retrieve the name of a particular folder */
-	int gp_folder_name (int folder_number, char *folder_name);
+	/* Retrieve the contents of a folder */
+	int gp_folder_list(char *folder_path, CameraFolderList *list);
 
 	/* Set the current folder */
-	int gp_folder_set (int folder_number);
+	int gp_folder_set (char *folder_path);
 
 /* File operations */
 	/* Retrieve the number of files in the current folder */
@@ -114,7 +111,7 @@
 	*/
 
 	/* Send "key=value" pairs to the library, delimited by '\n' */
-	int gp_config_set (char *config_settings);
+	int gp_config_set (CameraConfig *config, int config_count);
 
 /* Miscellaneous functions */
 	/* Captures the current view. Basically, it takes a picture */
