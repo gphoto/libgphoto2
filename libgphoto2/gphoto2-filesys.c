@@ -1707,10 +1707,11 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 			     CameraFile *file, GPContext *context)
 {
 	CameraFileType type;
+	CameraFileInfo info;
 	const char *filename;
-	int x, y;
-#ifdef HAVE_EXIF
+	int x, y, r;
 	time_t t;
+#ifdef HAVE_EXIF
 	const char *data;
 	unsigned long int size;
 #endif
@@ -1764,23 +1765,44 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR);
 	}
 
-        /* If we didn't get a mtime, try to get it from EXIF data */
-#ifdef HAVE_EXIF 
+        /*
+	 * If we didn't get a mtime, try to get it from the CameraFileInfo.
+	 */
 	CR (gp_file_get_mtime (file, &t));
-        if (!t) {
-                GP_DEBUG ("Did not get mtime.");
-                if (type == GP_FILE_TYPE_NORMAL) {
-                        GP_DEBUG ("Searching data for mtime...");
-                        CR (gp_file_get_data_and_size (file, &data, &size));
-                        t = get_exif_mtime (data, size);
-                }
-                if (!t) {
-                        GP_DEBUG ("Trying EXIF information...");
-                        t = gp_filesystem_get_exif_mtime (fs, folder, filename);
-                }
-		CR (gp_file_set_mtime (file, t));
-        }
+	if (!t) {
+		GP_DEBUG ("File does not contain mtime. Trying "
+			  "information on the file...");
+		r = gp_filesystem_get_info (fs, folder, filename, &info, NULL);
+		if ((r == GP_OK) && (info.file.fields & GP_FILE_INFO_MTIME))
+			t = info.file.mtime;
+	}
+
+	/*
+	 * If we still don't have the mtime and this is a normal
+	 * file, check if there is EXIF data in the file that contains
+	 * information on the mtime.
+	 */
+#ifdef HAVE_EXIF 
+        if (!t && (type == GP_FILE_TYPE_NORMAL)) {
+		GP_DEBUG ("Searching data for mtime...");
+		CR (gp_file_get_data_and_size (file, &data, &size));
+		t = get_exif_mtime (data, size);
+	}
 #endif
+
+	/*
+	 * Still no mtime? Let's see if the camera offers us data of type
+	 * GP_FILE_TYPE_EXIF that includes information on the mtime.
+	 */
+#ifdef HAVE_EXIF
+	if (!t) {
+		GP_DEBUG ("Trying EXIF information...");
+		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
+	}
+#endif
+
+	if (t)
+		CR (gp_file_set_mtime (file, t));
 
 	return (GP_OK);
 }
