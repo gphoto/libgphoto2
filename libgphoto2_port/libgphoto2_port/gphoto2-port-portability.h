@@ -60,9 +60,9 @@ typedef struct {
 
 /* Dynamic library functions */
 #define GP_SYSTEM_DLOPEN(_filename)		dlopen(_filename, RTLD_LAZY)
-#if defined(__APPLE__)
-	/* Darwin prepends underscores to symbols */
-#define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, "_" _funcname)
+#if defined(__APPLE__) && !defined(HAVE_LTDL)
+ 	/* Darwin prepends underscores to symbols, but not with ltdl. */
+#define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, "_" _funcname) 
 #else
 #define GP_SYSTEM_DLSYM(_handle, _funcname)	dlsym(_handle, _funcname)
 #endif
