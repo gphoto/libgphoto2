@@ -1,5 +1,9 @@
 2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/core.c: have_initted is no longer needed.
+
+2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sonydscf1/sonydscf1.c:
 	* libgphoto2/debug.c: glob_debug is now static in libgphoto2
 

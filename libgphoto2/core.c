@@ -34,12 +34,10 @@
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
-#define CHECK_INIT           {if (!gp_is_initialized ()) CHECK_RESULT (gp_init ());}
+#define CHECK_INIT           {if (!gal) CHECK_RESULT (gp_init ());}
 
 /* Camera List */
-CameraAbilitiesList *gal;
-
-static int have_initted = 0;
+CameraAbilitiesList *gal = NULL;
 
 static int
 is_library (char *library_filename)
@@ -177,7 +175,8 @@ gp_init (void)
 
         gp_debug_printf (GP_DEBUG_LOW, "core", "Initializing GPhoto...");
 
-        if (have_initted)
+	/* Check if we are already initialized */
+        if (gal)
                 return (GP_OK);
 
         /* Initialize the globals */
@@ -207,14 +206,7 @@ gp_init (void)
         else
                 gp_debug_printf (GP_DEBUG_LOW, "core","\tNone");
 
-        have_initted = 1;
         return (GP_OK);
-}
-
-static int
-gp_is_initialized (void)
-{
-        return have_initted;
 }
 
 int
@@ -222,8 +214,6 @@ gp_exit (void)
 {
         CHECK_RESULT (gp_abilities_list_free (gal));
         gal = NULL;
-
-	have_initted = 0;
 
         return (GP_OK);
 }
