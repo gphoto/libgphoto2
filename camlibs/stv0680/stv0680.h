@@ -22,7 +22,6 @@
 
 struct stv0680_s {
 	gp_port *gpiod;
-	CameraFilesystem *fs;
 };
 
 #endif
