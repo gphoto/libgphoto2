@@ -14,6 +14,7 @@ libgphoto2_la_SOURCES = \
 			exif.c exif.h \
 			file.c file.h \
 			globals.h \
+			interface.c interface.h \
 			library.c library.h \
 			settings.c settings.h \
 			util.c util.h
