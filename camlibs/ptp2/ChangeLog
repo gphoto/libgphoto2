@@ -1,3 +1,7 @@
+2005-01-11  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added Sony DSC-T3 as reported.
+
 2005-01-08  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Send owner name with \0, or we get
