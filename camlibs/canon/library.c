@@ -70,6 +70,8 @@
 #define snprintf(buf,size,format,arg) sprintf(buf,format,arg)
 #endif
 
+#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+
 int
 camera_id (CameraText *id)
 {
@@ -104,12 +106,14 @@ camera_abilities (CameraAbilitiesList *list)
 
 	for (i = 0; models[i].id_str; i++) {
 		memset (&a, 0, sizeof (a));
-#ifdef EXPERIMENTAL_CAPTURE
-		/* should be set only if the camera indeed supports capturing */
-		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-#else
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
+#ifdef EXPERIMENTAL_CAPTURE
+		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 #endif
+#ifdef EXPERIMENTAL_UPLOAD
+		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+#endif
+
 		strcpy (a.model, models[i].id_str);
 		a.port = 0;
 		if (models[i].usb_vendor && models[i].usb_product) {
@@ -685,6 +689,108 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 	return GP_OK;
 }
 
+#ifdef EXPERIMENTAL_UPLOAD
+/*
+ * get from the filesystem the name of the highest numbered picture or directory
+ * 
+ */
+static int
+get_last_file (Camera *camera, char *directory, char *destname, 
+	       GPContext* context, char getdirectory, char*result)
+{
+	CameraFilesystem * fs = camera->fs;
+	CameraList*list;
+	char dir2[300];
+	int t;
+	GP_DEBUG ("get_last_file()");
+
+	if(directory[1] == ':') {
+	    /* gp_file_list_folder() needs absolute filenames 
+	       starting with '/' */
+	    GP_DEBUG ("get_last_file(): replacing '%c:%c' by '/'", 
+		      directory[0], directory[2]);
+	    sprintf(dir2, "/%s", &directory[3]);
+	    directory = dir2;
+	}
+
+	gp_list_new(&list);
+	if(getdirectory) {
+	    CHECK_RESULT (gp_filesystem_list_folders (fs, directory, list, context));
+	    GP_DEBUG ("get_last_file(): %d folders", list->count);
+	}
+	else {
+	    CHECK_RESULT (gp_filesystem_list_files (fs, directory, list, context));
+	    GP_DEBUG ("get_last_file(): %d files", list->count);
+	}
+	for(t=0;t<list->count;t++)
+	{
+	    char* name = list->entry[t].name;
+	    if(getdirectory) 
+		GP_DEBUG ("get_last_file(): folder: %s", name);
+	    else
+		GP_DEBUG ("get_last_file(): file: %s", name);
+
+	    /* we search only for directories of the form [0-9]{3}CANON... */
+	    if(getdirectory && ((strlen (name)!=8) ||
+		    (!isdigit(name[0]) ||
+		     !isdigit(name[1]) ||
+		     !isdigit(name[2])) || strcmp(&name[3],"CANON")))
+		continue;
+
+	    /* ...and only for files similar to AUT_[0-9]{4} */
+	    if(!getdirectory && (!isdigit(name[6]) || 
+			         !isdigit(name[7])))
+		continue;
+
+	    if(!result[0] || strcmp(list->entry[t].name, result) > 0)
+		strcpy(result, list->entry[t].name);
+	}
+	gp_list_free(list);
+
+	return GP_OK;
+}
+
+static int
+get_last_picture (Camera *camera, char *directory, char *destname, GPContext* context)
+{
+    GP_DEBUG ("get_last_picture()");
+    return get_last_file(camera, directory, destname, context, 0, destname);
+}
+
+static int
+get_last_dir (Camera *camera, char *directory, char *destname, GPContext* context)
+{
+    GP_DEBUG ("get_last_dir()");
+    return get_last_file(camera, directory, destname, context, 1, destname);
+}
+
+/*
+ * convert a filename to 8.3 format by truncating 
+ * the basename to 8 and the extension to 3 chars
+ * 
+ */
+static void
+convert_filename_to_8_3(const char* filename, char* dest)
+{
+    char*c;
+    GP_DEBUG ("convert_filename_to_8_3()");
+    c = strchr(filename, '.');
+    if(!c) {
+	sprintf(dest, "%.8s", filename);
+    }
+    else {
+	int l = c-filename;
+	if(l>8) 
+	    l=8;
+	memcpy(dest, filename, l);
+	dest[l]=0;
+	strcat(dest, c);
+	dest[l+4]=0;
+    }
+}
+
+#endif /* EXPERIMENTAL_UPLOAD */
+
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data,
 	       GPContext *context)
@@ -696,11 +802,6 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 	CameraAbilities a;
 
 	GP_DEBUG ("camera_folder_put_file()");
-
-	if (camera->port->type == GP_PORT_USB) {
-		gp_context_error (context, "File upload not implemented for USB yet");
-		return GP_ERROR_NOT_SUPPORTED;
-	}
 
 	if (check_readiness (camera, context) != 1)
 		return GP_ERROR;
@@ -733,41 +834,63 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 	}
 
 	sprintf (dcf_root_dir, "%s\\DCIM", camera->pl->cached_drive);
+	GP_DEBUG ("camera_folder_put_file(): dcf_root_dir=%s",dcf_root_dir);
+
+	if (get_last_dir (camera, dcf_root_dir, dir, context) != GP_OK)
+		return GP_ERROR;
+	GP_DEBUG ("camera_folder_put_file(): dir=%s", dir?dir:"NULL");
 
 	if (strlen (dir) == 0) {
-		sprintf (dir, "\\100CANON");
+		sprintf (dir, "100CANON");
 		sprintf (destname, "AUT_0001.JPG");
+		sprintf (destpath, "%s\\%s", dcf_root_dir, dir);
 	} else {
-		if (strlen (destname) == 0) {
-			sprintf (destname, "AUT_%c%c01.JPG", dir[2], dir[3]);
+		if(camera->pl->upload_keep_filename) {
+		    const char* filename;
+		    char filename2[300];
+		    CHECK_RESULT (gp_file_get_name (file, &filename));
+		    if(!filename)
+			return GP_ERROR;
+		    convert_filename_to_8_3(filename, filename2);
+		    sprintf(destname, "%s", filename2);
 		} else {
-			sprintf (buf, "%c%c", destname[6], destname[7]);
-			j = 1;
-			j = atoi (buf);
-			if (j == 99) {
-				j = 1;
-				sprintf (buf, "%c%c%c", dir[1], dir[2], dir[3]);
-				dirnum = atoi (buf);
-				if (dirnum == 999) {
-					gp_context_error (context,
-							  _
-							  ("Could not upload, no free folder name available!\n"
-							   "999CANON folder name exists and has an AUT_9999.JPG picture in it."));
-					return GP_ERROR;
-				} else {
-					dirnum++;
-					sprintf (dir, "\\%03iCANON", dirnum);
-				}
-			} else
-				j++;
+		    char dir2[300];
+		    sprintf(dir2, "%s/%s", dcf_root_dir, dir);
+		    if (get_last_picture (camera, dir2, destname, context) == GP_ERROR)
+			    return GP_ERROR;
 
-			sprintf (destname, "AUT_%c%c%02i.JPG", dir[2], dir[3], j);
+		    if (strlen (destname) == 0) {
+			    sprintf (destname, "AUT_%c%c01.JPG", dir[1], dir[2]);
+		    } else {
+			    sprintf (buf, "%c%c", destname[6], destname[7]);
+			    j = 1;
+			    j = atoi (buf);
+			    if (j == 99) {
+				    j = 1;
+				    sprintf (buf, "%c%c%c", dir[0], dir[1], dir[2]);
+				    dirnum = atoi (buf);
+				    if (dirnum == 999 && !camera->pl->upload_keep_filename) {
+					    gp_context_error (context,
+							      _
+							      ("Could not upload, no free folder name available!\n"
+							       "999CANON folder name exists and has an AUT_9999.JPG picture in it."));
+					    return GP_ERROR;
+				    } else {
+					    dirnum++;
+					    sprintf (dir, "%03iCANON", dirnum);
+				    }
+			    } else
+				    j++;
+
+			    sprintf (destname, "AUT_%c%c%02i.JPG", dir[1], dir[2], j);
+		    }
 		}
-
-		sprintf (destpath, "%s%s", dcf_root_dir, dir);
-
+		sprintf (destpath, "%s\\%s", dcf_root_dir, dir);
 		GP_DEBUG ("destpath: %s destname: %s\n", destpath, destname);
 	}
+
+	GP_DEBUG ("camera_folder_put_file(): destpath=%s", destpath);
+	GP_DEBUG ("camera_folder_put_file(): destname=%s", destname);
 
 	r = canon_int_directory_operations (camera, dcf_root_dir, DIR_CREATE, context);
 	if (r < 0) {
@@ -781,7 +904,6 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		return (r);
 	}
 
-
 	j = strlen (destpath);
 	destpath[j] = '\\';
 	destpath[j + 1] = '\0';
@@ -790,6 +912,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 
 	return canon_int_put_file (camera, file, destname, destpath, context);
 }
+
 
 /****************************************************************************/
 
@@ -871,6 +994,12 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (t, &camera->pl->list_all_files);
 	gp_widget_append (section, t);
 
+#ifdef EXPERIMENTAL_CAPTURE
+	gp_widget_new (GP_WIDGET_TOGGLE, _("Keep filename on upload"), &t);
+	gp_widget_set_value (t, &camera->pl->upload_keep_filename);
+	gp_widget_append (section, t);
+#endif /* EXPERIMENTAL_CAPTURE */
+
 	return GP_OK;
 }
 
@@ -915,6 +1044,14 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		gp_widget_get_value (w, &camera->pl->list_all_files);
 		GP_DEBUG ("New config value for tmb: %i", &camera->pl->list_all_files);
 	}
+	
+#ifdef EXPERIMENTAL_CAPTURE
+	gp_widget_get_child_by_label (window, _("Keep filename on upload"), &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &camera->pl->upload_keep_filename);
+		GP_DEBUG ("New config value for tmb: %i", &camera->pl->upload_keep_filename);
+	}
+#endif /* EXPERIMENTAL_CAPTURE */
 
 	GP_DEBUG ("done configuring camera.");
 
@@ -1065,7 +1202,13 @@ camera_init (Camera *camera, GPContext *context)
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, folder_list_func, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL, make_dir_func,
+	gp_filesystem_set_folder_funcs (camera->fs,
+#ifdef EXPERIMENTAL_UPLOAD
+					put_file_func, 
+#else
+					(camera->port->type == GP_PORT_SERIAL)?put_file_func:NULL,
+#endif /* EXPERIMENTAL_UPLOAD */
+					NULL, make_dir_func,
 					remove_dir_func, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
@@ -1079,8 +1222,9 @@ camera_init (Camera *camera, GPContext *context)
 	/* we are currently not capturing, are we? */
 	camera->pl->capturing = FALSE;
 
-	/* default to false, i.e. list only known file types */
+	/* default to false, i.e. list only known file types, use DCIF filenames */
 	camera->pl->list_all_files = FALSE;
+	camera->pl->upload_keep_filename = FALSE;
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
