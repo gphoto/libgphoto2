@@ -235,6 +235,9 @@ static struct {
 	{"Nikon Coolpix 5700 (PTP mode)", 0x04b0, 0x010d},
 	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
 	{"Nikon Coolpix 885 (PTP mode)", 0x04b0, 0x0112},
+	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */ 
+	{"Nikon Coolpix 4300 (PTP mode)", 0x04b0, 0x010f}, 
+
 
 
 	/* (at least some) newer Canon cameras can be switched between
