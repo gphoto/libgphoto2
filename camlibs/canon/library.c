@@ -762,7 +762,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				  ((pwr_source & CAMERA_MASK_BATTERY) ==
 				   0) ? _("AC adapter") : _("on battery"), pwr_status);
 	} else {
-		strncpy (power_str, _("Unavaliable"), sizeof (power_str) - 1);
+		strncpy (power_str, _("Unavailable"), sizeof (power_str) - 1);
 		power_str[sizeof (power_str) - 1] = 0;
 	}
 
