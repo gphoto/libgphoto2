@@ -60,7 +60,7 @@
 
 #include <gphoto2-port-serial.h>
 #include <gphoto2-port-result.h>
-#include <gphoto2-port-debug.h>
+#include <gphoto2-port-log.h>
 #include <gphoto2-port.h>
 #include <gphoto2-port-library.h>
 
@@ -68,6 +68,25 @@
 static struct termios term_old;
 #else
 static struct sgttyb term_old;
+#endif
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif 
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
 #endif
 
 typedef struct {
@@ -149,13 +168,13 @@ gp_port_serial_lock (gp_port *dev)
 	port = strchr (dev->settings.serial.port, ':');
 	port++;
 
-	gp_port_debug_printf (GP_DEBUG_LOW, "Trying to lock "
-			      "'%s'...", port);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
+		"Trying to lock '%s'...", port);
 	if (!ttylock ((char*) port))
 		return (GP_OK);
 
-	gp_port_debug_printf (GP_DEBUG_LOW, "Device "
-			      "'%s' is locked.", port);
+	gp_log (GP_LOG_ERROR, "gphoto2-port-serial", "Device "
+		"'%s' is locked", port);
 	return (GP_ERROR_IO_LOCK);
 
 #elif HAVE_LOCKDEV
@@ -163,23 +182,23 @@ gp_port_serial_lock (gp_port *dev)
 	const char *port;
 	int pid;
 
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
+		"Trying to lock '%s'...", port);
+
 	port = strchr (dev->settings.serial.port, ':');
 	port++;
 
-	gp_port_debug_printf (GP_DEBUG_LOW, "Trying to lock "
-			      "'%s'...", port);
 	pid = dev_lock (port);
 	if (!pid)
 		return (GP_OK);
 
 	/* Tell the user what went wrong */
 	if (pid > 0)
-		gp_port_debug_printf (GP_DEBUG_LOW, "Device "
-				      "'%s' is locked by pid %d.", port, pid);
+		gp_log (GP_LOG_ERROR, "gphoto2-port-serial", "Device "
+			"'%s' is locked by pid %d.", port, pid);
 	else
-		gp_port_debug_printf (GP_DEBUG_LOW,
-				      "dev_lock on '%s' returned %d.", 
-				      port, pid);
+		gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+			_("dev_lock on '%s' returned %d."), port, pid);
 
 	return (GP_ERROR_IO_LOCK);
 
@@ -190,18 +209,19 @@ gp_port_serial_lock (gp_port *dev)
 
 #ifdef SVR4
 	struct stat sbuf;
-	
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
+		"Trying to lock '%s'...", port);
+
 	if (stat (port, &sbuf) < 0) {
-		gp_port_debug_printf (GP_DEBUG_LOW,
-				      "Cannot get device number for '%s': %m!",
-				      port);
+		gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+			_("Cannot get device number for '%s': %m!"), port);
 		return (GP_ERROR_IO_LOCK);
 	}
 	
 	if ((sbuf.st_mode & S_IFMT) != S_IFCHR) {
-		gp_port_debug_printf (GP_DEBUG_LOW,
-				      "Cannot lock '%s': Not a character "
-				      "device!", port);
+		gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+			_("Cannot lock '%s': Not a character device!"), port);
 		return (GP_ERROR_IO_LOCK);
 	}
 	
@@ -222,9 +242,9 @@ gp_port_serial_lock (gp_port *dev)
 	while ((fd = open (handle->lock_file, O_EXCL | O_CREAT | O_RDWR,
 			   0644)) < 0) {
 		if (errno != EEXIST) {
-			gp_port_debug_printf (GP_DEBUG_LOW,
-					      "Cannot create lock file '%s': "
-					      "%m", handle->lock_file);
+			gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+				_("Cannot create lock file '%s' (%m)"),
+				handle->lock_file);
 			break;
 		}
 		
@@ -233,9 +253,9 @@ gp_port_serial_lock (gp_port *dev)
 		if (fd < 0) {
 			if (errno == ENOENT) /* This is just a timing problem */
 				continue;
-			gp_port_debug_printf (GP_DEBUG_LOW,
-					      "Cannot open existing lock file "
-					      "'%s': %m", handle->lock_file);
+			gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+				_("Cannot open existing lock file '%s' (%m)"),
+				handle->lock_file);
 			break;
 		}
 #ifndef LOCK_BINARY
@@ -246,9 +266,9 @@ gp_port_serial_lock (gp_port *dev)
 		close (fd);
 		fd = -1;
 		if (n <= 0) {
-			gp_port_debug_printf (GP_DEBUG_LOW,
-					      "Cannot read pid from lock "
-					      "file '%s'", handle->lock_file);
+			gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+				_("Cannot read pid from lock file '%s'"),
+				handle->lock_file);
 			break;
 		} 
 		
@@ -261,19 +281,18 @@ gp_port_serial_lock (gp_port *dev)
 			return 1;      /* somebody else locked it for us */
 		if (pid == 0 || (kill (pid, 0) == -1 && errno == ESRCH)) {
 			if (unlink (handle->lock_file) == 0) {
-				gp_port_debug_printf (GP_DEBUG_LOW,
-						      "Removed stale lock on "
-						      "'%s' (pid %d).", port,
-						      pid);
+				gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
+					_("Removed stale lock on '%s' "
+					  "(pid %d)"), port, pid);
 				continue;
 			}
-			gp_port_debug_printf (GP_DEBUG_LOW,
-					      "Could not remove stale lock "
-					      "on '%s'", port);
+			gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+				_("Could not remove stale lock on '%s'"),
+				port);
 		} else
-			gp_port_debug_printf (GP_DEBUG_LOW,
-					      "Device '%s' is locked by pid "
-					      "%d", port, pid);
+			gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+				_("Device '%s' is locked by pid %d"),
+				port, pid);
 		break;
 	}
 
@@ -308,8 +327,8 @@ gp_port_serial_unlock (gp_port *dev)
 	if (!ttyunlock ((char*) port))
 		return (GP_OK);
 
-	gp_port_debug_printf (GP_DEBUG_LOW, "Device '%s' "
-			      "could not be unlocked.", port);
+	gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+		_("Device '%s' could not be unlocked."), port);
 	return (GP_ERROR_IO_LOCK);
 
 #elif HAVE_LOCKDEV
@@ -326,12 +345,11 @@ gp_port_serial_unlock (gp_port *dev)
 
 	/* Tell the user what went wrong */
 	if (pid > 0)
-		gp_port_debug_printf (GP_DEBUG_LOW, "Device "
-				      "'%s' is locked by pid %d.", port, pid);
+		gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+			_("Device '%s' is locked by pid %d."), port, pid);
 	else
-		gp_port_debug_printf (GP_DEBUG_LOW,
-				      "dev_unlock on '%s' returned %d.",
-				      port, pid);
+		gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+			_("dev_unlock on '%s' returned %d."), port, pid);
 
 	return (GP_ERROR_IO_LOCK);
 
@@ -457,9 +475,8 @@ gp_port_serial_open (gp_port *dev)
 			result = gp_port_serial_lock (dev);
 			if (result == GP_OK)
 				break;
-			gp_port_debug_printf (GP_DEBUG_LOW,
-					      "Failed to get a lock, trying "
-					      "again...");
+			gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
+				"Failed to get a lock, trying again...");
 			sleep (1);
 		}
 		if (result != GP_OK)
@@ -477,8 +494,8 @@ gp_port_serial_open (gp_port *dev)
         dev->device_fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif
         if (dev->device_fd == -1) {
-                fprintf(stderr, "gp_port_serial_open: failed to open ");
-                perror(port);
+		gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+			_("Failed to open '%s'"), port);
                 return GP_ERROR_IO_OPEN;
         }
 
@@ -499,8 +516,8 @@ gp_port_serial_close (gp_port * dev)
 
 	if (dev->device_fd) {
 		if (close (dev->device_fd) == -1) {
-			gp_port_debug_printf (GP_DEBUG_LOW,
-					      "Could not close device!");
+			gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+				_("Could not close device!"));
 	                return GP_ERROR_IO_CLOSE;
 	        }
 		dev->device_fd = 0;

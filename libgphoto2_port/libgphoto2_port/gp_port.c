@@ -26,7 +26,6 @@
 #include <string.h>
 
 #include <gphoto2-port.h>
-#include <gphoto2-port-debug.h>
 #include <gphoto2-port-result.h>
 
 #include "gphoto2-port-core.h"
@@ -62,7 +61,7 @@ gp_port_library_load (GPPort *device, gp_port_type type) {
 	/* Open the correct library */
 	device->library_handle = GP_SYSTEM_DLOPEN (library);
 	if (!device->library_handle) {
-		gp_port_debug_printf(GP_DEBUG_LOW, "bad handle: %s %s ",
+		gp_log (GP_LOG_ERROR, "gphoto2-port", "bad handle: %s %s ",
 			library, GP_SYSTEM_DLERROR());
 		return (GP_ERROR_LIBRARY);
 	}
@@ -70,7 +69,7 @@ gp_port_library_load (GPPort *device, gp_port_type type) {
 	/* Load the operations */
 	ops_func = GP_SYSTEM_DLSYM(device->library_handle, "gp_port_library_operations");
 	if (!ops_func) {
-		gp_port_debug_printf(GP_DEBUG_LOW, "can't load ops: %s %s ",
+		gp_log (GP_LOG_ERROR, "gphoto2-port", "can't load ops: %s %s ",
 			library, GP_SYSTEM_DLERROR());
 		GP_SYSTEM_DLCLOSE(device->library_handle);
 		return (GP_ERROR_LIBRARY);
@@ -92,7 +91,7 @@ gp_port_new (GPPort **dev, gp_port_type type)
 	/* Make sure gphoto2-port-core is initialized */
 	gp_port_core_count ();
 
-        gp_port_debug_printf(GP_DEBUG_LOW, "Creating new device... ");
+        gp_log (GP_LOG_DEBUG, "gphoto2-port", "Creating new device...");
 
         switch(type) {
         case GP_PORT_SERIAL:
@@ -102,10 +101,10 @@ gp_port_new (GPPort **dev, gp_port_type type)
 		break;
         case GP_PORT_USB:
 #ifndef GP_PORT_SUPPORTED_USB
-		gp_port_debug_printf (GP_DEBUG_LOW, "libgphoto2_port has been "
-			"compiled without USB support. This probably means "
-			"you didn't have libusb installed prior compilation "
-			"of gphoto2.");
+		gp_log (GP_LOG_ERROR, "gphoto2-port", _("libgphoto2_port "
+			"has been compiled without USB support. This probably "
+			"means you didn't have libusb installed prior "
+			"compilation of gphoto2."));
 		return GP_ERROR_IO_SUPPORTED_USB;
 #endif
 		break;
@@ -180,8 +179,6 @@ gp_port_new (GPPort **dev, gp_port_type type)
         default:
 		return GP_ERROR_UNKNOWN_PORT;
         }
-
-        gp_port_debug_printf(GP_DEBUG_LOW, "Created device successfully...");
 
         return (GP_OK);
 }
@@ -407,47 +404,27 @@ gp_port_flush (GPPort *dev, int direction)
 
 int gp_port_usb_find_device (GPPort *dev, int idvendor, int idproduct)
 {
-        int retval;
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Looking for (%i, %i)...",
+		idvendor, idproduct);
 
-	if (! dev) {
-		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_usb_find_device: "
-					"called on NULL device!");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
+	CHECK_NULL (dev);
 
-        if (!dev->ops->find_device) {
-                gp_port_debug_printf(GP_DEBUG_LOW,
-                        "gp_port_usb_find_device: NULL find_device operation!");
-                return (GP_ERROR);
-        }
+	CHECK_SUPP (_("find_device"), dev->ops->find_device);
+	CHECK_RESULT (dev->ops->find_device (dev, idvendor, idproduct));
 
-        retval = dev->ops->find_device(dev, idvendor, idproduct);
-        gp_port_debug_printf(GP_DEBUG_LOW,
-                "gp_port_usb_find_device: find_device (0x%04x 0x%04x) %s",
-                idvendor, idproduct, retval < 0? "error":"ok");
-        return (retval);
+        return (GP_OK);
 }
 
 int gp_port_usb_clear_halt (GPPort *dev, int ep)
 {
-        int retval;
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Clear halt...");
 
-	if (! dev) {
-		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_usb_clear_halt: "
-					"called on NULL device!");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
+	CHECK_NULL (dev);
 
-        if (!dev->ops->clear_halt) {
-                gp_port_debug_printf(GP_DEBUG_LOW,
-                        "gp_port_usb_clear_halt: NULL clear halt operation!");
-                return (GP_ERROR);
-        }
+	CHECK_SUPP (_("clear_halt"), dev->ops->clear_halt);
+        CHECK_RESULT (dev->ops->clear_halt (dev, ep));
 
-        retval = dev->ops->clear_halt(dev, ep);
-        gp_port_debug_printf(GP_DEBUG_LOW,
-                "gp_port_usb_clear_halt: clear_halt %s", retval < 0? "error":"ok");
-        return (retval);
+        return (GP_OK);
 }
 
 int gp_port_usb_msg_write (GPPort *dev, int request, int value, int index,
@@ -455,28 +432,17 @@ int gp_port_usb_msg_write (GPPort *dev, int request, int value, int index,
 {
         int retval;
 
-	if (! dev) {
-		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_usb_msg_write: "
-					"called on NULL device!");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Writing message "
+		"(request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
+		request, value, index, size, size);
+	gp_log_data (GP_LOG_DEBUG, "gphoto2-port", bytes, size);
 
-        if (!dev->ops->msg_write) {
-                gp_port_debug_printf(GP_DEBUG_LOW,
-                        "gp_port_usb_msg_write: NULL msg_write operation!");
-                return (GP_ERROR);
-        }
+	CHECK_NULL (dev);
 
+	CHECK_SUPP (_("msg_write"), dev->ops->msg_write);
         retval = dev->ops->msg_write(dev, request, value, index, bytes, size);
+	CHECK_RESULT (retval);
 
-	gp_port_debug_printf(GP_DEBUG_HIGH, 
-			     "gp_port_usb_msg_write: msg_write returns %i, "
-			     "request=0x%x value=0x%x index=0x%x size=%i=0x%x",
-			     retval, request, value, index, size, size);
-	gp_port_debug_print_data(GP_DEBUG_HIGH, bytes, size);
-
-        gp_port_debug_printf(GP_DEBUG_LOW,
-                "gp_port_usb_msg_write: msg_write %s", retval < 0? "error":"ok");
         return (retval);
 }
 
@@ -485,28 +451,17 @@ int gp_port_usb_msg_read (GPPort *dev, int request, int value, int index,
 {
         int retval;
 
-	if (! dev) {
-		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_usb_msg_read: "
-					"called on NULL device!");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Reading message "
+		"(request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
+		request, value, index, size, size);
 
-        if (!dev->ops->msg_read) {
-                gp_port_debug_printf(GP_DEBUG_LOW,
-                        "gp_port_usb_msg_read: NULL msg_read operation!");
-                return (GP_ERROR);
-        }
+	CHECK_NULL (dev);
 
-        retval = dev->ops->msg_read(dev, request, value, index, bytes, size);
+	CHECK_SUPP (_("msg_read"), dev->ops->msg_read);
+        retval = dev->ops->msg_read (dev, request, value, index, bytes, size);
+	CHECK_RESULT (retval);
 
-        gp_port_debug_printf(GP_DEBUG_LOW,
-                "gp_port_usb_msg_read: msg_read %s", retval < 0? "error":"ok");
-
-	gp_port_debug_printf(GP_DEBUG_HIGH, 
-			     "gp_port_usb_msg_read: msg_read returns %i, "
-			     "request=0x%x value=0x%x index=0x%x size=%i=0x%x",
-			     retval, request, value, index, size, size);
-	gp_port_debug_print_data(GP_DEBUG_HIGH, bytes, retval);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", bytes, retval);
 
         return (retval);
 }

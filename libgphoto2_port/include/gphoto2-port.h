@@ -17,7 +17,6 @@
 #include "gphoto2-port-ieee1394.h"
 
 #include "gphoto2-port-result.h"
-#include "gphoto2-port-debug.h"
 
 #ifndef TRUE
 #define TRUE (0==0)

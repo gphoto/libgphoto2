@@ -28,9 +28,6 @@
 
 #include <gphoto2-port-result.h>
 
-//FIXME:
-#include <gphoto2-port-debug.h>
-
 typedef struct {
 	unsigned int id;
 	GPLogLevels  levels;
@@ -265,9 +262,6 @@ gp_log (GPLogLevels levels, const char *domain, const char *format, ...)
 	}
 
 	gp_log_history_append (buffer);
-
-//FIXME: Remove this at some point
-	gp_port_debug_printf (GP_DEBUG_LOW, buffer);
 }
 
 /**

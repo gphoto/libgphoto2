@@ -13,7 +13,6 @@ libgphoto2_port_la_SOURCES =	\
 	gphoto2-port-core.c	\
 	gphoto2-port-log.c	\
 	gp_port.c \
-	debug.c \
 	result.c \
 	portability.c
 

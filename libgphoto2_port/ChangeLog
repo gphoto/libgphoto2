@@ -1,3 +1,8 @@
+2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port-debug.h
+	* libgphoto2_port/debug.c: Removed
+
 2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2_port/result.c:
