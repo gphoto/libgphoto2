@@ -19,6 +19,7 @@
  */
 #include <gphoto2-library.h>
 #include <gphoto2-core.h>
+#include <gphoto2-debug.h>
 #include <gphoto2-frontend.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -195,14 +196,10 @@ static gint
 init_serial_connection (Camera *camera)
 {
         gint i;
-        gboolean bit_flag_8_bits, bit_flag_stop_2_bits, bit_flag_parity_on;
-        gboolean bit_flag_parity_odd, bit_flag_use_hw_flow_control;
+	KBitRate bit_rates;
+	KBitFlag bit_flags;
         guint test_bit_rate [10] = {9600, 115200, 57600, 38400, 19200, 4800,
                                     2400, 1200, 600, 300};
-        guint bit_rate [10] = {300, 600, 1200, 2400, 4800, 9600, 19200, 38400,
-                               57600, 115200};
-        gboolean bit_rate_supported [10] = {FALSE, FALSE, FALSE, FALSE, FALSE,
-                                            FALSE, FALSE, FALSE, FALSE,  FALSE};
         gp_port_settings settings;
         guint speed;
 
@@ -248,53 +245,108 @@ init_serial_connection (Camera *camera)
         /* What are the camera's abilities? */
         gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Getting IO "
                          "capabilities...\n");
-        CHECK (k_get_io_capability (camera->port, &bit_rate_supported [0],
-                        &bit_rate_supported [1], &bit_rate_supported [2],
-                        &bit_rate_supported [3], &bit_rate_supported [4],
-                        &bit_rate_supported [5], &bit_rate_supported [6],
-                        &bit_rate_supported [7], &bit_rate_supported [8],
-                        &bit_rate_supported [9], &bit_flag_8_bits,
-                        &bit_flag_stop_2_bits, &bit_flag_parity_on,
-                        &bit_flag_parity_odd, &bit_flag_use_hw_flow_control));
-
+        CHECK (k_get_io_capability (camera->port, &bit_rates, &bit_flags));
         if (!camera->port_info->speed) {
 
                 /* Set the highest possible speed */
                 for (i = 9; i >= 0; i--)
-                        if (bit_rate_supported [i])
-                                break;
+			if ((1 << i) & bit_rates)
+				break;
                 if (i < 0)
                         return (GP_ERROR_IO_SERIAL_SPEED);
-                camera->port_info->speed = bit_rate [i];
+		bit_rates = (1 << i);
+		switch (i) {
+		case 0:
+			camera->port_info->speed = 300;
+			break;
+		case 1:
+			camera->port_info->speed = 600;
+			break;
+		case 2:
+			camera->port_info->speed = 1200;
+			break;
+		case 3:
+			camera->port_info->speed = 2400;
+			break;
+		case 4:
+			camera->port_info->speed = 4800;
+			break;
+		case 5:
+			camera->port_info->speed = 9600;
+			break;
+		case 6:
+			camera->port_info->speed = 19200;
+			break;
+		case 7:
+			camera->port_info->speed = 38400;
+			break;
+		case 8:
+			camera->port_info->speed = 57600;
+			break;
+		case 9:
+			camera->port_info->speed = 115200;
+			break;
+		default:
+			return (GP_ERROR_IO_SERIAL_SPEED);
+		}
         } else {
 
                 /* Does the camera allow us to set the bit rate to the
                  * given one?
                  */
                 speed = camera->port_info->speed;
-		if (((speed ==    300) && (!bit_rate_supported[0])) ||
-                    ((speed ==    600) && (!bit_rate_supported[1])) ||
-                    ((speed ==   1200) && (!bit_rate_supported[2])) ||
-                    ((speed ==   2400) && (!bit_rate_supported[3])) ||
-                    ((speed ==   4800) && (!bit_rate_supported[4])) ||
-                    ((speed ==   9600) && (!bit_rate_supported[5])) ||
-                    ((speed ==  19200) && (!bit_rate_supported[6])) ||
-                    ((speed ==  38400) && (!bit_rate_supported[7])) ||
-                    ((speed ==  57600) && (!bit_rate_supported[8])) ||
-                    ((speed == 115200) && (!bit_rate_supported[9])) ||
-                    ((speed !=    300) && (speed !=    600) &&
-                     (speed !=   1200) && (speed !=   2400) &&
-                     (speed !=   4800) && (speed !=   9600) &&
-                     (speed !=  19200) && (speed !=  38400) &&
-                     (speed !=  57600) && (speed != 115200)))
+		if (((speed ==    300) && (!(bit_rates & (1 << 0)))) ||
+                    ((speed ==    600) && (!(bit_rates & (1 << 1)))) ||
+                    ((speed ==   1200) && (!(bit_rates & (1 << 2)))) ||
+                    ((speed ==   2400) && (!(bit_rates & (1 << 3)))) ||
+                    ((speed ==   4800) && (!(bit_rates & (1 << 4)))) ||
+                    ((speed ==   9600) && (!(bit_rates & (1 << 5)))) ||
+                    ((speed ==  19200) && (!(bit_rates & (1 << 6)))) ||
+                    ((speed ==  38400) && (!(bit_rates & (1 << 7)))) ||
+                    ((speed ==  57600) && (!(bit_rates & (1 << 8)))) ||
+                    ((speed == 115200) && (!(bit_rates & (1 << 9)))))
 			return (GP_ERROR_IO_SERIAL_SPEED);
+		switch (speed) {
+		case 300:
+			bit_rates = 1 << 0;
+			break;
+		case 600:
+			bit_rates = 1 << 1;
+			break;
+		case 1200:
+			bit_rates = 1 << 2;
+			break;
+		case 2400:
+			bit_rates = 1 << 3;
+			break;
+		case 4800:
+			bit_rates = 1 << 4;
+			break;
+		case 9600:
+			bit_rates = 1 << 5;
+			break;
+		case 19200:
+			bit_rates = 1 << 6;
+			break;
+		case 38400:
+			bit_rates = 1 << 7;
+			break;
+		case 57600:
+			bit_rates = 1 << 8;
+			break;
+		case 115200:
+			bit_rates = 1 << 9;
+			break;
+		default:
+			return (GP_ERROR_IO_SERIAL_SPEED);
+		}
         }
 
         /* Request the new speed */
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Setting speed to "
-                         "%i...\n", camera->port_info->speed);
-        CHECK (k_set_io_capability (camera->port, camera->port_info->speed,
-                                    TRUE, FALSE, FALSE, FALSE, FALSE));
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Setting new speed (%x)"
+			 "...", bit_rates);
+	bit_flags = K_BIT_FLAG_8_BITS;
+        CHECK (k_set_io_capability (camera->port, bit_rates, bit_flags));
 
         /* Reconnect */
         settings.serial.speed = camera->port_info->speed;

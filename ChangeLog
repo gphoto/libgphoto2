@@ -1,3 +1,8 @@
+2001-10-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/konica/konica.[c,h]:
+	* camlibs/konica/library.c: Moving towards glib-free code...
+
 2001-09-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/sierra/protocol.c:
