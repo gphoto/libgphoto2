@@ -148,6 +148,7 @@ long exif_next_ifd(unsigned char *exif,int num);
 int exif_get_comment(exifparser *exifdat, char *comment);
 int exif_set_comment(exifparser *exifdat, char *comment);
 int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars);
+long exif_get_slilend(unsigned char *data, int size);
 
 /*
  *  Utility functions: get fields in little-endian format,
