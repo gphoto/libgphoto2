@@ -1,3 +1,7 @@
+2001-11-05  Marcus Meissner <marcus@jet.franken.de>
+
+	* camlibs/jd11: Implemented progress reporting.
+
 2001-11-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/polaroid/pdc700.c: Checksum is only 1 byte long.
@@ -114,7 +118,6 @@
 
 	* libgphoto2/gphoto2-filesys.c: Fix bug (folder deletion)
 
->>>>>>> 1.310
 2001-11-01 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Chris <adapt@ihug.co.nz>:

@@ -274,11 +274,12 @@ jd11_erase_all(GPPort *port) {
 }
 
 int
-jd11_get_image_preview(GPPort *port,int nr, char **data, int *size) {
-	int	xsize,packets=0,curread=0,ret=0;
+jd11_get_image_preview(Camera *camera,int nr, char **data, int *size) {
+	int	xsize,curread=0,ret=0;
 	char	*indexbuf,*src,*dst;
 	int	y;
 	char	header[200];
+	GPPort	*port = camera->port;
 
 	if (nr < 0) return GP_ERROR_BAD_PARAMETERS;
 	ret = jd11_select_index(port);
@@ -299,8 +300,8 @@ jd11_get_image_preview(GPPort *port,int nr, char **data, int *size) {
 		ret=getpacket(port,indexbuf+curread,readsize);
 		if (ret==0)
 			break;
+		gp_camera_progress(camera,(1.0*curread)/xsize);
 		curread+=ret;
-		packets++;
 		if (ret<200)
 			break;
 		_send_cmd(port,0xfff1);
@@ -324,7 +325,7 @@ jd11_get_image_preview(GPPort *port,int nr, char **data, int *size) {
 
 int
 jd11_file_count(GPPort *port,int *count) {
-    int		xsize,packets=0,curread=0,ret=0;
+    int		xsize,curread=0,ret=0;
     char	tmpbuf[202];
 
     ret = jd11_select_index(port);
@@ -345,7 +346,6 @@ jd11_file_count(GPPort *port,int *count) {
 	if (ret==0)
 	    break;
 	curread+=ret;
-	packets++;
 	if (ret<200)
 	    break;
 	_send_cmd(port,0xfff1);
@@ -354,13 +354,13 @@ jd11_file_count(GPPort *port,int *count) {
 }
 
 static int
-serial_image_reader(GPPort *port,int nr,unsigned char ***imagebufs,int *sizes) {
-    int	picnum,packets,curread,ret=0;
+serial_image_reader(Camera *camera,int nr,unsigned char ***imagebufs,int *sizes) {
+    int	picnum,curread,ret=0;
+    GPPort *port = camera->port;
 
     jd11_select_image(port,nr);
     *imagebufs = (unsigned char**)malloc(3*sizeof(char**));
     for (picnum=0;picnum<3;picnum++) {
-	packets=0;
 	curread=0;
 	sizes[picnum] = jd11_imgsize(port);
 	(*imagebufs)[picnum]=(unsigned char*)malloc(sizes[picnum]+400);
@@ -371,8 +371,8 @@ serial_image_reader(GPPort *port,int nr,unsigned char ***imagebufs,int *sizes) {
 	    ret=getpacket(port,(*imagebufs)[picnum]+curread,readsize);
 	    if (ret==0)
 		break;
+	    gp_camera_progress(camera,1.0*picnum/3.0+(curread*1.0)/sizes[picnum]/3.0);
 	    curread+=ret;
-	    packets++;
 	    if (ret<200)
 		break;
 	    _send_cmd(port,0xfff1);
@@ -383,13 +383,13 @@ serial_image_reader(GPPort *port,int nr,unsigned char ***imagebufs,int *sizes) {
 
 
 int
-jd11_get_image_full(GPPort *port,int nr, char **data, int *size,int raw) {
+jd11_get_image_full(Camera *camera,int nr, char **data, int *size,int raw) {
     unsigned char	*s,*uncomp[3],**imagebufs;
     int			ret,sizes[3];
     char		header[200];
     int 		h;
 
-    ret = serial_image_reader(port,nr,&imagebufs,sizes);
+    ret = serial_image_reader(camera,nr,&imagebufs,sizes);
     if (ret!=GP_OK)
 	return ret;
     uncomp[0] = malloc(320*480);
