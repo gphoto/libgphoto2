@@ -88,7 +88,7 @@ gp_port_debug_history_append (const char *msg)
 	if (!debug_history) {
 		debug_history_size = 1024;
 		debug_history = malloc (sizeof (char) * debug_history_size);
-		memset (debug_history, 0, debug_history_size);
+		memset (debug_history, 0, sizeof (char) * debug_history_size);
 	}
 
 	/* First of all, skip the whole thing if the message is too long */
