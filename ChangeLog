@@ -8,6 +8,10 @@
 	* configure.in, libgphoto2_port/configure.in:
 		added AC_INLINE, AC_CONST for platforms that don't have it.
 
+2002-03-14  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* doc/gphoto2.txt: clarification of hotplug setup
+
 2002-03-13  Colin Marquardt  <colin@marquardt-home.de>
 
 	* configure.in: Added es to ALL_LINGUAS.
