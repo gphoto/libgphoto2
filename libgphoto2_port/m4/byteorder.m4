@@ -43,7 +43,7 @@ fi
 
 # We're only interested in the target CPU, but it's not always set
 effective_target="$target"
-if test "x$effective_target" = xNONE ; then
+if test "x$effective_target" = xNONE -o "x$effective_target" = x ; then
 	effective_target="$host"
 fi
 
