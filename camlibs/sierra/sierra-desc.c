@@ -148,6 +148,7 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		GP_DEBUG ("window name is %s", reg_desc_p->regs_long_name);
 		gp_widget_new (reg_desc_p->reg_widget_type, 
 			       _(reg_desc_p->regs_long_name), &child);
+		gp_widget_set_name (child, reg_desc_p->regs_short_name);
 		/*
 		 * Setting the info for the preference settings does not
 		 * make sense like it does for an icon button. This is

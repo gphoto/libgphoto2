@@ -1,3 +1,8 @@
+2005-01-04  Patrick Mansfield <patmans@users.sourceforge.net>
+	* sierra-desc.c: Call gp_widget_set_name to properly set the
+	  "name", so new gphoto2 --list-config and such are easier to
+	  use.
+
 2004-12-11  Patrick Mansfield <patmans@users.sourceforge.net>
 	* sierra.c, sierra.h: Per report from Emmanuel Beranger, add and
 	  use a SIERRA_MID_SPEED flag so we only use download speeds of
