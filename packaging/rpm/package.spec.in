@@ -122,10 +122,11 @@ install
 
 # we should move that into the proper Makefile.am eventually
 install -d -m755 %{buildroot}/etc/hotplug/usb/
-install -m755 packaging/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
+install -m755 packaging/linux-hotplug/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
 
 # build file list
-find %{buildroot} -type f -or -type l | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.files
+find %{buildroot} -type f -or -type l \
+        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.allfiles
 
 find %{buildroot} \( -type f -or -type l \) -and -name '*.so*' \
         | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.sofiles
@@ -141,7 +142,7 @@ echo "%docdir ${htmldir}" > %{name}-%{version}.docfiles
 
 ####################################
 %clean
-rm -rf "${RPM_BUILD_ROOT}"
+# rm -rf "${RPM_BUILD_ROOT}"
 
 ########################################################################
 # file list and installation for main package
@@ -152,15 +153,19 @@ rm -rf "${RPM_BUILD_ROOT}"
 %defattr(-,root,root)
 %{_bindir}/gphoto2
 %doc doc/gphoto2.txt doc/gphoto2-cli.txt
-%doc AUTHORS README COPYING
+%doc AUTHORS README COPYING doc/FAQ
+%doc packaging/linux-hotplug/usbcam.console
+%doc packaging/linux-hotplug/usbcam.user
+%doc packaging/linux-hotplug/usbcam.group
+%doc frontends/command-line/gphoto2.1
+%doc frontends/command-line/gphoto2.3
+%{_datadir}/locale/*/LC_MESSAGES/*
+%{_libdir}/pkgconfig/*.pc
+/etc/hotplug/usb/usbcam
+%{_datadir}/gphoto2/konica/*
 # -f #{name}-#{version}.docfiles
 #docdir doc/api/html
 #docdir libgphoto2_port/doc/html
-%{_libdir}/gphoto2portConf.sh
-%{_datadir}/locale/de/LC_MESSAGES/*
-%{_libdir}/pkgconfig/libgphoto-2.0.pc
-/etc/hotplug/usb/usbcam
-%{_datadir}/gphoto2/konica/*
 
 ####################################
 %post
