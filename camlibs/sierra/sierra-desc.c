@@ -283,8 +283,8 @@ camera_cam_desc_set_value (Camera *camera, CameraRegisterType *reg_p,
 			(val_name_p->u.value & reg_desc_p->regs_mask);
 		reg_p->reg_value = new_value;
 		GP_DEBUG ("set new val 0x%x; reg val 0x%x; msk 0x%x; val 0x%x ",
-			  new_value, reg_p->reg_value, reg_desc_p->regs_mask,
-			  val_name_p->u.value);
+			  new_value, (int)reg_p->reg_value,
+			  reg_desc_p->regs_mask, (int)val_name_p->u.value);
 		CHECK_STOP (camera, cam_desc_set_register (camera, reg_p,
 				&new_value, context));
 	} else if (reg_desc_p->reg_widget_type == GP_WIDGET_DATE) {

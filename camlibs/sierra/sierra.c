@@ -628,7 +628,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	GP_DEBUG ("*** folder: %s", folder);
 	GP_DEBUG ("*** filename: %s", filename);
 
-	id = gp_context_progress_start (context, 4, filename);
+	id = gp_context_progress_start (context, 4, "%s", filename);
 	/*
 	 * XXX the CHECK() macro's don't allow for cleanup on error.
 	 */
