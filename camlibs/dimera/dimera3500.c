@@ -21,6 +21,10 @@
  *
  * History:
  * $Log$
+ * Revision 1.22  2001/10/16 19:04:52  dfandrich
+ * Using CHECK to propagate more error codes to callers.
+ * Added support for i18n.
+ *
  * Revision 1.21  2001/10/16 18:01:35  hun
  * added #include lines that should have already been there
  *
@@ -226,6 +230,21 @@
 #include "mesalib.h"
 #include "dimeratab.h"
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 /* Legacy macros */
 /*#define ERROR( s ) { \
 	fprintf( stderr, "%s: %s\n", __FUNCTION__, s ); \
@@ -282,8 +301,9 @@ typedef struct {
 
 
 static char *models[] = {
-        "Relisys Dimera 3500",
         "Mustek VDC-3500",
+        "Relisys Dimera 3500",
+        "Trust DC-3500",
         NULL
 };
 
@@ -465,12 +485,10 @@ static int camera_capture (Camera *camera, int capture_type, CameraFilePath *pat
 
 	if (capture_type == GP_OPERATION_CAPTURE_IMAGE) {
 		if (cam->auto_flash) {
-			if ( mesa_snap_picture( camera->port, cam->exposure*4 ) != GP_OK)
-				return GP_ERROR;
+			CHECK (mesa_snap_picture( camera->port, cam->exposure*4 ));
 		}
 		else {
-			if ( mesa_snap_image( camera->port, cam->exposure*4 ) != GP_OK)
-				return GP_ERROR;
+			CHECK (mesa_snap_image( camera->port, cam->exposure*4 ));
 		}
 
 		/* User must download special RAM_IMAGE_TEMPLATE file */
@@ -540,28 +558,39 @@ static int camera_summary (Camera *camera, CameraText *summary) {
 	if (features.feature_bits_lo & AC_PRESENT)
 		battery_string[0] = '\0';
 	else
-		sprintf( battery_string, " (battery is %d%% full)",
+		snprintf( battery_string, sizeof(battery_string),
+			_(" (battery is %d%% full)"),
 			mesa_battery_check(camera->port));
 
-	sprintf( summary->text, 
-			"Dimera 3500 ver. %s %d/%d %d:%d\n"
+	snprintf( summary->text, sizeof(summary->text),
+			_("Dimera 3500 ver. %s %d/%d %d:%d\n"
 			"%d pictures used of approximately %d (high res) or %d (low res)\n"
 			"Camera features: "
-			  " %sFlash, %sDual Iris, %sResolution Switch, %sPower Light\n"
-			"Flash is %s, is %sready and is %sin fill mode\n"
+			  "%s, %s, %s, %s\n"
+			"Flash is %s, is %s and is %s\n"
 			"Resolution is set to %s\n"
-			"Camera is %sternally powered%s\n",
+			"Camera is %s powered%s\n"),
+
 			version_string, Id.year, Id.week, Id.man, Id.ver,
 			num, hi_pics_max, lo_pics_max,
-			(features.feature_bits_lo & HAVE_FLASH) ? "" : "NO ",
-			(features.feature_bits_lo & DUAL_IRIS) ? "" : "NO ",
-			(features.feature_bits_lo & HAVE_RES_SW) ? "" : "NO ",
-			(features.feature_bits_hi & NO_PWR_LIGHT) ? "NO " : "",
-			(features.feature_bits_lo & FLASH_ON) ? "ON" : "OFF",
-			(features.feature_bits_lo & FLASH_READY) ? "" : "NOT ",
-			(features.feature_bits_lo & FLASH_FILL) ? "" : "NOT ",
-			(features.feature_bits_lo & LOW_RES) ? "low (320x240)" : "high (640x480)",
-			(features.feature_bits_lo & AC_PRESENT) ? "ex" : "in",
+			(features.feature_bits_lo & HAVE_FLASH) ?
+				_("Flash") : _("NO Flash"),
+			(features.feature_bits_lo & DUAL_IRIS) ?
+				_("Dual Iris") : _("NO Dual Iris"),
+			(features.feature_bits_lo & HAVE_RES_SW) ?
+				_("Resolution Switch") : _("NO Resolution Switch"),
+			(features.feature_bits_hi & NO_PWR_LIGHT) ?
+				_("NO Power Light") : "Power Light",
+			(features.feature_bits_lo & FLASH_ON) ?
+				_("ON") : _("OFF"),
+			(features.feature_bits_lo & FLASH_READY) ?
+				_("ready") : _("NOT ready"),
+			(features.feature_bits_lo & FLASH_FILL) ?
+				_("in fill mode") : _("NOT in fill mode"),
+			(features.feature_bits_lo & LOW_RES) ?
+				_("low (320x240)") : _("high (640x480)"),
+			(features.feature_bits_lo & AC_PRESENT) ?
+				_("externally") : _("internally"),
 			battery_string
 	);
 
@@ -570,7 +599,7 @@ static int camera_summary (Camera *camera, CameraText *summary) {
 
 static int camera_manual (Camera *camera, CameraText *manual) {
 
-        strcpy(manual->text,
+	strcpy(manual->text, _(
 	"  Image glitches or problems communicating are\n"
 	"often caused by a low battery.\n"
 	"  Images captured remotely on this camera are stored\n"
@@ -578,26 +607,27 @@ static int camera_manual (Camera *camera, CameraText *manual) {
 	"  Exposure control when capturing all images is\n"
 	"automatically set by the capture preview function.\n"
 	"  Image quality is currently lower than it could be.\n"
-	);
+	));
 
-        return GP_OK;
+	return GP_OK;
 }
 
 static int camera_about (Camera *camera, CameraText *about) {
-	strcpy(about->text,
+	strcpy(about->text, _(
 		"gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
 		"This software was created with the\n"
 		"help of proprietary information belonging\n"
 		"to StarDot Technologies.\n"
+		"\n"
 		"Author:\n"
-		"Brian Beattie http://www.beattie-home.net\n"
+		"  Brian Beattie  <URL:http://www.beattie-home.net>\n"
 		"Contributors:\n"
-		"Chuck Homic <chuck@vvisions.com>\n"
+		"  Chuck Homic <chuck@vvisions.com>\n"
 		"     Converting raw camera images to RGB\n"
-		"Dan Fandrich <dan@coneharvesters.com>\n"
+		"  Dan Fandrich <dan@coneharvesters.com>\n"
 		"     Information on protocol, raw image format,\n"
 		"     gphoto2 port\n"
-		);
+		));
 	return GP_OK;
 }
 
@@ -654,7 +684,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 
 	if ( picnum != RAM_IMAGE_NUM )
 	{
-		update_status( "Getting Image Info" );
+		update_status( _("Getting Image Info") );
 		if ( (r = mesa_read_image_info( camera->port, picnum, NULL )) < 0 )
 		{
 			ERROR("Can't get Image Info");
@@ -671,7 +701,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 			*width = 640;
 		}
 
-		update_status( "Loading Image" );
+		update_status( _("Loading Image") );
 		if ( mesa_load_image( camera->port, picnum ) != GP_OK )
 		{
 			ERROR("Image Load failed");
@@ -687,7 +717,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 
 	*size = *height * *width;	/* 8 bits per pixel in raw CCD format */
 
-	update_status( "Downloading Image" );
+	update_status( _("Downloading Image") );
 
 	rbuffer = (u_int8_t *)malloc( *size );
 	if ( rbuffer == NULL )
@@ -710,7 +740,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 	for ( ia.row = 4, b = rbuffer; ia.row < (height + 4) ;
 			ia.row += ia.row_cnt, b += s )
 	{
-		update_status( "Downloading Image" );
+		update_status( _("Downloading Image") );
 		for ( retry = 10;; )
 		{
 
@@ -720,7 +750,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 
 			if ( (s == GP_ERROR_TIMEOUT || s == GP_ERROR_CORRUPTED_DATA) && --retry > 0)
 			{
-				update_status( "Retransmitting" );
+				update_status( _("Retransmitting") );
 				gp_debug_printf(GP_DEBUG_LOW, "dimera", "Dimera_Get_Full_Image: retrans"); 
 				continue;
 			}
@@ -729,15 +759,15 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 				/* retry count exceeded, or other error */
 			free( rbuffer );
 			*size = 0;
-			return 0;
+			return NULL;
 		}
-		gp_camera_progress(camera, ia.row / (height + 4) );
+		gp_camera_progress(camera, ia.row / (*height + 4) );
 	}
 #else
 	for ( ia.row = 4, b = rbuffer; ia.row < (*height + 4) ;
 			ia.row++, b += s )
 	{
-		update_status( "Downloading Image" );
+		update_status( _("Downloading Image") );
 		for ( retry = 10;; )
 		{
 
@@ -747,7 +777,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 
 			if ( (s == GP_ERROR_TIMEOUT || s == GP_ERROR_CORRUPTED_DATA) && --retry > 0)
 			{
-				update_status( "Retransmitting" );
+				update_status( _("Retransmitting") );
 				gp_debug_printf(GP_DEBUG_LOW, "dimera", "Dimera_Get_Full_Image: retrans"); 
 				continue;
 			}
@@ -756,7 +786,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 				/* retry count exceeded, or other error */
 			free( rbuffer );
 			*size = 0;
-			return 0;
+			return NULL;
 		}
 		gp_camera_progress(camera, ia.row / (*height + 4) );
 	}
@@ -914,7 +944,7 @@ int camera_init (Camera *camera) {
 
         cam = (DimeraStruct*)malloc(sizeof(DimeraStruct));
         if (cam == NULL)
-                return GP_ERROR;
+                return GP_ERROR_NO_MEMORY;
         camera->camlib_data = cam;
 
         /* Set the default exposure */
@@ -957,7 +987,7 @@ int camera_init (Camera *camera) {
                 return GP_ERROR_TIMEOUT;
         case GP_ERROR_MODEL_NOT_FOUND:
                 ERROR("Probably a modem");
-                return GP_ERROR;
+                return GP_ERROR_MODEL_NOT_FOUND;
         case GP_OK:
                 break;
         }
