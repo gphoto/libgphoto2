@@ -1338,9 +1338,8 @@ ptp_property_issupported(PTPParams* params, uint16_t property)
 	return 0;
 }
 
-/* ptp structures feeing functions */
-
-static void
+/* ptp structures freeing functions */
+void
 ptp_free_devicepropvalue(uint16_t dt, PTPPropertyValue* dpd) {
 	switch (dt) {
 	case PTP_DTC_INT8:	case PTP_DTC_UINT8:

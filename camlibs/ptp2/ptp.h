@@ -814,6 +814,7 @@ int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
 int ptp_property_issupported	(PTPParams* params, uint16_t property);
 
 void ptp_free_devicepropdesc	(PTPDevicePropDesc* dpd);
+void ptp_free_devicepropvalue	(uint16_t dt, PTPPropertyValue* dpd);
 void ptp_perror			(PTPParams* params, uint16_t error);
 
 const char*

@@ -964,7 +964,7 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 }
 
 typedef int (*get_func)(CameraWidget **widget, char* name, PTPDevicePropDesc *dpd);
-typedef int (*put_func)(CameraWidget *widget, PTPDevicePropDesc *dpd);
+typedef int (*put_func)(CameraWidget *widget, PTPPropertyValue *propval);
 
 static int _get_AUINT8_as_CHAR_ARRAY(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
 	int	j;
@@ -996,14 +996,20 @@ static int _get_STR(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
 }
 
 
-static int _put_AUINT8_as_CHAR_ARRAY(CameraWidget *widget, PTPDevicePropDesc *dpd) {
-	char *value;
-	int ret;
+static int _put_AUINT8_as_CHAR_ARRAY(CameraWidget *widget, PTPPropertyValue *propval) {
+	char	*value;
+	int	i, ret;
 
 	ret = gp_widget_get_value (widget, &value);
 	if (ret != GP_OK)
-		fprintf(stderr,"could not get value!\n");
+		return ret;
 	fprintf (stderr, "value is %s\n", value);
+	memset(propval,0,sizeof(PTPPropertyValue));
+	/* add \0 ? */
+	propval->a.v = malloc(strlen(value)*sizeof(PTPPropertyValue));
+	propval->a.count = strlen(value);
+	for (i=0;i<strlen(value);i++)
+		propval->a.v[i].u8 = value[i];
 	return (GP_OK);
 }
 
@@ -1029,16 +1035,19 @@ static int _get_UINT32_as_time(CameraWidget **widget, char *name, PTPDevicePropD
 	return (GP_OK);
 }
 
-static int _put_UINT32_as_time(CameraWidget *widget, PTPDevicePropDesc *dpd) {
+static int _put_UINT32_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
 	time_t	camtime;
+	int	ret;
 
-	gp_widget_get_value (widget,&camtime);
-	dpd->CurrentValue.u32 = camtime;
-	dpd->DataType = PTP_DTC_UINT32;
+	camtime = 0;
+	ret = gp_widget_get_value (widget,&camtime);
+	if (ret != GP_OK)
+		return ret;
+	propval->u32 = camtime;
 	return (GP_OK);
 }
 
-static int _put_None(CameraWidget *widget, PTPDevicePropDesc *dpd) {
+static int _put_None(CameraWidget *widget, PTPPropertyValue *dpd) {
 	return (GP_ERROR_NOT_SUPPORTED);
 }
 
@@ -1157,11 +1166,13 @@ static int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *section, *widget, *subwindow;
-	PTPDevicePropDesc dpd;
 	int menuno, submenuno, ret;
 
 	ret = gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow);
-	if (ret != GP_OK) return ret;
+	if (ret != GP_OK) {
+		/* fprintf(stderr,"main not found.\n"); */
+		return ret;
+	}
 	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
 		ret = gp_widget_get_child_by_label (subwindow, _(menus[menuno].name), &section);
 		/* fprintf (stderr, "menu %s\n", _(menus[menuno].name)); */
@@ -1170,17 +1181,25 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			continue;
 		}
 		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
+			PTPPropertyValue	propval;
+
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
-			if (!have_prop(camera,cursub->vendorid,cursub->propid)) continue;
-			memset(&dpd,0,sizeof(dpd));
-			ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
-			ret = gp_widget_get_child_by_label (section, _(cursub->name), &widget);
-			if (ret != GP_OK) {
-				/* fprintf (stderr, "submenu %s not found\n", _(cursub->name)); */
+			if (!have_prop(camera,cursub->vendorid,cursub->propid))
 				continue;
+
+			ret = gp_widget_get_child_by_label (section, _(cursub->name), &widget);
+			if (ret != GP_OK)
+				continue;
+
+			if (!gp_widget_changed (widget))
+				continue;
+
+			ret = cursub->putfunc (widget, &propval);
+			if (ret == GP_OK) {
+				ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
+			} else {
 			}
-			cursub->putfunc (widget, &dpd);
-			ptp_free_devicepropdesc(&dpd);
+			ptp_free_devicepropvalue (cursub->type, &propval);
 		}
 	}
 	return GP_OK;
@@ -1731,9 +1750,8 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->capture = camera_capture;
 	camera->functions->summary = camera_summary;
 	camera->functions->get_config = camera_get_config;
-/*
 	camera->functions->set_config = camera_set_config;
- */
+
 	/* We need some data that we pass around */
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)

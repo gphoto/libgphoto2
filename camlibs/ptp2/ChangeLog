@@ -1,3 +1,13 @@
+2004-09-05  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* ptp-pack.c: Pack integer arrays.
+	* library.c: Enabled setting of configuration.
+		- Made work and tested:
+		* Canon Camera Owner.
+		* Canon Time on camera.
+
+	* ptp.[ch]: Make ptp_free_propertyvalue nonstatic.
+
 2004-09-04  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Nikon Coolpix 2200
