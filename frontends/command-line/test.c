@@ -4,9 +4,7 @@
 
 #include <gphoto2.h>
 
-#define DEBUG
-
-int main (int argc, char **argv) {
+int test_library() {
 
 	CameraAbilities a;
 	CameraPortSettings s;
@@ -28,9 +26,7 @@ int main (int argc, char **argv) {
 	/* ---------------------------------------- */
 	if ((n = gp_camera_count())==GP_ERROR)
 		printf("cli: camera_count error!\n");
-#ifdef DEBUG
 	printf("cli: Number of cameras: %i\n", n);
-#endif
 	/* ----------------------------------- */
 	/* Display a list of available cameras */
 	/* ----------------------------------- */
@@ -38,9 +34,7 @@ int main (int argc, char **argv) {
 		if (gp_camera_name(x, buf)==GP_ERROR)
 			printf("cli: (ERROR) camera_name error! (%i)\n", x);
 
-#ifdef DEBUG
 		printf("cli: Camera #%i name: %s\n", x, buf);
-#endif
 	}
 
 	/* -------------------------- */
@@ -50,9 +44,8 @@ int main (int argc, char **argv) {
 	fflush(stdout);
 	fgets(buf, 1023, stdin);
 	camnum = atoi(buf);
-#ifdef DEBUG
 	printf("cli: Setting camera #%i active\n", camnum);
-#endif
+
 	/* ---------------------------------------------- */
 	/* Set the camera they chose as the active camera */
 	/* ---------------------------------------------- */
@@ -77,9 +70,7 @@ int main (int argc, char **argv) {
 	m=gp_file_count();
 	if (m == GP_ERROR)
 		printf("cli: (ERROR) file_count error!\n");
-#ifdef DEBUG
 	printf("cli: Number of files: %i\n", n);
-#endif
 
 	/* ------------------------------- */
 	/* Get a thumbnail from the camera */
