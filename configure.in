@@ -326,13 +326,13 @@ fi
 dnl Check for sysctl()
 AC_MSG_CHECKING([for sysctl on BSD])
 AC_TRY_COMPILE([
-	#include <unistd.h>
-	#include <sys/sysctl.h>
-	#if __FreeBSD__
+	#ifdef __FreeBSD__
 	#	 include <sys/types.h>
 	#elif (__NetBSD__ || __OpenBSD__)
 	#	 include <sys/param.h>
-	#endif],
+	#endif
+	#include <unistd.h>
+	#include <sys/sysctl.h>],
 	[int mib[2] = { CTL_HW, HW_PHYSMEM };
 	int value;
 	size_t valuelen = sizeof(value);
