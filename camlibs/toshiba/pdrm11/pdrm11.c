@@ -90,11 +90,12 @@ int pdrm11_get_filenames(GPPort *port, CameraList *list)
 	numPics = le16atoh(&buf[2]) + (le16atoh(&buf[0]) * 1024);
 	GP_DEBUG("found %d pictures", numPics);
 
-	CHECK(gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_INFO, 1, buf, 8));
 	
 
 	for(i=1;  i<numPics+1;  i++) {
 		CHECK( pdrm11_select_file(port, i) );
+
+		CHECK(gp_port_usb_msg_read(port, 0x01, 0xe600, i, buf, 14));
 
 		/* the filename is 12 chars starting at the third byte */
 		CHECK(gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_FILENAME, i, buf, 26));
@@ -117,12 +118,17 @@ int pdrm11_get_filenames(GPPort *port, CameraList *list)
 
 int pdrm11_select_file(GPPort *port, uint16_t file)
 {
+	char buf[10];
+
 	uint16_t picNum = htole16(file);
-	/* need to write 01 00 after the picture number */
-	uint16_t one = htole16(1);
+	uint16_t file_type;
+	
+	/* byte 4 of PDRM11_CMD_GET_INFO determines if the file is a jpeg or tiff */
+	CHECK(gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_INFO, file, buf, 8));
+	file_type = htole16(buf[4]);
 
 	CHECK( gp_port_usb_msg_write(port, 0x01, PDRM11_CMD_SELECT_PIC1, file, (char*)&picNum, 2) );
-	CHECK( gp_port_usb_msg_write(port, 0x01, PDRM11_CMD_SELECT_PIC2, file, (char*)&one, 2) );
+	CHECK( gp_port_usb_msg_write(port, 0x01, PDRM11_CMD_SELECT_PIC2, file, (char*)&file_type, 2) );
 
 	return(GP_OK);
 }
@@ -149,15 +155,31 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 	uint8_t temp;
 	int i;
 	int ret;
+	int file_type;
 
 		
 	gp_port_set_timeout(port,10000);
 	CHECK( pdrm11_select_file(port, picNum) );
 
 	if(type == GP_FILE_TYPE_PREVIEW) {
+		CHECK(gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_INFO, file, buf, 8));
+		file_type = buf[4];
+
 		CHECK( gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_THUMBSIZE, picNum, buf, 14) );
 		thumbsize = le16atoh( &buf[8] );
-		size = (uint32_t)thumbsize + 1;
+		
+		GP_DEBUG("file_type: %d.", file_type);
+
+		/* XXX having some trouble getting both jpeg and tiff thumbnails to work */
+		/* add 1 to file size only for jpeg thumbnails */
+		/* if(file_type == 1) { */
+			size = (uint32_t)thumbsize + 1;
+		/*
+		} else {
+			size = (uint32_t)thumbsize;
+		}
+		*/
+
 	} else {
 		CHECK( gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_FILESIZE, picNum, buf, 26) );
 		/* FIXME this is probably wrong on big-endian (camera being 16-bit) */

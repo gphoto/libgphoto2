@@ -57,6 +57,8 @@
 #define PDRM11_CMD_PING1	htole16( 0xd700 )
 #define PDRM11_CMD_PING2	htole16( 0xd800 )
 #define PDRM11_CMD_PING3	htole16( 0xd701 )
+#define PDRM11_TYPE_JPEG	1
+#define PDRM11_TYPE_TIFF	2
 
 
 int pdrm11_init(GPPort *port);
