@@ -19,6 +19,7 @@
 
 #include <gphoto2.h>
 
+#include "gphoto2-port-log.h"
 #include "util.h"
 #include "psa50.h"
 
@@ -108,15 +109,14 @@ dump_hex (Camera *camera, const char *msg, const unsigned char *buf, int len)
 void
 debug_message (Camera *camera, const char *msg, ...)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
-	va_list ap;
+	va_list args;
+        char buf[4096]
+;
+        va_start (args, msg);
+        vsnprintf (buf, sizeof(buf), msg, args);
+        va_end (args);
 
-
-	if (cs->debug) {
-		va_start (ap, msg);
-		vfprintf (stderr, msg, ap);
-		va_end (ap);
-	}
+        gp_log (GP_LOG_DEBUG, "canon", "%s", buf);
 }
 
 /****************************************************************************

@@ -1,3 +1,8 @@
+2001-10-23 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* camlibs/canon/util.c: made canon debug use gp_log. 
+	  this makes canon drv to compile again
+
 2001-10-23 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Fredrik <fredrik@krixor.xy.org>:
@@ -11,7 +16,7 @@
 
 	* camlibs/stv0680: Added support for "Aiptek PenCam Trio"
 
-2001-10-21 Hans Ulrich Niedermann <gp@n-dimensional.de>
+2001-10-22 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* packages/usbcam.group: added. linux-hotplug script
 	* packages/usbcam.console: added. linux-hotplug script
