@@ -269,9 +269,32 @@ static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data)
 {
-	/* Implement for example renaming of files */
+	Camera *camera = data;
+	int n;
+	SierraPicInfo pic_info;
 
-	return (GP_ERROR_NOT_SUPPORTED);
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	n++;
+
+	CHECK (camera_start (camera));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder));
+	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &pic_info));
+
+	if (info->file.fields & GP_FILE_INFO_PERMISSIONS) {
+		if (info->file.permissions & GP_FILE_PERM_DELETE) {
+			if (pic_info.locked == SIERRA_LOCKED_YES) {
+				CHECK_STOP (camera, sierra_set_locked (camera,
+						n, SIERRA_LOCKED_NO));
+			}
+		} else {
+			if (pic_info.locked == SIERRA_LOCKED_NO) {
+				CHECK_STOP (camera, sierra_set_locked (camera,
+						n, SIERRA_LOCKED_YES));
+			}
+		}
+	}
+
+	return (camera_stop (camera));
 }
 
 int camera_start (Camera *camera)

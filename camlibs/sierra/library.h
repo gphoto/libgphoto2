@@ -66,6 +66,7 @@ struct _SierraPicInfo {
 };
 int sierra_get_pic_info (Camera *camera, unsigned int n,
 			 SierraPicInfo *pic_info);
+int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked);
 
 /* Communications functions */
 int sierra_set_speed		  (Camera *camera, int speed);

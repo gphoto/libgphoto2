@@ -1147,3 +1147,13 @@ int sierra_get_pic_info (Camera *camera, unsigned int n,
 
 	return (GP_OK);
 }
+
+int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked)
+{
+	CHECK (sierra_set_int_register (camera, 4, n));
+
+	gp_camera_set_error (camera, _("Not implemented!"));
+	return (GP_ERROR);
+
+	return (GP_OK);
+}
