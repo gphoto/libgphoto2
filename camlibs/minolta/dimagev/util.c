@@ -209,7 +209,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		return GP_ERROR;
 	}
 
-	sleep(1);
+	sleep(3);
 
 #ifdef _gphoto_exif_
 	exifdat.header = file->data;
@@ -566,24 +566,24 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		return GP_ERROR;
 	}
 
-	sleep(1);
+	sleep(3);
 
-	file->data = dimagev_ycbcr_to_ppm(ycrcb_data, 9600);
+	file->data = dimagev_ycbcr_to_ppm(ycrcb_data);
 	file->size = 14413;
 
 	return GP_OK;
 }
 
 /* This function handles the ugliness of converting Y:Cb:Cr data to RGB. The
-   return value is a pointer to an array of unsigned chars that has (size +13)
+   return value is a pointer to an array of unsigned chars that has 14413)
    members. The additional thirteen bytes are the PPM "rawbits" header.
 */
-unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr, int size) {
+unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr) {
 	unsigned char *rgb_data, *ycrcb_current, *rgb_current;
 	int count=0;
 	unsigned int magic_r, magic_g, magic_b;
 
-	if ( ( rgb_data = malloc( ( 1.5 * size ) + 13 ) ) == NULL ) {
+	if ( ( rgb_data = malloc( 14413 ) ) == NULL ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_ycbcr_to_ppm::unable to allocate buffer for Y:Cb:Cr conversion");
 		return NULL;
 	}
@@ -591,41 +591,32 @@ unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr, int size) {
 	ycrcb_current = ycbcr;
 	rgb_current = &(rgb_data[13]);
 
-	rgb_data[0]='P';
-	rgb_data[1]='6';
-	rgb_data[2]='\n';
-	rgb_data[3]='8';
-	rgb_data[4]='0';
-	rgb_data[5]=' ';
-	rgb_data[6]='6';
-	rgb_data[7]='0';
-	rgb_data[8]='\n';
-	rgb_data[9]='2';
-	rgb_data[10]='5';
-	rgb_data[11]='5';
-	rgb_data[12]='\n';
+	/* This is the header for a PPM "rawbits" bitmap of size 80x60. */
+	if ( snprintf(rgb_data, 14, "P6\n80 60\n255\n") < 13 ) {
+		fprintf(stderr, "dimagev_ycbcr_to_ppm::failed to printf PPM header\n");
+		return NULL;
+	}
 
-	while ( count < size ) {
+	for ( count = 0 ; count < 9600 ; count+=4, ycrcb_current+=4, rgb_current+=6 ) {
 		magic_b = ( ( ycrcb_current[2] > 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[0];
-		rgb_current[2] = ( magic_b > 255 ? 255 : magic_b );
-		magic_r = ( ( ycrcb_current[3] > 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 - Y_COEFF ) ) + ycrcb_current[0];
-		rgb_current[0] = ( magic_r > 255 ? 255 : magic_r );
+		rgb_current[2] = ( magic_b > 255 ? 0 : magic_b );
+		magic_r = ( ( ycrcb_current[3] > 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 * Y_COEFF ) ) + ycrcb_current[0];
+		rgb_current[0] = ( magic_r > 255 ? 0 : magic_r );
 		magic_g = (( ycrcb_current[0] - ( CR_COEFF * rgb_current[2] ) ) - ( Y_COEFF * rgb_current[0])) / CB_COEFF ; 
-		rgb_current[1] = ( magic_g > 255 ? 255 : magic_g );
+		rgb_current[1] = ( magic_g > 255 ? 0 : magic_g );
 
-		magic_b = ( ( ycrcb_current[2] > 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[1];
-		rgb_current[5] = ( magic_b > 255 ? 255 : magic_b );
-		magic_r = ( ( ycrcb_current[3] > 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 - Y_COEFF ) ) + ycrcb_current[1];
-		rgb_current[3] = ( magic_r > 255 ? 255 : magic_r );
-		magic_g = (( ycrcb_current[1] - ( CR_COEFF * rgb_current[5] ) ) - ( Y_COEFF * rgb_current[3])) / CB_COEFF ; 
-		rgb_current[4] = ( magic_g > 255 ? 255 : magic_g );
-
-		/* Wipe everything clean */
+		/* Wipe everything clean. */
 		magic_b = magic_r = magic_g = 0;
 
-		count += 4;
-		ycrcb_current += 4;
-		rgb_current += 6;
+		magic_b = ( ( ycrcb_current[2] > 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[1];
+		rgb_current[5] = ( magic_b > 255 ? 0 : magic_b );
+		magic_r = ( ( ycrcb_current[3] > 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 * Y_COEFF ) ) + ycrcb_current[1];
+		rgb_current[3] = ( magic_r > 255 ? 0 : magic_r );
+		magic_g = (( ycrcb_current[1] - ( CR_COEFF * rgb_current[5] ) ) - ( Y_COEFF * rgb_current[3])) / CB_COEFF ; 
+		rgb_current[4] = ( magic_g > 255 ? 0 : magic_g );
+
+		/* Wipe everything clean. */
+		magic_b = magic_r = magic_g = 0;
 	}
 
 	return rgb_data;
