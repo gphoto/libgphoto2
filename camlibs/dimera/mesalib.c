@@ -162,7 +162,7 @@ mesa_port_open( gp_port **dev, char const *device )
 	debuglog("mesa_port_open()");
 	if ((ret = gp_port_new(dev, GP_PORT_SERIAL)) != GP_OK) {
 		debuglog("mesa_port_open: error on gp_port_new");
-		return (ret);
+		return ret;
 	}
 	debuglog("mesa_port_open(): settings");
 	gp_port_timeout_set(*dev, 5000);
@@ -176,9 +176,9 @@ mesa_port_open( gp_port **dev, char const *device )
 	if (gp_port_settings_set(*dev, settings) < 0)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	if (gp_port_open(*dev) != GP_OK) {
+	if ((ret = gp_port_open(*dev)) != GP_OK) {
 		debuglog("mesa_port_open(): error selecting port settings");
-		return GP_ERROR_IO;
+		return ret;
 	}
 
 	return GP_OK;
@@ -246,9 +246,7 @@ mesa_set_speed( gp_port *port, int speed )
 
 	gp_port_settings_get(port, &settings);
 	settings.serial.speed = speed;
-	gp_port_settings_set(port, settings);
-
-	return GP_OK;
+	return gp_port_settings_set(port, settings);
 }
 
 /* get camera version number */
