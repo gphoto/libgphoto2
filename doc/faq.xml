@@ -24,10 +24,36 @@ About this file:
 
 <?xml-stylesheet type="text/css" href="docbook-xml.css"?>
 
+<!--
+  leave DOCTYPE commented out for easy inclusion as external entity 
+-->
 <!-- DOCTYPE qandaset PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
   "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" -->
 
 <qandaset>
+
+  <qandaentry>
+    <question>
+      <simpara>What can I do about the error message "Could not find USB device"?</simpara>
+    </question>
+    <answer>
+      <para>
+	The exact error message looks like
+      </para>
+      <screen>
+Could not find USB device (vendor 0x0000, product 0x0000). Make
+sure this device is connected to the computer
+      </screen>
+      <para>
+	You have to set up the permissions on your USB device correctly.
+	This is described in The gPhoto2 Manual, which is available at
+
+	<ulink url="http://n-dimensional.de/projects/digicam/The_gPhoto2_Manual/">http://n-dimensional.de/projects/digicam/The_gPhoto2_Manual/</ulink>.
+
+	See especially the section "Setting up permissions for USB ports".
+      </para>
+    </answer>
+  </qandaentry>
 
   <qandaentry>
     <question>

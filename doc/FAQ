@@ -5,19 +5,6 @@ NOTE: Some FAQs have already moved to faq.xml and hence into
 
 ========================================================================
 
-Q: I get the error message
-
-      Could not find USB device (vendor 0x0000, product 0x0000). Make
-      sure this device is connected to the computer
-
-   What can I do to make it work?
-
-A: You have to set up the permissions on your USB device correctly.
-   For Linux, this is described in the file named gphoto2.txt in
-   your gphoto2 documentation directory (named doc/ in the source tree).
-
-========================================================================
-
 Q: gphoto2 does not work, the driver reports some error messages.
    What shall I do?
 
