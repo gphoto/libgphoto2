@@ -56,8 +56,8 @@
 
 #define CAMERA_UNUSED(c)						\
 {									\
-	(c)->pc->in_use = 0;						\
-	if (!(c)->pc->ref_count)					\
+	(c)->pc->used--;						\
+	if (!(c)->pc->used && !(c)->pc->ref_count)			\
 		gp_camera_free (c);					\
 }
 
@@ -81,13 +81,23 @@
  * The solutions:
  *  (1) gp_port_open before each operation, gp_port_close after. This has
  *      shown to not work with some drivers (digita/dc240) for serial ports,
- *      because the camera will notice that (how? Please tell us!),
+ *      because the camera will notice that [1],
  *      reset itself and will therefore need to be reinitialized. If you want
  *      this behaviour, #define HAVE_MULTI.
  *  (2) Leave it up to the frontend to release the camera by calling
  *      gp_camera_exit after camera operations. This is what is implemented
  *      right now. The drawback is that re-initialization takes more time than
  *      just reopening the port. However, it works for all camera drivers.
+ *
+ * [1] Marr <marr@shianet.org> writes:
+ *
+ *     With the Digita-OS cameras at least, one of the RS-232 lines is tied
+ *     to a 'Reset' signal on the camera.  I quote from the Digita 'Host
+ *     Interface Specification' document:
+ *
+ *     "The Reset signal is a pulse on the Reset/Att line (which cooresponds 
+ *     [sic] to pin 2 at the camera side) sent from the host computer to the 
+ *     camera.  This pulse must be at least 50us."
  */
 
 #ifdef HAVE_MULTI
@@ -190,7 +200,7 @@
 
 #define CHECK_INIT(c)							\
 {									\
-	(c)->pc->in_use = 1;						\
+	(c)->pc->used++;						\
 	if (!(c)->pc->lh)						\
 		CR((c), gp_camera_init(c));				\
 }
@@ -218,7 +228,7 @@ struct _CameraPrivateCore {
 	char error[2048];
 
 	unsigned int ref_count;
-	unsigned char in_use;
+	unsigned char used;
 
 	int initialized;
 };
@@ -675,7 +685,7 @@ gp_camera_unref (Camera *camera)
 	if (!camera->pc->ref_count) {
 
 		/* We cannot free a camera that is currently in use */
-		if (!camera->pc->in_use)
+		if (!camera->pc->used)
 			gp_camera_free (camera);
 	}
 
