@@ -313,15 +313,11 @@ canon_usb_unlock_keys (Camera *camera)
 {
 	unsigned char *c_res;
 	int bytes_read;
-	char payload[4];
 
 	GP_DEBUG ("canon_usb_unlock_keys()");
 
 	switch (camera->pl->md->model) {
 		case CANON_EOS_D30:
-			memset (payload, 0, sizeof (payload));
-			payload[0] = 0x06;
-
 			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
 						    &bytes_read, NULL, 0);
 			/* Should look at the bytes returned, but I don't know what they mean */
