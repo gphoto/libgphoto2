@@ -158,7 +158,7 @@ int execute_options (int argc, char **argv) {
                                    }  else
                                         ret=(*option[x].execute)(NULL);
                                    if (ret != GP_OK) {
-                                        // cli_error_print("Option \"%s\" did not execute properly.",op);
+                                        /* cli_error_print("Option \"%s\" did not execute properly.",op); */
                                         return (ret);
                                    }
                                 }

@@ -1143,7 +1143,7 @@ set_globals (void)
 		} else {
 
 			/* More than one camera detected */
-//FIXME: Let the user choose from the list!
+/*FIXME: Let the user choose from the list!*/
 			CHECK_RESULT (gp_list_get_name (&list, 0, &name));
 			CHECK_RESULT (gp_list_get_value (&list, 0, &value));
 			model = gp_abilities_list_lookup_model (al, name);
