@@ -99,7 +99,6 @@ ptp_sendreq(PTPParams* params, PTPReq* databuf, short code)
 	req->trans_id = params->transaction_id;
 	params->transaction_id++;
 
-	ptp_debug (params, "Sending request...");
 	ret=params->write_func ((unsigned char *) req, PTP_REQ_LEN,
 				 params->data);
 	if (databuf==NULL) free (req);
@@ -188,7 +187,6 @@ ptp_transaction(PTPParams* params, PTPReq** req, unsigned short code,
 			break;
 		case PTP_DP_GETDATA:
 			if (datalen>PTP_REQ_DATALEN) {
-				ptp_debug (params, "REALLOCING \n");
 				*req=realloc(*req, datalen+PTP_REQ_HDR_LEN);
 				if (*req==NULL) {
 					ptp_error(params, "realloc while 0x%4x transaction error", code);

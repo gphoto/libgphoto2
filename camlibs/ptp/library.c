@@ -433,7 +433,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CR (n = gp_filesystem_number (fs, folder, filename));
 	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		     camera->pl->params.handles.handler[n], &oi));
-	GP_DEBUG ("ObjectInfo for '%s':");
+/*	GP_DEBUG ("ObjectInfo for '%s':");
 	GP_DEBUG ("  StorageID: %d", oi.StorageID);
 	GP_DEBUG ("  ObjectFormat: %d", oi.ObjectFormat);
 	GP_DEBUG ("  ObjectCompressedSize: %d", oi.ObjectCompressedSize);
@@ -448,7 +448,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("  AssociationType: %d", oi.AssociationType);
 	GP_DEBUG ("  AssociationDesc: %d", oi.AssociationDesc);
 	GP_DEBUG ("  SequenceNumber: %d", oi.SequenceNumber);
-
+*/
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE;
 
 	info->file.size   = oi.ObjectCompressedSize;
