@@ -167,8 +167,7 @@ canon_int_switch_camera_off (Camera *camera)
 			GP_DEBUG ("Not trying to shut down USB camera...");
 			break;
 		case GP_PORT_NONE:
-		default:
-			GP_DEBUG ("Unknown camera->port->type in canon_int_switch_camera_off()");
+		GP_PORT_DEFAULT
 	}
 	clear_readiness (camera);
 }
@@ -698,14 +697,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_debug_printf (GP_DEBUG_HIGH, "canon", "camera_file_get: "
 			 "Found picture, '%s' '%s'", path, filename);
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			/* add trailing backslash */
 			if (path[strlen (path) - 1] != '\\')
 				strncat (path, "\\", sizeof (path) - 1);
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			/* find rightmost \ in path */
 			if (strrchr (path, '\\') == NULL) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_get: "
@@ -717,6 +715,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			path[strrchr (path, '\\') - path + 1] = '\0';
 
 			break;
+		GP_PORT_DEFAULT
 	}
 
 	switch (type) {
@@ -950,7 +949,7 @@ _get_last_dir (Camera *camera, struct canon_dir *tree, char *path, char *temppat
 	if (tree == NULL)
 		return GP_ERROR;
 
-	if (camera->pl->canon_comm_method != CANON_USB) {
+	if (camera->port->type == GP_PORT_SERIAL) {
 		path = strchr (path, 0);
 		*path = '\\';
 	}
@@ -958,14 +957,14 @@ _get_last_dir (Camera *camera, struct canon_dir *tree, char *path, char *temppat
 	while (tree->name) {
 		if (!is_image (tree->name) && !is_movie (tree->name)
 		    && !is_thumbnail (tree->name)) {
-			switch (camera->pl->canon_comm_method) {
-				case CANON_USB:
+			switch (camera->port->type) {
+				case GP_PORT_USB:
 					strcpy (path, tree->name);
 					break;
-				case CANON_SERIAL_RS232:
-				default:
+				case GP_PORT_SERIAL:
 					strcpy (path + 1, tree->name);
 					break;
+				GP_PORT_DEFAULT
 			}
 		}
 
@@ -1369,12 +1368,10 @@ camera_init (Camera *camera)
 		case GP_PORT_USB:
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "GPhoto tells us that we should use a USB link.\n");
-			camera->pl->canon_comm_method = CANON_USB;
 
 			return canon_usb_init (camera);
 			break;
 		case GP_PORT_SERIAL:
-		default:
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "GPhoto tells us that we should use a RS232 link.\n");
 
@@ -1388,12 +1385,25 @@ camera_init (Camera *camera)
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "Camera transmission speed : %i\n",
 					 camera->pl->speed);
-			camera->pl->canon_comm_method = CANON_SERIAL_RS232;
 
 			return canon_serial_init (camera);
+			break;
+		default:
+			gp_camera_set_error (camera, 
+					     _("Unsupported port type %i = 0x%x given. "
+					       "Initialization impossible."), 
+					     camera->port->type, camera->port->type);
+			return GP_ERROR_NOT_SUPPORTED;
 			break;
 	}
 
 	/* NOT REACHED */
 	return GP_ERROR;
 }
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */

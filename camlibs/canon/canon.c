@@ -88,16 +88,16 @@ canon_int_directory_operations (Camera *camera, const char *path, int action)
 			 "called to %s the directory '%s'",
 			 canon_usb_funct == CANON_USB_FUNCTION_MKDIR ? "create" : "remove",
 			 path);
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, canon_usb_funct, &len, path,
 						  strlen (path) + 1);
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, type, 0x11, &len, path,
 						     strlen (path) + 1, NULL);
 			break;
+		GP_PORT_DEFAULT
 	}
 
 	if (!msg) {
@@ -136,15 +136,14 @@ canon_int_identify_camera (Camera *camera)
 
 	GP_DEBUG ("canon_int_identify_camera() called");
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_IDENTIFY_CAMERA,
 						  &len, NULL, 0);
 			if (!msg)
 				return GP_ERROR;
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x01, 0x12, &len, NULL);
 			if (!msg) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon",
@@ -153,7 +152,7 @@ canon_int_identify_camera (Camera *camera)
 				return GP_ERROR;
 			}
 			break;
-
+		GP_PORT_DEFAULT
 	}
 
 	if (len != 0x4c)
@@ -187,15 +186,14 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 
 	GP_DEBUG ("canon_int_get_battery()");
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_POWER_STATUS,
 						  &len, NULL, 0);
 			if (!msg)
 				return GP_ERROR;
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x0a, 0x12, &len, NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
@@ -203,6 +201,7 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 			}
 
 			break;
+		GP_PORT_DEFAULT
 	}
 
 	if (len != 8)
@@ -243,8 +242,8 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 	attr[0] = attr[1] = attr[2] = 0;
 	attr[3] = attrs;
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			if ((4 + strlen (dir) + 1 + strlen (file) + 1) > sizeof (payload)) {
 				GP_DEBUG ("canon_int_set_file_attributes: "
 					  "dir '%s' + file '%s' too long, "
@@ -279,12 +278,12 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 			}
 
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0xe, 0x11, &len, attr, 4, dir,
 						     strlen (dir) + 1, file, strlen (file) + 1,
 						     NULL);
 			break;
+		GP_PORT_DEFAULT
 	}
 
 	if (!msg) {
@@ -320,16 +319,16 @@ canon_int_set_owner_name (Camera *camera, const char *name)
 		return 0;
 	}
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_CAMERA_CHOWN,
 						  &len, name, strlen (name) + 1);
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x05, 0x12, &len, name,
 						     strlen (name) + 1, NULL);
 			break;
+		GP_PORT_DEFAULT
 	}
 
 	if (!msg) {
@@ -364,21 +363,21 @@ canon_int_get_time (Camera *camera)
 
 	GP_DEBUG ("canon_int_get_time()");
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_GET_TIME, &len,
 						  NULL, 0);
 			if (!msg)
 				return GP_ERROR;
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x03, 0x12, &len, NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
 				return GP_ERROR;
 			}
 			break;
+		GP_PORT_DEFAULT
 	}
 
 	if (len != 0x10)
@@ -404,15 +403,14 @@ canon_int_set_time (Camera *camera)
 	for (i = 0; i < 4; i++)
 		pcdate[i] = (date >> (8 * i)) & 0xff;
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_SET_TIME, &len,
 						  NULL, 0);
 			if (!msg)
 				return GP_ERROR;
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x04, 0x12, &len, pcdate,
 						     sizeof (pcdate),
 						     "\x00\x00\x00\x00\x00\x00\x00\x00", 8,
@@ -423,6 +421,7 @@ canon_int_set_time (Camera *camera)
 			}
 
 			break;
+		GP_PORT_DEFAULT
 	}
 
 	if (len != 0x10)
@@ -445,18 +444,14 @@ canon_int_ready (Camera *camera)
 
 	GP_DEBUG ("canon_int_ready()");
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			res = canon_usb_ready (camera);
 			break;
-		case CANON_SERIAL_RS232:
+		case GP_PORT_SERIAL:
 			res = canon_serial_ready (camera);
 			break;
-		default:
-			gp_camera_set_error (camera,
-					     "Unknown canon_comm_method in canon_int_ready()");
-			res = GP_ERROR;
-			break;
+		GP_PORT_DEFAULT
 	}
 
 	return (res);
@@ -478,8 +473,8 @@ canon_int_get_disk_name (Camera *camera)
 
 	GP_DEBUG ("canon_int_get_disk_name()");
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			res = canon_usb_long_dialogue (camera,
 						       CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,
 						       &msg, &len, 1024, NULL, 0, 0);
@@ -489,17 +484,17 @@ canon_int_get_disk_name (Camera *camera)
 				return NULL;
 			}
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x0a, 0x11, &len, NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
 				return NULL;
 			}
 			break;
+		GP_PORT_DEFAULT
 	}
 
-	if (camera->pl->canon_comm_method == CANON_SERIAL_RS232) {
+	if (camera->port->type == GP_PORT_SERIAL) {
 		/* this is correct even though it looks a bit funny. canon_serial_dialogue()
 		 * has a static buffer, strdup() part of that buffer and return to our caller.
 		 */
@@ -536,15 +531,14 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_int_get_disk_name_info() name '%s'",
 			 name);
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DISK_INFO, &len,
 						  name, strlen (name) + 1);
 			if (!msg)
 				return GP_ERROR;
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x09, 0x11, &len, name,
 						     strlen (name) + 1, NULL);
 			if (!msg) {
@@ -552,6 +546,7 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 				return GP_ERROR;
 			}
 			break;
+		GP_PORT_DEFAULT
 	}
 
 	if (len < 12) {
@@ -653,20 +648,16 @@ canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const c
 	*result_dir = NULL;
 
 	/* Fetch all directory entrys from the camera */
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			res = canon_usb_get_dirents (camera, &dirent_data, &dirents_length,
 						     path);
 			break;
-		case CANON_SERIAL_RS232:
+		case GP_PORT_SERIAL:
 			res = canon_serial_get_dirents (camera, &dirent_data, &dirents_length,
 							path);
 			break;
-		default:
-			gp_camera_set_error (camera, "canon_list_directory: "
-					     "called for something we do not "
-					     "know how to handle");
-			return GP_ERROR_BAD_PARAMETERS;
+		GP_PORT_DEFAULT
 	}
 	if (res != GP_OK)
 		return res;
@@ -713,7 +704,7 @@ canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const c
 			(end_of_data - dirent_data));
 
 		if (pos + CANON_MINIMUM_DIRENT_SIZE > end_of_data) {
-			if (camera->pl->canon_comm_method == CANON_SERIAL_RS232) {
+			if (camera->port->type == GP_PORT_SERIAL) {
 				/* check to see if it is only NULL bytes left,
 				 * that is not an error for serial cameras
 				 * (at least the A50 adds five zero bytes at the end)
@@ -903,17 +894,17 @@ canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const c
 int
 canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int *length)
 {
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			return canon_usb_get_file (camera, name, data, length);
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			*data = canon_serial_get_file (camera, name, length);
 			if (*data)
 				return GP_OK;
 			return GP_ERROR;
 			break;
+		GP_PORT_DEFAULT
 	}
 }
 
@@ -938,8 +929,8 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 	GP_DEBUG ("canon_int_get_thumbnail() called for file '%s'", name);
 
 	gp_camera_progress (camera, 0);
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			i = canon_usb_get_thumbnail (camera, name, &data, length);
 			if (i != GP_OK) {
 				GP_DEBUG ("canon_usb_get_thumbnail() failed, "
@@ -947,8 +938,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 				return NULL;	// XXX for now
 			}
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			if (camera->pl->receive_error == FATAL_ERROR) {
 				GP_DEBUG ("ERROR: can't continue a fatal "
 					  "error condition detected");
@@ -1005,6 +995,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 							     &total_file_size);
 			}
 			break;
+		GP_PORT_DEFAULT
 	}
 
 	switch (camera->pl->md->model) {
@@ -1101,8 +1092,8 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 	unsigned char *msg;
 	int len, payload_length;
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			memcpy (payload, dir, strlen (dir) + 1);
 			memcpy (payload + strlen (dir) + 1, name, strlen (name) + 1);
 			payload_length = strlen (dir) + strlen (name) + 2;
@@ -1112,8 +1103,7 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 				return GP_ERROR;
 
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0xd, 0x11, &len, dir,
 						     strlen (dir) + 1, name, strlen (name) + 1,
 						     NULL);
@@ -1122,6 +1112,7 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 				return GP_ERROR;
 			}
 			break;
+		GP_PORT_DEFAULT
 	}
 
 	if (len != 4) {
@@ -1150,13 +1141,20 @@ int
 canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			return canon_usb_put_file (camera, file, destname, destpath);
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			return canon_serial_put_file (camera, file, destname, destpath);
 			break;
+		GP_PORT_DEFAULT
 	}
 }
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */

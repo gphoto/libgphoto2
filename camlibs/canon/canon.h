@@ -128,7 +128,6 @@ struct _CameraPrivateLibrary
 	char ident[32];   /* Model ID string given by the camera */
 	char owner[32];   /* Owner name */
 	char firmwrev[4]; /* Firmware revision */
-	int canon_comm_method;
 	unsigned char psa50_eot[8];
 
 	int receive_error;
@@ -165,16 +164,11 @@ struct _CameraPrivateLibrary
 #define CANON_MINIMUM_DIRENT_SIZE	11
 
 
-
-/*
- * Our driver now supports both USB and serial communications
- */
-#define CANON_SERIAL_RS232 0
-#define CANON_USB 1
-
 #define DIR_CREATE 0
 #define DIR_REMOVE 1
 
+/* abbreviation for default branch in switch (camera->port->type) statements */
+#define GP_PORT_DEFAULT	default: GP_DEBUG ("Unsupported port type %i = 0x%x", camera->port->type, camera->port->type); break;
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
@@ -227,3 +221,10 @@ char *gphoto2canonpath(char *path);
 #define GP_MODULE "canon"
 
 #endif /* _CANON_H */
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
