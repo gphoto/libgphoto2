@@ -1,3 +1,15 @@
+2003-03-04  matthschulz <matthschulz@gmx.net>
+
+	* lmini.c (wakeup_camera): rewrote to make it work
+	(largan_recv_reply): fixed reply reading
+	(largan_erase):  now works
+	(largan_get_pict): now works
+	
+	* largan.c (camera_init): delete_file_func
+	(delete_all_func): parameter change
+	(delete_file_func): implemented file deletion
+
+
 2003-01-29  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* lmini.c: changed packet handling. More debug. Better return code

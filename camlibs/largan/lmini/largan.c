@@ -185,6 +185,24 @@ convert_name_to_index (const char * name)
 
 
 static int
+delete_file_func (CameraFilesystem *fs, const char *folder,
+		  const char *filename, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	int ret;
+	int index;
+	
+	/* Delete one file from the camera. 
+	(only the last file can be deleted)*/
+	
+	index = convert_name_to_index (filename);
+	ret = largan_erase (camera, index);
+	
+	return ret;
+}
+
+
+static int
 delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		 GPContext *context)
 {
@@ -195,7 +213,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	 * such a functionality, just don't implement this function.
 	 */
 
-	ret = largan_erase (camera, 1);
+	ret = largan_erase (camera, 0xff);
 	
 	return ret;
 }
@@ -203,18 +221,17 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	int ret;
-	/*
-	 * Capture a preview and return the data in the given file (again,
-	 * use gp_file_set_data_and_size, gp_file_set_mime_type, etc.).
-	 * libgphoto2 assumes that previews are NOT stored on the camera's 
-	 * disk. If your camera does, please delete it from the camera.
-	 */
-	ret = largan_capture (camera);
-	if (ret != GP_OK) {
-		return ret;
-	}
-
+ 	int ret;
+ 	/*
+ 	 * Capture a preview and return the data in the given file (again,
+ 	 * use gp_file_set_data_and_size, gp_file_set_mime_type, etc.).
+ 	 * libgphoto2 assumes that previews are NOT stored on the camera's 
+ 	 * disk. If your camera does, please delete it from the camera.
+ 	*/ 
+ 	ret = largan_capture (camera);
+ 	if (ret != GP_OK) {
+ 		return ret;
+ 	}
 
 	return (GP_OK);
 }
@@ -315,7 +332,7 @@ camera_init (Camera *camera, GPContext *context)
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
         camera->functions->capture              = camera_capture;
-        camera->functions->capture_preview      = camera_capture_preview;
+	/*        camera->functions->capture_preview      = camera_capture_preview;*/
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
@@ -325,8 +342,8 @@ camera_init (Camera *camera, GPContext *context)
 				      NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL,
 				      camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-				      NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, 
+				      delete_file_func, camera);
 	gp_filesystem_set_folder_funcs (camera->fs, NULL,
 					delete_all_func, NULL, NULL, camera);
 
@@ -365,7 +382,7 @@ camera_init (Camera *camera, GPContext *context)
 	if (ret < 0)
 		return (ret);
 
-	/*
+/*
 	ret = gp_port_set_timeout (camera->port, TIMEOUT);
 	if (ret < 0)
 		return (ret);

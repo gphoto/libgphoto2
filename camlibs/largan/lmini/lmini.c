@@ -48,7 +48,8 @@ static struct largan_baud_rate {
 	{38400, 0x03 },
 	{ 9600, 0x01 },
 	{ 4800, 0x00 },
-	{    0, 0x00 }
+	{    0, 0x00 },
+	{19200, 0x02 }
 };
 
 enum {
@@ -94,12 +95,12 @@ void largan_pict_alloc_data (largan_pict_info * ptr, uint32_t size)
 
 
 /*
- * Open the camera 
+ * Open the camera
  */
 int largan_open (Camera * camera)
 {
 	int ret;
-	
+
 	ret = purge_camera (camera);
 	if (ret == GP_ERROR) {
 		return ret;
@@ -120,7 +121,6 @@ int largan_get_num_pict (Camera * camera)
 		GP_DEBUG ("largan_send_command() failed: %d\n", ret);
 		return -1;
 	}
-	
 	ret = largan_recv_reply (camera, &reply, &code, NULL);
 	if (ret < 0) {
 		GP_DEBUG ("largan_recv_reply() failed: %d\n", ret);
@@ -138,7 +138,7 @@ int largan_get_num_pict (Camera * camera)
  *
  * return GP_OK if OK. Otherwise < 0
  */
-int largan_get_pict (Camera * camera, largan_pict_type type, 
+int largan_get_pict (Camera * camera, largan_pict_type type,
 		uint8_t index, largan_pict_info * pict)
 {
 	int ret;
@@ -146,7 +146,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 	uint8_t param;
 	uint8_t buf[5];
 	uint32_t pict_size;	/* size of the picture as returned by the camera */
-	
+
 	switch (type) {
 		case LARGAN_PICT:
 			param = 0x01;
@@ -162,14 +162,21 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 	if (ret < 0) {
 		return ret;
 	}
+/* here we have to receive 7 bytes back 
+ the 2nd contains 00 for thumbnail or 01 for original picture
+ the 3rd contains the picturenumber for an original picture
+ or 00 for an thumbnail for an lowres picture
+ or 01 for an thumbnail for an hires picture
+ bytes 4 5 6 7 contain the number of byte coming in the datastream */
 	ret = largan_recv_reply (camera, &reply, &code, NULL);
 	if (ret < 0) {
 		return ret;
 	}
 	if ((reply != LARGAN_GET_PICT_CMD) || (code != 0x01)) {
+		GP_DEBUG ("largan_get_pict(): code != 0x01\n");
 		return GP_ERROR;
 	}
-	
+
 	ret = gp_port_read (camera->port, buf, sizeof(buf));
 	if (ret < GP_OK) {
 		return ret;
@@ -213,7 +220,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 		largan_pict_alloc_data (pict, 19200 + sizeof(BMPheader));
 		memcpy (pict->data, BMPheader, sizeof(BMPheader));
 		largan_ccd2dib (buffer, pict->data + sizeof(BMPheader), 240, 1);
-		
+
 		free (buffer);
 		pict->quality = buf[0];
 	}
@@ -228,23 +235,32 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
  *
  * return GP_OK if OK.
  */
-int largan_erase (Camera *camera, int all)
+int largan_erase (Camera *camera, int pict_num)
 {
 	int ret;
+	int num_pix;
 	uint8_t erase_code;
 	uint8_t reply,code;
-	
-	if (all) {
+
+	if (pict_num == 0xff) {
 		erase_code = 0x11;
+		GP_DEBUG ("largan_erase() all sheets \n");
 	}
 	else {
-		erase_code = 0x10;
+		num_pix = largan_get_num_pict (camera);
+		if (pict_num == num_pix) {
+			erase_code = 0x10;
+			GP_DEBUG ("largan_erase() last sheet \n");
+		}
+		else {
+			GP_DEBUG ("Only the last sheet can be erased!\n");
+			return GP_ERROR;
+		}
 	}
 	ret = largan_send_command (camera, LARGAN_BAUD_ERASE_CMD, erase_code, 0);
 	if (ret < 0) {
 		return ret;
 	}
-	
 	ret = largan_recv_reply (camera, &reply, &code, NULL);
 	if (ret < 0) {
 		return ret;
@@ -270,9 +286,9 @@ int largan_capture (Camera *camera)
 	if (ret < 0) {
 		return ret;
 	}
-
 	ret = largan_recv_reply (camera, &reply, &code, &code2);
 	if (ret < 0) {
+		GP_DEBUG ("return ret\n");
 		return ret;
 	}
 	if (reply != LARGAN_CAPTURE_CMD) {
@@ -280,6 +296,7 @@ int largan_capture (Camera *camera)
 		return GP_ERROR;
 	}
 	if (code != code2) {
+		GP_DEBUG ("code != code2\n");
 		return GP_ERROR;
 	}
 	if (code == 0xee) {
@@ -315,7 +332,7 @@ int largan_set_serial_speed (Camera * camera, int speed)
 				return ret;
 			}
 			ret = largan_recv_reply (camera, &reply, &code, NULL);
-			if (ret < 0) {	
+			if (ret < 0) {
 				return ret;
 			}
 			if (reply !=  LARGAN_BAUD_ERASE_CMD) {
@@ -324,7 +341,7 @@ int largan_set_serial_speed (Camera * camera, int speed)
 			if (code != bauds[i].baud) {
 				return ret;
 			}
-			return set_serial_speed (camera, bauds[i].baud);	
+			return set_serial_speed (camera, bauds[i].baud);
 		}
 	}
 	GP_DEBUG ("largan_set_serial_speed(): baud rate not found\n");
@@ -334,17 +351,16 @@ int largan_set_serial_speed (Camera * camera, int speed)
 
 /*
  * received a reply from the camera.
- * can accept NULL on imput.
+ * can accept NULL on input.
  * TODO: check how much we need to read.
  */
-static int largan_recv_reply (Camera * camera, uint8_t *reply, 
+static int largan_recv_reply (Camera * camera, uint8_t *reply,
 		uint8_t *code, uint8_t *code2)
 {
 	int ret;
 	uint8_t packet [4];
 	uint8_t	packet_size = 0;
 	memset (packet, 0, sizeof (packet));
-	
 	ret = gp_port_read (camera->port, packet, 1);
 	if (ret < GP_OK) {
 		return ret;
@@ -355,13 +371,13 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 		packet_size = 2;
 		break;
 	case LARGAN_GET_PICT_CMD:
-		packet_size = 3;		
+		packet_size = 2;  
 		break;
 	case LARGAN_BAUD_ERASE_CMD:
 		packet_size = 2;
 		break;
 	case LARGAN_CAPTURE_CMD:
-		packet_size = 3;		
+		packet_size = 3;
 		break;
 	default:
 		packet_size = 0;
@@ -372,28 +388,46 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 		*reply = packet[0];
 	}
 	if (packet_size >= 2) {
+		ret = gp_port_read (camera->port, &packet[1], 1);
+		if (ret < GP_OK) {
+			return ret;
+		}
 		if (code) {
 			*code = packet[1];
 		}
 	}
 	if (packet_size >= 3) {
+		ret = gp_port_read (camera->port, &packet[2], 1);
+		if (ret < GP_OK) {
+			return ret;
+		}
 		if (code2) {
 			*code2 = packet[2];
 		}
 	}
+#if 0
+	if (packet_size = 7) {
+		ret = gp_port_read (camera->port, &packet[3], 4);
+		*code3 = packet[3];
+		*code4 = packet[4];
+		*code5 = packet[5];
+		*code6 = packet[6];
+	} 
+#endif
+
 	return ret;
 }
 
 /*
  * Send a command packet
  */
-static int largan_send_command (Camera * camera, uint8_t cmd, uint8_t param1, 
+static int largan_send_command (Camera * camera, uint8_t cmd, uint8_t param1,
 		uint8_t param2)
 {
 	uint8_t	packet_size = 0;
 	uint8_t packet [3];
 	memset (&packet, 0, sizeof (packet));
-	
+
 	packet [0] = cmd;
 
 	switch (cmd) {
@@ -436,6 +470,7 @@ static int set_serial_speed (Camera * camera, int speed)
 {
 	int ret;
 	GPPortSettings settings;
+	GP_DEBUG ("set_serial_speed() called ***************\n");
 	
 	if (camera->port->type != GP_PORT_SERIAL) {
 		GP_DEBUG ("set_serial_speed() called on non serial port\n");
@@ -443,8 +478,9 @@ static int set_serial_speed (Camera * camera, int speed)
 	}
 	
 	ret = gp_port_get_settings (camera->port, &settings);
-	if (ret < 0)
-		return (ret);
+	if (ret < 0) {
+		return ret;
+	}
 	settings.serial.speed    = speed;
 	
 	ret = gp_port_set_settings (camera->port, settings);
@@ -494,23 +530,19 @@ static int purge_camera (Camera * camera)
 static int wakeup_camera (Camera * camera)
 {
 	int num_pix;
-	int i;
+	/*	int i;*/
 	int ret;
-
-	if (camera->port->type == GP_PORT_SERIAL) {
 	
-		for (i = 0; bauds[i].baud; i++)
-		{
-			ret = set_serial_speed (camera, bauds[i].baud);
-			num_pix = largan_get_num_pict (camera);
-			if (num_pix >= 0)
-			{
-				return GP_OK;
-			}
-			sleep (1);
+	if (camera->port->type == GP_PORT_SERIAL) {
+		ret = set_serial_speed (camera, 4800);	/*wakes camera best*/
+		num_pix = largan_get_num_pict (camera);	/*this wakes*/
+		ret = set_serial_speed (camera, 19200);	/*back to normal*/
+		sleep (1);
+		num_pix = largan_get_num_pict (camera);	/*this wakes*/
+		if (num_pix >= 0){
+			return GP_OK;
 		}
 	}
 	purge_camera (camera);
 	return GP_ERROR;
 }
-
