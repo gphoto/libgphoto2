@@ -29,7 +29,7 @@ AC_DEFUN(GPKG_CHECK_LINUX,
 	is_linux=false
 	case "$effective_target" in 
 		*linux*)
-			is_linux=/bin/true
+			is_linux=true
 			;;
 	esac
 	AM_CONDITIONAL(HAVE_LINUX, "$is_linux")
