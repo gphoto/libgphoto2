@@ -2,17 +2,21 @@
 About this driver
 =================
 
-This driver is for Canon cameras. It underwent a fairly complete rewrite
-around 2002-01-01, so we list camera support for both the old and the
-new driver here. Note that the old driver is not being developed any
-more. The new driver will take over all functions as its successor.
+This driver was written to work with Canon digital cameras without
+using any official specs which might exist for the communication
+protocols.
+
+For a disclaimer, see the GNU LESSER GENERAL PUBLIC LICENSE as
+distributed with the libgphoto2 library.
+
+This driver underwent a fairly complete rewrite around 2002-01-01, so
+there may still be some wrinkles to be ironed out, especially with
+older cameras.
 
 
 ========================================================================
 Cameras supported
 =================
-
-The new driver works with the following models:
 
  - PowerShot A50 (not tested)
  - PowerShot S10
@@ -23,50 +27,29 @@ The new driver works with the following models:
  - PowerShot IXY Digital (not tested)
  - PowerShot S300 / Digital IXUS 300
  - PowerShot IXY Digital 300  (not tested)
- - PowerShot G1 (not tested)
- - PowerShot G2
- - PowerShot A10 (not tested)
- - PowerShot A20
- - PowerShot Pro90 IS (not tested)
- - EOS D30
-
-The old driver worked with the following models:
-
- - PowerShot A50
- - PowerShot S10
- - PowerShot S20
- - PowerShot S30 (under development)
- - PowerShot S40 (under development)
- - PowerShot S100 / Digital IXUS
- - PowerShot IXY Digital
- - PowerShot S300 / Digital IXUS 300
- - PowerShot IXY Digital 300  (not tested)
  - PowerShot G1
  - PowerShot G2
- - PowerShot A10
+ - PowerShot A10 (not tested after rewrite)
  - PowerShot A20
  - PowerShot Pro90 IS (not tested)
  - EOS D30
 
-This old driver can be checked into your CVS source tree by changing
-to camlibs/canon and running "cvs update -r Before_GPFileSystem"
-there.
-
-The support of the following cameras is mostly there as they were supported
-in gphoto 0.4.x but an API change broke the support as they handle files a 
-little differently. If you are interested in fixing it mail 
-gphoto-devel@gphoto.net or philm@users.sourceforge.net :
+Support for the following cameras is mostly there as they were supported
+in gphoto 0.4.x but several API changes and rewrites have probably broken
+something along the way. If you are interested in fixing it mail 
+gphoto-devel@gphoto.net or philm@users.sourceforge.net:
  
  - PowerShot A5
  - PowerShot A5 Zoom
   
- It doesn't  work with the  PowerShot  350. However, the  PS350 uses a
+It doesn't  work with the  PowerShot  350. However, the  PS350 uses a
 vaguely similar protocol, so some parts of the sources can probably be
 shared.
 
-The old driver cached a lot of information. If the camera status changes
-during a session or if the driver gets stuck for some other reason,
-the caches could be manually flushed using "Configure camera".
+The new driver doesn't cache much information any more. Still, if the
+camera status changes during a session or if the driver gets stuck for
+some other reason, the caches could be manually flushed using
+"Configure camera".
 
 
 ========================================================================
@@ -82,7 +65,7 @@ Features supported
 
 - Download all file types from the camera as they are, i.e. without 
   any transformation. This includes CRW (Canon RaW) files, which are
-  not processed to a standard format yet.
+  not processed to a standard image file format yet.
 
 - Download thumbnail for all file types where thumbnails are available
   for
@@ -92,16 +75,30 @@ Features supported
 
 - Download sound annotations to images (not tested)
 
-The following features are probably or surely not working (yet :-)
+- Create and Delete folders
+  Note that this does not mean that the camera will use your
+  directories to store the images.
 
-- Create and Delete folders (not tested, but worked in the past)
+- Upload files to camera for serial cameras
 
-- Upload files to camera (not tested, but worked in the past)
+The following features are still experimental and not completely
+working yet. See Makefile.am for how to activate them. Beware that
+this is work in progress, and no guarantees are given at all,
+i.e. even less than the no guarantees we give for the rest of the
+driver.
 
-- Capture images controlled by the computer (still to be implemented)
+- Capture images controlled by the computer (EXPERIMENTAL_CAPTURE)
+  (code courtesy of Emile Snyder)
+  Emile Snyder has implemented most of the remote capture functionality,
+  but not everything is understood about these commands yet and some
+  camera models have their own will about how well these things work.
 
-We are currently working on support for the raw file format the Canon
-cameras use (CRW -Canon RaW files). See
+- Upload files to camera for USB cameras (EXPERIMENTAL_UPLOAD)
+  (code courtesy of Matthias Kramm)
+
+
+We are currently also working on support for the raw file format the
+Canon cameras use (CRW -Canon RaW files). See
 
     http://www.shore.net/~dcoffin/powershot/
 
@@ -110,16 +107,23 @@ or
 
 for details on the file format.
 
-Emile Snyder has implemented most of the remote capture functionality,
-but not everything is understood about these commands yet and some
-camera models have their own will about how well these things work.
-The code is included, but inside #ifdef EXPERIMENTAL_CAPTURE - meaning
-you have to define EXPERIMENTAL_CAPTURE to compile it in. Beware that
-this is work in progress, and no guarantees are given.
+
+========================================================================
+Known Bugs
+==========
+
+* The PowerShot G1 and PowerShot 90 IS do not work properly when
+  operating with the AC power adapter
+* Shutting off the camera and rewaking it is not implemented
+
 
 ========================================================================
 Change history
 ==============
+
+For detailed changes, see the file ChangeLog. Yes, someone should
+extract the user releavant information from ChangeLog and collect it
+here.
 
 Version 9 (17-APRIL-2001)
 ---------
@@ -218,11 +222,11 @@ Version 0 (27-AUG-1999)
    completely useless for gPhoto
 
 
+========================================================================
 To do
 =====
 
-Not very up to date contact gphoto-devel@gphoto.net if you wish to 
-contribute.
+Quite outdated. See the TODO file for more current information.
  
 - code structure is still pretty ugly. Things that absolutely need fixing:
   - command codes and fffbs are spread all over the place
