@@ -367,7 +367,8 @@ camera_abilities (CameraAbilitiesList *list)
 		a.file_operations   = GP_FILE_OPERATION_PREVIEW|
 					GP_FILE_OPERATION_DELETE;
 		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
-			| GP_FOLDER_OPERATION_MAKE_DIR;
+			| GP_FOLDER_OPERATION_MAKE_DIR |
+			GP_FOLDER_OPERATION_REMOVE_DIR;
 		CR (gp_abilities_list_append (list, a));
 		memset(&a,0, sizeof(a));
 	}
@@ -689,6 +690,27 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
+remove_dir_func (CameraFilesystem *fs, const char *folder,
+			const char *foldername, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	unsigned long object_id;
+
+	((PTPData *) camera->pl->params.data)->context = context;
+
+	// Get file number
+	find_folder_handle(folder, object_id, data);
+	object_id = find_child(foldername, object_id, camera);
+	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	CPR (context, ptp_deleteobject(&camera->pl->params,
+		camera->pl->params.handles.handler[object_id],0));
+
+	return (GP_OK);
+}
+
+static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
@@ -881,7 +903,7 @@ camera_init (Camera *camera, GPContext *context)
 					  delete_file_func, camera));
 	CR (gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
 					    NULL, make_dir_func,
-					    NULL, camera));
+					    remove_dir_func, camera));
 
 	return (GP_OK);
 }
