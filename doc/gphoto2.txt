@@ -1,7 +1,11 @@
 ########################################################################
 # A short guide to setting up and using gphoto2
-#
-# This file has been made obsolete by Chapter 1 in gphoto2.xml
+########################################################################
+# This file has been made obsolete by the chapter
+#               "Setting up your system ..."
+# in the gphoto2.xml file and in the generated
+# - HTML manual in manual/
+# - PDF manual in gphoto2.pdf
 ########################################################################
 
 
