@@ -11,17 +11,10 @@
 int is_library(char *library_filename) {
 
 	int ret = GP_OK;
-        char buf[1024];
         void *lh;
 	c_id id;
-
-#if defined(OS2) || defined(WIN32)
-        sprintf(buf, "%s\\%s", CAMLIBS, library_filename);
-#else
-        sprintf(buf, "%s/%s", CAMLIBS, library_filename);
-#endif
        
-	if ((lh = GPIO_DLOPEN(buf)) == NULL)
+	if ((lh = GPIO_DLOPEN(library_filename)) == NULL)
                 return (GP_ERROR);
 	id = (c_id)GPIO_DLSYM(lh, "camera_id");
 	if (!id)
@@ -33,13 +26,11 @@ int is_library(char *library_filename) {
 
 int load_library (Camera *camera, char *camera_name) {
 
-        char buf[1024];
         void *lh;
         int x;
         for (x=0; x<glob_abilities_list->count; x++) {
            if (strcmp(glob_abilities_list->abilities[x]->model, camera_name)==0) {
-                sprintf(buf, "%s/%s", CAMLIBS, glob_abilities_list->abilities[x]->library);
-                if ((lh = GPIO_DLOPEN(buf))==NULL) {
+                if ((lh = GPIO_DLOPEN(glob_abilities_list->abilities[x]->library))==NULL) {
                         if (glob_debug)
                                 perror("core:\tload_library");
                         return (GP_ERROR);
@@ -60,21 +51,14 @@ int load_camera_list (char *library_filename) {
         /* Returns the number of cameras added to the CameraChoice list */
         /* 0 implies an error occurred */
 
-        char buf[1024];
-		CameraText id;
-        void *lh;
+	CameraText id;
+	void *lh;
         c_abilities load_camera_abilities;
         c_id load_camera_id;
         int x, old_count;
 
-#if defined(OS2) || defined(WIN32)
-	sprintf(buf, "%s\\%s", CAMLIBS, library_filename);
-#else
-        sprintf(buf, "%s/%s", CAMLIBS, library_filename);
-#endif
-
         /* try to open the library */
-        if ((lh = GPIO_DLOPEN(buf))==NULL) {
+        if ((lh = GPIO_DLOPEN(library_filename))==NULL) {
                 if (glob_debug)
                         perror("core:\tload_camera_list");
                 return 0;
@@ -114,19 +98,21 @@ int load_camera_list (char *library_filename) {
         return (x);
 }
 
-int load_cameras() {
+int load_cameras_search (char *directory) {
 
         GPIO_DIR d;
         GPIO_DIRENT de;
-		CameraAbilities *t;
+	char buf[1024];
 
-        int x, y, z;
-        
+	if (glob_debug) {
+		printf("core: Trying to load camera libraries in:\n");
+		printf("core: \t%s\n", directory);
+	}
 
         /* Look for available camera libraries */
-        d = GPIO_OPENDIR(CAMLIBS);
+        d = GPIO_OPENDIR(directory);
         if (!d) {
-                fprintf(stderr, "core: couldn't open %s\n", CAMLIBS);
+                fprintf(stderr, "core: couldn't open %s\n", directory);
                 return GP_ERROR;
         }
 
@@ -134,21 +120,38 @@ int load_cameras() {
            /* Read each entry */
            de = GPIO_READDIR(d);
            if (de) {
+		sprintf(buf, "%s%c%s", directory, GPIO_DIR_DELIM, GPIO_FILENAME(de));
                 if (glob_debug)
-                   printf("core:\tis %s a library? ", GPIO_FILENAME(de));
+                   printf("core:\tis %s a library? ", buf);
                 /* try to open the library */
-                if (is_library(GPIO_FILENAME(de)) == GP_OK) {
+                if (is_library(buf) == GP_OK) {
                         if (glob_debug)
                                 printf("yes\n");
-                        load_camera_list(GPIO_FILENAME(de));
+                        load_camera_list(buf);
                    } else {
                         if (glob_debug) {
                                 printf("no\n");
-				printf("core: reason: %s\n", GPIO_DLERROR());
+				printf("core: \t reason: %s\n", GPIO_DLERROR());
 			}
                 }
            }
         } while (de);
+
+        return (GP_OK);
+}
+
+int load_cameras() {
+
+	int x, y, z;
+	CameraAbilities *t;
+
+	/* Where should we search for camera libraries? */
+
+	/* The installed camera library directory */
+	load_cameras_search(CAMLIBS);
+
+	/* Current directory */
+	load_cameras_search(".");
 
         /* Sort the camera list */
         for (x=0; x<glob_abilities_list->count-1; x++) {
@@ -163,12 +166,14 @@ int load_cameras() {
                 }
         }
 
+/* MUCH too verbose. 
 	if (glob_debug) {
-		printf("core: Loaded camera list:");
-//		gp_abilities_list_dump(glob_abilities_list);
+		printf("core: Loaded camera list:\n");
+		gp_abilities_list_dump(glob_abilities_list);
 	}
+*/ 
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 int close_library (Camera *camera) {
