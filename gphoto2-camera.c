@@ -377,7 +377,7 @@ gp_camera_new (Camera **camera)
 int
 gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting abilibites ('%s')...",
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting abilities ('%s')...",
 		abilities.model);
 
 	CHECK_NULL (camera);
