@@ -215,11 +215,11 @@ pdc320_size (Camera *camera, int n)
                          * Yes, but how many is not known for the PDC 320.
 			 */                         
 //			if (camera->model==PDC640SE) {
-                        if (camera->model[10]=='6') {
+                        if (camera->model[9]=='6') {
 				CHECK_RESULT (gp_port_read (camera->port, buf, buf[0]+2));
 				CHECK_RESULT (pdc320_init(camera->port));
 //			} else if (camera->model==PDC320) {
-                        } else if (camera->model[10]=='F') {
+                        } else if (camera->model[9]=='F') {
 i=RETRIES;
 			// I have no clue else than to flush the whole buffer
 			// gp_port_flush(camera->port, direction) ??? What is the direction bit about?
@@ -248,7 +248,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 	unsigned char cmd[] = PDC320_PIC;
 	unsigned char buf[2048];
 	int remaining, f1, f2, i, len, checksum;
-
+	int chunksize; //=2000;
 	/* Get the size of the picture and allocate the memory */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Checking size of image %i...",
 			 n);
@@ -262,12 +262,22 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 
 	CHECK_RESULT_FREE (gp_port_write (camera->port, cmd, sizeof (cmd)), *data);
 
+//			if (camera->model==PDC640SE) {
+                        if (camera->model[9]=='6') {
+				chunksize=213;
+//			} else if (camera->model==PDC320) {
+                        } else if (camera->model[9]=='F') {
+				chunksize=2000;
+			}
+			else 
+gp_debug_printf (GP_DEBUG_LOW, "pdc320", "pdc320_pic could not determine camera");
+
 	len = *size;
-	for (i = 0; i < *size; i += 2000) {
+	for (i = 0; i < *size; i += chunksize) {
 
 		/* How many bytes do we read in this round? */
 		remaining = *size - i;
-		len = (remaining > 2000) ? 2000 : remaining;
+		len = (remaining > chunksize) ? chunksize : remaining;
 
 		/* Read the frame number */
 		usleep (10000);
@@ -352,10 +362,22 @@ if (type == GP_FILE_TYPE_RAW) {
 //   	CHECK_RESULT (gp_file_set_data_and_size (file, picture, 0));
 	CHECK_RESULT (gp_file_set_name (file, filename));
 	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
-    for (n=0; n<10; n++) {
+    for (n=0; n<4; n++) {
         gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Adding jpegheader[%i].data",n);
         CHECK_RESULT (gp_file_append(file, jpegheader[n].data, jpegheader[n].size));
     }
+//  if (camera->model==PDC640SE) {
+    if (camera->model[9]=='6') {
+	CHECK_RESULT (gp_file_append(file, SOFC0_640x488, jpegheader[4].size));	
+//  } else if (camera->model==PDC320) {
+    } else if (camera->model[9]=='F') {
+	CHECK_RESULT (gp_file_append(file, SOFCO_320x128, jpegheader[4].size));
+    }
+    for (n=5; n<10; n++) {
+        gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Adding jpegheader[%i].data",n);
+        CHECK_RESULT (gp_file_append(file, jpegheader[n].data, jpegheader[n].size));
+    }
+
     CHECK_RESULT (gp_file_append(file, temp, size));
     }
 	return (GP_OK);
@@ -441,6 +463,13 @@ camera_init (Camera *camera)
 
 	return (result);
 }
+
+
+
+
+
+
+
 
 
 
