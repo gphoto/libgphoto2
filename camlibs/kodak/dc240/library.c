@@ -378,7 +378,10 @@ int dc240_get_directory_list (DC240Data *dd, CameraList *list, char *folder,
     free(p1);
     free(p2);
     x=2;
-    while (x < file->size) {
+    /* since directory entries are 20 bytes, it is possible that */
+    /* we find some garbage. Ignore it. TODO: check that there is */
+    /* not another bug involving reading this info */
+    while ((x < file->size) && (file->size - x >= 20)) {
         if ((file->data[x] != '.') &&
             (attrib == (unsigned char)file->data[x+11]))  {
             /* Files have attrib 0x00, Folders have attrib 0x10 */
@@ -448,6 +451,9 @@ int dc240_file_action (DC240Data *dd, int action, CameraFile *file,
 
     free(cmd_packet);
     free(path_packet);
+
+    strcpy(file->name, filename);
+    strcpy(file->type, "image/jpeg");
 
     return (retval);
 }
