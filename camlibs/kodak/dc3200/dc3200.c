@@ -57,52 +57,6 @@ int camera_abilities (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera) 
-{
-	DC3200Data *dd;
-        int ret;
-
-	if (!camera)
-		return (GP_ERROR);
-
-	dd = (DC3200Data*)malloc(sizeof(DC3200Data));
-	if (!dd)
-		return (GP_ERROR);
-
-	/* First, set up all the function pointers */
-	camera->functions->id 			= camera_id;
-	camera->functions->abilities 		= camera_abilities;
-	camera->functions->init 		= camera_init;
-	camera->functions->exit 		= camera_exit;
-	camera->functions->folder_list_folders  = camera_folder_list_folders;
-	camera->functions->folder_list_files	= camera_folder_list_files;
-	camera->functions->file_get 		= camera_file_get;
-	camera->functions->summary		= camera_summary;
-	camera->functions->manual 		= camera_manual;
-	camera->functions->about 		= camera_about;
-	camera->functions->result_as_string 	= camera_result_as_string;
-	
-        if ((ret = gp_port_new(&(dd->dev), GP_PORT_SERIAL)) < 0) {
-		free(dd);
-		return (ret);
-	}
-
-	camera->camlib_data = dd;
-
-	/* initialize the camera */
-	if (init(camera) == GP_ERROR) {
-		gp_port_close(dd->dev);
-		gp_port_free(dd->dev);
-		free(dd);
-		return (GP_ERROR);
-	}
-
-	/* Everything went OK. Save the data*/
-	gp_filesystem_new(&dd->fs);
-
-	return (dc3200_keep_alive(dd));
-}
-
 int init(Camera *camera)
 {
 	gp_port_settings settings;
@@ -389,3 +343,47 @@ char* camera_result_as_string (Camera *camera, int result)
 	if (-result < 100) return gp_result_as_string (result);
 	return (_("This is a dc3200 specific error."));
 }
+
+int camera_init (Camera *camera) 
+{
+        DC3200Data *dd;
+        int ret;
+
+        if (!camera)
+                return (GP_ERROR);
+
+        dd = (DC3200Data*)malloc(sizeof(DC3200Data));
+        if (!dd)
+                return (GP_ERROR);
+
+        /* First, set up all the function pointers */
+        camera->functions->exit                 = camera_exit;
+        camera->functions->folder_list_folders  = camera_folder_list_folders;
+        camera->functions->folder_list_files    = camera_folder_list_files;
+        camera->functions->file_get             = camera_file_get;
+        camera->functions->summary              = camera_summary;
+        camera->functions->manual               = camera_manual;
+        camera->functions->about                = camera_about;
+        camera->functions->result_as_string     = camera_result_as_string;
+        
+        if ((ret = gp_port_new(&(dd->dev), GP_PORT_SERIAL)) < 0) {
+                free(dd);
+                return (ret);
+        }
+
+        camera->camlib_data = dd;
+
+        /* initialize the camera */
+        if (init(camera) == GP_ERROR) {
+                gp_port_close(dd->dev);
+                gp_port_free(dd->dev);
+                free(dd);
+                return (GP_ERROR);
+        }
+
+        /* Everything went OK. Save the data*/
+        gp_filesystem_new(&dd->fs);
+
+        return (dc3200_keep_alive(dd));
+}
+

@@ -1,5 +1,16 @@
 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* gphoto2-library.h: Clean up this file.
+	* gphoto2-camera.h: We don't need camera_init, camera_abilities, and
+	camera_id here. That belongs into gphoto2-library.h.
+	* libgphoto2/camera.c:
+	* libgphoto2/core.c: Adapt
+	* camlibs/*: Move camera_init to the bottom of the file. Camera
+	driver authors, could you please declare the functions above static?
+	Except camera_id and camera_abilities.
+
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	All work from Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>:
 
 	* libgphoto2/filesys.c (gp_filesystem_number): Check if the folder

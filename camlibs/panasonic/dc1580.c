@@ -454,75 +454,6 @@ int camera_abilities (CameraAbilitiesList *list)
         return GP_OK;
 }
 
-int camera_init (Camera *camera) 
-{
-        int ret;
-        dsc_t           *dsc = NULL;
-
-        dsc_print_status(camera, _("Initializing camera %s"), camera->model);
-
-        /* First, set up all the function pointers */
-        camera->functions->id                   = camera_id;
-        camera->functions->abilities            = camera_abilities;
-        camera->functions->init                 = camera_init;
-        camera->functions->exit                 = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        camera->functions->file_get             = camera_file_get;
-        camera->functions->folder_put_file      = camera_folder_put_file;
-        camera->functions->file_delete          = camera_file_delete;
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
-        camera->functions->about                = camera_about;
-
-        if (dsc && dsc->dev) {
-                gp_port_close(dsc->dev);
-                gp_port_free(dsc->dev);
-        }
-        free(dsc);
-
-        /* first of all allocate memory for a dsc struct */
-        if ((dsc = (dsc_t*)malloc(sizeof(dsc_t))) == NULL) {
-                dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
-                return GP_ERROR;
-        }
-
-        camera->camlib_data = dsc;
-
-        if ((ret = gp_port_new(&(dsc->dev), GP_PORT_SERIAL)) < 0) {
-            free (dsc);
-            return (ret);
-        }
-
-        gp_port_timeout_set(dsc->dev, 5000);
-        strcpy(dsc->settings.serial.port, camera->port_info->path);
-        dsc->settings.serial.speed      = 9600; /* hand shake speed */
-        dsc->settings.serial.bits       = 8;
-        dsc->settings.serial.parity     = 0;
-        dsc->settings.serial.stopbits   = 1;
-
-        gp_port_settings_set(dsc->dev, dsc->settings);
-
-        gp_port_open(dsc->dev);
-
-        /* allocate memory for a dsc read/write buffer */
-        if ((dsc->buf = (char *)malloc(sizeof(char)*(DSC_BUFSIZE))) == NULL) {
-                dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
-                free(dsc);
-                return GP_ERROR;
-        }
-
-        /* allocate memory for camera filesystem struct */
-        if ((ret = gp_filesystem_new(&dsc->fs)) != GP_OK) {
-                dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
-                free(dsc);
-                return ret;
-        }
-
-        return dsc2_connect(dsc, camera->port_info->speed);
-                /* connect with selected speed */
-}
-
 int camera_exit (Camera *camera) 
 {
         dsc_t   *dsc = (dsc_t *)camera->camlib_data;
@@ -708,6 +639,72 @@ int camera_about (Camera *camera, CameraText *about)
                         "Fredrik Roubert <roubert@df.lth.se> and\n"
                         "Galen Brooks <galen@nine.com>."));
         return (GP_OK);
+}
+
+int camera_init (Camera *camera) 
+{
+        int ret;
+        dsc_t           *dsc = NULL;
+
+        dsc_print_status(camera, _("Initializing camera %s"), camera->model);
+
+        /* First, set up all the function pointers */
+        camera->functions->exit                 = camera_exit;
+        camera->functions->folder_list_folders  = camera_folder_list_folders;
+        camera->functions->folder_list_files    = camera_folder_list_files;
+        camera->functions->file_get             = camera_file_get;
+        camera->functions->folder_put_file      = camera_folder_put_file;
+        camera->functions->file_delete          = camera_file_delete;
+        camera->functions->summary              = camera_summary;
+        camera->functions->manual               = camera_manual;
+        camera->functions->about                = camera_about;
+
+        if (dsc && dsc->dev) {
+                gp_port_close(dsc->dev);
+                gp_port_free(dsc->dev);
+        }
+        free(dsc);
+
+        /* first of all allocate memory for a dsc struct */
+        if ((dsc = (dsc_t*)malloc(sizeof(dsc_t))) == NULL) {
+                dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
+                return GP_ERROR;
+        }
+
+        camera->camlib_data = dsc;
+
+        if ((ret = gp_port_new(&(dsc->dev), GP_PORT_SERIAL)) < 0) {
+            free (dsc);
+            return (ret);
+        }
+
+        gp_port_timeout_set(dsc->dev, 5000);
+        strcpy(dsc->settings.serial.port, camera->port_info->path);
+        dsc->settings.serial.speed      = 9600; /* hand shake speed */
+        dsc->settings.serial.bits       = 8;
+        dsc->settings.serial.parity     = 0;
+        dsc->settings.serial.stopbits   = 1;
+
+        gp_port_settings_set(dsc->dev, dsc->settings);
+
+        gp_port_open(dsc->dev);
+
+        /* allocate memory for a dsc read/write buffer */
+        if ((dsc->buf = (char *)malloc(sizeof(char)*(DSC_BUFSIZE))) == NULL) {
+                dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
+                free(dsc);
+                return GP_ERROR;
+        }
+
+        /* allocate memory for camera filesystem struct */
+        if ((ret = gp_filesystem_new(&dsc->fs)) != GP_OK) {
+                dsc_errorprint(EDSCSERRNO, __FILE__, "camera_init", __LINE__);
+                free(dsc);
+                return ret;
+        }
+
+        return dsc2_connect(dsc, camera->port_info->speed);
+                /* connect with selected speed */
 }
 
 /* End of dc1580.c */

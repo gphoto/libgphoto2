@@ -92,120 +92,6 @@ static short find_usb_device_id (const char *model, unsigned short *idVendor,
     return 0;
 }
 
-int camera_init (Camera *camera) 
-{
-    unsigned short usb_vendor, usb_product;
-    int ret;
-    gp_port_settings settings;
-    DC240Data *dd;
-
-    if (!camera)
-        return (GP_ERROR);
-
-    dd = (DC240Data*)malloc(sizeof(DC240Data));
-    if (!dd)
-        return (GP_ERROR);
-
-    /* First, set up all the function pointers */
-    camera->functions->id 		= camera_id;
-    camera->functions->abilities 	= camera_abilities;
-    camera->functions->init 	        = camera_init;
-    camera->functions->exit 	        = camera_exit;
-    camera->functions->folder_list_folders      = camera_folder_list_folders;
-    camera->functions->folder_list_files	= camera_folder_list_files;
-    camera->functions->file_get 	= camera_file_get;
-    camera->functions->file_delete 	= camera_file_delete;
-    camera->functions->capture 	        = camera_capture;
-    camera->functions->summary	        = camera_summary;
-    camera->functions->manual 	        = camera_manual;
-    camera->functions->about 	        = camera_about;
-
-    switch (camera->port->type) {
-    case GP_PORT_SERIAL:
-        if ((ret = gp_port_new(&(dd->dev), GP_PORT_SERIAL)) < 0) {
-            free(dd);
-            return (GP_ERROR);
-        }
-        strcpy(settings.serial.port, camera->port_info->path);
-        settings.serial.speed    = 9600;
-        settings.serial.bits     = 8;
-        settings.serial.parity   = 0;
-        settings.serial.stopbits = 1;
-        break;
-    case GP_PORT_USB:
-        if ((ret = gp_port_new(&(dd->dev), GP_PORT_USB)) < 0) {
-            free(dd);
-            return (GP_ERROR);
-        }
-        if (find_usb_device_id (camera->model, &usb_vendor, &usb_product) == 0) {
-            gp_port_free(dd->dev);
-            free (dd);
-            return (GP_ERROR);
-        }
-        if (gp_port_usb_find_device(dd->dev, usb_vendor, usb_product) == GP_ERROR) {
-            gp_port_free(dd->dev);
-            free (dd);
-            return (GP_ERROR);
-        }
-        settings.usb.inep       = 0x82;
-        settings.usb.outep      = 0x01;
-        settings.usb.config     = 1;
-        settings.usb.interface  = 0;
-        settings.usb.altsetting = 0;
-        break;
-    default:
-        return (GP_ERROR);
-    }
-
-    if (gp_port_settings_set(dd->dev, settings) == GP_ERROR) {
-        gp_port_free(dd->dev);
-        free(dd);
-        return (GP_ERROR);
-    }
-
-    if (gp_port_open(dd->dev) == GP_ERROR) {
-        gp_port_free(dd->dev);
-        free(dd);
-        return (GP_ERROR);
-    }
-
-    gp_port_timeout_set(dd->dev, TIMEOUT);
-
-    if (camera->port->type == GP_PORT_SERIAL) {
-        /* Reset the camera to 9600 */
-        gp_port_send_break(dd->dev, 1);
-
-        /* Wait for it to reset */
-        GP_SYSTEM_SLEEP(1500);
-
-        if (dc240_set_speed(dd, camera->port_info->speed) == GP_ERROR) {
-            gp_port_close(dd->dev);
-            gp_port_free(dd->dev);
-            free(dd);
-            return (GP_ERROR);
-        }
-    }
-
-    /* Open the CF card */
-    if (dc240_open(dd) == GP_ERROR) {
-        gp_port_close(dd->dev);
-        gp_port_free(dd->dev);
-        free(dd);
-        return (GP_ERROR);
-    }
-
-    if (dc240_packet_set_size(dd, HPBS+2) == GP_ERROR) {
-        gp_port_close(dd->dev);
-        gp_port_free(dd->dev);
-        free(dd);
-        return (GP_ERROR);
-    }
-
-    camera->camlib_data = dd;
-
-    return (GP_OK);
-}
-
 int camera_exit (Camera *camera) 
 {
     DC240Data *dd = camera->camlib_data;
@@ -303,4 +189,115 @@ int camera_about (Camera *camera, CameraText *about)
 		"Rewritten and updated for gPhoto2."));
 
 	return (GP_OK);
+}
+
+int camera_init (Camera *camera) 
+{
+    unsigned short usb_vendor, usb_product;
+    int ret;
+    gp_port_settings settings;
+    DC240Data *dd;
+
+    if (!camera)
+        return (GP_ERROR);
+
+    dd = (DC240Data*)malloc(sizeof(DC240Data));
+    if (!dd)
+        return (GP_ERROR);
+
+    /* First, set up all the function pointers */
+    camera->functions->exit             = camera_exit;
+    camera->functions->folder_list_folders      = camera_folder_list_folders;
+    camera->functions->folder_list_files        = camera_folder_list_files;
+    camera->functions->file_get         = camera_file_get;
+    camera->functions->file_delete      = camera_file_delete;
+    camera->functions->capture          = camera_capture;
+    camera->functions->summary          = camera_summary;
+    camera->functions->manual           = camera_manual;
+    camera->functions->about            = camera_about;
+
+    switch (camera->port->type) {
+    case GP_PORT_SERIAL:
+        if ((ret = gp_port_new(&(dd->dev), GP_PORT_SERIAL)) < 0) {
+            free(dd);
+            return (GP_ERROR);
+        }
+        strcpy(settings.serial.port, camera->port_info->path);
+        settings.serial.speed    = 9600;
+        settings.serial.bits     = 8;
+        settings.serial.parity   = 0;
+        settings.serial.stopbits = 1;
+        break;
+    case GP_PORT_USB:
+        if ((ret = gp_port_new(&(dd->dev), GP_PORT_USB)) < 0) {
+            free(dd);
+            return (GP_ERROR);
+        }
+        if (find_usb_device_id (camera->model, &usb_vendor, &usb_product) == 0) {
+            gp_port_free(dd->dev);
+            free (dd);
+            return (GP_ERROR);
+        }
+        if (gp_port_usb_find_device(dd->dev, usb_vendor, usb_product) == GP_ERROR) {
+            gp_port_free(dd->dev);
+            free (dd);
+            return (GP_ERROR);
+        }
+        settings.usb.inep       = 0x82;
+        settings.usb.outep      = 0x01;
+        settings.usb.config     = 1;
+        settings.usb.interface  = 0;
+        settings.usb.altsetting = 0;
+        break;
+    default:
+        return (GP_ERROR);
+    }
+
+    if (gp_port_settings_set(dd->dev, settings) == GP_ERROR) {
+        gp_port_free(dd->dev);
+        free(dd);
+        return (GP_ERROR);
+    }
+
+    if (gp_port_open(dd->dev) == GP_ERROR) {
+        gp_port_free(dd->dev);
+        free(dd);
+        return (GP_ERROR);
+    }
+
+    gp_port_timeout_set(dd->dev, TIMEOUT);
+
+    if (camera->port->type == GP_PORT_SERIAL) {
+        /* Reset the camera to 9600 */
+        gp_port_send_break(dd->dev, 1);
+
+        /* Wait for it to reset */
+        GP_SYSTEM_SLEEP(1500);
+
+        if (dc240_set_speed(dd, camera->port_info->speed) == GP_ERROR) {
+            gp_port_close(dd->dev);
+            gp_port_free(dd->dev);
+            free(dd);
+            return (GP_ERROR);
+        }
+    }
+
+    /* Open the CF card */
+    if (dc240_open(dd) == GP_ERROR) {
+        gp_port_close(dd->dev);
+        gp_port_free(dd->dev);
+        free(dd);
+        return (GP_ERROR);
+    }
+
+    if (dc240_packet_set_size(dd, HPBS+2) == GP_ERROR) {
+        gp_port_close(dd->dev);
+        gp_port_free(dd->dev);
+        free(dd);
+        return (GP_ERROR);
+    }
+
+    camera->camlib_data = dd;
+
+    return (GP_OK);
 }

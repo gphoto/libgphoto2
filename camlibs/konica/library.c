@@ -188,7 +188,7 @@ erase_all_unprotected_images (Camera* camera, CameraWidget* widget)
 }
 
 
-gint 
+int 
 camera_id (CameraText* id)
 {
 	g_return_val_if_fail (id != NULL, GP_ERROR_BAD_PARAMETERS);
@@ -197,7 +197,7 @@ camera_id (CameraText* id)
 }
 
 
-gint 
+int 
 camera_abilities (CameraAbilitiesList* list)
 {
 	gint 			i;
@@ -440,102 +440,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	return (GP_OK);
 }
 
-gint 
-camera_init (Camera* camera)
-{
-	gint i;
-	gboolean image_id_long;
-	gint vendor, product, inep, outep;
-	KonicaData *kd;
-	gp_port_settings settings;
-
-	g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
-
-	/* First, set up all the function pointers. */
-	camera->functions->id 			= camera_id;
-	camera->functions->abilities 		= camera_abilities;
-	camera->functions->init 		= camera_init;
-	camera->functions->exit 		= camera_exit;
-        camera->functions->folder_get_config	= camera_folder_get_config;
-	camera->functions->folder_set_config	= camera_folder_set_config;
-	camera->functions->folder_delete_all    = camera_folder_delete_all;
-        camera->functions->file_get 		= camera_file_get;
-	camera->functions->file_delete 		= camera_file_delete;
-	camera->functions->get_config		= camera_get_config;
-	camera->functions->set_config		= camera_set_config;
-	camera->functions->capture		= camera_capture;
-	camera->functions->capture_preview	= camera_capture_preview;
-	camera->functions->summary		= camera_summary;
-	camera->functions->manual 		= camera_manual;
-	camera->functions->about 		= camera_about;
-	camera->functions->result_as_string	= camera_result_as_string;
-
-	/* Lookup model information */
-	for (i = 0; konica_cameras [i].model; i++)
-		if (!strcmp (konica_cameras [i].model, camera->model))
-			break;
-	if (!konica_cameras [i].model)
-		return (GP_ERROR_MODEL_NOT_FOUND);
-	image_id_long = konica_cameras [i].image_id_long;
-	vendor        = konica_cameras [i].vendor;
-	product       = konica_cameras [i].product;
-	inep          = konica_cameras [i].inep;
-	outep         = konica_cameras [i].outep;
-
-	/* Initiate the connection */
-	switch (camera->port->type) {
-	case GP_PORT_SERIAL:
-
-		/* Set up the device */
-		strcpy (settings.serial.port, camera->port_info->path);
-		settings.serial.bits = 8;
-		settings.serial.parity = 0;
-		settings.serial.stopbits = 1;
-		CHECK (gp_port_settings_set (camera->port, settings));
-
-		/* Initiate the serial connection */
-		CHECK (init_serial_connection (camera));
-
-		break;
-	case GP_PORT_USB:
-
-		/* Find the camera */
-		CHECK (gp_port_usb_find_device (camera->port, vendor, product));
-
-		/* Set up the device */
-		settings.usb.inep      = inep;
-		settings.usb.outep     = outep;
-		settings.usb.config    = 1;
-		settings.usb.interface = 0;
-		settings.usb.altsetting = 0;
-		CHECK (gp_port_settings_set (camera->port, settings));
-
-		/* Initiate the connection */
-		CHECK (k_init (camera->port));
-
-		break;
-	default:
-		return (GP_ERROR_IO_UNKNOWN_PORT);
-	}
-
-	/* Store some data we constantly need. */
-	kd = g_new (KonicaData, 1);
-	camera->camlib_data = kd;
-	kd->image_id_long = image_id_long;
-
-	/* Set up the filesystem */
-	gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-				      set_info_func, camera);
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      NULL, camera);
-
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** EXIT: "
-			 "camera_init ***");
-
-	return (GP_OK);
-}
-
-gint
+static int
 camera_exit (Camera* camera)
 {
         KonicaData* 	konica_data;
@@ -553,7 +458,7 @@ camera_exit (Camera* camera)
 	return (GP_OK);
 }
 
-gint
+static int
 camera_folder_delete_all (Camera* camera, const gchar* folder)
 {
 	gint		result;
@@ -578,7 +483,7 @@ camera_folder_delete_all (Camera* camera, const gchar* folder)
 	return (GP_OK);
 }
 
-int 
+static int 
 camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
 		 CameraFileType type, CameraFile *file)
 {
@@ -630,7 +535,7 @@ camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
 	return (GP_OK);
 }
 
-gint 
+static int
 camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 {
 	gchar*		tmp;
@@ -659,7 +564,7 @@ camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 }
 
 
-gint 
+static int 
 camera_summary (Camera* camera, CameraText* summary)
 {
 	gchar*		model = NULL;
@@ -699,7 +604,7 @@ camera_summary (Camera* camera, CameraText* summary)
 	return (GP_OK);
 }
 
-gint
+static int
 camera_capture_preview (Camera* camera, CameraFile* file)
 {
 	unsigned char *data = NULL;
@@ -712,7 +617,7 @@ camera_capture_preview (Camera* camera, CameraFile* file)
 	return (GP_OK);
 }
 
-gint 
+static int 
 camera_capture (Camera* camera, gint type, CameraFilePath* path)
 {
 	KonicaData*	kd;
@@ -751,7 +656,7 @@ camera_capture (Camera* camera, gint type, CameraFilePath* path)
 }
 
 
-gint 
+static int 
 camera_manual (Camera* camera, CameraText* manual)
 {
 	strcpy(manual->text, _("No manual available."));
@@ -760,7 +665,7 @@ camera_manual (Camera* camera, CameraText* manual)
 }
 
 
-gint 
+static int 
 camera_about (Camera* camera, CameraText* about) 
 {
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
@@ -774,7 +679,7 @@ camera_about (Camera* camera, CameraText* about)
 	return (GP_OK);
 }
 
-int
+static int
 camera_folder_get_config (Camera* camera, const gchar* folder, CameraWidget** window)
 {
 	CameraWidget*	widget;
@@ -796,7 +701,7 @@ camera_folder_get_config (Camera* camera, const gchar* folder, CameraWidget** wi
 	return (GP_OK);
 }
 
-int
+static int
 camera_folder_set_config (Camera* camera, const gchar* folder, CameraWidget* window)
 {
 	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
@@ -806,7 +711,7 @@ camera_folder_set_config (Camera* camera, const gchar* folder, CameraWidget* win
 	return (GP_OK);
 }
 
-int 
+static int
 camera_get_config (Camera* camera, CameraWidget** window)
 {
         CameraWidget*	widget;
@@ -1026,7 +931,8 @@ camera_get_config (Camera* camera, CameraWidget** window)
 	return (GP_OK);
 }
  
-int camera_set_config (Camera *camera, CameraWidget *window)
+static int
+camera_set_config (Camera *camera, CameraWidget *window)
 {
 	CameraWidget*	section;
 	CameraWidget*	widget_focus;
@@ -1239,7 +1145,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	return (GP_OK);
 }
 
-gchar*
+static gchar *
 camera_result_as_string (Camera* camera, gint result)
 {
 	/* Really an error? */
@@ -1369,3 +1275,95 @@ gboolean localization_file_read (Camera *camera, gchar *file_name, guchar **data
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "-> %i bytes read.\n", (gint) *data_size);
 	return (TRUE);
 }
+
+int 
+camera_init (Camera* camera)
+{
+        gint i;
+        gboolean image_id_long;
+        gint vendor, product, inep, outep;
+        KonicaData *kd;
+        gp_port_settings settings;
+
+        g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
+
+        /* First, set up all the function pointers. */
+        camera->functions->exit                 = camera_exit;
+        camera->functions->folder_get_config    = camera_folder_get_config;
+        camera->functions->folder_set_config    = camera_folder_set_config;
+        camera->functions->folder_delete_all    = camera_folder_delete_all;
+        camera->functions->file_get             = camera_file_get;
+        camera->functions->file_delete          = camera_file_delete;
+        camera->functions->get_config           = camera_get_config;
+        camera->functions->set_config           = camera_set_config;
+        camera->functions->capture              = camera_capture;
+        camera->functions->capture_preview      = camera_capture_preview;
+        camera->functions->summary              = camera_summary;
+        camera->functions->manual               = camera_manual;
+        camera->functions->about                = camera_about;
+        camera->functions->result_as_string     = camera_result_as_string;
+
+        /* Lookup model information */
+        for (i = 0; konica_cameras [i].model; i++)
+                if (!strcmp (konica_cameras [i].model, camera->model))
+                        break;
+        if (!konica_cameras [i].model)
+                return (GP_ERROR_MODEL_NOT_FOUND);
+        image_id_long = konica_cameras [i].image_id_long;
+        vendor        = konica_cameras [i].vendor;
+        product       = konica_cameras [i].product;
+        inep          = konica_cameras [i].inep;
+        outep         = konica_cameras [i].outep;
+
+        /* Initiate the connection */
+        switch (camera->port->type) {
+        case GP_PORT_SERIAL:
+
+                /* Set up the device */
+                strcpy (settings.serial.port, camera->port_info->path);
+                settings.serial.bits = 8;
+                settings.serial.parity = 0;
+                settings.serial.stopbits = 1;
+                CHECK (gp_port_settings_set (camera->port, settings));
+
+                /* Initiate the serial connection */
+                CHECK (init_serial_connection (camera));
+
+                break;
+        case GP_PORT_USB:
+
+                /* Find the camera */
+                CHECK (gp_port_usb_find_device (camera->port, vendor, product));
+                /* Set up the device */
+                settings.usb.inep      = inep;
+                settings.usb.outep     = outep;
+                settings.usb.config    = 1;
+                settings.usb.interface = 0;
+                settings.usb.altsetting = 0;
+                CHECK (gp_port_settings_set (camera->port, settings));
+
+                /* Initiate the connection */
+                CHECK (k_init (camera->port));
+
+                break;
+        default:
+                return (GP_ERROR_IO_UNKNOWN_PORT);
+        }
+
+        /* Store some data we constantly need. */
+        kd = g_new (KonicaData, 1);
+        camera->camlib_data = kd;
+        kd->image_id_long = image_id_long;
+
+        /* Set up the filesystem */
+        gp_filesystem_set_info_funcs (camera->fs, get_info_func,
+                                      set_info_func, camera);
+        gp_filesystem_set_list_funcs (camera->fs, file_list_func,
+                                      NULL, camera);
+
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** EXIT: "
+                         "camera_init ***");
+
+        return (GP_OK);
+}
+

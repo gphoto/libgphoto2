@@ -405,75 +405,6 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return GP_OK;
 }
 
-int camera_init (Camera *camera) {
-
-	int		ret;
-	l859_t	*dsc = NULL;
-
-	l859_debug("Camera Init %s", camera->model);
-
-	/* First, set up all the function pointers */
-	camera->functions->id 					= camera_id;
-	camera->functions->abilities 			= camera_abilities;
-	camera->functions->init 				= camera_init;
-	camera->functions->exit 				= camera_exit;
-	camera->functions->folder_list_folders 	= camera_folder_list_folders;
-	camera->functions->folder_list_files   	= camera_folder_list_files;
-	camera->functions->folder_delete_all   	= camera_folder_delete_all;
-	camera->functions->file_get 			= camera_file_get;
-	camera->functions->file_delete			= camera_file_delete;
-	camera->functions->summary				= camera_summary;
-	camera->functions->manual 				= camera_manual;
-	camera->functions->about 				= camera_about;
-
-	if (dsc && dsc->dev) {
-		gp_port_close(dsc->dev);
-		gp_port_free(dsc->dev);
-	}
-	free(dsc);
-
-	/* first of all allocate memory for a dsc struct */
-	if ((dsc = (l859_t*)malloc(sizeof(l859_t))) == NULL) {
-		l859_debug("Unable to allocate memory for data structure");
-		return GP_ERROR;
-	}
-
-	camera->camlib_data = dsc;
-
-	if ((ret = gp_port_new(&(dsc->dev), GP_PORT_SERIAL)) < 0) {
-		free(dsc);
-		return (ret);
-	}
-
-	gp_port_timeout_set(dsc->dev, 2000);
-	strcpy(dsc->settings.serial.port, camera->port_info->path);
-	dsc->settings.serial.speed 	= 9600; /* hand shake speed */
-	dsc->settings.serial.bits	= 8;
-	dsc->settings.serial.parity	= 0;
-	dsc->settings.serial.stopbits	= 1;
-
-	gp_port_settings_set(dsc->dev, dsc->settings);
-
-	gp_port_open(dsc->dev);
-
-	/* allocate memory for a dsc read/write buffer */
-	if ((dsc->buf = (char *)malloc(sizeof(char)*(L859_BUFSIZE))) == NULL) {
-		l859_debug("Unable to allocate memory for read/write buffer");
-		free(dsc);
-		return GP_ERROR;
-	}
-
-	/* allocate memory for camera filesystem struct */
-	if ((ret = gp_filesystem_new(&dsc->fs)) < 0) {
-		l859_debug("Unable to allocate memory for camera filesystem");
-		free(dsc);
-		return ret;
-	}
-
-	return l859_connect(dsc, camera->port_info->speed);
-
-}
-
 int camera_exit (Camera *camera) {
 
 	l859_t	*dsc = (l859_t *)camera->camlib_data;
@@ -721,6 +652,70 @@ int camera_about (Camera *camera, CameraText *about) {
 			_("Panasonic PV-L859-K/PV-L779-K Palmcorder Driver\n"
 			"Andrew Selkirk <aselkirk@mailandnews.com>"));
 	return (GP_OK);
+}
+
+int camera_init (Camera *camera) {
+
+        int             ret;
+        l859_t  *dsc = NULL;
+
+        l859_debug("Camera Init %s", camera->model);
+
+        /* First, set up all the function pointers */
+        camera->functions->exit                                 = camera_exit;
+        camera->functions->folder_list_folders  = camera_folder_list_folders;
+        camera->functions->folder_list_files    = camera_folder_list_files;
+        camera->functions->folder_delete_all    = camera_folder_delete_all;
+        camera->functions->file_get                     = camera_file_get;
+        camera->functions->file_delete                  = camera_file_delete;
+        camera->functions->summary                              = camera_summary;
+        camera->functions->manual                               = camera_manual;        camera->functions->about                                = camera_about;
+
+        if (dsc && dsc->dev) {
+                gp_port_close(dsc->dev);
+                gp_port_free(dsc->dev);
+        }
+        free(dsc);
+
+        /* first of all allocate memory for a dsc struct */
+        if ((dsc = (l859_t*)malloc(sizeof(l859_t))) == NULL) {
+                l859_debug("Unable to allocate memory for data structure");
+                return GP_ERROR;
+        }
+
+        camera->camlib_data = dsc;
+
+        if ((ret = gp_port_new(&(dsc->dev), GP_PORT_SERIAL)) < 0) {
+                free(dsc);
+                return (ret);
+        }
+
+        gp_port_timeout_set(dsc->dev, 2000);
+        strcpy(dsc->settings.serial.port, camera->port_info->path);
+        dsc->settings.serial.speed      = 9600; /* hand shake speed */
+        dsc->settings.serial.bits       = 8;
+        dsc->settings.serial.parity     = 0;
+        dsc->settings.serial.stopbits   = 1;
+
+        gp_port_settings_set(dsc->dev, dsc->settings);
+
+        gp_port_open(dsc->dev);
+
+        /* allocate memory for a dsc read/write buffer */
+        if ((dsc->buf = (char *)malloc(sizeof(char)*(L859_BUFSIZE))) == NULL) {
+                l859_debug("Unable to allocate memory for read/write buffer");
+                free(dsc);
+                return GP_ERROR;
+        }
+
+        /* allocate memory for camera filesystem struct */
+        if ((ret = gp_filesystem_new(&dsc->fs)) < 0) {
+                l859_debug("Unable to allocate memory for camera filesystem");
+                free(dsc);
+                return ret;
+        }
+
+        return l859_connect(dsc, camera->port_info->speed);
 }
 
 /* End of l859.c */

@@ -19,6 +19,7 @@
  */
 
 #include "gphoto2-core.h"
+#include "gphoto2-library.h"
 
 #include <stdlib.h>
 #include <stdarg.h>
@@ -47,14 +48,16 @@ is_library (char *library_filename)
 {
 	int ret = GP_OK;
         void *lh;
-	c_id id;
-       
-	if ((lh = GP_SYSTEM_DLOPEN(library_filename)) == NULL)
-                return (GP_ERROR);
-	id = (c_id)GP_SYSTEM_DLSYM(lh, "camera_id");
+	CameraLibraryIdFunc id;
+
+	lh = GP_SYSTEM_DLOPEN (library_filename);
+	if (!lh)
+		return (GP_ERROR);
+
+	id = GP_SYSTEM_DLSYM (lh, "camera_id");
+	GP_SYSTEM_DLCLOSE (lh);
 	if (!id)
 		ret = GP_ERROR;
-	GP_SYSTEM_DLCLOSE(lh);
 
         return (ret);
 }
@@ -64,8 +67,8 @@ load_camera_list (char *library_filename)
 {
 	CameraText id;
 	void *lh;
-        c_abilities load_camera_abilities;
-        c_id load_camera_id;
+        CameraLibraryAbilitiesFunc load_camera_abilities;
+	CameraLibraryIdFunc load_camera_id;
         int x, old_count, new_count, result;
 
         /* try to open the library */
@@ -76,7 +79,7 @@ load_camera_list (char *library_filename)
         }
 
         /* Make sure the camera hasn't been loaded yet */
-	load_camera_id = (c_id)GP_SYSTEM_DLSYM(lh, "camera_id");
+	load_camera_id = GP_SYSTEM_DLSYM (lh, "camera_id");
 	load_camera_id(&id);
 	gp_debug_printf(GP_DEBUG_LOW, "core", "\t library id: %s", id.text);
 	result = gp_abilities_list_lookup_id (glob_abilities_list, id.text);
@@ -86,7 +89,7 @@ load_camera_list (char *library_filename)
 	}
 
 	/* load in the camera_abilities function */
-	load_camera_abilities = (c_abilities)GP_SYSTEM_DLSYM(lh, "camera_abilities");
+	load_camera_abilities = GP_SYSTEM_DLSYM (lh, "camera_abilities");
 	old_count = gp_abilities_list_count (glob_abilities_list);
 	if (old_count < 0) {
 		GP_SYSTEM_DLCLOSE (lh);
@@ -145,7 +148,7 @@ load_cameras_search (char *directory)
                         gp_debug_printf(GP_DEBUG_LOW, "core", "yes");
                         load_camera_list (buf);
                    } else {
-			gp_debug_printf(GP_DEBUG_LOW, "core", "no. reason: %s", GP_SYSTEM_DLERROR());
+			gp_debug_printf(GP_DEBUG_LOW, "core", "no. reason: %s", GP_SYSTEM_DLERROR ());
                 }
            }
         } while (de);

@@ -62,57 +62,6 @@ int camera_abilities (CameraAbilitiesList *list) {
         return (GP_OK);
 }
 
-int camera_init (Camera *camera) {
-        gp_port_settings settings;
-        SonyStruct *b;
-        int ret;
-
-        if(glob_debug)
-        {
-         printf("sony dscf1: Initializing the camera\n");
-         printf("port: %s\n",camera->port_info->path);
-        }
-
-        camera->functions->id           = camera_id;
-        camera->functions->abilities    = camera_abilities;
-        camera->functions->init         = camera_init;
-        camera->functions->exit         = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        //camera->functions->folder_set   = camera_folder_set;
-        //camera->functions->file_count   = camera_file_count;
-        camera->functions->file_get     = camera_file_get;
-        camera->functions->file_delete  = camera_file_delete;
-//        camera->functions->capture      = camera_capture;
-        camera->functions->summary      = camera_summary;
-        camera->functions->manual       = camera_manual;
-        camera->functions->about        = camera_about;
-
-        b = (SonyStruct*)malloc(sizeof(SonyStruct));
-        camera->camlib_data = b;
-
-        if ((ret = gp_port_new(&(b->dev), GP_PORT_SERIAL)) < 0) {
-            return (ret);
-        }
-
-
-        gp_port_timeout_set(b->dev, 5000);
-        strcpy(settings.serial.port, camera->port_info->path);
-
-        settings.serial.speed   = camera->port_info->speed;
-        settings.serial.bits    = 8;
-        settings.serial.parity  = 0;
-        settings.serial.stopbits= 1;
-
-        gp_port_settings_set(b->dev, settings);
-        gp_port_open(b->dev);
-
-        /* Create the filesystem */
-        gp_filesystem_new(&b->fs);
-        dev = b->dev;
-        return (GP_OK);
-}
-
 int camera_exit (Camera *camera) {
         if(F1ok())
            return(GP_ERROR);
@@ -241,3 +190,52 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 
         return GP_OK;
 }
+
+int camera_init (Camera *camera) {
+        gp_port_settings settings;
+        SonyStruct *b;
+        int ret;
+
+        if(glob_debug)
+        {
+         printf("sony dscf1: Initializing the camera\n");
+         printf("port: %s\n",camera->port_info->path);
+        }
+
+        camera->functions->exit         = camera_exit;
+        camera->functions->folder_list_folders  = camera_folder_list_folders;
+        camera->functions->folder_list_files    = camera_folder_list_files;
+        //camera->functions->folder_set   = camera_folder_set;
+        //camera->functions->file_count   = camera_file_count;
+        camera->functions->file_get     = camera_file_get;
+        camera->functions->file_delete  = camera_file_delete;
+//        camera->functions->capture      = camera_capture;
+        camera->functions->summary      = camera_summary;
+        camera->functions->manual       = camera_manual;
+        camera->functions->about        = camera_about;
+
+        b = (SonyStruct*)malloc(sizeof(SonyStruct));
+        camera->camlib_data = b;
+
+        if ((ret = gp_port_new(&(b->dev), GP_PORT_SERIAL)) < 0) {
+            return (ret);
+        }
+
+
+        gp_port_timeout_set(b->dev, 5000);
+        strcpy(settings.serial.port, camera->port_info->path);
+
+        settings.serial.speed   = camera->port_info->speed;
+        settings.serial.bits    = 8;
+        settings.serial.parity  = 0;
+        settings.serial.stopbits= 1;
+
+        gp_port_settings_set(b->dev, settings);
+        gp_port_open(b->dev);
+
+        /* Create the filesystem */
+        gp_filesystem_new(&b->fs);
+        dev = b->dev;
+        return (GP_OK);
+}
+

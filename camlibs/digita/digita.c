@@ -76,57 +76,6 @@ int camera_abilities(CameraAbilitiesList *list)
         return GP_OK;
 }
 
-int camera_init(Camera *camera)
-{
-        struct digita_device *dev;
-        int ret = 0;
-
-        if (!camera)
-                return GP_ERROR;
-
-        /* First, set up all the function pointers */
-        camera->functions->id           = camera_id;
-        camera->functions->abilities    = camera_abilities;
-        camera->functions->init         = camera_init;
-        camera->functions->exit         = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        camera->functions->file_get     = camera_file_get;
-        camera->functions->summary      = camera_summary;
-        camera->functions->manual       = camera_manual;
-        camera->functions->about        = camera_about;
-
-        gp_debug_printf (GP_DEBUG_LOW, "digita", "Initializing the camera\n");
-
-        dev = malloc(sizeof(*dev));
-        if (!dev) {
-                fprintf(stderr, "Couldn't allocate digita device\n");
-                return GP_ERROR;
-        }
-        memset((void *)dev, 0, sizeof(*dev));
-
-        switch (camera->port->type) {
-        case GP_PORT_USB:
-                ret = digita_usb_open(dev, camera);
-                break;
-        case GP_PORT_SERIAL:
-                ret = digita_serial_open(dev, camera);
-                break;
-        default:
-                fprintf(stderr, "Unknown port type %d\n", camera->port->type);
-                return GP_ERROR;
-        }
-
-        if (ret < 0) {
-                fprintf(stderr, "Couldn't open digita device\n");
-                return GP_ERROR;
-        }
-
-        camera->camlib_data = dev;
-
-        return GP_OK;
-}
-
 int camera_exit (Camera *camera)
 {
         return GP_OK;
@@ -416,3 +365,52 @@ printf("deleting %d, %s%s\n", index, digita_file_list[index].fn.path, digita_fil
         return 1;
 }
 #endif
+
+int camera_init(Camera *camera)
+{
+        struct digita_device *dev;
+        int ret = 0;
+
+        if (!camera)
+                return GP_ERROR;
+
+        /* First, set up all the function pointers */
+        camera->functions->exit         = camera_exit;
+        camera->functions->folder_list_folders  = camera_folder_list_folders;
+        camera->functions->folder_list_files    = camera_folder_list_files;
+        camera->functions->file_get     = camera_file_get;
+        camera->functions->summary      = camera_summary;
+        camera->functions->manual       = camera_manual;
+        camera->functions->about        = camera_about;
+
+        gp_debug_printf (GP_DEBUG_LOW, "digita", "Initializing the camera\n");
+
+        dev = malloc(sizeof(*dev));
+        if (!dev) {
+                fprintf(stderr, "Couldn't allocate digita device\n");
+                return GP_ERROR;
+        }
+        memset((void *)dev, 0, sizeof(*dev));
+
+        switch (camera->port->type) {
+        case GP_PORT_USB:
+                ret = digita_usb_open(dev, camera);
+                break;
+        case GP_PORT_SERIAL:
+                ret = digita_serial_open(dev, camera);
+                break;
+        default:
+                fprintf(stderr, "Unknown port type %d\n", camera->port->type);
+                return GP_ERROR;
+        }
+
+        if (ret < 0) {
+                fprintf(stderr, "Couldn't open digita device\n");
+                return GP_ERROR;
+        }
+
+        camera->camlib_data = dev;
+
+        return GP_OK;
+}
+

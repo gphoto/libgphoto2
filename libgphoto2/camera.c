@@ -26,6 +26,7 @@
 #include "gphoto2-result.h"
 #include "gphoto2-frontend.h"
 #include "gphoto2-core.h"
+#include "gphoto2-library.h"
 
 #include <config.h>
 #ifdef ENABLE_NLS
@@ -289,6 +290,7 @@ gp_camera_init (Camera *camera)
 	int result;
         CameraList list;
 	const char *model, *port;
+	CameraLibraryInitFunc init_func;
 
 	CHECK_NULL (camera);
 
@@ -326,12 +328,7 @@ gp_camera_init (Camera *camera)
 		return (GP_ERROR);
 	}
 
-	camera->functions->id = GP_SYSTEM_DLSYM (camera->library_handle,
-						 "camera_id");
-	camera->functions->abilities = GP_SYSTEM_DLSYM (camera->library_handle,
-					                "camera_abilities");
-	camera->functions->init = GP_SYSTEM_DLSYM (camera->library_handle,
-						   "camera_init");
+	init_func = GP_SYSTEM_DLSYM (camera->library_handle, "camera_init");
 
 	/*
 	 * Don't open the port here - this has to be done by the
@@ -340,7 +337,7 @@ gp_camera_init (Camera *camera)
 	 * Ok, we are nice to camera driver writers - close the port, but
 	 * ignore errors.
 	 */
-	result = camera->functions->init (camera);
+	result = init_func (camera);
 	gp_port_close (camera->port);
 
 	return (result);

@@ -150,45 +150,6 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera)
-{
-        int i = 0;
-        DirectoryStruct *d;
-        char buf[256];
-
-        /* First, set up all the function pointers */
-        camera->functions->id                   = camera_id;
-        camera->functions->abilities            = camera_abilities;
-        camera->functions->init                 = camera_init;
-        camera->functions->exit                 = camera_exit;
-        camera->functions->file_get             = camera_file_get;
-        camera->functions->file_get_info        = camera_file_get_info;
-        camera->functions->file_set_info        = camera_file_set_info;
-        camera->functions->get_config           = camera_get_config;
-        camera->functions->set_config           = camera_set_config;
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
-        camera->functions->about                = camera_about;
-
-        d = (DirectoryStruct*)malloc(sizeof(DirectoryStruct));
-        camera->camlib_data = d;
-
-        d->num_images = 0;
-
-        for (i=0; i<1024; i++)
-                strcpy(d->images[i], "");
-
-	strcpy(d->directory, "/");
-
-        if (gp_setting_get("directory", "hidden", buf) != GP_OK)
-                gp_setting_set("directory", "hidden", "1");
-
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-				      folder_list_func, NULL);
-
-        return (GP_OK);
-}
-
 int camera_exit (Camera *camera)
 {
         DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
@@ -410,3 +371,40 @@ int camera_about (Camera *camera, CameraText *about)
 
         return (GP_OK);
 }
+
+int camera_init (Camera *camera)
+{
+        int i = 0;
+        DirectoryStruct *d;
+        char buf[256];
+
+        /* First, set up all the function pointers */
+        camera->functions->exit                 = camera_exit;
+        camera->functions->file_get             = camera_file_get;
+        camera->functions->file_get_info        = camera_file_get_info;
+        camera->functions->file_set_info        = camera_file_set_info;
+        camera->functions->get_config           = camera_get_config;
+        camera->functions->set_config           = camera_set_config;
+        camera->functions->summary              = camera_summary;
+        camera->functions->manual               = camera_manual;
+        camera->functions->about                = camera_about;
+
+        d = (DirectoryStruct*)malloc(sizeof(DirectoryStruct));
+        camera->camlib_data = d;
+
+        d->num_images = 0;
+
+        for (i=0; i<1024; i++)
+                strcpy(d->images[i], "");
+
+        strcpy(d->directory, "/");
+
+        if (gp_setting_get("directory", "hidden", buf) != GP_OK)
+                gp_setting_set("directory", "hidden", "1");
+
+        gp_filesystem_set_list_funcs (camera->fs, file_list_func,
+                                      folder_list_func, NULL);
+
+        return (GP_OK);
+}
+

@@ -75,80 +75,6 @@ int camera_abilities (CameraAbilitiesList *list)
 	return GP_OK;
 }
 
-int camera_init (Camera *camera) 
-{
-        int ret;
-        dimagev_t *dimagev = NULL;
-
-	/* First, set up all the function pointers */
-	camera->functions->id 			= camera_id;
-	camera->functions->abilities 		= camera_abilities;
-	camera->functions->init 		= camera_init;
-	camera->functions->exit 		= camera_exit;
-	camera->functions->folder_list_folders 	= camera_folder_list_folders;
-	camera->functions->folder_list_files   	= camera_folder_list_files;
-	camera->functions->file_get 		= camera_file_get;
-	camera->functions->file_delete 		= camera_file_delete;
-	camera->functions->folder_put_file      = camera_folder_put_file;
-	camera->functions->folder_delete_all    = camera_folder_delete_all;
-	camera->functions->capture 		= camera_capture;
-	camera->functions->summary		= camera_summary;
-	camera->functions->manual 		= camera_manual;
-	camera->functions->about 		= camera_about;
-
-	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "initializing the camera");
-
-	if ( ( dimagev = (dimagev_t*) malloc(sizeof(dimagev_t))) == NULL ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to allocate dimagev_t");
-		return GP_ERROR_NO_MEMORY;
-	}
-
-	camera->camlib_data = dimagev;
-
-	/* Now open a port. */
-	if (( ret = gp_port_new(&(dimagev->dev), GP_PORT_SERIAL)) < 0 ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to allocate gp_port_dev");
-		return ret;
-	}
-
-	gp_port_timeout_set(dimagev->dev, 5000);
-
-#if defined HAVE_STRNCPY
-	strncpy(dimagev->settings.serial.port, camera->port->path, sizeof(dimagev->settings.serial.port));
-#else
-	strcpy(dimagev->settings.serial.port, camera->port_info->path);
-#endif
-	dimagev->settings.serial.speed = 38400;
-	dimagev->settings.serial.bits = 8;
-	dimagev->settings.serial.parity = 0;
-	dimagev->settings.serial.stopbits = 1;
-
-	if (( ret = gp_filesystem_new(&dimagev->fs)) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to allocate filesystem");
-		return (ret);
-	}
-
-	gp_port_settings_set(dimagev->dev, dimagev->settings);
-	gp_port_open(dimagev->dev);
-
-	if  ( dimagev_get_camera_data(dimagev) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to get current camera data");
-		return GP_ERROR_IO;
-	}
-
-	if  ( dimagev_get_camera_status(dimagev) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to get current camera status");
-		return GP_ERROR_IO;
-	}
-
-	/* Let's make this non-fatal. An incorrect date doesn't affect much. */
-	if ( dimagev_set_date(dimagev) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
-	}
-
-	return GP_OK;
-}
-
 int camera_exit (Camera *camera) 
 {
 	dimagev_t *dimagev;
@@ -578,3 +504,75 @@ _("Minolta Dimage V Camera Library\n%s\nGus Hartmann <gphoto@gus-the-cat.org>\nS
 
 	return GP_OK;
 }
+
+int camera_init (Camera *camera) 
+{
+        int ret;
+        dimagev_t *dimagev = NULL;
+
+        /* First, set up all the function pointers */
+        camera->functions->exit                 = camera_exit;
+        camera->functions->folder_list_folders  = camera_folder_list_folders;
+        camera->functions->folder_list_files    = camera_folder_list_files;
+        camera->functions->file_get             = camera_file_get;
+        camera->functions->file_delete          = camera_file_delete;
+        camera->functions->folder_put_file      = camera_folder_put_file;
+        camera->functions->folder_delete_all    = camera_folder_delete_all;
+        camera->functions->capture              = camera_capture;
+        camera->functions->summary              = camera_summary;
+        camera->functions->manual               = camera_manual;
+        camera->functions->about                = camera_about;
+
+        gp_debug_printf(GP_DEBUG_LOW, "dimagev", "initializing the camera");
+
+        if ( ( dimagev = (dimagev_t*) malloc(sizeof(dimagev_t))) == NULL ) {
+                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to allocate dimagev_t");
+                return GP_ERROR_NO_MEMORY;
+        }
+
+        camera->camlib_data = dimagev;
+
+        /* Now open a port. */
+        if (( ret = gp_port_new(&(dimagev->dev), GP_PORT_SERIAL)) < 0 ) {
+                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to allocate gp_port_dev");
+                return ret;
+        }
+
+        gp_port_timeout_set(dimagev->dev, 5000);
+
+#if defined HAVE_STRNCPY
+        strncpy(dimagev->settings.serial.port, camera->port->path, sizeof(dimagev->settings.serial.port));
+#else
+        strcpy(dimagev->settings.serial.port, camera->port_info->path);
+#endif
+        dimagev->settings.serial.speed = 38400;
+        dimagev->settings.serial.bits = 8;
+        dimagev->settings.serial.parity = 0;
+        dimagev->settings.serial.stopbits = 1;
+
+        if (( ret = gp_filesystem_new(&dimagev->fs)) < GP_OK ) {
+                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to allocate filesystem");
+                return (ret);
+        }
+
+        gp_port_settings_set(dimagev->dev, dimagev->settings);
+        gp_port_open(dimagev->dev);
+
+        if  ( dimagev_get_camera_data(dimagev) < GP_OK ) {
+                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to get current camera data");
+                return GP_ERROR_IO;
+        }
+
+        if  ( dimagev_get_camera_status(dimagev) < GP_OK ) {
+                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to get current camera status");
+                return GP_ERROR_IO;
+        }
+
+        /* Let's make this non-fatal. An incorrect date doesn't affect much. */
+        if ( dimagev_set_date(dimagev) < GP_OK ) {
+                gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
+        }
+
+        return GP_OK;
+}
+

@@ -65,47 +65,6 @@ int camera_abilities (CameraAbilitiesList *list) {
         return (GP_OK);
 }
 
-int camera_init(Camera *camera) {
-
-        gp_port_settings settings;
-        BarbieStruct *b;
-        int ret;
-
-        /* First, set up all the function pointers */
-        camera->functions->id           = camera_id;
-        camera->functions->abilities    = camera_abilities;
-        camera->functions->init         = camera_init;
-        camera->functions->exit         = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        camera->functions->file_get     = camera_file_get;
-        camera->functions->summary      = camera_summary;
-        camera->functions->manual       = camera_manual;
-        camera->functions->about        = camera_about;
-
-        b = (BarbieStruct*)malloc(sizeof(BarbieStruct));
-        camera->camlib_data = b;
-
-        if ((ret = gp_port_new(&(b->dev), GP_PORT_SERIAL)) < 0) {
-            return (ret);
-        }
-        gp_port_timeout_set(b->dev, 5000);
-        strcpy(settings.serial.port, camera->port_info->path);
-
-        settings.serial.speed   = 57600;
-        settings.serial.bits    = 8;
-        settings.serial.parity  = 0;
-        settings.serial.stopbits= 1;
-
-        gp_port_settings_set(b->dev, settings);
-        gp_port_open(b->dev);
-
-        /* Create the filesystem */
-	gp_filesystem_new(&b->fs);
-
-        return (barbie_ping(b));
-}
-
 int camera_exit(Camera *camera) {
 
         BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
@@ -228,4 +187,42 @@ int camera_about (Camera *camera, CameraText *about) {
 
         strcpy(about->text,_("Barbie/HotWheels/WWF\nScott Fritzinger <scottf@unr.edu>\nAndreas Meyer <ahm@spies.com>\nPete Zaitcev <zaitcev@metabyte.com>\n\nReverse engineering of image data by:\nJeff Laing <jeffl@SPATIALinfo.com>\n\nImplemented using documents found on\nthe web. Permission given by Vision."));
         return GP_OK;
+}
+
+int camera_init(Camera *camera) {
+
+        gp_port_settings settings;
+        BarbieStruct *b;
+        int ret;
+
+        /* First, set up all the function pointers */
+        camera->functions->exit         = camera_exit;
+        camera->functions->folder_list_folders  = camera_folder_list_folders;
+        camera->functions->folder_list_files    = camera_folder_list_files;
+        camera->functions->file_get     = camera_file_get;
+        camera->functions->summary      = camera_summary;
+        camera->functions->manual       = camera_manual;
+        camera->functions->about        = camera_about;
+
+        b = (BarbieStruct*)malloc(sizeof(BarbieStruct));
+        camera->camlib_data = b;
+
+        if ((ret = gp_port_new(&(b->dev), GP_PORT_SERIAL)) < 0) {
+            return (ret);
+        }
+        gp_port_timeout_set(b->dev, 5000);
+        strcpy(settings.serial.port, camera->port_info->path);
+
+        settings.serial.speed   = 57600;
+        settings.serial.bits    = 8;
+        settings.serial.parity  = 0;
+        settings.serial.stopbits= 1;
+
+        gp_port_settings_set(b->dev, settings);
+        gp_port_open(b->dev);
+
+        /* Create the filesystem */
+        gp_filesystem_new(&b->fs);
+
+        return (barbie_ping(b));
 }

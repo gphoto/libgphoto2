@@ -42,9 +42,6 @@ typedef struct {
 	char folder [1024];
 } CameraFilePath;
 
-typedef int (*c_id)                     (CameraText *);
-typedef int (*c_abilities)              (CameraAbilitiesList *);
-typedef int (*c_init)                   (Camera*);
 typedef int (*c_exit)                   (Camera*);
 typedef int (*c_get_config)             (Camera*, CameraWidget**);
 typedef int (*c_set_config)             (Camera*, CameraWidget*);
@@ -78,9 +75,6 @@ typedef char *(*c_result_as_string)     (Camera*, int);
 
 
 typedef struct {
-	c_id                    id;
-	c_abilities             abilities;
-	c_init                  init;
 	c_exit                  exit;
 	c_get_config            get_config;
 	c_set_config            set_config;

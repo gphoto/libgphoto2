@@ -1,41 +1,40 @@
-int camera_id 			(CameraText *id);
-int camera_abilities 		(CameraAbilitiesList *list);
-int camera_init 		(Camera *camera);
-int camera_exit 		(Camera *camera);
+/* gphoto2-library.h:
+ * 
+ * Copyright (C) 2000 Scott Fritzinger
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 
-int camera_get_config		(Camera *camera, CameraWidget **window);
-int camera_set_config		(Camera *camera, CameraWidget  *window);
-int camera_capture 		(Camera *camera, int capture_type, 
-				 CameraFilePath *path);
-int camera_capture_preview     	(Camera *camera, CameraFile *file);
-int camera_summary 		(Camera *camera, CameraText *summary);
-int camera_manual 		(Camera *camera, CameraText *manual);
-int camera_about 		(Camera *camera, CameraText *about);
+#ifndef __GPHOTO2_LIBRARY_H__
+#define __GPHOTO2_LIBRARY_H__
 
-int camera_folder_list_folders	(Camera *camera, const char *folder, 
-				 CameraList *list);
-int camera_folder_list_files   	(Camera *camera, const char *folder, 
-				 CameraList *list);
-int camera_folder_put_file     	(Camera *camera, const char *folder, 
-				 CameraFile *file);
-int camera_folder_delete_all   	(Camera *camera, const char *folder);
-int camera_folder_get_config	(Camera *camera, const char *folder, 
-				 CameraWidget **window);
-int camera_folder_set_config	(Camera *camera, const char *folder, 
-				 CameraWidget  *window);
+#include <gphoto2-abilities-list.h>
+#include <gphoto2-camera.h>
 
-int camera_file_get_info        (Camera *camera, const char *folder, 
-				 const char *filename, CameraFileInfo *info);
-int camera_file_set_info	(Camera *camera, const char *folder, 
-				 const char *filename, CameraFileInfo *info);
-int camera_file_get       	(Camera *camera, const char *folder, 
-				 const char *filename, CameraFileType type,
-				 CameraFile *file);
-int camera_file_delete   	(Camera *camera, const char *folder, 
-				 const char *filename);
-int camera_file_get_config	(Camera *camera, const char *folder, 
-				 const char *filename, CameraWidget **window);
-int camera_file_set_config	(Camera *camera, const char *folder, 
-				 const char *filename, CameraWidget  *window);
+typedef int (* CameraLibraryIdFunc)        (CameraText *);
+typedef int (* CameraLibraryAbilitiesFunc) (CameraAbilitiesList *);
+typedef int (* CameraLibraryInitFunc)      (Camera *);
 
-char *camera_result_as_string 	(Camera *camera, int result);
+/*
+ * If you want to write a camera library, you need to implement 
+ * the following three functions. Everything else should be declared
+ * as static.
+ */
+int camera_id		(CameraText *id);
+int camera_abilities 	(CameraAbilitiesList *list);
+int camera_init 	(Camera *camera);
+
+#endif /* __GPHOTO2_LIBRARY_H__ */

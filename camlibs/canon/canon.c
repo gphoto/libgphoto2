@@ -780,117 +780,6 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 /****************************************************************************/
 
 
-/**
- * This routine initializes the serial port and also load the
- * camera settings. Right now it is only the speed that is
- * saved.
- */
-int camera_init(Camera *camera)
-{
-  struct canon_info *cs;
-  char buf[8];
-  
-  gp_debug_printf(GP_DEBUG_LOW,"canon","camera_init()");
-  
-  /* First, set up all the function pointers */
-  camera->functions->id                  = camera_id;
-  camera->functions->abilities           = camera_abilities;
-  camera->functions->init                = camera_init;
-  camera->functions->exit                = camera_exit;
-  camera->functions->folder_list_folders = camera_folder_list_folders;
-  camera->functions->folder_list_files   = camera_folder_list_files;
-  camera->functions->folder_put_file     = camera_folder_put_file;
-  camera->functions->file_get            = camera_file_get;
-  camera->functions->file_delete         = camera_file_delete;
-  camera->functions->file_get_info       = camera_file_get_info;
-  camera->functions->file_set_info       = camera_file_set_info;
-  camera->functions->get_config          = camera_get_config;
-  camera->functions->set_config          = camera_set_config;
-  camera->functions->file_get_config     = camera_file_get_config;
-  camera->functions->file_set_config     = camera_file_set_config;
-  camera->functions->folder_get_config   = camera_folder_get_config;
-  camera->functions->folder_set_config   = camera_folder_set_config;
-  camera->functions->capture             = camera_capture;
-  camera->functions->summary             = camera_summary;
-  camera->functions->manual              = camera_manual;
-  camera->functions->about               = camera_about;
-  camera->functions->result_as_string    = camera_result_as_string;
-  
-  cs = (struct canon_info*)malloc(sizeof(struct canon_info));
-  camera->camlib_data = cs;
-  
-  cs->first_init = 1;
-  cs->uploading = 0;
-  cs->slow_send = 0;
-  cs->cached_ready = 0;
-  cs->cached_disk = 0;
-  cs->cached_dir = 0;
-  cs->dump_packets = 0;
-  
-  fprintf(stderr,"canon_initialize()\n");
-  
-  cs->speed = camera->port_info->speed;
-  /* Default speed */
-  if (cs->speed == 0)
-    cs->speed = 9600;
-  
-  if (gp_setting_get("canon","debug",buf) != GP_OK)
-    cs->debug = 1;
-  
-  if (strncmp(buf, "0", 1) == 0)
-    cs->debug = 0;
-  if (strncmp(buf, "1", 1) == 0)
-    cs->debug = 1;
-  if (strncmp(buf, "1", 1) == 0)
-    cs->debug = 1;
-  if (strncmp(buf, "2", 1) == 0)
-    cs->debug = 2;
-  if (strncmp(buf, "3", 1) == 0)
-    cs->debug = 3;
-  if (strncmp(buf, "4", 1) == 0)
-    cs->debug = 4;
-  if (strncmp(buf, "5", 1) == 0)
-    cs->debug = 5;
-  if (strncmp(buf, "6", 1) == 0)
-    cs->debug = 6;
-  if (strncmp(buf, "7", 1) == 0)
-    cs->debug = 7;
-  if (strncmp(buf, "8", 1) == 0)
-    cs->debug = 8;
-  if (strncmp(buf, "9", 1) == 0)
-    cs->debug = 9;
-  fprintf(stderr,"Debug level: %i\n",cs->debug);
-  
-  if(gp_setting_get("canon","dump_packets",buf) == GP_OK) {
-    if(strncmp(buf, "1", 1) == 0)
-      cs->dump_packets = 1;
-    if(strncmp(buf, "0", 1) == 0)
-      cs->dump_packets = 0;
-  }
-  
-  switch (camera->port->type) { 
-  case GP_PORT_USB:
-    gp_debug_printf(GP_DEBUG_LOW,"canon","GPhoto tells us that we should use a USB link.\n");
-    canon_comm_method = CANON_USB;
-    break;
-  case GP_PORT_SERIAL:
-  default:
-    gp_debug_printf(GP_DEBUG_LOW,"canon","GPhoto tells us that we should use a RS232 link.\n");
-    canon_comm_method = CANON_SERIAL_RS232;
-    break;
-  }
-  
-  if (canon_comm_method == CANON_SERIAL_RS232)
-    gp_debug_printf(GP_DEBUG_LOW,"canon","Camera transmission speed : %i\n", cs->speed);
-  
-  
-  return canon_serial_init(camera,camera->port_info->path);
-}
-
-
-/****************************************************************************/
-
-
 static void pretty_number(int number,char *buffer)
 {
     int len,tmp,digits;
@@ -1528,3 +1417,107 @@ char *camera_result_as_string (Camera *camera, int result)
 {
   return NULL;
 }
+
+/**
+ * This routine initializes the serial port and also load the
+ * camera settings. Right now it is only the speed that is
+ * saved.
+ */
+int camera_init(Camera *camera)
+{
+  struct canon_info *cs;
+  char buf[8];
+  
+  gp_debug_printf(GP_DEBUG_LOW,"canon","camera_init()");
+  
+  /* First, set up all the function pointers */
+  camera->functions->exit                = camera_exit;
+  camera->functions->folder_list_folders = camera_folder_list_folders;
+  camera->functions->folder_list_files   = camera_folder_list_files;
+  camera->functions->folder_put_file     = camera_folder_put_file;
+  camera->functions->file_get            = camera_file_get;
+  camera->functions->file_delete         = camera_file_delete;
+  camera->functions->file_get_info       = camera_file_get_info;
+  camera->functions->file_set_info       = camera_file_set_info;
+  camera->functions->get_config          = camera_get_config;
+  camera->functions->set_config          = camera_set_config;
+  camera->functions->file_get_config     = camera_file_get_config;
+  camera->functions->file_set_config     = camera_file_set_config;
+  camera->functions->folder_get_config   = camera_folder_get_config;
+  camera->functions->folder_set_config   = camera_folder_set_config;
+  camera->functions->capture             = camera_capture;
+  camera->functions->summary             = camera_summary;
+  camera->functions->manual              = camera_manual;
+  camera->functions->about               = camera_about;
+  camera->functions->result_as_string    = camera_result_as_string;
+  
+  cs = (struct canon_info*)malloc(sizeof(struct canon_info));
+  camera->camlib_data = cs;
+  
+  cs->first_init = 1;
+  cs->uploading = 0;
+  cs->slow_send = 0;
+  cs->cached_ready = 0;
+  cs->cached_disk = 0;
+  cs->cached_dir = 0;
+  cs->dump_packets = 0;
+  
+  fprintf(stderr,"canon_initialize()\n");
+  
+  cs->speed = camera->port_info->speed;
+  /* Default speed */
+  if (cs->speed == 0)
+    cs->speed = 9600;
+  
+  if (gp_setting_get("canon","debug",buf) != GP_OK)
+    cs->debug = 1;
+  
+  if (strncmp(buf, "0", 1) == 0)
+    cs->debug = 0;
+  if (strncmp(buf, "1", 1) == 0)
+    cs->debug = 1;
+  if (strncmp(buf, "1", 1) == 0)
+    cs->debug = 1;
+  if (strncmp(buf, "2", 1) == 0)
+    cs->debug = 2;
+  if (strncmp(buf, "3", 1) == 0)
+    cs->debug = 3;
+  if (strncmp(buf, "4", 1) == 0)
+    cs->debug = 4;
+  if (strncmp(buf, "5", 1) == 0)
+    cs->debug = 5;
+  if (strncmp(buf, "6", 1) == 0)
+    cs->debug = 6;
+  if (strncmp(buf, "7", 1) == 0)
+    cs->debug = 7;
+  if (strncmp(buf, "8", 1) == 0)
+    cs->debug = 8;
+  if (strncmp(buf, "9", 1) == 0)
+    cs->debug = 9;
+  fprintf(stderr,"Debug level: %i\n",cs->debug);
+  
+  if(gp_setting_get("canon","dump_packets",buf) == GP_OK) {
+    if(strncmp(buf, "1", 1) == 0)
+      cs->dump_packets = 1;
+    if(strncmp(buf, "0", 1) == 0)
+      cs->dump_packets = 0;
+  }
+  
+  switch (camera->port->type) { 
+  case GP_PORT_USB:
+    gp_debug_printf(GP_DEBUG_LOW,"canon","GPhoto tells us that we should use a USB link.\n");
+    canon_comm_method = CANON_USB;
+    break;
+  case GP_PORT_SERIAL:
+  default:
+    gp_debug_printf(GP_DEBUG_LOW,"canon","GPhoto tells us that we should use a RS232 link.\n");
+    canon_comm_method = CANON_SERIAL_RS232;
+    break;
+  }
+  if (canon_comm_method == CANON_SERIAL_RS232)
+    gp_debug_printf(GP_DEBUG_LOW,"canon","Camera transmission speed : %i\n", cs->speed);
+  
+  
+  return canon_serial_init(camera,camera->port_info->path);
+}
+

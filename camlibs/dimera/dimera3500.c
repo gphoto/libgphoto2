@@ -21,6 +21,18 @@
  *
  * History:
  * $Log$
+ * Revision 1.13  2001/08/29 17:52:57  lutz
+ * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * gphoto2-library.h: Clean up this file.
+ *         * gphoto2-camera.h: We don't need camera_init, camera_abilities, and
+ *         camera_id here. That belongs into gphoto2-library.h.
+ *         * libgphoto2/camera.c:
+ *         * libgphoto2/core.c: Adapt
+ *         * camlibs/*: Move camera_init to the bottom of the file. Camera
+ *         driver authors, could you please declare the functions above static?
+ *         Except camera_id and camera_abilities.
+ *
  * Revision 1.12  2001/08/29 10:09:57  lutz
  * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -262,91 +274,6 @@ int camera_abilities (CameraAbilitiesList *list) {
 	}
 
 	return (GP_OK);
-}
-
-
-int camera_init (Camera *camera) {
-
-	DimeraStruct *cam;
-
-	debuglog("camera_init()");
-
-	/* First, set up all the function pointers */
-	camera->functions->id 			= camera_id;
-	camera->functions->abilities 		= camera_abilities;
-	camera->functions->init 		= camera_init;
-	camera->functions->exit 		= camera_exit;
-	camera->functions->folder_list_folders 	= camera_folder_list_folders;
-	camera->functions->folder_list_files	= camera_folder_list_files;
-	camera->functions->file_get_info	= camera_file_get_info;
-	camera->functions->file_set_info	= camera_file_set_info;
-	camera->functions->file_get 		= camera_file_get;
-	//camera->functions->folder_put_file	= camera_folder_put_file;
-	//camera->functions->file_delete 	= camera_file_delete;
-	//camera->functions->folder_delete_all 	= camera_folder_delete_all;
-	//camera->functions->config		= camera_config;
-	//camera->functions->get_config   	= camera_get_config;
-	//camera->functions->set_config   	= camera_set_config;
-	//camera->functions->folder_get_config 	= camera_folder_get_config;
-	//camera->functions->folder_set_config 	= camera_folder_set_config;
-	//camera->functions->file_get_config 	= camera_file_get_config;
-	//camera->functions->file_set_config 	= camera_file_set_config;
-	camera->functions->capture 		= camera_capture;
-	camera->functions->capture_preview 	= camera_capture_preview;
-	camera->functions->summary		= camera_summary;
-	camera->functions->manual 		= camera_manual;
-	camera->functions->about 		= camera_about;
-	//camera->functions->result_as_string 	= camera_result_as_string;
-
-	cam = (DimeraStruct*)malloc(sizeof(DimeraStruct));
-	if (cam == NULL)
-		return GP_ERROR;
-	camera->camlib_data = cam;
-
-	/* Set the default exposure */
-	cam->exposure = DEFAULT_EXPOSURE;
-
-	/* Enable automatic exposure setting for capture preview mode */
-	cam->auto_exposure = 1;
-
-	/* Use flash, if necessary, when capturing picture */
-	cam->auto_flash = 1;
-
-	debuglog("Opening port");
-	if (mesa_port_open(&cam->dev, camera->port_info->path) != GP_OK)
-	{
-		ERROR("Camera Open Failed");
-		return GP_ERROR;
-	}
-
-	/* Create the filesystem */
-	gp_filesystem_new(&cam->fs);
-
-	debuglog("Resetting camera");
-	if ( mesa_reset(cam->dev) != GP_OK )
-	{
-		ERROR("Camera Reset Failed");
-		return GP_ERROR;
-	}
-
-	mesa_set_speed(cam->dev, camera->port_info->speed);
-
-	debuglog("Checking for modem");
-	switch ( mesa_modem_check(cam->dev) )
-	{
-	case GP_ERROR_IO:
-	case GP_ERROR_TIMEOUT:
-		ERROR("No or Unknown Response");
-		return GP_ERROR_TIMEOUT;
-	case GP_ERROR_MODEL_NOT_FOUND:
-		ERROR("Probably a modem");
-		return GP_ERROR;
-	case GP_OK:
-		break;
-	}
-
-	/* Create pseudo file names for each picture */
-	return populate_filesystem(cam->dev, cam->fs);
 }
 
 int camera_exit(Camera *camera) {
@@ -906,5 +833,86 @@ Dimera_Preview( int *size, Camera *camera )
 	}
 
 	return image;
+}
+
+int camera_init (Camera *camera) {
+
+        DimeraStruct *cam;
+
+        debuglog("camera_init()");
+
+        /* First, set up all the function pointers */
+        camera->functions->exit                 = camera_exit;
+        camera->functions->folder_list_folders  = camera_folder_list_folders;
+        camera->functions->folder_list_files    = camera_folder_list_files;
+        camera->functions->file_get_info        = camera_file_get_info;
+        camera->functions->file_set_info        = camera_file_set_info;
+        camera->functions->file_get             = camera_file_get;
+        //camera->functions->folder_put_file    = camera_folder_put_file;
+        //camera->functions->file_delete        = camera_file_delete;
+        //camera->functions->folder_delete_all  = camera_folder_delete_all;
+        //camera->functions->config             = camera_config;
+        //camera->functions->get_config         = camera_get_config;
+        //camera->functions->set_config         = camera_set_config;
+        //camera->functions->folder_get_config  = camera_folder_get_config;
+        //camera->functions->folder_set_config  = camera_folder_set_config;
+        //camera->functions->file_get_config    = camera_file_get_config;
+        //camera->functions->file_set_config    = camera_file_set_config;
+        camera->functions->capture              = camera_capture;
+        camera->functions->capture_preview      = camera_capture_preview;
+        camera->functions->summary              = camera_summary;
+        camera->functions->manual               = camera_manual;
+        camera->functions->about                = camera_about;
+        //camera->functions->result_as_string   = camera_result_as_string;
+
+        cam = (DimeraStruct*)malloc(sizeof(DimeraStruct));
+        if (cam == NULL)
+                return GP_ERROR;
+        camera->camlib_data = cam;
+
+        /* Set the default exposure */
+        cam->exposure = DEFAULT_EXPOSURE;
+
+        /* Enable automatic exposure setting for capture preview mode */
+        cam->auto_exposure = 1;
+
+        /* Use flash, if necessary, when capturing picture */
+        cam->auto_flash = 1;
+
+        debuglog("Opening port");
+        if (mesa_port_open(&cam->dev, camera->port_info->path) != GP_OK)
+        {
+                ERROR("Camera Open Failed");
+                return GP_ERROR;
+        }
+
+        /* Create the filesystem */
+        gp_filesystem_new(&cam->fs);
+
+        debuglog("Resetting camera");
+        if ( mesa_reset(cam->dev) != GP_OK )
+        {
+                ERROR("Camera Reset Failed");
+                return GP_ERROR;
+        }
+
+        mesa_set_speed(cam->dev, camera->port_info->speed);
+
+        debuglog("Checking for modem");
+        switch ( mesa_modem_check(cam->dev) )
+        {
+        case GP_ERROR_IO:
+        case GP_ERROR_TIMEOUT:
+                ERROR("No or Unknown Response");
+                return GP_ERROR_TIMEOUT;
+        case GP_ERROR_MODEL_NOT_FOUND:
+                ERROR("Probably a modem");
+                return GP_ERROR;
+        case GP_OK:
+                break;
+        }
+
+        /* Create pseudo file names for each picture */
+        return populate_filesystem(cam->dev, cam->fs);
 }
 
