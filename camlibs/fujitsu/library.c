@@ -95,7 +95,7 @@ int camera_init (CameraInit *init) {
 
 	char buf[4096];
 	char *p;
-	int l;
+	int l, value=0;
 	gpio_device_settings settings;
 
 	debug_print("Initializing camera");
@@ -123,7 +123,7 @@ int camera_init (CameraInit *init) {
 		return (GP_ERROR);
 	}
 
-	if (fujitsu_set_int_register(glob_dev, 17, 2)==GP_ERROR) {
+	if (fujitsu_set_int_register(glob_dev, 17, 4)==GP_ERROR) {
 		interface_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
@@ -131,22 +131,31 @@ int camera_init (CameraInit *init) {
 //	if (init->speed)
 //		settings.serial.speed = init->port_settings.speed;
 //	   else
-//		settings.serial.speed = 115200;
-//	gpio_set_settings(glob_dev, settings);
-	sleep(1);
+		settings.serial.speed = 57600;
+	gpio_set_settings(glob_dev, settings);
+	sleep(2);
 
-	if (fujitsu_set_int_register(glob_dev, 1, 2)==GP_ERROR) {
-		interface_message("Can not set camera quality");
+	value = fujitsu_get_int_register(glob_dev, 1);
+	if (value == GP_ERROR) {
+		interface_message("Can not get the quality setting");
 		return (GP_ERROR);
 	}
 
 /*
+	if (fujitsu_set_int_register(glob_dev, 1, 2)==GP_ERROR) {
+		interface_message("Can not set camera quality");
+		return (GP_ERROR);
+	}
+	if (fujitsu_ping(glob_dev)==GP_ERROR) {
+		interface_message("Can not talk to camera after speed change");
+		return (GP_ERROR);
+	}
+printf("BLAH\n");
 	if (fujitsu_ping(glob_dev)==GP_ERROR) {
 		interface_message("Can not talk to camera after speed change");
 		return (GP_ERROR);
 	}
 */
-
 	return (GP_OK);
 }
 

@@ -365,7 +365,7 @@ OPTION_CALLBACK(num_pictures) {
 
 	int count;
 
-	debug_print("Deleting picture", "");
+	debug_print("Counting pictures", "");
 
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
