@@ -1,3 +1,18 @@
+2001-10-26 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* libgphoto2/gphoto2-debug.h: reformatted a little bit (more comments)
+	* packaging/Makefile.am: fixed typo resulting in wrong dir creation
+	* camlibs/fuji/.cvsignore: added (copied .cvsignore from camlib/canon)
+	* doc/api/.cvsignore: added scan
+	* intl/.cvsignore: added po2tbl.sed
+	* libgphoto2_port/intl/.cvsignore: added po2tbl.sed
+	* libgphoto2_port/doc/.cvsignore: added scan and tmpl
+	* camlibs/canon/util.c: added explanatory comment
+	* camlibs/samsung/samsung.c: added #include <string.h>
+	* camlibs/canon/psa50.c: added function prototypes
+	* libgphoto2/exif.c: added function prototypes
+	* tests/test-gphoto2.c_ replaced exit() by return() in main()
+
 2001-10-26 Fredrik <fredrik@krixor.xy.org>
 
 	* camlibs/canon/.indent.pro:
