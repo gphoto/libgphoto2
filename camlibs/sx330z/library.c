@@ -76,7 +76,7 @@ static struct
  {"Traveler:SX330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
  {"Maginon:SX330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
  {"Skanhex:SX-330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
- {"Medion:MD 9700",USB_VENDOR_TRAVELER,USB_PRODUCT_MEDION},
+ {"Medion:MD 9700",USB_VENDOR_TRAVELER,USB_PRODUCT_MD9700},
  {"Jenoptik:JD-3300z3",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
 
  {"Traveler:SX410z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
@@ -133,7 +133,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
  
 	/* get number of TOC pages */
 	CR (sx330z_get_toc_num_pages (camera, context, &tpages));
-
 	/* Read the TOC pages */
 	id = gp_context_progress_start (context, tpages, _("Getting "
 			"information on %i files..."), tpages);
@@ -239,11 +238,7 @@ camera_id(CameraText *id)
 static int 
 camera_summary(Camera *camera,CameraText *summary,GPContext *context)
 {
- strcpy(summary->text,_("0.1 Traveler SX330z ALDI-cam\n"
-  "(many other vendors, like Jenoptik, Skanhex, Maginon should work too.\n"
-  "Even the 4100 Cameras could work.\n"
-  "Not tested, please report if this driver works with them!)\n"));
- return(GP_OK);
+ return(GP_ERROR_NOT_SUPPORTED);
 } /* camera summary */
 
 
@@ -253,9 +248,25 @@ camera_summary(Camera *camera,CameraText *summary,GPContext *context)
 static int 
 camera_about(Camera *camera,CameraText *about,GPContext *context)
 {
- strcpy(about->text,_("(Traveler) SX330z Library\nSee summary for more information\nDominik Kuhlen <dkuhlen@fhm.edu>\n"));
+ strcpy(about->text,_("(Traveler) SX330z Library (And other Aldi-cams).\n"
+	"Even other Vendors like Jenoptik, Skanhex, Maginon should work.\n"
+	"Please send bugreports and comments.\n"
+	"Dominik Kuhlen <kinimod@users.sourceforge.net>\n"));
  return(GP_OK);
 } /* camera about */
+
+
+/*
+ * camera_exit
+ * release allocated memory
+ */
+int 
+camera_exit(Camera *camera, GPContext *context)
+{
+ if (camera->pl)
+  free(camera->pl);
+ return(GP_OK);
+}
 
 
 
@@ -266,11 +277,13 @@ int
 camera_init(Camera *camera,GPContext *context)
 {
  GPPortSettings settings;
+ CameraAbilities abilities;
  /* try to contact the camera ...*/
  /*CR(gp_port_get_settings(camera->port,&settings));*/
  
  camera->functions->about=camera_about; 
  camera->functions->summary=camera_summary; 
+ camera->functions->exit=camera_exit;
  gp_port_get_settings(camera->port,&settings);
  if (camera->port->type!=GP_PORT_USB)
  {
@@ -285,11 +298,15 @@ camera_init(Camera *camera,GPContext *context)
 /* CR(gp_filesystem_set_info_funcs(camera->fs,get_info_func,NULL,camera));*/
  CR(gp_filesystem_set_list_funcs(camera->fs,file_list_func,NULL,camera));
  CR(gp_filesystem_set_file_funcs(camera->fs,get_file_func,del_file_func,camera));
+ 
+ camera->pl=malloc(sizeof(CameraPrivateLibrary));
+ if (!camera->pl) 
+   return(GP_ERROR_NO_MEMORY);
 
-/* GP_DEBUG("sx330z Camera_init : sx init"); */
+ CR(gp_camera_get_abilities(camera, &abilities));
+ camera->pl->usb_product=abilities.usb_product; /* some models differ in Thumbnail size */
+/* GP_DEBUG("sx330z Camera_init : sx init %04x",camera->pl->usb_product); */
  return(sx330z_init(camera,context));
 
 } /* camera init */
-
-
 

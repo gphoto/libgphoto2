@@ -40,7 +40,8 @@
  * Please report if this works
  */
 #define USB_PRODUCT_SX410Z	0x4100
-#define USB_PRODUCT_MEDION	0x4102
+/* same as MD6000 */
+#define USB_PRODUCT_MD9700	0x4102
 
 /* different requests (are there more ?) */
 #define SX330Z_REQUEST_INIT	0x0001		/* not sure */
@@ -51,7 +52,6 @@
 
 #define SX_THUMBNAIL 1
 #define SX_IMAGE 0
-
 
 
 /* 0x14 Bytes TOC entry */
@@ -71,6 +71,12 @@ struct traveler_toc_page
  int16_t numEntries;		/* number of entries in TOC page (0 .. 25)*/
  struct traveler_toc_entry entries[25]; /* entries */
 };
+
+struct _CameraPrivateLibrary 
+{
+ int usb_product;		/* different Thumbnail size */
+};
+
 
 /* 0x20 Bytes  Request	*/
 struct traveler_req

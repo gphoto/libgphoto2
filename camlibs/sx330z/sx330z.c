@@ -92,8 +92,6 @@ sx330z_init(Camera *camera,GPContext *context)
 } /* sx330z_init */
 
 
-
-
 /*
  * Read block described by req 
  */
@@ -102,8 +100,6 @@ sx330z_read_block(Camera *camera,GPContext *context,struct traveler_req *req,cha
 {
  int ret;
  uint8_t trxbuf[0x20];
-/* struct traveler_ack ack;*/
-
  /* 1. send request */
  sx330z_fill_req(trxbuf,req);
  ret=gp_port_usb_msg_write(camera->port,
@@ -118,7 +114,6 @@ sx330z_read_block(Camera *camera,GPContext *context,struct traveler_req *req,cha
  /* FIXME : Security check ???*/
  return(GP_OK);
 } /* read block */
-
 
 
 /*
@@ -199,9 +194,12 @@ sx330z_get_data(Camera *camera,GPContext *context, const char *filename,
  
  if (thumbnail==SX_THUMBNAIL) 
  {
-  pages=5;			/* first 20k only */
+  if (camera->pl->usb_product == USB_PRODUCT_MD9700)
+    pages=7; /* first 28k only*/
+   else  
+    pages=5; /* first 20k only */
   req.filename[0]='T';		/* 'T'humbnail indicator ?*/
-  id=gp_context_progress_start(context,0x1000*5,"Thumbnail %.4s _",&filename[4]);
+  id=gp_context_progress_start(context,0x1000*pages,"Thumbnail %.4s _",&filename[4]);
  } else
  {
   /* I don't like this solution ... */
@@ -282,7 +280,5 @@ sx330z_delete_file(Camera *camera,GPContext *context,const char *filename)
  gp_context_progress_stop(context,id);					/* stop context */
  return(GP_OK);
 } /* sx330z delete file */
-
-
 
 

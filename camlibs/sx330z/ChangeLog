@@ -1,9 +1,14 @@
-2002-01-15  Marcus Meissner <marcus@jet.franken.de>
+2003-02-09  Dominik Kuhlen <kinimod@users.sourceforge.net>
+
+	* Thumbnailhandling for MD6000 (and MD9700) fixed
+	* Changelog: Date fixed :-) (2002-01-15 -> 2003-01-15)
+
+2003-01-15  Marcus Meissner <marcus@jet.franken.de>
 	
 	* Added Medion MD 6000 (same as JD 4100z3) and Jenoptik JD 4100z3 
 	  (verified usb ids by downloading driver).
 
-2002-01-10  Marcus Meissner <meissner@suse.de>
+2003-01-10  Marcus Meissner <meissner@suse.de>
 	
 	* Added Concord EyeQ 4330 (has same id as Traveller 410z), reported by
 	  Christian Boltz <christian.boltz@nexgo.de>.
