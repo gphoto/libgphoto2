@@ -1,3 +1,10 @@
+2001-08-04	Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/sierra/sierra.c: The C-2100UZ is supported, too.
+	Unfortunatelly, the product id is the same for the C-2100UZ, the
+	C-3000Z, and the C-3030Z. This results in three entries for this camera
+	("gphoto2 --auto-detect"). This has to be fixed somehow, sometime.
+
 2001-08-03	Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/sierra/sierra.c: Remove the Panasonic Coolshot KXI-600A

@@ -100,6 +100,7 @@ SierraCamera sierra_cameras[] = {
 	{"Olympus C-2000Z", 	0, 0, 0, 0, 0 },
 	{"Olympus C-2020Z",	0, 0, 0, 0, 0 },
         {"Olympus C-2040Z", 	0x07b4, 0x105, 0x83, 0x04, 1},
+	{"Olympus C-2100UZ",    0x07b4, 0x100, 0x83, 0x04, 0},
         {"Olympus C-2500Z", 	0, 0, 0, 0, 0 },
 	{"Olympus C-3000Z", 	0x07b4, 0x100, 0x83, 0x04, 0},
 	{"Olympus C-3030Z", 	0x07b4, 0x100, 0x83, 0x04, 0},
