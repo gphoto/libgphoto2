@@ -15,6 +15,7 @@
 #include "core.h"
 #include "library.h"
 #include "settings.h"
+#include "util.h"
 
 /* Some globals
    ---------------------------------------------------------------- */
@@ -26,14 +27,14 @@
 	/* Currently Selected camera/folder */
 	/* ------------------------------------------------ */
 			/* currently selected camera number */
-	int 		glob_camera_number;
+	int 		glob_camera_number = -1;
 			/* currently selected folder path */
 	char 		glob_folder_path[512];
 
 	/* Camera List */
 	/* ------------------------------------------------ */
 			/* total cameras found 		*/
-	int		glob_camera_count;
+	int		glob_camera_count = 0;
 			/* camera/library list 		*/
 	CameraChoice	glob_camera[512];
 			/* camera abilities 		*/
@@ -41,12 +42,12 @@
 			/* camera library id's 		*/
 	char		*glob_camera_id[512];
 			/* number of camera library id's*/
-	int		glob_camera_id_count;
+	int		glob_camera_id_count = 0;
 
 	/* Currently loaded settings */
 	/* ------------------------------------------------ */
 			/* number of settings found 	*/
-	int		glob_setting_count; 
+	int		glob_setting_count = 0; 
 			/* setting key/value list   	*/
 	Setting		glob_setting[512];  
 
@@ -107,8 +108,6 @@ int gp_init () {
 			printf("core:\tNone\n");
 	}
 
-	if (gp_get_setting("camera", buf) == GP_OK)
-		return (load_library(buf));
 	return (GP_OK);
 }
 
@@ -129,13 +128,6 @@ int gp_debug_set (int value) {
 	return (GP_OK);
 }
 
-int gp_port_set (CameraPortSettings port_settings) {
-
-	memcpy(&glob_port_settings, &port_settings, sizeof(glob_port_settings));
-	
-	return (GP_OK);
-}
-
 int gp_camera_count () {
 
 	return(glob_camera_count);
@@ -150,7 +142,18 @@ int gp_camera_name (int camera_number, char *camera_name) {
 	return (GP_OK);
 }
 
-int gp_camera_set (int camera_number) {
+int gp_camera_abilities (int camera_number, CameraAbilities *abilities) {
+
+	memcpy(abilities, &glob_camera_abilities[camera_number],
+	       sizeof(glob_camera_abilities[camera_number]));
+
+	if (glob_debug)
+		gp_dump_abilities(&glob_camera_abilities[camera_number]);
+
+	return (GP_OK);
+}
+
+int gp_camera_set (int camera_number, CameraPortSettings *settings) {
 
 	CameraInit ci;
 
@@ -158,7 +161,7 @@ int gp_camera_set (int camera_number) {
 		return (GP_ERROR);
 
 	if (glob_library_handle != NULL)
-		dlclose(glob_library_handle);
+		gp_camera_exit();
 	glob_library_handle = NULL;
 	if (load_library(glob_camera[camera_number].name)==GP_ERROR)
 		return (GP_ERROR);
@@ -168,19 +171,10 @@ int gp_camera_set (int camera_number) {
 		printf("core: Initializing \"%s\" (%s)...\n", 
 			glob_camera[camera_number].name,
 			glob_camera[camera_number].library);
-
 	strcpy(ci.model, glob_camera[camera_number].name);
-	memcpy(&ci.port_settings, &glob_port_settings, sizeof(glob_port_settings));
+	memcpy(&ci.port_settings, settings, sizeof(ci.port_settings));
 	gp_camera_init(&ci);
 	return(GP_OK);
-}
-
-int gp_camera_abilities (CameraAbilities *abilities) {
-
-	memcpy(abilities, &glob_camera_abilities[glob_camera_number],
-	       sizeof(glob_camera_abilities[glob_camera_number]));
-
-	return (GP_OK);
 }
 
 int gp_camera_init (CameraInit *init) {
@@ -193,26 +187,15 @@ int gp_camera_init (CameraInit *init) {
 
 int gp_camera_exit () {
 
+	int ret;
+
 	if (glob_c.exit == NULL)
 		return(GP_ERROR);
 
-	return(glob_c.exit());
-}
+	ret = glob_c.exit();
+	close_library();
 
-int gp_camera_open () {
-
-	if (glob_c.open == NULL)
-		return(GP_ERROR);
-
-	return(glob_c.open());
-}
-
-int gp_camera_close () {
-
-	if (glob_c.close == NULL)
-		return(GP_ERROR);
-
-	return(glob_c.close());
+	return (ret);
 }
 
 int gp_folder_list(char *folder_path, CameraFolderList *list) {
@@ -293,12 +276,12 @@ int gp_config_get (char *config_dialog_filename) {
 	return(GP_OK);
 }
 
-int gp_config_set (CameraConfig *config, int config_count) {
+int gp_config_set (CameraConfig *config) {
 
 	if (glob_c.config == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.config(config, config_count));
+	return(glob_c.config(config));
 }
 
 int gp_capture (int type) {

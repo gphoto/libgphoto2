@@ -9,6 +9,11 @@ int camera_id (char *id) {
 	return (GP_OK);
 }
 
+int camera_debug_set (int onoff) {
+
+        return (GP_OK);
+}
+
 int camera_abilities (CameraAbilities *abilities, int *count) {
 
 	*count = 3;
@@ -28,11 +33,9 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].cancel	= 0;
 	abilities[0].capture	= 1;
 	abilities[0].config	= 1;
-	abilities[0].delete_file  = 1;
+	abilities[0].file_delete  = 1;
 	abilities[0].file_preview = 1;
 	abilities[0].file_put   = 0;
-	abilities[0].reset	= 1;
-	abilities[0].sleep	= 1;
 
 	strcpy(abilities[1].model, "Olympus D-320L");
 	abilities[1].usb	= 0;
@@ -47,11 +50,9 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[1].cancel	= 0;
 	abilities[1].capture	= 1;
 	abilities[1].config	= 1;
-	abilities[1].delete_file  = 1;
+	abilities[1].file_delete  = 1;
 	abilities[1].file_preview = 1;
 	abilities[1].file_put   = 0;
-	abilities[1].reset	= 1;
-	abilities[1].sleep	= 1;
 
 	strcpy(abilities[2].model, "Olympus D-620L");
 	abilities[2].usb	= 0;
@@ -66,11 +67,9 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[2].cancel	= 0;
 	abilities[2].capture	= 1;
 	abilities[2].config	= 1;
-	abilities[2].delete_file  = 1;
+	abilities[2].file_delete  = 1;
 	abilities[2].file_preview = 1;
 	abilities[2].file_put   = 0;
-	abilities[2].reset	= 1;
-	abilities[2].sleep	= 1;
 
 	return (GP_OK);
 }
@@ -81,16 +80,6 @@ int camera_init (CameraInit *init) {
 }
 
 int camera_exit () {
-
-	return (GP_OK);
-}
-
-int camera_open () {
-
-	return (GP_OK);
-}
-
-int camera_close () {
 
 	return (GP_OK);
 }
@@ -148,7 +137,7 @@ int camera_file_unlock (int file_number) {
 	return (GP_ERROR);
 }
 
-int camera_config (CameraConfig *config, int config_count) {
+int camera_config (CameraConfig *config) {
 
 	return (GP_ERROR);
 }
@@ -175,7 +164,8 @@ int camera_manual (char *manual) {
 int camera_about (char *about) {
 
 	strcpy(about, 
-"Scott Fritzinger <scottf@unr.edu>
+"Fujitsu SPARClite library
+Scott Fritzinger <scottf@unr.edu>
 Support for Fujitsu-based digital cameras
 including Olympus, Nikon, Epson, and a few
 others.");

@@ -55,41 +55,36 @@ typedef struct {
 	char model[128];
 
 		/* can the library support the following: */
-	int serial		: 1;
-	int usb			: 1;
-	int parallel		: 1;
-	int ieee1394		: 1;
+	int serial;
+	int usb;
+	int parallel;
+	int ieee1394;
 
 	int serial_baud[64];
 		/* if serial==1, baud rates that this camera	 */
 		/* supports. terminate list with a zero 	 */
 
-	int cancel		: 1;
+	int cancel;
 		/* Camera operation can be cancelled in progress */
 
-	int capture		: 1;
+	int capture;
 		/* Camera can do a capture (take picture) 	 */
 
-	int config		: 1;
+	int config;
 		/* Camera can be configures remotely 		 */
 
-	int delete_file		: 1;
+	int file_delete;
 		/* Camera can delete files 			 */
 
-	int file_preview	: 1;
+	int file_preview;
 		/* Camera can get file previews (thumbnails) 	 */
 
-	int file_put		: 1;
+	int file_put;
 		/* Camera can receive files			 */
 
-	int lock		: 1;
+	int lock;
 		/* Camera can lock (protect) pictures		 */
 
-	int reset		: 1;
-		/* Camera can be reset during transfer 		 */
-
-	int sleep		: 1;
-		/* Camera can be turned off (sleep) 		 */
 } CameraAbilities;
 
 typedef struct {
@@ -102,7 +97,7 @@ typedef struct {
 	CameraFileType	type;
 		/* Type of file (GP_FILE_JPEG, GP_FILE_TIFF, ..) */
 
-	char*		name;
+	char		name[64];
 		/* Suggested name for the file */
 
 	long int	size;
@@ -123,6 +118,11 @@ typedef struct {
 } CameraFolderList;
 
 typedef struct {
-	char *name;
-	char *value;
+	char name[32];
+	char value[32];
+} CameraSetting;
+
+typedef struct {
+	int count;
+	CameraSetting setting[64];
 } CameraConfig;

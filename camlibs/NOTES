@@ -15,5 +15,3 @@
 	abilities[]->delete_file  = ;
 	abilities[]->file_preview = ;
 	abilities[]->lock      = ;
-	abilities[]->reset     = ;
-	abilities[]->sleep     = 1;

@@ -15,6 +15,8 @@ int  verify_options (int argc, char **argv);
 int  option_count;
 void debug_print (char *message, char *str);
 
+CameraInit init;
+
 /* Command-line option
    -----------------------------------------------------------------------
    this is funky and may look a little scary, but sounded cool to do. 
@@ -161,6 +163,9 @@ OPTION_CALLBACK(port) {
 	if (glob_debug)
 		debug_print("Setting port", arg);
 
+	strcpy(init.port_settings.serial_port, "/dev/ttyS0");
+        init.port_settings.serial_baud = 57600;
+
 	strcpy(glob_port, arg);
 
 	return (GP_OK);
@@ -251,9 +256,12 @@ int verify_options (int argc, char **argv) {
 	char s[5], l[24];
 
 	which = 0;
+	strcpy(init.port_settings.serial_port, "/dev/ttyS0");
+        init.port_settings.serial_baud = 57600;
 
 	for (x=1; x<argc; x++) {
-// printf("checking \"%s\": \n", argv[x]);
+		if (glob_debug) 
+			debug_print("checking \"%s\": \n", argv[x]);
 		match = 0;
 		missing_arg = 0;
 		for (y=0; y<option_count; y++) {

@@ -25,6 +25,11 @@ int camera_id (char *id) {
         return (GP_OK);
 }
 
+int camera_debug_set (int onoff) {
+
+	return (GP_OK);
+}
+
 int camera_abilities (CameraAbilities *abilities, int *count) {
 
 	*count = 1;
@@ -40,12 +45,10 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].cancel    = 0;
 	abilities[0].capture   = 0;
 	abilities[0].config    = 1;
-	abilities[0].delete_file  = 0;
+	abilities[0].file_delete  = 0;
 	abilities[0].file_preview = 1;
 	abilities[0].file_put  = 0;
 	abilities[0].lock      = 0;
-	abilities[0].reset     = 0;
-	abilities[0].sleep     = 0;
 
 	return (GP_OK);
 }
@@ -68,18 +71,6 @@ int camera_init (CameraInit *init) {
 }
 
 int camera_exit () {
-
-	return (GP_OK);
-}
-
-int camera_open () {
-
-	gp_get_setting("dir_directory", dir_directory);
-
-	return (GP_OK);
-}
-
-int camera_close () {
 
 	return (GP_OK);
 }
@@ -153,7 +144,7 @@ int camera_file_get (int file_number, CameraFile *file) {
 	fread(file->data, (size_t)imagesize, (size_t)sizeof(char), fp);
 	fclose(fp);
 
-	file->name = strdup(dir_images[file_number]);
+	strcpy(file->name, dir_images[file_number]);
 	file->type = GP_FILE_JPEG;
 	file->size = imagesize;
 	return (GP_OK);
@@ -206,7 +197,7 @@ int camera_file_unlock (int file_number) {
 	return (GP_ERROR);
 }
 
-int camera_config (CameraConfig *config, int config_count) {
+int camera_config (CameraConfig *config) {
 
 	return (GP_ERROR);
 }
@@ -234,7 +225,7 @@ int camera_about (char *about) {
 
 	strcpy(about,
 "Directory Browse Mode
-by Scott Fritzinger <scottf@unr.edu>");
+Scott Fritzinger <scottf@unr.edu>");
 
 	return (GP_OK);
 }

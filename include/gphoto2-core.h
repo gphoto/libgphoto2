@@ -23,9 +23,6 @@
 		/* value=0, debugging off */
 		/* value=1, debugging on  */
 
-/* Camera port operations */
-	int gp_port_set (CameraPortSettings settings);
-
 /* Camera operations */
 	/* Retrieve number of cameras */
 	int gp_camera_count ();
@@ -33,18 +30,15 @@
 	/* Retrieve camera name */
 	int gp_camera_name (int camera_number, char *camera_name);
 
-	/* Set the current camera library */
-	int gp_camera_set (int camera_number);
-
 	/* Retrieve the camera abilities */
-	int gp_camera_abilities (CameraAbilities *abilities);
+	int gp_camera_abilities (int camera_number, CameraAbilities *abilities);
+
+	/* Set the current camera library */
+	int gp_camera_set (int camera_number, CameraPortSettings *port);
 
 	/* Init/Exit, Open or close a camera */
 	int gp_camera_init (CameraInit *init);
 	int gp_camera_exit ();
-
-	int gp_camera_open ();
-	int gp_camera_close ();
 
 /* Folder operations */
 	/* Retrieve the contents of a folder */
@@ -119,7 +113,7 @@
 	*/
 
 	/* Send "key=value" pairs to the library, delimited by '\n' */
-	int gp_config_set (CameraConfig *config, int config_count);
+	int gp_config_set (CameraConfig *config);
 
 /* Miscellaneous functions */
 	/* Captures the current view. Basically, it takes a picture */

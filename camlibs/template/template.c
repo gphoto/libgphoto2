@@ -4,9 +4,14 @@
 
 int camera_id (char *id) {
 
-	strcpy(id, "REPLACE WITH UNIQUE ID");
+	strcpy(id, "REPLACE WITH UNIQUE LIBRARY ID");
 
 	return (GP_OK);
+}
+
+int camera_debug_set (int onoff) {
+
+        return (GP_OK);
 }
 
 int camera_abilities (CameraAbilities *abilities, int *count) {
@@ -25,11 +30,9 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].cancel	= 0;
 	abilities[0].capture	= 0;
 	abilities[0].config	= 0;
-	abilities[0].delete_file  = 0;
+	abilities[0].file_delete  = 0;
 	abilities[0].file_preview = 0;
 	abilities[0].file_put   = 0;
-	abilities[0].reset	= 0;
-	abilities[0].sleep	= 0;
 
 	return (GP_OK);
 }
@@ -40,16 +43,6 @@ int camera_init (CameraInit *init) {
 }
 
 int camera_exit () {
-
-	return (GP_OK);
-}
-
-int camera_open () {
-
-	return (GP_OK);
-}
-
-int camera_close () {
 
 	return (GP_OK);
 }
@@ -107,7 +100,7 @@ int camera_file_unlock (int file_number) {
 	return (GP_ERROR);
 }
 
-int camera_config (CameraConfig *config, int config_count) {
+int camera_config (CameraConfig *config) {
 
 	return (GP_ERROR);
 }
@@ -134,7 +127,8 @@ int camera_manual (char *manual) {
 int camera_about (char *about) {
 
 	strcpy(about, 
-"YOUR NAME <email@somewhere.com>
+"Library Name
+YOUR NAME <email@somewhere.com>
 Quick description of the library.
 No more than 5 lines if possible.");
 

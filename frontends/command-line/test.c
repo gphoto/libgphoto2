@@ -20,10 +20,6 @@ int test_gphoto() {
 	/* ----------------------------- */
 	gp_init();
 
-	strcpy(s.serial_port, "/dev/ttyS0");
-	s.serial_baud = 57600;
-	gp_port_set(s);
-
 	/* ---------------------------------------- */
 	/* Retrieve the number of cameras available */
 	/* ---------------------------------------- */
@@ -35,7 +31,7 @@ int test_gphoto() {
 	/* ----------------------------------- */
 	for (x=0; x<n; x++) {
 		if (gp_camera_name(x, buf)==GP_ERROR)
-			printf("cli: (ERROR) camera_name error! (%i)\n", x);
+			printf("cli: ERROR: camera_name error! (%i)\n", x);
 
 		printf("cli: Camera #%i name: %s\n", x, buf);
 	}
@@ -52,28 +48,31 @@ int test_gphoto() {
 	/* ---------------------------------------------- */
 	/* Set the camera they chose as the active camera */
 	/* ---------------------------------------------- */
-	if (gp_camera_set(camnum) == GP_ERROR)
-		printf("cli: (ERROR) camera_set error!\n");
+	strcpy(s.serial_port, "/dev/ttyS0");
+	s.serial_baud = 57600;
+	if (gp_camera_set(camnum, &s) == GP_ERROR)
+		printf("cli: ERROR: camera_set error!\n");
 
 	/* ------------------------------- */
 	/* Retrieve the camera's abilities */
 	/* ------------------------------- */
-	if (gp_camera_abilities(&a) == GP_ERROR)
-		printf("cli: (ERROR) camera_abilities error!\n");
+	if (gp_camera_abilities(camnum, &a) == GP_ERROR)
+		printf("cli: ERROR: camera_abilities error!\n");
 	
 	/* ------------------------------- */
 	/* Set the currently active folder */
 	/* ------------------------------- */
 	if (gp_folder_set("/") == GP_ERROR)
-		printf("Can't set folder!\n");
+		printf("cli: ERROR: Can't set folder!\n");
 
 	/* ----------------------------------------- */
 	/* Get the number of pictures in that folder */
 	/* ----------------------------------------- */
 	m=gp_file_count();
 	if (m == GP_ERROR)
-		printf("cli: (ERROR) file_count error!\n");
-	printf("cli: Number of files: %i\n", n);
+		printf("cli: ERROR: file_count error!\n");
+	   else
+		printf("cli: Number of files: %i\n", n);
 
 	/* ------------------------------- */
 	/* Get a thumbnail from the camera */
@@ -81,25 +80,30 @@ int test_gphoto() {
 	f = gp_file_new();
 
 	printf("cli: Getting preview 0\n");
-	gp_file_get_preview(0, f);
-	printf("cli: done!\n");
-
-	gp_file_save_to_disk(f, "/home/scottf/test.jpg");
+	if (gp_file_get_preview(0, f) == GP_ERROR)
+		printf("cli: ERROR: get_preview error!\n");
+	   else {
+		printf("cli: done!\n");
+		gp_file_save_to_disk(f, "/home/scottf/test.jpg");
+	}
 
 	/* ---------------------------------- */
 	/* Display camera/library information */
 	/* ---------------------------------- */
 	if (gp_summary(buf) == GP_ERROR)
-		printf("cli: (ERROR) summary error!\n");
-	printf("cli: Summary:\n%s\n", buf);
+		printf("cli: ERROR: summary error!\n");
+	   else
+		printf("cli: Summary:\n%s\n", buf);
 
 	if (gp_manual(buf) == GP_ERROR)
-		printf("cli: (ERROR) manual error!\n");
-	printf("cli: Manual:\n%s\n", buf);
+		printf("cli: ERROR: manual error!\n");
+	   else
+		printf("cli: Manual:\n%s\n", buf);
 
 	if (gp_about(buf) == GP_ERROR)
-		printf("cli: (ERROR) about error!\n");
-	printf("cli: About:\n%s\n", buf);
+		printf("cli: ERROR: about error!\n");
+	   else
+		printf("cli: About:\n%s\n", buf);
 
 	/* ---------------------------- */
 	/* Close out the gPhoto library */

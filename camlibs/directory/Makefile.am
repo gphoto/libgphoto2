@@ -2,6 +2,8 @@ camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_directory.la
 
 INCLUDES = -I$(top_srcdir)/include
+CFLAGS = @CFLAGS@ -g
+LDFLAGS = @LDFLAGS@ -g
 
 libgphoto2_directory_la_SOURCES = directory.c directory.h
 

@@ -21,6 +21,7 @@ char packet_1[4]                = {0x02, 0x01, 0x01, 0x03};
 char packet_2[5]                = {0x02, 0x01, 0x01, 0x01, 0x03};
 
 char glob_camera_model[64];
+int  glob_debug = 1;
 
 /* Utility Functions
    =======================================================================
@@ -30,9 +31,9 @@ void barbie_packet_dump(int direction, char *buf, int size) {
 	int x;
 
 	if (direction == 0)
-		printf("\tRead  Packet (%i): ", size);
+		printf("barbie: \tRead  Packet (%i): ", size);
 	   else
-		printf("\tWrite Packet (%i): ", size);
+		printf("barbie: \tWrite Packet (%i): ", size);
 	for (x=0; x<size; x++) {
 		if (isalpha(buf[x]))
 			printf("[ '%c' ] ", (unsigned char)buf[x]);
@@ -58,18 +59,17 @@ int barbie_read_response(char *response, int size) {
 
 	/* Read the ACK */
 	x=gpio_read(dev, &ack, 1);
-#ifdef BARBIE_DEBUG
-	barbie_packet_dump(0, &ack, 1);
-#endif
+	if (glob_debug) 
+		barbie_packet_dump(0, &ack, 1);
+
 	if ((ack != ACK)||(x<0))
 		return (0);
 
 	/* Read the Response */
 	memset(response, 0, size);
 	x=gpio_read(dev,response, size);
-#ifdef BARBIE_DEBUG
-	barbie_packet_dump(0, response, x);
-#endif
+	if (glob_debug) 
+		barbie_packet_dump(0, response, x);
 	return (x > 0);
 }
 
@@ -96,9 +96,8 @@ int barbie_ping() {
 
 	char cmd[4], resp[4];
 
-#ifdef BARBIE_DEBUG
-	printf("Pinging the camera\n");
-#endif
+	if (glob_debug)
+		printf("barbie: Pinging the camera\n");
 
 	memcpy(cmd, packet_1, 4);
 	cmd[COMMAND_BYTE] = 'E';
@@ -109,7 +108,8 @@ int barbie_ping() {
 
 	if (resp[DATA1_BYTE] != 'x')
 		return (0);
-printf("ping answered!\n");
+	if (glob_debug)
+		printf("barbie: ping answered!\n");
 	return (1);
 }
 
@@ -160,7 +160,8 @@ char *barbie_read_data (char *cmd, int cmd_size, int data_type, int *size) {
 		return (0);
 	switch (data_type) {
 		case BARBIE_DATA_FIRMWARE:
-printf("Getting Firmware\n");
+			if (glob_debug)
+				printf("barbie: Getting Firmware\n");
 			/* we're getting the firmware revision */
 			*size = resp[2];
 			s = (char *)malloc(sizeof(char)*(*size));
@@ -172,7 +173,8 @@ printf("Getting Firmware\n");
 			}
 			break;
 		case BARBIE_DATA_PICTURE:
-printf("Getting Picture\n");
+			if (glob_debug)
+				printf("barbie: Getting Picture\n");
 			/* we're getting a picture */
 			n1 = (unsigned char)resp[2];
 			n2 = (unsigned char)resp[3];
@@ -223,7 +225,8 @@ printf("\tn1=%i n2=%i n3=%i n4=%i size=%i\n", n1, n2 ,n3, n4, *size);
 				}
 			}
 			*size = z;
-printf("size=%i\n", *size);
+			if (glob_debug)
+				printf("barbie: size=%i\n", *size);
 			break;
 		case BARBIE_DATA_THUMBNAIL:
 			break;
@@ -253,6 +256,13 @@ int camera_id (char *id) {
 	return (GP_OK);
 }
 
+int camera_debug_set (int onoff) {
+
+	glob_debug=onoff;
+
+	return (GP_OK);
+}
+
 int camera_abilities (CameraAbilities *abilities, int *count) {
 
 	*count = 3;
@@ -270,12 +280,10 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].cancel    = 0;
 	abilities[0].capture   = 1;
 	abilities[0].config    = 0;
-	abilities[0].delete_file  = 0;
+	abilities[0].file_delete  = 0;
 	abilities[0].file_preview = 1;
 	abilities[0].file_put  = 0;
 	abilities[0].lock      = 0;
-	abilities[0].reset     = 0;
-	abilities[0].sleep     = 1;
 
 	memcpy(&abilities[1], &abilities[0], sizeof(abilities[0]));
 	strcpy(abilities[1].model, "Hot Wheels Camera");
@@ -288,13 +296,12 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 
 int camera_init(CameraInit *init) {
 
-#ifdef BARBIE_DEBUG
-	printf("Initializing the camera\n");
-#endif
+	if (glob_debug)
+		printf("barbie: Initializing the camera\n");
 
 	if (dev) {
-		gpio_free(dev);
 		gpio_close(dev);
+		gpio_free(dev);
 	}
 	dev = gpio_new(GPIO_DEVICE_SERIAL);
 	gpio_set_timeout(dev, 5000);
@@ -320,16 +327,6 @@ int camera_exit() {
 	return GP_OK;
 }
 
-int camera_open() {
-
-	return GP_OK;
-}
-
-int camera_close() {
-
-	return GP_OK;
-}
-
 int camera_folder_list (char *folder_name, CameraFolderList *list) {
 
 
@@ -343,9 +340,10 @@ int camera_folder_set (char *folder_name) {
 
 int camera_file_count () {
 	char cmd[4], resp[4];
-#ifdef BARBIE_DEBUG
-	printf("Getting the number of pictures\n");
-#endif
+
+	if (glob_debug)
+		printf("barbie: Getting the number of pictures\n");
+
 	memcpy(cmd, packet_1, 4);
 
 	cmd[COMMAND_BYTE] = 'I';
@@ -360,21 +358,21 @@ int camera_file_count () {
 int camera_file_get (int file_number, CameraFile *file) {
 
 	int size;
-	char *name;
-#ifdef BARBIE_DEBUG
-	printf("Getting a picture\n");
-#endif
-	name = strdup("barbie0.ppm");
-	name[6] = '0' + file_number;
+	char name[16];
+
+	if (glob_debug)
+		printf("barbie: Getting a picture\n");
+
 
 	gp_update_progress(0.00);
 
+	strcpy(file->name, "barbie0.ppm");
+	name[6] = '0' + file_number;
 	file->type = GP_FILE_PPM;
 	file->data = barbie_read_picture(file_number, 0, &size);;
 	if (!file->data)
 		return GP_ERROR;
 	file->size = size;
-	file->name = name;
 
 	return GP_OK;
 }
@@ -382,12 +380,11 @@ int camera_file_get (int file_number, CameraFile *file) {
 int camera_file_get_preview (int file_number, CameraFile *file) {
 
 	int size;
-	char *name;
-#ifdef BARBIE_DEBUG
-	printf("Getting a preview\n");
-#endif
-	name = strdup("barbie0thumb.ppm");
-	name[6] = '0' + file_number;
+	char name[24];
+
+	if (glob_debug)
+		printf("barbie: Getting a preview\n");
+
 
 	gp_update_progress(0.00);
 
@@ -396,7 +393,8 @@ int camera_file_get_preview (int file_number, CameraFile *file) {
 	if (!file->data)
 		return GP_ERROR;
 	file->size = size;
-	file->name = name;
+	strcpy(file->name, "barbie0thumb.ppm");
+	file->name[6] = '0' + file_number;
 
 	return GP_OK;
 }
@@ -423,7 +421,7 @@ int camera_file_unlock (int file_number) {
 	return GP_ERROR;
 }
 
-int camera_config (CameraConfig *config, int config_count) {
+int camera_config (CameraConfig *config) {
 
 	return GP_OK;
 }
@@ -431,9 +429,10 @@ int camera_config (CameraConfig *config, int config_count) {
 int camera_capture (int type) {
 
 	char cmd[4], resp[4];
-#ifdef BARBIE_DEBUG
-	printf("Taking a picture\n");
-#endif
+
+	if (glob_debug)
+		printf("barbie: Taking a picture\n");
+
 	memcpy(cmd, packet_1, 4);
 
 	/* Initiated the grab */

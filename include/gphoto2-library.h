@@ -6,6 +6,11 @@ int camera_id 			(char *id);
 	/* multiple libraries can support the same camera. 	*/
 	/* The id is limited to 64 characters.			*/
 
+int camera_debug_set		(int onoff);
+	/* Turns on or off camera library debugging. onoff will */
+	/* be 0 to turn off debugging, or 1 to turn it on. Use  */
+	/* this to set a flag in the library to be very verbose */
+
 int camera_abilities 		(CameraAbilities *abilities, 
 				 int *count);
 	/* Returns the camera abilities for all the cameras 	*/
@@ -22,12 +27,6 @@ int camera_exit 		();
 	/* Called when library is being closed or another 	*/
 	/* camera model (possibly from the same library) has	*/
 	/* been chosen.						*/
-
-int camera_open 		();
-	/* Opens the camera for use.				*/
-
-int camera_close 		();
-	/* Closes the camera after use.				*/
 
 int camera_folder_list		(char *folder_path, 
 				 CameraFolderList *folder);
@@ -72,7 +71,8 @@ int camera_file_unprotect	(int file_number);
 	/* protects and unprotects a file on the camera from 	*/
 	/* being deleted. (if supported)			*/
 
-int camera_config 		(CameraConfig *conf, int conf_count);
+int camera_config 		(CameraConfig *conf);
+	/* */
 
 int camera_capture 		(int type);
 
