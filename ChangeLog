@@ -1,3 +1,9 @@
+2001-11-04  Stephane Castejon <scastejo@club-internet.fr>
+
+	* liggphoto2/gphoto2-result.c,h : remove GP_ERROR_LOW_BATTERY
+	* camlibs/sierra/library.c : add an error message regarding the
+	  low battery level.
+
 2001-11-04 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* frontends/command-line/interface.c: clarified comment
