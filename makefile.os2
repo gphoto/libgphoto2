@@ -5,10 +5,10 @@ all:
   @echo gPhoto2/2 makefile by Bart van Leeuwen (bart@netage.nl)
   @if not exist lib md lib
   @if not exist obj md obj
-  @cd libgpio
+  @cd libgphoto2
   @nmake -nologo -f makefile.os2
   @cd ..
-  @cd libgphoto2
+  @cd libgpio
   @nmake -nologo -f makefile.os2
   @cd ..
   @cd frontends\libgphoto2_frontend
