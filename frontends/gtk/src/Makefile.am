@@ -1,4 +1,6 @@
 ## Process this file with automake to produce Makefile.in
+SUBDIRS = \
+	dialogs
 
 INCLUDES = \
 	-I$(top_srcdir)/intl \
@@ -24,4 +26,4 @@ gphoto2_gtk2_LDADD = \
 	@GTK_LIBS@ \
 	$(INTLLIBS) \
 	$(GNOMEUI_LIBS) \
-	$(EXTRA_GNOME_LIBS)
+	$(EXTRA_GNOME_LIBS) \
