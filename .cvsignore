@@ -4,5 +4,4 @@ Makefile
 .libs
 *.lo
 libgphoto2.la
-.cvsignore
-libgphoto2Conf.sh
+libgphoto-2.0.pc

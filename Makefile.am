@@ -21,16 +21,6 @@ libgphoto2_la_SOURCES = \
 	util.c util.h \
 	widget.c
 
-confexecdir           = $(libdir)
-confexec_DATA         = libgphoto2Conf.sh
-EXTRA_DIST            = libgphoto2Conf.sh.in
-CLEANFILES            = libgphoto2Conf.sh
-
-libgphoto2Conf.sh: libgphoto2Conf.sh.in Makefile
-## Use sed and then mv to avoid problems if the user interrupts.
-	sed -e 's?\@LIBGPHOTO2_LIBDIR\@?$(LIBGPHOTO2_LIBDIR)?g' \
-	    -e 's?\@LIBGPHOTO2_INCLUDEDIR\@?$(LIBGPHOTO2_INCLUDEDIR)?g' \
-	    -e 's?\@LIBGPHOTO2_LIBS\@?$(LIBGPHOTO2_LIBS)?g' \
-	    -e 's?\@LIBGPHOTO2_VERSION\@?$(LIBGPHOTO2_VERSION)?g' \
-	      < $(srcdir)/libgphoto2Conf.sh.in > libgphoto2Conf.tmp \
-	  && mv libgphoto2Conf.tmp libgphoto2Conf.sh
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libgphoto-2.0.pc
+EXTRA_DIST = libgphoto-2.0.pc.in
