@@ -48,7 +48,6 @@ libgphoto2include_HEADERS =	\
 	gphoto2-version.h	\
 	gphoto2-widget.h
 
-pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgphoto2.pc
 
 EXTRA_DIST = libgphoto2.pc.in gphoto2-library.c
