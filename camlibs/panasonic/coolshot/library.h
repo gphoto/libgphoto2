@@ -48,4 +48,4 @@ int coolshot_check_checksum( char *packet, int length );
 int coolshot_request_image (Camera *camera, char *buf, int *len, int number);
 int coolshot_request_thumbnail (Camera *camera, char *buf, int *len, int number);
 int coolshot_download_image (Camera *camera, char *buf, int *len, int thumbnail);
-
+int coolshot_build_thumbnail (char *data, int *size);

@@ -1,3 +1,10 @@
+2001-09-03  Chris Pinkham <cpinkham@infi.net>
+
+	* camlibs/panasonic/coolshot/README
+	  camlibs/panasonic/coolshot/coolshot.c
+	  camlibs/panasonic/coolshot/library.h
+	  camlibs/panasonic/coolshot/library.c: added thumbnail support.
+
 2001-09-02  Chris Pinkham <cpinkham@infi.net>
 
 	* camlibs/panasonic/coolshot/coolshot.c

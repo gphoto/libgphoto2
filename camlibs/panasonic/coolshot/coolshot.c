@@ -61,6 +61,8 @@ static char *coolshot_cameras[] = {
 
 int camera_id (CameraText *id)
 {
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_id");
+
 	strcpy (id->text, "coolshot");
 
 	return (GP_OK);
@@ -71,6 +73,8 @@ int camera_abilities (CameraAbilitiesList *list)
 	int x = 0;
 	char *ptr;
 	CameraAbilities *a;
+
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_abilities");
 
 	ptr = coolshot_cameras[x++];
 	while (*ptr) {
@@ -86,7 +90,7 @@ int camera_abilities (CameraAbilitiesList *list)
 
 		/* fixme, need to set these operations lists to correct values */
 		a->operations        = 	GP_OPERATION_NONE;
-		a->file_operations   = 	GP_FILE_OPERATION_NONE;
+		a->file_operations   = 	GP_FILE_OPERATION_PREVIEW;
 
 		/* fixme, believe supports GP_FOLDER_PUT_FILE */
 		a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
@@ -101,7 +105,7 @@ int camera_abilities (CameraAbilitiesList *list)
 
 static int camera_start (Camera *camera)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_start");
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_start");
 
 	/* coolshot_sb sets to default speed if speed == 0 */
 	CHECK (coolshot_sb (camera, camera->port_info->speed));
@@ -110,7 +114,7 @@ static int camera_start (Camera *camera)
 
 static int camera_stop (Camera *camera)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_stop");
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_stop");
 
 	CHECK (coolshot_sb( camera, DEFAULT_SPEED));
 	return (GP_OK);
@@ -122,7 +126,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	int count;
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** file_list_func");
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* file_list_func");
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** folder: %s", folder);
 
 	CHECK (camera_start (camera));
@@ -138,7 +142,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	int n;
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** get_info_func");
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* get_info_func");
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** filename: %s",filename);
 
@@ -159,7 +163,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 
 static int camera_exit (Camera *camera)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_exit");
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_exit");
 
 	return (GP_OK);
 }
@@ -187,20 +191,19 @@ static int camera_file_get (Camera *camera, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
-		/* fixme, need to figure out thumbnail format & munge it into a jpeg
 		CHECK (coolshot_request_thumbnail (camera, data, &size, n));
-		*/
-		CHECK (coolshot_request_image (camera, data, &size, n));
+		CHECK (coolshot_build_thumbnail (data, &size));
+		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
 		break;
 
 	case GP_FILE_TYPE_NORMAL:
 		CHECK (coolshot_request_image (camera, data, &size, n));
+		CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 	CHECK (gp_file_set_name (file, filename));
 	CHECK (gp_file_append (file, data, size));
 
@@ -212,7 +215,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
 	int count;
 	char tmp[1024];
 
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_summary");
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_summary");
 
 	CHECK (camera_start (camera));
 
@@ -227,7 +230,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
 
 static int camera_manual (Camera *camera, CameraText *manual)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_manual");
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_manual");
 
 	strcpy (manual->text, _("Some notes:\n"
 		"    No notes here yet.\n"));
@@ -236,7 +239,7 @@ static int camera_manual (Camera *camera, CameraText *manual)
 
 static int camera_about (Camera *camera, CameraText *about)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "*** camera_about");
+	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_about");
 
 	strcpy (about->text,
 		_("coolshot library v" COOLSHOT_VERSION

@@ -592,3 +592,75 @@ int coolshot_enq (Camera *camera)
 	return (GP_ERROR_IO_TIMEOUT);
 }
 
+
+int coolshot_build_thumbnail (char *data, int *size)
+{
+	char thumbnail[32768];
+	char prev_line[256];
+	char *ptr;
+	char *pptr;
+	char *src;
+	int length;
+	int x, y, r, g, b;
+	int ynd;
+	int loop;
+
+	strcpy( thumbnail,
+		"P6\n"
+		"# CREATOR: gphoto2, panasonic coolshot library\n"
+		"80 60\n"
+		"255\n" );
+
+	length = strlen( thumbnail );
+	ptr = thumbnail + length;
+	pptr = prev_line;
+
+	src = data;
+	x = y = ynd = 1;
+	r = g = b = 128;
+
+	for( loop = 0; loop < *size; loop++ ) {
+		if ( y == 81 ) {
+			x++;
+			y = 1;
+
+			memcpy( ptr, prev_line, 240 );
+			pptr = prev_line;
+			ptr += 240;
+		}
+
+		if (( x % 2 ) == 1 ) {
+			if (( ynd % 2 ) == 1 ) {
+				r = *src;
+			} else {
+				g = *src;
+			}
+		} else {
+			if (( ynd % 2 ) == 1 ) {
+				g = *src;
+			} else {
+				b = *src;
+			}
+		}
+
+		*(ptr++) = r; *(ptr++) = g; *(ptr++) = b;
+		*(pptr++) = r; *(pptr++) = g; *(pptr++) = b;
+
+		*(ptr++) = r; *(ptr++) = g; *(ptr++) = b;
+		*(pptr++) = r; *(pptr++) = g; *(pptr++) = b;
+
+		y += 2;
+		ynd++;
+
+		src++;
+	}
+
+	length += 80 * 60 * 3;
+
+	memcpy( data, thumbnail, length );
+	*size = length;
+
+	return( GP_OK );
+}
+
+
