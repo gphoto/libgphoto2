@@ -1,7 +1,13 @@
+########################################################################
+# $Id$
+#
+# RPM spec file for gphoto2
+########################################################################
+
 Summary: Software for accessing digital cameras
 Name: @PACKAGE@
 Version: @VERSION@
-Release: 2
+Release: 1
 License: LGPL
 Group: Applications/Multimedia
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -18,8 +24,7 @@ BuildRequires: findutils perl
 # TODO about packaging
 ########################################################################
 #
-# * review RPM packaging for gphoto2, libusb, gtkam
-# * make rpm -Fvh, rpm -Uvh work with /etc/hotplug/usb.usermap
+# * review and coordinate RPM packaging for gphoto2, libusb, gtkam
 #
 ########################################################################
 
@@ -144,8 +149,16 @@ mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 # unregister libraries
 /sbin/ldconfig
 # remove supported cameras from /etc/hotplug/usb.usermap
-grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
-mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
+# this has to be done in postun as we have to test 
+# whether there is still a usbcam script or not, i.e.
+# whether we were removed in the course of an update or not.
+if [ -x /etc/hotplug/usb/usbcam ]
+then
+        echo "Not removing usbcam lines from /etc/hotplug/usb.usermap"
+else
+        grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
+        mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
+fi
 
 %files devel
 %defattr(-,root,root)
@@ -158,7 +171,7 @@ mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 ##### Change log
 %changelog
 * Sat Oct 27 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
-- tried to fix update behaviour for hotplug list
+- fixed update behaviour for hotplug list (do not erase it when updating)
 
 * Thu Oct 25 2001 Tim Waugh <twaugh@redhat.com>
 - hotplug dependency is a prereq not a requires (the package scripts
