@@ -1,3 +1,8 @@
+2004-01-19  Marcus Meissner <marcus@jet.franken.de>
+
+	* blink2.c: Some alignment issues, set altsetting.
+	* xjpeg.c: Added APP1, APP2.
+
 2003-06-22  Marcus Meissner <marcus@jet.franken.de>
 	
 	* blink2.c: SiPix Blink2 now downloads viewable
