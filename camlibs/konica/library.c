@@ -719,33 +719,60 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info)
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_capture ***");
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
 	g_return_val_if_fail (file != NULL, GP_ERROR);
+	g_return_val_if_fail (info != NULL, GP_ERROR);
 
         konica_data = (konica_data_t *) camera->camlib_data;
 
-	/* Take the picture. */
-	if (error_happened (camera, k_take_picture (
-		konica_data->device, 
-		konica_data->image_id_long, 
-		&image_id, 
-		&exif_size, 
-		&information_buffer, 
-		&information_buffer_size, 
-		&protected)))
+	/* What are we supposed to do? */
+	switch (info->type) {
+	case GP_CAPTURE_IMAGE:
+
+		/* Take the picture. */
+		if (error_happened (camera, k_take_picture (
+			konica_data->device, 
+			konica_data->image_id_long, 
+			&image_id, 
+			&exif_size, 
+			&information_buffer, 
+			&information_buffer_size, 
+			&protected)))
+			return (GP_ERROR);
+		g_free (information_buffer);
+	
+		/* Get the image. */
+	        if (error_happened (camera, k_get_image (
+			konica_data->device, 
+			konica_data->image_id_long, 
+			image_id, 
+			K_IMAGE_JPEG, 
+			(guchar **) &file->data, 
+			(guint *) &file->size))) 
+			return (GP_ERROR);
+	        strcpy (file->type, "image/jpg");
+	
+		return (GP_OK);
+
+	case GP_CAPTURE_VIDEO:
+
+		/* Our cameras can't do that. */
+		gp_frontend_message (camera, "Your camera does not support capturing videos.");
 		return (GP_ERROR);
 
-	/* Get the image. */
-        if (error_happened (camera, k_get_image (
-		konica_data->device, 
-		konica_data->image_id_long, 
-		image_id, 
-		K_IMAGE_JPEG, 
-		(guchar **) &file->data, 
-		(guint *) &file->size))) 
-		return (GP_ERROR);
-        strcpy (file->type, "image/jpg");
-	sprintf (file->name, "picture%04i.jpg", (int) image_id); 
+//	case GP_CAPTURE_PREVIEW:
 
-	return (GP_OK);
+		/* Get the preview. */
+//		if (error_happened (camera, k_get_preview (
+//			konica_data->device, 
+//			TRUE,
+//			(guchar**) &file->data,
+//			(guint*) &file->size))) return (GP_ERROR);
+//		strcpy (file->type, "image/jpg");
+
+//		return (GP_OK);
+
+	default:
+		return (GP_ERROR);
+	}
 }
 
 
