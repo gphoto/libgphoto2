@@ -1114,7 +1114,7 @@ int camera_init (Camera *camera) {
 	settings.serial.speed 	 = 9600;
 	settings.serial.bits 	 = 8;
 	settings.serial.parity 	 = GP_PORT_SERIAL_PARITY_EVEN;
-	settings.serial.stopbits = 0;
+	settings.serial.stopbits = 1;
 
 	gp_port_settings_set(camera->port,settings);
 	//gp_port_open(thedev);
