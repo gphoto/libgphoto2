@@ -217,7 +217,7 @@ usage (void)
 		   else
 			sprintf(a, " ");
 		sprintf(buf, " %-4s %s %s", s, l, a);
-		printf("%-38s %s\n", buf, option[x].description);
+		printf("%-38s %s\n", buf, _(option[x].description));
 		x++;
 	}
 
