@@ -96,7 +96,8 @@
       <para>
 	OK, we begin with finding out how you can connect a camera to
 	your computer:
-	<screen>
+      </para>
+      <screen>
 <prompt>$uli@mir:~$ </prompt><command>gphoto2 <parameter>--list-ports</parameter></command>
 <computeroutput>Devices found: 4
 Path                             Description
@@ -106,7 +107,8 @@ serial:/dev/ttyS2                Serial Port 2
 serial:/dev/ttyS3                Serial Port 3                   
 usb:                             Universal Serial Bus	  </computeroutput>
 <prompt>uli@mir:~$ </prompt>
-	</screen>
+      </screen>
+      <para>
 	In this example, we see that we have the three serial devices
 	<filename class="devicefile">/dev/ttyS0</filename>, 
 	<filename class="devicefile">/dev/ttyS2</filename> and
@@ -124,20 +126,23 @@ usb:                             Universal Serial Bus	  </computeroutput>
 	<command>gphoto2</command> can find it. This may only work with
 	<acronym>USB</acronym>. (FIXME: can any of the people with
 	<acronym>RS232</acronym> cameras help me on this issue?)
-	<screen>
+      </para>
+      <screen>
 <prompt>uli@mir:~$ </prompt><command>gphoto2 <parameter>--auto-detect</parameter></command>
 <computeroutput>Model                          Port                                             
 ----------------------------------------------------------
 Canon PowerShot G2             usb:            </computeroutput>
 <prompt>uli@mir:~$ </prompt>
-	</screen>
+      </screen>
+      <para>
 	In this case, a camera called "Canon PowerShot G2" is connected
 	to your system's <acronym>USB</acronym> bus.
       </para>
 
       <para>
 	OK, so now let's see what we can find out about the camera:
-	<screen>
+      </para>
+      <screen>
 <prompt>uli@mir:~$ </prompt><command>gphoto2 <parameter>--summary</parameter></command>
 <computeroutput>Detected a 'Canon PowerShot G2'.                                                
 Camera Summary:
@@ -156,7 +161,8 @@ Flash disk information:
 Time: 2002-07-09 20:45:15 (host time +0 seconds)
 </computeroutput>
 <prompt>uli@mir:~$ </prompt>
-	</screen>
+      </screen>
+      <para>
 	The actual result of 
 	<command>gphoto2 <parameter>--summary</parameter></command>
 	may be different from camera to camera. However, we can see that
@@ -168,7 +174,8 @@ Time: 2002-07-09 20:45:15 (host time +0 seconds)
 	OK, now that we have seen that there is some space occupied on
 	the storage medium of the camera, let's have a look at what is
 	stored there:
-	<screen>
+      </para>
+      <screen>
 <prompt>uli@mir:~$ </prompt><command>gphoto2 <parameter>--list-files</parameter></command>
 <computeroutput>Detected a 'Canon PowerShot G2'.                                                
 There are no files in folder '/'.
@@ -180,7 +187,8 @@ There are 4 files in folder '/DCIM/154CANON':
 #4     MVI_5418.AVI               rd   682 KB video/x-msvideo
 There are no files in folder '/DCIM/CANONMSC'.</computeroutput>
 <prompt>uli@mir:~$ </prompt>
-	</screen>
+      </screen>
+      <para>
 	There are multiple folders on the camera, and there are several
 	files of different types and sizes on stored in one of them. One
 	is a raw file of the type this camera produces, two are <acronym>JPEG</acronym>
@@ -192,7 +200,8 @@ There are no files in folder '/DCIM/CANONMSC'.</computeroutput>
 	Now that we have an impression of what expects us when we
 	actually download the images from the camera, we are going to do
 	that:
-	<screen>
+      </para>
+      <screen>
 <prompt>uli@mir:~/tmp$ </prompt><command>gphoto2 <parameter>--get-all-files</parameter></command>
 <computeroutput>Detected a 'Canon PowerShot G2'.                                                
 Downloading 'CRW_5417.CRW' from folder '/DCIM/154CANON'...
@@ -204,7 +213,8 @@ Saving file as IMG_5416.JPG
 Downloading 'MVI_5418.AVI' from folder '/DCIM/154CANON'...
 Saving file as MVI_5418.AVI                                                     </computeroutput>
 <prompt>uli@mir:~/tmp$ </prompt>
-	</screen>
+      </screen>
+      <para>
 	And now we have all the files in our current directory (in
 	this case ~/tmp) and can do something with them.
       </para>
@@ -1632,6 +1642,12 @@ Saving file as MVI_5418.AVI                                                     
 	    produce.
 	  </simpara>
         </listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><ulink url="http://www.teaser.fr/~hfiguiere/linux/digicam.html">http://www.teaser.fr/~hfiguiere/linux/digicam.html</ulink></term>
+	<listitem>
+	  <simpara>Hubert Figuiere's digicam support list</simpara>
+	</listitem>
       </varlistentry>
       <varlistentry>
 	<term><ulink url="http://n-dimensional.de/projects/digicam/">http://n-dimensional.de/projects/digicam/</ulink></term>
