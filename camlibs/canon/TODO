@@ -9,20 +9,24 @@ List of work that still has to be done on this driver:
 
  - make file upload work
 
- - make thumbnail download work in 100% of cases
-
  - set attributes after successful download
 
  - getting other info on file (resolution and stuff)
 
  - setting attributes in general
 
+ - rework configuration dialog
+
+ - make thumbnail download work on serial cameras
+
  - extend file attributes from 1 octet to 2 octets
 
- - use capabilities everywhere
+ - introduce use capabilities everywhere
 
  - the canon_int* functions often shouldn't use gphoto2 structures
    the canon_usb* and canon_serial* should even less
+
+ - handle rotated images correctly (how)
 
  - A5 support is completely broken, with the new filename based API, the 
    directory caching mecanism must be completely revisited.
