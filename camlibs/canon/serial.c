@@ -112,6 +112,8 @@ int canon_serial_get_cts(void)
  *
  ****************************************************************************/
 
+#undef GPIO_USB
+
 int canon_serial_init(const char *devname)
 {
 #ifdef GPIO_USB

@@ -635,6 +635,17 @@ int camera_summary (Camera *camera, CameraText *summary)
 	}
 }
 
+int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
+
+	return (GP_ERROR);
+}
+
+int camera_manual (Camera *camera, CameraText *manual)
+{
+	strcpy(manual->text, "No manual available.");
+
+	return (GP_OK);
+}
 
 int camera_about (Camera *camera, CameraText *about) 
 {

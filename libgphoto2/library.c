@@ -149,8 +149,10 @@ int load_cameras() {
                                 printf("yes\n");
                         load_camera_list(de->d_name);
                    } else {
-                        if (glob_debug)
+                        if (glob_debug) {
                                 printf("no\n");
+				printf("core: reason: %s\n", dlerror());
+			}
                 }
            }
         } while (de);

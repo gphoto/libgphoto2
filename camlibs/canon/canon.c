@@ -95,6 +95,30 @@ int camera_id(char *id)
         return GP_OK;
 }
 
+int camera_file_put (Camera *camera, CameraFile *file)
+{
+
+	return GP_ERROR;
+}
+
+int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info) 
+{
+
+	return GP_ERROR;
+}
+
+int camera_config_get (Camera *camera, CameraWidget *window)
+{
+
+	return GP_ERROR;
+}
+
+int camera_config_set (Camera *camera, CameraSetting *setting, int count)
+{
+
+	return GP_ERROR;
+}
+
 int camera_manual(Camera *camera, CameraText *manual)
 {
         strcpy(manual->text, "Manual Not Available");
@@ -109,10 +133,7 @@ int camera_abilities(CameraAbilities *abilities, int *count)
 	CameraAbilities a;
 
 	strcpy(a.model, "");
-	a.serial     = 1;
-	a.parallel   = 0;
-	a.usb        = 1;
-	a.ieee1394   = 0;
+	a.port 	     = GP_PORT_SERIAL | GP_PORT_USB;
 	a.speed[0]   = 9600;
 	a.speed[1]   = 19200;
 	a.speed[2]   = 38400;
@@ -134,7 +155,7 @@ int camera_abilities(CameraAbilities *abilities, int *count)
 	}
 	
 	i=0;
-	a.serial     = 0;
+	a.port	    = GP_PORT_USB;
 	while (i<NUM_USB) {
 		memcpy(&abilities[x], &a, sizeof(a));
 		strcpy(abilities[x].model, models_USB[i]);
@@ -143,15 +164,13 @@ int camera_abilities(CameraAbilities *abilities, int *count)
 	}
 	
 	i=0;
-	a.serial     = 1;
-	a.usb        = 0;
+	a.port     = GP_PORT_SERIAL;
 	while (i<NUM_SERIAL) {
 		memcpy(&abilities[x], &a, sizeof(a));
 		strcpy(abilities[x].model, models_serial[i]);
 		x++;
 		i++;
 	}
-
 
 	*count = x;
 
