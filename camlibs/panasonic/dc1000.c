@@ -59,7 +59,7 @@
 
 static int dsc1_connect(Camera *camera, int speed) {
 	
-	u_int8_t	data = 0;
+	uint8_t	data = 0;
 	
 	DEBUG_PRINT_MEDIUM(("Connecting a camera."));
 		
@@ -125,7 +125,7 @@ static int dsc1_getindex(Camera *camera) {
 
 /* dsc1_delete - delete image #index from camera memory */
 
-static int dsc1_delete(Camera *camera, u_int8_t index) {
+static int dsc1_delete(Camera *camera, uint8_t index) {
 	
 	DEBUG_PRINT_MEDIUM(("Deleting image: %i.", index));
 		
@@ -147,7 +147,7 @@ static int dsc1_delete(Camera *camera, u_int8_t index) {
 	
 /* dsc1_selectimage - select image to download, return its size */
 
-static int dsc1_selectimage(Camera *camera, u_int8_t index)
+static int dsc1_selectimage(Camera *camera, uint8_t index)
 {
         int	size = 0;
 	
@@ -168,10 +168,10 @@ static int dsc1_selectimage(Camera *camera, u_int8_t index)
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
 
-	size =	(u_int32_t)camera->pl->buf[3] |
-		((u_int8_t)camera->pl->buf[2] << 8) |
-		((u_int8_t)camera->pl->buf[1] << 16) |
-		((u_int8_t)camera->pl->buf[0] << 24);		
+	size =	(uint32_t)camera->pl->buf[3] |
+		((uint8_t)camera->pl->buf[2] << 8) |
+		((uint8_t)camera->pl->buf[1] << 16) |
+		((uint8_t)camera->pl->buf[0] << 24);		
 	
 	DEBUG_PRINT_MEDIUM(("Selected image: %i, size: %i.", index, size));
 
@@ -186,8 +186,8 @@ static int dsc1_readimageblock(Camera *camera, int block, char *buffer) {
 	
 	DEBUG_PRINT_MEDIUM(("Reading image block: %i.", block));
 
-	buf[0] = (u_int8_t)(block >> 8);
-	buf[1] = (u_int8_t)block;
+	buf[0] = (uint8_t)(block >> 8);
+	buf[1] = (uint8_t)block;
 	
 	if (dsc1_sendcmd(camera, DSC1_CMD_GET_DATA, buf, 2) != GP_OK)
 		return GP_ERROR;

@@ -20,15 +20,10 @@
 	for Panasonic DC1000 and DC1580 cameras.
 */	
 
-#include <sys/types.h>
 #include <stdio.h>
 #include <errno.h>
+#include <_stdint.h>
 #include <gphoto2.h>
-
-#ifdef sun
-	typedef uint8_t u_int8_t;
-	typedef uint32_t u_int32_t;
-#endif
 
 #define DSC1	1	/* DC1000 */
 #define DSC2	2	/* DC1580 */
@@ -72,7 +67,7 @@ static const char
 	r_prefix[13] = /* generic response prefix */
 	{ 'M', 'K', 'E', ' ', 'P', 'C', ' ', ' ', 'D', 'S', 'C', ' ' };
 
-int dsc1_sendcmd(Camera *camera, u_int8_t cmd, void *data, int size);
+int dsc1_sendcmd(Camera *camera, uint8_t cmd, void *data, int size);
 	/* Send command with 'data' of 'size' to DSC */
 
 int dsc1_retrcmd(Camera *camera);

@@ -18,15 +18,9 @@
 
 */
 
-#include <sys/types.h>
 #include <stdio.h>
 #include <errno.h>
 #include <gphoto2.h>
-
-#ifdef sun
-	typedef uint8_t u_int8_t;
-	typedef uint32_t u_int32_t;
-#endif
 
 #define L859_BLOCKSIZE    0x74
 #define L859_BUFSIZE      0x74

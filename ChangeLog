@@ -1,3 +1,16 @@
+2001-12-05 Dan Fandrich <dan@coneharvesters.com>
+	* configure.in
+	* libgphoto2_port/m4/stdint.m4
+	* camlibs/dimera/dimera3500.c
+	* camlibs/dimera/mesalib.h
+	* camlibs/panasonic/dc.c
+	* camlibs/panasonic/dc.h
+	* camlibs/panasonic/dc1000.c
+	* camlibs/panasonic/dc1580.c
+	* camlibs/panasonic/l859/l859.c
+	* camlibs/panasonic/l859/l859.h: add AC_NEED_STDINT_H to configure.in
+	  and change camera libraries to use C99-style size-specific integer types
+
 2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	$builddir != $srcdir fixes.

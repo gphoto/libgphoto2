@@ -34,7 +34,7 @@
 #  define __FILE__ "dc.c"
 #endif
 
-int dsc1_sendcmd(Camera *camera, u_int8_t cmd, void *data, int size) {
+int dsc1_sendcmd(Camera *camera, uint8_t cmd, void *data, int size) {
 
         int     i;
 
@@ -45,7 +45,7 @@ int dsc1_sendcmd(Camera *camera, u_int8_t cmd, void *data, int size) {
         memcpy(camera->pl->buf, c_prefix, 12);
 
         for (i = 0; i < 4; i++)
-                camera->pl->buf[DSC1_BUF_SIZE + i] = (u_int8_t)(size >> 8*(3 - i));
+                camera->pl->buf[DSC1_BUF_SIZE + i] = (uint8_t)(size >> 8*(3 - i));
 
         camera->pl->buf[DSC1_BUF_CMD] = cmd;
 
@@ -80,10 +80,10 @@ int dsc1_retrcmd(Camera *camera) {
                 result = camera->pl->buf[DSC1_BUF_CMD];
 
         camera->pl->size =
-                (u_int32_t)camera->pl->buf[DSC1_BUF_SIZE + 3] |
-                ((u_int8_t)camera->pl->buf[DSC1_BUF_SIZE + 2] << 8) |
-                ((u_int8_t)camera->pl->buf[DSC1_BUF_SIZE + 1] << 16) |
-                ((u_int8_t)camera->pl->buf[DSC1_BUF_SIZE] << 24);
+                (uint32_t)camera->pl->buf[DSC1_BUF_SIZE + 3] |
+                ((uint8_t)camera->pl->buf[DSC1_BUF_SIZE + 2] << 8) |
+                ((uint8_t)camera->pl->buf[DSC1_BUF_SIZE + 1] << 16) |
+                ((uint8_t)camera->pl->buf[DSC1_BUF_SIZE] << 24);
 
         if (DSC_BUFSIZE < camera->pl->size) {
                 RETURN_ERROR(EDSCOVERFL);
@@ -101,7 +101,7 @@ int dsc1_retrcmd(Camera *camera) {
 int dsc1_setbaudrate(Camera *camera, int speed) {
 
 	GPPortSettings settings;
-        u_int8_t        s_bps;
+        uint8_t        s_bps;
         int             result;
 
         DEBUG_PRINT_MEDIUM(("Setting baud rate to: %i.", speed));
@@ -189,7 +189,7 @@ void dsc_dumpmem(void *buf, int size) {
                         stderr,
                         *((char*)buf + i) >= 32 &&
                         *((char*)buf + i) < 127 ? "%c" : "\\x%02x",
-                        (u_int8_t)*((char*)buf + i)
+                        (uint8_t)*((char*)buf + i)
                 );
         fprintf(stderr, "\n\n");
 }

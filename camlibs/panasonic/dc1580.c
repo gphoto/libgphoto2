@@ -59,7 +59,7 @@
 
 /* dsc2_checksum - establish checksum for size bytes in buffer */
 
-static u_int8_t dsc2_checksum(char *buffer, int size) {
+static uint8_t dsc2_checksum(char *buffer, int size) {
 
         int     checksum = 0;
         int     i;
@@ -74,7 +74,7 @@ static u_int8_t dsc2_checksum(char *buffer, int size) {
 
 /* dsc2_sendcmd - send command with data to DSC */
 
-static int dsc2_sendcmd(Camera *camera, u_int8_t cmd, long int data, u_int8_t sequence) {
+static int dsc2_sendcmd(Camera *camera, uint8_t cmd, long int data, uint8_t sequence) {
 
         int     i;
 
@@ -88,7 +88,7 @@ static int dsc2_sendcmd(Camera *camera, u_int8_t cmd, long int data, u_int8_t se
         camera->pl->buf[3] = cmd;
 
         for (i = 0; i < sizeof(data); i++)
-                camera->pl->buf[4 + i] = (u_int8_t)(data >> 8*i);
+                camera->pl->buf[4 + i] = (uint8_t)(data >> 8*i);
 
         camera->pl->buf[14] = dsc2_checksum(camera->pl->buf, 16);
 
@@ -111,7 +111,7 @@ static int dsc2_retrcmd(Camera *camera) {
 
 */
         if (s != 16 ||  camera->pl->buf[DSC2_BUF_BASE] != 0x08 ||
-                        camera->pl->buf[DSC2_BUF_SEQ] != 0xff - (u_int8_t)camera->pl->buf[DSC2_BUF_SEQC]) {
+                        camera->pl->buf[DSC2_BUF_SEQ] != 0xff - (uint8_t)camera->pl->buf[DSC2_BUF_SEQC]) {
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
         }
@@ -181,10 +181,10 @@ static int dsc2_getindex(Camera *camera) {
 
         if (dsc2_retrcmd(camera) == DSC2_RSP_INDEX)
                 result =
-                        ((u_int32_t)camera->pl->buf[DSC2_BUF_DATA]) |
-                        ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 1] << 8) |
-                        ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 2] << 16) |
-                        ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 3] << 24);
+                        ((uint32_t)camera->pl->buf[DSC2_BUF_DATA]) |
+                        ((uint8_t)camera->pl->buf[DSC2_BUF_DATA + 1] << 8) |
+                        ((uint8_t)camera->pl->buf[DSC2_BUF_DATA + 2] << 16) |
+                        ((uint8_t)camera->pl->buf[DSC2_BUF_DATA + 3] << 24);
         else
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
@@ -239,10 +239,10 @@ static int dsc2_selectimage(Camera *camera, int index, int thumbnail) {
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
 
-        size =  ((u_int32_t)camera->pl->buf[DSC2_BUF_DATA]) |
-                ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 1] << 8) |
-                ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 2] << 16) |
-                ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 3] << 24);
+        size =  ((uint32_t)camera->pl->buf[DSC2_BUF_DATA]) |
+                ((uint8_t)camera->pl->buf[DSC2_BUF_DATA + 1] << 8) |
+                ((uint8_t)camera->pl->buf[DSC2_BUF_DATA + 2] << 16) |
+                ((uint8_t)camera->pl->buf[DSC2_BUF_DATA + 3] << 24);
 
         DEBUG_PRINT_MEDIUM(("Selected image: %i, thumbnail: %i, size: %i.", index, thumbnail, size));
 
@@ -262,11 +262,11 @@ static int dsc2_readimageblock(Camera *camera, int block, char *buffer) {
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
 
-        if ((u_int8_t)camera->pl->buf[0] != 1 ||
-                        (u_int8_t)camera->pl->buf[1] != block ||
-                        (u_int8_t)camera->pl->buf[2] != 0xff - block ||
-                        (u_int8_t)camera->pl->buf[3] != DSC2_RSP_DATA ||
-                        (u_int8_t)camera->pl->buf[DSC_BUFSIZE - 2] != dsc2_checksum(camera->pl->buf, DSC_BUFSIZE))
+        if ((uint8_t)camera->pl->buf[0] != 1 ||
+                        (uint8_t)camera->pl->buf[1] != block ||
+                        (uint8_t)camera->pl->buf[2] != 0xff - block ||
+                        (uint8_t)camera->pl->buf[3] != DSC2_RSP_DATA ||
+                        (uint8_t)camera->pl->buf[DSC_BUFSIZE - 2] != dsc2_checksum(camera->pl->buf, DSC_BUFSIZE))
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
 

@@ -21,6 +21,19 @@
  *
  * History:
  * $Log$
+ * Revision 1.31  2001/12/06 01:45:49  dfandrich
+ * 	* configure.in
+ * 	* libgphoto2_port/m4/stdint.m4
+ * 	* camlibs/dimera/dimera3500.c
+ * 	* camlibs/dimera/mesalib.h
+ * 	* camlibs/panasonic/dc.c
+ * 	* camlibs/panasonic/dc.h
+ * 	* camlibs/panasonic/dc1000.c
+ * 	* camlibs/panasonic/dc1580.c
+ * 	* camlibs/panasonic/l859/l859.c
+ * 	* camlibs/panasonic/l859/l859.h: add AC_NEED_STDINT_H to configure.in
+ * 	  and change camera libraries to use C99-style size-specific integer types
+ *
  * Revision 1.30  2001/11/16 02:26:32  dfandrich
  * Propagating more error codes to the caller.
  *
@@ -49,212 +62,7 @@
  *           settings.serial.speed. That lets us ...
  *         * libgphoto2/gphoto2-camera.[c,h]: ... remove camera->port_info
  *
- * Revision 1.24  2001/10/19 13:40:28  lutz
- * 2001-10-19  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * camlibs/casio
- *         * camlibs/polaroid
- *         * camlibs/barbie
- *         * camlibs/dimera
- *         * camlibs/jamcam
- *         * camlibs/panasonic/coolshot
- *         * camlibs/samsung: Use camera-fs and get_file_func
- *
- * Revision 1.23  2001/10/16 22:38:57  lutz
- * 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * README: no glib-dependency any more
- *         * camlibs: gp_abilities_new doesn't exist any more
- *         * doc/api: Even more documentation
- *         * libgphoto2/gphoto2-abiltiies.h: Cleaned up.
- *         * libgphoto2/gphoto2-abilities-list.c: Documented
- *
- * Revision 1.22  2001/10/16 19:04:52  dfandrich
- * Using CHECK to propagate more error codes to callers.
- * Added support for i18n.
- *
- * Revision 1.21  2001/10/16 18:01:35  hun
- * added #include lines that should have already been there
- *
- * Revision 1.20  2001/10/11 22:01:25  lutz
- * 2001-10-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * camlibs/canon/psa50.c
- *         * camlibs/dimera/dimera3500.c:
- *         * camlibs/kodak/dc120/library.c:
- *         * camlibs/kodak/dc240/library.c:
- *         * camlibs/kodak/dc3200/library.c:
- *         * camlibs/panasonic/dc1000.c:
- *         * camlibs/panasonic/dc1580.c:
- *         * camlibs/panasonic/l859/l859.c:
- *         * camlibs/sierra/library.c:
- *         * frontends/command-line/interface.c: Unify percentage handling and
- *         define 0.0 <= percentage <= 1.0.
- *
- * Revision 1.19  2001/10/08 08:18:29  lutz
- * 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * include/gphoto2-frontend.h
- *         * libgphoto2/frontend.c
- *         * camlibs: gp_frontend_progress -> gp_camera_progress,
- *         gp_frontend_status -> gp_camera_status
- *
- * Revision 1.18  2001/08/31 01:33:34  dfandrich
- * Replaced references to PNM with the appropriate PPM or PGM
- *
- * Revision 1.17  2001/08/30 21:59:08  dfandrich
- * Fixed problem with saving raw images.  Stopped file name suffixes from
- * needlessly changing.
- *
- * Revision 1.16  2001/08/30 20:10:40  lutz
- * 2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * camlibs/dimera/dimera3500.c (camera_file_get): Use
- *         gp_file_adjust_name_for_mime_type
- *         * libgphoto2/file.c (gp_file_adjust_name_for_mime_type):
- *         GP_MIME_RAW -> *.raw
- *
- * Revision 1.15  2001/08/30 10:47:51  lutz
- * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * camlibs/barbie/?*: Use camera->port and camera->fs.
- *         * camlibs/dimera/dimera3500.c
- *         (populate_filesystem): Removed.
- *         (camera_folder_list_folders): Removed. We don't support folders anyways
- *         (camera_folder_list_files): Renamed to
- *         (file_list_func): Don't access the CameraFilesystem here. Just
- *         populate the list. The CameraFilesystem will get updated by libgphoto2.
- *         (camera_file_get_info): Renamed to
- *         (get_info_func): New
- *         (camera_file_set_info): Removed. Not supported.
- *         (camera_init): Correctly gp_filesystem_set_list_funcs and
- *         gp_filesystem_set_info_funcs so that the CameraFilesystem has full
- *         control over the information
- *         * include/gphoto2-list.h:
- *         * libgphoto2/list.c: (gp_list_populate): New. Please use this
- *         function to populate the list passed to you on file_list_func.
- *         * libgphoto2/filesys.c: Don't remove the dirty flag on folders
- *         on gp_filesystem_append (thanks, Dan!)
- *
- * Revision 1.14  2001/08/29 22:04:54  dfandrich
- * Now using predefined camera->port and camera->fs structures. Removed
- * unneeded include files. Now using predefined MIME types. Made all local
- * functions static. Updated camera_manual text.
- *
- * Revision 1.13  2001/08/29 17:52:57  lutz
- * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * gphoto2-library.h: Clean up this file.
- *         * gphoto2-camera.h: We don't need camera_init, camera_abilities, and
- *         camera_id here. That belongs into gphoto2-library.h.
- *         * libgphoto2/camera.c:
- *         * libgphoto2/core.c: Adapt
- *         * camlibs/?*: Move camera_init to the bottom of the file. Camera
- *         driver authors, could you please declare the functions above static?
- *         Except camera_id and camera_abilities.
- *
- * Revision 1.12  2001/08/29 10:09:57  lutz
- * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * camlibs/sierra/?*:
- *         * camlibs/directory/directory.c (camera_folder_list_folders),
- *         (camera_folder_list_files), (camera_file_[get,set]_info): Removed.
- *         Use the camera->fs. Use camera->port.
- *         * camlibs/?*: camera->port->* -> camera->port_info->*
- *         * include/gphoto2-camera.h:
- *         * libgphoto2/camera.c: Open the port before accessing a camera,
- *         close it after.
- *
- * Revision 1.11  2001/08/26 16:06:40  lutz
- * 2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * camlibs/dimera/dimera3500.c: explicitly set the conversion method
- *         to GP_FILE_CONVERSION_METHOD_CHUCK.
- *         * camlibs/digita/digita.c: Move the conversion raw -> ppm to ...
- *         * include/gphoto2-file.h:
- *         * libgphoto2/file.c: ... here.
- *         * include/gphoto2-filesystem.h:
- *         * libgphoto2/filesys.c: Implement "dirty" folders.
- *
- * Revision 1.10  2001/08/26 10:42:54  lutz
- * 2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * camlibs/dimera3500.c: Move the raw->pnm conversion ...
- *         * include/gphoto2-file.h:
- *         * libgphto2/file.c: ... here. Now, other camera drivers can use this,
- *         too.
- *         * include/gphoto2-core.c:
- *         * libgphoto2/core.c: Small change to make the API consistent.
- *         * frontends/command-line/main.c: Add possibility for download of raw
- *         data.
- *
- * Revision 1.9  2001/08/25 18:14:25  lutz
- * 2001-08-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * include/gphoto2-file.h:
- *         * include/gphoto2-library.h:
- *         * include/gphoto2-camera.h: Support for raw data.
- *         * libpghoto2/file.c: Adjust to above changes.
- *         * libgphoto2/frontend.c: Kill a warning.
- *         * libgphoto2/libgphoto-2.0.pc.in: CFlags -> Cflags
- *         * libgphoto2/widget.c: Include gphoto2-result.h instead of gphoto2.h
- *         * camlibs/?*: Prepare support for download of raw data. Remove lots of
- *         redundant code (people just copied & pasted the code for file_get
- *         and file_get_preview...). I hope everything works as it did before.
- *         * frontend/command-line/?*: Prepare support for download of raw data
- *
- * Revision 1.8  2001/08/24 21:23:11  lutz
- * 2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * libgphoto2/abilities.c:
- *         * include/gphoto2-abilities.h: Let gp_abilities_new return an error
- *         code. This was the last one.
- *         * camlibs/?*: Adjust to above change.
- *         * camlibs/canon/canon.c: #if 0 some code to kill some warnings
- *
- * Revision 1.7  2001/08/23 12:02:20  lutz
- * 2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * camlibs/agfa-cl18/agfa.c: Use gp_file_* instead of directly
- *         accessing the struct.
- *         * camlibs/barbie/barbie.c: And here.
- *         * camlibs/directory/directory.c: And here.
- *         * camlibs/konica/library.c: And here.
- *         * camlibs/sierra/sierra.c: And here.
- *         * camlibs/panasonic/l859/l859.c: And here.
- *         * camlibs/dimera/dimera3500.c: And here.
- *         * frontends/command-line/main.c: And here.
- *         * libgphoto2/camera.c: And here.
- *         * libgphoto2/file.c:
- *         * include/gphoto2-file.h: Introduce some more gp_file_* functions.
- *
- * Revision 1.6  2001/08/22 20:59:57  hfiguiere
- * 	* camlibs/dimera/dimera3500.c: removed * / * embedded inside comments
- * 	that issued warnings and broke the build...
- * 	* camlibs/kodak/dc240/library.c (dc240_wait_for_busy_completion):
- * 	cast a const to a char to avoid a serious warning on Solaris sparc
- * 	gcc. Fix bug #454183
- *
- * Revision 1.5  2001/08/22 18:09:41  lutz
- * 2001-08-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * * / *: Small parameter changes to make gphoto2 API more consistent.
- *         More to follow.
- *
- * Revision 1.4  2001/08/18 00:03:05  lutz
- * 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
- *
- *         * include/gphoto2-datatypes.h: Move the declaration of the lists to ...
- *         * include/gphoto2-lists.h: ... here. This is a first step towards
- *         cleaning up the include-mess. Realized that CameraListType isn't
- *         needed at all - removed.
- *         * include/gphoto2-filesys.h: Hide the actual contents of
- *         the CameraFilesystem ...
- *         * libgphoto2/filesys.c ... here. The normal user doesn't need to
- *         know what's inside.
- *         * libgphoto2/core.c:
- *         * libgphoto2/lists.c:
- *         * camlibs/ *: Reflect above changes
+ * [... elided log entries ...]
  *
  * Revision 1.3  2001/06/28 22:03:42  dfandrich
  * Integrated Brian Beattie's patch to use mesa_read_row instead of
@@ -277,6 +85,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <_stdint.h>
 #include "mesalib.h"
 #include "dimeratab.h"
 
@@ -330,14 +139,14 @@ static char     Dimera_stdhdr[] =
 
 /* Forward references */
 
-static u_int8_t *
+static uint8_t *
 Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 		       int *width, int *height);
 
-static u_int8_t *
+static uint8_t *
 Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera );
 
-static u_int8_t *
+static uint8_t *
 Dimera_Preview( int *size, Camera *camera );
 
 /* Gphoto2 */
@@ -579,9 +388,9 @@ static int camera_summary (Camera *camera, CameraText *summary) {
 	char version_string[MESA_VERSION_SZ];
 	char battery_string[80];
 	struct mesa_feature features;
-	u_int8_t eeprom_info[MESA_EEPROM_SZ];
+	uint8_t eeprom_info[MESA_EEPROM_SZ];
 	/* Table of EEPROM capacities in Mb based on part compatibility ID */
-	static u_int8_t const eeprom_size_table[14] = {
+	static uint8_t const eeprom_size_table[14] = {
 		/* 00 */ 0,
 		/* 01 */ 8,
 		/* 02 */ 8,
@@ -697,11 +506,11 @@ static int camera_about (Camera *camera, CameraText *about) {
 
 /* Download a thumbnail image from the camera and return it in a malloced
 buffer with PGM headers */
-static u_int8_t *
+static uint8_t *
 Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 {
 	int32_t		r;
-	u_int8_t *image;
+	uint8_t *image;
 
 	if ( !(image = (unsigned char *) malloc( MESA_THUMB_SZ +
 			sizeof( Dimera_thumbhdr ) - 1 )) )
@@ -731,13 +540,13 @@ Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 
 /* Download a raw Bayer image from the camera and return it in a malloced
 buffer */
-static u_int8_t *
+static uint8_t *
 Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 		       int *width, int *height)
 {
 	static struct mesa_image_arg	ia;
 	int32_t				r;
-	u_int8_t			*b, *rbuffer = NULL;
+	uint8_t			*b, *rbuffer = NULL;
 	int				hires, s, retry;
 
 	*size = 0;
@@ -783,7 +592,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 
 	update_status( _("Downloading Image") );
 
-	rbuffer = (u_int8_t *)malloc( *size );
+	rbuffer = (uint8_t *)malloc( *size );
 	if ( rbuffer == NULL )
 	{
 		gp_camera_set_error(camera, _("Out of memory"));
@@ -923,13 +732,13 @@ static unsigned calc_new_exposure(unsigned exposure, unsigned brightness) {
 
 /* Download a live image from the camera and return it in a malloced
 buffer with PGM headers */
-static u_int8_t *
+static uint8_t *
 Dimera_Preview( int *size, Camera *camera )
 {
-	u_int8_t buffer[VIEWFIND_SZ/2], *p;
+	uint8_t buffer[VIEWFIND_SZ/2], *p;
 	int		i;
-	u_int8_t *image;
-	u_int32_t exposure_total;
+	uint8_t *image;
+	uint32_t exposure_total;
 	unsigned brightness;
 
 	if ( !(image = (unsigned char *) malloc( VIEWFIND_SZ +

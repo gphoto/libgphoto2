@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <memory.h>
 #include <string.h>
+#include <_stdint.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -34,7 +35,6 @@
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
-#    define _(String) (String)
 #    define N_(String) (String)
 #  endif
 #else
@@ -67,7 +67,7 @@ static void l859_debug(char *format, ...) {
 /*
  * l859_sendcmd - Send command to camera
  */
-static int l859_sendcmd(Camera *camera, u_int8_t cmd) {
+static int l859_sendcmd(Camera *camera, uint8_t cmd) {
 
 	l859_debug("Sending command: 0x%02x.", cmd);
 
@@ -104,7 +104,7 @@ static int l859_retrcmd(Camera *camera) {
 static int l859_connect(Camera *camera, int speed) {
 
 	GPPortSettings settings;
-	u_int8_t	bps;
+	uint8_t	bps;
 
 	l859_debug("Connecting to a camera.");
 
@@ -175,7 +175,7 @@ static int l859_disconnect(Camera *camera) {
 /*
  *l859_delete - delete image #index from camera memory
  */
-static int l859_delete(Camera *camera, u_int8_t index) {
+static int l859_delete(Camera *camera, uint8_t index) {
 
 	int		value0;
 	int		value1;
@@ -225,12 +225,12 @@ static int l859_delete(Camera *camera, u_int8_t index) {
 /*
  * l859_selectimage - select image to download, return its size
  */
-static int l859_selectimage(Camera *camera, u_int8_t index) {
+static int l859_selectimage(Camera *camera, uint8_t index) {
 
 	int			size = 0;
-	u_int8_t	byte1 = 0;
-	u_int8_t	byte2 = 0;
-	u_int8_t	byte3 = 0;
+	uint8_t	byte1 = 0;
+	uint8_t	byte2 = 0;
+	uint8_t	byte3 = 0;
 	int		value0;
 	int		value1;
 	int		value2;
@@ -276,12 +276,12 @@ static int l859_selectimage(Camera *camera, u_int8_t index) {
  * l859_selectimage_preview - select preview image to download,
  * return its size
  */
-static int l859_selectimage_preview(Camera *camera, u_int8_t index) {
+static int l859_selectimage_preview(Camera *camera, uint8_t index) {
 
 	int			size = 0;
-	u_int8_t	byte1 = 0;
-	u_int8_t	byte2 = 0;
-	u_int8_t	byte3 = 0;
+	uint8_t	byte1 = 0;
+	uint8_t	byte2 = 0;
+	uint8_t	byte3 = 0;
 	int		value0;
 	int		value1;
 	int		value2;
@@ -403,18 +403,18 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data) {
 
 	Camera *camera = data;
-	int			num = 0;
-	int			width;
-	int			year;
-	int			size;
-	u_int8_t	month;
-	u_int8_t	day;
-	u_int8_t	hour;
-	u_int8_t	minute;
-	u_int8_t	byte1;
-	u_int8_t	byte2;
-	u_int8_t	byte3;
-	char		*filename;
+	int	num = 0;
+	int	width;
+	int	year;
+	int	size;
+	uint8_t	month;
+	uint8_t	day;
+	uint8_t	hour;
+	uint8_t	minute;
+	uint8_t	byte1;
+	uint8_t	byte2;
+	uint8_t	byte3;
+	char	*filename;
 
 	l859_debug("Camera List Files");
 

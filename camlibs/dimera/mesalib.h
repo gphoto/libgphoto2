@@ -11,6 +11,19 @@
  *
  * History:
  * $Log$
+ * Revision 1.6  2001/12/06 01:45:49  dfandrich
+ * 	* configure.in
+ * 	* libgphoto2_port/m4/stdint.m4
+ * 	* camlibs/dimera/dimera3500.c
+ * 	* camlibs/dimera/mesalib.h
+ * 	* camlibs/panasonic/dc.c
+ * 	* camlibs/panasonic/dc.h
+ * 	* camlibs/panasonic/dc1000.c
+ * 	* camlibs/panasonic/dc1580.c
+ * 	* camlibs/panasonic/l859/l859.c
+ * 	* camlibs/panasonic/l859/l859.h: add AC_NEED_STDINT_H to configure.in
+ * 	  and change camera libraries to use C99-style size-specific integer types
+ *
  * Revision 1.5  2001/10/19 13:40:28  lutz
  * 2001-10-19  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -36,13 +49,7 @@
 #ifndef MESALIB_H
 #define MESALIB_H
 
-/* Solaris doesn't have the u_int*_t types, so define them here. */
-/* The check for this should really be in the autoconf script, not here */
-#ifdef sun
-typedef uint8_t u_int8_t;
-typedef uint16_t u_int16_t;
-typedef uint32_t u_int32_t;
-#endif
+#include <_stdint.h>
 
 #define CHECK(result) {int res = (result); if (res < 0) return (res);}
 
@@ -90,7 +97,7 @@ typedef uint32_t u_int32_t;
 
 /* Feature bits */
 struct mesa_feature {
-	u_int8_t	feature_bits_lo;
+	uint8_t	feature_bits_lo;
 #define HAVE_FLASH	0x01		/* Flash present */
 #define HAVE_RES_SW	0x02		/* Resolution switch present */
 #define FLASH_FILL	0x04		/* Flash is in Fill mode */
@@ -99,42 +106,42 @@ struct mesa_feature {
 #define DUAL_IRIS	0x20		/* Dual Iris is present */
 #define AC_PRESENT	0x40		/* AC Adapter is connected */
 #define FLASH_ON	0x80		/* Flash is on */
-	u_int8_t	feature_bits_hi;
+	uint8_t	feature_bits_hi;
 #define	IRIS_ADJUST	0x1f
 #define BAT_VALID	0x20		/* Battery level valid */
 #define NO_PWR_LIGHT	0x40		/* No power light */
 #define	BAT_DIGITAL	0x80		/* Battery level is binary */
-	u_int8_t	battery_level;	/* Battery level */
-	u_int8_t	battery_zero;	/* Battery dead level */
-	u_int8_t	battery_full;	/* Battery full level */
+	uint8_t	battery_level;	/* Battery level */
+	uint8_t	battery_zero;	/* Battery dead level */
+	uint8_t	battery_full;	/* Battery full level */
 };
 
 /* Send Image */
 struct mesa_image_arg {
-	u_int16_t	row;		/* row to start sending */
-	u_int16_t	start;		/* 0x1e */
-	u_int8_t	send;		/* 0x04 */
-	u_int8_t	skip;		/* 0x00 */
-	u_int16_t	repeat;		/* 0xA0 */
-	u_int8_t	row_cnt;	/* 0x20 */
-	u_int8_t	inc1;		/* 0x01 */
-	u_int8_t	inc2;		/* 0x80 */
-	u_int8_t	inc3;		/* 0x00 */
-	u_int8_t	inc4;		/* 0x00 */
+	uint16_t	row;		/* row to start sending */
+	uint16_t	start;		/* 0x1e */
+	uint8_t	send;		/* 0x04 */
+	uint8_t	skip;		/* 0x00 */
+	uint16_t	repeat;		/* 0xA0 */
+	uint8_t	row_cnt;	/* 0x20 */
+	uint8_t	inc1;		/* 0x01 */
+	uint8_t	inc2;		/* 0x80 */
+	uint8_t	inc3;		/* 0x00 */
+	uint8_t	inc4;		/* 0x00 */
 };
 
 struct mesa_id {
-	u_int16_t	man;	/* 12bit manufacturer ID */
-	u_int16_t	year;	/* year of manufacture - 1996 */
-	u_int8_t	ver;	/* 4bit version */
-	u_int8_t	week;	/* week of manufacture 0 - 51 */
+	uint16_t	man;	/* 12bit manufacturer ID */
+	uint16_t	year;	/* year of manufacture - 1996 */
+	uint8_t	ver;	/* 4bit version */
+	uint8_t	week;	/* week of manufacture 0 - 51 */
 };
 
 #define MESA_THUMB_SZ	(64*60)	/* (64x60x4)/8 */
 
 struct mesa_image_info {
-	u_int32_t	num_bytes;	/* size of image in eeprom */
-	u_int8_t	standard_res;	/* image is standard res */
+	uint32_t	num_bytes;	/* size of image in eeprom */
+	uint8_t	standard_res;	/* image is standard res */
 };
 
 #define MESA_VERSION_SZ 7	/* min. buffer length needed for mesa_version */
@@ -143,9 +150,9 @@ struct mesa_image_info {
 void
 mesa_flush( GPPort *port, int timeout );
 int
-mesa_read( GPPort *port, u_int8_t *b, int s, int timeout2, int timeout1 );
+mesa_read( GPPort *port, uint8_t *b, int s, int timeout2, int timeout1 );
 int
-mesa_send_command( GPPort *port, u_int8_t *cmd, int n, int ackTimeout );
+mesa_send_command( GPPort *port, uint8_t *cmd, int n, int ackTimeout );
 int
 mesa_port_open( GPPort *port );
 int
@@ -161,44 +168,44 @@ mesa_transmit_test( GPPort *port );
 int
 mesa_ram_test( GPPort *port );
 int
-mesa_read_row( GPPort *port, u_int8_t *r, struct mesa_image_arg *s );
+mesa_read_row( GPPort *port, uint8_t *r, struct mesa_image_arg *s );
 int
-mesa_snap_image( GPPort *port, u_int16_t exposure );
+mesa_snap_image( GPPort *port, uint16_t exposure );
 int
-mesa_black_levels( GPPort *port, u_int8_t r[2] );
+mesa_black_levels( GPPort *port, uint8_t r[2] );
 int
-mesa_snap_view( GPPort *port, u_int8_t *r, unsigned int hi_res, unsigned int zoom,
-	unsigned int row, unsigned int col, u_int16_t exposure,
-	u_int8_t download );
+mesa_snap_view( GPPort *port, uint8_t *r, unsigned int hi_res, unsigned int zoom,
+	unsigned int row, unsigned int col, uint16_t exposure,
+	uint8_t download );
 int
 mesa_set_stopbits( GPPort *port, unsigned int bits );
 int
-mesa_download_view( GPPort *port, u_int8_t *r, u_int8_t download );
+mesa_download_view( GPPort *port, uint8_t *r, uint8_t download );
 int
-mesa_snap_picture( GPPort *port, u_int16_t exposure );
+mesa_snap_picture( GPPort *port, uint16_t exposure );
 int
 mesa_send_id( GPPort *port, struct mesa_id *id );
 int
 mesa_modem_check( GPPort *port );
 int
-mesa_read_image( GPPort *port, u_int8_t *r, struct mesa_image_arg *s );
+mesa_read_image( GPPort *port, uint8_t *r, struct mesa_image_arg *s );
 int
-mesa_recv_test( GPPort *port, u_int8_t r[6] );
+mesa_recv_test( GPPort *port, uint8_t r[6] );
 int
 mesa_get_image_count( GPPort *port );
 int
 mesa_load_image( GPPort *port, int image);
 int
-mesa_eeprom_info( GPPort *port, int long_read, u_int8_t info[MESA_EEPROM_SZ] );
+mesa_eeprom_info( GPPort *port, int long_read, uint8_t info[MESA_EEPROM_SZ] );
 int32_t
-mesa_read_thumbnail( GPPort *port, int picture, u_int8_t *image );
+mesa_read_thumbnail( GPPort *port, int picture, uint8_t *image );
 int
 mesa_read_features( GPPort *port, struct mesa_feature *f );
 int
 mesa_battery_check( GPPort *port );
 int32_t
 mesa_read_image_info( GPPort *port, int i, struct mesa_image_info *info );
-u_int8_t *
+uint8_t *
 mesa_get_image( GPPort *port, int image );
 
 #endif /* MESALIB_H */
