@@ -1,3 +1,8 @@
+2002-01-12  Hans Ulrich Niedermann <gp@n-dimensional.de>
+	
+	* libgphoto2_port/gphoto2-port.[ch]: renamed "class" parameter to "mainclass"
+	  to allow for compilation of C++ programs with libgphoto2_port
+
 2002-01-09 Dan Fandrich <dan@coneharvesters.com>
 
 	* m4/byteorder.m4: Added support for NetBSD swap macros.
