@@ -947,30 +947,67 @@ OPTION_CALLBACK (about)
 static int
 set_globals (void)
 {
+	CameraList list;
 	CameraAbilitiesList *al;
 	CameraAbilities abilities;
-	int model;
+	int model = 0, count;
+	const char *name;
 
         /* takes all the settings and sets up the gphoto lib */
 
         cli_debug_print ("Setting globals...");
         CHECK_RESULT (gp_camera_new (&glob_camera));
+	CHECK_RESULT (gp_abilities_list_new (&al));
+	CHECK_RESULT (gp_abilities_list_load (al));
 
-	/* Only set the model if the user specified one */
-	if (strcmp ("", glob_model)) {
-		CHECK_RESULT (gp_abilities_list_new (&al));
-		CHECK_RESULT (gp_abilities_list_load (al));
+	if (!strcmp ("", glob_model)) {
+
+		/* No model specified */
+		CHECK_RESULT (gp_abilities_list_detect (al, &list));
+		count = gp_list_count (&list);
+		CHECK_RESULT (count);
+		if (count == 1) {
+
+			/* Exactly one camera detected */
+			CHECK_RESULT (gp_list_get_name (&list, 0, &name));
+			model = gp_abilities_list_lookup_model (al, name);
+			CHECK_RESULT (model);
+
+		} else if (!count) {
+
+			/* No camera detected */
+//FIXME: Ask the user for a model
+			cli_error_print (_("Could not detect any camera. "
+				"Please specify a model."));
+			return (GP_ERROR_MODEL_NOT_FOUND);
+
+		} else {
+
+			/* More than one camera detected */
+//FIXME: Let the user choose from the list!
+			CHECK_RESULT (gp_list_get_name (&list, 0, &name));
+			model = gp_abilities_list_lookup_model (al, name);
+			CHECK_RESULT (model);
+		}
+	} else {
+
+		/* We set the port not in case of "Directory Browse" */
+		if (strcmp (glob_model, "Directory Browse")) {
+			if (strcmp ("", glob_port))
+				CHECK_RESULT (gp_camera_set_port_path (
+						glob_camera, glob_port))
+			else {
+				
+				/* Let the user choose from a list */
+//FIXME: Implement
+			}
+		}
 		model = gp_abilities_list_lookup_model (al, glob_model);
 		CHECK_RESULT (model);
-		CHECK_RESULT (gp_abilities_list_get_abilities (al, model,
-							       &abilities));
-		CHECK_RESULT (gp_abilities_list_free (al));
-		CHECK_RESULT (gp_camera_set_abilities (glob_camera, abilities));
 	}
-
-	/* Only set the port if the user specified one */
-        if (strcmp (glob_model, "Directory Browse") && strcmp ("", glob_port))
-                CHECK_RESULT (gp_camera_set_port_path (glob_camera, glob_port));
+	CHECK_RESULT (gp_abilities_list_get_abilities (al, model, &abilities));
+	CHECK_RESULT (gp_abilities_list_free (al));
+	CHECK_RESULT (gp_camera_set_abilities (glob_camera, abilities));
 
 	/* 
 	 * Setting of speed only makes sense for serial ports. gphoto2 
