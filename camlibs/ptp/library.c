@@ -171,6 +171,7 @@ static struct {
 	{"Kodak DC-4800", 0x040a, 0x0160},
 	{"Kodak DX-3500", 0x040a, 0x0500},
 	{"Kodak DX-3600", 0x040a, 0x0510},
+	{"Kodak DX-3700", 0x040a, 0x0530},
 	{"Kodak DX-3900", 0x040a, 0x0170},
 	{"Kodak MC3", 0, 0},
 	{"Sony DSC-P5", 0, 0},
@@ -531,8 +532,8 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 
 	CPR (camera, ptp_ek_sendfileobjectinfo (&camera->pl->params,
 		&store, &parent, &handle, &oi));
-	CPR (camera, ptp_ek_sendfileobject (&camera->pl->params,
-		&oi, 18));
+	//CPR (camera, ptp_ek_sendfileobject (&camera->pl->params,
+	//	&oi, 18));
 	return (GP_OK);
 }
 

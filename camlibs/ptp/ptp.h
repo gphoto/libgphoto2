@@ -277,6 +277,7 @@ uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 uint16_t ptp_ek_sendfileobject (PTPParams* params, PTPReq* object,
 			uint32_t size);
 void ptp_getobjectfilename	(PTPObjectInfo* objectinfo, char* filename);
+void ptp_setobjectfilename	(PTPObjectInfo* objectinfo, char* filename);
 time_t ptp_getobjectcapturedate	(PTPObjectInfo* objectinfo);
 
 #endif /* __PTP_H__ */
