@@ -1,3 +1,7 @@
+2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
+
+	* doc/FAQ: New entry.
+
 2002-06-09  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: 2.0.1dev11 (because of build changes)

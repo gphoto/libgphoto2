@@ -90,3 +90,18 @@ A: No idea. Sometimes it works and sometimes it doesn't. If you know a
    solution, please let us know.
 
 ========================================================================
+
+Q: I've got a serial camera, but gphoto2 doesn't work on SuSE 7.0
+   (or greater). You told me that my camera is supported! Fix it!
+
+A: Cool down, Joe, and listen to the wise words of Linda MacPhee-Cobb:
+       "If you are not getting a response from a camera plugged into
+        the serial port, check your /var/log/boot.msg file for the
+	following entry near the end:
+	    *This package use the ttyS0 device by default.
+	    The installation of this package only makes sense
+	    if you use a braille display.
+	This is from blinx, and you will need to turn it off,
+	or better, uninstall it."
+
+========================================================================
