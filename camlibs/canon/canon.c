@@ -1038,16 +1038,19 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
                                 if ( le16atoh ( new_entry+CANON_DIRENT_ATTRS ) & CANON_ATTR_RECURS_ENT_DIR ) {
                                         if ( !strcmp ( "..", new_name ) ) {
                                                 /* Pop out of this directory */
-                                                unsigned char *local_dir = strrchr(path->folder,'\\') + 1;
-                                                GP_DEBUG ( "Leaving directory \"%s\"", local_dir );
+                                                char *local_dir = strrchr(path->folder,'\\') + 1;
                                                 /* The EOS 350D has
                                                  * ".." entries right
                                                  * up to the root, so
                                                  * we need to avoid
                                                  * dereferencing a
                                                  * null pointer. */
-                                                if ( local_dir != NULL )
+                                                if ( local_dir != NULL && local_dir > path->folder ) {
+                                                        GP_DEBUG ( "Leaving directory \"%s\"", local_dir );
                                                         local_dir[-1] = 0;
+                                                }
+                                                else
+                                                        GP_DEBUG ( "Leaving top directory" );
                                         }
                                         else {
                                                 /* New directory, and we need to enter it. */
@@ -2114,7 +2117,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                                 }
 
                                 /* print dirent as text */
-                                GP_DEBUG ("Raw info: name=%s is_dir=%i, is_file=%i, attrs=0x%x", dirent_name, is_dir, is_file, dirent_attrs);
+                                GP_DEBUG ("Raw info: name=%s is_dir=%i, is_file=%i, attrs=0x%x",
+                                          dirent_name, is_dir, is_file, dirent_attrs);
                                 debug_fileinfo (&info);
 
                                 if (is_file) {
