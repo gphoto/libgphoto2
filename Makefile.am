@@ -5,9 +5,10 @@ CFLAGS= @CFLAGS@ \
 	-Wall \
 	-I$(top_srcdir)/include \
 	-DCAMLIBS=\"$(pkglibdir)\" \
-	-DDEBUG \
-	`gpio-config --cflags`
-LDFLAGS = @LDFLAGS@ -g `gpio-config --libs`
+	-DDEBUG 
+#	`gpio-config --cflags`
+LDFLAGS = @LDFLAGS@ -g 
+# `gpio-config --libs`
 
 libgphoto2_la_LDFLAGS = -version-info 0:0:0
 libgphoto2_la_SOURCES = \
@@ -20,9 +21,10 @@ libgphoto2_la_SOURCES = \
 			util.c util.h \
 			widget.c widget.h
 
-confexecdir=$(libdir)
-confexec_DATA=libgphoto2Conf.sh
-CLEANFILES=libgphoto2Conf.sh
+confexecdir           = $(libdir)
+confexec_DATA         = libgphoto2Conf.sh
+EXTRA_DIST            = libgphoto2Conf.sh.in
+CLEANFILES            = libgphoto2Conf.sh
 
 libgphoto2Conf.sh: libgphoto2Conf.sh.in Makefile
 ## Use sed and then mv to avoid problems if the user interrupts.
