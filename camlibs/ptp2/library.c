@@ -335,6 +335,9 @@ static struct {
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402},
 	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0405},
 
+	/* in pictbridge mode */
+	{"Panasonic:DMC-FZ20",            0x04da, 0x2374},
+
 	/* From VICTOR <viaaurea@yahoo.es> */
 	{"Olympus:C-350Z",                0x07b4, 0x0114},
 	{"Olympus:D-560Z",                0x07b4, 0x0114},
