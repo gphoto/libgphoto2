@@ -768,13 +768,14 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
-	char path[300];
 	const char *thumbname;
+	char canonfolder[300];
+	const char *_canonfolder;
 
 	GP_DEBUG ("delete_file_func()");
 
-	/* initialize memory to avoid problems later */
-	memset (path, 0, sizeof (path));
+	_canonfolder = gphoto2canonpath (camera, folder);
+	strncpy (canonfolder, _canonfolder, sizeof(canonfolder));
 
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
@@ -792,22 +793,10 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		return GP_ERROR;
 	}
 #endif
-	strcpy (path, camera->pl->cached_drive);
-
-#ifdef OBSOLETE
-	if (get_file_path (camera, filename, path) != GP_OK) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "Filename not found!\n");
-		return GP_ERROR;
-	}
-#endif
-
-	/* strip trailing backslash on path, if any */
-	if (path[strlen (path) - 1] == '\\')
-		path[strlen (path) - 1] = 0;
 
 	GP_DEBUG ("delete_file_func: "
-		  "filename: %s\n path: %s\n", filename, path);
-	if (canon_int_delete_file (camera, filename, path) != GP_OK) {
+		  "filename: %s\nfolder: %s\n", filename, canonfolder);
+	if (canon_int_delete_file (camera, filename, canonfolder) != GP_OK) {
 		gp_camera_set_error (camera, _("Error deleting file"));
 		return GP_ERROR;
 	}
@@ -817,8 +806,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	thumbname = canon_int_filename2thumbname (camera, filename);
 	if ((thumbname != NULL) && (*thumbname != '\0')) {
 		GP_DEBUG ("delete_file_func: "
-			  "thumbname: %s\n path: %s\n", thumbname, path);
-		if (canon_int_delete_file (camera, thumbname, path) != GP_OK) {
+			  "thumbname: %s\n folder: %s\n", thumbname, canonfolder);
+		if (canon_int_delete_file (camera, thumbname, canonfolder) != GP_OK) {
 			/* XXX should we handle this as an error?
 			 * Probably only in case the camera link died,
 			 * but not if the file just had already been
