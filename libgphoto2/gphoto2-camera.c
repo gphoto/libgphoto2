@@ -275,8 +275,8 @@ gp_camera_exit (Camera *camera, GPContext *context)
 		gp_port_open (camera->port);
 #endif
 		camera->functions->exit (camera, context);
-		gp_port_close (camera->port);
 	}
+	gp_port_close (camera->port);
 	memset (camera->functions, 0, sizeof (CameraFunctions));
 
 	if (camera->pc->lh) {

@@ -1,3 +1,8 @@
+2002-02-26  Marcus Meissner <marcus@jet.franken.de>
+	
+	* libgphoto2/gphoto-camera.c: do gp_close_port() unconditionaly
+	  in gp_camera_exit().
+
 2002-02-26  Lutz Müller <lutz@users.sourceforge.net>
 
 	* configure.in: We are currently working on libgphoto2-2.0.1.
