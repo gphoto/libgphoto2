@@ -57,12 +57,12 @@ dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, 
 	p->buffer[2] = ( p->length & 0x0000ff00) >> 8;
 	p->buffer[3] = p->length & 0x000000ff;
 
-	memcpy(&(p->buffer[4]), buffer, length);
+	memcpy(&(p->buffer[4]), buffer, (unsigned int) length);
 
 	/* Now the footer. */
 	for (i=0 ; i < p->length - 3 ; i++ )
 	{
-		checksum += p->buffer[i];
+		checksum += (unsigned int) p->buffer[i];
 	}
 	p->buffer[(p->length - 3)] = (checksum & 0x0000ff00) >> 8;
 	p->buffer[(p->length - 2)] = checksum & 0x000000ff;
@@ -107,13 +107,16 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 
 	if ( gp_port_read(dimagev->dev, p->buffer, 4) < GP_OK ) {
 		perror("dimagev_read_packet::unable to read packet header");
+		free(p);
 		return NULL;
 	}
 
 	p->length = ( p->buffer[2] * 256 ) + ( p->buffer[3] );
 
 	if ( gp_port_read(dimagev->dev, &(p->buffer[4]), ( p->length - 4)) < GP_OK ) {
-		perror("dimagev_read_packet::unable to read packet body");
+		/* perror("dimagev_read_packet::unable to read packet body"); */
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to read packet body");
+		free(p);
 		return NULL;
 	}
 
@@ -143,7 +146,7 @@ void dimagev_dump_packet(dimagev_packet *p) {
 	printf("Packet length is %d\n", p->length);
 
 	for ( i = 0 ; i < p->length ; i++ ) {
-		printf("%02x ", p->buffer[i]);
+		printf("%02x ",(unsigned int) p->buffer[i]);
 	}
 	printf("\n");
 	return;
@@ -174,9 +177,9 @@ unsigned char dimagev_decimal_to_bcd(unsigned char decimal) {
 	unsigned char bcd=0;
 	int tensdigit=0;
 
-	if ( decimal > 99 ) {
+	if ( decimal > (unsigned char) 99 ) {
 		/* No good way to handle this. */
-		return 0;
+		return (unsigned char) 0;
 	} else {
 		tensdigit = decimal / 10;
 		bcd = tensdigit * 16;
@@ -188,7 +191,7 @@ unsigned char dimagev_decimal_to_bcd(unsigned char decimal) {
 unsigned char dimagev_bcd_to_decimal(unsigned char bcd) {
 	if ( bcd > 99 ) {
 		/* The highest value that we can handle in BCD */
-		return 99;
+		return (unsigned char) 99;
 	} else {
 		return ((bcd/16)*10 + (bcd%16));
 	}

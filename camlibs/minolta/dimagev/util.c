@@ -81,22 +81,22 @@ unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr) {
 	strncpy(rgb_data, "P6\n80 60\n255\n", 13);
 
 	for ( count = 0 ; count < 9600 ; count+=4, ycrcb_current+=4, rgb_current+=6 ) {
-		magic_b = ( ( ycrcb_current[2] > 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[0];
-		rgb_current[2] = ( magic_b > 255 ? 0 : magic_b );
-		magic_r = ( ( ycrcb_current[3] > 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 * Y_COEFF ) ) + ycrcb_current[0];
-		rgb_current[0] = ( magic_r > 255 ? 0 : magic_r );
+		magic_b = ( ( ycrcb_current[2] > (unsigned char) 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[0];
+		rgb_current[2] = (unsigned char) ( magic_b > 255 ? 0 : magic_b );
+		magic_r = ( ( ycrcb_current[3] > (unsigned char) 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 * Y_COEFF ) ) + ycrcb_current[0];
+		rgb_current[0] = (unsigned char) ( magic_r > 255 ? 0 : magic_r );
 		magic_g = (( ycrcb_current[0] - ( CR_COEFF * rgb_current[2] ) ) - ( Y_COEFF * rgb_current[0])) / CB_COEFF ; 
-		rgb_current[1] = ( magic_g > 255 ? 0 : magic_g );
+		rgb_current[1] = (unsigned char) ( magic_g > 255 ? 0 : magic_g );
 
 		/* Wipe everything clean. */
 		magic_b = magic_r = magic_g = 0;
 
-		magic_b = ( ( ycrcb_current[2] > 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[1];
-		rgb_current[5] = ( magic_b > 255 ? 0 : magic_b );
-		magic_r = ( ( ycrcb_current[3] > 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 * Y_COEFF ) ) + ycrcb_current[1];
-		rgb_current[3] = ( magic_r > 255 ? 0 : magic_r );
+		magic_b = ( ( ycrcb_current[2] > (unsigned char) 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[1];
+		rgb_current[5] = (unsigned char) ( magic_b > 255 ? 0 : magic_b );
+		magic_r = ( ( ycrcb_current[3] > (unsigned char) 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 * Y_COEFF ) ) + ycrcb_current[1];
+		rgb_current[3] = (unsigned char) ( magic_r > 255 ? 0 : magic_r );
 		magic_g = (( ycrcb_current[1] - ( CR_COEFF * rgb_current[5] ) ) - ( Y_COEFF * rgb_current[3])) / CB_COEFF ; 
-		rgb_current[4] = ( magic_g > 255 ? 0 : magic_g );
+		rgb_current[4] = (unsigned char) ( magic_g > 255 ? 0 : magic_g );
 
 		/* Wipe everything clean. */
 		magic_b = magic_r = magic_g = 0;

@@ -41,14 +41,14 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	}
 
 	/* Verify that we can write to the memory card. */
-	if ( dimagev->status->card_status != 0 ) {
+	if ( dimagev->status->card_status != (unsigned char) 0 ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to write to memory card - check status");
 		return GP_ERROR;
 	}
 
 	/* Make sure we're in record mode and in host mode. */
-	dimagev->data->play_rec_mode = 1;
-	dimagev->data->host_mode = 1;
+	dimagev->data->play_rec_mode = (unsigned char) 1;
+	dimagev->data->host_mode = (unsigned char) 1;
 
 	/* Make sure we can set the data into the camera. */
 	if ( dimagev_send_data(dimagev) < GP_OK ) {
@@ -57,7 +57,9 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	}
 
 	/* Maybe reduce this later? */
-	sleep(2);
+	if ( sleep(2) != 0 ) {
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::sleep() returned non-zero value");
+	}
 
 	/* Let's say hello and get the current status. */
 	if ( ( p = dimagev_make_packet(DIMAGEV_SHUTTER, 1, 0)) == NULL ) {
@@ -67,38 +69,50 @@ int dimagev_shutter(dimagev_t *dimagev) {
 
 	if ( gp_port_write(dimagev->dev, p->buffer, p->length) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to write packet");
+		
+		if ( p != NULL ) {
+			free(p);
+		}
+		
 		return GP_ERROR_IO;
 	}
 
-	sleep(1);
+	if ( p != NULL ) {
+		free(p);
+	}
+		
+
+	if ( sleep(1) != 0 ) {
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::sleep() returned non-zero value");
+	}
 	
 	if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::no response from camera");
 		return GP_ERROR_IO;
 	}
 
-	free(p);
-
 	switch ( char_buffer ) {
 		case DIMAGEV_ACK:
 			/* Sleep for a few seconds while the image is written to flash. */
-			sleep(5);
+			if ( sleep(5) != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::sleep() returned non-zero value");
+			}
 			break;
 		case DIMAGEV_NAK:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera did not acknowledge transmission");
 			return GP_ERROR_IO;
-			break;
 		case DIMAGEV_CAN:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera cancels transmission");
 			return GP_ERROR_IO;
-			break;
 		default:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
-			break;
 	}
 
-	sleep(1);
+	if ( sleep(1) != 0 ) {
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::sleep() returned non-zero value");
+	}
+		
 
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to read packet");
@@ -107,17 +121,23 @@ int dimagev_shutter(dimagev_t *dimagev) {
 
 	if ( ( raw = dimagev_strip_packet(p) ) == NULL ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to strip data packet");
+		free(p);
 		return GP_ERROR;
 	}
 
 	free(p);
 
-	if ( raw->buffer[0] != 0 ) {
+	if ( raw->buffer[0] != (unsigned char) 0 ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera returned error code");
+		free(raw);
 		return GP_ERROR;
 	}
 
-	sleep(1);
+	free(raw);
+
+	if ( sleep(1) != 0 ) {
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::sleep() returned non-zero value");
+	}
 
 	char_buffer = DIMAGEV_EOT;
 	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
@@ -136,18 +156,15 @@ int dimagev_shutter(dimagev_t *dimagev) {
 		case DIMAGEV_NAK:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera did not acknowledge transmission");
 			return GP_ERROR_IO;
-			break;
 		case DIMAGEV_CAN:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera cancels transmission");
 			return GP_ERROR_IO;
-			break;
 		default:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
-			break;
 	}
 
-	dimagev->data->play_rec_mode = 0;
+	dimagev->data->play_rec_mode = (unsigned char) 0;
 
 	if ( dimagev_send_data(dimagev) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to set host mode or record mode");

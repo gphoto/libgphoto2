@@ -93,7 +93,7 @@
    can contain NULLs, and classic C strings won't work.
 */
 typedef struct {
-        unsigned int length;
+        int length;
         unsigned char buffer[1024];
 } dimagev_packet;
 

@@ -251,6 +251,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	sprintf(file->name, "%s", filename);
 #endif
 
+	sleep(2);
 	return GP_OK;
 }
 
