@@ -439,13 +439,13 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
-camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) 
 {
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_capture");
 
 	CHECK (camera_start (camera));
 
-	CHECK_STOP (camera, sierra_capture (camera, capture_type, path));
+	CHECK_STOP (camera, sierra_capture (camera, type, path));
 
 	return (camera_stop (camera));
 }

@@ -940,7 +940,8 @@ int sierra_capture_preview (Camera *camera, CameraFile *file)
 	return (GP_OK);
 }
 
-int sierra_capture (Camera *camera, int capture_type, CameraFilePath *filepath)
+int sierra_capture (Camera *camera, CameraCaptureType type,
+		    CameraFilePath *filepath)
 {
 	int picnum, length;
 	char packet[4096];
@@ -955,7 +956,7 @@ int sierra_capture (Camera *camera, int capture_type, CameraFilePath *filepath)
 		return (GP_ERROR_BAD_PARAMETERS);
 	if (filepath == NULL) 
 		return (GP_ERROR_BAD_PARAMETERS);
-	if (capture_type != GP_OPERATION_CAPTURE_IMAGE)
+	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	/* Get camera specific data */

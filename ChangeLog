@@ -1,5 +1,10 @@
 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-debug.c: Make tranition to gp_log_*
+	* camlibs/sierra: Adjust parameters of camera_capture
+
+2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* README: no glib-dependency any more
 	* camlibs: gp_abilities_new doesn't exist any more
 	* doc/api: Even more documentation
