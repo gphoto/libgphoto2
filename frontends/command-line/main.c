@@ -11,7 +11,7 @@
 #endif
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#  include "config.h"
 #endif
 
 #include "main.h"
@@ -23,6 +23,10 @@
 #include "range.h"
 #include "shell.h"
 #include "test.h"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#endif
 
 /* Initializes the globals */
 int  init_globals();
@@ -924,7 +928,12 @@ int main (int argc, char **argv) {
 
         int result;
 
-        /* Initialize the globals */
+#ifdef ENABLE_NLS
+	bindtextdomain (PACKAGE, GPHOTO2_LOCALEDIR);
+	textdomain (PACKAGE);
+#endif
+
+	/* Initialize the globals */
         init_globals();
 
         signal(SIGINT, signal_exit);

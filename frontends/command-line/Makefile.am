@@ -4,8 +4,9 @@ bin_PROGRAMS = gphoto2
 
 CFLAGS = @CFLAGS@ -g 
 
-INCLUDES =				\
-	-I$(top_srcdir)/include 	\
+INCLUDES =						\
+	-DGPHOTO2_LOCALEDIR=\""$(datadir)/locale"\"	\
+	-I$(top_srcdir)/include 			\
 	-I../libgphoto2_frontend
 
 LDFLAGS = @LDFLAGS@ -g 
