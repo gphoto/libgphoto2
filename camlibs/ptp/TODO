@@ -8,10 +8,10 @@ defined as char[] table!) and PTPObjectInfo type (NOT packed), which is used
 by C interface.
 All ptp_getobject/sendobject would use PTPObjectInfo, then convert internaly
 to proper dataset of _PTPObjectInfo (respecting host to transport layer byte
-order conversion) and then writing/reading to/from responder.
+order conversion) and then writing/reading to/from responder. [DONE?! :)]
 The same for other data structures.
 
--- folders implementation.
+-- folders implementation. [Started]
 
 -- implementation of GetStorageInfo and GetStorageID's and proper
 interpretation of it's fields, which may be meaningful for driver behavior.

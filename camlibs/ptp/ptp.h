@@ -271,6 +271,8 @@ struct _PTPParams {
 	/* Used by libptp */
 	uint32_t transaction_id;
 	PTPObjectHandles handles;
+
+	PTPObjectInfo * objectinfo;
 };
 
 

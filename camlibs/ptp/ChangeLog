@@ -1,3 +1,9 @@
+2002-01-09 Mariusz Woloszyn
+	* Started ptp fs implementation
+
+2002-01-08 Mariusz Woloszyn
+	* Added pack / unpack C structures to ptpdatasets code
+	* fixed host byteorder / data layer byteorder problem
 
 2002-01-04 Mariusz Woloszyn
 	* Added workaround for ioctl return 0 problem (this does not hurt)
