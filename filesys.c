@@ -257,7 +257,6 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	 * this folder.
 	 */
 	fs->folder[x].files_dirty = 0;
-	fs->folder[x].folders_dirty = 0;
 
         return (GP_OK);
 }

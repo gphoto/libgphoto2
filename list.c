@@ -20,6 +20,7 @@
 
 #include "gphoto2-list.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -167,6 +168,23 @@ gp_list_set_name (CameraList *list, int index, const char *name)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	strcpy (list->entry[index].name, name);
+
+	return (GP_OK);
+}
+
+int
+gp_list_populate  (CameraList *list, const char *format, int count)
+{
+	int x;
+	char buf[1024];
+
+	CHECK_NULL (list && format);
+
+	list->count = 0;
+	for (x = 0; x < count; x++) {
+		sprintf (buf, format, x + 1);
+		CHECK_RESULT (gp_list_append (list, buf, NULL));
+	}
 
 	return (GP_OK);
 }
