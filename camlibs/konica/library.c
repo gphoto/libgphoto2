@@ -158,7 +158,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	CameraFile *file;
 	CameraFileInfo info;
         KStatus status;
-        unsigned int i;
+        unsigned int i, id;
         Camera *camera = data;
 	int result;
 
@@ -168,6 +168,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
          * parameter. Therefore, let's get the image ids.
          */
         CHECK (camera, k_get_status (camera->port, &status));
+
+	id = gp_context_progress_start (context, status.pictures,
+					_("Getting file list..."));
         for (i = 0; i < status.pictures; i++) {
 
                 /* Get information */
@@ -187,7 +190,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		gp_filesystem_set_info_noop (camera->fs, folder, info, context);
 		gp_filesystem_set_file_noop (camera->fs, folder, file, context);
 		gp_file_unref (file);
+		gp_context_progress_update (context, id, i + 1);
         }
+	gp_context_progress_stop (context, id);
 
         return (GP_OK);
 }
@@ -631,13 +636,18 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
         const char *name;
         GP_SYSTEM_DIR d;
         GP_SYSTEM_DIRENT de;
+	unsigned int id;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: "
                          "camera_get_config ***");
 
         /* Get the current settings. */
+	id = gp_context_progress_start (context, 2,
+					_("Getting configuration..."));
         CHECK (camera, k_get_status (camera->port, &status));
+	gp_context_progress_update (context, id, 1);
         CHECK (camera, k_get_preferences (camera->port, &preferences));
+	gp_context_progress_stop (context, id);
 
         /* Create the window. */
         gp_widget_new (GP_WIDGET_WINDOW, _("Konica Configuration"), window);
