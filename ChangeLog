@@ -1,3 +1,8 @@
+2002-04-30  Marcus Meissner <marcus@jet.franken.de>
+	
+	* libgphoto2/gphoto2-filesys.c: memset() filesys to 0 so
+	  we do not forget to initialize members. (sf bug #549958)
+
 2002-04-28  Lutz Müller <lutz@users.sourceforge.net>
 
 	* frontends/command-line/main.c: %s/licence/license

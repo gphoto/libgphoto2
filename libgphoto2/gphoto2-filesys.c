@@ -438,19 +438,7 @@ gp_filesystem_new (CameraFilesystem **fs)
 
 	CHECK_MEM (*fs = malloc (sizeof (CameraFilesystem)));
 
-        (*fs)->folder = NULL;
-        (*fs)->count = 0;
-
-	(*fs)->set_info_func = NULL;
-	(*fs)->get_info_func = NULL;
-	(*fs)->info_data = NULL;
-
-	(*fs)->file_list_func = NULL;
-	(*fs)->folder_list_func = NULL;
-	(*fs)->list_data = NULL;
-
-	(*fs)->get_file_func = NULL;
-	(*fs)->file_data = NULL;
+	memset(*fs,0,sizeof(CameraFilesystem));
 
 	result = append_folder (*fs, "/", NULL);
 	if (result != GP_OK) {
