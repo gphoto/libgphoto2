@@ -25,12 +25,11 @@
 /* Not in gphoto API */
 int gp_interface_message_long(char *message) {
         GtkWidget *window, *ok, *text;
-        char buf[1024*32];
 
         window = create_message_window_long();
         text = (GtkWidget*) lookup_widget(window, "message");
         ok   = (GtkWidget*) lookup_widget(window, "close");
-        gtk_text_insert(GTK_TEXT(text),NULL,NULL,NULL,buf,strlen(buf));
+	gtk_label_set_text (GTK_LABEL(text), message);
 
         wait_for_hide(window, ok, NULL);
 
@@ -983,7 +982,7 @@ create_message_window_long (void)
 
   message_window_long = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (message_window_long), "message_window_long", message_window_long);
-  gtk_window_set_title (GTK_WINDOW (message_window_long), _("gPhoto2 Long Message"));
+  gtk_window_set_title (GTK_WINDOW (message_window_long), _("gPhoto2"));
   gtk_window_set_position (GTK_WINDOW (message_window_long), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (message_window_long), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (message_window_long), 400, 400);
@@ -1004,13 +1003,14 @@ create_message_window_long (void)
   gtk_box_pack_start (GTK_BOX (vbox3), scrolledwindow4, TRUE, TRUE, 0);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow4), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
-  message_window_text = gtk_text_new (NULL, NULL);
+  message_window_text = gtk_label_new ("No Message");
   gtk_widget_ref (message_window_text);
   gtk_object_set_data_full (GTK_OBJECT (message_window_long), "message", message_window_text,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (message_window_text);
-  gtk_text_set_editable(GTK_TEXT(message_window_text), FALSE);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow4), message_window_text);
+  gtk_label_set_line_wrap (GTK_LABEL (message_window_text), TRUE);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindow4), 
+	message_window_text);
 
   hsep = gtk_hseparator_new();
   gtk_widget_ref (hsep);
@@ -1108,7 +1108,7 @@ create_message_window (void)
 
   message_window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (message_window), "message_window", message_window);
-  gtk_window_set_title (GTK_WINDOW (message_window), _("gPhoto2 Message"));
+  gtk_window_set_title (GTK_WINDOW (message_window), _("gPhoto2"));
   gtk_window_set_position (GTK_WINDOW (message_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (message_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (message_window), 350, 200);
@@ -1216,7 +1216,7 @@ create_message_window_transient (void)
 
   message_window = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_object_set_data (GTK_OBJECT (message_window), "message_window", message_window);
-  gtk_window_set_title (GTK_WINDOW (message_window), _("gPhoto2 Message"));
+  gtk_window_set_title (GTK_WINDOW (message_window), _("gPhoto2"));
   gtk_window_set_position (GTK_WINDOW (message_window), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (message_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (message_window), 250, 100);

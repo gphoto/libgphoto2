@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <gphoto2.h>
 #include "file.h"
 
@@ -35,7 +36,36 @@ int gp_file_save (CameraFile *file, char *filename) {
 
 int gp_file_open (CameraFile *file, char *filename) {
 
-	return (GP_ERROR);
+	FILE *fp;
+	char *name;
+	long size;
+
+	gp_file_clean(file);
+
+	fp = fopen(filename, "r");
+	if (!fp)
+		return (GP_ERROR);
+	fseek(fp, 0, SEEK_END);
+	size = ftell(fp);
+	rewind(fp);
+
+	file->data = (char*)malloc(sizeof(char)*size);
+	if (!file->data)
+		return (GP_ERROR);
+	fread(file->data, (size_t)sizeof(char), (size_t)size, fp);
+	if (ferror(fp)) {
+		gp_file_clean(file);
+		return (GP_ERROR);
+	}
+	fclose(fp);
+
+	name = strrchr(filename, '/');
+	if (name)
+		strcpy(file->name, name);
+	   else
+		strcpy(file->name, "");
+
+	return (GP_OK);
 }
 
 int gp_file_clean (CameraFile *file) {

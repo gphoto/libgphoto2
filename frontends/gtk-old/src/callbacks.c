@@ -861,8 +861,6 @@ Licensed under the Library GNU Public License (LGPL).");
 
 }
 
-#define DOCDIR "/opt/gphoto2/doc/gphoto2"
-
 void help_authors() {
 
 	char buf[1024*8];
@@ -871,14 +869,12 @@ void help_authors() {
 	debug_print("help authors");
 
 	sprintf(buf, "%s/AUTHORS", DOCDIR);
-
 	f = gp_file_new();
 	if (gp_file_open(f, buf)==GP_ERROR) {
 		gp_message("Can't find AUTHORS file");
 		return;
 	}
-
-	gp_message_long(f->data);
+	gp_message(f->data);
 
 	gp_file_free(f);
 }

@@ -38,8 +38,9 @@ dnl Set PACKAGE_SOURCE_DIR in config.h.
 packagesrcdir=`cd $srcdir && pwd`
 AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
 
+dnl find the gphoto doc dir to display the AUTHORS file
 gphoto2docdir=`gphoto2-config --prefix`
-dnl CFLAGS="$CFLAGS -DDOCDIR=\"$gphoto2docdir/doc/gphoto2\""
+CFLAGS="$CFLAGS -DDOCDIR=\\\"$gphoto2docdir/doc/gphoto2\\\""
 
 dnl Use -Wall if we have gcc.
 changequote(,)dnl
