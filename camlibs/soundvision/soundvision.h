@@ -35,6 +35,7 @@
 
 #define SOUNDVISION_AGFACL18          0
 #define SOUNDVISION_TIGERFASTFLICKS   1
+#define SOUNDVISION_IXLA              2
 
 struct _CameraPrivateLibrary {
 	GPPort *gpdev;

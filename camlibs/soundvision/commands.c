@@ -114,8 +114,11 @@ retry_reset:
    
        /* Read the status registers */
     dev->reset_times++;
-    ret=soundvision_get_status(dev,status);
-    if (ret<0) goto reset_error;
+   
+    if (dev->device_type!=SOUNDVISION_IXLA) {
+       ret=soundvision_get_status(dev,status);
+       if (ret<0) goto reset_error;
+    }
    
     return GP_OK;
    

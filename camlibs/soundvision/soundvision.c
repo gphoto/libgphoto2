@@ -476,6 +476,14 @@ int camera_init(Camera *camera, GPContext *context) {
     if ((a.usb_vendor==0x0919) && (a.usb_product==0x0100)) {
        camera->pl->device_type=SOUNDVISION_TIGERFASTFLICKS;	
     }
+   
+    if ((a.usb_vendor==0x0784) && (a.usb_product==0x0100)) {
+       camera->pl->device_type=SOUNDVISION_IXLA;
+    }
+   
+	
+	
+   
 
        /* Keep track.  We _must_ reset an even number of times */
     camera->pl->reset_times=0;
