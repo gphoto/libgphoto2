@@ -505,10 +505,14 @@ canon_int_set_time (Camera *camera, time_t date)
 	/* convert to local UNIX timestamp since canon cameras know nothing about timezones */
 	/* XXX what about DST? do we need to check for that here? */
 
-#ifdef HAVE_TM_GMTOFF 
-	new_date = date - tm->tm_gmtoff;
+#ifdef HAVE_TM_GMTOFF
+	new_date = date + tm->tm_gmtoff;
+	GP_DEBUG ("canon_int_set_time: converted to UTC %i (tm_gmtoff is %i)",
+		  new_date, tm->tm_gmtoff);
 #else
 	new_date = date - timezone;
+	GP_DEBUG ("canon_int_set_time: converted to UTC %i (timezone is %i)",
+		  new_date, timezone);
 #endif
 	
 	memset (payload, 0, sizeof(payload));
