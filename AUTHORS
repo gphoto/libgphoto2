@@ -21,6 +21,10 @@ Additions for Canon PowerShot A5 support
 Wolfgang Reissnegger
 Canon A50 library
 
+Mariusz Zynel <mariusz@mizar.org>
+Panasonic DC1000/DC1580 library, additions to CLI,
+Solaris patches, bug fixing
+
 Ray Newman
 Canon PS350 protocol sniffing
 
