@@ -1,5 +1,13 @@
 2002-01-26  Lutz Müller <lutz@users.sourceforge.net>
 
+	Patch by Hans Ulrich Niedermann <gp@n-dimensional.de> (slightly
+	adapted):
+
+	* frontends/command-line/main.c: Only report progress information
+	  if the user can see it. Same with confirmation of status messages.
+
+2002-01-26  Lutz Müller <lutz@users.sourceforge.net>
+
 	Fixes #506075:
 
 	* frontends/command-line/Makefile.am: Include files into EXTRA_DIST

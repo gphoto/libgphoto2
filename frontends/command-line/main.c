@@ -1237,8 +1237,9 @@ static void
 ctx_progress_update_func (GPContext *context, unsigned int id,
 			  float current, void *data)
 {
-	printf ("Percent completed: %02.01f\r", current / targets[id] * 100.);
-	fflush(stdout);
+	fprintf (stdout, "Percent completed: %02.01f\r",
+		 current / targets[id] * 100.);
+	fflush (stdout);
 }
 
 static void
@@ -1264,10 +1265,15 @@ ctx_message_func (GPContext *context, const char *format, va_list args,
 	int c;
 
 	vprintf (format, args);
-	printf ("\n");
-	printf (_("Press any key to continue.\n"));
-	fflush(stdout);
-	c = fgetc (stdin);
+	fprintf (stdout, "\n");
+
+	/* Only ask for confirmation if the user can give it. */
+	if (isatty (STDOUT_FILENO) && isatty (STDIN_FILENO)) {
+		fprintf (stdout, _("Press any key to continue.\n"));
+		fflush (stdout);
+		c = fgetc (stdin);
+	} else
+		fflush (stdout);
 }
 
 static int
@@ -1292,13 +1298,15 @@ init_globals (void)
 
 	glob_context = gp_context_new ();
 	gp_context_set_cancel_func    (glob_context, ctx_cancel_func,   NULL);
-	gp_context_set_progress_funcs (glob_context,
-				       ctx_progress_start_func,
-				       ctx_progress_update_func,
-				       ctx_progress_stop_func, NULL);
 	gp_context_set_error_func     (glob_context, ctx_error_func,    NULL);
 	gp_context_set_status_func    (glob_context, ctx_status_func,   NULL);
 	gp_context_set_message_func   (glob_context, ctx_message_func,  NULL);
+
+	/* Report progress only if user will see it. */
+	if (isatty (STDOUT_FILENO))
+		gp_context_set_progress_funcs (glob_context,
+			ctx_progress_start_func, ctx_progress_update_func,
+			ctx_progress_stop_func, NULL);
 
         return GP_OK;
 }
