@@ -38,7 +38,7 @@ gpio_device *gdev;
 gpio_device_settings settings;
 /************ new stuff ********/
 
-#define MAX_TRIES 15
+#define MAX_TRIES 10
 
 #define USLEEP1 0
 #define USLEEP2 1
@@ -1732,6 +1732,8 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
 	filename[i]='\0';
 
 	hdr_len = HDR_FIXED_LEN + strlen(file->name) + strlen(destpath);
+
+	gp_camera_progress(camera, NULL, 0);
 	
 	while(sent<file->size) {
 		
@@ -1743,7 +1745,6 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
 		  block_len = DATA_BLOCK;
 		
 		offset = sent;
-		fprintf(stderr,"offset: %i, sent: %i\n",offset,sent);
 		
 		for(i=0;i<4;i++) {
 			offset2[i] = (offset >> (8*i)) & 0xff;
@@ -1760,10 +1761,10 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
 			    destpath,strlen(destpath),destname,strlen(destname)+1,
 				buf,block_len,
 				NULL);
+		if (!msg) return GP_ERROR;
 		
 		sent += block_len;
-		
-		fprintf(stderr,"Message sent!\n");
+		gp_camera_progress(camera, NULL, file->size ? (sent/(float) file->size)*100 : 100);		
 	}
 	
 /* 
@@ -1787,10 +1788,7 @@ int psa50_put_file_serial(Camera *camera, CameraFile *file, char *destname, char
 	else if (good_ack==1) {
 		debug_message(camera,"ACK received\n");
 	}
-*/	
-	
-	
-	
+*/
 	
     return GP_OK;
 }
