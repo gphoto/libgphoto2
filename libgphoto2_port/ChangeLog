@@ -1,3 +1,8 @@
+2003-01-23  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* libgphoto2_port/gphoto2-port-info-list.c (gp_port_info_list_free): actually 
+	free the list. It was simply leaked. (reported by DigiKam author on IRC).
+
 2002-11-29  Marcus Meissner <meissner@suse.de>
 
 	* serial/unix.c, configure.in: Added support for libresmgr style locking.

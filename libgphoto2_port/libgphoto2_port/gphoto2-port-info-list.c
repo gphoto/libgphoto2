@@ -113,6 +113,8 @@ gp_port_info_list_free (GPPortInfoList *list)
 	}
 	list->count = 0;
 
+	free (list);
+
 	return (GP_OK);
 }
 
