@@ -349,11 +349,11 @@ Configuration (libgphoto2):
 	Compiler:                  ${CC}
 
 	Build API documentation:   $gtkdoc_msg
-	Build User's Manual:       $manual_msg
 	pkg-config:                $pkgconfig_msg
 	EXIF support:              $exif_msg
 	Use ltdl.h:                $ltdl_msg
 "
+#	Build User's Manual:       $manual_msg
 
 echo "
 
