@@ -4,3 +4,10 @@
 	  Vincent Sanders <vince@kyllikki.org>
 
 	* Cleaned it up and made it work, still dumps compressed images.
+
+2002-12-04  Marcus Meissner <marcus@jet.franken.de>
+
+	* Intermediate checkin of my current work.
+
+	  - Can read bitstream to some degree and extract the DCT tables.
+	    Still apparently does not find the endmarker correctly.
