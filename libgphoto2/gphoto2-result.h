@@ -94,7 +94,7 @@ extern "C" {
 const char *gp_result_as_string      (int result);
 
 #ifdef __cplusplus
-extern "C" {
+}
 #endif /* __cplusplus */
 
 #endif /* __GPHOTO2_RESULT_H__ */

@@ -210,7 +210,7 @@ int gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 int gp_filesystem_dump         (CameraFilesystem *fs);
 
 #ifdef __cplusplus
-extern "C" {
+}
 #endif /* __cplusplus */
 
 #endif /* __GPHOTO2_FILESYS_H__ */
