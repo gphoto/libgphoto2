@@ -93,7 +93,7 @@ static unsigned char X13Camera[] = { 0, 2, 18 };
 #endif
 
 
-/**
+/*
  * This array contains the expected packet sequence code to to be applied/
  * checked for.
  */
