@@ -1,4 +1,13 @@
-2001-10-20
+2001-10-20 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* libgphoto2_port/stamp-h.in: removed as file is generated automatically anyway
+	* libgphoto2_port/doc/Makefile.am
+	* doc/api/Makefile.am: added DESTDIR to installation of html files
+	* gphoto.spec.in: use DESTDIR for installation
+	* .cvsignore: ignore *.tar.{bz2,gz}
+	* HACKING: added licensing paragraph (LGPL vs. GPL)
+
+2001-10-20 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* Makefile.am
 	* camlibs/agfa/Makefile.am
