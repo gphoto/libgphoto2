@@ -136,9 +136,10 @@ k_check (GPContext *c, const char *rb)
         default:
 		gp_context_error (c, _("The camera has just sent an "
 			"error that has not yet been discovered. Please "
-			"report the following to <gphoto-devel@lists.sourceforge.net> "
+			"report the following to %s "
 			"with additional information how you got this error: "
-			"(0x%x,0x%x). Thank you very much!"), rb[2], rb[3]);
+			"(0x%x,0x%x). Thank you very much!"), 
+			MAIL_GPHOTO_DEVEL, rb[2], rb[3]);
 		return (GP_ERROR);
         }
 }

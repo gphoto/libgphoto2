@@ -713,7 +713,7 @@ sierra_read_packet_wait (Camera *camera, char *buf, GPContext *context)
 				gp_context_error (context, _("Transmission "
 					"of packet timed out even after "
 					"%i retries. Please contact "
-					"<gphoto-devel@lists.sourceforge.net>."), r);
+					"%s."), r, MAIL_GPHOTO_DEVEL);
 				return GP_ERROR;
 			}
 			GP_DEBUG ("Retrying...");
@@ -761,7 +761,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 		case SIERRA_PACKET_INVALID:
 			gp_context_error (context, _("Packet got rejected "
 				"by camera. Please contact "
-				"<gphoto-devel@lists.sourceforge.net>."));
+				"%s.", MAIL_GPHOTO_DEVEL));
 			return GP_ERROR;
 
 		case SIERRA_PACKET_SESSION_END:
@@ -789,7 +789,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 				gp_context_error (context, _("Could not "
 					"transmit packet (error code %i). "
 					"Please contact "
-					"<gphoto-devel@lists.sourceforge.net>."), buf[0]);
+					"%s."), buf[0], MAIL_GPHOTO_DEVEL);
 				return GP_ERROR;
 			}
 			GP_DEBUG ("Did not receive ACK. Retrying...");
@@ -899,8 +899,8 @@ sierra_init (Camera *camera, GPContext *context)
 				gp_context_error (context,
 					_("Got unexpected result "
 					  "0x%x. Please contact "
-					  "<gphoto-devel@lists.sourceforge.net>."),
-					buf[0]);
+					  "%s."),
+					buf[0], MAIL_GPHOTO_DEVEL);
 				return GP_ERROR;
 			}
 			break;
@@ -996,7 +996,7 @@ int sierra_sub_action (Camera *camera, SierraAction action, int sub_action,
 		return (GP_OK);
 	default:
 		gp_context_error (context, _("Received unexpected answer "
-		"(%i). Please contact <gphoto-devel@lists.sourceforge.net>."), buf[0]);
+		"(%i). Please contact %s."), buf[0], MAIL_GPHOTO_DEVEL);
 		return (GP_ERROR);
 	}
 
@@ -1059,7 +1059,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 		case SIERRA_PACKET_INVALID:
 			gp_context_error (context, _("Could not get "
 				"register %i. Please contact "
-				"<gphoto-devel@lists.sourceforge.net>."), reg);
+				"%s."), reg, MAIL_GPHOTO_DEVEL);
 			return GP_ERROR;
 		case SIERRA_PACKET_DATA_END:
 			r = ((unsigned char) buf[4]) +
@@ -1200,7 +1200,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	if (in_function != 0) {
 		gp_context_error (context, _("recursive calls are not"
 			" supported by the sierra driver! Please contact"
-			" <gphoto-devel@lists.sourceforge.net>."));
+			" %s."), MAIL_GPHOTO_DEVEL);
 		return GP_ERROR;
 	}
 	in_function = 1;
@@ -1249,7 +1249,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 		case SIERRA_PACKET_INVALID:
 			gp_context_error (context, _("Could not get "
 				"string register %i. Please contact "
-				"<gphoto-devel@lists.sourceforge.net>."), reg);
+				"%s."), reg, MAIL_GPHOTO_DEVEL);
 			in_function = 0;
 			return GP_ERROR;
 		default:
@@ -1481,7 +1481,7 @@ int sierra_get_pic_info (Camera *camera, unsigned int n,
 
 	if (buf_len != 32) {
 		gp_context_error (context, _("Expected 32 bytes, got %i. "
-			"Please contact <gphoto-devel@lists.sourceforge.net>."), buf_len);
+			"Please contact %s."), buf_len, MAIL_GPHOTO_DEVEL);
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 

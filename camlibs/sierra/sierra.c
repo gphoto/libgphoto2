@@ -1900,7 +1900,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 		}
 		break;
 	case SIERRA_MODEL_EPSON:
-		strcpy (manual->text,
+	        snprintf (manual->text, sizeof(manual->text)
 			_("Some notes about Epson cameras:\n"
 			  "- Some parameters are not controllable remotely:\n"
 			  "  * zoom\n"
@@ -1908,7 +1908,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 			  "  * custom white balance setup\n"
 			  "- Configuration has been reverse-engineered with\n"
 			  "  a PhotoPC 3000z, if your camera acts differently\n"
-			  "  please send a mail to <gphoto-devel@lists.sourceforge.net> (in English)\n"));
+			  "  please send a mail to %s (in English)\n"), MAIL_GPHOTO_DEVEL);
 		break;
 	case SIERRA_MODEL_OLYMPUS:
 	default:
