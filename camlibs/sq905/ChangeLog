@@ -1,3 +1,9 @@
+2003-07-07  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* library.c
+	* sq905.c: Got some more feedback from Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu
+
 2003-06-30  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* library.c: Implement downloading of pictures.

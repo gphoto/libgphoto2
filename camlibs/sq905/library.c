@@ -29,6 +29,9 @@
 #  define N_(String) (String)
 #endif
 
+#undef  MAX
+#define MAX(a, b)  (((a) > (b)) ? (a) : (b))
+
 struct _CameraPrivateLibrary {
 	SQConfig data;
 };
@@ -90,6 +93,7 @@ static int
 camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera) {
+		sq_reset (camera->port);
 		if (camera->pl) {
 			free (camera->pl);
 			camera->pl = NULL;
@@ -148,6 +152,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 		/* Store the file with raw data */
 		gp_file_new (&file);
+		gp_file_set_name (file, name);
 		gp_file_set_type (file, GP_FILE_TYPE_RAW);
 		gp_file_set_data_and_size (file, buf, buf_len);
 		gp_filesystem_set_file_noop (fs, folder, file, context);
@@ -173,6 +178,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			"%d %d\n"
 			"255\n", w, h);
 		gp_file_new (&file);
+		gp_file_set_name (file, name);
 		gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
 		gp_file_set_mime_type (file, GP_MIME_PPM);
 		gp_file_append (file, header, strlen (header));

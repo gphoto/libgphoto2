@@ -145,10 +145,13 @@ sq_init (GPPort *port, SQConfig data)
 int
 sq_read (GPPort *port, unsigned char *buf, unsigned int buf_len)
 {
-	 SQWRITE (port, 0x0c, 0x03, buf_len, SQ905_GET, 1);
-	 memset (buf, 0, buf_len);
-	 gp_port_write (port, buf, buf_len);
-	 gp_port_read (port, buf, buf_len);
+	memset (buf, 0, buf_len);
 
-	 return GP_OK;
+	/* I don't know why set_timeout is necessary. But I was told it is. */
+	SQWRITE (port, 0x0c, 0x03, buf_len, SQ905_GET, 1);
+	gp_port_write (port, buf, buf_len);
+	gp_port_set_timeout (port, 500);
+	gp_port_read (port, buf, buf_len);
+
+	return GP_OK;
 }
