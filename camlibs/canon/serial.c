@@ -29,16 +29,6 @@
 #include "serial.h"
 
 
-/****************************************************************************
- *
- * static global storage area
- *
- ****************************************************************************/
-
-// GPPort *gdev;
-gp_port_settings settings;
-
-
 void
 serial_flush_input (GPPort *gdev)
 {
@@ -65,6 +55,8 @@ serial_flush_output (GPPort *gdev)
 int
 canon_serial_change_speed (GPPort *gdev, int speed)
 {
+	gp_port_settings settings;
+
 	/* set speed */
 	gp_port_settings_get (gdev, &settings);
 	settings.serial.speed = speed;
@@ -110,11 +102,11 @@ canon_serial_get_cts (GPPort *gdev)
 int
 canon_usb_camera_init (Camera *camera)
 {
-	char msg[0x58];
-	char buffer[0x44];
+	unsigned char msg[0x58];
+	unsigned char buffer[0x44];
 	int i;
 	char *camstat_str = "NOT RECOGNIZED";
-	char camstat;
+	unsigned char camstat;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_camera_init()");
 
@@ -211,7 +203,7 @@ canon_serial_init (Camera *camera)
 	gp_port_settings_get (camera->port, &settings);
 
 	/* Adjust the current settings */
-	switch (canon_comm_method) {
+	switch (camera->pl->canon_comm_method) {
 	case CANON_USB:
 		settings.usb.inep = 0x81;
 		settings.usb.outep = 0x02;
@@ -231,7 +223,7 @@ canon_serial_init (Camera *camera)
 	gp_port_settings_set (camera->port, settings);
 
 	/* Do further initialization */
-	switch (canon_comm_method) {
+	switch (camera->pl->canon_comm_method) {
 	case CANON_USB:
 		res = canon_usb_camera_init (camera);
 		if (res != GP_OK) {
@@ -298,7 +290,7 @@ serial_set_timeout (GPPort *gdev, int to)
  * canon_serial_get_byte
  *
  * Get the next byte from the serial line.
- * Actually the fucntion reads chunks of data and keeps them in a cache.
+ * Actually the function reads chunks of data and keeps them in a cache.
  * Only one byte per call will be returned.
  *
  * Returns the byte on success, -1 on error.

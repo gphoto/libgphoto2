@@ -1,3 +1,23 @@
+2001-10-26 Fredrik <fredrik@krixor.xy.org>
+
+	* camlibs/canon/.indent.pro:
+	  Added -T GPPort and some other types
+	* camlibs/canon/psa50.c:
+	* camlibs/canon/psa50.h:
+	* camlibs/canon/canon.c:
+	* camlibs/canon/serial.c:
+	* camlibs/canon/util.c:
+	  Moved all global variables into camera->pl.
+	  Re-indented.
+	  Fixed small memory leak in update_disk_cache().
+	  Renamed psa50_dir to canon_dir since a comment said to do
+	  so when merging with more camera models (something that
+	  was done a long time ago).
+	  Added some comments.
+	  Added/improved debugging output.
+	  Cleaned out some superfluous debugging I forgot in my last
+	  big patch.
+
 2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include: Move everything from here ...

@@ -7,22 +7,20 @@
 #ifndef PSA50_H
 #define PSA50_H
 
-/* Globals for error handling */
+/* Defines for error handling */
 #define NOERROR		0
 #define ERROR_RECEIVED	1
 #define ERROR_ADDRESSED	2
 #define FATAL_ERROR	3
 #define ERROR_LOWBATT	4
 
-int receive_error;
-
 /* Battery status values:
 
-hopefully obsolete values first - we now just use the bit 
-that makes the difference
+ * hopefully obsolete values first - we now just use the bit 
+ * that makes the difference
 
-#define CAMERA_ON_AC       16
-#define CAMERA_ON_BATTERY  48
+  obsolete #define CAMERA_ON_AC       16
+  obsolete #define CAMERA_ON_BATTERY  48
 */
 
 #define CAMERA_POWER_OK     6
@@ -31,12 +29,11 @@ that makes the difference
 #define CAMERA_MASK_BATTERY  32
 
 
-/* @@@ change this to canon_dir when merging with other models */
-struct psa50_dir {
+struct canon_dir {
   const char *name; /* NULL if at end */
   unsigned int size;
   time_t date;
-  char attrs; /* File attributes, see "Protocols" for details */
+  unsigned char attrs; /* File attributes, see "Protocols" for details */
   int is_file;
   void *user;	/* user-specific data */
 };
@@ -72,7 +69,12 @@ struct _CameraPrivateLibrary
 	char firmwrev[4]; /* Firmware revision */
 	int debug;
 	int dump_packets;
-	
+	int A5;
+	char psa50_id[200];	/* some models may have a lot to report */
+	int canon_comm_method;
+	unsigned char psa50_eot[8];
+
+	int receive_error;
 	int first_init;  /* first use of camera   1 = yes 0 = no */
 	int uploading;   /* 1 = yes ; 0 = no */
 	int slow_send;   /* to send data via serial with a usleep(1) 
@@ -83,33 +85,23 @@ struct _CameraPrivateLibrary
  * The first variable in each block indicates whether the block is valid.
  */
 
-    int cached_ready;
+	int cached_ready;
 	int cached_disk;
-	char cached_drive[10]; /* usually something like C: */
+	char *cached_drive; /* usually something like C: */
 	int cached_capacity;
 	int cached_available;
 	int cached_dir;
-	struct psa50_dir *cached_tree;
+	struct canon_dir *cached_tree;
 	int cached_images;
 	char **cached_paths; /* only used by A5 */
 };
 
-
-extern char psa50_id[]; /* ditto @@@ */
-int A5;
 
 /*
  * Our driver now supports both USB and serial communications
  */
 #define CANON_SERIAL_RS232 0
 #define CANON_USB 1
-
-#warning This driver uses global variables and
-#warning therefore can break frontends like
-#warning Konqueror (KDE) or Nautilus (GNOME).
-#warning Please fix by moving global variables
-#warning into camera->pl!
-int canon_comm_method;
 
 #define DIR_CREATE 0
 #define DIR_REMOVE 1
@@ -193,8 +185,8 @@ int psa50_disk_info(Camera *camera, const char *name,int *capacity,int *availabl
 /**
  *
  */
-struct psa50_dir *psa50_list_directory(Camera *camera, const char *name);
-void psa50_free_dir(Camera *camera, struct psa50_dir *list);
+struct canon_dir *psa50_list_directory(Camera *camera, const char *name);
+void psa50_free_dir(Camera *camera, struct canon_dir *list);
 int psa50_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
 unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length);
 int psa50_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath);
