@@ -774,7 +774,7 @@ OPTION_CALLBACK(get_all_pictures) {
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
-	return for_each_image(NULL, save_picture_action, glob_recurse);
+	return for_each_image(glob_folder, save_picture_action, glob_recurse);
 	/* NULL means current folder, set with -f/--folder */
 }
 
