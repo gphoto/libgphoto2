@@ -228,6 +228,7 @@ static struct {
 	{"HP:PhotoSmart 715 (PTP mode)", 0x03f0, 0x6402},
 	{"HP:PhotoSmart 720 (PTP mode)", 0x03f0, 0x6702},
 	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302},
+	{"HP:PhotoSmart 120 (PTP mode)", 0x03f0, 0x6502},
 	/* I got information that all SONY PTP cameras use the same
 	   product/vendor IDs */
 	{"Sony:DSC-P5 (PTP mode)", 0x054c, 0x004e},
