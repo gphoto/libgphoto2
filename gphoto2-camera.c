@@ -55,12 +55,59 @@
 #define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
 
-#define CHECK_OPEN(c)              {int r = (strcmp ((c)->pc->a.model,"Directory Browse") ? gp_port_open ((c)->port) : GP_OK); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
-#define CHECK_CLOSE(c)             {if (strcmp ((c)->pc->a.model,"Directory Browse")) gp_port_close ((c)->port);}
+#define CHECK_OPEN(c)							\
+{									\
+	int r;								\
+									\
+	if (strcmp ((c)->pc->a.model,"Directory Browse")) {		\
+		r = gp_port_open ((c)->port);				\
+		if (r < 0) {						\
+			gp_camera_status ((c), "");			\
+			return (r);					\
+		}							\
+	}								\
+	if ((c)->functions->pre_func) {					\
+		r = (c)->functions->pre_func (c);			\
+		if (r < 0) {						\
+			gp_camera_status ((c), "");			\
+			return (r);					\
+		}							\
+	}								\
+}
+
+#define CHECK_CLOSE(c)							\
+{									\
+	int r;								\
+									\
+	if (strcmp ((c)->pc->a.model,"Directory Browse"))		\
+		gp_port_close ((c)->port);				\
+	if ((c)->functions->post_func) {				\
+		r = (c)->functions->post_func (c);			\
+		if (r < 0) {						\
+			gp_camera_status ((c), "");			\
+			return (r);					\
+		}							\
+	}								\
+}
 
 #define CRS(c,res) {int r = (res); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
 
-#define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Operation failed!"); gp_camera_status ((c), ""); gp_camera_progress ((c), 0.0); return (r);}; CHECK_CLOSE (c);}
+#define CHECK_RESULT_OPEN_CLOSE(c,result)				\
+{									\
+	int r;								\
+									\
+	CHECK_OPEN (c);							\
+	r = (result);							\
+	if (r < 0) {							\
+		CHECK_CLOSE (c);					\
+		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Operation failed!");\
+		gp_camera_status ((c), "");				\
+		gp_camera_progress ((c), 0.0);				\
+		return (r);						\
+	}								\
+	CHECK_CLOSE (c);						\
+}
+
 #define CHECK_INIT(c) {if (!(c)->pc->lh) {CHECK_RESULT(gp_camera_init(c));}}
 
 struct _CameraPrivateCore {
