@@ -8,6 +8,4 @@ gphotohead_HEADERS=			\
 	gphoto2-debug.h			\
 	gphoto2-file.h			\
 	gphoto2-library.h		\
-	gphoto2-setting.h		\
-	gphoto2-result.h
-
+	gphoto2-setting.h

@@ -27,13 +27,11 @@
 #define GP_ERROR_IO                  -101 /* IO problem                 */
 #define GP_ERROR_CORRUPTED_DATA      -102 /* Corrupted data             */
 #define GP_ERROR_FILE_EXISTS         -103 /* File exists                */
-#define GP_ERROR_NO_MEMORY           -104 /* Insufficient memory        */
 #define GP_ERROR_MODEL_NOT_FOUND     -105 /* Model not found            */
 #define GP_ERROR_NOT_SUPPORTED       -106 /* Some op. is unsupported    */
 #define GP_ERROR_DIRECTORY_NOT_FOUND -107 /* Directory not found        */
 #define GP_ERROR_FILE_NOT_FOUND      -108 /* File not found             */
 #define GP_ERROR_DIRECTORY_EXISTS    -109 /* Directory exists           */
-#define GP_ERROR_NO_CAMERA_FOUND     -110 /* No cameras auto-detected   */
 #define GP_ERROR_PATH_NOT_ABSOLUTE   -111 /* Path not absolute          */
 
 const char *gp_result_as_string      (int result);

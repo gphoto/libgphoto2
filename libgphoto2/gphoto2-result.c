@@ -37,6 +37,16 @@
 
 #define GP_ERR_RES(num,str) {if (result == (num)) return (N_(str));}
 
+/**
+ * gp_result_as_string:
+ * @result: a gphoto2 error code
+ *
+ * Translates a gphoto2 error code into a human readable string. If the 
+ * error occurred in combination with a camera,
+ * #gp_camera_get_result_as_string should be used instead.
+ *
+ * Return value: A string representation of a gphoto2 error code
+ **/
 const char *
 gp_result_as_string (int result)
 {
@@ -51,13 +61,11 @@ gp_result_as_string (int result)
 	GP_ERR_RES (GP_ERROR_IO, N_("I/O problem"));
 	GP_ERR_RES (GP_ERROR_CORRUPTED_DATA, N_("Corrupted data"));
 	GP_ERR_RES (GP_ERROR_FILE_EXISTS, N_("File exists"));
-	GP_ERR_RES (GP_ERROR_NO_MEMORY, N_("Insufficient memory"));
 	GP_ERR_RES (GP_ERROR_MODEL_NOT_FOUND, N_("Unknown model"));
 	GP_ERR_RES (GP_ERROR_NOT_SUPPORTED, N_("Unsupported operation"));
 	GP_ERR_RES (GP_ERROR_DIRECTORY_NOT_FOUND, N_("Directory not found"));
 	GP_ERR_RES (GP_ERROR_FILE_NOT_FOUND, N_("File not found"));
 	GP_ERR_RES (GP_ERROR_DIRECTORY_EXISTS, N_("Directory exists"));
-	GP_ERR_RES (GP_ERROR_NO_CAMERA_FOUND, N_("No cameras were detected"));
 	GP_ERR_RES (GP_ERROR_PATH_NOT_ABSOLUTE, N_("Path not absolute"));
 
 	return (N_("Unknown error"));

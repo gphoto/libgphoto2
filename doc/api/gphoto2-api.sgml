@@ -4,6 +4,7 @@
 <!entity gphoto2-widget  SYSTEM "sgml/gphoto2-widget.sgml">
 <!entity gphoto2-core    SYSTEM "sgml/gphoto2-core.sgml">
 <!entity gphoto2-camera  SYSTEM "sgml/gphoto2-camera.sgml">
+<!entity gphoto2-result  SYSTEM "sgml/gphoto2-result.sgml">
 <!entity gphoto2-setting SYSTEM "sgml/gphoto2-setting.sgml">
 <!entity gphoto2-list    SYSTEM "sgml/gphoto2-list.sgml">
 ]>
@@ -63,6 +64,7 @@ locking of serial ports. GPhoto2 currently supports
         GPhoto2's core provides some utility functions.
       </para>
 
+&gphoto2-result;
 &gphoto2-core;
 &gphoto2-setting;
 
