@@ -2,6 +2,8 @@
 <!entity hash "#">
 <!entity gphoto2-port-log       SYSTEM "sgml/gphoto2-port-log.sgml">
 <!entity gphoto2-port-info-list SYSTEM "sgml/gphoto2-port-info-list.sgml">
+<!entity gphoto2-port-result    SYSTEM "sgml/gphoto2-port-result.sgml">
+<!entity gphoto2-port           SYSTEM "sgml/gphoto2-port.sgml">
 ]>
 
 <book id="index">
@@ -45,14 +47,9 @@
 
   <chapter id="gphoto2-base" role="no-toc">
     <title>GPhoto2-Port Core Reference</title>
-      <para>
-        GPhoto2-Port provides some useful mechanisms that are used by 
-	GPhoto2-Port itself and can be used by libraries that use
-	GPhoto2-Port.
-      </para>
-
       &gphoto2-port-log;
+      &gphoto2-port-result;
       &gphoto2-port-info-list;
-
+      &gphoto2-port;
   </chapter>
 </book>

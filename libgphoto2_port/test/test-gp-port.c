@@ -32,7 +32,7 @@ main (int argc, char **argv)
 	settings.serial.parity = 0;
 	settings.serial.stopbits = 1;
 
-	ret = gp_port_settings_set (dev, settings);
+	ret = gp_port_set_settings (dev, settings);
 	if (ret < 0) {
 		printf ("Could not set settings: %s\n",
 			gp_port_result_as_string (ret));
@@ -46,9 +46,9 @@ main (int argc, char **argv)
 		exit (1);
 	}
 
-	gp_port_settings_get(dev, &settings);
+	gp_port_get_settings(dev, &settings);
 	settings.serial.speed = 57600;
-	gp_port_settings_set(dev, settings);
+	gp_port_set_settings(dev, settings);
 
 	//printf("CTS: %i", gp_port_pin_get( dev, PIN_CTS, LOW ) );
 

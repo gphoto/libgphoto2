@@ -104,6 +104,16 @@ gp_port_info_list_free (GPPortInfoList *list)
 	return (GP_OK);
 }
 
+/**
+ * gp_port_info_list_append:
+ * @list: a #GPPortInfoList
+ * @info: the info to append
+ *
+ * Appends an entry to the @list. This function is typically called by
+ * an io-driver on #gp_port_library_list.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 {
@@ -127,6 +137,16 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 	return (GP_OK);
 }
 
+/**
+ * gp_port_info_list_load:
+ * @list: a #GPPortInfoList
+ *
+ * Searches the system for io-drivers and appends them to the list. You would
+ * normally call this function once after #gp_port_info_list_new and then
+ * use this list in order to supply #gp_port_set_info with parameters.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_port_info_list_load (GPPortInfoList *list)
 {
@@ -221,6 +241,14 @@ gp_port_info_list_load (GPPortInfoList *list)
         return (GP_OK);
 }
 
+/**
+ * gp_port_info_list_count:
+ * @list: a #GPPortInfoList
+ *
+ * Returns the number of entries in the @list.
+ *
+ * Return value: The number of entries or a gphoto2 error code
+ **/
 int
 gp_port_info_list_count (GPPortInfoList *list)
 {
@@ -229,6 +257,15 @@ gp_port_info_list_count (GPPortInfoList *list)
 	return (list->count);
 }
 
+/**
+ * gp_port_info_list_lookup_path:
+ * @list: a #GPPortInfoList
+ * @path: a path
+ *
+ * Looks for an entry in the list with the supplied @path.
+ *
+ * Return value: The index of the entry or a gphoto2 error code
+ **/
 int
 gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 {
@@ -243,6 +280,15 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 	return (GP_ERROR_UNKNOWN_PORT);
 }
 
+/**
+ * gp_port_info_list_lookup_name:
+ * @list: a #GPPortInfoList
+ * @name: a name
+ *
+ * Looks for an entry in the @list with the given @name.
+ *
+ * Return value: The index of the entry or a gphoto2 error code
+ **/
 int
 gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
 {
@@ -257,6 +303,16 @@ gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
 	return (GP_ERROR_UNKNOWN_PORT);
 }
 
+/**
+ * gp_port_info_list_get_info:
+ * @list: a #GPPortInfoList
+ * @n: the index of the entry
+ * @info:
+ *
+ * Retreives an entry from the @list.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 {

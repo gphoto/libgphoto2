@@ -84,27 +84,23 @@ struct _GPPort {
 	GPPortPrivateCore    *pc;
 };
 
-/* DEPRECATED */
-typedef GPPort gp_port;
-typedef GPPortSettings gp_port_settings;
-
-int gp_port_new         (GPPort **dev);
-int gp_port_free        (GPPort *dev);
+int gp_port_new         (GPPort **port);
+int gp_port_free        (GPPort *port);
 
 int gp_port_set_info    (GPPort *port, GPPortInfo  info);
 int gp_port_get_info    (GPPort *port, GPPortInfo *info);
 
-int gp_port_open        (GPPort *dev);
-int gp_port_close       (GPPort *dev);
+int gp_port_open        (GPPort *port);
+int gp_port_close       (GPPort *port);
 
-int gp_port_timeout_set  (GPPort *dev, int millisec_timeout);
-int gp_port_timeout_get  (GPPort *dev, int *millisec_timeout);
+int gp_port_write       (GPPort *port, char *data, int size);
+int gp_port_read        (GPPort *port, char *data, int size);
 
-int gp_port_settings_set (GPPort *dev, GPPortSettings  settings);
-int gp_port_settings_get (GPPort *dev, GPPortSettings *settings);
+int gp_port_get_timeout  (GPPort *port, int *timeout);
+int gp_port_set_timeout  (GPPort *port, int  timeout);
 
-int gp_port_write                (GPPort *dev, char *bytes, int size);
-int gp_port_read         (GPPort *dev, char *bytes, int size);
+int gp_port_set_settings (GPPort *port, GPPortSettings  settings);
+int gp_port_get_settings (GPPort *port, GPPortSettings *settings);
 
 #define PIN_RTS 0
 #define PIN_DTR 1
@@ -113,22 +109,26 @@ int gp_port_read         (GPPort *dev, char *bytes, int size);
 #define PIN_CD  4
 #define PIN_RING 5
 
-int gp_port_pin_get   (GPPort *dev, int pin, int *level);
-int gp_port_pin_set   (GPPort *dev, int pin, int level);
+int gp_port_get_pin   (GPPort *port, int pin, int *level);
+int gp_port_set_pin   (GPPort *port, int pin, int level);
 
-int gp_port_send_break (GPPort *dev, int duration);
-int gp_port_flush      (GPPort *dev, int direction);
+int gp_port_send_break (GPPort *port, int duration);
+int gp_port_flush      (GPPort *port, int direction);
 
-int gp_port_usb_find_device (GPPort * dev, int idvendor, int idproduct);
-int gp_port_usb_clear_halt  (GPPort * dev, int ep);
-int gp_port_usb_msg_write   (GPPort * dev, int request, int value,
+int gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct);
+int gp_port_usb_clear_halt  (GPPort *port, int ep);
+int gp_port_usb_msg_write   (GPPort *port, int request, int value,
 			     int index, char *bytes, int size);
-int gp_port_usb_msg_read    (GPPort * dev, int request, int value,
+int gp_port_usb_msg_read    (GPPort *port, int request, int value,
 			     int index, char *bytes, int size);
 
 /* Error reporting */
 int         gp_port_set_error (GPPort *port, const char *format, ...);
 const char *gp_port_get_error (GPPort *port);
+
+/* DEPRECATED */
+typedef GPPort gp_port;
+typedef GPPortSettings gp_port_settings; 
 
 #endif /* __GPHOTO2_PORT_H__ */
 

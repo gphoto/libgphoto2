@@ -30,7 +30,7 @@
 
 typedef struct {
 	unsigned int id;
-	GPLogLevel  level;
+	int  level;
 	GPLogFunc    func;
 	void        *data;
 } LogFunc;
@@ -52,7 +52,7 @@ static unsigned int log_funcs_count = 0;
  * Return value: an id or a gphoto2 error code
  **/
 int
-gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
+gp_log_add_func (int level, GPLogFunc func, void *data)
 {
 	LogFunc *new_log_funcs;
 
@@ -226,7 +226,7 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
  * function to log as yet unformatted strings. 
  **/
 void
-gp_logv (GPLogLevel level, const char *domain, const char *format,
+gp_logv (int level, const char *domain, const char *format,
 	 va_list args)
 {
 	int i;
@@ -249,7 +249,7 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
  * function to log strings.
  **/
 void
-gp_log (GPLogLevel level, const char *domain, const char *format, ...)
+gp_log (int level, const char *domain, const char *format, ...)
 {
 	va_list args;
 

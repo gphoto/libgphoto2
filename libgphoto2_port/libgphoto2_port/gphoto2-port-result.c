@@ -37,6 +37,16 @@
 
 #define GP_ERR_RES(num,str) {if (result == (num)) return (N_(str));}
 
+/**
+ * gp_port_result_as_string:
+ * @result: a gphoto2 error code
+ *
+ * Returns a string representation of a gphoto2 error code. Those are static
+ * error descriptions. You can get dynamic ones that explain the error more
+ * in depth using #gp_port_get_error.
+ *
+ * Return value: a string representation of a gphoto2 error code
+ **/
 const char *
 gp_port_result_as_string (int result)
 {
