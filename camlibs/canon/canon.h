@@ -60,7 +60,7 @@ typedef enum {
  * @CANON_PS_A5: PowerShot A5
  * @CANON_PS_A5_ZOOM: PowerShot A5 Zoom
  * @CANON_PS_A50: PowerShot A50
- * @CANON_PS_A70: PowerShot Pro70
+ * @CANON_PS_PRO70: PowerShot Pro70
  * @CANON_PS_S10: PowerShot S10
  * @CANON_PS_S20: PowerShot S20
  * @CANON_EOS_D30: EOS D30
@@ -84,6 +84,7 @@ typedef enum {
  * @CANON_PS_S45: PowerShot S45
  * @CANON_PS_G3: PowerShot G3
  * @CANON_PS_S230: PowerShot S230, Digital IXUS v3
+ * @CANON_EOS_10D: EOS 10D
  *
  * Enumeration of all camera types currently supported.
  *
@@ -96,7 +97,7 @@ typedef enum {
 	CANON_PS_S20,
 	CANON_PS_S30,
 	CANON_PS_S40,
-	CANON_PS_A70,
+	CANON_PS_PRO70,
 	CANON_PS_S100,
 	CANON_PS_S300,
 	CANON_PS_G1,
@@ -114,7 +115,8 @@ typedef enum {
 	CANON_PS_A200,
 	CANON_PS_S45,
 	CANON_PS_S230,
-	CANON_PS_G3
+	CANON_PS_G3,
+	CANON_EOS_10D
 } canonCamModel;
 
 /**
@@ -247,6 +249,8 @@ struct _CameraPrivateLibrary
 
 	char *cached_drive;	/* usually something like C: */
 	int cached_ready;       /* whether the camera is ready to rock */
+	long image_key, thumb_length, image_length; /* For immediate download of captured image */
+	int capture_step;		     /* To record progress in interrupt reads from capture */
 
 /*
  * Directory access may be rather expensive, so we cached some information.
