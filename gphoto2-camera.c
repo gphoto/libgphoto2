@@ -716,46 +716,45 @@ gp_camera_init (Camera *camera)
 				  camera->pc->a.model);
 
 	/*
-	 * If the port or the model hasn't been indicated, try to
+	 * If the model hasn't been indicated, try to
 	 * figure it out (USB only). Beware of "Directory Browse".
 	 */
-	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
-		if (!camera->port || !strcmp ("", camera->pc->a.model)) {
+	if (strcasecmp (camera->pc->a.model, "Directory Browse") &&
+	    !strcmp ("", camera->pc->a.model)) {
 
-			gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Neither "
-				"port nor model set. Trying auto-detection"
-				"...");
+		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Neither "
+			"port nor model set. Trying auto-detection...");
 
-			/* Call auto-detect and choose the first camera */
-			CRS (camera, gp_autodetect (&list));
-			if (!gp_list_count (&list))
-				return (GP_ERROR_MODEL_NOT_FOUND);
-
-			CRS (camera, gp_list_get_name  (&list, 0, &model));
-			CRS (camera, gp_camera_abilities_by_name (model, &a));
-			CRS (camera, gp_camera_set_abilities (camera, a));
-			CRS (camera, gp_camera_set_model (camera, model));
-			CRS (camera, gp_list_get_value (&list, 0, &port));
-			CRS (camera, gp_camera_set_port_path (camera, port));
+		/* Call auto-detect and choose the first camera */
+		CRS (camera, gp_autodetect (&list));
+		if (!gp_list_count (&list)) {
+			gp_log (GP_LOG_ERROR, "gphoto2-camera", _("Could not "
+				"detect any camera"));
+			return (GP_ERROR_MODEL_NOT_FOUND);
 		}
+
+		CRS (camera, gp_list_get_name  (&list, 0, &model));
+		CRS (camera, gp_camera_abilities_by_name (model, &a));
+		CRS (camera, gp_camera_set_abilities (camera, a));
+		CRS (camera, gp_list_get_value (&list, 0, &port));
+		CRS (camera, gp_camera_set_port_path (camera, port));
+	}
 		
-		/* If we don't have a port at this point, return error */
-		if (!camera->port) {
-			gp_camera_status (camera, "");
-			return (GP_ERROR_UNKNOWN_PORT);
-		}
+	/* If we don't have a port at this point, return error */
+	if (!camera->port) {
+		gp_camera_status (camera, "");
+		return (GP_ERROR_UNKNOWN_PORT);
+	}
 
-		/* In case of USB, find the device */
-		switch (camera->port->type) {
-		case GP_PORT_USB:
-			CRS (camera, gp_port_usb_find_device (camera->port,
-					camera->pc->a.usb_vendor,
-					camera->pc->a.usb_product));
-			break;
-		default:
-			break;
-		}
-
+	/* In case of USB, find the device */
+	switch (camera->port->type) {
+	case GP_PORT_USB:
+		CRS (camera, gp_port_usb_find_device (camera->port,
+				camera->pc->a.usb_vendor,
+				camera->pc->a.usb_product));
+		break;
+	default:
+		break;
 	}
 
 	/* Load the library. */
