@@ -200,4 +200,21 @@ int gp_camera_file_get		(Camera *camera, const char *folder,
 int gp_camera_file_delete     	(Camera *camera, const char *folder, 
 				 const char *file, GPContext *context);
 
+/* Some cameras need 'keep-alive-messages'. */
+typedef int          (* CameraTimeoutFunc)      (Camera *camera,
+						 GPContext *context);
+typedef unsigned int (* CameraTimeoutStartFunc) (Camera *camera,
+						 unsigned int timeout,
+						 CameraTimeoutFunc func,
+						 void *data);
+typedef void         (* CameraTimeoutStopFunc)  (Camera *camera,
+						 unsigned int id, void *data);
+void         gp_camera_set_timeout_funcs (Camera *camera,
+				          CameraTimeoutStartFunc start_func,
+				          CameraTimeoutStopFunc  stop_func,
+				          void *data);
+int          gp_camera_start_timeout     (Camera *camera, unsigned int timeout,
+					  CameraTimeoutFunc func);
+void         gp_camera_stop_timeout      (Camera *camera, unsigned int id);
+
 #endif /* __GPHOTO2_CAMERA_H__ */
