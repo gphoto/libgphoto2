@@ -136,7 +136,7 @@ translate_gp_result (int result)
 }
 
 #define CPR(camera,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((camera), r); return (translate_ptp_result (r));}}
-#define CHECK(camera,result) {int ret=(result);if(ret<0){return(ret);}}
+#define CHECK(result) {int ret=(result);if(ret<0){return(ret);}}
 
 
 static struct {
@@ -156,6 +156,58 @@ static struct {
 	{NULL, 0, 0}
 };
 
+static struct {
+	unsigned short format_code;
+	const char *txt;
+} object_formats[] = {
+	{PTP_OFC_Undefined,	"application/x-unknown"},
+	{PTP_OFC_Association,	"application/x-association"},
+	{PTP_OFC_Script,	"application/x-script"},
+	{PTP_OFC_Executable,	"application/octet-stream"},
+	{PTP_OFC_Text,		"text/plain"},
+	{PTP_OFC_HTML,		"text/html"},
+	{PTP_OFC_DPOF,		"text/plain"},
+	{PTP_OFC_AIFF,		"audio/x-aiff"},
+	{PTP_OFC_WAV,		"audio/x-wav"},
+	{PTP_OFC_MP3,		"audio/basic"},
+	{PTP_OFC_AVI,		"video/x-msvideo"},
+	{PTP_OFC_MPEG,		"video/mpeg"},
+	{PTP_OFC_ASF,		"vide/x-asf"},
+	{PTP_OFC_EXIF_JPEG,	"image/jpeg"},
+	{PTP_OFC_TIFF_EP,	"image/x-tiffep"},
+	{PTP_OFC_FlashPix,	"image/x-flashpix"},
+	{PTP_OFC_BMP,		"image/x-bitmap"},
+	{PTP_OFC_CIFF,		"image/x-ciff"},
+	{PTP_OFC_Undefined_0x3806, "application/x-unknown"},
+	{PTP_OFC_GIF,		"image/gif"},
+	{PTP_OFC_JFIF,		"image/jpeg"},
+	{PTP_OFC_PCD,		"image/x-pcd"},
+	{PTP_OFC_PICT,		"image/x-pict"},
+	{PTP_OFC_PNG,		"image/png"},
+	{PTP_OFC_Undefined_0x380C, "application/x-unknown"},
+	{PTP_OFC_TIFF,		"image/tiff"},
+	{PTP_OFC_TIFF_IT,	"image/x-tiffit"},
+	{PTP_OFC_JP2,		"image/x-jpeg2000bff"},
+	{PTP_OFC_JPX,		"image/x-jpeg2000eff"},
+	{0,			NULL}
+};
+
+static int
+set_mimetype (Camera *camera, CameraFile *file, unsigned short ofc)
+{
+	int i;
+
+	for (i = 0; object_formats[i].format_code; i++)
+		if (object_formats[i].format_code == ofc)
+		{
+			CHECK (gp_file_set_mime_type (file, object_formats[i].txt));
+			return (GP_OK);
+		}
+
+	CHECK (gp_file_set_mime_type (file, "application/x-unknown"));
+	return (GP_OK);
+}
+	
 struct _CameraPrivateLibrary {
 	PTPParams params;
 };
@@ -305,11 +357,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		&camera->pl->params.handles, image_id, &ptp_objectinfo));
 		fdata=malloc(ptp_objectinfo.ObjectCompressedSize);
-		if ((ptp_objectinfo.ObjectFormat & 0x0800) == 0x0000) return
-			(GP_OK);
 		CPR (camera, ptp_getobject(&camera->pl->params,
 		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
-		CHECK (camera, gp_file_set_data_and_size (file, fdata,
+		CHECK (gp_file_set_data_and_size (file, fdata,
 		ptp_objectinfo.ObjectCompressedSize));
 		break;
 
@@ -317,11 +367,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		&camera->pl->params.handles, image_id, &ptp_objectinfo));
 		fdata=malloc(ptp_objectinfo.ThumbCompressedSize);
-		if ((ptp_objectinfo.ObjectFormat & 0x0800) == 0x0000) return
-			(GP_OK);
 		CPR (camera, ptp_getthumb(&camera->pl->params,
 		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
-		CHECK (camera, gp_file_set_data_and_size (file, fdata,
+		CHECK (gp_file_set_data_and_size (file, fdata,
 		ptp_objectinfo.ThumbCompressedSize));
 		break;
 		
@@ -330,7 +378,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	}
 
-	CHECK (camera, gp_file_set_mime_type (file, GP_MIME_JPEG));
+	CHECK (set_mimetype (camera, file, ptp_objectinfo.ObjectFormat));
+	//CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
 	return (GP_OK);
 }
