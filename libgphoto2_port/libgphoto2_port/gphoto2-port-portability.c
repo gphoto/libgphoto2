@@ -138,6 +138,14 @@ int GP_SYSTEM_MKDIR (const char *dirname) {
         return (GP_OK);
 }
 
+int GP_SYSTEM_RMDIR (const char *dirname) {
+
+	if (rmdir (dirname) < 0)
+		return (GP_ERROR);
+
+	return (GP_OK);
+}
+
 GP_SYSTEM_DIR GP_SYSTEM_OPENDIR (const char *dirname) {
         return (opendir(dirname));
 }

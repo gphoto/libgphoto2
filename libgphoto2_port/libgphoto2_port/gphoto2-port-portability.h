@@ -81,6 +81,7 @@ typedef struct {
 #endif /* else */
 
 int		 GP_SYSTEM_MKDIR	(const char *dirname);
+int              GP_SYSTEM_RMDIR        (const char *dirname);
 GP_SYSTEM_DIR	 GP_SYSTEM_OPENDIR	(const char *dirname);
 GP_SYSTEM_DIRENT GP_SYSTEM_READDIR	(GP_SYSTEM_DIR d);
 const char*	 GP_SYSTEM_FILENAME	(GP_SYSTEM_DIRENT de);

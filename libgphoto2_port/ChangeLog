@@ -1,3 +1,8 @@
+2001-10-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gphoto2-port-portability.[c,h] (GP_SYSTEM_RMDIR):
+	  New
+
 2001-10-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2: Updated documentation
