@@ -191,6 +191,7 @@ int gp_camera_name (int camera_number, char *camera_name) {
 
 int gp_camera_abilities (int camera_number, CameraAbilities *abilities) {
 
+
 	memcpy(abilities, &glob_camera_abilities[camera_number],
 	       sizeof(glob_camera_abilities[camera_number]));
 
@@ -203,7 +204,6 @@ int gp_camera_abilities (int camera_number, CameraAbilities *abilities) {
 int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities) {
 
 	int x=0;
-
 	while (x < glob_camera_count) {
 		if (strcmp(glob_camera[x].name, camera_name)==0)
 			return (gp_camera_abilities(x, abilities));
