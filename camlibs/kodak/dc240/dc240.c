@@ -82,6 +82,7 @@ int camera_init (Camera *camera, CameraInit *init) {
         settings.serial.parity   = 0;
         settings.serial.stopbits = 1;
         break;
+#ifdef GPIO_USB
     case GP_PORT_USB:
         dd->dev = gpio_new(GPIO_DEVICE_USB);
         if (!dd->dev) {
@@ -100,6 +101,7 @@ int camera_init (Camera *camera, CameraInit *init) {
         settings.usb.altsetting = 0;
         break;
     default:
+#endif
         return (GP_ERROR);
     }
 
