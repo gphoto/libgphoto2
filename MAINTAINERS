@@ -53,9 +53,26 @@ camlibs/sonydscf55:
 Bug reports on sourceforge:
 	Hubert Figuiere <hfiguiere@teaser.fr>
 
-kamera (external project):
+				   FRONTENDS
+				   ---------
+
+kamera (?):
+	KDE integration (konqueror)
 	Ilya Konstantinov <future@shiny.co.il>
 
-GnoCam (external project):
+gtkam (?):
+	Simple GTK front-end.
+	?
+
+GnoCam (http://www.uni-karlsruhe.de/~urc8/GnoCam):
+	GNOME integration (nautilus)
 	Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+QtKam (?):
+	Front-end for KDE
+	Remko Troncon <spike@kotnet.org>
+
+SANE (?):
+	If configured with --with-gphoto2.
+	Pete Fales <psfales@lucent.com>
 
