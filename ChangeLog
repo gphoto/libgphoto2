@@ -1,5 +1,12 @@
 2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/panasonic/l859/l859.[c,h]:
+	  Fix compile warnings by declaring some functions static.
+	  Use camera->port and camera->fs.
+	  (l859_debug): Removed. Now in libgphoto2_port
+
+2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/jd3503/library.c: Fix compile warnings by declaring some
 	  functions static.
 	* camlibs/jd350e.c: Here, too. #include <stdlib.h>. Use camera->port

@@ -31,7 +31,6 @@
 typedef struct {
 	gp_port		        *dev;
 	gp_port_settings 	settings;
-	CameraFilesystem	*fs;
 	char			*buf;
 	int			size;
 } l859_t;

@@ -51,25 +51,7 @@
 /******************************************************************************/
 /* Internal utility functions */
 
-/*
- * l859_dumpmem - Dump bytes to screen
- */
-void l859_dumpmem(void *buf, int size) {
-
-        int     i;
-
-        fprintf(stderr, "\nMemory dump: size: %i, contents:\n", size);
-        for (i = 0; i < size; i ++)
-                fprintf(
-                        stderr,
-                        *((char*)buf + i) >= 32 &&
-                        *((char*)buf + i) < 127 ? "%c" : "\\x%02x",
-                        (u_int8_t)*((char*)buf + i)
-                );
-        fprintf(stderr, "\n\n");
-}
-
-void l859_debug(char *format, ...) {
+static void l859_debug(char *format, ...) {
 
 	va_list		pvar;
 	char		msg[512];
@@ -85,7 +67,7 @@ void l859_debug(char *format, ...) {
 /*
  * l859_sendcmd - Send command to camera
  */
-int l859_sendcmd(l859_t *dsc, u_int8_t cmd) {
+static int l859_sendcmd(l859_t *dsc, u_int8_t cmd) {
 
 	l859_debug("Sending command: 0x%02x.", cmd);
 
@@ -99,7 +81,7 @@ int l859_sendcmd(l859_t *dsc, u_int8_t cmd) {
 /*
  * l859_retrcmd - Packet received from camera
  */
-int l859_retrcmd(l859_t *dsc) {
+static int l859_retrcmd(l859_t *dsc) {
 
 	int     s;
 
@@ -119,7 +101,7 @@ int l859_retrcmd(l859_t *dsc) {
 /*
  * l859_connect - try hand shake with camera and establish connection
  */
-int l859_connect(l859_t *dsc, int speed) {
+static int l859_connect(l859_t *dsc, int speed) {
 
 	u_int8_t	bps;
 
@@ -175,7 +157,7 @@ int l859_connect(l859_t *dsc, int speed) {
 /*
  * l859_disconnect - reset camera, free buffers and close files
  */
-int l859_disconnect(l859_t *dsc) {
+static int l859_disconnect(l859_t *dsc) {
 
 	l859_debug("Disconnecting the camera.");
 
@@ -192,7 +174,7 @@ int l859_disconnect(l859_t *dsc) {
 /*
  *l859_delete - delete image #index from camera memory
  */
-int l859_delete(l859_t *dsc, u_int8_t index) {
+static int l859_delete(l859_t *dsc, u_int8_t index) {
 
 	int		value0;
 	int		value1;
@@ -242,7 +224,7 @@ int l859_delete(l859_t *dsc, u_int8_t index) {
 /*
  * l859_selectimage - select image to download, return its size
  */
-int l859_selectimage(l859_t *dsc, u_int8_t index) {
+static int l859_selectimage(l859_t *dsc, u_int8_t index) {
 
 	int			size = 0;
 	u_int8_t	byte1 = 0;
@@ -293,7 +275,7 @@ int l859_selectimage(l859_t *dsc, u_int8_t index) {
  * l859_selectimage_preview - select preview image to download,
  * return its size
  */
-int l859_selectimage_preview(l859_t *dsc, u_int8_t index) {
+static int l859_selectimage_preview(l859_t *dsc, u_int8_t index) {
 
 	int			size = 0;
 	u_int8_t	byte1 = 0;
@@ -340,11 +322,12 @@ int l859_selectimage_preview(l859_t *dsc, u_int8_t index) {
 	return size;
 }
 
+#if 0
 /*
  * l859_readimageblock - read #block block (116 bytes) of an
  * image into buf
  */
-int l859_readimageblock(l859_t *dsc, int block, char *buffer) {
+static int l859_readimageblock(l859_t *dsc, int block, char *buffer) {
 
 	int     index;
 
@@ -364,6 +347,7 @@ int l859_readimageblock(l859_t *dsc, int block, char *buffer) {
 	return 112;
 
 }
+#endif
 
 /******************************************************************************/
 /* Library interface functions */
@@ -405,37 +389,26 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return GP_OK;
 }
 
-int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera) {
 
 	l859_t	*dsc = (l859_t *)camera->camlib_data;
 
 	l859_debug("Camera Exit");
 
-	l859_disconnect(dsc);
-
-	if (dsc->dev) {
-		gp_port_close(dsc->dev);
-		gp_port_free(dsc->dev);
+	if (dsc) {
+		l859_disconnect(dsc);
+		free(dsc->buf);
+		free(dsc);
+		camera->camlib_data = NULL;
 	}
-	if (dsc->fs)
-		gp_filesystem_free(dsc->fs);
-
-	free(dsc);
 
 	return (GP_OK);
 }
 
-int camera_folder_list_folders (Camera *camera, const char *folder,
-				CameraList *list) {
+static int file_list_func (CameraFilesystem *fs, const char *folder,
+			   CameraList *list, void *data) {
 
-	l859_debug("Camera List Folders");
-
-	return GP_OK; 	/* folders are unsupported but it is OK */
-}
-
-int camera_folder_list_files (Camera *camera, const char *folder,
-			      CameraList *list) {
-
+	Camera *camera = data;
 	l859_t		*dsc = (l859_t *)camera->camlib_data;
 	int			num = 0;
 	int			width;
@@ -451,9 +424,6 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 	char		*filename;
 
 	l859_debug("Camera List Files");
-
-	gp_filesystem_free(dsc->fs);
-	gp_filesystem_new(&dsc->fs);
 
 	if (l859_sendcmd(dsc, 0xa0) != GP_OK)
 		return GP_ERROR;
@@ -502,9 +472,8 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 			width == 640 ? "F" : "N", year, month, day, hour, minute);
 		l859_debug("Filename: %s.", filename);
 
-		gp_filesystem_append(dsc->fs, "/", filename);
 		gp_list_append (list, filename, NULL);
-/*		l859_debug("Num %i Filename %s", num, gp_filesystem_name (dsc->fs, "/", num)); */
+/*		l859_debug("Num %i Filename %s", num, filename); */
 
 		num = num + 1;
 		if (l859_sendcmd(dsc, L859_CMD_PREVIEW_NEXT) != GP_OK)
@@ -519,9 +488,11 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 	return GP_OK;
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename,
-		     CameraFileType type, CameraFile *file) {
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *data) {
 
+	Camera *camera = camera;
 	l859_t	*dsc = (l859_t *)camera->camlib_data;
 	int		index;
 	int		size;
@@ -533,7 +504,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	l859_debug("Get File %s", filename);
 
 	/* index is the 0-based image number on the camera */
-	index = gp_filesystem_number (dsc->fs, folder, filename);
+	index = gp_filesystem_number (camera->fs, folder, filename);
 	if (index < 0)
 		return (index);
 
@@ -567,15 +538,15 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	}
 
 	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, "image/jpeg"); 
+	gp_file_set_mime_type (file, GP_MIME_JPEG); 
 
 	l859_debug("Camera Get File Done");
 
 	return (GP_OK);
 }
 
-int camera_file_delete (Camera *camera, const char *folder,
-			const char *filename) {
+static int camera_file_delete (Camera *camera, const char *folder,
+			       const char *filename) {
 
 	l859_t	*dsc = (l859_t *)camera->camlib_data;
 	int		index;
@@ -584,18 +555,22 @@ int camera_file_delete (Camera *camera, const char *folder,
 	l859_debug("Delete File %s", filename);
 
 	/* index is the 0-based image number on the camera */
-	index = gp_filesystem_number (dsc->fs, folder, filename);
+	index = gp_filesystem_number (camera->fs, folder, filename);
 	if (index < 0)
 		return (index);
 
 	result = l859_delete (dsc, index);
+	if (result < 0)
+		return (result);
+
+	gp_filesystem_delete (camera->fs, folder, filename);
 
 	l859_debug("Delete File Done");
 
-	return result;
+	return GP_OK;
 }
 
-int camera_folder_delete_all(Camera *camera, const char *folder) {
+static int camera_folder_delete_all(Camera *camera, const char *folder) {
 
 	l859_t	*dsc = (l859_t *)camera->camlib_data;
 
@@ -608,12 +583,14 @@ int camera_folder_delete_all(Camera *camera, const char *folder) {
 	if (l859_sendcmd(dsc, L859_CMD_DELETE_ACK) != GP_OK)
 		return GP_ERROR;
 
+	gp_filesystem_delete_all (camera->fs, folder);
+
 	l859_debug("Delete all images done.");
 
 	return GP_OK;
 }
 
-int camera_summary (Camera *camera, CameraText *summary) {
+static int camera_summary (Camera *camera, CameraText *summary) {
 
 	strcpy (summary->text,
 			_("Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
@@ -630,7 +607,7 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual) {
+static int camera_manual (Camera *camera, CameraText *manual) {
 
 	strcpy (manual->text,
 			_("Known problems:\n"
@@ -643,7 +620,7 @@ int camera_manual (Camera *camera, CameraText *manual) {
 	return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) {
+static int camera_about (Camera *camera, CameraText *about) {
 
 	strcpy(about->text,
 			_("Panasonic PV-L859-K/PV-L779-K Palmcorder Driver\n"
@@ -660,32 +637,19 @@ int camera_init (Camera *camera) {
 
         /* First, set up all the function pointers */
         camera->functions->exit                                 = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
         camera->functions->folder_delete_all    = camera_folder_delete_all;
-        camera->functions->file_get                     = camera_file_get;
         camera->functions->file_delete                  = camera_file_delete;
         camera->functions->summary                              = camera_summary;
         camera->functions->manual                               = camera_manual;        camera->functions->about                                = camera_about;
 
-        if (dsc && dsc->dev) {
-                gp_port_close(dsc->dev);
-                gp_port_free(dsc->dev);
-        }
-        free(dsc);
-
         /* first of all allocate memory for a dsc struct */
         if ((dsc = (l859_t*)malloc(sizeof(l859_t))) == NULL) {
                 l859_debug("Unable to allocate memory for data structure");
-                return GP_ERROR;
+                return GP_ERROR_NO_MEMORY;
         }
 
         camera->camlib_data = dsc;
-
-        if ((ret = gp_port_new(&(dsc->dev), GP_PORT_SERIAL)) < 0) {
-                free(dsc);
-                return (ret);
-        }
+	dsc->dev = camera->port;
 
         gp_port_timeout_set(dsc->dev, 2000);
         strcpy(dsc->settings.serial.port, camera->port_info->path);
@@ -693,10 +657,7 @@ int camera_init (Camera *camera) {
         dsc->settings.serial.bits       = 8;
         dsc->settings.serial.parity     = 0;
         dsc->settings.serial.stopbits   = 1;
-
         gp_port_settings_set(dsc->dev, dsc->settings);
-
-        gp_port_open(dsc->dev);
 
         /* allocate memory for a dsc read/write buffer */
         if ((dsc->buf = (char *)malloc(sizeof(char)*(L859_BUFSIZE))) == NULL) {
@@ -705,14 +666,18 @@ int camera_init (Camera *camera) {
                 return GP_ERROR;
         }
 
-        /* allocate memory for camera filesystem struct */
-        if ((ret = gp_filesystem_new(&dsc->fs)) < 0) {
-                l859_debug("Unable to allocate memory for camera filesystem");
-                free(dsc);
-                return ret;
-        }
+	/* Set up the filesystem */
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_file_func (camera->fs, get_file_func, camera);
 
-        return l859_connect(dsc, camera->port_info->speed);
+        ret = l859_connect(dsc, camera->port_info->speed);
+	if (ret < 0) {
+		free (dsc->buf);
+		free (dsc);
+		camera->camlib_data = NULL;
+	}
+
+	return (ret);
 }
 
 /* End of l859.c */
