@@ -1,0 +1,16 @@
+<!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!entity widget SYSTEM "sgml/widget.sgml">
+]>
+
+<book>
+  <bookinfo>
+    <title>GPhoto2 API Reference Manual</title>
+  </bookinfo>
+  
+  <chapter id="gphoto2-camera-configuration">
+    <title>Camera Configuration</title>
+      &widget;
+  </chapter>
+</book
+>
+

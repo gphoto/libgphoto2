@@ -1,0 +1,4 @@
+<SECTION>
+<FILE>widget</FILE>
+gp_widget_new
+</SECTION>

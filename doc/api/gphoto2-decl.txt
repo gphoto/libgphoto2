@@ -1,0 +1,5 @@
+<FUNCTION>
+<NAME>gp_widget_new</NAME>
+<RETURNS>int</RETURNS>
+CameraWidgetType type, const gchar *name
+</FUNCTION>
