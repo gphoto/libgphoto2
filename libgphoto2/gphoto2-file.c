@@ -29,6 +29,7 @@
 #include <utime.h>
 
 #include <gphoto2-port-log.h>
+#include <gphoto2-port-portability.h>
 
 #include "gphoto2-result.h"
 
@@ -265,11 +266,7 @@ gp_file_open (CameraFile *file, const char *filename)
         dot = strrchr (filename, '.');
         if (dot) {
             for (i = 0; mime_table[i] ; i+=2)
-#ifdef HAVE_STRCASECMP
                 if (!strcasecmp (mime_table[i], dot+1)) {
-#else
-                if (!stricmp (mime_table[i], dot+1)) {
-#endif
                     strncpy (file->mime_type, mime_table[i+1], sizeof(file->mime_type));
                     break;
                 }
