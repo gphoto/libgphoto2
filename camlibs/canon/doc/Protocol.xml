@@ -318,11 +318,14 @@
         <para>28 Jan 2003: Convert DocBook XML, expand USB information</para>
 	<literallayout>
 	$Log$
+	Revision 1.14  2005/03/25 18:49:27  swestin
+	Added S30, A510, A40, A200 to table of data in init response.
+
 	Revision 1.13  2005/03/24 22:03:21  swestin
 	Corrected some XML errors.
 	Added info on command codes (new protocol) found by stupidly sending;
 	   these are the ones that got a reply.
-
+	
 	Revision 1.12  2005/03/21 13:44:07  swestin
 	Updated copyright notice.
 	Added more info on new protocol (EOS 20D).
@@ -986,11 +989,11 @@ xx &lt;directory_name&gt; 00 00 00
             <tbody>
               <row><entry>G1, Pro90 IS, Digital IXUS</entry><entry>00 05 07 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>S10, S20</entry><entry>01 00 02 00</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>G2, D30, D60, 300D, S110, A10, IXUS 300</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>G3, A60, A70, A75, A80, A300, A400, S45, S50, S230, S400</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>G2, D30, D60, 300D, S110, A10, S30, S300</entry><entry>01 00 05 03</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>G3, A60, A70, A75, A80, A300, A400, A510, S45, S50, S230, S400</entry><entry>01 06 15 83</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>20D</entry><entry>01 06 15 83</entry><entry><emphasis>0x80000175</emphasis></entry><entry>0x800 (2048)</entry><entry>0x10000 (65536)</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
               <row><entry>Optura 200 MC camcorder</entry><entry>03 05 04 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
-              <row><entry>S200, S330, A30</entry><entry>03 05 15 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
+              <row><entry>S200, S330, A30, A40, A200</entry><entry>03 05 15 81</entry><entry><emphasis>USBid</emphasis></entry><entry>0x800 (2048)</entry><entry>-1</entry><entry>0xfd00 (64768)</entry><entry>0xfd00 (64768)</entry></row>
             </tbody>
           </tgroup>
         </table>
