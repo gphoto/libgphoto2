@@ -306,7 +306,14 @@ int camera_summary (Camera *camera, CameraText *summary) {
 
 int camera_manual (Camera *camera, CameraText *manual) {
 
-/* 	DC120Data *dd = camera->camlib_data; */
+/*	DC120Data *dd = camera->camlib_data; */
+
+	strcpy(manual->text, 
+"The Kodak DC120 camera uses the KDC file format
+for storing images. If you want to view the images you
+download from your camera, you will need to download 
+the \"kdc2tiff\" program.
+It is available from http://kdc2tiff.sourceforge.net");
 
 	return (GP_OK);
 }
