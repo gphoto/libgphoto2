@@ -13,6 +13,7 @@ libgphoto2:
    * support for Canon EOS D60, Canon PowerShot A40, Canon PowerShot A30, 
         Canon PowerShot S200, Canon Digital IXUS 330,
         Canon PowerShot S10 (fixed it)
+   * Added SiPix Web2 support.
 
 --------------------------------------------------------------------------------
 gphoto2 2.0
