@@ -3,10 +3,20 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <gphoto2.h>
+
+#include "globals.h"
 
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
+
+#include "camera_util.h"
+#include "tree_list_util.h"
+
 
 
 gboolean exit_callback(GtkMenuItem *menuitem, gpointer user_data) {
@@ -39,8 +49,52 @@ void display_window(GtkMenuItem *menuitem, gint window) {
 
 } /* end display_window */
 
-void select_camera_callback(GtkMenuItem *menuitem, gpointer user_data) {
+/*********** camera callback section **********/
+
+void select_camera_cb(GtkMenuItem *menuitem, gpointer user_data) {
+
+} /* end select_camera_cb */
+
+void config_camera_cb(GtkMenuItem *menuitem, gpointer user_data) {
+
+  CameraWidget *cw;
+  CameraSetting settings[128];
+  GtkWidget *window, *ok, *cancel;
+  int set_count = 0;
+
+  /* wrap around debug code later */
+  g_print("camera config\n");
+  
+ if (!gp_gtk_camera_init)
+    if (camera_set() == GP_ERROR) {
+      return;
+    }
+  
+ cw = gp_widget_new(GP_WIDGET_WINDOW, "Camera Configuration");
+ 
+ if (gp_camera_config_get(gp_gtk_camera, cw) == GP_ERROR) {
+   /* error message */
+   gp_widget_free(cw);
+   return;
+ }
 
 
-} /* end select_camera_callback */
+} /* end config_camera_cb */
 
+/*********** end camera callback section **********/
+
+/************* start some other cb section ****************/
+
+
+void populate_dir(GtkWidget *tree_item, gpointer data) {
+  /* change this name */
+  
+  char *path = (char *)gtk_object_get_data(GTK_OBJECT(tree_item),"path");
+
+  /* can't do this or the data gets corrupted after a bit, perhaps
+     gtk handles this on it's own? */
+  /* free(path); */
+  
+  create_sub_tree((char *)path,"y",tree_item);
+  
+} /* end populate_dir */
