@@ -242,9 +242,9 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 
-	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
+	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
 	settings.serial.speed = speed;
-	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
+	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 	camera->pc->speed = speed;
 
 	return (GP_OK);
