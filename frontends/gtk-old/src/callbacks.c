@@ -196,13 +196,15 @@ void toggle_sensitivity (GtkWidget *button, gpointer data) {
 		gtk_widget_set_sensitive(widget, TRUE);
 }
 
-void save_selected_photo() {
+void save_selected_photos() {
 
-	GtkWidget *icon_list, *window, *ok, *cancel, *hbox, *label, *prefix,
-		  *use_camera_filename;
+	GtkWidget *icon_list, *window, *ok, *cancel, 
+		  *use_camera_filename, *save_photos, *save_thumbs, *prefix_entry;
 	GtkIconListItem *item;
-	GList *child;
-	int num=0, x;
+	CameraFile *f;
+	char msg[1024], fname[1024];
+	char *path, *prefix=NULL, *slash;
+	int num=0, x, photo_num;
 
 	debug_print("save selected photo");
 
@@ -219,50 +221,124 @@ void save_selected_photo() {
 		return;
 	}
 
-	window = create_save_window();
+	if (num > 1)
+		window = create_save_window(1);
+	   else
+		window = create_save_window(0);
+
 	ok = GTK_FILE_SELECTION(window)->ok_button;
 	cancel = GTK_FILE_SELECTION(window)->cancel_button;
-	use_camera_filename = (GtkWidget*)lookup_widget(window, "use_camera_filename");
-
-	if (num > 1) {
-		gtk_widget_hide(GTK_FILE_SELECTION(window)->selection_entry);
-		gtk_widget_hide(GTK_FILE_SELECTION(window)->selection_text);
-		/* Hide the file selection */
-		/* get the main vbox children */
-		child = gtk_container_children(
-			GTK_CONTAINER(GTK_FILE_SELECTION(window)->main_vbox));
-		/* get the dir/file list box children */
-		child = gtk_container_children(
-			GTK_CONTAINER(child->next->next->data));
-		gtk_widget_hide(GTK_WIDGET(child->next->data));
-
-		/* Create the hbox to hold the filename prefix label and entry */
-		hbox = gtk_hbox_new(FALSE, 5);
-		gtk_widget_show(hbox);
-		gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(window)->main_vbox),hbox,
-			TRUE, TRUE, 0);
-		gtk_box_reorder_child(GTK_BOX(GTK_FILE_SELECTION(window)->main_vbox),
-			hbox, 256);
-
-		gtk_signal_connect(GTK_OBJECT(use_camera_filename), "clicked",
-			GTK_SIGNAL_FUNC(toggle_sensitivity), hbox);
-
-		label = gtk_label_new("Filename prefix:");
-		gtk_widget_show(label);
-		gtk_box_pack_start(GTK_BOX(hbox),label, FALSE, FALSE, 0);
-		prefix = gtk_entry_new();
-		gtk_widget_show(prefix);
-		gtk_box_pack_start(GTK_BOX(hbox), prefix, TRUE, TRUE, 0);
-		gtk_widget_set_sensitive(hbox, FALSE);
-		
-	}
 
 	if (wait_for_hide(window, ok, cancel)==0)
 		return;
 
-	printf("selected: %s\n", gtk_file_selection_get_filename(GTK_FILE_SELECTION(window)));
+	/* Get some settings from the file selection window */
+	path = gtk_file_selection_get_filename(GTK_FILE_SELECTION(window));	
+	use_camera_filename = (GtkWidget*)lookup_widget(window, "use_camera_filename");
+	save_photos = (GtkWidget*)lookup_widget(window, "save_photos");
+	save_thumbs = (GtkWidget*)lookup_widget(window, "save_thumbs");
 
+	if (num > 1) {
+		prefix_entry = (GtkWidget*)lookup_widget(window, "prefix");
+		prefix = gtk_entry_get_text(GTK_ENTRY(prefix_entry));
+	}
+
+	gp_progress(0.00);
+	gtk_widget_show(gp_gtk_progress_window);
+	for (x=0; x<GTK_ICON_LIST(icon_list)->num_icons; x++) {
+		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
+		photo_num = atoi(gtk_object_get_data(GTK_OBJECT(item->entry), "number"));
+printf("photo_num=%i\n", photo_num);
+		if (item->state == GTK_STATE_SELECTED) {
+		   /* Save the photo */
+		   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(save_photos))) {
+			sprintf(msg, "Saving photo #%04i of %04i", x, num);
+			gp_message(msg);
+			f = gp_file_new();
+			gp_file_get(x, f);
+			/* determine the name to use */
+			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(use_camera_filename))) {
+			   if (strlen(f->name)>0) {
+				/* If the camera provided a filename */
+				slash = strrchr(path, '/');
+				*slash = 0;
+				sprintf(fname, "%s/%s", path, f->name);
+				*slash = '/';
+			   } else {
+				/* If not, error, and return */
+				gp_message(_("Camera did not suggest a filename.\nPlease select \"Save\" again and specify a filename yourself."));
+				gp_file_free(f);
+				return;
+			   }
+			} else {
+			   if (num == 1) {
+				strcpy(fname, path);
+			   } else {
+				if (prefix)
+					sprintf(fname, "%s%s%04i", path, prefix, x);
+				   else
+					sprintf(fname, "%sphoto%04i", path, x);
+			   }
+			}
+			/* check for existing file */
+			if (file_exists(fname)) {
+				sprintf(msg, "%s already exists. Overwrite?", fname);
+				gtk_widget_hide(gp_gtk_progress_window);
+				if (gp_confirm(msg))
+					gp_file_save(f, fname);
+				gtk_widget_show(gp_gtk_progress_window);
+			} else {
+				gp_file_save(f, fname);
+			}
+
+			gp_file_free(f);
+		   }
+
+		   /* Save the thumbnail */
+		   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(save_thumbs))) {
+			sprintf(msg, "Saving thumbnail #%04i of %04i", x, num);
+			gp_status(msg);
+			f = gp_file_new();
+			gp_file_get_preview(x, f);
+			/* determine the name to use */
+			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(use_camera_filename))) {
+			   if (strlen(f->name)>0) {
+				/* If the camera provided a filename */
+				slash = strrchr(path, '/');
+				*slash = 0;
+				sprintf(fname, "%s/thumb_%s", path, f->name);
+				*slash = '/';
+			   } else {
+				/* If not, error, and return */
+				gp_message(_("Camera did not suggest a filename.\nPlease select \"Save\" again and specify a filename yourself."));
+				gp_file_free(f);
+				return;
+			   }
+			} else {
+			   if (num == 1) {
+				strcpy(fname, path);
+			   } else {
+				if (prefix)
+					sprintf(fname, "%sthumb_%s%04i", path, prefix, x);
+				   else
+					sprintf(fname, "%sthumb_%04i", path, x);
+			   }
+			}
+			/* check for existing file */
+			if (file_exists(fname)) {
+				sprintf(msg, "%s already exists. Overwrite?", fname);
+				if (gp_confirm(msg))
+					gp_file_save(f, fname);
+			} else {
+				gp_file_save(f, fname);
+			}
+			gp_file_free(f);
+		   }
+		}
+	}
 	gtk_widget_destroy(window);
+	gp_progress(0.00);
+	gtk_widget_hide(gp_gtk_progress_window);
 }
 
 void export_gallery() {
@@ -686,7 +762,7 @@ void camera_index () {
 
 	CameraFile *f;
 	CameraAbilities a;
-	GtkWidget *icon_list, *camera_tree;
+	GtkWidget *icon_list, *camera_tree, *use_thumbs;
 	GtkIconListItem *item;
 	GdkPixmap *pixmap;
 	GdkBitmap *bitmap;
@@ -721,31 +797,38 @@ void camera_index () {
 
 	gtk_icon_list_clear (GTK_ICON_LIST(icon_list));
 	camera_tree = (GtkWidget*) lookup_widget(gp_gtk_main_window, "folder_tree");
+	use_thumbs  = (GtkWidget*) lookup_widget(gp_gtk_main_window, "use_thumbs");
 	x=0;
-	gp_progress(0.00);
 	gtk_widget_set_sensitive(camera_tree, FALSE);
+	gp_progress(0.00);
 	gtk_widget_show(gp_gtk_progress_window);
 	while ((x<count)&&(GTK_WIDGET_VISIBLE(gp_gtk_progress_window))) {
 		sprintf(buf,_("Getting Thumbnail #%04i of %04i"), x, count);
 		gp_message(buf);
 		idle();
-		sprintf(buf,"#%04i", x);
-		item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
-			no_thumbnail_xpm,buf,NULL);
-		gtk_signal_connect(GTK_OBJECT(item->eventbox), "button_press_event",
-			GTK_SIGNAL_FUNC(toggle_icon), NULL);
-		gtk_signal_connect(GTK_OBJECT(item->entry), "button_press_event",
-			GTK_SIGNAL_FUNC(toggle_icon), NULL);
-		if ((get_thumbnails)&&(a.file_preview)) {
+		if ((get_thumbnails)&&
+		    (a.file_preview)&&
+		    (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(use_thumbs)))) {
 			f = gp_file_new();
 			if (gp_file_get_preview(x, f) == GP_OK) {
 				gdk_image_new_from_data(f->data,f->size,1,&pixmap,&bitmap);
+				item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
+					no_thumbnail_xpm,f->name,NULL);
 				gtk_pixmap_set(GTK_PIXMAP(item->pixmap), pixmap, bitmap);
+			}  else {
+				sprintf(buf, "Photo #%04i", x);
+				item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
+					no_thumbnail_xpm,buf,NULL);
 			}
 			gp_file_free(f);
+			gtk_signal_connect(GTK_OBJECT(item->eventbox), "button_press_event",
+				GTK_SIGNAL_FUNC(toggle_icon), NULL);
+			gtk_signal_connect(GTK_OBJECT(item->entry), "button_press_event",
+				GTK_SIGNAL_FUNC(toggle_icon), NULL);
+			sprintf(buf, "%i", x);
+			gtk_object_set_data(GTK_OBJECT(item->entry),"number",strdup(buf));
 		}
 		gp_progress(100.0*(float)x/(float)count);
-		idle();
 		x++;
 	}
 	gp_progress(0.00);
@@ -933,7 +1016,7 @@ void help_about() {
 
 	debug_print("help about");
 
-	gp_message(_("gPhoto2 (v1.90)- Cross-platform digital camera library.\nCopyright (C) 2000 Scott Fritzinger\nLicensed under the Library GNU Public License (LGPL)."));
+	gp_message(_("gPhoto2 (v1.90)- Cross-platform digital camera library.\nCopyright (C) 2000 Scott Fritzinger <scottf@unr.edu>\nLicensed under the Library GNU Public License (LGPL)."));
 }
 
 void help_authors() {
@@ -1041,7 +1124,7 @@ void on_open_directory_activate (GtkMenuItem *menuitem, gpointer user_data) {
 }
 
 void on_save_photo_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	save_selected_photo();
+	save_selected_photos();
 }
 
 

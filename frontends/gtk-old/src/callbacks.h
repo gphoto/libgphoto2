@@ -14,7 +14,7 @@ void icon_resize(GtkWidget *window);
 /* File operations */
 void open_photo();
 void open_directory();
-void save_selected_photo();
+void save_selected_photos();
 void export_gallery();
 void close_photo();
 

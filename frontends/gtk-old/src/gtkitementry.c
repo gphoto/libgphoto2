@@ -948,7 +948,6 @@ gtk_entry_draw_text (GtkEntry *entry)
       editable = GTK_EDITABLE (entry);
 
       gdk_window_get_size (entry->text_area, &width, &height);
-
       if (!entry->text)
 	{	  
 	  gdk_draw_rectangle (entry->text_area,

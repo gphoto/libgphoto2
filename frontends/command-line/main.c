@@ -418,6 +418,7 @@ int get_picture_common(int num, int thumbnail) {
 	CameraFile *f;
 	int count=0;
 	char filename[1024], msg[1024];
+	char *slash;
 
 	if (thumbnail)
 		debug_print("Getting thumbnail", "");
@@ -426,6 +427,11 @@ int get_picture_common(int num, int thumbnail) {
 
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
+
+	if ((thumbnail)&&(!glob_abilities.file_preview)) {
+		error_print("Camera doesn't support picture thumbnails");
+		return (GP_ERROR);
+	}
 
 	count = gp_file_count();
 
@@ -460,7 +466,10 @@ int get_picture_common(int num, int thumbnail) {
 	if ((glob_filename_override)&&(strlen(glob_filename)>0))
 		sprintf(filename, glob_filename, num);
 	   else if (strlen(f->name)>0)
-		strcpy(filename, f->name);
+		if (thumbnail)
+			sprintf(filename, "thumb_%s", f->name);
+		  else
+			strcpy(filename, f->name);
 	   else {
 		sprintf(msg, "Filename not found. Use \"%sfilename\" to specify a filename", LONG_OPTION);
 		error_print(msg);
@@ -485,11 +494,6 @@ OPTION_CALLBACK(get_picture) {
 }
 
 OPTION_CALLBACK(get_thumbnail) {
-
-	if (!glob_abilities.file_preview) {
-		error_print("Camera doesn't support picture thumbnails");
-		return (GP_ERROR);
-	}
 
 	return (get_picture_common(atoi(arg), 1));
 }

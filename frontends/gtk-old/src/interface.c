@@ -50,6 +50,7 @@ int gp_interface_message(char *message) {
 	if (GTK_WIDGET_VISIBLE(gp_gtk_progress_window)) {
 		label  = (GtkWidget*) lookup_widget(gp_gtk_progress_window, "message");
 		gtk_label_set_text(GTK_LABEL(label), message);
+		idle();
 		return (GP_OK);
 	}
 	
@@ -68,6 +69,15 @@ int gp_interface_message(char *message) {
 
 int gp_interface_status(char *message) {
 
+	GtkWidget *label;
+
+	if (GTK_WIDGET_VISIBLE(gp_gtk_progress_window)) {
+		label  = (GtkWidget*) lookup_widget(gp_gtk_progress_window, "message");
+		gtk_label_set_text(GTK_LABEL(label), message);
+		idle();
+		return (GP_OK);
+	}
+
 	return (GP_OK);
 }
 
@@ -75,7 +85,9 @@ int gp_interface_progress(float percentage) {
 
 	GtkWidget *progress = (GtkWidget*)lookup_widget(gp_gtk_progress_window, "progress_bar");
 
+printf("percent: %f\n", percentage);
 	gtk_progress_set_percentage(GTK_PROGRESS(progress), percentage/100.0);
+	idle();
 
 	return (GP_OK);
 }
@@ -104,17 +116,20 @@ void hide_progress_window (GtkWidget *widget, gpointer data) {
 }
 
 GtkWidget*
-create_save_window (void)
+create_save_window (int directory_only)
 {
 
-  GtkWidget *save_window, *hbox, *frame, *photos, *thumbs, *override;
+  GtkWidget *save_window, *hbox, *frame, *photos, *thumbs, *override,
+	    *label, *prefix;
   GtkTooltips *tooltip;
+  GList *child;
   char buf[1024];
 
   save_window = gtk_file_selection_new ("Save selected photos...");
   gtk_object_set_data (GTK_OBJECT (save_window), "main_window", save_window);
-  gtk_window_set_title (GTK_WINDOW (save_window), _("gPhoto2"));
+  gtk_window_set_title (GTK_WINDOW (save_window), _("Save selected photos..."));
   gtk_window_set_position (GTK_WINDOW (save_window), GTK_WIN_POS_CENTER);
+  gtk_window_set_modal (GTK_WINDOW (save_window), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (save_window), 450, 400);
   if (gp_setting_get("cwd", buf)==GP_OK)
 	  gtk_file_selection_set_filename(GTK_FILE_SELECTION(save_window),buf);
@@ -129,14 +144,14 @@ create_save_window (void)
 
   hbox = gtk_hbox_new(TRUE, 5);
   gtk_widget_ref(hbox);
-  gtk_object_set_data_full (GTK_OBJECT (save_window), "hbox", hbox,
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "save_which_hbox", hbox,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show(hbox);
   gtk_container_add(GTK_CONTAINER(frame), hbox);
 
   photos = gtk_check_button_new_with_label("Save Photos");
   gtk_widget_ref(photos);
-  gtk_object_set_data_full (GTK_OBJECT (save_window), "photos", photos,
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "save_photos", photos,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show(photos);
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(photos), TRUE);
@@ -147,7 +162,7 @@ create_save_window (void)
 
   thumbs = gtk_check_button_new_with_label("Save Thumbnails");
   gtk_widget_ref(thumbs);
-  gtk_object_set_data_full (GTK_OBJECT (save_window), "thumbs", thumbs,
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "save_thumbs", thumbs,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show(thumbs);
   tooltip = gtk_tooltips_new();
@@ -156,7 +171,7 @@ create_save_window (void)
   gtk_box_pack_start(GTK_BOX(hbox), thumbs, TRUE, TRUE, 0);
 
   /* Create the filename override button */
-  override = gtk_check_button_new_with_label("Use camera-suggested filenames");
+  override = gtk_check_button_new_with_label("Use the filenames provided by the camera");
   gtk_widget_ref(override);
   gtk_object_set_data_full (GTK_OBJECT (save_window), "use_camera_filename", override,
                             (GtkDestroyNotify) gtk_widget_unref);
@@ -171,6 +186,47 @@ create_save_window (void)
   gtk_signal_connect(GTK_OBJECT(override), "clicked",
    GTK_SIGNAL_FUNC(toggle_sensitivity), GTK_FILE_SELECTION(save_window)->selection_entry);
 
+  if (directory_only) {
+	gtk_widget_hide(GTK_FILE_SELECTION(save_window)->selection_entry);
+        gtk_widget_hide(GTK_FILE_SELECTION(save_window)->selection_text);
+        /* Hide the file selection list (only show directory listing */
+        child = gtk_container_children( 
+        	GTK_CONTAINER(GTK_FILE_SELECTION(save_window)->main_vbox));
+        /* get the dir/file list box children */
+        child = gtk_container_children(
+                GTK_CONTAINER(child->next->next->data));
+        gtk_widget_hide(GTK_WIDGET(child->next->data));
+
+        /* Create the hbox to hold the filename prefix label and entry */
+        hbox = gtk_hbox_new(FALSE, 5);
+	gtk_widget_ref(hbox);
+        gtk_object_set_data_full (GTK_OBJECT (save_window), "hbox", 
+		hbox, (GtkDestroyNotify) gtk_widget_unref);
+        gtk_widget_show(hbox);
+        gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(save_window)->main_vbox),hbox,
+                TRUE, TRUE, 0);
+        gtk_box_reorder_child(GTK_BOX(GTK_FILE_SELECTION(save_window)->main_vbox),
+                hbox, 256);
+
+        gtk_signal_connect(GTK_OBJECT(override), "clicked",
+                GTK_SIGNAL_FUNC(toggle_sensitivity), hbox);
+
+        label = gtk_label_new("Filename prefix:");
+	gtk_widget_ref(label);
+        gtk_object_set_data_full (GTK_OBJECT (save_window), "prefix_label", 
+		label, (GtkDestroyNotify) gtk_widget_unref);
+        gtk_widget_show(label);
+        gtk_box_pack_start(GTK_BOX(hbox),label, FALSE, FALSE, 0);
+
+        prefix = gtk_entry_new();
+	gtk_widget_ref(prefix);
+        gtk_object_set_data_full (GTK_OBJECT (save_window), "prefix", 
+		prefix, (GtkDestroyNotify) gtk_widget_unref);
+        gtk_widget_show(prefix);
+        gtk_box_pack_start(GTK_BOX(hbox), prefix, TRUE, TRUE, 0);
+        gtk_widget_set_sensitive(hbox, FALSE);
+  }
+
   return (save_window);
 }
 
@@ -179,7 +235,7 @@ create_main_window (void)
 {
 /* __main */
   /* widget labels: "folder_tree" "icons" "status_bar" "notebook"
-		    "camera_tree" "camera_pixmap" "camera_tree"
+		    "camera_tree" "camera_pixmap" "camera_tree" "use_thumbs"
   */
 
   GtkWidget *main_window;
@@ -255,6 +311,8 @@ create_main_window (void)
   GtkWidget *delete_button;
   GtkWidget *label2;
   GtkWidget *configure_button;
+  GtkWidget *frame;
+  GtkWidget *checkbutton;
   GtkWidget *label5;
   GtkWidget *exit_button;
   GtkWidget *hpaned1;
@@ -778,7 +836,7 @@ create_main_window (void)
   tooltip = gtk_tooltips_new();
   gtk_tooltips_set_tip (tooltip, save_button, _("Save selected photos"), NULL);
   gtk_signal_connect(GTK_OBJECT(save_button), "clicked", 
-	GTK_SIGNAL_FUNC(save_selected_photo), NULL);
+	GTK_SIGNAL_FUNC(save_selected_photos), NULL);
 
   tmp_toolbar_icon = create_pixmap (main_window, "delete_images.xpm");
   delete_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
@@ -874,7 +932,7 @@ create_main_window (void)
   gtk_container_set_border_width (GTK_CONTAINER (hpaned1), 2);
   gtk_paned_set_position (GTK_PANED (hpaned1), 200);
 
-  vbox2 = gtk_vbox_new (FALSE, 0);
+  vbox2 = gtk_vbox_new (FALSE, 5);
   gtk_widget_ref (vbox2);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "vbox2", vbox2,
                             (GtkDestroyNotify) gtk_widget_unref);
@@ -882,6 +940,21 @@ create_main_window (void)
   gtk_paned_pack1 (GTK_PANED (hpaned1), vbox2, FALSE, TRUE);
 
 /* __main */
+  frame = gtk_frame_new("Index Settings");
+  gtk_widget_ref (frame);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "settings_frame", frame,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (frame);
+  gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
+  
+  checkbutton = gtk_check_button_new_with_label("View camera thumbnails");
+  gtk_widget_ref (checkbutton);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "use_thumbs", checkbutton,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (checkbutton);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton), TRUE);
+  gtk_container_add (GTK_CONTAINER(frame), checkbutton);
+
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_ref (scrolledwindow1);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "scrolledwindow1", scrolledwindow1,

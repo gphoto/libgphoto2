@@ -6,6 +6,8 @@
 
 int glob_first_packet = 1;
 
+#define		QUICKSLEEP	5000
+
 void fujitsu_dump_packet (char *packet) {
 
 	int x, 	length=0;
@@ -108,7 +110,7 @@ int fujitsu_write_packet (gpio_device *dev, char *packet) {
 	
 	debug_print(" fujitsu_write_packet");
 
-	usleep(50000);
+	usleep(QUICKSLEEP);
 
 	/* Determing packet length */
 	if ((packet[0] == TYPE_COMMAND) ||
@@ -167,7 +169,7 @@ int fujitsu_read_packet (gpio_device *dev, char *packet) {
 
 	debug_print(" fujitsu_read_packet");
 
-	usleep(50000);
+	usleep(QUICKSLEEP);
 
 	done = 0;
 	while (!done && (r++<RETRIES)) {
@@ -395,6 +397,9 @@ int fujitsu_set_int_register (gpio_device *dev, int reg, int value) {
 	}
 
 	debug_print("too many retries");
+
+	fujitsu_set_speed(dev, -1);
+
 	return (GP_ERROR);
 }
 
@@ -520,6 +525,7 @@ int fujitsu_get_string_register (gpio_device *dev, int reg, char *s, int *length
 	switch (reg) {
 		case 14:
 		        /* Get the size of the current thumbnail */
+
 	        	if (fujitsu_get_int_register(dev, 12, length)==GP_ERROR) {
 	        	        interface_message("Can not get current image length");
 	        	        return (GP_ERROR);
@@ -556,14 +562,13 @@ int fujitsu_get_string_register (gpio_device *dev, int reg, char *s, int *length
 			gp_progress((float)x/(float)(*length));
 		if (fujitsu_write_ack(dev)==GP_ERROR)
 			return (GP_ERROR);
-		if (packet[0] == TYPE_DATA_END)
-			done = 1;
 		packlength = ((unsigned char)packet[2]) +
 			     ((unsigned char)packet[3]  * 256);
 		memcpy(&s[x], &packet[4], packlength);
 		x += packlength;
+		if (packet[0] == TYPE_DATA_END)
+			done = 1;
 	}
-
 	*length = x;
 	return (GP_OK);
 }

@@ -28,7 +28,7 @@
 
 #define DEFAULT_ROW_SPACING 	4
 #define DEFAULT_COL_SPACING 	10	
-#define DEFAULT_TEXT_SPACE 	60
+#define DEFAULT_TEXT_SPACE 	100
 #define DEFAULT_ICON_BORDER 	2
 #define DEFAULT_WIDTH 150
 #define DEFAULT_HEIGHT 120
@@ -1072,7 +1072,6 @@ gtk_icon_list_put (GtkIconList *iconlist,
           set_labels(iconlist, icon, label);
 
   text_width = gdk_string_width(icon->entry->style->font, label);
-
 /*
   gtk_fixed_put(GTK_FIXED(iconlist), icon->pixmap, 
                  x + req1.width/2 - icon->pixmap->requisition.width/2, 
@@ -1166,6 +1165,7 @@ set_labels(GtkIconList *iconlist, GtkIconListItem *icon, const gchar *label)
   gint n, space;
 
   text_width = gdk_string_width(icon->entry->style->font, label);
+
   point_width = gdk_string_width(icon->entry->style->font, "X");
 
   max_width = icon->entry->requisition.width;

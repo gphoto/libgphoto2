@@ -8,6 +8,7 @@
 
 int 		glob_debug	=0;
 int		glob_folders	=0;
+int		glob_speed	=0;
 gpio_device*	glob_dev;
 char		glob_folder[128];
 
@@ -260,7 +261,6 @@ int camera_file_get_generic (int file_number, CameraFile *file, int thumbnail) {
 	/* Fill in the file structure */
 	file->type = GP_FILE_JPEG;
 	file->size = length;
-	strcpy(file->name, buf);
 
 	/* Allocate the picture */
 	file->data = (char *)malloc(sizeof(char)*(length+16));
@@ -277,13 +277,7 @@ int camera_file_get_generic (int file_number, CameraFile *file, int thumbnail) {
 
 	/* In case the register doesn't have the filename, use this one */
 	if (length == 0)
-		sprintf(file->name, "fujitsu-%03i.jpg", file_number);
-
-	/* Prepend the "thumbnail-" prefix */
-	if (thumbnail) {
-		sprintf(buf, "thumbnail-%s", file->name);
-		strcpy(file->name, buf);
-	}
+		sprintf(file->name, "fujitsu%03i.jpg", file_number);
 
 	/* Get the picture data */
 	if (fujitsu_get_string_register(glob_dev, regd, file->data, &length)==GP_ERROR) {

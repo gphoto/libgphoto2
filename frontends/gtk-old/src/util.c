@@ -10,6 +10,17 @@
 #include "callbacks.h"
 #include "util.h"
 
+int file_exists(char *filename) {
+
+        FILE *f;
+
+        if ((f = fopen(filename, "r"))) {
+                fclose(f);
+		return (1);
+        }
+	return (0);
+}
+
 int gdk_image_new_from_data (char *image_data, int image_size, int scale,
 	GdkPixmap **pixmap, GdkBitmap **bitmap) {
 
