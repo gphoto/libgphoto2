@@ -161,8 +161,6 @@ int camera_init (Camera *camera)
         camera->functions->abilities            = camera_abilities;
         camera->functions->init                 = camera_init;
         camera->functions->exit                 = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
         camera->functions->file_get             = camera_file_get;
         camera->functions->file_get_info        = camera_file_get_info;
         camera->functions->file_set_info        = camera_file_set_info;
@@ -180,16 +178,12 @@ int camera_init (Camera *camera)
         for (i=0; i<1024; i++)
                 strcpy(d->images[i], "");
 
-        strcpy(d->directory, camera->port->path);
-        if (strlen(d->directory)==0) {
-                strcpy(d->directory, "/");
-        }
+	strcpy(d->directory, "/");
 
         if (gp_setting_get("directory", "hidden", buf) != GP_OK)
                 gp_setting_set("directory", "hidden", "1");
 
-	gp_filesystem_new (&d->fs);
-	gp_filesystem_set_list_funcs (d->fs, file_list_func,
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
 				      folder_list_func, NULL);
 
         return (GP_OK);
@@ -298,43 +292,6 @@ int camera_file_set_info (Camera *camera, const char *folder, const char *file,
         }
 
         return (GP_OK);
-}
-
-int camera_folder_list_files (Camera *camera, const char *folder,
-                              CameraList *list)
-{
-        GP_SYSTEM_DIR d;
-        GP_SYSTEM_DIRENT de;
-        char buf[1024], f[1024];
-
-        if ((d = GP_SYSTEM_OPENDIR ((char*) folder))==NULL)
-                return (GP_ERROR);
-
-        /* Make sure we have 1 delimiter */
-        if (folder[strlen(folder)-1] != '/')
-                sprintf(f, "%s%c", folder, '/');
-         else
-                strcpy(f, folder);
-
-        while ((de = GP_SYSTEM_READDIR(d))) {
-                if ((strcmp(GP_SYSTEM_FILENAME(de), "." )!=0) &&
-                    (strcmp(GP_SYSTEM_FILENAME(de), "..")!=0)) {
-                        sprintf(buf, "%s%s", f, GP_SYSTEM_FILENAME(de));
-                        if (GP_SYSTEM_IS_FILE(buf) && (is_image(buf)))
-                                gp_list_append(list, GP_SYSTEM_FILENAME(de),
-					       NULL);
-                }
-        }
-
-        return (GP_OK);
-}
-
-int camera_folder_list_folders (Camera *camera, const char *folder,
-                                CameraList *list)
-{
-	DirectoryStruct *d = camera->camlib_data;
-
-	return (gp_filesystem_list_folders (d->fs, folder, list));
 }
 
 static int

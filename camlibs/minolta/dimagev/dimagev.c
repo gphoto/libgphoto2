@@ -116,7 +116,7 @@ int camera_init (Camera *camera)
 #if defined HAVE_STRNCPY
 	strncpy(dimagev->settings.serial.port, camera->port->path, sizeof(dimagev->settings.serial.port));
 #else
-	strcpy(dimagev->settings.serial.port, camera->port->path);
+	strcpy(dimagev->settings.serial.port, camera->port_info->path);
 #endif
 	dimagev->settings.serial.speed = 38400;
 	dimagev->settings.serial.bits = 8;

@@ -788,13 +788,15 @@ set_globals (void)
 {
         /* takes all the settings and sets up the gphoto lib */
 
+	cli_debug_print ("Setting globals...");
         CHECK_RESULT (gp_camera_new (&glob_camera));
 
 	CHECK_RESULT (gp_camera_set_model (glob_camera, glob_model));
 	if (strcmp (glob_model, "Directory Browse"))
 		CHECK_RESULT (gp_camera_set_port_path (glob_camera, glob_port));
-	glob_camera->port->speed = glob_speed;
+	CHECK_RESULT (gp_camera_set_port_speed (glob_camera, glob_speed));
 
+	cli_debug_print ("Initializing camera...");
 	CHECK_RESULT (gp_camera_init (glob_camera));
 
         return (GP_OK);

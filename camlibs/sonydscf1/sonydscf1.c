@@ -70,7 +70,7 @@ int camera_init (Camera *camera) {
         if(glob_debug)
         {
          printf("sony dscf1: Initializing the camera\n");
-         printf("port: %s\n",camera->port->path);
+         printf("port: %s\n",camera->port_info->path);
         }
 
         camera->functions->id           = camera_id;
@@ -97,9 +97,9 @@ int camera_init (Camera *camera) {
 
 
         gp_port_timeout_set(b->dev, 5000);
-        strcpy(settings.serial.port, camera->port->path);
+        strcpy(settings.serial.port, camera->port_info->path);
 
-        settings.serial.speed   = camera->port->speed;
+        settings.serial.speed   = camera->port_info->speed;
         settings.serial.bits    = 8;
         settings.serial.parity  = 0;
         settings.serial.stopbits= 1;

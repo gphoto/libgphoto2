@@ -182,7 +182,7 @@ int digita_serial_open(struct digita_device *dev, Camera *camera)
         if ((ret = gp_port_new(&(dev->gpdev), GP_PORT_SERIAL)) < 0)
             return (ret);
 
-        strcpy(settings.serial.port,camera->port->path);
+        strcpy(settings.serial.port,camera->port_info->path);
 
         settings.serial.speed = 9600;
         settings.serial.bits = 8;
@@ -205,7 +205,7 @@ int digita_serial_open(struct digita_device *dev, Camera *camera)
 
         usleep(50);
 
-        dev->gpdev->settings.serial.speed = camera->port->speed;
+        dev->gpdev->settings.serial.speed = camera->port_info->speed;
         gp_port_serial_set_baudrate(dev->gpdev);
 
         usleep(2000);
@@ -225,7 +225,7 @@ printf("%04X %04X %04X %02X\n",
         beacon_ack.cf_reserved = 0;
         beacon_ack.cf_pod_receive_mode = 0;
         beacon_ack.cf_host_receive_mode = 0;
-        beacon_ack.dataspeed = htonl(camera->port->speed);
+        beacon_ack.dataspeed = htonl(camera->port_info->speed);
         beacon_ack.deviceframesize = htons(1023);
         beacon_ack.hostframesize = htons(1023);
         beacon_ack.checksum = 0;

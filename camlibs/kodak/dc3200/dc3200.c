@@ -108,7 +108,7 @@ int init(Camera *camera)
 	gp_port_settings settings;
 	DC3200Data *dd = camera->camlib_data;
 
-	strcpy(settings.serial.port, camera->port->path);
+	strcpy(settings.serial.port, camera->port_info->path);
 	settings.serial.speed    = 9600;
 	settings.serial.bits     = 8;
 	settings.serial.parity   = 0;
@@ -124,10 +124,10 @@ int init(Camera *camera)
 
 	gp_port_timeout_set(dd->dev, TIMEOUT);
 
-	if (dc3200_set_speed(dd, camera->port->speed) == GP_ERROR)
+	if (dc3200_set_speed(dd, camera->port_info->speed) == GP_ERROR)
 		return GP_ERROR;
 
-	settings.serial.speed = camera->port->speed;
+	settings.serial.speed = camera->port_info->speed;
 
 	/* set the new speed */
 	if (gp_port_settings_set(dd->dev, settings) == GP_ERROR)

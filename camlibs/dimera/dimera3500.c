@@ -21,6 +21,18 @@
  *
  * History:
  * $Log$
+ * Revision 1.12  2001/08/29 10:09:57  lutz
+ * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs/sierra/*:
+ *         * camlibs/directory/directory.c (camera_folder_list_folders),
+ *         (camera_folder_list_files), (camera_file_[get,set]_info): Removed.
+ *         Use the camera->fs. Use camera->port.
+ *         * camlibs/*: camera->port->* -> camera->port_info->*
+ *         * include/gphoto2-camera.h:
+ *         * libgphoto2/camera.c: Open the port before accessing a camera,
+ *         close it after.
+ *
  * Revision 1.11  2001/08/26 16:06:40  lutz
  * 2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -301,7 +313,7 @@ int camera_init (Camera *camera) {
 	cam->auto_flash = 1;
 
 	debuglog("Opening port");
-	if (mesa_port_open(&cam->dev, camera->port->path) != GP_OK)
+	if (mesa_port_open(&cam->dev, camera->port_info->path) != GP_OK)
 	{
 		ERROR("Camera Open Failed");
 		return GP_ERROR;
@@ -317,7 +329,7 @@ int camera_init (Camera *camera) {
 		return GP_ERROR;
 	}
 
-	mesa_set_speed(cam->dev, camera->port->speed);
+	mesa_set_speed(cam->dev, camera->port_info->speed);
 
 	debuglog("Checking for modem");
 	switch ( mesa_modem_check(cam->dev) )

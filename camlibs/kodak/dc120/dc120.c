@@ -87,7 +87,7 @@ int camera_init (Camera *camera) {
 		return (ret);
 	}
 
-	strcpy(settings.serial.port, camera->port->path);
+	strcpy(settings.serial.port, camera->port_info->path);
 	settings.serial.speed    = 9600;
 	settings.serial.bits     = 8;
 	settings.serial.parity   = 0;
@@ -113,7 +113,7 @@ int camera_init (Camera *camera) {
 	/* Wait for it to update */
 	GP_SYSTEM_SLEEP(1500);
 
-	if (dc120_set_speed(dd, camera->port->speed) == GP_ERROR) {
+	if (dc120_set_speed(dd, camera->port_info->speed) == GP_ERROR) {
 		gp_port_close(dd->dev);
 		gp_port_free(dd->dev);
 		free(dd);

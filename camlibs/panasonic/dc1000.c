@@ -403,7 +403,7 @@ int camera_init (Camera *camera) {
         }
 	
 	gp_port_timeout_set(dsc->dev, 5000);
-	strcpy(dsc->settings.serial.port, camera->port->path);
+	strcpy(dsc->settings.serial.port, camera->port_info->path);
 	dsc->settings.serial.speed 	= 9600; /* hand shake speed */
 	dsc->settings.serial.bits	= 8;
 	dsc->settings.serial.parity	= 0;
@@ -427,7 +427,7 @@ int camera_init (Camera *camera) {
 		return ret;
 	}
 	
-	return dsc1_connect(dsc, camera->port->speed); 
+	return dsc1_connect(dsc, camera->port_info->speed); 
 		/* connect with selected speed */
 }
 

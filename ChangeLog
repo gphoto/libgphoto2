@@ -1,3 +1,14 @@
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/sierra/*:
+	* camlibs/directory/directory.c (camera_folder_list_folders),
+	(camera_folder_list_files), (camera_file_[get,set]_info): Removed.
+	Use the camera->fs. Use camera->port.
+	* camlibs/*: camera->port->* -> camera->port_info->*
+	* include/gphoto2-camera.h:
+	* libgphoto2/camera.c: Open the port before accessing a camera,
+	close it after.
+
 2001-08-28  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* include/gphoto2-file.h (GP_MIME_BMP): added this mime type.

@@ -2,9 +2,7 @@ typedef struct {
 	int folders;
 	int speed;
 	int first_packet;
-	int type;
 	int usb_wrap;  /* 0: packets sent "raw", 1: see sierra-usbwrap.h */
-	gp_port* dev;
 	char folder[128];
 	CameraFilesystem *fs;
 } SierraData;

@@ -95,8 +95,8 @@ int camera_init (Camera *camera)
 
         gp_port_timeout_set(device->gpiod, 1000);
 
-	strcpy(gpiod_settings.serial.port, camera->port->path);
-	gpiod_settings.serial.speed = camera->port->speed;
+	strcpy(gpiod_settings.serial.port, camera->port_info->path);
+	gpiod_settings.serial.speed = camera->port_info->speed;
 	gpiod_settings.serial.bits = 8;
 	gpiod_settings.serial.parity = 0;
 	gpiod_settings.serial.stopbits = 1;

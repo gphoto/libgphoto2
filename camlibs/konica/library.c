@@ -28,7 +28,6 @@
 #include "konica.h"
 
 #define CHECK(r) {gint ret = (r); if (ret < 0) return (ret);}
-#define CHECK_FREE(r,d) {gint ret = r; if (ret < 0) {gp_port_free (d); return (ret);}}
 
 /*************/
 /* Variables */
@@ -87,9 +86,7 @@ KonicaCamera konica_cameras []=
 /* Type definitions */
 /********************/
 typedef struct {
-        gp_port          *device;
 	gboolean          image_id_long;
-	CameraFilesystem *filesystem;
 } KonicaData;
 			
 /**************/
@@ -140,7 +137,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (strcmp (folder, "/"))
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 	
-	CHECK (k_get_status (kd->device, &self_test_result,
+	CHECK (k_get_status (camera->port, &self_test_result,
                 &power_level, &power_source, &card_status, &display, &card_size,
                 &pictures, &pictures_left, &year, &month, &day, &hour, &minute,
                 &second, &io_setting_bit_rate, &io_setting_flags, &flash,
@@ -152,7 +149,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
         /* parameter. Therefore, let's get the image    */
         /* ids.                                         */
         for (i = 0; i < pictures; i++) {
-                if (k_get_image_information (kd->device, kd->image_id_long,
+                if (k_get_image_information (camera->port, kd->image_id_long,
                        	i + 1, &image_id, &exif_size, &protected,
 			&information_buffer, &information_buffer_size) == GP_OK)
 			filename = g_strdup_printf ("%06i.jpeg",
@@ -179,14 +176,14 @@ erase_all_unprotected_images (Camera* camera, CameraWidget* widget)
 
         konica_data = (KonicaData *) camera->camlib_data;
 
-        result = k_erase_all (konica_data->device, &not_erased);
+        result = k_erase_all (camera->port, &not_erased);
         if ((result == GP_OK) && (not_erased > 0)) {
                 tmp = g_strdup_printf (_("%i images were protected and have "
 				         "not been erased."), not_erased);
                 gp_frontend_status (camera, tmp);
                 g_free (tmp);
         }
-	gp_filesystem_format (konica_data->filesystem);
+	gp_filesystem_format (camera->fs);
         return (result);
 }
 
@@ -243,7 +240,7 @@ camera_abilities (CameraAbilitiesList* list)
 }
 
 static gint
-init_serial_connection (Camera *camera, gp_port *device)
+init_serial_connection (Camera *camera)
 {
 	gint i;
 	gboolean bit_flag_8_bits, bit_flag_stop_2_bits, bit_flag_parity_on;
@@ -257,7 +254,10 @@ init_serial_connection (Camera *camera, gp_port *device)
 	gp_port_settings settings;
 	guint speed;
 
-	CHECK (gp_port_settings_get (device, &settings));
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: "
+			 "init_serial_connection ***");
+
+	CHECK (gp_port_settings_get (camera->port, &settings));
 
 	/* Speed: 
 	 * 
@@ -273,10 +273,10 @@ init_serial_connection (Camera *camera, gp_port *device)
 	 * current speed to the given one.
 	 */
 
-	if (camera->port->speed) {
-		settings.serial.speed = camera->port->speed;
-		CHECK (gp_port_settings_set (device, settings));
-		if (k_init (device) == GP_OK)
+	if (camera->port_info->speed) {
+		settings.serial.speed = camera->port_info->speed;
+		CHECK (gp_port_settings_set (camera->port, settings));
+		if (k_init (camera->port) == GP_OK)
 			return (GP_OK);
 	}
 
@@ -284,11 +284,11 @@ init_serial_connection (Camera *camera, gp_port *device)
 		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Testing speed "
 				 "%i.\n", test_bit_rate [i]);
 		settings.serial.speed = test_bit_rate [i];
-		gp_port_settings_set (device, settings);
-		if (k_init (device) == GP_OK)
+		gp_port_settings_set (camera->port, settings);
+		if (k_init (camera->port) == GP_OK)
 			break;
 	}
-	if (!camera->port->speed && (i == 1))
+	if (!camera->port_info->speed && (i == 1))
 		return (GP_OK);
 	if (i == 10)
 		return (GP_ERROR_IO);
@@ -296,7 +296,7 @@ init_serial_connection (Camera *camera, gp_port *device)
 	/* What are the camera's abilities? */
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Getting IO "
 			 "capabilities...\n");
-	CHECK (k_get_io_capability (device, &bit_rate_supported [0], 
+	CHECK (k_get_io_capability (camera->port, &bit_rate_supported [0], 
 			&bit_rate_supported [1], &bit_rate_supported [2],
 			&bit_rate_supported [3], &bit_rate_supported [4],
 			&bit_rate_supported [5], &bit_rate_supported [6],
@@ -305,7 +305,7 @@ init_serial_connection (Camera *camera, gp_port *device)
 			&bit_flag_stop_2_bits, &bit_flag_parity_on,
 			&bit_flag_parity_odd, &bit_flag_use_hw_flow_control));
 
-	if (!camera->port->speed) {
+	if (!camera->port_info->speed) {
 
 		/* Set the highest possible speed */
 		for (i = 9; i >= 0; i--)
@@ -313,13 +313,13 @@ init_serial_connection (Camera *camera, gp_port *device)
 				break;
 		if (i < 0)
 			return (GP_ERROR_IO_SERIAL_SPEED);
-		camera->port->speed = bit_rate [i];
+		camera->port_info->speed = bit_rate [i];
 	} else {
 
 		/* Does the camera allow us to set the bit rate to the 
 		 * given one?
 		 */
-		speed = camera->port->speed;
+		speed = camera->port_info->speed;
 		if (    ((speed ==    300) && (!bit_rate_supported[0])) ||
 			((speed ==    600) && (!bit_rate_supported[1])) ||
 			((speed ==   1200) && (!bit_rate_supported[2])) ||
@@ -340,17 +340,20 @@ init_serial_connection (Camera *camera, gp_port *device)
 
 	/* Request the new speed */
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Setting speed to "
-			 "%i...\n", camera->port->speed);
-	CHECK (k_set_io_capability (device, camera->port->speed, TRUE, FALSE,
-			            FALSE, FALSE, FALSE)); 
+			 "%i...\n", camera->port_info->speed);
+	CHECK (k_set_io_capability (camera->port, camera->port_info->speed,
+				    TRUE, FALSE, FALSE, FALSE, FALSE)); 
 	
 	/* Disconnect */
-	CHECK (k_exit (device));
+	CHECK (k_exit (camera->port));
 	
 	/* Reconnect */
-	settings.serial.speed = camera->port->speed;
-	CHECK (gp_port_settings_set (device, settings));
-	CHECK (k_init (device));
+	settings.serial.speed = camera->port_info->speed;
+	CHECK (gp_port_settings_set (camera->port, settings));
+	CHECK (k_init (camera->port));
+
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** EXIT: "
+			 "init_serial_connection ***");
 	
 	return (GP_OK);
 }
@@ -385,7 +388,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 			protected = FALSE;
 		else
 			protected = TRUE;
-		CHECK (k_set_protect_status (kd->device, kd->image_id_long,
+		CHECK (k_set_protect_status (camera->port, kd->image_id_long,
 					     image_id, protected));
 	}
 
@@ -404,11 +407,11 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	guchar *information_buffer = NULL;
 	gboolean protected;
 
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering get_info_func "
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: get_info_func "
 						 "***");
 
-	CHECK (k_get_image_information (kd->device, kd->image_id_long, 
-			gp_filesystem_number (kd->filesystem, folder, file), 
+	CHECK (k_get_image_information (camera->port, kd->image_id_long, 
+			gp_filesystem_number (camera->fs, folder, file), 
 			&image_id, &exif_size, &protected,
 			&information_buffer, &information_buffer_size));
 	g_free (information_buffer);
@@ -436,7 +439,6 @@ camera_init (Camera* camera)
 	gint vendor, product, inep, outep;
 	KonicaData *kd;
 	gp_port_settings settings;
-	gp_port *device;
 
 	g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
 
@@ -445,15 +447,11 @@ camera_init (Camera* camera)
 	camera->functions->abilities 		= camera_abilities;
 	camera->functions->init 		= camera_init;
 	camera->functions->exit 		= camera_exit;
-	camera->functions->folder_list_folders 	= camera_folder_list_folders;
-	camera->functions->folder_list_files   	= camera_folder_list_files;
         camera->functions->folder_get_config	= camera_folder_get_config;
 	camera->functions->folder_set_config	= camera_folder_set_config;
 	camera->functions->folder_delete_all    = camera_folder_delete_all;
         camera->functions->file_get 		= camera_file_get;
 	camera->functions->file_delete 		= camera_file_delete;
-	camera->functions->file_get_info	= camera_file_get_info;
-	camera->functions->file_set_info	= camera_file_set_info;
 	camera->functions->get_config		= camera_get_config;
 	camera->functions->set_config		= camera_set_config;
 	camera->functions->capture		= camera_capture;
@@ -479,27 +477,21 @@ camera_init (Camera* camera)
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
 
-		/* Create port */
-		CHECK (gp_port_new (&device, GP_PORT_SERIAL));
-		
 		/* Set up the device */
-		strcpy (settings.serial.port, camera->port->path);
+		strcpy (settings.serial.port, camera->port_info->path);
 		settings.serial.bits = 8;
 		settings.serial.parity = 0;
 		settings.serial.stopbits = 1;
-		CHECK_FREE (gp_port_settings_set (device, settings), device);
+		CHECK (gp_port_settings_set (camera->port, settings));
 
 		/* Initiate the serial connection */
-		CHECK_FREE (init_serial_connection (camera, device), device);
+		CHECK (init_serial_connection (camera));
 
 		break;
 	case GP_PORT_USB:
 
-		/* Create device */
-		CHECK (gp_port_new (&device, GP_PORT_USB));
-
 		/* Find the camera */
-		CHECK_FREE (gp_port_usb_find_device (device, vendor, product), device);
+		CHECK (gp_port_usb_find_device (camera->port, vendor, product));
 
 		/* Set up the device */
 		settings.usb.inep      = inep;
@@ -507,10 +499,10 @@ camera_init (Camera* camera)
 		settings.usb.config    = 1;
 		settings.usb.interface = 0;
 		settings.usb.altsetting = 0;
-		CHECK_FREE (gp_port_settings_set (device, settings), device);
+		CHECK (gp_port_settings_set (camera->port, settings));
 
 		/* Initiate the connection */
-		CHECK_FREE (k_init (device), device);
+		CHECK (k_init (camera->port));
 
 		break;
 	default:
@@ -520,19 +512,19 @@ camera_init (Camera* camera)
 	/* Store some data we constantly need. */
 	kd = g_new (KonicaData, 1);
 	camera->camlib_data = kd;
+	kd->image_id_long = image_id_long;
 
-	gp_filesystem_new (&kd->filesystem);
-	gp_filesystem_set_info_funcs (kd->filesystem, get_info_func,
+	/* Set up the filesystem */
+	gp_filesystem_set_info_funcs (camera->fs, get_info_func,
 				      set_info_func, camera);
-	gp_filesystem_set_list_funcs (kd->filesystem, file_list_func,
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
 				      NULL, camera);
 
-	kd->device = device;
-	kd->image_id_long = image_id_long;
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** EXIT: "
+			 "camera_init ***");
 
 	return (GP_OK);
 }
-
 
 gint
 camera_exit (Camera* camera)
@@ -545,30 +537,11 @@ camera_exit (Camera* camera)
 	if (!konica_data)
 		return (GP_OK);
 	
-	if (konica_data->device) {
-		CHECK (k_exit (konica_data->device));
-		CHECK (gp_port_free (konica_data->device));
-		konica_data->device = NULL;
-	}
-	if (konica_data->filesystem) {
-		CHECK (gp_filesystem_free (konica_data->filesystem));
-		konica_data->filesystem = NULL;
-	}
+	CHECK (k_exit (camera->port));
+	free (konica_data);
+	camera->camlib_data = NULL;
 
 	return (GP_OK);
-}
-
-
-gint
-camera_folder_list_folders (Camera* camera, const gchar* folder, CameraList* list)
-{
-	KonicaData*  kd;
-
-	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-
-	kd = (KonicaData *) camera->camlib_data;
-	
-	return (gp_filesystem_list_folders (kd->filesystem, folder, list));
 }
 
 gint
@@ -585,7 +558,7 @@ camera_folder_delete_all (Camera* camera, const gchar* folder)
 
 	if (strcmp (folder, "/")) return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
-	if ((result = k_erase_all (konica_data->device, &not_erased)) != GP_OK) return (result);
+	if ((result = k_erase_all (camera->port, &not_erased)) != GP_OK) return (result);
 	if (not_erased) {
 		tmp = g_strdup_printf (_("%i pictures could not be deleted - they are protected!"), not_erased);
 		gp_frontend_message (camera, tmp);
@@ -595,20 +568,6 @@ camera_folder_delete_all (Camera* camera, const gchar* folder)
 
 	return (GP_OK);
 }
-
-
-gint 
-camera_folder_list_files (Camera* camera, const gchar* folder, CameraList* list)
-{
-	KonicaData*	kd;
-
-	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-	
-	kd = (KonicaData *) camera->camlib_data;
-
-	return (gp_filesystem_list_files (kd->filesystem, folder, list));
-}
-
 
 int 
 camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
@@ -641,12 +600,12 @@ camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
 	/* Get the image. */
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
-		CHECK (k_get_image (kd->device, kd->image_id_long, image_id,
+		CHECK (k_get_image (camera->port, kd->image_id_long, image_id,
 				    K_THUMBNAIL, (guchar **) &data,
 				    (guint *) &size));
 		break;
 	case GP_FILE_TYPE_NORMAL:
-		CHECK (k_get_image (kd->device, kd->image_id_long, image_id,
+		CHECK (k_get_image (camera->port, kd->image_id_long, image_id,
 				    K_IMAGE_EXIF, (guchar **) &data,
 				    (guint *) &size));
 		break;
@@ -684,8 +643,8 @@ camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 	image_id = atol (tmp);
 	g_free (tmp);
 	
-	CHECK (k_erase_image (kd->device, kd->image_id_long, image_id));
-	CHECK (gp_filesystem_delete (kd->filesystem, folder, filename));
+	CHECK (k_erase_image (camera->port, kd->image_id_long, image_id));
+	CHECK (gp_filesystem_delete (camera->fs, folder, filename));
 
 	return (GP_OK);
 }
@@ -706,11 +665,10 @@ camera_summary (Camera* camera, CameraText* summary)
 	gchar*		manufacturer = NULL;
         KonicaData*	kd;
 
-        g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (summary, 	GP_ERROR_BAD_PARAMETERS);
-
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: camera_summary "
+			 "***");
         kd = (KonicaData *) camera->camlib_data;
-	CHECK (k_get_information (kd->device, &model, &serial_number, 
+	CHECK (k_get_information (camera->port, &model, &serial_number, 
 		&hardware_version_major, &hardware_version_minor, 
 		&software_version_major, &software_version_minor, 
 		&testing_software_version_major,
@@ -735,11 +693,10 @@ camera_summary (Camera* camera, CameraText* summary)
 gint
 camera_capture_preview (Camera* camera, CameraFile* file)
 {
-	KonicaData *kd = camera->camlib_data;
 	unsigned char *data = NULL;
 	long int size;
 
-	CHECK (k_get_preview (kd->device, TRUE, &data, (guint*) &size));
+	CHECK (k_get_preview (camera->port, TRUE, &data, (guint*) &size));
 	CHECK (gp_file_set_data_and_size (file, data, size));
 	CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
@@ -765,7 +722,7 @@ camera_capture (Camera* camera, gint type, CameraFilePath* path)
         kd = (KonicaData *) camera->camlib_data;
 
 	/* Take the picture. */
-	CHECK (k_take_picture (kd->device, kd->image_id_long, &image_id, 
+	CHECK (k_take_picture (camera->port, kd->image_id_long, &image_id, 
 		&exif_size, &information_buffer, &information_buffer_size, 
 		&protected));
 	
@@ -775,7 +732,7 @@ camera_capture (Camera* camera, gint type, CameraFilePath* path)
 	g_free (tmp);
 	strcpy (path->folder, "/");
 
-	CHECK (gp_filesystem_append (kd->filesystem, path->folder, path->name));
+	CHECK (gp_filesystem_append (camera->fs, path->folder, path->name));
 
 	gp_debug_printf (GP_DEBUG_LOW, "konica",
 			 "*** filename: %s", path->name);
@@ -806,24 +763,6 @@ camera_about (Camera* camera, CameraText* about)
 		"Support for all Konica and several HP cameras."));
 
 	return (GP_OK);
-}
-
-gint
-camera_file_get_info (Camera* camera, const gchar* folder, const gchar* file,
-		      CameraFileInfo* info)
-{
-	KonicaData *kd = camera->camlib_data;
-
-	return (gp_filesystem_get_info (kd->filesystem, folder, file, info));
-}
-
-gint
-camera_file_set_info (Camera* camera, const gchar* folder, const gchar* file,
-		      CameraFileInfo* info)
-{
-	KonicaData *kd = camera->camlib_data;
-
-	return (gp_filesystem_set_info (kd->filesystem, folder, file, info));
 }
 
 int
@@ -892,12 +831,12 @@ camera_get_config (Camera* camera, CameraWidget** window)
 
 	/* Get the current settings. */
 	kd = (KonicaData *) camera->camlib_data;
-	CHECK (k_get_status (kd->device, &self_test_result, &power_level,
+	CHECK (k_get_status (camera->port, &self_test_result, &power_level,
                 &power_source, &card_status, &display, &card_size, &pictures,
                 &pictures_left, &year, &month, &day, &hour, &minute, &second,
                 &io_setting_bit_rate, &io_setting_flags, &flash, &resolution,
                 &focus_self_timer, &exposure, &total_pictures, &total_strobes));
-	CHECK (k_get_preferences (kd->device, &shutoff_time, &self_timer_time,
+	CHECK (k_get_preferences (camera->port, &shutoff_time, &self_timer_time,
                 &beep, &slide_show_interval));
 
 	/* Create the window. */
@@ -1115,7 +1054,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &i);
 		tm_struct = localtime ((time_t*) &i);
-		CHECK (k_set_date_and_time (kd->device, 
+		CHECK (k_set_date_and_time (camera->port, 
 			tm_struct->tm_year - 100, tm_struct->tm_mon, 
 			tm_struct->tm_mday, tm_struct->tm_hour, 
 			tm_struct->tm_min, tm_struct->tm_sec));
@@ -1129,14 +1068,14 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 		else if (strcmp (c, _("On")) == 0) beep = 1;
 		else g_warning (_("Value '%s' invalid. Valid values are 'Off' "
 				  "and 'On'."), c);
-		CHECK (k_set_preference (kd->device, K_PREFERENCE_BEEP, beep));
+		CHECK (k_set_preference (camera->port, K_PREFERENCE_BEEP, beep));
 	}
 
 	/* Self Timer Time */
 	gp_widget_get_child_by_label (section, _("Self Timer Time"), &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &f);
-		CHECK (k_set_preference (kd->device,
+		CHECK (k_set_preference (camera->port,
 			K_PREFERENCE_SELF_TIMER_TIME, (gint) f));
 	}
 
@@ -1144,7 +1083,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	gp_widget_get_child_by_label (section, _("Auto Off Time"), &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &f);
-		CHECK (k_set_preference (kd->device,
+		CHECK (k_set_preference (camera->port,
 					K_PREFERENCE_AUTO_OFF_TIME, (gint) f));
 	}
 
@@ -1152,7 +1091,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	gp_widget_get_child_by_label (section, _("Slide Show Interval"), &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &f);
-		CHECK (k_set_preference (kd->device,
+		CHECK (k_set_preference (camera->port,
 				K_PREFERENCE_SLIDE_SHOW_INTERVAL, (gint) f));
 	}
 
@@ -1166,7 +1105,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 			j = 3;
                 else
 			j = 0;
-        	CHECK (k_set_preference (kd->device,
+        	CHECK (k_set_preference (camera->port,
 					K_PREFERENCE_RESOLUTION, j));
 	}
 
@@ -1190,7 +1129,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 			}
 	
 			/* Go! */
-			result = k_localization_data_put (kd->device, data, data_size);
+			result = k_localization_data_put (camera->port, data, data_size);
 			g_free (data);
 			CHECK (result);
 		}
@@ -1208,7 +1147,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 			tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
 		else 
 			g_assert_not_reached ();
-		CHECK (k_localization_tv_output_format_set (kd->device,
+		CHECK (k_localization_tv_output_format_set (camera->port,
 					tv_output_format));
 	}
 
@@ -1224,7 +1163,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 			date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
 		else 
 			g_assert_not_reached ();
-		CHECK (k_localization_date_format_set (kd->device,date_format));
+		CHECK (k_localization_date_format_set (camera->port,date_format));
 	}
 
         /********************************/
@@ -1248,14 +1187,14 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 			j = 6;
 		else 
 			g_warning (_("Value '%s' invalid. Valid values are 'On', 'Off', 'On, red-eye reduction', 'Auto' and 'Auto, red-eye reduction'."), c);
-		CHECK (k_set_preference (kd->device, K_PREFERENCE_FLASH, j));
+		CHECK (k_set_preference (camera->port, K_PREFERENCE_FLASH, j));
 	}
 
 	/* Exposure */
 	gp_widget_get_child_by_label (section, _("Exposure"), &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &f);
-		CHECK (k_set_preference (kd->device,
+		CHECK (k_set_preference (camera->port,
 					K_PREFERENCE_EXPOSURE, (gint) f));
 	}
 
@@ -1283,7 +1222,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 		else if (!strcmp (c, _("Normal")));
 		else 
 			g_warning (_("Value '%s' invalid. Valid values are 'Self Timer (only next picture)' and 'Normal'"), c);
-		CHECK (k_set_preference (kd->device,
+		CHECK (k_set_preference (camera->port,
 			K_PREFERENCE_FOCUS_SELF_TIMER, focus_self_timer));
 	}
 

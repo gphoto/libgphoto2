@@ -28,6 +28,7 @@ typedef struct _Camera Camera;
 #include <gphoto2-widget.h>
 #include <gphoto2-list.h>
 #include <gphoto2-file.h>
+#include <gphoto2-filesys.h>
 #include <gphoto2-abilities.h>
 #include <gphoto2-abilities-list.h>
 #include <gphoto2-result.h>
@@ -40,38 +41,6 @@ typedef struct {
 	char name [128];
 	char folder [1024];
 } CameraFilePath;
-
-typedef enum {
-	GP_FILE_INFO_NONE            = 0,
-	GP_FILE_INFO_TYPE            = 1 << 0,
-	GP_FILE_INFO_NAME            = 1 << 1,
-	GP_FILE_INFO_SIZE            = 1 << 2,
-	GP_FILE_INFO_WIDTH           = 1 << 3,
-	GP_FILE_INFO_HEIGHT          = 1 << 4,
-	GP_FILE_INFO_PERMISSIONS     = 1 << 5,
-	GP_FILE_INFO_ALL             = 0xFF
-} CameraFileInfoFields;
-
-typedef enum {
-	GP_FILE_PERM_NONE       = 0,
-	GP_FILE_PERM_READ       = 1 << 0,
-	GP_FILE_PERM_DELETE     = 1 << 1,
-	GP_FILE_PERM_ALL        = 0xFF
-} CameraFilePermissions;
-
-typedef struct {
-	CameraFileInfoFields fields;
-	char type [64];
-	CameraFilePermissions permissions; /* Don't use with preview */
-	char name [64];
-	int size;
-	int width, height;
-} CameraFileInfoStruct;
-
-typedef struct {
-	CameraFileInfoStruct    preview;
-	CameraFileInfoStruct    file;
-} CameraFileInfo;
 
 typedef int (*c_id)                     (CameraText *);
 typedef int (*c_abilities)              (CameraAbilitiesList *);
@@ -138,12 +107,13 @@ typedef struct {
 	c_result_as_string      result_as_string;
 } CameraFunctions;
 
+typedef gp_port      CameraPort;
 typedef gp_port_info CameraPortInfo;
 
 struct _Camera {
 	char            model[128];
 
-	CameraPortInfo  *port;
+	CameraPortInfo  *port_info;
 	
 	int             ref_count;
 	
@@ -154,6 +124,9 @@ struct _Camera {
 
 	void            *camlib_data;
 	void            *frontend_data;
+
+	CameraPort       *port;
+	CameraFilesystem *fs;
 
 	int             session;
 };
@@ -166,6 +139,9 @@ int gp_camera_set_port_name     (Camera *camera, const char *port_name);
 int gp_camera_get_port_name     (Camera *camera, const char **port_name);
 int gp_camera_set_port_path     (Camera *camera, const char *port_path);
 int gp_camera_get_port_path     (Camera *camera, const char **port_path);
+
+/* Don't use */
+int gp_camera_set_port_speed    (Camera *camera, int speed);
 
 /************************************************************************
  * Part I:                                                              *

@@ -44,12 +44,17 @@
 
 static int glob_session_camera = 0;
 
-#define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
-#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+#define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
+#define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
+#define CHECK_OPEN(c)              {gp_port_open ((c)->port);}
+#define CHECK_CLOSE(c)             {gp_port_close ((c)->port);}
+#define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); return (r);}; CHECK_CLOSE (c);}
 
 int
 gp_camera_new (Camera **camera)
 {
+	int result;
+
 	CHECK_NULL (camera);
 
 	/* Be nice to frontend-writers... */
@@ -61,14 +66,17 @@ gp_camera_new (Camera **camera)
 		return (GP_ERROR_NO_MEMORY);
 
         /* Initialize the members */
-        (*camera)->port = malloc (sizeof(CameraPortInfo));
-	if (!(*camera)->port) {
+        (*camera)->port_info = malloc (sizeof(CameraPortInfo));
+	if (!(*camera)->port_info) {
 		free (*camera);
 		return (GP_ERROR_NO_MEMORY);
 	}
-	(*camera)->port->type = GP_PORT_NONE;
-	strcpy ((*camera)->port->path, "");
-	(*camera)->port->speed = 0;
+
+	(*camera)->port_info->type = GP_PORT_NONE;
+	strcpy ((*camera)->port_info->path, "");
+	strcpy ((*camera)->port_info->name, "");
+	(*camera)->port_info->speed = 0;
+
         (*camera)->abilities = malloc(sizeof(CameraAbilities));
 	if (!(*camera)->abilities) {
 		free ((*camera)->port);
@@ -87,6 +95,18 @@ gp_camera_new (Camera **camera)
         (*camera)->frontend_data   = NULL;
 	(*camera)->session    = glob_session_camera++;
         (*camera)->ref_count  = 1;
+
+	(*camera)->port = NULL;
+
+	/* Create the filesystem */
+	result = gp_filesystem_new (&(*camera)->fs);
+	if (result != GP_OK) {
+		free ((*camera)->functions);
+		free ((*camera)->port);
+		free ((*camera)->abilities);
+		free (*camera);
+		return (result);
+	}
 
 	/* Initialize function pointers to NULL.*/
 	memset((*camera)->functions, 0, sizeof (CameraFunctions));
@@ -114,6 +134,26 @@ gp_camera_get_model (Camera *camera, const char **model)
 	return (GP_OK);
 }
 
+static int
+gp_camera_set_port (Camera *camera, CameraPortInfo *info)
+{
+	CHECK_NULL (camera);
+
+	/*
+	 * We need to create a new port because the port could have 
+	 * changed from a SERIAL to an USB one...
+	 */
+	if (camera->port) {
+		CHECK_RESULT (gp_port_free (camera->port));
+		camera->port = NULL;
+	}
+
+	CHECK_RESULT (gp_port_new (&camera->port, info->type));
+	memcpy (camera->port_info, info, sizeof (CameraPortInfo));
+
+	return (GP_OK);
+}
+
 int
 gp_camera_set_port_path (Camera *camera, const char *port_path)
 {
@@ -125,13 +165,8 @@ gp_camera_set_port_path (Camera *camera, const char *port_path)
 	CHECK_RESULT (count = gp_port_count_get ());
 	for (x = 0; x < count; x++)
 		if ((gp_port_info_get (x, &info) == GP_OK) &&
-		    (!strcmp (port_path, info.path))) {
-			strncpy (camera->port->path, info.path,
-				 sizeof (camera->port->path));
-			strncpy (camera->port->name, info.name,
-				 sizeof (camera->port->name));
-			return (GP_OK);
-		}
+		    (!strcmp (port_path, info.path)))
+			return (gp_camera_set_port (camera, &info));
 
 	return (GP_ERROR_IO_UNKNOWN_PORT); 
 }
@@ -141,7 +176,7 @@ gp_camera_get_port_path (Camera *camera, const char **port_path)
 {
 	CHECK_NULL (camera && port_path);
 
-	*port_path = camera->port->path;
+	*port_path = camera->port_info->path;
 
 	return (GP_OK);
 }
@@ -157,14 +192,9 @@ gp_camera_set_port_name (Camera *camera, const char *port_name)
 	CHECK_RESULT (count = gp_port_count_get ());
 	for (x = 0; x < count; x++)
 		if ((gp_port_info_get (x, &info) == GP_OK) &&
-		    (!strcmp (port_name, info.name))) {
-			strncpy (camera->port->path, info.path,
-				 sizeof (camera->port->path));
-			strncpy (camera->port->name, info.name,
-				 sizeof (camera->port->name));
-			return (GP_OK);
-		}
-	
+		    (!strcmp (port_name, info.name)))
+			return (gp_camera_set_port (camera, &info));
+
 	return (GP_ERROR_IO_UNKNOWN_PORT);
 }
 
@@ -173,7 +203,17 @@ gp_camera_get_port_name (Camera *camera, const char **port_name)
 {
 	CHECK_NULL (camera && port_name);
 
-	*port_name = camera->port->name;
+	*port_name = camera->port_info->name;
+
+	return (GP_OK);
+}
+
+int
+gp_camera_set_port_speed (Camera *camera, int speed)
+{
+	CHECK_NULL (camera);
+
+	camera->port_info->speed = speed;
 
 	return (GP_OK);
 }
@@ -214,7 +254,9 @@ gp_camera_exit (Camera *camera)
 	if (camera->functions->exit == NULL)
 		return (GP_ERROR_NOT_SUPPORTED);
 
+	CHECK_OPEN (camera);
 	ret = camera->functions->exit (camera);
+	CHECK_CLOSE (camera);
 
 	GP_SYSTEM_DLCLOSE (camera->library_handle);
 
@@ -227,14 +269,16 @@ gp_camera_free (Camera *camera)
 	CHECK_NULL (camera);
 
 	gp_camera_exit (camera);
+	gp_port_free (camera->port);
+	gp_filesystem_free (camera->fs);
 
-        if (camera->port)
-                free (camera->port);
+        if (camera->port_info)
+                free (camera->port_info);
         if (camera->abilities) 
                 free (camera->abilities);
         if (camera->functions) 
                 free (camera->functions);
-        
+ 
 	free (camera);
         return (GP_OK);
 }
@@ -242,50 +286,20 @@ gp_camera_free (Camera *camera)
 int
 gp_camera_init (Camera *camera)
 {
+	int result;
         CameraList list;
 	const char *model, *port;
 
 	CHECK_NULL (camera);
 
-	/* Beware of 'Directory Browse'... */
-	if (strcmp (camera->model, "Directory Browse") != 0) {
-
-		/* Set the port's path if only the name has been indicated. */
-		if ((strcmp (camera->port->path, "") == 0) && 
-		    (strcmp (camera->port->name, "") != 0))
-			CHECK_RESULT (gp_camera_set_port_name (camera, 
-						camera->port->name));
-	
-		/* If the port hasn't been indicated, try to figure it 	*/
-		/* out (USB only). 					*/
-		if (strcmp (camera->port->path, "") == 0) {
-			
-			/* Call auto-detect */
-			CHECK_RESULT (gp_autodetect (&list));
-
-			/* Retrieve the first auto-detected camera */
-			CHECK_RESULT (gp_list_get_name  (&list, 0, &model));
-			CHECK_RESULT (gp_camera_set_model (camera, model));
-			CHECK_RESULT (gp_list_get_value (&list, 0, &port));
-			CHECK_RESULT (gp_camera_set_port_path (camera, port));
-		}
-	
-	        /* Set the port type from the path in case the 	*/
-		/* frontend didn't. 				*/
-	        if (camera->port->type == GP_PORT_NONE) {
-			if (!strncmp (camera->port->path, "serial", 6))
-				camera->port->type = GP_PORT_SERIAL;
-			else if (!strncmp (camera->port->path, "usb", 3))
-				camera->port->type = GP_PORT_USB;
-		}
-		if (camera->port->type == GP_PORT_NONE)
-			return (GP_ERROR_IO_UNKNOWN_PORT);
-	}
+	/*
+	 * If the port or the model hasn't been indicated, try to
+	 * figure it out (USB only). Beware of "Directory Browse".
+	 */
+	if (strcmp (camera->model, "Directory Browse") && 
+	    (!strcmp (camera->port_info->path, "") ||
+	     !strcmp (camera->model, ""))) {
 		
-	/* If the model hasn't been indicated, try to figure it out 	*/
-	/* through probing. 						*/
-	if (!strcmp (camera->model, "")) {
-
 		/* Call auto-detect */
 		CHECK_RESULT (gp_autodetect (&list));
 
@@ -294,6 +308,10 @@ gp_camera_init (Camera *camera)
 		CHECK_RESULT (gp_camera_set_model (camera, model));
 		CHECK_RESULT (gp_list_get_value (&list, 0, &port));
 		CHECK_RESULT (gp_camera_set_port_path (camera, port));
+
+		/* If we don't have a port at this point, return error */
+		if (!strcmp (camera->port_info->path, ""))
+			return (GP_ERROR_IO_UNKNOWN_PORT);
 	}
 
 	/* Fill in camera abilities. */
@@ -315,7 +333,17 @@ gp_camera_init (Camera *camera)
 	camera->functions->init = GP_SYSTEM_DLSYM (camera->library_handle,
 						   "camera_init");
 
-        return (camera->functions->init (camera));
+	/*
+	 * Don't open the port here - this has to be done by the
+	 * camera library.
+	 *
+	 * Ok, we are nice to camera driver writers - close the port, but
+	 * ignore errors.
+	 */
+	result = camera->functions->init (camera);
+	gp_port_close (camera->port);
+
+	return (result);
 }
 
 int
@@ -334,7 +362,10 @@ gp_camera_get_config (Camera *camera, CameraWidget **window)
         if (camera->functions->get_config == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->get_config (camera, window));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->get_config (camera,
+								   window));
+
+	return (GP_OK);
 }
 
 int
@@ -345,7 +376,10 @@ gp_camera_set_config (Camera *camera, CameraWidget *window)
         if (camera->functions->set_config == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->set_config (camera, window));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->set_config (camera,
+								   window));
+
+	return (GP_OK);
 }
 
 int
@@ -356,7 +390,10 @@ gp_camera_get_summary (Camera *camera, CameraText *summary)
         if (camera->functions->summary == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->summary (camera, summary));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->summary (camera,
+								summary));
+
+	return (GP_OK);
 }
 
 int
@@ -367,7 +404,10 @@ gp_camera_get_manual (Camera *camera, CameraText *manual)
         if (camera->functions->manual == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->manual (camera, manual));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->manual (camera,
+								    manual));
+
+	return (GP_OK);
 }
 
 int
@@ -378,7 +418,10 @@ gp_camera_get_about (Camera *camera, CameraText *about)
         if (camera->functions->about == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->about (camera, about));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->about (camera,
+								   about));
+
+	return (GP_OK);
 }
 
 int
@@ -390,7 +433,10 @@ gp_camera_capture (Camera *camera, int capture_type,
         if (camera->functions->capture == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->capture(camera, capture_type, path));
+        CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->capture (camera,
+							capture_type, path));
+
+	return (GP_OK);
 }
 
 int
@@ -401,7 +447,10 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file)
         if (camera->functions->capture_preview == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->capture_preview(camera, file));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->capture_preview (
+								camera, file));
+
+	return (GP_OK);
 }
 
 char *
@@ -421,16 +470,24 @@ int
 gp_camera_folder_list_files (Camera *camera, const char *folder, 
 			     CameraList *list)
 {
+	int result;
 	CHECK_NULL (camera && folder && list);
 
-	if (camera->functions->folder_list_files == NULL)
+	/* Check first if the camera driver uses the filesystem */
+	CHECK_OPEN (camera);
+	result = gp_filesystem_list_files (camera->fs, folder, list);
+	CHECK_CLOSE (camera);
+	if (result != GP_ERROR_NOT_SUPPORTED)
+		return (result);
+
+	if (!camera->functions->folder_list_files)
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting file list for "
 			 "folder '%s'...", folder);
 	list->count = 0;
-	CHECK_RESULT (camera->functions->folder_list_files (camera, folder,
-							    list));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_list_files (
+							camera, folder, list));
 	CHECK_RESULT (gp_list_sort (list));
 
         return (GP_OK);
@@ -440,16 +497,27 @@ int
 gp_camera_folder_list_folders (Camera *camera, const char* folder, 
 			       CameraList *list)
 {
+	int result;
+
 	CHECK_NULL (camera && folder && list);
 
-	if (camera->functions->folder_list_folders == NULL)
+	/* Check first if the camera driver uses the filesystem */
+	CHECK_OPEN (camera);
+	result = gp_filesystem_list_folders (camera->fs, folder, list);
+	CHECK_CLOSE (camera);
+	if (result != GP_ERROR_NOT_SUPPORTED)
+		return (result);
+
+	if (!camera->functions->folder_list_folders)
 		return (GP_ERROR_NOT_SUPPORTED);
-	
+
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting folder list for "
 			 "folder '%s'...", folder);
 	list->count = 0;
-	CHECK_RESULT (camera->functions->folder_list_folders (camera, folder,
-							      list));
+
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_list_folders(
+						camera, folder, list));
+
 	CHECK_RESULT (gp_list_sort (list));
 
         return (GP_OK);
@@ -477,6 +545,7 @@ delete_one_by_one (Camera *camera, const char *folder)
 int
 gp_camera_folder_delete_all (Camera *camera, const char *folder)
 {
+	int result;
 	CameraList list;
 
 	CHECK_NULL (camera && folder);
@@ -485,16 +554,24 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
 	 * As this function isn't supported by all cameras, we fall back to
 	 * deletion one by one.
 	 */
-        if (camera->functions->folder_delete_all == NULL)
-		return (delete_one_by_one (camera, folder));
+        if (!camera->functions->folder_delete_all) {
+		CHECK_RESULT_OPEN_CLOSE (camera, delete_one_by_one (camera,
+								    folder));
+		return (GP_OK);
+	}
 
-        if (camera->functions->folder_delete_all (camera, folder) != GP_OK)
-		return (delete_one_by_one (camera, folder));
+	CHECK_OPEN (camera);
+        result = camera->functions->folder_delete_all (camera, folder);
+	CHECK_CLOSE (camera);
+	if (result != GP_OK)
+		CHECK_RESULT_OPEN_CLOSE (camera, delete_one_by_one (camera,
+								    folder));
 
 	/* Sanity check: All pictures deleted? */
 	CHECK_RESULT (gp_camera_folder_list_files (camera, folder, &list));
 	if (gp_list_count (&list) > 0)
-		return (delete_one_by_one (camera, folder));
+		CHECK_RESULT_OPEN_CLOSE (camera, delete_one_by_one (camera,
+								    folder));
 
 	return (GP_OK);
 }
@@ -507,7 +584,10 @@ gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
         if (camera->functions->folder_put_file == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->folder_put_file (camera, folder, file));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_put_file (
+							camera, folder, file));
+
+	return (GP_OK);
 }
 
 int
@@ -519,7 +599,10 @@ gp_camera_folder_get_config (Camera *camera, const char *folder,
         if (camera->functions->folder_get_config == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->folder_get_config (camera, folder, window));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_get_config (
+						camera, folder, window));
+
+	return (GP_OK);
 }
 
 int
@@ -531,7 +614,10 @@ gp_camera_folder_set_config (Camera *camera, const char *folder,
         if (camera->functions->folder_set_config == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->folder_set_config (camera, folder, window));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_set_config (
+						camera, folder, window));
+
+	return (GP_OK);
 }
 
 int
@@ -547,8 +633,17 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 
 	memset (info, 0, sizeof (CameraFileInfo));
 
-	/* If the camera doesn't support file_info_get, we simply get	*/
-	/* the preview and the file and look for ourselves...		*/
+	/* Check first if the camera driver supports the filesystem */
+	CHECK_OPEN (camera);
+	result = gp_filesystem_get_info (camera->fs, folder, file, info);
+	CHECK_CLOSE (camera);
+	if (result != GP_ERROR_NOT_SUPPORTED)
+		return (result);
+
+	/*
+	 * If the camera doesn't support file_info_get, we simply get
+	 * the preview and the file and look for ourselves...
+	 */
 	if (!camera->functions->file_get_info) {
 		CameraFile *cfile;
 
@@ -558,6 +653,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 		/* Get the preview */
 		info->preview.fields = GP_FILE_INFO_NONE;
 		CHECK_RESULT (gp_file_new (&cfile));
+		CHECK_OPEN (camera);
 		if (gp_camera_file_get (camera, folder, file,
 					GP_FILE_TYPE_PREVIEW, cfile)== GP_OK) {
 			info->preview.fields |= GP_FILE_INFO_SIZE | 
@@ -568,29 +664,43 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 			strncpy (info->preview.type, mime_type,
 				 sizeof (info->preview.type));
 		}
+		CHECK_CLOSE (camera);
 		CHECK_RESULT (gp_file_unref (cfile));
 	} else
-		result = camera->functions->file_get_info (camera, folder,
-							   file, info);
+		CHECK_RESULT_OPEN_CLOSE (camera,
+				camera->functions->file_get_info (
+						camera, folder, file, info));
 
 	/* We don't trust the camera libraries */
 	info->file.fields |= GP_FILE_INFO_NAME;
 	strncpy (info->file.name, file, sizeof (info->file.name));
-	info->preview.fields &= ~GP_FILE_INFO_NAME; 
+	info->preview.fields &= ~GP_FILE_INFO_NAME;
 
-	return (result);
+	return (GP_OK);
 }
 
 int
 gp_camera_file_set_info (Camera *camera, const char *folder, 
 			 const char *file, CameraFileInfo *info)
 {
+	int result;
+
 	CHECK_NULL (camera && info && folder && file);
+
+	/* Check first if the camera driver supports the filesystem */
+	CHECK_OPEN (camera);
+	result = gp_filesystem_set_info (camera->fs, folder, file, info);
+	CHECK_CLOSE (camera);
+	if (result != GP_ERROR_NOT_SUPPORTED)
+		return (result);
 
 	if (camera->functions->file_set_info == NULL)
 		return (GP_ERROR_NOT_SUPPORTED);
-	
-	return (camera->functions->file_set_info (camera, folder, file, info));
+
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_set_info (
+						camera, folder, file, info));
+
+	return (GP_OK);
 }
 
 int 
@@ -610,8 +720,10 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 
 	CHECK_RESULT (gp_file_set_type (camera_file, type));
 
-        return (camera->functions->file_get (camera, folder, file, type,
-					     camera_file));
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_get (camera,
+					folder, file, type, camera_file));
+
+	return (GP_OK);
 }
 
 int
@@ -622,9 +734,11 @@ gp_camera_file_get_config (Camera *camera, const char *folder,
 
 	if (camera->functions->file_get_config == NULL)
 		return (GP_ERROR_NOT_SUPPORTED);
-		
-	return (camera->functions->file_get_config (camera, folder, file, 
-						    window));
+
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_get_config (
+						camera, folder, file, window));
+
+	return (GP_OK);
 }
 
 int
@@ -635,9 +749,11 @@ gp_camera_file_set_config (Camera *camera, const char *folder,
 
 	if (camera->functions->file_set_config == NULL)
 		return (GP_ERROR_NOT_SUPPORTED);
-	
-	return (camera->functions->file_set_config (camera, folder, 
-						    file, window));
+
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_set_config (
+					camera, folder, file, window));
+
+	return (GP_OK);
 }
 
 int
@@ -647,8 +763,11 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 
         if (camera->functions->file_delete == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
-		
-        return (camera->functions->file_delete (camera, folder, file));
+
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_delete (
+							camera, folder, file));
+
+	return (GP_OK);
 }
 
 

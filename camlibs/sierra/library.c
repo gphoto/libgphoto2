@@ -199,18 +199,18 @@ int sierra_write_packet (Camera *camera, char *packet)
 	}
 
 	/* USB */
-	if (fd->type == GP_PORT_USB) {
+	if (camera->port->type == GP_PORT_USB) {
 		if (fd->usb_wrap)
-			return (usb_wrap_write_packet (fd->dev, packet, 
+			return (usb_wrap_write_packet (camera->port, packet, 
 						       length));
 		else
-			return (gp_port_write (fd->dev, packet, length));
+			return (gp_port_write (camera->port, packet, length));
 	}
 
 	/* SERIAL */
 	for (r = 0; r < RETRIES; r++) {
 
-		ret = gp_port_write (fd->dev, packet, length);
+		ret = gp_port_write (camera->port, packet, length);
 		if (ret == GP_ERROR_IO_TIMEOUT)
 			continue;
 
@@ -258,7 +258,7 @@ int sierra_read_packet (Camera *camera, char *packet)
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_read_packet");
 
-	switch (fd->type) {
+	switch (camera->port->type) {
 	case GP_PORT_USB:
 		blocksize = 2054;
 		break;
@@ -285,15 +285,15 @@ int sierra_read_packet (Camera *camera, char *packet)
 
 		/* Clear the USB bus
 		   (what about the SERIAL bus : do we need to flush it?) */
-		if (fd->type == GP_PORT_USB && !fd->usb_wrap)
-			gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
+		if (camera->port->type == GP_PORT_USB && !fd->usb_wrap)
+			gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
 
 
 		/* Read data through the bus */
-		if (fd->type == GP_PORT_USB && fd->usb_wrap)
-			bytes_read = usb_wrap_read_packet (fd->dev, packet, blocksize);
+		if (camera->port->type == GP_PORT_USB && fd->usb_wrap)
+			bytes_read = usb_wrap_read_packet (camera->port, packet, blocksize);
 		else
-			bytes_read = gp_port_read (fd->dev, packet, blocksize);
+			bytes_read = gp_port_read (camera->port, packet, blocksize);
 		
 		gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* bytes_read: %d", bytes_read);
 		gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* packet[0] : %x",
@@ -322,8 +322,8 @@ int sierra_read_packet (Camera *camera, char *packet)
 
 			/* The data packet size is not known yet if the communication
 			   is performed through the serial bus : read it */
-			if (fd->type == GP_PORT_SERIAL) {
-				bytes_read = gp_port_read(fd->dev, packet+1, 3);
+			if (camera->port->type == GP_PORT_SERIAL) {
+				bytes_read = gp_port_read(camera->port, packet+1, 3);
 				if (bytes_read < 0) {
 					/* Maybe we should retry here? */
 					ret_status = GP_ERROR_IO;
@@ -343,7 +343,7 @@ int sierra_read_packet (Camera *camera, char *packet)
 			   or an IO error occured */
 			for (ret_status=GP_OK, y = bytes_read ; ret_status == GP_OK && y < length ; 
 			     y += blocksize) {
-				bytes_read = gp_port_read (fd->dev, &packet[y], blocksize);
+				bytes_read = gp_port_read (camera->port, &packet[y], blocksize);
 				if (bytes_read < 0)
 					ret_status = bytes_read;
 			}
@@ -358,8 +358,8 @@ int sierra_read_packet (Camera *camera, char *packet)
 		}
 	}
 
-	if (fd->type == GP_PORT_USB && !fd->usb_wrap)
-		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
+	if (camera->port->type == GP_PORT_USB && !fd->usb_wrap)
+		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
 
 	gp_debug_printf(GP_DEBUG_HIGH, "sierra", "* sierra_read_packet return '%s'",
 			gp_result_as_string(ret_status));
@@ -375,7 +375,7 @@ int sierra_build_packet (Camera *camera, char type, char subtype,
 	packet[0] = type;
 	switch (type) {
 	case TYPE_COMMAND:
-		if (fd->type == GP_PORT_USB)
+		if (camera->port->type == GP_PORT_USB)
 				/* USB cameras don't care about first packets */
 			fd->first_packet = 0;
 		if (fd->first_packet)
@@ -409,8 +409,8 @@ int sierra_write_ack (Camera *camera)
 	
 	buf[0] = ACK;
 	ret = sierra_write_packet (camera, buf);
-	if (fd->type == GP_PORT_USB && !fd->usb_wrap)
-		gp_port_usb_clear_halt (fd->dev, GP_PORT_USB_ENDPOINT_IN);
+	if (camera->port->type == GP_PORT_USB && !fd->usb_wrap)
+		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
 	return (ret);
 }
 
@@ -424,8 +424,8 @@ int sierra_write_nak (Camera *camera)
 
 	buf[0] = NAK;
 	ret = sierra_write_packet (camera, buf);
-	if (fd->type == GP_PORT_USB && !fd->usb_wrap)
-		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
+	if (camera->port->type == GP_PORT_USB && !fd->usb_wrap)
+		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
 	return (ret);
 }
 
@@ -433,11 +433,10 @@ int sierra_ping (Camera *camera)
 {
 	int ret, r = 0;
 	char buf[4096];
-	SierraData *fd = (SierraData *) camera->camlib_data;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_ping");
 
-	if (fd->type == GP_PORT_USB) {
+	if (camera->port->type == GP_PORT_USB) {
 		gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_ping no "
 				 "ping for USB");
 		return (GP_OK);
@@ -476,7 +475,7 @@ int sierra_set_speed (Camera *camera, int speed)
 
 	fd->first_packet = 1;
 
-	gp_port_settings_get (fd->dev, &settings);
+	gp_port_settings_get (camera->port, &settings);
 
 	switch (speed) {
 	case 9600:
@@ -511,7 +510,7 @@ int sierra_set_speed (Camera *camera, int speed)
 
 	CHECK (sierra_set_int_register (camera, 17, speed));
 
-	CHECK (gp_port_settings_set (fd->dev, settings));
+	CHECK (gp_port_settings_set (camera->port, settings));
 
 	GP_SYSTEM_SLEEP(10);
 	return GP_OK;

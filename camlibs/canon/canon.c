@@ -829,7 +829,7 @@ int camera_init(Camera *camera)
   
   fprintf(stderr,"canon_initialize()\n");
   
-  cs->speed = camera->port->speed;
+  cs->speed = camera->port_info->speed;
   /* Default speed */
   if (cs->speed == 0)
     cs->speed = 9600;
@@ -884,7 +884,7 @@ int camera_init(Camera *camera)
     gp_debug_printf(GP_DEBUG_LOW,"canon","Camera transmission speed : %i\n", cs->speed);
   
   
-  return canon_serial_init(camera,camera->port->path);
+  return canon_serial_init(camera,camera->port_info->path);
 }
 
 

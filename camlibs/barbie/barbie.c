@@ -90,7 +90,7 @@ int camera_init(Camera *camera) {
             return (ret);
         }
         gp_port_timeout_set(b->dev, 5000);
-        strcpy(settings.serial.port, camera->port->path);
+        strcpy(settings.serial.port, camera->port_info->path);
 
         settings.serial.speed   = 57600;
         settings.serial.bits    = 8;

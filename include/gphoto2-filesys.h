@@ -24,7 +24,38 @@
 #define __GPHOTO2_FILESYS_H__
 
 #include <gphoto2-list.h>
-#include <gphoto2-camera.h>
+
+typedef enum {
+	GP_FILE_INFO_NONE            = 0,
+	GP_FILE_INFO_TYPE            = 1 << 0,
+	GP_FILE_INFO_NAME            = 1 << 1,
+	GP_FILE_INFO_SIZE            = 1 << 2,
+	GP_FILE_INFO_WIDTH           = 1 << 3,
+	GP_FILE_INFO_HEIGHT          = 1 << 4,
+	GP_FILE_INFO_PERMISSIONS     = 1 << 5,
+	GP_FILE_INFO_ALL             = 0xFF
+} CameraFileInfoFields;
+
+typedef enum {
+	GP_FILE_PERM_NONE       = 0,
+	GP_FILE_PERM_READ       = 1 << 0,
+	GP_FILE_PERM_DELETE     = 1 << 1,
+	GP_FILE_PERM_ALL        = 0xFF
+} CameraFilePermissions;
+
+typedef struct {
+	CameraFileInfoFields fields;
+	char type [64];
+	CameraFilePermissions permissions; /* Don't use with preview */
+	char name [64];
+	int size;
+	int width, height;
+} CameraFileInfoStruct;
+
+typedef struct {
+	CameraFileInfoStruct    preview;
+	CameraFileInfoStruct    file;
+} CameraFileInfo;
 
 /* You don't really want to know what's inside, do you? */
 typedef struct _CameraFilesystem CameraFilesystem;
