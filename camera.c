@@ -280,6 +280,58 @@ int gp_camera_file_get_preview (Camera *camera, CameraFile *file,
         return (camera->functions->file_get_preview(camera, file, folder, filename));
 }
 
+int gp_camera_file_config_get (Camera *camera, CameraWidget **window,
+			char *folder, char *filename)
+{
+	if (camera->functions->file_config_get == NULL)
+		return (GP_ERROR_NOT_SUPPORTED);
+		
+	return (camera->functions->file_config_get (camera, window, folder, filename));
+}
+
+int gp_camera_file_config_set (Camera *camera, CameraWidget *window, 
+			char *folder, char *filename)
+{
+	if (camera->functions->file_config_set == NULL)
+		return (GP_ERROR_NOT_SUPPORTED);
+	
+	return (camera->functions->file_config_set (camera, window, folder, filename));
+}
+
+int gp_camera_folder_config_get (Camera *camera, CameraWidget **window,
+			char *folder)
+{
+	if (camera->functions->folder_config_get == NULL)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	return (camera->functions->folder_config_get (camera, window, folder));
+}
+
+int gp_camera_folder_config_set (Camera *camera, CameraWidget *window,
+			char *folder)
+{
+	if (camera->functions->folder_config_set == NULL)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	return (camera->functions->folder_config_set (camera, window, folder));
+}
+
+int gp_camera_config_get (Camera *camera, CameraWidget **window)
+{
+	if (camera->functions->config_get == NULL)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	return (camera->functions->config_get (camera, window));
+}
+
+int gp_camera_config_set (Camera *camera, CameraWidget *window)
+{
+	if (camera->functions->config_set == NULL)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	return (camera->functions->config_set (camera, window));
+}
+
 int gp_camera_file_put (Camera *camera, CameraFile *file, char *folder)
 {
         if (camera->functions->file_put == NULL)
