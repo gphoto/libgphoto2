@@ -2477,7 +2477,7 @@ msgstr "PTP Errur de protocole, réponse attendue"
 
 #: camlibs/ptp/library.c:502
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
-msgstr "Ecrit par Mariusz Woloszyn <emsi@ipartners.pl>."
+msgstr "Écrit par Mariusz Woloszyn <emsi@ipartners.pl>."
 
 #: camlibs/ptp/library.c:1034
 msgid "PTP is implemented for USB cameras only."
