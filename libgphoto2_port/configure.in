@@ -205,7 +205,7 @@ AC_SUBST(SERIAL_LDFLAGS)
 dnl ******
 dnl libusb
 dnl ******
-usb_msg=no
+usb_msg="no (required for USB cameras, http://sourceforge.net/projects/libusb/)"
 try_usb=true
 AC_ARG_WITH(usb, [  --without-usb           Don't compile in USB support],
 	if test x$withval = xno; then
@@ -218,7 +218,7 @@ if $try_usb; then
 		CPPFLAGS_save="$CPPFLAGS"
 		CPPFLAGS="$CPPFLAGS `libusb-config --cflags`"
 		AC_CHECK_HEADER(usb.h,
-			usb_msg=yes
+			usb_msg="yes"
 			IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
 			USB_LIBS="`libusb-config --libs`"
 			USB_CFLAGS="`libusb-config --cflags`"
@@ -231,7 +231,7 @@ if $try_usb; then
 	if test "$LIBUSB_VER" \< "0.1.5"; then
 		AC_MSG_WARN([
 *** You need at least version 0.1.5 of the libusb library for USB support
-*** http://libusb.sourceforge.net/
+*** http://sourceforge.net/projects/libusb/
 *** If you cannot find the appropriate version, try CVS
 	])
 	fi
@@ -278,7 +278,7 @@ m4/Makefile
 
 echo "
 
-Configuration
+Configuration (libgphoto2_port)
 
 	Source code location: ${srcdir}
 	Compiler:             ${CC}
