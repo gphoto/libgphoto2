@@ -1,5 +1,10 @@
 2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/canon.c: Don't use camera->model.
+	* libgphoto2/gphoto2-camera.[c,h]: Remove camera->model.
+
+2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/polaroid/pdc320.[c,h]: Don't use camera->model.
 
 2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
