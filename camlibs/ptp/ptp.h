@@ -170,10 +170,15 @@ struct _PTPDeviceInfo {
 	uint16_t VendorExtensionVersion;
 	char	*VendorExtensionDesc;
 	uint16_t FunctionalMode;
+	uint32_t OperationsSupported_len;
 	uint16_t *OperationsSupported;
+	uint32_t EventsSupported_len;
 	uint16_t *EventsSupported;
+	uint32_t DevicePropertiesSupported_len;
 	uint16_t *DevicePropertiesSupported;
+	uint32_t CaptureFormats_len;
 	uint16_t *CaptureFormats;
+	uint32_t ImageFormats_len;
 	uint16_t *ImageFormats;
 	char	*Manufacturer;
 	char	*Model;

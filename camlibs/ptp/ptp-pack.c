@@ -97,8 +97,7 @@ ptp_pack_string(PTPParams *params, char *string, PTPReq *req, uint16_t offset, u
 static inline uint32_t
 ptp_unpack_uint32_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint32_t *array)
 {
-	uint32_t n;
-	uint32_t i=0;
+	uint32_t n, i=0;
 
 	n=dtoh32a(&req->data[offset]);
 	while (n>i) {
@@ -108,13 +107,71 @@ ptp_unpack_uint32_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint3
 	return n;
 }
 
-// DevInfo pack/unpack
+static inline uint32_t
+ptp_unpack_uint16_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint16_t **array)
+{
+	uint32_t n, i=0;
+
+	n=dtoh32a(&req->data[offset]);
+	*array = malloc (n*sizeof(uint16_t));
+	while (n>i) {
+		(*array)[i]=dtoh16a(&req->data[offset+(sizeof(uint16_t)*(i+1))]);
+		i++;
+	}
+	return n;
+}
+
+// DeviceInfo pack/unpack
 
 #define PTP_di_StandardVersion		 0
 #define PTP_di_VendorExtensionID	 2
 #define PTP_di_VendorExtensionVersion	 6
 #define PTP_di_VendorExtensionDesc	 8
+#define PTP_di_FunctionalMode		 8
+#define PTP_di_OperationsSupported	10
 
+static inline void
+ptp_unpack_DI (PTPParams *params, PTPReq *req, PTPDeviceInfo *di)
+{
+	uint8_t len, totallen;
+
+	di->StaqndardVersion = dtoh16a(&req->data[PTP_di_StandardVersion]);
+	di->VendorExtensionID =
+		dtoh32a(&req->data[PTP_di_VendorExtensionID]);
+	di->VendorExtensionVersion =
+		dtoh16a(&req->data[PTP_di_VendorExtensionVersion]);
+	di->VendorExtensionDesc = 
+		ptp_unpack_string(params, req,
+		PTP_di_VendorExtensionDesc, &len); 
+	totallen=len*2+1;
+	di->FunctionalMode = 
+		dtoh16a(&req->data[PTP_di_FunctionalMode+totallen]);
+	di->OperationsSupported_len = ptp_unpack_uint16_t_array(params, req,
+		PTP_di_OperationsSupported+totallen,
+		&di->OperationsSupported);
+	totallen=totallen+di->OperationsSupported_len+sizeof(uint32_t);
+	di->EventsSupported_len = ptp_unpack_uint16_t_array(params, req,
+		PTP_di_OperationsSupported+totallen,
+		&di->EventsSupported);
+	totallen=totallen+di->EventsSupported_len+sizeof(uint32_t);
+	di->DevicePropertiesSupported_len =
+		ptp_unpack_uint16_t_array(params, req,
+		PTP_di_OperationsSupported+totallen,
+		&di->DevicePropertiesSupported);
+	totallen=totallen+di->DevicePropertiesSupported_len+sizeof(uint32_t);
+	di->CaptureFormats_len = ptp_unpack_uint16_t_array(params, req,
+		PTP_di_OperationsSupported+totallen,
+		&di->CaptureFormats);
+	totallen=totallen+di->CaptureFormats_len+sizeof(uint32_t);
+	di->ImageFormats_len = ptp_unpack_uint16_t_array(params, req,
+		PTP_di_OperationsSupported+totallen,
+		&di->ImageFormats);
+	totallen=totallen+di->ImageFormats_len+sizeof(uint32_t);
+	di->Manufacturer = ptp_unpack_string(params, req,
+		PTP_di_OperationsSupported+totallen,
+		&len);
+}
+	
 // ObjectHandles array pack/unpack
 
 #define PTP_oh				 0
