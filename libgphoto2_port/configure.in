@@ -285,17 +285,17 @@ echo "
 
 Configuration (libgphoto2_port)
 
-	Source code location: ${srcdir}
-	Compiler:             ${CC}
+	Source code location:    ${srcdir}
+	Compiler:                ${CC}
 
-	SERIAL support:       $serial_msg
+	SERIAL support:          $serial_msg
 
 	Locking mechanism (for serial ports):
-	Use baudboy:          $baudboy_msg
-	Use ttylock:          $ttylock_msg
-	Use lockdev:          $lockdev_msg
+	Use baudboy:             $baudboy_msg
+	Use ttylock:             $ttylock_msg
+	Use lockdev:             $lockdev_msg
 
-	USB support:          $usb_msg
+	USB support:             $usb_msg
 
-	Build documentation:  $gtkdoc_msg
+	Build API documentation: $gtkdoc_msg
 "

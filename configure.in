@@ -535,7 +535,8 @@ Configuration (libgphoto2):
 	Version:                   ${VERSION}
 	Compiler:                  ${CC}
 
-	Build documentation:       $gtkdoc_msg
+	Build API documentation:   $gtkdoc_msg
+	Build User's Manual:       $manual_msg
 	Config. support (gphoto2): $cdk_msg
 	Preview support (gphoto2): $aa_msg
 	JPEG support:              $jpeg_msg
