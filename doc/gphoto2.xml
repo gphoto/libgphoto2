@@ -79,19 +79,146 @@
     <para>This chapter assumes that somebody has set up your system
       correctly for use with 
       <systemitem class="library">libgphoto2</systemitem>. This is
-      something the packages from your system vendor (RPM packages,
-      DEB packages or BSD ports) and/or your system administrator
-      should already have done for you. If not, follow the
-      instructions in <xref linkend="setup"/> first.
+      something the packages from your system vendor
+      (<acronym>RPM</acronym> packages, <acronym>DEB</acronym>
+      packages or <acronym>BSD</acronym> ports) and/or your system
+      administrator should already have done for you. If not, follow
+      the instructions in the <xref linkend="setup"/> chapter first.
     </para>
 
-    <para>Currently, please take a look at the
-      <link linkend="cli-examples">command line examples</link> from
-      <xref linkend="gphoto2-cli"/> and the examples described on 
-      <ulink url="http://www.gphoto.org/">www.gphoto.org</ulink>.
-    </para>
-    
-    <para>FIXME: We will add more examples here in the future.</para>
+    <para>FIXME: We need examples using <acronym>RS232</acronym>
+      cameras, gtkam and the gphoto2 shell.</para>
+
+    <section>
+      <title>Using the <command>gphoto2</command> command line
+	interface (<acronym>CLI</acronym>)</title>
+
+      <para>
+	OK, we begin with finding out how you can connect a camera to
+	your computer:
+	<screen>
+<prompt>$uli@mir:~$ </prompt><command>gphoto2 <parameter>--list-ports</parameter></command>
+<computeroutput>Devices found: 4
+Path                             Description
+--------------------------------------------------------------
+serial:/dev/ttyS0                Serial Port 0                   
+serial:/dev/ttyS2                Serial Port 2                   
+serial:/dev/ttyS3                Serial Port 3                   
+usb:                             Universal Serial Bus	  </computeroutput>
+<prompt>uli@mir:~$ </prompt>
+	</screen>
+	In this example, we see that we have the three serial devices
+	<filename class="devicefile">/dev/ttyS0</filename>, 
+	<filename class="devicefile">/dev/ttyS2</filename> and
+	<filename class="devicefile">/dev/ttyS3</filename> which are
+	configured properly and to which <command>gphoto2</command> has
+	write permissions for.
+	Additionally, there is also a <acronym>USB</acronym>
+	bus. However, we cannot tell yet whether we will have write
+	access to the <acronym>USB</acronym> device file your camera
+	will be assigned from your operating system. 
+      </para>
+
+      <para>
+	The next step is to connect you camera and find out whether
+	<command>gphoto2</command> can find it. This may only work with
+	<acronym>USB</acronym>. (FIXME: can any of the people with
+	<acronym>RS232</acronym> cameras help me on this issue?)
+	<screen>
+<prompt>uli@mir:~$ </prompt><command>gphoto2 <parameter>--auto-detect</parameter></command>
+<computeroutput>Model                          Port                                             
+----------------------------------------------------------
+Canon PowerShot G2             usb:            </computeroutput>
+<prompt>uli@mir:~$ </prompt>
+	</screen>
+	In this case, a camera called "Canon PowerShot G2" is connected
+	to your system's <acronym>USB</acronym> bus.
+      </para>
+
+      <para>
+	OK, so now let's see what we can find out about the camera:
+	<screen>
+<prompt>uli@mir:~$ </prompt><command>gphoto2 <parameter>--summary</parameter></command>
+<computeroutput>Detected a 'Canon PowerShot G2'.                                                
+Camera Summary:
+
+Camera identification:
+  Model: Canon PowerShot G2
+  Owner: Hans Ulrich Niedermann
+
+Power status: on battery (power OK)
+
+Flash disk information:
+  Drive D:
+   31'885'312 bytes total
+   27'668'480 bytes available
+
+Time: 2002-07-09 20:45:15 (host time +0 seconds)
+</computeroutput>
+<prompt>uli@mir:~$ </prompt>
+	</screen>
+	The actual result of 
+	<command>gphoto2 <parameter>--summary</parameter></command>
+	may be different from camera to camera. However, we can see that
+	<command>gphoto2</command> obviously can talk to the camera, and
+	we get some information about the camera.
+      </para>
+
+      <para>
+	OK, now that we have seen that there is some space occupied on
+	the storage medium of the camera, let's have a look at what is
+	stored there:
+	<screen>
+<prompt>uli@mir:~$ </prompt><command>gphoto2 <parameter>--list-files</parameter></command>
+<computeroutput>Detected a 'Canon PowerShot G2'.                                                
+There are no files in folder '/'.
+There are no files in folder '/DCIM'.
+There are 4 files in folder '/DCIM/154CANON':
+#1     CRW_5417.CRW               rd  2334 KB image/x-canon-raw
+#2     IMG_5415.JPG               rd  1044 KB image/jpeg
+#3     IMG_5416.JPG               rd    31 KB image/jpeg
+#4     MVI_5418.AVI               rd   682 KB video/x-msvideo
+There are no files in folder '/DCIM/CANONMSC'.</computeroutput>
+<prompt>uli@mir:~$ </prompt>
+	</screen>
+	There are multiple folders on the camera, and there are several
+	files of different types and sizes on stored in one of them. One
+	is a raw file of the type this camera produces, two are <acronym>JPEG</acronym>
+	files (one large and one small) and one seems to be a short
+	video sequence.
+      </para>
+
+      <para>
+	Now that we have an impression of what expects us when we
+	actually download the images from the camera, we are going to do
+	that:
+	<screen>
+<prompt>uli@mir:~/tmp$ </prompt><command>gphoto2 <parameter>--get-all-files</parameter></command>
+<computeroutput>Detected a 'Canon PowerShot G2'.                                                
+Downloading 'CRW_5417.CRW' from folder '/DCIM/154CANON'...
+Saving file as CRW_5417.CRW                                                     
+Downloading 'IMG_5415.JPG' from folder '/DCIM/154CANON'...
+Saving file as IMG_5415.JPG                                                     
+Downloading 'IMG_5416.JPG' from folder '/DCIM/154CANON'...
+Saving file as IMG_5416.JPG                                                     
+Downloading 'MVI_5418.AVI' from folder '/DCIM/154CANON'...
+Saving file as MVI_5418.AVI                                                     </computeroutput>
+<prompt>uli@mir:~/tmp$ </prompt>
+	</screen>
+	And now we have all the files in our current directory (in
+	this case ~/tmp) and can do something with them.
+      </para>
+
+      <para>
+	Well, that's about it.
+	You may also want to have a look at the
+	<link linkend="cli-examples">command line examples</link> from
+	the <xref linkend="gphoto2-cli"/> man page and the examples
+	described on 
+	<ulink url="http://www.gphoto.org/">www.gphoto.org</ulink>.
+      </para>
+    </section>    
+
   </chapter>
  
   <!-- =========================================================== --> 
@@ -128,6 +255,7 @@
         Other (GUI) frontends (like e.g. gtkam) are available as
         separate packages.
       </para>
+
       <para>
         In order to get access to the camera, your frontend process requires
         write permissions to the respective device special file, e.g. to
@@ -151,7 +279,7 @@
     </section>
 
     <section>
-      <title>Setting up permissions for serial (RS232) ports</title>
+      <title>Setting up permissions for serial (<acronym>RS232</acronym>) ports</title>
       <note>
         I don't have any experience with serial ports for user
         processes. So take this section with a grain of salt.
@@ -163,11 +291,12 @@
     </section>
 
     <section>
-      <title>Setting up permissions for USB ports</title>
+      <title>Setting up permissions for <acronym>USB</acronym> ports</title>
       <para>
-        As USB allows hotplugging of devices, there is a mechanism that
-        dynamically creates the device files for the devices currently
-        connected and switched on.
+        As <acronym>USB</acronym> is designed for hotplugging of
+	devices, there is a mechanism that dynamically creates the
+	device files for the devices currently connected and switched
+	on.
       </para>
       <para>
         The operating system has to determine which users may access a device
@@ -181,7 +310,9 @@
 
       <!-- ================================================== -->
       <section>
-        <title>USB ports on Linux</title>
+
+        <title><acronym>USB</acronym> ports on Linux</title>
+
         <para>
           As gphoto2 provides a user space driver, in order to have gphoto2
           access your camera, you have to disable all kernel drivers which want
@@ -191,15 +322,28 @@
           drivers). You can check whether these modules are loaded by
           executing <command>lsmod</command>.
         </para>
+
+	<para>We will not cover basic <acronym>USB</acronym> setup
+	  here, for how to get <acronym>USB</acronym> working on your
+	  hardware and your system at all, we'd like to refer you to
+	  <ulink url="http://www.linux-usb.org/USB-guide/">http://www.linux-usb.org/USB-guide/</ulink>
+	  and especially
+	  <ulink url="http://www.linux-usb.org/USB-guide/c122.html">http://www.linux-usb.org/USB-guide/c122.html</ulink>
+	  where this is described in a better way than we could do.
+	</para>
+
         <para>
-          On Linux systems, you have basically two options to allow user access
-          to USB devices:
+          Now that you've got your basic <acronym>USB</acronym> system
+	  working, you have basically two options to allow user access
+	  to <acronym>USB</acronym> devices on your Linux system:
         </para>
+
         <orderedlist>
+
           <listitem id="usbdevfs">
             <simpara>
-              allow a certain user/group or the world access to
-              <emphasis>all</emphasis> USB devices
+              allow a certain user and/or group or the whole world
+	      access to <emphasis>all</emphasis> <acronym>USB</acronym> devices
               by mounting 
               <filename class="directory">/proc/bus/usb</filename>
               with adequate user and/or group permissions (default
@@ -211,21 +355,23 @@
             <simpara>
               use hotplug (<ulink
                 url="http://linux-hotplug.sourceforge.net/">http://linux-hotplug.sourceforge.net/</ulink>)
-              and allow access only to the USB devices you want to be
-              accessible (you need 
+              and allow access only to the <acronym>USB</acronym>
+	      devices you want to be accessible (you need 
               <filename class="directory">/proc/bus/usb</filename>
               mounted here as well, but not mounted writable by
               anybody else than root) 
             </simpara>
           </listitem> 
+
         </orderedlist>
 
         <para>    
           Solution <xref linkend="hotplug"/> has a huge advantage over 
           <xref linkend="usbdevfs"/>: It doesn't allow the
-          user/group to interfere with or eavesdrop on any other USB devices
-          which might be attached, such as USB keyboards, fingerprint reader or
-          similar. The following paragraphs thus describe setting up
+          user/group to interfere with or eavesdrop on any other
+	  <acronym>USB</acronym> devices which might be attached, such
+	  as <acronym>USB</acronym> keyboards, fingerprint reader or
+	  similar. The following paragraphs thus describe setting up 
           <xref linkend="hotplug"/>.
         </para>
 
@@ -233,20 +379,21 @@
           On Linux systems, from the 2.4 kernel series on, the kernel supports
           hotplugging. You may have to compile a kernel with hotplug support if
           you're not already running one. You may have to install the hotplug
-          package (<ulink url="http://linux-hotplug.sourceforge.net/">http://linux-hotplug.sourceforge.net/</ulink>) if you don't have it
-          installed already.
+          package
+	  (<ulink url="http://linux-hotplug.sourceforge.net/">http://linux-hotplug.sourceforge.net/</ulink>) 
+	  if you don't have it installed already.
         </para>
 
         <para>
-          You can find out if your kernel has hotplug support by looking for the
-          file <filename>/proc/sys/kernel/hotplug</filename>. 
-          If it exists, you have a hotplug
-          enabled kernel. If 
+          You can find out if your kernel has hotplug support by
+	  looking for the file
+	  <filename>/proc/sys/kernel/hotplug</filename>.
+          If it exists, you have a hotplug enabled kernel. If 
           <screen>
             <command>cat</command>
             <parameter>/proc/sys/kernel/hotplug</parameter>
-          </screen> prints the path to
-          your hotplug binary (usually 
+          </screen>
+	  prints the path to  your hotplug binary (usually 
           <command>/sbin/hotplug</command>) and this binary exists,
           you are ready to rock.
         </para>      
@@ -254,12 +401,13 @@
         <para>
           Also note that the following solution does
           <emphasis>not</emphasis> 
-          provide absolute security and that you know the security
-          implications of the respective <command>usbcam</command> 
-          script you are going to use.
+          provide absolute security and that you should definitely
+	  know the security implications of the respective
+	  <command>usbcam</command> script you are going to use.
         </para>
 
         <orderedlist>
+
           <listitem>
             <para>
               You must have the files 
@@ -270,7 +418,7 @@
               hints.
             </para>
             <para>
-              Load your USB driver and mount the USB device filesystem,
+              Load your <acronym>USB</acronym> driver and mount the <acronym>USB</acronym> device filesystem,
               i.e. e.g.
               <screen>
                 <prompt># </prompt><command>modprobe</command> <parameter>usb-uhci</parameter>
@@ -280,12 +428,12 @@
                 <parameter>/proc/bus/usb</parameter>
               </screen>
               Modern distributions like Redhat 7.2 handle this
-              automatically if you have your USB hardware enabled.
-              Check your BIOS settings if <command>lspci</command>
-              doesn't list any USB hardware.
+              automatically if you have your <acronym>USB</acronym> hardware enabled.
+              Check your <acronym>BIOS</acronym> settings if <command>lspci</command>
+              doesn't list any <acronym>USB</acronym> hardware.
             </para>
           </listitem>
-          <!-- ==================== -->
+
           <listitem>
             <para>
               Add the output of 
@@ -297,7 +445,7 @@
               removing all lines beginning with "usbcam".
             </para>
             <para>
-              This makes hotplug recognise all USB cameras which your version 
+              This makes hotplug recognise all <acronym>USB</acronym> cameras which your version 
               of <xref linkend="libgphoto2"/> supports and makes
               <command>hotplug</command> run the
               <command>usbcam</command> script you choose in step
@@ -305,7 +453,7 @@
               cameras is attached.
             </para>
           </listitem>
-          <!-- ==================== -->
+
           <listitem id="chooseusbcamscript">
             <para>
               Choose the right 
@@ -373,7 +521,7 @@
               </varlistentry>  
             </variablelist>
           </listitem>
-          <!-- ==================== -->
+
           <listitem>
             <para>
               Make your script file
@@ -381,7 +529,7 @@
               executable.
             </para>
           </listitem>
-          <!-- ==================== -->
+
           <listitem>
             <para>
               Plug in the camera and switch it on. If you already did so, please
@@ -401,7 +549,7 @@
               file will contain some messages to that effect.
             </para>
           </listitem>
-          <!-- ==================== -->
+
           <listitem>
             <para>
               Run <xref linkend="gphoto2-cli"/> or any other 
@@ -415,12 +563,17 @@
               <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--get-all-images</parameter>
             </screen>
           </listitem>
+
         </orderedlist>
+
       </section>
+
     </section>
 
     <section>
+
       <title>Specifying the port and camera you use</title>
+
       <abstract>
         <para>
           <systemitem class="library">libgphoto2</systemitem> 
@@ -442,7 +595,9 @@
       </abstract>
 
       <section id="port-names">
+
         <title>Port names</title>
+
         <variablelist>
           <varlistentry>
             <term>Serial ports</term>
@@ -456,20 +611,23 @@
             </listitem>
           </varlistentry>
           <varlistentry>
-            <term>USB ports</term>
+            <term><acronym>USB</acronym> ports</term>
             <listitem>
               <para>
-                As USB works with auto detection, you do not have to specify a device
+                As <acronym>USB</acronym> works with auto detection, you do not have to specify a device
                 file. Therefore you just use the gphoto2 port 
                 <systemitem class="resource">usb:</systemitem>.
               </para>
             </listitem>
           </varlistentry>
         </variablelist>
+
       </section>
 
       <section id="camera-names">
+
         <title>Camera name</title>
+
         <para>
           The model name of the camera does not have to be specified when using
           the <systemitem class="resource">usb:</systemitem> port. 
@@ -479,11 +637,15 @@
           the list of supported models rather than just trying to type
           your camera model. 
         </para>
+
         <screen>
           <prompt>[me@home ~]$ </prompt><command>gphoto2</command> <parameter>--camera</parameter> <parameter>"<replaceable>Canon PowerShot G2</replaceable>"</parameter> <parameter>--list-files</parameter>
         </screen>
+
       </section>
+
     </section>
+
   </chapter>
 
   <!-- =========================================================== --> 
@@ -500,13 +662,13 @@
       </para>
     </abstract>
 
-    <para>The APIs defined here are described in more detail by the
+    <para>The <acronym>API</acronym>s defined here are described in more detail by the
       autogenerated documentation at FIXME. Eventually, they should be
       included here, but as they currently are in Docbook SGML and
       this was written in Docbook XML, this isn't trivial.</para>
 
     <para>Anyway, we provide you with the architecture context here
-      and will let you read up on the API details in the respective
+      and will let you read up on the <acronym>API</acronym> details in the respective
       external documentation.</para>
 
 
@@ -539,10 +701,10 @@
 
     <section>
       <title>The <systemitem class="library">libgphoto2</systemitem>
-        API</title>
+        <acronym>API</acronym></title>
 
       <figure id="architecture-libgphoto2">
-        <title>The gPhoto2 system architecture</title>
+        <title>The libgphoto2 <acronym>API</acronym> within the gPhoto2 system architecture</title>
         <mediaobject>
           <imageobject>
             <imagedata fileref="figures/libgphoto2-api.png" format="PNG"/>
@@ -554,10 +716,10 @@
             <imagedata fileref="figures/libgphoto2-api.jpg" format="JPG"/>
           </imageobject>
           <textobject>
-            <phrase>The libgphoto2 API within the context of gPhoto2 software architecture</phrase>
+            <phrase>The libgphoto2 <acronym>API</acronym> within the context of gPhoto2 software architecture</phrase>
           </textobject>
           <caption>
-            <para>Diagram describing where the libgphoto2 API is
+            <para>Diagram describing where the libgphoto2 <acronym>API</acronym> is
               located within the gPhoto2 software architecture</para>
           </caption>
         </mediaobject>
@@ -568,10 +730,10 @@
 
     <section>
       <title>The <systemitem class="library">camlib</systemitem>
-        API</title>
+        <acronym>API</acronym></title>
 
       <figure id="architecture-camlib">
-        <title>The gPhoto2 system architecture</title>
+        <title>The camlib <acronym>API</acronym> within the gPhoto2 system architecture</title>
         <mediaobject>
           <imageobject>
             <imagedata fileref="figures/libgphoto2-camlib.png" format="PNG"/>
@@ -583,10 +745,10 @@
             <imagedata fileref="figures/libgphoto2-camlib.jpg" format="JPG"/>
           </imageobject>
           <textobject>
-            <phrase>The camlib API within the context of gPhoto2 software architecture</phrase>
+            <phrase>The camlib <acronym>API</acronym> within the context of gPhoto2 software architecture</phrase>
           </textobject>
           <caption>
-            <para>Diagram describing where the camlib API is
+            <para>Diagram describing where the camlib <acronym>API</acronym> is
               located within the gPhoto2 software architecture</para>
           </caption>
         </mediaobject>
@@ -597,10 +759,10 @@
 
     <section>
       <title>The <systemitem class="library">libgphoto2_port</systemitem>
-        API</title>
+        <acronym>API</acronym></title>
 
       <figure id="architecture-libgphoto2_port">
-        <title>The gPhoto2 system architecture</title>
+        <title>The libgphoto2_port <acronym>API</acronym> within the gPhoto2 system architecture</title>
         <mediaobject>
           <imageobject>
             <imagedata fileref="figures/libgphoto2_port.png" format="PNG"/>
@@ -612,10 +774,10 @@
             <imagedata fileref="figures/libgphoto2_port.jpg" format="JPG"/>
           </imageobject>
           <textobject>
-            <phrase>The libgphoto2_port API within the context of gPhoto2 software architecture</phrase>
+            <phrase>The libgphoto2_port <acronym>API</acronym> within the context of gPhoto2 software architecture</phrase>
           </textobject>
           <caption>
-            <para>Diagram describing where the libgphoto2_port API is
+            <para>Diagram describing where the libgphoto2_port <acronym>API</acronym> is
               located within the gPhoto2 software architecture</para>
           </caption>
         </mediaobject>
@@ -947,7 +1109,7 @@
 	<varlistentry>
 	  <term><option>--usbid</option> <replaceable>USBID</replaceable></term>
 	  <listitem>
-	    <para>(Expert only) Override USB IDs.</para>
+	    <para>(Expert only) Override <acronym>USB</acronym> IDs.</para>
 	  </listitem>
 	</varlistentry>
 
@@ -1256,7 +1418,7 @@
     <refsect1>
       <title>See also</title>
       <para><xref linkend="libgphoto2"/>,
-        <filename path="doc/">gphoto2.txt</filename>, 
+	  The gPhoto2 Manual,
         <filename path="doc/">gphoto2-cli.txt</filename>, 
         <ulink
                url="http://www.gphoto.org/">http://www.gphoto.org/</ulink> 
@@ -1266,6 +1428,18 @@
     <refsect1 id="cli-examples">
       <title>Examples</title>
       <variablelist>
+        <varlistentry>
+          <term><userinput><command>gphoto2</command> <option>--list-ports</option></userinput></term>
+          <listitem>
+            <para>Shows what kinds of ports (<acronym>USB</acronym> and serial) you have.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><userinput><command>gphoto2</command> <option>--auto-detect</option></userinput></term>
+          <listitem>
+            <para>Shows what camera(s) you have connected.</para>
+          </listitem>
+        </varlistentry>
         <varlistentry>
           <term><userinput><command>gphoto2</command> <option>--list-files</option></userinput></term>
           <listitem>
@@ -1348,9 +1522,9 @@
       <title>See also</title>
         <para><xref linkend="gphoto2-cli"/>,
           <xref linkend="libgphoto2_port"/>,
-          <filename path="doc/">gphoto2.txt</filename>,
-          <ulink
-                 url="http://www.gphoto.org/">http://www.gphoto.org/</ulink> 
+	  The gPhoto2 Manual,
+	  the automatically generated <acronym>API</acronym> docs,
+          <ulink url="http://www.gphoto.org/">http://www.gphoto.org/</ulink> 
       </para>
     </refsect1>
 
@@ -1395,21 +1569,22 @@
         <para>
           Currently, 
           <systemitem class="library">libgphoto2_port</systemitem> 
-          supports serial (RS-232) and USB connections, the latter
+          supports serial (<acronym>RS-232</acronym>) and <acronym>USB</acronym> connections, the latter
           requiring 
           <systemitem class="library">libusb</systemitem>
           to be installed.
         </para>
         <para>
-          The autogenerated API docs will be added here in the future.
+          The autogenerated <acronym>API</acronym> docs will be added here in the future.
         </para>
       </refsect1>
 
       <refsect1>
         <title>See also</title>
         <para><xref linkend="libgphoto2"/>,
-          <filename path="doc/">gphoto2.txt</filename>,
+          The gPhoto2 Manual,
           <ulink url="http://www.gphoto.org/">http://www.gphoto.org/</ulink>,
+	  the automatically generated <acronym>API</acronym> docs,
           <ulink url="http://libusb.sourceforge.net/">http://libusb.sourceforge.net/</ulink>
         </para>
       </refsect1>
@@ -1440,7 +1615,10 @@
         <term><ulink url="http://libusb.sourceforge.net/">http://libusb.sourceforge.net/</ulink></term>
         <listitem>
           <simpara>The <systemitem class="library">libusb</systemitem>
-          home page.</simpara>
+	    home page. <systemitem class="library">libusb</systemitem>
+	    allows C programs to access the <acronym>USB</acronym> interface of all
+	    supported operating systems in an OS independent manner.
+	  </simpara>
         </listitem>
       </varlistentry>
       <varlistentry>
@@ -1448,8 +1626,22 @@
         <listitem>
           <simpara>The
             <systemitem class="library">libexif</systemitem> project
-            page.</simpara>
+            page. <systemitem class="library">libexif</systemitem>
+	    allows programs written in C to access the metainformation
+	    from the <acronym>EXIF</acronym> tags in the <acronym>JPEG</acronym> files most modern cameras
+	    produce.
+	  </simpara>
         </listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><ulink url="http://n-dimensional.de/projects/digicam/">http://n-dimensional.de/projects/digicam/</ulink></term>
+	<listitem>
+	  <simpara>Hans Ulrich Niedermann's home page (one of the
+	    developers), with current issues of the gPhoto2 manual,
+	    daily CVS snapshot tarballs and patches, and packages
+	    which are updated from time to time.
+	  </simpara>
+	</listitem>
       </varlistentry>
     </variablelist>
   </appendix>
