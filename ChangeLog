@@ -1,6 +1,7 @@
 2001-12-07  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* configure.in: it is time for 2.0beta4dev4
+	* gphoto2-config.in: made it work again
 
 2001-12-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
