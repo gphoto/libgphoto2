@@ -650,6 +650,11 @@ camera_capture (Camera* camera, CameraFile* file, CameraCaptureInfo* info)
 			(guchar **) &file->data, 
 			(guint *) &file->size);
 		if (result == GP_OK) strcpy (file->type, "image/jpg");
+		if (result != GP_OK) return (result);
+
+		/* Delete this image. */
+		result = k_erase_image (konica_data->device, konica_data->image_id_long, image_id);
+		
 		return (result);
 
 	case GP_CAPTURE_VIDEO:
