@@ -92,7 +92,7 @@ AC_ARG_WITH(ltdl, [  --without-ltdl            Don't use ltdl],[
 if $try_ltdl; then
 	AC_CHECK_LIB(ltdl, lt_dlforeachfile,[
 		AC_CHECK_HEADER(ltdl.h,[
-			AC_DEFINE(HAVE_LTDL,,[whether we use libltdl])
+			AC_DEFINE(HAVE_LTDL,1,[whether we use libltdl])
 			LTDL_LIBS="-lltdl"
 			ltdl_msg="yes"
 			have_ltdl=true])])
@@ -119,7 +119,7 @@ AC_MSG_CHECKING([for tm_gmtoff in struct tm])
 AC_TRY_COMPILE([
 #include <sys/types.h>
 #include <$ac_cv_struct_tm>], [struct tm tm; tm.tm_gmtoff;],
-AC_DEFINE(HAVE_TM_GMTOFF,,[whether struct tm has tm_gmtoff field])
+AC_DEFINE(HAVE_TM_GMTOFF,1,[whether struct tm has tm_gmtoff field])
 AC_MSG_RESULT(yes),
 AC_MSG_RESULT(no)
 )
@@ -249,7 +249,7 @@ if $try_exif; then
 			EXIF_LIBS=`$PKG_CONFIG --libs libexif`
 			have_exif=true
 			exif_msg=yes
-			AC_DEFINE(HAVE_EXIF,,[whether we use libexif])
+			AC_DEFINE(HAVE_EXIF,1,[whether we use libexif])
 		fi
 		AC_MSG_RESULT($exif_msg)
 	else
@@ -260,14 +260,14 @@ if $try_exif; then
 			EXIF_LIBS="-L$exif_prefix/lib -lexif"
 			have_exif=true
 			exif_msg=yes
-			AC_DEFINE(HAVE_EXIF,,[whether we use libexif])])
+			AC_DEFINE(HAVE_EXIF,1,[whether we use libexif])])
 	fi
         if $have_exif; then
                 CPPFLAGS_save="$CPPFLAGS"
                 CPPFLAGS=$EXIF_CFLAGS
                 AC_CHECK_HEADER([exif-ifd.h], [
                         exif_msg="yes (>= 0.5.4)"
-                        AC_DEFINE(HAVE_EXIF_0_5_4,,[whether we use a version of libexif greater than 0.5.3])])
+                        AC_DEFINE(HAVE_EXIF_0_5_4,1,[whether we use a version of libexif greater than 0.5.3])])
                 CPPFLAGS="$CPPFLAGS_save"
         fi
 fi
@@ -284,7 +284,7 @@ dnl ---------------------------------------------------------------------------
 AC_CHECK_FILE(/proc/meminfo, [
 	proc_meminfo_msg="available";
 	proc_meminfo=true;
-	AC_DEFINE(HAVE_PROCMEMINFO,,[whether we get memory info from /proc/meminfo])
+	AC_DEFINE(HAVE_PROCMEMINFO,1,[whether we get memory info from /proc/meminfo])
 ], [
 	proc_meminfo_msg="not available";
 	proc_meminfo=false;

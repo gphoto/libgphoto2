@@ -79,7 +79,7 @@ AC_ARG_WITH(ltdl, [  --without-ltdl            Don't use ltdl],[
 if $try_ltdl; then
         AC_CHECK_LIB(ltdl, lt_dlforeachfile,[
                 AC_CHECK_HEADER(ltdl.h,[
-                        AC_DEFINE(HAVE_LTDL,,[whether we use libltdl])
+                        AC_DEFINE(HAVE_LTDL,1,[whether we use libltdl])
                         LTDL_LIBS="-lltdl"
                         ltdl_msg="yes"
                         have_ltdl=true])])
@@ -125,13 +125,13 @@ AC_CHECK_FUNCS(strerror snprintf vsnprintf)
 
 dnl Check if TIOCM_RTS is included in one of several possible files
 AC_TRY_COMPILE([#include <termios.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE(HAVE_RTS_IOCTL,,[Define if you have TIOCM_RTS.]))
+			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_RTS.]))
 AC_TRY_COMPILE([#include <termio.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE(HAVE_RTS_IOCTL,,[Define if you have TIOCM_RTS.]))
+			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_RTS.]))
 AC_TRY_COMPILE([#include <ioctl-types.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE(HAVE_RTS_IOCTL,,[Define if you have TIOCM_TRS.]))
+			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_TRS.]))
 AC_TRY_COMPILE([#include <sys/ioctl.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE(HAVE_RTS_IOCTL,,[Define if you have TIOCM_TRS.]))
+			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_TRS.]))
 
 dnl ******
 dnl serial
@@ -183,7 +183,7 @@ if $try_baudboy; then
 		baudboy_msg=yes
 		try_ttylock=false
 		try_lockdev=false
-		AC_DEFINE(HAVE_BAUDBOY,,[Define if you have Baudboy serial locking.])
+		AC_DEFINE(HAVE_BAUDBOY,1,[Define if you have Baudboy serial locking.])
 	)
 fi
 if $try_ttylock; then
@@ -191,13 +191,13 @@ if $try_ttylock; then
 		AC_MSG_CHECKING(if ttylock needs lockdev)
 		AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],
 			AC_MSG_RESULT(no)
-			AC_DEFINE(HAVE_TTYLOCK,,[Define if you have ttylock based tty locking.])
+			AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
 			ttylock_msg=yes
 			try_lockdev=false,
 			LDFLAGS="$LDFLAGS -llockdev"
 			AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],
 				AC_MSG_RESULT(yes)
-				AC_DEFINE(HAVE_TTYLOCK,,[Define if you have ttylock based tty locking.])
+				AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
 				ttylock_msg=yes
 				try_lockdev=false
 				SERIAL_LDFLAGS=-llockdev,
@@ -211,7 +211,7 @@ fi
 if $try_lockdev; then
 	AC_CHECK_LIB(lockdev, dev_lock,[
 		    AC_CHECK_HEADER(lockdev.h,[
-				AC_DEFINE(HAVE_LOCKDEV,,[Define if you have dev_lock/lockdev based locking.])
+				AC_DEFINE(HAVE_LOCKDEV,1,[Define if you have dev_lock/lockdev based locking.])
 				lockdev_msg=yes
 				SERIAL_LDFLAGS=-llockdev
 			    ]
@@ -269,7 +269,7 @@ AC_SUBST(IOLIB_SUBDIRS)
 dnl **********
 dnl GNU regex?
 dnl **********
-AC_CHECK_FUNC(re_compile_pattern, AC_DEFINE(HAVE_GNU_REGEX,,[Define if you have GNU regex.]))
+AC_CHECK_FUNC(re_compile_pattern, AC_DEFINE(HAVE_GNU_REGEX,1,[Define if you have GNU regex.]))
 
 dnl ******************************
 dnl disable debugging if requested
@@ -277,7 +277,7 @@ dnl ******************************
 AC_ARG_ENABLE(debugging,
   [  --disable-debugging     do not include debugging code],
   [if test "$enableval" = "no"; then
-    AC_DEFINE(DISABLE_DEBUGGING,,[Define if you want to disabled debugging.])
+    AC_DEFINE(DISABLE_DEBUGGING,1,[Define if you want to disabled debugging.])
   fi])
 
 dnl ********
