@@ -1900,7 +1900,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 		}
 		break;
 	case SIERRA_MODEL_EPSON:
-	        snprintf (manual->text, sizeof(manual->text)
+		snprintf (manual->text, sizeof(manual->text),
 			_("Some notes about Epson cameras:\n"
 			  "- Some parameters are not controllable remotely:\n"
 			  "  * zoom\n"
