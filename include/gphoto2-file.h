@@ -21,7 +21,10 @@
 #ifndef __GPHOTO2_FILE_H__
 #define __GPHOTO2_FILE_H__
 
-typedef struct {
+typedef struct _CameraFile CameraFile;
+
+/* Don't use this - it'll disappear soon... */
+struct _CameraFile {
 	char type [64];
 	char name [64];
 	long int size;
@@ -29,7 +32,7 @@ typedef struct {
 	int bytes_read;
 	int session;
 	int ref_count;
-} CameraFile;
+}; 
 
 int gp_file_new            (CameraFile **file);
 int gp_file_ref            (CameraFile *file);
@@ -46,8 +49,13 @@ int gp_file_free           (CameraFile *file);
 int gp_file_set_name       (CameraFile *file, const char *name);
 int gp_file_set_type       (CameraFile *file, const char *type);
 
-int gp_file_append         (CameraFile *file, char *data,  int size);
-int gp_file_get_last_chunk (CameraFile *file, char **data, int *size);
+int gp_file_get_name       (CameraFile *file, const char **name);
+int gp_file_get_type       (CameraFile *file, const char **type);
+
+int gp_file_append            (CameraFile*, const char *data,  int size);
+int gp_file_get_last_chunk    (CameraFile*, char **data, long int *size);
+int gp_file_set_data_and_size (CameraFile*, char *data, long int size);
+int gp_file_get_data_and_size (CameraFile*, const char **data, long int *size);
 
 int gp_file_copy           (CameraFile *destination, CameraFile *source);
 

@@ -244,7 +244,7 @@ camera_abilities (CameraAbilitiesList* list)
 	return (GP_OK);
 }
 
-gint
+static gint
 init_serial_connection (Camera *camera, gp_port *device)
 {
 	gint i;
@@ -536,12 +536,14 @@ camera_folder_list_files (Camera* camera, const gchar* folder, CameraList* list)
 }
 
 
-gint 
+static gint 
 camera_file_get_generic (Camera* camera, CameraFile* file, const gchar* folder, const gchar* filename, k_image_type_t image_type)
 {
 	gulong 		image_id;
 	gchar*		image_id_string;
 	konica_data_t*	kd;
+	char *data;
+	long int size;
 
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
@@ -565,14 +567,12 @@ camera_file_get_generic (Camera* camera, CameraFile* file, const gchar* folder, 
 	
 	/* Get the image. */
 	CHECK (k_get_image (kd->device, kd->image_id_long, image_id,
-			    image_type, (guchar **) &file->data,
-			    (guint *) &file->size));
+			    image_type, (guchar **) &data,
+			    (guint *) &size));
+	gp_file_set_data_and_size (file, data, size);
+	gp_file_set_name (file, filename);
+	gp_file_set_type (file, "image/jpeg");
 
-	strcpy (file->type, "image/jpeg");
-	strcpy (file->name, filename);
-
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** type: %s", file->type);
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** name: %s", file->name);
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_get_generic ***");
 	return (GP_OK);
 }
@@ -670,6 +670,8 @@ gint
 camera_capture_preview (Camera* camera, CameraFile* file)
 {
 	konica_data_t*	kd;
+	char *data;
+	long int size;
 
 	gp_debug_printf (GP_DEBUG_LOW, "konica",
 			 "*** Entering camera_capture_preview ***");
@@ -677,9 +679,10 @@ camera_capture_preview (Camera* camera, CameraFile* file)
 	g_return_val_if_fail (file,     GP_ERROR_BAD_PARAMETERS);
 
 	kd = (konica_data_t *) camera->camlib_data;
-	CHECK (k_get_preview (kd->device, TRUE, (guchar**) &file->data,
-			      (guint*) &file->size));
-	strcpy (file->type, "image/jpeg");
+	CHECK (k_get_preview (kd->device, TRUE, (guchar**) &data,
+			      (guint*) &size));
+	gp_file_set_data_and_size (file, data, size);
+	gp_file_set_type (file, "image/jpeg");
 	return (GP_OK);
 }
 
@@ -1290,30 +1293,6 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	/* We are done. */
 	return (GP_OK);
 }
-
-
-gint 
-camera_config (Camera *camera)
-{
-	gint		result;
-	CameraWidget*	window = NULL;
-
-	if ((result = camera_get_config (camera, &window)) == GP_OK) {
-
-	        /* Prompt the user with the config window. */
-	        if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
-			gp_widget_unref (window);
-	                return (GP_OK);
-	        }
-		result = camera_set_config (camera, window);
-		gp_widget_unref (window);
-		return (result);
-	} else {
-		if (window) gp_widget_unref (window);
-		return (result);
-	}
-}
-
 
 gchar*
 camera_result_as_string (Camera* camera, gint result)

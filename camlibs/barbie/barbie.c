@@ -151,19 +151,20 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 
         int size, num;
         BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
+	char *data;
 
         gp_frontend_progress(camera, NULL, 0.00);
 
-        strcpy(file->name, filename);
-        strcpy(file->type, "image/ppm");
+	gp_file_set_name (file, filename);
+	gp_file_set_type (file, "image/ppm");
 
         /* Retrieve the number of the photo on the camera */
         num = gp_filesystem_number(b->fs, "/", filename);
 
-        file->data = barbie_read_picture(b, num, 0, &size);
-        if (!file->data)
+        data = barbie_read_picture(b, num, 0, &size);
+        if (!data)
                 return GP_ERROR;
-        file->size = size;
+	gp_file_set_data_and_size (file, data, size);
 
         return GP_OK;
 }
@@ -174,19 +175,20 @@ int camera_file_get_preview (Camera *camera, const char *folder,
 
         int size, num;
         BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
+	char *data;
 
         gp_frontend_progress(camera, NULL, 0.00);
 
-        strcpy(file->name, filename);
-        strcpy(file->type, "image/ppm");
+        gp_file_set_name (file, filename);
+	gp_file_set_type (file, "image/ppm");
 
         /* Retrieve the number of the photo on the camera */
         num = gp_filesystem_number(b->fs, "/", filename);
 
-        file->data = barbie_read_picture(b, num, 1, &size);;
-        if (!file->data)
+        data = barbie_read_picture(b, num, 1, &size);;
+        if (!data)
                 return GP_ERROR;
-        file->size = size;
+	gp_file_set_data_and_size (file, data, size);
 
         return GP_OK;
 }

@@ -404,9 +404,10 @@ static int camera_file_get_generic (Camera *camera, CameraFile *file,
 {
         int regl, regd, file_number;
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	CameraFile *tmp_file;
 	char *jpeg_data, *wrk_s;
-	int jpeg_size, result;
+	int jpeg_size;
+	const char *data;
+	long int size;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_get_generic");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
@@ -432,73 +433,54 @@ static int camera_file_get_generic (Camera *camera, CameraFile *file,
 	/* Fill in the file structure */
 	CHECK_STOP (camera, gp_file_set_name (file, filename));
 
-	/* Creation of a temporary file */
-	CHECK_STOP (camera, gp_file_new (&tmp_file));
-	result = gp_file_set_name (tmp_file, filename);
-	if (result != GP_OK) {
-		gp_file_free (tmp_file);
-		camera_stop (camera);
-	}
-
 	/* Get the picture data */
-	result = sierra_get_string_register (camera, regd, file_number + 1,
-					     tmp_file, NULL, NULL);
-	if (result != GP_OK) {
-		gp_file_free (tmp_file);
-		camera_stop (camera);
-	}
-
+	CHECK_STOP (camera, sierra_get_string_register (camera, regd,
+					file_number + 1, file, NULL, NULL));
+	CHECK_STOP (camera, gp_file_get_data_and_size (file, &data, &size));
+	
 	/* Data postprocessing */
 	if (thumbnail) {
-		
+
 		/* Thumbnails are always JPEG file (as far as we know...) */
-		strcpy (file->type, "image/jpeg");
+		CHECK_STOP (camera, gp_file_set_type (file, "image/jpeg"));
+
 		/* Corrects the file name to reflect that */
 		if ( (wrk_s = rindex(file->name, '.')) ) {
-		     *wrk_s = '\0';
-		     strcat(file->name, ".JPG");
+			*wrk_s = '\0';
+			strcat(file->name, ".JPG");
 		}
 
-		/* Some camera (e.g. Epson 3000z) send the EXIF application data
-		   as thumbnail of a picture. The JPEG file need to be extracted.
-		   Equally for movies, the JPEG thumbnail is contained within a
-		   .MOV file. It needs to be extracted. */
-	   
-		/* Extract the thumbnail from the data sent by the camera */
-		get_jpeg_data(tmp_file->data, tmp_file->size, &jpeg_data, &jpeg_size);
+		/* 
+		 * Some camera (e.g. Epson 3000z) send the EXIF application
+		 * data as thumbnail of a picture. The JPEG file need to be
+		 * extracted. Equally for movies, the JPEG thumbnail is
+		 * contained within a .MOV file. It needs to be extracted.
+		 */
+		get_jpeg_data (data, size, &jpeg_data, &jpeg_size);
 
 		if (jpeg_data) {
-			/* Append data to the output file. Free temporary variable */
-			gp_file_append (file, jpeg_data, jpeg_size);
-			free(jpeg_data);
+			/* Append data to the output file */
+			gp_file_set_data_and_size (file, jpeg_data, jpeg_size);
 		}
 		else {
 			/* No valid JPEG data found */
-			gp_file_free (tmp_file);
 			camera_stop (camera);
 			return GP_ERROR_CORRUPTED_DATA;
 		}
 	}
 	else {
-		gp_file_append (file, tmp_file->data, tmp_file->size);
 
 		/* Check the file type */
-		if ( memcmp(tmp_file->data, TIFF_SOI_MARKER, 5) == 0 ) {
-			/* This is a TIFF file */
-			strcpy (file->type, "image/tiff");
-		}
-		else if ( memcmp(tmp_file->data, JPEG_SOI_MARKER, 2) == 0 ) {
-			/* This is a TIFF file */
-			strcpy (file->type, "image/jpeg");
-		}
-		else {
-			/* This is probably a video. */
-			gp_file_append (file, tmp_file->data, tmp_file->size);
-			strcpy (file->type, "video/quicktime");
-		}
+		if (!memcmp (data, TIFF_SOI_MARKER, 5))
+			CHECK_STOP (camera,
+				    gp_file_set_type (file, "image/tiff"))
+		else if (!memcmp (data, JPEG_SOI_MARKER, 2))
+			CHECK_STOP (camera,
+				    gp_file_set_type (file, "image/jpeg"))
+		else
+			CHECK_STOP (camera,
+				    gp_file_set_type (file, "video/quicktime"))
 	}
-
-	gp_file_free (tmp_file);
 
 	return (camera_stop (camera));
 }

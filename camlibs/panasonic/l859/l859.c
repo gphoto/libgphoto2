@@ -613,8 +613,8 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 		return (int) NULL;
 	}
 
-	strcpy (file->name, filename);
-	strcpy (file->type, "image/jpg");
+	gp_file_set_name (file, filename);
+	gp_file_set_type (file, "image/jpeg");
 
 	gp_frontend_progress (camera, file, 0.00);
 
@@ -667,8 +667,8 @@ int camera_file_get_preview (Camera *camera, const char *folder,
 		return (int) NULL;
 	}
 
-	strcpy (file->name, filename);
-	strcpy (file->type, "image/jpg");
+	gp_file_set_name (file, filename);
+	gp_file_set_type (file, "image/jpeg");
 
 	gp_frontend_progress (camera, file, 0.00);
 

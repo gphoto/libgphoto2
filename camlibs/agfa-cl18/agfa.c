@@ -240,21 +240,19 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 
     struct agfa_device *dev = camera->camlib_data;
     unsigned char *data;
-    int buflen;
+    int size;
 
     if (!dev) return GP_ERROR;
 
     if (folder[0] == '/') folder++;
 
-    data = agfa_file_get(camera, folder, filename, 0, &buflen);
+    data = agfa_file_get(camera, folder, filename, 0, &size);
     
     if (!data) return GP_ERROR;
 
-    file->data = data;
-    file->size = buflen;
-
-    strcpy(file->name, filename);
-    strcpy(file->type, "image/jpeg");
+    gp_file_set_data_and_size (file, data, size);
+    gp_file_set_name (file, filename);
+    gp_file_set_type (file, "image/jpeg");
 
     return GP_OK;
 }
@@ -274,12 +272,10 @@ int camera_file_get_preview (Camera *camera, const char *folder,
     data = agfa_file_get(camera, folder, filename, 1, &size);
         
     if (!data) return GP_ERROR;
-   
-    file->data = data;
-    file->size = size;
 
-    strcpy(file->type, "image/jpeg");
-    strcpy(file->name, filename);
+    gp_file_set_data_and_size (file, data, size);
+    gp_file_set_type (file, "image/jpeg");
+    gp_file_set_name (file, filename);
 
     return GP_OK;
 }

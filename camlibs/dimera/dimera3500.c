@@ -21,6 +21,22 @@
  *
  * History:
  * $Log$
+ * Revision 1.7  2001/08/23 12:02:20  lutz
+ * 2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs/agfa-cl18/agfa.c: Use gp_file_* instead of directly
+ *         accessing the struct.
+ *         * camlibs/barbie/barbie.c: And here.
+ *         * camlibs/directory/directory.c: And here.
+ *         * camlibs/konica/library.c: And here.
+ *         * camlibs/sierra/sierra.c: And here.
+ *         * camlibs/panasonic/l859/l859.c: And here.
+ *         * camlibs/dimera/dimera3500.c: And here.
+ *         * frontends/command-line/main.c: And here.
+ *         * libgphoto2/camera.c: And here.
+ *         * libgphoto2/file.c:
+ *         * include/gphoto2-file.h: Introduce some more gp_file_* functions.
+ *
  * Revision 1.6  2001/08/22 20:59:57  hfiguiere
  * 	* camlibs/dimera/dimera3500.c: removed * / * embedded inside comments
  * 	that issued warnings and broke the build...
@@ -305,13 +321,15 @@ int camera_folder_list_files(Camera *camera, const char *folder, CameraList *lis
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename, CameraFile *file) {
 
-	int size, num;
+	int num;
 	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
+	char *data;
+	long int size;
 
 	gp_frontend_progress(camera, NULL, 0.00);
 
-	strcpy(file->name, filename);
-	strcpy(file->type, PNM_MIME_TYPE);
+	gp_file_set_name (file, filename);
+	gp_file_set_type (file, PNM_MIME_TYPE);
 
 	/* Retrieve the number of the photo on the camera */
 	if (strcmp(filename, RAM_IMAGE_TEMPLATE) == 0)
@@ -323,10 +341,10 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename, C
 	if (num < 0)
 		return num;
 
-	file->data = Dimera_Get_Full_Image(num, &size, camera);
-	if (!file->data)
+	data = Dimera_Get_Full_Image(num, (int*) &size, camera);
+	if (!data)
 			return GP_ERROR;
-	file->size = size;
+	gp_file_set_data_and_size (file, data, size);
 
 	return GP_OK;
 }
@@ -376,20 +394,22 @@ int camera_file_set_info (Camera *camera, const char *folder, const char *filena
 
 int camera_file_get_preview (Camera *camera, const char *folder, const char *filename, CameraFile *file) {
         DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
-        int size, num;
+        int num;
+	long int size;
+	char *data;
 
         /* Retrieve the number of the photo on the camera */
         num = gp_filesystem_number(cam->fs, "/", filename);
 		if (num < 0)
 			return num;
 
-        strcpy(file->name, filename);
-        strcpy(file->type, PNM_MIME_TYPE);
+	gp_file_set_name (file, filename);
+	gp_file_set_type (file, PNM_MIME_TYPE);
 
-        file->data = Dimera_Get_Thumbnail(num, &size, camera);
-        if (!file->data)
+        data = Dimera_Get_Thumbnail(num, (int*) &size, camera);
+        if (!data)
                 return GP_ERROR;
-        file->size = size;
+	gp_file_set_data_and_size (file, data, size);
 
         return GP_OK;
 }
@@ -416,15 +436,16 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
 }
 
 int camera_capture_preview(Camera *camera, CameraFile *file) {
-        int size;
+        long int size;
+	char *data;
 
-        strcpy(file->name, RAM_IMAGE_TEMPLATE);
-        strcpy(file->type, PNM_MIME_TYPE);
+	gp_file_set_name (file, RAM_IMAGE_TEMPLATE);
+	gp_file_set_type (file, PNM_MIME_TYPE);
 
-        file->data = Dimera_Preview(&size, camera);
-        if (!file->data)
+        data = Dimera_Preview((int*) &size, camera);
+        if (!data)
                 return GP_ERROR;
-        file->size = size;
+	gp_file_set_data_and_size (file, data, size);
 
         return GP_OK;
 }

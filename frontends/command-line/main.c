@@ -487,6 +487,7 @@ save_camera_file_to_file (CameraFile *file, int thumbnail)
         int result;
         char *f;
         int resp1, resp2;
+	const char *name;
 
         /* Determine the folder and filename */
         strcpy(out_filename, "");
@@ -505,7 +506,8 @@ save_camera_file_to_file (CameraFile *file, int thumbnail)
                         sprintf(out_filename, glob_filename, glob_num++);
                 }
         } else {
-                strcat(out_filename, file->name);
+		gp_file_get_name (file, &name);
+                strcat(out_filename, name);
         }
 
         if (thumbnail)
@@ -566,9 +568,14 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
         }
 
         if (glob_stdout) {
+		const char *data;
+		long int size;
+
+		gp_file_get_data_and_size (file, &data, &size);
+
                 if (glob_stdout_size)
-                        printf ("%li\n", file->size);
-                fwrite (file->data, sizeof(char), file->size, stdout);
+                        printf ("%li\n", size);
+                fwrite (data, sizeof(char), size, stdout);
                 gp_file_free (file);
                 return (GP_OK);
         }

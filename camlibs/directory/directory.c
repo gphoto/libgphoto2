@@ -27,7 +27,8 @@ char *extension[] = {
         NULL
 };
 
-int is_image (char *filename)
+static int
+is_image (char *filename)
 {
 
         char *dot;
@@ -131,6 +132,10 @@ int camera_file_get_info (Camera *camera, const char *folder, const char *file,
         int result;
         char buf [1024];
         CameraFile *cam_file;
+	const char *name;
+	const char *type;
+	const char *data;
+	long int size;
 
         sprintf (buf, "%s/%s", folder, file);
         result = gp_file_new (&cam_file);
@@ -145,9 +150,14 @@ int camera_file_get_info (Camera *camera, const char *folder, const char *file,
         info->preview.fields = GP_FILE_INFO_NONE;
         info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_NAME |
                             GP_FILE_INFO_TYPE;
-        strcpy (info->file.type, cam_file->type);
-        strcpy (info->file.name, cam_file->name);
-        info->file.size = cam_file->size;
+
+	gp_file_get_name (cam_file, &name);
+	gp_file_get_type (cam_file, &type);
+	gp_file_get_data_and_size (cam_file, &data, &size);
+
+        strcpy (info->file.type, type);
+        strcpy (info->file.name, name);
+        info->file.size = size;
 
         gp_file_free (cam_file);
 
@@ -281,7 +291,8 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
         return (GP_OK);
 }
 
-int folder_index(Camera *camera)
+static int
+folder_index(Camera *camera)
 {
         GP_SYSTEM_DIR dir;
         GP_SYSTEM_DIRENT de;
@@ -307,7 +318,8 @@ int folder_index(Camera *camera)
         return (GP_OK);
 }
 
-int directory_folder_set (Camera *camera, const char *folder_name)
+static int
+directory_folder_set (Camera *camera, const char *folder_name)
 {
         DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
