@@ -461,10 +461,10 @@ pdc700_expand (unsigned char *src, unsigned char *dst)
 
 	for (y = 0; y < 60; y++)
 		for (x = 0; x < 80; x += 2) {
-			Y  = (char*) src[0]; Y  += 128;
-			U  = (char*) src[1]; U  -= 0;
-			Y2 = (char*) src[2]; Y2 += 128;
-			V  = (char*) src[3]; V  -= 0;
+			Y  = (char) src[0]; Y  += 128;
+			U  = (char) src[1]; U  -= 0;
+			Y2 = (char) src[2]; Y2 += 128;
+			V  = (char) src[3]; V  -= 0;
 
 			if ((Y  > -16) && (Y  < 16)) Y  = 0;
 			if ((Y2 > -16) && (Y2 < 16)) Y2 = 0;
