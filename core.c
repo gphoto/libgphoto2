@@ -19,6 +19,8 @@
 /* Some globals
    ---------------------------------------------------------------- */
 
+	int		glob_debug=1;
+
 	CameraPortSettings glob_port_settings;
 
 	/* Currently Selected camera/folder */
@@ -75,26 +77,27 @@ int gp_init () {
 	for(x=0; x<512; x++)
 		glob_camera_id[x] = (char *)malloc(sizeof(char)*64);
 
-#ifdef DEBUG
-	printf(" > Debug Mode On < \n");
-	printf("core: Creating $HOME/.gphoto\n");
-#endif
+	if (glob_debug) {
+		printf(" > Debug Mode On < \n");
+		printf("core: Creating $HOME/.gphoto\n");
+	}
+
 	/* Make sure the directories are created */
 	sprintf(buf, "%s/.gphoto", getenv("HOME"));
 	(void)mkdir(buf, 0700);
 
-#ifdef DEBUG
+	if (glob_debug)
+		printf("core: Trying to load settings:\n");
 	/* Load settings */
 	load_settings();
 
-	printf("core: Camera library dir: %s\n", CAMLIBS);
-	printf("core: Trying to load libraries:\n");
-#endif
-
+	if (glob_debug) {
+		printf("core: Camera library dir: %s\n", CAMLIBS);
+		printf("core: Trying to load libraries:\n");
+	}
 	load_cameras();
 
-#ifdef DEBUG
-	{
+	if (glob_debug) {
 		int x;
 		printf("core: List of cameras found:\n");
 		for (x=0; x<glob_camera_count; x++)
@@ -103,7 +106,7 @@ int gp_init () {
 		if (glob_camera_count == 0)
 			printf("core:\tNone\n");
 	}
-#endif
+
 	if (gp_get_setting("camera", buf) == GP_OK)
 		return (load_library(buf));
 	return (GP_OK);
@@ -154,11 +157,11 @@ int gp_camera_set (int camera_number) {
 		return (GP_ERROR);
 	glob_camera_number = camera_number;
 
-#ifdef DEBUG
-	printf("core: Initializing \"%s\" (%s)...\n", 
-		glob_camera[camera_number].name,
-		glob_camera[camera_number].library);
-#endif
+	if (glob_debug)
+		printf("core: Initializing \"%s\" (%s)...\n", 
+			glob_camera[camera_number].name,
+			glob_camera[camera_number].library);
+
 	strcpy(ci.model, glob_camera[camera_number].name);
 	memcpy(&ci.port_settings, &glob_port_settings, sizeof(glob_port_settings));
 	gp_camera_init(&ci);
@@ -344,9 +347,9 @@ int gp_set_setting (char *key, char *value) {
 
 	int x;
 
-#ifdef DEBUG
-	printf("core: Setting key \"%s\" to value \"%s\"\n",key,value);
-#endif
+	if (glob_debug)
+		printf("core: Setting key \"%s\" to value \"%s\"\n",
+			key,value);
 
 	for (x=0; x<glob_setting_count; x++) {
 		if (strcmp(glob_setting[x].key, key)==0) {
