@@ -260,7 +260,7 @@ int gp_widget_set_value (CameraWidget *widget, void *value)
  * @widget: a CameraWidget
  * @value:
  *
- * Sets the value of the CameraWidget.
+ * Retreives the value of the CameraWidget.
  *
  * Return value: GPhoto error code.
  **/
