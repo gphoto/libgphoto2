@@ -29,5 +29,8 @@ Notes on specific functions:
 	message indicating which image needs to be deleted. This is, in my
 	opinion, preferable to losing the picture entirely.
 
+	The camera_init() function attempts to set the camera clock to the current
+	system time. If it fails, the init function can still suceed; I do not
+	believe that failing to set the clock should mean failure to initialize.
 
 --Gus Hartmann, <gphoto-dimagev@gus-the-cat.org>
