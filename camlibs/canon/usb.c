@@ -553,7 +553,7 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 	intatpos (payload, 0x4, USB_BULK_READ_SIZE);
 
 	if (camera->pl->model == CANON_PS_S10 || camera->pl->model == CANON_PS_S20
-	    || camera->pl->model == CANON_PS_S30
+	    || camera->pl->model == CANON_PS_S30 || camera->pl->model == CANON_PS_S40
 	    || camera->pl->model == CANON_PS_G2 || camera->pl->model == CANON_PS_G1
 	    || camera->pl->model == CANON_PS_S300 || camera->pl->model == CANON_PS_S100
 	    || camera->pl->model == CANON_PS_A10 || camera->pl->model == CANON_PS_A20
