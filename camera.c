@@ -34,6 +34,9 @@ int gp_camera_count ()
 
 int gp_camera_name (int camera_number, char *camera_name)
 {
+	if (glob_abilities_list == NULL)
+		return (GP_ERROR_MODEL_NOT_FOUND);
+
         if (camera_number > glob_abilities_list->count)
                 return (GP_ERROR_MODEL_NOT_FOUND);
 
