@@ -1,7 +1,9 @@
+2003-11-26 Mariusz Woloszyn
+	* library.c: make the capture code less sensibe for protocol
+	incompatibility.
 2003-10-20  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Sony DSC-P52, DSC-P72, DSC-P92
-
 2003-10-14 Marcus Meissner 
 	
 	* library.c: Fixed progress max value to be 100, or we get Inf/Nan

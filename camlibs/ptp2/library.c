@@ -652,13 +652,17 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 */
 	CPR(context,ptp_initiatecapture(&camera->pl->params, 0x00000000, 0x00000000));
 	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
-	while (ptp_usb_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
+	if (ptp_usb_event_wait(&camera->pl->params,&event)!=PTP_RC_OK) goto out;
 	if (event.Code==PTP_EC_ObjectAdded) {
-		while (ptp_usb_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
+		if (ptp_usb_event_wait(&camera->pl->params, &event)!=PTP_RC_OK)
+			goto out;
 		if (event.Code==PTP_EC_CaptureComplete) {
 			return GP_OK;
+			CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
 		}
 	} 
+
+	out:
 	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
 
 	/* we're not going to set path, ptp does not use paths anyway ;) */
