@@ -1,2 +1,7 @@
+*~ .*~
 Makefile.in
 Makefile
+*.ced
+*.pdf
+html
+txt
