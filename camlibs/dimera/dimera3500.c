@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.37  2002/01/04 23:06:05  dfandrich
+ * Eliminated // comments for compatibility with pre-C99 compilers.
+ *
  * Revision 1.36  2002/01/03 17:45:58  dfandrich
  * Changed download to use gp_file_progress to allow user to cancel.
  *
@@ -568,7 +571,7 @@ Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 		*size = 0;
 		return NULL;
 	}
-	//return (0 != (r&0x1000000));
+	/*return (0 != (r&0x1000000));*/
 	return image;
 }
 
