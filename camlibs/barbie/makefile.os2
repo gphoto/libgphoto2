@@ -16,7 +16,7 @@ end:
   @echo   Done: $(MAKEDIR)
   @echo ****
 
-dll: ..\gpdscf1.dll
+dll: ..\gpbarbie.dll
 
 barbie.o : barbie.c
    @$(CC) -o $@ barbie.c $(CCFLAGS)
@@ -25,5 +25,5 @@ barbie.def: barbie.o
    @copy barbie.df barbie.def
    @emxexp $** >> barbie.def
 
-..\gpdscf1.dll: barbie.o barbie.def
+..\gpbarbie.dll: barbie.o barbie.def
    @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -Le:\emx\lib -lst\check -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldl ..\..\obj\interface.o -lpthreads -lpthrdrtl -lmt\c
