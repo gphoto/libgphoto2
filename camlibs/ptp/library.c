@@ -169,6 +169,7 @@ static struct {
 } models[] = {
 	{"Kodak DC-240 (PTP)",  0x040a, 0x0121}, /* Special firmware */
 	{"Kodak DC-4800", 0x040a, 0x0160},
+	{"Kodak DC-3215", 0x040a, 0x0525},
 	{"Kodak DX-3500", 0x040a, 0x0500},
 	{"Kodak DX-3600", 0x040a, 0x0510},
 	{"Kodak DX-3700", 0x040a, 0x0530},
@@ -258,6 +259,7 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data)
 	 */
 	result = gp_port_read (camera->port, bytes, size);
 	// returned value is little endian
+	if (result==0) result = gp_port_read (camera->port, bytes, size);
 	if (result >= 0)
 		return (PTP_RC_OK);
 	else
@@ -305,7 +307,6 @@ camera_abilities (CameraAbilitiesList *list)
 	CameraAbilities a;
 
 	for (i = 0; models[i].model; i++) {
-		memset(&a,0, sizeof(a));
 		strcpy (a.model, models[i].model);
 		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 		a.port   = GP_PORT_USB;
@@ -317,9 +318,9 @@ camera_abilities (CameraAbilitiesList *list)
 					GP_FILE_OPERATION_DELETE;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 		CR (gp_abilities_list_append (list, a));
+		memset(&a,0, sizeof(a));
 	}
 
-	memset(&a,0, sizeof(a));
 	strcpy(a.model, "USB PTP Class Camera");
 	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 	a.port   = GP_PORT_USB;
@@ -582,7 +583,7 @@ camera_init (Camera *camera)
 	camera->pl->params.transaction_id=0x01;
 
 	/* Configure the port */
-	CR (gp_port_set_timeout (camera->port, 2000));
+	CR (gp_port_set_timeout (camera->port, 3000));
 	CR (gp_port_get_settings (camera->port, &settings));
 	settings.usb.inep = 0x01;
 	settings.usb.outep = 0x01;
@@ -593,6 +594,10 @@ camera_init (Camera *camera)
 
 	/* Establish a connection to the camera */
 	ret=ptp_opensession (&camera->pl->params, htole32(1));
+	while (ret==PTP_RC_InvalidTransactionID) {
+		camera->pl->params.transaction_id+=10;
+		ret=ptp_opensession (&camera->pl->params, htole32(1));
+	}
 	if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
 		report_result(camera, ret);
 		return (translate_ptp_result(ret));
