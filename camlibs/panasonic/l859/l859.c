@@ -622,8 +622,6 @@ int camera_init (Camera *camera) {
         int             ret;
 	GPPortSettings settings;
 
-        l859_debug("Camera Init %s", camera->model);
-
         /* First, set up all the function pointers */
         camera->functions->exit    = camera_exit;
         camera->functions->summary = camera_summary;

@@ -27,9 +27,7 @@ static int digita_usb_send(struct digita_device *dev, void *buffer, int len)
 
 int digita_usb_open(struct digita_device *dev, Camera *camera)
 {
-	gp_port_settings settings;
-
-	fprintf(stderr, "digita: user selected %s\n", camera->model);
+	GPPortSettings settings;
 
 	settings.usb.inep = 0x81;
 	settings.usb.outep = 0x02;
