@@ -25,19 +25,16 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include <gphoto2-abilities.h>
-#include <gphoto2-setting.h>
-#include <gphoto2-result.h>
-#include <gphoto2-abilities-list.h>
-#include <gphoto2-camera.h>
-#include <gphoto2.h>
+#include "gphoto2-abilities.h"
+#include "gphoto2-setting.h"
+#include "gphoto2-result.h"
+#include "gphoto2-abilities-list.h"
+#include "gphoto2-camera.h"
+#include "gphoto2-debug.h"
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
-#define CHECK_INIT           {if (!gp_is_initialized ()) CHECK_RESULT (gp_init (GP_DEBUG_NONE));}
-
-/* Debug level */
-int             glob_debug = 0;
+#define CHECK_INIT           {if (!gp_is_initialized ()) CHECK_RESULT (gp_init ());}
 
 /* Camera List */
 CameraAbilitiesList *gal;
@@ -72,12 +69,10 @@ load_camera_list (char *library_filename)
         CameraLibraryIdFunc load_camera_id;
         int x, old_count, new_count, result;
 
-        /* try to open the library */
-        if ((lh = GP_SYSTEM_DLOPEN(library_filename))==NULL) {
-                if (glob_debug)
-                        perror("core:\tload_camera_list");
-                return 0;
-        }
+	/* Try to open the library */
+	lh = GP_SYSTEM_DLOPEN(library_filename);
+	if (!lh)
+		return (GP_ERROR);
 
         /* Make sure the camera hasn't been loaded yet */
         load_camera_id = GP_SYSTEM_DLSYM (lh, "camera_id");
@@ -174,16 +169,13 @@ load_cameras (void)
         return GP_OK;
 }
 
-int
-gp_init (int debug)
+static int
+gp_init (void)
 {
         char buf[1024];
         int count;
 
-        gp_debug_printf (GP_DEBUG_LOW, "core", "Initializing GPhoto with "
-                         "debug level %i...", debug);
-
-        glob_debug = debug;
+        gp_debug_printf (GP_DEBUG_LOW, "core", "Initializing GPhoto...");
 
         if (have_initted)
                 return (GP_OK);
@@ -200,9 +192,6 @@ gp_init (int debug)
         sprintf (buf, "%s/.gphoto", getenv ("HOME"));
 #endif
         (void)GP_SYSTEM_MKDIR (buf);
-
-        gp_debug_printf (GP_DEBUG_LOW, "core", "Initializing IO library...");
-        CHECK_RESULT (gp_port_init (debug));
 
         /* Load settings */
         gp_debug_printf (GP_DEBUG_LOW, "core", "Trying to load settings...");
@@ -222,7 +211,7 @@ gp_init (int debug)
         return (GP_OK);
 }
 
-int
+static int
 gp_is_initialized (void)
 {
         return have_initted;
@@ -233,6 +222,8 @@ gp_exit (void)
 {
         CHECK_RESULT (gp_abilities_list_free (gal));
         gal = NULL;
+
+	have_initted = 0;
 
         return (GP_OK);
 }
@@ -274,24 +265,6 @@ gp_autodetect (CameraList *list)
                 return GP_OK;
 
         return GP_ERROR_NO_CAMERA_FOUND;
-}
-
-
-void
-gp_debug_printf (int level, const char *id, const char *format, ...)
-{
-        va_list arg;
-
-        if (glob_debug == GP_DEBUG_NONE)
-                return;
-
-        if (glob_debug >= level) {
-                fprintf (stderr, "%s: ", id);
-                va_start (arg, format);
-                vfprintf (stderr, format, arg);
-                va_end (arg);
-                fprintf (stderr, "\n");
-        }
 }
 
 int

@@ -11,6 +11,7 @@ libgphoto2_la_SOURCES = 	\
 	abilities-list.c	\
 	camera.c		\
 	core.c			\
+	debug.c			\
 	exif.c exif.h		\
 	file.c			\
 	filesys.c		\

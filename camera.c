@@ -27,6 +27,7 @@
 #include "gphoto2-frontend.h"
 #include "gphoto2-core.h"
 #include "gphoto2-library.h"
+#include "gphoto2-debug.h"
 
 #include <config.h>
 #ifdef ENABLE_NLS
@@ -59,9 +60,11 @@ gp_camera_new (Camera **camera)
 
 	CHECK_NULL (camera);
 
-	/* Be nice to frontend-writers... */
-	if (!gp_is_initialized ())
-		CHECK_RESULT (gp_init (GP_DEBUG_NONE));
+	/*
+	 * Be nice to frontend-writers and call some core function to make
+	 * sure libgphoto2 is initialized...
+	 */
+	CHECK_RESULT (gp_camera_count ());
 
         *camera = malloc (sizeof (Camera));
 	if (!*camera) 

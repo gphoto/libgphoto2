@@ -26,6 +26,7 @@
 
 #include "gphoto2-result.h"
 #include "gphoto2-core.h"
+#include "gphoto2-debug.h"
 
 typedef struct {
 	/* key = value settings */
@@ -38,17 +39,23 @@ typedef struct {
 int             glob_setting_count = 0;
 Setting         glob_setting[512];
 
-extern int glob_debug;
-
 static int save_settings (void);
 static int dump_settings (void);
+
+#define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
+#define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
 
 int gp_setting_get (char *id, char *key, char *value)
 {
         int x;
 
-	if (!id || !key)
-		return (GP_ERROR);
+	CHECK_NULL (id && key);
+
+	/*
+	 * Be nice to frontend writers and make sure libgphoto2 is
+	 * initialized
+	 */
+	CHECK_RESULT (gp_camera_count ());
 
         for (x=0; x<glob_setting_count; x++) {
                 if ((strcmp(glob_setting[x].id, id)==0) &&
@@ -65,11 +72,10 @@ int gp_setting_set (char *id, char *key, char *value)
 {
         int x;
 
+	CHECK_NULL (id && key);
+
 	gp_debug_printf(GP_DEBUG_LOW, "core", "(%s) Setting key \"%s\" to value \"%s\"",
                         id,key,value);
-
-	if (!id || !key)
-		return (GP_ERROR);
 
         for (x=0; x<glob_setting_count; x++) {
                 if ((strcmp(glob_setting[x].id, id)==0) &&
@@ -163,7 +169,8 @@ int load_settings (void)
 			strcpy(glob_setting[glob_setting_count++].value, "");
 		}
 	}
-	if (glob_debug)
+
+	if (gp_debug_get_level ())
 		dump_settings ();
 
 	return (GP_OK);
