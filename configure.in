@@ -118,6 +118,7 @@ camlibs/konica/Makefile \
 camlibs/digita/Makefile \
 camlibs/canon/Makefile \
 camlibs/sonydscf1/Makefile \
+camlibs/template/Makefile \
 frontends/Makefile \
 frontends/command-line/Makefile \
 frontends/libgphoto2_frontend/Makefile \

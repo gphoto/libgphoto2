@@ -9,24 +9,22 @@ int camera_id (CameraText *id) {
 	return (GP_OK);
 }
 
-int camera_abilities (CameraAbilities *abilities, int *count) {
+int camera_abilities (CameraAbilitiesList *list) {
 
-	*count = 0;
+	CameraAbilities *a;
 
-	/* Fill in each camera model's abilities */
-	/* Make separate entries for each conneciton type (usb, serial, etc...)
-	   if a camera supported multiple ways. */
+	a = gp_abilities_new();
 
-	strcpy(abilities[0].model, "CAMERA MODEL");
+	strcpy(a->model, "CAMERA MODEL");
+	a->port     = GP_PORT_SERIAL | GP_PORT_USB;
+	a->speed[0] = 0;
+	a->capture  = 0;
+	a->config   = 0;
+	a->file_delete  = 0;
+	a->file_preview = 0;
+	a->file_put = 0;
 
-	abilities[0].port     = GP_PORT_NONE;
-
-	abilities[0].speed[0] = 0;
-	abilities[0].capture  = 0;
-	abilities[0].config   = 0;
-	abilities[0].file_delete  = 0;
-	abilities[0].file_preview = 0;
-	abilities[0].file_put = 0;
+	gp_abilities_list_append(list, a);
 
 	return (GP_OK);
 }
@@ -39,8 +37,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->init 	= camera_init;
 	camera->functions->exit 	= camera_exit;
 	camera->functions->folder_list  = camera_folder_list;
-	camera->functions->folder_set 	= camera_folder_set;
-	camera->functions->file_count 	= camera_file_count;
+	camera->functions->file_list	= camera_file_list;
 	camera->functions->file_get 	= camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_put 	= camera_file_put;
@@ -60,74 +57,59 @@ int camera_exit (Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_folder_list(Camera *camera, char *folder_name, CameraFolderInfo *list) {
+int camera_folder_list	(Camera *camera, CameraList *list, char *folder) {
 
 	return (GP_OK);
 }
 
-int camera_folder_set(Camera *camera, char *folder_name) {
+int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 
 	return (GP_OK);
 }
 
-int camera_file_count (Camera *camera) {
-
-	return (0);
-}
-
-int camera_file_get (Camera *camera, CameraFile *file, int file_number) {
-
-	/**********************************/
-	/* file_number now starts at 0!!! */
-	/**********************************/
+int camera_file_get (Camera *camera, CameraFile *file, 
+		     char *folder, char *filename) { 
 
 	return (GP_OK);
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *preview, int file_number) {
-
-	/**********************************/
-	/* file_number now starts at 0!!! */
-	/**********************************/
+int camera_file_get_preview (Camera *camera, CameraFile *file,
+			     char *folder, char *filename) {
 
 	return (GP_OK);
 }
 
-int camera_file_put (Camera *camera, CameraFile *file) {
+int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
-	return (GP_ERROR);
+	return (GP_OK);
 }
 
-int camera_file_delete (Camera *camera, int file_number) {
+int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
-	return (GP_ERROR);
+	return (GP_OK);
 }
 
 int camera_config_get (Camera *camera, CameraWidget *window) {
 
-        return GP_ERROR;
+	return (GP_OK);
 }
 
-int camera_config_set (Camera *camera, CameraSetting *setting, int count) {
+int camera_config_set (Camera *camera, CameraSetting *conf, int count) {
 
-	return (GP_ERROR);
+	return (GP_OK);
 }
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
-	return (GP_ERROR);
+	return (GP_OK);
 }
 
 int camera_summary (Camera *camera, CameraText *summary) {
-
-	strcpy(summary->text, "Summary Not Available");
 
 	return (GP_OK);
 }
 
 int camera_manual (Camera *camera, CameraText *manual) {
-
-	strcpy(manual->text, "Manual Not Available");
 
 	return (GP_OK);
 }
