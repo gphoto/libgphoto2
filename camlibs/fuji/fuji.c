@@ -98,7 +98,6 @@
 #define ESC 0x10
 #define ETB 0x17 /* End of transmission block */
 #define NAK 0x15
-#define PERR 0xff
 
 #define FUJI_ACK 0x00
 #define FUJI_NAK 0x01
@@ -208,7 +207,6 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 	/* Read the data. Unescape it. Calculate the checksum. */
 	for (i = 0; i < *buf_len; i++) {
 		CR (gp_port_read (camera->port, buf + i, 1));
-		if (buf[i]==PERR) CR (gp_port_read (camera->port, buf + i, 1));
 		if (buf[i] == ESC) {
 			CR (gp_port_read (camera->port, buf + i, 1));
 			if (buf[i] != ESC) {
@@ -281,7 +279,6 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 
 		/* Receive ACK (hopefully) */
 		CR (gp_port_read (camera->port, &c, 1));
-		if (c==PERR) CR (gp_port_read (camera->port, &c, 1));
 		switch (c) {
 		case ACK:
 			break;

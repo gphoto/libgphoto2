@@ -1,3 +1,7 @@
+2002-04-21 Matt Martin <matt.martin@ieee.org>
+
+	* fuji.c Remove 0xff escaping code now done by libgphoto2_port
+
 2002-04-21  Lutz Müller <lutz@users.sourceforge.net>
 
 	* fuji.c: Formatting.
@@ -10,6 +14,13 @@
 2002-04-21  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: A fuji_reset doesn't seem to reset the speed to 9600.
+
+2002-04-21 Matt Martin <matt.martin@ieee.org>
+
+	* fuji.c: Fixed some pointer errors in CFR macro calls. Added
+	escaping of 0xff codes in downloads. Made provisions for DS-7
+	which does not support file-length query.
+	# fuji.h: Fixed FUJI_CMD_PIC_GET vs PIC_GET_THUMB swap.
 
 2002-04-19  Lutz Müller <lutz@users.sourceforge.net>
 
