@@ -1,3 +1,8 @@
+2003-03-01  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* sierra.c: Fix SIERRA_SKIP_INIT usage and add vendor/product
+	  id's for Polaroid PDC 2300Z.
+
 2003-02-27  Marcus Meissner <marcus@jet.franken.de>
 	
 	* library.c: We support EXIF download.
