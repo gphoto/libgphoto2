@@ -81,10 +81,20 @@ else
     if test "$vers" -ge 11; then
         AC_MSG_RESULT(found)
     else
-        AC_MSG_ERROR(You need at least libglade 0.11 for this version of gphoto)
+        AC_MSG_ERROR([
+*** The gnome-version of gphoto needs at least libglade 0.11. The latest 
+*** version of libglade is always available from ftp://ftp.gnome.org/..
+***
+*** If you want to build gphoto without gnome support, try the 
+*** --disable-gnome option.])
     fi
   else
-    AC_MSG_ERROR(Did not find libglade installed)
+    AC_MSG_ERROR([
+*** The gnome-version of gphoto needs libglade. The latest version of 
+*** libglade is always available from ftp://ftp.gnome.org/.
+***
+*** If you want to build gphoto without gnome support, try the 
+*** --disable-gnome option.])
   fi
   EXTRA_GNOME_LIBS=`gnome-config --libs libglade`
   EXTRA_GNOME_CFLAGS=`gnome-config --cflags libglade`
