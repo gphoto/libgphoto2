@@ -845,12 +845,10 @@ gp_port_serial_check_speed (GPPort *dev)
         tio.c_cflag = (tio.c_cflag & ~CSIZE) | CS8;
 
         /* Set into raw, no echo mode */
-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__APPLE__)
         tio.c_iflag &= ~(IGNBRK | IGNCR | INLCR | ICRNL |
                          IXANY | IXON | IXOFF | INPCK | ISTRIP);
-#else
-        tio.c_iflag &= ~(IGNBRK | IGNCR | INLCR | ICRNL | IUCLC |
-                         IXANY | IXON | IXOFF | INPCK | ISTRIP);
+#ifdef IUCLC
+        tio.c_iflag &= ~IUCLC;
 #endif
         tio.c_iflag |= (BRKINT | IGNPAR);
         tio.c_oflag &= ~OPOST;

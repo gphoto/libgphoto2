@@ -1,3 +1,8 @@
+2005-03-04  Marcus Meissner  <marcus@jet.franken.de>
+
+	* serial/unix.c: make IUCLC check more generic.
+	  (from Robert Millan)
+
 2005-02-16  Marcus Meissner  <marcus@jet.franken.de>
 
 	* usb/libusb.c: also detach the usb-storage driver
