@@ -1304,6 +1304,8 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && folder && filename && info);
 	CHECK_ABS (folder);
 
+	memset (info, 0, sizeof (CameraFileInfo));
+
 	if (!fs->get_info_func) {
 		gp_log (GP_LOG_ERROR, "gphoto2-filesystem",
 			_("The filesystem doesn't support getting file "
