@@ -365,6 +365,10 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 			camera->pl->image_id_long, image_id, protected));
         }
 
+	/* Name? */
+	if (info.file.fields & GP_FILE_INFO_NAME)
+		return (GP_ERROR_NOT_SUPPORTED);
+
         return (GP_OK);
 }
 
