@@ -1,5 +1,15 @@
 2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/dimera/dimera3500.c: explicitly set the conversion method
+	to GP_FILE_CONVERSION_METHOD_CHUCK.
+	* camlibs/digita/digita.c: Move the conversion raw -> ppm to ...
+	* include/gphoto2-file.h:
+	* libgphoto2/file.c: ... here.
+	* include/gphoto2-filesystem.h:
+	* libgphoto2/filesys.c: Implement "dirty" folders.
+
+2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/dimera3500.c: Move the raw->pnm conversion ...
 	* include/gphoto2-file.h:
 	* libgphto2/file.c: ... here. Now, other camera drivers can use this,

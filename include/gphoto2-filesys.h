@@ -31,6 +31,10 @@ typedef struct _CameraFilesystem CameraFilesystem;
 int gp_filesystem_new	 (CameraFilesystem **fs);
 int gp_filesystem_free	 (CameraFilesystem *fs);
 
+int gp_filesystem_folder_set_dirty (CameraFilesystem *fs, const char *folder,
+				    int dirty);
+int gp_filesystem_folder_is_dirty  (CameraFilesystem *fs, const char *folder);
+
 /* Adding */
 int gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
 			    char *format, int count);

@@ -21,6 +21,17 @@
  *
  * History:
  * $Log$
+ * Revision 1.11  2001/08/26 16:06:40  lutz
+ * 2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs/dimera/dimera3500.c: explicitly set the conversion method
+ *         to GP_FILE_CONVERSION_METHOD_CHUCK.
+ *         * camlibs/digita/digita.c: Move the conversion raw -> ppm to ...
+ *         * include/gphoto2-file.h:
+ *         * libgphoto2/file.c: ... here.
+ *         * include/gphoto2-filesystem.h:
+ *         * libgphoto2/filesys.c: Implement "dirty" folders.
+ *
  * Revision 1.10  2001/08/26 10:42:54  lutz
  * 2001-08-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -406,6 +417,8 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename, C
 			gp_file_set_header (file, Dimera_finehdr);
 		else
 			gp_file_set_header (file, Dimera_stdhdr);
+		gp_file_set_conversion_method (file,
+					GP_FILE_CONVERSION_METHOD_CHUCK);
 		gp_file_convert (file, GP_MIME_PNM);
 		break;
 

@@ -23,6 +23,7 @@
 
 #define GP_MIME_RAW  "image/x-raw"
 #define GP_MIME_PNM  "image/pnm"
+#define GP_MIME_PPM  "image/ppm"
 #define GP_MIME_JPEG "image/jpeg"
 
 typedef enum {
@@ -30,6 +31,11 @@ typedef enum {
 	GP_FILE_TYPE_NORMAL,
 	GP_FILE_TYPE_RAW
 } CameraFileType;
+
+typedef enum {
+	GP_FILE_CONVERSION_METHOD_CHUCK,
+	GP_FILE_CONVERSION_METHOD_JOHANNES
+} CameraFileConversionMethod;
 
 typedef struct _CameraFile CameraFile;
 
@@ -48,6 +54,7 @@ struct _CameraFile {
 	int red_size, blue_size, green_size;
 	char header [128];
 	int width, height;
+	CameraFileConversionMethod method;
 }; 
 
 int gp_file_new            (CameraFile **file);
@@ -77,12 +84,15 @@ int gp_file_get_data_and_size (CameraFile*, const char **data, long int *size);
 
 int gp_file_copy           (CameraFile *destination, CameraFile *source);
 
+/* Conversion */
 int gp_file_set_color_table  (CameraFile *file,
 			      const unsigned char *red_table,   int red_size,
 			      const unsigned char *green_table, int green_size,
 			      const unsigned char *blue_table,  int blue_size);
-int gp_file_set_width_and_height (CameraFile *file, int width, int height);
-int gp_file_set_header           (CameraFile *file, const char *header);
+int gp_file_set_width_and_height  (CameraFile *file, int width, int height);
+int gp_file_set_header            (CameraFile *file, const char *header);
+int gp_file_set_conversion_method (CameraFile *file,
+				   CameraFileConversionMethod method);
 
 int gp_file_convert (CameraFile *file, const char *mime_type);
 	
