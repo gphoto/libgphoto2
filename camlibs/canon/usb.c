@@ -320,91 +320,15 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 	GP_DEBUG ("canon_usb_lock_keys()");
 
 	switch (camera->pl->md->model) {
-		case CANON_PS_G1:
-		case CANON_PS_S100:
-		case CANON_PS_S20:
-		case CANON_PS_S10:
+		case CANON_CLASS_0:
 			GP_DEBUG ("canon_usb_lock_keys: Your camera model does not need the keylock.");
 			break;
-		case CANON_PS_PRO90_IS:
-			GP_DEBUG ("canon_usb_lock_keys: Your camera model does not support keylocking.");
-			break;
-		case CANON_EOS_D30:
-		case CANON_EOS_D60:
-		case CANON_EOS_10D:
-		case CANON_EOS_300D:
-		case CANON_PS_S230:
-		case CANON_PS_S400:
-			GP_DEBUG ("Locking camera keys and turning off LCD using 'EOS' locking code...");
 
-			memset (payload, 0, sizeof (payload));
-			payload[0] = 0x06;
-
-			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_LOCK_KEYS,
-						    &bytes_read, payload, 4);
-			if (!c_res)
-				return GP_ERROR;
-			if (bytes_read == 0x4) {
-				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
-			} else {
-				gp_context_error (context,
-						  _("canon_usb_lock_keys: "
-						  "Unexpected amount of data returned (%i bytes, expected %i)"),
-						  bytes_read, 0x4);
-				return GP_ERROR;
-			}
-
-			break;
-
-		case CANON_PS_S45:
-		case CANON_PS_S50:
-		case CANON_PS_G3:
-		case CANON_PS_G5:
-		default:
-			/* Special case: doesn't implement "get
-                           picture abilities", but isn't an EOS
-                           camera, so we have to use the "normal" key
-                           lock command. Since the S45 is a relatively
-                           new model (in Jan. 2003), I suspect that we
-                           will find more cameras in the future that
-                           work this way. */
-			GP_DEBUG ("Locking camera keys and turning off LCD using special-case S45 locking code...");
-			c_res = canon_usb_dialogue (camera,
-						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
-						    &bytes_read, NULL, 0);
-			if (bytes_read == 0x4) {
-				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
-			} else {
-				gp_context_error (context,
-						  _("canon_usb_lock_keys: "
-						  "Unexpected amount of data returned (%i bytes, expected %i)"),
-						  bytes_read, 0x4);
-				return GP_ERROR;
-			}
-			break;
-
-		case CANON_PS_A5:
-		case CANON_PS_A5_ZOOM:
-		case CANON_PS_A50:
-		case CANON_PS_S30:
-		case CANON_PS_S40:
-		case CANON_PS_PRO70:
-		case CANON_PS_S300:
-		case CANON_PS_G2:
-		case CANON_PS_A10:
-		case CANON_PS_A20:
-		case CANON_PS_A30:
-		case CANON_PS_A40:
-		case CANON_PS_S330:
-		case CANON_PS_S200:
-		case CANON_PS_A100:
-		case CANON_PS_A200:
-		case CANON_OPT_200:
-		case CANON_PS_A80:
+		case CANON_CLASS_1:
+		case CANON_CLASS_2:
+		case CANON_CLASS_3:
 			/* Previous default; I doubt that any new
-			 * cameras will work this way, so it now is
-			 * explicit for the older cameras that use
-			 * it. */
+			 * cameras will work this way. */
 			GP_DEBUG ("Locking camera keys and turning off LCD using 'normal' locking code...");
 
 			c_res = canon_usb_dialogue (camera,
@@ -432,6 +356,51 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 				return GP_ERROR;
 			}
 			break;
+
+		case CANON_CLASS_4:
+			GP_DEBUG ("Locking camera keys and turning off LCD using 'EOS' locking code...");
+
+			memset (payload, 0, sizeof (payload));
+			payload[0] = 0x06;
+
+			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_LOCK_KEYS,
+						    &bytes_read, payload, 4);
+			if (!c_res)
+				return GP_ERROR;
+			if (bytes_read == 0x4) {
+				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
+			} else {
+				gp_context_error (context,
+						  _("canon_usb_lock_keys: "
+						  "Unexpected amount of data returned (%i bytes, expected %i)"),
+						  bytes_read, 0x4);
+				return GP_ERROR;
+			}
+			break;
+
+		case CANON_CLASS_5:
+			/* Doesn't implement "get
+                           picture abilities", but isn't an EOS
+                           camera, so we have to use the "normal" key
+                           lock command. Since the S45 is a relatively
+                           new model (in Jan. 2003), I suspect that we
+                           will find more cameras in the future that
+                           work this way. */
+			GP_DEBUG ("Locking camera keys and turning off LCD using special-case S45 locking code...");
+			c_res = canon_usb_dialogue (camera,
+						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
+						    &bytes_read, NULL, 0);
+			if (bytes_read == 0x4) {
+				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
+			} else {
+				gp_context_error (context,
+						  _("canon_usb_lock_keys: "
+						  "Unexpected amount of data returned (%i bytes, expected %i)"),
+						  bytes_read, 0x4);
+				return GP_ERROR;
+			}
+			break;
+
 	}
 
 	return GP_OK;
@@ -455,36 +424,28 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
 
 	GP_DEBUG ("canon_usb_unlock_keys()");
 
-	switch (camera->pl->md->model) {
-		case CANON_EOS_D30:
-		case CANON_EOS_D60:
-		case CANON_EOS_10D:
-		case CANON_EOS_300D:
-		case CANON_PS_S230:
-		case CANON_PS_S400:
-			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
-						    &bytes_read, NULL, 0);
-			if (!c_res)
-				return GP_ERROR;
-			if (bytes_read == 0x4) {
-				GP_DEBUG ("canon_usb_unlock_keys: Got the expected number of bytes back.");
-			} else {
-				gp_context_error (context,
-						  _("canon_usb_unlock_keys: "
-						  "Unexpected amount of data returned (%i bytes, expected %i)"),
-						  bytes_read, 0x4);
-				return GP_ERROR;
-			}
-
-			break;
-		default:
-			/* Your camera model does not need unlocking, cannot do unlocking or
-			 * we don't know how to unlock it's keys. 
-			 */
-			GP_DEBUG ("canon_usb_unlock_keys: Not unlocking the kind of camera you have.\n"
-				  "If unlocking works when using the Windows software with your camera,\n"
-				  "please contact %s.", MAIL_GPHOTO_DEVEL);
-			break;
+	if ( camera->pl->md->model == CANON_CLASS_4 ) {
+		c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
+					    &bytes_read, NULL, 0);
+		if (!c_res)
+			return GP_ERROR;
+		if (bytes_read == 0x4) {
+			GP_DEBUG ("canon_usb_unlock_keys: Got the expected number of bytes back.");
+		} else {
+			gp_context_error (context,
+					  _("canon_usb_unlock_keys: "
+					    "Unexpected amount of data returned (%i bytes, expected %i)"),
+					  bytes_read, 0x4);
+			return GP_ERROR;
+		}
+	}
+	else {
+		/* Your camera model does not need unlocking, cannot do unlocking or
+		 * we don't know how to unlock it's keys. 
+		 */
+		GP_DEBUG ("canon_usb_unlock_keys: Not unlocking the kind of camera you have.\n"
+			  "If unlocking works when using the Windows software with your camera,\n"
+			  "please contact %s.", MAIL_GPHOTO_DEVEL);
 	}
 
 	return GP_OK;
@@ -1377,6 +1338,67 @@ int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time
 }
 
 /**
+ * canon_usb_set_file_attributes:
+ * @camera: camera to initialize
+ * @attr_bits: bits to write in the camera directory entry
+ * @pathname: pathname of file whose attributes are to be changed.
+ * @context: context for error reporting
+ *
+ * Changes the attribute bits in a specified directory entry.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_usb_set_file_attributes (Camera *camera, unsigned short attr_bits,
+			       const char *pathname, GPContext *context)
+{
+	/* Pathname string plus 32-bit parameter plus two NULs. */
+	unsigned int payload_length = strlen(pathname) + 6;
+	unsigned char *payload = malloc ( payload_length );
+	int bytes_read;
+	unsigned char *res;
+
+	GP_DEBUG ( "canon_usb_set_file_attributes()" );
+
+	/* build payload :
+	 *
+	 * <attr bits> pathname 0x00 0x00
+	 *
+	 * The attribute bits will be a 32-bit little-endian integer.
+	 * NOTE: the first 0x00 after dirname is the NULL byte terminating
+	 * the string, so payload_length is strlen(dirname) + 4 
+	 */
+	memset (payload, 0x00, payload_length);
+	memcpy (payload + 4, pathname, strlen (pathname));
+	htole32a ( payload, (unsigned long)attr_bits );
+
+	/* 1024 * 1024 is max realistic data size, out of the blue.
+	 * 0 is to not show progress status
+	 */
+	res = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_SET_ATTR, &bytes_read,
+				   payload, payload_length );
+	if ( res == NULL ) {
+		gp_context_error (context,
+				  _("canon_usb_set_file_attributes: "
+				  "canon_usb_dialogue failed"));
+		free ( payload );
+		return GP_ERROR;
+	}
+	else if ( le32atoh ( res+0x50 ) != 0 ) {
+		gp_context_error (context,
+				  _("canon_usb_set_file_attributes: "
+				  "canon_usb_dialogue returned error status 0x%08x from camera"),
+				  le32atoh ( res+0x50 ) );
+		free ( payload );
+		return GP_ERROR;
+	}
+
+	free ( payload );
+	return GP_OK;
+}
+
+/**
  * canon_usb_put_file:
  * @camera: camera to lock keys on
  * @file: CameraFile object to upload
@@ -1413,7 +1435,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 	long int offs = 0;
 	char filename[256];
 	int filename_len;
-	const char *data;
+	char *data;
 	char *newdata = NULL;
 	long int size;			     /* Total size of file to upload */
 	FILE *fi;
@@ -1439,7 +1461,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 	CHECK_RESULT (gp_file_get_name (file, &srcname));
 
 	/* Open input file and read all its data into a buffer. */
-	if(!gp_file_get_data_and_size (file, &data, &size)) {
+	if(!gp_file_get_data_and_size (file, (const char **)&data, &size)) {
 	    fi = fopen(srcname, "rb");
 	    if(!fi) {
 		gp_context_error(context, _("Couldn't read from file \"%s\""), srcname);
@@ -1452,7 +1474,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 	    fseek(fi, 0, SEEK_SET);
 	    newdata = data = malloc(size);
 	    if(!newdata) {
-		gp_context_error(context, _("Out of memory: %d bytes needed."), size);
+		gp_context_error(context, _("Out of memory: %ld bytes needed."), size);
 		free(packet);
 		return GP_ERROR_NO_MEMORY;
 	    }
@@ -1461,7 +1483,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 	}
 
 	GP_DEBUG ( "canon_put_file_usb:"
-		   " finished reading file, %d bytes (0x%x)",
+		   " finished reading file, %ld bytes (0x%lx)",
 		   size, size );
 
 	/* Take the buffer and send it to the camera, breaking it into
@@ -1472,7 +1494,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 		len2 = size - offs;
 	    len1 = len2 + 0x1c + filename_len + 1;
 
-	    GP_DEBUG ( "canon_put_file_usb: len1=%x, len2=%x", len1, len2 );
+	    GP_DEBUG ( "canon_put_file_usb: len1=%lx, len2=%lx", len1, len2 );
 
 	    memset(packet, 0, 0x40);
 	    packet[4]=3;
@@ -1531,7 +1553,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 	    status = gp_port_write (camera->port, packet, len1+0x40);
 	    if (status != len1+0x40) {
 		    GP_DEBUG ("canon_put_file_usb: write 2 failed! "
-			      "(returned %i, expected %i)", status, len1+0x40);
+			      "(returned %i, expected %li)", status, len1+0x40);
 		    gp_context_error(context, _("File upload failed."));
 		    if(newdata)
 			free(newdata);
@@ -1717,67 +1739,6 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
 }
 
 /**
- * canon_usb_set_file_attributes:
- * @camera: camera to initialize
- * @attr_bits: bits to write in the camera directory entry
- * @pathname: pathname of file whose attributes are to be changed.
- * @context: context for error reporting
- *
- * Changes the attribute bits in a specified directory entry.
- *
- * Returns: gphoto2 error code
- *
- */
-int
-canon_usb_set_file_attributes (Camera *camera, unsigned short attr_bits,
-			       const char *pathname, GPContext *context)
-{
-	/* Pathname string plus 32-bit parameter plus two NULs. */
-	unsigned int payload_length = strlen(pathname) + 6;
-	unsigned char *payload = malloc ( payload_length );
-	int bytes_read;
-	unsigned char *res;
-
-	GP_DEBUG ( "canon_usb_set_file_attributes()" );
-
-	/* build payload :
-	 *
-	 * <attr bits> pathname 0x00 0x00
-	 *
-	 * The attribute bits will be a 32-bit little-endian integer.
-	 * NOTE: the first 0x00 after dirname is the NULL byte terminating
-	 * the string, so payload_length is strlen(dirname) + 4 
-	 */
-	memset (payload, 0x00, payload_length);
-	memcpy (payload + 4, pathname, strlen (pathname));
-	htole32a ( payload, (unsigned long)attr_bits );
-
-	/* 1024 * 1024 is max realistic data size, out of the blue.
-	 * 0 is to not show progress status
-	 */
-	res = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_SET_ATTR, &bytes_read,
-				   payload, payload_length );
-	if ( res == NULL ) {
-		gp_context_error (context,
-				  _("canon_usb_set_file_attributes: "
-				  "canon_usb_dialogue failed"));
-		free ( payload );
-		return GP_ERROR;
-	}
-	else if ( le32atoh ( res+0x50 ) != 0 ) {
-		gp_context_error (context,
-				  _("canon_usb_set_file_attributes: "
-				  "canon_usb_dialogue returned error status 0x%08x from camera"),
-				  le32atoh ( res+0x50 ) );
-		free ( payload );
-		return GP_ERROR;
-	}
-
-	free ( payload );
-	return GP_OK;
-}
-
-/**
  * canon_usb_ready:
  * @camera: camera to get ready
  *
@@ -1835,7 +1796,7 @@ canon_usb_identify (Camera *camera, GPContext *context)
 		    && models[i].usb_product
 		    && (a.usb_vendor  == models[i].usb_vendor) 
 		    && (a.usb_product == models[i].usb_product)) {
-			GP_DEBUG ("canon_usb_identify: USB ID match 0x%04x:0x%04x (%s)",
+			GP_DEBUG ("canon_usb_identify: USB ID match 0x%04x:0x%04x (model name \"%s\")",
 				  models[i].usb_vendor, models[i].usb_product, models[i].id_str);
 			gp_context_status (context, _("Detected a '%s'."), models[i].id_str);
 			camera->pl->md = (struct canonCamModelData *) &models[i];

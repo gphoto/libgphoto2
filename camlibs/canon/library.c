@@ -568,7 +568,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			 * GP_FILE_TYPE_EXIF instead
 			 */
 			if (is_jpeg (filename)) {
-				if (camera->pl->md->model != CANON_PS_PRO70) {
+				if (camera->pl->md->model != CANON_CLASS_2) {
 					GP_DEBUG ("get_file_func: preview requested where "
 						  "EXIF should be possible");
 					return (GP_ERROR_NOT_SUPPORTED);
@@ -589,7 +589,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		case GP_FILE_TYPE_EXIF:
 #ifdef HAVE_EXIF
 			/* the PowerShot Pro 70 does not support EXIF */
-			if (camera->pl->md->model == CANON_PS_PRO70)
+			if (camera->pl->md->model == CANON_CLASS_2)
 				return (GP_ERROR_NOT_SUPPORTED);
 
 			thumbname = canon_int_filename2thumbname (camera, canon_path);
@@ -795,7 +795,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	tm = localtime (&tmp_time);
 #ifdef HAVE_TM_GMTOFF
 	local_time = tmp_time + tm->tm_gmtoff;
-	GP_DEBUG ("camera_summary: converted %ld to localtime %ld (tm_gmtoff is %ld)", 
+	GP_DEBUG ("camera_summary: converted %ld to localtime %ld (tm_gmtoff is %ld)",
 		  (long)tmp_time, (long)local_time, (long)tm->tm_gmtoff);
 #else
 	local_time = tmp_time - timezone;
@@ -866,7 +866,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 	if (check_readiness (camera, context) != 1)
 		return GP_ERROR;
 
-	if (camera->pl->md->model == CANON_PS_A5 || camera->pl->md->model == CANON_PS_A5_ZOOM) {
+	if (camera->pl->md->model == CANON_CLASS_3) {
 		GP_DEBUG ("delete_file_func: deleting "
 			  "pictures disabled for cameras: PowerShot A5, PowerShot A5 ZOOM");
 
@@ -1017,8 +1017,9 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
-	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_PS_A50)
-					    || (camera->pl->md->model == CANON_PS_PRO70))) {
+	/* Special case for A50 and Pro 70 */
+	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_CLASS_1)
+					    || (camera->pl->md->model == CANON_CLASS_2))) {
 		gp_context_error (context,
 				  _("Speeds greater than 57600 are not supported for uploading to this camera"));
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1144,8 +1145,9 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
-	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_PS_A50)
-					    || (camera->pl->md->model == CANON_PS_PRO70))) {
+	/* Special case for A50 and Pro 70 */
+	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_CLASS_1)
+					    || (camera->pl->md->model == CANON_CLASS_2))) {
 		gp_context_error (context,
 				  _("Speeds greater than 57600 are not supported for uploading to this camera"));
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1369,7 +1371,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	gp_widget_get_child_by_label (window, _("Keep filename on upload"), &w);
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &camera->pl->upload_keep_filename);
-		GP_DEBUG ("New config value for tmb: %i", &camera->pl->upload_keep_filename);
+		GP_DEBUG ("New config value for tmb: %i", camera->pl->upload_keep_filename);
 	}
 #endif /* CANON_EXPERIMENTAL_UPLOAD */
 
@@ -1401,7 +1403,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	else if (is_audio (filename))
 		strcpy (info->file.type, GP_MIME_WAV);
 	else
-		/* May no be correct behaviour ... */
+		/* May not be correct behaviour ... */
 		strcpy (info->file.type, "unknown");
 
 	strcpy (info->file.name, filename);

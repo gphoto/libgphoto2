@@ -62,126 +62,33 @@ typedef enum {
 } canonJpegMarkerCode;
 
 /**
- * canonCamModel
- * @CANON_PS_A5: PowerShot A5
- * @CANON_PS_A5_ZOOM: PowerShot A5 Zoom
- * @CANON_PS_A50: PowerShot A50
- * @CANON_PS_A60: PowerShot A60
- * @CANON_PS_A70: PowerShot A70
- * @CANON_PS_A75: PowerShot A75
- * @CANON_PS_A85: PowerShot A95
- * @CANON_PS_A80: PowerShot A80
- * @CANON_PS_A95: PowerShot A95
- * @CANON_PS_PRO70: PowerShot Pro70
- * @CANON_PS_S10: PowerShot S10
- * @CANON_PS_S20: PowerShot S20
- * @CANON_EOS_D30: EOS D30
- * @CANON_PS_S100: PowerShot S100, PowerShot S110, IXY DIGITAL,
- *     Digital IXUS, DIGITAL IXUS v
- * @CANON_PS_G1: PowerShot G1
- * @CANON_PS_PRO90_IS: PowerShot Pro90 IS
- * @CANON_PS_S300: PowerShot S300, Digital IXUS 300
- * @CANON_PS_A20: PowerShot A20
- * @CANON_PS_A10: PowerShot A10
- * @CANON_PS_G2: PowerShot G2
- * @CANON_PS_S40: PowerShot S40
- * @CANON_PS_S30: PowerShot S30
- * @CANON_PS_A40: PowerShot A40
- * @CANON_PS_A30: PowerShot A30
- * @CANON_EOS_D60: EOS D60
- * @CANON_PS_A100: PowerShot A100
- * @CANON_PS_A200: PowerShot A200
- * @CANON_PS_A300: PowerShot A300
- * @CANON_PS_S200: PowerShot S200, Digital IXUS v2
- * @CANON_PS_S330: Digital IXUS 330
- * @CANON_PS_S410: Digital IXUS 430
- * @CANON_PS_S500: Digital IXUS 500
- * @CANON_PS_S45: PowerShot S45
- * @CANON_PS_S60: PowerShot S60
- * @CANON_PS_G3: PowerShot G3
- * @CANON_PS_G5: PowerShot G5
- * @CANON_PS_S230: PowerShot S230, Digital IXUS v3
- * @CANON_MV630I: MV630i camcorder
- * @CANON_MV650I: MV650i camcorder
- * @CANON_EOS_10D: EOS 10D
- * @CANON_OPT_10: Optura 10
- * @CANON_OPT_20: Optura 20
- * @CANON_OPT_200: Optura 200 MC, MVX2i
- * @CANON_PS_UNK1: Unknown camera seen in Mac OS X Image Capture
- * @CANON_PS_UNK2: Unknown camera seen in Mac OS X Image Capture
- * @CANON_PS_UNK3: Unknown camera seen in Mac OS X Image Capture
- * @CANON_ZR70MC: Canon ZR70MC Mini-DV Camcorder
- * @CANON_PS_UNK5: Unknown camera seen in Mac OS X Image Capture
- * @CANON_EOS_300D: EOS 300D / Digital Rebel / KISS Rebel
- * @CANON_PS_S50: PowerShot S50
- * @CANON_PS_S400: PowerShot S400, Digital IXUS 400
- * @CANON_PS_SD100: PowerShot SD100, Digital IXUS II
- * @CANON_PS_A400: PowerShot A400
- * @CANON_EOS_20D: EOS 20D
+ * canonCamClass:
+ * @CANON_CLASS_0: does not support key lock at all. Examples: G1,
+ *                 Pro 90is, S100, S10, S20
+ * @CANON_CLASS_1: supports lock, but not unlock. Supports (and
+ *                 requires) "get picture abilities" before capture.
+ *                 Examples: A5, A5 Zoom, A50, S30, S40, S200, S300,
+ *                 S330, G2, A10, A20, A30, A40, A100, A200,
+ *                 Optura200/MVX2i.
+ * @CANON_CLASS_2: like class 1, but doesn't support EXIF. Example: Pro 70.
+ * @CANON_CLASS_3: like class 1, but can't delete image
+ * @CANON_CLASS_4: supports lock/unlock. EOS D30 was first example; others
+ *                 include D60, 10D, 300D, S230, S400.
+ * @CANON_CLASS_5: supports lock, no unlock, but not "get picture abilities".
+ *                 Examples: S45, G3.
  *
- * Enumeration of all camera types currently supported.
+ * Enumeration of all camera types currently supported. Simplified so
+ * that all cameras with similar behavior have the same code.
  *
  */
 typedef enum {
-	CANON_PS_A5,
-	CANON_PS_A5_ZOOM,
-	CANON_PS_A50,
-	CANON_PS_A60,
-	CANON_PS_A70,
-	CANON_PS_A75,
-	CANON_PS_A80,
-	CANON_PS_A85,
-  	CANON_PS_A95,
-	CANON_PS_S10,
-	CANON_PS_S20,
-	CANON_PS_S30,
-	CANON_PS_S40,
-	CANON_PS_PRO70,
-	CANON_PS_S100,
-	CANON_PS_S300,
-	CANON_PS_G1,
-	CANON_PS_G2,
-	CANON_PS_A10,
-	CANON_PS_A20,
-	CANON_PS_A30,
-	CANON_PS_A40,
-	CANON_EOS_D30,
-	CANON_PS_PRO90_IS,
-	CANON_PS_S330,
-	CANON_PS_S200,
-	CANON_PS_SD20,
-	CANON_EOS_D60,
-	CANON_PS_A100,
-	CANON_PS_A200,
-	CANON_PS_A300,
-	CANON_PS_A310,
-	CANON_PS_A400,
-	CANON_PS_S50,
-	CANON_PS_S45,
-	CANON_PS_G3,
-	CANON_PS_S230,
-	CANON_MV630I,
-	CANON_MV650I,
-	CANON_EOS_10D,
-	CANON_EOS_20D,
-	CANON_OPT_200,
-	/* In Mac OS Image Capture, but not yet seen in the wild. */
-	CANON_PS_UNK1,
-	CANON_PS_UNK2,
-	CANON_PS_UNK3,
-	CANON_ZR70MC,
-	CANON_PS_UNK5,
-	/* other cameras */
-	CANON_PS_S400,
-	CANON_PS_S410,
-	CANON_PS_S60,
-	CANON_PS_S500,
-	CANON_PS_SD100,
-	CANON_EOS_300D,
-	CANON_PS_G5,
-	CANON_OPT_20,
-	CANON_OPT_10
-} canonCamModel;
+	CANON_CLASS_0,
+	CANON_CLASS_1,
+	CANON_CLASS_2,
+	CANON_CLASS_3,
+	CANON_CLASS_4,
+	CANON_CLASS_5
+} canonCamClass;
 
 /**
  * canonTransferMode:
@@ -272,7 +179,7 @@ typedef enum {
 struct canonCamModelData
 {
 	char *id_str;
-	canonCamModel model;
+	canonCamClass model;
 	unsigned short usb_vendor;
 	unsigned short usb_product;
 	canonCaptureSupport usb_capture_support;
@@ -474,12 +381,7 @@ typedef enum {
  * Treat PS 230 as EOS just as a guess; I really don't know.
  *
  */
-#define IS_EOS(cam) ( ((cam)==CANON_EOS_D30) \
-                      || ((cam)==CANON_EOS_D60) \
-                      || ((cam)==CANON_PS_S230) \
-                      || ((cam)==CANON_PS_S400) \
-		      || ((cam)==CANON_EOS_20D) \
-		)
+#define IS_EOS(cam) ((cam)==CANON_CLASS_4)
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must

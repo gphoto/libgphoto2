@@ -779,17 +779,17 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
 	}
 	if (camera->pl->receive_error == NOERROR) {
 		/*we want to be sure the camera U N D E R S T A N D S our packets */
-		if (camera->pl->uploading == 1 && camera->pl->md->model == CANON_PS_A50)
+		if (camera->pl->uploading == 1 && camera->pl->md->model == CANON_CLASS_1)
 			camera->pl->slow_send = 1;
 		if (!canon_serial_send_packet
 		    (camera, PKT_ACK, camera->pl->seq_rx++,
 		     camera->pl->psa50_eot + PKT_HDR_LEN, 0)) {
 			if (camera->pl->uploading == 1
-			    && camera->pl->md->model == CANON_PS_A50)
+			    && camera->pl->md->model == CANON_CLASS_1)
 				camera->pl->slow_send = 0;
 			return NULL;
 		}
-		if (camera->pl->uploading == 1 && camera->pl->md->model == CANON_PS_A50)
+		if (camera->pl->uploading == 1 && camera->pl->md->model == CANON_CLASS_1)
 			camera->pl->slow_send = 0;
 		if (total)
 			*total = msg_pos;
@@ -1058,7 +1058,7 @@ canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext 
 		if (!file) {
 			total = le32atoh (msg + 4);
 
-			if (total > camera->pl->md->max_movie_size) {
+			if (total > camera->pl->md->max_picture_size) {
 				GP_DEBUG ("ERROR: %d is too big\n", total);
 				break;
 			}
@@ -1389,9 +1389,8 @@ canon_serial_ready (Camera *camera, GPContext *context)
 
 	/* take care of some model specific things */
 	switch (camera->pl->md->model) {
-		case CANON_PS_A5:
-		case CANON_PS_A5_ZOOM:
-		case CANON_PS_A50:
+		case CANON_CLASS_3:
+		case CANON_CLASS_1:
 			if (camera->pl->speed > 57600)
 				camera->pl->slow_send = 1;
 			break;
