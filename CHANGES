@@ -8,6 +8,8 @@ drivers (camlibs):
 
    * Canon driver:
      - fixed ProductID for PowerShot S45
+     - fixed support for serial cameras
+     - fixed thumbnail stuff
 
    * Smal driver:
      - misc improvements
