@@ -119,11 +119,15 @@ static int print_usb_usermap(const char *usermap_script, const int add_comments)
 		if (flags != 0) {
 			printf ("# %s\n", 
 				a.model);
+			/* The first 3 lone bytes are the device class.
+			 * the second 3 lone bytes are the interface class.
+			 * for PTP we want the interface class.
+			 */
 			printf ("%-20s "
 				"0x%04x      0x%04x   0x%04x    0x0000       "
-				"0x0000       0x%02x         0x%02x            "
-				"0x%02x            0x00            0x00               "
-				"0x00               0x00000000\n",
+				"0x0000      0x00         0x00            "
+				"0x00            0x%02x            0x%02x               "
+				"0x%02x               0x00000000\n",
 				usermap_script, flags, 
 				a.usb_vendor, a.usb_product,
 				class, subclass, proto);
