@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
-"POT-Creation-Date: 2002-11-23 15:48+0100\n"
+"POT-Creation-Date: 2002-12-01 21:13+0100\n"
 "PO-Revision-Date: 2002-07-24 08:56+0200\n"
 "Last-Translator: Stefan Björnelund <stefanb@update.uu.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -48,7 +48,7 @@ msgstr ""
 "Implementerat med hjälp av dokument från\n"
 "nätet. Med tillstånd från Vision."
 
-#: camlibs/canon/canon.c:674
+#: camlibs/canon/canon.c:676
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
@@ -56,11 +56,11 @@ msgid ""
 msgstr ""
 "Namnet '%s' (%i tecken) är för långt (%i tecken), maximalt 30 tecken tillåts."
 
-#: camlibs/canon/canon.c:1538
+#: camlibs/canon/canon.c:1540
 msgid "File protected."
 msgstr "Filen skyddad."
 
-#: camlibs/canon/library.c:115
+#: camlibs/canon/library.c:117
 msgid ""
 "For the A50, 115200 may not be faster than 57600\n"
 "Folders are NOT supported\n"
@@ -72,34 +72,34 @@ msgstr ""
 "om du märker många överföringsfel, försök att ha datorn så lätt lastad som "
 "möjligt (d.v.s. ingen diskettaktivitet)"
 
-#: camlibs/canon/library.c:198 camlibs/canon/library.c:1173
-#: camlibs/canon/library.c:1186
+#: camlibs/canon/library.c:200 camlibs/canon/library.c:1175
+#: camlibs/canon/library.c:1188
 msgid "Camera unavailable"
 msgstr "Kameran ej tillgänglig"
 
-#: camlibs/canon/library.c:209
+#: camlibs/canon/library.c:211
 msgid "Switching Camera Off"
 msgstr "Stänger av kameran"
 
-#: camlibs/canon/library.c:265
+#: camlibs/canon/library.c:267
 msgid "Error capturing image"
 msgstr "Fel vid fotografering"
 
-#: camlibs/canon/library.c:300
+#: camlibs/canon/library.c:302
 #, c-format
 msgid "Could not get disk name: %s"
 msgstr "Kunde inte få tag på disk namn: %s"
 
-#: camlibs/canon/library.c:301
+#: camlibs/canon/library.c:303
 msgid "No reason available"
 msgstr "Ingen anledning tillgänglig"
 
-#: camlibs/canon/library.c:308
+#: camlibs/canon/library.c:310
 #, c-format
 msgid "Could not get disk info: %s"
 msgstr "Kunde inte få tag på disk info: %s"
 
-#: camlibs/canon/library.c:602
+#: camlibs/canon/library.c:604
 #, c-format
 msgid ""
 "  Drive %s\n"
@@ -110,35 +110,35 @@ msgstr ""
 "  %11s bytes totalt\n"
 "  %11s bytes tillgängliga"
 
-#: camlibs/canon/library.c:610 camlibs/canon/library.c:616
-#: camlibs/canon/library.c:1129 camlibs/canon/library.c:1135
+#: camlibs/canon/library.c:612 camlibs/canon/library.c:618
+#: camlibs/canon/library.c:1131 camlibs/canon/library.c:1137
 msgid "AC adapter"
 msgstr "Nätadapter"
 
-#: camlibs/canon/library.c:610 camlibs/canon/library.c:616
-#: camlibs/canon/library.c:1129 camlibs/canon/library.c:1135
+#: camlibs/canon/library.c:612 camlibs/canon/library.c:618
+#: camlibs/canon/library.c:1131 camlibs/canon/library.c:1137
 msgid "on battery"
 msgstr "på batteri"
 
-#: camlibs/canon/library.c:612 camlibs/canon/library.c:1131
+#: camlibs/canon/library.c:614 camlibs/canon/library.c:1133
 msgid "power OK"
 msgstr "kraft OK"
 
-#: camlibs/canon/library.c:612 camlibs/canon/library.c:1131
+#: camlibs/canon/library.c:614 camlibs/canon/library.c:1133
 msgid "power bad"
 msgstr "kraft dålig"
 
-#: camlibs/canon/library.c:620
+#: camlibs/canon/library.c:622
 #, c-format
 msgid "not available: %s"
 msgstr "ej tillgänglig: %s"
 
-#: camlibs/canon/library.c:646
+#: camlibs/canon/library.c:648
 #, c-format
 msgid "%s (host time %s%i seconds)"
 msgstr "%s (värdtid %s%i sekunder)"
 
-#: camlibs/canon/library.c:656
+#: camlibs/canon/library.c:658
 #, c-format
 msgid ""
 "\n"
@@ -165,7 +165,7 @@ msgstr ""
 "\n"
 "Tid: %s\n"
 
-#: camlibs/canon/library.c:673
+#: camlibs/canon/library.c:675
 msgid ""
 "Canon PowerShot series driver by\n"
 "Wolfgang G. Reissnegger,\n"
@@ -183,24 +183,24 @@ msgstr ""
 "A5-tillägg av Ole W. Saastad\n"
 "Holger Klemm\n"
 
-#: camlibs/canon/library.c:712
+#: camlibs/canon/library.c:714
 msgid "Error deleting file"
 msgstr "Fel vid filradering"
 
-#: camlibs/canon/library.c:728
+#: camlibs/canon/library.c:730
 msgid "Error deleting associated thumbnail file"
 msgstr "Fel vid radering av associerad minibild till fil"
 
-#: camlibs/canon/library.c:858 camlibs/canon/library.c:987
+#: camlibs/canon/library.c:860 camlibs/canon/library.c:989
 msgid ""
 "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr "Kameran stöder inte hastigheter överstigande 57600 vid uppladdning."
 
-#: camlibs/canon/library.c:875 camlibs/canon/library.c:1004
+#: camlibs/canon/library.c:877 camlibs/canon/library.c:1006
 msgid "Could not get flash drive letter"
 msgstr "Kunde inte få tag på flash-enhetens enhetsbokstav"
 
-#: camlibs/canon/library.c:919 camlibs/canon/library.c:1028
+#: camlibs/canon/library.c:921 camlibs/canon/library.c:1030
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
@@ -208,213 +208,213 @@ msgstr ""
 "Kunde inte ladda upp, inget ledigt mappnamn tillgängligt!\n"
 "Mappnamnet 999CANON existerar och har en bild AUT_9999.JPG."
 
-#: camlibs/canon/library.c:941 camlibs/canon/library.c:1048
+#: camlibs/canon/library.c:943 camlibs/canon/library.c:1050
 msgid "Could not create \\DCIM directory."
 msgstr "Kunde inte skapa \\DCIM-katalogen."
 
-#: camlibs/canon/library.c:947 camlibs/canon/library.c:1054
+#: camlibs/canon/library.c:949 camlibs/canon/library.c:1056
 msgid "Could not create destination directory."
 msgstr "Kunde inte skapa destinationskatalogen."
 
-#: camlibs/canon/library.c:1084
+#: camlibs/canon/library.c:1086
 msgid "Camera and Driver Configuration"
 msgstr "Kamera- och drivrutinskonfiguration"
 
-#: camlibs/canon/library.c:1086 camlibs/polaroid/pdc700.c:984
+#: camlibs/canon/library.c:1088 camlibs/polaroid/pdc700.c:984
 msgid "Camera"
 msgstr "Kamera"
 
-#: camlibs/canon/library.c:1089
+#: camlibs/canon/library.c:1091
 msgid "Camera Model (readonly)"
 msgstr "Kameramodell (skrivskyddad)"
 
-#: camlibs/canon/library.c:1093 camlibs/canon/library.c:1169
+#: camlibs/canon/library.c:1095 camlibs/canon/library.c:1171
 msgid "Owner name"
 msgstr "Ägarnamn"
 
-#: camlibs/canon/library.c:1100 camlibs/canon/library.c:1104
-#: camlibs/canon/library.c:1109
+#: camlibs/canon/library.c:1102 camlibs/canon/library.c:1106
+#: camlibs/canon/library.c:1111
 msgid "Date and Time (readonly)"
 msgstr "Datum och Tid (skrivskyddad)"
 
-#: camlibs/canon/library.c:1105
+#: camlibs/canon/library.c:1107
 msgid "Error"
 msgstr "Fel"
 
-#: camlibs/canon/library.c:1110 camlibs/canon/library.c:1137
+#: camlibs/canon/library.c:1112 camlibs/canon/library.c:1139
 msgid "Unavailable"
 msgstr "Otillgänglig"
 
-#: camlibs/canon/library.c:1114 camlibs/canon/library.c:1182
+#: camlibs/canon/library.c:1116 camlibs/canon/library.c:1184
 msgid "Set camera date to PC date"
 msgstr "Sätt kamerans datum till datorns datum"
 
-#: camlibs/canon/library.c:1117
+#: camlibs/canon/library.c:1119
 msgid "Firmware revision (readonly)"
 msgstr "Fastvarurevision (skrivskyddad)"
 
-#: camlibs/canon/library.c:1141
+#: camlibs/canon/library.c:1143
 msgid "Power (readonly)"
 msgstr "Kraft (skrivskyddad)"
 
-#: camlibs/canon/library.c:1145
+#: camlibs/canon/library.c:1147
 msgid "Driver"
 msgstr "Drivrutin"
 
-#: camlibs/canon/library.c:1148 camlibs/canon/library.c:1196
+#: camlibs/canon/library.c:1150 camlibs/canon/library.c:1198
 msgid "List all files"
 msgstr "Lista alla filer"
 
-#: camlibs/canon/library.c:1153 camlibs/canon/library.c:1204
+#: camlibs/canon/library.c:1155 camlibs/canon/library.c:1206
 msgid "Keep filename on upload"
 msgstr "Behåll filnamnet vid uppladdning"
 
-#: camlibs/canon/library.c:1176
+#: camlibs/canon/library.c:1178
 msgid "Owner name changed"
 msgstr "Ägarnamnet ändrat"
 
-#: camlibs/canon/library.c:1178
+#: camlibs/canon/library.c:1180
 msgid "could not change owner name"
 msgstr "kunde inte ändra ägarnamnet"
 
-#: camlibs/canon/library.c:1189
+#: camlibs/canon/library.c:1191
 msgid "time set"
 msgstr "tiden inställd"
 
-#: camlibs/canon/library.c:1191
+#: camlibs/canon/library.c:1193
 msgid "could not set time"
 msgstr "kunde inte ställa in tiden"
 
-#: camlibs/canon/library.c:1410
+#: camlibs/canon/library.c:1412
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr "Ej stödd port typ %i = 0x%x given. Initialisering omöjlig."
 
-#: camlibs/canon/serial.c:624 camlibs/canon/serial.c:689
+#: camlibs/canon/serial.c:626 camlibs/canon/serial.c:691
 msgid "Battery exhausted, camera off."
 msgstr "Batteriet slut, kameran avstängd."
 
-#: camlibs/canon/serial.c:627
+#: camlibs/canon/serial.c:629
 msgid "ERROR: unexpected message"
 msgstr "FEL: oväntat medelande"
 
-#: camlibs/canon/serial.c:637
+#: camlibs/canon/serial.c:639
 msgid "ERROR: message overrun"
 msgstr "FEL: medelande överkört"
 
-#: camlibs/canon/serial.c:666
+#: camlibs/canon/serial.c:668
 msgid "ERROR: out of sequence."
 msgstr "FEL: ej i sekvens."
 
-#: camlibs/canon/serial.c:671
+#: camlibs/canon/serial.c:673
 msgid "ERROR: unexpected packet type."
 msgstr "FEL: oväntad pakettyp."
 
-#: camlibs/canon/serial.c:681
+#: camlibs/canon/serial.c:683
 msgid "ERROR: message format error."
 msgstr "FEL: formatfel i medelande"
 
-#: camlibs/canon/serial.c:693
+#: camlibs/canon/serial.c:695
 msgid "ERROR: unexpected message2."
 msgstr "FEL: oväntat medelande2."
 
-#: camlibs/canon/serial.c:887
+#: camlibs/canon/serial.c:889
 msgid "Uploading file..."
 msgstr "Laddar upp fil..."
 
-#: camlibs/canon/serial.c:945 camlibs/digita/digita.c:256
+#: camlibs/canon/serial.c:947 camlibs/digita/digita.c:256
 msgid "Getting file..."
 msgstr "Hämtar fil..."
 
-#: camlibs/canon/serial.c:1171
+#: camlibs/canon/serial.c:1173
 msgid "Error changing speed."
 msgstr "Fel vid ändring av hastighet."
 
-#: camlibs/canon/serial.c:1180
+#: camlibs/canon/serial.c:1182
 msgid "Resetting protocol..."
 msgstr "Nollställer protokoll..."
 
-#: camlibs/canon/serial.c:1189
+#: camlibs/canon/serial.c:1191
 msgid "Camera OK.\n"
 msgstr "Kamera OK.\n"
 
-#: camlibs/canon/serial.c:1202
+#: camlibs/canon/serial.c:1204
 msgid "Looking for camera ..."
 msgstr "Söker efter kamera ..."
 
-#: camlibs/canon/serial.c:1212
+#: camlibs/canon/serial.c:1214
 msgid "Trying to contact camera..."
 msgstr "Försöker kontakta kamera..."
 
-#: camlibs/canon/serial.c:1216
+#: camlibs/canon/serial.c:1218
 msgid "Communication error 1"
 msgstr "Kommunikationsfel 1"
 
-#: camlibs/canon/serial.c:1226 camlibs/canon/serial.c:1230
+#: camlibs/canon/serial.c:1228 camlibs/canon/serial.c:1232
 #: camlibs/dimera/dimera3500.c:836
 msgid "No response from camera"
 msgstr "Ingen svar från kamera"
 
-#: camlibs/canon/serial.c:1234
+#: camlibs/canon/serial.c:1236
 msgid "Unrecognized response"
 msgstr "Ej igenkänd respons"
 
-#: camlibs/canon/serial.c:1277
+#: camlibs/canon/serial.c:1279
 msgid "Bad EOT"
 msgstr "Dålig EOT"
 
-#: camlibs/canon/serial.c:1283
+#: camlibs/canon/serial.c:1285
 msgid "Communication error 2"
 msgstr "Kommunikationsfel 2"
 
-#: camlibs/canon/serial.c:1306
+#: camlibs/canon/serial.c:1308
 msgid "Communication error 3"
 msgstr "Kommunikationsfel 3"
 
-#: camlibs/canon/serial.c:1310
+#: camlibs/canon/serial.c:1312
 msgid "Changing speed... wait..."
 msgstr "Ändrar hastighet... vänta..."
 
-#: camlibs/canon/serial.c:1315
+#: camlibs/canon/serial.c:1317
 msgid "Error changing speed"
 msgstr "Fel vid ändring av hastighet"
 
-#: camlibs/canon/serial.c:1327
+#: camlibs/canon/serial.c:1329
 msgid "Error waiting ACK during initialization retrying"
 msgstr "Fel väntande ACK under initialisering, försöker igen "
 
-#: camlibs/canon/serial.c:1333
+#: camlibs/canon/serial.c:1335
 msgid "Error waiting ACK during initialization"
 msgstr "Fel väntande ACK under initialisering"
 
-#: camlibs/canon/serial.c:1337
+#: camlibs/canon/serial.c:1339
 msgid "Connected to camera"
 msgstr "Ansluten till kamera"
 
-#: camlibs/canon/serial.c:1399
+#: camlibs/canon/serial.c:1401
 msgid "Getting thumbnail..."
 msgstr "Hämtar minibild..."
 
-#: camlibs/canon/usb.c:216 camlibs/sipixblink/sipixblink.c:486
+#: camlibs/canon/usb.c:218 camlibs/sipixblink/sipixblink.c:486
 msgid "Could not apply USB settings"
 msgstr "Kunde inte applicera USB inställningar"
 
-#: camlibs/canon/usb.c:241
+#: camlibs/canon/usb.c:243
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
 msgstr ""
 "Kamera ej redo, flera 'Identifiera kamera'-förfrågningar misslyckades: %s\""
 
-#: camlibs/canon/usb.c:250
+#: camlibs/canon/usb.c:252
 #, c-format
 msgid "Camera not ready, could not lock camera keys: %s"
 msgstr "Kamera inte redo, kunde inte låsa kameratangenter: %s"
 
-#: camlibs/canon/usb.c:649
+#: camlibs/canon/usb.c:651
 msgid "Receiving data..."
 msgstr "Tar emot data..."
 
-#: camlibs/canon/usb.c:944
+#: camlibs/canon/usb.c:946
 msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
@@ -422,7 +422,7 @@ msgstr ""
 "Filen var för stor. Du kan behöva stänga av kameran och slå på den ingen "
 "innan du kan ladda upp mer filer."
 
-#: camlibs/canon/usb.c:1040
+#: camlibs/canon/usb.c:1042
 #, c-format
 msgid "Detected a '%s'."
 msgstr "Detekterade ett '%s'."
@@ -834,9 +834,8 @@ msgid "Available memory: "
 msgstr "Tillgängligt Minne: "
 
 #: camlibs/gsmart/library.c:209
-#, fuzzy
 msgid "gsmart library v"
-msgstr "jamcam bibliotek v"
+msgstr "gsmart bibliotek v"
 
 #: camlibs/gsmart/library.c:210 camlibs/jamcam/jamcam.c:281
 #: camlibs/panasonic/coolshot/coolshot.c:265
@@ -993,9 +992,8 @@ msgid "Camera Configuration"
 msgstr "Kamerakonfiguration"
 
 #: camlibs/kodak/dc210/dc210.c:170
-#, fuzzy
 msgid "File"
-msgstr "Fil:\n"
+msgstr "Fil"
 
 #: camlibs/kodak/dc210/dc210.c:173 camlibs/kodak/dc210/dc210.c:342
 #, fuzzy
@@ -1004,7 +1002,7 @@ msgstr "Filen finns"
 
 #: camlibs/kodak/dc210/dc210.c:175 camlibs/kodak/dc210/dc210.c:180
 msgid "JPEG"
-msgstr ""
+msgstr "JPEG"
 
 #: camlibs/kodak/dc210/dc210.c:176 camlibs/kodak/dc210/dc210.c:182
 #, fuzzy
@@ -1018,13 +1016,12 @@ msgstr "Upplösning"
 
 #: camlibs/kodak/dc210/dc210.c:188 camlibs/kodak/dc210/dc210.c:193
 #: camlibs/ricoh/library.c:318
-#, fuzzy
 msgid "640 x 480"
-msgstr "VGA (640x480)"
+msgstr "640 x 480"
 
 #: camlibs/kodak/dc210/dc210.c:189 camlibs/kodak/dc210/dc210.c:195
 msgid "1152 x 864"
-msgstr ""
+msgstr "1152 x 864"
 
 #: camlibs/kodak/dc210/dc210.c:201 camlibs/kodak/dc210/dc210.c:364
 msgid "File compression"
@@ -2449,11 +2446,11 @@ msgstr "PTP protokollfel, data föråldrat"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP protokollfel, svar förväntat"
 
-#: camlibs/ptp/library.c:502
+#: camlibs/ptp/library.c:503
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
 msgstr "Skrivet av Mariusz Woloszyn <emsi@ipartners.pl>. Njut!"
 
-#: camlibs/ptp/library.c:1034
+#: camlibs/ptp/library.c:1052
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP endast implementerat för USB kamror."
 
@@ -3589,12 +3586,12 @@ msgstr ""
 "Ursprungligen skriven av Mark Davies <mdavies@dial.pipex.com>\n"
 "gPhoto2 anpassning av Raymond Penners <raymond@dotsphinx.com>"
 
-#: camlibs/soundvision/soundvision.c:229
+#: camlibs/soundvision/soundvision.c:230
 #, fuzzy, c-format
 msgid "Revision: %8s"
 msgstr "ASIC-revision: %d.%d\n"
 
-#: camlibs/soundvision/soundvision.c:236
+#: camlibs/soundvision/soundvision.c:237
 #, fuzzy
 msgid ""
 "Soundvision Driver\n"
@@ -3603,12 +3600,12 @@ msgstr ""
 "Agfa CL18\n"
 "Vince Weaver <vince@deater.net>\n"
 
-#: camlibs/spca504_flash/library.c:181
+#: camlibs/spca504_flash/library.c:182
 msgid ""
 "spca504_flash camlib\n"
 " Authors: Till Adam\n"
 " <till@adam-lilienthal.de>\n"
-"based on work by Matthias Krau\n"
+"based on work by Matthias Krauss\n"
 "and Mark A. Zimmerman <mark@foresthaven.com>"
 msgstr ""
 
