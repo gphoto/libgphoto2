@@ -89,8 +89,9 @@ About this file:
 	Hans Ulrich Niedermann first wrote a few text files of
 	user documentation for gphoto2. Then shortly before the 2.0
 	release, Tim Waugh wrote the man pages in Docbook XML. Then 
-	hun migrated the text files into the XML file and began with
-	general improvements.
+	Hans Ulrich Niedermann migrated the text files into the XML 
+	file and began with general improvements. Then after the 2.1.0
+	release, Michael J. Rensing joined us.
       </para>
     </formalpara>
 
@@ -147,6 +148,63 @@ About this file:
 
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
+ 
+  <chapter>
+    <title>Finding what you need</title>
+    <abstract>
+      <simpara>This chapter lists information about what you need to run gphoto2.This information is intended to assist you in setting up your computer so that you can connect a camera and use libgphoto2 software to download images.</simpara>
+    </abstract>
+    <para>What you need:</para>
+    <orderedlist>
+      <listitem>
+	<simpara>A camera</simpara>
+	<simpara>A list of currently supported cameras is maintained
+	  at 
+	  <ulink url="http://www.teaser.fr/~hfiguiere/linux/digicam.html">http://www.teaser.fr/~hfiguiere/linux/digicam.html</ulink>
+	</simpara>
+      </listitem>
+      <listitem>
+	<simpara>A computer running a Unix-like operating system:</simpara>
+	<itemizedlist>
+	  <listitem>
+	    <simpara>BSD (FreeBSD, OpenBSD, NetBSD, ...)</simpara>
+	  </listitem>
+	  <listitem>
+	    <simpara>Linux (RedHat 7.3, SuSE 8.x, Debian 3.0 Woody)</simpara>
+	  </listitem>
+	  <listitem>
+	    <simpara>FIXME: Is there a list somewhere, or can we get
+	      contributions of verified OS's?</simpara>
+	  </listitem>
+	</itemizedlist>
+	<simpara>For USB cameras, your OS must be supported by
+	  <systemitem class="library">libusb</systemitem>. At
+	  2002-08-29, this is the case for Linux 2.2 and 2.4, FreeBSD
+	  and OpenBSD.
+	</simpara>
+      </listitem>
+      <listitem>
+	<simpara>libgphoto2 software</simpara>
+	<itemizedlist>
+	  <listitem>
+	    <simpara>CVS</simpara>
+	  </listitem>
+	  <listitem>
+	    <simpara>RPM's</simpara>
+	  </listitem>
+	  <listitem>
+	    <simpara>Need descriptions and lists of various forms of
+	      source code and binaries.</simpara>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+      <listitem>
+	<simpara>FIXME: What else do you need to get
+	  started?</simpara>
+      </listitem>
+    </orderedlist>
+  </chapter>
+
   <!-- =========================================================== --> 
 
   <chapter id="quickstart">
@@ -171,6 +229,11 @@ About this file:
 
     <para>FIXME: We need examples using <acronym>RS232</acronym>
       cameras, gtkam and the gphoto2 shell.</para>
+
+    <section>
+      <title>Using gtkam</title>
+      <simpara>FIXME: add gtkam docs</simpara>
+    </section>
 
     <section>
       <title>Using the <command>gphoto2</command> command line
@@ -310,7 +373,17 @@ Saving file as MVI_5418.AVI                                                     
 	described on 
 	<ulink url="http://www.gphoto.org/">www.gphoto.org</ulink>.
       </para>
-    </section>    
+    </section>
+    
+    <section>
+      <title>Using Gnome VFS</title>
+      <simpara>FIXME: We need to write this section</simpara>
+    </section>
+
+    <section>
+      <title>Using kioslave</title>
+      <simpara>FIXME: We need to write this section</simpara>
+    </section>
 
   </chapter>
  
