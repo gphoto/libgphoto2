@@ -17,6 +17,7 @@ main (int argc, char *argv [])
 {
 	CameraText text;
 	Camera *camera;
+	CameraAbilities abilities;
 
 	/*
 	 * You don't have to initialize libgphoto2 anymore. We do that
@@ -39,7 +40,8 @@ main (int argc, char *argv [])
 	 * gphoto2 knows which library to use.
 	 */
 	printf ("Setting model...\n");
-	CHECK (gp_camera_set_model (camera, "Directory Browse"));
+	CHECK (gp_camera_abilities_by_name ("Directory Browse", &abilities));
+	CHECK (gp_camera_set_abilities (camera, abilities));
 
 	/*
 	 * Now, initialize the camera (establish a connection).
