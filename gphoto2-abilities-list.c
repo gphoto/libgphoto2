@@ -252,33 +252,55 @@ gp_abilities_list_load (CameraAbilitiesList *list)
  * Return value: a gphoto2 error code
  **/
 int
-gp_abilities_list_detect (CameraAbilitiesList *list, CameraList *l)
+gp_abilities_list_detect (CameraAbilitiesList *list,
+			  GPPortInfoList *info_list, CameraList *l)
 {
+	GPPortInfo info;
 	GPPort *dev;
-	int x, count, v, p;
+	int i, x, count, v, p, info_count;
 	const char *m;
 
-	CHECK_NULL (list && l);
+	CHECK_NULL (list && info_list && l);
 
 	l->count = 0;
 
 	CHECK_RESULT (count = gp_abilities_list_count (list));
+	CHECK_RESULT (info_count = gp_port_info_list_count (info_list));
 
-	CHECK_RESULT (gp_port_new (&dev, GP_PORT_USB));
+	for (i = 0; i < info_count; i++) {
+		CHECK_RESULT (gp_port_info_list_get_info (info_list, i, &info));
+		switch (info.type) {
+		case GP_PORT_USB:
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-		"Auto-detecting cameras...");
-	for (x = 0; x < count; x++) {
-		v = list->abilities[x].usb_vendor;
-		p = list->abilities[x].usb_product;
-		if ((gp_port_usb_find_device (dev, v, p)       == GP_OK) &&
-		    (gp_abilities_list_get_model (list, x, &m) == GP_OK)) {
+			/* Detect USB cameras */
 			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-				"Found '%s' (%i,%i)", m, v, p);
-			gp_list_append (l, m, "usb:");
+				"Auto-detecting USB cameras...");
+			CHECK_RESULT (gp_port_new (&dev, GP_PORT_USB));
+			for (x = 0; x < count; x++) {
+				v = list->abilities[x].usb_vendor;
+				p = list->abilities[x].usb_product;
+				if ((gp_port_usb_find_device (dev, v, p)
+								== GP_OK) &&
+				    (gp_abilities_list_get_model (list, x, &m)
+				     				== GP_OK)) {
+					gp_log (GP_LOG_DEBUG,
+						"gphoto2-abilities-list",
+						"Found '%s' (%i,%i)", m, v, p);
+					gp_list_append (l, m, info.path);
+				}
+			}
+			gp_port_free (dev);
+			break;
+
+		default:
+
+			/*
+			 * We currently cannot detect any cameras on this
+			 * port
+			 */
+			break;
 		}
 	}
-	gp_port_free (dev);
 
 	return (GP_OK);
 }
