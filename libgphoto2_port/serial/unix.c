@@ -62,6 +62,7 @@
 #include <gphoto2-port-result.h>
 #include <gphoto2-port-debug.h>
 #include <gphoto2-port.h>
+#include <gphoto2-port-library.h>
 
 #ifdef HAVE_TERMIOS_H
 static struct termios term_old;
@@ -447,7 +448,7 @@ gp_port_serial_open (gp_port *dev)
 	/* Ports are named "serial:/dev/whatever/port" */
 	port = strchr (dev->settings.serial.port, ':');
 	if (!port)
-		return GP_ERROR_IO_UNKNOWN_PORT;
+		return GP_ERROR_UNKNOWN_PORT;
 	port++;
 
 	result = gp_port_serial_lock (dev);

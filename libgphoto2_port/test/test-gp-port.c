@@ -13,13 +13,6 @@ main (int argc, char **argv)
 	char buf[32];
 	int ret;
 
-	ret = gp_port_init ();
-	if (ret < 0) {
-		printf ("Could not initialize: %s\n",
-			gp_port_result_as_string (ret));
-		exit( 1 );
-	}
-
 	ret = gp_port_new (&dev, GP_PORT_SERIAL);
 	if (ret < 0) {
 		printf ("Could not create device: %s\n",

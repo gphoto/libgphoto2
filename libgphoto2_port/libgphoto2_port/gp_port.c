@@ -28,7 +28,9 @@
 #include <gphoto2-port.h>
 #include <gphoto2-port-debug.h>
 #include <gphoto2-port-result.h>
-#include "library.h"
+
+#include "gphoto2-port-core.h"
+#include "gphoto2-port-library.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -44,53 +46,48 @@
 #  define N_(String) (String)
 #endif
 
-gp_port_info     device_list[256];
-int              device_count;
-
-int initialized = 0;
+#define CHECK_RESULT(result) {int r=(result); if (r<0) return (r);}
 
 /*
    Required library functions
    ----------------------------------------------------------------
  */
 
-int gp_port_init (void)
-{
-        gp_port_debug_printf(GP_DEBUG_LOW, "Initializing...");
-        /* Enumerate all the available devices */
-        device_count = 0;
-	initialized = 1;
-        return (gp_port_library_list(device_list, &device_count));
+static int
+gp_port_library_load (gp_port *device, gp_port_type type) {
+
+	const char *library;
+        GPPortLibraryOperations ops_func;
+
+	CHECK_RESULT (gp_port_core_get_library (type, &library));
+
+	/* Open the correct library */
+	device->library_handle = GP_SYSTEM_DLOPEN (library);
+	if (!device->library_handle) {
+		gp_port_debug_printf(GP_DEBUG_LOW, "bad handle: %s %s ",
+			library, GP_SYSTEM_DLERROR());
+		return (GP_ERROR_LIBRARY);
+	}
+
+	/* Load the operations */
+	ops_func = GP_SYSTEM_DLSYM(device->library_handle, "gp_port_library_operations");
+	if (!ops_func) {
+		gp_port_debug_printf(GP_DEBUG_LOW, "can't load ops: %s %s ",
+			library, GP_SYSTEM_DLERROR());
+		GP_SYSTEM_DLCLOSE(device->library_handle);
+		return (GP_ERROR_LIBRARY);
+	}
+	device->ops = ops_func();
+	
+	return (GP_OK);
 }
 
-int gp_port_count_get(void)
-{
-        gp_port_debug_printf(GP_DEBUG_LOW, "Device count: %i", device_count);
-	if (!initialized)
-		gp_port_init ();
+static 
+int gp_port_library_close (gp_port *device) {
 
-        return device_count;
-}
+        GP_SYSTEM_DLCLOSE(device->library_handle);
 
-int gp_port_info_get(int device_number, gp_port_info *info)
-{
-	if (! info) {
-		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_info_get: "
-					"called on NULL info struct!");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
-	
-	if (device_number > device_count) {
-		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_info_get: "
-					"called on non-existant device!");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
-	
-        gp_port_debug_printf(GP_DEBUG_LOW, "Getting device info...");
-
-        memcpy(info, &device_list[device_number], sizeof(device_list[device_number]));
-
-        return GP_OK;
+        return (GP_OK);
 }
 
 int
@@ -100,8 +97,8 @@ gp_port_new (gp_port **dev, gp_port_type type)
         char buf[1024];
 	int result;
 
-	if (!initialized)
-		gp_port_init ();
+	/* Make sure gphoto2-port-core is initialized */
+	gp_port_core_count ();
 
         gp_port_debug_printf(GP_DEBUG_LOW, "Creating new device... ");
 
@@ -136,7 +133,7 @@ gp_port_new (gp_port **dev, gp_port_type type)
 #endif
 		break;
         default:
-		return GP_ERROR_IO_UNKNOWN_PORT;
+		return GP_ERROR_UNKNOWN_PORT;
         }
 
         *dev = malloc (sizeof (gp_port));
@@ -189,7 +186,7 @@ gp_port_new (gp_port **dev, gp_port_type type)
 		/* blah ? */
 		break;
         default:
-		return GP_ERROR_IO_UNKNOWN_PORT;
+		return GP_ERROR_UNKNOWN_PORT;
         }
 
         gp_port_debug_printf(GP_DEBUG_LOW, "Created device successfully...");

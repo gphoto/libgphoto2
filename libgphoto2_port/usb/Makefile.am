@@ -1,7 +1,7 @@
 ## Specify some includes and versioning
 INCLUDES = -I../ $(VERSION_FLAGS) -I$(top_srcdir)/include
 VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\"
-CFLAGS = @CFLAGS@ @IOLIB_CFLAGS@ -g `libusb-config --cflags`
+CFLAGS = @CFLAGS@ @IOLIB_CFLAGS@ -g `libusb-config --cflags` -I$(top_srcdir)/libgphoto2_port
 LDFLAGS = @LDFLAGS@ -g `libusb-config --libs`
 
 ## Compile the IO library into a shared library

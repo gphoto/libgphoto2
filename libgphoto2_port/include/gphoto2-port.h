@@ -39,21 +39,11 @@ typedef enum {
     GP_PORT_NETWORK     = 1 << 4,             /* <- Not supported yet */
 } gp_port_type;
 
+typedef gp_port_type GPPortType;
+
 
 /* Device struct
    -------------------------------------------------------------- */
-
-typedef struct {
-        gp_port_type type;
-        char name[64];
-        char path[64];
-
-        int speed;
-
-        /* don't touch */
-        char library_filename[1024];
-
-} gp_port_info;
 
 /* Put the settings together in a union */
 typedef union {
@@ -100,11 +90,7 @@ struct gp_port_operations {
 };
 
 typedef struct gp_port_operations gp_port_operations;
-
-/* Function pointers for the dynamic libraries */
-typedef int              (*gp_port_ptr_type)    ();
-typedef int              (*gp_port_ptr_list)    (gp_port_info*, int *);
-typedef gp_port_operations* (*gp_port_ptr_operations) ();
+typedef gp_port_operations GPPortOperations;
 
 /* Specify the device information */
 struct gp_port {
@@ -129,29 +115,10 @@ struct gp_port {
         void *library_handle;
 };
 
+typedef gp_port GPPort;
+
 /* Core functions
    -------------------------------------------------------------- */
-
-        int gp_port_init (void);
-                /* Initializes the library.
-                        return values:
-                                  successful: GP_OK
-                                unsuccessful: < 0
-                */
-
-        int gp_port_count_get ();
-                /* Get a count of available devices
-                        return values:
-                                  successful: valid gp_port_list struct
-                                unsuccessful: < 0
-                */
-
-        int gp_port_info_get (int device_number, gp_port_info *info);
-                /* Get information about a device
-                        return values:
-                                  successful: valid gp_port_list struct
-                                unsuccessful: < 0
-                */
 
         int gp_port_new         (gp_port **dev, gp_port_type type);
                 /* Create a new device of type "type"

@@ -1,5 +1,17 @@
 2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* ieee1394/Makefile.am:
+	* serial/Makefile.am:
+	* parallel/Makefile.am:
+	* usb/Makefile.am:
+	* network/Makefile.am: -I$(top_srcdir)/libgphoto2_port
+	* include/gphoto2-port-result.h: GP_ERROR_UNKNOWN_PORT instead of
+	  GP_ERROR_IO_UNKNOWN_PORT.
+	* include/gphoto2-port.h: GPPortType, GPPortOperations, GPPort
+	* libgphoto2_port/gphoto2-port-core.[c,h]: New. 
+
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* doc: Create framework for documentation.
 	* libgphoto2_port/gphoto2-port-log.[c,h]: Updated
 

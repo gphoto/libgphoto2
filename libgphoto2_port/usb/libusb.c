@@ -33,6 +33,7 @@
 #include <gphoto2-port.h>
 #include <gphoto2-port-result.h>
 #include <gphoto2-port-debug.h>
+#include <gphoto2-port-library.h>
 
 int gp_port_usb_list(gp_port_info *list, int *count);
 int gp_port_usb_init(gp_port *dev);

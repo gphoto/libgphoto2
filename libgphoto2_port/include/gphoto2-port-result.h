@@ -29,6 +29,7 @@
 #define GP_ERROR_BAD_PARAMETERS		-2
 #define GP_ERROR_NO_MEMORY		-3
 #define GP_ERROR_LIBRARY		-4
+#define GP_ERROR_UNKNOWN_PORT		-5
 
 #define GP_ERROR_TIMEOUT                -10
 
@@ -37,7 +38,6 @@
 #define GP_ERROR_IO_SUPPORTED_PARALLEL  -22
 #define GP_ERROR_IO_SUPPORTED_NETWORK   -23
 #define GP_ERROR_IO_SUPPORTED_IEEE1394  -24
-#define GP_ERROR_IO_UNKNOWN_PORT        -25
 
 #define GP_ERROR_IO_INIT                -31
 #define GP_ERROR_IO_OPEN                -32
