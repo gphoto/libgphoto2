@@ -34,7 +34,7 @@ k_return_status_t K_RETURN_STATUS (l_return_status_t l_return_status)
 	case L_TRANSMISSION_ERROR:
 		return (K_L_TRANSMISSION_ERROR);
 	default:
-		return (K_L_SUCCESS);
+		return (K_SUCCESS);
 	}
 }
 

@@ -56,8 +56,6 @@ gboolean error_happened (Camera *camera, k_return_status_t return_status)
                 case K_L_TRANSMISSION_ERROR:
                         gp_frontend_message (camera, "Transmission error!\n");
                         return (TRUE);
-                case K_L_SUCCESS:
-                        return (FALSE);
                 case K_SUCCESS:
                         return (FALSE);
                 case K_ERROR_FOCUSING_ERROR:
@@ -258,7 +256,7 @@ int camera_init (Camera *camera, CameraInit *init)
 	if (init->port.speed != 0) {
 		device_settings.serial.speed = init->port.speed;
 		gpio_set_settings (device, device_settings);
-		if (k_init (device) == K_L_SUCCESS) return (GP_OK);
+		if (k_init (device) == K_SUCCESS) return (GP_OK);
 	}
 
 	/* We either do have a speed of 0 or are not	*/
@@ -268,7 +266,7 @@ int camera_init (Camera *camera, CameraInit *init)
 		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Testing speed %i.\n", test_bit_rate[i]);
 		device_settings.serial.speed = test_bit_rate[i];
 		gpio_set_settings (device, device_settings); 
-		if (k_init (device) == K_L_SUCCESS) break; 
+		if (k_init (device) == K_SUCCESS) break; 
 	}
 	if ((i == 1) && (init->port.speed == 0)) {
 
@@ -882,7 +880,7 @@ int camera_config_get (Camera *camera, CameraWidget **window)
 	gp_widget_append (section, widget);
 	if (year > 80) year_4_digits = year + 1900;
 	else year_4_digits = year + 2000;
-	tm_struct.tm_year = year - 1900;
+	tm_struct.tm_year = year_4_digits - 1900;
 	tm_struct.tm_mon = month;
 	tm_struct.tm_mday = day;
 	tm_struct.tm_hour = hour;
@@ -1088,12 +1086,15 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 		tm_struct = localtime ((time_t*) &i);
 		if (error_happened (camera, k_set_date_and_time (
 			konica_data->device, 
-			tm_struct->tm_year, 
+			tm_struct->tm_year - 100, 
 			tm_struct->tm_mon, 
 			tm_struct->tm_mday, 
 			tm_struct->tm_hour, 
 			tm_struct->tm_min, 
-			tm_struct->tm_sec))) return (GP_ERROR);
+			tm_struct->tm_sec))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the date and time.");
+			return (GP_ERROR);
+		}
 	}
 
 	/* Beep */
@@ -1103,31 +1104,40 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 		if (strcmp (c, "Off") == 0) beep = 0;
 		else if (strcmp (c, "On") == 0) beep = 1;
 		else g_assert_not_reached ();
-		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_BEEP, beep))) return (GP_ERROR);
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_BEEP, beep))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the beep.");
+			return (GP_ERROR);
+		}
 	}
 
 	/* Self Timer Time */
 	g_assert ((widget = gp_widget_child_by_label (section, "Self Timer Time")) != NULL);
 	if (gp_widget_changed (widget)) {
 		gp_widget_value_get (widget, &f);
-		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_SELF_TIMER_TIME, (gint) f))) 
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_SELF_TIMER_TIME, (gint) f))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the self timer time.");
 			return (GP_ERROR);
+		}
 	}
 
 	/* Auto Off Time */
 	g_assert ((widget = gp_widget_child_by_label (section, "Auto Off Time")) != NULL);
 	if (gp_widget_changed (widget)) {
 		gp_widget_value_get (widget, &f);
-		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_AUTO_OFF_TIME, (gint) f)))
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_AUTO_OFF_TIME, (gint) f))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the auto off time.");
 			return (GP_ERROR);
+		}
 	}
 
 	/* Slide Show Interval */
 	g_assert ((widget = gp_widget_child_by_label (section, "Slide Show Interval")) != NULL);
 	if (gp_widget_changed (widget)) {
 		gp_widget_value_get (widget, &f);
-		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_SLIDE_SHOW_INTERVAL, (gint) f)))
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_SLIDE_SHOW_INTERVAL, (gint) f))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the slide show interval.");
 			return (GP_ERROR);
+		}
 	}
 
 	/* Resolution */
@@ -1137,7 +1147,10 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 		if (strcmp (c, "High (1152 x 872)") == 0) j = 1;
                 else if (strcmp (c, "Low (576 x 436)") == 0) j = 3;
                 else j = 0;
-                if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_RESOLUTION, j))) return (GP_ERROR);
+                if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_RESOLUTION, j))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the resolution.");
+			return (GP_ERROR);
+		}
 	}
 
         /****************/
@@ -1176,7 +1189,10 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 		else if (strcmp (c, "PAL") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_PAL;
 		else if (strcmp (c, "Do not display TV menu") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
 		else g_assert_not_reached ();
-		if (error_happened (camera, k_localization_tv_output_format_set (konica_data->device, tv_output_format))) return (GP_ERROR);
+		if (error_happened (camera, k_localization_tv_output_format_set (konica_data->device, tv_output_format))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the TV output format.");
+			return (GP_ERROR);
+		}
 	}
 
 	/* Date Format */
@@ -1187,7 +1203,10 @@ int camera_config_set (Camera *camera, CameraWidget *window)
                 else if (strcmp (c, "Day/Month/Year") == 0) date_format = K_DATE_FORMAT_DAY_MONTH_YEAR;
 		else if (strcmp (c, "Year/Month/Day") == 0) date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
 		else g_assert_not_reached ();
-		if (error_happened (camera, k_localization_date_format_set (konica_data->device, date_format))) return (GP_ERROR);
+		if (error_happened (camera, k_localization_date_format_set (konica_data->device, date_format))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the date format.");
+			return (GP_ERROR);
+		}
 	}
 
         /********************************/
@@ -1205,15 +1224,20 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 		else if (strcmp (c, "Auto") == 0) j = 2;
 		else if (strcmp (c, "Auto, red-eye reduction") == 0) j = 6;
 		else g_assert_not_reached ();
-		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_FLASH, j))) return (GP_ERROR);
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_FLASH, j))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the flash.");
+			return (GP_ERROR);
+		}
 	}
 
 	/* Exposure */
 	g_assert ((widget = gp_widget_child_by_label (section, "Exposure")) != NULL);
 	if (gp_widget_changed (widget)) {
 		gp_widget_value_get (widget, &f);
-		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_EXPOSURE, (gint) f)))
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_EXPOSURE, (gint) f))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the exposure.");
 			return (GP_ERROR);
+		}
 	}
 
 	/* Focus will be set together with self timer. */
@@ -1224,7 +1248,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
         /************************/
 	g_assert ((section = gp_widget_child_by_label (window, "Volatile Settings")) != NULL);
 
-	/* Self Timer (and focus) */
+	/* Self Timer (and Focus) */
 	g_assert ((widget_self_timer = gp_widget_child_by_label (section, "Self Timer")) != NULL);
 	if (gp_widget_changed (widget_focus) && gp_widget_changed (widget_self_timer)) {
 		gp_widget_value_get (widget_focus, c);
@@ -1235,11 +1259,14 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 		if (strcmp (c, "Self Timer (only next picture)") == 0) focus_self_timer++;
 		else if (strcmp (c, "Normal") == 0);
 		else g_assert_not_reached ();
-		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_FOCUS_SELF_TIMER, focus_self_timer))) return (GP_ERROR);
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_FOCUS_SELF_TIMER, focus_self_timer))) {
+			gp_debug_printf (GP_DEBUG_LOW, "konica", "An error occurred while setting the self timer and focus.");
+			return (GP_ERROR);
+		}
 	}
 
 	/* We are done. */
-	gp_widget_free (window);
+	gp_widget_unref (window);
 	return (GP_OK);
 }
 
@@ -1253,12 +1280,12 @@ int camera_config (Camera *camera)
 
 	        /* Prompt the user with the config window. */
 	        if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
-			gp_widget_free (window);
+			gp_widget_unref (window);
 	                return (GP_OK);
 	        }
 		return (camera_config_set (camera, window));
 	} else {
-		if (window) gp_widget_free (window);
+		if (window) gp_widget_unref (window);
 		return (GP_ERROR);
 	}
 }
