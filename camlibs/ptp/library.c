@@ -403,7 +403,6 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 
 	unsigned long image_id;
-	PTPObjectInfo ptp_objectinfo;
 
 	if (strcmp (folder, "/"))
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
@@ -411,8 +410,6 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	// Get file number
 	image_id = gp_filesystem_number (fs, folder, filename);
 
-	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
-		camera->pl->params.handles.handler[image_id],&ptp_objectinfo));
 	CPR (camera, ptp_deleteobject(&camera->pl->params,
 		camera->pl->params.handles.handler[image_id],0));
 
