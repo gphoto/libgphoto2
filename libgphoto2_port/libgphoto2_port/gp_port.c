@@ -184,7 +184,6 @@ gp_port_new (gp_port **dev, gp_port_type type)
         }
 
         (*dev)->debug_level = glob_debug_level;
-        (*dev)->previously_opened = 0;
 
         (*dev)->type = type;
         (*dev)->device_fd = 0;
@@ -212,14 +211,12 @@ gp_port_new (gp_port **dev, gp_port_type type)
 		gp_port_timeout_set (*dev, 50000);
 		break;
         case GP_PORT_USB:
-
-		/* Set some default settings */
-		settings.usb.inep = 0x81;
-		settings.usb.outep = 0x02;
-		settings.usb.config = 1;
-		settings.usb.interface = 0;
-		settings.usb.altsetting = 0;
-		gp_port_settings_set (*dev, settings);
+		/* Initialize settings.usb */
+		(*dev)->settings.usb.inep = -1;
+		(*dev)->settings.usb.outep = -1;
+		(*dev)->settings.usb.config = -1;
+		(*dev)->settings.usb.interface = 0;
+		(*dev)->settings.usb.altsetting = -1;
 
 		gp_port_timeout_set (*dev, 5000);
 		break;
@@ -259,18 +256,6 @@ gp_port_open (gp_port *dev)
         retval = dev->ops->open (dev);
 	if (retval < 0)
 		return (retval);
-
-	/* Now update the settings */
-	retval = dev->ops->update (dev);
-	if (retval != GP_OK) {
-		dev->device_fd = 0;
-		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
-				      "gp_port_open: update error");
-		return retval;
-	}
-	
-	/* Set the default timeout */
-	gp_port_timeout_set (dev, dev->timeout);
 
 	return GP_OK;
 }
@@ -396,10 +381,10 @@ gp_port_settings_set (gp_port *dev, gp_port_settings settings)
 {
         int retval;
 
-        /* need to memcpy() settings to dev->settings */
+        /* need to memcpy() settings to dev->settings_pending */
         memcpy(&dev->settings_pending, &settings, sizeof(dev->settings_pending));
 
-        retval =  dev->ops->update(dev);
+        retval = dev->ops->update(dev);
         gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
                 "gp_port_set_settings: update %s", retval < 0? "error":"ok");
         return (retval);

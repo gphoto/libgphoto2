@@ -332,7 +332,6 @@ gp_port_serial_init (gp_port *dev)
 {
 	DeviceHandle *handle;
 
-        /* save previous setttings in to dev->settings_saved */
 #if HAVE_TERMIOS_H
         if (tcgetattr(dev->device_fd, &term_old) < 0) {
                 perror("tcgetattr2");

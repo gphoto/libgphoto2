@@ -159,8 +159,6 @@ struct gp_port {
         gp_port_settings settings;
         gp_port_settings settings_pending;
 
-        gp_port_settings settings_saved;
-
         int device_fd;
 #ifdef WIN32
         HANDLE device_handle;
@@ -173,7 +171,6 @@ struct gp_port {
         void *library_handle;
 
         int debug_level;
-        int previously_opened;
 };
 
 /* Core functions

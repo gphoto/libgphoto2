@@ -1,5 +1,14 @@
 2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch from Fredrik <fredrik@krixor.xy.org>
+
+	* include/gphoto2-port.h:
+	* libgphoto2_port/gp_port.c:
+	* serial/unix.c:
+	* usb/libusb.c: Clean up settings code.
+
+2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch from Carsten Pfeiffer <carpdjih@sp.zrz.tu-berlin.de>
 
 	* libgphoto2_port/library.c: 

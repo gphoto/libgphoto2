@@ -130,11 +130,11 @@ int gp_port_usb_open(gp_port *dev)
 	ret = usb_claim_interface (dev->device_handle,
 				   dev->settings.usb.interface);
 	if (ret < 0) {
-		fprintf (stderr, "gp_port_usb_open: could not claim intf %d: "
-			 "%s\n", dev->settings.usb.interface, strerror (errno));
+		fprintf(stderr, "gp_port_usb_open: could not claim intf %d: "
+			"%s\n", dev->settings.usb.interface, strerror (errno));
 		return GP_ERROR_IO_OPEN;
 	}
-
+	
 	return GP_OK;
 }
 
@@ -250,33 +250,71 @@ int gp_port_usb_msg_read_lib(gp_port * dev, int request, int value, int index,
 }
 
 /*
- * This function applys changes to the device
+ * This function applys changes to the device.
+ *
+ * New settings are in dev->settings_pending and the old ones
+ * are in dev->settings. Compare them first and only call
+ * usb_set_configuration() and usb_set_altinterface() if needed
+ * since some USB devices does not like it if this is done
+ * more than necessary (Canon Digital IXUS 300 for one).
+ *
  */
 int gp_port_usb_update(gp_port * dev)
 {
 	int ret;
-	
-	memcpy(&dev->settings, &dev->settings_pending, sizeof(dev->settings));
 
-	if ((dev->device_handle != NULL) && (! dev->previously_opened)) {
-		ret = usb_set_configuration (dev->device_handle,
-					     dev->settings.usb.config);
-		if (ret < 0) {
-			fprintf(stderr, "gp_port_usb_update: could not set config %d: "
-				"%s\n", dev->settings.usb.config, strerror (errno));
-			return GP_ERROR_IO_OPEN;
+	if (!dev) {
+		fprintf(stderr, "gp_port_usb_update: called on NULL device\n");
+		return GP_ERROR_IO_UPDATE;
+	}
+
+	if (dev->device_handle == NULL) {
+		fprintf(stderr, "gp_port_usb_update: called on non-open device\n");
+		return GP_ERROR_IO_UPDATE;
+	}
+
+	if (dev->debug_level)
+		printf("gp_port_usb_update() called\n");
+
+	if (memcmp(&dev->settings.usb, &dev->settings_pending.usb, sizeof(dev->settings.usb))) {
+
+		/* settings.usb structure is different than the old one */
+		 
+		if (dev->settings.usb.config != dev->settings_pending.usb.config) {
+			ret = usb_set_configuration(dev->device_handle,
+					     dev->settings_pending.usb.config);
+			if (ret < 0) {
+				fprintf(stderr, "gp_port_usb_update: could not set config %d/%d: "
+					"%s\n", dev->settings_pending.usb.interface,
+					dev->settings_pending.usb.config, strerror(errno));
+
+				return GP_ERROR_IO_UPDATE;	
+			}
+				
+			if (dev->debug_level)
+				printf("gp_port_usb_update: changed usb.config from %d to %d\n",
+						dev->settings.usb.config, dev->settings_pending.usb.config);
+			
+			/* copy at once if something else fails so that this does not get re-applied */
+			dev->settings.usb.config = dev->settings_pending.usb.config;
 		}
 
-		ret = usb_set_altinterface (dev->device_handle,
-					    dev->settings.usb.altsetting);
-		if (ret < 0) {
-			fprintf (stderr, "gp_port_usb_update: could not set intf %d/%d: "
-				 "%s\n", dev->settings.usb.interface,
-				 dev->settings.usb.altsetting, strerror (errno));
-			return GP_ERROR_IO_OPEN;
-		}
+		if (dev->settings.usb.altsetting != dev->settings_pending.usb.altsetting) { 
+			ret = usb_set_altinterface(dev->device_handle, dev->settings_pending.usb.altsetting);
+			if (ret < 0) {
+				fprintf(stderr, "gp_port_usb_update: could not set intf %d/%d: "
+					"%s\n", dev->settings_pending.usb.interface,
+					dev->settings_pending.usb.altsetting, strerror(errno));
 
-		dev->previously_opened = 1;
+				return GP_ERROR_IO_UPDATE;
+			}
+
+			if (dev->debug_level)
+				printf("gp_port_usb_update: changed usb.altsetting from %d to %d\n",
+					dev->settings.usb.altsetting, dev->settings_pending.usb.altsetting);
+		}
+		
+		memcpy(&dev->settings.usb, &dev->settings_pending.usb, sizeof(dev->settings.usb));
 	}
 	
 	return GP_OK;
