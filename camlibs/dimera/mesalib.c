@@ -155,18 +155,13 @@ mesa_send_command( gp_port *port, u_int8_t *cmd, int n, int ackTimeout )
 
 /* Open the serial port and configure it */
 int
-mesa_port_open( gp_port **dev, char const *device )
+mesa_port_open( gp_port *port, char const *device )
 {
 	gp_port_settings settings;
 	int ret;
 
 	debuglog("mesa_port_open()");
-	if ((ret = gp_port_new(dev, GP_PORT_SERIAL)) != GP_OK) {
-		debuglog("mesa_port_open: error on gp_port_new");
-		return ret;
-	}
-	debuglog("mesa_port_open(): settings");
-	gp_port_timeout_set(*dev, 5000);
+	gp_port_timeout_set(port, 5000);
 	strcpy(settings.serial.port, device);
 
 	settings.serial.speed   = 115200;
@@ -174,22 +169,24 @@ mesa_port_open( gp_port **dev, char const *device )
 	settings.serial.parity  = 0;
 	settings.serial.stopbits= 1;
 
-	if (gp_port_settings_set(*dev, settings) < 0)
-		return GP_ERROR_BAD_PARAMETERS;
-
-	if ((ret = gp_port_open(*dev)) != GP_OK) {
+	if ((ret = gp_port_settings_set(port, settings)) != GP_OK) {
 		debuglog("mesa_port_open(): error selecting port settings");
+		return ret;
+	}
+
+	if ((ret = gp_port_open(port)) != GP_OK) {
+		debuglog("mesa_port_open(): error opening port");
 		return ret;
 	}
 
 	return GP_OK;
 }
 
-/* Close the serial port */
+/* Close the serial port (now done by gphoto2 itself) */
 int
 mesa_port_close( gp_port *port )
 {
-	return gp_port_close(port);
+	return GP_OK;
 }
 
 /* reset camera */
@@ -205,6 +202,12 @@ mesa_set_speed( gp_port *port, int speed )
 {
 	u_int8_t	b[2];
 	gp_port_settings settings;
+
+	if (speed == 0)
+		speed = 115200;		/* use default speed */
+
+	gp_debug_printf(GP_DEBUG_LOW, "dimera", 
+	 "mesa_set_speed: speed %d", speed);
 
 	b[0] = SET_SPEED;
 
