@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <regex.h>
 
-#if HAVE_LTDL
+#ifdef HAVE_LTDL
 #include <ltdl.h>
 #endif
 
@@ -91,10 +91,6 @@ gp_port_info_list_new (GPPortInfoList **list)
 		return (GP_ERROR_NO_MEMORY);
 	memset (*list, 0, sizeof (GPPortInfoList));
 
-#ifdef HAVE_LTDL
-	lt_dlinit ();
-#endif
-
 	return (GP_OK);
 }
 
@@ -116,10 +112,6 @@ gp_port_info_list_free (GPPortInfoList *list)
 		list->info = NULL;
 	}
 	list->count = 0;
-
-#ifdef HAVE_LTDL
-	lt_dlexit ();
-#endif
 
 	return (GP_OK);
 }
@@ -165,14 +157,23 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 	return (list->count - 1 - generic);
 }
 
+#define UGLY_HACK /* E-mail <lutz@users.sourceforge.net> for infos. */
+
 #ifdef HAVE_LTDL
 
 #define MAX_COUNT 8
 typedef struct _LibrariesList LibrariesList;
 struct _LibrariesList {
+#ifdef UGLY_HACK
+	unsigned char first;
+#endif
 	unsigned int count;
 	char path[MAX_COUNT][1024];
 };
+
+#ifdef UGLY_HACK
+static LibrariesList backup;
+#endif
 
 static int
 foreach_func (const char *filename, lt_ptr data)
@@ -185,6 +186,16 @@ foreach_func (const char *filename, lt_ptr data)
 	strncpy (list->path[list->count], filename,
 		 sizeof (list->path[list->count]));
 	list->count++;
+
+#ifdef UGLY_HACK
+	if (list->first) {
+		memset (&backup, 0, sizeof (backup));
+		list->first = 0;
+	}
+	backup.count = list->count;
+	strncpy (backup.path[list->count - 1], filename,
+		 sizeof (list->path[list->count - 1]) - 1);
+#endif
 
 	return (0);
 }
@@ -227,9 +238,24 @@ gp_port_info_list_load (GPPortInfoList *list)
 
 #ifdef HAVE_LTDL
 	flist.count = 0;
+#ifdef UGLY_HACK
+	flist.first = 1;
+#endif
+	lt_dlinit ();
+	lt_dladdsearchdir (IOLIBS);
 	result = lt_dlforeachfile (IOLIBS, foreach_func, &flist);
+	lt_dlexit ();
 	if (result < 0)
 		return (result);
+
+#ifdef UGLY_HACK
+	if (!flist.count && backup.count)
+		memcpy (&flist, &backup, sizeof (backup));
+#endif
+	gp_log (GP_LOG_DEBUG, "gp-port-info-list", "Found %i IO-driver(s).",
+		flist.count);
+
+	lt_dlinit ();
 	for (i = 0; i < flist.count; i++) {
 		lh = lt_dlopenext (flist.path[i]);
 		if (!lh) {
@@ -278,6 +304,7 @@ gp_port_info_list_load (GPPortInfoList *list)
 		}
 		old_size = list->count;
 	}
+	lt_dlexit ();
 #else
 	d = GP_SYSTEM_OPENDIR (IOLIBS);
         if (!d) {

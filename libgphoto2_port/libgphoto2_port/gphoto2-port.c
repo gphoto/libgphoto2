@@ -95,10 +95,6 @@ gp_port_new (GPPort **port)
 		return (GP_ERROR_NO_MEMORY);
         memset (*port, 0, sizeof (GPPort));
 
-#ifdef HAVE_LTDL
-	lt_dlinit ();
-#endif
-
 	(*port)->pc = malloc (sizeof (GPPortPrivateCore));
 	if (!(*port)->pc) {
 		gp_port_free (*port);
@@ -162,22 +158,31 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 	if (port->pc->lh) {
 #ifdef HAVE_LTDL
 		lt_dlclose (port->pc->lh);
+		lt_dlexit ();
 #else
 		GP_SYSTEM_DLCLOSE (port->pc->lh);
 #endif
 	}
 
 #ifdef HAVE_LTDL
-	port->pc->lh = lt_dlopen (info.library_filename);
+	lt_dlinit ();
+	port->pc->lh = lt_dlopenext (info.library_filename);
+	if (!port->pc->lh) {
+		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not load "
+			"'%s' ('%s').", info.library_filename,
+			lt_dlerror ());
+		lt_dlexit ();
+		return (GP_ERROR_LIBRARY);
+	}
 #else
 	port->pc->lh = GP_SYSTEM_DLOPEN (info.library_filename);
-#endif
 	if (!port->pc->lh) {
 		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not load "
 			"'%s' ('%s')", info.library_filename,
 			GP_SYSTEM_DLERROR ());
 		return (GP_ERROR_LIBRARY);
 	}
+#endif
 
 	/* Load the operations */
 #ifdef HAVE_LTDL
@@ -191,6 +196,7 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 			"'gp_port_library_operations' in '%s' ('%s')",
 			info.library_filename, lt_dlerror ());
 		lt_dlclose (port->pc->lh);
+		lt_dlexit ();
 #else
 		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not find "
 			"'gp_port_library_operations' in '%s' ('%s')",
@@ -327,6 +333,7 @@ gp_port_free (GPPort *port)
 		if (port->pc->lh) {
 #ifdef HAVE_LTDL
 			lt_dlclose (port->pc->lh);
+			lt_dlexit ();
 #else
 		        GP_SYSTEM_DLCLOSE (port->pc->lh);
 #endif
@@ -338,10 +345,6 @@ gp_port_free (GPPort *port)
 	}
 
         free (port);
-
-#ifdef HAVE_LTDL
-	lt_dlexit ();
-#endif
 
         return GP_OK;
 }

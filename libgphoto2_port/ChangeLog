@@ -1,5 +1,12 @@
 2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
 
+	* configure.in:
+	* libgphoto2_port/gphoto2-port-info-list.c: Make libgphoto2_port
+	  use ltdl.h. I needed to introduce a global variable - code is
+	  marked as UGLY_HACK. If you know how to fix it, please tell me.
+
+2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
+
 	* serial/unix.c: Substitute some '#if's by '#ifdef's.
 
 2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
