@@ -43,7 +43,7 @@ msgstr "lire"
 #. Check if we read as many bytes as expected
 #: libgphoto2_port/gphoto2-port.c:441 libgphoto2_port/gphoto2-port.c:478
 msgid "check_int"
-msgstr ""
+msgstr "check_int"
 
 #: libgphoto2_port/gphoto2-port.c:578
 msgid "update"
@@ -92,9 +92,7 @@ msgstr "Pas de description d'erreur disponible"
 #: libgphoto2_port/gphoto2-port-info-list.c:285
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
-msgstr ""
-"Ne peut charger aucune bibliothèque d'E/S car '%s' \n"
-"ne peut être ouvert (%m)"
+msgstr "Ne peut charger aucune bibliothèque d'E/S car '%s' ne peut être ouvert (%m)"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:479
 msgid "Generic Port"
@@ -138,7 +136,7 @@ msgstr "Port inconnu"
 
 #: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Out of memory"
-msgstr "Plus de mémoire"
+msgstr "Mémoire épuisée"
 
 #: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Error loading a library"
@@ -196,9 +194,9 @@ msgid ""
 "module (e.g. dc2xx) is using the device and you have read/write access to "
 "the device."
 msgstr ""
-"Impossible d'utiliser l'interface %d (%m).\n"
-"Assurez-vous qu'aucun programme ou module noyau (par ex. dc2xx) \n"
-"n'utilise le périphérique et que vous avez bien accès \n"
+"Impossible d'utiliser l'interface %d (%m). "
+"Assurez-vous qu'aucun programme ou module noyau (par ex. dc2xx) "
+"n'utilise le périphérique et que vous avez bien accès "
 "en lecture/écriture au descripteur de périphérique."
 
 #: usb/libusb.c:157
@@ -232,7 +230,7 @@ msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
-"Impossible de trouver le périphérique USB (fabricant 0x%x,\n"
+"Impossible de trouver le périphérique USB (fabricant 0x%x, "
 "produit 0x%x). Assurez-vous qu'il est bien connecté à l'ordinateur."
 
 #: usb/libusb.c:547
@@ -241,8 +239,8 @@ msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
 "sure this device is connected to the computer."
 msgstr ""
-"Impossible de trouver le périphérique USB (fabricant 0x%x,\n"
-"sous-classe 0x%x, produit 0x%x). Assurez-vous qu'il est bien \n"
+"Impossible de trouver le périphérique USB (fabricant 0x%x, "
+"sous-classe 0x%x, produit 0x%x). Assurez-vous qu'il est bien "
 "connecté à l'ordinateur."
 
 #: serial/unix.c:214
@@ -253,23 +251,22 @@ msgstr "Impossible de verrouiller le périphérique '%s'"
 #: serial/unix.c:223
 #, c-format
 msgid "Device '%s' is locked by pid %d"
-msgstr "Le device '%s' est verrouillé par le processus %d."
+msgstr "Le périphérique '%s' est verrouillé par le processus %d."
 
 #: serial/unix.c:226
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr "Le device '%s' ne peut être verrouillé (dev_unlock a retourné %d)"
+msgstr "Le périphérique '%s' ne peut être verrouillé (dev_lock a retourné %d)"
 
 #: serial/unix.c:249
 #, c-format
 msgid "Device '%s' could not be unlocked."
-msgstr "Impossible de déverrouiller le device '%s'."
+msgstr "Impossible de déverrouiller le périphérique '%s'."
 
 #: serial/unix.c:261
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
-"Le device '%s' ne peut être déverrouillé car vérouillé par processus %d."
+msgstr "Le périphérique '%s' ne peut être déverrouillé car verouillé par processus %d."
 
 #: serial/unix.c:265
 #, c-format
@@ -284,26 +281,26 @@ msgstr "Port série %i"
 #: serial/unix.c:417
 #, c-format
 msgid "Failed to open '%s' (%m)."
-msgstr "Impossible d'ouvrir '%s' (%m.)"
+msgstr "Impossible d'ouvrir '%s' (%m)."
 
 #: serial/unix.c:435
 #, c-format
 msgid "Could not close '%s' (%m)."
-msgstr "Impossible de fermer '%s' (%m.)"
+msgstr "Impossible de fermer '%s' (%m)."
 
 #: serial/unix.c:488
 #, c-format
 msgid "Could not write to port (%m)"
-msgstr "Impossible d'écrire sur le port (%)"
+msgstr "Impossible d'écrire sur le port (%m)"
 
 #: serial/unix.c:560
 msgid "Parity error."
-msgstr ""
+msgstr "Erreur de parité."
 
 #: serial/unix.c:564
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
-msgstr ""
+msgstr "Séquence de réponse de parité 0xff 0x%02x inattendue."
 
 #: serial/unix.c:607
 #, c-format
@@ -323,7 +320,7 @@ msgstr "Impossible de configurer le niveau de la borne %i à %i (%m)."
 #: serial/unix.c:685
 #, c-format
 msgid "Could not flush '%s' (%m)."
-msgstr "Impossible de vider '%s' (%m.)"
+msgstr "Impossible de vider '%s' (%m)."
 
 #: serial/unix.c:796
 #, c-format
