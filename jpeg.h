@@ -25,18 +25,6 @@ typedef enum {
     JPEG_SSSEAHAL=0xDA,     JPEG_EOI=0xD9
 } jpegmarker;
 
-const jpegmarker JPEG_MARKERS[] = {
-    JPEG_START,             JPEG_COMMENT,           JPEG_APPO,
-    JPEG_QUANTIZATION,      JPEG_HUFFMAN,           JPEG_SOFC0,
-    JPEG_SSSEAHAL,          JPEG_EOI
-};
-
-const char *JPEG_MARKERNAMES[] = {
-    "Start",                "Comment",              "APPO",
-    "Quantization table",   "Huffman table",        "SOFC0",
-    "SsSeAhAl",             "End of image"
-};
-
 typedef struct chunk{
     int size;
     unsigned char *data;
