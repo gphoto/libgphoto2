@@ -1,4 +1,4 @@
-/* file.c
+/* gphoto2-file.c
  *
  * Copyright (C) 2000 Scott Fritzinger
  *
@@ -31,6 +31,28 @@ static int glob_session_file = 0;
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
+
+/**
+ * CameraFile:
+ *
+ * The internals of this struct are private.
+ **/
+struct _CameraFile {
+        CameraFileType type;
+        char mime_type [64];
+        char name [64];
+        long int size;
+        unsigned char *data;
+        int bytes_read;
+        int session;
+        int ref_count;
+
+        unsigned char *red_table, *blue_table, *green_table;
+        int red_size, blue_size, green_size;
+        char header [128];
+        int width, height;
+        CameraFileConversionMethod method;
+};
 
 int
 gp_file_new (CameraFile **file)

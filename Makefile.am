@@ -13,7 +13,7 @@ libgphoto2_la_SOURCES = 	\
 	gphoto2-core.c		\
 	gphoto2-debug.c		\
 	exif.c exif.h		\
-	file.c			\
+	gphoto2-file.c		\
 	gphoto2-filesys.c	\
 	gamma.c gamma.h		\
 	jpeg.c jpeg.h		\
@@ -31,6 +31,7 @@ libgphoto2include_HEADERS =	\
 	gphoto2-camera.h	\
 	gphoto2-core.h		\
 	gphoto2-debug.h		\
+	gphoto2-file.h		\
 	gphoto2-filesys.h	\
 	gphoto2-library.h	\
 	gphoto2-list.h		\
