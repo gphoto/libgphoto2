@@ -533,6 +533,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	if (type != GP_CAPTURE_IMAGE) {
 		return GP_ERROR_NOT_SUPPORTED;
 	}
+	
+	if (!ptp_operation_issupported(&camera->pl->params,
+		PTP_OC_InitiateCapture)) return GP_ERROR_NOT_SUPPORTED;
 
 	CPR(context,ptp_initiatecapture(&camera->pl->params, 0x00000000, 0x00000000));
 	while (ptp_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
