@@ -1,3 +1,8 @@
+2001-08-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/sierra/sierra.c: Set timeout to TIMEOUT before updating 
+	folder. Thanks to Stéphane Castejon who found this bug.
+
 2001-08-13  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* libgphoto2_port/usb/libusb.c (gp_port_usb_open): fix bug #438062: 

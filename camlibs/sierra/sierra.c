@@ -362,12 +362,12 @@ int camera_init (Camera *camera)
 				 "*** folder support: yes");
 	}
 
+	CHECK_STOP_FREE (camera, gp_port_timeout_set (fd->dev, TIMEOUT));
+
 	/* We are in "/" */
 	strcpy (fd->folder, "/");
 	fd->fs = gp_filesystem_new ();
-	CHECK (update_fs_for_folder (camera, "/"));
-
-	CHECK_STOP_FREE (camera, gp_port_timeout_set (fd->dev, TIMEOUT));
+	CHECK_STOP_FREE (camera, update_fs_for_folder (camera, "/"));
 
 	CHECK_STOP_FREE (camera, camera_stop (camera));
 
