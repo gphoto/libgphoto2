@@ -164,10 +164,10 @@ int load_cameras() {
                                 memcpy(&glob_camera_list[x], &glob_camera_list[y], sizeof(t));
                                 memcpy(&glob_camera_list[y], &t, sizeof(t));
 
-                                memcpy(&a, &glob_camera_abilities[x], sizeof(t));
+                                memcpy(&a, &glob_camera_abilities[x], sizeof(a));
                                 memcpy(&glob_camera_abilities[x], &glob_camera_abilities[y],
-                                        sizeof(t));
-                                memcpy(&glob_camera_abilities[y], &a, sizeof(t));
+                                        sizeof(a));
+                                memcpy(&glob_camera_abilities[y], &a, sizeof(a));
                         }
                 }
         }
