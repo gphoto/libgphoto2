@@ -188,7 +188,9 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
  * params:	PTPParams*
  * 		PTPReq* req		- request phase PTPReq
  * 		uint16_t code		- PTP operation code
- * 		unsigned short dataphase- data phase description
+ * 		uint16_t flags		- lower 8 bits - data phase description
+ *					  upper 8 bits - number of params
+ *					  of request phase
  * 		unsigned int datalen	- data phase data length
  * 		PTPReq* dataphasebuf	- data phase req bufor
  *
@@ -202,14 +204,14 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
  **/
 static uint16_t
 ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
-			unsigned short dataphase, unsigned int datalen,
+			uint16_t flags, unsigned int datalen,
 			PTPReq* dataphasebuf)
 {
 	if ((params==NULL) || (req==NULL)) 
 		return PTP_ERROR_BADPARAM;
 	params->transaction_id++;
 	CHECK_PTP_RC(ptp_sendreq(params, req, code));
-	switch (dataphase) {
+	switch (flags&&0x00ff) {
 		case PTP_DP_SENDDATA:
 			datalen+=PTP_REQ_HDR_LEN;
 			CHECK_PTP_RC(ptp_senddata(params, dataphasebuf,
