@@ -255,12 +255,8 @@ ff d8 ff e1 61 a5 45 78 69 66 00 00 4d 4d 00 2a		ef a8 a2 8a 00 28 a2 8a 00 28 a
 00 00 01 00 00 03 00 00 00 00 00 00 0e 01 00 00
 
 
-This is an exif File. It has a clear header,			This I don't know what it is. I cannot
-and conforms to the spec. I reckon, you can just		find a header nor other readable characters.
-save it and use it.						Maybe it is just compressed jpg data.
-								I don't know.
-
-
--------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------
-
+This is an exif File. It has a clear header, This I don't know what it
+is. I cannot and conforms to the spec. I reckon, you can just find a
+header nor other readable characters.  save it and use it. Maybe it is
+just compressed jpg data.  I don't know.
+----------------------------------------------------------------------
