@@ -1,5 +1,12 @@
 2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
 
+	Marcus Meissner <meissner@suse.de> explained me how what
+	--enable-maintainer-mode is for:
+
+	* Makefile.am: Uncomment the automake and aclocal flags.
+
+2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
+
 	Patch by Arnaud Launay <asl@launay.org>, which corrects the
 	previous patch:
 
