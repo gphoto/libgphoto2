@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 # lsusb-v
-###################################################################
+#####################################################################
 #
 # This file contains the output of lsusb -v for the cameras 
 # supported by this driver
@@ -9,10 +9,11 @@
 # distinguishing properties for cameras with the same ProductID but 
 # different features
 #
-# Add data after the __DATA__ line.
+# Add data after the __DATA__ line. There is a template you can copy.
+#
 # Run this file with perl to create the lsusb output in extra files.
 # 
-###################################################################
+######################################################################
 
 use strict;
 my $dir = "lsusb-v-comparison";
@@ -35,12 +36,28 @@ while (<DATA>) {
 		print OUT $line;
 	}
 }
+print "Have a look at ${dir}/* now :-)\n";
 
 __DATA__
 
+
+##BEGIN CAMERA
+#Camera name: <whatever your camera is called
+#Media: <sdram, flash, storage card, etc.>
+#Contact person: <your name and possibly
+##BEGIN Notes
+# <insert your remarks about the camera here>
+##END Notes
+##BEGIN lsusb-v
+<output of "lsusb -v">
+##END lsusb-v
+##END CAMERA
+
+
+
 ##BEGIN CAMERA
 #Camera name: Aiptek 1.3
-#Media: sdram
+#Media: sdram, ?
 #Contact person: Walter A. Boring IV - hemna
 ##BEGIN Notes
 # This is the camera which deletes all files when downloading a file
@@ -271,7 +288,7 @@ Device Descriptor:
 
 ##BEGIN CAMERA
 #Camera name: Aiptek Mega Cam 1.3
-#Media: ?
+#Media: flash, sdram
 #Contact Person: mxhaard
 ##BEGIN Notes
 # This camera must be initialized this way:
