@@ -9,6 +9,13 @@
 
 extern char packet_1[];
 
+char *models[] = {
+	"Barbie",
+	"WWF",
+	"Hot Wheels",
+	NULL
+};
+
 int camera_id (CameraText *id) {
 
 	strcpy(id->text, "barbie");
@@ -16,28 +23,32 @@ int camera_id (CameraText *id) {
 	return (GP_OK);
 }
 
-int camera_abilities (CameraAbilities *abilities, int *count) {
+int camera_abilities (CameraAbilitiesList *list) {
 
-	*count = 3;
+	int x=0;
+	CameraAbilities *a;
 
-	/* What models do we support? */
-	strcpy(abilities[0].model, "Barbie");
-	abilities[0].port = GP_PORT_SERIAL;
-	abilities[0].speed[0] = 57600;
-	abilities[0].speed[1] = 0;
+	while (models[x]) {
 
-	abilities[0].capture   = 1;
-	abilities[0].config    = 0;
-	abilities[0].file_delete  = 0;
-	abilities[0].file_preview = 1;
-	abilities[0].file_put  = 0;
+		/* Allocate the new abilities */
+		a = gp_abilities_new();
 
-	memcpy(&abilities[1], &abilities[0], sizeof(abilities[0]));
-	strcpy(abilities[1].model, "Hot Wheels");
+		/* Fill in the appropriate flags/data */
+		strcpy(a->model, models[x]);
+		a->port      = GP_PORT_SERIAL;
+		a->speed[0]  = 57600;
+		a->speed[1]  = 0;
+		a->capture   = 1;
+		a->config    = 0;
+		a->file_delete  = 0;
+		a->file_preview = 1;
+		a->file_put  = 0;
 
-	memcpy(&abilities[2], &abilities[0], sizeof(abilities[0]));
-	strcpy(abilities[2].model, "WWF");
+		/* Append it to the list */
+		gp_abilities_list_append(list, a);
 
+		x++;
+	}	
 	return (GP_OK);
 }
 

@@ -88,33 +88,31 @@ char *models[] = {
 	NULL
 };
 
-int camera_abilities (CameraAbilities *abilities, int *count) {
+int camera_abilities (CameraAbilitiesList *list) {
 
 	int x=0;
-	CameraAbilities a;
-
-	/* Fill in a template */
-	strcpy(a.model, "");
-	a.port     = GP_PORT_SERIAL;
-	a.speed[0] = 9600;
-	a.speed[1] = 19200;
-	a.speed[2] = 38400;
-	a.speed[3] = 57600;
-	a.speed[4] = 115200;
-	a.speed[5] = 0;
-	a.capture  = 1;
-	a.config   = 0;
-	a.file_delete  = 1;
-	a.file_preview = 1;
-	a.file_put = 0;
+	CameraAbilities *a;
 
 	while (models[x]) {
-		memcpy(&abilities[x], &a, sizeof(a));
-		strcpy(abilities[x].model, models[x]);
+		a = gp_abilities_new();
+		strcpy(a->model, models[x]);
+		a->port     = GP_PORT_SERIAL;
+		a->speed[0] = 9600;
+		a->speed[1] = 19200;
+		a->speed[2] = 38400;
+		a->speed[3] = 57600;
+		a->speed[4] = 115200;
+		a->speed[5] = 0;
+		a->capture  = 1;
+		a->config   = 0;
+		a->file_delete  = 1;
+		a->file_preview = 1;
+		a->file_put = 0;
+		gp_abilities_list_append(list, a);
+
 		x++;
 	}
 
-	*count = x;
 	return (GP_OK);
 }
 
@@ -430,7 +428,7 @@ int fujitsu_file_count (Camera *camera) {
 	debug_print(fd, "Counting files");
 
 	if (fujitsu_get_int_register(camera, 10, &value)==GP_ERROR) {
-                gp_camera_message(camera, "Could not get number of files on camera.");
+                gp_camera_message(camera, "Could not get number of files on camera->");
                 return (GP_ERROR);
         }
 

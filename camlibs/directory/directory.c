@@ -52,19 +52,23 @@ int camera_id (CameraText *id) {
 }
 
 
-int camera_abilities (CameraAbilities *abilities, int *count) {
+int camera_abilities (CameraAbilitiesList *list) {
 
-	*count = 1;
+	CameraAbilities *a;
 
-	strcpy(abilities[0].model, "Directory Browse");
-	abilities[0].port     = GP_PORT_NONE;
-	abilities[0].speed[0] = 0;
+	a = gp_abilities_new();
 
-	abilities[0].capture   = 0;
-	abilities[0].config    = 1;
-	abilities[0].file_delete  = 0;
-	abilities[0].file_preview = 1;
-	abilities[0].file_put  = 0;
+	strcpy(a->model, "Directory Browse");
+	a->port     = GP_PORT_NONE;
+	a->speed[0] = 0;
+
+	a->capture   = 0;
+	a->config    = 1;
+	a->file_delete  = 0;
+	a->file_preview = 1;
+	a->file_put  = 0;
+
+	gp_abilities_list_append(list, a);
 
 	return (GP_OK);
 }

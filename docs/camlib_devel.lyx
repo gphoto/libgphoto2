@@ -690,7 +690,7 @@ id
 \end_inset 
 
 .
- Please consult the gPhoto developer to determine which string you should
+ Please consult the gPhoto developers to determine which string you should
  use.
 \newline 
 
@@ -735,7 +735,7 @@ Retrieve the list of supported cameras and the abilities for each camera
 \series bold 
 Prototype: 
 \series default 
-int camera_abilities (CameraAbilities *abilities, int *count); 
+int camera_abilities (CameraAbilitiesList *list); 
 \layout Standard
 
 

@@ -6,8 +6,7 @@ int camera_id 			(CameraText *id);
 	/* multiple libraries can support the same camera. 	*/
 	/* The id is limited to 64 characters.			*/
 
-int camera_abilities 		(CameraAbilities *abilities, 
-				 int *count);
+int camera_abilities 		(CameraAbilitiesList *list);
 	/* Returns the camera abilities for all the cameras 	*/
 	/* that the library supports. The value of 		*/
 	/* 'count' should be set to the number of cameras the	*/

@@ -30,33 +30,33 @@ int camera_id(CameraText *id)
         return GP_OK;
 }
 
-int camera_abilities(CameraAbilities *abilities, int *count)
+char *models[] = {  
+        "Kodak DC265",
+        "Kodak DC290",
+        "Kodak DC220",
+        NULL
+};
+
+int camera_abilities(CameraAbilitiesList *list)
 {
-        *count = 1;
+        int x=0;
+        CameraAbilities *a;
 
-	strcpy(abilities[0].model, "Kodak DC260");
-	abilities[0].port	= GP_PORT_SERIAL | GP_PORT_USB;
-	abilities[0].speed[0]	= 57600;
-	abilities[0].speed[1]	= 0;
-	abilities[0].capture	= 1;
-	abilities[0].config	= 0;
-	abilities[0].file_delete = 1;
-	abilities[0].file_preview = 1;
-	abilities[0].file_put = 0;
+        while (models[x]) {
+                a = gp_abilities_new();
+                strcpy(a->model, models[x]);
+                a->port       = GP_PORT_SERIAL | GP_PORT_USB;
+                a->speed[0]   = 57600;
+                a->speed[1]   = 0;
+                a->capture    = 1;
+                a->config     = 0;
+                a->file_delete = 1;
+                a->file_preview = 1;
+                a->file_put = 0;
 
-	(*count)++;
-	memcpy(&abilities[1], &abilities[0], sizeof(abilities[0]));
-	strcpy(abilities[1].model, "Kodak DC265");
-
-	(*count)++;
-	memcpy(&abilities[2], &abilities[0], sizeof(abilities[0]));
-	strcpy(abilities[2].model, "Kodak DC290");
-
-	(*count)++;
-	memcpy(&abilities[3], &abilities[0], sizeof(abilities[0]));
-	strcpy(abilities[3].model, "Kodak DC220");
-
-        return GP_OK;
+                gp_abilities_list_append(list, a);
+                x++;
+        }
 }
 
 int camera_init(Camera *camera, CameraInit *init)

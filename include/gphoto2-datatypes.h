@@ -116,6 +116,7 @@ typedef struct {
 } CameraPortInfo;
 
 /* Functions supported by the cameras */
+
 typedef struct {
 	char model[128];
 
@@ -141,7 +142,18 @@ typedef struct {
 
 	int capture;
 		/* Camera can do a capture			 */
+
+	/* Don't touch below. for core use */
+	char library[1024];
+	char id[64];
+
 } CameraAbilities;
+
+typedef struct {
+	int count;
+	CameraAbilities **abilities;
+} CameraAbilitiesList;
+
 
 /* Initialization data to the camera */
 typedef struct {
@@ -206,22 +218,22 @@ typedef struct {
 
 /* Camera object data */
 struct Camera;
-typedef int (*c_id)		 (char *);
-typedef int (*c_abilities)	 (CameraAbilities *,int *);
-typedef int (*c_init)		 (struct Camera *, CameraInit *);
-typedef int (*c_exit)		 (struct Camera *);
-typedef int (*c_folder_list)	 (struct Camera *, CameraList *, char *);
-typedef int (*c_file_list)	 (struct Camera *, CameraList *, char *);
-typedef int (*c_file_get)	 (struct Camera *, CameraFile *, char *, char *);
-typedef int (*c_file_get_preview)(struct Camera *, CameraFile *, char *, char *);
-typedef int (*c_file_put)	 (struct Camera *, CameraFile *, char *);
-typedef int (*c_file_delete)	 (struct Camera *, char *, char *);
-typedef int (*c_capture)	 (struct Camera *, CameraFile *, CameraCaptureInfo *);
-typedef int (*c_config_get)	 (struct Camera *, CameraWidget *);
-typedef int (*c_config_set)	 (struct Camera *, CameraSetting *, int);
-typedef int (*c_summary)	 (struct Camera *, CameraText *);
-typedef int (*c_manual)		 (struct Camera *, CameraText *);
-typedef int (*c_about)		 (struct Camera *, CameraText *);
+typedef int (*c_id)		 (CameraText *);
+typedef int (*c_abilities)	 (CameraAbilitiesList *);
+typedef int (*c_init)		 (struct Camera*, CameraInit*);
+typedef int (*c_exit)		 (struct Camera*);
+typedef int (*c_folder_list)	 (struct Camera*, CameraList*, char*);
+typedef int (*c_file_list)	 (struct Camera*, CameraList*, char*);
+typedef int (*c_file_get)	 (struct Camera*, CameraFile*, char*, char*);
+typedef int (*c_file_get_preview)(struct Camera*, CameraFile*, char*, char*);
+typedef int (*c_file_put)	 (struct Camera*, CameraFile*, char*);
+typedef int (*c_file_delete)	 (struct Camera*, char*, char*);
+typedef int (*c_capture)	 (struct Camera*, CameraFile*, CameraCaptureInfo *);
+typedef int (*c_config_get)	 (struct Camera*, CameraWidget*);
+typedef int (*c_config_set)	 (struct Camera*, CameraSetting*, int);
+typedef int (*c_summary)	 (struct Camera*, CameraText*);
+typedef int (*c_manual)		 (struct Camera*, CameraText*);
+typedef int (*c_about)		 (struct Camera*, CameraText*);
 
 /* Function pointers to the current library functions */
 typedef struct {
@@ -258,4 +270,3 @@ typedef struct Camera {
 	void 		*camlib_data;
 	void 		*frontend_data;
 } Camera;
-

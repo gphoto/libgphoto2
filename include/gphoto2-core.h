@@ -225,3 +225,14 @@
 	/* Debugging output to stdout. Will dump the widget and all children
 	   widgets (and their children, ...) recursively */
 	int gp_widget_dump (CameraWidget *widget);
+
+	/* Abilities List Functions */
+	/* ============================================================================== */
+
+	CameraAbilities *gp_abilities_new();
+	int gp_abilities_free(CameraAbilities *abilities);
+
+	CameraAbilitiesList *gp_abilities_list_new ();
+	int gp_abilities_list_free (CameraAbilitiesList *list);
+	int gp_abilities_list_dump (CameraAbilitiesList *list);
+	int gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities *abilities);
