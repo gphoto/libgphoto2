@@ -1,5 +1,9 @@
 2002-05-26  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c: Handle the error where the camera sends strange bytes.
+
+2002-05-26  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c (sierra_check_connection, sierra_set_speed):
 	  These functions are only applicable for serial connections.
 

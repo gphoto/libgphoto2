@@ -569,12 +569,18 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			break;
 
 		default:
+
+			/*
+			 * This byte is not valid. Dump everything that
+			 * coming in.
+			 */
+			gp_context_error (context, _("The first byte "
+				"received (0x%x) is not valid."), packet[0]);
+			while (gp_port_read (camera->port, packet, 1) >= 0);
 			if (camera->port->type == GP_PORT_USB &&
 			    !camera->pl->usb_wrap)
 				gp_port_usb_clear_halt (camera->port,
 						GP_PORT_USB_ENDPOINT_IN);
-			gp_context_error (context, _("The first byte "
-				"received (0x%x) is not valid."), packet[0]);
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
 
@@ -712,7 +718,7 @@ sierra_read_packet_wait (Camera *camera, char *buf, GPContext *context)
 static int
 sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 {
-	int r = 0;
+	int r = 0, result;
 	unsigned char buf[4096];
 
 	while (1) {
@@ -721,7 +727,19 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 
 		/* Write packet and read the answer */
 		CHECK (sierra_write_packet (camera, packet, context));
-		CHECK (sierra_read_packet_wait (camera, buf, context));
+		result = sierra_read_packet_wait (camera, buf, context);
+		switch (result) {
+		case GP_ERROR_CORRUPTED_DATA:
+			if (++r > 2) {
+				gp_context_error (context, _("Could not "
+					"transmit packet even after several "
+					"retries."));
+				return (result);
+			}
+			continue;
+		default:
+			CHECK (result);
+		}
 
 		switch (buf[0]) {
 		case ACK:
@@ -916,6 +934,7 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 		bit_rate = 19200;
 	}
 
+#if 0
 	/*
 	 * Check if we need to change the speed or if we are currently
 	 * using the requested speed.
@@ -923,6 +942,7 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 	CHECK (gp_port_get_settings (camera->port, &settings));
 	if (settings.serial.speed == bit_rate)
 		return (GP_OK);
+#endif
 
 	/*
 	 * Tell the camera about the new speed. Note that a speed change
@@ -1073,7 +1093,9 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 	return GP_ERROR_IO;
 }
 
-int sierra_set_string_register (Camera *camera, int reg, const char *s, long int length, GPContext *context) 
+int
+sierra_set_string_register (Camera *camera, int reg, const char *s,
+			    long int length, GPContext *context) 
 {
 
 	char packet[4096];
@@ -1089,7 +1111,8 @@ int sierra_set_string_register (Camera *camera, int reg, const char *s, long int
 	/* Make use of the progress bar when the packet is "large enough" */
 	if (length > MAX_DATA_FIELD_LENGTH) {
 		do_percent = 1;
-		id = gp_context_progress_start (context, length, _("Sending data..."));
+		id = gp_context_progress_start (context, length,
+						_("Sending data..."));
 	}
 	else
 		do_percent = 0;
