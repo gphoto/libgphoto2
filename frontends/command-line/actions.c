@@ -266,7 +266,8 @@ save_audio_action (const char *folder, const char *filename)
 	return (save_file_to_file (folder, filename, GP_FILE_TYPE_AUDIO));
 }
 
-int delete_file_action (const char *folder, const char *filename)
+int
+delete_file_action (const char *folder, const char *filename)
 {
 	return (gp_camera_file_delete(glob_camera, folder, filename, glob_context));
 }
