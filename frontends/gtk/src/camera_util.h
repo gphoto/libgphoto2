@@ -8,4 +8,8 @@
 
 
 int camera_set(void);
+void camera_config_build_rec(CameraWidget *cw, GtkWidget *box,
+                             GtkWidget *window);
+void camera_config_retrieve_rec(CameraWidget *cw, GtkWidget *window, 
+				CameraSetting *settings, int *count);
 
