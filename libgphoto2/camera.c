@@ -404,11 +404,14 @@ int gp_camera_folder_list_files (Camera *camera, char *folder,
         /* Initialize the folder list to a known state */
         list->count = 0;
 
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting file list for "
+			 "folder '%s'...", folder);
         ret = camera->functions->file_list (camera, list, folder);
         if (ret != GP_OK)
                 return (ret);
 
         /* Sort the file list */
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Sorting file list...");
         for (x = 0; x < list->count - 1; x++) {
                 for (y = x + 1; y < list->count; y++) {
                         z = strcmp (list->entry[x].name, list->entry[y].name);
@@ -439,12 +442,15 @@ int gp_camera_folder_list_folders (Camera *camera, char* folder,
 	/* Initialize the folder list to a known state */
         list->count = 0;
 
-        ret = camera->functions->folder_list (camera, list, folder);
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting folder list for "
+			 "folder '%s'...", folder);
+	ret = camera->functions->folder_list (camera, list, folder);
 
         if (ret != GP_OK)
                 return (ret);
 
         /* Sort the folder list */
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Sorting file list...");
         for (x = 0; x < list->count - 1; x++) {
                 for (y = x + 1; y < list->count; y++) {
                         z = strcmp (list->entry[x].name, list->entry[y].name);
@@ -622,8 +628,8 @@ int gp_camera_file_get_config (Camera *camera, char *folder, char *file,
 	if (camera->functions->file_config_get == NULL)
 		return (GP_ERROR_NOT_SUPPORTED);
 		
-	return (camera->functions->file_config_get (camera, folder, file, 
-						    window));
+	return (camera->functions->file_config_get (camera, window, folder, 
+						    file));
 }
 
 int gp_camera_file_set_config (Camera *camera, char *folder, char *file, 
