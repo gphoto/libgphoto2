@@ -68,6 +68,7 @@ struct models{
   char serial;
 } models[] = {
   {"Creative:PC-CAM600",0x041e,0x400b,0},
+  {"Creative:PC-CAM750",0x041e,0x4013,0},
   {NULL,0,0,0}
 };
 

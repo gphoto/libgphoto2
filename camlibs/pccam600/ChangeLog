@@ -1,7 +1,15 @@
+
+	
+
 	This software is based upon usbsniffing, and therefore is
 	marked EXPERIMENTAL.
 	
 	Any comments email me at pbk@odense.kollegienet.dk
+
+2004-01-27 Marcus Meissner <marcus@jet.franken.de>
+
+	Andres Guerrero reports the PC CAM 750 working with this driver,
+	added id.
 
 2002-08-16
 	Fixed a newline compile error with gcc 2.96. 
