@@ -45,6 +45,7 @@
 #include "canon.h"
 #include "util.h"
 
+
 /*****************************************************************************
  *
  * canon_usb_camera_init
@@ -60,7 +61,7 @@ canon_usb_camera_init (Camera *camera)
 {
 	unsigned char msg[0x58];
 	unsigned char buffer[0x44];
-	int i;
+	int i, read_bytes, *i_ptr;
 	char *camstat_str = "NOT RECOGNIZED";
 	unsigned char camstat;
 
@@ -111,20 +112,72 @@ canon_usb_camera_init (Camera *camera)
 	GP_DEBUG("canon_usb_camera_init() "
 		 "PC sign on LCD should be lit now (if your camera has a PC sign)");
 
-	i = gp_port_read (camera->port, buffer, 0x44);
-
+	/* We expect to get 0x44 bytes here, but the camera is picky at this stage and
+	 * we must read 0x40 bytes, look at position 0 and read 0x4 (or whatever) bytes
+	 * more.
+	 */
+	i = gp_port_read (camera->port, buffer, 0x40);
 	if ((i >= 4)
 	    && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
 	    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
+	    
+		/* We have some reports that sometimes the camera takes a long
+		 * time to respond to this read request and then comes back with
+		 * the 54 78 00 00 packet, instead of telling us to read four more
+		 * bytes which is the normal 54 78 00 00 packet.
+		 */
+
 		GP_DEBUG("canon_usb_camera_init() "
-			 "expected %i and got %i bytes with \"54 78 00 00\" "
-			 "at the end, so we just ignore the whole bunch",
-			 0x44, i);
-	} else {
-		GP_DEBUG("canon_usb_camera_init() "
-			 "Step #4  of initialization failed! (returned %i, expected %i) "
-			 "Camera might still work though. Continuing.", i, 0x44);
+			 "expected %i bytes, got %i bytes with \"54 78 00 00\" "
+			 "at the end, so we just ignore the whole bunch and call it a day",
+			 0x40, i);
+
+		return GP_OK;
 	}
+	if (i != 0x40) {
+		gp_camera_set_error (camera, "Step #4.1 failed! "
+				"(returned %i, expected %i) Camera not operational", i, 0x40);
+		return GP_ERROR_IO_INIT;
+	}
+	
+	i_ptr = (int *) buffer;
+	read_bytes = *i_ptr;
+	if (read_bytes) {
+		i = gp_port_read (camera->port, buffer, read_bytes);
+		if (i != read_bytes) {
+			GP_DEBUG ("canon_usb_camera_init() "
+				"Step #4.2 of initialization failed! (returned %i, expected %i) "
+				"Camera might still work though. Continuing.", i, read_bytes);
+		} else {
+			if ((i >= 4)
+			    && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
+			    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
+			    	if (i != 4) {
+			    		/* Only log this message about anomality if we did not
+			    		 * get exactly four bytes back. We expect to get four
+			    		 * bytes (54 78 00 00) and don't have to log it if we do.
+			    		 */
+					GP_DEBUG("canon_usb_camera_init() "
+						 "expected %i but got %i bytes with \"54 78 00 00\" "
+						 "at the end, so we just ignore the whole bunch",
+						 0x4, i);
+				}
+			} else {
+				/* I don't think we can ever get here and the camera will still work
+				 * anymore. That should be fixed by the other new code in this commit.
+				 * I'll leave it here as a comment for now, but change the behaviour
+				 * to return error instead.
+				 * GP_DEBUG("canon_usb_camera_init() "
+				 *	 "Step #4 of initialization failed! (returned %i, expected %i) "
+				 *	 "Camera might still work though. Continuing.", i, 0x44);
+				 */
+				gp_camera_set_error (camera, "Step #4 of initialization failed! "
+					"(returned %i, expected %i) Camera not operational", i, read_bytes);
+				return GP_ERROR_IO_INIT;
+			}
+		}	
+	}
+	
 	return GP_OK;
 }
 
@@ -164,6 +217,37 @@ canon_usb_init (Camera *camera)
 
 	return canon_usb_camera_init (camera);
 }
+
+/**
+ * canon_usb_keylock:
+ * @camera: camera to lock keys on
+ * @Returns: gphoto2 error code
+ *
+ * Lock the keys on the camera and turn off the display
+ **/
+int
+canon_usb_keylock (Camera *camera)
+{
+	unsigned char *c_res;
+	int bytes_read;
+
+	GP_DEBUG ("canon_usb_keylock()");
+
+	c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_KEYLOCK, &bytes_read,
+					    NULL, 0);
+	if (bytes_read == 0x4) {
+		GP_DEBUG ("Got the expected number of bytes back, "
+			"unfortuntely we don't know what they mean.");
+	} else {
+		gp_camera_set_error (camera, "canon_usb_keylock: "
+				     "Unexpected amount of data returned (%i bytes, expected %i)",
+				     bytes_read, 0x4);
+		return GP_ERROR_IO;
+	}
+
+	return GP_OK;
+}
+
 /**
  * canon_usb_dialogue:
  * @camera: the Camera to work with
@@ -303,8 +387,6 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 		return NULL;
 	}
 
-	if (return_length)
-		*return_length = read_bytes;
 
 	/* if cmd3 equals to 0x202, this is a command that returns L (long) data
 	 * and what we return here is the complete packet (ie. not skipping the
@@ -312,10 +394,15 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 	 * (which is canon_usb_long_dialogue()) can find out how much data to
 	 * read from the USB port by looking at offset 6 in this packet.
 	 */
-	if (cmd3 == 0x202)
+	if (cmd3 == 0x202) {
+		if (return_length)
+			*return_length = read_bytes;
 		return buffer;
-	else
+	} else {
+		if (return_length)
+			*return_length = (read_bytes - 0x50);
 		return buffer + 0x50;
+	}
 }
 
 /**
