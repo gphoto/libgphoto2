@@ -206,8 +206,10 @@ ptp_getobjecthandles(PTPParams* params, PTPObjectHandles* objecthandles)
 	short ret;
 	PTPReq* req=malloc(sizeof(PTPReq));
 	
-	if (objecthandles==NULL)
-		objecthandles=malloc(sizeof(PTPObjectHandles));
+	if (objecthandles==NULL) {
+		free (req);
+		return PTP_ERROR_BADPARAM;
+	}
 	memset(req, 0, PTP_RESP_LEN);
 	*(int *)(req->data)=0xffffffff;   // XXX return from ALL stores
 	ret=ptp_sendreq(params, req, PTP_OC_GetObjectHandles);
@@ -254,19 +256,19 @@ ptp_getobjecthandles(PTPParams* params, PTPObjectHandles* objecthandles)
 
 short
 ptp_getobjectsinfo(PTPParams* params, PTPObjectHandles* objecthandles,
-			PTPObjectInfo** objectinfoarray)
+			PTPObjectInfo*** objectinfoarray)
 {
 	short ret,i;
-	if (objecthandles==NULL)
+	if ((objecthandles==NULL)||(objectinfoarray==NULL))
 		return PTP_ERROR_BADPARAM;
 
 	{
 	PTPReq* req=malloc(sizeof(PTPReq));
 	
 	memset(req, 0, PTP_RESP_LEN);
-	objectinfoarray=malloc(sizeof(PTPObjectHandles *)*objecthandles->n);
+	*objectinfoarray=malloc(sizeof(PTPObjectHandles *)*objecthandles->n);
 	for (i=0;i<objecthandles->n;i++) {
-		objectinfoarray[i]=malloc(sizeof(PTPObjectInfo));
+		(*objectinfoarray)[i]=malloc(sizeof(PTPObjectInfo));
 		*(int *)(req->data)=objecthandles->handler[i];
 		ret=ptp_sendreq(params, req, PTP_OC_GetObjectInfo);
 		if (ret!=PTP_OK) {
@@ -291,7 +293,7 @@ ptp_getobjectsinfo(PTPParams* params, PTPObjectHandles* objecthandles,
 			// XXX no objectinfoarray cleanup!!!
 			return ret;
 		}
-		memcpy(objectinfoarray[i], req->data, sizeof(PTPObjectInfo));
+		memcpy((*objectinfoarray)[i], req->data, sizeof(PTPObjectInfo));
 
 		ret=ptp_getresp(params, req);
 		if ((ret!=PTP_OK) ||
