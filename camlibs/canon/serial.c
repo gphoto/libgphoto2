@@ -963,7 +963,6 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 			total = get_int (msg + 4);
 			if (camera->pl->model == CANON_PS_S20
 			    || camera->pl->model == CANON_PS_G1
-			    || camera->pl->model == CANON_PS_G2
 			    || camera->pl->model == CANON_PS_S10) {
 				maxfilesize = 10000000;
 			} else {
