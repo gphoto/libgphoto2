@@ -103,12 +103,26 @@ static int gp_filesystem_get_file_impl (CameraFilesystem *, const char *,
 		const char *, CameraFileType, CameraFile *, GPContext *);
 
 static time_t
+get_time_from_exif_tag(ExifEntry *e) {
+	struct tm ts;
+
+        e->data[4] = e->data[ 7] = e->data[10] = e->data[13] = e->data[16] = 0;
+        ts.tm_year = atoi (e->data) - 1900;
+        ts.tm_mon  = atoi (e->data + 5) - 1;
+        ts.tm_mday = atoi (e->data + 8);
+        ts.tm_hour = atoi (e->data + 11);
+        ts.tm_min  = atoi (e->data + 14);
+        ts.tm_sec  = atoi (e->data + 17);
+
+        return mktime (&ts);
+}
+
+static time_t
 get_exif_mtime (const unsigned char *data, unsigned long size)
 {
 	ExifData *ed;
 	ExifEntry *e;
-	struct tm ts;
-	time_t t;
+	time_t t, t1 = 0, t2 = 0, t3 = 0;
 
         ed = exif_data_new_from_data (data, size);
         if (!ed) {
@@ -121,39 +135,50 @@ get_exif_mtime (const unsigned char *data, unsigned long size)
          */
 #ifdef HAVE_EXIF_0_5_4
 	e = exif_content_get_entry (ed->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME);
-	if (!e)
-		e = exif_content_get_entry (ed->ifd[EXIF_IFD_EXIF],
-					    EXIF_TAG_DATE_TIME_ORIGINAL);
-	if (!e)
-		e = exif_content_get_entry (ed->ifd[EXIF_IFD_EXIF],
-					    EXIF_TAG_DATE_TIME_DIGITIZED);
+	if (e)
+		t1 = get_time_from_exif_tag(e);
+	e = exif_content_get_entry (ed->ifd[EXIF_IFD_EXIF],
+				    EXIF_TAG_DATE_TIME_ORIGINAL);
+	if (e)
+		t2 = get_time_from_exif_tag(e);
+	e = exif_content_get_entry (ed->ifd[EXIF_IFD_EXIF],
+				    EXIF_TAG_DATE_TIME_DIGITIZED);
+	if (e)
+		t3 = get_time_from_exif_tag(e);
 #else
 	e = exif_content_get_entry (ed->ifd0, EXIF_TAG_DATE_TIME);
-	if (!e)
-	        e = exif_content_get_entry (ed->ifd_exif,
-					    EXIF_TAG_DATE_TIME_ORIGINAL);
-	if (!e)
-		e = exif_content_get_entry (ed->ifd_exif, 
-					    EXIF_TAG_DATE_TIME_DIGITIZED);
+	if (e) {
+		t1 = get_time_from_exif_tag(e);
+		exif_data_unref (e);
+	}
+	e = exif_content_get_entry (ed->ifd_exif,
+				    EXIF_TAG_DATE_TIME_ORIGINAL);
+	if (e) {
+		t2 = get_time_from_exif_tag(e);
+		exif_data_unref (e);
+	}
+	e = exif_content_get_entry (ed->ifd_exif, 
+				    EXIF_TAG_DATE_TIME_DIGITIZED);
+	if (e) {
+		t3 = get_time_from_exif_tag(e);
+		exif_data_unref (e);
+	}
 #endif
-        if (!e) {
-                GP_DEBUG ("EXIF data has not date/time tag.");
-                exif_data_unref (ed);
+        exif_data_unref (ed);
+        if (!t1 && !t2 && !t3) {
+                GP_DEBUG ("EXIF data has not date/time tags.");
                 return 0;
         }
 
-        e->data[4] = e->data[ 7] = e->data[10] = e->data[13] = e->data[16] = 0;
-        ts.tm_year = atoi (e->data) - 1900;
-        ts.tm_mon  = atoi (e->data + 5) - 1;
-        ts.tm_mday = atoi (e->data + 8);
-        ts.tm_hour = atoi (e->data + 11);
-        ts.tm_min  = atoi (e->data + 14);
-        ts.tm_sec  = atoi (e->data + 17);
-        exif_data_unref (ed);
+	/* Perform some sanity checking on those tags */
+	t = t1; /* "last modified" */
 
-        t = mktime (&ts);
+	if (t2 > t)	/* "image taken" > "last modified" ? can not be */
+		t = t2;
+	if (t3 > t)	/* "image digitized" > max(last two) ? can not be */
+		t = t3;
+
         GP_DEBUG ("Found time in EXIF data: '%s'.", asctime (localtime (&t)));
-
         return (t);
 }
 
