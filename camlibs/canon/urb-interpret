@@ -461,7 +461,7 @@ foreach $file (@ARGV) {
 				printf ( "\n*** URB $current_urb interrupt read 0x%02x bytes: unknown type $code ***\n\n", $length );
 			    }
 			} elsif ($length == 0x40) {
-			    print("\n\n\n\n*** URB $current_urb possible CANON RESPONSE ***\n");
+			    print("\n\n\n\n*** URB $current_urb possible CANON RESPONSE 0x%x bytes ***\n", $length);
 			} elsif ($length == 0x01) {
 			    print("\n\n\n\n*** URB $current_urb probably CAMERA INIT ***\n\n");
 			} elsif ($length == 0x58 && defined ($urbdata{$current_urb}{usbid}) ) {
@@ -470,7 +470,11 @@ foreach $file (@ARGV) {
 			    print ( "\n*** URB $current_urb interrupt read, but data are missing from log file ***\n\n" );
 			}
 		    } elsif ($length == 0x58 && defined ($urbdata{$current_urb}{usbid}) ) {
-			print("\n\n\n\n*** URB $current_urb probably camera initial response, USB ID=$urbdata{$current_urb}{usbid}, magic=$urbdata{$current_urb}{magic} ***\n\n");
+			if ( $urbdata{$current_urb}{magic} == 0x00000002 ) {
+			    print("\n\n\n\n*** URB $current_urb possible CANON RESPONSE 0x%x bytes ***\n", $length);
+			} else {
+			    print("\n\n\n\n*** URB $current_urb probably camera initial response, USB ID=$urbdata{$current_urb}{usbid}, magic=$urbdata{$current_urb}{magic} ***\n\n");
+			}
 		    } elsif ($length == 0x01) {
 			print("\n\n\n\n*** URB $current_urb probably CAMERA INIT ***\n\n");
 		    } elsif ($length >= 0x40) {
