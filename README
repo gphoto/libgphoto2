@@ -62,14 +62,15 @@ USB Mass Storage protocol:
 Again, those cameras cannot be accessed through gphoto2.
 
 Other camera support a protocol called PTP or USB Imaging Devices that has
-been developped by Kodak and other. gphoto2 does not fully support PTP yet,
-but jPhoto <http://jphoto.sourceforge.net/> does. Here is a short list of 
-camera that use this protocol:
+been developped by Kodak and other. gphoto2 does not fully support PTP yet
+and needs some testing. Here is a short list of camera that use this protocol:
  * HP PhotoSmart 318, 612, 715
  * Kodak DC-4800, DX-3215, DX-3500, DX-3600, DX-3700, DX-3900, MC3 and all the
    camera that use Kodak Easy Share(tm) system.
  * Sony DSC-P5, DSC-F707, DSC-P30, DSC-P50, DSC-S75, DSC-S85, MVC-CD300
    (all need user configuration of the camera)
+You may try jPhoto <http://jphoto.sourceforge.net/> for ptp cameras
+alternatively if gphoto fails.
 
 Platforms
 ---------
