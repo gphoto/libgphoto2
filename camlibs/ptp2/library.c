@@ -885,6 +885,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		   failure?? */
 		break;
 
+	case	GP_FILE_TYPE_EXIF:
+		return (GP_ERROR_NOT_SUPPORTED);
+
 	default:
 		/* we do not allow downloading unknown type files as in most
 		cases they are special file (like firmware or control) which

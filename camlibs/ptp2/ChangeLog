@@ -1,3 +1,6 @@
+2003-08-03 Mariusz Woloszyn
+	* library.c: PTP do not offer plain EXIF data; return
+	  GP_ERROR_NOT_SUPPORTED while downloading GP_FILE_TYPE_EXIF.
 2003-08-29 Mariusz Woloszyn
 	* library.c: allow downloading thumbnail of nonimage objects,
 	  however only in case that the ThumbCompressedSize is greater than 0
