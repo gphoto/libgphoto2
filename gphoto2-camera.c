@@ -962,66 +962,6 @@ gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
 }
 
 /**
- * gp_camera_folder_get_config:
- * @camera: a #Camera
- * @folder: a folder
- * @window: a #CameraWidget
- *
- * Retrieves the configuration @window of a @folder. This function is similar
- * to #gp_camera_get_config. The only difference is that it operates on a
- * folder.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_folder_get_config (Camera *camera, const char *folder, 
-			     CameraWidget **window)
-{
-	CHECK_NULL (camera && folder && window);
-
-	if (!camera->functions->folder_get_config) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("The camera does "
-			"not offer any configuration options for folders"));
-                return (GP_ERROR_NOT_SUPPORTED);
-	}
-
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_get_config (
-						camera, folder, window));
-
-	return (GP_OK);
-}
-
-/**
- * gp_camera_folder_set_config:
- * @camera: a #Camera
- * @folder: a folder
- * @window: a #CameraWidget
- *
- * Sets the folder configuration. See #gp_camera_set_config and
- * #gp_camera_folder_get_config for details.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_folder_set_config (Camera *camera, const char *folder, 
-	                     CameraWidget *window)
-{
-	CHECK_NULL (camera && folder && window);
-
-	if (!camera->functions->folder_set_config) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("The camera does "
-			"not support setting configuration options on "
-			"folders"));
-                return (GP_ERROR_NOT_SUPPORTED);
-	}
-
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_set_config (
-						camera, folder, window));
-
-	return (GP_OK);
-}
-
-/**
  * gp_camera_file_get_info:
  * @camera: a #Camera
  * @folder: a folder
@@ -1156,65 +1096,6 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 	/* We don't trust the camera libraries */
 	CHECK_RESULT (gp_file_set_type (camera_file, type));
 	CHECK_RESULT (gp_file_set_name (camera_file, file));
-
-	return (GP_OK);
-}
-
-/**
- * gp_camera_file_get_config:
- * @camera: a #Camera
- * @folder: a folder
- * @file: the name of a file
- * @window:
- *
- * Gets a configuration window for a given @file. See #gp_camera_get_config
- * and #gp_camera_set_config.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_file_get_config (Camera *camera, const char *folder, 
-			   const char *file, CameraWidget **window)
-{
-	CHECK_NULL (camera && folder && file && window);
-
-	if (!camera->functions->file_get_config) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
-			"not offer configuration options for files"));
-		return (GP_ERROR_NOT_SUPPORTED);
-	}
-
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_get_config (
-						camera, folder, file, window));
-
-	return (GP_OK);
-}
-
-/**
- * gp_camera_file_set_config:
- * @camera: a #Camera
- * @folder: a folder
- * @file: the name of a file
- * @window: a #CameraWidget
- *
- * Sets the configuration of a file. See #gp_camera_set_config.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_file_set_config (Camera *camera, const char *folder, 
-			   const char *file, CameraWidget *window)
-{
-	CHECK_NULL (camera && window && folder && file);
-
-	if (!camera->functions->file_set_config) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
-			"not support setting configuration options on files"));
-		return (GP_ERROR_NOT_SUPPORTED);
-	}
-
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_set_config (
-					camera, folder, file, window));
 
 	return (GP_OK);
 }
