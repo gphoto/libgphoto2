@@ -242,9 +242,9 @@ const struct canonCamModelData models[] = {
 
         /* 0x30bf is PowerShot SD300/Digital IXUS 40 in PTP mode */
         /* 0x30c0 is PowerShot SD200 in PTP mode */
-        {"Canon:PowerShot SD200 (normal mode)", CANON_CLASS_5,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:Digital IXUS 30 (normal mode)", CANON_CLASS_5,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:IXY Digital 40 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot SD200 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:Digital IXUS 30 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:IXY Digital 40 (normal mode)",  CANON_CLASS_4,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
         {"Canon:PowerShot A510 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30c2, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
@@ -1034,10 +1034,17 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
                                                 /* Pop out of this directory */
                                                 unsigned char *local_dir = strrchr(path->folder,'\\') + 1;
                                                 GP_DEBUG ( "Leaving directory \"%s\"", local_dir );
-                                                local_dir[-1] = 0;
+                                                /* The EOS 350D has
+                                                 * ".." entries right
+                                                 * up to the root, so
+                                                 * we need to avoid
+                                                 * dereferencing a
+                                                 * null pointer. */
+                                                if ( local_dir != NULL )
+                                                        local_dir[-1] = 0;
                                         }
                                         else {
-                                                // New directory, and we need to enter it.
+                                                /* New directory, and we need to enter it. */
                                                 GP_DEBUG ( "Entering directory \"%s\"", new_name );
                                                 if ( new_entry[CANON_DIRENT_NAME] == '.' )
                                                         /* Ignore a leading dot */
