@@ -67,8 +67,8 @@
 #define PTP_RC_OK                       0x2001
 #define PTP_RC_GeneralError             0x2002
 #define PTP_RC_SessionNotOpen           0x2003
-#define PTP_RC_InvalidTransactioID      0x2004
-#define PTP_RC_OperaztionNotSupported   0x2005
+#define PTP_RC_InvalidTransactionID	0x2004
+#define PTP_RC_OperationNotSupported    0x2005
 #define PTP_RC_ParameterNotSupported    0x2006
 #define PTP_RC_IncompleteTransfer       0x2007
 #define PTP_RC_InvalidStorageId         0x2008
@@ -96,6 +96,14 @@
 #define PTP_RC_SessionAlreadyOpened     0x201E
 #define PTP_RC_TransactionCanceled      0x201F
 #define PTP_RC_SpecificationOfDestinationUnsupported            0x2020
+
+// PTP extended ERROR codes
+
+#define PTP_ERROR_DATA_EXPECTED		0x2FF
+#define PTP_ERROR_RESP_EXPECTED		0x2FE
+
+// Error description structure
+#include "ptperr.h"
 
 // Requests
 
@@ -172,6 +180,5 @@ struct _PTPParams {
 
 
 // ptp functions
-
 
 #endif /* __PTP_H__ */

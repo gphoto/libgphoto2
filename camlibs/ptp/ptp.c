@@ -82,73 +82,20 @@ ptp_getresp(PTPParams* params, PTPReq* databuf)
 	return ret;
 }
 
-PTPResult
-ptp_getdevinfo(PTPParams* params, PTPReq* databuf)
-{
-	return ptp_sendreq(params, databuf, PTP_OC_GetDevInfo);
-}
-
-PTPResult
-ptp_opensession(PTPParams* params, PTPReq* databuf)
-{
-	return ptp_sendreq(params, databuf, PTP_OC_OpenSession);
-}
-
-PTPResult
-ptp_closesession(PTPParams* params, PTPReq* databuf)
-{
-	return ptp_sendreq(params, databuf, PTP_OC_CloseSession);
-}
-
-PTPResult
-ptp_getobjectinfo(PTPParams* params, PTPReq* databuf)
-{
-	return ptp_sendreq(params, databuf, PTP_OC_GetObjectInfo);
-}
-
-PTPResult
-ptp_getobjecthandles(PTPParams* params, PTPReq* databuf)
-{
-	return ptp_sendreq(params, databuf, PTP_OC_GetObjectHandles);
-}
-
-PTPResult
-ptp_getobject(PTPParams* params, PTPReq* databuf)
-{
-	return ptp_sendreq(params, databuf, PTP_OC_GetObject);
-}
-
-PTPResult
-ptp_resetdevice(PTPParams* params, PTPReq* databuf)
-{
-	return ptp_sendreq(params, databuf, PTP_OC_ResetDevice);
-}
-
-PTPResult
-ptp_selftest(PTPParams* params, PTPReq* databuf)
-{
-	return ptp_sendreq(params, databuf, PTP_OC_SelfTest);
-}
-
-PTPResult
-ptp_powerdown(PTPParams* params, PTPReq* databuf)
-{
-	return ptp_sendreq(params, databuf, PTP_OC_PowerDown);
-}
-
 // Iniciates connection with device, opens session
 
-PTPResult
-ptp_GetDevInfo(PTPParams* params, PTPReq* databuf)
+short
+ptp_getdevinfo(PTPParams* params, PTPReq* databuf)
 {
-	PTPResult ret;
+	short ret;
 	PTPReq* req=(databuf==NULL)?
 		malloc(sizeof(PTPReq)):databuf;
 
 	// Do GetDevInfo (we may use it for some camera_about)
 	memset(req, 0, PTP_RESP_LEN);
-	ret=ptp_getdevinfo(params, req);
+	ret=ptp_sendreq(params, req,PTP_OC_GetDevInfo);
 	if (ret!=PTP_OK) {
+		ret=PTP_RC_Undefined;
 		params->ptp_error("ptp_getdevinfo sending req");
 		if (databuf==NULL) free(req);
 		return ret;
@@ -162,6 +109,9 @@ ptp_GetDevInfo(PTPParams* params, PTPReq* databuf)
 			"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
 			req->len, req->type, req->code, req->trans_id);
 #endif
+		if (ret!=PTP_OK) ret=PTP_RC_Undefined; else
+		ret=(req->type==PTP_TYPE_DATA)?
+			req->code:PTP_ERROR_DATA_EXPECTED;
 		if (databuf==NULL) free(req);
 		return ret;
 	}
@@ -176,6 +126,9 @@ ptp_GetDevInfo(PTPParams* params, PTPReq* databuf)
 			"code=0x%4.4x ID=0x%8.8x\n",
 			resp->len, resp->type, resp->code, resp->trans_id);
 #endif
+		if (ret!=PTP_OK) ret=PTP_RC_Undefined; else
+			ret=(req->type==PTP_TYPE_RESP)?
+				req->code:PTP_ERROR_RESP_EXPECTED;
 		free(resp);
 		if (databuf==NULL)  free(req);
 		return ret;
