@@ -49,7 +49,7 @@
 	* Update README, TODO, ChangeLog
 	* Support for Optura 200 MC/MVX2i camcorder
 
-2003/04/04 Stephen H. Westin <westin@graphics.cornell.edu>
+2003-04-04 Stephen H. Westin <westin@graphics.cornell.edu>
 
 	* CANON_PS_A70 is now CANON_PS_PRO70, to avoid confusion with new
 	  PowerShot A70, a completely different camera.
@@ -78,7 +78,7 @@
 	* Messed with file upload; now sets file time from host file time.
 	  Still doesn't work any better.
 
-2003/02/28 Stephen H. Westin <westin@graphics.cornell.edu>
+2003-02-28 Stephen H. Westin <westin@graphics.cornell.edu>
 
 	* Removed "capturing" field from CameraPrivateLibrary; it was unused.
 	* EOS capture is no longer flagged as "experimental".
@@ -88,7 +88,7 @@
 	
 	* library.c: We support EXIF download.
 
-2003/02/27 Stephen H. Westin <westin@graphics.cornell.edu>
+2003-02-27 Stephen H. Westin <westin@graphics.cornell.edu>
 
 	* Changed all C++-style comments ("//") to C-style "/* ... */".
           Gcc allows C++ form in C programs, but it's not quite ANSI.
@@ -97,7 +97,7 @@
 	* Added function canon_usb_list_all_dirs() to support path and
 	  file name deduction in canon_int_capture_image().
 
-2003/02/18 Stephen H. Westin <westin@graphics.cornell.edu>
+2003-02-18 Stephen H. Westin <westin@graphics.cornell.edu>
 
 	* canon_usb_capture_dialogue() now gets error context
 	* Added extra NUL to end of "delete file" command; this
@@ -113,14 +113,14 @@
 	* canon_usb_capture_dialogue() now gets error context to
 	  pass to canon_usb_capture_dialogue().
 
-2003/02/14 Stephen H. Westin <westin@graphics.cornell.edu>
+2003-02-14 Stephen H. Westin <westin@graphics.cornell.edu>
 
 	* Corrected comment explaining path returned from capture.
 	* Added labels for all values of canonCamModel, for gtk-doc.
 	* Added PowerShot G3 to special-case locking: use non-EOS locking,
           but no "get photo abilities" command.
 
-2003/02/11 Stephen H. Westin <westin@graphics.cornell.edu>
+2003-02-11 Stephen H. Westin <westin@graphics.cornell.edu>
 
 	* Tidy comments (esp. for gtk-doc)
 	* Return "*UNKNOWN*" for both path and file names from capture, since
@@ -152,7 +152,7 @@
 	* Increase MAX_INTERRUPT_TRIES from 4000 to 12000 to allow worst-case
 	  timing: a D60 writing a raw file to CF.
 
-2003/01/27 Stephen H. Westin <westin@graphics.cornell.edu>
+2003-01-27 Stephen H. Westin <westin@graphics.cornell.edu>
 
 	* Major cleanup of comments to make gtk-doc work.
 	* Moved "defines for error handling" from canon.h to serial.h.
@@ -169,7 +169,7 @@
 	* Created doc/canon-api.sgml, doc/canon-sections.txt
 	  with tentative structure for documentation.
 
-2003/01/13 Stephen H. Westin <westin@graphics.cornell.edu>
+2003-01-13 Stephen H. Westin <westin@graphics.cornell.edu>
 
 	* Improved some debug logging; added interpretation of power status
 	* Re-inserted "get picture abilities" for non-EOS cameras
@@ -184,7 +184,7 @@
 	* library.[ch]: removed CANON_EXPERIMENTAL_CAPTURE #ifdefs
 	* canon.[ch], serial.c: new serial detection code (with dedicated ID strings)
 
-2003/01/10 Stephen H. Westin <westin@graphics.cornell.edu>
+2003-01-10 Stephen H. Westin <westin@graphics.cornell.edu>
 
 	* Corrected capture sequence, including reads from interrupt pipe.
 	  Tested on PowerShot G2 and S45; *not* working for EOS D30/D60

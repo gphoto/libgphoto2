@@ -1,23 +1,23 @@
-Sat Jan 17 01:01:46 2004  Till Adam  <till@adam-lilienthal.de>
+2004-01-17 Till Adam  <till@adam-lilienthal.de>
   * fix brokeness for pencams which don't react well to the reset
     command needed for other firmware one cams. Thanks to 
     Norbert Möndjen <Norbert.Moendjen@t-online.de> and 
     Walt Boring <waboring@3gstech.com> for figuring that out
     and helping debug it.
 
-Wed Jun 04 18:39:02 2003  Till Adam  <till@adam-lilienthal.de>
+2003-06-04  Till Adam  <till@adam-lilienthal.de>
   * add support for spca500 based cams with flash storage, courtesy
     of Ian MacArthur <ian@imm.uklinux.net>
 
-Wed Jun 04 18:26:23 2003  Till Adam  <till@adam-lilienthal.de>
+2003-06-04  Till Adam  <till@adam-lilienthal.de>
   * use ids to detect the model instead of strcmp which fails
     after the : change
   * move jpeg function into spca50x.c|h
   * return mtime in the info func to save thumbnail uploads
 
-Sat May 17 08:34:29 2003  Till Adam  <till@adam-lilienthal.de>
+2003-05-17  Till Adam  <till@adam-lilienthal.de>
   * fix crash in thumbnail generation due to brainfart on my part.
     Thanks to Hartmut Henkel <hartmut_henkel@gmx.de> for the help.
 
-Sat Feb 22 15:23:02 2003  Till Adam  <till@adam-lilienthal.de>
+2003-02-22  Till Adam  <till@adam-lilienthal.de>
   * merge of the gsmart, spca504_flash and benq camlibs into this one
