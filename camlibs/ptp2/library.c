@@ -347,6 +347,9 @@ static struct {
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
+	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
+	{"Nikon:D2H SLR (PTP mode)",      0x04b0, 0x0404, 0},
+
 	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0406, 0},
 
 	/* in pictbridge mode */
