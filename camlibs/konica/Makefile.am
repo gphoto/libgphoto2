@@ -7,7 +7,7 @@ EXTRA_DIST = ChangeLog EXPERTS
 
 INCLUDES =\
  -I$(top_srcdir)/include\
- -DG_LOG_DOMAIN=\"$(PACKAGE)\"\
+ -DG_LOG_DOMAIN=\"$(PACKAGE)\"
 
 libgphoto2_konica_la_SOURCES = \
  lowlevel.c lowlevel.h \
