@@ -329,7 +329,6 @@ ptp_getobjecthandles(PTPParams* params, PTPObjectHandles* objecthandles)
 	return PTP_RC_OK;
 }
 
-#if 0
 short
 ptp_getobjectinfo(PTPParams* params, PTPObjectHandles* objecthandles,
 			int n, PTPObjectInfo* objectinfo)
@@ -387,7 +386,6 @@ ptp_getobjectinfo(PTPParams* params, PTPObjectHandles* objecthandles,
 	}
 	return PTP_RC_OK;
 }
-#endif
 
 short
 ptp_getobject(PTPParams* params, PTPObjectHandles* objecthandles, 

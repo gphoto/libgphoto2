@@ -272,10 +272,18 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data;
 	PTPObjectHandles handles;
+	int i;
+	char filename[1024];
+
 
 	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &handles));
 
-	return (GP_ERROR);
+	 for (i = 0; i < handles.n; i++) {
+		 sprintf (filename, "image%03i.jpg", i); 	// 999 pictures
+		 CR (gp_list_append (list, filename, NULL));
+	 }
+
+	return (GP_OK);
 }
 
 static int
@@ -379,6 +387,7 @@ camera_init (Camera *camera)
 	camera->pl->params.debug_func = ptp_debug_func;
 	camera->pl->params.error_func = ptp_error_func;
 	camera->pl->params.data = camera;
+	camera->pl->params.transaction_id=0x01;
 
 	/* Configure the port */
 	CR (gp_port_set_timeout (camera->port, 2000));
