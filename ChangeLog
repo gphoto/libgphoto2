@@ -1,3 +1,10 @@
+2004-11-18  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* camlibs/kodak/ez200/*: New camera driver written by 
+	  Edo <edo.bvdcorp@free.fr>. Slightly modified to remove some
+	  warnings.
+	* configure.in: Hook it up.
+	  
 2004-11-17  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* configure.in

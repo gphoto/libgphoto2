@@ -377,7 +377,7 @@ dnl Configure libgphoto2-port
 dnl ---------------------------------------------------------------------------
 AC_CONFIG_SUBDIRS(libgphoto2_port)
 
-AC_OUTPUT([ 
+AC_OUTPUT([
 README
 Makefile
 camlibs/Makefile
@@ -399,6 +399,7 @@ camlibs/kodak/dc120/Makefile
 camlibs/kodak/dc210/Makefile
 camlibs/kodak/dc240/Makefile
 camlibs/kodak/dc3200/Makefile
+camlibs/kodak/ez200/Makefile
 camlibs/konica/Makefile
 camlibs/konica/localization/Makefile
 camlibs/largan/Makefile
