@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <gphoto2-datatypes.h>
-#include <gphoto2-frontend.h>
+#include <gphoto2.h>
 
 int gpfe_script (char *script_line) {
 

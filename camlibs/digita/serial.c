@@ -9,10 +9,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
+#include <termios.h>
+#include <unistd.h>
+#include <netinet/in.h>
 
 #include "digita.h"
 
 #include <gpio.h>
+int gpio_serial_set_baudrate(gpio_device * dev);
 
 struct beacon {
 	unsigned short intro;
@@ -188,7 +193,7 @@ int digita_serial_open(struct digita_device *dev, Camera *camera,
 	gpio_set_settings(dev->gpdev, settings);
 	if (gpio_open(dev->gpdev) < 0) {
 		fprintf(stderr, "error opening device\n");
-		return NULL;
+		return 0;
 	}
 
 	tcsendbreak(dev->gpdev->device_fd, 4);
@@ -206,7 +211,7 @@ int digita_serial_open(struct digita_device *dev, Camera *camera,
 	memset((void *)&beacon, 0, sizeof(beacon));
 	if (gpio_read(dev->gpdev, (void *)&beacon, sizeof(beacon)) < 0) {
 		perror("reading beacon");
-		return NULL;
+		return 0;
 	}
 
 printf("%04X %04X %04X %02X\n",

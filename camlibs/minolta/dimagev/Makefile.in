@@ -60,10 +60,23 @@ POST_UNINSTALL = :
 host_alias = @host_alias@
 host_triplet = @host@
 AS = @AS@
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CFLAGS = @CFLAGS@
 CPP = @CPP@
+DATADIRNAME = @DATADIRNAME@
 DLLTOOL = @DLLTOOL@
+GENCAT = @GENCAT@
+GMOFILES = @GMOFILES@
+GMSGFMT = @GMSGFMT@
+GT_NO = @GT_NO@
+GT_YES = @GT_YES@
+INCLUDE_LOCALE_H = @INCLUDE_LOCALE_H@
+INSTOBJEXT = @INSTOBJEXT@
+INTLDEPS = @INTLDEPS@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
 LIBGPHOTO2_INCLUDEDIR = @LIBGPHOTO2_INCLUDEDIR@
 LIBGPHOTO2_LIBDIR = @LIBGPHOTO2_LIBDIR@
 LIBGPHOTO2_LIBS = @LIBGPHOTO2_LIBS@
@@ -74,18 +87,25 @@ LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
 OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
+POFILES = @POFILES@
+POSUB = @POSUB@
 RANLIB = @RANLIB@
 SUBDIRS_CAMLIBS = @SUBDIRS_CAMLIBS@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+l = @l@
 
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_dimagev.la
 
 INCLUDES = -I$(top_srcdir)/include
 
-libgphoto2_dimagev_la_SOURCES = dimagev.c dimagev.h packet.c data.c status.c 	info.c capture.c util.c
+libgphoto2_dimagev_la_SOURCES = capture.c data.c delete.c dimagev.c dimagev.h 	download.c info.c packet.c status.c util.c
 
 
 libgphoto2_dimagev_la_LDFLAGS = -version-info 0:0:0
@@ -99,8 +119,8 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I../../..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 libgphoto2_dimagev_la_LIBADD = 
-libgphoto2_dimagev_la_OBJECTS =  dimagev.lo packet.lo data.lo status.lo \
-info.lo capture.lo util.lo
+libgphoto2_dimagev_la_OBJECTS =  capture.lo data.lo delete.lo dimagev.lo \
+download.lo info.lo packet.lo status.lo util.lo
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -110,10 +130,11 @@ DIST_COMMON =  README COPYING Makefile.am Makefile.in
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = gtar
+TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/capture.P .deps/data.P .deps/dimagev.P .deps/info.P \
-.deps/packet.P .deps/status.P .deps/util.P
+DEP_FILES =  .deps/capture.P .deps/data.P .deps/delete.P .deps/dimagev.P \
+.deps/download.P .deps/info.P .deps/packet.P .deps/status.P \
+.deps/util.P
 SOURCES = $(libgphoto2_dimagev_la_SOURCES)
 OBJECTS = $(libgphoto2_dimagev_la_OBJECTS)
 

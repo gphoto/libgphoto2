@@ -134,7 +134,7 @@ int dsc1_selectimage(dsc_t *dsc, u_int8_t index)
 {
 	int	size = 0;
 	
-	DEBUG_PRINT_1("Selecting image: %i.", index);	
+	DEBUG_PRINT(("Selecting image: %i.", index));	
 	
 	if (index < 1)
 		RETURN_ERROR(EDSCBADNUM, dsc1_selectimage);
@@ -192,7 +192,6 @@ int dsc1_readimageblock(dsc_t *dsc, int block, char *buffer) {
 char *dsc1_readimage(dsc_t *dsc, int index, int *size) {
 
 	int	rsize, i, s;
-	char 	str[80];
 	char	*buffer = NULL;
 
 	DEBUG_PRINT(("Reading image: %i.", index));
@@ -206,7 +205,7 @@ char *dsc1_readimage(dsc_t *dsc, int index, int *size) {
 	}
 	
 	for (i = 0, s = 0; s < *size; i++) {
-		if (rsize = dsc1_readimageblock(dsc, i, &buffer[s]) == GP_ERROR) {
+		if ((rsize = dsc1_readimageblock(dsc, i, &buffer[s])) == GP_ERROR) {
 			DEBUG_PRINT(("Error during image transfer."));
 			free(buffer);
 			return NULL;

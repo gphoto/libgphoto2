@@ -54,7 +54,7 @@ int gpfe_cache_get (int camera_number, int folder_number, int file_number, Camer
 		de = readdir(d);
 		if (de) {
 			sscanf(de->d_name, "%i-%i-%i.%s", 
-			       &camn, &foldn, &filen, &filet);
+			       &camn, &foldn, &filen, (char *)&filet);
 			if ((camn  == camera_number) &&
 			    (foldn == folder_number) && 
 			    (filen == file_number)) {

@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
+#include <netinet/in.h>
 
 #include <gphoto2.h>
 

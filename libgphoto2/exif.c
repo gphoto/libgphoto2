@@ -45,7 +45,6 @@ static int exif_sizetab[13]={
 /**************************************************************/
 /* Foward declarations. move to exif.h if you want to export. */
 /**************************************************************/
-int stat_exif(exifparser *exifdata);
 int gpe_getvalue(unsigned char *data,int tagind);
 int gpe_datsize(unsigned char *data,int tagind);
 int gpe_tagnum( char *data,int tagind);

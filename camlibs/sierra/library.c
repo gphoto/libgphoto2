@@ -185,18 +185,14 @@ read_packet_again:
 //	usleep(QUICKSLEEP);
 
 	done = 0;
-#ifdef GPIO_USB
 	if (fd->type == GP_PORT_USB)
-		gpio_usb_clear_halt(fd->dev);
-#endif
+		gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
 	while (!done && (r++<RETRIES)) {
 
 		switch (fd->type) {
-#ifdef GPIO_USB
 		   case GP_PORT_USB:
 			blocksize = 2054;
 			break;
-#endif
 		   case GP_PORT_SERIAL:
 			blocksize = 1;
 			break;
@@ -242,7 +238,6 @@ read_packet_again:
 		for (y=bytes_read; y < length; y+=blocksize) {
 			ret = gpio_read(fd->dev, &packet[y], blocksize);
 			if (ret == GPIO_TIMEOUT) {
-fprintf(stderr, "timeout!!! #################################\n");
 				sierra_write_nak(camera);
 				goto read_packet_again;
 			}
@@ -253,10 +248,8 @@ fprintf(stderr, "timeout!!! #################################\n");
 	}
 
 	sierra_dump_packet(camera, packet);
-#ifdef GPIO_USB
 	if (fd->type == GP_PORT_USB)
-		gpio_usb_clear_halt(fd->dev);
-#endif
+		gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
 	return (GP_OK);
 
 }
@@ -320,17 +313,13 @@ int sierra_write_ack(Camera *camera) {
 
 	buf[0] = ACK;
 	if (sierra_write_packet(camera, buf)==GP_OK) {
-#ifdef GPIO_USB
 		if (fd->type == GP_PORT_USB)
-			gpio_usb_clear_halt(fd->dev);
-#endif
+	                gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
 		return (GP_OK);
 	}
 	sierra_debug_print(fd, "Could not write ACK");
-#ifdef GPIO_USB
 	if (fd->type == GP_PORT_USB)
-		gpio_usb_clear_halt(fd->dev);
-#endif
+                gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
 	return (GP_ERROR);
 }
 
@@ -343,18 +332,14 @@ int sierra_write_nak(Camera *camera) {
 
 	buf[0] = NAK;
 	if (sierra_write_packet(camera, buf)==GP_OK) {
-#ifdef GPIO_USB
 		if (fd->type == GP_PORT_USB)
-			gpio_usb_clear_halt(fd->dev);
-#endif
+	                gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
 		return (GP_OK);
 	}
 
 	sierra_debug_print(fd, "Could not write NAK");
-#ifdef GPIO_USB
 	if (fd->type == GP_PORT_USB)
-		gpio_usb_clear_halt(fd->dev);
-#endif
+                gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
 	return (GP_ERROR);
 }
 
