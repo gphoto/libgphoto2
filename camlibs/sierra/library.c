@@ -239,8 +239,12 @@ int sierra_check_battery_capacity (Camera *camera)
 		return ret;
 	}
 
-	if (capacity < 5)
-		return GP_ERROR_LOW_BATTERY;
+	if (capacity < 5) {
+		gp_camera_set_error (camera,
+				     _("The battery level of the camera is too low (%d%%). "
+				       "The operation is aborted."), capacity);
+		return GP_ERROR;
+	}
 
 	return GP_OK;
 }
