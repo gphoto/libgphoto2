@@ -1,3 +1,7 @@
+2005-04-05   Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/ptp: removing obsolete camlib.
+	
 2005-03-30 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* libgphoto2/gphoto2-file.c: replace stricmp() by strcasecmp()
