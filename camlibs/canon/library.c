@@ -33,6 +33,7 @@
 #include <sys/stat.h>
 #include <termios.h>
 #include <time.h>
+#include <ctype.h>
 
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
@@ -553,7 +554,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			 * GP_FILE_TYPE_EXIF instead
 			 */
 			if (is_image (filename)) {
-				if (camera->pl->md->model != CANON_PS_A70) {
+				if (camera->pl->md->model != CANON_PS_PRO70) {
 					GP_DEBUG ("get_file_func: preview requested where "
 						  "EXIF should be possible");
 					return (GP_ERROR_NOT_SUPPORTED);
@@ -573,7 +574,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		case GP_FILE_TYPE_EXIF:
 #ifdef HAVE_EXIF
 			/* the PS A70 does not support EXIF */
-			if (camera->pl->md->model == CANON_PS_A70)
+			if (camera->pl->md->model == CANON_PS_PRO70)
 				return (GP_ERROR_NOT_SUPPORTED);
 				
 			if (*thumbname == '\0') {
@@ -989,7 +990,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 
 	gp_camera_get_abilities (camera, &a);
 	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_PS_A50)
-					    || (camera->pl->md->model == CANON_PS_A70))) {
+					    || (camera->pl->md->model == CANON_PS_PRO70))) {
 		gp_context_error (context,
 				  _
 				  ("Speeds greater than 57600 are not supported for uploading to this camera"));
@@ -1118,7 +1119,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 
 	gp_camera_get_abilities (camera, &a);
 	if ((camera->pl->speed > 57600) && ((camera->pl->md->model == CANON_PS_A50)
-					    || (camera->pl->md->model == CANON_PS_A70))) {
+					    || (camera->pl->md->model == CANON_PS_PRO70))) {
 		gp_context_error (context,
 				  _
 				  ("Speeds greater than 57600 are not supported for uploading to this camera"));
