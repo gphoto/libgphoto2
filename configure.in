@@ -14,6 +14,15 @@ AC_PROG_CC
 AC_PROG_CPP
 AM_PROG_LIBTOOL
 
+dnl Solaris hack for grep and tr
+if test -n `echo $host_os | grep solaris`; then
+  TR=/usr/xpg4/bin/tr
+  GREP=/usr/xpg4/bin/grep  
+else
+  TR=tr
+  GREP=grep
+fi
+
 dnl Checks for libraries.
 dnl Replace `main' with a function in -ldl:
 AC_CHECK_LIB(dl, main)
@@ -61,7 +70,7 @@ dnl Find out which drivers to compile
 camlibs='barbie canon directory fujitsu konica panasonic digita sonydscf1'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
-  d=`echo $i | tr a-z A-Z`
+  d=`echo $i | $TR a-z A-Z`
   eval "CONFIG_DRIVER_$d=n"
 done
 AC_MSG_CHECKING(which drivers to compile)
@@ -75,7 +84,7 @@ AC_ARG_WITH(drivers,
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
-    d=`echo $i | tr a-z A-Z`
+    d=`echo $i | $TR a-z A-Z`
     eval "CONFIG_DRIVER_$d=y"
     AC_DEFINE_UNQUOTED(CONFIG_DRIVER_$d)
     SUBDIRS_CAMLIBS="$SUBDIRS_CAMLIBS $i"
@@ -85,8 +94,8 @@ if test "$drivers" = "all"; then
 else
   drivers=`echo $drivers | sed 's/,/ /g'`
   for driver in $drivers; do
-    if test -n "`echo $camlibs | grep -E \"(^| )$driver( |\$)\"`"; then
-      d=`echo $driver | tr a-z A-Z`
+    if test -n "`echo $camlibs | $GREP -E \"(^| )$driver( |\$)\"`"; then
+      d=`echo $driver | $TR a-z A-Z`
       eval "CONFIG_DRIVER_$d=y"
       AC_DEFINE_UNQUOTED(CONFIG_DRIVER_$d)
       SUBDIRS_CAMLIBS="$SUBDIRS_CAMLIBS $driver"
