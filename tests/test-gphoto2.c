@@ -1,9 +1,30 @@
-#include <gphoto2-camera.h>
+/* test-gphoto2.c
+ *
+ * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+#include <config.h>
 
 #include <stdio.h>
-#ifdef _GNU_SOURCE
+#ifdef HAVE_MCHECK_H
 #include <mcheck.h>
 #endif
+
+#include <gphoto2-camera.h>
 
 #define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); return (1);}}
 
@@ -16,7 +37,7 @@ main (int argc, char *argv [])
 	CameraAbilities abilities;
 	int m;
 
-#ifdef _GNU_SOURCE
+#ifdef HAVE_MCHECK_H
 	mtrace();
 #endif
 
@@ -61,7 +82,7 @@ main (int argc, char *argv [])
 	printf ("Unrefing camera...\n");
 	CHECK (gp_camera_unref (camera));
 
-#ifdef _GNU_SOURCE
+#ifdef HAVE_MCHECK_H
 	muntrace();
 #endif
 

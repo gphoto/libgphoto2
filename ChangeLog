@@ -1,3 +1,8 @@
+2001-11-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Check for mcheck.h
+	* tests: #ifdef HAVE_MCHECK_H
+
 2001-11-23  Marcus Meissner <marcus@jet.franken.de>
 
 	* camlibs/stv0680/library.c: Major rework of the Capture Preview
