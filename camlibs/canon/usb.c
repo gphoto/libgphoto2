@@ -212,9 +212,12 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 				  "Step #4.2 of initialization failed! (returned %i, expected %i) "
 				  "Camera might still work though. Continuing.", i, 4);
 
+		read_bytes = 0;
 		do {
 			i = gp_port_check_int_fast ( camera->port, buffer, 0x10 );
-		} while ( i < 0x10 && i >= 0 );
+			if ( i > 0 )
+				read_bytes += i;
+		} while ( read_bytes < 0x10 && i >= 0 );
 		if ( i != 0x10 ) {
 			GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
 			return GP_ERROR_CORRUPTED_DATA;
