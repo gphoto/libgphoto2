@@ -1,3 +1,8 @@
+2001-11-10 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2/jpeg.[ch]: moved array definitions from .h to .c
+	* libgphoto2_port/serial/unix.c: changed serial port prefix for Darwin
+
 2001-11-10 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* libghoto2_port/doc/Makefile.am
