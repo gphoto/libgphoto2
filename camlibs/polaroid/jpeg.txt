@@ -1,0 +1,46 @@
+This should help understand jpeg headers.
+Warning: I don't understand the jpeg headers or jpegs that well!
+Oh well, I will try to explain here anyway.
+
+Jpeg markers in general:
+------------
+0xFF marker# 0x00 lenth data
+length is the size of the information after the 0xFF XX
+
+Quantization tables:
+-------------------
+0xFF 0xDB 0x00 length data
+Funny.....for what I have the data is all 0x01's.
+I guess there is a precision number in there somewhere, but I don't know.
+For what I have, both quantization tables are precision 0.
+
+Start of Frame 0:
+----------------
+0xFF 0xC0 0x00 length bits-per-pixel 0x00 height(2 bytes) width(2 bytes)
+  #_of_components component# v/h huh component# v/h huh component# v/h huh
+The v/h is the vertical to horizontal compression ratio.
+I forget what the "huh" is.
+I misplaced some info I had on the components here.
+There are a couple of formats that the data could be in.
+The 3 component ones are YCbCr and CMY.
+The 4 component ones are YCbCrK and CMYK.
+The #_of_components is set to 3 or 4 accordingly.
+The component# can be something like 0 through 5
+The component# would refer to Y, Cb, Cr, C, M, or K
+I need to sift through my email to find what number is for what.
+
+Huffman tables:
+--------------
+0xFF 0xC4 0x00 length table# data
+length is the size of that huffman table (you don't count the FFCO)
+Table# is 0x00, 0x01, 0x10, or 0x11
+
+Ending piece of header (I have no clue what to call it):
+-------------------------------------------------------
+0xFF 0xDA 0x00 length sets
+The sets are 3 bytes long.
+I think the sets are supposed to correspond with the huffman tables.
+
+
+
+
