@@ -50,10 +50,12 @@ USB Mass Storage protocol:
  * FinePix [1400,2400,4700]Zoom, 1300, 4500
  * HP PhotoSmart 315, 618, 912
  * Leica Digilux 4.3
+ * Kyocera Finecam s3
+ * Konica KD300
  * Minolta Dimage 7
  * Nikon Coolpix 995
- * Olympus C-100, C-200Z, C-700, C-860L, C-2040, C-3040Z, D-510
- * Sony DSC-F505(V), DSC P5
+ * Olympus C-100, C-200Z, C-700, C-860L, C-2040, C-3040Z, D-510, E-10
+ * Sony DSC-F505(V), DSC P5, DSC-F707
 Again, those cameras cannot be accessed through gphoto2.
 
 Platforms

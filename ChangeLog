@@ -1,3 +1,7 @@
+2001-10-30  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* README: added a few USB Mass storage cameras.
+
 2001-10-30 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/polaroid/pdc640.c: If you malloc memory for camera->pl, 
