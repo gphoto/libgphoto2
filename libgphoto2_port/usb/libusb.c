@@ -62,6 +62,10 @@
 struct _GPPortPrivateLibrary {
 	void *dh;
 	struct usb_device *d;
+
+	int config;
+	int interface;
+	int altsetting;
 };
 
 GPPortType
@@ -89,6 +93,8 @@ static int gp_port_usb_init (GPPort *port)
 	if (!port->pl)
 		return (GP_ERROR_NO_MEMORY);
 	memset (port->pl, 0, sizeof (GPPortPrivateLibrary));
+
+	port->pl->config = port->pl->interface = port->pl->altsetting = -1;
 
 	usb_init ();
 	usb_find_busses ();
@@ -261,53 +267,47 @@ gp_port_usb_update (GPPort *port)
 	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	if (memcmp (&port->settings.usb, &port->settings_pending.usb,
-		    sizeof(port->settings.usb))) {
+	memcpy(&port->settings.usb, &port->settings_pending.usb,
+		sizeof(port->settings.usb));
 
-		/* settings.usb structure is different than the old one */
-		 
-		if (port->settings.usb.config != port->settings_pending.usb.config) {
-			ret = usb_set_configuration(port->pl->dh,
-					     port->settings_pending.usb.config);
-			if (ret < 0) {
-				gp_port_set_error (port, 
-					_("Could not set config %d/%d (%m)"),
-					port->settings_pending.usb.interface,
-					port->settings_pending.usb.config);
-				return GP_ERROR_IO_UPDATE;	
-			}
-
-			gp_log (GP_LOG_DEBUG, "gphoto2-port-usb",
-				"Changed usb.config from %d to %d",
-				port->settings.usb.config,
-				port->settings_pending.usb.config);
-
-			/*
-			 * Copy at once if something else fails so that this
-			 * does not get re-applied
-			 */
-			port->settings.usb.config = port->settings_pending.usb.config;
+	if (port->settings.usb.config != port->pl->config) {
+		ret = usb_set_configuration(port->pl->dh,
+				     port->settings.usb.config);
+		if (ret < 0) {
+			gp_port_set_error (port, 
+				_("Could not set config %d/%d (%m)"),
+				port->settings.usb.interface,
+				port->settings.usb.config);
+			return GP_ERROR_IO_UPDATE;	
 		}
 
-		if (port->settings.usb.altsetting != port->settings_pending.usb.altsetting) { 
-			ret = usb_set_altinterface(port->pl->dh, port->settings_pending.usb.altsetting);
-			if (ret < 0) {
-				gp_port_set_error (port, 
-					_("Could not set interface "
-					"%d/%d (%m)"),
-					port->settings_pending.usb.interface,
-					port->settings_pending.usb.altsetting);
-				return GP_ERROR_IO_UPDATE;
-			}
+		gp_log (GP_LOG_DEBUG, "gphoto2-port-usb",
+			"Changed usb.config from %d to %d",
+			port->pl->config,
+			port->settings.usb.config);
 
-			gp_log (GP_LOG_DEBUG, "gphoto2-port-usb",
-				"Changed usb.altsetting from %d to %d",
-				port->settings.usb.altsetting,
-				port->settings_pending.usb.altsetting);
+		/*
+		 * Copy at once if something else fails so that this
+		 * does not get re-applied
+		 */
+		port->pl->config = port->settings.usb.config;
+	}
+
+	if (port->settings.usb.altsetting != port->pl->altsetting) {
+		ret = usb_set_altinterface(port->pl->dh, port->settings.usb.altsetting);
+		if (ret < 0) {
+			gp_port_set_error (port, 
+				_("Could not set altsetting "
+				"%d/%d (%m)"),
+				port->settings.usb.interface,
+				port->settings.usb.altsetting);
+			return GP_ERROR_IO_UPDATE;
 		}
 
-		memcpy (&port->settings.usb, &port->settings_pending.usb,
-			sizeof (port->settings.usb));
+		gp_log (GP_LOG_DEBUG, "gphoto2-port-usb",
+			"Changed usb.altsetting from %d to %d",
+			port->pl->altsetting,
+			port->settings.usb.altsetting);
 	}
 
 	return GP_OK;
