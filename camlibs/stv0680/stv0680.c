@@ -292,7 +292,8 @@ int camera_init (Camera *camera)
         	settings.serial.stopbits = 1;
 		break;
 	case GP_PORT_USB:
-		/* Use the defaults the core parsed */
+		/* For the rest settings we use the defaults the core parsed */
+		settings.usb.inep = 0x82;
 		break;
 	default:
 		return (GP_ERROR_UNKNOWN_PORT);
