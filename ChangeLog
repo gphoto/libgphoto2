@@ -1,3 +1,8 @@
+2001-10-27 Marcus Meissner <marcus@jet.franken.de>
+	* camlibs/jd11: New Jenoptik JD11 driver for gphoto2.
+	* configure.in: added jd11 subdirs
+	* MAINTAINERS: added myself
+
 2001-10-27 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/canon/canon.c: rmdir/mkdir support

@@ -26,6 +26,9 @@ camlibs/dimera:
 camlibs/jamcam:
 	Chris Pinkham <cpinkham@infi.net>
 
+camlibs/jd11:
+	Marcus Meissner <marcus@jet.franken.de>
+
 camlibs/konica:
 	Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
