@@ -47,6 +47,9 @@ From Camera
 From PC : STS Ok
 0000: 06
 
+You have to send this message (0x0110) prior to retreiving the list
+of photos(0x011a).
+
 This may be about folders, if the #of photos exceeds 9999, then a new folder
 is created.  The default, not configureable, is "100"  The next folder would
 be "101"
