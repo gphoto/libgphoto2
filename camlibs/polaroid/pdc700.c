@@ -189,7 +189,10 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, int cmd_len,
 	*buf_len = b_len;
 	memcpy (buf, b, b_len);
 
-	if (status != PDC700_DONE) {
+	/* Check if other packets are to follow */
+	if (cmd[4] == PDC700_FIRST) {
+
+		/* Get those other packets */
 		while (status != PDC700_LAST) {
 			cmd[4] = PDC700_DONE;
 			cmd[5] = sequence_number;
