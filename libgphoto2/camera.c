@@ -120,6 +120,8 @@ int gp_camera_new_by_name (Camera **camera, char *camera_name)
 
 int gp_camera_free(Camera *camera)
 {
+	if (camera == NULL)
+		return (GP_ERROR_BAD_PARAMETERS);
         gp_camera_exit(camera);
 
         if (camera->port)
@@ -134,19 +136,25 @@ int gp_camera_free(Camera *camera)
 
 int gp_camera_ref (Camera *camera)
 {
-    camera->ref_count += 1;
+	if (camera == NULL)
+		return (GP_ERROR_BAD_PARAMETERS);
 
-    return (GP_OK);
+	camera->ref_count += 1;
+
+	return (GP_OK);
 }
 
 int gp_camera_unref (Camera *camera)
 {
-    camera->ref_count -= 1;
+	if (camera == NULL)
+		return (GP_ERROR_BAD_PARAMETERS);
+		
+	camera->ref_count -= 1;
 
-    if (camera->ref_count == 0)
-        gp_camera_free(camera);
+	if (camera->ref_count == 0)
+		gp_camera_free(camera);
 
-    return (GP_OK);
+	return (GP_OK);
 }
 
 
@@ -203,7 +211,10 @@ int gp_camera_folder_list(Camera *camera, CameraList *list, char *folder)
         CameraListEntry t;
         int x, ret, y, z;
 
-        /* Initialize the folder list to a known state */
+	if (camera == NULL)
+		return (GP_ERROR_BAD_PARAMETERS);
+	
+	/* Initialize the folder list to a known state */
         list->count = 0;
 
         if (camera->functions->folder_list == NULL)
@@ -234,6 +245,9 @@ int gp_camera_file_list(Camera *camera, CameraList *list, char *folder)
         CameraListEntry t;
         int x, ret, y, z;
 
+	if (camera == NULL)
+		return (GP_ERROR_BAD_PARAMETERS);
+
         /* Initialize the folder list to a known state */
         list->count = 0;
 
@@ -261,6 +275,9 @@ int gp_camera_file_list(Camera *camera, CameraList *list, char *folder)
 int gp_camera_file_get (Camera *camera, CameraFile *file,
                         char *folder, char *filename)
 {
+	if (camera == NULL)
+		return (GP_ERROR_BAD_PARAMETERS);
+		
         if (camera->functions->file_get == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
@@ -272,6 +289,9 @@ int gp_camera_file_get (Camera *camera, CameraFile *file,
 int gp_camera_file_get_preview (Camera *camera, CameraFile *file,
                         char *folder, char *filename)
 {
+	if (camera == NULL)
+		return (GP_ERROR_BAD_PARAMETERS);
+
         if (camera->functions->file_get_preview == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
