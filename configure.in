@@ -285,6 +285,7 @@ packaging/rpm/package.spec
 po/Makefile.in
 doc/Makefile
 doc/api/Makefile
+doc/figures/Makefile
 ])
 
 echo "
