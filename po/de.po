@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2001-11-11 18:22+0100\n"
-"PO-Revision-Date: 2001-11-11 18:36+0100\n"
+"POT-Creation-Date: 2001-11-15 22:35+0100\n"
+"PO-Revision-Date: 2001-11-15 22:42+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -829,6 +829,7 @@ msgstr "Dauerhafte Einstellungen"
 
 #. Date
 #: camlibs/konica/library.c:671 camlibs/konica/library.c:883
+#: camlibs/polaroid/pdc700.c:892 camlibs/polaroid/pdc700.c:958
 msgid "Date and Time"
 msgstr "Datum und Zeit"
 
@@ -995,6 +996,7 @@ msgstr "Flüchtige Einstellungen"
 
 #. Self Timer
 #: camlibs/konica/library.c:835 camlibs/konica/library.c:1056
+#: camlibs/polaroid/pdc700.c:148
 msgid "Self Timer"
 msgstr "Selbstauslöser"
 
@@ -1278,94 +1280,152 @@ msgstr ""
 "Fredrik Roubert <roubert@df.lth.se> und\n"
 "Galen Brooks <galen@nine.com>."
 
-#: camlibs/polaroid/pdc700.c:182
+#: camlibs/polaroid/pdc700.c:145
+msgid "Image Quality"
+msgstr "Bildqualität"
+
+#: camlibs/polaroid/pdc700.c:146
+msgid "Flash Setting"
+msgstr "Blitzeinstellung"
+
+#: camlibs/polaroid/pdc700.c:147
+msgid "LCD"
+msgstr "LCD"
+
+#: camlibs/polaroid/pdc700.c:149
+msgid "Auto Power Off (minutes)"
+msgstr "Autom. Abschaltung (in Minuten)"
+
+#: camlibs/polaroid/pdc700.c:150
+msgid "Information"
+msgstr "Information"
+
+#: camlibs/polaroid/pdc700.c:152
+msgid "normal"
+msgstr "normal"
+
+#: camlibs/polaroid/pdc700.c:152
+msgid "fine"
+msgstr "fein"
+
+#: camlibs/polaroid/pdc700.c:152
+msgid "superfine"
+msgstr "superfein"
+
+#: camlibs/polaroid/pdc700.c:154
+msgid "auto"
+msgstr "auto"
+
+#: camlibs/polaroid/pdc700.c:154 camlibs/polaroid/pdc700.c:155
+msgid "on"
+msgstr "an"
+
+#: camlibs/polaroid/pdc700.c:154 camlibs/polaroid/pdc700.c:155
+msgid "off"
+msgstr "aus"
+
+#: camlibs/polaroid/pdc700.c:156
+msgid "play"
+msgstr "Wiedergabe"
+
+#: camlibs/polaroid/pdc700.c:156
+msgid "record"
+msgstr "Aufnahme"
+
+#: camlibs/polaroid/pdc700.c:156
+msgid "menu"
+msgstr "Menü"
+
+#: camlibs/polaroid/pdc700.c:157
+msgid "battery"
+msgstr "Batterie "
+
+#: camlibs/polaroid/pdc700.c:157
+msgid "a/c adaptor"
+msgstr "Netzadapter "
+
+#: camlibs/polaroid/pdc700.c:158
+msgid "9600"
+msgstr "9600"
+
+#: camlibs/polaroid/pdc700.c:158
+msgid "19200"
+msgstr "19200"
+
+#: camlibs/polaroid/pdc700.c:158
+msgid "38400"
+msgstr "38400"
+
+#: camlibs/polaroid/pdc700.c:159
+msgid "57600"
+msgstr "57600"
+
+#: camlibs/polaroid/pdc700.c:159
+msgid "115200"
+msgstr "115200"
+
+#: camlibs/polaroid/pdc700.c:210
 #, c-format
 msgid "Received unexpected header (%i)"
 msgstr "Unerwarteten Header erhalten (%i)"
 
-#: camlibs/polaroid/pdc700.c:195
+#: camlibs/polaroid/pdc700.c:223
 msgid "Received unexpected response"
 msgstr "Unerwartete Antwort erhalten"
 
-#: camlibs/polaroid/pdc700.c:211
+#: camlibs/polaroid/pdc700.c:239
 msgid "Checksum error"
 msgstr "Prüfsummenfehler"
 
-#: camlibs/polaroid/pdc700.c:255
+#: camlibs/polaroid/pdc700.c:283
 #, c-format
 msgid "The camera sent more bytes than expected (%i)"
 msgstr "Die Kamera sendete mehr Bytes als erwartet (%i)"
 
-#: camlibs/polaroid/pdc700.c:336
+#: camlibs/polaroid/pdc700.c:367
 #, c-format
 msgid ""
 "Requested information about picture %i (= 0x%x), but got information about "
 "picture %i back"
-msgstr "Forderte Informationen über Bild %i (= 0x%x) an, erhielt jedoch Informationen über Bild %i"
+msgstr ""
+"Forderte Informationen über Bild %i (= 0x%x) an, erhielt jedoch "
+"Informationen über Bild %i"
 
-#: camlibs/polaroid/pdc700.c:720
+#: camlibs/polaroid/pdc700.c:799
 #, c-format
 msgid ""
 "%i bytes of an unknown image format have been received. Please write <gphoto-"
 "devel@gphoto.org> for assistance."
-msgstr "%i Bytes eines unbekannten Bildformates erhalten. Bitte schreiben Sie an <gphoto-devel@gphoto.org> (auf Englisch) für Unterstützung."
+msgstr ""
+"%i Bytes eines unbekannten Bildformates erhalten. Bitte schreiben Sie an "
+"<gphoto-devel@gphoto.org> (auf Englisch) für Unterstützung."
 
-#: camlibs/polaroid/pdc700.c:756
-msgid "normal"
-msgstr "normal"
+#: camlibs/polaroid/pdc700.c:864 camlibs/sierra/sierra.c:700
+msgid "Camera Configuration"
+msgstr "Kamera-Konfiguration"
 
-#: camlibs/polaroid/pdc700.c:756
-msgid "fine"
-msgstr "fein"
+#: camlibs/polaroid/pdc700.c:865
+msgid "Settings"
+msgstr "Einstellungen"
 
-#: camlibs/polaroid/pdc700.c:757
-msgid "superfine"
-msgstr "superfein"
+#: camlibs/polaroid/pdc700.c:880
+msgid "How long will it take until the camera powers off?"
+msgstr "Wie lange soll es dauern, bis die Kamera abschaltet?"
 
-#: camlibs/polaroid/pdc700.c:758
-msgid "auto"
-msgstr "auto"
-
-#: camlibs/polaroid/pdc700.c:758 camlibs/polaroid/pdc700.c:759
-msgid "on"
-msgstr "an"
-
-#: camlibs/polaroid/pdc700.c:758 camlibs/polaroid/pdc700.c:759
-msgid "off"
-msgstr "aus"
-
-#: camlibs/polaroid/pdc700.c:760
-msgid "play"
-msgstr "Wiedergabe"
-
-#: camlibs/polaroid/pdc700.c:760
-msgid "record"
-msgstr "Aufnahme"
-
-#: camlibs/polaroid/pdc700.c:760
-msgid "menu"
-msgstr "Menü"
-
-#: camlibs/polaroid/pdc700.c:761
-msgid "battery"
-msgstr "Batterie "
-
-#: camlibs/polaroid/pdc700.c:761
-msgid "a/c adaptor"
-msgstr "Netzadapter "
-
-#: camlibs/polaroid/pdc700.c:767
+#: camlibs/polaroid/pdc700.c:975
 #, c-format
 msgid ""
 "Date: %i/%02i/%02i %02i:%02i:%02i\n"
 "Pictures taken: %i\n"
 "Free pictures: %i\n"
 "Software version: %s\n"
+"Baudrate: %s\n"
 "Memory: %i megabytes\n"
 "Camera mode: %s\n"
 "Image quality: %s\n"
 "Flash setting: %s\n"
 "Information: %s\n"
+"Timer: %s\n"
 "LCD: %s\n"
 "Auto power off: %i minutes\n"
 "Power source: %s"
@@ -1374,14 +1434,21 @@ msgstr ""
 "Aufgenommene Bilder: %i\n"
 "Verbleibende Aufnahmen: %i\n"
 "Software-Version: %s\n"
+"Baudrate: %s\n"
 "Speicher: %i Megabytes\n"
 "Kameramodus: %s\n"
 "Bildqualität: %s\n"
 "Blitzeinstellung: %s\n"
 "Information: %s\n"
+"Timer: %s\n"
 "LCD: %s\n"
 "Automat. Ausschalten: %i Minuten\n"
 "Stromquelle: %s"
+
+#: camlibs/polaroid/pdc700.c:1099
+#, c-format
+msgid "The requested port type (%i) is not supported by this driver."
+msgstr "Der angeforderte Port-Typ (%i) wird von diesem Treiber nicht unterstützt."
 
 #: camlibs/sierra/sierra.c:560
 msgid "The file to be uploaded has a null length"
@@ -1399,10 +1466,6 @@ msgstr "Kann den Namen des Verzeichnisses mit den Bildern nicht bekommen"
 #, c-format
 msgid "Upload is supported into the '%s' folder only"
 msgstr "Hochladen ist nur in das Verzeichnis »%s« unterstützt"
-
-#: camlibs/sierra/sierra.c:700
-msgid "Camera Configuration"
-msgstr "Kamera-Konfiguration"
 
 #: camlibs/sierra/sierra.c:701
 msgid "Picture Settings"
@@ -1832,7 +1895,7 @@ msgstr "Lege Verzeichnis »%s« im Verzeichnis »%s« an..."
 msgid "Removing folder '%s' from folder '%s'..."
 msgstr "Lösche Verzeichnis »%s« aus Verzeichnis »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1321
+#: libgphoto2/gphoto2-camera.c:1323
 msgid "No error description available"
 msgstr "Fehlerbeschreibung nicht verfügbar"
 
@@ -1874,11 +1937,11 @@ msgstr "Das Dateisystem unterstützt das Holen von Dateien nicht"
 msgid "Unknown file type %i"
 msgstr "Unbekannter Dateityp %i"
 
-#: libgphoto2/gphoto2-filesys.c:1303
+#: libgphoto2/gphoto2-filesys.c:1309
 msgid "The filesystem doesn't support getting file information"
 msgstr "Das Dateisystem unterstützt das Holen von Dateiinformationen nicht"
 
-#: libgphoto2/gphoto2-filesys.c:1343
+#: libgphoto2/gphoto2-filesys.c:1349
 msgid "The filesystem doesn't support setting file information"
 msgstr "Das Dateisystem unterstützt das Setzen von Dateiinformationen nicht"
 
@@ -1985,11 +2048,11 @@ msgstr "Anzahl der unterstützten Kameras: %i\n"
 msgid "Supported cameras:\n"
 msgstr "Unterstützte Kameras:\n"
 
-#: frontends/command-line/main.c:1073
+#: frontends/command-line/main.c:1075
 msgid "Please specify a model."
 msgstr "Bitte geben Sie ein Modell an."
 
-#: frontends/command-line/main.c:1101
+#: frontends/command-line/main.c:1103
 #, c-format
 msgid ""
 "The port you specified ('%s') can not be found. Please specify one of the "
@@ -2001,11 +2064,11 @@ msgstr ""
 "der von »gphoto2 --list-ports« gelisteten Ports an und stellen Sie sicher, \n"
 "daß die Schreibweise korrekt ist (mit Präfix »serial:« oder »usb:«)."
 
-#: frontends/command-line/main.c:1118
+#: frontends/command-line/main.c:1120
 msgid "Please specify a port."
 msgstr "Bitte geben Sie einen Port an."
 
-#: frontends/command-line/main.c:1288
+#: frontends/command-line/main.c:1290
 msgid "For debugging messages, please use the --debug option.\n"
 msgstr "Für Debug-Meldungen verwenden Sie bitte die Option »--debug«.\n"
 

@@ -1,3 +1,7 @@
+2001-11-15  Colin Marquardt  <colin@marquardt-home.de>
+
+	* po/de.po: Update.
+
 2001-11-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/ptp: Basic structure for a new driver.
