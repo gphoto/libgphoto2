@@ -21,7 +21,7 @@
  *
  * History:
  *		2001/03/10 - Port to gphoto2				  Dan
-*
+ *
  *		2000/09/06 - Rewrite of Dimera_Get_Full_Image()		  GDB
  *			* Reordered call to mesa_read_image_info()	  GDB
  *			* Minor revision & doc Dimera_covert_raw()	  GDB	
@@ -215,6 +215,8 @@ int camera_init (Camera *camera) {
 		ERROR("Camera Reset Failed");
 		return GP_ERROR;
 	}
+
+	mesa_set_speed(cam->dev, camera->port->speed);
 
 	debuglog("Checking for modem");
 	switch ( mesa_modem_check(cam->dev) )
@@ -419,7 +421,7 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	mesa_send_id( cam->dev, &Id );
 	mesa_version(cam->dev, version_string);
 	mesa_read_features(cam->dev, &features);
-	mesa_eeprom_info(cam->dev, 0, eeprom_info);
+	mesa_eeprom_info(cam->dev, 1, eeprom_info);
 	eeprom_capacity = 0;
 	if (eeprom_info[4] == 0xc9) {
 		if (eeprom_info[11] < sizeof(eeprom_size_table))
@@ -428,8 +430,11 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	hi_pics_max = eeprom_capacity / 2; 
 	lo_pics_max = (eeprom_capacity * 13) / 8;
 
-	sprintf( battery_string, " (battery is %d%% full)",
-	    mesa_battery_check(cam->dev));
+	if (features.feature_bits_lo & AC_PRESENT)
+		battery_string[0] = '\0';
+	else
+		sprintf( battery_string, " (battery is %d%% full)",
+			mesa_battery_check(cam->dev));
 
 	sprintf( summary->text, 
 			"Dimera 3500 ver. %s %d/%d %d:%d\n"
@@ -450,7 +455,7 @@ int camera_summary (Camera *camera, CameraText *summary) {
 			(features.feature_bits_lo & FLASH_FILL) ? "" : "NOT ",
 			(features.feature_bits_lo & LOW_RES) ? "low (320x240)" : "high (640x480)",
 			(features.feature_bits_lo & AC_PRESENT) ? "ex" : "in",
-			(features.feature_bits_lo & AC_PRESENT) ? "" : battery_string
+			battery_string
 	);
 
 	return GP_OK;
@@ -465,7 +470,6 @@ int camera_manual (Camera *camera, CameraText *manual) {
 	"in a temporary location and not in the flash card.\n"
 	"  Exposure control when capturing all images is\n"
 	"automatically set by the capture preview function.\n"
-	"  The serial port speed is currently fixed at 115200 bps.\n"
 	);
 
         return GP_OK;
