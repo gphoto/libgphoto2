@@ -185,7 +185,11 @@ AC_ARG_WITH(cdk,        [  --without-cdk            Don't use cdk],
 		try_cdk=false
 	fi
 )
-cdk_prefix=$prefix
+if test "x$prefix" = xNONE; then
+	cdk_prefix=$ac_default_prefix
+else
+	cdk_prefix=$prefix
+fi
 AC_ARG_WITH(cdk-prefix, [  --with-cdk-prefix=PREFIX Location of cdk],
 	cdk_prefix="$withval")
 if $try_cdk; then
