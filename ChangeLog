@@ -1,5 +1,10 @@
 2001-11-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-filesys.c: Don't trust the camera libraries,
+	  set name, type, and adjust name for mime type after getting a file.
+
+2001-11-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Chris Pinkham <cpinkham@corp.infi.net> decoded the thumbnails:
 
 	* camlibs/polaroid/pdc700.c: Convert the thumbnails from YUV 2:1:1
