@@ -30,8 +30,6 @@
 #include <gphoto2-port-debug.h>
 #include <gphoto2-port.h>
 
-static int glob_debug = GP_DEBUG_NONE;
-
 static GPDebugFunc debug_func      = NULL;
 static void       *debug_func_data = NULL;
 
@@ -70,10 +68,7 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 
 	gp_port_debug_history_append (buffer);
 
-	if (glob_debug == GP_DEBUG_NONE)
-		return;
-
-	if (glob_debug >= level) {
+	if (level <= gp_port_debug_get_level ()) {
 		if (debug_func) {
 
 			/* Custom debug function */
@@ -94,16 +89,13 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 void
 gp_debug_set_level (int level)
 {
-	glob_debug = level;
-
-	/* Initialize the IO library with the given debug level */
-	gp_port_init (level);
+	gp_port_debug_set_level (level);
 }
 
 int
 gp_debug_get_level (void)
 {
-	return (glob_debug);
+	return (gp_port_debug_get_level ());
 }
 
 const char *
