@@ -55,7 +55,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 	memset(&a,0,sizeof(a));
 	strcpy(a.model,	"Mustek MDC 800");
-	a.status	= GP_DRIVER_STATUS_TESTING;
+	a.status	= GP_DRIVER_STATUS_EXPERIMENTAL;
 	a.port		= GP_PORT_SERIAL | GP_PORT_USB;
 	a.speed[0]	= 19200;
 	a.speed[1]	= 57600;
