@@ -1,3 +1,7 @@
+2002-01-09  Dan Fandrich <dan@coneharvesters.com>
+
+	* sierra-usbwrap.c: Fixed a pointer arithmetic portability issue.
+
 2001-12-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Suggestion from Stefan Höhne <s_hoehne@informatik.uni-kl.de>:

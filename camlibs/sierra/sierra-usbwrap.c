@@ -289,7 +289,7 @@ usb_wrap_CMND(gp_port* dev, char* sierra_msg, int sierra_len)
    msg->length   = uw_value(msg_len);
    hdr.request_type = UW_REQUEST_CMND;
    msg->packet_type = UW_PACKET_DATA;
-   memcpy((void*)msg + sizeof(*msg), sierra_msg, sierra_len);
+   memcpy((char*)msg + sizeof(*msg), sierra_msg, sierra_len);
    gp_debug_printf( GP_DEBUG_LOW, "sierra", "usb_wrap_CMND writing %i + %i",
                    sizeof(hdr), msg_len);
    
@@ -385,7 +385,7 @@ usb_wrap_DATA(gp_port* dev, char* sierra_response, int sierra_len, uw32_t size)
       free(msg);
       return GP_ERROR;
    }
-   memcpy(sierra_response, (void*)msg + sizeof(*msg), sierra_len);
+   memcpy(sierra_response, (char*)msg + sizeof(*msg), sierra_len);
    free(msg);
 
    return usb_wrap_OK(dev, &hdr);
