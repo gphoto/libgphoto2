@@ -1,3 +1,25 @@
+2001-12-15  Fredrik <fredrik@krixor.xy.org>
+
+	* library.c, canon.h:
+	  Moved models[] from library.c to canon.h and added
+	  canonCamModel model to models[].
+
+	* usb.c, usb.h:
+	  Identify USB cameras based on USB vendor/product ID.
+	  This was necessary because we need to know what
+	  model it is before initializing since some models
+	  do that differently.
+
+	* usb.c:
+	  Add special treatment of EOS D30 cameras to
+	  canon_usb_camera_init() when camstat is 'A'. Simplified
+	  canon_usb_camera_init() in general.
+
+	* usb.c: Moved the code from canon_usb_ready() to
+	  canon_usb_init() - canon_usb_ready() should send a
+	  'ping' packet to check if the camera is alive instead
+	  of doing stuff like identification and key locking.
+
 2001-12-06  Fredrik <fredrik@krixor.xy.org>
 
 	* canon.c, library.c:
