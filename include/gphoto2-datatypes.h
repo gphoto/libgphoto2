@@ -79,6 +79,9 @@ typedef struct {
 	int file_preview	: 1;
 		/* Camera can get file previews (thumbnails) 	 */
 
+	int file_put		: 1;
+		/* Camera can receive files			 */
+
 	int lock		: 1;
 		/* Camera can lock (protect) pictures		 */
 

@@ -56,6 +56,9 @@
 	int gp_file_get (int file_number, CameraFile *file);
 	int gp_file_get_preview (int file_number, CameraFile *preview);
 
+	/* Upload a file to the camera */
+	int gp_file_put (CameraFile *file);
+
 	/* Delete a file from the current folder */
 	int gp_file_delete (int file_number);
 

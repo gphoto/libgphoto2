@@ -24,6 +24,7 @@ typedef int (*c_folder_set)	(char*);
 typedef int (*c_file_count)	();
 typedef int (*c_file_get)	(int, CameraFile*);
 typedef int (*c_file_get_preview)(int, CameraFile*);
+typedef int (*c_file_put)	(CameraFile*);
 typedef int (*c_file_delete)	(int);
 typedef int (*c_file_lock)	(int);
 typedef int (*c_file_unlock)	(int);
@@ -47,6 +48,7 @@ typedef struct {
 	c_file_count		file_count;
 	c_file_get		file_get;
 	c_file_get_preview	file_get_preview;
+	c_file_put		file_put;
 	c_file_delete		file_delete;
 	c_file_lock		file_lock;
 	c_file_unlock		file_unlock;

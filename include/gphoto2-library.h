@@ -47,6 +47,8 @@ int camera_file_get 	    	(int file_number,
 int camera_file_get_preview 	(int file_number, 
 				 CameraFile *preview);
 
+int camera_file_put 	    	(CameraFile *file);
+
 int camera_file_delete 		(int file_number);
 
 int camera_file_lock   		(int file_number);
