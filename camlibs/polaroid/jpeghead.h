@@ -92,6 +92,7 @@ char *data;
     {2, "\xFF\xD8"},
 // JFIF APPO Marker:Version 1.01, density 78x78 (the 00 48 00 48)
     {18, "\xFF\xE0\x00\x10\x4A\x46\x49\x46" "\x00\x01\x01\x01\x00\x48\x00\x48" "\x00\x00"},
+
     {69, JPEG_Q0 quantization_chroma_new},
     {69, JPEG_Q1 quantization_luma_new},
 /*
