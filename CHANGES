@@ -11,9 +11,10 @@ drivers (camlibs):
      - added support for capturing on consumer class cameras, tested on
        Canon PowerShot S45, Canon PowerShot G2
      - G2 works again running from AC adapter
+     - multiple new models added (A60, A70, ...)
 
    * PTP2 driver:
-     - next generation PTP driver added, using this as default now.
+     - Next generation PTP driver added, using this as default now.
 
    * New Agfa CL20 driver from http://cl20.poeml.de/.
 
