@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-11-19 19:45+0100\n"
+"POT-Creation-Date: 2002-11-20 18:40+0100\n"
 "PO-Revision-Date: 2002-06-18 16:30--500\n"
 "Last-Translator: christophe barbé <christophe@ufies.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
@@ -873,7 +873,9 @@ msgstr ""
 #: camlibs/gsmart/library.c:251
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr "Type de port non supporté: %d. Ce pilote ne marche qu'avec des appareils USB.\n"
+msgstr ""
+"Type de port non supporté: %d. Ce pilote ne marche qu'avec des appareils "
+"USB.\n"
 
 #: camlibs/gsmart/library.c:280
 msgid "Could not reset camera.\n"
@@ -2477,11 +2479,11 @@ msgstr "PTP Erreur de protocole, données attendues"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP Errur de protocole, réponse attendue"
 
-#: camlibs/ptp/library.c:478
+#: camlibs/ptp/library.c:481
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
 msgstr "Ecrit par Mariusz Woloszyn <emsi@ipartners.pl>."
 
-#: camlibs/ptp/library.c:1010
+#: camlibs/ptp/library.c:1013
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP est implémenté uniquement pour les appareils USB."
 
@@ -3736,9 +3738,9 @@ msgid ""
 "Not tested, please report if this driver works with them!)\n"
 msgstr ""
 "Appareil 0.1 Traveler SX330z ALDI\n"
-"(beaucoup d'autres vendeurs, comme Jenoptik, Skanhex, Maginon, "
-"devraientégalement marcher. Même les appareils 4100 pourraient marcher.Non "
-"testé, merci de rapporter si ce pilote marche avec!)"
+"(beaucoup d'autres vendeurs, comme Jenoptik, Skanhex, Maginon,\n"
+"devraient également marcher. Même les appareils 4100 pourraient marcher.\n"
+"Non testé, merci de rapporter si ce pilote marche avec!)\n"
 
 #: camlibs/sx330z/library.c:253
 msgid ""
