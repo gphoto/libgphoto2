@@ -7,7 +7,7 @@ typedef struct {
 	gpio_device* dev;
 	char folder[128];
 	CameraFilesystem *fs;
-} FujitsuData;
+} SierraData;
 
 typedef struct {
 	char model[64];
@@ -15,6 +15,6 @@ typedef struct {
 	int  usb_product;
 	int  usb_inep;
 	int  usb_outep;
-} FujitsuCamera;
+} SierraCamera;
 
-void fujitsu_debug_print(FujitsuData *fd, char *message);
+void sierra_debug_print(SierraData *fd, char *message);

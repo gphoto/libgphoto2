@@ -1,3 +1,686 @@
+2000-08-20 15:47  scottf
+
+	* libgphoto2/library.c: minor formatting changes
+
+2000-08-20 15:44  scottf
+
+	* libgphoto2/: core.c, file.c, settings.c: added mallocs for NULL
+	reallocs
+
+2000-08-20 13:29  jgangemi
+
+	* frontends/gtk/configure.in:	- now checks for gnome libs > 1.2.4
+	(needed for libglade to work)
+
+2000-08-20 08:13  philm
+
+	* camlibs/canon/: Changelog, canon.c, psa50.c: make use of
+	gp_config_set/get instead of own file to save settings
+
+2000-08-20 06:44  philm
+
+	* camlibs/canon/: Changelog, TODO, canon.c, serial.c: USB now works
+	thanks to the help of James Tappin and Tuomas Jormola.
+
+2000-08-19 11:53  jgangemi
+
+	* frontends/gtk/src/main.c:   - gphoto-backend correctly initalized
+
+2000-08-19 11:52  jgangemi
+
+	* frontends/gtk/src/Makefile.am:   - now we look in the dialogs
+	directory too!
+
+2000-08-19 11:51  jgangemi
+
+	* frontends/gtk/configure.in:	- added src/dialogs/Makefile
+
+2000-08-19 11:22  philm
+
+	* camlibs/canon/serial.c: fixed another type in serial.c
+
+2000-08-19 11:13  jgangemi
+
+	* frontends/gtk/configure.in:	- more verbose output if libglade
+	fails
+
+2000-08-19 10:33  philm
+
+	* camlibs/canon/serial.c: fixed a typo in serial.c
+
+2000-08-19 04:34  scottf
+
+	* camlibs/fujitsu/fujitsu.c: updated the supported camera list
+
+2000-08-18 20:47  jgangemi
+
+	* frontends/gtk/src/main.c:   - adding gnome support (by by
+	Lutz_Müller)
+
+2000-08-18 20:45  jgangemi
+
+	* frontends/gtk/src/Makefile.am:   - adding gnome support (by
+	Lutz_Müller)
+	  - now uses gpio-config
+
+2000-08-18 20:44  jgangemi
+
+	* frontends/gtk/: acconfig.h, configure.in:   - adding gnome
+	support (by Lutz_Müller)
+
+2000-08-18 17:24  scottf
+
+	* configure.in, libgphoto2/core.c, libgphoto2/core.h,
+	libgphoto2/settings.c: implemented id-based settings system
+
+2000-08-18 12:35  scottf
+
+	* frontends/gtk-old/src/util.c: removed debug statement. whoops. :P
+
+2000-08-18 12:33  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, interface.c, util.c, util.h:
+	added option to open image in viewer/editor after download
+
+2000-08-18 11:34  scottf
+
+	* camlibs/canon/serial.c: minor update in serial.c for latest
+	libusb (usb_device members names changed)
+
+2000-08-17 17:08  scottf
+
+	* camlibs/directory/directory.def: whoops. overwrote the
+	directory.def file. fixed
+
+2000-08-17 17:06  scottf
+
+	* camlibs/directory/directory.c, camlibs/directory/directory.def,
+	frontends/command-line/main.c: fixing directory browse lib
+
+2000-08-17 15:48  scottf
+
+	* camlibs/directory/directory.c, frontends/gtk-old/src/main.c:
+	directory browse now uses GPIO_DIR macros for portability.
+	gphoto2_gtk updated for frontend_register functionality
+
+2000-08-17 15:18  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/library.c,
+	libgphoto2/file.c: minor edits
+
+2000-08-17 10:54  scottf
+
+	* camlibs/directory/Makefile.am, camlibs/directory/directory.c,
+	frontends/command-line/interface.h, frontends/command-line/main.c,
+	include/gphoto2-datatypes.h, libgphoto2/core.c: fixed
+	frontend_register function (name-space conflict)
+
+2000-08-17 10:35  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/library.c,
+	camlibs/fujitsu/library.h, frontends/command-line/main.c,
+	include/gphoto2-core.h, include/gphoto2-datatypes.h,
+	include/gphoto2.h, libgphoto2/core.c, libgphoto2/library.c,
+	libgphoto2/settings.c: fixing little things
+
+2000-08-17 06:36  philm
+
+	* frontends/gtk-old/src/Makefile.am: fixed Makefile.am to use
+	gpio-config
+
+2000-08-17 04:30  mariusz
+
+	* configure.in: Solaris workaround for tr and grep fixed
+
+2000-08-17 03:05  philm
+
+	* camlibs/canon/: Changelog, canon.c, psa50.c, serial.c: fixed USB
+	compilation, but does it work?
+
+2000-08-16 15:12  scottf
+
+	* include/gphoto2.h, libgphoto2/core.c, libgphoto2/exif.h,
+	libgphoto2/library.c, libgphoto2/library.h: fixed minor issues
+
+2000-08-16 07:46  mariusz
+
+	* configure.in: fixed problems with Solaris tr (ranges) and grep
+	(-E option)
+
+2000-08-16 07:40  mariusz
+
+	* frontends/command-line/main.c: reverse order for image deleting
+	in cli
+
+2000-08-15 19:33  jgangemi
+
+	* frontends/gtk/src/: gp_util.c, gp_util.h:   - added gp_idle
+	  - completed gp_interface_message_long
+	    - create_message_win_long unimplemented
+	  - completed gp_interface_message
+	    - create_message_win unimplemented
+
+2000-08-15 19:28  jgangemi
+
+	* frontends/gtk/src/: interface.c, interface.h:   - added
+	create_message_win_long stub
+	  - added create_message_win stub
+
+2000-08-15 13:49  scottf
+
+	* libgphoto2/: library.c, library.h: quick define changes
+
+2000-08-15 11:42  philm
+
+	* camlibs/canon/: Changelog, TODO, canon.c, psa50.c, psa50.h,
+	serial.c, serial.h, util.c, util.h: created a working
+	camera_config_set functions (saves debug level and owner name). 
+	modified heavily the driver to use the camlib_data struct to store
+	all the variables which were previously global.  The driver should
+	now be able to use more than one Canon camera at a time (not
+	tested).
+
+2000-08-14 20:35  jgangemi
+
+	* frontends/gtk/src/camera_util.h:   - finished config_camera_cb
+	    - still need to add gp_message calls and implement
+	build/retrieve rec
+	      routines
+
+2000-08-14 20:31  jgangemi
+
+	* frontends/gtk/src/callbacks.c:   - finished config_camera_cb
+	    - still need to add gp_message calls and implement the
+	build/retrieve
+	      routines
+
+2000-08-14 20:30  jgangemi
+
+	* frontends/gtk/src/camera_util.c:   - moved gp_gtk_camera* to
+	gp_util
+
+2000-08-14 20:29  jgangemi
+
+	* frontends/gtk/src/: gp_util.c, gp_util.h:   - new files :
+	contains all gp_* routines
+	  - added stubs for some routines so interface compiles
+	  - gp_debug_print now functional
+
+2000-08-14 20:27  jgangemi
+
+	* frontends/gtk/src/Makefile.am:   - added a few more files to
+	compile
+
+2000-08-13 21:45  jgangemi
+
+	* frontends/gtk/src/interface.c:   - added some interface menus,
+	work on local file listings
+
+2000-08-13 21:44  jgangemi
+
+	* frontends/gtk/src/: callbacks.c, callbacks.h:   - added some new
+	callbacks
+
+2000-08-13 21:43  jgangemi
+
+	* frontends/gtk/src/globals.h:	 - global vars here
+
+2000-08-13 21:42  jgangemi
+
+	* frontends/gtk/src/: tree_list_util.c, tree_list_util.h:   - all
+	functions involving trees reside here - these mainly deal w/
+	    the directory structures and manipulation of the local and
+	camera
+	    file system
+
+2000-08-13 21:41  jgangemi
+
+	* frontends/gtk/src/: camera_util.c, camera_util.h:   - all
+	interface funcs to the camera will reside here - see the README
+	file
+	    one level up
+
+2000-08-13 21:39  jgangemi
+
+	* frontends/gtk/src/Makefile.am:   added files for compiling
+
+2000-08-13 21:39  jgangemi
+
+	* frontends/gtk/README:   read me - i've got some "standards"
+	listed here
+
+2000-08-12 13:06  scottf
+
+	* camlibs/konica/: konica.c, konica.h, library.c, lowlevel.c,
+	localization/data_english.c30, localization/data_french.c30: added
+	patches from Lutz. now supports localization
+
+2000-08-11 04:24  simpson2
+
+	* camlibs/makefile.os2, camlibs/barbie/makefile.os2,
+	camlibs/canon/makefile.os2, camlibs/canon/serial.c,
+	camlibs/digita/makefile.os2, camlibs/directory/makefile.os2,
+	camlibs/sonydscf1/Makefile.am, camlibs/sonydscf1/chotplay.c,
+	camlibs/sonydscf1/makefile.os2, camlibs/sonydscf1/sonydscf1.c,
+	frontends/command-line/makefile.os2,
+	frontends/libgphoto2_frontend/makefile.os2, include/gphotoos2.h,
+	libgphoto2/core.c, libgphoto2/file.c, libgphoto2/fs.c,
+	libgphoto2/makefile.os2: bvl: Updated OS/2 makefile and made a
+	start with modifying the sony lib
+
+2000-08-10 17:16  scottf
+
+	* camlibs/canon/serial.c: removed reference to gpio/gpio.h in favor
+	of just gpio.h
+
+2000-08-10 16:36  scottf
+
+	* camlibs/fujitsu/: fujitsu.c, fujitsu.h: added generic USB support
+	to fujitsu library. just put in vendor/product/endpoints for any
+	camera and it will be supported
+
+2000-08-10 16:19  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/fujitsu.h,
+	camlibs/fujitsu/library.c, frontends/command-line/main.c,
+	include/gphoto2-datatypes.h: optimized the fujitsu USB support.
+	little change in folder-display in the cli
+
+2000-08-10 16:04  scottf
+
+	* camlibs/canon/canon.c: quick typecast change
+
+2000-08-10 15:48  scottf
+
+	* libgphoto2/fs.c: fixed filesystem deletion bug (yuck)
+
+2000-08-10 14:48  philm
+
+	* camlibs/canon/: Changelog, canon.c, psa50.c: changed
+	camera_summary to report battery status.
+
+2000-08-10 13:43  philm
+
+	* camlibs/canon/: Changelog, TODO, canon.c, psa50.c, psa50.h: added
+	psa50_set_time. added some widget to the config dialog box.
+
+2000-08-09 18:22  philm
+
+	* camlibs/canon/: Changelog, Protocol, canon.c, psa50.c: changed
+	timeout for initialization from 1000 to 900 because with 1000 it
+	was working on command line but not GUI.  started a configure
+	dialog box.  changed gp_file_list to use gp_list_append.
+
+2000-08-09 18:17  scottf
+
+	* camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/fujitsu.h,
+	camlibs/fujitsu/library.c, camlibs/fujitsu/library.h,
+	camlibs/panasonic/.cvsignore, libgphoto2/fs.c: added USB support to
+	the fujitsu library
+
+2000-08-09 14:44  philm
+
+	* camlibs/canon/canon.c: changed a sprintf to strcpy in canon.c
+	(avoids a coredumps (?))
+
+2000-08-09 14:14  scottf
+
+	* camlibs/fujitsu/: fujitsu.c, fujitsu.h, library.c: adding USB
+	support to fujitsu. it's failing right now. blech.
+
+2000-08-08 19:35  scottf
+
+	* include/gphoto2-datatypes.h: modified cameralistentry
+
+2000-08-08 15:43  scottf
+
+	* camlibs/konica/: konica.c, konica.h, library.c, library.h,
+	lowlevel.c, lowlevel.h: added Lutz's patches for filename-centric
+	API
+
+2000-08-08 15:33  philm
+
+	* camlibs/canon/serial.c: Fixed typo in serial.c
+
+2000-08-08 15:04  scottf
+
+	* frontends/command-line/main.c: fixed get-all-pictures bug that
+	crashed the CLI (for_each_image was being called with NULL folder)
+
+2000-08-08 15:00  scottf
+
+	* frontends/gtk-old/src/: callbacks.c, interface.c: updated gtk-old
+	to new API
+
+2000-08-08 14:59  philm
+
+	* camlibs/canon/: TODO, canon.c, psa50.c, psa50.h, serial.c: Upload
+	preliminary support for testing.
+
+2000-08-08 12:56  philm
+
+	* camlibs/canon/: Changelog, TODO: TODO and Changelog files
+	created.
+
+2000-08-08 12:38  philm
+
+	* camlibs/canon/: canon.c, serial.c: Bug for setting attributes
+	corrected. changed canon_serial_send to speed up for all cameras
+	but A50 which does not like getting too much data in a row.
+
+2000-08-08 12:10  mariusz
+
+	* camlibs/panasonic/dc1580.c: bug related to abilities fixed
+
+2000-08-06 06:01  mariusz
+
+	* camlibs/panasonic/: README, dc1000.c, dc1580.c: abilities
+	accomodated to the new API
+
+2000-08-05 09:57  mariusz
+
+	* camlibs/panasonic/: README, dc.h, dc1000.c, dc1580.c: filename
+	based communication between library and core
+
+2000-08-05 05:35  philm
+
+	* camlibs/canon/canon.c: camera_file_delete updated to the filename
+	API
+
+2000-08-05 04:55  philm
+
+	* camlibs/canon/: Makefile.am, README, canon.c, psa50.c, serial.c,
+	serial.h: Updated library to the filename based API.  PowerShot A5
+	support must be updated to the new API.  Deletion of pics does not
+	yet work.  USB is not updated to the changes in libgpio.
+
+2000-08-04 20:29  scottf
+
+	* docs/: camlib_devel.sgml, camlib_devel.txt: updated linuxdoc and
+	plaintext camlib developer docs
+
+2000-08-04 18:09  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/digita/digita.c,
+	camlibs/directory/directory.c, camlibs/fujitsu/fujitsu.c,
+	docs/camlib_devel.lyx, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, include/gphoto2-library.h,
+	libgphoto2/core.c, libgphoto2/globals.h, libgphoto2/library.c:
+	changed camera_id and camera_abilities prototypes. this should be
+	the start of stability for the API
+
+2000-08-04 17:09  jerdfelt
+
+	* include/gphoto2-datatypes.h: Clean up type definitions and
+	prototypes. Some minor formatting changes for consistency
+
+2000-08-04 17:07  jerdfelt
+
+	* camlibs/digita/: digita.c, usb.c: Get it to atleast compile again
+
+2000-08-04 17:04  jerdfelt
+
+	* camlibs/: canon/.cvsignore, konica/.cvsignore: Update .cvsignore
+
+2000-08-04 17:04  jerdfelt
+
+	* camlibs/canon/canon.c: Spaces to TABs
+
+2000-08-04 17:02  jerdfelt
+
+	* libgphoto2/.cvsignore: Wildcard .lo
+
+2000-08-04 17:01  jerdfelt
+
+	* configure.in: Fix alignment for camera help
+
+2000-08-04 17:01  jerdfelt
+
+	* camlibs/sonydscf1/: .cvsignore, Makefile.am: Standard files
+
+2000-08-04 15:32  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/canon/canon.c,
+	camlibs/digita/digita.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, camlibs/fujitsu/library.c,
+	camlibs/konica/library.c, camlibs/panasonic/dc1000.c,
+	camlibs/panasonic/dc1580.c, camlibs/sonydscf1/sonydscf1.c,
+	camlibs/template/template.c, docs/camlib_devel-portmon.eps,
+	docs/camlib_devel-repeater.eps, docs/camlib_devel-y.eps,
+	docs/camlib_devel.lyx, docs/camlib_devel.txt,
+	include/gphoto2-library.h, libgphoto2/library.c: changed prototype
+	for camera_id to use CameraText (sorry everyone\!)
+
+2000-08-04 14:59  jerdfelt
+
+	* libgphoto2/core.c: Standardize formatting a little bit
+
+2000-08-04 14:52  jerdfelt
+
+	* include/gphoto2-datatypes.h: Tabs before everything? Call me
+	anal, but I think this is more readable :)
+
+2000-08-04 11:38  scottf
+
+	* frontends/command-line/main.c: fixed thumbnail naming buggy
+
+2000-08-03 17:47  scottf
+
+	* camlibs/barbie/barbie.c, camlibs/barbie/barbie.h,
+	camlibs/barbie/library.c, camlibs/directory/directory.c,
+	camlibs/fujitsu/fujitsu.c, frontends/command-line/main.c,
+	frontends/gtk-old/src/callbacks.c, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, include/gphoto2-library.h,
+	libgphoto2/core.c, libgphoto2/fs.c: changed to newer API version.
+	completely filename based, more atomic to make way for camera
+	locking
+
+2000-08-03 16:13  scottf
+
+	* configure.in, camlibs/NOTES, camlibs/barbie/barbie.c,
+	camlibs/directory/directory.c, camlibs/fujitsu/fujitsu.c,
+	camlibs/fujitsu/fujitsu.h, camlibs/sonydscf1/chotplay.c,
+	camlibs/sonydscf1/sonydscf1.c, frontends/command-line/main.c: moved
+	to filename-based system. tested (pretty well) and working with
+	barbie, directory, and fujitsu libraries
+
+2000-08-02 10:38  scottf
+
+	* DAEMON, camlibs/barbie/Makefile.am, camlibs/barbie/barbie.c,
+	camlibs/barbie/barbie.h, camlibs/barbie/library.c,
+	camlibs/barbie/library.h, camlibs/barbie/makefile.os2,
+	frontends/command-line/main.c, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, include/gphoto2-library.h,
+	libgphoto2/Makefile.am, libgphoto2/core.c, libgphoto2/fs.c,
+	libgphoto2/fs.h, libgphoto2/library.c: changing to filename based
+	system
+
+2000-08-01 15:03  scottf
+
+	* camlibs/directory/directory.c, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, libgphoto2/widget.c: revised widget
+	system (a little)
+
+2000-08-01 15:00  scottf
+
+	* frontends/gtk-old/src/callbacks.c: fixed configuration bug (radio
+	buttons). updated to newer widget revision
+
+2000-08-01 12:31  scottf
+
+	* camlibs/fujitsu/fujitsu.c: added folder support patch from Veros
+	Kaplan (thanks Veros\!)
+
+2000-08-01 12:17  scottf
+
+	* include/gphoto2-datatypes.h: fixed abilities bug
+
+2000-07-31 19:10  scottf
+
+	* camlibs/: canon/psa50.c, canon/serial.c, digita/digita.c,
+	digita/usb.c: updated for new dynamic libgpio
+
+2000-07-31 14:47  scottf
+
+	* camlibs/panasonic/.cvsignore: updated .cvsignore
+
+2000-07-31 14:46  scottf
+
+	* camlibs/panasonic/: README, dc1000.c, dc1000.h: added missing
+	panasonic files
+
+2000-07-31 14:45  scottf
+
+	* frontends/command-line/main.c, libgphoto2/Makefile.am,
+	libgphoto2/core.c: fixed CAMLIBS directory bug
+
+2000-07-31 11:16  scottf
+
+	* camlibs/fujitsu/fujitsu.c: fixed camera_init conditional
+	placemente (noted by Veros Kaplan)
+
+2000-07-31 05:16  simpson2
+
+	* camlibs/digita/: digita.c, digita.h, serial.c: bvl: init
+	structure passed to digita seial init, for serial path and speed
+
+2000-07-30 12:59  scottf
+
+	* camlibs/konica/: konica.c, konica.h, library.c: added patch from
+	lutz to konica
+
+2000-07-30 06:34  simpson2
+
+	* docs/build_OS2.txt: bvl: start of information on OS/2 Build
+
+2000-07-30 05:10  simpson2
+
+	* AUTHORS, camlibs/makefile.os2, camlibs/barbie/makefile.os2,
+	camlibs/canon/makefile.os2, camlibs/digita/makefile.os2,
+	camlibs/directory/makefile.os2, camlibs/fujitsu/makefile.os2,
+	camlibs/konica/makefile.os2, camlibs/panasonic/makefile.os2,
+	camlibs/sonydscf1/makefile.os2,
+	frontends/command-line/makefile.os2: bvl: updated OS/2 makefiles,
+	there was a stupid machine dependant declaration      in them
+
+2000-07-29 13:28  scottf
+
+	* AUTHORS: added mariusz to the AUTHORS file
+
+2000-07-29 12:06  scottf
+
+	* camlibs/: canon/canon.c, panasonic/Makefile.am, panasonic/dc.c,
+	panasonic/dc.h, panasonic/dc1580.c, panasonic/dc1580.h: applied
+	patches from Mariusz(panasonic) and Phillipe (canon)
+
+2000-07-29 04:41  simpson2
+
+	* camlibs/barbie/makefile.os2,
+	frontends/libgphoto2_frontend/makefile.os2: bvl: updated OS/2
+	support
+
+2000-07-29 04:32  simpson2
+
+	* camlibs/.cvsignore: bvl: updated
+
+2000-07-29 04:31  simpson2
+
+	* camlibs/konica/: .cvsignore, konica.df, makefile.os2: bvl: added
+	files needed to build DLL on OS/2
+
+2000-07-29 04:30  simpson2
+
+	* camlibs/fujitsu/.cvsignore: [no log message]
+
+2000-07-29 04:29  simpson2
+
+	* camlibs/fujitsu/: fujitsu.df, makefile.os2: bvl: Files needed to
+	build DLL on OS/2
+
+2000-07-29 04:28  simpson2
+
+	* camlibs/makefile.os2, camlibs/directory/makefile.os2,
+	frontends/command-line/makefile.os2, include/gphotoos2.h,
+	libgphoto2/makefile.os2: bvl: various changes and updates to OS/2
+	specific files
+
+2000-07-29 04:27  simpson2
+
+	* camlibs/sonydscf1/: readme, todo: [no log message]
+
+2000-07-29 04:25  simpson2
+
+	* camlibs/sonydscf1/: chotplay.c, chotplay.h, command.c, command.h,
+	common.h, config.h, dsc_f1.c, getuint.c, getuint.h, makefile.os2,
+	pmp.h, sonydscf1.c, sonydscf1.df, sonydscf1.h: bvl: Support for the
+	Sony DSC-F1, modified library from gphoto1	only tested and
+	compiled on OS/2
+
+2000-07-29 04:20  simpson2
+
+	* camlibs/canon/: canon.c, psa50.c, serial.c: bvl: changed include
+	<gpio/gpio.h> to <gpio.h> as discussed earlier
+
+2000-07-29 04:17  simpson2
+
+	* camlibs/: barbie/barbie.df, barbie/makefile.os2, canon/canon.df,
+	canon/makefile.os2: bvl: added files to build DLL on OS/2
+
+2000-07-29 04:16  simpson2
+
+	* camlibs/panasonic/: dc.c, dc1580.c, makefile.os2, panasonic.df:
+	bvl: dc.c, dc1580.c added db.h include, to make it compile on OS/2 
+	    makefile.os2 panansonic.df files needed to build dll on OS/2
+
+2000-07-29 04:14  simpson2
+
+	* camlibs/digita/digita.df: bvl: digita.df, module defenition file
+	to create DLL on OS/2
+
+2000-07-29 04:13  simpson2
+
+	* camlibs/digita/makefile.os2: bvl: makefile for OS/2
+
+2000-07-29 04:13  simpson2
+
+	* camlibs/digita/: commands.c, digita.c, digita.h, serial.c, usb.c:
+	bvl: Changed include file from <gpio/gpio.h> to <gpio.h>
+
+2000-07-28 23:09  scottf
+
+	* include/gphoto2-datatypes.h: fixed abilities->port macros to
+	reflect renumbering of CameraPortType
+
+2000-07-28 16:54  scottf
+
+	* camlibs/panasonic/dc1580.c: replace gp_message in panasonic lib
+	with gp_camera_message
+
+2000-07-28 13:20  scottf
+
+	* camlibs/canon/canon.c, camlibs/canon/canon.h,
+	camlibs/canon/psa50.c, camlibs/canon/psa50.h,
+	camlibs/fujitsu/fujitsu.c, frontends/command-line/main.c,
+	frontends/gtk-old/src/callbacks.c, include/gphoto2-datatypes.h,
+	libgphoto2/core.c, libgphoto2/globals.h, libgphoto2/library.c:
+	added patch from mariusz to fix deleting bug. added canon patch
+	from phillipe to fix thumbnailing bug and add detection of IXUS
+
+2000-07-27 13:00  scottf
+
+	* camlibs/canon/canon.c, camlibs/canon/serial.c,
+	camlibs/konica/library.c, libgphoto2/library.c: fixed 'not a
+	library' bug for konica and canon libraries
+
+2000-07-27 12:30  scottf
+
+	* camlibs/konica/library.c: added patch from Lutz fixing exit, and
+	removing unneeded struct
+
+2000-07-27 03:31  scottf
+
+	* ChangeLog: updated ChangeLog
+
 2000-07-27 00:38  scottf
 
 	* frontends/gtk/configure.in: changed name of gtk from project5 to
@@ -5,8 +688,15 @@
 
 2000-07-27 00:37  scottf
 
-	* frontends/gtk/: install-sh, missing, mkinstalldirs: remove intl
-	directory
+	* frontends/gtk/: install-sh, missing, mkinstalldirs,
+	intl/ChangeLog, intl/VERSION, intl/bindtextdom.c,
+	intl/cat-compat.c, intl/dcgettext.c, intl/dgettext.c,
+	intl/explodename.c, intl/finddomain.c, intl/gettext.c,
+	intl/gettext.h, intl/gettextP.h, intl/hash-string.h,
+	intl/intl-compat.c, intl/l10nflist.c, intl/libgettext.h,
+	intl/linux-msg.sed, intl/loadinfo.h, intl/loadmsgcat.c,
+	intl/localealias.c, intl/po2tbl.sed.in, intl/textdomain.c,
+	intl/xopen-msg.sed: remove intl directory
 
 2000-07-27 00:35  scottf
 
@@ -80,7 +770,14 @@
 	* frontends/gtk/: ABOUT-NLS, AUTHORS, COPYING, ChangeLog, INSTALL,
 	Makefile.am, NEWS, README, acconfig.h, aclocal.m4, config.h.in,
 	configure, configure.in, install-sh, missing, mkinstalldirs,
-	stamp-h.in, pixmaps/camera.xpm, pixmaps/close_image.xpm,
+	stamp-h.in, intl/ChangeLog, intl/VERSION, intl/bindtextdom.c,
+	intl/cat-compat.c, intl/dcgettext.c, intl/dgettext.c,
+	intl/explodename.c, intl/finddomain.c, intl/gettext.c,
+	intl/gettext.h, intl/gettextP.h, intl/hash-string.h,
+	intl/intl-compat.c, intl/l10nflist.c, intl/libgettext.h,
+	intl/linux-msg.sed, intl/loadinfo.h, intl/loadmsgcat.c,
+	intl/localealias.c, intl/po2tbl.sed.in, intl/textdomain.c,
+	intl/xopen-msg.sed, pixmaps/camera.xpm, pixmaps/close_image.xpm,
 	pixmaps/configure.xpm, pixmaps/delete_images.xpm, pixmaps/exit.xpm,
 	pixmaps/fliph.xpm, pixmaps/flipv.xpm, pixmaps/folder.xpm,
 	pixmaps/get_index.xpm, pixmaps/get_index_empty.xpm,
@@ -973,10 +1670,19 @@
 
 2000-06-26 13:34  scottf
 
-	* frontends/libgphoto2_frontend/: Makefile, Makefile.am,
-	Makefile.in, cache.c, cache.h, cache.lo, cache.o, helpers.c,
-	helpers.h, helpers.lo, helpers.o, image.c, image.h, image.lo,
-	image.o, libgphoto2_util.la: renamed libgphoto2_util to
+	* frontends/: libgphoto2_frontend/Makefile,
+	libgphoto2_frontend/Makefile.am, libgphoto2_frontend/Makefile.in,
+	libgphoto2_frontend/cache.c, libgphoto2_frontend/cache.h,
+	libgphoto2_frontend/cache.lo, libgphoto2_frontend/cache.o,
+	libgphoto2_frontend/helpers.c, libgphoto2_frontend/helpers.h,
+	libgphoto2_frontend/helpers.lo, libgphoto2_frontend/helpers.o,
+	libgphoto2_frontend/image.c, libgphoto2_frontend/image.h,
+	libgphoto2_frontend/image.lo, libgphoto2_frontend/image.o,
+	libgphoto2_frontend/libgphoto2_util.la,
+	libgphoto2_util/Makefile.am, libgphoto2_util/cache.c,
+	libgphoto2_util/cache.h, libgphoto2_util/helpers.c,
+	libgphoto2_util/helpers.h, libgphoto2_util/image.c,
+	libgphoto2_util/image.h: renamed libgphoto2_util to
 	libgphoto2_frontend
 
 2000-06-23 20:48  scottf
@@ -1032,12 +1738,12 @@
 	camlibs/fujitsu/Makefile.am, camlibs/fujitsu/fujitsu.c,
 	camlibs/template/Makefile.am, camlibs/template/template.c,
 	frontends/command-line/main.c, frontends/command-line/test.c,
-	include/gphoto2-core.h, include/gphoto2-datatypes.h,
-	include/gphoto2-library.h, libgphoto2/Makefile.am,
-	libgphoto2/core.c, libgphoto2/core.h, libgphoto2/library.c,
-	libgphoto2/library.h, libgphoto2/util.c, libgphoto2/util.h:
-	*revamped CameraAbilities (no more reset/sleep) *making
-	command-line functional *adding error-checking *removed
+	frontends/libgphoto2_util/Makefile.am, include/gphoto2-core.h,
+	include/gphoto2-datatypes.h, include/gphoto2-library.h,
+	libgphoto2/Makefile.am, libgphoto2/core.c, libgphoto2/core.h,
+	libgphoto2/library.c, libgphoto2/library.h, libgphoto2/util.c,
+	libgphoto2/util.h: *revamped CameraAbilities (no more reset/sleep)
+	*making command-line functional *adding error-checking *removed
 	camera_open/close *added camera_debug_set to get more verbose
 	output *other misc.
 
@@ -1138,7 +1844,17 @@
 
 2000-06-19 12:20  scottf
 
-	* frontends/Makefile.am: finish renaming libgphoto2_util
+	* frontends/: Makefile.am, libgphoto2_util/Makefile.am,
+	libgphoto2_util/cache.c, libgphoto2_util/cache.h,
+	libgphoto2_util/helpers.c, libgphoto2_util/helpers.h,
+	libgphoto2_util/image.c, libgphoto2_util/image.h: finish renaming
+	libgphoto2_util
+
+2000-06-19 12:19  scottf
+
+	* frontends/libgphoto2-util/: Makefile.am, cache.c, cache.h,
+	image.c, image.h: renaming libgphoto2-util to libgphoto2_util
+	(Automake don't like dashes)
 
 2000-06-19 12:06  scottf
 
@@ -1147,8 +1863,11 @@
 
 2000-06-19 12:01  scottf
 
-	* frontends/: Makefile.am, command-line/Makefile.am: added
-	beginining of gphoto2 utility library for frontends
+	* frontends/: Makefile.am, command-line/Makefile.am,
+	libgphoto2-util/Makefile.am, libgphoto2-util/cache.c,
+	libgphoto2-util/cache.h, libgphoto2-util/image.c,
+	libgphoto2-util/image.h: added beginining of gphoto2 utility
+	library for frontends
 
 2000-06-16 14:48  scottf
 

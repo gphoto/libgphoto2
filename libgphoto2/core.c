@@ -66,9 +66,9 @@ int gp_init (int debug)
 
         /* Make sure the directories are created */
 #ifdef WIN32
-		GetWindowsDirectory(buf, 1024);
-		strcat(buf, "\\gphoto");
-		(void)_mkdir(buf);
+	GetWindowsDirectory(buf, 1024);
+	strcat(buf, "\\gphoto");
+	(void)_mkdir(buf);
 #else
         sprintf(buf, "%s/.gphoto", getenv("HOME"));
         (void)mkdir(buf, 0700);
@@ -86,10 +86,8 @@ int gp_init (int debug)
         /* Load settings */
         load_settings();
 
-        if (glob_debug) {
-                printf("core: Camera library dir: %s\n", CAMLIBS);
+        if (glob_debug)
                 printf("core: Trying to load libraries:\n");
-        }
         load_cameras();
 
         if (glob_debug) {

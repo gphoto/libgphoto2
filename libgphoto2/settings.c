@@ -57,7 +57,6 @@ int load_settings () {
 	if (verify_settings(buf) == GP_ERROR)
 		/* verify_settings will unlink and recreate the settings file */
 		return (GP_OK);
-printf("here\n");
 	if (glob_debug)
 		printf("core: Loading settings from file \"%s\"\n", buf);
 

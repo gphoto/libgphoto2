@@ -4,17 +4,17 @@
 #include <gpio.h>
 
 #include "library.h"
-#include "fujitsu.h"
+#include "sierra.h"
 
 #define TIMEOUT	   2000
 
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
 
-void fujitsu_debug_print(FujitsuData *fd, char *message) {
+void sierra_debug_print(SierraData *fd, char *message) {
 
 	if (fd->debug) {
-		printf("fujitsu: ");
+		printf("sierra: ");
 		printf(message);
 		printf("\n");
 	}
@@ -22,12 +22,12 @@ void fujitsu_debug_print(FujitsuData *fd, char *message) {
 
 int camera_id (CameraText *id) {
 
-	strcpy(id->text, "fujitsu-scottf");
+	strcpy(id->text, "sierra-scottf");
 
 	return (GP_OK);
 }
 
-FujitsuCamera fujitsu_cameras[] = {
+SierraCamera sierra_cameras[] = {
 	/* Camera Model       vendor id, product id, in endpoint, out endpoint */ 
 	{"Agfa ePhoto 307", 	0, 0, 0, 0 },
 	{"Agfa ePhoto 780", 	0, 0, 0, 0 },
@@ -104,12 +104,12 @@ int camera_abilities (CameraAbilitiesList *list) {
 	int x=0;
 	CameraAbilities *a;
 
-	while (strlen(fujitsu_cameras[x].model)>0) {
+	while (strlen(sierra_cameras[x].model)>0) {
 		a = gp_abilities_new();
-		strcpy(a->model, fujitsu_cameras[x].model);
+		strcpy(a->model, sierra_cameras[x].model);
 		a->port     = GP_PORT_SERIAL;
-		if ((fujitsu_cameras[x].usb_vendor  > 0) &&
-		    (fujitsu_cameras[x].usb_product > 0))
+		if ((sierra_cameras[x].usb_vendor  > 0) &&
+		    (sierra_cameras[x].usb_product > 0))
 			a->port |= GP_PORT_USB;
 		a->speed[0] = 9600;
 		a->speed[1] = 19200;
@@ -122,8 +122,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a->file_delete  = 1;
 		a->file_preview = 1;
 		a->file_put = 0;
-		a->usb_vendor  = fujitsu_cameras[x].usb_vendor;
-		a->usb_product = fujitsu_cameras[x].usb_product;
+		a->usb_vendor  = sierra_cameras[x].usb_vendor;
+		a->usb_product = sierra_cameras[x].usb_product;
 		gp_abilities_list_append(list, a);
 
 		x++;
@@ -139,7 +139,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	int vendor, product, inep, outep;
 #endif
 	gpio_device_settings settings;
-	FujitsuData *fd;
+	SierraData *fd;
 
 	if (!camera)
 		return (GP_ERROR);
@@ -162,17 +162,17 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
-	fd = (FujitsuData*)malloc(sizeof(FujitsuData));	
+	fd = (SierraData*)malloc(sizeof(SierraData));	
 	camera->camlib_data = fd;
 
 	fd->first_packet = 1;
 	fd->debug = camera->debug;
 
-	fujitsu_debug_print(fd, "Initializing camera");
+	sierra_debug_print(fd, "Initializing camera");
 
 	switch (init->port_settings.type) {
 		case GP_PORT_SERIAL:
-			fujitsu_debug_print(fd, "Serial Device");
+			sierra_debug_print(fd, "Serial Device");
 			fd->dev = gpio_new(GPIO_DEVICE_SERIAL);
 			strcpy(settings.serial.port, init->port_settings.path);
 			settings.serial.speed 	 = 19200;
@@ -183,12 +183,12 @@ int camera_init (Camera *camera, CameraInit *init) {
 #ifdef GPIO_USB
 		case GP_PORT_USB:
 			/* lookup the USB information */
-			while (strlen(fujitsu_cameras[x].model)>0) {			
-				if (strcmp(fujitsu_cameras[x].model, init->model)==0) {
-					vendor = fujitsu_cameras[x].usb_vendor;
-					product = fujitsu_cameras[x].usb_product;
-					inep = fujitsu_cameras[x].usb_inep;
-					outep = fujitsu_cameras[x].usb_outep;
+			while (strlen(sierra_cameras[x].model)>0) {			
+				if (strcmp(sierra_cameras[x].model, init->model)==0) {
+					vendor = sierra_cameras[x].usb_vendor;
+					product = sierra_cameras[x].usb_product;
+					inep = sierra_cameras[x].usb_inep;
+					outep = sierra_cameras[x].usb_outep;
 				}
 				x++;
 			}
@@ -197,7 +197,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 			if ((vendor == 0) && (product == 0))
 				return (GP_ERROR);
 
-			fujitsu_debug_print(fd, "USB Device");
+			sierra_debug_print(fd, "USB Device");
 			fd->dev = gpio_new(GPIO_DEVICE_USB);
 
 		        if (gpio_usb_find_device(fd->dev, vendor, product) == GPIO_ERROR) {
@@ -214,7 +214,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 			break;
 #endif
 		default:
-			fujitsu_debug_print(fd, "Invalid Device");
+			sierra_debug_print(fd, "Invalid Device");
 			free (fd);
 	                return (GP_ERROR);
 	}
@@ -230,12 +230,12 @@ int camera_init (Camera *camera, CameraInit *init) {
 
 	switch (init->port_settings.type) {
 		case GP_PORT_SERIAL:
-			if (fujitsu_ping(camera)==GP_ERROR) {
+			if (sierra_ping(camera)==GP_ERROR) {
 				gp_camera_message(camera, "Can not talk to camera");
 				return (GP_ERROR);
 			}
 
-			if (fujitsu_set_speed(camera, init->port_settings.speed)==GP_ERROR) {
+			if (sierra_set_speed(camera, init->port_settings.speed)==GP_ERROR) {
 				gp_camera_message(camera, "Can not set the serial port speed");
 				return (GP_ERROR);
 			}
@@ -250,24 +250,24 @@ int camera_init (Camera *camera, CameraInit *init) {
 			break;
 	}
 
-	if (fujitsu_get_int_register(camera, 1, &value)==GP_ERROR) {
+	if (sierra_get_int_register(camera, 1, &value)==GP_ERROR) {
 		gp_camera_message(camera, "Could not communicate with camera after initialization");
 		fd->speed = init->port_settings.speed;
 		return (GP_ERROR);
 	}
 
-	fujitsu_set_int_register(camera, 83, -1);
+	sierra_set_int_register(camera, 83, -1);
 
 	gpio_set_timeout(fd->dev, 50);
-	if (fujitsu_set_string_register(camera, 84, "\\", 1)==GP_ERROR)
+	if (sierra_set_string_register(camera, 84, "\\", 1)==GP_ERROR)
 		fd->folders = 0;
 	   else
 		fd->folders = 1;	
 
 	if (fd->folders)
-		fujitsu_debug_print(fd, "Camera supports folders");
+		sierra_debug_print(fd, "Camera supports folders");
 	   else
-		fujitsu_debug_print(fd, "Camera doesn't support folders. Using CameraFilesystem emu.");
+		sierra_debug_print(fd, "Camera doesn't support folders. Using CameraFilesystem emu.");
 
 	fd->fs = gp_filesystem_new();
 
@@ -279,9 +279,9 @@ int camera_init (Camera *camera, CameraInit *init) {
 	return (GP_OK);
 }
 
-static int fujitsu_change_folder(Camera *camera, const char *folder)
+static int sierra_change_folder(Camera *camera, const char *folder)
 {	
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	int st=0,i = 1;
 	char target[128];
@@ -299,10 +299,10 @@ static int fujitsu_change_folder(Camera *camera, const char *folder)
 		strcpy(target, "/");
 
 	if (target[0] != '/') {
-		fujitsu_debug_print(fd, "Change dir called with relative path?");
+		sierra_debug_print(fd, "Change dir called with relative path?");
 		i = 0;
 	} else {
-		if (fujitsu_set_string_register(camera, 84, "\\", 1)==GP_ERROR)
+		if (sierra_set_string_register(camera, 84, "\\", 1)==GP_ERROR)
 			return GP_ERROR;
 	}
 	st = i;
@@ -311,7 +311,7 @@ static int fujitsu_change_folder(Camera *camera, const char *folder)
 			target[i] = '\0';
 			if (st == i-1)
 				break;
-			if (fujitsu_set_string_register(camera, 84, target+st, strlen(target+st))==GP_ERROR)
+			if (sierra_set_string_register(camera, 84, target+st, strlen(target+st))==GP_ERROR)
 				return GP_ERROR; 
 			st = i+1;
 			target[i] = '/';
@@ -324,24 +324,24 @@ static int fujitsu_change_folder(Camera *camera, const char *folder)
 
 int camera_start(Camera *camera) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 	
 	if (fd->type == GP_PORT_SERIAL) {
-		if (fujitsu_set_speed(camera, fd->speed)==GP_ERROR) {
+		if (sierra_set_speed(camera, fd->speed)==GP_ERROR) {
 			gp_camera_message(camera, "Can not set the serial port speed");
 			return (GP_ERROR);
 		}
-		fujitsu_folder_set(camera, fd->folder);
+		sierra_folder_set(camera, fd->folder);
 	}
 	return (GP_OK);
 }
 
 int camera_stop(Camera *camera) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	if (fd->type == GP_PORT_SERIAL) {
-		if (fujitsu_set_speed(camera, -1)==GP_ERROR) {
+		if (sierra_set_speed(camera, -1)==GP_ERROR) {
 			gp_camera_message(camera, "Can not set the serial port speed");
 			return (GP_ERROR);
 		}
@@ -352,9 +352,9 @@ int camera_stop(Camera *camera) {
 
 int camera_exit (Camera *camera) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	fujitsu_debug_print(fd, "Exiting camera");
+	sierra_debug_print(fd, "Exiting camera");
 
 	free(fd);
 
@@ -363,7 +363,7 @@ int camera_exit (Camera *camera) {
 
 int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 	int x=0, error=0, count;
 
 	if ((!fd->folders)&&(strcmp("/", folder)!=0))
@@ -373,13 +373,13 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 		return (GP_ERROR);
 
 	if (fd->folders) {
-		if (fujitsu_change_folder(camera, folder)) {
+		if (sierra_change_folder(camera, folder)) {
 			gp_camera_message(camera, "Can't change folder");
 			return (GP_ERROR);
 		}
 	}
 
-	count = fujitsu_file_count(camera);
+	count = sierra_file_count(camera);
 
         /* Populate the filesystem */
 	gp_filesystem_populate(fd->fs, folder, "PIC%04i.jpg", count);
@@ -388,13 +388,13 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 #if 0
 	/* are all filenames *.jpg, or are there *.tif files too? */
 		/* Set the current picture number */
-		if (fujitsu_set_int_register(camera, 4, x+1)==GP_ERROR) {
+		if (sierra_set_int_register(camera, 4, x+1)==GP_ERROR) {
 			gp_message("Could not set the picture number");
 			camera_stop(camera);
 			return (GP_ERROR);
 		}
 		/* Get the picture filename */
-		if (fujitsu_get_string_register(camera, 79, 0, NULL, buf, &length)==GP_ERROR)
+		if (sierra_get_string_register(camera, 79, 0, NULL, buf, &length)==GP_ERROR)
 			gp_message("Could not get filename");
 			camera_stop(camera);
 			return (GP_ERROR);
@@ -416,11 +416,11 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 
 int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 	int count, i, bsize;
 	char buf[1024];
 
-	fujitsu_debug_print(fd, "Listing folders");
+	sierra_debug_print(fd, "Listing folders");
 
 	if (!fd->folders) /* camera doesn't support folders */
 		return GP_OK;
@@ -428,21 +428,21 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 	if (camera_start(camera) != GP_OK) /* XXX */
 		return GP_ERROR;
 
-	if ((fujitsu_change_folder(camera, folder) != GP_OK) ||
-	    (fujitsu_get_int_register(camera, 83, &count) != GP_OK)) {
+	if ((sierra_change_folder(camera, folder) != GP_OK) ||
+	    (sierra_get_int_register(camera, 83, &count) != GP_OK)) {
 		camera_stop(camera);
 		return GP_ERROR;
 	}
 	if (count)
 	for (i = 0; i < count; i++) {
-		if (fujitsu_change_folder(camera, folder) != GP_OK) {
+		if (sierra_change_folder(camera, folder) != GP_OK) {
 			break;
 		}
-		if (fujitsu_set_int_register(camera, 83, i+1) != GP_OK) {
+		if (sierra_set_int_register(camera, 83, i+1) != GP_OK) {
 			break;
 		}
 		bsize = 1024;
-		if (fujitsu_get_string_register(camera, 84, 0, NULL, buf, &bsize) != GP_OK) {
+		if (sierra_get_string_register(camera, 84, 0, NULL, buf, &bsize) != GP_OK) {
 			break;
 		} else {
 			/* append the folder name on to the folder list */
@@ -454,11 +454,11 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 	return (GP_OK);
 }
 
-int fujitsu_folder_set(Camera *camera, char *folder) {
+int sierra_folder_set(Camera *camera, char *folder) {
 
 	char buf[4096];
 	char tf[4096];
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	/* If the camera doesn't support folders and it was passed something
 	   other than "/", return an error! */
@@ -485,7 +485,7 @@ int fujitsu_folder_set(Camera *camera, char *folder) {
 		 It should be done after implementing camera_lock/unlock pair */
 	
 	if (fd->folders) {
-		if (fujitsu_change_folder(camera, tf)) {
+		if (sierra_change_folder(camera, tf)) {
 			gp_camera_message(camera, "Can't change folder");
 			return (GP_ERROR);
 		}
@@ -494,14 +494,14 @@ int fujitsu_folder_set(Camera *camera, char *folder) {
 	return (GP_OK);
 }
 
-int fujitsu_file_count (Camera *camera) {
+int sierra_file_count (Camera *camera) {
 
 	int value;
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	fujitsu_debug_print(fd, "Counting files");
+	sierra_debug_print(fd, "Counting files");
 
-	if (fujitsu_get_int_register(camera, 10, &value)==GP_ERROR) {
+	if (sierra_get_int_register(camera, 10, &value)==GP_ERROR) {
                 gp_camera_message(camera, "Could not get number of files on camera->");
                 return (GP_ERROR);
         }
@@ -514,7 +514,7 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 
 	char buf[4096];
 	int regl, regd, file_number;
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
 if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
@@ -531,14 +531,14 @@ return (GP_ERROR);
 		regl = 12;
 		regd = 14;
 	}
-	fujitsu_debug_print(fd, buf);
+	sierra_debug_print(fd, buf);
 
 	/* Fill in the file structure */	
 	strcpy(file->type, "image/jpg");
 	strcpy(file->name, filename);
 
 	/* Get the picture data */
-	if (fujitsu_get_string_register(camera, regd, file_number+1, file, NULL, NULL)==GP_ERROR) {
+	if (sierra_get_string_register(camera, regd, file_number+1, file, NULL, NULL)==GP_ERROR) {
 		gp_camera_message(camera, "Can not get picture");
 		return (GP_ERROR);
 	}
@@ -561,9 +561,9 @@ int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, cha
 
 int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	fujitsu_debug_print(fd, "Putting file on camera");
+	sierra_debug_print(fd, "Putting file on camera");
 
 	return (GP_ERROR);
 }
@@ -572,7 +572,7 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 	int ret, file_number;
 	char buf[4096];
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
 if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
@@ -580,9 +580,9 @@ return (GP_ERROR);
 	file_number = gp_filesystem_number(fd->fs, folder, filename);
 
 	sprintf(buf, "Deleting photo #%i", file_number+1);
-	fujitsu_debug_print(fd, buf);
+	sierra_debug_print(fd, buf);
 
-	ret = fujitsu_delete(camera, file_number+1);
+	ret = sierra_delete(camera, file_number+1);
 	if (ret == GPIO_OK)
 		gp_filesystem_delete(fd->fs, folder, filename);
 
@@ -594,21 +594,21 @@ return (GP_ERROR);
 
 int camera_config_get (Camera *camera, CameraWidget *window) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	fujitsu_debug_print(fd, "Building configuration window");
+	sierra_debug_print(fd, "Building configuration window");
 
 	return (GP_ERROR);
 }
 
 int camera_config_set (Camera *camera, CameraSetting *setting, int count) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
 if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
 
-	fujitsu_debug_print(fd, "Setting configuration values");
+	sierra_debug_print(fd, "Setting configuration values");
 
 if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);
@@ -618,9 +618,9 @@ return (GP_ERROR);
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	fujitsu_debug_print(fd, "Capturing image");
+	sierra_debug_print(fd, "Capturing image");
 
 	return (GP_ERROR);
 }
@@ -630,20 +630,20 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	char buf[1024*32];
 	int value;
 	char t[1024];
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
 if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
 
-	fujitsu_debug_print(fd, "Getting camera summary");
+	sierra_debug_print(fd, "Getting camera summary");
 	strcpy(buf, "");
 
 	/* Get all the string-related info */
-	if (fujitsu_get_string_register(camera, 22, 0, NULL, t, &value)!=GP_ERROR)
+	if (sierra_get_string_register(camera, 22, 0, NULL, t, &value)!=GP_ERROR)
 		sprintf(buf, "%sCamera ID       : %s\n", buf, t);
-	if (fujitsu_get_string_register(camera, 25, 0, NULL, t, &value)!=GP_ERROR)
+	if (sierra_get_string_register(camera, 25, 0, NULL, t, &value)!=GP_ERROR)
 		sprintf(buf, "%sSerial Number   : %s\n", buf, t);
-	if (fujitsu_get_int_register(camera, 1, &value)!=GP_ERROR) {
+	if (sierra_get_int_register(camera, 1, &value)!=GP_ERROR) {
 		switch(value) {
 			case 1:	strcpy(t, "Standard");
 				break;
@@ -656,14 +656,14 @@ return (GP_ERROR);
 		}
 		sprintf(buf, "%sResolution      : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(camera, 3, &value)!=GP_ERROR) {
+	if (sierra_get_int_register(camera, 3, &value)!=GP_ERROR) {
 		if (value == 0)
 			strcpy(t, "Auto");
 		   else
 			sprintf(t, "%i microseconds", value);
 		sprintf(buf, "%sShutter Speed   : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(camera, 5, &value)!=GP_ERROR) {
+	if (sierra_get_int_register(camera, 5, &value)!=GP_ERROR) {
 		switch(value) {
 			case 1:	strcpy(t, "Low");
 				break;
@@ -676,7 +676,7 @@ return (GP_ERROR);
 		}
 		sprintf(buf, "%sAperture        : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(camera, 6, &value)!=GP_ERROR) {	
+	if (sierra_get_int_register(camera, 6, &value)!=GP_ERROR) {	
 		switch(value) {
 			case 1:	strcpy(t, "Color");
 				break;
@@ -688,7 +688,7 @@ return (GP_ERROR);
 		sprintf(buf, "%sColor Mode      : %s\n", buf, t);
 	}
 
-	if (fujitsu_get_int_register(camera, 7, &value)!=GP_ERROR) {	
+	if (sierra_get_int_register(camera, 7, &value)!=GP_ERROR) {	
 		switch(value) {
 			case 0: strcpy(t, "Auto");
 				break;
@@ -705,7 +705,7 @@ return (GP_ERROR);
 		}
 		sprintf(buf, "%sFlash Mode      : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(camera, 19, &value)!=GP_ERROR) {	
+	if (sierra_get_int_register(camera, 19, &value)!=GP_ERROR) {	
 		switch(value) {
 			case 0: strcpy(t, "Normal");
 				break;
@@ -722,7 +722,7 @@ return (GP_ERROR);
 		}
 		sprintf(buf, "%sBright/Contrast : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(camera, 20, &value)!=GP_ERROR) {	
+	if (sierra_get_int_register(camera, 20, &value)!=GP_ERROR) {	
 		switch(value) {
 			case 0: strcpy(t, "Auto");
 				break;
@@ -739,7 +739,7 @@ return (GP_ERROR);
 		}
 		sprintf(buf, "%sWhite Balance   : %s\n", buf, t);
 	}
-	if (fujitsu_get_int_register(camera, 33, &value)!=GP_ERROR) {	
+	if (sierra_get_int_register(camera, 33, &value)!=GP_ERROR) {	
 		switch(value) {
 			case 1: strcpy(t, "Macro");
 				break;
@@ -754,21 +754,21 @@ return (GP_ERROR);
 	}
 
 	/* Get all the integer information */
-	if (fujitsu_get_int_register(camera, 10, &value)!=GP_ERROR)
+	if (sierra_get_int_register(camera, 10, &value)!=GP_ERROR)
 		sprintf(buf, "%sFrames Taken    : %i\n", buf, value);
-	if (fujitsu_get_int_register(camera, 11, &value)!=GP_ERROR)
+	if (sierra_get_int_register(camera, 11, &value)!=GP_ERROR)
 		sprintf(buf, "%sFrames Left     : %i\n", buf, value);
-	if (fujitsu_get_int_register(camera, 16, &value)!=GP_ERROR)
+	if (sierra_get_int_register(camera, 16, &value)!=GP_ERROR)
 		sprintf(buf, "%sBattery Life    : %i\n", buf, value);
-	if (fujitsu_get_int_register(camera, 23, &value)!=GP_ERROR)
+	if (sierra_get_int_register(camera, 23, &value)!=GP_ERROR)
 		sprintf(buf, "%sAutoOff (host)  : %i seconds\n", buf, value);
-	if (fujitsu_get_int_register(camera, 24, &value)!=GP_ERROR)
+	if (sierra_get_int_register(camera, 24, &value)!=GP_ERROR)
 		sprintf(buf, "%sAutoOff (field) : %i seconds\n", buf, value);
-	if (fujitsu_get_int_register(camera, 28, &value)!=GP_ERROR)
+	if (sierra_get_int_register(camera, 28, &value)!=GP_ERROR)
 		sprintf(buf, "%sMemory Left	: %i bytes\n", buf, value);
-	if (fujitsu_get_int_register(camera, 35, &value)!=GP_ERROR)
+	if (sierra_get_int_register(camera, 35, &value)!=GP_ERROR)
 		sprintf(buf, "%sLCD Brightness  : %i (1-7)\n", buf, value);
-	if (fujitsu_get_int_register(camera, 38, &value)!=GP_ERROR)
+	if (sierra_get_int_register(camera, 38, &value)!=GP_ERROR)
 		sprintf(buf, "%sLCD AutoOff	: %i seconds\n", buf, value);
 
 	strcpy(summary->text, buf);
@@ -781,9 +781,9 @@ return (GP_ERROR);
 
 int camera_manual (Camera *camera, CameraText *manual) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	fujitsu_debug_print(fd, "Getting camera manual");
+	sierra_debug_print(fd, "Getting camera manual");
 
 	strcpy(manual->text, "Manual Not Available");
 
@@ -792,11 +792,11 @@ int camera_manual (Camera *camera, CameraText *manual) {
 
 int camera_about (Camera *camera, CameraText *about) {
 
-	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
+	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	fujitsu_debug_print(fd, "Getting 'about' information");
+	sierra_debug_print(fd, "Getting 'about' information");
 
-	strcpy(about->text, "Fujitsu SPARClite library\nScott Fritzinger <scottf@unr.edu>\nSupport for Fujitsu-based digital cameras\nincluding Olympus, Nikon, Epson, and others.\n\nThanks to Data Engines (www.dataengines.com)\nfor the use of their Olympus C-3030Z for USB\nsupport implementation.");
+	strcpy(about->text, "sierra SPARClite library\nScott Fritzinger <scottf@unr.edu>\nSupport for sierra-based digital cameras\nincluding Olympus, Nikon, Epson, and others.\n\nThanks to Data Engines (www.dataengines.com)\nfor the use of their Olympus C-3030Z for USB\nsupport implementation.");
 
 	return (GP_OK);
 }
