@@ -1,0 +1,55 @@
+<!DOCTYPE BOOK PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!entity hash "#">
+<!entity gphoto2-port-log SYSTEM "sgml/gphoto2-port-log.sgml">
+]>
+
+<book id="index">
+  <bookinfo>
+    <title>GPhoto2-Port API Reference Manual</title>
+    <abstract>
+      <para>
+	This manual documents the GPhoto2-Port library.
+	It gives an overview of GPhoto2-Port, discusses examples that
+	come with GPhoto2-Port and includes detailed documentation of
+	the GPhoto2-Port API.
+      </para>
+    </abstract>
+  </bookinfo>
+
+  <chapter id="gphoto2-port">
+    <title>GPhoto2-Port Overview</title>
+    
+    <para>
+      GPhoto2-Port is the GPhoto2 I/O library.
+    </para>
+    
+    <para>
+      The benefit to using this library would be that all communications can be
+      done quickly and without worry for device specific functions; all devices
+      are abstracted to a point, allowing you to read/write to a device using
+      the same interface. For example, you can set all the options on the
+      serial port easily, and then read/write to that device. Additionally,
+      you could easily switch over to a USB device, and read/write without
+      having to learn the USB internals.
+    </para>
+
+    <para>
+      The whole idea behind this is simplicity. It should be easy to write a
+      program that uses any sort of serial-based device. This will take the
+      hassle out of playing with low-level configurations and actually just
+      get on to writing the core of the application.
+    </para>
+    
+  </chapter>
+
+  <chapter id="gphoto2-base" role="no-toc">
+    <title>GPhoto2-Port Core Reference</title>
+      <para>
+        GPhoto2-Port provides some useful mechanisms that are used by 
+	GPhoto2-Port itself and can be used by libraries that use
+	GPhoto2-Port.
+      </para>
+
+      &gphoto2-port-log;
+  </chapter>
+</book>

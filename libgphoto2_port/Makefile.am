@@ -7,7 +7,7 @@ VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\" -DHAVE_TERMIOS_H
 ## Executable files
 bin_SCRIPTS = gphoto2-port-config
 
-SUBDIRS = po intl libgphoto2_port include test @IOLIB_SUBDIRS@
+SUBDIRS = po intl libgphoto2_port include test @IOLIB_SUBDIRS@ doc
 
 ## GNOME configuration script
 confexecdir=$(libdir)

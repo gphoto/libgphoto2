@@ -1,0 +1,13 @@
+<SECTION>
+<FILE>gphoto2-port-log</FILE>
+GPLogLevels
+GPLogFunc
+gp_log_add_func
+gp_log_remove_func
+gp_log
+gp_log_data
+gp_log_history_set_size
+gp_log_history_get_size
+gp_log_history_get
+</SECTION>
+

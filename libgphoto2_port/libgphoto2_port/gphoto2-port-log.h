@@ -1,4 +1,4 @@
-/* gphoto2-log.h
+/* gphoto2-port-log.h
  *
  * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -18,8 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GPHOTO2_LOG_H__
-#define __GPHOTO2_LOG_H__
+#ifndef __GPHOTO2_PORT_LOG_H__
+#define __GPHOTO2_PORT_LOG_H__
 
 typedef enum {
 	GP_LOG_ERROR = 1 << 2,
@@ -32,9 +32,15 @@ typedef void (* GPLogFunc) (GPLogLevels levels, const char *domain,
 int  gp_log_add_func    (GPLogLevels levels, GPLogFunc func, void *data);
 int  gp_log_remove_func (int id);
 
-void gp_log      (const char *domain, GPLogLevel levels,
+/* Logging */
+void gp_log      (GPLogLevels levels, const char *domain,
 		  const char *format, ...);
-void gp_log_data (const char *domain, GPLogLevel levels,
+void gp_log_data (GPLogLevels levels, const char *domain,
 		  const char *data, unsigned int size);
 
-#endif /* __GPHOTO2_LOG_H__ */
+/* History */
+int         gp_log_history_set_size (unsigned int size);
+int         gp_log_history_get_size (void);
+const char *gp_log_history_get (void);
+
+#endif /* __GPHOTO2_PORT_LOG_H__ */
