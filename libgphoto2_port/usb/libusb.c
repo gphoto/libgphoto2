@@ -316,14 +316,41 @@ gp_port_usb_update (GPPort *port)
 static int
 gp_port_usb_find_bulk(struct usb_device *dev, int config, int interface, int altsetting, int direction)
 {
-	struct usb_interface_descriptor *intf = &dev->config[config].interface[interface].altsetting[altsetting];
+	struct usb_interface_descriptor *intf;
 	int i;
+
+	if (!dev->config)
+		return -1;
+
+	intf = &dev->config[config].interface[interface].altsetting[altsetting];
 
 	for (i = 0; i < intf->bNumEndpoints; i++) {
 		if ((intf->endpoint[i].bEndpointAddress & USB_ENDPOINT_DIR_MASK) == direction &&
 		    (intf->endpoint[i].bmAttributes & USB_ENDPOINT_TYPE_MASK) == USB_ENDPOINT_TYPE_BULK)
 			return intf->endpoint[i].bEndpointAddress & USB_ENDPOINT_ADDRESS_MASK;
 	}
+
+	return -1;
+}
+
+static int
+gp_port_usb_find_first_altsetting(struct usb_device *dev, int *config, int *interface, int *altsetting)
+{
+	int i, i1, i2;
+
+	if (!dev->config)
+		return -1;
+
+	for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
+		for (i1 = 0; i1 < dev->config[i].bNumInterfaces; i1++)
+			for (i2 = 0; i2 < dev->config[i].interface[i1].num_altsetting; i2++)
+				if (dev->config[i].interface[i1].altsetting[i2].bNumEndpoints) {
+					*config = i;
+					*interface = i1;
+					*altsetting = i2;
+
+					return 0;
+				}
 
 	return -1;
 }
@@ -353,16 +380,23 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		for (dev = bus->devices; dev; dev = dev->next) {
 			if ((dev->descriptor.idVendor == idvendor) &&
 			    (dev->descriptor.idProduct == idproduct)) {
+				int config, interface, altsetting;
+
 				port->pl->d = dev;
 
 				/* Use the first config, interface and altsetting we find */
-				/* Set the defaults */
-				port->settings.usb.config = dev->config[0].bConfigurationValue;
-				port->settings.usb.interface = dev->config[0].interface[0].altsetting[0].bInterfaceNumber;
-				port->settings.usb.altsetting = dev->config[0].interface[0].altsetting[0].bAlternateSetting;
+				gp_port_usb_find_first_altsetting(dev, &config, &interface, &altsetting);
 
-				port->settings.usb.inep = gp_port_usb_find_bulk(dev, 0, 0, 0, USB_ENDPOINT_IN);
-				port->settings.usb.outep = gp_port_usb_find_bulk(dev, 0, 0, 0, USB_ENDPOINT_OUT);
+				/* Set the defaults */
+				if (dev->config) {
+
+					port->settings.usb.config = dev->config[config].bConfigurationValue;
+					port->settings.usb.interface = dev->config[config].interface[interface].altsetting[altsetting].bInterfaceNumber;
+					port->settings.usb.altsetting = dev->config[config].interface[interface].altsetting[altsetting].bAlternateSetting;
+
+					port->settings.usb.inep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_IN);
+					port->settings.usb.outep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_OUT);
+				}
 
 				port->pl->d = dev;
 
@@ -392,6 +426,9 @@ gp_port_usb_match_device_by_class(struct usb_device *dev, int class, int subclas
 	    (protocol == -1 ||
 	     dev->descriptor.bDeviceProtocol == protocol))
 		return 1;
+
+	if (!dev->config)
+		return 0;
 
 	for (i = 0; i < dev->descriptor.bNumConfigurations; i++) {
 		struct usb_config_descriptor *config =
@@ -450,12 +487,14 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 				continue;
 
 			/* Set the defaults */
-			port->settings.usb.config = dev->config[config].bConfigurationValue;
-			port->settings.usb.interface = dev->config[config].interface[interface].altsetting[altsetting].bInterfaceNumber;
-			port->settings.usb.altsetting = dev->config[config].interface[interface].altsetting[altsetting].bAlternateSetting;
+			if (dev->config) {
+				port->settings.usb.config = dev->config[config].bConfigurationValue;
+				port->settings.usb.interface = dev->config[config].interface[interface].altsetting[altsetting].bInterfaceNumber;
+				port->settings.usb.altsetting = dev->config[config].interface[interface].altsetting[altsetting].bAlternateSetting;
 
-			port->settings.usb.inep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_IN);
-			port->settings.usb.outep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_OUT);
+				port->settings.usb.inep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_IN);
+				port->settings.usb.outep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_OUT);
+			}
 
 			port->pl->d = dev;
 			gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
