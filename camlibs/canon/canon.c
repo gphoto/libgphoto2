@@ -1011,105 +1011,107 @@ static char *canon_get_picture(char *filename, char *path, int thumbnail, int *s
     char attribs;
     char file[300];
     void *ptr;
-
+	int j;
 
     if (!check_readiness()) {
-      return NULL;
+		return NULL;
     }
 
     switch (camera_data.model) {
-                case CANON_PS_A5:
-                case CANON_PS_A5_ZOOM:
+	 case CANON_PS_A5:
+	 case CANON_PS_A5_ZOOM:
 #if 0
-                        picture_number=picture_number*2-1;
-                        if (thumbnail) picture_number+=1;
-                        debug_message("Picture number %d\n",picture_number);
-
-                        image = malloc(sizeof(*image));
-                        if (!image) {
-                                perror("malloc");
-                                return NULL;
-                        }
-                        memset(image,0,sizeof(*image));
-                        if (!picture_number || picture_number > cached_images) {
-                                gp_camera_status(NULL, "Invalid index");
-                                free(image);
-                                return NULL;
-                        }
-                        gp_camera_status(NULL, cached_paths[picture_number]);
-                        if (!check_readiness()) {
-                                free(image);
-                                return NULL;
-                        }
-                        image = psa50_get_file(cached_paths[picture_number], size);
-                        if (image) return image;
-                        free(image);
+		picture_number=picture_number*2-1;
+		if (thumbnail) picture_number+=1;
+		debug_message("Picture number %d\n",picture_number);
+		
+		image = malloc(sizeof(*image));
+		if (!image) {
+			perror("malloc");
+			return NULL;
+		}
+		memset(image,0,sizeof(*image));
+		if (!picture_number || picture_number > cached_images) {
+			gp_camera_status(NULL, "Invalid index");
+			free(image);
+			return NULL;
+		}
+		gp_camera_status(NULL, cached_paths[picture_number]);
+		if (!check_readiness()) {
+			free(image);
+			return NULL;
+		}
+		image = psa50_get_file(cached_paths[picture_number], size);
+		if (image) return image;
+		free(image);
 #endif
-                        return NULL;
-                        break;
-                default:
-      /* For A50 or others */
-      /* clear_readiness(); */
-                if (!update_dir_cache()) {
-                        gp_camera_status(NULL, "Could not obtain directory listing");
-                        return 0;
-                }
-                image = malloc(sizeof(*image));
-                if (!image) {
-                        perror("malloc");
-                        return NULL;
-                }
-                memset(image,0,sizeof(*image));
-
-                sprintf(file,"%s%s",path,filename);
-
-                attribs = 0;
-                if (!check_readiness()) {
-                        free(image);
-                        return NULL;
-                }
-                if (thumbnail) {
-                        ptr=image;
-                        if ( (image = psa50_get_thumbnail(file,size)) == NULL) {
-                                free(ptr);
-                                return NULL;
-                        }
-                }
-                else {
-                        image = psa50_get_file(file,size);
-                        debug_message("We now have to set the \"downloaded\" flag on the  picture\n");
-                        debug_message("The old file attributes were: %#x\n",attribs);
-                        attribs = attribs & 0xdf; // 0xdf = !0x20
-                        psa50_set_file_attributes(filename,path,attribs);
-                }
-                if (image) return image;
-         //if(receive_error==FATAL_ERROR) clear_readiness();
-                free(image);
-                return NULL;
-                break;
+		return NULL;
+		break;
+	 default:
+		/* For A50 or others */
+		/* clear_readiness(); */
+		if (!update_dir_cache()) {
+			gp_camera_status(NULL, "Could not obtain directory listing");
+			return 0;
+		}
+		image = malloc(sizeof(*image));
+		if (!image) {
+			perror("malloc");
+			return NULL;
+		}
+		memset(image,0,sizeof(*image));
+		
+		sprintf(file,"%s%s",path,filename);
+		
+		attribs = 0;
+		if (!check_readiness()) {
+			free(image);
+			return NULL;
+		}
+		if (thumbnail) {
+			ptr=image;
+			if ( (image = psa50_get_thumbnail(file,size)) == NULL) {
+				free(ptr);
+				return NULL;
+			}
+		}
+		else {
+			image = psa50_get_file(file,size);
+			j = strrchr(path, '\\') - path;
+			path[j] = '\0';
+			debug_message("We now have to set the \"downloaded\" flag on the  picture\n");
+			debug_message("The old file attributes were: %#x\n",attribs);
+			attribs = attribs & 0xdf; // 0xdf = !0x20
+			psa50_set_file_attributes(filename,path,attribs);
+		}
+		if (image) return image;
+		//if(receive_error==FATAL_ERROR) clear_readiness();
+		free(image);
+		return NULL;
+		break;
     }
 }
 
 static int _get_file_path(struct psa50_dir *tree, char *filename, char *path)
 {
     if (tree==NULL) return GP_ERROR;    
- 
+	
     path = strchr(path,0);
     *path = '\\';
 
     while(tree->name) {
         if (!is_image(tree->name)) 
-            strcpy(path+1,tree->name);
+		  strcpy(path+1,tree->name);
         if (is_image(tree->name) && strcmp(tree->name,filename)==0) {
             return GP_OK;
         }
         else if (!tree->is_file) 
-            if (_get_file_path(tree->user,filename, path) == GP_OK)
-                   return GP_OK;
+		  if (_get_file_path(tree->user,filename, path) == GP_OK)
+			return GP_OK;
         tree++;
     }
     return GP_ERROR;
-
+	
 }
 
 static int get_file_path(char *filename, char *path)
