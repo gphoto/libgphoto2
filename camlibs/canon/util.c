@@ -81,7 +81,7 @@ is_audio (const char *name)
  * is_image:
  * @name: name of file to examine
  *
- * Tests whether the given @name corresponds to an image (.JPG or .CRW).
+ * Tests whether the given @name corresponds to an image (.JPG, .CR2, or .CRW).
  *
  * Returns:
  *   1 if filename is the name of an image
@@ -133,10 +133,10 @@ is_jpeg (const char *name)
  * is_crw:
  * @name: name of file to examine
  *
- * Tests whether the name given corresponds to a raw CRW image (.CRW).
+ * Tests whether the name given corresponds to a raw CRW image (.CRW or .CR2).
  *
  * Returns:
- *   1 if filename is the name of a raw image (i.e. ends with .CRW )
+ *   1 if filename is the name of a raw image (i.e. ends with .CRW or .CR2)
  *   0 if not
  *
  */
@@ -148,7 +148,7 @@ is_crw (const char *name)
 
 	pos = strchr (name, '.');
 	if (pos)
-		res = (!strcmp (pos, ".CRW"));
+		res = (!strcmp (pos, ".CRW")) || (!strcmp ( pos, ".CR2" ) );
 
 	GP_DEBUG ("is_crw(%s) == %i", name, res);
 	return (res);
@@ -204,6 +204,8 @@ filename2mimetype (const char *filename)
 		else if (!strcmp (pos, ".THM"))
 			return GP_MIME_JPEG;
 		else if (!strcmp (pos, ".CRW"))
+			return GP_MIME_CRW;
+		else if (!strcmp (pos, ".CR2"))
 			return GP_MIME_CRW;
 	}
 	return GP_MIME_UNKNOWN;
