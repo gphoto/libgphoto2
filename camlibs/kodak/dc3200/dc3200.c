@@ -3,11 +3,12 @@
  * for gphoto2                                      *
  *                                                  *
  * author: donn morrison - dmorriso@gulf.uvic.ca    *
- * date: dec 2000 - feb 2001                        *
+ * date: dec 2000 - jan 2002                        *
  * license: gpl                                     *
- * version: 1.5                                     *
+ * version: 1.6                                     *
  *                                                  *
  ****************************************************/
+
 #include <config.h>
 #include "dc3200.h"
 
@@ -145,6 +146,8 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 	char		filename[13], *ptr;
 	int		res, i;
 
+	camera->pl->context = context;
+
 	if(check_last_use(camera) == GP_ERROR)
 		return GP_ERROR;
 
@@ -168,8 +171,6 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 	i = 0;
 
 	while(i < data_len) {
-		//dump_buffer(ptr_data_buff, 20, "list", 20);
-	
 		/* directories have 0x10 in their attribute */
 		if(!(ptr_data_buff[11] & 0x10)) {
 			ptr_data_buff += 20;
@@ -215,6 +216,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	u_char		*ptr_data_buff;
 	char		filename[13];
 	int		res, i;
+
+	camera->pl->context = context;
 
 	if(check_last_use(camera) == GP_ERROR)
 		return GP_ERROR;
@@ -281,6 +284,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	long		data_len = 0;
 	int		res;
 
+	camera->pl->context = context;
+
 	if(check_last_use(camera) == GP_ERROR)
 		return GP_ERROR;
 
@@ -303,6 +308,57 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR);
 
 	gp_file_append (file, data, data_len);
+
+	free(data);
+	return (dc3200_keep_alive(camera));
+}
+
+static int
+get_info_func (CameraFilesystem *fs, const char *folder,
+	       const char *filename, CameraFileInfo *info, void *user_data,
+	       GPContext *context)
+{
+	Camera		*camera = user_data;
+	u_char		*data = NULL;
+	long		data_len = 0;
+	int		res;
+	char		file[1024];
+
+	camera->pl->context = context;
+
+	if(check_last_use(camera) == GP_ERROR)
+		return GP_ERROR;
+
+	if(!folder)
+		return GP_ERROR;
+	
+	strcpy(file, folder);
+	if(folder[strlen(folder)-1] != '\\' || folder[strlen(folder)-1] != '/')
+		strcat(file, "\\");
+	strcat(file, filename);	
+
+	/* get file list data */
+	res = dc3200_get_data (camera, &data, &data_len, CMD_LIST_FILES, file,
+			       NULL);
+	if (res == GP_ERROR)
+		return GP_ERROR;
+
+	/* check the data length */
+	if(data_len%20 != 0 || data_len < 1) {
+		/* there is a problem */
+		return GP_ERROR;
+	}
+
+	if(data == NULL)
+		return GP_ERROR;
+
+	/* get the file length && type and stuff */
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	info->file.size = bytes_to_l(data[19], data[18], data[17], data[16]);
+	strcpy (info->file.type, GP_MIME_JPEG);
+	
+	info->preview.fields = GP_FILE_INFO_TYPE;
+	strcpy (info->preview.type, GP_MIME_JPEG);
 
 	free(data);
 	return (dc3200_keep_alive(camera));
@@ -352,7 +408,8 @@ int camera_init (Camera *camera, GPContext *context)
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
 				      folder_list_func, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
-        
+	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
+
         /* initialize the camera */
 	ret = init (camera);
 	if (ret < 0) {

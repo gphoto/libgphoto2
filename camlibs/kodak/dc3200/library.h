@@ -3,9 +3,9 @@
  * for gphoto2                                      *
  *                                                  *
  * author: donn morrison - dmorriso@gulf.uvic.ca    *
- * date: dec 2000 - feb 2001                        *
+ * date: dec 2000 - jan 2002                        *
  * license: gpl                                     *
- * version: 1.5                                     *
+ * version: 1.6                                     *
  *                                                  *
  ****************************************************/
 

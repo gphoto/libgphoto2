@@ -3,9 +3,9 @@
  * for gphoto2                                      *
  *                                                  *
  * author: donn morrison - dmorriso@gulf.uvic.ca    *
- * date: dec 2000 - feb 2001                        *
+ * date: dec 2000 - jan 2002                        *
  * license: gpl                                     *
- * version: 1.5                                     *
+ * version: 1.6                                     *
  *                                                  *
  ****************************************************/
 
@@ -37,7 +37,6 @@
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
-
 
 //#define DEBUG
 
@@ -381,14 +380,17 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 			ptr_data += resp_len - data_start_pos;
 
 			/* update gphoto2 frontend */
-/* fix!			pid = gp_context_progress_start(camera->pl->context,(int)data_len,"Downloading image...");
-			gp_context_progress_update(camera->pl->context, pid, ptr_data - *data);
-			if(gp_context_cancel(camera->pl->context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-				free(*data);
-				dc3200_cancel_get_data(camera);
-				return GP_ERROR_CANCEL;
+			if(command == CMD_GET_FILE)
+			{
+				pid = gp_context_progress_start(camera->pl->context,(int)*data_len,_("Downloading image..."));
+				gp_context_progress_update(camera->pl->context, pid, ptr_data - *data);
+				if(gp_context_cancel(camera->pl->context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+					free(*data);
+					dc3200_cancel_get_data(camera);
+					return GP_ERROR_CANCEL;
+				}
 			}
-*/			break;
+			break;
 		case 0x01:
 			/*
 			 * MULTIPACKET, MIDDLE
@@ -407,13 +409,16 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 			ptr_data += resp_len - data_start_pos;
 
 			/* update gphoto2 frontend */
-/* fix!			gp_context_progress_update(camera->pl->context, pid, ptr_data - *data);
-			if(gp_context_cancel(camera->pl->context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-				free(*data);
-				dc3200_cancel_get_data(camera);
-				return GP_ERROR_CANCEL;
+			if(command == CMD_GET_FILE)
+			{
+				gp_context_progress_update(camera->pl->context, pid, ptr_data - *data);
+				if(gp_context_cancel(camera->pl->context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+					free(*data);
+					dc3200_cancel_get_data(camera);
+					return GP_ERROR_CANCEL;
+				}
 			}
-*/			break;
+			break;
 		case 0x81:
 			/*
 			 * MULTIPACKET, END
@@ -432,19 +437,22 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 			ptr_data += resp_len - data_start_pos;
 			
 			/* update gphoto2 frontend */
-/*			gp_context_progress_update(camera->pl->context, pid, ptr_data - *data);
-			if(gp_context_cancel(camera->pl->context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-				free(*data);
-				dc3200_cancel_get_data(camera);
-				return GP_ERROR_CANCEL;
+			if(command == CMD_GET_FILE)
+			{
+				gp_context_progress_update(camera->pl->context, pid, ptr_data - *data);
+				if(gp_context_cancel(camera->pl->context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+					free(*data);
+					dc3200_cancel_get_data(camera);
+					return GP_ERROR_CANCEL;
+				}
 			}
-*/			break;
+			break;
 		default:
 			return GP_ERROR;
 		}
 	} while(num_left > 1);
 
-	if(pid != 0)
+	if(pid != 0 && command == CMD_GET_FILE)
 		gp_context_progress_stop(camera->pl->context, pid);
 
 	return GP_OK;
