@@ -26,12 +26,17 @@ int load_settings () {
 	while (!feof(f)) {
 		strcpy(buf, "");
 		fgets(buf, 1023, f);
-		if (strlen(buf)>3) {
+		if (strlen(buf)>2) {
 			buf[strlen(buf)-1] = '\0';
 			c = strtok(buf, "=");
-			strcpy(glob_setting[glob_setting_count].key, c);
-			c = strtok(NULL, "=");
-			strcpy(glob_setting[glob_setting_count++].value, c);
+			if (c) {
+				strcpy(glob_setting[glob_setting_count].key, c);
+				c = strtok(NULL, "\0");
+				if (c)
+					strcpy(glob_setting[glob_setting_count++].value,c);
+				   else
+					strcpy(glob_setting[glob_setting_count++].value,"");
+			}
 		}
 	}
 	if (glob_debug)
