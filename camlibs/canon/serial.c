@@ -127,48 +127,21 @@ canon_serial_get_cts (GPPort *gdev)
 int
 canon_serial_init (Camera *camera)
 {
-	int res;
 	GPPortSettings settings;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "Initializing the camera.\n");
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "Initializing the (serial) camera.\n");
 
 	/* Get the current settings */
 	gp_port_get_settings (camera->port, &settings);
 
 	/* Adjust the current settings */
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
-			settings.usb.inep = 0x81;
-			settings.usb.outep = 0x02;
-			settings.usb.config = 1;
-			settings.usb.altsetting = 0;
-			break;
-		case CANON_SERIAL_RS232:
-		default:
-			settings.serial.speed = 9600;
-			settings.serial.bits = 8;
-			settings.serial.parity = 0;
-			settings.serial.stopbits = 1;
-			break;
-	}
+	settings.serial.speed = 9600;
+	settings.serial.bits = 8;
+	settings.serial.parity = 0;
+	settings.serial.stopbits = 1;
 
 	/* Set the new settings */
 	gp_port_set_settings (camera->port, settings);
-
-	/* Do further initialization */
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
-			res = canon_usb_camera_init (camera);
-			if (res != GP_OK) {
-				fprintf (stderr, "canon_init_serial(): "
-					 "Cannot initialize camera, "
-					 "canon_usb_camera_init() " "returned %i\n", res);
-				return GP_ERROR;
-			}
-			break;
-		default:
-			break;
-	}
 
 	return GP_OK;
 }

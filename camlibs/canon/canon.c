@@ -1527,6 +1527,8 @@ camera_init (Camera *camera)
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "GPhoto tells us that we should use a USB link.\n");
 			camera->pl->canon_comm_method = CANON_USB;
+
+			return canon_usb_init (camera);
 			break;
 		case GP_PORT_SERIAL:
 		default:
@@ -1544,10 +1546,11 @@ camera_init (Camera *camera)
 					 "Camera transmission speed : %i\n",
 					 camera->pl->speed);
 			camera->pl->canon_comm_method = CANON_SERIAL_RS232;
+
+			return canon_serial_init (camera);
 			break;
 	}
 
-
-	/* This is bogus. You don't have to change the path */
-	return canon_serial_init (camera);
+	/* NOT REACHED */
+	return GP_ERROR;
 }

@@ -71,9 +71,8 @@ canon_usb_camera_init (Camera *camera)
 
 	i = gp_port_usb_msg_read (camera->port, 0x0c, 0x55, 0, msg, 1);
 	if (i != 1) {
-		fprintf (stderr, "canon_usb_camera_init(): step #1 read failed! (returned %i) "
-			 "Camera not operational.\n", i);
-		return GP_ERROR;
+		gp_camera_set_error (camera, "Could not establish initial contact with camera");
+		return GP_ERROR_IO_INIT;
 	}
 	camstat = msg[0];
 	switch (camstat) {
@@ -89,51 +88,78 @@ canon_usb_camera_init (Camera *camera)
 			break;
 	}
 	if (camstat != 'A' && camstat != 'C') {
-		gp_debug_printf (GP_DEBUG_NONE, "canon",
-				 "canon_usb_camera_init(): initial camera response: %c/'%s' "
-				 "not 'A' or 'C'. Camera not operational.", camstat,
-				 camstat_str);
-		return GP_ERROR;
+		gp_camera_set_error (camera, "Initial camera response %c/'%s' unrecognized", 
+			camstat, camstat_str);
+		return GP_ERROR_IO_INIT;
 	}
-	gp_debug_printf (GP_DEBUG_LOW, "canon",
-			 "canon_usb_camera_init(): initial camera response: %c/'%s'", camstat,
-			 camstat_str);
+	gp_log (GP_LOG_DEBUG, "canon", "canon_usb_camera_init() " 
+			"initial camera response: %c/'%s'", camstat, camstat_str);
 
 	i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, msg, 0x58);
 	if (i != 0x58) {
-		gp_debug_printf (GP_DEBUG_NONE, "canon",
-				 "canon_usb_camera_init(): step #2 read failed! (returned %i, expected %i) "
-				 "Camera not operational.", i, 0x58);
-		return GP_ERROR;
+		gp_camera_set_error (camera, "Step #2 of initialization failed! (returned %i, expected %i) "
+				 "Camera not operational", i, 0x58);
+		return GP_ERROR_IO_INIT;
 	}
 
 	i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg + 0x48, 0x10);
 	if (i != 0x10) {
-		gp_debug_printf (GP_DEBUG_NONE, "canon",
-				 "canon_usb_camera_serial(): step #3 write failed! (returned %i, expected %i) "
-				 "Camera not operational.", i, 0x10);
-		return GP_ERROR;
+		gp_camera_set_error (camera, "Step #3 of initialization failed! "
+				"(returned %i, expected %i) Camera not operational", i, 0x10);
+		return GP_ERROR_IO_INIT;
 	}
-	gp_debug_printf (GP_DEBUG_LOW, "canon",
-			 "canon_usb_camera_init(): PC sign on LCD should be lit now");
+	gp_log (GP_LOG_DEBUG, "canon", "canon_usb_camera_init() "
+			 "PC sign on LCD should be lit now (if your camera has a PC sign)");
 
 	i = gp_port_read (camera->port, buffer, 0x44);
 
 	if ((i >= 4)
 	    && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
 	    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "canon_usb_camera_init(): expected %i and got %i bytes with "
-				 "\"54 78 00 00\" at the end, so we just ignore the whole bunch",
+		gp_log (GP_LOG_DEBUG, "canon", "canon_usb_camera_init() "
+				 "expected %i and got %i bytes with \"54 78 00 00\" "
+				 "at the end, so we just ignore the whole bunch",
 				 0x44, i);
 	} else {
-		gp_debug_printf (GP_DEBUG_NONE, "canon",
-				 "canon_usb_camera_init(): step #4 read failed! (returned %i, expected %i) "
+		gp_log (GP_LOG_DEBUG, "canon", "canon_usb_camera_init() "
+				 "Step #4  of initialization failed! (returned %i, expected %i) "
 				 "Camera might still work though. Continuing.", i, 0x44);
 	}
 	return GP_OK;
 }
 
+/*****************************************************************************
+ *
+ * canon_usb_init
+ *
+ * Initializes the given USB device.
+ *
+ * Returns GP_OK on success.
+ *
+ ****************************************************************************/
+
+int
+canon_usb_init (Camera *camera)
+{
+	int res;
+	GPPortSettings settings;
+
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "Initializing the (USB) camera.\n");
+
+	/* Get the current settings */
+	gp_port_get_settings (camera->port, &settings);
+
+	/* Adjust the current settings */
+	settings.usb.inep = 0x81;
+	settings.usb.outep = 0x02;
+	settings.usb.config = 1;
+	settings.usb.altsetting = 0;
+
+	/* Set the new settings */
+	gp_port_set_settings (camera->port, settings);
+
+	return canon_usb_camera_init (camera);
+}
 /**
  * canon_usb_dialogue:
  * @camera: the Camera to work with
