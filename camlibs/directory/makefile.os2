@@ -21,5 +21,5 @@ dll: ..\gpdirbrw.dll
 ..\..\obj\directory.o : directory.c directory.h
    @$(CC) -o $@ directory.c $(CCFLAGS)
 
-..\gpdirbrw.dll: ..\..\obj\directory.o ..\..\obj\main.o ..\..\obj\test.o ..\..\obj\script.o
-   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** directory.def -lwrap -Le:\emx\lib -lst\check -lgcc -LE:\NETLABS\GNOME\GPHOTO2\LIB -llibgphoto2 -llibgpio -ldl E:\NETLABS\GNOME\GPHOTO2\obj\interface.o -lpthreads -lpthrdrtl -lmt\c
+..\gpdirbrw.dll: ..\..\obj\directory.o ..\..\obj\main.o ..\..\obj\test.o ..\..\obj\script.o ..\..\obj\interface.o
+   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** directory.def -lwrap -lst\check -lgcc -L..\..\lib -llibgphoto2 -llibgpio -ldl -lpthreads -lpthrdrtl -lmt\c

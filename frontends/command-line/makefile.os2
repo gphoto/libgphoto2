@@ -27,4 +27,4 @@ cmdline: ..\..\gphoto2.exe
   @$(CC) -o $@ $** $(CCFLAGS)
 
 ..\..\gphoto2.exe: ..\..\obj\interface.o ..\..\obj\script.o ..\..\obj\main.o ..\..\obj\test.o ..\..\lib\libgphoto2.a ..\..\lib\libgpio.a
-  @$(CC) -O2 $** -o $@ -Zbin-files -Zcrtdll -Zmtd -s -Le:\emx\lib -L..\..\lib -llibgphoto2 -llibgpio -ldl -lpthreads -lpthrdrtl
+  @$(CC) -O2 $** -o $@ -Zbin-files -Zcrtdll -Zmtd -s -L..\..\lib -llibgphoto2 -llibgpio -ldl -lpthreads -lpthrdrtl

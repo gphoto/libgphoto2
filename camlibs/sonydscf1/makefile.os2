@@ -37,5 +37,5 @@ sonydscf1.def: sonydscf1.o
    @copy sonydscf1.df sonydscf1.def
    @emxexp $** >> sonydscf1.def
 
-..\gpdscf1.dll: sonydscf1.o sonydscf1.def command.o chotplay.o getuint.o
-   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -Le:\emx\lib -lst\check -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldl ..\..\obj\interface.o -lpthreads -lpthrdrtl -lmt\c
+..\gpdscf1.dll: sonydscf1.o sonydscf1.def command.o chotplay.o getuint.o ..\..\obj\interface.o
+   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap-lst\check -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldl  -lpthreads -lpthrdrtl -lmt\c

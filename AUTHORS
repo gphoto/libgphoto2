@@ -9,9 +9,9 @@ Matt Martin <matt.martin@ieee.org>
 Fuji DS-7 library
 Bug fixing and GUI features
 
-Mike Labriola <mdlabriola@mindless.com> 
-Extra HTML gallery export options 
- 
+Mike Labriola <mdlabriola@mindless.com>
+Extra HTML gallery export options
+
 Werner Almesberger <almesber@lrc.di.epfl.ch>
 Canon A50 library
 
@@ -119,6 +119,9 @@ Mailinglists, web, FAQ, bug fixing
 
 Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>
 Olympus C3030Z USB support
+
+Bart van Leeuwen <bart@netage.nl>
+OS/2 Port
 
 If you feel left out, then please
 add yourself to the file "AUTHORS",
