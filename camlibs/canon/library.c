@@ -562,13 +562,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				return (GP_ERROR_NOT_SUPPORTED);
 			}
 #ifdef HAVE_EXIF
-			/* Check if we have libexif, it is an image
+			/* Check if we have libexif, it is a jpeg file
 			 * and it is not a PowerShot Pro 70 (which
 			 * does not support EXIF), return not
 			 * supported here so that gPhoto2 query for
 			 * GP_FILE_TYPE_EXIF instead
 			 */
-			if (is_image (filename)) {
+			if (is_jpeg (filename)) {
 				if (camera->pl->md->model != CANON_PS_PRO70) {
 					GP_DEBUG ("get_file_func: preview requested where "
 						  "EXIF should be possible");
