@@ -42,7 +42,7 @@
 #include <gphoto2.h>
 
 #include "usb.h"
-#include "library.h"
+#include "canon.h"
 #include "util.h"
 
 /*****************************************************************************
