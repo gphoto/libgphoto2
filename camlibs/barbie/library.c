@@ -20,7 +20,7 @@ char packet_2[5]                = {0x02, 0x01, 0x01, 0x01, 0x03};
    =======================================================================
 */
 
-void barbie_packet_dump(BarbieStruct *b, int direction, char *buf, int size) {
+void barbie_packet_dump(CameraPort *port, int direction, char *buf, int size) {
 	int x;
 
 	if (direction == 0)
@@ -36,42 +36,42 @@ void barbie_packet_dump(BarbieStruct *b, int direction, char *buf, int size) {
 	gp_debug_printf (GP_DEBUG_LOW, "barbie", "\n");
 }
 
-int barbie_write_command(BarbieStruct *b, char *command, int size) {
+int barbie_write_command(CameraPort *port, char *command, int size) {
 
 	int x;
 
-	barbie_packet_dump(b, 1, command, size);
-	x=gp_port_write(b->dev, command, size);
+	barbie_packet_dump(port, 1, command, size);
+	x=gp_port_write(port, command, size);
 	return (x == GP_OK);
 }
 
-int barbie_read_response(BarbieStruct *b, char *response, int size) {
+int barbie_read_response(CameraPort *port, char *response, int size) {
 
 	int x;
 	char ack = 0;
 
 	/* Read the ACK */
-	x=gp_port_read(b->dev, &ack, 1);
-	barbie_packet_dump(b, 0, &ack, 1);
+	x=gp_port_read(port, &ack, 1);
+	barbie_packet_dump(port, 0, &ack, 1);
 
 	if ((ack != ACK)||(x<0))
 		return (0);
 
 	/* Read the Response */
 	memset(response, 0, size);
-	x=gp_port_read(b->dev,response, size);
-	barbie_packet_dump(b, 0, response, x);
+	x=gp_port_read(port,response, size);
+	barbie_packet_dump(port, 0, response, x);
 	return (x > 0);
 }
 
-int barbie_exchange (BarbieStruct *b, char *cmd, int cmd_size, char *resp, int resp_size) {
+int barbie_exchange (CameraPort *port, char *cmd, int cmd_size, char *resp, int resp_size) {
 
 	int count = 0;
 
 	while (count++ < 10) {
-		if (barbie_write_command(b, cmd, cmd_size) != 1)
+		if (barbie_write_command(port, cmd, cmd_size) != 1)
 			return (0);
-		if (barbie_read_response(b, resp, resp_size) != 1)
+		if (barbie_read_response(port, resp, resp_size) != 1)
 			return (0);
 		/* if it's not busy, return */
 		if (resp[RESPONSE_BYTE] != '!')
@@ -83,7 +83,7 @@ int barbie_exchange (BarbieStruct *b, char *cmd, int cmd_size, char *resp, int r
 	return (0);
 }
 
-int barbie_ping(BarbieStruct *b) {
+int barbie_ping(CameraPort *port) {
 
 	char cmd[4], resp[4];
 
@@ -93,7 +93,7 @@ int barbie_ping(BarbieStruct *b) {
 	cmd[COMMAND_BYTE] = 'E';
 	cmd[DATA1_BYTE]   = 'x';
 
-	if (barbie_exchange(b, cmd, 4, resp, 4) == 0)
+	if (barbie_exchange(port, cmd, 4, resp, 4) == 0)
 		return (0);
 
 	if (resp[DATA1_BYTE] != 'x')
@@ -102,7 +102,7 @@ int barbie_ping(BarbieStruct *b) {
 	return (1);
 }
 
-int barbie_file_count (BarbieStruct *b) {
+int barbie_file_count (CameraPort *port) {
 
         char cmd[4], resp[4];
 
@@ -113,13 +113,13 @@ int barbie_file_count (BarbieStruct *b) {
         cmd[COMMAND_BYTE] = 'I';
         cmd[DATA1_BYTE]   = 0;
 
-        if (barbie_exchange(b, cmd, 4, resp, 4) != 1)
+        if (barbie_exchange(port, cmd, 4, resp, 4) != 1)
                 return (0);
 
         return (resp[DATA1_BYTE]);
 }
 
-char *barbie_read_firmware(BarbieStruct *b) {
+char *barbie_read_firmware(CameraPort *port) {
 
 	char cmd[4];
 	int x;
@@ -128,10 +128,10 @@ char *barbie_read_firmware(BarbieStruct *b) {
 	cmd[COMMAND_BYTE] = 'V';
 	cmd[DATA1_BYTE]   = '0';
 	
-	return (barbie_read_data(b, cmd, 4, BARBIE_DATA_FIRMWARE, &x));
+	return (barbie_read_data(port, cmd, 4, BARBIE_DATA_FIRMWARE, &x));
 }
 
-char *barbie_read_picture(BarbieStruct *b, int picture_number, int get_thumbnail, int *size) {
+char *barbie_read_picture(CameraPort *port, int picture_number, int get_thumbnail, int *size) {
 
 	char cmd[4], resp[4];
 
@@ -139,7 +139,7 @@ char *barbie_read_picture(BarbieStruct *b, int picture_number, int get_thumbnail
 	cmd[COMMAND_BYTE] = 'A';
 	cmd[DATA1_BYTE]   = picture_number;
 
-	if (barbie_exchange(b, cmd, 4, resp, 4) != 1)
+	if (barbie_exchange(port, cmd, 4, resp, 4) != 1)
 		return (NULL);
 	
 	memcpy(cmd, packet_1, 4);
@@ -150,10 +150,10 @@ char *barbie_read_picture(BarbieStruct *b, int picture_number, int get_thumbnail
 
 	cmd[DATA1_BYTE] = 0;
 
-	return (barbie_read_data(b, cmd, 4, BARBIE_DATA_PICTURE, size));
+	return (barbie_read_data(port, cmd, 4, BARBIE_DATA_PICTURE, size));
 }
 
-char *barbie_read_data (BarbieStruct *bs, char *cmd, int cmd_size, int data_type, int *size) {
+char *barbie_read_data (CameraPort *port, char *cmd, int cmd_size, int data_type, int *size) {
 
 	char c, resp[4];
 	int n1, n2, n3, n4, x, y, z;
@@ -162,7 +162,7 @@ char *barbie_read_data (BarbieStruct *bs, char *cmd, int cmd_size, int data_type
 	char *ppmhead_t = "P6\n# test.ppm\n%i %i\n255\n";
 	char ppmhead[64];
 
-	if (barbie_exchange(bs, cmd, cmd_size, resp, 4) != 1)
+	if (barbie_exchange(port, cmd, cmd_size, resp, 4) != 1)
 		return (0);
 	switch (data_type) {
 		case BARBIE_DATA_FIRMWARE:
@@ -172,7 +172,7 @@ char *barbie_read_data (BarbieStruct *bs, char *cmd, int cmd_size, int data_type
 			s = (char *)malloc(sizeof(char)*(*size));
 			memset(s, 0, *size);
 			s[0] = resp[3];
-			if (gp_port_read(bs->dev, &s[1], (*size)-1) < 0) {
+			if (gp_port_read(port, &s[1], (*size)-1) < 0) {
 				free(s);
 				return (NULL);
 			}
@@ -182,10 +182,10 @@ char *barbie_read_data (BarbieStruct *bs, char *cmd, int cmd_size, int data_type
 			/* we're getting a picture */
 			n1 = (unsigned char)resp[2];
 			n2 = (unsigned char)resp[3];
-			if (gp_port_read(bs->dev, &c, 1) < 0)
+			if (gp_port_read(port, &c, 1) < 0)
 				return (NULL);
 			n3 = (unsigned char)c;
-			if (gp_port_read(bs->dev, &c, 1) < 0)
+			if (gp_port_read(port, &c, 1) < 0)
 				return (NULL);
 			n4 = (unsigned char)c;
 			*size = PICTURE_SIZE(n1, n2, n3, n4);
@@ -197,7 +197,7 @@ printf("\tn1=%i n2=%i n3=%i n4=%i size=%i\n", n1, n2 ,n3, n4, *size);
 			memset(us, 0, *size);
 			memset(rg, 0, *size);
 			memset(s , 0, *size+strlen(ppmhead));
-			if (gp_port_read(bs->dev, us, *size)<0) {
+			if (gp_port_read(port, us, *size)<0) {
 				free(us);
 				free(rg);
 				free(s);
@@ -237,7 +237,7 @@ printf("\tn1=%i n2=%i n3=%i n4=%i size=%i\n", n1, n2 ,n3, n4, *size);
 			break;
 	}
 	/* read the footer */
-	if (gp_port_read(bs->dev, &c, 1) < 0) {
+	if (gp_port_read(port, &c, 1) < 0) {
 		free(us);
 		free(rg);
 		free(s);

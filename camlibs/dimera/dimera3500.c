@@ -21,6 +21,28 @@
  *
  * History:
  * $Log$
+ * Revision 1.15  2001/08/30 10:47:51  lutz
+ * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs/barbie/*: Use camera->port and camera->fs.
+ *         * camlibs/dimera/dimera3500.c
+ *         (populate_filesystem): Removed.
+ *         (camera_folder_list_folders): Removed. We don't support folders anyways
+ *         (camera_folder_list_files): Renamed to
+ *         (file_list_func): Don't access the CameraFilesystem here. Just
+ *         populate the list. The CameraFilesystem will get updated by libgphoto2.
+ *         (camera_file_get_info): Renamed to
+ *         (get_info_func): New
+ *         (camera_file_set_info): Removed. Not supported.
+ *         (camera_init): Correctly gp_filesystem_set_list_funcs and
+ *         gp_filesystem_set_info_funcs so that the CameraFilesystem has full
+ *         control over the information
+ *         * include/gphoto2-list.h:
+ *         * libgphoto2/list.c: (gp_list_populate): New. Please use this
+ *         function to populate the list passed to you on file_list_func.
+ *         * libgphoto2/filesys.c: Don't remove the dirty flag on folders
+ *         on gp_filesystem_append (thanks, Dan!)
+ *
  * Revision 1.14  2001/08/29 22:04:54  dfandrich
  * Now using predefined camera->port and camera->fs structures. Removed
  * unneeded include files. Now using predefined MIME types. Made all local
@@ -223,19 +245,6 @@ static char *models[] = {
         NULL
 };
 
-/* Create pseudo file names for each picture in the camera, except
-the temporary picture in RAM, which might not always be available. */
-static int populate_filesystem(gp_port *port, CameraFilesystem *fs) {
-        int count = mesa_get_image_count(port);
-
-		gp_debug_printf(GP_DEBUG_LOW, "dimera", "%d pictures", count);
-        if (count < 0)
-        	return count;	// count must hold error code
-
-        /* Populate the filesystem */
-        return gp_filesystem_populate(fs, "/", IMAGE_NAME_TEMPLATE, count);
-}
-
 
 int camera_id (CameraText *id) {
 
@@ -280,24 +289,27 @@ static int camera_exit(Camera *camera) {
 	return mesa_port_close(camera->port);
 }
 
-static int camera_folder_list_folders(Camera *camera, const char *folder, CameraList *list) {
-	/* there are never any subfolders */
+static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data) {
 
-	return (GP_OK);
-}
+	Camera *camera = data;
+	int count;
 
-static int camera_folder_list_files(Camera *camera, const char *folder, CameraList *list) {
-	int x;
-	const char *name;
+	/* We only support root folder */
+	if (strcmp (folder, "/"))
+		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
-	/* Update filesystem in case images were added */
-	populate_filesystem(camera->port, camera->fs);
+	count = mesa_get_image_count (camera->port);
+	if (count < 0)
+		return (count);
 
-	for (x=0; x<gp_filesystem_count(camera->fs, folder); x++) {
-		gp_filesystem_name (camera->fs, folder, x, &name);
-		gp_list_append(list, name, NULL);
-	}
-	return GP_OK;
+	/*
+	 * Create pseudo file names for each picture in the camera, except
+	 * the temporary picture in RAM, which might not always be available.
+	 *
+	 * We don't add anything to the filesystem here - the filesystem does
+	 * that for us.
+	 */
+	return (gp_list_populate (list, IMAGE_NAME_TEMPLATE, count));
 }
 
 static int camera_file_get (Camera *camera, const char *folder, const char *filename, CameraFileType type, CameraFile *file) {
@@ -366,10 +378,12 @@ static int camera_file_get (Camera *camera, const char *folder, const char *file
 	return GP_OK;
 }
 
-static int camera_file_get_info (Camera *camera, const char *folder, const char *filename, CameraFileInfo *info) {
+static int get_info_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFileInfo *info, void *data) {
+
+	Camera *camera = data;
 	int num, std_res;
 
-	num = gp_filesystem_number(camera->fs, folder, filename);
+	num = gp_filesystem_number (fs, folder, filename);
 	if (num < 0)
 		return num;
 
@@ -402,10 +416,6 @@ static int camera_file_get_info (Camera *camera, const char *folder, const char 
 	info->file.size = info->file.height*info->file.width*3 + sizeof( Dimera_finehdr ) - 1;
 
 	return GP_OK;
-}
-
-static int camera_file_set_info (Camera *camera, const char *folder, const char *filename, CameraFileInfo *info) {
-	    return GP_ERROR_NOT_SUPPORTED;
 }
 
 static int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
@@ -835,10 +845,6 @@ int camera_init (Camera *camera) {
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        camera->functions->file_get_info        = camera_file_get_info;
-        camera->functions->file_set_info        = camera_file_set_info;
         camera->functions->file_get             = camera_file_get;
         //camera->functions->folder_put_file    = camera_folder_put_file;
         //camera->functions->file_delete        = camera_file_delete;
@@ -907,6 +913,9 @@ int camera_init (Camera *camera) {
                 break;
         }
 
-        /* Create pseudo file names for each picture */
-        return populate_filesystem(camera->port, camera->fs);
+	/* Tell the filesystem where to get listings and info from */
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
+
+	return (GP_OK);
 }

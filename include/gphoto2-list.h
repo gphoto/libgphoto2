@@ -46,4 +46,6 @@ int gp_list_get_value (CameraList *list, int index, const char **value);
 int gp_list_set_name  (CameraList *list, int index, const char *name);
 int gp_list_set_value (CameraList *list, int index, const char *value);
 
+int gp_list_populate  (CameraList *list, const char *format, int count);
+
 #endif /* __GPHOTO2_LIST_H__ */

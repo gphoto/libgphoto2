@@ -1,5 +1,26 @@
 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/barbie/*: Use camera->port and camera->fs.
+	* camlibs/dimera/dimera3500.c
+	(populate_filesystem): Removed.
+	(camera_folder_list_folders): Removed. We don't support folders anyways
+	(camera_folder_list_files): Renamed to
+	(file_list_func): Don't access the CameraFilesystem here. Just 
+	populate the list. The CameraFilesystem will get updated by libgphoto2.
+	(camera_file_get_info): Renamed to
+	(get_info_func): New
+	(camera_file_set_info): Removed. Not supported.
+	(camera_init): Correctly gp_filesystem_set_list_funcs and
+	gp_filesystem_set_info_funcs so that the CameraFilesystem has full
+	control over the information
+	* include/gphoto2-list.h:
+	* libgphoto2/list.c: (gp_list_populate): New. Please use this
+	function to populate the list passed to you on file_list_func.
+	* libgphoto2/filesys.c: Don't remove the dirty flag on folders 
+	on gp_filesystem_append (thanks, Dan!)
+
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/template/*: Updated
 	* include/gphoto2-camera.h: Add a note about c_folder_list_folders and
 	c_folder_list_files not to be used. Same with [get,set]_info.
