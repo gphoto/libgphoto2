@@ -203,7 +203,7 @@ static struct {
 	{"Sony MVC-CD300",  0x054c, 0x004e},
 
 	// we're looking for vendor/product IDs of following:
-	{"HP PhotoSmart 612", 0x0000, 0x0000},
+	{"HP PhotoSmart 612", 0x03f0, 0x6302},
 	{"HP PhotoSmart 715",  0x03f0, 0x6402},
 	// more comming soon :)
 	{NULL, 0, 0}
@@ -844,7 +844,7 @@ camera_init (Camera *camera, GPContext *context)
 	memset (camera->pl->params.data, 0, sizeof (PTPData));
 	((PTPData *) camera->pl->params.data)->camera = camera;
 	camera->pl->params.byteorder = PTP_DL_LE;
-	camera->pl->params.transaction_id=0x01;
+	camera->pl->params.transaction_id=0x00;
 
 	/* Configure the port */
 	CR (gp_port_set_timeout (camera->port, 3000));
