@@ -1,3 +1,7 @@
+2001-12-24  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* library.c: stop reporting broken camera abilities
+
 2001-12-23  Fredrik <fredrik@krixor.xy.org>
 
 	* canon.c, canon.h, serial.c, usb.c, util.c, util.h :
