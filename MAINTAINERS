@@ -63,6 +63,9 @@ camlibs/polaroid/pdc320.c:
 camlibs/polaroid/pdc640.c:
 	Chris Byrne <adapt.ihug.co.nz>
 
+camlibs/polaroid/pdc700.c:
+	Greg Ingram <ingram@symsys.com>
+
 camlibs/ptp:
 	Mariusz Woloszyn <emsi@ipartners.pl>
 
