@@ -1,3 +1,8 @@
+2001-12-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-abilities-list.c (gp_abilities_list_detect_usb):
+	  Declare this function static - we don't want to advertise it.
+
 2001-12-29  Marcus Meissner <marcus@jet.franken.de>
 	
 	* MAINTAINERS: Added myself to stv680 entry.
