@@ -118,10 +118,10 @@ AC_HEADER_STDC
 AC_INLINE
 AC_CONST
 
-AC_CHECK_HEADERS(stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h)
-AC_CHECK_HEADERS(sys/param.h termios.h sgetty.h ttold.h ioctl-types.h \
-	fcntl.h sgtty.h sys/ioctl.h sys/time.h termio.h unistd.h \
-	endian.h byteswap.h asm/io.h)
+AC_CHECK_HEADERS([stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h
+	sys/param.h termios.h sgetty.h ttold.h ioctl-types.h
+	fcntl.h sgtty.h sys/ioctl.h sys/time.h termio.h unistd.h
+	endian.h byteswap.h asm/io.h])
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS(strerror snprintf vsnprintf)
@@ -243,12 +243,12 @@ if $try_usb; then
 			LDFLAGS_orig="$LDFLAGS"
 			LDFLAGS="`$LIBUSB_CONFIG --libs`"
 			AC_CHECK_LIB(usb,usb_busses,[
-			usb_msg="yes"
-			IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
-			USB_LIBS="`$LIBUSB_CONFIG --libs`"
-			USB_CFLAGS="`$LIBUSB_CONFIG --cflags`"
-                        LIBUSB_VER="`$LIBUSB_CONFIG --version`"],[
-			usb_msg="no (available version too old)"])
+				usb_msg="yes"
+				IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
+				USB_LIBS="`$LIBUSB_CONFIG --libs`"
+				USB_CFLAGS="`$LIBUSB_CONFIG --cflags`"
+                        	LIBUSB_VER="`$LIBUSB_CONFIG --version`"],[
+				usb_msg="no (available version too old)"])
 			LDFLAGS="$LDFLAGS_orig"])
 		CPPFLAGS="$CPPFLAGS_save"
 	fi

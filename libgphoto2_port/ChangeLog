@@ -1,5 +1,9 @@
 2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
 
+	* configure.in: Fix indentation.
+
+2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
+
 	Patch by Arnaud Launay <asl@launay.org>, slightly modified:
 
 	* configure.in: Check for usb_busses in -lusb.
