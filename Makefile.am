@@ -9,6 +9,7 @@ SUBDIRS = 			\
 	libgphoto2 		\
 	camlibs 		\
 	frontends 		\
+	tests			\
 	po 			\
 	doc
 

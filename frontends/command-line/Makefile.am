@@ -17,8 +17,7 @@ gphoto2_SOURCES = 		\
 	main.c main.h 		\
 	options.c options.h 	\
 	range.c range.h 	\
-	shell.c shell.h 	\
-	test.c test.h
+	shell.c shell.h 
 
 gphoto2_LDFLAGS = -export-dynamic
 

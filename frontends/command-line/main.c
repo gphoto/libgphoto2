@@ -22,7 +22,6 @@
 #include "options.h"
 #include "range.h"
 #include "shell.h"
-#include "test.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -63,7 +62,6 @@ int  set_globals();
 
 OPTION_CALLBACK(abilities);
 OPTION_CALLBACK(help);
-OPTION_CALLBACK(test);
 OPTION_CALLBACK(shell);
 OPTION_CALLBACK(list_cameras);
 OPTION_CALLBACK(auto_detect);
@@ -112,7 +110,6 @@ Option option[] = {
 /* Display and die actions */
 
 {"h", "help",           "",             "Displays this help screen",    help,           0},
-{"",  "verify",         "",             "Verifies gPhoto installation", test,           0},
 {"",  "list-cameras",   "",             "List supported camera models", list_cameras,   0},
 {"",  "list-ports",     "",             "List supported port devices",  list_ports,     0},
 {"",  "stdout",         "",             "Send file to stdout",          use_stdout,     0},
@@ -192,14 +189,6 @@ OPTION_CALLBACK(help) {
         cli_debug_print("Displaying usage");
 
         usage();
-        exit(EXIT_SUCCESS);
-        return GP_OK;
-}
-
-OPTION_CALLBACK(test) {
-
-        cli_debug_print("Testing gPhoto Installation");
-        test_gphoto();
         exit(EXIT_SUCCESS);
         return GP_OK;
 }
@@ -752,11 +741,11 @@ int capture_generic (int type, char *name) {
 
         if (type == GP_OPERATION_CAPTURE_PREVIEW) {
                 file = gp_file_new ();
-                if ((result = gp_camera_capture_preview(glob_camera, file)) != GP_OK) {
+                if ((result = gp_camera_capture_preview (glob_camera, file)) != GP_OK) {
                         cli_error_print("Could not capture the preview.");
                         return (result);
                 }
-                save_camera_file_to_file(file, 0);
+                save_camera_file_to_file (file, 0);
                 gp_file_free(file);
         } else {
                 result =  gp_camera_capture (glob_camera, type, &path);

@@ -180,7 +180,7 @@ camlibs/sonydscf1/Makefile \
 camlibs/stv0680/Makefile \
 frontends/Makefile \
 frontends/command-line/Makefile \
-frontends/libgphoto2_frontend/Makefile \
+tests/Makefile \
 include/Makefile \
 libgphoto2/Makefile \
 gphoto2-config \

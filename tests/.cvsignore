@@ -1,0 +1,6 @@
+Makefile.in
+Makefile
+test-gphoto2
+.libs
+.deps
+*.o

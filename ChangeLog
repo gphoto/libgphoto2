@@ -1,5 +1,14 @@
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* tests/*: New
+	* configure.in:
+	* Makefile.am: Add tests to SUBDIRS and generate the Makefile
+	* frontents/command-line/test.[c,h]: Removed
+	* frontends/command-line/main.c:
+	* frontents/command-line/Makefile.am: Reflect changes
+
+2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* frontents/gtk/macros/*: Removed.
 
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
