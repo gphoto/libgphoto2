@@ -12,6 +12,10 @@ drivers (camlibs):
      - added support for Canon PowerShot A100, Canon PowerShot A200
      - fixed Canon EOS D60 unlocking
 
+   * PTP driver:
+     - fixed some bugs
+     - added support for Nikon D100
+
 --------------------------------------------------------------------------------
 gphoto2 2.1.0
 
