@@ -1,3 +1,8 @@
+2002-10-17  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* libgphoto2/gphoto2-abilities-list.c: removed the fscking "can't load *.la" message
+	* libgphoto2_port/m4/documentation.m4: removed unnecessary stuff (xmlto, fig2dev, etc.)
+
 2002-10-13  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* *.am, libgphoto2_port/m4/packaging.m4, libgphoto2_port/m4/packaging.m4: moved definition of docdir from Makefile.am to m4 macros

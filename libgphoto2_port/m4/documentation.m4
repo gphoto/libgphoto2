@@ -34,7 +34,7 @@ else # otherwise invent a docdir hopefully compatible with system policy
     AC_MSG_CHECKING(package docdir)
     # check whether to include package version into documentation path
     # FIXME: doesn't work properly.
-    if ls -d /usr/{share/,}doc/*-[[]0-9[]]* > /dev/null 2>&1
+    if ls -d /usr/{share/,}doc/make-[0-9]* > /dev/null 2>&1
     then
         docdir="${maindocdir}/${PACKAGE}-${VERSION}"
         AC_MSG_RESULT([${docdir} (redhat style)])
@@ -59,41 +59,6 @@ AC_DEFUN(GP_BUILD_DOCS,
 [
 # docdir has to be determined in advance
 AC_REQUIRE([GP_CHECK_DOC_DIR])
-
-dnl ---------------------------------------------------------------------------
-dnl fig2dev: This program is needed for processing images. If not found,
-dnl          documentation can still be built, but without figures.
-dnl ---------------------------------------------------------------------------
-try_fig2dev=true
-have_fig2dev=false
-AC_ARG_WITH(fig2dev, [  --without-fig2dev         Don't use fig2dev],[
-	if test "x$withval" = "xno"; then
-		try_fig2dev=false
-	fi])
-if $try_fig2dev; then
-	AC_PATH_PROG(FIG2DEV,fig2dev)
-	if test -n "${FIG2DEV}"; then
-		have_fig2dev=true
-	fi
-fi
-if $have_fig2dev; then
-        ${FIG2DEV} -L ps > /dev/null <<EOF
-#FIG 3.2
-Landscape
-Center
-Inches
-Letter  
-100.00
-Single
--2
-1200 2
-1 3 0 1 0 7 50 0 -1 0.000 1 0.0000 3000 3750 270 270 3000 3750 3150 3975
-EOF
-        if test $? != 0; then
-                have_fig2dev=false
-        fi
-fi
-AM_CONDITIONAL(ENABLE_FIGURES, $have_fig2dev)
 
 dnl ---------------------------------------------------------------------------
 dnl gtk-doc: We use gtk-doc for building our documentation. However, we
@@ -133,113 +98,5 @@ fi
 AC_SUBST(htmldir)
 apidocdir="${htmldir}/api"
 AC_SUBST(apidocdir)
-
-dnl ------------------------------------------------------------------------
-dnl try to find xmlto (required for generation of man pages and html docs)
-dnl ------------------------------------------------------------------------
-#
-# The intention of these macros is the following:
-#
-# A distribution tarball should have the manuals (HTML, PDF, PS) included.
-# Only if the user has the software to re-build the manuals from the
-# docbook source, should we delete or re-create the created docs.
-#
-manual_msg="no (http://cyberelk.net/tim/xmlto/)"
-try_xmlto=true
-have_xmlto=false
-AC_ARG_WITH(xmlto, [  --without-xmlto           Don't use xmlto],[
-	if test x$withval = xno; then
-		try_xmlto=false
-	fi])
-if $try_xmlto; then
-	AC_PATH_PROG(XMLTO,xmlto)
-	if test -n "${XMLTO}"; then
-		have_xmlto=true
-		manual_msg="yes"
-        else
-                # in case anybody runs $(XMLTO) somewhere, we return false
-                XMLTO=false
-	fi
-fi
-
-AM_CONDITIONAL(XMLTO, $have_xmlto)
-
-
-doc_formats_list='man html ps pdf'
-
-# initialize have_xmlto* to false
-for i in $doc_formats_list; do
-  d=`echo $i | $TR A-Z a-z`
-  eval "have_xmlto$d=false"
-done
-
-AC_MSG_CHECKING(checking doc formats)
-AC_ARG_WITH(doc_formats,
-  [  --with-doc-formats=<list>   create doc with format in <list>; ]
-  [                            'all' build all doc formats; ]
-  [                            possible formats are: ]
-  [                            man, html, ps, pdf ],
-  doc_formats="$withval", doc_formats="man html")
-
-if test "$doc_formats" = "all"; then
-  doc_formats=$doc_formats_list
-else
-  doc_formats=`echo $doc_formats | sed 's/,/ /g'`
-fi
-
-# set have_xmlto* to true if requested and possible
-if $have_xmlto; then
-  for i in $doc_formats; do
-    if test -n "`echo $doc_formats_list | $GREP -E \"(^| )$i( |\$)\"`"; then
-      eval "have_xmlto$i=true"
-    else
-      AC_ERROR(Unknown doc format $i!)
-    fi
-  done
-  AC_MSG_RESULT($doc_formats)
-else
-  AC_MSG_RESULT([deactivated (requires xmlto)])
-fi
-
-AM_CONDITIONAL(XMLTOHTML,$have_xmltohtml)
-AM_CONDITIONAL(XMLTOMAN,$have_xmltoman)
-AM_CONDITIONAL(XMLTOPDF,$have_xmltopdf)
-AM_CONDITIONAL(XMLTOPS,$have_xmltops)
-
-# create list of supported formats
-AC_MSG_CHECKING([for manual formats to re­create])
-xxx=""
-manual_html=""
-manual_pdf=""
-manual_ps=""
-if $have_xmltohtml; then
-        manual_html=manual
-        xxx="${xxx} html($manual_html)"
-fi
-if $have_xmltoman; then
-        xxx="${xxx} man"
-fi
-if $have_xmltopdf; then
-        manual_pdf=gphoto2.pdf
-        xxx="${xxx} pdf($manual_pdf)"
-fi
-if $have_xmltops; then 
-        manual_ps=gphoto2.ps
-        xxx="${xxx} ps($manual_ps)"
-fi
-AC_SUBST(manual_html)
-AC_SUBST(manual_pdf)
-AC_SUBST(manual_ps)
-AC_MSG_RESULT($xxx)
-
-if test "x$xxx" != "x"
-then
-        if $have_fig2dev; then
-                fig_out=""
-        else
-                fig_out="out"
-        fi
-        manual_msg="in (${xxx} ) format with${fig_out} figures"
-fi
 
 ])dnl

@@ -302,9 +302,19 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 				"Trying to load '%s'...", buf);
 			lh = GP_SYSTEM_DLOPEN (buf);
 			if (!lh) {
-				gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
-					"Failed to load '%s': %s.", buf,
-					GP_SYSTEM_DLERROR ());
+				size_t len;
+				len = strlen(buf);
+				if ((len >= 3) && 
+				    (buf[len-1] == 'a') && 
+				    ((buf[len-2] == '.') ||
+				     ((buf[len-2] == 'l') && (buf[len-3] == '.'))
+					    )) {
+					/* *.la or *.a - we cannot load these, so no error msg */
+				} else {
+					gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+						"Failed to load '%s': %s.", buf,
+						GP_SYSTEM_DLERROR ());
+				}
 				continue;
 			}
 
@@ -684,3 +694,10 @@ gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 
 	return (GP_OK);
 }
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
