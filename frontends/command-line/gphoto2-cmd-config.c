@@ -182,6 +182,7 @@ show_date (CmdConfig *cmd_config, CameraWidget *date)
 	selection = activateCDKCalendar (calendar, 0);
 
 	if (calendar->exitType == vNORMAL) {
+		date_info = localtime ((time_t *) &time);
 		date_info->tm_mday = calendar->day;
 		date_info->tm_mon = calendar->month;
 		date_info->tm_year = calendar->year - 1900;
@@ -191,6 +192,90 @@ show_date (CmdConfig *cmd_config, CameraWidget *date)
 	}
 
 	destroyCDKCalendar (calendar);
+	return (GP_OK);
+}
+
+static int
+time_preprocess (EObjectType cdktype, void *object, void *clientData,
+		 chtype input)
+{
+	CDKENTRY *entry = object;
+
+	/* Check a predefined binding... */
+	if (checkCDKObjectBind (vENTRY, entry, input) != 0)
+		return (1);
+
+	/* Check ':' */
+	if ((input == ':') || ((input >= '0') && (input <= '9')))
+		return (1);
+
+	/* Check other known keys */
+	switch (input) {
+	case KEY_UP:
+	case KEY_DOWN:
+	case CDK_BEGOFLINE:
+	case CDK_TRANSPOSE:
+	case CDK_ENDOFLINE:
+	case KEY_LEFT:
+	case CDK_BACKCHAR:
+	case KEY_RIGHT:
+	case CDK_FORCHAR:
+	case DELETE:
+	case ('H') & 0x1f:
+	case KEY_BACKSPACE:
+	case KEY_DC:
+	case KEY_ESC:
+	case CDK_ERASE:
+	case CDK_CUT:
+	case CDK_COPY:
+	case CDK_PASTE:
+	case KEY_RETURN:
+	case KEY_TAB:
+	case KEY_ENTER:
+	case CDK_REFRESH:
+		return (1);
+	default:
+		Beep ();
+		return (0);
+	}
+}
+
+static int
+show_time (CmdConfig *cmd_config, CameraWidget *date)
+{
+	CDKENTRY *entry = NULL;
+	const char *label, *info;
+	char title[1024], time_string[9];
+	int time;
+	struct tm *date_info;
+
+	gp_widget_get_label (date, &label);
+	snprintf (title, sizeof (title), "<C></5>%s", label);
+
+	entry = newCDKEntry (cmd_config->screen, CENTER, CENTER, title,
+			     _("Time: "), A_NORMAL, ' ', vMIXED, 40, 0,
+			     8, TRUE, FALSE);
+	if (!entry)
+		return (GP_ERROR);
+
+	gp_widget_get_value (date, &time);
+	date_info = localtime ((time_t *) &time);
+	snprintf (time_string, sizeof (time_string), "%2i:%02i:%02i",
+		  date_info->tm_hour, date_info->tm_min, date_info->tm_sec);
+	setCDKEntryValue (entry, time_string);
+
+	setCDKEntryPreProcess (entry, time_preprocess, NULL);
+
+	info = activateCDKEntry (entry, 0);
+	if (entry->exitType == vNORMAL) {
+		date_info = localtime ((time_t *) &time);
+		sscanf (info, "%d:%d:%d", &date_info->tm_hour,
+			&date_info->tm_min, &date_info->tm_sec);
+		time = mktime (date_info);
+		gp_widget_set_value (date, &time);
+		set_config (cmd_config);
+	} 
+	destroyCDKEntry (entry);
 	return (GP_OK);
 }
 
@@ -347,6 +432,7 @@ show_widget (CmdConfig *cmd_config, CameraWidget *widget)
 		break;
 	case GP_WIDGET_DATE:
 		CHECK (show_date (cmd_config, widget));
+		CHECK (show_time (cmd_config, widget));
 		CHECK (gp_widget_get_parent (widget, &parent));
 		CHECK (show_widget (cmd_config, parent));
 		break;
