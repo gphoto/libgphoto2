@@ -107,6 +107,7 @@
 #define PTP_ERROR_IO			0x2FF
 #define PTP_ERROR_DATA_EXPECTED		0x2FE
 #define PTP_ERROR_RESP_EXPECTED		0x2FD
+#define PTP_ERROR_BADPARAM		0x2fC
 
 // Error description structure
 #include "ptperr.h"
@@ -201,12 +202,11 @@ struct _PTPParams {
 // ptp functions
 
 short
-ptp_opensession(PTPParams* params, PTPReq* databuf, int session);
+ptp_opensession(PTPParams* params, int session);
 short
-ptp_closesession(PTPParams* params, PTPReq* databuf);
+ptp_closesession(PTPParams* params);
 short
-ptp_getobjecthandles(PTPParams* params, PTPReq* databuf,
-			PTPObjectHandles* objecthandles);
+ptp_getobjecthandles(PTPParams* params, PTPObjectHandles* objecthandles);
 
 /* no more yet ;) */
 
