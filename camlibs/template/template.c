@@ -48,6 +48,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
+	camera->functions->result_as_string = camera_result_as_string;
 
 	return (GP_OK);
 }
@@ -123,4 +124,11 @@ Quick description of the library.
 No more than 5 lines if possible.");
 
 	return (GP_OK);
+}
+
+char* camera_result_as_string (Camera *camera, int result) {
+	
+	if (result >= 0) return ("This is not an error...");
+	if (-result < 100) return gp_result_as_string (result);
+	return ("This is a template specific error.");
 }

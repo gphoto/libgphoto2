@@ -107,7 +107,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 		strcpy(d->directory, "/");
 	}
 
-	if (gp_setting_get("directory", "hidden", buf) == GP_ERROR)
+	if (gp_setting_get("directory", "hidden", buf) != GP_OK)
 		gp_setting_set("directory", "hidden", "1");
 
 	return (GP_OK);
@@ -229,13 +229,14 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 	/**********************************/
 
 	char buf[1024];
+	int result;
 	DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
 	directory_folder_set(camera, folder);
 
 	sprintf(buf, "%s/%s", d->directory, filename);
-	if (gp_file_open(file, buf)==GP_ERROR)
-		return (GP_ERROR);
+	if ((result = gp_file_open(file, buf)) != GP_OK)
+		return (result);
 
 	return (GP_OK);
 }
@@ -247,26 +248,27 @@ int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, cha
 	/**********************************/
 
 	char buf[1024];
+	int result;
 	DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
 	directory_folder_set(camera, folder);
 
 	sprintf(buf, "%s/%s", d->directory, filename);
-	if (gp_file_open(file, buf)==GP_ERROR)
-		return (GP_ERROR);
+	if ((result = gp_file_open(file, buf)) != GP_OK)
+		return (result);
 
 	return (GP_OK);
 }
 
 int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
-	return (GP_ERROR);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 
 int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
-	return (GP_ERROR);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 int camera_config (Camera *camera) {
@@ -343,7 +345,7 @@ int camera_config (Camera *camera) {
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
-	return (GP_ERROR);
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 int camera_summary (Camera *camera, CameraText *summary) {
