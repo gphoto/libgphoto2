@@ -85,10 +85,9 @@ int gp_filesystem_get_folder   (CameraFilesystem *fs, const char *filename,
 			        const char **folder);
 
 /* Listings */
-typedef int (*CameraFilesystemListFunc)   (CameraFilesystem *fs,
-					   const char *folder,
-					   CameraList *list,
-					   void *data);
+typedef int (*CameraFilesystemListFunc) (CameraFilesystem *fs,
+					 const char *folder, CameraList *list,
+					 void *data);
 int gp_filesystem_set_list_funcs (CameraFilesystem *fs,
 				  CameraFilesystemListFunc file_list_func,
 				  CameraFilesystemListFunc folder_list_func,
