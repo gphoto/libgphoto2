@@ -133,6 +133,12 @@ int fujitsu_write_packet (Camera *camera, char *packet) {
 	}
 
 	fujitsu_dump_packet(camera, packet);
+
+	/* For USB support */
+	if (fd->type == GP_PORT_USB) {
+		return (gpio_write(fd->dev, packet, length));
+	}
+
 	r=0;
 	x=0;
 	while (x<length) {
@@ -280,9 +286,14 @@ int fujitsu_write_ack(Camera *camera) {
 	debug_print(fd, " fujitsu_write_ack");
 
 	buf[0] = ACK;
-	if (fujitsu_write_packet(camera, buf)==GP_OK)
+	if (fujitsu_write_packet(camera, buf)==GP_OK) {
+#ifdef GPIO_USB
+		gpio_usb_clear_halt(fd->dev);
+#endif
 		return (GP_OK);
+	}
 	debug_print(fd, "Could not write ACK");
+	gpio_usb_clear_halt(fd->dev);
 	return (GP_ERROR);
 }
 
@@ -294,10 +305,17 @@ int fujitsu_write_nak(Camera *camera) {
 	debug_print(fd, " fujitsu_write_nak");
 
 	buf[0] = NAK;
-	if (fujitsu_write_packet(camera, buf)==GP_OK)
+	if (fujitsu_write_packet(camera, buf)==GP_OK) {
+#ifdef GPIO_USB
+		gpio_usb_clear_halt(fd->dev);
+#endif
 		return (GP_OK);
+	}
 
 	debug_print(fd, "Could not write NAK");
+#ifdef GPIO_USB
+	gpio_usb_clear_halt(fd->dev);
+#endif
 	return (GP_ERROR);
 }
 
@@ -457,7 +475,6 @@ int fujitsu_get_int_register (Camera *camera, int reg, int *value) {
 		/* DC1 = invalid register or value */
 		if (buf[0] == DC1)
 			return (GP_ERROR);
-
 		if (buf[0] == TYPE_DATA_END) {
 //			fujitsu_write_ack(camera);
 			r =((unsigned char)buf[4]) +
@@ -521,7 +538,6 @@ int fujitsu_set_string_register (Camera *camera, int reg, char *s, int length) {
 			c = (unsigned char)buf[0];
 			if (c == DC1)
 				return (GP_ERROR);
-
 			if (c == ACK)
 				done = 1;
 			   else	{

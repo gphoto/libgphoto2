@@ -96,7 +96,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	while (models[x]) {
 		a = gp_abilities_new();
 		strcpy(a->model, models[x]);
-		a->port     = GP_PORT_SERIAL;
+		a->port     = GP_PORT_SERIAL | GP_PORT_USB;
 		a->speed[0] = 9600;
 		a->speed[1] = 19200;
 		a->speed[2] = 38400;
@@ -152,34 +152,73 @@ int camera_init (Camera *camera, CameraInit *init) {
 
 	debug_print(fd, "Initializing camera");
 
-	fd->dev = gpio_new(GPIO_DEVICE_SERIAL);
+	switch (init->port_settings.type) {
+		case GP_PORT_SERIAL:
+			printf("serial port\n");
+			fd->dev = gpio_new(GPIO_DEVICE_SERIAL);
 
-        strcpy(settings.serial.port, init->port_settings.path);
-	settings.serial.speed 	 = 19200;
-	settings.serial.bits 	 = 8;
-	settings.serial.parity 	 = 0;
-	settings.serial.stopbits = 1;
+		        strcpy(settings.serial.port, init->port_settings.path);
+			settings.serial.speed 	 = 19200;
+			settings.serial.bits 	 = 8;
+			settings.serial.parity 	 = 0;
+			settings.serial.stopbits = 1;
+			break;
+#ifdef GPIO_USB
+		case GP_PORT_USB:
+			printf("usb port\n");
+			fd->dev = gpio_new(GPIO_DEVICE_USB);
+
+		        if (gpio_usb_find_device(fd->dev, 0x07b4, 0x0100) == GPIO_ERROR) {
+				printf("could not find camera on USB\n");
+				free (fd);
+		                return (GP_ERROR);
+			}
+		        gpio_set_timeout (fd->dev, 5000);
+        		settings.usb.inep = 0x83;
+        		settings.usb.outep = 0x04;
+        		settings.usb.config = 1;
+        		settings.usb.interface = 0;
+        		settings.usb.altsetting = 0;
+			break;
+#endif
+		default:
+			printf("invalid port type");
+			free (fd);
+	                return (GP_ERROR);
+	}
+
 	gpio_set_settings(fd->dev, settings);
 	gpio_set_timeout(fd->dev, TIMEOUT);
 	strcpy(fd->folder, "/");
+	fd->type = init->port_settings.type;
 
 	if (gpio_open(fd->dev)==GPIO_ERROR) {
 		gp_camera_message(camera, "Can not open the port");
 		return (GP_ERROR);
 	}
 
-	if (fujitsu_ping(camera)==GP_ERROR) {
-		gp_camera_message(camera, "Can not talk to camera");
-		return (GP_ERROR);
-	}
+	switch (init->port_settings.type) {
+		case GP_PORT_SERIAL:
+			if (fujitsu_ping(camera)==GP_ERROR) {
+				gp_camera_message(camera, "Can not talk to camera");
+				return (GP_ERROR);
+			}
 
-	if (fujitsu_set_speed(camera, init->port_settings.speed)==GP_ERROR) {
-		gp_camera_message(camera, "Can not set the serial port speed");
-		return (GP_ERROR);
+			if (fujitsu_set_speed(camera, init->port_settings.speed)==GP_ERROR) {
+				gp_camera_message(camera, "Can not set the serial port speed");
+				return (GP_ERROR);
+			}
+			break;
+		case GP_PORT_USB:
+			gpio_usb_clear_halt(fd->dev);
+			break;
+		default:
+			break;
 	}
 
 	if (fujitsu_get_int_register(camera, 1, &value)==GP_ERROR) {
-		gp_camera_message(camera, "Could not communicate with camera after speed change");
+		gp_camera_message(camera, "Could not communicate with camera after initialization");
+		fd->speed = init->port_settings.speed;
 		return (GP_ERROR);
 	}
 
@@ -198,7 +237,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	fd->fs = gp_filesystem_new();
 
 	gpio_set_timeout(fd->dev, TIMEOUT);
-	fd->speed = init->port_settings.speed;
+
 
 	camera_stop(camera);
 	return (GP_OK);
@@ -248,10 +287,12 @@ static int fujitsu_change_folder(Camera *camera, const char *folder)
 int camera_start(Camera *camera) {
 
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
-
-	if (fujitsu_set_speed(camera, fd->speed)==GP_ERROR) {
-		gp_camera_message(camera, "Can not set the serial port speed");
-		return (GP_ERROR);
+	
+	if (fd->type == GP_PORT_SERIAL) {
+		if (fujitsu_set_speed(camera, fd->speed)==GP_ERROR) {
+			gp_camera_message(camera, "Can not set the serial port speed");
+			return (GP_ERROR);
+		}
 	}
 	fujitsu_folder_set(camera, fd->folder);
 	return (GP_OK);
@@ -261,9 +302,11 @@ int camera_stop(Camera *camera) {
 
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
-	if (fujitsu_set_speed(camera, -1)==GP_ERROR) {
-		gp_camera_message(camera, "Can not set the serial port speed");
-		return (GP_ERROR);
+	if (fd->type == GP_PORT_SERIAL) {
+		if (fujitsu_set_speed(camera, -1)==GP_ERROR) {
+			gp_camera_message(camera, "Can not set the serial port speed");
+			return (GP_ERROR);
+		}
 	}
 
 	return (GP_OK);
