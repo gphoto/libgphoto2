@@ -461,7 +461,7 @@ camera_abilities (CameraAbilitiesList *list)
 	memset(&a,0, sizeof(a));
 	for (i = 0; models[i].model; i++) {
 		strcpy (a.model, models[i].model);
-		a.status = GP_DRIVER_STATUS_TESTING;
+		a.status = GP_DRIVER_STATUS_DEPRECATED;
 		a.port   = GP_PORT_USB;
 		a.speed[0] = 0;
 		a.usb_vendor = models[i].usb_vendor;
@@ -477,7 +477,7 @@ camera_abilities (CameraAbilitiesList *list)
 	}
 
 	strcpy(a.model, "USB PTP Class Camera");
-	a.status = GP_DRIVER_STATUS_TESTING;
+	a.status = GP_DRIVER_STATUS_DEPRECATED;
 	a.port   = GP_PORT_USB;
 	a.speed[0] = 0;
 	a.usb_class = 6;
