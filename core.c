@@ -283,19 +283,18 @@ int gp_camera_exit (Camera *camera) {
 	return (ret);
 }
 
-int gp_camera_folder_list(Camera *camera, char *folder_path, CameraFolderList *list) {
+int gp_camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 
-	CameraFolderListEntry t;
+	CameraListEntry t;
 	int x, ret, y, z;
 
 	/* Initialize the folder list to a known state */
 	list->count = 0;
-	strcpy(list->folder, folder_path);
 
 	if (camera->functions->folder_list == NULL)
 		return (GP_ERROR);
 
-	ret = camera->functions->folder_list(camera, folder_path, list);
+	ret = camera->functions->folder_list(camera, list, folder);
 
 	if (ret == GP_ERROR)
 		return (GP_ERROR);
@@ -315,74 +314,92 @@ int gp_camera_folder_list(Camera *camera, char *folder_path, CameraFolderList *l
 	return (GP_OK);
 }
 
-int gp_camera_folder_list_append(CameraFolderList *list, char *name, int is_folder) {
+int gp_camera_file_list(Camera *camera, CameraList *list, char *folder) {
+
+	CameraListEntry t;
+	int x, ret, y, z;
+
+	/* Initialize the folder list to a known state */
+	list->count = 0;
+
+	if (camera->functions->file_list == NULL)
+		return (GP_ERROR);
+
+	ret = camera->functions->file_list(camera, list, folder);
+
+	if (ret == GP_ERROR)
+		return (GP_ERROR);
+
+	/* Sort the file list */
+	for (x=0; x<list->count-1; x++) {
+		for (y=x+1; y<list->count; y++) {
+			z = strcmp(list->entry[x].name, list->entry[y].name);
+			if (z > 0) {
+				memcpy(&t, &list->entry[x], sizeof(t));
+				memcpy(&list->entry[x], &list->entry[y], sizeof(t));
+				memcpy(&list->entry[y], &t, sizeof(t));
+                        }
+                }
+        }
+
+	return (GP_OK);
+}
+
+int gp_list_append(CameraList *list, char *name, CameraListType type) {
 
 	strcpy(list->entry[list->count].name, name);
-	list->entry[list->count].is_folder = is_folder;
+	list->entry[list->count].type = type;
 
 	list->count += 1;
 
 	return (GP_OK);
 }
 
-CameraFolderListEntry *gp_camera_folder_list_entry(CameraFolderList *list, int entrynum) {
+int gp_list_count(CameraList *list) {
+
+	return (list->count);
+}
+
+CameraListEntry *gp_list_entry(CameraList *list, int entrynum) {
 
 	return (&list->entry[entrynum]);
 }
 
-
-int gp_camera_folder_set (Camera *camera, char *folder_path) {
-
-	if (camera->functions->folder_set == NULL)
-		return (GP_ERROR);
-
-	if (camera->functions->folder_set(camera, folder_path) == GP_ERROR)
-		return (GP_ERROR);
-
-	return(GP_OK);
-}
-
-int gp_camera_file_count (Camera *camera) {
-
-	if (camera->functions->file_count == NULL)
-		return (GP_ERROR);
-
-	return(camera->functions->file_count(camera));
-}
-
-int gp_camera_file_get (Camera *camera, CameraFile *file, char *filename) {
+int gp_camera_file_get (Camera *camera, CameraFile *file, 
+			char *folder, char *filename) {
 
 	if (camera->functions->file_get == NULL)
 		return (GP_ERROR);
 
 	gp_file_clean(file);
 
-	return (camera->functions->file_get(camera, file, filename));
+	return (camera->functions->file_get(camera, file, folder, filename));
 }
 
-int gp_camera_file_get_preview (Camera *camera, CameraFile *file, char *filename) {
+int gp_camera_file_get_preview (Camera *camera, CameraFile *file, 
+			char *folder, char *filename) {
 
 	if (camera->functions->file_get_preview == NULL)
 		return (GP_ERROR);
 
 	gp_file_clean(file);
 
-	return (camera->functions->file_get_preview(camera, file, filename));
+	return (camera->functions->file_get_preview(camera, file, folder, filename));
 }
 
-int gp_camera_file_put (Camera *camera, CameraFile *file) {
+int gp_camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
 	if (camera->functions->file_put == NULL)
 		return (GP_ERROR);
 
-	return (camera->functions->file_put(camera, file));
+	return (camera->functions->file_put(camera, file, folder));
 }
 
-int gp_camera_file_delete (Camera *camera, char *filename) {
+int gp_camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 	if (camera->functions->file_delete == NULL)
 		return (GP_ERROR);
-	return (camera->functions->file_delete(camera, filename));
+	return (camera->functions->file_delete(camera, folder, filename));
 }
 
 int gp_camera_config_get (Camera *camera, CameraWidget *window) {
