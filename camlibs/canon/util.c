@@ -149,15 +149,6 @@ const char *filename2mimetype(const char *filename)
 	return GP_MIME_UNKNOWN;
 }
 
-int
-comp_dir (const void *a, const void *b)
-{
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "comp_dir()");
-
-	return strcmp (((const struct canon_dir *) a)->name,
-		       ((const struct canon_dir *) b)->name);
-}
-
 
 /****************************************************************************
  *

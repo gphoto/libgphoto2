@@ -10,12 +10,8 @@
 
 #include <gphoto2-endian.h>
 
-#ifndef MAX
-# define MAX(a, b) ((a) > (b) ? (a) : (b))
-#endif
-#ifndef MIN
-# define MIN(a, b) ((a) < (b) ? (a) : (b))
-#endif
+#define TRUE 1
+#define FALSE 0
 
 /****************************************************************************
  *
@@ -32,8 +28,6 @@ int is_jpeg (const char *name);
 int is_crw (const char *name);
 
 const char *filename2mimetype(const char *filename);
-
-int comp_dir (const void *a, const void *b);
 
 #endif /* _CANON_UTIL_H */
 

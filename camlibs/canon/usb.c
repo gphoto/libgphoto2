@@ -209,7 +209,7 @@ canon_usb_init (Camera *camera)
 	/* Get the current settings */
 	gp_port_get_settings (camera->port, &settings);
 
-	/* Use the defaults the core parsed */
+	/* Use the default settings the core parsed */
 
 	/* Set the new settings */
 	res = gp_port_set_settings (camera->port, settings);

@@ -595,7 +595,7 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
 		if (type == PKT_MSG)
 			break;
 		/* uploading is special */
-		/*if (type == PKT_ACK && mtype == 0x3 && dir == 0x21) break; */
+/*              if (type == PKT_ACK && mtype == 0x3 && dir == 0x21) break; */
 		if (type == PKT_EOT) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "Old EOT received sending corresponding ACK\n");
@@ -609,12 +609,12 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
 		length = frag[MSG_LEN_LSB] | (frag[MSG_LEN_MSB] << 8);
 		/* while uploading we expect 2 ACKs and a message 0x3 0x21
 		 * not always in the same order */
-		/*
+/*
 		if (type == PKT_ACK && mtype == 0x3 && dir == 0x21) {
 			gp_debug_printf(GP_DEBUG_LOW,"canon","ignoring ACK received while waiting for MSG\n");
 			return frag;
-		}
-		*/
+		} 
+*/
 		if (len < MSG_HDR_LEN || frag[MSG_02] != 2) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "ERROR: message format error\n");
@@ -1270,10 +1270,9 @@ canon_serial_ready (Camera *camera)
 			break;
 	}
 
-	/*  5 seconds  delay should  be enough for   big flash cards.   By
+	/* 5 seconds  delay should  be enough for   big flash cards.   By
 	 * experience, one or two seconds is too  little, as a large flash
-	 * card needs more access time.
-	 */
+	 * card needs more access time. */
 	serial_set_timeout (camera->port, 5000);
 	(void) canon_serial_recv_packet (camera, &type, &seq, NULL);
 	if (type != PKT_EOT || seq) {
@@ -1344,6 +1343,88 @@ canon_serial_ready (Camera *camera)
 	canon_int_identify_camera (camera);
 	canon_int_get_time (camera);
 
+	return GP_OK;
+}
+
+/**
+ * canon_serial_get_thumbnail:
+ *
+ * @camera: camera to work on
+ * @name: file name (complete canon path) of file to get thumbnail for
+ * @data: pointer to data pointer
+ * @length: pointer to data length
+ * @Returns: GP_ERROR code
+ *
+ * This is just the serial specific part extracted from the older
+ * canon_get_thumbnail() routine. 
+ **/
+int 
+canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length)
+{
+	unsigned int expect = 0, size, payload_length, total_file_size;
+	unsigned int total = 0;
+	unsigned char *msg;
+
+	CAM_CHECK_PARAM_NULL(length);
+	CAM_CHECK_PARAM_NULL(data);
+	*length = 0;
+	*data = NULL;
+
+	if (camera->pl->receive_error == FATAL_ERROR) {
+		gp_camera_set_error (camera, "ERROR: can't continue a fatal "
+				     "error condition detected");
+		return GP_ERROR;
+	}
+
+	payload_length = strlen (name) + 1;
+	msg = canon_serial_dialogue (camera, 0x1, 0x11, &total_file_size,
+				     "\x01\x00\x00\x00\x00", 5,
+				     &payload_length, 1, "\x00", 2,
+				     name, strlen (name) + 1, NULL);
+	if (!msg) {
+		canon_serial_error_type (camera);
+		return GP_ERROR;
+	}
+
+	
+	total = le32atoh (msg + 4);
+	if (total > 2000000) {	/* 2 MB thumbnails ? unlikely ... */
+		gp_camera_set_error (camera, "ERROR: %d is too big", total);
+		return GP_ERROR;
+	}
+	*data = malloc (total);
+	if (!*data) {
+		perror ("malloc");
+		return GP_ERROR;
+	}
+	*length = total;
+
+	while (msg) {
+		if (total_file_size < 20 || le32atoh (msg)) {
+			return GP_ERROR;
+		}
+		size = le32atoh (msg + 12);
+		if (le32atoh (msg + 8) != expect || expect + size > total
+		    || size > total_file_size - 20) {
+			GP_DEBUG ("ERROR: doesn't fit");
+			return GP_ERROR;
+		}
+		memcpy (*data + expect, msg + 20, size);
+		expect += size;
+		gp_camera_progress (camera,
+				    total ? (expect / (float) total) : 1.);
+		if ((expect == total) != le32atoh (msg + 16)) {
+			GP_DEBUG ("ERROR: end mark != end of data");
+			return GP_ERROR;
+		}
+		if (expect == total) {
+			/* We finished receiving the file. Parse the header and
+			   return just the thumbnail */
+			break;
+		}
+		msg = canon_serial_recv_msg (camera, 0x1, 0x21,
+					     &total_file_size);
+	}
 	return GP_OK;
 }
 

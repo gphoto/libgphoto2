@@ -31,7 +31,7 @@
 
 #define CAMERA_MASK_BATTERY  32
 
-
+#ifdef OBSOLETE
 struct canon_dir {
   const char *name; /* NULL if at end */
   unsigned int size;
@@ -40,6 +40,7 @@ struct canon_dir {
   int is_file;
   void *user;	/* user-specific data */
 };
+#endif
 
 
 /**
@@ -64,9 +65,15 @@ typedef enum {
 	CANON_PS_PRO90_IS
 } canonCamModel;
 
-#define CHECK_PARAM_NULL(param) \
+#define CAM_CHECK_PARAM_NULL(param) \
 	if (param == NULL) { \
 		gp_camera_set_error (camera, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
+		return GP_ERROR_BAD_PARAMETERS; \
+	}
+
+#define CHECK_PARAM_NULL(param) \
+	if (param == NULL) { \
+		GP_LOG (GP_LOG_ERROR, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
 		return GP_ERROR_BAD_PARAMETERS; \
 	}
 
@@ -101,14 +108,21 @@ struct _CameraPrivateLibrary
 	unsigned char seq_tx;
 	unsigned char seq_rx;
 
+	/* driver settings
+	 * leave these as int, as gp_widget_get_value sets them as int!
+	 */
+	int list_all_files; /* whether to list all files, not just know types */
+
+	char *cached_drive;	/* usually something like C: */
+	int cached_ready;       /* whether the camera is ready to rock */
+
 /*
- * Directory access may be rather expensive, so we cache some information.
- * The first variable in each block indicates whether the block is valid.
+ * Directory access may be rather expensive, so we cached some information.
+ * This is now done by libgphoto2, so we are continuously removing this stuff.
+ * So the following variables are OBSOLETE.
  */
 
-	int cached_ready;
 	int cached_disk;
-	char *cached_drive; /* usually something like C: */
 	int cached_capacity;
 	int cached_available;
 	int cached_dir;
@@ -125,6 +139,15 @@ struct _CameraPrivateLibrary
  */
 #define CANON_MINIMUM_DIRENT_SIZE	11
 
+/* offsets of fields of direntry in bytes */
+#define CANON_DIRENT_ATTRS 0
+#define CANON_DIRENT_SIZE  2
+#define CANON_DIRENT_TIME  4
+#define CANON_DIRENT_NAME 10
+
+/* what to list in canon_int_list_directory */
+#define CANON_LIST_FILES (1 << 1)
+#define CANON_LIST_FOLDERS (1 << 2)
 
 #define DIR_CREATE 0
 #define DIR_REMOVE 1
@@ -173,10 +196,10 @@ int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,
 /*
  *
  */
-int canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const char *path);
+int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, const int flags, GPContext *context);
 void canon_int_free_dir(Camera *camera, struct canon_dir *list);
 int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
-unsigned char *canon_int_get_thumbnail(Camera *camera, const char *name,int *length);
+int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, int *length);
 int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath);
 int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs);
 int canon_int_delete_file(Camera *camera, const char *name, const char *dir);
@@ -191,6 +214,8 @@ int canon_int_set_owner_name(Camera *camera, const char *name);
 /* path conversion - needs drive letter, and can therefor not be moved to util.c */
 const char *canon2gphotopath(Camera *camera, const char *path);
 const char *gphoto2canonpath(Camera *camera, const char *path);
+
+const char *canon_int_filename2thumbname (Camera *camera, const char *filename);
 
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"
