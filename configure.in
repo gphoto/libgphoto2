@@ -457,7 +457,7 @@ if $try_readline; then
 		    RL_LIBS="-lreadline -lncurses"
 		    RL_CFLAGS=""
 		    AC_DEFINE(HAVE_RL,,[whether we use readline])
-		], [rl_msg="no (couldn't link against it or version too old"])
+		], [rl_msg="no (couldn't link against it or version too old)"])
 		LDFLAGS="$LDFLAGS_save"
 	    ])
 	])
