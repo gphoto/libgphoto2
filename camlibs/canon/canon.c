@@ -76,6 +76,7 @@ static struct {
 	{ "Canon IXY DIGITAL", 		0x04A9, 0x3046, 0 },
 	{ "Canon Digital IXUS", 	0x04A9, 0x3047, 0 },
 	{ "Canon PowerShot G1", 	0x04A9, 0x3048, 1 },
+	{ "Canon PowerShot G2", 	0x04A9, 0x3055, 0 },
 	{ "Canon PowerShot Pro90 IS", 	0x04A9, 0x3049, 1 },
 	{ "Canon IXY DIGITAL 300", 	0x04A9, 0x304B, 0 },
 	{ "Canon PowerShot S300", 	0x04A9, 0x304C, 0 },
@@ -242,6 +243,8 @@ char *camera_model_string(Camera *camera)
 		return "Powershot S20";
 	 case CANON_PS_G1:
 		return "Powershot G1";
+	 case CANON_PS_G2:
+		return "Powershot G2";
 	 case CANON_PS_S100:
 		return "Powershot S100 / Digital IXUS / IXY DIGITAL";
          case CANON_PS_S300:
@@ -843,6 +846,7 @@ int camera_summary(Camera *camera, CameraText *summary)
 	 case CANON_PS_S10:     model = "Canon Powershot S10"; break;
 	 case CANON_PS_S20:     model = "Canon Powershot S20"; break;
 	 case CANON_PS_G1:      model = "Canon Powershot G1"; break;
+	 case CANON_PS_G2:      model = "Canon Powershot G2"; break;
 	 case CANON_PS_S100:    model = "Canon Powershot S100 / Digital IXUS / IXY DIGITAL"; break;
          case CANON_PS_S300:     model = "Canon Powershot S300 / Digital IXUS 300 / IXY DIGITAL 300"; break;
          case CANON_PS_A10:      model = "Canon Powershot A10"; break;
