@@ -204,8 +204,13 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
 	CHECK_STOP (camera, sierra_set_int_register (camera, 4, n + 1));
 
-	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE |
+			    GP_FILE_INFO_NAME;
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+
+	/* Name of image */
+	strncpy (info->file.name, filename, sizeof (info->file.name) - 1);
+	info->file.name[sizeof (info->file.name) - 1] = '\0';
 
 	/* Get the size of the current image */
 	CHECK_STOP (camera, sierra_get_int_register (camera, 12, &l));
