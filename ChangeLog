@@ -1,3 +1,10 @@
+2002-05-18  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+	
+	* frontends/command-line/gphoto2.xml: moved man pages from
+		frontends/command-line/ to doc/
+	* doc/gphoto2.xml: added gphoto2(3) man page
+	* doc/gphoto2.xml: added examples to gphoto2(1)
+
 2002-05-17  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* INSTALL: added CDPATH warning, "make rpm" works again
