@@ -403,7 +403,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 {
 	int i, result, generic;
 	regex_t pattern;
-#if HAVE_GNU_REGEX
+#ifdef HAVE_GNU_REGEX
 	const char *rv;
 #else
 	regmatch_t match;
@@ -432,7 +432,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 			"Trying '%s'...", list->info[i].path);
 
 		/* Compile the pattern */
-#if HAVE_GNU_REGEX
+#ifdef HAVE_GNU_REGEX
 		memset (&pattern, 0, sizeof (pattern));
 		rv = re_compile_pattern (list->info[i].path,
 					 strlen (list->info[i].path), &pattern);
@@ -456,7 +456,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 #endif
 
 		/* Try to match */
-#if HAVE_GNU_REGEX
+#ifdef HAVE_GNU_REGEX
 		result = re_match (&pattern, path, strlen (path), 0, NULL);
 		regfree (&pattern);
 		if (result < 0) {

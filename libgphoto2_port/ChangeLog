@@ -1,5 +1,11 @@
 2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
 
+	Patch by Patrick Mansfield <patman@aracnet.com>:
+
+	* libgphoto2_port/gphoto2-port-info-list.c: #ifdef instead of #if
+
+2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
+
 	* m4/documentation.m4: Fix this ugly output all over the place.
 
 2002-06-06  Lutz Müller <lutz@users.sourceforge.net>
