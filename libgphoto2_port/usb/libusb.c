@@ -416,7 +416,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 					port->settings.usb.inep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_BULK);
 					port->settings.usb.outep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_BULK);
-					port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_INTERRUPT);
+					port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_INTERRUPT);
 					gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
 						"Detected defaults: config %d, "
 						"interface %d, altsetting %d, "
@@ -525,7 +525,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 
 				port->settings.usb.inep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_BULK);
 				port->settings.usb.outep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_BULK);
-				port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_INTERRUPT);
+				port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_INTERRUPT);
 				gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
 					"Detected defaults: config %d, "
 					"interface %d, altsetting %d, "

@@ -3,6 +3,7 @@
 	* usb/libusb.c: gp_port_usb_find_bulk no exists, replaced with _ep.
 	                Also look for intep in class based matching.
 			Dump intep in debugoutput.
+			interrupt endpoints are *input* endpoints, not output.
 
 2002-03-19  Marcus Meissner <marcus@jet.franken.de>
 	
