@@ -631,16 +631,22 @@ typedef struct _PTPCANONFolderEntry PTPCANONFolderEntry;
 #define PTP_DPC_NIKON_MenusAndPlayback			0xD088
 #define PTP_DPC_NIKON_F6ButtonsAndDials			0xD089
 #define PTP_DPC_NIKON_F7NoCFCard			0xD08a
-#define PTP_DPC_NIKON_ImageComment			0xD090
+#define PTP_DPC_NIKON_ImageCommentString		0xD090
 #define PTP_DPC_NIKON_AutoImageRotation			0xD092
 #define PTP_DPC_NIKON_ExposureBracketingOnOff		0xD0c0
 #define PTP_DPC_NIKON_ExposureBracketingIntervalDist	0xD0c1
 #define PTP_DPC_NIKON_ExposureBracketingNumBracketPlace	0xD0c2
+#define PTP_DPC_NIKON_LensID				0xD0e0
+#define PTP_DPC_NIKON_FocalLengthMin			0xD0e3
+#define PTP_DPC_NIKON_FocalLengthMax			0xD0e4
+#define PTP_DPC_NIKON_MaxApAtMinFocalLength		0xD0e5
+#define PTP_DPC_NIKON_MaxApAtMaxFocalLength		0xD0e6
 #define PTP_DPC_NIKON_AutofocusLCDTopMode2		0xD107
 #define PTP_DPC_NIKON_AutofocusLCDTopMode3AndMode4	0xD108
 #define PTP_DPC_NIKON_LightMeter			0xD10a
 #define PTP_DPC_NIKON_ExposureAperatureLock(ReadOnly)	0xD111
 #define PTP_DPC_NIKON_MaximumShots			0xD103
+#define PTP_DPC_NIKON_FlashExposureCompensation		0xD126
 #define PTP_DPC_NIKON_Beep				0xD160
 #define PTP_DPC_NIKON_AFC				0xD161
 #define PTP_DPC_NIKON_AFLampOff				0xD163
@@ -652,16 +658,9 @@ typedef struct _PTPCANONFolderEntry PTPCANONFolderEntry;
 #define PTP_DPC_NIKON_FlashPower			0xD16d
 #define PTP_DPC_NIKON_FlashSignOff			0xD169
 #define PTP_DPC_NIKON_RemoteTimeout			0xD16B
-#define PTP_DPC_NIKON_LowLight				0xD1B0
-#define PTP_DPC_NIKON_ImageCommentString		0xD090
-#define PTP_DPC_NIKON_FlashOpen				0xD1C0
-#define PTP_DPC_NIKON_FlashCharged			0xD1C1
-#define PTP_DPC_NIKON_LensID				0xD0E0
-#define PTP_DPC_NIKON_FocalLengthMin			0xD0E3
-#define PTP_DPC_NIKON_FocalLengthMax			0xD0E4
-#define PTP_DPC_NIKON_MaxApAtMinFocalLength		0xD0E5
-#define PTP_DPC_NIKON_MaxApAtMaxFocalLength		0xD0E6
-#define PTP_DPC_NIKON_FlashExposureCompensation		0xD126
+#define PTP_DPC_NIKON_LowLight				0xD1b0
+#define PTP_DPC_NIKON_FlashOpen				0xD1c0
+#define PTP_DPC_NIKON_FlashCharged			0xD1c1
 
 /* Device Property Form Flag */
 

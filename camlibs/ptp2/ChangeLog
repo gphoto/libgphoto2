@@ -1,3 +1,9 @@
+2005-01-25  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c, ptp.h, library.c: 
+	Vegard Engen <vegard@engen.priv.no>
+	Clean up of last Nikon PTP patch.
+
 2005-01-24  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c, ptp.h, library.c:
