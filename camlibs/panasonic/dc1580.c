@@ -411,12 +411,12 @@ int camera_abilities (CameraAbilitiesList *list) {
 			"Panasonic DC1580",
 			"Nikon CoolPix 600",
 			NULL };		
-	int 	i;
+	int 	i = 0;
 
 	while (models[i]) {
 		if (!(a = gp_abilities_new())) 
 			return GP_ERROR;
-		strcpy(a->model, models[1]);
+		strcpy(a->model, models[i]);
 		a->port		= GP_PORT_SERIAL;
 		a->speed[0] 	= 9600;
 		a->speed[1] 	= 19200;
