@@ -1211,6 +1211,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	}
 
 	/* We are done. */
+	gp_widget_free (window);
 	return (GP_OK);
 }
 
@@ -1224,10 +1225,14 @@ int camera_config (Camera *camera)
 
 	        /* Prompt the user with the config window. */
 	        if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
+			gp_widget_free (window);
 	                return (GP_OK);
 	        }
 		return (camera_config_set (camera, window));
-	} else return (GP_ERROR);
+	} else {
+		if (window) gp_widget_free (window);
+		return (GP_ERROR);
+	}
 }
 
 
