@@ -1,3 +1,9 @@
+2002-03-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Andrea Suatoni <a.suatoni@itaca.it>:
+
+	* pdc640.c: IRIX fixes.
+
 2002-03-19  Greg Ingram <ingram@symsys.com>
 
 	* pdc700.c: Added pdc700_set_date() which appears to work.  Is the

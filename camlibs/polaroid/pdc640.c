@@ -134,21 +134,14 @@ static int
 pdc640_transmit_pic (GPPort *port, char cmd, int width, int thumbnail,
 		     char *buf, int buf_size)
 {
-	char cmd1[] = {0x61, cmd};
+	char cmd1[] = {0x61, 0x00};
 	char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x00};
 	int i, packet_size, result, size, ofs;
 	char *data;
 
 	/* First send the command ... */
+	cmd1[1] = cmd;
 	CHECK_RESULT (pdc640_transmit (port, cmd1, 2, NULL, 0));
-
-/*
-	if (thumbnail) {
-		cmd2[4] = 0x01;
-	} else {
-		cmd2[4] = 0x06;
-	}
-*/
 
 	/* Set how many scanlines worth of data to get at once */
 	cmd2[4] = 0x06;
@@ -191,10 +184,11 @@ pdc640_transmit_pic (GPPort *port, char cmd, int width, int thumbnail,
 static int
 pdc640_transmit_packet (GPPort *port, char cmd, char *buf, int buf_size)
 {
-	char cmd1[] = {0x61, cmd};
+	char cmd1[] = {0x61, 0x00};
 	char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x01};
 
 	/* Send the command and get the packet */
+	cmd1[1] = cmd;
 	CHECK_RESULT (pdc640_transmit (port, cmd1, 2, NULL, 0));
 	CHECK_RESULT (pdc640_transmit (port, cmd2, 5, buf, buf_size));
 
@@ -273,9 +267,10 @@ pdc640_caminfo (GPPort *port, int *numpic)
 static int
 pdc640_setpic (GPPort *port, char n)
 {
-	char cmd[2] = {0xf6, n};
+	char cmd[2] = {0xf6, 0x00};
 	char buf[8];
 
+	cmd[1] = n;
 	CHECK_RESULT (pdc640_transmit (port, cmd, 2, buf, 7));
 
 	return (GP_OK);
