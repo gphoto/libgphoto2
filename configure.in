@@ -179,6 +179,7 @@ camlibs/minolta/Makefile
 camlibs/minolta/dimagev/Makefile
 camlibs/panasonic/Makefile
 camlibs/panasonic/l859/Makefile
+camlibs/panasonic/coolshot/Makefile
 camlibs/polaroid/Makefile
 camlibs/samsung/Makefile
 camlibs/sierra/Makefile

@@ -1,4 +1,4 @@
-SUBDIRS = l859
+SUBDIRS = coolshot l859
 
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES =\

@@ -2,6 +2,19 @@
 
 	* frontends/command-line/options.c: #include <config.h>
 
+2001-09-01  Chris Pinkham <cpinkham@infi.net>
+
+	* configure.in: added line to generate
+	camlibs/panasonic/coolshot/Makefile
+	* MAINTAINERS: added line for camlibs/panasonic/coolshot driver
+	* camlibs/panasonic/Makefile.am: added coolshot to SUBDIRS declaration
+	* camlibs/panasonic/coolshot/Makefile.am
+	* camlibs/panasonic/coolshot/README
+	* camlibs/panasonic/coolshot/TODO
+	* camlibs/panasonic/coolshot/coolshot.[c,h]
+	* camlibs/panasonic/coolshot/library.[c,h]:added files to support
+	Panasonic Coolshot KXL-600A & KXL-601A digital cameras.
+	
 2001-09-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/casio: New
