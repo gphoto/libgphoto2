@@ -1,3 +1,8 @@
+2001-11-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/polaroid/pdc700.c: PPM-thumbnails are 9600 bytes, not
+	  4800. Sorry, guys. Should work again.
+
 2001-11-10  Greg Ingram <ingram@symsys.com>
 
 	* camlibs/polaroid/pdc700.c: Report

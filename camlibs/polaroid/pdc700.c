@@ -683,7 +683,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			     data);
 			CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
-		} else if (size == 4800) {
+		} else if (size == 9600) {
 			const char header[] = "P6\n80 60\n255\n";
 			unsigned char *ppm;
 			unsigned int ppm_size;
