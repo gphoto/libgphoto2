@@ -75,6 +75,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 
 	int i=0;
 	DirectoryStruct *d;
+	char buf[256];
 
 	/* First, set up all the function pointers */
 	camera->functions->id 		= camera_id;
@@ -106,6 +107,9 @@ int camera_init (Camera *camera, CameraInit *init) {
 	if (strlen(d->directory)==0) {
 		strcpy(d->directory, "/");
 	}
+
+	if (gp_setting_get("directory", "hidden", buf) == GP_ERROR)
+		gp_setting_set("directory", "hidden", "1");
 
 	return (GP_OK);
 }
@@ -152,8 +156,11 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 	GPIO_DIR d;
 	GPIO_DIRENT de;
 	char buf[1024], f[1024];
-	int count=0;
+	char *dirname;
+	int count=0, view_hidden=1;
 
+	if (gp_setting_get("directory", "hidden", buf)==GP_OK)
+		view_hidden = atoi(buf);
 	if ((d = GPIO_OPENDIR(folder))==NULL)
 		return (GP_ERROR);
 
@@ -167,8 +174,14 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 		if ((strcmp(GPIO_FILENAME(de), "." )!=0) &&
 		    (strcmp(GPIO_FILENAME(de), "..")!=0)) {
 			sprintf(buf, "%s%s", f, GPIO_FILENAME(de));
-			if (GPIO_IS_DIR(buf))
+			dirname = GPIO_FILENAME(de);
+			if (GPIO_IS_DIR(buf)) {
+			   if (dirname[0] != '.')
 				gp_list_append(list, GPIO_FILENAME(de), GP_LIST_FOLDER);
+			     else
+			       if (view_hidden)
+				gp_list_append(list, GPIO_FILENAME(de), GP_LIST_FOLDER);
+			}
 		}
 	}
 
@@ -260,9 +273,19 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 int camera_config_get (Camera *camera, CameraWidget *window) {
 
+	CameraWidget *t;
+	char buf[256];
+
+	t = gp_widget_new(GP_WIDGET_TOGGLE, "View hidden (dot) directories");
+	gp_setting_get("directory", "hidden", buf);
+	gp_widget_value_set(t, buf);
+	gp_widget_append(window, t);
+
+#if 0
+/* use this as an example */
 	CameraWidget *t, *section;
 
-	// printf("Building configuration window");
+	printf("Building configuration window");
 
 	/* Create a new section for "Quality" */
 	section = gp_widget_new(GP_WIDGET_SECTION, "Quality");
@@ -302,6 +325,7 @@ int camera_config_get (Camera *camera, CameraWidget *window) {
 		gp_widget_choice_add(t, "Normal");
 		gp_widget_choice_add(t, "Macro");
 		gp_widget_value_set(t, "Macro");
+#endif
 
 	return (GP_OK);
 }
@@ -311,8 +335,11 @@ int camera_config_set (Camera *camera, CameraSetting *setting, int count) {
 	int x;
 
 	printf("Directory library got the following config values:\n");
-	for (x=0; x<count; x++)
+	for (x=0; x<count; x++) {
 		printf("\"%s\" = \"%s\"\n", setting[x].name, setting[x].value);
+		if (strcmp(setting[x].name, "View hidden (dot) directories")==0)
+			gp_setting_set("directory", "hidden", setting[x].value);
+	}
 
 	return (GP_OK);
 }
