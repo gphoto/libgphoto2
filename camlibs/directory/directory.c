@@ -358,8 +358,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (result);
 
 #ifdef DEBUG
-	for (i = 0; i < 1000; i++) {
-		result = gp_file_progress (file, (float) i / 1000.);
+	for (i = 0; i < 500; i++) {
+		result = gp_file_progress (file, (float) i / 500.);
 		if (result < 0)
 			return (result);
 		usleep (10);
@@ -487,6 +487,10 @@ put_file_func (CameraFilesystem *fs, const char *folder,
 {
 	char path[2048];
 	const char *name;
+	int result;
+#ifdef DEBUG
+	unsigned int i;
+#endif
 
 	gp_file_get_name (file, &name);
 
@@ -495,7 +499,20 @@ put_file_func (CameraFilesystem *fs, const char *folder,
 		strncat (path, "/", sizeof (path));
 	strncat (path, name, sizeof (path));
 
-	return (gp_file_save (file, path));
+	result = gp_file_save (file, path);
+	if (result < 0)
+		return (result);
+
+#ifdef DEBUG
+	for (i = 0; i < 500; i++) {
+		result = gp_file_progress (file, (float) i / 500.);
+		if (result < 0)
+			return (result);
+		usleep (10);
+	}
+#endif
+
+	return (GP_OK);
 }
 
 int
