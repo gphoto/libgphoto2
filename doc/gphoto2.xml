@@ -504,9 +504,9 @@ Saving file as MVI_5418.AVI                                                     
               Load your <acronym>USB</acronym> driver and mount the <acronym>USB</acronym> device filesystem,
               i.e. e.g.
               <screen>
-<prompt># </prompt><command>modprobe</command> <parameter>usb-uhci</parameter>
-<prompt># </prompt><command>modprobe</command> <parameter>usb-ohci</parameter>
-<prompt># </prompt><command>mount <parameter>-t usbdevfs</parameter> <parameter>/proc/bus/usb</parameter></command>
+<prompt>[root@home ~]# </prompt><command>modprobe</command> <parameter>usb-uhci</parameter>
+<prompt>[root@home ~]# </prompt><command>modprobe</command> <parameter>usb-ohci</parameter>
+<prompt>[root@home ~]# </prompt><command>mount <parameter>-t usbdevfs</parameter> <parameter>/proc/bus/usb</parameter></command>
               </screen>
               Modern distributions like Redhat 7.2 handle this
               automatically if you have your <acronym>USB</acronym> hardware enabled.
@@ -519,7 +519,7 @@ Saving file as MVI_5418.AVI                                                     
             <para>
               Add the output of 
               <screen>
-<prompt># </prompt><command>gphoto2 <parameter>--print-usb-usermap</parameter></command>
+<prompt>[root@home ~]# </prompt><command>gphoto2 <parameter>--print-usb-usermap</parameter></command>
               </screen>
               to the file
               <filename>/etc/hotplug/usb.usermap</filename> after
@@ -540,9 +540,9 @@ Saving file as MVI_5418.AVI                                                     
 		update the
 		<filename>/etc/hotplug/usb.usermap</filename> file:
 		<screen>
-<prompt># </prompt><command>mkdir <parameter>/usr/lib/hotplug/usbcam</parameter></command>
-<prompt># </prompt><command>gphoto2 <parameter>--print-usb-usermap</parameter> > <filename>/usr/lib/hotplug/usbcam/usb.usermap</filename></command>
-<prompt># </prompt><command>update-usb.usermap</command>
+<prompt>[root@home ~]# </prompt><command>mkdir <parameter>/usr/lib/hotplug/usbcam</parameter></command>
+<prompt>[root@home ~]# </prompt><command>gphoto2 <parameter>--print-usb-usermap</parameter> > <filename>/usr/lib/hotplug/usbcam/usb.usermap</filename></command>
+<prompt>[root@home ~]# </prompt><command>update-usb.usermap</command>
 		</screen>
 	      </para>
 	    </formalpara>
@@ -565,7 +565,8 @@ Saving file as MVI_5418.AVI                                                     
 	    <para>
               Example scripts are found in 
               <filename class="directory">packaging/linux-hotplug/</filename> 
-              in the source tree and in the doc dir under
+              in the source tree and in the doc dir (usually
+	      /usr/share/doc/gphoto2/ or something similar) under 
               <filename class="directory">linux-hotplug/</filename>
               after installation.
 	    </para>
@@ -639,7 +640,7 @@ Saving file as MVI_5418.AVI                                                     
               executable:
             </para>
 	    <screen>
-<prompt># </prompt><command>chmod <parameter>+x</parameter> <filename>/etc/hotplug/usb/usbcam</filename></command>
+<prompt>[root@home ~]# </prompt><command>chmod <parameter>+x</parameter> <filename>/etc/hotplug/usb/usbcam</filename></command>
 	    </screen>
           </listitem>
 
