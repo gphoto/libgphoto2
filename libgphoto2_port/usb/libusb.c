@@ -408,17 +408,22 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 				/* Use the first config, interface and altsetting we find */
 				gp_port_usb_find_first_altsetting(dev, &config, &interface, &altsetting);
-				if (dev->descriptor.bDeviceClass == USB_CLASS_MASS_STORAGE) {
-					gp_port_set_error (port, 
-						_("USB device (vendor 0x%x, product 0x%x) is a mass"
-						  " storage device, and cannot function with gphoto2."
-						  " Reference: http://www.linux-usb.org/USB-guide/x498.html"),
-						idvendor, idproduct);
-					return GP_ERROR_IO_USB_FIND;
-				}
 
 				/* Set the defaults */
 				if (dev->config) {
+					gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+						"class 0x%x, subclass 0x%x",
+						dev->config[config].interface[interface].altsetting[altsetting].bInterfaceClass,
+						dev->config[config].interface[interface].altsetting[altsetting].bInterfaceSubClass);
+					if (dev->config[config].interface[interface].altsetting[altsetting].bInterfaceClass
+					    == USB_CLASS_MASS_STORAGE) {
+						gp_port_set_error (port, 
+							_("USB device (vendor 0x%x, product 0x%x) is a mass"
+							  " storage device, and cannot function with gphoto2."
+							  " Reference: http://www.linux-usb.org/USB-guide/x498.html"),
+							idvendor, idproduct);
+						return GP_ERROR_IO_USB_FIND;
+					}
 					port->settings.usb.config = dev->config[config].bConfigurationValue;
 					port->settings.usb.interface = dev->config[config].interface[interface].altsetting[altsetting].bInterfaceNumber;
 					port->settings.usb.altsetting = dev->config[config].interface[interface].altsetting[altsetting].bAlternateSetting;

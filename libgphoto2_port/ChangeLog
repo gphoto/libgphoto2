@@ -1,5 +1,9 @@
 2003-08-10  Patrick Mansfield <patmans@users.sourceforge.net>
 
+	* usb/libusb.c: Fix the check for mass storage devices.
+
+2003-08-10  Patrick Mansfield <patmans@users.sourceforge.net>
+
 	* usb/libusb.c: Check for and do not allow USB mass
 	  storage devices.
 
