@@ -1,4 +1,5 @@
 camlibs/agfa-cl20/agfa_cl20.c
+camlibs/aox/library.c
 camlibs/barbie/barbie.c
 camlibs/canon/canon.c
 camlibs/canon/canon.h
@@ -9,6 +10,7 @@ camlibs/canon/usb.c
 camlibs/digita/digita.c
 camlibs/dimera/dimera3500.c
 camlibs/directory/directory.c
+camlibs/enigma13/enigma13.c
 camlibs/fuji/fuji.c
 camlibs/fuji/library.c
 camlibs/gsmart300/library.c
@@ -29,6 +31,7 @@ camlibs/konica/library.c
 camlibs/konica/lowlevel.c
 camlibs/konica/qm150.c
 camlibs/largan/lmini/largan.c
+camlibs/mars/library.c
 camlibs/minolta/dimagev/dimagev.c
 camlibs/mustek/core.c
 camlibs/mustek/mdc800.c
@@ -59,14 +62,17 @@ camlibs/sipix/blink.c
 camlibs/sipix/web2.c
 camlibs/smal/smal.c
 camlibs/smal/ultrapocket.c
+camlibs/sonydscf1/dsc_f1.c
 camlibs/sonydscf1/sonydscf1.c
 camlibs/sonydscf55/camera.c
 camlibs/soundvision/soundvision.c
 camlibs/spca50x/library.c
+camlibs/sq905/library.c
 camlibs/stv0674/stv0674.c
 camlibs/stv0680/library.c
 camlibs/stv0680/stv0680.c
 camlibs/sx330z/library.c
+camlibs/toshiba/pdrm11/library.c
 libgphoto2/gphoto2-abilities-list.c
 libgphoto2/gphoto2-camera.c
 libgphoto2/gphoto2-filesys.c
