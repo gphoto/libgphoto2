@@ -11,7 +11,7 @@
 
 
 #define USB_BULK_READ_SIZE 0x1400
-//#define USB_BULK_WRITE_SIZE 0xC000
+/* #define USB_BULK_WRITE_SIZE 0xC000 */
 #define USB_BULK_WRITE_SIZE 0x1400
 
 /**
