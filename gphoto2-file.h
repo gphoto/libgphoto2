@@ -97,7 +97,7 @@ int gp_file_get_data_and_size (CameraFile*, const char **data,
  * step forward and write to gphoto-devel@gphoto.org.
  */
 typedef enum {
-	GP_FILE_CONVERSION_METHOD_CHUCK,
+	GP_FILE_CONVERSION_METHOD_CHUCK
 } CameraFileConversionMethod;
 
 int gp_file_set_color_table  (CameraFile *file,
