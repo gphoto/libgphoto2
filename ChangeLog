@@ -1,3 +1,18 @@
+2001-11-03 Marcus Meissner <marcus@jet.franken.de>
+	
+	* camlibs/agfa/agfa.c
+	* camlibs/barbie/barbie.c
+	* camlibs/canon/psa50.c
+	* camlibs/digita/digita.c
+	* camlibs/dimera/dimera3500.c
+	* camlibs/jamcam/jamcam.c
+	* camlibs/jd11/jd11.c
+	* camlibs/panasonic/dc1000.c
+	* camlibs/panasonic/dc1580.c: 
+	  If we check for 'ENABLE_NLS', we need to include <config.h>.
+	  Fix 'redefinition of _' compile warnings due to broken copy & pasted
+	  macro.
+
 2001-11-01 Marcus Meissner <marcus@jet.franken.de>
 	
 	* camlibs/jd11:

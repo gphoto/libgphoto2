@@ -22,6 +22,8 @@
         CoolPix 600 library for gPhoto1.
 */
 
+#include <config.h>
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <sys/time.h>
@@ -37,7 +39,6 @@
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
-#    define _(String) (String)
 #    define N_(String) (String)
 #  endif
 #else

@@ -21,8 +21,13 @@
  *
  * History:
  * $Log$
+ * Revision 1.28  2001/11/03 14:30:21  marcusmeissner
+ * If we check for 'ENABLE_NLS', we need to include <config.h>.
+ * Fix 'redefinition of _' compile warnings due to broken copy & pasted macro
+ * in the camlibs.
+ *
  * Revision 1.27  2001/10/31 08:29:53  dfandrich
- * * camlibs/dimera/*.c: use renamed get/set functions, gp_camera_set_error
+ * * camlibs/dimera/ *.c: use renamed get/set functions, gp_camera_set_error
  *
  * Revision 1.26  2001/10/20 18:05:55  lutz
  * 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
@@ -260,6 +265,8 @@
  *			* Minor revision & doc Dimera_covert_raw()	  GDB	
  */
 
+#include <config.h>
+
 #include <gphoto2.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -274,7 +281,6 @@
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
-#    define _(String) (String)
 #    define N_(String) (String)
 #  endif
 #else
