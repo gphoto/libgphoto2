@@ -136,19 +136,28 @@ gp_camera_get_model (Camera *camera, const char **model)
 }
 
 static int
-gp_camera_set_port (Camera *camera, CameraPortInfo *info)
+gp_camera_unset_port (Camera *camera)
 {
 	CHECK_NULL (camera);
 
-	/*
-	 * We need to create a new port because the port could have 
-	 * changed from a SERIAL to an USB one...
-	 */
 	if (camera->port) {
 		CHECK_RESULT (gp_port_free (camera->port));
 		camera->port = NULL;
 	}
 
+	return (GP_OK);
+}
+
+static int
+gp_camera_set_port (Camera *camera, CameraPortInfo *info)
+{
+	CHECK_NULL (camera);
+
+	/*
+	 * We need to create a new port because the port could have
+	 * changed from a SERIAL to an USB one...
+	 */
+	CHECK_RESULT (gp_camera_unset_port (camera));
 	CHECK_RESULT (gp_port_new (&camera->port, info->type));
 	memcpy (camera->port_info, info, sizeof (CameraPortInfo));
 
@@ -163,6 +172,7 @@ gp_camera_set_port_path (Camera *camera, const char *port_path)
 
 	CHECK_NULL (camera && port_path);
 
+	CHECK_RESULT (gp_camera_unset_port (camera));
 	CHECK_RESULT (count = gp_port_count_get ());
 	for (x = 0; x < count; x++)
 		if ((gp_port_info_get (x, &info) == GP_OK) &&
@@ -190,6 +200,7 @@ gp_camera_set_port_name (Camera *camera, const char *port_name)
 
 	CHECK_NULL (camera && port_name);
 
+	CHECK_RESULT (gp_camera_unset_port (camera));
 	CHECK_RESULT (count = gp_port_count_get ());
 	for (x = 0; x < count; x++)
 		if ((gp_port_info_get (x, &info) == GP_OK) &&
@@ -270,8 +281,9 @@ gp_camera_free (Camera *camera)
 	CHECK_NULL (camera);
 
 	gp_camera_exit (camera);
-	gp_port_free (camera->port);
-	gp_filesystem_free (camera->fs);
+
+	CHECK_RESULT (gp_camera_unset_port (camera));
+	CHECK_RESULT (gp_filesystem_free (camera->fs));
 
         if (camera->port_info)
                 free (camera->port_info);
@@ -281,7 +293,8 @@ gp_camera_free (Camera *camera)
                 free (camera->functions);
  
 	free (camera);
-        return (GP_OK);
+
+	return (GP_OK);
 }
 
 int
@@ -298,35 +311,48 @@ gp_camera_init (Camera *camera)
 	 * If the port or the model hasn't been indicated, try to
 	 * figure it out (USB only). Beware of "Directory Browse".
 	 */
-	if (strcmp (camera->model, "Directory Browse") && 
-	    (!strcmp (camera->port_info->path, "") ||
-	     !strcmp (camera->model, ""))) {
+	if (strcmp (camera->model, "Directory Browse")) {
+		if (!camera->port || !strcmp ("", camera->model)) {
+			
+			/* Call auto-detect and choose the first camera */
+			CHECK_RESULT (gp_autodetect (&list));
+			CHECK_RESULT (gp_list_get_name  (&list, 0, &model));
+			CHECK_RESULT (gp_camera_set_model (camera, model));
+			CHECK_RESULT (gp_list_get_value (&list, 0, &port));
+			CHECK_RESULT (gp_camera_set_port_path (camera, port));
+		}
 		
-		/* Call auto-detect */
-		CHECK_RESULT (gp_autodetect (&list));
-
-		/* Retrieve the first auto-detected camera */
-		CHECK_RESULT (gp_list_get_name  (&list, 0, &model));
-		CHECK_RESULT (gp_camera_set_model (camera, model));
-		CHECK_RESULT (gp_list_get_value (&list, 0, &port));
-		CHECK_RESULT (gp_camera_set_port_path (camera, port));
-
 		/* If we don't have a port at this point, return error */
-		if (!strcmp (camera->port_info->path, ""))
+		if (!camera->port)
 			return (GP_ERROR_IO_UNKNOWN_PORT);
-	}
 
-	/* Fill in camera abilities. */
-	CHECK_RESULT (gp_camera_abilities_by_name (camera->model,
-						   camera->abilities));
+		/* Fill in camera abilities. */
+		CHECK_RESULT (gp_camera_abilities_by_name (camera->model,
+							   camera->abilities));
+
+		/* In case of USB, find the device */
+		switch (camera->port->type) {
+		case GP_PORT_USB:
+			CHECK_RESULT (gp_port_usb_find_device (camera->port,
+					camera->abilities->usb_vendor,
+					camera->abilities->usb_product));
+			break;
+		default:
+			break;
+		}
+
+	} else {
+		
+		/* Fill in camera abilities. */
+		CHECK_RESULT (gp_camera_abilities_by_name (camera->model,
+							   camera->abilities));
+	}
 
 	/* Load the library. */
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Loading library...");
 	camera->library_handle = GP_SYSTEM_DLOPEN (camera->abilities->library);
-	if (!camera->library_handle) {
-		gp_camera_free (camera);
+	if (!camera->library_handle)
 		return (GP_ERROR);
-	}
 
 	init_func = GP_SYSTEM_DLSYM (camera->library_handle, "camera_init");
 
