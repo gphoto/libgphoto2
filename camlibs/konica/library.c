@@ -556,7 +556,7 @@ camera_file_get_generic (Camera* camera, CameraFile* file, const gchar* folder, 
 	strcpy (file->type, "image/jpeg");
 	strcpy (file->name, filename);
 
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** fype: %s", file->type);
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** type: %s", file->type);
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** name: %s", file->name);
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_get_generic ***");
 	return (GP_OK);
@@ -580,12 +580,12 @@ camera_file_get_preview (Camera* camera, const gchar* folder, const gchar* filen
 gint 
 camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 {
+	gchar*		tmp;
 	gulong 		image_id; 
-	gchar		image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
 	gint		result;
 	konica_data_t*	konica_data;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** camera_file_delete ***");
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_delete ***");
         g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
         g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
         g_return_val_if_fail (filename, GP_ERROR_BAD_PARAMETERS);
@@ -596,13 +596,15 @@ camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 
 	/* Check if we can get the image id from the filename. */
 	g_return_val_if_fail (filename[0] != '?', GP_ERROR);
-	memcpy (image_id_string, filename, 6);
-	image_id = atol (image_id_string);
+	tmp = g_strndup (filename, 6);
+	image_id = atol (tmp);
+	g_free (tmp);
 	
 	result = k_erase_image (konica_data->device, konica_data->image_id_long, image_id);
 	if (result != GP_OK)
 		return (result);
 	
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_delete ***");
 	return (gp_filesystem_delete (konica_data->filesystem, folder, filename));
 }
 
@@ -713,11 +715,16 @@ camera_capture (Camera* camera, gint type, CameraFilePath* path)
 	g_free (information_buffer);
 	if (result != GP_OK) return (result);
 	
-	tmp = g_strdup_printf ("%6i.jpeg", (gint) image_id);
-	strcpy (path->name, "image.jpeg");
+	tmp = g_strdup_printf ("%06i.jpeg", (gint) image_id);
+	strcpy (path->name, tmp);
 	g_free (tmp);
 	strcpy (path->folder, "/");
 
+	if (!konica_data->filesystem_up_to_date) update_filesystem (camera);
+	gp_filesystem_append (konica_data->filesystem, path->folder, path->name);
+
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** filename: %s", path->name);
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_capture ***");
 	return (GP_OK);
 }
 
@@ -764,6 +771,8 @@ camera_file_get_info (Camera* camera, const gchar* folder, const gchar* file, Ca
 
 	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
 
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_info ***");
+
 	result = k_get_image_information (
 		konica_data->device, 
 		konica_data->image_id_long, 
@@ -777,22 +786,48 @@ camera_file_get_info (Camera* camera, const gchar* folder, const gchar* file, Ca
 
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info->preview.size = information_buffer_size;
-	strcpy (info->file.type, "image/jpeg");
+	strcpy (info->preview.type, "image/jpeg");
 
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS | GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
 	info->file.size = exif_size;
-	info->file.permissions = (gint) protected;
+	info->file.permissions = GP_FILE_PERM_READ;
+	if (!protected) info->file.permissions = GP_FILE_PERM_DELETE;
 	strcpy (info->file.type, "image/jpeg");
 	strcpy (info->file.name, file);
 
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_get_info ***");
 	return (GP_OK);
 }
 
 gint
 camera_file_set_info (Camera* camera, const gchar* folder, const gchar* file, CameraFileInfo* info)
 {
-	//FIXME: Implement
-	return (GP_ERROR);
+	konica_data_t*	konica_data;
+	gint		result;
+	gboolean	protected;
+	gulong		image_id;
+	gchar*		tmp;
+
+	konica_data = (konica_data_t*) camera->camlib_data;
+
+	if (info->file.fields & (GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME)) return (GP_ERROR_NOT_SUPPORTED);
+	if (info->preview.fields & (GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | GP_FILE_INFO_PERMISSIONS)) return (GP_ERROR_NOT_SUPPORTED);
+
+	/* Permissions? */
+	if (info->file.fields & GP_FILE_INFO_PERMISSIONS) {
+		tmp = g_strndup (file, 6);
+		image_id = atol (tmp);
+		g_free (tmp);
+		if (info->file.permissions & GP_FILE_PERM_DELETE)
+			protected = FALSE;
+		else
+			protected = TRUE;
+		result = k_set_protect_status (konica_data->device, konica_data->image_id_long, image_id, protected);
+		if (result != GP_OK)
+			return (result);
+	}
+	
+	return (GP_ERROR_NOT_SUPPORTED);
 }
 
 gint 
