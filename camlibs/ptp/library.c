@@ -306,6 +306,7 @@ camera_abilities (CameraAbilitiesList *list)
 	int i;
 	CameraAbilities a;
 
+	memset(&a,0, sizeof(a));
 	for (i = 0; models[i].model; i++) {
 		strcpy (a.model, models[i].model);
 		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
