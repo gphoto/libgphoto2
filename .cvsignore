@@ -3,6 +3,7 @@
 autom4te.cache
 config.guess
 config.sub
+depcomp
 ltconfig
 ltmain.sh
 aclocal.m4
@@ -22,7 +23,6 @@ gphoto2-config
 install-sh
 missing
 mkinstalldirs
-bindings
 *.tar.gz
 *.tar.bz2
 *.log
