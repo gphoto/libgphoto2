@@ -16,6 +16,9 @@ drivers (camlibs):
      - fixed some bugs
      - added support for Nikon D100
 
+   * added support for Mustek gSmart mini, Mustek gSmart mini 2, Mustek gSmart
+       mini 3 and So. Show 301
+
 --------------------------------------------------------------------------------
 gphoto2 2.1.0
 
