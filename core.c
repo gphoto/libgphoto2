@@ -318,7 +318,7 @@ int gp_file_unlock (int file_number) {
 }
 
 
-int gp_config_get (char *config_dialog_filename) {
+int gp_config_get (CameraWidget *window) {
 
 	/*
 	strcpy(config_dialog_name, LIB/library_name.config);
