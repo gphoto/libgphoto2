@@ -1,3 +1,7 @@
+2001-11-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Put gettext hack in again. Someone complained...
+
 2001-11-19  Mariusz Woloszyn <emsi@ipartners.pl>
 	
 	* camlibs/ptp: added camera filenames support,
