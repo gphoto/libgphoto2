@@ -89,7 +89,7 @@ spca50x_detect_storage_type (CameraPrivateLibrary *lib)
 	return GP_OK;
 }
 
-int
+static int
 spca50x_pd_enable (CameraPrivateLibrary * lib)
 {
 	uint8_t buf[9];
