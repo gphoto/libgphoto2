@@ -1,5 +1,14 @@
 2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-abilities-list.h: Make gp_abilities_list_new
+	return an error code. Introduce gp_abilities_list_sort and
+	gp_abilities_list_count.
+	* libgphoto2/abilities-list.c: See above.
+	* libgphoto2/core.c: Sorting code now is in abilibies-list.
+	* libgphoto2/file.c: "image/x-png" -> "image/png"
+
+2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sierra/library.c: Remove some unnecessary casts, put in some
 	CHECKs
 	* camlibs/kodak/dc120/dc120.c:

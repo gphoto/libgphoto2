@@ -28,10 +28,13 @@ typedef struct {
 	CameraAbilities **abilities;
 } CameraAbilitiesList;
 
-CameraAbilitiesList* gp_abilities_list_new    (void);
-
+int gp_abilities_list_new    (CameraAbilitiesList **list);
 int gp_abilities_list_free   (CameraAbilitiesList *list);
+
 int gp_abilities_list_dump   (CameraAbilitiesList *list);
 int gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities *);
+
+int gp_abilities_list_count  (CameraAbilitiesList *list);
+int gp_abilities_list_sort   (CameraAbilitiesList *list);
 
 #endif /* __GPHOTO2_ABILITIES_LIST_H__ */

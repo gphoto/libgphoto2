@@ -198,7 +198,7 @@ gp_file_open (CameraFile *file, char *filename)
             "ppm",  "x-portable-pixmap",
             "pgm",  "x-portable-graymap",
             "pbm",  "x-portable-bitmap",
-            "png",  "x-png",
+            "png",  "png",
             NULL};
 
 	CHECK_NULL (file && filename);
