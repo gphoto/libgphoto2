@@ -23,9 +23,9 @@
 #include "dc3200.h"
 #include "library.h"
 
-
+/*
 #define DEBUG
-
+*/
 
 /*
  * dc3200_set_speed
@@ -39,7 +39,7 @@ int dc3200_set_speed(DC3200Data *dd, int baudrate)
 	u_char resp[INI_PACKET_LEN], msg[INI_PACKET_LEN];
 	int resp_len = INI_PACKET_LEN, msg_len = INI_PACKET_LEN;
 	
-/**/	printf("dc3200_set_speed\n");
+//	printf("dc3200_set_speed\n");
 
 	msg[0] = 0xAF;
 	msg[1] = 0x00;
@@ -127,7 +127,7 @@ int dc3200_setup(DC3200Data *dd)
 	u_char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
 	int ack_len = ACK_PACKET_LEN, resp_len = DEF_PACKET_LEN;
 	
-/**/	printf("dc3200_setup\n");
+//	printf("dc3200_setup\n");
 	
 	if(dc3200_send_command(dd, cmd1, sizeof(cmd1), ack, &ack_len) == GP_ERROR)
 		return GP_ERROR;
@@ -199,7 +199,7 @@ int dc3200_get_data(DC3200Data *dd, u_char **data, u_long *data_len, int command
 	char *file = NULL;
 	char *ptr = NULL;
 	
-/**/	printf("dc3200_get_data\n");
+//	printf("dc3200_get_data\n");
 	
 	if(folder) {
 		if(filename) {
@@ -434,7 +434,7 @@ int dc3200_send_command(DC3200Data *dd, u_char *cmd, int cmd_len, u_char *ack, i
 	int received = 0;
 	u_char *buff = NULL;
 
-/**/	printf("dc3200_send_command\n");
+//	printf("dc3200_send_command\n");
 	
 	buff = malloc(sizeof(u_char) * *ack_len);
 	if(buff == NULL) {
@@ -502,7 +502,7 @@ int dc3200_send_command(DC3200Data *dd, u_char *cmd, int cmd_len, u_char *ack, i
  */
 int dc3200_recv_response(DC3200Data *dd, u_char *resp, int *resp_len)
 {
-/**/	printf("dc3200_recv_response\n");
+//	printf("dc3200_recv_response\n");
 
 	return dc3200_send_command(dd, NULL, 0, resp, resp_len);
 }
@@ -519,7 +519,7 @@ int dc3200_send_ack(DC3200Data *dd, int seqnum)
 	ack[0] = 0x01;
 	ack[1] = seqnum + 16;
 	
-/**/	printf("dc3200_send_ack\n");
+//	printf("dc3200_send_ack\n");
 	
 	return dc3200_send_packet(dd, ack, sizeof(ack));		
 }
@@ -532,7 +532,7 @@ int dc3200_send_ack(DC3200Data *dd, int seqnum)
  */
 int dc3200_check_ack(DC3200Data *dd, u_char *ack, int ack_len)
 {
-/**/	printf("dc3200_check_ack\n");
+//	printf("dc3200_check_ack\n");
 	return GP_OK;
 }
 
@@ -549,7 +549,7 @@ int dc3200_send_packet(DC3200Data *dd, u_char *data, int data_len)
 	int buff_len = data_len;
 	u_char *buff = NULL;
 
-/**/	printf("dc3200_send_packet\n");
+//	printf("dc3200_send_packet\n");
 
 	buff = malloc(sizeof(u_char) * buff_len);
 	if(!buff)
@@ -588,7 +588,7 @@ int dc3200_recv_packet(DC3200Data *dd, u_char *data, int *data_len)
 	/* allocate storage for size, checksum, and EOP */
 	u_char *buff = NULL;
 	
-/**/	printf("dc3200_recv_packet\n");
+//	printf("dc3200_recv_packet\n");
 	
 	buff = malloc(sizeof(u_char) * (*data_len + 3));
 	if(buff == NULL) {
@@ -670,7 +670,7 @@ int dc3200_compile_packet(DC3200Data *dd, u_char **data, int *data_len)
 	u_char *new_data = NULL;
 	u_char *tmp_ptr  = NULL;
 
-/**/	printf("dc3200_compile_packet\n");
+//	printf("dc3200_compile_packet\n");
 
 	/* realloc + 2 for len and checksum */
 	*data_len += 2;
@@ -748,7 +748,7 @@ int dc3200_process_packet(DC3200Data *dd, u_char *data, int *data_len)
 	int length, checksum;
 	u_char *buff;
 	
-/**/	printf("dc3200_process_packet\n");
+//	printf("dc3200_process_packet\n");
 	
 	if(data == NULL || *data_len < 1) {
 		return GP_ERROR;
@@ -814,7 +814,7 @@ int dc3200_calc_checksum(DC3200Data *dd, unsigned char * buffer, int len)
 {
 	int sum = 0, i;
 
-/**/	printf("dc3200_calc_checksum\n");
+//	printf("dc3200_calc_checksum\n");
 
 	for(i=0; i<len; i++) {
 		sum += buffer[i];
@@ -839,7 +839,7 @@ int dc3200_calc_checksum(DC3200Data *dd, unsigned char * buffer, int len)
  */
 int dc3200_calc_seqnum(DC3200Data *dd)
 {
-/**/	printf("dc3200_calc_seqnum\n");
+//	printf("dc3200_calc_seqnum\n");
 
 	if(dd->pkt_seqnum >= 0x1F || dd->pkt_seqnum < 0x10) {
 		dd->pkt_seqnum = 0x10;
@@ -869,27 +869,27 @@ int dc3200_keep_alive(DC3200Data *dd)
 	u_char ak[ACK_PACKET_LEN]; /* keepalive ack */
 	int ak_len = ACK_PACKET_LEN;
 
-/**/	printf("dc3200_keep_alive\n");
+//	printf("dc3200_keep_alive\n");
 
 	ka[0] = 0xCF;
 	ka[1] = 0x01;
 
-/**/	printf("ping...");
-/**/	fflush(0);
+//	printf("ping...");
+//	fflush(0);
 	
 	/* send keep alive packet */
 	if(dc3200_send_command(dd, ka, sizeof(ka), ak, &ak_len) == GP_ERROR) {
-/**/		printf("err.\n");
+//		printf("err.\n");
 		return GP_ERROR;
 	}
 	
 	/* check the ack (should be same packet) */
 	if(memcmp(ak,ka,ak_len) == 0) {
-/**/		printf("pong.\n");
+//		printf("pong.\n");
 		return GP_OK;
 	}
 
-/**/	printf("err.\n");
+//	printf("err.\n");
 	return GP_ERROR;
 }
 
@@ -906,7 +906,7 @@ int dc3200_clear_read_buffer(DC3200Data *dd)
 	u_char byte;
 	int count = 0;
 	
-/**/	printf("dc3200_clear_read_buffer\n");
+//	printf("dc3200_clear_read_buffer\n");
 	
 	gp_port_timeout_set(dd->dev, 0);
 	
@@ -932,7 +932,7 @@ int dump_buffer(unsigned char * buffer, int len, char * title, int bytesperline)
 	char spacer[80];
 	int i;
 	
-/**/	printf("dump_buffer\n");
+//	printf("dump_buffer\n");
 	
 	memset(spacer, 0, sizeof(spacer));
 	memset(spacer, ' ', strlen(title)+2);
