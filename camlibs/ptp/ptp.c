@@ -87,12 +87,12 @@ ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
 	PTPReq* req=(databuf==NULL)?
 		malloc(sizeof(PTPReq)):databuf;
 	
-	req->len = htod32(PTP_REQ_LEN);
+	//req->len = htod32(PTP_REQ_LEN);
 	req->type = htod16(PTP_TYPE_REQ);
 	req->code = htod16(code);
 	req->trans_id = htod32(params->transaction_id);
 
-	ret=params->write_func ((unsigned char *) req, PTP_REQ_LEN,
+	ret=params->write_func ((unsigned char *) req, req->len,
 				 params->data);
 	if (databuf==NULL) free (req);
 	if (ret!=PTP_RC_OK) {
