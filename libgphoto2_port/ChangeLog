@@ -1,3 +1,7 @@
+2002-07-12  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Use ltdl if available.
+
 2002-06-27  Lutz Müller <lutz@users.sourceforge.net>
 
 	* autogen.sh: We don't need this file.

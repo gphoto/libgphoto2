@@ -1,3 +1,7 @@
+2002-07-12  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Use ltdl if available.
+
 2002-07-06  Patrick Mansfield <patman@aracnet.com>
 
 	* MAINTAINERS: Add myself to camlibs/sierra
