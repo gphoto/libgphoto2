@@ -3,6 +3,9 @@
 	* configure.in: changed package name from gphoto to gphoto2
 	* configure.in: changed version from 2.0beta4 to 2.0beta4dev0 to
 	  distinguish bug reports from various stages of beta4 development
+	* camlibs/sonydscf1/README: added remark about general state of driver
+	* libgphoto2_port/intl/Makefile.in
+	* intl/Makefile.in: fixed incorrect location of config.h
 
 2001-11-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
