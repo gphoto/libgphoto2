@@ -329,6 +329,8 @@ int camera_start (Camera *camera)
 	 * that other programs have the chance to access the
 	 * camera, too.
 	 */
+//Remove this once libgphoto2_port is fixed
+if (fd->type != GP_PORT_USB)
 	CHECK_STOP (camera, gp_port_open (fd->dev));
 
 	switch (fd->type) {
@@ -361,6 +363,8 @@ int camera_stop (Camera *camera)
 	 * We close the port here to give other programs the possiblity
 	 * to access the camera, too.
 	 */
+//Remove this once libgphoto2_port is fixed
+//if (fd->type != GP_PORT_USB)
 	CHECK (gp_port_close (fd->dev));
 
 	return (GP_OK);
