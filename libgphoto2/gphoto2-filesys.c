@@ -808,7 +808,6 @@ int
 gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
 			CameraFile *file)
 {
-	const char *name;
 	int x;
 
 	CHECK_NULL (fs && folder && file);
@@ -816,8 +815,6 @@ gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
 	/* Do we support file upload? */
 	if (!fs->put_file_func)
 		return (GP_ERROR_NOT_SUPPORTED);
-
-	CHECK_RESULT (gp_file_get_name (file, &name));
 
 	/* Search the folder */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));

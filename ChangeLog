@@ -1,5 +1,12 @@
 2001-10-22 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/canon/canon.c: Use the CameraFilesystem. Declare some
+	  functions static.
+	* libgphoto2/gphoto2-camera.[c,h]: We now use the CameraFilesystem
+	  exclusively - major cleanup. 
+
+2001-10-22 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-camera.c: Autodetect also in case of 
 	  camera->port != NULL.
 	* frontends/command-line/main.c: Only call gp_camera_set_abilities
