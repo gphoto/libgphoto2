@@ -72,18 +72,44 @@ else
   dnl -------------
   dnl We have GNOME
   dnl -------------
+  dnl --------------------
+  dnl Check for gnome-libs
+  dnl --------------------
+  AC_MSG_CHECKING(for gnome-libs >= 1.2.4)
+  if gnome-config --version > /dev/null 2>&1; then
+    vers=`gnome-config --version | sed -e "s/gnome-libs //" | \
+      awk 'BEGIN { FS = "."; } { printf "%d", ($1 * 1000 + $2) * 1000 + $3;}'`
+    if test "$vers" -ge 1002004; then
+      AC_MSG_RESULT(found)
+    else
+      AC_MSG_ERROR([
+*** The gnome-version of gphoto needs at least gnome-libs 1.2.4. The latest 
+*** version of gnome-libs is always available from ftp://ftp.gnome.org/.
+***
+*** If you want to build gphoto without gnome support, try the
+*** --disable-gnome option.])
+    fi
+  else
+    AC_MSG_ERROR([
+*** The gnome-version of gphoto needs gnome-libs. The latest version of 
+*** gnome-libs is always available from ftp://ftp.gnome.org/.
+***
+*** If you want to build gphoto without gnome support, try the 
+*** --disable-gnome option.])
+  fi
   dnl ------------------
   dnl Check for libglade
   dnl ------------------
   AC_MSG_CHECKING(for Glade libraries >= 0.11)
   if gnome-config --libs libglade > /dev/null 2>&1; then 
-    vers=`gnome-config --modversion libglade | awk 'BEGIN { FS = "."; } { print $1 * 1000 + $2;}'`
+    vers=`gnome-config --modversion libglade | \
+      awk 'BEGIN { FS = "."; } { print $1 * 1000 + $2;}'`
     if test "$vers" -ge 11; then
         AC_MSG_RESULT(found)
     else
         AC_MSG_ERROR([
 *** The gnome-version of gphoto needs at least libglade 0.11. The latest 
-*** version of libglade is always available from ftp://ftp.gnome.org/..
+*** version of libglade is always available from ftp://ftp.gnome.org/.
 ***
 *** If you want to build gphoto without gnome support, try the 
 *** --disable-gnome option.])
