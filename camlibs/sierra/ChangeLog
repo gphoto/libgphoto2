@@ -1,5 +1,11 @@
 2002-05-22  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c (sierra_init): Portmon logs show that the port
+	  is closed and reopened after SIERRA_PACKET_SESSION_END
+	  has been received and before the initial handshake.
+
+2002-05-22  Lutz Müller <lutz@users.sourceforge.net>
+
 	* sierra.c: If the requested speed is 0, we set it to 115200.
 
 2002-05-21  Lutz Müller <lutz@users.sourceforge.net>

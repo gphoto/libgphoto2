@@ -755,6 +755,8 @@ sierra_init (Camera *camera, GPContext *context)
 	 *    Shake:9 Replace:80000080 XonLimit:2048 XoffLimit:512
 	 *  - IOCTL_SERIAL_SET_TIMEOUTS RI:0 RM:0 RC:500 WM:200 WC:800
 	 */
+	CHECK (gp_port_close (camera->port));
+	CHECK (gp_port_open (camera->port));
 	CHECK (gp_port_get_settings (camera->port, &settings));
 	if (settings.serial.speed != 19200) {
 		settings.serial.speed = 19200;
@@ -771,6 +773,7 @@ sierra_init (Camera *camera, GPContext *context)
 		switch (buf[0]) {
 		case NAK:
 			return (GP_OK);
+		case SIERRA_PACKET_SESSION_END:
 		default:
 			if (++r > 3) {
 				gp_context_error (context,
