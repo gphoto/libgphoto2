@@ -5,7 +5,7 @@
 	This library is covered by the LGPL.
 */
 
-/* Data Structures
+/* Constants 
    ---------------------------------------------------------------- */
 
 /* Return Values */
@@ -13,220 +13,246 @@
 #define GP_ERROR			-1
 #define GP_ERROR_NONCRITICAL		-2
 
-/* Physical Connection Types */
-typedef enum {
-	GP_PORT_NONE		= 0,
-	GP_PORT_SERIAL		= 1 << 0,
-	GP_PORT_PARALLEL	= 1 << 1,
-	GP_PORT_USB		= 1 << 2,
-	GP_PORT_IEEE1394	= 1 << 3,
-	GP_PORT_NETWORK		= 1 << 4
-} CameraPortType;
+/* Macros
+   ---------------------------------------------------------------- */
 
-/* Some macros for determining what type of ports the camera supports */
+/* Determining what kind of port a camera supports. 
+   For use on CameraAbilities -> port */
 #define SERIAL_SUPPORTED(_a)	((_a >> 0)&0x01)
 #define PARALLEL_SUPPORTED(_a)	((_a >> 1)&0x01)
 #define USB_SUPPORTED(_a)	((_a >> 2)&0x01)
 #define IEEE1394_SUPPORTED(_a)	((_a >> 3)&0x01)
 #define NETWORK_SUPPORTED(_a)	((_a >> 4)&0x01)
 
-typedef enum {
-	GP_CAPTURE_IMAGE	= 1 << 0,
-	GP_CAPTURE_AUDIO 	= 1 << 1,
-	GP_CAPTURE_VIDEO	= 1 << 2
-} CameraCaptureType;
+/* Enumerations
+   ---------------------------------------------------------------- */
 
-typedef enum {
-	GP_WIDGET_WINDOW,
-	GP_WIDGET_SECTION,
-	GP_WIDGET_TEXT,
-	GP_WIDGET_RANGE,
-	GP_WIDGET_TOGGLE,
-	GP_WIDGET_RADIO,
-	GP_WIDGET_MENU,
-	GP_WIDGET_BUTTON,
-	GP_WIDGET_NONE
-} CameraWidgetType;
+/* Physical Connection Types */
+	typedef enum {
+		GP_PORT_NONE		= 0,
+		GP_PORT_SERIAL		= 1 << 0,
+		GP_PORT_PARALLEL	= 1 << 1,
+		GP_PORT_USB		= 1 << 2,
+		GP_PORT_IEEE1394	= 1 << 3,
+		GP_PORT_NETWORK		= 1 << 4
+	} CameraPortType;
 
-struct CameraWidget;
+/* Capture Type */
+	typedef enum {
+		GP_CAPTURE_IMAGE	= 1 << 0,
+		GP_CAPTURE_AUDIO 	= 1 << 1,
+		GP_CAPTURE_VIDEO	= 1 << 2
+	} CameraCaptureType;
 
-struct CameraWidget {
-
-	CameraWidgetType type;
-	char		 label[32];
-
-	/* Current value of the widget */
-	char		 value[128];
-
-	/* For Radio and Menu */
-	char 		 choice[32][64];
-	int		 choice_count;
-
-	/* For Range */
-	float		 min;
-	float 		 max;
-	float		 increment;
-
-	/* Child info */
-	struct CameraWidget*	children[64];
-	int 			children_count;
-
-};
-
-typedef struct CameraWidget CameraWidget;
-
-typedef struct {
-	CameraCaptureType type;
-	int duration;
-	int quality;
-} CameraCaptureInfo;
-
-typedef struct {
-	CameraPortType type;	
-	char name[128];
-	char path[128];
-		/* path to serial port device 			 */
-		/* For serial port, "/dev/ttyS0" or variants	 */
-		/* For parallel port, "/dev/lpt0" or variants	 */
-		/* For usb, "usb"				 */
-		/* For ieee1394, "ieee1394"			 */
-		/* For network, the host's address (ip or fqdn)  */
-
-	int speed;
-		/* Speed to use	(serial)			 */
-} CameraPortInfo;
-
-typedef struct {
-	char model[128];
-
-		/* can the library support the following: */
-
-	int port;
-		/* an OR of GP_PORT_* for whatever devices the	 */
-		/* the library can use.				 */
-
-	int speed[64];
-		/* if serial==1, baud rates that this camera	 */
-		/* supports. terminate list with a zero 	 */
+/* Widget types */
+	typedef enum {
+		GP_WIDGET_WINDOW,
+		GP_WIDGET_SECTION,
+		GP_WIDGET_TEXT,
+		GP_WIDGET_RANGE,
+		GP_WIDGET_TOGGLE,
+		GP_WIDGET_RADIO,
+		GP_WIDGET_MENU,
+		GP_WIDGET_BUTTON,
+		GP_WIDGET_NONE
+	} CameraWidgetType;
 
 
-	int config;
-		/* Camera can be configured remotely 		 */
+/* Structures
+   ---------------------------------------------------------------- */
 
-	int file_delete;
-		/* Camera can delete files 			 */
+/* CameraWidget structure */
+	struct CameraWidget;
+	struct CameraWidget {
 
-	int file_preview;
-		/* Camera can get file previews (thumbnails) 	 */
+		CameraWidgetType type;
+		char		 label[32];
+	
+		/* Current value of the widget */
+		char		 value[128];
 
-	int file_put;
-		/* Camera can receive files			 */
+		/* For Radio and Menu */
+		char 		 choice[32][64];
+		int		 choice_count;
 
-	int capture;
-		/* Camera can do a capture (take picture) 	 */
+		/* For Range */
+		float		 min;
+		float 		 max;
+		float		 increment;
 
-} CameraAbilities;
+		/* Child info */
+		struct CameraWidget*	children[64];
+		int 			children_count;
 
-typedef struct {
-	char model[128]; 		   /* Name of the camera */
+	};
+	typedef struct CameraWidget CameraWidget;
 
-	CameraPortInfo port_settings;		/* Port settings */
+/* Capture information structure */
+	typedef struct {
+		CameraCaptureType type;
+		int duration;
+		int quality;
+	} CameraCaptureInfo;
 
-	int debug;	          /* Debugging output 0=off 1=on */
-} CameraInit;
+/* Port information/settings */
+	typedef struct {
+		CameraPortType type;	
+		char name[128];
+		char path[128];
+			/* path to serial port device 			 */
+			/* For serial port, "/dev/ttyS0" or variants	 */
+			/* For parallel port, "/dev/lpt0" or variants	 */
+			/* For usb, "usb"				 */
+			/* For ieee1394, "ieee1394"			 */
+			/* For network, "network"  			 */
 
-typedef struct {
-	char		type[64];
-		/* mime-type of file ("image/jpg", "image/tiff", etc..,) */
+		/* Serial-specific members */
+		int speed;
 
-	char		name[64];
-		/* Suggested name for the file */
+		/* Network-specific members */
+		char host[128];
+		int  host_port;
+	} CameraPortInfo;
 
-	long int	size;
-		/* Size of the image data*/
+/* Functions supported by the cameras */
+	typedef struct {
+		char model[128];
 
-	char*		data;
-		/* Image data */
+		int port;
+			/* an OR of GP_PORT_* for whatever devices the	 */
+			/* the library can use.				 */
 
-		/* For chunk-based transfers */
-	int		bytes_read;
+		int speed[64];
+			/* Supported serial baud rates, terminated with  */
+			/* a 0.						 */
 
-} CameraFile;
+		int config;
+			/* Camera can be configured	 		 */
 
-typedef struct {
-	char	name[128];
-} CameraFolderInfo;
+		int file_delete;
+			/* Camera can delete files 			 */
 
-typedef struct {
-	char name[32];
-	char value[128];
-} CameraSetting;
+		int file_preview;
+			/* Camera can get file previews (thumbnails) 	 */
 
-typedef struct {
-	char text[32*1024];
-} CameraText;
+		int file_put;
+			/* Camera can receive files			 */
 
-/* Define some prototype function pointers to camera functions */
-struct Camera;
+		int capture;
+			/* Camera can do a capture			 */
+	} CameraAbilities;
 
-typedef int (*c_id)		 (char *);
-typedef int (*c_abilities)	 (CameraAbilities*,int*);
-typedef int (*c_init)		 (struct Camera*, CameraInit*);
-typedef int (*c_exit)		 (struct Camera*);
-typedef int (*c_folder_list)	 (struct Camera*, char*, CameraFolderInfo*);
-typedef int (*c_folder_set)	 (struct Camera*, char*);
-typedef int (*c_file_count)	 (struct Camera*);
-typedef int (*c_file_get)	 (struct Camera*, CameraFile*, int);
-typedef int (*c_file_get_preview)(struct Camera*, CameraFile*, int);
-typedef int (*c_file_put)	 (struct Camera*, CameraFile*);
-typedef int (*c_capture)	 (struct Camera*, CameraFile*, CameraCaptureInfo *);
-typedef int (*c_file_delete)	 (struct Camera*, int);
-typedef int (*c_file_lock)	 (struct Camera*, int);
-typedef int (*c_file_unlock)	 (struct Camera*, int);
-typedef int (*c_config_get)	 (struct Camera*, CameraWidget*);
-typedef int (*c_config_set)	 (struct Camera*, CameraSetting*, int);
-typedef int (*c_summary)	 (struct Camera*, CameraText*);
-typedef int (*c_manual)		 (struct Camera*, CameraText*);
-typedef int (*c_about)		 (struct Camera*, CameraText*);
+/* Initialization data to the camera */
+	typedef struct {
+		char model[128]; 		   /* Name of the camera */
+
+		CameraPortInfo port_settings;		/* Port settings */
+
+		int debug;	          /* Debugging output 0=off 1=on */
+	} CameraInit;
+
+/* Camera file structure used for transferring files*/
+	typedef struct {
+		char		type[64];
+			/* mime-type of file ("image/jpg", "image/tiff", etc..,) */
+
+		char		name[64];
+			/* filename */
+	
+		long int	size;
+		char*		data;
+		int		bytes_read;
+	} CameraFile;
+
+/* Entry in a folder on the camera */
+	typedef struct {
+		char name[128];
+		int is_folder;
+	} CameraFolderListEntry;
+
+	typedef struct {
+		char folder[1024];
+		int  count;
+		CameraFolderListEntry entry[1024];
+	} CameraFolderList;
+
+/* Camera filesystem emulation structs */
+	typedef struct {
+		char name[128];
+	} CameraFilesystemEntry;
+
+	typedef struct {
+		int count;
+		char format[64];
+		CameraFilesystemEntry **entry ;
+	} CameraFilesystem;
+
+/* Settings for the config_set function */
+	typedef struct {
+		char name[32];
+		char value[128];
+	} CameraSetting;
+
+/* Text transferred to/from the camera */
+	typedef struct {
+		char text[32*1024];
+	} CameraText;
+
+/* Camera object data */
+	struct Camera;
+	typedef int (*c_id)		 (char *);
+	typedef int (*c_abilities)	 (CameraAbilities*,int*);
+	typedef int (*c_init)		 (struct Camera*, CameraInit*);
+	typedef int (*c_exit)		 (struct Camera*);
+	typedef int (*c_folder_list)	 (struct Camera*, char*, CameraFolderList*);
+	typedef int (*c_folder_set)	 (struct Camera*, char*);
+	typedef int (*c_file_count)	 (struct Camera*);
+	typedef int (*c_file_get)	 (struct Camera*, CameraFile*, char*);
+	typedef int (*c_file_get_preview)(struct Camera*, CameraFile*, char*);
+	typedef int (*c_file_put)	 (struct Camera*, CameraFile*);
+	typedef int (*c_capture)	 (struct Camera*, CameraFile*, CameraCaptureInfo *);
+	typedef int (*c_file_delete)	 (struct Camera*, char*);
+	typedef int (*c_config_get)	 (struct Camera*, CameraWidget*);
+	typedef int (*c_config_set)	 (struct Camera*, CameraSetting*, int);
+	typedef int (*c_summary)	 (struct Camera*, CameraText*);
+	typedef int (*c_manual)		 (struct Camera*, CameraText*);
+	typedef int (*c_about)		 (struct Camera*, CameraText*);
 
 /* Function pointers to the current library functions */
-typedef struct {
-	c_id			id;
-	c_abilities		abilities;
-	c_init			init;
-	c_exit			exit;
-	c_folder_list		folder_list;
-	c_folder_set		folder_set;
-	c_file_count		file_count;
-	c_file_get		file_get;
-	c_file_get_preview	file_get_preview;
-	c_file_put		file_put;
-	c_file_delete		file_delete;
-	c_file_lock		file_lock;
-	c_file_unlock		file_unlock;
-	c_config_get		config_get;
-	c_config_set		config_set;
-	c_capture		capture;
-	c_summary		summary;
-	c_manual		manual;
-	c_about			about;
-} CameraFunctions;
+	typedef struct {
+		c_id			id;
+		c_abilities		abilities;
+		c_init			init;
+		c_exit			exit;
+		c_folder_list		folder_list;
+		c_folder_set		folder_set;
+		c_file_count		file_count;
+		c_file_get		file_get;
+		c_file_get_preview	file_get_preview;
+		c_file_put		file_put;
+		c_file_delete		file_delete;
+		c_config_get		config_get;
+		c_config_set		config_set;
+		c_capture		capture;
+		c_summary		summary;
+		c_manual		manual;
+		c_about			about;
+	} CameraFunctions;
 
 /* The Camera structure */
-struct Camera {
-	char		model[128];
+	struct Camera {
+		char		model[128];
+		
+		CameraPortInfo *port;
 
-	CameraPortInfo *port;
+		int 		debug;
 
-	int 		debug;
+		void*		library_handle;
 
-	void*		library_handle;
+		CameraAbilities *abilities;
+		CameraFunctions *functions;
 
-	CameraAbilities *abilities;
-	CameraFunctions *functions;
-
-	void 		*camlib_data;
-	void 		*frontend_data;
-};
-
-typedef struct Camera Camera;
+		void 		*camlib_data;
+		void 		*frontend_data;
+	};
+	typedef struct Camera Camera;

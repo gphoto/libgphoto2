@@ -7,245 +7,7 @@
 #include <gpio.h>
 #include "barbie.h"
 
-/* packet headers/footers */
-char packet_header[3]           = {0x02, 0x01};
-char packet_header_data[6]      = {0x02, 0x01, 0x01, 0x01, 0x01}; 
-char packet_header_firmware[4]  = {0x02, 'V', 0x01};
-char packet_footer[2]           = {0x03};
-
-/* Some simple packet templates */
-char packet_1[4]                = {0x02, 0x01, 0x01, 0x03};
-char packet_2[5]                = {0x02, 0x01, 0x01, 0x01, 0x03};
-
-
-/* Utility Functions
-   =======================================================================
-*/
-
-void barbie_packet_dump(BarbieStruct *b, int direction, char *buf, int size) {
-	int x;
-
-	if (!b->debug)
-		return;
-
-	if (direction == 0)
-		printf("barbie: \tRead  Packet (%i): ", size);
-	   else
-		printf("barbie: \tWrite Packet (%i): ", size);
-	for (x=0; x<size; x++) {
-		if (isalpha(buf[x]))
-			printf("[ '%c' ] ", (unsigned char)buf[x]);
-		   else
-			printf("[ x%02x ] ", (unsigned char)buf[x]);
-	}
-	printf("\n");
-}
-
-int barbie_write_command(BarbieStruct *b, char *command, int size) {
-
-	int x;
-
-	barbie_packet_dump(b, 1, command, size);
-	x=gpio_write(b->dev, command, size);
-	return (x == GPIO_OK);
-}
-
-int barbie_read_response(BarbieStruct *b, char *response, int size) {
-
-	int x;
-	char ack = 0;
-
-	/* Read the ACK */
-	x=gpio_read(b->dev, &ack, 1);
-	if (b->debug) 
-		barbie_packet_dump(b, 0, &ack, 1);
-
-	if ((ack != ACK)||(x<0))
-		return (0);
-
-	/* Read the Response */
-	memset(response, 0, size);
-	x=gpio_read(b->dev,response, size);
-	if (b->debug) 
-		barbie_packet_dump(b, 0, response, x);
-	return (x > 0);
-}
-
-int barbie_exchange (BarbieStruct *b, char *cmd, int cmd_size, char *resp, int resp_size) {
-
-	int count = 0;
-
-	while (count++ < 10) {
-		if (barbie_write_command(b, cmd, cmd_size) != 1)
-			return (0);
-		if (barbie_read_response(b, resp, resp_size) != 1)
-			return (0);
-		/* if it's not busy, return */
-		if (resp[RESPONSE_BYTE] != '!')
-			return (1);
-		/* if busy, sleep 2 seconds */
-		sleep(2);
-	}
-
-	return (0);
-}
-
-int barbie_ping(BarbieStruct *b) {
-
-	char cmd[4], resp[4];
-
-	if (b->debug)
-		printf("barbie: Pinging the camera\n");
-
-	memcpy(cmd, packet_1, 4);
-	cmd[COMMAND_BYTE] = 'E';
-	cmd[DATA1_BYTE]   = 'x';
-
-	if (barbie_exchange(b, cmd, 4, resp, 4) == 0)
-		return (0);
-
-	if (resp[DATA1_BYTE] != 'x')
-		return (0);
-	if (b->debug)
-		printf("barbie: ping answered!\n");
-	return (1);
-}
-
-char *barbie_read_firmware(BarbieStruct *b) {
-
-	char cmd[4];
-	int x;
-	
-	memcpy(cmd, packet_1, 4);
-	cmd[COMMAND_BYTE] = 'V';
-	cmd[DATA1_BYTE]   = '0';
-	
-	return (barbie_read_data(b, cmd, 4, BARBIE_DATA_FIRMWARE, &x));
-}
-
-char *barbie_read_picture(BarbieStruct *b, int picture_number, int get_thumbnail, int *size) {
-
-	char cmd[4], resp[4];
-
-	memcpy(cmd, packet_1, 4);
-	cmd[COMMAND_BYTE] = 'A';
-	cmd[DATA1_BYTE]   = picture_number;
-
-	if (barbie_exchange(b, cmd, 4, resp, 4) != 1)
-		return (NULL);
-	
-	memcpy(cmd, packet_1, 4);
-	if (get_thumbnail)
-		cmd[COMMAND_BYTE] = 'M';
-	   else
-		cmd[COMMAND_BYTE] = 'U';
-
-	cmd[DATA1_BYTE] = 0;
-
-	return (barbie_read_data(b, cmd, 4, BARBIE_DATA_PICTURE, size));
-}
-
-char *barbie_read_data (BarbieStruct *bs, char *cmd, int cmd_size, int data_type, int *size) {
-
-	char c, resp[4];
-	int n1, n2, n3, n4, x, y, z;
-	unsigned char r, g, b;
-	char *s = NULL, *us = NULL, *rg = NULL;
-	char *ppmhead_t = "P6\n# test.ppm\n%i %i\n255\n";
-	char ppmhead[64];
-
-	if (barbie_exchange(bs, cmd, cmd_size, resp, 4) != 1)
-		return (0);
-	switch (data_type) {
-		case BARBIE_DATA_FIRMWARE:
-			if (bs->debug)
-				printf("barbie: Getting Firmware\n");
-			/* we're getting the firmware revision */
-			*size = resp[2];
-			s = (char *)malloc(sizeof(char)*(*size));
-			memset(s, 0, *size);
-			s[0] = resp[3];
-			if (gpio_read(bs->dev, &s[1], (*size)-1) < 0) {
-				free(s);
-				return (NULL);
-			}
-			break;
-		case BARBIE_DATA_PICTURE:
-			if (bs->debug)
-				printf("barbie: Getting Picture\n");
-			/* we're getting a picture */
-			n1 = (unsigned char)resp[2];
-			n2 = (unsigned char)resp[3];
-			if (gpio_read(bs->dev, &c, 1) < 0)
-				return (NULL);
-			n3 = (unsigned char)c;
-			if (gpio_read(bs->dev, &c, 1) < 0)
-				return (NULL);
-			n4 = (unsigned char)c;
-			*size = PICTURE_SIZE(n1, n2, n3, n4);
-printf("\tn1=%i n2=%i n3=%i n4=%i size=%i\n", n1, n2 ,n3, n4, *size);
-			sprintf(ppmhead, ppmhead_t, n1-1, (n2+n3-1));
-			us = (char *)malloc(sizeof(char)*(*size));
-			rg = (char *)malloc(sizeof(char)*(*size));
-			s  = (char *)malloc(sizeof(char)*(n1-1)*(n2+n3-1)*3+strlen(ppmhead));
-			memset(us, 0, *size);
-			memset(rg, 0, *size);
-			memset(s , 0, *size+strlen(ppmhead));
-			if (gpio_read(bs->dev, us, *size)<0) {
-				free(us);
-				free(rg);
-				free(s);
-				return (NULL);
-			}
-			/* Unshuffle the data */
-			*size = *size - 16;
-			for (x=0; x<(n2+n3); x++) {
-				for (y=0; y<n1; y++) {
-					z = x*n1 + y/2 + y%2*(n1/2+2);
-					rg[x*n1+y] = us[z];
-				}
-			}
-			/* Camera uses Bayen array:
-			 *		bg  bg   ...
-			 *		gr  gr   ...
-			 */
-			strcpy(s, ppmhead);
-			z = strlen(s);
-			for (x=0; x<(n2+n3-1); x++) {
-				for (y=0; y<(n1-1); y++) {
-					b = (unsigned char)rg[x*n1+y];
-					g = (((unsigned char)rg[(x+1)*n1+y] + 
-					      (unsigned char)rg[x*n1+y+1]) / 2);
-					r = (unsigned char)rg[(x+1)*n1+y+1];
-					s[z++] = r;
-					s[z++] = g;
-					s[z++] = b;
-				}
-			}
-			*size = z;
-			if (bs->debug)
-				printf("barbie: size=%i\n", *size);
-			break;
-		case BARBIE_DATA_THUMBNAIL:
-			break;
-		default:
-			break;
-	}
-	/* read the footer */
-	if (gpio_read(bs->dev, &c, 1) < 0) {
-		free(us);
-		free(rg);
-		free(s);
-		return (0);
-	}
-	free(us);
-	free(rg);
-	return(s);
-}
-
-/* gPhoto Functions
-   =======================================================================
-*/
+extern char packet_1[];
 
 int camera_id (char *id) {
 
@@ -323,20 +85,41 @@ int camera_init(Camera *camera, CameraInit *init) {
 	gpio_set_settings(b->dev, settings);
 	gpio_open(b->dev);
 
+	/* Create the filesystem */
+	b->fs = gp_filesystem_new();
+
 	return (barbie_ping(b));
 }
 
 int camera_exit(Camera *camera) {
 
+	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
+
+	gpio_close(b->dev);
+	gp_filesystem_free(b->fs);
+
 	return GP_OK;
 }
 
-int camera_folder_list (Camera *camera, char *folder_name, CameraFolderInfo *list) {
+int camera_folder_list (Camera *camera, char *folder_name, CameraFolderList *list) {
+
+	int count, x;
+	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
+
+	count = camera_file_count(camera);
+
+	/* Populate the filesystem */
+	gp_filesystem_populate(b->fs, "mattel%02i.ppm", count);
+
+	for (x=0; x<gp_filesystem_count(b->fs); x++)
+		gp_folder_list_append(list, gp_filesystem_name(b->fs, x), 0);
 
 	return 0;
 }
 
 int camera_folder_set (Camera *camera, char *folder_name) {
+
+	/* This should only be called with "/" as the folder_name */
 
 	return GP_OK;
 }
@@ -360,9 +143,9 @@ int camera_file_count (Camera *camera) {
 	return (resp[DATA1_BYTE]);
 }
 
-int camera_file_get (Camera *camera, CameraFile *file, int file_number) {
+int camera_file_get (Camera *camera, CameraFile *file, char *filename) {
 
-	int size;
+	int size, num;
 	char name[16];
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
 
@@ -370,11 +153,14 @@ int camera_file_get (Camera *camera, CameraFile *file, int file_number) {
 		printf("barbie: Getting a picture\n");
 
 	gp_camera_progress(camera, NULL, 0.00);
-
-	strcpy(file->name, "barbie0.ppm");
-	name[6] = '0' + file_number;
+	
+	strcpy(file->name, filename);
 	strcpy(file->type, "image/ppm");
-	file->data = barbie_read_picture(b, file_number, 0, &size);;
+
+	/* Retrieve the number of the photo on the camera */
+	num = gp_filesystem_number(b->fs, filename);
+
+	file->data = barbie_read_picture(b, num, 0, &size);
 	if (!file->data)
 		return GP_ERROR;
 	file->size = size;
@@ -382,9 +168,9 @@ int camera_file_get (Camera *camera, CameraFile *file, int file_number) {
 	return GP_OK;
 }
 
-int camera_file_get_preview (Camera *camera, CameraFile *file, int file_number) {
+int camera_file_get_preview (Camera *camera, CameraFile *file, char *filename) {
 
-	int size;
+	int size, num;
 	char name[24];
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
 
@@ -393,13 +179,16 @@ int camera_file_get_preview (Camera *camera, CameraFile *file, int file_number) 
 
 	gp_camera_progress(camera, NULL, 0.00);
 
+	strcpy(file->name, filename);
 	strcpy(file->type, "image/ppm");
-	file->data = barbie_read_picture(b, file_number, 1, &size);;
+
+	/* Retrieve the number of the photo on the camera */
+	num = gp_filesystem_number(b->fs, filename);
+
+	file->data = barbie_read_picture(b, num, 1, &size);;
 	if (!file->data)
 		return GP_ERROR;
 	file->size = size;
-	strcpy(file->name, "barbie0thumb.ppm");
-	file->name[6] = '0' + file_number;
 
 	return GP_OK;
 }
@@ -410,7 +199,7 @@ int camera_file_put (Camera *camera, CameraFile *file) {
 }
 
 
-int camera_file_delete (Camera *camera, int file_number) {
+int camera_file_delete (Camera *camera, char *filename) {
 
 	return GP_ERROR;
 }

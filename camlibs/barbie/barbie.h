@@ -111,6 +111,7 @@ typedef struct {
         gpio_device *dev;
         gpio_device_settings settings;
         int debug;
+	CameraFilesystem *fs;
 } BarbieStruct;
 
 /* Utility functions */
@@ -123,4 +124,3 @@ char*	barbie_read_firmware(BarbieStruct *b);
 char*	barbie_read_picture (BarbieStruct *b, int picture_number, int get_thumbnail, int *size);
 int	barbie_exchange     (BarbieStruct *b, char *cmd, int cmd_size, char *resp, int resp_size);
 int	barbie_ping         (BarbieStruct *b);
-

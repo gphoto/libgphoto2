@@ -283,33 +283,53 @@ int gp_camera_exit (Camera *camera) {
 	return (ret);
 }
 
-int gp_camera_folder_list(Camera *camera, char *folder_path, CameraFolderInfo *list) {
+int gp_camera_folder_list(Camera *camera, char *folder_path, CameraFolderList *list) {
 
-	CameraFolderInfo t;
-	int x, y, z, count;
+	CameraFolderListEntry t;
+	int x, ret, y, z;
+
+	/* Initialize the folder list to a known state */
+	list->count = 0;
+	strcpy(list->folder, folder_path);
 
 	if (camera->functions->folder_list == NULL)
 		return (GP_ERROR);
 
-	count = camera->functions->folder_list(camera, folder_path, list);
+	ret = camera->functions->folder_list(camera, folder_path, list);
 
-	if (count == GP_ERROR)
+	if (ret == GP_ERROR)
 		return (GP_ERROR);
 
 	/* Sort the folder list */
-	for (x=0; x<count-1; x++) {
-		for (y=x+1; y<count; y++) {
-			z = strcmp(list[x].name, list[y].name);
+	for (x=0; x<list->count-1; x++) {
+		for (y=x+1; y<list->count; y++) {
+			z = strcmp(list->entry[x].name, list->entry[y].name);
 			if (z > 0) {
-				memcpy(&t, &list[x], sizeof(t));
-				memcpy(&list[x], &list[y], sizeof(t));
-				memcpy(&list[y], &t, sizeof(t));
+				memcpy(&t, &list->entry[x], sizeof(t));
+				memcpy(&list->entry[x], &list->entry[y], sizeof(t));
+				memcpy(&list->entry[y], &t, sizeof(t));
                         }
                 }
         }
 
-	return(count);
+	return (GP_OK);
 }
+
+int gp_camera_folder_list_append(CameraFolderList *list, char *name, int is_folder) {
+
+	strcpy(list->entry[list->count].name, name);
+	list->entry[list->count].is_folder = is_folder;
+
+	list->count += 1;
+
+	return (GP_OK);
+}
+
+CameraFolderListEntry *gp_camera_folder_list_entry(CameraFolderList *list, int entrynum) {
+
+	return (&list->entry[entrynum]);
+}
+
 
 int gp_camera_folder_set (Camera *camera, char *folder_path) {
 
@@ -330,24 +350,24 @@ int gp_camera_file_count (Camera *camera) {
 	return(camera->functions->file_count(camera));
 }
 
-int gp_camera_file_get (Camera *camera, CameraFile *file, int file_number) {
+int gp_camera_file_get (Camera *camera, CameraFile *file, char *filename) {
 
 	if (camera->functions->file_get == NULL)
 		return (GP_ERROR);
 
 	gp_file_clean(file);
 
-	return (camera->functions->file_get(camera, file, file_number));
+	return (camera->functions->file_get(camera, file, filename));
 }
 
-int gp_camera_file_get_preview (Camera *camera, CameraFile *file, int file_number) {
+int gp_camera_file_get_preview (Camera *camera, CameraFile *file, char *filename) {
 
 	if (camera->functions->file_get_preview == NULL)
 		return (GP_ERROR);
 
 	gp_file_clean(file);
 
-	return (camera->functions->file_get_preview(camera, file, file_number));
+	return (camera->functions->file_get_preview(camera, file, filename));
 }
 
 int gp_camera_file_put (Camera *camera, CameraFile *file) {
@@ -358,11 +378,11 @@ int gp_camera_file_put (Camera *camera, CameraFile *file) {
 	return (camera->functions->file_put(camera, file));
 }
 
-int gp_camera_file_delete (Camera *camera, int file_number) {
+int gp_camera_file_delete (Camera *camera, char *filename) {
 
 	if (camera->functions->file_delete == NULL)
 		return (GP_ERROR);
-	return (camera->functions->file_delete(camera, file_number));
+	return (camera->functions->file_delete(camera, filename));
 }
 
 int gp_camera_config_get (Camera *camera, CameraWidget *window) {

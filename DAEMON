@@ -29,7 +29,7 @@ Example
 '>' indicates commands from the program to gPhoto
 '<' indicates commands from gPhoto to the program
 
-To put gphoto2 into a daemon mode, you must run it as "gphoto2 -D".
+To put gphoto2 into a daemon mode, you must run it as "gphoto2 -S".
 You can open a pipe and then read/write to that file descriptor.
 
 here is a session:

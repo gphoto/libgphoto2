@@ -14,6 +14,7 @@ libgphoto2_la_LDFLAGS = -version-info 0:0:0
 libgphoto2_la_SOURCES = \
 			core.c core.h \
 			exif.c exif.h \
+			fs.c fs.h \
 			file.c file.h \
 			globals.h \
 			library.c library.h \

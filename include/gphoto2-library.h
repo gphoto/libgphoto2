@@ -30,7 +30,7 @@ int camera_exit 		(Camera *camera);
 
 int camera_folder_list		(Camera *camera, 
 				 char *folder_path, 
-				 CameraFolderInfo *folder);
+				 CameraFolderList *folder);
 	/* Returns a list of sub-folders from the 'folder_name'	*/
 	/* folder. The first call will be with folder_name	*/
 	/* set to "/" to get a listing of all the top-level	*/
@@ -48,13 +48,13 @@ int camera_file_count 		(Camera *camera);
 
 int camera_file_get 	    	(Camera *camera,
 				 CameraFile *file,
-				 int file_number); 
+				 char *filename); 
 	/* Fills in the file struct with a file #file_number	*/
 	/* from the camera.					*/
 
 int camera_file_get_preview 	(Camera *camera, 
 				 CameraFile *file,
-				 int file_number);
+				 char *filename);
 	/* Fills in the file struct with a file preview 	*/
 	/* #file_number	from the camera. The preview is a	*/
 	/* picture thumbnail, or snippet from a movie/sound	*/
@@ -69,7 +69,7 @@ int camera_file_put 	    	(Camera *camera,
 	/* to do the conversion.				*/
 
 int camera_file_delete 		(Camera *camera, 
-				 int file_number);
+				 char *filename);
 	/* Deletes a picture from the current folder on the	*/
 	/* camera. 						*/
 

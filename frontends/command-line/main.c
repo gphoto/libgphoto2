@@ -1,3 +1,13 @@
+
+
+/* *********************************
+   need to set up a global file list
+   ********************************* */
+  
+
+
+
+
 /* $Id$ */
 
 #include <stdlib.h>
@@ -395,7 +405,8 @@ typedef int image_action(int num);
 
 int for_each_subfolder(char *folder, folder_action action, int recurse) {
 	
-	CameraFolderInfo	folderlist[512];
+	CameraFolderList	folderlist;
+	CameraFolderListEntry	*entry;
 
 	int	count = 0;
 	char	prefix[1024], subfolder[1024];
@@ -414,14 +425,18 @@ int for_each_subfolder(char *folder, folder_action action, int recurse) {
 	
 	/* Maybe we should rather trim last / instead of appending it? */
 	
-	count = gp_camera_folder_list(glob_camera, prefix, folderlist);
+	gp_camera_folder_list(glob_camera, prefix, &folderlist);
 			
-	for (i = 0; i < count; i++) {
-		sprintf(subfolder, "%s%s", prefix, folderlist[i].name);
-		if (action(subfolder) == GP_ERROR) 
-			return (GP_ERROR);
-		if (recurse) 
-			for_each_subfolder(subfolder, action, recurse);
+	for (i = 0; i < gp_folder_list_count(folderlist); i++) {
+		entry = gp_folder_list_entry(folderlist, i);
+		/* folder_list now returns a listing of all files/folders in the folder */
+		if (entry->is_folder) {
+			sprintf(subfolder, "%s%s", prefix, entry->name);
+			if (action(subfolder) == GP_ERROR) 
+				return (GP_ERROR);
+			if (recurse) 
+				for_each_subfolder(subfolder, action, recurse);
+		}
 	}
 
 	return (GP_OK);
@@ -651,38 +666,33 @@ int for_each_image_in_range(char *range, image_action action) {
 	option or set by library. num is 0-based.
 */
 
-int save_picture_to_file(int num, int thumbnail) {
+int save_picture_to_file(char *filename, int thumbnail) {
 
-	char filename[1024];
+	char out_filename[1024];
 	CameraFile *file;
 
 	file = gp_file_new();
 
 	if (thumbnail) {
-		if (gp_camera_file_get_preview(glob_camera, file, num) == GP_ERROR) {
+		if (gp_camera_file_get_preview(glob_camera, file, filename) == GP_ERROR) {
 			cli_error_print("Can not get preview #%i.", num+1);
 			return (GP_ERROR);
 		}
 	 } else {
-		if (gp_camera_file_get(glob_camera, file, num) == GP_ERROR) {
+		if (gp_camera_file_get(glob_camera, file, filename) == GP_ERROR) {
 			cli_error_print("Can not get picture #%i.", num+1);
 			return (GP_ERROR);
 		}
 	}
 	if ((glob_filename_override)&&(strlen(glob_filename)>0))
-		sprintf(filename, glob_filename, num+1);
-	   else if (strlen(file->name)>0)
-		strcpy(filename, file->name);
-	   else {
-		cli_error_print("Filename not specified. Use \"%sfilename\" to specify a filename", LONG_OPTION);
-		gp_file_free(file);
-		return (GP_ERROR);
-	}
+		sprintf(out_filename, glob_filename, num+1);
+	   else
+		strcpy(out_filename, filename);
 
 	if (!glob_quiet)
-		printf("Saving %s #%i as %s\n", thumbnail ? "preview" : "image", num+1, filename);
-	if (gp_file_save(file, filename) == GP_ERROR) 
-		cli_error_print("Can not save %s as %s", thumbnail ? "preview" : "image", filename);
+		printf("Saving %s #%i as %s\n", thumbnail ? "preview" : "image", num+1, out_filename);
+	if (gp_file_save(file, out_filename) == GP_ERROR) 
+		cli_error_print("Can not save %s as %s", thumbnail ? "preview" : "image", out_filename);
 
 	gp_file_free(file);
 
@@ -693,21 +703,21 @@ int save_picture_to_file(int num, int thumbnail) {
   Commonly used image actions.
 */
 
-int save_picture_action(int num) {
+int save_picture_action(char *filename) {
 		
-	if (save_picture_to_file(num, 0) == GP_ERROR)
+	if (save_picture_to_file(filename, 0) == GP_ERROR)
 		return (GP_ERROR);		
 }
 
-int save_thumbnail_action(int num) {
+int save_thumbnail_action(char *filename) {
 	
-	if (save_picture_to_file(num, 1) == GP_ERROR)
-		return (GP_ERROR);		
+	if (save_picture_to_file(filename, 1) == GP_ERROR)
+		return (GP_ERROR);
 }
 
-int delete_picture_action(int num) {
+int delete_picture_action(char *filename) {
 	
-	if (gp_camera_file_delete(glob_camera, num) == GP_ERROR)
+	if (gp_camera_file_delete(glob_camera, filename) == GP_ERROR)
 		return (GP_ERROR);		
 }
 
@@ -791,7 +801,7 @@ OPTION_CALLBACK(delete_picture) {
 OPTION_CALLBACK(delete_all_pictures) {
 
 	cli_debug_print("Deleting all pictures");
-			
+
 	if (set_globals() == GP_ERROR)
 		return (GP_ERROR);
 
