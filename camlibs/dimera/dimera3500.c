@@ -21,6 +21,14 @@
  *
  * History:
  * $Log$
+ * Revision 1.44  2002/01/22 04:57:59  dfandrich
+ * 	* TODO: changed note about temp.ppm and added one about multiple ops.
+ * 	* mesalib.c: Check for error in mesa_modem_check.
+ * 	* mesalib.h: Added include files.
+ * 	* dimera3500.c: Put temp.ppm file permanently into file list.
+ * 	  Fix percentage given to gp_file_progress.
+ * 	  Simplified debugging macros.
+ *
  * Revision 1.43  2002/01/16 21:41:58  cmarqu
  * Fix typo in dimera3500.c.
  *
@@ -147,13 +155,15 @@
 
 #include <config.h>
 
-#include <gphoto2.h>
+#include "mesalib.h"
+#include "dimeratab.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <_stdint.h>
-#include "mesalib.h"
-#include "dimeratab.h"
+
+#include <gphoto2.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -171,17 +181,14 @@
 
 #define GP_MODULE "dimera"
 
-/* Legacy macros */
-/*#define ERROR( s ) { \
-	fprintf( stderr, "%s: %s\n", __FUNCTION__, s ); \
-	error_dialog( s ); }*/
-#define ERROR(e) GP_DEBUG( "%s", (e))
-#define debuglog(e) GP_DEBUG( "%s", (e))
+#define ERROR(e) gp_log(GP_LOG_ERROR, GP_MODULE "/" __FILE__, (e))
 
-#define update_status(e) ERROR(e)
-
-#define max(a,b) ((a) > (b) ? (a) : (b))
-#define min(a,b) ((a) < (b) ? (a) : (b))
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
 
 #define IMAGE_NAME_TEMPLATE "dimera%02i.ppm"
 #define RAM_IMAGE_TEMPLATE "temp.ppm"	/* actually, sometimes this is a PGM */
@@ -285,9 +292,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
 	/* We only support root folder */
 	if (strcmp (folder, "/"))
 	{
-		gp_context_error (context, _("Only root folder is "
-			"supported - you requested a file listing for "
-			"folder '%s'."), folder);
+		gp_context_error (context, _("Only root folder is supported - "
+			"you requested a file listing for folder '%s'."), folder);
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 	}
 
@@ -299,12 +305,14 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
 	}
 
 	/*
-	 * Create pseudo file names for each picture in the camera, except
-	 * the temporary picture in RAM, which might not always be available.
+	 * Create pseudo file names for each picture in the camera, including
+	 * the temporary picture in RAM, which, unfortunately, might not always
+	 * be available.
 	 *
 	 * We don't add anything to the filesystem here - the filesystem does
 	 * that for us.
 	 */
+	CHECK (gp_filesystem_append (fs, "/", RAM_IMAGE_TEMPLATE, context));
 	return (gp_list_populate (list, IMAGE_NAME_TEMPLATE, count));
 }
 
@@ -312,7 +320,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder, const char *
 
 	Camera *camera = user_data;
 	int num, width, height;
-	char *data;
+	uint8_t *data;
 	long int size;
 
 	/* Retrieve the number of the photo on the camera */
@@ -434,27 +442,17 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	}
 
 	/*
-	 * At this point, the previous RAM_IMAGE_TEMPLATE file (if it existed)
-	 * has disappeared. Tell the CameraFilesystem. If it didn't exist, 
-	 * never mind (don't check return value).
-	 */
-	gp_filesystem_delete_file_noop (camera->fs, "/", RAM_IMAGE_TEMPLATE,
-					context);
-
-	/*
 	 * User must download special RAM_IMAGE_TEMPLATE file.
-	 * Don't forget to tell the CameraFilesystem about it.
 	 */
 	strncpy (path->folder, "/", sizeof (path->folder));
 	strncpy (path->name, RAM_IMAGE_TEMPLATE, sizeof (path->name));
-	CHECK (gp_filesystem_append (camera->fs, path->folder, path->name, context));
 
 	return (GP_OK);
 }
 
 static int camera_capture_preview(Camera *camera, CameraFile *file, GPContext *context) {
         long int size;
-	char *data;
+	uint8_t *data;
 
 	gp_file_set_name (file, RAM_IMAGE_TEMPLATE);
 	gp_file_set_mime_type (file, GP_MIME_PGM);
@@ -476,6 +474,7 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 	uint8_t eeprom_info[MESA_EEPROM_SZ];
 	/* Table of EEPROM capacities in Mb based on part compatibility ID */
 	static uint8_t const eeprom_size_table[14] = {
+		/* ID    Mb */
 		/* 00 */ 0,
 		/* 01 */ 8,
 		/* 02 */ 8,
@@ -508,6 +507,7 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 		if (eeprom_info[11] < sizeof(eeprom_size_table))
 			eeprom_capacity = eeprom_size_table[eeprom_info[11]];
 	}
+	/* Estimate the number of pictures that this size of flash can hold */
 	hi_pics_max = eeprom_capacity / 2; 
 	lo_pics_max = (eeprom_capacity * 13) / 8;
 
@@ -556,13 +556,13 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) {
 
 	strcpy(manual->text, _(
-	"  Image glitches or problems communicating are\n"
-	"often caused by a low battery.\n"
-	"  Images captured remotely on this camera are stored\n"
-	"in temporary RAM and not in the flash memory card.\n"
-	"  Exposure control when capturing all images is\n"
-	"automatically set by the capture preview function.\n"
-	"  Image quality is currently lower than it could be.\n"
+	"* Image glitches or problems communicating are\n"
+	"  often caused by a low battery.\n"
+	"* Images captured remotely on this camera are stored\n"
+	"  in temporary RAM and not in the flash memory card.\n"
+	"* Exposure control when capturing all images is\n"
+	"  automatically set by the capture preview function.\n"
+	"* Image quality is currently lower than it could be.\n"
 	));
 
 	return GP_OK;
@@ -641,7 +641,7 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 
 	if ( picnum != RAM_IMAGE_NUM )
 	{
-		update_status( _("Getting Image Info") );
+		GP_DEBUG("Getting Image Info");
 		if ( (r = mesa_read_image_info( camera->port, picnum, NULL )) < 0 )
 		{
 			ERROR("Can't get Image Info");
@@ -659,7 +659,7 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 			*width = 640;
 		}
 
-		update_status( _("Loading Image") );
+		GP_DEBUG("Loading Image");
 		if ( mesa_load_image( camera->port, picnum ) != GP_OK )
 		{
 			ERROR("Image Load failed");
@@ -676,7 +676,7 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 
 	*size = *height * *width;	/* 8 bits per pixel in raw CCD format */
 
-	update_status( _("Downloading Image") );
+	GP_DEBUG("Downloading Image");
 
 	rbuffer = (uint8_t *)malloc( *size );
 	if ( rbuffer == NULL )
@@ -697,10 +697,12 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 	/* due to reports of mesa_read_image not working for some cameras */
 	/* this is changed to use mesa_read_row */
 #if 0
+	id = gp_context_progress_start (context, *height + 4,
+					_("Downloading image..."));
 	for ( ia.row = 4, b = rbuffer; ia.row < (height + 4) ;
 			ia.row += ia.row_cnt, b += s )
 	{
-		update_status( _("Downloading Image") );
+		GP_DEBUG("Downloading Image");
 		for ( retry = 10;; )
 		{
 
@@ -710,7 +712,6 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 
 			if ( (s == GP_ERROR_TIMEOUT || s == GP_ERROR_CORRUPTED_DATA) && --retry > 0)
 			{
-				update_status( _("Retransmitting") );
 				GP_DEBUG( "Dimera_Get_Full_Image: retrans"); 
 				continue;
 			}
@@ -722,11 +723,12 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 			gp_context_error (context, _("Problem downloading image"));
 			return NULL;
 		}
-		if (gp_file_progress(file, ia.row / (*height + 4) ) < 0)
+		gp_context_progress_update (context, id, ia.row);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 		{
 			free( rbuffer );
 			*size = 0;
-			gp_context_error (context, _("User cancelled download"));
+			gp_context_error (context, _("User canceled download"));
 			return NULL;
 		}
 	}
@@ -736,7 +738,7 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 	for ( ia.row = 4, b = rbuffer; ia.row < (*height + 4) ;
 			ia.row++, b += s )
 	{
-		update_status( _("Downloading Image") );
+		GP_DEBUG("Downloading Image");
 		for ( retry = 10;; )
 		{
 
@@ -746,8 +748,7 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 
 			if ( (s == GP_ERROR_TIMEOUT || s == GP_ERROR_CORRUPTED_DATA) && --retry > 0)
 			{
-				update_status( _("Retransmitting") );
-				GP_DEBUG( "Dimera_Get_Full_Image: retrans"); 
+				GP_DEBUG("Dimera_Get_Full_Image: retrans"); 
 				continue;
 			}
 			GP_DEBUG(
@@ -817,17 +818,17 @@ static unsigned calc_new_exposure(unsigned exposure, unsigned brightness) {
 			/* We found the best curve for this scene */
 			break;
 	}
-	i = max(i-1, 0);
+	i = MAX(i-1, 0);
 
 	/* Using this curve, calculate the optimum exposure */
-	return max(MIN_EXPOSURE,min(MAX_EXPOSURE,(unsigned) exp((double)(8.0 - exposure_tables[i].b) / exposure_tables[i].M)));
+	return MAX(MIN_EXPOSURE,MIN(MAX_EXPOSURE,(unsigned) exp((double)(8.0 - exposure_tables[i].b) / exposure_tables[i].M)));
 
 }
 
 #else
 /* Use linear interpolation to choose a better exposure level for this scene */
 static unsigned calc_new_exposure(unsigned exposure, unsigned brightness) {
-	return max(MIN_EXPOSURE,min(MAX_EXPOSURE,(exposure * 128L) / brightness));
+	return MAX(MIN_EXPOSURE,MIN(MAX_EXPOSURE,(exposure * 128L) / brightness));
 }
 #endif
 
@@ -927,7 +928,7 @@ int camera_init (Camera *camera, GPContext *context) {
         /* Use flash, if necessary, when capturing picture */
 	camera->pl->auto_flash = 1;
 
-        debuglog("Opening port");
+        GP_DEBUG("Opening port");
         if ( (ret = mesa_port_open(camera->port)) != GP_OK)
         {
                 ERROR("Camera Open Failed");
@@ -937,7 +938,7 @@ int camera_init (Camera *camera, GPContext *context) {
                 return ret;
         }
 
-        debuglog("Resetting camera");
+        GP_DEBUG("Resetting camera");
         if ( (ret = mesa_reset(camera->port)) != GP_OK )
         {
                 ERROR("Camera Reset Failed");
@@ -947,7 +948,7 @@ int camera_init (Camera *camera, GPContext *context) {
                 return ret;
         }
 
-        debuglog("Setting speed");
+        GP_DEBUG("Setting speed");
         if ( (ret = mesa_set_speed(camera->port, selected_speed)) != GP_OK )
         {
                 ERROR("Camera Speed Setting Failed");
@@ -958,7 +959,7 @@ int camera_init (Camera *camera, GPContext *context) {
         }
 
 
-        debuglog("Checking for modem");
+        GP_DEBUG("Checking for modem");
         switch ( ret = mesa_modem_check(camera->port) )
         {
         case GP_ERROR_IO:

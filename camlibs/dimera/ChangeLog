@@ -1,3 +1,12 @@
+2002-01-21  Dan Fandrich <dan@coneharvesters.com.>
+
+	* TODO: changed note about temp.ppm and added one about multiple ops.
+	* mesalib.c: Check for error in mesa_modem_check.
+	* mesalib.h: Added include files.
+	* dimera3500.c: Put temp.ppm file permanently into file list.
+	  Fix percentage given to gp_file_progress.
+	  Simplified debugging macros.
+
 2002-01-16  Colin Marquardt  <colin@marquardt-home.de>
 
 	* dimera3500.c: Fix typo.

@@ -21,15 +21,16 @@
 */
 #include <config.h>
 
+#include "mesalib.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/time.h>
 #include <string.h>
 
-#include "gphoto2.h"
-#include "gphoto2-endian.h"
-#include "mesalib.h"
+#include <gphoto2.h>
+#include <gphoto2-endian.h>
 
 #define GP_MODULE "dimera"
 #define debuglog(e) GP_DEBUG( "%s", (e))
@@ -670,12 +671,13 @@ mesa_modem_check( GPPort *port )
 		return GP_OK;
 
 	/* Anything past this point results in an error */
-	mesa_read( port, b+1, sizeof(b) - 1, 2, 2 );
-
-	if ( b[0] == 'A' && b[1] == 'T' )
+	if ( mesa_read( port, b+1, sizeof(b) - 1, 2, 2 ) == sizeof(b) - 1 )
 	{
-		mesa_flush( port, 10 );
-		return GP_ERROR_MODEL_NOT_FOUND;
+		if ( b[0] == 'A' && b[1] == 'T' )
+		{
+			mesa_flush( port, 10 );
+			return GP_ERROR_MODEL_NOT_FOUND;
+		}
 	}
 
 	mesa_flush( port, 10 );

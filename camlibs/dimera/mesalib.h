@@ -11,6 +11,14 @@
  *
  * History:
  * $Log$
+ * Revision 1.7  2002/01/22 04:57:59  dfandrich
+ * 	* TODO: changed note about temp.ppm and added one about multiple ops.
+ * 	* mesalib.c: Check for error in mesa_modem_check.
+ * 	* mesalib.h: Added include files.
+ * 	* dimera3500.c: Put temp.ppm file permanently into file list.
+ * 	  Fix percentage given to gp_file_progress.
+ * 	  Simplified debugging macros.
+ *
  * Revision 1.6  2001/12/06 01:45:49  dfandrich
  * 	* configure.in
  * 	* libgphoto2_port/m4/stdint.m4
@@ -49,7 +57,9 @@
 #ifndef MESALIB_H
 #define MESALIB_H
 
+#include <config.h>
 #include <_stdint.h>
+#include <gphoto2-port.h>
 
 #define CHECK(result) {int res = (result); if (res < 0) return (res);}
 
