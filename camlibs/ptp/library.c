@@ -1029,15 +1029,6 @@ camera_init (Camera *camera, GPContext *context)
 	/* Use the defaults the core parsed */
 	CR (gp_port_set_settings (camera->port, settings));
 
-	/* get device info */
-	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
-	&camera->pl->params.deviceinfo));
-
-	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
-	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
-	GP_DEBUG ("  model: %s", camera->pl->params.deviceinfo.Model);
-	GP_DEBUG ("  device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
-
 	/* Establish a connection to the camera */
 	((PTPData *) camera->pl->params.data)->context = context;
 	ret=ptp_opensession (&camera->pl->params, 1);
@@ -1049,6 +1040,16 @@ camera_init (Camera *camera, GPContext *context)
 		report_result(context, ret);
 		return (translate_ptp_result(ret));
 	}
+
+	/* Seems HP does not like getdevinfo outside of session */
+	/* get device info */
+	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
+	&camera->pl->params.deviceinfo));
+
+	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
+	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
+	GP_DEBUG ("  model: %s", camera->pl->params.deviceinfo.Model);
+	GP_DEBUG ("  device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
 
 	/* init internal ptp objectfiles (required for fs implementation) */
 	init_ptp_fs (camera, context);
