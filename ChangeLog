@@ -1,5 +1,12 @@
 2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* tests/test-filesys.c: New
+	* tests/Makefile.am: Compile test-filesys.c
+	* libgphoto2/filesys.c: Several bugfixes - there are still bugs in
+	there.
+
+2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in: Don't generate camlibs/template/Makefile
 	* libgphoto2/filesys.c:
 	* include/gphoto2-filesys.h (gp_filesystem_delete_all): New
