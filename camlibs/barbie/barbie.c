@@ -10,6 +10,7 @@ extern char packet_1[];
 
 char *models[] = {
 	"Barbie",
+	"Nick Click",
 	"WWF",
 	"Hot Wheels",
 	NULL
