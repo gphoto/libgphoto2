@@ -1,5 +1,12 @@
 2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
 
+	Patch by Arnaud Launay <asl@launay.org>, which corrects the
+	previous patch:
+
+	* Makefile.am: Correct the flags to tar.
+
+2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
+
 	Patch by Arnaud Launay <asl@launay.org>, slightly modified:
 
 	* Makefile.am: Get rid of the automake flags, use --bzip2 instead of
