@@ -1,3 +1,5 @@
+2003-06-12 Mariusz Woloszyn
+	* library.c: added DX6340 explicite support
 2003-05-14 Mariusz Woloszyn
 	* ptpcam.c: changed test_ptp.c to ptpcam.c;
 	* Makefile.am: changed test_ptp.c to ptpcam.c;
