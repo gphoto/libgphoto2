@@ -46,3 +46,7 @@ kamera (external project):
 
 GnoCam (external project):
 	Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+/camlibs/polaroid:
+	Nathan Stenzel <nathanstenzel@users.sourceforge.net>
+
