@@ -8,7 +8,7 @@ GtkWidget* create_confirm_window (void);
 GtkWidget* create_message_window (void);
 GtkWidget* create_select_camera_window (void);
 
-int interface_message(char *message);
-int interface_status(char *message);
-int interface_progress(float percentage);
-int interface_confirm(char *message);
+int gp_interface_message(char *message);
+int gp_interface_status(char *message);
+int gp_interface_progress(float percentage);
+int gp_interface_confirm(char *message);

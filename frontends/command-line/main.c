@@ -57,6 +57,7 @@ int  set_globals();
 OPTION_CALLBACK(abilities);
 OPTION_CALLBACK(help);
 OPTION_CALLBACK(test);
+OPTION_CALLBACK(script);
 OPTION_CALLBACK(list_cameras);
 OPTION_CALLBACK(list_ports);
 OPTION_CALLBACK(filename);
@@ -92,6 +93,7 @@ Option option[] = {
 /* Display and die actions */
 {"h", "help",		"",		"Displays this help screen",	help,		0},
 {"",  "verify",		"",		"Verifies gPhoto installation",	test,		0},
+{"s", "script",		"",		"gPhoto scripting (stdin/stdout)",script,	0},
 {"",  "list-cameras",	"",		"List supported camera models",	list_cameras,	0},
 {"",  "list-ports",	"",		"List supported port devices",	list_ports,	0},
 
@@ -133,6 +135,7 @@ int  glob_speed;
 CameraAbilities glob_abilities;
 
 int  glob_debug;
+int  glob_script=0;
 int  glob_quiet=0;
 int  glob_filename_override=0;
 char glob_filename[128];
@@ -318,6 +321,21 @@ OPTION_CALLBACK(quiet) {
 	return (GP_OK);
 }
 
+OPTION_CALLBACK(script) {
+
+	char buf[1024];
+	int n=0;
+
+	glob_script = 1;
+
+	while (1) {
+		n = read(0, buf, 1024);
+		gpfe_script(buf);
+	}
+
+	return (GP_OK);
+}
+
 void list_folders_rec (char *path) {
 	/* List all the folders on the camera recursively. */
 
@@ -411,7 +429,12 @@ int get_picture_common(int num, int thumbnail) {
 
 	count = gp_file_count();
 
-	if (num >= count) {
+	if (count == GP_ERROR) {
+		error_print("Could not get number of pictures on camera");
+		return (GP_ERROR);
+	}
+
+	if (num > count) {
 		error_print("Picture number is too large");
 		return (GP_ERROR);
 	}
@@ -424,9 +447,9 @@ int get_picture_common(int num, int thumbnail) {
 			gp_file_free(f);
 			return (GP_ERROR);
 		}
-		gp_file_get_preview(num, f);
+		gp_file_get_preview(num-1, f);
 	 } else
-		gp_file_get(num, f);
+		gp_file_get(num-1, f);
 
 	if ((glob_filename_override)&&(strlen(glob_filename)>0))
 		sprintf(filename, glob_filename, num);
@@ -452,7 +475,7 @@ int get_picture_common(int num, int thumbnail) {
 
 OPTION_CALLBACK(get_picture) {
 
-	return (get_picture_common(atoi(arg), 0));
+	return (get_picture_common(atoi(arg)-1, 0));
 }
 
 OPTION_CALLBACK(get_thumbnail) {
@@ -462,7 +485,7 @@ OPTION_CALLBACK(get_thumbnail) {
 		return (GP_ERROR);
 	}
 
-	return (get_picture_common(atoi(arg), 1));
+	return (get_picture_common(atoi(arg)-1, 1));
 }
 
 OPTION_CALLBACK(delete_picture) {
@@ -482,12 +505,17 @@ OPTION_CALLBACK(delete_picture) {
 
 	count = gp_file_count();
 
-	if (num >= count) {
+	if (count == GP_ERROR) {
+		error_print("Could not get number of pictures on camera");
+		return (GP_ERROR);
+	}
+
+	if (num > count) {
 		error_print("Picture number is too large.\nRemember that numbering begins at zero (0)");
 		return (GP_ERROR);
 	}	
 
-	if (gp_file_delete(num)==GP_ERROR) {
+	if (gp_file_delete(num-1)==GP_ERROR) {
 		error_print("Could not delete the picture");
 		return (GP_ERROR);		
 	}
@@ -799,7 +827,7 @@ void usage () {
 		x++;
 	}
 	printf( "------------------------------------------------------------------------\n"
-	        "[Use double-quotes around arguments] [Picture numbers begin at zero (0)]\n");
+	        "[Use double-quotes around arguments]     [Picture numbers begin one (1)]\n");
 }
 
 /* Misc functions							*/

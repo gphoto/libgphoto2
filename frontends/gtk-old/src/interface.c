@@ -19,22 +19,22 @@
 #include "interface.h"
 #include "support.h"
 
-int interface_message(char *message) {
+int gp_interface_message(char *message) {
 
 	return (GP_OK);
 }
 
-int interface_status(char *message) {
+int gp_interface_status(char *message) {
 
 	return (GP_OK);
 }
 
-int interface_progress(float percentage) {
+int gp_interface_progress(float percentage) {
 
 	return (GP_OK);
 }
 
-int interface_confirm(char *message) {
+int gp_interface_confirm(char *message) {
 
 	return (GP_OK);
 }

@@ -2,7 +2,7 @@
 
 bin_PROGRAMS = gphoto2
 
-CFLAGS = @CFLAGS@   -g `gpio-config --cflags` -I$(top_srcdir)/include
+CFLAGS = @CFLAGS@   -g `gpio-config --cflags` -I$(top_srcdir)/include -I../libgphoto2_frontend
 LDFLAGS = @LDFLAGS@ -g `gpio-config --libs`
 
 gphoto2_SOURCES = \

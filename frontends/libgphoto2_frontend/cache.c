@@ -4,11 +4,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <gphoto2.h>
 #include <gphoto2-frontend.h>
 
 
-int cache_put (int camera_number, int folder_number, int file_number, CameraFile *file) {
+int gpfe_cache_put (int camera_number, int folder_number, int file_number, CameraFile *file) {
 
 	FILE *fp;
 	char buf[1024];
@@ -29,7 +28,7 @@ int cache_put (int camera_number, int folder_number, int file_number, CameraFile
 	return (GP_OK);
 }
 
-int cache_get (int camera_number, int folder_number, int file_number, CameraFile *file) {
+int gpfe_cache_get (int camera_number, int folder_number, int file_number, CameraFile *file) {
 
 	FILE *fp;
 	DIR  *d;
@@ -82,7 +81,7 @@ int cache_get (int camera_number, int folder_number, int file_number, CameraFile
 	return (GP_ERROR);
 }
 
-int cache_delete (int camera_number, int folder_number, int file_number) {
+int gpfe_cache_delete (int camera_number, int folder_number, int file_number) {
 
 	/* if file_number   == -1, all the files in the folder get deleted */
 	/* if folder_number == -1, all the folders for camera get deleted */
@@ -141,7 +140,7 @@ int cache_delete (int camera_number, int folder_number, int file_number) {
 	return (GP_OK);
 }
 
-int cache_exists (int camera_number, int folder_number, int file_number) {
+int gpfe_cache_exists (int camera_number, int folder_number, int file_number) {
 
 	DIR  *d;
 	struct dirent *de;

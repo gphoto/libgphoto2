@@ -1,4 +1,4 @@
-#include <gphoto2.h>
+#include <gphoto2-frontend.h>
 
 /*
 	Contains the command-lines for altering various image types
