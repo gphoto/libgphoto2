@@ -119,6 +119,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Olympus C-2500Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 }, /* Does this model exist? */
 	{"Olympus C-3000Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0},
 	{"Olympus C-3030Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0},
+	{"Olympus C-3040Z",     SIERRA_MODEL_OLYMPUS,   0x07b4, 0x105, 1},
 	{"Panasonic Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid PDC 2300Z",	SIERRA_MODEL_DEFAULT,   0, 0, 0 },
