@@ -319,6 +319,10 @@ gp_camera_new (Camera **camera)
 		return (GP_ERROR_NO_MEMORY);
 	memset (*camera, 0, sizeof (Camera));
 
+#ifdef HAVE_LTDL
+	lt_dlinit ();
+#endif
+
         (*camera)->functions = malloc(sizeof(CameraFunctions));
 	if (!(*camera)->functions) {
 		gp_camera_free (*camera);
@@ -759,6 +763,10 @@ gp_camera_free (Camera *camera)
 	}
  
 	free (camera);
+
+#ifdef HAVE_LTDL
+	lt_dlexit ();
+#endif
 
 	return (GP_OK);
 }

@@ -9,7 +9,6 @@ AC_LIBTOOL_DLOPEN
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
-AM_PROG_LIBTOOL
 AC_PROG_INSTALL
 
 dnl ---------------------------------------------------------------------------
@@ -55,16 +54,6 @@ else
 fi
 changequote([, ])dnl
 
-dnl ---------------------------------------------------------------------------
-dnl Checks for libraries.
-dnl ---------------------------------------------------------------------------
-AC_CHECK_FUNC(dlopen, dlopen_without_libdl=true)
-# if dlopen doesn't require linking against libdl (e.g. FreeBSD)
-# we don't have to check for dlopen in libdl any more
-if test "$dlopen_without_libdl" != "true"; then
-        AC_CHECK_LIB(dl, dlopen)
-fi
-
 dnl Replace `main' with a function in -libs:
 AC_CHECK_LIB(ibs, main)
 
@@ -76,14 +65,30 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS(unistd.h mcheck.h)
 
 dnl ---------------------------------------------------------------------------
-dnl Check for libtool
+dnl Check for libtool: lt_dlforeachfile has been introduced in 
+dnl		       libtool-1.4. However, there are still systems out
+dnl		       there running libtool-1.3. For those, we will need
+dnl		       dlopen. Note that on some systems (e.g. FreeBSD)
+dnl		       -ldl isn't needed.
 dnl ---------------------------------------------------------------------------
+AM_PROG_LIBTOOL
+no_libtool=true
 AC_CHECK_LIB(ltdl, lt_dlforeachfile,
 	AC_CHECK_HEADER(ltdl.h,
 		AC_DEFINE(HAVE_LTDL)
 		LTDL_LIBS="-lltdl"
+		no_libtool=false
 	)
 )
+if $no_libtool; then
+	AC_CHECK_FUNC(dlopen,,
+		AC_CHECK_LIB(dl, dlopen,
+			LTDL_LIBS="-ldl",
+			AC_ERROR([
+*** Could not determine how to handle
+*** shared libraries!
+])))
+fi
 AC_SUBST(LTDL_LIBS)
 
 dnl Checks for typedefs, structures, and compiler characteristics.

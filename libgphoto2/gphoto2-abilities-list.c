@@ -85,9 +85,11 @@ gp_abilities_list_new (CameraAbilitiesList **list)
 	CHECK_NULL (list);
 
 	CHECK_MEM (*list = malloc (sizeof (CameraAbilitiesList)));
+	memset (*list, 0, sizeof (CameraAbilitiesList));
 
-	(*list)->count = 0;
-	(*list)->abilities = NULL;
+#if HAVE_LTDL
+	lt_dlinit ();
+#endif
 
 	return (GP_OK);
 }
@@ -111,6 +113,10 @@ gp_abilities_list_free (CameraAbilitiesList *list)
 	}
 
 	free (list);
+
+#ifdef HAVE_LTDL
+	lt_dlexit ();
+#endif
 
 	return (GP_OK);
 }
@@ -153,7 +159,6 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 	CHECK_RESULT (gp_list_reset (&flist));
 	CHECK_RESULT (lt_dlforeachfile (dir, foreach_func, &flist));
 	CHECK_RESULT (count = gp_list_count (&flist));
-	lt_dlinit ();
 	for (i = 0; i < count; i++) {
 		CHECK_RESULT (gp_list_get_name (&flist, i, &filename));
 		lh = lt_dlopenext (filename);
