@@ -107,7 +107,7 @@ enum _PDCFlash {
 typedef struct _PDCInfo PDCInfo;
 struct _PDCInfo {
 	unsigned int num_taken, num_free;
-	unsigned int auto_power_off;
+	unsigned char auto_power_off;
 	char version[6];
 	int memory;
 	PDCDate date;
