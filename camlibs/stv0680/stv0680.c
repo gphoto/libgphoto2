@@ -52,7 +52,7 @@ struct camera_to_usb {
 	  int serial;
 } camera_to_usb[] = {
         /* http://www.vvl.co.uk/products/co-processors/680/680.htm */
-	{ "STM USB Dual-mode camera",   0x0553, 0x0202, 1 },
+	{ "STM:USB Dual-mode camera",   0x0553, 0x0202, 1 },
 	{ "STV0680",                    0x0553, 0x0202, 1 },
 
 	/* You can search in google for them, using either:
@@ -63,59 +63,69 @@ struct camera_to_usb {
 	 */
 
 	/* According to: http://www.bazelet.com/generic74.html */
-	{ "SpyPen Axys",                0x0553, 0x0202, 0 },
-	{ "SpyPen Cleo",                0x0553, 0x0202, 0 },
-	{ "SpyPen Xion",                0x0553, 0x0202, 0 },
-	{ "SpyPen Memo",                0x0553, 0x0202, 0 },
+	{ "SpyPen:Axys",                0x0553, 0x0202, 0 },
+	{ "SpyPen:Cleo",                0x0553, 0x0202, 0 },
+	{ "SpyPen:Xion",                0x0553, 0x0202, 0 },
+	{ "SpyPen:Memo",                0x0553, 0x0202, 0 },
 
 	/* Tested by Priit Laes <amd@tt.ee> */
-	{ "SpyPen Luxo",                0x0553, 0x0202, 0 },
+	{ "SpyPen:Luxo",                0x0553, 0x0202, 0 },
 
 	/* http://www.iomagic.com/support/digitalcameras/magicimage400/magicimage400manual.htm */
-	{ "IOMagic MagicImage 400",     0x0553, 0x0202, 0 },
+	{ "IOMagic:MagicImage 400",     0x0553, 0x0202, 0 },
 	/* http://www.pctekonline.com/phoebsmardig.html */
-	{ "Phoebe Smartcam",            0x0553, 0x0202, 0 },
-	{ "QuickPix QP1",               0x0553, 0x0202, 0 },
-	{ "Hawking DC120 Pocketcam",    0x0553, 0x0202, 0 },
-	{ "Aiptek PenCam Trio",         0x0553, 0x0202, 0 },
+	{ "Phoebe:Smartcam",            0x0553, 0x0202, 0 },
+	{ "QuickPix:QP1",               0x0553, 0x0202, 0 },
+	{ "Hawking:DC120 Pocketcam",    0x0553, 0x0202, 0 },
+	{ "Aiptek:PenCam Trio",         0x0553, 0x0202, 0 },
 	/* reported by Klaus-M. Klingsporn */
-	{ "Aiptek PalmCam Trio",        0x0553, 0x0202, 0 },
+	{ "Aiptek:PalmCam Trio",        0x0553, 0x0202, 0 },
 	/* Made by Medion (ALDI hw reseller). Their homepage is broken, so
 	 * no URL. This is the camera I have -Marcus. CIF */
-	{ "Micromaxx Digital Camera",   0x0553, 0x0202, 0 },
-	/* http://www.digitaldreamco.com/shop/elegante.htm, VGA */
-	{ "l'elegante by DigitalDream", 0x0553, 0x0202, 0 },
-	/* http://www.digitaldreamco.com/shop/espion.htm, CIF */
-	{ "l'espion by DigitalDream",   0x0553, 0x0202, 0 },
-	/* http://www.digitaldreamco.com/shop/lesprit.html, CIF */
-	{ "l'esprit by DigitalDream",   0x0553, 0x0202, 0 },
-	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA */
-	{ "la ronde by DigitalDream",   0x0553, 0x0202, 0 },
-	/* reported by jerry white */
-	{ "Argus DC-1500",		0x0553, 0x0202, 1 },
+	{ "Micromaxx:Digital Camera",   0x0553, 0x0202, 0 },
+/* Changed names to fit Vendor:Model notation
+*  Michael Rensing <mrensing@users.sourceforge.net>
+*
+*	http://www.digitaldreamco.com/shop/elegante.htm, VGA 
+*	{ "l'elegante by DigitalDream", 0x0553, 0x0202, 0 },
+*	/* http://www.digitaldreamco.com/shop/espion.htm, CIF 
+*	{ "l'espion by DigitalDream",   0x0553, 0x0202, 0 },
+*	/* http://www.digitaldreamco.com/shop/lesprit.html, CIF 
+*	{ "l'esprit by DigitalDream",   0x0553, 0x0202, 0 },
+*	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA 
+*	{ "la ronde by DigitalDream",   0x0553, 0x0202, 0 },
+*/
+       	{ "DigitalDream:l'elegante", 0x0553, 0x0202, 0 },
+      	{ "DigitalDream:l'espion",   0x0553, 0x0202, 0 },
+      	{ "DigitalDream:l'esprit",   0x0553, 0x0202, 0 },
+      	{ "DigitalDream:la ronde",   0x0553, 0x0202, 0 },
+	
+
+	/* reported by jerry white */ 
+	{ "Argus:DC-1500",		0x0553, 0x0202, 1 },
 	/* reported by Philippe Libat <philippe@mandrakesoft.com>,
 	 * serial only. */
 	{ "Yahoo!Cam",			0x0   , 0x0   , 1 },
 
-	{ "AEG Snap 300",               0x0553, 0x0202, 0 },
+	{ "AEG:Snap 300",               0x0553, 0x0202, 0 },
 
 	/* ALDI (german discounter) version */
-	{ "Pencam TEVION MD 9456",	0x0553, 0x0202, 0 },
+	{ "Pencam:TEVION MD 9456",	0x0553, 0x0202, 0 },
 
 	/* SiPix Stylecam looks like stv0680, but reportedly is not  */
 	/* (has USB id 0xd64/0x1001) */
 	/* http://www.umax.de/digicam/AstraPen_SL.htm.
 	 * There is an additional 100K (CIF), 300K (VGA) tag after the name. */
-	{ "UMAX AstraPen",              0x0553, 0x0202, 0 }, /* SV and SL */
+	{ "UMAX:AstraPen",              0x0553, 0x0202, 0 }, /* SV and SL */
 
 	/* The Umax AstraPix 320S is a SiPix Stylecam clone, reported by Marius
 	 * Schaefer. */
 	/* http://www.umax.de/digicam/AstraPix320S.htm, VGA */
 
-	{ "Fuji IX-1",                  0x0553, 0x0202, 0 }, /* Unconfirmed */
+	{ "Fuji:IX-1",                  0x0553, 0x0202, 0 }, /* Unconfirmed */
 
 	/* Added for the konica e-mini by Roland Marcus Rutschmann<Rutschmann@gmx.de>*/
-	{ "Konica e-mini",              0x04c8, 0x0722, 0 },
+	{ "Konica:e-mini",              0x04c8, 0x0722, 0 },
 };
 
 int camera_id (CameraText *id) 
