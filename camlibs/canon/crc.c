@@ -208,7 +208,7 @@ canon_psa50_gen_crc (const unsigned char *pkt, int len)
 	init = find_init (len);
 	if (init != -1)
 		return chksum (init, len, pkt);
-	fprintf (stderr, "FATAL ERROR: initial CRC value for length %d " "unknown\n", len);
+	fprintf (stderr, "FATAL ERROR: initial CRC value for length %d unknown\n", len);
 	exit (1);
 }
 

@@ -139,14 +139,20 @@ is_movie (const char *name)
  * @Returns: pointer to immutable string with the MIME type
  **/
 
-const char *filename2mimetype(const char *filename)
+const char *
+filename2mimetype (const char *filename)
 {
-	const char *pos = strchr(filename, '.');
+	const char *pos = strchr (filename, '.');
+
 	if (pos) {
-		if      (!strcmp (pos, ".AVI")) return GP_MIME_AVI;
-		else if (!strcmp (pos, ".JPG")) return GP_MIME_JPEG;
-		else if (!strcmp (pos, ".THM")) return GP_MIME_JPEG;
-		else if (!strcmp (pos, ".CRW")) return GP_MIME_CRW;
+		if (!strcmp (pos, ".AVI"))
+			return GP_MIME_AVI;
+		else if (!strcmp (pos, ".JPG"))
+			return GP_MIME_JPEG;
+		else if (!strcmp (pos, ".THM"))
+			return GP_MIME_JPEG;
+		else if (!strcmp (pos, ".CRW"))
+			return GP_MIME_CRW;
 	}
 	return GP_MIME_UNKNOWN;
 }
