@@ -1,5 +1,7 @@
 libgphoto2 CVS
 
+   * separated libgphoto2 sources from gphoto2 command line interface
+
    * gphoto2 manual moved to separate package gphoto2-manual
 
 drivers (camlibs):
