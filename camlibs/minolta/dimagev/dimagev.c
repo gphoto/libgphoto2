@@ -126,6 +126,13 @@ int camera_init (Camera *camera, CameraInit *init) {
 
 	if  ( dimagev_get_camera_data(dimagev) == GP_ERROR ) {
 		if ( camera->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to get current camera data");
+		}
+		return GP_ERROR;
+	}
+
+	if  ( dimagev_get_camera_status(dimagev) == GP_ERROR ) {
+		if ( camera->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to get current camera status");
 		}
 		return GP_ERROR;
@@ -313,7 +320,7 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 		case GP_CAPTURE_PREVIEW: case GP_CAPTURE_IMAGE:
 			/* Proceed with the code below. Since the Dimage V doesn't support
 			grabbing just the input (to the best of my knowledge), we take the
-			pictureeither way. */
+			picture either way. */
 			break;
 		default:
 			if ( dimagev->debug != 0 ) {
