@@ -19,7 +19,7 @@
 ..
 .TH "GPHOTO2" 1 "February 2002" "" ""
 .SH NAME
-gphoto2 \- command-line gPhoto2 client
+gphoto2 \- command-line gphoto2 client
 .SH "SYNOPSIS"
 
 .nf
@@ -46,7 +46,7 @@ gphoto2 \- command-line gPhoto2 client
 .SH "DESCRIPTION"
 
 .PP
-gPhoto2 is a cross-platform digital camera library, and \fBgphoto2\fR is a command-line client for it.
+\fBgphoto2\fR(3) is a cross-platform digital camera library, and \fBgphoto2\fR(1) is a command-line client for it.
 
 .PP
 Where an option takes a range of files, thumbnails, or other data, they are numbered beginning at 1.
@@ -73,11 +73,11 @@ List supported camera models.
 
 .TP
 \fB--usb-usermap-script\fR \fINAME\fR
-Specify name of hotplug usb script used in the output of \fB--print-usb-usermap\fR.
+Use \fINAME\fR as the hotplug usb script used in the output of \fB--print-usb-usermap\fR. Default is "usbcam".
 
 .TP
 \fB--print-usb-usermap\fR
-Create output for usb.usermap.
+For every camera supported by your version of \fBgphoto2\fR, print the corresponding line for inclusion into the \fIusb.usermap\fR hotplug config file. The script name used in these lines is specified with the \fB--usb-usermap-script\fR option.
 
 .TP
 \fB--list-ports\fR
@@ -229,9 +229,12 @@ About the camera driver.
 
 .TP
 \fB--shell\fR
-gPhoto shell. In this interactive environment, the following commands are available:
+Start the gphoto2 shell, an interactive environment. See SHELL MODE for a detailed description.
 
-.RS
+.SH "SHELL MODE"
+
+.PP
+The following commands are available:
 
 .TP
 cd
@@ -243,7 +246,7 @@ Change to a directory on the local machine.
 
 .TP
 exit, quit, q
-Exit the gPhoto shell.
+Exit the gphoto2 shell.
 
 .TP
 get
@@ -277,9 +280,26 @@ Displays command usage.
 ls
 List the contents of the current directory on the camera.
 
-.RE
+.SH "SEE ALSO"
+
+.PP
+\fBgphoto2\fR(3), \fIhttp://www.gphoto.org/\fR
+
+.SH "EXAMPLES"
+
+.TP
+\fB\fBgphoto2\fR \fB--list-files\fR\fR
+List files on camera.
+
+.TP
+\fB\fBgphoto2\fR \fB--get-file\fR \fI7-13\fR\fR
+Get files number 7 through 13 from the list output by \fB\fBgphoto2\fR \fB--list-files\fR\fR.
+
+.TP
+\fB\fBgphoto2\fR \fB--usb-usermap-script\fR \fIgphoto2cam\fR \fB--print-usb-usermap\fR\fR >> \fI/etc/hotplug/usb.usermap\fR
+Append a line to the \fBhotplug\fR config file \fI/etc/hotplug/usb.usermap\fR for every supported camera, using \fI/etc/hotplug/usb/gphoto2cam\fR for setting up permissions correctly.
 
 .SH AUTHOR
-The gPhoto2 team.
+The gphoto2 team.
 .br
 Man page edited by Tim Waugh <twaugh@redhat.com>.

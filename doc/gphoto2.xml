@@ -4,10 +4,10 @@
 <reference>
   <title>gPhoto2</title>
 
-  <refentry>
+  <refentry id="gphoto2-cli">
     <refentryinfo>
       <author>
-	<firstname>The gPhoto2</firstname><surname>team</surname>
+	<firstname>The gphoto2</firstname><surname>team</surname>
       </author>
 
       <editor>
@@ -28,7 +28,7 @@
 
     <refnamediv>
       <refname>gphoto2</refname>
-      <refpurpose>command-line gPhoto2 client</refpurpose>
+      <refpurpose>command-line <systemitem class="library">gphoto2</systemitem> client</refpurpose>
     </refnamediv>
 
     <refsynopsisdiv>
@@ -141,9 +141,10 @@
     <refsect1>
       <title>Description</title>
 
-      <para>gPhoto2 is a cross-platform digital camera library, and
-       <command>gphoto2</command> is a command-line client for
-       it.</para>
+      <para><xref linkend="libgphoto2"/> is a 
+        cross-platform digital camera library, and
+        <xref linkend="gphoto2-cli"/> is a command-line client for
+        it.</para>
 
       <para>Where an option takes a range of files, thumbnails, or
        other data, they are numbered beginning at 1.</para>
@@ -194,7 +195,7 @@
 	<varlistentry>
 	  <term><option>--print-usb-usermap</option></term>
 	  <listitem>
-	    <para>Create output for <filename>usb.usermap</filename>. The script name in the output is specified with the <option>--usb-usermap-script</option> option.</para>
+	    <para>For every camera supported by your version of <command>gphoto2</command>, print the corresponding line for inclusion into the <filename>usb.usermap</filename> hotplug config file. The script name used in these lines is specified with the <option>--usb-usermap-script</option> option.</para>
 	  </listitem>
 	</varlistentry>
 
@@ -473,93 +474,198 @@
 	<varlistentry>
 	  <term><option>--shell</option></term>
 	  <listitem>
-	    <para>gPhoto shell.  In this interactive environment, the
-	     following commands are available:</para>
-
-	    <variablelist>
-	      <varlistentry>
-		<term>cd</term>
-		<listitem>
-		  <para>Change to a directory on the camera.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>lcd</term>
-		<listitem>
-		  <para>Change to a directory on the local
-		   machine.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>exit, quit, q</term>
-		<listitem>
-		  <para>Exit the gPhoto shell.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>get</term>
-		<listitem>
-		  <para>Download the file to the current directory.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>get-thumbnail</term>
-		<listitem>
-		  <para>Download the thumbnail to the current directory.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>get-raw</term>
-		<listitem>
-		  <para>Download raw data to the current directory.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>show-info</term>
-		<listitem>
-		  <para>Show information.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>delete</term>
-		<listitem>
-		  <para>Delete a file or directory.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>show-exif</term>
-		<listitem>
-		  <para>Show EXIF information (only if compiled with
-		    EXIF support).</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>help, ?</term>
-		<listitem>
-		  <para>Displays command usage.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>ls</term>
-		<listitem>
-		  <para>List the contents of the current directory on
-		   the camera.</para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
-	  </listitem>
-	</varlistentry>
+	    <para>Start the gphoto2 shell, an interactive environment.
+              See <link linkend="shell-mode">SHELL MODE</link><!--xref linkend="shell-mode"/--> for a detailed description.</para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </refsect1>
+
+    <refsect1 id="shell-mode">
+      <title>Shell Mode</title>
+      <para>The following commands are available:</para>
+      
+      <variablelist>
+        <varlistentry>
+          <term>cd</term>
+          <listitem>
+            <para>Change to a directory on the camera.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>lcd</term>
+          <listitem>
+            <para>Change to a directory on the local
+              machine.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>exit, quit, q</term>
+          <listitem>
+            <para>Exit the gphoto2 shell.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>get</term>
+          <listitem>
+            <para>Download the file to the current directory.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>get-thumbnail</term>
+          <listitem>
+            <para>Download the thumbnail to the current directory.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>get-raw</term>
+          <listitem>
+            <para>Download raw data to the current directory.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>show-info</term>
+          <listitem>
+            <para>Show information.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>delete</term>
+          <listitem>
+            <para>Delete a file or directory.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>show-exif</term>
+          <listitem>
+            <para>Show EXIF information (only if compiled with
+              EXIF support).</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>help, ?</term>
+          <listitem>
+            <para>Displays command usage.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>ls</term>
+          <listitem>
+            <para>List the contents of the current directory on
+              the camera.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </refsect1>
+
+    <refsect1>
+      <title>See also</title>
+      <para><xref linkend="libgphoto2"/>,
+        <ulink
+               url="http://www.gphoto.org/">http://www.gphoto.org/</ulink> 
+      </para>
+    </refsect1>
+
+    <refsect1>
+      <title>Examples</title>
+      <variablelist>
+        <varlistentry>
+          <term><userinput><command>gphoto2</command> <option>--list-files</option></userinput></term>
+          <listitem>
+            <para>List files on camera.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><userinput><command>gphoto2</command> <option>--get-file</option> <parameter>7-13</parameter></userinput></term>
+          <listitem>
+            <para>Get files number 7 through 13 from the list output by <userinput><command>gphoto2</command> <option>--list-files</option></userinput>.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><userinput><command>gphoto2</command> <option>--usb-usermap-script</option> <parameter>gphoto2cam</parameter> <option>--print-usb-usermap</option></userinput> >> <filename>/etc/hotplug/usb.usermap</filename></term>
+          <listitem>
+            <para>Append a line to the <command>hotplug</command> config file <filename>/etc/hotplug/usb.usermap</filename> for every supported camera, using <filename>/etc/hotplug/usb/gphoto2cam</filename> for setting up permissions correctly.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </refsect1>
+
+  </refentry>
+
+  <refentry id="libgphoto2">
+    <refentryinfo>
+      <author><firstname>The gphoto2</firstname><surname>team</surname></author>
+      <editor>
+	<firstname>Hans Ulrich</firstname>
+	<surname>Niedermann</surname>
+	<affiliation>
+	  <address><email>gp@n-dimensional.de</email></address>
+	</affiliation>
+      </editor>
+    </refentryinfo>
+
+    <refmeta>
+      <refentrytitle>gphoto2</refentrytitle>
+      <manvolnum>3</manvolnum>
+    </refmeta>
+
+    <refnamediv>
+      <refname>gphoto2</refname>
+      <refpurpose>cross-platform digital camera library</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv>
+      <cmdsynopsis>
+        <command>#include &lt;gphoto2.h&gt;</command>
+      </cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1>
+      <title>Description</title>
+      <para>The <systemitem class="library">gphoto2</systemitem>
+        library provides applications with access to a variety of
+        cameras.</para>
+      <para>This man page will be extended with autogenerated
+        documentation of the interface types and methods used for
+        communication between the 
+        <systemitem class="library">gphoto2</systemitem> 
+        library and a frontend.</para> 
+    </refsect1>
+
+    <refsect1>
+      <title>Files</title>
+      <variablelist>
+        <varlistentry>
+          <term><filename>~/.gphoto/settings</filename></term>
+          <listitem>
+            <para>Here
+              <systemitem class="library">gphoto2</systemitem>
+              applications may store their configuration used to
+              access
+              <systemitem class="library">gphoto2</systemitem>.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </refsect1>
+
+    <refsect1>
+      <title>See also</title>
+      <para><xref linkend="gphoto2-cli"/>,
+        <ulink
+               url="http://www.gphoto.org/">http://www.gphoto.org/</ulink> 
+      </para>
+    </refsect1>
+
   </refentry>
 </reference>

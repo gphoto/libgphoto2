@@ -4,12 +4,9 @@
 # people without aalib or cdk make dist.
 EXTRA_DIST = makefile.os2				\
 	gphoto2-cmd-config.c gphoto2-cmd-config.h	\
-	gphoto2-cmd-capture.c gphoto2-cmd-capture.h	\
-	$(man_MANS) gphoto2.xml
+	gphoto2-cmd-capture.c gphoto2-cmd-capture.h
 
 bin_PROGRAMS = gphoto2
-
-man_MANS = gphoto2.1
 
 INCLUDES =						\
 	-DGPHOTO2_LOCALEDIR=\""$(datadir)/locale"\"	\
@@ -53,9 +50,3 @@ gphoto2_LDADD =						\
 	$(AA_LIBS)					\
 	$(JPEG_LIBS) $(PTHREAD_LIBS)			\
 	$(EXIF_LIBS) $(INTLLIBS) $(RL_LIBS)
-
-# Special rule for regenerating the man page from the XML file.
-# This requires xmlto, which can be obtained from
-# <http://cyberelk.net/tim/xmlto/>.
-$(man_MANS): gphoto2.xml
-	-xmlto man $<
