@@ -248,6 +248,7 @@ int gp_widget_append (CameraWidget *parent, CameraWidget *child)
 	parent->children[parent->children_count] = child;
 	parent->children_count += 1;
 	child->parent = parent;
+	child->changed = 0;
 	
 	return (GP_OK);
 }
@@ -269,6 +270,7 @@ int gp_widget_prepend (CameraWidget *parent, CameraWidget *child)
 	parent->children[0] = child;
 	parent->children_count += 1;
 	child->parent = parent;
+	child->changed = 0;
 
 	return (GP_OK);
 }

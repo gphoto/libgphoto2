@@ -537,13 +537,13 @@ int gp_camera_file_get_info (Camera *camera, const char *folder,
 
 		/* Get the file */
 		info->file.fields = GP_FILE_INFO_NONE;
-		if (gp_camera_file_get_file (camera, folder, file, cfile) 
-		    == GP_OK) {
-			info->file.fields |= GP_FILE_INFO_SIZE | 
-					     GP_FILE_INFO_TYPE;
-			info->file.size = cfile->size;
-			strcpy (info->file.type, cfile->type);
-		}
+//		if (gp_camera_file_get_file (camera, folder, file, cfile) 
+//		    == GP_OK) {
+//			info->file.fields |= GP_FILE_INFO_SIZE | 
+//					     GP_FILE_INFO_TYPE;
+//			info->file.size = cfile->size;
+//			strcpy (info->file.type, cfile->type);
+//		}
 
 		/* Get the preview */
 		info->preview.fields = GP_FILE_INFO_NONE;
