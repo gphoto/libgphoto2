@@ -26,9 +26,9 @@
 
 /* FIXME: should be variable, and user configurable. Which is problematic in 
  * gphoto2 :/ */
-#define HUE_DATA        50
-#define LIGHTNESS_DATA  50
-#define SATURATION_DATA 50
+#define HUE_DATA        40
+#define LIGHTNESS_DATA  40
+#define SATURATION_DATA 40
 
 const static int default_colors[6][3] =
 {

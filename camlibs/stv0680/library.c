@@ -266,7 +266,7 @@ int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
 	light_enhance(w,h,coarse,fine,tmpdata1);
 	gp_bayer_interpolate (tmpdata1, w, h, BAYER_TILE_GBRG_INTERLACED);
 	stv680_hue_saturation (w, h, tmpdata1, tmpdata2 );
-	sharpen (w, h, tmpdata2, *data + strlen(header), 50);
+	sharpen (w, h, tmpdata2, *data + strlen(header), 35);
 	free(tmpdata2);
 	free(tmpdata1);
 	free(raw);

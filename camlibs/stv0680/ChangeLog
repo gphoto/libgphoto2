@@ -1,3 +1,17 @@
+2001-01-08  Marcus Meissner <marcus@jet.franken.de>
+	
+	* bayer.c, saturate.c, library.c:
+
+	  From Kurt Garloff:
+
+	  * The sharpening seems to be overdone a bit -- for darker images,
+	    the noise gets amplified too much and the picutre gets too
+	    snowy/grainy.
+	  * The colour correction sometimes also seems to go too far and
+	    a compormise between the original and the processed image would
+	    seem best.
+
+
 2001-01-06  Marcus Meissner <marcus@jet.franken.de>
 	
 	* bayer.c, library.c: Integrated a speedup of the
