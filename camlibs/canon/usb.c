@@ -1954,9 +1954,16 @@ canon_usb_identify (Camera *camera, GPContext *context)
 	}
 
 	/* ahem. isn't this a tautology? */
+
+	/* Formerly, we matched strings here.
+	 * Now we just match USB Vendor/Product IDs to work around
+	 * the colon/space problem. (FIXME)
+	 */
 	for (i = 0; models[i].id_str != NULL; i++) {
-		if (models[i].usb_vendor && models[i].usb_product
-		    && !strcmp (models[i].id_str, a.model)) {
+		if (models[i].usb_vendor 
+		    && models[i].usb_product
+		    && (a.usb_vendor  == models[i].usb_vendor) 
+		    && (a.usb_product == models[i].usb_product)) {
 			GP_DEBUG ("canon_usb_identify: model name match '%s'",
 				  models[i].id_str);
 			gp_context_status (context, _("Detected a '%s'."), models[i].id_str);
