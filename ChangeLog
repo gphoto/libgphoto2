@@ -1,5 +1,9 @@
 2001-08-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/panasonic/Makefile.am: SUBDIRS = l859
+
+2001-08-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/konica/library.c: (camera_init): Update the filesystem once
 	at camera_init
 	(camera_folder_list_folders): Use gp_filesystem_list_folders

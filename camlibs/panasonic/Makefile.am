@@ -1,3 +1,5 @@
+SUBDIRS = l859
+
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES =\
  libgphoto2_panasonic_dc1000.la\
