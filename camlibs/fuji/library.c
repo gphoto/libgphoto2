@@ -314,7 +314,7 @@ pre_func (Camera *camera, GPContext *context)
 			if (Speeds[i].bit_rate == camera->pl->speed)
 				break;
 		if (!Speeds[i].bit_rate) {
-			gp_context_error (context, _("Bit rate %i is not "
+			gp_context_error (context, _("Bit rate %ld is not "
 					"supported."), camera->pl->speed);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
