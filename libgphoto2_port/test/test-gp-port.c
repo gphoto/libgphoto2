@@ -46,100 +46,111 @@ main (int argc, char **argv)
 	GPPortInfoList *il;
 	GPPortInfo info;
 	GPLevel level;
+	unsigned int i;
 
 	gp_log_add_func (GP_LOG_DATA, log_func, NULL);
 
-	ret = gp_port_info_list_new (&il);
-	if (ret < 0) {
-		printf ("Could not create list of ports: %s\n",
-			gp_port_result_as_string (ret));
-		return (1);
+	for (i = 0; i < 2; i++) {
+
+		ret = gp_port_info_list_new (&il);
+		if (ret < 0) {
+			printf ("Could not create list of ports: %s\n",
+				gp_port_result_as_string (ret));
+			return (1);
+		}
+	
+		ret = gp_port_info_list_load (il);
+		if (ret < 0) {
+			printf ("Could not load list of ports: %s\n",
+				gp_port_result_as_string (ret));
+			return (1);
+		}
+	
+		printf ("############\n");
+		printf ("############ There are %i IO-drivers "
+			"installed on your system.\n",
+			gp_port_info_list_count (il));
+		printf ("############\n");
+	
+		ret = gp_port_info_list_get_info (il, 0, &info);
+		if (ret < 0) {
+			printf ("Could not get info of first port in "
+				"list: %s\n",
+				gp_port_result_as_string (ret));
+			return (1);
+		}
+
+		ret = gp_port_new (&dev);
+		if (ret < 0) {
+			printf ("Could not create device: %s\n",
+				gp_port_result_as_string (ret));
+			return (1);
+		}
+
+		ret = gp_port_set_info (dev, info);
+		if (ret < 0) {
+			printf ("Could not set port info: %s\n",
+				gp_port_result_as_string (ret));
+			return (1);
+		}
+
+		gp_port_info_list_free (il);
+
+		ret = gp_port_set_timeout (dev, 500);
+		if (ret < 0) {
+			printf ("Could not set timeout: %s\n",
+				gp_port_result_as_string (ret));
+			return (1);
+		}
+
+		strcpy (settings.serial.port, "serial:/dev/ttyS0");
+		settings.serial.speed = 19200;
+		settings.serial.bits = 8;
+		settings.serial.parity = 0;
+		settings.serial.stopbits = 1;
+
+		ret = gp_port_set_settings (dev, settings);
+		if (ret < 0) {
+			printf ("Could not set settings: %s\n",
+				gp_port_result_as_string (ret));
+			return (1);
+		}
+
+		ret = gp_port_open (dev);
+		if (ret < 0) {
+			printf ("Could not open device: %s\n",
+				gp_port_result_as_string (ret));
+			return (1);
+		}
+
+		gp_port_get_settings(dev, &settings);
+		settings.serial.speed = 57600;
+		gp_port_set_settings(dev, settings);
+
+		ret = gp_port_get_pin (dev, GP_PIN_DTR, &level);
+		if (ret < 0) {
+			printf ("Could not get level of pin DTR: %s\n",
+				gp_port_result_as_string (ret));
+			return (1);
+		}
+
+		ret = gp_port_set_pin (dev, GP_PIN_CTS, GP_LEVEL_HIGH);
+		if (ret < 0) {
+			printf ("Could not set level of pin CTS: %s\n",
+				gp_port_result_as_string (ret));
+			return (1);
+		}
+
+		gp_port_write (dev, "AT\n", 3);
+
+		gp_port_read (dev, buf, 3);
+		buf[3] = 0;
+		printf("recv: %s\n", buf);
+
+		gp_port_close (dev);
+
+		gp_port_free (dev);
 	}
-
-	ret = gp_port_info_list_load (il);
-	if (ret < 0) {
-		printf ("Could not load list of ports: %s\n",
-			gp_port_result_as_string (ret));
-		return (1);
-	}
-
-	ret = gp_port_info_list_get_info (il, 0, &info);
-	if (ret < 0) {
-		printf ("Could not get info of first port in list: %s\n",
-			gp_port_result_as_string (ret));
-		return (1);
-	}
-
-	ret = gp_port_new (&dev);
-	if (ret < 0) {
-		printf ("Could not create device: %s\n",
-			gp_port_result_as_string (ret));
-		return (1);
-	}
-
-	ret = gp_port_set_info (dev, info);
-	if (ret < 0) {
-		printf ("Could not set port info: %s\n",
-			gp_port_result_as_string (ret));
-		return (1);
-	}
-
-	gp_port_info_list_free (il);
-
-	ret = gp_port_set_timeout (dev, 500);
-	if (ret < 0) {
-		printf ("Could not set timeout: %s\n",
-			gp_port_result_as_string (ret));
-		return (1);
-	}
-
-	strcpy (settings.serial.port, "serial:/dev/ttyS0");
-	settings.serial.speed = 19200;
-	settings.serial.bits = 8;
-	settings.serial.parity = 0;
-	settings.serial.stopbits = 1;
-
-	ret = gp_port_set_settings (dev, settings);
-	if (ret < 0) {
-		printf ("Could not set settings: %s\n",
-			gp_port_result_as_string (ret));
-		return (1);
-	}
-
-	ret = gp_port_open (dev);
-	if (ret < 0) {
-		printf ("Could not open device: %s\n",
-			gp_port_result_as_string (ret));
-		return (1);
-	}
-
-	gp_port_get_settings(dev, &settings);
-	settings.serial.speed = 57600;
-	gp_port_set_settings(dev, settings);
-
-	ret = gp_port_get_pin (dev, GP_PIN_DTR, &level);
-	if (ret < 0) {
-		printf ("Could not get level of pin DTR: %s\n",
-			gp_port_result_as_string (ret));
-		return (1);
-	}
-
-	ret = gp_port_set_pin (dev, GP_PIN_CTS, GP_LEVEL_HIGH);
-	if (ret < 0) {
-		printf ("Could not set level of pin CTS: %s\n",
-			gp_port_result_as_string (ret));
-		return (1);
-	}
-
-	gp_port_write (dev, "AT\n", 3);	/* write bytes to the device */
-
-	gp_port_read (dev, buf, 3);	/* read bytes from the device */
-	buf[3] = 0;
-	printf("recv: %s\n", buf);
-
-	gp_port_close (dev);	/* close the device */
-
-	gp_port_free (dev);
 
 	return 0;
 }
