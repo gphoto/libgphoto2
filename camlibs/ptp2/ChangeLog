@@ -1,3 +1,7 @@
+2003-09-20  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: Fixed compile. (defined names with - are invalid).
+
 2003-09-19 Mariusz Woloszyn
 	* library.c: fixed capture imout and increased to 20 seconds; fixed
 	  internal structures update when uploding files and creating
