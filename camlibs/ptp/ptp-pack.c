@@ -340,60 +340,59 @@ ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 	oi->SequenceNumber=dtoh32a(&req->data[PTP_oi_SequenceNumber]);
 	oi->Filename= ptp_unpack_string(params, req, PTP_oi_filenamelen, &filenamelen);
 
-	capture_date = ptp_unpack_string(params, req, PTP_oi_filenamelen+filenamelen*2+1, &capturedatelen);
+	capture_date = ptp_unpack_string(params, req,
+		PTP_oi_filenamelen+filenamelen*2+1, &capturedatelen);
 	// subset of ISO 8601, without '.s' tenths of second and
 	// time zone
 	if (capturedatelen>15)
 	{
-	strncpy (tmp, capture_date, 4);
-	tmp[4] = 0;
-	tm.tm_year=atoi (tmp) - 1900;
-	strncpy (tmp, capture_date + 4, 2);
-	tmp[2] = 0;
-	tm.tm_mon = atoi (tmp) - 1;
-	strncpy (tmp, capture_date + 6, 2);
-	tmp[2] = 0;
-	tm.tm_mday = atoi (tmp);
-	strncpy (tmp, capture_date + 9, 2);
-	tmp[2] = 0;
-	tm.tm_hour = atoi (tmp);
-	strncpy (tmp, capture_date + 11, 2);
-	tmp[2] = 0;
-	tm.tm_min = atoi (tmp);
-	strncpy (tmp, capture_date + 13, 2);
-	tmp[2] = 0;
-	tm.tm_sec = atoi (tmp);
-	oi->CaptureDate=mktime (&tm);
+		strncpy (tmp, capture_date, 4);
+		tmp[4] = 0;
+		tm.tm_year=atoi (tmp) - 1900;
+		strncpy (tmp, capture_date + 4, 2);
+		tmp[2] = 0;
+		tm.tm_mon = atoi (tmp) - 1;
+		strncpy (tmp, capture_date + 6, 2);
+		tmp[2] = 0;
+		tm.tm_mday = atoi (tmp);
+		strncpy (tmp, capture_date + 9, 2);
+		tmp[2] = 0;
+		tm.tm_hour = atoi (tmp);
+		strncpy (tmp, capture_date + 11, 2);
+		tmp[2] = 0;
+		tm.tm_min = atoi (tmp);
+		strncpy (tmp, capture_date + 13, 2);
+		tmp[2] = 0;
+		tm.tm_sec = atoi (tmp);
+		oi->CaptureDate=mktime (&tm);
 	}
+	free(capture_date);
 
 	// now it's modification date ;)
-	capture_date = ptp_unpack_string(params, req, PTP_oi_filenamelen+filenamelen*2
+	capture_date = ptp_unpack_string(params, req,
+		PTP_oi_filenamelen+filenamelen*2
 		+capturedatelen*2+2,&capturedatelen);
 	if (capturedatelen>15)
 	{
-	strncpy (tmp, capture_date, 4);
-	tmp[4] = 0;
-	tm.tm_year=atoi (tmp) - 1900;
-	strncpy (tmp, capture_date + 4, 2);
-	tmp[2] = 0;
-	tm.tm_mon = atoi (tmp) - 1;
-	strncpy (tmp, capture_date + 6, 2);
-	tmp[2] = 0;
-	tm.tm_mday = atoi (tmp);
-	strncpy (tmp, capture_date + 9, 2);
-	tmp[2] = 0;
-	tm.tm_hour = atoi (tmp);
-	strncpy (tmp, capture_date + 11, 2);
-	tmp[2] = 0;
-	tm.tm_min = atoi (tmp);
-	strncpy (tmp, capture_date + 13, 2);
-	tmp[2] = 0;
-	tm.tm_sec = atoi (tmp);
-	oi->ModificationDate=mktime (&tm);
+		strncpy (tmp, capture_date, 4);
+		tmp[4] = 0;
+		tm.tm_year=atoi (tmp) - 1900;
+		strncpy (tmp, capture_date + 4, 2);
+		tmp[2] = 0;
+		tm.tm_mon = atoi (tmp) - 1;
+		strncpy (tmp, capture_date + 6, 2);
+		tmp[2] = 0;
+		tm.tm_mday = atoi (tmp);
+		strncpy (tmp, capture_date + 9, 2);
+		tmp[2] = 0;
+		tm.tm_hour = atoi (tmp);
+		strncpy (tmp, capture_date + 11, 2);
+		tmp[2] = 0;
+		tm.tm_min = atoi (tmp);
+		strncpy (tmp, capture_date + 13, 2);
+		tmp[2] = 0;
+		tm.tm_sec = atoi (tmp);
+		oi->ModificationDate=mktime (&tm);
 	}
-
-	
 	free(capture_date);
 }
-
-

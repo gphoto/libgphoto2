@@ -179,16 +179,18 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
 // major PTP functions
 
 // Transaction data phase description
-#define PTP_DP_NODATA		0x00	// No Data Phase
-#define PTP_DP_SENDDATA		0x01	// sending data
-#define PTP_DP_GETDATA		0x02	// geting data
+#define PTP_DP_NODATA		0x0000	// No Data Phase
+#define PTP_DP_SENDDATA		0x0001	// sending data
+#define PTP_DP_GETDATA		0x0002	// geting data
+#define PTP_DP_DATA_MASK	0x00ff	// data phase mask
 
 // Number of PTP Request phase parameters
-#define PTP_RQ_PARAM0		0x0000	// one parameter
+#define PTP_RQ_PARAM0		0x0000	// zero parameters
 #define PTP_RQ_PARAM1		0x0100	// one parameter
-#define PTP_RQ_PARAM2		0x0200	// two parameter
-#define PTP_RQ_PARAM3		0x0300	// three parameter
-#define PTP_RQ_PARAM4		0x0400	// four parameter
+#define PTP_RQ_PARAM2		0x0200	// two parameters
+#define PTP_RQ_PARAM3		0x0300	// three parameters
+#define PTP_RQ_PARAM4		0x0400	// four parameters
+#define PTP_RQ_PARAM5		0x0500	// five parameters
 
 /**
  * ptp_transaction:
@@ -221,7 +223,7 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 	req->len=PTP_REQ_HDR_LEN+((flags>>8)*sizeof(uint32_t));
 	// send request
 	CHECK_PTP_RC(ptp_sendreq(params, req, code));
-	switch (flags&0x00ff) {
+	switch (flags&PTP_DP_DATA_MASK) {
 		case PTP_DP_SENDDATA:
 			datalen+=PTP_REQ_HDR_LEN;
 			CHECK_PTP_RC(ptp_senddata(params, dataphasebuf,
