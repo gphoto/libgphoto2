@@ -32,6 +32,7 @@ and availability of gphoto2. Another source of information is
 where you can access our CVS server to fetch the source code of
 gphoto2, gtkam and GnoCam (see below).
 
+
 What is gphoto2 not?
 --------------------
 
@@ -69,6 +70,7 @@ camera that use this protocol:
  * Sony DSC-P5, DSC-F707 (both need user configuration of the camera)
 These camera won't be supported until gphoto2 implement PTP.
 
+
 Platforms
 ---------
 
@@ -76,10 +78,12 @@ gphoto2 should compile and run on pretty much all Unix-like platforms.
 Additionally, there is a port for OS/2 available. gphoto2 has _not_ (yet?) 
 been ported to any operating system from MicroSoft.
 
+
 How to set up gphoto2
 ---------------------
 
 See gphoto2.txt.
+
 
 Frontends
 ---------
@@ -91,3 +95,21 @@ short description.
 For the GUI lovers, there are for example gtkam (GTK based), and
 GnoCam (GNOME). Additionally, there are plugins for other programs
 available like kio_gphoto (KDE - Konqueror). 
+
+
+Reporting Bugs
+--------------
+
+Every piece of software contains errors and flaws. So does
+gphoto2. When you encounter something that does not work, try to
+reproduce the problem with debug output enabled and the language set
+to English, so that the development team will understand the
+messages. You can do this by running:
+
+    LANG=C gtkam
+
+if you're using the gtkam frontend or running:
+
+    LANG=C gphoto2 --debug <options>
+
+using the gphoto2 command line interface.

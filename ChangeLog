@@ -1,4 +1,9 @@
+2001-11-29  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* README: Added paragraph about reporting bugs (using LANG=C)
+	
 2001-11-10 Dan Fandrich <dan@coneharvesters.com>
+
 	* configure.in
 	* frontends/command-line/Makefile.am
 	* libgphoto2/Makefile.am
@@ -8,6 +13,7 @@
 	  static library.  Now, only use -lintl when linking other targets.
 
 2001-11-29  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
 	* Makefile.am: enable RPM and CVS rules only when useful
 	* configure.in: init RPM packaging
 	* libgphoto2_port/m4/packaging.m4: added packaging macro
