@@ -1,5 +1,11 @@
 #! /bin/sh
 
+# leave these definitions here
+# they are required for correct interpolation of
+# @libdir@ and @includedir@ later on
+prefix="@prefix@"
+exec_prefix="@exec_prefix@"
+
 usage()
 {
     cat <<EOF
@@ -7,7 +13,7 @@ Usage: gphoto2-port-config [OPTION]
 
 Known values for OPTION are:
 
-  --prefix=DIR		change libgphoto2-port prefix [default @prefix@]
+  --prefix=DIR		change libgphoto2-port prefix [default ${prefix}]
   --libs		print library linking information
   --cflags		print pre-processor and compiler flags
   --help		display this help and exit
@@ -32,15 +38,15 @@ while test $# -gt 0; do
 
     case "$1" in
     --prefix=*)
-	prefix=$optarg
+	prefix="$optarg"
 	;;
 
     --prefix)
-	echo @prefix@
+	echo "@prefix@"
 	;;
 
     --version)
-	echo @PACKAGE@ @VERSION@
+	echo "@PACKAGE@" "@VERSION@"
 	exit 0
 	;;
 
@@ -49,11 +55,11 @@ while test $# -gt 0; do
 	;;
 
     --cflags)
-       	echo -I@includedir@/gphoto2 -I@includedir@
+       	echo "-I@includedir@/gphoto2" "-I@includedir@"
        	;;
 
     --libs)
-       	echo -L@libdir@
+       	echo "-L@libdir@"
        	;;
 
     *)

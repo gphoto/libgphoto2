@@ -1,5 +1,8 @@
 #! /bin/sh
 
+# leave these definitions here
+# they are required for correct interpolation of
+# @libdir@ and @includedir@ later on
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
 
@@ -39,7 +42,7 @@ while test $# -gt 0; do
 	;;
 
     --prefix)
-	echo "${prefix}"
+	echo "@prefix@"
 	;;
 
     --version)
