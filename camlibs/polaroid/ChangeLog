@@ -1,3 +1,10 @@
+2004-01-08  Marcus Meissner <marcus@jet.franken.de>
+	
+	From Mark Slemko <slemkom@users.sourceforge.net>
+	* dlink350f.c, dlink350f.h, pdc640.c:
+ 	  Orientation, byte order, and brightness correction for the
+	  D-Link 350F
+
 2004-01-04  Marcus Meissner <marcus@jet.franken.de>
 
 	* pdc640.c: Use different names for Skanhex SX-35, or 

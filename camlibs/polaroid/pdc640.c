@@ -61,7 +61,8 @@
 
 typedef enum{
 	pdc640,
-	jd350e
+	jd350e,
+	dlink350f
 } Model;
 
 typedef int postproc_func(int,int,unsigned char*);
@@ -189,7 +190,7 @@ static struct {
 	/* http://www.dlink.com/products/usb/dsc350/ */
 	/* ids from driver download */
 	{"D-Link DSC 350F", 0xd64, 0x1021, {
-		 	jd350e,
+		 	dlink350f,
 			BAYER_TILE_BGGR,
 			&flip_vertical,
 			"dlink%04i.ppm"
