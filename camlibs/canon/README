@@ -105,7 +105,10 @@ Canon cameras use (CRW -Canon RaW files). See
 or
     http://www2.primushost.com/~dcoffin/powershot/
 
-for details on the file format.
+for details on the file format. Currently, only download of CRW files
+is supported without any conversion to common image file formats. Use
+the programs offered on the website mentioned above for conversion from 
+CRW to something else.
 
 
 ========================================================================
