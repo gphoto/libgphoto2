@@ -9,7 +9,7 @@ INCLUDES =\
  -DLOCALIZATION=\"$(datadir)/gphoto2/konica\"		\
  -I$(top_srcdir)/libgphoto2				\
  -I$(top_srcdir)/libgphoto2_port/libgphoto2_port
- 
+
 libgphoto2_konica_la_SOURCES = \
  lowlevel.c lowlevel.h \
  konica.c konica.h \
