@@ -436,7 +436,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 	for (i = 0; models[i].model; i++) {
 		strcpy (a.model, models[i].model);
-		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		a.port     = GP_PORT_SERIAL;
 		a.speed[0] = 9600;
 		a.speed[1] = 19200;
