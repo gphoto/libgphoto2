@@ -245,8 +245,8 @@ int exif_parse_data(exifparser *exifdat) {
 
   exif_debug=1;
   /* Check that it's not already preparsed */
-  // Doesn't work if we don't initialize this first...
-  //  if (exifdat->preparsed) return 0;
+  /* Doesn't work if we don't initialize this first... */
+  /*  if (exifdat->preparsed) return 0; */
   if (exif_debug) printf("Parsing exif structure\n");
 
   /* First, verify that we really have an EXIF file */
@@ -318,7 +318,7 @@ int exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag
   int numtags,i, tag;
   char *ifdp, *data;
 
-  // Sanity check first:
+  /* Sanity check first: */
   exif_debug=1;
   if ( !exifdata->preparsed ) {
     if(exif_parse_data(exifdata) < 0)
@@ -331,18 +331,18 @@ int exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag
       if ( exif_get_field(tag_number, i, exifdata, tag_data) == 1)
 	return 1;
     }
-    return 0; // We did not find it.
+    return 0; /* We did not find it. */
   } else {
 
-    // Find tag in a specific IFD
+    /* Find tag in a specific IFD */
     ifdp = exifdata->ifds[ifd];
-    numtags=exif_get_lilend(ifdp,2); // How many tags in the IFD
+    numtags=exif_get_lilend(ifdp,2); /* How many tags in the IFD */
     if (exif_debug)  printf("exif_get_field: %d tags in ifd %d\n",numtags, ifd);
     i=-1;
     do {
       i++;
-      tag = exif_get_lilend(ifdp+i*12+2, 2); // Get the tag ID
-      // if (exif_debug) fprintf(stderr,"Found tag %d \n",tag);
+      tag = exif_get_lilend(ifdp+i*12+2, 2); /* Get the tag ID */
+      /* if (exif_debug) fprintf(stderr,"Found tag %d \n",tag); */
     } while ((i < numtags) && (tag != tag_number));
     
     if(tag != tag_number) {
@@ -350,13 +350,13 @@ int exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag
       return 0;
     }
     
-    ifdp = ifdp+i*12+2; // Place pointer at TAG type position
+    ifdp = ifdp+i*12+2; /* Place pointer at TAG type position */
     tag_data->tag = tag;
     tag_data->type = exif_get_lilend(ifdp+2,2);    /* tag type */
     tag_data->size = exif_sizetab[tag_data->type]*exif_get_lilend(ifdp+4,4);
     if (exif_debug) printf("(%d bytes) ",tag_data->size);
 
-    ifdp += 8; // place pointer at beginning of the contents of the field
+    ifdp += 8; /* place pointer at beginning of the contents of the field */
 
     /* Data types smaller than 4 bytes are stored directly in
        the IFD field value. Otherwise, that value is an offset
@@ -374,15 +374,15 @@ int exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag
       };
 
     if (tag_data->type == EXIF_ASCII) {
-	memcpy(data,ifdp,tag_data->size);  // Normally, the exif data includes a terminating 0
+	memcpy(data,ifdp,tag_data->size);  /* Normally, the exif data includes a terminating 0 */
 	tag_data->data = data;
 	if(exif_debug) printf("\"%s\"",data);
     } else {
       for (i = 0; i < tag_data->size; i += exif_sizetab[tag_data->type]) {
-	//if (exif_debug) fprintf(stderr,".");
+	/*if (exif_debug) fprintf(stderr,"."); */
 	if ( tag_data->type % 5 ) {
 	  memcpy(data+i,ifdp+i,exif_sizetab[tag_data->type]);	  
-	} else { // Fraction
+	} else { /* Fraction */
 	    tag_data->num =exif_get_lilend(ifdp+i,4);
 	    tag_data->den =exif_get_lilend(ifdp+i+4,4);
 	  
@@ -391,14 +391,14 @@ int exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag
 				 (tag_data->den==0)?0:(1.0*tag_data->num/tag_data->den));
 	}	
       }
-      // If the value can be put into an int, save the trouble and store
-      // it into "intval" right away...
+      /* If the value can be put into an int, save the trouble and store */
+      /* it into "intval" right away... */
       if(tag_data->type != EXIF_ASCII && tag_data->type != EXIF_RATIONAL &&
 	 tag_data->type != EXIF_UNDEFINED && tag_data->type != EXIF_SRATIONAL) {
 	tag_data->intval = exif_get_lilend(data,exif_sizetab[tag_data->type]);
 	if(exif_debug) printf("'%d'",tag_data->intval);
       }
-      tag_data->data = data; // Save the data field
+      tag_data->data = data; /* Save the data field */
     }
     if (exif_debug) printf("\n"); /*end of this tag */
     return 1;
@@ -454,7 +454,7 @@ int exif_get_int_field( int tag_number, int ifd, exifparser *exifdat) {
     return 0;
   } else {
     tmp = tagdat.intval;
-    free(tagdat.data);   // ???
+    free(tagdat.data);   /* ??? */
     return tmp;
   }  
   return 0;
@@ -552,9 +552,9 @@ unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size) {
       exif_get_field( EXIF_Model, -1, exifdat, &owner);
       printf("Camera model: %s\n",owner.data);
       printf("Comment for this picture (%d chars)",exif_get_comment( exifdat, comment));
-      //printf(" -> %s\n",comment); Not OK on Linux
+      /*printf(" -> %s\n",comment); Not OK on Linux */
       exif_get_field( EXIF_SubjectDistance, 2, exifdat, &owner);
-      //      dump_exif(exifdat);      
+      /*      dump_exif(exifdat);       */
   };
 
   /* Skip to Thumbnail image data */
@@ -711,14 +711,15 @@ int gpe_getvalue(unsigned char *data,int tagind){
 /**
  * Add all tag names and values in an ifd to an array of strings for gphoto
  */
-//int gpe_exif_add_all(exifparser *exifdata,int ifdnum,char **datastrings){
-//  int i;
-//  for (i=0;i<exifdata->ifdtags[ifdnum];i++){
-//    togphotostr(exifdata,ifdnum,i,datastrings+i*2,datastrings+i*2+1);
-//    /*    printf("%s = %s\n",datastrings[i*2],datastrings[i*2+1]);*/
-//  };
-//};
-
+#if 0
+int gpe_exif_add_all(exifparser *exifdata,int ifdnum,char **datastrings){
+  int i;
+  for (i=0;i<exifdata->ifdtags[ifdnum];i++){
+    togphotostr(exifdata,ifdnum,i,datastrings+i*2,datastrings+i*2+1);
+    /*    printf("%s = %s\n",datastrings[i*2],datastrings[i*2+1]);*/
+  };
+};
+#endif
 
 
 int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars){
@@ -775,7 +776,7 @@ int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars){
       if ( tag == 0x8769 ) {
          printf("Exif SubIFD at offset %d\n", value );
          exifdata->ifds[exifdata->ifdcnt]     = exifdata->data+value;  
-//       exifdata->ifds[exifdata->ifdcnt];
+/*       exifdata->ifds[exifdata->ifdcnt]; */
          exifdata->ifdtags[exifdata->ifdcnt]=exif_get_lilend(exifdata->data+value,2);
          exifdata->ifdcnt++;
 

@@ -50,7 +50,7 @@ main (int argc, char **argv)
 	settings.serial.speed = 57600;
 	gp_port_set_settings(dev, settings);
 
-	//printf("CTS: %i", gp_port_pin_get( dev, PIN_CTS, LOW ) );
+	/*printf("CTS: %i", gp_port_pin_get( dev, PIN_CTS, LOW ) );*/
 
 	gp_port_write(dev, "AT\n", 3);	/* write bytes to the device */
 
