@@ -27,6 +27,7 @@
 #include "library.h"
 #include "sharpen.h"
 #include "bayer.h"
+#include "saturate.h"
 #include <pattrec.h>
 #include "../../libgphoto2/bayer.h"
 
@@ -226,7 +227,7 @@ int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
 	struct stv680_image_header imghdr;
 	char header[200];
 	unsigned char buf[16];
-	unsigned char *raw, *bayerpre;
+	unsigned char *raw, *tmpdata1, *tmpdata2;
 	int h,w,ret,coarse,fine;
 
 	/* Despite the documentation saying so, CMDID_UPLOAD_IMAGE does not
@@ -248,20 +249,27 @@ int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
 	fine = (imghdr.fine_exposure[0]<<8)|imghdr.fine_exposure[1];
 	coarse = (imghdr.coarse_exposure[0]<<8)|imghdr.coarse_exposure[1];
 	raw = malloc(*size);
+	if (!raw)
+	    return GP_ERROR_NO_MEMORY;
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n#flags %x sgain %d sclkdiv %d avgpix %d fine %d coarse %d\n%d %d\n255\n", imghdr.flags, imghdr.sensor_gain, imghdr.sensor_clkdiv, imghdr.avg_pixel_value, fine, coarse , w, h);
 
 	if ((ret=gp_port_read(port, raw, *size))<0)
 	    return ret;
 
 	*data = malloc((*size * 3) + strlen(header));
-	bayerpre = malloc((*size * 3));
+	tmpdata1 = malloc((*size * 3));
+	if (!tmpdata1) return GP_ERROR_NO_MEMORY;
+	tmpdata2 = malloc((*size * 3));
+	if (!tmpdata2) return GP_ERROR_NO_MEMORY;
 	strcpy(*data, header);
-	gp_bayer_expand (raw, w, h, bayerpre, BAYER_TILE_GBRG_INTERLACED);
-	light_enhance(w,h,coarse,fine,bayerpre);
-	gp_bayer_interpolate (bayerpre, w, h, BAYER_TILE_GBRG_INTERLACED);
-	sharpen (w, h, bayerpre, *data + strlen(header), 50);
+	gp_bayer_expand (raw, w, h, tmpdata1, BAYER_TILE_GBRG_INTERLACED);
+	light_enhance(w,h,coarse,fine,tmpdata1);
+	gp_bayer_interpolate (tmpdata1, w, h, BAYER_TILE_GBRG_INTERLACED);
+	stv680_hue_saturation (w, h, tmpdata1, tmpdata2 );
+	sharpen (w, h, tmpdata2, *data + strlen(header), 50);
+	free(tmpdata2);
+	free(tmpdata1);
 	free(raw);
-	free(bayerpre);
 	*size *= 3;
 	*size += strlen(header);
 	return GP_OK;

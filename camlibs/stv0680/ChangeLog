@@ -1,3 +1,11 @@
+2001-12-29  Marcus Meissner <marcus@jet.franken.de>
+	
+	* saturate.[ch]: Merged from pencam-0.50, which got it from GIMP. 
+	  Adapted to not use global variables.
+	* library.c: Use saturation filter.
+	 
+	  (Done by Kevin, merged by me)
+
 2001-12-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* stv0680.c (camera_capture): Tell the filesystem about the new
