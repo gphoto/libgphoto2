@@ -50,6 +50,7 @@ camlibs/sierra/sierra.c
 camlibs/sierra/sierra-desc.c
 camlibs/sipix/sipix.c
 camlibs/sipix/web2.c
+camlibs/sipixblink/sipixblink.c
 camlibs/sonydscf1/sonydscf1.c
 camlibs/sonydscf55/camera.c
 camlibs/soundvision/soundvision.c
