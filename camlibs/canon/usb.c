@@ -424,6 +424,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 /**
  * canon_usb_unlock_keys:
  * @camera: camera to unlock keys on
+ * @context: context for error reporting
  *
  * Unlocks the keys on cameras that support this
  *
@@ -516,6 +517,10 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
  * @camera: the Camera to work with
  * @return_length: number of bytes to read from the camera as response
  * @context: context for error reporting
+ * @thumb_length: length of thumbnail (if %REMOTE_CAPTURE_THUMB_TO_PC is set in transfer mode)
+ * @image_length: length of full image (if %REMOTE_CAPTURE_FULL_TO_PC is set in transfer mode)
+ * @image_key: unique image identifier (if %REMOTE_CAPTURE_THUMB_TO_PC
+ *      or %REMOTE_CAPTURE_FULL_TO_PC or both are set in transfer mode)
  *
  * USB version of the #canon_serial_dialogue function.
  * Special case for the "capture image" command, where we must read the
@@ -526,28 +531,14 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
  * exists for this function, we read #return_length bytes back from the
  * camera and return this camera response to the caller.
  *
- * Example:
- *
- *	This function gets called with
- *		@canon_funct = %CANON_USB_FUNCTION_SET_TIME
- *		@payload = already constructed payload with the new time
- *	we construct a complete command packet and send this to the camera.
- *	The canon_usb_cmdstruct indicates that command
- *	CANON_USB_FUNCTION_SET_TIME returns four bytes, so we read those
- *	four bytes into our buffer and return a pointer to the buffer to
- *	the caller.
- *
- *	This should probably be changed so that the caller supplies a
- *	unsigned char ** which can be pointed to our buffer and an int
- *	returned with GP_OK or some error code.
- *
  * Returns: a char * that points to the data read from the camera (or
  * NULL on failure), and sets what @return_length points to to the number
  * of bytes read.
  *
  */
 unsigned char *
-canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context )
+canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context,
+			    int *thumb_length, int *image_length, int *image_key )
 {
 	int msgsize, status, i;
 	char cmd1 = 0x13, cmd2 = 0x12, *funct_descr = "";
@@ -642,7 +633,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 	packet[0x47] = cmd2;
 	packet[0x50] = canon_subfunc;
 	htole32a (packet + 0x04, cmd3);
-	htole32a (packet + 0x4c, 0x0012c8f8);	/* fake serial number */
+	htole32a (packet + 0x4c, serial_code++);	/* fake serial number */
 	htole32a (packet + 0x48, 0x18);
 
 	msgsize = 0x58;			     /* TOTAL msg size */
@@ -718,8 +709,8 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 	   0x0f for EOS) */
 	if ( IS_EOS(camera->pl->md->model) ) {
 		int step = 0;
-		int thumb_length = -1, image_length = -1;
-		int image_key = 0x81818181;
+		*thumb_length = 0; *image_length = 0;
+		*image_key = 0x81818181;
 
 		while ( buf2[4] != 0x0f ) {
 			status = canon_usb_poll_interrupt_pipe ( camera, buf2, MAX_INTERRUPT_TRIES );
@@ -736,10 +727,10 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
 						 " bogus length 0x%04x"
 						 " for thumbnail size packet\n", status );
-				thumb_length = le32atoh ( buf2+0x11 );
-				image_key = le32atoh ( buf2+0x0c );
-				GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size 0x%08x, tag=0x%08x",
-					   thumb_length, image_key );
+				*thumb_length = le32atoh ( buf2+0x11 );
+				*image_key = le32atoh ( buf2+0x0c );
+				GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size %i, tag=0x%08x",
+					   *thumb_length, *image_key );
 				break;
 			case 0x0c:
 				/* Full image size */
@@ -747,22 +738,16 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
 						 " bogus length 0x%04x"
 						 " for full image size packet\n", status );
-				image_length = le32atoh ( buf2+0x11 );
-				image_key = le32atoh ( buf2+0x0c );
+				*image_length = le32atoh ( buf2+0x11 );
+				*image_key = le32atoh ( buf2+0x0c );
 				GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08x, tag=0x%08x",
-					   image_length, image_key );
+					   *image_length, *image_key );
 				break;
 			case 0x0a:
 				if ( buf2[12] == 0x1c ) {
 					GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt read" );
-					if ( step == 0 ) {
+					if ( step == 0 )
 						step++;
-						/* Canon RemoteCapture unlocks the keys here for EOS cameras. */
-						/*if ( canon_usb_unlock_keys ( camera ) < 0 ) {
-						  GP_DEBUG ( "canon_usb_capture_dialogue: couldn't unlock keys after capture." );
-						  goto FAIL;
-						  }*/
-					}
 					else if ( step == 2 ) {
 						/* I think this may be a signal that this is the last shot
 						   that will fit on the CF card. */
@@ -796,8 +781,12 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 				}
 				break;
 			case 0x0e:
+				/* The image has been written to local
+				 * storage. Never seen if the transfer
+				 * mode didn't include any local
+				 * storage. */
 				GP_DEBUG ( "canon_usb_capture_dialogue:"
-					   " EOS ok from interrupt read" );
+					   " EOS flash write complete from interrupt read" );
 				if ( step != 2 ) {
 					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
 						 " third EOS interrupt read out of sequence" );
@@ -811,15 +800,24 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 				}
 				break;
 			case 0x0f:
-				if ( step != 3 ) {
-					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-						 " fourth EOS interrupt read out of sequence" );
-					/* But keys remain locked... */
-					goto FAIL;
+				/* We allow this message as third or
+				 * fourth, since we may or may not be
+				 * writing to camera storage. */
+				if ( step == 2 ) {
+					/* Keys were never unlocked, as that message never came. */
+					if ( canon_usb_unlock_keys ( camera, context ) < 0 ) {
+						GP_DEBUG ( "canon_usb_capture_dialogue: couldn't unlock keys after capture." );
+						goto FAIL;
+					}
 				}
-				else {
+				else if ( step == 3 ) {
 					GP_DEBUG ( "canon_usb_capture_dialogue:"
 						   " final EOS interrupt read" );
+				}
+				else {
+					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+						 " fourth EOS interrupt read out of sequence" );
+					goto FAIL;
 				}
 				break;
 			default:
@@ -1217,15 +1215,22 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 
 	bytes_received = 0;
 	while (bytes_received < total_data_size) {
-		if ((total_data_size - bytes_received) < read_bytes)
+		if ((total_data_size - bytes_received) > USB_BULK_READ_SIZE )
+			/* Limit max transfer length */
+			read_bytes = USB_BULK_READ_SIZE;
+		else if ((total_data_size - bytes_received) > 0x040 )
+			/* Round longer transfers down to nearest 0x40 */
+			read_bytes = (total_data_size - bytes_received) / 0x40 * 0x40;
+		else
+			/* Final transfer; use true length */
 			read_bytes = (total_data_size - bytes_received);
 
-		GP_DEBUG ("calling gp_port_read(), total_data_size = %i, "
+		GP_DEBUG ("canon_usb_long_dialogue: calling gp_port_read(), total_data_size = %i, "
 			  "bytes_received = %i, read_bytes = %i (0x%x)", total_data_size,
 			  bytes_received, read_bytes, read_bytes);
 		bytes_read = gp_port_read (camera->port, *data + bytes_received, read_bytes);
 		if (bytes_read < 1) {
-			GP_DEBUG ("gp_port_read() returned error (%i) or no data\n",
+			GP_DEBUG ("canon_usb_long_dialogue: gp_port_read() returned error (%i) or no data\n",
 				  bytes_read);
 			free (*data);
 			*data = NULL;
@@ -1242,7 +1247,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 		}
 
 		if (bytes_read < read_bytes)
-			GP_DEBUG ("WARNING: gp_port_read() resulted in short read "
+			GP_DEBUG ("canon_usb_long_dialogue: WARNING: gp_port_read() resulted in short read "
 				  "(returned %i bytes, expected %i)", bytes_read, read_bytes);
 		bytes_received += bytes_read;
 
@@ -1345,6 +1350,7 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 
 	htole32a (payload, 0x1);	/* get thumbnail */
 	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
+	htole32a (payload + 0x8, USB_BULK_READ_SIZE);
 
 	/* 0 is to not show status */
 	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
@@ -1355,6 +1361,97 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 		GP_DEBUG ("canon_usb_get_thumbnail: canon_usb_long_dialogue() "
 			  "returned error (%i).", res);
 		return res;
+	}
+
+	return GP_OK;
+}
+
+/**
+ * canon_usb_get_captured_image:
+ * @camera: camera to lock keys on
+ * @key: index of image to fetch, returned from canon_usb_capture_dialogue()
+ * @data: to receive image data
+ * @length: to receive length of image data
+ * @context: context for error reporting
+ *
+ * Gets the just-captured image from a USB-connected Canon
+ * camera. This function must be called soon after an image capture,
+ * and needs the image key returned by canon_usb_capture_dialogue().
+ *
+ * Returns: gphoto2 error code, length in @length, and image data in @data.
+ *
+ */
+int
+canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **data, int *length,
+			      GPContext *context)
+{
+	char payload[16];
+	int payload_length = 16, result;
+
+	GP_DEBUG ("canon_usb_get_captured_image() called");
+
+	/* Construct payload containing buffer size and function request.
+	 * See the file Protocol in this directory for more information.
+	 */
+	htole32a (payload, 0x0);	/* always zero */
+	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
+	htole32a (payload + 0x8, CANON_DOWNLOAD_FULL);
+	htole32a (payload + 0xc, key);
+
+	/* the 1 is to show status */
+	result = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_RETRIEVE_CAPTURE, data, length,
+					  0, payload,
+					  payload_length, 1, context);
+	if (result != GP_OK) {
+		GP_DEBUG ("canon_usb_get_captured_image: canon_usb_long_dialogue() "
+			  "returned error (%i).", result);
+		return result;
+	}
+
+	return GP_OK;
+}
+
+/**
+ * canon_usb_get_captured_thumbnail:
+ * @camera: camera to lock keys on
+ * @key: index of image to fetch, returned from canon_usb_capture_dialog()
+ * @data: to receive thumbnail data
+ * @length: to receive length of thumbnail data
+ * @context: context for error reporting
+ *
+ * Gets the just-captured thumbnail from a USB-connected Canon
+ * camera. This function must be called after a remote image capture,
+ * before leaving remote capture mode, and needs the image key
+ * returned by canon_usb_capture_dialog().
+ *
+ * Returns: gphoto2 error code, length in @length, and thumbnail data in @data.
+ *
+ */
+int
+canon_usb_get_captured_thumbnail (Camera *camera, const int key, unsigned char **data, int *length,
+			      GPContext *context)
+{
+	char payload[16];
+	int payload_length = 16, result;
+
+	GP_DEBUG ("canon_usb_get_captured_thumbnail() called");
+
+	/* Construct payload containing buffer size and function request.
+	 * See the file Protocol in this directory for more information.
+	 */
+	htole32a (payload, 0x0);	/* get picture */
+	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
+	htole32a (payload + 0x8, CANON_DOWNLOAD_THUMB);
+	htole32a (payload + 0xc, key);
+
+	/* the 1 is to show status */
+	result = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_RETRIEVE_CAPTURE, data, length,
+					  0, payload,
+					  payload_length, 1, context);
+	if (result != GP_OK) {
+		GP_DEBUG ("canon_usb_get_captured_thumbnail: canon_usb_long_dialogue() "
+			  "returned error (%i).", result);
+		return result;
 	}
 
 	return GP_OK;
