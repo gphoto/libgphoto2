@@ -58,11 +58,6 @@
 
 /************ new stuff ********/
 
-gp_port *gdev;
-gp_port_settings settings;
-
-/************ new stuff ********/
-
 #define MAX_TRIES 10
 
 #define USLEEP1 0
@@ -70,6 +65,7 @@ gp_port_settings settings;
 
 #define USB_BULK_READ_SIZE 0x3000
 
+#warning No globals please!
 static unsigned char psa50_eot[8];
 
 /* ------------------------- Frame-level processing ------------------------- */
@@ -113,7 +109,6 @@ psa50_send_frame (Camera *camera, const unsigned char *pkt, int len)
 unsigned char *
 psa50_recv_frame (Camera *camera, int *len)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	static unsigned char buffer[5000];
 
 	/* more than enough :-) (allow for a few run-together packets) */
@@ -135,7 +130,7 @@ psa50_recv_frame (Camera *camera, int *len)
 		}
 		*p++ = c;
 	}
-	if (cs->dump_packets == 1)
+	if (camera->pl->dump_packets == 1)
 		dump_hex (camera, "RECV", buffer, p - buffer);
 	if (len)
 		*len = p - buffer;
@@ -172,7 +167,6 @@ static int
 psa50_send_packet (Camera *camera, unsigned char type,
 		   unsigned char seq, unsigned char *pkt, int len)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char *hdr = pkt - PKT_HDR_LEN;
 	unsigned short crc;
 
@@ -205,7 +199,6 @@ psa50_send_packet (Camera *camera, unsigned char type,
 static unsigned char *
 psa50_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int *len)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char *pkt;
 	unsigned short crc;
 	int raw_length, length = 0;
@@ -280,7 +273,6 @@ psa50_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int 
 static int
 psa50_wait_for_ack (Camera *camera)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char *pkt;
 	unsigned char type, seq, old_seq;
 	int len;
@@ -355,7 +347,6 @@ psa50_wait_for_ack (Camera *camera)
 static int
 psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list * ap)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	unsigned char buffer[MAX_PKT_PAYLOAD + 2];	/* allow space for CRC */
 	unsigned char upload_buffer[MAX_PKT_PAYLOAD + 2];
 	unsigned char *pkt, *pkt2, *pos;
@@ -381,7 +372,7 @@ psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list 
 			break;
 		len = va_arg (*ap, int);
 
-		if (pos + len - pkt > MAX_MSG_SIZE && cs->uploading != 1) {
+		if (pos + len - pkt > MAX_MSG_SIZE && camera->pl->uploading != 1) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "FATAL ERROR: message too big (%i)\n",
 					 pos + len - pkt);
@@ -396,7 +387,7 @@ psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list 
 	pkt[MSG_LEN_LSB] = total & 0xff;
 	pkt[MSG_LEN_MSB] = total >> 8;
 
-	if (cs->uploading == 1) {
+	if (camera->pl->uploading == 1) {
 		memset (upload_buffer, 0, PKT_HDR_LEN + MSG_HDR_LEN);
 		pkt2 = upload_buffer;
 		memcpy (pkt2, pkt + UPLOAD_DATA_BLOCK, total - UPLOAD_DATA_BLOCK);
@@ -472,7 +463,6 @@ psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list 
 static unsigned char *
 psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *total)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	static unsigned char *msg = NULL;
 	static int msg_size = 512;	/* initial allocation/2 */
 	unsigned char *frag;
@@ -611,15 +601,15 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 	}
 	if (receive_error == NOERROR) {
 		/*we want to be sure the camera U N D E R S T A N D S our packets */
-		if (cs->uploading == 1 && cs->model == CANON_PS_A50)
-			cs->slow_send = 1;
+		if (camera->pl->uploading == 1 && camera->pl->model == CANON_PS_A50)
+			camera->pl->slow_send = 1;
 		if (!psa50_send_packet (camera, PKT_ACK, seq_rx++, psa50_eot + PKT_HDR_LEN, 0)) {
-			if (cs->uploading == 1 && cs->model == CANON_PS_A50)
-				cs->slow_send = 0;
+			if (camera->pl->uploading == 1 && camera->pl->model == CANON_PS_A50)
+				camera->pl->slow_send = 0;
 			return NULL;
 		}
-		if (cs->uploading == 1 && cs->model == CANON_PS_A50)
-			cs->slow_send = 0;
+		if (camera->pl->uploading == 1 && camera->pl->model == CANON_PS_A50)
+			camera->pl->slow_send = 0;
 		if (total)
 			*total = msg_pos;
 		return msg;
@@ -651,7 +641,6 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 static unsigned char *
 psa50_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, int *len, ...)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	va_list ap;
 	int okay, try;
 	unsigned char *good_ack;
@@ -664,7 +653,7 @@ psa50_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, i
 			return NULL;
 		/* while uploading we receive 2 ACKs and 1 confirmation message
 		 * The first ACK has already been received if we are here */
-		if (cs->uploading == 1) {
+		if (camera->pl->uploading == 1) {
 			seq_tx--;
 			good_ack = psa50_recv_msg (camera, mtype, dir ^ DIR_REVERSE, len);
 			if (!good_ack)
@@ -1013,8 +1002,6 @@ get_int (const unsigned char *p)
 int
 psa50_end (Camera *camera)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-
 	canon_serial_send (camera, "\xC0\x00\x02\x55\x2C\xC1", 6, USLEEP2);
 	canon_serial_send (camera, "\xC0\x00\x04\x01\x00\x00\x00\x24\xC6\xC1", 8, USLEEP2);
 	return 0;
@@ -1044,8 +1031,6 @@ psa50_directory_operations (Camera *camera, char *path, int action)
 	unsigned char *msg;
 	int len, canon_usb_funct;
 	char type;
-
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 
 	switch (action) {
 		case DIR_CREATE:
@@ -1105,7 +1090,6 @@ psa50_directory_operations (Camera *camera, char *path, int action)
 int
 psa50_get_owner_name (Camera *camera)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	unsigned char *msg;
 	int len;
 
@@ -1131,11 +1115,11 @@ psa50_get_owner_name (Camera *camera)
 	}
 
 	/* Store these values in our "camera" structure: */
-	memcpy (cs->firmwrev, (char *) msg + 8, 4);
-	strncpy (cs->ident, (char *) msg + 12, 30);
-	strncpy (cs->owner, (char *) msg + 44, 30);
+	memcpy (camera->pl->firmwrev, (char *) msg + 8, 4);
+	strncpy (camera->pl->ident, (char *) msg + 12, 30);
+	strncpy (camera->pl->owner, (char *) msg + 44, 30);
 	gp_debug_printf (GP_DEBUG_HIGH, "canon", "psa50_get_owner_name: "
-			 "ident '%s' owner '%s'", cs->ident, cs->owner);
+			 "ident '%s' owner '%s'", camera->pl->ident, camera->pl->owner);
 
 	return GP_OK;
 }
@@ -1146,7 +1130,6 @@ psa50_get_owner_name (Camera *camera)
 int
 psa50_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char *msg;
 	int len;
 
@@ -1184,7 +1167,6 @@ int
 psa50_set_file_attributes (Camera *camera, const char *file, const char *dir,
 			   unsigned char attrs)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char payload[300];
 	unsigned char *msg;
 	unsigned char attr[4];
@@ -1253,7 +1235,6 @@ psa50_set_file_attributes (Camera *camera, const char *file, const char *dir,
 int
 psa50_set_owner_name (Camera *camera, const char *name)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char *msg;
 	int len;
 
@@ -1301,7 +1282,6 @@ psa50_set_owner_name (Camera *camera, const char *name)
 time_t
 psa50_get_time (Camera *camera)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char *msg;
 	int len;
 	int t;
@@ -1339,7 +1319,6 @@ psa50_get_time (Camera *camera)
 int
 psa50_set_time (Camera *camera)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char *msg;
 	int len, i;
 	time_t date;
@@ -1378,7 +1357,6 @@ psa50_set_time (Camera *camera)
 int
 psa50_ready (Camera *camera)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	unsigned char type, seq;
 	char *pkt;
 	int try, len, speed, good_ack, res;
@@ -1402,57 +1380,57 @@ psa50_ready (Camera *camera)
 						  "('get time' request failed (%d))\n", res);
 				return GP_ERROR;
 			}
-			if (!strcmp ("Canon PowerShot S20", cs->ident)) {
+			if (!strcmp ("Canon PowerShot S20", camera->pl->ident)) {
 				gp_camera_status (camera, "Detected a Powershot S20");
-				cs->model = CANON_PS_S20;
+				camera->pl->model = CANON_PS_S20;
 				return GP_OK;
-			} else if (!strcmp ("Canon PowerShot S10", cs->ident)) {
+			} else if (!strcmp ("Canon PowerShot S10", camera->pl->ident)) {
 				gp_camera_status (camera, "Detected a Powershot S10");
-				cs->model = CANON_PS_S10;
+				camera->pl->model = CANON_PS_S10;
 				return GP_OK;
-			} else if (!strcmp ("Canon PowerShot G1", cs->ident)) {
+			} else if (!strcmp ("Canon PowerShot G1", camera->pl->ident)) {
 				gp_camera_status (camera, "Detected a Powershot G1");
-				cs->model = CANON_PS_G1;
+				camera->pl->model = CANON_PS_G1;
 				return GP_OK;
-			} else if (!strcmp ("Canon PowerShot G2", cs->ident)) {
+			} else if (!strcmp ("Canon PowerShot G2", camera->pl->ident)) {
 				gp_camera_status (camera, "Detected a Powershot G2");
-				cs->model = CANON_PS_G2;
+				camera->pl->model = CANON_PS_G2;
 				return GP_OK;
-			} else if ((!strcmp ("Canon DIGITAL IXUS", cs->ident))
-				   || (!strcmp ("Canon IXY DIGITAL", cs->ident))
-				   || (!strcmp ("Canon PowerShot S110", cs->ident))
-				   || (!strcmp ("Canon PowerShot S100", cs->ident))
-				   || (!strcmp ("Canon DIGITAL IXUS v", cs->ident))) {
+			} else if ((!strcmp ("Canon DIGITAL IXUS", camera->pl->ident))
+				   || (!strcmp ("Canon IXY DIGITAL", camera->pl->ident))
+				   || (!strcmp ("Canon PowerShot S110", camera->pl->ident))
+				   || (!strcmp ("Canon PowerShot S100", camera->pl->ident))
+				   || (!strcmp ("Canon DIGITAL IXUS v", camera->pl->ident))) {
 				gp_camera_status (camera,
 						  "Detected a Digital IXUS series / IXY DIGITAL / Powershot S100 series");
-				cs->model = CANON_PS_S100;
+				camera->pl->model = CANON_PS_S100;
 				return GP_OK;
-			} else if ((!strcmp ("Canon DIGITAL IXUS 300", cs->ident))
-				   || (!strcmp ("Canon IXY DIGITAL 300", cs->ident))
-				   || (!strcmp ("Canon PowerShot S300", cs->ident))) {
+			} else if ((!strcmp ("Canon DIGITAL IXUS 300", camera->pl->ident))
+				   || (!strcmp ("Canon IXY DIGITAL 300", camera->pl->ident))
+				   || (!strcmp ("Canon PowerShot S300", camera->pl->ident))) {
 				gp_camera_status (camera,
 						  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
-				cs->model = CANON_PS_S300;
+				camera->pl->model = CANON_PS_S300;
 				return GP_OK;
-			} else if (!strcmp ("Canon PowerShot A10", cs->ident)) {
+			} else if (!strcmp ("Canon PowerShot A10", camera->pl->ident)) {
 				gp_camera_status (camera, "Detected a Powershot A10");
-				cs->model = CANON_PS_A10;
+				camera->pl->model = CANON_PS_A10;
 				return GP_OK;
-			} else if (!strcmp ("Canon PowerShot A20", cs->ident)) {
+			} else if (!strcmp ("Canon PowerShot A20", camera->pl->ident)) {
 				gp_camera_status (camera, "Detected a Powershot A20");
-				cs->model = CANON_PS_A20;
+				camera->pl->model = CANON_PS_A20;
 				return GP_OK;
-			} else if (!strcmp ("Canon EOS D30", cs->ident)) {
+			} else if (!strcmp ("Canon EOS D30", camera->pl->ident)) {
 				gp_camera_status (camera, "Detected a EOS D30");
-				cs->model = CANON_EOS_D30;
+				camera->pl->model = CANON_EOS_D30;
 				return GP_OK;
-			} else if (!strcmp ("Canon PowerShot Pro90 IS", cs->ident)) {
+			} else if (!strcmp ("Canon PowerShot Pro90 IS", camera->pl->ident)) {
 				gp_camera_status (camera, "Detected a PowerShot Pro90 IS");
-				cs->model = CANON_PS_PRO90_IS;
+				camera->pl->model = CANON_PS_PRO90_IS;
 				return GP_OK;
 			} else {
 				gp_debug_printf (GP_DEBUG_NONE, "Unknown camera! (%s)\n",
-						 cs->ident);
+						 camera->pl->ident);
 				return GP_ERROR;
 			}
 			break;
@@ -1469,7 +1447,7 @@ psa50_ready (Camera *camera)
 			/*      cts=canon_serial_get_cts();
 			   gp_debug_printf(GP_DEBUG_LOW,"canon","cts : %i\n",cts);
 			   if (cts==32) {  CTS == 32  when the camera is connected. */
-			if (cs->first_init == 0 && cs->cached_ready == 1) {
+			if (camera->pl->first_init == 0 && camera->pl->cached_ready == 1) {
 				/* First case, the serial speed of the camera is the same as
 				 * ours, so let's try to send a ping packet : */
 				if (!psa50_send_packet
@@ -1481,7 +1459,7 @@ psa50_ready (Camera *camera)
 				if (good_ack == 0) {
 					/* no answer from the camera, let's try
 					 * at the speed saved in the settings... */
-					speed = cs->speed;
+					speed = camera->pl->speed;
 					if (speed != 9600) {
 						if (!canon_serial_change_speed
 						    (camera->port, speed)) {
@@ -1564,65 +1542,65 @@ psa50_ready (Camera *camera)
 
 			gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_id : '%s'\n", psa50_id);
 
-			cs->first_init = 0;
+			camera->pl->first_init = 0;
 
 			if (!strcmp ("DE300 Canon Inc.", psa50_id)) {
 				gp_camera_status (camera, "Powershot A5");
-				cs->model = CANON_PS_A5;
-				if (cs->speed > 57600)
-					cs->slow_send = 1;
+				camera->pl->model = CANON_PS_A5;
+				if (camera->pl->speed > 57600)
+					camera->pl->slow_send = 1;
 				A5 = 1;
 			} else if (!strcmp ("Canon PowerShot A5 Zoom", psa50_id)) {
 				gp_camera_status (camera, "Powershot A5 Zoom");
-				cs->model = CANON_PS_A5_ZOOM;
-				if (cs->speed > 57600)
-					cs->slow_send = 1;
+				camera->pl->model = CANON_PS_A5_ZOOM;
+				if (camera->pl->speed > 57600)
+					camera->pl->slow_send = 1;
 				A5 = 1;
 			} else if (!strcmp ("Canon PowerShot A50", psa50_id)) {
 				gp_camera_status (camera, "Detected a Powershot A50");
-				cs->model = CANON_PS_A50;
-				if (cs->speed > 57600)
-					cs->slow_send = 1;
+				camera->pl->model = CANON_PS_A50;
+				if (camera->pl->speed > 57600)
+					camera->pl->slow_send = 1;
 			} else if (!strcmp ("Canon PowerShot S20", psa50_id)) {
 				gp_camera_status (camera, "Detected a Powershot S20");
-				cs->model = CANON_PS_S20;
+				camera->pl->model = CANON_PS_S20;
 			} else if (!strcmp ("Canon PowerShot G1", psa50_id)) {
 				gp_camera_status (camera, "Detected a Powershot G1");
-				cs->model = CANON_PS_G1;
+				camera->pl->model = CANON_PS_G1;
 			} else if (!strcmp ("Canon PowerShot G2", psa50_id)) {
 				gp_camera_status (camera, "Detected a Powershot G2");
-				cs->model = CANON_PS_G2;
+				camera->pl->model = CANON_PS_G2;
 			} else if (!strcmp ("Canon PowerShot A10", psa50_id)) {
 				gp_camera_status (camera, "Detected a Powershot A10");
-				cs->model = CANON_PS_A10;
+				camera->pl->model = CANON_PS_A10;
 			} else if (!strcmp ("Canon PowerShot A20", psa50_id)) {
 				gp_camera_status (camera, "Detected a Powershot A20");
-				cs->model = CANON_PS_A20;
+				camera->pl->model = CANON_PS_A20;
 			} else if (!strcmp ("Canon EOS D30", psa50_id)) {
 				gp_camera_status (camera, "Detected a EOS D30");
-				cs->model = CANON_EOS_D30;
+				camera->pl->model = CANON_EOS_D30;
 			} else if (!strcmp ("Canon PowerShot Pro90 IS", psa50_id)) {
 				gp_camera_status (camera, "Detected a Powershot Pro90 IS");
-				cs->model = CANON_PS_PRO90_IS;
+				camera->pl->model = CANON_PS_PRO90_IS;
 			} else if (!strcmp ("Canon PowerShot Pro70", psa50_id)) {
 				gp_camera_status (camera, "Detected a Powershot Pro70");
-				cs->model = CANON_PS_A70;
+				camera->pl->model = CANON_PS_A70;
 			} else if ((!strcmp ("Canon DIGITAL IXUS", psa50_id))
 				   || (!strcmp ("Canon IXY DIGITAL", psa50_id))
 				   || (!strcmp ("Canon PowerShot S100", psa50_id))
 				   || (!strcmp ("Canon DIGITAL IXUS v", psa50_id))) {
 				gp_camera_status (camera,
 						  "Detected a Digital IXUS series / IXY DIGITAL / Powershot S100 series");
-				cs->model = CANON_PS_S100;
+				camera->pl->model = CANON_PS_S100;
 			} else if ((!strcmp ("Canon DIGITAL IXUS 300", psa50_id))
 				   || (!strcmp ("Canon IXY DIGITAL 300", psa50_id))
 				   || (!strcmp ("Canon PowerShot S300", psa50_id))) {
 				gp_camera_status (camera,
 						  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / Powershot S300");
-				cs->model = CANON_PS_S300;
+				camera->pl->model = CANON_PS_S300;
 			} else {
 				gp_camera_status (camera, "Detected a Powershot S10");
-				cs->model = CANON_PS_S10;
+				camera->pl->model = CANON_PS_S10;
 			}
 
 			//  5 seconds  delay should  be enough for   big flash cards.   By
@@ -1641,7 +1619,7 @@ psa50_ready (Camera *camera)
 				return GP_ERROR;
 			}
 			res = 0;
-			switch (cs->speed) {
+			switch (camera->pl->speed) {
 				case 9600:
 					res = psa50_send_frame (camera, SPEED_9600, 12);
 					break;
@@ -1665,7 +1643,7 @@ psa50_ready (Camera *camera)
 				gp_camera_status (camera, _("Communication error 3"));
 				return GP_ERROR;
 			}
-			speed = cs->speed;
+			speed = camera->pl->speed;
 			gp_camera_status (camera, _("Changing speed... wait..."));
 			if (!psa50_wait_for_ack (camera))
 				return GP_ERROR;
@@ -1710,7 +1688,6 @@ psa50_ready (Camera *camera)
 char *
 psa50_get_disk (Camera *camera)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char *msg;
 	int len, res;
 
@@ -1763,7 +1740,6 @@ psa50_get_disk (Camera *camera)
 int
 psa50_disk_info (Camera *camera, const char *name, int *capacity, int *available)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char *msg;
 	int len, cap, ava;
 
@@ -1820,7 +1796,6 @@ psa50_free_dir (Camera *camera, struct psa50_dir *list)
 struct psa50_dir *
 psa50_list_directory (Camera *camera, const char *name)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	struct psa50_dir *dir = NULL;
 	int entries = 0, len, res;
 	unsigned int payload_length;
@@ -1990,7 +1965,6 @@ psa50_list_directory (Camera *camera, const char *name)
 unsigned char *
 psa50_get_file_serial (Camera *camera, const char *name, int *length)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	unsigned char *file = NULL;
 	unsigned char *msg;
 	unsigned char name_len;
@@ -2016,8 +1990,8 @@ psa50_get_file_serial (Camera *camera, const char *name, int *length)
 		}
 		if (!file) {
 			total = get_int (msg + 4);
-			if (cs->model == CANON_PS_S20 || cs->model == CANON_PS_G1
-			    || cs->model == CANON_PS_G2 || cs->model == CANON_PS_S10) {
+			if (camera->pl->model == CANON_PS_S20 || camera->pl->model == CANON_PS_G1
+			    || camera->pl->model == CANON_PS_G2 || camera->pl->model == CANON_PS_S10) {
 				maxfilesize = 10000000;
 			} else {
 				maxfilesize = 2000000;
@@ -2060,7 +2034,6 @@ psa50_get_file_serial (Camera *camera, const char *name, int *length)
 static int
 psa50_get_file_usb (Camera *camera, const char *name, unsigned char **data, int *length)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	char payload[100];
 	int payload_length, maxfilesize, res;
 
@@ -2084,11 +2057,11 @@ psa50_get_file_usb (Camera *camera, const char *name, unsigned char **data, int 
 	intatpos (payload, 0x0, 0x0);	// get picture
 	intatpos (payload, 0x4, USB_BULK_READ_SIZE);
 
-	if (cs->model == CANON_PS_S10 || cs->model == CANON_PS_S20
-	    || cs->model == CANON_PS_G2 || cs->model == CANON_PS_G1
-	    || cs->model == CANON_PS_S300 || cs->model == CANON_PS_S100
-	    || cs->model == CANON_PS_A10 || cs->model == CANON_PS_A20
-	    || cs->model == CANON_EOS_D30 || cs->model == CANON_PS_PRO90_IS) {
+	if (camera->pl->model == CANON_PS_S10 || camera->pl->model == CANON_PS_S20
+	    || camera->pl->model == CANON_PS_G2 || camera->pl->model == CANON_PS_G1
+	    || camera->pl->model == CANON_PS_S300 || camera->pl->model == CANON_PS_S100
+	    || camera->pl->model == CANON_PS_A10 || camera->pl->model == CANON_PS_A20
+	    || camera->pl->model == CANON_EOS_D30 || camera->pl->model == CANON_PS_PRO90_IS) {
 		maxfilesize = 10000000;
 	} else {
 		maxfilesize = 2000000;
@@ -2169,7 +2142,6 @@ psa50_get_thumbnail_usb (Camera *camera, const char *name, unsigned char **data,
 unsigned char *
 psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	unsigned char *data = NULL;
 	unsigned char *msg;
 	exifparser exifdat;
@@ -2253,7 +2225,7 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 			break;
 	}
 
-	switch (cs->model) {
+	switch (camera->pl->model) {
 		case CANON_PS_A70:	/* pictures are JFIF files */
 			/* we skip the first FF D8 */
 			i = 3;
@@ -2348,7 +2320,6 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 int
 psa50_delete_file (Camera *camera, const char *name, const char *dir)
 {
-//      struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	unsigned char payload[300];
 	unsigned char *msg;
 	int len, payload_length;
@@ -2402,7 +2373,6 @@ psa50_put_file_usb (Camera *camera, CameraFile *file, char *destname, char *dest
 int
 psa50_put_file_serial (Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	unsigned char *msg;
 	char filename[64];
 	char buf[4096];
@@ -2415,7 +2385,7 @@ psa50_put_file_serial (Camera *camera, CameraFile *file, char *destname, char *d
 	long int size;
 	const char *data, *name;
 
-	cs->uploading = 1;
+	camera->pl->uploading = 1;
 	gp_file_get_name (file, &name);
 	for (i = 0; name[i]; i++)
 		filename[i] = toupper (name[i]);
@@ -2452,13 +2422,13 @@ psa50_put_file_serial (Camera *camera, CameraFile *file, char *destname, char *d
 					     destpath, strlen (destpath), destname,
 					     strlen (destname) + 1, buf, block_len, NULL);
 		if (!msg) {
-			cs->uploading = 0;
+			camera->pl->uploading = 0;
 			return GP_ERROR;
 		}
 		sent += block_len;
 		gp_camera_progress (camera, size ? (sent / (float) size) : 1.);
 	}
-	cs->uploading = 0;
+	camera->pl->uploading = 0;
 	return GP_OK;
 }
 

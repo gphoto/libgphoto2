@@ -63,10 +63,9 @@ typedef enum {
 } canonCamModel;
 
 
-typedef struct canon_info
+struct _CameraPrivateLibrary
 {
 	canonCamModel model;
-	gp_port *gdev;
 	int speed;        /* The speed we're using for this camera */
 	char ident[32];   /* Model ID string given by the camera */
 	char owner[32];   /* Owner name */
@@ -93,10 +92,9 @@ typedef struct canon_info
 	struct psa50_dir *cached_tree;
 	int cached_images;
 	char **cached_paths; /* only used by A5 */
-} canon_info;
+};
 
 
-// extern struct canon_info camera_data;
 extern char psa50_id[]; /* ditto @@@ */
 int A5;
 
@@ -106,6 +104,11 @@ int A5;
 #define CANON_SERIAL_RS232 0
 #define CANON_USB 1
 
+#warning This driver uses global variables and
+#warning therefore can break frontends like
+#warning Konqueror (KDE) or Nautilus (GNOME).
+#warning Please fix by moving global variables
+#warning into camera->pl!
 int canon_comm_method;
 
 #define DIR_CREATE 0

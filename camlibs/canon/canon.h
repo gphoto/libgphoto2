@@ -9,22 +9,6 @@
 
 /****************************************************************************
  *
- * global info structure
- *
- * Not much here yet...
- *
- ****************************************************************************/
-
-typedef struct {
-	gp_port *dev;
-	gp_port_settings settings;
-	int speed;
-	int debug;
-} CanonDataStruct;
-
-
-/****************************************************************************
- *
  * These are defines for packet command codes collected from several
  * sources. There's no guarantee, that they are correct...
  *

@@ -35,17 +35,17 @@
  *
  ****************************************************************************/
 
-// gp_port *gdev;
+// GPPort *gdev;
 gp_port_settings settings;
 
 
 void
-serial_flush_input (gp_port *gdev)
+serial_flush_input (GPPort *gdev)
 {
 }
 
 void
-serial_flush_output (gp_port *gdev)
+serial_flush_output (GPPort *gdev)
 {
 }
 
@@ -63,7 +63,7 @@ serial_flush_output (gp_port *gdev)
  ****************************************************************************/
 
 int
-canon_serial_change_speed (gp_port *gdev, int speed)
+canon_serial_change_speed (GPPort *gdev, int speed)
 {
 	/* set speed */
 	gp_port_settings_get (gdev, &settings);
@@ -89,7 +89,7 @@ canon_serial_change_speed (gp_port *gdev, int speed)
  *
  ****************************************************************************/
 int
-canon_serial_get_cts (gp_port *gdev)
+canon_serial_get_cts (GPPort *gdev)
 {
 	int level;
 
@@ -281,12 +281,11 @@ canon_serial_init (Camera *camera, const char *devname)
 int
 canon_serial_send (Camera *camera, const unsigned char *buf, int len, int sleep)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	int i;
 
 	/* the A50 does not like to get too much data in a row at 115200
 	 * The S10 and S20 do not have this problem */
-	if (sleep > 0 && cs->slow_send == 1) {
+	if (sleep > 0 && camera->pl->slow_send == 1) {
 		for (i = 0; i < len; i++) {
 			gp_port_write (camera->port, (char *) buf, 1);
 			buf++;
@@ -304,10 +303,8 @@ canon_serial_send (Camera *camera, const unsigned char *buf, int len, int sleep)
  * Sets the timeout, in miliseconds.
  */
 void
-serial_set_timeout (gp_port *gdev, int to)
+serial_set_timeout (GPPort *gdev, int to)
 {
-	//    struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-
 	gp_port_timeout_set (gdev, to);
 }
 
@@ -323,7 +320,7 @@ serial_set_timeout (gp_port *gdev, int to)
  *
  ****************************************************************************/
 int
-canon_serial_get_byte (gp_port *gdev)
+canon_serial_get_byte (GPPort *gdev)
 {
 	static unsigned char cache[512];
 	static unsigned char *cachep = cache;

@@ -185,26 +185,22 @@ camera_abilities (CameraAbilitiesList * list)
 void
 clear_readiness (Camera *camera)
 {
-	canon_info *cs = (struct canon_info *) camera->camlib_data;
-
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "clear_readiness()");
 
-	cs->cached_ready = 0;
+	camera->pl->cached_ready = 0;
 }
 
 static int
 check_readiness (Camera *camera)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
-
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "check_readiness() cached_ready == %i",
-			 cs->cached_ready);
+			 camera->pl->cached_ready);
 
-	if (cs->cached_ready)
+	if (camera->pl->cached_ready)
 		return 1;
 	if (psa50_ready (camera) == GP_OK) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera type:  %d\n", cs->model);
-		cs->cached_ready = 1;
+		gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera type:  %d\n", camera->pl->model);
+		camera->pl->cached_ready = 1;
 		return 1;
 	}
 	gp_camera_status (camera, _("Camera unavailable"));
@@ -226,21 +222,13 @@ switch_camera_off (Camera *camera)
 static int
 camera_exit (Camera *camera)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_exit()");
-
-	switch (camera->port->type) {
-		case GP_PORT_USB:
-			break;
-		case GP_PORT_SERIAL:
+	if (camera->pl) {
+		if (camera->port->type == GP_PORT_SERIAL)
 			switch_camera_off (camera);
-			break;
-		default:
-			break;
+		free (camera->pl);
+		camera->pl = NULL;
 	}
 
-	free (cs);
 	return GP_OK;
 }
 
@@ -258,13 +246,12 @@ canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source)
 static int
 update_disk_cache (Camera *camera)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	char root[10];		/* D:\ or such */
 	char *disk;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "update_disk_cache()");
 
-	if (cs->cached_disk)
+	if (camera->pl->cached_disk)
 		return 1;
 	if (!check_readiness (camera))
 		return 0;
@@ -273,13 +260,13 @@ update_disk_cache (Camera *camera)
 		gp_camera_status (camera, _("No response"));
 		return 0;
 	}
-	strcpy (cs->cached_drive, disk);
+	strcpy (camera->pl->cached_drive, disk);
 	sprintf (root, "%s\\", disk);
-	if (!psa50_disk_info (camera, root, &cs->cached_capacity, &cs->cached_available)) {
+	if (!psa50_disk_info (camera, root, &camera->pl->cached_capacity, &camera->pl->cached_available)) {
 		gp_camera_status (camera, _("No response"));
 		return 0;
 	}
-	cs->cached_disk = 1;
+	camera->pl->cached_disk = 1;
 
 	return 1;
 }
@@ -365,7 +352,6 @@ is_movie (const char *name)
 static int
 recurse (Camera *camera, const char *name)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	struct psa50_dir *dir, *walk;
 	char buffer[300];	/* longest path, etc. */
 	int count, curr;
@@ -379,15 +365,15 @@ recurse (Camera *camera, const char *name)
 	for (walk = dir; walk->name; walk++)
 		if (walk->size && (is_image (walk->name) || is_movie (walk->name)))
 			count++;
-	cs->cached_paths =
-		realloc (cs->cached_paths, sizeof (char *) * (cs->cached_images + count + 1));
-	memset (cs->cached_paths + cs->cached_images + 1, 0, sizeof (char *) * count);
-	if (!cs->cached_paths) {
+	camera->pl->cached_paths =
+		realloc (camera->pl->cached_paths, sizeof (char *) * (camera->pl->cached_images + count + 1));
+	memset (camera->pl->cached_paths + camera->pl->cached_images + 1, 0, sizeof (char *) * count);
+	if (!camera->pl->cached_paths) {
 		perror ("realloc");
 		return 0;
 	}
-	curr = cs->cached_images;
-	cs->cached_images += count;
+	curr = camera->pl->cached_images;
+	camera->pl->cached_images += count;
 	for (walk = dir; walk->name; walk++) {
 		sprintf (buffer, "%s\\%s", name, walk->name);
 		if (!walk->size) {
@@ -397,8 +383,8 @@ recurse (Camera *camera, const char *name)
 			if ((!is_image (walk->name)) && (!is_movie (walk->name)))
 				continue;
 			curr++;
-			cs->cached_paths[curr] = strdup (buffer);
-			if (!cs->cached_paths[curr]) {
+			camera->pl->cached_paths[curr] = strdup (buffer);
+			if (!camera->pl->cached_paths[curr]) {
 				perror ("strdup");
 				return 0;
 			}
@@ -424,7 +410,6 @@ comp_dir (const void *a, const void *b)
 static struct psa50_dir *
 dir_tree (Camera *camera, const char *path)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	struct psa50_dir *dir, *walk;
 	char buffer[300];	/* longest path, etc. */
 
@@ -437,7 +422,7 @@ dir_tree (Camera *camera, const char *path)
 		if (walk->is_file) {
 			if (is_image (walk->name) || is_movie (walk->name)
 			    || is_thumbnail (walk->name))
-				cs->cached_images++;
+				camera->pl->cached_images++;
 		} else {
 			sprintf (buffer, "%s\\%s", path, walk->name);
 			walk->user = dir_tree (camera, buffer);
@@ -451,11 +436,9 @@ dir_tree (Camera *camera, const char *path)
 static void
 clear_dir_cache (Camera *camera)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
-
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "clear_dir_cache()");
 
-	psa50_free_dir (camera, cs->cached_tree);
+	psa50_free_dir (camera, camera->pl->cached_tree);
 }
 
 
@@ -497,33 +480,32 @@ compare_a5_paths (const void *p1, const void *p2)
 static int
 update_dir_cache (Camera *camera)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	int i;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "update_dir_cache()");
 
-	if (cs->cached_dir)
+	if (camera->pl->cached_dir)
 		return 1;
 	if (!update_disk_cache (camera))
 		return 0;
 	if (!check_readiness (camera))
 		return 0;
-	cs->cached_images = 0;
-	switch (cs->model) {
+	camera->pl->cached_images = 0;
+	switch (camera->pl->model) {
 		case CANON_PS_A5:
 		case CANON_PS_A5_ZOOM:
-			if (recurse (camera, cs->cached_drive)) {
+			if (recurse (camera, camera->pl->cached_drive)) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon", _("Before sort:\n"));
-				for (i = 1; i < cs->cached_images; i++) {
-					gp_debug_printf (GP_DEBUG_LOW, "canon", "%d: %s\n", i, cs->cached_paths[i]);
+				for (i = 1; i < camera->pl->cached_images; i++) {
+					gp_debug_printf (GP_DEBUG_LOW, "canon", "%d: %s\n", i, camera->pl->cached_paths[i]);
 				}
-				qsort (cs->cached_paths + 1, cs->cached_images,
+				qsort (camera->pl->cached_paths + 1, camera->pl->cached_images,
 				       sizeof (char *), compare_a5_paths);
 				gp_debug_printf (GP_DEBUG_LOW, "canon", _("After sort:\n"));
-				for (i = 1; i < cs->cached_images; i++) {
-					printf ("%d: %s\n", i, cs->cached_paths[i]);
+				for (i = 1; i < camera->pl->cached_images; i++) {
+					printf ("%d: %s\n", i, camera->pl->cached_paths[i]);
 				}
-				cs->cached_dir = 1;
+				camera->pl->cached_dir = 1;
 				return 1;
 			}
 			clear_dir_cache (camera);
@@ -531,10 +513,10 @@ update_dir_cache (Camera *camera)
 			break;
 
 		default:	/* A50 or S10 or other */
-			cs->cached_tree = dir_tree (camera, cs->cached_drive);
-			if (!cs->cached_tree)
+			camera->pl->cached_tree = dir_tree (camera, camera->pl->cached_drive);
+			if (!camera->pl->cached_tree)
 				return 0;
-			cs->cached_dir = 1;
+			camera->pl->cached_dir = 1;
 			return 1;
 			break;
 	}
@@ -564,8 +546,6 @@ _canon_file_list (struct psa50_dir *tree, const char *folder, CameraList * list)
 static int
 canon_file_list (Camera *camera, const char *folder, CameraList * list)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
-
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_file_list()");
 
 	if (!update_dir_cache (camera)) {
@@ -573,7 +553,7 @@ canon_file_list (Camera *camera, const char *folder, CameraList * list)
 		return GP_ERROR;
 	}
 
-	_canon_file_list (cs->cached_tree, folder, list);
+	_canon_file_list (camera->pl->cached_tree, folder, list);
 	return GP_OK;
 }
 
@@ -603,7 +583,6 @@ static int
 canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 		   unsigned char **data, int *size)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	unsigned char attribs;
 	char file[300];
 	int res;
@@ -613,7 +592,7 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 	if (!check_readiness (camera)) {
 		return GP_ERROR;
 	}
-	switch (cs->model) {
+	switch (camera->pl->model) {
 		case CANON_PS_A5:
 		case CANON_PS_A5_ZOOM:
 #if 0
@@ -772,11 +751,9 @@ _get_file_path (struct psa50_dir *tree, const char *filename, char *path)
 static int
 get_file_path (Camera *camera, const char *filename, const char *path)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
-
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "get_file_path()");
 
-	return _get_file_path (cs->cached_tree, filename, (char *) path);
+	return _get_file_path (camera->pl->cached_tree, filename, (char *) path);
 
 }
 
@@ -785,7 +762,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data)
 {
 	Camera *camera = user_data;
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	unsigned char *data = NULL;
 	int buflen, size, ret;
 	char path[300] = { 0 }, tempfilename[300] =
@@ -797,7 +773,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
-	strncpy (path, cs->cached_drive, sizeof (path) - 1);
+	strncpy (path, camera->pl->cached_drive, sizeof (path) - 1);
 
 	/* update file cache (if necessary) first */
 	if (!update_dir_cache (camera)) {
@@ -925,7 +901,6 @@ pretty_number (int number, char *buffer)
 static int
 camera_summary (Camera *camera, CameraText * summary)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	char a[20], b[20];
 	char *model;
 	int pwr_source, pwr_status;
@@ -940,11 +915,11 @@ camera_summary (Camera *camera, CameraText * summary)
 	if (!update_disk_cache (camera))
 		return GP_ERROR;
 
-	pretty_number (cs->cached_capacity, a);
-	pretty_number (cs->cached_available, b);
+	pretty_number (camera->pl->cached_capacity, a);
+	pretty_number (camera->pl->cached_available, b);
 
 	model = "Canon Powershot";
-	switch (cs->model) {
+	switch (camera->pl->model) {
 		case CANON_PS_A5:
 			model = "Canon Powershot A5";
 			break;
@@ -1011,7 +986,7 @@ camera_summary (Camera *camera, CameraText * summary)
 
 	sprintf (summary->text,
 		 _("%s\n%s\n%s\nDrive %s\n%11s bytes total\n%11s bytes available\n"), model,
-		 cs->owner, power_stats, cs->cached_drive, a, b);
+		 camera->pl->owner, power_stats, camera->pl->cached_drive, a, b);
 	return GP_OK;
 }
 
@@ -1040,7 +1015,6 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data)
 {
 	Camera *camera = data;
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	char path[300], thumbname[300];
 	int j;
 
@@ -1054,13 +1028,13 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
-	if (!(cs->model == CANON_PS_A5 || cs->model == CANON_PS_A5_ZOOM)) {	/* Tested only on powershot A50 */
+	if (!(camera->pl->model == CANON_PS_A5 || camera->pl->model == CANON_PS_A5_ZOOM)) {	/* Tested only on powershot A50 */
 
 		if (!update_dir_cache (camera)) {
 			gp_camera_status (camera, _("Could not obtain directory listing"));
 			return 0;
 		}
-		strcpy (path, cs->cached_drive);
+		strcpy (path, camera->pl->cached_drive);
 
 		if (get_file_path (camera, filename, path) == GP_ERROR) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon", "Filename not found!\n");
@@ -1144,14 +1118,13 @@ _get_last_dir (struct psa50_dir *tree, char *path, char *temppath)
 static int
 get_last_dir (Camera *camera, char *path)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	char temppath[300];
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "get_last_dir()");
 
 	strncpy (temppath, path, sizeof (temppath));
 
-	return _get_last_dir (cs->cached_tree, path, temppath);
+	return _get_last_dir (camera->pl->cached_tree, path, temppath);
 }
 
 static int
@@ -1189,11 +1162,9 @@ _get_last_picture (struct psa50_dir *tree, char *directory, char *filename)
 static int
 get_last_picture (Camera *camera, char *directory, char *filename)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
-
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "get_last_picture()");
 
-	return _get_last_picture (cs->cached_tree, directory, filename);
+	return _get_last_picture (camera->pl->cached_tree, directory, filename);
 }
 
 
@@ -1202,7 +1173,6 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	       void *data)
 {
 	Camera *camera = data;
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	char destpath[300], destname[300], dir[300], dcf_root_dir[10];
 	int j, dirnum = 0;
 	char buf[10];
@@ -1214,7 +1184,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
-	if (cs->speed > 57600 &&
+	if (camera->pl->speed > 57600 &&
 	    (!strcmp (a.model, "Canon PowerShot A50") ||
 	     !strcmp (a.model, "Canon PowerShot Pro70"))) {
 		gp_camera_message (camera,
@@ -1238,7 +1208,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 		return GP_ERROR;
 	}
 
-	sprintf (dcf_root_dir, "%s\\DCIM", cs->cached_drive);
+	sprintf (dcf_root_dir, "%s\\DCIM", camera->pl->cached_drive);
 
 	if (get_last_dir (camera, dir) == GP_ERROR)
 		return GP_ERROR;
@@ -1307,7 +1277,6 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 static int
 camera_get_config (Camera *camera, CameraWidget ** window)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	CameraWidget *t, *section;
 	char power_stats[48], firm[64];
 	int pwr_status, pwr_source;
@@ -1322,15 +1291,15 @@ camera_get_config (Camera *camera, CameraWidget ** window)
 	gp_widget_append (*window, section);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Camera Model"), &t);
-	gp_widget_set_value (t, cs->ident);
+	gp_widget_set_value (t, camera->pl->ident);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Owner name"), &t);
-	gp_widget_set_value (t, cs->owner);
+	gp_widget_set_value (t, camera->pl->owner);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TEXT, "date", &t);
-	if (cs->cached_ready == 1) {
+	if (camera->pl->cached_ready == 1) {
 		camtime = psa50_get_time (camera);
 		if (camtime != GP_ERROR) {
 			camtm = gmtime (&camtime);
@@ -1345,12 +1314,12 @@ camera_get_config (Camera *camera, CameraWidget ** window)
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Firmware revision"), &t);
-	sprintf (firm, "%i.%i.%i.%i", cs->firmwrev[3],
-		 cs->firmwrev[2], cs->firmwrev[1], cs->firmwrev[0]);
+	sprintf (firm, "%i.%i.%i.%i", camera->pl->firmwrev[3],
+		 camera->pl->firmwrev[2], camera->pl->firmwrev[1], camera->pl->firmwrev[0]);
 	gp_widget_set_value (t, firm);
 	gp_widget_append (section, t);
 
-	if (cs->cached_ready == 1) {
+	if (camera->pl->cached_ready == 1) {
 		canon_get_batt_status (camera, &pwr_status, &pwr_source);
 		if ((pwr_source & CAMERA_MASK_BATTERY) == 0) {
 			strcpy (power_stats, _("AC adapter "));
@@ -1386,7 +1355,7 @@ camera_get_config (Camera *camera, CameraWidget ** window)
 	gp_widget_add_choice (t, "none");
 	gp_widget_add_choice (t, "functions");
 	gp_widget_add_choice (t, "complete");
-	switch (cs->debug) {
+	switch (camera->pl->debug) {
 		case 0:
 		default:
 			gp_widget_set_value (t, "none");
@@ -1401,7 +1370,7 @@ camera_get_config (Camera *camera, CameraWidget ** window)
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _("Dump data by packets to stderr"), &t);
-	gp_widget_set_value (t, &(cs->dump_packets));
+	gp_widget_set_value (t, &(camera->pl->dump_packets));
 	gp_widget_append (section, t);
 
 	return GP_OK;
@@ -1410,7 +1379,6 @@ camera_get_config (Camera *camera, CameraWidget ** window)
 static int
 camera_set_config (Camera *camera, CameraWidget * window)
 {
-	struct canon_info *cs = (struct canon_info *) camera->camlib_data;
 	CameraWidget *w;
 	char *wvalue;
 	char buf[8];
@@ -1421,20 +1389,20 @@ camera_set_config (Camera *camera, CameraWidget * window)
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &wvalue);
 		if (strcmp (wvalue, "none") == 0)
-			cs->debug = 0;
+			camera->pl->debug = 0;
 		else if (strcmp (wvalue, "functions") == 0)
-			cs->debug = 1;
+			camera->pl->debug = 1;
 		else if (strcmp (wvalue, "complete") == 0)
-			cs->debug = 9;
+			camera->pl->debug = 9;
 
-		sprintf (buf, "%i", cs->debug);
+		sprintf (buf, "%i", camera->pl->debug);
 		gp_setting_set ("canon", "debug", buf);
 	}
 
 	gp_widget_get_child_by_label (window, _("Dump data by packets to stderr"), &w);
 	if (gp_widget_changed (w)) {
-		gp_widget_get_value (w, &(cs->dump_packets));
-		sprintf (buf, "%i", cs->dump_packets);
+		gp_widget_get_value (w, &(camera->pl->dump_packets));
+		sprintf (buf, "%i", camera->pl->dump_packets);
 		gp_setting_set ("canon", "dump_packets", buf);
 	}
 
@@ -1540,17 +1508,8 @@ int
 camera_init (Camera *camera)
 {
 	GPPortSettings settings;
-	struct canon_info *cs;
 	char buf[8];
 	const char *path;
-
-	if (camera == NULL) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon camera_init() "
-				 "called with NULL camera!");
-		return GP_ERROR;
-	}
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_init()");
 
 	/* First, set up all the function pointers */
 	camera->functions->exit = camera_exit;
@@ -1573,61 +1532,57 @@ camera_init (Camera *camera)
 	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
 					camera);
 
-	cs = (struct canon_info *) malloc (sizeof (struct canon_info));
-	camera->camlib_data = cs;
-
-	cs->first_init = 1;
-	cs->uploading = 0;
-	cs->slow_send = 0;
-	cs->cached_ready = 0;
-	cs->cached_disk = 0;
-	cs->cached_dir = 0;
-	cs->dump_packets = 0;
-	cs->cached_tree = NULL;
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_initialize()\n");
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+	camera->pl->first_init = 1;
+	camera->pl->uploading = 0;
+	camera->pl->slow_send = 0;
+	camera->pl->cached_ready = 0;
+	camera->pl->cached_disk = 0;
+	camera->pl->cached_dir = 0;
+	camera->pl->dump_packets = 0;
+	camera->pl->cached_tree = NULL;
 
 	/* Figure out the speed (and set to default speed if 0) */
 	if (camera->port->type == GP_PORT_SERIAL) {
 		gp_port_settings_get (camera->port, &settings);
-		cs->speed = settings.serial.speed;
+		camera->pl->speed = settings.serial.speed;
 	} else
-		cs->speed = 0;
-	if (cs->speed == 0)
-		cs->speed = 9600;
+		camera->pl->speed = 0;
+	if (camera->pl->speed == 0)
+		camera->pl->speed = 9600;
 
 	if (gp_setting_get ("canon", "debug", buf) != GP_OK)
-		cs->debug = 1;
+		camera->pl->debug = 1;
 
 	if (strncmp (buf, "0", 1) == 0)
-		cs->debug = 0;
+		camera->pl->debug = 0;
 	if (strncmp (buf, "1", 1) == 0)
-		cs->debug = 1;
-	if (strncmp (buf, "1", 1) == 0)
-		cs->debug = 1;
+		camera->pl->debug = 1;
 	if (strncmp (buf, "2", 1) == 0)
-		cs->debug = 2;
+		camera->pl->debug = 2;
 	if (strncmp (buf, "3", 1) == 0)
-		cs->debug = 3;
+		camera->pl->debug = 3;
 	if (strncmp (buf, "4", 1) == 0)
-		cs->debug = 4;
+		camera->pl->debug = 4;
 	if (strncmp (buf, "5", 1) == 0)
-		cs->debug = 5;
+		camera->pl->debug = 5;
 	if (strncmp (buf, "6", 1) == 0)
-		cs->debug = 6;
+		camera->pl->debug = 6;
 	if (strncmp (buf, "7", 1) == 0)
-		cs->debug = 7;
+		camera->pl->debug = 7;
 	if (strncmp (buf, "8", 1) == 0)
-		cs->debug = 8;
+		camera->pl->debug = 8;
 	if (strncmp (buf, "9", 1) == 0)
-		cs->debug = 9;
-	fprintf (stderr, "Debug level: %i\n", cs->debug);
+		camera->pl->debug = 9;
+	fprintf (stderr, "Debug level: %i\n", camera->pl->debug);
 
 	if (gp_setting_get ("canon", "dump_packets", buf) == GP_OK) {
 		if (strncmp (buf, "1", 1) == 0)
-			cs->dump_packets = 1;
+			camera->pl->dump_packets = 1;
 		if (strncmp (buf, "0", 1) == 0)
-			cs->dump_packets = 0;
+			camera->pl->dump_packets = 0;
 	}
 
 	switch (camera->port->type) {
@@ -1645,7 +1600,7 @@ camera_init (Camera *camera)
 	}
 	if (canon_comm_method == CANON_SERIAL_RS232)
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera transmission speed : %i\n",
-				 cs->speed);
+				 camera->pl->speed);
 
 
 	/* This is bogus. You don't have to change the path */
