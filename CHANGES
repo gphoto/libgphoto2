@@ -5,6 +5,12 @@ drivers (camlibs):
 
    * Canon driver:
      - added support for G5
+     - re-added support for A300 and S50
+
+packaging:
+
+   * linux hotplug scripts:
+     - use correct directories in usbcam.x11-app
 
 ----------------------------------------------------------------------------
 libgphoto2 2.1.3
