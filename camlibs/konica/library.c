@@ -699,7 +699,7 @@ camera_about (Camera* camera, CameraText* about)
 }
 
 gint 
-camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gchar* filename)
+camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gchar* file)
 {
 	CameraWidget*	widget;
 	konica_data_t*	konica_data;
@@ -722,12 +722,12 @@ camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gc
 	result = k_get_image_information (
 		konica_data->device, 
 		konica_data->image_id_long, 
-		gp_filesystem_number (konica_data->filesystem, folder, filename),
+		gp_filesystem_number (konica_data->filesystem, folder, file),
 		&image_id, &exif_size, &protected, &information_buffer, &information_buffer_size);
 	if (result != GP_OK) return (result);
 
 	/* Construct the window. */
-	*window = gp_widget_new (GP_WIDGET_WINDOW, filename);
+	*window = gp_widget_new (GP_WIDGET_WINDOW, file);
 	widget = gp_widget_new (GP_WIDGET_TOGGLE, "Protect");
 	if (protected) value_int = 1;
 	gp_widget_value_set (widget, &value_int);
