@@ -330,7 +330,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 	 */
 	if (!idvendor) {
 		gp_port_set_error (port, _("The supplied vendor or product "
-			"id (%i,%i) is not valid."));
+			"id (0x%x,0x%x) is not valid."), idvendor, idproduct);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
