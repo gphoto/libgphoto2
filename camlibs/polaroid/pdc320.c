@@ -190,7 +190,13 @@ pdc320_delete (CameraPort *port)
 	 */
 	CHECK_RESULT (gp_port_write (port, PDC320_DEL,
 				     sizeof (PDC320_DEL) - 1));
-	CHECK_RESULT (gp_port_read (port, buf, 3));
+/* Since the Polaroid 640SE times out here, I will read one byte at a time to 
+   find out how many bytes to read. 
+ * Now, let's see how many bytes it reads before it times out. : )
+ */
+	CHECK_RESULT (gp_port_read (port, buf, 1));
+	CHECK_RESULT (gp_port_read (port, buf, 1));
+	CHECK_RESULT (gp_port_read (port, buf, 1));
 
 #if 0
 	if ((buf[0] != 0x08) ||
@@ -476,6 +482,7 @@ camera_init (Camera *camera)
 
 	return (GP_OK);
 }
+
 
 
 
