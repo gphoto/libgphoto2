@@ -44,9 +44,9 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/html/*.html $(DESTDIR)$(TARGET_DIR)
 	$(INSTALL_DATA) $(srcdir)/html/index.sgml $(DESTDIR)$(TARGET_DIR)
 	gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(DESTDIR)$(htmldir)
+endif
 
 dist-hook:
 	(cd $(srcdir) ; tar cvf - html) | (cd $(distdir); tar xf -)
 
 .PHONY : html sgml templates scan
-endif
