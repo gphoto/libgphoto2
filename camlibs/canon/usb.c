@@ -358,6 +358,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 
 		case CANON_PS_S45:
 		case CANON_PS_G3:
+		case CANON_PS_G5:
 		default:
 			/* Special case: doesn't implement "get
                            picture abilities", but isn't an EOS

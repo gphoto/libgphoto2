@@ -1,3 +1,8 @@
+2003-09-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.c, canon.h, usb.c, usb.h: Added G5 support
+	  (patches by Andreas Klemm <andreas@FreeBSD.org>)
+
 2003-10-10 Olivier Crete <tester@tester.ca>
 	* library.c: Add Canon A80
 
