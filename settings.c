@@ -27,7 +27,6 @@ int verify_settings (char *settings_file) {
 			for (x=0; x<strlen(buf); x++)
 				if (buf[x] == '=')
 					equals++;
-printf("checking \"%s\" (%i)\n", buf, equals);
 
 			if (equals < 2) {
 				fclose (f);
@@ -73,18 +72,14 @@ printf("here\n");
 		if (strlen(buf)>2) {
 		     buf[strlen(buf)-1] = '\0';
 		     id = strtok(buf, "=");
-printf("id=%s\n", id);
 		     strcpy(glob_setting[glob_setting_count].id,id);
 		     key = strtok(NULL, "=");
-printf("key=%s\n", key);
 		     strcpy(glob_setting[glob_setting_count].key,key);
 		     value = strtok(NULL, "\0");
-printf("value=%s\n", value);
-
-			if (value)
-				strcpy(glob_setting[glob_setting_count++].value, value);
-			   else
-				strcpy(glob_setting[glob_setting_count++].value, "");
+		     if (value)
+			strcpy(glob_setting[glob_setting_count++].value, value);
+		       else
+			strcpy(glob_setting[glob_setting_count++].value, "");
 		}
 	}
 	if (glob_debug)
