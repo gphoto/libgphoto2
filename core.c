@@ -43,10 +43,10 @@ Setting         glob_setting[512];
 int gp_camera_init (Camera *camera, CameraInit *init);
 int gp_camera_exit (Camera *camera);
 
-CameraStatus   gp_interface_status = NULL;
-CameraProgress gp_interface_progress = NULL;
-CameraMessage  gp_interface_message = NULL;
-CameraConfirm  gp_interface_confirm = NULL;
+CameraStatus   gp_fe_status = NULL;
+CameraProgress gp_fe_progress = NULL;
+CameraMessage  gp_fe_message = NULL;
+CameraConfirm  gp_fe_confirm = NULL;
 
 
 int gp_init (int debug)
@@ -520,44 +520,44 @@ int gp_setting_set (char *id, char *key, char *value)
    ---------------------------------------------------------------------------- */
 
 int gp_frontend_register(CameraStatus status, CameraProgress progress, 
-						  CameraMessage message, CameraConfirm confirm) {
+			 CameraMessage message, CameraConfirm confirm) {
 
-	gp_interface_status   = status;
-	gp_interface_progress = progress;
-	gp_interface_message  = message;
-	gp_interface_confirm  = confirm;
+	gp_fe_status   = status;
+	gp_fe_progress = progress;
+	gp_fe_message  = message;
+	gp_fe_confirm  = confirm;
 
 	return (GP_OK);
 }
 
 int gp_camera_status (Camera *camera, char *status)
 {
-		if (gp_interface_status)
-			gp_interface_status(camera, status);
+	if (gp_fe_status)
+		gp_fe_status(camera, status);
         return(GP_OK);
 }
 
 int gp_camera_progress (Camera *camera, CameraFile *file, float percentage)
 {
-		if (gp_interface_progress)
-			gp_interface_progress(camera, file, percentage);
+	if (gp_fe_progress)
+		gp_fe_progress(camera, file, percentage);
 
         return(GP_OK);
 }
 
 int gp_camera_message (Camera *camera, char *message)
 {
-		if (gp_interface_message)
-			gp_interface_message(camera, message);
+	if (gp_fe_message)
+		gp_fe_message(camera, message);
         return(GP_OK);
 }
 
 int gp_camera_confirm (Camera *camera, char *message)
 {
-		if (!gp_interface_confirm)
-			/* return YES. dangerous? */
-			return 1;
-        return(gp_interface_confirm(camera, message));
+	if (!gp_fe_confirm)
+		/* return YES. dangerous? */
+		return 1;
+        return(gp_fe_confirm(camera, message));
 }
 
 CameraAbilities *gp_abilities_new()
