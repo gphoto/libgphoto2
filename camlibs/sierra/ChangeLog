@@ -1,3 +1,9 @@
+2002-04-17  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Ilya Konstantinov <anonymous1@future.shiny.co.il>:
+
+	* library.c: break on timeout.
+
 2002-03-29  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c (sierra_ping): Retry up to 3 times.

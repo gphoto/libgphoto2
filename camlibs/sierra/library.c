@@ -530,6 +530,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 
 				/* We will retry later on. */
 				GP_DEBUG ("Timeout!");
+				break;
 
 			} else if (result < 0) {
 				GP_DEBUG ("Could not read remainder of "
