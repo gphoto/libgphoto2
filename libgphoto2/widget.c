@@ -73,6 +73,18 @@ char *gp_widget_label(CameraWidget *widget) {
 	return (widget->label);
 }
 
+CameraWidgetCallback gp_widget_callback (CameraWidget *widget) {
+
+	return (widget->callback);
+}
+
+int gp_widget_callback_set (CameraWidget *widget, CameraWidgetCallback callback) {
+
+	widget->callback = callback;
+
+	return (GP_OK);
+}
+
 /* Set and unset the value of a widget 						*/
 /* --------------------------------------------------------------------------	*/
 

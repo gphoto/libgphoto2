@@ -1024,7 +1024,7 @@ int set_globals () {
 	}
 
 	if (gp_camera_init(glob_camera, &s)==GP_ERROR) {
-		cli_error_print("Can not initialize the camera \"s\"",glob_model);
+		cli_error_print("Can not initialize the camera \"%s\"",glob_model);
 		return (GP_ERROR);
 	}
 

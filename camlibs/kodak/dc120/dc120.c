@@ -97,7 +97,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	gpio_set_timeout(dd->dev, TIMEOUT);
 
 	/* Reset the camera to 9600 */
-	gpio_send_break(dd->dev, 5);
+	gpio_send_break(dd->dev, 2);
 
 	/* Wait for it to update */
 	GPIO_SLEEP(1500);

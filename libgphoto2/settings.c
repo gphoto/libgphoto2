@@ -59,7 +59,7 @@ int verify_settings (char *settings_file) {
 	int x, equals;
 
 	if ((f=fopen(settings_file, "r"))==NULL) {
-		perror("Loading Settings");
+		gp_debug_printf(GP_DEBUG_LOW, "core", "Can't open settings file for reading");
 		return(0);
 	}
 
@@ -107,9 +107,10 @@ int load_settings () {
 		printf("core: Loading settings from file \"%s\"\n", buf);
 
 	if ((f=fopen(buf, "r"))==NULL) {
-		perror("Loading Settings");
-		return(0);
+		gp_debug_printf(GP_DEBUG_LOW, "core", "Can't open settings for reading");
+		return(GP_ERROR);
 	}
+
 	rewind(f);
 	while (!feof(f)) {
 		strcpy(buf, "");
@@ -146,7 +147,7 @@ int save_settings () {
 		printf("core: Saving settings to file \"%s\"\n", buf);
 
 	if ((f=fopen(buf, "w+"))==NULL) {
-		perror("Loading Settings");
+		gp_debug_printf(GP_DEBUG_LOW, "core", "Can't open settings file for writing");
 		return(0);
 	}
 	rewind(f);

@@ -19,6 +19,9 @@ CameraWidget* 	gp_widget_child_by_label(CameraWidget *parent, char *child_label)
 int		gp_widget_type (CameraWidget *widget);
 char*		gp_widget_label(CameraWidget *widget);
 
+CameraWidgetCallback gp_widget_callback (CameraWidget *widget);
+int 		gp_widget_callback_set (CameraWidget *widget, CameraWidgetCallback callback);
+
 int		gp_widget_value_set (CameraWidget *widget, char *value);
 char*		gp_widget_value_get (CameraWidget *widget);
 

@@ -67,7 +67,7 @@ typedef enum {
 /* Window prompt return values */
 typedef enum {
 	GP_PROMPT_CANCEL	= -1,
-	GP_PROMPT_OK		= 0,
+	GP_PROMPT_OK		= 0
 } CameraPromptValue;
 
 /* Confirm return values */
@@ -83,6 +83,20 @@ typedef enum {
 	GP_LIST_FOLDER,
 	GP_LIST_FILE
 } CameraListType;
+
+/* Function Pointers
+   ---------------------------------------------------------------- */
+struct Camera;
+struct CameraFile;
+struct CameraWidget;
+
+typedef int (*CameraStatus)		(struct Camera*, char*);
+typedef int (*CameraMessage)		(struct Camera*, char*);
+typedef int (*CameraConfirm)		(struct Camera*, char*);
+typedef int (*CameraProgress)		(struct Camera*, struct CameraFile*, float);
+typedef int (*CameraPrompt)		(struct Camera*, struct CameraWidget*);
+typedef int (*CameraWidgetCallback) 	(struct Camera*, struct CameraWidget*);
+
 
 /* Structures
    ---------------------------------------------------------------- */
@@ -108,10 +122,14 @@ typedef struct CameraWidget {
 
 	/* Child info */
 	struct CameraWidget	*children[64];
-	int 			children_count;
+	int 			 children_count;
 
 	/* Widget was changed */
 	int 		changed;
+	
+	/* Callback */
+	CameraWidgetCallback 	 callback;
+
 } CameraWidget;
 
 /* Capture information structure */
@@ -249,8 +267,7 @@ typedef struct {
 	char text[32*1024];
 } CameraText;
 
-/* Camera object data */
-struct Camera;
+/* Camera function pointers */
 typedef int (*c_id)		 (CameraText *);
 typedef int (*c_abilities)	 (CameraAbilitiesList *);
 typedef int (*c_init)		 (struct Camera*, CameraInit*);
@@ -304,9 +321,4 @@ typedef struct Camera {
 	int 		session;
 } Camera;
 
-/* Interface function pointers */
-typedef int (*CameraStatus)	(Camera*, char*);
-typedef int (*CameraProgress)	(Camera*, CameraFile*, float);
-typedef int (*CameraMessage)	(Camera*, char*);
-typedef int (*CameraConfirm)	(Camera*, char*);
-typedef int (*CameraPrompt)	(Camera*, CameraWidget *window);
+
