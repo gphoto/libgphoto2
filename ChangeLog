@@ -1,5 +1,10 @@
 2001-09-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/stv0680/pattrec.[c,h]: Move those files ...
+	* libgphoto2/pattrec.[c,]: ...here.
+
+2001-09-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* frontends/command-line/options.c: #include <config.h>
 
 2001-09-01  Chris Pinkham <cpinkham@infi.net>

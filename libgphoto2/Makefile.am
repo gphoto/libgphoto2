@@ -16,6 +16,7 @@ libgphoto2_la_SOURCES = 	\
 	filesys.c		\
 	frontend.c		\
 	list.c			\
+	pattrec.c pattrec.h	\
 	result.c		\
 	setting.c		\
 	widget.c

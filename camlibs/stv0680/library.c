@@ -25,7 +25,7 @@
 #include "stv0680.h"
 #include "library.h"
 #include "bayer.h"
-#include "pattrec.h"
+#include "libgphoto2/pattrec.h"
 
 #define CMD_RETRIES		0x03
 
