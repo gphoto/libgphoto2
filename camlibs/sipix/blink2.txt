@@ -1,0 +1,33 @@
+Blink2 Protocol
+
+Mostly control messages.
+
+Number of pictures:
+	control read 0x08, 0x03, 0x00	-> buf[2] (high, low byte)
+
+Get Dir:
+	control read 0x0d, 0x03, 0x00	-> buf[1] 
+	bulk read  (((8*(1+numpics))+0x3f) & ~0x3f) bytes.
+
+	Buffer has now: 
+	i = 0 .. numpics:
+		buf[8*(i+1)]	- movie flag
+		buf[8*(i+1)+5 ... 7]	- 3 bytes start, MSB first
+		buf[8*(i+1)+13 ... 15]	- 3 bytes end, MSB first
+
+Get Memory:
+	Prepare buffer as:
+		buf[0..4]	start	(MSB first)
+		buf[5..7]	length	(MSB first)
+
+	control write 0x0a, 0x03, 0x00, buf[8]
+	bulk read (length)
+
+
+Capture Picture:
+	control read 0x0e, 0x03, 0x00	-> buf[1]
+	do 
+		control read 0x16, 0x03, 0x00 -> buf[1]
+	while buf[0] == 0
+
+	Afterwards the image is in the camera memory.
