@@ -8,6 +8,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <gphoto2/gphoto2.h>
 
 #include "interface.h"
 #include "support.h"
@@ -28,6 +29,7 @@ main (int argc, char *argv[])
 
   gtk_set_locale ();
   gtk_init (&argc, &argv);
+	
 
   add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
   add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
@@ -39,6 +41,8 @@ main (int argc, char *argv[])
    */
   main_window = create_main_window ();
   gtk_widget_show (main_window);
+
+/*
   message_window_long = create_message_window_long ();
   gtk_widget_show (message_window_long);
   confirm_window = create_confirm_window ();
@@ -47,8 +51,8 @@ main (int argc, char *argv[])
   gtk_widget_show (message_window);
   select_camera_window = create_select_camera_window ();
   gtk_widget_show (select_camera_window);
+*/
 
   gtk_main ();
   return 0;
 }
-

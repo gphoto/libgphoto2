@@ -42,4 +42,5 @@ frontends/command-line/Makefile \
 frontends/libgphoto2_frontend/Makefile \
 include/Makefile \
 libgphoto2/Makefile \
+gphoto2-config \
 )
