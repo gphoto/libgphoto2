@@ -1,3 +1,7 @@
+2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/camera.c: Additional debugging messages
+
 2001-10-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/jamcam: Use libgphoto2/bayer.h and libgphoto2/gamma.h

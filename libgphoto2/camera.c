@@ -124,6 +124,7 @@ gp_camera_set_model (Camera *camera, const char *model)
 {
 	CHECK_NULL (camera && model);
 
+	gp_debug_printf (GP_DEBUG_LOW, "core", "Setting model to '%s'", model);
 	strncpy (camera->model, model, sizeof (camera->model));
 	
 	return (GP_OK);
@@ -187,6 +188,8 @@ gp_camera_set_port_path (Camera *camera, const char *port_path)
 
 	CHECK_NULL (camera && port_path);
 
+	gp_debug_printf (GP_DEBUG_LOW, "core", "Setting port path to '%s'",
+			 port_path); 
 	CHECK_RESULT (gp_camera_unset_port (camera));
 	CHECK_RESULT (count = gp_port_count_get ());
 	for (x = 0; x < count; x++)
@@ -215,6 +218,8 @@ gp_camera_set_port_name (Camera *camera, const char *port_name)
 
 	CHECK_NULL (camera && port_name);
 
+	gp_debug_printf (GP_DEBUG_LOW, "core", "Setting port name to '%s'",
+			 port_name);
 	CHECK_RESULT (gp_camera_unset_port (camera));
 	CHECK_RESULT (count = gp_port_count_get ());
 	for (x = 0; x < count; x++)
