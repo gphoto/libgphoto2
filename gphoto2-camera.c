@@ -55,6 +55,7 @@
 #define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
 
+#ifdef HAVE_MULTI
 #define CHECK_OPEN(c)							\
 {									\
 	int r;								\
@@ -74,7 +75,22 @@
 		}							\
 	}								\
 }
+#else
+#define CHECK_OPEN(c)							\
+{                                                                       \
+	int r;								\
+									\
+	if ((c)->functions->pre_func) {                                 \
+		r = (c)->functions->pre_func (c);                       \
+		if (r < 0) {                                            \
+			gp_camera_status ((c), "");                     \
+			return (r);                                     \
+		}                                                       \
+	}                                                               \
+}
+#endif
 
+#ifdef HAVE_MULTI
 #define CHECK_CLOSE(c)							\
 {									\
 	int r;								\
@@ -89,6 +105,20 @@
 		}							\
 	}								\
 }
+#else
+#define CHECK_CLOSE(c)                                                  \
+{                                                                       \
+	int r;								\
+									\
+	if ((c)->functions->post_func) {                                \
+		r = (c)->functions->post_func (c);                      \
+		if (r < 0) {                                            \
+			gp_camera_status ((c), "");                     \
+			return (r);                                     \
+		}                                                       \
+	}                                                               \
+}
+#endif
 
 #define CRS(c,res) {int r = (res); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
 
@@ -146,7 +176,9 @@ gp_camera_exit (Camera *camera)
 		camera->pc->a.model);
 
 	if (camera->functions->exit) {
+#ifdef HAVE_MULTI
 		gp_port_open (camera->port);
+#endif
 		camera->functions->exit (camera);
 		gp_port_close (camera->port);
 	}
@@ -746,7 +778,9 @@ gp_camera_init (Camera *camera)
 	}
 
 	/* We don't care if that goes wrong */
+#ifdef HAVE_MULTI
 	gp_port_close (camera->port);
+#endif
 
 	gp_camera_status (camera, "");
 	return (GP_OK);
