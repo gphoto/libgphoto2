@@ -407,7 +407,7 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 	CR (gp_port_read (camera->port, b, 4));
 	if ((b[0] != ESC) || (b[1] != STX)) {
 		gp_context_error (context, _("Received unexpected data "
-			"(0x%02x, 0x%02)."), b[0], b[1]);
+			"(0x%02x, 0x%02x)."), b[0], b[1]);
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 	*buf_len = ((b[3] << 8) | b[2]) - 3;
