@@ -7,9 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
-"POT-Creation-Date: 2002-02-22 22:58+0100\n"
+"POT-Creation-Date: 2002-02-21 14:32-0500\n"
 "PO-Revision-Date: 2002-02-22 00:03+0100\n"
-"Last-Translator: Andreas Hyden <a.hyden@cyberpoint.se>\n"
+"Last-Translator: Stefan Björnelund <stefanb@update.uu.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
@@ -82,8 +82,7 @@ msgid ""
 msgstr ""
 "För A50, kan 115200 vara långsammare än 57600\n"
 "Mappar stöds INTE\n"
-"om du märker många överföringsfel, försök att ha datorn lätt lastad så som "
-"möjligt (d.v.s. ingen diskett aktivitet)"
+"om du märker många överföringsfel, försök att ha datorn så lätt lastad som möjligt (d.v.s. ingen diskettaktivitet)"
 
 #: camlibs/canon/library.c:155 camlibs/canon/library.c:795
 #: camlibs/canon/library.c:808
@@ -215,7 +214,7 @@ msgid ""
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
 msgstr ""
 "Kunde inte ladda upp, inget ledigt mappnamn tillgängligt!\n"
-"999CANON mapp namnet existerar och har en AUT_9999.JPG bild."
+"Mappnamnet 999CANON existerar och har en bild AUT_9999.JPG."
 
 #: camlibs/canon/library.c:680
 msgid "Could not create \\DCIM directory."
@@ -223,11 +222,11 @@ msgstr "Kunde inte skapa \\DCIM-katalogen."
 
 #: camlibs/canon/library.c:686
 msgid "Could not create destination directory."
-msgstr "Kunde inte skapa destinations-katalogen."
+msgstr "Kunde inte skapa destinationskatalogen."
 
 #: camlibs/canon/library.c:712
 msgid "Camera and Driver Configuration"
-msgstr "Kamera och drivrutins-konfiguration"
+msgstr "Kamera- och drivrutinskonfiguration"
 
 #: camlibs/canon/library.c:714
 msgid "Camera"
@@ -256,11 +255,11 @@ msgstr "Otillgänglig"
 
 #: camlibs/canon/library.c:742 camlibs/canon/library.c:804
 msgid "Set camera date to PC date"
-msgstr "Set kamerans datum till datorns datum"
+msgstr "Sätt kamerans datum till datorns datum"
 
 #: camlibs/canon/library.c:745
 msgid "Firmware revision (readonly)"
-msgstr "Fastvaru-revision (enbart läsning)"
+msgstr "Fastvarurevision (skrivskyddad)"
 
 #: camlibs/canon/library.c:769
 msgid "Power (readonly)"
@@ -408,8 +407,7 @@ msgstr "Kunde inte applicera USB inställningar"
 #: camlibs/canon/usb.c:240
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
-msgstr ""
-"Kamera ej redo, många 'Identifiera kamera' förfrågningar misslyckades: %s\""
+msgstr "Kamera ej redo, flera 'Identifiera kamera'-förfrågningar misslyckades: %s\""
 
 #: camlibs/canon/usb.c:249
 #, c-format
@@ -453,7 +451,7 @@ msgstr "Problem att hämta bildinformation"
 
 #: camlibs/dimera/dimera3500.c:433
 msgid "Capture type is not supported"
-msgstr "Tagna typen stöds ej"
+msgstr "Tagningstypen stöds ej"
 
 #: camlibs/dimera/dimera3500.c:518
 #, c-format
@@ -506,7 +504,7 @@ msgstr "EJ Upplösningsbyte"
 
 #: camlibs/dimera/dimera3500.c:539
 msgid "NO Power Light"
-msgstr "EJ starktljus"
+msgstr "EJ extraljus"
 
 #: camlibs/dimera/dimera3500.c:541
 msgid "ON"
@@ -561,9 +559,9 @@ msgstr ""
 "* Bildtekniska fel eller problem med kommunikation\n"
 "  orsakas ofta av dåliga batterier.\n"
 "* Bilder tagna fjärrstyrt med denna kamera lagras\n"
-"  tillfälligt i minnet och inte på flash minnes-kortet.\n"
+"  tillfälligt i minnet och inte på flashminnes-kortet.\n"
 "* Exponeringskontroll under kontinuerlig fotografering,\n"
-"  sätts  automatiskt av förvisnings funktionen.\n"
+"  sätts  automatiskt av förhandvisningsfunktionen.\n"
 "* Bildkvalitén är f.n. lägre än den kunde vara.\n"
 
 #: camlibs/dimera/dimera3500.c:573
@@ -679,7 +677,7 @@ msgstr "Kunde inte öppna '%s'."
 
 #: camlibs/directory/directory.c:461
 msgid "Directory Browse"
-msgstr "Katalog bläddra"
+msgstr "Katalogbläddring"
 
 #: camlibs/directory/directory.c:462 camlibs/directory/directory.c:493
 msgid "View hidden directories"
@@ -688,12 +686,11 @@ msgstr "Visa dolda kataloger"
 #: camlibs/directory/directory.c:506
 msgid ""
 "The Directory Browse \"camera\" lets you index photos on your hard drive."
-msgstr ""
-"Katalog bläddra \"kamera\" låter dig indexera bilderna på din hårddisk."
+msgstr "Katalogbläddring \"camera\" låter dig indexera bilderna på din hårddisk."
 
 #: camlibs/directory/directory.c:515
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
-msgstr "Katalog bläddra läge - skrivet av Scott Fritzinger <scottf@unr.edu>."
+msgstr "Katalogbläddring - skrivet av Scott Fritzinger <scottf@unr.edu>."
 
 #: camlibs/jamcam/jamcam.c:280
 msgid "jamcam library v"
@@ -701,7 +698,7 @@ msgstr "jamcam bibliotek v"
 
 #: camlibs/jamcam/jamcam.c:281 camlibs/panasonic/coolshot/coolshot.c:265
 msgid " "
-msgstr " "
+msgstr " "
 
 #: camlibs/jamcam/jamcam.c:281
 msgid ""
@@ -763,7 +760,7 @@ msgstr "Andra inställningar"
 #. Bulb Exposure Time
 #: camlibs/jd11/jd11.c:207 camlibs/jd11/jd11.c:255
 msgid "Bulb Exposure Time"
-msgstr "Exponering med öppen slutare"
+msgstr "Exponering med bollslutare"
 
 #: camlibs/jd11/jd11.c:215 camlibs/jd11/jd11.c:263
 msgid "Color Settings"
@@ -791,11 +788,7 @@ msgid ""
 "want to view the images you download from your camera, you will need to "
 "download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
 "sourceforge.net"
-msgstr ""
-"Kodak DC120-kameran använder KDC filformatet för att lagra bilder. Om du "
-"vill visa bilderna du laddade ner från din kamera, behöver du ladda ner "
-"\"kdc2tiff\" programmet. Det finns tillgängligt på http://kdc2tiff."
-"sourceforge.net"
+msgstr "Kodak DC120-kameran använder filformatet KDC för att lagra bilder. Om du vill visa bilderna du laddade ner från din kamera, behöver du ladda ner \"kdc2tiff\" programmet. Det finns tillgängligt på http://kdc2tiff.sourceforge.net"
 
 #: camlibs/kodak/dc120/dc120.c:376
 msgid ""
@@ -863,9 +856,8 @@ msgid ""
 "Rewritten and updated for gPhoto2."
 msgstr ""
 "Kodak DC240 kamera-bibliotek\n"
-"Scott Fritzinger <scottf@gphoto.net> och Hubert Figuiere <hfiguiere@teaser."
-"fr>\n"
-"Kamera-bibliotek för Kodak DC240, DC280, DC3400 och DC5000 kamror.\n"
+"Scott Fritzinger <scottf@gphoto.net> och Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"Kamera-bibliotek för Kodak DC240, DC280, DC3400 och DC5000 kameror.\n"
 "Omskriven och uppdaterad för gPhoto2."
 
 #: camlibs/kodak/dc240/library.c:572
@@ -1059,7 +1051,7 @@ msgstr "Skall kameran pipa när den tar en bild?"
 #. Self Timer Time
 #: camlibs/konica/library.c:662 camlibs/konica/library.c:870
 msgid "Self Timer Time"
-msgstr "Självutlösnings tid"
+msgstr "Självutlösningstid"
 
 #. Auto Off Time
 #: camlibs/konica/library.c:669 camlibs/konica/library.c:878
@@ -1069,7 +1061,7 @@ msgstr "Auto Av tid"
 #. Slide Show Interval
 #: camlibs/konica/library.c:676 camlibs/konica/library.c:886
 msgid "Slide Show Interval"
-msgstr "Bildspels-intervall"
+msgstr "Bildspelsintervall"
 
 #. Resolution
 #: camlibs/konica/library.c:683 camlibs/konica/library.c:895
@@ -1227,7 +1219,7 @@ msgstr "Självutlösare (nästa bild endast)"
 #: camlibs/konica/library.c:1058
 #, c-format
 msgid "Could not find localization data at '%s'"
-msgstr "Kunde inte finna lokalitetsdata vid '%s'"
+msgstr "Kunde inte finna lokaliseringsdata vid '%s'"
 
 #: camlibs/konica/library.c:1122
 msgid "Localization file too long!"
@@ -1321,7 +1313,7 @@ msgstr "Alltid blixt\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:339
 msgid "Prohibit Flash\n"
-msgstr "Ej blixt\n"
+msgstr "Aldrig blixt\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:347
 #, c-format
@@ -1432,7 +1424,7 @@ msgstr ""
 "\n"
 "Chris Pinkham <cpinkham@infi.net>\n"
 "Stöd för Panasonic Coolshot digital kameror\n"
-"baserad på reverse engineering serie protokollet.\n"
+"baserad på \"reverse engineering\" av serieprotokollet.\n"
 "\n"
 
 #: camlibs/panasonic/dc1000.c:371 camlibs/panasonic/dc1580.c:468
@@ -1521,12 +1513,7 @@ msgid ""
 msgstr ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "\n"
-"Panasonic introducerade bildfångst teknik kallad PHOTOSHOT för den första "
-"gången till denna serie av Palmcorders. Bilderna sparas i JPEG format på ett "
-"internt flash-kort och kan överföras till en dator genom den inbygga "
-"serieporten. Bilder sparas i en av två möjliga upplösningar; NORMAL är "
-"320x240 och FIN är 640x480. CCD enheten som tar bilderna från linsen är "
-"endast 300K och producerar endast bilder med låg kvalité."
+"Panasonic introducerade en bildtagningsteknik som kallas PHOTOSHOT för den första gången till denna serie av Palmcorders. Bilderna sparas i JPEG-format på ett internt flash-kort och kan överföras till en dator genom den inbygga serieporten. Bilder sparas i endera av två möjliga upplösningar: NORMAL är 320x240 och FIN är 640x480. CCD enheten som tar bilderna från linsen är endast 300K och producerar endast bilder med låg kvalité."
 
 #: camlibs/panasonic/l859/l859.c:604
 msgid ""
@@ -1539,10 +1526,7 @@ msgid ""
 msgstr ""
 "Kända problem:\n"
 "\n"
-"Om kommunikationsproblem uppstår, nollställ kameran och starta om "
-"applikationen. Drivrutinen är ännu inte robust nog för att återhämta sig "
-"från dessa situationer, speciellt om problem uppstår och kameran inte är "
-"korrekt avstängd vid hastigheter över 9600bps."
+"Om kommunikationsproblem uppstår, nollställ kameran och starta om applikationen. Drivrutinen kan ännu inte hantera dessa situationer, speciellt om problem uppstår och kameran inte är korrekt avstängd vid hastigheter över 9600 bps."
 
 #: camlibs/panasonic/l859/l859.c:618
 msgid ""
@@ -1712,7 +1696,7 @@ msgid ""
 "Auto power off: %i minutes\n"
 "Power source: %s"
 msgstr ""
-"Datum: %i/%02i/%02i %02i:%02i:%02i\n"
+"Datum: %i-%02i-%02i %02i:%02i:%02i\n"
 "Bilder tagna: %i\n"
 "Lediga bilder: %i\n"
 "Mjukvaru-version: %s\n"
@@ -1923,7 +1907,7 @@ msgstr "Makro"
 #: camlibs/sierra/sierra.c:978 camlibs/sierra/sierra.c:985
 #: camlibs/sierra/sierra.c:1254
 msgid "Infinity/Fish-eye"
-msgstr "Oändligt/fiskögeobjektiv"
+msgstr "Oändlighet/fiskögeobjektiv"
 
 #: camlibs/sierra/sierra.c:999 camlibs/sierra/sierra.c:1264
 msgid "Spot Metering Mode"
@@ -2313,7 +2297,7 @@ msgstr "Dålig exponering (inte tillräckligt med ljus troligen)"
 
 #: camlibs/stv0680/library.c:520
 msgid "Information for STV0680 based camera:\n"
-msgstr "Information för STV0680 baserad kamera:\n"
+msgstr "Information för STV0680-baserad kamera:\n"
 
 #: camlibs/stv0680/library.c:525
 #, c-format
@@ -2445,7 +2429,7 @@ msgstr "Kunde inte finna någon kamera."
 
 #: libgphoto2/gphoto2-camera.c:682
 msgid "You have to set the port prior initialization of the camera."
-msgstr "Du måste sätta porten innan du gör initialiseringen av kameran."
+msgstr "Du måste sätta porten innan du initialiserar kameran."
 
 #: libgphoto2/gphoto2-camera.c:710
 #, c-format
@@ -2463,7 +2447,7 @@ msgstr "Denna kamera erbjuder inga konfigurationsalternativ."
 
 #: libgphoto2/gphoto2-camera.c:818
 msgid "This camera does not support setting configuration options."
-msgstr "Denna kamera stödjer inte att sätta konfigurations parametrar."
+msgstr "Denna kamera stödjer inte sättning av konfigurationsparametrar."
 
 #: libgphoto2/gphoto2-camera.c:850
 msgid "This camera does not support summaries."
@@ -2483,7 +2467,7 @@ msgstr "Denna kamera kan inte ta bilder."
 
 #: libgphoto2/gphoto2-camera.c:979
 msgid "This camera can not capture previews."
-msgstr "Denna kamera kan inte ta förgransknings bilder."
+msgstr "Denna kamera kan inte ta förgranskningsbilder."
 
 #: libgphoto2/gphoto2-filesys.c:214
 #, c-format
@@ -2578,7 +2562,7 @@ msgstr "Filsystemet har inget stöd för att sätta filinformation"
 
 #: libgphoto2/gphoto2-filesys.c:1890
 msgid "Read-only file attributes like width and height can not be changed."
-msgstr "Enbart läsbara filattribut som bredd och höjd kan inte ändras."
+msgstr "Skrivskyddade filattribut som bredd och höjd kan inte ändras."
 
 #: libgphoto2/gphoto2-abilities-list.c:248
 #, c-format
@@ -2630,7 +2614,7 @@ msgstr "Operationen avbruten."
 
 #: libgphoto2/gphoto2-result.c:76
 msgid "Unknown camera library error"
-msgstr "Okänt kamera-biblioteks fel"
+msgstr "Okänt kamerabiblioteksfel"
 
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
@@ -2705,7 +2689,7 @@ msgstr "Visa kamera-färdigheter"
 
 #: frontends/command-line/main.c:200
 msgid "Specify camera folder (default=\"/\")"
-msgstr "Specificera kamera mapp (standard=\"/\")"
+msgstr "Specificera kameramapp (standard=\"/\")"
 
 #: frontends/command-line/main.c:201
 msgid "Recursion (default for download)"
@@ -2817,7 +2801,7 @@ msgstr "Sammanfattning av kamerastatus"
 
 #: frontends/command-line/main.c:231
 msgid "Camera driver manual"
-msgstr "Kamera-drivrutins manual"
+msgstr "Kameradrivrutinens manual"
 
 #: frontends/command-line/main.c:232
 msgid "About the camera driver"
@@ -2972,9 +2956,7 @@ msgstr ""
 msgid ""
 "Ports must look like 'serial:/dev/ttyS0' or 'usb:', but '%s' is missing a "
 "colon so I am going to guess what you mean."
-msgstr ""
-"Portar måste se ut som 'serial:/dev/ttyS0' eller 'usb:', men '%s' saknar ett "
-"kolon så jag kommer gissa vad du menar."
+msgstr "Portar måste se ut som 'serial:/dev/ttyS0' eller 'usb:', men '%s' saknar ett kolon så jag kommer att gissa vad du menar."
 
 #: frontends/command-line/main.c:555
 #, c-format
@@ -3048,7 +3030,7 @@ msgid ""
 "Camera Manual:\n"
 "%s\n"
 msgstr ""
-"Kamera manual:\n"
+"Kameramanual:\n"
 "%s\n"
 
 #: frontends/command-line/main.c:1139
@@ -3149,10 +3131,9 @@ msgid ""
 "gphoto2 as follows:\n"
 "\n"
 msgstr ""
-"För avlusnings medelanden, var vänlig använd flaggan --debug.\n"
-"Avlusnings medelanden kan hjälpa till att hitta en lösning till ditt "
-"problem.\n"
-"Om du avser att sända några fel eller avlusnings medelanden till gphoto-\n"
+"För avlusningsmeddelanden, var vänlig använd flaggan --debug.\n"
+"Avlusningsmeddelanden kan hjälpa till att hitta en lösning till ditt problem.\n"
+"Om du avser att sända några fel eller avlusningsmeddelanden till gphoto-\n"
 "utvecklarnas postlista <gphoto-devel@gphoto.org>, var vänlig och kör\n"
 "gphoto2 som följer:\n"
 
@@ -3200,7 +3181,7 @@ msgid ""
 msgstr ""
 "gPhoto (v%s) - Fler-plattforms digitalkamera-bibliotek.\n"
 "Copyright © 2000,2001 Scott Fritzinger och andra\n"
-"%sLisensierad under Library GNU Public License (LGPL).\n"
+"%sLicensierad under Library GNU Public License (LGPL).\n"
 
 #: frontends/command-line/options.c:197
 msgid "OS/2 port by Bart van Leeuwen\n"
@@ -3273,7 +3254,7 @@ msgid ""
 "Ranges need to start with a number."
 msgstr ""
 "%s\n"
-"Intervall behöver starta med med ett tal."
+"Intervall måste starta med ett tal."
 
 #: frontends/command-line/range.c:198
 #, c-format
@@ -3291,8 +3272,7 @@ msgid ""
 "Decreasing ranges are not allowed. You specified a range from %i to %i."
 msgstr ""
 "%s\n"
-"Minskande intervall är inte tillåtna. Du specificerade ett intervall från %i "
-"till %i."
+"Nedåtgående intervall är inte tillåtna. Du specificerade ett intervall från %i till %i."
 
 #: frontends/command-line/actions.c:77
 #, c-format
@@ -4006,7 +3986,7 @@ msgstr "gphoto2 har kompilerats utan EXIF stöd."
 #~ msgstr "Kort borttaget under åtkomst"
 
 #~ msgid "Image number not valid"
-#~ msgstr "Bild nummer ej giltigt"
+#~ msgstr "Bildnummer ej giltigt"
 
 #~ msgid "Card can not be written"
 #~ msgstr "Kortet kan ej skrivas"

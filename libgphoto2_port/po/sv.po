@@ -1,191 +1,189 @@
 # Swedish translation of gPhoto
 # Copyright (C) 2000 Free Software Foundation, Inc.
 # Andreas Hyden <a.hyden@cyberpoint.se> 2000.
+# Stefan Björnelund <stefanb@Update.UU.SE>, 2002.
+# Sverker Wiberg <sverkerw@du.uab.ericsson.se>, 2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gphoto 0.4.3\n"
+"Project-Id-Version: libgphoto2_port 2.0\n"
 "POT-Creation-Date: 2002-01-26 21:31+0100\n"
-"PO-Revision-Date: 2000-04-21 23:23+0200\n"
-"Last-Translator: Andreas Hyden <a.hyden@cyberpoint.se>\n"
+"PO-Revision-Date: 2002-03-08 19:31+0100\n"
+"Last-Translator: Stefan Björnelund <Stefanb@Update.UU.SE>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
-"Content-Transfer-Encoding: 8-bit\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: libgphoto2_port/gphoto2-port.c:56
 #, c-format
 msgid "The operation '%s' is not supported by this device"
-msgstr ""
+msgstr "Operationen '%s' stöds inte av denna enhet"
 
 #: libgphoto2_port/gphoto2-port.c:57
 msgid "The port has not yet been initialized"
-msgstr ""
+msgstr "Porten har ännu inte blivit initialiserad"
 
 #: libgphoto2_port/gphoto2-port.c:272
 msgid "open"
-msgstr ""
+msgstr "öppna"
 
 #: libgphoto2_port/gphoto2-port.c:295
-#, fuzzy
 msgid "close"
-msgstr "Stäng"
+msgstr "stäng"
 
 #. Check if we wrote all bytes
 #: libgphoto2_port/gphoto2-port.c:373
-#, fuzzy
 msgid "write"
-msgstr "Skriv ut"
+msgstr "skriv"
 
 #. Check if we read as many bytes as expected
 #: libgphoto2_port/gphoto2-port.c:405
-#, fuzzy
 msgid "read"
-msgstr "Skapa"
+msgstr "läs"
 
 #: libgphoto2_port/gphoto2-port.c:504
 msgid "update"
-msgstr ""
+msgstr "uppdatera"
 
 #: libgphoto2_port/gphoto2-port.c:550
 msgid "get_pin"
-msgstr ""
+msgstr "hämta_pin"
 
 #: libgphoto2_port/gphoto2-port.c:568
 msgid "set_pin"
-msgstr ""
+msgstr "sätt_pin"
 
 #: libgphoto2_port/gphoto2-port.c:583
 msgid "send_break"
-msgstr ""
+msgstr "sänd_avbrott"
 
 #: libgphoto2_port/gphoto2-port.c:596
 msgid "flush"
-msgstr ""
+msgstr "spola_ut"
 
 #: libgphoto2_port/gphoto2-port.c:612
 msgid "find_device"
-msgstr ""
+msgstr "hitta_enhet"
 
 #: libgphoto2_port/gphoto2-port.c:624
 msgid "find_device_by_class"
-msgstr ""
+msgstr "hitta_enhet_efter_klass"
 
 #: libgphoto2_port/gphoto2-port.c:638
 msgid "clear_halt"
-msgstr ""
+msgstr "rensa_stop"
 
 #: libgphoto2_port/gphoto2-port.c:658
 msgid "msg_write"
-msgstr ""
+msgstr "medd_skriv"
 
 #: libgphoto2_port/gphoto2-port.c:678
 msgid "msg_read"
-msgstr ""
+msgstr "medd_läs"
 
 #: libgphoto2_port/gphoto2-port.c:738
 msgid "No error description available"
-msgstr ""
+msgstr "Ingen felbeskrivning tillgänglig"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:285
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
+"Kunde inte ladda något io-bibliotek eftersom '%s' inte kunde öppnas (%m)"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:479
 msgid "Generic Port"
-msgstr ""
+msgstr "Generell Port"
 
 #: libgphoto2_port/gphoto2-port-result.c:58
 msgid "No error"
-msgstr ""
+msgstr "Inget fel"
 
 #: libgphoto2_port/gphoto2-port-result.c:60
 msgid "Unspecified error"
-msgstr ""
+msgstr "Ospecificerat fel"
 
 #: libgphoto2_port/gphoto2-port-result.c:62
 msgid "I/O problem"
-msgstr ""
+msgstr "I/O problem"
 
 #: libgphoto2_port/gphoto2-port-result.c:64
 msgid "Bad parameters"
-msgstr ""
+msgstr "Felaktiga parametrar"
 
 #: libgphoto2_port/gphoto2-port-result.c:66
 msgid "Unsupported operation"
-msgstr ""
+msgstr "Operationen stöds ej"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Timeout reading from or writing to the port"
-msgstr ""
+msgstr "Time out vid läsning från eller skrivning till port"
 
 #: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Serial port not supported"
-msgstr ""
+msgstr "Serieporten stöds inte"
 
 #: libgphoto2_port/gphoto2-port-result.c:72
 msgid "USB port not supported"
-msgstr ""
+msgstr "USB porten stöds inte"
 
 #: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Unknown port"
-msgstr ""
+msgstr "Okänd port"
 
 #: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Out of memory"
-msgstr ""
+msgstr "Slut på minne"
 
 #: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Error loading a library"
-msgstr ""
+msgstr "Fel vid laddning av ett bibliotek"
 
 #: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error initializing the port"
-msgstr ""
+msgstr "Fel vid initialisering av porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error reading from the port"
-msgstr ""
+msgstr "Fel vid läsning av porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error writing to the port"
-msgstr ""
+msgstr "Fel vid skrivning till porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error updating the port settings"
-msgstr ""
+msgstr "Fel vid uppdatering av port inställningarna"
 
 #: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error setting the serial port speed"
-msgstr ""
+msgstr "Fel vid inställning av serieportens hastighet"
 
 #: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error clearing a halt condition on the USB port"
-msgstr ""
+msgstr "Fel vid rensning av stop tillstånd på USB porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Could not find the requested device on the USB port"
-msgstr ""
+msgstr "Kunde inte finna den begärda enheten på USB porten"
 
 #: libgphoto2_port/gphoto2-port-result.c:94
-#, fuzzy
 msgid "Could not claim the USB device"
-msgstr "Kunde inte få tag på förhandsgranskning"
+msgstr "Kunde inte göra anspråk på USB enheten"
 
 #: libgphoto2_port/gphoto2-port-result.c:96
-#, fuzzy
 msgid "Could not lock the device"
-msgstr "Kunde inte få tag på förhandsgranskning"
+msgstr "Kunde inte låsa enheten"
 
 #: libgphoto2_port/gphoto2-port-result.c:98
 msgid "Unknown error"
-msgstr ""
+msgstr "Okänt fel"
 
 #: usb/libusb.c:131
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open USB device (%m)."
-msgstr "Kunde inte få tag på förhandsgranskning"
+msgstr "Kunde inte öppna USB enheten (%m)"
 
 #: usb/libusb.c:138
 #, c-format
@@ -194,31 +192,35 @@ msgid ""
 "module (i.e. dc2xx) is using the device and you have read/write access to "
 "the device."
 msgstr ""
+"Kunde inte göra anspråk på gränssnittet %d (%m). Kontrollera att inget annat "
+"program eller \"kernel\"-modul (d.v.s. dc2xx) använder enheten och att du du "
+"har skriv/läs rättingheter för enheten."
 
 #: usb/libusb.c:157
 #, c-format
 msgid "Could not release interface %d (%m)."
-msgstr ""
+msgstr "Kunde inte släppa gränssnitt %d (%m)."
 
 #: usb/libusb.c:164
 #, c-format
 msgid "Could not close USB port (%m)."
-msgstr ""
+msgstr "Kunde inte stänga USB port (%m)."
 
 #: usb/libusb.c:278
 #, c-format
 msgid "Could not set config %d/%d (%m)"
-msgstr ""
+msgstr "Kunde inte sätta konfiguration %d/%d (%m)"
 
 #: usb/libusb.c:300
-#, fuzzy, c-format
+#, c-format
 msgid "Could not set altsetting %d/%d (%m)"
-msgstr "Kunde inte hämta #%i"
+msgstr "Kunde inte sätta alternativinställning %d/%d (%m)"
 
 #: usb/libusb.c:374
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
+"Den angivna tillverkare eller produktidentiteten (0x%x,0x%x) är inte giltig."
 
 #: usb/libusb.c:419
 #, c-format
@@ -226,6 +228,8 @@ msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
+"Kunde inte finna USB-enheten (tillverkare 0x%x, produkt 0x%x). Kontrolera "
+"att enheten är ansluten till datorn."
 
 #: usb/libusb.c:524
 #, c-format
@@ -233,83 +237,83 @@ msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
 "sure this device is connected to the computer."
 msgstr ""
+"Kunde inte finna USB.enheten  (klass 0x%x, underklass 0x%x, protokoll 0x%x). "
+"Kontrollera att enheten är ansluten till datorn."
 
 #: serial/unix.c:190
-#, fuzzy, c-format
+#, c-format
 msgid "Could not lock device '%s'"
-msgstr "Kunde inte få tag på förhandsgranskning"
+msgstr "Kunde inte låsa enhet '%s'"
 
 #: serial/unix.c:199
 #, c-format
 msgid "Device '%s' is locked by pid %d"
-msgstr ""
+msgstr "Enheten '%s' är låst av pid %d"
 
 #: serial/unix.c:202
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr ""
+msgstr "Enheten '%s' kunden inte låsas (dev_lock returnerade %d)"
 
 #: serial/unix.c:224
 #, c-format
 msgid "Device '%s' could not be unlocked."
-msgstr ""
+msgstr "Enheten '%s' kunde inte låsas upp."
 
 #: serial/unix.c:236
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
+msgstr "Enheten '%s' kunde inte låsas upp eftersom den är låsta av pid %d."
 
 #: serial/unix.c:240
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr ""
+msgstr "Enheten '%s' kunde inte låsas upp (dev_lock returnerade %d)"
 
 #: serial/unix.c:307
 #, c-format
 msgid "Serial Port %i"
-msgstr ""
+msgstr "Serieport %i"
 
 #: serial/unix.c:389
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open '%s' (%m)."
-msgstr "Fel: misslyckades att öppna %s"
+msgstr "Misslyckades att öppna '%s' (%m)."
 
 #: serial/unix.c:407
-#, fuzzy, c-format
+#, c-format
 msgid "Could not close '%s' (%m)."
-msgstr ""
-"Kunde inte öppna:\n"
-"%s"
+msgstr "Kunde inte stänga '%s' (%m)."
 
 #: serial/unix.c:452
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write to port (%m)"
-msgstr "Kunde inte hämta #%i"
+msgstr "Kunde inte skriva till port (%m)"
 
 #: serial/unix.c:539
 #, c-format
 msgid "Unknown pin %i."
-msgstr ""
+msgstr "Okänd pin %i."
 
 #: serial/unix.c:561
-#, fuzzy, c-format
+#, c-format
 msgid "Could not get level of pin %i (%m)."
-msgstr "Kunde inte hämta #%i"
+msgstr "Kunde inte hämta nivån av pin %i (%m)."
 
 #: serial/unix.c:594
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
-msgstr ""
+msgstr "Kunde inte sätta nivån av pin %i till %i (%m)."
 
 #: serial/unix.c:617
 #, c-format
 msgid "Could not flush '%s' (%m)."
-msgstr ""
+msgstr "Kunde inte spola ut '%s' (%m)."
 
 #: serial/unix.c:726
-#, fuzzy, c-format
+#, c-format
 msgid "Could not set the baudrate to %d"
-msgstr "Kunde inte få antalet bilder"
+msgstr "Kunde inte sätta bit-hhastigheten till %d"
 
 #~ msgid "No configuration options."
 #~ msgstr "Inga konfigurationsalternativ."
@@ -414,15 +418,6 @@ msgstr "Kunde inte få antalet bilder"
 #~ msgid "Could not open $HOME/.gphoto/gphotorc for writing.\n"
 #~ msgstr "Kunde inte öppna $HOME/.gphoto/gphotorc för skrivning.\n"
 
-#~ msgid ""
-#~ "Version Information-------------------Current Version: %sNew features all "
-#~ "over the place. Please seethe ChangeLog for more information.As always, "
-#~ "report bugs gphoto-devel@gphoto.orgThanx much."
-#~ msgstr ""
-#~ "Versjonsinformasjon-------------------Denne versjon: %sNye funksjoner "
-#~ "over det hele. Vennligst se ChangeLog for mer informasjon. Som alltid, "
-#~ "rapporter feil til gphoto-devel@gphoto.org. Takk så mye."
-
 #~ msgid "User's Manual"
 #~ msgstr "Användarmanual"
 
@@ -456,17 +451,8 @@ msgstr "Kunde inte få antalet bilder"
 #~ msgid "%s is not yet implemented"
 #~ msgstr "%s är inte implementerad ännu"
 
-#~ msgid "Getting thumbnail %i..."
-#~ msgstr "Hämtar minibild  %i..."
-
-#~ msgid "Picture #%i\n"
-#~ msgstr "Bild #%i\n"
-
 #~ msgid "Getting Index..."
 #~ msgstr "Hämtar index..."
-
-#~ msgid "num_pictures_taken is %d\n"
-#~ msgstr "num_pictures_take är %d\n"
 
 #~ msgid "Download cancelled."
 #~ msgstr "Nerladdning avbryten."
@@ -555,122 +541,8 @@ msgstr "Kunde inte få antalet bilder"
 #~ msgid "Post-processing command-line:"
 #~ msgstr "Bearbetningskommando-rad:"
 
-#~ msgid "http://www.gphoto.org/help.php3"
-#~ msgstr "http://www.gphoto.org/help.php3"
-
-#~ msgid "http://www.gphoto.org/"
-#~ msgstr "http://www.gphoto.org/"
-
-#~ msgid "http://www.gphoto.org/feedback.php3"
-#~ msgstr "http://www.gphoto.org/feedback.php3"
-
-#~ msgid "http://www.gphoto.org/news.php3"
-#~ msgstr "http://www.gphoto.org/news.php3"
-
-#~ msgid "http://www.gphoto.org/download.php3"
-#~ msgstr "http://www.gphoto.org/download.php3"
-
-#~ msgid "http://www.gphoto.org/cameras.php3"
-#~ msgstr "http://www.gphoto.org/cameras.php3"
-
-#~ msgid "http://www.gphoto.org/supporting.php3"
-#~ msgstr "http://www.gphoto.org/supporting.php3"
-
-#~ msgid "http://www.gphoto.org/lists.php3"
-#~ msgstr "http://www.gphoto.org/lists.php3"
-
-#~ msgid "http://www.gphoto.org/team.php3"
-#~ msgstr "http://www.gphoto.org/team.php3"
-
-#~ msgid "http://www.gphoto.org/themes.php3"
-#~ msgstr "http://www.gphoto.org/themes.php3"
-
-#~ msgid "http://www.gphoto.org/links.php3"
-#~ msgstr "http://www.gphoto.org/links.php3"
-
-#~ msgid "http://www.gphoto.org/todo.php3"
-#~ msgstr "http://www.gphoto.org/todo.php3"
-
-#~ msgid ""
-#~ "%s summary:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "%s sammanfattning:\n"
-#~ "%s"
-
 #~ msgid "gPhoto %s (%s) - the GNU digital camera application\n"
 #~ msgstr "gPhoto %s (%s) - GNU's digitalkamera applikation\n"
-
-#~ msgid ""
-#~ "Copyright (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Copyright (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
-#~ "\n"
-
-#~ msgid "Usage: gphoto [-h] [-c] [-n] [-s # filename] [-t # filename]\n"
-#~ msgstr "Anvädning: gphoto [-h] [-c] [-n] [-s # filnamn] [-t # filnamn]\n"
-
-#~ msgid "              [-d #] [-p filename] [-l filename]\n"
-#~ msgstr "                 [-d #] [-p filnamn] [-l filnamn]\n"
-
-#~ msgid "\t-h                    display this help screen\n"
-#~ msgstr "-h                      visa den här hjälptexten\n"
-
-#~ msgid "\t-c                    display camera summary\n"
-#~ msgstr "\t-c                    visa kamerasummering\n"
-
-#~ msgid "\t-n                    display the # of pictures\n"
-#~ msgstr "\t-n                    visa antalet bilder\n"
-
-#~ msgid "\t-s # filename         save image # as filename\n"
-#~ msgstr "\t-s # filnamn          spara bild # som filnamn\n"
-
-#~ msgid "\t-t # filename         save thumbnail # as filename\n"
-#~ msgstr "\t-t # filnamn          spara minibild # som filnamn\n"
-
-#~ msgid "\t-d #                  delete image # from camera\n"
-#~ msgstr "\t-d #                  ta bort bild # från kameran\n"
-
-#~ msgid "\t-p filename           take picture and save as filename\n"
-#~ msgstr "\t-p filnamn            ta bild och spara som filnamn\n"
-
-#~ msgid ""
-#~ "\t-l filename           save live preview as filename\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\t-l filnamn           spara nuvarande förhandsgranskning som filnamn\n"
-#~ "\n"
-
-#~ msgid "gPhoto is free GNU software; you can redistribute it and/or\n"
-#~ msgstr "gPhoto är fri GNU-mjukvara; du kan omdistribuera det och/eller\n"
-
-#~ msgid "modify it under the terms of the GNU General Public License \n"
-#~ msgstr "modifiera det under termerna i GNU General Public License \n"
-
-#~ msgid "as published by the Free Software Foundation; either version \n"
-#~ msgstr "som publicerats av Free Software Foundation; antingen version \n"
-
-#~ msgid "2 of the License, or any later version.  Visit gphoto/COPYING\n"
-#~ msgstr "2 av licensen, eller någon senare version.  Besök gphoto/COPYING\n"
-
-#~ msgid ""
-#~ "in the source distribution to read the GNU GPL license terms.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "i källkods-distributionen för att läsa GNU GPL licenstermerna.\n"
-#~ "\n"
-
-#~ msgid "Report bugs and camera success to gphoto-devel@gphoto.org.\n"
-#~ msgstr ""
-#~ "Rapportera fel och framgång med kameran till gphoto-devel@gphoto.org.\n"
-
-#~ msgid "See http://www.gphoto.org for the latest news and updates.\n"
-#~ msgstr ""
-#~ "Se http://www.gphoto.org för de senaste nyheterna och uppdateringarna.\n"
-
-#~ msgid "%i\n"
-#~ msgstr "%i\n"
 
 #~ msgid "ERROR: could not get image.\n"
 #~ msgstr "FEL: kunde inte hämta bild.\n"
@@ -702,32 +574,6 @@ msgstr "Kunde inte få antalet bilder"
 #~ msgid "Saving the new image (# %i) as %s: "
 #~ msgstr "Sparar den nya bilden (# %i) som %s: "
 
-#~ msgid ""
-#~ "\n"
-#~ "ERROR: could not get image.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "FEL: kunde inte hämta bild.\n"
-
-#~ msgid "gPhoto release %s was brought to you by"
-#~ msgstr "gPhoto versionen %s presenterat av"
-
-#~ msgid "Web Page"
-#~ msgstr "Webbsida"
-
-#~ msgid "Previous"
-#~ msgstr "Föregående"
-
-#~ msgid "Next"
-#~ msgstr "Nästa"
-
-#~ msgid ""
-#~ "The gPhoto AUTHORS file appears to be missing!\n"
-#~ "\t      There should be a file called "
-#~ msgstr ""
-#~ "gPhoto's AUTHORS-fil verkar saknas!\n"
-#~ "\t      Där borde finnas en fil kallad "
-
 #~ msgid "Select an Output Directory..."
 #~ msgstr "Välj en utdata-katalog..."
 
@@ -749,11 +595,6 @@ msgstr "Kunde inte få antalet bilder"
 #~ msgid "Set table border width to zero for thumbnails?"
 #~ msgstr "Sätt bredden på tabellkanten till 0 för minibilder?"
 
-#~ msgid ""
-#~ "Set image border width to zero? (so you don't see the link colors...)"
-#~ msgstr ""
-#~ "Sätt bredden på bildkanten till 0? (så att du inte ser länkfägerna...)"
-
 #~ msgid "You must select a theme!"
 #~ msgstr "Du måste välja ett tema!"
 
@@ -771,18 +612,6 @@ msgstr "Kunde inte få antalet bilder"
 
 #~ msgid "Getting Image #%i..."
 #~ msgstr "Hämtar bild #%i..."
-
-#~ msgid "<img alt=\"%03i\" src=\"picture-%03i.%s\">"
-#~ msgstr "<img alt=\"%03i\" src=\"picture-%03i.%s\">"
-
-#~ msgid "picture-%03i.%s"
-#~ msgstr "bild-%03i.%s"
-
-#~ msgid "picture-%03i.html"
-#~ msgstr "bild-%03i.html"
-
-#~ msgid "%spicture-%03i.html"
-#~ msgstr "%sbild-%o3i.html"
 
 #~ msgid "Loaded file:%s%s in %s"
 #~ msgstr "Laddade filen:%s%s i %s"
