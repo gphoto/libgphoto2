@@ -112,9 +112,9 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 		params->data);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
-		ptp_error (params,
-			"PTP: request code 0x%04x sending req error 0x%02x",
-			req->Code,ret);
+/*		ptp_error (params,
+			"PTP: request code 0x%04x sending req error 0x%04x",
+			req->Code,ret); */
 	}
 	return ret;
 }
@@ -139,9 +139,9 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		params->data);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
-		ptp_error (params,
+/*		ptp_error (params,
 		"PTP: request code 0x%04x sending data error 0x%04x",
-			ptp->Code,ret);
+			ptp->Code,ret);*/
 		return ret;
 	}
 	if (size<=PTP_USB_BULK_PAYLOAD_LEN) return ret;
@@ -150,9 +150,9 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 				size-PTP_USB_BULK_PAYLOAD_LEN, params->data);
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
-		ptp_error (params,
+/*		ptp_error (params,
 		"PTP: request code 0x%04x sending data error 0x%04x",
-			ptp->Code,ret);
+			ptp->Code,ret);*/
 	}
 	return ret;
 }
@@ -198,13 +198,17 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 					PTP_USB_BULK_PAYLOAD_LEN,
 					len-PTP_USB_BULK_PAYLOAD_LEN,
 					params->data);
+		if (ret!=PTP_RC_OK) {
+			ret = PTP_ERROR_IO;
+			break;
+		}
 	} while (0);
+/*
 	if (ret!=PTP_RC_OK) {
 		ptp_error (params,
 		"PTP: request code 0x%04x getting data error 0x%04x",
 			ptp->Code, ret);
-		ret = PTP_ERROR_IO;
-	}
+	}*/
 	return ret;
 }
 
@@ -229,9 +233,9 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 		ret = dtoh16(usbresp.code);
 	}
 	if (ret!=PTP_RC_OK) {
-		ptp_error (params,
+/*		ptp_error (params,
 		"PTP: request code 0x%04x getting resp error 0x%04x",
-			resp->Code, ret);
+			resp->Code, ret);*/
 		return ret;
 	}
 	/* build an appropriate PTPContainer */
@@ -838,7 +842,7 @@ ptp_ek_sendfileobject (PTPParams* params, char* object, uint32_t size)
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &object);
 }
 
-
+/* Non PTP protocol functions */
 /* devinfo testing functions */
 
 int
@@ -886,4 +890,65 @@ ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
 			free(dpd->FORM.Enum.SupportedValue[i]);
 		free(dpd->FORM.Enum.SupportedValue);
 	}
+}
+
+void 
+ptp_perror(PTPParams* params, uint16_t error) {
+
+	int i;
+	// PTP error descriptions
+	static struct {
+		short n;
+		const char *txt;
+	} ptp_errors[] = {
+	{PTP_RC_Undefined, 		N_("PTP: Undefined Error")},
+	{PTP_RC_OK, 			N_("PTP: OK!")},
+	{PTP_RC_GeneralError, 		N_("PTP: General Error")},
+	{PTP_RC_SessionNotOpen, 	N_("PTP: Session Not Open")},
+	{PTP_RC_InvalidTransactionID, 	N_("PTP: Invalid Transaction ID")},
+	{PTP_RC_OperationNotSupported, 	N_("PTP: Operation Not Supported")},
+	{PTP_RC_ParameterNotSupported, 	N_("PTP: Parameter Not Supported")},
+	{PTP_RC_IncompleteTransfer, 	N_("PTP: Incomplete Transfer")},
+	{PTP_RC_InvalidStorageId, 	N_("PTP: Invalid Storage ID")},
+	{PTP_RC_InvalidObjectHandle, 	N_("PTP: Invalid Object Handle")},
+	{PTP_RC_DevicePropNotSupported, N_("PTP: Device Prop Not Supported")},
+	{PTP_RC_InvalidObjectFormatCode, N_("PTP: Invalid Object Format Code")},
+	{PTP_RC_StoreFull, 		N_("PTP: Store Full")},
+	{PTP_RC_ObjectWriteProtected, 	N_("PTP: Object Write Protected")},
+	{PTP_RC_StoreReadOnly, 		N_("PTP: Store Read Only")},
+	{PTP_RC_AccessDenied,		N_("PTP: Access Denied")},
+	{PTP_RC_NoThumbnailPresent, 	N_("PTP: No Thumbnail Present")},
+	{PTP_RC_SelfTestFailed, 	N_("PTP: Self Test Failed")},
+	{PTP_RC_PartialDeletion, 	N_("PTP: Partial Deletion")},
+	{PTP_RC_StoreNotAvailable, 	N_("PTP: Store Not Available")},
+	{PTP_RC_SpecificationByFormatUnsupported,
+				N_("PTP: Specification By Format Unsupported")},
+	{PTP_RC_NoValidObjectInfo, 	N_("PTP: No Valid Object Info")},
+	{PTP_RC_InvalidCodeFormat, 	N_("PTP: Invalid Code Format")},
+	{PTP_RC_UnknownVendorCode, 	N_("PTP: Unknown Vendor Code")},
+	{PTP_RC_CaptureAlreadyTerminated,
+					N_("PTP: Capture Already Terminated")},
+	{PTP_RC_DeviceBusy, 		N_("PTP: Device Bus")},
+	{PTP_RC_InvalidParentObject, 	N_("PTP: Invalid Parent Object")},
+	{PTP_RC_InvalidDevicePropFormat, N_("PTP: Invalid Device Prop Format")},
+	{PTP_RC_InvalidDevicePropValue, N_("PTP: Invalid Device Prop Value")},
+	{PTP_RC_InvalidParameter, 	N_("PTP: Invalid Parameter")},
+	{PTP_RC_SessionAlreadyOpened, 	N_("PTP: Session Already Opened")},
+	{PTP_RC_TransactionCanceled, 	N_("PTP: Transaction Canceled")},
+	{PTP_RC_SpecificationOfDestinationUnsupported,
+			N_("PTP: Specification Of Destination Unsupported")},
+	{PTP_RC_EK_FilenameRequired,	N_("PTP: EK Filename Required")},
+	{PTP_RC_EK_FilenameConflicts,	N_("PTP: EK Filename Conflicts")},
+	{PTP_RC_EK_FilenameInvalid,	N_("PTP: EK Filename Invalid")},
+
+	{PTP_ERROR_IO,		  N_("PTP: I/O error")},
+	{PTP_ERROR_BADPARAM,	  N_("PTP: Error: bad parameter")},
+	{PTP_ERROR_DATA_EXPECTED, N_("PTP: Protocol error, data expected")},
+	{PTP_ERROR_RESP_EXPECTED, N_("PTP: Protocol error, response expected")},
+	{0, NULL}
+};
+
+	for (i=0; ptp_errors[i].txt!=NULL; i++)
+		if (ptp_errors[i].n == error)
+			ptp_error(params, ptp_errors[i].txt);
 }

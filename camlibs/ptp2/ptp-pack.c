@@ -612,7 +612,7 @@ ptp_unpack_DPD (PTPParams *params, char* data, PTPDevicePropDesc *dpd)
 static inline uint32_t
 ptp_pack_DPV (PTPParams *params, void* value, char** dpvptr, uint16_t datatype)
 {
-	char* dpv;
+	char* dpv=NULL;
 	uint32_t size=0;
 
 	switch (datatype) {
@@ -658,5 +658,6 @@ ptp_pack_DPV (PTPParams *params, void* value, char** dpvptr, uint16_t datatype)
 		}
 		break;
 	}
+	*dpvptr=dpv;
 	return size;
 }

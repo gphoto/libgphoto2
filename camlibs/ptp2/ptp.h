@@ -597,10 +597,12 @@ uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 uint16_t ptp_ek_sendfileobject	(PTPParams* params, char* object,
 				uint32_t size);
 
+/* Non PTP protocol functions */
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
 int ptp_property_issupported	(PTPParams* params, uint16_t property);
 
 void ptp_free_devicepropdesc	(PTPDevicePropDesc* dpd);
+void ptp_perror			(PTPParams* params, uint16_t error);
 
 
 #endif /* __PTP_H__ */
