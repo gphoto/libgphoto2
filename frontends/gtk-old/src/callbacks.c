@@ -79,6 +79,16 @@ int camera_set() {
 
 int main_quit(GtkWidget *widget, gpointer data) {
 
+	char buf[1024];
+	int x, y;
+
+	/* Save the window size */
+	gdk_window_get_size(gp_gtk_main_window->window, &x, &y);
+	sprintf(buf, "%i", x);
+	gp_setting_set("width", buf);
+	sprintf(buf, "%i", y);
+	gp_setting_set("height", buf);
+
 	if (gp_gtk_camera_init)
 		gp_exit();
 	gtk_main_quit();
@@ -211,13 +221,107 @@ void folder_set (GtkWidget *tree_item, gpointer data) {
 	sprintf(buf, "camera folder path = %s", path);
 	debug_print(buf);
 
-		
+	if (gp_folder_set(path)==GP_ERROR) {
+		sprintf(buf, "Could not open folder\n%s", path);
+		gp_message(buf);
+		return;
+	}
+}
+
+GtkWidget *folder_item (GtkWidget *tree, char *text) {
+	/* Create an item in the "tree" with the label of text and a folder icon */
+
+	return (tree_item_icon(tree, text, "folder.xpm"));
+}
+
+GtkWidget *tree_item_icon (GtkWidget *tree, char *text, char *icon_name) {
+	/* Create an item in the "tree" with the label of text and an icon */
+
+	GtkWidget *item, *hbox, *pixmap, *label, *subtree, *subitem;
+
+	item = gtk_tree_item_new();
+	gtk_widget_show(item);
+	gtk_tree_append(GTK_TREE(tree), item);
+	gtk_signal_connect(GTK_OBJECT(item), "select", 
+		GTK_SIGNAL_FUNC(folder_set),NULL);
+	gtk_signal_connect_after(GTK_OBJECT(item), "expand", 
+		GTK_SIGNAL_FUNC(folder_expand),NULL);
+
+	hbox = gtk_hbox_new(FALSE, 3);
+	gtk_widget_show(hbox);
+	gtk_container_add(GTK_CONTAINER(item), hbox);
+
+	pixmap = create_pixmap(gp_gtk_main_window, icon_name);
+	gtk_widget_show(pixmap);
+	gtk_box_pack_start(GTK_BOX(hbox), pixmap, FALSE, FALSE, 0);
+
+	label = gtk_label_new(text);
+	gtk_widget_show(label);
+	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
+
+	subtree = gtk_tree_new();
+	gtk_widget_show(subtree);
+	gtk_tree_item_set_subtree (GTK_TREE_ITEM(item), subtree);
+
+	subitem = gtk_tree_item_new();
+	gtk_widget_show(subitem);
+	gtk_tree_append(GTK_TREE(subtree), subitem);
+	gtk_object_set_data(GTK_OBJECT(subitem), "blech", (gpointer)"foo");
+	
+	return (item);
 }
 
 void folder_expand (GtkWidget *tree_item, gpointer data) {
 
-	GtkWidget *tree, *hbox, *pixmap
+	GtkWidget *tree, *item;
+	CameraFolderInfo list[256], t;
+	char *path = (char*)gtk_object_get_data(GTK_OBJECT(tree_item), "path");
+	char buf[1024];
+	int x=0, y=0, z=0, count=0;
 
+	if (!gp_gtk_camera_init)
+		if (camera_set()==GP_ERROR) {return;}
+
+	tree = GTK_TREE_ITEM(tree_item)->subtree;
+
+	/* See if we've expanded this before! */
+	if (gtk_object_get_data(GTK_OBJECT(tree_item), "expanded")) return;
+
+	if ((count = gp_folder_list(path, list))==GP_ERROR) {
+		sprintf(buf, "Could not open folder\n%s", path);
+		gp_message(buf);
+		return;
+	}
+
+	if (count == 0) {
+		if (strcmp(path, "/")!=0)
+			gtk_tree_item_remove_subtree(GTK_TREE_ITEM(tree_item));
+		return;
+	}
+
+	/* sort the folder list (old bubble) */
+	for (x=0; x<count-1; x++) {
+		for (y=x+1; y<count; y++) {
+			z = strcmp(list[x].name, list[y].name);
+			if (z > 0) {
+				memcpy(&t, &list[x], sizeof(t));
+				memcpy(&list[x], &list[y], sizeof(list[x]));
+				memcpy(&list[y], &t, sizeof(list[y]));
+			}
+		}
+	}
+
+	/* Append the new folders */
+	for (x=0; x<count; x++) {
+		if (strcmp(path, "/")==0)
+			sprintf(buf, "/%s", list[x].name);
+		   else
+			sprintf(buf, "%s/%s", path, list[x].name);
+		item = folder_item(tree, list[x].name);
+		gtk_object_set_data(GTK_OBJECT(item), "path", strdup(buf));
+	}
+
+	gtk_object_set_data(GTK_OBJECT(tree_item), "expanded", "yes");
 }
 
 /* Camera operations */

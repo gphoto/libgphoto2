@@ -977,8 +977,10 @@ create_main_window (void)
   gtk_object_set_data_full (GTK_OBJECT (main_window), "camera_tree", tree_item,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_object_set_data (GTK_OBJECT (tree_item), "path", (gpointer)"/");
-  gtk_signal_connect(GTK_OBJECT(tree_item), "select", GTK_SIGNAL_FUNC(folder_set),NULL);
-  gtk_signal_connect(GTK_OBJECT(tree_item), "expand", GTK_SIGNAL_FUNC(folder_expand),NULL);
+  gtk_signal_connect(GTK_OBJECT(tree_item), "select", 
+	GTK_SIGNAL_FUNC(folder_set),NULL);
+  gtk_signal_connect(GTK_OBJECT(tree_item), "expand", 
+	GTK_SIGNAL_FUNC(folder_expand),NULL);
   gtk_widget_show (tree_item);
   gtk_tree_append(GTK_TREE(tree1), tree_item);
 
@@ -1002,6 +1004,21 @@ create_main_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (label);
   gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
+
+  tree1 = gtk_tree_new ();
+  gtk_widget_ref (tree1);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "camera_subtree", tree1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (tree1);
+  gtk_tree_item_set_subtree(GTK_TREE_ITEM(tree_item), tree1);
+
+  tree_item = gtk_tree_item_new ();
+  gtk_widget_ref (tree_item);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "subtree_item", tree_item,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_object_set_data (GTK_OBJECT(tree_item), "blech", "foo");
+  gtk_widget_show (tree_item);
+  gtk_tree_append(GTK_TREE(tree1), tree_item);
 
   progress_bar = gtk_progress_bar_new ();
   gtk_widget_ref (progress_bar);

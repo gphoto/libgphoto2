@@ -28,6 +28,7 @@ main (int argc, char *argv[])
 {
 	GtkWidget *label;
 	char buf[1024];
+	int x, y;
 
 #ifdef ENABLE_NLS
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
@@ -53,12 +54,23 @@ main (int argc, char *argv[])
 	gp_gtk_main_window = create_main_window ();
 	gtk_widget_show (gp_gtk_main_window);
 
+	/* Retrieve the last width/height of the window */
+        if (gp_setting_get("width", buf)==GP_OK) {
+		x = atoi(buf);
+		if (gp_setting_get("height", buf)==GP_OK) {
+			y = atoi(buf);
+		        gdk_window_resize(gp_gtk_main_window->window, x, y);
+		}
+	}
+
+	/* Retrieve the last camera used */
 	if (gp_setting_get("camera", buf)==GP_OK) {
 		/* Set the camera model label */
 		label = (GtkWidget*) lookup_widget(gp_gtk_main_window, "camera_label");
 		gtk_label_set_text(GTK_LABEL(label), buf);
 	}
 
+	/* Set the current working directory */
 	getcwd(buf, 1024);
 	strcat(buf, "/");
 	gp_setting_set("cwd", buf);

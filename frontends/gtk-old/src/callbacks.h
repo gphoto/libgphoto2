@@ -31,6 +31,9 @@ void select_inverse();
 void select_none();
 
 /* Folder operations */
+GtkWidget *tree_item_icon (GtkWidget *tree, char *text, char *icon_name);
+GtkWidget *folder_item      (GtkWidget *tree, char *text);
+
 void folder_set (GtkWidget *tree_item, gpointer data);
 void folder_expand (GtkWidget *tree_item, gpointer data);
 
