@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-01-18 01:38+0100\n"
-"PO-Revision-Date: 2002-01-18 01:52+0100\n"
+"POT-Creation-Date: 2002-01-19 16:03+0100\n"
+"PO-Revision-Date: 2002-01-19 16:26+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -495,8 +495,8 @@ msgstr ""
 "Kamera wird %s-betrieben%s\n"
 
 #. Flash
-#: camlibs/dimera/dimera3500.c:533 camlibs/konica/library.c:776
-#: camlibs/konica/library.c:1016
+#: camlibs/dimera/dimera3500.c:533 camlibs/konica/library.c:779
+#: camlibs/konica/library.c:1019
 msgid "Flash"
 msgstr "Blitz"
 
@@ -647,7 +647,8 @@ msgstr "Problem beim Herunterladen des Bildes"
 msgid "User cancelled download"
 msgstr "Benutzerabbruch beim Herunterladen"
 
-#: camlibs/dimera/dimera3500.c:735 camlibs/samsung/samsung.c:211
+#: camlibs/dimera/dimera3500.c:735 camlibs/kodak/dc3200/library.c:385
+#: camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:211
 msgid "Downloading image..."
 msgstr "Lade Bild herunter..."
 
@@ -725,6 +726,38 @@ msgstr ""
 #: camlibs/directory/directory.c:492
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
 msgstr "Verzeichnis-Modus - geschrieben von Scott Fritzinger <scottf@unr.edu>."
+
+#: camlibs/jamcam/jamcam.c:280
+msgid "jamcam library v"
+msgstr "jamcam-Bibliothek v"
+
+#: camlibs/jamcam/jamcam.c:281 camlibs/panasonic/coolshot/coolshot.c:265
+msgid " "
+msgstr " "
+
+#: camlibs/jamcam/jamcam.c:281
+msgid ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Support for KBGear JamCam v2.0 & v3.0 digital cameras\n"
+"based on reverse engineering serial protocol.\n"
+"\n"
+msgstr ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Unterstützung für KBGear JamCam \n"
+"v2.0 & v3.0-Digitalkameras,\n"
+"basierend auf dem rückentwickelten\n"
+"seriellen Protokoll.\n"
+"\n"
+
+#: camlibs/jamcam/library.c:336 camlibs/jd11/serial.c:455
+msgid "Downloading data..."
+msgstr "Lade Daten herunter..."
+
+#: camlibs/jamcam/library.c:494 camlibs/jd11/serial.c:375
+msgid "Downloading thumbnail..."
+msgstr "Lade Vorschaubild herunter..."
 
 #: camlibs/jd11/jd11.c:174
 msgid ""
@@ -811,6 +844,16 @@ msgstr ""
 "Scott Fritzinger <scottf@gphoto.net>\n"
 "(aufgrund öffentlichen Interesses)."
 
+#: camlibs/kodak/dc120/library.c:122 camlibs/kodak/dc240/library.c:295
+#: camlibs/panasonic/dc1000.c:424 camlibs/panasonic/dc1580.c:552
+msgid "Getting data..."
+msgstr "Hole Daten..."
+
+#. Wait for command completion
+#: camlibs/kodak/dc120/library.c:506
+msgid "Waiting for completion..."
+msgstr "Warte auf Beendigung..."
+
 #: camlibs/kodak/dc240/dc240.c:180
 #, c-format
 msgid "Model: Kodak %s\n"
@@ -860,12 +903,52 @@ msgstr ""
 "Bibliothek für die Kameras Kodak DC240, DC280, DC3400 und DC5000.\n"
 "Neu geschrieben und aktualisiert für gPhoto2."
 
+#: camlibs/kodak/dc240/library.c:538
+msgid "OK"
+msgstr "OK"
+
+#: camlibs/kodak/dc240/library.c:541
+msgid "Weak"
+msgstr "Schwach"
+
+#: camlibs/kodak/dc240/library.c:544
+msgid "Empty"
+msgstr "Leer"
+
+#: camlibs/kodak/dc240/library.c:549 camlibs/kodak/dc240/library.c:564
+msgid "Invalid"
+msgstr "Ungültig"
+
+#: camlibs/kodak/dc240/library.c:556
+msgid "Not used"
+msgstr "Nicht benutzt"
+
+#: camlibs/kodak/dc240/library.c:559
+msgid "In use"
+msgstr "Benutzt"
+
+#: camlibs/kodak/dc240/library.c:573
+msgid "Card is open"
+msgstr "Karte ist geöffnet"
+
+#: camlibs/kodak/dc240/library.c:576
+msgid "Card is not open"
+msgstr "Karte ist nicht geöffnet"
+
+#: camlibs/kodak/dc240/library.c:580
+msgid "Card is not formatted"
+msgstr "Karte ist nicht formatiert"
+
+#: camlibs/kodak/dc240/library.c:584
+msgid "No card"
+msgstr "Keine Karte vorhanden"
+
 #. we have to re-init the camera
-#: camlibs/kodak/dc3200/dc3200.c:123
+#: camlibs/kodak/dc3200/dc3200.c:131
 msgid "camera inactive for > 9 seconds, re-initing.\n"
 msgstr "Kamera inaktiv für > 9 Sekunden, initialisiere neu.\n"
 
-#: camlibs/kodak/dc3200/dc3200.c:307
+#: camlibs/kodak/dc3200/dc3200.c:370
 msgid ""
 "Known problems:\n"
 "\n"
@@ -889,7 +972,7 @@ msgstr ""
 "Kamera \n"
 "neu initialisieren müssen."
 
-#: camlibs/kodak/dc3200/dc3200.c:324
+#: camlibs/kodak/dc3200/dc3200.c:387
 msgid ""
 "Kodak DC3200 Driver\n"
 "Donn Morrison <dmorriso@gulf.uvic.ca>\n"
@@ -1005,11 +1088,11 @@ msgstr "Unbekannter Fehler"
 msgid "Getting file list..."
 msgstr "Hole Dateiliste..."
 
-#: camlibs/konica/library.c:335
+#: camlibs/konica/library.c:338
 msgid "Testing different speeds..."
 msgstr "Teste verschiedene Datenraten..."
 
-#: camlibs/konica/library.c:349
+#: camlibs/konica/library.c:352
 msgid ""
 "The camera could not be contacted. Please make sure it is conntected to the "
 "computer and turned on."
@@ -1018,12 +1101,12 @@ msgstr ""
 "Kamera\n"
 "mit dem Computer verbunden und angeschaltet ist."
 
-#: camlibs/konica/library.c:433
+#: camlibs/konica/library.c:436
 #, c-format
 msgid "%i pictures could not be deleted because they are protected"
 msgstr "%i Bilder konnten nicht gelöscht werden, da sie geschützt sind"
 
-#: camlibs/konica/library.c:532
+#: camlibs/konica/library.c:535
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -1042,7 +1125,7 @@ msgstr ""
 "Name: %s,\n"
 "Hersteller: %s\n"
 
-#: camlibs/konica/library.c:621
+#: camlibs/konica/library.c:624
 msgid ""
 "Konica library\n"
 "Lutz Müller <urc8@rz.uni-karlsruhe.de>\n"
@@ -1052,43 +1135,43 @@ msgstr ""
 "Lutz Müller <urc8@rz.uni-karlsruhe.de>\n"
 "Unterstützung für alle Konica- und verschiedene HP-Kameras."
 
-#: camlibs/konica/library.c:649
+#: camlibs/konica/library.c:652
 msgid "Getting configuration..."
 msgstr "Lade Kamera-Konfiguration..."
 
 #. Create the window.
-#: camlibs/konica/library.c:656
+#: camlibs/konica/library.c:659
 msgid "Konica Configuration"
 msgstr "Konica-Konfiguration"
 
 #. **********************
 #. Persistent Settings
 #. **********************
-#: camlibs/konica/library.c:661 camlibs/konica/library.c:872
+#: camlibs/konica/library.c:664 camlibs/konica/library.c:875
 msgid "Persistent Settings"
 msgstr "Dauerhafte Einstellungen"
 
 #. Date
-#: camlibs/konica/library.c:665 camlibs/konica/library.c:876
+#: camlibs/konica/library.c:668 camlibs/konica/library.c:879
 #: camlibs/polaroid/pdc700.c:965 camlibs/polaroid/pdc700.c:1031
 msgid "Date and Time"
 msgstr "Datum und Zeit"
 
 #. Beep
-#: camlibs/konica/library.c:679 camlibs/konica/library.c:890
+#: camlibs/konica/library.c:682 camlibs/konica/library.c:893
 msgid "Beep"
 msgstr "Ton"
 
-#: camlibs/konica/library.c:681 camlibs/konica/library.c:688
-#: camlibs/konica/library.c:779 camlibs/konica/library.c:788
-#: camlibs/konica/library.c:1021 camlibs/sierra/sierra.c:932
+#: camlibs/konica/library.c:684 camlibs/konica/library.c:691
+#: camlibs/konica/library.c:782 camlibs/konica/library.c:791
+#: camlibs/konica/library.c:1024 camlibs/sierra/sierra.c:932
 #: camlibs/sierra/sierra.c:938 camlibs/sierra/sierra.c:1199
 msgid "On"
 msgstr "An"
 
-#: camlibs/konica/library.c:682 camlibs/konica/library.c:685
-#: camlibs/konica/library.c:778 camlibs/konica/library.c:785
-#: camlibs/konica/library.c:893 camlibs/konica/library.c:1019
+#: camlibs/konica/library.c:685 camlibs/konica/library.c:688
+#: camlibs/konica/library.c:781 camlibs/konica/library.c:788
+#: camlibs/konica/library.c:896 camlibs/konica/library.c:1022
 #: camlibs/sierra/sierra.c:817 camlibs/sierra/sierra.c:826
 #: camlibs/sierra/sierra.c:933 camlibs/sierra/sierra.c:936
 #: camlibs/sierra/sierra.c:1121 camlibs/sierra/sierra.c:1201
@@ -1097,114 +1180,114 @@ msgstr "An"
 msgid "Off"
 msgstr "Aus"
 
-#: camlibs/konica/library.c:691
+#: camlibs/konica/library.c:694
 msgid "Shall the camera beep when taking a picture?"
 msgstr "Soll die Kamera einen Ton spielen, wenn ein Bild aufgenommen wird?"
 
 #. Self Timer Time
-#: camlibs/konica/library.c:695 camlibs/konica/library.c:903
+#: camlibs/konica/library.c:698 camlibs/konica/library.c:906
 msgid "Self Timer Time"
 msgstr "Selbstauslöserzeit"
 
 #. Auto Off Time
-#: camlibs/konica/library.c:702 camlibs/konica/library.c:911
+#: camlibs/konica/library.c:705 camlibs/konica/library.c:914
 msgid "Auto Off Time"
 msgstr "Zeit für automatische Abschaltung"
 
 #. Slide Show Interval
-#: camlibs/konica/library.c:709 camlibs/konica/library.c:919
+#: camlibs/konica/library.c:712 camlibs/konica/library.c:922
 msgid "Slide Show Interval"
 msgstr "Diashow-Intervall"
 
 #. Resolution
-#: camlibs/konica/library.c:716 camlibs/konica/library.c:928
+#: camlibs/konica/library.c:719 camlibs/konica/library.c:931
 #: camlibs/sierra/sierra.c:716 camlibs/sierra/sierra.c:1045
 #: camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1604
 msgid "Resolution"
 msgstr "Auflösung"
 
-#: camlibs/konica/library.c:718 camlibs/konica/library.c:726
-#: camlibs/konica/library.c:933
+#: camlibs/konica/library.c:721 camlibs/konica/library.c:729
+#: camlibs/konica/library.c:936
 msgid "Low (576 x 436)"
 msgstr "Niedrig (576 x 436)"
 
-#: camlibs/konica/library.c:719 camlibs/konica/library.c:729
+#: camlibs/konica/library.c:722 camlibs/konica/library.c:732
 msgid "Medium (1152 x 872)"
 msgstr "Mittel (1152 x 872)"
 
-#: camlibs/konica/library.c:720 camlibs/konica/library.c:723
-#: camlibs/konica/library.c:931
+#: camlibs/konica/library.c:723 camlibs/konica/library.c:726
+#: camlibs/konica/library.c:934
 msgid "High (1152 x 872)"
 msgstr "Hoch (1152 x 872)"
 
 #. **************
 #. Localization
 #. **************
-#: camlibs/konica/library.c:736 camlibs/konica/library.c:944
+#: camlibs/konica/library.c:739 camlibs/konica/library.c:947
 msgid "Localization"
 msgstr "Lokalisierung"
 
 #. Localization File
-#: camlibs/konica/library.c:742 camlibs/konica/library.c:947
+#: camlibs/konica/library.c:745 camlibs/konica/library.c:950
 #: camlibs/sierra/sierra.c:1471 camlibs/sierra/sierra.c:1655
 msgid "Language"
 msgstr "Sprache"
 
-#: camlibs/konica/library.c:749 camlibs/konica/library.c:758
-#: camlibs/konica/library.c:766 camlibs/konica/library.c:952
-#: camlibs/konica/library.c:977 camlibs/konica/library.c:995
+#: camlibs/konica/library.c:752 camlibs/konica/library.c:761
+#: camlibs/konica/library.c:769 camlibs/konica/library.c:955
+#: camlibs/konica/library.c:980 camlibs/konica/library.c:998
 msgid "None selected"
 msgstr "Keine ausgewählt"
 
 #. TV output format
-#: camlibs/konica/library.c:753 camlibs/konica/library.c:974
+#: camlibs/konica/library.c:756 camlibs/konica/library.c:977
 msgid "TV Output Format"
 msgstr "TV-Ausgabeformat"
 
-#: camlibs/konica/library.c:755 camlibs/konica/library.c:978
+#: camlibs/konica/library.c:758 camlibs/konica/library.c:981
 msgid "NTSC"
 msgstr "NTSC"
 
-#: camlibs/konica/library.c:756 camlibs/konica/library.c:980
+#: camlibs/konica/library.c:759 camlibs/konica/library.c:983
 msgid "PAL"
 msgstr "PAL"
 
-#: camlibs/konica/library.c:757 camlibs/konica/library.c:982
+#: camlibs/konica/library.c:760 camlibs/konica/library.c:985
 msgid "Do not display TV menu"
 msgstr "TV-Menü nicht anzeigen"
 
 #. Date format
-#: camlibs/konica/library.c:761 camlibs/konica/library.c:992
+#: camlibs/konica/library.c:764 camlibs/konica/library.c:995
 msgid "Date Format"
 msgstr "Datumsformat"
 
-#: camlibs/konica/library.c:763 camlibs/konica/library.c:996
+#: camlibs/konica/library.c:766 camlibs/konica/library.c:999
 msgid "Month/Day/Year"
 msgstr "Monat/Tag/Jahr"
 
-#: camlibs/konica/library.c:764 camlibs/konica/library.c:998
+#: camlibs/konica/library.c:767 camlibs/konica/library.c:1001
 msgid "Day/Month/Year"
 msgstr "Tag/Monat/Jahr"
 
-#: camlibs/konica/library.c:765 camlibs/konica/library.c:1000
+#: camlibs/konica/library.c:768 camlibs/konica/library.c:1003
 msgid "Year/Month/Day"
 msgstr "Jahr/Monat/Tag"
 
 #. ******************************
 #. Session-persistent Settings
 #. ******************************
-#: camlibs/konica/library.c:771 camlibs/konica/library.c:1012
+#: camlibs/konica/library.c:774 camlibs/konica/library.c:1015
 msgid "Session-persistent Settings"
 msgstr "Sitzungsdauerhafte Einstellungen"
 
-#: camlibs/konica/library.c:780 camlibs/konica/library.c:791
-#: camlibs/konica/library.c:1023
+#: camlibs/konica/library.c:783 camlibs/konica/library.c:794
+#: camlibs/konica/library.c:1026
 msgid "On, red-eye reduction"
 msgstr "An, Rote-Augen-Vermeidung"
 
-#: camlibs/konica/library.c:781 camlibs/konica/library.c:797
-#: camlibs/konica/library.c:812 camlibs/konica/library.c:815
-#: camlibs/konica/library.c:1025 camlibs/konica/library.c:1055
+#: camlibs/konica/library.c:784 camlibs/konica/library.c:800
+#: camlibs/konica/library.c:815 camlibs/konica/library.c:818
+#: camlibs/konica/library.c:1028 camlibs/konica/library.c:1058
 #: camlibs/sierra/sierra.c:717 camlibs/sierra/sierra.c:723
 #: camlibs/sierra/sierra.c:756 camlibs/sierra/sierra.c:762
 #: camlibs/sierra/sierra.c:815 camlibs/sierra/sierra.c:822
@@ -1217,21 +1300,21 @@ msgstr "An, Rote-Augen-Vermeidung"
 msgid "Auto"
 msgstr "Auto"
 
-#: camlibs/konica/library.c:782 camlibs/konica/library.c:794
+#: camlibs/konica/library.c:785 camlibs/konica/library.c:797
 msgid "Auto, red-eye reduction"
 msgstr "Auto, Rote-Augen-Vermeidung"
 
 #. Exposure
-#: camlibs/konica/library.c:802 camlibs/konica/library.c:1034
+#: camlibs/konica/library.c:805 camlibs/konica/library.c:1037
 msgid "Exposure"
 msgstr "Belichtung"
 
 #. Focus
-#: camlibs/konica/library.c:809 camlibs/konica/library.c:1042
+#: camlibs/konica/library.c:812 camlibs/konica/library.c:1045
 msgid "Focus"
 msgstr "Fokus"
 
-#: camlibs/konica/library.c:811 camlibs/konica/library.c:818
+#: camlibs/konica/library.c:814 camlibs/konica/library.c:821
 #: camlibs/sierra/sierra.c:1352 camlibs/sierra/sierra.c:1358
 #: camlibs/sierra/sierra.c:1578
 msgid "Fixed"
@@ -1240,21 +1323,21 @@ msgstr "Fest eingestellt"
 #. **********************
 #. Volatile Settings
 #. **********************
-#: camlibs/konica/library.c:825 camlibs/konica/library.c:1047
+#: camlibs/konica/library.c:828 camlibs/konica/library.c:1050
 msgid "Volatile Settings"
 msgstr "Flüchtige Einstellungen"
 
 #. Self Timer
-#: camlibs/konica/library.c:829 camlibs/konica/library.c:1050
+#: camlibs/konica/library.c:832 camlibs/konica/library.c:1053
 #: camlibs/polaroid/pdc700.c:153
 msgid "Self Timer"
 msgstr "Selbstauslöser"
 
-#: camlibs/konica/library.c:831 camlibs/konica/library.c:1060
+#: camlibs/konica/library.c:834 camlibs/konica/library.c:1063
 msgid "Self Timer (only next picture)"
 msgstr "Selbstauslöser (nur nächstes Bild)"
 
-#: camlibs/konica/library.c:832 camlibs/konica/library.c:839
+#: camlibs/konica/library.c:835 camlibs/konica/library.c:842
 #: camlibs/minolta/dimagev/dimagev.c:407 camlibs/sierra/sierra.c:785
 #: camlibs/sierra/sierra.c:792 camlibs/sierra/sierra.c:846
 #: camlibs/sierra/sierra.c:853 camlibs/sierra/sierra.c:908
@@ -1265,16 +1348,16 @@ msgstr "Selbstauslöser (nur nächstes Bild)"
 msgid "Normal"
 msgstr "Normal"
 
-#: camlibs/konica/library.c:835
+#: camlibs/konica/library.c:838
 msgid "Self Timer (next picture only)"
 msgstr "Selbstauslöser (nur nächstes Bild)"
 
-#: camlibs/konica/library.c:1091
+#: camlibs/konica/library.c:1094
 #, c-format
 msgid "Could not find localization data at '%s'"
 msgstr "Konnte Lokalisierungsdaten nicht in »%s« finden"
 
-#: camlibs/konica/library.c:1155
+#: camlibs/konica/library.c:1158
 msgid "Localization file too long!"
 msgstr "Lokalisierungsdatei zu lang!"
 
@@ -1462,6 +1545,26 @@ msgstr ""
 "Gus Hartmann <gphoto@gus-the-cat.org>\n"
 "Besonderen Dank an Minolta für die Spezifikation."
 
+#: camlibs/panasonic/coolshot/coolshot.c:264
+msgid "coolshot library v"
+msgstr "coolshot-Bibliothek v"
+
+#: camlibs/panasonic/coolshot/coolshot.c:265
+msgid ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Support for Panasonic Coolshot digital cameras\n"
+"based on reverse engineering serial protocol.\n"
+"\n"
+msgstr ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Unterstützung für \n"
+"Panasonic Coolshot-Digitalkameras,\n"
+"basierend auf dem rückentwickelten\n"
+"seriellen Protokoll.\n"
+"\n"
+
 #: camlibs/panasonic/dc1000.c:371 camlibs/panasonic/dc1580.c:468
 msgid "Disconnecting camera."
 msgstr "Schließe Verbindung zu Kamera."
@@ -1470,10 +1573,6 @@ msgstr "Schließe Verbindung zu Kamera."
 #, c-format
 msgid "Downloading image %s."
 msgstr "Lade Bild »%s« herunter."
-
-#: camlibs/panasonic/dc1000.c:424 camlibs/panasonic/dc1580.c:552
-msgid "Getting data..."
-msgstr "Hole Daten..."
 
 #: camlibs/panasonic/dc1000.c:452 camlibs/panasonic/dc1580.c:577
 #, c-format
@@ -1533,6 +1632,57 @@ msgstr ""
 "Basierend auf dem dc1000-Programm von\n"
 "Fredrik Roubert <roubert@df.lth.se> und\n"
 "Galen Brooks <galen@nine.com>."
+
+#: camlibs/panasonic/l859/l859.c:505
+#, c-format
+msgid "Downloading '%s'..."
+msgstr "Lade »%s« herunter..."
+
+#: camlibs/panasonic/l859/l859.c:586
+msgid ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
+"\n"
+"Panasonic introduced image capturing technology called PHOTOSHOT for the "
+"first time to this series of Palmcorders.  Images are stored in JPEG format "
+"on an internal flashcard and can be transfered to a computer through the "
+"built-in serial port.  Images are saved in one of two resolutions; NORMAL is "
+"320x240 and FINE is 640x480.  The CCD device which captures the images from "
+"the lens is only 300K and thus produces only low quality pictures."
+msgstr ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
+"\n"
+"Panasonic hat Bildaufnahme (genannt PHOTOSHOT) zum ersten Mal in\n"
+"dieser Serie von Palmcordern implementiert.  Bilder sind im\n"
+"JPEG-Format auf einer internen Flashkarte gespeichert und können\n"
+"über den seriellen Port zum Computer übertragen werden.  Bilder sind\n"
+"iin zwei Formaten gespeichert: NORMAL ist 320x240 und FINE ist\n"
+"640x480.  Das CCD, welches die Bilder von der Linse aufnimmt, hat\n"
+"nur 300K Pixel und produziert so nur Bilder mit niedriger Qualität."
+
+#: camlibs/panasonic/l859/l859.c:604
+msgid ""
+"Known problems:\n"
+"\n"
+"If communications problems occur, reset the camera and restart the "
+"application.  The driver is not robust enough yet to recover from these "
+"situations, especially if a problem occurs and the camera is not properly "
+"shutdown at speeds faster than 9600."
+msgstr ""
+"Bekannte Probleme:\n"
+"\n"
+"Wenn Kommunikationsfehler auftreten, setzen Sie die Kamera zurück\n"
+"und starten Sie die Anwendung neu. Der Treiber ist noch nicht robust\n"
+"genug, um solche Situationen zu überstehen, besonders, wenn die\n"
+"Kamera bei Problemen nicht ordnungsgemäß ausgeschaltet wurde und die\n"
+"Datenrate über 9600 bps liegt."
+
+#: camlibs/panasonic/l859/l859.c:618
+msgid ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder Driver\n"
+"Andrew Selkirk <aselkirk@mailandnews.com>"
+msgstr ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder-Treiber\n"
+"Andrew Selkirk <aselkirk@mailandnews.com>"
 
 #: camlibs/polaroid/pdc700.c:150
 msgid "Image Quality"
@@ -2280,9 +2430,53 @@ msgid ""
 msgstr ""
 "Sony DSC-F1 Digitalkamera-Unterstützung\n"
 "M. Adam Kendall <joker@penguinpub.com>\n"
-"Basierend auf dem chotplay CLI-Interface fvon\n"
+"Basierend auf dem chotplay CLI-Interface von\n"
 "Ken-ichi Hayashi\n"
 "Gphoto2-Portierung von Bart van Leeuwen <bart@netage.nl>"
+
+#: camlibs/sonydscf1/dsc_f1.c:134
+msgid "Sorry this function not implemented.."
+msgstr "Diese Funktion ist nicht implementiert."
+
+#: camlibs/sonydscf1/dsc_f1.c:140
+msgid "Sorry, nothing to configure.."
+msgstr "Es gibt nichts zu konfigurieren."
+
+#: camlibs/sonydscf1/dsc_f1.c:146
+msgid "Sorry, taking pictures is not implemented.."
+msgstr "Das Machen von Aufnahmen ist nicht implementiert."
+
+#: camlibs/sonydscf1/dsc_f1.c:152
+msgid "Couldn't open camera.\n"
+msgstr "Konnte keine Kamera öffnen.\n"
+
+#: camlibs/sonydscf1/dsc_f1.c:166
+msgid "Error opening camera\n"
+msgstr "Fehler beim Öffnen der Kamera.\n"
+
+#: camlibs/sonydscf1/dsc_f1.c:171
+msgid "Picture number is too large.\n"
+msgstr "Bildnummer zu groß\n"
+
+#: camlibs/sonydscf1/dsc_f1.c:182
+msgid ""
+"Sony DSC-F1 Digital Camera Support\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"\n"
+"Based on the chotplay CLI interface from\n"
+"Ken-ichi Hayashi\n"
+"\n"
+"This lib may not work. YMMV\n"
+msgstr ""
+"Sony DSC-F1 Digitalkamera-Unterstützung\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"Basierend auf dem chotplay CLI-Interface von\n"
+"Ken-ichi Hayashi\n"
+"Diese Bibliothek funktioniert möglicherweise nicht.\n"
+
+#: camlibs/sonydscf1/dsc_f1.c:187 camlibs/sonydscf1/dsc_f1.c:188
+msgid "Error opening camera.\n"
+msgstr "Fehler beim Öffnen der Kamera.\n"
 
 #: camlibs/stv0680/library.c:353 camlibs/stv0680/library.c:387
 msgid "Bad exposure (not enough light probably)"
@@ -2463,36 +2657,36 @@ msgstr "Diese Kamera kann keine Aufnahme machen."
 msgid "This camera can not capture previews."
 msgstr "Diese Kamera kann keine Vorschaubilder machen."
 
-#: libgphoto2/gphoto2-filesys.c:120
+#: libgphoto2/gphoto2-filesys.c:126
 #, c-format
 msgid "The path '%s' is not absolute."
 msgstr "Die Pfadangabe »%s« ist nicht absolut."
 
-#: libgphoto2/gphoto2-filesys.c:239
+#: libgphoto2/gphoto2-filesys.c:247
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr ""
 "Konnte Verzeichnis »%s« nicht anhängen, das dieses Verzeichnis bereits "
 "existiert."
 
-#: libgphoto2/gphoto2-filesys.c:417
+#: libgphoto2/gphoto2-filesys.c:426
 #, c-format
 msgid "Could not find folder '%s'."
 msgstr "Konnte Verzeichnis »%s« nicht finden."
 
-#: libgphoto2/gphoto2-filesys.c:434
+#: libgphoto2/gphoto2-filesys.c:443
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr "Verzeichnis »%s« enthält kein Verzeichnis »%s«."
 
-#: libgphoto2/gphoto2-filesys.c:494
+#: libgphoto2/gphoto2-filesys.c:504
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr ""
 "Konnte »%s« nicht an Verzeichnis »%s« anhängen, das diese Datei bereits "
 "existiert."
 
-#: libgphoto2/gphoto2-filesys.c:855
+#: libgphoto2/gphoto2-filesys.c:869
 #, c-format
 msgid ""
 "You have been trying to delete '%s' from folder '%s', but the filesystem "
@@ -2501,14 +2695,14 @@ msgstr ""
 "Sie versuchen, »%s« aus dem Verzeichnis »%s« zu löschen, aber das "
 "Dateisystem unterstützt kein Löschen von Dateien."
 
-#: libgphoto2/gphoto2-filesys.c:951
+#: libgphoto2/gphoto2-filesys.c:969
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr ""
 "Im Verzeichnis »%s«, das Sie zu Löschen versuchen, befinden sich immer noch "
 "Dateien."
 
-#: libgphoto2/gphoto2-filesys.c:957
+#: libgphoto2/gphoto2-filesys.c:975
 #, c-format
 msgid ""
 "There are still subfolders in folder '%s' that you are trying to remove."
@@ -2516,11 +2710,11 @@ msgstr ""
 "Im Verzeichnis »%s«, das Sie zu Löschen versuchen, befinden sich immer noch "
 "Unterverzeichnisse."
 
-#: libgphoto2/gphoto2-filesys.c:995
+#: libgphoto2/gphoto2-filesys.c:1014
 msgid "The filesystem does not support upload of files."
 msgstr "Das Dateisystem unterstützt kein Hochladen von Dateien."
 
-#: libgphoto2/gphoto2-filesys.c:1034
+#: libgphoto2/gphoto2-filesys.c:1054
 #, c-format
 msgid ""
 "Folder '%s' does only contain %i files, but you requested a file with number "
@@ -2529,34 +2723,34 @@ msgstr ""
 "Verzeichnis »%s« enthält nur %i Dateien, aber Sie verlangten eine Datei mit "
 "der Nummer %i."
 
-#: libgphoto2/gphoto2-filesys.c:1073
+#: libgphoto2/gphoto2-filesys.c:1094
 #, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr "Datei »%s« konnte nicht im Verzeichnis »%s« gefunden werden."
 
-#: libgphoto2/gphoto2-filesys.c:1153
+#: libgphoto2/gphoto2-filesys.c:1176
 #, c-format
 msgid "Could not find file '%s'."
 msgstr "Konnte Datei »%s« nicht finden."
 
-#: libgphoto2/gphoto2-filesys.c:1289
+#: libgphoto2/gphoto2-filesys.c:1313
 msgid "The filesystem doesn't support getting files"
 msgstr "Das Dateisystem unterstützt kein Holen von Dateien."
 
-#: libgphoto2/gphoto2-filesys.c:1324 libgphoto2/gphoto2-filesys.c:1611
+#: libgphoto2/gphoto2-filesys.c:1348 libgphoto2/gphoto2-filesys.c:1637
 #, c-format
 msgid "Unknown file type %i."
 msgstr "Unbekannter Dateityp %i."
 
-#: libgphoto2/gphoto2-filesys.c:1516
+#: libgphoto2/gphoto2-filesys.c:1541
 msgid "The filesystem doesn't support getting file information"
 msgstr "Das Dateisystem unterstützt das Holen von Dateiinformationen nicht"
 
-#: libgphoto2/gphoto2-filesys.c:1671
+#: libgphoto2/gphoto2-filesys.c:1699
 msgid "The filesystem doesn't support setting file information"
 msgstr "Das Dateisystem unterstützt das Setzen von Dateiinformationen nicht"
 
-#: libgphoto2/gphoto2-filesys.c:1694
+#: libgphoto2/gphoto2-filesys.c:1722
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr ""
 "\"Nur-Lesen\"-Dateiattribute wie Höhe und Breite können nicht geändert "
@@ -3243,9 +3437,6 @@ msgstr ""
 #~ msgid "Debug"
 #~ msgstr "Debug"
 
-#~ msgid "done configuring camera.\n"
-#~ msgstr "Konfigurieren der Kamera beendet.\n"
-
 #~ msgid "Manual Not Available"
 #~ msgstr "Handbuch nicht verfügbar"
 
@@ -3269,9 +3460,6 @@ msgstr ""
 
 #~ msgid "Initializing '%s'..."
 #~ msgstr "Initialisiere »%s«..."
-
-#~ msgid "Setting configuration..."
-#~ msgstr "Setze Konfiguration..."
 
 #~ msgid "Deleting all files in '%s'..."
 #~ msgstr "Lösche alle Dateien in »%s«..."
@@ -3326,9 +3514,6 @@ msgstr ""
 
 #~ msgid "No summary information."
 #~ msgstr "Keine Zusammenfassung."
-
-#~ msgid "Picture number %d\n"
-#~ msgstr "Bild Nummer %d\n"
 
 #~ msgid "For debugging messages, please use the --debug option.\n"
 #~ msgstr "Für Debug-Meldungen verwenden Sie bitte die Option »--debug«.\n"
