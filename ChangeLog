@@ -1,5 +1,11 @@
 2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/sonydscf55/camera.c:
+	  Fix compile warnings by declaring some functions static.
+	  Use camera->port and camera->fs.
+
+2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/minolta/dimagev/dimagev.[c,h]:
 	  Fix compile warnings by declaring some functions static.
 	  Use camera->port and camera->fs.

@@ -25,16 +25,6 @@
 #include "nls.h"
 #include "gphoto2-camera.h"
 
-int camera_folder_list_files(Camera * camera, const char *folder,
-			     CameraList * list);
-int camera_file_get(Camera * camera, const char *folder, const char *filename,
-		    CameraFileType type, CameraFile * file);
-int camera_file_get_info(Camera * camera, const char *folder,
-			 const char *filename, CameraFileInfo * info);
-int camera_about(Camera * camera, CameraText * about);
-int camera_exit(Camera * camera);
-
-
 int camera_id(CameraText * id)
 {
 	strcpy(id->text, SONY_CAMERA_ID);
@@ -68,7 +58,7 @@ int camera_abilities(CameraAbilitiesList * list)
 /**
  * De-initialises camera
  */
-int camera_exit(Camera * camera)
+static int camera_exit(Camera * camera)
 {
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 			"camera_exit()");
@@ -77,7 +67,7 @@ int camera_exit(Camera * camera)
 
 
 
-int camera_about(Camera * camera, CameraText * about)
+static int camera_about(Camera * camera, CameraText * about)
 {
 	strcpy(about->text,
 	       _("Sony DSC-F55/505 gPhoto library\n"
@@ -88,84 +78,79 @@ int camera_about(Camera * camera, CameraText * about)
 	return (GP_OK);
 }
 
-int
-camera_folder_list_files(Camera * camera, const char *folder,
-			 CameraList * list)
+static int
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		void *data)
 {
-	int rc;
+	Camera *camera = data;
+	int count;
 
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 			"camera_folder_list_files()");
-	rc = sony_image_count(camera);
-	if (rc != GP_ERROR) {
-		int count, x;
 
-		count = rc;
+	count = sony_image_count(camera);
+	if (count < 0)
+		return (count);
 
-		/* Populate the filesystem */
-		gp_filesystem_populate(camera->fs, "/", SONY_FILE_NAME_FMT,
-				       count);
-		for (x = 0; x < gp_filesystem_count(camera->fs, folder); x++)
-		{
-			const char *name;
-			gp_filesystem_name (camera->fs, folder, x, &name);
-			gp_list_append (list, name, NULL);
-		}
-		rc = GP_OK;
-	}
-	return rc;
+	/* Populate the filesystem */
+	gp_list_populate(list, SONY_FILE_NAME_FMT, count);
+
+	return GP_OK;
 }
 
-int
-camera_file_get(Camera * camera, const char *folder, const char *filename,
-		CameraFileType type, CameraFile * file)
+static int
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile * file, void *data)
 {
+	Camera *camera = data;
 	int num;
 	int rc = GP_ERROR;
 
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 			"camera_file_get(\"%s/%s\")", folder, filename);
-	num =
-	    gp_filesystem_number(camera->fs, folder, filename);
-	if (num >= 0) {
-		num++;
-		gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
-				"file %s has id %d", filename, num);
 
-		switch (type) {
-		case GP_FILE_TYPE_NORMAL:
-			rc = sony_image_get(camera, num, file);
-			break;
-		case GP_FILE_TYPE_PREVIEW:
-			rc = sony_thumbnail_get(camera, num, file);
-			break;
-		default:
-			rc = GP_ERROR_NOT_SUPPORTED;
-		}
+	num = gp_filesystem_number(camera->fs, folder, filename);
+	if (num < 0)
+		return (num);
 
-		
-		if (rc == GP_OK) {
-			gp_file_set_name (file, filename);
-		}
+	num++;
+	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+			"file %s has id %d", filename, num);
+
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		rc = sony_image_get(camera, num, file);
+		break;
+	case GP_FILE_TYPE_PREVIEW:
+		rc = sony_thumbnail_get(camera, num, file);
+		break;
+	default:
+		rc = GP_ERROR_NOT_SUPPORTED;
 	}
+
+	
+	if (rc == GP_OK) {
+		gp_file_set_name (file, filename);
+	}
+
 	return rc;
 }
 
 
 
-int
-camera_file_get_info(Camera * camera, const char *folder,
-		     const char *filename, CameraFileInfo * info)
+static int
+get_info_func (CameraFilesystem *fs, const char *folder,
+	       const char *filename, CameraFileInfo *info, void *data)
 {
-	int num, rc = GP_ERROR;
+	Camera *camera = data;
+	int num;
 
-	num =
-	    gp_filesystem_number(camera->fs, folder, filename);
-	if (num >= 0) {
-		num++;
-		rc = sony_image_info(camera, num, info);
-	}
-	return rc;
+	num = gp_filesystem_number(camera->fs, folder, filename);
+	if (num < 0)
+		return (num);
+
+	num++;
+	return (sony_image_info(camera, num, info));
 }
 
 /**
@@ -180,11 +165,12 @@ int camera_init(Camera * camera)
 
 	camera->functions->exit = camera_exit;
 	camera->functions->about = camera_about;
-	camera->functions->folder_list_files = camera_folder_list_files;
-	camera->functions->file_get = camera_file_get;
-	camera->functions->file_get_info = camera_file_get_info;
 
 	is_msac = !strcmp (camera->model, SONY_MODEL_MSAC_SR1);
+
+	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_file_func (camera->fs, get_file_func, camera);
 
 	return sony_init (camera, is_msac);
 }
