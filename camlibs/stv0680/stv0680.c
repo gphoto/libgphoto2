@@ -75,6 +75,8 @@ struct camera_to_usb {
 	{ "QuickPix QP1",               0x0553, 0x0202, 0 },
 	{ "Hawking DC120 Pocketcam",    0x0553, 0x0202, 0 },
 	{ "Aiptek PenCam Trio",         0x0553, 0x0202, 0 },
+	/* reported by Klaus-M. Klingsporn */
+	{ "Aiptek PalmCam Trio",        0x0553, 0x0202, 0 },
 	/* Made by Medion (ALDI hw reseller). Their homepage is broken, so
 	 * no URL. This is the camera I have -Marcus. CIF */
 	{ "Micromaxx Digital Camera",   0x0553, 0x0202, 0 },
@@ -90,8 +92,6 @@ struct camera_to_usb {
 	{ "Argus DC-1500",              0x0553, 0x0202, 1 },
 
 	{ "AEG Snap 300",               0x0553, 0x0202, 0 },
-	/* reported by Klaus-M. Klingsporn */
-	{ "Aiptek Palm Cam Trio",       0x0553, 0x0202, 0 },
 	/* SiPix Stylecam looks like stv0680, but reportedly is not  */
 	/* (has USB id 0xd64/0x1001) */
 	/* http://www.umax.de/digicam/AstraPen_SL.htm.
