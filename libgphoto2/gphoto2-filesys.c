@@ -32,6 +32,10 @@
 #include "gphoto2-file.h"
 #include "gphoto2-port-log.h"
 
+/* to get the free memory out of /proc/meminfo */
+#include <unistd.h>
+#include <fcntl.h>
+
 #ifdef HAVE_EXIF
 #  include <libexif/exif-data.h>
 #endif
@@ -1818,8 +1822,51 @@ gp_filesystem_lru_free (CameraFilesystem *fs)
 	return (GP_OK);
 
 }
-static int
 
+/* free is a number of free kB (free memory + free swap) */
+static int
+gp_get_free_memory (GPContext *context, unsigned *free)
+{
+   char buf[1024], *head, *tail, *tmp;
+   int n, fd = -1;
+
+   *free=0;
+
+   if ((fd = open ("/proc/meminfo", O_RDONLY)) == -1) {
+		gp_context_error (context, _("/proc filesystem not mounted."));
+		return (GP_ERROR);
+   }
+   lseek (fd, 0L, SEEK_SET);
+   if ((n = read (fd, buf, sizeof(buf) - 1)) < 0) {
+		gp_context_error (context, _("error when reading /proc/meminfo."));
+		return (GP_ERROR);
+   }
+   buf[n] = '\0';
+
+   n=0;
+   head = buf;
+   do {
+      tail = strchr (head, ':');
+      if (!tail) break;
+      *tail = '\0';
+      tmp = head;
+      head = tail+1;
+      if (strcmp (tmp, "MemFree") == 0) {
+         *free += strtoul (head, NULL, 10);
+         n++;
+      } else if (strcmp (tmp, "SwapFree") == 0) {
+         *free += strtoul (head, NULL, 10);
+         n++;
+      }
+      tail = strchr (head, '\n');
+      if (!tail) break;
+      head = tail+1;
+   } while (n != 2);
+
+	return (GP_OK);
+}
+
+static int
 gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 			     CameraFile *file, GPContext *context)
 {
@@ -1829,6 +1876,7 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 	const char *data;
 	unsigned long int size;
 	int x, y;
+	unsigned int free;
 
 	CHECK_NULL (fs && folder && file);
 
@@ -1836,7 +1884,11 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 	CR (gp_file_get_type (file, &type));
 
 	CR( gp_file_get_data_and_size (file, &data, &size));
-/* The following is a simple case which is used to test the LRU */
+
+/* The following is a simple case which is used to test the LRU.
+ * I need to implement a way to pass a limit and then use it instead
+ * of 600000. If the limit is not defined use the gp_get_free_memory
+ */
 #if 0
 	while (fs->lru_size + size > 600000) {
 		GP_DEBUG ("Freeing cached data before adding new data (cache=%ld, new=%ld)",
@@ -1844,6 +1896,14 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 		CR (gp_filesystem_lru_free (fs));
 	}
 #endif
+
+	CR (gp_get_free_memory (context, &free));
+	while (free < (size/1024 + 1024)) {
+		GP_DEBUG ("Freeing cached data before adding new data (cache=%ldB, new=%ldB, free=%dkB)",
+			fs->lru_size, size, free);
+		CR (gp_filesystem_lru_free (fs));
+		CR (gp_get_free_memory (context, &free));
+	}
 
 	GP_DEBUG ("Adding file '%s' from folder '%s' to the fscache LRU list (type %i)...",
 		  filename, folder, type);

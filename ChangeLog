@@ -1,5 +1,12 @@
+2002-08-22  Christophe Barbé <christophe.barbe@ufies.org>
+
+	* libgphoto2/gphoto2-filesys.c: Implemented code to free cached data when
+	  we are going out of memory. 
+	  I still have to add a test in configure for the /proc filesystem.
+
 2002-08-21  Vincent Weaver <vince@deater.net>
-        * Move camlibs/agfa to camlibs/soundvision
+
+	* Move camlibs/agfa to camlibs/soundvision
 	* Rename agfa files to new soundvision scheme
 	* Minor fixes for Tiger Fast Flicks support
 
