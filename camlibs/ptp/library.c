@@ -268,14 +268,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	char filename[MAXFILELEN];
 
 
-	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &camera->pl->params.handles));
-
-	 for (i = 0; i < camera->pl->params.handles.n; i++) {
-		 ptp_getobjectinfo(&camera->pl->params,
-		 &camera->pl->params.handles, i, &objectinfo);
-		 ptp_objectfilename (&objectinfo, filename);
-		 CR (gp_list_append (list, filename, NULL));
-	 }
+	for (i = 0; i < camera->pl->params.handles.n; i++) {
+		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
+		&camera->pl->params.handles, i, &objectinfo));
+		ptp_objectfilename (&objectinfo, filename);
+		CR (gp_list_append (list, filename, NULL));
+	}
 
 	return (GP_OK);
 }
@@ -342,14 +340,23 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 }
 
 static int
-get_info_func (CameraFilesystem *fs, const char *folder, const char *name,
+get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data)
 {
 	Camera *camera = data;
+	PTPObjectInfo objectinfo;
+	int n;
 
-	camera = NULL;
+	n=gp_filesystem_number (fs, folder, filename);
+	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
+	&camera->pl->params.handles, n, &objectinfo));
 
-	return (GP_ERROR);
+	info->preview.fields = GP_FILE_INFO_SIZE;
+	info->file.fields = GP_FILE_INFO_SIZE;
+	info->preview.size = objectinfo.ThumbCompressedSize;
+	info->file.size = objectinfo.ObjectCompressedSize;
+
+	return (GP_OK);
 }
 
 static int
@@ -378,6 +385,7 @@ int
 camera_init (Camera *camera)
 {
 	GPPortSettings settings;
+	short ret;
 
 	/* Make sure our port is a USB port */
 	if (camera->port->type != GP_PORT_USB) {
@@ -411,7 +419,13 @@ camera_init (Camera *camera)
 	CR (gp_port_set_settings (camera->port, settings));
 
 	/* Establish a connection to the camera */
-	CPR (camera, ptp_opensession (&camera->pl->params, 1));
+	ret=ptp_opensession (&camera->pl->params, 1);
+	if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
+		report_result(camera, ret);
+	}
+	/* Get file handles array for filesystem */
+	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &camera->pl->params.handles));
+
 
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
