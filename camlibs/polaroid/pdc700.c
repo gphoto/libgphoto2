@@ -90,7 +90,6 @@ struct _PDCPicInfo {
 
 #define CHECK_RESULT(result) {int r=(result);if(r<0) return (r);}
 #define CRF(result,d)      {int r=(result);if(r<0) {free(d);return(r);}}
-#define CRFF(result,d1,d2) {int r=(result);if(r<0) {free(d1);free(d2);return(r);}}
 
 /*
  * Every command sent to the camera begins with 0x40 followed by two bytes
@@ -528,7 +527,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		}
 		pdc700_expand (data, ppm);
 		free (data);
-		CRF (gp_file_append (file, header, sizeof (header)), ppm);
+		CRF (gp_file_append (file, header, strlen (header)), ppm);
 		CRF (gp_file_append (file, ppm, ppm_size), ppm);
 		free (ppm);
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
