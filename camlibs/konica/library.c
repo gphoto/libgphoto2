@@ -445,11 +445,8 @@ camera_exit (Camera* camera)
 static int
 delete_all_func (CameraFilesystem *fs, const char* folder, void *data)
 {
-	CameraList list;
 	Camera *camera = data;
         unsigned int not_erased = 0;
-	int i;
-	const char *name;
 
         if (strcmp (folder, "/"))
                 return (GP_ERROR_DIRECTORY_NOT_FOUND);
@@ -461,12 +458,7 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data)
 				   _("%i pictures could not be deleted "
 				     "because they are protected!"),
 				   not_erased);
-		list.count = 0;
-		file_list_func (fs, folder, &list, camera);
-		for (i = 0; i < gp_list_count (&list); i++) {
-			gp_list_get_name (&list, i, &name);
-			gp_filesystem_append (fs, folder, name);
-		}
+		gp_filesystem_reset (camera->fs);
         }
 
         return (GP_OK);
