@@ -363,6 +363,7 @@ int fujitsu_set_speed(gpio_device *dev, int speed) {
 		return (GP_ERROR);
 	if (gpio_set_settings(dev, settings)==GPIO_ERROR)
 		return (GP_ERROR);
+	usleep(10000);
 
 	return (GP_OK);
 }

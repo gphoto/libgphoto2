@@ -188,10 +188,10 @@ int gp_camera_name (int camera_number, char *camera_name) {
 int gp_camera_abilities (int camera_number, CameraAbilities *abilities) {
 
 	memcpy(abilities, &glob_camera_abilities[camera_number],
-	       sizeof(glob_camera_abilities[camera_number]));
+	       sizeof(CameraAbilities));
 
 	if (glob_debug)
-		gp_abilities_dump(&glob_camera_abilities[camera_number]);
+		gp_abilities_dump(abilities);
 
 	return (GP_OK);
 }

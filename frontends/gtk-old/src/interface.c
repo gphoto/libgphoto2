@@ -85,7 +85,6 @@ int gp_interface_progress(float percentage) {
 
 	GtkWidget *progress = (GtkWidget*)lookup_widget(gp_gtk_progress_window, "progress_bar");
 
-printf("percent: %f\n", percentage);
 	gtk_progress_set_percentage(GTK_PROGRESS(progress), percentage/100.0);
 	idle();
 

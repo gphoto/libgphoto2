@@ -102,6 +102,7 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	a.parallel = 0;
 	a.usb      = 0;
 	a.ieee1394 = 0;
+	a.network  = 0;
 	a.speed[0] = 9600;
 	a.speed[1] = 19200;
 	a.speed[2] = 38400;

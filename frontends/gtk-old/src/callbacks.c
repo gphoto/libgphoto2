@@ -47,7 +47,7 @@ gboolean toggle_icon (GtkWidget *widget, gpointer data) {
 }
 
 void idle() {
-	/* Let's GTK do some processing */
+	/* Let GTK do some processing */
 
         while (gtk_events_pending())
                 gtk_main_iteration();
@@ -204,7 +204,7 @@ void save_selected_photos() {
 	CameraFile *f;
 	char msg[1024], fname[1024];
 	char *path, *prefix=NULL, *slash;
-	int num=0, x, photo_num;
+	int num=0, x;
 
 	debug_print("save selected photo");
 
@@ -247,12 +247,10 @@ void save_selected_photos() {
 	gtk_widget_show(gp_gtk_progress_window);
 	for (x=0; x<GTK_ICON_LIST(icon_list)->num_icons; x++) {
 		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
-		photo_num = atoi(gtk_object_get_data(GTK_OBJECT(item->entry), "number"));
-printf("photo_num=%i\n", photo_num);
 		if (item->state == GTK_STATE_SELECTED) {
 		   /* Save the photo */
 		   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(save_photos))) {
-			sprintf(msg, "Saving photo #%04i of %04i", x, num);
+			sprintf(msg, "Saving photo #%04i of %04i", x+1, num);
 			gp_message(msg);
 			f = gp_file_new();
 			gp_file_get(x, f);
@@ -296,7 +294,7 @@ printf("photo_num=%i\n", photo_num);
 
 		   /* Save the thumbnail */
 		   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(save_thumbs))) {
-			sprintf(msg, "Saving thumbnail #%04i of %04i", x, num);
+			sprintf(msg, "Saving thumbnail #%04i of %04i", x+1, num);
 			gp_status(msg);
 			f = gp_file_new();
 			gp_file_get_preview(x, f);
@@ -809,25 +807,30 @@ void camera_index () {
 		if ((get_thumbnails)&&
 		    (a.file_preview)&&
 		    (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(use_thumbs)))) {
+			/* Get the thumbnails */
 			f = gp_file_new();
+			sprintf(buf, "Photo #%04i", x);
 			if (gp_file_get_preview(x, f) == GP_OK) {
 				gdk_image_new_from_data(f->data,f->size,1,&pixmap,&bitmap);
 				item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
-					no_thumbnail_xpm,f->name,NULL);
+					no_thumbnail_xpm,buf,NULL);
 				gtk_pixmap_set(GTK_PIXMAP(item->pixmap), pixmap, bitmap);
-			}  else {
-				sprintf(buf, "Photo #%04i", x);
+			} else {
 				item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
 					no_thumbnail_xpm,buf,NULL);
 			}
 			gp_file_free(f);
-			gtk_signal_connect(GTK_OBJECT(item->eventbox), "button_press_event",
-				GTK_SIGNAL_FUNC(toggle_icon), NULL);
-			gtk_signal_connect(GTK_OBJECT(item->entry), "button_press_event",
-				GTK_SIGNAL_FUNC(toggle_icon), NULL);
-			sprintf(buf, "%i", x);
-			gtk_object_set_data(GTK_OBJECT(item->entry),"number",strdup(buf));
+		} else {
+			/* Use a dummy icon */
+			sprintf(buf, "Photo #%04i", x);
+			item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
+				no_thumbnail_xpm,buf,NULL);
 		}
+		gtk_signal_connect(GTK_OBJECT(item->eventbox), "button_press_event",
+			GTK_SIGNAL_FUNC(toggle_icon), NULL);
+		gtk_signal_connect(GTK_OBJECT(item->entry), "button_press_event",
+			GTK_SIGNAL_FUNC(toggle_icon), NULL);
+		sprintf(buf, "%i", x);
 		gp_progress(100.0*(float)x/(float)count);
 		x++;
 	}
@@ -926,7 +929,7 @@ void camera_delete_common(int all) {
 
 	for (x=0; x<count; x++) {
 		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
-		sprintf(buf, "#%04i", x);
+		sprintf(buf, "Photo #%04i", x);
 		gtk_icon_list_set_label (GTK_ICON_LIST(icon_list), item, buf);
 		gtk_icon_list_freeze(GTK_ICON_LIST(icon_list));
 		gtk_icon_list_thaw(GTK_ICON_LIST(icon_list));
@@ -1159,7 +1162,6 @@ void on_select_none_activate (GtkMenuItem *menuitem, gpointer user_data) {
 void on_select_camera_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	camera_select();
 }
-
 
 void on_download_thumbnails_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	camera_download_thumbnails();
