@@ -96,6 +96,19 @@ int camera_capture 		(CameraFileType type);
 	/* type will be one of the generic CameraFileType's.	*/
 	/* This is used to get live previews.			*/
 
+
+/* For each of the following functions, the char* buffers	*/
+/* passed in are 32k large.					*/
+
 int camera_summary 		(char *summary);
+	/* Returns information about the current status of the	*/
+	/* camera, such as pictures taken/left, battery		*/
+	/* percent, etc...					*/
+
 int camera_manual 		(char *manual);
+	/* Returns information on using the camera library.	*/
+
 int camera_about 		(char *about);
+	/* Returns information about the camera library.	*/
+	/* Includes author's name, email, models supported,	*/
+	/* and anything else library-specific.			*/

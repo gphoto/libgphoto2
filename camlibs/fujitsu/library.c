@@ -334,9 +334,147 @@ int camera_capture (CameraFileType type) {
 
 int camera_summary (char *summary) {
 
-	debug_print("Getting camera summary");
+	char buf[1024*32];
+	int value;
+	char t[1024];
 
-	strcpy(summary, "Summary Not Available");
+	debug_print("Getting camera summary");
+	strcpy(buf, "");
+
+	/* Get all the string-related info */
+	if (fujitsu_get_string_register(glob_dev, 22, t, &value)!=GP_ERROR)
+		sprintf(buf, "%sCamera ID       : %s\n", buf, t);
+	if (fujitsu_get_string_register(glob_dev, 25, t, &value)!=GP_ERROR)
+		sprintf(buf, "%sSerial Number   : %s\n", buf, t);
+	if (fujitsu_get_int_register(glob_dev, 1, &value)!=GP_ERROR) {
+		switch(value) {
+			case 1:	strcpy(t, "Standard");
+				break;
+			case 2:	strcpy(t, "High");
+				break;
+			case 3:	strcpy(t, "Best");
+				break;
+			default:
+				sprintf(t, "%i (unknown)", value);
+		}
+		sprintf(buf, "%sResolution      : %s\n", buf, t);
+	}
+	if (fujitsu_get_int_register(glob_dev, 3, &value)!=GP_ERROR) {
+		if (value == 0)
+			strcpy(t, "Auto");
+		   else
+			sprintf(t, "%i microseconds", value);
+		sprintf(buf, "%sShutter Speed   : %s\n", buf, t);
+	}
+	if (fujitsu_get_int_register(glob_dev, 5, &value)!=GP_ERROR) {
+		switch(value) {
+			case 1:	strcpy(t, "Low");
+				break;
+			case 2:	strcpy(t, "Medium");
+				break;
+			case 3:	strcpy(t, "High");
+				break;
+			default:
+				sprintf(t, "%i (unknown)", value);
+		}
+		sprintf(buf, "%sAperture        : %s\n", buf, t);
+	}
+	if (fujitsu_get_int_register(glob_dev, 6, &value)!=GP_ERROR) {	
+		switch(value) {
+			case 1:	strcpy(t, "Color");
+				break;
+			case 2:	strcpy(t, "Black/White");
+				break;
+			default:
+				sprintf(t, "%i (unknown)", value);
+		}		
+		sprintf(buf, "%sColor Mode      : %s\n", buf, t);
+	}
+
+	if (fujitsu_get_int_register(glob_dev, 7, &value)!=GP_ERROR) {	
+		switch(value) {
+			case 0: strcpy(t, "Auto");
+				break;
+			case 1:	strcpy(t, "Force");
+				break;
+			case 2:	strcpy(t, "Off");
+				break;
+			case 3:	strcpy(t, "Red-eye Reduction");
+				break;
+			case 4:	strcpy(t, "Slow Synch");
+				break;
+			default:
+				sprintf(t, "%i (unknown)", value);
+		}
+		sprintf(buf, "%sFlash Mode      : %s\n", buf, t);
+	}
+	if (fujitsu_get_int_register(glob_dev, 19, &value)!=GP_ERROR) {	
+		switch(value) {
+			case 0: strcpy(t, "Normal");
+				break;
+			case 1:	strcpy(t, "Bright+");
+				break;
+			case 2:	strcpy(t, "Bright-");
+				break;
+			case 3:	strcpy(t, "Contrast+");
+				break;
+			case 4:	strcpy(t, "Contrast-");
+				break;
+			default:
+				sprintf(t, "%i (unknown)", value);
+		}
+		sprintf(buf, "%sBright/Contrast : %s\n", buf, t);
+	}
+	if (fujitsu_get_int_register(glob_dev, 20, &value)!=GP_ERROR) {	
+		switch(value) {
+			case 0: strcpy(t, "Auto");
+				break;
+			case 1:	strcpy(t, "Skylight");
+				break;
+			case 2:	strcpy(t, "Flourescent");
+				break;
+			case 3:	strcpy(t, "Tungsten");
+				break;
+			case 255:	strcpy(t, "Cloudy");
+				break;
+			default:
+				sprintf(t, "%i (unknown)", value);
+		}
+		sprintf(buf, "%sWhite Balance   : %s\n", buf, t);
+	}
+	if (fujitsu_get_int_register(glob_dev, 33, &value)!=GP_ERROR) {	
+		switch(value) {
+			case 1: strcpy(t, "Macro");
+				break;
+			case 2:	strcpy(t, "Normal");
+				break;
+			case 3:	strcpy(t, "Inifity/Fish-eye");
+				break;
+			default:
+				sprintf(t, "%i (unknown)", value);
+		}
+		sprintf(buf, "%sLens Mode       : %s\n", buf, t);
+	}
+
+	/* Get all the integer information */
+	if (fujitsu_get_int_register(glob_dev, 10, &value)!=GP_ERROR)
+		sprintf(buf, "%sFrames Taken    : %i\n", buf, value);
+	if (fujitsu_get_int_register(glob_dev, 11, &value)!=GP_ERROR)
+		sprintf(buf, "%sFrames Left     : %i\n", buf, value);
+	if (fujitsu_get_int_register(glob_dev, 16, &value)!=GP_ERROR)
+		sprintf(buf, "%sBattery Life    : %i\n", buf, value);
+	if (fujitsu_get_int_register(glob_dev, 23, &value)!=GP_ERROR)
+		sprintf(buf, "%sAutoOff (host)  : %i seconds\n", buf, value);
+	if (fujitsu_get_int_register(glob_dev, 24, &value)!=GP_ERROR)
+		sprintf(buf, "%sAutoOff (field) : %i seconds\n", buf, value);
+	if (fujitsu_get_int_register(glob_dev, 28, &value)!=GP_ERROR)
+		sprintf(buf, "%sMemory Left	: %i bytes\n", buf, value);
+	if (fujitsu_get_int_register(glob_dev, 35, &value)!=GP_ERROR)
+		sprintf(buf, "%sLCD Brightness  : %i (1-7)\n", buf, value);
+	if (fujitsu_get_int_register(glob_dev, 38, &value)!=GP_ERROR)
+		sprintf(buf, "%sLCD AutoOff	: %i seconds\n", buf, value);
+
+	strcpy(summary, buf);
 
 	return (GP_OK);
 }

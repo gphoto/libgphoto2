@@ -409,6 +409,10 @@ int fujitsu_get_int_register (gpio_device *dev, int reg, int *value) {
 		if (fujitsu_read_packet(dev, buf)==GP_ERROR)
 			return (GP_ERROR);
 
+		if (buf[0] == DC1)
+			/* Got the packet, bad command */
+			return (GP_ERROR);
+
 		if (buf[0] == TYPE_DATA_END) {
 			fujitsu_write_ack(dev);
 			r =((unsigned char)buf[4]) +
