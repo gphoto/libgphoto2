@@ -141,7 +141,7 @@ report_result (GPContext *context, short result)
 
 	for (i = 0; ptp_errors[i].txt; i++)
 		if (ptp_errors[i].n == result)
-			gp_context_error (context, dgettext(PACKAGE, ptp_errors[i].txt));
+			gp_context_error (context, dgettext(GETTEXT_PACKAGE, ptp_errors[i].txt));
 }
 
 static int
