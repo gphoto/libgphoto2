@@ -1,5 +1,6 @@
 2001-12-24  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
+	* configure.in: felt like 2.0beta4dev5 - and progress is inevitable.
 	* frontends/command-line/main.h: added constants for USB hotplug matching
 	* frontends/command-line/main.c:
 	  Fixed Bug #490542: wrong match_flags at --print-usb-usermap
