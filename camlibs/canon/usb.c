@@ -1102,11 +1102,13 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 	packet[0x44] = cmd1;
 	packet[0x47] = cmd2;
 	htole32a (packet + 0x04, cmd3);
-	/* New style of protocol is picky about this byte. */
-	if ( cmd3 == 0x202 )
-		packet[0x46] = 0x20;
-	else
-		packet[0x46] = 0x10;
+	if ( camera->pl->md->model == CANON_CLASS_6 )
+		/* New style of protocol is picky about this byte. */
+		if ( cmd3 == 0x202 )
+			packet[0x46] = 0x20;
+		else
+			packet[0x46] = 0x10;
+
 	htole32a (packet + 0x4c, serial_code++);	/* serial number */
 	htole32a (packet + 0x48, 0x10 + payload_length);
 	msgsize = 0x50 + payload_length;	/* TOTAL msg size */
