@@ -1,3 +1,7 @@
+2005-01-17  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added PowerShot SD200.
+
 2005-01-16  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Pass Camera* to property put and get
