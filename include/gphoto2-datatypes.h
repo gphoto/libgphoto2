@@ -60,8 +60,8 @@ struct CameraWidget {
 	/* Private (don't access)
 	   ------------------------------ */
 	/* Current value of the widget */
-	char		 value_string[32];
-	float		 value_number;
+	float		 value;
+	char		 value_string[128];
 
 	/* For Radio and Menu */
 	char 		 choice[32][64];
@@ -70,7 +70,7 @@ struct CameraWidget {
 	/* For Range */
 	float		 min;
 	float 		 max;
-	float		 step;
+	float		 increment;
 
 	/* Child info */
 	struct CameraWidget*	children[64];
@@ -167,7 +167,7 @@ typedef struct {
 
 typedef struct {
 	char name[32];
-	char value[32];
+	char value[128];
 } CameraSetting;
 
 typedef struct {

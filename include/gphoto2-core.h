@@ -119,32 +119,6 @@
 	/* Retrieves information about the camera library (author, version, etc) */
 	int gp_about (CameraText *about);
 
-	/* Widget functions */
-	/* ============================================================================== */
-
-	/* Create/free a widget */
-	CameraWidget* gp_widget_new(CameraWidgetType type, char *label);
-	int gp_widget_free(CameraWidget *widget);
-
-	/* Add a child widget to the parent widget */
-	int gp_widget_append (CameraWidget *widget, CameraWidget *child);
-	int gp_widget_prepend(CameraWidget *widget, CameraWidget *child);
-
-	/* Retrieve the number of children a parent has */
-	int gp_widget_child_count(CameraWidget *widget);
-
-	/* Retrieve a pointer to a child #child_number of the parent */
-	CameraWidget* gp_widget_child(CameraWidget *widget, int child_number);
-
-
-	/* For multi-choice widgets, retrieve number of choices */
-	int gp_widget_choice_count(CameraWidget *widget);
-	/* Retrieve the text of a choice for a widget */
-	char *gp_widget_choice(CameraWidget *widget, int choice_number);
-
-	/* For debugging purposes, will dump the widget and all child
-	   widget to stdout */
-	int gp_widget_dump(CameraWidget *widget);
 
 	/* Utility functions for libraries */
 	/* ============================================================================== */
@@ -160,3 +134,55 @@
 
 	/* Displays a confirmation. returns 1 if answer was "yes", 0 for "no" */
 	int gp_confirm (char *message);
+
+
+	/* Widget functions */
+	/* ============================================================================== */
+
+	/* Create and free a widget */
+	CameraWidget* gp_widget_new(CameraWidgetType type, char *label);
+	int gp_widget_free (CameraWidget *widget);
+
+	/* Add a widget to a parent (only sections and windows can be parents) */
+	int gp_widget_append(CameraWidget *parent, CameraWidget *child);
+	int gp_widget_prepend(CameraWidget *parent, CameraWidget *child);
+
+	/* Return the number of children a parent has */
+	int gp_widget_child_count(CameraWidget *parent);
+
+	/* Retrieve a child pointer from a parent */
+	CameraWidget* gp_widget_child(CameraWidget *parent, int child_number);
+
+	/* Get the type and label of a widget */
+	int   gp_widget_type (CameraWidget *widget);
+	char *gp_widget_label(CameraWidget *widget);
+
+	/* Set/get the value of a range widget */
+	int gp_widget_range_set (CameraWidget *range, 
+		float low, float high, float increment, float value);
+	int gp_widget_range_get (CameraWidget *range,
+		float *low, float *high, float *increment, float *value);
+
+	/* Set/get the state of a toggle button (0 or 1) */
+	int gp_widget_toggle_set(CameraWidget *toggle, int active);
+	int gp_widget_toggle_get(CameraWidget *toggle);
+
+	/* Set/get the string of a text entry widget */
+	int   gp_widget_text_set (CameraWidget *text, char *string);
+	char *gp_widget_text_get (CameraWidget *text);
+
+	/* Add a choice to a menu/radio widget */
+	int gp_widget_choice_add (CameraWidget *widget, char *choice, int active);
+
+	/* Retrieve the number of choices in a menu/radio widget */
+	int gp_widget_choice_count (CameraWidget *widget);
+
+	/* Retrieve a choice from a menu/radio widget */
+	char *gp_widget_choice (CameraWidget *widget, int choice_number);
+
+	/* Retrieve the active choice from a menu/radio widget */
+	char *gp_widget_choice_active(CameraWidget *widget);
+
+	/* Debugging output to stdout. Will dump the widget and all children
+	   widgets (and their children, ...) recursively */
+	int gp_widget_dump(CameraWidget *widget);

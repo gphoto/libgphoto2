@@ -369,13 +369,28 @@ int gp_file_unlock (int file_number) {
 
 int gp_config_get (CameraWidget *window) {
 
+	int ret;
+
 	if (glob_c.config_get == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.config_get(window));
+	ret = glob_c.config_get(window);
+
+	if (glob_debug)
+		gp_widget_dump(window);
+
+	return (ret);
 }
 
 int gp_config_set (CameraSetting *setting, int count) {
+
+	int x;
+
+	if (glob_debug) {
+		printf("core: Dumping CameraSetting:\n");
+		for (x=0; x<count; x++)
+			printf("core: \"%s\" = \"%s\"\n", setting[x].name, setting[x].value);
+	}
 
 	if (glob_c.config_set == NULL)
 		return (GP_ERROR);

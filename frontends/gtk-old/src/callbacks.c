@@ -962,14 +962,16 @@ void camera_delete_all() {
 
 void camera_configure_build_rec (CameraWidget *w, GtkWidget *box, GtkWidget *window) {
 
-	GtkWidget *label, *vbox, *notebook, *hscale, *button, *frame;
+	GtkWidget *label, *vbox, *notebook, *entry, *hscale, *button, *frame, *menu;
 	GtkWidget *widget = NULL;
 	GtkObject *adj;
 	GSList *list;
+	GList *options;
 	CameraWidget *c;
-	int x, child_count, choice_count;
+	float min, max, increment, value;
+	int x, choice_count;
 
-	switch(w->type) {
+	switch(gp_widget_type(w)) {
 		case GP_WIDGET_WINDOW:
 			/* do nothing. */
 			break;
@@ -982,56 +984,61 @@ void camera_configure_build_rec (CameraWidget *w, GtkWidget *box, GtkWidget *win
 				gtk_object_set_data(GTK_OBJECT(window), "notebook", notebook);
 			}
 			/* Create the new label for the page */
-			label = gtk_label_new(w->label);
+			label = gtk_label_new(gp_widget_label(w));
 			gtk_widget_show(label);
 
 			/* Create a packing box in the page */
-			vbox = gtk_vbox_new(FALSE, 0);
+			vbox = gtk_vbox_new(FALSE, 10);
 			gtk_widget_show(vbox);
 			gtk_notebook_append_page(GTK_NOTEBOOK(notebook), vbox, label);
+
 			box = vbox;
 			break;
 		case GP_WIDGET_TEXT:
-			label = gtk_label_new(w->label);
-			gtk_widget_show(label);
-			gtk_widget_ref(label);
-			gtk_object_set_data(GTK_OBJECT(window), w->label, label);
-			widget = label;
+			entry = gtk_entry_new();
+			gtk_widget_show(entry);
+
+			gtk_entry_set_text(GTK_ENTRY(entry), gp_widget_text_get(w));
+			gtk_object_set_data(GTK_OBJECT(window), gp_widget_label(w), entry);
+
+			frame = gtk_frame_new(gp_widget_label(w));
+			gtk_widget_show(frame);
+			gtk_container_add(GTK_CONTAINER(frame), entry);
+			widget = frame;
+			
 			break;
 		case GP_WIDGET_RANGE:
-			adj = gtk_adjustment_new(w->value_number, 
-				w->min, w->max, w->step, 0, 0);
+			gp_widget_range_get(w, &min, &max, &increment, &value);
+			adj = gtk_adjustment_new(value, min, max, increment, 0, 0);
 			hscale = gtk_hscale_new(GTK_ADJUSTMENT(adj));
 			gtk_widget_show(hscale);
-			gtk_widget_ref(hscale);
-			gtk_object_set_data(GTK_OBJECT(window), w->label, hscale);
+			gtk_object_set_data(GTK_OBJECT(window), gp_widget_label(w), hscale);
 
 			gtk_range_set_update_policy(GTK_RANGE(hscale),GTK_UPDATE_CONTINUOUS);
 			gtk_scale_set_draw_value(GTK_SCALE(hscale), TRUE);
 			gtk_scale_set_digits(GTK_SCALE(hscale), 0);
-			widget = hscale;
+
+			frame = gtk_frame_new(gp_widget_label(w));
+			gtk_widget_show(frame);
+			gtk_container_add(GTK_CONTAINER(frame), hscale);
+			widget = frame;
 			break;
 		case GP_WIDGET_TOGGLE:
-			button = gtk_check_button_new_with_label(w->label);
+			button = gtk_check_button_new_with_label(gp_widget_label(w));
 			gtk_widget_show(button);
-			gtk_widget_ref(button);
-			gtk_object_set_data(GTK_OBJECT(window), w->label, button);
+			gtk_object_set_data(GTK_OBJECT(window), gp_widget_label(w), button);
+
 			widget = button;
 			break;
 		case GP_WIDGET_RADIO:
-			/* Make it look purrrty */
-			frame = gtk_frame_new(w->label);
-			gtk_widget_show(frame);
-			widget = frame;
-
 			vbox = gtk_vbox_new(FALSE, 0);
 			gtk_widget_show(vbox);
-			gtk_container_add(GTK_CONTAINER(frame), vbox);
 
 			/* Add the first radio button */
 			button = gtk_radio_button_new_with_label(NULL, gp_widget_choice(w,0));
 			gtk_widget_show(button);
 			gtk_object_set_data(GTK_OBJECT(window), gp_widget_choice(w,0), button);
+			gtk_object_set_data(GTK_OBJECT(window), gp_widget_label(w), button);
 			gtk_box_pack_start(GTK_BOX(vbox), button, TRUE, TRUE, 0);
 
 			/* Add the rest of the radio buttons */
@@ -1043,10 +1050,35 @@ void camera_configure_build_rec (CameraWidget *w, GtkWidget *box, GtkWidget *win
 				gtk_object_set_data(GTK_OBJECT(window), gp_widget_choice(w,x),button);
 				gtk_box_pack_start(GTK_BOX(vbox), button, TRUE, TRUE, 0);
 			}
+
+
+			frame = gtk_frame_new(gp_widget_label(w));
+			gtk_widget_show(frame);
+			gtk_container_add(GTK_CONTAINER(frame), vbox);
+			widget = frame;
+
 			break;
 		case GP_WIDGET_MENU:
+
+			menu = gtk_combo_new();
+			gtk_widget_show(menu);
+			gtk_object_set_data(GTK_OBJECT(window), gp_widget_label(w),menu);
+			gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(menu)->entry), FALSE);
+			options = g_list_alloc();
+			choice_count = gp_widget_choice_count(w);
+			for (x=0; x<choice_count; x++)
+				options = g_list_append(options, strdup(gp_widget_choice(w,x)));
+			gtk_combo_set_popdown_strings(GTK_COMBO(menu), options);
+			gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(menu)->entry), gp_widget_choice_active(w));
+
+			frame = gtk_frame_new(gp_widget_label(w));
+			gtk_widget_show(frame);
+			gtk_container_add(GTK_CONTAINER(frame), menu);
+			widget = frame;
+
 			break;
 		case GP_WIDGET_BUTTON:
+			/* Not supported yet */
 			break;
 		default:
 			break;
@@ -1055,11 +1087,78 @@ void camera_configure_build_rec (CameraWidget *w, GtkWidget *box, GtkWidget *win
 	if (widget)
 		gtk_box_pack_start(GTK_BOX(box), widget, FALSE, TRUE, 0);
 
-
-	child_count = gp_widget_child_count(w);
-	for (x=0; x<child_count; x++) {
+	for (x=0; x<gp_widget_child_count(w); x++) {
 		c = gp_widget_child(w, x);
 		camera_configure_build_rec(c, box, window);
+	}
+
+}
+
+void camera_configure_retrieve_rec (CameraWidget *w, GtkWidget *window, 
+				    CameraSetting *settings, int *count) {
+
+	GtkWidget *widget;
+	GtkAdjustment *adj;
+	CameraWidget *c;
+	int x;
+	char buf[1024];
+
+	widget = gtk_object_get_data(GTK_OBJECT(window), gp_widget_label(w));
+
+	if (widget) {
+		switch(gp_widget_type(w)) {
+			case GP_WIDGET_WINDOW:
+				/* do nothing. */
+				break;
+			case GP_WIDGET_SECTION:
+				/* do nothing. */
+				break;
+			case GP_WIDGET_TEXT:
+				strcpy(settings[*count].name, gp_widget_label(w));
+				strcpy(settings[*count].value, gtk_entry_get_text(GTK_ENTRY(widget)));
+				*count += 1;
+				break;
+			case GP_WIDGET_RANGE:
+				strcpy(settings[*count].name, gp_widget_label(w));
+				adj = gtk_range_get_adjustment(GTK_RANGE(widget));
+				sprintf(buf, "%f", adj->value);
+				strcpy(settings[*count].value, buf);
+				*count += 1;
+				break;
+			case GP_WIDGET_TOGGLE:
+				strcpy(settings[*count].name, gp_widget_label(w));
+				sprintf(buf, "%i", 
+					gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)));
+				strcpy(settings[*count].value, buf);
+				*count += 1;
+				break;
+			case GP_WIDGET_RADIO:
+				strcpy(settings[*count].name, gp_widget_label(w));
+				for (x=0; x<gp_widget_choice_count(w); x++) {
+					widget = gtk_object_get_data(GTK_OBJECT(window), 
+						gp_widget_choice(w, x));
+					if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
+						strcpy(settings[*count].value, gp_widget_choice(w,x));
+				}
+				*count += 1;
+				break;
+			case GP_WIDGET_MENU:
+				strcpy(settings[*count].name, gp_widget_label(w));
+				strcpy(settings[*count].value, 
+					gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(widget)->entry)));
+				*count += 1;
+				break;
+			case GP_WIDGET_BUTTON:
+				/* do nothing. */
+				break;
+			default:
+				break;
+		}
+	}
+
+	for (x=0; x<gp_widget_child_count(w); x++) {
+		c = gp_widget_child(w, x);
+		camera_configure_retrieve_rec(c, window, settings, count);
 	}
 
 }
@@ -1067,7 +1166,9 @@ void camera_configure_build_rec (CameraWidget *w, GtkWidget *box, GtkWidget *win
 void camera_configure() {
 
 	CameraWidget *w;
+	CameraSetting s[128]; /* room for 128 settings for now */
 	GtkWidget *window, *ok, *cancel;
+	int s_count = 0;
 
 	debug_print("camera configure");
 
@@ -1088,7 +1189,7 @@ void camera_configure() {
 
 	/* Create the GTK window */
 	window = gtk_dialog_new();
-	gtk_window_set_title(GTK_WINDOW(window), w->label);
+	gtk_window_set_title(GTK_WINDOW(window), gp_widget_label(w));
 	gtk_window_set_modal(GTK_WINDOW(window), TRUE);
 	gtk_window_set_default_size(GTK_WINDOW(window), 300, 400);
 	gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
@@ -1108,6 +1209,11 @@ void camera_configure() {
 		gp_widget_free(w);
 		return;
 	}
+
+	camera_configure_retrieve_rec(w, window, s, &s_count);
+
+	if (gp_config_set(s, s_count)==GP_ERROR)
+		gp_message("Could not set camera configuration");
 
 	/* Clean up and leave */
 	gp_widget_free(w);
