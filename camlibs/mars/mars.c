@@ -41,13 +41,26 @@ int
 mars_init (Camera *camera, GPPort *port, Model *model, Info *info) 
 {
 	unsigned char c[16];
+	unsigned char status = 0;
 	memset(info,0, sizeof(info)); 
 	memset(c,0,sizeof(c));
 	GP_DEBUG("Running mars_init\n");
 
-	/* Done twice. First time is a dry run. */ 
-	mars_routine (info, port, INIT, 0);
-	mars_routine (info, port, INIT, 0);    
+	/* Init routine done twice, usually. First time is a dry run. But if 
+	 * camera reports 0x02 it is "jammed" and we must clear it.
+	 */ 
+
+    	M_READ(port, c, 16); 	
+	if ( (c[0] == 0x02 ) ) {
+		gp_port_write(port, "\x19", 1);
+		gp_port_read(port, c, 16);
+	}
+
+	while ( (status != 0xb5)){
+	status = mars_routine (info, port, INIT, 0);    
+	GP_DEBUG("status = 0x%x\n", status);
+	}
+
 	/* Not a typo. This _will_ download the config data ;) */
 	mars_read_picture_data (camera, info, port, info, 0x2000, 0); 
 
@@ -146,10 +159,12 @@ mars_read_picture_data (Camera *camera, Info *info, GPPort *port,
 {
 	unsigned char c[16];
 	unsigned char complete[2] = {0x19, 0x54};
-	
+	unsigned char status = 0;	
 	memset(c,0,sizeof(c));
 	/*Initialization routine for download. */
-	mars_routine (info, port, GET_DATA, n);
+	while( (status != 0xa8 )) {
+		status = mars_routine (info, port, GET_DATA, n);
+	}
 	/*Data transfer begins*/
 	set_usb_in_endpoint (camera, 0x82); 
 	mars_read_data (camera, port, data, size);
@@ -218,22 +233,26 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	memset(c,0,sizeof(c));
 
 	/*Routine used in initialization, photo download, and reset. */
+
     	M_READ(port, c, 16); 	
-	if ( (c[0] != 0xa ) ) {
-		printf("Error. Replug Camera to clear it!\n");
-		return GP_ERROR;
+	if ( (c[0] == 0x02 ) ) {		/* Clears camera if jammed. */
+		gp_port_write(port, "\x19", 1);
+		gp_port_read(port, c, 16);
+    		M_READ(port, c, 16); 	
 	}
 
 	M_COMMAND(port, start, 2, c);
 	M_COMMAND(port, do_something, 2, c);
 	M_COMMAND(port, address1, 2, c);
 
+	c[0] = 0;
 	gp_port_write(port, address2, 2);	
+
 	/* Moving the memory cursor to the given address? */
 	while (( c[0] != 0xa) ) {	
     	M_READ(port, c, 16); 	
 	}
-	
+
 	M_COMMAND(port, address3, 2, c);
 	M_COMMAND(port, address4, 2, c);
 	M_COMMAND(port, address5, 2, c);
@@ -242,7 +261,7 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	gp_port_write(port, "\x19", 1);
 	gp_port_read(port, c , 16);	
 
-	return(GP_OK);
+	return(c[0]);
 }
 
 
