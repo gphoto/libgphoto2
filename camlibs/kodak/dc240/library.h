@@ -9,7 +9,7 @@
 #define DC240_ACTION_IMAGE      (uint8_t)0x9A
 #define DC240_ACTION_DELETE     (uint8_t)0x9D
 
-#include <_byteorder.h>
+#include <gphoto2-endian.h>
 
 
 const char *dc240_convert_type_to_camera (uint16_t type);

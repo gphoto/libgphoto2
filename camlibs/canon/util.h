@@ -8,7 +8,7 @@
 #ifndef _CANON_UTIL_H
 #define _CANON_UTIL_H
 
-#include <_byteorder.h>
+#include <gphoto2-endian.h>
 
 /****************************************************************************
  *

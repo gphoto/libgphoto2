@@ -13,8 +13,7 @@
 #include <string.h>
 #include <gphoto2.h>
 #include <gphoto2-port.h>
-
-#include <_byteorder.h>
+#include <gphoto2-endian.h>
 
 #include "dc240.h"
 #include "library.h"

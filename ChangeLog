@@ -1,3 +1,10 @@
+2001-12-27 Dan Fandrich <dan@coneharvesters.com>
+
+	* camlibs/canon/util.h
+	* camlibs/kodak/dc240/library.c
+	* camlibs/kodak/dc240/library.h
+	* configure.in: renamed _byteorder.h to gphoto2-endian.h
+
 2001-12-24  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* configure.in: felt like 2.0beta4dev5 - and progress is inevitable.
