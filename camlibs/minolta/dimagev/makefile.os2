@@ -1,4 +1,4 @@
-CCFLAGS=-O2 -c -I.. -I..\..\..\include -I..\..\..\libgpio\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
+CCFLAGS=-O2 -c -I.. -I..\..\..\include -I..\..\..\libgphoto2_port\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
 CC=gcc
 
 all: start \
@@ -50,4 +50,4 @@ dimagev.def: dimagev.o
    emxexp $** >> dimagev.def
 
 ..\..\gpminolt.dll: util.o dimagev.def info.o data.o packet.o delete.o download.o capture.o status.o dimagev.o
-   $(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\..\LIB -llibgphoto2 -llibgpio -ldllib
+   $(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\..\LIB -llibgphoto2 -llibgphoto2_port -ldllib

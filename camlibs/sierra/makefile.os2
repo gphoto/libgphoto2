@@ -1,4 +1,4 @@
-CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgpio\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H  -DEBUG
+CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgphoto2_port\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H  -DEBUG
 CC=gcc
 
 all: start \
@@ -29,4 +29,4 @@ sierra.def: sierra.o
    @emxexp $** >> sierra.def
 
 ..\gpsierra.dll: sierra.o sierra.def library.o
-   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldllib
+   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\LIB -llibgphoto2 -llibgphoto2_port -ldllib

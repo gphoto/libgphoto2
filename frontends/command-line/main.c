@@ -215,8 +215,8 @@ OPTION_CALLBACK(use_stdout_size) {
 OPTION_CALLBACK(abilities) {
 
         int x=0;
-	int result;
-	CameraAbilities abilities;
+        int result;
+        CameraAbilities abilities;
 
         if (strlen(glob_model)==0) {
                 cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
@@ -370,7 +370,7 @@ OPTION_CALLBACK(quiet) {
 
 OPTION_CALLBACK(shell) {
 
-	int result;
+        int result;
 
         cli_debug_print("Entering shell mode");
 
@@ -403,7 +403,7 @@ OPTION_CALLBACK(recurse) {
 
 OPTION_CALLBACK(list_folders) {
 
-	int result;
+        int result;
 
         if ((result = set_globals()) != GP_OK)
                 return (result);
@@ -416,13 +416,13 @@ OPTION_CALLBACK(list_folders) {
 
 OPTION_CALLBACK(list_files) {
 
-	int result;
+        int result;
 
         if ((result = set_globals()) != GP_OK)
                 return (result);
 
         if ((result = print_files (glob_folder, NULL, 0)) != GP_OK)
-		return (result);
+                return (result);
 
         if (!glob_recurse)
                 return (GP_OK);
@@ -433,12 +433,12 @@ OPTION_CALLBACK(list_files) {
 OPTION_CALLBACK(num_pictures) {
 
         CameraList list;
-	int result;
+        int result;
 
         cli_debug_print("Counting pictures");
 
-	if ((result = set_globals()) != GP_OK)
-        	return (result);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         if ((result = gp_camera_file_list(glob_camera, &list, glob_folder)) != GP_OK)
                 return (result);
@@ -456,7 +456,7 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
         char out_filename[1024], out_folder[1024], buf[1024], msg[1024];
         char *f;
         int resp1, resp2;
-	int result;
+        int result;
 
         CameraFile *file;
 
@@ -542,7 +542,7 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
 
 int get_picture_common(char *arg, int thumbnail) {
 
-	int result;
+        int result;
 
         if (thumbnail)
                 cli_debug_print("Getting thumbnail(s) %s", arg);
@@ -557,7 +557,7 @@ int get_picture_common(char *arg, int thumbnail) {
                 return (GP_ERROR_NOT_SUPPORTED);
         }
 
-        if (strchr(arg, '.')) 
+        if (strchr(arg, '.'))
                 return (save_picture_to_file(glob_folder, arg, thumbnail));
 
         if (thumbnail)
@@ -573,7 +573,7 @@ OPTION_CALLBACK(get_picture) {
 
 OPTION_CALLBACK(get_all_pictures) {
 
-	int result;
+        int result;
 
         cli_debug_print("Getting all pictures");
 
@@ -590,7 +590,7 @@ OPTION_CALLBACK(get_thumbnail) {
 
 OPTION_CALLBACK(get_all_thumbnails) {
 
-	int result;
+        int result;
 
         cli_debug_print("Getting all thumbnails");
 
@@ -607,7 +607,7 @@ OPTION_CALLBACK(get_all_thumbnails) {
 
 OPTION_CALLBACK(delete_picture) {
 
-	int result;
+        int result;
 
         cli_debug_print("Deleting picture(s) %s", arg);
 
@@ -624,7 +624,7 @@ OPTION_CALLBACK(delete_picture) {
 
 OPTION_CALLBACK(delete_all_pictures) {
 
-	int result;
+        int result;
 
         cli_debug_print("Deleting all pictures");
 
@@ -642,7 +642,7 @@ OPTION_CALLBACK(delete_all_pictures) {
 OPTION_CALLBACK(upload_picture) {
 
         CameraFile *file;
-	int result;
+        int result;
 
         file = gp_file_new();
 
@@ -676,7 +676,7 @@ int capture_generic (int type, int duration) {
         CameraCaptureInfo info;
         CameraFile *file;
         char out_filename[1024];
-	int result;
+        int result;
 
         if ((result = set_globals()) != GP_OK)
                 return (result);
@@ -731,7 +731,7 @@ OPTION_CALLBACK(capture_preview) {
 OPTION_CALLBACK(summary) {
 
         CameraText buf;
-	int result;
+        int result;
 
         if ((result = set_globals()) != GP_OK)
                 return (result);
@@ -748,7 +748,7 @@ OPTION_CALLBACK(summary) {
 
 OPTION_CALLBACK(manual) {
 
-	int result;
+        int result;
         CameraText buf;
 
         if ((result = set_globals()) != GP_OK)
@@ -765,7 +765,7 @@ OPTION_CALLBACK(manual) {
 
 OPTION_CALLBACK(about) {
 
-	int result;
+        int result;
         CameraText buf;
 
         if ((result = set_globals()) != GP_OK)
@@ -785,28 +785,28 @@ OPTION_CALLBACK(about) {
 
 int set_globals () {
 
-	int result;
-	
+        int result;
+
         /* takes all the settings and sets up the gphoto lib */
 
-//	if (strlen(glob_model) == 0) {
-//		cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
-//		return (GP_ERROR);
-//	}
+//      if (strlen(glob_model) == 0) {
+//              cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
+//              return (GP_ERROR);
+//      }
 
-//	if ((strlen(glob_port) == 0)&&(strcmp(glob_model, "Directory Browse")!=0)) {
-//	        cli_error_print("Must specify a camera port using \"%sport path\"",LONG_OPTION);
-//	        return (GP_ERROR);
-//	}
+//      if ((strlen(glob_port) == 0)&&(strcmp(glob_model, "Directory Browse")!=0)) {
+//              cli_error_print("Must specify a camera port using \"%sport path\"",LONG_OPTION);
+//              return (GP_ERROR);
+//      }
 
-	if ((result = gp_camera_new(&glob_camera)) != GP_OK) {
-	        cli_error_print("Can not create camera data");
-	        return (result);
-	}
+        if ((result = gp_camera_new(&glob_camera)) != GP_OK) {
+                cli_error_print("Can not create camera data");
+                return (result);
+        }
 
-	strcpy (glob_camera->model, glob_model);
-	strcpy (glob_camera->port->path, glob_port);
-	glob_camera->port->speed = glob_speed;
+        strcpy (glob_camera->model, glob_model);
+        strcpy (glob_camera->port->path, glob_port);
+        glob_camera->port->speed = glob_speed;
 
         if ((result = gp_camera_init(glob_camera)) != GP_OK) {
                 cli_error_print("Can not initialize the camera \"%s\"",glob_model);
@@ -886,7 +886,8 @@ void signal_exit (int signo) {
 
 int main (int argc, char **argv) {
 
-	int result;
+        int result;
+        char test[25];
 
         /* Initialize the globals */
         init_globals();
@@ -939,7 +940,7 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
         gp_frontend_register(gp_interface_status, gp_interface_progress,
                 gp_interface_message, gp_interface_confirm, NULL);
         if ((result = execute_options(argc, argv)) != GP_OK) {
-		printf ("gPhoto2 reported the error '%s'\n", gp_camera_result_as_string (glob_camera, result));
+                printf ("gPhoto2 reported the error '%s'\n", gp_camera_result_as_string (glob_camera, result));
 //              if (!glob_quiet)
 //                      usage();
                 exit(EXIT_FAILURE);
@@ -949,6 +950,6 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
         if (glob_camera)
                gp_camera_free(glob_camera);
         gp_exit();
-
         return (EXIT_SUCCESS);
 }
+

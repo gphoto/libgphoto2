@@ -10,6 +10,9 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
+#ifdef OS2
+#include <db.h>
+#endif
 #include <netinet/in.h>
 
 #include "digita.h"

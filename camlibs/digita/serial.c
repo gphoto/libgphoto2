@@ -12,6 +12,9 @@
 #include <string.h>
 #include <termios.h>
 #include <unistd.h>
+#ifdef OS2
+#include <db.h>
+#endif
 #include <netinet/in.h>
 
 #include "digita.h"
@@ -20,54 +23,54 @@
 int gp_port_serial_set_baudrate(gp_port * dev);
 
 struct beacon {
-	unsigned short intro;
-	unsigned short vendorid;
-	unsigned short deviceid;
-	unsigned char checksum;
+        unsigned short intro;
+        unsigned short vendorid;
+        unsigned short deviceid;
+        unsigned char checksum;
 } __attribute__ ((packed));
 
 struct beacon_ack {
-	unsigned short intro;
-	unsigned char intftype;
-	unsigned int cf_reserved:4;
-	unsigned int cf_pod_receive_mode:2;
-	unsigned int cf_host_receive_mode:2;
-	unsigned int dataspeed;
-	unsigned short deviceframesize;
-	unsigned short hostframesize;
-	unsigned char checksum;
+        unsigned short intro;
+        unsigned char intftype;
+        unsigned int cf_reserved:4;
+        unsigned int cf_pod_receive_mode:2;
+        unsigned int cf_host_receive_mode:2;
+        unsigned int dataspeed;
+        unsigned short deviceframesize;
+        unsigned short hostframesize;
+        unsigned char checksum;
 } __attribute__ ((packed));
 
 struct beacon_comp {
-	unsigned char result;
-	unsigned int cf_reserved:4;
-	unsigned int cf_pod_receive_mode:2;
-	unsigned int cf_host_receive_mode:2;
-	unsigned int dataspeed;
-	unsigned short deviceframesize;
-	unsigned short hostframesize;
+        unsigned char result;
+        unsigned int cf_reserved:4;
+        unsigned int cf_pod_receive_mode:2;
+        unsigned int cf_host_receive_mode:2;
+        unsigned int dataspeed;
+        unsigned short deviceframesize;
+        unsigned short hostframesize;
 } __attribute__ ((packed));
 
-#define POLL_LENGTH_MASK	0x03FF
-#define POLL_BOB		0x0400
-#define POLL_EOB		0x0800
-#define POLL_CMD		0x1000
-#define POLL_POLL_MASK		0xE000
-#define POLL_POLL_SHIFT		13
+#define POLL_LENGTH_MASK        0x03FF
+#define POLL_BOB                0x0400
+#define POLL_EOB                0x0800
+#define POLL_CMD                0x1000
+#define POLL_POLL_MASK          0xE000
+#define POLL_POLL_SHIFT         13
 
-#define POLL_ACK		0x01
-#define POLL_NAK		0x02
+#define POLL_ACK                0x01
+#define POLL_NAK                0x02
 
 static unsigned int checksum(const unsigned char *buffer, int len)
 {
-	int	i;
-	int	limit = len - 1;
-	unsigned int sum = 0;
+        int     i;
+        int     limit = len - 1;
+        unsigned int sum = 0;
 
-	for (i = 0; i < limit; i++)
-		sum += *(buffer++);
+        for (i = 0; i < limit; i++)
+                sum += *(buffer++);
 
-	return sum & 0xff;
+        return sum & 0xff;
 }
 
 static int poll_and_wait(gp_port *dev, int length, int bob, int eob)
@@ -172,82 +175,82 @@ int digita_serial_open(struct digita_device *dev, Camera *camera)
 {
         int ret;
         gp_port_settings settings;
-	struct beacon beacon;
-	struct beacon_ack beacon_ack;
-	struct beacon_comp beacon_comp;
+        struct beacon beacon;
+        struct beacon_ack beacon_ack;
+        struct beacon_comp beacon_comp;
 
         if ((ret = gp_port_new(&(dev->gpdev), GP_PORT_SERIAL)) < 0)
             return (ret);
 
-	strcpy(settings.serial.port,camera->port->path);
+        strcpy(settings.serial.port,camera->port->path);
 
-	settings.serial.speed = 9600;
-	settings.serial.bits = 8;
-	settings.serial.parity = 0;
-	settings.serial.stopbits = 1;
+        settings.serial.speed = 9600;
+        settings.serial.bits = 8;
+        settings.serial.parity = 0;
+        settings.serial.stopbits = 1;
 
-	digita_send = digita_serial_send;
-	digita_read = digita_serial_read;
+        digita_send = digita_serial_send;
+        digita_read = digita_serial_read;
 
-	gp_port_settings_set(dev->gpdev, settings);
-	if (gp_port_open(dev->gpdev) < 0) {
-		fprintf(stderr, "error opening device\n");
-		return 0;
-	}
+        gp_port_settings_set(dev->gpdev, settings);
+        if (gp_port_open(dev->gpdev) < 0) {
+                fprintf(stderr, "error opening device\n");
+                return 0;
+        }
 
-	tcsendbreak(dev->gpdev->device_fd, 4);
+        tcsendbreak(dev->gpdev->device_fd, 4);
 
-	dev->gpdev->settings.serial.speed = 0;
-	gp_port_serial_set_baudrate(dev->gpdev);
+        dev->gpdev->settings.serial.speed = 0;
+        gp_port_serial_set_baudrate(dev->gpdev);
 
-	usleep(50);
+        usleep(50);
 
-	dev->gpdev->settings.serial.speed = camera->port->speed;
-	gp_port_serial_set_baudrate(dev->gpdev);
+        dev->gpdev->settings.serial.speed = camera->port->speed;
+        gp_port_serial_set_baudrate(dev->gpdev);
 
-	usleep(2000);
+        usleep(2000);
 
-	memset((void *)&beacon, 0, sizeof(beacon));
-	if (gp_port_read(dev->gpdev, (void *)&beacon, sizeof(beacon)) < 0) {
-		perror("reading beacon");
-		return 0;
-	}
+        memset((void *)&beacon, 0, sizeof(beacon));
+        if (gp_port_read(dev->gpdev, (void *)&beacon, sizeof(beacon)) < 0) {
+                perror("reading beacon");
+                return 0;
+        }
 
 printf("%04X %04X %04X %02X\n",
-	beacon.intro, beacon.vendorid,
-	beacon.deviceid, beacon.checksum);
+        beacon.intro, beacon.vendorid,
+        beacon.deviceid, beacon.checksum);
 
-	beacon_ack.intro = htons(0x5aa5);
-	beacon_ack.intftype = 0x55;
-	beacon_ack.cf_reserved = 0;
-	beacon_ack.cf_pod_receive_mode = 0;
-	beacon_ack.cf_host_receive_mode = 0;
-	beacon_ack.dataspeed = htonl(camera->port->speed);
-	beacon_ack.deviceframesize = htons(1023);
-	beacon_ack.hostframesize = htons(1023);
-	beacon_ack.checksum = 0;
-	beacon_ack.checksum = checksum((void *)&beacon_ack, sizeof(beacon_ack));
+        beacon_ack.intro = htons(0x5aa5);
+        beacon_ack.intftype = 0x55;
+        beacon_ack.cf_reserved = 0;
+        beacon_ack.cf_pod_receive_mode = 0;
+        beacon_ack.cf_host_receive_mode = 0;
+        beacon_ack.dataspeed = htonl(camera->port->speed);
+        beacon_ack.deviceframesize = htons(1023);
+        beacon_ack.hostframesize = htons(1023);
+        beacon_ack.checksum = 0;
+        beacon_ack.checksum = checksum((void *)&beacon_ack, sizeof(beacon_ack));
 
-	if (gp_port_write(dev->gpdev, (void *)&beacon_ack, sizeof(beacon_ack)) < 0) {
-		perror("writing beacon_ack");
-		return -1;
-	}
+        if (gp_port_write(dev->gpdev, (void *)&beacon_ack, sizeof(beacon_ack)) < 0) {
+                perror("writing beacon_ack");
+                return -1;
+        }
 
-	if (gp_port_read(dev->gpdev, (void *)&beacon_comp, sizeof(beacon_comp)) < 0) {
-		perror("reading beacon_comp");
-		return -1;
-	}
+        if (gp_port_read(dev->gpdev, (void *)&beacon_comp, sizeof(beacon_comp)) < 0) {
+                perror("reading beacon_comp");
+                return -1;
+        }
 
 printf("%d\n", ntohl(beacon_comp.dataspeed));
-	usleep(100000);
+        usleep(100000);
 
-	dev->deviceframesize = ntohs(beacon_comp.deviceframesize);
+        dev->deviceframesize = ntohs(beacon_comp.deviceframesize);
 
-	dev->gpdev->settings.serial.speed = ntohl(beacon_comp.dataspeed);
-	gp_port_serial_set_baudrate(dev->gpdev);
+        dev->gpdev->settings.serial.speed = ntohl(beacon_comp.dataspeed);
+        gp_port_serial_set_baudrate(dev->gpdev);
 
 usleep(100000);
 
-	return 0;
+        return 0;
 }
 

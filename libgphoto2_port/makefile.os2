@@ -6,7 +6,6 @@ MKLIB=ar r
 all: start \
   lib \
   serial\
-  parallel\
   end
 
 start:
@@ -37,16 +36,16 @@ parallel:
 #  @nmake /nologo -f makefile.os2
 #  @cd..
 
-lib: ..\lib\libgpio.a
+lib: ..\lib\libgphoto2_port.a
 
-obj\gpio.o: libgpio\gpio.c
+obj\gpio.o: libgphoto2_port\portability.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
-obj\port.o: libgpio\port.c
+obj\port.o: libgphoto2_port\gp_port.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
-obj\library.o: libgpio\library.c
+obj\library.o: libgphoto2_port\library.c
   @$(CC) -o $@ $** $(CCFLAGS)
 
-..\lib\libgpio.a: obj\gpio.o obj\library.o obj\port.o
+..\lib\libgphoto2_port.a: obj\gpio.o obj\library.o obj\port.o
   @$(MKLIB) $@ $**

@@ -1,4 +1,4 @@
-CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgpio\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H  -DEBUG
+CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgphoto2_port\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H  -DEBUG
 CC=gcc
 
 all: start \
@@ -36,4 +36,4 @@ digita.def: digita.o
    @emxexp $** >> digita.def
 
 ..\gpdigita.dll: digita.o digita.def serial.o commands.o usb.o
-   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldllib -lgiserial -lsocket
+   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\LIB -llibgphoto2 -llibgphoto2_port -ldllib -lsocket -lgiserial
