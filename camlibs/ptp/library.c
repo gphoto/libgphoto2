@@ -210,13 +210,15 @@ static struct {
 	{"Sony MVC-CD300",  0x054c, 0x004e},
 
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
-	{"Nikon DSC D100", 0x04b0, 0x0402},
+	{"Nikon DSC D100 (PTP mode)", 0x04b0, 0x0402},
+	/* Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
+	{"Nikon Coolpix 5700 (PTP mode)", 0x04b0, 0x010d},
 
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode 
 	 */
-	{"Canon PowerShot S45 (PTP mode)", 0x04A9, 0x306D}, /* 0x306C is S45 in normal (canon) mode */
-	{"Canon PowerShot S230 (PTP mode)", 0x04A9, 0x3071}, /* 0x3070 is S230 in normal (canon) mode */
+	{"Canon PowerShot S45 (PTP mode)", 0x04a9, 0x306d}, /* 0x306c is S45 in normal (canon) mode */
+	{"Canon PowerShot S230 (PTP mode)", 0x04a9, 0x3071}, /* 0x3070 is S230 in normal (canon) mode */
 
 	/* more comming soon :) */
 	{NULL, 0, 0}
