@@ -639,7 +639,7 @@ int dc3200_recv_packet(DC3200Data *dd, u_char *data, int *data_len)
 #endif
 
 	if(dc3200_process_packet(dd, buff, &num_read) == GP_ERROR) {
-		printf("packet process error.\n");		
+		//printf("packet process error.\n");		
 		return GP_ERROR;
 	}
 
@@ -792,7 +792,7 @@ int dc3200_process_packet(DC3200Data *dd, u_char *data, int *data_len)
 
 	/* make sure its a valid packet */
 	if(length != count - 3 || checksum != dc3200_calc_checksum(dd, data, count - 2)) {
-	   	printf("%02x=%02x %02x=%02x\n", length, count - 3, checksum, dc3200_calc_checksum(dd, data, count - 2));
+	   	//printf("%02x=%02x %02x=%02x\n", length, count - 3, checksum, dc3200_calc_checksum(dd, data, count - 2));
 		return GP_ERROR;
 	}
 	
