@@ -795,20 +795,20 @@ int set_globals () {
 //		return (GP_ERROR);
 //	}
 
-        if ((strlen(glob_port) == 0)&&(strcmp(glob_model, "Directory Browse")!=0)) {
-                cli_error_print("Must specify a camera port using \"%sport path\"",LONG_OPTION);
-                return (GP_ERROR);
-        }
+//	if ((strlen(glob_port) == 0)&&(strcmp(glob_model, "Directory Browse")!=0)) {
+//	        cli_error_print("Must specify a camera port using \"%sport path\"",LONG_OPTION);
+//	        return (GP_ERROR);
+//	}
 
 //	if (gp_camera_abilities_by_name(glob_model, &glob_abilities) != GP_OK) {
 //		cli_error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
 //	      return (GP_ERROR);
 //	}
 
-        if ((result = gp_camera_new(&glob_camera)) != GP_OK) {
-                cli_error_print("Can not create camera data");
-                return (result);
-        }
+	if ((result = gp_camera_new(&glob_camera)) != GP_OK) {
+	        cli_error_print("Can not create camera data");
+	        return (result);
+	}
 
 	strcpy (glob_camera->model, glob_model);
 	strcpy (glob_camera->port->path, glob_port);
