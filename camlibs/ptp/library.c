@@ -1058,13 +1058,13 @@ camera_init (Camera *camera, GPContext *context)
 	&camera->pl->params.deviceinfo));
 
 	GP_DEBUG ("Device info:");
-	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
 	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
 	GP_DEBUG ("  model: %s", camera->pl->params.deviceinfo.Model);
 	GP_DEBUG ("  device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
+	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
 	GP_DEBUG ("Supported operations:");
 	for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++) {
-		GP_DEBUG ("  0x%x",camera->pl->params.deviceinfo.OperationsSupported[i]);
+		GP_DEBUG ("  0x%.4x",camera->pl->params.deviceinfo.OperationsSupported[i]);
 	}
 
 	/* init internal ptp objectfiles (required for fs implementation) */
