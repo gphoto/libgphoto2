@@ -284,12 +284,30 @@ static int is_image(const char *name)
 {
 	const char *pos;
 
-	gp_debug_printf(GP_DEBUG_LOW,"canon","is_image()");
-	
+	gp_debug_printf(GP_DEBUG_LOW,"canon","is_image(%s)",name);
+
 	pos = strchr(name,'.');
 	if (!pos) return 0;
 	return !strcmp(pos,".JPG");
 }
+
+/*
+ * Test whether the name given corresponds
+ * to a movie (.AVI)
+ */
+static int is_movie(const char *name)
+{
+	const char *pos;
+
+	gp_debug_printf(GP_DEBUG_LOW,"canon","is_movie(%s)",name);
+
+	pos = strchr(name, '.');
+	if(!pos) return 0;
+	return !strcmp(pos,".AVI");
+}
+
+
+
 
 /* This function is only used by A5 */
 
@@ -306,7 +324,7 @@ static int recurse(Camera *camera, const char *name)
     if (!dir) return 1; /* assume it's empty @@@ */
     count = 0;
     for (walk = dir; walk->name; walk++)
-        if (walk->size && is_image(walk->name)) count++;
+        if (walk->size && (is_image(walk->name) || is_movie(walk->name) )) count++;
     cs->cached_paths = realloc(cs->cached_paths,sizeof(char *)*(cs->cached_images+count+1));
     memset(cs->cached_paths+cs->cached_images+1,0,sizeof(char *)*count);
     if (!cs->cached_paths) {
@@ -321,7 +339,7 @@ static int recurse(Camera *camera, const char *name)
             if (!recurse(camera, buffer)) return 0;
         }
         else {
-            if (!is_image(walk->name)) continue;
+            if ((!is_image(walk->name)) && (!is_movie(walk->name))) continue;
             curr++;
             cs->cached_paths[curr] = strdup(buffer);
             if (!cs->cached_paths[curr]) {
@@ -358,7 +376,7 @@ static struct psa50_dir *dir_tree(Camera *camera, const char *path)
     if (!dir) return NULL; /* assume it's empty @@@ */
     for (walk = dir; walk->name; walk++) {
         if (walk->is_file) {
-            if (is_image(walk->name)) cs->cached_images++;
+            if (is_image(walk->name) || is_movie(walk->name)) cs->cached_images++;
         }
         else {
             sprintf(buffer,"%s\\%s",path,walk->name);
@@ -463,7 +481,7 @@ static int _canon_file_list(struct psa50_dir *tree, CameraList *list, char *fold
 	}
 
     while (tree->name) {
-        if(is_image(tree->name))
+        if(is_image(tree->name) || is_movie(tree->name))
 			gp_list_append(list,(char*)tree->name,GP_LIST_FILE);
         else if (!tree->is_file) { 
             _canon_file_list(tree->user, list, folder);      
@@ -576,6 +594,16 @@ static char *canon_get_picture(Camera *camera, char *filename, char *path, int t
 		}
 		if (thumbnail) {
 			ptr=image;
+			/* The thumbnail of a movie in on a file called MVI_XXXX.THM
+			 * we replace .AVI by .THM to download the thumbnail (jpeg format)
+			 */
+			if (is_movie(filename)) {
+				j = strrchr(filename,'.') - filename;
+				filename[j+1]='\0';
+				strcat(filename,"THM");
+				sprintf(file,"%s%s",path,filename);
+				fprintf(stderr,"movie thumbnail: %s",file);
+			}
 			if ( (image = psa50_get_thumbnail(camera, file,size)) == NULL) {
 				free(ptr);
 				return NULL;
@@ -609,7 +637,7 @@ static int _get_file_path(struct psa50_dir *tree, char *filename, char *path)
 	}
 
 	while(tree->name) {
-		if (!is_image(tree->name)) { 
+		if (!is_image(tree->name) && !is_movie(tree->name) ) { 
 			switch(canon_comm_method) {
 			 case CANON_USB:
 				strcpy(path,tree->name);
@@ -620,7 +648,7 @@ static int _get_file_path(struct psa50_dir *tree, char *filename, char *path)
 				break;
 			}
 		}
-		if (is_image(tree->name) && strcmp(tree->name,filename)==0) {
+		if ((is_image(tree->name) || (is_movie(tree->name))) && strcmp(tree->name,filename)==0) {
 			return GP_OK;
 		}
 		else if (!tree->is_file) {
@@ -1041,7 +1069,7 @@ static int _get_last_dir(struct psa50_dir *tree, char *path, char *temppath)
 	}
 
 	while(tree->name) {
-		if (!is_image(tree->name)) {
+		if (!is_image(tree->name) && !is_movie(tree->name)) {
 			switch(canon_comm_method) {
 			 case CANON_USB:
 				strcpy(path,tree->name);
@@ -1089,7 +1117,7 @@ static int _get_last_picture(struct psa50_dir *tree, char *directory, char *file
 
 	while(tree->name) {
 
-		if (is_image(tree->name)) {
+		if (is_image(tree->name) || is_movie(tree->name)) {
 			if(strcmp(tree->name,filename)>0)
 			  strcpy(filename,tree->name);
 		}
