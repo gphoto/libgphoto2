@@ -583,7 +583,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 */
 	gp_file_get_data_and_size (file, &data, &size);
         if (size > DSC_MAXIMAGESIZE) {
-                gp_context_message (context, _("File size is %i bytes. "
+                gp_context_message (context, _("File size is %ld bytes. "
 				   "The size of the largest file possible to "
 				   "upload is: %i bytes."), size, 
 				   DSC_MAXIMAGESIZE);
