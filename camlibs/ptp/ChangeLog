@@ -1,3 +1,9 @@
+2003-01-10 Mariusz Woloszyn
+	* library.c: added HP PhotoSmart 850, cosmetics
+2003-01-08 Mariusz Woloszyn
+	* ptp-pack.c: fixed a bug in ptp_unpack_DI(), totallen could be
+	  bigger than uint8_t
+
 2002-12-10 Mariusz Woloszyn
 	* library.c: better handling of foldername to handler conversion
 	  (storage id matching was missing)

@@ -135,7 +135,8 @@ ptp_unpack_uint16_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint1
 static inline void
 ptp_unpack_DI (PTPParams *params, PTPReq *req, PTPDeviceInfo *di)
 {
-	uint8_t len, totallen;
+	uint8_t len;
+	unsigned int totallen;
 	
 	di->StaqndardVersion = dtoh16a(&req->data[PTP_di_StandardVersion]);
 	di->VendorExtensionID =

@@ -219,16 +219,17 @@ static struct {
 	/* HP PTP cameras */
 	{"HP PhotoSmart 318 (PTP mode)", 0x03f0, 0x6302},
 	{"HP PhotoSmart 612 (PTP mode)", 0x03f0, 0x6302},
-	{"HP PhotoSmart 715 (PTP mode)",  0x03f0, 0x6402},
+	{"HP PhotoSmart 715 (PTP mode)", 0x03f0, 0x6402},
+	{"HP PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302},
 	/* I got information that all SONY PTP cameras use the same
 	   product/vendor IDs */
 	{"Sony DSC-P5 (PTP mode)", 0x054c, 0x004e},
 	{"Sony DSC-F707V (PTP mode)", 0x054c, 0x004e},
 	{"Sony DSC-P30 (PTP mode)", 0x054c, 0x004e},
-	{"Sony DSC-P50 (PTP mode)",  0x054c, 0x004e},
-	{"Sony DSC-S75 (PTP mode)",  0x054c, 0x004e},
-	{"Sony DSC-S85 (PTP mode)",  0x054c, 0x004e},
-	{"Sony MVC-CD300 (PTP mode)",  0x054c, 0x004e},
+	{"Sony DSC-P50 (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-S75 (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-S85 (PTP mode)", 0x054c, 0x004e},
+	{"Sony MVC-CD300 (PTP mode)", 0x054c, 0x004e},
 
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon DSC D100 (PTP mode)", 0x04b0, 0x0402},
@@ -236,8 +237,8 @@ static struct {
 	{"Nikon Coolpix 5700 (PTP mode)", 0x04b0, 0x010d},
 	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
 	{"Nikon Coolpix 885 (PTP mode)", 0x04b0, 0x0112},
-	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */ 
-	{"Nikon Coolpix 4300 (PTP mode)", 0x04b0, 0x010f}, 
+	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
+	{"Nikon Coolpix 4300 (PTP mode)", 0x04b0, 0x010f},
 
 
 
