@@ -1,3 +1,8 @@
+2002-07-30  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* linux-hotplug/print-usb-usermap.c: moved code here from CLI
+	* linux-hotplug/Makefile.am: added print-usb-usermap
+
 2002-06-11  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* rpm/package.spec.in: package dependency on libusb only if required
