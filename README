@@ -56,12 +56,6 @@ USB Mass Storage protocol:
  * Sony DSC-F505(V), DSC P5
 Again, those cameras cannot be accessed through gphoto2.
 
-Requirements
-------------
-
-The konica driver depends on glib. If you do not need this driver, use the
-"--with-drivers=xxx" flag to avoid the glib dependency.
-
 Platforms
 ---------
 
