@@ -125,6 +125,9 @@ int camera_init (Camera *camera, CameraInit *init) {
 	gpio_device_settings settings;
 	FujitsuData *fd;
 
+	if (!camera)
+		return (GP_ERROR);
+
 	/* First, set up all the function pointers */
 	camera->functions->id 		= camera_id;
 	camera->functions->abilities 	= camera_abilities;
@@ -153,8 +156,6 @@ int camera_init (Camera *camera, CameraInit *init) {
 	debug_print(fd, "Initializing camera");
 
 	fd->dev = gpio_new(GPIO_DEVICE_SERIAL);
-	if (!camera)
-		return (GP_ERROR);
 
         strcpy(settings.serial.port, init->port_settings.path);
 	settings.serial.speed 	 = 19200;
