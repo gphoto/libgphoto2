@@ -287,7 +287,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo *info, void *data)
+	       CameraFileInfo info, void *data)
 {
 	Camera *camera = data;
 	int n;
@@ -300,8 +300,8 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
 	CHECK_STOP (camera, sierra_get_pic_info (camera, n, &pic_info));
 
-	if (info->file.fields & GP_FILE_INFO_PERMISSIONS) {
-		if (info->file.permissions & GP_FILE_PERM_DELETE) {
+	if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
+		if (info.file.permissions & GP_FILE_PERM_DELETE) {
 			if (pic_info.locked == SIERRA_LOCKED_YES) {
 				CHECK_STOP (camera, sierra_set_locked (camera,
 						n, SIERRA_LOCKED_NO));

@@ -1076,15 +1076,6 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 };
 
 static int
-set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo *info, void *data)
-{
-	/* Implement for example renaming of files */
-
-	return (GP_ERROR_NOT_SUPPORTED);
-}
-
-static int
 get_file_func (CameraFilesystem *fs, const char *folder,
 	       const char *filename, CameraFileType type, CameraFile *file,
 	       void *data) { 
@@ -1192,8 +1183,7 @@ int camera_init (Camera *camera) {
         gp_filesystem_set_list_funcs (camera->fs,
                                         file_list_func, folder_list_func,
                                         camera);
-        gp_filesystem_set_info_funcs (camera->fs,
-	                                        get_info_func, set_info_func,
+        gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL,
 	                              camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 

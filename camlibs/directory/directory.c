@@ -219,59 +219,51 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo *info, void *data)
+	       CameraFileInfo info, void *data)
 {
-        int retval;
-        char *path_old;
-        char *path_new;
+	int retval;
+	char path_old[1024], path_new[1024];
 
-        if ((info->file.fields == GP_FILE_INFO_NONE) &&
-            (info->preview.fields == GP_FILE_INFO_NONE))
-                return (GP_OK);
+        /* We only support basic renaming in the same folder */
+	if (info.file.fields & GP_FILE_INFO_PERMISSIONS)
+		return (GP_ERROR_NOT_SUPPORTED);
 
-        /* We only support basic renaming in the same folder. */
-        if (!((info->file.fields == GP_FILE_INFO_NAME) &&
-              (info->preview.fields == GP_FILE_INFO_NONE)))
-                return (GP_ERROR_NOT_SUPPORTED);
+	if (info.file.fields & GP_FILE_INFO_NAME) {
+        	if (!strcmp (info.file.name, file))
+        	        return (GP_OK);
 
-        if (!strcmp (info->file.name, file))
-                return (GP_OK);
-
-        /* We really have to rename the poor file... */
-        path_old = malloc (strlen (folder) + 1 + strlen (file) + 1);
-        path_new = malloc (strlen (folder) + 1 + strlen (info->file.name) + 1);
-        strcpy (path_old, folder);
-        strcpy (path_new, folder);
-        path_old [strlen (folder)] = '/';
-        path_new [strlen (folder)] = '/';
-        strcpy (path_old + strlen (folder) + 1, file);
-        strcpy (path_new + strlen (folder) + 1, info->file.name);
-
-        if (*(path_old + 1) == '/')
-                retval = rename (path_old + 1, path_new + 1);
-        else
+	        /* We really have to rename the poor file... */
+		if (strlen (folder) == 1) {
+			snprintf (path_old, sizeof (path_old), "/%s",
+				  file);
+			snprintf (path_new, sizeof (path_new), "/%s",
+				  info.file.name);
+		} else {
+			snprintf (path_old, sizeof (path_old), "%s/%s",
+				  folder, file);
+			snprintf (path_new, sizeof (path_new), "%s/%s",
+				  folder, info.file.name);
+		}
                 retval = rename (path_old, path_new);
-        free (path_old);
-        free (path_new);
-
-        if (retval != 0) {
-                switch (errno) {
-                case EISDIR:
-                        return (GP_ERROR_DIRECTORY_EXISTS);
-                case EEXIST:
-                        return (GP_ERROR_FILE_EXISTS);
-                case EINVAL:
-                        return (GP_ERROR_BAD_PARAMETERS);
-                case EIO:
-                        return (GP_ERROR_IO);
-                case ENOMEM:
-                        return (GP_ERROR_NO_MEMORY);
-                case ENOENT:
-                        return (GP_ERROR_FILE_NOT_FOUND);
-                default:
-                        return (GP_ERROR);
-                }
-        }
+		if (retval != 0) {
+	                switch (errno) {
+	                case EISDIR:
+	                        return (GP_ERROR_DIRECTORY_EXISTS);
+	                case EEXIST:
+	                        return (GP_ERROR_FILE_EXISTS);
+	                case EINVAL:
+	                        return (GP_ERROR_BAD_PARAMETERS);
+	                case EIO:
+	                        return (GP_ERROR_IO);
+	                case ENOMEM:
+	                        return (GP_ERROR_NO_MEMORY);
+	                case ENOENT:
+	                        return (GP_ERROR_FILE_NOT_FOUND);
+	                default:
+	                        return (GP_ERROR);
+	                }
+	        }
+	}
 
         return (GP_OK);
 }

@@ -447,9 +447,9 @@ static int sony_baud_port_set(Camera * camera, long baud)
 {
 	gp_port_settings settings;
 
-	gp_port_settings_get(camera->port, &settings);
+	gp_port_get_settings(camera->port, &settings);
 	settings.serial.speed = baud;
-	gp_port_settings_set(camera->port, settings);
+	gp_port_set_settings(camera->port, settings);
 
 	usleep(70000);
 
@@ -486,17 +486,17 @@ static int sony_init_port (Camera *camera)
 	gp_port_settings settings;
 	int rc;
 	
-	rc = gp_port_timeout_set (camera->port, 5000);
+	rc = gp_port_set_timeout (camera->port, 5000);
 	if (rc == GP_OK) { 
 
-		gp_port_settings_get(camera->port, &settings);
+		gp_port_get_settings(camera->port, &settings);
 
 		settings.serial.speed = 9600;
 		settings.serial.bits = 8;
 		settings.serial.parity = 0;
 		settings.serial.stopbits = 1;
 
-		rc = gp_port_settings_set(camera->port, settings);
+		rc = gp_port_set_settings(camera->port, settings);
 		if (rc == GP_OK) {
 			rc = gp_port_flush(camera->port, 0);
 		}

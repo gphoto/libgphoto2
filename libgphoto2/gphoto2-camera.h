@@ -273,7 +273,7 @@ int gp_camera_folder_remove_dir   (Camera *camera, const char *folder,
 int gp_camera_file_get_info 	(Camera *camera, const char *folder, 
 				 const char *file, CameraFileInfo *info);
 int gp_camera_file_set_info 	(Camera *camera, const char *folder, 
-				 const char *file, CameraFileInfo *info);
+				 const char *file, CameraFileInfo info);
 int gp_camera_file_get		(Camera *camera, const char *folder, 
 				 const char *file, CameraFileType type,
 				 CameraFile *camera_file);

@@ -1,3 +1,11 @@
+2001-11-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/directory/directory.c (set_info_func): Rewrite
+	* camlibs/ptp/library.c:
+	* camlibs/fuji/fuji.c: Don't advertise what you don't support.
+	* camlibs/konica/library.c (set_info_func): Rewrite
+	* libgphoto2: Make *set_info consistent
+
 2001-11-25  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* camlibs/canon/canon.h: define GP_MODULE for abbref gp_log* stuff

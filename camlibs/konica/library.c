@@ -172,7 +172,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		 * because we have additional information.
 		 */
 		gp_filesystem_append (camera->fs, folder, info.file.name);
-		gp_filesystem_set_info_noop (camera->fs, folder, &info);
+		gp_filesystem_set_info_noop (camera->fs, folder, info);
         }
 
         return (GP_OK);
@@ -325,27 +325,19 @@ test_speed (Camera *camera)
 
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-               CameraFileInfo *info, void *data)
+               CameraFileInfo info, void *data)
 {
         Camera *camera = data;
         char tmp[7];
         int protected;
         unsigned long image_id;
 
-        if (info->file.fields & (GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE |
-                                 GP_FILE_INFO_NAME))
-                return (GP_ERROR_NOT_SUPPORTED);
-        if (info->preview.fields & (GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE |
-                                    GP_FILE_INFO_NAME |
-                                    GP_FILE_INFO_PERMISSIONS))
-                return (GP_ERROR_NOT_SUPPORTED);
-
         /* Permissions? */
-        if (info->file.fields & GP_FILE_INFO_PERMISSIONS) {
+        if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
                 strncpy (tmp, file, 6);
                 tmp[6] = '\0';
                 image_id = atol (tmp);
-                if (info->file.permissions & GP_FILE_PERM_DELETE)
+                if (info.file.permissions & GP_FILE_PERM_DELETE)
                         protected = FALSE;
                 else
                         protected = TRUE;
@@ -561,7 +553,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path)
 	strcpy (info.file.type, GP_MIME_JPEG);
 	snprintf (info.file.name, sizeof (info.file.name),
 		  "%06i.jpeg", (int) image_id);
-	gp_filesystem_set_info_noop (camera->fs, path->folder, &info);
+	gp_filesystem_set_info_noop (camera->fs, path->folder, info);
 
 	gp_file_new (&file);
 	gp_file_set_name (file, info.file.name);

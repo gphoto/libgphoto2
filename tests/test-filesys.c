@@ -34,7 +34,7 @@
 
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo *info, void *data)
+	       CameraFileInfo info, void *data)
 {
 	printf ("  -> The camera will set the file info here.\n");
 
@@ -189,7 +189,7 @@ main (int argc, char **argv)
 
 	printf ("*** Set info about another file...\n");
 	CHECK (gp_filesystem_set_info (fs, "/whatever/directory", "some.file2",
-				       &info));
+				       info));
 
 	printf ("*** Getting info about this file (cache!)...\n");
 	CHECK (gp_filesystem_get_info (fs, "/whatever/directory", "some.file2",

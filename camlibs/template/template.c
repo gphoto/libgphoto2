@@ -211,7 +211,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-	       CameraFileInfo *info, void *data)
+	       CameraFileInfo info, void *data)
 {
 	Camera *camera = data;
 

@@ -360,17 +360,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-set_info_func (CameraFilesystem *fs, const char *folder, const char *name,
-	       CameraFileInfo *info, void *data)
-{
-	Camera *camera = data;
-
-	camera = NULL;
-
-	return (GP_ERROR);
-}
-
-static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	       void *data)
 {
@@ -431,7 +420,7 @@ camera_init (Camera *camera)
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
 					  NULL, camera));
 	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-					  set_info_func, camera));
+					  NULL, camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 					  delete_file_func, camera));
 	CR (gp_filesystem_set_folder_funcs (camera->fs, NULL,
