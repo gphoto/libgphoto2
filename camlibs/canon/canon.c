@@ -54,6 +54,59 @@
 #include "canon.h"
 #include "serial.h"
 
+/************************************************************************
+ * Camera definitions
+ ************************************************************************/
+
+/**
+ * models:
+ *
+ * Contains list of all camera models currently supported with their
+ * respective USB IDs and a flag denoting RS232 serial support.
+ **/
+
+#define S32K	32 * 1024
+#define S1M	1024 * 1024
+#define S2M	2 * S1M
+#define S10M	10 * S1M
+
+static const struct canonCamModelData models[] =
+{
+	/* *INDENT-OFF* */
+	{"DE300 Canon Inc.",		CANON_PS_A5,		0, 0, 1, S2M, S32K},
+	{"Canon PowerShot A5 Zoom",	CANON_PS_A5_ZOOM,	0, 0, 1, S2M, S32K},
+	{"Canon PowerShot A50",		CANON_PS_A50,		0, 0, 1, S2M, S32K},
+	{"Canon PowerShot Pro70",	CANON_PS_A70,		0, 0, 1, S2M, S32K},
+	{"Canon PowerShot S10",		CANON_PS_S10,		0x04A9, 0x3041, 1, S10M, S32K},
+	{"Canon PowerShot S20",		CANON_PS_S20,		0x04A9, 0x3043, 1, S10M, S32K},
+	{"Canon EOS D30",		CANON_EOS_D30,		0x04A9, 0x3044, 0, S10M, S32K},
+	{"Canon PowerShot S100",	CANON_PS_S100,		0x04A9, 0x3045, 0, S10M, S32K},
+	{"Canon IXY DIGITAL",		CANON_PS_S100,		0x04A9, 0x3046, 0, S10M, S32K},
+	{"Canon Digital IXUS",		CANON_PS_S100,		0x04A9, 0x3047, 0, S10M, S32K},
+	{"Canon PowerShot G1",		CANON_PS_G1,		0x04A9, 0x3048, 1, S10M, S32K},
+	{"Canon PowerShot Pro90 IS",	CANON_PS_PRO90_IS,	0x04A9, 0x3049, 1, S10M, S32K},
+	{"Canon IXY DIGITAL 300",	CANON_PS_S300,		0x04A9, 0x304B, 0, S10M, S32K},
+	{"Canon PowerShot S300",	CANON_PS_S300,		0x04A9, 0x304C, 0, S10M, S32K},
+	{"Canon Digital IXUS 300",	CANON_PS_S300,		0x04A9, 0x304D, 0, S10M, S32K},
+	{"Canon PowerShot A20",		CANON_PS_A20,		0x04A9, 0x304E, 0, S10M, S32K},
+	{"Canon PowerShot A10",		CANON_PS_A10,		0x04A9, 0x304F, 0, S10M, S32K},
+	{"Canon PowerShot S110",	CANON_PS_S100,		0x04A9, 0x3051, 0, S10M, S32K},
+	{"Canon DIGITAL IXUS v",	CANON_PS_S100,		0x04A9, 0x3052, 0, S10M, S32K},
+	{"Canon PowerShot G2",		CANON_PS_G2,		0x04A9, 0x3055, 0, S10M, S32K},
+	{"Canon PowerShot S40",		CANON_PS_S40,		0x04A9, 0x3056, 0, S10M, S32K},
+	{"Canon PowerShot S30",		CANON_PS_S30,		0x04A9, 0x3057, 0, S10M, S32K},
+	{NULL}
+	/* *INDENT-ON* */
+};
+
+#undef S10M
+#undef S2M
+#undef S1M
+#undef S32K
+
+/************************************************************************
+ * Methods
+ ************************************************************************/
 
 /*
  * does operations on a directory based on the value
