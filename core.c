@@ -2,7 +2,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include <gpio.h>
 #include <gphoto2.h>
 
 #ifdef HAVE_CONFIG_H
@@ -93,10 +92,10 @@ int gp_init (int debug)
 #else
         sprintf(buf, "%s/.gphoto", getenv("HOME"));
 #endif
-        (void)GPIO_MKDIR(buf);
+        (void)GP_SYSTEM_MKDIR(buf);
         gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing gpio");
 
-        if (gpio_init(debug) == GPIO_ERROR)
+        if (gp_port_init(debug) == GP_ERROR)
                 return (GP_ERROR);
 
         /* Load settings */
