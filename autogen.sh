@@ -10,6 +10,8 @@
 # seems to be quite advisable if your automake is not already version 
 # 1.6) then call this file with AUTOMAKE_SUFFIX set to "-1.6".
 
+# FIXME: The software versions / links are quite outdated.
+
 DIE=0
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
