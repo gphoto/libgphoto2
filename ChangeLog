@@ -1,3 +1,9 @@
+2001-11-01 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Chris <adapt@ihug.co.nz>:
+
+	* frontends/command-line/main.c: Don't gp_file_free twice
+
 2001-10-28 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* packaging/rpm/package.spec.in: cleaned up file lists, moved .a and .la to -devel

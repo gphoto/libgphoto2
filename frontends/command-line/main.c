@@ -697,10 +697,8 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
 			} while ((c[0]!='y')&&(c[0]!='Y')&&
 				 (c[0]!='n')&&(c[0]!='N'));
 
-			if (!((c[0]=='y') || (c[0]=='Y'))) {
-				gp_file_free(file);
+			if (!((c[0]=='y') || (c[0]=='Y')))
 				return (GP_OK);
-			}
 
 			printf("Enter new filename: ");
 			fflush(stdout);
