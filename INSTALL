@@ -4,27 +4,54 @@
 # This file describes how to install gphoto2.
 ########################################################################
 
-The installation procedure should be quite simple:
+Follow these steps to build and install gphoto2 from the source
+code. You don't have to run most of these steps as root, except when
+explicitly required. In fact, you really shouldn't.
 
-0) If you got your source tree from CVS (and not from a .tar.gz
-   tarball), you have to run ./autogen.sh instead of ./configure in 
-   step 1).  In this case, you will need to have the following software
-   installed:
+In order to get gphoto2 running after installation, you will probably
+want to read doc/FAQ and doc/gphoto2.txt.
 
-	autoconf
 
-	automake (ver. >= 1.5)
+=============================
+Step 1: Configure the sources
+=============================
 
-	libtool (ver. >= 1.4)
+If you got your source tree from CVS (and not from a .tar.gz tarball),
+you will have to run ./autogen.sh instead of ./configure in this
+step. In this case, you will need to have the following software
+installed:
 
-1) ./configure --prefix=/usr --sysconfdir=/etc
-	or any other options (try --help)
+  - autoconf
+  - automake (ver. >= 1.5)
+  - libtool (ver. >= 1.4)
 
-   See the end of this file for some hints on configuring for certain
-   platforms.
+Now run either one of
 
-   The following software components are optional, and will improve the
-   libraries' and/or command-line client's functionality if present:
+
+  ./configure --prefix=/usr/local
+
+     to prepare a tarball source tree for installation in /usr/local
+
+
+  ./autogen.sh --prefix=/usr/local
+
+       to prepare a CVS source tree for installation in /usr/local
+
+
+  ./configure --prefix=/home/me/root --with-drivers=ptp,canon
+
+       to prepare a tarball source tree for installation in
+       /home/me/root and for compilation only of the drivers 
+       for PTP and Canon cameras
+
+or run ./configure --help in order to find out about more
+configuration parameters.
+
+See Appendix A at the end of this file for some hints on configuring
+for certain platforms.
+
+The following software components are optional, and will improve the
+libraries' and/or command-line client's functionality if present:
 
 	libusb (ver. >= 0.1.5) -- Universal Serial Bus camera support
 	    <URL:http://www.sourceforge.net/projects/libusb/>
@@ -44,40 +71,63 @@ The installation procedure should be quite simple:
 	libexif - EXIF tag support
 	    <URL:http://www.sourceforge.net/projects/libexif>
 
-   Please check the output of the configure script for whether all
-   desired libraries have been detected correctly. E.g., you might
-   have to add the path where libusb-config resides to your PATH
-   before running configure.
+Please check the output of the configure script for whether all
+desired libraries have been detected correctly. E.g., you might
+have to add the path where libusb-config resides to your PATH
+before running configure.
 
-2) make install
 
-   This installs the software and documentation into the proper
-   directories on your system. If you want to use your system's
-   package system instead, follow a) or b) instead.
+===========================
+Step 2: Compile the program
+===========================
 
-   a) make rpm
+You will probably be best off running GNU make. On GNU/Linux linux
+systems, you can run "make", on other systems (such as *BSD), you
+will have to run "gmake" or something similar.
 
-      If you're running a RPM based system (e.g. Redhat Linux or SuSE
-      Linux), you can build RPM packages and install these. The
-      packages will be located in packaging/rpm/RPMS/.
+The classic way to compile the program is just to run
 
-      You may have to unset CDPATH before running "make rpm".
+    make
 
-   b) make deb
+and wait until the source is built.
 
-      (This is not implemented yet)
+If you want to install gphoto2 using RPM, you should be able to run
 
-      If you're running a DEB based system (e.g. Debian GNU/Linux),
-      you can build .deb packages and install these. The packages will
-      be located in FIXME. 
+    make rpm
 
-3) ready to rock
+after making sure that CDPATH is unset. The RPM packages will be
+located in packaging/rpm/RPMS/.
+
+
+==============================
+Step 3: Installing the program
+==============================
+
+To install the stuff you just compiled by running "make", you can just
+run 
+
+   make install
+
+now. If installing to a directory which is not writable by your
+current user, you will have to run it as root.
+
+This installs the software and documentation into the proper
+directories on your system.
+
+In the case you're trying to use RPM packages, find the *.rpm files in
+packaging/rpm/RPMS/ and install them.
+
+
+====================================================
+Step 4: Installation is finished - now what do I do?
+====================================================
 
 Note that gphoto2 is not designed to be installed as a setuid/setgid
 program. Running ANY gphoto2 frontend as root or setuid root or in a
 similar fashion will open up a SECURITY HOLE in your system!
 
 Read doc/FAQ if you run into problems.
+
 Read doc/gphoto2.txt for more general information about how to
 configure gphoto2.
 
@@ -87,7 +137,9 @@ for the users that are to have camera access and change the
 permissions of the serial or USB device to match.
 
 
-Compiling Hints:
+===============================================
+Appendix A: Platform specific compilation hints
+===============================================
 
 gphoto2 has been successfully used on many system.  Some systems where it
 has been reported to successfully compile are listed below. Not all, or even
