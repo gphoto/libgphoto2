@@ -263,11 +263,17 @@ gp_port_info_list_count (GPPortInfoList *list)
 
 	CHECK_NULL (list);
 
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", "Counting entries "
+		"(%i available)...", list->count);
+
 	/* Ignore generic entries */
 	count = list->count;
 	for (i = 0; i < list->count; i++)
 		if (!strlen (list->info[i].name))
 			count--;
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", "%i regular entries "
+		"available.", count);
 	return (count);
 }
 
@@ -285,7 +291,7 @@ gp_port_info_list_count (GPPortInfoList *list)
 int
 gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 {
-	int i, result;
+	int i, result, generic;
 	regex_t pattern;
 #if HAVE_GNU_REGEX
 	const char *rv;
@@ -295,10 +301,15 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 
 	CHECK_NULL (list && path);
 
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", "Looking for "
+		"path '%s' (%i entries available)...", path, list->count);
+
 	/* Exact match? */
-	for (i = 0; i < list->count; i++)
-		if (!strcmp (list->info[i].path, path))
-			return (i);
+	for (generic = i = 0; i < list->count; i++)
+		if (!strlen (list->info[i].name))
+			generic++;
+		else if (!strcmp (list->info[i].path, path))
+			return (i - generic);
 
 	/* Regex match? */
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
@@ -379,12 +390,15 @@ gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
 
 	CHECK_NULL (list && name);
 
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", "Looking up entry "
+		"'%s'...", name);
+
 	/* Ignore generic entries */
 	for (generic = i = 0; i < list->count; i++)
 		if (!strlen (list->info[i].name))
 			generic++;
 		else if (!strcmp (list->info[i].name, name))
-			return (i + generic);
+			return (i - generic);
 
 	return (GP_ERROR_UNKNOWN_PORT);
 }
@@ -405,6 +419,9 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 	int i;
 
 	CHECK_NULL (list && info);
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", "Getting info of "
+		"entry %i (%i available)...", n, list->count);
 
 	if (n < 0 || n >= list->count)
 		return (GP_ERROR_BAD_PARAMETERS);
