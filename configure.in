@@ -1,8 +1,8 @@
-s dnl Process this file with autoconf to produce a configure script.
+dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.50)
 AC_INIT(libgphoto2/gphoto2.h)
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(libgphoto2, 2.1.3dev1)
+AM_INIT_AUTOMAKE(libgphoto2, 2.1.3dev2)
 AM_MAINTAINER_MODE
 AC_LIBTOOL_DLOPEN
 
@@ -372,6 +372,7 @@ dnl ---------------------------------------------------------------------------
 AC_CONFIG_SUBDIRS(libgphoto2_port)
 
 AC_OUTPUT([
+README
 Makefile
 camlibs/Makefile
 camlibs/agfa-cl20/Makefile
