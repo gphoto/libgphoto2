@@ -21,6 +21,8 @@
 #ifndef __GPHOTO2_WIDGET_H__
 #define __GPHOTO2_WIDGET_H__
 
+#include <gphoto2-context.h>
+
 /* You don't really want to know what's inside, do you? */
 typedef struct _CameraWidget CameraWidget;
 
@@ -38,7 +40,7 @@ typedef enum {			/* Value (get/set):	*/
 	GP_WIDGET_DATE		/* int			*/
 } CameraWidgetType;
 
-typedef int (* CameraWidgetCallback)     (Camera *, CameraWidget *);
+typedef int (* CameraWidgetCallback) (Camera *, CameraWidget *, GPContext *);
 
 int 	gp_widget_new 	(CameraWidgetType type, const char *label, 
 		         CameraWidget **widget);

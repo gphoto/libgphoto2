@@ -224,9 +224,6 @@ struct _CameraPrivateCore {
 	CameraStatusFunc   status_func;
 	void              *status_data;
 
-	CameraMessageFunc  message_func;
-	void              *message_data;
-
 	/* The abilities of this camera */
 	CameraAbilities a;
 
@@ -530,32 +527,6 @@ gp_camera_set_status_func (Camera *camera, CameraStatusFunc func,
 }
 
 /**
- * gp_camera_set_message_func:
- * @camera: a #Camera
- * @func: a #CameraMessageFunc
- * @data:
- *
- * Sets the message function that will be used for displaying messages. 
- * This mechanism is used by camera drivers in order to display information
- * that cannot be passed through gphoto2 using standard mechanisms. As gphoto2
- * allows camera specific error codes, the message mechanism should never be
- * used. It is here for historical reasons.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_set_message_func (Camera *camera, CameraMessageFunc func,
-			    void *data)
-{
-	CHECK_NULL (camera);
-
-	camera->pc->message_func = func;
-	camera->pc->message_data = data;
-
-	return (GP_OK);
-}
-
-/**
  * gp_camera_status:
  * @camera: a #Camera
  * @format:
@@ -590,39 +561,6 @@ gp_camera_status (Camera *camera, const char *format, ...)
 	if (camera->pc->status_func)
 		camera->pc->status_func (camera, buffer,
 					 camera->pc->status_data);
-
-	return (GP_OK);
-}
-
-/**
- * gp_camera_message:
- * @camera: a #Camera
- * @format:
- * @...:
- *
- * This function is here for historical reasons. Please do not use.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_message (Camera *camera, const char *format, ...)
-{
-	char buffer[2048];
-	va_list arg;
-
-	CHECK_NULL (camera && format);
-
-	va_start (arg, format);
-#if HAVE_VSNPRINTF
-	vsnprintf (buffer, sizeof (buffer), format, arg);
-#else
-	vsprintf (buffer, format, arg);
-#endif
-	va_end (arg);
-
-	if (camera->pc->message_func)
-		camera->pc->message_func (camera, buffer,
-					  camera->pc->message_data);
 
 	return (GP_OK);
 }
@@ -1442,5 +1380,13 @@ gp_camera_progress (Camera *camera, float percentage)
 {
 	gp_log (GP_LOG_DEBUG, "camera", "gp_camera_progress is deprecated. "
 		"Please use gp_context_progress_update. Thank you!");
+	return (GP_OK);
+}
+int gp_camera_message (Camera *camera, const char *format, ...);
+int 
+gp_camera_message (Camera *camera, const char *format, ...)
+{
+	gp_log (GP_LOG_DEBUG, "camera", "gp_camera_message is deprecated. "
+		"Please use gp_context_message. Thank you!");
 	return (GP_OK);
 }

@@ -1561,7 +1561,7 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
 	}
 
 	if (msg[0] == 0x29) {
-		gp_camera_message (camera, _("File protected"));
+		gp_context_error (context, _("File protected."));
 		return GP_ERROR;
 	}
 

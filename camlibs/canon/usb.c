@@ -716,7 +716,6 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 int
 canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
-	gp_camera_message (camera, _("Not implemented!"));
 	return GP_ERROR_NOT_SUPPORTED;
 }
 

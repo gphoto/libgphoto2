@@ -1155,8 +1155,7 @@ localization_file_read (Camera *camera, const char *file_name,
                                 (*data)[*data_size] = d;
                                 (*data_size)++;
                                 if (*data_size == 65536) {
-                                        gp_camera_message (
-						camera,
+                                        gp_context_error (context,
 						_("Localization file too long!"));
                                         fclose (file);
                                         return (FALSE);

@@ -852,9 +852,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	if (camera->pl->speed > 57600 &&
 	    (!strcmp (a.model, "Canon PowerShot A50") ||
 	     !strcmp (a.model, "Canon PowerShot Pro70"))) {
-		gp_camera_message (camera,
-				   _
-				   ("Speeds greater than 57600 are not supported for uploading to this camera"));
+		gp_context_error (context,
+			_("Speeds greater than 57600 are not supported for uploading to this camera"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
@@ -902,7 +901,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 				sprintf (buf, "%c%c%c", dir[1], dir[2], dir[3]);
 				dirnum = atoi (buf);
 				if (dirnum == 999) {
-					gp_camera_message (camera,
+					gp_context_error (context,
 							   _
 							   ("Could not upload, no free folder name available!\n"
 							    "999CANON folder name exists and has an AUT_9999.JPG picture in it."));
@@ -925,13 +924,13 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	r = canon_int_directory_operations (camera, dcf_root_dir, DIR_CREATE, context);
 	if (r < 0) {
-		gp_camera_message (camera, "could not create \\DCIM directory");
+		gp_context_error (context, _("Could not create \\DCIM directory."));
 		return (r);
 	}
 
 	r = canon_int_directory_operations (camera, destpath, DIR_CREATE, context);
 	if (r < 0) {
-		gp_camera_message (camera, "could not create destination directory");
+		gp_context_error (context, _("Could not create destination directory."));
 		return (r);
 	}
 

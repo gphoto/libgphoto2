@@ -1,3 +1,10 @@
+2002-01-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	More GPContext changes:
+
+	* libgphoto2/gphoto2-context.[c,h]: Add message functionality
+	* camlibs: Use it.
+
 2002-01-14  Fredrik <fredrik@krixor.xy.org>
 
 	* frontends/command-line/main.c: Fix some core dumps when parsing

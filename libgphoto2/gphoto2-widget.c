@@ -70,7 +70,7 @@ struct _CameraWidget {
 	int     id;
 
 	/* Callback */
-	int (* callback) (Camera *, CameraWidget *);
+	CameraWidgetCallback callback;
 };
 
 /**
@@ -345,7 +345,7 @@ gp_widget_set_value (CameraWidget *widget, void *value)
 
         switch (widget->type) {
 	case GP_WIDGET_BUTTON:
-		widget->callback = (CameraWidgetCallback)value;
+		widget->callback = (CameraWidgetCallback) value;
 		return (GP_OK);
 	case GP_WIDGET_MENU:
 	case GP_WIDGET_RADIO:

@@ -1180,7 +1180,6 @@ set_globals (void)
 	        CHECK_RESULT (gp_camera_set_port_speed (glob_camera, glob_speed));
 
 	gp_camera_set_status_func (glob_camera, status_func, NULL);
-	gp_camera_set_message_func (glob_camera, message_func, NULL);
 
         return (GP_OK);
 }
@@ -1249,6 +1248,19 @@ ctx_cancel_func (GPContext *context, void *data)
 		return (GP_CONTEXT_FEEDBACK_OK);
 }
 
+static void
+ctx_message_func (GPContext *context, const char *format, va_list args,
+		  void *data)
+{
+	int c;
+
+	vprintf (format, args);
+	printf ("\n");
+	printf (_("Press any key to continue.\n"));
+	fflush(stdout);
+	c = fgetc (stdin);
+}
+
 static int
 init_globals (void)
 {
@@ -1277,6 +1289,7 @@ init_globals (void)
 				       ctx_progress_stop_func, NULL);
 	gp_context_set_error_func     (glob_context, ctx_error_func,    NULL);
 	gp_context_set_status_func    (glob_context, ctx_status_func,   NULL);
+	gp_context_set_message_func   (glob_context, ctx_message_func,  NULL);
 
         return GP_OK;
 }
