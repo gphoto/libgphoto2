@@ -192,7 +192,7 @@ translate_gp_result (int result)
 		return (PTP_RC_OK);
 	case GP_ERROR:
 	default:
-		GP_DEBUG ("PTP: gp_port_* function returned 0x%4x \t %i",result,result);
+		GP_DEBUG ("PTP: gp_port_* function returned 0x%04x \t %i",result,result);
 		return (PTP_RC_GeneralError);
 	}
 }
@@ -668,23 +668,63 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 */
 	CPR(context,ptp_initiatecapture(&camera->pl->params, 0x00000000, 0x00000000));
 	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
-	if (ptp_usb_event_wait(&camera->pl->params,&event)!=PTP_RC_OK) goto out;
-	if (event.Code==PTP_EC_ObjectAdded) {
-		if (ptp_usb_event_wait(&camera->pl->params, &event)!=PTP_RC_OK)
+	/* A word of comments is worth here.
+	 * After InitiateCapture camera should report with ObjectAdded event
+	 * all newly created objects. However there might be more than one
+	 * newly created object. There a two scenarios here, which may occur
+	 * both at the time.
+	 * 1) InitiateCapture trigers capture of more than one object if the
+	 * camera is in burst mode for example.
+	 * 2) InitiateCapture creates a number of objects, but not all
+	 * objects represents images. This happens when the camera creates a
+	 * folder for newly captured image(s). This may happen with the
+	 * fresh, formatted flashcard or in burs mode if the camera is
+	 * configured to create a dedicated folder for a burst of pictures.
+	 * The newly created folder (an association object) is reported
+	 * before the images that are stored after its creation.
+	 * Thus we set CameraFilePath to the path to last object reported by
+	 * the camera.
+	 */
+	{
+		short ret;
+		ret=ptp_usb_event_wait(&camera->pl->params,&event);
+		CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
+		if (ret!=PTP_RC_OK) goto err;
+	}
+	while (event.Code==PTP_EC_ObjectAdded) {
+		/* add newsly created object to internal structures */
+		add_object (camera, event.Param1, context);
+
+		/* I hate workarounds! Nikon is not 100% PTP compatible here! */
+		if (camera->pl->params.deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) 
 			goto out;
-		if (event.Code==PTP_EC_CaptureComplete) {
-			CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
-			return GP_OK;
+		if (ptp_usb_event_wait(&camera->pl->params, &event)!=PTP_RC_OK)
+		{
+			gp_context_error (context,
+			_("Capture command completed, but no confirmation received"));
+			goto err;
 		}
 	} 
+	if (event.Code==PTP_EC_CaptureComplete) 
+		goto out;
+
+	gp_context_error (context,_("Received event 0x%04x"),event.Code);
+
+	err:
+	/* we're not setting *path on error! */
+	return GP_ERROR;
 
 	out:
-	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
-	gp_context_error (context,
-		_("Capture command completed, but no confirmation received"));
+	/* we gonna set the *path now... */
 
-	/* we're not going to set path, ptp does not use paths anyway ;) */
-	return GP_ERROR;
+	/*
+        CR (gp_filesystem_append (camera->fs, path->folder,
+		path->name, context));
+
+	*/
+
+	return GP_OK;
+
 }
 
 static int
@@ -719,9 +759,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	memset(&dpd,0,sizeof(dpd));
 	ptp_getdevicepropdesc(&camera->pl->params,PTP_DPC_BatteryLevel,&dpd);
-	GP_DEBUG ("Data Type = 0x%.4x",dpd.DataType);
-	GP_DEBUG ("Get/Set = 0x%.2x",dpd.GetSet);
-	GP_DEBUG ("Form Flag = 0x%.2x",dpd.FormFlag);
+	GP_DEBUG ("Data Type = 0x%04x",dpd.DataType);
+	GP_DEBUG ("Get/Set = 0x%02x",dpd.GetSet);
+	GP_DEBUG ("Form Flag = 0x%02x",dpd.FormFlag);
 	if (dpd.DataType!=PTP_DTC_UINT8) {
 		ptp_free_devicepropdesc(&dpd);
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1382,16 +1422,16 @@ camera_init (Camera *camera, GPContext *context)
 	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
 	GP_DEBUG ("Supported operations:");
 	for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++)
-		GP_DEBUG ("  0x%.4x",
+		GP_DEBUG ("  0x%04x",
 			camera->pl->params.deviceinfo.OperationsSupported[i]);
 	GP_DEBUG ("Events Supported:");
 	for (i=0; i<camera->pl->params.deviceinfo.EventsSupported_len; i++)
-		GP_DEBUG ("  0x%.4x",
+		GP_DEBUG ("  0x%04x",
 			camera->pl->params.deviceinfo.EventsSupported[i]);
 	GP_DEBUG ("Device Properties Supported:");
 	for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len;
 		i++)
-		GP_DEBUG ("  0x%.4x",
+		GP_DEBUG ("  0x%04x",
 			camera->pl->params.deviceinfo.DevicePropertiesSupported[i]);
 
 	/* init internal ptp objectfiles (required for fs implementation) */
