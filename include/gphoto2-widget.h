@@ -5,39 +5,44 @@
 	This library is covered by the LGPL.
 */
 
-CameraWidget* 	gp_widget_new            (CameraWidgetType type, 
-					  const char *label);
-int           	gp_widget_free           (CameraWidget *widget);
+int 	gp_widget_new 	(CameraWidgetType type, const char *label, 
+		         CameraWidget **widget);
+int    	gp_widget_free 	(CameraWidget *widget);
+int     gp_widget_ref   (CameraWidget *widget);
+int     gp_widget_unref (CameraWidget *widget);
 
-int             gp_widget_ref            (CameraWidget *widget);
-int             gp_widget_unref          (CameraWidget *widget);
+int	gp_widget_append	(CameraWidget *parent, CameraWidget *child);
+int 	gp_widget_prepend	(CameraWidget *parent, CameraWidget *child);
+int 	gp_widget_count_children(CameraWidget *parent);
 
-int 		gp_widget_append         (CameraWidget *parent, CameraWidget *child);
-int 		gp_widget_prepend        (CameraWidget *parent, CameraWidget *child);
+int	gp_widget_get_child	     (CameraWidget *parent, int child_number, 
+				      CameraWidget **child);
+int	gp_widget_get_child_by_label (CameraWidget *parent, 
+				      const char *child_label,
+				      CameraWidget **child);
+int	gp_widget_get_child_by_id    (CameraWidget *parent, int id, 
+				      CameraWidget **child);
+int	gp_widget_get_root           (CameraWidget *widget, 
+				      CameraWidget **root);
 
-int 		gp_widget_child_count    (CameraWidget *parent);
+int	gp_widget_set_info (CameraWidget *widget, const char  *info);
+int	gp_widget_get_info (CameraWidget *widget, const char **info);
 
-CameraWidget* 	gp_widget_child          (CameraWidget *parent, int child_number);
-CameraWidget* 	gp_widget_child_by_label (CameraWidget *parent, char *child_label);
-CameraWidget*	gp_widget_child_by_id    (CameraWidget *parent, int id);
-CameraWidget*	gp_widget_root           (CameraWidget *widget);
+int	gp_widget_get_id	(CameraWidget *widget, int *id);
+int	gp_widget_get_type	(CameraWidget *widget, CameraWidgetType *type);
+int	gp_widget_get_label	(CameraWidget *widget, const char **label);
 
-int		gp_widget_id             (CameraWidget *widget);
-int		gp_widget_type           (CameraWidget *widget);
-char*		gp_widget_label          (CameraWidget *widget);
+int	gp_widget_set_value     (CameraWidget *widget, void *value);
+int	gp_widget_get_value     (CameraWidget *widget, void *value);
 
-CameraWidgetCallback gp_widget_callback  (CameraWidget *widget);
-int 		gp_widget_callback_set   (CameraWidget *widget, CameraWidgetCallback callback);
+int	gp_widget_set_range	(CameraWidget *range, 
+				 float  low, float  high, float  increment);
+int	gp_widget_get_range	(CameraWidget *range, 
+				 float *low, float *high, float *increment);
 
-int		gp_widget_value_set      (CameraWidget *widget, void *value);
-int		gp_widget_value_get      (CameraWidget *widget, void *value);
+int	gp_widget_add_choice     (CameraWidget *widget, const char *choice);
+int	gp_widget_count_choices  (CameraWidget *widget);
+int	gp_widget_get_choice     (CameraWidget *widget, int choice_number, 
+				  const char **choice);
 
-int		gp_widget_range_set      (CameraWidget *range, float  low, float  high, float  increment);
-int		gp_widget_range_get      (CameraWidget *range, float *low, float *high, float *increment);
-
-int		gp_widget_choice_add     (CameraWidget *widget, char *choice);
-int		gp_widget_choice_count   (CameraWidget *widget);
-char*		gp_widget_choice         (CameraWidget *widget, int choice_number);
-
-int		gp_widget_dump           (CameraWidget *widget);
-int		gp_widget_changed        (CameraWidget *widget);
+int	gp_widget_changed        (CameraWidget *widget);

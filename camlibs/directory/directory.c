@@ -307,12 +307,12 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	char buf[256];
 	int val;
 
-	*window = gp_widget_new (GP_WIDGET_WINDOW, "Dummy");
-	widget = gp_widget_new (GP_WIDGET_TOGGLE, 
-				"View hidden (dot) directories");
+	gp_widget_new (GP_WIDGET_WINDOW, "Dummy", window);
+	gp_widget_new (GP_WIDGET_TOGGLE, "View hidden (dot) directories", 
+		       &widget);
 	gp_setting_get ("directory", "hidden", buf);
 	val = atoi (buf);
-	gp_widget_value_set (widget, &val);
+	gp_widget_set_value (widget, &val);
 	gp_widget_append (*window, widget);
 
 	return (GP_OK);
@@ -324,33 +324,15 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	char buf[256];
 	int val;
 	
-	widget = gp_widget_child_by_label(window, "View hidden (dot) directories");
-	if (gp_widget_changed(widget)) {
-		gp_widget_value_get (widget, &val);
-		sprintf(buf, "%i", val);
-		gp_setting_set("directory", "hidden", buf);
+	gp_widget_get_child_by_label (window, "View hidden (dot) directories", 
+				  &widget);
+	if (gp_widget_changed (widget)) {
+		gp_widget_get_value (widget, &val);
+		sprintf (buf, "%i", val);
+		gp_setting_set ("directory", "hidden", buf);
 	}
 	return (GP_OK);
 }
-
-/* DEPRECATED */
-/* This function is deprecated! Do not implement!*/
-int camera_config (Camera *camera) 
-{
-	CameraWidget *window;
-
-	camera_get_config (camera, &window);
-
-        /* Prompt the user with the config window */
-        if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
-                gp_widget_unref(window);
-                return GP_OK;
-        }
-	
-	camera_set_config (camera, window);
-
-        return (GP_OK);
-} /* END DEPRECATED */
 
 int camera_summary (Camera *camera, CameraText *summary) 
 {

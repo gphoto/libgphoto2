@@ -841,9 +841,9 @@ camera_folder_get_config (Camera* camera, const gchar* folder, CameraWidget** wi
 	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
 
 	/* Construct the window. */
-	*window = gp_widget_new (GP_WIDGET_WINDOW, folder);
-	widget = gp_widget_new (GP_WIDGET_BUTTON, _("Erase all unprotected images"));
-	gp_widget_callback_set (widget, erase_all_unprotected_images);
+	gp_widget_new (GP_WIDGET_WINDOW, folder, window);
+	gp_widget_new (GP_WIDGET_BUTTON, _("Erase all unprotected images"), &widget);
+	gp_widget_set_value (widget, erase_all_unprotected_images);
 	gp_widget_append (*window, widget);
 
 	return (GP_OK);
@@ -927,16 +927,16 @@ camera_get_config (Camera* camera, CameraWidget** window)
                 &slide_show_interval)) != GP_OK) return (result);
 
 	/* Create the window. */
-        *window = gp_widget_new (GP_WIDGET_WINDOW, "Konica Configuration");
+        gp_widget_new (GP_WIDGET_WINDOW, "Konica Configuration", window);
 
         /************************/
         /* Persistent Settings  */
         /************************/
-        section = gp_widget_new (GP_WIDGET_SECTION, "Persistent Settings");
+	gp_widget_new (GP_WIDGET_SECTION, "Persistent Settings", &section);
         gp_widget_append (*window, section);
 
 	/* Date */
-	widget = gp_widget_new (GP_WIDGET_DATE, "Date and Time");
+	gp_widget_new (GP_WIDGET_DATE, "Date and Time", &widget);
 	gp_widget_append (section, widget);
 	if (year > 80) year_4_digits = year + 1900;
 	else year_4_digits = year + 2000;
@@ -947,155 +947,155 @@ camera_get_config (Camera* camera, CameraWidget** window)
 	tm_struct.tm_min = minute;
 	tm_struct.tm_sec = second;
 	t = mktime (&tm_struct);
-	gp_widget_value_set (widget, &t);
+	gp_widget_set_value (widget, &t);
 
         /* Beep */
-        widget = gp_widget_new (GP_WIDGET_RADIO, "Beep");
+        gp_widget_new (GP_WIDGET_RADIO, "Beep", &widget);
         gp_widget_append (section, widget);
-	gp_widget_choice_add (widget, "On");
-	gp_widget_choice_add (widget, "Off");
+	gp_widget_add_choice (widget, "On");
+	gp_widget_add_choice (widget, "Off");
         switch (beep) {
         case 0:
-		gp_widget_value_set (widget, "Off");
+		gp_widget_set_value (widget, "Off");
 		break;
         default:
-		gp_widget_value_set (widget, "On");
+		gp_widget_set_value (widget, "On");
                 break;
         }
 
         /* Self Timer Time */
-        widget = gp_widget_new (GP_WIDGET_RANGE, "Self Timer Time");
+        gp_widget_new (GP_WIDGET_RANGE, "Self Timer Time", &widget);
         gp_widget_append (section, widget);
-        gp_widget_range_set (widget, 3, 40, 1);
+        gp_widget_set_range (widget, 3, 40, 1);
 	value_float = self_timer_time;
-	gp_widget_value_set (widget, &value_float);
+	gp_widget_set_value (widget, &value_float);
 
         /* Auto Off Time */
-        widget = gp_widget_new (GP_WIDGET_RANGE, "Auto Off Time");
+        gp_widget_new (GP_WIDGET_RANGE, "Auto Off Time", &widget);
         gp_widget_append (section, widget);
-        gp_widget_range_set (widget, 1, 255, 1);
+        gp_widget_set_range (widget, 1, 255, 1);
 	value_float = shutoff_time;
-	gp_widget_value_set (widget, &value_float);
+	gp_widget_set_value (widget, &value_float);
 
         /* Slide Show Interval */
-        widget = gp_widget_new (GP_WIDGET_RANGE, "Slide Show Interval");
+        gp_widget_new (GP_WIDGET_RANGE, "Slide Show Interval", &widget);
         gp_widget_append (section, widget);
-        gp_widget_range_set (widget, 1, 30, 1);
+        gp_widget_set_range (widget, 1, 30, 1);
 	value_float = slide_show_interval;
-	gp_widget_value_set (widget, &value_float);
+	gp_widget_set_value (widget, &value_float);
 
         /* Resolution */
-        widget = gp_widget_new (GP_WIDGET_RADIO, "Resolution");
+        gp_widget_new (GP_WIDGET_RADIO, "Resolution", &widget);
         gp_widget_append (section, widget);
-        gp_widget_choice_add (widget, "Low (576 x 436)");
-        gp_widget_choice_add (widget, "Medium (1152 x 872)");
-        gp_widget_choice_add (widget, "High (1152 x 872)");
+        gp_widget_add_choice (widget, "Low (576 x 436)");
+        gp_widget_add_choice (widget, "Medium (1152 x 872)");
+        gp_widget_add_choice (widget, "High (1152 x 872)");
         switch (resolution) {
         case 1:
-		gp_widget_value_set (widget, "High (1152 x 872)");
+		gp_widget_set_value (widget, "High (1152 x 872)");
                 break;
         case 3:
-		gp_widget_value_set (widget, "Low (576 x 436)"); 
+		gp_widget_set_value (widget, "Low (576 x 436)"); 
                 break;
         default:
-		gp_widget_value_set (widget, "Medium (1152 x 872)");
+		gp_widget_set_value (widget, "Medium (1152 x 872)");
                 break;
         }
 
 	/****************/
 	/* Localization */
 	/****************/
-        section = gp_widget_new (GP_WIDGET_SECTION, "Localization");
+        gp_widget_new (GP_WIDGET_SECTION, "Localization", &widget);
         gp_widget_append (*window, section);
 
         /* Language */
-        widget = gp_widget_new (GP_WIDGET_TEXT, "Localization File");
+        gp_widget_new (GP_WIDGET_TEXT, "Localization File", &widget);
         gp_widget_append (section, widget);
 
 	/* TV output format */
-	widget = gp_widget_new (GP_WIDGET_RADIO, "TV Output Format");
+	gp_widget_new (GP_WIDGET_RADIO, "TV Output Format", &widget);
 	gp_widget_append (section, widget);
-	gp_widget_choice_add (widget, "NTSC");
-	gp_widget_choice_add (widget, "PAL");
-	gp_widget_choice_add (widget, "Do not display TV menu");
+	gp_widget_add_choice (widget, "NTSC");
+	gp_widget_add_choice (widget, "PAL");
+	gp_widget_add_choice (widget, "Do not display TV menu");
 
 	/* Date format */
-	widget = gp_widget_new (GP_WIDGET_RADIO, "Date Format");
+	gp_widget_new (GP_WIDGET_RADIO, "Date Format", &widget);
 	gp_widget_append (section, widget);
-	gp_widget_choice_add (widget, "Month/Day/Year");
-	gp_widget_choice_add (widget, "Day/Month/Year");
-	gp_widget_choice_add (widget, "Year/Month/Day");
+	gp_widget_add_choice (widget, "Month/Day/Year");
+	gp_widget_add_choice (widget, "Day/Month/Year");
+	gp_widget_add_choice (widget, "Year/Month/Day");
 
         /********************************/
         /* Session-persistent Settings  */
         /********************************/
-        section = gp_widget_new (GP_WIDGET_SECTION, "Session-persistent Settings");
+        gp_widget_new (GP_WIDGET_SECTION, "Session-persistent Settings", &widget);
         gp_widget_append (*window, section);
 
         /* Flash */
-        widget = gp_widget_new (GP_WIDGET_RADIO, "Flash");
+        gp_widget_new (GP_WIDGET_RADIO, "Flash", &widget);
         gp_widget_append (section, widget);
-        gp_widget_choice_add (widget, "Off");
-        gp_widget_choice_add (widget, "On");
-        gp_widget_choice_add (widget, "On, red-eye reduction");
-        gp_widget_choice_add (widget, "Auto");
-        gp_widget_choice_add (widget, "Auto, red-eye reduction");
+        gp_widget_add_choice (widget, "Off");
+        gp_widget_add_choice (widget, "On");
+        gp_widget_add_choice (widget, "On, red-eye reduction");
+        gp_widget_add_choice (widget, "Auto");
+        gp_widget_add_choice (widget, "Auto, red-eye reduction");
         switch (flash) {
         case 0:
-		gp_widget_value_set (widget, "Off");
+		gp_widget_set_value (widget, "Off");
                 break;
         case 1:
-		gp_widget_value_set (widget, "On");
+		gp_widget_set_value (widget, "On");
                 break;
         case 5:
-		gp_widget_value_set (widget, "On, red-eye reduction");
+		gp_widget_set_value (widget, "On, red-eye reduction");
                 break;
         case 6:
-		gp_widget_value_set (widget, "Auto, red-eye reduction");
+		gp_widget_set_value (widget, "Auto, red-eye reduction");
                 break;
         default:
-		gp_widget_value_set (widget, "Auto");
+		gp_widget_set_value (widget, "Auto");
                 break;
         }
 
         /* Exposure */
-        widget = gp_widget_new (GP_WIDGET_RANGE, "Exposure");
+        gp_widget_new (GP_WIDGET_RANGE, "Exposure", &widget);
         gp_widget_append (section, widget);
-        gp_widget_range_set (widget, 0, 255, 1);
+        gp_widget_set_range (widget, 0, 255, 1);
 	value_float = exposure;
-	gp_widget_value_set (widget, &value_float);
+	gp_widget_set_value (widget, &value_float);
 
         /* Focus */
-        widget = gp_widget_new (GP_WIDGET_RADIO, "Focus");
+        gp_widget_new (GP_WIDGET_RADIO, "Focus", &widget);
         gp_widget_append (section, widget);
-        gp_widget_choice_add (widget, "Fixed");
-        gp_widget_choice_add (widget, "Auto");
+        gp_widget_add_choice (widget, "Fixed");
+        gp_widget_add_choice (widget, "Auto");
         switch ((guint) (focus_self_timer / 2)) {
         case 1:
-		gp_widget_value_set (widget, "Auto");
+		gp_widget_set_value (widget, "Auto");
                 break;
         default:
-		gp_widget_value_set (widget, "Fixed");
+		gp_widget_set_value (widget, "Fixed");
                 break;
         }
 
         /************************/
         /* Volatile Settings    */
         /************************/
-        section = gp_widget_new (GP_WIDGET_SECTION, "Volatile Settings");
+        gp_widget_new (GP_WIDGET_SECTION, "Volatile Settings", &section);
         gp_widget_append (*window, section);
 
         /* Self Timer */
-        widget = gp_widget_new (GP_WIDGET_RADIO, "Self Timer");
+        gp_widget_new (GP_WIDGET_RADIO, "Self Timer", &widget);
         gp_widget_append (section, widget);
-        gp_widget_choice_add (widget, "Self Timer (only next picture)");
-        gp_widget_choice_add (widget, "Normal");
+        gp_widget_add_choice (widget, "Self Timer (only next picture)");
+        gp_widget_add_choice (widget, "Normal");
         switch (focus_self_timer % 2) {
         case 1:
-		gp_widget_value_set (widget, "Self Timer (only next picture)");
+		gp_widget_set_value (widget, "Self Timer (only next picture)");
                 break;
         default:
-		gp_widget_value_set (widget, "Normal");
+		gp_widget_set_value (widget, "Normal");
                 break;
         }
 
@@ -1132,12 +1132,12 @@ int camera_set_config (Camera *camera, CameraWidget *window)
         /************************/
         /* Persistent Settings  */
         /************************/
-	g_assert ((section = gp_widget_child_by_label (window, "Persistent Settings")) != NULL);
+	gp_widget_get_child_by_label (window, "Persistent Settings", &section);
 
 	/* Date & Time */
-	g_assert ((widget = gp_widget_child_by_label (section, "Date and Time")) != NULL);
+	gp_widget_get_child_by_label (section, "Date and Time", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &i);
+		gp_widget_get_value (widget, &i);
 		tm_struct = localtime ((time_t*) &i);
 		if ((result = k_set_date_and_time (
 			konica_data->device, 
@@ -1150,9 +1150,9 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	}
 
 	/* Beep */
-	g_assert ((widget = gp_widget_child_by_label (section, "Beep")) != NULL);
+	gp_widget_get_child_by_label (section, "Beep", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &c);
+		gp_widget_get_value (widget, &c);
 		if (strcmp (c, "Off") == 0) beep = 0;
 		else if (strcmp (c, "On") == 0) beep = 1;
 		else g_warning (_("Value '%s' invalid. Valid values are 'Off' and 'On'."), c);
@@ -1160,30 +1160,30 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	}
 
 	/* Self Timer Time */
-	g_assert ((widget = gp_widget_child_by_label (section, "Self Timer Time")) != NULL);
+	gp_widget_get_child_by_label (section, "Self Timer Time", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &f);
+		gp_widget_get_value (widget, &f);
 		if ((result = k_set_preference (konica_data->device, K_PREFERENCE_SELF_TIMER_TIME, (gint) f)) != GP_OK) return (result);
 	}
 
 	/* Auto Off Time */
-	g_assert ((widget = gp_widget_child_by_label (section, "Auto Off Time")) != NULL);
+	gp_widget_get_child_by_label (section, "Auto Off Time", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &f);
+		gp_widget_get_value (widget, &f);
 		if ((result = k_set_preference (konica_data->device, K_PREFERENCE_AUTO_OFF_TIME, (gint) f)) != GP_OK) return (result);
 	}
 
 	/* Slide Show Interval */
-	g_assert ((widget = gp_widget_child_by_label (section, "Slide Show Interval")) != NULL);
+	gp_widget_get_child_by_label (section, "Slide Show Interval", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &f);
+		gp_widget_get_value (widget, &f);
 		if ((result = k_set_preference (konica_data->device, K_PREFERENCE_SLIDE_SHOW_INTERVAL, (gint) f)) != GP_OK) return (result);
 	}
 
 	/* Resolution */
-	g_assert ((widget = gp_widget_child_by_label (section, "Resolution")) != NULL);
+	gp_widget_get_child_by_label (section, "Resolution", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &c);
+		gp_widget_get_value (widget, &c);
 		if (strcmp (c, "High (1152 x 872)") == 0) j = 1;
                 else if (strcmp (c, "Low (576 x 436)") == 0) j = 3;
                 else j = 0;
@@ -1193,12 +1193,12 @@ int camera_set_config (Camera *camera, CameraWidget *window)
         /****************/
         /* Localization */
         /****************/
-	g_assert ((section = gp_widget_child_by_label (window, "Localization")) != NULL);
+	gp_widget_get_child_by_label (window, "Localization", &section);
 
 	/* Localization File */
-	g_assert ((widget = gp_widget_child_by_label (section, "Localization File")) != NULL);
+	gp_widget_get_child_by_label (section, "Localization File", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &c);
+		gp_widget_get_value (widget, &c);
 	        if (strcmp (c, "") != 0) {
                 	data = NULL;
 			data_size = 0;
@@ -1217,9 +1217,9 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	}
 
 	/* TV Output Format */
-	g_assert ((widget = gp_widget_child_by_label (section, "TV Output Format")) != NULL);
+	gp_widget_get_child_by_label (section, "TV Output Format", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &c);
+		gp_widget_get_value (widget, &c);
 		if (strcmp (c, "NTSC") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_NTSC;
 		else if (strcmp (c, "PAL") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_PAL;
 		else if (strcmp (c, "Do not display TV menu") == 0) tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
@@ -1228,9 +1228,9 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	}
 
 	/* Date Format */
-	g_assert ((widget = gp_widget_child_by_label (section, "Date Format")) != NULL);
+	gp_widget_get_child_by_label (section, "Date Format", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &c);
+		gp_widget_get_value (widget, &c);
 		if (strcmp (c, "Month/Day/Year") == 0) date_format = K_DATE_FORMAT_MONTH_DAY_YEAR;
                 else if (strcmp (c, "Day/Month/Year") == 0) date_format = K_DATE_FORMAT_DAY_MONTH_YEAR;
 		else if (strcmp (c, "Year/Month/Day") == 0) date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
@@ -1241,12 +1241,12 @@ int camera_set_config (Camera *camera, CameraWidget *window)
         /********************************/
         /* Session-persistent Settings  */
         /********************************/
-	g_assert ((section = gp_widget_child_by_label (window, "Session-persistent Settings")) != NULL);
+	gp_widget_get_child_by_label (window, "Session-persistent Settings", &section);
 
 	/* Flash */
-	g_assert ((widget = gp_widget_child_by_label (section, "Flash")) != NULL);
+	gp_widget_get_child_by_label (section, "Flash", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &c);
+		gp_widget_get_value (widget, &c);
 		if (strcmp (c, "Off") == 0) j = 0;
 		else if (strcmp (c, "On") == 0) j = 1;
                 else if (strcmp (c, "On, red-eye reduction") == 0) j = 5;
@@ -1257,28 +1257,28 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	}
 
 	/* Exposure */
-	g_assert ((widget = gp_widget_child_by_label (section, "Exposure")) != NULL);
+	gp_widget_get_child_by_label (section, "Exposure", &widget);
 	if (gp_widget_changed (widget)) {
-		gp_widget_value_get (widget, &f);
+		gp_widget_get_value (widget, &f);
 		if ((result = k_set_preference (konica_data->device, K_PREFERENCE_EXPOSURE, (gint) f)) != GP_OK) return (result);
 	}
 
 	/* Focus will be set together with self timer. */
-	g_assert ((widget_focus = gp_widget_child_by_label (section, "Focus")) != NULL);
+	gp_widget_get_child_by_label (section, "Focus", &widget_focus);
 
         /************************/
         /* Volatile Settings    */
         /************************/
-	g_assert ((section = gp_widget_child_by_label (window, "Volatile Settings")) != NULL);
+	gp_widget_get_child_by_label (window, "Volatile Settings", &section);
 
 	/* Self Timer (and Focus) */
-	g_assert ((widget_self_timer = gp_widget_child_by_label (section, "Self Timer")) != NULL);
+	gp_widget_get_child_by_label (section, "Self Timer", &widget_self_timer);
 	if (gp_widget_changed (widget_focus) && gp_widget_changed (widget_self_timer)) {
-		gp_widget_value_get (widget_focus, &c);
+		gp_widget_get_value (widget_focus, &c);
 		if (strcmp (c, "Auto") == 0) focus_self_timer = 2;
 		else if (strcmp (c, "Fixed") == 0) focus_self_timer = 0;
 		else g_assert_not_reached ();
-		gp_widget_value_get (widget_self_timer, &c);
+		gp_widget_get_value (widget_self_timer, &c);
 		if (strcmp (c, "Self Timer (only next picture)") == 0) focus_self_timer++;
 		else if (strcmp (c, "Normal") == 0);
 		else g_warning (_("Value '%s' invalid. Valid values are 'Self Timer (only next picture)' and 'Normal'"), c);

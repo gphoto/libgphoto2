@@ -74,8 +74,7 @@ typedef enum {
 	GP_WIDGET_RADIO,
 	GP_WIDGET_MENU,
 	GP_WIDGET_BUTTON,
-	GP_WIDGET_DATE,
-	GP_WIDGET_NONE
+	GP_WIDGET_DATE
 } CameraWidgetType;
 
 /* Window prompt return values */
@@ -282,6 +281,7 @@ struct CameraWidget;
 typedef struct CameraWidget {
 	CameraWidgetType type;
 	char    label[32];
+	char	info[1024];
 
 	/* Pointer to the parent */
 	struct CameraWidget *parent;

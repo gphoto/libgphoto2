@@ -1273,38 +1273,38 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_get_config()");
 	
-	*window = gp_widget_new(GP_WIDGET_WINDOW, 
-		"Canon PowerShot Configuration");
+	gp_widget_new (GP_WIDGET_WINDOW, "Canon PowerShot Configuration", 
+		       window);
 
-	section = gp_widget_new(GP_WIDGET_SECTION, "Configure");
-	gp_widget_append(*window,section);
+	gp_widget_new (GP_WIDGET_SECTION, "Configure", &section);
+	gp_widget_append (*window,section);
 	
-	t = gp_widget_new(GP_WIDGET_TEXT,"Camera Model");
-	gp_widget_value_set (t, cs->ident);
-	gp_widget_append(section,t);
+	gp_widget_new (GP_WIDGET_TEXT,"Camera Model", &t);
+	gp_widget_set_value (t, cs->ident);
+	gp_widget_append (section,t);
 
-	t = gp_widget_new(GP_WIDGET_TEXT,"Owner name");
-	gp_widget_value_set (t, cs->owner);
-	gp_widget_append(section,t);
+	gp_widget_new (GP_WIDGET_TEXT,"Owner name", &t);
+	gp_widget_set_value (t, cs->owner);
+	gp_widget_append (section,t);
 
-	t = gp_widget_new(GP_WIDGET_TEXT, "date");
+	gp_widget_new (GP_WIDGET_TEXT, "date", &t);
 	if (cs->cached_ready == 1) {
 	  camtime = psa50_get_time(camera);
 	  camtm = gmtime(&camtime);
-	  gp_widget_value_set (t, asctime(camtm));
+	  gp_widget_set_value (t, asctime(camtm));
 	} else
-	  gp_widget_value_set (t, "Unavailable");
-	gp_widget_append(section,t);
+	  gp_widget_set_value (t, "Unavailable");
+	gp_widget_append (section,t);
 	
-	t = gp_widget_new(GP_WIDGET_TOGGLE, "Set camera date to PC date");
-	gp_widget_append(section,t);
+	gp_widget_new (GP_WIDGET_TOGGLE, "Set camera date to PC date", &t);
+	gp_widget_append (section,t);
 	
-	t = gp_widget_new(GP_WIDGET_TEXT,"Firmware revision");
-	sprintf(firm,"%i.%i.%i.%i",cs->firmwrev[3], 
+	gp_widget_new (GP_WIDGET_TEXT,"Firmware revision", &t);
+	sprintf (firm,"%i.%i.%i.%i",cs->firmwrev[3], 
 			cs->firmwrev[2],cs->firmwrev[1],
 			cs->firmwrev[0]);
-	gp_widget_value_set (t, firm);
-	gp_widget_append(section,t);
+	gp_widget_set_value (t, firm);
+	gp_widget_append (section,t);
 	
 	if (cs->cached_ready == 1) {
 		canon_get_batt_status(camera, &pwr_status,&pwr_source);
@@ -1334,36 +1334,36 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 		}
 	}
 	else
-	  strcpy(power_stats,"Power: camera unavailable");
+	  strcpy (power_stats,"Power: camera unavailable");
 	
-	t = gp_widget_new(GP_WIDGET_TEXT,"Power");
-	gp_widget_value_set (t, power_stats);
-	gp_widget_append(section,t);
+	gp_widget_new (GP_WIDGET_TEXT,"Power", &t);
+	gp_widget_set_value (t, power_stats);
+	gp_widget_append (section,t);
 	
-	section = gp_widget_new(GP_WIDGET_SECTION, "Debug");
-	gp_widget_append(*window,section);
+	gp_widget_new (GP_WIDGET_SECTION, "Debug", &section);
+	gp_widget_append (*window, section);
 	
-	t = gp_widget_new(GP_WIDGET_MENU, "Debug level");
-	gp_widget_choice_add (t, "none");
-	gp_widget_choice_add (t, "functions");
-	gp_widget_choice_add (t, "complete");
+	gp_widget_new (GP_WIDGET_MENU, "Debug level", &t);
+	gp_widget_add_choice (t, "none");
+	gp_widget_add_choice (t, "functions");
+	gp_widget_add_choice (t, "complete");
 	switch (cs->debug) {
 	 case 0:
 	 default:
-		gp_widget_value_set(t, "none");
+		gp_widget_set_value (t, "none");
 		break;
 	 case 1:
-		gp_widget_value_set(t, "functions");
+		gp_widget_set_value (t, "functions");
 		break;
 	 case 9:
-		gp_widget_value_set(t, "complete");
+		gp_widget_set_value (t, "complete");
 		break;
 	}
-	gp_widget_append(section,t);
+	gp_widget_append (section,t);
 
-	t = gp_widget_new(GP_WIDGET_TOGGLE, "Dump data by packets to stderr");
-	gp_widget_value_set(t, &(cs->dump_packets));
-	gp_widget_append(section,t);
+	gp_widget_new (GP_WIDGET_TOGGLE, "Dump data by packets to stderr", &t);
+	gp_widget_set_value (t, &(cs->dump_packets));
+	gp_widget_append (section,t);
 
 	return GP_OK;
 }
@@ -1392,11 +1392,11 @@ int camera_set_config (Camera *camera, CameraWidget *window)
         char *wvalue;
         char buf[8];
 
-	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_set_config()");
+	gp_debug_printf (GP_DEBUG_LOW,"canon","camera_set_config()");
 
-	w = gp_widget_child_by_label(window,"Debug level");
-	if (gp_widget_changed(w)) {
-		gp_widget_value_get(w, &wvalue);
+	gp_widget_get_child_by_label (window,"Debug level", &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &wvalue);
                 if(strcmp(wvalue,"none") == 0)
                     cs->debug = 0;
                 else if (strcmp(wvalue,"functions") == 0)
@@ -1408,29 +1408,31 @@ int camera_set_config (Camera *camera, CameraWidget *window)
                 gp_setting_set("canon", "debug", buf);
         }
 
-	w = gp_widget_child_by_label(window,"Dump data by packets to stderr");
-	if (gp_widget_changed(w)) {
-		gp_widget_value_get(w, &(cs->dump_packets));
+	gp_widget_get_child_by_label (window,"Dump data by packets to stderr", 
+				      &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &(cs->dump_packets));
 		sprintf(buf,"%i",cs->dump_packets);
 		gp_setting_set("canon", "dump_packets", buf);
 	}
 	
-	w = gp_widget_child_by_label(window,"Owner name");
-	if (gp_widget_changed(w)) {
-	        gp_widget_value_get(w, &wvalue);
+	gp_widget_get_child_by_label (window,"Owner name", &w);
+	if (gp_widget_changed (w)) {
+	        gp_widget_get_value (w, &wvalue);
                 if(!check_readiness(camera)) {
                     gp_frontend_status(camera,"Camera unavailable");
                 } else {
                     if(psa50_set_owner_name(camera, wvalue))
                         gp_frontend_status(camera, "Owner name changed");
                     else
-                        gp_frontend_status(camera, "could not change owner name");
+                        gp_frontend_status (camera, 
+					    "could not change owner name");
                 }
         }
 	
-	w = gp_widget_child_by_label(window,"Set camera date to PC date");
-	if (gp_widget_changed(w)) {
-                gp_widget_value_get(w, &wvalue);
+	gp_widget_get_child_by_label (window,"Set camera date to PC date", &w);
+	if (gp_widget_changed (w)) {
+                gp_widget_get_value (w, &wvalue);
                 if(!check_readiness(camera)) {
                     gp_frontend_status(camera,"Camera unavailable");
                 } else {
@@ -1442,7 +1444,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
                 }
         }
 
-	gp_debug_printf(GP_DEBUG_LOW,"canon","done configuring camera.\n");
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "done configuring camera.\n");
 
 	return GP_OK;
 }
