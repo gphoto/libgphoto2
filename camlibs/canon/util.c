@@ -2,9 +2,9 @@
  *
  * File: util.c 
  *
- * Utility functions for the gPhoto Canon PowerShot A5(Z)/A50 driver.
+ * Utility functions for the gphoto2 camlibs/canon driver.
  *
- * $Header$
+ * $Id$
  ****************************************************************************/
 
 /****************************************************************************

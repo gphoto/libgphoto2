@@ -1,12 +1,15 @@
 /***************************************************************************
  *
- * canon.c
+ * library.c
  *
  *   Canon Camera library for the gphoto project,
  *   (c) 1999 Wolfgang G. Reissnegger
  *   Developed for the Canon PowerShot A50
  *   Additions for PowerShot A5 by Ole W. Saastad
  *   (c) 2000: Other additions  by Edouard Lafargue, Philippe Marzouk
+ *
+ * This file contains all the "glue code" required to use the canon
+ * driver with libgphoto2.
  *
  * $Id$
  ****************************************************************************/

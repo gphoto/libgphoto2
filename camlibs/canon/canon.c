@@ -1,19 +1,19 @@
 /*
- * psa50.c - Canon PowerShot "native" operations.
+ * canon.c - Canon protocol "native" operations.
  *
  * Written 1999 by Wolfgang G. Reissnegger and Werner Almesberger
  * Additions 2000 by Philippe Marzouk and Edouard Lafargue
  * USB support, 2000, by Mikael Nyström
  *
- * $Header$
- */
-
-/*
- * This file now includes both USB and serial support. This is
- * experimental and not guaranteed to work 100%. Maybe a better
- * design would be to make serial and USB support completely separate,
- * but at the same time, both protocols/busses work almost the same
- * way.
+ * $Id$
+ *
+ * This file includes both USB and serial support for the cameras
+ * manufactured by Canon. These comprise all (or at least almost all)
+ * of the digital models of the IXUS, PowerShot and EOS series.
+ *
+ * We are working at moving serial and USB specific stuff to serial.c
+ * and usb.c, keeping the common protocols/busses support in this
+ * file.
  */
 
 #include <config.h>

@@ -1,5 +1,5 @@
 /*
- * library.h - Canon "native" operations.
+ * canon.h - Canon "native" operations.
  *
  * Written 1999 by Wolfgang G. Reissnegger and Werner Almesberger
  *
