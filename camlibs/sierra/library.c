@@ -761,7 +761,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 		case SIERRA_PACKET_INVALID:
 			gp_context_error (context, _("Packet got rejected "
 				"by camera. Please contact "
-				"%s.", MAIL_GPHOTO_DEVEL));
+				"%s."), MAIL_GPHOTO_DEVEL);
 			return GP_ERROR;
 
 		case SIERRA_PACKET_SESSION_END:
