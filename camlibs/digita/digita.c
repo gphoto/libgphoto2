@@ -93,7 +93,7 @@ int camera_init(Camera *camera, CameraInit *init)
         if (!strcmp(init->port_settings.path, "usb"))
                 dev = digita_usb_open(camera);
         else
-                dev = digita_serial_open(camera);
+                dev = digita_serial_open(camera,init);
 
         return dev ? GP_OK : GP_ERROR;
 }

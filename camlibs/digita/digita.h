@@ -133,7 +133,7 @@ int digita_get_file_data(struct digita_device *dev, int thumbnail,
 int digita_delete_picture(struct digita_device *dev, struct filename *filename);
 
 /* serial.c */
-struct digita_device *digita_serial_open(Camera *camera);
+struct digita_device *digita_serial_open(Camera *camera,  CameraInit *init);
 
 /* usb.c */
 struct digita_device *digita_usb_open(Camera *camera);
