@@ -35,6 +35,7 @@ GtkWidget *create_main_win(void) {
   GtkWidget *camera_menu;
   GtkAccelGroup *camera_menu_accels;
   GtkWidget *select_camera;
+  GtkWidget *config_camera;
   GtkWidget *export, *export_menu, *html_export;
   GtkWidget *main_toolbar;
   GtkWidget *tmp_toolbar_icon;
@@ -49,6 +50,7 @@ GtkWidget *create_main_win(void) {
   GtkWidget *main_scroll_local;
   GtkWidget *main_vp_local;
   GtkWidget *main_tree_local;
+  GtkWidget *main_leaf_local;
   GtkWidget *main_scroll_cam;
   GtkWidget *main_vp_cam;
   GtkWidget *main_tree_hbox;
@@ -155,15 +157,25 @@ GtkWidget *create_main_win(void) {
   camera_menu_accels = gtk_menu_ensure_uline_accel_group
     (GTK_MENU (camera_menu));
 
-  select_camera = gtk_menu_item_new_with_label (_("Select Camera"));
+  select_camera = gtk_menu_item_new_with_label (_("Select"));
   gtk_widget_set_name (select_camera, "select_camera");
   gtk_widget_ref (select_camera);
   gtk_object_set_data_full(GTK_OBJECT (main_win), "select_camera", 
 			   select_camera, (GtkDestroyNotify)gtk_widget_unref);
   gtk_signal_connect (GTK_OBJECT (select_camera), "activate",
-                      GTK_SIGNAL_FUNC (select_camera_callback), NULL);
+                      GTK_SIGNAL_FUNC (select_camera_cb), NULL);
   gtk_widget_show (select_camera);
   gtk_container_add (GTK_CONTAINER (camera_menu), select_camera);
+
+  config_camera = gtk_menu_item_new_with_label (_("Configure"));
+  gtk_widget_set_name (config_camera, "config_camera");
+  gtk_widget_ref (config_camera);
+  gtk_object_set_data_full(GTK_OBJECT (main_win), "config_camera", 
+			   config_camera, (GtkDestroyNotify)gtk_widget_unref);
+  gtk_signal_connect (GTK_OBJECT (config_camera), "activate",
+                      GTK_SIGNAL_FUNC (config_camera_cb), NULL);
+  gtk_widget_show (config_camera);
+  gtk_container_add (GTK_CONTAINER (camera_menu), config_camera);
     
   export = gtk_menu_item_new_with_label (_("Export"));
   gtk_widget_set_name (export, "export");
@@ -319,15 +331,10 @@ GtkWidget *create_main_win(void) {
   gtk_widget_show (main_vp_local);
   gtk_container_add (GTK_CONTAINER (main_scroll_local), main_vp_local);
 
-  /* start local file directory tree */
-  main_tree_local = gtk_tree_new ();
-  gtk_widget_set_name (main_tree_local, "main_tree_local");
-  gtk_widget_ref (main_tree_local);
-  gtk_object_set_data_full (GTK_OBJECT (main_win), "main_tree_local", 
-			    main_tree_local,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (main_tree_local);
+  main_tree_local = create_local_tree(main_win);
   gtk_container_add (GTK_CONTAINER (main_vp_local), main_tree_local);
+  gtk_widget_show(main_tree_local);
+
   /* end local file directory tree */
 
   main_vbox_vp = gtk_vbox_new (FALSE, 2);
@@ -380,9 +387,9 @@ GtkWidget *create_main_win(void) {
   gtk_widget_ref(main_leaf_cam);
   gtk_tree_append(GTK_TREE(main_tree_cam), main_leaf_cam);
   gtk_widget_show(main_leaf_cam);
-
+ 
   /* tree functions in tree_list_util.c */
-  main_tree_hbox = create_camera_tree();
+  main_tree_hbox = create_camera_tree(main_win);
   gtk_container_add(GTK_CONTAINER(main_leaf_cam), main_tree_hbox);
   gtk_widget_show(main_tree_hbox);
   
