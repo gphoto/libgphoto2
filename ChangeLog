@@ -1,3 +1,7 @@
+2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-camera.[c,h]: Documented
+
 2001-10-16 Dan Fandrich <dan@coneharvesters.com>
 
 	* camlibs/dimera/*: added i18n support; improved error returning

@@ -1,4 +1,36 @@
 <SECTION>
+<FILE>gphoto2-camera</FILE>
+<TITLE>Camera</TITLE>
+Camera
+
+gp_camera_new
+gp_camera_ref
+gp_camera_unref
+gp_camera_free
+
+gp_camera_capture
+gp_camera_folder_list_folders
+
+gp_camera_file_delete
+
+gp_camera_file_set_info
+gp_camera_file_get_config
+
+gp_camera_file_set_config
+
+gp_camera_get_summary
+gp_camera_get_about
+
+
+CameraCaptureType
+
+gp_camera_progress
+gp_camera_message
+
+
+</SECTION>
+
+<SECTION>
 <FILE>gphoto2-debug</FILE>
 <TITLE>GPDebug</TITLE>
 
@@ -54,7 +86,6 @@ GP_ERROR_DIRECTORY_EXISTS
 GP_ERROR_FILE_EXISTS
 GP_ERROR_FILE_NOT_FOUND
 GP_ERROR_DIRECTORY_NOT_FOUND
-GP_ERROR_NOT_SUPPORTED
 GP_ERROR_IO
 GP_ERROR_MODEL_NOT_FOUND
 

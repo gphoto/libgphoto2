@@ -1,6 +1,9 @@
-/* camera.c
+/* gphoto2-camera.c
  *
  * Copyright (C) 2000 Scott Fritzinger
+ *
+ * Contributions:
+ * 	2001: Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,26 +32,27 @@
 #include "gphoto2-result.h"
 #include "gphoto2-core.h"
 #include "gphoto2-library.h"
-#include "gphoto2-debug.h"
 #include "gphoto2-port-core.h"
 #include "gphoto2-port-log.h"
 
-#include <config.h>
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
 #  define _(String) dgettext (PACKAGE, String)
 #  ifdef gettext_noop
-#      define N_(String) gettext_noop (String)
+#    define N_(String) gettext_noop (String)
 #  else
-#      define N_(String) (String)
+#    define N_(String) (String)
 #  endif
 #else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
-
-static int glob_session_camera = 0;
 
 #define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
@@ -60,8 +64,14 @@ static int glob_session_camera = 0;
 
 #define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); gp_camera_status ((c), ""); gp_camera_progress ((c), 0.0); return (r);}; CHECK_CLOSE (c);}
 
-#define GP_DEBUG(m) {gp_debug_printf (GP_DEBUG_LOW, "core", (m));}
-
+/**
+ * gp_camera_new:
+ * @camera:
+ *
+ * Allocates the memory for a #Camera.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_new (Camera **camera)
 {
@@ -106,7 +116,6 @@ gp_camera_new (Camera **camera)
 	}
 	memset ((*camera)->functions, 0, sizeof (CameraFunctions));
 
-	(*camera)->session    = glob_session_camera++;
         (*camera)->ref_count  = 1;
 
 	/* Create the filesystem */
@@ -131,7 +140,6 @@ gp_camera_set_model (Camera *camera, const char *model)
 
 	CHECK_NULL (camera && model);
 
-	gp_debug_printf (GP_DEBUG_LOW, "core", "Setting model to '%s'", model);
 	CHECK_RESULT (gp_camera_abilities_by_name (model, &abilities));
 	CHECK_RESULT (gp_camera_set_abilities (camera, abilities));
 	strncpy (camera->model, model, sizeof (camera->model));
@@ -151,6 +159,20 @@ gp_camera_get_model (Camera *camera, const char **model)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_set_abilities:
+ * @camera: a #Camera
+ * @abilities: the #CameraAbilities to be set
+ *
+ * Sets the camera abilities. You need to call this function before
+ * calling #gp_camera_init unless you want gphoto2 to autodetect 
+ * cameras and choose the first detected one. By setting the @abilities, you
+ * tell gphoto2 what model the @camera is and what camera driver should 
+ * be used for accessing the @camera. You can get @abilities by calling
+ * #gp_abilities_list_get_abilities.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 {
@@ -167,6 +189,15 @@ gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_get_abilities:
+ * @camera: a #Camera
+ * @abilities:
+ *
+ * Retreives the @abilities of the @camera. 
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_get_abilities (Camera *camera, CameraAbilities *abilities)
 {
@@ -217,16 +248,27 @@ gp_camera_set_port (Camera *camera, CameraPortInfo *info)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_set_port_path:
+ * @camera: a #Camera
+ * @port_path: a path
+ *
+ * Indicates which device should be used for accessing the @camera.
+ * Alternatively, #gp_camera_set_port_name can be used.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_set_port_path (Camera *camera, const char *port_path)
 {
 	int x, count;
 	CameraPortInfo info;
 
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port path to '%s'...",
+		port_path);
+
 	CHECK_NULL (camera && port_path);
 
-	gp_debug_printf (GP_DEBUG_LOW, "core", "Setting port path to '%s'",
-			 port_path); 
 	CHECK_RESULT (gp_camera_unset_port (camera));
 	CHECK_RESULT (count = gp_port_core_count ());
 	for (x = 0; x < count; x++)
@@ -237,6 +279,15 @@ gp_camera_set_port_path (Camera *camera, const char *port_path)
 	return (GP_ERROR_UNKNOWN_PORT); 
 }
 
+/**
+ * gp_camera_get_port_path:
+ * @camera: a #Camera
+ * @port_path:
+ *
+ * Retreives the path to the port the @camera is currently using.
+ *
+ * Return value: a gphoto2 error code.
+ **/
 int
 gp_camera_get_port_path (Camera *camera, const char **port_path)
 {
@@ -247,16 +298,27 @@ gp_camera_get_port_path (Camera *camera, const char **port_path)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_set_port_name:
+ * @camera: a #Camera
+ * @port_name: a name
+ *
+ * Indicates which device should be used for accessing the @camera.
+ * Alternatively, #gp_camera_set_port_path can be used.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_set_port_name (Camera *camera, const char *port_name)
 {
 	int x, count;
 	CameraPortInfo info;
 
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port name to '%s'",
+		port_name);
+
 	CHECK_NULL (camera && port_name);
 
-	gp_debug_printf (GP_DEBUG_LOW, "core", "Setting port name to '%s'",
-			 port_name);
 	CHECK_RESULT (gp_camera_unset_port (camera));
 	CHECK_RESULT (count = gp_port_core_count ());
 	for (x = 0; x < count; x++)
@@ -267,6 +329,15 @@ gp_camera_set_port_name (Camera *camera, const char *port_name)
 	return (GP_ERROR_UNKNOWN_PORT);
 }
 
+/**
+ * gp_camera_get_port_name:
+ * @camera: a #Camera
+ * @port_name:
+ *
+ * Retreives the name of the port the @camera is currently using.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_get_port_name (Camera *camera, const char **port_name)
 {
@@ -277,6 +348,18 @@ gp_camera_get_port_name (Camera *camera, const char **port_name)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_set_port_speed:
+ * @camera: a #Camera
+ * @speed: the speed
+ *
+ * Sets the speed. This function is typically used prior initialization 
+ * using #gp_camera_init for debugging purposes. Normally, a camera driver
+ * will try to figure out the current speed of the camera and set the speed
+ * to the optimal one automatically.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_set_port_speed (Camera *camera, int speed)
 {
@@ -287,6 +370,19 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_set_progress_func:
+ * @camera: a #Camera
+ * @func: a #CameraProgressFunc
+ * @data:
+ *
+ * Sets the function that will be used to display the progress in case of
+ * operations that can take some time (like file download). Typically, this
+ * function will be called by the frontend after #gp_camera_new in order to
+ * redirect progress information to the status bar.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_set_progress_func (Camera *camera, CameraProgressFunc func,
 			     void *data)
@@ -299,6 +395,20 @@ gp_camera_set_progress_func (Camera *camera, CameraProgressFunc func,
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_set_status_func:
+ * @camera: a #Camera
+ * @func: a #CameraStatusFunc
+ * @data:
+ *
+ * Sets the function that will be used to display status messages. Status
+ * messages are displayed before operations that can take some time, often
+ * in combination with progress information. Typically, a frontend would 
+ * call this function after #gp_camera_new in order to redirect status 
+ * messages to the status bar.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_set_status_func (Camera *camera, CameraStatusFunc func,
 			   void *data)
@@ -311,6 +421,20 @@ gp_camera_set_status_func (Camera *camera, CameraStatusFunc func,
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_set_message_func:
+ * @camera: a #Camera
+ * @func: a #CameraMessageFunc
+ * @data:
+ *
+ * Sets the message function that will be used for displaying messages. 
+ * This mechanism is used by camera drivers in order to display information
+ * that cannot be passed through gphoto2 using standard mechanisms. As gphoto2
+ * allows camera specific error codes, the message mechanism should never be
+ * used. It is here for historical reasons.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_set_message_func (Camera *camera, CameraMessageFunc func,
 			    void *data)
@@ -323,6 +447,19 @@ gp_camera_set_message_func (Camera *camera, CameraMessageFunc func,
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_status:
+ * @camera: a #Camera
+ * @format:
+ * @...:
+ *
+ * Sets the status message. Typically, this function gets called by gphoto2
+ * or a camera driver before operations that will take some time. For 
+ * example, gphoto2 automatically sets a status message before
+ * each file download.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_status (Camera *camera, const char *format, ...)
 {
@@ -345,6 +482,16 @@ gp_camera_status (Camera *camera, const char *format, ...)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_message:
+ * @camera: a #Camera
+ * @format:
+ * @...:
+ *
+ * This function is here for historical reasons. Please do not use.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_message (Camera *camera, const char *format, ...)
 {
@@ -367,14 +514,25 @@ gp_camera_message (Camera *camera, const char *format, ...)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_progress:
+ * @camera: a #Camera:
+ * @percentage: a percentage
+ *
+ * Informs frontends of the progress of an operation. Typically, this
+ * function is used by camera drivers during operations that take some
+ * time but that can be monitored.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_progress (Camera *camera, float percentage)
 {
 	CHECK_NULL (camera);
 
 	if ((percentage < 0.) || (percentage > 1.)) {
-		gp_debug_printf (GP_DEBUG_LOW, "camera",
-				 "Wrong percentage: %f", percentage);
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", 
+			"Wrong percentage: %f", percentage);
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 
@@ -385,6 +543,14 @@ gp_camera_progress (Camera *camera, float percentage)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_ref:
+ * @camera: a #Camera
+ *
+ * Increments the reference count of a @camera.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_ref (Camera *camera)
 {
@@ -395,6 +561,15 @@ gp_camera_ref (Camera *camera)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_unref:
+ * @camera: a #Camera
+ *
+ * Decrements the reference count of a @camera. If the reference count 
+ * reaches %0, the @camera will be freed automatically.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_unref (Camera *camera)
 {
@@ -413,13 +588,14 @@ gp_camera_exit (Camera *camera)
 {
 	int ret;
 
-	GP_DEBUG ("ENTER: gp_camera_exit");
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Exiting camera...");
+
 	CHECK_NULL (camera);
 
-	if (camera->functions == NULL)
+	if (!camera->functions)
 		return (GP_ERROR);
 
-	if (camera->functions->exit == NULL)
+	if (!camera->functions->exit)
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	CHECK_OPEN (camera);
@@ -429,10 +605,18 @@ gp_camera_exit (Camera *camera)
 	GP_SYSTEM_DLCLOSE (camera->library_handle);
 	CHECK_RESULT (ret);
 
-	GP_DEBUG ("LEAVE: gp_camera_exit");
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_free:
+ * @camera: a #Camera
+ *
+ * Frees the camera. This function should never be used. Please use
+ * #gp_camera_ref instead.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_free (Camera *camera)
 {
@@ -455,6 +639,18 @@ gp_camera_free (Camera *camera)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_init:
+ * @camera: a #camera
+ *
+ * Initiates a connection to the camera. Before calling this function, the
+ * @camera should be set up using #gp_camera_set_port_path or
+ * #gp_camera_set_port_name and #gp_camera_set_abilities. If that has been
+ * omitted, gphoto2 tries to autodetect any cameras and chooses the first one
+ * if any cameras are found.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_init (Camera *camera)
 {
@@ -500,7 +696,8 @@ gp_camera_init (Camera *camera)
 	}
 
 	/* Load the library. */
-	gp_debug_printf (GP_DEBUG_LOW, "core", "Loading library...");
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Loading '%s'...",
+		camera->abilities->library);
 	camera->library_handle = GP_SYSTEM_DLOPEN (camera->abilities->library);
 	if (!camera->library_handle) {
 		gp_camera_status (camera, "");
@@ -509,21 +706,26 @@ gp_camera_init (Camera *camera)
 
 	/* Initialize the camera */
 	init_func = GP_SYSTEM_DLSYM (camera->library_handle, "camera_init");
+	if (!init_func) {
+		gp_camera_status (camera, "");
+		return (GP_ERROR_LIBRARY);
+	}
 	CHECK_RESULT_OPEN_CLOSE (camera, init_func (camera));
 
-	GP_DEBUG ("LEAVE: gp_camera_init");
 	gp_camera_status (camera, "");
 	return (GP_OK);
 }
 
-int
-gp_camera_get_session (Camera *camera)
-{
-	CHECK_NULL (camera);
-
-        return (camera->session);
-}
-
+/**
+ * gp_camera_get_config:
+ * @camera: a #Camera
+ * @window:
+ *
+ * Retreives a configuration @window for the @camera. This window can be
+ * used for construction of a configuration dialog.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_get_config (Camera *camera, CameraWidget **window)
 {
@@ -540,6 +742,17 @@ gp_camera_get_config (Camera *camera, CameraWidget **window)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_set_config:
+ * @camera: a #Camera
+ * @window: a #CameraWidget
+ *
+ * Sets the configuration. Typically, a @window is retreived using
+ * #gp_camera_get_config and passed to this function in order to adjust
+ * the settings on the camera.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_set_config (Camera *camera, CameraWidget *window)
 {
@@ -556,6 +769,17 @@ gp_camera_set_config (Camera *camera, CameraWidget *window)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_get_summary:
+ * @camera: a #Camera
+ * @summary: a #CameraText
+ *
+ * Retreives a camera @summary. This summary typically contains information
+ * like manufacturer, pictures taken, or generally information that is
+ * not configurable.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_get_summary (Camera *camera, CameraText *summary)
 {
@@ -572,6 +796,16 @@ gp_camera_get_summary (Camera *camera, CameraText *summary)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_get_manual:
+ * @camera: a #Camera
+ * @manual: a #CameraText
+ *
+ * Retreives the @manual for given @camera. This manual typically contains
+ * information about using the camera.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_get_manual (Camera *camera, CameraText *manual)
 {
@@ -586,6 +820,16 @@ gp_camera_get_manual (Camera *camera, CameraText *manual)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_get_about:
+ * @camera: a #Camera
+ * @about: a #CameraText
+ *
+ * Retreives information about the camera driver. Typically, this information
+ * contains name and address of the author, acknowledgements, etc.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_get_about (Camera *camera, CameraText *about)
 {
@@ -600,9 +844,21 @@ gp_camera_get_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_capture:
+ * @camera: a #Camera
+ * @type: a #CameraCaptureType
+ * @path: a #CameraFilePath
+ *
+ * Captures an image, movie, or sound clip depending on the given @type.
+ * The resulting file will be stored on the camera. The location gets stored
+ * in @path. The file can then be downloaded using #gp_camera_file_get.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
-gp_camera_capture (Camera *camera, int capture_type, 
-		       CameraFilePath *path)
+gp_camera_capture (Camera *camera, CameraCaptureType type,
+		   CameraFilePath *path)
 {
 	CHECK_NULL (camera && path);
 
@@ -611,13 +867,24 @@ gp_camera_capture (Camera *camera, int capture_type,
 
 	gp_camera_status (camera, "Capturing image...");
 	CHECK_RESULT_OPEN_CLOSE (camera,
-		camera->functions->capture (camera, capture_type, path));
+		camera->functions->capture (camera, type, path));
 	gp_camera_status (camera, "");
 	gp_camera_progress (camera, 0.0);
 
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_capture_preview:
+ * @camera: a #Camera
+ * @file: a #CameraFile
+ *
+ * Captures a preview that won't be stored on the camera but returned in 
+ * supplied @file. For example, you could use #gp_capture_preview for 
+ * taking some sample pictures before calling #gp_capture.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_capture_preview (Camera *camera, CameraFile *file)
 {
@@ -635,6 +902,18 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_get_result_as_string:
+ * @camera: a #Camera
+ * @result: a gphoto2 error code
+ *
+ * Returns a string representation of supplied @result. This function should
+ * be used for every gphoto2 error code returned by a function operating on 
+ * a #Camera. This is because camera drivers can generate their own error 
+ * codes that cannot be translated by #gp_result_as_string.
+ *
+ * Return value: a string representation of a gphoto2 error code
+ **/
 const char *
 gp_camera_get_result_as_string (Camera *camera, int result)
 {
@@ -648,16 +927,27 @@ gp_camera_get_result_as_string (Camera *camera, int result)
         return (gp_result_as_string (result));
 }
 
+/**
+ * gp_camera_folder_list_files:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @list: a #CameraList
+ *
+ * Lists the files in supplied @folder.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_folder_list_files (Camera *camera, const char *folder, 
 			     CameraList *list)
 {
 	int result;
 
-	GP_DEBUG ("ENTER: gp_camera_folder_list_files");
-	CHECK_NULL (camera && folder && list);
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Listing files in '%s'...",
+		folder);
 
-	gp_list_reset (list);
+	CHECK_NULL (camera && folder && list);
+	CHECK_RESULT (gp_list_reset (list));
 
 	/* Check first if the camera driver uses the filesystem */
 	CHECK_OPEN (camera);
@@ -673,27 +963,35 @@ if (list->count)
 	if (!camera->functions->folder_list_files)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting file list for "
-			 "folder '%s'...", folder);
 	gp_list_reset (list);
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_list_files (
 							camera, folder, list));
 	CHECK_RESULT (gp_list_sort (list));
 
-	GP_DEBUG ("LEAVE: gp_camera_folder_list_files");
         return (GP_OK);
 }
 
+/**
+ * gp_camera_folder_list_folders:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @list: a #CameraList
+ *
+ * Lists the folders in supplied @folder.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_folder_list_folders (Camera *camera, const char* folder, 
 			       CameraList *list)
 {
 	int result;
 
-	GP_DEBUG ("ENTER: gp_camera_folder_list_folders");
-	CHECK_NULL (camera && folder && list);
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Listing folders in '%s'...",
+		folder);
 
-	gp_list_reset (list);
+	CHECK_NULL (camera && folder && list);
+	CHECK_RESULT (gp_list_reset (list));
 
 	/* Check first if the camera driver uses the filesystem */
 	CHECK_OPEN (camera);
@@ -709,8 +1007,6 @@ if (list->count)
 	if (!camera->functions->folder_list_folders)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting folder list for "
-			 "folder '%s'...", folder);
 	gp_list_reset (list);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_list_folders(
@@ -718,26 +1014,29 @@ if (list->count)
 
 	CHECK_RESULT (gp_list_sort (list));
 
-	GP_DEBUG ("LEAVE: gp_camera_folder_list_folders");
         return (GP_OK);
 }
 
 int
 gp_camera_folder_delete_all (Camera *camera, const char *folder)
 {
-	GP_DEBUG ("ENTER: gp_camera_folder_delete_all");
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Deleting all files in "
+		"'%s'...", folder);
+
 	CHECK_NULL (camera && folder);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_all (camera->fs,
 								folder));
 
-	GP_DEBUG ("LEAVE: gp_camera_folder_delete_all");
 	return (GP_OK);
 }
 
 int
 gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
 {
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Uploading file into '%s'...",
+		folder);
+
 	CHECK_NULL (camera && folder && file);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_put_file (camera->fs,
@@ -785,7 +1084,9 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	const char *data;
 	long int size;
 
-	GP_DEBUG ("ENTER: gp_camera_file_get_info");
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Getting file info for '%s' "
+		"in '%s'...", file, folder);
+
 	CHECK_NULL (camera && folder && file && info);
 
 	memset (info, 0, sizeof (CameraFileInfo));
@@ -839,7 +1140,6 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	strncpy (info->file.name, file, sizeof (info->file.name));
 	info->preview.fields &= ~GP_FILE_INFO_NAME;
 
-	GP_DEBUG ("LEAVE: gp_camera_file_get_info");
 	return (GP_OK);
 }
 
@@ -873,7 +1173,9 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 {
 	int result;
 
-	GP_DEBUG ("ENTER: gp_camera_file_get");
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Getting file '%s' in "
+		"folder '%s'...", file, folder);
+
 	CHECK_NULL (camera && folder && file && camera_file);
 
 	/* Did we get reasonable foldername/filename? */
@@ -902,7 +1204,6 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_get (camera,
 					folder, file, type, camera_file));
 
-	GP_DEBUG ("LEAVE: gp_camera_file_get");
 	return (GP_OK);
 }
 
@@ -939,13 +1240,14 @@ gp_camera_file_set_config (Camera *camera, const char *folder,
 int
 gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 {
-	GP_DEBUG ("ENTER: gp_camera_file_delete");
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Deleting file '%s' in "
+		"folder '%s'...", file, folder);
+
 	CHECK_NULL (camera && folder && file);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_file (
 						camera->fs, folder, file));
 
-	GP_DEBUG ("LEAVE: gp_camera_file_delete");
 	return (GP_OK);
 }
 

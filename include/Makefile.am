@@ -4,6 +4,5 @@ gphotoheaddir = $(includedir)/gphoto2
 gphotohead_HEADERS=			\
 	gphoto2.h 			\
 	gphoto2-abilities.h		\
-	gphoto2-camera.h		\
 	gphoto2-file.h			\
 	gphoto2-setting.h

@@ -43,10 +43,17 @@ typedef struct {
 	char folder [1024];
 } CameraFilePath;
 
+typedef enum {
+	GP_CAPTURE_IMAGE,
+	GP_CAPTURE_MOVIE,
+	GP_CAPTURE_SOUND
+} CameraCaptureType;
+
 typedef int (*c_exit)                   (Camera*);
 typedef int (*c_get_config)             (Camera*, CameraWidget**);
 typedef int (*c_set_config)             (Camera*, CameraWidget*);
-typedef int (*c_capture)                (Camera*, int, CameraFilePath*);
+typedef int (*c_capture)                (Camera*, CameraCaptureType,
+					 CameraFilePath*);
 typedef int (*c_capture_preview)        (Camera*, CameraFile*);
 typedef int (*c_summary)                (Camera*, CameraText*);
 typedef int (*c_manual)                 (Camera*, CameraText*);
@@ -142,9 +149,6 @@ struct _Camera {
 	GPPort          *port;
 	CameraFilesystem *fs;
 
-	/* Don't use - DEPRECATED */
-	int             session;
-
 	CameraStatusFunc   status_func;
 	void              *status_data;
 
@@ -175,7 +179,6 @@ int gp_camera_set_port_speed    (Camera *camera, int speed);
  *   - unref               : Unref the camera                           *
  *   - free                : Free                                       *
  *   - init                : Initialize the camera                      *
- *   - get_session         : Get the session identifier                 *
  *   - get_config          : Get configuration options                  *
  *   - set_config          : Set those configuration options            *
  *   - get_summary         : Get information about the camera           *
@@ -191,13 +194,12 @@ int gp_camera_ref   		 (Camera *camera);
 int gp_camera_unref 		 (Camera *camera);
 int gp_camera_free 		 (Camera *camera);
 int gp_camera_init 		 (Camera *camera);
-int gp_camera_get_session 	 (Camera *camera);
 int gp_camera_get_config	 (Camera *camera, CameraWidget **window);
 int gp_camera_set_config	 (Camera *camera, CameraWidget  *window);
 int gp_camera_get_summary	 (Camera *camera, CameraText *summary);
 int gp_camera_get_manual	 (Camera *camera, CameraText *manual);
 int gp_camera_get_about		 (Camera *camera, CameraText *about);
-int gp_camera_capture 		 (Camera *camera, int capture_type,
+int gp_camera_capture 		 (Camera *camera, CameraCaptureType type,
 				  CameraFilePath *path);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file);
 
