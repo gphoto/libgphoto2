@@ -1,0 +1,8 @@
+2002-04-12  Marcus Meissner <marcus@jet.franken.de>
+	
+	* *: First version of SiPix Web2 driver:
+
+	  The Camera is a 640x480 JPEG camera. The driver 
+	  currently supports:
+	  - Picture, Thumbnail, EXIF download.
+	  - Delete Single Picture
