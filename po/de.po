@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "POT-Creation-Date: 2001-10-17 01:17+0200\n"
-"PO-Revision-Date: 2001-10-16 01:09+02:00\n"
+"PO-Revision-Date: 2001-10-18 01:54+02:00\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -229,17 +229,14 @@ msgid "Firmware revision"
 msgstr "Firmware-Revision"
 
 #: camlibs/canon/canon.c:1374
-#, fuzzy
 msgid "Power: camera unavailable"
 msgstr "Power: Kamera nicht verfügbar"
 
 #: camlibs/canon/canon.c:1376
-#, fuzzy
 msgid "Power"
 msgstr "Power"
 
 #: camlibs/canon/canon.c:1380
-#, fuzzy
 msgid "Debug"
 msgstr "Debug"
 
@@ -249,7 +246,7 @@ msgstr "Debuglevel"
 
 #: camlibs/canon/canon.c:1401 camlibs/canon/canon.c:1452
 msgid "Dump data by packets to stderr"
-msgstr "Schreibe Daten nach Paketen auf stderr"
+msgstr "Schreibe Daten Paketen entsprechend auf stderr"
 
 #: camlibs/canon/canon.c:1466
 msgid "Owner name changed"
@@ -277,27 +274,27 @@ msgstr "Batterie leer, Kamera aus."
 
 #: camlibs/canon/psa50.c:521
 msgid "ERROR: unexpected message"
-msgstr ""
+msgstr "Fehler: unerwartete Meldung"
 
 #: camlibs/canon/psa50.c:533
 msgid "ERROR: message overrun"
-msgstr ""
+msgstr "Fehler: Meldungsüberlauf"
 
 #: camlibs/canon/psa50.c:563
 msgid "ERROR: out of sequence."
-msgstr ""
+msgstr "Fehler: aus der Reihe."
 
 #: camlibs/canon/psa50.c:570
 msgid "ERROR: unexpected packet type."
-msgstr ""
+msgstr "Fehler: unerwarteter Pakettyp."
 
 #: camlibs/canon/psa50.c:582
 msgid "ERROR: message format error."
-msgstr ""
+msgstr "Fehler: Meldungsformatfehler."
 
 #: camlibs/canon/psa50.c:598
 msgid "ERROR: unexpected message2."
-msgstr ""
+msgstr "Fehler: unerwartete Meldung2."
 
 #: camlibs/canon/psa50.c:1097
 msgid "Name too long, could not store it!"
@@ -354,11 +351,11 @@ msgstr "Fehler beim Ändern der Datenrate"
 
 #: camlibs/canon/psa50.c:1534
 msgid "Error waiting ACK during initialization retrying"
-msgstr ""
+msgstr "Fehler beim Warten auf ACK, während die Initialisierung erneut versucht wird"
 
 #: camlibs/canon/psa50.c:1540
 msgid "Error waiting ACK during initialization"
-msgstr ""
+msgstr "Fehler beim Warten auf ACK während der Initialisierung"
 
 #: camlibs/canon/psa50.c:1543
 msgid "Connected to camera"
@@ -395,7 +392,7 @@ msgstr ""
 #: camlibs/dimera/dimera3500.c:570
 #, c-format
 msgid " (battery is %d%% full)"
-msgstr ""
+msgstr " (Batterie ist zu %d%% voll)"
 
 #: camlibs/dimera/dimera3500.c:574
 #, c-format
@@ -407,6 +404,12 @@ msgid ""
 "Resolution is set to %s\n"
 "Camera is %s powered%s\n"
 msgstr ""
+"Dimera 3500 Ver. %s %d/%d %d:%d\n"
+"%d Bilder von etwa %d (hohe Aufl.) oder %d (niedrige Aufl.)\n"
+"Kamera-Features: %s, %s, %s, %s\n"
+"Blitz ist %s, ist %s und %s\n"
+"Auflösung auf %s gesetzt\n"
+"Kamera wird %s-betrieben%s\n"
 
 #. Flash
 #: camlibs/dimera/dimera3500.c:585 camlibs/konica/library.c:786
@@ -415,73 +418,70 @@ msgid "Flash"
 msgstr "Blitz"
 
 #: camlibs/dimera/dimera3500.c:585
-#, fuzzy
 msgid "NO Flash"
-msgstr "Blitz"
+msgstr "Kein Blitz"
 
 #: camlibs/dimera/dimera3500.c:587
 msgid "Dual Iris"
-msgstr ""
+msgstr "Dual-Iris"
 
 #: camlibs/dimera/dimera3500.c:587
 msgid "NO Dual Iris"
-msgstr ""
+msgstr "Keine Dual-Iris"
 
 #: camlibs/dimera/dimera3500.c:589
-#, fuzzy
 msgid "Resolution Switch"
-msgstr "Auflösung"
+msgstr "Auflösungsumschaltung"
 
 #: camlibs/dimera/dimera3500.c:589
 #, fuzzy
 msgid "NO Resolution Switch"
-msgstr "Auflösung"
+msgstr "Keine Auflösungsumschaltung"
 
 #: camlibs/dimera/dimera3500.c:591
+#, fuzzy
 msgid "NO Power Light"
-msgstr ""
+msgstr "Keine Powerlampe"
 
 #: camlibs/dimera/dimera3500.c:593
 msgid "ON"
-msgstr ""
+msgstr "An"
 
 #: camlibs/dimera/dimera3500.c:593
 msgid "OFF"
-msgstr ""
+msgstr "Aus"
 
 #: camlibs/dimera/dimera3500.c:595
-#, fuzzy
 msgid "ready"
 msgstr "Bereit"
 
 #: camlibs/dimera/dimera3500.c:595
 msgid "NOT ready"
-msgstr ""
+msgstr "Nicht bereit"
 
 #: camlibs/dimera/dimera3500.c:597
 msgid "in fill mode"
-msgstr ""
+msgstr "Im Füllmodus"
 
 #: camlibs/dimera/dimera3500.c:597
 msgid "NOT in fill mode"
-msgstr ""
+msgstr "Nicht im Füllmodus"
 
 #: camlibs/dimera/dimera3500.c:599
 msgid "low (320x240)"
-msgstr ""
+msgstr "niedrig (320x240)"
 
 #: camlibs/dimera/dimera3500.c:599
 msgid "high (640x480)"
-msgstr ""
+msgstr "hoch (640x480)"
 
 #: camlibs/dimera/dimera3500.c:601
 msgid "externally"
-msgstr ""
+msgstr "extern"
 
 #: camlibs/dimera/dimera3500.c:601
-#, fuzzy
 msgid "internally"
-msgstr "Interner Speicher"
+msgstr "intern"
 
 #: camlibs/dimera/dimera3500.c:611
 msgid ""
@@ -493,6 +493,13 @@ msgid ""
 "automatically set by the capture preview function.\n"
 "  Image quality is currently lower than it could be.\n"
 msgstr ""
+"  Bildstörungen oder Probleme mit der Kommunikation\n"
+"sind häufig auf einen niedrigen Batteriestand zurückzuführen.\n"
+"  Bilder, die über Fernsteuerung aufgenommen wurden werden \n"
+"in einem temporären RAM gespeichert, nicht auf der Flash-Karte.\n"
+"  Die Belichtungskontrolle beim Bildaufnehmen wird automatisch \n"
+"von der Aufnahmevorschau-Funktion gesetzt.\n"
+"  Die Bildqualität ist im Moment geringer als sie sein könnte.\n"
 
 #: camlibs/dimera/dimera3500.c:625
 msgid ""
@@ -510,27 +517,37 @@ msgid ""
 "     Information on protocol, raw image format,\n"
 "     gphoto2 port\n"
 msgstr ""
+"gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
+"Diese Software wurde mit der Hilfe von proprietären \n"
+"Informationen geschrieben, die der Firma\n"
+"StarDot Technologies gehören.\n"
+"\n"
+"Autor:\n"
+"  Brian Beattie  <URL:http://www.beattie-home.net>\n"
+"Beteiligte:\n"
+"  Chuck Homic <chuck@vvisions.com>\n"
+"     Konvertierung von rohen Kamerabildern nach RGB\n"
+"  Dan Fandrich <dan@coneharvesters.com>\n"
+"     Informationen über Protokoll und Rohbildformat,\n"
+"     gphoto2-Portierung\n"
 
 #: camlibs/dimera/dimera3500.c:695
-#, fuzzy
 msgid "Getting Image Info"
 msgstr "Lade Bild-Informationen"
 
 #: camlibs/dimera/dimera3500.c:712
-#, fuzzy
 msgid "Loading Image"
 msgstr "Lade Bild"
 
 #. 8 bits per pixel in raw CCD format
 #: camlibs/dimera/dimera3500.c:728 camlibs/dimera/dimera3500.c:751
 #: camlibs/dimera/dimera3500.c:778
-#, fuzzy
 msgid "Downloading Image"
-msgstr "Lade Bild herunter."
+msgstr "Lade Bild herunter"
 
 #: camlibs/dimera/dimera3500.c:761 camlibs/dimera/dimera3500.c:788
 msgid "Retransmitting"
-msgstr ""
+msgstr "Übertrage erneut"
 
 #: camlibs/kodak/dc120/dc120.c:25
 msgid "Internal Memory"
@@ -1012,7 +1029,7 @@ msgstr ""
 "Firmware-Revision:\t%s\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:325
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Host Mode:\t\t%s\n"
 "Exposure Correction:\t%s\n"
@@ -1028,11 +1045,11 @@ msgid ""
 msgstr ""
 "Host-Modus:\t\t%s\n"
 "Belichtungskorrektur:\t%s\n"
-"Belichtuungsdaten:\t%d\n"
+"Belichtungsdaten:\t%d\n"
 "Datum gültig:\t\t%s\n"
 "Datum:\t\t\t%d/%02d/%02d %02d:%02d:%02d\n"
 "Selbstauslöser gesetzt:\t%s\n"
-"Qualität:       \t%s\n"
+"Qualität:\t\t%s\n"
 "Wiedergabe/Aufnahme:\t%s\n"
 "Karten-ID gültig:\t%s\n"
 "Karten-ID:\t\t%d\n"
@@ -1587,13 +1604,12 @@ msgid "Getting configuration..."
 msgstr "Lade Kamera-Konfiguration..."
 
 #: libgphoto2/gphoto2-camera.c:764
-#, fuzzy
 msgid "Setting configuration..."
-msgstr "Setze Kamera-Konfiguration..."
+msgstr "Setze Konfiguration..."
 
 #: libgphoto2/gphoto2-camera.c:791
 msgid "Getting summary..."
-msgstr ""
+msgstr "Hole Zusammenfassung..."
 
 #: libgphoto2/gphoto2-camera.c:923
 msgid "Error description not available"
@@ -1602,54 +1618,54 @@ msgstr "Fehlerbeschreibung nicht verfügbar"
 #: libgphoto2/gphoto2-camera.c:1150
 #, c-format
 msgid "Getting info for '%s' in folder '%s'..."
-msgstr ""
+msgstr "Hole Information für '%s' im Verzeichnis '%s'..."
 
 #: libgphoto2/gphoto2-filesys.c:200
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
-msgstr ""
+msgstr "Konnte Verzeichnis '%s' nicht anhängen, das dieses Verzeichnis bereits existiert."
 
 #: libgphoto2/gphoto2-filesys.c:376
 #, c-format
 msgid "Could not find folder '%s'."
-msgstr ""
+msgstr "Konnte Verzeichnis '%s' nicht finden."
 
 #: libgphoto2/gphoto2-filesys.c:393
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'"
-msgstr ""
+msgstr "Verzeichnis '%s' enthält kein Verzeichnis '%s'"
 
 #: libgphoto2/gphoto2-filesys.c:455
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists"
-msgstr ""
+msgstr "Konnte '%s' nicht an Verzeichnis '%s' anhängen, das diese Datei bereits existiert"
 
 #: libgphoto2/gphoto2-filesys.c:969
 #, c-format
 msgid "Could not find file '%s'."
-msgstr ""
+msgstr "Konnte Datei '%s' nicht finden."
 
 #: libgphoto2/gphoto2-filesys.c:1093
 msgid "The filesystem doesn't support getting files"
-msgstr ""
+msgstr "Das Dateisystem unterstützt das Holen von Dateien nicht"
 
 #: libgphoto2/gphoto2-filesys.c:1119 libgphoto2/gphoto2-filesys.c:1144
 #, c-format
 msgid "Unknown file type %i"
-msgstr ""
+msgstr "Unbekannter Dateityp %i"
 
 #: libgphoto2/gphoto2-filesys.c:1203
 msgid "The filesystem doesn't support getting file information"
-msgstr ""
+msgstr "Das Dateisystem unterstützt das Holen von Dateiinformationen nicht"
 
 #: libgphoto2/gphoto2-filesys.c:1243
 msgid "The filesystem doesn't support setting file information"
-msgstr ""
+msgstr "Das Dateisystem unterstützt das Setzen von Dateiinformationen nicht"
 
 #: libgphoto2/gphoto2-abilities-list.c:135
 #, c-format
 msgid "Could not open '%s'"
-msgstr ""
+msgstr "Konnte '%s' nicht öffnen"
 
 #: libgphoto2/gphoto2-result.c:59
 msgid "Unknown camera library error"
