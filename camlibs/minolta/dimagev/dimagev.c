@@ -118,6 +118,13 @@ int camera_init (Camera *camera, CameraInit *init) {
 		return GP_ERROR;
 	}
 
+	/* Let's make this non-fatal. An incorrect date doesn't affect much. */
+	if ( dimagev_set_date(dimagev) == GP_ERROR ) {
+		if ( camera->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to set camera to system time");
+		}
+	}
+
 	return GP_OK;
 }
 
