@@ -346,7 +346,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         int             result;
 
 	memset (&a, 0, sizeof(a));
-	strcpy(a.model, "Panasonic DC1000");
+	strcpy(a.model, "Panasonic:DC1000");
 	a.status = GP_DRIVER_STATUS_PRODUCTION;
 	a.port		= GP_PORT_SERIAL;
 	a.speed[0] 	= 9600;

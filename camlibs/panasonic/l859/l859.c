@@ -364,9 +364,9 @@ int camera_abilities (CameraAbilitiesList *list) {
 			      GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 
-	strncpy (a.model, "Panasonic PV-L691", sizeof (a.model));
+	strncpy (a.model, "Panasonic:PV-L691", sizeof (a.model));
 	gp_abilities_list_append (list, a);
-	strncpy (a.model, "Panasonic PV-L859", sizeof (a.model));
+	strncpy (a.model, "Panasonic:PV-L859", sizeof (a.model));
 	gp_abilities_list_append (list, a);
 
 	return GP_OK;

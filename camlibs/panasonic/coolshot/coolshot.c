@@ -57,8 +57,8 @@
 
 /* define what cameras we support */
 static char *coolshot_cameras[] = {
-	"Panasonic Coolshot KXL-600A",
-	"Panasonic Coolshot KXL-601A",
+	"Panasonic:Coolshot KXL-600A",
+	"Panasonic:Coolshot KXL-601A",
 	""
 };
 

@@ -433,8 +433,8 @@ int camera_abilities (CameraAbilitiesList *list) {
         
         CameraAbilities a;
         char    *models[] = {
-                        "Panasonic DC1580",
-                        "Nikon CoolPix 600",
+                        "Panasonic:DC1580",
+                        "Nikon:CoolPix 600",
                         NULL };
         int     i = 0, result;
         
