@@ -3,11 +3,20 @@
 Q: gphoto2 does not find my camera. What shall I do?
 
 A: First try to run "gphoto2 --list-ports" and look whether the ports 
-   you want to use are listed.
+   you want to use are listed there: 
+   - For serial devices, the port with the appropriate device must be
+     listed 
+   - For USB devices, you need the "usb:" port in the list. If you
+     don't see it, check whether you compiled gphoto2 with libusb
+     support.
+
    Then try to run "gphoto2 --auto-detect" and look whether the camera
    is detected.
-   If you gphoto2 cannot access the USB device, you have to set up
-   hotplugging correctly. See gphoto2.txt for details.
+
+   If your gphoto2 cannot access the USB device as non-root users, you
+   have to set up hotplugging correctly. See gphoto2.txt for details.
+
+   AND DO NOT RUN gphoto2 AS ROOT.
 
 ========================================================================
 
