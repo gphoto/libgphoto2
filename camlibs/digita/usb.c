@@ -43,9 +43,7 @@ int digita_usb_probe(struct digita_device *dev, int i)
 
 	if (gp_port_usb_find_device(dev->gpdev, camera_to_usb[i].idVendor,
 				camera_to_usb[i].idProduct) == GP_OK) {
-		printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
-			dev->gpdev->usb_device->bus->dirname, 
-			dev->gpdev->usb_device->filename);
+		printf("found '%s'\n", camera_to_usb[i].name);
 		return 0;
 	}
 
