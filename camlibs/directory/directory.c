@@ -29,7 +29,7 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 
 	*count = 1;
 
-	strcpy(abilities[0].model, "Browse a directory");
+	strcpy(abilities[0].model, "Directory Browse");
 	abilities[0].serial    = 0;
 	abilities[0].usb       = 0;
 	abilities[0].parallel  = 0;

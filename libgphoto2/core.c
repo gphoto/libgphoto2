@@ -19,7 +19,7 @@
 /* Some globals
    ---------------------------------------------------------------- */
 
-	int		glob_debug=1;
+	int		glob_debug=0;
 
 	CameraPortSettings glob_port_settings;
 
@@ -78,7 +78,7 @@ int gp_init () {
 		glob_camera_id[x] = (char *)malloc(sizeof(char)*64);
 
 	if (glob_debug) {
-		printf(" > Debug Mode On < \n");
+		printf("core: >> Debug Mode On << \n");
 		printf("core: Creating $HOME/.gphoto\n");
 	}
 
@@ -119,6 +119,13 @@ int gp_exit () {
                 free(glob_camera_id[x]);
 
 	gp_camera_exit();
+	return (GP_OK);
+}
+
+int gp_debug_set (int value) {
+
+	glob_debug = value;
+
 	return (GP_OK);
 }
 

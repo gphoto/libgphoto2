@@ -18,6 +18,11 @@
 	int gp_init();
 	int gp_exit();
 
+/* Debugging options */
+	int gp_debug_set(int value);
+		/* value=0, debugging off */
+		/* value=1, debugging on  */
+
 /* Camera port operations */
 	int gp_port_set (CameraPortSettings settings);
 

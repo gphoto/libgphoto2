@@ -1,6 +1,6 @@
 /* Make it easy to add command-line options */
 
-#define OPTION_CALLBACK(_a)		void _a (char *arg)
+#define OPTION_CALLBACK(_a)		int _a (char *arg)
 #define	SHORT_OPTION			"-"
 #define LONG_OPTION			"--"
 

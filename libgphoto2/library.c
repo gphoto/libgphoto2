@@ -17,7 +17,8 @@ int is_library(char *library_filename) {
 	sprintf(buf, "%s/%s", CAMLIBS, library_filename);
 
 	if ((lh = dlopen(buf, RTLD_LAZY))==NULL) {
-		perror("load_library");
+		if (glob_debug)
+			perror("core:\tis_library");
 		return (GP_ERROR);
 	}
 	
@@ -35,7 +36,8 @@ int load_library (char *camera_name) {
 	   if (strcmp(glob_camera[x].name, camera_name)==0) {
 		sprintf(buf, "%s/%s", CAMLIBS, glob_camera[x].library);
 		if ((lh = dlopen(buf, RTLD_LAZY))==NULL) {
-			perror("load_library");
+			if (glob_debug)
+				perror("core:\tload_library");
 			return (GP_ERROR);
 		}
 		glob_c.id = dlsym(lh, "camera_id");
@@ -81,7 +83,8 @@ int load_camera_list (char *library_filename) {
 
 	/* try to open the library */
 	if ((lh = dlopen(buf, RTLD_LAZY))==NULL) {
-		perror("load_library");
+		if (glob_debug)
+			perror("core:\tload_camera_list");
 		return 0;
 	}
 
@@ -90,7 +93,7 @@ int load_camera_list (char *library_filename) {
 	load_camera_id(id);
 
 	if (glob_debug)
-		printf("camera id: %s\n", id);
+		printf("core:\t library id: %s\n", id);
 
 	for (x=0; x<glob_camera_id_count; x++) {
 		if (strcmp(glob_camera_id[x], id)==0) {
@@ -111,14 +114,14 @@ int load_camera_list (char *library_filename) {
 	}
 
 	if (glob_debug)
-		printf("camera model count: %i\n", count);
+		printf("core:\t camera model count: %i\n", count);
 
 	/* Copy over the camera name */
 	for (x=glob_camera_count; x<glob_camera_count+count; x++) {
 		strcpy(glob_camera[x].name, glob_camera_abilities[x].model);
 		strcpy(glob_camera[x].library, library_filename);		
 		if (glob_debug)
-			printf("camera model: %s\n", glob_camera[x].name);
+			printf("core:\t camera model: %s\n", glob_camera[x].name);
 	}
 
 	glob_camera_count += count;
