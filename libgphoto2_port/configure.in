@@ -279,7 +279,7 @@ if $try_usb; then
 			LDFLAGS_orig="$LDFLAGS"
 			LDFLAGS="`$LIBUSB_CONFIG --libs`"
 			AC_CHECK_LIB(usb,usb_busses,[
-				usb_msg="yes"
+				usb_msg="yes, from `$LIBUSB_CONFIG --prefix`"
 				IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
 				USB_LIBS="`$LIBUSB_CONFIG --libs`"
 				USB_CFLAGS="`$LIBUSB_CONFIG --cflags`"
