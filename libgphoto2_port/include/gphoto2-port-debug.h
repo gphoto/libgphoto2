@@ -40,6 +40,7 @@ void gp_port_debug_set_func (GPPortDebugFunc func, void *data);
 /* History */
 void        gp_port_debug_history_append (const char *msg);
 int         gp_port_debug_history_set_size (unsigned int size);
+int         gp_port_debug_history_get_size (void);
 const char *gp_port_debug_history_get (void);
 
 #endif /* __GPHOTO2_PORT_DEBUG_H__ */

@@ -186,8 +186,6 @@ gp_port_debug_printf (int level, char *format, ...)
 #endif
 	va_end (arg);
 
-	gp_port_debug_history_append (buffer);
-
 	if (debug_level >= level) {
 		if (debug_func) {
 
@@ -204,12 +202,14 @@ gp_port_debug_printf (int level, char *format, ...)
 			fprintf(stderr, "\n");
 		}
 	}
+
+	gp_port_debug_history_append (buffer);
 }
 
 void
 gp_port_debug_history_append (const char *msg)
 {
-	int i;
+	int needed, available, delta;
 
 	/* Create history if needed */
 	if (!debug_history) {
@@ -223,22 +223,22 @@ gp_port_debug_history_append (const char *msg)
 		return;
 
 	/* Do we have to forget parts of the debug history? */
-	while (debug_history_size - strlen (debug_history) <
-			strlen (msg) + 1) {
-
-		/* Determine len of first entry */
-		for (i = 0; debug_history[i] != '\0'; i++)
-			if (debug_history[i] == '\n')
-				break;
-
-		/* Remove the first entry */
-		memmove (debug_history, debug_history + i + 1,
-			 strlen (debug_history) - i);
-	}
+	needed = strlen (msg) + 1;
+	available = debug_history_size - strlen (debug_history) - 1;
+	delta = available - needed;
+	if (delta < 0)
+		memmove (debug_history, debug_history - delta,
+			 debug_history_size + delta);
 
 	/* Append the message */
 	strcat (debug_history, msg);
 	strcat (debug_history, "\n");
+}
+
+int
+gp_port_debug_history_get_size (void)
+{
+	return (debug_history_size);
 }
 
 int

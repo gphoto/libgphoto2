@@ -1,6 +1,15 @@
 2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include/gphoto2-port-debug.h
+	* libgphoto2_port/debug.c (gp_port_debug_history_get_size): New.
+	(gp_port_debug_printf): Append the msg to the history after calling
+	the debugging function.
+	(gp_port_history_append): Don't try to remove full messages, just 
+	remove as many bytes as needed.
+
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-port-debug.h
 	* libgphoto2/debug.c (gp_port_debug_get_level): New. In addition,
 	remove port-dependent debug levels as frontends are not able to 
 	change them dynamically. Just use the global one.
