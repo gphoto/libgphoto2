@@ -1,4 +1,7 @@
 2003-11-11 Theodore Kilgore <kilgota@auburn.edu>
+	* postprocess.c: bugfix for release.
+
+2003-11-11 Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: added ViviCam 5B and SY-2107C cameras.
 
 

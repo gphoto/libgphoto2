@@ -206,14 +206,14 @@ sq_postprocess(CameraPrivateLibrary *priv, int width, int height,
 
 	/* determine min and max per color... */
 
-	for( y=0; y<height; y++){
+/*	for( y=0; y<height; y++){
 		for( x=0; x<width; x++ ){
 			MINMAX( RED(rgb,x,y,width), red_min,   red_max  );
 			MINMAX( GREEN(rgb,x,y,width), green_min, green_max);
 			MINMAX( BLUE(rgb,x,y,width), blue_min,  blue_max );
 		}
 	}
-
+*/
 	/* white balancing ...                               */
 
 	if( (priv->catalog[16*n+9] >= priv->catalog[16*n+10])  ){ 
@@ -240,13 +240,13 @@ sq_postprocess(CameraPrivateLibrary *priv, int width, int height,
 				MIN(2*(unsigned)RED(rgb,x,y,width),255); */
 			}
 		}
-		 red_min = MIN(2*(unsigned)red_min,255); 
-		 red_max = MIN(2*(unsigned)red_max,255); 
+//		 red_min = MIN(2*(unsigned)red_min,255); 
+//		 red_max = MIN(2*(unsigned)red_max,255); 
 	}
 
-	else { 
+//	else { 
 		/* indoor electric light */
-		GP_DEBUG( "electric light mode");
+/*		GP_DEBUG( "electric light mode");
 		for( y=0; y<height; y++){
 			for( x=0; x<width; x++ ){
 
@@ -266,9 +266,35 @@ sq_postprocess(CameraPrivateLibrary *priv, int width, int height,
 
 			}
 		}
-		blue_min = MIN(2*(unsigned)blue_min,255);
-		blue_max = MIN(2*(unsigned)blue_max,255);
+//		blue_min = MIN(2*(unsigned)blue_min,255);
+//		blue_max = MIN(2*(unsigned)blue_max,255);
 	}
+
+
+*/
+
+	/* determine min and max per color... */
+
+	for( y=0; y<height; y++){
+		for( x=0; x<width; x++ ){
+			MINMAX( RED(rgb,x,y,width), red_min,   red_max  );
+			MINMAX( GREEN(rgb,x,y,width), green_min, green_max);
+			MINMAX( BLUE(rgb,x,y,width), blue_min,  blue_max );
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	/* Normalize brightness ... */
 
