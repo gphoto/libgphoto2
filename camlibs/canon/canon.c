@@ -294,6 +294,7 @@ extern long int timezone;
 
 #define extra_file_for_thumb_of_jpeg FALSE
 #define extra_file_for_thumb_of_crw TRUE
+#define extra_file_for_thumb_of_cr2 FALSE
 
 static const char *
 replace_filename_extension(const char *filename, const char *newext)
@@ -439,6 +440,11 @@ canon_int_filename2thumbname (Camera *camera, const char *filename)
         }
         if (!extra_file_for_thumb_of_crw && is_crw (filename)) {
                 GP_DEBUG ("canon_int_filename2thumbname: thumbnail for CRW \"%s\" is internal",
+                          filename);
+                return nullstring;
+        }
+        if (!extra_file_for_thumb_of_cr2 && is_cr2 (filename)) {
+                GP_DEBUG ("canon_int_filename2thumbname: thumbnail for CR2 \"%s\" is internal",
                           filename);
                 return nullstring;
         }

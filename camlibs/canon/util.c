@@ -133,10 +133,10 @@ is_jpeg (const char *name)
  * is_crw:
  * @name: name of file to examine
  *
- * Tests whether the name given corresponds to a raw CRW image (.CRW or .CR2).
+ * Tests whether the name given corresponds to a raw CRW image (.CRW).
  *
  * Returns:
- *   1 if filename is the name of a raw image (i.e. ends with .CRW or .CR2)
+ *   1 if filename is the name of a traditional Canon raw image (i.e. ends with .CRW)
  *   0 if not
  *
  */
@@ -148,9 +148,34 @@ is_crw (const char *name)
 
 	pos = strchr (name, '.');
 	if (pos)
-		res = (!strcmp (pos, ".CRW")) || (!strcmp ( pos, ".CR2" ) );
+		res = !strcmp (pos, ".CRW");
 
 	GP_DEBUG ("is_crw(%s) == %i", name, res);
+	return (res);
+}
+
+/**
+ * is_cr2:
+ * @name: name of file to examine
+ *
+ * Tests whether the name given corresponds to a raw CR2 image (.CR2).
+ *
+ * Returns:
+ *   1 if filename is the name of a CR2 raw image (i.e. ends with .CR2)
+ *   0 if not
+ *
+ */
+int
+is_cr2 (const char *name)
+{
+	const char *pos;
+	int res = 0;
+
+	pos = strchr (name, '.');
+	if (pos)
+		res = !strcmp (pos, ".CR2");
+
+	GP_DEBUG ("is_cr2(%s) == %i", name, res);
 	return (res);
 }
 

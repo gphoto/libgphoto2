@@ -31,6 +31,7 @@ int is_image (const char *name);
 int is_movie (const char *name);
 int is_jpeg (const char *name);
 int is_crw (const char *name);
+int is_cr2 (const char *name);
 
 const char *filename2mimetype(const char *filename);
 
