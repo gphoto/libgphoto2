@@ -4,5 +4,8 @@ Makefile.in
 Makefile
 gphoto.pot
 stamp-cat-id
+Makevars
+libgphoto2-2.pot
+libgphoto2.pot
+remove-potcdate.sed
 *.gmo
-gphoto2.pot

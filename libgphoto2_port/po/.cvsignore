@@ -3,4 +3,7 @@ Makefile.in.in
 Makefile.in
 Makefile
 libgphoto2_port.pot
+Makevars
+libgphoto2_port-0.pot
+remove-potcdate.sed
 *.gmo
