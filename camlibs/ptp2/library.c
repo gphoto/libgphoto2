@@ -214,6 +214,9 @@ static struct {
 	{"Kodak:LS420", 0x040a, 0x0540},
 	{"Kodak:LS443", 0x040a, 0x0568},
 	{"Kodak:CX4210", 0x040a, 0x0560},
+	{"Kodak:CX4200", 0x040a, 0x0560},
+	/* both above may share the same product IDs???
+	   A Europe/US versions of the same model??? */
 	{"Kodak:CX4230", 0x040a, 0x0535},
 	{"Kodak:CX4300", 0x040a, 0x0566},
 
@@ -458,8 +461,8 @@ camera_abilities (CameraAbilitiesList *list)
 		a.speed[0] = 0;
 		a.usb_vendor = models[i].usb_vendor;
 		a.usb_product= models[i].usb_product;
-		a.operations        = GP_CAPTURE_IMAGE;
-		a.file_operations   = GP_FILE_OPERATION_PREVIEW|
+		a.operations        = GP_CAPTURE_IMAGE; // | GP_OPERATION_CONFIG;
+		a.file_operations   = GP_FILE_OPERATION_PREVIEW |
 					GP_FILE_OPERATION_DELETE;
 		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
 			| GP_FOLDER_OPERATION_MAKE_DIR |
@@ -567,6 +570,23 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		camera->pl->params.deviceinfo.VendorExtensionDesc);
 
 	return (GP_OK);
+}
+
+static int
+camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
+{
+	CameraWidget *config;
+	PTPDevicePropDesc dpd;
+
+	ptp_getdevicepropdesc(&camera->pl->params,PTP_DPC_BatteryLevel,&dpd);
+
+	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"),
+		window);
+	gp_widget_new (GP_WIDGET_TEXT, _("Power (readonly)"), &config);
+	gp_widget_set_value (config, "POWER");
+	gp_widget_append (*window,config);
+
+	return GP_OK;
 }
 
 /* following functions are used for fs testing only */
@@ -1083,6 +1103,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->exit = camera_exit;
 	camera->functions->capture = camera_capture;
 	camera->functions->summary = camera_summary;
+	camera->functions->get_config = camera_get_config;
 
 	/* We need some data that we pass around */
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
@@ -1140,9 +1161,18 @@ camera_init (Camera *camera, GPContext *context)
 	GP_DEBUG ("  serial number: '%s'",camera->pl->params.deviceinfo.SerialNumber);
 	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
 	GP_DEBUG ("Supported operations:");
-	for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++) {
-		GP_DEBUG ("  0x%.4x",camera->pl->params.deviceinfo.OperationsSupported[i]);
-	}
+	for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++)
+		GP_DEBUG ("  0x%.4x",
+			camera->pl->params.deviceinfo.OperationsSupported[i]);
+	GP_DEBUG ("Events Supported:");
+	for (i=0; i<camera->pl->params.deviceinfo.EventsSupported_len; i++)
+		GP_DEBUG ("  0x%.4x",
+			camera->pl->params.deviceinfo.EventsSupported[i]);
+	GP_DEBUG ("Device Properties Supported:");
+	for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len;
+		i++)
+		GP_DEBUG ("  0x%.4x",
+			camera->pl->params.deviceinfo.DevicePropertiesSupported[i]);
 
 	/* init internal ptp objectfiles (required for fs implementation) */
 	init_ptp_fs (camera, context);

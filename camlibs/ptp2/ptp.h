@@ -367,6 +367,99 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_AC_ReadOnly				0x0001
 #define PTP_AC_ReadOnly_with_Object_Deletion	0x0002
 
+// Property Describing Dataset, Range Form
+
+struct _PTPPropDescRangeForm {
+	void *		MinimumValue;
+	void *		MaximumValue;
+	void *		StepSize;
+};
+typedef struct _PTPPropDescRangeForm PTPPropDescRangeForm;
+
+// Property Describing Dataset, Enum Form
+
+struct _PTPPropDescEnumForm {
+	uint16_t	NumberOfValues;
+	void **		SupportedValue;
+};
+typedef struct _PTPPropDescEnumForm PTPPropDescEnumForm;
+
+// Device Property Describing Dataset (DevicePropDesc)
+
+struct _PTPDevicePropDesc {
+	uint16_t	DevicePropertyCode;
+	uint16_t	DataType;
+	uint8_t		GetSet;
+	void *		FactoryDefaultValue;
+	void *		CurrentValue;
+	uint8_t		FormFlag;
+	union	{
+		PTPPropDescEnumForm	enumeration;
+		PTPPropDescRangeForm	range;
+	} FORM;
+};
+typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
+
+// Datatype Codes 
+
+#define PTP_DC_UNDEF	0x0000
+#define PTP_DC_INT8	0x0001
+#define PTP_DC_UINT8	0x0002
+#define PTP_DC_INT16	0x0003
+#define PTP_DC_UINT16	0x0004
+#define PTP_DC_INT32	0x0005
+#define PTP_DC_UINT32	0x0006
+#define PTP_DC_INT64	0x0007
+#define PTP_DC_UINT64	0x0008
+#define PTP_DC_INT128	0x0009
+#define PTP_DC_UINT128	0x000A
+#define PTP_DC_AINT8	0x4001
+#define PTP_DC_AUINT8	0x4002
+#define PTP_DC_AINT16	0x4003
+#define PTP_DC_AUINT16	0x4004
+#define PTP_DC_AINT32	0x4005
+#define PTP_DC_AUINT32	0x4006
+#define PTP_DC_AINT64	0x4007
+#define PTP_DC_AUINT64	0x4008
+#define PTP_DC_AINT128	0x4009
+#define PTP_DC_AUINT128	0x400A
+#define PTP_DC_STR	0xFFFF
+
+// Device Properties Codes
+
+#define PTP_DPC_Undefined		0x5000
+#define PTP_DPC_BatteryLevel		0x5001
+#define PTP_DPC_FunctionalMode		0x5002
+#define PTP_DPC_ImageSize		0x5003
+#define PTP_DPC_CompressionSetting	0x5004
+#define PTP_DPC_WhiteBalance		0x5005
+#define PTP_DPC_RGBGain			0x5006
+#define PTP_DPC_FNumber			0x5007
+#define PTP_DPC_FocalLength		0x5008
+#define PTP_DPC_FocusDistance		0x5009
+#define PTP_DPC_FocusMode		0x500A
+#define PTP_DPC_ExposureMeteringMode	0x500B
+#define PTP_DPC_FlashMode		0x500C
+#define PTP_DPC_ExposureTime		0x500D
+#define PTP_DPC_ExposureProgramMode	0x500E
+#define PTP_DPC_ExposureIndex		0x500F
+#define PTP_DPC_ExposureBiasCompensation	0x5010
+#define PTP_DPC_DateTime		0x5011
+#define PTP_DPC_CaptureDelay		0x5012
+#define PTP_DPC_StillCaptureMode	0x5013
+#define PTP_DPC_Contrast		0x5014
+#define PTP_DPC_Sharpness		0x5015
+#define PTP_DPC_DigitalZoom		0x5016
+#define PTP_DPC_EffectMode		0x5017
+#define PTP_DPC_BurstNumber		0x5018
+#define PTP_DPC_BurstInterval		0x5019
+#define PTP_DPC_TimelapseNumber		0x501A
+#define PTP_DPC_TimelapseInterval	0x501B
+#define PTP_DPC_FocusMeteringMode	0x501C
+#define PTP_DPC_UploadURL		0x501D
+#define PTP_DPC_Artist			0x501E
+#define PTP_DPC_CopyrightInfo		0x501F
+
 // Glue stuff starts here
 
 typedef struct _PTPParams PTPParams;
@@ -469,6 +562,9 @@ uint16_t ptp_sendobject		(PTPParams* params, char* object,
 
 uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
 				uint32_t ofc);
+
+uint16_t ptp_getdevicepropdesc	(PTPParams* params, uint16_t propcode,
+				PTPDevicePropDesc *devicepropertydesc);
 
 uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,

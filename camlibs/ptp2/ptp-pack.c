@@ -403,3 +403,17 @@ ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi)
 	}
 	free(capture_date);
 }
+
+#define PTP_dpd_DevicePropertyCode	0
+#define PTP_dpd_DataType		2
+#define PTP_dpd_GetSet			4
+#define PTP_dpd_FactoryDefaultValue	5
+
+static inline void
+ptp_unpack_DPD (PTPParams *params, char* data, PTPDevicePropDesc *dpd)
+{
+
+	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_DevicePropertyCode]);
+	dpd->DataType=dtoh16a(&data[PTP_dpd_DataType]);
+	dpd->GetSet=dtoh8a(&data[PTP_dpd_GetSet]);
+}

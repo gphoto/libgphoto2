@@ -1,3 +1,11 @@
+2003-04-01 Mariusz Woloszyn
+	* library.c: added Kodak CX4200 explicite support;
+	  added some get config code (it's not enabled, nor finished yet);
+	  added some extra debug info about events and properties supported
+	* ptp-pack.c: intoduced ptp_unpack_DPD (not finished yet)
+	* ptp.c: added ptp_getdevicepropdesc()
+	* ptp.h: introduced some device property describing structures and
+	  constants
 2003-03-29 Mariusz Woloszyn
 	* library.c: enabled downloading of nonimage files
 	* ptp.c: fixed a bug in capture code
@@ -6,8 +14,8 @@
 2003-03-29 Mariusz Woloszyn
 	* ptp.h: added Nparam field to PTPContainer
 	* ptp.c: using Nparam field we send requests with only used params
-	to the camera (although specs says it's legal, some cameras do not
-	like it)
+	  to the camera (although specs says it's legal, some cameras do not
+	  like it)
 2003-03-29 Mariusz Woloszyn
 	* ptp.c: fixed a memcopy size bug
 2003-03-27 Mariusz Woloszyn

@@ -707,6 +707,23 @@ ptp_initiatecapture (PTPParams* params, uint32_t storageid,
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL);
 }
 
+uint16_t
+ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode, 
+			PTPDevicePropDesc *devicepropertydesc)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+	char *dpd=NULL;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_GetDevicePropDesc;
+	ptp.Param1=propcode;
+	ptp.Nparam=1;
+	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpd);
+	/* unpack */
+	free(dpd);
+	return ret;
+}
 
 /**
  * ptp_ek_sendfileobjectinfo:
