@@ -38,7 +38,7 @@ int gp_file_ref (CameraFile *file) {
 int gp_file_unref (CameraFile *file) {
 
     if (file == NULL)
-    	return GP_ERROR_BAD_PARAMETERS;
+        return GP_ERROR_BAD_PARAMETERS;
 
     file->ref_count -= 1;
 
@@ -50,7 +50,7 @@ int gp_file_unref (CameraFile *file) {
 
 int gp_file_session (CameraFile *file) {
 
-	return (file->session);
+        return (file->session);
 }
 
 int gp_file_append (CameraFile *file, char *data, int size) {
@@ -58,10 +58,10 @@ int gp_file_append (CameraFile *file, char *data, int size) {
         if (size < 0)
                 return (GP_ERROR_BAD_PARAMETERS);
 
-	if (!file->data)
-	        file->data = (char*)malloc(sizeof(char) * (size));
-	   else
-	        file->data = (char*)realloc(file->data, sizeof(char) * (file->size + size));
+        if (!file->data)
+                file->data = (char*)malloc(sizeof(char) * (size));
+           else
+                file->data = (char*)realloc(file->data, sizeof(char) * (file->size + size));
         memcpy(&file->data[file->size], data, size);
 
         file->bytes_read = size;
@@ -149,7 +149,6 @@ int gp_file_clean (CameraFile *file) {
         frees a CameraFile's components, not the CameraFile itself.
         this is used to prep a CameraFile struct to be filled.
         */
-
         if (file->data != NULL)
                 free(file->data);
         strcpy(file->name, "");
