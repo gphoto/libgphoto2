@@ -14,7 +14,7 @@ struct agfa_device {
 int agfa_reset          (struct agfa_device *dev);
 int agfa_get_status     (struct agfa_device *dev, int *taken,
 		         int *available, int *rawcount);
-int agfa_photos_taken   (struct agfa_device *dev,int *taken);
+int agfa_photos_taken   (struct agfa_device *dev);
 int agfa_get_file_list  (struct agfa_device *dev);
 int agfa_delete_picture (struct agfa_device *dev, const char *filename);
 

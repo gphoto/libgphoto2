@@ -1,5 +1,12 @@
 2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/agfa.c:
+	* camlibs/commands.c:
+	* camlibs/commands.h: Use a macro CHECK for most of the simple
+	error checks. That makes the code much cleaner.
+
+2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/agfa-cl18/agfa.h: Renamed to
 	* camlibs/agfa-cl18/commands.h
 	* camlibs/Makefile.am: Reflect this change.

@@ -47,6 +47,7 @@ struct agfa_file_command {
         char filename[12];
 };
 
+#define CHECK(result) {int r = (result); if (r < 0) return (r);}
 
 /* Regular commands always 8 bytes long */
 static void
@@ -71,8 +72,9 @@ agfa_reset (struct agfa_device *dev)
 	struct agfa_command cmd;
 	
 	build_command (&cmd, AGFA_RESET, 0);
-	
-	return (gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd)));
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd)));
+
+	return (GP_OK);
 }
 
 /* Status is a 60 byte array.  I have no clue what it does */
@@ -82,19 +84,14 @@ agfa_get_status (struct agfa_device *dev, int *taken,
 {
 	struct agfa_command cmd;
 	unsigned char ss[0x60];
-	int ret;
 
 	build_command (&cmd, AGFA_STATUS, 0);
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd)));
+	CHECK (gp_port_read (dev->gpdev, (unsigned char *)&ss, sizeof (ss)));
 
-	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd)); 
-	if (ret < 0)
-		return (ret);
+	CHECK (agfa_reset (dev));
 
-	ret = gp_port_read (dev->gpdev, (unsigned char *)&ss, sizeof (ss));
-	if (ret < 0)
-		return (ret);
-
-	return (agfa_reset (dev));
+	return (GP_OK);
 }
 
 /* Below contributed by Ben Hague <benhague@btinternet.com> */
@@ -132,9 +129,9 @@ agfa_capture (struct agfa_device *dev, CameraFilePath *path)
 	sleep(20);
 	
 	/* Again, three times in windows driver */
-	ret = agfa_photos_taken (dev,&taken);
-	ret = agfa_photos_taken (dev,&taken);
-	ret = agfa_photos_taken (dev,&taken);
+	taken = agfa_photos_taken (dev);
+	taken = agfa_photos_taken (dev);
+	taken = agfa_photos_taken (dev);
 	
 	/* 
 	 * This seems to do some kind of reset, but does cause the camera to
@@ -148,24 +145,16 @@ agfa_capture (struct agfa_device *dev, CameraFilePath *path)
 
 
 int
-agfa_photos_taken (struct agfa_device *dev, int *taken)
+agfa_photos_taken (struct agfa_device *dev)
 {
 	struct agfa_command cmd;
-	int ret, numpics;
+	int numpics;
 	
 	build_command (&cmd, AGFA_GET_NUM_PICS, 0);
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd)));
+	CHECK (gp_port_read (dev->gpdev, (char*)&numpics, sizeof (numpics)));
 
-	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof (cmd));
-	if (ret < 0)
-		return (ret);
-	
-	ret = gp_port_read (dev->gpdev, (char*)&numpics, sizeof (numpics));
-	if (ret < 0)
-		return (ret);
-	
-	*taken = numpics;
-	
-	return 0;
+	return (numpics);
 }
 
 
@@ -179,9 +168,7 @@ agfa_get_file_list (struct agfa_device *dev)
 	/* It seems we need to do a "reset" packet before reading names?? */
 	agfa_reset (dev);
 
-	ret = agfa_photos_taken (dev, &taken);
-	if (ret < 0)
-		return (ret);
+	CHECK (taken = agfa_photos_taken (dev));
 
 	dev->num_pictures = taken;
 
@@ -196,12 +183,16 @@ agfa_get_file_list (struct agfa_device *dev)
 
 	build_command (&cmd, AGFA_GET_NAMES, buflen);
 	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
-	if (ret < 0)
+	if (ret < 0) {
+		free (buffer);
 		return (ret);
-	
+	}
+
 	ret = gp_port_read (dev->gpdev, (void *)buffer, buflen);
-	if (ret < 0)
+	if (ret < 0) {
+		free (buffer);
 		return (ret);
+	}
 	
 	if (dev->file_list)
 		free (dev->file_list);
@@ -230,27 +221,19 @@ agfa_get_thumb_size (struct agfa_device *dev, const char *filename)
 {
 	struct agfa_command cmd;
 	struct agfa_file_command file_cmd;
-	int ret, temp,size;
+	int temp, size;
 
 	build_command (&cmd, AGFA_GET_THUMB_SIZE, 0);
-	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd)));
+
 	/* always returns ff 0f 00 00 ??? */
-	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp)));
+
 	build_file_command (&file_cmd, filename);
-	ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
-	if (ret < 0)
-		return (ret);
-	
-	ret = gp_port_read (dev->gpdev, (char*)&size, sizeof(size));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd)));
+
+	CHECK (gp_port_read (dev->gpdev, (char*)&size, sizeof(size)));
+
 	return size;
 }
 
@@ -260,42 +243,30 @@ agfa_get_thumb (struct agfa_device *dev, const char *filename,
 {
 	struct agfa_command cmd;
 	struct agfa_file_command file_cmd;
-	int ret, temp; 
+	int temp; 
 #if 0
 	unsigned char temp_string[8];
 #endif
 	
 	build_command (&cmd, AGFA_GET_THUMB, 0);
-	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
-	if (ret < 0)
-		return (ret);
-	
-	/* always returns ff 0f 00 00 ??? */
-	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
-	if (ret < 0)
-		return (ret);
-	
-	build_file_command (&file_cmd, filename);
-	ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd)));
 
-	ret = gp_port_read (dev->gpdev, data, size);
-	if (ret < 0)
-		return (ret);
+	/* always returns ff 0f 00 00 ??? */
+	CHECK (gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp)));
+
+	build_file_command (&file_cmd, filename);
+	CHECK (gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd)));
+
+	CHECK (gp_port_read (dev->gpdev, data, size));
 
 #if 0
 	/* Is this needed? */
-	agfa_photos_takeni (dev, &ret);
+	agfa_photos_taken (dev, &ret);
    
         build_command (&cmd, AGFA_END_OF_THUMB, 0);
-        ret = gp_port_write (dev->gpdev,&cmd, sizeof(cmd));
-        if (ret < 0)
-		return (ret);
+	CHECK (gp_port_write (dev->gpdev,&cmd, sizeof(cmd)));
 
-	ret = gp_port_read (dev->gpdev, temp_string, 8);
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_read (dev->gpdev, temp_string, 8));
 #endif
 
 	return (GP_OK);
@@ -306,27 +277,19 @@ agfa_get_pic_size (struct agfa_device *dev, const char *filename)
 {
 	struct agfa_command cmd;
 	struct agfa_file_command file_cmd;
-	int ret, temp, size;
+	int temp, size;
 	
 	build_command (&cmd, AGFA_GET_PIC_SIZE, 0);
-	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd)));
+
 	/* always returns ff 0f 00 00 ??? */
-	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp)));
+
 	build_file_command (&file_cmd, filename);
-	ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
-	if (ret < 0)
-		return (ret);
-	
-	ret = gp_port_read (dev->gpdev, (char*)&size, sizeof(size));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd)));
+
+	CHECK (gp_port_read (dev->gpdev, (char*)&size, sizeof(size)));
+
 	return size;
 }
 
@@ -336,38 +299,30 @@ agfa_get_pic (struct agfa_device *dev, const char *filename,
 {
 	struct agfa_command cmd;
 	struct agfa_file_command file_cmd;
-	int ret, temp;
+	int temp;
 #if 0
 	int taken;
 #endif
 
 #if 0
-	agfa_photos_taken(dev,&taken);
-	agfa_get_pic_size(dev,filename);
+	taken = agfa_photos_taken (dev);
+	agfa_get_pic_size (dev, filename);
 #endif
 	build_command (&cmd, AGFA_GET_PIC, 0);
-	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd)));
+
 	/* always returns ff 0f 00 00 ??? */
-	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp)));
+
 	build_file_command (&file_cmd, filename);
-	ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
-	if (ret < 0)
-		return (ret);
-	
-	ret = gp_port_read (dev->gpdev, data, size);
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd)));
+
+	CHECK (gp_port_read (dev->gpdev, data, size));
 
 #if 0
 	/* Have to do this after getting pic */
 	build_command (&cmd, AGFA_DONE_PIC, 0);
-	ret=gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd)));
 #endif
 
 	return (GP_OK);
@@ -385,75 +340,53 @@ agfa_delete_picture (struct agfa_device *dev, const char *filename)
 	int size=4, buflen;
 	
 	/* yes, we do this twice?? */
-	agfa_photos_taken (dev,&taken);
-	agfa_photos_taken (dev,&taken);
+	taken = agfa_photos_taken (dev);
+	taken = agfa_photos_taken (dev);
 	
 	build_command (&cmd, AGFA_GET_PIC_SIZE,0);
-	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd)));
+
 	/* always returns ff 0f 00 00 ??? */
-	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp)));
+
 	/* Some traces show sending other than the file we want deleted? */
 	build_file_command (&file_cmd,filename);
-	ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd)));
 
-	ret = gp_port_read (dev->gpdev, data, size);
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_read (dev->gpdev, data, size));
+
 	/* Check num taken AGAIN */
-	agfa_photos_taken (dev, &taken);
+	taken = agfa_photos_taken (dev);
 	
 	build_command (&cmd, AGFA_GET_PIC_SIZE, 0);
-	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd)));
 
 	/* always returns ff 0f 00 00 ??? */
-	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp)));
 
 	build_file_command (&file_cmd, filename);
-	ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
-	if (ret < 0)
-		return (ret);
-	
-	ret = gp_port_read (dev->gpdev, data, size);
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd)));
+
+	CHECK (gp_port_read (dev->gpdev, data, size));
 
 	/* Check num taken AGAIN */
-	agfa_photos_taken (dev, &taken);
+	taken = agfa_photos_taken (dev);
 
 	build_command (&cmd, AGFA_DELETE, 0);
-	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd)));
 
         /* read ff 0f ??? */
-	ret = gp_port_read (dev->gpdev, data, size);
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_read (dev->gpdev, data, size));
 
 	build_file_command (&file_cmd, filename);
-	ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd)));
 
         /* This is the point we notices that in fact a pic is missing */
         /* Why do it 4 times??? Timing?? Who knows */
-	agfa_photos_taken (dev, &taken);
-	agfa_photos_taken (dev, &taken);
-	agfa_photos_taken (dev, &taken);
-	agfa_photos_taken (dev, &taken);
+	taken = agfa_photos_taken (dev);
+	taken = agfa_photos_taken (dev);
+	taken = agfa_photos_taken (dev);
+	taken = agfa_photos_taken (dev);
 	
 	/* Why +1 ? */
 	buflen = ((taken+1) * 13)+1;  /* 12 char filenames and space for each */
@@ -467,31 +400,31 @@ agfa_delete_picture (struct agfa_device *dev, const char *filename)
 	
 	build_command (&cmd, AGFA_GET_NAMES, buflen);
 	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
-	if (ret < 0)
+	if (ret < 0) {
+		free (buffer);
 		return (ret);
+	}
 	
 	ret = gp_port_read (dev->gpdev, (void *)buffer, buflen);
-	if (ret < 0) 
+	if (ret < 0) {
+		free (buffer);
 		return (ret);
+	}
+
+	if (dev->file_list)
+		free (dev->file_list);
+	dev->file_list = buffer;
 	
 	build_command (&cmd, AGFA_GET_PIC_SIZE, 0);
-	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));  
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd)));
 
 	/* always returns ff 0f 00 00 ??? */
-	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
-	if (ret < 0)
-		return (ret);
-	
+	CHECK (gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp)));
+
 	build_file_command (&file_cmd, filename);
-	ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
-	if (ret < 0)
-		return (ret);
-	
-	ret = gp_port_read (dev->gpdev, data, size);
-	if (ret < 0)
-		return (ret);
+	CHECK (gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd)));
+
+	CHECK (gp_port_read (dev->gpdev, data, size));
 
 	return (GP_OK);
 }

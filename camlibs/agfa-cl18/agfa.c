@@ -37,6 +37,8 @@
 
 #include "commands.h"
 
+#define CHECK(result) {int r = (result); if (r < 0) return (r);}
+
 int
 camera_id (CameraText *id)
 {
@@ -135,16 +137,14 @@ agfa_file_get (Camera *camera, const char *filename, int thumbnail,
 	 * then pic size no matter what.  Otherwise
 	 * the camera will stop responding
 	 */
-	result = agfa_photos_taken (dev, &throwaway);
-	if (result < 0)
-		return (result);
+	CHECK (throwaway = agfa_photos_taken (dev));
 
 	if (thumbnail)
-		buflen = agfa_get_thumb_size(dev,filename);
+		CHECK (buflen = agfa_get_thumb_size (dev, filename))
 	else
-		buflen = agfa_get_pic_size (dev, filename);
+		CHECK (buflen = agfa_get_pic_size (dev, filename));
 	
-	*data = malloc (buflen+1);
+	*data = malloc (buflen + 1);
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
 	memset (*data, 0, buflen);
@@ -181,25 +181,22 @@ static int
 camera_file_get (Camera *camera, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file)
 {
-	unsigned char *data;
-	int size, result;
+	unsigned char *data = NULL;
+	int size;
 	
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		result = agfa_file_get (camera, filename, 0, &data, &size);
-		if (result < 0)
-			return (result);
+		CHECK (agfa_file_get (camera, filename, 0, &data, &size));
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		result = agfa_file_get (camera, filename, 1, &data, &size);
-		if (result < 0)
-			return (result);
+		CHECK (agfa_file_get (camera, filename, 1, &data, &size));
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	if (!data) return GP_ERROR;
+	if (!data)
+		return GP_ERROR;
 	
 	gp_file_set_data_and_size (file, data, size);
 	gp_file_set_name (file, filename);
@@ -212,11 +209,9 @@ static int
 camera_summary (Camera *camera, CameraText *summary)
 {
 	struct agfa_device *dev = camera->camlib_data;
-	int taken, result;
+	int taken;
 	
-	result = agfa_photos_taken (dev, &taken);
-	if (result < 0)
-		return (result);
+	CHECK (taken = agfa_photos_taken (dev));
 
 	sprintf (summary->text, _("Number of pictures: %d"), taken);
 	
@@ -232,7 +227,7 @@ camera_manual (Camera *camera, CameraText *manual)
 }
 
 static int
-camera_about(Camera *camera, CameraText *about)
+camera_about (Camera *camera, CameraText *about)
 {
 	strcpy (about->text, _("Agfa CL18\nVince Weaver <vince@deater.net>\n"));
 	
