@@ -7,7 +7,7 @@ INCLUDES =						\
 
 lib_LTLIBRARIES = libgphoto2.la
 
-libgphoto2_la_LDFLAGS = -version-info $(LIBGPHOTO2_CURRENT):$(LIBGPHOTO2_REVISION):$(LIBGPHOTO2_AGE)
+libgphoto2_la_LDFLAGS = -version-info @LIBGPHOTO2_VERSION_INFO@
 
 libgphoto2_la_SOURCES = 	\
 	gphoto2-abilities-list.c\
