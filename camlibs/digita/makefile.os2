@@ -35,5 +35,5 @@ digita.def: digita.o
    @copy digita.df digita.def
    @emxexp $** >> digita.def
 
-..\gpdigita.dll: digita.o digita.def serial.o commands.o usb.o ..\..\obj\interface.o
-   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lst\check -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldl -lpthreads -lpthrdrtl -lmt\c
+..\gpdigita.dll: digita.o digita.def serial.o commands.o usb.o
+   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldllib -lgiserial -lsocket
