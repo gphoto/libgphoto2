@@ -75,10 +75,10 @@ typedef struct {
 
 #endif /* else */
 
-int		 GP_SYSTEM_MKDIR	(char *dirname);
-GP_SYSTEM_DIR	 GP_SYSTEM_OPENDIR	(char *dirname);
+int		 GP_SYSTEM_MKDIR	(const char *dirname);
+GP_SYSTEM_DIR	 GP_SYSTEM_OPENDIR	(const char *dirname);
 GP_SYSTEM_DIRENT GP_SYSTEM_READDIR	(GP_SYSTEM_DIR d);
-char*		 GP_SYSTEM_FILENAME	(GP_SYSTEM_DIRENT de);
+const char*	 GP_SYSTEM_FILENAME	(GP_SYSTEM_DIRENT de);
 int		 GP_SYSTEM_CLOSEDIR	(GP_SYSTEM_DIR dir);
-int		 GP_SYSTEM_IS_FILE	(char *filename);
-int		 GP_SYSTEM_IS_DIR	(char *dirname);
+int		 GP_SYSTEM_IS_FILE	(const char *filename);
+int		 GP_SYSTEM_IS_DIR	(const char *dirname);

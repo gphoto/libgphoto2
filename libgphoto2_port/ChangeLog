@@ -1,3 +1,8 @@
+2001-09-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-portability.h:
+	* include/libgphoto2_port/portability.c: const *char
+
 2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include/gphoto2-port.h: GP_ERROR_IO_LOCK
