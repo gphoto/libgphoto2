@@ -115,19 +115,6 @@ ptp_sendreq(PTPParams* params, PTPReq* databuf, short code)
 static short
 ptp_senddata(PTPParams* params, PTPReq* databuf, short code)
 {
-	short ret;
-	PTPReq* req=(databuf==NULL)?
-		malloc(sizeof(PTPReq)):databuf;
-	
-	req->len = PTP_REQ_LEN;
-	req->type = PTP_TYPE_DATA;
-	req->code = code;
-	req->trans_id = params->transaction_id;
-
-	ret=params->write_func ((unsigned char *) req, PTP_REQ_LEN,
-				 params->data);
-	if (databuf==NULL) free (req);
-	return ret;
 }
 #endif
 
@@ -188,12 +175,12 @@ ptp_getresp(PTPParams* params, PTPReq* databuf, short code)
 #define PTP_DP_GETDATA		0x02	// geting data
 
 short
-ptp_transaction(PTPParams* params, PTPReq* req, unsigned short code,
+ptp_transaction(PTPParams* params, PTPReq** req, unsigned short code,
 			unsigned short dataphase, unsigned int datalen)
 {
-	if ((params==NULL) || (req==NULL)) 
+	if ((params==NULL) || (*req==NULL)) 
 		return PTP_ERROR_BADPARAM;
-	CHECK_PTP_RC(ptp_sendreq(params, req, code));
+	CHECK_PTP_RC(ptp_sendreq(params, *req, code));
 	switch (dataphase) {
 		case PTP_DP_SENDDATA:
 			// XXX unimplemented
@@ -202,14 +189,14 @@ ptp_transaction(PTPParams* params, PTPReq* req, unsigned short code,
 		case PTP_DP_GETDATA:
 			if (datalen>PTP_REQ_DATALEN) {
 				ptp_debug (params, "REALLOCING \n");
-				req=realloc(req, datalen+PTP_REQ_HDR_LEN);
-				if (req==NULL) {
+				*req=realloc(*req, datalen+PTP_REQ_HDR_LEN);
+				if (*req==NULL) {
 					ptp_error(params, "realloc while 0x%4x transaction error", code);
 					return PTP_RC_GeneralError;
 				}
 			}
 			datalen=datalen+PTP_REQ_HDR_LEN;
-			CHECK_PTP_RC(ptp_getdata(params, req, code, datalen));
+			CHECK_PTP_RC(ptp_getdata(params, *req, code, datalen));
 			break;
 		case PTP_DP_NODATA:
 			break;
@@ -234,9 +221,10 @@ ptp_getdevinfo(PTPParams* params, PTPDedviceInfo* devinfo)
 
 /**
  * ptp_opensession:
- * @params: #PTPParams
+ * params:	PTPParams*
+ * 		int session		- session number
  *
- * Establishes a new connection.
+ * Establishes a new session.
  *
  * Return values: Some PTP_RC_* code.
  **/
@@ -244,32 +232,58 @@ short
 ptp_opensession(PTPParams* params, int session)
 {
 	PTPReq req;
+	PTPReq* ptr=&req;
 	
 	*(int *)(req.data)=session;
 
-	return ptp_transaction(params, &req, PTP_OC_OpenSession,
-	PTP_DP_NODATA, 0);
+	return ptp_transaction(params, &ptr, PTP_OC_OpenSession,
+		PTP_DP_NODATA, 0);
 }
 
+/**
+ * ptp_closesession:
+ * params:	PTPParams*
+ *
+ * Closes session.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
 short
 ptp_closesession(PTPParams* params)
 {
 	PTPReq req;
-	return ptp_transaction(params, &req, PTP_OC_CloseSession,
-	PTP_DP_NODATA, 0);
+	PTPReq* ptr=&req;
+
+	return ptp_transaction(params, &ptr, PTP_OC_CloseSession,
+		PTP_DP_NODATA, 0);
 }
 
+/**
+ * ptp_getobjecthandles:
+ * params:	PTPParams*
+ *		PTPObjectHandles*	- pointer to structute
+ *		unsigned int store	- StoreID
+ *
+ * Fills objecthandles with structure returned by device.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+// XXX still ObjectFormatCode and ObjectHandle of Assiciation NOT
+//     IMPLEMENTED (parameter 2 and 3)
 short
-ptp_getobjecthandles(PTPParams* params, PTPObjectHandles* objecthandles)
+ptp_getobjecthandles(PTPParams* params, PTPObjectHandles* objecthandles,
+			unsigned int store)
 {
 	short ret;
 	PTPReq req;
+	PTPReq* ptr=&req;
 	
-	if (objecthandles==NULL) return PTP_ERROR_BADPARAM;
+	if (objecthandles==NULL)
+		return PTP_ERROR_BADPARAM;
 
-	*(int *)(req.data)=0xffffffff;   // XXX return from ALL stores
+	*(int *)(req.data)=store;
 
-	ret=ptp_transaction(params, &req, PTP_OC_GetObjectHandles,
+	ret=ptp_transaction(params, &ptr, PTP_OC_GetObjectHandles,
 		PTP_DP_GETDATA, sizeof(PTPObjectHandles));
 	memcpy(objecthandles, req.data, sizeof(PTPObjectHandles));
 	return ret;
@@ -281,13 +295,13 @@ ptp_getobjectinfo(PTPParams* params, unsigned int handler,
 {
 	short ret;
 	PTPReq req;
+	PTPReq* ptr=&req;
 
-	ptp_debug(params, "entering ptp_getobjectinfo\n");
 	if (objectinfo==NULL)
 		return PTP_ERROR_BADPARAM;
 
 	*(int *)(req.data)=handler;
-	ret=ptp_transaction(params, &req, PTP_OC_GetObjectInfo,
+	ret=ptp_transaction(params, &ptr, PTP_OC_GetObjectInfo,
 		PTP_DP_GETDATA, sizeof(PTPObjectInfo));
 	memcpy(objectinfo, req.data, sizeof(PTPObjectInfo));
 	return ret;
@@ -298,25 +312,16 @@ ptp_getobject(PTPParams* params, unsigned int handler,
 			unsigned int size, char* object)
 {
 	short ret;
-	PTPReq* req=malloc(size);
-	/* XXX STRANGE thing if I use smaller value for malloc, for example
-	   sizeof(PTPReq) the code fails while doing:
-	   memcpy(object, req->data, size);
-	   Dunno why! It does realloc in ptp_transaction() regardless of
-	   allocated req memory!
-	 */
+	PTPReq* req=malloc(sizeof(PTPReq));
 
-	ptp_debug(params, "entering ptp_getobject\n");
 	if (object==NULL)
 		return PTP_ERROR_BADPARAM;
 
 	memset(req, 0, sizeof(PTPReq));
 	*(int *)(req->data)=handler;
-	ret=ptp_transaction(params, req, PTP_OC_GetObject,
+	ret=ptp_transaction(params, &req, PTP_OC_GetObject,
 		PTP_DP_GETDATA, size);
-	ptp_debug(params, ">>>>> memcp\n");
 	memcpy(object, req->data, size);
-	ptp_debug(params, "<<<<< memcp\n");
 	free(req);
 	return ret;
 }
@@ -333,11 +338,35 @@ ptp_getthumb(PTPParams* params, unsigned int handler,
 
 	memset(req, 0, sizeof(PTPReq));
 	*(int *)(req->data)=handler;
-	ret=ptp_transaction(params, req, PTP_OC_GetThumb,
+	ret=ptp_transaction(params, &req, PTP_OC_GetThumb,
 		PTP_DP_GETDATA, size);
 	memcpy(object, req->data, size);
 	free(req);
 	return ret;
+}
+
+/**
+ * ptp_deleteobject:
+ * params:	PTPParams*
+ *
+ *		unsigned int handler	- object handler
+ *		unsigned int ofc	- object format code
+ * 
+ * Deletes desired objects.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+short
+ptp_deleteobject(PTPParams* params, unsigned int handler,
+			unsigned int ofc)
+{
+	PTPReq req;
+	PTPReq* ptr=&req;
+	*(int *)(req.data)=handler;
+	*(int *)(req.data+4)=ofc;
+
+	return ptp_transaction(params, &ptr, PTP_OC_DeleteObject,
+	PTP_DP_NODATA, 0);
 }
 
 void

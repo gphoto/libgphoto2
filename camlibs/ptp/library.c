@@ -288,7 +288,8 @@ camera_abilities (CameraAbilitiesList *list)
 		a.usb_vendor = models[i].usb_vendor;
 		a.usb_product= models[i].usb_product;
 		a.operations        = GP_OPERATION_NONE;
-		a.file_operations   = GP_FILE_OPERATION_PREVIEW;
+		a.file_operations   = GP_FILE_OPERATION_PREVIEW|
+					GP_FILE_OPERATION_DELETE;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 		CR (gp_abilities_list_append (list, a));
 	}
@@ -336,7 +337,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
-		GP_DEBUG ("listing handler 0x%4x\n",camera->pl->params.handles.handler[i]);
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		camera->pl->params.handles.handler[i], &objectinfo));
 		ptp_getobjectfilename (&objectinfo, filename);
@@ -360,7 +360,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 
-	// Get file numer
+	// Get file number
 	image_id = gp_filesystem_number (fs, folder, filename);
 
 	switch (type) {
@@ -397,14 +397,26 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-delete_file_func (CameraFilesystem *fs, const char *folder, const char *name,
-		  void *data)
+delete_file_func (CameraFilesystem *fs, const char *folder,
+			const char *filename, void *data)
 {
 	Camera *camera = data;
 
-	camera = NULL;
+	unsigned long image_id;
+	PTPObjectInfo ptp_objectinfo;
 
-	return (GP_ERROR);
+	if (strcmp (folder, "/"))
+		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+
+	// Get file number
+	image_id = gp_filesystem_number (fs, folder, filename);
+
+	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
+		camera->pl->params.handles.handler[image_id],&ptp_objectinfo));
+	CPR (camera, ptp_deleteobject(&camera->pl->params,
+		camera->pl->params.handles.handler[image_id],0));
+
+	return (GP_OK);
 }
 
 static int
@@ -525,7 +537,7 @@ camera_init (Camera *camera)
 		report_result(camera, ret);
 	}
 	/* Get file handles array for filesystem */
-	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &camera->pl->params.handles));
+	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &camera->pl->params.handles, 0xffffffff)); // XXX return from all stores
 
 	GP_DEBUG ("ptp_getobjecthandles done");
 

@@ -189,7 +189,8 @@ struct _PTPParams {
 short ptp_opensession  (PTPParams *params, int session);
 short ptp_closesession (PTPParams *params);
 
-short ptp_getobjecthandles(PTPParams *params, PTPObjectHandles* objecthandles);
+short ptp_getobjecthandles(PTPParams *params, PTPObjectHandles* objecthandles,
+			unsigned int store);
 short ptp_getobjectinfo	(PTPParams *params, unsigned int handler,
 			PTPObjectInfo* objectinfo);
 short ptp_getobject	(PTPParams *params, unsigned int handler,
