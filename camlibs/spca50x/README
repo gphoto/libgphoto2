@@ -55,7 +55,7 @@ READMEs are listed here in no particular order.
 Post merge thanks
 -----------------
 A lot of people helped with testing the merged camlib. Most of them are listed
-above anyway, so I wont list them again.
+below anyway, so I wont list them again.
 
 Big thanks to Richard Curnow <rc@rc0.org.uk> who fixed several bug in the
 gsmart mini support. His patches went in during the merge.
@@ -65,6 +65,8 @@ Rupert Levene <r.levene@lancaster.ac.uk> helped debug the merged camlib.
 Norbert Möndjen <Norbert.Moendjen@t-online.de> found out that the pencams
 don't react well to the reset command.
 Walt Boring <waboring@3gstech.com> helped debug the above reset problem.
+John Feuerstein <bizkit@baze.de> helped figuring out and testing the 
+workaround for Pencams without flash.
 
 
 Thanks from the Benq README

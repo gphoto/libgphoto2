@@ -1,3 +1,10 @@
+2004-02-22 Till Adam  <till@adam-lilienthal.de>
+  * add support for Pencams without flash via a special camera
+    model. --camera "Pencam without flash" works for those cams
+    which fail upon autodetection as regular pencams.  
+    Thanks to John Feuerstein <bizkit@baze.de> for helping with
+    that.
+
 2004-01-17 Till Adam  <till@adam-lilienthal.de>
   * fix brokeness for pencams which don't react well to the reset
     command needed for other firmware one cams. Thanks to 

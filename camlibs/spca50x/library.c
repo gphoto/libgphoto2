@@ -585,10 +585,17 @@ camera_init (Camera *camera, GPContext *context)
 	while (model) {
 		if (abilities.usb_vendor == models[x].usb_vendor
 		 && abilities.usb_product == models[x].usb_product) {
-			camera->pl->bridge = models[x].bridge;
-			camera->pl->storage_media_mask =
-				models[x].storage_media_mask;
-			break;
+			char *m = strdup( models[x].model );
+			char *p = strchr (m, ':' );
+			*p = ' ';
+			int same = !strcmp (m, abilities.model);
+			free (m);
+			if (same) {
+				camera->pl->bridge = models[x].bridge;
+				camera->pl->storage_media_mask =
+					models[x].storage_media_mask;
+				break;
+			}
 		}
 		model = models[++x].model;
 	}
