@@ -86,6 +86,8 @@ int gp_camera_new (Camera **camera, int camera_number)
         /* Initialize the members */
         strcpy((*camera)->model, glob_abilities_list->abilities[camera_number]->model);
         (*camera)->port       = (CameraPortInfo*)malloc(sizeof(CameraPortInfo));
+	if (!(*camera)->port) 
+		return (GP_ERROR_NO_MEMORY);
 	(*camera)->port->type = GP_PORT_NONE;
         (*camera)->abilities  = (CameraAbilities*)malloc(sizeof(CameraAbilities));
         (*camera)->functions  = (CameraFunctions*)malloc(sizeof(CameraFunctions));
@@ -94,7 +96,7 @@ int gp_camera_new (Camera **camera, int camera_number)
         (*camera)->frontend_data   = NULL;
 	(*camera)->session    = glob_session_camera++;
         (*camera)->ref_count  = 1;
-	if (!(*camera)->port || !(*camera)->abilities || !(*camera)->functions) 
+	if (!(*camera)->abilities || !(*camera)->functions) 
 		return (GP_ERROR_NO_MEMORY);
 
 	/* Initialize function pointers to NULL.*/
