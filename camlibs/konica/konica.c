@@ -53,7 +53,7 @@
 #define CHECK_NULL(r)     {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 
 static int
-k_check (GPContext *c, const char *rb)
+k_check (GPContext *c, const unsigned char *rb)
 {
 	switch ((rb[3] << 8) | rb[2]) {
 	case 0x0000:
