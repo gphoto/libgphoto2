@@ -212,7 +212,10 @@ gp_file_open (CameraFile *file, const char *filename)
             "tif",  GP_MIME_TIFF,
             "ppm",  GP_MIME_PPM,
             "pgm",  GP_MIME_PGM,
+            "pnm",  GP_MIME_PNM,
             "png",  GP_MIME_PNG,
+            "wav",  GP_MIME_WAV,
+            "avi",  GP_MIME_AVI,
             NULL};
 
 	CHECK_NULL (file && filename);
@@ -249,11 +252,7 @@ gp_file_open (CameraFile *file, const char *filename)
         dot = strrchr (filename, '.');
         if (dot) {
             for (i = 0; mime_table[i] ; i+=2)
-#ifdef HAVE_STRCASECMP
-                if (!strcasecmp (mime_table[i], dot+1)) {
-#else
-                if (!stricmp (mime_table[i], dot+1)) {
-#endif
+                if (!strcmp (mime_table[i], dot+1)) {
                     strncpy (file->mime_type, mime_table[i+1], sizeof(file->mime_type));
                     break;
                 }
@@ -421,14 +420,23 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 		GP_MIME_PNG,  "png",
 		GP_MIME_PPM,  "ppm",
 		GP_MIME_PGM,  "pgm",
-		GP_MIME_TIFF, "tif", NULL};
+		GP_MIME_PNM,  "pnm",
+		GP_MIME_TIFF, "tif",
+		GP_MIME_WAV,  "wav",
+		GP_MIME_BMP,  "bmp",
+		GP_MIME_AVI,  "avi",
+		NULL};
 
 	CHECK_NULL (file);
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-file", "Adjusting file name for "
 		"mime type '%s'...", file->mime_type);
 	for (x = 0; table[x]; x += 2)
-		if (!strcmp (file->mime_type, table[x])) {
+#ifdef HAVE_STRCASECMP
+                if (!strcasecmp (file->mime_type, table[x])) {
+#else
+                if (!stricmp (file->mime_type, table[x])) {
+#endif
 
 			/* Search the current suffix and erase it */
 #ifdef HAVE_STRCHR
