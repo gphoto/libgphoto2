@@ -1,4 +1,10 @@
 2003-01-08 Mariusz Woloszyn
+	* ptp.c: cosmetic
+	* ptp-pack.c: fixed a bug in ptp_unpack_DI(), totallen could be
+	  bigger than uint8_t
+	* library.c:  added camera summary
+
+2003-01-08 Mariusz Woloszyn
 	* ptp-pack.c:
 	* ptp.c: fixed buggy ptp_usb_senddata()
 

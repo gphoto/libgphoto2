@@ -544,6 +544,22 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	return GP_ERROR;
 }
 
+static int
+camera_summary (Camera* camera, CameraText* summary, GPContext *context)
+{
+	snprintf (summary->text, sizeof (summary->text),
+		"Model: %s\n"
+		"  device version: %s\n"
+		"  serial number:  %s\n"
+		"Vendor extension description: %s\n",
+		camera->pl->params.deviceinfo.Model,
+		camera->pl->params.deviceinfo.DeviceVersion,
+		camera->pl->params.deviceinfo.SerialNumber,
+		camera->pl->params.deviceinfo.VendorExtensionDesc);
+
+	return (GP_OK);
+}
+
 /* following functions are used for fs testing only */
 #if 0
 static void
@@ -1054,6 +1070,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->about = camera_about;
 	camera->functions->exit = camera_exit;
 	camera->functions->capture = camera_capture;
+	camera->functions->summary = camera_summary;
 
 	/* We need some data that we pass around */
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
@@ -1108,6 +1125,7 @@ camera_init (Camera *camera, GPContext *context)
 	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
 	GP_DEBUG ("  model: %s", camera->pl->params.deviceinfo.Model);
 	GP_DEBUG ("  device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
+	GP_DEBUG ("  serial number: '%s'",camera->pl->params.deviceinfo.SerialNumber);
 	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
 	GP_DEBUG ("Supported operations:");
 	for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++) {

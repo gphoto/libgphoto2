@@ -137,7 +137,8 @@ ptp_unpack_uint16_t_array(PTPParams *params, char* data, uint16_t offset, uint16
 static inline void
 ptp_unpack_DI (PTPParams *params, char* data, PTPDeviceInfo *di)
 {
-	uint8_t len, totallen;
+	uint8_t len;
+	unsigned int totallen;
 	
 	di->StaqndardVersion = dtoh16a(&data[PTP_di_StandardVersion]);
 	di->VendorExtensionID =
@@ -186,7 +187,6 @@ ptp_unpack_DI (PTPParams *params, char* data, PTPDeviceInfo *di)
 	di->SerialNumber = ptp_unpack_string(params, data,
 		PTP_di_OperationsSupported+totallen,
 		&len);
-
 }
 	
 // ObjectHandles array pack/unpack

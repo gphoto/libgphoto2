@@ -186,14 +186,12 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 					PTP_USB_BULK_PAYLOAD_LEN,
 					len-PTP_USB_BULK_PAYLOAD_LEN,
 					params->data);
-		if (ret!=PTP_RC_OK) {
-			ret = PTP_ERROR_IO;
-		}
 	} while (0);
 	if (ret!=PTP_RC_OK) {
 		ptp_error (params,
 		"PTP: request code %4x container receive error %4x",
 			ptp->Code, ret);
+		ret = PTP_ERROR_IO;
 	}
 	return ret;
 }
