@@ -154,7 +154,6 @@ spca504_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 	u_int32_t addr = 0;
 	u_int8_t *p, *buf;
 	u_int8_t *tmp, *rgb_p, *yuv_p;
-	unsigned char pbm_header[15];
 
 	if (thumbnail) {
 		p = lib->toc + (index*2+1) * 32;
@@ -203,15 +202,18 @@ spca504_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 		 */
 		w = ((p2[0x0c] & 0xff) + (p2[0x0d] & 0xff) * 0x100) / 8; 
 		h = ((p2[0x0e] & 0xff) + (p2[0x0f] & 0xff) * 0x100) / 8;
-		
-		hdrlen = snprintf (pbm_header, sizeof (pbm_header),
-				"P6 %d %d 255\n", w, h );
+	
+                /* Figure out actual header length */
+                hdrlen = 13;
+                if (w > 99) hdrlen++;
+                if (h > 99) hdrlen++;
+
 		size = w * h * 3 + hdrlen;
 		tmp = malloc (size);
 		if (!tmp)
 			return GP_ERROR_NO_MEMORY;
 
-		snprintf ( tmp, size, pbm_header);	
+		snprintf ( tmp, size, "P6 %d %d 255\n", w, h);	
 		yuv_p = buf;
 		rgb_p = tmp + hdrlen;
 		while (yuv_p < buf + file_size) {
