@@ -14,7 +14,6 @@ For questions/comments, email the library author:
 TODO List
 ---------
 - file upload capability
-- fix thumbnail download to use additional data supplied by camera
 - better error checking ("fixme"s) & recovery
 - modify coolshot_file_count to return GP_ code and take *count as argument
 

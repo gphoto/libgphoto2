@@ -49,8 +49,8 @@
 #define TIMEOUT	      2000
 #define DEFAULT_SPEED 9600
 
-#define COOLSHOT_VERSION "0.3"
-#define COOLSHOT_LAST_MOD "09/02/2001 21:22 EST"
+#define COOLSHOT_VERSION "0.4"
+#define COOLSHOT_LAST_MOD "09/06/2001 02:28 EST"
 
 /* define what cameras we support */
 static char *coolshot_cameras[] = {
@@ -173,6 +173,7 @@ static int camera_file_get (Camera *camera, const char *folder,
 			    CameraFile *file)
 {
 	char data[128000];
+	char ppm_filename[128];
 	int size, n;
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_file_get");
@@ -194,17 +195,23 @@ static int camera_file_get (Camera *camera, const char *folder,
 		CHECK (coolshot_request_thumbnail (camera, data, &size, n));
 		CHECK (coolshot_build_thumbnail (data, &size));
 		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
+
+		strcpy( ppm_filename, filename );
+		ppm_filename[strlen(ppm_filename)-3] = 'p';
+		ppm_filename[strlen(ppm_filename)-2] = 'p';
+		ppm_filename[strlen(ppm_filename)-1] = 'm';
+		CHECK (gp_file_set_name (file, ppm_filename));
 		break;
 
 	case GP_FILE_TYPE_NORMAL:
 		CHECK (coolshot_request_image (camera, data, &size, n));
 		CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
+		CHECK (gp_file_set_name (file, filename));
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	CHECK (gp_file_set_name (file, filename));
 	CHECK (gp_file_append (file, data, size));
 
 	return (camera_stop (camera));

@@ -1,3 +1,11 @@
+2001-09-06  Chris Pinkham <cpinkham@infi.net>
+
+	* camlibs/panasonic/coolshot/README
+	  camlibs/panasonic/coolshot/coolshot.c
+	  camlibs/panasonic/coolshot/library.c: changed thumbnail code to
+	  properly decode thumbnails after discovering they are encoded in
+	  YUV 4:1:1 format.
+
 2001-09-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/polaroid/pdc320.c: Bug fixes from Nathan Stenzel

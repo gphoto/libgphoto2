@@ -593,71 +593,89 @@ int coolshot_enq (Camera *camera)
 }
 
 
+#define WIDTH 40
+#define HEIGHT 30
+
+#define Y_ADJ 25
+
+#define RIND(x, y, w) (((w)*(HEIGHT))+((y/2)*(WIDTH/2))+(x/2))
+#define BIND(x, y, w) (((w)*(HEIGHT))+((WIDTH/4)*(HEIGHT))+((y/2)*(WIDTH/2))+(x/2))
+
 int coolshot_build_thumbnail (char *data, int *size)
 {
 	char thumbnail[32768];
-	char prev_line[256];
 	char *ptr;
-	char *pptr;
+	unsigned char *udata = (unsigned char *)data;
 	char *src;
 	int length;
-	int x, y, r, g, b;
-	int ynd;
+	int x, y;
 	int loop;
+	int Y, U, V;
 
-	strcpy( thumbnail,
-		"P6\n"
-		"# CREATOR: gphoto2, panasonic coolshot library\n"
-		"80 60\n"
-		"255\n" );
 
-	length = strlen( thumbnail );
-	ptr = thumbnail + length;
-	pptr = prev_line;
+	ptr = thumbnail;
 
 	src = data;
-	x = y = ynd = 1;
-	r = g = b = 128;
+	x = y = 0;
 
 	for( loop = 0; loop < *size; loop++ ) {
-		if ( y == 81 ) {
+		if ( x == WIDTH ) {
+			x = 0;
+			y++;
+		}
+
+		if ( y < HEIGHT ) {
+			/*
+				from imagemagick
+				Y =  0.299000*R+0.587000*G+0.114000*B
+				Cb= -0.168736*R-0.331264*G+0.500000*B
+				Cr=  0.500000*R-0.418688*G-0.081316*B
+
+				R = Y            +1.402000*Cr
+				G = Y-0.344136*Cb-0.714136*Cr
+				B = Y+1.772000*Cb
+			*/
+
+			Y = *src + Y_ADJ;
+			U = udata[RIND(x,y,WIDTH)] - 128;
+			V = udata[BIND(x,y,WIDTH)] - 128;
+
+			ptr[0] = Y + ( 1.402000 * V );
+			ptr[1] = Y - ( 0.344136 * U ) - ( 0.714136 * V );
+			ptr[2] = Y + ( 1.772000 * U );
+			ptr += 3;
+
 			x++;
-			y = 1;
-
-			memcpy( ptr, prev_line, 240 );
-			pptr = prev_line;
-			ptr += 240;
+			src++;
 		}
-
-		if (( x % 2 ) == 1 ) {
-			if (( ynd % 2 ) == 1 ) {
-				r = *src;
-			} else {
-				g = *src;
-			}
-		} else {
-			if (( ynd % 2 ) == 1 ) {
-				g = *src;
-			} else {
-				b = *src;
-			}
-		}
-
-		*(ptr++) = r; *(ptr++) = g; *(ptr++) = b;
-		*(pptr++) = r; *(pptr++) = g; *(pptr++) = b;
-
-		*(ptr++) = r; *(ptr++) = g; *(ptr++) = b;
-		*(pptr++) = r; *(pptr++) = g; *(pptr++) = b;
-
-		y += 2;
-		ynd++;
-
-		src++;
 	}
 
-	length += 80 * 60 * 3;
+	/* copy the header */
+	sprintf( data,
+		"P6\n"
+		"# CREATOR: gphoto2, panasonic coolshot library\n"
+		"%d %d\n"
+		"255\n", 80, 60 );
 
-	memcpy( data, thumbnail, length );
+	length = strlen( data );
+
+	/* copy the image doubling both height and width */
+	ptr = data + length;
+	for( y = 0; y < HEIGHT; y++ ) {
+		src = thumbnail + (y * WIDTH * 3);
+		for( x = 0; x < WIDTH ; x++, src += 3 ) {
+			ptr[0] = src[0];   ptr[1] = src[1];   ptr[2] = src[2];   ptr += 3;
+			ptr[0] = src[0];   ptr[1] = src[1];   ptr[2] = src[2];   ptr += 3;
+		}
+		src = thumbnail + (y * WIDTH * 3);
+		for( x = 0; x < WIDTH ; x++, src += 3 ) {
+			ptr[0] = src[0];   ptr[1] = src[1];   ptr[2] = src[2];   ptr += 3;
+			ptr[0] = src[0];   ptr[1] = src[1];   ptr[2] = src[2];   ptr += 3;
+		}
+	}
+
+	length += WIDTH * HEIGHT * 3 * 4;
+
 	*size = length;
 
 	return( GP_OK );
