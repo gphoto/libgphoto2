@@ -110,7 +110,7 @@ const struct canonCamModelData models[] =
 #undef S1M
 #undef S32K
 
-#ifdef HAVE_TM_GMTOFF
+#ifndef HAVE_TM_GMTOFF
 /* required for time conversions in canon_int_set_time() */
 extern long int timezone;
 #endif
