@@ -30,7 +30,7 @@ struct _CameraPrivateLibrary {
 	int			cmd_seqnum;	/* command seqnum */
 	int			debug;
 	time_t			last;		/* remember last recv time */
-} DC3200Data;
+};
 
 int init(Camera *camera);
 int check_last_use(Camera *camera);
