@@ -64,9 +64,6 @@ typedef struct {
 		/* if serial==1, baud rates that this camera	 */
 		/* supports. terminate list with a zero 	 */
 
-	int cancel;
-		/* Camera operation can be cancelled in progress */
-
 	int capture;
 		/* Camera can do a capture (take picture) 	 */
 
@@ -81,9 +78,6 @@ typedef struct {
 
 	int file_put;
 		/* Camera can receive files			 */
-
-	int lock;
-		/* Camera can lock (protect) pictures		 */
 
 } CameraAbilities;
 

@@ -42,13 +42,11 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 
 	abilities[0].serial_baud[0] = 0;
 
-	abilities[0].cancel    = 0;
 	abilities[0].capture   = 0;
 	abilities[0].config    = 1;
 	abilities[0].file_delete  = 0;
 	abilities[0].file_preview = 1;
 	abilities[0].file_put  = 0;
-	abilities[0].lock      = 0;
 
 	return (GP_OK);
 }
@@ -183,16 +181,6 @@ int camera_file_put (CameraFile *file) {
 
 
 int camera_file_delete (int file_number) {
-
-	return (GP_ERROR);
-}
-
-int camera_file_lock (int file_number) {
-
-	return (GP_ERROR);
-}
-
-int camera_file_unlock (int file_number) {
 
 	return (GP_ERROR);
 }

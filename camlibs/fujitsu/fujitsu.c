@@ -30,7 +30,6 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].serial_baud[2] = 57600;
 	abilities[0].serial_baud[3] = 115200;
 	abilities[0].serial_baud[4] = 0;
-	abilities[0].cancel	= 0;
 	abilities[0].capture	= 1;
 	abilities[0].config	= 1;
 	abilities[0].file_delete  = 1;
@@ -47,7 +46,6 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[1].serial_baud[2] = 57600;
 	abilities[1].serial_baud[3] = 115200;
 	abilities[1].serial_baud[4] = 0;
-	abilities[1].cancel	= 0;
 	abilities[1].capture	= 1;
 	abilities[1].config	= 1;
 	abilities[1].file_delete  = 1;
@@ -64,7 +62,6 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[2].serial_baud[2] = 57600;
 	abilities[2].serial_baud[3] = 115200;
 	abilities[2].serial_baud[4] = 0;
-	abilities[2].cancel	= 0;
 	abilities[2].capture	= 1;
 	abilities[2].config	= 1;
 	abilities[2].file_delete  = 1;
@@ -123,16 +120,6 @@ int camera_file_put (CameraFile *file) {
 }
 
 int camera_file_delete (int file_number) {
-
-	return (GP_ERROR);
-}
-
-int camera_file_lock (int file_number) {
-
-	return (GP_ERROR);
-}
-
-int camera_file_unlock (int file_number) {
 
 	return (GP_ERROR);
 }

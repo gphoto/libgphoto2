@@ -60,16 +60,13 @@ int camera_file_get_preview 	(int file_number,
 int camera_file_put 	    	(CameraFile *file);
 	/* Uploads a file to the current folder on the camera. 	*/
 	/* The user is in charge of converting an image to the	*/
-	/* appropriate format.					*/
+	/* appropriate format. The camera_manual should explain	*/
+	/* the image format to upload with directions on how	*/
+	/* to do the conversion.				*/
 
 int camera_file_delete 		(int file_number);
 	/* Deletes a picture from the current folder on the	*/
 	/* camera. 						*/
-
-int camera_file_protect		(int file_number);
-int camera_file_unprotect	(int file_number);
-	/* protects and unprotects a file on the camera from 	*/
-	/* being deleted. (if supported)			*/
 
 int camera_config 		(CameraSetting *conf,
 				 int count);

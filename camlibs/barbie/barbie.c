@@ -277,13 +277,11 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].serial_baud[0] = 57600;
 	abilities[0].serial_baud[1] = 0;
 
-	abilities[0].cancel    = 0;
 	abilities[0].capture   = 1;
 	abilities[0].config    = 0;
 	abilities[0].file_delete  = 0;
 	abilities[0].file_preview = 1;
 	abilities[0].file_put  = 0;
-	abilities[0].lock      = 0;
 
 	memcpy(&abilities[1], &abilities[0], sizeof(abilities[0]));
 	strcpy(abilities[1].model, "Hot Wheels Camera");
@@ -410,16 +408,6 @@ int camera_file_delete (int file_number) {
 	return GP_ERROR;
 }
 
-
-int camera_file_lock (int file_number) {
-
-	return GP_ERROR;
-}
-
-int camera_file_unlock (int file_number) {
-
-	return GP_ERROR;
-}
 
 int camera_config (CameraSetting *setting, int count) {
 
