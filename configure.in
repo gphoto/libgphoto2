@@ -329,11 +329,7 @@ AC_SUBST(EXIF_LIBS)
 
 dnl Check libusb
 AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
-if test -n "${LIBUSB_CONFIG}"; then
-	AM_CONDITIONAL(HAVE_LIBUSB,true)
-else
-	AM_CONDITIONAL(HAVE_LIBUSB,false)
-fi
+AM_CONDITIONAL(HAVE_LIBUSB,test -n "${LIBUSB_CONFIG}")
 
 dnl ---------------------------------------------------------------------------
 dnl /proc/meminfo: If the meminfo /proc entry is available, we use it
