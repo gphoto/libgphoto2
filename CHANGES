@@ -2,7 +2,7 @@ gphoto2 2.0beta5
 
 libgphoto2:
    * Added Sony DCR-PC100 support.
-	* Fixed serial cameras bug introduced in beta4. 
+   * Fixed serial cameras bug introduced in beta4. 
 
 gphoto2 command-line interface:
    * EXIF support (extra tags that contain information about the image
