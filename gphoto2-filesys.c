@@ -1227,8 +1227,12 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR);
 	}
 
+	/* We don't trust the camera drivers */
 	CHECK_RESULT (gp_file_set_type (tmp, type));
-	CHECK_RESULT (gp_file_set_name (tmp, filename)); 
+	CHECK_RESULT (gp_file_set_name (tmp, filename));
+	CHECK_RESULT (gp_file_adjust_name_for_mime_type (tmp));
+
+	/* Remember the file (cache) */
 	CHECK_RESULT (gp_file_copy (file, tmp));
 
 	return (GP_OK);
