@@ -272,7 +272,7 @@ msgid "Could not open USB device (%m)."
 msgstr "Kunde inte öppna USB enheten (%m)"
 
 #: usb/libusb.c:138
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
 "module (e.g. dc2xx or stv680) is using the device and you have read/write "
