@@ -122,9 +122,11 @@ int camera_abilities (CameraAbilitiesList *list)
 #endif
 #ifdef DEBUG
         a.file_operations = GP_FILE_OPERATION_PREVIEW |
-			    GP_FILE_OPERATION_DELETE;
+			    GP_FILE_OPERATION_DELETE | 
+			    GP_FILE_OPERATION_EXIF;
 #else
-	a.file_operations = GP_FILE_OPERATION_DELETE;
+	a.file_operations = GP_FILE_OPERATION_DELETE |
+			    GP_FILE_OPERATION_EXIF;
 #endif
         a.folder_operations = GP_FOLDER_OPERATION_MAKE_DIR |
 			      GP_FOLDER_OPERATION_REMOVE_DIR |

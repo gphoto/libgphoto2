@@ -1,3 +1,7 @@
+2003-02-27  Marcus Meissner <marcus@jet.franken.de>
+	
+	* directory.c: We support EXIF download.
+
 2003-01-29  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* directory.c (file_list_func): call GP_SYSTEM_CLOSEDIR() where
