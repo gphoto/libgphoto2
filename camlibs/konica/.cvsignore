@@ -1,0 +1,7 @@
+libgphoto2_konica.la
+library.lo
+konica.lo
+lowlevel.lo
+.libs
+.deps
+Makefile

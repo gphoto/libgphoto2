@@ -1,0 +1,7 @@
+libgphoto2_panasonic_dc1580.la
+dc.lo
+dc1580.lo
+.libs
+.deps
+Makefile
+Makefile.in

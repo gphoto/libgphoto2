@@ -1,0 +1,8 @@
+libgphoto2_canon.la
+util.lo
+crc.lo
+serial.lo
+psa50.lo
+canon.lo
+.libs
+.deps
