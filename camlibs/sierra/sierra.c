@@ -1310,28 +1310,34 @@ int camera_summary (Camera *camera, CameraText *summary)
 
 	CHECK (camera_start (camera));
 
-	strcpy(buf, "");
+	strcpy (buf, "");
 
 	/* Get all the string-related info */
 	ret = sierra_get_string_register (camera, 22, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf(buf, "%sCamera ID       : %s\n", buf, t);
+		sprintf(buf, "%sCamera ID: %s\n", buf, t);
 
 	ret = sierra_get_string_register (camera, 25, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf(buf, "%sSerial Number   : %s\n", buf, t);
+		sprintf(buf, "%sSerial Number: %s\n", buf, t);
 
 	/* Get all the integer information */
 	if (sierra_get_int_register(camera, 10, &value) == GP_OK)
-		sprintf (buf, "%sFrames Taken    : %i\n", buf, value);
+		sprintf (buf, "%sFrames Taken: %i\n", buf, value);
 	if (sierra_get_int_register(camera, 11, &value) == GP_OK)
-		sprintf (buf, "%sFrames Left     : %i\n", buf, value);
-	if (sierra_get_int_register(camera, 16, &value) == GP_OK)
-		sprintf (buf, "%sBattery Life    : %i\n", buf, value);
-	if (sierra_get_int_register(camera, 28, &value) == GP_OK)
-		sprintf (buf, "%sMemory Left	: %i bytes\n", buf, value);
+		sprintf (buf, "%sFrames Left: %i\n", buf, value);
+	if (sierra_get_int_register(camera, 16, &value) == GP_OK) {
+		if (value)
+			sprintf (buf, "%sBattery Life: %i\n", buf, value);
+		else
+			sprintf (buf, "%sConnected to AC power\n", buf);
+	}
+	if (sierra_get_int_register(camera, 28, &value) == GP_OK) {
+		//C-3030Z: measured in MB. Other cameras?
+		sprintf (buf, "%sMemory Left: %i MB\n", buf, value);
+	}
 
-	strcpy(summary->text, buf);
+	strcpy (summary->text, buf);
 
 	return (camera_stop(camera));
 }
