@@ -15,6 +15,9 @@
 #define SUBTYPE_COMMAND_FIRST	0x53
 #define SUBTYPE_COMMAND		0x43
 
+/* Packet functions */
 char *fujitsu_build_packet (char type, char subtype, int length);
-
 int fujitsu_process_packet (char *packet);
+
+/* Communications functions */
+int fujitsu_ping(gpio_device *dev);

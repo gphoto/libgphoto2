@@ -5,6 +5,6 @@ CFLAGS = @CFLAGS@ -g `gpio-config --cflags`
 LDFLAGS = @LDFLAGS@ -g `gpio-config --libs`
 INCLUDES = -I$(top_srcdir)/include
 
-libgphoto2_fujitsu_la_SOURCES = fujitsu.c fujitsu.h gphoto.c gphoto.h
+libgphoto2_fujitsu_la_SOURCES = fujitsu.c fujitsu.h library.c library.h
 
 libgphoto2_fujitsu_la_LDFLAGS = -version-info 0:0:0 `gpio-config --libs`
