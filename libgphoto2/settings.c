@@ -4,9 +4,7 @@
 #include <string.h>
 #include "core.h"
 #include "settings.h"
-
-extern Setting	glob_setting[];
-extern int	glob_setting_count;
+#include "globals.h"
 
 int load_settings () {
 
@@ -16,9 +14,10 @@ int load_settings () {
 	glob_setting_count = 0;
 
 	sprintf(buf, "%s/.gphoto/settings", getenv("HOME"));
-#ifdef DEBUG
-	printf("core: Loading settings from file \"%s\"\n", buf);
-#endif
+
+	if (glob_debug)
+		printf("core: Loading settings from file \"%s\"\n", buf);
+
 	if ((f=fopen(buf, "a+"))==NULL) {
 		perror("Loading Settings");
 		return(0);
@@ -35,9 +34,8 @@ int load_settings () {
 			strcpy(glob_setting[glob_setting_count++].value, c);
 		}
 	}
-#ifdef DEBUG
-	dump_settings();
-#endif
+	if (glob_debug)
+		dump_settings();
 
 	return (GP_OK);
 }
@@ -50,9 +48,10 @@ int save_settings () {
 	int x=0;
 
 	sprintf(buf, "%s/.gphoto/settings", getenv("HOME"));
-#ifdef DEBUG
-	printf("core: Saving settings to file \"%s\"\n", buf);
-#endif
+
+	if (glob_debug)
+		printf("core: Saving settings to file \"%s\"\n", buf);
+
 	if ((f=fopen(buf, "w+"))==NULL) {
 		perror("Loading Settings");
 		return(0);

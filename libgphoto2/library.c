@@ -7,14 +7,7 @@
 #include "core.h"
 #include "library.h"
 #include "util.h"
-
-extern CameraChoice glob_camera[];
-extern CameraAbilities glob_camera_abilities[];
-extern int     glob_camera_count;
-extern void   *glob_library_handle;
-extern Camera  glob_c;
-extern char   *glob_camera_id[];
-extern int     glob_camera_id_count;
+#include "globals.h"
 
 int is_library(char *library_filename) {
 
@@ -95,9 +88,10 @@ int load_camera_list (char *library_filename) {
 	/* check to see if this library has been loaded */
 	load_camera_id = dlsym(lh, "camera_id");
 	load_camera_id(id);
-#ifdef DEBUG 
-	printf("camera id: %s\n", id);
-#endif
+
+	if (glob_debug)
+		printf("camera id: %s\n", id);
+
 	for (x=0; x<glob_camera_id_count; x++) {
 		if (strcmp(glob_camera_id[x], id)==0) {
 			dlclose(lh);
@@ -116,17 +110,15 @@ int load_camera_list (char *library_filename) {
 		return 0;
 	}
 
-#ifdef DEBUG
-	printf("camera model count: %i\n", count);
-#endif
+	if (glob_debug)
+		printf("camera model count: %i\n", count);
 
 	/* Copy over the camera name */
 	for (x=glob_camera_count; x<glob_camera_count+count; x++) {
 		strcpy(glob_camera[x].name, glob_camera_abilities[x].model);
 		strcpy(glob_camera[x].library, library_filename);		
-#ifdef DEBUG
-		printf("camera model: %s\n", glob_camera[x].name);
-#endif
+		if (glob_debug)
+			printf("camera model: %s\n", glob_camera[x].name);
 	}
 
 	glob_camera_count += count;
@@ -149,19 +141,16 @@ int load_cameras() {
            /* Read each entry */
            de = readdir(d);
            if (de) {
-#ifdef DEBUG
-           printf("core:\tis %s a library? ", de->d_name);
-#endif
+		if (glob_debug)
+	           printf("core:\tis %s a library? ", de->d_name);
                 /* try to open the library */
                 if (is_library(de->d_name) == GP_OK) {
-#ifdef DEBUG
-                        printf("yes\n");
-#endif
+			if (glob_debug)
+	                        printf("yes\n");
                         load_camera_list(de->d_name);
-#ifdef DEBUG
                    } else {
-                        printf("no\n");
-#endif
+			if (glob_debug)
+	                        printf("no\n");
                 }
            }
         } while (de);

@@ -42,6 +42,14 @@ static int exif_sizetab[13]={
   0,1,1,2,4,8,1,1,2,4,8,4,8
 };
 
+/**************************************************************/
+/* Foward declarations. move to exif.h if you want to export. */
+/**************************************************************/
+int stat_exif(exifparser *exifdata);
+int gpe_getvalue(unsigned char *data,int tagind);
+int gpe_datsize(unsigned char *data,int tagind);
+int gpe_tagnum( char *data,int tagind);
+int gpe_getintval(unsigned char *data, int tagnum);
 
 /**************************************************************/
 /*  Utility functions: get fields in little-endian format,    */
@@ -151,7 +159,7 @@ int exif_parse_data(exifparser *exifdat) {
   }
 
   exifdat->exiflen = exifdat->header[5] + (exifdat->header[4]<<8) - 8;
-  if (exif_debug) printf("Exif length is %ld\n",exifdat->exiflen);
+  if (exif_debug) printf("Exif length is %i\n",exifdat->exiflen);
 
   /* Count the number of IFD's and register their pointers. */
   exifdat->endian=0;
@@ -170,7 +178,7 @@ int exif_parse_data(exifparser *exifdat) {
     exifdat->ifdcnt++;
     exifdat->ifds[exifdat->ifdcnt]     = exifdat->data+offset;
     exifdat->ifdtags[exifdat->ifdcnt]  = exif_get_lilend(exifdat->data+offset,2);
-  } while (offset=exif_next_ifd(exifdat->data,offset));
+  } while ((offset=exif_next_ifd(exifdat->data,offset)));
 
   exifdat->ifdcnt++;
 
@@ -208,8 +216,8 @@ int exif_parse_data(exifparser *exifdat) {
  * returns   : 1 on success, 0 on failure
  */
 int exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag_data) {
-  int numtags,i,j,tag, sign;
-  char *ifdp, *offset, *data;
+  int numtags,i, tag;
+  char *ifdp, *data;
 
   // Sanity check first:
   exif_debug=1;
@@ -404,10 +412,9 @@ int exif_set_comment(exifparser *exifdat, char *comment) {
  * The returned thumbnail might be in JPEG or TIFF format.
  */
 unsigned char *exif_get_thumbnail(exifparser *exifdat) {
-  char *tmpstr[32];
   unsigned char *imagedata,*exifimg,*newimg,*curptr;
-  unsigned int exiflen,entry;
-  long dataptr,dsize,tag,datvec,size,tmp;
+  unsigned int entry;
+  long dataptr,dsize,tag,datvec,tmp;
   int i,j;
 
   exif_debug=1;
@@ -425,7 +432,7 @@ unsigned char *exif_get_thumbnail(exifparser *exifdat) {
 
   if (exif_debug) {    
       ExifData owner;
-      char *comment;
+      char *comment=NULL;
       printf("Decoding EXIF fields in thumbnail\n");
       exif_get_field( EXIF_Model, -1, exifdat, &owner);
       printf("Camera model: %s\n",owner.data);
@@ -590,13 +597,11 @@ int gpe_getvalue(unsigned char *data,int tagind){
 
 
 int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars){
-  int i,j,tag,numtags,tagtype,count,typelen, value,tmp1,tmp2;
+  int i,j,tag,numtags,tagtype,count,typelen, value=-1,tmp1,tmp2;
   char tmpstr[256];
   unsigned char* thistag;
   unsigned char* thedata;
   unsigned char* thisisd;
-  char tmpdat[200];
-  char** name;
   
   
     thisisd=exifdata->ifds[ifdnum];
@@ -645,7 +650,7 @@ int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars){
       if ( tag == 0x8769 ) {
          printf("Exif SubIFD at offset %d\n", value );
          exifdata->ifds[exifdata->ifdcnt]     = exifdata->data+value;  
-         exifdata->ifds[exifdata->ifdcnt];
+//       exifdata->ifds[exifdata->ifdcnt];
          exifdata->ifdtags[exifdata->ifdcnt]=exif_get_lilend(exifdata->data+value,2);
          exifdata->ifdcnt++;
 
@@ -653,14 +658,14 @@ int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars){
 /***/
 
     };
+    return 1;
 };
 
 
 
 /* Walk through EXIF structure, printing values */
 int gpe_dump_exif(exifparser *exifdata){ 
-  int i,tag;
-  unsigned char* thisifd;
+  int i;
 
   if (!exifdata->preparsed) 
     if (stat_exif(exifdata)) return(-1);
@@ -682,6 +687,7 @@ int gpe_dump_exif(exifparser *exifdata){
 
     gpe_dump_ifd(i,exifdata,NULL);
   };
+  return 1;
 };
 
 /**
@@ -689,4 +695,33 @@ int gpe_dump_exif(exifparser *exifdata){
  */
 int gpe_datsize(unsigned char *data,int tagind){
   return(exif_sizetab[exif_get_lilend(data+tagind*12+4,2)]*exif_get_lilend(data+tagind*12+6,4));
+};
+
+int stat_exif(exifparser *exifdata) {
+  long offset=0;
+
+  exifdata->endian=0;
+  if (exifdata->data[0]!='I') {
+    exifdata->endian=1;
+    printf("%c,Intel-Endian format only supported right now!\n",
+           exifdata->data[0]);
+    return(-1);
+  };
+
+  offset=exif_get_lilend(exifdata->data+4,4); /*Get offset of first IFD*/
+
+  exifdata->ifdcnt=-1;
+
+  /*Step through each IFD (looks like there should be 2 or 3)*/
+  do{
+    exifdata->ifdcnt++;
+    exifdata->ifds[exifdata->ifdcnt]     = exifdata->data+offset;
+    exifdata->ifdtags[exifdata->ifdcnt]  = 
+    exif_get_lilend(exifdata->data+offset,2);
+
+  }while((offset=exif_next_ifd(exifdata->data,offset)));
+  exifdata->ifdcnt++;
+
+  exifdata->preparsed=1;
+  return(0);
 };
