@@ -145,7 +145,7 @@ fi
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='barbie canon casio digita dimera directory fuji gsmart jamcam jd11 kodak konica minolta mustek panasonic pccam600 polaroid ptp ricoh samsung sierra sipix sonydscf1 sonydscf55 soundvision stv0680 sx330z'
+camlibs='barbie canon casio digita dimera directory fuji gsmart jamcam jd11 kodak konica largan minolta mustek panasonic pccam600 polaroid ptp ricoh samsung sierra sipix sonydscf1 sonydscf55 soundvision stv0680 sx330z'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -159,7 +159,7 @@ AC_ARG_WITH(drivers,
   [                            possible drivers are: ]
   [                            barbie, canon, casio, digita, dimera,]
   [                            directory, fuji, gsmart, jamcam, jd11, kodak,]
-  [                            konica, mustek,]
+  [                            konica, mustek, largan,]
   [                            minolta, panasonic, polaroid, ptp, ricoh,]
   [                            samsung, sierra, sx330z, sonydscf1, sonydscf55,]
   [                            soundvision, stv0680, pccam600 ],
@@ -315,6 +315,8 @@ camlibs/kodak/dc240/Makefile
 camlibs/kodak/dc3200/Makefile
 camlibs/konica/Makefile
 camlibs/konica/localization/Makefile
+camlibs/largan/Makefile
+camlibs/largan/lmini/Makefile
 camlibs/minolta/Makefile
 camlibs/minolta/dimagev/Makefile
 camlibs/mustek/Makefile

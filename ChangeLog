@@ -1,3 +1,8 @@
+2002-08-23  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* configure.in: added largan/lmini driver
+	* camlibs/largan/lmini: new driver for Largan Lmini
+
 2002-08-22  Christophe Barbé <christophe.barbe@ufies.org>
 
 	* configure.in: test for /proc/meminfo (HAVE_PROCMEMINFO).
