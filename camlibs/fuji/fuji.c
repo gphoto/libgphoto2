@@ -67,6 +67,14 @@
 #  define N_(String) (String)
 #endif
 
+#ifndef MIN
+#define MIN(a, b)  (((a) < (b)) ? (a) : (b))
+#endif
+
+#ifndef MAX
+#define MAX(a, b)  (((a) > (b)) ? (a) : (b))
+#endif
+
 #define GP_MODULE "fuji"
 
 #define CR(result)    {int r = (result); if (r < 0) return (r);}
@@ -94,243 +102,6 @@
 
 #define FUJI_ACK 0x00
 #define FUJI_NAK 0x01
-
-#if 0
-
-#define FUJI_GET_PICCOUNT	0x0b
-#define FUJI_CMD_TAKE		0x27
-#define FUJI_CMD_DELETE		0x19
-#define FUJI_CHARGE_FLASH	0x34
-#define FUJI_PREVIEW		0x64
-
-
-/**
- * Gets a byte. Already gets rid of parity error generated sequences.
- */
-static int
-get_byte (GPPort *port)
-{
-	unsigned char c;
-
-	CR(gp_port_read(port, &c, 1));
-	if (c < 255)
-		return c;
-	CR(gp_port_read(port, &c, 1));
-	if (c == 255)
-		return c;	/* escaped '\377' */
-
-	if (c != 0) {
-		fprintf(stderr,"get_byte: impossible escape sequence following 0xFF\n");
-	}
-	/* Otherwise, it's a parity or framing error, drop 1 byte. */
-	CR(gp_port_read(port, &c, 1));
-	return GP_ERROR_IO;
-}
-
-static int
-put_byte (GPPort *port, char c)
-{
-    return gp_port_write(port, &c, 1);
-}
-
-static int
-send_packet (GPPort *port, unsigned char *data, int len, int last)
-{
-	unsigned char *p, *end, buff[3];
-	int check;
-
-	last = last ? ETX : ETB;
-	check = last;
-	end = data + len;
-	for (p = data; p < end; p++)
-		check ^= *p;
-
-	/* Start of frame */
-	buff[0] = ESC;
-	buff[1] = STX;
-
-	CR(gp_port_write(port, buff, 2));
-
-	/* Data */
-	/* This is not so good if we have more than one esc. char */
-	for (p = data; p < end; p++)
-		if (*p == ESC) {
-		    	char c;
-			/* Escape the last character */
-		        CR(gp_port_write(port,data,p-data+1)); /* send up to the ESC*/
-			data = p+1;
-
-			c = ESC;/* send another esc*/
-			CR(gp_port_write(port,&c,1));
-		}
-	CR(gp_port_write(port, data, end-data));
-	/* End of frame */
-	buff[1] = last;
-	buff[2] = check;
-	CR(gp_port_write(port, buff, 3));
-	return GP_OK;
-}
-
-static int
-read_packet (GPPort *port, char **packet, int *size )
-{
-	unsigned char answerheader[4];
-	unsigned char *p = answerheader;
-	int c, cnt, check, incomplete, answerlen = 0;
-
-	if ((get_byte(port) != ESC) || (get_byte(port) != STX)) {
-bad_frame:
-		/* drain input */
-		while (get_byte(port) >= 0)
-			continue;
-		return GP_ERROR_IO;
-	}
-
-	check = 0;cnt = 0;
-	while(1) {
-		if ((c = get_byte(port)) < 0)
-			goto bad_frame;
-		if (c == ESC) {
-			if ((c = get_byte(port)) < 0)
-				goto bad_frame;
-			if (c == ETX || c == ETB) {
-				incomplete = (c == ETB);
-				break;
-			}
-		}
-		*p++ = c;
-		cnt++;
-		if (cnt == 4) {
-			answerlen = (answerheader[2] | (answerheader[3]<<8));
-			*packet = malloc(answerlen+4);
-			*size = answerlen+4;
-			memcpy(*packet,answerheader, 4);
-			p = (*packet)+4;
-		}
-		if ((cnt > 4) && (cnt > answerlen+4)) {
-			fprintf(stderr,"Too much data (only expecting %d byte)!\n",cnt);
-			goto bad_frame;
-		}
-		check ^= c;
-	}
-	/* Append a sentry '\0' at the end of the buffer, for the convenience
-	   of C programmers */
-	*p = '\0';
-	check ^= c;
-	c = get_byte(port);
-	if (c != check)
-		return -1;
-	/* Return 0 for the last packet, 1 otherwise */
-	return incomplete;
-}
-
-static int
-cmd (	Camera *camera, GPContext *context,
-	unsigned char *cmd, int cmdlen, 
-	char **data, int *len
-) {
-	int i, c, timeout=50;
-	int	xsize=0;
-	char	*xdata = NULL;
-
-	fprintf(stderr,"CMD $%X called ",cmd[1]);	
-
-	/* Some commands require large timeouts */
-	switch (cmd[1]) {
-	  case FUJI_CMD_TAKE:	/* Take picture */
-	  case FUJI_CHARGE_FLASH:	/* Recharge the flash */
-	  case FUJI_PREVIEW:	/* Take preview */
-	    timeout = 12;
-	    break;
-	  case FUJI_CMD_DELETE:	/* Erase a picture */
-	    timeout = 1;
-	    break;
-	}
-
-	for (i = 0; i < 3; i++) { /* Three tries to send cmd. */
-		send_packet(camera->port, cmd, cmdlen, 1);
-		c = get_byte(camera->port);
-		if (c == ACK)
-			goto rd_pkt;
-		if (c != NAK){
-			if(fuji_ping(camera, context))
-			    return(GP_ERROR_IO);
-		};
-	}
-	fprintf(stderr,"Command error, aborting.\n");
-	return(-1);
-
-rd_pkt:
-	/*wait_for_input(timeout);*/
-	for (i = 0; i < 3; i++) {
-	    	char *answer;
-		int answerlen;
-		if (i) put_byte(camera->port,NAK);
-		c = read_packet(camera->port, &answer, &answerlen);
-		if (c < 0)
-			continue; /* go and retry */
-		put_byte(camera->port,ACK);
-
-		/* Skip 4 byte */
-		answerlen-=4;
-		xdata = realloc(xdata, xsize+answerlen);
-		memcpy(xdata+xsize, answer, answerlen);
-		xsize+=answerlen;
-		free(answer);answer=NULL;
-
-		/* More packets ? */
-		if (c != 0)
-			goto rd_pkt;
-		*len = xsize;
-		*data = xdata;
-		return 0;
-	}
-	fprintf(stderr,"Cannot receive answer, aborting.");
-	return(GP_ERROR_IO);
-}
-
-/* Zero byte command */
-static int
-cmd0(	
-	Camera *camera, GPContext *context,
-	int c0, int c1, char **data, int *len
-) {
-	unsigned char b[4];
-
-	b[0] = c0; b[1] = c1;
-	b[2] = b[3] = 0;
-	return cmd(camera, context, b, 4, data, len);
-}
-
-
-/* One byte command */
-static int
-cmd1(
-	Camera *camera, GPContext *context,
-	int c0, int c1, int arg,
-	char **data, int *len
-) {
-	unsigned char b[5];
-
-	b[0] = c0; b[1] = c1;
-	b[2] =  1; b[3] =  0;
-	b[4] = arg;
-	return cmd(camera, context, b, 5,  data, len);
-}
-
-/* Two byte command */
-static int cmd2(
-	Camera *camera, GPContext *context, int c0, int c1, int arg,
-	char **data, int *len
-) {
-	unsigned char b[6];
-
-	b[0] = c0; b[1] = c1;
-	b[2] =  2; b[3] =  0;
-	b[4] = arg; b[5] = arg>>8;
-	return cmd(camera, context, b, 6, data, len);
-}
-#endif
 
 int
 fuji_ping (Camera *camera, GPContext *context)
@@ -562,6 +333,12 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 			continue;
 		}
 
+		/* Give the user the possibility to cancel. */
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+			CR (fuji_reset (camera, context));
+			return (GP_ERROR_CANCEL);
+		}
+
 		/* Acknowledge this packet. */
 		c = ACK;
 		CR (gp_port_write (camera->port, &c, 1));
@@ -632,6 +409,81 @@ fuji_pic_name (Camera *camera, unsigned int i, const char **name,
 	memset (buf, 0, sizeof (buf));
 	CR (fuji_transmit (camera, cmd, 6, buf, &buf_len, context));
 	*name = buf;
+
+	return (GP_OK);
+}
+
+int
+fuji_version (Camera *camera, const char **version, GPContext *context)
+{
+	static unsigned char buf[1025];
+	unsigned char cmd[4];
+	unsigned int buf_len = 0;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_VERSION;
+	cmd[2] = 0;
+	cmd[3] = 0;
+
+	memset (buf, 0, sizeof (buf));
+	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
+	*version = buf;
+
+	return (GP_OK);
+}
+
+int
+fuji_model (Camera *camera, const char **model, GPContext *context)
+{
+	static unsigned char buf[1025];
+	unsigned char cmd[4];
+	unsigned int buf_len = 0;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_MODEL;
+	cmd[2] = 0;
+	cmd[3] = 0;
+
+	memset (buf, 0, sizeof (buf));
+	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
+	*model = buf;
+
+	return (GP_OK);
+}
+
+int
+fuji_id_get (Camera *camera, const char **id, GPContext *context)
+{
+	static unsigned char buf[1025];
+	unsigned char cmd[4];
+	unsigned int buf_len = 0;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_ID_GET;
+	cmd[2] = 0; 
+	cmd[3] = 0;
+
+	memset (buf, 0, sizeof (buf));
+	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
+	*id = buf;
+
+	return (GP_OK);
+}
+
+int
+fuji_id_set (Camera *camera, const char *id, GPContext *context)
+{
+	unsigned char cmd[14], buf[1025];
+	unsigned int buf_len = 0;
+
+	/* It seems that the ID must be 10 chars or less */
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_ID_SET;
+	cmd[2] = 0x0a;
+	cmd[3] = 0x00;
+	memcpy (cmd + 4, id, MIN (strlen (id) + 1, 10));
+
+	CR (fuji_transmit (camera, cmd, 14, buf, &buf_len, context));
 
 	return (GP_OK);
 }
@@ -762,6 +614,25 @@ fuji_date_get (Camera *camera, FujiDate *date, GPContext *context)
 }
 
 int
+fuji_avail_mem (Camera *camera, unsigned int *avail_mem, GPContext *context)
+{
+	unsigned char cmd[4], buf[1024];
+	unsigned int buf_len = 0;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_AVAIL_MEM;
+	cmd[2] = 0;
+	cmd[3] = 0;
+
+	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
+	CLEN (buf_len, 4);
+
+	*avail_mem = buf[0] | (buf[1] << 8) | (buf[2] << 16) | (buf[3] << 24);
+
+	return (GP_OK);
+}
+
+int
 fuji_date_set (Camera *camera, FujiDate date, GPContext *context)
 {
 	unsigned char cmd[1024], buf[1024];
@@ -775,6 +646,108 @@ fuji_date_set (Camera *camera, FujiDate date, GPContext *context)
 		 date.day, date.hour, date.min, date.sec);
 
 	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
+
+	return (GP_OK);
+}
+
+int
+fuji_upload_init (Camera *camera, const char *name, GPContext *context)
+{
+	unsigned char cmd[1024], buf[1024];
+	unsigned int buf_len = 0, cmd_len = 0;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_UPLOAD_INIT;
+	cmd[2] = strlen (name);
+	cmd[3] = 0;
+	memcpy (cmd + 4, name, strlen (name));
+	cmd_len = strlen (name) + 4;
+	CR (fuji_transmit (camera, cmd, cmd_len, buf, &buf_len, context));
+	CLEN (buf_len, 1);
+
+	/* Check the response */
+	switch (buf[0]) {
+	case FUJI_ACK:
+		break;
+	case FUJI_NAK:
+		gp_context_error (context, _("The camera does not "
+			"accept '%s' as filename."), name);
+		return (GP_ERROR);
+	default:
+		gp_context_error (context, _("Could not initialize upload "
+			"(camera responded with 0x%02x)."), buf[0]);
+		return (GP_ERROR);
+	}
+
+	return (GP_OK);
+}
+
+#define CHUNK_SIZE 512
+
+int
+fuji_upload (Camera *camera, const unsigned char *data,
+	     unsigned int size, GPContext *context)
+{
+	unsigned char cmd[1024], c;
+	unsigned int cmd_len, chunk_size, retries, i;
+
+	/*
+	 * The old driver did upload in chunks of 512 bytes. I don't know
+	 * if this is optimal.
+	 */
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_UPLOAD;
+	for (i = 0; i < size; i+= CHUNK_SIZE) {
+		chunk_size = MIN (CHUNK_SIZE, size - i);
+		cmd[2] = chunk_size;
+		cmd[3] = (chunk_size >> 8);
+		memcpy (cmd + 4, data + i, chunk_size);
+		cmd_len = chunk_size + 4;
+
+		retries = 0;
+		while (1) {
+
+			/* Give the user the possibility to cancel. */
+			if (gp_context_cancel (context) ==
+					GP_CONTEXT_FEEDBACK_CANCEL) {
+				CR (fuji_reset (camera, context));
+				return (GP_ERROR_CANCEL);
+			}
+
+			CR (fuji_send (camera, cmd, cmd_len,
+				(i + CHUNK_SIZE < size) ? 0 : 1, context));
+
+			/* Receive ACK (hopefully) */
+			CR (gp_port_read (camera->port, &c, 1));
+			switch (c) {
+			case ACK:
+				break;
+			case NAK:
+
+				/* Camera didn't like the command */
+				if (++retries > 1) {
+					gp_context_error (context,
+						_("Camera rejected "
+							"the command."));
+					return (GP_ERROR);
+				}
+				continue;
+
+			case EOT:
+
+				/* Camera got fed up and reset itself. */
+				gp_context_error (context, _("Camera reset "
+							"itself."));
+				return (GP_ERROR);
+
+			default:
+				gp_context_error (context, _("Camera sent "
+					"unexpected byte 0x%02x."), c);
+				return (GP_ERROR_CORRUPTED_DATA);
+			}
+			break;
+		}
+	}
 
 	return (GP_OK);
 }
@@ -824,231 +797,6 @@ fuji_reset (Camera *camera, GPContext *context)
 }
 
 #if 0
-#define serial_port 0
-
-static int pictures;
-static int interrupted = 0;
-static int pending_input = 0;
-static struct pict_info *pinfo = NULL;
-
-#define FUJI_MAXBUF_DEFAULT 9000000
-
-static char *fuji_buffer;
-static long fuji_maxbuf=FUJI_MAXBUF_DEFAULT;
-static int answer_len = 0;
-static Camera *curcam=NULL;
-static CameraFile *curcamfile=NULL;
-
-static int fuji_initialized=0; 
-static int fuji_count;
-static int fuji_size;
-static int devfd = -1;
-static int maxnum;
-
-
-struct pict_info {
-	char *name;
-	int number;
-	int size;
-	short ondisk;
-	short transferred;
-};
-
-static int get_raw_byte (void)
-{
-	static unsigned char buffer[128];
-	static unsigned char *bufstart;
-	int ret;
-
-	while (!pending_input) {
-		/* Refill the buffer */
-	        ret=gp_port_read(thedev,buffer,1);
-		/*ret = read(devfd, buffer, 128);*/
-		DBG2("GOT %d",ret);
-		if (ret == GP_ERROR_TIMEOUT)
-			return -1;  /* timeout */
-		if (ret == GP_ERROR) {
-		  return -1;  /* error */
-		}
-		if (ret <0 ) {
-		  return -1;  /* undocumented error */
-		}
-		pending_input = ret;
-		bufstart = buffer;
-	}
-	pending_input--;
-	return *bufstart++;
-}
-
-static int wait_for_input (int seconds)
-{
-	fd_set rfds;
-	struct timeval tv;
-	DBG2("Wait for input,devfd=%d",devfd);
-	if (pending_input)
-		return 1;
-	if (!seconds)
-		return 0;
-	DBG("Wait for input, running cmds");
-	FD_ZERO(&rfds);
-	FD_SET(devfd, &rfds);
-	DBG("Wait for input,cmds complete");
-	tv.tv_sec = seconds;
-	tv.tv_usec = 0;
-
-	return select(1+devfd, &rfds, NULL, NULL, &tv);
-}
-
-static int put_bytes (int n, unsigned char* buff)
-{
-	int ret;
-
-	ret=gp_port_write(thedev,buff,n);
-	if (ret==GP_OK) {
-	  buff+=n;
-	  return -1;
-	};
-	return 0;
-	while (n > 0) {
-	  /*ret = write(devfd, buff, n);*/
-	  CR (ret = gp_port_write(thedev,buff,n)); 
-	  n -= ret;
-	  buff += ret;
-	}
-	return 0;
-}
-
-
-static int cmd (int len, unsigned char *data)
-{
-	int i, c, timeout=50;
-	fuji_count=0;
-
-	DBG2("CMD $%X called ",data[1]);	
-
-	/* Some commands require large timeouts */
-	switch (data[1]) {
-	  case FUJI_CMD_TAKE:	/* Take picture */
-	  case FUJI_CHARGE_FLASH:	/* Recharge the flash */
-	  case FUJI_PREVIEW:	/* Take preview */
-	    timeout = 12;
-	    break;
-	  case FUJI_CMD_DELETE:	/* Erase a picture */
-	    timeout = 1;
-	    break;
-	}
-
-	for (i = 0; i < 3; i++) { /* Three tries */
-		send_packet(len, data, 1);
-		c = get_byte();
-		if (c == ACK)
-			goto rd_pkt;
-		if (c != NAK){
-			if(fuji_ping(camera, context)) return(-1);
-		};
-	}
-	DBG2("Command error, aborting. %d bytes recd",answer_len);
-	return(-1);
-
-rd_pkt:
-	/*wait_for_input(timeout);*/
-
-	for (i = 0; i < 3; i++) {
-		if (i) put_byte(NAK);
-		c = read_packet();
-		if (c < 0)
-			continue;
-		if (c && interrupted) {
-		        DBG("interrupted");
-			exit(1);
-		}
-
-		put_byte(ACK);
-
-		if (fuji_buffer != NULL) {
-		  if ((fuji_count+answer_len-4)<fuji_maxbuf){
-		    memcpy(fuji_buffer+fuji_count,answer+4,answer_len-4);
-		    fuji_count+=answer_len-4;
-		  } else DBG("buffer overflow");
-		    
-		  DBG3("Recd %d of %d\n",fuji_count,fuji_size);
-
-		  //if (curcamfile)
-		  //  gp_frontend_progress(curcam,curcamfile,
-		  //		 (1.0*fuji_count/fuji_size>1.0)?1.0:1.0*fuji_count/fuji_size);
-
-		};
-		/* More packets ? */
-		if (c != 0)
-			goto rd_pkt;
-		//gp_frontend_progress("","",0); /* Clean up the indicator */
-		return 0;
-	}		
-	DBG("Cannot receive answer, aborting.");
-	return(-1);
-}
-
-static char* fuji_version_info (void)
-{
-	cmd0 (0, FUJI_CMD_VERSION);
-	return answer+4;
-}
-
-static char* fuji_camera_type (void)
-{
-	cmd0 (0, 0x29);
-	return answer+4;
-}
-
-static char* fuji_camera_id (void)
-{
-	cmd0 (0, 0x80);
-	return answer+4;
-}
-
-static int fuji_set_camera_id (const char *id)
-{
-	unsigned char b[14];
-	int n = strlen(id);
-
-	if (n > 10)
-		n = 10;
-	b[0] = 0;
-	b[1] = 0x82;
-	b[2] = n;
-	b[3] = 0;
-	memcpy(b+4, id, n);
-	return cmd(n+4, b);
-}
-
-static char* fuji_get_date (void)
-{
-	char *fmtdate = answer+50;
-	
-	cmd0 (0, 0x84);
-	strcpy(fmtdate, "YYYY/MM/DD HH:MM:SS");
-	memcpy(fmtdate,    answer+4,   4);	/* year */
-	memcpy(fmtdate+5,  answer+8,   2);	/* month */
-	memcpy(fmtdate+8,  answer+10,  2);	/* day */
-	memcpy(fmtdate+11, answer+12,  2);	/* hour */
-	memcpy(fmtdate+14, answer+14,  2);	/* minutes */
-	memcpy(fmtdate+17, answer+16,  2);	/* seconds */
-
-	return fmtdate;
-}
-
-static int fuji_set_date (struct tm *pt)
-{
-	unsigned char b[50];
-
-	sprintf(b+4, "%04d%02d%02d%02d%02d%02d", 1900 + pt->tm_year, pt->tm_mon+1, pt->tm_mday,
-		pt->tm_hour, pt->tm_min, pt->tm_sec);
-	b[0] = 0;
-	b[1] = 0x86;
-	b[2] = strlen(b+4);	/* should be 14 */
-	b[3] = 0;
-	return cmd(4+b[2], b);
-}
 
 static int fuji_get_flash_mode (void)
 {
@@ -1060,23 +808,6 @@ static int fuji_set_flash_mode (int mode)
 {
 	cmd1 (0, 0x32, mode);
 	return answer[4];
-}
-
-int
-fuji_pic_count (Camera *camera, GPContext *context)
-{
-	if (cmd0 (0, 0x0b)) return(-1);
-	return answer[4] + (answer[5]<<8);
-}
-
-int
-fuji_pic_name (Camera *camera, unsigned int i, const char **name,
-	       GPContext *context)
-{
-	cmd2 (0, 0x0a, i);
-	*name = answer+4;
-
-	return (GP_OK);
 }
 
 static int fuji_picture_size (int i)
@@ -1175,74 +906,6 @@ static void get_picture_list (FujiData *fjd)
 		pinfo[i].ondisk = !stat(name, &st);
 	}
 }
-/*
-void list_pictures (void)
-{
-	int i;
-	struct pict_info* pi;
-	char ex;
-
-	for (i = 1; i <= pictures; i++) {
-		pi = &pinfo[i];
-		ex = pi->ondisk ? '*' : ' ';
-		DBG4(stderr,"%3d%c  %12s  %7d\n", i, ex,pi->name, pi->size);
-	}
-}
-*/
-static void fuji_close_connection (void)
-{
-	put_byte(0x04);
-	usleep(50000);
-}
-
-static void reset_serial (void)
-{
-	if (devfd >= 0) {
-	  fuji_close_connection();
-		/*tcsetattr(devfd, TCSANOW, &oldt);*/
-	}
-	devfd = -1; /* shouldn't be needed*/
-}
-
-static int fuji_set_max_speed (int newspeed)
-{
-  int speed,i,res;
-  int speedlist[]={115200,57600,38400,19200,9600,0};  /* Serial Speeds */
-  int numlist[]={8,7,6,5,0,0}; /* Rate codes for camera */
-  gp_port_settings settings;
-
-  gp_port_settings_get(thedev, &settings);
-  
-  DBG2("Speed currently set to %d",settings.serial.speed);
-
-  DBG("Begin set_max_speed");
-
-  speed=9600; /* The default */
-
-  /* Search for speed =< that specified which is supported by the camera*/
-  for (i=0;speedlist[i]>0;i+=1) {
-
-    if (speedlist[i]>newspeed) continue;
-
-    res=cmd1(1,7,numlist[i]); /* Check if supported */
-
-    DBG4("Speed change to %d answer was %X, res=%d",speedlist[i],answer[4],res);
-
-    if (answer[4]==0 && res>-1) {
-      speed=speedlist[i];
-      break; /* Use this one !!! */
-    };
-  };
-
-  fuji_close_connection();
-  settings.serial.speed=speed;
-
-  DBG2("Setting speed to %d",speed);
-  gp_port_settings_set(thedev, settings);
-  gp_port_settings_get(thedev, &settings);
-  DBG2("Speed set to %d",settings.serial.speed);
-  return(fuji_ping (camera, context));
-}
 
 static int download_picture(int n,int thumb,CameraFile *file,CameraPrivateLibrary *fjd)
 {
@@ -1300,33 +963,6 @@ static int fuji_free_memory (void)
 	cmd0 (0, FUJI_CMD_FREE_MEM);
 	return answer[5] + (answer[6]<<8) + (answer[7]<<16) + (answer[8]<<24);
 }
-
-
-static int delete_pic (const char *picname,FujiData *fjd)
-{
-	int i, ret;
-
-	for (i = 1; i <= pictures; i++)
-	        if (!strcmp(pinfo[i].name, picname)) {
-	                 if ((ret = del_frame(i)) == 0)
-			          get_picture_list(fjd);
-			 return ret;
-		}
-	return -1;
-}
-
-
-static char* auto_rename (void)
-{
-	static char buffer[13];
-	
-	if (maxnum < 99999)
-		maxnum++;
-
-	sprintf(buffer, "DSC%05d.JPG", maxnum);
-	return buffer;
-}
-
 
 static int upload_pic (const char *picname)
 {
@@ -1392,308 +1028,6 @@ again:
 	fclose(fd);
 	fprintf(stderr, "  looks ok\n");
 	return 1;
-}
-
-
-/***********************************************************************
-     gphoto lib calls
-***********************************************************************/
-
-
-static int fuji_configure(){
-  /* 
-     DS7 can't be configured, looks like other Fuji cams can...
-     expansion needed here.
-  */
-  // open_fuji_config_dialog();
-
-  return(1);
-};
-
-static int fuji_get_picture (int picture_number,int thumbnail,CameraFile *cfile,CameraPrivateLibrary *fjd){
-
-  const char *buffer;
-  long int file_size;
-
-  exifparser exifdat;
-
-  DBG3("fuji_get_picture called for #%d %s\n",
-       picture_number, thumbnail?"thumb":"photo");
-
-  //if (fuji_init()) return(GP_ERROR);
-  DBG2("buffer is %x",fuji_buffer);
-
-  //  if (thumbnail)
-  //  sprintf(tmpfname, "%s/gphoto-thumbnail-%i-%i.tiff",
-
-  DBG("test 1");
-
-  if (download_picture(picture_number,thumbnail,cfile,fjd)!=GP_OK) {
-    return(GP_ERROR);
-  };
-
-  DBG("test 2");
-
-  //buffer=cfile->data;
-  gp_file_get_data_and_size(cfile,&buffer,&file_size);
-
-  /* Work on the tags...*/
-  exifdat.header=buffer;
-  exifdat.data=buffer+12;
-
-  if (exif_parse_data(&exifdat)>0){
-    stat_exif(&exifdat);  /* pre-parse the exif data */
-
-    //newimage->image_info_size=exifdat.ifdtags[thumbnail?1:0]*2;
-
-    //if (thumbnail) newimage->image_info_size+=6; /* just a little bigger...*/
-
-    //DBG2("Image info size is %d",cfile->size);
-
-    //newimage->image_info=malloc(sizeof(char*)*infosize);
-
-    if (buffer==NULL) {
-      DBG("BIG TROUBLE!!! Bad image memory allocation");
-      return(GP_ERROR);
-    };
-
-    if (thumbnail) {/* This SHOULD be done by tag id */
-      //      togphotostr(&exifdat,0,0,newimage->image_info,newimage->image_info+1);
-      //      togphotostr(&exifdat,0,1,newimage->image_info+2,newimage->image_info+3);
-      //      togphotostr(&exifdat,0,2,newimage->image_info+4,newimage->image_info+5);
-      //      newimage->image_info_size+=6;
-    };
-
-    //exif_add_all(&exifdat,thumbnail?1:0,newimage->image_info+(thumbnail?6:0));
-
-    //DBG("====================EXIF TAGS================");
-    //for(i=0;i<cfile->size/2;i++)
-    // DBG3("%12s = %12s \n",cfile->data[i*2],cfile->data[i*2+1]);
-    //DBG("=============================================");
-
-    /* Tiff info in thumbnail must be converted to be viewable */
-    if (thumbnail) {
-      fuji_exif_convert(&exifdat,cfile);
-      gp_file_get_data_and_size(cfile,&buffer,&file_size);
-      
-      //  if (cfile->data==NULL) {
-      if (buffer==NULL) {
-	DBG("Thumbnail conversion error");
-	return(GP_ERROR);
-      };
-    }
-    else  { /* Real image ... */
-      //cfile->data=buffer;  /* ok, use original data...*/
-      //strcpy(cfile->type,"image/jpg");
-    };
-  } else    { /* Wasn't recognizable exif data */
-	DBG("Exif data parsing error");
-  };
-
-  return(GP_OK/*newimage*/);
-
-};
-
-static int fuji_delete_image (FujiData *fjd, int picture_number){
-  int err_status;
-
-  if (!fjd->has_cmd[FUJI_CMD_DELETE]) {
-    return(0);
-  };
-
-  err_status = del_frame(picture_number);
-  reset_serial();
-
-  /* Warning, does the index need to be re-counted after each delete?*/
-  return(!err_status);
-};
-
-static int fuji_number_of_pictures (){
-  int numpix;
-
-  numpix=fuji_nb_pictures();
-
-  reset_serial(); /* Wish this wasn't necessary...*/
-  return(numpix);
-
-};
-
-static int camera_exit (Camera *camera) {
-  DBG("Camera exit");
-  fuji_close_connection();
-  if (camera->port) gp_port_close(camera->port);
-  DBG("Done");
-  return (GP_OK);
-}
-
-static int camera_folder_list	(Camera *camera, char *folder, CameraList *list) {
-  DBG2("Camera folder list,%s",folder);
-  if (folder==NULL) gp_list_append(list,"/",NULL);
-  return (GP_OK);
-}
-
-static int camera_file_list (Camera *camera, const char *folder, CameraList *list) {
-  int i,n;
-  char* fn=NULL;
-  //FujiData *cs;
-  CameraPrivateLibrary *cs;
-
-  //cs=(FujiData*)camera->camlib_data;
-  cs=(CameraPrivateLibrary *)camera->pl;
-
-  DBG("Camera file list");
-  n=fuji_nb_pictures();
-  DBG3("Getting file list for %s, %d files",folder,n);
-  for (i=0;i<n;i++) {
-    fn=strdup(fuji_picture_name(i+1));
-    DBG3("File %s is number %d",fn,i+1);
-    //gp_filesystem_append(camera->fs,"/",fn);
-    gp_list_append (list, fn, NULL);
-  };
-  return (GP_OK);
-  }
-
-
-static int
-file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-	       void *data)
-{
-	Camera *camera = data;
-	DBG("file_list_func");
-	return (camera_file_list (camera, folder, list));
-}
-
-static int get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,CameraFileInfo *info, void *data)
-{
-  DBG2("Info Func %s",folder);
-
-  info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE |
-    GP_FILE_INFO_NAME;
-  info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
-
-  /* Name of image */
-  strncpy (info->file.name, "test\0", 5);
-  
-  /* Get the size of the current image */
-  info->file.size = 1;
-  
-  /* Type of image? */
-  /* if (strstr (filename, ".MOV") != NULL) {
-     strcpy (info->file.type, GP_MIME_QUICKTIME);
-     strcpy (info->preview.type, GP_MIME_JPEG);
-     } else if (strstr (filename, ".TIF") != NULL) {
-     strcpy (info->file.type, GP_MIME_TIFF);
-     strcpy (info->preview.type, GP_MIME_TIFF);
-     } else {*/
-     strcpy (info->file.type, GP_MIME_JPEG);
-     strcpy (info->preview.type, GP_MIME_JPEG);
-     //     }
-
-
-  return(GP_OK);
-};
-
-static int
-get_file_func (CameraFilesystem *fs, const char *folder,
-	       const char *filename, CameraFileType type, CameraFile *file,
-	       void *data) { 
-
-  Camera *camera = data;
-  int num;
-  //FujiData *fjd;
-  CameraPrivateLibrary *fjd;
-
-  fjd=camera->pl;
-
-
-  curcam=camera;
-  curcamfile=file;
-
-  DBG3("Camera file type %d get %s",type,filename);
-
-  num=gp_filesystem_number   (camera->fs, "/" ,filename)+1;
-
-
-  DBG3("File %s,%d\n",filename,num);
-
-	return (fuji_get_picture(num,type==0?1:0,file,fjd));
-}
-
-int camera_init (Camera *camera) {
-        char idstring[256];
-	CameraPrivateLibrary *fjd;
-
-	gp_port_settings settings;
-
-	DBG("Camera init");
-
-	/* First, set up all the function pointers */
-	camera->functions->exit 	= camera_exit;
-	//camera->functions->file_get 	= camera_file_get;
-	//	camera->functions->file_get_preview =  camera_file_get_preview;
-	//	camera->functions->file_put 	= camera_file_put;
-	//camera->functions->file_delete 	= camera_file_delete;
-	/*	camera->functions->config_get   = camera_config_get;
-		camera->functions->config_set   = camera_config_set;*/
-	camera->functions->capture 	= camera_capture;
-	camera->functions->summary	= camera_summary;
-	camera->functions->manual 	= camera_manual;
-	camera->functions->about 	= camera_about;
-
-	//camera->camlib_data=malloc(sizeof( FujiData));
-	camera->pl=malloc(sizeof( CameraPrivateLibrary ));
-	fjd=camera->pl;//(FujiData*)camera->camlib_data;
-
-	/* Set up the CameraFilesystem */
-        gp_filesystem_set_list_funcs (camera->fs,
-                                        file_list_func, folder_list_func,
-                                        camera);
-        gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL,
-	                              camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
-
-	/* Set up the port */
-	thedev=camera->port;
-	gp_port_settings_get (camera->port, &settings);
-	gp_port_timeout_set(thedev,1000);
-	settings.serial.speed 	 = 9600;
-	settings.serial.bits 	 = 8;
-	settings.serial.parity 	 = GP_PORT_SERIAL_PARITY_EVEN;
-	settings.serial.stopbits = 1;
-
-	gp_port_settings_set(camera->port,settings);
-	//gp_port_open(thedev);
-
-	//DBG2("Initialized port %s",settings.serial.port);
-
-	fuji_maxbuf=FUJI_MAXBUF_DEFAULT; /* This should be camera dependent */
-
-	//fuji_set_max_speed(57600);
-
-	//DBG("Max speed set");
-
-	if (!fuji_initialized){
-	  fuji_buffer=malloc(fuji_maxbuf);
-	  if (fuji_buffer==NULL) {
-	    DBG("Memory allocation error");
-	    return(-1);
-	  } else {
-	    DBG2("Allocated %ld bytes to main buffer",fuji_maxbuf);
-	  };
-	  
-	  /* could ID camera here and set the relevent variables... */
-	  get_command_list(camera->pl);
-	  /* For now assume that the user wil not use 2 different fuji cams
-	     in one session */
-	  strcpy(idstring,"Identified ");
-	  strncat(idstring,fuji_version_info(),100);
-	  //gp_frontend_status(NULL,idstring);
-
-	  /* load_fuji_options() */
-	  fuji_initialized=1;  
-	};
-
-	return (GP_OK);
 }
 
 #endif

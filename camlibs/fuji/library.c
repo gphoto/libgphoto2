@@ -22,6 +22,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 #include <gphoto2-library.h>
@@ -136,7 +137,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.speed[3] = 56700;
 		a.speed[4] = 115200;
 		a.speed[5] = 0;
-		a.folder_operations = GP_FOLDER_OPERATION_NONE;
+		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
 		a.file_operations = GP_FILE_OPERATION_PREVIEW |
 				    GP_FILE_OPERATION_DELETE;
 		a.operations = GP_OPERATION_CONFIG;
@@ -218,6 +219,22 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	}
 	CR (gp_file_set_data_and_size (file, d, size));
 	CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
+
+	return (GP_OK);
+}
+
+static int
+put_file_func (CameraFilesystem *fs, const char *folder,
+	       CameraFile *file, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	const char *d, *name;
+	unsigned long int d_len;
+
+	CR (gp_file_get_data_and_size (file, &d, &d_len));
+	CR (gp_file_get_name (file, &name));
+	CR (fuji_upload_init (camera, name, context));
+	CR (fuji_upload (camera, d, d_len, context));
 
 	return (GP_OK);
 }
@@ -337,23 +354,32 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	struct tm tm;
 	time_t t;
 	FujiDate date;
+	const char *id;
 
 	CR (gp_widget_new (GP_WIDGET_WINDOW, _("Configuration for "
 					"your FUJI camera"), window));
 
 	/* Date & Time */
-	CR (fuji_date_get (camera, &date, context));
-	CR (gp_widget_new (GP_WIDGET_DATE, _("Date & Time"), &widget));
-	CR (gp_widget_append (*window, widget));
-	memset (&tm, 0, sizeof (struct tm));
-	tm.tm_year = date.year;
-	tm.tm_mon  = date.month;
-	tm.tm_mday = date.day;
-	tm.tm_hour = date.hour;
-	tm.tm_min  = date.min;
-	tm.tm_sec  = date.sec;
-	t = mktime (&tm);
-	CR (gp_widget_set_value (widget, &t));
+	if (fuji_date_get (camera, &date, context) >= 0) {
+		CR (gp_widget_new (GP_WIDGET_DATE, _("Date & Time"), &widget));
+		CR (gp_widget_append (*window, widget));
+		memset (&tm, 0, sizeof (struct tm));
+		tm.tm_year = date.year;
+		tm.tm_mon  = date.month;
+		tm.tm_mday = date.day;
+		tm.tm_hour = date.hour;
+		tm.tm_min  = date.min;
+		tm.tm_sec  = date.sec;
+		t = mktime (&tm);
+		CR (gp_widget_set_value (widget, &t));
+	}
+
+	/* ID */
+	if (fuji_id_get (camera, &id, context) >= 0) {
+		CR (gp_widget_new (GP_WIDGET_TEXT, _("ID"), &widget));
+		CR (gp_widget_append (*window, widget));
+		CR (gp_widget_set_value (widget, (void *) id));
+	}
 
 	return (GP_OK);
 }
@@ -365,10 +391,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	FujiDate date;
 	time_t t;
 	struct tm *tm;
+	const char *id;
 
 	/* Date & Time */
-	CR (gp_widget_get_child_by_label (window, _("Date & Time"), &widget));
-	if (gp_widget_changed (widget)) {
+	if ((gp_widget_get_child_by_label (window, _("Date & Time"),
+					   &widget) >= 0) &&
+	     gp_widget_changed (widget)) {
 		CR (gp_widget_get_value (widget, &t));
 		tm = localtime (&t);
 		date.year  = tm->tm_year;
@@ -378,6 +406,45 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		date.min   = tm->tm_min;
 		date.sec   = tm->tm_sec;
 		CR (fuji_date_set (camera, date, context));
+	}
+
+	/* ID */
+	if ((gp_widget_get_child_by_label (window, _("ID"), &widget) >= 0) &&
+	    gp_widget_changed (widget)) {
+		CR (gp_widget_get_value (widget, &id));
+		CR (fuji_id_set (camera, id, context));
+	}
+		
+
+	return (GP_OK);
+}
+
+static int
+camera_summary (Camera *camera, CameraText *text, GPContext *context)
+{
+	const char *string;
+	char buf[1024];
+	unsigned int avail_mem;
+
+	memset (text->text, 0, sizeof (text->text));
+
+	if (fuji_version (camera, &string, context) >= 0) {
+		strcat (text->text, _("Version: "));
+		strcat (text->text, string);
+		strcat (text->text, "\n");
+	}
+
+	if (fuji_model (camera, &string, context) >= 0) {
+		strcat (text->text, _("Model: "));
+		strcat (text->text, string);
+		strcat (text->text, "\n");
+	}
+
+	if (fuji_avail_mem (camera, &avail_mem, context) >= 0) {
+		snprintf (buf, sizeof (buf), "%d", avail_mem);
+		strcat (text->text, _("Available memory: "));
+		strcat (text->text, buf);
+		strcat (text->text, "\n");
 	}
 
 	return (GP_OK);
@@ -425,6 +492,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->exit       = camera_exit;
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
+	camera->functions->summary    = camera_summary;
 
 	/* We need to store some data */
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
@@ -443,12 +511,14 @@ camera_init (Camera *camera, GPContext *context)
 	CR (gp_port_set_settings (camera->port, settings));
 
 	/* Set up the filesystem. */
-	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
-					  camera));
-	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-					  del_file_func, camera));
-	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL,
-					  camera));
+	CR (gp_filesystem_set_list_funcs   (camera->fs, file_list_func, NULL,
+					    camera));
+	CR (gp_filesystem_set_file_funcs   (camera->fs, get_file_func,
+					    del_file_func, camera));
+	CR (gp_filesystem_set_info_funcs   (camera->fs, get_info_func, NULL,
+					    camera));
+	CR (gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
+					    NULL, NULL, camera));
 
 	/* Initialize the connection */
 	CR (pre_func (camera, context));

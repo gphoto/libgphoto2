@@ -32,21 +32,28 @@ enum _FujiCmd {
         FUJI_CMD_VERSION        = 0x09,
 	FUJI_CMD_PIC_NAME	= 0x0a,
 	FUJI_CMD_PIC_COUNT	= 0x0b,
-	FUJI_CMD_UNKNOWN1	= 0x0c,
-	FUJI_CMD_UNKNOWN2	= 0x0e,
-	FUJI_CMD_UNKNOWN3	= 0x0f,
-	FUJI_CMD_UNKNOWN4	= 0x11,
-	FUJI_CMD_UNKNOWN5	= 0x13,
+
+	FUJI_CMD_UNKNOWN1	= 0x0c, /* Figure this out! */
+
+	FUJI_CMD_UPLOAD		= 0x0e,
+	FUJI_CMD_UPLOAD_INIT	= 0x0f,
+
+	FUJI_CMD_UNKNOWN4	= 0x11, /* Figure this out! */
+	FUJI_CMD_UNKNOWN5	= 0x13, /* Figure this out! */
+
         FUJI_CMD_PIC_SIZE       = 0x17,
         FUJI_CMD_PIC_DEL        = 0x19,
-	FUJI_CMD_FREE_MEM	= 0x1b,
-	FUJI_CMD_UNKNOWN10	= 0x20,
-	FUJI_CMD_UNKNOWN11	= 0x22,
-        FUJI_CMD_TAKE           = 0x27,
-	FUJI_CMD_UNKNOWN12      = 0x29,
-	FUJI_CMD_UNKNOWN13      = 0x2a,
-	FUJI_CMD_UNKNOWN14	= 0x2b,
-	FUJI_CMD_UNKNOWN15	= 0x2e,
+	FUJI_CMD_AVAIL_MEM	= 0x1b,
+
+	FUJI_CMD_UNKNOWN10	= 0x20, /* Figure this out! */
+	FUJI_CMD_UNKNOWN11	= 0x22, /* Figure this out! */
+
+	FUJI_CMD_TAKE           = 0x27,
+	FUJI_CMD_MODEL		= 0x29,
+
+	FUJI_CMD_UNKNOWN13      = 0x2a, /* Figure this out! */
+	FUJI_CMD_UNKNOWN14	= 0x2b, /* Figure this out! */
+	FUJI_CMD_UNKNOWN15	= 0x2e, /* Figure this out! */
 
 	/* Flash related commands */
 	FUJI_CMD_FLASH_GET	= 0x30,
@@ -55,22 +62,35 @@ enum _FujiCmd {
 
         FUJI_CMD_CMDS_VALID     = 0x4c,
 
-	FUJI_CMD_UNKNOWN16	= 0x51,
+	FUJI_CMD_UNKNOWN16	= 0x51, /* Figure this out! */
 
         FUJI_CMD_PREVIEW        = 0x64,
 
-	FUJI_CMD_UNKNOWN7	= 0x80,
-	FUJI_CMD_UNKNOWN6	= 0x82,
+	/* Configurable settings */
+	FUJI_CMD_ID_GET		= 0x80,
+	FUJI_CMD_ID_SET		= 0x82,
 	FUJI_CMD_DATE_GET	= 0x84,
 	FUJI_CMD_DATE_SET	= 0x86,
-	FUJI_CMD_UNKNOWN8	= 0xc0
+
+	FUJI_CMD_UNKNOWN8	= 0xc0  /* Figure this out! */
 };
 
 int fuji_get_cmds  (Camera *camera, unsigned char *cmds, GPContext *context);
 
-int fuji_ping      (Camera *camera, GPContext *context);
-int fuji_pic_count (Camera *camera, unsigned int *n, GPContext *context);
-int fuji_reset     (Camera *camera, GPContext *context);
+int fuji_ping        (Camera *, GPContext *context);
+int fuji_pic_count   (Camera *, unsigned int *n, GPContext *);
+int fuji_version     (Camera *, const char **version, GPContext *);
+int fuji_model       (Camera *, const char **model, GPContext *);
+int fuji_avail_mem   (Camera *, unsigned int *avail_mem, GPContext *);
+
+int fuji_upload_init (Camera *, const char *name, GPContext *);
+int fuji_upload      (Camera *, const unsigned char *data,
+		      unsigned int size, GPContext *context);
+
+int fuji_id_get      (Camera *camera, const char **id, GPContext *context);
+int fuji_id_set      (Camera *camera, const char  *id, GPContext *context);
+
+int fuji_reset       (Camera *camera, GPContext *context);
 
 typedef struct _FujiDate FujiDate;
 struct _FujiDate {

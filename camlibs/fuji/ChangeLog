@@ -1,5 +1,10 @@
 2002-04-21  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c:
+	* fuji.[c,h]: Implement upload and summary.
+
+2002-04-21  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c: A fuji_reset doesn't seem to reset the speed to 9600.
 
 2002-04-19  Lutz Müller <lutz@users.sourceforge.net>
