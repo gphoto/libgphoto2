@@ -25,32 +25,7 @@
 
 #include "util.h"
 #include "psa50.h"
-
-
-/****  new stuff ********/
-struct camera_to_usb {
-	  char *name;
-	  unsigned short idVendor;
-	  unsigned short idProduct;
-} camera_to_usb[] = {
-		{ "Canon PowerShot S10", 0x04A9, 0x3041 },
-		{ "Canon PowerShot S20", 0x04A9, 0x3043 },
-		{ "Canon PowerShot G1", 0x04A9, 0x3048 },
-		{ "Canon Digital IXUS", 0x4A9, 0x3047 },
-		{ "Canon IXY DIGITAL", 0x4A9, 0x3046 },
-		{ "Canon PowerShot S100", 0x4A9, 0x3045 },
-                { "Canon Digital IXUS 300", 0x4A9, 0x304D },
-		{ "Canon IXY DIGITAL 300", 0x4A9, 0x304B },
-		{ "Canon PowerShot S300", 0x4A9, 0x304C },
-                { "Canon PowerShot A10", 0x4A9, 0x304F },
-                { "Canon PowerShot A20", 0x4A9, 0x304E },
-                { "Canon EOS D30", 0x4A9, 0x3044 },
-                { "Canon PowerShot Pro90 IS", 0x4A9, 0x3049 }
-
-
-
-};
-/*******  new stuff *********/
+#include "canon.h"
 
 
 /****************************************************************************
@@ -129,23 +104,18 @@ int canon_serial_get_cts(gp_port *gdev)
  * 
  * return 1 on success, 0 on failure
  ****************************************************************************/
-int canon_usb_probe(gp_port *gdev, int i)
+static int canon_usb_probe(gp_port *gdev, int i)
 {
 	
-  if (i >= sizeof(camera_to_usb) / sizeof(struct camera_to_usb))
-    goto err;
-  
-  if (gp_port_usb_find_device(gdev, camera_to_usb[i].idVendor,
-			      camera_to_usb[i].idProduct) == GP_OK) {
+  if (gp_port_usb_find_device(gdev, models[i].idVendor,
+			      models[i].idProduct) == GP_OK) {
     //		printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
     //			   gdev->usb_device->bus->dirname, gdev->usb_device->filename);
-    printf("found '%s' @\n", camera_to_usb[i].name);
+    printf("found '%s' @\n", models[i].name);
     
     return 1;
   }
   
-  
- err:
   fprintf(stderr, "unable to find any compatible USB cameras\n");
   
   return 0;		
@@ -184,12 +154,11 @@ int canon_serial_init(Camera *camera, const char *devname)
     if ((ret = gp_port_new(&(cs->gdev), GP_PORT_USB) != GP_OK))
       return ret;
 	
-    for (i = 0; i < sizeof(camera_to_usb) / sizeof(struct camera_to_usb); 
-	 i++) {
+    for (i=0; models[i].name; i++) {
       fprintf(stderr, "canon: %s, %s\n", camera->model,
-	      camera_to_usb[i].name);
+	      models[i].name);
       
-      if (!strcmp(camera->model, camera_to_usb[i].name))
+      if (!strcmp(camera->model, models[i].name))
 	break;
     }
     

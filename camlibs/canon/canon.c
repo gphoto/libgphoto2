@@ -58,37 +58,25 @@
 
 int canon_debug_driver = 9;
 
-/* DO NOT FORGET to update the NUM_ constants after adding a camera */
-
-#define NUM_SERIAL      4
-#define NUM_USB         9
-#define NUM_SERIAL_USB  4
-
-char *models_serial[] = {
-        "Canon PowerShot A5",
-        "Canon PowerShot A5 Zoom",
-        "Canon PowerShot A50",
-        "Canon PowerShot Pro70",
-        NULL
-};
-char *models_USB[] = {
-        "Canon Digital IXUS",
-	"Canon IXY DIGITAL",
-        "Canon PowerShot S100",
-        "Canon Digital IXUS 300",
-        "Canon IXY DIGITAL 300",
-        "Canon PowerShot S300",
-        "Canon PowerShot A10",
-        "Canon PowerShot A20",
-        "Canon EOS D30",
-        NULL
-};
-char *models_serialandUSB[] = {
-        "Canon PowerShot S10",
-        "Canon PowerShot S20",
-        "Canon PowerShot G1",
-        "Canon PowerShot Pro90 SI",
-        NULL
+struct model models[] = {
+	{ "Canon PowerShot A5", 	0, 0, 1 },
+	{ "Canon PowerShot A5 Zoom", 	0, 0, 1},
+	{ "Canon PowerShot A50", 	0, 0, 1},
+	{ "Canon PowerShot Pro70", 	0, 0, 1},
+	{ "Canon PowerShot S10", 	0x04A9, 0x3041, 1},
+	{ "Canon PowerShot S20", 	0x04A9, 0x0304, 1 },
+	{ "Canon PowerShot G1", 	0x04A9, 0x0304, 1 },
+	{ "Canon PowerShot Pro90 SI", 	0x04A9, 0x3049, 1 },
+	{ "Canon Digital IXUS", 	0x04A9, 0x3047, 0 },
+	{ "Canon IXY DIGITAL", 		0x04A9, 0x3046, 0 },
+	{ "Canon PowerShot S100", 	0x04A9, 0x3045, 0 },
+	{ "Canon Digital IXUS 300", 	0x04A9, 0x304D, 0 },
+	{ "Canon IXY DIGITAL 300", 	0x04A9, 0x304B, 0 },
+	{ "Canon PowerShot S300", 	0x04A9, 0x304C, 0 },
+	{ "Canon PowerShot A10", 	0x04A9, 0x304F, 0 },
+	{ "Canon PowerShot A20", 	0x04A9, 0x304E, 0 },
+	{ "Canon EOS D30", 		0x04A9, 0x3044, 0 },
+	{ 0, 0, 0}
 };
 
 int camera_id(CameraText *id)
@@ -119,55 +107,29 @@ int camera_abilities(CameraAbilitiesList *list)
 
     gp_debug_printf(GP_DEBUG_LOW,"canon","camera_abilities()");
 
-    i=0;
-    while(models_serialandUSB[i]) {
+    for (i=0; models[i].name; i++) {
         a = gp_abilities_new();
-        strcpy(a->model, models_serialandUSB[i]);
-        a->port = GP_PORT_SERIAL | GP_PORT_USB;
-        a->speed[0]   = 9600;
-        a->speed[1]   = 19200;
-        a->speed[2]   = 38400;
-        a->speed[3]   = 57600;
-        a->speed[4]   = 115200;
-        a->speed[5]   = 0;
+        strcpy(a->model, models[i].name);
+	a->port = 0;
+	if (models[i].idProduct) {
+		a->port |= GP_PORT_USB;
+		a->usb_vendor = models[i].idVendor;
+		a->usb_product = models[i].idProduct;
+	}
+	if (models[i].serial) {
+		a->port |= GP_PORT_SERIAL;
+		a->speed[0]   = 9600;
+		a->speed[1]   = 19200;
+		a->speed[2]   = 38400;
+		a->speed[3]   = 57600;
+		a->speed[4]   = 115200;
+		a->speed[5]   = 0;
+	}
         a->operations        = 	GP_OPERATION_CONFIG;
 	a->folder_operations = 	GP_FOLDER_OPERATION_PUT_FILE;
         a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
 				GP_FILE_OPERATION_PREVIEW;
         gp_abilities_list_append(list, a);
-        i++;
-    }
-
-    i=0;
-    while(models_USB[i]) {
-        a = gp_abilities_new();
-        strcpy(a->model, models_USB[i]);
-        a->port = GP_PORT_USB;
-        a->operations        = 	GP_OPERATION_CONFIG;
-	a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
-	a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
-				GP_FILE_OPERATION_PREVIEW;
-        gp_abilities_list_append(list, a);
-        i++;
-    }
-
-    i=0;
-    while(models_serial[i]) {
-        a = gp_abilities_new();
-        strcpy(a->model, models_serial[i]);
-        a->port = GP_PORT_SERIAL;
-        a->speed[0]   = 9600;
-        a->speed[1]   = 19200;
-        a->speed[2]   = 38400;
-        a->speed[3]   = 57600;
-        a->speed[4]   = 115200;
-        a->speed[5]   = 0;
-        a->operations        = 	GP_OPERATION_CONFIG;
-	a->folder_operations = 	GP_FOLDER_OPERATION_PUT_FILE;
-	a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
-				GP_FILE_OPERATION_PREVIEW;
-        gp_abilities_list_append(list, a);
-        i++;
     }
 
     return GP_OK;
