@@ -95,8 +95,15 @@
 #define GP_PORT_SERIAL_RANGE_HIGH       32
 #endif
 
-/* BSD */
-#if defined(__FreeBSD__) || defined(__NetBSD__)
+/* FreeBSD */
+#if defined(__FreeBSD__)
+#define GP_PORT_SERIAL_PREFIX   "/dev/cuaa%x"
+#define GP_PORT_SERIAL_RANGE_LOW        0
+#define GP_PORT_SERIAL_RANGE_HIGH       (0xf)
+#endif
+
+/* NetBSD */
+#if defined(__NetBSD__)
 #define GP_PORT_SERIAL_PREFIX   "/dev/tty0%i"
 #define GP_PORT_SERIAL_RANGE_LOW        0
 #define GP_PORT_SERIAL_RANGE_HIGH       32
