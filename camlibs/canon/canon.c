@@ -94,64 +94,64 @@
 
 const struct canonCamModelData models[] = {
 	/* *INDENT-OFF* */
-	{"Canon:PowerShot A5",	        CANON_PS_A5,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, "DE300 Canon Inc."},
-	{"Canon:PowerShot A5 Zoom",	CANON_PS_A5_ZOOM,	NO_USB, NO_USB, CAP_NON,  S2M, S32K, "Canon PowerShot A5 Zoom"},
-	{"Canon:PowerShot A50",		CANON_PS_A50,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, "Canon PowerShot A50"},
-	{"Canon:PowerShot Pro70",	CANON_PS_PRO70,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, "Canon PowerShot Pro70"},
-	{"Canon:PowerShot S10",		CANON_PS_S10,		0x04A9, 0x3041, CAP_NON, S10M, S32K, "Canon PowerShot S10"},
-	{"Canon:PowerShot S20",		CANON_PS_S20,		0x04A9, 0x3043, CAP_NON, S10M, S32K, "Canon PowerShot S20"},
-	{"Canon:EOS D30",		CANON_EOS_D30,		0x04A9, 0x3044, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot S100",	CANON_PS_S100,		0x04A9, 0x3045, CAP_NON, S10M, S32K, NULL},
-	{"Canon:IXY DIGITAL",		CANON_PS_S100,		0x04A9, 0x3046, CAP_NON, S10M, S32K, NULL},
-	{"Canon:Digital IXUS",		CANON_PS_S100,		0x04A9, 0x3047, CAP_NON, S10M, S32K, NULL},
-	{"Canon:PowerShot G1",		CANON_PS_G1,		0x04A9, 0x3048, CAP_SUP, S10M, S32K, "Canon PowerShot G1"},
-	{"Canon:PowerShot Pro90 IS",	CANON_PS_PRO90_IS,	0x04A9, 0x3049, CAP_SUP, S10M, S32K, "Canon PowerShot Pro90 IS"},
-	{"Canon:IXY DIGITAL 300",	CANON_PS_S300,		0x04A9, 0x304B, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot S300",	CANON_PS_S300,		0x04A9, 0x304C, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:Digital IXUS 300",	CANON_PS_S300,		0x04A9, 0x304D, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot A20",		CANON_PS_A20,		0x04A9, 0x304E, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot A10",		CANON_PS_A10,		0x04A9, 0x304F, CAP_SUP, S10M, S32K, NULL},
+	{"Canon:PowerShot A5",	        CANON_PS_A5,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, S2M, "DE300 Canon Inc."},
+	{"Canon:PowerShot A5 Zoom",	CANON_PS_A5_ZOOM,	NO_USB, NO_USB, CAP_NON,  S2M, S32K, S2M, "Canon PowerShot A5 Zoom"},
+	{"Canon:PowerShot A50",		CANON_PS_A50,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, S2M, "Canon PowerShot A50"},
+	{"Canon:PowerShot Pro70",	CANON_PS_PRO70,		NO_USB, NO_USB, CAP_NON,  S2M, S32K, S2M, "Canon PowerShot Pro70"},
+	{"Canon:PowerShot S10",		CANON_PS_S10,		0x04A9, 0x3041, CAP_NON, S10M, S32K, S2M, "Canon PowerShot S10"},
+	{"Canon:PowerShot S20",		CANON_PS_S20,		0x04A9, 0x3043, CAP_NON, S10M, S32K, S2M, "Canon PowerShot S20"},
+	{"Canon:EOS D30",		CANON_EOS_D30,		0x04A9, 0x3044, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot S100",	CANON_PS_S100,		0x04A9, 0x3045, CAP_NON, S10M, S32K, S2M, NULL},
+	{"Canon:IXY DIGITAL",		CANON_PS_S100,		0x04A9, 0x3046, CAP_NON, S10M, S32K, S2M, NULL},
+	{"Canon:Digital IXUS",		CANON_PS_S100,		0x04A9, 0x3047, CAP_NON, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot G1",		CANON_PS_G1,		0x04A9, 0x3048, CAP_SUP, S10M, S32K, S2M, "Canon PowerShot G1"},
+	{"Canon:PowerShot Pro90 IS",	CANON_PS_PRO90_IS,	0x04A9, 0x3049, CAP_SUP, S10M, S32K, S2M, "Canon PowerShot Pro90 IS"},
+	{"Canon:IXY DIGITAL 300",	CANON_PS_S300,		0x04A9, 0x304B, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot S300",	CANON_PS_S300,		0x04A9, 0x304C, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:Digital IXUS 300",	CANON_PS_S300,		0x04A9, 0x304D, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot A20",		CANON_PS_A20,		0x04A9, 0x304E, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot A10",		CANON_PS_A10,		0x04A9, 0x304F, CAP_SUP, S10M, S32K, S2M, NULL},
 	/* Mac OS includes this as a valid ID; don't know which camera model --swestin */
-	{"Canon:PowerShot unknown 1",	CANON_PS_UNK1,		0x04A9, 0x3050, CAP_SUP, S10M, S32K, NULL},
+	{"Canon:PowerShot unknown 1",	CANON_PS_UNK1,		0x04A9, 0x3050, CAP_SUP, S10M, S32K, S2M, NULL},
 	/* Canon IXY DIGITAL 200 here? */
-	{"Canon:PowerShot S110",	CANON_PS_S100,		0x04A9, 0x3051, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:DIGITAL IXUS v",	CANON_PS_S100,		0x04A9, 0x3052, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot G2",		CANON_PS_G2,		0x04A9, 0x3055, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot S40",		CANON_PS_S40,		0x04A9, 0x3056, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot S30",		CANON_PS_S30,		0x04A9, 0x3057, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot A40",		CANON_PS_A40,		0x04A9, 0x3058, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot A30",		CANON_PS_A30,		0x04A9,	0x3059, CAP_SUP, S10M, S32K, NULL},
+	{"Canon:PowerShot S110",	CANON_PS_S100,		0x04A9, 0x3051, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:DIGITAL IXUS v",	CANON_PS_S100,		0x04A9, 0x3052, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot G2",		CANON_PS_G2,		0x04A9, 0x3055, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot S40",		CANON_PS_S40,		0x04A9, 0x3056, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot S30",		CANON_PS_S30,		0x04A9, 0x3057, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot A40",		CANON_PS_A40,		0x04A9, 0x3058, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot A30",		CANON_PS_A30,		0x04A9,	0x3059, CAP_SUP, S10M, S32K, S2M, NULL},
 	/* 305c is in MacOS Info.plist, but I don't know what it is --swestin. */
-	{"Canon:PowerShot unknown 2",	CANON_PS_UNK2,		0x04A9,	0x305c, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:EOS D60",		CANON_EOS_D60,		0x04A9, 0x3060, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot A100",	CANON_PS_A100,		0x04A9, 0x3061, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot A200",	CANON_PS_A200,		0x04A9, 0x3062, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot A300",	CANON_PS_A300,		0x04A9, 0x3076, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot S50 (normal mode)",	CANON_PS_S50,	0x04A9, 0x3077, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:PowerShot unknown 2",	CANON_PS_UNK2,		0x04A9,	0x305c, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:EOS D60",		CANON_EOS_D60,		0x04A9, 0x3060, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot A100",	CANON_PS_A100,		0x04A9, 0x3061, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot A200",	CANON_PS_A200,		0x04A9, 0x3062, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot A300",	CANON_PS_A300,		0x04A9, 0x3076, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot S50 (normal mode)",	CANON_PS_S50,	0x04A9, 0x3077, CAP_SUP, S99M, S32K, S2M, NULL},
 	/* 306a is in MacOS Info.plist, but I don't know what it is --swestin. */
-	{"Canon:Digital unknown 3",	CANON_PS_UNK3,		0x04A9, 0x306a, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:Digital unknown 3",	CANON_PS_UNK3,		0x04A9, 0x306a, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, CAP_SUP, S99M, S32K, S2M, NULL},
         /* 0x306D is S45 in PTP mode */
-	{"Canon:PowerShot G3 (normal mode)",	CANON_PS_G3,	0x04A9, 0x306E, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:PowerShot G3 (normal mode)",	CANON_PS_G3,	0x04A9, 0x306E, CAP_SUP, S99M, S32K, S2M, NULL},
         /* 0x306F is G3 in PTP mode */
-	{"Canon:PowerShot S230 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:PowerShot S230 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, CAP_SUP, S99M, S32K, S2M, NULL},
         /* 0x3071 is S230 in PTP mode */
-	{"Canon:Digital IXUS v3 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:Digital IXUS v3 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, CAP_SUP, S99M, S32K, S2M, NULL},
         /* 0x3071 is IXUS v3 in PTP mode */
 	/* reported working on SourceForge patch tracker. */
 	/* FIXME: dunno about capture, assuming none for now -Marcus */
-	{"Canon:Digital IXUS 400",              CANON_PS_S230,  0x04A9, 0x3075, CAP_SUP, S99M, S32K, NULL},
-	{"Canon:PowerShot S400",                CANON_PS_S230,  0x04A9, 0x3075, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:Digital IXUS 400",              CANON_PS_S230,  0x04A9, 0x3075, CAP_SUP, S99M, S32K, S2M, NULL},
+	{"Canon:PowerShot S400",                CANON_PS_S230,  0x04A9, 0x3075, CAP_SUP, S99M, S32K, S2M, NULL},
 
 	/* added from report on mailinglist. XXX: assuming capture works -Marcus */
 	/* reports suggest that they provide 1 interface which does
 	 * both PTP and Canon access modes.
 	 */
-	{"Canon:PowerShot A60",         CANON_PS_A60,           0x04A9, 0x3074, CAP_SUP,  S99M, S32K},
-	{"Canon:PowerShot A70",         CANON_PS_A70,           0x04A9, 0x3073, CAP_SUP,  S99M, S32K},
+	{"Canon:PowerShot A60",         CANON_PS_A60,           0x04A9, 0x3074, CAP_SUP, S99M, S32K, S2M, NULL},
+	{"Canon:PowerShot A70",         CANON_PS_A70,           0x04A9, 0x3073, CAP_SUP, S99M, S32K, S2M, NULL},
 
 	/* S400 product ID for PTP mode is 0x3075; there may be no
 	 * "Canon" mode, so it will be supported by the PTP driver,
@@ -159,17 +159,17 @@ const struct canonCamModelData models[] = {
 
 	/* 3078 and 307a are in MacOS Info.plist, but I don't know
 	 * what they are --swestin. */
-	{"Canon:PowerShot unknown 4",		CANON_PS_UNK4,		0x04A9, 0x3078, CAP_SUP, S10M, S32K, NULL},
-	{"Canon:PowerShot unknown 5",		CANON_PS_UNK5,		0x04A9, 0x307a, CAP_SUP, S10M, S32K, NULL},
+	{"Canon:PowerShot unknown 4",		CANON_PS_UNK4,		0x04A9, 0x3078, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:PowerShot unknown 5",		CANON_PS_UNK5,		0x04A9, 0x307a, CAP_SUP, S10M, S32K, S2M, NULL},
 
 	/* MV630i seems to be a DV camcorder */
-	{"Canon:MV630i",		CANON_MV630I,		0x04A9, 0x307b, CAP_SUP, S99M, S32K, NULL},
-	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, NULL},
+	{"Canon:MV630i",		CANON_MV630I,		0x04A9, 0x307b, CAP_SUP, S99M, S32K, S2M, NULL},
+	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, S2M, NULL},
 
 	/* Canon MVX2i in some mode is 0x3067 - probably PTP */
 	/* Apparently the MVX2i is the same as Optura 200 MC (Philippe
 	 * Gramoulle), so share the code. */
-	{"Canon:Optura 200 MC",		CANON_OPT_200,		0x04A9, 0x306B, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:Optura 200 MC",		CANON_OPT_200,		0x04A9, 0x306B, CAP_SUP, S99M, S32K, S2M, NULL},
 	{NULL}
 	/* *INDENT-ON* */
 };
