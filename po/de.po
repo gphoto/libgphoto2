@@ -1,85 +1,381 @@
 # German Translation.
-# Copyright (C) YEAR Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001 Scott Fritzinger <scottf@unr.edu>
 # Lutz Müller <urc8@rz.uni-karlsruhe.de>, 2000.
+# Colin Marquardt <colin@marquardt-home.de>, 2001.
 #
-#, fuzzy
+# [Please leave these: öäüßÖÄÜ]
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-12-28 13:04+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: gphoto2\n"
+"POT-Creation-Date: 2001-03-18 20:49-0800\n"
+"PO-Revision-Date: 2001-03-18 21:33-08:00\n"
+"Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
+"Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
 
-#. GP_OK
-#: libgphoto2/core.c:53
-msgid "No error."
-msgstr "Kein Fehler"
-
-#. GP_ERROR
-#: libgphoto2/core.c:54
-msgid "Generic error."
-msgstr "Generischer Fehler"
-
-#. GP_ERROR_NONCRITICAL
-#: libgphoto2/core.c:55
-msgid "Noncritical error (deprecated error message!)"
-msgstr "Nicht-kritischer Fehler"
-
-#. GP_ERROR_BAD_PARAMETERS
-#: libgphoto2/core.c:56
+#. GP_ERROR_BAD_PARAMETERS      -100
+#: libgphoto2/core.c:52
 msgid "Bad parameters"
 msgstr "Ungültige Parameter"
 
-#. GP_ERROR_IO
-#: libgphoto2/core.c:57
+#. GP_ERROR_IO                  -101
+#: libgphoto2/core.c:53
 msgid "I/O problem"
-msgstr "I/O Problem"
+msgstr "I/O-Problem"
 
-#. GP_ERROR_CORRUPTED_DATA
-#: libgphoto2/core.c:58
+#. GP_ERROR_CORRUPTED_DATA      -102
+#: libgphoto2/core.c:54
 msgid "Corrupted data"
 msgstr "Korrupte Daten"
 
-#. GP_ERROR_FILE_EXISTS
-#: libgphoto2/core.c:59
+#. GP_ERROR_FILE_EXISTS         -103
+#: libgphoto2/core.c:55
 msgid "File exists"
 msgstr "Datei existiert bereits"
 
-#. GP_ERROR_NO_MEMORY
-#: libgphoto2/core.c:60
+#. GP_ERROR_NO_MEMORY           -104
+#: libgphoto2/core.c:56
 msgid "Insufficient memory"
 msgstr "Nicht genügend Speicher"
 
-#. GP_ERROR_MODEL_NOT_FOUND
-#: libgphoto2/core.c:61
+#. GP_ERROR_MODEL_NOT_FOUND     -105
+#: libgphoto2/core.c:57
 msgid "Unknown model"
 msgstr "Unbekanntes Modell"
 
-#. GP_ERROR_NOT_SUPPORTED
-#: libgphoto2/core.c:62
+#. GP_ERROR_NOT_SUPPORTED       -106
+#: libgphoto2/core.c:58
 msgid "Unsupported operation"
 msgstr "Operation nicht unterstützt"
 
-#. GP_ERROR_DIRECTORY_NOT_FOUND
-#: libgphoto2/core.c:63
+#. GP_ERROR_DIRECTORY_NOT_FOUND -107
+#: libgphoto2/core.c:59
 msgid "Directory not found"
-msgstr "Ordner nicht gefunden"
+msgstr "Verzeichnis nicht gefunden"
 
-#. GP_ERROR_FILE_NOT_FOUND
-#: libgphoto2/core.c:64
+#. GP_ERROR_FILE_NOT_FOUND      -108
+#: libgphoto2/core.c:60
 msgid "File not found"
 msgstr "Datei nicht gefunden"
 
-#. Really an error?
-#: libgphoto2/core.c:154 libgphoto2/core.c:163
+#. GP_ERROR_DIRECTORY_EXISTS    -109
+#: libgphoto2/core.c:61
+msgid "Directory exists"
+msgstr "Verzeichnis existiert bereits"
+
+#: libgphoto2/core.c:163 libgphoto2/core.c:178
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
 
-#. Camlib error? You should have called gp_camera_result_as_string...
-#: libgphoto2/core.c:157
+#: libgphoto2/core.c:171
 msgid "Unknown camera library error"
 msgstr "Unbekannter Fehler des Kamera-Treibers"
+
+#: camlibs/sierra/sierra.c:781
+msgid "Camera Configuration"
+msgstr "Kamera-Konfiguration"
+
+#: camlibs/sierra/sierra.c:782
+msgid "Picture Settings"
+msgstr "Bildeinstellungen"
+
+#: camlibs/sierra/sierra.c:789 camlibs/sierra/sierra.c:1108
+msgid "Resolution"
+msgstr "Auflösung"
+
+#: camlibs/sierra/sierra.c:790 camlibs/sierra/sierra.c:796
+#: camlibs/sierra/sierra.c:828 camlibs/sierra/sierra.c:834
+#: camlibs/sierra/sierra.c:887 camlibs/sierra/sierra.c:894
+#: camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:954
+#: camlibs/sierra/sierra.c:1111 camlibs/sierra/sierra.c:1138
+#: camlibs/sierra/sierra.c:1176 camlibs/sierra/sierra.c:1217
+msgid "Auto"
+msgstr "Auto"
+
+#: camlibs/sierra/sierra.c:791 camlibs/sierra/sierra.c:798
+#: camlibs/sierra/sierra.c:1113
+msgid "Standard"
+msgstr "Standard"
+
+#: camlibs/sierra/sierra.c:792 camlibs/sierra/sierra.c:800
+#: camlibs/sierra/sierra.c:831 camlibs/sierra/sierra.c:840
+#: camlibs/sierra/sierra.c:1115 camlibs/sierra/sierra.c:1144
+msgid "High"
+msgstr "Hoch"
+
+#: camlibs/sierra/sierra.c:793 camlibs/sierra/sierra.c:802
+#: camlibs/sierra/sierra.c:1117
+msgid "Best"
+msgstr "Beste"
+
+#: camlibs/sierra/sierra.c:805 camlibs/sierra/sierra.c:843
+#: camlibs/sierra/sierra.c:875 camlibs/sierra/sierra.c:905
+#: camlibs/sierra/sierra.c:935 camlibs/sierra/sierra.c:966
+#: camlibs/sierra/sierra.c:990 camlibs/sierra/sierra.c:1011
+#: camlibs/sierra/sierra.c:1040
+#, c-format
+msgid "%i (unknown)"
+msgstr "%i (unbekannt)"
+
+#: camlibs/sierra/sierra.c:817 camlibs/sierra/sierra.c:1127
+msgid "Shutter Speed (microseconds)"
+msgstr "Belichtungszeit (Mikrosekunden)"
+
+#: camlibs/sierra/sierra.c:827 camlibs/sierra/sierra.c:1135
+msgid "Aperture"
+msgstr "Blende"
+
+#: camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:836
+#: camlibs/sierra/sierra.c:1140
+msgid "Low"
+msgstr "Niedrig"
+
+#: camlibs/sierra/sierra.c:830 camlibs/sierra/sierra.c:838
+#: camlibs/sierra/sierra.c:1142
+msgid "Medium"
+msgstr "Mittel"
+
+#: camlibs/sierra/sierra.c:856 camlibs/sierra/sierra.c:1153
+msgid "Color Mode"
+msgstr "Farbmodus"
+
+#: camlibs/sierra/sierra.c:857 camlibs/sierra/sierra.c:864
+#: camlibs/sierra/sierra.c:917 camlibs/sierra/sierra.c:924
+#: camlibs/sierra/sierra.c:979 camlibs/sierra/sierra.c:985
+#: camlibs/sierra/sierra.c:1156 camlibs/sierra/sierra.c:1197
+#: camlibs/sierra/sierra.c:1239
+msgid "Normal"
+msgstr "Normal"
+
+#: camlibs/sierra/sierra.c:858 camlibs/sierra/sierra.c:866
+#: camlibs/sierra/sierra.c:1158
+msgid "Black/White"
+msgstr "Schwarz/Weiß"
+
+#: camlibs/sierra/sierra.c:859 camlibs/sierra/sierra.c:868
+#: camlibs/sierra/sierra.c:1160
+msgid "Sepia"
+msgstr "Sepia"
+
+# Wie heisst denn das? [Colin]
+#: camlibs/sierra/sierra.c:860 camlibs/sierra/sierra.c:870
+#: camlibs/sierra/sierra.c:1162
+#, fuzzy
+msgid "White Board"
+msgstr "White Board"
+
+#: camlibs/sierra/sierra.c:861 camlibs/sierra/sierra.c:872
+#: camlibs/sierra/sierra.c:1164
+#, fuzzy
+msgid "Black Board"
+msgstr "Black Board"
+
+#: camlibs/sierra/sierra.c:886 camlibs/sierra/sierra.c:1173
+msgid "Flash Mode"
+msgstr "Blitz-Modus"
+
+#: camlibs/sierra/sierra.c:888 camlibs/sierra/sierra.c:896
+#: camlibs/sierra/sierra.c:1178
+msgid "Force"
+msgstr "Immer"
+
+#: camlibs/sierra/sierra.c:889 camlibs/sierra/sierra.c:898
+#: camlibs/sierra/sierra.c:1003 camlibs/sierra/sierra.c:1006
+#: camlibs/sierra/sierra.c:1180 camlibs/sierra/sierra.c:1256
+msgid "Off"
+msgstr "Aus"
+
+#: camlibs/sierra/sierra.c:890 camlibs/sierra/sierra.c:900
+#: camlibs/sierra/sierra.c:1182
+msgid "Red-eye Reduction"
+msgstr "Rote-Augen-Vermeidung"
+
+#: camlibs/sierra/sierra.c:891 camlibs/sierra/sierra.c:902
+#: camlibs/sierra/sierra.c:1184
+msgid "Slow Sync"
+msgstr "Langsame Sync"
+
+#: camlibs/sierra/sierra.c:916 camlibs/sierra/sierra.c:1194
+msgid "Brightness/Contrast"
+msgstr "Helligkeit/Kontrast"
+
+#: camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:926
+#: camlibs/sierra/sierra.c:1199
+msgid "Bright+"
+msgstr "Hell+"
+
+#: camlibs/sierra/sierra.c:919 camlibs/sierra/sierra.c:928
+#: camlibs/sierra/sierra.c:1201
+msgid "Bright-"
+msgstr "Hell-"
+
+#: camlibs/sierra/sierra.c:920 camlibs/sierra/sierra.c:930
+#: camlibs/sierra/sierra.c:1203
+msgid "Contrast+"
+msgstr "Kontrast+"
+
+#: camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:932
+#: camlibs/sierra/sierra.c:1205
+msgid "Contrast-"
+msgstr "Kontrast-"
+
+#: camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1214
+msgid "White Balance"
+msgstr "Weißabgleich"
+
+# Doch nicht etwa "Himmel"? [Colin]
+#: camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
+#: camlibs/sierra/sierra.c:1219
+msgid "Skylight"
+msgstr "Tageslicht"
+
+#: camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:958
+#: camlibs/sierra/sierra.c:1221
+msgid "Fluorescent"
+msgstr "Kunstlicht"
+
+#: camlibs/sierra/sierra.c:950 camlibs/sierra/sierra.c:960
+#: camlibs/sierra/sierra.c:1223
+msgid "Tungsten"
+msgstr "Glühbirne"
+
+#: camlibs/sierra/sierra.c:951 camlibs/sierra/sierra.c:963
+#: camlibs/sierra/sierra.c:1225
+msgid "Cloudy"
+msgstr "Wolkig"
+
+#: camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1234
+msgid "Lens Mode"
+msgstr "Objektiv-Modus"
+
+#: camlibs/sierra/sierra.c:978 camlibs/sierra/sierra.c:983
+#: camlibs/sierra/sierra.c:1237
+msgid "Macro"
+msgstr "Makro"
+
+#: camlibs/sierra/sierra.c:980 camlibs/sierra/sierra.c:987
+#: camlibs/sierra/sierra.c:1241
+msgid "Infinity/Fish-eye"
+msgstr "Unendlich//Fischauge"
+
+# Nachfragen. [Colin]
+#: camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1251
+#, fuzzy
+msgid "Spot Metering Mode"
+msgstr "Spot Metering Mode"
+
+#: camlibs/sierra/sierra.c:1002 camlibs/sierra/sierra.c:1008
+#: camlibs/sierra/sierra.c:1254
+msgid "On"
+msgstr "An"
+
+#: camlibs/sierra/sierra.c:1022 camlibs/sierra/sierra.c:1265
+msgid "Zoom"
+msgstr "Zoom"
+
+#: camlibs/sierra/sierra.c:1023 camlibs/sierra/sierra.c:1029
+msgid "1x"
+msgstr "1x"
+
+#: camlibs/sierra/sierra.c:1024 camlibs/sierra/sierra.c:1034
+msgid "1.6x"
+msgstr "1.6x"
+
+#: camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1031
+msgid "2x"
+msgstr "2x"
+
+#: camlibs/sierra/sierra.c:1026 camlibs/sierra/sierra.c:1037
+msgid "2.5x"
+msgstr "2.5x"
+
+#: camlibs/sierra/sierra.c:1047
+msgid "Camera Settings"
+msgstr "Kameraeinstellungen"
+
+#: camlibs/sierra/sierra.c:1054 camlibs/sierra/sierra.c:1283
+msgid "Auto Off (host) (in seconds)"
+msgstr "Autom. Abschaltung (am PC) (in Sekunden)"
+
+#: camlibs/sierra/sierra.c:1065 camlibs/sierra/sierra.c:1293
+msgid "Auto Off (field) (in seconds)"
+msgstr "Autom. Abschaltung (nicht am PC) (in Sekunden)"
+
+#: camlibs/sierra/sierra.c:1076 camlibs/sierra/sierra.c:1302
+msgid "LCD Brightness"
+msgstr "LCD-Helligkeit"
+
+#: camlibs/sierra/sierra.c:1086 camlibs/sierra/sierra.c:1310
+msgid "LCD Auto Off (in seconds)"
+msgstr "Autom. Abschaltung des LCD (in Sekunden)"
+
+#: camlibs/sierra/sierra.c:1334
+#, c-format
+msgid "%sCamera ID       : %s\n"
+msgstr "%sKamera-ID: %s\n"
+
+#: camlibs/sierra/sierra.c:1338
+#, c-format
+msgid "%sSerial Number   : %s\n"
+msgstr "%sSeriennummer: %s\n"
+
+# Haesslich [Colin]
+#: camlibs/sierra/sierra.c:1342
+#, c-format
+msgid "%sFrames Taken    : %i\n"
+msgstr "%sGemachte Bilder: %i\n"
+
+# Haesslich... [Colin]
+#: camlibs/sierra/sierra.c:1344
+#, c-format
+msgid "%sFrames Left     : %i\n"
+msgstr "%sÜbrige Bilder: %i\n"
+
+#: camlibs/sierra/sierra.c:1346
+#, c-format
+msgid "%sBattery Life    : %i\n"
+msgstr "%sBatterielebensdauer: %i\n"
+
+#: camlibs/sierra/sierra.c:1348
+#, c-format
+msgid "%sMemory Left\t: %i bytes\n"
+msgstr "%sÜbriger Speicher: %i bytes\n"
+
+#: camlibs/sierra/sierra.c:1359
+msgid ""
+"Some notes:\n"
+"(1) Camera Configuration:\n"
+"    A value of 0 will take the default one (auto).\n"
+msgstr ""
+
+# Ist "Freigabe" richtig? [Colin]
+#: camlibs/sierra/sierra.c:1370
+msgid ""
+"sierra SPARClite library\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Support for sierra-based digital cameras\n"
+"including Olympus, Nikon, Epson, and others.\n"
+"\n"
+"Thanks to Data Engines (www.dataengines.com)\n"
+"for the use of their Olympus C-3030Z for USB\n"
+"support implementation."
+msgstr ""
+"sierra SPARClite-Bibliothek\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Unterstützung für Sierra-basierte Digitalkameras\n"
+"incl. Olympus, Nikon, Epson, und andere.\n"
+"\n"
+"Dank an Data Engines (www.dataengines.com) für die\n"
+"Freigabe ihrer Olympus C-3030Z for USB-Implementierung."
+
+#~ msgid "No error."
+#~ msgstr "Kein Fehler."
+
+#~ msgid "Generic error."
+#~ msgstr "Generischer Fehler."
+
+#~ msgid "Noncritical error (deprecated error message!)"
+#~ msgstr "Nicht-kritischer Fehler"

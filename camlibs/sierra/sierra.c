@@ -3,6 +3,21 @@
 #include <string.h>
 #include <gphoto2.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "library.h"
 #include "sierra.h"
 
@@ -136,6 +151,7 @@ int camera_init (Camera *camera)
 	int vendor=0, product=0, inep=0, outep=0;
         gp_port_settings settings;
 	SierraData *fd;
+
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init");
 
@@ -762,31 +778,31 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	CHECK (camera_start (camera));
 	dump_register (camera);
 
-	*window = gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration");
-	section = gp_widget_new (GP_WIDGET_SECTION, "Picture Settings");
+	*window = gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"));
+	section = gp_widget_new (GP_WIDGET_SECTION, _("Picture Settings"));
 	gp_widget_append (*window, section);
 
 	/* Resolution */
 	ret = sierra_get_int_register (camera, 1, &value);
         if (ret == GP_OK) {
 
-		child = gp_widget_new (GP_WIDGET_RADIO, "Resolution");
-		gp_widget_choice_add (child, "Auto");
-		gp_widget_choice_add (child, "Standard");
-		gp_widget_choice_add (child, "High");
-		gp_widget_choice_add (child, "Best");
+		child = gp_widget_new (GP_WIDGET_RADIO, _("Resolution"));
+		gp_widget_choice_add (child, _("Auto"));
+		gp_widget_choice_add (child, _("Standard"));
+		gp_widget_choice_add (child, _("High"));
+		gp_widget_choice_add (child, _("Best"));
 		
                 switch (value) {
-		case 0: strcpy (t, "Auto");
+		case 0: strcpy (t, _("Auto"));
 			break;
-                case 1: strcpy (t, "Standard");
+                case 1: strcpy (t, _("Standard"));
                         break;
-                case 2: strcpy (t, "High");
+                case 2: strcpy (t, _("High"));
                         break;
-                case 3: strcpy (t, "Best");
+                case 3: strcpy (t, _("Best"));
                         break;
                 default:
-                	sprintf (t, "%i (unknown)", value);
+                	sprintf (t, _("%i (unknown)"), value);
 			gp_widget_choice_add (child, t);
                 }
 		gp_widget_value_set (child, t);
@@ -798,7 +814,7 @@ int camera_get_config (Camera *camera, CameraWidget **window)
         if (ret == GP_OK) {
 		
 		child = gp_widget_new (GP_WIDGET_RANGE, 
-				       "Shutter Speed (microseconds)");
+				       _("Shutter Speed (microseconds)"));
 		gp_widget_range_set (child, 0, 2000, 1);
 		gp_widget_value_set (child, &value);
 		gp_widget_append (section, child);
@@ -808,23 +824,23 @@ int camera_get_config (Camera *camera, CameraWidget **window)
         ret = sierra_get_int_register (camera, 5, &value);
         if (ret == GP_OK) {
 
-		child = gp_widget_new (GP_WIDGET_RADIO, "Aperture");
-		gp_widget_choice_add (child, "Auto");
-		gp_widget_choice_add (child, "Low");
-		gp_widget_choice_add (child, "Medium");
-		gp_widget_choice_add (child, "High");
+		child = gp_widget_new (GP_WIDGET_RADIO, _("Aperture"));
+		gp_widget_choice_add (child, _("Auto"));
+		gp_widget_choice_add (child, _("Low"));
+		gp_widget_choice_add (child, _("Medium"));
+		gp_widget_choice_add (child, _("High"));
 
                 switch (value) {
-		case 0: strcpy (t, "Auto");
+		case 0: strcpy (t, _("Auto"));
 			break;
-                case 1: strcpy (t, "Low");
+                case 1: strcpy (t, _("Low"));
                         break;
-                case 2: strcpy (t, "Medium");
+                case 2: strcpy (t, _("Medium"));
                         break;
-                case 3: strcpy (t, "High");
+                case 3: strcpy (t, _("High"));
                         break;
                 default:
-                        sprintf(t, "%i (unknown)", value);
+                        sprintf(t, _("%i (unknown)"), value);
 			gp_widget_choice_add (child, t);
                 }
 		gp_widget_value_set (child, t);
@@ -837,26 +853,26 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 
 		// Those values are for a C-2020 Z. If your model differs, we
 		// have to distinguish models here...
-		child = gp_widget_new (GP_WIDGET_RADIO, "Color Mode");
-		gp_widget_choice_add (child, "Normal");
-		gp_widget_choice_add (child, "Black/White");
-		gp_widget_choice_add (child, "Sepia");
-		gp_widget_choice_add (child, "White Board");
-		gp_widget_choice_add (child, "Black Board");
+		child = gp_widget_new (GP_WIDGET_RADIO, _("Color Mode"));
+		gp_widget_choice_add (child, _("Normal"));
+		gp_widget_choice_add (child, _("Black/White"));
+		gp_widget_choice_add (child, _("Sepia"));
+		gp_widget_choice_add (child, _("White Board"));
+		gp_widget_choice_add (child, _("Black Board"));
 
                 switch (value) {
-		case 0: strcpy (t, "Normal");
+		case 0: strcpy (t, _("Normal"));
 			break;
-                case 1: strcpy (t, "Black/White");
+                case 1: strcpy (t, _("Black/White"));
                         break;
-                case 2: strcpy (t, "Sepia");
+                case 2: strcpy (t, _("Sepia"));
                         break;
-		case 3: strcpy (t, "White Board");
+		case 3: strcpy (t, _("White Board"));
 			break;
-		case 4: strcpy (t, "Black Board");
+		case 4: strcpy (t, _("Black Board"));
 			break;
                 default:
-                        sprintf (t, "%i (unknown)", value);
+                        sprintf (t, _("%i (unknown)"), value);
 			gp_widget_choice_add (child, t);
                 }
 		gp_widget_value_set (child, t);
@@ -867,26 +883,26 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	ret = sierra_get_int_register (camera, 7, &value);
         if (ret == GP_OK) {
 
-		child = gp_widget_new (GP_WIDGET_RADIO, "Flash Mode");
-		gp_widget_choice_add (child, "Auto");
-		gp_widget_choice_add (child, "Force");
-		gp_widget_choice_add (child, "Off");
-		gp_widget_choice_add (child, "Red-eye Reduction");
-		gp_widget_choice_add (child, "Slow Sync");
+		child = gp_widget_new (GP_WIDGET_RADIO, _("Flash Mode"));
+		gp_widget_choice_add (child, _("Auto"));
+		gp_widget_choice_add (child, _("Force"));
+		gp_widget_choice_add (child, _("Off"));
+		gp_widget_choice_add (child, _("Red-eye Reduction"));
+		gp_widget_choice_add (child, _("Slow Sync"));
 
                 switch (value) {
-                case 0: strcpy (t, "Auto");
+                case 0: strcpy (t, _("Auto"));
                         break;
-                case 1: strcpy (t, "Force");
+                case 1: strcpy (t, _("Force"));
                         break;
-                case 2: strcpy (t, "Off");
+                case 2: strcpy (t, _("Off"));
                         break;
-                case 3: strcpy (t, "Red-eye Reduction");
+                case 3: strcpy (t, _("Red-eye Reduction"));
                         break;
-                case 4: strcpy (t, "Slow Sync");
+                case 4: strcpy (t, _("Slow Sync"));
                         break;
                 default:
-                        sprintf (t, "%i (unknown)", value);
+                        sprintf (t, _("%i (unknown)"), value);
 			gp_widget_choice_add (child, t);
                 }
 		gp_widget_value_set (child, t);
@@ -897,26 +913,26 @@ int camera_get_config (Camera *camera, CameraWidget **window)
         ret = sierra_get_int_register (camera, 19, &value);
         if (ret == GP_OK) {
 
-		child = gp_widget_new (GP_WIDGET_RADIO, "Brightness/Contrast");
-		gp_widget_choice_add (child, "Normal");
-		gp_widget_choice_add (child, "Bright+");
-		gp_widget_choice_add (child, "Bright-");
-		gp_widget_choice_add (child, "Contrast+");
-		gp_widget_choice_add (child, "Contrast-");
+		child = gp_widget_new (GP_WIDGET_RADIO, _("Brightness/Contrast"));
+		gp_widget_choice_add (child, _("Normal"));
+		gp_widget_choice_add (child, _("Bright+"));
+		gp_widget_choice_add (child, _("Bright-"));
+		gp_widget_choice_add (child, _("Contrast+"));
+		gp_widget_choice_add (child, _("Contrast-"));
 
                 switch (value) {
-                case 0: strcpy (t, "Normal");
+                case 0: strcpy (t, _("Normal"));
                         break;
-                case 1: strcpy (t, "Bright+");
+                case 1: strcpy (t, _("Bright+"));
                         break;
-                case 2: strcpy (t, "Bright-");
+                case 2: strcpy (t, _("Bright-"));
                         break;
-                case 3: strcpy (t, "Contrast+");
+                case 3: strcpy (t, _("Contrast+"));
                         break;
-                case 4: strcpy (t, "Contrast-");
+                case 4: strcpy (t, _("Contrast-"));
                         break;
                 default:
-                        sprintf (t, "%i (unknown)", value);
+                        sprintf (t, _("%i (unknown)"), value);
 			gp_widget_choice_add (child, t);
                 }
 		gp_widget_value_set (child, t);
@@ -927,27 +943,27 @@ int camera_get_config (Camera *camera, CameraWidget **window)
         ret = sierra_get_int_register (camera, 20, &value);
         if (ret == GP_OK) {
 		
-		child = gp_widget_new (GP_WIDGET_RADIO, "White Balance");
-		gp_widget_choice_add (child, "Auto");
-		gp_widget_choice_add (child, "Skylight");
-		gp_widget_choice_add (child, "Fluorescent");
-		gp_widget_choice_add (child, "Tungsten");
-		gp_widget_choice_add (child, "Cloudy");
+		child = gp_widget_new (GP_WIDGET_RADIO, _("White Balance"));
+		gp_widget_choice_add (child, _("Auto"));
+		gp_widget_choice_add (child, _("Skylight"));
+		gp_widget_choice_add (child, _("Fluorescent"));
+		gp_widget_choice_add (child, _("Tungsten"));
+		gp_widget_choice_add (child, _("Cloudy"));
 
                 switch (value) {
-                case 0: strcpy (t, "Auto");
+                case 0: strcpy (t, _("Auto"));
                         break;
-                case 1: strcpy (t, "Skylight");
+                case 1: strcpy (t, _("Skylight"));
                         break;
-                case 2: strcpy (t, "Fluorescent");
+                case 2: strcpy (t, _("Fluorescent"));
                         break;
-                case 3: strcpy (t, "Tungsten");
+                case 3: strcpy (t, _("Tungsten"));
                         break;
                 case 255:
-                        strcpy (t, "Cloudy");
+                        strcpy (t, _("Cloudy"));
                         break;
                 default:
-                        sprintf (t, "%i (unknown)", value);
+                        sprintf (t, _("%i (unknown)"), value);
 			gp_widget_choice_add (child, t);
                 }
 		gp_widget_value_set (child, t);
@@ -958,20 +974,20 @@ int camera_get_config (Camera *camera, CameraWidget **window)
         ret = sierra_get_int_register (camera, 33, &value);
         if (ret == GP_OK) {
 
-		child = gp_widget_new (GP_WIDGET_RADIO, "Lens Mode");
-		gp_widget_choice_add (child, "Macro");
-		gp_widget_choice_add (child, "Normal");
-		gp_widget_choice_add (child, "Infinity/Fish-eye");
+		child = gp_widget_new (GP_WIDGET_RADIO, _("Lens Mode"));
+		gp_widget_choice_add (child, _("Macro"));
+		gp_widget_choice_add (child, _("Normal"));
+		gp_widget_choice_add (child, _("Infinity/Fish-eye"));
 
                 switch (value) {
-                case 1: strcpy (t, "Macro");
+                case 1: strcpy (t, _("Macro"));
                         break;
-                case 2: strcpy (t, "Normal");
+                case 2: strcpy (t, _("Normal"));
                         break;
-                case 3: strcpy (t, "Infinity/Fish-eye");
+                case 3: strcpy (t, _("Infinity/Fish-eye"));
                         break;
                 default:
-                        sprintf (t, "%i (unknown)", value);
+                        sprintf (t, _("%i (unknown)"), value);
 			gp_widget_choice_add (child, t);
                 }
 		gp_widget_value_set (child, t);
@@ -982,17 +998,17 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	ret = sierra_get_int_register (camera, 70, &value);
 	if (ret == GP_OK) {
 		
-		child = gp_widget_new (GP_WIDGET_RADIO, "Spot Metering Mode");
-		gp_widget_choice_add (child, "On");
-		gp_widget_choice_add (child, "Off");
+		child = gp_widget_new (GP_WIDGET_RADIO, _("Spot Metering Mode"));
+		gp_widget_choice_add (child, _("On"));
+		gp_widget_choice_add (child, _("Off"));
 
 		switch (value) {
-		case 5:	strcpy (t, "Off");
+		case 5:	strcpy (t, _("Off"));
 			break;
-		case 3: strcpy (t, "On");
+		case 3: strcpy (t, _("On"));
 			break;
 		default:
-			sprintf (t, "%i (unknown)", value);
+			sprintf (t, _("%i (unknown)"), value);
 			gp_widget_choice_add (child, t);
 		}
 		gp_widget_value_set (child, t);
@@ -1003,40 +1019,40 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	ret = sierra_get_int_register (camera, 72, &value);
 	if (ret == GP_OK) {
 
-		child = gp_widget_new (GP_WIDGET_RADIO, "Zoom");
-		gp_widget_choice_add (child, "1x");
-		gp_widget_choice_add (child, "1.6x");
-		gp_widget_choice_add (child, "2x");
-		gp_widget_choice_add (child, "2.5x");
+		child = gp_widget_new (GP_WIDGET_RADIO, _("Zoom"));
+		gp_widget_choice_add (child, _("1x"));
+		gp_widget_choice_add (child, _("1.6x"));
+		gp_widget_choice_add (child, _("2x"));
+		gp_widget_choice_add (child, _("2.5x"));
 
 		switch (value) {
-		case 0: strcpy (t, "1x");
+		case 0: strcpy (t, _("1x"));
 			break;
-		case 8: strcpy (t, "2x");
+		case 8: strcpy (t, _("2x"));
 			break;
 		case 520:
-			strcpy (t, "1.6x");
+			strcpy (t, _("1.6x"));
 			break;
 		case 1032:
-			strcpy (t, "2.5x");
+			strcpy (t, _("2.5x"));
 			break;
 		default:
-			sprintf (t, "%i (unknown)", value);
+			sprintf (t, _("%i (unknown)"), value);
 			gp_widget_choice_add (child, t);
 		}
 		gp_widget_value_set (child, t);
 		gp_widget_append (section, child);
 	}
 
-	section = gp_widget_new (GP_WIDGET_SECTION, "Camera Settings");
+	section = gp_widget_new (GP_WIDGET_SECTION, _("Camera Settings"));
 	gp_widget_append (*window, section);
 
 	/* Auto Off (host) */
 	ret = sierra_get_int_register (camera, 23, &value);
 	if (ret == GP_OK) {
 		
-		child = gp_widget_new (GP_WIDGET_RANGE, "Auto Off (host) "
-				       "(in seconds)");
+		child = gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (host) "
+				       "(in seconds)"));
 		gp_widget_range_set (child, 0, 255, 1);
 		gp_widget_value_set (child, &value);
 		gp_widget_append (section, child);
@@ -1046,8 +1062,8 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	ret = sierra_get_int_register (camera, 24, &value);
 	if (ret == GP_OK) {
 
-		child = gp_widget_new (GP_WIDGET_RANGE, "Auto Off (field) "
-				       "(in seconds)");
+		child = gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (field) "
+				       "(in seconds)"));
 		gp_widget_range_set (child, 0, 255, 1);
 		gp_widget_value_set (child, &value);
 		gp_widget_append (section, child);
@@ -1057,7 +1073,7 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	ret = sierra_get_int_register (camera, 35, &value);
 	if (ret == GP_OK) {
 		
-		child = gp_widget_new (GP_WIDGET_RANGE, "LCD Brightness");
+		child = gp_widget_new (GP_WIDGET_RANGE, _("LCD Brightness"));
 		gp_widget_range_set (child, 1, 7, 1);
 		gp_widget_value_set (child, &value);
 		gp_widget_append (section, child);
@@ -1067,8 +1083,8 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	ret = sierra_get_int_register (camera, 38, &value);
 	if (ret == GP_OK) {
 
-		child = gp_widget_new (GP_WIDGET_RANGE, "LCD Auto Off (in "
-				       "seconds)");
+		child = gp_widget_new (GP_WIDGET_RANGE, _("LCD Auto Off (in "
+				       "seconds)"));
 		gp_widget_range_set (child, 0, 255, 1);
 		gp_widget_value_set (child, &value);
 		gp_widget_append (section, child);
@@ -1089,16 +1105,16 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
 	/* Resolution */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting resolution");
-	child = gp_widget_child_by_label (window, "Resolution");
+	child = gp_widget_child_by_label (window, _("Resolution"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &value);
-		if (strcmp (value, "Auto") == 0) {
+		if (strcmp (value, _("Auto")) == 0) {
 			i = 0;
-		} else if (strcmp (value, "Standard") == 0) {
+		} else if (strcmp (value, _("Standard")) == 0) {
 			i = 1;
-		} else if (strcmp (value, "High") == 0) {
+		} else if (strcmp (value, _("High")) == 0) {
 			i = 2;
-		} else if (strcmp (value, "Best") == 0) {
+		} else if (strcmp (value, _("Best")) == 0) {
 			i = 3;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
@@ -1108,7 +1124,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	/* Shutter Speed */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting shutter speed");
 	child = gp_widget_child_by_label (window, 
-					  "Shutter Speed (microseconds)");
+					  _("Shutter Speed (microseconds)"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &i);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 3, i));
@@ -1116,16 +1132,16 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
 	/* Aperture */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting aperture");
-	child = gp_widget_child_by_label (window, "Aperture");
+	child = gp_widget_child_by_label (window, _("Aperture"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &value);
-		if (strcmp (value, "Auto") == 0) {
+		if (strcmp (value, _("Auto")) == 0) {
 			i = 0;
-		} else if (strcmp (value, "Low") == 0) {
+		} else if (strcmp (value, _("Low")) == 0) {
 			i = 1;
-		} else if (strcmp (value, "Medium") == 0) {
+		} else if (strcmp (value, _("Medium")) == 0) {
 			i = 2;
-		} else if (strcmp (value, "High") == 0) {
+		} else if (strcmp (value, _("High")) == 0) {
 			i = 3;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
@@ -1134,18 +1150,18 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
 	/* Color Mode */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting color mode");
-	child = gp_widget_child_by_label (window, "Color Mode");
+	child = gp_widget_child_by_label (window, _("Color Mode"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &value);
-		if (strcmp (value, "Normal") == 0) {
+		if (strcmp (value, _("Normal")) == 0) {
 			i = 0;
-		} else if (strcmp (value, "Black/White") == 0) {
+		} else if (strcmp (value, _("Black/White")) == 0) {
 			i = 1;
-		} else if (strcmp (value, "Sepia") == 0) {
+		} else if (strcmp (value, _("Sepia")) == 0) {
 			i = 2;
-		} else if (strcmp (value, "White Board") == 0) {
+		} else if (strcmp (value, _("White Board")) == 0) {
 			i = 3;
-		} else if (strcmp (value, "Black Board") == 0) {
+		} else if (strcmp (value, _("Black Board")) == 0) {
 			i = 4;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
@@ -1154,18 +1170,18 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
 	/* Flash Mode */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting flash mode");
-	child = gp_widget_child_by_label (window, "Flash Mode");
+	child = gp_widget_child_by_label (window, _("Flash Mode"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &value);
-		if (strcmp (value, "Auto") == 0) {
+		if (strcmp (value, _("Auto")) == 0) {
 			i = 0;
-		} else if (strcmp (value, "Force") == 0) {
+		} else if (strcmp (value, _("Force")) == 0) {
 			i = 1;
-		} else if (strcmp (value, "Off") == 0) {
+		} else if (strcmp (value, _("Off")) == 0) {
 			i = 2;
-		} else if (strcmp (value, "Red-eye Reduction") == 0) {
+		} else if (strcmp (value, _("Red-eye Reduction")) == 0) {
 			i = 3;
-		} else if (strcmp (value, "Slow Sync") == 0) {
+		} else if (strcmp (value, _("Slow Sync")) == 0) {
 			i = 4;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
@@ -1175,18 +1191,18 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	/* Brightness/Contrast */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** setting brightness/contrast");
-	child = gp_widget_child_by_label (window, "Brightness/Contrast");
+	child = gp_widget_child_by_label (window, _("Brightness/Contrast"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &value);
-		if (strcmp (value, "Normal") == 0) {
+		if (strcmp (value, _("Normal")) == 0) {
 			i = 0;
-		} else if (strcmp (value, "Bright+") == 0) {
+		} else if (strcmp (value, _("Bright+")) == 0) {
 			i = 1;
-		} else if (strcmp (value, "Bright-") == 0) {
+		} else if (strcmp (value, _("Bright-")) == 0) {
 			i = 2;
-		} else if (strcmp (value, "Contrast+") == 0) {
+		} else if (strcmp (value, _("Contrast+")) == 0) {
 			i = 3;
-		} else if (strcmp (value, "Contrast-") == 0) {
+		} else if (strcmp (value, _("Contrast-")) == 0) {
 			i = 4;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
@@ -1195,18 +1211,18 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
 	/* White Balance */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting white balance");
-	child = gp_widget_child_by_label (window, "White Balance");
+	child = gp_widget_child_by_label (window, _("White Balance"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &value);
-		if (strcmp (value, "Auto") == 0) {
+		if (strcmp (value, _("Auto")) == 0) {
 			i = 0;
-		} else if (strcmp (value, "Skylight") == 0) {
+		} else if (strcmp (value, _("Skylight")) == 0) {
 			i = 1;
-		} else if (strcmp (value, "Fluorescent") == 0) {
+		} else if (strcmp (value, _("Fluorescent")) == 0) {
 			i = 2;
-		} else if (strcmp (value, "Tungsten") == 0) {
+		} else if (strcmp (value, _("Tungsten")) == 0) {
 			i = 3;
-		} else if (strcmp (value, "Cloudy") == 0) {
+		} else if (strcmp (value, _("Cloudy")) == 0) {
 			i = 4;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
@@ -1215,14 +1231,14 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
 	/* Lens Mode */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting lens mode");
-	child = gp_widget_child_by_label (window, "Lens Mode");
+	child = gp_widget_child_by_label (window, _("Lens Mode"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &value);
-                if (strcmp (value, "Macro") == 0) {
+                if (strcmp (value, _("Macro")) == 0) {
 			i = 1;
-		} else if (strcmp (value, "Normal") == 0) {
+		} else if (strcmp (value, _("Normal")) == 0) {
 			i = 2;
-		} else if (strcmp (value, "Infinity/Fish-eye") == 0) {
+		} else if (strcmp (value, _("Infinity/Fish-eye")) == 0) {
 			i = 3;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
@@ -1232,12 +1248,12 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	/* Spot Metering Mode */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** setting spot metering mode");
-	child = gp_widget_child_by_label (window, "Spot Metering Mode");
+	child = gp_widget_child_by_label (window, _("Spot Metering Mode"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &value);
-		if (strcmp (value, "On") == 0) {
+		if (strcmp (value, _("On")) == 0) {
 			i = 3;
-		} else if (strcmp (value, "Off") == 0) {
+		} else if (strcmp (value, _("Off")) == 0) {
 			i = 5;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
@@ -1246,7 +1262,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
 	/* Zoom */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting zoom");
-	child = gp_widget_child_by_label (window, "Zoom");
+	child = gp_widget_child_by_label (window, _("Zoom"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &value);
 		if (strcmp (value, "1x") == 0) {
@@ -1264,8 +1280,8 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
         /* Auto Off (host) */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting auto off (host)");
-	child = gp_widget_child_by_label (window, "Auto Off (host) "
-					  "(in seconds)");
+	child = gp_widget_child_by_label (window, _("Auto Off (host) "
+					  "(in seconds)"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &i);
                 CHECK_STOP (camera, sierra_set_int_register (camera, 23, i));
@@ -1274,8 +1290,8 @@ int camera_set_config (Camera *camera, CameraWidget *window)
         /* Auto Off (field) */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** setting auto off (field)");
-	child = gp_widget_child_by_label (window, "Auto Off (field) "
-						  "(in seconds)");
+	child = gp_widget_child_by_label (window, _("Auto Off (field) "
+						  "(in seconds)"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &i);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 24, i));
@@ -1283,7 +1299,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
         /* LCD Brightness */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting lcd brightness");
-	child = gp_widget_child_by_label (window, "LCD Brightness");
+	child = gp_widget_child_by_label (window, _("LCD Brightness"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &i);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 35, i));
@@ -1291,7 +1307,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 
         /* LCD Auto Off */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting lcd auto off");
-	child = gp_widget_child_by_label (window, "LCD Auto Off (in seconds)");
+	child = gp_widget_child_by_label (window, _("LCD Auto Off (in seconds)"));
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &i);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 38, i));
@@ -1310,34 +1326,28 @@ int camera_summary (Camera *camera, CameraText *summary)
 
 	CHECK (camera_start (camera));
 
-	strcpy (buf, "");
+	strcpy(buf, "");
 
 	/* Get all the string-related info */
 	ret = sierra_get_string_register (camera, 22, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf(buf, "%sCamera ID: %s\n", buf, t);
+		sprintf(buf, _("%sCamera ID       : %s\n"), buf, t);
 
 	ret = sierra_get_string_register (camera, 25, 0, NULL, t, &value);
 	if (ret == GP_OK)
-		sprintf(buf, "%sSerial Number: %s\n", buf, t);
+		sprintf(buf, _("%sSerial Number   : %s\n"), buf, t);
 
 	/* Get all the integer information */
 	if (sierra_get_int_register(camera, 10, &value) == GP_OK)
-		sprintf (buf, "%sFrames Taken: %i\n", buf, value);
+		sprintf (buf, _("%sFrames Taken    : %i\n"), buf, value);
 	if (sierra_get_int_register(camera, 11, &value) == GP_OK)
-		sprintf (buf, "%sFrames Left: %i\n", buf, value);
-	if (sierra_get_int_register(camera, 16, &value) == GP_OK) {
-		if (value)
-			sprintf (buf, "%sBattery Life: %i\n", buf, value);
-		else
-			sprintf (buf, "%sConnected to AC power\n", buf);
-	}
-	if (sierra_get_int_register(camera, 28, &value) == GP_OK) {
-		//C-3030Z: measured in MB. Other cameras?
-		sprintf (buf, "%sMemory Left: %i MB\n", buf, value);
-	}
+		sprintf (buf, _("%sFrames Left     : %i\n"), buf, value);
+	if (sierra_get_int_register(camera, 16, &value) == GP_OK)
+		sprintf (buf, _("%sBattery Life    : %i\n"), buf, value);
+	if (sierra_get_int_register(camera, 28, &value) == GP_OK)
+		sprintf (buf, _("%sMemory Left	: %i bytes\n"), buf, value);
 
-	strcpy (summary->text, buf);
+	strcpy(summary->text, buf);
 
 	return (camera_stop(camera));
 }
@@ -1346,9 +1356,9 @@ int camera_manual (Camera *camera, CameraText *manual)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_manual");
 
-	strcpy (manual->text, "Some notes:\n"
+	strcpy (manual->text, _("Some notes:\n"
 		"(1) Camera Configuration:\n"
-		"    A value of 0 will take the default one (auto).\n");
+		"    A value of 0 will take the default one (auto).\n"));
 	return (GP_OK);
 }
 
@@ -1357,14 +1367,15 @@ int camera_about (Camera *camera, CameraText *about)
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_about");
 	
 	strcpy (about->text, 
-		"sierra SPARClite library\n"
+		_("sierra SPARClite library\n"
 		"Scott Fritzinger <scottf@unr.edu>\n"
 		"Support for sierra-based digital cameras\n"
 		"including Olympus, Nikon, Epson, and others.\n"
 		"\n"
 		"Thanks to Data Engines (www.dataengines.com)\n"
 		"for the use of their Olympus C-3030Z for USB\n"
-		"support implementation.");
+		"support implementation."));
 
 	return (GP_OK);
 }
+
