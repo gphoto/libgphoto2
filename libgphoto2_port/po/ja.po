@@ -1,14 +1,15 @@
 # libgphoto2_port ja.po.
-# Copyright (C) 2001 Free Software Foundation, Inc.
-# Takeshi Aihana <aihana@gnome.gr.jp>, 2001.
+# Copyright (C) 2001-2002 Free Software Foundation, Inc.
+# Takeshi Aihana <aihana@gnome.gr.jp>, 2001-2002.
 # AMANO Kazuhiro <haa13142@jnb.odn.ne.jp>, 2002.
 # 
+#, no-wrap
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.0beta3\n"
-"POT-Creation-Date: 2002-02-01 19:24+0900\n"
-"PO-Revision-Date: 2002-02-01 18:49+0900\n"
-"Last-Translator: AMANO Kazuhiro <haa13142@jnb.odn.ne.jp>\n"
+"Project-Id-Version: libgphoto2_port 2.0beta4\n"
+"POT-Creation-Date: 2002-02-23 09:00+0900\n"
+"PO-Revision-Date: 2002-02-11 11:10+0900\n"
+"Last-Translator: Takeshi Aihana <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=euc-jp\n"
@@ -94,15 +95,15 @@ msgstr ""
 
 #: libgphoto2_port/gphoto2-port-info-list.c:479
 msgid "Generic Port"
-msgstr "汎用ポート"
+msgstr "Generic ポート"
 
 #: libgphoto2_port/gphoto2-port-result.c:58
 msgid "No error"
-msgstr "エラー無し"
+msgstr "エラーなし"
 
 #: libgphoto2_port/gphoto2-port-result.c:60
 msgid "Unspecified error"
-msgstr "特定できないエラー"
+msgstr "不明なエラー"
 
 #: libgphoto2_port/gphoto2-port-result.c:62
 msgid "I/O problem"
@@ -118,15 +119,15 @@ msgstr "サポートしていない操作"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Timeout reading from or writing to the port"
-msgstr "ポート読み書き中にタイムアウトしました"
+msgstr "ポートからの読み込み/書き込みでタイムアウト"
 
 #: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Serial port not supported"
-msgstr "シリアルポートはサポートされていません"
+msgstr "シリアルポートはサポートしていません"
 
 #: libgphoto2_port/gphoto2-port-result.c:72
 msgid "USB port not supported"
-msgstr "USBポートはサポートされていません"
+msgstr "USB ポートはサポートしていません"
 
 #: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Unknown port"
@@ -134,43 +135,43 @@ msgstr "不明なポート"
 
 #: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Out of memory"
-msgstr "メモリー不足"
+msgstr "メモリが足りません"
 
 #: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Error loading a library"
-msgstr "ライブラリロード中のエラー"
+msgstr "ライブラリの読み込みエラー"
 
 #: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error initializing the port"
-msgstr "ポート初期化中のエラー"
+msgstr "ポートの初期化エラー"
 
 #: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error reading from the port"
-msgstr "ポートから読み込み中のエラー"
+msgstr "ポートの読み込みエラー"
 
 #: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error writing to the port"
-msgstr "ポートへ書き込み中のエラー"
+msgstr "ポートへの書き込みエラー"
 
 #: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error updating the port settings"
-msgstr "ポート設定更新中のエラー"
+msgstr "ポート設定の更新エラー"
 
 #: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error setting the serial port speed"
-msgstr "シリアルポートの速度設定中のエラー"
+msgstr "シリアルポートのスピードの設定エラー"
 
 #: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error clearing a halt condition on the USB port"
-msgstr "USBのhaltコンディションをクリア中のエラー"
+msgstr "USB ポート上で Halt 状態のクリアエラー"
 
 #: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Could not find the requested device on the USB port"
-msgstr "USBポートに要求されたデバイスが見付かりません"
+msgstr "USB ポート上に指定したデバイスが見つかりませんでした"
 
 #: libgphoto2_port/gphoto2-port-result.c:94
 msgid "Could not claim the USB device"
-msgstr "USB デバイスを要求出来ませんでした"
+msgstr "USB デバイスと断定できませんでした"
 
 #: libgphoto2_port/gphoto2-port-result.c:96
 msgid "Could not lock the device"
@@ -183,7 +184,7 @@ msgstr "不明なエラー"
 #: usb/libusb.c:131
 #, c-format
 msgid "Could not open USB device (%m)."
-msgstr "USB デバイスを開くことが出来ませんでした (%m)"
+msgstr "USB デバイスを開くことが出来ませんでした (%m)。"
 
 #: usb/libusb.c:138
 #, c-format
@@ -192,34 +193,34 @@ msgid ""
 "module (i.e. dc2xx) is using the device and you have read/write access to "
 "the device."
 msgstr ""
-"インタフェース %d を要求できませんでした (%m)。他のプログラムまたは Kernel モ"
-"ジュール (接頭子が dcxxx) がこのデバイスを使用していないか、また、そのデバイ"
-"スの読み込み/書き込み権限があることを確認してください"
+"インタフェース %d と断定できませんでした (%m)。他のプログラムまたは Kernel モ"
+"ジュール (接頭子が dc2xx) がこのデバイスを使用していないか確認して、そのデバ"
+"イスの読み込み/書き込みをしてみて下さい。"
 
 #: usb/libusb.c:157
 #, c-format
 msgid "Could not release interface %d (%m)."
-msgstr "インタフェース %d を解放することが出来ませんでした (%m)"
+msgstr "インタフェース %d を解放することが出来ませんでした (%m)。"
 
 #: usb/libusb.c:164
 #, c-format
 msgid "Could not close USB port (%m)."
-msgstr "USB ポートを閉じることが出来ませんでした (%m)"
+msgstr "USB ポートを閉じることが出来ませんでした (%m)。"
 
 #: usb/libusb.c:278
 #, c-format
 msgid "Could not set config %d/%d (%m)"
-msgstr "設定 %d/%d を反映することが出来ませんでした (%m)"
+msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
 
 #: usb/libusb.c:300
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
-msgstr "代替設定 %d/%d を反映することが出来ませんでした (%m)"
+msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
 
 #: usb/libusb.c:374
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "提供されたベンダーIDあるいは製品ID (0x%x,0x%x) が無効です。 "
+msgstr "提供ベンダーまたは製品 ID (0x%x,0x%x) は正しくありません。"
 
 #: usb/libusb.c:419
 #, c-format
@@ -236,90 +237,84 @@ msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
 "sure this device is connected to the computer."
 msgstr ""
-"USB デバイス (クラス:0x%x サブクラス: 0x%x プロトコル: 0x%x) が見つかりません"
+"USB デバイス (Class: 0x%x, SubClass: 0x%x, プロトコル: 0x%x) が見つかりません"
 "でした。このデバイスがコンピュータに接続されているか確認して下さい。"
 
-#: serial/unix.c:190
+#: serial/unix.c:204
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "デバイス '%s' をロックすることが出来ませんでした"
 
-#: serial/unix.c:199
+#: serial/unix.c:213
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "デバイス '%s' は他のプロセス (PID:%d) がロックしています"
 
-#: serial/unix.c:202
+#: serial/unix.c:216
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "デバイス '%s' がロックできません (dev_lock の返り値 %d)"
 
-#: serial/unix.c:224
+#: serial/unix.c:238
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "デバイス '%s' のロックを解放することが出来ませんでした。"
 
-#: serial/unix.c:236
+#: serial/unix.c:250
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "デバイス '%s' が他のプロセス (PID:%d) がロックしているので解放することが出来"
 "ませんでした。"
 
-#: serial/unix.c:240
+#: serial/unix.c:254
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 "デバイス '%s' のロックを解放することが出来ませんでした (dev_unlock の返り値 %"
 "d)"
 
-#: serial/unix.c:307
+#: serial/unix.c:321
 #, c-format
 msgid "Serial Port %i"
 msgstr "シリアルポート %i"
 
-#: serial/unix.c:389
+#: serial/unix.c:406
 #, c-format
 msgid "Failed to open '%s' (%m)."
-msgstr "'%s' のオープンに失敗 (%m)"
+msgstr "'%s' のオープンに失敗しました (%m)。"
 
-#: serial/unix.c:407
+#: serial/unix.c:424
 #, c-format
 msgid "Could not close '%s' (%m)."
-msgstr "'%s'を閉じることが出来ませんでした (%m)"
+msgstr "'%s' を閉じることが出来ませんでした (%m)。"
 
-#: serial/unix.c:452
+#: serial/unix.c:469
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "ポートへ書き込めませんでした (%m)"
 
-#: serial/unix.c:539
+#: serial/unix.c:556
 #, c-format
 msgid "Unknown pin %i."
 msgstr "不明なピン %i"
 
-#: serial/unix.c:561
+#: serial/unix.c:578
 #, c-format
 msgid "Could not get level of pin %i (%m)."
-msgstr "ピン %iのレベルを取得することが出来ませんでした (%m)"
+msgstr "ピン %i のレベルを取得することが出来ませんでした (%m)。"
 
-#: serial/unix.c:594
+#: serial/unix.c:611
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
-msgstr "ピン %i から %iまでのレベルをセットすることが出来ませんでした (%m)"
+msgstr "ピン %i から %i のレベルを設定することが出来ませんでした (%m)。"
 
-#: serial/unix.c:617
+#: serial/unix.c:634
 #, c-format
 msgid "Could not flush '%s' (%m)."
-msgstr "'%s'をフラッシュすることができませんでした (%m)"
+msgstr "フラッシュ '%s' できませんでした (%m)。"
 
-#: serial/unix.c:726
+#: serial/unix.c:752
 #, c-format
 msgid "Could not set the baudrate to %d"
-msgstr "ボーレートを %d にセットできませんでした"
-
-#~ msgid "Could not set interface %d/%d (%m)"
-#~ msgstr "インタフェース %d/%d をセットすることが出来ませんでした (%m)"
-
-#~ msgid "Could not close device (%s)"
-#~ msgstr "デバイス (%s)を閉じれませんでした"
+msgstr "ボーレートを %d にセットできませんでした。"
