@@ -1,5 +1,10 @@
 2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/jpeg.[c,h]: Respect the namespace of libjpeg. Otherwise,
+	gtkam and other graphical frontends will horribly fail.
+
+2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/core.c: have_initted is no longer needed.
 
 2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>

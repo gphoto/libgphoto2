@@ -54,29 +54,33 @@ chunk *chunk_new_filled(int length, const char *data);
 void chunk_destroy(chunk *mychunk);
 void chunk_print(chunk *mychunk);
 
-char jpeg_findff(int *location, chunk *picture);
-char jpeg_findactivemarker(char *id, int *location, chunk *picture);
-char *jpeg_markername(int c);
-void jpeg_init(jpeg *myjpeg);
-void jpeg_destroy(jpeg *myjpeg);
-void jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end);
-void jpeg_parse(jpeg *myjpeg, chunk *picture);
-void jpeg_print(jpeg *myjpeg);
+char  gp_jpeg_findff(int *location, chunk *picture);
+char  gp_jpeg_findactivemarker(char *id, int *location, chunk *picture);
+char *gp_jpeg_markername(int c);
 
-chunk *jpeg_make_start();
-chunk *jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3, char q1, char q2, char q3);
-chunk *jpeg_makeSsSeAhAl(int huffset1, int huffset2, int huffset3);
+void  gp_jpeg_init       (jpeg *myjpeg);
+void  gp_jpeg_destroy    (jpeg *myjpeg);
+void  gp_jpeg_add_marker (jpeg *myjpeg, chunk *picture, int start, int end);
+void  gp_jpeg_add_chunk  (jpeg *myjpeg, chunk *source);
+void  gp_jpeg_parse      (jpeg *myjpeg, chunk *picture);
+void  gp_jpeg_print      (jpeg *myjpeg);
 
-void jpeg_print_quantization_table(jpeg_quantization_table *table);
-chunk *jpeg_make_quantization(jpeg_quantization_table *table, int number);
-jpeg_quantization_table *jpeg_quantization2table(chunk *qmarker);
+chunk *gp_jpeg_make_start   (void);
+chunk *gp_jpeg_make_SOFC    (int width, int height,
+			     char vh1, char vh2, char vh3,
+			     char q1, char q2, char q3);
+chunk *gp_jpeg_makeSsSeAhAl (int huffset1, int huffset2, int huffset3);
 
-jpeg *jpeg_header(int width, int height,
+void gp_jpeg_print_quantization_table(jpeg_quantization_table *table);
+chunk *gp_jpeg_make_quantization(jpeg_quantization_table *table, int number);
+jpeg_quantization_table *gp_jpeg_quantization2table(chunk *qmarker);
+
+jpeg *gp_jpeg_header(int width, int height,
     char vh1, char vh2, char vh3,
     char q1, char q2, char q3,
     jpeg_quantization_table *quant1, jpeg_quantization_table *quant2,
     char huffset1, char huffset2, char huffset3,
     chunk *huff1, chunk *huff2, chunk *huff3, chunk *huff4);
 
-void jpeg_write(CameraFile *file, const char *name, jpeg *myjpeg);
+void gp_jpeg_write(CameraFile *file, const char *name, jpeg *myjpeg);
 #endif
