@@ -2,15 +2,16 @@ AC_DEFUN(GPKG_CHECK_RPM,
 [
 AC_ARG_WITH(rpmbuild, [  --with-rpmbuild=PATH      Program to use for building RPMs])
 
-AC_MSG_CHECKING([for rpmbuild or rpm])
 if test -x "${with_rpmbuild}"
 then
     RPMBUILD="${with_rpmbuild}"
+    AC_MSG_CHECKING([for rpmbuild or rpm])
     AC_MSG_RESULT([${RPMBUILD} (from parameter)])
 else
     AC_MSG_RESULT([using autodetection])
     AC_CHECK_PROGS(RPMBUILD, [rpmbuild rpm], false)
-    AC_MSG_RESULT([${RPMBUILD} (autodetect)])
+    AC_MSG_CHECKING([for rpmbuild or rpm])
+    AC_MSG_RESULT([${RPMBUILD} (autodetected)])
 fi
 AC_SUBST(RPMBUILD)
 AM_CONDITIONAL(ENABLE_RPM, test "$RPMBUILD" != "false")
@@ -40,6 +41,7 @@ AC_DEFUN(GPKG_CHECK_LINUX,
 
 	AC_ARG_WITH(hotplug-doc-dir, [  --with-hotplug-doc-dir=PATH Where to install hotplug scripts as docs [default=autodetect]])
 
+	AC_MSG_CHECKING([for hotplug doc dir])
 	if test "x${with_hotplug_doc_dir}" != "x"
 	then # given as parameter
 	    hotplugdocdir="${with_hotplug_doc_dir}"
@@ -52,6 +54,7 @@ AC_DEFUN(GPKG_CHECK_LINUX,
 
 	AC_ARG_WITH(hotplug-usermap-dir, [  --with-hotplug-usermap-dir=PATH Where to install hotplug scripts as docs [default=autodetect]])
 
+	AC_MSG_CHECKING([for hotplug usermap dir])
 	if test "x${with_hotplug_usermap_dir}" != "x"
 	then # given as parameter
 	    hotplugusermapdir="${with_hotplug_usermap_dir}"
