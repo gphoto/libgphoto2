@@ -163,6 +163,18 @@ struct _PTPStorageIDs {
 };
 typedef struct _PTPStorageIDs PTPStorageIDs;
 
+// PTP StorageInfo structure (returned by GetStorageInfo)
+struct _PTPStorageInfo {
+	uint16_t StorageType;
+	uint16_t FilesystemType;
+	uint16_t AccessCapability;
+	uint64_t MaxCapability;
+	uint64_t FreeSpaceInBytes;
+	uint32_t FreeSpaceInImages;
+	char 	*StorageDescription;
+	char	*VolumeLabel;
+};
+typedef struct _PTPStorageInfo PTPStorageInfo;
 
 // PTP objecthandles structure (returned by GetObjectHandles)
 

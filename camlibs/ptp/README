@@ -4,4 +4,7 @@ This library is under developement yet.
 It's designet to use with gphoto2, but can be easily used with any other
 software.
 
+To compile test_ptp.c type:
+cc -g -O2 -g -Wall -I/usr/local/include/libexif -I../../libgphoto2 -I/usr/local/include -g -Wall test_ptp.c -lusb ptp.o -o test_ptp
+
 Enjoy!

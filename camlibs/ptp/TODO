@@ -10,3 +10,5 @@ interpretation of it's fields, which may be meaningful for driver behavior.
 
 -- remove ptp error code from library.c, separate ptp protocol code from
 gphoto2 driver.
+
+-- free() all malloced memory upon exit!

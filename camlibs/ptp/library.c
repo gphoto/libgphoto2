@@ -586,7 +586,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		memcpy(image, fdata->data, size);
 		free(fdata);
 		CR (gp_file_set_data_and_size (file, image, size));
-		// XXX does gp_file_set_data_and_size free image ptr upon
+		// XXX does gp_file_set_data_and_size free() image ptr upon
 		// failure??
 		break;
 
@@ -603,7 +603,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		memcpy(image, fdata->data, size);
 		free(fdata);
 		CR (gp_file_set_data_and_size (file, image, size));
-		// XXX does gp_file_set_data_and_size free image ptr upon
+		// XXX does gp_file_set_data_and_size free() image ptr upon
 		// failure??
 		break;
 		
@@ -792,7 +792,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	id = gp_context_progress_start (context, 0, "Initializing Camera");
 	CPR (context, ptp_getobjecthandles
 	(&camera->pl->params, 0xffffffff, 0x000000, 0x000000,
-	&camera->pl->params.handles)); // XXX return from all stores
+	&camera->pl->params.handles)); // return from all stores
 	gp_context_progress_update (context, id, 10);
 	// wee need that for fileststem :/
 	camera->pl->params.objectinfo = (PTPObjectInfo*)malloc(sizeof(PTPObjectInfo)*camera->pl->params.handles.n);
