@@ -481,9 +481,8 @@ camera_exit (Camera *camera, GPContext *context)
 	CR (gp_port_get_settings (camera->port, &settings));
 	if (camera->pl) {
 		/* it won't hurt */
-		GP_DEBUG ("Clearing STALL condition on eps: 0x%x, 0x%x",
-		settings.usb.inep, settings.usb.outep);
-		gp_port_usb_clear_halt(camera->port, settings.usb.inep);
+		GP_DEBUG ("Clearing STALL condition on ep: 0x%x",
+		settings.usb.outep);
 		gp_port_usb_clear_halt(camera->port, settings.usb.outep);
 		/* close ptp session */
 		ptp_closesession (&camera->pl->params);
