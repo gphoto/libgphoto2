@@ -94,31 +94,7 @@ int gp_camera_new (Camera **camera)
 		return (GP_ERROR_NO_MEMORY);
 
 	/* Initialize function pointers to NULL.*/
-	(*camera)->functions->id		= NULL;
-	(*camera)->functions->abilities		= NULL;
-	(*camera)->functions->init		= NULL;
-	(*camera)->functions->exit		= NULL;
-	(*camera)->functions->folder_list	= NULL;
-	(*camera)->functions->file_list		= NULL;
-	(*camera)->functions->file_info_get	= NULL;
-	(*camera)->functions->file_info_set	= NULL;
-	(*camera)->functions->file_get_preview	= NULL;
-	(*camera)->functions->file_config_get	= NULL;
-	(*camera)->functions->file_config_set	= NULL;
-	(*camera)->functions->folder_config_get	= NULL;
-	(*camera)->functions->folder_config_set	= NULL;
-	(*camera)->functions->config_get	= NULL;
-	(*camera)->functions->config_set	= NULL;
-	(*camera)->functions->folder_put_file	= NULL;
-	(*camera)->functions->file_delete	= NULL;
-        (*camera)->functions->folder_delete_all = NULL;
-        (*camera)->functions->capture		= NULL;
-        (*camera)->functions->capture_preview 	= NULL;
-	(*camera)->functions->summary		= NULL;
-	(*camera)->functions->manual		= NULL;
-	(*camera)->functions->about		= NULL;
-	(*camera)->functions->result_as_string	= NULL;
-	(*camera)->functions->config		= NULL;
+	memset((*camera)->functions, 0, sizeof (CameraFunctions));
 
         return(GP_OK);
 }
@@ -380,6 +356,8 @@ int gp_camera_file_info_get (Camera *camera, CameraFileInfo *info,
 int gp_camera_file_info_set (Camera *camera, CameraFileInfo *info, 
 			char *folder, char *file)
 {
+	int result;
+
 	if ((camera == NULL) || (info == NULL) || 
 	    (folder == NULL) || (file == NULL))
 	    	return (GP_ERROR_BAD_PARAMETERS);
