@@ -1,3 +1,8 @@
+2005-01-16  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Pass Camera* to property put and get
+	  functions too, so we can make vendor based adjustements.
+
 2005-01-15  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Return the correct path and filename

@@ -1045,8 +1045,8 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 }
 
 struct submenu;
-typedef int (*get_func)(CameraWidget **widget, struct submenu* menu, PTPDevicePropDesc *dpd);
-typedef int (*put_func)(CameraWidget *widget, PTPPropertyValue *propval);
+typedef int (*get_func)(Camera *camera, CameraWidget **widget, struct submenu* menu, PTPDevicePropDesc *dpd);
+typedef int (*put_func)(Camera *camera, CameraWidget *widget, PTPPropertyValue *propval);
 
 struct submenu {
 	char 		*label;
@@ -1065,7 +1065,7 @@ struct menu {
 };
 
 static int
-_get_AUINT8_as_CHAR_ARRAY(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_AUINT8_as_CHAR_ARRAY(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	int	j;
 	char 	value[128];
 
@@ -1083,7 +1083,7 @@ _get_AUINT8_as_CHAR_ARRAY(CameraWidget **widget, struct submenu *menu, PTPDevice
 }
 
 static
-int _get_STR(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+int _get_STR(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	char value[64];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
@@ -1099,7 +1099,7 @@ int _get_STR(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd
 
 
 static int
-_put_AUINT8_as_CHAR_ARRAY(CameraWidget *widget, PTPPropertyValue *propval) {
+_put_AUINT8_as_CHAR_ARRAY(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
 	char	*value;
 	int	i, ret;
 
@@ -1117,7 +1117,7 @@ _put_AUINT8_as_CHAR_ARRAY(CameraWidget *widget, PTPPropertyValue *propval) {
 }
 
 static int
-_get_UINT32_as_MB(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_UINT32_as_MB(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	char value[64];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
@@ -1132,7 +1132,7 @@ _get_UINT32_as_MB(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc
 }
 
 static int
-_get_Canon_AssistLight(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_AssistLight(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
@@ -1146,7 +1146,7 @@ _get_Canon_AssistLight(CameraWidget **widget, struct submenu *menu, PTPDevicePro
 }
 
 static int
-_put_Canon_AssistLight(CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_AssistLight(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
 	char *value;
 	int ret;
 
@@ -1165,7 +1165,7 @@ _put_Canon_AssistLight(CameraWidget *widget, PTPPropertyValue *propval) {
 }
 
 static int
-_get_Canon_FlashMode(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_FlashMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	if (dpd->DataType != PTP_DTC_UINT8)
@@ -1177,7 +1177,7 @@ _get_Canon_FlashMode(CameraWidget **widget, struct submenu *menu, PTPDevicePropD
 }
 
 static int
-_put_Canon_FlashMode(CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_FlashMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
 	char *value;
 	int ret;
 
@@ -1196,7 +1196,7 @@ _put_Canon_FlashMode(CameraWidget *widget, PTPPropertyValue *propval) {
 }
 
 static int
-_get_Canon_ExpCompensation(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_ExpCompensation(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	float t, b, s, f;
 	int min, max, i;
 
@@ -1228,7 +1228,7 @@ _get_Canon_ExpCompensation(CameraWidget **widget, struct submenu *menu, PTPDevic
 }
 
 static int
-_put_Canon_ExpCompensation(CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_ExpCompensation(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
 	float value;
 	int ret;
 
@@ -1239,7 +1239,7 @@ _put_Canon_ExpCompensation(CameraWidget *widget, PTPPropertyValue *propval) {
 	return (GP_ERROR);
 }
 static int
-_get_Canon_BeepMode(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_BeepMode(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
@@ -1253,7 +1253,7 @@ _get_Canon_BeepMode(CameraWidget **widget, struct submenu *menu, PTPDevicePropDe
 }
 
 static int
-_put_Canon_BeepMode(CameraWidget *widget, PTPPropertyValue *propval) {
+_put_Canon_BeepMode(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
 	char *value;
 	int ret;
 
@@ -1272,7 +1272,7 @@ _put_Canon_BeepMode(CameraWidget *widget, PTPPropertyValue *propval) {
 }
 
 static int
-_get_Canon_ZoomRange(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_Canon_ZoomRange(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	float	f, t, b, s;
 
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
@@ -1289,7 +1289,7 @@ _get_Canon_ZoomRange(CameraWidget **widget, struct submenu *menu, PTPDevicePropD
 }
 
 static int
-_put_Canon_ZoomRange(CameraWidget *widget, PTPPropertyValue *propval)
+_put_Canon_ZoomRange(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval)
 {
 	float	f;
 	int	ret;
@@ -1302,7 +1302,7 @@ _put_Canon_ZoomRange(CameraWidget *widget, PTPPropertyValue *propval)
 }
 
 static int
-_get_UINT32_as_time(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_UINT32_as_time(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	time_t	camtime;
 
 	gp_widget_new (GP_WIDGET_DATE, _(menu->label), widget);
@@ -1313,7 +1313,7 @@ _get_UINT32_as_time(CameraWidget **widget, struct submenu *menu, PTPDevicePropDe
 }
 
 static int
-_put_UINT32_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
+_put_UINT32_as_time(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
 	time_t	camtime;
 	int	ret;
 
@@ -1326,7 +1326,7 @@ _put_UINT32_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
 }
 
 static int
-_get_STR_as_time(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+_get_STR_as_time(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	time_t		camtime;
 	struct tm	tm;
 	char		capture_date[64],tmp[5];
@@ -1360,7 +1360,7 @@ _get_STR_as_time(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc 
 }
 
 static int
-_put_STR_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
+_put_STR_as_time(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
 	time_t		camtime;
 #ifdef HAVE_GMTIME_R
 	struct tm	xtm;
@@ -1385,7 +1385,7 @@ _put_STR_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
 }
 
 static int
-_put_None(CameraWidget *widget, PTPPropertyValue *dpd) {
+_put_None(Camera* camera, CameraWidget *widget, PTPPropertyValue *dpd) {
 	return (GP_ERROR_NOT_SUPPORTED);
 }
 
@@ -1434,7 +1434,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			}
 			memset(&dpd,0,sizeof(dpd));
 			ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
-			cursub->getfunc (&widget, cursub, &dpd);
+			cursub->getfunc (camera, &widget, cursub, &dpd);
 			gp_widget_append (section,widget);
 			ptp_free_devicepropdesc(&dpd);
 		}
@@ -1529,7 +1529,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			if (!gp_widget_changed (widget))
 				continue;
 
-			ret = cursub->putfunc (widget, &propval);
+			ret = cursub->putfunc (camera, widget, &propval);
 			if (ret == GP_OK)
 				ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
 			ptp_free_devicepropvalue (cursub->type, &propval);
