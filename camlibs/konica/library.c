@@ -132,16 +132,17 @@ update_filesystem (Camera* camera)
         guint           exif_size;
         gboolean        protected;
         gulong          image_id;
-        konica_data_t*  konica_data;
+        konica_data_t*  kd;
         gchar*          filename;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica",
 			 "*** Entering update_filesystem ***");
         g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
 
-        konica_data = (konica_data_t *) camera->camlib_data;
+        kd = (konica_data_t *) camera->camlib_data;
+	gp_filesystem_format (kd->filesystem);
 
-	CHECK (k_get_status (konica_data->device, &self_test_result,
+	CHECK (k_get_status (kd->device, &self_test_result,
                 &power_level, &power_source, &card_status, &display, &card_size,
                 &pictures, &pictures_left, &year, &month, &day, &hour, &minute,
                 &second, &io_setting_bit_rate, &io_setting_flags, &flash,
@@ -153,8 +154,7 @@ update_filesystem (Camera* camera)
         /* parameter. Therefore, let's get the image    */
         /* ids.                                         */
         for (i = 0; i < pictures; i++) {
-                if (k_get_image_information (
-                       	konica_data->device, konica_data->image_id_long,
+                if (k_get_image_information (kd->device, kd->image_id_long,
                        	i + 1, &image_id, &exif_size, &protected,
 			&information_buffer, &information_buffer_size) == GP_OK)
 			filename = g_strdup_printf ("%06i.jpeg",
@@ -163,12 +163,10 @@ update_filesystem (Camera* camera)
 			filename = g_strdup ("??????.jpeg");
                 g_free (information_buffer);
                 information_buffer = NULL;
-                gp_filesystem_append (konica_data->filesystem, "/", filename);
+                gp_filesystem_append (kd->filesystem, "/", filename);
                 g_free (filename);
         }
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica",
-			 "*** Leaving camera_file_list ***");
         return (GP_OK);
 }
 
