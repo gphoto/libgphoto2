@@ -1,3 +1,10 @@
+2001-11-17  Colin Marquardt  <colin@marquardt-home.de>
+
+	* libgphoto2_port/configure.in (BUILD_INCLUDED_LIBINTL): Added
+	  'de' to ALL_LINGUAS.
+
+	* libgphoto2_port/po/de.po: Added translation.
+
 2001-11-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/ptp: Remove a whole lot of warnings, remove unnecessary
