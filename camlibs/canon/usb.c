@@ -357,6 +357,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			break;
 
 		case CANON_PS_S45:
+		case CANON_PS_S50:
 		case CANON_PS_G3:
 		case CANON_PS_G5:
 		default:

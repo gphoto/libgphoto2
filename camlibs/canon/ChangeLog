@@ -1,3 +1,8 @@
+2004-01-02  Marcus Meissner <marcus@jet.franken.de>
+
+	* canon.c, usb.c: lock keys and audio support in PowerShot S50, from
+	  rcaputo@users.sf.net
+
 2003-11-08  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.c, canon.h: Added support for Optura 20 (reported by Walt H)

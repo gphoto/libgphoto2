@@ -312,6 +312,7 @@ canon_int_filename2audioname (Camera *camera, const char *filename)
 	case CANON_PS_S30:
 	case CANON_PS_S40:
 	case CANON_PS_S45:
+	case CANON_PS_S50:
 	case CANON_PS_S400:
 	case CANON_PS_G3:
 	case CANON_PS_G5:
