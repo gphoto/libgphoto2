@@ -19,4 +19,8 @@ doc_DATA = gphoto2-cli.txt gphoto2.txt FAQ
 # This requires xmlto, which can be obtained from
 # <http://cyberelk.net/tim/xmlto/>.
 $(man_MANS): gphoto2.xml
-	-xmlto man $<
+	xmlto man $<
+
+html: gphoto2.xml
+	xmlto html -o $@ $<
+	touch $@
