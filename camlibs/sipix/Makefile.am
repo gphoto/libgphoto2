@@ -19,6 +19,6 @@ libgphoto2_sipix_web2_la_SOURCES	= web2.c
 libgphoto2_sipix_blink_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
 libgphoto2_sipix_blink_la_LDFLAGS = -module -avoid-version
 libgphoto2_sipix_blink2_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
-libgphoto2_sipix_blink2_la_LDFLAGS = -module -avoid-version
+libgphoto2_sipix_blink2_la_LDFLAGS = -module -avoid-version @LIBJPEG@
 libgphoto2_sipix_web2_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
 libgphoto2_sipix_web2_la_LDFLAGS = -module -avoid-version
