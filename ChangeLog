@@ -1,11 +1,11 @@
 2001-10-26 Dan Fandrich <dan@coneharvesters.com>
 
-    * libgphoto2_port/include/gphoto2-portability.h:
-    * libgphoto2_port/include/gphoto2-port-parallel.h:
-    * libgphoto2_port/include/gphoto2-port-serial.h:
-    * libgphoto2_port/serial/unix.c:
-    * libgphoto2/jpeg.c:
-      Preliminary support for OS X/Darwin
+	* libgphoto2_port/include/gphoto2-portability.h:
+	* libgphoto2_port/include/gphoto2-port-parallel.h:
+	* libgphoto2_port/include/gphoto2-port-serial.h:
+	* libgphoto2_port/serial/unix.c:
+	* libgphoto2/jpeg.c:
+	  Preliminary support for OS X/Darwin
 
 2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
