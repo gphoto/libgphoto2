@@ -18,16 +18,18 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
-#include "gphoto2-setting.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+
+#include "config.h"
+#include "gphoto2-setting.h"
 
 #include "gphoto2-result.h"
 #include "gphoto2-debug.h"
 #include "gphoto2-port-log.h"
+#include "gphoto2-port-portability.h"
 
 typedef struct {
 	/* key = value settings */
