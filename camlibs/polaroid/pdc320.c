@@ -60,8 +60,14 @@
  * that same point.
  */
 
-//                                                        xf?
+typedef enum {
+	PDC320,
+	PDC640SE
+} PDCModel;
 
+struct _CameraPrivateLibrary {
+	PDCModel model;
+};
 
 static int
 pdc320_id (CameraPort *port, const char **model)
@@ -187,21 +193,21 @@ pdc320_size (Camera *camera, int n)
 		/* Read one byte and check if we can continue */
 		CHECK_RESULT (gp_port_read (camera->port, buf, 1));
 		if (buf[0] != ACK) {
+
 			/*
 			 * Do we need to dump some bytes here before trying
 			 * again?
                          * Yes, but how many is not known for the PDC 320.
 			 */
-//			if (camera->model==PDC640SE) {
-                        if (camera->model[9]=='6') {
-				CHECK_RESULT (gp_port_read (camera->port, buf, buf[0]+2));
-				CHECK_RESULT (pdc320_init(camera->port));
-//			} else if (camera->model==PDC320) {
-                        } else if (camera->model[9]=='F') {
-i=RETRIES;
-			// I have no clue else than to flush the whole buffer
-			// gp_port_flush(camera->port, direction) ??? What is the direction bit about?
-			// it uses dev->ops->flush(dev, direction) which seems to only be valid with serial devices
+			switch (camera->pl->model) {
+			case PDC640SE:
+				CHECK_RESULT (gp_port_read (camera->port, buf,
+							    buf[0] + 2));
+				CHECK_RESULT (pdc320_init (camera->port));
+				break;
+			case PDC320:
+				i = RETRIES;
+				break;
 			}
 			continue;
 		}
@@ -227,6 +233,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 	unsigned char buf[2048];
 	int remaining, f1, f2, i, len, checksum;
 	int chunksize=2000;
+
 	/* Get the size of the picture and allocate the memory */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Checking size of image %i...",
 			 n);
@@ -238,17 +245,17 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 	cmd[5] = n;
 	cmd[7] = 0xff - n;
 
-	CHECK_RESULT_FREE (gp_port_write (camera->port, cmd, sizeof (cmd)), *data);
+	CHECK_RESULT_FREE (gp_port_write (camera->port, cmd, sizeof (cmd)),
+			   *data);
 
-//			if (camera->model==PDC640SE) {
-                        if (camera->model[9]=='6') {
-				chunksize=528;
-//			} else if (camera->model==PDC320) {
-                        } else if (camera->model[9]=='F') {
-				chunksize=2000;
-			}
-			else
-gp_debug_printf (GP_DEBUG_LOW, "pdc320", "pdc320_pic could not determine camera");
+	switch (camera->pl->model) {
+	case PDC640SE:
+		chunksize = 528;
+		break;
+	case PDC320:
+		chunksize = 2000;
+		break;
+	}
 
 	len = *size;
 	for (i = 0; i < *size; i += chunksize) {
@@ -357,31 +364,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Cleaning up the mess\n");
     gp_jpeg_destroy(myjpeg);
 
-/* Here is the old code */
-/*    temp=data;
-    temp+=6;
-//   	CHECK_RESULT (gp_file_set_data_and_size (file, picture, 0));
-	CHECK_RESULT (gp_file_set_name (file, filename));
-	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
-
-    for (n=0; n<4; n++) {
-        gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Adding jpegheader[%i].data",n);
-        CHECK_RESULT (gp_file_append(file, jpegheader[n].data, jpegheader[n].size));
-    }
-//  if (camera->model==PDC640SE) {
-    if (camera->model[9]=='6') {
-	CHECK_RESULT (gp_file_append(file, SOFC0_640x240, jpegheader[4].size));
-//  } else if (camera->model==PDC320) {
-    } else if (camera->model[9]=='F') {
-	CHECK_RESULT (gp_file_append(file, SOFCO_320x120, jpegheader[4].size));
-    }
-    for (n=5; n<10; n++) {
-        gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Adding jpegheader[%i].data",n);
-        CHECK_RESULT (gp_file_append(file, jpegheader[n].data, jpegheader[n].size));
-    }
-
-    CHECK_RESULT (gp_file_append(file, temp, size));
-*/
     }
     return (GP_OK);
 }
@@ -436,14 +418,31 @@ camera_summary (Camera *camera, CameraText *summary)
 	return (GP_OK);
 }
 
+static int
+camera_exit (Camera *camera)
+{
+	if (!camera)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	if (camera->pl) {
+		free (camera->pl);
+		camera->pl = NULL;
+	}
+
+	return (GP_OK);
+}
+
 int
 camera_init (Camera *camera)
 {
-	gp_port_settings settings;
+	GPPortSettings settings;
+	CameraAbilities abilities;
+	int result;
 
         /* First, set up all the function pointers */
-        camera->functions->about             = camera_about;
-	camera->functions->summary           = camera_summary;
+	camera->functions->exit		= camera_exit;
+        camera->functions->about        = camera_about;
+	camera->functions->summary      = camera_summary;
 
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
@@ -452,17 +451,38 @@ camera_init (Camera *camera)
 	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func,
 					camera);
 
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+
+	/* What model are we talking to? */
+	gp_camera_get_abilities (camera, &abilities);
+	if (!strcmp (abilities.model, "Polaroid Fun! 320"))
+		camera->pl->model = PDC320;
+	else if (!strcmp (abilities.model, "Polaroid 640SE"))
+		camera->pl->model = PDC640SE;
+	else {
+		free (camera->pl);
+		camera->pl = NULL;
+		return (GP_ERROR_MODEL_NOT_FOUND);
+	}
+
 	/* Open the port and check if the camera is there */
-	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
+	gp_port_settings_get (camera->port, &settings);
 	if (camera->port_info->speed)
 		settings.serial.speed = camera->port_info->speed;
 	else
 		settings.serial.speed = 115200;
-	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
-	CHECK_RESULT (gp_port_timeout_set (camera->port, 30000));
+	gp_port_settings_set (camera->port, settings);
+	gp_port_timeout_set (camera->port, 30000);
 
 	/* Check if the camera is really there */
-	CHECK_RESULT (pdc320_init (camera->port));
+	result = pdc320_init (camera->port);
+	if (result < 0) {
+		free (camera->pl);
+		camera->pl = NULL;
+		return (result);
+	}
 
 	return (GP_OK);
 }

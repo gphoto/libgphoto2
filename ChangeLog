@@ -1,5 +1,9 @@
 2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/polaroid/pdc320.[c,h]: Don't use camera->model.
+
+2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sonydscf55: Use camera->pl, fix compile warnings
 
 2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
