@@ -32,6 +32,7 @@
 #include <stdio.h>
 
 #include <gphoto2-library.h>
+#include <gphoto2-port-log.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -74,10 +75,15 @@ struct _PDCDate {
 typedef struct _PDCInfo PDCInfo;
 struct _PDCInfo {
 	unsigned int num_taken, num_free;
-	char version[8];
+	char version[6];
 	PDCDate date;
 };
-	
+
+typedef struct _PDCPicInfo PDCPicInfo;
+struct _PDCPicInfo {
+	char version[6];
+	unsigned int pic_size, thumb_size;
+};
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
@@ -205,7 +211,7 @@ pdc700_init (Camera *camera)
 }
 
 static int
-pdc700_picinfo (Camera *camera, int n, int *size_thumb, int *size_pic)
+pdc700_picinfo (Camera *camera, int n, PDCPicInfo *info)
 {
 	int status, buf_len;
 	unsigned char cmd[7];
@@ -218,19 +224,11 @@ pdc700_picinfo (Camera *camera, int n, int *size_thumb, int *size_pic)
 	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
-	/*
-	 * What we got back:
-	 *  0 -  3: ?
-	 *  4 -  7: Picture size
-	 *  8 - 17: ?
-	 * 18 - 21: Thumbnail size
-	 * 22: ?
-	 * 23 - 28: Version
-	 * 29 - 63: ?
-	 */
-	*size_pic = buf[4] | (buf[5] << 8) | (buf[6] << 16) | (buf[7] << 24);
-	*size_thumb = buf[18] | (buf[19] <<  8) | (buf[20] << 16) |
-						  (buf[21] << 24);
+	info->pic_size = buf[4] | (buf[5] << 8) |
+			(buf[6] << 16) | (buf[7] << 24);
+	info->thumb_size = buf[18] | (buf[19] <<  8) | (buf[20] << 16) |
+			  (buf[21] << 24);
+	strncpy (info->version, &buf[23], 6);
 
 	return (GP_OK);
 }
@@ -248,7 +246,7 @@ pdc700_info (Camera *camera, PDCInfo *info)
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	/* Protocol version */
-	strncpy (info->version, &buf[8], 8);
+	strncpy (info->version, &buf[8], 6);
 
 	/* Pictures */
 	info->num_taken = buf[16] | (buf[17] << 8);
@@ -271,13 +269,14 @@ pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
 {
 	unsigned char cmd[8];
 	unsigned char buf[2048];
-	int len, status;
-	int size_thumb, size_pic, i;
+	int len, status, i;
 	unsigned char sequence_num;
+	PDCPicInfo info;
 
 	/* Picture size? Allocate the memory */
-	CHECK_RESULT (pdc700_picinfo (camera, n, &size_thumb, &size_pic));
-	*data = malloc (sizeof (char) * ((thumb) ? size_thumb : size_pic));
+	CHECK_RESULT (pdc700_picinfo (camera, n, &info));
+	*data = malloc (sizeof (char) * ((thumb) ? info.thumb_size :
+						   info.pic_size));
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
 
@@ -366,7 +365,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
 
 	/* Get the file */
-	CHECK_RESULT (pdc700_pic (camera, n, &data, &size, 
+	CHECK_RESULT (pdc700_pic (camera, n + 1, &data, &size, 
 				  (type == GP_FILE_TYPE_NORMAL) ? 0 : 1));
 
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
@@ -424,19 +423,20 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo *info, void *data)
 {
-	int n, size_thumb, size_pic;
+	int n;
 	Camera *camera = data;
+	PDCPicInfo pic_info;
 
 	/* Get the picture number from the CameraFilesystem */
 	CHECK_RESULT (n = gp_filesystem_number (fs, folder, file));
 
-	CHECK_RESULT (pdc700_picinfo (camera, n, &size_thumb, &size_pic));
+	CHECK_RESULT (pdc700_picinfo (camera, n + 1, &pic_info));
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	strcpy (info->file.type, GP_MIME_JPEG);
 	strcpy (info->preview.type, GP_MIME_JPEG);
-	info->file.size = size_pic;
-	info->preview.size = size_thumb;
+	info->file.size = pic_info.pic_size;
+	info->preview.size = pic_info.thumb_size;
 
 	return (GP_OK);
 }
