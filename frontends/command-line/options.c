@@ -45,6 +45,8 @@
 #  define N_(String) (String)
 #endif
 
+#define CR(result) {int r = (result); if (r < 0) return r;}
+
 int option_is_present (char *op, int argc, char **argv) {
         /* checks to see if op is in the command-line. it will */
         /* check for both short and long option-formats for op */
@@ -90,7 +92,12 @@ verify_options (int argc, char **argv)
 			/* Check to see if the option matches */
 			sprintf(s, "%s%s", SHORT_OPTION, option[y].short_id);
 			sprintf(l, "%s%s", LONG_OPTION, option[y].long_id);
-			if ((strcmp(s, argv[x])==0)||(strcmp(l, argv[x])==0)) {
+
+			if ((strlen (option[y].short_id) &&
+						!strcmp (s, argv[x])) ||
+			    (strlen (option[y].long_id) &&
+			     			!strcmp (l, argv[x]))) {
+
 				/* Check to see if the option requires an argument */
 				if (strlen(option[y].argument)>0) {
 					if (x+1 < argc) {
@@ -138,30 +145,40 @@ verify_options (int argc, char **argv)
         return (GP_OK);
 }
 
-int execute_options (int argc, char **argv) {
+int
+execute_options (int argc, char **argv) {
 
-        int x, y, ret;
-        char s[5], l[24];
-        char *op;
+        int x, y;
+	const char *o;
 
         /* Execute the command-line options */
-        for (x=0; x<glob_option_count; x++) {
-                sprintf(s, "%s%s", SHORT_OPTION, option[x].short_id);
-                sprintf(l, "%s%s", LONG_OPTION, option[x].long_id);
-                for (y=1; y<argc; y++) {
-                        if ((strcmp(argv[y],s)==0)||(strcmp(argv[y],l)==0)) {
-                                if (option[x].execute) {
-                                   op = argv[y];
-                                   if (strlen(option[x].argument) > 0) {
-                                        ret=(*option[x].execute)(argv[++y]);
-                                   }  else
-                                        ret=(*option[x].execute)(NULL);
-                                   if (ret != GP_OK) {
-                                        /* cli_error_print("Option \"%s\" did not execute properly.",op); */
-                                        return (ret);
-                                   }
-                                }
-                        }
+        for (x = 0; x < glob_option_count; x++) {
+
+		/* If there is no function, skip this option */
+		if (!option[x].execute)
+			continue;
+
+		/* Did the user use this option? */
+                for (y = 1; y < argc; y++) {
+
+			/*
+			 * Skip leading "-". We assume that the syntax has
+			 * already been verified.
+			 */
+			o = argv[y];
+			while (o[0] == '-')
+				o++;
+
+			if ((strlen (option[x].short_id) &&
+					!strcmp (o, option[x].short_id)) ||
+			    (strlen (option[x].long_id) &&
+			     		!strcmp (o, option[x].long_id))) {
+				if (strlen (option[x].argument) > 0) {
+					CR ((*option[x].execute) (argv[++y]));
+				} else {
+					CR ((*option[x].execute) (NULL));
+				}
+			}
                 }
         }
 

@@ -1,3 +1,9 @@
+2002-02-18  Lutz Müller <lutz@users.sourceforge.net>
+
+	Bug reported by Marcus Meissner <marcus@jet.franken.de>:
+
+	* frontends/command-line/options.c: The option "-" is invalid.
+
 2002-02-17  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2/gphoto2-filesys.c: If a file is requested, look for
