@@ -285,6 +285,8 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 		case CANON_EOS_D30:
 		case CANON_EOS_D60:
 		case CANON_PS_S230:
+			GP_DEBUG ("Locking camera keys and turning off LCD using 'EOS' locking code...");
+
 			memset (payload, 0, sizeof (payload));
 			payload[0] = 0x06;
 
@@ -295,6 +297,8 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 
 			break;
 		default:
+			GP_DEBUG ("Locking camera keys and turning off LCD using 'normal' locking code...");
+
 			c_res = canon_usb_dialogue (camera,
 						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
 						    &bytes_read, NULL, 0);
