@@ -136,11 +136,14 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	/*
 	 * This is a non-fatal check if a memory card is present. Some
 	 * cameras don't understand this command and error out here.
+	 * Since some cameras do not like it at all, do not send it for those.
 	 */
-	r = sierra_get_int_register (camera, 51, &i, NULL);
-	if ((r >= 0) && (i == 1)) {
-		gp_context_error (context, _("No memory card present"));
-		return GP_ERROR_NOT_SUPPORTED;
+	if (!(camera->pl->flags & SIERRA_NO_51)) {
+		r = sierra_get_int_register (camera, 51, &i, NULL);
+		if ((r >= 0) && (i == 1)) {
+			gp_context_error (context, _("No memory card present"));
+			return GP_ERROR_NOT_SUPPORTED;
+		}
 	}
 
 	/* We need to change to the folder first */
@@ -437,7 +440,7 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 		packet[length-1] = (checksum >> 8) & 0xff; 
 	}
 
-	if (camera->pl->usb_wrap) {
+	if (camera->pl->flags & SIERRA_WRAP_USB) {
 		CHECK (usb_wrap_write_packet (camera->port, packet, length));
 	} else {
 		CHECK (gp_port_write (camera->port, packet, length));
@@ -456,7 +459,7 @@ sierra_write_nak (Camera *camera, GPContext *context)
 
         buf[0] = SIERRA_PACKET_NAK;
         ret = sierra_write_packet (camera, buf, context);
-        if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
+        if (camera->port->type == GP_PORT_USB && !(camera->pl->flags & SIERRA_WRAP_USB))
                 gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
         return (ret);
 }
@@ -515,7 +518,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 
 		/* Clear the USB bus
 		   (what about the SERIAL bus : do we need to flush it?) */
-		if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
+		if (camera->port->type == GP_PORT_USB && !(camera->pl->flags & SIERRA_WRAP_USB))
 			gp_port_usb_clear_halt (camera->port,
 						GP_PORT_USB_ENDPOINT_IN);
 
@@ -523,7 +526,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		 * Read data through the bus. If an error occurred,
 		 * try again.
 		 */
-		if (camera->port->type == GP_PORT_USB && camera->pl->usb_wrap)
+		if (camera->port->type == GP_PORT_USB && (camera->pl->flags & SIERRA_WRAP_USB))
 			result = usb_wrap_read_packet (camera->port, packet,
 						       blocksize);
 		else
@@ -533,7 +536,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 				  gp_result_as_string (result));
 			if (++r > 2) {
 				if (camera->port->type == GP_PORT_USB &&
-				    !camera->pl->usb_wrap)
+				    !(camera->pl->flags & SIERRA_WRAP_USB))
 					gp_port_usb_clear_halt (camera->port,
 						GP_PORT_USB_ENDPOINT_IN);
 				GP_DEBUG ("Giving up...");
@@ -560,7 +563,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 
 			/* Those are all single byte packets. */
 			if (camera->port->type == GP_PORT_USB &&
-			    !camera->pl->usb_wrap)
+			    !(camera->pl->flags & SIERRA_WRAP_USB))
 				gp_port_usb_clear_halt (camera->port,
 						GP_PORT_USB_ENDPOINT_IN);
 
@@ -584,7 +587,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 				"received (0x%x) is not valid."), packet[0]);
 			while (gp_port_read (camera->port, packet, 1) >= 0);
 			if (camera->port->type == GP_PORT_USB &&
-			    !camera->pl->usb_wrap)
+			    !(camera->pl->flags & SIERRA_WRAP_USB))
 				gp_port_usb_clear_halt (camera->port,
 						GP_PORT_USB_ENDPOINT_IN);
 			return (GP_ERROR_CORRUPTED_DATA);
@@ -600,7 +603,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 					       packet + br, 4 - br);
 			if (result < 0) {
 				if (camera->port->type == GP_PORT_USB &&
-				    !camera->pl->usb_wrap)
+				    !(camera->pl->flags & SIERRA_WRAP_USB))
 					gp_port_usb_clear_halt (camera->port,
 						GP_PORT_USB_ENDPOINT_IN);
 				GP_DEBUG ("Could not read length of "
@@ -673,7 +676,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		r++;
 		if (r + 1 >= RETRIES) {
 			if (camera->port->type == GP_PORT_USB &&
-			    !camera->pl->usb_wrap)
+			    !(camera->pl->flags & SIERRA_WRAP_USB))
 				gp_port_usb_clear_halt (camera->port,
 						GP_PORT_USB_ENDPOINT_IN);
 			GP_DEBUG ("Giving up...");
@@ -685,7 +688,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		GP_SYSTEM_SLEEP (10);
 	}
 
-	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
+	if (camera->port->type == GP_PORT_USB && !(camera->pl->flags & SIERRA_WRAP_USB))
 		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
 
 	return GP_OK;
@@ -827,7 +830,7 @@ sierra_write_ack (Camera *camera, GPContext *context)
 	
 	buf[0] = ACK;
 	ret = sierra_write_packet (camera, buf, context);
-	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
+	if (camera->port->type == GP_PORT_USB && !(camera->pl->flags & SIERRA_WRAP_USB))
 		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
 	CHECK (ret);
 
@@ -1335,11 +1338,14 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	/*
 	 * This is a non-fatal check if a memory card is present. Some
 	 * cameras don't understand this command and error out here.
+	 * Since some cameras do not like it at all, do not send it for those.
 	 */
-	r = sierra_get_int_register (camera, 51, &n, context);
-	if ((r >= 0) && (n == 1)) {
-		gp_context_error (context, _("No memory card present"));
-		return GP_ERROR_NOT_SUPPORTED;
+	if (!(camera->pl->flags & SIERRA_NO_51)) {
+		r = sierra_get_int_register (camera, 51, &n, context);
+		if ((r >= 0) && (n == 1)) {
+			gp_context_error (context, _("No memory card present"));
+			return GP_ERROR_NOT_SUPPORTED;
+		}
 	}
 
 	/*

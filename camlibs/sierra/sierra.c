@@ -65,7 +65,7 @@ static SierraCamera sierra_cameras[] = {
 	   USB wrapper protocol) */ 
 	{"Agfa ePhoto 307", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0 },
 	{"Agfa ePhoto 780", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0 },
-	{"Agfa ePhoto 780C", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Agfa ePhoto 780C", 	SIERRA_MODEL_DEFAULT,	0, 0, SIERRA_NO_51|SIERRA_LOW_SPEED },
 	{"Agfa ePhoto 1280", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Agfa ePhoto 1680", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Apple QuickTake 200", SIERRA_MODEL_DEFAULT,	0, 0, 0 },
@@ -89,7 +89,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Nikon CoolPix 950", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 950S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 990",	SIERRA_MODEL_DEFAULT,	0x04b0, 0x0102, 0},
-	{"Nikon CoolPix 995",   SIERRA_MODEL_CAM_DESC,  0x04b0, 0x0104, 1,
+	{"Nikon CoolPix 995",   SIERRA_MODEL_CAM_DESC,  0x04b0, 0x0104, SIERRA_WRAP_USB,
 							&cp995_cam_desc},
 	{"Olympus D-100Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus D-200L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
@@ -113,7 +113,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Olympus C-410L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-420", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-420L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
-	{"Olympus C-700UZ",	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105, 1,
+	{"Olympus C-700UZ",	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105, SIERRA_WRAP_USB,
 							&oly3040_cam_desc},
 	{"Olympus C-800", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-800L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
@@ -129,7 +129,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Olympus C-1400XL", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-2000Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-2020Z",	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
-	{"Olympus C-2040Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105, 1,
+	{"Olympus C-2040Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105, SIERRA_WRAP_USB,
 							&oly3040_cam_desc},
 	{"Olympus C-2100UZ",    SIERRA_MODEL_CAM_DESC,	0x07b4, 0x100, 0,
 							&oly3040_cam_desc},
@@ -139,13 +139,13 @@ static SierraCamera sierra_cameras[] = {
  */
 	{"Olympus C-3000Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x100, 0,
 							&oly3040_cam_desc},
-	{"Olympus C-3020Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105, 1,
+	{"Olympus C-3020Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105, SIERRA_WRAP_USB,
 							&oly3040_cam_desc},
 	{"Olympus C-3030Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x100, 0,
 							&oly3040_cam_desc},
-	{"Olympus C-3040Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105, 1,
+	{"Olympus C-3040Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105, SIERRA_WRAP_USB,
 							&oly3040_cam_desc},
-	{"Olympus C-4040Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105, 1,
+	{"Olympus C-4040Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105, SIERRA_WRAP_USB,
 							&oly3040_cam_desc},
 	{"Panasonic Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
@@ -195,9 +195,13 @@ int camera_abilities (CameraAbilitiesList *list)
 		a.speed[0] = 9600;
 		a.speed[1] = 19200;
 		a.speed[2] = 38400;
-		a.speed[3] = 57600;
-		a.speed[4] = 115200;
-		a.speed[5] = 0;
+		if (!(sierra_cameras[x].flags & SIERRA_LOW_SPEED)) {
+			a.speed[3] = 57600;
+			a.speed[4] = 115200;
+			a.speed[5] = 0;
+		} else {
+			a.speed[3] = 0;
+		}
 		a.operations        = 	GP_OPERATION_CAPTURE_IMAGE |
 					GP_OPERATION_CAPTURE_PREVIEW |
 					GP_OPERATION_CONFIG;
@@ -1785,13 +1789,14 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *c)
 	 * At least on PhotoPC 3000z, if no card is present near all
 	 * retrieved info are either unreadable or invalid...
 	 */
-	r = sierra_get_int_register(camera, 51, &v, c);
-	if ((r >= 0) && (v == 1)) {
-		strcpy (buf, _("Note: no memory card present, some"
-			       " values may be invalid\n"));
-		strcpy (summary->text, buf);
+	if (!(camera->pl->flags & SIERRA_NO_51)) {
+		r = sierra_get_int_register(camera, 51, &v, c);
+		if ((r >= 0) && (v == 1)) {
+			strcpy (buf, _("Note: no memory card present, some"
+				       " values may be invalid\n"));
+			strcpy (summary->text, buf);
+		}
 	}
-
 	/* Get all the string-related info */
 	if (sierra_get_string_register (camera, 27, 0, NULL, t, &v, c) >= 0)
 		sprintf (buf, _("%sCamera Model: %s\n"), buf, t);
@@ -1939,7 +1944,8 @@ int
 camera_init (Camera *camera, GPContext *context) 
 {
         int x = 0, ret, value;
-        int vendor=0, product=0, usb_wrap=0;
+        int vendor=0, product=0;
+	SierraFlags flags=0;
 	GPPortSettings s;
 	CameraAbilities a;
 	const CameraDescType *cam_desc = NULL;
@@ -1958,7 +1964,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	camera->pl->model = SIERRA_MODEL_DEFAULT;
 	camera->pl->first_packet = 1;
-	camera->pl->usb_wrap = 0;
+	camera->pl->flags = 0;
 	camera->pl->use_extended_protocol = 0;
 
 	/* Retrieve Camera information from name */
@@ -1967,7 +1973,7 @@ camera_init (Camera *camera, GPContext *context)
 		if (!strcmp (sierra_cameras[x].model, a.model)) {
 			camera->pl->model = sierra_cameras[x].sierra_model;
 			vendor = sierra_cameras[x].usb_product;
-                        usb_wrap = sierra_cameras[x].usb_wrap;
+                        flags = sierra_cameras[x].flags;
                         cam_desc = sierra_cameras[x].cam_desc;
                }
 	}
@@ -2013,14 +2019,19 @@ camera_init (Camera *camera, GPContext *context)
 		if (s.serial.speed)
 			camera->pl->speed = s.serial.speed;
 		else {
-			unsigned int speeds[] = {115200, 57600, 38400, 0}, i;
-			
-			for (i = 0; speeds[i]; i++) {
-				s.serial.speed = speeds[i];
+			int i;
+			/* Find the speed into abilities.speeds array.
+			 * Highest speeds are last ... so look backwards ...
+			 */
+			for (i=0;i<sizeof(a.speed)/sizeof(a.speed[0]) && a.speed[i];i++)
+				/*empty*/;
+			i--;
+			for (; i >= 0 ; i--) {
+				s.serial.speed = a.speed[i];
 				if (gp_port_set_settings (camera->port, s) >= 0)
 					break;
 			}
-			camera->pl->speed = (speeds[i] ? speeds[i] : 19200);
+			camera->pl->speed = (i>=0 ? a.speed[i] : 19200);
 		}
 
 		/* The camera defaults to 19200. */
@@ -2036,7 +2047,7 @@ camera_init (Camera *camera, GPContext *context)
                         camera->pl = NULL;
                         return (GP_ERROR_MODEL_NOT_FOUND);
                 } else {
-			camera->pl->usb_wrap = usb_wrap;
+			camera->pl->flags = flags;
 		}
 
 		/* Use the defaults the core parsed */

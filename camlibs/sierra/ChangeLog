@@ -1,3 +1,12 @@
+2002-12-10  Marcus Meissner <meissner@suse.de>
+
+	* sierra.c, sierra.h: replaced usb_wrap flag value by a generic
+	  flags value.
+
+	  Added a hack for "low speed" cameras and cameras which do not
+	  like the register 51 being retrieved, like the Agfa ePhoto 780c
+	  apparently.
+
 2002-11-17  Patrick Mansfield <patmans@users.sourceforge.net>
 	* sierra.c: start off with folder set to empty rather than "/",
 	  since we have no idea of the camera directory on startup.
