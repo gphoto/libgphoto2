@@ -8,6 +8,8 @@ gphoto2-scan
 gphoto2-decl.txt
 gphoto2-decl-list.txt
 gphoto2-unused.txt
+gphoto2-undocumented.txt
 html.stamp
 sgml.stamp
+tmpl.stamp
 
