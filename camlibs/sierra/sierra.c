@@ -496,6 +496,8 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 		else
 			CHECK_STOP (camera,
 				    gp_file_set_mime_type (file, "video/quicktime"));
+		break;
+
 	default:
 		CHECK (camera_stop (camera));
 		return (GP_ERROR_NOT_SUPPORTED);
