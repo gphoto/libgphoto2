@@ -853,8 +853,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
-	if (camera->pl->speed > 57600 && (!strcmp (a.model, "Canon PowerShot A50")
-					  || !strcmp (a.model, "Canon PowerShot Pro70"))) {
+	if (camera->pl->speed > 57600 && (!strcmp (a.model, "Canon:PowerShot A50")
+					  || !strcmp (a.model, "Canon:PowerShot Pro70"))) {
 		gp_context_error (context,
 				  _
 				  ("Speeds greater than 57600 are not supported for uploading to this camera"));
@@ -982,8 +982,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
-	if (camera->pl->speed > 57600 && (!strcmp (a.model, "Canon PowerShot A50")
-					  || !strcmp (a.model, "Canon PowerShot Pro70"))) {
+	if (camera->pl->speed > 57600 && (!strcmp (a.model, "Canon:PowerShot A50")
+					  || !strcmp (a.model, "Canon:PowerShot Pro70"))) {
 		gp_context_error (context,
 				  _
 				  ("Speeds greater than 57600 are not supported for uploading to this camera"));

@@ -89,39 +89,40 @@
 const struct canonCamModelData models[] = {
 	/* *INDENT-OFF* */
 	{"DE300 Canon Inc.",		CANON_PS_A5,		NO_USB, NO_USB, 1,  S2M, S32K},
-	{"Canon PowerShot A5 Zoom",	CANON_PS_A5_ZOOM,	NO_USB, NO_USB, 1,  S2M, S32K},
-	{"Canon PowerShot A50",		CANON_PS_A50,		NO_USB, NO_USB, 1,  S2M, S32K},
-	{"Canon PowerShot Pro70",	CANON_PS_A70,		NO_USB, NO_USB, 1,  S2M, S32K},
-	{"Canon PowerShot S10",		CANON_PS_S10,		0x04A9, 0x3041, 1, S10M, S32K},
-	{"Canon PowerShot S20",		CANON_PS_S20,		0x04A9, 0x3043, 1, S10M, S32K},
-	{"Canon EOS D30",		CANON_EOS_D30,		0x04A9, 0x3044, 0, S10M, S32K},
-	{"Canon PowerShot S100",	CANON_PS_S100,		0x04A9, 0x3045, 0, S10M, S32K},
-	{"Canon IXY DIGITAL",		CANON_PS_S100,		0x04A9, 0x3046, 0, S10M, S32K},
-	{"Canon Digital IXUS",		CANON_PS_S100,		0x04A9, 0x3047, 0, S10M, S32K},
-	{"Canon PowerShot G1",		CANON_PS_G1,		0x04A9, 0x3048, 1, S10M, S32K},
-	{"Canon PowerShot Pro90 IS",	CANON_PS_PRO90_IS,	0x04A9, 0x3049, 1, S10M, S32K},
-	{"Canon IXY DIGITAL 300",	CANON_PS_S300,		0x04A9, 0x304B, 0, S10M, S32K},
-	{"Canon PowerShot S300",	CANON_PS_S300,		0x04A9, 0x304C, 0, S10M, S32K},
-	{"Canon Digital IXUS 300",	CANON_PS_S300,		0x04A9, 0x304D, 0, S10M, S32K},
-	{"Canon PowerShot A20",		CANON_PS_A20,		0x04A9, 0x304E, 0, S10M, S32K},
-	{"Canon PowerShot A10",		CANON_PS_A10,		0x04A9, 0x304F, 0, S10M, S32K},
-	{"Canon PowerShot S110",	CANON_PS_S100,		0x04A9, 0x3051, 0, S10M, S32K},
-	{"Canon DIGITAL IXUS v",	CANON_PS_S100,		0x04A9, 0x3052, 0, S10M, S32K},
-	{"Canon PowerShot G2",		CANON_PS_G2,		0x04A9, 0x3055, 0, S10M, S32K},
-	{"Canon PowerShot S40",		CANON_PS_S40,		0x04A9, 0x3056, 0, S10M, S32K},
-	{"Canon PowerShot S30",		CANON_PS_S30,		0x04A9, 0x3057, 0, S10M, S32K},
-	{"Canon PowerShot A40",		CANON_PS_A40,		0x04A9, 0x3058, 0, S10M, S32K},
-	{"Canon PowerShot A30",		CANON_PS_A30,		0x04A9,	0x3059,	0, S10M, S32K},
-	{"Canon EOS D60",		CANON_EOS_D60,		0x04A9, 0x3060, 0, S10M, S32K},
-	{"Canon PowerShot A100",	CANON_PS_A100,		0x04A9, 0x3061, 0, S10M, S32K},
-	{"Canon PowerShot A200",	CANON_PS_A200,		0x04A9, 0x3062, 0, S10M, S32K},
-	{"Canon PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, 0, S10M, S32K},
-	{"Canon Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, 0, S10M, S32K},
-	{"Canon Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, 0, S10M, S32K},
-	{"Canon PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, 0, S99M, S32K}, /* 0x306D is S45 in PTP mode */
-	{"Canon PowerShot G3 (normal mode)",	CANON_PS_G3,	0x04A9, 0x306E, 0, S99M, S32K}, /* 0x306F is G3 in PTP mode */
-	{"Canon PowerShot S230 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, 0, S99M, S32K}, /* 0x3071 is S230 in PTP mode */
-	{"Canon Digital IXUS v3 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, 0, S99M, S32K}, /* 0x3071 is IXUS v3 in PTP mode */
+	{"Canon:DE300",		        CANON_PS_A5,		NO_USB, NO_USB, 1,  S2M, S32K},
+	{"Canon:PowerShot A5 Zoom",	CANON_PS_A5_ZOOM,	NO_USB, NO_USB, 1,  S2M, S32K},
+	{"Canon:PowerShot A50",		CANON_PS_A50,		NO_USB, NO_USB, 1,  S2M, S32K},
+	{"Canon:PowerShot Pro70",	CANON_PS_A70,		NO_USB, NO_USB, 1,  S2M, S32K},
+	{"Canon:PowerShot S10",		CANON_PS_S10,		0x04A9, 0x3041, 1, S10M, S32K},
+	{"Canon:PowerShot S20",		CANON_PS_S20,		0x04A9, 0x3043, 1, S10M, S32K},
+	{"Canon:EOS D30",		CANON_EOS_D30,		0x04A9, 0x3044, 0, S10M, S32K},
+	{"Canon:PowerShot S100",	CANON_PS_S100,		0x04A9, 0x3045, 0, S10M, S32K},
+	{"Canon:IXY DIGITAL",		CANON_PS_S100,		0x04A9, 0x3046, 0, S10M, S32K},
+	{"Canon:Digital IXUS",		CANON_PS_S100,		0x04A9, 0x3047, 0, S10M, S32K},
+	{"Canon:PowerShot G1",		CANON_PS_G1,		0x04A9, 0x3048, 1, S10M, S32K},
+	{"Canon:PowerShot Pro90 IS",	CANON_PS_PRO90_IS,	0x04A9, 0x3049, 1, S10M, S32K},
+	{"Canon:IXY DIGITAL 300",	CANON_PS_S300,		0x04A9, 0x304B, 0, S10M, S32K},
+	{"Canon:PowerShot S300",	CANON_PS_S300,		0x04A9, 0x304C, 0, S10M, S32K},
+	{"Canon:Digital IXUS 300",	CANON_PS_S300,		0x04A9, 0x304D, 0, S10M, S32K},
+	{"Canon:PowerShot A20",		CANON_PS_A20,		0x04A9, 0x304E, 0, S10M, S32K},
+	{"Canon:PowerShot A10",		CANON_PS_A10,		0x04A9, 0x304F, 0, S10M, S32K},
+	{"Canon:PowerShot S110",	CANON_PS_S100,		0x04A9, 0x3051, 0, S10M, S32K},
+	{"Canon:DIGITAL IXUS v",	CANON_PS_S100,		0x04A9, 0x3052, 0, S10M, S32K},
+	{"Canon:PowerShot G2",		CANON_PS_G2,		0x04A9, 0x3055, 0, S10M, S32K},
+	{"Canon:PowerShot S40",		CANON_PS_S40,		0x04A9, 0x3056, 0, S10M, S32K},
+	{"Canon:PowerShot S30",		CANON_PS_S30,		0x04A9, 0x3057, 0, S10M, S32K},
+	{"Canon:PowerShot A40",		CANON_PS_A40,		0x04A9, 0x3058, 0, S10M, S32K},
+	{"Canon:PowerShot A30",		CANON_PS_A30,		0x04A9,	0x3059,	0, S10M, S32K},
+	{"Canon:EOS D60",		CANON_EOS_D60,		0x04A9, 0x3060, 0, S10M, S32K},
+	{"Canon:PowerShot A100",	CANON_PS_A100,		0x04A9, 0x3061, 0, S10M, S32K},
+	{"Canon:PowerShot A200",	CANON_PS_A200,		0x04A9, 0x3062, 0, S10M, S32K},
+	{"Canon:PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, 0, S10M, S32K},
+	{"Canon:Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, 0, S10M, S32K},
+	{"Canon:Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, 0, S10M, S32K},
+	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, 0, S99M, S32K}, /* 0x306D is S45 in PTP mode */
+	{"Canon:PowerShot G3 (normal mode)",	CANON_PS_G3,	0x04A9, 0x306E, 0, S99M, S32K}, /* 0x306F is G3 in PTP mode */
+	{"Canon:PowerShot S230 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, 0, S99M, S32K}, /* 0x3071 is S230 in PTP mode */
+	{"Canon:Digital IXUS v3 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, 0, S99M, S32K}, /* 0x3071 is IXUS v3 in PTP mode */
 	{NULL}
 	/* *INDENT-ON* */
 };
