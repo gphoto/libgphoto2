@@ -37,9 +37,11 @@ int dimagev_get_camera_info(dimagev_t *dimagev) {
 	}
 
 	/* Make sure that the old info struct is fred, and allocate a new one. */
+	/*
 	if ( dimagev->info != NULL ) {
 		free(dimagev->info);
 	}
+	*/
 
 	/* Let's say hello and get the current status. */
 	if ( ( p = dimagev_make_packet(DIMAGEV_INQUIRY, 1, 0)) == NULL ) {
