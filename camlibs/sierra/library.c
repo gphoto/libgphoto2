@@ -462,8 +462,6 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 		case NAK:
 		case TRM:
 		case TYPE_COMMAND:
-		case TYPE_DATA:
-		case TYPE_DATA_END:
 
 			/* Those are all single byte packets. */
 			if (camera->port->type == GP_PORT_USB &&
@@ -473,6 +471,12 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 
 			GP_DEBUG ("Packet read. Returning GP_OK.");
 			return (GP_OK);
+
+		case TYPE_DATA:
+		case TYPE_DATA_END:
+
+			/* Those are packets with more than one byte. */
+			break;
 
 		default:
 			if (camera->port->type == GP_PORT_USB &&

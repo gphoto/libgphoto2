@@ -1,3 +1,9 @@
+2002-02-05  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (sierra_read_packet): Hopefully this fixes problems
+	  with serial cameras: TYPE_DATA[_END] identifies packets of more
+	  than one byte.
+
 2002-01-29  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: Cleanup.
