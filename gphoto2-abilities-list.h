@@ -69,6 +69,7 @@ typedef struct {
         CameraFolderOperation folder_operations;
 
         int usb_vendor, usb_product;
+	int usb_class, usb_subclass, usb_protocol;
 
         /* For core use */
         char library [1024];
