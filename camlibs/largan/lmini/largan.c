@@ -1,6 +1,6 @@
 /* largan.c
  *
- * Copyright © 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * Copyright © 2001 Lutz Müller <lutz@users.sourceforge.net>
  * Copyright © 2002 Hubert Figuiere <hfiguiere@teaser.fr>
  * Code largely borrowed to lmini-0.1 by Steve O Connor
  *
@@ -68,13 +68,13 @@ struct largan_cameras {
 	unsigned short idProduct;
 	char hasSerial;
 } largan_cameras [] = {
-	{ "Largan Lmini", 0, 0, 1 },
+	{ "Largan:Lmini", 0, 0, 1 },
 /* these are other largan camera. I'm not sure they use the same
  * protocol */
-/*	{ "Largan Chameleon Slim", 0, 0, 0 },
-	{ "Largan Chameleon Mega", 0, 0, 0 },
-	{ "Largan Chameleon", 0, 0, 0 },
-	{ "Largan Easy 800", 0, 0, 1 }, */
+/*	{ "Largan:Chameleon Slim", 0, 0, 0 },
+	{ "Largan:Chameleon Mega", 0, 0, 0 },
+	{ "Largan:Chameleon", 0, 0, 0 },
+	{ "Largan:Easy 800", 0, 0, 1 }, */
 	{ NULL, 0, 0, 0 }
 };
 

@@ -48,10 +48,10 @@ struct camera_to_usb {
 	unsigned short idVendor;
 	unsigned short idProduct;
 } camera_to_usb[] = {
-	{ "Kodak DC240", 0x040A, 0x0120 },
-	{ "Kodak DC280", 0x040A, 0x0130 },
-	{ "Kodak DC3400", 0x040A, 0x0132 },
-	{ "Kodak DC5000", 0x040A, 0x0131 },
+	{ "Kodak:DC240", 0x040A, 0x0120 },
+	{ "Kodak:DC280", 0x040A, 0x0130 },
+	{ "Kodak:DC3400", 0x040A, 0x0132 },
+	{ "Kodak:DC5000", 0x040A, 0x0131 },
         { NULL, 0, 0 }
 };
 
