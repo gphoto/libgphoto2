@@ -1,3 +1,4 @@
+extern char             glob_cancel;
 extern char 		glob_port[];
 extern char 		glob_model[];
 extern char 		glob_folder[];

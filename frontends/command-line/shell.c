@@ -1,41 +1,139 @@
+/* shell.c:
+ *
+ * Copyright (C) 2002 Lutz Müller <lutz@users.sourceforge.net>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include <config.h>
+#include "shell.h"
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef HAVE_RL
+#  include <readline/readline.h>
+#  include <readline/history.h>
+#endif
+
 #include "main.h"
 #include "globals.h"
-#include "shell.h"
+#include "actions.h"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 #define CHECK(result) {int r=(result);if(r<0) return(r);}
-#define CHECK_CONT(result) {int r=(result);if(r<0){printf ("*** Error ('%s') ***\n", gp_result_as_string (result));}}
+#define CHECK_CONT(result)					\
+{								\
+	int r = (result);					\
+								\
+	if (r < 0) {						\
+		if (r == GP_ERROR_CANCEL) {			\
+			glob_cancel = 0;			\
+		} else {					\
+			printf (_("*** Error (%i: '%s') ***"),	\
+				r, gp_result_as_string (r));	\
+			printf ("\n");				\
+		}						\
+	}							\
+}
 
-/* Valid shell commands */
-shell_function func[] = {
-{"cd", 			shell_cd,		"Change to a directory on the camera",			"directory"},
-{"lcd", 		shell_lcd,		"Change to a directory on the local drive",		"directory"},
-{"exit", 		shell_exit,		"Exit the gPhoto shell",				""},
-{"get",			shell_get,		"Download the file to the current directory",		"[directory/]filename"},
-{"get-thumbnail",	shell_get_thumbnail,	"Download the thumbnail to the current directory",	"[directory/]filename"},
-{"get-raw",		shell_get_raw,		"Download raw data to the current directory",		"[directory/]filename"},
-{"help",		shell_help,		"Displays command usage",				"command"},
-{"ls", 			shell_ls,		"List the contents of the current directory",		"[directory/]"},
-{"q", 			shell_exit,		"Exit the gPhoto shell",				""},
-{"quit", 		shell_exit,		"Exit the gPhoto shell",				""},
-{"?",			shell_help,		"Displays command usage",				""},
-{"", NULL}
+/* Forward declarations */
+static int shell_cd            (const char *);
+static int shell_lcd           (const char *);
+static int shell_exit          (const char *);
+static int shell_get           (const char *);
+static int shell_get_thumbnail (const char *);
+static int shell_get_raw       (const char *);
+static int shell_del           (const char *);
+static int shell_help          (const char *);
+static int shell_ls            (const char *);
+static int shell_exit          (const char *);
+static int shell_show_info     (const char *);
+#ifdef HAVE_EXIF
+static int shell_show_exif     (const char *);
+#endif
+
+typedef int (* ShellFunction) (const char *arg);
+
+typedef struct _ShellFunctionTable ShellFunctionTable;
+struct _ShellFunctionTable {
+	const char *command;
+	ShellFunction function;
+	const char *description;
+	const char *description_arg;
+	unsigned char arg_required;
+} func[] = {
+	{"cd", shell_cd, N_("Change to a directory on the camera"),
+	 N_("directory"), 1},
+	{"lcd", shell_lcd, N_("Change to a directory on the local drive"),
+	 N_("directory"), 1},
+	{"exit", shell_exit, N_("Exit the gPhoto shell"), NULL, 0},
+	{"get", shell_get, N_("Download a file"), N_("[directory/]filename"),
+	 1},
+	{"get-thumbnail", shell_get_thumbnail, N_("Download a thumbnail"),
+	 N_("[directory/]filename"), 1},
+	{"get-raw", shell_get_raw, N_("Download raw data"),
+	 N_("[directory/]filename"), 1},
+	{"show-info", shell_show_info, N_("Show info"),
+	 N_("[directory/]filename"), 1},
+	{"delete", shell_del, N_("Delete"), N_("[directory/]filename"), 1},
+#ifdef HAVE_EXIF
+	{"show-exif", shell_show_exif, N_("Show EXIF information"),
+	 N_("[directory/]filename"), 1},
+#endif
+	{"help", shell_help, N_("Displays command usage"),
+	 N_("[command]"), 0},
+	{"ls", shell_ls, N_("List the contents of the current directory"),
+	 N_("[directory/]"), 0},
+	{"q", shell_exit, N_("Exit the gPhoto shell"), NULL, 0},
+	{"quit", shell_exit, N_("Exit the gPhoto shell"), NULL, 0},
+	{"?", shell_help, N_("Displays command usage"), N_("[command]"), 0},
+	{"", NULL, NULL, NULL}
 };
 
 /* Local globals */
-char*	shell_prompt_text	= "gphoto: {%s} %s> ";
+#define SHELL_PROMPT "gphoto2: {%s} %s> "
 int 	shell_done		= 0;
 
 static int
-shell_arg_count (char *args)
+shell_arg_count (const char *args)
 {
 	int x=0, in_arg=0, count=0;
 	
-	while (x < strlen(args)) {				/* Edge-triggered */
+	while (x < strlen (args)) {
 		if ((!isspace(args[x])) && (!in_arg)) {
 			in_arg = 1;
 			count++;
@@ -48,8 +146,42 @@ shell_arg_count (char *args)
 	return (count);
 }
 
+static char *
+shell_read_line (void)
+{
+	char prompt[70], buf[1024], *line;
+
+	if (glob_quiet)
+		snprintf (prompt, sizeof (prompt), SHELL_PROMPT, "\0", "\0");
+	else {
+		if (strlen (glob_cwd) > 25) {
+			strncpy (buf, "...", sizeof (buf));
+			strncat (buf, &glob_cwd[strlen (glob_cwd) - 22],
+				 sizeof (buf));
+			snprintf (prompt, sizeof (prompt), SHELL_PROMPT, buf,
+				  glob_folder);
+		} else
+			snprintf (prompt, sizeof (prompt), SHELL_PROMPT,
+				  glob_cwd, glob_folder);
+	}
+#ifdef HAVE_RL
+	line = readline (prompt);
+	if (line)
+		add_history (line);
+#else
+	line = malloc (1024);
+	if (!line)
+		return (NULL);
+	printf (shell_prompt_text, prompt, glob_folder);
+	fflush(stdout);
+	fgets (line, 1023, stdin);
+	line[strlen (line) - 1] = '\0'; 
+#endif
+	return (line);
+}
+
 static int
-shell_arg (char *args, int arg_num, char *arg)
+shell_arg (const char *args, int arg_num, char *arg)
 {
 	int x=0, y=0, in_arg=0, count=0, copy=0;
 
@@ -78,134 +210,290 @@ shell_arg (char *args, int arg_num, char *arg)
 	return (GP_OK);
 }
 
+#ifdef HAVE_RL
+
+static char *
+shell_command_generator (const char *text, int state)
+{
+	static int x, len;
+
+	/* If this is a new command to complete, reinitialize */
+	if (!state) {
+		x = 0;
+		len = strlen (text);
+	}
+
+	/* Search 'text' */
+	for (; func[x].command; x++)
+		if (!strncmp (func[x].command, text, len))
+			break;
+	if (func[x].command)
+		return (strdup (func[x++].command));
+
+	return (NULL);
+}
+
+static char *
+shell_path_generator (const char *text, int state)
+{
+	static int x, len;
+	const char *slash, *name, *basename;
+	CameraList list;
+	int count, r;
+	char folder[1024];
+
+	/* If this is a new path to complete, reinitialize */
+	if (!state) {
+		x = 0;
+		len = strlen (text);
+	}
+
+	slash = strrchr (text, '/');
+	if (slash) {
+		strncpy (folder, text, MIN (sizeof (folder), slash - text));
+		basename = slash + 1;
+	} else {
+		strncpy (folder, glob_folder, sizeof (folder));
+		basename = text;
+	}
+
+	/* First search for matching file */
+	r = gp_camera_folder_list_files (glob_camera, folder,
+					 &list, glob_context);
+	if (r < 0)
+		return (NULL);
+	count = gp_list_count (&list);
+	if (count < 0)
+		return (NULL);
+	if (x < count) {
+		for (; x < count; x++) {
+			r = gp_list_get_name (&list, x, &name);
+			if (r < 0)
+				return (NULL);
+			if (!strncmp (name, basename, len)) {
+				x++;
+				return (strdup (name));
+			}
+		}
+	} else {
+		r = gp_camera_folder_list_folders (glob_camera, folder,
+						   &list, glob_context);
+		if (r < 0)
+			return (NULL);
+		count = gp_list_count (&list);
+		if (count < 0)
+			return (NULL);
+		if (x < count) {
+			for (; x < count; x++) {
+				r = gp_list_get_name (&list, x, &name);
+				if (r < 0)
+					return (NULL);
+				if (!strncmp (name, basename, len)) {
+					x++;
+					return (strdup (name));
+				}
+			}
+		}
+	}
+
+	return (NULL);
+}
+
+static char **
+shell_completion_function (const char *text, int start, int end)
+{
+	char **matches = NULL;
+	char *current;
+
+	if (!text)
+		return (NULL);
+
+	if (!start) {
+		/* Complete command */
+		matches = rl_completion_matches (text, shell_command_generator);
+	} else {
+		current = strdup (rl_copy_text (0, end));
+
+		/* Complete local path? */
+		if (!strncmp (current, "lcd", strlen ("lcd"))) {
+			free (current);
+			return (NULL);
+		}
+		free (current);
+
+		/* Complete remote path */
+		matches = rl_completion_matches (text, shell_path_generator);
+	}
+
+	return (matches);
+}
+#endif /* HAVE_RL */
+
 int
 shell_prompt (void)
 {
 	int x;
-	char buf[1024], cmd[1024], arg[1024];
+	char cmd[1024], arg[1024], *line;
 
-	while (!shell_done) {
-		if (glob_quiet) {
-			printf(">\n");
-		} else {
-			if (strlen(glob_cwd) > 25) {
-				strcpy(buf, "...");
-				strcat(buf, &glob_cwd[strlen(glob_cwd)-22]);
-			} else {
-				strcpy(buf, glob_cwd);
-			}
-			printf(shell_prompt_text, buf, glob_folder); /* Display prompt text */
-		}
-		fflush(stdout);
-		fgets(buf, 1023, stdin);		/* Get the command/args */
-		buf[strlen(buf)-1]=0;			/* Chop the newline */
+#ifdef HAVE_RL
+	rl_attempted_completion_function = shell_completion_function;
+#endif
 
-							/* Extract command and argument */
+	while (!shell_done && !glob_cancel) {
+		line = shell_read_line ();
+		if (!line)
+			continue;
 
 		/* If we don't have any command, start from the beginning */
-		if (shell_arg_count (buf) <= 0)
+		if (shell_arg_count (line) <= 0) {
+			free (line);
 			continue;
-		
-		shell_arg (buf, 0, cmd);
-		strcpy(arg, &buf[strlen(cmd)]);
-		for (x = 0; func[x].function; x++) {
-			if (!strcmp (cmd, func[x].command)) {
-				CHECK_CONT (func[x].function (arg));
-				break;
-			}
 		}
-		if (!func[x].function)
-			cli_error_print ("Invalid command");
+		
+		shell_arg (line, 0, cmd);
+		strcpy (arg, &line[strlen (cmd)]);
+		free (line);
+
+		/* Search the command */
+		for (x = 0; func[x].function; x++)
+			if (!strcmp (cmd, func[x].command))
+				break;
+		if (!func[x].function) {
+			cli_error_print (_("Invalid command."));
+			continue;
+		}
+
+		/*
+		 * If the command requires an argument, complain if this
+		 * argument is not given.
+		 */
+		if (func[x].arg_required && !shell_arg_count (arg)) {
+			printf (_("The command '%s' requires "
+				  "an argument."), cmd);
+			printf ("\n");
+			continue;
+		}
+
+		/* Execute the command */
+		CHECK_CONT (func[x].function (arg));
 	}
 
 	return (GP_OK);
 }
+
+#define MAX_FOLDER_LEN 1024
+#define MAX_FILE_LEN 1024
 
 static int
-shell_get_new_folder (char *relative_path, char *cd_arg, char *new_folder)
+shell_construct_path (const char *folder_orig, const char *rel_path,
+                      char *dest_folder, char *dest_filename)
 {
-	/*
-	   Find what the new folder will be based on the "cd" or "ls" argument.
-	   This can take paths like:
-		"/blah", "./blah", "../blah", "/blah/hey/../doh/blah", etc...
-	*/
+        const char *slash;
+        unsigned int len;
 
-	char *dir = NULL, *slash = NULL;
-	char tmp_folder[1024];
-	int append = 0, x=0;
+        if (!folder_orig || !rel_path || !dest_folder)
+                return (GP_ERROR);
 
-	while (isspace(cd_arg[x])) {x++;}
+        memset (dest_folder, 0, MAX_FOLDER_LEN);
+	if (dest_filename)
+	        memset (dest_filename, 0, MAX_FILE_LEN);
 
-	if (cd_arg[x] == '/')				/* Check if path is relative to root */
-		strcpy(tmp_folder, "/");
-	   else
-		strcpy(tmp_folder, relative_path);
-	do {
-		append = 1;
-		if (!dir)				/* Get each directory individually */
-			dir = strtok(&cd_arg[x], "/");
-		   else
-			dir = strtok(NULL, "/");
-		if (!dir) 
-			break;
+	/* Skip leading spaces */
+	while (rel_path[0] == ' ')
+		rel_path++;
 
-		if (strcmp(dir, ".")==0)		/* Do nothing for CWD */
-			append = 0;
+        /*
+         * Consider folder_orig only if we are really given a relative
+         * path.
+         */
+        if (rel_path[0] != '/')
+                strncpy (dest_folder, folder_orig, MAX_FOLDER_LEN);
+	else {
+		while (rel_path[0] == '/')
+			rel_path++;
+	}
 
-		if (strcmp(dir, "..")==0) {		/* Move up a directory */
-			if (strcmp(tmp_folder, "/")!=0) {
-				slash = strrchr(tmp_folder, '/');
-				*slash = 0;
-				if (strlen(tmp_folder)==0)
-					strcpy(tmp_folder, "/");
-			}
-			append = 0;
+        while (rel_path) {
+		if (!strncmp (rel_path, "./", 2) || !strcmp (rel_path, ".")) {
+                        rel_path += MIN (strlen (rel_path), 2);
+			continue;
 		}
+		if (!strncmp (rel_path, "../", 3) || !strcmp (rel_path, "..")) {
+                        rel_path += MIN (3, strlen (rel_path));
 
-		if (append) {				/* Append the dir name */
-			if (strcmp(tmp_folder, "/")!=0)
-				strcat(tmp_folder, "/");
-			strcat(tmp_folder, dir);
+                        /* Go up one folder */
+                        slash = strrchr (dest_folder, '/');
+                        if (!slash) {
+                                cli_error_print (_("Invalid path."));
+                                return (GP_ERROR);
+                        }
+                        len = slash - dest_folder;
+                        memset (dest_folder, 0, MAX_FOLDER_LEN);
+                        strncpy (dest_folder, folder_orig,
+                                 MIN (MAX_FOLDER_LEN, MAX (len, 1)));
+			continue;
+                }
+
+                slash = strchr (rel_path, '/');
+		if (strcmp (rel_path, "") && (slash || !dest_filename)) {
+
+			/*
+			 * We need to go down one folder. Append a 
+			 * trailing slash
+			 */
+			if (dest_folder[strlen (dest_folder) - 1] != '/')
+				strncat (dest_folder, "/", MAX_FOLDER_LEN);
 		}
+                if (slash) {
+                        strncat (dest_folder, rel_path,
+                                 MIN (MAX_FOLDER_LEN, slash - rel_path));
+                        rel_path = slash + 1;
+                } else {
 
-	} while (1);
-
-	strcpy(new_folder, tmp_folder);
-
-	return (GP_OK);
+                        /* Done */
+                        if (dest_filename)
+                                strncpy (dest_filename, rel_path,
+                                         MAX_FILE_LEN);
+                        else
+                                strncat (dest_folder, rel_path, MAX_FILE_LEN);
+                        break;
+                }
+        }
+ 
+        return (GP_OK);
 }
 
 int
-shell_lcd (char *arg)
+shell_lcd (const char *arg)
 {
-	char tmp_dir[1024];
-	int arg_count = shell_arg_count(arg);
+	char new_cwd[MAX_FOLDER_LEN];
+	int arg_count = shell_arg_count (arg);
 
 	if (!arg_count) {
-		if (getenv("HOME")==NULL) {
-			cli_error_print("Could not find home directory");
-			return (GP_OK);
+		if (!getenv ("HOME")) {
+			cli_error_print (_("Could not find home directory."));
+			return (GP_OK); 
 		}
-		strcpy(tmp_dir, getenv("HOME"));
-	} else {
-		/* shell_arg(arg, 0, arg_dir); */
-		shell_get_new_folder(glob_cwd, arg, tmp_dir);
-	}
+		strcpy (new_cwd, getenv ("HOME"));
+	} else
+		shell_construct_path (glob_cwd, arg, new_cwd, NULL);
 
-	if (chdir(tmp_dir)<0) {
-		cli_error_print("Could not change to local directory %s", tmp_dir);
+	if (chdir (new_cwd) < 0) {
+		cli_error_print (_("Could not change to "
+				   "local directory '%s'."), new_cwd);
 	} else {
-		printf("Local directory now %s\n", tmp_dir);
-		strcpy(glob_cwd, tmp_dir);
+		printf (_("Local directory now '%s'."), new_cwd);
+		printf ("\n");
+		strcpy (glob_cwd, new_cwd);
 	}
 
 	return (GP_OK);
 }
 
 int
-shell_cd (char *arg)
+shell_cd (const char *arg)
 {
-	char tmp_folder[1024];
+	char folder[MAX_FOLDER_LEN];
 	CameraList list;
 	int arg_count = shell_arg_count (arg);
 	int res;
@@ -221,48 +509,42 @@ shell_cd (char *arg)
 	}
 
 	/* Get the new folder value */
-	shell_get_new_folder (glob_folder, arg, tmp_folder);
-	printf("tmp_folder=%s\n", tmp_folder);
+	shell_construct_path (glob_folder, arg, folder, NULL);
 
-	res = gp_camera_folder_list_folders (glob_camera, tmp_folder, &list, glob_context);
-	if (res == GP_OK)
-		strcpy (glob_folder, tmp_folder);
-	else
-		cli_error_print ("Folder %s does not exist", tmp_folder);
+	res = gp_camera_folder_list_folders (glob_camera, folder, &list, glob_context);
+	if (res == GP_OK) {
+		strcpy (glob_folder, folder);
+		printf (_("Remote directory now '%s'."), glob_folder);
+		printf ("\n");
+	} else
+		cli_error_print ("Folder %s does not exist", folder);
 
 	return (GP_OK);
 }
 
 int
-shell_ls (char *arg)
+shell_ls (const char *arg)
 {
 	CameraList list;
-	char buf[1024], tmp_folder[1024];
-	int x, y=1, res;
+	char buf[1024], folder[MAX_FOLDER_LEN];
+	int x, y=1;
 	int arg_count = shell_arg_count(arg);
 	const char *name;
 
 	if (arg_count) {
-		/* shell_arg(arg, 0, arg_dir); */
-		shell_get_new_folder (glob_folder, arg, tmp_folder);
+		shell_construct_path (glob_folder, arg, folder, NULL);
 	} else {
-		strcpy (tmp_folder, glob_folder);
+		strcpy (folder, glob_folder);
 	}
 
-	res = gp_camera_folder_list_folders (glob_camera, tmp_folder, &list, glob_context);
-	if (res != GP_OK) {
-		if (arg_count)
-			cli_error_print("Folder %s does not exist", tmp_folder);
-		else
-			cli_error_print("Could not retrieve the folder list");
-		return (res);
-	}
+	CHECK (gp_camera_folder_list_folders (glob_camera, folder, &list,
+					      glob_context));
 
 	if (glob_quiet)
-		printf ("%i\n", gp_list_count(&list));
+		printf ("%i\n", gp_list_count (&list));
 
 	for (x = 1; x <= gp_list_count (&list); x++) {
-		gp_list_get_name (&list, x - 1, &name);
+		CHECK (gp_list_get_name (&list, x - 1, &name));
 		if (glob_quiet)
 			printf ("%s\n", name);
 		else {
@@ -273,9 +555,8 @@ shell_ls (char *arg)
 		}
 	}
 
-	res = gp_camera_folder_list_files (glob_camera, tmp_folder, &list, glob_context);
-	if (res != GP_OK)
-		return (res);
+	CHECK (gp_camera_folder_list_files (glob_camera, folder, &list,
+					    glob_context));
 
 	if (glob_quiet)
 		printf("%i\n", gp_list_count(&list));
@@ -297,42 +578,25 @@ shell_ls (char *arg)
 }
 
 static int
-shell_get_common (char *args, CameraFileType type)
+shell_get_common (const char *args, CameraFileType type)
 {
-	char tmp_folder[1024], arg[1024];
-	char *slash, *tmp_filename;
-	int x, arg_count = shell_arg_count (args);
+	char arg[1024];
+	unsigned int x;
+	char dest_folder[MAX_FOLDER_LEN], dest_filename[MAX_FILE_LEN];
 
-	if (!arg_count) {
-		cli_error_print("No filename specified");
-		return (GP_ERROR);
-	}
+	for (x = 0; x < shell_arg_count (args); x++) {
 
-	for (x = 0; x < arg_count; x++) {
-
-		shell_arg (args, x, arg);
-
-		if (strchr (arg, '/')) {
-			slash = strrchr (arg, '/');
-			tmp_filename = slash + 1;
-			*slash = 0;
-			if (strlen (arg)==0)
-				strcpy (tmp_folder, "/");
-			   else
-				strcpy (tmp_folder, arg);
-		} else {
-			tmp_filename = arg;
-			strcpy (tmp_folder, glob_folder);
-		}
-
-		CHECK (save_file_to_file (tmp_folder, tmp_filename, type));
+		CHECK (shell_arg (args, x, arg));
+		CHECK (shell_construct_path (glob_folder, arg,
+					     dest_folder, dest_filename));
+		CHECK (save_file_to_file (dest_folder, dest_filename, type));
 	}
 
 	return (GP_OK);		
 }
 
 int
-shell_get_thumbnail (char *arg)
+shell_get_thumbnail (const char *arg)
 {
 	CHECK (shell_get_common (arg, GP_FILE_TYPE_PREVIEW));
 
@@ -340,7 +604,7 @@ shell_get_thumbnail (char *arg)
 }
 
 int
-shell_get (char *arg)
+shell_get (const char *arg)
 {
 
 	CHECK (shell_get_common (arg, GP_FILE_TYPE_NORMAL));
@@ -349,7 +613,7 @@ shell_get (char *arg)
 }
 
 int
-shell_get_raw (char *arg)
+shell_get_raw (const char *arg)
 {
 	CHECK (shell_get_common (arg, GP_FILE_TYPE_RAW));
 
@@ -357,47 +621,124 @@ shell_get_raw (char *arg)
 }
 
 int
-shell_exit (char *arg)
+shell_del (const char *args)
+{
+        char arg[1024];
+	unsigned int x;
+	char dest_folder[MAX_FOLDER_LEN], dest_filename[MAX_FILE_LEN];
+
+	for (x = 0; x < shell_arg_count (args); x++) {
+
+		CHECK (shell_arg (args, x, arg));
+		CHECK (shell_construct_path (glob_folder, arg,
+					     dest_folder, dest_filename));
+		CHECK (gp_camera_file_delete (glob_camera, dest_folder,
+					      dest_filename, glob_context));
+	}
+
+	return (GP_OK);
+}
+
+#ifdef HAVE_EXIF
+static int
+shell_show_exif (const char *arg)
+{
+	char a[1024];
+	unsigned int x;
+	char dest_folder[MAX_FOLDER_LEN], dest_filename[MAX_FILE_LEN];
+
+	for (x = 0; x < shell_arg_count (arg); x++) {
+		CHECK (shell_arg (arg, x, a));
+		CHECK (shell_construct_path (glob_folder, a,
+					     dest_folder, dest_filename));
+		CHECK (print_exif_action (dest_folder, dest_filename));
+	}
+
+	return (GP_OK);
+}
+#endif
+
+static int
+shell_show_info (const char *arg)
+{
+	char a[1024];
+	unsigned int x;
+	char dest_folder[MAX_FOLDER_LEN], dest_filename[MAX_FILE_LEN];
+
+	for (x = 0; x < shell_arg_count (arg); x++) {
+		CHECK (shell_arg (arg, x, a)); 
+		CHECK (shell_construct_path (glob_folder, a,
+					     dest_folder, dest_filename));
+		CHECK (print_info_action (dest_folder, dest_filename));
+	}
+
+	return (GP_OK);
+}
+
+int
+shell_exit (const char *arg)
 {
 	shell_done = 1;
 	return (GP_OK);
 }
 
-int
-shell_help (char *arg)
+static int
+shell_help_command (const char *arg)
 {
 	char arg_cmd[1024];
-	int x=0;
-	int arg_count = shell_arg_count (arg);
+	unsigned int x;
 
-	if (arg_count > 0) {
-		shell_arg(arg, 0, arg_cmd);
-		while (func[x].function) {
-			if (strcmp (arg_cmd, func[x].command) == 0) {
-				printf ("Help on \"%s\":\n\n", arg_cmd);
-				printf ("Usage: %s %s\n", arg_cmd, 
-					func[x].description_arg);
-				printf ("Description: \n\t%s\n\n", 
-					func[x].description);
-				printf ("* Arguments in brackets [] are "
-					"optional\n");
-				return (GP_OK);
-			}
-			x++;
-		}
-		cli_error_print ("Command not found in 'help'");
+	shell_arg (arg, 0, arg_cmd);
+
+	/* Search this command */
+	for (x = 0; func[x].function; x++)
+		if (!strcmp (arg_cmd, func[x].command))
+			break;
+	if (!func[x].function) {
+		printf (_("Command '%s' not found. Use 'help' to get a "
+			"list of available commands."), arg_cmd);
+		printf ("\n");
 		return (GP_OK);
 	}
 
-	printf ("Available commands:\n");
+	/* Print the command's syntax. */
+	printf (_("Help on \"%s\":"), func[x].command);
+	printf ("\n\n");
+	printf (_("Usage:"));
+	printf (" %s %s", func[x].command,
+		func[x].description_arg ? _(func[x].description_arg) : "");
+	printf ("\n");
+	printf (_("Description:"));
+	printf ("\n\t%s\n\n", _(func[x].description));
+	printf (_("* Arguments in brackets [] are optional"));
+	printf ("\n");
+	
+	return (GP_OK);
+}
 
-	while (func[x].function) {
-		printf ("\t%-16s%s\n", func[x].command, func[x].description);
-		x++;
+static int
+shell_help (const char *arg)
+{
+	unsigned int x;
+	int arg_count = shell_arg_count (arg);
+
+	/*
+	 * If help on a command is requested, print the syntax of the command.
+	 */
+	if (arg_count > 0) {
+		CHECK (shell_help_command (arg));
+		return (GP_OK);
 	}
 
-	printf ("\nTo get help on a particular command, type in "
-		"'help command-name'\n\n");
+	/* No command specified. Print command listing. */
+	printf (_("Available commands:"));
+	printf ("\n");
+	for (x = 0; func[x].function; x++)
+		printf ("\t%-16s%s\n", func[x].command, _(func[x].description));
+	printf ("\n");
+	printf (_("To get help on a particular command, type in "
+		"'help command-name'."));
+	printf ("\n\n");
 
 	return (GP_OK);
 }

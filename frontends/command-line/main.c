@@ -26,6 +26,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <locale.h>
+#ifdef HAVE_RL
+#include <readline/readline.h>
+#endif
 
 #ifndef WIN32
 #include <signal.h>
@@ -262,7 +265,8 @@ int  glob_filename_override=0;
 char glob_filename[128];
 int  glob_stdout=0;
 int  glob_stdout_size=0;
-static char glob_cancel = 0;
+char glob_cancel = 0;
+static int glob_cols = 80;
 
 static ForEachFlags glob_flags = FOR_EACH_FLAGS_RECURSE;
 
@@ -800,6 +804,7 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
 				break;
 
 			do {
+				putchar('\007');
 				printf(_("File %s exists. Overwrite? [y|n] "),buf);
 				fflush(stdout);
 				fgets(c, 1023, stdin);
@@ -1318,32 +1323,35 @@ ctx_error_func (GPContext *context, const char *format, va_list args,
 
 
 #define MAX_PROGRESS_STATES 16
-#define MAX_MSG_LEN 48
+#define MAX_MSG_LEN 1024
 
 static struct {
 	char message[MAX_MSG_LEN + 1];
 	float target;
 	unsigned long int count;
+	struct {
+		float  current;
+		time_t time, left;
+	} last;
 } progress_states[MAX_PROGRESS_STATES];
-
-static const char bar[] = 
-	"==============================================================="
-	"===============================================================";
-static const char spaces[] = 
-	"                                                               "
-	"                                                               ";
 
 static unsigned int
 ctx_progress_start_func (GPContext *context, float target, 
 			 const char *format, va_list args, void *data)
 {
-	unsigned int id;
+	unsigned int id, len;
 	static unsigned char initialized = 0;
 
 	if (!initialized) {
 		memset (progress_states, 0, sizeof (progress_states));
 		initialized = 1;
 	}
+
+	/*
+	 * If the message is too long, we will shorten it. If we have less
+	 * than 4 cols available, we won't display any message.
+	 */
+	len = (glob_cols * 0.5 < 4) ? 0 : MIN (glob_cols * 0.5, MAX_MSG_LEN);
 
 	/* Remember message and target. */
 	for (id = 0; id < MAX_PROGRESS_STATES; id++)
@@ -1352,15 +1360,17 @@ ctx_progress_start_func (GPContext *context, float target,
 	if (id == MAX_PROGRESS_STATES)
 		id--;
 	progress_states[id].target = target;
-	vsnprintf (progress_states[id].message, MAX_MSG_LEN + 1, format, args);
+	vsnprintf (progress_states[id].message, len + 1, format, args);
 	progress_states[id].count = 0;
+	progress_states[id].last.time = time (NULL);
+	progress_states[id].last.current = progress_states[id].last.left = 0.;
 
 	/* If message is too long, shorten it. */
-	if (progress_states[id].message[MAX_MSG_LEN - 1]) {
-		progress_states[id].message[MAX_MSG_LEN - 1] = '\0';
-		progress_states[id].message[MAX_MSG_LEN - 2] = '.';
-		progress_states[id].message[MAX_MSG_LEN - 3] = '.';
-		progress_states[id].message[MAX_MSG_LEN - 4] = '.';
+	if (progress_states[id].message[len - 1]) {
+		progress_states[id].message[len - 1] = '\0';
+		progress_states[id].message[len - 2] = '.';
+		progress_states[id].message[len - 3] = '.';
+		progress_states[id].message[len - 4] = '.';
 	}
 
 	return (id);
@@ -1371,39 +1381,79 @@ ctx_progress_update_func (GPContext *context, unsigned int id,
 			  float current, void *data)
 {
 	static const char spinner[] = "\\|/-";
-	unsigned int i, width;
+	unsigned int i, width, pos;
+	float rate;
+	char remaining[10], buf[4];
+	time_t sec = 0;
 
 	/* Guard against buggy camera drivers */
 	if (id >= MAX_PROGRESS_STATES || id < 0)
 		return;
 
-	width = 66 - strlen (progress_states[id].message);
-	i = ((MIN (current / progress_states[id].target, 100.) * width) + 0.5);
+	/* How much time until completion? */
+	if ((time (NULL) - progress_states[id].last.time > 0) &&
+	    (current - progress_states[id].last.current > 0)) {
+		rate = (time (NULL) - progress_states[id].last.time) /
+		       (current - progress_states[id].last.current);
+		sec = (MAX (0, progress_states[id].target - current)) * rate;
+		if (progress_states[id].last.left) {
+			sec += progress_states[id].last.left;
+			sec /= 2.;
+		}
+		progress_states[id].last.time = time (NULL);
+		progress_states[id].last.current = current;
+		progress_states[id].last.left = sec;
+	} else
+		sec = progress_states[id].last.left;
+	memset (remaining, 0, sizeof (remaining));
+	if ((int) sec >= 3600) {
+		snprintf (buf, sizeof (buf), "%2ih", (int) sec / 3600);
+		sec -= ((int) (sec / 3600) * 3600);
+		strncat (remaining, buf, sizeof (remaining) - 1);
+	}
+	if ((int) sec >= 60) {
+		snprintf (buf, sizeof (buf), "%2im", (int) sec / 60);
+		sec -= ((int) (sec / 60) * 60);
+		strncat (remaining, buf, sizeof (remaining) - 1);
+	}
+	if ((int) sec) {
+		snprintf (buf, sizeof (buf), "%2is", (int) sec);
+		strncat (remaining, buf, sizeof (remaining) - 1);
+	}
 
-	fprintf (stdout, "%s |%s%s", progress_states[id].message,
-		 bar + sizeof (bar) - (i + 1),
-		 spaces + (sizeof (spaces) - (width - i + 1)));
+	/* Determine the width of the progress bar and the current position */
+	width = MAX (0, (int) glob_cols -
+				strlen (progress_states[id].message) - 20);
+	pos = MIN (width, (MIN (current / progress_states[id].target, 100.) * width) + 0.5);
 
-	if (current == 100.)
+	/* Print the progress bar */
+	fprintf (stdout, "%s |", progress_states[id].message);
+	for (i = 0; i < width; i++)
+		fprintf (stdout, (i < pos) ? "-" : " ");
+	if (pos == width)
 		fputc ('|', stdout);
 	else
 		fputc (spinner[progress_states[id].count & 0x03], stdout);
 	progress_states[id].count++;
 
-	fprintf (stdout, " %5.1f%%   \r",
-		 current / progress_states[id].target * 100.);
+	fprintf (stdout, " %5.1f%% %9.9s\r",
+		 current / progress_states[id].target * 100., remaining);
 	fflush (stdout);
 }
 
 static void
 ctx_progress_stop_func (GPContext *context, unsigned int id, void *data)
 {
+	unsigned int i;
+
 	/* Guard against buggy camera drivers */
 	if (id >= MAX_PROGRESS_STATES || id < 0)
 		return;
 
 	/* Clear the progress bar. */
-	fprintf (stdout, "%s\r", spaces + (sizeof(spaces) - 80));
+	for (i = 0; i < glob_cols; i++)
+		fprintf (stdout, " ");
+	fprintf (stdout, "\r");
 	fflush (stdout);
 
 	progress_states[id].target = 0.;
@@ -1503,6 +1553,16 @@ cli_error_print (char *format, ...)
 }
 
 static void
+signal_resize (int signo)
+{
+	const char *columns;
+
+	columns = getenv ("COLUMNS");
+	if (columns && atoi (columns))
+		glob_cols = atoi (columns);
+}
+
+static void
 signal_exit (int signo)
 {
 	/* If we already were told to cancel, abort. */
@@ -1543,6 +1603,10 @@ main (int argc, char **argv)
 	setlocale (LC_ALL, "");
         bindtextdomain (PACKAGE, GPHOTO2_LOCALEDIR);
         textdomain (PACKAGE);
+
+	/* Figure out the width of the terminal and watch out for changes */
+	signal_resize (0);
+	signal (SIGWINCH, signal_resize);
 
         /* Initialize the globals */
         init_globals ();

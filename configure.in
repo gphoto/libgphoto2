@@ -388,6 +388,33 @@ AC_SUBST(AA_LIBS)
 AC_SUBST(AA_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
+dnl readline: Readline is pretty cool - it allows you to use <tab> to complete
+dnl           commands in the gphoto2 shell or to use <up> or <down> to 
+dnl           navigate through the history.
+dnl ---------------------------------------------------------------------------
+rl_msg="no (cnswww.cns.cwru.edu/~chet/readline/rltop.html)"
+try_rl=true
+have_rl=false
+AC_ARG_WITH(readline, [  --without-readline        Don't use readline],
+        if test x$withval = xno; then
+                try_readline=false
+        fi
+)
+if $try_readline; then
+        AC_CHECK_HEADER(readline/readline.h,[
+                have_readline=true
+                rl_msg=yes
+                AC_DEFINE(HAVE_RL)
+		RL_LIBS=-lreadline
+		RL_CFLAGS=""])
+else
+        rl_msg="no (not requested)"
+fi
+AM_CONDITIONAL(HAVE_RL, $have_rl)
+AC_SUBST(RL_LIBS)
+AC_SUBST(RL_CFLAGS)
+
+dnl ---------------------------------------------------------------------------
 dnl Configure libgphoto2-port
 dnl ---------------------------------------------------------------------------
 AC_CONFIG_SUBDIRS(libgphoto2_port)
@@ -454,4 +481,5 @@ Configuration (libgphoto2):
 	JPEG support:              $jpeg_msg
 	pkg-config:                $pkgconfig_msg
 	EXIF support:              $exif_msg
+	readline support:          $rl_msg
 "

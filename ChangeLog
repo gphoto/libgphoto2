@@ -1,3 +1,16 @@
+2002-02-25  Lutz Müller <lutz@users.sourceforge.net>
+
+	* acconfig.h:
+	* configure.in: Add optional readline support.
+	* frontends/command-line/main.c: Show remaining time in progress bar.
+	* frontends/command-line/globals.h: Export glob_cancel.
+	* frontends/command-line/shell.[c,h]: Clean up and add (optional)
+	  readline support. Support deletion of files.
+
+2002-02-25  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Version 2.0
+
 2002-02-23  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch from Patrick Mansfield <patman@aracnet.com>:

@@ -20,7 +20,8 @@ INCLUDES =						\
 	-I$(top_srcdir)/libgphoto2			\
 	$(CDK_CFLAGS)					\
 	$(AA_CFLAGS)					\
-	$(EXIF_CFLAGS)
+	$(EXIF_CFLAGS)					\
+	$(RL_CFLAGS)
 
 if HAVE_CDK
 CDK_FILES = gphoto2-cmd-config.c gphoto2-cmd-config.h
@@ -53,7 +54,7 @@ gphoto2_LDADD =						\
 	$(top_builddir)/libgphoto2/libgphoto2.la	\
 	$(AA_LIBS)					\
 	$(JPEG_LIBS) 					\
-	$(INTLLIBS)
+	$(EXIF_LIBS) $(INTLLIBS) $(RL_LIBS)
 
 # Special rule for regenerating the man page from the XML file.
 # This requires xmlto, which can be obtained from

@@ -1,18 +1,26 @@
-typedef int (*shell_function_call)  (char *arg);
- 
-typedef struct {
-	char			command[16];
-	shell_function_call	function;
-	char			description[64];
-	char			description_arg[64];
-} shell_function;
+/* shell.h
+ *
+ * Copyright (C) 2002 Lutz Müller <lutz@users.sourceforge.net>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef __SHELL_H__
+#define __SHELL_H__
 
 int shell_prompt (void);
-int shell_cd (char *arg);
-int shell_lcd (char *arg);
-int shell_ls (char *arg);
-int shell_get (char *arg);
-int shell_get_thumbnail (char *arg);
-int shell_get_raw (char *arg);
-int shell_exit (char *arg);
-int shell_help (char *arg);
+
+#endif /* __SHELL_H__ */
