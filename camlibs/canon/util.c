@@ -199,6 +199,8 @@ filename2mimetype (const char *filename)
 			return GP_MIME_AVI;
 		else if (!strcmp (pos, ".JPG"))
 			return GP_MIME_JPEG;
+		else if (!strcmp (pos, ".WAV"))
+			return GP_MIME_WAV;
 		else if (!strcmp (pos, ".THM"))
 			return GP_MIME_JPEG;
 		else if (!strcmp (pos, ".CRW"))

@@ -461,6 +461,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = user_data;
 	unsigned char *data = NULL, *thumbdata = NULL;
 	const char *thumbname = NULL;
+	const char *audioname = NULL;
 	int ret;
 	unsigned int datalen;
 	char canon_path[300];
@@ -491,6 +492,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		} 
 	}
 
+	/* preparation, if it is _PREVIEW or _EXIF we get the thumbnail name */
+	if (type == GP_FILE_TYPE_AUDIO) {
+		audioname = canon_int_filename2audioname (camera, canon_path);
+	}
+
 	/* fetch image/thumbnail/exif */	
 	switch (type) {
 		case GP_FILE_TYPE_NORMAL:
@@ -517,6 +523,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 							       attr, context);
 			}
 			break;
+		case GP_FILE_TYPE_AUDIO:
+			if ((audioname != NULL) && (*audioname != '\0')) {
+				/* extra audio file */
+				ret = canon_int_get_file (camera, audioname, &data, &datalen,
+							  context);				
+			} else {
+				gp_context_error (context,
+						  "No audio file could be fould for %s",
+						  canon_path);
+				ret = GP_ERROR;
+			}
 		case GP_FILE_TYPE_PREVIEW:
 #ifdef HAVE_EXIF
 			/* Check if we have libexif, it is an image and it is not
@@ -524,11 +541,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			 * supported here so that gPhoto2 query for
 			 * GP_FILE_TYPE_EXIF instead
 			 */
-			if (is_image (filename))
+			if (is_image (filename)) {
 				if (camera->pl->md->model != CANON_PS_A70) {
 					GP_DEBUG ("get_file_func: preview requested where "
 						  "EXIF should be possible");
 					return (GP_ERROR_NOT_SUPPORTED);
+				}
 			}
 #endif /* HAVE_EXIF */
 			if (*thumbname == '\0') {
@@ -617,6 +635,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
 			gp_file_set_name (file, filename);
 			break;
+	        case GP_FILE_TYPE_AUDIO:
+			gp_file_set_mime_type (file, GP_MIME_WAV);
 		case GP_FILE_TYPE_NORMAL:
 			gp_file_set_mime_type (file, filename2mimetype (filename));
 			gp_file_set_data_and_size (file, data, datalen);

@@ -164,6 +164,98 @@ extern long int timezone;
 #define extra_file_for_thumb_of_jpeg FALSE
 #define extra_file_for_thumb_of_crw TRUE
 
+const char *
+replace_filename_extension(const char *filename, const char *newext)
+{
+	static char buf[1024];
+
+	/* We just replace file ending by .THM and assume this is the
+	 * name of the thumbnail file.
+	 */
+	if (strncpy (buf, filename, sizeof (buf)) < 0) {
+		GP_DEBUG ("replace_filename_extension: Buffer too small in %s line %i.",
+			  __FILE__, __LINE__);
+		return NULL;
+	}
+	if ((p = strrchr (buf, '.')) == NULL) {
+		GP_DEBUG ("replace_filename_extension: No '.' found in filename '%s' "
+			  "in %s line %i.", filename, __FILE__, __LINE__);
+		return NULL;
+	}
+	if (((p - buf) < sizeof (buf) - 4) && strncpy (p, ".THM", 4)) {
+		GP_DEBUG ("replace_filename_extension: New name for '%s' is '%s'",
+			  filename, buf);
+		return buf;
+	} else {
+		GP_DEBUG ("replace_filename_extension: "
+			  "New name for filename '%s' doesnt fit in %s line %i.",
+			  filename, __FILE__, __LINE__);
+		return NULL;
+	}
+}
+
+/**
+ * canon_int_filename2audioname:
+ * @camera: Camera to work on
+ * @filename: the file to get the name of the thumbnail of
+ *
+ * The identifier returned is 
+ *  a) NULL if no thumbnail exists for this file or an internal error occured
+ *  b) pointer to empty string if thumbnail is contained in the file itself
+ *  c) pointer to string with file name of the corresponding thumbnail
+ *  d) pointer to filename in case filename is a thumbnail itself
+ *
+ * Returns: identifier for corresponding thumbnail
+ */
+
+const char *
+canon_int_filename2audioname (Camera *camera, const char *filename)
+{
+	char *p;
+	static char *nullstring = "";
+
+        /* FIXME: I want capabilities */
+	switch camera->pl->model {
+	case CANON_PS_S30:
+	case CANON_PS_S40:
+	case CANON_PS_S45:
+	case CANON_PS_G3:
+		break;
+	default:
+		GP_DEBUG ("canon_int_filename2audioname: camera model doesn't support audio files",
+			  filename);
+		return NULL;
+		break;
+	}
+
+	/* We use the audio file itself as the audio file of the
+	 * audio file file. In short audiofile = audiofile(audiofile)
+	 */
+	if (is_audio (filename)) {
+		GP_DEBUG ("canon_int_filename2audioname: \"%s\" IS an audio file",
+			  filename);
+		return filename;
+	}
+
+	/* There are only thumbnails for images and movies */
+	if (!is_movie (filename) && !is_image (filename)) {
+		GP_DEBUG ("canon_int_filename2audioname: "
+			  "\"%s\" is neither movie nor image -> no audio file", filename);
+		return NULL;
+	}
+
+	GP_DEBUG ("canon_int_filename2audioname: thumbnail for file \"%s\" is external",
+		  filename);
+
+	/* We just replace file ending by .WAV and assume this is the
+	 * name of the audio file.
+	 */
+	return replace_filename_extension (filename, ".WAV");
+
+	/* never reached */
+	return NULL;
+}
+
 /**
  * canon_int_filename2thumbname:
  * @camera: Camera to work on
@@ -181,7 +273,6 @@ extern long int timezone;
 const char *
 canon_int_filename2thumbname (Camera *camera, const char *filename)
 {
-	static char buf[1024];
 	char *p;
 	static char *nullstring = "";
 
@@ -220,26 +311,8 @@ canon_int_filename2thumbname (Camera *camera, const char *filename)
 	/* We just replace file ending by .THM and assume this is the
 	 * name of the thumbnail file.
 	 */
-	if (strncpy (buf, filename, sizeof (buf)) < 0) {
-		GP_DEBUG ("canon_int_filename2thumbname: Buffer too small in %s line %i.",
-			  __FILE__, __LINE__);
-		return NULL;
-	}
-	if ((p = strrchr (buf, '.')) == NULL) {
-		GP_DEBUG ("canon_int_filename2thumbname: No '.' found in filename '%s' "
-			  "in %s line %i.", filename, __FILE__, __LINE__);
-		return NULL;
-	}
-	if (((p - buf) < sizeof (buf) - 4) && strncpy (p, ".THM", 4)) {
-		GP_DEBUG ("canon_int_filename2thumbname: Thumbnail name for '%s' is '%s'",
-			  filename, buf);
-		return buf;
-	} else {
-		GP_DEBUG ("canon_int_filename2thumbname: "
-			  "Thumbnail name for filename '%s' doesnt fit in %s line %i.",
-			  filename, __FILE__, __LINE__);
-		return NULL;
-	}
+	return replace_filename_extension (filename, ".THM");
+
 	/* never reached */
 	return NULL;
 }
