@@ -2,16 +2,62 @@
 Camera
 
 <!-- ##### SECTION Short_Description ##### -->
-
+The structure giving you access to your camera
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+This section describes the operations that you can perform on a #Camera.
+</para>
 
+<para>
+Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_error. Before a camera driver generates any error, it should use #gp_camera_set_error to explain why the error occurred and how it can be resolved.
+  <example>
+    <title>Error reporting</title>
+    <programlisting>
+        char c;
+	int result;
+
+        /*
+	 *If any error occurs here, just pass it along because
+	 * the error hasn't been generated here.
+	 */
+	result = #gp_port_read (camera->port, &amp;c, 1);
+	if (result < 0)
+	    return (result);
+	
+	if (c != 0x05) {
+	    
+	    /* Unrecoverable error. Generate an error. */
+	    #gp_camera_set_error (camera, _("'0x%x' has been received, but "
+	        "0x05 has been expected. Error recovery is not possible in "
+		"this situation. Please reset your camera."));
+            return (#GP_ERROR_CORRUPTED_DATA);
+	}
+    </programlisting>
+  </example>
+
+  The frontend can now query the error using #gp_camera_get_error. Note that,
+  in the following example, we explicitly clear the error before calling
+  the function that could generate an error.
+
+  <example>
+    <title>Querying errors</title>
+    <programlisting>
+      int result;
+      #CameraText text;
+
+      #gp_camera_set_error (camera, NULL);
+      result = gp_camera_get_about (camera, &amp;text);
+      if (result < 0)
+          printf ("Error ('%s'): '%s'", #gp_result_as_string (result),
+	          #gp_camera_get_error (camera));
+    </programlisting>
+  </example>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+#CameraFilesystem, #GPPort
 </para>
 
 <!-- ##### USER_FUNCTION CameraExitFunc ##### -->
