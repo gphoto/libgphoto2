@@ -1,3 +1,6 @@
+2003-08-22 Mariusz Woloszyn
+	* library.c: added Nikon CoolPix 4500 and HP PhotoSmart 935, thanks
+	  to T. Kaproncai
 2003-07-28 Mariusz Woloszyn
 	* library.c: removed Kodak DC290, DX4230, DX4300, changed productID
 	  of Kodak CX4210 and added Nikon Coolpix 5400. Thanks to T.

@@ -229,6 +229,8 @@ static struct {
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202},
 	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302},
+	/* HP PhotoSmart 935: T. Kaproncai, 25 Jul 2003*/
+	{"HP:PhotoSmart 935 (PTP mode)", 0x03f0, 0x4402};
 	{"HP:PhotoSmart 318 (PTP mode)", 0x03f0, 0x6302},
 	{"HP:PhotoSmart 612 (PTP mode)", 0x03f0, 0x6302},
 	{"HP:PhotoSmart 715 (PTP mode)", 0x03f0, 0x6402},
@@ -254,6 +256,8 @@ static struct {
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
 	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d},
+	/* Nikon CoolPix 4500: T. Kaproncai, 22 Aug 2003 */
+	{"Nikon CoolPix 4500 (PTP mode)", 0x04b0, 0x010b},
 	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
 	{"Nikon:Coolpix 4300 (PTP mode)", 0x04b0, 0x010f},
 	/* Nikon Coolpix 3500: M. Meissner, 07 May 2003 */
