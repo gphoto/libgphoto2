@@ -1,5 +1,9 @@
 2001-10-20 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
+	* gphoto.spec.in: made RPM spec file work for 1st time
+
+2001-10-20 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
 	* configure.in
 	* include/.cvsignore
 	* libgphoto2_port/configure.in

@@ -4,9 +4,10 @@ Version: @VERSION@
 Release: 0
 License: LGPL
 Group: Applications/Multimedia
-BuildRoot: %{_tmppath}/%{name}-root
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Source: http://www.gphoto.org/dist/%{name}-%{version}.tar.gz
 Url: http://www.gphoto.org/
+Requires: libgphoto2
 Requires: libusb
 BuildRequires: libusb-devel
 BuildRequires: gtk-doc
@@ -19,14 +20,14 @@ framework that lets you download images from several different
 digital camera models, including the newer models with USB
 connections. Note that
 a) for some older camera models you must use the old "gphoto" package.
-b) for USB mass storage models use the driver in the kernel
+b) for USB mass storage models you must use the driver in the kernel
 
 This package contains the command-line utility gphoto2.
 
 %package -n libgphoto2
 Summary: Library for accessing digital cameras.
 Provides: libgphoto
-Requires: libusb
+Requires: libusb >= 0.0.4
 Group: System Environment/Libraries
 
 %description -n libgphoto2
@@ -41,7 +42,7 @@ can use.
 
 %package -n libgphoto2-devel
 Summary: Headers and links to compile against the libgphoto2 library.
-Requires: libgphoto2 >= %{version}
+Requires: libgphoto2 = %{version}
 Provides: libgphoto-devel
 Group: Development/Libraries
 
@@ -91,7 +92,7 @@ make DESTDIR=%{buildroot} \
         sbindir=%{_sbindir} \
         sysconfdir=%{_sysconfdir} \
         datadir=%{_datadir} \
-        docdir=%{_docdir} \
+        docdir=%{_docdir}/%{name}-%{version} \
         includedir=%{_includedir} \
         libdir=%{_libdir} \
         libexecdir=%{_libexecdir} \
@@ -100,6 +101,8 @@ make DESTDIR=%{buildroot} \
         mandir=%{_mandir} \
         infodir=%{_infodir} \
 install
+
+find %{buildroot} -type f | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.files
 
 %post -p /sbin/ldconfig -n libgphoto2
 %postun -p /sbin/ldconfig -n libgphoto2
@@ -111,36 +114,40 @@ rm -rf $RPM_BUILD_ROOT
 ##### gphoto2
 %files
 %defattr(-,root,root)
-%docdir %{_docdir}/gphoto2
-%doc README
-%{_bindir}/*
-%{_datadir}/*/*
+%{_bindir}/gphoto2
+%doc %{_docdir}/%{name}-%{version}/gphoto2-cli.txt
 
 ##### libgphoto2
 %files -n libgphoto2
 %defattr(-,root,root)
-%{_libdir}/*.so.*
-# Here are only ".so" and no ".so.XXX" packages, so the ".so" have to be in
-# the main package
-%{_libdir}/gphoto2/*.so
-%{_libdir}/gphoto2_port/*.so.*
+%{_datadir}/gphoto2/konica/*
+%doc doc/gphoto2.txt doc/gphoto2-cli.txt
+%doc AUTHORS README COPYING NEWS
+%docdir doc/api/html
+%docdir libgphoto2_port/doc/html
+%{_libdir}/libgphoto2.*
+%{_libdir}/gphoto2/*
+%{_libdir}/libgphoto2_port.*
+%{_libdir}/gphoto2_port/*
+%{_libdir}/gphoto2portConf.sh
+%{_datadir}/locale/de/LC_MESSAGES/gphoto.mo
+%{_libdir}/pkgconfig/libgphoto-2.0.pc
 
 ##### libgphoto2-devel
 %files -n libgphoto2-devel
 %defattr(-,root,root)
+%docdir %{_docdir}/%{name}-%{version}/html
+%{_bindir}/gphoto2-config
+%{_bindir}/gphoto2-port-config
 %{_includedir}/gphoto2/*
-%{_libdir}/*.so
-%{_libdir}/*.a
-%{_libdir}/*.la
-%{_libdir}/gphoto2/*.a
-%{_libdir}/gphoto2/*.la
-%{_libdir}/gphoto2_port/*.so
-%{_libdir}/gphoto2_port/*.a
-%{_libdir}/gphoto2_port/*.la
-%{_libdir}/gphoto2portConf.sh
 
+
+##### Change log
 %changelog
-* Sun Oct 14 2001 Hans Ulrich Niedermann <ulrich@niedermann.bb.bawue.de>
+* Sun Oct 14 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
+- integrated spec file into source package
+
+* Sun Oct 14 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
 - 2.0beta3
 
 * Tue Oct  2 2001 Tim Waugh <twaugh@redhat.com> 2.0beta2-0.1
