@@ -255,67 +255,120 @@ ptp_getobjecthandles(PTPParams* params, PTPObjectHandles* objecthandles)
 }
 
 short
-ptp_getobjectsinfo(PTPParams* params, PTPObjectHandles* objecthandles,
-			PTPObjectInfo*** objectinfoarray)
+ptp_getobjectinfo(PTPParams* params, PTPObjectHandles* objecthandles,
+			int n, PTPObjectInfo* objectinfo)
 {
-	short ret,i;
-	if ((objecthandles==NULL)||(objectinfoarray==NULL))
+	short ret;
+	if ((objecthandles==NULL)||(objectinfo==NULL))
 		return PTP_ERROR_BADPARAM;
 
 	{
 	PTPReq* req=malloc(sizeof(PTPReq));
 	
 	memset(req, 0, PTP_RESP_LEN);
-	*objectinfoarray=malloc(sizeof(PTPObjectHandles *)*objecthandles->n);
-	for (i=0;i<objecthandles->n;i++) {
-		(*objectinfoarray)[i]=malloc(sizeof(PTPObjectInfo));
-		*(int *)(req->data)=objecthandles->handler[i];
-		ret=ptp_sendreq(params, req, PTP_OC_GetObjectInfo);
-		if (ret!=PTP_OK) {
-			params->ptp_error("ptp_getobjectsinfo sending req");
-			free(req);
-			return PTP_ERROR_IO;
-		}
-		ret=ptp_getdata(params, req);
-		if ((ret!=PTP_OK) ||
-			(req->type!=PTP_TYPE_DATA) ||
-			(req->code!=PTP_OC_GetObjectInfo)) {
-			params->ptp_error("ptp_getobjectsinfo getting data");
+	*(int *)(req->data)=objecthandles->handler[n];
+	ret=ptp_sendreq(params, req, PTP_OC_GetObjectInfo);
+	if (ret!=PTP_OK) {
+		params->ptp_error("ptp_getobjectsinfo sending req");
+		free(req);
+		return PTP_ERROR_IO;
+	}
+	ret=ptp_getdata(params, req);
+	if ((ret!=PTP_OK) ||
+		(req->type!=PTP_TYPE_DATA) ||
+		(req->code!=PTP_OC_GetObjectInfo)) {
+		params->ptp_error("ptp_getobjectsinfo getting data");
 #ifdef DEBUG
-			params->ptp_error("GetObjectInfo data returned:\nlen=0x%8.8x"
-			"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
-			req->len, req->type, req->code, req->trans_id);
+		params->ptp_error("GetObjectInfo data returned:\nlen=0x%8.8x"
+		"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
+		req->len, req->type, req->code, req->trans_id);
 #endif
-			if (ret!=PTP_OK) ret=PTP_ERROR_IO; else
-				ret=(req->type==PTP_TYPE_DATA)?
-				req->code:PTP_ERROR_DATA_EXPECTED;
-			free(req);
-			// XXX no objectinfoarray cleanup!!!
-			return ret;
-		}
-		memcpy((*objectinfoarray)[i], req->data, sizeof(PTPObjectInfo));
+		if (ret!=PTP_OK) ret=PTP_ERROR_IO; else
+			ret=(req->type==PTP_TYPE_DATA)?
+			req->code:PTP_ERROR_DATA_EXPECTED;
+		free(req);
+		return ret;
+	}
+	memcpy(objectinfo, req->data, sizeof(PTPObjectInfo));
 
-		ret=ptp_getresp(params, req);
-		if ((ret!=PTP_OK) ||
-			(req->type!=PTP_TYPE_RESP) ||
-			(req->code!=PTP_RC_OK)) {
-			params->ptp_error("ptp_getobjectsinfo getting resp");
+	ret=ptp_getresp(params, req);
+	if ((ret!=PTP_OK) ||
+		(req->type!=PTP_TYPE_RESP) ||
+		(req->code!=PTP_RC_OK)) {
+		params->ptp_error("ptp_getobjectsinfo getting resp");
 #ifdef DEBUG
-			params->ptp_error("PTP_OC_GetObjectInfo resp:\nlen=0x%8.8x"
-			" type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
-			req->len, req->type, req->code, req->trans_id);
+		params->ptp_error("PTP_OC_GetObjectInfo resp:\nlen=0x%8.8x"
+		" type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
+		req->len, req->type, req->code, req->trans_id);
 #endif
-			if (ret!=PTP_OK) ret=PTP_ERROR_IO; else
-				ret=(req->type==PTP_TYPE_RESP)?
-					req->code:PTP_ERROR_RESP_EXPECTED;
-			free(req);
-			// XXX no objectinfoarray cleanup!!!
-			return ret;
-		}
-		// Get next ObjectInfo now
+		if (ret!=PTP_OK) ret=PTP_ERROR_IO; else
+			ret=(req->type==PTP_TYPE_RESP)?
+				req->code:PTP_ERROR_RESP_EXPECTED;
+		free(req);
+		return ret;
 	}
 	free(req);
 	}
 	return PTP_RC_OK;
 }
 
+
+short
+ptp_getobject(PTPParams* params, PTPObjectHandles* objecthandles, 
+			PTPObjectInfo* objectinfo, int n,
+			char* object)
+{
+	short ret;
+	if ((objecthandles==NULL)||(objectinfo==NULL)||((object==NULL)))
+		return PTP_ERROR_BADPARAM;
+
+	{
+	PTPReq* req=malloc(sizeof(PTPReq));
+	PTPReq* ptr;
+	
+	memset(req, 0, PTP_RESP_LEN);
+	*(int *)(req->data)=objecthandles->handler[n];
+	ret=ptp_sendreq(params, req, PTP_OC_GetObject);
+	if (ret!=PTP_OK) {
+		params->ptp_error("ptp_getobject sending req");
+		free(req);
+		return PTP_ERROR_IO;
+	}
+	ptr=req; req=(PTPReq*)object;
+	ret=params->io_read(req,
+		objectinfo->ObjectCompressedSize+PTP_REQ_HDR_LEN,
+		params->io_data);	
+	if ((ret!=PTP_OK) ||
+		(req->type!=PTP_TYPE_DATA) ||
+		(req->code!=PTP_OC_GetObject)) {
+		params->ptp_error("ptp_getobject getting data");
+#ifdef DEBUG
+		params->ptp_error("GetObject data returned:\nlen=0x%8.8x"
+		"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
+		req->len, req->type, req->code, req->trans_id);
+#endif
+		if (ret!=PTP_OK) ret=PTP_ERROR_IO; else
+			 ret=(req->type==PTP_TYPE_DATA)?
+			 req->code:PTP_ERROR_DATA_EXPECTED;
+		req=ptr;
+		free(req);
+		return ret;
+	}
+	req=ptr;
+	ret=ptp_getresp(params, req);
+	if ((ret!=PTP_OK) ||
+		(req->type!=PTP_TYPE_RESP) ||
+		(req->code!=PTP_RC_OK)) {
+		params->ptp_error("ptp_getobject getting resp");
+#ifdef DEBUG
+		params->ptp_error("GetObject data returned:\nlen=0x%8.8x"
+		"type=0x%4.4x code=0x%4.4x ID=0x%8.8x\n",
+		req->len, req->type, req->code, req->trans_id);
+#endif
+		free(req);
+		return ret;
+	}
+	free(req);
+	}
+	return PTP_RC_OK;
+}

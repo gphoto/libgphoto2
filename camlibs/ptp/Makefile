@@ -1,7 +1,7 @@
 
 OBJECTS	= dx3500 libptp.so
 
-CFLAGS	= -g -DDEBUG -Wall
+CFLAGS	= -g -DDEBUG
 LDFLAGS = -lusb ptp.o
 
 CC	= gcc
