@@ -87,7 +87,8 @@ union _GPPortSettings {
 
 enum {
         GP_PORT_USB_ENDPOINT_IN,
-        GP_PORT_USB_ENDPOINT_OUT
+        GP_PORT_USB_ENDPOINT_OUT,
+        GP_PORT_USB_ENDPOINT_INT
 };
 
 typedef struct _GPPortPrivateLibrary GPPortPrivateLibrary;

@@ -211,6 +211,9 @@ gp_port_usb_clear_halt_lib(GPPort *port, int ep)
 	case GP_PORT_USB_ENDPOINT_OUT :
 		ret=usb_clear_halt(port->pl->dh, port->settings.usb.outep);
 		break;
+	case GP_PORT_USB_ENDPOINT_INT :
+		ret=usb_clear_halt(port->pl->dh, port->settings.usb.intep);
+		break;
 	default:
 		gp_port_set_error (port, "gp_port_usb_clear_halt: "
 				   "bad EndPoint argument");

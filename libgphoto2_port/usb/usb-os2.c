@@ -173,6 +173,8 @@ int gp_port_usb_clear_halt_lib(gp_port * dev, int ep)
                         break;
                 case GP_PORT_USB_ENDPOINT_OUT :
                         /*ret=usb_clear_halt(dev->device_handle, dev->settings.usb.outep);*/
+                case GP_PORT_USB_ENDPOINT_INT :
+                        /*ret=usb_clear_halt(dev->device_handle, dev->settings.usb.intep);*/
                         break;
                 default:
                         fprintf(stderr,"gp_port_usb_clear_halt: bad EndPoint argument\n");
