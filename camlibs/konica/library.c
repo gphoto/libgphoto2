@@ -71,12 +71,26 @@ gchar** models[2] = {models_qm100, models_qm200};
 /**************/
 /* Prototypes */
 /**************/
-gboolean localization_file_read (Camera *camera, gchar *file_name, guchar **data, gulong *data_size);
+gboolean localization_file_read (Camera* camera, gchar* file_name, guchar** data, gulong* data_size);
+
+gint erase_all_unprotected_images (Camera* camera, CameraWidget* widget);
 
 
 /*************/
 /* Functions */
 /*************/
+gint
+erase_all_unprotected_images (Camera* camera, CameraWidget* widget)
+{
+	konica_data_t*	konica_data;
+	gint		not_erased;
+
+	konica_data = g_new (konica_data_t, 1);
+
+	return (k_erase_all (konica_data->device, &not_erased));
+}
+
+
 int 
 camera_id (CameraText *id)
 {
@@ -152,12 +166,11 @@ camera_init (Camera* camera, CameraInit* init)
 	camera->functions->file_list		= camera_file_list;
 	camera->functions->file_get 		= camera_file_get;
 	camera->functions->file_get_preview 	= camera_file_get_preview;
-	camera->functions->file_put 		= camera_file_put;
 	camera->functions->file_delete 		= camera_file_delete;
-	camera->functions->file_config_get	= NULL;
-	camera->functions->file_config_set	= NULL;
-	camera->functions->folder_config_get	= NULL;
-	camera->functions->folder_config_set	= NULL;
+	camera->functions->file_config_get	= camera_file_config_get;
+	camera->functions->file_config_set	= camera_file_config_set;
+	camera->functions->folder_config_get	= camera_folder_config_get;
+	camera->functions->folder_config_set	= camera_folder_config_set;
 	camera->functions->config_get		= camera_config_get;
 	camera->functions->config_set		= camera_config_set;
 	camera->functions->config 	  	= camera_config;
@@ -507,19 +520,6 @@ camera_file_get_preview (Camera* camera, CameraFile* file, gchar* folder, gchar*
 
 
 gint 
-camera_file_put (Camera* camera, CameraFile* file, char* folder)
-{
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** camera_file_put ***");
-	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
-
-	/* The camera does not support putting files. */
-	return (GP_ERROR);
-}
-
-
-gint 
 camera_file_delete (Camera* camera, gchar* folder, gchar* filename)
 {
 	gulong 		image_id; 
@@ -687,8 +687,86 @@ int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
+int 
+camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gchar* filename)
+{
+	CameraWidget*	widget;
+	konica_data_t*	konica_data;
+	gulong		image_id;
+	guint		exif_size;
+	gboolean 	protected;
+	guchar*		information_buffer;
+	guint		information_buffer_size;
+	gint		result;
+	gint		value_int = 0;
+	
+	/* Get some information about the picture. */
+	konica_data = (konica_data_t*) camera->camlib_data;
+	result = k_get_image_information (
+		konica_data->device, 
+		konica_data->image_id_long, 
+		gp_filesystem_number (konica_data->filesystem, folder, filename),
+		&image_id, &exif_size, &protected, &information_buffer, &information_buffer_size);
+	if (result != GP_OK) return (result);
 
-int camera_config_get (Camera *camera, CameraWidget **window)
+	/* Construct the window. */
+	*window = gp_widget_new (GP_WIDGET_WINDOW, filename);
+	widget = gp_widget_new (GP_WIDGET_TOGGLE, "Protect");
+	if (protected) value_int = 1;
+	gp_widget_value_set (widget, &value_int);
+	gp_widget_append (*window, widget);
+
+	return (GP_OK);
+}
+
+int
+camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gchar* filename)
+{
+	CameraWidget* 	widget;
+	gint		result = GP_OK;
+	gchar		image_id_string[] = {'0', '0', '0', '0', '0', '0', '0'};
+	glong		image_id;
+	gint		value_int;
+	konica_data_t*	konica_data;
+	
+	/* Some information we need. */
+	konica_data = (konica_data_t*) camera->camlib_data;
+	g_return_val_if_fail (filename[0] != '?', GP_ERROR);
+	memcpy (image_id_string, filename, 6);
+	image_id = atol (image_id_string);
+	
+	/* Protect status? */
+	g_return_val_if_fail (widget = gp_widget_child_by_label (window, _("Protect")), GP_ERROR_BAD_PARAMETERS);
+	if (gp_widget_changed (widget)) {
+		gp_widget_value_get (widget, &value_int);
+		result = k_set_protect_status (konica_data->device, konica_data->image_id_long, image_id, (value_int == 1));
+	}
+		
+	return (result);
+}
+
+int
+camera_folder_config_get (Camera* camera, CameraWidget** window, gchar* folder)
+{
+	CameraWidget*	widget;
+
+	/* Construct the window. */
+	*window = gp_widget_new (GP_WIDGET_WINDOW, folder);
+	widget = gp_widget_new (GP_WIDGET_BUTTON, _("Erase all unprotected images"));
+	gp_widget_callback_set (widget, erase_all_unprotected_images);
+	gp_widget_append (*window, widget);
+
+	return (GP_OK);
+}
+
+int
+camera_folder_config_set (Camera* camera, CameraWidget* window, gchar* folder)
+{
+	return (GP_OK);
+}
+
+int 
+camera_config_get (Camera* camera, CameraWidget** window)
 {
         CameraWidget*	widget;
 	CameraWidget*	section;
@@ -710,11 +788,11 @@ int camera_config_get (Camera *camera, CameraWidget **window)
         guint 		total_pictures;
         guint 		total_strobes;
 	konica_data_t*	konica_data;
-	gchar*		buffer;
 	gint		year_4_digits;
 	struct tm	tm_struct;
 	time_t		t;
 	gint		result;
+	gfloat		value_float;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_config_get ***");
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
@@ -795,25 +873,22 @@ int camera_config_get (Camera *camera, CameraWidget **window)
         widget = gp_widget_new (GP_WIDGET_RANGE, "Self Timer Time");
         gp_widget_append (section, widget);
         gp_widget_range_set (widget, 3, 40, 1);
-	buffer = g_strdup_printf ("%i", self_timer_time);
-	gp_widget_value_set (widget, buffer);
-	g_free (buffer);
+	value_float = self_timer_time;
+	gp_widget_value_set (widget, &value_float);
 
         /* Auto Off Time */
         widget = gp_widget_new (GP_WIDGET_RANGE, "Auto Off Time");
         gp_widget_append (section, widget);
         gp_widget_range_set (widget, 1, 255, 1);
-        buffer = g_strdup_printf ("%i", shutoff_time);
-	gp_widget_value_set (widget, buffer);
-	g_free (buffer);
+	value_float = shutoff_time;
+	gp_widget_value_set (widget, &value_float);
 
         /* Slide Show Interval */
         widget = gp_widget_new (GP_WIDGET_RANGE, "Slide Show Interval");
         gp_widget_append (section, widget);
         gp_widget_range_set (widget, 1, 30, 1);
-	buffer = g_strdup_printf ("%i", slide_show_interval);
-	gp_widget_value_set (widget, buffer);
-	g_free (buffer);
+	value_float = slide_show_interval;
+	gp_widget_value_set (widget, &value_float);
 
         /* Resolution */
         widget = gp_widget_new (GP_WIDGET_RADIO, "Resolution");
@@ -893,9 +968,8 @@ int camera_config_get (Camera *camera, CameraWidget **window)
         widget = gp_widget_new (GP_WIDGET_RANGE, "Exposure");
         gp_widget_append (section, widget);
         gp_widget_range_set (widget, 0, 255, 1);
-	buffer = g_strdup_printf ("%i", exposure);
-	gp_widget_value_set (widget, buffer);
-	g_free (buffer);
+	value_float = exposure;
+	gp_widget_value_set (widget, &value_float);
 
         /* Focus */
         widget = gp_widget_new (GP_WIDGET_RADIO, "Focus");
