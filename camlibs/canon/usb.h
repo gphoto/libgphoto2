@@ -229,100 +229,11 @@ struct canon_usb_cmdstruct
 	int return_length;
 };
 
-/*
- * Command codes are structured:
- *   cmd2=11 -> camera control,
- *   cmd2=12 -> storage control.
- *
- *   cmd3=201 -> fixed length response
- *   cmd3=202 -> variable length response
- */
 
-static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
-	{CANON_USB_FUNCTION_GET_FILE,		"Get file",			0x01, 0x11, 0x202,	0x40},
-	{CANON_USB_FUNCTION_IDENTIFY_CAMERA,	"Identify camera",		0x01, 0x12, 0x201,	0x9c},
-	{CANON_USB_FUNCTION_GET_TIME,		"Get time",			0x03, 0x12, 0x201,	0x60},
-	{CANON_USB_FUNCTION_SET_TIME,		"Set time",			0x04, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_MKDIR,		"Make directory",		0x05, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_CAMERA_CHOWN,	"Change camera owner",		0x05, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_RMDIR,		"Remove directory",		0x06, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_DISK_INFO,		"Disk info request",		0x09, 0x11, 0x201,	0x5c},
-	/* 0x0a is overloaded: "flash device ident" and "delete file", with different responses */
-	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,	"Flash device ident",		0x0a, 0x11, 0x202,	0x40},
-	{CANON_USB_FUNCTION_DELETE_FILE_2,	"Delete file",			0x0a, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_POWER_STATUS,	"Power supply status",		0x0a, 0x12, 0x201,	0x58},
-	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entries",	0x0b, 0x11, 0x202,	0x40},
-	/* Command code 0x0d is overloaded: delete file (old),
-	 * disk info request ID (new). */
-	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_DISK_INFO_2,	"Disk info request (new)",	0x0d, 0x11, 0x201,	0x5c},
-	/* Command code 0x0e is overloaded: set file attribute (old),
-	 * flash device ID (new). And the response is different: fixed
-	 * length in old, variable length in new. */
-	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attributes",		0x0e, 0x11, 0x201,	0x54},
-	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2, "Flash device ident (new)",	0x0e, 0x11, 0x202,	0x40},
-	{CANON_USB_FUNCTION_SET_FILE_TIME,	"Set file time",		0x0f, 0x11, 0x201,	0x54},
-	/* Notice the overloaded command code 0x13: remote camera control
-	   in the original protocol, power status in the new protocol. */
-	{CANON_USB_FUNCTION_CONTROL_CAMERA,	"Remote camera control",	0x13, 0x12, 0x201,      0x40},
-	{CANON_USB_FUNCTION_POWER_STATUS_2,	"Power supply status (new)",	0x13, 0x12, 0x201,      0x58},
-	{CANON_USB_FUNCTION_RETRIEVE_CAPTURE,	"Download a captured image",	0x17, 0x12, 0x202,      0x40},
-	{CANON_USB_FUNCTION_RETRIEVE_PREVIEW,	"Download a captured preview",	0x18, 0x12, 0x202,      0x40},
-	{CANON_USB_FUNCTION_UNKNOWN_FUNCTION,	"Unknown function",		0x1a, 0x12, 0x201,	0x80},
-	{CANON_USB_FUNCTION_EOS_LOCK_KEYS,	"EOS lock keys",		0x1b, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,	"EOS unlock keys",		0x1c, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_EOS_GET_BODY_ID,	"EOS get body ID",		0x1d, 0x12, 0x201,	0x58},
-	{CANON_USB_FUNCTION_GET_PIC_ABILITIES,	"Get picture abilities",	0x1f, 0x12, 0x201,	0x384},
-	{CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,	"Lock keys and turn off LCD",	0x20, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_20D_UNKNOWN_1,	"Unknown EOS 20D function",	0x21, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_20D_UNKNOWN_2,	"Unknown EOS 20D function",	0x22, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,	"New EOS get body ID",		0x23, 0x12, 0x201,	0x58},
-	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "New get picture abilities",	0x24, 0x12, 0x201,	0x474},
-	{CANON_USB_FUNCTION_CONTROL_CAMERA_2,	"Remote camera control (new)",	0x25, 0x12, 0x201,	0x40},
-	{CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2, "New download a captured image", 0x26, 0x12, 0x202,	0x40},
-	{CANON_USB_FUNCTION_20D_UNKNOWN_4,	"Unknown EOS 20D function",	0x35, 0x12, 0x201,	0x5c},
-	{CANON_USB_FUNCTION_20D_UNKNOWN_5,	"Unknown EOS 20D function",	0x36, 0x12, 0x201,	0x54},
-	/* WARNING: I don't think this is really the right value, but
-	 * it gives no error on EOS 20D -- swestin 22-Mar-05 */
-	{CANON_USB_FUNCTION_SET_ATTR_2,		"Set file attributes (new))", 0x07, 0x11, 0x201,	0x54},
-	{ 0 }
-};
+/* USB command data structures defined in usb.c */
+extern const struct canon_usb_cmdstruct canon_usb_cmd[];
+extern const struct canon_usb_control_cmdstruct canon_usb_control_cmd[];
 
-
-
-static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
-	/* COMMAND NAME                         Description            Value   CmdLen ReplyLen */
-	{CANON_USB_CONTROL_INIT,                "Camera control init",  0x00,  0x18,  0x1c},  /* load 0x00, 0x00 */
-	{CANON_USB_CONTROL_SHUTTER_RELEASE,     "Release shutter",      0x04,  0x18,  0x1c},  /* load 0x04, 0x00 */
-	{CANON_USB_CONTROL_SET_PARAMS,          "Set release params",   0x07,  0x00,  0x1c},  /* ?? */
-	{CANON_USB_CONTROL_SET_TRANSFER_MODE,   "Set transfer mode",    0x09,  0x1c,  0x1c},  /* load (0x09, 0x04, 0x03) or (0x09, 0x04, 0x02000003) */
-	{CANON_USB_CONTROL_GET_PARAMS,          "Get release params",   0x0a,  0x18,  0x4c},  /* load 0x0a, 0x00 */
-	{CANON_USB_CONTROL_GET_ZOOM_POS,        "Get zoom position",    0x0b,  0x18,  0x20},  /* load 0x0b, 0x00 */
-	{CANON_USB_CONTROL_SET_ZOOM_POS,        "Set zoom position",    0x0c,  0x1c,  0x1c},  /* load 0x0c, 0x04, 0x01 (or 0x0c, 0x04, 0x0b) (or 0x0c, 0x04, 0x0a) or (0x0c, 0x04, 0x09) or (0x0c, 0x04, 0x08) or (0x0c, 0x04, 0x07) or (0x0c, 0x04, 0x06) or (0x0c, 0x04, 0x00) */
-	{CANON_USB_CONTROL_GET_AVAILABLE_SHOT,  "Get available shot",   0x0d,  0x18,  0x20},
-	{CANON_USB_CONTROL_GET_CUSTOM_FUNC,     "Get custom func.",     0x0f,  0x22,  0x26},
-	{CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE, "Get ext. release params size",
-	                                                                0x10,  0x1c,  0x20},  /* load 0x10, 0x00 */
-	{CANON_USB_CONTROL_GET_EXT_PARAMS,      "Get ext. release params",
-	                                                                0x12,  0x1c,  0x2c},  /* load 0x12, 0x04, 0x10 */
-
-	{CANON_USB_CONTROL_EXIT,                "Exit release control", 0x01,  0x18,  0x1c},
-	/* unobserved, commands present in canon headers defines, but need more usb snoops to get reply lengths */
-	{CANON_USB_CONTROL_VIEWFINDER_START,    "Start viewfinder",     0x02,  0x00,  0x00},
-	{CANON_USB_CONTROL_VIEWFINDER_STOP,     "Stop viewfinder",      0x03,  0x00,  0x00},
-	{CANON_USB_CONTROL_SET_CUSTOM_FUNC,     "Set custom func.",     0x0e,  0x00,  0x00},
-	{CANON_USB_CONTROL_GET_EXT_PARAMS_VER,  "Get extended params version",
-	                                                                0x11,  0x00,  0x00},
-	{CANON_USB_CONTROL_SET_EXT_PARAMS,      "Set extended params",  0x13,  0x00,  0x00},
-	{CANON_USB_CONTROL_SELECT_CAM_OUTPUT,   "Select camera output", 0x14,  0x00,  0x00}, /* LCD (0x1), Video out (0x2), or OFF (0x3) */
-	{CANON_USB_CONTROL_DO_AE_AF_AWB,        "Do AE, AF, and AWB",   0x15,  0x00,  0x00},
-	/* New subcodes for new version of protocol */
-	{CANON_USB_CONTROL_UNKNOWN_1,    "Unknown remote control code",
-	                                                                0x1b,  0x08,  0x5e},
-	{CANON_USB_CONTROL_UNKNOWN_2,    "Unknown remote control code",
-	                                                                0x1c,  0x00,  0x00},
-	{ 0 }
-};
 
 /* For mapping status codes to intelligible messages */
 struct canon_usb_status {
