@@ -236,10 +236,10 @@ camera_id(CameraText *id)
 static int 
 camera_summary(Camera *camera,CameraText *summary,GPContext *context)
 {
- strcpy(summary->text,_("0.1 Traveler SX330z ALDI-cam\
- \n(many other vendors, like Jenoptik, Skanhex, Maginon should work too.\
-  Even the 4100 Cameras could work.\
-  Not tested, please report if this driver works with them!) "));
+ strcpy(summary->text,_("0.1 Traveler SX330z ALDI-cam\n"
+  "(many other vendors, like Jenoptik, Skanhex, Maginon should work too.\n"
+  "Even the 4100 Cameras could work.\n"
+  "Not tested, please report if this driver works with them!)\n"));
  return(GP_OK);
 } /* camera summary */
 

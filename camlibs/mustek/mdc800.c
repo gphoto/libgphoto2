@@ -275,7 +275,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *ctx)
 	strcpy (about->text, _("Mustek MDC-800 gPhoto2 Library\n"
 			       "Henning Zabel <henning@uni-paderborn.de>\n"
 			       "Ported to gphoto2 by Marcus Meissner <marcus@jet.franken.de>\n"
-			       "Supports Serial and USB Protokoll."));
+			       "Supports Serial and USB Protocol."));
 	return (GP_OK);
 }
 

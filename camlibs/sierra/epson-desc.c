@@ -242,7 +242,7 @@ static const ValueNameType ep3000z_reg_23_val_names[] = {
 static const RegisterDescriptorType ep3000z_reg_23[] = { 
 	{
 		GP_WIDGET_RANGE, GP_REG_NO_MASK,
-		"hsot-power-save", N_("Host power save (seconds)"),
+		"host-power-save", N_("Host power save (seconds)"),
 		VAL_NAME_INIT (ep3000z_reg_23_val_names)
 	}
 };

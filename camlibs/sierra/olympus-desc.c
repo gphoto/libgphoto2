@@ -343,7 +343,7 @@ static const ValueNameType oly3040_reg_23_val_names[] = {
 static const RegisterDescriptorType oly3040_reg_23[] = { 
 	{
 		GP_WIDGET_RANGE, GP_REG_NO_MASK,
-		"hsot-power-save", N_("Host power save (seconds)"),
+		"host-power-save", N_("Host power save (seconds)"),
 		VAL_NAME_INIT (oly3040_reg_23_val_names)
 	}
 };
@@ -558,17 +558,17 @@ N_(
 "    A value of 0 will take the default one (auto).\n"
 "(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
 "    and others) have a USB PC Control mode. In order\n"
-"    to use this mode, the camera must be switched \n"
-"    into 'USB PC control mode'. To get to the menu \n"
-"    for switching modes, turn on the camera, open \n"
-"    the memory card access door and then press and \n"
-"    hold both of the menu and LCD buttons until the \n"
-"    camera control menu appears. Set it to ON. \n"
-"(3) If you switch the 'LCD mode' to 'Monitor' or \n"
-"    'Normal', don't forget to switch it back to 'Off' \n"
-"    before disconnectig. Otherwise you cannot use \n"
-"    the camera's buttons. If you end up with this \n"
-"    state, you should reconnect the camera to the \n"
+"    to use this mode, the camera must be switched\n"
+"    into 'USB PC control mode'. To get to the menu\n"
+"    for switching modes, turn on the camera, open\n"
+"    the memory card access door and then press and\n"
+"    hold both of the menu and LCD buttons until the\n"
+"    camera control menu appears. Set it to ON.\n"
+"(3) If you switch the 'LCD mode' to 'Monitor' or\n"
+"    'Normal', don't forget to switch it back to 'Off'\n"
+"    before disconnectig. Otherwise you cannot use\n"
+"    the camera's buttons. If you end up with this\n"
+"    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
 );
 
