@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2001-11-16 04:18-0800\n"
-"PO-Revision-Date: 2001-11-15 22:42+0100\n"
+"POT-Creation-Date: 2001-11-21 23:24+0100\n"
+"PO-Revision-Date: 2001-11-21 23:54+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr ""
 "Implementiert mit Hilfe von Dokumenten\n"
 "aus dem Web. Mit Erlaubnis von Vision."
 
-#: camlibs/canon/canon.c:142
+#: camlibs/canon/canon.c:135
 msgid ""
 "For the A50, 115200 may not be faster than 57600\n"
 "Folders are NOT supported\n"
@@ -66,74 +66,74 @@ msgstr ""
 "den Computer so unbeschäftigt wie möglich zu lassen (besonders keine "
 "Plattenaktivität)."
 
-#: camlibs/canon/canon.c:209 camlibs/canon/canon.c:1469
-#: camlibs/canon/canon.c:1482
+#: camlibs/canon/canon.c:201 camlibs/canon/canon.c:1302
+#: camlibs/canon/canon.c:1315
 msgid "Camera unavailable"
 msgstr "Kamera nicht verfügbar"
 
-#: camlibs/canon/canon.c:219
+#: camlibs/canon/canon.c:211
 msgid "Switching Camera Off"
 msgstr "Schalte Kamera aus"
 
-#: camlibs/canon/canon.c:262 camlibs/canon/canon.c:268
+#: camlibs/canon/canon.c:254 camlibs/canon/canon.c:261
 msgid "No response"
 msgstr "Keine Antwort"
 
-#: camlibs/canon/canon.c:486
+#: camlibs/canon/canon.c:368
 #, c-format
 msgid "Comparing %s to %s\n"
 msgstr "Vergleiche %s mit %s\n"
 
-#: camlibs/canon/canon.c:495
+#: camlibs/canon/canon.c:377
 #, c-format
 msgid "Numbers are %d and %d\n"
 msgstr "Zahlen sind %d und %d\n"
 
-#: camlibs/canon/canon.c:504
+#: camlibs/canon/canon.c:386
 #, c-format
 msgid "Base 1 is %s and base 2 is %s\n"
 msgstr "Basis 1 ist %s und Basis 2 ist %s\n"
 
-#: camlibs/canon/canon.c:530
+#: camlibs/canon/canon.c:412
 msgid "Before sort:\n"
 msgstr "Vor dem Sortieren:\n"
 
-#: camlibs/canon/canon.c:537
+#: camlibs/canon/canon.c:419
 msgid "After sort:\n"
 msgstr "Nach dem Sortieren:\n"
 
-#: camlibs/canon/canon.c:585 camlibs/canon/canon.c:662
-#: camlibs/canon/canon.c:830 camlibs/canon/canon.c:1088
-#: camlibs/canon/canon.c:1261
+#: camlibs/canon/canon.c:466 camlibs/canon/canon.c:539
+#: camlibs/canon/canon.c:707 camlibs/canon/canon.c:965
+#: camlibs/canon/canon.c:1138
 msgid "Could not obtain directory listing"
 msgstr "Konnte Verzeichnisliste nicht bekommen"
 
-#: camlibs/canon/canon.c:634
+#: camlibs/canon/canon.c:511
 #, c-format
 msgid "Picture number %d\n"
 msgstr "Bild Nummer %d\n"
 
-#: camlibs/canon/canon.c:638
+#: camlibs/canon/canon.c:515
 msgid "Invalid index"
 msgstr "Ungültiger Index"
 
-#: camlibs/canon/canon.c:1024 camlibs/canon/canon.c:1381
+#: camlibs/canon/canon.c:901 camlibs/canon/canon.c:1258
 msgid "AC adapter "
 msgstr "Netzadapter "
 
-#: camlibs/canon/canon.c:1026 camlibs/canon/canon.c:1383
+#: camlibs/canon/canon.c:903 camlibs/canon/canon.c:1260
 msgid "on battery "
 msgstr "mit Batterie "
 
-#: camlibs/canon/canon.c:1031 camlibs/canon/canon.c:1390
+#: camlibs/canon/canon.c:908 camlibs/canon/canon.c:1267
 msgid "(power OK)"
 msgstr "(Ladung OK)"
 
-#: camlibs/canon/canon.c:1034 camlibs/canon/canon.c:1393
+#: camlibs/canon/canon.c:911 camlibs/canon/canon.c:1270
 msgid "(power low)"
 msgstr "(Ladung niedrig)"
 
-#: camlibs/canon/canon.c:1043
+#: camlibs/canon/canon.c:920
 #, c-format
 msgid ""
 "%s\n"
@@ -150,7 +150,7 @@ msgstr ""
 "%11s bytes gesamt\n"
 "%11s bytes verfügbar\n"
 
-#: camlibs/canon/canon.c:1056
+#: camlibs/canon/canon.c:933
 msgid ""
 "Canon PowerShot series driver by\n"
 "Wolfgang G. Reissnegger,\n"
@@ -168,21 +168,21 @@ msgstr ""
 "A5-Zusätze von Ole W. Saastad\n"
 "Holger Klemm\n"
 
-#: camlibs/canon/canon.c:1109
+#: camlibs/canon/canon.c:986
 msgid "error deleting file"
 msgstr "Fehler beim Löschen der Datei"
 
-#: camlibs/canon/canon.c:1118
+#: camlibs/canon/canon.c:995
 msgid "error deleting thumbnail"
 msgstr "Fehler beim Löschen des Vorschaubildes"
 
-#: camlibs/canon/canon.c:1246
+#: camlibs/canon/canon.c:1123
 msgid ""
 "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr ""
 "Raten über 57600 sind mit dieser Kamera nicht für das Hochladen unterstützt"
 
-#: camlibs/canon/canon.c:1290
+#: camlibs/canon/canon.c:1167
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
@@ -191,176 +191,65 @@ msgstr ""
 "Der Verzeichnisname 999CANON existiert und enthält eine Datei namens "
 "AUT_9999.JPG."
 
-#: camlibs/canon/canon.c:1346
+#: camlibs/canon/canon.c:1223
 msgid "Configure"
 msgstr "Konfigurieren"
 
-#: camlibs/canon/canon.c:1349
+#: camlibs/canon/canon.c:1226
 msgid "Camera Model"
 msgstr "Kameramodell"
 
-#: camlibs/canon/canon.c:1353 camlibs/canon/canon.c:1465
+#: camlibs/canon/canon.c:1230 camlibs/canon/canon.c:1298
 msgid "Owner name"
 msgstr "Eigentümername"
 
-#: camlibs/canon/canon.c:1364
+#: camlibs/canon/canon.c:1241
 msgid "Error"
 msgstr "Fehler"
 
-#: camlibs/canon/canon.c:1366
+#: camlibs/canon/canon.c:1243
 msgid "Unavailable"
 msgstr "Nicht verfügbar"
 
-#: camlibs/canon/canon.c:1369 camlibs/canon/canon.c:1478
+#: camlibs/canon/canon.c:1246 camlibs/canon/canon.c:1311
 msgid "Set camera date to PC date"
 msgstr "Setze Kameradatum auf das Datum des PCs"
 
-#: camlibs/canon/canon.c:1372
+#: camlibs/canon/canon.c:1249
 msgid "Firmware revision"
 msgstr "Firmware-Revision"
 
-#: camlibs/canon/canon.c:1401
+#: camlibs/canon/canon.c:1278
 msgid "Power: camera unavailable"
 msgstr "Power: Kamera nicht verfügbar"
 
-#: camlibs/canon/canon.c:1403
+#: camlibs/canon/canon.c:1280
 msgid "Power"
 msgstr "Power"
 
-#: camlibs/canon/canon.c:1407
+#: camlibs/canon/canon.c:1284
 msgid "Debug"
 msgstr "Debug"
 
-#: camlibs/canon/canon.c:1410 camlibs/canon/canon.c:1444
-msgid "Debug level"
-msgstr "Debuglevel"
-
-#: camlibs/canon/canon.c:1428 camlibs/canon/canon.c:1458
-msgid "Dump data by packets to stderr"
-msgstr "Schreibe Daten Paketen entsprechend auf stderr"
-
-#: camlibs/canon/canon.c:1472
+#: camlibs/canon/canon.c:1305
 msgid "Owner name changed"
 msgstr "Eigentümername geändert"
 
-#: camlibs/canon/canon.c:1474
+#: camlibs/canon/canon.c:1307
 msgid "could not change owner name"
 msgstr "Konnte Eigentümernamen nicht ändern"
 
-#: camlibs/canon/canon.c:1485
+#: camlibs/canon/canon.c:1318
 msgid "time set"
 msgstr "Zeit gesetzt"
 
-#: camlibs/canon/canon.c:1487
+#: camlibs/canon/canon.c:1320
 msgid "could not set time"
 msgstr "Konnte Zeit nicht setzen"
 
-#: camlibs/canon/canon.c:1492
+#: camlibs/canon/canon.c:1325
 msgid "done configuring camera.\n"
 msgstr "Konfigurieren der Kamera beendet.\n"
-
-#: camlibs/canon/psa50.c:522 camlibs/canon/psa50.c:598
-msgid "Battery exhausted, camera off."
-msgstr "Batterie leer, Kamera aus."
-
-#: camlibs/canon/psa50.c:527
-msgid "ERROR: unexpected message"
-msgstr "Fehler: unerwartete Meldung"
-
-#: camlibs/canon/psa50.c:539
-msgid "ERROR: message overrun"
-msgstr "Fehler: Meldungsüberlauf"
-
-#: camlibs/canon/psa50.c:569
-msgid "ERROR: out of sequence."
-msgstr "Fehler: aus der Reihe."
-
-#: camlibs/canon/psa50.c:576
-msgid "ERROR: unexpected packet type."
-msgstr "Fehler: unerwarteter Pakettyp."
-
-#: camlibs/canon/psa50.c:588
-msgid "ERROR: message format error."
-msgstr "Fehler: Meldungsformatfehler."
-
-#: camlibs/canon/psa50.c:604
-msgid "ERROR: unexpected message2."
-msgstr "Fehler: unerwartete Meldung2."
-
-#: camlibs/canon/psa50.c:1299
-msgid "Name too long, max is 30 characters!"
-msgstr "Name zu lang, maximal 30 Zeichen!"
-
-#: camlibs/canon/psa50.c:1530
-msgid "Error changing speed."
-msgstr "Fehler beim Ändern der Datenrate."
-
-#: camlibs/canon/psa50.c:1542
-msgid "Resetting protocol..."
-msgstr "Setze Protokoll zurück..."
-
-#: camlibs/canon/psa50.c:1552
-msgid "Camera OK.\n"
-msgstr "Kamera OK.\n"
-
-#. Camera was off...
-#: camlibs/canon/psa50.c:1567
-msgid "Looking for camera ..."
-msgstr "Suche nach Kamera ..."
-
-#: camlibs/canon/psa50.c:1584
-msgid "Communication error 1"
-msgstr "Kommunikationsfehler 1"
-
-#: camlibs/canon/psa50.c:1592 camlibs/canon/psa50.c:1596
-#: camlibs/dimera/dimera3500.c:1059
-msgid "No response from camera"
-msgstr "Keine Antwort von Kamera"
-
-#: camlibs/canon/psa50.c:1600
-msgid "Unrecognized response"
-msgstr "Nicht erkannte Antwort"
-
-#: camlibs/canon/psa50.c:1676
-msgid "Bad EOT"
-msgstr "Fehlerhafter EOT"
-
-#: camlibs/canon/psa50.c:1682
-msgid "Communication error 2"
-msgstr "Kommunikationsfehler 2"
-
-#: camlibs/canon/psa50.c:1707
-msgid "Communication error 3"
-msgstr "Kommunikationsfehler 3"
-
-#: camlibs/canon/psa50.c:1711
-msgid "Changing speed... wait..."
-msgstr "Ändere Datenrate... Warte..."
-
-#: camlibs/canon/psa50.c:1716
-msgid "Error changing speed"
-msgstr "Fehler beim Ändern der Datenrate"
-
-#: camlibs/canon/psa50.c:1731
-msgid "Error waiting ACK during initialization retrying"
-msgstr ""
-"Fehler beim Warten auf ACK, während die Initialisierung erneut versucht wird"
-
-#: camlibs/canon/psa50.c:1737
-msgid "Error waiting ACK during initialization"
-msgstr "Fehler beim Warten auf ACK während der Initialisierung"
-
-#: camlibs/canon/psa50.c:1740
-msgid "Connected to camera"
-msgstr "Mit Kamera verbunden"
-
-#: camlibs/canon/psa50.c:2421
-msgid "File protected"
-msgstr "Datei geschützt"
-
-#: camlibs/canon/psa50.c:2435
-msgid "Not implemented!"
-msgstr "Nicht implementiert!"
 
 #: camlibs/digita/digita.c:333
 #, c-format
@@ -423,8 +312,8 @@ msgstr ""
 "Kamera wird %s-betrieben%s\n"
 
 #. Flash
-#: camlibs/dimera/dimera3500.c:639 camlibs/konica/library.c:782
-#: camlibs/konica/library.c:1022
+#: camlibs/dimera/dimera3500.c:639 camlibs/konica/library.c:709
+#: camlibs/konica/library.c:949
 msgid "Flash"
 msgstr "Blitz"
 
@@ -587,14 +476,18 @@ msgstr "Problem beim Kamera-Reset"
 msgid "Problem setting camera communication speed"
 msgstr "Problem beim Setzen der Kameradatenrate"
 
+#: camlibs/dimera/dimera3500.c:1059
+msgid "No response from camera"
+msgstr "Keine Antwort von Kamera"
+
 #: camlibs/dimera/dimera3500.c:1065
 msgid "Looks like a modem, not a camera"
 msgstr "Sieht wie ein Modem aus, nicht wie eine Kamera"
 
+# Browser == Stöberer? [CM]
 #: camlibs/directory/directory.c:311
-#, fuzzy
 msgid "Directory Browse"
-msgstr "Verzeichnis existiert bereits"
+msgstr "Verzeichnis-Liste"
 
 #: camlibs/directory/directory.c:312 camlibs/directory/directory.c:343
 msgid "View hidden directories"
@@ -790,12 +683,12 @@ msgstr "Fehler bei der Befehlsreihenfolge"
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
 
-#: camlibs/konica/library.c:469
+#: camlibs/konica/library.c:396
 #, c-format
 msgid "%i pictures could not be deleted because they are protected!"
 msgstr "%i Bilder konnten nicht gelöscht werden, da sie geschützt waren!"
 
-#: camlibs/konica/library.c:567
+#: camlibs/konica/library.c:494
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -814,7 +707,7 @@ msgstr ""
 "Name: %s,\n"
 "Hersteller: %s\n"
 
-#: camlibs/konica/library.c:632
+#: camlibs/konica/library.c:559
 msgid ""
 "Konica library\n"
 "Lutz Müller <urc8@rz.uni-karlsruhe.de>\n"
@@ -825,213 +718,224 @@ msgstr ""
 "Unterstützung für alle Konica- und verschiedene HP-Kameras."
 
 #. Create the window.
-#: camlibs/konica/library.c:662
+#: camlibs/konica/library.c:589
 msgid "Konica Configuration"
 msgstr "Konica-Konfiguration"
 
 #. **********************
 #. Persistent Settings
 #. **********************
-#: camlibs/konica/library.c:667 camlibs/konica/library.c:879
+#: camlibs/konica/library.c:594 camlibs/konica/library.c:806
 msgid "Persistent Settings"
 msgstr "Dauerhafte Einstellungen"
 
 #. Date
-#: camlibs/konica/library.c:671 camlibs/konica/library.c:883
+#: camlibs/konica/library.c:598 camlibs/konica/library.c:810
 #: camlibs/polaroid/pdc700.c:896 camlibs/polaroid/pdc700.c:962
 msgid "Date and Time"
 msgstr "Datum und Zeit"
 
 #. Beep
-#: camlibs/konica/library.c:685 camlibs/konica/library.c:897
+#: camlibs/konica/library.c:612 camlibs/konica/library.c:824
 msgid "Beep"
 msgstr "Ton"
 
-#: camlibs/konica/library.c:687 camlibs/konica/library.c:694
-#: camlibs/konica/library.c:785 camlibs/konica/library.c:794
-#: camlibs/konica/library.c:1027 camlibs/sierra/sierra.c:924
-#: camlibs/sierra/sierra.c:930 camlibs/sierra/sierra.c:1191
+#: camlibs/konica/library.c:614 camlibs/konica/library.c:621
+#: camlibs/konica/library.c:712 camlibs/konica/library.c:721
+#: camlibs/konica/library.c:954 camlibs/sierra/sierra.c:925
+#: camlibs/sierra/sierra.c:931 camlibs/sierra/sierra.c:1192
 msgid "On"
 msgstr "An"
 
-#: camlibs/konica/library.c:688 camlibs/konica/library.c:691
-#: camlibs/konica/library.c:784 camlibs/konica/library.c:791
-#: camlibs/konica/library.c:900 camlibs/konica/library.c:1025
-#: camlibs/sierra/sierra.c:809 camlibs/sierra/sierra.c:818
-#: camlibs/sierra/sierra.c:925 camlibs/sierra/sierra.c:928
-#: camlibs/sierra/sierra.c:1113 camlibs/sierra/sierra.c:1193
+#: camlibs/konica/library.c:615 camlibs/konica/library.c:618
+#: camlibs/konica/library.c:711 camlibs/konica/library.c:718
+#: camlibs/konica/library.c:827 camlibs/konica/library.c:952
+#: camlibs/sierra/sierra.c:810 camlibs/sierra/sierra.c:819
+#: camlibs/sierra/sierra.c:926 camlibs/sierra/sierra.c:929
+#: camlibs/sierra/sierra.c:1114 camlibs/sierra/sierra.c:1194
+#: camlibs/sierra/sierra.c:1318 camlibs/sierra/sierra.c:1326
+#: camlibs/sierra/sierra.c:1553
 msgid "Off"
 msgstr "Aus"
 
-#: camlibs/konica/library.c:697
+#: camlibs/konica/library.c:624
 msgid "Shall the camera beep when taking a picture?"
 msgstr "Soll die Kamera einen Ton spielen, wenn ein Bild aufgenommen wird?"
 
 #. Self Timer Time
-#: camlibs/konica/library.c:701 camlibs/konica/library.c:910
+#: camlibs/konica/library.c:628 camlibs/konica/library.c:837
 msgid "Self Timer Time"
 msgstr "Selbstauslöserzeit"
 
 #. Auto Off Time
-#: camlibs/konica/library.c:708 camlibs/konica/library.c:918
+#: camlibs/konica/library.c:635 camlibs/konica/library.c:845
 msgid "Auto Off Time"
 msgstr "Zeit für automatische Abschaltung"
 
 #. Slide Show Interval
-#: camlibs/konica/library.c:715 camlibs/konica/library.c:926
+#: camlibs/konica/library.c:642 camlibs/konica/library.c:853
 msgid "Slide Show Interval"
 msgstr "Diashow-Intervall"
 
 #. Resolution
-#: camlibs/konica/library.c:722 camlibs/konica/library.c:935
-#: camlibs/sierra/sierra.c:708 camlibs/sierra/sierra.c:1037
+#: camlibs/konica/library.c:649 camlibs/konica/library.c:862
+#: camlibs/sierra/sierra.c:709 camlibs/sierra/sierra.c:1038
+#: camlibs/sierra/sierra.c:1388 camlibs/sierra/sierra.c:1597
 msgid "Resolution"
 msgstr "Auflösung"
 
-#: camlibs/konica/library.c:724 camlibs/konica/library.c:732
-#: camlibs/konica/library.c:940
+#: camlibs/konica/library.c:651 camlibs/konica/library.c:659
+#: camlibs/konica/library.c:867
 msgid "Low (576 x 436)"
 msgstr "Niedrig (576 x 436)"
 
-#: camlibs/konica/library.c:725 camlibs/konica/library.c:735
+#: camlibs/konica/library.c:652 camlibs/konica/library.c:662
 msgid "Medium (1152 x 872)"
 msgstr "Mittel (1152 x 872)"
 
-#: camlibs/konica/library.c:726 camlibs/konica/library.c:729
-#: camlibs/konica/library.c:938
+#: camlibs/konica/library.c:653 camlibs/konica/library.c:656
+#: camlibs/konica/library.c:865
 msgid "High (1152 x 872)"
 msgstr "Hoch (1152 x 872)"
 
 #. **************
 #. Localization
 #. **************
-#: camlibs/konica/library.c:742 camlibs/konica/library.c:951
+#: camlibs/konica/library.c:669 camlibs/konica/library.c:878
 msgid "Localization"
 msgstr "Lokalisierung"
 
 #. Localization File
-#: camlibs/konica/library.c:748 camlibs/konica/library.c:954
+#: camlibs/konica/library.c:675 camlibs/konica/library.c:881
+#: camlibs/sierra/sierra.c:1464 camlibs/sierra/sierra.c:1648
 msgid "Language"
 msgstr "Sprache"
 
-#: camlibs/konica/library.c:755 camlibs/konica/library.c:764
-#: camlibs/konica/library.c:772 camlibs/konica/library.c:959
-#: camlibs/konica/library.c:983 camlibs/konica/library.c:1001
+#: camlibs/konica/library.c:682 camlibs/konica/library.c:691
+#: camlibs/konica/library.c:699 camlibs/konica/library.c:886
+#: camlibs/konica/library.c:910 camlibs/konica/library.c:928
 msgid "None selected"
 msgstr "Keine ausgewählt"
 
 #. TV output format
-#: camlibs/konica/library.c:759 camlibs/konica/library.c:980
+#: camlibs/konica/library.c:686 camlibs/konica/library.c:907
 msgid "TV Output Format"
 msgstr "TV-Ausgabeformat"
 
-#: camlibs/konica/library.c:761 camlibs/konica/library.c:984
+#: camlibs/konica/library.c:688 camlibs/konica/library.c:911
 msgid "NTSC"
 msgstr "NTSC"
 
-#: camlibs/konica/library.c:762 camlibs/konica/library.c:986
+#: camlibs/konica/library.c:689 camlibs/konica/library.c:913
 msgid "PAL"
 msgstr "PAL"
 
-#: camlibs/konica/library.c:763 camlibs/konica/library.c:988
+#: camlibs/konica/library.c:690 camlibs/konica/library.c:915
 msgid "Do not display TV menu"
 msgstr "TV-Menü nicht anzeigen"
 
 #. Date format
-#: camlibs/konica/library.c:767 camlibs/konica/library.c:998
+#: camlibs/konica/library.c:694 camlibs/konica/library.c:925
 msgid "Date Format"
 msgstr "Datumsformat"
 
-#: camlibs/konica/library.c:769 camlibs/konica/library.c:1002
+#: camlibs/konica/library.c:696 camlibs/konica/library.c:929
 msgid "Month/Day/Year"
 msgstr "Monat/Tag/Jahr"
 
-#: camlibs/konica/library.c:770 camlibs/konica/library.c:1004
+#: camlibs/konica/library.c:697 camlibs/konica/library.c:931
 msgid "Day/Month/Year"
 msgstr "Tag/Monat/Jahr"
 
-#: camlibs/konica/library.c:771 camlibs/konica/library.c:1006
+#: camlibs/konica/library.c:698 camlibs/konica/library.c:933
 msgid "Year/Month/Day"
 msgstr "Jahr/Monat/Tag"
 
 #. ******************************
 #. Session-persistent Settings
 #. ******************************
-#: camlibs/konica/library.c:777 camlibs/konica/library.c:1018
+#: camlibs/konica/library.c:704 camlibs/konica/library.c:945
 msgid "Session-persistent Settings"
 msgstr "Sitzungsdauerhafte Einstellungen"
 
-#: camlibs/konica/library.c:786 camlibs/konica/library.c:797
-#: camlibs/konica/library.c:1029
+#: camlibs/konica/library.c:713 camlibs/konica/library.c:724
+#: camlibs/konica/library.c:956
 msgid "On, red-eye reduction"
 msgstr "An, Rote-Augen-Vermeidung"
 
-#: camlibs/konica/library.c:787 camlibs/konica/library.c:803
-#: camlibs/konica/library.c:818 camlibs/konica/library.c:821
-#: camlibs/konica/library.c:1031 camlibs/konica/library.c:1061
-#: camlibs/sierra/sierra.c:709 camlibs/sierra/sierra.c:715
-#: camlibs/sierra/sierra.c:748 camlibs/sierra/sierra.c:754
-#: camlibs/sierra/sierra.c:807 camlibs/sierra/sierra.c:814
-#: camlibs/sierra/sierra.c:868 camlibs/sierra/sierra.c:875
-#: camlibs/sierra/sierra.c:1041 camlibs/sierra/sierra.c:1069
-#: camlibs/sierra/sierra.c:1109 camlibs/sierra/sierra.c:1152
+#: camlibs/konica/library.c:714 camlibs/konica/library.c:730
+#: camlibs/konica/library.c:745 camlibs/konica/library.c:748
+#: camlibs/konica/library.c:958 camlibs/konica/library.c:988
+#: camlibs/sierra/sierra.c:710 camlibs/sierra/sierra.c:716
+#: camlibs/sierra/sierra.c:749 camlibs/sierra/sierra.c:755
+#: camlibs/sierra/sierra.c:808 camlibs/sierra/sierra.c:815
+#: camlibs/sierra/sierra.c:869 camlibs/sierra/sierra.c:876
+#: camlibs/sierra/sierra.c:1042 camlibs/sierra/sierra.c:1070
+#: camlibs/sierra/sierra.c:1110 camlibs/sierra/sierra.c:1153
+#: camlibs/sierra/sierra.c:1316 camlibs/sierra/sierra.c:1322
+#: camlibs/sierra/sierra.c:1344 camlibs/sierra/sierra.c:1349
+#: camlibs/sierra/sierra.c:1549 camlibs/sierra/sierra.c:1569
 msgid "Auto"
 msgstr "Auto"
 
-#: camlibs/konica/library.c:788 camlibs/konica/library.c:800
+#: camlibs/konica/library.c:715 camlibs/konica/library.c:727
 msgid "Auto, red-eye reduction"
 msgstr "Auto, Rote-Augen-Vermeidung"
 
 #. Exposure
-#: camlibs/konica/library.c:808 camlibs/konica/library.c:1040
+#: camlibs/konica/library.c:735 camlibs/konica/library.c:967
 msgid "Exposure"
 msgstr "Belichtung"
 
 #. Focus
-#: camlibs/konica/library.c:815 camlibs/konica/library.c:1048
+#: camlibs/konica/library.c:742 camlibs/konica/library.c:975
 msgid "Focus"
 msgstr "Fokus"
 
-#: camlibs/konica/library.c:817 camlibs/konica/library.c:824
+#: camlibs/konica/library.c:744 camlibs/konica/library.c:751
+#: camlibs/sierra/sierra.c:1345 camlibs/sierra/sierra.c:1351
+#: camlibs/sierra/sierra.c:1571
 msgid "Fixed"
 msgstr "Fest eingestellt"
 
 #. **********************
 #. Volatile Settings
 #. **********************
-#: camlibs/konica/library.c:831 camlibs/konica/library.c:1053
+#: camlibs/konica/library.c:758 camlibs/konica/library.c:980
 msgid "Volatile Settings"
 msgstr "Flüchtige Einstellungen"
 
 #. Self Timer
-#: camlibs/konica/library.c:835 camlibs/konica/library.c:1056
+#: camlibs/konica/library.c:762 camlibs/konica/library.c:983
 #: camlibs/polaroid/pdc700.c:148
 msgid "Self Timer"
 msgstr "Selbstauslöser"
 
-#: camlibs/konica/library.c:837 camlibs/konica/library.c:1066
+#: camlibs/konica/library.c:764 camlibs/konica/library.c:993
 msgid "Self Timer (only next picture)"
 msgstr "Selbstauslöser (nur nächstes Bild)"
 
-#: camlibs/konica/library.c:838 camlibs/konica/library.c:845
-#: camlibs/minolta/dimagev/dimagev.c:401 camlibs/sierra/sierra.c:777
-#: camlibs/sierra/sierra.c:784 camlibs/sierra/sierra.c:838
-#: camlibs/sierra/sierra.c:845 camlibs/sierra/sierra.c:900
-#: camlibs/sierra/sierra.c:906 camlibs/sierra/sierra.c:1088
-#: camlibs/sierra/sierra.c:1131 camlibs/sierra/sierra.c:1175
+#: camlibs/konica/library.c:765 camlibs/konica/library.c:772
+#: camlibs/minolta/dimagev/dimagev.c:401 camlibs/sierra/sierra.c:778
+#: camlibs/sierra/sierra.c:785 camlibs/sierra/sierra.c:839
+#: camlibs/sierra/sierra.c:846 camlibs/sierra/sierra.c:901
+#: camlibs/sierra/sierra.c:907 camlibs/sierra/sierra.c:1089
+#: camlibs/sierra/sierra.c:1132 camlibs/sierra/sierra.c:1176
+#: camlibs/sierra/sierra.c:1371 camlibs/sierra/sierra.c:1375
+#: camlibs/sierra/sierra.c:1588
 msgid "Normal"
 msgstr "Normal"
 
-#: camlibs/konica/library.c:841
+#: camlibs/konica/library.c:768
 msgid "Self Timer (next picture only)"
 msgstr "Selbstauslöser (nur nächstes Bild)"
 
-#: camlibs/konica/library.c:1096
+#: camlibs/konica/library.c:1023
 #, c-format
 msgid "Could not find localization data at '%s'"
 msgstr "Konnte Lokalisierungsdaten nicht in »%s« finden"
 
-#: camlibs/konica/library.c:1163
+#: camlibs/konica/library.c:1090
 msgid "Localization file too long!"
 msgstr "Lokalisierungsdatei zu lang!"
 
@@ -1083,22 +987,25 @@ msgstr "Lokal"
 
 #: camlibs/minolta/dimagev/dimagev.c:294 camlibs/minolta/dimagev/dimagev.c:296
 #: camlibs/minolta/dimagev/dimagev.c:300 camlibs/minolta/dimagev/dimagev.c:303
-#: frontends/command-line/gphoto2-cmd-config.c:280
+#: frontends/command-line/gphoto2-cmd-config.c:365
 msgid "Yes"
 msgstr "Ja"
 
 #: camlibs/minolta/dimagev/dimagev.c:294 camlibs/minolta/dimagev/dimagev.c:296
 #: camlibs/minolta/dimagev/dimagev.c:300 camlibs/minolta/dimagev/dimagev.c:303
-#: frontends/command-line/gphoto2-cmd-config.c:280
+#: frontends/command-line/gphoto2-cmd-config.c:365
 msgid "No"
 msgstr "Nein"
 
-#: camlibs/minolta/dimagev/dimagev.c:301
+#: camlibs/minolta/dimagev/dimagev.c:301 camlibs/sierra/sierra.c:1390
+#: camlibs/sierra/sierra.c:1397 camlibs/sierra/sierra.c:1602
 msgid "Fine"
 msgstr "Fein"
 
-#: camlibs/minolta/dimagev/dimagev.c:301 camlibs/sierra/sierra.c:710
-#: camlibs/sierra/sierra.c:717 camlibs/sierra/sierra.c:1043
+#: camlibs/minolta/dimagev/dimagev.c:301 camlibs/sierra/sierra.c:711
+#: camlibs/sierra/sierra.c:718 camlibs/sierra/sierra.c:1044
+#: camlibs/sierra/sierra.c:1389 camlibs/sierra/sierra.c:1395
+#: camlibs/sierra/sierra.c:1600
 msgid "Standard"
 msgstr "Standard"
 
@@ -1321,7 +1228,8 @@ msgstr "fein"
 msgid "superfine"
 msgstr "superfein"
 
-#: camlibs/polaroid/pdc700.c:154
+#: camlibs/polaroid/pdc700.c:154 camlibs/sierra/sierra.c:1288
+#: camlibs/sierra/sierra.c:1302 camlibs/sierra/sierra.c:1537
 msgid "auto"
 msgstr "auto"
 
@@ -1409,7 +1317,8 @@ msgstr ""
 "%i Bytes eines unbekannten Bildformates erhalten. Bitte schreiben Sie an "
 "<gphoto-devel@gphoto.org> (auf Englisch) für Unterstützung."
 
-#: camlibs/polaroid/pdc700.c:868 camlibs/sierra/sierra.c:700
+#: camlibs/polaroid/pdc700.c:868 camlibs/sierra/sierra.c:701
+#: camlibs/sierra/sierra.c:1273
 msgid "Camera Configuration"
 msgstr "Kamera-Konfiguration"
 
@@ -1460,206 +1369,219 @@ msgid "The requested port type (%i) is not supported by this driver."
 msgstr ""
 "Der angeforderte Port-Typ (%i) wird von diesem Treiber nicht unterstützt."
 
-#: camlibs/sierra/sierra.c:560
+#: camlibs/sierra/sierra.c:561
 msgid "The file to be uploaded has a null length"
 msgstr "Die hochzuladende Datei hat eine Größe von null Bytes"
 
-#: camlibs/sierra/sierra.c:574
+#: camlibs/sierra/sierra.c:575
 msgid "Not enough memory available on the memory card"
 msgstr "Nicht genügend Speicherplatz auf der Karte vorhanden"
 
-#: camlibs/sierra/sierra.c:581
+#: camlibs/sierra/sierra.c:582
 msgid "Cannot retrieve the name of the folder containing the pictures"
 msgstr "Kann den Namen des Verzeichnisses mit den Bildern nicht bekommen"
 
-#: camlibs/sierra/sierra.c:588
+#: camlibs/sierra/sierra.c:589
 #, c-format
 msgid "Upload is supported into the '%s' folder only"
 msgstr "Hochladen ist nur in das Verzeichnis »%s« unterstützt"
 
-#: camlibs/sierra/sierra.c:701
+#: camlibs/sierra/sierra.c:702 camlibs/sierra/sierra.c:1363
 msgid "Picture Settings"
 msgstr "Bildeinstellungen"
 
-#: camlibs/sierra/sierra.c:711 camlibs/sierra/sierra.c:719
-#: camlibs/sierra/sierra.c:751 camlibs/sierra/sierra.c:760
-#: camlibs/sierra/sierra.c:1045 camlibs/sierra/sierra.c:1075
+#: camlibs/sierra/sierra.c:712 camlibs/sierra/sierra.c:720
+#: camlibs/sierra/sierra.c:752 camlibs/sierra/sierra.c:761
+#: camlibs/sierra/sierra.c:1046 camlibs/sierra/sierra.c:1076
 msgid "High"
 msgstr "Hoch"
 
-#: camlibs/sierra/sierra.c:712 camlibs/sierra/sierra.c:721
-#: camlibs/sierra/sierra.c:1047
+#: camlibs/sierra/sierra.c:713 camlibs/sierra/sierra.c:722
+#: camlibs/sierra/sierra.c:1048
 msgid "Best"
 msgstr "Beste"
 
-#: camlibs/sierra/sierra.c:724 camlibs/sierra/sierra.c:763
-#: camlibs/sierra/sierra.c:795 camlibs/sierra/sierra.c:825
-#: camlibs/sierra/sierra.c:856 camlibs/sierra/sierra.c:887
-#: camlibs/sierra/sierra.c:911 camlibs/sierra/sierra.c:933
-#: camlibs/sierra/sierra.c:962
+#: camlibs/sierra/sierra.c:725 camlibs/sierra/sierra.c:764
+#: camlibs/sierra/sierra.c:796 camlibs/sierra/sierra.c:826
+#: camlibs/sierra/sierra.c:857 camlibs/sierra/sierra.c:888
+#: camlibs/sierra/sierra.c:912 camlibs/sierra/sierra.c:934
+#: camlibs/sierra/sierra.c:963 camlibs/sierra/sierra.c:1305
+#: camlibs/sierra/sierra.c:1333 camlibs/sierra/sierra.c:1356
+#: camlibs/sierra/sierra.c:1378 camlibs/sierra/sierra.c:1404
+#: camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1491
 #, c-format
 msgid "%i (unknown)"
 msgstr "%i (unbekannt)"
 
-#: camlibs/sierra/sierra.c:736 camlibs/sierra/sierra.c:1057
+#: camlibs/sierra/sierra.c:737 camlibs/sierra/sierra.c:1058
 msgid "Shutter Speed (microseconds)"
 msgstr "Belichtungszeit (Mikrosekunden)"
 
-#: camlibs/sierra/sierra.c:747 camlibs/sierra/sierra.c:1065
+#: camlibs/sierra/sierra.c:748 camlibs/sierra/sierra.c:1066
+#: camlibs/sierra/sierra.c:1281 camlibs/sierra/sierra.c:1522
 msgid "Aperture"
 msgstr "Blende"
 
-#: camlibs/sierra/sierra.c:749 camlibs/sierra/sierra.c:756
-#: camlibs/sierra/sierra.c:1071
+#: camlibs/sierra/sierra.c:750 camlibs/sierra/sierra.c:757
+#: camlibs/sierra/sierra.c:1072
 msgid "Low"
 msgstr "Niedrig"
 
-#: camlibs/sierra/sierra.c:750 camlibs/sierra/sierra.c:758
-#: camlibs/sierra/sierra.c:1073
+#: camlibs/sierra/sierra.c:751 camlibs/sierra/sierra.c:759
+#: camlibs/sierra/sierra.c:1074
 msgid "Medium"
 msgstr "Mittel"
 
 #. Those values are for a C-2020 Z. If your model differs, we
 #. have to distinguish models here...
-#: camlibs/sierra/sierra.c:776 camlibs/sierra/sierra.c:1084
+#: camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:1085
+#: camlibs/sierra/sierra.c:1414 camlibs/sierra/sierra.c:1615
 msgid "Color Mode"
 msgstr "Farbmodus"
 
-#: camlibs/sierra/sierra.c:778 camlibs/sierra/sierra.c:786
-#: camlibs/sierra/sierra.c:1090
+#: camlibs/sierra/sierra.c:779 camlibs/sierra/sierra.c:787
+#: camlibs/sierra/sierra.c:1091
 msgid "Black/White"
 msgstr "Schwarz/Weiß"
 
-#: camlibs/sierra/sierra.c:779 camlibs/sierra/sierra.c:788
-#: camlibs/sierra/sierra.c:1092
+#: camlibs/sierra/sierra.c:780 camlibs/sierra/sierra.c:789
+#: camlibs/sierra/sierra.c:1093
 msgid "Sepia"
 msgstr "Sepia"
 
-#: camlibs/sierra/sierra.c:780 camlibs/sierra/sierra.c:790
-#: camlibs/sierra/sierra.c:1094
+#: camlibs/sierra/sierra.c:781 camlibs/sierra/sierra.c:791
+#: camlibs/sierra/sierra.c:1095
 msgid "White Board"
 msgstr "White Board-Effekt"
 
-#: camlibs/sierra/sierra.c:781 camlibs/sierra/sierra.c:792
-#: camlibs/sierra/sierra.c:1096
+#: camlibs/sierra/sierra.c:782 camlibs/sierra/sierra.c:793
+#: camlibs/sierra/sierra.c:1097
 msgid "Black Board"
 msgstr "Black Board-Effekt"
 
-#: camlibs/sierra/sierra.c:806 camlibs/sierra/sierra.c:1105
+#: camlibs/sierra/sierra.c:807 camlibs/sierra/sierra.c:1106
+#: camlibs/sierra/sierra.c:1315 camlibs/sierra/sierra.c:1546
 msgid "Flash Mode"
 msgstr "Blitzmodus"
 
-#: camlibs/sierra/sierra.c:808 camlibs/sierra/sierra.c:816
-#: camlibs/sierra/sierra.c:1111
+#: camlibs/sierra/sierra.c:809 camlibs/sierra/sierra.c:817
+#: camlibs/sierra/sierra.c:1112 camlibs/sierra/sierra.c:1317
+#: camlibs/sierra/sierra.c:1324 camlibs/sierra/sierra.c:1551
 msgid "Force"
 msgstr "Immer"
 
-#: camlibs/sierra/sierra.c:810 camlibs/sierra/sierra.c:820
-#: camlibs/sierra/sierra.c:1115
+#: camlibs/sierra/sierra.c:811 camlibs/sierra/sierra.c:821
+#: camlibs/sierra/sierra.c:1116 camlibs/sierra/sierra.c:1319
+#: camlibs/sierra/sierra.c:1328 camlibs/sierra/sierra.c:1555
 msgid "Red-eye Reduction"
 msgstr "Rote-Augen-Vermeidung"
 
-#: camlibs/sierra/sierra.c:811 camlibs/sierra/sierra.c:822
-#: camlibs/sierra/sierra.c:1117
+#: camlibs/sierra/sierra.c:812 camlibs/sierra/sierra.c:823
+#: camlibs/sierra/sierra.c:1118 camlibs/sierra/sierra.c:1320
+#: camlibs/sierra/sierra.c:1330 camlibs/sierra/sierra.c:1557
 msgid "Slow Sync"
 msgstr "Langsame Sync"
 
-#: camlibs/sierra/sierra.c:836 camlibs/sierra/sierra.c:1127
+#: camlibs/sierra/sierra.c:837 camlibs/sierra/sierra.c:1128
 msgid "Brightness/Contrast"
 msgstr "Helligkeit/Kontrast"
 
-#: camlibs/sierra/sierra.c:839 camlibs/sierra/sierra.c:847
-#: camlibs/sierra/sierra.c:1133
+#: camlibs/sierra/sierra.c:840 camlibs/sierra/sierra.c:848
+#: camlibs/sierra/sierra.c:1134
 msgid "Bright+"
 msgstr "Hell+"
 
-#: camlibs/sierra/sierra.c:840 camlibs/sierra/sierra.c:849
-#: camlibs/sierra/sierra.c:1135
+#: camlibs/sierra/sierra.c:841 camlibs/sierra/sierra.c:850
+#: camlibs/sierra/sierra.c:1136
 msgid "Bright-"
 msgstr "Hell-"
 
-#: camlibs/sierra/sierra.c:841 camlibs/sierra/sierra.c:851
-#: camlibs/sierra/sierra.c:1137
+#: camlibs/sierra/sierra.c:842 camlibs/sierra/sierra.c:852
+#: camlibs/sierra/sierra.c:1138
 msgid "Contrast+"
 msgstr "Kontrast+"
 
-#: camlibs/sierra/sierra.c:842 camlibs/sierra/sierra.c:853
-#: camlibs/sierra/sierra.c:1139
+#: camlibs/sierra/sierra.c:843 camlibs/sierra/sierra.c:854
+#: camlibs/sierra/sierra.c:1140
 msgid "Contrast-"
 msgstr "Kontrast-"
 
-#: camlibs/sierra/sierra.c:867 camlibs/sierra/sierra.c:1148
+#: camlibs/sierra/sierra.c:868 camlibs/sierra/sierra.c:1149
+#: camlibs/sierra/sierra.c:1343 camlibs/sierra/sierra.c:1566
 msgid "White Balance"
 msgstr "Weißabgleich"
 
-#: camlibs/sierra/sierra.c:869 camlibs/sierra/sierra.c:877
-#: camlibs/sierra/sierra.c:1154
+#: camlibs/sierra/sierra.c:870 camlibs/sierra/sierra.c:878
+#: camlibs/sierra/sierra.c:1155
 msgid "Skylight"
 msgstr "Tageslicht"
 
-#: camlibs/sierra/sierra.c:870 camlibs/sierra/sierra.c:879
-#: camlibs/sierra/sierra.c:1156
+#: camlibs/sierra/sierra.c:871 camlibs/sierra/sierra.c:880
+#: camlibs/sierra/sierra.c:1157
 msgid "Fluorescent"
 msgstr "Kunstlicht - Fluoreszenzlampe"
 
-#: camlibs/sierra/sierra.c:871 camlibs/sierra/sierra.c:881
-#: camlibs/sierra/sierra.c:1158
+#: camlibs/sierra/sierra.c:872 camlibs/sierra/sierra.c:882
+#: camlibs/sierra/sierra.c:1159
 msgid "Tungsten"
 msgstr "Kunstlicht - Glühlampe"
 
-#: camlibs/sierra/sierra.c:872 camlibs/sierra/sierra.c:884
-#: camlibs/sierra/sierra.c:1160
+#: camlibs/sierra/sierra.c:873 camlibs/sierra/sierra.c:885
+#: camlibs/sierra/sierra.c:1161
 msgid "Cloudy"
 msgstr "Wolkig"
 
-#: camlibs/sierra/sierra.c:898 camlibs/sierra/sierra.c:1169
+#: camlibs/sierra/sierra.c:899 camlibs/sierra/sierra.c:1170
+#: camlibs/sierra/sierra.c:1369 camlibs/sierra/sierra.c:1582
 msgid "Lens Mode"
 msgstr "Objektivmodus"
 
-#: camlibs/sierra/sierra.c:899 camlibs/sierra/sierra.c:904
-#: camlibs/sierra/sierra.c:1173
+#: camlibs/sierra/sierra.c:900 camlibs/sierra/sierra.c:905
+#: camlibs/sierra/sierra.c:1174 camlibs/sierra/sierra.c:1370
+#: camlibs/sierra/sierra.c:1373 camlibs/sierra/sierra.c:1586
 msgid "Macro"
 msgstr "Makro"
 
-#: camlibs/sierra/sierra.c:901 camlibs/sierra/sierra.c:908
-#: camlibs/sierra/sierra.c:1177
+#: camlibs/sierra/sierra.c:902 camlibs/sierra/sierra.c:909
+#: camlibs/sierra/sierra.c:1178
 msgid "Infinity/Fish-eye"
 msgstr "Unendlich/Fischauge"
 
 # Translation thanks to Martin Kroeker. [Colin]
-#: camlibs/sierra/sierra.c:922 camlibs/sierra/sierra.c:1187
+#: camlibs/sierra/sierra.c:923 camlibs/sierra/sierra.c:1188
 msgid "Spot Metering Mode"
 msgstr "Spotmessung"
 
-#: camlibs/sierra/sierra.c:944 camlibs/sierra/sierra.c:1202
+#: camlibs/sierra/sierra.c:945 camlibs/sierra/sierra.c:1203
 msgid "Zoom"
 msgstr "Zoom"
 
-#: camlibs/sierra/sierra.c:945 camlibs/sierra/sierra.c:951
+#: camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:952
 msgid "1x"
 msgstr "1x"
 
-#: camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:956
+#: camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:957
 msgid "1.6x"
 msgstr "1.6x"
 
-#: camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:953
+#: camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:954
 msgid "2x"
 msgstr "2x"
 
-#: camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:959
+#: camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:960
 msgid "2.5x"
 msgstr "2.5x"
 
-#: camlibs/sierra/sierra.c:969
+#: camlibs/sierra/sierra.c:970 camlibs/sierra/sierra.c:1430
 msgid "Camera Settings"
 msgstr "Kameraeinstellungen"
 
-#: camlibs/sierra/sierra.c:976 camlibs/sierra/sierra.c:1221
+#: camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1222
+#: camlibs/sierra/sierra.c:1437 camlibs/sierra/sierra.c:1629
 msgid "Auto Off (host) (in seconds)"
 msgstr "Autom. Abschaltung (am PC) (in Sekunden)"
 
-#: camlibs/sierra/sierra.c:978
+#: camlibs/sierra/sierra.c:979 camlibs/sierra/sierra.c:1439
 msgid ""
 "How long will it take until the camera powers off when connected to the "
 "computer?"
@@ -1667,11 +1589,12 @@ msgstr ""
 "Wie lange soll es dauern, bis die Kamera abschaltet, wenn sie an den "
 "Computer angeschlossen ist?"
 
-#: camlibs/sierra/sierra.c:990 camlibs/sierra/sierra.c:1231
+#: camlibs/sierra/sierra.c:991 camlibs/sierra/sierra.c:1232
+#: camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1639
 msgid "Auto Off (field) (in seconds)"
 msgstr "Autom. Abschaltung (nicht am PC) (in Sekunden)"
 
-#: camlibs/sierra/sierra.c:992
+#: camlibs/sierra/sierra.c:993 camlibs/sierra/sierra.c:1453
 msgid ""
 "How long will it take until the camera powers off when not connected to the "
 "computer?"
@@ -1679,59 +1602,196 @@ msgstr ""
 "Wie lange soll es dauern, bis die Kamera abschaltet, wenn sie nicht an den "
 "Computer angeschlossen ist?"
 
-#: camlibs/sierra/sierra.c:1004 camlibs/sierra/sierra.c:1241
+#: camlibs/sierra/sierra.c:1005 camlibs/sierra/sierra.c:1242
 msgid "LCD Brightness"
 msgstr "LCD-Helligkeit"
 
-#: camlibs/sierra/sierra.c:1014 camlibs/sierra/sierra.c:1250
+#: camlibs/sierra/sierra.c:1015 camlibs/sierra/sierra.c:1251
 msgid "LCD Auto Off (in seconds)"
 msgstr "Autom. Abschaltung des LCD (in Sekunden)"
 
 #: camlibs/sierra/sierra.c:1275
+msgid "Shot Settings"
+msgstr "Aufnahme-Einstellungen"
+
+#: camlibs/sierra/sierra.c:1282 camlibs/sierra/sierra.c:1290
+#: camlibs/sierra/sierra.c:1525
+msgid "F2"
+msgstr "F2"
+
+#: camlibs/sierra/sierra.c:1283 camlibs/sierra/sierra.c:1292
+#: camlibs/sierra/sierra.c:1527
+msgid "F2.3"
+msgstr "F2.3"
+
+#: camlibs/sierra/sierra.c:1284 camlibs/sierra/sierra.c:1294
+#: camlibs/sierra/sierra.c:1529
+msgid "F2.8"
+msgstr "F2.8"
+
+#: camlibs/sierra/sierra.c:1285 camlibs/sierra/sierra.c:1296
+#: camlibs/sierra/sierra.c:1531
+msgid "F4"
+msgstr "F4"
+
+#: camlibs/sierra/sierra.c:1286 camlibs/sierra/sierra.c:1298
+#: camlibs/sierra/sierra.c:1533
+msgid "F5.6"
+msgstr "F5.6"
+
+#: camlibs/sierra/sierra.c:1287 camlibs/sierra/sierra.c:1300
+#: camlibs/sierra/sierra.c:1535
+msgid "F8"
+msgstr "F8"
+
+#: camlibs/sierra/sierra.c:1346 camlibs/sierra/sierra.c:1353
+#: camlibs/sierra/sierra.c:1573
+msgid "Custom"
+msgstr "Benutzerdefiniert"
+
+#: camlibs/sierra/sierra.c:1391 camlibs/sierra/sierra.c:1399
+#: camlibs/sierra/sierra.c:1604
+msgid "SuperFine"
+msgstr "Superfein"
+
+#: camlibs/sierra/sierra.c:1392 camlibs/sierra/sierra.c:1401
+#: camlibs/sierra/sierra.c:1606
+msgid "HyPict"
+msgstr "HyPict"
+
+#: camlibs/sierra/sierra.c:1415 camlibs/sierra/sierra.c:1418
+#: camlibs/sierra/sierra.c:1618
+msgid "color"
+msgstr "farbig"
+
+#: camlibs/sierra/sierra.c:1416 camlibs/sierra/sierra.c:1420
+#: camlibs/sierra/sierra.c:1620
+msgid "black & white"
+msgstr "schwarz/weiß"
+
+#: camlibs/sierra/sierra.c:1465 camlibs/sierra/sierra.c:1474
+#: camlibs/sierra/sierra.c:1651
+msgid "Korean"
+msgstr "Koreanisch"
+
+#: camlibs/sierra/sierra.c:1466 camlibs/sierra/sierra.c:1476
+#: camlibs/sierra/sierra.c:1653
+msgid "English"
+msgstr "Englisch"
+
+#: camlibs/sierra/sierra.c:1467 camlibs/sierra/sierra.c:1478
+#: camlibs/sierra/sierra.c:1655
+msgid "French"
+msgstr "Französisch"
+
+#: camlibs/sierra/sierra.c:1468 camlibs/sierra/sierra.c:1480
+#: camlibs/sierra/sierra.c:1657
+msgid "German"
+msgstr "Deutsch"
+
+#: camlibs/sierra/sierra.c:1469 camlibs/sierra/sierra.c:1482
+#: camlibs/sierra/sierra.c:1659
+msgid "Italian"
+msgstr "Italienisch"
+
+#: camlibs/sierra/sierra.c:1470 camlibs/sierra/sierra.c:1484
+#: camlibs/sierra/sierra.c:1661
+msgid "Japanese"
+msgstr "Japanisch"
+
+#: camlibs/sierra/sierra.c:1471 camlibs/sierra/sierra.c:1486
+#: camlibs/sierra/sierra.c:1663
+msgid "Spanish"
+msgstr "Spanisch"
+
+#: camlibs/sierra/sierra.c:1472 camlibs/sierra/sierra.c:1488
+#: camlibs/sierra/sierra.c:1665
+msgid "Portugese"
+msgstr "Portugiesisch"
+
+#: camlibs/sierra/sierra.c:1501 camlibs/sierra/sierra.c:1674
+msgid "Date & Time"
+msgstr "Datum und Zeit"
+
+#: camlibs/sierra/sierra.c:1716
+msgid "NO MEMORY CARD PRESENT\n"
+msgstr "Keine Speicherkarte vorhanden\n"
+
+#: camlibs/sierra/sierra.c:1726
 #, c-format
-msgid "%sCamera ID       : %s\n"
+msgid "%sCamera Model: %s\n"
+msgstr "%sKameramodell: %s\n"
+
+#: camlibs/sierra/sierra.c:1730
+#, c-format
+msgid "%sManufacturer: %s\n"
+msgstr "%sHersteller: %s\n"
+
+#: camlibs/sierra/sierra.c:1734
+#, c-format
+msgid "%sCamera ID: %s\n"
 msgstr "%sKamera-ID: %s\n"
 
-#: camlibs/sierra/sierra.c:1279
+#: camlibs/sierra/sierra.c:1738
 #, c-format
-msgid "%sSerial Number   : %s\n"
+msgid "%sSerial Number: %s\n"
 msgstr "%sSeriennummer: %s\n"
 
-#: camlibs/sierra/sierra.c:1283
+#: camlibs/sierra/sierra.c:1742
 #, c-format
-msgid "%sSoftware Rev.   : %s\n"
+msgid "%sSoftware Rev.: %s\n"
 msgstr "%sSoftware-Revision: %s\n"
 
 # Haesslich [Colin]
-#: camlibs/sierra/sierra.c:1287
+#: camlibs/sierra/sierra.c:1746
 #, c-format
-msgid "%sFrames Taken    : %i\n"
+msgid "%sFrames Taken: %i\n"
 msgstr "%sAufgenommene Bilder: %i\n"
 
 # Haesslich... [Colin]
-#: camlibs/sierra/sierra.c:1289
+#: camlibs/sierra/sierra.c:1748
 #, c-format
-msgid "%sFrames Left     : %i\n"
+msgid "%sFrames Left: %i\n"
 msgstr "%sVerbleibende Bilder: %i\n"
 
-#: camlibs/sierra/sierra.c:1291
+#: camlibs/sierra/sierra.c:1750
 #, c-format
-msgid "%sBattery Life    : %i\n"
+msgid "%sBattery Life: %i\n"
 msgstr "%sBatterielebensdauer: %i\n"
 
-#: camlibs/sierra/sierra.c:1293
+#: camlibs/sierra/sierra.c:1752
 #, c-format
-msgid "%sMemory Left\t: %i bytes\n"
+msgid "%sMemory Left: %i bytes\n"
 msgstr "%sVerbleibender Speicher: %i bytes\n"
 
-#: camlibs/sierra/sierra.c:1297
+#: camlibs/sierra/sierra.c:1756
 #, c-format
-msgid "%sDate         : %s\n"
+msgid "%sDate: %s\n"
 msgstr "%sDatum: %s\n"
 
-#: camlibs/sierra/sierra.c:1310
+#: camlibs/sierra/sierra.c:1772
 msgid ""
-"Some notes:\n"
+"Some notes about Epson cameras:\n"
+"- Some parameters are not controllable remotely:\n"
+"  * zoom\n"
+"  * focus\n"
+"  * custom white balance setup\n"
+"- Configuration has been reverse-engineered with\n"
+"  a PhotoPC 3000z, if your camera acts differently\n"
+"  please send a mail to <gphoto-devel@gphoto.org> (in English)\n"
+msgstr ""
+"Einige Kommentare über Epson-Kameras:\n"
+"- einige Parameter sind nicht fernsteuerbar:\n"
+"  * Zoom\n"
+"  * Fokus\n"
+"  * Benutzer-Weißabgleich\n"
+"- Die Konfiguration wurde mit einer PhotoPC 3000z rückentwickelt.\n"
+"  Wenn Ihre Kamera anders reagiert, dann senden Sie bitte\n"
+"  eine Mail an <gphoto-devel@gphoto.org> (auf Englisch).\n"
+
+#: camlibs/sierra/sierra.c:1784
+msgid ""
+"Some notes about Olympus cameras (and others?):\n"
 "(1) Camera Configuration:\n"
 "    A value of 0 will take the default one (auto).\n"
 "(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
@@ -1749,14 +1809,14 @@ msgstr ""
 "(2) Olympus C-3040Z (und möglicherweise die C-2040Z\n"
 "    und andere) haben einen USB-Kontrollmodus. Um \n"
 "    diesen Modus zu benutzen, muss die Kamera auf \n"
-"    'USB PC control mode' geschaltet sein. Um zum Menü\n"
+"    »USB PC control mode« geschaltet sein. Um zum Menü\n"
 "    für diese Einstellung zu gelangen, öffnen sie die\n"
 "    Klappe für die Speicherkarte und halten Sie beide\n"
 "    Menütasten gedrückt, bis das Kontrollmenü erscheint.\n"
-"    Schalten Sie es auf 'ON'."
+"    Schalten Sie es auf »ON«."
 
 # Ist "Freigabe" richtig? [Colin]
-#: camlibs/sierra/sierra.c:1330
+#: camlibs/sierra/sierra.c:1807
 msgid ""
 "sierra SPARClite library\n"
 "Scott Fritzinger <scottf@unr.edu>\n"
@@ -1789,123 +1849,123 @@ msgstr ""
 "Ken-ichi Hayashi\n"
 "Gphoto2-Portierung von Bart van Leeuwen <bart@netage.nl>"
 
-#: libgphoto2/gphoto2-camera.c:268
+#: libgphoto2/gphoto2-camera.c:347
 msgid "You need to set a port prior trying to set the speed"
 msgstr "Sie müssen einen Port setzen, bevor Sie die Datenrate setzen können"
 
-#: libgphoto2/gphoto2-camera.c:274
+#: libgphoto2/gphoto2-camera.c:353
 msgid "You can specify a speed only with serial ports"
 msgstr "Nur mit seriellen Ports können Sie eine Datenrate setzen"
 
-#: libgphoto2/gphoto2-camera.c:473
+#: libgphoto2/gphoto2-camera.c:552
 #, c-format
 msgid "Wrong percentage: %f"
 msgstr "Falsche Prozentangabe: %f"
 
-#: libgphoto2/gphoto2-camera.c:602
+#: libgphoto2/gphoto2-camera.c:681
 msgid "Initializing camera..."
 msgstr "Initialisiere Kamera..."
 
-#: libgphoto2/gphoto2-camera.c:604
+#: libgphoto2/gphoto2-camera.c:683
 #, c-format
 msgid "Initializing '%s'..."
 msgstr "Initialisiere »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:630
+#: libgphoto2/gphoto2-camera.c:709
 msgid "Could not detect any camera"
 msgstr "Konnte keine Kamera finden"
 
-#: libgphoto2/gphoto2-camera.c:650
+#: libgphoto2/gphoto2-camera.c:729
 msgid "You have to set the port prior initialization of the camera"
 msgstr ""
 "Sie müssen einen Port setzen, bevor Sie die Kamera initialisieren können"
 
-#: libgphoto2/gphoto2-camera.c:725
+#: libgphoto2/gphoto2-camera.c:806
 msgid "This camera does not offer any configuration options"
 msgstr "Diese Kamera bietet keine Konfigurationsoptionen"
 
-#: libgphoto2/gphoto2-camera.c:730
+#: libgphoto2/gphoto2-camera.c:811
 msgid "Getting configuration..."
 msgstr "Lade Kamera-Konfiguration..."
 
-#: libgphoto2/gphoto2-camera.c:756
+#: libgphoto2/gphoto2-camera.c:837
 msgid "This camera does not support setting configuration options"
 msgstr "Diese Kamera unterstützt das Setzen von Konfigurationsoptionen nicht"
 
-#: libgphoto2/gphoto2-camera.c:761
+#: libgphoto2/gphoto2-camera.c:842
 msgid "Setting configuration..."
 msgstr "Setze Konfiguration..."
 
-#: libgphoto2/gphoto2-camera.c:787
+#: libgphoto2/gphoto2-camera.c:868
 msgid "This camera does not support summaries"
 msgstr "Diese Kamera unterstützt keine Zusammenfassung"
 
-#: libgphoto2/gphoto2-camera.c:792
+#: libgphoto2/gphoto2-camera.c:873
 msgid "Getting summary..."
 msgstr "Hole Zusammenfassung..."
 
-#: libgphoto2/gphoto2-camera.c:817
+#: libgphoto2/gphoto2-camera.c:898
 msgid "This camera does not offer a manual"
 msgstr "Für diese Kamera existiert kein Handbuch"
 
-#: libgphoto2/gphoto2-camera.c:845
+#: libgphoto2/gphoto2-camera.c:926
 msgid "This camera does not provide information about the driver"
 msgstr "Diese Kamera liefert keine Information über den Treiber"
 
-#: libgphoto2/gphoto2-camera.c:876
+#: libgphoto2/gphoto2-camera.c:957
 msgid "This camera can not capture"
 msgstr "Diese Kamera kann keine Aufnahme machen"
 
-#: libgphoto2/gphoto2-camera.c:910
+#: libgphoto2/gphoto2-camera.c:991
 msgid "This camera can not capture previews"
 msgstr "Diese Kamera kann keine Vorschaubilder machen"
 
-#: libgphoto2/gphoto2-camera.c:945
+#: libgphoto2/gphoto2-camera.c:1026
 #, c-format
 msgid "Listing files in '%s'..."
 msgstr "Liste Dateien in »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:975
+#: libgphoto2/gphoto2-camera.c:1056
 #, c-format
 msgid "Listing folders in '%s'..."
 msgstr "Liste Verzeichnisse in »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1002
+#: libgphoto2/gphoto2-camera.c:1083
 #, c-format
 msgid "Deleting all files in '%s'..."
 msgstr "Lösche alle Dateien in »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1029
+#: libgphoto2/gphoto2-camera.c:1110
 #, c-format
 msgid "Uploading file into '%s'..."
 msgstr "Lade Datei nach »%s« hoch..."
 
-#: libgphoto2/gphoto2-camera.c:1068
+#: libgphoto2/gphoto2-camera.c:1149
 #, c-format
 msgid "Getting info for '%s' in folder '%s'..."
 msgstr "Hole Information für »%s« im Verzeichnis »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1165
+#: libgphoto2/gphoto2-camera.c:1246
 #, c-format
 msgid "Getting '%s' from folder '%s'..."
 msgstr "Hole Information für »%s« aus Verzeichnis »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1196
+#: libgphoto2/gphoto2-camera.c:1277
 #, c-format
 msgid "Deleting '%s' from folder '%s'..."
 msgstr "Lösche »%s« aus Verzeichnis »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1222
+#: libgphoto2/gphoto2-camera.c:1303
 #, c-format
 msgid "Creating folder '%s' in folder '%s'..."
 msgstr "Lege Verzeichnis »%s« im Verzeichnis »%s« an..."
 
-#: libgphoto2/gphoto2-camera.c:1248
+#: libgphoto2/gphoto2-camera.c:1329
 #, c-format
 msgid "Removing folder '%s' from folder '%s'..."
 msgstr "Lösche Verzeichnis »%s« aus Verzeichnis »%s«..."
 
-#: libgphoto2/gphoto2-camera.c:1323
+#: libgphoto2/gphoto2-camera.c:1402
 msgid "No error description available"
 msgstr "Fehlerbeschreibung nicht verfügbar"
 
@@ -1997,6 +2057,10 @@ msgstr "Verzeichnis existiert bereits"
 msgid "Path not absolute"
 msgstr "Pfadangabe nicht absolut"
 
+#: frontends/command-line/main.c:165
+msgid "Recursively descend through folders"
+msgstr "Steige rekursiv in Verzeichnisse hinab"
+
 #: frontends/command-line/main.c:168 frontends/command-line/main.c:169
 msgid "name"
 msgstr "Name"
@@ -2045,9 +2109,103 @@ msgstr "Eine Filmaufnahme machen"
 msgid "Capture an audio clip"
 msgstr "Eine Audioaufnahme machen"
 
+#: frontends/command-line/main.c:285 frontends/command-line/main.c:290
+#, c-format
+msgid "%-30s %-16s\n"
+msgstr "%-30s %-16s\n"
+
+#: frontends/command-line/main.c:285
+msgid "Model"
+msgstr "Modell"
+
+#: frontends/command-line/main.c:285
+msgid "Port"
+msgstr "Port"
+
+#: frontends/command-line/main.c:286
+msgid "----------------------------------------------------------\n"
+msgstr "----------------------------------------------------------\n"
+
 #: frontends/command-line/main.c:303
 msgid "You need to specify a camera model"
 msgstr "Sie müssen ein Kameramodell angeben"
+
+#. Output a parsing friendly abilities table. Split on ":"
+#: frontends/command-line/main.c:314
+#, c-format
+msgid "Abilities for camera             : %s\n"
+msgstr "Fähigkeiten für Kamera           : %s\n"
+
+#: frontends/command-line/main.c:316
+#, c-format
+msgid "Serial port support              : %s\n"
+msgstr "Unterstützung für seriellen Port : %s\n"
+
+#: frontends/command-line/main.c:317 frontends/command-line/main.c:319
+#: frontends/command-line/main.c:338 frontends/command-line/main.c:340
+#: frontends/command-line/main.c:342 frontends/command-line/main.c:344
+msgid "yes"
+msgstr "Ja"
+
+#: frontends/command-line/main.c:317 frontends/command-line/main.c:319
+#: frontends/command-line/main.c:338 frontends/command-line/main.c:340
+#: frontends/command-line/main.c:342 frontends/command-line/main.c:344
+msgid "no"
+msgstr "Nein"
+
+#: frontends/command-line/main.c:318
+#, c-format
+msgid "USB support                      : %s\n"
+msgstr "USB-Unterstützung                : %s\n"
+
+#: frontends/command-line/main.c:321
+msgid "Transfer speeds supported        :\n"
+msgstr "Unterstützte Datenraten (seriell):\n"
+
+#: frontends/command-line/main.c:324
+#, c-format
+msgid "                                 : %i\n"
+msgstr "                                 : %i\n"
+
+#: frontends/command-line/main.c:328
+msgid "Capture choices                  :\n"
+msgstr "Aufnahme machen (Auswahl)        :\n"
+
+#: frontends/command-line/main.c:330
+msgid "                                 : Image\n"
+msgstr "                                 : Bild\n"
+
+#: frontends/command-line/main.c:332
+msgid "                                 : Video\n"
+msgstr "                                 : Video\n"
+
+#: frontends/command-line/main.c:334
+msgid "                                 : Audio\n"
+msgstr "                                 : Audio\n"
+
+#: frontends/command-line/main.c:336
+msgid "                                 : Preview\n"
+msgstr "                                 : Bildvorschau\n"
+
+#: frontends/command-line/main.c:337
+#, c-format
+msgid "Configuration support            : %s\n"
+msgstr "Konfigurationsunterstützung      : %s\n"
+
+#: frontends/command-line/main.c:339
+#, c-format
+msgid "Delete files on camera support   : %s\n"
+msgstr "Unterstützung für Bildlöschung   : %s\n"
+
+#: frontends/command-line/main.c:341
+#, c-format
+msgid "File preview (thumbnail) support : %s\n"
+msgstr "Unterstützung für Bildvorschau   : %s\n"
+
+#: frontends/command-line/main.c:343
+#, c-format
+msgid "File upload support              : %s\n"
+msgstr "Unterstützung für Bildhochladen  : %s\n"
 
 #: frontends/command-line/main.c:365
 #, c-format
@@ -2058,11 +2216,125 @@ msgstr "Anzahl der unterstützten Kameras: %i\n"
 msgid "Supported cameras:\n"
 msgstr "Unterstützte Kameras:\n"
 
-#: frontends/command-line/main.c:1075
+#: frontends/command-line/main.c:377
+#, c-format
+msgid "\t\"%s\" (TESTING)\n"
+msgstr "\t»%s« (IM TEST)\n"
+
+#: frontends/command-line/main.c:380
+#, c-format
+msgid "\t\"%s\" (EXPERIMENTAL)\n"
+msgstr "\t»%s« (EXPERIMENTELL)\n"
+
+#: frontends/command-line/main.c:384
+#, c-format
+msgid "\t\"%s\"\n"
+msgstr "\t»%s«\n"
+
+#: frontends/command-line/main.c:448
+#, c-format
+msgid "Devices found: %i\n"
+msgstr "Gefundene Geräte: %i\n"
+
+#: frontends/command-line/main.c:449
+msgid ""
+"Path                             Description\n"
+"--------------------------------------------------------------\n"
+msgstr ""
+"Pfad                             Beschreibung\n"
+"------------------------------------------------------------------------\n"
+
+#. User didn't specify the port type; try to guess it
+#: frontends/command-line/main.c:486
+#, c-format
+msgid ""
+"Ports must look like 'serial:/dev/ttyS0' or 'usb:', but '%s' is missing a "
+"colon so I am going to guess what you mean."
+msgstr ""
+"Ports müssen als »serial:/dev/ttyS0« oder »usb:« angegeben werden, aber »%s« "
+"hat keinen Doppelpunkt. Es wird versucht, herauszufinden, was Sie meinen."
+
+#: frontends/command-line/main.c:505
+#, c-format
+msgid "Guessed port name. Using port '%s' from now on."
+msgstr "Vermutlich meinen Sie Port »%s«, dieser wird von nun an verwendet."
+
+#: frontends/command-line/main.c:535
+#, c-format
+msgid "%s(ERROR): "
+msgstr "%s(FEHLER): "
+
+#: frontends/command-line/main.c:634
+#, c-format
+msgid "Number of pictures in folder %s: %i\n"
+msgstr "Anzahl der Bilder im Verzeichnis %s: %i\n"
+
+#: frontends/command-line/main.c:667
+#, c-format
+msgid "Using filename '%s'..."
+msgstr "Verwende Dateinamen »%s«..."
+
+# !!! [y/n] !!! [CM]
+#: frontends/command-line/main.c:693
+#, c-format
+msgid "File %s exists. Overwrite? [y|n] "
+msgstr "Datei %s existiert bereits. Überschreiben? [y|n] "
+
+#: frontends/command-line/main.c:704
+msgid "Specify new filename? [y|n] "
+msgstr "Neuen Dateinamen angeben? [y|n] "
+
+#: frontends/command-line/main.c:713
+msgid "Enter new filename: "
+msgstr "Geben Sie einen neuen Dateinamen an: "
+
+#: frontends/command-line/main.c:718
+#, c-format
+msgid "Saving file as %s\n"
+msgstr "Speichere Datei als %s\n"
+
+#: frontends/command-line/main.c:722
+#, c-format
+msgid "Can not save file as %s"
+msgstr "Kann Datei nicht als %s speichern"
+
+#: frontends/command-line/main.c:942
+#, c-format
+msgid "New file is in location %s%s%s on the camera\n"
+msgstr "Neue Datei ist in %s%s%s auf der Kamera\n"
+
+#: frontends/command-line/main.c:1000
+#, c-format
+msgid ""
+"Camera Summary:\n"
+"%s\n"
+msgstr ""
+"Kamerazusammenfassung:\n"
+"%s\n"
+
+#: frontends/command-line/main.c:1012
+#, c-format
+msgid ""
+"Camera Manual:\n"
+"%s\n"
+msgstr ""
+"Kameraanleitung:\n"
+"%s\n"
+
+#: frontends/command-line/main.c:1024
+#, c-format
+msgid ""
+"About the library:\n"
+"%s\n"
+msgstr ""
+"Über die Bibliothek:\n"
+"%s\n"
+
+#: frontends/command-line/main.c:1080
 msgid "Please specify a model."
 msgstr "Bitte geben Sie ein Modell an."
 
-#: frontends/command-line/main.c:1103
+#: frontends/command-line/main.c:1108
 #, c-format
 msgid ""
 "The port you specified ('%s') can not be found. Please specify one of the "
@@ -2074,11 +2346,60 @@ msgstr ""
 "der von »gphoto2 --list-ports« gelisteten Ports an und stellen Sie sicher, \n"
 "daß die Schreibweise korrekt ist (mit Präfix »serial:« oder »usb:«)."
 
-#: frontends/command-line/main.c:1120
+#: frontends/command-line/main.c:1125
 msgid "Please specify a port."
 msgstr "Bitte geben Sie einen Port an."
 
-#: frontends/command-line/main.c:1289
+#: frontends/command-line/main.c:1203
+msgid "ERROR: "
+msgstr "FEHLER: "
+
+#: frontends/command-line/main.c:1214
+msgid ""
+"\n"
+"Exiting gPhoto...\n"
+msgstr ""
+"\n"
+"Beende gPhoto...\n"
+
+#: frontends/command-line/main.c:1263
+msgid ""
+"gPhoto2 for OS/2 requires you to set the enviroment value CAMLIBS to the "
+"location of the camera libraries. e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n"
+msgstr ""
+"gPhoto2 für OS/2 erfordert, daß die Umgebungsvariable CAMLIBS auf den Ort "
+"der Kamerabibliotheken zeigt, z.B. mit SET CAMLIBS=C:\\GPHOTO2\\CAM\n"
+
+#: frontends/command-line/main.c:1273
+msgid ""
+"gPhoto2 for OS/2 requires you to set the enviroment value IOLIBS to the "
+"location of the io libraries. e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"
+msgstr ""
+"gPhoto2 für OS/2 erfordert, daß die Umgebungsvariable IOLIBS auf den Ort der "
+"I/O-Bibliotheken zeigt, z.B. mit SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"
+
+#: frontends/command-line/main.c:1290
+#, c-format
+msgid "*** Error ('%s') ***\n"
+msgstr "*** Fehler ('%s') ***\n"
+
+#: frontends/command-line/main.c:1292
+#, c-format
+msgid ""
+"The following message is the last internal error message.\n"
+"This message may currently still be unrelated to the real error:\n"
+"\n"
+"%s\n"
+"\n"
+msgstr ""
+"Die folgende Meldung ist die letzte interne Fehlermeldung.\n"
+"Die Meldung muß im Moment noch nichts mit dem tatsächlichen Fehler zu tun "
+"haben:\n"
+"\n"
+"%s\n"
+"\n"
+
+#: frontends/command-line/main.c:1298
 msgid "For debugging messages, please use the --debug option.\n"
 msgstr "Für Debug-Meldungen verwenden Sie bitte die Option »--debug«.\n"
 
@@ -2106,15 +2427,134 @@ msgstr "Beenden"
 msgid "Back"
 msgstr "Zurück"
 
-#: frontends/command-line/gphoto2-cmd-config.c:230
-#: frontends/command-line/gphoto2-cmd-config.c:258
-#: frontends/command-line/gphoto2-cmd-config.c:318
+#: frontends/command-line/gphoto2-cmd-config.c:256
+msgid "Time: "
+msgstr "Zeit: "
+
+#: frontends/command-line/gphoto2-cmd-config.c:315
+#: frontends/command-line/gphoto2-cmd-config.c:343
+#: frontends/command-line/gphoto2-cmd-config.c:403
 msgid "Value: "
 msgstr "Wert: "
 
-#: frontends/command-line/gphoto2-cmd-capture.c:202
+#: frontends/command-line/gphoto2-cmd-capture.c:209
 msgid "Operation cancelled"
 msgstr "Operation abgebrochen"
+
+#: frontends/command-line/options.c:175
+#, c-format
+msgid ""
+"gPhoto (v%s) - Cross-platform digital camera library.\n"
+"Copyright (C) 2000,2001 Scott Fritzinger and others\n"
+"%sLicensed under the Library GNU Public License (LGPL).\n"
+msgstr ""
+"gPhoto (v%s) - Multi-Plattform-Bibliothek für digitale Kameras.\n"
+"Copyright (C) 2000,2001 Scott Fritzinger und andere\n"
+"%sLizensiert unter der Library GNU Public License (LGPL).\n"
+
+#: frontends/command-line/options.c:181
+msgid "OS/2 port by Bart van Leeuwen\n"
+msgstr "OS/2-Portierung von Bart van Leeuwen\n"
+
+#: frontends/command-line/options.c:196
+msgid "Usage:\n"
+msgstr "Verwendung:\n"
+
+#: frontends/command-line/options.c:198
+msgid ""
+"Short/long options (& argument)        description\n"
+"------------------------------------------------------------------------\n"
+msgstr ""
+"Kurze/lange Optionen (& Argument)      Beschreibung\n"
+"------------------------------------------------------------------------\n"
+
+#: frontends/command-line/options.c:224
+msgid ""
+"------------------------------------------------------------------------\n"
+"[Use double-quotes around arguments]     [Picture numbers begin one (1)]\n"
+msgstr ""
+"------------------------------------------------------------------------\n"
+"[Doppelte Anführungszeichen um Argumente]    [Bildzählung beginnt mit 1]\n"
+
+#~ msgid "Debug level"
+#~ msgstr "Debuglevel"
+
+#~ msgid "Dump data by packets to stderr"
+#~ msgstr "Schreibe Daten Paketen entsprechend auf stderr"
+
+#~ msgid "Battery exhausted, camera off."
+#~ msgstr "Batterie leer, Kamera aus."
+
+#~ msgid "ERROR: unexpected message"
+#~ msgstr "Fehler: unerwartete Meldung"
+
+#~ msgid "ERROR: message overrun"
+#~ msgstr "Fehler: Meldungsüberlauf"
+
+#~ msgid "ERROR: out of sequence."
+#~ msgstr "Fehler: aus der Reihe."
+
+#~ msgid "ERROR: unexpected packet type."
+#~ msgstr "Fehler: unerwarteter Pakettyp."
+
+#~ msgid "ERROR: message format error."
+#~ msgstr "Fehler: Meldungsformatfehler."
+
+#~ msgid "ERROR: unexpected message2."
+#~ msgstr "Fehler: unerwartete Meldung2."
+
+#~ msgid "Name too long, max is 30 characters!"
+#~ msgstr "Name zu lang, maximal 30 Zeichen!"
+
+#~ msgid "Error changing speed."
+#~ msgstr "Fehler beim Ändern der Datenrate."
+
+#~ msgid "Resetting protocol..."
+#~ msgstr "Setze Protokoll zurück..."
+
+#~ msgid "Camera OK.\n"
+#~ msgstr "Kamera OK.\n"
+
+#~ msgid "Looking for camera ..."
+#~ msgstr "Suche nach Kamera ..."
+
+#~ msgid "Communication error 1"
+#~ msgstr "Kommunikationsfehler 1"
+
+#~ msgid "Unrecognized response"
+#~ msgstr "Nicht erkannte Antwort"
+
+#~ msgid "Bad EOT"
+#~ msgstr "Fehlerhafter EOT"
+
+#~ msgid "Communication error 2"
+#~ msgstr "Kommunikationsfehler 2"
+
+#~ msgid "Communication error 3"
+#~ msgstr "Kommunikationsfehler 3"
+
+#~ msgid "Changing speed... wait..."
+#~ msgstr "Ändere Datenrate... Warte..."
+
+#~ msgid "Error changing speed"
+#~ msgstr "Fehler beim Ändern der Datenrate"
+
+#~ msgid "Error waiting ACK during initialization retrying"
+#~ msgstr ""
+#~ "Fehler beim Warten auf ACK, während die Initialisierung erneut versucht "
+#~ "wird"
+
+#~ msgid "Error waiting ACK during initialization"
+#~ msgstr "Fehler beim Warten auf ACK während der Initialisierung"
+
+#~ msgid "Connected to camera"
+#~ msgstr "Mit Kamera verbunden"
+
+#~ msgid "File protected"
+#~ msgstr "Datei geschützt"
+
+#~ msgid "Not implemented!"
+#~ msgstr "Nicht implementiert!"
 
 #~ msgid "Name too long, could not store it!"
 #~ msgstr "Name zu lang, konnte nicht speichern!"

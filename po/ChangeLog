@@ -1,5 +1,7 @@
 2001-11-21  Colin Marquardt  <colin@marquardt-home.de>
 
+	* de.po: Another update, won't be the last...
+
 	* POTFILES.in (Module): Removed ../camlibs/canon/psa50.c
 
 2001-11-15  Colin Marquardt  <colin@marquardt-home.de>
