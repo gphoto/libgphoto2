@@ -18,9 +18,13 @@ doc_DATA = gphoto2-cli.txt gphoto2.txt FAQ
 # Special rule for regenerating the man page from the XML file.
 # This requires xmlto, which can be obtained from
 # <http://cyberelk.net/tim/xmlto/>.
+if XMLTOMAN
 $(man_MANS): gphoto2.xml
 	xmlto man $<
+endif
 
+if XMLTOHTML
 html: gphoto2.xml
 	xmlto html -o $@ $<
 	touch $@
+endif
