@@ -1097,8 +1097,10 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 	/* Make use of the progress bar when the packet is "large enough" */
 	if (length > MAX_DATA_FIELD_LENGTH) {
 		do_percent = 1;
-		id = gp_context_progress_start (context, length,
+#ifdef GTKAM_IS_MODIFIED
+		id = gp_context_progress_update (context, length,
 						_("Sending data..."));
+#endif
 	}
 	else
 		do_percent = 0;
@@ -1131,8 +1133,10 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 
 		/* Transmit packet */
 		CHECK (sierra_transmit_ack (camera, packet, context));
+#ifdef GTKAM_IS_MODIFIED
 		if (do_percent)
 			gp_context_progress_update (context, id, x);
+#endif
 	}
 	if (do_percent)
 		gp_context_progress_stop (context, id);
@@ -1216,7 +1220,9 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 
 		if (file) {
 			CHECK (gp_file_append (file, &p[4], packlength));
+#ifdef GTKAM_IS_MODIFIED
 			gp_context_progress_update (context, id, *b_len);
+#endif
 		}
 
 	} while (p[0] != SIERRA_PACKET_DATA_END);

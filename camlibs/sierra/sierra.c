@@ -547,20 +547,33 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = data;
 	int n;
+	unsigned int id;
 
 	GP_DEBUG ("*** sierra_file_delete");
 	GP_DEBUG ("*** folder: %s", folder);
 	GP_DEBUG ("*** filename: %s", filename);
 
+	id = gp_context_progress_start (context, 4, filename);
+	/*
+	 * XXX the CHECK() macro's don't allow for cleanup on error.
+	 */
 	/* Get the file number from the CameraFilesystem */
+#ifdef GTKAM_IS_MODIFIED
+	gp_context_progress_update (context, id, 0);
+#endif
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
-
 	/* Set the working folder and delete the file */
 	CHECK (camera_start (camera, context));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
+	/*
+	 * The following command takes a while, and there is no way to add
+	 * a nice progress bar, since it is a single sierra_action call.
+	 * so multiple gp_context_progress_update () calls can not add 
+	 * anything.
+	 */
 	CHECK_STOP (camera, sierra_delete (camera, n + 1, context));
 	CHECK (camera_stop (camera, context));
-
+	gp_context_progress_stop (context, id);
 	return (GP_OK);
 }
 
