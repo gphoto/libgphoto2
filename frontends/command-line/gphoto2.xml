@@ -187,7 +187,7 @@
 	<varlistentry>
 	  <term><option>--usb-usermap-script</option> <replaceable>NAME</replaceable></term>
 	  <listitem>
-	    <para>Specify name of hotplug usb script.</para>
+	    <para>Specify name of hotplug usb script used in the output of <option>--print-usb-usermap</option>.</para>
 	  </listitem>
 	</varlistentry>
 
