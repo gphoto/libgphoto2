@@ -676,6 +676,8 @@ gp_camera_init (Camera *camera)
 	const char *model, *port;
 	CameraLibraryInitFunc init_func;
 
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Initializing camera...");
+
 	CHECK_NULL (camera);
 	gp_camera_status (camera, _("Initializing camera..."));
 
@@ -685,9 +687,16 @@ gp_camera_init (Camera *camera)
 	 */
 	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
 		if (!camera->port || !strcmp ("", camera->pc->a.model)) {
-			
+
+			gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Neither "
+				"port nor model set. Trying auto-detection"
+				"...");
+
 			/* Call auto-detect and choose the first camera */
 			CRS (camera, gp_autodetect (&list));
+			if (!gp_list_count (&list))
+				return (GP_ERROR_MODEL_NOT_FOUND);
+
 			CRS (camera, gp_list_get_name  (&list, 0, &model));
 			CRS (camera, gp_camera_set_model (camera, model));
 			CRS (camera, gp_list_get_value (&list, 0, &port));
