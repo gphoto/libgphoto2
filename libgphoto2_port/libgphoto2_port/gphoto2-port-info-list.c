@@ -287,9 +287,19 @@ gp_port_info_list_load (GPPortInfoList *list)
 
                 lh = GP_SYSTEM_DLOPEN (path);
                 if (!lh) {
-                        gp_log (GP_LOG_DEBUG, "gphoto2-port-core",
-                                "'%s' is not a library (%s)", path,
-                                GP_SYSTEM_DLERROR ());
+			size_t len;
+			len = strlen(buf);
+			if ((len >= 3) &&
+			    (buf[len-1] == 'a') &&
+			    ((buf[len-2] == '.') ||
+			     ((buf[len-2] == 'l') && (buf[len-3] == '.'))
+				    )) {
+				/* *.la or *.a - we cannot load these, so no error msg */
+			} else {
+                                gp_log (GP_LOG_DEBUG, "gphoto2-port-core",
+                                        "'%s' is not a library (%s)", path,
+                                        GP_SYSTEM_DLERROR ());
+			}
                         continue;
                 }
 
