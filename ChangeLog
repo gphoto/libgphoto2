@@ -1,5 +1,11 @@
 2001-12-08  Marcus Meissner <marcus@jet.franken.de>
 	
+	* libgphoto2/bayer.[ch]: Export gp_bayer_expand. Needed if you want
+	  to do a lightfilter pass right between bayer expand and bayer
+	  interpolate.
+
+2001-12-08  Marcus Meissner <marcus@jet.franken.de>
+	
 	* camlibs/stv0680/stv0680.html: Removed, replaced by pdf below.
 	* camlibs/stv0680/680_commands_and_communication_sdk.pdf.gz:
 	  Extract from STV 680 SDK describing USB command set. Supplied
