@@ -24,6 +24,8 @@ int is_movie (const char *name);
 int is_jpeg (const char *name);
 int is_crw (const char *name);
 
+const char *filename2mimetype(const char *filename);
+
 int comp_dir (const void *a, const void *b);
 
 #endif /* _CANON_UTIL_H */
