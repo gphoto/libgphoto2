@@ -33,6 +33,7 @@ else # otherwise invent a docdir hopefully compatible with system policy
     fi
     AC_MSG_CHECKING(package docdir)
     # check whether to include package version into documentation path
+    # FIXME: doesn't work properly.
     if ls -d /usr/{share/,}doc/*-[[]0-9[]]* > /dev/null 2>&1
     then
         DOC_DIR="${maindocdir}/${PACKAGE}-${VERSION}"
