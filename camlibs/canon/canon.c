@@ -204,7 +204,11 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot S410 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 430 (normal mode)",CANON_CLASS_5,	0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A95 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30bb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+
+	/* 0x30bf is PowerShot SD300/Digital IXUS 40 in PTP mode */
+
 	{"Canon:PowerShot SD20 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+
 	{"Canon:EOS 20D (normal mode)",		CANON_CLASS_6,	0x04A9, 0x30eb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{NULL}
@@ -460,15 +464,15 @@ canon_int_directory_operations (Camera *camera, const char *path, canonDirFuncti
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, canon_usb_funct, &len, path,
 						  strlen (path) + 1);
-			if (!msg)
-				return GP_ERROR;
+			if ( msg == NULL )
+				return GP_ERROR_OS_FAILURE;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, type, 0x11, &len, path,
 						     strlen (path) + 1, NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				canon_serial_error_type (camera);
-				return GP_ERROR;
+				return GP_ERROR_OS_FAILURE;
 			}
 
 			break;
@@ -482,13 +486,13 @@ canon_int_directory_operations (Camera *camera, const char *path, canonDirFuncti
 	}
 
 	if (msg[0] != 0x00) {
-		if ( canon_usb_funct == CANON_USB_FUNCTION_MKDIR )
+		if ( action == DIR_CREATE )
 			gp_context_error (context, _("Could not create directory %s."),
 					  path );
 		else
 			gp_context_error (context, _("Could not remove directory %s."),
 					  path);
-		return GP_ERROR;
+		return GP_ERROR_CAMERA_ERROR;
 	}
 
 	return GP_OK;
@@ -521,15 +525,15 @@ canon_int_identify_camera (Camera *camera, GPContext *context)
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_IDENTIFY_CAMERA,
 						  &len, NULL, 0);
-			if (!msg)
-				return GP_ERROR;
+			if ( msg == NULL )
+				return GP_ERROR_OS_FAILURE;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0x01, 0x12, &len, NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				GP_DEBUG ("canon_int_identify_camera: msg error");
 				canon_serial_error_type (camera);
-				return GP_ERROR;
+				return GP_ERROR_OS_FAILURE;
 			}
 			break;
 		GP_PORT_DEFAULT
@@ -576,14 +580,14 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_POWER_STATUS,
 						  &len, NULL, 0);
-			if (!msg)
-				return GP_ERROR;
+			if ( msg == NULL )
+				return GP_ERROR_OS_FAILURE;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0x0a, 0x12, &len, NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				canon_serial_error_type (camera);
-				return GP_ERROR;
+				return GP_ERROR_OS_FAILURE;
 			}
 
 			break;
@@ -641,14 +645,14 @@ canon_int_get_picture_abilities (Camera *camera, GPContext *context)
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_GET_PIC_ABILITIES,
 						  &len, NULL, 0);
-			if (!msg)
-				return GP_ERROR;
+			if ( msg == NULL )
+				return GP_ERROR_OS_FAILURE;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0x1f, 0x12, &len, NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				canon_serial_error_type (camera);
-				return GP_ERROR;
+				return GP_ERROR_OS_FAILURE;
 			}
 
 			break;
@@ -741,11 +745,11 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
 	msg = canon_usb_dialogue(camera, 
 				 CANON_USB_FUNCTION_CONTROL_CAMERA,
 				 &datalen, payload, payloadlen);
-	if (!msg && datalen != 0x1c) {
+	if ( msg == NULL  && datalen != 0x1c) {
 		/* ERROR */
-		GP_DEBUG("%s returned msg=%p, datalen=%x",
-			 desc, msg, datalen);
-		return GP_ERROR;
+		GP_DEBUG("%s datalen=%x",
+			 desc, datalen);
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 	msg = NULL;
 	datalen = 0;
@@ -790,9 +794,10 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 
 		gp_port_set_timeout (camera->port, 15000);
 		/* Init, extends camera lens, puts us in remote capture mode */
-		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_INIT, 0, 0) == GP_ERROR)
-			return GP_ERROR;
+		status = canon_int_do_control_command (camera,
+						       CANON_USB_CONTROL_INIT, 0, 0);
+		if ( status < 0 )
+			return status;
 
 		gp_port_set_timeout (camera->port, mstimeout);
 		GP_DEBUG("canon_int_capture_preview: set camera port timeout back to %d seconds...", mstimeout / 1000 );
@@ -808,28 +813,32 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 		 *
 		 */
 		GP_DEBUG ( "canon_int_capture_preview: transfer mode is %x\n", transfermode );
-		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_SET_TRANSFER_MODE,
-						  0x04, transfermode) == GP_ERROR)
-			return GP_ERROR;
+		status = canon_int_do_control_command (camera,
+						       CANON_USB_CONTROL_SET_TRANSFER_MODE,
+						       0x04, transfermode);
+		if ( status < 0)
+			return status;
 
 		/* Get release parameters a couple of times, just to
                    see if that helps. */
-		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_GET_PARAMS,
-						  0x04, transfermode) == GP_ERROR)
-			return GP_ERROR;
+		status = canon_int_do_control_command (camera,
+						       CANON_USB_CONTROL_GET_PARAMS,
+						       0x04, transfermode);
+		if ( status < 0)
+			return status;
 
-		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_GET_PARAMS,
-						  0x04, transfermode) == GP_ERROR)
-			return GP_ERROR;
+		status = canon_int_do_control_command (camera,
+						       CANON_USB_CONTROL_GET_PARAMS,
+						       0x04, transfermode);
+		if ( status < 0)
+			return status;
 
 		/* Lock keys here for D30/D60 */
 		if ( camera->pl->md->model == CANON_CLASS_4 ) {
-			if(canon_usb_lock_keys(camera,context) < 0) {
+			status = canon_usb_lock_keys(camera,context);
+			if( status < 0) {
 				gp_context_error (context, _("lock keys failed."));
-				return GP_ERROR_CORRUPTED_DATA;
+				return status;
 			}
 		}
 
@@ -843,7 +852,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 			canon_int_do_control_command (camera,
 						      CANON_USB_CONTROL_EXIT,
 						      0, 0);
-			return GP_ERROR;
+			return GP_ERROR_OS_FAILURE;
 		}
 
 		/* Download the thumbnail image. */
@@ -857,10 +866,11 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, int *length,
 		}
 
 		/* End release mode */
-		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_EXIT,
-						  0, 0) == GP_ERROR)
-			return GP_ERROR;
+		status = canon_int_do_control_command (camera,
+						       CANON_USB_CONTROL_EXIT,
+						       0, 0);
+		if ( status < 0)
+			return status;
 
 		break;
 	case GP_PORT_SERIAL:
@@ -924,23 +934,61 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
 				break;
 			}
 			else {
-				/* The mismatch is not an image file. There are three possibilities:
-				   1. This is a new directory with no files. The next entry will be
-				   another directory.
-				   2. This is a new directory with new files, and we will enter it.
-				   The next entry in the new directory will be
-				   a new file, which may well be our new image file.
-				   3. This is an auxiliary file (sound, thumbnail, catalog).
+				/* The mismatch is not an image
+				   file. There are three
+				   possibilities:
 
-				   In all cases, the thing to do is to skip this entry in the
-				   new directory. */
-				new_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( new_entry+CANON_DIRENT_NAME );
+				   1. This is a new directory with no
+				      files. The next entry will be
+				      another directory.
+
+				   2. This is an auxiliary file
+				      (sound, thumbnail, catalog).
+
+				   In either of these cases, the thing
+				   to do is to skip this entry in the
+				   new directory.
+
+				   3. This is a new directory with new
+				      files, and we will enter it.
+				      The next entry in the new
+				      directory will be a new file,
+				      which may well be our new image
+				      file.
+
+				    */
+				if ( le16atoh ( new_entry+CANON_DIRENT_ATTRS ) & CANON_ATTR_RECURS_ENT_DIR ) {
+					if ( !strcmp ( "..", new_entry + CANON_DIRENT_NAME ) ) {
+						/* Pop out of this directory */
+						unsigned char *local_dir = strrchr(path->folder,'\\') + 1;
+						GP_DEBUG ( "Leaving directory \"%s\"", local_dir );
+						local_dir[-1] = 0;
+					}
+					else {
+						// New directory, and we need to enter it.
+						GP_DEBUG ( "Entering directory \"%s\"", new_entry + CANON_DIRENT_NAME );
+						if ( new_entry[CANON_DIRENT_NAME] == '.' )
+							/* Ignore a leading dot */
+							strncat ( path->folder,
+								  new_entry + CANON_DIRENT_NAME + 1,
+								  sizeof(path->folder) - strlen(path->folder) - 1 );
+						else
+							strncat ( path->folder,
+								  new_entry + CANON_DIRENT_NAME,
+								  sizeof(path->folder) - strlen(path->folder) - 1 );
+					}
+				}
+				else
+					new_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( new_entry+CANON_DIRENT_NAME );
 			}
 		}
 		else {
 			if ( le16atoh ( old_entry+CANON_DIRENT_ATTRS ) & CANON_ATTR_RECURS_ENT_DIR ) {
-				/* Entered a new directory; append its name to the current folder path.
-				   But how do I sense the end of a directory and remove this? */
+				/* Entered a new directory; append its
+				   name to the current folder path.
+				   The end of a directory is signaled
+				   by an entry with zero length and
+				   time, and name "..". */
 				if ( !strcmp ( "..", old_entry + CANON_DIRENT_NAME ) ) {
 					/* Pop out of this directory */
 					unsigned char *local_dir = strrchr(path->folder,'\\') + 1;
@@ -951,9 +999,13 @@ static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_st
 					GP_DEBUG ( "Entering directory \"%s\"", old_entry + CANON_DIRENT_NAME );
 					if ( old_entry[CANON_DIRENT_NAME] == '.' )
 						/* Ignore a leading dot */
-						strcat ( path->folder, old_entry + CANON_DIRENT_NAME + 1 );
+						strncat ( path->folder,
+							  old_entry + CANON_DIRENT_NAME + 1,
+							  sizeof(path->folder) - strlen(path->folder) - 1 );
 					else
-						strcat ( path->folder, old_entry + CANON_DIRENT_NAME  );
+						strncat ( path->folder,
+							  old_entry + CANON_DIRENT_NAME,
+							  sizeof(path->folder) - strlen(path->folder) - 1 );
 				}
 			}
 			/* Move to next entry */
@@ -988,7 +1040,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 	canonTransferMode transfermode = REMOTE_CAPTURE_FULL_TO_DRIVE;
 	int initial_state_len, final_state_len;
 	int mstimeout = -1;
-	int len;
+	int len, status;
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
@@ -1010,9 +1062,10 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 
 		gp_port_set_timeout (camera->port, 15000);
 		/* Init, extends camera lens, puts us in remote capture mode */
-		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_INIT, 0, 0) == GP_ERROR)
-			return GP_ERROR;
+		status = canon_int_do_control_command (camera,
+						       CANON_USB_CONTROL_INIT, 0, 0);
+		if ( status < 0)
+			return status;
 
 		/*
 		 * Set the captured image transfer mode.  We have four options
@@ -1025,31 +1078,35 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		 *
 		 */
 		GP_DEBUG ( "canon_int_capture_image: transfer mode is %x\n", transfermode );
-		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_SET_TRANSFER_MODE,
-						  0x04, transfermode) == GP_ERROR)
-			return GP_ERROR;
+		status = canon_int_do_control_command (camera,
+						       CANON_USB_CONTROL_SET_TRANSFER_MODE,
+						       0x04, transfermode);
+		if ( status < 0)
+			return status;
 
 		gp_port_set_timeout (camera->port, mstimeout);
 		GP_DEBUG("canon_int_capture_image: set camera port timeout back to %d seconds...", mstimeout / 1000 );
 
 		/* Get release parameters a couple of times, just to
                    see if that helps. */
-		if (canon_int_do_control_command (camera,
+		status = canon_int_do_control_command (camera,
 						  CANON_USB_CONTROL_GET_PARAMS,
-						  0x04, transfermode) == GP_ERROR)
-			return GP_ERROR;
+						  0x04, transfermode);
+		if ( status < 0 )
+			return status;
 
-		if (canon_int_do_control_command (camera,
+		status = canon_int_do_control_command (camera,
 						  CANON_USB_CONTROL_GET_PARAMS,
-						  0x04, transfermode) == GP_ERROR)
-			return GP_ERROR;
+						  0x04, transfermode);
+		if ( status < 0 )
+			return status;
 
 		/* Lock keys here for D30/D60 */
 		if ( camera->pl->md->model == CANON_CLASS_4 ) {
-			if(canon_usb_lock_keys(camera,context) < 0) {
+			status = canon_usb_lock_keys(camera,context);
+			if ( status < 0 ) {
 				gp_context_error (context, _("lock keys failed."));
-				return GP_ERROR_CORRUPTED_DATA;
+				return status;
 			}
 		}
 
@@ -1063,25 +1120,26 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 			canon_int_do_control_command (camera,
 						      CANON_USB_CONTROL_EXIT,
 						      0, 0);
-			return GP_ERROR;
+			return GP_ERROR_CAMERA_ERROR;
 		}
 
 		/* End release mode */
-		if (canon_int_do_control_command (camera,
+		status = canon_int_do_control_command (camera,
 						  CANON_USB_CONTROL_EXIT,
-						  0, 0) == GP_ERROR)
-			return GP_ERROR;
+						  0, 0);
+		if ( status < 0 )
+			return status;
 
 		/* Now list all directories on the camera; this has
 		   presumably added an image file. Find the difference
 		   and decode to return real path and file names. */
-		len = canon_usb_list_all_dirs ( camera, &final_state, &final_state_len, context );
-		if ( len < 0 ) {
+		status = canon_usb_list_all_dirs ( camera, &final_state, &final_state_len, context );
+		if ( status < 0 ) {
 			gp_context_error ( context,
 					   _("canon_int_capture_image:"
 					     " final canon_usb_list_all_dirs() failed with status %i"),
-					   len );
-			return len;
+					   status );
+			return status;
 		}
 
 		/* Find new file name in camera directory */
@@ -1145,17 +1203,17 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 			payload_length = 4 + strlen (dir) + 1 + strlen (file) + 1;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_SET_ATTR, &len,
 						  payload, payload_length);
-			if (!msg)
-				return GP_ERROR;
+			if ( msg == NULL )
+				return GP_ERROR_OS_FAILURE;
 
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0xe, 0x11, &len, attr, 4,
 						     dir, strlen (dir) + 1, file,
 						     strlen (file) + 1, NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				canon_serial_error_type (camera);
-				return GP_ERROR;
+				return GP_ERROR_OS_FAILURE;
 			}
 			break;
 		GP_PORT_DEFAULT
@@ -1200,22 +1258,22 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 				  _("Name '%s' (%i characters) "
 				    "too long, maximum 30 characters are "
 				    "allowed."), name, strlen (name));
-		return GP_ERROR;
+		return GP_ERROR_BAD_PARAMETERS;
 	}
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_CAMERA_CHOWN,
 						  &len, name, strlen (name) + 1);
-			if (!msg)
-				return GP_ERROR;
+			if ( msg == NULL )
+				return GP_ERROR_OS_FAILURE;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0x05, 0x12, &len, name,
 						     strlen (name) + 1, NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				canon_serial_error_type (camera);
-				return GP_ERROR;
+				return GP_ERROR_OS_FAILURE;
 			}
 			break;
 		GP_PORT_DEFAULT
@@ -1268,14 +1326,14 @@ canon_int_get_time (Camera *camera, time_t *camera_time, GPContext *context)
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_GET_TIME, &len,
 						  NULL, 0);
-			if (!msg)
-				return GP_ERROR;
+			if ( msg == NULL )
+				return GP_ERROR_OS_FAILURE;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0x03, 0x12, &len, NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				canon_serial_error_type (camera);
-				return GP_ERROR;
+				return GP_ERROR_OS_FAILURE;
 			}
 			break;
 		GP_PORT_DEFAULT
@@ -1352,15 +1410,15 @@ canon_int_set_time (Camera *camera, time_t date, GPContext *context)
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_SET_TIME, &len,
 						  payload, sizeof (payload));
-			if (!msg)
-				return GP_ERROR;
+			if ( msg == NULL )
+				return GP_ERROR_OS_FAILURE;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0x04, 0x12, &len,
 						     payload, sizeof (payload), NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				canon_serial_error_type (camera);
-				return GP_ERROR;
+				return GP_ERROR_OS_FAILURE;
 			}
 
 			break;
@@ -1438,7 +1496,7 @@ canon_int_get_disk_name (Camera *camera, GPContext *context)
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0x0a, 0x11, &len, NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				canon_serial_error_type (camera);
 				return NULL;
 			}
@@ -1450,7 +1508,7 @@ canon_int_get_disk_name (Camera *camera, GPContext *context)
 			 * has a static buffer, strdup() part of that buffer and return to our caller.
 			 */
 			msg = strdup ((char *) msg + 4);	/* @@@ should check length */
-			if (!msg) {
+			if ( msg == NULL ) {
 				GP_DEBUG ("canon_int_get_disk_name: could not allocate %i "
 					  "bytes of memory to hold response",
 					  strlen ((char *) msg + 4));
@@ -1460,7 +1518,7 @@ canon_int_get_disk_name (Camera *camera, GPContext *context)
 		GP_PORT_DEFAULT_RETURN (NULL)
 	}
 
-	if (!msg)
+	if ( msg == NULL )
 		return NULL;
 
 	GP_DEBUG ("canon_int_get_disk_name: disk '%s'", msg);
@@ -1498,15 +1556,15 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DISK_INFO, &len,
 						  name, strlen (name) + 1);
-			if (!msg)
-				return GP_ERROR;
+			if ( msg == NULL )
+				return GP_ERROR_OS_FAILURE;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0x09, 0x11, &len, name,
 						     strlen (name) + 1, NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				canon_serial_error_type (camera);
-				return GP_ERROR;
+				return GP_ERROR_OS_FAILURE;
 			}
 			break;
 		GP_PORT_DEFAULT
@@ -1734,7 +1792,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 				  dirents_length, CANON_MINIMUM_DIRENT_SIZE);
 		free (dirent_data);
 		dirent_data = NULL;
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	/* The first data we have got here is the dirent for the
@@ -1755,7 +1813,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 				   "examining the first dirent"));
 		free (dirent_data);
 		dirent_data = NULL;
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 	pos++;			/* skip NULL byte terminating directory name */
 
@@ -1840,7 +1898,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 					   "truncated directory entry encountered"));
 			free (dirent_data);
 			dirent_data = NULL;
-			return GP_ERROR;
+			return GP_ERROR_CORRUPTED_DATA;
 		}
 
 		/* Check end of this dirent, 10 is to skip over
@@ -2044,7 +2102,7 @@ canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int 
 			*data = canon_serial_get_file (camera, name, length, context);
 			if (*data)
 				return GP_OK;
-			return GP_ERROR;
+			return GP_ERROR_OS_FAILURE;
 			break;
 		GP_PORT_DEFAULT
 	}
@@ -2123,17 +2181,17 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
 			payload[payload_length++] = 0; /* Double NUL to end command */
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE, &len,
 						  payload, payload_length);
-			if (!msg)
-				return GP_ERROR;
+			if ( msg == NULL )
+				return GP_ERROR_OS_FAILURE;
 
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, context, 0xd, 0x11, &len, dir,
 						     strlen (dir) + 1, name, strlen (name) + 1,
 						     NULL);
-			if (!msg) {
+			if ( msg == NULL ) {
 				canon_serial_error_type (camera);
-				return GP_ERROR;
+				return GP_ERROR_OS_FAILURE;
 			}
 			break;
 		GP_PORT_DEFAULT
@@ -2148,7 +2206,7 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
 
 	if (msg[0] == 0x29) {
 		gp_context_error (context, _("File protected."));
-		return GP_ERROR;
+		return GP_ERROR_CAMERA_ERROR;
 	}
 
 	/* XXX we should mark folder as dirty, re-read it and check if the file
