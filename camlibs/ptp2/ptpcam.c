@@ -17,9 +17,12 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <usb.h>
 
 #ifdef HAVE_GETOPT_H
@@ -146,8 +149,8 @@ struct _PTP_USB {
 /* some functions declarations to avoid warnings */
 
 //void talk (struct usb_device*, int , int , int );
-void usage(void);
-void help(void);
+void usage(char *n);
+void help(char *n);
 struct usb_bus* init_usb(void);
 void init_ptp_usb (PTPParams*, PTP_USB*, struct usb_device*);
 void list_devices(short force);
@@ -160,32 +163,73 @@ short verbose=0;
 
 
 void
-usage()
+usage(n)
+char *n;
 {
-	printf("USAGE: ptpcam [OPTION]\n\n");
+	fprintf(stderr, "USAGE: %s [OPTION]\n", n);
+	fprintf(stderr, "Use the OPTION \"-h\" to get help\n");
 }
 
 void
-help()
+help(n)
+char *n;
 {
-	printf("USAGE: ptpcam [OPTION]\n\n");
-	printf("Options:\n"
-	"  -h, --help                   Print this help message\n"
-	"  -B, --bus=BUS-NUMBER         USB bus number\n"
-	"  -D, --dev=DEV-NUMBER         USB assigned device number\n"
-	"  -r, --reset                  Reset the device\n"
-	"  -l, --list-devices           List all PTP devices\n"
-	"  -p, --list-properties        List all PTP device properties\n"
-	"                               "
-				"(e.g. focus mode, focus distance, etc.)\n"
-	"  -s, --show-property=NUMBER   Display property details "
-					"(or set its value,\n"
-	"                               if used in conjunction with --val)\n"
-	"  --set-property=NUMBER        Set property value (--val required)\n"
-	"  --val=VALUE                  Property value\n"
-	"  -f, --force                  Talk to non PTP devices\n"
-	"  -v, --verbose                Be verbosive (print more debug)\n"
+	fprintf(stderr, "USAGE: %s [OPTION]\n\n", n);
+	fprintf(stderr, "Options:\n");
+	fprintf(stderr, "  -h"
+#ifdef HAVE_GETOPT_LONG
+	", --help"
+#endif                   
+	"\t\t\tPrint this help message\n");
+	fprintf(stderr, "  -B"
+#ifdef HAVE_GETOPT_LONG	
+	", --bus="
+#endif
+	"BUS-NUMBER\t\tUSB bus number\n");
+	fprintf(stderr, "  -D"
+#ifdef HAVE_GETOPT_LONG
+	", --dev="
+#endif
+	"DEV-NUMBER\t\tUSB assigned device number\n");
+	 fprintf(stderr, "  -r"
+#ifdef HAVE_GETOPT_LONG
+	", --reset"
+#endif
+	"\t\t\tReset the device\n");
+	fprintf(stderr, "  -l"
+#ifdef HAVE_GETOPT_LONG
+	", --list-devices"
+#endif
+	"\t\tList all PTP devices\n");
+	fprintf(stderr, "  -p"
+#ifdef HAVE_GETOPT_LONG
+	", --list-properties"
+#endif
+	"\t\tList all PTP device properties\n"
+	"\t\t\t\t(e.g. focus mode, focus distance, etc.)\n");
+	fprintf(stderr, "  -s"
+#ifdef HAVE_GETOPT_LONG
+	", --show-property="
+#endif
+	"NUMBER\tDisplay property details"
+#ifdef HAVE_GETOPT_LONG
+	" (or set its value, if used in conjunction with --val)"
+#endif
 	"\n");
+#ifdef HAVE_GETOPT_LONG
+	fprintf(stderr, "  --set-property=NUMBER\t\tSet property value (--val required)\n");
+	fprintf(stderr, "  --val=VALUE\t\t\tProperty value\n");
+#endif
+	fprintf(stderr, "  -f"
+#ifdef HAVE_GETOPT_LONG
+	", --force"
+#endif
+	"\t\t\tTalk to non PTP devices\n");
+	fprintf(stderr, "  -v"
+#ifdef HAVE_GETOPT_LONG
+	", --verbose"
+#endif
+	"\t\t\tBe verbosive (print more debug)\n");
 }
 
 
@@ -937,16 +981,16 @@ main(int argc, char ** argv)
 		{"verbose",2,0,'v'},
 		{0,0,0,0}
 	};
-#endif
-#endif
+#endif /* HAVE_GETOPT_LONG */
+#endif/* HAVE_GETOPT */
 	
-	while(1) {
 #ifdef HAVE_GETOPT
+	while(1) {
 #ifdef HAVE_GETOPT_LONG
 		opt = getopt_long (argc, argv, optstr, loptions, &option_index);
 #else
 		opt = getopt (argc, argv, optstr);
-#endif
+#endif /* HAVE_GETOPT_LONG */
 		if (opt==-1) break;
 	
 		switch (opt) {
@@ -955,7 +999,7 @@ main(int argc, char ** argv)
 				value=strdup(optarg);
 			break;
 		case 'h':
-			help();
+			help(argv[0]);
 			break;
 		case 'B':
 			busn=strtol(optarg,NULL,10);
@@ -995,7 +1039,7 @@ main(int argc, char ** argv)
 		}
 	}
 	if (argc==1) {
-		usage();
+		usage(argv[0]);
 		return 0;
 	}
 	switch (action) {
@@ -1013,5 +1057,13 @@ main(int argc, char ** argv)
 			break;
 	}
 
-	return 0;
+	exit(EXIT_SUCCESS);
+
+#else
+
+	fprintf(stderr, "ERROR: Your system doesn't support getopt(3), so we can't parse the options.");
+	exit(EXIT_FAILURE);
+
+#endif /* HAVE_GETOPT */
+
 }
