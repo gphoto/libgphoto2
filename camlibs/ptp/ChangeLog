@@ -1,3 +1,6 @@
+2002-03-06 Marcus Meissner
+	* library.c: translate the error messages
+
 2002-03-05 Mariusz Woloszyn
 	* ptp.c: updated ptp_getobjecthandles() to be protocol compliant
 	* ptp.c: rewrited ptp_transaction and ptp_sendreq code to send no
