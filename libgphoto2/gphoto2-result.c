@@ -50,6 +50,8 @@ static struct {
 	{GP_ERROR_CAMERA_BUSY,         N_("I/O in progress")},
 	{GP_ERROR_PATH_NOT_ABSOLUTE,   N_("Path not absolute")},
 	{GP_ERROR_CANCEL,              N_("Operation cancelled")},
+	{GP_ERROR_CAMERA_ERROR,        N_("Camera could not complete operation")},
+	{GP_ERROR_OS_FAILURE,          N_("OS error in camera communication")},
 	{0, NULL}
 };
 

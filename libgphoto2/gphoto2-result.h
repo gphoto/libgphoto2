@@ -97,6 +97,24 @@ extern "C" {
 
 #define GP_ERROR_CANCEL              -112
 
+/**
+ * GP_ERROR_CAMERA_ERROR:
+ *
+ * The camera reported some kind of error. This can be either a
+ * photographic error, such as failure to autofocus, underexposure, or
+ * violating storage permission, anything else that stops the camera
+ * from performing the operation.
+ */
+#define GP_ERROR_CAMERA_ERROR	     -113
+
+/**
+ * GP_ERROR_OS_FAILURE:
+ *
+ * There was some sort of OS error in communicating with the camera,
+ * e.g. lack of permission for an operation.
+ */
+#define GP_ERROR_OS_FAILURE	     -114
+
 
 const char *gp_result_as_string      (int result);
 
