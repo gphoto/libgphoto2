@@ -256,6 +256,8 @@ static struct {
 	{"Nikon:Coolpix 885 (PTP mode)", 0x04b0, 0x0112},
 	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
 	{"Nikon:Coolpix 4300 (PTP mode)", 0x04b0, 0x010f},
+	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
+	{"Nikon:Coolpix SQ (PTP mode)", 0x04b0, 0x0202},
 
 
 	/* (at least some) newer Canon cameras can be switched between
