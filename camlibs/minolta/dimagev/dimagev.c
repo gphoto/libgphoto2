@@ -243,10 +243,6 @@ int camera_file_get_preview (Camera *camera, CameraFile *file,
 
 	file_number = gp_filesystem_number(dimagev->fs, folder, filename);
 
-	if ( dimagev->debug != 0 ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "file number is %d", file_number);
-	}
-
 	if ( dimagev_get_thumbnail(dimagev, file_number + 1, file) == GP_ERROR ) {
 		if ( dimagev->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_get_preview::unable to retireve image file");
@@ -254,10 +250,10 @@ int camera_file_get_preview (Camera *camera, CameraFile *file,
 		return GP_ERROR;
 	}
 
-	/* The Dimage V always uses EXIF/JPEG for images, RGB for previews. */
+	/* The previews are stored in PPM format. See util.c for more details. */
 	snprintf(file->type, 63, "image/ppm");
 	/* Always name the image 0, for predictablity reasons. */
-	snprintf(file->name, 63, DIMAGEV_THUMBNAIL_FMT, 0);
+	snprintf(file->name, 63, DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
 
 	return GP_OK;
 	return (GP_OK);
@@ -404,6 +400,7 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	}
 
 	/* Now put all of the information into a reasonably formatted string. */
+	/* i keeps track of the length. */
 	i = 0;
 	/* First the stuff from the dimagev_info_t */
 	i = snprintf(summary->text, 32766, "\t\tGeneral Information\nModel:\t\t\t%s Dimage V (%s)\nHardware Revision:\t%s\nFirmware Revision:\t%s\n\n", dimagev->info->vendor, dimagev->info->model, dimagev->info->hardware_rev, dimagev->info->firmware_rev);
