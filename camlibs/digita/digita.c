@@ -73,7 +73,7 @@ int camera_abilities(CameraAbilitiesList *list)
 		a.port		= GP_PORT_SERIAL | GP_PORT_USB;
 		a.speed[0]	= 9600;
 		a.speed[1]	= 19200;
-		a.speed[2]	= 28400;
+		a.speed[2]	= 38400;
 		a.speed[3]	= 57600;
 		a.speed[4]	= 115200;
 		a.speed[5]	= 0;
