@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
 "POT-Creation-Date: 2001-03-18 20:49-0800\n"
-"PO-Revision-Date: 2001-03-18 21:33-08:00\n"
+"PO-Revision-Date: 2001-03-21 21:59-08:00\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -160,22 +160,19 @@ msgstr "Schwarz/Weiß"
 msgid "Sepia"
 msgstr "Sepia"
 
-# Wie heisst denn das? [Colin]
 #: camlibs/sierra/sierra.c:860 camlibs/sierra/sierra.c:870
 #: camlibs/sierra/sierra.c:1162
-#, fuzzy
 msgid "White Board"
-msgstr "White Board"
+msgstr "White Board-Effekt"
 
 #: camlibs/sierra/sierra.c:861 camlibs/sierra/sierra.c:872
 #: camlibs/sierra/sierra.c:1164
-#, fuzzy
 msgid "Black Board"
-msgstr "Black Board"
+msgstr "Black Board-Effekt"
 
 #: camlibs/sierra/sierra.c:886 camlibs/sierra/sierra.c:1173
 msgid "Flash Mode"
-msgstr "Blitz-Modus"
+msgstr "Blitzmodus"
 
 #: camlibs/sierra/sierra.c:888 camlibs/sierra/sierra.c:896
 #: camlibs/sierra/sierra.c:1178
@@ -226,7 +223,6 @@ msgstr "Kontrast-"
 msgid "White Balance"
 msgstr "Weißabgleich"
 
-# Doch nicht etwa "Himmel"? [Colin]
 #: camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
 #: camlibs/sierra/sierra.c:1219
 msgid "Skylight"
@@ -235,12 +231,12 @@ msgstr "Tageslicht"
 #: camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:958
 #: camlibs/sierra/sierra.c:1221
 msgid "Fluorescent"
-msgstr "Kunstlicht"
+msgstr "Kunstlicht - Fluoreszenzlampe"
 
 #: camlibs/sierra/sierra.c:950 camlibs/sierra/sierra.c:960
 #: camlibs/sierra/sierra.c:1223
 msgid "Tungsten"
-msgstr "Glühbirne"
+msgstr "Kunstlicht - Glühlampe"
 
 #: camlibs/sierra/sierra.c:951 camlibs/sierra/sierra.c:963
 #: camlibs/sierra/sierra.c:1225
@@ -249,7 +245,7 @@ msgstr "Wolkig"
 
 #: camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1234
 msgid "Lens Mode"
-msgstr "Objektiv-Modus"
+msgstr "Objektivmodus"
 
 #: camlibs/sierra/sierra.c:978 camlibs/sierra/sierra.c:983
 #: camlibs/sierra/sierra.c:1237
@@ -259,13 +255,12 @@ msgstr "Makro"
 #: camlibs/sierra/sierra.c:980 camlibs/sierra/sierra.c:987
 #: camlibs/sierra/sierra.c:1241
 msgid "Infinity/Fish-eye"
-msgstr "Unendlich//Fischauge"
+msgstr "Unendlich/Fischauge"
 
-# Nachfragen. [Colin]
+# Translation thanks to Martin Kroeker. [Colin]
 #: camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1251
-#, fuzzy
 msgid "Spot Metering Mode"
-msgstr "Spot Metering Mode"
+msgstr "Spotmessung"
 
 #: camlibs/sierra/sierra.c:1002 camlibs/sierra/sierra.c:1008
 #: camlibs/sierra/sierra.c:1254
@@ -332,7 +327,7 @@ msgstr "%sGemachte Bilder: %i\n"
 #: camlibs/sierra/sierra.c:1344
 #, c-format
 msgid "%sFrames Left     : %i\n"
-msgstr "%sÜbrige Bilder: %i\n"
+msgstr "%sVerbleibende Bilder: %i\n"
 
 #: camlibs/sierra/sierra.c:1346
 #, c-format
@@ -342,7 +337,7 @@ msgstr "%sBatterielebensdauer: %i\n"
 #: camlibs/sierra/sierra.c:1348
 #, c-format
 msgid "%sMemory Left\t: %i bytes\n"
-msgstr "%sÜbriger Speicher: %i bytes\n"
+msgstr "%sVerbleibender Speicher: %i bytes\n"
 
 #: camlibs/sierra/sierra.c:1359
 msgid ""
