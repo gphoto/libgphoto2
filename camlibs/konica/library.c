@@ -307,9 +307,6 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
         int protected;
         unsigned long image_id;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering set_info_func "
-                                                 "***");
-
         if (info->file.fields & (GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE |
                                  GP_FILE_INFO_NAME))
                 return (GP_ERROR_NOT_SUPPORTED);
@@ -342,12 +339,14 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
         unsigned long image_id;
         unsigned int information_buffer_size, exif_size;
         unsigned char *information_buffer = NULL;
-        int protected;
+        int protected, n;
+
+	/* We need image numbers starting with 1 */
+	CHECK (camera, n = gp_filesystem_number (camera->fs, folder, file));
+	n++;
 
         CHECK (camera, k_get_image_information (camera->port,
-		camera->pl->image_id_long,
-		gp_filesystem_number (camera->fs, folder, file),
-		&image_id, &exif_size, &protected,
+		camera->pl->image_id_long, n, &image_id, &exif_size, &protected,
 		&information_buffer, &information_buffer_size));
         free (information_buffer);
 
