@@ -623,7 +623,7 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	p[1] = n >> 8;
 	CR (ricoh_transmit (camera, context, (unsigned char) type,
 			    p, 2, buf, &len));
-	C_LEN (context, len, 18);
+	C_LEN (context, len, 16);
 
 	/*
 	 * Allocate the necessary memory. Note that previews are 80x60 pixels
@@ -631,7 +631,7 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	 * for the TIFF header.
 	 */
 	header_len = (type == RICOH_FILE_TYPE_PREVIEW) ? sizeof (header) : 0;
-	*size = buf[17] << 24 | buf[16] << 16 | buf[15] << 8 | buf[14];
+	*size = buf[15] << 24 | buf[14] << 16 | buf[13] << 8 | buf[12];
 	*size += header_len;
 
 	*data = malloc (*size);
