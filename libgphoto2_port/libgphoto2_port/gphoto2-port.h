@@ -46,12 +46,12 @@ extern "C" {
  * Use Parity. Enable/Disable, and Odd/Even.
  */
 
-typedef enum _GPPortSerialParity GPPortSerialParity;
-enum _GPPortSerialParity {
+typedef enum _GPPortSerialParity
+{
     GP_PORT_SERIAL_PARITY_OFF = 0,
     GP_PORT_SERIAL_PARITY_EVEN,
     GP_PORT_SERIAL_PARITY_ODD
-};
+} GPPortSerialParity;
 
 
 #define GP_PORT_MAX_BUF_LEN 4096             /* max length of receive buffer */
