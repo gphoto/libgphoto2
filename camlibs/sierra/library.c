@@ -566,6 +566,16 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			c &= 0xffff;
 			if (c == (packet[br - 2] + (packet[br - 1] * 256)))
 				break;
+
+			/*
+			 * At least the Nikon CoolPix 880 sets the checksum
+			 * always to 0xffff. In that case, we can't check it
+			 * and return successfully.
+			 */
+			if ((packet[br - 2] == 0xff) &&
+			    (packet[br - 1] == 0xff))
+				break;
+
 			GP_DEBUG ("Checksum wrong (calculated 0x%x, "
 				"found 0x%x)!", c,
 				packet[br - 2] + (packet[br - 1] * 256));

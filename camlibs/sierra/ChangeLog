@@ -1,3 +1,10 @@
+2002-02-18  Lutz Müller <lutz@users.sourceforge.net>
+
+	Reported by Patrick Mansfield <patman@aracnet.com>:
+
+	* library.c (sierra_read_packet): At least Nikon CoolPix 880 sets 
+	  the checksum always to 0xffff (?!?).
+
 2002-02-11  Lutz Müller <lutz@users.sourceforge.net>
 
 	* Makefile.am: As long as there is EXIF code in here, add
