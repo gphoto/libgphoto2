@@ -34,11 +34,12 @@
 #  define __FILE__ "dc.c"
 #endif
 
-int dsc1_sendcmd(dsc_t *dsc, u_int8_t cmd, void *data, int size) {
+int dsc1_sendcmd(Camera *camera, u_int8_t cmd, void *data, int size) {
 
+        dsc_t   *dsc = camera->camlib_data;
         int     i;
 
-        DEBUG_PRINT(("Sending command: 0x%02x, data size: %i.", cmd, size));
+        DEBUG_PRINT_MEDIUM(("Sending command: 0x%02x, data size: %i.", cmd, size));
 
         memset(dsc->buf, 0, DSC_BUFSIZE);
 
@@ -50,29 +51,32 @@ int dsc1_sendcmd(dsc_t *dsc, u_int8_t cmd, void *data, int size) {
         dsc->buf[DSC1_BUF_CMD] = cmd;
 
         if (DSC_BUFSIZE - DSC1_BUF_DATA <= size) {
-                RETURN_ERROR(EDSCOVERFL, dsc1_sendcmd)
+                RETURN_ERROR(EDSCOVERFL)
                 /* overflow */
         }
 
         if (data && 0 < size)
                 memcpy(&dsc->buf[DSC1_BUF_DATA], data, size);
 
-        return gp_port_write(dsc->dev, dsc->buf, 17 + size);
+        return gp_port_write(camera->port, dsc->buf, 17 + size);
 }
 
-int dsc1_retrcmd(dsc_t *dsc) {
+int dsc1_retrcmd(Camera *camera) {
 
+        dsc_t   *dsc = camera->camlib_data;
         int     result = GP_ERROR;
         int     s;
 
-        if ((s = gp_port_read(dsc->dev, dsc->buf, 17)) == GP_ERROR)
+        if ((s = gp_port_read(camera->port, dsc->buf, 17)) == GP_ERROR)
                 return GP_ERROR;
 
+/*      Make sense in debug only. Done on gp_port level.
         if (0 < s)
                 dsc_dumpmem(dsc->buf, s);
-
+*/
+                
         if (s != 17 ||  memcmp(dsc->buf, r_prefix, 12) != 0 )
-                RETURN_ERROR(EDSCBADRSP, dsc1_retrcmd)
+                RETURN_ERROR(EDSCBADRSP)
                 /* bad response */
         else
                 result = dsc->buf[DSC1_BUF_CMD];
@@ -84,23 +88,25 @@ int dsc1_retrcmd(dsc_t *dsc) {
                 ((u_int8_t)dsc->buf[DSC1_BUF_SIZE] << 24);
 
         if (DSC_BUFSIZE < dsc->size) {
-                RETURN_ERROR(EDSCOVERFL, dsc1_retrcmd);
+                RETURN_ERROR(EDSCOVERFL);
                 /* overflow */
         }
 
-        if (gp_port_read(dsc->dev, dsc->buf, dsc->size) != dsc->size)
+        if (gp_port_read(camera->port, dsc->buf, dsc->size) != dsc->size)
                 return GP_ERROR;
 
-        DEBUG_PRINT(("Retrieved command: %i.", result));
+        DEBUG_PRINT_MEDIUM(("Retrieved command: %i.", result));
 
         return result;
 }
 
-int dsc1_setbaudrate(dsc_t *dsc, int speed) {
+int dsc1_setbaudrate(Camera *camera, int speed) {
 
+        dsc_t           *dsc = camera->camlib_data;
         u_int8_t        s_bps;
+        int             result;
 
-        DEBUG_PRINT(("Setting baud rate to: %i.", speed));
+        DEBUG_PRINT_MEDIUM(("Setting baud rate to: %i.", speed));
 
         switch (speed) {
 
@@ -125,43 +131,43 @@ int dsc1_setbaudrate(dsc_t *dsc, int speed) {
                         break;
 
                 default:
-                        RETURN_ERROR(EDSCBPSRNG, dsc1_setbaudrate);
+                        RETURN_ERROR(EDSCBPSRNG);
         }
 
-        if (dsc1_sendcmd(dsc, DSC1_CMD_SET_BAUD, &s_bps, 1) != GP_OK)
+        if (dsc1_sendcmd(camera, DSC1_CMD_SET_BAUD, &s_bps, 1) != GP_OK)
                 return GP_ERROR;
 
-        if (dsc1_retrcmd(dsc) != DSC1_RSP_OK)
-                RETURN_ERROR(EDSCBADRSP, dsc1_setbaudrate);
+        if (dsc1_retrcmd(camera) != DSC1_RSP_OK)
+                RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
 
         sleep(DSC_PAUSE/2);
 
         dsc->settings.serial.speed = speed;
-        if (gp_port_settings_set(dsc->dev, dsc->settings) != GP_OK)
-                return GP_ERROR;
+        CHECK (gp_port_settings_set(camera->port, dsc->settings));
 
-        DEBUG_PRINT(("Baudrate set to: %i.", speed));
+        DEBUG_PRINT_MEDIUM(("Baudrate set to: %i.", speed));
 
         return GP_OK;
 }
 
-int dsc1_getmodel(dsc_t *dsc) {
+int dsc1_getmodel(Camera *camera) {
 
 
+        dsc_t                   *dsc = camera->camlib_data;
         static const char       response[3] = { 'D', 'S', 'C' };
 
-        DEBUG_PRINT(("Getting camera model."));
+        DEBUG_PRINT_MEDIUM(("Getting camera model."));
 
-        if (dsc1_sendcmd(dsc, DSC1_CMD_GET_MODEL, NULL, 0) != GP_OK)
+        if (dsc1_sendcmd(camera, DSC1_CMD_GET_MODEL, NULL, 0) != GP_OK)
                 return GP_ERROR;
 
-        if (dsc1_retrcmd(dsc) != DSC1_RSP_MODEL ||
+        if (dsc1_retrcmd(camera) != DSC1_RSP_MODEL ||
                         memcmp(dsc->buf, response, 3) != 0)
-                RETURN_ERROR(EDSCBADRSP, dsc1_getmodel);
+                RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
 
-        DEBUG_PRINT(("Camera model is: %c.", dsc->buf[3]));
+        DEBUG_PRINT_MEDIUM(("Camera model is: %c.", dsc->buf[3]));
 
         switch (dsc->buf[3]) {
                 case '1':
@@ -222,16 +228,11 @@ char *dsc_msgprintf(char *format, ...) {
         return msg;
 }
 
-void dsc_debugprint(char *file, char *message) {
+void dsc_errorprint(int error, char *file, int line) {
 
-	gp_debug_printf (GP_DEBUG_LOW, "panasonic", "%s: %s\n", file, message);
-}
-
-void dsc_errorprint(int error, char *file, char *function, int line) {
-
-        dsc_debugprint(file,
-                dsc_msgprintf("%s(): return from line %u, code: %i, errno: %i, %s\n",
-                        function, line, error, errno, dsc_strerror(error)));
+	gp_debug_printf(GP_DEBUG_LOW, "panasonic",
+		"%s:%u: return code: %i, errno: %i, %s",
+			file, line, error, errno, dsc_strerror(error));
 }
 
 void dsc_print_status(Camera *camera, char *format, ...) {
@@ -243,7 +244,7 @@ void dsc_print_status(Camera *camera, char *format, ...) {
         vsprintf(str, format, pvar);
         va_end(pvar);
 
-        dsc_debugprint(__FILE__, str);
+        gp_debug_printf(GP_DEBUG_MEDIUM, "panasonic", "%s\n", str);
         gp_frontend_status(camera, str);
 }
 
@@ -256,7 +257,7 @@ void dsc_print_message(Camera *camera, char *format, ...) {
         vsprintf(str, format, pvar);
         va_end(pvar);
 
-        dsc_debugprint(__FILE__, str);
+        gp_debug_printf(GP_DEBUG_MEDIUM, "panasonic", "%s\n", str);
         gp_frontend_message(camera, str);
 }
 

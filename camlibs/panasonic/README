@@ -26,6 +26,10 @@ Copyright
 	
 Changes
 -------	
+	* 18 September, 2001
+		- get rid of gp_port_(new|open|close|free)
+		- adapted to use filesystem provided in core
+
 	* 5 August, 2000
 		- filename based communication between library and core
 		- abilities accomodated to the new API
