@@ -1,3 +1,8 @@
+2002-11-22 Mariusz Woloszyn
+	* library.c: added several Kodak cammeras.
+	  Changed namig convention od Kodak devices. Dash removed (less
+	  readable, but conforms to original Kodak naming scheme).
+
 2002-11-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* library.c: several Canon cameras have a PTP mode
