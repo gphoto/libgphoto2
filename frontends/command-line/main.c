@@ -1071,6 +1071,18 @@ set_globals (void)
 	if (strcmp (glob_model, "Directory Browse") && (port < 0)) {
 		if (strcmp ("", glob_port)) {
 			port = gp_port_info_list_lookup_path (il, glob_port);
+			switch (port) {
+			case GP_ERROR_UNKNOWN_PORT:
+				cli_error_print (_("The port you specified "
+					"('%s') can not be found. Please "
+					"specify one of the ports found by "
+					"'gphoto2 --list-ports' and make "
+					"sure the spelling is correct "
+					"(i.e. with prefix 'serial:' or "
+					"'usb:')."), glob_port);
+			default:
+				break;
+			}
 			CHECK_RESULT (port);
 		} else {
 
