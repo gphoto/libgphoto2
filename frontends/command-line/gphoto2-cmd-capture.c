@@ -56,7 +56,6 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 	int result, event, contrast, bright;
 	aa_context *c;
 	aa_renderparams *params;
-	aa_palette palette;
 
 	c = aa_autoinit (&aa_defparams);
 	if (!c)
@@ -150,7 +149,7 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 			return (GP_OK);
 		}
 
-		aa_renderpalette (c, palette, params, 0, 0,
+		aa_render (c, params, 0, 0,
 			aa_scrwidth (c), aa_scrheight (c));
 		aa_flush (c);
 		
