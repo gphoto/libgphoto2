@@ -8,6 +8,7 @@ Mustek gSmart mini 2
 Mustek gSmart mini 3
 So. Show 301
 Aiptek Pencam
+Aiptek Pencam without flash storage (needs --camera "Pencam without flash")
 Medion MD 5319
 nisis Quickpix Qp3
 Trust Spyc@m 500F FLASH
@@ -18,6 +19,7 @@ Benq DC1300
 D-Link DSC 350+
 Trust Familycam 300
 Minton S-Cam F5
+Pure Digital Ritz disposable cam
 
 There are probably more cameras with these chips out there and they probably
 work with this driver as well.
