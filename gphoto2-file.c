@@ -252,7 +252,11 @@ gp_file_open (CameraFile *file, const char *filename)
         dot = strrchr (filename, '.');
         if (dot) {
             for (i = 0; mime_table[i] ; i+=2)
-                if (!strcmp (mime_table[i], dot+1)) {
+#ifdef HAVE_STRCASECMP
+                if (!strcasecmp (mime_table[i], dot+1)) {
+#else
+                if (!stricmp (mime_table[i], dot+1)) {
+#endif
                     strncpy (file->mime_type, mime_table[i+1], sizeof(file->mime_type));
                     break;
                 }
@@ -432,11 +436,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 	gp_log (GP_LOG_DEBUG, "gphoto2-file", "Adjusting file name for "
 		"mime type '%s'...", file->mime_type);
 	for (x = 0; table[x]; x += 2)
-#ifdef HAVE_STRCASECMP
-                if (!strcasecmp (file->mime_type, table[x])) {
-#else
-                if (!stricmp (file->mime_type, table[x])) {
-#endif
+                if (!strcmp (file->mime_type, table[x])) {
 
 			/* Search the current suffix and erase it */
 #ifdef HAVE_STRCHR
