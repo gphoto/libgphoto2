@@ -58,15 +58,15 @@ install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(TARGET_DIR)
 	(installfiles=`echo $(srcdir)/html/*.html`; \
 	if test "$$installfiles" = '$(srcdir)/html/*.html'; \
-	then echo '-- Nothing to install' ; \
+	then echo 'doc/api: -- Nothing to install' ; \
 	else \
 	  for i in $$installfiles; do \
-	    echo '-- Installing '$$i ; \
+	    echo 'doc/api/-- Installing '$$i ; \
 	    $(INSTALL_DATA) $$i $(DESTDIR)$(TARGET_DIR); \
 	  done; \
 	  echo '-- Installing $(srcdir)/html/index.sgml' ; \
 	  $(INSTALL_DATA) $(srcdir)/html/index.sgml $(DESTDIR)$(TARGET_DIR); \
-	  echo '-- Fixing Crossreferences' ; \
+	  echo 'doc/api-- Fixing Crossreferences' ; \
 	  gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(HTML_DIR)|| true; \
 	fi)
 
@@ -82,4 +82,5 @@ dist-hook:
 .PHONY : html sgml templates scan
 
 		      
+
 
