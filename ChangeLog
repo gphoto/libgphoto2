@@ -1,4 +1,8 @@
-2001-10-16 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2: Adapt to changes in libgphoto2_port
+
+2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line/gphoto2-cmd-capture.c: Adjust brighness
 	  and contrast with arrow keys

@@ -256,7 +256,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 			  GPPortInfoList *info_list, CameraList *l)
 {
 	GPPortInfo info;
-	GPPort *dev;
+	GPPort *port;
 	int i, x, count, v, p, info_count;
 	const char *m;
 
@@ -267,19 +267,20 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 	CHECK_RESULT (count = gp_abilities_list_count (list));
 	CHECK_RESULT (info_count = gp_port_info_list_count (info_list));
 
+	CHECK_RESULT (gp_port_new (&port));
 	for (i = 0; i < info_count; i++) {
 		CHECK_RESULT (gp_port_info_list_get_info (info_list, i, &info));
+		CHECK_RESULT (gp_port_set_info (port, info));
 		switch (info.type) {
 		case GP_PORT_USB:
 
 			/* Detect USB cameras */
 			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
 				"Auto-detecting USB cameras...");
-			CHECK_RESULT (gp_port_new (&dev, GP_PORT_USB));
 			for (x = 0; x < count; x++) {
 				v = list->abilities[x].usb_vendor;
 				p = list->abilities[x].usb_product;
-				if ((gp_port_usb_find_device (dev, v, p)
+				if ((gp_port_usb_find_device (port, v, p)
 								== GP_OK) &&
 				    (gp_abilities_list_get_model (list, x, &m)
 				     				== GP_OK)) {
@@ -289,7 +290,6 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 					gp_list_append (l, m, info.path);
 				}
 			}
-			gp_port_free (dev);
 			break;
 
 		default:
@@ -301,6 +301,8 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 			break;
 		}
 	}
+
+	gp_port_free (port);
 
 	return (GP_OK);
 }
