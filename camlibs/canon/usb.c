@@ -390,6 +390,12 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 	unsigned char packet[1024];	/* used for sending data to camera */
 	static unsigned char buffer[0x9c];	/* used for receiving data from camera */
 
+#ifdef EXPERIMENTAL_CAPTURE
+	int j, canon_subfunc = 0;
+	char subcmd = 0, *subfunct_descr = "";
+	int additional_read_bytes = 0, returned_read_bytes = 0;
+#endif
+
 	/* clear this to indicate that no data is there if we abort */
 	if (return_length)
 		*return_length = 0;
@@ -423,6 +429,36 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 	}
 	GP_DEBUG ("canon_usb_dialogue() cmd 0x%x 0x%x 0x%x (%s)", cmd1, cmd2, cmd3,
 		  funct_descr);
+
+#ifdef EXPERIMENTAL_CAPTURE
+	/*
+	 * The CONTROL_CAMERA function is special in that it's payload specifies a 
+	 * subcommand, and the size of the return data is dependent on which
+	 * subcommand we're sending the camera.  See "Protocol" file for details.
+	 */
+	if (canon_usb_cmd[i].num == CANON_USB_FUNCTION_CONTROL_CAMERA) {
+		canon_subfunc = le32atoh (payload);
+		j = 0;
+		while (canon_usb_control_cmd[j].num != 0) {
+			if (canon_usb_control_cmd[j].subcmd == canon_subfunc) {
+				subfunct_descr = canon_usb_control_cmd[j].description;
+				subcmd = canon_usb_control_cmd[j].subcmd;
+				additional_read_bytes = canon_usb_control_cmd[j].additional_return_length;
+				break;
+			}
+			j++;
+		}
+		if (canon_usb_control_cmd[j].num == 0) {
+			GP_DEBUG("canon_usb_dialogue(): CONTROL_CAMERA called for ILLEGAL "
+				 "sub function %i! Aborting.", canon_subfunc);
+			return NULL;
+		}
+		read_bytes += additional_read_bytes;
+
+		GP_DEBUG ("canon_usb_dialogue() called with CONTROL_CAMERA, %s",
+			  canon_usb_control_cmd[j].description);
+	}
+#endif /* EXPERIMENTAL_CAPTURE */
 
 	if (read_bytes > sizeof (buffer)) {
 		/* If this message is ever printed, chances are that you just added
@@ -481,6 +517,25 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 	/* and, if this canon_funct is known to generate a response from the camera,
 	 * read this response back.
 	 */
+
+#ifdef EXPERIMENTAL_CAPTURE
+	// TESTING
+	sleep(2);
+
+	// OTHER POSSIBLE TEST
+	//if (cmd1 == 0x13 && cmd2 == 0x12 && cmd3 == 0x201) {
+	//	GP_DEBUG ("sleeping 2 sec...");
+	//	sleep(3);
+	//	GP_DEBUG ("...done");
+	//}
+
+	//if (cmd1 == 0x17 && cmd2 == 0x12 && cmd3 == 0x202) {
+	//	GP_DEBUG ("capture command, sleeping 5 sec...");
+	//	sleep(5);
+	//	GP_DEBUG("...done");
+	//}
+#endif
+
 
 	/* Divide read_bytes into two parts (two reads), one that is the highest
 	 * ammount of 0x40 byte blocks we can get, and one that is the modulus (the rest).

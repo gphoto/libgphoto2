@@ -1,3 +1,15 @@
+2002-03-18  Fredrik <fredrik@krixor.xy.org>
+
+	* usb.c, usb.h, library.c, canon.c, canon.h:
+	  Committed Emile Snyder's USB remote capture code. This is
+	  work in progress, but to ease distribution and avoid
+	  conflicts it is included here inside
+	  #ifdef EXPERIMENTAL_CAPTURE
+
+	* README: Updated models known to work with the 'new'
+	  driver and added a paragraph about the remote capture code
+	  included today.
+
 2002-03-08  Fredrik <fredrik@krixor.xy.org>
 
 	* canon.{c,h}, library.c:

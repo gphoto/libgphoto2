@@ -380,6 +380,182 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 }
 
 
+
+#ifdef EXPERIMENTAL_CAPTURE
+
+int
+canon_int_pack_control_subcmd (unsigned char *payload, int subcmd,
+			       int word0, int word1,
+			       char *desc)
+{
+	int i, paysize;
+
+	i = 0;
+	while (canon_usb_control_cmd[i].num != 0) {
+		if (canon_usb_control_cmd[i].num == subcmd)
+			break;
+		i++;
+	}
+	if (canon_usb_control_cmd[i].num == 0) {
+		GP_DEBUG ("canon_int_pack_control_subcmd: unknown subcommand %d", subcmd);
+		sprintf (desc, "unknown subcommand");
+		return 0;
+	}
+
+	sprintf (desc, "%s", canon_usb_control_cmd[i].description);
+	paysize = canon_usb_control_cmd[i].cmd_length - 0x10;
+	memset (payload, 0, paysize);
+	if (paysize >= 0x04) htole32a(payload,     canon_usb_control_cmd[i].subcmd);
+	if (paysize >= 0x08) htole32a(payload+0x4, word0);
+	if (paysize >= 0x0c) htole32a(payload+0x8, word1);
+
+	return paysize;
+}
+
+int
+canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
+{
+	char payload[0x4c];
+	char desc[128];
+	int payloadlen;
+	int datalen = 0;
+	unsigned char *msg = NULL;
+
+	payloadlen = canon_int_pack_control_subcmd(payload, subcmd,
+						   a, b, desc);
+	GP_DEBUG("%s++ with %x, %x", desc, a, b);
+	msg = canon_usb_dialogue(camera, 
+				 CANON_USB_FUNCTION_CONTROL_CAMERA,
+				 &datalen, payload, payloadlen);
+	if (!msg && datalen != 0x1c) {
+		// ERROR
+		GP_DEBUG("%s returned msg=%p, datalen=%x",
+			 desc, msg, datalen);
+		return GP_ERROR;
+	}
+	msg = NULL;
+	datalen = 0;
+	GP_DEBUG("%s--", desc);
+
+	return GP_OK;
+}
+
+/**
+ * canon_int_capture_image
+ * @camera: camera to work with
+ * @path: gets filled in with the filename of the captured image
+ * @Returns: gphoto2 error code
+ *
+ * Directs the camera to capture an image (remote shutter release via USB).
+ * See the 'Protocol' file for details.
+ **/
+int
+canon_int_capture_image (Camera *camera, CameraFilePath *path, 
+			 GPContext *context)
+{
+	int c_res;
+	char payload[0x4c];
+	int payloadlen;
+	unsigned char *msg = NULL;
+
+	unsigned char *data = NULL;
+	int datalen = 0;
+	int mstimeout = -1;
+	int transfermode = 0x0;
+	
+	switch (camera->port->type) {
+	case GP_PORT_USB:
+		gp_port_get_timeout (camera->port, &mstimeout);
+		GP_DEBUG("usb port timeout starts at %dms", mstimeout);
+
+		/*
+		 * Send a sequence of CONTROL_CAMERA commands.
+		 */
+
+		// Init, extends camera lens, puts us in remote capture mode //
+		if (canon_int_do_control_command (camera, 
+						  CANON_USB_CONTROL_INIT, 0, 0) == GP_ERROR)
+			return GP_ERROR;
+
+
+		/*
+		 * Set the captured image transfer mode.  We have four options 
+		 * that we can specify any combo of, captured thumb to PC,
+		 * full to PC, thumb to disk, and full to disk.
+		 *
+		 * The to-PC option requires that we figure out how to get 
+		 * the alter telling us the data is in the camera buffer.
+		 */
+		transfermode = REMOTE_CAPTURE_THUMB_TO_DRIVE;
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_SET_TRANSFER_MODE, 
+						  0x04, transfermode) == GP_ERROR)
+			return GP_ERROR;
+		// Verify that msg points to 
+                // 02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
+		// 00 00 00 00 00 00 00 00 00 00 00 00
+
+
+
+		// Shutter Release //
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_SHUTTER_RELEASE, 
+						  0, 0) == GP_ERROR)
+			return GP_ERROR;
+		// Verify that msg points to 
+                // 02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
+		// 00 00 00 00 04 00 00 00 00 00 00 00
+
+
+		// End release mode //
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_EXIT,
+						  0, 0) == GP_ERROR)
+			return GP_ERROR;
+
+		
+		/*
+		 * This is how the computer responds to the event saying there's a 
+		 * thumbnail capture to download, but I don't know how the event
+		 * is transmitted yet.
+		 */
+		/*
+		//gp_port_set_timeout (camera->port, 10000);
+		//GP_DEBUG("set camera port timeout to 10 seconds...");
+
+		memset (payload, 0, sizeof(payload));
+		payloadlen = 0x10;
+
+		payload[5] = 0x50;
+		payload[8] = 0x02;
+		payload[12] = 0x01;
+		
+		c_res = canon_usb_long_dialogue(camera, CANON_USB_FUNCTION_RETRIEVE_CAPTURE,
+						&data, &datalen, 1024*1024,
+						payload, 0x10, 1, context);
+		if (datalen > 0 && data) {
+			GP_DEBUG ("canon camera_capture: Got the expected amount of data back");
+		} else {
+			gp_context_error (context, 
+					  _("camera_capture: Unexpected "
+					    "amount of data returned (%i bytes)"),
+					    datalen);
+			return GP_ERROR;
+		}
+		*/
+		break;
+	case GP_PORT_SERIAL:
+		return GP_ERROR_NOT_SUPPORTED;
+		break;
+	GP_PORT_DEFAULT
+	}
+
+	return GP_OK;
+}
+
+#endif /* EXPERIMENTAL_CAPTURE */
+
+
 /**
  * canon_int_set_file_attributes:
  * @camera: camera to work with

@@ -177,6 +177,14 @@ char *canon_int_get_disk_name(Camera *camera, GPContext *context);
  */
 int canon_int_get_battery(Camera *camera, int *pwr_status, int *pwr_source, GPContext *context);
 
+
+#ifdef EXPERIMENTAL_CAPTURE
+/*
+ *
+ */
+int canon_int_capture_image (Camera *camera, CameraFilePath *path, GPContext *context);
+#endif
+
 /*
  *
  */

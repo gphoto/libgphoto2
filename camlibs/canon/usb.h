@@ -52,6 +52,56 @@ int canon_usb_identify (Camera *camera, GPContext *context);
 #define CANON_USB_FUNCTION_EOS_LOCK_KEYS	16
 #define CANON_USB_FUNCTION_EOS_UNLOCK_KEYS	17
 
+
+
+#ifdef EXPERIMENTAL_CAPTURE
+
+#define CANON_USB_FUNCTION_RETRIEVE_CAPTURE     18
+#define CANON_USB_FUNCTION_RETRIEVE_PREVIEW     19
+#define CANON_USB_FUNCTION_CONTROL_CAMERA       20
+
+
+/* 
+ * CANON_USB_FUNCTION_CONTROL_CAMERA commands are used for a wide range
+ * of remote camera control actions.  A control_cmdstruct is defined
+ * below for the following remote camera control options.
+ */
+#define CANON_USB_CONTROL_INIT                  1
+#define CANON_USB_CONTROL_SHUTTER_RELEASE       2
+#define CANON_USB_CONTROL_SET_PARAMS            3
+#define CANON_USB_CONTROL_SET_TRANSFER_MODE     4
+#define CANON_USB_CONTROL_GET_PARAMS            5
+#define CANON_USB_CONTROL_GET_ZOOM_POS          6
+#define CANON_USB_CONTROL_SET_ZOOM_POS          7
+#define CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE   8
+#define CANON_USB_CONTROL_GET_EXT_PARAMS        9
+/* unobserved, commands present in canon headers defines */
+#define CANON_USB_CONTROL_EXIT                  10
+#define CANON_USB_CONTROL_VIEWFINDER_START      11
+#define CANON_USB_CONTROL_VIEWFINDER_STOP       12
+#define CANON_USB_CONTROL_GET_AVAILABLE_SHOT    13
+#define CANON_USB_CONTROL_SET_CUSTOM_FUNC       14
+#define CANON_USB_CONTROL_GET_CUSTOM_FUNC       15
+#define CANON_USB_CONTROL_GET_EXT_PARAMS_VER    16
+#define CANON_USB_CONTROL_SET_EXT_PARAMS        17
+#define CANON_USB_CONTROL_SELECT_CAM_OUTPUT     18
+#define CANON_USB_CONTROL_DO_AE_AF_AWB          19
+
+
+struct canon_usb_control_cmdstruct 
+{
+	int num;
+	char *description;
+	char subcmd;
+	int cmd_length;
+	int additional_return_length;
+};
+
+#endif /* EXPERIMENTAL_CAPTURE */
+
+
+
+
 struct canon_usb_cmdstruct 
 {
 	int num;
@@ -75,12 +125,56 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entries",	0x0b, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",		0x0e, 0x11, 0x201,	0x54},
+#ifdef EXPERIMENTAL_CAPTURE
+	{CANON_USB_FUNCTION_CONTROL_CAMERA,     "Remote camera control",        0x13, 0x12, 0x201,      0x40},
+	{CANON_USB_FUNCTION_RETRIEVE_CAPTURE,   "Download a captured image",    0x17, 0x12, 0x202,      0x40},
+	{CANON_USB_FUNCTION_RETRIEVE_PREVIEW,   "Download a captured preview",  0x18, 0x12, 0x202,      0x40},
+#endif /* EXPERIMENTAL_CAPTURE */
 	{CANON_USB_FUNCTION_EOS_LOCK_KEYS,	"EOS lock keys",		0x1b, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,	"EOS unlock keys",		0x1c, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_GET_PIC_ABILITIES,	"Get picture abilities",	0x1f, 0x12, 0x201,	0x384},
 	{CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,	"Lock keys and turn off LCD",	0x20, 0x12, 0x201,	0x54},
 	{ 0 }
 };
+
+
+#ifdef EXPERIMENTAL_CAPTURE
+
+static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
+	/* COMMAND NAME                         Description            Value   CmdLen ReplyLen */
+	{CANON_USB_CONTROL_INIT,                "Camera control init",  0x00,  0x18,  0x1c},  /* load 0x00, 0x00 */
+	{CANON_USB_CONTROL_SHUTTER_RELEASE,     "Release shutter",      0x04,  0x18,  0x1c},  /* load 0x04, 0x00 */
+	{CANON_USB_CONTROL_SET_PARAMS,          "Set release params",   0x07,  0x00,  0x1c},  /* ?? */
+	{CANON_USB_CONTROL_SET_TRANSFER_MODE,   "Set transfer mode",    0x09,  0x1c,  0x1c},  /* load (0x09, 0x04, 0x03) or (0x09, 0x04, 0x02000003) */
+	{CANON_USB_CONTROL_GET_PARAMS,          "Get release params",   0x0a,  0x18,  0x4c},  /* load 0x0a, 0x00 */
+	{CANON_USB_CONTROL_GET_ZOOM_POS,        "Get zoom position",    0x0b,  0x18,  0x20},  /* load 0x0b, 0x00 */
+	{CANON_USB_CONTROL_SET_ZOOM_POS,        "Set zoom position",    0x0c,  0x1c,  0x1c},  /* load 0x0c, 0x04, 0x01 (or 0x0c, 0x04, 0x0b) (or 0x0c, 0x04, 0x0a) or (0x0c, 0x04, 0x09) or (0x0c, 0x04, 0x08) or (0x0c, 0x04, 0x07) or (0x0c, 0x04, 0x06) or (0x0c, 0x04, 0x00) */
+	{CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE, "Get extended release params size",              
+	                                                                0x10,  0x1c,  0x20},  /* load 0x10, 0x00 */
+	{CANON_USB_CONTROL_GET_EXT_PARAMS,      "Get extended release params",              
+	                                                                0x12,  0x1c,  0x2c},  /* load 0x12, 0x04, 0x10 */
+
+	/* unobserved, commands present in canon headers defines, but need more usb snoops to get reply lengths */
+	{CANON_USB_CONTROL_EXIT,                "Exit release control", 0x01,  0x18,  0x1c},
+	{CANON_USB_CONTROL_VIEWFINDER_START,    "Start viewfinder",     0x02,  0x00,  0x00},
+	{CANON_USB_CONTROL_VIEWFINDER_STOP,     "Stop viewfinder",      0x03,  0x00,  0x00},
+	{CANON_USB_CONTROL_GET_AVAILABLE_SHOT,  "Get available shot",   0x0d,  0x00,  0x00},
+	{CANON_USB_CONTROL_SET_CUSTOM_FUNC,     "Set custom func.",     0x0e,  0x00,  0x00},
+	{CANON_USB_CONTROL_GET_CUSTOM_FUNC,     "Get custom func.",     0x0f,  0x00,  0x00},
+	{CANON_USB_CONTROL_GET_EXT_PARAMS_VER,  "Get extended params version",
+	                                                                0x11,  0x00,  0x00},
+	{CANON_USB_CONTROL_SET_EXT_PARAMS,      "Set extended params",  0x13,  0x00,  0x00},
+	{CANON_USB_CONTROL_SELECT_CAM_OUTPUT,   "Select camera output", 0x14,  0x00,  0x00}, /* LCD (0x1), Video out (0x2), or OFF (0x3) */
+	{CANON_USB_CONTROL_DO_AE_AF_AWB,        "Do AE, AF, and AWB",   0x15,  0x00,  0x00}, 
+	{ 0 }
+};
+
+#define REMOTE_CAPTURE_THUMB_TO_PC    (0x0001)
+#define REMOTE_CAPTURE_FULL_TO_PC     (0x0002)
+#define REMOTE_CAPTURE_THUMB_TO_DRIVE (0x0004)
+#define REMOTE_CAPTURE_FULL_TO_DRIVE  (0x0008)
+
+#endif /* EXPERIMENTAL_CAPTURE */
 
 
 #endif /* _CANON_USB_H */

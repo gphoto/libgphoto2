@@ -122,6 +122,10 @@ camera_abilities (CameraAbilitiesList *list)
 			a.speed[5] = 0;
 		}
 		a.operations = GP_OPERATION_CONFIG;
+#ifdef EXPERIMENTAL_CAPTURE
+		a.operations |= GP_OPERATION_CAPTURE_IMAGE |
+			GP_OPERATION_CAPTURE_PREVIEW;
+#endif
 		a.folder_operations =
 			GP_FOLDER_OPERATION_PUT_FILE | GP_FOLDER_OPERATION_MAKE_DIR |
 			GP_FOLDER_OPERATION_REMOVE_DIR;
@@ -189,6 +193,43 @@ camera_exit (Camera *camera, GPContext *context)
 
 	return GP_OK;
 }
+
+#ifdef EXPERIMENTAL_CAPTURE
+
+static int
+camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
+{
+	GP_DEBUG ("canon_capture_preview() called, currently not implemented");
+
+	return GP_OK;
+}
+
+static int
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
+{
+	GP_DEBUG ("canon_capture() called");
+
+	GP_DEBUG ("CANON REMOTE CAPTURE IS EXPERIMENTAL CODE, WORK IN PROGRESS "
+		  "AND MAYBE NOT WORKING AT ALL. NOT FOR THE FAINT OF HEART.");
+
+	if (camera->pl->md->model != CANON_PS_S40) {
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+
+	if (type != GP_CAPTURE_IMAGE) {
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+
+	if (canon_int_capture_image (camera, path, context) != GP_OK) {
+		gp_context_error (context, _("Error capturing image"));
+		return GP_ERROR;
+	}
+
+	return GP_OK;
+}
+
+#endif /* EXPERIMENTAL_CAPTURE */
 
 static int
 canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source, GPContext *context)
@@ -1001,6 +1042,10 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* First, set up all the function pointers */
 	camera->functions->exit = camera_exit;
+#ifdef EXPERIMENTAL_CAPTURE
+	camera->functions->capture_preview = camera_capture_preview;
+	camera->functions->capture = camera_capture;
+#endif /* EXPERIMENTAL_CAPTURE */
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
 	camera->functions->summary = camera_summary;
