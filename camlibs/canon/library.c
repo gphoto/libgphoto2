@@ -32,7 +32,6 @@
 #include <sys/stat.h>
 #include <termios.h>
 #include <time.h>
-//#include <ctype.h>
 
 #include <gphoto2.h>
 
@@ -889,7 +888,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 
 	GP_DEBUG ("delete_file_func() (previously known as camera_file_delete())");
 
-	// initialize memory to avoid problems later
+	/* initialize memory to avoid problems later */
 	memset (path, 0, sizeof (path));
 	memset (thumbname, 0, sizeof (thumbname));
 
@@ -1265,8 +1264,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* FIXME GP_FILE_INFO_PERMISSIONS to add */
 	info->file.fields = GP_FILE_INFO_NAME | GP_FILE_INFO_TYPE;
-	// | GP_FILE_INFO_PERMISSIONS | GP_FILE_INFO_SIZE;
-	//info->file.fields.permissions = 
+	/* | GP_FILE_INFO_PERMISSIONS | GP_FILE_INFO_SIZE;
+	info->file.fields.permissions = 
+	*/
 
 	if (is_movie (filename))
 		strcpy (info->file.type, GP_MIME_AVI);

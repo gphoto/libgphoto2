@@ -94,7 +94,7 @@ int canon_serial_ready (Camera *camera);
 #define MSG_LEN_LSB     8
 #define MSG_LEN_MSB     9
 
-// #define MSG_FFFB     12
+/* #define MSG_FFFB     12 */
 
 
 

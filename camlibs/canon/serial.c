@@ -545,7 +545,7 @@ canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, v
 				gp_debug_printf (GP_DEBUG_LOW, "canon",
 						 "No ACK received, retrying command\n");
 				if (try == 2) {
-					//is the camera still there?
+					/* is the camera still there? */
 					if (!canon_serial_send_packet
 					    (camera, PKT_EOT, camera->pl->seq_tx,
 					     camera->pl->psa50_eot + PKT_HDR_LEN, 0))
@@ -594,8 +594,8 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
 			return NULL;
 		if (type == PKT_MSG)
 			break;
-		//uploading is special
-//              if (type == PKT_ACK && mtype == 0x3 && dir == 0x21) break;
+		/* uploading is special */
+		/*if (type == PKT_ACK && mtype == 0x3 && dir == 0x21) break; */
 		if (type == PKT_EOT) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "Old EOT received sending corresponding ACK\n");
@@ -609,10 +609,12 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
 		length = frag[MSG_LEN_LSB] | (frag[MSG_LEN_MSB] << 8);
 		/* while uploading we expect 2 ACKs and a message 0x3 0x21
 		 * not always in the same order */
-//              if (type == PKT_ACK && mtype == 0x3 && dir == 0x21) {
-//                      gp_debug_printf(GP_DEBUG_LOW,"canon","ignoring ACK received while waiting for MSG\n");
-//                      return frag;
-//              }
+		/*
+		if (type == PKT_ACK && mtype == 0x3 && dir == 0x21) {
+			gp_debug_printf(GP_DEBUG_LOW,"canon","ignoring ACK received while waiting for MSG\n");
+			return frag;
+		}
+		*/
 		if (len < MSG_HDR_LEN || frag[MSG_02] != 2) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "ERROR: message format error\n");
@@ -1142,7 +1144,7 @@ canon_serial_ready (Camera *camera)
 
 	GP_DEBUG ("canon_int_ready()");
 
-	serial_set_timeout (camera->port, 900);	// 1 second is the delay for awakening the camera
+	serial_set_timeout (camera->port, 900);	/* 1 second is the delay for awakening the camera */
 	serial_flush_input (camera->port);
 	serial_flush_output (camera->port);
 
@@ -1268,9 +1270,10 @@ canon_serial_ready (Camera *camera)
 			break;
 	}
 
-	//  5 seconds  delay should  be enough for   big flash cards.   By
-	// experience, one or two seconds is too  little, as a large flash
-	// card needs more access time.
+	/*  5 seconds  delay should  be enough for   big flash cards.   By
+	 * experience, one or two seconds is too  little, as a large flash
+	 * card needs more access time.
+	 */
 	serial_set_timeout (camera->port, 5000);
 	(void) canon_serial_recv_packet (camera, &type, &seq, NULL);
 	if (type != PKT_EOT || seq) {

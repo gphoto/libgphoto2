@@ -376,8 +376,8 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 	int msgsize, status, i;
 	char cmd1 = 0, cmd2 = 0, *funct_descr = "";
 	int cmd3 = 0, read_bytes = 0, read_bytes1 = 0, read_bytes2 = 0;
-	unsigned char packet[1024];	// used for sending data to camera
-	static unsigned char buffer[0x9c];	// used for receiving data from camera
+	unsigned char packet[1024];	/* used for sending data to camera */
+	static unsigned char buffer[0x9c];	/* used for receiving data from camera */
 
 	/* clear this to indicate that no data is there if we abort */
 	if (return_length)
@@ -651,7 +651,7 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 	sprintf (payload, "12111111%s", name);
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file: payload %s", payload);
 	payload_length = strlen (payload) + 1;
-	htole32a (payload, 0x0);	// get picture
+	htole32a (payload, 0x0);	/* get picture */
 	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
 
 	/* the 1 is to show status */
@@ -690,7 +690,7 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 			 "payload %s", payload);
 	payload_length = strlen (payload) + 1;
 
-	htole32a (payload, 0x1);	// get thumbnail
+	htole32a (payload, 0x1);	/* get thumbnail */
 	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
 
 	/* 0 is to not show status */
