@@ -134,6 +134,7 @@ typedef struct CameraDesc {
  * oly-desc.c:
  */
 extern const CameraDescType sierra_default_cam_desc;
+extern const CameraDescType oly750uz_cam_desc;
 extern const CameraDescType oly3040_cam_desc;
 extern const CameraDescType oly3000z_cam_desc;
 

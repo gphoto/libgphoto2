@@ -475,7 +475,23 @@ static const RegisterDescriptorType oly3040_reg_70[] = {
 };
 
 /*
- * Register 71: optical zoom value.
+ * Oly 750 uz Register 71: optical zoom value.
+ */
+static const ValueNameType oly750uz_reg_71_val_names[] = {
+	{
+		{ range: { 6.3, 63.0, .1 } }, NULL
+	}
+};
+static const RegisterDescriptorType oly750uz_reg_71[] = { 
+	{
+		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		"zoom", N_("Zoom (in millimeters)"),
+		VAL_NAME_INIT (oly750uz_reg_71_val_names)
+	}
+};
+
+/*
+ * Oly 3040 Register 71: optical zoom value.
  */
 static const ValueNameType oly3040_reg_71_val_names[] = {
 	{
@@ -626,6 +642,56 @@ static const CameraRegisterSetType oly3040_desc[] = {
 		},
 };
 
+/*
+ * Olympus 750UZ: All of the register used to modify picture settings.
+ *
+ * XXX patman for now all except zoom are the same as the 3000 - a mix of
+ * 3040 and 3000.
+ */
+static CameraRegisterType oly750uz_pic_regs[] =  {
+	/* camera prefix, register number, size of register */
+	CAM_REG_TYPE_INIT (oly3040, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
+	CAM_REG_TYPE_INIT (oly3040, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
+	CAM_REG_TYPE_INIT (oly3000z, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
+	CAM_REG_TYPE_INIT (oly3040, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
+	CAM_REG_TYPE_INIT (oly3040, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
+	CAM_REG_TYPE_INIT (oly3000z, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
+	CAM_REG_TYPE_INIT (oly3040, 33, 4, CAM_DESC_DEFAULT, 0), /* focus mode */
+	CAM_REG_TYPE_INIT (oly3040,103, 4, CAM_DESC_DEFAULT, 0), /* focus position */
+	CAM_REG_TYPE_INIT (oly3040, 69, 8, CAM_DESC_DEFAULT, 0), /* exposure compensation */
+	CAM_REG_TYPE_INIT (oly3040, 70, 4, CAM_DESC_DEFAULT, 0), /* exposure metering */
+	CAM_REG_TYPE_INIT (oly750uz, 71, 8, CAM_DESC_DEFAULT, 0), /* optical zoom */
+	CAM_REG_TYPE_INIT (oly3040, 72, 4, CAM_DESC_DEFAULT, 0), /* digital zoom + lense +  AE lock */
+	CAM_REG_TYPE_INIT (oly3040, 85, 4, CAM_DESC_DEFAULT, 0), /* ISO Speed, read only  */
+};
+
+/*
+ * All of the register used to modify camera settings.
+ *
+ * XXX patman for now all the same as 3040.
+ */
+static const CameraRegisterType oly750uz_cam_regs[] = {
+	CAM_REG_TYPE_INIT (oly3040, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
+	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION, 
+			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
+	CAM_REG_TYPE_INIT (oly3040, 35, 4, CAM_DESC_DEFAULT, 0), /* LCD brightness */
+	CAM_REG_TYPE_INIT (oly3040, 38, 4, CAM_DESC_DEFAULT, 0), /* LCD auto shutoff */
+	CAM_REG_TYPE_INIT (oly3040, 24, 4, CAM_DESC_DEFAULT, 0), /* Camera power save */
+	CAM_REG_TYPE_INIT (oly3040, 23, 4, CAM_DESC_DEFAULT, 0), /* Host power save */
+	CAM_REG_TYPE_INIT (oly3040, 41, 4, CAM_DESC_DEFAULT, 0), /* time format, read only */
+};
+
+static const CameraRegisterSetType oly750uz_desc[] = {
+		{ 
+			N_("Picture Settings"), 
+			SIZE_ADDR (CameraRegisterType, oly750uz_pic_regs)
+		},
+		{ 
+			N_("Camera Settings"), 
+			SIZE_ADDR (CameraRegisterType, oly750uz_cam_regs)
+		},
+};
+
 static const CameraRegisterSetType oly3000z_desc[] = {
 		{ 
 			N_("Picture Settings"), 
@@ -661,6 +727,24 @@ N_(
 "    PC and switch LCD to 'Off'."
 );
 
+static const char oly750uz_manual[] =
+N_(
+"Olympus 750 Ultra Zoom:\n"
+"(1) Olympus 750UZ has a USB PC Control mode. In order\n"
+"    to use this mode, the camera must be switched\n"
+"    into 'USB PC control mode'. To get to the menu\n"
+"    for switching modes, turn on the camera, open\n"
+"    the memory card access door and then press and\n"
+"    hold both the 'OK' and 'quickview' buttons until the\n"
+"    camera control menu appears. Set it to control mode.\n"
+"(2) If you switch the 'LCD mode' to 'Monitor' or\n"
+"    'Normal', don't forget to switch it back to 'Off'\n"
+"    before disconnectig. Otherwise you cannot use\n"
+"    the camera's buttons. If you end up with this\n"
+"    state, you should reconnect the camera to the\n"
+"    PC and switch LCD to 'Off'."
+);
+
 static const char default_manual[] = 
 N_(
 "Default sierra driver:\n\n"
@@ -676,6 +760,8 @@ N_(
 "    please contact the developer mailing list.\n"
 );
 
+const CameraDescType oly750uz_cam_desc = { oly750uz_desc, oly750uz_manual,
+	SIERRA_EXT_PROTO, };
 const CameraDescType oly3040_cam_desc = { oly3040_desc, oly3040_manual,
 	SIERRA_EXT_PROTO, };
 const CameraDescType oly3000z_cam_desc = { oly3000z_desc, oly3040_manual,

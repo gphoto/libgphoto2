@@ -129,6 +129,8 @@ static struct {
 	{"Olympus", "C-420L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-700UZ",	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105,
 					SIERRA_WRAP_USB, &oly3040_cam_desc},
+	{"Olympus", "C-750UZ",	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105,
+					SIERRA_WRAP_USB, &oly750uz_cam_desc},
 	{"Olympus", "C-800", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-800L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-820", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },

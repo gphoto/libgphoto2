@@ -1,3 +1,8 @@
+2003-11-15  Patrick Mansfield <patmans@users.sourceforge.net>
+	* olympus-desc.c, sierra-desc.h, sierra.c: Add basic camera
+	  description for the oly 750uz (just the zoom support and
+	  oly750uz_manual for now).
+
 2003-11-03  Patrick Mansfield <patmans@users.sourceforge.net>
 	* library.c: get rid of all progress updates to fix recursion
 	  during capture per bug report 805858 from Harry Mangalam. The
