@@ -25,37 +25,27 @@
 
 #include "stv0680.h"
 #include "library.h"
+/*#include "sharpen.h"*/
 #include "bayer.h"
 #include "libgphoto2/pattrec.h"
 #include "libgphoto2/bayer.h"
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define _(String) (String)
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #define CMD_RETRIES		0x03
-
-#define CMD_GET_ERROR           0x80
-#define CMD_GET_ERROR_RLEN      0x02
-#define CMD_PING		0x88
-#define CMD_PING_RLEN		0x02
-#define CMD_GET_CAMERA_INFO		0x85
-#define CMD_GET_CAMERA_INFO_RLEN	0x10
-#define CMD_GET_FILE_INFO	0x86
-#define CMD_GET_FILE_INFO_RLEN	0x10
-#define CMD_GET_IMAGE		0x83
-#define CMD_GET_IMAGE_RLEN	0x10
-#define CMD_GET_PREVIEW		0x84
-#define CMD_GET_PREVIEW_RLEN	0x10
-
-#define CMD_GET_PICS            0x8d
-#define CMD_GET_PICS_RLEN       0x08
-
-#define CMD_GET_IMAGE_INFO	0x8f
-#define CMD_GET_IMAGE_INFO_RLEN	0x10
-#define CMD_CAPTURE_IMAGE	0x09
-#define CMD_TO_DSC		0x0a
-
-#define CMD_OK			0x00
-#define CMD_IO_ERROR		0x01
-#define CMD_IO_TIMEOUT		0x02
-#define CMD_BAD_RESPONSE	0x03
 
 #define STV0680_QCIF_WIDTH	178
 #define STV0680_QCIF_HEIGHT	146
@@ -66,21 +56,8 @@
 #define STV0680_VGA_WIDTH	644
 #define STV0680_VGA_HEIGHT	484
 
-static int stv0680_remap_gp_port_error(int error)
-{
-	switch(error) {
-	case GP_ERROR_TIMEOUT:
-		printf("Remapping GP_ERROR_TIMEOUT->CMD_IO_TIMEOUT\n");
-		return CMD_IO_TIMEOUT;
-	case GP_ERROR:
-		printf("Remapping GP_ERROR->CMD_IO_ERROR\n");
-	default:
-		printf("(generic error %d actually)\n", error);
-		return CMD_IO_ERROR;
-	}
-}
-
-static unsigned char stv0680_checksum(const unsigned char *data, int start, int end)
+static unsigned char
+stv0680_checksum(const unsigned char *data, int start, int end)
 {
 	unsigned char sum = 0;
 	int i;
@@ -89,29 +66,10 @@ static unsigned char stv0680_checksum(const unsigned char *data, int start, int 
 		sum += data[i];
 		sum &= 0xff;
 	}
-
-	printf("Calculated checksum 0x%X\n", sum);
-
 	return sum;
 }
 
-static int stv680_last_error(GPPort *device) {
-    	unsigned char lasterror[CMD_GET_ERROR_RLEN];
-	int ret;
-
-	ret = gp_port_usb_msg_read(device,CMD_GET_ERROR,0,0,lasterror,sizeof(lasterror));
-	if (ret < 0) {
-	    fprintf(stderr,"get last error returned gp error %d\n",ret);
-	    return ret;
-	}
-	fprintf(stderr,"last error was: %02x, last command was %02x\n",
-		lasterror[0],lasterror[1]
-	);
-	return GP_OK;
-}
-
-
-static int stv0680_cmd(GPPort *device, unsigned char cmd,
+static int stv0680_cmd(GPPort *port, unsigned char cmd,
 		unsigned char data1, unsigned char data2, unsigned char data3,
 		unsigned char *response, unsigned char response_len)
 {
@@ -127,20 +85,20 @@ static int stv0680_cmd(GPPort *device, unsigned char cmd,
 	packet[5] = data3;
 	packet[6] = stv0680_checksum(packet, 1, 5);
 
-	// write to device
-	printf("Writing packet to device\n");
-	if((ret = gp_port_write(device, packet, 8)) != GP_OK)
-		return stv0680_remap_gp_port_error(ret);
+	// write to port
+	printf("Writing packet to port\n");
+	if((ret = gp_port_write(port, packet, 8)) != GP_OK)
+		return ret;
 
 	printf("Reading response header\n");
 	// read response header
-	if((ret = gp_port_read(device, rhdr, 6)) != 6)
-		return stv0680_remap_gp_port_error(ret);
+	if((ret = gp_port_read(port, rhdr, 6)) != 6)
+		return ret;
 
 	printf("Read response\n");
 	// read response
-	if((ret = gp_port_read(device, response, response_len)) != response_len)
-		return stv0680_remap_gp_port_error(ret);
+	if((ret = gp_port_read(port, response, response_len)) != response_len)
+	    return ret;
 
 	printf("Validating packet [0x%X,0x%X,0x%X,0x%X,0x%X,0x%X]\n",
 rhdr[0], rhdr[1], rhdr[2], rhdr[3], rhdr[4], rhdr[5]);
@@ -150,144 +108,117 @@ rhdr[0], rhdr[1], rhdr[2], rhdr[3], rhdr[4], rhdr[5]);
 	   rhdr[3] != stv0680_checksum(response, 0, response_len - 1) ||
 	   rhdr[4] != stv0680_checksum(rhdr, 1, 3) ||
 	   rhdr[5] != 0x03)
-		return CMD_BAD_RESPONSE;
+		return GP_ERROR_BAD_PARAMETERS;
 
 	printf("Packet OK\n");
-	return CMD_OK;
+	return GP_OK;
 }
 
-static int stv0680_try_cmd(GPPort *device, unsigned char cmd,
-		unsigned char data1, unsigned char data2, unsigned char data3,
-		unsigned char *response, unsigned char response_len,
-		int retries)
-{
+static int stv0680_try_cmd(GPPort *port, unsigned char cmd,
+		unsigned short data,
+		unsigned char *response, unsigned char response_len
+) {
 	int ret;
+	switch (port->type) {
+	case GP_PORT_USB:
+	    /* Most significant bit set, data flows from camera->host */
+	    if (cmd & 0x80)
+		ret=gp_port_usb_msg_read(port,cmd,data,0,response,response_len);
+	    else
+		ret=gp_port_usb_msg_write(port,cmd,data,0,response,response_len);
 
-	while(retries--) {
-		printf("Trying command 0x%X\n", cmd);
-
-		switch(ret = stv0680_cmd(device, cmd, data1, data2, data3,
-					 response, response_len)) {
-		case CMD_IO_TIMEOUT:
-		case CMD_BAD_RESPONSE:
+	    if (ret == response_len)
+		return GP_OK;
+	    return ret;
+	    break;
+	case GP_PORT_SERIAL: {
+	    int retries = CMD_RETRIES;
+	    while(retries--) {
+		/* data3 was always 0 */
+		switch(ret=stv0680_cmd(port,cmd,(data>>8)&0xff,data&0xff,0,response,response_len)) {
+		case GP_ERROR_IO_TIMEOUT:
+		case GP_ERROR_BAD_PARAMETERS:
 			break;
 		default:
 			return ret;
 		}
-	}
-
-	printf("Failed command, retries exhausted\n");
-
-	return CMD_IO_ERROR;
-}
-
-int stv0680_ping(GPPort *device)
-{
-	unsigned char response[CMD_PING_RLEN];
-	int ret;
-
-	switch (device->type) {
-	case GP_PORT_USB:
-		ret = gp_port_usb_msg_read(device, CMD_PING, 0x55AA, 0x00,
-			response, sizeof(response));
-		if (ret != GP_OK)
-		    return ret;
-		if ((response[0]!=0x55) || (response[1]!=0xAA))
-		    return GP_ERROR_IO;
-		return GP_OK;
-	default:
-	case GP_PORT_SERIAL:
-		ret = stv0680_try_cmd(device, CMD_PING, 0x55, 0xAA, 0x00,
-			      response, sizeof(response), CMD_RETRIES);
-		switch(ret) {
-		case CMD_IO_ERROR:
-			printf("ping failed\n");
-			return GP_ERROR_IO;
-		case CMD_OK:
-			printf("ping ok\n");
-			return GP_OK;
-		default:
-			//Should not be reached.
-			return GP_ERROR;
-		}
-	}
-}
-
-int stv0680_file_count(GPPort *device, int *count)
-{
-	unsigned char response[CMD_GET_FILE_INFO_RLEN];
-	int ret;
-
-	switch (device->type) {
-	case GP_PORT_USB: {
-		unsigned char getpics[CMD_GET_PICS_RLEN];
-
-		if ((ret = gp_port_usb_msg_read(device,CMD_GET_PICS,0x00,0x00,
-			getpics, sizeof(getpics))) == sizeof(response)) {
-			*count = (getpics[2]<<8)|getpics[3];
-			return GP_OK;
-		}
-		/* Try old method */
-		if ((ret = gp_port_usb_msg_read(device,CMD_GET_FILE_INFO,0x00,0x00,
-			response,sizeof(response))) == sizeof(response)) {
-		    *count = response[1]+(response[0]<<8);
-		    return GP_OK;
-		}
-		return ret;
+	    }
 	}
 	default:
-	case GP_PORT_SERIAL:
-		ret = stv0680_try_cmd(device, CMD_GET_FILE_INFO, 0x00, 0x00, 0x00,
-			response, sizeof(response), CMD_RETRIES);
-		switch(ret) {
-		case CMD_IO_ERROR:
-			printf("IO error!\n");
-			return GP_ERROR_IO;
-		case CMD_OK:
-			printf("GFI OK, count = %d\n", response[1]);
-			*count = (response[0]<<8)|response[1];
-			return GP_OK;
-		default:
-			//Should not be reached.
-			return GP_ERROR;
-		}
+	    return GP_ERROR_NOT_SUPPORTED;
 	}
+	return GP_ERROR_IO;
 }
 
-int stv0680_get_image(GPPort *device, int image_no,
-			char **data, int *size)
+static int
+stv680_last_error(GPPort *port) {
+    	struct stv680_error_info errinf;
+	int ret;
+
+	ret = stv0680_try_cmd(port, CMDID_CLEAR_COMMS_ERROR, 0,
+		(void*)&errinf, sizeof(errinf));
+	if (ret != GP_OK)
+	    return ret;
+	fprintf(stderr,"last error was: %02x, additional info %02x\n",
+		errinf.error,errinf.info
+	);
+	return GP_OK;
+}
+
+int stv0680_ping(GPPort *port)
 {
-	unsigned char response[CMD_GET_IMAGE_RLEN], header[64];
+	unsigned char pong[2];
+	int ret;
+
+	ret=stv0680_try_cmd(port, CMDID_PING, 0x55AA, pong, sizeof(pong));
+	if (ret != GP_OK)
+	    return ret;
+	if ((pong[0]!=0x55) || (pong[1]!=0xAA)) {
+	    printf("CMDID_PING successful, but returned bad values?\n");
+	    return GP_ERROR_IO;
+	}
+	return GP_OK;
+}
+
+int stv0680_file_count(GPPort *port, int *count)
+{
+	struct stv680_image_info imginfo;
+	int ret;
+
+	ret = stv0680_try_cmd(port,CMDID_GET_IMAGE_INFO,0,
+		(void*)&imginfo,sizeof(imginfo));
+	if (ret != GP_OK)
+	    return ret;
+	*count = (imginfo.index[0]<<8)|imginfo.index[1];
+	return GP_OK;
+}
+
+int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
+{
+	struct stv680_image_header imghdr;
+	char header[64];
 	unsigned char *raw;
-	int h,w;
-	int ret;
+	int h,w,ret;
 
-	switch (device->type) {
-	case GP_PORT_USB:
+	ret = stv0680_try_cmd(port, CMDID_UPLOAD_IMAGE, image_no,
+		(void*)&imghdr, sizeof(imghdr));
+	if(ret != GP_OK)
+		return ret;
 
-		if ((ret = gp_port_usb_msg_read(device, CMD_GET_IMAGE,
-			image_no, 0x00, response, sizeof(response)) < 0)) {
-			return ret;
-		}
-		w = (response[4] << 8) | response[5];
-		h = (response[6] << 8) | response[7];
-		*size = w * h;
-		*size += (*size % 8) ? 8 - (*size % 8) : 0;
-		break;
-	default:
-	case GP_PORT_SERIAL:
-		ret = stv0680_try_cmd(device, CMD_GET_IMAGE, 0x00, image_no,
-			0x00, response, sizeof(response), CMD_RETRIES);
-		if(ret == CMD_IO_ERROR)
-			return GP_ERROR_IO;
-		w = (response[4] << 8) | response[5];
-		h = (response[6] << 8) | response[7];
-		*size = w * h;
-		break;
-	}
+	w = (imghdr.width[0]  << 8) | imghdr.width[1];
+	h = (imghdr.height[0] << 8) | imghdr.height[1];
+	*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+	    (imghdr.size[2]<<8) | imghdr.size[3];
+#if 0
+	fprintf(stderr,"image flag %x\n",imghdr.flags);
+	fprintf(stderr,"fine exp %d\n",(imghdr.fine_exposure[0]<<8)|imghdr.fine_exposure[1]);
+	fprintf(stderr,"coarse exp %d\n",(imghdr.coarse_exposure[0]<<8)|imghdr.coarse_exposure[1]);
+	fprintf(stderr,"sensor gain %d\n",imghdr.sensor_gain);
+	fprintf(stderr,"sensor clkdiv %d\n",imghdr.sensor_clkdiv);
+	fprintf(stderr,"avg pixel value %d\n",imghdr.avg_pixel_value);
+#endif
 	raw = malloc(*size);
-
-	if ((ret=gp_port_read(device, raw, *size))<0)
+	if ((ret=gp_port_read(port, raw, *size))<0)
 	    return ret;
 
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
@@ -300,40 +231,42 @@ int stv0680_get_image(GPPort *device, int image_no,
 	return GP_OK;
 }
 
-int stv0680_get_image_preview(GPPort *device, int image_no,
+int stv0680_get_image_preview(GPPort *port, int image_no,
 			char **data, int *size)
 {
-	unsigned char response[CMD_GET_IMAGE_RLEN], header[64];
+	struct stv680_image_header imghdr;
+	char header[64];
 	unsigned char *raw;
 	int h,w,scale;
 	int ret;
 
-	switch (device->type) {
+	switch (port->type) {
 	case GP_PORT_USB:
-		if ((ret = gp_port_usb_msg_read(device, CMD_GET_IMAGE,
-			image_no, 0x00, response, sizeof(response)) < 0)) {
+		if ((ret = stv0680_try_cmd(port, CMDID_UPLOAD_IMAGE,
+			image_no, (void*)&imghdr, sizeof(imghdr)) < 0)) {
 			return ret;
 		}
-		w = response[4] << 8 | response[5];
-		h = response[6] << 8 | response[7];
-		*size = w * h;			
-		*size += (*size % 8) ? 8 - (*size % 8) : 0;
+		w = (imghdr.width[0]  << 8) | imghdr.width[1];
+		h = (imghdr.height[0] << 8) | imghdr.height[1];
+		*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+		    (imghdr.size[2]<<8) | imghdr.size[3];
 		scale = (w>>8)+1;
 		break;
 	default:
 	case GP_PORT_SERIAL:
-		ret = stv0680_try_cmd(device, CMD_GET_PREVIEW, 0x00, image_no,
-			0x00, response, sizeof(response), CMD_RETRIES);
-		if(ret == CMD_IO_ERROR)
-			return GP_ERROR_IO;
-		w = response[4] << 8 | response[5];
-		h = response[6] << 8 | response[7];
-		*size = w * h;
+		ret = stv0680_try_cmd(port, CMDID_UPLOAD_THUMBNAIL, image_no,
+			(void*)&imghdr, sizeof(imghdr));
+		if(ret != GP_OK)
+			return ret;
+		w = (imghdr.width[0]  << 8) | imghdr.width[1];
+		h = (imghdr.height[0] << 8) | imghdr.height[1];
+		*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+		    (imghdr.size[2]<<8) | imghdr.size[3];
 		scale = 0;
 		break;
 	}
 	raw = calloc(1, *size);
-	if ((ret=gp_port_read(device, raw, *size))<0)
+	if ((ret=gp_port_read(port, raw, *size))<0)
 		return ret;
 	w >>=scale;
 	h >>=scale;
@@ -356,12 +289,28 @@ int stv0680_get_image_preview(GPPort *device, int image_no,
 	return GP_OK;
 }
 
-int stv0680_capture_preview(GPPort *device, char **data, int *size)
+int stv0680_capture(GPPort *port)
 {
-	unsigned char response[CMD_GET_IMAGE_RLEN], header[64];
-	unsigned char caminfo[CMD_GET_CAMERA_INFO_RLEN];
-	unsigned char *raw;
-	int h,w,xsize,i;
+    int ret;
+    struct stv680_error_info errinf;
+
+    ret = stv0680_try_cmd(port, CMDID_GRAB_IMAGE, GRAB_UPDATE_INDEX|GRAB_USE_CAMERA_INDEX, NULL, 0);
+    if (ret!=GP_OK)
+	return ret;
+    do {
+	ret = stv0680_try_cmd(port, CMDID_CLEAR_COMMS_ERROR, 0, (void*)&errinf, sizeof(errinf));
+	if (ret != GP_OK)
+	    return ret;
+    } while (errinf.error == CAMERR_BUSY);
+    return GP_OK;
+}
+
+int stv0680_capture_preview(GPPort *port, char **data, int *size)
+{
+	char header[64];
+	struct stv680_camera_info caminfo;
+	unsigned char *raw,*bayerpre;
+	int xsize,h,w,i;
 	int ret;
 	struct capmode { 
 	    int mask,w,h,mode;
@@ -372,17 +321,18 @@ int stv0680_capture_preview(GPPort *device, char **data, int *size)
 	    { 8, STV0680_QVGA_WIDTH, STV0680_QVGA_HEIGHT, 0x300 },
 	};
 
-	if (device->type != GP_PORT_USB)
-		return GP_ERROR_NOT_SUPPORTED;
-
 	/* Get Camera Information */
-	if ((ret = gp_port_usb_msg_read(device, CMD_GET_CAMERA_INFO,
-				0x000, 0x00 , caminfo, sizeof(caminfo)) < 0))
+	if ((ret = stv0680_try_cmd(port, CMDID_GET_CAMERA_INFO, 0,
+				(void*)&caminfo, sizeof(caminfo)) < 0))
 		return ret;
+
+	/* serial cameras don't have video... Too slow. */
+	if (!(caminfo.hardware_config & HWCONFIG_HAS_VIDEO))
+	    return GP_ERROR_NOT_SUPPORTED;
 
 	/* Look for the first supported mode, with decreasing size */
 	for (i=0;i<4;i++)
-	    if (caminfo[7] & capmodes[i].mask)
+	    if (caminfo.capabilities & capmodes[i].mask)
 		break;
 	if (i==4) {
 	    fprintf(stderr,"Neither CIF, QCIF, QVGA nor VGA supported?\n");
@@ -390,34 +340,126 @@ int stv0680_capture_preview(GPPort *device, char **data, int *size)
 	}
 	w = capmodes[i].w;
 	h = capmodes[i].h;
+
 	xsize = (w+2)*(h+2);
 
 	/* Send parameter according to mode */
-	if ((ret = gp_port_usb_msg_write(device, CMD_CAPTURE_IMAGE,
-				capmodes[i].mode, 0x00 , response, 0x0) < 0))
+	ret = stv0680_try_cmd(port,CMDID_START_VIDEO,capmodes[i].mode,NULL,0x0);
+
+	if (ret!=GP_OK)
 		return ret;
-	*size = xsize;
+
+	*size= xsize;
 	raw = malloc(*size);
-	switch(gp_port_read(device, raw, *size)) {
+	switch(gp_port_read(port, raw, *size)) {
 	case GP_ERROR_TIMEOUT:
 		printf("read timeout\n");
-		stv680_last_error(device);
+		stv680_last_error(port);
 		break;
 	case GP_ERROR:
 		printf("IO error\n");
-		stv680_last_error(device);
+		stv680_last_error(port);
 		break;
 	default:break;
 	}
-	if ((ret = gp_port_usb_msg_write(device, CMD_TO_DSC, 0x00,
-					0x00, response, 0x00) < 0))
+	if ((ret = stv0680_try_cmd(port, CMDID_STOP_VIDEO, 0, NULL, 0)!=GP_OK))
 		return ret;
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
 	*data = malloc((*size * 3) + strlen(header));
 	strcpy(*data, header);
+	bayerpre = malloc((*size*3));
 	gp_bayer_decode (raw, w, h, *data + strlen(header), BAYER_TILE_GBRG_INTERLACED);
+	/*gp_bayer_decode (raw, w, h, bayerpre, BAYER_TILE_GBRG_INTERLACED);*/
+	/*sharpen (w, h, bayerpre,*data + strlen(header), 66);*/
 	free(raw);
+	free(bayerpre);
 	*size *= 3;
 	*size += strlen(header);
 	return GP_OK;
+}
+
+int stv0680_delete_all(GPPort *port) {
+    return stv0680_try_cmd(port,CMDID_SET_IMAGE_INDEX,0,NULL,0);
+}
+
+int stv0680_summary(GPPort *port, char *txt)
+{
+    struct stv680_camera_info caminfo;
+    struct stv680_image_info imginfo;
+    int ret;
+
+    strcpy(txt,_("Information for STV0680 based camera:\n"));
+    /* Get Camera Information */
+    if ((ret = stv0680_try_cmd(port, CMDID_GET_CAMERA_INFO,
+				0, (void*)&caminfo, sizeof(caminfo)) < 0))
+	return ret;
+    sprintf(txt+strlen(txt),_("Firmware Revision: %d.%d\n"),
+	    caminfo.firmware_revision[0],
+	    caminfo.firmware_revision[1]
+    );
+    sprintf(txt+strlen(txt),_("ASIC Revision: %d.%d\n"),
+	    caminfo.asic_revision[0],
+	    caminfo.asic_revision[1]
+    );
+    sprintf(txt+strlen(txt),_("Sensor ID: %d.%d\n"),
+	    caminfo.sensor_id[0],
+	    caminfo.sensor_id[1]
+    );
+    /* HWCONFIG_COMMSLINK_MASK ... not really needed, the user knows, he
+     * plugged it in. */
+    sprintf(txt+strlen(txt),_("Camera is configured for lights flickering with %dHz.\n"),
+    	(caminfo.hardware_config & HWCONFIG_FLICKERFREQ_60HZ)?60:50
+    );
+    sprintf(txt+strlen(txt),_("Memory in camera: %d Mbit.\n"),
+    	(caminfo.hardware_config & HWCONFIG_MEMSIZE_16MBIT)?16:64
+    );
+    if (caminfo.hardware_config & HWCONFIG_HAS_THUMBNAILS)
+	strcat(txt,_("Camera supports Thumbnails.\n"));
+    if (caminfo.hardware_config & HWCONFIG_HAS_VIDEO)
+	strcat(txt,_("Camera supports Video.\n"));
+    /* HWCONFIG_STARTUP_COMPLETED ... Would the camera even answer if not ? */
+    if (caminfo.hardware_config & HWCONFIG_IS_MONOCHROME)
+	strcat(txt,_("Camera pictures are monochrome.\n"));
+    if (caminfo.hardware_config & HWCONFIG_MEM_FITTED) /* Is this useful? */
+	strcat(txt,_("Camera has memory.\n"));
+
+    strcat(txt,_("Camera supports videoformats: "));
+    if (caminfo.capabilities & CAP_CIF) strcat(txt,"CIF ");
+    if (caminfo.capabilities & CAP_VGA) strcat(txt,"VGA ");
+    if (caminfo.capabilities & CAP_QCIF) strcat(txt,"QCIF ");
+    if (caminfo.capabilities & CAP_QVGA) strcat(txt,"QVGA ");
+    strcat(txt,"\n");
+    sprintf(txt+strlen(txt),_("Vendor ID: %02x%02x\n"),
+	    caminfo.vendor_id[0],
+	    caminfo.vendor_id[1]
+    );
+    sprintf(txt+strlen(txt),_("Product ID: %02x%02x\n"),
+	    caminfo.product_id[0],
+	    caminfo.product_id[1]
+    );
+    if ((ret = stv0680_try_cmd(port, CMDID_GET_IMAGE_INFO, 0,
+		    (void*)&imginfo, sizeof(imginfo))!=GP_OK))
+	return ret;
+    sprintf(txt+strlen(txt),_("Number of Images: %d\n"),
+	    (imginfo.index[0]<<8)|imginfo.index[1]
+    );
+    sprintf(txt+strlen(txt),_("Maximum number of Images: %d\n"),
+	    (imginfo.maximages[0]<<8)|imginfo.maximages[1]
+    );
+    sprintf(txt+strlen(txt),_("Image width: %d\n"),
+	    (imginfo.width[0]<<8)|imginfo.width[1]
+    );
+    sprintf(txt+strlen(txt),_("Image height: %d\n"),
+	    (imginfo.height[0]<<8)|imginfo.height[1]
+    );
+    sprintf(txt+strlen(txt),_("Image size: %d\n"),
+	    (imginfo.size[0]<<24)|(imginfo.size[1]<<16)|(imginfo.size[2]<<8)|
+	     imginfo.size[3]
+    );
+    sprintf(txt+strlen(txt),_("Thumbnail width: %d\n"),imginfo.thumb_width);
+    sprintf(txt+strlen(txt),_("Thumbnail height: %d\n"),imginfo.thumb_height);
+    sprintf(txt+strlen(txt),_("Thumbnail size: %d\n"),
+	    (imginfo.thumb_size[0]<<8)|imginfo.thumb_size[1]
+    );
+    return GP_OK;
 }

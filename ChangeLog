@@ -1,3 +1,14 @@
+2001-12-01  Marcus Meissner <marcus@jet.franken.de>
+
+	* camlibs/stv0680: Partial rewrite.
+	  Got vendor information on USB communications, moved corrected
+	  definitions and return data structs into header file.
+	  Merged serial and USB communications to use the same functions.
+	  Rewrote almost all functions, fixed lots of bugs and added some
+	  missing features.
+	  Added 'delete all', 'capture image' and 'summary' functionality.
+	  *** Tested with USB only. Serial testers wanted. ***
+
 2001-12-02  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/de.po: Update.
