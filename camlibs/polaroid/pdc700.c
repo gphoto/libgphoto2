@@ -79,7 +79,12 @@ enum _PDCBool {
 
 typedef struct _PDCDate PDCDate;
 struct _PDCDate {
-	unsigned char year, month, day; /* Years since 1980 */
+
+	/*
+	 * v2.45: Years since 1980
+	 * V3.10: Years since 2000
+	 */
+	unsigned char year, month, day;
 	unsigned char hour, minute, second;
 };
 
@@ -771,7 +776,8 @@ camera_summary (Camera *camera, CameraText *about)
 		"LCD: %s\n"
 		"Auto power off: %i minutes\n"
 		"Power source: %s"),
-		info.date.year + 1980, info.date.month, info.date.day,
+		info.date.year + (!strcmp (info.version, "v2.45")) ? 1980 : 0,
+		info.date.month, info.date.day,
 		info.date.hour, info.date.minute, info.date.second,
 		info.num_taken, info.num_free, info.version,
 		info.memory,
