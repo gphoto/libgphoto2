@@ -59,8 +59,8 @@ dtoh32ap (PTPParams *params, char *a)
 #define htod32(x)	htod32p(params,x)
 
 #define dtoh8a(x)	*(uint8_t*)(x)
-#define dtoh16a(x)	dtoh16ap(params,x)
-#define dtoh32a(x)	dtoh32ap(params,x)
+#define dtoh16a(a)	dtoh16ap(params,a)
+#define dtoh32a(a)	dtoh32ap(params,a)
 #define dtoh16(x)	dtoh16p(params,x)
 #define dtoh32(x)	dtoh32p(params,x)
 
@@ -86,6 +86,9 @@ static inline int
 ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 {
 	int i;
+	uint8_t filenamelen;
+	uint8_t capturedatelen;
+	char *capture_date="20020101T010101"; //FIXME
 
 	memset (req, 0, sizeof(PTPReq));
 	htod32a(&req->data[PTP_oi_StorageID],oi->StorageID);
@@ -104,13 +107,28 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 	htod32a(&req->data[PTP_oi_AssociationDesc],oi->AssociationDesc);
 	htod32a(&req->data[PTP_oi_SequenceNumber],oi->SequenceNumber);
 	
-	htod8a(&req->data[PTP_oi_filenamelen],strlen(oi->Filename)+1);
-	for (i=0;i<strlen(oi->Filename) && i< MAXFILENAMELEN; i++) {
+	filenamelen=(uint8_t)strlen(oi->Filename);
+	htod8a(&req->data[PTP_oi_filenamelen],filenamelen+1);
+	for (i=0;i<filenamelen && i< MAXFILENAMELEN; i++) {
 		req->data[PTP_oi_Filename+i*2]=oi->Filename[i];
 	}
-	// XXX add other fields, this function should return dataset length
 
-	return 1;
+	// FIXME: fake date!!!
+	capturedatelen=strlen(capture_date);
+	htod8a(&req->data[PTP_oi_Filename+(filenamelen+1)*2],
+		capturedatelen+1);
+	for (i=0;i<capturedatelen && i< MAXFILENAMELEN; i++) {
+		req->data[PTP_oi_Filename+(i+filenamelen+1)*2+1]=capture_date[i];
+	}
+	htod8a(&req->data[PTP_oi_Filename+(filenamelen+capturedatelen+2)*2+1],
+		capturedatelen+1);
+	for (i=0;i<capturedatelen && i< MAXFILENAMELEN; i++) {
+		req->data[PTP_oi_Filename+(i+filenamelen+capturedatelen+2)*2+2]=
+		  capture_date[i];
+	}
+
+	// XXX this function should return dataset length
+	return 144;
 }
 
 static inline void

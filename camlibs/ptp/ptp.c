@@ -91,7 +91,7 @@ ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
 	req->type = htod16(PTP_TYPE_REQ);
 	req->code = htod16(code);
 	req->trans_id = htod32(params->transaction_id);
-	params->transaction_id++;
+//	params->transaction_id++;
 
 	ret=params->write_func ((unsigned char *) req, PTP_REQ_LEN,
 				 params->data);
@@ -208,6 +208,7 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 {
 	if ((params==NULL) || (req==NULL)) 
 		return PTP_ERROR_BADPARAM;
+	params->transaction_id++;
 	CHECK_PTP_RC(ptp_sendreq(params, req, code));
 	switch (dataphase) {
 		case PTP_DP_SENDDATA:
@@ -395,14 +396,14 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 	uint16_t ret;
 	PTPReq req;
 	PTPReq req_oi;
+	uint32_t size;
 
 	*(uint32_t *)(req.data)=htod32(*store);
 	*(uint32_t *)(req.data+4)=htod32(*parenthandle);
 	
-	memcpy(req_oi.data, objectinfo, sizeof (PTPObjectInfo));
-	
+	size=ptp_pack_OI(params, objectinfo, &req_oi);
 	ret= ptp_transaction(params, &req, PTP_OC_EK_SendFileObjectInfo,
-		PTP_DP_SENDDATA, sizeof(PTPObjectInfo), &req_oi); 
+		PTP_DP_SENDDATA, size, &req_oi); 
 	*store=dtoh32a(req.data);
 	*parenthandle=dtoh32a(req.data+4);
 	*handle=dtoh32a(req.data+8); 

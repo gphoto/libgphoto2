@@ -1,3 +1,8 @@
+2002-01-16 Mariusz WOloszyn
+	* ptp-pack.c:     added fake date packing
+	* ptp.c:  Fixed ptp_ek_sendfileobjectinfo to use packed structures
+	* library.: started implementation of upload file (for Kodak only!)
+
 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* library.c: Remove references to gp_camera_set_error.
