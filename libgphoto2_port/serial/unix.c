@@ -161,144 +161,136 @@ gp_port_library_type ()
 }
 
 static int
-gp_port_serial_lock (GPPort *dev)
+gp_port_serial_lock (GPPort *dev, const char *path)
 {
-#if HAVE_TTYLOCK || HAVE_BAUDBOY
-	const char *port;
-
-	port = strchr (dev->settings.serial.port, ':');
-	port++;
-
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
-		"Trying to lock '%s'...", port);
-	if (!ttylock ((char*) port))
-		return (GP_OK);
-
-	gp_port_set_error (dev, _("Could not lock device '%s'"), port);
-	return (GP_ERROR_IO_LOCK);
-
-#elif HAVE_LOCKDEV
-
-	const char *port;
+#if HAVE_LOCKDEV
 	int pid;
+#endif
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
-		"Trying to lock '%s'...", port);
+		"Trying to lock '%s'...", path);
 
-	port = strchr (dev->settings.serial.port, ':');
-	port++;
-
-	pid = dev_lock (port);
-	if (!pid)
-		return (GP_OK);
-
-	/* Tell the user what went wrong */
-	if (pid > 0)
-		gp_port_set_error (dev, _("Device '%s' is locked by pid %d"),
-				   port, pid);
-	else
-		gp_port_set_error (dev, _("Device '%s' could not be locked "
-				   "(dev_lock returned %d)"), port, pid);
-
-	return (GP_ERROR_IO_LOCK);
-
+#if HAVE_TTYLOCK || HAVE_BAUDBOY
+	if (ttylock ((char*) path)) {
+		if (dev)
+			gp_port_set_error (dev, _("Could not lock device "
+						  "'%s'"), path);
+		return (GP_ERROR_IO_LOCK);
+	}
+#elif HAVE_LOCKDEV
+	pid = dev_lock (path);
+	if (pid) {
+		if (dev) {
+			if (pid > 0)
+				gp_port_set_error (dev, _("Device '%s' is "
+					"locked by pid %d"), path, pid);
+			else
+				gp_port_set_error (dev, _("Device '%s' could "
+					"not be locked (dev_lock returned "
+					"%d)"), path, pid);
+		}
+		return (GP_ERROR_IO_LOCK);
+	}
 #else
 #warning No locking library found. 
 #warning You will run into problems if you 
 #warning use gphoto2 in combination with
 #warning Konqueror (KDE) or Nautilus (GNOME).
+#endif
 
 	return (GP_OK);
-
-#endif
 }
 
 static int
-gp_port_serial_unlock (GPPort *dev)
+gp_port_serial_unlock (GPPort *dev, const char *path)
 {
 #if HAVE_TTYLOCK || HAVE_BAUDBOY
-	const char *port;
-
-	port = strchr (dev->settings.serial.port, ':');
-	port++;
-
-	if (!ttyunlock ((char*) port))
-		return (GP_OK);
-
-	gp_port_set_error (dev, _("Device '%s' could not be unlocked."), port);
-	return (GP_ERROR_IO_LOCK);
-
+	if (ttyunlock ((char*) path)) {
+		if (dev)
+			gp_port_set_error (dev, _("Device '%s' could not be "
+					   "unlocked."), path);
+		return (GP_ERROR_IO_LOCK);
+	}
 #elif HAVE_LOCKDEV
 
 	int pid;
-	const char *port;
-	
-	port = strchr (dev->settings.serial.port, ':');
-	port++;
 
-	pid = dev_unlock (port, 0);
-	if (!pid)
-		return (GP_OK);
-
-	/* Tell the user what went wrong */
-	if (pid > 0)
-		gp_port_set_error (dev, _("Device '%s' could not be "
-			"unlocked as it is locked by pid %d."), port, pid);
-	else
-		gp_port_set_error (dev, _("Device '%s' could not be "
-			"unlocked (dev_unlock returned %d)"), port, pid);
-	return (GP_ERROR_IO_LOCK);
-
-#else
+	pid = dev_unlock (path, 0);
+	if (pid) {
+		if (dev) {
+			if (pid > 0)
+				gp_port_set_error (dev, _("Device '%s' could "
+					"not be unlocked as it is locked by "
+					"pid %d."), path, pid);
+			else
+				gp_port_set_error (dev, _("Device '%s' could "
+					"not be unlocked (dev_unlock "
+					"returned %d)"), path, pid);
+		}
+		return (GP_ERROR_IO_LOCK);
+	}
+#endif /* !HAVE_LOCKDEV */
 
 	return (GP_OK);
-	
-#endif /* !HAVE_LOCKDEV */
 }
 
 int
 gp_port_library_list (GPPortInfoList *list)
 {
 	GPPortInfo info;
-        char buf[1024], prefix[1024];
+	char path[1024], prefix[1024];
         int x, fd;
 #ifdef __linux
-        /* devfs */
         struct stat s;
 #endif
 #ifdef OS2
-        int rc,fh,option;
+        int fh, option;
 #endif
 
         /* Copy in the serial port prefix */
-        strcpy(prefix, GP_PORT_SERIAL_PREFIX);
-#ifdef __linux
-        /* devfs */
-        if (stat("/dev/tts", &s)==0)
-            strcpy(prefix, "/dev/tts/%i");
+        strcpy (prefix, GP_PORT_SERIAL_PREFIX);
 
+	/* On Linux systems, check for devfs */
+#ifdef __linux
+        if (!stat ("/dev/tts", &s))
+		strcpy (prefix, "/dev/tts/%i");
 #endif
+
         for (x=GP_PORT_SERIAL_RANGE_LOW; x<=GP_PORT_SERIAL_RANGE_HIGH; x++) {
-            sprintf(buf, prefix, x);
+		sprintf (path, prefix, x);
+
+		/* OS/2 seems to need an additional check */
 #ifdef OS2
-           rc = DosOpen(buf,&fh,&option,0,0,1,OPEN_FLAGS_FAIL_ON_ERROR|OPEN_SHARE_DENYREADWRITE,0);
-           DosClose(fh);
-           if(rc==0) {
+		r = DosOpen (path, &fh, &option, 0, 0, 1,
+			     OPEN_FLAGS_FAIL_ON_ERROR |
+			     OPEN_SHARE_DENYREADWRITE, 0);
+		DosClose(fh);
+		if (r)
+			continue;
 #endif
-                fd = open (buf, O_RDONLY | O_NDELAY);
-                if (fd != -1) {
-                        close (fd);
-			info.type = GP_PORT_SERIAL;
-                        strcpy(info.path, "serial:");
-                        strcat(info.path, buf);
-                        sprintf(buf, "Serial Port %i", x);
-			snprintf (info.name, sizeof (info.name),
-				  "Serial Port %i", x);
-			CHECK (gp_port_info_list_append (list, info));
-                }
-#ifdef OS2
-           }
-#endif
+
+		/* First of all, try to lock the device */
+		if (gp_port_serial_lock (NULL, path) < 0)
+			continue;
+			
+		/* Device locked. Try to open the device. */
+		fd = open (path, O_RDONLY | O_NDELAY);
+		if (fd < 0) {
+			gp_port_serial_unlock (NULL, path);
+			continue;
+		}
+
+		/*
+		 * Device locked and opened. Close it, unlock it, and add
+		 * it to the list.
+		 */
+		close (fd);
+		gp_port_serial_unlock (NULL, path);
+		info.type = GP_PORT_SERIAL;
+		strncpy (info.path, "serial:", sizeof (info.path));
+		strncat (info.path, path, sizeof (info.path));
+		snprintf (info.name, sizeof (info.name), "Serial Port %i", x);
+		CHECK (gp_port_info_list_append (list, info));
         }
 
         return (GP_OK);
@@ -350,10 +342,10 @@ gp_port_serial_open (GPPort *dev)
 		return GP_ERROR_UNKNOWN_PORT;
 	port++;
 
-	result = gp_port_serial_lock (dev);
+	result = gp_port_serial_lock (dev, port);
 	if (result != GP_OK) {
 		for (i = 0; i < max_tries; i++) {
-			result = gp_port_serial_lock (dev);
+			result = gp_port_serial_lock (dev, port);
 			if (result == GP_OK)
 				break;
 			gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
@@ -386,6 +378,7 @@ static int
 gp_port_serial_close (GPPort *dev)
 {
 	int result;
+	const char *path;
 
 	if (!dev)
 		return (GP_OK);
@@ -400,7 +393,9 @@ gp_port_serial_close (GPPort *dev)
 	}
 
 	/* Unlock the port */
-	result = gp_port_serial_unlock (dev);
+	path = strchr (dev->settings.serial.port, ':');
+	path++;
+	result = gp_port_serial_unlock (dev, path);
 	if (result < 0)
 		return (result);
 
