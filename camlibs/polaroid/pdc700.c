@@ -85,10 +85,10 @@ typedef struct _PDCPicInfo PDCPicInfo;
 struct _PDCPicInfo {
 	char version[6];
 	unsigned int pic_size, thumb_size;
+	unsigned char flash;
 };
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
-#define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
 
 /*
  * Every command sent to the camera begins with 0x40 followed by two bytes
@@ -110,18 +110,25 @@ calc_checksum (unsigned char *cmd, int len)
 }
 
 static int
-pdc700_read (Camera *camera, unsigned char *cmd, int cmd_len,
-	     unsigned char *buf, int *buf_len, int *status)
+pdc700_send (Camera *camera, unsigned char *cmd, int cmd_len)
 {
-	unsigned char header[3], checksum;
-	int i;
-
 	/* Finish the command and send it */
 	cmd[0] = 0x40;
 	cmd[1] = (cmd_len - 3) >> 8;
 	cmd[2] = (cmd_len - 3) & 0xff;
 	cmd[cmd_len - 1] = calc_checksum (cmd + 3, cmd_len - 1 - 3);
 	CHECK_RESULT (gp_port_write (camera->port, cmd, cmd_len));
+
+	return (GP_OK);
+}
+
+static int
+pdc700_read (Camera *camera, unsigned char *cmd,
+	     unsigned char *b, int *b_len,
+	     char *status, char *sequence_number)
+{
+	unsigned char header[3], checksum;
+	unsigned int i;
 
 	/*
 	 * Read the header (0x40 plus 2 bytes indicating how many bytes
@@ -130,36 +137,88 @@ pdc700_read (Camera *camera, unsigned char *cmd, int cmd_len,
 	CHECK_RESULT (gp_port_read (camera->port, header, 3));
 	if (header[0] != 0x40)
 		return (GP_ERROR_CORRUPTED_DATA);
-	*buf_len = (header[2] << 8) | header [1];
+	*b_len = (header[2] << 8) | header [1];
 
 	/* Read the remaining bytes */
-	CHECK_RESULT (gp_port_read (camera->port, buf, *buf_len));
-	
+	CHECK_RESULT (gp_port_read (camera->port, b, *b_len));
+
 	/*
-	 * The first byte indicates if this the response for our command. 
+	 * The first byte indicates if this the response for our command.
 	 */
-	if (buf[0] != (0x80 | cmd[3])) {
+	if (b[0] != (0x80 | cmd[3])) {
 		gp_camera_set_error (camera, _("Received unexpected response"));
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 
-	/*
-	 * The next byte indicates if other packets will follow (in case
-	 * of picture transmission). 
-	 */
-	*status = buf[1];
+	/* Will other packets follow? */
+	*status = b[1];
+
+	/* Then follows the sequence number (number of next packet if any) */
+	*sequence_number = b[2];
 
 	/* Check the checksum */
-	for (checksum = i = 0; i < *buf_len - 1; i++)
-		checksum += buf[i];
-	if (checksum != buf[*buf_len - 1]) {
+	for (checksum = i = 0; i < *b_len - 1; i++)
+		checksum += b[i];
+	if (checksum != b[*b_len - 1]) {
 		gp_camera_set_error (camera, _("Checksum error"));
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 
-	/* We no longer need the first two bytes and the last byte */
-	*buf_len -= 3;
-	memmove (buf, buf + 2, *buf_len);
+	/* Preserve only the actual data */
+	*b_len -= 4;
+	memmove (b, b + 3, *b_len);
+
+	return (GP_OK);
+}
+
+static int
+pdc700_transmit (Camera *camera, unsigned char *cmd, int cmd_len,
+		 unsigned char *buf, unsigned int *buf_len)
+{
+	unsigned char status, b[2048], sequence_number;
+	unsigned int b_len;
+	unsigned int target = *buf_len;
+
+	CHECK_RESULT (pdc700_send (camera, cmd, cmd_len));
+	CHECK_RESULT (pdc700_read (camera, cmd, b, &b_len,
+				   &status, &sequence_number));
+
+	/* Copy over the data */
+	*buf_len = b_len;
+	memcpy (buf, b, b_len);
+
+	if (status != PDC700_DONE) {
+		while (status != PDC700_DONE) {
+			cmd[4] = PDC700_DONE;
+			cmd[5] = sequence_number;
+			GP_DEBUG ("Fetching sequence %i...", sequence_number);
+			CHECK_RESULT (pdc700_send (camera, cmd, 7));
+			CHECK_RESULT (pdc700_read (camera, cmd, b, &b_len,
+						&status, &sequence_number));
+
+			/*
+			 * Sanity check: We should never read more bytes than
+			 * targeted
+			 */
+			if (*buf_len + b_len > target) {
+				gp_camera_set_error (camera, _("The camera "
+					"sent more bytes than expected (%i)"),
+					target);
+				return (GP_ERROR_CORRUPTED_DATA);
+			}
+
+			/* Copy over the data */
+			memcpy (buf + *buf_len, b, b_len);
+			*buf_len += b_len;
+			gp_camera_progress (camera,
+					    (float) *buf_len / (float) target);
+		}
+
+		/* Acknowledge last packet */
+		cmd[4] = PDC700_LAST;
+		cmd[5] = sequence_number;
+		CHECK_RESULT (pdc700_send (camera, cmd, 7));
+	}
 
 	return (GP_OK);
 }
@@ -170,7 +229,7 @@ pdc700_baud (Camera *camera, int baud)
 	unsigned char b;
 	unsigned char cmd[6];
 	unsigned char buf[2048];
-	int status, buf_len;
+	int buf_len;
 
 	switch (baud) {
 	case 57600:
@@ -190,9 +249,7 @@ pdc700_baud (Camera *camera, int baud)
 
 	cmd[3] = PDC700_BAUD;
 	cmd[4] = b;
-	CHECK_RESULT (pdc700_read (camera, cmd, 6, buf, &buf_len, &status));
-	if (status != PDC700_DONE)
-		return (GP_ERROR_CORRUPTED_DATA);
+	CHECK_RESULT (pdc700_transmit (camera, cmd, 6, buf, &buf_len));
 
 	return (GP_OK);
 }
@@ -200,14 +257,12 @@ pdc700_baud (Camera *camera, int baud)
 static int
 pdc700_init (Camera *camera)
 {
-	int status, buf_len;
+	int buf_len;
 	unsigned char cmd[5];
 	unsigned char buf[2048];
 
 	cmd[3] = PDC700_INIT;
-	CHECK_RESULT (pdc700_read (camera, cmd, 5, buf, &buf_len, &status));
-	if (status != PDC700_DONE)
-		return (GP_ERROR_CORRUPTED_DATA);
+	CHECK_RESULT (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
 
 	return (GP_OK);
 }
@@ -215,47 +270,46 @@ pdc700_init (Camera *camera)
 static int
 pdc700_picinfo (Camera *camera, int n, PDCPicInfo *info)
 {
-	int status, buf_len;
+	int buf_len;
 	unsigned char cmd[7];
 	unsigned char buf[2048];
 
 	cmd[3] = PDC700_PICINFO;
 	cmd[4] = n && 0xff;
 	cmd[5] = n >> 8;
-	CHECK_RESULT (pdc700_read (camera, cmd, 7, buf, &buf_len, &status));
-	if (status != PDC700_DONE)
-		return (GP_ERROR_CORRUPTED_DATA);
+	CHECK_RESULT (pdc700_transmit (camera, cmd, 7, buf, &buf_len));
 
-	/* We don't know about the meaning of buf[0] and buf[1] */
-	
+	/* We don't know about the meaning of buf[0] */
+
 	/* Check if this information is about the right picture */
-	if (n != (buf[2] | (buf[3] << 8)))
+	if (n != (buf[1] | (buf[2] << 8)))
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	/* Picture size */
-	info->pic_size = buf[4] | (buf[5] << 8) |
-			(buf[6] << 16) | (buf[7] << 24);
+	info->pic_size = buf[3] | (buf[4] << 8) |
+			(buf[5] << 16) | (buf[6] << 24);
+	GP_DEBUG ("Size of picture: %i", info->pic_size);
 
 	/* Flash used? */
+	info->flash = buf[7];
 	GP_DEBUG ("This picture has been taken with%s flash.",
-		  buf[8] ? "" : "out");
+		  buf[7] ? "" : "out");
 
-	/* The meaning of buf[9-17] is unknown */
+	/* The meaning of buf[8-16] is unknown */
 
 	/* Thumbnail size */
-	info->thumb_size = buf[18] | (buf[19] <<  8) | (buf[20] << 16) |
-			  (buf[21] << 24);
-	GP_DEBUG ("Size of picture: %i", info->pic_size);
+	info->thumb_size = buf[17] | (buf[18] <<  8) | (buf[19] << 16) |
+			  (buf[20] << 24);
 	GP_DEBUG ("Size of thumbnail: %i", info->thumb_size);
 
-	/* The meaning of buf[22] is unknown */
+	/* The meaning of buf[21] is unknown */
 
 	/* Version info */
-	strncpy (info->version, &buf[23], 6);
+	strncpy (info->version, &buf[22], 6);
 
 	/*
 	 * Now follows some picture data we have yet to reverse
-	 * engineer (buf[29-63]).
+	 * engineer (buf[23-62]).
 	 */
 
 	return (GP_OK);
@@ -264,90 +318,81 @@ pdc700_picinfo (Camera *camera, int n, PDCPicInfo *info)
 static int
 pdc700_info (Camera *camera, PDCInfo *info)
 {
-	int status, buf_len;
+	int buf_len;
 	unsigned char buf[2048];
 	unsigned char cmd[5];
 
 	cmd[3] = PDC700_INFO;
-	CHECK_RESULT (pdc700_read (camera, cmd, 5, buf, &buf_len, &status));
-	if (status != PDC700_DONE)
-		return (GP_ERROR_CORRUPTED_DATA);
+	CHECK_RESULT (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
+
+	/*
+	 * buf[0-6]: We don't know. The following has been seen:
+	 * 12 04 01 00 0a 01 00
+	 * 20 04 02 01 05 01 00
+	 * 20 04 02 01 05 00 00
+	 */
 
 	/* Protocol version */
-	strncpy (info->version, &buf[8], 6);
+	strncpy (info->version, &buf[7], 6);
+
+	/* buf[13-14]: We don't know. Seems to be always 00 00 */
 
 	/* Pictures */
-	info->num_taken = buf[16] | (buf[17] << 8);
-	info->num_free = buf[18] | (buf[19] << 8);
+	info->num_taken = buf[15] | (buf[16] << 8);
+	info->num_free = buf[17] | (buf[18] << 8);
 
 	/* Date */
-	info->date.year   = buf[20];
-	info->date.month  = buf[21];
-	info->date.day    = buf[22];
-	info->date.hour   = buf[23];
-	info->date.minute = buf[24];
-	info->date.second = buf[25];
+	info->date.year   = buf[19];
+	info->date.month  = buf[20];
+	info->date.day    = buf[21];
+	info->date.hour   = buf[22];
+	info->date.minute = buf[23];
+	info->date.second = buf[24];
+
+	/*
+	 * buf[25-62]: We don't know:
+	 * 
+	 * 03 00 f8 b2 64 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 *
+	 * 03 00 c6 03 86 28 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 *
+	 * 03 00 3a 7f 65 83 00 00 01 00 00 00 00 00 00 00 00 00 00 00 
+	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 *
+	 * 03 00 23 25 66 83 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 */
 
 	return (GP_OK);
 }
 
 static int
-pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
+pdc700_pic (Camera *camera, int n, unsigned char **data, unsigned int *size,
 	    int thumb)
 {
 	unsigned char cmd[8];
-	unsigned char buf[2048];
-	int len, status;
-	unsigned int target;
+	int r;
 	PDCPicInfo info;
 
 	/* Picture size? Allocate the memory */
 	CHECK_RESULT (pdc700_picinfo (camera, n, &info));
-	target = thumb ? info.thumb_size : info.pic_size;
-	*data = malloc (sizeof (char) * target);
+	*size = thumb ? info.thumb_size : info.pic_size;
+	*data = malloc (sizeof (char) * *size);
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
 
-	/* Get first packet and copy the data (without sequence number) */
+	/* Get picture data */
 	cmd[3] = (thumb) ? PDC700_THUMB : PDC700_PIC;
 	cmd[4] = PDC700_FIRST;
 	cmd[5] = n & 0xff;
 	cmd[6] = n >> 8;
-	gp_camera_progress (camera, 0.);
-	CHECK_RESULT_FREE (pdc700_read (camera, cmd, 8,
-					buf, &len, &status), *data);
-	memcpy (*data, buf + 1, len - 1);
-	*size = len - 1;
-	gp_camera_progress (camera, (float) *size / (float) target);
-
-	/* Get the following packets */
-	while (status != PDC700_LAST) {
-		cmd[4] = PDC700_DONE;
-		cmd[5] = buf[0]; /* Sequence number */;
-		GP_DEBUG ("Fetching sequence %i...", buf[0]);
-		CHECK_RESULT_FREE (pdc700_read (camera, cmd, 7,
-						buf, &len, &status), *data);
-
-		/*
-		 * Sanity check: We should never read more bytes than
-		 * targeted.
-		 */
-		if (*size + len - 1 > target) {
-			gp_camera_set_error (camera, _("The camera sent more "
-				"bytes than we expected (%i)"), target);
-			return (GP_ERROR_CORRUPTED_DATA);
-		}
-
-		memcpy (*data + *size, buf + 1, len - 1);
-		*size += len - 1;
-		gp_camera_progress (camera, (float) *size / (float) target);
+	r = pdc700_transmit (camera, cmd, 8, *data, size);
+	if (r < 0) {
+		free (*data);
+		return (r);
 	}
-
-	/* Terminate transfer */
-	cmd[4] = PDC700_LAST;
-	cmd[5] = buf[0]; /* Sequence number */
-	CHECK_RESULT_FREE (pdc700_read (camera, cmd, 7, buf, &len, &status),
-			   *data);
 
 	return (GP_OK);
 }
