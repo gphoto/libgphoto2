@@ -131,9 +131,8 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 	GP_DEBUG ("camera_manual()");
 
 	strcpy (manual->text,
-		_("For the A50, 115200 may not be faster than 57600\n"
-		  "Folders are NOT supported\n"
-		  "if you experience a lot of serial transmission errors,"
+		_("For the A50, using 115200 may effectively be slower than using 57600\n"
+		  "If you experience a lot of serial transmission errors,"
 		  " try to have your computer as idle as possible\n"
 		  " (i.e. no disk activity)\n"
 			));

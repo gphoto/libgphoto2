@@ -103,7 +103,7 @@ typedef enum {
  * @CANON_PS_UNK1: Unknown camera seen in Mac OS X Image Capture
  * @CANON_PS_UNK2: Unknown camera seen in Mac OS X Image Capture
  * @CANON_PS_UNK3: Unknown camera seen in Mac OS X Image Capture
- * @CANON_PS_UNK4: Unknown camera seen in Mac OS X Image Capture
+ * @CANON_ZR70MC: Canon ZR70MC Mini-DV Camcorder
  * @CANON_PS_UNK5: Unknown camera seen in Mac OS X Image Capture
  * @CANON_EOS_300D: EOS 300D / Digital Rebel / KISS Rebel
  * @CANON_PS_S50: PowerShot S50
@@ -152,7 +152,7 @@ typedef enum {
 	CANON_PS_UNK1,
 	CANON_PS_UNK2,
 	CANON_PS_UNK3,
-	CANON_PS_UNK4,
+	CANON_ZR70MC,
 	CANON_PS_UNK5,
 	/* other cameras */
 	CANON_PS_S400,
@@ -256,9 +256,9 @@ struct canonCamModelData
 	unsigned short usb_vendor;
 	unsigned short usb_product;
 	canonCaptureSupport usb_capture_support;
-	unsigned int max_picture_size;
 	unsigned int max_movie_size;
 	unsigned int max_thumbnail_size;
+	unsigned int max_picture_size;
 	char *serial_id_string; /* set to NULL if camera doesn't support serial connections */
 };
 
