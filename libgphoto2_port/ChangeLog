@@ -1,3 +1,8 @@
+2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Don't use ltdl.h - libtool is just too broken
+	  (or I am too stupid to use it).
+
 2002-06-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* m4/documentation.m4:
