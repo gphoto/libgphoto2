@@ -891,23 +891,23 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	oi=&camera->pl->params.objectinfo[object_id];
-
-	GP_DEBUG ("ObjectInfo for '%s':");
-	GP_DEBUG ("  StorageID: %d", oi->StorageID);
-	GP_DEBUG ("  ObjectFormat: %d", oi->ObjectFormat);
+/*
+	GP_DEBUG ("ObjectInfo for '%s':", filename);
+	GP_DEBUG ("  StorageID: 0x%.4x", oi->StorageID);
+	GP_DEBUG ("  ObjectFormat: 0x%.4x", oi->ObjectFormat);
 	GP_DEBUG ("  ObjectCompressedSize: %d", oi->ObjectCompressedSize);
-	GP_DEBUG ("  ThumbFormat: %d", oi->ThumbFormat);
+	GP_DEBUG ("  ThumbFormat: 0x%.4x", oi->ThumbFormat);
 	GP_DEBUG ("  ThumbCompressedSize: %d", oi->ThumbCompressedSize);
 	GP_DEBUG ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
 	GP_DEBUG ("  ThumbPixHeight: %d", oi->ThumbPixHeight);
 	GP_DEBUG ("  ImagePixWidth: %d", oi->ImagePixWidth);
 	GP_DEBUG ("  ImagePixHeight: %d", oi->ImagePixHeight);
 	GP_DEBUG ("  ImageBitDepth: %d", oi->ImageBitDepth);
-	GP_DEBUG ("  ParentObject: %d", oi->ParentObject);
-	GP_DEBUG ("  AssociationType: %d", oi->AssociationType);
-	GP_DEBUG ("  AssociationDesc: %d", oi->AssociationDesc);
-	GP_DEBUG ("  SequenceNumber: %d", oi->SequenceNumber);
-
+	GP_DEBUG ("  ParentObject: 0x%.4x", oi->ParentObject);
+	GP_DEBUG ("  AssociationType: 0x%.4x", oi->AssociationType);
+	GP_DEBUG ("  AssociationDesc: 0x%.4x", oi->AssociationDesc);
+	GP_DEBUG ("  SequenceNumber: 0x%.4x", oi->SequenceNumber);
+*/
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
 
 	info->file.size   = oi->ObjectCompressedSize;
@@ -1005,6 +1005,28 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		CPR (context, ptp_getobjectinfo(&camera->pl->params,
 			camera->pl->params.handles.handler[i],
 			&camera->pl->params.objectinfo[i]));
+#if 1
+		{
+		PTPObjectInfo *oi;
+	
+		oi=&camera->pl->params.objectinfo[i];
+		GP_DEBUG ("ObjectInfo for '%s':", oi->Filename);
+		GP_DEBUG ("  StorageID: 0x%.4x", oi->StorageID);
+		GP_DEBUG ("  ObjectFormat: 0x%.4x", oi->ObjectFormat);
+		GP_DEBUG ("  ObjectCompressedSize: %d", oi->ObjectCompressedSize);
+		GP_DEBUG ("  ThumbFormat: 0x%.4x", oi->ThumbFormat);
+		GP_DEBUG ("  ThumbCompressedSize: %d", oi->ThumbCompressedSize);
+		GP_DEBUG ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
+		GP_DEBUG ("  ThumbPixHeight: %d", oi->ThumbPixHeight);
+		GP_DEBUG ("  ImagePixWidth: %d", oi->ImagePixWidth);
+		GP_DEBUG ("  ImagePixHeight: %d", oi->ImagePixHeight);
+		GP_DEBUG ("  ImageBitDepth: %d", oi->ImageBitDepth);
+		GP_DEBUG ("  ParentObject: 0x%.4x", oi->ParentObject);
+		GP_DEBUG ("  AssociationType: 0x%.4x", oi->AssociationType);
+		GP_DEBUG ("  AssociationDesc: 0x%.4x", oi->AssociationDesc);
+		GP_DEBUG ("  SequenceNumber: 0x%.4x", oi->SequenceNumber);
+		}
+#endif
 		gp_context_progress_update (context, id,
 		(90*i)/camera->pl->params.handles.n);
 	}
