@@ -185,6 +185,7 @@ static int check_readiness(void)
 
 void switch_camera_off(void)
 {
+	gp_camera_status(NULL, "Switching Camera Off");
         psa50_off();
         clear_readiness();
 }
@@ -193,6 +194,7 @@ int camera_exit(Camera *camera)
 {
         CanonDataStruct *cs = (CanonDataStruct*)camera->camlib_data;
         switch_camera_off();
+	switch_camera_off();
 
         free(cs);
         return GP_OK;
@@ -1278,8 +1280,7 @@ int camera_init(Camera *camera, CameraInit *init)
       }
     fclose(conf);
   }
-//FIXME: How to know the link type ?
-/*  switch () { //  is a gphoto global variable
+  switch (init->port_settings.type) { //  is a gphoto global variable
   case GP_PORT_USB:
       debug_message("GPhoto tells us tha we should use a USB link.\n");
       canon_comm_method = CANON_USB;
@@ -1287,10 +1288,9 @@ int camera_init(Camera *camera, CameraInit *init)
   case GP_PORT_SERIAL:
   default:
       debug_message("GPhoto tells us tha we should use a RS232 link.\n");
-      canon_comm_method = CANON_SERIAL_RS232;
+//      canon_comm_method = CANON_SERIAL_RS232;
       break;
   }
-*/
 
         canon_comm_method = CANON_SERIAL_RS232;
 

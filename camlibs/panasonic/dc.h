@@ -24,7 +24,6 @@
 #include <stdio.h>
 #include <errno.h>
 #include <gphoto2.h>
-#include <gpio.h>
 
 #ifdef sun
 	typedef uint8_t u_int8_t;
@@ -35,12 +34,6 @@
 #define DSC2	2	/* DC1580 */
 
 typedef enum {
-	unknown		= 0,
-	dsc1		= DSC1,
-	dsc2		= DSC2
-} dsc_protocol_t;
-
-typedef enum {
 	unavailable	= -1,
 	normal		= 0,
 	fine		= 1,
@@ -48,16 +41,11 @@ typedef enum {
 } dsc_quality_t;
 	
 typedef struct {
-	int		lerror, lerrno;
-} dsc_error;	
-
-typedef struct {
 	gpio_device		*dev;
 	gpio_device_settings 	settings;
-	dsc_protocol_t		type;
-	dsc_error		lasterror;
-	char 			model[64];	
 	char			*buf;
+	int			size;	
+	int			debug;
 } dsc_t;
 
 #define DSC_BLOCKSIZE	  0x400   /* amount of image data transfered in a single packet */
@@ -72,17 +60,11 @@ typedef struct {
 #define EDSCSERRNO     -1 /* see errno value */
 #define EDSCUNKNWN	0 /* unknown error code */
 #define EDSCBPSRNG	1 /* bps out of range */
-#define EDSCNOANSW	2 /* no answer from camera */
-#define EDSCRTMOUT	3 /* read time out */
-#define EDSCNRESET	4 /* could not reset camera */
-#define EDSCBADNUM	5 /* bad image number */
-#define EDSCBADPCL	6 /* bad protocol */
-#define EDSCBADRSP	7 /* bad response */
-#define EDSCBADDSC	8 /* bad camera model */
-#define EDSCMAXERR	8 /* highest used error code */
-
-extern dsc_t	*dsc; 
-extern int	glob_debug; /* 0 - debug mode off, 1 - debug mode on */
+#define EDSCBADNUM	2 /* bad image number */
+#define EDSCBADRSP	3 /* bad response */
+#define EDSCBADDSC	4 /* bad camera model */
+#define EDSCOVERFL	5 /* overfolw */
+#define EDSCMAXERR	5 /* highest used error code */
 
 static const char
 	c_prefix[13] = /* generic command prefix */
@@ -91,69 +73,56 @@ static const char
 	r_prefix[13] = /* generic response prefix */
 	{ 'M', 'K', 'E', ' ', 'P', 'C', ' ', ' ', 'D', 'S', 'C', ' ' };
 
-int dsc_setbaudrate(dsc_t *dsc, int speed);
+int dsc1_sendcmd(dsc_t *dsc, u_int8_t cmd, void *data, int size);
+	/* Send command with 'data' of 'size' to DSC */
+
+int dsc1_retrcmd(dsc_t *dsc);
+	/* Retrieve command and its data from DSC */
+
+int dsc1_setbaudrate(dsc_t *dsc, int speed);
 	/* Set baud rate of connection. Part of hand shake procedure 	*/
 	/* Returns GP_OK if succesful and GP_ERROR otherwise.		*/
 	
-int dsc_getmodel(dsc_t *dsc);
+int dsc1_getmodel(dsc_t *dsc);
 	/* Returns camera (sub)model, DSC1: DC1000, DSC2: DC1580, 	*/
 	/* 0: unknown, or GP_ERROR. Part of hand shake procedure. 	*/
 
-int dsc_handshake(dsc_t *dsc, int speed);
-	/* Negotiate transmition speed, check camera model. 		*/
-	/* Returns GP_OK if succesful and GP_ERROR otherwise.		*/	
-
-int dsc_dumpmem(void *buf, int size);
+void dsc_dumpmem(void *buf, int size);
 	/* Print size bytes of memory at the buf pointer.		*/
 		
-const char *dsc_strerror(dsc_error lasterror);
+const char *dsc_strerror(int error);
 	/* Convert error numbers into readable messages. 		*/
+
+char *dsc_msgprintf(char *format, ...);
+	/* Format message string. 					*/
+
+void dsc_debugprint(char *file, char *message);
+	/* Print debug information, including file name, to stderr.	*/
+	
+void dsc_errorprint(int error, char *file, char *function, int line);
+	/* Print information on error, including file name, function 	*/
+	/* name and line number.					*/
+
+void dsc_print_status(Camera *camera, char *format, ...);
+	/* Call gp_camera_status() and dsc_debugprint() with the same 	*/
+	/* message.							*/
+
+void dsc_print_message(Camera *camera, char *format, ...);
+	/* Call gp_camera_message() and dsc_debugprint() with the same 	*/
+	/* message.							*/
 
 /******************************************************************************/
 
 /* Pre-procesor macros for verbose messaging and debugging */
 
-#define DBUG_PRINT(FORMAT) \
-	if (glob_debug) \
-		fprintf( \
-			stderr, \
-			__FILE__ ": " FORMAT "\n" \
-		)
-		
-#define DBUG_PRINT_1(FORMAT, ARG1) \
-	if (glob_debug) \
-		fprintf( \
-			stderr, \
-			__FILE__ ": " FORMAT "\n", ARG1 \
-		)
+#define DEBUG_PRINT(ARGS) \
+	if (dsc->debug) \
+		dsc_debugprint(__FILE__, dsc_msgprintf ARGS ); 
 
-#define DBUG_PRINT_2(FORMAT, ARG1, ARG2) \
-	if (glob_debug) \
-		fprintf( \
-			stderr, \
-			__FILE__ ": " FORMAT "\n", ARG1, ARG2 \
-		)
-
-#define DBUG_PRINT_3(FORMAT, ARG1, ARG2, ARG3) \
-	if (glob_debug) \
-		fprintf( \
-			stderr, \
-			__FILE__ ": " FORMAT "\n", ARG1, ARG2, ARG3 \
-		)
-		
-#define DBUG_PRINT_ERROR(DSCERROR, FUNCTION) \
-	if (glob_debug) \
-		fprintf( \
-			stderr, \
-			__FILE__ ": " #FUNCTION \
-			"() return from line %u, code: %u, errno: %u, %s\n", \
-			__LINE__, DSCERROR.lerror, DSCERROR.lerrno, dsc_strerror(DSCERROR) \
-		)
-
-#define DBUG_RETURN(ERROR, FUNCTION, RESULT) { \
-	dsc->lasterror.lerror = ERROR; \
-	dsc->lasterror.lerrno = errno; \
-	DBUG_PRINT_ERROR(dsc->lasterror, FUNCTION); \
-	return RESULT; }
+#define RETURN_ERROR(ERROR, FUNCTION) { \
+	if (dsc->debug) \
+		dsc_errorprint(ERROR, __FILE__, #FUNCTION, __LINE__); \
+	return GP_ERROR; \
+	}
 
 /* End of dc.h */

@@ -21,34 +21,33 @@
 
 /* DC1580 command codes */
 
-#define	DSC_CMD_SET_BAUD	0x04
-#define	DSC_CMD_SEND_DATA	0x05
-#define	DSC_CMD_GET_INDEX	0x07
-#define	DSC_CMD_OK		0x08
-#define	DSC_CMD_CONNECT		0x10
-#define	DSC_CMD_DELETE		0x11
-#define	DSC_CMD_PREVIEW		0x14
-#define	DSC_CMD_SET_SIZE	0x15
-#define	DSC_CMD_THUMB		0x16
-#define	DSC_CMD_SELECT		0x1a
-#define	DSC_CMD_GET_DATA	0x1e
-#define	DSC_CMD_RESET		0x1f
+#define	DSC2_CMD_SET_BAUD	0x04
+#define	DSC2_CMD_SEND_DATA	0x05
+#define	DSC2_CMD_GET_INDEX	0x07
+#define	DSC2_CMD_CONNECT	0x10
+#define	DSC2_CMD_DELETE		0x11
+#define	DSC2_CMD_PREVIEW	0x14
+#define	DSC2_CMD_SET_SIZE	0x15
+#define	DSC2_CMD_THUMB		0x16
+#define	DSC2_CMD_SELECT		0x1a
+#define	DSC2_CMD_GET_DATA	0x1e
+#define	DSC2_CMD_RESET		0x1f
 
 /* DC1580 response codes */
 
-#define DSC_RSP_OK		0x01
-#define DSC_RSP_MODEL		0x03
-#define DSC_RSP_DATA		0x05
-#define DSC_RSP_INDEX		0x08
-#define DSC_RSP_IMGSIZE		0x1d
+#define DSC2_RSP_OK		0x01
+#define DSC2_RSP_MODEL		0x03
+#define DSC2_RSP_DATA		0x05
+#define DSC2_RSP_INDEX		0x08
+#define DSC2_RSP_IMGSIZE	0x1d
 
 /* DC1580 response buffer offsets, 0 - first byte in buffer */
 
-#define DSC_BUF_BASE		0
-#define DSC_BUF_SEQ 		1
-#define DSC_BUF_SEQC		2
-#define DSC_BUF_CMD		3
-#define DSC_BUF_DATA		4
-#define DSC_BUF_CSUM		14
+#define DSC2_BUF_BASE		0
+#define DSC2_BUF_SEQ 		1
+#define DSC2_BUF_SEQC		2
+#define DSC2_BUF_CMD		3
+#define DSC2_BUF_DATA		4
+#define DSC2_BUF_CSUM		14
 
 /* End of dc1580.h */
