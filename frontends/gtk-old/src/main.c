@@ -50,6 +50,8 @@ main (int argc, char *argv[])
 	}
 
 	gp_init(gp_gtk_debug);
+	gp_frontend_register(gp_interface_status, gp_interface_progress,
+		gp_interface_message, gp_interface_confirm);
 
 	add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
 	add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");

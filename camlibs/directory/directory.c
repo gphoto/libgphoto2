@@ -8,9 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <unistd.h>
 #include <gphoto2.h>
 #include <gpio.h>
 
@@ -124,27 +121,22 @@ int camera_exit (Camera *camera) {
 
 int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 
-	GP_DIR d;
-	GP_DIRENT de;
-/* REPLACE NEXT WITH GP_IS_FILE/GP_IS_DIR */
-	struct stat st;
-/* ************************************** */
+	GPIO_DIR d;
+	GPIO_DIRENT de;
 	char *ch;
 	char buf[1024];
 	int count=0;
 
-	if ((d = GP_OPENDIR(folder))==NULL)
+	if ((d = GPIO_OPENDIR(folder))==NULL)
 		return (GP_ERROR);
 
-	while (de = GP_READDIR(d)) {
-		if ((strcmp(GP_FILENAME(de), "." )!=0) &&
-		    (strcmp(GP_FILENAME(de), "..")!=0)) {
-			sprintf(buf, "%s/%s", folder, GP_FILENAME(de));
-			if (stat(buf, &st)==0) {
-/* blech */
-			   if ((!S_ISDIR(st.st_mode))&&(is_image(de->d_name)))
-				gp_list_append(list, GP_FILENAME(de), GP_LIST_FILE);
-			}
+	while (de = GPIO_READDIR(d)) {
+		if ((strcmp(GPIO_FILENAME(de), "." )!=0) &&
+		    (strcmp(GPIO_FILENAME(de), "..")!=0)) {
+			sprintf(buf, "%s/%s", folder, GPIO_FILENAME(de));
+			if (GPIO_IS_FILE(buf))
+			   if (is_image(buf))
+				gp_list_append(list, GPIO_FILENAME(de), GP_LIST_FILE);
 		}
 	}
 
@@ -153,24 +145,21 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 
 int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 
-	DIR *d;
-	struct dirent *de;
-	struct stat st;
+	GPIO_DIR d;
+	GPIO_DIRENT de;
 	char *ch;
 	char buf[1024];
 	int count=0;
 
-	if ((d = opendir(folder))==NULL)
+	if ((d = GPIO_OPENDIR(folder))==NULL)
 		return (GP_ERROR);
 
-	while (de = readdir(d)) {
-		if ((strcmp(de->d_name, "." )!=0) &&
-		    (strcmp(de->d_name, "..")!=0)) {
-			sprintf(buf, "%s/%s", folder, de->d_name);
-			if (stat(buf, &st)==0) {
-			   if (S_ISDIR(st.st_mode))
-				gp_list_append(list, de->d_name, GP_LIST_FOLDER);
-			}
+	while (de = GPIO_READDIR(d)) {
+		if ((strcmp(GPIO_FILENAME(de), "." )!=0) &&
+		    (strcmp(GPIO_FILENAME(de), "..")!=0)) {
+			sprintf(buf, "%s/%s", folder, GPIO_FILENAME(de));
+			if (GPIO_IS_DIR(buf))
+				gp_list_append(list, GPIO_FILENAME(de), GP_LIST_FOLDER);
 		}
 	}
 
@@ -179,33 +168,27 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 
 int folder_index(Camera *camera) {
 
-	DIR *dir;
-	struct dirent *de;
-	struct stat s;
+	GPIO_DIR dir;
+	GPIO_DIRENT de;
 	char *dot, fname[1024];
 	DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
 	d->num_images = 0;
 
-	dir = opendir(d->directory);
+	dir = GPIO_OPENDIR(d->directory);
 	if (!dir)
 		return (GP_ERROR);
-	de = readdir(dir);
+	de = GPIO_READDIR(dir);
 	while (de) {
-		sprintf(fname, "%s/%s", d->directory, de->d_name);
-		stat(fname, &s);
-                /* If it's a file ...*/
-                if (S_ISREG(s.st_mode)) {
-			if (is_image(de->d_name)) {
-				strcpy(d->images[d->num_images++],
-					de->d_name);
-				if (camera->debug)
-					printf("directory: found \"%s\"\n", de->d_name);
-			}
+		sprintf(fname, "%s/%s", d->directory, GPIO_FILENAME(de));
+		if (GPIO_IS_FILE(fname)) {
+			strcpy(d->images[d->num_images++], GPIO_FILENAME(de));
+			if (camera->debug)
+				printf("directory: found \"%s\"\n", GPIO_FILENAME(de));
 		}
-		de = readdir(dir);
+		de = GPIO_READDIR(dir);
 	}
-	closedir(dir);
+	GPIO_CLOSEDIR(dir);
 
 	return (GP_OK);
 }
