@@ -315,6 +315,8 @@ static struct {
 	{"Canon:PowerShot A60 (PTP)",        0x04a9, 0x3074},
 		/* IXUS 400 has the same PID in both modes, Till Kamppeter */
 	{"Canon:Digital IXUS 400 (PTP mode)", 0x4a9, 0x3075},
+		/* reported by Yves Boisjoly <Yves.Boisjoly@sympatico.ca> */
+	{"Canon:Digital Rebel (PTP mode)",   0x04a9, 0x3084},
 	{"Canon:PowerShot G5 (PTP mode)",    0x04a9, 0x3085},
 		/* 0x3074 is the EOS 300D in normal (canon) mode */
 	{"Canon:EOS 300D (PTP mode)",        0x04a9, 0x3099},

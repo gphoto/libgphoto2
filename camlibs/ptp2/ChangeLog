@@ -1,3 +1,8 @@
+2003-09-30 Marcus Meissner 
+
+	* library.c: Added Canon Digital Rebel as reported by Yves Boisjoly
+		     <Yves.Boisjoly@sympatico.ca>
+
 2003-09-24 Marcus Meissner 
 
 	* library.c: Use strtoul instead of strtol, or we cant handle
