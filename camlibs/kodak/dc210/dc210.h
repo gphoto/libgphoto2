@@ -63,10 +63,9 @@ typedef struct {
 	dc210_zoom_type         zoom;     	
 	char                    flash_charged;	
 	dc210_compression_type  compression_type; 
-        char                    exp_compensation;
+        signed char             exp_compensation;
 	dc210_flash_type        flash;
 	char                    preflash;
-	char                    exposure_compensation;
 	dc210_resolution_type   resolution;		
         dc210_file_type_type    file_type;		
 	int                     totalPicturesTaken;     
