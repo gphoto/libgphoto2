@@ -27,6 +27,7 @@
     if (pointer==NULL) { printf(name " does not exist\n"); \
         return; }
 
+#define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
 
 chunk *chunk_new(int length)
 {
