@@ -1,3 +1,8 @@
+2001-12-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Use () instead of {}. That produces a warning in 
+	  configure, but at least works when linking.
+
 2001-12-05 Dan Fandrich <dan@coneharvesters.com>
 	* configure.in
 	* libgphoto2_port/m4/stdint.m4
