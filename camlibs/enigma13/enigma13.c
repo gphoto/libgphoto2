@@ -31,6 +31,20 @@
 #include <gphoto2-result.h>
 #include <gphoto2-endian.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #define ENIGMA13_BLK_FLASH_ALIGN 0x2000
 #define ENIGMA13_BLK_CARD_ALIGN 0x4000
 #define ENIGMA13_USB_TIMEOUT_MS 5000
@@ -313,7 +327,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
         CHECK(enigma13_get_toc(camera,&numpics,&enigma13_static_toc));
 
 	for ( i=0; i < numpics; i=i+2 ) {
-                sprintf(tmp,"sunp%04d.jpg\0",(i/2));
+                sprintf(tmp,"sunp%04d.jpg",(i/2));
 		gp_list_append( list, tmp, NULL);
 	}
 	return (GP_OK);
