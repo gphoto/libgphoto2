@@ -6,6 +6,8 @@
 #include "library.h"
 #include "fujitsu.h"
 
+#define TIMEOUT	   2000
+
 int 		glob_debug	=0;
 int		glob_folders	=0;
 int		glob_speed	=0;
@@ -145,7 +147,7 @@ int camera_init (CameraInit *init) {
 	settings.serial.parity 	 = 0;
 	settings.serial.stopbits = 1;
 	gpio_set_settings(glob_dev, settings);
-	gpio_set_timeout(glob_dev, 2000);
+	gpio_set_timeout(glob_dev, TIMEOUT);
 
 	if (gpio_open(glob_dev)==GPIO_ERROR) {
 		gp_message("Can not open the port");
@@ -177,28 +179,29 @@ int camera_init (CameraInit *init) {
 
 	if (glob_folders)
 		debug_print("Camera supports folders");
-	gpio_set_timeout(glob_dev, 2000);
+	gpio_set_timeout(glob_dev, TIMEOUT);
 	glob_speed = init->port_settings.speed;
 	return (GP_OK);
 }
 
 int camera_start() {
 
+/*
 	if (fujitsu_set_speed(glob_dev, glob_speed)==GP_ERROR) {
 		gp_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
-
+*/
 	return (GP_OK);
 }
 
 int camera_stop() {
-
+/*
 	if (fujitsu_set_speed(glob_dev, -1)==GP_ERROR) {
 		gp_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
-
+*/
 	return (GP_OK);
 }
 

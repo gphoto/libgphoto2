@@ -6,7 +6,7 @@
 
 int glob_first_packet = 1;
 
-#define		QUICKSLEEP	50000
+#define		QUICKSLEEP	5000
 
 void fujitsu_dump_packet (char *packet) {
 
@@ -161,9 +161,10 @@ int fujitsu_write_packet (gpio_device *dev, char *packet) {
 
 int fujitsu_read_packet (gpio_device *dev, char *packet) {
 
-	int x, r=0, ret, done, length=0;
+	int x, y, r=0, ret, done, length=0;
 	char buf[4096], msg[4096];
 
+read_packet_again:
 	buf[0] = 0;
 	packet[0] = 0;
 
@@ -201,9 +202,19 @@ int fujitsu_read_packet (gpio_device *dev, char *packet) {
 		return (fujitsu_valid_packet(packet));
 	}
 
-	if (gpio_read(dev, &packet[4], length-4)==GPIO_ERROR) {
-		debug_print("  read error (data)");
-		return (GP_ERROR);
+	for (y=4; y < length; y++) {
+		ret = gpio_read(dev, &packet[y], 1);
+		if (ret == GPIO_TIMEOUT) {
+			sprintf(msg, "   timeout! (%i)\n", y);
+			debug_print(msg);
+			fujitsu_write_nak(dev);
+			goto read_packet_again;
+		}
+
+		if (ret ==GPIO_ERROR) {
+			debug_print("  read error (data)");
+			return (GP_ERROR);
+		}
 	}
 
 	fujitsu_dump_packet(packet);
@@ -560,6 +571,7 @@ int fujitsu_get_string_register (gpio_device *dev, int reg, char *s, int *length
 			return (GP_ERROR);
 		if (do_percent)
 			gp_progress((float)x/(float)(*length));
+		usleep(100000);
 		if (fujitsu_write_ack(dev)==GP_ERROR)
 			return (GP_ERROR);
 		packlength = ((unsigned char)packet[2]) +
