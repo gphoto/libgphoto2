@@ -1,3 +1,12 @@
+2001-11-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Marr <marr@shianet.org>:
+
+	* libgphoto2/gphoto2-port.c: Fix bug whereby hexadecimal output is
+	  erroneously shown in decimal format.
+	* serial/unix.c (gp_port_serial_update): Don't open/close the port
+	  here (does this break anything?)
+
 2001-11-17  Colin Marquardt  <colin@marquardt-home.de>
 
 	* configure.in (Module): Added 'de' to ALL_LINGUAS.

@@ -321,8 +321,8 @@ gp_port_write (GPPort *port, char *data, int size)
 {
 	int retval;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Writing %i=0x%x byte(s) to port...",
-		size, size);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Writing %i=0x%x byte(s) "
+		"to port...", size, size);
 
 	CHECK_NULL (port && data);
 	CHECK_INIT (port);

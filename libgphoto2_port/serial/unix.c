@@ -761,17 +761,8 @@ static int
 gp_port_serial_update (GPPort *dev)
 {
 	unsigned int baudrate;
-	int fd = dev->pl->fd;
-	int result;
 
 	memcpy (&dev->settings, &dev->settings_pending, sizeof (dev->settings));
-
-	/* If the port is open, close it */
-	if (fd)
-		CHECK (gp_port_serial_close (dev));
-
-	/* Open the port */
-	CHECK (gp_port_serial_open (dev));
 
 	/* 
 	 * If the requested speed is 0, this means that we should
@@ -781,11 +772,8 @@ gp_port_serial_update (GPPort *dev)
 	if (!baudrate)
 		baudrate = 9600;
 
-	/* Set the baudrate and revert to state before */
-	result = gp_port_serial_set_baudrate (dev, baudrate);
-	if (!fd)
-		CHECK (gp_port_serial_close (dev));
-	CHECK (result);
+	/* Set the baudrate */
+	CHECK (gp_port_serial_set_baudrate (dev, baudrate));
 
 	return GP_OK;
 }
