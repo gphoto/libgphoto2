@@ -1,3 +1,8 @@
+2002-02-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	* serial/unix.c: Improved IRIX fix to set the speed exactly once after
+	  opening the device.
+
 2002-02-21  Lutz Müller <lutz@users.sourceforge.net>
 
 	* serial/unix.c: IRIX fixes.

@@ -433,6 +433,14 @@ gp_port_serial_close (GPPort *dev)
 	path++;
 	CHECK (gp_port_serial_unlock (dev, path));
 
+#if defined(__sgi)
+	/*
+	 * On IRIX, we need to set the baudrate each time after opening
+	 * the port.
+	 */
+	dev->pl->baudrate = 0;
+#endif
+
         return GP_OK;
 }
 
@@ -718,18 +726,9 @@ gp_port_serial_check_speed (GPPort *dev)
 	if (!dev->pl->fd)
 		return (GP_OK);
 
-#if defined(__sgi)
-	/*
-	 * On IRIX, we need to set the baudrate after closing and
-	 * reopening.
-	 */
-	if (!dev->settings.serial.speed)
-		return (GP_OK);
-#else
 	/* If baudrate is up to date, do nothing */
 	if (dev->pl->baudrate == dev->settings.serial.speed)
 		return (GP_OK);
-#endif
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
 		"Setting baudrate to %d...", dev->settings.serial.speed);
