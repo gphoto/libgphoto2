@@ -64,6 +64,7 @@ struct _CameraFilesystem {
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
+#define CHECK_ABS(folder)    {if ((folder)[0] != '/') return (GP_ERROR_PATH_NOT_ABSOLUTE);}
 
 static int gp_filesystem_append_folder (CameraFilesystem *, const char *);
 
@@ -120,6 +121,7 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 	CameraList list;
 
 	CHECK_NULL (fs && folder);
+	CHECK_ABS (folder);
 
 	/*
 	 * We are nice to front-end/camera-driver writers - we'll ignore
@@ -167,6 +169,7 @@ gp_filesystem_append_folder (CameraFilesystem *fs, const char *folder)
 	char buf[128];
 
 	CHECK_NULL (fs && folder);
+	CHECK_ABS (folder);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Appending folder '%s'...",
 			 folder);
@@ -225,12 +228,10 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
         int x, y;
 
 	CHECK_NULL (fs && folder);
+	CHECK_ABS (folder);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Appending '%s' to folder "
 			 "'%s'...", filename, folder);
-
-	if (*folder != '/')
-		return (GP_ERROR_BAD_PARAMETERS);
 
 	/* Check for existence */
 	x = gp_filesystem_folder_number (fs, folder);
@@ -298,6 +299,7 @@ gp_filesystem_delete_all_files (CameraFilesystem *fs, const char *folder)
 	const char *name;
 
 	CHECK_NULL (fs && folder);
+	CHECK_ABS (folder);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Deleting all files in "
 			 "'%s'...", folder);
@@ -322,6 +324,7 @@ gp_filesystem_delete_all_folders (CameraFilesystem *fs, const char *folder)
 	char buf[128];
 
 	CHECK_NULL (fs && folder);
+	CHECK_ABS (folder);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Deleting all folders in "
 			 "'%s'...", folder);
@@ -349,6 +352,7 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 	const char *name;
 
 	CHECK_NULL (fs && list && folder);
+	CHECK_ABS (folder);
 
 	list->count = 0;
 
@@ -394,6 +398,7 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 	const char *name;
 
 	CHECK_NULL (fs && folder && list);
+	CHECK_ABS (folder);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Listing folders in '%s'...",
 			 folder);
@@ -469,6 +474,7 @@ gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
         char buf[1024];
 
 	CHECK_NULL (fs && folder && format);
+	CHECK_ABS (folder);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Populating '%s'...", folder);
 
@@ -505,6 +511,7 @@ gp_filesystem_count (CameraFilesystem *fs, const char *folder)
         int x;
 
 	CHECK_NULL (fs && folder);
+	CHECK_ABS (folder);
 
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
 
@@ -520,6 +527,7 @@ gp_filesystem_delete (CameraFilesystem *fs, const char *folder,
         int x, y;
 
 	CHECK_NULL (fs && folder);
+	CHECK_ABS (folder);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core",
 			 "Deleting file '%s' in folder '%s'...",
@@ -579,6 +587,7 @@ int
 gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
 {
 	CHECK_NULL (fs && folder);
+	CHECK_ABS (folder);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core",
 			 "Deleting everything in '%s'...", folder);
@@ -624,6 +633,7 @@ gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
         int x;
 
 	CHECK_NULL (fs && folder);
+	CHECK_ABS (folder);
 
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
 	
@@ -642,6 +652,7 @@ gp_filesystem_number (CameraFilesystem *fs, const char *folder,
         int x, y;
 
 	CHECK_NULL (fs && folder && filename);
+	CHECK_ABS (folder);
 
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
 
@@ -668,7 +679,8 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 	const char *name;
 	char path[128];
 
-	CHECK_NULL (fs);
+	CHECK_NULL (fs && folder && filename);
+	CHECK_ABS (folder);
 
 	CHECK_RESULT (gp_filesystem_list_files (fs, folder, &list));
 	CHECK_RESULT (count = gp_list_count (&list));
@@ -749,6 +761,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	CameraFile *tmp;
 
 	CHECK_NULL (fs && folder && file && filename);
+	CHECK_ABS (folder);
 
 	if (!fs->get_file_func)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -829,6 +842,7 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	int x, y;
 
 	CHECK_NULL (fs && folder && filename && info);
+	CHECK_ABS (folder);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting info for '%s' in "
 			 "folder '%s'...", filename, folder);
@@ -858,6 +872,7 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	int x, y;
 
 	CHECK_NULL (fs && folder && filename && info);
+	CHECK_ABS (folder);
 
 	if (!fs->set_info_func)
 		return (GP_ERROR_NOT_SUPPORTED);

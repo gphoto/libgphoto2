@@ -1,5 +1,14 @@
 2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/camera.c (gp_camera_list_folders), (gp_camera_list_files):
+	Return the result instead of GP_OK if anything goes wrong
+	* libgphoto2/filesys.c: Check if path to folder is absolute. If not, 
+	return GP_ERROR_PATH_NOT_ABSOLUTE.
+	* libgphoto2/result.c:
+	* include/gphoto2-result.h: GP_ERROR_PATH_NOT_ABSOLUTE: New error.
+
+2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/sierra/sierra.c (get_info_func): Fix copy & paste bug.
 
 2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>

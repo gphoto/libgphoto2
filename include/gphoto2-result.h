@@ -35,6 +35,7 @@
 #define GP_ERROR_FILE_NOT_FOUND      -108 /* File not found             */
 #define GP_ERROR_DIRECTORY_EXISTS    -109 /* Directory exists           */
 #define GP_ERROR_NO_CAMERA_FOUND     -110 /* No cameras auto-detected   */
+#define GP_ERROR_PATH_NOT_ABSOLUTE   -111 /* Path not absolute          */
 
 char   *gp_result_as_string (int result);
 
