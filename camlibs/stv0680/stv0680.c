@@ -82,9 +82,9 @@ struct camera_to_usb {
 	{ "la ronde by DigitalDream",   0x0553, 0x0202 },
 
 	{ "AEG Snap 300",               0x0553, 0x0202 },
-	/* http://www.sipix.com/stylecam.shtml, unconfirmed, but the
-	 * feature list reads like the stv680 chipset. VGA */
-	{ "SiPix StyleCam",             0x0553, 0x0202 },
+	/* SiPix Stylecam looks like stv0680, but reportedly is not  */
+	/* (has USB id 0xd64/0x1001) */
+
 	/* http://www.umax.de/digicam/AstraPen_SL.htm.
 	 * There is an additional 100K (CIF), 300K (VGA) tag after the name. */
 	{ "UMAX AstraPen",              0x0553, 0x0202 }, /* SV and SL */
