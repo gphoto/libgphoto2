@@ -381,7 +381,8 @@ static struct {
 	{"Canon:Digital IXUS v3 (PTP mode)",    0x04a9, 0x3071, 0},
 		/* it's the same as S230 */
 
-	{"Canon:Digital IXUS 2 (PTP mode)",     0x04a9, 0x3072, 0},
+	{"Canon:Digital IXUS II (PTP mode)",    0x04a9, 0x3072, 0},
+	{"Canon:PowerShot SD100 (PTP mode)",    0x04a9, 0x3072, 0},
 
 	{"Canon:PowerShot A70 (PTP)",           0x04a9, 0x3073, 0},
 	{"Canon:PowerShot A60 (PTP)",           0x04a9, 0x3074, 0},
@@ -2995,7 +2996,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	/* disabled currently */
 #if 0 
-	/* Needed for Canon IXUS 2 at least, but not for Kodak CX 6230, nor Nikon
+	/* Needed for Canon IXUS II at least, but not for Kodak CX 6230, nor Nikon
 	 * CoolPix 2500. 
 	 * The documentation is not clear on whether this event is sent or not,
 	 * I read it that it is sent when the file vanishes through external
