@@ -1,0 +1,15 @@
+Makefile
+Makefile.in
+gphoto2-port-api.html
+html
+sgml
+gphoto2-port-scan.c
+gphoto2-port-scan
+gphoto2-port-decl.txt
+gphoto2-port-decl-list.txt
+gphoto2-port-unused.txt
+gphoto2-port-undocumented.txt
+html.stamp
+sgml.stamp
+tmpl.stamp
+
