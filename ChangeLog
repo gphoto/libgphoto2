@@ -1,5 +1,10 @@
 2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
 
+        * libgphoto2/gphoto2-abilities-list.c: Cleanup the ltdl-specific
+          part.
+
+2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
+
 	Patch by Arnaud Launay <asl@launay.org>, slightly enhanced:
 
 	* autogen.sh: If gettext --version is something like 0.11.*, 
