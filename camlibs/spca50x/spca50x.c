@@ -154,7 +154,6 @@ create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
 		       int h, uint8_t format, int o_size, int *size,
 		       int omit_huffman_table, int omit_escape)
 {
-
 	int i = 0;
 	uint8_t *start;
 	uint8_t value;
@@ -207,5 +206,3 @@ create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
 
 	*size = dst - start;
 }
-
-

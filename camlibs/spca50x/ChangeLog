@@ -1,6 +1,8 @@
 Wed Jun 04 18:26:23 2003  Till Adam  <till@adam-lilienthal.de>
   * use ids to detect the model instead of strcmp which fails
     after the : change
+  * move jpeg function into spca50x.c|h
+  * return mtime in the info func to save thumbnail uploads
 
 Sat May 17 08:34:29 2003  Till Adam  <till@adam-lilienthal.de>
   * fix crash in thumbnail generation due to brainfart on my part.
