@@ -58,8 +58,12 @@ sq_init (GPPort *port, SQData *data)
 		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);     
 		sq_read_data (port, c, 4);
 
-		/* If all is well, we receive here "09 05 00 26"  
+		/*
+		 * If all is well, we receive here "09 05 00 26"  
 		 * Translates to "905 &" 
+		 * 
+		 * Paulo Tribolet Abreu <paulotex@gmx.net> reports that
+		 * his camera returns 09 05 01 19.
 		 */
 		sq_reset (port);
 		SQWRITE (port, 0x0c, 0x06, 0x20, SQ_PING, 1);	
@@ -106,9 +110,13 @@ sq_get_comp_ratio (SQData *data, int n)
 {
     	switch (data[n]) {
 	case 0x61:
-	case 0x62: return 2;
+	case 0x62:
+	case 0x63:
+	case 0x76: return 2;
 	case 0x41:
-	case 0x42: return 1;
+	case 0x42:
+	case 0x43:
+	case 0x76: return 1;
 	default:
 		GP_DEBUG ("Your camera has unknown resolution settings.\n");
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -123,6 +131,10 @@ sq_get_picture_width (SQData *data, int n)
 	case 0x61: return 352;
 	case 0x42:
 	case 0x62: return 176;
+	case 0x43:
+	case 0x63: return 320;
+	case 0x56:
+	case 0x76: return 640;
 	default:
 		GP_DEBUG ("Your pictures have unknown width.\n");
 		return (GP_ERROR_NOT_SUPPORTED);
