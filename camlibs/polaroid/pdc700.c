@@ -153,8 +153,10 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	/* Will other packets follow? */
 	*status = b[1];
 
-	/* Then follows the sequence number (number of next packet if any) */
-	*sequence_number = b[2];
+	/* Then follows the sequence number (number of next packet if any)
+	 * only in case of picture transmission */
+	if (sequence_number)
+		*sequence_number = b[2];
 
 	/* Check the checksum */
 	for (checksum = i = 0; i < *b_len - 1; i++)
@@ -165,8 +167,8 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	}
 
 	/* Preserve only the actual data */
-	*b_len -= 4;
-	memmove (b, b + 3, *b_len);
+	*b_len -= (sequence_number ? 4 : 3);
+	memmove (b, b + (sequence_number ? 3 : 2), *b_len);
 
 	return (GP_OK);
 }
@@ -180,8 +182,8 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, int cmd_len,
 	unsigned int target = *buf_len;
 
 	CHECK_RESULT (pdc700_send (camera, cmd, cmd_len));
-	CHECK_RESULT (pdc700_read (camera, cmd, b, &b_len,
-				   &status, &sequence_number));
+	CHECK_RESULT (pdc700_read (camera, cmd, b, &b_len, &status,
+			(cmd[4] == PDC700_FIRST) ? &sequence_number : NULL));
 
 	/* Copy over the data */
 	*buf_len = b_len;
@@ -279,37 +281,37 @@ pdc700_picinfo (Camera *camera, int n, PDCPicInfo *info)
 	cmd[5] = n >> 8;
 	CHECK_RESULT (pdc700_transmit (camera, cmd, 7, buf, &buf_len));
 
-	/* We don't know about the meaning of buf[0] */
+	/* We don't know about the meaning of buf[0-1] */
 
 	/* Check if this information is about the right picture */
-	if (n != (buf[1] | (buf[2] << 8)))
+	if (n != (buf[2] | (buf[3] << 8)))
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	/* Picture size */
-	info->pic_size = buf[3] | (buf[4] << 8) |
-			(buf[5] << 16) | (buf[6] << 24);
+	info->pic_size = buf[4] | (buf[5] << 8) |
+			(buf[6] << 16) | (buf[7] << 24);
 	GP_DEBUG ("Size of picture: %i", info->pic_size);
 
 	/* Flash used? */
-	info->flash = buf[7];
+	info->flash = buf[8];
 	GP_DEBUG ("This picture has been taken with%s flash.",
-		  buf[7] ? "" : "out");
+		  buf[8] ? "" : "out");
 
-	/* The meaning of buf[8-16] is unknown */
+	/* The meaning of buf[9-17] is unknown */
 
 	/* Thumbnail size */
-	info->thumb_size = buf[17] | (buf[18] <<  8) | (buf[19] << 16) |
-			  (buf[20] << 24);
+	info->thumb_size = buf[18] | (buf[19] <<  8) | (buf[20] << 16) |
+			  (buf[21] << 24);
 	GP_DEBUG ("Size of thumbnail: %i", info->thumb_size);
 
-	/* The meaning of buf[21] is unknown */
+	/* The meaning of buf[22] is unknown */
 
 	/* Version info */
-	strncpy (info->version, &buf[22], 6);
+	strncpy (info->version, &buf[23], 6);
 
 	/*
 	 * Now follows some picture data we have yet to reverse
-	 * engineer (buf[23-62]).
+	 * engineer (buf[24-63]).
 	 */
 
 	return (GP_OK);
@@ -326,31 +328,31 @@ pdc700_info (Camera *camera, PDCInfo *info)
 	CHECK_RESULT (pdc700_transmit (camera, cmd, 5, buf, &buf_len));
 
 	/*
-	 * buf[0-6]: We don't know. The following has been seen:
-	 * 12 04 01 00 0a 01 00
-	 * 20 04 02 01 05 01 00
-	 * 20 04 02 01 05 00 00
+	 * buf[0-7]: We don't know. The following has been seen:
+	 * 01 12 04 01 00 0a 01 00
+	 * 01 20 04 02 01 05 01 00
+	 * 01 20 04 02 01 05 00 00
 	 */
 
 	/* Protocol version */
-	strncpy (info->version, &buf[7], 6);
+	strncpy (info->version, &buf[8], 6);
 
-	/* buf[13-14]: We don't know. Seems to be always 00 00 */
+	/* buf[14-15]: We don't know. Seems to be always 00 00 */
 
 	/* Pictures */
-	info->num_taken = buf[15] | (buf[16] << 8);
-	info->num_free = buf[17] | (buf[18] << 8);
+	info->num_taken = buf[16] | (buf[17] << 8);
+	info->num_free = buf[18] | (buf[19] << 8);
 
 	/* Date */
-	info->date.year   = buf[19];
-	info->date.month  = buf[20];
-	info->date.day    = buf[21];
-	info->date.hour   = buf[22];
-	info->date.minute = buf[23];
-	info->date.second = buf[24];
+	info->date.year   = buf[20];
+	info->date.month  = buf[21];
+	info->date.day    = buf[22];
+	info->date.hour   = buf[23];
+	info->date.minute = buf[24];
+	info->date.second = buf[25];
 
 	/*
-	 * buf[25-62]: We don't know:
+	 * buf[26-63]: We don't know:
 	 * 
 	 * 03 00 f8 b2 64 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00
 	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
