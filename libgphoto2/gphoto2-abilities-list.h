@@ -56,7 +56,7 @@ typedef enum {
 } CameraOperation;
 
 /**
- * CameraFileOperations:
+ * CameraFileOperation:
  *
  * Similarly to #CameraOperations, this flag indicates what file operations
  * a specific camera model supports.
@@ -70,7 +70,7 @@ typedef enum {
 } CameraFileOperation;
 
 /**
- * CameraFolderOperations:
+ * CameraFolderOperation:
  *
  * Similarly to #CameraFolderOperations, this flag indicates what folder
  * operations a specific camera model supports.
