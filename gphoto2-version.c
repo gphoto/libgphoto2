@@ -69,7 +69,7 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 #ifdef HAVE_LTDL
 			"ltdl (hopefully with non-buggy libltdl :-)",
 #else
-			"no ltdl (working around bugg libltdl, eh? :-)",
+			"no ltdl (working around buggy libltdl, eh? :-)",
 #endif
 #ifdef HAVE_PROCMEMINFO
 			"/proc/meminfo (adapts cache size to memory available)",
