@@ -31,6 +31,7 @@ Notes on specific functions:
 	The camera_init() function attempts to set the camera clock to the current
 	system time. If it fails, the init function can still succeed; I do not
 	believe that failing to set the clock should mean failure to initialize.
+	The same is true of the camera_exit() function.
 
 	At long last, the preview thumbnails finally work! The strange distortions
 	that were occurring previously have been eliminated, and I have been able
