@@ -14,6 +14,7 @@
 	abilities[]->config    = ;
 	abilities[]->delete_file  = ;
 	abilities[]->file_preview = ;
+	abilities[]->file_put  = ;
 	abilities[]->lock      = ;
 
 * Interfaces should wait to close the configuration dialog until gp_config_set returns.
@@ -21,3 +22,14 @@
   If GP_ERROR is returned, it is expected that the camera libraries have already notified
   the user of an error by using gp_message(). Leave the window open so they can make the necessary
   changes.
+
+* To add a camera library to gPhoto2:
+
+	1) create a directory in camlibs/ for your driver.
+	2) copy over the contents of the template/ directory.
+	3) rename files to your liking.
+	4) edit the Makefile.am file in your directory to change filenames and
+	   such.
+	5) write your code (step #5 takes the longest ;)
+	6) contact the gphoto-devel list to have the library added to the build 
+	   process.

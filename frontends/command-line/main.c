@@ -447,10 +447,16 @@ int get_picture_common(int num, int thumbnail) {
 			gp_file_free(f);
 			return (GP_ERROR);
 		}
-		gp_file_get_preview(num-1, f);
-	 } else
-		gp_file_get(num-1, f);
-
+		if (gp_file_get_preview(num-1, f) == GP_ERROR) {
+			error_print("Can not get preview.");
+			return (GP_ERROR);
+		}
+	 } else {
+		if (gp_file_get(num-1, f) == GP_ERROR) {
+			error_print("Can not get picture.");
+			return (GP_ERROR);
+		}
+	}
 	if ((glob_filename_override)&&(strlen(glob_filename)>0))
 		sprintf(filename, glob_filename, num);
 	   else if (strlen(f->name)>0)

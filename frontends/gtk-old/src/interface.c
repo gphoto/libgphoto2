@@ -174,7 +174,6 @@ create_main_window (void)
   GtkWidget *tmp_toolbar_icon;
   GtkWidget *open_button;
   GtkWidget *save_button;
-  GtkWidget *label1;
   GtkWidget *refresh_button;
   GtkWidget *delete_button;
   GtkWidget *label2;
@@ -251,7 +250,7 @@ create_main_window (void)
   tmp_key = gtk_label_parse_uline (GTK_LABEL (GTK_BIN (save1)->child),
                                    _("_Save Selected Photos..."));
   gtk_widget_add_accelerator (save1, "activate_item", file2_menu_accels,
-				GDK_s, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+				tmp_key, 0, 0);
   gtk_widget_ref (save1);
   gtk_object_set_data_full (GTK_OBJECT (main_window), "save1", save1,
                             (GtkDestroyNotify) gtk_widget_unref);
@@ -680,6 +679,8 @@ create_main_window (void)
   gtk_widget_show (open_button);
   tooltip = gtk_tooltips_new();
   gtk_tooltips_set_tip (tooltip, open_button, "Open a photo", NULL);
+  gtk_signal_connect(GTK_OBJECT(open_button), "clicked", 
+	GTK_SIGNAL_FUNC(open_photo), NULL);
 
   tmp_toolbar_icon = create_pixmap (main_window, "save_current_image.xpm");
   save_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
@@ -694,13 +695,31 @@ create_main_window (void)
   gtk_widget_show (save_button);
   tooltip = gtk_tooltips_new();
   gtk_tooltips_set_tip (tooltip, save_button, "Save selected photos", NULL);
+  gtk_signal_connect(GTK_OBJECT(save_button), "clicked", 
+	GTK_SIGNAL_FUNC(save_selected_photo), NULL);
 
-  label1 = gtk_label_new (_("     "));
-  gtk_widget_ref (label1);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "label1", label1,
+  tmp_toolbar_icon = create_pixmap (main_window, "delete_images.xpm");
+  delete_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
+                                GTK_TOOLBAR_CHILD_BUTTON,
+                                NULL,
+                                "Delete",
+                                NULL, NULL,
+                                tmp_toolbar_icon, NULL, NULL);
+  gtk_widget_ref (delete_button);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "delete_button", delete_button,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label1);
-  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar1), label1, NULL, NULL);
+  gtk_widget_show (delete_button);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, delete_button, "Delete selected photos", NULL);
+  gtk_signal_connect(GTK_OBJECT(delete_button), "clicked", 
+	GTK_SIGNAL_FUNC(camera_delete_selected), NULL);
+
+  label2 = gtk_label_new (_("     "));
+  gtk_widget_ref (label2);
+  gtk_object_set_data_full (GTK_OBJECT (main_window), "label2", label2,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label2);
+  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar1), label2, NULL, NULL);
 
   tmp_toolbar_icon = create_pixmap (main_window, "refresh.xpm");
   refresh_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
@@ -717,20 +736,6 @@ create_main_window (void)
 	GTK_SIGNAL_FUNC(folder_refresh), NULL);
   tooltip = gtk_tooltips_new();
   gtk_tooltips_set_tip (tooltip, refresh_button, "Refresh photo index", NULL);
-
-  tmp_toolbar_icon = create_pixmap (main_window, "delete_images.xpm");
-  delete_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar1),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                "Delete",
-                                NULL, NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_widget_ref (delete_button);
-  gtk_object_set_data_full (GTK_OBJECT (main_window), "delete_button", delete_button,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (delete_button);
-  tooltip = gtk_tooltips_new();
-  gtk_tooltips_set_tip (tooltip, delete_button, "Delete selected photos", NULL);
 
   label2 = gtk_label_new (_("     "));
   gtk_widget_ref (label2);
@@ -752,6 +757,8 @@ create_main_window (void)
   gtk_widget_show (configure_button);
   tooltip = gtk_tooltips_new();
   gtk_tooltips_set_tip (tooltip, configure_button, "Configure the camera", NULL);
+  gtk_signal_connect(GTK_OBJECT(configure_button), "clicked", 
+	GTK_SIGNAL_FUNC(camera_configure), NULL);
 
   label5 = gtk_label_new (_("     "));
   gtk_widget_ref (label5);
