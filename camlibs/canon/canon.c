@@ -233,6 +233,8 @@ const struct canonCamModelData models[] = {
 	{"Canon:Digital IXUS 30 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:IXY Digital 40 (normal mode)",	CANON_CLASS_5,	0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
+	{"Canon:PowerShot A510 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x30c2, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+
 	{"Canon:PowerShot SD20 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS i5 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:IXY Digital L2 (normal mode)",  CANON_CLASS_5,  0x04A9, 0x30c4, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
@@ -1611,10 +1613,18 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 					name_local[len-1] = 0;
 				msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DISK_INFO_2, &len,
 							  name_local, len );
+				/* These newer cameras report sizes in
+				 * K instead of bytes, so max capacity
+				 * is 4TB rather than 4GB. */
+				cap = le32atoh (msg + 4) * 1024;
+				ava = le32atoh (msg + 8) * 1024;
 			}
-			else
+			else {
 				msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DISK_INFO, &len,
 							  name, strlen (name) + 1);
+				cap = le32atoh (msg + 4);
+				ava = le32atoh (msg + 8);
+			}
 			if ( msg == NULL )
 				return GP_ERROR_OS_FAILURE;
 			break;
@@ -1634,8 +1644,7 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 			  "(expected %i got %i)", 0x0c, len);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
-	cap = le32atoh (msg + 4);
-	ava = le32atoh (msg + 8);
+
 	if (capacity)
 		*capacity = cap;
 	if (available)
