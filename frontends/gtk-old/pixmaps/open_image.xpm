@@ -1,0 +1,35 @@
+/* XPM */
+static char *open_image_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"24 24 5 1",
+"  c Gray0",
+". c #999990907b7b",
+"X c #fffffefef7f7",
+"o c Gray100",
+"O c None",
+/* pixels */
+"OOOOOOOOOOOOOOOOOOOOOOOO",
+"OOOOOOOOOOOOOOOOOOOOOOOO",
+"OOOOOOOOOOOOOOOOOOOOOOOO",
+"OOOOOOOOOOOOOOOOOOOOOOOO",
+"OOOOOOOOOOOOOOOOOOOOOOOO",
+"OOOOOOOOOOOOOO  OOOOOOOO",
+"OOOOOOOOOOO   .. OOOOOOO",
+"OOOO  OO   ....XXo   OOO",
+"OOO ..  ....XXXX  .. OOO",
+"OOO .....XXXXX  .... OOO",
+"OOOO ..XXXXX  ...... OOO",
+"OOOO ..XXX  ........ OOO",
+"OOOOO .XX .......... OOO",
+"OOOOO ..X .......... OOO",
+"OOOOOO .X .......... OOO",
+"OOOOOO .. ........  OOOO",
+"OOOOOOO . ......  OOOOOO",
+"OOOOOOO . ..... OOOOOOOO",
+"OOOOOOOO  ...  OOOOOOOOO",
+"OOOOOOOO  .  OOOOOOOOOOO",
+"OOOOOOOOO  OOOOOOOOOOOOO",
+"OOOOOOOOOOOOOOOOOOOOOOOO",
+"OOOOOOOOOOOOOOOOOOOOOOOO",
+"OOOOOOOOOOOOOOOOOOOOOOOO"
+};
