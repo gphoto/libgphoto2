@@ -1,3 +1,9 @@
+2001-11-17  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* configure.in: changed package name from gphoto to gphoto2
+	* configure.in: changed version from 2.0beta4 to 2.0beta4dev0 to
+	  distinguish bug reports from various stages of beta4 development
+
 2001-11-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line: Fix translation. You use N_(...) to _mark_ a
