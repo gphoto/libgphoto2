@@ -119,6 +119,7 @@ OPTION_CALLBACK(list_ports);
 OPTION_CALLBACK(filename);
 OPTION_CALLBACK(port);
 OPTION_CALLBACK(speed);
+OPTION_CALLBACK(usbid);
 OPTION_CALLBACK(model);
 OPTION_CALLBACK(quiet);
 #ifndef DISABLE_DEBUGGING
@@ -180,10 +181,11 @@ Option option[] = {
 {"",  "auto-detect", "", N_("List auto-detected cameras"),   auto_detect,    0},
 
 /* Settings needed for camera functions */
-{"" , "port",     "path",     N_("Specify port device"),           port,     0},
-{"" , "speed",    "speed",    N_("Specify serial transfer speed"), speed,    0},
-{"" , "camera",   "model",    N_("Specify camera model"),          model,    0},
-{"" , "filename", "filename", N_("Specify a filename"),            filename, 0},
+{"" , "port",     "path",     N_("Specify port device"),            port,      0},
+{"" , "speed",    "speed",    N_("Specify serial transfer speed"),  speed,     0},
+{"" , "camera",   "model",    N_("Specify camera model"),           model,     0},
+{"" , "filename", "filename", N_("Specify a filename"),             filename, 0},
+{"" , "usbid",    "usbid",    N_("(expert only) Override USB IDs"), usbid,     0},
 
 /* Actions that depend on settings */
 {"a", "abilities", "",       N_("Display camera abilities"), abilities,    0},
@@ -238,6 +240,8 @@ char glob_owd[1024];
 char glob_cwd[1024];
 int  glob_speed;
 int  glob_num=1;
+
+int glob_usbid[4];
 
 Camera    *glob_camera  = NULL;
 GPContext *glob_context = NULL;
@@ -563,6 +567,21 @@ OPTION_CALLBACK(model)
         glob_model[sizeof (glob_model) - 1] = 0;
 
         return (GP_OK);
+}
+
+OPTION_CALLBACK(usbid)
+{
+		cli_debug_print("Overriding USB IDs to %s", arg);
+
+		if (sscanf (arg, "0x%x:0x%x=0x%x:0x%x", &glob_usbid[0], &glob_usbid[1],
+			&glob_usbid[2], &glob_usbid[3]) != 4) {
+			printf(_("Use the following syntax a:b=c:d to treat any "
+						"USB device detected as a:b as c:d instead. "
+						"a b c d should be hexadecimal numbers beginning with '0x'.\n"));
+
+			return (GP_ERROR);
+		}
+		return (GP_OK);
 }
 
 #ifndef DISABLE_DEBUGGING
@@ -1104,11 +1123,11 @@ static int
 set_globals (void)
 {
 	CameraList list;
-	CameraAbilitiesList *al;
+	CameraAbilitiesList *al, *al_mod;
 	GPPortInfoList *il;
 	GPPortInfo info;
 	CameraAbilities abilities;
-	int model = -1, port = -1, count;
+	int model = -1, port = -1, count, x;
 	const char *name, *value;
 	static int initialized = 0;
 
@@ -1123,6 +1142,24 @@ set_globals (void)
 
 	CR (gp_abilities_list_new (&al));
 	CR (gp_abilities_list_load (al, glob_context));
+
+	/* Eventually override the abilities list (option usbid) */
+	count=0;
+	CR (gp_abilities_list_new (&al_mod));
+	for (x = 0; x < gp_abilities_list_count (al); x++) {
+		gp_abilities_list_get_abilities (al,x, &abilities);
+		if (abilities.usb_vendor==glob_usbid[2]
+				&& abilities.usb_product==glob_usbid[3]) {
+			abilities.usb_vendor  = glob_usbid[0];
+			abilities.usb_product = glob_usbid[1];
+			count++;
+		}
+		gp_abilities_list_append (al_mod, abilities);
+	}
+
+	if (count) cli_debug_print ("%d override(s) done.", count);
+	gp_abilities_list_free (al);
+	al=al_mod; al_mod=NULL;
 
 	CR (gp_port_info_list_new (&il));
 	CR (gp_port_info_list_load (il));
