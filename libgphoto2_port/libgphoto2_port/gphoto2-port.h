@@ -128,7 +128,7 @@ int gp_port_send_break (GPPort *port, int duration);
 int gp_port_flush      (GPPort *port, int direction);
 
 int gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct);
-int gp_port_usb_find_device_by_class (GPPort *port, int class, int subclass, int protocol);
+int gp_port_usb_find_device_by_class (GPPort *port, int mainclass, int subclass, int protocol);
 int gp_port_usb_clear_halt  (GPPort *port, int ep);
 int gp_port_usb_msg_write   (GPPort *port, int request, int value,
 			     int index, char *bytes, int size);
