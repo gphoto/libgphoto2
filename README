@@ -45,28 +45,19 @@ Then, there are cameras supporting the so-called USB Mass Storage protocol.
 This is a protocol that has been published and lets you access any storage
 device, be it a camera or a disk connected via USB to your computer. As there
 are already drivers for this protocol out there, you don't need an additional
-library like libgphoto2. As of now, at least the following cameras
-seem to support the USB Mass Storage protocol:
-
- * Casio QV [2x00,3x00,8000]
- * Fuji FinePix S1 Pro, [1400,2400,4700]Zoom, 1300, 4500
- * HP PhotoSmart 315, 618, 912
- * Konica KD300Z
- * Kyocera Finecam s3
- * Leica Digilux 4.3
- * Minolta Dimage 5 & 7
- * Nikon Coolpix 775, 995
- * Olympus C-100, C-200Z, C-700, C-860L, C-2040, C-3020Z, C-3040Z, 
-   C-4040Zoom, D-510, E-10
- * Pentax Optio 330
- * Sony DSC-F505(V), DSC-P1, DSC-P5, DSC-P20, DSC-P30, DSC-F707
-
-Again, those cameras *cannot* be accessed through libgphoto2.
+library like libgphoto2. The list of camera that use USB Mass Storage is getting
+longer everyday, so we won't publish it.
+For a more up to date list, you can consult 
+	http://www.teaser.fr/~hfiguiere/linux/digicam.html
+Your operating system will tell you about that because it is likely to recognise
+the device as a SCSI disk that you can mount (for Linux 'dmesg' will tell you).
+Again, those cameras *cannot* be accessed through libgphoto2. Some of them can
+be switched to use a different communication protocol and might be in that case
+useable with libgphoto2.
 
 Other camera support a protocol called PTP or USB Imaging Devices that has
-been developped by Kodak and other. libgphoto2 does not fully support PTP yet
-and needs some testing. Here is a short incomplete list of camera that
-use this protocol:
+been developped by Kodak and other. libgphoto2 does support PTP. 
+Here is a short incomplete list of camera that use this protocol:
 
  * HP PhotoSmart 318, 612, 715
  * Kodak DC-4800, DX-3215, DX-3500, DX-3600, DX-3700, DX-3900, MC3 and all the
@@ -74,7 +65,10 @@ use this protocol:
  * Sony DSC-P5, DSC-F707, DSC-P30, DSC-P50, DSC-S75, DSC-S85, MVC-CD300
    (all need user configuration of the camera)
 
-You may try jPhoto <http://jphoto.sourceforge.net/> for ptp cameras
+PTP camera unknown to libgphoto2 can be detected as a generic PTP camera and
+will work as is.
+
+You still may try jPhoto <http://jphoto.sourceforge.net/> for ptp cameras
 alternatively if libgphoto2 fails.
 
 
