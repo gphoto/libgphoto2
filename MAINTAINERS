@@ -59,6 +59,9 @@ camlibs/sonydscf55:
 camlibs/stv0680:
 	Carsten Weinholz <cweinholz@users.sourceforge.net>
 
+camlibs/ptp/:
+	Mariusz Woloszyn <emsi@ipartners.pl>
+
 Bug reports on sourceforge:
 	Hubert Figuiere <hfiguiere@teaser.fr>
 
