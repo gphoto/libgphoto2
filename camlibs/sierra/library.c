@@ -7,61 +7,11 @@
 
 #define		QUICKSLEEP	5
 
-void sierra_dump_packet (Camera *camera, char *packet) {
-
-	int x, 	length=0;
-	char buf[4096], msg[4096];
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
-	return;
-
-	if ((packet[0] == TYPE_COMMAND) ||
-	    (packet[0] == TYPE_DATA) ||
-	    (packet[0] == TYPE_DATA_END)) {
-                length = ((unsigned char)packet[2]) +
-			 ((unsigned char)packet[3]  * 256);
-		length += 6;
-	} else {
-		switch((unsigned char)packet[0]) {
-			case NUL:
-				strcpy(buf, "  packet: NUL");
-				break;
-			case ENQ:
-				strcpy(buf, "  packet: ENQ");
-				break;
-			case ACK:
-				strcpy(buf, "  packet: ACK");
-				break;
-			case DC1:
-				strcpy(buf, "  packet: DC1");
-				break;
-			case NAK:
-				strcpy(buf, "  packet: NAK (Camera Signature)");
-				break;
-			case TRM:
-				strcpy(buf, "  packet: TRM");
-				break;
-			default:
-				sprintf(buf, "  packet: 0x%02x (UNKNOWN!)", packet[0]);
-		}
-		sierra_debug_print(fd, buf);
-		return;
-	}
-	sprintf(msg, "  packet length: %i", length);
-	sierra_debug_print(fd, msg);
-	if (length > 256)
-		length = 256;
-	strcpy(msg, "  packet: ");
-	for (x=0; x<length; x++)
-		sprintf(msg, "%s 0x%02x ", msg, (unsigned char)packet[x]);
-
-	sierra_debug_print(fd, msg);
-
-}
-
-int sierra_valid_type(char b) {
-
+int sierra_valid_type (char b) 
+{
 	unsigned char byte = (unsigned char)b;
+
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_valid_type");
 
 	if ((byte == NUL) ||
 	    (byte == ENQ) ||
@@ -79,31 +29,32 @@ int sierra_valid_type(char b) {
 int sierra_valid_packet (Camera *camera, char *packet) {
 
 	int length;
-	SierraData *fd = (SierraData*)camera->camlib_data;
+
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_valid_packet");
 
 	if ((packet[0] == TYPE_COMMAND) ||
 	    (packet[0] == TYPE_DATA) ||
 	    (packet[0] == TYPE_DATA_END)) {
+
+		/* ??? */
                 length = ((unsigned char)packet[2]) +
 			 ((unsigned char)packet[3] * 256);
 		length += 6;
-	} else {
-		switch((unsigned char)packet[0]) {
-			case NUL:
-			case ENQ:
-			case ACK:
-			case DC1:
-			case NAK:
-			case TRM:
-				return (GP_OK);
-				break;
-			default:
-				return (GP_ERROR);
-		}
-	}
 
-	sierra_debug_print(fd, "VALID_PACKET NOT DONE FOR DATA PACKETS!");
-	return (GP_ERROR);
+		return (GP_ERROR);
+	}
+		
+	switch((unsigned char)packet[0]) {
+	case NUL:
+	case ENQ:
+	case ACK:
+	case DC1:
+	case NAK:
+	case TRM:
+		return (GP_OK);
+	default:
+		return (GP_ERROR);
+	}
 }
 
 int sierra_write_packet (Camera *camera, char *packet) {
@@ -111,9 +62,7 @@ int sierra_write_packet (Camera *camera, char *packet) {
 	int x, ret, r, checksum=0, length;
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	
-	sierra_debug_print(fd, " sierra_write_packet");
-
-//	usleep(QUICKSLEEP);
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_packet");
 
 	/* Determing packet length */
 	if ((packet[0] == TYPE_COMMAND) ||
@@ -134,127 +83,114 @@ int sierra_write_packet (Camera *camera, char *packet) {
 	        packet[length-1]= (checksum >> 8) & 0xff; 
 	}
 
-	sierra_dump_packet(camera, packet);
+	/* USB */
+	if (fd->type == GP_PORT_USB) 
+		return (gp_port_write (fd->dev, packet, length));
 
-	/* For USB support */
-	if (fd->type == GP_PORT_USB) {
-		return (gp_port_write(fd->dev, packet, length));
+	/* SERIAL */
+	for (r = 0; r < RETRIES; r++) {
+
+	        ret = gp_port_write (fd->dev, packet, length);
+		if (ret == GP_ERROR_IO_TIMEOUT)
+			continue;
+
+		return (ret);
 	}
 
-	r=0;
-	x=0;
-	while (x<length) {
-	        ret = gp_port_write(fd->dev, &packet[x], 1);
-
-		switch (ret) {
-		case GP_OK:
-			r=0;    /* reset retries */
-			x++;    /* next byte     */
-			break;
-		case GP_ERROR_TIMEOUT:
-			if (r++ > RETRIES)
-				return (ret);
-			sierra_debug_print(fd, " write timed out. trying again.");
-			break;
-		default:
-			return (ret);
-		}
-	}
-
-	return (GP_OK);
+	return (GP_ERROR_IO_TIMEOUT);
 }
 
 int sierra_read_packet (Camera *camera, char *packet) {
 
-	int y, r=0, ret, done, length=0;
+	int y, r = 0, ret, done, length=0;
 	int blocksize, bytes_read;
 	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
+
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_read_packet");
 
 read_packet_again:
 	buf[0] = 0;
 	packet[0] = 0;
 
-	sierra_debug_print(fd, " sierra_read_packet");
-
-//	usleep(QUICKSLEEP);
+	if (r > 0)
+		gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* reading again...");
 
 	done = 0;
 	if (fd->type == GP_PORT_USB)
 		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
-	while (!done && (r++<RETRIES)) {
-
-		switch (fd->type) {
-		   case GP_PORT_USB:
-			blocksize = 2054;
-			break;
-		   case GP_PORT_SERIAL:
-			blocksize = 1;
-			break;
-		   default:
-			return (GP_ERROR_IO_UNKNOWN_PORT);
-		}
-		bytes_read = gp_port_read(fd->dev, packet, blocksize);
-
-
-		if (bytes_read == GP_ERROR) {
-			sierra_debug_print(fd, "  read error (packet type)");
-			return (GP_ERROR);
-		}
-		if (sierra_valid_type(packet[0])==GP_OK)
-			done = 1;
-		if (r>RETRIES) {
-			sierra_debug_print(fd, "  read error (too many retries on packet type)");
-			return (GP_ERROR);
-		}
-
-		/* Determine the packet type */
-		if ((packet[0] == TYPE_COMMAND) ||
-		    (packet[0] == TYPE_DATA) ||
-		    (packet[0] == TYPE_DATA_END)) {
-			/* It's a response/command packet */
-			if (fd->type == GP_PORT_SERIAL) {
-				bytes_read = gp_port_read(fd->dev, &packet[1], 3);
-				if (bytes_read == GP_ERROR) {
-					sierra_debug_print(fd, "  read error (header)");
-					return (GP_ERROR);
-				}
-				bytes_read = 4;
-			}
-			/* Determine the packet length */
-        	        length = ((unsigned char)packet[2]) +
-				 ((unsigned char)packet[3]  * 256);
-			length += 6;
-		} else {
-			/* It's a single byte response. dump and validate */
-			sierra_dump_packet(camera, packet);
-
-			if (fd->type == GP_PORT_USB)
-				gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
-
-			return (sierra_valid_packet(camera, packet));
-		}
-		for (y=bytes_read; y < length; y+=blocksize) {
-			ret = gp_port_read(fd->dev, &packet[y], blocksize);
-			if (ret == GP_ERROR_TIMEOUT) {
-				sierra_write_nak(camera);
-				goto read_packet_again;
-			}
-
-			if (ret ==GP_ERROR)
-				return (GP_ERROR);
-		}
+	
+	switch (fd->type) {
+	case GP_PORT_USB:
+		blocksize = 2054;
+		break;
+	case GP_PORT_SERIAL:
+		blocksize = 1;
+		break;
+	default:
+		return (GP_ERROR_IO_UNKNOWN_PORT);
 	}
 
-	sierra_dump_packet(camera, packet);
+	for (r = 0; r < RETRIES; r++) {
+
+		bytes_read = gp_port_read (fd->dev, packet, blocksize);
+		if (bytes_read == GP_ERROR_IO_TIMEOUT)
+			continue;
+		if (bytes_read < 0) 
+			return (bytes_read);
+
+		ret = sierra_valid_type (packet[0]);
+		if (ret == GP_OK)
+			done = 1;
+
+		/* Determine the packet type */
+		if (!((packet[0] == TYPE_COMMAND) ||
+		    (packet[0] == TYPE_DATA) ||
+		    (packet[0] == TYPE_DATA_END))) {
+		    	if (fd->type == GP_PORT_USB)
+				gp_port_usb_clear_halt (fd->dev,
+						GP_PORT_USB_ENDPOINT_IN);
+			return (sierra_valid_packet (camera, packet));
+		}
+
+		/* It's a response/command packet */
+		if (fd->type == GP_PORT_SERIAL) {
+			bytes_read = gp_port_read (fd->dev, 
+						   &packet[1], 3);
+			if (bytes_read < 0)
+				return (bytes_read);
+
+			bytes_read = 4;
+		}
+
+		/* Determine the packet length */
+       	        length = ((unsigned char)packet[2]) +
+			 ((unsigned char)packet[3]  * 256);
+		length += 6;
+
+		for (y = bytes_read; y < length; y += blocksize) {
+
+			ret = gp_port_read (fd->dev, &packet[y], blocksize);
+			if (ret == GP_ERROR_IO_TIMEOUT) {
+				sierra_write_nak (camera);
+				goto read_packet_again;
+			}
+			if (ret < 0)
+				return (ret);
+		}
+
+		if (done) break;
+	}
+
 	if (fd->type == GP_PORT_USB)
 		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
-	return (GP_OK);
 
+	return (GP_ERROR_IO_TIMEOUT);
 }
 
-int sierra_build_packet (Camera *camera, char type, char subtype, int data_length, char *packet) {
-
+int sierra_build_packet (Camera *camera, char type, char subtype, 
+			 int data_length, char *packet) 
+{
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	packet[0] = type;
@@ -274,7 +210,8 @@ int sierra_build_packet (Camera *camera, char type, char subtype, int data_lengt
 			packet[1] = subtype;
 			break;
 		default:
-			sierra_debug_print(fd, "unknown packet type");
+			gp_debug_printf (GP_DEBUG_HIGH, "sierra", 
+					"* unknown packet type!");
 	}
 
 	packet[2] = data_length &  0xff;
@@ -283,14 +220,14 @@ int sierra_build_packet (Camera *camera, char type, char subtype, int data_lengt
 	return (GP_OK);
 }
 
-int sierra_write_ack(Camera *camera) {
-
+int sierra_write_ack (Camera *camera) 
+{
 	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	int ret;
 
-	sierra_debug_print(fd, " sierra_write_ack");
-
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_ack");
+	
 	buf[0] = ACK;
 	ret = sierra_write_packet (camera, buf);
 	if (fd->type == GP_PORT_USB)
@@ -298,13 +235,13 @@ int sierra_write_ack(Camera *camera) {
 	return (ret);
 }
 
-int sierra_write_nak(Camera *camera) {
-
+int sierra_write_nak (Camera *camera) 
+{
 	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	int ret;
 
-	sierra_debug_print(fd, " sierra_write_nak");
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_nack");
 
 	buf[0] = NAK;
 	ret = sierra_write_packet (camera, buf);
@@ -313,44 +250,49 @@ int sierra_write_nak(Camera *camera) {
 	return (ret);
 }
 
-int sierra_ping(Camera *camera) {
-
-	int r=0;
+int sierra_ping (Camera *camera) 
+{
+	int ret, r = 0;
 	char buf[4096];
-	SierraData *fd = (SierraData*)camera->camlib_data;
+
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_ping");
 
         buf[0] = NUL;
+	for (r = 0; r < RETRIES; r++) {
 
-	while (r++ < RETRIES) {
-		sierra_debug_print(fd, "pinging the camera");
-		if (sierra_write_packet(camera, buf)==GP_ERROR)
-			return (GP_ERROR);
+		ret = sierra_write_packet (camera, buf);
+		if (ret == GP_ERROR_IO_TIMEOUT)
+			continue;
+		if (ret != GP_OK)
+			return (ret);
 
-		if (sierra_read_packet(camera, buf)==GP_ERROR)
-			return (GP_ERROR);
+		ret = sierra_read_packet (camera, buf);
+		if (ret == GP_ERROR_IO_TIMEOUT)
+			continue;
+		if (ret != GP_OK)
+			return (ret);
 
-		if (buf[0] == NAK) {
-			sierra_debug_print(fd, "ping succeeded");
+		if (buf[0] == NAK)
 			return (GP_OK);
-		}
-		sierra_debug_print(fd, "ping failed");
+		else
+			return (GP_ERROR_CORRUPTED_DATA);
+
 	}
-	return (GP_ERROR);
+	return (GP_ERROR_IO_TIMEOUT);
 }
 
-int sierra_set_speed (Camera *camera, int speed) {
-
+int sierra_set_speed (Camera *camera, int speed) 
+{
 	gp_port_settings settings;
-	char buf[1024];
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	int ret;
 
-	sprintf(buf, "Setting speed to %i", speed);
-	sierra_debug_print(fd, buf);
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_set_speed");
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* speed: %i", speed);
 
 	fd->first_packet = 1;
 
-	gp_port_settings_get(fd->dev, &settings);
+	gp_port_settings_get (fd->dev, &settings);
 
 	switch (speed) {
 		case 9600:
@@ -395,21 +337,21 @@ int sierra_set_speed (Camera *camera, int speed) {
 	return (GP_OK);
 }
 
-int sierra_set_int_register (Camera *camera, int reg, int value) {
-
+int sierra_set_int_register (Camera *camera, int reg, int value) 
+{
 	int r=0;
 	char p[4096];
 	char buf[4096];
-	SierraData *fd = (SierraData*)camera->camlib_data;
 	int ret;
 
-	sprintf(buf, "Setting register #%i to %i", reg, value);
-	sierra_debug_print(fd, buf);
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_set_int_register");
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* value:    %i", value);
 
 	if (value < 0)
-		sierra_build_packet(camera, TYPE_COMMAND, 0, 2, p);
+		sierra_build_packet (camera, TYPE_COMMAND, 0, 2, p);
 	   else
-		sierra_build_packet(camera, TYPE_COMMAND, 0, 6, p);
+		sierra_build_packet (camera, TYPE_COMMAND, 0, 6, p);
 
         /* Fill in the data */
         p[4] = 0x00;
@@ -421,14 +363,17 @@ int sierra_set_int_register (Camera *camera, int reg, int value) {
 		p[9] = (value>>24) & 0xff;
 	}
 
-	while (r++<RETRIES) {
-	
+	for (r = 0; r < RETRIES; r++) {
+
 		ret = sierra_write_packet (camera, p);
 		if (ret != GP_OK)
 			return (ret);
 
-		if (sierra_read_packet(camera, buf)==GP_ERROR)
-			return (GP_ERROR);
+		ret = sierra_read_packet (camera, buf);
+		if (ret == GP_ERROR_IO_TIMEOUT)
+			continue;
+		if (ret != GP_OK)
+			return (ret);
 
 		if (buf[0] == ACK)
 			return (GP_OK);
@@ -438,25 +383,24 @@ int sierra_set_int_register (Camera *camera, int reg, int value) {
 			return (GP_ERROR);
 	}
 
-	sierra_debug_print(fd, "too many retries");
-
 	sierra_set_speed (camera, -1);
 
 	return (GP_ERROR);
 }
 
-int sierra_get_int_register (Camera *camera, int reg, int *value) {
-
+int sierra_get_int_register (Camera *camera, int reg, int *value) 
+{
 	int r=0, write_nak=0;
 	char packet[4096];
 	char buf[4096];
-	SierraData *fd = (SierraData*)camera->camlib_data;
 	int ret;
 
-	sprintf(buf, "Getting register #%i value", reg);
-	sierra_debug_print(fd, buf);
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_get_int_register");
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
 
-	sierra_build_packet(camera, TYPE_COMMAND, 0, 2, packet);
+	ret = sierra_build_packet (camera, TYPE_COMMAND, 0, 2, packet);
+	if (ret != GP_OK)
+		return (ret);
 
         /* Fill in the data */
 	packet[4] = 0x01;
@@ -473,7 +417,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value) {
 				return (ret);
 		}
 
-		if (sierra_read_packet(camera, buf)==GP_ERROR)
+		if (sierra_read_packet (camera, buf)==GP_ERROR)
 			return (GP_ERROR);
 
 		/* DC1 = invalid register or value */
@@ -492,20 +436,21 @@ int sierra_get_int_register (Camera *camera, int reg, int *value) {
 		}
 	}
 
-	sierra_debug_print(fd, "too many retries");
 	return (GP_ERROR);
 }
 
-int sierra_set_string_register (Camera *camera, int reg, char *s, int length) {
+int sierra_set_string_register (Camera *camera, int reg, char *s, int length) 
+{
 
 	char packet[4096], buf[4096];
 	char type;
 	unsigned char c;
 	int x=0, seq=0, size=0, done, r;
-	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	sprintf(buf, "Setting string in register #%i to \"%s\"", reg, s);
-	sierra_debug_print(fd, buf);
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", 
+			 "* sierra_set_string_register");
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* value: %s", s);
 
 	while (x < length) {
 		if (x==0) {
@@ -551,7 +496,6 @@ int sierra_set_string_register (Camera *camera, int reg, char *s, int length) {
 
 		}
 		if (r > RETRIES) {
-			sierra_debug_print(fd, "too many NAKs from camera");
 			return (GP_ERROR);
 		}
 	}
@@ -561,15 +505,18 @@ int sierra_set_string_register (Camera *camera, int reg, char *s, int length) {
 int sierra_get_string_register (Camera *camera, int reg, int file_number, 
 				 CameraFile *file, char *s, int *length) {
 
-	char packet[4096], buf[2048];
+	char packet[4096];
 	int done, x, packlength, do_percent, l;
-	SierraData *fd = (SierraData*)camera->camlib_data;
 	int ret;
 
-	sprintf(buf, "Getting string in register #%i", reg);
-	sierra_debug_print(fd, buf);
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", 
+			 "* sierra_get_string_register");
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* file number: %i", 
+			 file_number);
 
 	do_percent = 1;
+
 	/* Set the current picture number */
 	if (file_number >= 0) {
 
@@ -579,31 +526,35 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	}
 
 	switch (reg) {
-		case 14:
-		        /* Get the size of the current image */
-	        	if (sierra_get_int_register(camera, 12, &l)==GP_ERROR)
-	        	        return (GP_ERROR);
+	case 14:
+	        /* Get the size of the current image */
+        	ret = sierra_get_int_register(camera, 12, &l);
+		if (ret != GP_OK)
+        	        return (ret);
 
-			break;
-		case 15:
-		        /* Get the size of the current thumbnail */
-	        	if (sierra_get_int_register(camera, 13, &l)==GP_ERROR)
-	        	        return (GP_ERROR);
-			break;
-		case 44:
-		        /* Get the size of the current audio */
-			/* will do */
-			break;
-		default:
-			do_percent = 0;
+		break;
+	case 15:
+	
+	        /* Get the size of the current thumbnail */
+		ret = sierra_get_int_register(camera, 13, &l);
+		if (ret != GP_OK)
+        	        return (ret);
+
+		break;
+	case 44:
+	        /* Get the size of the current audio will do */
+		break;
+	default:
+		do_percent = 0;
 	}
 
 	/* Send request */
-	sierra_build_packet(camera, TYPE_COMMAND, 0, 2, packet);
+	sierra_build_packet (camera, TYPE_COMMAND, 0, 2, packet);
 	packet[4] = 0x04;
 	packet[5] = reg;
-	if (sierra_write_packet(camera, packet)==GP_ERROR)
-		return (GP_ERROR);
+	ret = sierra_write_packet (camera, packet);
+	if (ret != GP_OK)
+		return (ret);
 
 	/* Read all the data packets */
 	x=0; done=0;
@@ -637,7 +588,8 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		/*    transferred by using gp_file_chunk		*/
 
 			if (do_percent)
-			   gp_frontend_progress(camera, file, (float)(100.0*(float)x/(float)(l)));
+			   gp_frontend_progress (camera, file, 
+			   		(float)(100.0*(float)x/(float)(l)));
 		}
 
 		x += packlength;
@@ -649,18 +601,19 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	return (GP_OK);
 }
 
-int sierra_delete(Camera *camera, int picture_number) {
-
+int sierra_delete (Camera *camera, int picture_number) 
+{
 	char packet[4096], buf[4096];
 	int r, done;
-	SierraData *fd = (SierraData*)camera->camlib_data;
 	int ret;
 
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_delete");
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* picture: %i", 
+			 picture_number);
+
 	ret = sierra_set_int_register (camera, 4, picture_number);
-	if (ret != GP_OK) {
-		sierra_debug_print(fd, "Can not set current image");
+	if (ret != GP_OK)
 		return (ret);
-        }
 
 	sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
 	packet[4] = 0x02;
@@ -684,10 +637,8 @@ int sierra_delete(Camera *camera, int picture_number) {
 			
 		}
 	}
-	if (r > RETRIES) {
-		sierra_debug_print(fd, "too many NAKs from camera");
+	if (r > RETRIES)
 		return (GP_ERROR);
-	}
 
 	GP_SYSTEM_SLEEP(QUICKSLEEP);
 
@@ -699,7 +650,8 @@ int sierra_end_session(Camera *camera) {
 	char packet[4096], buf[4096];
 	unsigned char c;
 	int r, done;
-	SierraData *fd = (SierraData*)camera->camlib_data;
+
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_end_session");
 
 	sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
 	packet[4] = 0x02;
@@ -728,10 +680,8 @@ int sierra_end_session(Camera *camera) {
 			return ((c==ENQ)? GP_OK : GP_ERROR);
 		}
 	}
-	if (r > RETRIES) {
-		sierra_debug_print(fd, "too many NAKs from camera");
+	if (r > RETRIES)
 		return (GP_ERROR);
-	}
 
 	return (GP_OK);
 }
@@ -739,10 +689,9 @@ int sierra_end_session(Camera *camera) {
 int sierra_file_count (Camera *camera) {
  
         int value;
-        SierraData *fd = (SierraData*)camera->camlib_data;
 	int ret;
- 
-        sierra_debug_print(fd, "Counting files");
+
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_file_count");
  
  	ret = sierra_get_int_register (camera, 10, &value);
 	if (ret != GP_OK) 
@@ -751,118 +700,123 @@ int sierra_file_count (Camera *camera) {
         return (value);
 } 
 
-#if 0
-int sierra_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
-
+static int do_capture (Camera *camera, char *packet)
+{
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	int r, done, retval, picnum;
-	char packet[4096], buf[8];
-	unsigned char c;
-	struct tm *t;
-	time_t tt;
+	char buf[8];
+	int r, ret, done;
+	unsigned char c = 0;
 
-	if (info == NULL) return (GP_ERROR_BAD_PARAMETERS);
-
-	switch (info->type) {
-	case GP_CAPTURE_IMAGE:
-	
-		/* Take a picture */
-		sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
-		packet[4] = 0x02;
-		packet[5] = 0x02;
-		packet[6] = 0x00;
-		break;
+	for (r = 0; r < RETRIES; r++) {
 		
-	case GP_CAPTURE_PREVIEW:
+		ret = sierra_write_packet (camera, packet);
+		if (ret != GP_OK)
+			return (ret);
 
-		/* Take a quick preview */
-		sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
-		packet[4] = 0x02;
-		packet[5] = 0x05;
-		packet[6] = 0x00;
-		break;
-		
-	default:
-		return (GP_ERROR_BAD_PARAMETERS);
-	}
-
-	r=0; done=0;
-	while ((!done)&&(r++<RETRIES)) {
-		if (sierra_write_packet(camera, packet)==GP_ERROR)
-			return (GP_ERROR);
-	
-		if (sierra_read_packet(camera, buf)==GP_ERROR)
-			return (GP_ERROR);
+		ret = sierra_read_packet (camera, buf);
+		if (ret == GP_ERROR_IO_TIMEOUT)
+			continue;
+		if (ret != GP_OK)
+			return (ret);
 
 		c = (unsigned char)buf[0];
-		if (c==TRM)
+		if (c == TRM)
 			return (GP_OK);
 
 		done = (c == NAK)? 0 : 1;
 
-		gp_frontend_progress(camera, file, 0.0);
+		if (done)
+			break;
 	}
-	if (r >= RETRIES) {
-		sierra_debug_print(fd, "too many NAKs from camera");
-		return (GP_ERROR);
-	}
-	r = 0;done=0;
-	while ((!done)&&(r++<RETRIES)) {
+
+	if (r == RETRIES)
+		return (GP_ERROR_IO_TIMEOUT);
+
+	done = 0;
+	for (r = 0; r < RETRIES; r++) {
+
 		/* read in the ENQ */
-		retval = gp_port_read(fd->dev, buf, 1);
-		switch(retval) {
-		   case GP_ERROR:
-			return (GP_ERROR);
-			break;
-		   case GP_ERROR_TIMEOUT:
-			break;
-		   default:
-			done = 1;
-		}
+		ret = gp_port_read (fd->dev, buf, 1);
+		if (ret == GP_ERROR_IO_TIMEOUT)
+			continue;
+		if (ret != GP_OK)
+			return (ret);
+
+		done = 1;
+
 		c = (unsigned char)buf[0];
-		gp_frontend_progress(camera, file, 0.0);
-	}
-	if ((r >= RETRIES) || (c!=ENQ))
-		return (GP_ERROR);
-
-	switch (info->type) {
-	case GP_CAPTURE_IMAGE:
-
-		/* After picture is taken, register 4 is set to current picture */
-		if (sierra_get_int_register(camera, 4, &picnum)==GP_ERROR)
-			return (GP_ERROR);
-
-		/* Retrieve the just-taken picture */
-		if (sierra_get_string_register(camera, 14, picnum, file, NULL, NULL)==GP_ERROR)
-	                return (GP_ERROR);
-
-		/* Delete the just-taken picture */
-		if (sierra_delete(camera, picnum)==GP_ERROR)
-			return (GP_ERROR);
-		break;
-	
-	case GP_CAPTURE_PREVIEW:
-	
-		/* Retrieve the quick preview */
-		if (sierra_get_string_register(camera, 14, 0, file, NULL, NULL)==GP_ERROR)
-	                return (GP_ERROR);
-		break;
-		
-	default:
-		return (GP_ERROR_BAD_PARAMETERS);
+		if (done)
+			break;
 	}
 
-	tt = time(&tt);
-	t = gmtime(&tt);
+	if (r == RETRIES)
+		return (GP_ERROR_IO_TIMEOUT);
 
-	/* fix it :P */
-	if (t->tm_year < 1900)
-		t->tm_year += 1900;
-
-	sprintf(file->name, "%04i%02i%02i-%02i%02i%02i.jpg", 
-			t->tm_year, t->tm_mon, t->tm_mday, 
-			t->tm_hour, t->tm_min, t->tm_sec);
+	if (c != ENQ)
+		return (GP_ERROR_CORRUPTED_DATA);
 
 	return (GP_OK);
 }
-#endif
+
+
+
+int sierra_capture_preview (Camera *camera, CameraFile *file)
+{
+	int ret;
+	char packet[4096];
+
+	if (file == NULL)
+		return (GP_ERROR_BAD_PARAMETERS);
+	
+	ret = sierra_build_packet (camera, TYPE_COMMAND, 0, 3, packet);
+	if (ret != GP_OK)
+		return (ret);
+
+	packet[4] = 0x02;
+	packet[5] = 0x05;
+	packet[6] = 0x00;
+
+	ret = do_capture (camera, packet);
+	gp_frontend_progress (camera, file, 0.0);
+	if (ret != GP_OK)
+		return (ret);
+
+	/* Retrieve the quick preview */
+	ret = sierra_get_string_register (camera, 14, 0, file, NULL, NULL);
+	if (ret != GP_OK)
+		return (ret);
+
+	return (GP_OK);
+}
+
+int sierra_capture (Camera *camera, int capture_type, CameraFilePath *filepath)
+{
+	int ret, picnum;
+	char packet[4096];
+
+	if (filepath == NULL) 
+		return (GP_ERROR_BAD_PARAMETERS);
+	if (capture_type != GP_OPERATION_CAPTURE_IMAGE)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	ret = sierra_build_packet (camera, TYPE_COMMAND, 0, 3, packet);
+	if (ret != GP_OK)
+		return (ret);
+
+	packet[4] = 0x02;
+	packet[5] = 0x02;
+	packet[6] = 0x00;
+
+	ret = do_capture (camera, packet);
+	if (ret != GP_OK)
+		return (ret);
+
+	/* After picture is taken, register 4 is set to current picture */
+	ret = sierra_get_int_register (camera, 4, &picnum);
+	if (ret != GP_OK)
+		return (ret);
+
+	//FIXME: Where is the picture stored?!?
+
+	return (GP_OK);
+}

@@ -18,7 +18,6 @@
 #define	RETRIES			10
 
 /* Packet functions */
-void sierra_dump_packet (Camera *camera, char *packet);
 int sierra_valid_packet (Camera *camera, char *packet);
 int sierra_write_packet (Camera *camera, char *packet);
 int sierra_read_packet  (Camera *camera, char *packet);
@@ -39,6 +38,6 @@ int sierra_get_string_register	(Camera *camera, int reg, int file_number,
 int sierra_folder_set		(Camera *camera, const char *folder);
 int sierra_file_count		(Camera *camera);
 int sierra_delete		(Camera *camera, int picture_number);
-#if 0
-int sierra_capture		(Camera *camera, CameraFile *file, CameraCaptureInfo *info);
-#endif
+int sierra_capture		(Camera *camera, int capture_type, 
+				 CameraFilePath *filepath);
+int sierra_capture_preview 	(Camera *camera, CameraFile *file);

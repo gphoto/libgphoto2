@@ -11,11 +11,6 @@
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
 
-void sierra_debug_print(SierraData *fd, char *message) 
-{
-	gp_debug_printf(GP_DEBUG_LOW, "sierra", message);
-}
-
 int camera_id (CameraText *id) 
 {
 	strcpy(id->text, "sierra");
@@ -82,6 +77,7 @@ SierraCamera sierra_cameras[] = {
 	{"Olympus C-1400L", 	0, 0, 0, 0 },
 	{"Olympus C-1400XL", 	0, 0, 0, 0 },
 	{"Olympus C-2000Z", 	0, 0, 0, 0 },
+	{"Olympus C-2020Z",	0, 0, 0, 0 },
         {"Olympus C-2040Z", 	0x07b4, 0x105, 0x83, 0x04},
         {"Olympus C-2500Z", 	0, 0, 0, 0 },
 	{"Olympus C-3000Z", 	0x07b4, 0x100, 0x83, 0x04},
@@ -117,7 +113,8 @@ int camera_abilities (CameraAbilitiesList *list)
 		a->speed[3] = 57600;
 		a->speed[4] = 115200;
 		a->speed[5] = 0;
-		a->operations        = 	GP_OPERATION_CAPTURE_IMAGE;
+		a->operations        = 	GP_OPERATION_CAPTURE_IMAGE |
+					GP_OPERATION_CAPTURE_PREVIEW;
 		a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
 					GP_FILE_OPERATION_PREVIEW;
 		a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
@@ -136,169 +133,196 @@ int camera_init (Camera *camera)
 	int value=0, count;
 	int x=0, ret;
 	int vendor=0, product=0, inep=0, outep=0;
-
         gp_port_settings settings;
 	SierraData *fd;
 
-	if (!camera)
-		return (GP_ERROR);
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init");
 
+	if (!camera)
+		return (GP_ERROR_BAD_PARAMETERS);
+	
 	/* First, set up all the function pointers */
-	camera->functions->id 		= camera_id;
-	camera->functions->abilities 	= camera_abilities;
-	camera->functions->init 	= camera_init;
-	camera->functions->exit 	= camera_exit;
-	camera->functions->folder_list_folders = camera_folder_list_folders;
-	camera->functions->folder_list_files   = camera_folder_list_files;
-	camera->functions->file_get 	= camera_file_get;
-	camera->functions->file_get_preview =  camera_file_get_preview;
-	camera->functions->file_delete 	= camera_file_delete;
-//	camera->functions->capture 	= camera_capture;
-	camera->functions->summary	= camera_summary;
-	camera->functions->manual 	= camera_manual;
-	camera->functions->about 	= camera_about;
+	camera->functions->id 			= camera_id;
+	camera->functions->abilities 		= camera_abilities;
+	camera->functions->init 		= camera_init;
+	camera->functions->exit 		= camera_exit;
+	camera->functions->folder_list_folders 	= camera_folder_list_folders;
+	camera->functions->folder_list_files   	= camera_folder_list_files;
+	camera->functions->file_get 		= camera_file_get;
+	camera->functions->file_get_preview 	= camera_file_get_preview;
+	camera->functions->file_delete 		= camera_file_delete;
+	camera->functions->capture_preview	= camera_capture_preview;
+	camera->functions->capture 		= camera_capture;
+	camera->functions->summary		= camera_summary;
+	camera->functions->manual 		= camera_manual;
+	camera->functions->about 		= camera_about;
 
 	fd = (SierraData*)malloc(sizeof(SierraData));	
 	camera->camlib_data = fd;
 
 	fd->first_packet = 1;
 
-	sierra_debug_print(fd, "Initializing camera");
-
 	switch (camera->port->type) {
-		case GP_PORT_SERIAL:
-			sierra_debug_print(fd, "Serial Device");
-                        if ((ret = gp_port_new(&(fd->dev), GP_PORT_SERIAL)) < 0) {
-				free(fd);
-				return (ret);
-			}
-			strcpy(settings.serial.port, camera->port->path);
-			settings.serial.speed 	 = 19200;
-			settings.serial.bits 	 = 8;
-			settings.serial.parity 	 = 0;
-			settings.serial.stopbits = 1;
-			break;
-		case GP_PORT_USB:
-			/* lookup the USB information */
-			while (strlen(sierra_cameras[x].model)>0) {			
-				if (strcmp(sierra_cameras[x].model, camera->model)==0) {
-					vendor = sierra_cameras[x].usb_vendor;
-					product = sierra_cameras[x].usb_product;
-					inep = sierra_cameras[x].usb_inep;
-					outep = sierra_cameras[x].usb_outep;
-				}
-				x++;
-			}
-
-			/* Couldn't find the usb information */
-			if ((vendor == 0) && (product == 0))
-				return (GP_ERROR);
-
-			sierra_debug_print(fd, "USB Device");
-                        if ((ret = gp_port_new(&(fd->dev), GP_PORT_USB)) < 0) {
-				free(fd);
-				return (GP_ERROR);
-			}
-
-		        if ((ret = gp_port_usb_find_device(fd->dev, vendor, product)) < 0) {
-				gp_port_free(fd->dev);
-				free (fd);
-		                return (ret);
-			}
-		        gp_port_timeout_set (fd->dev, 5000);
-        		settings.usb.inep 	= inep;
-        		settings.usb.outep 	= outep;
-        		settings.usb.config 	= 1;
-        		settings.usb.interface 	= 0;
-        		settings.usb.altsetting = 0;
-			break;
-                default:
-			sierra_debug_print(fd, "Invalid Device");
+	case GP_PORT_SERIAL:
+		ret = gp_port_new (&(fd->dev), GP_PORT_SERIAL);
+		if (ret != GP_OK) {
 			free (fd);
-	                return (GP_ERROR);
+			return (ret);
+		}
+
+		strcpy (settings.serial.port, camera->port->path);
+		settings.serial.speed 	 = 19200;
+		settings.serial.bits 	 = 8;
+		settings.serial.parity 	 = 0;
+		settings.serial.stopbits = 1;
+		break;
+	case GP_PORT_USB:
+
+		/* Lookup the USB information */
+		for (x = 0; strlen (sierra_cameras[x].model) > 0; x++) {
+			if (strcmp(sierra_cameras[x].model, camera->model)==0) {
+				vendor = sierra_cameras[x].usb_vendor;
+				product = sierra_cameras[x].usb_product;
+				inep = sierra_cameras[x].usb_inep;
+				outep = sierra_cameras[x].usb_outep;
+			}
+		}
+
+		/* Couldn't find the usb information */
+		if ((vendor == 0) && (product == 0))
+			return (GP_ERROR);
+
+		ret = gp_port_new (&(fd->dev), GP_PORT_USB);
+		if (ret != GP_OK) {
+			free (fd);
+			return (ret);
+		}
+
+	        ret = gp_port_usb_find_device (fd->dev, vendor, product);
+		if (ret != GP_OK) {
+			gp_port_free (fd->dev);
+			free (fd);
+	                return (ret);
+		}
+
+	        gp_port_timeout_set (fd->dev, 5000);
+       		settings.usb.inep 	= inep;
+       		settings.usb.outep 	= outep;
+       		settings.usb.config 	= 1;
+       		settings.usb.interface 	= 0;
+       		settings.usb.altsetting = 0;
+		break;
+	default:
+		free (fd);
+                return (GP_ERROR_IO_UNKNOWN_PORT);
 	}
 
-	if ((ret = gp_port_settings_set(fd->dev, settings)) < 0) {
-		gp_port_free(fd->dev);
+	ret = gp_port_settings_set (fd->dev, settings);
+	if (ret != GP_OK) {
+		gp_port_free (fd->dev);
 		free (fd);
                 return (ret);
 	}
 
-	gp_port_timeout_set(fd->dev, TIMEOUT);
+	gp_port_timeout_set (fd->dev, TIMEOUT);
 	fd->type = camera->port->type;
 
-	if ((ret = gp_port_open(fd->dev)) < 0) {
-		gp_port_free(fd->dev);
+	ret = gp_port_open (fd->dev);
+	if (ret != GP_OK) {
+		gp_port_free (fd->dev);
 		free (fd);
 		return (ret);
 	}
 
 	switch (camera->port->type) {
-		case GP_PORT_SERIAL:
-			if (sierra_ping(camera) < 0) {
-				gp_port_free(fd->dev);
-				free (fd);
-				return (GP_ERROR);
-			}
+	case GP_PORT_SERIAL:
 
-			if (sierra_set_speed(camera, camera->port->speed) < 0) {
-				gp_port_free(fd->dev);
-				free (fd);
-				return (GP_ERROR);
-			}
-			fd->speed = camera->port->speed;
-			break;
-		case GP_PORT_USB:
-			gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
-			break;
-		default:
-			break;
+		ret = sierra_ping (camera);
+		if (ret != GP_OK) {
+			gp_port_free (fd->dev);
+			free (fd);
+			return (ret);
+		}
+
+		ret = sierra_set_speed (camera, camera->port->speed);
+		if (ret != GP_OK) {
+			gp_port_free (fd->dev);
+			free (fd);
+			return (ret);
+		}
+
+		fd->speed = camera->port->speed;
+		break;
+	case GP_PORT_USB:
+		gp_port_usb_clear_halt (fd->dev, GP_PORT_USB_ENDPOINT_IN);
+		break;
+	default:
+		break;
 	}
 
-	if (sierra_get_int_register(camera, 1, &value)< 0) {
+	ret = sierra_get_int_register (camera, 1, &value);
+	if (ret != GP_OK) {
 		gp_port_free(fd->dev);
 		free (fd);
-		return (GP_ERROR);
+		return (ret);
 	}
 
-	sierra_set_int_register(camera, 83, -1);
+	ret = sierra_set_int_register (camera, 83, -1);
+	if (ret != GP_OK) {
+		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** Could not set "
+				 "register 83 to -1: %s", 
+				 gp_camera_get_result_as_string (camera, ret));
+	}
 
-	gp_port_timeout_set(fd->dev, 50);
-	if (sierra_set_string_register(camera, 84, "\\", 1)< 0)
+	ret = gp_port_timeout_set (fd->dev, 50);
+	if (ret != GP_OK)
+		return (ret);
+
+	/* Folder support? */
+	ret = sierra_set_string_register (camera, 84, "\\", 1);
+	if (ret != GP_OK) {
 		fd->folders = 0;
-	   else
-		fd->folders = 1;	
+		gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+				 "*** folder support: no");
+	} else {
+		fd->folders = 1;
+		gp_debug_printf (GP_DEBUG_LOW, "sierra",
+				 "*** folder support: yes");
+	}
 
-	if (fd->folders)
-		sierra_debug_print(fd, "Camera supports folders");
-	   else
-		sierra_debug_print(fd, "Camera doesn't support folders. "
-				   "Using CameraFilesystem emu.");
+	fd->fs = gp_filesystem_new ();
+	count = sierra_file_count (camera);
+	if (count < 0) 
+		return (count);
 
-	fd->fs = gp_filesystem_new();
-	count = sierra_file_count(camera);
         /* Populate the filesystem */
-	gp_filesystem_populate(fd->fs, "/", "PIC%04i.jpg", count);
+	ret = gp_filesystem_populate (fd->fs, "/", "PIC%04i.jpg", count);
+	if (ret != GP_OK)
+		return (ret);
 
-	strcpy(fd->folder, "/");
+	strcpy (fd->folder, "/");
 
-	gp_port_timeout_set(fd->dev, TIMEOUT);
+	ret = gp_port_timeout_set (fd->dev, TIMEOUT);
+	if (ret != GP_OK)
+		return (ret);
 
-	camera_stop(camera);
+	camera_stop (camera);
 	return (GP_OK);
 }
 
-static int sierra_change_folder(Camera *camera, const char *folder)
+static int sierra_change_folder (Camera *camera, const char *folder)
 {	
 	SierraData *fd = (SierraData*)camera->camlib_data;
-
-	int st=0,i = 1;
+	int st = 0,i = 1, ret;
 	char target[128];
+
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_change_folder");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
 	if (!fd->folders)
 		return GP_OK;
-	if (!folder)
-		return GP_ERROR;
+	if (!folder || !camera)
+		return GP_ERROR_BAD_PARAMETERS;
 
 	if (folder[0]) {
 		strncpy(target, folder, sizeof(target)-1);
@@ -307,64 +331,70 @@ static int sierra_change_folder(Camera *camera, const char *folder)
 	} else
 		strcpy(target, "/");
 
-	if (target[0] != '/') {
-		sierra_debug_print(fd, "Change dir called with relative path?");
+	if (target[0] != '/')
 		i = 0;
-	} else {
-		if (sierra_set_string_register(camera, 84, "\\", 1)< 0)
-			return GP_ERROR;
+	else {
+		ret = sierra_set_string_register (camera, 84, "\\", 1);
+		if (ret != GP_OK)
+			return (ret);
 	}
 	st = i;
 	for (; target[i]; i++) {
 		if (target[i] == '/') {
 			target[i] = '\0';
-			if (st == i-1)
+			if (st == i - 1)
 				break;
-			if (sierra_set_string_register(camera, 84, target+st, strlen(target+st))< 0)
-				return GP_ERROR; 
-			st = i+1;
+			ret = sierra_set_string_register (camera, 84, 
+				target + st, strlen (target + st));
+			if (ret != GP_OK)
+				return (ret);
+			st = i + 1;
 			target[i] = '/';
 		}
 	}
-	strcpy(fd->folder, folder);
-
+	strcpy (fd->folder, folder);
 
 	return GP_OK;
 }
 
-int camera_start(Camera *camera) 
+int camera_start (Camera *camera)
 {
 	SierraData *fd = (SierraData*)camera->camlib_data;
+	int ret;
+
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_start");
+
+	if (fd->type != GP_PORT_SERIAL)
+		return (GP_OK);
 	
-	if (fd->type == GP_PORT_SERIAL) {
-		if (sierra_set_speed(camera, fd->speed)< 0)
-			return (GP_ERROR);
-		sierra_folder_set(camera, fd->folder);
-	}
-	return (GP_OK);
+	ret = sierra_set_speed (camera, fd->speed);
+	if (ret != GP_OK)
+		return (ret);
+
+	return (sierra_folder_set (camera, fd->folder));
 }
 
-int camera_stop(Camera *camera) 
+int camera_stop (Camera *camera) 
 {
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	if (fd->type == GP_PORT_SERIAL) {
-		if (sierra_set_speed(camera, -1)< 0)
-			return (GP_ERROR);
-	}
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_stop");
 
-	return (GP_OK);
+	if (fd->type != GP_PORT_SERIAL)
+		return (GP_OK);
+
+	return (sierra_set_speed (camera, -1));
 }
 
 int camera_exit (Camera *camera) 
 {
-	SierraData *fd = (SierraData*)camera->camlib_data;
+//	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	sierra_debug_print(fd, "Exiting camera");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_exit");
 
-	gp_port_close(fd->dev);
-	gp_port_free(fd->dev);
-	free(fd);
+//	gp_port_close (fd->dev);
+//	gp_port_free (fd->dev);
+//	free (fd);
 
 	return (GP_OK);
 }
@@ -373,410 +403,457 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 			      CameraList *list) 
 {
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	int x=0, error=0, count;
+	int x=0, count, ret;
 
-	if ((!fd->folders)&&(strcmp("/", folder)!=0))
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+			 "*** camera_folder_list_files");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
+
+	if ((!fd->folders) && (strcmp ("/", folder) != 0))
 		return (GP_ERROR);
 
-	if (camera_start(camera)< 0)
-		return (GP_ERROR);
+	ret = camera_start (camera);
+	if (ret != GP_OK)
+		return (ret);
 
 	if (fd->folders) {
-		if (sierra_change_folder(camera, folder))
-			return (GP_ERROR);
+		ret = sierra_change_folder (camera, folder);
+		if (ret != GP_OK)
+			return (ret);
 	}
 
-	count = sierra_file_count(camera);
+	count = sierra_file_count (camera);
+	if (count < 0)
+		return (count);
 
-	while ((x<count)&&(!error)) {
+	for (x = 0; x < count; x++) {
 		char buf[128];
 		int length;
 		
 		/* are all filenames *.jpg, or are there *.tif files too? */
 		/* Set the current picture number */
-		if (sierra_set_int_register(camera, 4, x+1)< 0) {
-			sierra_debug_print(fd, "Could not set the picture number");
-			camera_stop(camera);
-			return (GP_ERROR);
+		ret = sierra_set_int_register (camera, 4, x + 1);
+		if (ret != GP_OK) {
+			camera_stop (camera);
+			return (ret);
 		}
+
 		/* Get the picture filename */
-		if (sierra_get_string_register(camera, 79, 0, NULL, buf, &length)< 0) {
-			sierra_debug_print(fd, "Could not get filename");
-			camera_stop(camera);
-			return (GP_ERROR);
+		ret = sierra_get_string_register (camera, 79, 0, NULL, buf, 
+						  &length);
+		if (ret != GP_OK) {
+			camera_stop (camera);
+			return (ret);
 		}
+
 		if (length > 0) {
+
 			/* Filename supported. Use the camera filename */
-			gp_list_append(list, buf, GP_LIST_FILE);
+			gp_list_append (list, buf, GP_LIST_FILE);
 			gp_filesystem_append (fd->fs, folder, buf);
+
 		} else {
+
 			/* Filename not supported. Use CameraFileSystem entry */
-			gp_list_append(list, gp_filesystem_name(fd->fs, folder, x), 
-				GP_LIST_FILE);
+			gp_list_append (list, gp_filesystem_name (fd->fs, 
+					folder, x), GP_LIST_FILE);
 		}
-		x++;
 	}
 
-	camera_stop(camera);
-	return GP_OK;
+	camera_stop (camera);
+
+	return (GP_OK);
 }
 
 int camera_folder_list_folders (Camera *camera, const char *folder, 
 				CameraList *list) 
 {
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	int count, i, bsize;
+	int count, i, bsize, ret;
 	char buf[1024];
 
-	sierra_debug_print(fd, "Listing folders");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+			 "*** camera_folder_list_folders");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
-	if ((!fd->folders)&&(strcmp(folder, "/")!=0))
+	if ((!fd->folders) && (strcmp (folder, "/") !=0 ))
 		return GP_ERROR;
 
 	if (!fd->folders)
 		return GP_OK;
 
-	if (camera_start(camera) != GP_OK) /* XXX */
-		return GP_ERROR;
+	ret = camera_start (camera);
+	if (ret != GP_OK)
+		return (ret);
 
-	if ((sierra_change_folder(camera, folder) != GP_OK) ||
-	    (sierra_get_int_register(camera, 83, &count) != GP_OK)) {
-		camera_stop(camera);
-		return GP_ERROR;
+	ret = sierra_change_folder (camera, folder);
+	if (ret != GP_OK) {
+		camera_stop (camera);
+		return (ret);
 	}
-	if (count)
+
+	ret = sierra_get_int_register (camera, 83, &count);
+	if (ret != GP_OK) {
+		camera_stop (camera);
+		return (ret);
+	}
+
 	for (i = 0; i < count; i++) {
-		if (sierra_change_folder(camera, folder) != GP_OK) {
-			break;
-		}
-		if (sierra_set_int_register(camera, 83, i+1) != GP_OK) {
-			break;
-		}
-		bsize = 1024;
-		if (sierra_get_string_register(camera, 84, 0, NULL, buf, &bsize) != GP_OK) {
-			break;
-		} else {
-			/* remove trailing spaces */
-			for (i = strlen(buf)-1; i >= 0 && buf[i] == ' '; i--)
-				buf[i]='\0';
-			/* append the folder name on to the folder list */
-			gp_list_append(list, buf, GP_LIST_FOLDER);
-		}
 
+		ret = sierra_change_folder (camera, folder);
+		if (ret != GP_OK) 
+			break;
+
+		ret = sierra_set_int_register (camera, 83, i+1);
+		if (ret != GP_OK)
+			break;
+
+		bsize = 1024;
+		ret = sierra_get_string_register (camera, 84, 0, NULL, buf, 
+						  &bsize);
+		if (ret != GP_OK)
+			break;
+
+		/* remove trailing spaces */
+		for (i = strlen (buf)-1; i >= 0 && buf[i] == ' '; i--)
+			buf[i]='\0';
+
+		/* append the folder name on to the folder list */
+		gp_list_append (list, buf, GP_LIST_FOLDER);
 	}
-	camera_stop(camera);
+
+	camera_stop (camera);
 	return (GP_OK);
 }
 
-int sierra_folder_set(Camera *camera, const char *folder) 
+int sierra_folder_set (Camera *camera, const char *folder) 
 {
-	char buf[4096];
 	char tf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
-	/* If the camera doesn't support folders and it was passed something
-	   other than "/", return an error! */
-	if ((!fd->folders)&&(strcmp("/", folder)!=0))
-		return (GP_ERROR);
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_folder_set");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s");
 
-	/* If the camera doesn't support folders and it was passed "/",
-	   then that's OK */
-	if ((!fd->folders)&&(strcmp("/", folder)==0))
-		return (GP_OK);
-
-	if (folder[0] != '/') {
-		strcat(tf, folder);
-	} else {
-		strcpy(tf, folder);
+	if (!fd->folders) {
+		if (strcmp ("/", folder) != 0)
+			return (GP_ERROR_DIRECTORY_NOT_FOUND);
+		else
+			return (GP_OK);
 	}
 
-	if (tf[strlen(fd->folder)-1] != '/')
-	       strcat(tf, "/");
+	if (folder[0] != '/')
+		strcat (tf, folder);
+	else
+		strcpy (tf, folder);
 
-	printf(buf, "Folder set to %s", tf);
+	if (tf[strlen (fd->folder) - 1] != '/')
+	       strcat (tf, "/");
 
 	/* TODO: check whether the selected folder is valid.
 		 It should be done after implementing camera_lock/unlock pair */
 	
-	if (fd->folders) {
-		if (sierra_change_folder(camera, tf))
-			return (GP_ERROR);
-	}
-
-	return (GP_OK);
+	return (sierra_change_folder (camera, tf));
 }
 
 int camera_file_get_generic (Camera *camera, CameraFile *file, 
 			     const char *folder, const char *filename, 
 			     int thumbnail) 
 {
-	char buf[4096];
-	int regl, regd, file_number;
+	int regl, regd, file_number, ret;
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
-if (camera_start(camera)< 0)
-return (GP_ERROR);
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_get_generic");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
+
+	ret = camera_start(camera);
+	if (ret != GP_OK)
+		return (ret);
 
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number(fd->fs, folder, filename);
-
 	if (file_number < 0)
-		return GP_ERROR;
+		return (file_number);
 
 	if (thumbnail) {
-		sprintf(buf, "Getting thumbnail \"%s\" (#%i)", filename, file_number+1);
 		regl = 13;
 		regd = 15;
 	}  else {
-		sprintf(buf, "Getting photo \"%s\" (#%i)", filename, file_number+1);
 		regl = 12;
 		regd = 14;
 	}
 
-	sierra_debug_print(fd, buf);
-
 	/* Fill in the file structure */	
-	strcpy(file->type, "image/jpg");
-	strcpy(file->name, filename);
+	strcpy (file->type, "image/jpeg");
+	strcpy (file->name, filename);
 
 	/* Get the picture data */
-	if (sierra_get_string_register(camera, regd, file_number+1, file, NULL, NULL)< 0)
-		return (GP_ERROR);
+	ret = sierra_get_string_register (camera, regd, file_number + 1, file, 
+					  NULL, NULL);
+	if (ret != GP_OK)
+		return (ret);
 
-if (camera_stop(camera)< 0)
-return (GP_ERROR);
-
-	return (GP_OK);
+	return (camera_stop (camera));
 }
 
 int camera_file_get (Camera *camera, const char *folder, const char *filename,
                      CameraFile *file) 
 {
-	return (camera_file_get_generic(camera, file, folder, filename, 0));
+	return (camera_file_get_generic (camera, file, folder, filename, 0));
 }
 
 int camera_file_get_preview (Camera *camera, const char *folder, 
 			     const char *filename,
                              CameraFile *file) 
 {
-	return (camera_file_get_generic(camera, file, folder, filename, 1));
+	return (camera_file_get_generic (camera, file, folder, filename, 1));
 }
 
 int camera_file_delete (Camera *camera, const char *folder, 
 			const char *filename) 
 {
 	int ret, file_number;
-	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
-if (camera_start(camera)< 0)
-return (GP_ERROR);
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_delete");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
 
-	file_number = gp_filesystem_number(fd->fs, folder, filename);
+	ret = camera_start (camera);
+	if (ret != GP_OK)
+		return (ret);
 
-	sprintf(buf, "Deleting photo #%i", file_number+1);
-	sierra_debug_print(fd, buf);
+	file_number = gp_filesystem_number (fd->fs, folder, filename);
 
-	ret = sierra_delete(camera, file_number+1);
-	if (ret == GP_OK)
-		gp_filesystem_delete(fd->fs, folder, filename);
+	ret = sierra_delete (camera, file_number+1);
+	if (ret != GP_OK)
+		return (ret);
 
-if (camera_stop(camera)< 0)
-return (GP_ERROR);
+	ret = gp_filesystem_delete (fd->fs, folder, filename);
+	if (ret != GP_OK)
+		return (ret);
 
-	return (ret);
+	return (camera_stop(camera));
 }
 
-#if 0
-int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
+int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
+{
+	int ret;
 
-	SierraData *fd = (SierraData*)camera->camlib_data;
-	int retval;
+	ret = camera_start (camera);
+	if (ret != GP_OK)
+		return (ret);
 
-if (camera_start(camera)< 0)
-return (GP_ERROR);
-
-	sierra_debug_print(fd, "Capturing image");
-	retval = sierra_capture(camera, file, info);
-
-if (camera_stop(camera)< 0)
-return (GP_ERROR);
-
-	return (retval);
+	ret = sierra_capture (camera, capture_type, path);
+	if (ret != GP_OK) {
+		camera_stop (camera);
+		return (ret);
+	}
+	
+	return (camera_stop (camera));
 }
-#endif
+
+int camera_capture_preview (Camera *camera, CameraFile *file)
+{
+	int ret;
+
+	ret = camera_start (camera);
+	if (ret != GP_OK)
+		return (ret);
+	
+	ret = sierra_capture_preview (camera, file);
+	if (ret != GP_OK) {
+		camera_stop (camera);
+		return (ret);
+	}
+
+	return (camera_stop (camera));
+}
 
 int camera_summary (Camera *camera, CameraText *summary) 
 {
 	char buf[1024*32];
-	int value;
+	int value, ret;
 	char t[1024];
-	SierraData *fd = (SierraData*)camera->camlib_data;
 
-if (camera_start(camera)< 0)
-return (GP_ERROR);
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_summary");
 
-	sierra_debug_print(fd, "Getting camera summary");
+	ret = camera_start (camera);
+	if (ret != GP_OK)
+		return (ret);
+
 	strcpy(buf, "");
 
 	/* Get all the string-related info */
-	if (sierra_get_string_register(camera, 22, 0, NULL, t, &value)!=GP_ERROR)
+	ret = sierra_get_string_register (camera, 22, 0, NULL, t, &value);
+	if (ret == GP_OK)
 		sprintf(buf, "%sCamera ID       : %s\n", buf, t);
-	if (sierra_get_string_register(camera, 25, 0, NULL, t, &value)!=GP_ERROR)
+
+	ret = sierra_get_string_register (camera, 25, 0, NULL, t, &value);
+	if (ret == GP_OK)
 		sprintf(buf, "%sSerial Number   : %s\n", buf, t);
-	if (sierra_get_int_register(camera, 1, &value)!=GP_ERROR) {
-		switch(value) {
-			case 1:	strcpy(t, "Standard");
-				break;
-			case 2:	strcpy(t, "High");
-				break;
-			case 3:	strcpy(t, "Best");
-				break;
-			default:
-				sprintf(t, "%i (unknown)", value);
+
+	ret = sierra_get_int_register (camera, 1, &value);
+	if (ret == GP_OK) {
+		switch (value) {
+		case 1:	strcpy(t, "Standard");
+			break;
+		case 2:	strcpy(t, "High");
+			break;
+		case 3:	strcpy(t, "Best");
+			break;
+		default:
+			sprintf(t, "%i (unknown)", value);
 		}
-		sprintf(buf, "%sResolution      : %s\n", buf, t);
+		sprintf (buf, "%sResolution      : %s\n", buf, t);
 	}
-	if (sierra_get_int_register(camera, 3, &value)!=GP_ERROR) {
+	
+	ret = sierra_get_int_register (camera, 3, &value);
+	if (ret == GP_OK) {
 		if (value == 0)
-			strcpy(t, "Auto");
-		   else
-			sprintf(t, "%i microseconds", value);
-		sprintf(buf, "%sShutter Speed   : %s\n", buf, t);
-	}
-	if (sierra_get_int_register(camera, 5, &value)!=GP_ERROR) {
-		switch(value) {
-			case 1:	strcpy(t, "Low");
-				break;
-			case 2:	strcpy(t, "Medium");
-				break;
-			case 3:	strcpy(t, "High");
-				break;
-			default:
-				sprintf(t, "%i (unknown)", value);
-		}
-		sprintf(buf, "%sAperture        : %s\n", buf, t);
-	}
-	if (sierra_get_int_register(camera, 6, &value)!=GP_ERROR) {	
-		switch(value) {
-			case 1:	strcpy(t, "Color");
-				break;
-			case 2:	strcpy(t, "Black/White");
-				break;
-			default:
-				sprintf(t, "%i (unknown)", value);
-		}		
-		sprintf(buf, "%sColor Mode      : %s\n", buf, t);
+			strcpy (t, "Auto");
+		else
+			sprintf (t, "%i microseconds", value);
+		sprintf (buf, "%sShutter Speed   : %s\n", buf, t);
 	}
 
-	if (sierra_get_int_register(camera, 7, &value)!=GP_ERROR) {	
-		switch(value) {
-			case 0: strcpy(t, "Auto");
-				break;
-			case 1:	strcpy(t, "Force");
-				break;
-			case 2:	strcpy(t, "Off");
-				break;
-			case 3:	strcpy(t, "Red-eye Reduction");
-				break;
-			case 4:	strcpy(t, "Slow Synch");
-				break;
-			default:
-				sprintf(t, "%i (unknown)", value);
+	ret = sierra_get_int_register (camera, 5, &value);
+	if (ret == GP_OK) {
+		switch (value) {
+		case 1:	strcpy (t, "Low");
+			break;
+		case 2:	strcpy (t, "Medium");
+			break;
+		case 3:	strcpy (t, "High");
+			break;
+		default:
+			sprintf(t, "%i (unknown)", value);
 		}
-		sprintf(buf, "%sFlash Mode      : %s\n", buf, t);
+		sprintf (buf, "%sAperture        : %s\n", buf, t);
 	}
-	if (sierra_get_int_register(camera, 19, &value)!=GP_ERROR) {	
-		switch(value) {
-			case 0: strcpy(t, "Normal");
-				break;
-			case 1:	strcpy(t, "Bright+");
-				break;
-			case 2:	strcpy(t, "Bright-");
-				break;
-			case 3:	strcpy(t, "Contrast+");
-				break;
-			case 4:	strcpy(t, "Contrast-");
-				break;
-			default:
-				sprintf(t, "%i (unknown)", value);
-		}
-		sprintf(buf, "%sBright/Contrast : %s\n", buf, t);
+
+	ret = sierra_get_int_register (camera, 6, &value);
+	if (ret == GP_OK) {
+		switch (value) {
+		case 1:	strcpy (t, "Color");
+			break;
+		case 2:	strcpy (t, "Black/White");
+			break;
+		default:
+			sprintf (t, "%i (unknown)", value);
+		}		
+		sprintf (buf, "%sColor Mode      : %s\n", buf, t);
 	}
-	if (sierra_get_int_register(camera, 20, &value)!=GP_ERROR) {	
-		switch(value) {
-			case 0: strcpy(t, "Auto");
-				break;
-			case 1:	strcpy(t, "Skylight");
-				break;
-			case 2:	strcpy(t, "Flourescent");
-				break;
-			case 3:	strcpy(t, "Tungsten");
-				break;
-			case 255:	strcpy(t, "Cloudy");
-				break;
-			default:
-				sprintf(t, "%i (unknown)", value);
+
+	ret = sierra_get_int_register (camera, 7, &value);
+	if (ret == GP_OK) {
+		switch (value) {
+		case 0: strcpy (t, "Auto");
+			break;
+		case 1:	strcpy (t, "Force");
+			break;
+		case 2:	strcpy (t, "Off");
+			break;
+		case 3:	strcpy (t, "Red-eye Reduction");
+			break;
+		case 4:	strcpy (t, "Slow Synch");
+			break;
+		default:
+			sprintf (t, "%i (unknown)", value);
 		}
-		sprintf(buf, "%sWhite Balance   : %s\n", buf, t);
+		sprintf (buf, "%sFlash Mode      : %s\n", buf, t);
 	}
-	if (sierra_get_int_register(camera, 33, &value)!=GP_ERROR) {	
-		switch(value) {
-			case 1: strcpy(t, "Macro");
-				break;
-			case 2:	strcpy(t, "Normal");
-				break;
-			case 3:	strcpy(t, "Infinity/Fish-eye");
-				break;
-			default:
-				sprintf(t, "%i (unknown)", value);
+
+	ret = sierra_get_int_register (camera, 19, &value);
+	if (ret == GP_OK) {
+		switch (value) {
+		case 0: strcpy (t, "Normal");
+			break;
+		case 1:	strcpy (t, "Bright+");
+			break;
+		case 2:	strcpy (t, "Bright-");
+			break;
+		case 3:	strcpy (t, "Contrast+");
+			break;
+		case 4:	strcpy (t, "Contrast-");
+			break;
+		default:
+			sprintf (t, "%i (unknown)", value);
 		}
-		sprintf(buf, "%sLens Mode       : %s\n", buf, t);
+		sprintf (buf, "%sBright/Contrast : %s\n", buf, t);
+	}
+	
+	ret = sierra_get_int_register (camera, 20, &value);
+	if (ret == GP_OK) {
+		switch (value) {
+		case 0: strcpy (t, "Auto");
+			break;
+		case 1:	strcpy (t, "Skylight");
+			break;
+		case 2:	strcpy (t, "Flourescent");
+			break;
+		case 3:	strcpy (t, "Tungsten");
+			break;
+		case 255:	
+			strcpy (t, "Cloudy");
+			break;
+		default:
+			sprintf (t, "%i (unknown)", value);
+		}
+		sprintf (buf, "%sWhite Balance   : %s\n", buf, t);
+	}
+
+	ret = sierra_get_int_register (camera, 33, &value);
+	if (ret == GP_OK) {
+		switch(value) {
+		case 1: strcpy (t, "Macro");
+			break;
+		case 2:	strcpy (t, "Normal");
+			break;
+		case 3:	strcpy (t, "Infinity/Fish-eye");
+			break;
+		default:
+			sprintf (t, "%i (unknown)", value);
+		}
+		sprintf (buf, "%sLens Mode       : %s\n", buf, t);
 	}
 
 	/* Get all the integer information */
-	if (sierra_get_int_register(camera, 10, &value)!=GP_ERROR)
-		sprintf(buf, "%sFrames Taken    : %i\n", buf, value);
-	if (sierra_get_int_register(camera, 11, &value)!=GP_ERROR)
-		sprintf(buf, "%sFrames Left     : %i\n", buf, value);
-	if (sierra_get_int_register(camera, 16, &value)!=GP_ERROR)
-		sprintf(buf, "%sBattery Life    : %i\n", buf, value);
-	if (sierra_get_int_register(camera, 23, &value)!=GP_ERROR)
-		sprintf(buf, "%sAutoOff (host)  : %i seconds\n", buf, value);
-	if (sierra_get_int_register(camera, 24, &value)!=GP_ERROR)
-		sprintf(buf, "%sAutoOff (field) : %i seconds\n", buf, value);
-	if (sierra_get_int_register(camera, 28, &value)!=GP_ERROR)
-		sprintf(buf, "%sMemory Left	: %i bytes\n", buf, value);
-	if (sierra_get_int_register(camera, 35, &value)!=GP_ERROR)
-		sprintf(buf, "%sLCD Brightness  : %i (1-7)\n", buf, value);
-	if (sierra_get_int_register(camera, 38, &value)!=GP_ERROR)
-		sprintf(buf, "%sLCD AutoOff	: %i seconds\n", buf, value);
+	if (sierra_get_int_register(camera, 10, &value) == GP_OK)
+		sprintf (buf, "%sFrames Taken    : %i\n", buf, value);
+	if (sierra_get_int_register(camera, 11, &value) == GP_OK)
+		sprintf (buf, "%sFrames Left     : %i\n", buf, value);
+	if (sierra_get_int_register(camera, 16, &value) == GP_OK)
+		sprintf (buf, "%sBattery Life    : %i\n", buf, value);
+	if (sierra_get_int_register(camera, 23, &value) == GP_OK)
+		sprintf (buf, "%sAutoOff (host)  : %i seconds\n", buf, value);
+	if (sierra_get_int_register(camera, 24, &value) == GP_OK)
+		sprintf (buf, "%sAutoOff (field) : %i seconds\n", buf, value);
+	if (sierra_get_int_register(camera, 28, &value) == GP_OK)
+		sprintf (buf, "%sMemory Left	: %i bytes\n", buf, value);
+	if (sierra_get_int_register(camera, 35, &value) == GP_OK)
+		sprintf (buf, "%sLCD Brightness  : %i (1-7)\n", buf, value);
+	if (sierra_get_int_register(camera, 38, &value) == GP_OK)
+		sprintf (buf, "%sLCD AutoOff	: %i seconds\n", buf, value);
 
 	strcpy(summary->text, buf);
 
-if (camera_stop(camera)< 0)
-return (GP_ERROR);
-
-	return (GP_OK);
+	return (camera_stop(camera));
 }
 
 int camera_manual (Camera *camera, CameraText *manual) 
 {
-	SierraData *fd = (SierraData*)camera->camlib_data;
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_manual");
 
-	sierra_debug_print(fd, "Getting camera manual");
-
-	strcpy(manual->text, "Manual Not Available");
+	strcpy (manual->text, "Manual Not Available");
 
 	return (GP_OK);
 }
 
 int camera_about (Camera *camera, CameraText *about) 
 {
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
-	sierra_debug_print(fd, "Getting 'about' information");
-
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_about");
+	
 	strcpy (about->text, 
 		"sierra SPARClite library\n"
 		"Scott Fritzinger <scottf@unr.edu>\n"

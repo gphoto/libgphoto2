@@ -16,4 +16,3 @@ typedef struct {
 	int  usb_outep;
 } SierraCamera;
 
-void sierra_debug_print(SierraData *fd, char *message);
