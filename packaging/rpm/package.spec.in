@@ -142,6 +142,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 %doc doc/gphoto2.txt doc/gphoto2-cli.txt doc/FAQ
 %doc AUTHORS README COPYING
 %doc html/manual
+%doc doc/gphoto2.pdf
 %{_bindir}/gphoto2
 /etc/hotplug/usb/usbcam
 %{_datadir}/gphoto2
