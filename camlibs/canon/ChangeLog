@@ -1,6 +1,6 @@
 2004-02-03  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
-	* usb.c: Use largest file size limit
+	* serial.c, usb.c: Use largest file size limit
 	* canon.c, canon.h: Note improper use of file size limits
 	
 2004-01-31  Marcus Meissner <marcus@jet.franken.de>
