@@ -1,3 +1,7 @@
+2002-11-03  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.[ch]: support for PowerShot S230
+
 2002-11-02  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.[ch]: support for PowerShot S45

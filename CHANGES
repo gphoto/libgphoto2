@@ -10,7 +10,7 @@ drivers (camlibs):
 
    * Canon driver: 
      - added support for Canon PowerShot A100, Canon PowerShot A200,
-       Canon PowerShot S45
+       Canon PowerShot S45, Canon PowerShot S230
      - fixed Canon EOS D60 unlocking
 
    * PTP driver:
