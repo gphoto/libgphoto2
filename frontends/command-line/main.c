@@ -431,7 +431,31 @@ OPTION_CALLBACK(port)
 {
         cli_debug_print("Setting port to %s", arg);
 
-        strcpy (glob_port, arg);
+	strcpy (glob_port, arg);
+
+	if (strchr(glob_port, ':') == NULL) {
+		/* User didn't specify the port type; try to guess it */
+
+		gp_log (GP_LOG_DEBUG, "main", "Ports must look like "
+		  "'serial:/dev/ttyS0' or 'usb:', but '%s' is missing a colon "
+		  "so I am going to guess what you mean.",
+		glob_port);
+
+		if (strcmp(arg, "usb") == 0) {
+			/* User forgot the colon; add it for him */
+			strcpy (glob_port, "usb:");
+
+		} else if (strncmp(arg, "/dev/", 5) == 0) {
+			/* Probably a serial port like /dev/ttyS0 */
+			strcpy (glob_port, "serial:");
+			strncat (glob_port, arg, sizeof(glob_port)-7);
+
+		} else if (strncmp(arg, "/proc/", 6) == 0) {
+			/* Probably a USB port like /proc/bus/usb/001 */
+			strcpy (glob_port, "usb:");
+			strncat (glob_port, arg, sizeof(glob_port)-4);
+		}
+	}
 
         return (GP_OK);
 }
