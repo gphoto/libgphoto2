@@ -1,5 +1,11 @@
 2001-11-19  Mariusz Woloszyn <emsi@ipartners.pl>
 	
+	* camlibs/ptp: added camera filenames support,
+	* fixed some minor and major bugs in handling unaligned
+	  structures
+
+2001-11-19  Mariusz Woloszyn <emsi@ipartners.pl>
+	
 	* camlibs/ptp: basic (and hacked) ptp camera functionality:
 	  only JPG image and thumbnails downloading supported
 
