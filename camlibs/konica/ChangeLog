@@ -1,3 +1,10 @@
+2003-05-25  Marcus Meissner <marcus@jet.franken.de>
+	    Aurélien Croc (AP²C) <programming@ap2c.com>
+
+	* qm150.c: Reverse engineered Konica Q-M150 camera serial
+	  protocol and implemented a basic driver. Still work in progress,
+	  but picture download/deletion already possible.
+
 2003-02-27  Marcus Meissner <marcus@jet.franken.de>
 	
 	* library.c: We support EXIF download.

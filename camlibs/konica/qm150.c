@@ -281,7 +281,7 @@ k_getdata (int image_no, int type, unsigned int len, void *data,
 			ret = gp_port_write (camera->port, &ack, ACK_LEN);
 			if (ret < GP_OK)
 				return ret;
-			gp_context_error(context, _("Datas has corrupted."));
+			gp_context_error(context, _("Data has been corrupted."));
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
 		if ((len - bytes_read) > DATA_BUFFER) {
@@ -401,7 +401,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		default:
 			gp_context_error(context, 
-				_("This is not supported by this camera !"));
+				_("Image type %d is not supported by this camera !"), type);
 			return (GP_ERROR_NOT_SUPPORTED);
 	}
 	gp_file_set_name (file, filename);
@@ -519,8 +519,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	ret = gp_port_write (camera->port, cmd, sizeof(cmd)); 
 	if (ret<GP_OK) 
 		return ret;
-	gp_file_get_data_and_size(file, (const char **)&d, (unsigned long int *)&len);
-	id = gp_context_progress_start (context, len, _("Upload image..."));
+	gp_file_get_data_and_size(file, &d, &len);
+	id = gp_context_progress_start (context, len, _("Uploading image..."));
 	for (i=0; i < ((len+DATA_BUFFER-1) / DATA_BUFFER); i++) {
 		ret = gp_port_read (camera->port, &ack, ACK_LEN);
 		if (ret<GP_OK) {
@@ -595,7 +595,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	}
 	if (ack != ACK) {
 		gp_context_progress_stop (context, id);
-		gp_context_error(context, _("Can't upload this image to the"
+		gp_context_error(context, _("Can't upload this image to the "
 			"camera. An error has occured."));
 		return (GP_ERROR);
 	}
@@ -637,14 +637,14 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 		return ret;
 	if (ack == NACK) {
 		if (buf[CAMERA_MODE_PTR] != REC_MODE)
-			gp_context_error(context, _("You must be on record"
+			gp_context_error(context, _("You must be in record "
 				"mode to capture image."));
 		else if (!nbr_images)
-			gp_context_error(context, _("No space available"
+			gp_context_error(context, _("No space available "
 				"to capture new image. You must delete some"
 				"images."));
 		else
-			gp_context_error(context, _("Can't capture new image."
+			gp_context_error(context, _("Can't capture new image. "
 				"Unknown error"));
 		return (GP_ERROR);
 	}
@@ -1137,14 +1137,14 @@ camera_summary (Camera *camera, CameraText *text, GPContext *context)
 		return ret;
 
 	capacity = buf[CAPACITY_PTR]*0x100 + buf[CAPACITY_PTR+1];
-	snprintf(power,sizeof(power),_("battery"));
+	snprintf(power,sizeof(power),_("Battery"));
 	if (buf[POWER_STATE_PTR] == 1)
 		snprintf(power,sizeof(power),_("AC"));
 	autopoweroff = buf[AUTO_OFF_PTR]*0x100 + buf[AUTO_OFF_PTR+1];
 	autopoweroff /= 60;
-	snprintf(mode,sizeof(mode),_("play"));
+	snprintf(mode,sizeof(mode),_("Play"));
 	if (buf[CAMERA_MODE_PTR] == 1)
-		snprintf(mode,sizeof(mode),_("record"));
+		snprintf(mode,sizeof(mode),_("Record"));
 	image_taken = buf[TAKEN_IMAGE_PTR] * 0x100 + buf[TAKEN_IMAGE_PTR+1];
 	image_remained = buf[FREE_IMAGE_PTR] * 0x100 + buf[FREE_IMAGE_PTR+1];
 
