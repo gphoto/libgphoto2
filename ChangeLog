@@ -1,3 +1,7 @@
+2002-04-04  Marcus Meissner <marcus@jet.franken.de>
+
+	* frontends/command-line/main.c: Dump USB class devices into usbmap too.
+
 2002-04-01  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* TESTERS: added explicit usage permissions and improved wording some

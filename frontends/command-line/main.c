@@ -511,6 +511,8 @@ OPTION_CALLBACK(print_usb_usermap) {
 
         for (x = 0; x < n; x++) {
 		CR (gp_abilities_list_get_abilities (al, x, &a));
+		if (!(a.port & GP_PORT_USB))
+		    continue;
 		if (a.usb_vendor && a.usb_product) {
 			printf (GP_USB_HOTPLUG_SCRIPT "               "
 				"0x%04x      0x%04x   0x%04x    0x0000       "
@@ -519,6 +521,30 @@ OPTION_CALLBACK(print_usb_usermap) {
 				"0x00               0x00000000\n",
 				GP_USB_HOTPLUG_MATCH_VENDOR_ID | GP_USB_HOTPLUG_MATCH_PRODUCT_ID,
 				a.usb_vendor, a.usb_product);
+		}
+		if (a.usb_class) {
+		    	int flags;
+			int class,subclass,proto;
+
+			class = a.usb_class;
+			subclass = a.usb_subclass;
+			proto = a.usb_protocol;
+			flags = GP_USB_HOTPLUG_MATCH_DEV_CLASS;
+			if (subclass != -1)
+			    flags |= GP_USB_HOTPLUG_MATCH_DEV_SUBCLASS;
+			else
+			    subclass = 0;
+			if (proto != -1)
+			    flags |= GP_USB_HOTPLUG_MATCH_DEV_PROTOCOL;
+			else
+			    proto = 0;
+			printf (GP_USB_HOTPLUG_SCRIPT "               "
+				"0x%04x      0x0000   0x0000    0x0000       "
+				"0x0000       0x%02x         0x%02x            "
+				"0x%02x        0x00            0x00               "
+				"0x00               0x00000000\n",
+				flags,
+				class, subclass, proto);
 		}
         }
 	CR (gp_abilities_list_free (al));
