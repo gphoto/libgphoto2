@@ -109,28 +109,28 @@ static struct {
 			"jd350v%04i.ppm"
 		}
 	},
-	{"ScanHex SX-35", 0x797, 0x8901, {
+	{"ScanHex SX-35a", 0x797, 0x8901, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350v%04i.ppm"
 		}
 	},
-	{"ScanHex SX-35", 0x797, 0x8909, {
+	{"ScanHex SX-35b", 0x797, 0x8909, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350v%04i.ppm"
 		}
 	},
-	{"ScanHex SX-35", 0x797, 0x8911, {
+	{"ScanHex SX-35c", 0x797, 0x8911, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,
 			"jd350v%04i.ppm"
 		}
 	},
-	{"ScanHex SX-35", 0x84d, 0x1001, {
+	{"ScanHex SX-35d", 0x84d, 0x1001, {
 		 	jd350e,
 			BAYER_TILE_BGGR,
 			&jd350e_postprocessing,

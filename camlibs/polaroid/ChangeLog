@@ -1,3 +1,8 @@
+2004-01-04  Marcus Meissner <marcus@jet.franken.de>
+
+	* pdc640.c: Use different names for Skanhex SX-35, or 
+	  the lower level gets confused.
+
 2003-12-28  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* pdc640.c: Martin Sarfy <sarfy@ics.muni.cz> reports that his camera
