@@ -337,14 +337,16 @@ gp_port_library_list (GPPortInfoList *list)
 			continue;
 			
 		/* Device locked. Try to open the device. */
+		fd = -1;
 #ifdef HAVE_RESMGR
 		/* resmgr has its own API, which calls to a server and
 		 * communicates over UNIX domain sockets.
 		 */
 		fd = rsm_open_device(path, O_RDONLY | O_NDELAY);
-#else
-		fd = open (path, O_RDONLY | O_NDELAY);
+		/* fall through to standard open if this failed */
 #endif
+		if (fd == -1)
+			fd = open (path, O_RDONLY | O_NDELAY);
 		if (fd < 0) {
 			gp_port_serial_unlock (NULL, path);
 			continue;
