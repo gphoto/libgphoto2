@@ -26,6 +26,7 @@ camlibs/kodak/dc240/dc240.c
 camlibs/kodak/dc240/library.c
 camlibs/kodak/dc3200/dc3200.c
 camlibs/kodak/dc3200/library.c
+camlibs/kodak/ez200/library.c
 camlibs/konica/konica.c
 camlibs/konica/library.c
 camlibs/konica/lowlevel.c
