@@ -50,7 +50,8 @@ typedef enum {
 	GP_FILE_OPERATION_NONE          = 0,
 	GP_FILE_OPERATION_DELETE        = 1 << 1,
 	GP_FILE_OPERATION_CONFIG        = 1 << 2,
-	GP_FILE_OPERATION_PREVIEW       = 1 << 3
+	GP_FILE_OPERATION_PREVIEW       = 1 << 3,
+	GP_FILE_OPERATION_RAW           = 1 << 4
 } CameraFileOperation;
 
 typedef enum {
