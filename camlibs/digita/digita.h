@@ -5,15 +5,6 @@
 
 #include <gpio.h>
 
-struct digita_device {
-        gpio_device *gpdev;
-
-        /* These parameters are only significant for serial support */
-        int portspeed;
-
-        int deviceframesize;
-};
-
 #define DIGITA_GET_PRODUCT_INFO         0x01
 #define DIGITA_GET_IMAGE_SPECS          0x02
 #define DIGITA_GET_CAMERA_STATUS        0x03
@@ -46,29 +37,29 @@ struct digita_device {
 
 /* Digita protocol primitives */
 struct digita_command {
-        unsigned int length;
-        unsigned int unknown;
-        unsigned short command;
-        unsigned short status;
+	unsigned int length;
+	unsigned int unknown;
+	unsigned short command;
+	unsigned short status;
 };
 
 struct partial_tag {
-        unsigned int offset;
-        unsigned int length;
-        unsigned int filesize;
+	unsigned int offset;
+	unsigned int length;
+	unsigned int filesize;
 };
 
 struct filename {
-        unsigned int driveno;
-        unsigned char path[32];
-        unsigned char dosname[16];
+	unsigned int driveno;
+	unsigned char path[32];
+	unsigned char dosname[16];
 };
 
 struct file_item {
-        struct filename fn;
+	struct filename fn;
 
-        int length;
-        unsigned int filestatus;
+	int length;
+	unsigned int filestatus;
 };
 
 /* Digita protocol commands */
@@ -83,19 +74,19 @@ struct file_item {
  *             data
  */
 struct get_file_data_send {
-        struct digita_command cmd;
+	struct digita_command cmd;
 
-        struct filename fn;
+	struct filename fn;
 
-        unsigned int dataselector;
+	unsigned int dataselector;
 
-        struct partial_tag tag;
+	struct partial_tag tag;
 };
 
 struct get_file_data_receive {
-        struct digita_command cmd;
+	struct digita_command cmd;
 
-        struct partial_tag tag;
+	struct partial_tag tag;
 };
 
 /* DIGITA_GET_FILE_LIST */
@@ -105,38 +96,52 @@ struct get_file_data_receive {
  *             data
  */
 struct get_file_list {
-        struct digita_command cmd;
+	struct digita_command cmd;
 
-        unsigned int listorder;
+	unsigned int listorder;
 };
 
 /* DIGITA_ERASE_FILE */
 /*  sent - erase_file */
 /*  received - nothing */
 struct erase_file {
-        struct digita_command cmd;
+	struct digita_command cmd;
 
-        struct filename fn;
+	struct filename fn;
+};
+
+struct digita_device {
+	gpio_device *gpdev;
+
+	int debug;
+
+	int num_pictures;
+	struct file_item *file_list;
+
+	/* These parameters are only significant for serial support */
+	int portspeed;
+
+	int deviceframesize;
 };
 
 extern int (*digita_send)(struct digita_device *dev, void *buffer, int buflen);
 extern int (*digita_read)(struct digita_device *dev, void *buffer, int buflen);
-extern int digita_num_pictures;
-extern struct file_item *digita_file_list;
 
 /* commands.c */
 int digita_get_storage_status(struct digita_device *dev, int *taken,
-        int *available, int *rawcount);
+	int *available, int *rawcount);
 int digita_get_file_list(struct digita_device *dev);
 int digita_get_file_data(struct digita_device *dev, int thumbnail,
-        struct filename *filename, struct partial_tag *tag, void *buffer);
+	struct filename *filename, struct partial_tag *tag, void *buffer);
 int digita_delete_picture(struct digita_device *dev, struct filename *filename);
 
 /* serial.c */
-struct digita_device *digita_serial_open(Camera *camera,  CameraInit *init);
+int digita_serial_open(struct digita_device *dev, Camera *camera,
+		CameraInit *init);
 
 /* usb.c */
-struct digita_device *digita_usb_open(Camera *camera);
+int digita_usb_open(struct digita_device *dev, Camera *camera,
+		CameraInit *init);
 
 #endif
 

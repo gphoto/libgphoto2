@@ -14,9 +14,6 @@
 
 #include <gpio.h>
 
-int digita_num_pictures = 0;
-struct file_item *digita_file_list = NULL;
-
 void build_command(struct digita_command *cmd, int length, short command)
 {
         /* Length is the sizeof the digita_command minus the length */
@@ -76,13 +73,12 @@ int digita_get_file_list(struct digita_device *dev)
         if (digita_get_storage_status(dev, &taken, NULL, NULL) < 0)
                 return -1;
 
-        digita_num_pictures = taken;
+        dev->num_pictures = taken;
 
         buflen = (taken * sizeof(struct file_item)) + sizeof(cmd) + 4;
         buffer = malloc(buflen);
         if (!buffer) {
-                fprintf(stderr, "digita_get_file_list: error allocating %d
-bytes\n", buflen);
+                fprintf(stderr, "digita_get_file_list: error allocating %d bytes\n", buflen);
                 return -1;
         }
 
@@ -101,16 +97,16 @@ bytes\n", buflen);
                 return -1;
         }
 
-        if (digita_file_list)
-                free(digita_file_list);
+        if (dev->file_list)
+                free(dev->file_list);
 
-        digita_file_list = malloc(taken * sizeof(struct file_item));
-        if (!digita_file_list) {
+        dev->file_list = malloc(taken * sizeof(struct file_item));
+        if (!dev->file_list) {
                 fprintf(stderr, "digita_get_file_list: error allocating file_list memory\n");
                 return -1;
         }
 
-        memcpy(digita_file_list, buffer + sizeof(cmd) + 4, taken * sizeof(struct file_item));
+        memcpy(dev->file_list, buffer + sizeof(cmd) + 4, taken * sizeof(struct file_item));
 
         free(buffer);
 
