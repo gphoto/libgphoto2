@@ -498,7 +498,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (thumbname == NULL) {
 			/* no thumbnail available */
 			gp_context_error (context,
-					  _("No thumbnail could be fould for %s"),
+					  _("No thumbnail could be found for %s"),
 					  canon_path);
 			ret = GP_ERROR;
 		} 
