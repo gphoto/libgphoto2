@@ -1,3 +1,12 @@
+2005-01-21  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c:
+
+	Vegard Engen <vegard@engen.priv.no>
+	For Nikon PTP cameras:
+	Added Long Exposure settings.
+	Added Compression mode setting.
+
 2005-01-21  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* ptp-bugs.h: Added file. 

@@ -1070,11 +1070,18 @@ struct menu {
 	struct	submenu	*submenus;
 };
 
-struct deviceproptable {
+struct deviceproptableu8 {
 	char		*label;
-	uint16_t	propid;
+	uint8_t		propid;
 	uint16_t	vendor_id;
 };
+
+struct deviceproptableu16 {
+	char		*label;
+	uint16_t	 propid;
+	uint16_t	vendor_id;
+};
+
 
 static int
 _get_AUINT8_as_CHAR_ARRAY(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
@@ -1094,8 +1101,8 @@ _get_AUINT8_as_CHAR_ARRAY(Camera* camera, CameraWidget **widget, struct submenu 
 	return (GP_OK);
 }
 
-static
-int _get_STR(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+static int
+_get_STR(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	char value[64];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
@@ -1138,6 +1145,69 @@ _put_AUINT8_as_CHAR_ARRAY(Camera* camera, CameraWidget *widget, PTPPropertyValue
 	return (GP_OK);
 }
 
+#if 0
+static int
+_get_Range_INT8(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	float CurrentValue;
+	
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name ( *widget, menu->name);
+	if (dpd->FormFlag != PTP_DPFF_Range)
+		return (GP_ERROR_NOT_SUPPORTED);
+	if (dpd->DataType != PTP_DTC_INT8)
+		return (GP_ERROR_NOT_SUPPORTED);
+	CurrentValue = (float) dpd->CurrentValue.i8;
+	gp_widget_set_range ( *widget, (float) dpd->FORM.Range.MinimumValue.i8, (float) dpd->FORM.Range.MaximumValue.i8, (float) dpd->FORM.Range.StepSize.i8);
+	gp_widget_set_value ( *widget, &CurrentValue);
+	return (GP_OK);
+}
+
+
+static int
+_put_Range_INT8(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+	int ret;
+	float f;
+	ret = gp_widget_get_value (widget, &f);
+	if (ret != GP_OK) 
+		return ret;
+	propval->i8 = (int) f;
+	return (GP_OK);
+}
+#endif
+
+static int
+_get_Nikon_OnOff_UINT8(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name ( *widget, menu->name);
+	if (dpd->FormFlag != PTP_DPFF_Range)
+                return (GP_ERROR_NOT_SUPPORTED);
+        if (dpd->DataType != PTP_DTC_UINT8)
+                return (GP_ERROR_NOT_SUPPORTED);
+	gp_widget_add_choice (*widget,_("On"));
+	gp_widget_add_choice (*widget,_("Off"));
+	gp_widget_set_value ( *widget, (dpd->CurrentValue.u8?_("On"):_("Off")));
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_OnOff_UINT8(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+	int ret;
+	char *value;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK) 
+		return ret;
+	if(!strcmp(value,_("On"))) {
+		propval->u8 = 1;
+		return (GP_OK);
+	}
+	if(!strcmp(value,_("Off"))) {
+		propval->u8 = 0;
+		return (GP_OK);
+	}
+	return (GP_ERROR);
+}
+
 static int
 _get_UINT32_as_MB(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	char value[64];
@@ -1153,7 +1223,7 @@ _get_UINT32_as_MB(Camera* camera, CameraWidget **widget, struct submenu *menu, P
 	return (GP_OK);
 }
 
-struct deviceproptable whitebalance[] = {
+struct deviceproptableu16 whitebalance[] = {
 	{ N_("Manual"), 0x0001, 0 },
 	{ N_("Automatic"), 0x0002, 0 },
 	{ N_("One-push Automatic"), 0x0003, 0 },
@@ -1166,6 +1236,7 @@ struct deviceproptable whitebalance[] = {
 	{ N_("Preset"), 0x8013, PTP_VENDOR_NIKON },
 	{ NULL },
 };
+
 
 static int
 _get_WhiteBalance (Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
@@ -1208,7 +1279,7 @@ _put_WhiteBalance(Camera* camera, CameraWidget *widget, PTPPropertyValue *propva
 	ret = gp_widget_get_value (widget, &value);
 	if(ret != GP_OK)
 		return ret;
-	for (i=0; (whitebalance[i].propid && (retval<0));i++) {
+	for (i=0; (whitebalance[i].label && (retval<0));i++) {
 		if (!strcmp ( _(whitebalance[i].label),value))
 			retval = i;
 	}
@@ -1219,6 +1290,68 @@ _put_WhiteBalance(Camera* camera, CameraWidget *widget, PTPPropertyValue *propva
 	return GP_OK;
 }
 	
+/* Everything is camera specific. */
+struct deviceproptableu8 compression[] = {
+	{ N_("JPEG Basic"), 0x00, PTP_VENDOR_NIKON },
+	{ N_("JPEG Normal"), 0x01, PTP_VENDOR_NIKON },
+	{ N_("JPEG Fine"), 0x02, PTP_VENDOR_NIKON },
+	{ N_("NEF (Raw)"), 0x04, PTP_VENDOR_NIKON },
+	{ N_("NEF+BASIC"), 0x05, PTP_VENDOR_NIKON },
+	{ NULL },
+};
+
+static int
+_get_Compression (Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	int i, j, value=-1;
+	gp_widget_new (GP_WIDGET_MENU, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return(GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return(GP_ERROR);
+	/* Run through all the supported values and all the values known to
+	   the camera, and see which values that matches */
+	for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
+		for (i=0;compression[i].label;i++) {
+			if ((dpd->FORM.Enum.SupportedValue[j].u8 == compression[i].propid) && ((compression[i].vendor_id == 0) || (compression[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))) {
+				gp_widget_add_choice (*widget, _(compression[i].label));
+				/* Might as well take note here if this value
+				is the one currently set. */
+				if (dpd->CurrentValue.u8 == compression[i].propid)
+					value = i;
+				/* Make sure at least a known value is set
+				   as chosen initially */
+				if (value==-1)
+					value = i;
+			}
+		}
+	}
+	if (value>=0)
+		gp_widget_set_value ( *widget, _(compression[value].label));
+	return GP_OK;
+}
+
+static int
+_put_Compression(Camera* camera, CameraWidget *widget, PTPPropertyValue *propval) {
+	int i;
+	char *value;
+	int ret;
+	int retval = -1;
+
+	ret = gp_widget_get_value (widget, &value);
+	if(ret != GP_OK)
+		return ret;
+	for (i=0; (compression[i].label && (retval<0));i++) {
+		if (!strcmp ( _(compression[i].label),value))
+			retval = i;
+	}
+	if (retval>=0) 
+		propval->u8 = compression[retval].propid;
+	else
+		return GP_ERROR;
+	return GP_OK;
+}
+
 static int
 _get_ImageSize(Camera* camera, CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
         int j;
@@ -1519,6 +1652,8 @@ struct submenu camera_settings_menu[] = {
 };
 
 struct submenu image_settings_menu[] = {
+        { N_("Long Exp Noise Reduction"), "longexpnr", PTP_DPC_NIKON_D4LongExposureNoiseReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+        { N_("Image Quality"), "imgquality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Compression, _put_Compression},
         { N_("Image Size"), "imgsize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_WhiteBalance, 0, PTP_DTC_UINT16, _get_WhiteBalance, _put_WhiteBalance},
         { NULL },
