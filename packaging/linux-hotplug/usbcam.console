@@ -23,7 +23,7 @@
 
 if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
 then
-    # New code, using lock files instead of /dev/console permissions
+    # New code, using lock files instead of copying /dev/console permissions
     # This also works with non-gdm logins (e.g. on a virtual terminal)
     # Idea and code from Nalin Dahyabhai <nalin@redhat.com>
     if [ -f /var/run/console.lock ]
@@ -37,19 +37,8 @@ then
     fi
     if [ -n "$CONSOLEOWNER" ]
     then
-        chown 0000 "${DEVICE}"
+        chmod 0000 "${DEVICE}"
         chown "$CONSOLEOWNER" "${DEVICE}"
-        chown 0600 "${DEVICE}"
+        chmod 0600 "${DEVICE}"
     fi
-
-    # old code, using traditional parameters and /dev/console permissions
-    # user="$(ls -l /dev/console | awk '/\/dev\/console$/ { print $3; }')"
-    # chown "${user}" "${DEVICE}"
-    # chmod 0600 "${DEVICE}"
-
-    # new code, using GNU style parameters and /dev/console permissions
-    # CONSOLE="/dev/console"
-    # chown 0000 "${DEVICE}" # precaution against possible race conditions
-    # chown --reference "${CONSOLE}" "${DEVICE}"
-    # chmod --reference "${CONSOLE}" "${DEVICE}"
 fi
