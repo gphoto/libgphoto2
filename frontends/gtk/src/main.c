@@ -8,6 +8,10 @@
 #endif
 
 #include <gtk/gtk.h>
+#ifndef WITHOUT_GNOME
+#include <gnome.h>
+#include <glade/glade.h>
+#endif
 
 #include "interface.h"
 #include "support.h"
@@ -23,7 +27,14 @@ main (int argc, char *argv[])
 #endif
 
   gtk_set_locale ();
+#ifdef WITHOUT_GNOME
   gtk_init (&argc, &argv);
+#else
+  gnome_init (PACKAGE, VERSION, argc, argv);
+  glade_gnome_init ();
+  gtk_widget_push_visual (gdk_imlib_get_visual ());
+  gtk_widget_push_colormap (gdk_imlib_get_colormap ());
+#endif
 
   add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
   add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
