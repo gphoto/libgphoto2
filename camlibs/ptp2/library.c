@@ -401,6 +401,7 @@ static struct {
  	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb, 0},
 	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf, 0},
  	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0, 0},
+ 	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, 0},
  	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, 0},
  	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, PTPBUG_DCIM_WRONG_PARENT},
 
@@ -1938,7 +1939,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
 		PTPStorageIDs storageids;
-		
+
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
 			CPR (context, ptp_getstorageids(params,
 				&storageids));
