@@ -108,31 +108,35 @@ gp_port_new (gp_port **dev, gp_port_type type)
         switch(type) {
         case GP_PORT_SERIAL:
 #ifndef GP_PORT_SUPPORTED_SERIAL
-            return GP_ERROR_IO_SUPPORTED_SERIAL;
+		return GP_ERROR_IO_SUPPORTED_SERIAL;
 #endif
-            break;
+		break;
         case GP_PORT_USB:
 #ifndef GP_PORT_SUPPORTED_USB
-            return GP_ERROR_IO_SUPPORTED_USB;
+		gp_port_debug_printf (GP_DEBUG_LOW, "libgphoto2_port has been "
+			"compiled without USB support. This probably means "
+			"you didn't have libusb installed prior compilation "
+			"of gphoto2.");
+		return GP_ERROR_IO_SUPPORTED_USB;
 #endif
-            break;
+		break;
         case GP_PORT_PARALLEL:
 #ifndef GP_PORT_SUPPORTED_PARALLEL
-            return GP_ERROR_IO_SUPPORTED_PARALLEL;
+		return GP_ERROR_IO_SUPPORTED_PARALLEL;
 #endif
-            break;
+		break;
         case GP_PORT_NETWORK:
 #ifndef GP_PORT_SUPPORTED_NETWORK
-            return GP_ERROR_IO_SUPPORTED_NETWORK;
+		return GP_ERROR_IO_SUPPORTED_NETWORK;
 #endif
-            break;
+		break;
         case GP_PORT_IEEE1394:
 #ifndef GP_PORT_SUPPORTED_IEEE1394
-            return GP_ERROR_IO_SUPPORTED_IEEE1394;
+		return GP_ERROR_IO_SUPPORTED_IEEE1394;
 #endif
-            break;
+		break;
         default:
-            return GP_ERROR_IO_UNKNOWN_PORT;
+		return GP_ERROR_IO_UNKNOWN_PORT;
         }
 
         *dev = malloc (sizeof (gp_port));
