@@ -4,7 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <gphoto2.h>
-#include <gpio.h>
+#include <gpio/gpio.h>
 #include "barbie.h"
 
 gpio_device *dev=NULL;

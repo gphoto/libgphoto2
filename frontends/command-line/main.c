@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <gphoto2.h>
+#include <gpio/gpio.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -48,7 +49,8 @@ CameraInit init;
 OPTION_CALLBACK(abilities);
 OPTION_CALLBACK(help);
 OPTION_CALLBACK(test);
-OPTION_CALLBACK(list);
+OPTION_CALLBACK(list_cameras);
+OPTION_CALLBACK(list_ports);
 OPTION_CALLBACK(filename);
 OPTION_CALLBACK(port);
 OPTION_CALLBACK(speed);
@@ -68,18 +70,19 @@ OPTION_CALLBACK(get_thumbnail);
 Option option[] = {
 
 /* Settings 			*/
-{"" , "port",		"<port>",	"Port device (path, or \"usb\")",port,	0},
-{"" , "speed",		"<speed>",	"Specify serial transfer speed",speed,	0},
-{"" , "camera",		"<model>",	"Specify camera model",		model,	0},
+{"" , "port",		"path",		"Specify port device",		port,	0},
+{"" , "speed",		"speed",	"Specify serial transfer speed",speed,	0},
+{"" , "camera",		"model",	"Specify camera model",		model,	0},
 {"d", "debug",		"",		"Turn on debugging",		debug,	0},
 {"f", "filename",	"<filename>",	"Specify a filename",		filename,0},
 {"q", "quiet",		"",		"Quiet output",			quiet,	0},
 
 /* Display and die functions 	*/
-{"",  "abilities",	"",		"Display camera abilities",	abilities, 0},
-{"",  "test",		"",		"Verifies gPhoto installation",	test,	0},
 {"h", "help",		"",		"Displays this help screen",	help,	0},
-{"l", "list", 		"",		"List supported cameras",	list,	0},
+{"",  "test",		"",		"Verifies gPhoto installation",	test,	0},
+{"",  "list-cameras",	"",		"List supported camera models",	list_cameras,0},
+{"",  "list-ports",	"",		"List supported port devices",	list_ports,0},
+{"",  "abilities",	"",		"Display camera abilities",	abilities, 0},
 
 /* Actions (Depend on settings) */
 {"p", "get-picture",	"#", 		"Get picture # from camera", 	get_picture,   0},
@@ -144,7 +147,7 @@ OPTION_CALLBACK(abilities) {
 	}
 
 	if (gp_camera_abilities_by_name(glob_model, &a)==GP_ERROR) {
-		error_print("can't find camera \"%s\".\nUse \"--list\" to see available camera models", glob_model);
+		error_print("can't find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
 		return (GP_ERROR);
 	}
 
@@ -199,7 +202,7 @@ OPTION_CALLBACK(abilities) {
 }
 
 
-OPTION_CALLBACK(list) {
+OPTION_CALLBACK(list_cameras) {
 
 	int x, n;
 	char buf[64];
@@ -221,6 +224,25 @@ OPTION_CALLBACK(list) {
 			printf("%s\n", buf);
 		   else
 			printf("\t\"%s\"\n", buf);
+	}
+
+	return (GP_OK);
+}
+
+OPTION_CALLBACK(list_ports) {
+
+	CameraPortInfo info;
+	int x, count;
+
+	count = gp_port_count();
+	if (!glob_quiet) {
+	  printf("Devices found: %i\n", count);
+	  printf("Path                             Name\n"
+	         "--------------------------------------------------------------\n");
+	}
+	for(x=0; x<count; x++) {
+		gp_port_info(x, &info);
+		printf("%-32s %-32s\n",info.path,info.name);
 	}
 
 	return (GP_OK);
@@ -344,7 +366,7 @@ int init_globals () {
 	strcpy(glob_port, "");
 	strcpy(glob_filename, "gphoto");
 
-	glob_speed = 57600;
+	glob_speed = 0;
 	glob_debug = 0;
 	glob_quiet = 0;
 	glob_filename_override = 0;
@@ -479,16 +501,18 @@ void usage () {
 	printf(
 	"gPhoto2 (v%s)- Cross-platform digital camera library.\n"
 	"Copyright (C) 2000 Scott Fritzinger\n"
-	"gPhoto is licensed under the Lesser GNU Public License (LGPL).\n"
+	"gPhoto is licensed under the Library GNU Public License (LGPL).\n"
 	"Usage:\n", VERSION
 	);
 
+	printf ("short/long option/argument           description\n"
+		"--------------------------------------------------------------------\n");
 	/* Run through option and print them out */
 	while (x < option_count) {
 		/* maybe sort these by short option? can't be an in-place sort.
 		   would need to memcpy() to a new struct array. */
 		if (strlen(option[x].short_id) > 0)
-			sprintf(s, "%s%s,", SHORT_OPTION, option[x].short_id);
+			sprintf(s, "%s%s ", SHORT_OPTION, option[x].short_id);
 		   else
 			sprintf(s, " ");
 
@@ -505,6 +529,7 @@ void usage () {
 		printf("%-38s %s\n", buf, option[x].description);
 		x++;
 	}
+	printf("\n* Use double-quotes around arguments. *\n");
 }
 
 /* Misc functions							*/
@@ -547,6 +572,7 @@ int main (int argc, char **argv) {
 
 	/* Initialize gPhoto core */
 	gp_init();
+	gpio_init();
 
 	if (execute_options(argc, argv) == GP_ERROR) {
 		usage();

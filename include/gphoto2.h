@@ -5,6 +5,7 @@
 	This library is covered by the LGPL.
 */
 
+#include <gpio/gpio.h>
 #include <gphoto2-datatypes.h>
 #include <gphoto2-core.h>
 #include <gphoto2-library.h>

@@ -36,22 +36,21 @@ typedef enum {
 	GP_PORT_SOCKET
 } CameraPortType;
 
+
+typedef gpio_device_info CameraPortInfo;
+
 typedef struct {
 	char port[128];
 		/* path to serial port device 			 */
 		/* For serial port, "/dev/ttyS0" or variants	 */
 		/* For parallel port, "/dev/lpt0" or variants	 */
-		/* For usb, "usb"				 */
+		/* For usb, "inep# outep#"			 */
 		/* For ieee1394, "ieee1394"			 */
 		/* For socket, the address (ip or fqdn).	 */
 		/* For directory, the path.			 */
 
 	int speed;
-		/* Baud rate for serial port camera		 */
-
-	int usb_node;
-		/* dummy for now. need way to specify which USB device */
-
+		/* Speed to use					 */
 } CameraPortSettings;
 
 typedef struct {

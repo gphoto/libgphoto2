@@ -24,6 +24,11 @@
 		/* value=0, debugging off */
 		/* value=1, debugging on  */
 
+/* Camera Port */
+	int gp_port_count();
+
+	int gp_port_info(int port_number, CameraPortInfo *info);
+
 /* Camera operations */
 	/* Retrieve number of cameras */
 	int gp_camera_count ();
