@@ -1,5 +1,8 @@
+2000-08-20
+    philm       USB now works thanks to the help of James Tappin and
+                Tuomas Jormola.
 2000-08-17
-    philm      fixed USB compilation but does it work ?
+    philm       fixed USB compilation but does it work ?
 2000-08-15
     philm       created a working camera_config_set functions
                 (saves debug level and owner name).

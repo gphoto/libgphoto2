@@ -2,7 +2,7 @@
  - The driver must be changed to be able to talk to various cameras
    via the Camera *camera struct with each function call (08/15/2000 - done).
  - USB support is broken as libgpio got changed a bit. I can't test it as
-   I don't have USB :-(
+   I don't have USB :-( (08/20/2000 - done).
  - A5 support is completely broken, with the new filename based API, the 
    directory caching mecanism must be completely revisited.
  - Uploading : I'm working on it but there are problems. I will soon 

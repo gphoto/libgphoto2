@@ -455,7 +455,6 @@ static int canon_file_list(Camera *camera, CameraList *list, char *folder)
     }
 
     _canon_file_list(cs->cached_tree, list, folder);
-
     return GP_OK;
 }
 
@@ -1041,7 +1040,8 @@ static char *canon_get_picture(Camera *camera, char *filename, char *path, int t
 		memset(image,0,sizeof(*image));
 		
 		sprintf(file,"%s%s",path,filename);
-		
+		debug_message(camera, "canon_get_picture: file = %s\n\tpath=%s, filename=%s\n",
+		       file,path,filename);
 		attribs = 0;
 		if (!check_readiness(camera)) {
 			free(image);
@@ -1073,24 +1073,37 @@ static char *canon_get_picture(Camera *camera, char *filename, char *path, int t
 
 static int _get_file_path(struct psa50_dir *tree, char *filename, char *path)
 {
+
     if (tree==NULL) return GP_ERROR;    
  
+	if (canon_comm_method !=  CANON_USB) {
     path = strchr(path,0);
     *path = '\\';
+	}
 
     while(tree->name) {
-        if (!is_image(tree->name)) 
+		if (!is_image(tree->name)) { 
+			switch(canon_comm_method) {
+			 case CANON_USB:
+				strcpy(path,tree->name);
+				break;
+			 case CANON_SERIAL_RS232:
+			 default:
             strcpy(path+1,tree->name);
+				break;
+			}
+		}
         if (is_image(tree->name) && strcmp(tree->name,filename)==0) {
             return GP_OK;
         }
-        else if (!tree->is_file) 
+		else if (!tree->is_file) {
             if (_get_file_path(tree->user,filename, path) == GP_OK)
                    return GP_OK;
+		}
         tree++;
     }
-    return GP_ERROR;
 
+	return GP_ERROR;	
 }
 
 static int get_file_path(Camera *camera, char *filename, char *path)
@@ -1115,8 +1128,15 @@ int camera_file_get(Camera *camera, CameraFile *file, char *folder, char *filena
         debug_message(camera,"Filename not found!\n");
         return GP_ERROR;
     }
+
+    if (canon_comm_method != CANON_USB) {
     j = strrchr(path,'\\') - path;
     path[j+1] = '\0';     
+    } else {
+      j = strchr(path,'\0') - path;
+      path[j] = '\\';     
+      path[j+1] = '\0';
+    }
 
     data = canon_get_picture(camera, filename, path, 0, &buflen);
     if (!data)
@@ -1145,8 +1165,15 @@ int camera_file_get_preview(Camera *camera, CameraFile *preview, char *folder, c
         debug_message(camera,"Filename not found!\n");
         return GP_ERROR;
     }
+
+    if (canon_comm_method != CANON_USB) {
     j = strrchr(path,'\\') - path;
     path[j+1] = '\0';        
+    } else {
+      j = strchr(path,'\0') - path;
+      path[j] = '\\';     
+      path[j+1] = '\0';
+    }
 	
     data = canon_get_picture(camera, filename, path, 1, &buflen);
     if (!data)

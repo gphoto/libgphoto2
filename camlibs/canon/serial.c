@@ -34,7 +34,9 @@ struct camera_to_usb {
 	  unsigned short idProduct;
 } camera_to_usb[] = {
 		{ "Canon PowerShot S10", 0x04A9, 0x3041 },
-		{ "Canon PowerShot S20", 0x04A9, 0x3043 }
+		{ "Canon PowerShot S20", 0x04A9, 0x3043 },
+		{ "Canon Digital IXUS", 0x4A9, 0x3047 },
+		{ "Canon Powershot S100", 0x4A9, 0x3047 }
 };
 /*******  new stuff *********/
 
@@ -123,7 +125,7 @@ int canon_usb_probe(gpio_device *gdev, int i)
 	if (gpio_usb_find_device(gdev, camera_to_usb[i].idVendor,
 							 camera_to_usb[i].idProduct) == GPIO_OK) {
 		printf("found '%s' @ %d/%d\n", camera_to_usb[i].name,
-			gdev->usb_device->bus->dirname, gdev->usb_device->filename);
+			   gdev->usb_device->bus->busnum, gdev->usb_device->devicenum);
 		return 1;
 	}
 
