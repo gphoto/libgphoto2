@@ -1543,10 +1543,13 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
  * @path: gphoto2 path
  * @context: context for error reporting
  *
- * convert gphoto2 path  (e.g.   "/DCIM/116CANON/IMG_1240.JPG")
+ * convert gphoto2 path  (e.g.   "/dcim/116CANON/img_1240.jpg")
  * into canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
  *
- * Returns: string with converted path name
+ * Canon cameras use FAT with upper case internally, so we convert
+ * into that.
+ *
+ * Returns: immutable string with converted path name
  *
  */
 const char *
@@ -1570,13 +1573,14 @@ gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
 
 	snprintf (tmp, sizeof (tmp), "%s%s", camera->pl->cached_drive, path);
 
-	/* replace all slashes by backslashes */
+	/* replace all slashes by backslashes, change case to upper for FAT */
 	for (p = tmp; *p != '\0'; p++) {
 		if (*p == '/')
 			*p = '\\';
+		*p = (char) toupper(*p);
 	}
 
-	/* remove trailing backslash */
+	/* remove trailing backslash, making sure buffer ends with \0 */
 	if ((p > tmp) && (*(p - 1) == '\\'))
 		*(p - 1) = '\0';
 
