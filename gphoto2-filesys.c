@@ -1305,6 +1305,9 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	CC (context);
 	CA (folder, context);
 
+	GP_DEBUG ("Getting file '%s' from folder '%s' (type %i)...",
+		  filename, folder, type);
+
 	CR (gp_file_set_type (file, type));
 	CR (gp_file_set_name (file, filename));
 
@@ -1355,6 +1358,8 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	    (r == GP_ERROR_NOT_SUPPORTED)) {
 
 		/* Try EXIF data */
+		GP_DEBUG ("Getting previews is not supported. Trying "
+			  "EXIF data...");
 		CR (gp_filesystem_get_exif_preview (fs, folder, filename,
 						    context));
 	} else
@@ -1370,6 +1375,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	/* If we didn't get a mtime, try to get it from EXIF data */
 	gp_file_get_mtime (file, &t);
 	if (!t) {
+		GP_DEBUG ("Did not get mtime. Trying EXIF information...");
 		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
 		gp_file_set_mtime (file, t);
 	}
@@ -1535,6 +1541,9 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && folder && filename && info);
 	CC (context);
 	CA (folder, context);
+
+	GP_DEBUG ("Getting information about '%s' in '%s'...", filename,
+		  folder);
 
 	if (!fs->get_info_func) {
 		gp_context_error (context,
