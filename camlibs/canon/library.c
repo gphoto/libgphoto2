@@ -768,13 +768,13 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
-	char path[300], thumbname[300];
+	char path[300];
+	const char *thumbname;
 
-	GP_DEBUG ("delete_file_func() (previously known as camera_file_delete())");
+	GP_DEBUG ("delete_file_func()");
 
 	/* initialize memory to avoid problems later */
 	memset (path, 0, sizeof (path));
-	memset (thumbname, 0, sizeof (thumbname));
 
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
@@ -805,18 +805,25 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (path[strlen (path) - 1] == '\\')
 		path[strlen (path) - 1] = 0;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "filename: %s\n path: %s\n", filename, path);
+	GP_DEBUG ("delete_file_func: "
+		  "filename: %s\n path: %s\n", filename, path);
 	if (canon_int_delete_file (camera, filename, path) != GP_OK) {
 		gp_camera_set_error (camera, _("Error deleting file"));
 		return GP_ERROR;
 	}
 
-	/* If we have a movie, delete its thumbnail as well */
-	if (is_movie (filename)) {
-		strcpy (thumbname, filename);
-		strcpy (thumbname + strlen ("MVI_XXXX"), ".THM\0");
+	/* If we have a file with associated thumbnail file, delete
+	 * its thumbnail as well */
+	thumbname = canon_int_filename2thumbname (camera, filename);
+	if ((thumbname != NULL) && (*thumbname != '\0')) {
+		GP_DEBUG ("delete_file_func: "
+			  "thumbname: %s\n path: %s\n", thumbname, path);
 		if (canon_int_delete_file (camera, thumbname, path) != GP_OK) {
-			gp_camera_set_error (camera, _("Error deleting movie thumbnail"));
+			/* XXX should we handle this as an error?
+			 * Probably only in case the camera link died,
+			 * but not if the file just had already been
+			 * deleted before. */
+			gp_camera_set_error (camera, _("Error deleting associated thumbnail file"));
 			return GP_ERROR;
 		}
 	}
