@@ -53,18 +53,8 @@ As to whether 'autogen.sh' does its job, we are not completely sure.
   Redhat Linux 7.3 user Uli says:
   ===============================
 
-    This skript is far from being perfect, but it works on my stock
-    Redhat 7.3 installation, provided you have the following packages
-    installed: 
+    Building currently doesn't work.
 
-    - automake (version 1.4-p5, package 1.4p5-4)
-    - autoconf (version 2.13,   package 2.13-17)
-    - libtool  (version 1.4.2,  package 1.4.2-7)
-    - gettext  (version 0.11.1, package 0.11.1-2)
-
-    Just run './autogen.sh', and you may even supply it with the
-    parameters to ./configure.in from step 1 and spare yourself step
-    1.
 
 
 =============================
