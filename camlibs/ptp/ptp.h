@@ -51,6 +51,7 @@ typedef struct _PTPReq PTPReq;
 #define PTP_TYPE_REQ                    0x0001
 #define PTP_TYPE_DATA                   0x0002
 #define PTP_TYPE_RESP                   0x0003
+#define PTP_REQ_DATALEN                 16384
 
 // Operation Codes
 
@@ -153,6 +154,14 @@ struct _PTPDeviceInfo {
 	char	*SerialNumber;
 };
 typedef struct _PTPDeviceInfo PTPDeviceInfo;
+
+// PTP storageIDs structute (returned by GetStorageIDs)
+
+struct _PTPStorageIDs {
+	uint32_t n;
+	uint32_t storage[(PTP_REQ_DATALEN-sizeof(uint32_t))/sizeof(uint32_t)];
+};
+typedef struct _PTPStorageIDs PTPStorageIDs;
 
 
 // PTP objecthandles structure (returned by GetObjectHandles)
@@ -284,6 +293,8 @@ typedef struct _PTPParams PTPParams;
 
 uint16_t ptp_opensession  (PTPParams *params, uint32_t session);
 uint16_t ptp_closesession (PTPParams *params);
+
+uint16_t ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids);
 
 uint16_t ptp_getobjecthandles(PTPParams *params,
 			PTPObjectHandles* objecthandles, uint32_t store);

@@ -1,8 +1,18 @@
+2002-03-04 Mariusz Woloszyn
+	* library.c: some vendor/product IDs added
+	* library.c: changed initial transaction_id
+	* ptp.c: added ptp_getstorageids, fixed ptp_getobjecthandles
+	* ptp-pack.c: added ptp_unpack_OH, ptp_unpack_SIDs,
+	  ptp_unpack_uint32_t_array
+	* ptp.h: added typedef of PTPStorageIDs, ptp_getstorageids function
+	  prototype
+	  (all changes according to TODO, multi storage support)
+
 2002-01-16  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: No time for previews...
 
-2002-01-16 Mariusz WOloszyn
+2002-01-16 Mariusz Woloszyn
 	* ptp-pack.c:     added fake date packing
 	* ptp.c:  Fixed ptp_ek_sendfileobjectinfo to use packed structures
 	* library.: started implementation of upload file (for Kodak only!)

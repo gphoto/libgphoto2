@@ -94,11 +94,49 @@ ptp_pack_string(PTPParams *params, char *string, PTPReq *req, uint16_t offset, u
 	}
 }
 
+static inline uint32_t
+ptp_unpack_uint32_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint32_t *array)
+{
+	uint32_t n;
+	uint32_t i=0;
+
+	n=dtoh32a(&req->data[offset]);
+	while (n>i) {
+		array[i]=dtoh32a(&req->data[offset+(sizeof(uint32_t)*(i+1))]);
+		i++;
+	}
+	return n;
+}
+
+// DevInfo pack/unpack
 
 #define PTP_di_StandardVersion		 0
 #define PTP_di_VendorExtensionID	 2
 #define PTP_di_VendorExtensionVersion	 6
 #define PTP_di_VendorExtensionDesc	 8
+
+// ObjectHandles pack/unpack
+
+#define PTP_oh				 0
+
+static inline void
+ptp_unpack_OH (PTPParams *params, PTPReq *req, PTPObjectHandles *oh)
+{
+	oh->n = ptp_unpack_uint32_t_array(params, req, PTP_oh, oh->handler);
+}
+
+// StoreIDs pack/unpack
+
+#define PTP_sids			 0
+
+static inline void
+ptp_unpack_SIDs (PTPParams *params, PTPReq *req, PTPStorageIDs *sids)
+{
+	sids->n = ptp_unpack_uint32_t_array(params, req, PTP_sids,
+	sids->storage);
+}
+
+// ObjectInfo pack/unpack
 
 #define PTP_oi_StorageID		 0
 #define PTP_oi_ObjectFormat		 4

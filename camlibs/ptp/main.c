@@ -1,3 +1,8 @@
+/* BROKEN CODE. it does not work with current libptp2. Some day it will.
+   Feel free to submit standalone code used for libptp2 testing. */
+
+#if 0 // do not try to compile
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -191,3 +196,5 @@ main (int argc, char** argv)  {
 
 	}
 }
+
+#endif

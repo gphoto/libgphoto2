@@ -280,6 +280,27 @@ ptp_closesession (PTPParams* params)
 }
 
 /**
+ * ptp_getststorageids:
+ * params:	PTPParams*
+ *
+ * Gets array of StorageiDs and fills the storageids structure.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
+{
+	uint16_t ret;
+	PTPReq si;
+	PTPReq req;
+
+	ret=ptp_transaction(params, &req, PTP_OC_GetStorageIDs,
+		PTP_DP_GETDATA, PTP_REQ_DATALEN, &si);
+	ptp_unpack_SIDs(params, &si, storageids);
+	return ret;
+}
+
+/**
  * ptp_getobjecthandles:
  * params:	PTPParams*
  *		PTPObjectHandles*	- pointer to structute
@@ -298,14 +319,13 @@ ptp_getobjecthandles (PTPParams* params, PTPObjectHandles* objecthandles,
 {
 	uint16_t ret;
 	PTPReq req;
-	PTPReq* oh=malloc(sizeof(PTPObjectHandles)+PTP_REQ_HDR_LEN);
+	PTPReq oh;
 	
 	*(int *)(req.data)=htod32(store);
 
 	ret=ptp_transaction(params, &req, PTP_OC_GetObjectHandles,
-		PTP_DP_GETDATA, sizeof(PTPObjectHandles), oh);
-	memcpy(objecthandles, oh->data, sizeof(PTPObjectHandles));
-	free(oh);
+		PTP_DP_GETDATA, PTP_REQ_DATALEN, &oh);
+	ptp_unpack_OH(params, &oh, objecthandles);
 	return ret;
 }
 

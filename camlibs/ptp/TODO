@@ -1,6 +1,8 @@
 
 Unordered TODO list:
 
+-- fix file uploading for non Kodak cameras (require GetDevInfo).
+
 -- implementation of GetStorageInfo and GetStorageID's and proper
 interpretation of it's fields, which may be meaningful for driver behavior.
 
