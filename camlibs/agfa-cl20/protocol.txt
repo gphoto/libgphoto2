@@ -1,0 +1,352 @@
+Okay, let's tell something about the protocoll:
+
+Everything can be looked up in the USB 1.1 secification!
+http://www.usb.org/developers/data/usbspec.zip
+
+That's where I have everything from.
+
+All the communication consists of three usb command types:
+It seems that all the packages have a little endian byte order (least significant byte first?)
+I always confuse that. Well, If I have 0x0001 then it sends 01 00, so turned around.
+
+1. control packages with direction "in"
+2. control packages with direction "out"
+3. bulk transfers with direction "in"
+
+1. These control packages are always 8 Bytes long. The first
+   Byte is the reqest Type. this is always 0xc1 for direction "in".
+  The c1 is a Bitmap:
+7 1	means that the direction is device to host
+6 1	Bits 6 and 5 mean that the "Type" is "Vendor"
+5 0
+4 0	the first 5 Bits (0-4) define the recipient. In this case an "Interface"
+3 0
+2 0
+1 0
+0 1
+
+the last two Bytes are always 01 00 the length of the camera reply, so 0x0001 - one Byte.
+The camera always replys with 0x00.
+
+
+2. Similar to 1. just the direction is "out".
+   The first byte is always 0x41 (just changing the last bit to 0 - direction "out")
+   The last two bytes are 00 00, because we don't await an answer of the camera.
+
+
+3. these semm to be standard bulk transfers. you just open one, and the camera sends data.
+   The direction of this transfer is "in".
+   The trnsfer buffer length is always 0x100.
+
+
+
+-----------------
+
+
+So, what happens now on the bus:
+
+First we send a standard USB Device request, to get the device descriptor:
+direction is "in" (80) length of answer is 0x0012 (12 00)
+
+SetupPacket          : 80 06 00 01 00 00 12 00
+
+We get as an answer the device descriptor:
+
+    0000:       
+      12 01 00 01 00 00 00 08 bd 06 04 04 90 00 00 00        
+    0010:       
+      00 01  
+
+What this means is in the USB specs.
+
+
+Then we want the "configuration descriptor" from the device. I think this is done by sending:
+
+SetupPacket          : 80 06 00 02 00 00 09 02
+
+
+As answer we should get:
+   0000:
+09 02 27 00 01 01 00 80 fa 09 04 01 00 03 ff 00
+   0010:
+00 00 07 05 82 02 40 00 00 07 05 03 02 40 00 00
+   0020:
+07 05 84 03 01 00 08
+
+
+Now it's time to choose a configuration. I believe the camera just has one, but without setting it exlicitly, the camera does nothing!
+
+So we choose configuration 0x01.
+
+I think this is done by sending:
+
+SetupPacket          : 00 09 01 00 00 00 00 00
+Note, that the direction is "out" now (00) and the length 0x0000 (00 00).
+
+	
+That was the setup process. Now the camera should talk to us.
+
+
+***************
+* Here I had one picture on the camera. I plugged the camera in,
+* got the thumbnail and deleted it. Then I switched the camera
+* off.
+*
+* In further experiemnts we have to try out, where our magic numbers
+* are: Like: How many pictures are on the camera, which one is going
+* to be downloaded...
+*****************************
+
+SetupPacket          : c1 00 00 00 21 05 01 00
+	answer:		00
+SetupPacket          : 41 02 00 00 07 00 00 00
+SetupPacket          : 41 0a 00 00 00 00 00 00
+SetupPacket          : 41 02 00 00 07 00 00 00
+SetupPacket          : 41 0a 00 00 01 00 00 00
+
+Bulk Transfer "in":
+
+   0000:      		   1  .  1  6             I think this is something
+01 00 00 10 00 00 00 00 00 31 2e 31 36 00 00 00   like a directory... No idea, what
+   0010:                                          the 1.16 means. Could be either a
+00 00 00 00 00 00 02 00 00 02 00 00 00 00 06 0a   protocol or firmware version.
+   0020:       
+1e 79 01 69 02 28 06 50 01 e0 00 60 00 c0 0f 00        
+   0030:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0040:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0050:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0060:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0070:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0080:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0090:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00a0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00b0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00c0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00d0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00e0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00f0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+
+SetupPacket          : c1 00 00 00 21 05 01 00
+	answer:		00
+SetupPacket          : c1 00 00 00 00 80 01 00
+	answer:		00
+SetupPacket          : 41 0a 01 00 08 00 00 00
+Bulk Transfer "in":
+   0000:                   1  .   1  6 
+01 00 00 10 00 14 00 00 00 31 2e 31 36 00 00 00   The 14 is new. No idea, what it means...
+   0010:       
+00 01 00 00 00 00 02 00 00 02 00 00 00 00 06 0a   The 01 could be one of the magic
+   0020:                                          numbers, since there was ONE pic
+1e 79 01 69 02 28 06 50 01 e0 00 60 00 c0 0f 00   on the camera...
+   0030:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0040:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0050:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0060:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0070:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0080:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0090:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00a0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00b0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00c0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00d0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00e0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00f0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+**************************
+* I just got an idea: The camera has internal AND a flash card as memory.
+* When we have a flash card, the internal memory is not going to
+* be used. Maybe the first "directory" is the internal one, with zero pics.
+* Maybe the second one is the flash card directory with the one pic.
+* Maybe I'm completely wrong... ;-)
+***************************
+
+
+SetupPacket          : c1 00 00 00 85 89 01 00	
+	answer:		00
+SetupPacket          : c1 00 00 00 21 05 01 00
+        answer:         00
+SetupPacket          : c1 00 00 00 00 80 01 00
+        answer:         00
+SetupPacket          : c1 00 00 00 21 05 01 00
+        answer:         00
+SetupPacket          : c1 00 00 00 00 80 01 00
+        answer:         00
+SetupPacket          : 41 0a 01 00 0a 00 00 00
+Bulk Transfer "in":
+   0000:           E x  i  f        M  M     *
+ff d8 ff e1 01 a5 45 78 69 66 00 00 4d 4d 00 2a        
+   0010:       
+00 00 00 08 00 07 01 1a 00 05 00 00 00 01 00 00        
+   0020:                                     (
+01 0e 01 1b 00 05 00 00 00 01 00 00 01 16 01 28        
+   0030:       
+00 03 00 00 00 01 00 02 00 00 02 13 00 03 00 00        
+   0040:       
+P  I   C T  0  0  0  1  J   P  G  <sp>
+50 49 43 54 30 30 30 31 4a 50 47 20 00 00 00 00        
+   0050:       
+00 00 00 00 00 00 00 00 00 00 02 00 00 14 00 00        
+   0060:                    D       0  ^  @  c
+00 04 00 00 00 01 00 00 00 44 00 00 30 5e 40 63        
+   0070:       
+@        ,  A  f
+40 00 01 2c 41 66 00 00 00 00 00 00 00 00 00 00        
+   0080:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0090:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00a0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00b0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00c0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00d0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00e0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00f0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+Bulk transfer "in":
+   0000:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00       
+   0010:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0020:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0030:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0040:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0050:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0060:                   0  2  1  0   
+0b 90 00 00 07 00 00 00 04 30 32 31 30 91 01 00        
+   0070:       
+07 00 00 00 04 01 02 03 00 a0 00 00 07 00 00 00        
+   0080:       
+04 00 00 00 00 a0 01 00 03 00 00 00 01 00 01 00        
+   0090:       
+00 a0 02 00 04 00 00 00 01 00 00 02 00 a0 03 00        
+   00a0:       
+04 00 00 00 01 00 00 01 80 ff db 00 84 00 10 0b        
+   00b0:                                (    
+0c 0e 0c 0a 10 0e 0d 0e 12 11 10 13 18 28 1a 18        
+   00c0: 1   # %     (  :  3  =  <  9  3  8  7      
+16 16 18 31 23 25 1d 28 3a 33 3d 3c 39 33 38 37        
+   00d0:
+@  H  \  N   @  D W  E  7  8  P  m  Q  W  _  b       
+40 48 5c 4e 40 44 57 45 37 38 50 6d 51 57 5f 62        
+   00e0:       
+67 68 67 3e 4d 71 79 70 64 78 5c 65 67 63 01 11        
+   00f0:       
+12 12 18 15 18 2f 1a 1a 2f 63 42 38 42 63 63 63
+
+
+Then 18 further bulk "in" transfers, probably containing the data of the picture/thumbnail.
+
+SetupPacket          : c1 00 00 00 85 89 01 00
+SetupPacket          : c1 00 00 00 85 89 01 00 
+SetupPacket          : c1 00 00 00 85 89 01 00 
+SetupPacket          : c1 00 00 00 85 89 01 00 
+SetupPacket          : c1 00 00 00 85 89 01 00 
+SetupPacket          : c1 00 00 00 85 89 01 00 
+SetupPacket          : c1 00 00 00 85 89 01 00 
+SetupPacket          : c1 00 00 00 85 89 01 00 
+SetupPacket          : c1 00 00 00 85 89 01 00 
+SetupPacket          : c1 00 00 00 85 89 01 00 
+plenty of these more for wuite a while.
+SetupPacket          : c1 00 00 00 21 05 01 00
+SetupPacket          : c1 00 00 00 00 80 01 00
+SetupPacket          : c1 00 00 00 21 05 01 00
+SetupPacket          : c1 00 00 00 00 80 01 00
+SetupPacket          : c1 00 00 00 85 89 01 00
+SetupPacket          : c1 00 00 00 85 89 01 00
+SetupPacket          : c1 00 00 00 85 89 01 00
+SetupPacket          : c1 00 00 00 85 89 01 00
+and so on...
+SetupPacket          : c1 00 00 00 21 05 01 00
+SetupPacket          : c1 00 00 00 00 80 01 00
+SetupPacket          : 41 0a 01 00 0d 00 00 00
+SetupPacket          : c1 00 00 00 20 05 01 00    Somewhere here I deleted
+SetupPacket          : 41 02 00 00 07 00 00 00    a thumbnail...
+SetupPacket          : c1 00 00 00 85 89 01 00
+SetupPacket          : 41 0a 01 00 00 00 00 00
+SetupPacket          : c1 00 00 00 21 05 01 00
+SetupPacket          : 41 02 00 00 07 00 00 00
+SetupPacket          : 41 0a 00 00 00 00 00 00
+SetupPacket          : 41 02 00 00 07 00 00 00
+SetupPacket          : 41 0a 00 00 01 00 00 00
+Bult transfer "in":
+   0000:                   1  .  1  6             Maybe this is something like
+01 00 00 10 00 00 00 00 00 31 2e 31 36 00 00 00   the directory... So, after deleting
+   0010:                                          a thumbnail, it re-reads the directory
+00 00 00 00 00 00 01 00 00 02 00 00 00 00 06 0a        
+   0020:       
+1e 79 01 69 02 28 06 50 01 e0 00 60 00 c0 0f 00        
+   0030:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0040:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0050:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0060:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0070:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0080:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   0090:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00a0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00b0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00c0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00d0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00e0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00        
+   00f0:       
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+SetupPacket          : c1 00 00 00 85 89 01 00
+SetupPacket          : c1 00 00 00 85 89 01 00
+SetupPacket          : c1 00 00 00 85 89 01 00
+SetupPacket          : c1 00 00 00 85 89 01 00
+SetupPacket          : c1 00 00 00 85 89 01 00
+etc. pp.
+SetupPacket          : 41 0a 01 00 00 00 00 00     Somewhere here I just switched off
+SetupPacket          : c1 00 00 00 21 05 01 00     the camera... It just dies then
+SetupPacket          : c1 00 00 00 21 05 01 00     We don't have to do something
+                                                   special...
+

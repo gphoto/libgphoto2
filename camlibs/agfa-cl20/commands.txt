@@ -1,0 +1,68 @@
+general commands, same for flash card or NON flash card,
+I don't know what they do exactly.
+
+c1 00 00 00 21 05 01 00
+
+c1 00 00 00 20 05 01 00		This one appeares only right after issuing any delete command
+				41 0a 01 00 0d 00 00 00 (for pic 01). It appears after every
+				 delete comand. I dont't know what
+				it does. The camera answers as usual with a "00" Byte.
+
+41 02 00 00 07 00 00 00		This appears after the
+				41 0a 0x 00 0d 00 00 00
+				c1 00 00 00 20 05 01 00
+				sequence.
+				It also appears before these two basic commands:
+				41 0a 00 00 00 00 00 00
+				41 0a 00 00 01 00 00 00
+
+41 0a 00 00 00 00 00 00		This I believe to be a reset command. It is issued in the very
+				beginning and for example after dleting all the pictures, just
+				before the directory is reread with the
+				41 0a 00 00 01 00 00 00
+				command.
+
+c1 00 00 00 00 80 01 00		This appears before every 41 0a command. And usually after a
+				c1 00 00 00 21 05 01 00. But not always.
+
+c1 00 00 00 85 89 01 00		After a long transfer and after al the picture info transfers
+				this is sent until something else happens.
+				To me it looks like a "keepalive"
+				Every other minute (?) this is interuppted by a combination
+				of:
+				c1 00 00 00 21 05 01 00
+				c1 00 00 00 00 80 01 00
+				c1 00 00 00 21 05 01 00
+				c1 00 00 00 00 80 01 00
+				Then it continues.
+
+	UPDATE: dennis 09.09.02
+	The command "c1 00 00 00 85 89 01 00" is a polling command to query the status of the
+	"print" button on the camera. It appears whenever nothing else is happening, and is
+	needed to catch the user pressing the print button. Keepalive is not necessary with
+	USB.
+
+
+
+Using a compact flash card:
+
+41 0a 00 00 01 00 00 00		Send the basic directory info
+
+41 0a 03 00 08 00 00 00 	send infos for picture number 03
+
+41 0a 03 00 00 0a 00 00		Send picture number 03
+
+41 0a 03 00 00 0d 00 00		Delete picture number 03
+
+
+WITHOUT a compact flash card:
+
+41 0a 00 00 01 00 00 00         Send the basic directory info
+
+41 03 ff 0f 00 00 00 00         send infos for the first picture
+41 03 fe 0f 00 00 00 00		send infos for the second picture
+41 03 fd 0f 00 00 00 00		guess what? :))
+
+41 03 ff 0f 08 00 00 00		send the first picture
+41 03 fe 0f 08 00 00 00		send the second picture
+41 03 fd 0f 08 00 00 00		you know what...
