@@ -103,7 +103,6 @@ SierraCamera sierra_cameras[] = {
         {"Olympus C-2500Z", 	0, 0, 0, 0, 0 },
 	{"Olympus C-3000Z", 	0x07b4, 0x100, 0x83, 0x04, 0},
 	{"Olympus C-3030Z", 	0x07b4, 0x100, 0x83, 0x04, 0},
-	{"Panasonic Coolshot KXl-600A", 0, 0, 0, 0, 0 },
 	{"Panasonic Coolshot NV-DCF5E", 0, 0, 0, 0, 0 },
 	{"Polaroid PDC 640", 	0, 0, 0, 0, 0  },
 	{"Sanyo DSC-X300", 	0, 0, 0, 0, 0 },
