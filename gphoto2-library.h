@@ -21,7 +21,9 @@
 #ifndef __GPHOTO2_LIBRARY_H__
 #define __GPHOTO2_LIBRARY_H__
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 #include <gphoto2-abilities-list.h>
 #include <gphoto2-camera.h>
 #include <gphoto2-context.h>

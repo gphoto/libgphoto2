@@ -21,11 +21,12 @@
 #ifndef __GPHOTO2_LIST_H__
 #define __GPHOTO2_LIST_H__
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
 #define MAX_ENTRIES 1024
 
-typedef struct _CameraList CameraList;
 struct _CameraList {
 	int  count;
 	struct {
@@ -34,6 +35,7 @@ struct _CameraList {
 	} entry [MAX_ENTRIES];
 	int ref_count;
 };
+typedef struct _CameraList CameraList;
 
 int     gp_list_new   (CameraList **list);
 int     gp_list_ref   (CameraList *list);
