@@ -1,13 +1,20 @@
 
 Unordered TODO list:
 
+-- packing and unpacking functions which interprete whole structures of
+specyfied type (especialy proper extraction of variable length fields).
+For example _PTPObjectInfo which containes all data in packed format (may be
+defined as char[] table!) and PTPObjectInfo type (NOT packed), which is used
+by C interface.
+All ptp_getobject/sendobject would use PTPObjectInfo, then convert internaly
+to proper dataset of _PTPObjectInfo (respecting host to transport layer byte
+order conversion) and then writing/reading to/from responder.
+The same for other data structures.
+
 -- folders implementation.
 
 -- implementation of GetStorageInfo and GetStorageID's and proper
 interpretation of it's fields, which may be meaningful for driver behavior.
-
--- packing and unpacking functions which interprete whole structures of
-specyfied type (especialy proper extraction of variable length fields).
 
 -- remove ptp error code from library.c, separate ptp protocol code from
 gphoto2 driver.

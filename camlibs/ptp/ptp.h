@@ -42,91 +42,91 @@ struct _PTPReq {
 
 // Container types
 
-#define PTP_TYPE_REQ                    (htole16(0x0001))
-#define PTP_TYPE_DATA                   (htole16(0x0002))
-#define PTP_TYPE_RESP                   (htole16(0x0003))
+#define PTP_TYPE_REQ                    0x0001
+#define PTP_TYPE_DATA                   0x0002
+#define PTP_TYPE_RESP                   0x0003
 
 // Operation Codes
 
-#define PTP_OC_Undefined                (htole16(0x1000))
-#define PTP_OC_GetDevInfo               (htole16(0x1001))
-#define PTP_OC_OpenSession              (htole16(0x1002))
-#define PTP_OC_CloseSession             (htole16(0x1003))
-#define PTP_OC_GetStorageIDs            (htole16(0x1004))
-#define PTP_OC_GetStorageInfo           (htole16(0x1005))
-#define PTP_OC_GetNumObjects            (htole16(0x1006))
-#define PTP_OC_GetObjectHandles         (htole16(0x1007))
-#define PTP_OC_GetObjectInfo            (htole16(0x1008))
-#define PTP_OC_GetObject                (htole16(0x1009))
-#define PTP_OC_GetThumb                 (htole16(0x100A))
-#define PTP_OC_DeleteObject             (htole16(0x100B))
-#define PTP_OC_SendObjectInfo           (htole16(0x100C))
-#define PTP_OC_SendObject               (htole16(0x100D))
-#define PTP_OC_InitiateCapture          (htole16(0x100E))
-#define PTP_OC_FormatStore              (htole16(0x100F))
-#define PTP_OC_ResetDevice              (htole16(0x1010))
-#define PTP_OC_SelfTest                 (htole16(0x1011))
-#define PTP_OC_SetObjectProtection      (htole16(0x1012))
-#define PTP_OC_PowerDown                (htole16(0x1013))
-#define PTP_OC_GetDevicePropDesc        (htole16(0x1014))
-#define PTP_OC_GetDevicePropValue       (htole16(0x1015))
-#define PTP_OC_SetDevicePropValue       (htole16(0x1016))
-#define PTP_OC_ResetDevicePropValue     (htole16(0x1017))
-#define PTP_OC_TerminateOpenCapture     (htole16(0x1018))
-#define PTP_OC_MoveObject               (htole16(0x1019))
-#define PTP_OC_CopyObject               (htole16(0x101A))
-#define PTP_OC_GetPartialObject         (htole16(0x101B))
-#define PTP_OC_InitiateOpenCapture      (htole16(0x101C))
+#define PTP_OC_Undefined                0x1000
+#define PTP_OC_GetDevInfo               0x1001
+#define PTP_OC_OpenSession              0x1002
+#define PTP_OC_CloseSession             0x1003
+#define PTP_OC_GetStorageIDs            0x1004
+#define PTP_OC_GetStorageInfo           0x1005
+#define PTP_OC_GetNumObjects            0x1006
+#define PTP_OC_GetObjectHandles         0x1007
+#define PTP_OC_GetObjectInfo            0x1008
+#define PTP_OC_GetObject                0x1009
+#define PTP_OC_GetThumb                 0x100A
+#define PTP_OC_DeleteObject             0x100B
+#define PTP_OC_SendObjectInfo           0x100C
+#define PTP_OC_SendObject               0x100D
+#define PTP_OC_InitiateCapture          0x100E
+#define PTP_OC_FormatStore              0x100F
+#define PTP_OC_ResetDevice              0x1010
+#define PTP_OC_SelfTest                 0x1011
+#define PTP_OC_SetObjectProtection      0x1012
+#define PTP_OC_PowerDown                0x1013
+#define PTP_OC_GetDevicePropDesc        0x1014
+#define PTP_OC_GetDevicePropValue       0x1015
+#define PTP_OC_SetDevicePropValue       0x1016
+#define PTP_OC_ResetDevicePropValue     0x1017
+#define PTP_OC_TerminateOpenCapture     0x1018
+#define PTP_OC_MoveObject               0x1019
+#define PTP_OC_CopyObject               0x101A
+#define PTP_OC_GetPartialObject         0x101B
+#define PTP_OC_InitiateOpenCapture      0x101C
 // Eastman Kodak extension Operation Codes
-#define PTP_OC_EK_SendFileObjectInfo	(htole16(0x9005))
-#define PTP_OC_EK_SendFileObject	(htole16(0x9006))
+#define PTP_OC_EK_SendFileObjectInfo	0x9005
+#define PTP_OC_EK_SendFileObject	0x9006
 
 // Response Codes
 
-#define PTP_RC_Undefined                (htole16(0x2000))
-#define PTP_RC_OK                       (htole16(0x2001))
-#define PTP_RC_GeneralError             (htole16(0x2002))
-#define PTP_RC_SessionNotOpen           (htole16(0x2003))
-#define PTP_RC_InvalidTransactionID	(htole16(0x2004))
-#define PTP_RC_OperationNotSupported    (htole16(0x2005))
-#define PTP_RC_ParameterNotSupported    (htole16(0x2006))
-#define PTP_RC_IncompleteTransfer       (htole16(0x2007))
-#define PTP_RC_InvalidStorageId         (htole16(0x2008))
-#define PTP_RC_InvalidObjectHandle      (htole16(0x2009))
-#define PTP_RC_DevicePropNotSupported   (htole16(0x200A))
-#define PTP_RC_InvalidObjectFormatCode  (htole16(0x200B))
-#define PTP_RC_StoreFull                (htole16(0x200C))
-#define PTP_RC_ObjectWriteProtected     (htole16(0x200D))
-#define PTP_RC_StoreReadOnly            (htole16(0x200E))
-#define PTP_RC_AccessDenied             (htole16(0x200F))
-#define PTP_RC_NoThumbnailPresent       (htole16(0x2010))
-#define PTP_RC_SelfTestFailed           (htole16(0x2011))
-#define PTP_RC_PartialDeletion          (htole16(0x2012))
-#define PTP_RC_StoreNotAvailable        (htole16(0x2013))
-#define PTP_RC_SpecyficationByFormatUnsupported         (htole16(0x2014))
-#define PTP_RC_NoValidObjectInfo        (htole16(0x2015))
-#define PTP_RC_InvalidCodeFormat        (htole16(0x2016))
-#define PTP_RC_UnknownVendorCode        (htole16(0x2017))
-#define PTP_RC_CaptureAlreadyTerminated (htole16(0x2018))
-#define PTP_RC_DeviceBusy               (htole16(0x2019))
-#define PTP_RC_InvalidParentObject      (htole16(0x201A))
-#define PTP_RC_InvalidDevicePropFormat  (htole16(0x201B))
-#define PTP_RC_InvalidDevicePropValue   (htole16(0x201C))
-#define PTP_RC_InvalidParameter         (htole16(0x201D))
-#define PTP_RC_SessionAlreadyOpened     (htole16(0x201E))
-#define PTP_RC_TransactionCanceled      (htole16(0x201F))
-#define PTP_RC_SpecificationOfDestinationUnsupported            (htole16(0x2020))
+#define PTP_RC_Undefined                0x2000
+#define PTP_RC_OK                       0x2001
+#define PTP_RC_GeneralError             0x2002
+#define PTP_RC_SessionNotOpen           0x2003
+#define PTP_RC_InvalidTransactionID	0x2004
+#define PTP_RC_OperationNotSupported    0x2005
+#define PTP_RC_ParameterNotSupported    0x2006
+#define PTP_RC_IncompleteTransfer       0x2007
+#define PTP_RC_InvalidStorageId         0x2008
+#define PTP_RC_InvalidObjectHandle      0x2009
+#define PTP_RC_DevicePropNotSupported   0x200A
+#define PTP_RC_InvalidObjectFormatCode  0x200B
+#define PTP_RC_StoreFull                0x200C
+#define PTP_RC_ObjectWriteProtected     0x200D
+#define PTP_RC_StoreReadOnly            0x200E
+#define PTP_RC_AccessDenied             0x200F
+#define PTP_RC_NoThumbnailPresent       0x2010
+#define PTP_RC_SelfTestFailed           0x2011
+#define PTP_RC_PartialDeletion          0x2012
+#define PTP_RC_StoreNotAvailable        0x2013
+#define PTP_RC_SpecyficationByFormatUnsupported         0x2014
+#define PTP_RC_NoValidObjectInfo        0x2015
+#define PTP_RC_InvalidCodeFormat        0x2016
+#define PTP_RC_UnknownVendorCode        0x2017
+#define PTP_RC_CaptureAlreadyTerminated 0x2018
+#define PTP_RC_DeviceBusy               0x2019
+#define PTP_RC_InvalidParentObject      0x201A
+#define PTP_RC_InvalidDevicePropFormat  0x201B
+#define PTP_RC_InvalidDevicePropValue   0x201C
+#define PTP_RC_InvalidParameter         0x201D
+#define PTP_RC_SessionAlreadyOpened     0x201E
+#define PTP_RC_TransactionCanceled      0x201F
+#define PTP_RC_SpecificationOfDestinationUnsupported            0x2020
 // Eastman Kodak extension Response Codes
-#define PTP_RC_EK_FilenameRequired	(htole16(0xA001))
-#define PTP_RC_EK_FilenameConflicts	(htole16(0xA002))
-#define PTP_RC_EK_FilenameInvalid	(htole16(0xA003))
+#define PTP_RC_EK_FilenameRequired	0xA001
+#define PTP_RC_EK_FilenameConflicts	0xA002
+#define PTP_RC_EK_FilenameInvalid	0xA003
 
 // PTP extended ERROR codes
 
-#define PTP_ERROR_IO			(htole16(0x2FF))
-#define PTP_ERROR_DATA_EXPECTED		(htole16(0x2FE))
-#define PTP_ERROR_RESP_EXPECTED		(htole16(0x2FD))
-#define PTP_ERROR_BADPARAM		(htole16(0x2fC))
+#define PTP_ERROR_IO			0x02FF
+#define PTP_ERROR_DATA_EXPECTED		0x02FE
+#define PTP_ERROR_RESP_EXPECTED		0x02FD
+#define PTP_ERROR_BADPARAM		0x02FC
 
 // PTP device info structure (returned by GetDevInfo)
 
@@ -177,55 +177,55 @@ struct _PTPObjectInfo {
 // PTP Object Format Codes
 
 // ancillary formats
-#define PTP_OFC_Undefined			(htole16(0x3000))
-#define PTP_OFC_Association			(htole16(0x3001))
-#define PTP_OFC_Script				(htole16(0x3002))
-#define PTP_OFC_Executable			(htole16(0x3003))
-#define PTP_OFC_Text				(htole16(0x3004))
-#define PTP_OFC_HTML				(htole16(0x3005))
-#define PTP_OFC_DPOF				(htole16(0x3006))
-#define PTP_OFC_AIFF	 			(htole16(0x3007))
-#define PTP_OFC_WAV				(htole16(0x3008))
-#define PTP_OFC_MP3				(htole16(0x3009))
-#define PTP_OFC_AVI				(htole16(0x300A))
-#define PTP_OFC_MPEG				(htole16(0x300B))
-#define PTP_OFC_ASF				(htole16(0x300D))
+#define PTP_OFC_Undefined			0x3000
+#define PTP_OFC_Association			0x3001
+#define PTP_OFC_Script				0x3002
+#define PTP_OFC_Executable			0x3003
+#define PTP_OFC_Text				0x3004
+#define PTP_OFC_HTML				0x3005
+#define PTP_OFC_DPOF				0x3006
+#define PTP_OFC_AIFF	 			0x3007
+#define PTP_OFC_WAV				0x3008
+#define PTP_OFC_MP3				0x3009
+#define PTP_OFC_AVI				0x300A
+#define PTP_OFC_MPEG				0x300B
+#define PTP_OFC_ASF				0x300D
 // image formats
-#define PTP_OFC_EXIF_JPEG			(htole16(0x3801))
-#define PTP_OFC_TIFF_EP				(htole16(0x3802))
-#define PTP_OFC_FlashPix			(htole16(0x3803))
-#define PTP_OFC_BMP				(htole16(0x3804))
-#define PTP_OFC_CIFF				(htole16(0x3805))
-#define PTP_OFC_Undefined_0x3806		(htole16(0x3806))
-#define PTP_OFC_GIF				(htole16(0x3807))
-#define PTP_OFC_JFIF				(htole16(0x3808))
-#define PTP_OFC_PCD				(htole16(0x3809))
-#define PTP_OFC_PICT				(htole16(0x380A))
-#define PTP_OFC_PNG				(htole16(0x380B))
-#define PTP_OFC_Undefined_0x380C		(htole16(0x380C))
-#define PTP_OFC_TIFF				(htole16(0x380D))
-#define PTP_OFC_TIFF_IT				(htole16(0x380E))
-#define PTP_OFC_JP2				(htole16(0x380F))
-#define PTP_OFC_JPX				(htole16(0x3810))
+#define PTP_OFC_EXIF_JPEG			0x3801
+#define PTP_OFC_TIFF_EP				0x3802
+#define PTP_OFC_FlashPix			0x3803
+#define PTP_OFC_BMP				0x3804
+#define PTP_OFC_CIFF				0x3805
+#define PTP_OFC_Undefined_0x3806		0x3806
+#define PTP_OFC_GIF				0x3807
+#define PTP_OFC_JFIF				0x3808
+#define PTP_OFC_PCD				0x3809
+#define PTP_OFC_PICT				0x380A
+#define PTP_OFC_PNG				0x380B
+#define PTP_OFC_Undefined_0x380C		0x380C
+#define PTP_OFC_TIFF				0x380D
+#define PTP_OFC_TIFF_IT				0x380E
+#define PTP_OFC_JP2				0x380F
+#define PTP_OFC_JPX				0x3810
 // Eastman Kodak extension ancillary format
-#define PTP_OFC_EK_M3U				(htole16(0xb002))
+#define PTP_OFC_EK_M3U				0xb002
 
 
 // PTP Association Types
 
-#define PTP_AT_Undefined			(htole16(0x0000))
-#define PTP_AT_GenericFolder			(htole16(0x0001))
-#define PTP_AT_Album				(htole16(0x0002))
-#define PTP_AT_TimeSequence			(htole16(0x0003))
-#define PTP_AT_HorizontalPanoramic		(htole16(0x0004))
-#define PTP_AT_VerticalPanoramic		(htole16(0x0005))
-#define PTP_AT_2DPanoramic			(htole16(0x0006))
-#define PTP_AT_AncillaryData			(htole16(0x0007))
+#define PTP_AT_Undefined			0x0000
+#define PTP_AT_GenericFolder			0x0001
+#define PTP_AT_Album				0x0002
+#define PTP_AT_TimeSequence			0x0003
+#define PTP_AT_HorizontalPanoramic		0x0004
+#define PTP_AT_VerticalPanoramic		0x0005
+#define PTP_AT_2DPanoramic			0x0006
+#define PTP_AT_AncillaryData			0x0007
 
 // PTP Protection Status
 
-#define PTP_PS_NoProtection			(htole16(0x0000))
-#define PTP_PS_ReadOnly				(htole16(0x0001))
+#define PTP_PS_NoProtection			0x0000
+#define PTP_PS_ReadOnly				0x0001
 
 // Glue stuff
 
