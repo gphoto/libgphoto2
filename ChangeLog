@@ -1,3 +1,7 @@
+2002-11-12  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* libgphoto2/gphoto2-version.c: Use HAVE_CC only if defined.
+
 2002-11-10  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2/gphoto2-widget.[c,h] (gp_widget_set_value): Make the
