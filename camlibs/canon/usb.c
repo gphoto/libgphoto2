@@ -520,7 +520,9 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 
 #ifdef EXPERIMENTAL_CAPTURE
 	// TESTING
-	sleep(2);
+
+	if (camera->pl->capturing)
+		sleep(2);
 
 	// OTHER POSSIBLE TEST
 	//if (cmd1 == 0x13 && cmd2 == 0x12 && cmd3 == 0x201) {

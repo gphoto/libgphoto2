@@ -98,6 +98,10 @@ struct _CameraPrivateLibrary
 	unsigned char seq_tx;
 	unsigned char seq_rx;
 
+	int capturing; /* whether we are capturing or not
+			  hack to speed up usb_dialogue 
+			  when not capturing [no sleep(2)] */
+
 	/* driver settings
 	 * leave these as int, as gp_widget_get_value sets them as int!
 	 */

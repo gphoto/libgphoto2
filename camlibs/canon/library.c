@@ -229,11 +229,14 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
+	camera->pl->capturing = TRUE;
 	if (canon_int_capture_image (camera, path, context) != GP_OK) {
+		camera->pl->capturing = FALSE;
 		gp_context_error (context, _("Error capturing image"));
 		return GP_ERROR;
 	}
 
+	camera->pl->capturing = FALSE;
 	return GP_OK;
 }
 
@@ -1074,6 +1077,9 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->first_init = 1;
 	camera->pl->seq_tx = 1;
 	camera->pl->seq_rx = 1;
+
+	/* we are currently not capturing, are we? */
+	camera->pl->capturing = FALSE;
 
 	/* default to false, i.e. list only known file types */
 	camera->pl->list_all_files = FALSE;
