@@ -94,6 +94,8 @@ static struct {
 	{PTP_RC_SpecificationOfDestinationUnsupported,
 			N_("PTP Specification Of Destination Unsupported")},
 
+	{PTP_ERROR_IO,		  N_("PTP I/O error")},
+	{PTP_ERROR_BADPARAM,	  N_("PTP Error: bad parameter")},
 	{PTP_ERROR_DATA_EXPECTED, N_("PTP Protocol error, data expected")},
 	{PTP_ERROR_RESP_EXPECTED, N_("PTP Protocol error, response expected")},
 	{0, NULL}
@@ -334,8 +336,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 
 	for (i = 0; i < camera->pl->params.handles.n; i++) {
+		GP_DEBUG ("listing handler 0x%4x\n",camera->pl->params.handles.handler[i]);
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
-		&camera->pl->params.handles, i, &objectinfo));
+		camera->pl->params.handles.handler[i], &objectinfo));
 		ptp_getobjectfilename (&objectinfo, filename);
 		CR (gp_list_append (list, filename, NULL));
 	}
@@ -363,20 +366,22 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
-		&camera->pl->params.handles, image_id, &ptp_objectinfo));
+		camera->pl->params.handles.handler[image_id],&ptp_objectinfo));
 		fdata=malloc(ptp_objectinfo.ObjectCompressedSize);
 		CPR (camera, ptp_getobject(&camera->pl->params,
-		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
+		camera->pl->params.handles.handler[image_id],
+		ptp_objectinfo.ObjectCompressedSize, fdata));
 		CHECK (gp_file_set_data_and_size (file, fdata,
 		ptp_objectinfo.ObjectCompressedSize));
 		break;
 
 	case GP_FILE_TYPE_PREVIEW:
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
-		&camera->pl->params.handles, image_id, &ptp_objectinfo));
+		camera->pl->params.handles.handler[image_id],&ptp_objectinfo));
 		fdata=malloc(ptp_objectinfo.ThumbCompressedSize);
 		CPR (camera, ptp_getthumb(&camera->pl->params,
-		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
+		camera->pl->params.handles.handler[image_id],
+		ptp_objectinfo.ThumbCompressedSize, fdata));
 		CHECK (gp_file_set_data_and_size (file, fdata,
 		ptp_objectinfo.ThumbCompressedSize));
 		break;
@@ -415,7 +420,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	CR (n = gp_filesystem_number (fs, folder, filename));
 	CPR (camera, ptp_getobjectinfo(&camera->pl->params,
-		     &camera->pl->params.handles, n, &oi));
+		     camera->pl->params.handles.handler[n], &oi));
 	GP_DEBUG ("ObjectInfo for '%s':");
 	GP_DEBUG ("  StorageID: %d", oi.StorageID);
 	GP_DEBUG ("  ObjectFormat: %d", oi.ObjectFormat);
@@ -522,6 +527,7 @@ camera_init (Camera *camera)
 	/* Get file handles array for filesystem */
 	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &camera->pl->params.handles));
 
+	GP_DEBUG ("ptp_getobjecthandles done");
 
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,

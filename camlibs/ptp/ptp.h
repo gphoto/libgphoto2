@@ -128,7 +128,7 @@ struct _PTPDeviceInfo {
 typedef struct _PTPObjectHandles PTPObjectHandles;
 struct _PTPObjectHandles {
 	int n;
-	int handler[(PTP_REQ_DATALEN-sizeof(int))/sizeof(int)];
+	unsigned int handler[(PTP_REQ_DATALEN-sizeof(int))/sizeof(int)];
 };
 
 
@@ -152,7 +152,7 @@ struct _PTPObjectInfo {
 	__u32 AssociationDesc __attribute__ ((packed));
 	__u32 SequenceNumber __attribute__ ((packed));
 	__u8  filenamelen __attribute__ ((packed));	// makes reading easyier
-	char data[PTP_REQ_DATALEN-11*sizeof(int)-2*sizeof(short)-sizeof(char)] __attribute__ ((packed));
+	char data[PTP_REQ_DATALEN-54] __attribute__ ((packed));
 };
 
 // Glue stuff
@@ -190,14 +190,12 @@ short ptp_opensession  (PTPParams *params, int session);
 short ptp_closesession (PTPParams *params);
 
 short ptp_getobjecthandles(PTPParams *params, PTPObjectHandles* objecthandles);
-short ptp_getobjectinfo	(PTPParams *params, PTPObjectHandles* objecthandles,
-			int n, PTPObjectInfo* objectinfoarray);
-short ptp_getobject	(PTPParams *params, PTPObjectHandles* objecthandles,
-			PTPObjectInfo* objectinfo, int n,
-			char* object);
-short ptp_getthumb	(PTPParams *params, PTPObjectHandles* objecthandles,
-			PTPObjectInfo* objectinfo, int n,
-			char* object);
+short ptp_getobjectinfo	(PTPParams *params, unsigned int handler,
+			PTPObjectInfo* objectinfo);
+short ptp_getobject	(PTPParams *params, unsigned int handler,
+			unsigned int size, char* object);
+short ptp_getthumb	(PTPParams *params, unsigned int handler,
+			unsigned int size, char* object);
 void ptp_getobjectfilename	(PTPObjectInfo* objectinfo, char* filename);
 void ptp_getobjectcapturedate	(PTPObjectInfo* objectinfo, char* date);
 
