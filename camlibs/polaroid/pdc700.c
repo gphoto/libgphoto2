@@ -18,13 +18,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/*
- * 2001/08/31 Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- * I cannot test this stuff - I simply don't have this camera. If you have
- * one, please contact me so that we can get this stuff up and running.
- */
-
 #include <config.h>
 
 #include <string.h>
