@@ -1,8 +1,16 @@
 #include <gphoto2-core.h>
 #include <gphoto2-camera.h>
+#include <gphoto2-debug.h>
+
 #include <stdio.h>
 
 #define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); exit (1);}}
+
+static void
+my_debug_func (const char *id, const char *msg, void *data)
+{
+	printf ("DEBUG: %s\n", msg);
+}
 
 int
 main (int argc, char *argv [])
@@ -14,6 +22,10 @@ main (int argc, char *argv [])
 	 * You don't have to initialize libgphoto2 anymore. We do that
 	 * internally.
 	 */
+
+	/* Just to show off a bit... */
+	gp_debug_set_level (GP_DEBUG_LOW);
+	gp_debug_set_func (my_debug_func, NULL);
 
 	/*
 	 * You'll probably want to access your camera. You will first have
