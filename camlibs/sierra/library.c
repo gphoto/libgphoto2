@@ -712,22 +712,30 @@ int
 sierra_ping (Camera *camera, GPContext *context) 
 {
 	char buf[4096], packet[4096];
+	int r = 0;
 
 	GP_DEBUG ("Pinging camera...");
 
 	packet[0] = NUL;
 
-	CHECK (sierra_write_packet (camera, packet));
-	CHECK (sierra_read_packet_wait (camera, buf, context));
+	while (1) {
+		CHECK (sierra_write_packet (camera, packet));
+		CHECK (sierra_read_packet_wait (camera, buf, context));
 
-	switch (buf[0]) {
-	case NAK:
-		return (GP_OK);
-	default:
-		gp_context_error (context, _("Got unexpected result "
-			"0x%x. Please contact "
-			"<gphoto-devel@gphoto.org>."), buf[0]);
-		return GP_ERROR;
+		switch (buf[0]) {
+		case NAK:
+			return (GP_OK);
+		default:
+			if (++r > 3) {
+				gp_context_error (context,
+					_("Got unexpected result "
+					  "0x%x. Please contact "
+					  "<gphoto-devel@gphoto.org>."),
+					buf[0]);
+				return GP_ERROR;
+			}
+			break;
+		}
 	}
 }
 

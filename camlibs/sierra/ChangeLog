@@ -1,3 +1,7 @@
+2002-03-29  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (sierra_ping): Retry up to 3 times.
+
 2002-03-28  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: Formatting.
