@@ -84,6 +84,8 @@
  **/
 #define GP_ERROR_PATH_NOT_ABSOLUTE   -111
 
+#define GP_ERROR_CANCEL              -112
+
 
 const char *gp_result_as_string      (int result);
 

@@ -1,3 +1,9 @@
+2001-12-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-file.[c,h]: Implement progress reporting here.
+	  That makes file upload and file download cancellable.
+	* frontends/command-line/main.c: Use file-specific progress reporting.
+
 2001-12-27 Dan Fandrich <dan@coneharvesters.com>
 
 	* camlibs/canon/util.h

@@ -732,6 +732,24 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
         return (result);
 }
 
+static int
+download_progress_func (CameraFile *file, float percentage, void *data)
+{
+	const char *name;
+
+	if (glob_quiet)
+		return (GP_OK);
+
+	CHECK_RESULT (gp_file_get_name (file, &name));
+	if (strlen (name))
+		printf ("Downloading '%s': %02.01f\r", name, 
+			percentage * 100.);
+	else
+		printf ("Downloading: %02.01f\r", percentage * 100.);
+	fflush (stdout);
+
+	return (GP_OK);
+}
 
 int
 save_picture_to_file (const char *folder, const char *filename,
@@ -742,8 +760,11 @@ save_picture_to_file (const char *folder, const char *filename,
         CameraFile *file;
 
         CHECK_RESULT (gp_file_new (&file));
+	CHECK_RESULT (gp_file_set_progress_func (file,
+					download_progress_func, NULL));
         CHECK_RESULT (gp_camera_file_get (glob_camera, folder, filename, type,
                                           file));
+	CHECK_RESULT (gp_file_set_progress_func (file, NULL, NULL));
 
         if (glob_stdout) {
                 const char *data;
