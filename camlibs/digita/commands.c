@@ -20,7 +20,7 @@
 
 #include <gphoto2-port.h>
 
-void build_command(struct digita_command *cmd, int length, short command)
+static void build_command(struct digita_command *cmd, int length, short command)
 {
         /* Length is the sizeof the digita_command minus the length */
         /*  parameter, plus whatever other data we send */
@@ -38,7 +38,7 @@ struct storage_status {
         int rawcount;
 };
 
-int digita_get_storage_status(struct digita_device *dev, int *taken,
+int digita_get_storage_status(CameraPrivateLibrary *dev, int *taken,
         int *available, int *rawcount)
 {
         struct digita_command cmd;
@@ -69,7 +69,7 @@ int digita_get_storage_status(struct digita_device *dev, int *taken,
         return 0;
 }
 
-int digita_get_file_list(struct digita_device *dev)
+int digita_get_file_list(CameraPrivateLibrary *dev)
 {
         struct digita_command cmd;
         struct get_file_list gfl;
@@ -120,7 +120,7 @@ int digita_get_file_list(struct digita_device *dev)
 }
 
 #define GFD_BUFSIZE 19432
-int digita_get_file_data(struct digita_device *dev, int thumbnail,
+int digita_get_file_data(CameraPrivateLibrary *dev, int thumbnail,
         struct filename *filename, struct partial_tag *tag, void *buffer)
 {
         struct get_file_data_send gfds;
@@ -163,7 +163,7 @@ int digita_get_file_data(struct digita_device *dev, int thumbnail,
         return 0;
 }
 
-int digita_delete_picture(struct digita_device *dev, struct filename *filename)
+int digita_delete_picture(CameraPrivateLibrary *dev, struct filename *filename)
 {
         struct erase_file ef;
         struct digita_command response;

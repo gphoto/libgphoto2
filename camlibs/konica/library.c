@@ -359,6 +359,7 @@ init_serial_connection (Camera *camera)
         CHECK (k_set_io_capability (camera->port, bit_rates, bit_flags));
 
         /* Reconnect */
+	gp_log (GP_LOG_DEBUG, "konica", "Reconnecting at speed %d", speed);
         settings.serial.speed = speed;
         CHECK (gp_port_settings_set (camera->port, settings));
         CHECK (k_init (camera->port));

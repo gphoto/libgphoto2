@@ -96,7 +96,7 @@ printf("POLL_NAK\n");
         return 0;
 }
 
-static int digita_serial_send(struct digita_device *dev, void *_buffer, int len)
+static int digita_serial_send(CameraPrivateLibrary *dev, void *_buffer, int len)
 {
         unsigned char *buffer = _buffer;
         unsigned short s;
@@ -148,7 +148,7 @@ static int poll_and_reply(gp_port *dev, int *length, int *eob, int nak)
         return 0;
 }
 
-static int digita_serial_read(struct digita_device *dev, void *_buffer, int len)
+static int digita_serial_read(CameraPrivateLibrary *dev, void *_buffer, int len)
 {
         unsigned char *buffer = _buffer;
         unsigned short s;
@@ -171,7 +171,7 @@ static int digita_serial_read(struct digita_device *dev, void *_buffer, int len)
         return received;
 }
 
-int digita_serial_open(struct digita_device *dev, Camera *camera)
+int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 {
 	GPPortSettings settings;
         struct beacon beacon;

@@ -21,6 +21,13 @@
  *
  * History:
  * $Log$
+ * Revision 1.26  2001/10/20 18:05:55  lutz
+ * 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * camlibs/digita:
+ *         * camlibs/dimera: Prepare for elimination of camera->camlib_data.
+ *         * camlibs/konica: Some additional debugging messages
+ *
  * Revision 1.25  2001/10/20 12:36:11  lutz
  * 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -320,11 +327,11 @@ Dimera_Preview( int *size, Camera *camera );
 
 /* Gphoto2 */
 
-typedef struct {
+struct _CameraPrivateLibrary {
         unsigned exposure; 
         int auto_exposure; 
         int auto_flash; 
-} DimeraStruct;
+};
 
 
 static char *models[] = {
@@ -508,16 +515,15 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 }
 
 static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path) {
-        DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	if (cam->auto_flash) {
-		CHECK (mesa_snap_picture( camera->port, cam->exposure*4 ));
+	if (camera->pl->auto_flash) {
+		CHECK (mesa_snap_picture( camera->port, camera->pl->exposure*4 ));
 	}
 	else {
-		CHECK (mesa_snap_image( camera->port, cam->exposure*4 ));
+		CHECK (mesa_snap_image( camera->port, camera->pl->exposure*4 ));
 	}
 
 	/* User must download special RAM_IMAGE_TEMPLATE file */
@@ -886,7 +892,6 @@ buffer with PGM headers */
 static u_int8_t *
 Dimera_Preview( int *size, Camera *camera )
 {
-	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 	u_int8_t buffer[VIEWFIND_SZ/2], *p;
 	int		i;
 	u_int8_t *image;
@@ -906,7 +911,7 @@ Dimera_Preview( int *size, Camera *camera )
 	/* set image header */
 	memcpy( image, Dimera_viewhdr, sizeof( Dimera_viewhdr ) - 1 );
 
-	if ( mesa_snap_view( camera->port, buffer, TRUE, 0, 0, 0, cam->exposure,
+	if ( mesa_snap_view( camera->port, buffer, TRUE, 0, 0, 0, camera->pl->exposure,
 			VIEW_TYPE) < 0 )
 	{
 		ERROR( "Get Preview, mesa_snap_view failed" );
@@ -931,12 +936,12 @@ Dimera_Preview( int *size, Camera *camera )
 
 	gp_debug_printf(GP_DEBUG_LOW, "dimera",
 		"Average pixel brightness %f, Current exposure value: %d",
-		brightness / 16.0, cam->exposure);
+		brightness / 16.0, camera->pl->exposure);
 
-	if (cam->auto_exposure && (brightness < 96 || brightness > 160)) {
+	if (camera->pl->auto_exposure && (brightness < 96 || brightness > 160)) {
 		/* Picture brightness needs to be corrected for next time */
-		cam->exposure = calc_new_exposure(cam->exposure, brightness);
-		gp_debug_printf(GP_DEBUG_LOW, "dimera", "New exposure value: %d", cam->exposure);
+		camera->pl->exposure = calc_new_exposure(camera->pl->exposure, brightness);
+		gp_debug_printf(GP_DEBUG_LOW, "dimera", "New exposure value: %d", camera->pl->exposure);
 	}
 
 	return image;
@@ -945,10 +950,7 @@ Dimera_Preview( int *size, Camera *camera )
 int camera_init (Camera *camera) {
 
 	GPPortSettings settings;
-        DimeraStruct *cam;
         int ret, selected_speed;
-
-        debuglog("camera_init()");
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
@@ -962,24 +964,25 @@ int camera_init (Camera *camera) {
 	gp_port_settings_get (camera->port, &settings);
 	selected_speed = settings.serial.speed;
 
-        cam = (DimeraStruct*)malloc(sizeof(DimeraStruct));
-        if (cam == NULL)
-                return GP_ERROR_NO_MEMORY;
-        camera->camlib_data = cam;
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
 
         /* Set the default exposure */
-        cam->exposure = DEFAULT_EXPOSURE;
+	camera->pl->exposure = DEFAULT_EXPOSURE;
 
         /* Enable automatic exposure setting for capture preview mode */
-        cam->auto_exposure = 1;
+        camera->pl->auto_exposure = 1;
 
         /* Use flash, if necessary, when capturing picture */
-        cam->auto_flash = 1;
+	camera->pl->auto_flash = 1;
 
         debuglog("Opening port");
         if ( (ret = mesa_port_open(camera->port)) != GP_OK)
         {
                 ERROR("Camera Open Failed");
+		free (camera->pl);
+		camera->pl = NULL;
                 return ret;
         }
 
@@ -987,12 +990,16 @@ int camera_init (Camera *camera) {
         if ( (ret = mesa_reset(camera->port)) != GP_OK )
         {
                 ERROR("Camera Reset Failed");
+		free (camera->pl);
+		camera->pl = NULL;
                 return ret;
         }
 
         if ( (ret = mesa_set_speed(camera->port, selected_speed)) != GP_OK )
         {
                 ERROR("Camera Speed Setting Failed");
+		free (camera->pl);
+		camera->pl = NULL;
                 return ret;
         }
 
@@ -1003,9 +1010,13 @@ int camera_init (Camera *camera) {
         case GP_ERROR_IO:
         case GP_ERROR_TIMEOUT:
                 ERROR("No or Unknown Response");
+		free (camera->pl);
+		camera->pl = NULL;
                 return GP_ERROR_TIMEOUT;
         case GP_ERROR_MODEL_NOT_FOUND:
                 ERROR("Probably a modem");
+		free (camera->pl);
+		camera->pl = NULL;
                 return GP_ERROR_MODEL_NOT_FOUND;
         case GP_OK:
                 break;

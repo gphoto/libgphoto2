@@ -110,8 +110,8 @@ struct erase_file {
 	struct filename fn;
 };
 
-struct digita_device {
-	gp_port *gpdev;
+struct _CameraPrivateLibrary {
+	GPPort *gpdev;
 
 	int num_pictures;
 	struct file_item *file_list;
@@ -122,22 +122,22 @@ struct digita_device {
 	int deviceframesize;
 };
 
-extern int (*digita_send)(struct digita_device *dev, void *buffer, int buflen);
-extern int (*digita_read)(struct digita_device *dev, void *buffer, int buflen);
+extern int (*digita_send)(CameraPrivateLibrary *dev, void *buffer, int buflen);
+extern int (*digita_read)(CameraPrivateLibrary *dev, void *buffer, int buflen);
 
 /* commands.c */
-int digita_get_storage_status(struct digita_device *dev, int *taken,
+int digita_get_storage_status(CameraPrivateLibrary *dev, int *taken,
 	int *available, int *rawcount);
-int digita_get_file_list(struct digita_device *dev);
-int digita_get_file_data(struct digita_device *dev, int thumbnail,
+int digita_get_file_list(CameraPrivateLibrary *dev);
+int digita_get_file_data(CameraPrivateLibrary *dev, int thumbnail,
 	struct filename *filename, struct partial_tag *tag, void *buffer);
-int digita_delete_picture(struct digita_device *dev, struct filename *filename);
+int digita_delete_picture(CameraPrivateLibrary *dev, struct filename *filename);
 
 /* serial.c */
-int digita_serial_open(struct digita_device *dev, Camera *camera);
+int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera);
 
 /* usb.c */
-int digita_usb_open(struct digita_device *dev, Camera *camera);
+int digita_usb_open(CameraPrivateLibrary *dev, Camera *camera);
 
 #endif
 

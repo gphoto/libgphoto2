@@ -15,17 +15,17 @@
 
 #include <gphoto2-port.h>
 
-static int digita_usb_read(struct digita_device *dev, void *buffer, int len)
+static int digita_usb_read(CameraPrivateLibrary *dev, void *buffer, int len)
 {
 	return gp_port_read(dev->gpdev, buffer, len);
 }
 
-static int digita_usb_send(struct digita_device *dev, void *buffer, int len)
+static int digita_usb_send(CameraPrivateLibrary *dev, void *buffer, int len)
 {
 	return gp_port_write(dev->gpdev, buffer, len);
 }
 
-int digita_usb_open(struct digita_device *dev, Camera *camera)
+int digita_usb_open(CameraPrivateLibrary *dev, Camera *camera)
 {
 	GPPortSettings settings;
 

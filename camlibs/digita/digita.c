@@ -36,8 +36,13 @@
 
 #include <gphoto2-port.h>
 
-int (*digita_send)(struct digita_device *dev, void *buffer, int buflen) = NULL;
-int (*digita_read)(struct digita_device *dev, void *buffer, int buflen) = NULL;
+#warning This library uses global variables and
+#warning therefore breaks pretty much any GUI
+#warning like Konqueror or Nautilus. Please fix!
+#warning Tip: Put digita_send and digita_read
+#warning into CameraPrivateLibrary (camera->pl).
+int (*digita_send)(CameraPrivateLibrary *dev, void *buffer, int buflen) = NULL;
+int (*digita_read)(CameraPrivateLibrary *dev, void *buffer, int buflen) = NULL;
 
 int camera_id(CameraText *id)
 {
@@ -84,6 +89,11 @@ int camera_abilities(CameraAbilitiesList *list)
 
 static int camera_exit (Camera *camera)
 {
+	if (camera->pl) {
+		free (camera->pl);
+		camera->pl = NULL;
+	}
+
         return GP_OK;
 }
 
@@ -91,34 +101,30 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 			     CameraList *list, void *data)
 {
 	Camera *camera = data;
-        struct digita_device *dev = camera->camlib_data;
         int i, i1;
 
-        if (!dev)
-                return GP_ERROR;
-
-        if (digita_get_file_list(dev) < 0)
+        if (digita_get_file_list(camera->pl) < 0)
                 return GP_ERROR;
 
         if (folder[0] == '/')
                 folder++;
 
         /* Walk through all of the pictures building a list of folders */
-        for (i = 0; i < dev->num_pictures; i++) {
+        for (i = 0; i < camera->pl->num_pictures; i++) {
                 int found;
                 char *path;
 
                 /* Check to make sure the path matches the folder we're */
                 /*  looking through */
-                if (strlen(folder) && strncmp(dev->file_list[i].fn.path,
+                if (strlen(folder) && strncmp(camera->pl->file_list[i].fn.path,
                     folder, strlen(folder)))
                         continue;
 
                 /* If it's not the root, then we skip the / as well */
                 if (strlen(folder))
-                        path = dev->file_list[i].fn.path + strlen(folder) + 1;
+                        path = camera->pl->file_list[i].fn.path + strlen(folder) + 1;
                 else
-                        path = dev->file_list[i].fn.path;
+                        path = camera->pl->file_list[i].fn.path;
 
                 if (!strlen(path))
                         continue;
@@ -148,18 +154,14 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data)
 {
 	Camera *camera = data;
-        struct digita_device *dev = camera->camlib_data;
         int i;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "digita", "camera_file_list %s\n", 
 			 folder);
 
-        if (!dev)
-                return GP_ERROR;
-
         /* We should probably check to see if we have a list already and */
         /*  get the changes since */
-        if (digita_get_file_list(dev) < 0)
+        if (digita_get_file_list(camera->pl) < 0)
                 return GP_ERROR;
 
         if (folder[0] == '/')
@@ -169,11 +171,11 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
                         folder++;
 
         /* Walk through all of the pictures building a list of folders */
-        for (i = 0; i < dev->num_pictures; i++) {
-                if (strcmp(dev->file_list[i].fn.path, folder))
+        for (i = 0; i < camera->pl->num_pictures; i++) {
+                if (strcmp(camera->pl->file_list[i].fn.path, folder))
                         continue;
 
-                gp_list_append (list, dev->file_list[i].fn.dosname, NULL);
+                gp_list_append (list, camera->pl->file_list[i].fn.dosname, NULL);
         }
 
         return GP_OK;
@@ -183,7 +185,6 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 static char *digita_file_get (Camera *camera, const char *folder, 
 			      const char *filename, int thumbnail, int *size)
 {
-        struct digita_device *dev = camera->camlib_data;
         struct filename fn;
         struct partial_tag tag;
         unsigned char *data;
@@ -195,7 +196,7 @@ printf("digita: getting %s%s\n", folder, filename);
 
         /* Setup the filename */
         /* FIXME: This is kinda lame, but it's a quick hack */
-        fn.driveno = dev->file_list[0].fn.driveno;
+        fn.driveno = camera->pl->file_list[0].fn.driveno;
         strcpy(fn.path, folder);
         strcpy(fn.dosname, filename);
 
@@ -214,7 +215,7 @@ printf("digita: getting %s%s\n", folder, filename);
 
         gp_camera_progress(camera, 0.00);
 
-        if (digita_get_file_data(dev, thumbnail, &fn, &tag, data) < 0) {
+        if (digita_get_file_data(camera->pl, thumbnail, &fn, &tag, data) < 0) {
                 printf("digita_get_picture: digita_get_file_data failed\n");
                 return NULL;
         }
@@ -240,7 +241,7 @@ printf("digita: getting %s%s\n", folder, filename);
                 else
                         tag.length = htonl(len - pos);
 
-                if (digita_get_file_data(dev, thumbnail, &fn, &tag, data + pos) < 0) {
+                if (digita_get_file_data(camera->pl, thumbnail, &fn, &tag, data + pos) < 0) {
                         printf("digita_get_picture: digita_get_file_data failed\n");
                         return NULL;
                 }
@@ -260,14 +261,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  CameraFile *file, void *user_data)
 {
 	Camera *camera = user_data;
-        struct digita_device *dev = camera->camlib_data;
 	unsigned char *data;
 	unsigned int *ints, width, height;
 	char ppmhead[64]; 
         int buflen;
-
-        if (!dev)
-                return GP_ERROR;
 
         if (folder[0] == '/')
                 folder++;
@@ -317,13 +314,9 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 static int camera_summary(Camera *camera, CameraText *summary)
 {
-        struct digita_device *dev = camera->camlib_data;
         int taken;
 
-        if (!dev)
-                return GP_ERROR;
-
-        if (digita_get_storage_status(dev, &taken, NULL, NULL) < 0)
+        if (digita_get_storage_status(camera->pl, &taken, NULL, NULL) < 0)
                 return 0;
 
         sprintf(summary->text, _("Number of pictures: %d"), taken);
@@ -366,10 +359,10 @@ printf("deleting %d, %s%s\n", index, digita_file_list[index].fn.path, digita_fil
         strcpy(fn.path, digita_file_list[index].fn.path);
         strcpy(fn.dosname, digita_file_list[index].fn.dosname);
 
-        if (digita_delete_picture(dev, &fn) < 0)
+        if (digita_delete_picture(camera->pl, &fn) < 0)
                 return 0;
 
-        if (digita_get_file_list(dev) < 0)
+        if (digita_get_file_list(camera->pl) < 0)
                 return 0;
 
         return 1;
@@ -378,7 +371,6 @@ printf("deleting %d, %s%s\n", index, digita_file_list[index].fn.path, digita_fil
 
 int camera_init(Camera *camera)
 {
-        struct digita_device *dev;
         int ret = 0;
 
         if (!camera)
@@ -397,33 +389,31 @@ int camera_init(Camera *camera)
 
         gp_debug_printf (GP_DEBUG_LOW, "digita", "Initializing the camera\n");
 
-        dev = malloc(sizeof(*dev));
-        if (!dev) {
-                fprintf(stderr, "Couldn't allocate digita device\n");
-                return GP_ERROR;
-        }
-        memset((void *)dev, 0, sizeof(*dev));
-	dev->gpdev = camera->port;
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+        memset(camera->pl, 0, sizeof(CameraPrivateLibrary));
+	camera->pl->gpdev = camera->port;
 
         switch (camera->port->type) {
         case GP_PORT_USB:
-                ret = digita_usb_open (dev, camera);
+                ret = digita_usb_open (camera->pl, camera);
                 break;
         case GP_PORT_SERIAL:
-                ret = digita_serial_open (dev, camera);
+                ret = digita_serial_open (camera->pl, camera);
                 break;
         default:
-                fprintf(stderr, "Unknown port type %d\n", camera->port->type);
-                return GP_ERROR;
+		free (camera->pl);
+		camera->pl = NULL;
+                return GP_ERROR_UNKNOWN_PORT;
         }
 
         if (ret < 0) {
                 fprintf(stderr, "Couldn't open digita device\n");
-		free (dev);
-                return GP_ERROR;
+		free (camera->pl);
+		camera->pl = NULL;
+                return (ret);
         }
-
-        camera->camlib_data = dev;
 
         return GP_OK;
 }

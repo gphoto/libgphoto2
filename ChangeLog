@@ -1,5 +1,11 @@
 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/digita:
+	* camlibs/dimera: Prepare for elimination of camera->camlib_data.
+	* camlibs/konica: Some additional debugging messages
+
+2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-camera.[c,h] (gp_camera_get_port_speed): New
 
 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
