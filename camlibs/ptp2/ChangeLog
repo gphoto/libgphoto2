@@ -2,6 +2,7 @@
 	
 	* Added Canon PowerShot A310 ids as reported.
 	* Added Ricoh Caplio GX ids as reported.
+	* Added Nikon D70 ids as reported.
 
 2004-07-16 Mariusz Woloszyn
 	* ptp.h: Added NIKON extension code by Corey Manders 
