@@ -127,7 +127,7 @@ translate_gp_result (int result)
 	case GP_ERROR:
 		return (PTP_RC_GeneralError);
 	default:
-		return (PTP_RC_OK);
+		return (PTP_RC_GeneralError);
 	}
 }
 
@@ -160,8 +160,15 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data)
 	Camera *camera = data;
 	int result;
 
+	/*
+	 * gp_port_read returns (in case of success) the number of bytes
+	 * read. libptp doesn't need that.
+	 */
 	result = gp_port_read (camera->port, bytes, size);
-	return (translate_gp_result (result));
+	if (result >= 0)
+		return (PTP_RC_OK);
+	else
+		return (translate_gp_result (result));
 }
 
 static short
