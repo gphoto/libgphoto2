@@ -1,3 +1,9 @@
+2004-05-30  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* canon.[ch]: Added PowerShot S410 / IXUS 430 by
+	applying patch 963229
+	http://www.gphoto.org/patches/?id=963229
+
 2004-05-09  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* canon.[ch]: Added IXUS 500 as reported.
