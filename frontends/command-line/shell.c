@@ -86,6 +86,12 @@ static int shell_show_info     (const char *);
 static int shell_show_exif     (const char *);
 #endif
 
+#define MAX_FOLDER_LEN 1024
+#define MAX_FILE_LEN 1024
+
+static int shell_construct_path (const char *folder_orig, const char *rel_path,
+				 char *dest_folder, char *dest_filename);
+
 typedef int (* ShellFunction) (const char *arg);
 
 typedef struct _ShellFunctionTable ShellFunctionTable;
@@ -236,64 +242,102 @@ shell_command_generator (const char *text, int state)
 static char *
 shell_path_generator (const char *text, int state)
 {
-	static int x, len;
-	const char *slash, *name, *basename;
+	static int x;
+	const char *slash, *name;
 	CameraList list;
-	int count, r;
-	char folder[1024];
+	int file_count, folder_count, r, len;
+	char folder[MAX_FOLDER_LEN], basename[MAX_FILE_LEN], *path;
+
+#if 0
+	printf ("shell_path_generator ('%s', %i)\n", text, state);
+#endif
+
+	r = shell_construct_path (glob_folder, text, folder, basename);
+	if (r < 0)
+		return (NULL);
+	len = strlen (basename);
+
+#if 0
+	printf ("Searching for '%s' in '%s'...\n", basename, folder);
+#endif
 
 	/* If this is a new path to complete, reinitialize */
-	if (!state) {
+	if (!state)
 		x = 0;
-		len = strlen (text);
-	}
-
-	slash = strrchr (text, '/');
-	if (slash) {
-		strncpy (folder, text, MIN (sizeof (folder), slash - text));
-		basename = slash + 1;
-	} else {
-		strncpy (folder, glob_folder, sizeof (folder));
-		basename = text;
-	}
 
 	/* First search for matching file */
 	r = gp_camera_folder_list_files (glob_camera, folder,
 					 &list, glob_context);
 	if (r < 0)
 		return (NULL);
-	count = gp_list_count (&list);
-	if (count < 0)
+	file_count = gp_list_count (&list);
+	if (file_count < 0)
 		return (NULL);
-	if (x < count) {
-		for (; x < count; x++) {
+	if (x < file_count) {
+		for (; x < file_count; x++) {
 			r = gp_list_get_name (&list, x, &name);
 			if (r < 0)
 				return (NULL);
 			if (!strncmp (name, basename, len)) {
-				x++;
-				return (strdup (name));
-			}
-		}
-	} else {
-		r = gp_camera_folder_list_folders (glob_camera, folder,
-						   &list, glob_context);
-		if (r < 0)
-			return (NULL);
-		count = gp_list_count (&list);
-		if (count < 0)
-			return (NULL);
-		if (x < count) {
-			for (; x < count; x++) {
-				r = gp_list_get_name (&list, x, &name);
-				if (r < 0)
-					return (NULL);
-				if (!strncmp (name, basename, len)) {
-					x++;
-					return (strdup (name));
+				x++; 
+				slash = strrchr (text, '/');
+				if (!slash) {
+					path = malloc (strlen (name) + 2);
+					if (!path)
+						return (NULL);
+					strcpy (path, name);
+					strcat (path, " ");
+				} else {
+					path = malloc (slash - text + 1 + strlen (name) + 2);
+					if (!path)
+						return (NULL);
+					memset (path, 0, slash - text + 1 + strlen (name) + 2);
+					strncpy (path, text, slash - text);
+					strcat (path, "/");
+					strcat (path, name);
+					strcat (path, " ");
 				}
+				return (path);
 			}
 		}
+	}
+
+	/* Ok, we listed all matching files. Now, list matching folders. */
+	r = gp_camera_folder_list_folders (glob_camera, folder,
+					   &list, glob_context);
+	if (r < 0)
+		return (NULL);
+	folder_count = gp_list_count (&list);
+	if (folder_count < 0)
+		return (NULL);
+	if (x - file_count < folder_count) {
+		for (; x - file_count < folder_count; x++) {
+			r = gp_list_get_name (&list, x - file_count, &name);
+			if (r < 0)
+				return (NULL);
+			if (!strncmp (name, basename, len)) {
+				x++;
+				slash = strrchr (text, '/');
+				if (!slash) {
+					path = malloc (strlen (name) + 2);
+					if (!path)
+						return (NULL);
+					strcpy (path, name);
+					strcat (path, "/");
+				} else {
+					path = malloc (slash - text + 1 + strlen (name) + 2);
+					if (!path)
+						return (NULL);
+					memset (path, 0, slash - text + 1 + strlen (name) + 2);
+					strncpy (path, text, slash - text);
+					strcat (path, "/");
+					strcat (path, name);
+					strcat (path, "/");
+				}
+				return (path);
+			}
+		}
+		return (NULL);
 	}
 
 	return (NULL);
@@ -337,6 +381,7 @@ shell_prompt (void)
 
 #ifdef HAVE_RL
 	rl_attempted_completion_function = shell_completion_function;
+	rl_completion_append_character = '\0';
 #endif
 
 	while (!shell_done && !glob_cancel) {
@@ -381,15 +426,11 @@ shell_prompt (void)
 	return (GP_OK);
 }
 
-#define MAX_FOLDER_LEN 1024
-#define MAX_FILE_LEN 1024
-
 static int
 shell_construct_path (const char *folder_orig, const char *rel_path,
                       char *dest_folder, char *dest_filename)
 {
         const char *slash;
-        unsigned int len;
 
         if (!folder_orig || !rel_path || !dest_folder)
                 return (GP_ERROR);
@@ -411,14 +452,15 @@ shell_construct_path (const char *folder_orig, const char *rel_path,
 	else {
 		while (rel_path[0] == '/')
 			rel_path++;
+		strncpy (dest_folder, "/", MAX_FOLDER_LEN);
 	}
 
         while (rel_path) {
-		if (!strncmp (rel_path, "./", 2) || !strcmp (rel_path, ".")) {
+		if (!strncmp (rel_path, "./", 2)) {
                         rel_path += MIN (strlen (rel_path), 2);
 			continue;
 		}
-		if (!strncmp (rel_path, "../", 3) || !strcmp (rel_path, "..")) {
+		if (!strncmp (rel_path, "../", 3)) {
                         rel_path += MIN (3, strlen (rel_path));
 
                         /* Go up one folder */
@@ -427,10 +469,9 @@ shell_construct_path (const char *folder_orig, const char *rel_path,
                                 cli_error_print (_("Invalid path."));
                                 return (GP_ERROR);
                         }
-                        len = slash - dest_folder;
-                        memset (dest_folder, 0, MAX_FOLDER_LEN);
-                        strncpy (dest_folder, folder_orig,
-                                 MIN (MAX_FOLDER_LEN, MAX (len, 1)));
+			dest_folder[slash - dest_folder] = '\0';
+			if (!strlen (dest_folder))
+				strcpy (dest_folder, "/");
 			continue;
                 }
 
@@ -459,7 +500,7 @@ shell_construct_path (const char *folder_orig, const char *rel_path,
                         break;
                 }
         }
- 
+
         return (GP_OK);
 }
 
@@ -496,7 +537,6 @@ shell_cd (const char *arg)
 	char folder[MAX_FOLDER_LEN];
 	CameraList list;
 	int arg_count = shell_arg_count (arg);
-	int res;
 
 	if (!arg_count)
 		return (GP_OK);
@@ -511,13 +551,11 @@ shell_cd (const char *arg)
 	/* Get the new folder value */
 	shell_construct_path (glob_folder, arg, folder, NULL);
 
-	res = gp_camera_folder_list_folders (glob_camera, folder, &list, glob_context);
-	if (res == GP_OK) {
-		strcpy (glob_folder, folder);
-		printf (_("Remote directory now '%s'."), glob_folder);
-		printf ("\n");
-	} else
-		cli_error_print ("Folder %s does not exist", folder);
+	CHECK (gp_camera_folder_list_folders (glob_camera, folder, &list,
+					      glob_context));
+	strcpy (glob_folder, folder);
+	printf (_("Remote directory now '%s'."), glob_folder);
+	printf ("\n");
 
 	return (GP_OK);
 }
