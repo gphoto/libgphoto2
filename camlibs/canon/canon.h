@@ -64,6 +64,12 @@ typedef enum {
 	CANON_PS_PRO90_IS
 } canonCamModel;
 
+#define CHECK_PARAM_NULL(param) \
+	if (param == NULL) { \
+		gp_camera_set_error (camera, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
+		return GP_ERROR_BAD_PARAMETERS; \
+	}
+
 struct canonCamModelData
 {
 	char *id_str;
