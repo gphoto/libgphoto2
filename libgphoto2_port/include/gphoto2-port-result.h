@@ -26,35 +26,37 @@
 #define GP_OK                            0
 
 #define GP_ERROR                        -1
-#define GP_ERROR_TIMEOUT                -2
-#define GP_ERROR_IO_SUPPORTED_SERIAL    -3
-#define GP_ERROR_IO_SUPPORTED_USB       -4
-#define GP_ERROR_IO_SUPPORTED_PARALLEL  -5
-#define GP_ERROR_IO_SUPPORTED_NETWORK   -6
-#define GP_ERROR_IO_SUPPORTED_IEEE1394  -7
-#define GP_ERROR_IO_UNKNOWN_PORT        -8
+#define GP_ERROR_BAD_PARAMETERS		-2
+#define GP_ERROR_MEMORY			-3
+#define GP_ERROR_LIBRARY		-4
 
-#define GP_ERROR_IO_MEMORY              -9
-#define GP_ERROR_IO_LIBRARY             -10
+#define GP_ERROR_TIMEOUT                -10
 
-#define GP_ERROR_IO_INIT                -11
-#define GP_ERROR_IO_OPEN                -12
-#define GP_ERROR_IO_TIMEOUT             -13
-#define GP_ERROR_IO_READ                -14
-#define GP_ERROR_IO_WRITE               -15
-#define GP_ERROR_IO_CLOSE               -16
-#define GP_ERROR_IO_UPDATE              -17
-#define GP_ERROR_IO_PIN                 -18
+#define GP_ERROR_IO_SUPPORTED_SERIAL    -20
+#define GP_ERROR_IO_SUPPORTED_USB       -21
+#define GP_ERROR_IO_SUPPORTED_PARALLEL  -22
+#define GP_ERROR_IO_SUPPORTED_NETWORK   -23
+#define GP_ERROR_IO_SUPPORTED_IEEE1394  -24
+#define GP_ERROR_IO_UNKNOWN_PORT        -25
 
-#define GP_ERROR_IO_SERIAL_SPEED        -19
-#define GP_ERROR_IO_SERIAL_BREAK        -20
-#define GP_ERROR_IO_SERIAL_FLUSH        -21
+#define GP_ERROR_IO_INIT                -31
+#define GP_ERROR_IO_OPEN                -32
+#define GP_ERROR_IO_TIMEOUT             -33
+#define GP_ERROR_IO_READ                -34
+#define GP_ERROR_IO_WRITE               -35
+#define GP_ERROR_IO_CLOSE               -36
+#define GP_ERROR_IO_UPDATE              -37
+#define GP_ERROR_IO_PIN                 -38
 
-#define GP_ERROR_IO_USB_CLEAR_HALT      -22
-#define GP_ERROR_IO_USB_FIND            -23
-#define GP_ERROR_IO_USB_CLAIM           -24
+#define GP_ERROR_IO_SERIAL_SPEED        -41
+#define GP_ERROR_IO_SERIAL_BREAK        -42
+#define GP_ERROR_IO_SERIAL_FLUSH        -43
 
-#define GP_ERROR_IO_LOCK                -25
+#define GP_ERROR_IO_USB_CLEAR_HALT      -51
+#define GP_ERROR_IO_USB_FIND            -52
+#define GP_ERROR_IO_USB_CLAIM           -53
+
+#define GP_ERROR_IO_LOCK                -60
 
 const char *gp_port_result_as_string (int result);
 

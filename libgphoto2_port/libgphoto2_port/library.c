@@ -132,7 +132,7 @@ int gp_port_library_load (gp_port *device, gp_port_type type) {
                                 gp_port_debug_printf(GP_DEBUG_LOW,
                                         "bad handle: %s %s ",
                                         device_list[x].library_filename, GP_SYSTEM_DLERROR());
-                                return (GP_ERROR);
+                                return (GP_ERROR_LIBRARY);
                         }
 
                         /* Load the operations */
@@ -142,13 +142,13 @@ int gp_port_library_load (gp_port *device, gp_port_type type) {
                                         "can't load ops: %s %s ",
                                         device_list[x].library_filename, GP_SYSTEM_DLERROR());
                                 GP_SYSTEM_DLCLOSE(device->library_handle);
-                                return (GP_ERROR);
+                                return (GP_ERROR_LIBRARY);
                         }
                         device->ops = ops_func();
                         return (GP_OK);
                 }
         }
-        return (GP_ERROR);
+        return (GP_ERROR_LIBRARY);
 }
 
 int gp_port_library_close (gp_port *device) {

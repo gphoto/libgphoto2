@@ -110,8 +110,11 @@ int gp_port_usb_open(gp_port *dev)
 {
 	int ret;
 
-	if (!dev)
-		return (GP_OK);
+	if (!dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_open: called on NULL device");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 
         /*
 	 * Open the device using the previous usb_handle returned by
@@ -119,7 +122,7 @@ int gp_port_usb_open(gp_port *dev)
 	 */
 	if (!dev->device) {
 		gp_port_debug_printf (GP_DEBUG_LOW, "dev->device is NULL!");
-		return GP_ERROR_IO_OPEN;	
+		return GP_ERROR_BAD_PARAMETERS;
 	}
         dev->device_handle = usb_open (dev->device);
 	if (!dev->device_handle)
@@ -140,31 +143,44 @@ int gp_port_usb_open(gp_port *dev)
 
 int gp_port_usb_close (gp_port *dev)
 {
-	if (!dev)
-		return GP_OK;
-
-	/* simply ignore if device handle is NULL */
-	/* should we consider this as an error ? */
-	if (dev->device_handle) {
-		if (usb_release_interface (dev->device_handle,
-					   dev->settings.usb.interface) < 0) {
-			fprintf (stderr, "gp_port_usb_close: could not release "
-				 "interface %d: %s\n",
-				 dev->settings.usb.interface, strerror (errno));
-			return (GP_ERROR_IO_CLOSE);
-		}
-
-		if (usb_close (dev->device_handle) < 0)
-			fprintf (stderr, "gp_port_usb_close: %s\n",
-				 strerror (errno));
-		dev->device_handle = NULL;
+	if (!dev || dev->device_handle == NULL) {
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_close: called on ",
+					(!dev)?"NULL device":"non-open device handle");
+		return GP_ERROR_BAD_PARAMETERS;
 	}
+
+	if (usb_release_interface (dev->device_handle,
+				   dev->settings.usb.interface) < 0) {
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_close: could not release "
+					"interface %d: %s\n",
+			 dev->settings.usb.interface, strerror (errno));
+		return (GP_ERROR_IO_CLOSE);
+	}
+
+	if (usb_close (dev->device_handle) < 0)
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_close: %s\n",
+					strerror (errno));
+
+	dev->device_handle = NULL;
 
 	return GP_OK;
 }
 
 int gp_port_usb_reset(gp_port *dev)
 {
+	if (!dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_reset: called on NULL device");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
+	/* XXX should we check for errors on close too or
+	 * should we do what we do now, return the result of a
+	 * fresh open?
+	 */
 	gp_port_usb_close(dev);
 	return gp_port_usb_open(dev);
 }
@@ -172,6 +188,13 @@ int gp_port_usb_reset(gp_port *dev)
 int gp_port_usb_clear_halt_lib(gp_port * dev, int ep)
 {
 	int ret=0;
+
+	if (!dev || dev->device_handle == NULL) {
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_clear_halt_lib: called on ",
+					(!dev)?"NULL device":"non-open device handle");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 
 	switch (ep) {
 		case GP_PORT_USB_ENDPOINT_IN :
@@ -181,8 +204,9 @@ int gp_port_usb_clear_halt_lib(gp_port * dev, int ep)
 			ret=usb_clear_halt(dev->device_handle, dev->settings.usb.outep);
 			break;
 		default:
-			fprintf(stderr,"gp_port_usb_clear_halt: bad EndPoint argument\n");
-			return GP_ERROR_IO_USB_CLEAR_HALT;
+			gp_port_debug_printf (GP_DEBUG_NONE,
+				"gp_port_usb_clear_halt: bad EndPoint argument\n");
+			return GP_ERROR_BAD_PARAMETERS;
 	}
 	return (ret ? GP_ERROR_IO_USB_CLEAR_HALT : GP_OK);
 }
@@ -190,6 +214,13 @@ int gp_port_usb_clear_halt_lib(gp_port * dev, int ep)
 int gp_port_usb_write(gp_port * dev, char *bytes, int size)
 {
         int ret;
+
+	if (!dev || dev->device_handle == NULL) {
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_write: called on ",
+					(!dev)?"NULL device":"non-open device handle");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 
 	ret = usb_bulk_write(dev->device_handle, dev->settings.usb.outep,
                            bytes, size, dev->timeout);
@@ -203,6 +234,22 @@ int gp_port_usb_read(gp_port * dev, char *bytes, int size)
 {
 	int ret;
 
+	fprintf (stderr, "gp_port_usb_read: ENTER\n");
+	if (!dev)
+		fprintf (stderr, "gp_port_usb_read: DEV IS NULL\n");
+		
+	if (!dev->device_handle)
+		fprintf (stderr, "gp_port_usb_read: DEVICE HANDLE IS NULL\n");
+		
+	fflush(stderr);
+
+	if (!dev || dev->device_handle == NULL) {
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_read: called on ",
+					(!dev)?"NULL device":"non-open device handle");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
 	ret = usb_bulk_read(dev->device_handle, dev->settings.usb.inep,
 			     bytes, size, dev->timeout);
         if (ret < 0)
@@ -214,6 +261,13 @@ int gp_port_usb_read(gp_port * dev, char *bytes, int size)
 int gp_port_usb_msg_write_lib(gp_port * dev, int request, int value, int index,
 	char *bytes, int size)
 {
+	if (!dev || dev->device_handle == NULL) {
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_msg_write_lib: called on ",
+					(!dev)?"NULL device":"non-open device handle");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
 	return usb_control_msg(dev->device_handle,
 		USB_TYPE_VENDOR | USB_RECIP_DEVICE,
 		request, value, index, bytes, size, dev->timeout);
@@ -222,6 +276,13 @@ int gp_port_usb_msg_write_lib(gp_port * dev, int request, int value, int index,
 int gp_port_usb_msg_read_lib(gp_port * dev, int request, int value, int index,
 	char *bytes, int size)
 {
+	if (!dev || dev->device_handle == NULL) {
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_msg_read_lib: called on ",
+					(!dev)?"NULL device":"non-open device handle");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
 	return usb_control_msg(dev->device_handle,
 		USB_TYPE_VENDOR | USB_RECIP_DEVICE | 0x80,
 		request, value, index, bytes, size, dev->timeout);
@@ -241,14 +302,11 @@ int gp_port_usb_update(gp_port * dev)
 {
 	int ret;
 
-	if (!dev) {
-		fprintf(stderr, "gp_port_usb_update: called on NULL device\n");
-		return GP_ERROR_IO_UPDATE;
-	}
-
-	if (dev->device_handle == NULL) {
-		fprintf(stderr, "gp_port_usb_update: called on non-open device\n");
-		return GP_ERROR_IO_UPDATE;
+	if (!dev || dev->device_handle == NULL) {
+		gp_port_debug_printf (GP_DEBUG_NONE,
+					"gp_port_usb_update: called on ",
+					(!dev)?"NULL device":"non-open device handle");
+		return GP_ERROR_BAD_PARAMETERS;
 	}
 
 	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_update() called.");
@@ -316,13 +374,16 @@ int gp_port_usb_find_device_lib(gp_port * d, int idvendor, int idproduct)
 	 * Better to check here.
 	 */
 	if ((idvendor == 0) || (idproduct == 0)) {
-		return GP_ERROR_IO_USB_FIND;
+		return GP_ERROR_BAD_PARAMETERS;
 	}
 
 	for (bus = usb_busses; bus; bus = bus->next) {
 		for (dev = bus->devices; dev; dev = dev->next) {
 			if ((dev->descriptor.idVendor == idvendor) &&
 			    (dev->descriptor.idProduct == idproduct)) {
+				/* XXX shouldn't we check 'if (d)' at the
+				 * beginning of this function? 
+				 */
                                 if (d)
                                     d->device = dev;
 				return GP_OK;

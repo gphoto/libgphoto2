@@ -1,3 +1,10 @@
+2001-10-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Patch from Fredrik <fredrik@krixor.xy.org>:
+
+	* libgphoto2_port/gp_port.c: 
+	* usb/libusb.c: Better error checking
+
 2001-10-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
         Patch from David Faure <david@mandrakesoft.com>

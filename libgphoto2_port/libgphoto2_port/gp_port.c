@@ -74,6 +74,18 @@ int gp_port_count_get(void)
 
 int gp_port_info_get(int device_number, gp_port_info *info)
 {
+	if (! info) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_info_get: "
+					"called on NULL info struct!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	
+	if (device_number > device_count) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_info_get: "
+					"called on non-existant device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	
         gp_port_debug_printf(GP_DEBUG_LOW, "Getting device info...");
 
         memcpy(info, &device_list[device_number], sizeof(device_list[device_number]));
@@ -86,6 +98,7 @@ gp_port_new (gp_port **dev, gp_port_type type)
 {
         gp_port_settings settings;
         char buf[1024];
+	int result;
 
 	if (!initialized)
 		gp_port_init ();
@@ -122,18 +135,15 @@ gp_port_new (gp_port **dev, gp_port_type type)
             return GP_ERROR_IO_UNKNOWN_PORT;
         }
 
-        *dev = (gp_port *) malloc(sizeof(gp_port));
-        if (!(*dev)) {
-            gp_port_debug_printf(GP_DEBUG_LOW, "Can not allocate device!");
-            return (GP_ERROR_IO_MEMORY);
-        }
-        memset(*dev, 0, sizeof(gp_port));
+        *dev = malloc (sizeof (gp_port));
+        if (!(*dev))
+		return (GP_ERROR_MEMORY);
+        memset (*dev, 0, sizeof (gp_port));
 
-        if (gp_port_library_load(*dev, type)) {
-            /* whoops! that type of device isn't supported */
-            gp_port_debug_printf(GP_DEBUG_LOW, "Device library can't be loaded! (%i)", type);
-            free(*dev);
-            return (GP_ERROR_IO_LIBRARY);
+	result = gp_port_library_load (*dev, type);
+	if (result < 0) {
+		free(*dev);
+		return (result);
         }
 
         (*dev)->type = type;
@@ -188,9 +198,11 @@ gp_port_open (gp_port *dev)
 {
         int retval = 0;
 
-	/* I don't know what to report here... */
-	if (!dev)
-		return (GP_OK);
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_open: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 
 	switch (dev->type) {
 	case GP_PORT_SERIAL:
@@ -217,9 +229,11 @@ gp_port_close (gp_port *dev)
 {
         int retval = 0;
 
-	/* I don't know what to report here... */
-        if (!dev)
-		return (GP_OK);
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_close: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 
 	gp_port_debug_printf (GP_DEBUG_LOW, "Closing port");
 
@@ -233,9 +247,11 @@ gp_port_free (gp_port *dev)
 {
         int retval;
 
-	/* I don't know what to report here... */
-	if (!dev)
-		return (GP_OK);
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_free: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 
 	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Freeing port");
 
@@ -253,6 +269,12 @@ gp_port_free (gp_port *dev)
 int
 gp_port_write (gp_port *dev, char *bytes, int size)
 {
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_write: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
 	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Writing %i byte(s) to port",
 			      size);
 	gp_port_debug_print_data (GP_DEBUG_HIGH, bytes, size);
@@ -264,6 +286,12 @@ int
 gp_port_read (gp_port *dev, char *bytes, int size)
 {
         int retval;
+
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_read: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 
 	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Reading from port...");
 
@@ -280,6 +308,12 @@ gp_port_read (gp_port *dev, char *bytes, int size)
 int
 gp_port_timeout_set (gp_port *dev, int millisec_timeout)
 {
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_timeout_set: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
 	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Setting timeout to %ims",
 			      millisec_timeout);
 
@@ -291,6 +325,12 @@ gp_port_timeout_set (gp_port *dev, int millisec_timeout)
 int
 gp_port_timeout_get (gp_port *dev, int *millisec_timeout)
 {
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_timeout_get: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
 	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Getting timeout: %ims",
 			      dev->timeout);
 
@@ -303,6 +343,12 @@ int
 gp_port_settings_set (gp_port *dev, gp_port_settings settings)
 {
         int retval;
+
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_settings_set: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 
         /*
 	 * We copy the settings to settings_pending and call update on the 
@@ -322,6 +368,12 @@ gp_port_settings_set (gp_port *dev, gp_port_settings settings)
 int
 gp_port_settings_get (gp_port *dev, gp_port_settings * settings)
 {
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_settings_get: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
         memcpy (settings, &(dev->settings), sizeof(gp_port_settings));
 
         return GP_OK;
@@ -333,6 +385,12 @@ gp_port_settings_get (gp_port *dev, gp_port_settings * settings)
 int gp_port_pin_get(gp_port *dev, int pin, int *level)
 {
         int retval;
+
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_pin_get: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 
         if (!dev->ops->get_pin) {
                 gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_get_pin: get_pin NULL");
@@ -349,8 +407,14 @@ int gp_port_pin_set(gp_port *dev, int pin, int level)
 {
         int retval;
 
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_pin_set: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
         if (!dev->ops->get_pin) {
-                gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_set_pin: set_pin NULL");
+                gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_pin_set: set_pin NULL");
                 return (GP_ERROR);
         }
 
@@ -364,8 +428,14 @@ int gp_port_send_break (gp_port *dev, int duration)
 {
         int retval;
 
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_send_break: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
         if (!dev->ops->send_break) {
-                gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_break: gp_port_break NULL");
+                gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_send_break: NULL break operation!");
                 return (GP_ERROR);
         }
 
@@ -379,8 +449,14 @@ int gp_port_flush (gp_port *dev, int direction)
 {
         int retval;
 
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_flush: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
         if (!dev->ops->flush) {
-                gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_flush: gp_port_flush NULL");
+                gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_flush: NULL flush operation!");
                 return (GP_ERROR);
         }
 
@@ -398,9 +474,15 @@ int gp_port_usb_find_device (gp_port * dev, int idvendor, int idproduct)
 {
         int retval;
 
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_usb_find_device: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
         if (!dev->ops->find_device) {
                 gp_port_debug_printf(GP_DEBUG_LOW,
-                        "gp_port_usb_find_device: find_device NULL");
+                        "gp_port_usb_find_device: NULL find_device operation!");
                 return (GP_ERROR);
         }
 
@@ -410,13 +492,20 @@ int gp_port_usb_find_device (gp_port * dev, int idvendor, int idproduct)
                 idvendor, idproduct, retval < 0? "error":"ok");
         return (retval);
 }
+
 int gp_port_usb_clear_halt (gp_port * dev, int ep)
 {
         int retval;
 
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_usb_clear_halt: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
         if (!dev->ops->clear_halt) {
                 gp_port_debug_printf(GP_DEBUG_LOW,
-                        "gp_port_usb_clear_halt: clear_halt NULL");
+                        "gp_port_usb_clear_halt: NULL clear halt operation!");
                 return (GP_ERROR);
         }
 
@@ -431,9 +520,15 @@ int gp_port_usb_msg_write (gp_port * dev, int request, int value, int index,
 {
         int retval;
 
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_usb_msg_write: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
         if (!dev->ops->msg_write) {
                 gp_port_debug_printf(GP_DEBUG_LOW,
-                        "gp_port_usb_msg_write: msg_write NULL");
+                        "gp_port_usb_msg_write: NULL msg_write operation!");
                 return (GP_ERROR);
         }
 
@@ -448,9 +543,15 @@ int gp_port_usb_msg_read (gp_port * dev, int request, int value, int index,
 {
         int retval;
 
+	if (! dev) {
+		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_usb_msg_read: "
+					"called on NULL device!");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
         if (!dev->ops->msg_read) {
                 gp_port_debug_printf(GP_DEBUG_LOW,
-                        "gp_port_usb_msg_read: msg_read NULL");
+                        "gp_port_usb_msg_read: NULL msg_read operation!");
                 return (GP_ERROR);
         }
 
