@@ -59,11 +59,14 @@
 #define PDC700_DEL	0x09
 #define PDC700_CAPTURE  0x0a
 
-#define PDC700_FAIL	0x00
-#define PDC700_DONE	0x01
-#define PDC700_LAST	0x02
-
 #define RETRIES 5
+
+typedef enum _PDCStatus PDCStatus;
+enum _PDCStatus {
+	PDC_STATUS_FAIL = 0x00,
+	PDC_STATUS_DONE = 0x01,
+	PDC_STATUS_LAST = 0x02
+};
 
 typedef enum _PDCConf PDCConf;
 enum _PDCConf {
@@ -198,7 +201,7 @@ pdc700_send (Camera *camera, unsigned char *cmd, unsigned int cmd_len)
 static int
 pdc700_read (Camera *camera, unsigned char *cmd,
 	     unsigned char *b, unsigned int *b_len,
-	     unsigned char *status, unsigned char *sequence_number,
+	     PDCStatus *status, unsigned char *sequence_number,
 	     GPContext *context)
 {
 	unsigned char header[3], checksum;
@@ -229,15 +232,17 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 
 	/* Will other packets follow? Has the transaction been successful? */
 	*status = b[1];
+	if (*status != PDC_STATUS_FAIL) {
 
-	/*
-	 * In case of PDC700_PIC or PDC700_THUMB, a sequence number 
-	 * (number of next packet) will follow.
-	 */
-	if ((cmd[3] == PDC700_THUMB) || (cmd[3] == PDC700_PIC))
-		*sequence_number = b[2];
-	else
-		sequence_number = NULL;
+		/*
+		 * In case of PDC700_PIC or PDC700_THUMB, a sequence number 
+		 * (number of next packet) will follow.
+		 */
+		if ((cmd[3] == PDC700_THUMB) || (cmd[3] == PDC700_PIC))
+			*sequence_number = b[2];
+		else
+			sequence_number = NULL;
+	}
 
 	/* Check the checksum */
 	for (checksum = i = 0; i < *b_len - 1; i++)
@@ -258,21 +263,24 @@ static int
 pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 		 unsigned char *buf, unsigned int *buf_len, GPContext *context)
 {
-	unsigned char status, b[2048], n;
+	unsigned char b[2048], n;
 	unsigned int b_len, r;
 	unsigned int target = *buf_len, id;
 	int result;
+	PDCStatus status;
 
-	status = PDC700_DONE;
+	status = PDC_STATUS_DONE;
 	for (r = 0; r < RETRIES; r++) {
-		if (status == PDC700_FAIL)
+		if (status == PDC_STATUS_FAIL)
 			GP_DEBUG ("Retrying (%i)...", r);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return GP_ERROR_CANCEL;
 		CR (pdc700_send (camera, cmd, cmd_len));
 		CR (pdc700_read (camera, cmd, b, &b_len, &status, &n, context));
-		if (status != PDC700_FAIL)
+		if (status != PDC_STATUS_FAIL)
 			break;
 	}
-	if (status == PDC700_FAIL) {
+	if (status == PDC_STATUS_FAIL) {
 		gp_context_error (context, _("The camera did not accept the "
 				     "command."));
 		return (GP_ERROR);
@@ -292,19 +300,28 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 		r = 0;
 		id = gp_context_progress_start (context, target,
 						_("Downloading..."));
-		while ((status != PDC700_LAST) && (r < RETRIES)) {
+		while ((status != PDC_STATUS_LAST) && (r < RETRIES)) {
 			GP_DEBUG ("Fetching sequence %i...", n);
 			cmd[4] = status;
 			cmd[5] = n;
 			CR (pdc700_send (camera, cmd, 7));
 
-			/*
-			 * Read data. On error (either we or the camera),
-			 * try again.
-			 */
+			/* Read data. */
 			result = pdc700_read (camera, cmd, b, &b_len,
 					      &status, &n, context);
-			if ((result < 0) || (status == PDC700_FAIL)) {
+
+			/* Did libgphoto2(_port) report an error? */
+			if (result < 0) {
+				GP_DEBUG ("Read failed ('%s'). Trying again.",
+					  gp_result_as_string (result));
+				r++;
+				continue;
+			}
+
+			/* Did the camera report an error? */
+			if (status == PDC_STATUS_FAIL) {
+				GP_DEBUG ("Read failed: camera reported "
+					  "failure. Trying again.");
 				r++;
 				continue;
 			}
@@ -326,15 +343,27 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 			/* Copy over the data */
 			memcpy (buf + *buf_len, b, b_len);
 			*buf_len += b_len;
+
+			/*
+			 * Update the progress bar and check for
+			 * cancellation.
+			 */
 			gp_context_progress_update (context, id, *buf_len);
+			if (gp_context_cancel (context) ==
+						GP_CONTEXT_FEEDBACK_CANCEL) {
+				cmd[4] = PDC_STATUS_LAST;
+				cmd[5] = n;
+				CR (pdc700_send (camera, cmd, 7));
+				return (GP_ERROR_CANCEL);
+			}
 		}
 
 		/* Check if anything went wrong */
-		if (status != PDC700_LAST)
+		if (status != PDC_STATUS_LAST)
 			return (GP_ERROR_CORRUPTED_DATA);
 
 		/* Acknowledge last packet */
-		cmd[4] = PDC700_LAST;
+		cmd[4] = PDC_STATUS_LAST;
 		cmd[5] = n;
 		CR (pdc700_send (camera, cmd, 7));
 

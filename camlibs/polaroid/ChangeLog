@@ -1,3 +1,8 @@
+2002-01-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* pdc700.c: When status is PDC_STATUS_FAIL, the camera will only 
+	  send the checksum, nothing else.
+
 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* pdc700.c: Remove references to gp_camera_set_error.
