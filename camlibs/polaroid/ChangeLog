@@ -1,3 +1,7 @@
+2002-01-09  Dan Fandrich <dan@coneharvesters.com>
+
+	* jd350e.c: Added definitions of MIN and MAX
+
 2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* pdc640.c: Includes again :-)
