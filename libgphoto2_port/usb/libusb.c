@@ -384,26 +384,33 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 				port->pl->d = dev;
 
+				gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+					"Looking for USB device "
+					"(vendor 0x%x, product 0x%x)... found.", 
+					idvendor, idproduct);
+
 				/* Use the first config, interface and altsetting we find */
 				gp_port_usb_find_first_altsetting(dev, &config, &interface, &altsetting);
 
 				/* Set the defaults */
 				if (dev->config) {
-
 					port->settings.usb.config = dev->config[config].bConfigurationValue;
 					port->settings.usb.interface = dev->config[config].interface[interface].altsetting[altsetting].bInterfaceNumber;
 					port->settings.usb.altsetting = dev->config[config].interface[interface].altsetting[altsetting].bAlternateSetting;
 
 					port->settings.usb.inep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_IN);
 					port->settings.usb.outep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_OUT);
+					gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+						"Detected defaults: config %d, "
+						"interface %d, altsetting %d, "
+						"inep %02x, outep %02x",
+						port->settings.usb.config,
+						port->settings.usb.interface,
+						port->settings.usb.altsetting,
+						port->settings.usb.inep,
+						port->settings.usb.outep);
 				}
 
-				port->pl->d = dev;
-
-				gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
-					"Looking for USB device "
-					"(vendor 0x%x, product 0x%x)... found.", 
-					idvendor, idproduct);
 				return GP_OK;
 			}
 		}
@@ -494,6 +501,15 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 
 				port->settings.usb.inep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_IN);
 				port->settings.usb.outep = gp_port_usb_find_bulk(dev, config, interface, altsetting, USB_ENDPOINT_OUT);
+				gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+					"Detected defaults: config %d, "
+					"interface %d, altsetting %d, "
+					"inep %02x, outep %02x",
+					port->settings.usb.config,
+					port->settings.usb.interface,
+					port->settings.usb.altsetting,
+					port->settings.usb.inep,
+					port->settings.usb.outep);
 			}
 
 			port->pl->d = dev;
