@@ -1,3 +1,10 @@
+2002-02-07  Lutz Müller <lutz@users.sourceforge.net>
+
+	* frontends/command-line/foreach.[c,h]: Pass CameraList as parameter.
+	  This be where the const filename is allocated. Before, the string
+	  got messed up.
+	* frontends/command-line/main.c: %s/gp_file_free/gp_file_unref
+
 2002-02-06  Fredrik <fredrik@krixor.xy.org>
 
 	* frontends/command-line/foreach.c: Check return values

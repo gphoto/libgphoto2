@@ -86,11 +86,12 @@ gp_cmd_exif (Camera *camera, const char *folder, const char *filename,
 	const char *data;
 	unsigned long size;
 	ExifData *ed;
+	CameraList list;
 
 	/* Did the user specify a number? */
 	if (!strchr (filename, '.'))
 		CR (get_path_for_id (folder, 1, atoi (filename) - 1, &folder,
-				     &filename));
+				     &filename, &list));
 
 	CR (gp_file_new (&file));
 	CRU (gp_camera_file_get (camera, folder, filename, GP_FILE_TYPE_EXIF,

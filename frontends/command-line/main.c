@@ -792,13 +792,13 @@ save_picture_to_file (const char *folder, const char *filename,
                 if (glob_stdout_size)
                         printf ("%li\n", size);
                 fwrite (data, sizeof(char), size, stdout);
-                gp_file_free (file);
+                gp_file_unref (file);
                 return (GP_OK);
         }
 
         res = save_camera_file_to_file (file, type);
 
-        gp_file_free (file);
+        gp_file_unref (file);
 
         return (res);
 }
@@ -1039,17 +1039,17 @@ OPTION_CALLBACK (capture_preview)
 	result = gp_camera_capture_preview (glob_camera, file, glob_context);
 #endif
 	if (result < 0) {
-		gp_file_free (file);
+		gp_file_unref (file);
 		return (result);
 	}
 
 	result = save_camera_file_to_file (file, GP_FILE_TYPE_NORMAL);
 	if (result < 0) {
-		gp_file_free (file);
+		gp_file_unref (file);
 		return (result);
 	}
 
-	gp_file_free (file);
+	gp_file_unref (file);
 
 	return (GP_OK);
 }

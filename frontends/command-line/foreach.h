@@ -21,6 +21,8 @@
 #ifndef __FOREACH_H__
 #define __FOREACH_H__
 
+#include <gphoto2-list.h>
+
 #include "actions.h"
 
 int for_each_subfolder      (const char *folder, folder_action faction,
@@ -32,6 +34,6 @@ int for_each_image_in_range (const char *folder, unsigned char recurse,
 
 int get_path_for_id (const char *base_folder, unsigned char recurse,
 		     unsigned int id, const char **folder,
-		     const char **filename);
+		     const char **filename, CameraList *list);
 
 #endif /* __FOREACH_H__ */

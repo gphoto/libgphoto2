@@ -158,23 +158,22 @@ for_each_image (const char *folder, image_action iaction, int reverse)
 static int
 get_path_for_id_rec (const char *base_folder, unsigned int id,
 		     unsigned int *base_id, const char **folder,
-		     const char **filename)
+		     const char **filename, CameraList *list)
 {
 	char subfolder[1024];
 	int n_folders, n_files, r;
 	unsigned int i;
-	CameraList list;
 	const char *name;
 
 	*folder = base_folder;
-	CR (gp_camera_folder_list_files (glob_camera, base_folder, &list,
+	CR (gp_camera_folder_list_files (glob_camera, base_folder, list,
 					 glob_context));
-	CR (n_files = gp_list_count (&list));
+	CR (n_files = gp_list_count (list));
 	if (id - *base_id < n_files) {
 
 		/* ID is in this folder */
 		GP_DEBUG ("ID %i is in folder '%s'.", id, base_folder);
-		CR (gp_list_get_name (&list, id - *base_id, filename));
+		CR (gp_list_get_name (list, id - *base_id, filename));
 		return (GP_OK);
 	} else {
 
@@ -182,16 +181,16 @@ get_path_for_id_rec (const char *base_folder, unsigned int id,
 		GP_DEBUG ("ID %i is not in folder '%s'.", id, base_folder);
 		*base_id += n_files;
 		CR (gp_camera_folder_list_folders (glob_camera, base_folder,
-						   &list, glob_context));
-		CR (n_folders = gp_list_count (&list));
+						   list, glob_context));
+		CR (n_folders = gp_list_count (list));
 		for (i = 0; i < n_folders; i++) {
-			CR (gp_list_get_name (&list, i, &name));
+			CR (gp_list_get_name (list, i, &name));
 			strncpy (subfolder, base_folder, sizeof (subfolder));
 			if (strlen (base_folder) > 1)
 				strncat (subfolder, "/", sizeof (subfolder));
 			strncat (subfolder, name, sizeof (subfolder));
 			r = get_path_for_id_rec (subfolder, id, base_id,
-						 folder, filename);
+						 folder, filename, list);
 			switch (r) {
 			case GP_ERROR_FRONTEND_BAD_ID:
 				break;
@@ -203,11 +202,17 @@ get_path_for_id_rec (const char *base_folder, unsigned int id,
 	}
 }
 
+/*
+ * Sorry for the last parameter CameraList. Because we return
+ * const filename, the string must be allocated somewhere. As
+ * we will need a list anyways and use the string from there, we just pass
+ * the list around as parameter. Quite ugly, but it works.
+ */
 int
 get_path_for_id (const char *base_folder, unsigned char recurse,
-		 unsigned int id, const char **folder, const char **filename)
+		 unsigned int id, const char **folder, const char **filename,
+		 CameraList *list)
 {
-	CameraList list;
 	int r;
 	unsigned int base_id;
 
@@ -217,13 +222,13 @@ get_path_for_id (const char *base_folder, unsigned char recurse,
 		GP_DEBUG ("No recursion. Taking file %i from folder '%s'.",
 			  id, base_folder);
 		CR (gp_camera_folder_list_files (glob_camera, base_folder,
-						 &list, glob_context));
-		CR (gp_list_get_name (&list, id, filename));
+						 list, glob_context));
+		CR (gp_list_get_name (list, id, filename));
 		return (GP_OK);
 	} else {
 		base_id = 0;
 		r = get_path_for_id_rec (base_folder, id, &base_id, folder,
-					 filename);
+					 filename, list);
 		switch (r) {
 		case GP_ERROR_FRONTEND_BAD_ID:
 			gp_context_error (glob_context, _("Bad image number. "
@@ -245,6 +250,7 @@ for_each_image_in_range (const char *folder, unsigned char recurse,
 {
 	char	index[MAX_IMAGE_NUMBER];
 	int 	i, max = 0;
+	CameraList list;
 	const char *name;
 
 	memset(index, 0, MAX_IMAGE_NUMBER);
@@ -257,7 +263,8 @@ for_each_image_in_range (const char *folder, unsigned char recurse,
 		for (i = max; 0 <= i; i--)
 			if (index[i]) {
 				CR (get_path_for_id (folder, recurse,
-					(unsigned int) i, &folder, &name));
+					(unsigned int) i, &folder, &name,
+					&list));
 				CR (action (folder, (char*)name));
 			}
 	} else 
@@ -265,7 +272,8 @@ for_each_image_in_range (const char *folder, unsigned char recurse,
 			if (index[i]) {
 				GP_DEBUG ("Now processing ID %i...", i);
 				CR (get_path_for_id (folder, recurse,
-					(unsigned int) i, &folder, &name));
+					(unsigned int) i, &folder, &name,
+					&list));
 				CR (action (folder, (char*)name));
 			}
 		
