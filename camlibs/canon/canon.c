@@ -655,6 +655,13 @@ canon_int_serial_ready (Camera *camera)
 		gp_camera_status (camera, _("Error waiting ACK during initialization"));
 		return GP_ERROR;
 	}
+
+	gp_camera_status (camera, _("Connected to camera"));
+	/* Now is a good time to ask the camera for its owner
+	 * name (and Model String as well)  */
+	canon_int_identify_camera (camera);
+	canon_int_get_time (camera);
+
 	return GP_OK;
 }
 
@@ -674,40 +681,28 @@ canon_int_usb_ready (Camera *camera)
 
 	res = canon_int_identify_camera (camera);
 	if (res != GP_OK) {
-		gp_camera_status (camera, "Camera not ready "
-				  "('get owner name' request failed (%d))\n", res);
-		return GP_ERROR;
-	}
-	res = canon_int_get_time (camera);
-	if (res == GP_ERROR) {
-		gp_camera_status (camera, "Camera not ready "
-				  "('get time' request failed (%d))\n", res);
+		gp_camera_set_error (camera, "Camera not ready, "
+				  "identify camera request failed (returned %i)", res);
 		return GP_ERROR;
 	}
 	if (!strcmp ("Canon PowerShot S20", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a PowerShot S20");
 		camera->pl->model = CANON_PS_S20;
-		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot S10", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a PowerShot S10");
 		camera->pl->model = CANON_PS_S10;
-		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot S30", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a PowerShot S30");
 		camera->pl->model = CANON_PS_S30;
-		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot S40", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a PowerShot S40");
 		camera->pl->model = CANON_PS_S40;
-		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot G1", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a PowerShot G1");
 		camera->pl->model = CANON_PS_G1;
-		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot G2", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a PowerShot G2");
 		camera->pl->model = CANON_PS_G2;
-		return GP_OK;
 	} else if ((!strcmp ("Canon DIGITAL IXUS", camera->pl->ident))
 		   || (!strcmp ("Canon IXY DIGITAL", camera->pl->ident))
 		   || (!strcmp ("Canon PowerShot S110", camera->pl->ident))
@@ -716,34 +711,46 @@ canon_int_usb_ready (Camera *camera)
 		gp_camera_status (camera,
 				  "Detected a Digital IXUS series / IXY DIGITAL / PowerShot S100 series");
 		camera->pl->model = CANON_PS_S100;
-		return GP_OK;
 	} else if ((!strcmp ("Canon DIGITAL IXUS 300", camera->pl->ident))
 		   || (!strcmp ("Canon IXY DIGITAL 300", camera->pl->ident))
 		   || (!strcmp ("Canon PowerShot S300", camera->pl->ident))) {
 		gp_camera_status (camera,
 				  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / PowerShot S300");
 		camera->pl->model = CANON_PS_S300;
-		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot A10", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a PowerShot A10");
 		camera->pl->model = CANON_PS_A10;
-		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot A20", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a PowerShot A20");
 		camera->pl->model = CANON_PS_A20;
-		return GP_OK;
 	} else if (!strcmp ("Canon EOS D30", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a EOS D30");
 		camera->pl->model = CANON_EOS_D30;
-		return GP_OK;
 	} else if (!strcmp ("Canon PowerShot Pro90 IS", camera->pl->ident)) {
 		gp_camera_status (camera, "Detected a PowerShot Pro90 IS");
 		camera->pl->model = CANON_PS_PRO90_IS;
-		return GP_OK;
 	} else {
-		gp_debug_printf (GP_DEBUG_NONE, "Unknown camera! (%s)\n", camera->pl->ident);
+		gp_camera_set_error (camera, "Unknown camera! (%s)", camera->pl->ident);
 		return GP_ERROR;
 	}
+
+	res = canon_usb_keylock (camera);
+	if (res != GP_OK) {
+		gp_camera_set_error (camera, "Camera not ready, "
+				     "could not lock camera keys (returned %i)",
+				     res);
+		return res;
+	}
+
+	res = canon_int_get_time (camera);
+	if (res == GP_ERROR) {
+		gp_camera_set_error (camera, "Camera not ready, "
+				  "get time request failed (returned %i)", res);
+		return GP_ERROR;
+	}
+
+	gp_camera_status (camera, _("Connected to camera"));
+
 	return GP_OK;
 }
 
@@ -758,8 +765,6 @@ int
 canon_int_ready (Camera *camera)
 {
 	int res;
-
-	//    int cts;
 
 	GP_DEBUG ("canon_int_ready()");
 
@@ -776,15 +781,8 @@ canon_int_ready (Camera *camera)
 			res = GP_ERROR;
 			break;
 	}
-	if (res != GP_OK) {
-		return (res);
-	}
-	gp_camera_status (camera, _("Connected to camera"));
-	/* Now is a good time to ask the camera for its owner
-	 * name (and Model String as well)  */
-	canon_int_identify_camera (camera);
-	canon_int_get_time (camera);
-	return GP_OK;
+	
+	return (res);
 }
 
 /**
