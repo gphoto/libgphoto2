@@ -278,7 +278,7 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_20D_UNKNOWN_2,	"Unknown EOS 20D function",	0x22, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,	"New EOS get body ID",		0x23, 0x12, 0x201,	0x58},
 	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "New get picture abilities",	0x24, 0x12, 0x201,	0x474},
-	{CANON_USB_FUNCTION_CONTROL_CAMERA_2,	"Remote camera control (new)",	0x25, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_CONTROL_CAMERA_2,	"Remote camera control (new)",	0x25, 0x12, 0x201,	0x40},
 	{CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2, "New download a captured image", 0x26, 0x12, 0x202,	0x40},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_4,	"Unknown EOS 20D function",	0x35, 0x12, 0x201,	0x5c},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_5,	"Unknown EOS 20D function",	0x36, 0x12, 0x201,	0x54},
