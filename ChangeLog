@@ -1,3 +1,8 @@
+2001-10-19 Dan Fandrich <dan@coneharvesters.com>
+
+    * frontends/command-line/main.c: Added automatic port type guessing
+      when the type isn't specified
+
 2001-10-19  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/casio
