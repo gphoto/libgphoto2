@@ -667,7 +667,6 @@ int sierra_set_speed (Camera *camera, int speed, GPContext *context)
 		return GP_ERROR_IO_SERIAL_SPEED;
 	}
 
-	gp_context_status (context, _("Setting speed to %i baud..."), speed);
 	CHECK (sierra_set_int_register (camera, 17, speed, context));
 	CHECK (gp_port_set_settings (camera->port, settings));
 
