@@ -192,10 +192,10 @@ const struct canonCamModelData models[] = {
 	 {"Canon:PowerShot A75",        CANON_PS_A75, 	        0x04A9, 0x30b5, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	 {"Canon:PowerShot A400",	CANON_PS_A400,		0x04A9, 0x30b7,	CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot A310",        CANON_PS_A310,          0x04A9, 0x30b8, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL}, 
-	{"Canon:PowerShot S410 (normal mode)",CANON_PS_S410,  0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot A85 (normal mode)",CANON_PS_A85,      0x04A9, 0x30b9, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot S410 (normal mode)",CANON_PS_S410,    0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS 430 (normal mode)",CANON_PS_S410,  0x04A9, 0x30ba, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot A95 (normal mode)",CANON_PS_A95,  0x04A9, 0x30bb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot A85 (normal mode)",CANON_PS_A85,  0x04A9, 0x30be, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot A95 (normal mode)",CANON_PS_A95,      0x04A9, 0x30bb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
 	{NULL}
 	/* *INDENT-ON* */
