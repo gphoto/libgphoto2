@@ -56,6 +56,7 @@ int load_library (char *camera_name) {
 		glob_c.file_count = dlsym(lh, "camera_file_count");
 		glob_c.file_get = dlsym(lh, "camera_file_get");
 		glob_c.file_get_preview = dlsym(lh, "camera_file_get_preview");
+		glob_c.file_put = dlsym(lh, "camera_file_put");
 		glob_c.file_delete = dlsym(lh, "camera_file_delete");
 		glob_c.file_lock = dlsym(lh, "camera_file_lock");
 		glob_c.file_unlock = dlsym(lh, "camera_file_unlock");

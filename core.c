@@ -247,6 +247,15 @@ int gp_file_get_preview (int file_number, CameraFile *preview) {
 	return (glob_c.file_get_preview(file_number, preview));
 }
 
+int gp_file_put (CameraFile *file) {
+
+	if (glob_c.file_put == NULL)
+		return (GP_ERROR);
+
+	return (glob_c.file_put(file));
+}
+
+
 int gp_file_delete (int file_number) {
 
 	if (glob_c.file_delete == NULL)
