@@ -24,11 +24,11 @@ typedef enum {
 } CameraPortType;
 
 /* Some macros for determining what type of ports the camera supports */
-#define SERIAL_SUPPORTED(_a)	((_a >> 0)&&0x01)
-#define PARALLEL_SUPPORTED(_a)	((_a >> 1)&&0x01)
-#define USB_SUPPORTED(_a)	((_a >> 2)&&0x01)
-#define IEEE1394_SUPPORTED(_a)	((_a >> 3)&&0x01)
-#define NETWORK_SUPPORTED(_a)	((_a >> 4)&&0x01)
+#define SERIAL_SUPPORTED(_a)	((_a >> 0)&0x01)
+#define PARALLEL_SUPPORTED(_a)	((_a >> 1)&0x01)
+#define USB_SUPPORTED(_a)	((_a >> 2)&0x01)
+#define IEEE1394_SUPPORTED(_a)	((_a >> 3)&0x01)
+#define NETWORK_SUPPORTED(_a)	((_a >> 4)&0x01)
 
 typedef enum {
 	GP_CAPTURE_IMAGE	= 1 << 0,
