@@ -1,3 +1,11 @@
+2003-02-15  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* epson-desc.c, library.c, nikon-desc.c olympus-desc.c
+	  sierra-desc.h, sierra.c, sierra.h: Remove use_extended_protocol
+	  field and use a bit in the flags field instead.
+	* sierra.c: cleanup some of the init code
+	* sierra-desc.h: cleanup a comment
+
 2003-02-02  Patrick Mansfield <patmans@users.sourceforge.net>
 
 	* library.c: Add locking support just use the action

@@ -1194,8 +1194,8 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	static int in_function = 0;
 
 	GP_DEBUG ("sierra_get_string_register:  reg %i, file number %i, "
-		  " total %d, ext protocol %x", reg, fnumber, total,
-		  camera->pl->use_extended_protocol);
+		  " total %d, flags 0x%x", reg, fnumber, total,
+		  camera->pl->flags);
 
 	if (in_function != 0) {
 		gp_context_error (context, _("recursive calls are not"
@@ -1216,7 +1216,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	 * and receive 32k size packages, otherwise code 0x04 is used and
 	 * we have 2k size packages.
 	 */
-	p[4] = camera->pl->use_extended_protocol ? 0x06 : 0x04;
+	p[4] = (camera->pl->flags & SIERRA_EXT_PROTO) ? 0x06 : 0x04;
 	p[5] = reg;
 	CHECK (sierra_write_packet (camera, p, context));
 

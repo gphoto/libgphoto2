@@ -1996,11 +1996,9 @@ int
 camera_init (Camera *camera, GPContext *context) 
 {
         int x = 0, ret, value;
-        int vendor=0, product=0;
-	SierraFlags flags=0;
+        int vendor=0;
 	GPPortSettings s;
 	CameraAbilities a;
-	const CameraDescType *cam_desc = NULL;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
@@ -2017,7 +2015,6 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->model = SIERRA_MODEL_DEFAULT;
 	camera->pl->first_packet = 1;
 	camera->pl->flags = 0;
-	camera->pl->use_extended_protocol = 0;
 
 	/* Retrieve Camera information from name */
 	gp_camera_get_abilities (camera, &a);
@@ -2028,8 +2025,9 @@ camera_init (Camera *camera, GPContext *context)
 			     sierra_cameras[x].model)) {
 			camera->pl->model = sierra_cameras[x].sierra_model;
 			vendor = sierra_cameras[x].usb_product;
-                        flags = sierra_cameras[x].flags;
-                        cam_desc = sierra_cameras[x].cam_desc;
+			camera->pl->flags = sierra_cameras[x].flags;
+			camera->pl->cam_desc = sierra_cameras[x].cam_desc;
+			break;
                }
 	}
 
@@ -2043,13 +2041,11 @@ camera_init (Camera *camera, GPContext *context)
 		camera->functions->set_config = camera_set_config_olympus;
 		break;
 	case SIERRA_MODEL_CAM_DESC:
-		if (cam_desc == NULL) {
+		if (camera->pl->cam_desc == NULL) {
 			GP_DEBUG ("*** sierra cam_desc NULL");
                         return (GP_ERROR_MODEL_NOT_FOUND);
 		}
-		camera->pl->cam_desc = cam_desc;
-		camera->pl->use_extended_protocol = 
-			cam_desc->use_extended_protocol;
+		camera->pl->flags |= camera->pl->cam_desc->flags;
 		camera->functions->get_config = camera_get_config_cam_desc;
 		camera->functions->set_config = camera_set_config_cam_desc;
 		break;
@@ -2097,14 +2093,11 @@ camera_init (Camera *camera, GPContext *context)
         case GP_PORT_USB:
 
                 /* Test if we have usb information */
-                if ((vendor == 0) && (product == 0)) {
+                if (vendor == 0) {
                         free (camera->pl);
                         camera->pl = NULL;
                         return (GP_ERROR_MODEL_NOT_FOUND);
-                } else {
-			camera->pl->flags = flags;
-		}
-
+                }
 		/* Use the defaults the core parsed */
                 break;
 

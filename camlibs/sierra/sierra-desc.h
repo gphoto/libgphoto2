@@ -76,14 +76,14 @@ typedef struct {
 		 * range values.  The proper value to user here is based
 		 * on the reg_len size and the reg_widget_type.
 		 *
-		 * How do we handle things like the exp compensation, or
-		 * the zoom where the first x bytes are used, and it looks
-		 * like the rest are a fixed value? Let's just mask them
-		 * out, and use the XXX values read from the camera.
+		 * For fields like the exp compensation, or the zoom,
+		 * where the first x bytes are used, and it looks like the
+		 * rest are a fixed value: just mask them out, and use the
+		 * values read from the camera.
 		 */
 		int64_t value;	/* GP_WIDGET_RADIO */
-		float range[3];	/* GP_WIDGET_RANGE theser are
-				   min/max/stepping, if stepping is zero,
+		float range[3];	/* GP_WIDGET_RANGE these are
+				   min/max/stepping; if stepping is zero,
 				   a stepping of one is used. */
 	} u;
 	/* 
@@ -127,7 +127,7 @@ typedef struct CameraRegisterSet {
 typedef struct CameraDesc {
 	const CameraRegisterSetType *regset;
 	const char * const manual;
-	const unsigned use_extended_protocol:1;
+	const SierraFlags flags;
 } CameraDescType;
 
 extern const CameraDescType sierra_default_cam_desc;

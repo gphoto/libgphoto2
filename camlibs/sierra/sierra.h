@@ -9,6 +9,7 @@ typedef enum {
 	SIERRA_WRAP_USB	 = 1<<0,
 	SIERRA_NO_51	 = 1<<1,
 	SIERRA_LOW_SPEED = 1<<2,
+	SIERRA_EXT_PROTO = 1<<3,
 } SierraFlags;
 
 struct _CameraPrivateLibrary {
@@ -17,7 +18,6 @@ struct _CameraPrivateLibrary {
 	int speed;
 	int first_packet;
 	SierraFlags flags;
-	int use_extended_protocol:1;
 	struct CameraDesc const *cam_desc;
 	char folder[128];
 };
