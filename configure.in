@@ -188,7 +188,7 @@ fi
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='agfa barbie canon casio digita dimera directory fuji jamcam jd11 kodak konica minolta mustek panasonic polaroid ptp ricoh samsung sierra sipix stv0680 sonydscf1 sonydscf55'
+camlibs='agfa barbie canon casio digita dimera directory fuji jamcam jd11 kodak konica minolta mustek panasonic polaroid ptp ricoh samsung sierra sipix sonydscf1 sonydscf55 stv0680 sx330z'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -204,7 +204,7 @@ AC_ARG_WITH(drivers,
   [                            directory, fuji, jamcam, jd11, kodak,]
   [                            konica, mustek,]
   [                            minolta, panasonic, polaroid, ptp, ricoh,]
-  [                            samsung, sierra, sonydscf1, sonydscf55,]
+  [                            samsung, sierra, sx330z, sonydscf1, sonydscf55,]
   [                            stv0680 ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
@@ -508,6 +508,7 @@ camlibs/sipix/Makefile
 camlibs/sonydscf1/Makefile
 camlibs/sonydscf55/Makefile
 camlibs/stv0680/Makefile
+camlibs/sx330z/Makefile
 frontends/Makefile
 frontends/command-line/Makefile
 tests/Makefile

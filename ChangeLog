@@ -1,3 +1,7 @@
+2002-07-05  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Add camlibs/sx330z.
+
 2002-06-27  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch from Arnaud Launay <asl@launay.org>:
