@@ -69,7 +69,8 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 			break;
 		case DIMAGEV_NAK:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::camera did not acknowledge transmission");
-			return GP_ERROR_IO;
+			return dimagev_get_picture(dimagev, file_number, file);
+/*			return GP_ERROR_IO;*/
 			break;
 		case DIMAGEV_CAN:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::camera cancels transmission");
@@ -217,7 +218,8 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 			break;
 		case DIMAGEV_NAK:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::camera did not acknowledge transmission");
-			return GP_ERROR_IO;
+			return dimagev_get_thumbnail(dimagev, file_number, file);
+/*			return GP_ERROR_IO;*/
 			break;
 		case DIMAGEV_CAN:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::camera cancels transmission");

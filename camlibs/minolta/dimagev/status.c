@@ -58,7 +58,8 @@ int dimagev_get_camera_status(dimagev_t *dimagev) {
 			break;
 		case DIMAGEV_NAK:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera did not acknowledge transmission");
-			return GP_ERROR_IO;
+			return dimagev_get_camera_status(dimagev);
+/*			return GP_ERROR_IO;*/
 			break;
 		case DIMAGEV_CAN:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera cancels transmission");

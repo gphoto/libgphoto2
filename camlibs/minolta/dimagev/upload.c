@@ -67,7 +67,9 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 			break;
 		case DIMAGEV_NAK:
 			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_put_file::camera did not acknowledge transmission");
-			return GP_ERROR_IO;
+			/* Since we haven't sent anything, keep trying until we get a cancel. */
+			return dimagev_put_file(dimagev, file);
+/*			return GP_ERROR_IO;*/
 			break;
 		case DIMAGEV_CAN:
 			gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_put_file::camera cancels transmission");
