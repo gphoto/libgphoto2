@@ -235,17 +235,21 @@ clear_readiness (Camera *camera)
 static int
 check_readiness (Camera *camera, GPContext *context)
 {
+	int status;
+
 	GP_DEBUG ("check_readiness() cached_ready == %i", camera->pl->cached_ready);
 
 	if (camera->pl->cached_ready)
 		return 1;
-	if (canon_int_ready (camera, context) == GP_OK) {
+	status = canon_int_ready (camera, context);
+	if ( status == GP_OK ) {
 		GP_DEBUG ("Camera type: %s (%d)\n", camera->pl->md->id_str,
 			  camera->pl->md->model);
 		camera->pl->cached_ready = 1;
 		return 1;
 	}
-	gp_context_error (context, _("Camera unavailable"));
+	gp_context_error ( context, _("Camera unavailable: %s"),
+			   gp_result_as_string ( status ) );
 	return 0;
 }
 
@@ -315,12 +319,13 @@ camera_exit (Camera *camera, GPContext *context)
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	int size;
+	int size, code;
 	unsigned char *data;
 
 	GP_DEBUG ("canon_capture_preview() called");
 
-	if (canon_int_capture_preview (camera, &data, &size, context) != GP_OK) {
+	code = canon_int_capture_preview (camera, &data, &size, context);
+	if ( code != GP_OK) {
 		gp_context_error (context, _("Error capturing image"));
 		return GP_ERROR;
 	}
@@ -478,14 +483,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	char *filetype;
 	char buf[32];
 
-	/* put complete canon path into canon_path */
+	/* Assemble complete canon path into canon_path */
 	ret = snprintf (canon_path, sizeof (canon_path) - 3, "%s\\%s",
 			gphoto2canonpath (camera, folder, context), filename);
 	if (ret < 0) {
 		gp_context_error (context,
 				  _("Internal error #1 in get_file_func() (%s line %i)"),
 				  __FILE__, __LINE__);
-		return GP_ERROR;
+		return GP_ERROR_BAD_PARAMETERS;
 	}
 
 	/* for debugging */
@@ -751,7 +756,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 	GP_DEBUG ("camera_summary()");
 
-	if (check_readiness (camera, context) != 1)
+	if (!check_readiness (camera, context))
 		return GP_ERROR;
 
 	/*clear_readiness(); */
@@ -860,7 +865,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 	strncpy (canonfolder, _canonfolder, sizeof (canonfolder) - 1);
 	canonfolder[sizeof (canonfolder) - 1] = 0;
 
-	if (check_readiness (camera, context) != 1)
+	if (!check_readiness (camera, context))
 		return GP_ERROR;
 
 	if (camera->pl->md->model == CANON_CLASS_3) {
@@ -1004,13 +1009,13 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 {
 	Camera *camera = data;
 	char destpath[300], destname[300], dir[300], dcf_root_dir[10];
-	int j, dirnum = 0, r;
+	int j, dirnum = 0, r, status;
 	char buf[10];
 	CameraAbilities a;
 
 	GP_DEBUG ("camera_folder_put_file()");
 
-	if (check_readiness (camera, context) != 1)
+	if (!check_readiness (camera, context))
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
@@ -1063,8 +1068,9 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		} else {
 		    char dir2[300];
 		    sprintf(dir2, "%s/%s", dcf_root_dir, dir);
-		    if (get_last_picture (camera, dir2, destname, context) == GP_ERROR)
-			    return GP_ERROR;
+		    status = get_last_picture (camera, dir2, destname, context);
+		    if ( status < 0 )
+			    return status;
 
 		    if (strlen (destname) == 0) {
 			    sprintf (destname, "AUT_%c%c01.JPG", dir[1], dir[2]);
@@ -1138,7 +1144,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
-	if (check_readiness (camera, context) != 1)
+	if (!check_readiness (camera, context))
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
@@ -1439,7 +1445,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *name, void 
 
 	canonpath = gphoto2canonpath (camera, gppath, context);
 	if (canonpath == NULL)
-		return GP_ERROR;
+		return GP_ERROR_BAD_PARAMETERS;
 
 	r = canon_int_directory_operations (camera, canonpath, DIR_CREATE, context);
 	if (r != GP_OK)
@@ -1479,7 +1485,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name, voi
 
 	canonpath = gphoto2canonpath (camera, gppath, context);
 	if (canonpath == NULL)
-		return GP_ERROR;
+		return GP_ERROR_BAD_PARAMETERS;
 
 	r = canon_int_directory_operations (camera, canonpath, DIR_REMOVE, context);
 	if (r != GP_OK)

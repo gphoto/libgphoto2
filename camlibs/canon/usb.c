@@ -63,12 +63,14 @@ static int serial_code = 0;
  * canon_usb_camera_init:
  * @camera: camera to initialize
  * @context: context for error reporting
- *  GP_OK on success.
- *  GP_ERROR on any error.
  *
  * Initializes the USB camera through a series of read/writes
  *
  * Returns: gphoto2 error code
+ *  @GP_OK on success.
+ *  @GP_ERROR_OS_FAILURE if it seems to be an OS error
+ *  @GP_ERROR_CORRUPTED_DATA if communication was completed, but the
+ *               response was other than expected.
  *
  */
 int
@@ -105,16 +107,18 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 			break;
 		case 'I':
 		case 'E':
+	        default:
 			camstat_str = _("Unknown (some kind of error))");
-			break;
+		gp_context_error (context, _("Initial camera response %c/ unrecognized)"),
+				  camstat);
+		if ( i < 0 )
+			return GP_ERROR_OS_FAILURE;
+		else
+			return GP_ERROR_CORRUPTED_DATA;
 	}
-	if (camstat != 'A' && camstat != 'C') {
-		gp_context_error (context, _("Initial camera response %c/'%s' unrecognized)"),
-				  camstat, camstat_str);
-		return GP_ERROR_CORRUPTED_DATA;
-	}
-	GP_DEBUG ("canon_usb_camera_init() initial camera response: %c/'%s'", camstat,
-		  camstat_str);
+
+	GP_DEBUG ("canon_usb_camera_init() initial camera response: %c/'%s'",
+		  camstat, camstat_str);
 
 	i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, msg, 0x58);
 	if (i != 0x58) {
@@ -122,7 +126,10 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 				  _("Step #2 of initialization failed for"
 				    " PowerShot camera! (returned %i, expected %i) "
 				    "Camera not operational"), i, 0x58);
-		return GP_ERROR_CORRUPTED_DATA;
+		if ( i < 0 )
+			return GP_ERROR_OS_FAILURE;
+		else
+			return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	if (camstat == 'A') {
@@ -133,7 +140,10 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 					  _("EOS Step #3 of initialization failed! "
 					    "(returned %i, expected %i) "
 					    "Camera not operational"), i, 0x50);
-			return GP_ERROR_CORRUPTED_DATA;
+			if ( i < 0 )
+				return GP_ERROR_OS_FAILURE;
+			else
+				return GP_ERROR_CORRUPTED_DATA;
 		}
 
 	}
@@ -150,7 +160,10 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 					  _("Step #3 of initialization failed! "
 					    "(returned %i, expected %i) Camera not operational"), i,
 					  0x50);
-			return GP_ERROR_IO_INIT;
+			if ( i < 0 )
+				return GP_ERROR_OS_FAILURE;
+			else
+				return GP_ERROR_CORRUPTED_DATA;
 		}
 		/* We expect to get 0x44 bytes here, but the camera is picky at this stage and
 		 * we must read 0x40 bytes and then read 0x4 bytes more.
@@ -177,7 +190,10 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 						  _("Step #4.1 failed! "
 						    "(returned %i, expected %i) Camera not operational"), i,
 						  0x40);
-				return GP_ERROR_CORRUPTED_DATA;
+				if ( i < 0 )
+					return GP_ERROR_OS_FAILURE;
+				else
+					return GP_ERROR_CORRUPTED_DATA;
 			}
 		}
 
@@ -257,7 +273,10 @@ canon_usb_init (Camera *camera, GPContext *context)
 				  _("Camera not ready, "
 				    "multiple 'Identify camera' requests failed: %s"),
 				  gp_result_as_string (res));
-		return GP_ERROR;
+		if ( res < 0 )
+			return GP_ERROR_OS_FAILURE;
+		else
+			return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	do {
@@ -267,7 +286,10 @@ canon_usb_init (Camera *camera, GPContext *context)
 	} while ( read_bytes < 0x10 && i >= 0 );
 	if ( read_bytes < 0x10 ) {
 		GP_DEBUG ( "canon_usb_camera_init() interrupt read returned only %d bytes, status=%d", read_bytes, i );
-		return GP_ERROR_CORRUPTED_DATA;
+		if ( i < 0 )
+			return GP_ERROR_OS_FAILURE;
+		else
+			return GP_ERROR_CORRUPTED_DATA;
 	}
 	else if ( i < 0 ) {
 		GP_DEBUG ( "canon_usb_camera_init() interrupt read failed, status=%d", i );
@@ -277,11 +299,13 @@ canon_usb_init (Camera *camera, GPContext *context)
 		GP_DEBUG ( "canon_usb_camera_init() interrupt read %d bytes, expected 16", read_bytes );
 
 	if ( camera->pl->md->model != CANON_CLASS_4
-	     && camera->pl->md->model != CANON_CLASS_6 )
-		if(canon_usb_lock_keys(camera,context) < 0) {
+	     && camera->pl->md->model != CANON_CLASS_6 ) {
+		i = canon_usb_lock_keys(camera,context);
+		if( i < 0 ) {
 			gp_context_error (context, _("lock keys failed."));
-			return GP_ERROR_CORRUPTED_DATA;
+			return i;
 		}
+	}
 
 	res = canon_int_get_battery(camera, NULL, NULL, context);
 	if (res != GP_OK) {
@@ -327,6 +351,9 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			c_res = canon_usb_dialogue (camera,
 						    CANON_USB_FUNCTION_GET_PIC_ABILITIES,
 						    &bytes_read, NULL, 0);
+
+			if ( c_res == NULL )
+				return GP_ERROR_OS_FAILURE;
 			if ( bytes_read == 0x334 ) {
 				GP_DEBUG ( "canon_usb_lock_keys: Got the expected number of bytes back from \"get picture abilities.\"" );
 			} else {
@@ -334,11 +361,13 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 						   _("canon_usb_lock_keys: "
 						   "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\""),
 						   bytes_read, 0x334 );
-				return GP_ERROR;
+				return GP_ERROR_CORRUPTED_DATA;
 			}
 			c_res = canon_usb_dialogue (camera,
 						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
 						    &bytes_read, NULL, 0);
+			if ( c_res == NULL )
+				return GP_ERROR_OS_FAILURE;
 			if (bytes_read == 0x4) {
 				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
 			} else {
@@ -346,7 +375,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 						  _("canon_usb_lock_keys: "
 						  "Unexpected amount of data returned (%i bytes, expected %i)"),
 						  bytes_read, 0x4);
-				return GP_ERROR;
+				return GP_ERROR_CORRUPTED_DATA;
 			}
 			break;
 
@@ -359,8 +388,8 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 
 			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_LOCK_KEYS,
 						    &bytes_read, payload, 4);
-			if (!c_res)
-				return GP_ERROR;
+			if ( c_res == NULL )
+				return GP_ERROR_OS_FAILURE;
 			if (bytes_read == 0x4) {
 				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
 			} else {
@@ -368,7 +397,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 						  _("canon_usb_lock_keys: "
 						  "Unexpected amount of data returned (%i bytes, expected %i)"),
 						  bytes_read, 0x4);
-				return GP_ERROR;
+				return GP_ERROR_CORRUPTED_DATA;
 			}
 			break;
 
@@ -380,10 +409,12 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
                            new model (in Jan. 2003), I suspect that we
                            will find more cameras in the future that
                            work this way. */
-			GP_DEBUG ("Locking camera keys and turning off LCD using special-case S45 locking code...");
+			GP_DEBUG ("Locking camera keys and turning off LCD using class 5 locking code...");
 			c_res = canon_usb_dialogue (camera,
 						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
 						    &bytes_read, NULL, 0);
+			if ( c_res == NULL )
+				return GP_ERROR_OS_FAILURE;
 			if (bytes_read == 0x4) {
 				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back.");
 			} else {
@@ -391,7 +422,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 						  _("canon_usb_lock_keys: "
 						  "Unexpected amount of data returned (%i bytes, expected %i)"),
 						  bytes_read, 0x4);
-				return GP_ERROR;
+				return GP_ERROR_CORRUPTED_DATA;
 			}
 			break;
 
@@ -421,8 +452,8 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
 	if ( camera->pl->md->model == CANON_CLASS_4 ) {
 		c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
 					    &bytes_read, NULL, 0);
-		if (!c_res)
-			return GP_ERROR;
+		if ( c_res == NULL )
+			return GP_ERROR_OS_FAILURE;
 		if (bytes_read == 0x4) {
 			GP_DEBUG ("canon_usb_unlock_keys: Got the expected number of bytes back.");
 		} else {
@@ -430,7 +461,7 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
 					  _("canon_usb_unlock_keys: "
 					    "Unexpected amount of data returned (%i bytes, expected %i)"),
 					  bytes_read, 0x4);
-			return GP_ERROR;
+			return GP_ERROR_CORRUPTED_DATA;
 		}
 	}
 	else {
@@ -1014,7 +1045,7 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
 		canon_usb_dialogue (camera, canon_funct, &bytes_read, payload, payload_length);
 	if (lpacket == NULL) {
 		GP_DEBUG ("canon_usb_long_dialogue: canon_usb_dialogue returned error!");
-		return GP_ERROR;
+		return GP_ERROR_OS_FAILURE;
 	}
 	/* This check should not be needed since we check the return of canon_usb_dialogue()
 	 * above, but as the saying goes: better safe than sorry.
@@ -1324,7 +1355,7 @@ int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time
 	if ( result_buffer == NULL ) {
 		GP_DEBUG ( "canon_usb_set_file_time:"
 			   " dialogue failed." );
-		return GP_ERROR;
+		return GP_ERROR_OS_FAILURE;
 	}
 
 	free ( payload );
@@ -1377,7 +1408,7 @@ canon_usb_set_file_attributes (Camera *camera, unsigned short attr_bits,
 				  _("canon_usb_set_file_attributes: "
 				  "canon_usb_dialogue failed"));
 		free ( payload );
-		return GP_ERROR;
+		return GP_ERROR_OS_FAILURE;
 	}
 	else if ( le32atoh ( res+0x50 ) != 0 ) {
 		gp_context_error (context,
@@ -1385,7 +1416,7 @@ canon_usb_set_file_attributes (Camera *camera, unsigned short attr_bits,
 				  "canon_usb_dialogue returned error status 0x%08x from camera"),
 				  le32atoh ( res+0x50 ) );
 		free ( payload );
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	free ( payload );
@@ -1460,7 +1491,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 	    if(!fi) {
 		gp_context_error(context, _("Couldn't read from file \"%s\""), srcname);
 		free(packet);
-		return GP_ERROR;
+		return GP_ERROR_OS_FAILURE;
 	    }
 	    fstat ( fileno(fi), &filestat );
 	    fseek(fi, 0, SEEK_END);
@@ -1552,7 +1583,10 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 		    if(newdata)
 			free(newdata);
 		    free(packet);
-		    return GP_ERROR_CORRUPTED_DATA;
+		    if ( status < 0 )
+			    return GP_ERROR_OS_FAILURE;
+		    else
+			    return GP_ERROR_CORRUPTED_DATA;
 	    }
 
 	    status = gp_port_read (camera->port, buffer, 0x40);
@@ -1563,7 +1597,10 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 		    if(newdata)
 			free(newdata);
 		    free(packet);
-		    return GP_ERROR_CORRUPTED_DATA;
+		    if ( status < 0 )
+			    return GP_ERROR_OS_FAILURE;
+		    else
+			    return GP_ERROR_CORRUPTED_DATA;
 	    }
 
 	    status = gp_port_read (camera->port, buffer, 0x1c);
@@ -1574,7 +1611,10 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 		    if(newdata)
 			free(newdata);
 		    free(packet);
-		    return GP_ERROR_CORRUPTED_DATA;
+		    if ( status < 0 )
+			    return GP_ERROR_OS_FAILURE;
+		    else
+			    return GP_ERROR_CORRUPTED_DATA;
 	    }
 	    else if ( le32atoh ( buffer ) != 0 ) {
 		    /* Got a status message back from the camera */
@@ -1657,7 +1697,8 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 				  _("canon_usb_get_dirents: "
 				  "canon_usb_long_dialogue failed to fetch direntries, "
 				  "returned %i"), res);
-		return GP_ERROR;
+		return res;
+
 	}
 
 	return GP_OK;
@@ -1726,7 +1767,7 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
 				  _("canon_usb_list_all_dirs: "
 				  "canon_usb_long_dialogue failed to fetch direntries, "
 				  "returned %i"), res);
-		return GP_ERROR;
+		return res;
 	}
 
 	return GP_OK;
