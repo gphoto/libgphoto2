@@ -8,6 +8,7 @@ INCLUDES =                                              \
 	-I$(top_builddir)/libgphoto2
 
 libgphoto2_gsmart_la_SOURCES = gsmart.c gsmart.h library.c \
-                               gsmart-jpeg-header.h gsmart-registers.h
+                               gsmart-jpeg-header.h gsmart-registers.h \
+			       gsmart-avi-header.h
 libgphoto2_gsmart_la_LDFLAGS = -module -avoid-version
 libgphoto2_gsmart_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la

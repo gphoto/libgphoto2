@@ -292,7 +292,12 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	CHECK (number = gp_filesystem_number (camera->fs, folder, filename, context));
 	switch (type) {
 		case GP_FILE_TYPE_NORMAL:
-			CHECK (gsmart_request_file (camera->pl, &data, &size, number));
+			CHECK (gsmart_request_file (camera->pl, &data, &size, number, &filetype));
+			if (filetype == GSMART_FILE_TYPE_IMAGE) {
+				CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
+			} else if (filetype == GSMART_FILE_TYPE_AVI) {
+				CHECK (gp_file_set_mime_type (file, GP_MIME_AVI));
+			}
 			break;
 		case GP_FILE_TYPE_PREVIEW:
 			CHECK (gsmart_request_thumbnail

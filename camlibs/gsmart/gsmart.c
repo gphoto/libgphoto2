@@ -33,6 +33,7 @@
 #include "gsmart.h"
 #include "gsmart-registers.h"
 #include "gsmart-jpeg-header.h"
+#include "gsmart-avi-header.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -67,6 +68,10 @@ static int gsmart_get_avi_thumbnail (CameraPrivateLibrary * lib,
 static int gsmart_get_image_thumbnail (CameraPrivateLibrary * lib,
 				       u_int8_t ** buf, unsigned int *len,
 				       struct GsmartFile *g_file);
+static int gsmart_get_avi (CameraPrivateLibrary * lib,
+			   u_int8_t ** buf, unsigned int *len, struct GsmartFile *g_file);
+static int gsmart_get_image (CameraPrivateLibrary * lib,
+			     u_int8_t ** buf, unsigned int *len, struct GsmartFile *g_file);
 
 int
 gsmart_get_file_count (CameraPrivateLibrary * lib)
@@ -75,7 +80,7 @@ gsmart_get_file_count (CameraPrivateLibrary * lib)
 	sleep (1);
 	CHECK (gp_port_usb_msg_read
 	       (lib->gpdev, 0, 0, 0xe15, (u_int8_t *) & lib->num_files, 1));
-	LE32TOH(lib->num_files);
+	LE32TOH (lib->num_files);
 
 	return (GP_OK);
 }
@@ -112,20 +117,28 @@ gsmart_delete_all (CameraPrivateLibrary * lib)
 
 int
 gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
-		     unsigned int *len, unsigned int number)
+		     unsigned int *len, unsigned int number, int *type)
 {
 	struct GsmartFile *g_file;
+
+	CHECK (gsmart_get_file_info (lib, number, &g_file));
+
+	*type = g_file->mime_type;
+	if (g_file->mime_type == GSMART_FILE_TYPE_AVI)
+		return (gsmart_get_avi (lib, buf, len, g_file));
+	else
+		return (gsmart_get_image (lib, buf, len, g_file));
+}
+
+int
+gsmart_get_image (CameraPrivateLibrary * lib, u_int8_t ** buf,
+		  unsigned int *len, struct GsmartFile *g_file)
+{
 	u_int8_t *p, *lp_jpg, *start_of_file;
 	u_int8_t qIndex, quality, value;
 	u_int32_t start;
 	u_int8_t *mybuf;
 	int size, o_size, i, file_size;
-
-	CHECK (gsmart_get_file_info (lib, number, &g_file));
-	/* FIXME implement avi downloading */
-	if (g_file->mime_type == GSMART_FILE_TYPE_AVI)
-		return GP_ERROR_NOT_SUPPORTED;
-
 
 	p = g_file->fat;
 
@@ -191,6 +204,153 @@ gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	*buf = start_of_file;
 	*len = file_size;
 
+	return (GP_OK);
+}
+
+int
+gsmart_get_avi (CameraPrivateLibrary * lib, u_int8_t ** buf,
+		unsigned int *len, struct GsmartFile *g_file)
+{
+	int i, j, k;
+	int frame_count = 0, frames_per_fat = 0;
+	int size = 0;
+	int frame_width, frame_height;
+	int file_size;
+	u_int32_t frame_size = 0;
+	u_int32_t total_frame_size = 0;
+	u_int32_t start = 0;
+	u_int8_t *p, *mybuf, *avi, *start_of_file, *start_of_frame, *data;
+	u_int8_t value, qIndex;
+
+	avi = mybuf = start_of_file = data = NULL;
+
+	p = g_file->fat;
+	/* get the position in memory where the movie is */
+	start = (p[1] & 0xff) + (p[2] & 0xff) * 0x100;
+	start *= 128;
+
+	/* Frame w and h and qIndex dont change, so just use the values 
+	 * of the first frame */
+	frame_width = (p[8] & 0xFF) * 16;
+	frame_height = (p[9] & 0xFF) * 16;
+	qIndex = p[7] & 0x07;
+
+	/* Each movie consists of a number of frames, and can have more than
+	 * one fat page. Iterate over all fat pages for this movie and count
+	 * all frames in all fats. Same for size. */
+	for (i = g_file->fat_start; i <= g_file->fat_end; i++) {
+		p += (i - g_file->fat_start) * FLASH_PAGE_SIZE;
+		frame_count += (p[49] & 0xFF) * 0x100 + (p[48] & 0xFF);
+		size += (p[13] & 0xFF) * 0x10000 + (p[12] & 0xFF) * 0x100 + (p[11] & 0xFF);
+	}
+
+	/* slurp in the movie */
+	mybuf = malloc (size);
+	if (!mybuf)
+		return GP_ERROR_NO_MEMORY;
+
+	CHECK (gsmart_download_data (lib, start, size, mybuf));
+
+	/* Now write our data to a file with an avi header */
+	file_size = size + GSMART_AVI_HEADER_LENGTH + 1024 * 10;
+	avi = malloc (file_size);
+	if (!avi)
+		return GP_ERROR_NO_MEMORY;
+
+	start_of_file = avi;
+
+	/* copy the header from the template */
+	memcpy (avi, GsmartAviHeader, GSMART_AVI_HEADER_LENGTH);
+	/* correct framecount in the header at offset 48 */
+	memcpy (avi + 48, &frame_count, sizeof (frame_count));
+
+	avi += GSMART_AVI_HEADER_LENGTH;
+
+	/* Reset to the first fat */
+	p = g_file->fat;
+	data = mybuf;
+
+	/* Iterate over fats and frames in each fat and build a jpeg for
+	 * each frame. Add the jpeg to the avi.
+	 * FIXME Build an index and append it to the file. */
+	for (i = g_file->fat_start; i <= g_file->fat_end; i++) {
+		p += (i - g_file->fat_start) * FLASH_PAGE_SIZE;
+		frames_per_fat = ((p[49] & 0xFF) * 0x100 + (p[48] & 0xFF));
+
+		for (j = 0; j < frames_per_fat; j++) {
+			frame_size = ((p[52 + j * 3] & 0xFF) * 0x10000)
+				+ ((p[51 + j * 3] & 0xFF) * 0x100)
+				+ (p[50 + j * 3] & 0xFF);
+
+			if ((frame_size % 8) != 0)
+				frame_size = ((frame_size / 8) + 1) * 8;
+
+			memcpy (avi, GsmartAviFrameHeader, 
+			      GSMART_AVI_FRAME_HEADER_LENGTH);
+
+			avi += GSMART_AVI_FRAME_HEADER_LENGTH;
+			start_of_frame = avi;
+			/* jpeg starts here */
+			memcpy (avi, GsmartJPGDefaultHeader, 
+			      GSMART_JPG_DEFAULT_HEADER_LENGTH);
+
+			/* modify quantization table */
+			memcpy (avi + 7, GsmartQTable[qIndex * 2], 64);
+			memcpy (avi + 72, GsmartQTable[qIndex * 2 + 1], 64);
+
+			/* modify the image width, height */
+			*(avi + 564) = frame_width & 0xFF;
+			*(avi + 563) = frame_width >> 8 & 0xFF;
+			*(avi + 562) = frame_height & 0xFF;
+			*(avi + 561) = frame_height >> 8 & 0xFF;
+
+			/* set the format to yuv 211 */
+			*(avi + 567) = 0x22;
+
+			avi += GSMART_JPG_DEFAULT_HEADER_LENGTH;
+
+			/* Copy and escape FF in the jpeg stream */
+			for (k = 0; k < frame_size; k++) {
+				value = *(data + k) & 0xFF;
+				*(avi) = value;
+				avi++;
+				if (value == 0xFF) {
+					*(avi) = 0x00;
+					avi++;
+				}
+			}
+			data += frame_size;
+
+			/* Add end of image marker */
+			*(avi++) = 0xFF;
+			*(avi++) = 0xD9;
+
+			/* Make sure the next frame is aligned */
+			if ((avi - start_of_frame) % 2 != 0)
+				avi++;
+
+			/* Now we know the real frame size after escaping and
+			 * adding the EOI marker. Put it in the frame header. */
+			frame_size = avi - start_of_frame;
+			memcpy (start_of_frame - 4, &frame_size, 
+			      sizeof (frame_size));
+		}
+	}
+	total_frame_size = avi - (start_of_file + GSMART_AVI_HEADER_LENGTH - 4);
+	memcpy (start_of_file + GSMART_AVI_HEADER_LENGTH - 8,
+		&total_frame_size, sizeof (total_frame_size));
+	/* And reuse total_frame_size for the file size RIFF marker at offset
+	 * 4 */
+	total_frame_size = avi - (start_of_file + 4);
+	memcpy (start_of_file + 4, &total_frame_size, 
+	      sizeof (total_frame_size));
+
+	free (mybuf);
+	/* Account for the first four bytes of riff header */
+	total_frame_size += 4;
+	start_of_file = realloc (start_of_file, total_frame_size);
+	*buf = start_of_file;
+	*len = total_frame_size;
 	return (GP_OK);
 }
 

@@ -66,7 +66,7 @@ int gsmart_delete_all (CameraPrivateLibrary * lib);
 int gsmart_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 			  struct GsmartFile **file);
 int gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
-			 unsigned int *len, unsigned int number);
+			 unsigned int *len, unsigned int number, int *type);
 int gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 			      unsigned int *len, unsigned int number, int *type);
 

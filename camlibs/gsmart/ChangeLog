@@ -1,3 +1,7 @@
+Tue Oct 08 22:14:04 2002  Till Adam  <till@adam-lilienthal.de>
+
+ * add support for avi downloading
+
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
