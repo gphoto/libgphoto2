@@ -524,6 +524,7 @@ ptp_unpack_DPD (PTPParams *params, char* data, PTPDevicePropDesc *dpd)
 		/* XXX: other int types are unimplemented */
 		/* XXX: int arrays are unimplemented also */
 		}
+		break;
 		case PTP_DPFF_Enumeration:
 #define N	dpd->FORM.Enum.NumberOfValues
 		N = dtoh16a(&data[PTP_dpd_FactoryDefaultValue+totallen]);
