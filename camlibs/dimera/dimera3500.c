@@ -21,10 +21,17 @@
  *
  * History:
  * $Log$
+ * Revision 1.6  2001/08/22 20:59:57  hfiguiere
+ * 	* camlibs/dimera/dimera3500.c: removed * / * embedded inside comments
+ * 	that issued warnings and broke the build...
+ * 	* camlibs/kodak/dc240/library.c (dc240_wait_for_busy_completion):
+ * 	cast a const to a char to avoid a serious warning on Solaris sparc
+ * 	gcc. Fix bug #454183
+ *
  * Revision 1.5  2001/08/22 18:09:41  lutz
  * 2001-08-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
- *         * */*: Small parameter changes to make gphoto2 API more consistent.
+ *         * * / *: Small parameter changes to make gphoto2 API more consistent.
  *         More to follow.
  *
  * Revision 1.4  2001/08/18 00:03:05  lutz
@@ -40,7 +47,7 @@
  *         know what's inside.
  *         * libgphoto2/core.c:
  *         * libgphoto2/lists.c:
- *         * camlibs/*: Reflect above changes
+ *         * camlibs/ *: Reflect above changes
  *
  * Revision 1.3  2001/06/28 22:03:42  dfandrich
  * Integrated Brian Beattie's patch to use mesa_read_row instead of

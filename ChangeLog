@@ -1,3 +1,11 @@
+2001-08-22  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/dimera/dimera3500.c: removed * / * embedded inside comments
+	that issued warnings and broke the build...
+	* camlibs/kodak/dc240/library.c (dc240_wait_for_busy_completion): 
+	cast a const to a char to avoid a serious warning on Solaris sparc 
+	gcc. Fix bug #454183
+
 2001-08-22  Stephane Castejon <scastejo@club-internet.fr>
 
 	* frontends/command-line/main.c : fix option --debug so that it

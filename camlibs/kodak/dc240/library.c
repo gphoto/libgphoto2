@@ -175,7 +175,7 @@ static int dc240_wait_for_busy_completion (DC240Data *dd)
 	    /* in busy state, GP_ERROR_IO_READ can happend */
 	    break;
 	default:
-	    if (*p != 0xf0) {
+	    if (*p != (char)0xf0) {
 		done = 1;
 	    }
 	}
