@@ -58,6 +58,7 @@ char *models_serial[] = {
 };
 char *models_USB[] = {
         "Canon Digital IXUS",
+	"Canon IXY DIGITAL",
         "Canon PowerShot S100",
         NULL
 };
@@ -242,7 +243,7 @@ char *camera_model_string(Camera *camera)
 	 case CANON_PS_G1:
 		return "Powershot G1";
 	 case CANON_PS_S100:
-		return "Powershot S100 / Digital IXUS";
+		return "Powershot S100 / Digital IXUS / IXY DIGITAL";
 	 default:
 		return "Unknown model !";
 	}
@@ -963,7 +964,7 @@ int camera_summary(Camera *camera, CameraText *summary)
 	 case CANON_PS_S10:     model = "Canon Powershot S10"; break;
 	 case CANON_PS_S20:     model = "Canon Powershot S20"; break;
 	 case CANON_PS_G1:      model = "Canon Powershot G1"; break;
-	 case CANON_PS_S100:    model = "Canon Powershot S100 / Digital IXUS"; break;
+	 case CANON_PS_S100:    model = "Canon Powershot S100 / Digital IXUS / IXY DIGITAL"; break;
     }
 		
 	canon_get_batt_status(camera, &pwr_status, &pwr_source);

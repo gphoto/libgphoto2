@@ -1008,7 +1008,7 @@ int psa50_ready(Camera *camera)
   //    int cts;
   
   gp_debug_printf(GP_DEBUG_LOW,"canon","psa50_ready()");
-  
+
   switch (canon_comm_method) {
   case CANON_USB:
     psa50_get_owner_name(camera);
@@ -1032,8 +1032,9 @@ int psa50_ready(Camera *camera)
       return 1;
     }
     else if ((!strcmp("Canon DIGITAL IXUS",cs->ident))
+	     || (!strcmp("Canon IXY DIGITAL",cs->ident))
 	     || (!strcmp("Canon PowerShot S100",cs->ident))) {
-      gp_frontend_status(camera, "Detected a Digital IXUS / Powershot S100");
+      gp_frontend_status(camera, "Detected a Digital IXUS / IXY DIGITAL / Powershot S100");
       cs->model = CANON_PS_S100;
       A5=0;
       return 1;
@@ -1160,9 +1161,10 @@ int psa50_ready(Camera *camera)
       cs->model = CANON_PS_G1;
       A5 = 0;
     } else if ((!strcmp("Canon DIGITAL IXUS",psa50_id))
+	       || (!strcmp("Canon IXY DIGITAL",psa50_id))	
 	       || (!strcmp("Canon PowerShot S100",psa50_id)))
       {
-	gp_frontend_status(camera, "Detected a Digital IXUS / Powershot S100");
+	gp_frontend_status(camera, "Detected a Digital IXUS / IXY DIGITAL / Powershot S100");
 	cs->model = CANON_PS_S100;
 	A5=0;
       } else {
