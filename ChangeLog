@@ -1,5 +1,11 @@
 2001-11-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/ptp: Remove a whole lot of warnings, remove unnecessary
+	  PTPResult (we've got PTP_RC_*), flesh out library.c a bit - still
+	  not functional, though.
+
+2001-11-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch from Greg Ingram <ingram@symsys.com>, slightly reworked:
 
 	* camlibs/polaroid/pdc700.c: Make the assumption that we need to 
