@@ -1,3 +1,35 @@
+2001-10-20
+
+	* Makefile.am
+	* camlibs/agfa/Makefile.am
+	* camlibs/barbie/Makefile.am
+	* camlibs/canon/Makefile.am
+	* camlibs/digita/Makefile.am
+	* camlibs/dimera/Makefile.am
+	* camlibs/directory/Makefile.am
+	* camlibs/jd350e/Makefile.am
+	* camlibs/kodak/Makefile.am
+	* camlibs/kodak/dc120/Makefile.am
+	* camlibs/kodak/dc240/Makefile.am
+	* camlibs/kodak/dc3200/Makefile.am
+	* camlibs/konica/Makefile.am
+	* camlibs/minolta/Makefile.am
+	* camlibs/minolta/dimagev/Makefile.am
+	* camlibs/panasonic/Makefile.am
+	* camlibs/polaroid/Makefile.am
+	* camlibs/sierra/Makefile.am
+	* camlibs/sonydscf1/Makefile.am
+	* camlibs/stv0680/Makefile.am
+	* doc/api/Makefile.am
+	* frontends/command-line/Makefile.am
+	* libgphoto2_port/Makefile.am
+	* libgphoto2_port/doc/Makefile.am
+	* libgphoto2_port/include/Makefile.am
+	* libgphoto2_port/libgphoto2_port/Makefile.am
+	* libgphoto2_port/serial/Makefile.am
+	* libgphoto2_port/usb/Makefile.am
+	* camlibs/Makefile.am: added missing files to EXTRA_DIST and/or *_SOURCES
+
 2001-10-19 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* libgphoto2_port/libgphoto2_port/Makefile.am: use $(libdir) as library directory
@@ -1337,8 +1369,8 @@
 	* README: Updated list of USB Mass Storage cameras. Thanks Hubert!
 
 2001-08-21  Stephane Castejon <scastejo@club-internet.fr>
- 
-        * Removing unused variables
+
+	* Removing unused variables
 
 2001-08-21  Stephane Castejon <scastejo@club-internet.fr>
 
