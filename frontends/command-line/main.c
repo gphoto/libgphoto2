@@ -406,6 +406,8 @@ typedef int image_action(char *folder, char *filename);
 typedef int folder_action(char *subfolder, image_action action, int reverse);
 
 
+int print_folder(char *subfolder, image_action action, int reverse);
+
 /*
   for_each_subfolder() - call action() for every subfolder in 'folder' and, if
   	'recurse' is non-zero, in all its subfolders, recursively. If 'folder' 
@@ -435,6 +437,9 @@ int for_each_subfolder(char *folder, folder_action faction,
 		strcat(prefix, "/");
 */
 	gp_camera_folder_list(glob_camera, &folderlist, prefix);
+
+	if ((glob_quiet)&&(faction == print_folder))
+		printf ("%i\n", gp_list_count(&folderlist));
 	
 	for (i = 0; i < gp_list_count(&folderlist); i++) {
 		entry = gp_list_entry(&folderlist, i);
@@ -511,13 +516,19 @@ int print_files(char *subfolder, image_action iaction, int reverse) {
 	CameraListEntry *entry;
 	int x;
 	char buf[64];
-	if (!glob_quiet)
-		printf("Files in %s:\n", subfolder);
 	gp_camera_file_list(glob_camera, &filelist, subfolder);
+	if (glob_quiet)
+		printf("%i\n", gp_list_count(&filelist));
+	   else
+		printf("Files in %s:\n", subfolder);
 	for (x=0; x<gp_list_count(&filelist); x++) {
 		entry = gp_list_entry(&filelist, x);
-		sprintf(buf, "%i", x+1);
-		printf("#%-5s %s\n", buf, entry->name);
+		if (glob_quiet)
+			printf("\"%s\"\n", entry->name);
+		   else {
+			sprintf(buf, "%i", x+1);
+			printf("#%-5s %s\n", buf, entry->name);
+		}
 	}
 	return (GP_OK);
 }
