@@ -24,6 +24,35 @@ in $HOME/.cvsrc and send us the output of "cvs diff some_file.c".
 We prefer patches against the current CVS version very much over
 patches agains old released versions, but these are also welcome :-)
 
+source files
+------------
+
+Every source file (file_name.c) should have the following layout:
+
+/* Licence, author, etc. */
+#include <config.h>
+#include "file_name.h"
+
+#include <std*.h> (i.e. stdlib, stdio, string, etc.)
+
+#include <gphoto2-*.h> (what you need)
+
+/* Source code here. */
+
+header files
+------------
+
+Please use the following layout:
+
+/* Licence, author, etc. */
+#ifndef __FILE_NAME_H__
+#define __FILE_NAME_H__
+
+#include <whatever is needed for the _header_>
+
+/* Declarations */
+
+#endif /* __FILE_NAME_H__ */
 
 camlib
 ------
