@@ -961,6 +961,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
 		gp_widget_set_value (widget, "On");
                 break;
         }
+	gp_widget_set_info (widget, _("Shall the camera beep when taking a picture?"));
 
         /* Self Timer Time */
         gp_widget_new (GP_WIDGET_RANGE, "Self Timer Time", &widget);

@@ -13,8 +13,8 @@ int     gp_widget_unref (CameraWidget *widget);
 
 int	gp_widget_append	(CameraWidget *parent, CameraWidget *child);
 int 	gp_widget_prepend	(CameraWidget *parent, CameraWidget *child);
-int 	gp_widget_count_children(CameraWidget *parent);
 
+int 	gp_widget_count_children     (CameraWidget *parent);
 int	gp_widget_get_child	     (CameraWidget *parent, int child_number, 
 				      CameraWidget **child);
 int	gp_widget_get_child_by_label (CameraWidget *parent, 
@@ -22,8 +22,8 @@ int	gp_widget_get_child_by_label (CameraWidget *parent,
 				      CameraWidget **child);
 int	gp_widget_get_child_by_id    (CameraWidget *parent, int id, 
 				      CameraWidget **child);
-int	gp_widget_get_root           (CameraWidget *widget, 
-				      CameraWidget **root);
+
+int	gp_widget_get_root (CameraWidget *widget, CameraWidget **root);
 
 int	gp_widget_set_info (CameraWidget *widget, const char  *info);
 int	gp_widget_get_info (CameraWidget *widget, const char **info);

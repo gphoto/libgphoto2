@@ -1056,6 +1056,9 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 		
 		gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (host) "
 				       "(in seconds)"), &child);
+		gp_widget_set_info (child, _("How long will it take until the "
+				    "camera powers off when connected to the "
+				    "computer?"));
 		gp_widget_set_range (child, 0, 255, 1);
 		gp_widget_set_value (child, &value);
 		gp_widget_append (section, child);
@@ -1067,6 +1070,9 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 
 		gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (field) "
 				       "(in seconds)"), &child);
+		gp_widget_set_info (child, _("How long will it take until the "
+				    "camera powers off when not connected to "
+				    "the computer?"));
 		gp_widget_set_range (child, 0, 255, 1);
 		gp_widget_set_value (child, &value);
 		gp_widget_append (section, child);
