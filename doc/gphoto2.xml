@@ -37,7 +37,9 @@
 
   <!--
   <preface>
-    <title>About this manual</title>
+    <title>About this document</title>
+
+    
     <variablelist>
       <title>Typographic conventions</title>
       <varlistentry>
@@ -55,17 +57,24 @@
         </listitem>
       </varlistentry>
     </variablelist>
+ 
   </preface>
   -->
- 
+
+
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
 
-  <chapter>
+  <chapter id="quickstart">
     <title>Quick start</title>
-    <subtitle>How you quickly get your pictures to your computer,
-      assuming somebody has already set up everything correctly</subtitle>
+
+    <abstract>
+      <simpara>
+        How you quickly get your pictures to your computer,
+        assuming somebody has already set up everything correctly.
+      </simpara>
+    </abstract>
 
     <para>This chapter assumes that somebody has set up your system
       correctly for use with 
@@ -176,7 +185,11 @@
         <para>
           As gphoto2 provides a user space driver, in order to have gphoto2
           access your camera, you have to disable all kernel drivers which want
-          to handle the camera themselves (e.g. the Linux dc2xx driver).
+          to handle the camera themselves (e.g. the Linux
+          <systemitem class="resource">dc2xx</systemitem> or
+          <systemitem class="resource">stv680</systemitem>
+          drivers). You can check whether these modules are loaded by
+          executing <command>lsmod</command>.
         </para>
         <para>
           On Linux systems, you have basically two options to allow user access
@@ -248,38 +261,55 @@
 
         <orderedlist>
           <listitem>
-            <formalpara>
-            Load your USB driver and mount the USB device filesystem,
-            i.e. e.g.
-            <screen>
-              <prompt># </prompt><command>modprobe</command> <parameter>usb-uhci</parameter>
-              <prompt># </prompt><command>modprobe</command> <parameter>usb-ohci</parameter>
-              <prompt># </prompt><command>mount</command> 
-              <parameter>-t usbdevfs</parameter>
-              <parameter>/proc/bus/usb</parameter>
-            </screen>
-                Modern distributions like Redhat 7.2 handle this
-                automatically.
-            </formalpara>
+            <para>
+              You must have the files 
+              <filename>devices</filename> and 
+              <filename>drivers</filename> in your
+              <filename class="directory">/proc/bus/usb</filename>
+              directory. If not, check the following paragraph for
+              hints.
+            </para>
+            <para>
+              Load your USB driver and mount the USB device filesystem,
+              i.e. e.g.
+              <screen>
+                <prompt># </prompt><command>modprobe</command> <parameter>usb-uhci</parameter>
+                <prompt># </prompt><command>modprobe</command> <parameter>usb-ohci</parameter>
+                <prompt># </prompt><command>mount</command> 
+                <parameter>-t usbdevfs</parameter>
+                <parameter>/proc/bus/usb</parameter>
+              </screen>
+              Modern distributions like Redhat 7.2 handle this
+              automatically if you have your USB hardware enabled.
+              Check your BIOS settings if <command>lspci</command>
+              doesn't list any USB hardware.
+            </para>
           </listitem>
           <!-- ==================== -->
           <listitem>
-            <formalpara>
-                Add the output of <command>gphoto2</command> <parameter>--print-usb-usermap</parameter> to
-                <filename>/etc/hotplug/usb.usermap</filename>
-                This makes hotplug recognise all USB cameras which your version 
-                of <xref linkend="libgphoto2"/> supports and makes
-                <command>hotplug</command> run the
-                <command>usbcam</command> script you choose in step
-                <xref linkend="chooseusbcamscript"/>whenever one of these
-                cameras is attached.
-            </formalpara>
+            <para>
+              Add the output of 
+              <screen>
+                <prompt># </prompt><command>gphoto2</command> <parameter>--print-usb-usermap</parameter> 
+              </screen>
+              to
+              <filename>/etc/hotplug/usb.usermap</filename> after
+              removing all lines beginning with "usbcam".
+            </para>
+            <para>
+              This makes hotplug recognise all USB cameras which your version 
+              of <xref linkend="libgphoto2"/> supports and makes
+              <command>hotplug</command> run the
+              <command>usbcam</command> script you choose in step
+              <xref linkend="chooseusbcamscript"/>whenever one of these
+              cameras is attached.
+            </para>
           </listitem>
           <!-- ==================== -->
           <listitem id="chooseusbcamscript">
             <para>
               Choose the right 
-              /etc/hotplug/usb/usbcam 
+              <filename>/etc/hotplug/usb/usbcam</filename>
               script for you.
               Example scripts are found in 
               <filename class="directory">packages/linux-hotplug</filename> 
@@ -302,17 +332,16 @@
               <varlistentry>
                 <term><filename>usbcam.console</filename></term>
                 <listitem>
-                  <para>
-                    The most simple solution is using usbcam.console. This
-                    changes the permissions so that the user owning /dev/console can
-                    access the camera. This works if you're logging in with
-                    pam_console, i.e. e.g. using gdm on Redhat Linux.
-                  </para>
-                  <para>
-                    You may want to check with "ls -l /dev/console" whether this
-                    usbcam.console script will work for you: /dev/console must
-                    belong to the user you want to run the gphoto2 frontend as.
-                  </para>              
+                  <simpara>
+                    The most simple solution is using
+                    usbcam.console<filename></filename>. This
+                    changes the permissions so that the user owning
+                    the console according to the 
+                    <systemitem class="library">pam_console</systemitem>
+                    access the camera. This works only if you're logging in with
+                    <systemitem class="library">pam_console</systemitem>, 
+                    i.e. e.g. using gdm on Redhat Linux.
+                  </simpara>
                 </listitem>
               </varlistentry>
               <varlistentry>
@@ -321,7 +350,8 @@
                   <simpara>
                     If you want only one user to have access to the camera, use
                     <filename>usbcam.user</filename> and change it
-                    accordingly.
+                    accordingly. There is a specially marked line in
+                    the script you have to change.
                   </simpara> 
                 </listitem>
               </varlistentry>
@@ -336,18 +366,20 @@
                     or a generic group 
                     <systemitem class="groupname">users</systemitem>
                     will do - and use that group in 
-                    <filename>usbcam.group</filename>.</simpara>
+                    <filename>usbcam.group</filename>. 
+                    There is a specially marked line in
+                    the script you have to change.</simpara>
                 </listitem>
               </varlistentry>  
             </variablelist>
           </listitem>
           <!-- ==================== -->
           <listitem>
-            <simpara>
+            <para>
               Make your script file
               <filename>/etc/hotplug/usb/usbcam</filename>
               executable.
-            </simpara>
+            </para>
           </listitem>
           <!-- ==================== -->
           <listitem>
@@ -369,9 +401,19 @@
               file will contain some messages to that effect.
             </para>
           </listitem>
+          <!-- ==================== -->
           <listitem>
-            Run <xref linkend="gphoto2-cli"/> or any other 
-            <xref linkend="libgphoto2"/> frontend and enjoy :-)
+            <para>
+              Run <xref linkend="gphoto2-cli"/> or any other 
+              <xref linkend="libgphoto2"/> frontend and enjoy:
+            </para>
+            <screen>
+              <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--list-ports</parameter>
+              <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--auto-detect</parameter>
+              <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--summary</parameter>
+              <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--list-files</parameter>
+              <prompt>[user@home ~]$ </prompt><command>gphoto2</command> <parameter>--get-all-images</parameter>
+            </screen>
           </listitem>
         </orderedlist>
       </section>
@@ -379,27 +421,28 @@
 
     <section>
       <title>Specifying the port and camera you use</title>
-      <para>
-        <systemitem class="library">libgphoto2</systemitem> 
-        identifies a camera by two values:
-        <orderedlist numeration="loweralpha">
-          <listitem>
-            <simpara>the <link linkend="ports">port</link> it 
-              is connected to</simpara>
-          </listitem>
-          <listitem>
-            <simpara>the <link linkend="cameras">name</link> of the
-              camera</simpara>
-          </listitem>
-        </orderedlist>
-      </para>
+      <abstract>
+        <para>
+          <systemitem class="library">libgphoto2</systemitem> 
+          identifies a camera by two values:
+          <orderedlist numeration="loweralpha">
+            <listitem>
+              <simpara>the <link linkend="ports">port</link> it 
+                is connected to</simpara>
+            </listitem>
+            <listitem>
+              <simpara>the <link linkend="cameras">name</link> of the
+                camera</simpara>
+            </listitem>
+          </orderedlist>
+        </para>
+        <para>
+          How these may be specified is discussed in this chapter.
+        </para>
+      </abstract>
 
-      <para>
-        How these may be specified is discussed in this chapter.
-      </para>
-      
-      <section id="ports">
-        <title>Ports</title>
+      <section id="port-names">
+        <title>Port names</title>
         <variablelist>
           <varlistentry>
             <term>Serial ports</term>
@@ -425,7 +468,7 @@
         </variablelist>
       </section>
 
-      <section>
+      <section id="camera-names">
         <title>Camera name</title>
         <para>
           The model name of the camera does not have to be specified when using
@@ -449,8 +492,13 @@
 
   <chapter>
     <title>Developer Documentation: The Inner Workings</title>
-    <subtitle>How it works internally, how you can work on it and how
-      you can use it in your own software</subtitle>
+
+    <abstract>
+      <para>
+        How it works internally, how you can work on it and how
+        you can use it in your own software.
+      </para>
+    </abstract>
 
     <para>The APIs defined here are described in more detail by the
       autogenerated documentation at FIXME. Eventually, they should be
@@ -471,10 +519,10 @@
             <imagedata fileref="figures/architecture.eps" format="EPS"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="../figures/architecture.png" format="PNG"/>
+            <imagedata fileref="figures/architecture.png" format="PNG"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="../figures/architecture.jpg" format="JPG"/>
+            <imagedata fileref="figures/architecture.jpg" format="JPG"/>
           </imageobject>
           <textobject>
             <phrase>Diagram describing the gPhoto2 software architecture</phrase>
@@ -500,10 +548,10 @@
             <imagedata fileref="figures/libgphoto2-api.eps" format="EPS"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="../figures/libgphoto2-api.png" format="PNG"/>
+            <imagedata fileref="figures/libgphoto2-api.png" format="PNG"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="../figures/libgphoto2-api.jpg" format="JPG"/>
+            <imagedata fileref="figures/libgphoto2-api.jpg" format="JPG"/>
           </imageobject>
           <textobject>
             <phrase>The libgphoto2 API within the context of gPhoto2 software architecture</phrase>
@@ -529,10 +577,10 @@
             <imagedata fileref="figures/libgphoto2-camlib.eps" format="EPS"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="../figures/libgphoto2-camlib.png" format="PNG"/>
+            <imagedata fileref="figures/libgphoto2-camlib.png" format="PNG"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="../figures/libgphoto2-camlib.jpg" format="JPG"/>
+            <imagedata fileref="figures/libgphoto2-camlib.jpg" format="JPG"/>
           </imageobject>
           <textobject>
             <phrase>The camlib API within the context of gPhoto2 software architecture</phrase>
@@ -558,10 +606,10 @@
             <imagedata fileref="figures/libgphoto2_port.eps" format="EPS"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="../figures/libgphoto2_port.png" format="PNG"/>
+            <imagedata fileref="figures/libgphoto2_port.png" format="PNG"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="../figures/libgphoto2_port.jpg" format="JPG"/>
+            <imagedata fileref="figures/libgphoto2_port.jpg" format="JPG"/>
           </imageobject>
           <textobject>
             <phrase>The libgphoto2_port API within the context of gPhoto2 software architecture</phrase>
@@ -583,8 +631,14 @@
 
   <chapter>
     <title>Utopia: A look into the possible future</title>
-    <subtitle>Things that may or may not be implemented in the
-      future</subtitle>
+    
+    <abstract>
+      <para>
+        Things that may or may not be implemented in the
+        future. Usefulness and feasability of these things may vary
+        considerably.
+      </para>
+    </abstract>
 
     <section>
       <title>Language Bindings</title>
@@ -606,10 +660,10 @@
             <imagedata fileref="figures/gphotofs.eps" format="EPS"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="../figures/gphotofs.png" format="PNG"/>
+            <imagedata fileref="figures/gphotofs.png" format="PNG"/>
           </imageobject>
           <imageobject>
-            <imagedata fileref="../figures/gphotofs.jpg" format="JPG"/>
+            <imagedata fileref="figures/gphotofs.jpg" format="JPG"/>
           </imageobject>
           <textobject>
             <phrase>The gPhoto2 file system software architecture</phrase>
