@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-05-28 23:24+0200\n"
+"POT-Creation-Date: 2002-06-13 23:51+0200\n"
 "PO-Revision-Date: 2002-04-06 23:22+0800\n"
 "Last-Translator: Wang Li <charlesw1234@163.com>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -907,7 +907,7 @@ msgstr ""
 # camlibs/konica/lowlevel.c:382 camlibs/polaroid/pdc700.c:314
 # camlibs/sierra/library.c:989
 #: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
-#: camlibs/polaroid/pdc700.c:314 camlibs/sierra/library.c:1181
+#: camlibs/polaroid/pdc700.c:314 camlibs/sierra/library.c:1156
 msgid "Downloading..."
 msgstr "正在下载..."
 
@@ -962,7 +962,7 @@ msgstr ""
 # camlibs/sierra/sierra.c:1581 camlibs/sierra/sierra.c:1754
 #. Date & Time
 #: camlibs/fuji/library.c:370 camlibs/fuji/library.c:403
-#: camlibs/sierra/sierra.c:1609 camlibs/sierra/sierra.c:1782
+#: camlibs/sierra/sierra.c:1550 camlibs/sierra/sierra.c:1723
 msgid "Date & Time"
 msgstr "日期和时间"
 
@@ -1384,8 +1384,8 @@ msgstr "鸣笛"
 # camlibs/sierra/sierra.c:1009 camlibs/sierra/sierra.c:1272
 #: camlibs/konica/library.c:675 camlibs/konica/library.c:682
 #: camlibs/konica/library.c:773 camlibs/konica/library.c:782
-#: camlibs/konica/library.c:1013 camlibs/sierra/sierra.c:1031
-#: camlibs/sierra/sierra.c:1037 camlibs/sierra/sierra.c:1300
+#: camlibs/konica/library.c:1013 camlibs/sierra/sierra.c:972
+#: camlibs/sierra/sierra.c:978 camlibs/sierra/sierra.c:1241
 msgid "On"
 msgstr "开"
 
@@ -1400,11 +1400,11 @@ msgstr "开"
 #: camlibs/konica/library.c:676 camlibs/konica/library.c:679
 #: camlibs/konica/library.c:772 camlibs/konica/library.c:779
 #: camlibs/konica/library.c:887 camlibs/konica/library.c:1011
-#: camlibs/sierra/sierra.c:916 camlibs/sierra/sierra.c:925
-#: camlibs/sierra/sierra.c:1032 camlibs/sierra/sierra.c:1035
-#: camlibs/sierra/sierra.c:1222 camlibs/sierra/sierra.c:1302
-#: camlibs/sierra/sierra.c:1426 camlibs/sierra/sierra.c:1434
-#: camlibs/sierra/sierra.c:1661
+#: camlibs/sierra/sierra.c:857 camlibs/sierra/sierra.c:866
+#: camlibs/sierra/sierra.c:973 camlibs/sierra/sierra.c:976
+#: camlibs/sierra/sierra.c:1163 camlibs/sierra/sierra.c:1243
+#: camlibs/sierra/sierra.c:1367 camlibs/sierra/sierra.c:1375
+#: camlibs/sierra/sierra.c:1602
 msgid "Off"
 msgstr "关"
 
@@ -1436,8 +1436,8 @@ msgstr "幻灯片显示间隔"
 # camlibs/sierra/sierra.c:1468 camlibs/sierra/sierra.c:1677
 #. Resolution
 #: camlibs/konica/library.c:710 camlibs/konica/library.c:921
-#: camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1145
-#: camlibs/sierra/sierra.c:1496 camlibs/sierra/sierra.c:1705
+#: camlibs/sierra/sierra.c:755 camlibs/sierra/sierra.c:1086
+#: camlibs/sierra/sierra.c:1437 camlibs/sierra/sierra.c:1646
 msgid "Resolution"
 msgstr "分辨率"
 
@@ -1472,7 +1472,7 @@ msgstr "本地化"
 # camlibs/sierra/sierra.c:1544 camlibs/sierra/sierra.c:1728
 #. Localization File
 #: camlibs/konica/library.c:736 camlibs/konica/library.c:940
-#: camlibs/sierra/sierra.c:1572 camlibs/sierra/sierra.c:1756
+#: camlibs/sierra/sierra.c:1513 camlibs/sierra/sierra.c:1697
 msgid "Language"
 msgstr "语言"
 
@@ -1557,15 +1557,15 @@ msgstr "开，消红眼"
 #: camlibs/konica/library.c:775 camlibs/konica/library.c:791
 #: camlibs/konica/library.c:806 camlibs/konica/library.c:809
 #: camlibs/konica/library.c:1017 camlibs/konica/library.c:1047
-#: camlibs/sierra/sierra.c:815 camlibs/sierra/sierra.c:821
-#: camlibs/sierra/sierra.c:855 camlibs/sierra/sierra.c:861
-#: camlibs/sierra/sierra.c:914 camlibs/sierra/sierra.c:921
-#: camlibs/sierra/sierra.c:975 camlibs/sierra/sierra.c:982
-#: camlibs/sierra/sierra.c:1149 camlibs/sierra/sierra.c:1178
-#: camlibs/sierra/sierra.c:1218 camlibs/sierra/sierra.c:1261
-#: camlibs/sierra/sierra.c:1424 camlibs/sierra/sierra.c:1430
-#: camlibs/sierra/sierra.c:1452 camlibs/sierra/sierra.c:1457
-#: camlibs/sierra/sierra.c:1657 camlibs/sierra/sierra.c:1677
+#: camlibs/sierra/sierra.c:756 camlibs/sierra/sierra.c:762
+#: camlibs/sierra/sierra.c:796 camlibs/sierra/sierra.c:802
+#: camlibs/sierra/sierra.c:855 camlibs/sierra/sierra.c:862
+#: camlibs/sierra/sierra.c:916 camlibs/sierra/sierra.c:923
+#: camlibs/sierra/sierra.c:1090 camlibs/sierra/sierra.c:1119
+#: camlibs/sierra/sierra.c:1159 camlibs/sierra/sierra.c:1202
+#: camlibs/sierra/sierra.c:1365 camlibs/sierra/sierra.c:1371
+#: camlibs/sierra/sierra.c:1393 camlibs/sierra/sierra.c:1398
+#: camlibs/sierra/sierra.c:1598 camlibs/sierra/sierra.c:1618
 msgid "Auto"
 msgstr "自动"
 
@@ -1590,8 +1590,8 @@ msgstr "聚焦"
 # camlibs/sierra/sierra.c:1425 camlibs/sierra/sierra.c:1431
 # camlibs/sierra/sierra.c:1651
 #: camlibs/konica/library.c:805 camlibs/konica/library.c:812
-#: camlibs/sierra/sierra.c:1453 camlibs/sierra/sierra.c:1459
-#: camlibs/sierra/sierra.c:1679
+#: camlibs/sierra/sierra.c:1394 camlibs/sierra/sierra.c:1400
+#: camlibs/sierra/sierra.c:1620
 msgid "Fixed"
 msgstr "固定"
 
@@ -1625,13 +1625,13 @@ msgstr "自动定时 (仅用于下一张照片)"
 # camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1455
 # camlibs/sierra/sierra.c:1668
 #: camlibs/konica/library.c:826 camlibs/konica/library.c:833
-#: camlibs/minolta/dimagev/dimagev.c:407 camlibs/sierra/sierra.c:884
-#: camlibs/sierra/sierra.c:891 camlibs/sierra/sierra.c:945
-#: camlibs/sierra/sierra.c:952 camlibs/sierra/sierra.c:1007
-#: camlibs/sierra/sierra.c:1013 camlibs/sierra/sierra.c:1197
-#: camlibs/sierra/sierra.c:1240 camlibs/sierra/sierra.c:1284
-#: camlibs/sierra/sierra.c:1479 camlibs/sierra/sierra.c:1483
-#: camlibs/sierra/sierra.c:1696
+#: camlibs/minolta/dimagev/dimagev.c:407 camlibs/sierra/sierra.c:825
+#: camlibs/sierra/sierra.c:832 camlibs/sierra/sierra.c:886
+#: camlibs/sierra/sierra.c:893 camlibs/sierra/sierra.c:948
+#: camlibs/sierra/sierra.c:954 camlibs/sierra/sierra.c:1138
+#: camlibs/sierra/sierra.c:1181 camlibs/sierra/sierra.c:1225
+#: camlibs/sierra/sierra.c:1420 camlibs/sierra/sierra.c:1424
+#: camlibs/sierra/sierra.c:1637
 msgid "Normal"
 msgstr "普通"
 
@@ -1857,8 +1857,8 @@ msgstr "否"
 
 # camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:1470
 # camlibs/sierra/sierra.c:1477 camlibs/sierra/sierra.c:1682
-#: camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:1498
-#: camlibs/sierra/sierra.c:1505 camlibs/sierra/sierra.c:1710
+#: camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:1439
+#: camlibs/sierra/sierra.c:1446 camlibs/sierra/sierra.c:1651
 msgid "Fine"
 msgstr "精细"
 
@@ -1866,10 +1866,10 @@ msgstr "精细"
 # camlibs/sierra/sierra.c:795 camlibs/sierra/sierra.c:1123
 # camlibs/sierra/sierra.c:1469 camlibs/sierra/sierra.c:1475
 # camlibs/sierra/sierra.c:1680
-#: camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:816
-#: camlibs/sierra/sierra.c:823 camlibs/sierra/sierra.c:1151
-#: camlibs/sierra/sierra.c:1497 camlibs/sierra/sierra.c:1503
-#: camlibs/sierra/sierra.c:1708
+#: camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:757
+#: camlibs/sierra/sierra.c:764 camlibs/sierra/sierra.c:1092
+#: camlibs/sierra/sierra.c:1438 camlibs/sierra/sierra.c:1444
+#: camlibs/sierra/sierra.c:1649
 msgid "Standard"
 msgstr "标准"
 
@@ -2201,8 +2201,8 @@ msgstr "超精细"
 
 # camlibs/polaroid/pdc700.c:169 camlibs/sierra/sierra.c:1368
 # camlibs/sierra/sierra.c:1382 camlibs/sierra/sierra.c:1617
-#: camlibs/polaroid/pdc700.c:169 camlibs/sierra/sierra.c:1396
-#: camlibs/sierra/sierra.c:1410 camlibs/sierra/sierra.c:1645
+#: camlibs/polaroid/pdc700.c:169 camlibs/sierra/sierra.c:1337
+#: camlibs/sierra/sierra.c:1351 camlibs/sierra/sierra.c:1586
 msgid "auto"
 msgstr "自动"
 
@@ -2323,8 +2323,8 @@ msgstr ""
 
 # camlibs/polaroid/pdc700.c:981 camlibs/sierra/sierra.c:776
 # camlibs/sierra/sierra.c:1353
-#: camlibs/polaroid/pdc700.c:981 camlibs/sierra/sierra.c:804
-#: camlibs/sierra/sierra.c:1381
+#: camlibs/polaroid/pdc700.c:981 camlibs/sierra/sierra.c:745
+#: camlibs/sierra/sierra.c:1322
 msgid "Camera Configuration"
 msgstr "相机配置"
 
@@ -2579,12 +2579,12 @@ msgid "PTP Protocol error, response expected"
 msgstr "PTP 协议错误，需要响应"
 
 # camlibs/ptp/library.c:422
-#: camlibs/ptp/library.c:462
+#: camlibs/ptp/library.c:463
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
 msgstr "由 Mariusz Woloszyn <emsi@ipartners.pl> 编写。请享用！"
 
 # camlibs/ptp/library.c:918
-#: camlibs/ptp/library.c:972
+#: camlibs/ptp/library.c:995
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP 仅为 USB 相机实现。"
 
@@ -2664,44 +2664,44 @@ msgstr ""
 "Marcus Meissner <marcus@jet.franken.de> 修正并增强了移植后的版本。"
 
 # camlibs/sierra/sierra.c:635
-#: camlibs/sierra/sierra.c:663
+#: camlibs/sierra/sierra.c:602
 msgid "The file to be uploaded has a null length"
 msgstr "要上载的文件具有空长度"
 
 # camlibs/sierra/sierra.c:649
-#: camlibs/sierra/sierra.c:677
+#: camlibs/sierra/sierra.c:616
 msgid "Not enough memory available on the memory card"
 msgstr "内存卡上没有足够的内存"
 
 # camlibs/sierra/sierra.c:656
-#: camlibs/sierra/sierra.c:684
+#: camlibs/sierra/sierra.c:623
 msgid "Cannot retrieve the name of the folder containing the pictures"
 msgstr "无法检索含有照片的文件夹名称"
 
 # camlibs/sierra/sierra.c:663
-#: camlibs/sierra/sierra.c:691
+#: camlibs/sierra/sierra.c:630
 #, c-format
 msgid "Upload is supported into the '%s' folder only"
 msgstr "只支持上载到文件夹“%s”"
 
 # camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:1443
-#: camlibs/sierra/sierra.c:805 camlibs/sierra/sierra.c:1471
+#: camlibs/sierra/sierra.c:746 camlibs/sierra/sierra.c:1412
 msgid "Picture Settings"
 msgstr "照片设置"
 
 # camlibs/sierra/sierra.c:789 camlibs/sierra/sierra.c:797
 # camlibs/sierra/sierra.c:830 camlibs/sierra/sierra.c:839
 # camlibs/sierra/sierra.c:1125 camlibs/sierra/sierra.c:1156
-#: camlibs/sierra/sierra.c:817 camlibs/sierra/sierra.c:825
-#: camlibs/sierra/sierra.c:858 camlibs/sierra/sierra.c:867
-#: camlibs/sierra/sierra.c:1153 camlibs/sierra/sierra.c:1184
+#: camlibs/sierra/sierra.c:758 camlibs/sierra/sierra.c:766
+#: camlibs/sierra/sierra.c:799 camlibs/sierra/sierra.c:808
+#: camlibs/sierra/sierra.c:1094 camlibs/sierra/sierra.c:1125
 msgid "High"
 msgstr "高"
 
 # camlibs/sierra/sierra.c:790 camlibs/sierra/sierra.c:799
 # camlibs/sierra/sierra.c:1127
-#: camlibs/sierra/sierra.c:818 camlibs/sierra/sierra.c:827
-#: camlibs/sierra/sierra.c:1155
+#: camlibs/sierra/sierra.c:759 camlibs/sierra/sierra.c:768
+#: camlibs/sierra/sierra.c:1096
 msgid "Best"
 msgstr "最佳"
 
@@ -2713,41 +2713,41 @@ msgstr "最佳"
 # camlibs/sierra/sierra.c:1413 camlibs/sierra/sierra.c:1436
 # camlibs/sierra/sierra.c:1458 camlibs/sierra/sierra.c:1484
 # camlibs/sierra/sierra.c:1503 camlibs/sierra/sierra.c:1571
-#: camlibs/sierra/sierra.c:830 camlibs/sierra/sierra.c:870
-#: camlibs/sierra/sierra.c:902 camlibs/sierra/sierra.c:932
-#: camlibs/sierra/sierra.c:963 camlibs/sierra/sierra.c:994
-#: camlibs/sierra/sierra.c:1018 camlibs/sierra/sierra.c:1040
-#: camlibs/sierra/sierra.c:1069 camlibs/sierra/sierra.c:1413
-#: camlibs/sierra/sierra.c:1441 camlibs/sierra/sierra.c:1464
-#: camlibs/sierra/sierra.c:1486 camlibs/sierra/sierra.c:1512
-#: camlibs/sierra/sierra.c:1531 camlibs/sierra/sierra.c:1599
+#: camlibs/sierra/sierra.c:771 camlibs/sierra/sierra.c:811
+#: camlibs/sierra/sierra.c:843 camlibs/sierra/sierra.c:873
+#: camlibs/sierra/sierra.c:904 camlibs/sierra/sierra.c:935
+#: camlibs/sierra/sierra.c:959 camlibs/sierra/sierra.c:981
+#: camlibs/sierra/sierra.c:1010 camlibs/sierra/sierra.c:1354
+#: camlibs/sierra/sierra.c:1382 camlibs/sierra/sierra.c:1405
+#: camlibs/sierra/sierra.c:1427 camlibs/sierra/sierra.c:1453
+#: camlibs/sierra/sierra.c:1472 camlibs/sierra/sierra.c:1540
 #, c-format
 msgid "%i (unknown)"
 msgstr "%i (未知)"
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
-#: camlibs/sierra/sierra.c:842 camlibs/sierra/sierra.c:1165
+#: camlibs/sierra/sierra.c:783 camlibs/sierra/sierra.c:1106
 msgid "Shutter Speed (microseconds, 0 auto)"
 msgstr "快门速度 (微秒，0 表示自动)"
 
 # camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1146
 # camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1602
-#: camlibs/sierra/sierra.c:854 camlibs/sierra/sierra.c:1174
-#: camlibs/sierra/sierra.c:1389 camlibs/sierra/sierra.c:1630
+#: camlibs/sierra/sierra.c:795 camlibs/sierra/sierra.c:1115
+#: camlibs/sierra/sierra.c:1330 camlibs/sierra/sierra.c:1571
 msgid "Aperture"
 msgstr "光圈"
 
 # camlibs/sierra/sierra.c:828 camlibs/sierra/sierra.c:835
 # camlibs/sierra/sierra.c:1152
-#: camlibs/sierra/sierra.c:856 camlibs/sierra/sierra.c:863
-#: camlibs/sierra/sierra.c:1180
+#: camlibs/sierra/sierra.c:797 camlibs/sierra/sierra.c:804
+#: camlibs/sierra/sierra.c:1121
 msgid "Low"
 msgstr "低"
 
 # camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:837
 # camlibs/sierra/sierra.c:1154
-#: camlibs/sierra/sierra.c:857 camlibs/sierra/sierra.c:865
-#: camlibs/sierra/sierra.c:1182
+#: camlibs/sierra/sierra.c:798 camlibs/sierra/sierra.c:806
+#: camlibs/sierra/sierra.c:1123
 msgid "Medium"
 msgstr "中"
 
@@ -2755,208 +2755,208 @@ msgstr "中"
 # camlibs/sierra/sierra.c:1494 camlibs/sierra/sierra.c:1695
 #. Those values are for a C-2020 Z. If your model differs, we
 #. have to distinguish models here...
-#: camlibs/sierra/sierra.c:883 camlibs/sierra/sierra.c:1193
-#: camlibs/sierra/sierra.c:1522 camlibs/sierra/sierra.c:1723
+#: camlibs/sierra/sierra.c:824 camlibs/sierra/sierra.c:1134
+#: camlibs/sierra/sierra.c:1463 camlibs/sierra/sierra.c:1664
 msgid "Color Mode"
 msgstr "彩色模式"
 
 # camlibs/sierra/sierra.c:857 camlibs/sierra/sierra.c:865
 # camlibs/sierra/sierra.c:1171
-#: camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:893
-#: camlibs/sierra/sierra.c:1199
+#: camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:834
+#: camlibs/sierra/sierra.c:1140
 msgid "Black/White"
 msgstr "黑白"
 
 # camlibs/sierra/sierra.c:858 camlibs/sierra/sierra.c:867
 # camlibs/sierra/sierra.c:1173
-#: camlibs/sierra/sierra.c:886 camlibs/sierra/sierra.c:895
-#: camlibs/sierra/sierra.c:1201
+#: camlibs/sierra/sierra.c:827 camlibs/sierra/sierra.c:836
+#: camlibs/sierra/sierra.c:1142
 msgid "Sepia"
 msgstr "棕褐色"
 
 # camlibs/sierra/sierra.c:859 camlibs/sierra/sierra.c:869
 # camlibs/sierra/sierra.c:1175
-#: camlibs/sierra/sierra.c:887 camlibs/sierra/sierra.c:897
-#: camlibs/sierra/sierra.c:1203
+#: camlibs/sierra/sierra.c:828 camlibs/sierra/sierra.c:838
+#: camlibs/sierra/sierra.c:1144
 msgid "White Board"
 msgstr "白板"
 
 # camlibs/sierra/sierra.c:860 camlibs/sierra/sierra.c:871
 # camlibs/sierra/sierra.c:1177
-#: camlibs/sierra/sierra.c:888 camlibs/sierra/sierra.c:899
-#: camlibs/sierra/sierra.c:1205
+#: camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:840
+#: camlibs/sierra/sierra.c:1146
 msgid "Black Board"
 msgstr "黑板"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/sierra/sierra.c:913 camlibs/sierra/sierra.c:1214
-#: camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1654
+#: camlibs/sierra/sierra.c:854 camlibs/sierra/sierra.c:1155
+#: camlibs/sierra/sierra.c:1364 camlibs/sierra/sierra.c:1595
 msgid "Flash Mode"
 msgstr "闪光灯模式"
 
 # camlibs/sierra/sierra.c:887 camlibs/sierra/sierra.c:895
 # camlibs/sierra/sierra.c:1192 camlibs/sierra/sierra.c:1397
 # camlibs/sierra/sierra.c:1404 camlibs/sierra/sierra.c:1631
-#: camlibs/sierra/sierra.c:915 camlibs/sierra/sierra.c:923
-#: camlibs/sierra/sierra.c:1220 camlibs/sierra/sierra.c:1425
-#: camlibs/sierra/sierra.c:1432 camlibs/sierra/sierra.c:1659
+#: camlibs/sierra/sierra.c:856 camlibs/sierra/sierra.c:864
+#: camlibs/sierra/sierra.c:1161 camlibs/sierra/sierra.c:1366
+#: camlibs/sierra/sierra.c:1373 camlibs/sierra/sierra.c:1600
 msgid "Force"
 msgstr "强制"
 
 # camlibs/sierra/sierra.c:889 camlibs/sierra/sierra.c:899
 # camlibs/sierra/sierra.c:1196 camlibs/sierra/sierra.c:1399
 # camlibs/sierra/sierra.c:1408 camlibs/sierra/sierra.c:1635
-#: camlibs/sierra/sierra.c:917 camlibs/sierra/sierra.c:927
-#: camlibs/sierra/sierra.c:1224 camlibs/sierra/sierra.c:1427
-#: camlibs/sierra/sierra.c:1436 camlibs/sierra/sierra.c:1663
+#: camlibs/sierra/sierra.c:858 camlibs/sierra/sierra.c:868
+#: camlibs/sierra/sierra.c:1165 camlibs/sierra/sierra.c:1368
+#: camlibs/sierra/sierra.c:1377 camlibs/sierra/sierra.c:1604
 msgid "Red-eye Reduction"
 msgstr "消红眼"
 
 # camlibs/sierra/sierra.c:890 camlibs/sierra/sierra.c:901
 # camlibs/sierra/sierra.c:1198 camlibs/sierra/sierra.c:1400
 # camlibs/sierra/sierra.c:1410 camlibs/sierra/sierra.c:1637
-#: camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:929
-#: camlibs/sierra/sierra.c:1226 camlibs/sierra/sierra.c:1428
-#: camlibs/sierra/sierra.c:1438 camlibs/sierra/sierra.c:1665
+#: camlibs/sierra/sierra.c:859 camlibs/sierra/sierra.c:870
+#: camlibs/sierra/sierra.c:1167 camlibs/sierra/sierra.c:1369
+#: camlibs/sierra/sierra.c:1379 camlibs/sierra/sierra.c:1606
 msgid "Slow Sync"
 msgstr "慢同步"
 
 # camlibs/sierra/sierra.c:915 camlibs/sierra/sierra.c:1208
-#: camlibs/sierra/sierra.c:943 camlibs/sierra/sierra.c:1236
+#: camlibs/sierra/sierra.c:884 camlibs/sierra/sierra.c:1177
 msgid "Brightness/Contrast"
 msgstr "亮度/对比度"
 
 # camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:926
 # camlibs/sierra/sierra.c:1214
-#: camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:954
-#: camlibs/sierra/sierra.c:1242
+#: camlibs/sierra/sierra.c:887 camlibs/sierra/sierra.c:895
+#: camlibs/sierra/sierra.c:1183
 msgid "Bright+"
 msgstr "亮度+"
 
 # camlibs/sierra/sierra.c:919 camlibs/sierra/sierra.c:928
 # camlibs/sierra/sierra.c:1216
-#: camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:956
-#: camlibs/sierra/sierra.c:1244
+#: camlibs/sierra/sierra.c:888 camlibs/sierra/sierra.c:897
+#: camlibs/sierra/sierra.c:1185
 msgid "Bright-"
 msgstr "亮度-"
 
 # camlibs/sierra/sierra.c:920 camlibs/sierra/sierra.c:930
 # camlibs/sierra/sierra.c:1218
-#: camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:958
-#: camlibs/sierra/sierra.c:1246
+#: camlibs/sierra/sierra.c:889 camlibs/sierra/sierra.c:899
+#: camlibs/sierra/sierra.c:1187
 msgid "Contrast+"
 msgstr "对比度+"
 
 # camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:932
 # camlibs/sierra/sierra.c:1220
-#: camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:960
-#: camlibs/sierra/sierra.c:1248
+#: camlibs/sierra/sierra.c:890 camlibs/sierra/sierra.c:901
+#: camlibs/sierra/sierra.c:1189
 msgid "Contrast-"
 msgstr "对比度-"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/sierra/sierra.c:974 camlibs/sierra/sierra.c:1257
-#: camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1674
+#: camlibs/sierra/sierra.c:915 camlibs/sierra/sierra.c:1198
+#: camlibs/sierra/sierra.c:1392 camlibs/sierra/sierra.c:1615
 msgid "White Balance"
 msgstr "白平衡"
 
 # camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
 # camlibs/sierra/sierra.c:1235
-#: camlibs/sierra/sierra.c:976 camlibs/sierra/sierra.c:984
-#: camlibs/sierra/sierra.c:1263
+#: camlibs/sierra/sierra.c:917 camlibs/sierra/sierra.c:925
+#: camlibs/sierra/sierra.c:1204
 msgid "Skylight"
 msgstr "日光"
 
 # camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:958
 # camlibs/sierra/sierra.c:1237
-#: camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:986
-#: camlibs/sierra/sierra.c:1265
+#: camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:927
+#: camlibs/sierra/sierra.c:1206
 msgid "Fluorescent"
 msgstr "荧光"
 
 # camlibs/sierra/sierra.c:950 camlibs/sierra/sierra.c:960
 # camlibs/sierra/sierra.c:1239
-#: camlibs/sierra/sierra.c:978 camlibs/sierra/sierra.c:988
-#: camlibs/sierra/sierra.c:1267
+#: camlibs/sierra/sierra.c:919 camlibs/sierra/sierra.c:929
+#: camlibs/sierra/sierra.c:1208
 msgid "Tungsten"
 msgstr "钨"
 
 # camlibs/sierra/sierra.c:951 camlibs/sierra/sierra.c:963
 # camlibs/sierra/sierra.c:1241
-#: camlibs/sierra/sierra.c:979 camlibs/sierra/sierra.c:991
-#: camlibs/sierra/sierra.c:1269
+#: camlibs/sierra/sierra.c:920 camlibs/sierra/sierra.c:932
+#: camlibs/sierra/sierra.c:1210
 msgid "Cloudy"
 msgstr "多云"
 
 # camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1250
 # camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
-#: camlibs/sierra/sierra.c:1005 camlibs/sierra/sierra.c:1278
-#: camlibs/sierra/sierra.c:1477 camlibs/sierra/sierra.c:1690
+#: camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1219
+#: camlibs/sierra/sierra.c:1418 camlibs/sierra/sierra.c:1631
 msgid "Lens Mode"
 msgstr "镜头模式"
 
 # camlibs/sierra/sierra.c:978 camlibs/sierra/sierra.c:983
 # camlibs/sierra/sierra.c:1254 camlibs/sierra/sierra.c:1450
 # camlibs/sierra/sierra.c:1453 camlibs/sierra/sierra.c:1666
-#: camlibs/sierra/sierra.c:1006 camlibs/sierra/sierra.c:1011
-#: camlibs/sierra/sierra.c:1282 camlibs/sierra/sierra.c:1478
-#: camlibs/sierra/sierra.c:1481 camlibs/sierra/sierra.c:1694
+#: camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:952
+#: camlibs/sierra/sierra.c:1223 camlibs/sierra/sierra.c:1419
+#: camlibs/sierra/sierra.c:1422 camlibs/sierra/sierra.c:1635
 msgid "Macro"
 msgstr "巨大"
 
 # camlibs/sierra/sierra.c:980 camlibs/sierra/sierra.c:987
 # camlibs/sierra/sierra.c:1258
-#: camlibs/sierra/sierra.c:1008 camlibs/sierra/sierra.c:1015
-#: camlibs/sierra/sierra.c:1286
+#: camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:956
+#: camlibs/sierra/sierra.c:1227
 msgid "Infinity/Fish-eye"
 msgstr "无限/鱼眼"
 
 # camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1268
-#: camlibs/sierra/sierra.c:1029 camlibs/sierra/sierra.c:1296
+#: camlibs/sierra/sierra.c:970 camlibs/sierra/sierra.c:1237
 msgid "Spot Metering Mode"
 msgstr "场景测量模式"
 
 # camlibs/sierra/sierra.c:1023 camlibs/sierra/sierra.c:1283
-#: camlibs/sierra/sierra.c:1051 camlibs/sierra/sierra.c:1311
+#: camlibs/sierra/sierra.c:992 camlibs/sierra/sierra.c:1252
 msgid "Zoom"
 msgstr "缩放"
 
 # camlibs/sierra/sierra.c:1024 camlibs/sierra/sierra.c:1030
-#: camlibs/sierra/sierra.c:1052 camlibs/sierra/sierra.c:1058
+#: camlibs/sierra/sierra.c:993 camlibs/sierra/sierra.c:999
 msgid "1x"
 msgstr "1x"
 
 # camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1035
-#: camlibs/sierra/sierra.c:1053 camlibs/sierra/sierra.c:1063
+#: camlibs/sierra/sierra.c:994 camlibs/sierra/sierra.c:1004
 msgid "1.6x"
 msgstr "1.6x"
 
 # camlibs/sierra/sierra.c:1026 camlibs/sierra/sierra.c:1032
-#: camlibs/sierra/sierra.c:1054 camlibs/sierra/sierra.c:1060
+#: camlibs/sierra/sierra.c:995 camlibs/sierra/sierra.c:1001
 msgid "2x"
 msgstr "2x"
 
 # camlibs/sierra/sierra.c:1027 camlibs/sierra/sierra.c:1038
-#: camlibs/sierra/sierra.c:1055 camlibs/sierra/sierra.c:1066
+#: camlibs/sierra/sierra.c:996 camlibs/sierra/sierra.c:1007
 msgid "2.5x"
 msgstr "2.5x"
 
 # camlibs/sierra/sierra.c:1048 camlibs/sierra/sierra.c:1510
-#: camlibs/sierra/sierra.c:1076 camlibs/sierra/sierra.c:1538
+#: camlibs/sierra/sierra.c:1017 camlibs/sierra/sierra.c:1479
 msgid "Camera Settings"
 msgstr "相机设置"
 
 # camlibs/sierra/sierra.c:1055 camlibs/sierra/sierra.c:1302
 # camlibs/sierra/sierra.c:1517 camlibs/sierra/sierra.c:1709
-#: camlibs/sierra/sierra.c:1083 camlibs/sierra/sierra.c:1330
-#: camlibs/sierra/sierra.c:1545 camlibs/sierra/sierra.c:1737
+#: camlibs/sierra/sierra.c:1024 camlibs/sierra/sierra.c:1271
+#: camlibs/sierra/sierra.c:1486 camlibs/sierra/sierra.c:1678
 msgid "Auto Off (host) (in seconds)"
 msgstr "自动关机 (连接) (秒)"
 
 # camlibs/sierra/sierra.c:1057 camlibs/sierra/sierra.c:1519
-#: camlibs/sierra/sierra.c:1085 camlibs/sierra/sierra.c:1547
+#: camlibs/sierra/sierra.c:1026 camlibs/sierra/sierra.c:1488
 msgid ""
 "How long will it take until the camera powers off when connected to the "
 "computer?"
@@ -2964,233 +2964,233 @@ msgstr "在相机连接到计算机以后，须等待多长时间再自动关机
 
 # camlibs/sierra/sierra.c:1069 camlibs/sierra/sierra.c:1312
 # camlibs/sierra/sierra.c:1531 camlibs/sierra/sierra.c:1719
-#: camlibs/sierra/sierra.c:1097 camlibs/sierra/sierra.c:1340
-#: camlibs/sierra/sierra.c:1559 camlibs/sierra/sierra.c:1747
+#: camlibs/sierra/sierra.c:1038 camlibs/sierra/sierra.c:1281
+#: camlibs/sierra/sierra.c:1500 camlibs/sierra/sierra.c:1688
 msgid "Auto Off (field) (in seconds)"
 msgstr "自动关机 (未连接) (秒)"
 
 # camlibs/sierra/sierra.c:1071 camlibs/sierra/sierra.c:1533
-#: camlibs/sierra/sierra.c:1099 camlibs/sierra/sierra.c:1561
+#: camlibs/sierra/sierra.c:1040 camlibs/sierra/sierra.c:1502
 msgid ""
 "How long will it take until the camera powers off when not connected to the "
 "computer?"
 msgstr "在未连接到计算机时，须等待多长时间再自动关机？"
 
 # camlibs/sierra/sierra.c:1083 camlibs/sierra/sierra.c:1322
-#: camlibs/sierra/sierra.c:1111 camlibs/sierra/sierra.c:1350
+#: camlibs/sierra/sierra.c:1052 camlibs/sierra/sierra.c:1291
 msgid "LCD Brightness"
 msgstr "LCD 亮度"
 
 # camlibs/sierra/sierra.c:1093 camlibs/sierra/sierra.c:1331
-#: camlibs/sierra/sierra.c:1121 camlibs/sierra/sierra.c:1359
+#: camlibs/sierra/sierra.c:1062 camlibs/sierra/sierra.c:1300
 msgid "LCD Auto Off (in seconds)"
 msgstr "LCD 自动关闭 (以秒为单位)"
 
 # camlibs/sierra/sierra.c:1355
-#: camlibs/sierra/sierra.c:1383
+#: camlibs/sierra/sierra.c:1324
 msgid "Shot Settings"
 msgstr "拍摄设置"
 
 # camlibs/sierra/sierra.c:1362 camlibs/sierra/sierra.c:1370
 # camlibs/sierra/sierra.c:1605
-#: camlibs/sierra/sierra.c:1390 camlibs/sierra/sierra.c:1398
-#: camlibs/sierra/sierra.c:1633
+#: camlibs/sierra/sierra.c:1331 camlibs/sierra/sierra.c:1339
+#: camlibs/sierra/sierra.c:1574
 msgid "F2"
 msgstr "F2"
 
 # camlibs/sierra/sierra.c:1363 camlibs/sierra/sierra.c:1372
 # camlibs/sierra/sierra.c:1607
-#: camlibs/sierra/sierra.c:1391 camlibs/sierra/sierra.c:1400
-#: camlibs/sierra/sierra.c:1635
+#: camlibs/sierra/sierra.c:1332 camlibs/sierra/sierra.c:1341
+#: camlibs/sierra/sierra.c:1576
 msgid "F2.3"
 msgstr "F2.3"
 
 # camlibs/sierra/sierra.c:1364 camlibs/sierra/sierra.c:1374
 # camlibs/sierra/sierra.c:1609
-#: camlibs/sierra/sierra.c:1392 camlibs/sierra/sierra.c:1402
-#: camlibs/sierra/sierra.c:1637
+#: camlibs/sierra/sierra.c:1333 camlibs/sierra/sierra.c:1343
+#: camlibs/sierra/sierra.c:1578
 msgid "F2.8"
 msgstr "F2.8"
 
 # camlibs/sierra/sierra.c:1365 camlibs/sierra/sierra.c:1376
 # camlibs/sierra/sierra.c:1611
-#: camlibs/sierra/sierra.c:1393 camlibs/sierra/sierra.c:1404
-#: camlibs/sierra/sierra.c:1639
+#: camlibs/sierra/sierra.c:1334 camlibs/sierra/sierra.c:1345
+#: camlibs/sierra/sierra.c:1580
 msgid "F4"
 msgstr "F4"
 
 # camlibs/sierra/sierra.c:1366 camlibs/sierra/sierra.c:1378
 # camlibs/sierra/sierra.c:1613
-#: camlibs/sierra/sierra.c:1394 camlibs/sierra/sierra.c:1406
-#: camlibs/sierra/sierra.c:1641
+#: camlibs/sierra/sierra.c:1335 camlibs/sierra/sierra.c:1347
+#: camlibs/sierra/sierra.c:1582
 msgid "F5.6"
 msgstr "F5.6"
 
 # camlibs/sierra/sierra.c:1367 camlibs/sierra/sierra.c:1380
 # camlibs/sierra/sierra.c:1615
-#: camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1408
-#: camlibs/sierra/sierra.c:1643
+#: camlibs/sierra/sierra.c:1336 camlibs/sierra/sierra.c:1349
+#: camlibs/sierra/sierra.c:1584
 msgid "F8"
 msgstr "F8"
 
 # camlibs/sierra/sierra.c:1426 camlibs/sierra/sierra.c:1433
 # camlibs/sierra/sierra.c:1653
-#: camlibs/sierra/sierra.c:1454 camlibs/sierra/sierra.c:1461
-#: camlibs/sierra/sierra.c:1681
+#: camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1402
+#: camlibs/sierra/sierra.c:1622
 msgid "Custom"
 msgstr "定制"
 
 # camlibs/sierra/sierra.c:1471 camlibs/sierra/sierra.c:1479
 # camlibs/sierra/sierra.c:1684
-#: camlibs/sierra/sierra.c:1499 camlibs/sierra/sierra.c:1507
-#: camlibs/sierra/sierra.c:1712
+#: camlibs/sierra/sierra.c:1440 camlibs/sierra/sierra.c:1448
+#: camlibs/sierra/sierra.c:1653
 msgid "SuperFine"
 msgstr "超精细"
 
 # camlibs/sierra/sierra.c:1472 camlibs/sierra/sierra.c:1481
 # camlibs/sierra/sierra.c:1686
-#: camlibs/sierra/sierra.c:1500 camlibs/sierra/sierra.c:1509
-#: camlibs/sierra/sierra.c:1714
+#: camlibs/sierra/sierra.c:1441 camlibs/sierra/sierra.c:1450
+#: camlibs/sierra/sierra.c:1655
 msgid "HyPict"
 msgstr "合成照片"
 
 # camlibs/sierra/sierra.c:1495 camlibs/sierra/sierra.c:1498
 # camlibs/sierra/sierra.c:1698
-#: camlibs/sierra/sierra.c:1523 camlibs/sierra/sierra.c:1526
-#: camlibs/sierra/sierra.c:1726
+#: camlibs/sierra/sierra.c:1464 camlibs/sierra/sierra.c:1467
+#: camlibs/sierra/sierra.c:1667
 msgid "color"
 msgstr "彩色"
 
 # camlibs/sierra/sierra.c:1496 camlibs/sierra/sierra.c:1500
 # camlibs/sierra/sierra.c:1700
-#: camlibs/sierra/sierra.c:1524 camlibs/sierra/sierra.c:1528
-#: camlibs/sierra/sierra.c:1728
+#: camlibs/sierra/sierra.c:1465 camlibs/sierra/sierra.c:1469
+#: camlibs/sierra/sierra.c:1669
 msgid "black & white"
 msgstr "黑白"
 
 # camlibs/sierra/sierra.c:1545 camlibs/sierra/sierra.c:1554
 # camlibs/sierra/sierra.c:1731
-#: camlibs/sierra/sierra.c:1573 camlibs/sierra/sierra.c:1582
-#: camlibs/sierra/sierra.c:1759
+#: camlibs/sierra/sierra.c:1514 camlibs/sierra/sierra.c:1523
+#: camlibs/sierra/sierra.c:1700
 msgid "Korean"
 msgstr "韩语"
 
 # camlibs/sierra/sierra.c:1546 camlibs/sierra/sierra.c:1556
 # camlibs/sierra/sierra.c:1733
-#: camlibs/sierra/sierra.c:1574 camlibs/sierra/sierra.c:1584
-#: camlibs/sierra/sierra.c:1761
+#: camlibs/sierra/sierra.c:1515 camlibs/sierra/sierra.c:1525
+#: camlibs/sierra/sierra.c:1702
 msgid "English"
 msgstr "英语"
 
 # camlibs/sierra/sierra.c:1547 camlibs/sierra/sierra.c:1558
 # camlibs/sierra/sierra.c:1735
-#: camlibs/sierra/sierra.c:1575 camlibs/sierra/sierra.c:1586
-#: camlibs/sierra/sierra.c:1763
+#: camlibs/sierra/sierra.c:1516 camlibs/sierra/sierra.c:1527
+#: camlibs/sierra/sierra.c:1704
 msgid "French"
 msgstr "法语"
 
 # camlibs/sierra/sierra.c:1548 camlibs/sierra/sierra.c:1560
 # camlibs/sierra/sierra.c:1737
-#: camlibs/sierra/sierra.c:1576 camlibs/sierra/sierra.c:1588
-#: camlibs/sierra/sierra.c:1765
+#: camlibs/sierra/sierra.c:1517 camlibs/sierra/sierra.c:1529
+#: camlibs/sierra/sierra.c:1706
 msgid "German"
 msgstr "德语"
 
 # camlibs/sierra/sierra.c:1549 camlibs/sierra/sierra.c:1562
 # camlibs/sierra/sierra.c:1739
-#: camlibs/sierra/sierra.c:1577 camlibs/sierra/sierra.c:1590
-#: camlibs/sierra/sierra.c:1767
+#: camlibs/sierra/sierra.c:1518 camlibs/sierra/sierra.c:1531
+#: camlibs/sierra/sierra.c:1708
 msgid "Italian"
 msgstr "意大利语"
 
 # camlibs/sierra/sierra.c:1550 camlibs/sierra/sierra.c:1564
 # camlibs/sierra/sierra.c:1741
-#: camlibs/sierra/sierra.c:1578 camlibs/sierra/sierra.c:1592
-#: camlibs/sierra/sierra.c:1769
+#: camlibs/sierra/sierra.c:1519 camlibs/sierra/sierra.c:1533
+#: camlibs/sierra/sierra.c:1710
 msgid "Japanese"
 msgstr "日语"
 
 # camlibs/sierra/sierra.c:1551 camlibs/sierra/sierra.c:1566
 # camlibs/sierra/sierra.c:1743
-#: camlibs/sierra/sierra.c:1579 camlibs/sierra/sierra.c:1594
-#: camlibs/sierra/sierra.c:1771
+#: camlibs/sierra/sierra.c:1520 camlibs/sierra/sierra.c:1535
+#: camlibs/sierra/sierra.c:1712
 msgid "Spanish"
 msgstr "西班牙语"
 
 # camlibs/sierra/sierra.c:1552 camlibs/sierra/sierra.c:1568
 # camlibs/sierra/sierra.c:1745
-#: camlibs/sierra/sierra.c:1580 camlibs/sierra/sierra.c:1596
-#: camlibs/sierra/sierra.c:1773
+#: camlibs/sierra/sierra.c:1521 camlibs/sierra/sierra.c:1537
+#: camlibs/sierra/sierra.c:1714
 msgid "Portugese"
 msgstr "葡萄牙语"
 
 # camlibs/sierra/sierra.c:1796
-#: camlibs/sierra/sierra.c:1824
+#: camlibs/sierra/sierra.c:1765
 msgid "NO MEMORY CARD PRESENT\n"
 msgstr "内存卡不存在\n"
 
 # camlibs/sierra/sierra.c:1806
-#: camlibs/sierra/sierra.c:1834
+#: camlibs/sierra/sierra.c:1775
 #, c-format
 msgid "%sCamera Model: %s\n"
 msgstr "%s相机型号：%s\n"
 
 # camlibs/sierra/sierra.c:1810
-#: camlibs/sierra/sierra.c:1838
+#: camlibs/sierra/sierra.c:1779
 #, c-format
 msgid "%sManufacturer: %s\n"
 msgstr "%s制造商：%s\n"
 
 # camlibs/sierra/sierra.c:1814
-#: camlibs/sierra/sierra.c:1842
+#: camlibs/sierra/sierra.c:1783
 #, c-format
 msgid "%sCamera ID: %s\n"
 msgstr "%s相机 ID：%s\n"
 
 # camlibs/sierra/sierra.c:1818
-#: camlibs/sierra/sierra.c:1846
+#: camlibs/sierra/sierra.c:1787
 #, c-format
 msgid "%sSerial Number: %s\n"
 msgstr "%s序列号：%s\n"
 
 # camlibs/sierra/sierra.c:1822
-#: camlibs/sierra/sierra.c:1850
+#: camlibs/sierra/sierra.c:1791
 #, c-format
 msgid "%sSoftware Rev.: %s\n"
 msgstr "%s软件版本号：%s\n"
 
 # camlibs/sierra/sierra.c:1826
-#: camlibs/sierra/sierra.c:1854
+#: camlibs/sierra/sierra.c:1795
 #, c-format
 msgid "%sFrames Taken: %i\n"
 msgstr "%s已用帧：%i\n"
 
 # camlibs/sierra/sierra.c:1828
-#: camlibs/sierra/sierra.c:1856
+#: camlibs/sierra/sierra.c:1797
 #, c-format
 msgid "%sFrames Left: %i\n"
 msgstr "%s剩余帧：%i\n"
 
 # camlibs/sierra/sierra.c:1830
-#: camlibs/sierra/sierra.c:1858
+#: camlibs/sierra/sierra.c:1799
 #, c-format
 msgid "%sBattery Life: %i\n"
 msgstr "%s电池寿命：%i\n"
 
 # camlibs/sierra/sierra.c:1832
-#: camlibs/sierra/sierra.c:1860
+#: camlibs/sierra/sierra.c:1801
 #, c-format
 msgid "%sMemory Left: %i bytes\n"
 msgstr "%s内存剩余：%i 字节\n"
 
 # camlibs/sierra/sierra.c:1836
-#: camlibs/sierra/sierra.c:1864
+#: camlibs/sierra/sierra.c:1805
 #, c-format
 msgid "%sDate: %s\n"
 msgstr "%s日期：%s\n"
 
 # camlibs/sierra/sierra.c:1852
-#: camlibs/sierra/sierra.c:1880
+#: camlibs/sierra/sierra.c:1821
 msgid ""
 "Some notes about Epson cameras:\n"
 "- Some parameters are not controllable remotely:\n"
@@ -3211,7 +3211,7 @@ msgstr ""
 "  <gphoto-devel@gphoto.org> 发送电子邮件 (用英语)\n"
 
 # camlibs/sierra/sierra.c:1864
-#: camlibs/sierra/sierra.c:1892
+#: camlibs/sierra/sierra.c:1833
 msgid ""
 "Some notes about Olympus cameras (and others?):\n"
 "(1) Camera Configuration:\n"
@@ -3238,7 +3238,7 @@ msgstr ""
 "    打开。"
 
 # camlibs/sierra/sierra.c:1887
-#: camlibs/sierra/sierra.c:1915
+#: camlibs/sierra/sierra.c:1856
 msgid ""
 "sierra SPARClite library\n"
 "Scott Fritzinger <scottf@unr.edu>\n"
@@ -3259,23 +3259,23 @@ msgstr ""
 "以实现 USB 支持。"
 
 # camlibs/sierra/library.c:285
-#: camlibs/sierra/library.c:290
+#: camlibs/sierra/library.c:259
 msgid "Cannot retrieve the battery capacity"
 msgstr "无法检索电池容量"
 
 # camlibs/sierra/library.c:291
-#: camlibs/sierra/library.c:296
+#: camlibs/sierra/library.c:265
 #, c-format
 msgid ""
 "The battery level of the camera is too low (%d%%). The operation is aborted."
 msgstr "相机电量太低 (%d%%)。操作取消。"
 
 # camlibs/sierra/library.c:315
-#: camlibs/sierra/library.c:320
+#: camlibs/sierra/library.c:289
 msgid "Cannot retrieve the available memory left"
 msgstr "无法检索剩余可用内存"
 
-#: camlibs/sierra/library.c:367
+#: camlibs/sierra/library.c:336
 msgid "Camera refused 3 times to keep a connection open."
 msgstr ""
 
@@ -3284,31 +3284,31 @@ msgstr ""
 #. * This byte is not valid. Dump everything that
 #. * coming in.
 #.
-#: camlibs/sierra/library.c:577
+#: camlibs/sierra/library.c:546
 #, c-format
 msgid "The first byte received (0x%x) is not valid."
 msgstr "接收的第一个字节 (0x%x) 非法。"
 
 # camlibs/sierra/library.c:620
-#: camlibs/sierra/library.c:700
+#: camlibs/sierra/library.c:669
 #, c-format
 msgid ""
 "Transmission of packet timed out even after %i retries. Please contact "
 "<gphoto-devel@gphoto.org>."
 msgstr "在 %i 次重试后包传输仍然超时。请联系 <gphoto-devel@gphoto.org>。"
 
-#: camlibs/sierra/library.c:734 camlibs/sierra/library.c:758
+#: camlibs/sierra/library.c:703 camlibs/sierra/library.c:727
 msgid "Could not transmit packet even after several retries."
 msgstr ""
 
 # camlibs/sierra/library.c:657
-#: camlibs/sierra/library.c:749
+#: camlibs/sierra/library.c:718
 msgid ""
 "Packet got rejected by camera. Please contact <gphoto-devel@gphoto.org>."
 msgstr "相机拒绝包。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:664
-#: camlibs/sierra/library.c:776
+#: camlibs/sierra/library.c:745
 #, c-format
 msgid ""
 "Could not transmit packet (error code %i). Please contact <gphoto-"
@@ -3316,54 +3316,54 @@ msgid ""
 msgstr "无法传输包 (错误码 %i)。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:620
-#: camlibs/sierra/library.c:868
+#: camlibs/sierra/library.c:837
 #, fuzzy
 msgid "Transmission timed out even after 2 retries. Giving up..."
 msgstr "在 %i 次重试后包传输仍然超时。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:744
-#: camlibs/sierra/library.c:887
+#: camlibs/sierra/library.c:856
 #, c-format
 msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@gphoto.org>."
 msgstr "得到意外的结果 0x%x。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:819
-#: camlibs/sierra/library.c:985
+#: camlibs/sierra/library.c:954
 #, c-format
 msgid ""
 "Received unexpected answer (%i). Please contact <gphoto-devel@gphoto.org>."
 msgstr "收到意外的应答 (%i)。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:879
-#: camlibs/sierra/library.c:1042
+#: camlibs/sierra/library.c:1017
 #, c-format
 msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
 msgstr "无法读取寄存器 %i。请联系 <gphoto-devel@gphoto.org>。"
 
-#: camlibs/sierra/library.c:1062 camlibs/sierra/library.c:1082
+#: camlibs/sierra/library.c:1037 camlibs/sierra/library.c:1057
 msgid "Too many retries failed."
 msgstr ""
 
 # camlibs/sierra/library.c:923
-#: camlibs/sierra/library.c:1115
+#: camlibs/sierra/library.c:1090
 msgid "Sending data..."
 msgstr "正在发送数据..."
 
 # camlibs/sierra/library.c:1010
-#: camlibs/sierra/library.c:1202
+#: camlibs/sierra/library.c:1177
 #, c-format
 msgid ""
 "Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
 msgstr "无法读取字符串寄存器 %i。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:1157
-#: camlibs/sierra/library.c:1355
+#: camlibs/sierra/library.c:1330
 #, c-format
 msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@gphoto.org>."
 msgstr "需要 32 字节，得到 %i。请连线 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:1187
-#: camlibs/sierra/library.c:1385
+#: camlibs/sierra/library.c:1360
 msgid "Not implemented!"
 msgstr "未实现！"
 
@@ -3553,14 +3553,20 @@ msgid "No additional information available."
 msgstr "没有可用的附加信息。"
 
 # libgphoto2/gphoto2-camera.c:662
-#: libgphoto2/gphoto2-camera.c:677
+#: libgphoto2/gphoto2-camera.c:670
 msgid "Could not detect any camera"
 msgstr "无法检测到任何相机"
 
 # libgphoto2/gphoto2-camera.c:682
-#: libgphoto2/gphoto2-camera.c:697
+#: libgphoto2/gphoto2-camera.c:690
 msgid "You have to set the port prior initialization of the camera."
 msgstr "您必须在初始化相机以前设定端口。"
+
+# libgphoto2/gphoto2-camera.c:710
+#: libgphoto2/gphoto2-camera.c:716
+#, fuzzy, c-format
+msgid "Could not load required camera driver '%s' (%s)."
+msgstr "无法装入必须的相机驱动程序“%s”。"
 
 # libgphoto2/gphoto2-camera.c:710
 #: libgphoto2/gphoto2-camera.c:725
@@ -3569,43 +3575,43 @@ msgid "Could not load required camera driver '%s'."
 msgstr "无法装入必须的相机驱动程序“%s”。"
 
 # libgphoto2/gphoto2-camera.c:728
-#: libgphoto2/gphoto2-camera.c:743
+#: libgphoto2/gphoto2-camera.c:745
 #, c-format
 msgid "Camera driver '%s' is missing the 'camera_init' function."
 msgstr "相机驱动程序“%s”缺少“camera_init”函数。"
 
 # libgphoto2/gphoto2-camera.c:786
-#: libgphoto2/gphoto2-camera.c:801
+#: libgphoto2/gphoto2-camera.c:805
 msgid "This camera does not offer any configuration options."
 msgstr "该相机不提供任何配置选项。"
 
 # libgphoto2/gphoto2-camera.c:818
-#: libgphoto2/gphoto2-camera.c:833
+#: libgphoto2/gphoto2-camera.c:837
 msgid "This camera does not support setting configuration options."
 msgstr "该相机不支持设置配置选项。"
 
 # libgphoto2/gphoto2-camera.c:850
-#: libgphoto2/gphoto2-camera.c:865
+#: libgphoto2/gphoto2-camera.c:869
 msgid "This camera does not support summaries."
 msgstr "该相机不支持概要。"
 
 # libgphoto2/gphoto2-camera.c:881
-#: libgphoto2/gphoto2-camera.c:896
+#: libgphoto2/gphoto2-camera.c:900
 msgid "This camera does not offer a manual."
 msgstr "该相机不提供手册。"
 
 # libgphoto2/gphoto2-camera.c:912
-#: libgphoto2/gphoto2-camera.c:927
+#: libgphoto2/gphoto2-camera.c:931
 msgid "This camera does not provide information about the driver."
 msgstr "该相机不提供关于驱动程序的信息。"
 
 # libgphoto2/gphoto2-camera.c:946
-#: libgphoto2/gphoto2-camera.c:961
+#: libgphoto2/gphoto2-camera.c:965
 msgid "This camera can not capture."
 msgstr "该相机不能视频捕捉。"
 
 # libgphoto2/gphoto2-camera.c:979
-#: libgphoto2/gphoto2-camera.c:994
+#: libgphoto2/gphoto2-camera.c:998
 msgid "This camera can not capture previews."
 msgstr "该相机不能预览视频捕捉。"
 
@@ -3717,20 +3723,21 @@ msgstr "文件系统不支持设置文件信息"
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr "无法改变像宽度和高度这样的只读文件属性。"
 
-# libgphoto2/gphoto2-abilities-list.c:248
-#: libgphoto2/gphoto2-abilities-list.c:248
-#, c-format
-msgid "Could not open '%s'"
-msgstr "无法打开“%s”"
-
 # libgphoto2/gphoto2-abilities-list.c:260
-#: libgphoto2/gphoto2-abilities-list.c:260
+#: libgphoto2/gphoto2-abilities-list.c:206
+#: libgphoto2/gphoto2-abilities-list.c:301
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "正在从“%s”装入相机驱动程序..."
 
+# libgphoto2/gphoto2-abilities-list.c:248
+#: libgphoto2/gphoto2-abilities-list.c:289
+#, c-format
+msgid "Could not open '%s'"
+msgstr "无法打开“%s”"
+
 # libgphoto2/gphoto2-abilities-list.c:622
-#: libgphoto2/gphoto2-abilities-list.c:622
+#: libgphoto2/gphoto2-abilities-list.c:663
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "无法为“%s”找到任何驱动程序"
