@@ -57,7 +57,7 @@ dnl
 
 AC_DEFUN(GP_BUILD_DOCS,
 [
-# doc dir has to be determined in advance
+# docdir has to be determined in advance
 AC_REQUIRE([GP_CHECK_DOC_DIR])
 
 dnl ---------------------------------------------------------------------------

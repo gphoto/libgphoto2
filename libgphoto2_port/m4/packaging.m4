@@ -32,7 +32,8 @@ AC_DEFUN(GPKG_CHECK_LINUX,
 	AM_CONDITIONAL(HAVE_LINUX, "$is_linux")
 
 	# required for docdir
-	AC_REQUIRE(GP_CHECK_DOC_DIR)
+	# FIXME: Implicit dependency
+	# AC_REQUIRE(GP_CHECK_DOC_DIR)
 
 	AC_ARG_WITH(hotplug-doc-dir, [  --with-hotplug-doc-dir=PATH Where to install hotplug scripts as docs [default=autodetect]])
 
