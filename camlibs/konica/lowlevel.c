@@ -306,9 +306,9 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 	CHECK_NULL (device && rb && rbs);
 
 	for (i = 0; ; ) {
-		CHECK (gp_port_timeout_set (device, timeout));
+		CHECK (gp_port_set_timeout (device, timeout));
 		CHECK (gp_port_read (device, &c, 1));
-		CHECK (gp_port_timeout_set (device, DEFAULT_TIMEOUT));
+		CHECK (gp_port_set_timeout (device, DEFAULT_TIMEOUT));
 		switch (c) {
 		case ENQ:
 
