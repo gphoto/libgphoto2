@@ -1,9 +1,14 @@
+2003-11-11 Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: added ViviCam 5B and SY-2107C cameras.
+
+
 2004-10-28  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* sq905.c (sq_read_picture_data): Fix build for gcc 2.95
 	(bug #1055868)
 
 2003-0825 Theodore Kilgore <kilgota@auburn.edu>
+
 
 	* README.913C: Description of Argus DC-1730 0x2770:0x913c camera.
 	

@@ -72,7 +72,9 @@ struct {
         {"iConcepts digital camera" ,
                               GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
 	{"ViviCam3350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"ViviCam5B",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"DC-N130t",          GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"SY-2107C",          GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Argus DC-1730",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x913c},
 	{NULL,0,0}
 };
