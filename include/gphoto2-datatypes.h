@@ -140,6 +140,9 @@ typedef struct CameraWidget {
         /* Reference count */
         int     ref_count;
 
+	/* Unique identifier */
+	int	id;
+
 	/* Callback */
 	int (*callback)(struct Camera*, struct CameraWidget*);
 

@@ -18,7 +18,9 @@ int 		gp_widget_child_count(CameraWidget *parent);
 
 CameraWidget* 	gp_widget_child(CameraWidget *parent, int child_number);
 CameraWidget* 	gp_widget_child_by_label(CameraWidget *parent, char *child_label);
+CameraWidget*	gp_widget_child_by_id (CameraWidget *parent, int id);
 
+int		gp_widget_id   (CameraWidget *widget);
 int		gp_widget_type (CameraWidget *widget);
 char*		gp_widget_label(CameraWidget *widget);
 
