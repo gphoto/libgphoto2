@@ -185,27 +185,44 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 			else
 				return GP_ERROR_CORRUPTED_DATA;
 		}
-		/* We expect to get 0x44 bytes here, but the camera is picky at this stage and
-		 * we must read 0x40 bytes and then read 0x4 bytes more.
-		 */
-		i = gp_port_read (camera->port, buffer, 0x40);
-		if ((i >= 4)
-		    && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
-		    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
-
-			/* We have some reports that sometimes the camera takes a long
-			 * time to respond to the above read request and then comes back with
-			 * the 54 78 00 00 packet, instead of telling us to read four more
-			 * bytes which is the normal 54 78 00 00 packet.
+		if ( camera->pl->md->model != CANON_CLASS_6 ) {
+			/* We expect to get 0x44 bytes here, but the camera is picky at this stage and
+			 * we must read 0x40 bytes and then read 0x4 bytes more.
 			 */
+			i = gp_port_read (camera->port, buffer, 0x40);
+			if ((i >= 4)
+			    && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
+			    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
 
-			GP_DEBUG ("canon_usb_camera_init() "
-				  "expected %i bytes, got %i bytes with \"54 78 00 00\" "
-				  "at the end, so we just ignore the whole bunch and call it a day",
-				  0x40, i);
+				/* We have some reports that sometimes the camera takes a long
+				 * time to respond to the above read request and then comes back with
+				 * the 54 78 00 00 packet, instead of telling us to read four more
+				 * bytes which is the normal 54 78 00 00 packet.
+				 */
+
+				GP_DEBUG ("canon_usb_camera_init() "
+					  "expected %i bytes, got %i bytes with \"54 78 00 00\" "
+					  "at the end, so we just ignore the whole bunch and call it a day",
+					  0x40, i);
+			}
+			else {
+				if (i != 0x40) {
+					gp_context_error (context,
+							  _("Step #4 failed! "
+							    "(returned %i, expected %i) Camera not operational"), i,
+							  0x40);
+					if ( i < 0 )
+						return GP_ERROR_OS_FAILURE;
+					else
+						return GP_ERROR_CORRUPTED_DATA;
+				}
+			}
 		}
 		else {
-			if (i != 0x40) {
+			/* Newer cameras can give us all 0x44 bytes at
+			 * once; some insist on it. */
+			i = gp_port_read (camera->port, buffer, 0x44);
+			if (i != 0x44) {
 				gp_context_error (context,
 						  _("Step #4 failed! "
 						    "(returned %i, expected %i) Camera not operational"), i,
@@ -813,7 +830,7 @@ unsigned char *
 canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context )
 {
 	int status, i;
-	unsigned char payload[8]; /* used for sending data to camera */
+	unsigned char payload[9]; /* used for sending data to camera */
 	static unsigned char *buffer; /* used for receiving data from camera */
 	unsigned char buf2[0x40]; /* for reading from interrupt endpoint */
 
@@ -840,9 +857,15 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 	gp_port_set_timeout (camera->port, 15000);
 
 	/* now send the packet to the camera */
-	buffer = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_CONTROL_CAMERA,
-				      return_length,
-				      payload, sizeof payload );
+	if ( camera->pl->md->model != CANON_CLASS_6 )
+		buffer = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_CONTROL_CAMERA,
+					      return_length,
+					      payload, 8 );
+	else {
+		buffer = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_CONTROL_CAMERA_2,
+					      return_length,
+					      payload, 9 );
+	}
 
 	if ( buffer == NULL )
 		return NULL;
@@ -863,7 +886,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 	   to use the short timeout (50 ms), we need to try several
 	   times.
 	   Read until we have completion signaled (0x0a for PowerShot,
-	   0x0f for EOS) */
+	   0x0f for EOS, 0x0e for newer EOS) */
 	camera->pl->capture_step = 0;
 	camera->pl->thumb_length = 0; camera->pl->image_length = 0;
 	camera->pl->image_key = 0x81818181;
@@ -946,7 +969,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 			 * storage. */
 			GP_DEBUG ( "canon_usb_capture_dialogue:"
 				   " EOS flash write complete from interrupt read" );
-			if ( camera->pl->capture_step != 2 ) {
+			if ( camera->pl->capture_step != 2 && camera->pl->md->model != CANON_CLASS_6 ) {
 				GP_LOG ( GP_LOG_ERROR, _("canon_usb_capture_dialogue:"
 					 " third EOS interrupt read out of sequence") );
 				goto FAIL;
@@ -958,7 +981,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 				goto FAIL;
 			}
 			/* Nasty special-case code for 300D, which never seems to give the 0x0f message. */
-			if ( camera->pl->md->usb_product == 0x3084 ) {
+			if ( camera->pl->md->usb_product == 0x3084 || camera->pl->md->model == CANON_CLASS_6 ) {
 				GP_DEBUG ( "canon_usb_capture_dialogue:"
 					   " final EOS 300D interrupt read at step %i", camera->pl->capture_step );
 				goto EXIT;

@@ -113,11 +113,11 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A50",		CANON_CLASS_1,	NO_USB, NO_USB, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot A50"},
 	{"Canon:PowerShot Pro70",	CANON_CLASS_2,	NO_USB, NO_USB, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot Pro70"},
 	{"Canon:PowerShot S10",		CANON_CLASS_0,	0x04A9, 0x3041, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot S10"},
-	/* 3042 is a scanner, so it will never be added here. */
-	{"Canon:PowerShot S20",		CANON_CLASS_0,	0x04A9, 0x3043, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot S20"},
-	{"Canon:EOS D30",		CANON_CLASS_4,	0x04A9, 0x3044, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:PowerShot S100",	CANON_CLASS_0,	0x04A9, 0x3045, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-	{"Canon:IXY DIGITAL",		CANON_CLASS_0,	0x04A9, 0x3046, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+        /* 3042 is a scanner, so it will never be added here. */
+        {"Canon:PowerShot S20",         CANON_CLASS_0,  0x04A9, 0x3043, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot S20"},
+        {"Canon:EOS D30",               CANON_CLASS_4,  0x04A9, 0x3044, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot S100",        CANON_CLASS_0,  0x04A9, 0x3045, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:IXY DIGITAL",           CANON_CLASS_0,  0x04A9, 0x3046, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Digital IXUS",		CANON_CLASS_0,	0x04A9, 0x3047, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot G1",		CANON_CLASS_0,	0x04A9, 0x3048, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot G1"},
 	{"Canon:PowerShot Pro90 IS",	CANON_CLASS_0,	0x04A9, 0x3049, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot Pro90 IS"},
@@ -801,9 +801,20 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
 	payloadlen = canon_int_pack_control_subcmd(payload, subcmd,
 						   a, b, desc);
 	GP_DEBUG("%s++ with %x, %x", desc, a, b);
-	msg = canon_usb_dialogue(camera, 
-				 CANON_USB_FUNCTION_CONTROL_CAMERA,
-				 &datalen, payload, payloadlen);
+
+        if ( camera->pl->md->model == CANON_CLASS_6 ) {
+                /* Newer protocol uses a different code, but with same
+                 * response. It also needs an extra zero byte at the
+                 * end. */
+                payload[payloadlen++] = 0;
+                msg = canon_usb_dialogue(camera, 
+                                         CANON_USB_FUNCTION_CONTROL_CAMERA_2,
+                                         &datalen, payload, payloadlen);
+        }
+        else
+                msg = canon_usb_dialogue(camera, 
+                                         CANON_USB_FUNCTION_CONTROL_CAMERA,
+                                         &datalen, payload, payloadlen);
 	if ( msg == NULL  && datalen != 0x1c) {
 		/* ERROR */
 		GP_DEBUG("%s datalen=%x",
@@ -2426,6 +2437,6 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
 /*
  * Local Variables:
  * c-file-style:"linux"
- * indent-tabs-mode:t
+ * indent-tabs-mode:nil
  * End:
  */

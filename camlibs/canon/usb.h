@@ -85,13 +85,14 @@
  *   %CANON_USB_FUNCTION_EOS_GET_BODY_ID, but first seen on EOS 20D.
  * @CANON_USB_FUNCTION_GET_PIC_ABILITIES_2: Same function as
  *   %CANON_USB_FUNCTION_GET_PIC_ABILITIES, but first seen on EOS 20D.
- * @CANON_USB_FUNCTION_20D_UNKNOWN_3: First seen with EOS 20D, not yet
- *   understood.
+ * @CANON_USB_FUNCTION_CONTROL_CAMERA_2: Replacement for
+ *   %CANON_USB_FUNCTION_CONTROL_CAMERA, with many similarities, first
+ *   seen with EOS 20D.
  * @CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2: Same function as
  *   %CANON_USB_FUNCTION_RETRIEVE_CAPTURE, but first seen on EOS 20D.
  * @CANON_USB_FUNCTION_20D_UNKNOWN_4: First seen with EOS 20D, not yet
  *   understood.
- * @CANON_USB_FUNCTION_20D_UNKNOWN_4: First seen with EOS 20D, not yet
+ * @CANON_USB_FUNCTION_20D_UNKNOWN_5: First seen with EOS 20D, not yet
  *   understood.
  * @CANON_USB_FUNCTION_SET_ATTR_2: Presumed code to set attribute bits
  *   for a file on an EOS 20D and its ilk.
@@ -132,7 +133,7 @@ typedef enum {
 	CANON_USB_FUNCTION_20D_UNKNOWN_2,
 	CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,
 	CANON_USB_FUNCTION_GET_PIC_ABILITIES_2,
-	CANON_USB_FUNCTION_20D_UNKNOWN_3,
+	CANON_USB_FUNCTION_CONTROL_CAMERA_2,
 	CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2,
 	CANON_USB_FUNCTION_20D_UNKNOWN_4,
 	CANON_USB_FUNCTION_20D_UNKNOWN_5,
@@ -167,6 +168,8 @@ typedef enum {
  * @CANON_USB_CONTROL_SET_EXT_PARAMS:  Not yet seen in USB trace.
  * @CANON_USB_CONTROL_SELECT_CAM_OUTPUT:  Not yet seen in USB trace.
  * @CANON_USB_CONTROL_DO_AE_AF_AWB:  Not yet seen in USB trace.
+ * @CANON_USB_CONTROL_UNKNOWN_1: part of new protocol, function unknown.
+ * @CANON_USB_CONTROL_UNKNOWN_2: part of new protocol, function unknown.
  *
  * CANON_USB_FUNCTION_CONTROL_CAMERA commands are used for a wide range
  * of remote camera control actions.  A control_cmdstruct is defined
@@ -192,6 +195,8 @@ typedef enum {
 	CANON_USB_CONTROL_SET_EXT_PARAMS,	/* Not yet seen in USB trace */
 	CANON_USB_CONTROL_SELECT_CAM_OUTPUT,	/* Not yet seen in USB trace */
 	CANON_USB_CONTROL_DO_AE_AF_AWB,		/* Not yet seen in USB trace */
+	CANON_USB_CONTROL_UNKNOWN_1,
+	CANON_USB_CONTROL_UNKNOWN_2
 } canonSubcommandIndex;
 
 
@@ -273,7 +278,7 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_20D_UNKNOWN_2,	"Unknown EOS 20D function",	0x22, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,	"New EOS get body ID",		0x23, 0x12, 0x201,	0x58},
 	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "New get picture abilities",	0x24, 0x12, 0x201,	0x474},
-	{CANON_USB_FUNCTION_20D_UNKNOWN_3,	"Unknown EOS 20D function",	0x25, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_CONTROL_CAMERA_2,	"Remote camera control (new)",	0x25, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2, "New download a captured image", 0x26, 0x12, 0x202,	0x40},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_4,	"Unknown EOS 20D function",	0x35, 0x12, 0x201,	0x5c},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_5,	"Unknown EOS 20D function",	0x36, 0x12, 0x201,	0x54},
@@ -296,13 +301,13 @@ static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	{CANON_USB_CONTROL_SET_ZOOM_POS,        "Set zoom position",    0x0c,  0x1c,  0x1c},  /* load 0x0c, 0x04, 0x01 (or 0x0c, 0x04, 0x0b) (or 0x0c, 0x04, 0x0a) or (0x0c, 0x04, 0x09) or (0x0c, 0x04, 0x08) or (0x0c, 0x04, 0x07) or (0x0c, 0x04, 0x06) or (0x0c, 0x04, 0x00) */
 	{CANON_USB_CONTROL_GET_AVAILABLE_SHOT,  "Get available shot",   0x0d,  0x18,  0x20},
 	{CANON_USB_CONTROL_GET_CUSTOM_FUNC,     "Get custom func.",     0x0f,  0x22,  0x26},
-	{CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE, "Get extended release params size",              
+	{CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE, "Get ext. release params size",
 	                                                                0x10,  0x1c,  0x20},  /* load 0x10, 0x00 */
-	{CANON_USB_CONTROL_GET_EXT_PARAMS,      "Get extended release params",              
+	{CANON_USB_CONTROL_GET_EXT_PARAMS,      "Get ext. release params",
 	                                                                0x12,  0x1c,  0x2c},  /* load 0x12, 0x04, 0x10 */
 
-	/* unobserved, commands present in canon headers defines, but need more usb snoops to get reply lengths */
 	{CANON_USB_CONTROL_EXIT,                "Exit release control", 0x01,  0x18,  0x1c},
+	/* unobserved, commands present in canon headers defines, but need more usb snoops to get reply lengths */
 	{CANON_USB_CONTROL_VIEWFINDER_START,    "Start viewfinder",     0x02,  0x00,  0x00},
 	{CANON_USB_CONTROL_VIEWFINDER_STOP,     "Stop viewfinder",      0x03,  0x00,  0x00},
 	{CANON_USB_CONTROL_SET_CUSTOM_FUNC,     "Set custom func.",     0x0e,  0x00,  0x00},
@@ -310,7 +315,12 @@ static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	                                                                0x11,  0x00,  0x00},
 	{CANON_USB_CONTROL_SET_EXT_PARAMS,      "Set extended params",  0x13,  0x00,  0x00},
 	{CANON_USB_CONTROL_SELECT_CAM_OUTPUT,   "Select camera output", 0x14,  0x00,  0x00}, /* LCD (0x1), Video out (0x2), or OFF (0x3) */
-	{CANON_USB_CONTROL_DO_AE_AF_AWB,        "Do AE, AF, and AWB",   0x15,  0x00,  0x00}, 
+	{CANON_USB_CONTROL_DO_AE_AF_AWB,        "Do AE, AF, and AWB",   0x15,  0x00,  0x00},
+	/* New subcodes for new version of protocol */
+	{CANON_USB_CONTROL_UNKNOWN_1,    "Unknown remote control code",
+	                                                                0x1b,  0x08,  0x5e},
+	{CANON_USB_CONTROL_UNKNOWN_2,    "Unknown remote control code",
+	                                                                0x1c,  0x00,  0x00},
 	{ 0 }
 };
 
