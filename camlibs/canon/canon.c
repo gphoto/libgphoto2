@@ -388,7 +388,7 @@ canon_int_directory_operations (Camera *camera, const char *path, canonDirFuncti
 	}
 
 	GP_DEBUG ("canon_int_directory_operations() called to %s the directory '%s'",
-		  canon_usb_funct == CANON_USB_FUNCTION_MKDIR ? _("create") : _("remove"), path);
+		  canon_usb_funct == CANON_USB_FUNCTION_MKDIR ? "create" : "remove", path);
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, canon_usb_funct, &len, path,
