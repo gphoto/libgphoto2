@@ -1,7 +1,12 @@
+2002-01-09 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2_port/gphoto2-port.h: Moved typedefs after the definitions
+	  of the dependent types.
+
 2002-01-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-        * configure.in: Substitute AM_PROG_LIBTOOL by AC_PROG_LIBTOOL (first
-          is deprecated).
+	* configure.in: Substitute AM_PROG_LIBTOOL by AC_PROG_LIBTOOL (first
+	  is deprecated).
 
 2002-01-04 Dan Fandrich <dan@coneharvesters.com>
 
