@@ -80,7 +80,6 @@ KonicaCamera konica_cameras []=
 	{"HP PhotoSmart C20",  FALSE, 0,      0,      0,    0   },
 	{"HP PhotoSmart C30",  FALSE, 0,      0,      0,    0   },
 	{"HP PhotoSmart C200", TRUE,  0,      0,      0,    0   },
-	{"HP PhotoSmart C215", FALSE, 0x03f0, 0x6202, 0x81, 0x02},
 	{NULL,                 FALSE, 0,      0,      0,    0   }
 };
 
