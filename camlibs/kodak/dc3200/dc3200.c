@@ -203,8 +203,8 @@ int camera_folder_list	(Camera *camera, CameraList *list, char *folder)
 	i = 0;
 
 	while(i < data_len) {
-		/* files have 0x00, dirs have 0x10 */
-		if(ptr_data_buff[11] != 0x10) {
+		/* files have 0x00,0x20, dirs have 0x10,0x30 */
+		if(ptr_data_buff[11] != 0x10 && ptr_data_buff[11] != 0x30) {
 			ptr_data_buff += 20;
 			i += 20;
 			continue;
@@ -226,6 +226,8 @@ int camera_folder_list	(Camera *camera, CameraList *list, char *folder)
 
 		/* in case of long directory */
 		filename[12] = 0;
+		
+		printf("%s\n",filename);
 		
 		/* append dir to the list */
 		gp_list_append(list, filename, GP_LIST_FOLDER);
@@ -270,8 +272,8 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder)
 	i = 0;
 	
 	while(i < data_len) {
-		/* files have 0x00, dirs have 0x10 */
-		if(ptr_data_buff[11] != 0x00) {
+		/* files have 0x00,0x20, dirs have 0x10,0x30 */
+		if(ptr_data_buff[11] != 0x00 && ptr_data_buff[11] != 0x20) {
 			ptr_data_buff += 20;
 			i += 20;
 			continue;
