@@ -53,7 +53,7 @@ while test $# -gt 0; do
 	;;
 
     --cflags)
-       	echo -I${includedir}/gphoto2 @GPPORT_INCLUDEDIR@ @IOLIB_CFLAGS@
+       	echo -I${includedir}/gphoto2-port @GPPORT_INCLUDEDIR@ @IOLIB_CFLAGS@
        	;;
 
     --libs)
