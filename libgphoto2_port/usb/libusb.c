@@ -493,6 +493,11 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 			if (!ret)
 				continue;
 
+			port->pl->d = dev;
+			gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+				"Looking for USB device "
+				"(class 0x%x, subclass, 0x%x, protocol 0x%x)... found.", 
+				class, subclass, protocol);
 			/* Set the defaults */
 			if (dev->config) {
 				port->settings.usb.config = dev->config[config].bConfigurationValue;
@@ -512,11 +517,6 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 					port->settings.usb.outep);
 			}
 
-			port->pl->d = dev;
-			gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
-				"Looking for USB device "
-				"(class 0x%x, subclass, 0x%x, protocol 0x%x)... found.", 
-				class, subclass, protocol);
 			return GP_OK;
 		}
 	}
