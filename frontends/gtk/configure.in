@@ -105,6 +105,7 @@ fi
 AC_OUTPUT([
 Makefile
 src/Makefile
+src/dialogs/Makefile
 intl/Makefile
 po/Makefile.in
 ])
