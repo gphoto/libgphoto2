@@ -71,8 +71,9 @@ int camera_file_unprotect	(int file_number);
 	/* protects and unprotects a file on the camera from 	*/
 	/* being deleted. (if supported)			*/
 
-int camera_config 		(CameraConfig *conf);
-	/* */
+int camera_config 		(CameraSetting *conf,
+				 int count);
+	/* Sets configuration values in the library. */
 
 int camera_capture 		(int type);
 

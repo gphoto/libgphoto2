@@ -197,7 +197,7 @@ int camera_file_unlock (int file_number) {
 	return (GP_ERROR);
 }
 
-int camera_config (CameraConfig *config) {
+int camera_config (CameraSetting *setting, int count) {
 
 	return (GP_ERROR);
 }

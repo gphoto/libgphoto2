@@ -114,15 +114,10 @@ typedef struct {
 
 typedef struct {
 	int count;
-	CameraFolderInfo info[512];
+	CameraFolderInfo entry[512];
 } CameraFolderList;
 
 typedef struct {
 	char name[32];
 	char value[32];
 } CameraSetting;
-
-typedef struct {
-	int count;
-	CameraSetting setting[64];
-} CameraConfig;

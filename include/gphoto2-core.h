@@ -113,7 +113,7 @@
 	*/
 
 	/* Send "key=value" pairs to the library, delimited by '\n' */
-	int gp_config_set (CameraConfig *config);
+	int gp_config_set (CameraSetting *setting, int count);
 
 /* Miscellaneous functions */
 	/* Captures the current view. Basically, it takes a picture */

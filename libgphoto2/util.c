@@ -39,4 +39,6 @@ int gp_dump_abilities (CameraAbilities *abilities) {
 	printf("core: \tProtect files support		: %s\n", 
 		abilities->lock == 0? "no":"yes");
 	printf("core: End of Abilities\n");
+
+	return (GP_OK);
 }
