@@ -572,10 +572,10 @@ static int
 camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 {
 	snprintf (summary->text, sizeof (summary->text),
-		"Model: %s\n"
+		_("Model: %s\n"
 		"  device version: %s\n"
 		"  serial number:  %s\n"
-		"Vendor extension description: %s\n",
+		"Vendor extension description: %s\n"),
 		camera->pl->params.deviceinfo.Model,
 		camera->pl->params.deviceinfo.DeviceVersion,
 		camera->pl->params.deviceinfo.SerialNumber,
@@ -610,11 +610,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	if (dpd.FormFlag==PTP_DPFF_Enumeration){
 		GP_DEBUG ("Number of values %i",
 			dpd.FORM.Enum.NumberOfValues);
-		gp_widget_new (GP_WIDGET_TEXT, "Number of values",&widget);
+		gp_widget_new (GP_WIDGET_TEXT, _("Number of values"),&widget);
 		snprintf (value,255,"%i",dpd.FORM.Enum.NumberOfValues);
 		gp_widget_set_value (widget,value);
 		gp_widget_append (section,widget);
-		gp_widget_new (GP_WIDGET_TEXT, "Supported values",&widget);
+		gp_widget_new (GP_WIDGET_TEXT, _("Supported values"),&widget);
 		value[0]='\0';
 		{
 		uint16_t i;
@@ -627,7 +627,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		gp_widget_set_value (widget,value);
 		gp_widget_append (section,widget);
-		gp_widget_new (GP_WIDGET_TEXT, "Current value",&widget);
+		gp_widget_new (GP_WIDGET_TEXT, _("Current value"),&widget);
 		snprintf (value,255,"%i",*(uint8_t *)dpd.CurrentValue);
 		gp_widget_set_value (widget,value);
 		gp_widget_append (section,widget);
@@ -1069,7 +1069,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	((PTPData *) camera->pl->params.data)->context = context;
 
 	/* Get file handles array for filesystem */
-	id = gp_context_progress_start (context, 0, "Initializing Camera");
+	id = gp_context_progress_start (context, 0, _("Initializing Camera"));
 	/* be paranoid!!! */
 	memset (&camera->pl->params.handles, 0, sizeof(PTPObjectHandles));
 	/* get objecthandles of all objects from all stores */
