@@ -55,6 +55,9 @@
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
+/* Global variable for cancelling */
+static unsigned char cancelled = 0;
+
 /* Takes the current globals, and sets up the gPhoto lib with them */
 static int set_globals (void);
 
@@ -737,6 +740,10 @@ download_progress_func (CameraFile *file, float percentage, void *data)
 {
 	const char *name;
 
+	/* Check for cancellation */
+	if (cancelled)
+		return (GP_ERROR_CANCEL);
+
 	if (glob_quiet)
 		return (GP_OK);
 
@@ -907,6 +914,10 @@ static int
 upload_progress_func (CameraFile *file, float percentage, void *data)
 {
 	const char *name;
+
+	/* Check for cancellation */
+	if (cancelled)
+		return (GP_ERROR_CANCEL);
 
 	if (glob_quiet)
 		return (GP_OK);
@@ -1262,8 +1273,11 @@ static void
 signal_exit (int signo)
 {
         if (!glob_quiet)
-                printf(_("\nExiting gPhoto...\n"));
+                printf(_("\nCancelling...\n"));
 
+	cancelled = 1;
+
+#if 0
 	/* If we've got a camera, unref it */
         if (glob_camera) {
 		gp_camera_unref (glob_camera);
@@ -1274,6 +1288,7 @@ signal_exit (int signo)
                 chdir(glob_owd);
 
         exit (EXIT_SUCCESS);
+#endif
 }
 
 /* Main :)                                                              */
@@ -1338,31 +1353,43 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 	gp_camera_set_error (glob_camera, NULL);
 	result = execute_options(argc, argv);
         if (result < 0) {
-		printf (_("*** Error ('%s') ***\n"),
-			_(gp_result_as_string (result)));
-		printf (_("The following message is the last internal error "
-			  "message.\n"
-			  "This message may currently still be unrelated to "
-			  "the real error:\n\n"
-			  "%s\n\n"), _(gp_camera_get_error (glob_camera)));
+		switch (result) {
+		case GP_ERROR_CANCEL:
+			printf (_("Operation cancelled.\n"));
+			break;
+		default:
+			printf (_("*** Error ('%s') ***\n"),
+				_(gp_result_as_string (result)));
+			printf (_("The following message is the last "
+				  "internal error message.\n"
+				  "This message may currently still be "
+				  "unrelated to the real error:\n\n"
+				  "%s\n\n"),
+				_(gp_camera_get_error (glob_camera)));
 #ifndef DISABLE_DEBUGGING
-		if (!glob_debug) {
-			int n;
-			printf (_("For debugging messages, please use the --debug option.\n"
-				  "Debugging messages may help finding a solution to your problem.\n"
-				  "If you intend to send any error or debug messages to the gphoto\n"
-				  "developer mailing list <gphoto-devel@gphoto.org>, please run\n"
-				  "gphoto2 as follows:\n\n"));
-			/* print the exact command line to assist l^Husers */
-			printf ("    env LANG=C gphoto2 --debug");
-			for (n = 1; n < argc; n++) {
-				printf(" %s",argv[n]);
+			if (!glob_debug) {
+				int n;
+				printf (_(
+	"For debugging messages, please use the --debug option.\n"
+	"Debugging messages may help finding a solution to your problem.\n"
+	"If you intend to send any error or debug messages to the gphoto\n"
+	"developer mailing list <gphoto-devel@gphoto.org>, please run\n"
+	"gphoto2 as follows:\n\n"));
+
+				/*
+				 * print the exact command line to assist
+				 * l^Husers
+				 */
+				printf ("    env LANG=C gphoto2 --debug");
+				for (n = 1; n < argc; n++) {
+					printf(" %s",argv[n]);
+				}
+				printf ("\n\n");
 			}
-			printf ("\n\n");
-		}
 #endif
-                exit (EXIT_FAILURE);
-        }
+			exit (EXIT_FAILURE);
+		}
+	}
 
 #ifdef OS2
 //       printf(_("\nErrors occuring beyond this point are 'expected' on OS/2\ninvestigation pending\n"));
