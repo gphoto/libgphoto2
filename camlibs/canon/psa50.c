@@ -43,6 +43,7 @@ gpio_device_settings settings;
 #define USLEEP2 1
 
 static unsigned char psa50_eot[8];
+static int first_init = 1;  /* first use of camera   1 = yes 0 = no */
 
 /* ------------------------- Frame-level processing ------------------------- */
 
@@ -840,7 +841,8 @@ int psa50_ready()
 {
     unsigned char type,seq;
     char *pkt;
-    int try,len,speed,good_ack,res,cts;
+    int try,len,speed,good_ack,res;
+//    int cts;
 
     switch (canon_comm_method) {
     case CANON_USB:
@@ -881,11 +883,12 @@ int psa50_ready()
       receive_error=NOERROR;
 
       /* First of all, we must check if the camera is already on */
-      cts=canon_serial_get_cts();
+/*      cts=canon_serial_get_cts();
       debug_message("cts : %i\n",cts);
-      if (cts==1) { // CTS > 0 when the camera is on.
+      if (cts==32) { */// CTS == 32  when the camera is connected.
 
-        gp_camera_status(NULL, "Camera already on...");
+//        gp_camera_status(NULL, "Camera already on...");
+        if (first_init==0) {
         /* First case, the serial speed of the camera is the same as
          * ours, so let's try to send a ping packet : */
         if (!psa50_send_packet(PKT_EOT,seq_tx,psa50_eot+PKT_HDR_LEN,0))
@@ -940,7 +943,7 @@ int psa50_ready()
         receive_error=NOERROR;
       }
       for (try = 1; try < MAX_TRIES; try++) {
-        gp_camera_progress(NULL, NULL, try/(float) MAX_TRIES);
+        gp_camera_progress(NULL, NULL, (try/(float) MAX_TRIES)*100);
         if (canon_serial_send("\x55\x55\x55\x55\x55\x55\x55\x55",8,USLEEP1) < 0) {
           gp_camera_status(NULL, "Communication error");
           return 0;
@@ -963,6 +966,8 @@ int psa50_ready()
       strcpy(psa50_id,pkt+26); /* @@@ check size */
 
       debug_message("psa50_id : '%s'\n",psa50_id);
+
+      first_init=0;
 
       if (!strcmp("DE300 Canon Inc.",psa50_id)) {
         gp_camera_status(NULL, "Powershot A5");
@@ -1052,7 +1057,7 @@ int psa50_ready()
       psa50_get_owner_name();
       psa50_get_time();
       return 1;
-    }
+   } 
 }
 
 /**
@@ -1294,7 +1299,7 @@ unsigned char *psa50_get_file_serial(const char *name,int *length) {
         }
         memcpy(file+expect,msg+20,size);
         expect += size;
-        gp_camera_progress(NULL, NULL, total ? expect/(float) total : 1);
+        gp_camera_progress(NULL, NULL, total ? (expect/(float) total)*100 : 100);
         if ((expect == total) != get_int(msg+16)) {
             debug_message("ERROR: end mark != end of data\n");
             break;
@@ -1368,7 +1373,7 @@ unsigned char *psa50_get_file_usb(const char *name,int *length) {
 
       expect += size;
 
-      gp_camera_progress(NULL, NULL, total ? expect/(float) total : 1);
+      gp_camera_progress(NULL, NULL, total ? (expect/(float) total)*100 : 100);
       if (expect == total) return file;
 
       if ((total-expect) <= 0x2000)
@@ -1476,7 +1481,7 @@ unsigned char *psa50_get_thumbnail(const char *name,int *length)
         }
         memcpy(file+expect,msg+20,size);
         expect += size;
-        gp_camera_progress(NULL, NULL, total ? expect/(float) total : 1);
+        gp_camera_progress(NULL, NULL, total ? (expect/(float) total)*100 : 100);
         if ((expect == total) != get_int(msg+16)) {
           debug_message("ERROR: end mark != end of data\n");
           return NULL;

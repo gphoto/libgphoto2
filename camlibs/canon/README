@@ -18,6 +18,10 @@ the caches can be manually flushed using "Configure camera".
 
 Change history
 ==============
+Version 7 (25-JULY-2000)
+---------
+- Ported to gphoto2
+
 
 Version 6 (19-MAY-2000)
 ---------

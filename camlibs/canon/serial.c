@@ -110,12 +110,16 @@ int canon_serial_get_cts(void)
 
 int canon_serial_init(const char *devname)
 {
+#ifdef GPIO_USB
     char msg[65536];
     char mem;
     char buffer[65536];
+#endif
     gpio_device_settings settings;
 
   debug_message("Initializing the camera.\n");
+  
+  gpio_init();
 
   switch (canon_comm_method) {
   case CANON_USB:
@@ -196,6 +200,22 @@ int canon_serial_init(const char *devname)
 
     return 0;
   }
+}
+
+/****************************************************************************
+ *
+ * canon_serial_close
+ *
+ * Close and free the device on exit
+ *
+ *
+ ****************************************************************************/
+int canon_serial_close()
+{
+       gpio_close(gdev);
+       gpio_free(gdev);
+
+       return 0;
 }
 
 /*****************************************************************************
