@@ -62,28 +62,45 @@
 /* Check value and Return on error */
 #define CR(result,error) {						\
 			if((result)!=PTP_RC_OK) {			\
-				fprintf(stderr,error);			\
+				fprintf(stderr,"ERROR: "error);		\
 				usb_release_interface(ptp_usb.handle,	\
 		dev->config->interface->altsetting->bInterfaceNumber);	\
 				return;					\
 			}						\
 }
 
+/* Check value and Return -1 on error */
+#define CRR(result) {							\
+			if((result)!=PTP_RC_OK) {			\
+				return -1;				\
+			}						\
+}
+
+/* Check value and Report (PTP) Error if needed */
+#define CRE(result) {							\
+			uint16_t r;					\
+			r=(result);					\
+			if (r!=PTP_RC_OK)				\
+				ptp_perror(&params,r);			\
+}
+
 /* Check value and Continue on error */
 #define CC(result,error) {						\
 			if((result)!=PTP_RC_OK) {			\
-				fprintf(stderr,error);			\
+				fprintf(stderr,"ERROR: "error);		\
 				usb_release_interface(ptp_usb.handle,	\
 		dev->config->interface->altsetting->bInterfaceNumber);	\
 				continue;					\
 			}						\
 }
 
+#define ERROR(error) fprintf(stderr,"ERROR: "error);				
+
 /* requested actions */
 #define ACT_DEVICE_RESET	01
 #define ACT_LIST_DEVICES	02
 #define ACT_LIST_PROPERTIES	03
-#define ACT_SHOW_PROPERTY	04
+#define ACT_GETSET_PROPERTY	04
 
 			
 typedef struct _PTP_USB PTP_USB;
@@ -190,7 +207,7 @@ error (void *data, const char *format, va_list args);
 void
 error (void *data, const char *format, va_list args)
 {
-	if (!verbose) return;
+//	if (!verbose) return;
 	vfprintf (stderr, format, args);
 	fprintf (stderr,"\n");
 	fflush(stderr);
@@ -217,21 +234,21 @@ int ret=-1;
 int i;
 usb_dev_handle *device_handle;
 PTP_USB ptp_usb;
-PTPParams* ptp_params;
+PTPParams* params;
 
-	ptp_params=malloc(sizeof(PTPParams));
+	params=malloc(sizeof(PTPParams));
 
-	ptp_params->write_func=ptp_write_func;
-	ptp_params->read_func=ptp_read_func;
-	ptp_params->error_func=NULL;
-	ptp_params->debug_func=NULL;
-	ptp_params->sendreq_func=ptp_usb_sendreq;
-	ptp_params->senddata_func=ptp_usb_senddata;
-	ptp_params->getresp_func=ptp_usb_getresp;
-	ptp_params->getdata_func=ptp_usb_getdata;
-	ptp_params->data=&ptp_usb;
-	ptp_params->transaction_id=1;
-	ptp_params->byteorder = PTP_DL_LE;
+	params->write_func=ptp_write_func;
+	params->read_func=ptp_read_func;
+	params->error_func=NULL;
+	params->debug_func=NULL;
+	params->sendreq_func=ptp_usb_sendreq;
+	params->senddata_func=ptp_usb_senddata;
+	params->getresp_func=ptp_usb_getresp;
+	params->getdata_func=ptp_usb_getdata;
+	params->data=&ptp_usb;
+	params->transaction_id=1;
+	params->byteorder = PTP_DL_LE;
 	ptp_usb.inep=inep;
 	ptp_usb.outep=outep;
 	ptp_usb.intep=eventep;
@@ -243,7 +260,7 @@ PTPParams* ptp_params;
 	}
 	ptp_usb.handle=device_handle;
 	
-	ret=ptp_opensession (ptp_params, 1);
+	ret=ptp_opensession (params, 1);
 	if (ret!=PTP_RC_OK) return;
 
 	sleep(3);
@@ -251,7 +268,7 @@ PTPParams* ptp_params;
 
 //	ret=usb_bulk_read(device_handle, eventep, buf, 16384, 5000);
 
-	ret=ptp_check_int (buf, 16384, ptp_params->data);
+	ret=ptp_check_int (buf, 16384, params->data);
 	if (ret<=0) {
 		perror ("bulk_read()");
 	} else {
@@ -263,7 +280,7 @@ PTPParams* ptp_params;
 	}
 
 
-	ptp_closesession (ptp_params);
+	ptp_closesession (params);
 	exit;
 	} else {
 		printf("DUPA\n");
@@ -274,21 +291,21 @@ PTPParams* ptp_params;
 #endif
 
 void
-init_ptp_usb (PTPParams* ptp_params, PTP_USB* ptp_usb, struct usb_device* dev)
+init_ptp_usb (PTPParams* params, PTP_USB* ptp_usb, struct usb_device* dev)
 {
 	usb_dev_handle *device_handle;
 
-	ptp_params->write_func=ptp_write_func;
-	ptp_params->read_func=ptp_read_func;
-	ptp_params->error_func=error;
-	ptp_params->debug_func=debug;
-	ptp_params->sendreq_func=ptp_usb_sendreq;
-	ptp_params->senddata_func=ptp_usb_senddata;
-	ptp_params->getresp_func=ptp_usb_getresp;
-	ptp_params->getdata_func=ptp_usb_getdata;
-	ptp_params->data=ptp_usb;
-	ptp_params->transaction_id=0;
-	ptp_params->byteorder = PTP_DL_LE;
+	params->write_func=ptp_write_func;
+	params->read_func=ptp_read_func;
+	params->error_func=error;
+	params->debug_func=debug;
+	params->sendreq_func=ptp_usb_sendreq;
+	params->senddata_func=ptp_usb_senddata;
+	params->getresp_func=ptp_usb_getresp;
+	params->getdata_func=ptp_usb_getdata;
+	params->data=ptp_usb;
+	params->transaction_id=0;
+	params->byteorder = PTP_DL_LE;
 
 	if ((device_handle=usb_open(dev))){
 		if (!device_handle) {
@@ -390,7 +407,7 @@ list_devices(short force)
 		{
 			int n;
 			struct usb_endpoint_descriptor *ep;
-			PTPParams ptp_params;
+			PTPParams params;
 			PTP_USB ptp_usb;
 			//int inep=0, outep=0, intep=0;
 			PTPDeviceInfo deviceinfo;
@@ -420,26 +437,27 @@ list_devices(short force)
 */
 			find_endpoints(dev,&ptp_usb.inep,&ptp_usb.outep,
 				&ptp_usb.intep);
-			init_ptp_usb(&ptp_params, &ptp_usb, dev);
+			init_ptp_usb(&params, &ptp_usb, dev);
 
-			CC(ptp_opensession (&ptp_params,1),
-				"ERROR: Could not open session!\n");
-			CC(ptp_getdeviceinfo (&ptp_params, &deviceinfo),
-				"ERROR: Could not get device info!\n");
+			CC(ptp_opensession (&params,1),
+				"Could not open session!\n"
+				"Try to reset the camera.\n");
+			CC(ptp_getdeviceinfo (&params, &deviceinfo),
+				"Could not get device info!\n");
 
       			printf("%s/%s\t0x%04X/0x%04X\t%s\n",
 				bus->dirname, dev->filename,
 				dev->descriptor.idVendor,
 				dev->descriptor.idProduct, deviceinfo.Model);
 
-			CC(ptp_closesession(&ptp_params),
-				"ERROR: Could not close session!\n");
+			CC(ptp_closesession(&params),
+				"Could not close session!\n");
 			usb_release_interface(ptp_usb.handle,
 			dev->config->interface->altsetting->bInterfaceNumber);
 		}
 	}
 	if (!found) printf("\nFound no PTP devices");
-	printf("\n\n");
+	printf("\n");
 }
 
 const char*
@@ -517,7 +535,7 @@ get_property_description(PTPParams* params, uint16_t dpc)
 void
 list_properties (int busn, int devn, short force)
 {
-	PTPParams ptp_params;
+	PTPParams params;
 	PTP_USB ptp_usb;
 	struct usb_device *dev;
 	const char* propdesc;
@@ -535,25 +553,25 @@ list_properties (int busn, int devn, short force)
 	}
 	find_endpoints(dev,&ptp_usb.inep,&ptp_usb.outep,&ptp_usb.intep);
 
-	init_ptp_usb(&ptp_params, &ptp_usb, dev);
-	CR(ptp_opensession (&ptp_params,1),
+	init_ptp_usb(&params, &ptp_usb, dev);
+	CR(ptp_opensession (&params,1),
 		"Could not open session!\n");
-	CR(ptp_getdeviceinfo (&ptp_params, &ptp_params.deviceinfo),
+	CR(ptp_getdeviceinfo (&params, &params.deviceinfo),
 		"Could not get device info\n");
-	printf("Quering: %s\n",ptp_params.deviceinfo.Model);
-	for (i=0; i<ptp_params.deviceinfo.DevicePropertiesSupported_len;i++){
-		propdesc=get_property_description(&ptp_params,
-			ptp_params.deviceinfo.DevicePropertiesSupported[i]);
+	printf("Quering: %s\n",params.deviceinfo.Model);
+	for (i=0; i<params.deviceinfo.DevicePropertiesSupported_len;i++){
+		propdesc=get_property_description(&params,
+			params.deviceinfo.DevicePropertiesSupported[i]);
 		if (propdesc!=NULL) 
-			printf("0x%04x : %s\n",ptp_params.deviceinfo.
+			printf("0x%04x : %s\n",params.deviceinfo.
 				DevicePropertiesSupported[i], propdesc);
 		else
-			printf("0x%04x : 0x%04x\n",ptp_params.deviceinfo.
+			printf("0x%04x : 0x%04x\n",params.deviceinfo.
 				DevicePropertiesSupported[i],
-				ptp_params.deviceinfo.
+				params.deviceinfo.
 					DevicePropertiesSupported[i]);
 	}
-	CR(ptp_closesession(&ptp_params), "Could not close session!\n");
+	CR(ptp_closesession(&params), "Could not close session!\n");
 	usb_release_interface(ptp_usb.handle,
 		dev->config->interface->altsetting->bInterfaceNumber);
 }
@@ -588,18 +606,59 @@ print_propval (uint16_t datatype, void* value)
 	return -1;
 }
 
-void
-show_property (int busn, int devn, uint16_t property, char* value, short force);
-void
-show_property (int busn, int devn, uint16_t property, char* value, short force)
+uint16_t
+set_property (PTPParams* params,
+		uint16_t property, char* value, uint16_t datatype);
+uint16_t
+set_property (PTPParams* params,
+		uint16_t property, char* value, uint16_t datatype)
 {
-	PTPParams ptp_params;
+	void* val=NULL;
+
+	switch(datatype) {
+	case PTP_DTC_INT8:
+		val=malloc(sizeof(int8_t));
+		*(int8_t*)val=(int8_t)strtol(value,NULL,10);
+		break;
+	case PTP_DTC_UINT8:
+		val=malloc(sizeof(uint8_t));
+		*(uint8_t*)val=(uint8_t)strtol(value,NULL,10);
+		break;
+	case PTP_DTC_INT16:
+		val=malloc(sizeof(int16_t));
+		*(int16_t*)val=(int16_t)strtol(value,NULL,10);
+		break;
+	case PTP_DTC_UINT16:
+		val=malloc(sizeof(uint16_t));
+		*(uint16_t*)val=(uint16_t)strtol(value,NULL,10);
+		break;
+	case PTP_DTC_INT32:
+		val=malloc(sizeof(int32_t));
+		*(int32_t*)val=(int32_t)strtol(value,NULL,10);
+		break;
+	case PTP_DTC_UINT32:
+		val=malloc(sizeof(uint32_t));
+		*(uint32_t*)val=(uint32_t)strtol(value,NULL,10);
+		break;
+	case PTP_DTC_STR:
+		val=(void *)value;
+	}
+	return(ptp_setdevicepropvalue(params, property, val, datatype));
+	free(val);
+	return 0;
+}
+
+void
+getset_property (int busn,int devn,uint16_t property,char* value,short force);
+void
+getset_property (int busn,int devn,uint16_t property,char* value,short force)
+{
+	PTPParams params;
 	PTP_USB ptp_usb;
 	struct usb_device *dev;
 	PTPDevicePropDesc dpd;
 	const char* propdesc;
 
-	if (value) printf("val = %s\n",value);
 #ifdef DEBUG
 	printf("dev %i\tbus %i\n",devn,busn);
 #endif
@@ -611,29 +670,30 @@ show_property (int busn, int devn, uint16_t property, char* value, short force)
 	}
 	find_endpoints(dev,&ptp_usb.inep,&ptp_usb.outep,&ptp_usb.intep);
 
-	init_ptp_usb(&ptp_params, &ptp_usb, dev);
-	CR(ptp_opensession (&ptp_params,1),
+	init_ptp_usb(&params, &ptp_usb, dev);
+	CR(ptp_opensession (&params,1),
 		"Could not open session!\nTry to reset the camera.\n");
-	CR(ptp_getdeviceinfo (&ptp_params, &ptp_params.deviceinfo),
+	CR(ptp_getdeviceinfo (&params, &params.deviceinfo),
 		"Could not get device info\nTry to reset the camera.\n");
-	propdesc=get_property_description(&ptp_params,property);
-	printf("Camera: %s",ptp_params.deviceinfo.Model);
+	propdesc=get_property_description(&params,property);
+	printf("Camera: %s",params.deviceinfo.Model);
 	if ((devn!=0)||(busn!=0)) 
 		printf(" (bus %i, dev %i)\n",busn,devn);
 	else
 		printf("\n");
-	if (!ptp_property_issupported(&ptp_params, property)||propdesc==NULL)
+	if (!ptp_property_issupported(&params, property)||propdesc==NULL)
 	{
 		fprintf(stderr,"The dvice does not support this property!\n");
-		CR(ptp_closesession(&ptp_params), "Could not close session!\n"
+		CR(ptp_closesession(&params), "Could not close session!\n"
 			"Try to reset the camera.\n");
 		return;
 	}
 	printf("Property '%s'\n",propdesc);
 	memset(&dpd,0,sizeof(dpd));
-	CR(ptp_getdevicepropdesc(&ptp_params,property,&dpd),
+	CR(ptp_getdevicepropdesc(&params,property,&dpd),
 		"Could not get device property description!\n"
 		"Try to reset the camera.\n");
+	printf ("Data type is 0x%04x\n",dpd.DataType);
 	printf ("Current value is ");
 	print_propval(dpd.DataType, dpd.CurrentValue);
 	printf("\n");
@@ -669,8 +729,12 @@ show_property (int busn, int devn, uint16_t property, char* value, short force)
 	case PTP_DPFF_None:
 		printf(".\n");
 	}
+	if (value) {
+		printf("Setting proprty value to '%s'\n",value);
+		CRE(set_property(&params, property, value, dpd.DataType));
+	}
 	ptp_free_devicepropdesc(&dpd);
-	CR(ptp_closesession(&ptp_params), "Could not close session!\n"
+	CR(ptp_closesession(&params), "Could not close session!\n"
 	"Try to reset the camera.\n");
 	usb_release_interface(ptp_usb.handle,
 		dev->config->interface->altsetting->bInterfaceNumber);
@@ -723,7 +787,7 @@ reset_device (int busn, int devn, short force);
 void
 reset_device (int busn, int devn, short force)
 {
-	PTPParams ptp_params;
+	PTPParams params;
 	PTP_USB ptp_usb;
 	struct usb_device *dev;
 	uint16_t status;
@@ -741,7 +805,7 @@ reset_device (int busn, int devn, short force)
 	}
 	find_endpoints(dev,&ptp_usb.inep,&ptp_usb.outep,&ptp_usb.intep);
 
-	init_ptp_usb(&ptp_params, &ptp_usb, dev);
+	init_ptp_usb(&params, &ptp_usb, dev);
 	
 	// get device status (devices likes that regardless of its result)
 	usb_ptp_get_device_status(&ptp_usb,devstatus);
@@ -862,7 +926,7 @@ main(int argc, char ** argv)
 			action=ACT_LIST_PROPERTIES;
 			break;
 		case 's':
-			action=ACT_SHOW_PROPERTY;
+			action=ACT_GETSET_PROPERTY;
 			property=strtol(optarg,NULL,16);
 			break;
 		case '?':
@@ -887,8 +951,8 @@ main(int argc, char ** argv)
 		case ACT_LIST_PROPERTIES:
 			list_properties(busn,devn,force);
 			break;
-		case ACT_SHOW_PROPERTY:
-			show_property(busn,devn,property,value,force);
+		case ACT_GETSET_PROPERTY:
+			getset_property(busn,devn,property,value,force);
 			break;
 	}
 
