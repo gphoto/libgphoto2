@@ -1,0 +1,243 @@
+INTRODUCTION:
+
+This library, developed using gphoto2 library support, and intended as part
+of the Gphotoproject, is for USB cameras with an SQ Technologies chip.
+Apparently, the chips inside the two cameras which I have used to develop
+the driver library are SQ905 or similar, later chips from SQ (Service and
+Quality Technologies).
+
+Several cameras sold under various brands are known to report themselves to
+the USB interface as Vendor:Product number 0x2770:0x9120 -- persistent
+Google searching will turn up approximately half a dozen. It could
+reasonably be suspected that all of these cameras have the same chip in
+them, or similar chips from SQ. 
+
+I have two SQ cameras. I bought them just to see if I could make them work.
+One of them is the Argus DC-1510, and the other one is a Brand X "Gear to
+Go." Both are very cheap, low-end cameras (under $20 US in Walmart), with
+maximum resolution 352x288. Within the class of cheap cameras they have some
+interesting features nevertheless. For example, these cameras are able to
+download 16,232 bytes at a time, repeating in order to download a larger
+image. Some cameras are much slower. On maximum resolution setting, these
+cameras will hold 19 or 20 pictures (depending on the particular model and
+its features). Both of my cameras report themselves to
+/proc/bus/usb/devices as Class ff Subclass ff Protocol ff (where "ff"
+signifies "proprietary"). In spite of some clear differences between the two
+cameras, there is no difference in model number or in anything else which
+is reported to te USB interface. My two cameras produce identical output to
+/proc/bus/usb/devices. The differences are all internal. 
+
+The website of SQ Technologies <www.sq.com.tw> lists an SQ905 chip and also
+an SQ913 chip, and an SQ915, but no SQ912 at all. The INF file for
+both of the camers which I own is called sq9120.inf, and that file lists the
+supported devices as 0x2770:0x9120 and 0x2770:0x9130. This information might
+lead one to suspect that the chip inside these cameras is actually the
+SQ913. However, the byte sequence 09 05 00 26 is used several times in the
+initialization sequence, apparently as an address reference point equivalent
+to sector zero on a harddrive. This might possibly imply that the chip
+inside is the SQ905.  Another possibility, since the "Gear to Go" offers a
+feature (compresson) which the Argus DC-1510 does not have, is that the
+"Gear to Go" contains a later chip, perhaps the SQ913 or SQ915, which is
+backwards compatible with the SQ905, while the Argus DC-1510 contains the
+SQ905. 
+
+An inquiry to SQ Technologies about information and the data sheet on the
+chip in the 0x2770:0x9120, for the purpose of developing a Linux driver for
+the camera, has not been answered. All development of a driver, therefore,
+is based on observation of the traffic between the camera and the computer,
+conbined with observation of what the camera is actually doing while the
+traffic was going on.
+
+WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
+
+	FEATURE LIST					SUPPORTED (Y/N/Part)
+-- USB connection to computer
+-- High resolution 352x288 						
+	-- 20 pictures on Argus DC-1510					Y
+	-- 19 pictures on "Gear to Go"					Y
+	-- 38 pictures on "Gear to Go" if using compression		P
+	-- Low resolution 176x144		
+	-- 80 pictures on Argus						Y
+	-- 76 pictures on "Gear to Go"					Y
+	--152 pictures on "Gear to Go" if using compression		P
+	-- Both cameras can be used for video capture 			N
+	-- Partial ability to "switch" resolution without
+		deleting all pictures first (claimed in manual)		N
+	-- Ability to download all pictures on camera			Y
+	-- Ability to download the first k pictures, where 
+		k is less than the number on the camera 		N
+	-- Frequency filter for use in artificial light. Can be set 
+	to cancel 60hz or 50hz interference. Done with button-pushes 
+	on the camera, not with software.
+
+Notes: 
+
+"P" means that it is currently possible to get raw pictures from the
+compressed data, or ppm pictures which do not make much sense of the
+original. 
+
+The pictures obtained on the uncompressed settings can quite often
+be superior to those obtained using the support for Windows which came with
+the camera. 
+
+WHAT FEATURES DO THESE CAMERAS ABSOLUTELY NOT SUPPORT?
+
+1. 	The downloading of "thumbnails" as separate files seems to be
+totally unsupported by these cameras. The supporting software from the
+manufacturer does not download thumbnaill files. What that software does is
+only to download consecutively all photos starting from the first until the
+last one requested. Once the chosen list of photos has been downloaded, the
+computer sends a"disengage" sequence to the camera, after which no further
+traffic between computer and camera occurs. At that point. "thumbnails" are
+created on the computer by the installed software and are displayed. The
+actual file for the photo corresponding to a given thumbnail is either held
+in memory or is put in a temporary location. The user may then choose from
+the displayed photos which ones he/she wishes to save to a permanent
+location. The discarded ones are not retained after exit from the program.
+
+2.	Considering the way the communication protocols of these cameras
+have been constructed, it would seem quite impossible for the camera to be
+used in any way resembling a USB Mass Storage device. The camera clearly
+does not have files on it, only data addresses. And the camera does not keep
+time. Also:
+
+	--it would seem there is absolutely no way (unless undocumented and
+	unused) to send data *to* the camera, for storage or for transport.
+	Indeed, the way the camera is caused to download data to the
+	computer is that the computer first informs the camera of a request
+	to download. The camera gives no response to this, until the
+	computer sends to the camera the same number of bytes that it
+	requested. An apt comparison: one puts money into a vending machine.
+	The machine takes the money but otherwise does nothing. Then the
+	customer kicks the machine, and the machine delivers the product! 	
+	
+	--it is clearly impossible to delete any single picture on the
+	camera, or all pictures, for that matter, from the computer side.
+	These actions are done with button press sequences on the camera,
+	instead.
+
+To find a way around these constraints would indeed be most interesting. Who
+knows? Maybe these things can be done. Could be that these chips have
+undocumented capabilities.
+
+
+WHAT FEATURES OF GPHOTO2 AND LIBGPHOTO2 DOES MY DRIVER NOT SUPPORT?
+
+	A short answer to this is, most of the features. I am actually very
+new to C programming and very new to the gphoto project, and I do not have
+an insider's understanding of the way that all of the features of gphoto2
+are put together. In particular I do not claim to understand just how the
+"filesystem" of gphoto2 is put together and how it functions with the rest
+of things. Several attempts to implement the filesystem have led to nothing
+but crashes. Therefore, this program will do exactly the following,
+assuming that it works for you as it does for me:
+
+1. gphoto2 --summary will download all photos on the camera to PPM files in
+	the current working directory on your hard drive and print a summary
+	of what was found in the camera. Then gphoto2 should exit
+	gracefully.
+
+2. gphoto2 -P will download all photos on the camera to PPM files in the
+	current working directory without bothering to print any
+	information, and then it should exit gracefully.
+
+3. gphoto2 --about will print a message to the screen.
+
+4. gphoto2 --abilities will print an accurate list of the camera's
+	abilities. Note that capture support is left blank. The camera will 
+	support capture, but the program, right now, does not. 
+
+
+In either case, the pictures will come out right side up and correctly
+oriented if the picture was done in landscape mode. If the picture was in
+portrait mode, you will have to rotate it yourself. 
+
+
+The program does work well for me, and it actually exploits most of what the
+camera will do inspite of the fact that the gphoto2 filesystem is
+unsupported. And when the image processing part of this program is not fed
+compressed data by the camera it makes pretty good pictures, considering the
+comparatively low resolution of the camera. Much of the time, the pictures
+obtained from uncompressed data are visibly superior to those processed by
+the manufacturer's software.
+
+NOTES FOR DEVELOPERS 
+
+1.	I have tried very hard to make everything easy to follow, by
+providing comments. 
+
+2.	The program is set up to put out pictures in PPM format. If you want
+raw format, for example in order to investigate what kind of compression is
+used for "High Compression,"  then the code for producing raw files is
+already present. Just go into sq905.c and uncomment it. And if you want to,
+then comment out the section which will give you a PPM file while you are
+experimenting. 
+
+3.	 The gamma setting (actually seems to be one over gamma) used for
+the construction of PPM image files has been obtained by trial and error. It
+seems to work very well for outdoor pictures, but the setting is a
+compromise between what happens with outdoor photos and what happens with
+indoor photos. Conceivably, the program could support a choice between two
+or more gamma settings, optimizing for different conditions.
+
+4. 	To unscramble the "High Compression" setting on the "Gear to Go" or
+similar cameras is obviously the biggie right now. 
+
+5. 	As mentioned, all landscape-oriented pictures are oriented
+correctly. This is done by reversing the order of the data in the picture
+before the creation of a raw or a PPM file, because the picture comes out of
+the camera upside-down. Reversing the order of the data also causes the
+color mappings to reverse from RGB to BGR. If you wish to comment out the
+byte-reversal in order to run various experiments, then please be aware that
+you have reversed blue and red, too, which is dealt with a few lines down in
+the program.
+
+6.	If you have a camera with an SQ chipset in it which otherwise ought
+to work with this program, then you should see a debug message to the effect
+that the camera is an unknown SQ camera. The program will then run (I hope), 
+under the presumably false assumptions that 
+	--there can be at most one uncompressed high resolution picture in
+it. Please change this number to whatever is appropriate for your camera.
+Because I can't know what that number is. Clearly, something would get
+messed up if I said max_num_pics = 19 and it is only 18 and you have 18
+pictures in the camera and it tries to download 19 anyhow.
+	--there can be at most four uncompressed low resolution pictures in
+the camera, for similar reasons. 
+
+So at least you can find out if there is any hope at all of using this
+program on your camera.
+
+	I am not too much worried if you have high compression pictures in
+it and it is full. Probably won't happen, but the results would be equally
+bad. Just don't do that. 
+
+7. Please get back to me with reports about other SQ cameras, with their
+specifications (what it says in the manual about resolution and number of
+pictures would be enough, and with log files showing the output of the 
+0x4000 bytes of setup data, from gphoto2 --debug --summary or from usbsniff. 
+Preferably you do this without pictures in the camera, please. 
+
+WARRANTY? 
+
+	Absolutely not. No warranty. Never. Not responsible for any actual
+	or potential damage or consequences to anyone or to the equipment of
+	anyone for using this program, whether the alleged damage or alleged
+	consequences are claimed to be real, imaginary, direct, collateral,
+	for pain and suffering, or are claimed to be inflicted upon any
+	"third party" who is not the user or installer of the program. The
+	program has been written for my pleasure and to broaden and deepen
+	my knowledge of computer hardware and software. The program has not
+	been written with the immediate expectation of financial gain or
+	profit on my part, nor has it been commissioned for pay. It is
+	presumed that any end-user of this program will have access to the
+	source code of the program and can judge for himself or herself
+	whether he/she wishes to use it or not, or consult someone with
+	appropriate expertise. 
+
+	Furthermore, the program is at this point completely untested alpha
+	software, and anyone attempting or wishing to use it or install it
+	should keep this fact in mind.
+
+
+Theodore Kilgore
+06/21/03
