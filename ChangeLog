@@ -1,5 +1,9 @@
 2001-10-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/libgphoto-2.0.pc.in: -I${includedir}
+
+2001-10-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/directory/directory.h: Removed.
 	* camlibs/directory/directory.c: Remove cruft
 
