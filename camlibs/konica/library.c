@@ -444,6 +444,7 @@ camera_file_list (Camera* camera, CameraList* list, gchar* folder)
 		g_free (filename);
 	}
 
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_list ***");
 	return (GP_OK);
 }
 
@@ -454,7 +455,6 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 	gulong 		image_id;
 	gchar*		image_id_string;
 	konica_data_t*	kd;
-	gchar*		tmp;
 	gint		result;
 
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
@@ -481,14 +481,10 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 	if ((result = k_get_image (kd->device, kd->image_id_long, image_id, image_type, (guchar **) &file->data, (guint *) &file->size)) != GP_OK) return (result);
 
 	strcpy (file->type, "image/jpeg");
-	if (image_type == K_THUMBNAIL) {
-		tmp = g_strdup_printf ("%06i-thumbnail.jpeg", (int) image_id);
-		strcpy (file->name, tmp);
-		g_free (tmp);
-	} else {
-		strcpy (file->name, filename);
-	}
+	strcpy (file->name, filename);
 
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** fype: %s", file->type);
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** name: %s", file->name);
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_get_generic ***");
 	return (GP_OK);
 }
