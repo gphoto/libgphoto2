@@ -122,7 +122,7 @@
 	* libgphoto2_port/gphoto2-port-result.[c,h]: Remove
 	  GP_ERROR_IO_TIMEOUT - we already have GP_ERROR_TIMEOUT.
 
-2001-12-07  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-12-07  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* libgphoto2_port/gphoto2-port-log.c: ENABLE_DEBUGGING -> DISABLE_DEBUGGING
 	* doc/gphoto2-port-sections.txt: added lots of constants, a few macros and
@@ -132,11 +132,11 @@
 
 	* configure.in: You won't believe how much dead code there is...
 
-2001-12-07  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-12-07  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* gphoto2-port-config.in: made it work again
 
-2001-12-01  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-12-01  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: help cosmetics
 	* m4/documentation.m4: help cosmetics,
@@ -173,11 +173,11 @@
 	* libgphoto2_port: First try to implement a regex match. Doesn't work
 	  yet.
 
-2001-11-29  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-29  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* libgphoto2_port/m4/packaging.m4: added packaging macro
 
-2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-11-27  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* po/libgphoto2_port.pot: I'm sick of all the diffs
 	* po/de.po: I'm still sick of all the diffs
@@ -376,7 +376,7 @@
 
 2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-	Suggestions from Hans Ulrich Niedermann <hun@n-dimensional.de>:
+	Suggestions from Hans Ulrich Niedermann <gp@n-dimensional.de>:
 
 	* libgphoto2_port/debug.c: #warn the user #ifndef HAVE_VSNPRINTF and
 	use a #define at the beginning instead of #ifdefs in the code.
@@ -418,7 +418,7 @@
 
 2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-	Patch from Hans Ulrich Niedermann <hun@n-dimensional.de>, slightly
+	Patch from Hans Ulrich Niedermann <gp@n-dimensional.de>, slightly
 	adapted:
 
 	* include/gphoto2-port-debug.h

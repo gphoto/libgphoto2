@@ -57,3 +57,6 @@ Konica driver, various clean-up all over the place
 
 Fredrik <fredrik@krixor.xy.org>
 Canon driver, all but serial specific things.
+
+Hans Ulrich Niedermann <gp@n-dimensional.de>
+Canon driver, package building, and various other things
