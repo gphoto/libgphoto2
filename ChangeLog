@@ -1,3 +1,11 @@
+2002-02-13 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2/gphoto2-abilities-list.h
+	* libgphoto2/gphoto2-camera.h
+	* libgphoto2/gphoto2-filesys.h: Rearranged some structs and added
+	  some empty members to make backward compatibility easier to achieve
+	  when API changes are made in the future.
+
 2002-02-13  Tim Waugh <twaugh@redhat.com>
 
 	* frontends/command-line/gphoto2.xml: Mention that files are

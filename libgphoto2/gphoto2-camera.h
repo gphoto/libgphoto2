@@ -104,6 +104,15 @@ struct _CameraFunctions {
 	CameraManualFunc  manual;
 	CameraAboutFunc   about;
 
+	/* Reserved space to use in the future without changing the struct size */
+	void *reserved1;
+	void *reserved2;
+	void *reserved3;
+	void *reserved4;
+	void *reserved5;
+	void *reserved6;
+	void *reserved7;
+	void *reserved8;
 };
 
 /* Those are DEPRECATED */
