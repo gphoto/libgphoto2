@@ -16,6 +16,7 @@ libgphoto2_la_SOURCES = 	\
 	file.c			\
 	filesys.c		\
 	frontend.c		\
+	jpeg.c jpeg.h		\
 	list.c			\
 	pattrec.c pattrec.h	\
 	result.c		\
@@ -25,3 +26,4 @@ libgphoto2_la_SOURCES = 	\
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgphoto-2.0.pc
 EXTRA_DIST = libgphoto-2.0.pc.in
+
