@@ -316,6 +316,9 @@ print_exif_action (ActionParams *p, const char *filename)
         const char *data;
         unsigned long size;
         ExifData *ed;
+#ifdef HAVE_EXIF_0_5_4
+	unsigned int i;
+#endif
 
         CR (gp_file_new (&file));
         CRU (gp_camera_file_get (p->camera, p->folder, filename,
@@ -337,6 +340,11 @@ print_exif_action (ActionParams *p, const char *filename)
         printf ("%-59.59s", _("Value"));
         printf ("\n");
         print_hline ();
+#ifdef HAVE_EXIF_0_5_4
+	for (i = 0; i < EXIF_IFD_COUNT; i++)
+		if (ed->ifd[i])
+			show_ifd (ed->ifd[i]);
+#else
         if (ed->ifd0)
                 show_ifd (ed->ifd0);
         if (ed->ifd1)
@@ -347,6 +355,7 @@ print_exif_action (ActionParams *p, const char *filename)
                 show_ifd (ed->ifd_gps);
         if (ed->ifd_interoperability)
                 show_ifd (ed->ifd_interoperability);
+#endif
         print_hline ();
         if (ed->size) {
                 printf (_("EXIF data contains a thumbnail (%i bytes)."),

@@ -98,6 +98,15 @@ get_exif_mtime (const unsigned char *data, unsigned long size)
         /*
          * HP PhotoSmart C30 has the date and time in ifd_exif.
          */
+#ifdef HAVE_EXIF_0_5_4
+	e = exif_content_get_entry (ed->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME);
+	if (!e)
+		e = exif_content_get_entry (ed->ifd[EXIF_IFD_EXIF],
+					    EXIF_TAG_DATE_TIME_ORIGINAL);
+	if (!e)
+		e = exif_content_get_entry (ed->ifd[EXIF_IFD_EXIF],
+					    EXIF_TAG_DATE_TIME_DIGITIZED);
+#else
 	e = exif_content_get_entry (ed->ifd0, EXIF_TAG_DATE_TIME);
 	if (!e)
 	        e = exif_content_get_entry (ed->ifd_exif,
@@ -105,6 +114,7 @@ get_exif_mtime (const unsigned char *data, unsigned long size)
 	if (!e)
 		e = exif_content_get_entry (ed->ifd_exif, 
 					    EXIF_TAG_DATE_TIME_DIGITIZED);
+#endif
         if (!e) {
                 GP_DEBUG ("EXIF data has not date/time tag.");
                 exif_data_unref (ed);

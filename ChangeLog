@@ -1,3 +1,10 @@
+2002-07-25  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Detect new version of libexif.
+	* frontends/command-line/actions.c:
+	* libgphoto2/gphoto2-filesys.c: Adjust to new version of libexif
+	  (if found).
+
 2002-07-24  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: 2.1.1dev3
