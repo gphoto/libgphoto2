@@ -102,7 +102,7 @@ static int stv0680_cmd(GPPort *port, unsigned char cmd,
 	    return ret;
 
 	printf("Validating packet [0x%X,0x%X,0x%X,0x%X,0x%X,0x%X]\n",
-rhdr[0], rhdr[1], rhdr[2], rhdr[3], rhdr[4], rhdr[5]);
+	       rhdr[0], rhdr[1], rhdr[2], rhdr[3], rhdr[4], rhdr[5]);
 	// validate response
 	if(rhdr[0] != 0x02 || rhdr[1] != cmd ||
 	   rhdr[2] != response_len ||
@@ -264,7 +264,7 @@ int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
 	if (!tmpdata2) return GP_ERROR_NO_MEMORY;
 	strcpy(*data, header);
 	gp_bayer_expand (raw, w, h, tmpdata1, BAYER_TILE_GBRG_INTERLACED);
-	light_enhance(w,h,coarse,fine,tmpdata1);
+	light_enhance(w,h,coarse,imghdr.avg_pixel_value,fine,tmpdata1);
 	//gp_bayer_interpolate (tmpdata1, w, h, BAYER_TILE_GBRG_INTERLACED);
 	stv680_hue_saturation (w, h, tmpdata1, tmpdata2 );
 	demosaic_sharpen (w, h, tmpdata2, tmpdata1, 2, BAYER_TILE_GBRG_INTERLACED);
@@ -419,10 +419,10 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 	strcpy(*data, header);
 	bayerpre = malloc(((*size)*3));
 	gp_bayer_expand (raw, w, h, bayerpre, BAYER_TILE_GBRG_INTERLACED);
-	light_enhance(w,h,coarse,fine,bayerpre);
-	gp_bayer_interpolate (bayerpre, w, h, BAYER_TILE_GBRG_INTERLACED);
+	light_enhance(w,h,coarse,fine,imghdr.avg_pixel_value,bayerpre);
+	//gp_bayer_interpolate (bayerpre, w, h, BAYER_TILE_GBRG_INTERLACED);
 	demosaic_sharpen (w, h, bayerpre, *data + strlen(header), 2, BAYER_TILE_GBRG_INTERLACED);
-	//sharpen (w, h, bayerpre,*data + strlen(header), 40);
+	//sharpen (w, h, bayerpre,*data + strlen(header), 20);
 	free(bayerpre);
 	free(raw);
 	*size *= 3;
@@ -495,7 +495,7 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 	/* no light enhancement here, we do not get the exposure values? */
 	gp_bayer_decode (raw, w, h, bayerpre, BAYER_TILE_GBRG_INTERLACED);
 	demosaic_sharpen (w, h, bayerpre, *data + strlen(header), 2, BAYER_TILE_GBRG_INTERLACED);
-	//sharpen (w, h, bayerpre,*data + strlen(header), 40);
+	//sharpen (w, h, bayerpre,*data + strlen(header), 20);
 	free(raw);
 	free(bayerpre);
 	*size *= 3;

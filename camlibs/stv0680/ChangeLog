@@ -1,5 +1,10 @@
 2001-01-23  Kurt Garloff <garloff@suse.de>
 	
+	* library.c, bayer.c: Enhanced the light
+	  processing even more.
+
+2001-01-23  Kurt Garloff <garloff@suse.de>
+	
 	* sharpen.c: Fixed off by one error.
 
 2001-01-15  Kurt Garloff <garloff@suse.de>
