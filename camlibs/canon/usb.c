@@ -333,6 +333,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 		case CANON_EOS_D60:
                 case CANON_EOS_10D:
 		case CANON_PS_S230:
+		case CANON_PS_S400:
 			GP_DEBUG ("Locking camera keys and turning off LCD using 'EOS' locking code...");
 
 			memset (payload, 0, sizeof (payload));
@@ -455,6 +456,7 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
 		case CANON_EOS_D60:
 	        case CANON_EOS_10D:
 		case CANON_PS_S230:
+		case CANON_PS_S400:
 			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
 						    &bytes_read, NULL, 0);
 			if (!c_res)
