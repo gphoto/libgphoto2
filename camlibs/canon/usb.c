@@ -274,6 +274,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 		case CANON_PS_G1:
 		case CANON_PS_S100:
 		case CANON_PS_S20:
+		case CANON_PS_S10:
 			GP_DEBUG ("canon_usb_lock_keys: Your camera model does not need the keylock.");
 			break;
 		case CANON_PS_PRO90_IS:

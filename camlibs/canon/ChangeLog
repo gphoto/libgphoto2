@@ -5,6 +5,9 @@
 	  handling and got rid of the ../../libgphoto2/exif.*
 	  dependency.
 
+	* usb.c: Don't keylock S10 - it does that by itself when
+	  set to PC mode. Reported by Philipp Kolmann.
+
 2002-01-09  Fredrik <fredrik@krixor.xy.org>
 
 	* *.{c,h}: Re-indented and removed everything
