@@ -1,7 +1,7 @@
 ########################################################################
 # A short guide to setting up and using gphoto2
 ########################################################################
-# This file has been made obsolete by the chapter
+# This file has been made OBSOLETE by the chapter
 #               "Setting up your system ..."
 # in the gphoto2.xml file and in the generated
 # - HTML manual in manual/
@@ -111,7 +111,7 @@ usbcam script you are going to use.
    choose in step 2 whenever one of these cameras is attached.
 
 2. Choose the right /etc/hotplug/usb/usbcam script for you.
-   Example scripts are found in packages/ in the source tree
+   Example scripts are found in packaging/ in the source tree
    and in linux-hotplug/ after installation and in the doc dir of 
    the binary package. Choose one, adapt it for your needs, and copy
    it to /etc/hotplug/usb/usbcam. The directory /etc/hotplug should
