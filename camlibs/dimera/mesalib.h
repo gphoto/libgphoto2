@@ -11,6 +11,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.3  2001/09/10 20:25:44  dfandrich
+ * Added missing types for Solaris
+ *
  * Revision 1.2  2001/08/29 21:57:28  dfandrich
  * Changed port parameter to mesa_port_open
  *
@@ -18,6 +21,14 @@
 
 #ifndef MESALIB_H
 #define MESALIB_H
+
+/* Solaris doesn't have the u_int*_t types, so define them here. */
+/* The check for this should really be in the autoconf script, not here */
+#ifdef sun
+typedef uint8_t u_int8_t;
+typedef uint16_t u_int16_t;
+typedef uint32_t u_int32_t;
+#endif
 
 /* MESA commands */
 #define	NOP		0x01	/* No operation */
