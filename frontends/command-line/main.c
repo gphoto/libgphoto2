@@ -640,42 +640,45 @@ OPTION_CALLBACK (num_pictures)
 static int
 save_camera_file_to_file (CameraFile *file, CameraFileType type)
 {
-        char out_filename[1024], out_folder[1024], buf[1024], c[1024];
+        char ofile[1024], ofolder[1024], buf[1024], c[1024];
         int result;
         char *f;
         const char *name;
 
         /* Determine the folder and filename */
-        strcpy (out_filename, "");
-        strcpy (out_folder, "");
+        strcpy (ofile, "");
+        strcpy (ofolder, "");
 
         if (glob_filename_override) {
-                if (strchr(glob_filename, '/')) {               /* Check if they specified an output dir */
+                if (strchr (glob_filename, '/')) {              /* Check if they specified an output dir */
                         f = strrchr(glob_filename, '/');
                         strcpy(buf, f+1);                       /* Get the filename */
-                        sprintf(out_filename, buf, glob_num++);
+                        sprintf(ofile, buf, glob_num++);
                         *f = 0;
-                        strcpy(out_folder, glob_filename);      /* Get the folder */
-                        strcat(out_folder, "/");
+                        strcpy(ofolder, glob_filename);      /* Get the folder */
+                        strcat(ofolder, "/");
                         *f = '/';
                 } else {                                        /* If not, subst and set */
-                        sprintf(out_filename, glob_filename, glob_num++);
+                        sprintf(ofile, glob_filename, glob_num++);
                 }
         } else {
                 gp_file_get_name (file, &name);
-                strcat(out_filename, name);
+                strcat(ofile, name);
         }
 
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
-                sprintf(buf, "%sthumb_%s", out_folder, out_filename);
+                snprintf (buf, sizeof (buf), "%sthumb_%s", ofolder, ofile);
                 break;
         case GP_FILE_TYPE_NORMAL:
-                sprintf(buf, "%s%s", out_folder, out_filename);
+		snprintf (buf, sizeof (buf), "%s%s", ofolder, ofile);
                 break;
         case GP_FILE_TYPE_RAW:
-                sprintf(buf, "%sraw_%s", out_folder, out_filename);
+                snprintf (buf, sizeof (buf), "%sraw_%s", ofolder, ofile);
                 break;
+	case GP_FILE_TYPE_AUDIO:
+		snprintf (buf, sizeof (buf), "%saudio_%s", ofolder, ofile);
+		break;
         default:
                 return (GP_ERROR_NOT_SUPPORTED);
         }
