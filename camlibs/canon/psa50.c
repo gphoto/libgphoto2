@@ -1328,7 +1328,7 @@ struct psa50_dir *psa50_list_directory(Camera *camera, const char *name)
     unsigned char *msg,*p;
     int len,namlen;
     char attributes;
-    char newstr[100];
+    char newstr[100]={0};
 
     /* Ask the camera for a full directory listing */
     switch (canon_comm_method) {
