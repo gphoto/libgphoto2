@@ -314,7 +314,7 @@ gp_debug_printf (GP_DEBUG_LOW, "pdc320", "pdc320_pic could not determine camera"
 }
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy (id->text, "Polaroid DC320");
 
@@ -430,7 +430,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	/* Fill the list */
 	CHECK_RESULT (n = pdc320_num (camera->port));
-	gp_list_populate (list, "PDC320%04i.raw", n);
+	gp_list_populate (list, "PDC320%04i.jpg", n);
 
 	return (GP_OK);
 }
