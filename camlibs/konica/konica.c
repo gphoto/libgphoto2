@@ -1221,7 +1221,7 @@ k_localization_data_put (GPPort *p, GPContext *c,
         unsigned long i, j;
         unsigned char sb[16 + PACKET_SIZE];
 
-	gp_log (GP_LOG_DEBUG, "konica", "Uploading %i bytes localization "
+	gp_log (GP_LOG_DEBUG, "konica", "Uploading %ld bytes localization "
 		"data...", data_size);
 
 	CHECK_NULL (data);
