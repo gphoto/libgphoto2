@@ -1,5 +1,6 @@
 .*~ *~
 *.patch *.patch.new
+autom4te.cache
 config.guess
 config.sub
 ltconfig
