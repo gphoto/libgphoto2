@@ -97,11 +97,11 @@ void gp_debug_printf(int level, char *id, char *format, ...)
 		return;
 
 	if (glob_debug >= level) {
-		fprintf(stdout, "%s: ", id);
+		fprintf(stderr, "%s: ", id);
 		va_start(arg, format);
-		vfprintf(stdout, format, arg);
+		vfprintf(stderr, format, arg);
 		va_end(arg);
-		fprintf(stdout, "\n");
+		fprintf(stderr, "\n");
 	}
 }
 

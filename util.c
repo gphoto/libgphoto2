@@ -8,34 +8,34 @@ int gp_abilities_dump (CameraAbilities *abilities) {
 
 	int x=0;
 
-	printf("core: Abilities for camera                  : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Abilities for camera                  : %s", 
 		abilities->model);
-	printf("core: Serial port support                   : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Serial port support                   : %s", 
 		SERIAL_SUPPORTED(abilities->port)? "yes":"no");
-	printf("core: Parallel port support                 : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Parallel port support                 : %s", 
 		PARALLEL_SUPPORTED(abilities->port)? "yes":"no");
-	printf("core: USB support                           : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "USB support                           : %s", 
 		USB_SUPPORTED(abilities->port)? "yes":"no");
-	printf("core: IEEE1394 support                      : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "IEEE1394 support                      : %s", 
 		IEEE1394_SUPPORTED(abilities->port)? "yes":"no");
-	printf("core: Network support                       : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Network support                       : %s", 
 		NETWORK_SUPPORTED(abilities->port)? "yes":"no");
 	if (abilities->speed[0] != 0) {
-	printf("core: Transfer speeds supported             :\n");
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Transfer speeds supported             :");
 		do {	
-	printf("core:                                       : %i\n", abilities->speed[x]);
+	gp_debug_printf(GP_DEBUG_LOW, "core", "                                      : %i", abilities->speed[x]);
 			x++;
 		} while (abilities->speed[x]!=0);
 	}
-	printf("core: Capture from computer support         : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Capture from computer support         : %s", 
 		abilities->capture == 0? "no":"yes");
-	printf("core: Configuration  support                : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Configuration  support                : %s", 
 		abilities->config == 0? "no":"yes");
-	printf("core: Delete files on camera support        : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Delete files on camera support        : %s", 
 		abilities->file_delete == 0? "no":"yes");
-	printf("core: File preview (thumbnail) support      : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "File preview (thumbnail) support      : %s", 
 		abilities->file_preview == 0? "no":"yes");
-	printf("core: File upload support                   : %s\n", 
+	gp_debug_printf(GP_DEBUG_LOW, "core", "File upload support                   : %s", 
 		abilities->file_put == 0? "no":"yes");
 
 	return (GP_OK);

@@ -18,17 +18,19 @@ CameraWidget* gp_widget_new(CameraWidgetType type, char *label) {
 	strcpy(w->label, label);
 	
 	/* set the value to nothing */
-	strcpy(w->value, "");
+        strcpy(w->value_string, "");
+        w->value_int    = 0;
+        w->value_float  = 0.0;
+        w->ref_count    = 1;
+	w->choice_count = 0;
 
-	/* for now, for ease of mem management, pre-alloc 64 children pointers */
+        /* Alloc 64 children pointers */
 	memset(w->children, 0, sizeof(CameraWidget*)*64);
-
 	w->children_count = 0;
 
-	/* clear out the choices */
+	/* Clear out the choices */
 	for (x=0; x<32; x++)
 		strcpy(w->choice[x], "");
-	w->choice_count = 0;
 
 	return (w);
 }
@@ -57,6 +59,23 @@ int gp_widget_free (CameraWidget *widget) {
 	free(widget);
 
 	return (GP_OK);
+}
+
+int gp_widget_ref (CameraWidget *widget) {
+
+    widget->ref_count += 1;
+
+    return (GP_OK);
+}
+
+int gp_widget_unref (CameraWidget *widget) {
+
+    widget->ref_count -= 1;
+
+    if (widget->ref_count == 0)
+        gp_widget_free(widget);
+
+    return (GP_OK);
 }
 
 /* Retrieve some common widget properties					*/
@@ -88,19 +107,96 @@ int gp_widget_callback_set (CameraWidget *widget, CameraWidgetCallback callback)
 /* Set and unset the value of a widget 						*/
 /* --------------------------------------------------------------------------	*/
 
-int gp_widget_value_set (CameraWidget *widget, char *value) {
+int gp_widget_value_set (CameraWidget *widget, void *value) {
 
-	if (strcmp(widget->value, value) != 0) {
-		strcpy(widget->value, value);
-		widget->changed = 1;
-	}
+        switch (widget->type) {
+        case GP_WIDGET_WINDOW:
+            return (GP_ERROR);
+            break;
+        case GP_WIDGET_SECTION:
+            return (GP_ERROR);
+            break;
+        case GP_WIDGET_TEXT:
+            if (strcmp(widget->value_string, (char*)value) != 0) {
+                strncpy(widget->value_string, (char*)value, 255);
+                widget->changed = 1;
+            }
+            break;
+        case GP_WIDGET_RANGE:
+            if (widget->value_float != *((float*)value)) {
+                widget->value_float  = *((float*)value);
+                widget->changed = 1;
+            }
+            break;
+        case GP_WIDGET_TOGGLE:
+            if (widget->value_int != *((int*)value)) {
+                widget->value_int  = *((int*)value);
+                widget->changed = 1;
+            }
+            break;
+        case GP_WIDGET_RADIO:
+            if (strcmp(widget->value_string, (char*)value) != 0) {
+                strncpy(widget->value_string, (char*)value, 255);
+                widget->changed = 1;
+            }
+            break;
+        case GP_WIDGET_MENU:
+            if (strcmp(widget->value_string, (char*)value) != 0) {
+                strncpy(widget->value_string, (char*)value, 255);
+                widget->changed = 1;
+            }
+            break;
+        case GP_WIDGET_BUTTON:
+            return (GP_ERROR);
+            break;
+        case GP_WIDGET_DATE:
+            if (widget->value_int != *((int*)value)) {
+                widget->value_int  = *((int*)value);
+                widget->changed = 1;
+            }
+            break;
+        default:
+            return (GP_ERROR);
+        }
 
 	return (GP_OK);
 }
 
-char *gp_widget_value_get (CameraWidget *widget) {
+int gp_widget_value_get (CameraWidget *widget, void *value) {
 
-	return (widget->value);
+        switch (widget->type) {
+        case GP_WIDGET_WINDOW:
+            return (GP_ERROR);
+            break;
+        case GP_WIDGET_SECTION:
+            return (GP_ERROR);
+            break;
+        case GP_WIDGET_TEXT:
+            strncpy((char*)value, widget->value_string, 255);
+            break;
+        case GP_WIDGET_RANGE:
+            *((float*)value) = widget->value_float;
+            break;
+        case GP_WIDGET_TOGGLE:
+            *((int*)value) = widget->value_int;
+            break;
+        case GP_WIDGET_RADIO:
+            strncpy((char*)value, widget->value_string, 255);
+            break;
+        case GP_WIDGET_MENU:
+            strncpy((char*)value, widget->value_string, 255);
+            break;
+        case GP_WIDGET_BUTTON:
+            return (GP_ERROR);
+            break;
+        case GP_WIDGET_DATE:
+            *((int*)value) = widget->value_int;
+            break;
+        default:
+            return (GP_ERROR);
+        }
+
+	return (GP_OK);
 }
 
 /* Attach/Retrieve widgets to/from a parent widget				*/
@@ -109,7 +205,7 @@ char *gp_widget_value_get (CameraWidget *widget) {
 int gp_widget_append(CameraWidget *parent, CameraWidget *child) {
 
 	/* Return if they can't have any children */
-	if ((parent->type != GP_WIDGET_WINDOW) && (parent->type != GP_WIDGET_SECTION))
+        if ((parent->type != GP_WIDGET_WINDOW) && (parent->type != GP_WIDGET_SECTION))
 		return (GP_ERROR);
 
 	parent->children[parent->children_count] = child;
@@ -239,7 +335,12 @@ char *gp_widget_choice (CameraWidget *widget, int choice_number) {
 
 int gp_widget_changed (CameraWidget *widget) {
 
-	return (widget->changed);
+        int val;
+
+        val = widget->changed;
+        widget->changed = 0;
+
+        return (val);
 }
 
 /* Debugging output								*/
@@ -253,12 +354,12 @@ void gp_widget_dump_rec (CameraWidget *widget, int depth) {
 	for (x=0; x<depth*2; x++)
 		printf(" ");
 	printf("/ label=\"%s\"\n", widget->label);
-
+#if 0
 	printf("core: ");
 	for (x=0; x<depth*2; x++)
 		printf(" ");
 	printf("\\ value=\"%s\"\n", widget->value);
-
+#endif
 	for (x=0; x<widget->children_count; x++)
 		gp_widget_dump_rec(widget->children[x], depth+1);
 }
