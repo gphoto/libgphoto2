@@ -4,4 +4,5 @@
 
 int pdrm65_init(GPPort *);
 int pdrm65_get_filenames(GPPort *, CameraList *);
-
+int pdrm65_select_file(GPPort *, int);
+int pdrm65_get_pict(GPPort *, const char *,CameraFile *);
