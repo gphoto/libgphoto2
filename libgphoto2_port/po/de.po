@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-04 11:27+0100\n"
+"POT-Creation-Date: 2005-03-19 16:41+0100\n"
 "PO-Revision-Date: 2005-01-06 16:14+0100\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: deutsch <de@li.org>\n"
@@ -457,24 +457,20 @@ msgid "Camera is already in use."
 msgstr "Kamera ist bereits in Benutzung."
 
 #: usb/libusb.c:201
-msgid "Camera is supported by USB Storage driver."
-msgstr "Kamera wird durch USB Mass Storage Kerneltreiber unterst?zt."
-
-#: usb/libusb.c:205
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Gerät hat Kerneltreiber '%s' zugewiesen, löse Treiber jetzt."
 
-#: usb/libusb.c:208
+#: usb/libusb.c:204
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Konnte Kerneltreiber '%s' nicht vom Kamera Device lösen."
 
-#: usb/libusb.c:210
+#: usb/libusb.c:206
 msgid "Could not query kernel driver of device."
 msgstr "Konnte den Kerneltreiber des Gerätes nicht abfragen."
 
-#: usb/libusb.c:217
+#: usb/libusb.c:213
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -486,33 +482,33 @@ msgstr ""
 "anderes Programm oder Kernelmodul (z.B. %s) das Gerät verwendet und Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
-#: usb/libusb.c:236
+#: usb/libusb.c:232
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Konnte Schnittstelle %d nicht freigeben (%m)."
 
-#: usb/libusb.c:243
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Konnte USB-Port nicht schließen (%m)."
 
-#: usb/libusb.c:383
+#: usb/libusb.c:379
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Konnte Konfiguration %d/%d nicht setzen (%m)"
 
-#: usb/libusb.c:405
+#: usb/libusb.c:401
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Konnte Alternativ-Setting %d/%d nicht setzen (%m)"
 
-#: usb/libusb.c:497
+#: usb/libusb.c:493
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
-#: usb/libusb.c:529
+#: usb/libusb.c:525
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -522,7 +518,7 @@ msgstr ""
 "und wird von System direkt unterstützt (und deshalb nicht von gphoto2). "
 "Lesen Sie hierzu bitte %s"
 
-#: usb/libusb.c:562
+#: usb/libusb.c:558
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -532,7 +528,7 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: usb/libusb.c:693
+#: usb/libusb.c:689
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -542,6 +538,9 @@ msgstr ""
 "finden. \n"
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
+
+#~ msgid "Camera is supported by USB Storage driver."
+#~ msgstr "Kamera wird durch USB Mass Storage Kerneltreiber unterst?zt."
 
 #~ msgid "open"
 #~ msgstr " öffnen"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-04 11:27+0100\n"
+"POT-Creation-Date: 2005-03-19 16:41+0100\n"
 "PO-Revision-Date: 2004-12-21 01:06+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
@@ -452,24 +452,20 @@ msgid "Camera is already in use."
 msgstr "既にカメラは使用中です。"
 
 #: usb/libusb.c:201
-msgid "Camera is supported by USB Storage driver."
-msgstr "USB ストレージ・ドライバでサポートしているカメラです。"
-
-#: usb/libusb.c:205
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "ドライバ '%s' がデバイスを使用しています。今すぐ解放します。"
 
-#: usb/libusb.c:208
+#: usb/libusb.c:204
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Kernel ドライバ '%s' を解放できませんでした。"
 
-#: usb/libusb.c:210
+#: usb/libusb.c:206
 msgid "Could not query kernel driver of device."
 msgstr "Kernel のデバイス・ドライバを照会できませんでした。"
 
-#: usb/libusb.c:217
+#: usb/libusb.c:213
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -480,32 +476,32 @@ msgstr ""
 "が %s のような)  Kernel モジュールがこのデバイスを使用していないか確認して、"
 "そのデバイスの読み込み/書き込みをしてみて下さい。"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:232
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "インタフェース %d を解放することが出来ませんでした (%m)。"
 
-#: usb/libusb.c:243
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "USB ポートを閉じることが出来ませんでした (%m)。"
 
-#: usb/libusb.c:383
+#: usb/libusb.c:379
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
 
-#: usb/libusb.c:405
+#: usb/libusb.c:401
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
 
-#: usb/libusb.c:497
+#: usb/libusb.c:493
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "提供ベンダーまたは製品 ID (0x%x,0x%x) は正しくありません。"
 
-#: usb/libusb.c:529
+#: usb/libusb.c:525
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -514,7 +510,7 @@ msgstr ""
 "USB デバイス (ベンダー:0x%x 製品: 0x%x) はマス・ストレージ用デバイスで、"
 "gphoto2 では取り扱えません。参考情報: %s"
 
-#: usb/libusb.c:562
+#: usb/libusb.c:558
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -523,7 +519,7 @@ msgstr ""
 "USB デバイス (ベンダー:0x%x 製品: 0x%x) が見つかりませんでした。このデバイス"
 "がコンピュータに接続されているか確認して下さい。"
 
-#: usb/libusb.c:693
+#: usb/libusb.c:689
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -531,6 +527,9 @@ msgid ""
 msgstr ""
 "USB デバイス (Class: 0x%x, SubClass: 0x%x, プロトコル: 0x%x) が見つかりません"
 "でした。このデバイスがコンピュータに接続されているか確認して下さい。"
+
+#~ msgid "Camera is supported by USB Storage driver."
+#~ msgstr "USB ストレージ・ドライバでサポートしているカメラです。"
 
 #~ msgid "open"
 #~ msgstr "open"

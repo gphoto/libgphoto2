@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-04 11:27+0100\n"
+"POT-Creation-Date: 2005-03-19 16:41+0100\n"
 "PO-Revision-Date: 2002-11-21 13:11+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -445,25 +445,21 @@ msgid "Camera is already in use."
 msgstr ""
 
 #: usb/libusb.c:201
-msgid "Camera is supported by USB Storage driver."
-msgstr ""
-
-#: usb/libusb.c:205
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr ""
 
-#: usb/libusb.c:208
+#: usb/libusb.c:204
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr ""
 
-#: usb/libusb.c:210
+#: usb/libusb.c:206
 #, fuzzy
 msgid "Could not query kernel driver of device."
 msgstr "无法锁定设备"
 
-#: usb/libusb.c:217
+#: usb/libusb.c:213
 #, fuzzy, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -473,46 +469,46 @@ msgstr ""
 "无法请求界面 %d (%m)。请确认没有其它程序或内核模块 (例如 dc2xx 或 stv680) 正"
 "在使用该设备并且您有对该设备的读/写权。"
 
-#: usb/libusb.c:236
+#: usb/libusb.c:232
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "无法释放界面 %d (%m)。"
 
-#: usb/libusb.c:243
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "无法关闭 USB 端口 (%m)。"
 
-#: usb/libusb.c:383
+#: usb/libusb.c:379
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "无法设定配置 %d/%d (%m)"
 
-#: usb/libusb.c:405
+#: usb/libusb.c:401
 #, c-format
 msgid "Could not set altsetting %d/%d (%m)"
 msgstr "无法设定补充设置 %d/%d (%m)"
 
-#: usb/libusb.c:497
+#: usb/libusb.c:493
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "给出的供应商或产品 id (0x%x、0x%x) 不合法。"
 
-#: usb/libusb.c:529
+#: usb/libusb.c:525
 #, fuzzy, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
 "not function with gphoto2. Reference: %s"
 msgstr "无法找到 USB 设备 (供应商 0x%x、产品 0x%x)。确信该设备已连接到计算机。"
 
-#: usb/libusb.c:562
+#: usb/libusb.c:558
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr "无法找到 USB 设备 (供应商 0x%x、产品 0x%x)。确信该设备已连接到计算机。"
 
-#: usb/libusb.c:693
+#: usb/libusb.c:689
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
