@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.18  2001/08/31 01:33:34  dfandrich
+ * Replaced references to PNM with the appropriate PPM or PGM
+ *
  * Revision 1.17  2001/08/30 21:59:08  dfandrich
  * Fixed problem with saving raw images.  Stopped file name suffixes from
  * needlessly changing.
@@ -209,7 +212,7 @@
 #define min(a,b) ((a) < (b) ? (a) : (b))
 
 #define IMAGE_NAME_TEMPLATE "dimera%02i.ppm"
-#define RAM_IMAGE_TEMPLATE "temp.ppm"
+#define RAM_IMAGE_TEMPLATE "temp.ppm"	/* actually, sometimes this is a PGM */
 
 /* PNM headers */
 #define VIEWFIND_SZ	(128*96)
@@ -376,11 +379,12 @@ static int camera_file_get (Camera *camera, const char *folder, const char *file
 			gp_file_set_header (file, Dimera_stdhdr);
 		gp_file_set_conversion_method (file,
 					GP_FILE_CONVERSION_METHOD_CHUCK);
-		gp_file_convert (file, GP_MIME_PNM);
+		gp_file_convert (file, GP_MIME_PPM);
 		break;
 
 	case GP_FILE_TYPE_PREVIEW:
-		gp_file_set_mime_type (file, GP_MIME_PNM);
+		gp_file_set_mime_type (file, GP_MIME_PGM);
+		gp_file_adjust_name_for_mime_type (file);
 		break;
 	case GP_FILE_TYPE_RAW:
 		gp_file_set_mime_type (file, GP_MIME_RAW); 
@@ -407,7 +411,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 	}
 
 	info->preview.fields = GP_FILE_INFO_ALL;
-	strcpy(info->preview.type, GP_MIME_PNM);
+	strcpy(info->preview.type, GP_MIME_PGM);
 	strcpy(info->preview.name, filename);
 	info->preview.permissions = GP_FILE_PERM_READ;
 	info->preview.size = MESA_THUMB_SZ + sizeof( Dimera_thumbhdr ) - 1;
@@ -415,7 +419,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 	info->preview.height = 48;
 
 	info->file.fields = GP_FILE_INFO_ALL;
-	strcpy(info->file.type, GP_MIME_PNM);
+	strcpy(info->file.type, GP_MIME_PPM);
 	strcpy(info->file.name, filename);
 	info->file.permissions = GP_FILE_PERM_READ;
 
@@ -457,7 +461,7 @@ static int camera_capture_preview(Camera *camera, CameraFile *file) {
 	char *data;
 
 	gp_file_set_name (file, RAM_IMAGE_TEMPLATE);
-	gp_file_set_mime_type (file, GP_MIME_PNM);
+	gp_file_set_mime_type (file, GP_MIME_PGM);
 
         data = Dimera_Preview((int*) &size, camera);
         if (!data)
