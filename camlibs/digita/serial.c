@@ -180,7 +180,7 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 	int selected_speed;
 
 	/* Get the settings */
-	gp_port_settings_get (camera->port, &settings);
+	gp_port_get_settings (camera->port, &settings);
 
 	/* Remember the selected speed */
 	selected_speed = settings.serial.speed;
@@ -190,7 +190,7 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
         settings.serial.bits = 8;
         settings.serial.parity = 0;
         settings.serial.stopbits = 1;
-	gp_port_settings_set(dev->gpdev, settings);
+	gp_port_set_settings(dev->gpdev, settings);
 
         digita_send = digita_serial_send;
         digita_read = digita_serial_read;

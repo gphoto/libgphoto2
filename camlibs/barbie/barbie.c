@@ -180,13 +180,13 @@ camera_init (Camera *camera)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	/* Set up the port */
-        gp_port_timeout_set (camera->port, 5000);
-	gp_port_settings_get (camera->port, &settings);
+        gp_port_set_timeout (camera->port, 5000);
+	gp_port_get_settings (camera->port, &settings);
         settings.serial.speed   = 57600;
         settings.serial.bits    = 8;
         settings.serial.parity  = 0;
         settings.serial.stopbits= 1;
-        gp_port_settings_set (camera->port, settings);
+        gp_port_set_settings (camera->port, settings);
 
         res = barbie_ping (camera->port);
         if (res)

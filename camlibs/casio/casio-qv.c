@@ -219,11 +219,11 @@ camera_init (Camera *camera)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	/* Check if the camera is really there */
-	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
-	CHECK_RESULT (gp_port_timeout_set (camera->port, 1000));
+	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
+	CHECK_RESULT (gp_port_set_timeout (camera->port, 1000));
 	for (i = 0; i < 4; i++) {
 		settings.serial.speed = speeds[i];
-		CHECK_RESULT (gp_port_settings_set (camera->port, settings));
+		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 		result = QVping (camera);
 		if (result == GP_OK)
 			break;

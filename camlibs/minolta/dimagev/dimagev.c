@@ -464,13 +464,13 @@ int camera_init (Camera *camera)
 	camera->pl->dev = camera->port;
 
 	/* Configure the port */
-        gp_port_timeout_set(camera->port, 5000);
-	gp_port_settings_get(camera->port, &settings);
+        gp_port_set_timeout(camera->port, 5000);
+	gp_port_get_settings(camera->port, &settings);
         settings.serial.speed = 38400;
         settings.serial.bits = 8;
         settings.serial.parity = 0;
         settings.serial.stopbits = 1;
-        gp_port_settings_set(camera->port, settings);
+        gp_port_set_settings(camera->port, settings);
 
         if  ( dimagev_get_camera_data(camera->pl) < GP_OK ) {
                 gp_debug_printf(GP_DEBUG_LOW, "dimagev", "camera_init::unable to get current camera data");

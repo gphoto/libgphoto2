@@ -273,7 +273,7 @@ int camera_init(Camera *camera) {
  	    settings.usb.interface = 0;
 	    settings.usb.altsetting = 0;
  
-            ret=gp_port_settings_set(camera->port,settings);
+            ret=gp_port_set_settings(camera->port,settings);
             if (ret<0) return ret;
        
             break;

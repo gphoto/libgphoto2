@@ -38,7 +38,7 @@ int digita_usb_open(CameraPrivateLibrary *dev, Camera *camera)
 	digita_send = digita_usb_send;
 	digita_read = digita_usb_read;
 
-	gp_port_settings_set(dev->gpdev, settings);
+	gp_port_set_settings(dev->gpdev, settings);
 
 	return GP_OK;
 }

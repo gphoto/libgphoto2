@@ -1521,7 +1521,7 @@ camera_init (Camera *camera)
 
 	/* Figure out the speed (and set to default speed if 0) */
 	if (camera->port->type == GP_PORT_SERIAL) {
-		gp_port_settings_get (camera->port, &settings);
+		gp_port_get_settings (camera->port, &settings);
 		camera->pl->speed = settings.serial.speed;
 	} else
 		camera->pl->speed = 0;

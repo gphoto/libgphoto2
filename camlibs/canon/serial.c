@@ -58,9 +58,9 @@ canon_serial_change_speed (GPPort *gdev, int speed)
 	gp_port_settings settings;
 
 	/* set speed */
-	gp_port_settings_get (gdev, &settings);
+	gp_port_get_settings (gdev, &settings);
 	settings.serial.speed = speed;
-	gp_port_settings_set (gdev, settings);
+	gp_port_set_settings (gdev, settings);
 
 	usleep (70000);
 
@@ -200,7 +200,7 @@ canon_serial_init (Camera *camera)
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "Initializing the camera.\n");
 
 	/* Get the current settings */
-	gp_port_settings_get (camera->port, &settings);
+	gp_port_get_settings (camera->port, &settings);
 
 	/* Adjust the current settings */
 	switch (camera->pl->canon_comm_method) {
@@ -220,7 +220,7 @@ canon_serial_init (Camera *camera)
 	}
 
 	/* Set the new settings */
-	gp_port_settings_set (camera->port, settings);
+	gp_port_set_settings (camera->port, settings);
 
 	/* Do further initialization */
 	switch (camera->pl->canon_comm_method) {
@@ -282,7 +282,7 @@ canon_serial_send (Camera *camera, const unsigned char *buf, int len, int sleep)
 void
 serial_set_timeout (GPPort *gdev, int to)
 {
-	gp_port_timeout_set (gdev, to);
+	gp_port_set_timeout (gdev, to);
 }
 
 /*****************************************************************************
