@@ -56,21 +56,21 @@ static struct {
 	RicohModel id;
 	const char *model;
 } models[] = {
-	{RICOH_MODEL_1,     "Ricoh RDC-1"},
-	{RICOH_MODEL_2,     "Ricoh RDC-2"},
-	{RICOH_MODEL_2E,    "Ricoh RDC-2E"},
-	{RICOH_MODEL_100G,  "Ricoh RDC-100G"},
-	{RICOH_MODEL_300,   "Ricoh RDC-300"},
-	{RICOH_MODEL_300Z,  "Ricoh RDC-300Z"},
-	{RICOH_MODEL_4200,  "Ricoh RDC-4200"},
-	{RICOH_MODEL_4300,  "Ricoh RDC-4300"},
-	{RICOH_MODEL_5000,  "Ricoh RDC-5000"},
-	{RICOH_MODEL_ESP2,  "Philips ESP2"},
-	{RICOH_MODEL_ESP50, "Philips ESP50"},
-	{RICOH_MODEL_ESP60, "Philips ESP60"},
-	{RICOH_MODEL_ESP70, "Philips ESP70"},
-	{RICOH_MODEL_ESP80, "Philips ESP80"},
-	{RICOH_MODEL_ESP80SXG, "Philips ESP80SXG"},
+	{RICOH_MODEL_1,     "Ricoh:RDC-1"},
+	{RICOH_MODEL_2,     "Ricoh:RDC-2"},
+	{RICOH_MODEL_2E,    "Ricoh:RDC-2E"},
+	{RICOH_MODEL_100G,  "Ricoh:RDC-100G"},
+	{RICOH_MODEL_300,   "Ricoh:RDC-300"},
+	{RICOH_MODEL_300Z,  "Ricoh:RDC-300Z"},
+	{RICOH_MODEL_4200,  "Ricoh:RDC-4200"},
+	{RICOH_MODEL_4300,  "Ricoh:RDC-4300"},
+	{RICOH_MODEL_5000,  "Ricoh:RDC-5000"},
+	{RICOH_MODEL_ESP2,  "Philips:ESP2"},
+	{RICOH_MODEL_ESP50, "Philips:ESP50"},
+	{RICOH_MODEL_ESP60, "Philips:ESP60"},
+	{RICOH_MODEL_ESP70, "Philips:ESP70"},
+	{RICOH_MODEL_ESP80, "Philips:ESP80"},
+	{RICOH_MODEL_ESP80SXG, "Philips:ESP80SXG"},
 	{0, NULL}
 };
 

@@ -54,7 +54,7 @@ camera_abilities (CameraAbilitiesList *list)
 	CameraAbilities a;
 
 	memset(&a, 0, sizeof(a));
-	strcpy(a.model, "SiPix Web2");
+	strcpy(a.model, "SiPix:Web2");
 	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 	a.port     		= GP_PORT_USB;
 	a.speed[0] 		= 0;
@@ -66,7 +66,7 @@ camera_abilities (CameraAbilitiesList *list)
 	gp_abilities_list_append(list, a);
 
 	/* reported by Terry Lewis <mrkennie@amscomputers.biz> */
-	strcpy(a.model, "SiPix SC2100");
+	strcpy(a.model, "SiPix:SC2100");
 	a.usb_product		= 0x1002;
 	gp_abilities_list_append(list, a);
 	return (GP_OK);

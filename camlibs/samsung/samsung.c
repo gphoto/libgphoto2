@@ -139,10 +139,10 @@ camera_id (CameraText *id)
 static struct {
 	const char *model;
 } models[] = {
-	{"Samsung digimax 800k"},
-	{"Dynatron Dynacam 800"},
-	{"Jenoptik JD12 800ff"},
-	{"Praktica QD800"},
+	{"Samsung:digimax 800k"},
+	{"Dynatron:Dynacam 800"},
+	{"Jenoptik:JD12 800ff"},
+	{"Praktica:QD800"},
 	{NULL}
 };
 
