@@ -193,6 +193,17 @@ static SierraCamera sierra_cameras[] = {
 	{"", 			SIERRA_MODEL_DEFAULT,	0, 0, 0 }
 };
 
+static struct {
+	SierraSpeed speed;
+	int bit_rate;
+} SierraSpeeds[] = {
+	{SIERRA_SPEED_9600  ,   9600},
+	{SIERRA_SPEED_19200 ,  19200},
+	{SIERRA_SPEED_38400 ,  38400},
+	{SIERRA_SPEED_57600 ,  57600},
+	{SIERRA_SPEED_115200, 115200},
+	{0, 0}
+};
 
 int camera_id (CameraText *id) 
 {
@@ -367,6 +378,7 @@ static int
 camera_start (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
+	unsigned int i;
 
 	GP_DEBUG ("Establishing connection...");
 
@@ -379,17 +391,24 @@ camera_start (Camera *camera, GPContext *context)
 
 		/* If needed, change speed. */
 		CHECK (gp_port_get_settings (camera->port, &settings));
-		if (camera->pl->speed != settings.serial.speed)
-			CHECK (sierra_set_speed (camera, camera->pl->speed,
-						 context));
-		return (GP_OK);
+		if (camera->pl->speed != settings.serial.speed) {
+			for (i = 0; SierraSpeeds[i].bit_rate; i++)
+				if (camera->pl->speed ==
+						SierraSpeeds[i].bit_rate)
+					break;
+			CHECK (sierra_set_speed (camera,
+					SierraSpeeds[i].speed, context));
+		}
+		break;
 
 	case GP_PORT_USB:
 		CHECK (gp_port_set_timeout (camera->port, 5000));
-		return (GP_OK);
+		break;
 	default:
-		return (GP_OK);
+		break;
 	}
+
+	return (GP_OK);
 }
 
 static int
@@ -403,7 +422,7 @@ camera_stop (Camera *camera, GPContext *context)
 	 */
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
-		CHECK (sierra_set_speed (camera, -1, context));
+		CHECK (sierra_set_speed (camera, SIERRA_SPEED_19200, context));
 		break;
 	default:
 		break;

@@ -1,5 +1,14 @@
 2002-05-21  Lutz Müller <lutz@users.sourceforge.net>
 
+	* sierra.c
+	* library.[c,h] (sierra_set_speed): Introduce SierraSpeed - makes
+	  reading the code easier. Set GP_PIN_DTR before initialization and
+	  after speed changes. According to Portmon logs, sierra_init
+	  must be called after a SIERRA_PACKET_SESSION_END has been received.
+	  Implement that.
+
+2002-05-21  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c: Yet another try to handle SIERRA_PACKET_SESSION_END.
 
 2002-05-14  Lutz Müller <lutz@users.sourceforge.net>

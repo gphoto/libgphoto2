@@ -630,7 +630,6 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 {
 	int r = 0;
 	unsigned char buf[4096];
-	GPPortSettings s;
 
 	while (1) {
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
@@ -651,6 +650,8 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 			return GP_ERROR;
 
 		case SIERRA_PACKET_SESSION_END:
+		case SIERRA_PACKET_SESSION_ERROR:
+		case SIERRA_PACKET_WRONG_SPEED:
 			if (++r > 2) {
 				gp_context_error (context, _("Could not "
 					"transmit packet even after several "
@@ -660,29 +661,12 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 			
 			/*
                          * The camera has ended this session and
-                         * reverted the speed back to 19200. Imitate this
-                         * speed change and retry at 19200.
+                         * reverted the speed back to 19200. Reinitialize
+			 * the connection.
                          */
-                        switch (camera->port->type) { 
-                        case GP_PORT_SERIAL: 
-                                CHECK (gp_port_get_settings (camera->port, &s));                                s.serial.speed = 19200;
-                                CHECK (gp_port_set_settings (camera->port, s));
-                                break;
-                        default:
-                                break;
-                        }
-			continue;
-
-		case SIERRA_PACKET_SESSION_ERROR:
-		case SIERRA_PACKET_WRONG_SPEED:
-			if (++r > 2) {
-				gp_context_error (context, _("Could not "
-					"transmit packet even after several "
-					"retries."));
-				return (GP_ERROR);
-			}
 			CHECK (sierra_init (camera, context));
 			continue;
+
 		default:
 			if (++r > 2) {
 				gp_context_error (context, _("Could not "
@@ -760,13 +744,23 @@ sierra_init (Camera *camera, GPContext *context)
 
 	/*
 	 * It seems that the initialization sequence needs to be sent at
-	 * 19200.
+	 * 19200. Portmon logs show:
+	 *  - IOCTL_SERIAL_SET_BAUD_RATE Rate: 19200
+	 *  - IOCTL_SERIAL_SET_DTR
+	 *  - IOCTL_SERIAL_SET_LINE_CONTROL
+	 *    StopBits: 1 Parity: NONE WordLength: 8
+	 *  - IOCTL_SERIAL_SET_CHAR
+	 *    EOF:0 ERR:0 BRK:0 EVT:0 XON:11 XOFF:13
+	 *  - IOCTL_SERIAL_SET_HANDFLOW
+	 *    Shake:9 Replace:80000080 XonLimit:2048 XoffLimit:512
+	 *  - IOCTL_SERIAL_SET_TIMEOUTS RI:0 RM:0 RC:500 WM:200 WC:800
 	 */
 	CHECK (gp_port_get_settings (camera->port, &settings));
 	if (settings.serial.speed != 19200) {
 		settings.serial.speed = 19200;
 		CHECK (gp_port_set_settings (camera->port, settings));
 	}
+	CHECK (gp_port_set_pin (camera->port, GP_PIN_DTR, 1));
 
 	packet[0] = NUL;
 
@@ -791,52 +785,54 @@ sierra_init (Camera *camera, GPContext *context)
 	}
 }
 
+static struct {
+        SierraSpeed speed;
+        int bit_rate;
+} SierraSpeeds[] = {
+        {SIERRA_SPEED_9600  ,   9600},
+        {SIERRA_SPEED_19200 ,  19200},
+        {SIERRA_SPEED_38400 ,  38400},
+        {SIERRA_SPEED_57600 ,  57600},
+        {SIERRA_SPEED_115200, 115200},
+        {0, 0}
+};
+
 int
-sierra_set_speed (Camera *camera, int speed, GPContext *context) 
+sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context) 
 {
 	GPPortSettings settings;
+	unsigned int i;
 
-	GP_DEBUG ("Setting speed to %i...", speed);
+	for (i = 0; SierraSpeeds[i].bit_rate; i++)
+		if (SierraSpeeds[i].speed == speed)
+			break;
+	GP_DEBUG ("Setting speed to %i (%i bps)...", speed,
+		  SierraSpeeds[i].bit_rate);
 
+	/* Tell the camera about the new speed. */
 	camera->pl->first_packet = 1;
-
-	CHECK (gp_port_get_settings (camera->port, &settings));
-
-	switch (speed) {
-	case 9600:
-		speed = 1;
-		settings.serial.speed = 9600;
-		break;
-	case 19200:
-		speed = 2;
-		settings.serial.speed = 19200;
-		break;
-	case 38400:
-		speed = 3;
-		settings.serial.speed = 38400;
-		break;
-	case 57600:
-		speed = 4;
-		settings.serial.speed = 57600;
-		break;
-	case 0:		/* Default speed */
-	case 115200:
-		speed = 5;
-		settings.serial.speed = 115200;
-		break;
-
-	case -1:	/* End session */
-		settings.serial.speed = 19200;
-		speed = 2;
-		break;
-	default:
-		return GP_ERROR_IO_SERIAL_SPEED;
-	}
-
 	CHECK (sierra_set_int_register (camera, 17, speed, context));
-	CHECK (gp_port_set_settings (camera->port, settings));
 
-	GP_SYSTEM_SLEEP(10);
+	/*
+	 * Now switch the port to the new speed. Portmon logs show the 
+	 * following procedure:
+	 *  - IOCTL_SERIAL_SET_BAUD_RATE
+	 *  - IOCTL_SERIAL_SET_DTR
+	 *  - IOCTL_SERIAL_SET_LINE_CONTROL
+	 *    StopBits: 1 Parity: NONE WordLength: 8
+	 *  - IOCTL_SERIAL_SET_CHAR EOF:0 ERR:0 BRK:0 EVT:0 XON:11 XOFF:13
+	 *  - IOCTL_SERIAL_SET_HANDFLOW
+	 *    Shake:1 Replace:80000080 XonLimit:2048 XoffLimit:512
+	 *  - IOCTL_SERIAL_SET_TIMEOUTS
+	 *    RI:0 RM:0 RC:20 WM:200 WC:800CCESS
+	 *  - IOCTL_SERIAL_SET_TIMEOUTS RI:0 RM:0 RC:10 WM:200 WC:800
+	 */
+	CHECK (gp_port_get_settings (camera->port, &settings));
+	settings.serial.speed = SierraSpeeds[i].bit_rate;
+	CHECK (gp_port_set_settings (camera->port, settings));
+	CHECK (gp_port_set_pin (camera->port, GP_PIN_DTR, 1));
+
+	GP_SYSTEM_SLEEP (10);
 	return GP_OK;
 }
 
@@ -898,7 +894,6 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 {
 	int r = 0;
 	unsigned char packet[4096], buf[4096];
-	GPPortSettings s;
 
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, packet));
 
@@ -931,6 +926,8 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			return GP_OK;
 
 		case SIERRA_PACKET_SESSION_END:
+		case SIERRA_PACKET_SESSION_ERROR:
+		case SIERRA_PACKET_WRONG_SPEED:
 			if (++r > 2) {
 				gp_context_error (context, _("Too many "
 						"retries failed."));
@@ -939,28 +936,9 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 
 			/*
 			 * The camera has ended this session and
-			 * reverted the speed back to 19200. Imitate this
-			 * speed change and retry at 19200.
+			 * reverted the speed back to 19200. Reinitialize
+			 * the connection.
 			 */
-			switch (camera->port->type) {
-			case GP_PORT_SERIAL:
-				CHECK (gp_port_get_settings (camera->port, &s));
-				s.serial.speed = 19200;
-				CHECK (gp_port_set_settings (camera->port, s));
-				break;
-			default:
-				break;
-			}
-			CHECK (sierra_write_packet (camera, packet));
-			break;
-				
-		case SIERRA_PACKET_SESSION_ERROR:
-		case SIERRA_PACKET_WRONG_SPEED:
-			if (++r > 2) {
-				gp_context_error (context, _("Too many "
-					"retries failed."));
-				return (GP_ERROR);
-			}
 			CHECK (sierra_init (camera, context));
 			CHECK (sierra_write_packet (camera, packet));
 			break;

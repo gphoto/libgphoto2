@@ -44,7 +44,15 @@ int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked,
 		       GPContext *context);
 
 /* Communications functions */
-int sierra_set_speed		  (Camera *camera, int speed,
+typedef enum _SierraSpeed SierraSpeed;
+enum _SierraSpeed {
+	SIERRA_SPEED_9600   = 1,
+	SIERRA_SPEED_19200  = 2,
+	SIERRA_SPEED_38400  = 3,
+	SIERRA_SPEED_57600  = 4,
+	SIERRA_SPEED_115200 = 5
+};
+int sierra_set_speed		  (Camera *camera, SierraSpeed speed,
 				   GPContext *context);
 int sierra_end_session		  (Camera *camera, GPContext *context);
 int sierra_init			  (Camera *camera, GPContext *context);
