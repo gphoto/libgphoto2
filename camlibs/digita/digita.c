@@ -175,14 +175,12 @@ static int file_list_func(CameraFilesystem *fs, const char *folder,
 		return GP_ERROR;
 
 	if (folder[0] == '/')
-		/* FIXME: Why does the frontend return a path with multiple */
-		/*  leading slashes? */
-		while (folder[0] == '/')
-			folder++;
+		folder++;
 
 	/* Walk through all of the pictures building a list of folders */
 	for (i = 0; i < camera->pl->num_pictures; i++) {
-		if (strcmp(camera->pl->file_list[i].fn.path, folder))
+		if (strncmp(camera->pl->file_list[i].fn.path, folder, strlen(folder)) ||
+		    camera->pl->file_list[i].fn.path[strlen(folder)] != '/')
 			continue;
 
 		gp_list_append(list, camera->pl->file_list[i].fn.dosname, NULL);
@@ -200,14 +198,15 @@ static char *digita_file_get(Camera *camera, const char *folder,
 	unsigned char *data;
 	int pos, len, buflen;
 
-printf("digita_file_get\n");
+	fprintf(stderr, "digita_file_get\n");
 
-printf("digita: getting %s%s\n", folder, filename);
+	fprintf(stderr, "digita: getting %s/%s\n", folder, filename);
 
 	/* Setup the filename */
 	/* FIXME: This is kinda lame, but it's a quick hack */
 	fn.driveno = camera->pl->file_list[0].fn.driveno;
 	strcpy(fn.path, folder);
+	strcat(fn.path, "/");
 	strcpy(fn.dosname, filename);
 
 	/* How much data we're willing to accept */
@@ -355,14 +354,14 @@ static int delete_picture(int index)
 {
 	struct filename fn;
 
-printf("digita_delete_picture\n");
+	fprintf(stderr, "digita_delete_picture\n");
 
 	if (index > digita_num_pictures)
 		return 0;
 
 	index--;
 
-printf("deleting %d, %s%s\n", index, digita_file_list[index].fn.path, digita_file_list[index].fn.dosname);
+	fprintf(stderr, "deleting %d, %s%s\n", index, digita_file_list[index].fn.path, digita_file_list[index].fn.dosname);
 
 	/* Setup the filename */
 	fn.driveno = digita_file_list[index].fn.driveno;
