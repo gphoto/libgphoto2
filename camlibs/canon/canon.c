@@ -1846,6 +1846,24 @@ debug_fileinfo (CameraFileInfo * info)
  *
  * Implicitly assumes that uint8_t[] is a char[] for strings.
  *
+ * A few notes about listing files and camera->pl->list_all_files:
+ * 
+ *   If camera->pl->list_all_files is false (intended default), then
+ *   we list only "primary files" or ("main" files). Those are files
+ *   like image files or movie files which the user explicitly created
+ *   on the camera. "Secondary files" such as .thm files which contain
+ *   the thumbnail of a movie are not listed here - you can get them using
+ *   the --get-thumbnail command in gphoto2 or the analog command of your
+ *   frontend. Same story with ,wav files containing audio annotations
+ *   to primary files.
+ *
+ *   If camera->pl->list_all_files is true (can be changed via the
+ *   configuration interface), then we list _all_ files. This means
+ *   that we just use the camera like a CF/SD card reader. Use this mode
+ *   to read/write your .pdf files, .tgz backup tarballs, or whatever.
+ *   Of course, all the "internal" files the camera puts on the storage
+ *   medium will be listed in this mode as well.
+ *
  * Returns: a gphoto2 status code.
  *   @list will contain a list of folders (directories) contained in this folder.
  *   Files will be added to the internal gphoto2 file system only if
