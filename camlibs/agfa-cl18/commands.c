@@ -93,6 +93,7 @@ int agfa_capture(struct agfa_device *dev, const char *path) {
     
     /*Not sure if this delay is necessary, but it was used in the windows driver*/
     /*delay(20); */
+    sleep(20);
     /*Again, three times in windows driver*/
     ret = agfa_photos_taken(dev,&taken);
     ret = agfa_photos_taken(dev,&taken);
