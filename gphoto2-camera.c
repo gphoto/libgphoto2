@@ -1017,6 +1017,15 @@ if (list->count)
         return (GP_OK);
 }
 
+/**
+ * gp_camera_folder_delete_all:
+ * @camera: a #Camera
+ * @folder: a folder
+ *
+ * Deletes all files in a given @folder.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_folder_delete_all (Camera *camera, const char *folder)
 {
@@ -1031,6 +1040,16 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_folder_put_file:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @file: a #CameraFile
+ *
+ * Uploads a file into given @folder.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
 {
@@ -1045,6 +1064,18 @@ gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_folder_get_config:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @window: a #CameraWidget
+ *
+ * Retreives the configuration @window of a @folder. This function is similar
+ * to #gp_camera_get_config. The only difference is that it operates on a
+ * folder.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_folder_get_config (Camera *camera, const char *folder, 
 			     CameraWidget **window)
@@ -1060,6 +1091,17 @@ gp_camera_folder_get_config (Camera *camera, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_folder_set_config:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @window: a #CameraWidget
+ *
+ * Sets the folder configuration. See #gp_camera_set_config and
+ * #gp_camera_folder_get_config for details.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_folder_set_config (Camera *camera, const char *folder, 
 	                     CameraWidget *window)
@@ -1075,6 +1117,17 @@ gp_camera_folder_set_config (Camera *camera, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_file_get_info:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @file: the name of the file
+ * @info:
+ *
+ * Retreives information about a @file.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_file_get_info (Camera *camera, const char *folder, 
 			 const char *file, CameraFileInfo *info)
@@ -1083,6 +1136,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	const char *mime_type;
 	const char *data;
 	long int size;
+	CameraFile *cfile;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Getting file info for '%s' "
 		"in '%s'...", file, folder);
@@ -1105,33 +1159,26 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	}
 
 	/*
-	 * If the camera doesn't support file_info_get, we simply get
+	 * The CameraFilesystem doesn't support file info. We simply get
 	 * the preview and the file and look for ourselves...
 	 */
-	if (!camera->functions->file_get_info) {
-		CameraFile *cfile;
 
-		/* It takes too long to get the file */
-		info->file.fields = GP_FILE_INFO_NONE;
+	/* It takes too long to get the file */
+	info->file.fields = GP_FILE_INFO_NONE;
 
-		/* Get the preview */
-		info->preview.fields = GP_FILE_INFO_NONE;
-		CRS (camera, gp_file_new (&cfile));
-		if (gp_camera_file_get (camera, folder, file,
-					GP_FILE_TYPE_PREVIEW, cfile)== GP_OK) {
-			info->preview.fields |= GP_FILE_INFO_SIZE | 
-						GP_FILE_INFO_TYPE;
-			gp_file_get_data_and_size (cfile, &data, &size);
-			info->preview.size = size;
-			gp_file_get_mime_type (cfile, &mime_type);
-			strncpy (info->preview.type, mime_type,
-				 sizeof (info->preview.type));
-		}
-		gp_file_unref (cfile);
-	} else
-		CHECK_RESULT_OPEN_CLOSE (camera,
-				camera->functions->file_get_info (
-						camera, folder, file, info));
+	/* Get the preview */
+	info->preview.fields = GP_FILE_INFO_NONE;
+	CRS (camera, gp_file_new (&cfile));
+	if (gp_camera_file_get (camera, folder, file,
+				GP_FILE_TYPE_PREVIEW, cfile)== GP_OK) {
+		info->preview.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+		gp_file_get_data_and_size (cfile, &data, &size);
+		info->preview.size = size;
+		gp_file_get_mime_type (cfile, &mime_type);
+		strncpy (info->preview.type, mime_type,
+			 sizeof (info->preview.type));
+	}
+	gp_file_unref (cfile);
 	gp_camera_status (camera, "");
 	gp_camera_progress (camera, 0.0);
 
@@ -1143,30 +1190,41 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_file_set_info:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @file: the name of a file
+ * @info: the #CameraFileInfo
+ *
+ * Sets some file properties like name or permissions.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_file_set_info (Camera *camera, const char *folder, 
 			 const char *file, CameraFileInfo *info)
 {
-	int result;
-
 	CHECK_NULL (camera && info && folder && file);
 
-	/* Check first if the camera driver supports the filesystem */
-	CHECK_OPEN (camera);
-	result = gp_filesystem_set_info (camera->fs, folder, file, info);
-	CHECK_CLOSE (camera);
-	if (result != GP_ERROR_NOT_SUPPORTED)
-		return (result);
-
-	if (camera->functions->file_set_info == NULL)
-		return (GP_ERROR_NOT_SUPPORTED);
-
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_set_info (
-						camera, folder, file, info));
+	CHECK_RESULT_OPEN_CLOSE (camera,
+		gp_filesystem_set_info (camera->fs, folder, file, info));
 
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_file_get:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @file: the name of a file
+ * @type: the #CameraFileType
+ * @camera_file: a #CameraFile
+ *
+ * Retrieves a @file from the @camera.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int 
 gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 		    CameraFileType type, CameraFile *camera_file)
@@ -1207,6 +1265,18 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_file_get_config:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @file: the name of a file
+ * @window:
+ *
+ * Gets a configuration window for a given @file. See #gp_camera_get_config
+ * and #gp_camera_set_config.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_file_get_config (Camera *camera, const char *folder, 
 			   const char *file, CameraWidget **window)
@@ -1222,6 +1292,17 @@ gp_camera_file_get_config (Camera *camera, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_file_set_config:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @file: the name of a file
+ * @window: a #CameraWidget
+ *
+ * Sets the configuration of a file. See #gp_camera_set_config.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_file_set_config (Camera *camera, const char *folder, 
 			   const char *file, CameraWidget *window)
@@ -1237,6 +1318,16 @@ gp_camera_file_set_config (Camera *camera, const char *folder,
 	return (GP_OK);
 }
 
+/**
+ * gp_camera_file_delete:
+ * @camera: a #Camera
+ * @folder: a folder
+ * @file: the name of a file
+ *
+ * Deletes the @file from a @folder.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 {
