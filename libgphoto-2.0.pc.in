@@ -8,4 +8,4 @@ Description: Library for easy access to digital cameras
 Requires:
 Version: @VERSION@
 Libs: -L${libdir} -lgphoto2
-Cflags: -I${includedir}/gphoto2
+Cflags: -I${includedir}/gphoto2 -I${includedir}
