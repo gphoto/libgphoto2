@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2003-02-17 14:00+0100\n"
+"POT-Creation-Date: 2003-07-27 13:04+0200\n"
 "PO-Revision-Date: 2002-12-03 17:00+0100\n"
 "Last-Translator: Evandro Gardenali <evandro@fasternet.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -133,51 +133,51 @@ msgstr "Escrever"
 msgid "read"
 msgstr "ler"
 
-#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
+#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:478
 msgid "check_int"
 msgstr "check_init"
 
-#: libgphoto2_port/gphoto2-port.c:581
+#: libgphoto2_port/gphoto2-port.c:595
 msgid "update"
 msgstr "atualizar"
 
-#: libgphoto2_port/gphoto2-port.c:627
+#: libgphoto2_port/gphoto2-port.c:641
 msgid "get_pin"
 msgstr "get_pin"
 
-#: libgphoto2_port/gphoto2-port.c:679
+#: libgphoto2_port/gphoto2-port.c:693
 msgid "set_pin"
 msgstr "set_pin"
 
-#: libgphoto2_port/gphoto2-port.c:694
+#: libgphoto2_port/gphoto2-port.c:708
 msgid "send_break"
 msgstr "send_break"
 
-#: libgphoto2_port/gphoto2-port.c:707
+#: libgphoto2_port/gphoto2-port.c:721
 msgid "flush"
 msgstr "descarregar"
 
-#: libgphoto2_port/gphoto2-port.c:723
+#: libgphoto2_port/gphoto2-port.c:737
 msgid "find_device"
 msgstr "encontrar dispositivo"
 
-#: libgphoto2_port/gphoto2-port.c:735
+#: libgphoto2_port/gphoto2-port.c:749
 msgid "find_device_by_class"
 msgstr "encontrar dispositivo por classe"
 
-#: libgphoto2_port/gphoto2-port.c:749
+#: libgphoto2_port/gphoto2-port.c:763
 msgid "clear_halt"
 msgstr "clear_halt"
 
-#: libgphoto2_port/gphoto2-port.c:769
+#: libgphoto2_port/gphoto2-port.c:783
 msgid "msg_write"
 msgstr "escrever mensagem"
 
-#: libgphoto2_port/gphoto2-port.c:789
+#: libgphoto2_port/gphoto2-port.c:803
 msgid "msg_read"
 msgstr "ler mensagem"
 
-#: libgphoto2_port/gphoto2-port.c:849
+#: libgphoto2_port/gphoto2-port.c:863
 msgid "No error description available"
 msgstr "Descrição do erro não disponível"
 

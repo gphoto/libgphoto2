@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2 2.1.1rc2\n"
-"POT-Creation-Date: 2003-07-13 10:18+0200\n"
+"POT-Creation-Date: 2003-07-27 13:04+0200\n"
 "PO-Revision-Date: 2002-11-26 00:46+0900\n"
 "Last-Translator: Takeshi Aihana <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -55,15 +55,6 @@ msgstr ""
 "\n"
 "WEB 上に実装済みの使用方法のドキュメント\n"
 "があります。Vison の承諾済み。"
-
-#: camlibs/canon/canon.c:391
-msgid "create"
-msgstr ""
-
-#: camlibs/canon/canon.c:391
-#, fuzzy
-msgid "remove"
-msgstr "リモート"
 
 #: camlibs/canon/canon.c:419
 #, fuzzy, c-format
@@ -332,7 +323,7 @@ msgstr "\\DCIM ディレクトリを作成することが出来ませんでした"
 msgid "Could not create destination directory."
 msgstr "対象となるディレクトリを作成することが出来ませんでした"
 
-#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:617
+#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:629
 msgid "Camera and Driver Configuration"
 msgstr "カメラとドライバの設定"
 
@@ -369,7 +360,7 @@ msgstr "カメラの日付を PC の日付にセットします"
 msgid "Firmware revision (readonly)"
 msgstr "ファームウェアのリビジョン (読み取りのみ)"
 
-#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:619
+#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:631
 msgid "Power (readonly)"
 msgstr "電源 (読み取りのみ)"
 
@@ -3180,7 +3171,7 @@ msgstr "PTP プロトコル・エラー (期待値: データ)"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP プロトコル・エラー (期待値: 応答)"
 
-#: camlibs/ptp2/library.c:548
+#: camlibs/ptp2/library.c:560
 #, fuzzy
 msgid ""
 "PTP2 driver\n"
@@ -3188,7 +3179,7 @@ msgid ""
 "Enjoy!"
 msgstr "Mariusz Woloszyn 氏 <emsi@ipartners.pl> が担当しました。Enjoy!"
 
-#: camlibs/ptp2/library.c:584
+#: camlibs/ptp2/library.c:596
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3198,25 +3189,25 @@ msgid ""
 "Vendor extension description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:624
+#: camlibs/ptp2/library.c:636
 #, fuzzy
 msgid "Number of values"
 msgstr "写真の数: %d\n"
 
-#: camlibs/ptp2/library.c:628
+#: camlibs/ptp2/library.c:640
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/library.c:641
+#: camlibs/ptp2/library.c:653
 msgid "Current value"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1083
+#: camlibs/ptp2/library.c:1095
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "カメラを OFF にします"
 
-#: camlibs/ptp2/library.c:1155 camlibs/ptp/library.c:1065
+#: camlibs/ptp2/library.c:1167 camlibs/ptp/library.c:1065
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP は USB カメラのみサポートしています。"
 
@@ -5131,34 +5122,34 @@ msgstr "このカメラではキャプチャできません。"
 msgid "This camera can not capture previews."
 msgstr "このカメラはキャプチャのプレビューができません。"
 
-#: libgphoto2/gphoto2-filesys.c:254
+#: libgphoto2/gphoto2-filesys.c:258
 #, c-format
 msgid "The path '%s' is not absolute."
 msgstr "パス名 '%s' が無効です。"
 
-#: libgphoto2/gphoto2-filesys.c:375
+#: libgphoto2/gphoto2-filesys.c:379
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr "フォルダ '%s' が既に存在しているので追加することが出来ませんでした。"
 
-#: libgphoto2/gphoto2-filesys.c:547
+#: libgphoto2/gphoto2-filesys.c:551
 #, c-format
 msgid "Could not find folder '%s'."
 msgstr "フォルダ '%s' が見つかりませんでした。"
 
-#: libgphoto2/gphoto2-filesys.c:564
+#: libgphoto2/gphoto2-filesys.c:568
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr "フォルダ '%s' の中にフォルダ '%s' がありません。"
 
-#: libgphoto2/gphoto2-filesys.c:628
+#: libgphoto2/gphoto2-filesys.c:632
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr ""
 "ファイル '%s' が既に存在しているのでフォルダ '%s' に追加することが出来ません"
 "でした。"
 
-#: libgphoto2/gphoto2-filesys.c:1005
+#: libgphoto2/gphoto2-filesys.c:1009
 #, c-format
 msgid ""
 "You have been trying to delete '%s' from folder '%s', but the filesystem "
@@ -5167,22 +5158,22 @@ msgstr ""
 "'%s' をフォルダ '%s' から削除しようとしましたが、ファイルシステムはファイルの"
 "削除をサポートしていません。"
 
-#: libgphoto2/gphoto2-filesys.c:1108
+#: libgphoto2/gphoto2-filesys.c:1112
 #, c-format
 msgid ""
 "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr "削除しようとしたフォルダ '%s' の中にサブフォルダが存在します。"
 
-#: libgphoto2/gphoto2-filesys.c:1115
+#: libgphoto2/gphoto2-filesys.c:1119
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr "削除しようとしたフォルダ '%s' の中にファイルが存在しています。"
 
-#: libgphoto2/gphoto2-filesys.c:1157
+#: libgphoto2/gphoto2-filesys.c:1161
 msgid "The filesystem does not support upload of files."
 msgstr "ファイルシステムではファイルのアップロードをサポートしていません。"
 
-#: libgphoto2/gphoto2-filesys.c:1198
+#: libgphoto2/gphoto2-filesys.c:1202
 #, c-format
 msgid ""
 "Folder '%s' does only contain %i files, but you requested a file with number "
@@ -5190,36 +5181,36 @@ msgid ""
 msgstr ""
 "フォルダ '%s' には %i 個のファイルがありますが、要求した番号は %i です。"
 
-#: libgphoto2/gphoto2-filesys.c:1243
+#: libgphoto2/gphoto2-filesys.c:1247
 #, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr "ファイル '%s' がフォルダ '%s' の中にありません。"
 
-#: libgphoto2/gphoto2-filesys.c:1330
+#: libgphoto2/gphoto2-filesys.c:1334
 #, c-format
 msgid "Could not find file '%s'."
 msgstr "ファイル '%s' が見つかりませんでした。"
 
-#: libgphoto2/gphoto2-filesys.c:1455
+#: libgphoto2/gphoto2-filesys.c:1459
 msgid "The filesystem doesn't support getting files"
 msgstr "ファイルシステムはこの形式のファイル取得をサポートしていません。"
 
-#: libgphoto2/gphoto2-filesys.c:1490 libgphoto2/gphoto2-filesys.c:2001
-#: libgphoto2/gphoto2-filesys.c:2154
+#: libgphoto2/gphoto2-filesys.c:1494 libgphoto2/gphoto2-filesys.c:2037
+#: libgphoto2/gphoto2-filesys.c:2190
 #, c-format
 msgid "Unknown file type %i."
 msgstr "不明なファイル形式 %i です。"
 
-#: libgphoto2/gphoto2-filesys.c:1494
+#: libgphoto2/gphoto2-filesys.c:1498
 #, c-format
 msgid "Downloading '%s' from folder '%s'..."
 msgstr "'%s' をフォルダ '%s' からダウンロード中..."
 
-#: libgphoto2/gphoto2-filesys.c:1704
+#: libgphoto2/gphoto2-filesys.c:1708
 msgid "The filesystem doesn't support getting file information"
 msgstr "ファイルシステムはこの形式のファイル情報取得をサポートしていません"
 
-#: libgphoto2/gphoto2-filesys.c:1879
+#: libgphoto2/gphoto2-filesys.c:1883
 #, c-format
 msgid ""
 "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
@@ -5228,21 +5219,31 @@ msgstr ""
 "'/proc/meminfo' を ('%m') を読み込むために開けませんでした。proc ファイルシス"
 "テムが存在するか確認して下さい。"
 
-#: libgphoto2/gphoto2-filesys.c:1887
+#: libgphoto2/gphoto2-filesys.c:1891
 #, c-format
 msgid "An error occured while reading '/proc/meminfo' ('%m')."
 msgstr "'/proc/meminfo' ('%m') の読み込み中にエラーが発生しました。"
 
-#: libgphoto2/gphoto2-filesys.c:1922
+#: libgphoto2/gphoto2-filesys.c:1926
 #, c-format
 msgid "sysctl call failed ('%m')."
 msgstr "システムコールの呼び出しに失敗しました ('%m')。"
 
-#: libgphoto2/gphoto2-filesys.c:2257
+#: libgphoto2/gphoto2-filesys.c:1944
+#, fuzzy, c-format
+msgid "sysconf call failed ('%m')."
+msgstr "システムコールの呼び出しに失敗しました ('%m')。"
+
+#: libgphoto2/gphoto2-filesys.c:1952
+#, fuzzy, c-format
+msgid "swapctl call failed ('%m')."
+msgstr "システムコールの呼び出しに失敗しました ('%m')。"
+
+#: libgphoto2/gphoto2-filesys.c:2293
 msgid "The filesystem doesn't support setting file information"
 msgstr "ファイルシステムはこの形式のファイル情報の設定をサポートしていません"
 
-#: libgphoto2/gphoto2-filesys.c:2280
+#: libgphoto2/gphoto2-filesys.c:2316
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr "ファイルの幅と高さなどの読み込み専用属性を変更することはできません。"
 
@@ -5285,6 +5286,10 @@ msgstr "カメラライブラリの不明なエラー"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "不明なエラー"
+
+#, fuzzy
+#~ msgid "remove"
+#~ msgstr "リモート"
 
 #, fuzzy
 #~ msgid "Could not identify camera based on name \"%s\""

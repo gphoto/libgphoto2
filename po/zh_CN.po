@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2003-07-13 10:18+0200\n"
+"POT-Creation-Date: 2003-07-27 13:04+0200\n"
 "PO-Revision-Date: 2002-11-21 11:02+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -55,16 +55,6 @@ msgstr ""
 "\n"
 "根据网上找到的文档实现。由 Vision\n"
 " 授权。"
-
-#: camlibs/canon/canon.c:391
-msgid "create"
-msgstr ""
-
-# camlibs/minolta/dimagev/dimagev.c:299
-#: camlibs/canon/canon.c:391
-#, fuzzy
-msgid "remove"
-msgstr "远程"
 
 # camlibs/canon/library.c:774
 #: camlibs/canon/canon.c:419
@@ -363,7 +353,7 @@ msgid "Could not create destination directory."
 msgstr "无法创建目标目录。"
 
 # camlibs/canon/library.c:806
-#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:617
+#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:629
 msgid "Camera and Driver Configuration"
 msgstr "相机及驱动器配置"
 
@@ -410,7 +400,7 @@ msgid "Firmware revision (readonly)"
 msgstr "固件版本 (只读)"
 
 # camlibs/canon/library.c:863
-#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:619
+#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:631
 msgid "Power (readonly)"
 msgstr "电源 (只读)"
 
@@ -3660,7 +3650,7 @@ msgid "PTP Protocol error, response expected"
 msgstr "PTP 协议错误，需要响应"
 
 # camlibs/ptp/library.c:422
-#: camlibs/ptp2/library.c:548
+#: camlibs/ptp2/library.c:560
 #, fuzzy
 msgid ""
 "PTP2 driver\n"
@@ -3668,7 +3658,7 @@ msgid ""
 "Enjoy!"
 msgstr "由 Mariusz Woloszyn <emsi@ipartners.pl> 编写。请享用！"
 
-#: camlibs/ptp2/library.c:584
+#: camlibs/ptp2/library.c:596
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3679,27 +3669,27 @@ msgid ""
 msgstr ""
 
 # camlibs/stv0680/library.c:572
-#: camlibs/ptp2/library.c:624
+#: camlibs/ptp2/library.c:636
 #, fuzzy
 msgid "Number of values"
 msgstr "图像数量：%d\n"
 
-#: camlibs/ptp2/library.c:628
+#: camlibs/ptp2/library.c:640
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/library.c:641
+#: camlibs/ptp2/library.c:653
 msgid "Current value"
 msgstr ""
 
 # camlibs/canon/library.c:176
-#: camlibs/ptp2/library.c:1083
+#: camlibs/ptp2/library.c:1095
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "关闭相机"
 
 # camlibs/ptp/library.c:918
-#: camlibs/ptp2/library.c:1155 camlibs/ptp/library.c:1065
+#: camlibs/ptp2/library.c:1167 camlibs/ptp/library.c:1065
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP 仅为 USB 相机实现。"
 
@@ -5928,37 +5918,37 @@ msgid "This camera can not capture previews."
 msgstr "该相机不能预览视频捕捉。"
 
 # libgphoto2/gphoto2-filesys.c:214
-#: libgphoto2/gphoto2-filesys.c:254
+#: libgphoto2/gphoto2-filesys.c:258
 #, c-format
 msgid "The path '%s' is not absolute."
 msgstr "路径“%s”不是绝对路径。"
 
 # libgphoto2/gphoto2-filesys.c:335
-#: libgphoto2/gphoto2-filesys.c:375
+#: libgphoto2/gphoto2-filesys.c:379
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr "文件夹“%s”已存在，无法附加。"
 
 # libgphoto2/gphoto2-filesys.c:514
-#: libgphoto2/gphoto2-filesys.c:547
+#: libgphoto2/gphoto2-filesys.c:551
 #, c-format
 msgid "Could not find folder '%s'."
 msgstr "无法找到文件夹“%s”。"
 
 # libgphoto2/gphoto2-filesys.c:531
-#: libgphoto2/gphoto2-filesys.c:564
+#: libgphoto2/gphoto2-filesys.c:568
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr "文件夹“%s”不含有文件夹“%s”。"
 
 # libgphoto2/gphoto2-filesys.c:594
-#: libgphoto2/gphoto2-filesys.c:628
+#: libgphoto2/gphoto2-filesys.c:632
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr "由于“%s”已存在，所以无法将其附加到文件夹“%s”中。"
 
 # libgphoto2/gphoto2-filesys.c:970
-#: libgphoto2/gphoto2-filesys.c:1005
+#: libgphoto2/gphoto2-filesys.c:1009
 #, c-format
 msgid ""
 "You have been trying to delete '%s' from folder '%s', but the filesystem "
@@ -5966,25 +5956,25 @@ msgid ""
 msgstr "您试图从文件夹“%2$s”中删除“%1$s”，但文件系统不支持删除文件。"
 
 # libgphoto2/gphoto2-filesys.c:1077
-#: libgphoto2/gphoto2-filesys.c:1108
+#: libgphoto2/gphoto2-filesys.c:1112
 #, c-format
 msgid ""
 "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr "您正试图删除的文件夹“%s”中还有子文件夹。"
 
 # libgphoto2/gphoto2-filesys.c:1071
-#: libgphoto2/gphoto2-filesys.c:1115
+#: libgphoto2/gphoto2-filesys.c:1119
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr "您正试图删除的文件夹“%s”中还有文件。"
 
 # libgphoto2/gphoto2-filesys.c:1117
-#: libgphoto2/gphoto2-filesys.c:1157
+#: libgphoto2/gphoto2-filesys.c:1161
 msgid "The filesystem does not support upload of files."
 msgstr "文件系统不支持上载文件。"
 
 # libgphoto2/gphoto2-filesys.c:1158
-#: libgphoto2/gphoto2-filesys.c:1198
+#: libgphoto2/gphoto2-filesys.c:1202
 #, c-format
 msgid ""
 "Folder '%s' does only contain %i files, but you requested a file with number "
@@ -5992,64 +5982,74 @@ msgid ""
 msgstr "文件夹“%s”只含有 %i 个文件，但您请求编号为 %i 的文件。"
 
 # libgphoto2/gphoto2-filesys.c:1199
-#: libgphoto2/gphoto2-filesys.c:1243
+#: libgphoto2/gphoto2-filesys.c:1247
 #, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr "在文件夹“%2$s”中无法找到文件“%1$s”。"
 
 # libgphoto2/gphoto2-filesys.c:1282
-#: libgphoto2/gphoto2-filesys.c:1330
+#: libgphoto2/gphoto2-filesys.c:1334
 #, c-format
 msgid "Could not find file '%s'."
 msgstr "无法找到文件“%s”。"
 
 # libgphoto2/gphoto2-filesys.c:1407
-#: libgphoto2/gphoto2-filesys.c:1455
+#: libgphoto2/gphoto2-filesys.c:1459
 msgid "The filesystem doesn't support getting files"
 msgstr "文件系统不支持获取文件"
 
 # libgphoto2/gphoto2-filesys.c:1442 libgphoto2/gphoto2-filesys.c:1764
-#: libgphoto2/gphoto2-filesys.c:1490 libgphoto2/gphoto2-filesys.c:2001
-#: libgphoto2/gphoto2-filesys.c:2154
+#: libgphoto2/gphoto2-filesys.c:1494 libgphoto2/gphoto2-filesys.c:2037
+#: libgphoto2/gphoto2-filesys.c:2190
 #, c-format
 msgid "Unknown file type %i."
 msgstr "未知的文件类型 %i。"
 
 # libgphoto2/gphoto2-filesys.c:1446
-#: libgphoto2/gphoto2-filesys.c:1494
+#: libgphoto2/gphoto2-filesys.c:1498
 #, c-format
 msgid "Downloading '%s' from folder '%s'..."
 msgstr "正在从文件夹“%2$s”下载“%1$s”..."
 
 # libgphoto2/gphoto2-filesys.c:1656
-#: libgphoto2/gphoto2-filesys.c:1704
+#: libgphoto2/gphoto2-filesys.c:1708
 msgid "The filesystem doesn't support getting file information"
 msgstr "文件系统不支持获取文件信息"
 
-#: libgphoto2/gphoto2-filesys.c:1879
+#: libgphoto2/gphoto2-filesys.c:1883
 #, c-format
 msgid ""
 "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
 "filesystem is mounted."
 msgstr "无法打开“/proc/meminfo”以便读入(“%m”)。确认加载了 proc 文件系统。"
 
-#: libgphoto2/gphoto2-filesys.c:1887
+#: libgphoto2/gphoto2-filesys.c:1891
 #, c-format
 msgid "An error occured while reading '/proc/meminfo' ('%m')."
 msgstr "读入“/proc/meminfo”时出错 (“%m”)。"
 
-#: libgphoto2/gphoto2-filesys.c:1922
+#: libgphoto2/gphoto2-filesys.c:1926
 #, c-format
 msgid "sysctl call failed ('%m')."
 msgstr "sysctl 调用失败 (“%m”)。"
 
+#: libgphoto2/gphoto2-filesys.c:1944
+#, fuzzy, c-format
+msgid "sysconf call failed ('%m')."
+msgstr "sysctl 调用失败 (“%m”)。"
+
+#: libgphoto2/gphoto2-filesys.c:1952
+#, fuzzy, c-format
+msgid "swapctl call failed ('%m')."
+msgstr "sysctl 调用失败 (“%m”)。"
+
 # libgphoto2/gphoto2-filesys.c:1867
-#: libgphoto2/gphoto2-filesys.c:2257
+#: libgphoto2/gphoto2-filesys.c:2293
 msgid "The filesystem doesn't support setting file information"
 msgstr "文件系统不支持设置文件信息"
 
 # libgphoto2/gphoto2-filesys.c:1890
-#: libgphoto2/gphoto2-filesys.c:2280
+#: libgphoto2/gphoto2-filesys.c:2316
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr "无法改变像宽度和高度这样的只读文件属性。"
 
@@ -6103,6 +6103,11 @@ msgstr "未知的相机库错误"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "未知的错误"
+
+# camlibs/minolta/dimagev/dimagev.c:299
+#, fuzzy
+#~ msgid "remove"
+#~ msgstr "远程"
 
 # camlibs/canon/library.c:267
 #, fuzzy

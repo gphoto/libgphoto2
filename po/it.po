@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
-"POT-Creation-Date: 2003-07-13 10:18+0200\n"
+"POT-Creation-Date: 2003-07-27 13:04+0200\n"
 "PO-Revision-Date: sab lug 22 11:35:36 CEST 2000\n"
 "Last-Translator: Daniele Medri <madrid@linux.it>\n"
 "Language-Team: Italian <it@li.org>\n"
@@ -40,14 +40,6 @@ msgid ""
 "\n"
 "Implemented using documents found on\n"
 "the web. Permission given by Vision."
-msgstr ""
-
-#: camlibs/canon/canon.c:391
-msgid "create"
-msgstr ""
-
-#: camlibs/canon/canon.c:391
-msgid "remove"
 msgstr ""
 
 #: camlibs/canon/canon.c:419
@@ -300,7 +292,7 @@ msgstr ""
 msgid "Could not create destination directory."
 msgstr ""
 
-#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:617
+#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:629
 #, fuzzy
 msgid "Camera and Driver Configuration"
 msgstr "Configurazione fotocamera"
@@ -341,7 +333,7 @@ msgstr ""
 msgid "Firmware revision (readonly)"
 msgstr ""
 
-#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:619
+#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:631
 msgid "Power (readonly)"
 msgstr ""
 
@@ -2992,14 +2984,14 @@ msgstr ""
 msgid "PTP Protocol error, response expected"
 msgstr ""
 
-#: camlibs/ptp2/library.c:548
+#: camlibs/ptp2/library.c:560
 msgid ""
 "PTP2 driver\n"
 "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
 "Enjoy!"
 msgstr ""
 
-#: camlibs/ptp2/library.c:584
+#: camlibs/ptp2/library.c:596
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3009,24 +3001,24 @@ msgid ""
 "Vendor extension description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:624
+#: camlibs/ptp2/library.c:636
 #, fuzzy
 msgid "Number of values"
 msgstr "La nuova immagine è #%03i"
 
-#: camlibs/ptp2/library.c:628
+#: camlibs/ptp2/library.c:640
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/library.c:641
+#: camlibs/ptp2/library.c:653
 msgid "Current value"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1083
+#: camlibs/ptp2/library.c:1095
 msgid "Initializing Camera"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1155 camlibs/ptp/library.c:1065
+#: camlibs/ptp2/library.c:1167 camlibs/ptp/library.c:1065
 msgid "PTP is implemented for USB cameras only."
 msgstr ""
 
@@ -4753,119 +4745,129 @@ msgstr ""
 msgid "This camera can not capture previews."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:254
+#: libgphoto2/gphoto2-filesys.c:258
 #, c-format
 msgid "The path '%s' is not absolute."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:375
+#: libgphoto2/gphoto2-filesys.c:379
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:547
+#: libgphoto2/gphoto2-filesys.c:551
 #, fuzzy, c-format
 msgid "Could not find folder '%s'."
 msgstr ""
 "Non è possibile aprire:\n"
 "%s"
 
-#: libgphoto2/gphoto2-filesys.c:564
+#: libgphoto2/gphoto2-filesys.c:568
 #, fuzzy, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr ""
 "Non è possibile aprire:\n"
 "%s"
 
-#: libgphoto2/gphoto2-filesys.c:628
+#: libgphoto2/gphoto2-filesys.c:632
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1005
+#: libgphoto2/gphoto2-filesys.c:1009
 #, c-format
 msgid ""
 "You have been trying to delete '%s' from folder '%s', but the filesystem "
 "does not support deletion of files."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1108
+#: libgphoto2/gphoto2-filesys.c:1112
 #, c-format
 msgid ""
 "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1115
+#: libgphoto2/gphoto2-filesys.c:1119
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1157
+#: libgphoto2/gphoto2-filesys.c:1161
 msgid "The filesystem does not support upload of files."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1198
+#: libgphoto2/gphoto2-filesys.c:1202
 #, c-format
 msgid ""
 "Folder '%s' does only contain %i files, but you requested a file with number "
 "%i."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1243
+#: libgphoto2/gphoto2-filesys.c:1247
 #, fuzzy, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr ""
 "Non è possibile aprire:\n"
 "%s"
 
-#: libgphoto2/gphoto2-filesys.c:1330
+#: libgphoto2/gphoto2-filesys.c:1334
 #, fuzzy, c-format
 msgid "Could not find file '%s'."
 msgstr ""
 "Non è possibile aprire:\n"
 "%s"
 
-#: libgphoto2/gphoto2-filesys.c:1455
+#: libgphoto2/gphoto2-filesys.c:1459
 msgid "The filesystem doesn't support getting files"
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1490 libgphoto2/gphoto2-filesys.c:2001
-#: libgphoto2/gphoto2-filesys.c:2154
+#: libgphoto2/gphoto2-filesys.c:1494 libgphoto2/gphoto2-filesys.c:2037
+#: libgphoto2/gphoto2-filesys.c:2190
 #, c-format
 msgid "Unknown file type %i."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1494
+#: libgphoto2/gphoto2-filesys.c:1498
 #, fuzzy, c-format
 msgid "Downloading '%s' from folder '%s'..."
 msgstr "Download interrotto."
 
-#: libgphoto2/gphoto2-filesys.c:1704
+#: libgphoto2/gphoto2-filesys.c:1708
 msgid "The filesystem doesn't support getting file information"
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1879
+#: libgphoto2/gphoto2-filesys.c:1883
 #, c-format
 msgid ""
 "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
 "filesystem is mounted."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1887
+#: libgphoto2/gphoto2-filesys.c:1891
 #, c-format
 msgid "An error occured while reading '/proc/meminfo' ('%m')."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1922
+#: libgphoto2/gphoto2-filesys.c:1926
 #, c-format
 msgid "sysctl call failed ('%m')."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:2257
+#: libgphoto2/gphoto2-filesys.c:1944
+#, c-format
+msgid "sysconf call failed ('%m')."
+msgstr ""
+
+#: libgphoto2/gphoto2-filesys.c:1952
+#, c-format
+msgid "swapctl call failed ('%m')."
+msgstr ""
+
+#: libgphoto2/gphoto2-filesys.c:2293
 msgid "The filesystem doesn't support setting file information"
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:2280
+#: libgphoto2/gphoto2-filesys.c:2316
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr ""
 

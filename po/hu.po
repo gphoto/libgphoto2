@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2\n"
-"POT-Creation-Date: 2003-07-13 10:18+0200\n"
+"POT-Creation-Date: 2003-07-27 13:04+0200\n"
 "PO-Revision-Date: 2003-02-14 11:11+0100\n"
 "Last-Translator: Tamas Szanto <tszanto@mol.hu>\n"
 "Language-Team: Hungarian <kde-lista@sophia.jpte.hu>\n"
@@ -54,15 +54,6 @@ msgstr ""
 "\n"
 "A weben talált dokumentáció alapján\n"
 "készült. A Vision engedélyével."
-
-#: camlibs/canon/canon.c:391
-msgid "create"
-msgstr ""
-
-#: camlibs/canon/canon.c:391
-#, fuzzy
-msgid "remove"
-msgstr "távoli"
 
 #: camlibs/canon/canon.c:419
 #, fuzzy, c-format
@@ -334,7 +325,7 @@ msgstr "Nem sikerült létrehozni a \\DCIM könyvtárat."
 msgid "Could not create destination directory."
 msgstr "Nem sikerült létrehozni a célkönyvtárat."
 
-#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:617
+#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:629
 msgid "Camera and Driver Configuration"
 msgstr "A kamera és a meghajtóprogram beállításai"
 
@@ -371,7 +362,7 @@ msgstr "A kamera dátumának beállítása a számítógép dátumára"
 msgid "Firmware revision (readonly)"
 msgstr "A firmware revíziószáma (csak olvasható)"
 
-#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:619
+#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:631
 msgid "Power (readonly)"
 msgstr "Energia (csak olvasható)"
 
@@ -3181,7 +3172,7 @@ msgstr "PTP protokollhiba, nem érkezett adat"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP protokollhiba, nem jött válasz"
 
-#: camlibs/ptp2/library.c:548
+#: camlibs/ptp2/library.c:560
 #, fuzzy
 msgid ""
 "PTP2 driver\n"
@@ -3189,7 +3180,7 @@ msgid ""
 "Enjoy!"
 msgstr "Készítette: Mariusz Woloszyn <emsi@ipartners.pl>. Sok sikert!"
 
-#: camlibs/ptp2/library.c:584
+#: camlibs/ptp2/library.c:596
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3199,25 +3190,25 @@ msgid ""
 "Vendor extension description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:624
+#: camlibs/ptp2/library.c:636
 #, fuzzy
 msgid "Number of values"
 msgstr "A képek száma: %d\n"
 
-#: camlibs/ptp2/library.c:628
+#: camlibs/ptp2/library.c:640
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/library.c:641
+#: camlibs/ptp2/library.c:653
 msgid "Current value"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1083
+#: camlibs/ptp2/library.c:1095
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "A kamera kikapcsolása"
 
-#: camlibs/ptp2/library.c:1155 camlibs/ptp/library.c:1065
+#: camlibs/ptp2/library.c:1167 camlibs/ptp/library.c:1065
 msgid "PTP is implemented for USB cameras only."
 msgstr "A PTP csak USB-csatolós kameráknál használható."
 
@@ -5149,36 +5140,36 @@ msgstr "Ez a kamera nem támogat rögzítést."
 msgid "This camera can not capture previews."
 msgstr "Ez a kamera nem támogat gyorsnézeteket."
 
-#: libgphoto2/gphoto2-filesys.c:254
+#: libgphoto2/gphoto2-filesys.c:258
 #, c-format
 msgid "The path '%s' is not absolute."
 msgstr "Az elérési út ('%s') nem abszolút."
 
-#: libgphoto2/gphoto2-filesys.c:375
+#: libgphoto2/gphoto2-filesys.c:379
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr ""
 "A(z) '%s' nevű könyvtár hozzáfűzése nem sikerült, mert már létezik ilyen "
 "nevű könyvtár."
 
-#: libgphoto2/gphoto2-filesys.c:547
+#: libgphoto2/gphoto2-filesys.c:551
 #, c-format
 msgid "Could not find folder '%s'."
 msgstr "'%s' nevű könyvtár nem ttalálható."
 
-#: libgphoto2/gphoto2-filesys.c:564
+#: libgphoto2/gphoto2-filesys.c:568
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr "A(z) '%s' nevű könyvtár nem tartalmaz '%s' nevű fájlt."
 
-#: libgphoto2/gphoto2-filesys.c:628
+#: libgphoto2/gphoto2-filesys.c:632
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr ""
 "Nem sikerült hozzáfűzni ezt: '%s' a(z) '%s' mappához, mert a fájl már "
 "létezik."
 
-#: libgphoto2/gphoto2-filesys.c:1005
+#: libgphoto2/gphoto2-filesys.c:1009
 #, c-format
 msgid ""
 "You have been trying to delete '%s' from folder '%s', but the filesystem "
@@ -5187,23 +5178,23 @@ msgstr ""
 "A program megpróbálta törölni a(z) '%s' fájlt a(z) '%s' mappából, de a "
 "fájlrendszer nem támogatja fájlok törlését."
 
-#: libgphoto2/gphoto2-filesys.c:1108
+#: libgphoto2/gphoto2-filesys.c:1112
 #, c-format
 msgid ""
 "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr ""
 "Az eltávolítani kívánt '%s' könyvtár nem üres, még tartalmaz alkönyvtárakat."
 
-#: libgphoto2/gphoto2-filesys.c:1115
+#: libgphoto2/gphoto2-filesys.c:1119
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr "Az eltávolítani kívánt '%s' könyvtár még nem üres, fájlokat tartalmaz."
 
-#: libgphoto2/gphoto2-filesys.c:1157
+#: libgphoto2/gphoto2-filesys.c:1161
 msgid "The filesystem does not support upload of files."
 msgstr "A fájlrendszer nem támogatja fájlok feltöltését."
 
-#: libgphoto2/gphoto2-filesys.c:1198
+#: libgphoto2/gphoto2-filesys.c:1202
 #, c-format
 msgid ""
 "Folder '%s' does only contain %i files, but you requested a file with number "
@@ -5211,36 +5202,36 @@ msgid ""
 msgstr ""
 "A(z) '%s' könyvtár csak %i fájlt tartalmaz, de a kért fájl száma %i volt."
 
-#: libgphoto2/gphoto2-filesys.c:1243
+#: libgphoto2/gphoto2-filesys.c:1247
 #, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr "'%s' nevű fájl nem létezik a(z) '%s' könyvtárban."
 
-#: libgphoto2/gphoto2-filesys.c:1330
+#: libgphoto2/gphoto2-filesys.c:1334
 #, c-format
 msgid "Could not find file '%s'."
 msgstr "A(z) '%s' fájl nem található."
 
-#: libgphoto2/gphoto2-filesys.c:1455
+#: libgphoto2/gphoto2-filesys.c:1459
 msgid "The filesystem doesn't support getting files"
 msgstr "A fájlrendszer nem támogatja fájlok letöltését"
 
-#: libgphoto2/gphoto2-filesys.c:1490 libgphoto2/gphoto2-filesys.c:2001
-#: libgphoto2/gphoto2-filesys.c:2154
+#: libgphoto2/gphoto2-filesys.c:1494 libgphoto2/gphoto2-filesys.c:2037
+#: libgphoto2/gphoto2-filesys.c:2190
 #, c-format
 msgid "Unknown file type %i."
 msgstr "Ismeretlen fájltípus: %i."
 
-#: libgphoto2/gphoto2-filesys.c:1494
+#: libgphoto2/gphoto2-filesys.c:1498
 #, c-format
 msgid "Downloading '%s' from folder '%s'..."
 msgstr "'%s' letöltése a(z) '%s' mappából..."
 
-#: libgphoto2/gphoto2-filesys.c:1704
+#: libgphoto2/gphoto2-filesys.c:1708
 msgid "The filesystem doesn't support getting file information"
 msgstr "A fájlrendszer nem támogatja a fájljellemzők lekérdezését."
 
-#: libgphoto2/gphoto2-filesys.c:1879
+#: libgphoto2/gphoto2-filesys.c:1883
 #, c-format
 msgid ""
 "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
@@ -5249,21 +5240,31 @@ msgstr ""
 "Nem sikerült megnyitni olvasásra a '/proc/meminfo' fájlt ('%m'). "
 "Ellenőrizze, hogy a proc fájlrendszer csatlakoztatva van-e."
 
-#: libgphoto2/gphoto2-filesys.c:1887
+#: libgphoto2/gphoto2-filesys.c:1891
 #, c-format
 msgid "An error occured while reading '/proc/meminfo' ('%m')."
 msgstr "Hiba történt '/proc/meminfo' olvasása közben ('%m')."
 
-#: libgphoto2/gphoto2-filesys.c:1922
+#: libgphoto2/gphoto2-filesys.c:1926
 #, c-format
 msgid "sysctl call failed ('%m')."
 msgstr "A sysctl hívás nem sikerült ('%m')."
 
-#: libgphoto2/gphoto2-filesys.c:2257
+#: libgphoto2/gphoto2-filesys.c:1944
+#, fuzzy, c-format
+msgid "sysconf call failed ('%m')."
+msgstr "A sysctl hívás nem sikerült ('%m')."
+
+#: libgphoto2/gphoto2-filesys.c:1952
+#, fuzzy, c-format
+msgid "swapctl call failed ('%m')."
+msgstr "A sysctl hívás nem sikerült ('%m')."
+
+#: libgphoto2/gphoto2-filesys.c:2293
 msgid "The filesystem doesn't support setting file information"
 msgstr "A fájlrendszer nem támogatja fájlinformációk beállítását"
 
-#: libgphoto2/gphoto2-filesys.c:2280
+#: libgphoto2/gphoto2-filesys.c:2316
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr ""
 "A csak olvasható fájljellemzők (pl. szélesség, magasság) nem változtathatók "
@@ -5308,6 +5309,10 @@ msgstr "Ismeretlen hiba a kamerakezelő programkönyvtárban"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "Ismeretlen hiba"
+
+#, fuzzy
+#~ msgid "remove"
+#~ msgstr "távoli"
 
 #, fuzzy
 #~ msgid "Could not identify camera based on name \"%s\""

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
-"POT-Creation-Date: 2003-02-17 14:00+0100\n"
+"POT-Creation-Date: 2003-07-27 13:04+0200\n"
 "PO-Revision-Date: 2000-06-27 16:33+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <ru@li.org>\n"
@@ -136,51 +136,51 @@ msgstr "Друкувати"
 msgid "read"
 msgstr "Створити"
 
-#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
+#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:478
 msgid "check_int"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:581
+#: libgphoto2_port/gphoto2-port.c:595
 msgid "update"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:627
+#: libgphoto2_port/gphoto2-port.c:641
 msgid "get_pin"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:679
+#: libgphoto2_port/gphoto2-port.c:693
 msgid "set_pin"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:694
+#: libgphoto2_port/gphoto2-port.c:708
 msgid "send_break"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:707
+#: libgphoto2_port/gphoto2-port.c:721
 msgid "flush"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:723
+#: libgphoto2_port/gphoto2-port.c:737
 msgid "find_device"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:735
+#: libgphoto2_port/gphoto2-port.c:749
 msgid "find_device_by_class"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:749
+#: libgphoto2_port/gphoto2-port.c:763
 msgid "clear_halt"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:769
+#: libgphoto2_port/gphoto2-port.c:783
 msgid "msg_write"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:789
+#: libgphoto2_port/gphoto2-port.c:803
 msgid "msg_read"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:849
+#: libgphoto2_port/gphoto2-port.c:863
 msgid "No error description available"
 msgstr ""
 
