@@ -1,5 +1,11 @@
 2001-10-12 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
+	* libgphoto2_port/libgphoto2_port/gp_port.c: more detailed debug output for *_write and *_read
+	* libgphoto2_port/usb/libusb.c: removed the last fprintf, fixed missing "%s" in string
+	* libgphoto2_port/usb/libusb.c: added call notification at GP_DEBUG_HIGH for most methods
+
+2001-10-12 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
 	* frontends/command-line/main.c: added package and version to debug msgs
 	* frontends/command-line/main.c: added --print-usb-usermap command
 	* frontends/command-line/main.h: added definition name of hotplug script

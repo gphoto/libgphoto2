@@ -269,7 +269,9 @@ gp_port_free (gp_port *dev)
 int
 gp_port_write (gp_port *dev, char *bytes, int size)
 {
-	if (! dev) {
+	int retval;
+
+	if (!dev) {
 		gp_port_debug_printf (GP_DEBUG_NONE, "gp_port_write: "
 					"called on NULL device!");
 		return GP_ERROR_BAD_PARAMETERS;
@@ -279,7 +281,13 @@ gp_port_write (gp_port *dev, char *bytes, int size)
 			      size);
 	gp_port_debug_print_data (GP_DEBUG_HIGH, bytes, size);
 
-	return (dev->ops->write (dev, bytes, size));
+	retval = dev->ops->write (dev, bytes, size);
+
+	if (retval != size)
+		gp_port_debug_printf (GP_DEBUG_HIGH, "dev->ops->write returned %i, expected %i",
+				      retval, size);
+
+	return (retval);
 }
 
 int
@@ -300,9 +308,13 @@ gp_port_read (gp_port *dev, char *bytes, int size)
 		return (retval);
 
 	gp_port_debug_printf (GP_DEBUG_MEDIUM, "... %5i byte(s) read", retval);
+	if (retval != size) {
+		gp_port_debug_printf(GP_DEBUG_HIGH, "dev->ops->read returned %i, expected %i",
+				     retval, size);
+	}
 	gp_port_debug_print_data (GP_DEBUG_HIGH, bytes, retval);
 
-        return (retval);
+	return (retval);
 }
 
 int
@@ -533,6 +545,13 @@ int gp_port_usb_msg_write (gp_port * dev, int request, int value, int index,
         }
 
         retval = dev->ops->msg_write(dev, request, value, index, bytes, size);
+
+	gp_port_debug_printf(GP_DEBUG_HIGH, 
+			     "gp_port_usb_msg_write: msg_write returns %i, "
+			     "request=0x%x value=0x%x index=0x%x size=%i=0x%x",
+			     retval, request, value, index, size, size);
+	gp_port_debug_print_data(GP_DEBUG_HIGH, bytes, size);
+
         gp_port_debug_printf(GP_DEBUG_LOW,
                 "gp_port_usb_msg_write: msg_write %s", retval < 0? "error":"ok");
         return (retval);
@@ -556,7 +575,15 @@ int gp_port_usb_msg_read (gp_port * dev, int request, int value, int index,
         }
 
         retval = dev->ops->msg_read(dev, request, value, index, bytes, size);
+
         gp_port_debug_printf(GP_DEBUG_LOW,
                 "gp_port_usb_msg_read: msg_read %s", retval < 0? "error":"ok");
+
+	gp_port_debug_printf(GP_DEBUG_HIGH, 
+			     "gp_port_usb_msg_read: msg_read returns %i, "
+			     "request=0x%x value=0x%x index=0x%x size=%i=0x%x",
+			     retval, request, value, index, size, size);
+	gp_port_debug_print_data(GP_DEBUG_HIGH, bytes, retval);
+
         return (retval);
 }

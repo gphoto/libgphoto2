@@ -115,6 +115,7 @@ int gp_port_usb_open(gp_port *dev)
 					"gp_port_usb_open: called on NULL device");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_open() called");
 
         /*
 	 * Open the device using the previous usb_handle returned by
@@ -149,6 +150,7 @@ int gp_port_usb_close (gp_port *dev)
 					(!dev)?"NULL device":"non-open device handle");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_close() called");
 
 	if (usb_release_interface (dev->device_handle,
 				   dev->settings.usb.interface) < 0) {
@@ -176,6 +178,7 @@ int gp_port_usb_reset(gp_port *dev)
 					"gp_port_usb_reset: called on NULL device");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_reset() called");
 
 	/* XXX should we check for errors on close too or
 	 * should we do what we do now, return the result of a
@@ -195,6 +198,7 @@ int gp_port_usb_clear_halt_lib(gp_port * dev, int ep)
 					(!dev)?"NULL device":"non-open device handle");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_clear_halt_lib() called");
 
 	switch (ep) {
 		case GP_PORT_USB_ENDPOINT_IN :
@@ -221,6 +225,7 @@ int gp_port_usb_write(gp_port * dev, char *bytes, int size)
 					(!dev)?"NULL device":"non-open device handle");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_write() called");
 
 	ret = usb_bulk_write(dev->device_handle, dev->settings.usb.outep,
                            bytes, size, dev->timeout);
@@ -234,21 +239,13 @@ int gp_port_usb_read(gp_port * dev, char *bytes, int size)
 {
 	int ret;
 
-	fprintf (stderr, "gp_port_usb_read: ENTER\n");
-	if (!dev)
-		fprintf (stderr, "gp_port_usb_read: DEV IS NULL\n");
-		
-	if (!dev->device_handle)
-		fprintf (stderr, "gp_port_usb_read: DEVICE HANDLE IS NULL\n");
-		
-	fflush(stderr);
-
 	if (!dev || dev->device_handle == NULL) {
 		gp_port_debug_printf (GP_DEBUG_NONE,
 					"gp_port_usb_read: called on ",
 					(!dev)?"NULL device":"non-open device handle");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_read() called");
 
 	ret = usb_bulk_read(dev->device_handle, dev->settings.usb.inep,
 			     bytes, size, dev->timeout);
@@ -267,6 +264,7 @@ int gp_port_usb_msg_write_lib(gp_port * dev, int request, int value, int index,
 					(!dev)?"NULL device":"non-open device handle");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_write_lib() called");
 
 	return usb_control_msg(dev->device_handle,
 		USB_TYPE_VENDOR | USB_RECIP_DEVICE,
@@ -282,6 +280,7 @@ int gp_port_usb_msg_read_lib(gp_port * dev, int request, int value, int index,
 					(!dev)?"NULL device":"non-open device handle");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_msg_read_lib() called");
 
 	return usb_control_msg(dev->device_handle,
 		USB_TYPE_VENDOR | USB_RECIP_DEVICE | 0x80,
@@ -304,11 +303,10 @@ int gp_port_usb_update(gp_port * dev)
 
 	if (!dev || dev->device_handle == NULL) {
 		gp_port_debug_printf (GP_DEBUG_NONE,
-					"gp_port_usb_update: called on ",
+					"gp_port_usb_update: called on %s",
 					(!dev)?"NULL device":"non-open device handle");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-
 	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_update() called.");
 
 	if (memcmp(&dev->settings.usb, &dev->settings_pending.usb, sizeof(dev->settings.usb))) {
@@ -320,6 +318,7 @@ int gp_port_usb_update(gp_port * dev)
 					     dev->settings_pending.usb.config);
 			if (ret < 0) {
 				gp_port_debug_printf (GP_DEBUG_LOW,
+					"gp_port_usb_update: "
 					"Could not set config %d/%d: %s",
 					dev->settings_pending.usb.interface,
 					dev->settings_pending.usb.config,
@@ -327,8 +326,9 @@ int gp_port_usb_update(gp_port * dev)
 				return GP_ERROR_IO_UPDATE;	
 			}
 
-			gp_port_debug_printf (GP_DEBUG_LOW, "Changed "
-				"usb.config from %d to %d",
+			gp_port_debug_printf (GP_DEBUG_LOW,
+				"gp_port_usb_update: "
+				"Changed usb.config from %d to %d",
 				dev->settings.usb.config,
 				dev->settings_pending.usb.config);
 			
@@ -343,6 +343,7 @@ int gp_port_usb_update(gp_port * dev)
 			ret = usb_set_altinterface(dev->device_handle, dev->settings_pending.usb.altsetting);
 			if (ret < 0) {
 				gp_port_debug_printf (GP_DEBUG_LOW,
+					"gp_port_usb_update: "
 					"Could not set interface %d/%d: %s",
 					dev->settings_pending.usb.interface,
 					dev->settings_pending.usb.altsetting,
@@ -351,6 +352,7 @@ int gp_port_usb_update(gp_port * dev)
 			}
 
 			gp_port_debug_printf (GP_DEBUG_HIGH,
+				"gp_port_usb_update: "
 				"Changed usb.altsetting from %d to %d",
 				dev->settings.usb.altsetting,
 				dev->settings_pending.usb.altsetting);
@@ -376,6 +378,8 @@ int gp_port_usb_find_device_lib(gp_port * d, int idvendor, int idproduct)
 	if ((idvendor == 0) || (idproduct == 0)) {
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_find_device_lib() called "
+			      "(idvendor=0x%x, idproduct=0x%x", idvendor, idproduct);
 
 	for (bus = usb_busses; bus; bus = bus->next) {
 		for (dev = bus->devices; dev; dev = dev->next) {
