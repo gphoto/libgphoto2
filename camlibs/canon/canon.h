@@ -166,6 +166,10 @@ int canon_int_directory_operations(Camera *camera, const char *path, int action)
 int canon_int_identify_camera(Camera *camera);
 int canon_int_set_owner_name(Camera *camera, const char *name);
 
+/* path conversion - needs drive letter, and can therefor not be moved to util.c */
+char *canon2gphotopath(char *path);
+char *gphoto2canonpath(char *path);
+
 /* not sure whether these belong here :-) */
 int canon_int_serial_ready (Camera *camera);
 int canon_int_usb_ready (Camera *camera);

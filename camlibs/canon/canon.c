@@ -893,6 +893,55 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 }
 
 
+/**
+ * gphoto2canonpath:
+ * @path: gphoto2 path 
+ *
+ * convert gphoto2 path  (e.g.   "/DCIM/116CANON/IMG_1240.JPG")
+ * into canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
+ */
+char *gphoto2canonpath(char *path)
+{
+	static char tmp[2000];
+	char *p;
+	if (path[0] != '/') {
+		return NULL;
+	}
+	strcpy(tmp, "D:"); // FIXME
+	strcpy(tmp + 2, path);
+	for (p = tmp + 2; *p != '\0'; p++) {
+		if (*p == '/')
+			*p = '\\';
+	}
+	return(tmp);
+}
+
+/**
+ * cancon2gphotopath:
+ * @path: canon style path
+ *
+ * convert canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
+ * into gphoto2 path        (e.g.   "/DCIM/116CANON/IMG_1240.JPG")
+ */
+char *canon2gphotopath(char *path)
+{
+	static char tmp[2000];
+	char *p;
+	if (!((path[1] == ':') && (path[2] == '\\'))){
+		return NULL;
+	}
+	// FIXME: just drops the drive letter
+	p = path + 2;
+	strcpy(tmp,p);
+	for (p = tmp; *p != '\0'; p++) {
+		if (*p == '\\')
+			*p = '/';
+	}
+	return(tmp);
+}
+
+
+
 void
 canon_int_free_dir (Camera *camera, struct canon_dir *list)
 {
