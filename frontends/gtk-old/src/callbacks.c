@@ -960,43 +960,105 @@ void camera_delete_all() {
 	camera_delete_common(1);
 }
 
-void camera_configure_rec (CameraWidget *w, GtkWidget *page, GtkWidget *parent) {
-/*
-	child_count = gp_widget_child_count(window);
-	for (x=0; x<child_count; x++) {
-		c = gp_widget_child(window, x);
-		camera_configure_rec
+void camera_configure_rec (CameraWidget *w, GtkWidget *box, GtkWidget *window) {
+
+	GtkWidget *widget, *label, *hbox, *vbox, *notebook;
+	GtkWidget *new_page=NULL;
+	CameraWidget *c;
+	GSList *group;
+	int x, child_count;
+
+	switch(w->type) {
+		case GP_WIDGET_WINDOW:
+			/* do nothing. */
+			break;
+		case GP_WIDGET_SECTION:
+			if ((notebook=gtk_object_get_data(GTK_OBJECT(window), "notebook"))==NULL) {
+				notebook = gtk_notebook_new();
+				gtk_widget_show(notebook);
+				gtk_box_pack_start(GTK_BOX(box), notebook, FALSE, FALSE, 0);
+				gtk_object_set_data(GTK_OBJECT(window), "notebook", notebook);
+			}
+			label = gtk_label_new(w->label);
+			gtk_widget_show(label);
+			vbox = gtk_vbox_new(FALSE, 0);
+			gtk_widget_show(vbox);
+			box = vbox;
+			gtk_notebook_append_page(GTK_NOTEBOOK(notebook), vbox, label);
+			break;
+		case GP_WIDGET_TEXT:
+			break;
+		case GP_WIDGET_RANGE:
+			break;
+		case GP_WIDGET_TOGGLE:
+			break;
+		case GP_WIDGET_RADIO:
+			break;
+		case GP_WIDGET_MENU:
+			break;
+		case GP_WIDGET_BUTTON:
+			break;
+		default:
+			break;
 	}
-*/
+
+	child_count = gp_widget_child_count(w);
+printf("child_count=%i\n", child_count);
+	for (x=0; x<child_count; x++) {
+		c = gp_widget_child(w, x);
+		camera_configure_rec(c, box, window);
+	}
+
 }
 
 void camera_configure() {
 
 	CameraWidget *w;
-	GtkWidget *window;
-	GSList *radio_list[256];
-	int x, child_count;
+	GtkWidget *window, *box, *ok, *cancel;
 
 	debug_print("camera configure");
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
+	/* Get the camera configuration widgets */
 	w = gp_widget_new(GP_WIDGET_WINDOW, "Camera Configuration");
+
 	if (gp_config_get(w)==GP_ERROR) {
 		gp_message("Could not retrieve camera configuration information");
-		gp_widget_free(window);
+		gp_widget_free(w);
 		return;
 	}
 
 //	if (gp_gtk_debug)
-		gp_widget_dump(window);
+		gp_widget_dump(w);
 
+	/* Create the GTK window */
+	window = gtk_window_new(GTK_WINDOW_DIALOG);
 	gtk_window_set_title(GTK_WINDOW(window), w->label);
 
-	camera_configure_rec(window, NULL, NULL);
+	box = gtk_vbox_new(FALSE, 0);
+	gtk_widget_show(box);
+	gtk_container_add(GTK_CONTAINER(window), box);
 
-	gp_widget_free(window);
+	ok = gtk_button_new_with_label("OK");
+	gtk_widget_show(ok);
+
+	cancel = gtk_button_new_with_label("Cancel");
+	gtk_widget_show(cancel);
+
+	/* Build the dialog */
+	camera_configure_rec(w, box, window);
+
+	if (wait_for_hide(window, ok, NULL)==0) {
+		gp_widget_free(w);
+		return;
+	}
+	printf("gathering widget data\n");
+
+	/* Clean up and leave */
+	gp_widget_free(w);
+	gtk_widget_destroy(window);
 }
 
 void camera_show_information() {

@@ -369,7 +369,7 @@ return (GP_ERROR);
 
 int camera_config_get (CameraWidget *window) {
 
-	CameraWidget *t, *page;
+	CameraWidget *t, *section;
 	int num;
 	char buf[1024];
 
@@ -378,50 +378,32 @@ int camera_config_get (CameraWidget *window) {
 	/* set the window label to something more specific */
 	strcpy(window->label, "Fujitsu Camera Settings");
 
-	/* Create a new page for "Quality" */
-	page = gp_widget_new(GP_WIDGET_PAGE, "Quality");
-	gp_widget_append(window, page);
+	/* Create a new section for "Quality" */
+	section = gp_widget_new(GP_WIDGET_SECTION, "Quality");
+	gp_widget_append(window, section);
 
 		/* Add the Resolution setting radio buttons */
 		t = gp_widget_new(GP_WIDGET_RADIO, "Resolution");
-		strcpy(t->choice, "Standard");
-		gp_widget_append(page, t);
+		gp_widget_choice_append(t, "Normal");
+		gp_widget_choice_append(t, "High");
+		gp_widget_choice_append(t, "Best");
+		gp_widget_append(section, t);
 
-		t = gp_widget_new(GP_WIDGET_RADIO, "Resolution");
-		strcpy(t->choice, "High");
-		gp_widget_append(page, t);
-
-		t = gp_widget_new(GP_WIDGET_RADIO, "Resolution");
-		strcpy(t->choice, "Best");
-		gp_widget_append(page, t);
-
-	/* Create a new page for "Flash/Lens" and append to window */
-	page = gp_widget_new(GP_WIDGET_PAGE, "Flash/Lens");
-	gp_widget_append(window, page);
+	/* Create a new section for "Flash/Lens" and append to window */
+	section = gp_widget_new(GP_WIDGET_SECTION, "Flash/Lens");
+	gp_widget_append(window, section);
 
 		t = gp_widget_new(GP_WIDGET_MENU, "Flash Setting");
-		strcpy(t->choice, "Auto");
-		gp_widget_append(page, t);
-
-		t = gp_widget_new(GP_WIDGET_MENU, "Flash Setting");
-		strcpy(t->choice, "Red-eye");
-		gp_widget_append(page, t);
-
-		t = gp_widget_new(GP_WIDGET_MENU, "Flash Setting");
-		strcpy(t->choice, "Force");
-		gp_widget_append(page, t);
-
-		t = gp_widget_new(GP_WIDGET_MENU, "Flash Setting");
-		strcpy(t->choice, "None");
-		gp_widget_append(page, t);
+		gp_widget_choice_append(t, "Auto");
+		gp_widget_choice_append(t, "Red-eye");
+		gp_widget_choice_append(t, "Force");
+		gp_widget_choice_append(t, "None");
+		gp_widget_append(section, t);
 
 		t = gp_widget_new(GP_WIDGET_RADIO, "Lens Mode");
-		strcpy(t->choice, "Normal");
-		gp_widget_append(page, t);
-
-		t = gp_widget_new(GP_WIDGET_RADIO, "Lens Mode");
-		strcpy(t->choice, "Macro");
-		gp_widget_append(page, t);
+		gp_widget_choice_append(t, "Normal");
+		gp_widget_choice_append(t, "Macro");
+		gp_widget_append(section, t);
 
 	return (GP_OK);
 }

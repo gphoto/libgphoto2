@@ -1,9 +1,14 @@
 #include <stdlib.h>
+#include <string.h>
 #include <gphoto2.h>
+
+/* Create/free a widget								*/
+/* --------------------------------------------------------------------------	*/
 
 CameraWidget* gp_widget_new(CameraWidgetType type, char *label) {
 
 	CameraWidget *w;
+	int x;
 
 	w = (CameraWidget*)malloc(sizeof(CameraWidget));
 	memset(w, 0, sizeof(CameraWidget));
@@ -16,8 +21,34 @@ CameraWidget* gp_widget_new(CameraWidgetType type, char *label) {
 	memset(w->children, 0, sizeof(CameraWidget*)*64);	
 	w->children_count = 0;
 
+	for (x=0; x<32; x++)
+		strcpy(w->choice[x], "");
+	w->choice_count = 0;
+
 	return (w);
 }
+
+int gp_widget_free(CameraWidget *widget) {
+	/* Recursively delete the widget and all children */
+
+	int x;
+
+	if (widget->children_count == 0)
+		return (GP_OK);
+
+	for (x=0; x<widget->children_count; x++) {
+		gp_widget_free(widget->children[x]);
+		free(widget->children[x]);
+	}
+
+	free(widget);
+
+	return (GP_OK);
+}
+
+
+/* Attach widgets to a parent widget						*/
+/* --------------------------------------------------------------------------	*/
 
 int gp_widget_append(CameraWidget *parent, CameraWidget *child) {
 
@@ -52,28 +83,38 @@ CameraWidget*   gp_widget_child(CameraWidget *parent, int child_number) {
 	return (parent->children[child_number]);
 }
 
-int gp_widget_free(CameraWidget *widget) {
-	/* Recursively delete the widget and all children */
+/* Retrieve and set choices for menus/radio buttons 				*/
+/* --------------------------------------------------------------------------	*/
 
-	int x;
+int gp_widget_choice_append(CameraWidget *widget, char *choice) {
 
-	if (widget->children_count == 0)
-		return (GP_OK);
-
-	for (x=0; x<widget->children_count; x++) {
-		gp_widget_free(widget->children[x]);
-		free(widget->children[x]);
-	}
-
-	free(widget);
+	strncpy(widget->choice[widget->choice_count], choice, 64);
+	widget->choice_count += 1;
 
 	return (GP_OK);
 }
 
+int gp_widget_choice_count(CameraWidget *widget) {
+
+	return (widget->choice_count);
+}
+
+char *gp_widget_choice(CameraWidget *widget, int choice_number) {
+
+	if (choice_number > widget->choice_count)
+		return NULL;
+
+	return (widget->choice[choice_number]);
+}
+
+
+
+/* Debugging output								*/
+/* --------------------------------------------------------------------------	*/
+
 void gp_widget_dump_rec (CameraWidget *widget, int depth) {
 
 	int x;
-	char buf[1024];
 
 	printf("core: ");
 	for (x=0; x<depth*2; x++)
@@ -86,7 +127,7 @@ void gp_widget_dump_rec (CameraWidget *widget, int depth) {
 
 int gp_widget_dump(CameraWidget *widget) {
 
-	printf("core: Dumping widget \"%s\" and children:", widget->label);
+	printf("core: Dumping widget \"%s\" and children:\n", widget->label);
 	gp_widget_dump_rec(widget, 0);
 
 	return (GP_OK);

@@ -38,7 +38,7 @@ typedef enum {
 
 typedef enum {
 	GP_WIDGET_WINDOW,
-	GP_WIDGET_PAGE,
+	GP_WIDGET_SECTION,
 	GP_WIDGET_TEXT,
 	GP_WIDGET_RANGE,
 	GP_WIDGET_TOGGLE,
@@ -61,9 +61,9 @@ struct CameraWidget {
 	char		 value_string[32];
 	float		 value_number;
 
-
 	/* For Radio and Menu */
-	char 		 choice[32];
+	char 		 choice[32][64];
+	int		 choice_count;
 
 	/* For Range */
 	float		 min;
