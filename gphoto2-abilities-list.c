@@ -27,8 +27,27 @@
 
 #include "gphoto2-core.h"
 #include "gphoto2-result.h"
-#include "gphoto2-debug.h"
+#include "gphoto2-port-log.h"
 #include "gphoto2-library.h"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
@@ -107,13 +126,13 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 
 	CHECK_NULL (list && dir);
 
-	gp_debug_printf (GP_DEBUG_HIGH, "abilities-list", "Loading camera "
-			 "libraries in '%s'...", dir);
+	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+		"Loading camera libraries in '%s'...", dir);
 
 	d = GP_SYSTEM_OPENDIR (dir);
 	if (!d) {
-		gp_debug_printf (GP_DEBUG_HIGH, "abilities-list", "Could not "
-				 "open '%s'.", dir);
+		gp_log (GP_LOG_ERROR, "gphoto2-abilities-list",
+			_("Could not open '%s'"), dir);
 		return GP_ERROR_LIBRARY;
 	}
 
@@ -134,20 +153,19 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 			/* Try to open the library */
 			lh = GP_SYSTEM_DLOPEN (buf);
 			if (!lh) {
-				gp_debug_printf (GP_DEBUG_HIGH,
-					"abilities-list", "Failed to load "
-					"'%s': %s.", buf, GP_SYSTEM_DLERROR ());
+				gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+					"Failed to load '%s': %s.", buf,
+					GP_SYSTEM_DLERROR ());
 				continue;
 			}
 
 			/* camera_id */
 			id = GP_SYSTEM_DLSYM (lh, "camera_id");
 			if (!id) {
-				gp_debug_printf (GP_DEBUG_HIGH,
-					"abilities-list", "Library '%s' does "
-					"not seem to contain a camera_id "
-					"function: %s", buf,
-					GP_SYSTEM_DLERROR ());
+				gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+					"Library '%s' does not seem to "
+					"contain a camera_id function: %s",
+					buf, GP_SYSTEM_DLERROR ());
 				GP_SYSTEM_DLCLOSE (lh);
 				continue;
 			}
@@ -168,11 +186,10 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 			/* camera_abilities */
 			ab = GP_SYSTEM_DLSYM (lh, "camera_abilities");
 			if (!ab) {
-				gp_debug_printf (GP_DEBUG_HIGH,
-					"abilities-list", "Library '%s' does "
-					"not seem to contain a camera_id "
-					"function: %s", buf,
-					GP_SYSTEM_DLERROR ());
+				gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+					"Library '%s' does not seem to "
+					"contain a camera_abilities function: "
+					"%s", buf, GP_SYSTEM_DLERROR ());
 				GP_SYSTEM_DLCLOSE (lh);
 				continue;
 			}
@@ -250,14 +267,15 @@ gp_abilities_list_detect (CameraAbilitiesList *list, CameraList *l)
 
 	CHECK_RESULT (gp_port_new (&dev, GP_PORT_USB));
 
-	gp_debug_printf (GP_DEBUG_LOW, "core", "Auto-detecting cameras...");
+	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+		"Auto-detecting cameras...");
 	for (x = 0; x < count; x++) {
 		v = list->abilities[x].usb_vendor;
 		p = list->abilities[x].usb_product;
 		if ((gp_port_usb_find_device (dev, v, p)       == GP_OK) &&
 		    (gp_abilities_list_get_model (list, x, &m) == GP_OK)) {
-			gp_debug_printf (GP_DEBUG_LOW, "abilities-list", 
-					 "Found '%s' (%i,%i)", m, v, p);
+			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+				"Found '%s' (%i,%i)", m, v, p);
 			gp_list_append (l, m, "usb:");
 		}
 	}
@@ -274,9 +292,9 @@ gp_abilities_list_dump_libs (CameraAbilitiesList *list)
 	CHECK_NULL (list);
 
 	for (x = 0; x < list->count; x++)
-		gp_debug_printf (GP_DEBUG_LOW, "core", "\t\"%s\" uses %s",
-				 list->abilities[x].model,
-				 list->abilities[x].library);
+		gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+			"\t\"%s\" uses %s", list->abilities[x].model,
+			list->abilities[x].library);
 	return (GP_OK);
 }
 
