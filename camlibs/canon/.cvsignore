@@ -6,5 +6,3 @@ libgphoto2_canon.la
 Makefile
 Makefile.in
 *.patch
-protocol.xml
-crw
