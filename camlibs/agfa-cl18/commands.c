@@ -15,10 +15,38 @@
 #include <db.h>
 #endif
 #include <netinet/in.h>
+#include <gphoto2.h>
 
-#include "agfa.h"
+#include "commands.h"
 
-#include <gphoto2-port.h>
+#define AGFA_RESET          0x0001
+#define AGFA_TAKEPIC1       0x0004
+#define AGFA_TAKEPIC2       0x0094
+#define AGFA_TAKEPIC3       0x0092
+#define AGFA_DELETE         0x0100
+#define AGFA_GET_PIC        0x0101
+#define AGFA_GET_PIC_SIZE   0x0102
+#define AGFA_GET_NUM_PICS   0x0103
+#define AGFA_DELETE_ALL2    0x0105
+#define AGFA_END_OF_THUMB   0x0106   /* delete all one? */
+#define AGFA_GET_NAMES      0x0108
+#define AGFA_GET_THUMB_SIZE 0x010A
+#define AGFA_GET_THUMB      0x010B
+#define AGFA_DONE_PIC       0x01FF
+#define AGFA_STATUS         0x0114
+
+/* agfa protocol primitives */
+struct agfa_command {
+        unsigned int length;
+        unsigned int command;
+        unsigned int argument;
+};
+
+struct agfa_file_command {
+        unsigned int length;
+        char filename[12];
+};
+
 
 /* Regular commands always 8 bytes long */
 static void
@@ -141,244 +169,208 @@ agfa_photos_taken (struct agfa_device *dev, int *taken)
 }
 
 
-int agfa_get_file_list(struct agfa_device *dev) {
+int
+agfa_get_file_list (struct agfa_device *dev)
+{
+	struct agfa_command cmd;
+	char *buffer;
+	int ret, taken, buflen;
 
-    struct agfa_command cmd;
-    char *buffer;
-    int ret, taken, buflen;
+	/* It seems we need to do a "reset" packet before reading names?? */
+	agfa_reset (dev);
 
-    /* It seems we need to do a "reset" packet before reading names?? */
-   
-    agfa_reset(dev);
-   
-    if (agfa_photos_taken(dev, &taken) < 0)
-       return -1;
-   
-    dev->num_pictures = taken;
+	ret = agfa_photos_taken (dev, &taken);
+	if (ret < 0)
+		return (ret);
 
-    
-    buflen = (taken * 13)+1;  /* 12 char filenames and space for each */
+	dev->num_pictures = taken;
+
+	buflen = (taken * 13)+1;  /* 12 char filenames and space for each */
                               /* plus trailing NULL */
-    
-    buffer = malloc(buflen);
-        
-    if (!buffer) {
-       fprintf(stderr, "agfa_get_file_list: error allocating %d bytes\n", buflen);
-       return -1;
-    }
-
-    build_command(&cmd,AGFA_GET_NAMES, buflen);
-
-    ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
-    if (ret < 0) {
-       fprintf(stderr, "agfa_get_file_list: error sending command\n");
-       return -1;
-    }
-
-    ret = gp_port_read (dev->gpdev, (void *)buffer, buflen);
-    if (ret < 0) {
-       fprintf(stderr, "agfa_get_file_list: error receiving data\n");
-       return -1;
-    }
-
-    if (dev->file_list) free(dev->file_list);
-
-    dev->file_list = malloc(taken * 13);
-    if (!dev->file_list) {
-       fprintf(stderr, "agfa_get_file_list: error allocating file_list memory\n");
-       return -1;
-    }
-
-    memcpy(dev->file_list, buffer, taken * 13);
-
-    free(buffer);
-#if 0
-    agfa_photos_taken(dev, &taken);
-    agfa_get_thumb_size(dev,dev->file_list);
-#endif 
-    return 0;
-}
-
-int agfa_get_thumb_size(struct agfa_device *dev, const char *filename) {
- 
-    struct agfa_command cmd;    
-    struct agfa_file_command file_cmd;
-    int ret,temp,size; 
-   
-    build_command(&cmd,AGFA_GET_THUMB_SIZE,0);
-    ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));  
-   
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-     }
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-    
-    build_file_command(&file_cmd,filename);
-    ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-   
-    ret = gp_port_read (dev->gpdev, (char*)&size, sizeof(size));        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-    
-    return size;
-   
-}
-
-int agfa_get_thumb(struct agfa_device *dev, const char *filename,
-		   unsigned char *data,int size) {
-   
-    struct agfa_command cmd;   
-    struct agfa_file_command file_cmd;
-    int ret,temp; 
-/*    unsigned char temp_string[8]; */
-    
-    build_command(&cmd,AGFA_GET_THUMB,0);
-    ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));  
-   
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp)); 
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-    
-    build_file_command(&file_cmd,filename);
-    ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-   
-    ret = gp_port_read (dev->gpdev, data, size);        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-#if 0
-           /* Is this needed? */
-        agfa_photos_taken(dev,&ret);
-   
-        build_command(&cmd,AGFA_END_OF_THUMB,0);
-        ret = gp_port_write (dev->gpdev,&cmd, sizeof(cmd));
-        if (ret<0) {
-	   printf("Error sending command!\n");
-	   return -1;
+	buffer = malloc (buflen);
+	if (!buffer) {
+		gp_debug_printf (GP_DEBUG_HIGH, "agfa", "Could not allocate "
+				 "%i bytes!", buflen);
+		return (GP_ERROR_NO_MEMORY);
 	}
-   
-        ret = gp_port_read (dev->gpdev, temp_string, 8);        
-        if (ret<0) {
-	   printf("Error sending command!\n");
-	   return -1;
-	}   
 
-#endif   
-    return 0;
-   
-}
+	build_command (&cmd, AGFA_GET_NAMES, buflen);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	if (ret < 0)
+		return (ret);
+	
+	ret = gp_port_read (dev->gpdev, (void *)buffer, buflen);
+	if (ret < 0)
+		return (ret);
+	
+	if (dev->file_list)
+		free (dev->file_list);
 
-int agfa_get_pic_size(struct agfa_device *dev, const char *filename) {
- 
-    struct agfa_command cmd;    
-    struct agfa_file_command file_cmd;
-    int ret,temp,size; 
-   
-    build_command(&cmd,AGFA_GET_PIC_SIZE,0);
-    ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));  
-   
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-    
-    build_file_command(&file_cmd,filename);
-    ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-   
-    ret = gp_port_read (dev->gpdev, (char*)&size, sizeof(size));        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-    
-    return size;
-   
-}
-
-int agfa_get_pic(struct agfa_device *dev, const char *filename,
-		   unsigned char *data,int size) {
-   
-    struct agfa_command cmd;   
-    struct agfa_file_command file_cmd;
-    int ret,temp; 
-//  int taken;
-   
-//    agfa_photos_taken(dev,&taken);
-//  agfa_get_pic_size(dev,filename);
-   
-    build_command(&cmd,AGFA_GET_PIC,0);
-    ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));  
-   
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-     
-       /* always returns ff 0f 00 00 ??? */
-    ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
-    
-    build_file_command(&file_cmd,filename);
-    ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }
-   
-    ret = gp_port_read (dev->gpdev, data, size);        
-    if (ret<0) {
-       printf("Error sending command!\n");
-       return -1;
-    }   
+	dev->file_list = malloc (taken * 13);
+	if (!dev->file_list) {
+		gp_debug_printf (GP_DEBUG_HIGH, "agfa", "Could not allocate "
+				 "%i bytes!", taken * 13);
+		free (buffer);
+		return (GP_ERROR_NO_MEMORY);
+	}
+	
+	memcpy (dev->file_list, buffer, taken * 13);
+	free (buffer);
 
 #if 0
-       /* Have to do this after getting pic */
-    build_command(&cmd,AGFA_DONE_PIC,0);
-    ret=gp_port_write (dev->gpdev,&cmd,sizeof(cmd));
+	agfa_photos_taken (dev, &taken);
+	agfa_get_thumb_size (dev, dev->file_list);
 #endif
+
+	return (GP_OK);
+}
+
+int
+agfa_get_thumb_size (struct agfa_device *dev, const char *filename)
+{
+	struct agfa_command cmd;
+	struct agfa_file_command file_cmd;
+	int ret, temp,size;
+
+	build_command (&cmd, AGFA_GET_THUMB_SIZE, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	if (ret < 0)
+		return (ret);
+	
+	/* always returns ff 0f 00 00 ??? */
+	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
+	if (ret < 0)
+		return (ret);
+	
+	build_file_command (&file_cmd, filename);
+	ret = gp_port_write (dev->gpdev, (char*)&file_cmd, sizeof(file_cmd));
+	if (ret < 0)
+		return (ret);
+	
+	ret = gp_port_read (dev->gpdev, (char*)&size, sizeof(size));
+	if (ret < 0)
+		return (ret);
+	
+	return size;
+}
+
+int
+agfa_get_thumb (struct agfa_device *dev, const char *filename,
+		unsigned char *data,int size)
+{
+	struct agfa_command cmd;
+	struct agfa_file_command file_cmd;
+	int ret, temp; 
+#if 0
+	unsigned char temp_string[8];
+#endif
+	
+	build_command (&cmd, AGFA_GET_THUMB, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	if (ret < 0)
+		return (ret);
+	
+	/* always returns ff 0f 00 00 ??? */
+	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
+	if (ret < 0)
+		return (ret);
+	
+	build_file_command (&file_cmd, filename);
+	ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
+	if (ret < 0)
+		return (ret);
+
+	ret = gp_port_read (dev->gpdev, data, size);
+	if (ret < 0)
+		return (ret);
+
+#if 0
+	/* Is this needed? */
+	agfa_photos_takeni (dev, &ret);
    
-    return 0;
-   
+        build_command (&cmd, AGFA_END_OF_THUMB, 0);
+        ret = gp_port_write (dev->gpdev,&cmd, sizeof(cmd));
+        if (ret < 0)
+		return (ret);
+
+	ret = gp_port_read (dev->gpdev, temp_string, 8);
+	if (ret < 0)
+		return (ret);
+#endif
+
+	return (GP_OK);
+}
+
+int
+agfa_get_pic_size (struct agfa_device *dev, const char *filename)
+{
+	struct agfa_command cmd;
+	struct agfa_file_command file_cmd;
+	int ret, temp, size;
+	
+	build_command (&cmd, AGFA_GET_PIC_SIZE, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	if (ret < 0)
+		return (ret);
+	
+	/* always returns ff 0f 00 00 ??? */
+	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
+	if (ret < 0)
+		return (ret);
+	
+	build_file_command (&file_cmd, filename);
+	ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
+	if (ret < 0)
+		return (ret);
+	
+	ret = gp_port_read (dev->gpdev, (char*)&size, sizeof(size));
+	if (ret < 0)
+		return (ret);
+	
+	return size;
+}
+
+int
+agfa_get_pic (struct agfa_device *dev, const char *filename,
+	      unsigned char *data,int size)
+{
+	struct agfa_command cmd;
+	struct agfa_file_command file_cmd;
+	int ret, temp;
+#if 0
+	int taken;
+#endif
+
+#if 0
+	agfa_photos_taken(dev,&taken);
+	agfa_get_pic_size(dev,filename);
+#endif
+	build_command (&cmd, AGFA_GET_PIC, 0);
+	ret = gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+	if (ret < 0)
+		return (ret);
+	
+	/* always returns ff 0f 00 00 ??? */
+	ret = gp_port_read (dev->gpdev, (char*)&temp, sizeof(temp));
+	if (ret < 0)
+		return (ret);
+	
+	build_file_command (&file_cmd, filename);
+	ret = gp_port_write (dev->gpdev,(char*)&file_cmd, sizeof(file_cmd));
+	if (ret < 0)
+		return (ret);
+	
+	ret = gp_port_read (dev->gpdev, data, size);
+	if (ret < 0)
+		return (ret);
+
+#if 0
+	/* Have to do this after getting pic */
+	build_command (&cmd, AGFA_DONE_PIC, 0);
+	ret=gp_port_write (dev->gpdev, (char*)&cmd, sizeof(cmd));
+#endif
+
+	return (GP_OK);
 }
 
 /* thanks to heathhey3@hotmail.com for sending me the trace */

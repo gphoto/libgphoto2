@@ -35,7 +35,7 @@
 #  define N_(String) (String)
 #endif
 
-#include "agfa.h"
+#include "commands.h"
 
 int
 camera_id (CameraText *id)
@@ -45,7 +45,13 @@ camera_id (CameraText *id)
 	return GP_OK;
 }
 
-struct model models[] = {
+
+struct {
+	char *name;
+	unsigned short idVendor;
+	unsigned short idProduct;
+	char serial;
+} models[] = {
         {"Agfa CL18",0x06bd,0x0403,0},
         {NULL,0,0,0}
 };
@@ -76,8 +82,12 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_exit (Camera *camera)
 {
-	if (camera->camlib_data) {
-		free (camera->camlib_data);
+	struct agfa_device *dev = camera->camlib_data;
+
+	if (dev) {
+		if (dev->file_list)
+			free (dev->file_list);
+		free (dev);
 		camera->camlib_data = NULL;
 	}
 
@@ -315,6 +325,8 @@ camera_init (Camera *camera)
 		if (ret < 0)
 			return (ret);
 		break;
+	case GP_PORT_SERIAL:
+		return (GP_ERROR_IO_SUPPORTED_SERIAL);
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
