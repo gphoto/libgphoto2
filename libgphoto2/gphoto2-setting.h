@@ -21,8 +21,6 @@
 #ifndef __GPHOTO2_SETTING_H__
 #define __GPHOTO2_SETTING_H__
 
-int load_settings (void);
-
 int gp_setting_set (char *id, char *key, char *value);
 int gp_setting_get (char *id, char *key, char *value);
 

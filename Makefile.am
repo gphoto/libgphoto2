@@ -9,7 +9,6 @@ EXTRA_DIST = @PACKAGE@.spec @PACKAGE@.spec.in \
 SUBDIRS = 			\
 	libgphoto2_port 	\
 	intl 			\
-	include 		\
 	libgphoto2 		\
 	camlibs 		\
 	frontends 		\

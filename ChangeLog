@@ -1,5 +1,10 @@
 2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include: Move everything from here ...
+	* libgphoto2: ... to here.
+
+2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2: Adapt to changes in libgphoto2_port
 
 2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
