@@ -173,7 +173,7 @@ int sierra_read_packet (Camera *camera, char *packet) {
 
 	int y, r=0, ret, done, length=0;
 	int blocksize, bytes_read;
-	char buf[4096], msg[4096];
+	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
 read_packet_again:
@@ -204,6 +204,8 @@ read_packet_again:
 			return (GP_ERROR);
 		}
 		bytes_read = gpio_read(fd->dev, packet, blocksize);
+
+
 		if (bytes_read == GPIO_ERROR) {
 			sierra_debug_print(fd, "  read error (packet type)");
 			return (GP_ERROR);
@@ -237,35 +239,16 @@ read_packet_again:
 			sierra_dump_packet(camera, packet);
 			return (sierra_valid_packet(camera, packet));
 		}
-		ret = gpio_read(fd->dev, &packet[bytes_read], length-bytes_read);
-		switch (ret) {
-		   case GPIO_ERROR:
-			return (GP_ERROR);
-			break;
-		   case GPIO_TIMEOUT:
-			goto read_packet_again;
-			break;
-		   default:
-			/* We're fine! */
-		}
-
-#if 0   
-	/* Wow. it likes reading chunks. */
 		for (y=bytes_read; y < length; y+=blocksize) {
 			ret = gpio_read(fd->dev, &packet[y], blocksize);
 			if (ret == GPIO_TIMEOUT) {
-				sprintf(msg, "   timeout! (%i)\n", y);
-				sierra_debug_print(fd, msg);
 				sierra_write_nak(camera);
 				goto read_packet_again;
 			}
 
-			if (ret ==GPIO_ERROR) {
-				sierra_debug_print(fd, "  read error (data)");
+			if (ret ==GPIO_ERROR)
 				return (GP_ERROR);
-			}
 		}
-#endif
 	}
 
 	sierra_dump_packet(camera, packet);
@@ -791,17 +774,25 @@ int sierra_file_count (Camera *camera) {
 int sierra_capture (Camera *camera, CameraFile *file) {
 
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	int r, done, retval;
-	char packet[4096], buf[8];	
+	int r, done, retval, picnum;
+	char packet[4096], buf[8];
 	unsigned char c;
-	int length;
 	struct tm *t;
 	time_t tt;
-		
+
+	/* Take a picture */
+	sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
+	packet[4] = 0x02;
+	packet[5] = 0x02;
+	packet[6] = 0x00;
+
+#if 0
+	/* Take a quick preview */
 	sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
 	packet[4] = 0x02;
 	packet[5] = 0x05;
 	packet[6] = 0x00;
+#endif
 
 	r=0; done=0;
 	while ((!done)&&(r++<RETRIES)) {
@@ -842,7 +833,19 @@ int sierra_capture (Camera *camera, CameraFile *file) {
 	if ((r >= RETRIES) || (c!=ENQ))
 		return (GP_ERROR);
 
-	
+	/* After picture is taken, register 4 is set to current picture */
+	if (sierra_get_int_register(camera, 4, &picnum)==GP_ERROR)
+		return (GP_ERROR);
+
+	/* Retrieve the just-taken picture */
+	if (sierra_get_string_register(camera, 14, picnum, file, NULL, NULL)==GP_ERROR)
+                return (GP_ERROR);
+#if 0
+	/* Retrieve the quick preview */
+	if (sierra_get_string_register(camera, 14, 0, file, NULL, NULL)==GP_ERROR)
+                return (GP_ERROR);
+#endif
+
 	tt = time(&tt);
 	t = gmtime(&tt);
 
@@ -853,7 +856,6 @@ int sierra_capture (Camera *camera, CameraFile *file) {
 	sprintf(file->name, "%04i%02i%02i-%02i%02i%02i.jpg", 
 			t->tm_year, t->tm_mon, t->tm_mday, 
 			t->tm_hour, t->tm_min, t->tm_sec);
- 	sierra_get_string_register (camera, 14, 0, file, NULL, &length);
 
 	return (GP_OK);
 }

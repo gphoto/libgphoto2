@@ -610,10 +610,18 @@ return (GP_ERROR);
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	SierraData *fd = (SierraData*)camera->camlib_data;
+	int retval;
+
+if (camera_start(camera)==GP_ERROR)
+return (GP_ERROR);
 
 	sierra_debug_print(fd, "Capturing image");
+	retval = sierra_capture(camera, file);
 
-	return(sierra_capture(camera, file));
+if (camera_stop(camera)==GP_ERROR)
+return (GP_ERROR);
+
+	return (retval);
 }
 
 int camera_summary (Camera *camera, CameraText *summary) {
