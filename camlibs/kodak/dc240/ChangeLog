@@ -1,3 +1,8 @@
+2004-06-16  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* dc240.h (TIMEOUT): fix bug 920532
+	http://www.gphoto.org/bugs/?id=920532
+
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
