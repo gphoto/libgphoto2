@@ -70,7 +70,7 @@ struct _CameraPrivateLibrary {
 };
 
 static int
-pdc320_id (CameraPort *port, const char **model)
+pdc320_id (GPPort *port, const char **model)
 {
 	int i;
 	unsigned char buf[32];
@@ -91,7 +91,7 @@ pdc320_id (CameraPort *port, const char **model)
 }
 
 static int
-pdc320_init (CameraPort *port)
+pdc320_init (GPPort *port)
 {
 	unsigned char buf[32];
 
@@ -121,7 +121,7 @@ pdc320_init (CameraPort *port)
 }
 
 static int
-pdc320_num (CameraPort *port)
+pdc320_num (GPPort *port)
 {
 	int num;
 	unsigned char buf[4];
@@ -146,7 +146,7 @@ pdc320_num (CameraPort *port)
 }
 
 static int
-pdc320_delete (CameraPort *port)
+pdc320_delete (GPPort *port)
 {
 	unsigned char buf[7];
 

@@ -66,7 +66,7 @@ calc_checksum (unsigned char *cmd, int len)
 }
 
 static int
-pdc700_read (CameraPort *port, unsigned char *cmd, int cmd_len,
+pdc700_read (GPPort *port, unsigned char *cmd, int cmd_len,
 	     unsigned char *buf, int *buf_len, int *status)
 {
 	unsigned char header[3], c;
@@ -115,7 +115,7 @@ pdc700_read (CameraPort *port, unsigned char *cmd, int cmd_len,
 }
 
 static int
-pdc700_baud (CameraPort *port, int baud)
+pdc700_baud (GPPort *port, int baud)
 {
 	unsigned char b;
 	unsigned char cmd[6];
@@ -148,7 +148,7 @@ pdc700_baud (CameraPort *port, int baud)
 }
 
 static int
-pdc700_init (CameraPort *port)
+pdc700_init (GPPort *port)
 {
 	int status, buf_len;
 	unsigned char cmd[5];
@@ -163,7 +163,7 @@ pdc700_init (CameraPort *port)
 }
 
 static int
-pdc700_picinfo (CameraPort *port, int n, int *size_thumb, int *size_pic)
+pdc700_picinfo (GPPort *port, int n, int *size_thumb, int *size_pic)
 {
 	int status, buf_len;
 	unsigned char cmd[7];
@@ -184,7 +184,7 @@ pdc700_picinfo (CameraPort *port, int n, int *size_thumb, int *size_pic)
 }
 
 static int
-pdc700_num (CameraPort *port, int *num, int *num_free)
+pdc700_num (GPPort *port, int *num, int *num_free)
 {
 	int status, buf_len;
 	unsigned char buf[2048];
@@ -204,7 +204,7 @@ pdc700_num (CameraPort *port, int *num, int *num_free)
 }
 
 static int
-pdc700_pic (CameraPort *port, int n, unsigned char **data, int *size,
+pdc700_pic (GPPort *port, int n, unsigned char **data, int *size,
 	    int thumb)
 {
 	unsigned char cmd[8];

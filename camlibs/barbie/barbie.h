@@ -108,13 +108,13 @@
 #define PICTURE_SIZE(n1, n2, n3, n4)	(n1*(n2+n3)+n4)
 
 /* Utility functions */
-void	barbie_packet_dump  (CameraPort *port, int direction, char *buf, int size);
-int	barbie_write_command(CameraPort *port, char *command, int size);
-int	barbie_read_response(CameraPort *port, char *response, int size);
-char*	barbie_read_data    (CameraPort *port, char *cmd, int cmd_size, int get_firmware, int *size);
+void	barbie_packet_dump  (GPPort *port, int direction, char *buf, int size);
+int	barbie_write_command(GPPort *port, char *command, int size);
+int	barbie_read_response(GPPort *port, char *response, int size);
+char*	barbie_read_data    (GPPort *port, char *cmd, int cmd_size, int get_firmware, int *size);
 
-char*	barbie_read_firmware(CameraPort *port);
-char*	barbie_read_picture (CameraPort *port, int picture_number, int get_thumbnail, int *size);
-int	barbie_exchange     (CameraPort *port, char *cmd, int cmd_size, char *resp, int resp_size);
-int	barbie_ping         (CameraPort *port);
-int     barbie_file_count (CameraPort *port);
+char*	barbie_read_firmware(GPPort *port);
+char*	barbie_read_picture (GPPort *port, int picture_number, int get_thumbnail, int *size);
+int	barbie_exchange     (GPPort *port, char *cmd, int cmd_size, char *resp, int resp_size);
+int	barbie_ping         (GPPort *port);
+int     barbie_file_count (GPPort *port);

@@ -110,12 +110,12 @@ gp_camera_new (Camera **camera)
 	memset (*camera, 0, sizeof (Camera));
 
         /* Initialize the members */
-        (*camera)->port_info = malloc (sizeof(CameraPortInfo));
+        (*camera)->port_info = malloc (sizeof(GPPortInfo));
 	if (!(*camera)->port_info) {
 		gp_camera_free (*camera);
 		return (GP_ERROR_NO_MEMORY);
 	}
-	memset ((*camera)->port_info, 0, sizeof (CameraPortInfo));
+	memset ((*camera)->port_info, 0, sizeof (GPPortInfo));
 	(*camera)->port_info->type = GP_PORT_NONE;
 
         (*camera)->functions = malloc(sizeof(CameraFunctions));
@@ -231,7 +231,7 @@ gp_camera_unset_port (Camera *camera)
 }
 
 static int
-gp_camera_set_port (Camera *camera, CameraPortInfo *info)
+gp_camera_set_port (Camera *camera, GPPortInfo *info)
 {
 	GPPortSettings settings;
 	CHECK_NULL (camera);
@@ -242,7 +242,7 @@ gp_camera_set_port (Camera *camera, CameraPortInfo *info)
 	 */
 	CHECK_RESULT (gp_camera_unset_port (camera));
 	CHECK_RESULT (gp_port_new (&camera->port, info->type));
-	memcpy (camera->port_info, info, sizeof (CameraPortInfo));
+	memcpy (camera->port_info, info, sizeof (GPPortInfo));
 
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
@@ -271,7 +271,7 @@ int
 gp_camera_set_port_path (Camera *camera, const char *port_path)
 {
 	int x, count;
-	CameraPortInfo info;
+	GPPortInfo info;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port path to '%s'...",
 		port_path);
@@ -321,7 +321,7 @@ int
 gp_camera_set_port_name (Camera *camera, const char *port_name)
 {
 	int x, count;
-	CameraPortInfo info;
+	GPPortInfo info;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port name to '%s'",
 		port_name);

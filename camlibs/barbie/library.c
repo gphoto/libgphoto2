@@ -20,7 +20,7 @@ char packet_2[5]                = {0x02, 0x01, 0x01, 0x01, 0x03};
    =======================================================================
 */
 
-void barbie_packet_dump(CameraPort *port, int direction, char *buf, int size) {
+void barbie_packet_dump(GPPort *port, int direction, char *buf, int size) {
 	int x;
 
 	if (direction == 0)
@@ -36,7 +36,7 @@ void barbie_packet_dump(CameraPort *port, int direction, char *buf, int size) {
 	gp_debug_printf (GP_DEBUG_LOW, "barbie", "\n");
 }
 
-int barbie_write_command(CameraPort *port, char *command, int size) {
+int barbie_write_command(GPPort *port, char *command, int size) {
 
 	int x;
 
@@ -45,7 +45,7 @@ int barbie_write_command(CameraPort *port, char *command, int size) {
 	return (x == GP_OK);
 }
 
-int barbie_read_response(CameraPort *port, char *response, int size) {
+int barbie_read_response(GPPort *port, char *response, int size) {
 
 	int x;
 	char ack = 0;
@@ -64,7 +64,7 @@ int barbie_read_response(CameraPort *port, char *response, int size) {
 	return (x > 0);
 }
 
-int barbie_exchange (CameraPort *port, char *cmd, int cmd_size, char *resp, int resp_size) {
+int barbie_exchange (GPPort *port, char *cmd, int cmd_size, char *resp, int resp_size) {
 
 	int count = 0;
 
@@ -83,7 +83,7 @@ int barbie_exchange (CameraPort *port, char *cmd, int cmd_size, char *resp, int 
 	return (0);
 }
 
-int barbie_ping(CameraPort *port) {
+int barbie_ping(GPPort *port) {
 
 	char cmd[4], resp[4];
 
@@ -102,7 +102,7 @@ int barbie_ping(CameraPort *port) {
 	return (1);
 }
 
-int barbie_file_count (CameraPort *port) {
+int barbie_file_count (GPPort *port) {
 
         char cmd[4], resp[4];
 
@@ -119,7 +119,7 @@ int barbie_file_count (CameraPort *port) {
         return (resp[DATA1_BYTE]);
 }
 
-char *barbie_read_firmware(CameraPort *port) {
+char *barbie_read_firmware(GPPort *port) {
 
 	char cmd[4];
 	int x;
@@ -131,7 +131,7 @@ char *barbie_read_firmware(CameraPort *port) {
 	return (barbie_read_data(port, cmd, 4, BARBIE_DATA_FIRMWARE, &x));
 }
 
-char *barbie_read_picture(CameraPort *port, int picture_number, int get_thumbnail, int *size) {
+char *barbie_read_picture(GPPort *port, int picture_number, int get_thumbnail, int *size) {
 
 	char cmd[4], resp[4];
 
@@ -153,7 +153,7 @@ char *barbie_read_picture(CameraPort *port, int picture_number, int get_thumbnai
 	return (barbie_read_data(port, cmd, 4, BARBIE_DATA_PICTURE, size));
 }
 
-char *barbie_read_data (CameraPort *port, char *cmd, int cmd_size, int data_type, int *size) {
+char *barbie_read_data (GPPort *port, char *cmd, int cmd_size, int data_type, int *size) {
 
 	char c, resp[4];
 	int n1, n2, n3, n4, x, y, z;

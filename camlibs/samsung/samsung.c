@@ -49,7 +49,7 @@
 #define CHECK_RESULT(result) {int r = result; if (r < 0) return (r);}
 
 static int
-SDSC_send (CameraPort *port, unsigned char command)
+SDSC_send (GPPort *port, unsigned char command)
 {
 	CHECK_RESULT (gp_port_write (port, &command, 1));
 
@@ -57,7 +57,7 @@ SDSC_send (CameraPort *port, unsigned char command)
 }
 
 static int
-SDSC_receive (CameraPort *port, unsigned char *buf, int length)
+SDSC_receive (GPPort *port, unsigned char *buf, int length)
 {
 	char tmp[3];
 	int i, result = GP_OK;
@@ -105,7 +105,7 @@ is_null (unsigned char *buf)
 }
 
 static int
-SDSC_initialize (CameraPort *port)
+SDSC_initialize (GPPort *port)
 {
 	unsigned char buffer[SDSC_INFOSIZE];
 

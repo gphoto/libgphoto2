@@ -45,7 +45,7 @@ static struct {
 };
 
 static int
-pdc640_read_packet (CameraPort *port, char *buf, int buf_size)
+pdc640_read_packet (GPPort *port, char *buf, int buf_size)
 {
 	int i;
 	char checksum, c;
@@ -74,7 +74,7 @@ pdc640_read_packet (CameraPort *port, char *buf, int buf_size)
 }
 
 static int
-pdc640_transmit (CameraPort *port, char *cmd, int cmd_size,
+pdc640_transmit (GPPort *port, char *cmd, int cmd_size,
 				   char *buf, int buf_size)
 {
 	char c;
@@ -104,7 +104,7 @@ pdc640_transmit (CameraPort *port, char *cmd, int cmd_size,
 }
 
 static int
-pdc640_transmit_pic (CameraPort *port, char cmd, int width, int thumbnail,
+pdc640_transmit_pic (GPPort *port, char cmd, int width, int thumbnail,
 		     char *buf, int buf_size)
 {
 	char cmd1[] = {0x61, cmd};
@@ -162,7 +162,7 @@ pdc640_transmit_pic (CameraPort *port, char cmd, int width, int thumbnail,
 }
 
 static int
-pdc640_transmit_packet (CameraPort *port, char cmd, char *buf, int buf_size)
+pdc640_transmit_packet (GPPort *port, char cmd, char *buf, int buf_size)
 {
 	char cmd1[] = {0x61, cmd};
 	char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x01};
@@ -175,7 +175,7 @@ pdc640_transmit_packet (CameraPort *port, char cmd, char *buf, int buf_size)
 }
 
 static int
-pdc640_ping_low (CameraPort *port)
+pdc640_ping_low (GPPort *port)
 {
 	char cmd[] = {0x01};
 
@@ -185,7 +185,7 @@ pdc640_ping_low (CameraPort *port)
 }
 
 static int
-pdc640_ping_high (CameraPort *port)
+pdc640_ping_high (GPPort *port)
 {
 	char cmd[] = {0x41};
 
@@ -195,7 +195,7 @@ pdc640_ping_high (CameraPort *port)
 }
 
 static int
-pdc640_speed (CameraPort *port, int speed)
+pdc640_speed (GPPort *port, int speed)
 {
 	char cmd[] = {0x69, 0x00};
 
@@ -207,7 +207,7 @@ pdc640_speed (CameraPort *port, int speed)
 
 #if 0
 static int
-pdc640_unknown5 (CameraPort *port)
+pdc640_unknown5 (GPPort *port)
 {
 	char cmd[] = {0x05};
 	char buf[3];
@@ -222,7 +222,7 @@ pdc640_unknown5 (CameraPort *port)
 
 #if 0
 static int
-pdc640_unknown20 (CameraPort* port)
+pdc640_unknown20 (GPPort* port)
 {
 	char buf[128];
 
@@ -233,7 +233,7 @@ pdc640_unknown20 (CameraPort* port)
 #endif
 
 static int
-pdc640_caminfo (CameraPort *port, int *numpic)
+pdc640_caminfo (GPPort *port, int *numpic)
 {
 	char buf[1280];
 
@@ -244,7 +244,7 @@ pdc640_caminfo (CameraPort *port, int *numpic)
 }
 
 static int
-pdc640_setpic (CameraPort *port, char n)
+pdc640_setpic (GPPort *port, char n)
 {
 	char cmd[2] = {0xf6, n};
 	char buf[8];
@@ -255,7 +255,7 @@ pdc640_setpic (CameraPort *port, char n)
 }
 
 static int
-pdc640_picinfo (CameraPort *port, char n,
+pdc640_picinfo (GPPort *port, char n,
 		int *size_pic,   int *width_pic,   int *height_pic,
 		int *size_thumb, int *width_thumb, int *height_thumb)
 {
@@ -411,7 +411,7 @@ pdc640_deltadecode (int width, int height, char **rawdata, int *rawsize)
 }
 
 static int
-pdc640_getpic (CameraPort *port, int n, int thumbnail, int justraw,
+pdc640_getpic (GPPort *port, int n, int thumbnail, int justraw,
 		char **data, int *size)
 {
 	char cmd, ppmheader[100];
@@ -508,7 +508,7 @@ pdc640_getpic (CameraPort *port, int n, int thumbnail, int justraw,
 }
 
 static int
-pdc640_delpic (CameraPort *port)
+pdc640_delpic (GPPort *port)
 {
 	char cmd[2] = {0x59, 0x01};
 
@@ -518,7 +518,7 @@ pdc640_delpic (CameraPort *port)
 }
 
 static int
-pdc640_takepic (CameraPort *port)
+pdc640_takepic (GPPort *port)
 {
 	char cmd[2] = {0x2D, 0x00};
 
