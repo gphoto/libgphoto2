@@ -276,8 +276,8 @@ Saving file as MVI_5418.AVI                                                     
         For security reasons, we strongly recommend not to run any 
         <xref linkend="libgphoto2"/>
         frontend as root. So you have to set up the permissions of your camera
-        device accordingly. This is described in chapter 2 - Setting up
-        permissions. 
+        device accordingly. This is described in the following two sections,
+	<xref linkend="perms-rs232"/> and <xref linkend="perms-usb"/>.
       </para>
       <para>
         Then you can run your frontend. For the command line 
@@ -288,7 +288,7 @@ Saving file as MVI_5418.AVI                                                     
       </para>    
     </section>
 
-    <section>
+    <section id="perms-rs232">
       <title>Setting up permissions for serial (<acronym>RS232</acronym>) ports</title>
       <note>
         I don't have any experience with serial ports for user
@@ -300,7 +300,7 @@ Saving file as MVI_5418.AVI                                                     
       </para>    
     </section>
 
-    <section>
+    <section id="perms-usb">
       <title>Setting up permissions for <acronym>USB</acronym> ports</title>
       <para>
         As <acronym>USB</acronym> is designed for hotplugging of
@@ -334,12 +334,14 @@ Saving file as MVI_5418.AVI                                                     
         </para>
 
 	<para>We will not cover basic <acronym>USB</acronym> setup
-	  here, for how to get <acronym>USB</acronym> working on your
+	  here. For how to get <acronym>USB</acronym> working on your
 	  hardware and your system at all, we'd like to refer you to
 	  <ulink url="http://www.linux-usb.org/USB-guide/">http://www.linux-usb.org/USB-guide/</ulink>
 	  and especially
 	  <ulink url="http://www.linux-usb.org/USB-guide/c122.html">http://www.linux-usb.org/USB-guide/c122.html</ulink>
-	  where this is described in a better way than we could do.
+	  .
+	  This page explains the USB basics in a better way than we
+	  could do.
 	</para>
 
         <para>
