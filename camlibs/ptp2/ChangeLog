@@ -1,3 +1,8 @@
+2005-01-23  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c, ptp.h: Added ptp_event_issupported helper
+          function.
+
 2005-01-21  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c:

@@ -1328,6 +1328,19 @@ ptp_operation_issupported(PTPParams* params, uint16_t operation)
 
 
 int
+ptp_event_issupported(PTPParams* params, uint16_t event)
+{
+	int i=0;
+
+	for (;i<params->deviceinfo.EventsSupported_len;i++) {
+		if (params->deviceinfo.EventsSupported[i]==event)
+			return 1;
+	}
+	return 0;
+}
+
+
+int
 ptp_property_issupported(PTPParams* params, uint16_t property)
 {
 	int i=0;
