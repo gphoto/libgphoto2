@@ -572,7 +572,7 @@ sony_item_count(Camera * camera, unsigned char *from, int from_len)
 		if (rc == GP_OK) {
 			rc = sony_converse(camera, &dp, SendImageCount, 3);
 			if (rc == GP_OK) {
-				int nr = (int) dp.buffer[5];
+				int nr = dp.buffer[5] | (dp.buffer[4]<<8);
 				GP_DEBUG ("count = %d", nr);
 				return nr;
 			}
@@ -633,8 +633,8 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 			if (file_type == SONY_FILE_THUMBNAIL) {
 				sc = 0x247;
 
-				// FIXME
-				SelectImage[4] = imageid;
+				SelectImage[3] = (imageid >> 8);
+				SelectImage[4] = imageid & 0xff;
 				sony_converse(camera, &dp, SelectImage, 7);
 
 				GP_DEBUG ("XYZ %11.11s", dp.buffer + 5);
@@ -665,7 +665,7 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 			} else {
 				sc = 11;
 
-				// FIXME
+				SendImage[3] = (imageid >> 8);
 				SendImage[4] = imageid;
 				sony_converse(camera, &dp, SendImage, 7);
 
@@ -750,8 +750,8 @@ int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info, GPConte
 		return GP_ERROR_CANCEL;
 	}
 
-	// FIXME
-	SelectImage[4] = imageid;
+	SelectImage[3] = (imageid >> 8);
+	SelectImage[4] =  imageid & 0xff;
 	rc = sony_converse(camera, &dp, SelectImage, 7);
 	if (rc == GP_OK) {
 		l = (l << 8) | dp.buffer[16];

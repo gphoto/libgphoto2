@@ -1,3 +1,7 @@
+2002-05-07  Khalid Akbar <khalid@homechoice.co.uk>
+
+	* *.[ch]: Added support for more than 256 images and "Sony TRV-20E".
+
 2002-03-27  Raymond Penners  <raymond@dotsphinx.com>
 
 	* *.[ch]: Made driver GPContext aware (i.e., operations can now be

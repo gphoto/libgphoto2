@@ -23,6 +23,7 @@
 #define SONY_CAMERA_ID "sonydscf55"
 #define SONY_MODEL_MSAC_SR1 "Sony MSAC-SR1"
 #define SONY_MODEL_DCR_PC100 "Sony DCR-PC100"
+#define SONY_MODEL_TRV_20E   "Sony TRV-20E"
 #define SONY_MODEL_DSC_F55 "Sony DSC-F55"
 
 #define SONY_FILE_NAME_FMT "dsc%05d.jpg"

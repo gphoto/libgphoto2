@@ -42,6 +42,7 @@ int camera_abilities(CameraAbilitiesList * list)
 	static const char *models[] = {
 		SONY_MODEL_DSC_F55,
 		SONY_MODEL_MSAC_SR1,
+		SONY_MODEL_TRV_20E,
 		SONY_MODEL_DCR_PC100
 	};
 	int i;
