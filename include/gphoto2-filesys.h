@@ -24,6 +24,7 @@
 #define __GPHOTO2_FILESYS_H__
 
 #include <gphoto2-list.h>
+#include <gphoto2-camera.h>
 
 /* You don't really want to know what's inside, do you? */
 typedef struct _CameraFilesystem CameraFilesystem;
@@ -59,6 +60,20 @@ int gp_filesystem_list_files   (CameraFilesystem *fs, const char *folder,
 				CameraList *list);
 int gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 				CameraList *list);
+
+/* File information */
+typedef int (*CameraFilesystemInfoFunc) (CameraFilesystem *fs,
+					 const char *folder,
+					 const char *filename,
+					 CameraFileInfo *info, void *data);
+int gp_filesystem_set_info_funcs (CameraFilesystem *fs,
+				  CameraFilesystemInfoFunc get_info_func,
+				  CameraFilesystemInfoFunc set_info_func,
+				  void *data);
+int gp_filesystem_get_info       (CameraFilesystem *fs, const char *folder,
+				  const char *filename, CameraFileInfo *info);
+int gp_filesystem_set_info       (CameraFilesystem *fs, const char *folder,
+				  const char *filename, CameraFileInfo *info);
 
 int gp_filesystem_dump         (CameraFilesystem *fs);
 

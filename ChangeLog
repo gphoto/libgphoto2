@@ -1,5 +1,13 @@
 2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-filesys.h:
+	* libgphoto2/filesys.c: Implement caching for file information.
+	* tests/test-filesys.c: Test it here.
+	* camlibs/konica/library.c: Use gp_filesystem_[get,set]_info. This
+	stuff is really incredibly fast.
+
+2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Daniel Resare <noa@metamatrix.se> suggested using AC_CONFIG_SUBDIRS:
 
 	* configure.in: Use AC_CONFIG_SUBDIRS(libgphoto2_port).

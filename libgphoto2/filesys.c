@@ -29,6 +29,8 @@
 
 typedef struct {
 	char name [128];
+	int info_dirty;
+	CameraFileInfo info;
 } CameraFilesystemFile;
 
 typedef struct {
@@ -41,6 +43,10 @@ typedef struct {
 struct _CameraFilesystem {
 	int count;
 	CameraFilesystemFolder *folder;
+
+	CameraFilesystemInfoFunc get_info_func;
+	CameraFilesystemInfoFunc set_info_func;
+	void *info_data;
 };
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
@@ -58,6 +64,8 @@ gp_filesystem_new (CameraFilesystem **fs)
 
         (*fs)->folder = NULL;
         (*fs)->count = 0;
+	(*fs)->set_info_func = NULL;
+	(*fs)->get_info_func = NULL;
 
         return (GP_OK);
 }
@@ -172,6 +180,7 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	fs->folder[x].file = new;
 	fs->folder[x].count++;
 	strcpy (fs->folder[x].file[fs->folder[x].count - 1].name, filename);
+	fs->folder[x].file[fs->folder[x].count - 1].info_dirty = 1;
 
         return (GP_OK);
 }
@@ -499,4 +508,71 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 			}
 
 	return (GP_ERROR_FILE_NOT_FOUND);
+}
+
+int
+gp_filesystem_set_info_funcs (CameraFilesystem *fs,
+			      CameraFilesystemInfoFunc get_info_func,
+			      CameraFilesystemInfoFunc set_info_func,
+			      void *data)
+{
+	CHECK_NULL (fs);
+
+	fs->get_info_func = get_info_func;
+	fs->set_info_func = set_info_func;
+	fs->info_data = data;
+
+	return (GP_OK);
+}
+
+int
+gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
+			const char *filename, CameraFileInfo *info)
+{
+	int x, y;
+
+	CHECK_NULL (fs && folder && filename && info);
+
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting info for '%s' in "
+			 "folder '%s'...", filename, folder);
+
+	if (!fs->get_info_func)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	/* Search folder and file and get info if needed */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+	CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename));
+	if (fs->folder[x].file[y].info_dirty) {
+		CHECK_RESULT (fs->get_info_func (fs, folder, filename, 
+						&fs->folder[x].file[y].info,
+						fs->info_data));
+		fs->folder[x].file[y].info_dirty = 0;
+	}
+
+	memcpy (info, &fs->folder[x].file[y].info, sizeof (CameraFileInfo));
+
+	return (GP_OK);
+}
+
+int
+gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
+			const char *filename, CameraFileInfo *info)
+{
+	int x, y;
+
+	CHECK_NULL (fs && folder && filename && info);
+
+	if (!fs->set_info_func)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	/* Search folder and file and set info */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+	CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename)); 
+	CHECK_RESULT (fs->set_info_func (fs, folder, filename, info,
+					 fs->info_data));
+
+	memcpy (&fs->folder[x].file[y].info, info, sizeof (CameraFileInfo));
+	fs->folder[x].file[y].info_dirty = 0;
+
+	return (GP_OK);
 }

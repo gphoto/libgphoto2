@@ -87,10 +87,10 @@ KonicaCamera konica_cameras []=
 /* Type definitions */
 /********************/
 typedef struct {
-        gp_port*                device;
-	gboolean                image_id_long;
-	CameraFilesystem*       filesystem;
-} konica_data_t;
+        gp_port          *device;
+	gboolean          image_id_long;
+	CameraFilesystem *filesystem;
+} KonicaData;
 			
 /**************/
 /* Prototypes */
@@ -132,14 +132,14 @@ update_filesystem (Camera* camera)
         guint           exif_size;
         gboolean        protected;
         gulong          image_id;
-        konica_data_t*  kd;
+        KonicaData*  kd;
         gchar*          filename;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica",
 			 "*** Entering update_filesystem ***");
         g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
 
-        kd = (konica_data_t *) camera->camlib_data;
+        kd = (KonicaData *) camera->camlib_data;
 	gp_filesystem_format (kd->filesystem);
 
 	CHECK (k_get_status (kd->device, &self_test_result,
@@ -174,12 +174,12 @@ update_filesystem (Camera* camera)
 static gint
 erase_all_unprotected_images (Camera* camera, CameraWidget* widget)
 {
-        konica_data_t*  konica_data;
+        KonicaData*  konica_data;
         gint            not_erased;
         gint            result;
         gchar*          tmp;
 
-        konica_data = (konica_data_t *) camera->camlib_data;
+        konica_data = (KonicaData *) camera->camlib_data;
 
         result = k_erase_all (konica_data->device, &not_erased);
         if ((result == GP_OK) && (not_erased > 0)) {
@@ -357,13 +357,86 @@ init_serial_connection (Camera *camera, gp_port *device)
 	return (GP_OK);
 }
 
+static int
+set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
+	       CameraFileInfo *info, void *data)
+{
+	Camera *camera = data;
+	KonicaData *kd = camera->camlib_data;
+	char tmp[7];
+	gboolean protected;
+	gulong image_id;
+
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering set_info_func "
+						 "***");
+
+	if (info->file.fields & (GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE |
+				 GP_FILE_INFO_NAME))
+		return (GP_ERROR_NOT_SUPPORTED);
+	if (info->preview.fields & (GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE |
+				    GP_FILE_INFO_NAME |
+				    GP_FILE_INFO_PERMISSIONS))
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	/* Permissions? */
+	if (info->file.fields & GP_FILE_INFO_PERMISSIONS) {
+		strncpy (tmp, file, 6);
+		tmp[6] = '\0';
+		image_id = atol (tmp);
+		if (info->file.permissions & GP_FILE_PERM_DELETE)
+			protected = FALSE;
+		else
+			protected = TRUE;
+		CHECK (k_set_protect_status (kd->device, kd->image_id_long,
+					     image_id, protected));
+	}
+
+	return (GP_OK);
+}
+
+static int
+get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
+	       CameraFileInfo *info, void *data)
+{
+	Camera *camera = data;
+	KonicaData *kd = camera->camlib_data;
+	gulong image_id;
+	guint information_buffer_size;
+	guint exif_size;
+	guchar *information_buffer = NULL;
+	gboolean protected;
+
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering get_info_func "
+						 "***");
+
+	CHECK (k_get_image_information (kd->device, kd->image_id_long, 
+			gp_filesystem_number (kd->filesystem, folder, file), 
+			&image_id, &exif_size, &protected,
+			&information_buffer, &information_buffer_size));
+	g_free (information_buffer);
+
+	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	info->preview.size = information_buffer_size;
+	strcpy (info->preview.type, GP_MIME_JPEG);
+
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS |
+			    GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
+	info->file.size = exif_size;
+	info->file.permissions = GP_FILE_PERM_READ;
+	if (!protected) info->file.permissions = GP_FILE_PERM_DELETE;
+	strcpy (info->file.type, GP_MIME_JPEG);
+	strcpy (info->file.name, file);
+
+	return (GP_OK);
+}
+
 gint 
 camera_init (Camera* camera)
 {
 	gint i;
 	gboolean image_id_long;
 	gint vendor, product, inep, outep;
-	konica_data_t *konica_data;
+	KonicaData *kd;
 	gp_port_settings settings;
 	gp_port *device;
 
@@ -447,11 +520,15 @@ camera_init (Camera* camera)
 	}
 
 	/* Store some data we constantly need. */
-	konica_data = g_new (konica_data_t, 1);
-	camera->camlib_data = konica_data;
-	gp_filesystem_new (&konica_data->filesystem);
-	konica_data->device = device;
-	konica_data->image_id_long = image_id_long;
+	kd = g_new (KonicaData, 1);
+	camera->camlib_data = kd;
+
+	gp_filesystem_new (&kd->filesystem);
+	gp_filesystem_set_info_funcs (kd->filesystem, get_info_func,
+				      set_info_func, camera);
+
+	kd->device = device;
+	kd->image_id_long = image_id_long;
 
 	update_filesystem (camera);
 
@@ -462,11 +539,11 @@ camera_init (Camera* camera)
 gint
 camera_exit (Camera* camera)
 {
-        konica_data_t* 	konica_data;
+        KonicaData* 	konica_data;
 
 	g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
 	
-	konica_data = (konica_data_t *) camera->camlib_data;
+	konica_data = (KonicaData *) camera->camlib_data;
 	if (!konica_data)
 		return (GP_OK);
 	
@@ -487,11 +564,11 @@ camera_exit (Camera* camera)
 gint
 camera_folder_list_folders (Camera* camera, const gchar* folder, CameraList* list)
 {
-	konica_data_t*  kd;
+	KonicaData*  kd;
 
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 
-	kd = (konica_data_t *) camera->camlib_data;
+	kd = (KonicaData *) camera->camlib_data;
 	
 	return (gp_filesystem_list_folders (kd->filesystem, folder, list));
 }
@@ -500,13 +577,13 @@ gint
 camera_folder_delete_all (Camera* camera, const gchar* folder)
 {
 	gint		result;
-	konica_data_t*	konica_data;
+	KonicaData*	konica_data;
 	guint		not_erased = 0;
 	gchar*		tmp;
 	
 	g_return_val_if_fail (camera,	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (konica_data = (konica_data_t *) camera->camlib_data, GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (konica_data = (KonicaData *) camera->camlib_data, GP_ERROR_BAD_PARAMETERS);
 
 	if (strcmp (folder, "/")) return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
@@ -525,11 +602,11 @@ camera_folder_delete_all (Camera* camera, const gchar* folder)
 gint 
 camera_folder_list_files (Camera* camera, const gchar* folder, CameraList* list)
 {
-	konica_data_t*	kd;
+	KonicaData*	kd;
 
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 	
-	kd = (konica_data_t *) camera->camlib_data;
+	kd = (KonicaData *) camera->camlib_data;
 
 	return (gp_filesystem_list_files (kd->filesystem, folder, list));
 }
@@ -541,7 +618,7 @@ camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
 {
 	gulong 		image_id;
 	gchar*		image_id_string;
-	konica_data_t*	kd;
+	KonicaData*	kd;
 	char *data = NULL;
 	long int size;
 
@@ -556,7 +633,7 @@ camera_file_get (Camera* camera, const gchar* folder, const gchar* filename,
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** file:   %s", filename);
 
-	kd = (konica_data_t *) camera->camlib_data;
+	kd = (KonicaData *) camera->camlib_data;
 
 	/* Check if we can get the image id from the filename. */
 	image_id_string = g_strndup (filename, 6);
@@ -592,7 +669,7 @@ camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 {
 	gchar*		tmp;
 	gulong 		image_id; 
-	konica_data_t*	kd;
+	KonicaData*	kd;
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_delete ***");
         g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
@@ -601,7 +678,7 @@ camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 
 	if (strcmp (folder, "/")) return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
-	kd = (konica_data_t *) camera->camlib_data;
+	kd = (KonicaData *) camera->camlib_data;
 
 	/* Check if we can get the image id from the filename. */
 	g_return_val_if_fail (filename[0] != '?', GP_ERROR);
@@ -629,12 +706,12 @@ camera_summary (Camera* camera, CameraText* summary)
 	guchar 		testing_software_version_minor;
 	gchar*		name = NULL;
 	gchar*		manufacturer = NULL;
-        konica_data_t*	kd;
+        KonicaData*	kd;
 
         g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
         g_return_val_if_fail (summary, 	GP_ERROR_BAD_PARAMETERS);
 
-        kd = (konica_data_t *) camera->camlib_data;
+        kd = (KonicaData *) camera->camlib_data;
 	CHECK (k_get_information (kd->device, &model, &serial_number, 
 		&hardware_version_major, &hardware_version_minor, 
 		&software_version_major, &software_version_minor, 
@@ -660,7 +737,7 @@ camera_summary (Camera* camera, CameraText* summary)
 gint
 camera_capture_preview (Camera* camera, CameraFile* file)
 {
-	konica_data_t*	kd;
+	KonicaData*	kd;
 	char *data;
 	long int size;
 
@@ -669,7 +746,7 @@ camera_capture_preview (Camera* camera, CameraFile* file)
 	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (file,     GP_ERROR_BAD_PARAMETERS);
 
-	kd = (konica_data_t *) camera->camlib_data;
+	kd = (KonicaData *) camera->camlib_data;
 	CHECK (k_get_preview (kd->device, TRUE, (guchar**) &data,
 			      (guint*) &size));
 	gp_file_set_data_and_size (file, data, size);
@@ -680,7 +757,7 @@ camera_capture_preview (Camera* camera, CameraFile* file)
 gint 
 camera_capture (Camera* camera, gint type, CameraFilePath* path)
 {
-	konica_data_t*	kd;
+	KonicaData*	kd;
 	gulong 		image_id;
 	gint 		exif_size;
 	guchar*		information_buffer = NULL;
@@ -693,7 +770,7 @@ camera_capture (Camera* camera, gint type, CameraFilePath* path)
 	g_return_val_if_fail (type == GP_OPERATION_CAPTURE_IMAGE, GP_ERROR_NOT_SUPPORTED);
 	g_return_val_if_fail (path,	GP_ERROR_BAD_PARAMETERS);
 
-        kd = (konica_data_t *) camera->camlib_data;
+        kd = (KonicaData *) camera->camlib_data;
 
 	/* Take the picture. */
 	CHECK (k_take_picture (kd->device, kd->image_id_long, &image_id, 
@@ -743,81 +820,18 @@ gint
 camera_file_get_info (Camera* camera, const gchar* folder, const gchar* file,
 		      CameraFileInfo* info)
 {
-	konica_data_t* 	kd;
-	gulong		image_id;
-	guint		information_buffer_size;
-	guint		exif_size;
-	guchar*		information_buffer = NULL;
-	gboolean	protected;
+	KonicaData *kd = camera->camlib_data;
 
-	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (info, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (file,	GP_ERROR_BAD_PARAMETERS);
-	
-	kd = (konica_data_t*) camera->camlib_data;
-	g_return_val_if_fail (kd, GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
-
-	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_info ***");
-
-	CHECK (k_get_image_information (kd->device, kd->image_id_long, 
-		gp_filesystem_number (kd->filesystem, folder, file), 
-		&image_id, &exif_size, &protected,
-		&information_buffer, &information_buffer_size));
-	
-	g_free (information_buffer);
-
-	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
-	info->preview.size = information_buffer_size;
-	strcpy (info->preview.type, "image/jpeg");
-
-	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS |
-			    GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
-	info->file.size = exif_size;
-	info->file.permissions = GP_FILE_PERM_READ;
-	if (!protected) info->file.permissions = GP_FILE_PERM_DELETE;
-	strcpy (info->file.type, "image/jpeg");
-	strcpy (info->file.name, file);
-
-	gp_debug_printf (GP_DEBUG_LOW, "konica",
-			 "*** Leaving camera_file_get_info ***");
-	return (GP_OK);
+	return (gp_filesystem_get_info (kd->filesystem, folder, file, info));
 }
 
 gint
 camera_file_set_info (Camera* camera, const gchar* folder, const gchar* file,
 		      CameraFileInfo* info)
 {
-	konica_data_t*	kd;
-	gboolean	protected;
-	gulong		image_id;
-	gchar*		tmp;
+	KonicaData *kd = camera->camlib_data;
 
-	kd = (konica_data_t*) camera->camlib_data;
-
-	if (info->file.fields & (GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE |
-				 GP_FILE_INFO_NAME))
-		return (GP_ERROR_NOT_SUPPORTED);
-	if (info->preview.fields & (GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE |
-				    GP_FILE_INFO_NAME |
-				    GP_FILE_INFO_PERMISSIONS))
-		return (GP_ERROR_NOT_SUPPORTED);
-
-	/* Permissions? */
-	if (info->file.fields & GP_FILE_INFO_PERMISSIONS) {
-		tmp = g_strndup (file, 6);
-		image_id = atol (tmp);
-		g_free (tmp);
-		if (info->file.permissions & GP_FILE_PERM_DELETE)
-			protected = FALSE;
-		else
-			protected = TRUE;
-		CHECK (k_set_protect_status (kd->device, kd->image_id_long,
-					     image_id, protected));
-	}
-	
-	return (GP_OK);
+	return (gp_filesystem_set_info (kd->filesystem, folder, file, info));
 }
 
 int
@@ -874,7 +888,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
         guchar 		exposure;
         guint 		total_pictures;
         guint 		total_strobes;
-	konica_data_t*	kd;
+	KonicaData*	kd;
 	gint		year_4_digits;
 	struct tm	tm_struct;
 	time_t		t;
@@ -885,7 +899,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
 	g_return_val_if_fail (window, 	GP_ERROR_BAD_PARAMETERS);
 
 	/* Get the current settings. */
-	kd = (konica_data_t *) camera->camlib_data;
+	kd = (KonicaData *) camera->camlib_data;
 	CHECK (k_get_status (kd->device, &self_test_result, &power_level,
                 &power_source, &card_status, &display, &card_size, &pictures,
                 &pictures_left, &year, &month, &day, &hour, &minute, &second,
@@ -1085,7 +1099,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
         guchar*		data;
         gulong 		data_size;
 	guchar 		focus_self_timer = 0;
-        konica_data_t*	kd;
+        KonicaData*	kd;
 	gint		i;
 	gfloat		f;
 	gchar*		c;
@@ -1096,7 +1110,7 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (window, GP_ERROR_BAD_PARAMETERS);
 
-        kd = (konica_data_t *) camera->camlib_data;
+        kd = (KonicaData *) camera->camlib_data;
 	g_return_val_if_fail (kd, GP_ERROR_BAD_PARAMETERS);
 
         /************************/
@@ -1308,7 +1322,7 @@ gboolean localization_file_read (Camera *camera, gchar *file_name, guchar **data
 	gchar f;
 	guchar c[] = "\0\0";
 	gulong line_number;
-	konica_data_t *konica_data;
+	KonicaData *konica_data;
 	guchar checksum;
 	gulong fcs;
 	guint d;
@@ -1320,7 +1334,7 @@ gboolean localization_file_read (Camera *camera, gchar *file_name, guchar **data
 	g_return_val_if_fail (*data == NULL, FALSE);
 	g_return_val_if_fail (data_size != NULL, FALSE);
 
-	konica_data = (konica_data_t *) camera->camlib_data;
+	konica_data = (KonicaData *) camera->camlib_data;
 	if ((file = fopen (file_name, "r")) == NULL) {
 		gp_frontend_message (camera, _("Could not open requested localization file!"));
 		return (FALSE);
