@@ -889,8 +889,8 @@ OPTION_CALLBACK (remove_dir)
 	return (GP_OK);
 }
 
-int
-capture_generic (int type, char *name)
+static int
+capture_generic (CameraCaptureType type, char *name)
 {
         CameraFilePath path;
         char *pathsep;
@@ -921,17 +921,17 @@ capture_generic (int type, char *name)
 
 OPTION_CALLBACK (capture_image)
 {
-	return (capture_generic (GP_OPERATION_CAPTURE_IMAGE, arg));
+	return (capture_generic (GP_CAPTURE_IMAGE, arg));
 }
 
 OPTION_CALLBACK (capture_movie)
 {
-        return (capture_generic (GP_OPERATION_CAPTURE_VIDEO, arg));
+        return (capture_generic (GP_CAPTURE_MOVIE, arg));
 }
 
 OPTION_CALLBACK (capture_sound)
 {
-        return (capture_generic (GP_OPERATION_CAPTURE_AUDIO, arg));
+        return (capture_generic (GP_CAPTURE_SOUND, arg));
 }
 
 OPTION_CALLBACK (capture_preview)

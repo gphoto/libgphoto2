@@ -1,3 +1,7 @@
+2001-10-30 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* frontends/command-line/main.[c,h]: Fix --capture-image
+
 2001-10-29 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line/interface.c: Suppress empty status
