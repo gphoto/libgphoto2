@@ -36,7 +36,7 @@ AC_CHECK_LIB(ibs, main)
 dnl Checks for header files.
 AC_HEADER_DIRENT
 AC_HEADER_STDC
-AC_CHECK_HEADERS(fcntl.h sys/time.h unistd.h)
+AC_CHECK_HEADERS(fcntl.h sys/time.h unistd.h stdio.h string.h stdlib.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
