@@ -821,34 +821,41 @@ int
 sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context) 
 {
 	GPPortSettings settings;
-	unsigned int i;
+	unsigned int i, bit_rate;
 
+	/*
+	 * Check that the requested speed is valid. We don't want to bug
+	 * the user with our coding errors, therefore if the requested 
+	 * speed is invalid, we use 19200.
+	 */
 	for (i = 0; SierraSpeeds[i].bit_rate; i++)
 		if (SierraSpeeds[i].speed == speed)
 			break;
-	GP_DEBUG ("Setting speed to %i (%i bps)...", speed,
-		  SierraSpeeds[i].bit_rate);
+	if (SierraSpeeds[i].bit_rate)
+		bit_rate = SierraSpeeds[i].bit_rate;
+	else {
+		GP_DEBUG ("Invalid speed %i. Using %i (19200, default).",
+			  speed, SIERRA_SPEED_19200);
+		speed = SIERRA_SPEED_19200;
+		bit_rate = 19200;
+	}
+
+	/*
+	 * Check if we need to change the speed or if we are currently
+	 * using the requested speed.
+	 */
+	CHECK (gp_port_get_settings (camera->port, &settings));
+	if (settings.serial.speed == bit_rate)
+		return (GP_OK);
 
 	/* Tell the camera about the new speed. */
+	GP_DEBUG ("Setting speed to %i (%i bps)...", speed, bit_rate);
 	camera->pl->first_packet = 1;
 	CHECK (sierra_set_int_register (camera, 17, speed, context));
 
-	/*
-	 * Now switch the port to the new speed. Portmon logs show the 
-	 * following procedure:
-	 *  - IOCTL_SERIAL_SET_BAUD_RATE
-	 *  - IOCTL_SERIAL_SET_DTR
-	 *  - IOCTL_SERIAL_SET_LINE_CONTROL
-	 *    StopBits: 1 Parity: NONE WordLength: 8
-	 *  - IOCTL_SERIAL_SET_CHAR EOF:0 ERR:0 BRK:0 EVT:0 XON:11 XOFF:13
-	 *  - IOCTL_SERIAL_SET_HANDFLOW
-	 *    Shake:1 Replace:80000080 XonLimit:2048 XoffLimit:512
-	 *  - IOCTL_SERIAL_SET_TIMEOUTS
-	 *    RI:0 RM:0 RC:20 WM:200 WC:800CCESS
-	 *  - IOCTL_SERIAL_SET_TIMEOUTS RI:0 RM:0 RC:10 WM:200 WC:800
-	 */
+	/* Now switch the port to the new speed. */
 	CHECK (gp_port_get_settings (camera->port, &settings));
-	settings.serial.speed = SierraSpeeds[i].bit_rate;
+	settings.serial.speed = bit_rate;
 	CHECK (gp_port_set_settings (camera->port, settings));
 	CHECK (gp_port_set_pin (camera->port, GP_PIN_DTR, GP_LEVEL_HIGH));
 

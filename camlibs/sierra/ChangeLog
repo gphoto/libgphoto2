@@ -1,3 +1,9 @@
+2002-05-24  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c
+	* sierra.c: Move the check if a speed change is really needed into
+	  sierra_set_speed.
+
 2002-05-23  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c (sierra_init): Don't use sierra_read_packet_wait, 

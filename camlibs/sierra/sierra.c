@@ -379,13 +379,10 @@ camera_start (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 	unsigned int i;
+	SierraSpeed speed;
 
 	GP_DEBUG ("Establishing connection...");
 
-	/*
-	 * Opening and closing of the port happens in libgphoto2. All we
-	 * do here is resetting the speed and timeout.
-	 */
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
 
@@ -396,8 +393,14 @@ camera_start (Camera *camera, GPContext *context)
 				if (camera->pl->speed ==
 						SierraSpeeds[i].bit_rate)
 					break;
-			CHECK (sierra_set_speed (camera,
-					SierraSpeeds[i].speed, context));
+			if (SierraSpeeds[i].bit_rate)
+				speed = SierraSpeeds[i].speed;
+			else {
+				GP_DEBUG ("Invalid speed %i. Using 19200 "
+					"(default).", camera->pl->speed);
+				speed = SIERRA_SPEED_19200;
+			}
+			CHECK (sierra_set_speed (camera, speed, context));
 		}
 		break;
 
@@ -414,12 +417,8 @@ camera_start (Camera *camera, GPContext *context)
 static int
 camera_stop (Camera *camera, GPContext *context) 
 {
-	GP_DEBUG ("*** camera_stop");
+	GP_DEBUG ("Closing connection...");
 
-	/*
-	 * Closing the port happens in libgphoto2. All we do here is
-	 * setting the default speed.
-	 */
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
 		CHECK (sierra_set_speed (camera, SIERRA_SPEED_19200, context));
