@@ -1,3 +1,8 @@
+2004-12-11  Patrick Mansfield <patmans@users.sourceforge.net>
+	* sierra.c, sierra.h: Per report from Emmanuel Beranger, add and
+	  use a SIERRA_MID_SPEED flag so we only use download speeds of
+	  9600 to 38400 for the Olympus C820-L.
+
 2004-07-30  Patrick Mansfield <patmans@users.sourceforge.net>
 	* library.c, sierra.c, sierra.h: Patch from Sean Bruno
 	  <sean.bruno@dsl-only.net> to support Toshiba cameras. Added and

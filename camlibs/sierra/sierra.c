@@ -134,7 +134,8 @@ static struct {
 	{"Olympus", "C-800", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-800L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-820", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
-	{"Olympus", "C-820L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus", "C-820L", 	SIERRA_MODEL_OLYMPUS,	0, 0,
+					SIERRA_MID_SPEED },
 	{"Olympus", "C-830L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-840L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-860L",	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
@@ -229,12 +230,22 @@ int camera_abilities (CameraAbilitiesList *list)
 		a.speed[0] = 9600;
 		a.speed[1] = 19200;
 		a.speed[2] = 38400;
-		if (!(sierra_cameras[x].flags & SIERRA_LOW_SPEED)) {
-			a.speed[3] = 57600;
-			a.speed[4] = 115200;
-			a.speed[5] = 0;
-		} else {
+		if (sierra_cameras[x].flags & SIERRA_LOW_SPEED) {
+			/*
+			 * Camera supports 9600 -> 38400 
+			 */
 			a.speed[3] = 0;
+		} else {
+			a.speed[3] = 57600;
+			if (sierra_cameras[x].flags & SIERRA_MID_SPEED) {
+				/*
+				 * Camera supports 9600 -> 57600.
+				 */
+				a.speed[4] = 0;
+			} else {
+				a.speed[4] = 115200;
+				a.speed[5] = 0;
+			}
 		}
 		a.operations        = 	GP_OPERATION_CAPTURE_IMAGE |
 					GP_OPERATION_CAPTURE_PREVIEW |
