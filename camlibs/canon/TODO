@@ -2,24 +2,20 @@
 List of work that still has to be done on this driver:
 ========================================================================
 
- - switch the camera keys and buttons off while connected
-   and on again when disconnected
+ - switch the camera on again when application exits
 
  - make misc. models work on A/C adapter (e.g. G1, Pro 90 IS)
 
- - make file upload work
+ - make image capturing work
 
- - getting other info on file (resolution and stuff)
-   this will be done using the new EXIF stuff from libgphoto2
-
- - rework configuration dialog (also wrt i18n)
+ - make file upload work with different file types and names
 
  - handle thumbnails and sound annotations in a more generic way to
    reuse the code
 
  - extend file attributes from 1 octet to 2 octets
 
- - introduce use capabilities everywhere (how?)
+ - introduce and use capabilities everywhere (how?)
 
  - the canon_int* functions often shouldn't use gphoto2 structures
    the canon_usb* and canon_serial* should even less
@@ -31,13 +27,25 @@ List of work that still has to be done on this driver:
    other hand, when removing the internal caching layer, we perhaps
    facilitated the solution to this problem.
 
- - make sure serial cameras work with new CameraFS based code
-
- - make sure thumbnail download work on serial cameras
 
 ========================================================================
 List of work that has already been done:
 ========================================================================
+
+ - make sure thumbnail download work on serial cameras 
+   [done according to Philippe -hun]
+
+ - getting other info on file (resolution and stuff)
+   using the new libexif [done -fredrik]
+
+ - rework configuration dialog (also wrt i18n) [done -hun]
+
+ - switch the camera keys and buttons off while connected [done -fredrik]
+
+ - made file upload work [done -hun (Patch from Matthias Kramm)]
+
+ - make sure serial cameras work with new CameraFS based code
+                      [basically works, according to Philippe -hun]
 
  - deleting files [done -hun]
 
@@ -52,6 +60,7 @@ List of work that has already been done:
    moment the internal directory structure is hidden to gphoto2. [done -hun]
 
  - make downloading raw images work [done -hun]
+
 
 ========================================================================
 Old stuff that is already done was moved down a bit by hun:
