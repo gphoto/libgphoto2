@@ -560,10 +560,14 @@ camera_abilities (CameraAbilitiesList *list)
 		strcpy (a.model, models[i].model);
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		a.port     = GP_PORT_SERIAL;
+
+		/* Supported speeds, terminated with 0 */
 		a.speed[0] = 9600;
 		a.speed[1] = 19200;
 		a.speed[2] = 38400;
 		a.speed[3] = 57600;
+		a.speed[4] = 0;
+
 		a.operations        = GP_OPERATION_CAPTURE_IMAGE;
 		a.file_operations   = GP_FILE_OPERATION_DELETE |
 				      GP_FILE_OPERATION_PREVIEW;
