@@ -32,6 +32,8 @@
 #include "gphoto2-file.h"
 #include "gphoto2-port-log.h"
 
+#include <libexif/exif-data.h>
+
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -71,6 +73,10 @@ typedef struct {
 	int folders_dirty;
 	CameraFilesystemFile *file;
 } CameraFilesystemFolder;
+
+static time_t gp_filesystem_get_exif_mtime (CameraFilesystem *, const char *,
+					    const char *);
+
 
 /**
  * CameraFilesystem:
@@ -1268,6 +1274,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 			CameraFile *file, GPContext *context)
 {
 	int x, y;
+	time_t t = 0;
 
 	CHECK_NULL (fs && folder && file && filename);
 	CHECK_ABS (folder, context);
@@ -1323,6 +1330,13 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	CR (gp_file_set_type (file, type));
 	CR (gp_file_set_name (file, filename));
 
+	/* If we didn't get a mtime, try to get it from EXIF data */
+	gp_file_get_mtime (file, &t);
+	if (!t) {
+		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
+		gp_file_set_mtime (file, t);
+	}
+
 	/* Cache this file */
 	CR (gp_filesystem_set_file_noop (fs, folder, file, context));
 
@@ -1364,6 +1378,65 @@ gp_filesystem_set_info_funcs (CameraFilesystem *fs,
 	return (GP_OK);
 }
 
+static time_t
+gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
+			      const char *filename)
+{
+	CameraFile *file;
+	ExifData *ed;
+	ExifEntry *e;
+	const char *data = NULL;
+	unsigned long int size = 0;
+	struct tm ts;
+	time_t t;
+
+	if (!fs)
+		return 0;
+
+	gp_file_new (&file);
+	if (gp_filesystem_get_file (fs, folder, filename, GP_FILE_TYPE_EXIF,
+				    file, NULL) != GP_OK) {
+		GP_DEBUG ("Could not get EXIF data of '%s' in folder '%s'.",
+			  filename, folder);
+		gp_file_unref (file);
+		return 0;
+	}
+
+	gp_file_get_data_and_size (file, &data, &size);
+	ed = exif_data_new_from_data (data, size);
+	gp_file_unref (file);
+	if (!ed) {
+		GP_DEBUG ("Could not parse EXIF data of '%s' in folder '%s'.",
+			  filename, folder);
+		return 0;
+	}
+
+	/*
+	 * HP PhotoSmart C30 has the date and time in ifd_exif.
+	 */
+	e = exif_content_get_entry (ed->ifd_exif, EXIF_TAG_DATE_TIME_ORIGINAL);
+	if (!e) {
+		GP_DEBUG ("EXIF data of '%s' in folder '%s' "
+			  "has not date/time tag.", filename, folder);
+		exif_data_unref (ed);
+		return 0;
+	}
+
+	e->data[4] = e->data[ 7] = e->data[10] = e->data[13] = e->data[16] = 0;
+	ts.tm_year = atoi (data) - 1900;
+	ts.tm_mon  = atoi (data + 5);
+	ts.tm_mday = atoi (data + 8);
+	ts.tm_hour = atoi (data + 11);
+	ts.tm_min  = atoi (data + 14);
+	ts.tm_sec  = atoi (data + 17);
+	exif_data_unref (ed);
+
+	t = mktime (&ts);
+	GP_DEBUG ("Found time in EXIF data: '%s'.", asctime (localtime (&t)));
+
+	return (t);
+}
+
 /**
  * gp_filesystem_get_info:
  * @fs: a #CameraFilesystem
@@ -1379,6 +1452,7 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 			GPContext *context)
 {
 	int x, y;
+	time_t t;
 
 	CHECK_NULL (fs && folder && filename && info);
 	CHECK_ABS (folder, context);
@@ -1398,6 +1472,20 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 						&fs->folder[x].file[y].info,
 						fs->info_data, context));
 		fs->folder[x].file[y].info_dirty = 0;
+	}
+
+	/*
+	 * If we didn't get GP_FILE_INFO_MTIME, we'll have a look if we
+	 * can get it from EXIF data.
+	 */
+	if (!(fs->folder[x].file[y].info.file.fields & GP_FILE_INFO_MTIME)) {
+		GP_DEBUG ("Did not get mtime. Trying EXIF information...");
+		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
+		if (t) {
+			fs->folder[x].file[y].info.file.mtime = t;
+			fs->folder[x].file[y].info.file.fields |=
+							GP_FILE_INFO_MTIME;
+		}
 	}
 
 	memcpy (info, &fs->folder[x].file[y].info, sizeof (CameraFileInfo));

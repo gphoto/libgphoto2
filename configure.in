@@ -326,6 +326,7 @@ camlibs/stv0680/Makefile
 frontends/Makefile
 frontends/command-line/Makefile
 tests/Makefile
+libexif/Makefile
 libgphoto2/Makefile
 libgphoto2/libgphoto2.pc
 gphoto2-config
