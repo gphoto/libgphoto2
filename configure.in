@@ -445,7 +445,7 @@ if $try_readline; then
 	    AC_CHECK_LIB(readline, rl_completion_append_character, [
 		AC_CHECK_LIB(readline, rl_completion_matches, [
 		    have_readline=true
-		    rl_msg="yes (doesn' require explicit -lncurses)"
+		    rl_msg="yes (doesn't require explicit -lncurses)"
 		    RL_LIBS="-lreadline"
 		    RL_CFLAGS=""
 		    AC_DEFINE(HAVE_RL,,[whether we use readline])
