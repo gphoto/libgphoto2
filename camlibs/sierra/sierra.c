@@ -25,6 +25,9 @@
 #include <string.h>
 #include <time.h>
 
+#ifdef HAVE_EXIF
+#include <libexif/exif-data.h>
+#endif
 
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
@@ -416,6 +419,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	const char *data, *mime_type;
 	long int size;
 	SierraPicInfo info;
+#ifdef HAVE_EXIF
+	ExifData *exif_data;
+	unsigned char *buf;
+	unsigned int buf_len;
+#endif
 
 	/*
 	 * Get the file number from the CameraFileSystem.
@@ -435,6 +443,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_AUDIO:
 		regd = 44;
 		break;
+#ifdef HAVE_EXIF
+	case GP_FILE_TYPE_EXIF:
+		regd = 15;
+		break;
+#endif
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
@@ -491,6 +504,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_AUDIO:
 		CHECK (gp_file_set_mime_type (file, GP_MIME_WAV));
 		break;
+
+#ifdef HAVE_EXIF
+	case GP_FILE_TYPE_EXIF:
+		CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
+
+		CHECK (exif_data = exif_data_new_from_data (
+			       (const unsigned char*)data,
+			       (unsigned int)size));
+
+		exif_data_save_data (exif_data, &buf, &buf_len);
+		exif_data_unref (exif_data);
+		gp_file_set_data_and_size (file, buf, buf_len);
+		break;
+#endif
+
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
