@@ -163,7 +163,7 @@ pop (x)
 struct loaded_l10nfile *
 _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
 		    territory, codeset, normalized_codeset, modifier, special,
-		    sponsor, revision, filename, domainbinding, do_allocate)
+		    sponsor, revision, filename, do_allocate)
      struct loaded_l10nfile **l10nfile_list;
      const char *dirlist;
      size_t dirlist_len;
@@ -177,7 +177,6 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
      const char *sponsor;
      const char *revision;
      const char *filename;
-     struct binding *domainbinding;
      int do_allocate;
 {
   char *abs_filename;
@@ -298,7 +297,6 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
     return NULL;
 
   retval->filename = abs_filename;
-  retval->domainbinding = domainbinding;
   retval->decided = (__argz_count (dirlist, dirlist_len) != 1
 		     || ((mask & XPG_CODESET) != 0
 			 && (mask & XPG_NORM_CODESET) != 0));
@@ -334,8 +332,7 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
 	    = _nl_make_l10nflist (l10nfile_list, dir, strlen (dir) + 1, cnt,
 				  language, territory, codeset,
 				  normalized_codeset, modifier, special,
-				  sponsor, revision, filename, domainbinding,
-				  1);
+				  sponsor, revision, filename, 1);
       }
   retval->successor[entries] = NULL;
 

@@ -28,11 +28,11 @@ VPATH = @srcdir@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 transform = @program_transform_name@
-libdir = $(exec_prefix)/lib
-includedir = $(prefix)/include
-datadir = $(prefix)/share
+libdir = @libdir@
+includedir = @includedir@
+datadir = @datadir@
 localedir = $(datadir)/locale
-gettextsrcdir = @datadir@/gettext/intl
+gettextsrcdir = $(datadir)/gettext/intl
 aliaspath = $(localedir)
 subdir = intl
 
@@ -83,7 +83,7 @@ DISTFILES.obsolete = xopen-msg.sed linux-msg.sed po2tbl.sed.in cat-compat.c
 # Maintainers of other packages that include the intl directory must *not*
 # change these values.
 LTV_CURRENT=1
-LTV_REVISION=0
+LTV_REVISION=1
 LTV_AGE=0
 
 .SUFFIXES:
@@ -105,8 +105,7 @@ INCLUDES = -I.. -I. -I$(top_srcdir)/intl
 
 all: all-@USE_INCLUDED_LIBINTL@
 all-yes: libintl.$la libintl.h charset.alias ref-add.sed ref-del.sed
-#all-no: all-no-@BUILD_INCLUDED_LIBINTL@
-all-no: all-no-no
+all-no: all-no-@BUILD_INCLUDED_LIBINTL@
 all-no-yes: libgnuintl.$la
 all-no-no:
 
@@ -153,14 +152,21 @@ install-exec: all
 	fi
 	if test '@USE_INCLUDED_LIBINTL@' = yes; then \
 	  $(mkinstalldirs) $(DESTDIR)$(libdir); \
-	  test -f $(DESTDIR)$(libdir)/charset.alias \
-	    && orig=$(DESTDIR)$(libdir)/charset.alias \
-	    || orig=charset.alias; \
 	  temp=$(DESTDIR)$(libdir)/t-charset.alias; \
 	  dest=$(DESTDIR)$(libdir)/charset.alias; \
-	  sed -f ref-add.sed $$orig > $$temp; \
-	  $(INSTALL_DATA) $$temp $$dest; \
-	  rm -f $$temp; \
+	  if test -f $(DESTDIR)$(libdir)/charset.alias; then \
+	    orig=$(DESTDIR)$(libdir)/charset.alias; \
+	    sed -f ref-add.sed $$orig > $$temp; \
+	    $(INSTALL_DATA) $$temp $$dest; \
+	    rm -f $$temp; \
+	  else \
+	    if test @GLIBC21@ = no; then \
+	      orig=charset.alias; \
+	      sed -f ref-add.sed $$orig > $$temp; \
+	      $(INSTALL_DATA) $$temp $$dest; \
+	      rm -f $$temp; \
+	    fi; \
+	  fi; \
 	  $(mkinstalldirs) $(DESTDIR)$(localedir); \
 	  test -f $(DESTDIR)$(localedir)/locale.alias \
 	    && orig=$(DESTDIR)$(localedir)/locale.alias \
@@ -184,6 +190,12 @@ install-data: all
 			    $(DESTDIR)$(gettextsrcdir)/$$file; \
 	  done; \
 	  chmod a+x $(DESTDIR)$(gettextsrcdir)/config.charset; \
+	  dists="$(DISTFILES.generated)"; \
+	  for file in $$dists; do \
+	    if test -f $$file; then dir=.; else dir=$(srcdir); fi; \
+	    $(INSTALL_DATA) $$dir/$$file \
+			    $(DESTDIR)$(gettextsrcdir)/$$file; \
+	  done; \
 	  dists="$(DISTFILES.obsolete)"; \
 	  for file in $$dists; do \
 	    rm -f $(DESTDIR)$(gettextsrcdir)/$$file; \
@@ -231,7 +243,7 @@ uninstall:
 	  : ; \
 	fi
 	if test "$(PACKAGE)" = "gettext"; then \
-	  for file in VERSION ChangeLog $(DISTFILES.common); do \
+	  for file in VERSION ChangeLog $(DISTFILES.common) $(DISTFILES.generated); do \
 	    rm -f $(DESTDIR)$(gettextsrcdir)/$$file; \
 	  done; \
 	else \
@@ -286,8 +298,9 @@ dist distdir: Makefile
 	fi; \
 	$(MAKE) $(DISTFILES.common) $(DISTFILES.generated) $$additional; \
 	for file in ChangeLog $(DISTFILES.common) $(DISTFILES.generated) $$additional; do \
-	  ln $(srcdir)/$$file $(distdir) 2> /dev/null \
-	    || cp -p $(srcdir)/$$file $(distdir); \
+	  if test -f $$file; then dir=.; else dir=$(srcdir); fi; \
+	  ln $$dir/$$file $(distdir) 2> /dev/null \
+	    || cp -p $$dir/$$file $(distdir); \
 	done
 
 Makefile: Makefile.in ../config.status
