@@ -61,20 +61,32 @@ gp_camera_new (Camera **camera)
 		return (GP_ERROR_NO_MEMORY);
 
         /* Initialize the members */
-        (*camera)->port       = (CameraPortInfo*)malloc(sizeof(CameraPortInfo));
-	if (!(*camera)->port) 
+        (*camera)->port = malloc (sizeof(CameraPortInfo));
+	if (!(*camera)->port) {
+		free (*camera);
 		return (GP_ERROR_NO_MEMORY);
+	}
 	(*camera)->port->type = GP_PORT_NONE;
 	strcpy ((*camera)->port->path, "");
-        (*camera)->abilities  = (CameraAbilities*)malloc(sizeof(CameraAbilities));
-        (*camera)->functions  = (CameraFunctions*)malloc(sizeof(CameraFunctions));
+	(*camera)->port->speed = 0;
+        (*camera)->abilities = malloc(sizeof(CameraAbilities));
+	if (!(*camera)->abilities) {
+		free ((*camera)->port);
+		free (*camera);
+		return (GP_ERROR_NO_MEMORY);
+	}
+        (*camera)->functions = malloc(sizeof(CameraFunctions));
+	if (!(*camera)->functions) {
+		free ((*camera)->port);
+		free ((*camera)->abilities);
+		free (*camera);
+		return (GP_ERROR_NO_MEMORY);
+	}
         (*camera)->library_handle  = NULL;
         (*camera)->camlib_data     = NULL;
         (*camera)->frontend_data   = NULL;
 	(*camera)->session    = glob_session_camera++;
         (*camera)->ref_count  = 1;
-	if (!(*camera)->abilities || !(*camera)->functions) 
-		return (GP_ERROR_NO_MEMORY);
 
 	/* Initialize function pointers to NULL.*/
 	memset((*camera)->functions, 0, sizeof (CameraFunctions));

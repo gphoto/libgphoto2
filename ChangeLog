@@ -1,3 +1,10 @@
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Another patch from Ilya Konstantinov <future@shiny.co.il>:
+
+	* libgphoto2/camera.c (gp_camera_new): Correctly initialize the speed
+	to 0
+
 2001-08-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/canon/psa50.c:
