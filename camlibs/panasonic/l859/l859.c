@@ -441,7 +441,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		byte3 = camera->pl->buf[7];
 		size = (byte1 * 256 * 256) + (byte2 * 256) + byte3;
 
-		// Check for no images
+		/* Check for no images */
 		if (size == 0)
 			return GP_OK;
 
