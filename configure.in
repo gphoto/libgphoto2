@@ -39,7 +39,7 @@ camlibs/fujitsu/Makefile \
 camlibs/directory/Makefile \
 frontends/Makefile \
 frontends/command-line/Makefile \
-frontends/libgphoto2_util/Makefile \
+frontends/libgphoto2_frontend/Makefile \
 include/Makefile \
 libgphoto2/Makefile \
 )
