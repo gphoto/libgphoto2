@@ -3,19 +3,27 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(libgphoto2_port/gphoto2-port.c)
 AM_CONFIG_HEADER(libgphoto2_port/config.h)
 
-LIBGPPORT_MAJOR_VERSION=0
-LIBGPPORT_MINOR_VERSION=0
-LIBGPPORT_MICRO_VERSION=4
-LIBGPPORT_VERSION=$LIBGPPORT_MAJOR_VERSION.$LIBGPPORT_MINOR_VERSION.$LIBGPPORT_MICRO_VERSION
-LIBGPPORT_VERSION_INFO=`expr $LIBGPPORT_MAJOR_VERSION + $LIBGPPORT_MINOR_VERSION`:$LIBGPPORT_MICRO_VERSION:$LIBGPPORT_MINOR_VERSION
+dnl ---------------------------------------------------------------------------
+dnl Versioning (libgphoto2_port-(AGE.)CURRENT.REVISION):
+dnl  - AGE (Micro):      Increment if any interfaces have been added; set to 0
+dnl                      if any interfaces have been removed. Removal has 
+dnl                      precedence over adding, so set to 0 if both happened.
+dnl  - REVISION (Minor): Increment any time the source changes; set to 
+dnl                      0 if you incremented CURRENT.
+dnl  - CURRENT (Major):  Increment if the interface has additions, changes,
+dnl                      removals.
+dnl ---------------------------------------------------------------------------
+LIBGPHOTO2_PORT_AGE=0
+LIBGPHOTO2_PORT_REVISION=5
+LIBGPHOTO2_PORT_CURRENT=0
+AC_SUBST(LIBGPHOTO2_PORT_AGE)
+AC_SUBST(LIBGPHOTO2_PORT_REVISION)
+AC_SUBST(LIBGPHOTO2_PORT_CURRENT)
 
-AC_SUBST(LIBGPPORT_MAJOR_VERSION)
-AC_SUBST(LIBGPPORT_MINOR_VERSION)
-AC_SUBST(LIBGPPORT_MICRO_VERSION)
-AC_SUBST(LIBGPPORT_VERSION)
-AC_SUBST(LIBGPPORT_VERSION_INFO)
+LIBGPHOTO2_PORT_VERSION=$LIBGHOTO2_PORT_CURRENT.$LIBGPHOTO2_PORT_REVISION.$LIBGPHOTO2_PORT_AGE
+AC_SUBST(LIBGPHOTO2_PORT_VERSION)
 
-VERSION=$LIBGPPORT_VERSION
+VERSION=$LIBGPHOTO2_PORT_VERSION
 
 AM_INIT_AUTOMAKE(libgphoto2_port, $VERSION)
 AM_MAINTAINER_MODE

@@ -9,7 +9,7 @@ LDFLAGS = @LDFLAGS@ -g
 
 ## Compile the IO library into a shared library
 lib_LTLIBRARIES = libgphoto2_port.la
-libgphoto2_port_la_LDFLAGS = -version-info @LIBGPPORT_VERSION_INFO@
+libgphoto2_port_la_LDFLAGS = -version-info $(LIBGPHOTO2_PORT_CURRENT):$(LIBGPHOTO2_PORT_REVISION):$(LIBGPHOTO2_PORT_AGE)
 libgphoto2_port_la_LIBADD = $(LTDL_LIBS) $(INTLLIBS)
 libgphoto2_port_la_SOURCES =		\
 	gphoto2-port-info-list.c	\

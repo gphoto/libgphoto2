@@ -1,4 +1,9 @@
-2002-03-11 Mariusz Woloszyn
+2002-03-11  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Fix versionning.
+
+2002-03-11  Mariusz Woloszyn
+
 	* libgphoto2_port/gphoto2-port-library.h: added
 	  check_event to GPPortOperationsl
 	* libgphoto2_port/gphoto2-port.h: added eventep to
@@ -8,10 +13,10 @@
 	  added setting of eventsep to gp_port_usb_find_device_lib()
 	* libgphoto2_port/gphoto2-port.[ch]: added gp_port_check_event()
 
-2002-02-23 Dan Fandrich <dan@coneharvesters.com>
+2002-02-23  Dan Fandrich <dan@coneharvesters.com>
 
 	* libgphoto2_port/gphoto2-port-info-list.c: Fixed error test for
-	non-GNU regex.
+	  non-GNU regex.
 
 2002-02-23  Lutz Müller <lutz@users.sourceforge.net>
 
