@@ -264,7 +264,7 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	*count = 3;
 
 	/* What models do we support? */
-	strcpy(abilities[0].model, "Barbie Camera");
+	strcpy(abilities[0].model, "Barbie");
 	abilities[0].port = GP_PORT_SERIAL;
 	abilities[0].speed[0] = 57600;
 	abilities[0].speed[1] = 0;
@@ -276,10 +276,10 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].file_put  = 0;
 
 	memcpy(&abilities[1], &abilities[0], sizeof(abilities[0]));
-	strcpy(abilities[1].model, "Hot Wheels Camera");
+	strcpy(abilities[1].model, "Hot Wheels");
 
 	memcpy(&abilities[2], &abilities[0], sizeof(abilities[0]));
-	strcpy(abilities[2].model, "WWF Camera");
+	strcpy(abilities[2].model, "WWF");
 
 	return (GP_OK);
 }
