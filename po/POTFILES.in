@@ -12,6 +12,7 @@ camlibs/panasonic/dc1000.c
 camlibs/panasonic/dc1580.c
 camlibs/sierra/sierra.c
 camlibs/sonydscf1/sonydscf1.c
-libgphoto2/result.c
-libgphoto2/camera.c
-libgphoto2/core.c
+libgphoto2/gphoto2-camera.c
+libgphoto2/gphoto2-filesys.c
+libgphoto2/gphoto2-abilities-list.c
+libgphoto2/gphoto2-result.c
