@@ -38,7 +38,7 @@ doc_DATA = gphoto2-cli.txt gphoto2.txt FAQ
 ########################################################################
 if XMLTOPDF
 gphoto2.pdf: gphoto2.xml
-	xmlto pdf $<
+	$(XMLTO) pdf $<
 endif
 ########################################################################
 
@@ -46,7 +46,7 @@ endif
 ########################################################################
 if XMLTOPS
 gphoto2.ps: gphoto2.xml
-	xmlto ps $<
+	$(XMLTO) ps $<
 endif
 ########################################################################
 
@@ -54,7 +54,7 @@ endif
 ########################################################################
 if XMLTOMAN
 $(man_MANS): gphoto2.xml
-	xmlto man $<
+	$(XMLTO) man $<
 endif
 ########################################################################
 
@@ -73,7 +73,7 @@ htmldir=@HTML_DIR@
 TARGET_DIR=$(htmldir)/manual
 
 manual: gphoto2.xml
-	xmlto html -o "$@" "$<"
+	$(XMLTO) html -o "$@" "$<"
 	touch "$@"
 
 clean_local_manual = clean-local-manual
