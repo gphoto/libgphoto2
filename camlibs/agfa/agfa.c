@@ -80,13 +80,15 @@ int camera_abilities(CameraAbilitiesList *list) {
 
 static int camera_exit (Camera *camera) {
    
-    struct agfa_device *dev = camera->camlib_data;
-    
-    if (dev) {
-       if (dev->file_list) free(dev->file_list);
-       free(dev);
-       camera->camlib_data = NULL;
+    if (camera->pl) {
+	if (camera->pl->file_list) {
+	    free(camera->pl->file_list);
+	    camera->pl->file_list = NULL;
+	}
+	free(camera->pl);
+	camera->pl = NULL;
     }
+
     return GP_OK;
 }
 
@@ -94,20 +96,19 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data) {
  
     Camera *camera=data;
-    struct agfa_device *dev = camera->camlib_data;
     int i;
     char temp_file[14];
 
     gp_debug_printf (GP_DEBUG_HIGH, "agfa", "camera_file_list %s\n", 
 		     folder);
    
-    if (agfa_get_file_list(dev) < 0) {
+    if (agfa_get_file_list(camera->pl) < 0) {
        gp_debug_printf (GP_DEBUG_HIGH, "agfa", "Could not agfa_file_list!");
        return GP_ERROR;
     }
        
-    for(i=0; i < dev->num_pictures; i++) {
-       strncpy(temp_file,dev->file_list+(13*i),12);
+    for(i=0; i < camera->pl->num_pictures; i++) {
+       strncpy(temp_file,camera->pl->file_list+(13*i),12);
        temp_file[12]=0;
        gp_list_append (list, temp_file, NULL);
     }
@@ -118,23 +119,22 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 static int agfa_file_get (Camera *camera, const char *filename, int thumbnail, 
 			    unsigned char **data, int *size) {
 
-    struct agfa_device *dev = camera->camlib_data;
     int buflen,throwaway,result;
 
     gp_debug_printf(GP_DEBUG_LOW, "agfa", "Getting file '%s'...",filename);
 
-    agfa_reset(dev);
+    agfa_reset(camera->pl);
         /* Always have to check num photos,
 	 * then pic size no matter what.  Otherwise
 	 * the camera will stop responding 
 	 */
    
-    throwaway=agfa_photos_taken(dev);
+    throwaway=agfa_photos_taken(camera->pl);
     if (throwaway<0) return throwaway;
    
        /* The below two lines might look wrong, but they aren't! */
-    buflen = agfa_get_pic_size(dev,filename);
-    if (thumbnail) buflen = agfa_get_thumb_size(dev,filename);
+    buflen = agfa_get_pic_size(camera->pl,filename);
+    if (thumbnail) buflen = agfa_get_thumb_size(camera->pl,filename);
    
     *data = malloc(buflen+1);
         
@@ -143,7 +143,7 @@ static int agfa_file_get (Camera *camera, const char *filename, int thumbnail,
     memset(*data, 0, buflen);
  
     if (thumbnail) {
-       result=agfa_get_thumb(dev, filename, *data, buflen);
+       result=agfa_get_thumb(camera->pl, filename, *data, buflen);
        if (result < 0) {
 	  free (*data);
 	  gp_debug_printf(GP_DEBUG_LOW,"agfa","agfa_get_thumb_failed!");
@@ -151,7 +151,7 @@ static int agfa_file_get (Camera *camera, const char *filename, int thumbnail,
        }
     }
     else {
-       result=agfa_get_pic(dev, filename, *data, buflen);
+       result=agfa_get_pic(camera->pl, filename, *data, buflen);
        if (result < 0) {
 	  free(*data);
 	  gp_debug_printf(GP_DEBUG_LOW,"agfa","agfa_get_pic_failed!");
@@ -197,10 +197,9 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 static int camera_summary(Camera *camera, CameraText *summary) {
 
-    struct agfa_device *dev = camera->camlib_data;
     int taken;
 
-    taken=agfa_photos_taken(dev);
+    taken=agfa_photos_taken(camera->pl);
     if (taken< 0) return taken;
 
     sprintf(summary->text, _("Number of pictures: %d"), taken);
@@ -225,16 +224,14 @@ static int camera_about(Camera *camera, CameraText *about) {
 
 
     /* Below contributed by Ben Hague <benhague@btinternet.com> */
-static int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
+static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path)
 {
-    struct agfa_device *dev=camera->camlib_data;
-
     /* this is broken.  We capture image to the camera, but
      * we don't detect the new filename.  We should detect
      * it and gp_filesystem_append and return 
      */
        
-    return (agfa_capture(dev,path));
+    return (agfa_capture(camera->pl,path));
 }
 
 
@@ -242,14 +239,13 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 			     const char *filename, void *data) {
   
     Camera *camera = data;
-    struct agfa_device *dev=camera->camlib_data;
 
     gp_debug_printf(GP_DEBUG_LOW,"agfa","Deleting '%s' in '%s'...",filename,folder); 
    
-    agfa_delete_picture(dev,filename);
+    agfa_delete_picture(camera->pl,filename);
    
        /* Update our file list */
-    if (agfa_get_file_list(dev)<0) return GP_ERROR;
+    if (agfa_get_file_list(camera->pl)<0) return GP_ERROR;
    
     return GP_OK;
 }
@@ -257,8 +253,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 
 int camera_init(Camera *camera) {
    
-    gp_port_settings settings;
-    struct agfa_device *dev;
+    GPPortSettings settings;
     int ret = 0;
 
        /* First, set up all the function pointers */
@@ -288,15 +283,17 @@ int camera_init(Camera *camera) {
             return GP_ERROR_NOT_SUPPORTED;
     }
     
-    dev = malloc(sizeof(*dev));
-    if (!dev) return (GP_ERROR_NO_MEMORY);
-   
-    memset ((void *)dev, 0, sizeof (*dev));
-    dev->gpdev = camera->port;
-    camera->camlib_data = dev;
+    camera->pl = malloc (sizeof (CameraPrivateLibrary));
+    if (!camera->pl) return (GP_ERROR_NO_MEMORY);
+    memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
+    camera->pl->gpdev = camera->port;
   
-    ret = agfa_reset (dev);
-    if (ret < 0) return (ret);
+    ret = agfa_reset (camera->pl);
+    if (ret < 0) {
+	free (camera->pl);
+	camera->pl = NULL;
+	return (ret);
+    }
     
        /* Tell the CameraFilesystem where to get lists from */
     gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);

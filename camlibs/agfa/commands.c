@@ -20,7 +20,7 @@
 #include "agfa.h"
 
     /* Regular commands always 8 bytes long */
-static int agfa_send_command(int command, int argument, struct agfa_device *dev) {
+static int agfa_send_command(int command, int argument, CameraPrivateLibrary *dev) {
 
     struct agfa_command cmd;
     int result;
@@ -34,7 +34,7 @@ static int agfa_send_command(int command, int argument, struct agfa_device *dev)
 }
 
     /* Filenames are always 12 bytes long */
-static int agfa_send_file_command(const char *filename, struct agfa_device *dev) {
+static int agfa_send_file_command(const char *filename, CameraPrivateLibrary *dev) {
     
     struct agfa_file_command file_cmd;
     int result;
@@ -47,13 +47,13 @@ static int agfa_send_file_command(const char *filename, struct agfa_device *dev)
 }
 
     /* USB-only */
-static int agfa_read(struct agfa_device *dev, void *buffer, int len) {
+static int agfa_read(CameraPrivateLibrary *dev, void *buffer, int len) {
 
     return gp_port_read(dev->gpdev, buffer, len);
 }
 
 
-int agfa_reset(struct agfa_device *dev) {
+int agfa_reset(CameraPrivateLibrary *dev) {
     int ret;
    
     ret=agfa_send_command(AGFA_RESET,0,dev);
@@ -63,7 +63,7 @@ int agfa_reset(struct agfa_device *dev) {
 }
 
     /* Status is a 60 byte array.  I have no clue what it does */
-int agfa_get_status(struct agfa_device *dev, int *taken,
+int agfa_get_status(CameraPrivateLibrary *dev, int *taken,
         int *available, int *rawcount) {
 
     unsigned char ss[0x60];
@@ -89,7 +89,7 @@ int agfa_get_status(struct agfa_device *dev, int *taken,
 }
 
     /* Below contributed by Ben Hague <benhague@btinternet.com> */
-int agfa_capture(struct agfa_device *dev, const char *path) {
+int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path) {
     /*FIXME: Not fully implemented according to the gphoto2 spec.*/
     /*Should also save taken picture, and then delete it from the camera*/
     /*but when I try to do that it just hangs*/
@@ -116,7 +116,7 @@ int agfa_capture(struct agfa_device *dev, const char *path) {
 }
 
 
-int agfa_photos_taken(struct agfa_device *dev) {
+int agfa_photos_taken(CameraPrivateLibrary *dev) {
    
     int ret,numpics;
 
@@ -137,7 +137,7 @@ int agfa_photos_taken(struct agfa_device *dev) {
 }
 
 
-int agfa_get_file_list(struct agfa_device *dev) {
+int agfa_get_file_list(CameraPrivateLibrary *dev) {
 
     char *buffer;
     int ret, taken, buflen;
@@ -196,7 +196,7 @@ int agfa_get_file_list(struct agfa_device *dev) {
     return GP_OK;
 }
 
-int agfa_get_thumb_size(struct agfa_device *dev, const char *filename) {
+int agfa_get_thumb_size(CameraPrivateLibrary *dev, const char *filename) {
  
     int ret,temp,size; 
    
@@ -217,7 +217,7 @@ int agfa_get_thumb_size(struct agfa_device *dev, const char *filename) {
    
 }
 
-int agfa_get_thumb(struct agfa_device *dev, const char *filename,
+int agfa_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
 
     int ret,temp; 
@@ -249,7 +249,7 @@ int agfa_get_thumb(struct agfa_device *dev, const char *filename,
    
 }
 
-int agfa_get_pic_size(struct agfa_device *dev, const char *filename) {
+int agfa_get_pic_size(CameraPrivateLibrary *dev, const char *filename) {
  
     int ret,temp,size; 
    
@@ -270,7 +270,7 @@ int agfa_get_pic_size(struct agfa_device *dev, const char *filename) {
    
 }
 
-int agfa_get_pic(struct agfa_device *dev, const char *filename,
+int agfa_get_pic(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
    
     int ret,temp; 
@@ -300,7 +300,7 @@ int agfa_get_pic(struct agfa_device *dev, const char *filename,
 
    /* thanks to heathhey3@hotmail.com for sending me the trace */
    /* to implement this */
-int agfa_delete_picture(struct agfa_device *dev, const char *filename) {
+int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
    
     int ret,temp,taken; 
     char data[4],*buffer;

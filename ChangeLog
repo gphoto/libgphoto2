@@ -1,5 +1,13 @@
 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/agfa/commands.h: Unused -> removed.
+	* camlibs/agfa/Makefile.am: Reflect above.
+	* camlibs/agfa/agfa.[c,h]: Use camera->pl instead of
+	  camera->camlib_data. Fix small memory leak in camera_init (in case
+	  of error).
+
+2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/minolta/dimagev/dimagev.[c,h]: Prepare for removal of
 	  camera->camlib_data. Fix memory leaks (in case of errors).
 

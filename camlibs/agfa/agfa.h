@@ -30,8 +30,8 @@ struct agfa_file_command {
    char filename[12];
 };
 
-struct agfa_device {
-	gp_port *gpdev;
+struct _CameraPrivateLibrary {
+	GPPort *gpdev;
 
 	int num_pictures;
 	char *file_list;
@@ -43,28 +43,28 @@ struct agfa_device {
 };
 
 /* commands.c */
-int agfa_reset(struct agfa_device *dev);
+int agfa_reset(CameraPrivateLibrary *dev);
 
-int agfa_get_status(struct agfa_device *dev, int *taken,
+int agfa_get_status(CameraPrivateLibrary *dev, int *taken,
 	int *available, int *rawcount);
 
-int agfa_photos_taken(struct agfa_device *dev);
+int agfa_photos_taken(CameraPrivateLibrary *dev);
 
-int agfa_get_file_list(struct agfa_device *dev);
+int agfa_get_file_list(CameraPrivateLibrary *dev);
 
-int agfa_delete_picture(struct agfa_device *dev, const char *filename);
+int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename);
 
-int agfa_get_thumb_size(struct agfa_device *dev, const char *filename);
-int agfa_get_thumb(struct agfa_device *dev, const char *filename, 
+int agfa_get_thumb_size(CameraPrivateLibrary *dev, const char *filename);
+int agfa_get_thumb(CameraPrivateLibrary *dev, const char *filename, 
 		   unsigned char *data,int size);
-int agfa_get_pic_size(struct agfa_device *dev, const char *filename);
-int agfa_get_pic(struct agfa_device *dev, const char *filename, 
+int agfa_get_pic_size(CameraPrivateLibrary *dev, const char *filename);
+int agfa_get_pic(CameraPrivateLibrary *dev, const char *filename, 
 		   unsigned char *data,int size);
-int agfa_capture(struct agfa_device *dev, const char *path);
+int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path);
 
 
 /* usb.c */
-int agfa_usb_open(struct agfa_device *dev, Camera *camera);
+int agfa_usb_open(CameraPrivateLibrary *dev, Camera *camera);
 
 
 #endif
