@@ -3,12 +3,13 @@ gphoto2 2.0beta5
 libgphoto2:
    * Added Sony DCR-PC100 support.
    * Fixed serial cameras bug introduced in beta4. 
+   * Removed SiPix StyleCam from the STV0680 cameras list.
 
 gphoto2 command-line interface:
    * EXIF support (extra tags that contain information about the image
-		produced by most digital cameras).
+      produced by most digital cameras).
    * Fixed broken --delete-all-images. Also, recursion is now the
-		default for downloading but _not_ for deleting.
+      default for downloading but _not_ for deleting.
 
 
 --------------------------------------------------------------------------------
@@ -19,7 +20,7 @@ libgphoto2:
    * Camera libraries are now installed in a versioned subdirectories.
    * Stv0680 improvements.
    * Canon: added PowerShot S30 support, CameraFS support, big-endian
-		 systems support, RAW-File support.
+      systems support, RAW-File support.
    * Added ptp cameras support (Kodak DX series and much more).
    * Camera Summary for Kodak DC240 driver.
    * Samsung 800k support.
