@@ -159,7 +159,6 @@ const struct canonCamModelData models[] = {
 	 * what they are --swestin. */
 	/*{"Canon:PowerShot ?????",		CANON_PS_A60,		0x04A9, 0x3078, CAP_SUP, S10M, S32K, NULL},*/
 	/*{"Canon:PowerShot ?????",		CANON_PS_A60,		0x04A9, 0x307a, CAP_SUP, S10M, S32K, NULL},*/
->>>>>>> 1.205
 	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, NULL},
 	/* Canon MVX2i in some mode is 0x3067 - probably PTP */
 	/* Apparently the MVX2i is the same as Optura 200 MC (Philippe
