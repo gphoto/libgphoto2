@@ -486,8 +486,8 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 		}
 
 		/* For single byte data packets, the work is done... */
-		if ((packet[0] == TYPE_DATA) ||
-		    (packet[0] == TYPE_DATA_END)) {
+		if (!((packet[0] == TYPE_DATA) ||
+		      (packet[0] == TYPE_DATA_END))) {
 			if (camera->port->type == GP_PORT_USB &&
 			    !camera->pl->usb_wrap)
 				gp_port_usb_clear_halt (camera->port,
