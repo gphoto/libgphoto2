@@ -740,6 +740,9 @@ static int do_capture (Camera *camera, char *packet)
 		ret = sierra_read_packet (camera, buf);
 		if (ret == GP_ERROR_IO_TIMEOUT)
 			continue;
+		/* we're probably to fast if the following occurs */
+		if (ret == GP_ERROR_IO_READ)
+			continue;
 		if (ret != GP_OK)
 			return (ret);
 
@@ -750,6 +753,9 @@ static int do_capture (Camera *camera, char *packet)
 		case NAK:
 		case ACK:
 			continue;
+		case DC1:
+			/* occurs when there is no space left on smart-card */
+			return (GP_ERROR_NO_MEMORY);
 		default:
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
