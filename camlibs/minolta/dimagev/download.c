@@ -65,7 +65,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		return GP_ERROR;
 	} else if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			perror("dimagev_get_picture::no response from camera");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::no response from camera");
 		}
 		return GP_ERROR;
 	}
@@ -171,7 +171,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 
 	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			perror("dimagev_get_picture::no response from camera");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::no response from camera");
 		}
 		return GP_ERROR;
 	}
@@ -251,7 +251,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		return GP_ERROR;
 	} else if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			perror("dimagev_get_thumbnail::no response from camera");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::no response from camera");
 		}
 		return GP_ERROR;
 	}
@@ -360,7 +360,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 
 	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			perror("dimagev_get_thumbnail::no response from camera");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::no response from camera");
 		}
 		return GP_ERROR;
 	}

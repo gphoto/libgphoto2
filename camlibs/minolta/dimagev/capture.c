@@ -68,7 +68,7 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	/* Let's say hello and get the current status. */
 	if ( ( p = dimagev_make_packet(DIMAGEV_SHUTTER, 1, 0)) == NULL ) {
 		if ( dimagev->debug != 0 ) {
-			perror("dimagev_shutter::unable to allocate packet");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to allocate packet");
 		}
 		return GP_ERROR;
 	}
@@ -150,14 +150,14 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	char_buffer = DIMAGEV_EOT;
 	if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			perror("dimagev_shutter::unable to send EOT");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to send EOT");
 		}
 		return GP_ERROR;
 	}
 		
 	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			perror("dimagev_shutter::no response from camera");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::no response from camera");
 		}
 		return GP_ERROR;
 	}

@@ -72,7 +72,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		return GP_ERROR;
 	} else if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			perror("dimagev_delete_picture::no response from camera");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::no response from camera");
 		}
 		return GP_ERROR;
 	}
@@ -136,7 +136,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 
 	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			perror("dimagev_delete_picture::no response from camera");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::no response from camera");
 		}
 		return GP_ERROR;
 	}

@@ -86,7 +86,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 
 	if ( ( dimagev = (dimagev_t*) malloc(sizeof(dimagev_t))) == NULL ) {
 		if ( camera->debug != 0 ) {
-			perror("camera_init::unable to allocate dimagev_t");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate dimagev_t");
 		}
 		return GP_ERROR;
 	}
@@ -97,7 +97,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	/* Now open a port. */
 	if ( ( dimagev->dev = gpio_new(GPIO_DEVICE_SERIAL) ) == NULL ) {
 		if ( camera->debug != 0 ) {
-			perror("camera_init::unable to allocate gpio_dev");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate gpio_dev");
 		}
 		return GP_ERROR;
 	}
@@ -116,7 +116,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 
 	if ( ( dimagev->fs = gp_filesystem_new()) == NULL ) {
 		if ( camera->debug != 0 ) {
-			perror("camera_init::unable to allocate filesystem");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate filesystem");
 		}
 		return GP_ERROR;
 	}
@@ -209,7 +209,7 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 
 	if ( dimagev_get_camera_status(dimagev) != GP_OK ) {
 		if ( camera->debug != 0 ) {
-			perror("camera_file_list::unable to get camera status");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_list::unable to get camera status");
 		}
 		return GP_ERROR;
 	}
