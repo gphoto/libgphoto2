@@ -60,13 +60,46 @@ rm -rf $RPM_BUILD_DIR/%{name}-%{version}
 %setup -q -n %{name}-%{version}
 
 %build
-%configure --with-html-dir=%{prefix}/share/doc/%{name}-%{version}
-%make
+CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ;
+CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ;
+FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ;
+%{?__libtoolize:[ -f configure.in ] && %{__libtoolize} --copy --force} ;
+./configure %{_target_platform} \
+        --prefix=%{_prefix} \
+        --exec-prefix=%{_exec_prefix} \
+        --bindir=%{_bindir} \
+        --sbindir=%{_sbindir} \
+        --sysconfdir=%{_sysconfdir} \
+        --datadir=%{_datadir} \
+        --includedir=%{_includedir} \
+        --libdir=%{_libdir} \
+        --libexecdir=%{_libexecdir} \
+        --localstatedir=%{_localstatedir} \
+        --sharedstatedir=%{_sharedstatedir} \
+        --mandir=%{_mandir} \
+        --infodir=%{_infodir} \
+        --with-html-dir=%{_docdir}/%{name}-%{version}/html
+make
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%makeinstall
+make DESTDIR=%{buildroot} \
+        prefix=%{_prefix} \
+        exec_prefix=%{_exec_prefix} \
+        bindir=%{_bindir} \
+        sbindir=%{_sbindir} \
+        sysconfdir=%{_sysconfdir} \
+        datadir=%{_datadir} \
+        docdir=%{_docdir} \
+        includedir=%{_includedir} \
+        libdir=%{_libdir} \
+        libexecdir=%{_libexecdir} \
+        localstatedir=%{_localstatedir} \
+        sharedstatedir=%{_sharedstatedir} \
+        mandir=%{_mandir} \
+        infodir=%{_infodir} \
+install
 
 %post -p /sbin/ldconfig -n libgphoto2
 %postun -p /sbin/ldconfig -n libgphoto2
