@@ -79,6 +79,7 @@ models[] =
 {
 	{"Mustek gSmart mini 2", 0x055f, 0xc420}, 
 	{"Mustek gSmart mini 3", 0x055f, 0xc520}, 
+	{"So. Show 301", 0x0ec7, 0x1008}, 
 	{ NULL, 0, 0}
 };
 
