@@ -60,13 +60,6 @@ struct _CameraPrivateLibrary {
 #define EDSCOVERFL	5 /* overfolw */
 #define EDSCMAXERR	5 /* highest used error code */
 
-static const char
-	c_prefix[13] = /* generic command prefix */
-	{ 'M', 'K', 'E', ' ', 'D', 'S', 'C', ' ', 'P', 'C', ' ', ' ' },
-
-	r_prefix[13] = /* generic response prefix */
-	{ 'M', 'K', 'E', ' ', 'P', 'C', ' ', ' ', 'D', 'S', 'C', ' ' };
-
 int dsc1_sendcmd(Camera *camera, uint8_t cmd, void *data, int size);
 	/* Send command with 'data' of 'size' to DSC */
 
