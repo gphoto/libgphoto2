@@ -1,3 +1,7 @@
+Fri Jan 24 08:15:59 2003  Till Adam  <till@adam-lilienthal.de>
+ * apply patch by Mark Zimmermann <mark@foresthaven.com> 
+   fixing reporting of preview height
+
 2002-11-26  Colin Marquardt  <colin@marquardt-home.de>
 
 	* library.c (camera_about): Make sure author names are 7bit ASCII only.
