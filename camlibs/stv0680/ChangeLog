@@ -1,3 +1,7 @@
+2001-04-12  Marcus Meissner <marcus@jet.franken.de>
+	
+	* stv0680.c: Use GP_MIME_PNM instead of (wrong) image/pnm.
+
 2001-04-10  Marcus Meissner <marcus@jet.franken.de>
 	
 	* stv0680.c: Some of those cameras (especially the generic ones 
