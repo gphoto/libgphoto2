@@ -7,6 +7,18 @@ licensing
 We urge you to license your contributions under the LGPL so we can
 distribute gphoto2 under the LGPL as well.
 
+patches
+-------
+
+... are always welcome. Please have something like 
+
+cvs -z4 -q
+diff -u3 -p
+update -dP
+checkout -P
+
+in $HOME/.cvsrc and send us the output of "cvs diff some_file.c".
+
 camlib
 ------
 
@@ -53,7 +65,16 @@ my_func (int arg)
 
 	/* This is a simple one-line comment */
 	if (res < 0) {
-		gp_debug_printf (GP_DEBUG_HIGH, "core", "Error happened!");
+		gp_log (GP_LOG_DEBUG, "Error happened!");
+
+		/* Note that we _don't_ indent the case statements */
+		switch (res) {
+		case GP_ERROR:
+			gp_log (GP_LOG_DEBUG, "Generic error");
+			break;
+		default:
+			gp_log (GP_LOG_DEBUG, "Not a generic error");
+		}
 		return (res);
 	}
 
