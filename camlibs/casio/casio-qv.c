@@ -112,10 +112,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_RAW:
 		break;
 	case GP_FILE_TYPE_PREVIEW:
+		CHECK_RESULT (QVgetthumb (camera, &data, &size));
 		break;
 	case GP_FILE_TYPE_NORMAL:
 	default:
-		CHECK_RESULT (QVgetpic (camera, data, size));
+		CHECK_RESULT (QVgetpic (camera, &data, &size));
 		break;
 	}
 
@@ -234,7 +235,7 @@ camera_init (Camera *camera, GPContext *context)
 		settings.serial.speed = speeds[i];
 		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 		result = QVping (camera);
-		if (result == GP_OK)
+		if (result >= GP_OK)
 			break;
 	}
 	if (i == 4)

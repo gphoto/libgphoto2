@@ -17,8 +17,10 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-
+#include <config.h>
 #include "casio-qv-commands.h"
+
+#include <stdlib.h>
 
 #define STX 0x02
 #define ETX 0x03
@@ -125,7 +127,7 @@ QVsend (Camera *camera, unsigned char *cmd, int cmd_len,
 }
 
 static int
-QVblockrecv (Camera *camera, unsigned char *buf, int buf_size)
+QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 {
 	unsigned char c;
 	unsigned char buffer[2];
@@ -135,6 +137,8 @@ QVblockrecv (Camera *camera, unsigned char *buf, int buf_size)
 	/* Send DC2 */
 	CR (gp_port_write (camera->port, &c, 1));
 
+	*buf = NULL;
+	*buf_len = 0;
 	while (1) {
 
 		/* Read STX */
@@ -154,10 +158,19 @@ QVblockrecv (Camera *camera, unsigned char *buf, int buf_size)
 		size = (buffer[0] << 8) | buffer[1];
 		sum = buffer[0] + buffer[1];
 
+		/* Allocate the memory */
+		if (!*buf)
+			buf = malloc (sizeof (char) * size);
+		else
+			buf = realloc (buf, sizeof (char) * (*buf_len + size));
+		if (!buf)
+			return (GP_ERROR_NO_MEMORY);
+		*buf_len += size;
+
 		/* Get the sector */
-		CR (gp_port_read (camera->port, buf + pos, size));
+		CR (gp_port_read (camera->port, *buf + pos, size));
 		for (i = 0; i < size; i++)
-			sum += buf[i + pos];
+			sum += *buf[i + pos];
 
 		/* Get EOT or ETX and the checksum */
 		CR (gp_port_read (camera->port, buffer, 2));
@@ -285,12 +298,25 @@ QVsetpic (Camera *camera)
 }
 
 int
-QVgetpic (Camera *camera, unsigned char *data, long int size)
+QVgetpic (Camera *camera, unsigned char **data, unsigned long int *size)
 {
 	unsigned char cmd[2];
 
 	cmd[0] = 'M';
 	cmd[1] = 'G';
+	CR (QVsend (camera, cmd, 2, NULL, 0));
+	CR (QVblockrecv (camera, data, size));
+
+	return (GP_OK);
+}
+
+int
+QVgetthumb (Camera *camera, unsigned char **data, unsigned long int *size)
+{
+	unsigned char cmd[2];
+
+	cmd[0] = 'M';
+	cmd[1] = 'K';
 	CR (QVsend (camera, cmd, 2, NULL, 0));
 	CR (QVblockrecv (camera, data, size));
 
