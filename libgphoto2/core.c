@@ -67,11 +67,11 @@ int gp_init (int debug)
         char buf[1024];
         int x;
 
-	if (have_initted) {
-		gp_debug_printf(GP_DEBUG_LOW, "core",
-			"Attempt to init gphoto2 a second time");
-		return GP_ERROR;
-	}
+        if (have_initted) {
+                gp_debug_printf(GP_DEBUG_LOW, "core",
+                        "Attempt to init gphoto2 a second time");
+                return GP_ERROR;
+        }
 
         glob_debug = debug;
 
@@ -113,14 +113,14 @@ int gp_init (int debug)
                 gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing the gPhoto IO library (libgpio)");
         }
 
-	have_initted = 1;
+        have_initted = 1;
         return (GP_OK);
 }
 
-int 
+int
 gp_is_initialized (void)
 {
-	return have_initted;
+        return have_initted;
 }
 
 int gp_exit ()
@@ -163,7 +163,7 @@ char *gp_result_as_string (int result)
 {
         /* Really an error? */
         if (result > 0)
-		return _("Unknown error");
+                return _("Unknown error");
 
         /* IOlib error? Pass through. */
         if ((result <= 0) && (result >= -99))
@@ -171,7 +171,7 @@ char *gp_result_as_string (int result)
 
         /* Camlib error? You should have called gp_camera_result_as_string... */
         if (result <= -1000)
-		return _("Unknown camera library error");
+                return _("Unknown camera library error");
 
         /* Do we have an error description? */
         if ((-result - 100) < (int) (sizeof (result_string) / sizeof (*result_string)))
