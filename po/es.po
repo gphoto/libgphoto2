@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2003-07-11 18:42+0200\n"
+"POT-Creation-Date: 2003-07-13 10:18+0200\n"
 "PO-Revision-Date: 2003-07-11 14:03-0300\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Español <es@li.org>\n"
@@ -336,7 +336,7 @@ msgstr "No se puede crear el directorio \\DCIM."
 msgid "Could not create destination directory."
 msgstr "No se puede crear el directorio de destino."
 
-#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:616
+#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:617
 msgid "Camera and Driver Configuration"
 msgstr "Configuración del controlador y la cámara"
 
@@ -373,7 +373,7 @@ msgstr "Configurar la fecha de la cámara con la de la PC"
 msgid "Firmware revision (readonly)"
 msgstr "Revisión del firmware (sólo lectura)"
 
-#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:618
+#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:619
 msgid "Power (readonly)"
 msgstr "Energía (sólo lectura)"
 
@@ -2907,17 +2907,18 @@ msgstr ""
 " correo-e: <pbk@odense.kollegienet.dk>\n"
 
 #: camlibs/polaroid/pdc320.c:455
+#, fuzzy
 msgid ""
 "Download program for several Polaroid cameras. Originally written by Peter "
 "Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan "
-"Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <urc8@rz.uni-"
-"karlsruhe.de>.\n"
+"Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users."
+"sf.net>.\n"
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
 msgstr ""
 "Programa de descarga para varias cámaras Polaroid. Escrito originalmente por "
 "Peter Desnoyers <pjd@fred.cambridge.ma.us>, y adaptado para gphoto2 por "
-"Nathan Stenzel <nathanstenzel@users.sourceforge.net> y Lutz Mueller <urc8@rz."
-"uni-karlsruhe.de>.\n"
+"Nathan Stenzel <nathanstenzel@users.sourceforge.net> y Lutz Mueller <lutz@users."
+"sf.net>.\n"
 "La prueba con una Polaroid 640SE fue realizada por Michael Golden "
 "<naugrim@juno.com>."
 
@@ -2927,10 +2928,11 @@ msgid "Model: %x, %x, %x, %x"
 msgstr "Modelo: %x, %x, %x, %x"
 
 #: camlibs/polaroid/pdc640.c:887
+#, fuzzy
 msgid ""
 "Download program for GrandTek 98x based cameras. Originally written by Chris "
-"Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller <urc8@rz."
-"uni-karlsruhe.de>.Protocol enhancements and postprocessing  for Jenoptik "
+"Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller "
+"<lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik "
 "JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus "
 "Meissner <marcus@jet.franken.de>."
 msgstr ""
@@ -3265,7 +3267,7 @@ msgstr "PTP. Error de protocolo, se esperaban datos"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP. Error de protocolo, se esperaba respuesta"
 
-#: camlibs/ptp2/library.c:547
+#: camlibs/ptp2/library.c:548
 msgid ""
 "PTP2 driver\n"
 "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -3275,7 +3277,7 @@ msgstr ""
 "(c)2001-2003 por Mariusz Woloszyn <emsi@ipartners.pl>.\n"
 "¡Disfrute!"
 
-#: camlibs/ptp2/library.c:583
+#: camlibs/ptp2/library.c:584
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3290,23 +3292,23 @@ msgstr ""
 "ID extensión del fabricante: 0x%08x\n"
 "Descripción extensión del fabricante: %s\n"
 
-#: camlibs/ptp2/library.c:623
+#: camlibs/ptp2/library.c:624
 msgid "Number of values"
 msgstr "Cantidad de valores"
 
-#: camlibs/ptp2/library.c:627
+#: camlibs/ptp2/library.c:628
 msgid "Supported values"
 msgstr "Valores soportados"
 
-#: camlibs/ptp2/library.c:640
+#: camlibs/ptp2/library.c:641
 msgid "Current value"
 msgstr "Valor corriente"
 
-#: camlibs/ptp2/library.c:1082
+#: camlibs/ptp2/library.c:1083
 msgid "Initializing Camera"
 msgstr "Inicializando la cámara"
 
-#: camlibs/ptp2/library.c:1154 camlibs/ptp/library.c:1065
+#: camlibs/ptp2/library.c:1155 camlibs/ptp/library.c:1065
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP está implementado sólo para cámaras USB."
 

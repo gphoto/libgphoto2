@@ -7,13 +7,21 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2 2.1.1rc2\n"
-"POT-Creation-Date: 2003-07-10 16:46-0400\n"
+"POT-Creation-Date: 2003-07-13 10:18+0200\n"
 "PO-Revision-Date: 2002-11-26 00:46+0900\n"
 "Last-Translator: Takeshi Aihana <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=euc-jp\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: camlibs/agfa-cl20/agfa_cl20.c:540
+msgid ""
+"agfa_cl20\n"
+"The Agfa CL20 Linux Driver People!\n"
+"     Email us at cl20@poeml.de    \n"
+" Visit us at http://cl20.poeml.de "
+msgstr ""
 
 #: camlibs/barbie/barbie.c:149
 #, c-format
@@ -48,47 +56,48 @@ msgstr ""
 "WEB 上に実装済みの使用方法のドキュメント\n"
 "があります。Vison の承諾済み。"
 
-#: camlibs/canon/canon.c:391 camlibs/canon/canon.c:420
+#: camlibs/canon/canon.c:391
 msgid "create"
 msgstr ""
 
-#: camlibs/canon/canon.c:391 camlibs/canon/canon.c:420
+#: camlibs/canon/canon.c:391
 #, fuzzy
 msgid "remove"
 msgstr "リモート"
 
-#: camlibs/canon/canon.c:418
+#: camlibs/canon/canon.c:419
 #, fuzzy, c-format
-msgid "Could not %s directory %s."
+msgid "Could not create directory %s."
 msgstr "\\DCIM ディレクトリを作成することが出来ませんでした"
 
-#: camlibs/canon/canon.c:761
+#: camlibs/canon/canon.c:422
+#, fuzzy, c-format
+msgid "Could not remove directory %s."
+msgstr "\\DCIM ディレクトリを作成することが出来ませんでした"
+
+#: camlibs/canon/canon.c:764 camlibs/canon/canon.c:986 camlibs/canon/usb.c:229
 msgid "lock keys failed."
 msgstr ""
 
-#: camlibs/canon/canon.c:824 camlibs/canon/canon.c:825
+#: camlibs/canon/canon.c:827 camlibs/canon/canon.c:828
 msgid "*UNKNOWN*"
 msgstr ""
 
-#: camlibs/canon/canon.c:932
+#: camlibs/canon/canon.c:935
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
 "status %i"
 msgstr ""
 
-#: camlibs/canon/canon.c:983 camlibs/canon/usb.c:229
-msgid "lock keys failed.\n"
-msgstr ""
-
-#: camlibs/canon/canon.c:1013
+#: camlibs/canon/canon.c:1016
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
 "i"
 msgstr ""
 
-#: camlibs/canon/canon.c:1132
+#: camlibs/canon/canon.c:1135
 #, fuzzy, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximum 30 characters are "
@@ -97,30 +106,57 @@ msgstr ""
 "名前 '%s' (%i 個の文字) は長すぎます (%i 個の文字)。最大 30 文字まで有効で"
 "す。"
 
-#: camlibs/canon/canon.c:1653
+#: camlibs/canon/canon.c:1656
 #, c-format
 msgid "canon_int_list_dir: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
 
-#: camlibs/canon/canon.c:1675
+#: camlibs/canon/canon.c:1678
 msgid ""
 "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
 
-#: camlibs/canon/canon.c:1760
+#: camlibs/canon/canon.c:1763
 msgid "canon_int_list_dir: truncated directory entry encountered"
 msgstr ""
 
-#: camlibs/canon/canon.c:2071
+#: camlibs/canon/canon.c:2074
 msgid "File protected."
 msgstr "ファイルが保護されています。"
 
-#: camlibs/canon/canon.c:2142
+#: camlibs/canon/canon.c:2145
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
 
-#: camlibs/canon/canon.c:2167
+#: camlibs/canon/canon.c:2170
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
+msgstr ""
+
+#: camlibs/canon/canon.h:180 camlibs/canon/canon.h:194
+#, c-format
+msgid "NULL parameter \"%s\" in %s line %i"
+msgstr ""
+
+#: camlibs/canon/canon.h:376
+#, c-format
+msgid ""
+"Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
+msgstr ""
+
+#: camlibs/canon/crc.c:221
+#, c-format
+msgid "FATAL ERROR: initial CRC value for length %d unknown\n"
+msgstr ""
+
+#: camlibs/canon/crc.c:234
+msgid "unable to guess initial CRC value\n"
+msgstr ""
+
+#: camlibs/canon/crc.c:261
+#, c-format
+msgid ""
+"warning: CRC not checked (add len %d, value 0x%04x) "
+"#########################\n"
 msgstr ""
 
 #: camlibs/canon/library.c:134
@@ -170,13 +206,13 @@ msgid "Internal error #1 in get_file_func() (%s line %i)"
 msgstr ""
 
 #: camlibs/canon/library.c:501
-#, c-format
-msgid "No thumbnail could be fould for %s"
-msgstr ""
+#, fuzzy, c-format
+msgid "No thumbnail could be found for %s"
+msgstr "ファイル '%s' がフォルダ '%s' の中にありません。"
 
 #: camlibs/canon/library.c:545
 #, fuzzy, c-format
-msgid "No audio file could be fould for %s"
+msgid "No audio file could be found for %s"
 msgstr "ファイル '%s' がフォルダ '%s' の中にありません。"
 
 #: camlibs/canon/library.c:741
@@ -296,7 +332,7 @@ msgstr "\\DCIM ディレクトリを作成することが出来ませんでした"
 msgid "Could not create destination directory."
 msgstr "対象となるディレクトリを作成することが出来ませんでした"
 
-#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:616
+#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:617
 msgid "Camera and Driver Configuration"
 msgstr "カメラとドライバの設定"
 
@@ -333,7 +369,7 @@ msgstr "カメラの日付を PC の日付にセットします"
 msgid "Firmware revision (readonly)"
 msgstr "ファームウェアのリビジョン (読み取りのみ)"
 
-#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:618
+#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:619
 msgid "Power (readonly)"
 msgstr "電源 (読み取りのみ)"
 
@@ -365,7 +401,7 @@ msgstr "時刻のセット"
 msgid "could not set time"
 msgstr "時刻をセットすることが出来ませんでした"
 
-#: camlibs/canon/library.c:1543
+#: camlibs/canon/library.c:1545
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr ""
@@ -753,9 +789,9 @@ msgid "Detected a '%s'."
 msgstr "'%s' を検出しました。"
 
 #: camlibs/canon/usb.c:1839
-#, fuzzy, c-format
-msgid "Could not identify camera based on name \"%s\""
-msgstr "ディスク名を取得することが出来ませんでした: %s"
+#, c-format
+msgid "Name \"%s\" from camera does not match any known camera"
+msgstr ""
 
 #: camlibs/digita/digita.c:331
 msgid "Unsupported image type"
@@ -969,8 +1005,8 @@ msgid "Problem taking live image"
 msgstr "リアルタイム画像の取得中に問題が発生しました"
 
 #: camlibs/dimera/dimera3500.c:771 camlibs/kodak/dc210/dc210.c:168
-#: camlibs/polaroid/pdc700.c:982 camlibs/sierra/sierra-desc.c:192
-#: camlibs/sierra/sierra.c:822 camlibs/sierra/sierra.c:1399
+#: camlibs/polaroid/pdc700.c:982 camlibs/sierra/sierra.c:822
+#: camlibs/sierra/sierra.c:1399 camlibs/sierra/sierra-desc.c:192
 msgid "Camera Configuration"
 msgstr "カメラの設定"
 
@@ -1203,6 +1239,46 @@ msgstr "型式: "
 msgid "Available memory: "
 msgstr "有効なメモリ: "
 
+#: camlibs/gsmart300/library.c:163
+#, fuzzy
+msgid ""
+"gsmart300 library \n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
+"Support for Mustek gSmart 300 digital cameras\n"
+"based on several other gphoto2 camlib modules and the specifications kindly "
+"provided by Mustek.\n"
+"\n"
+msgstr ""
+"\n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"いくつかの gPhoto2 camlib モジュールと Mustek 社から提供して頂いた Windows 向"
+"けのドライバ・ソースを流用したデジタルカメラの Mustek gSmart ミニ・シリーズの"
+"サポート。\n"
+"\n"
+
+#: camlibs/gsmart300/library.c:199
+#, fuzzy, c-format
+msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
+msgstr ""
+"サポートしていないポートの種類: %d 【このドライバは USB カメラでのみ動作しま"
+"す】\n"
+
+#: camlibs/gsmart300/library.c:216 camlibs/gsmart/library.c:284
+#: camlibs/spca50x/library.c:604
+msgid "Could not reset camera.\n"
+msgstr "カメラをリセットすることが出来ませんでした。\n"
+
+#: camlibs/gsmart300/library.c:346 camlibs/gsmart/library.c:431
+#: camlibs/spca50x/library.c:508
+#, c-format
+msgid ""
+"Your camera does only support deleting the last file on the camera. In this "
+"case, this is file '%s'."
+msgstr ""
+"お使いのカメラでは最後のファイルの削除のみサポートしています。現在このファイ"
+"ルは '%s' に該当します。"
+
 #: camlibs/gsmart/library.c:213
 msgid "gsmart library v"
 msgstr "gsmart ライブラリ Ver"
@@ -1231,46 +1307,6 @@ msgstr ""
 #: camlibs/gsmart/library.c:255 camlibs/spca50x/library.c:563
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr ""
-"サポートしていないポートの種類: %d 【このドライバは USB カメラでのみ動作しま"
-"す】\n"
-
-#: camlibs/gsmart/library.c:284 camlibs/gsmart300/library.c:216
-#: camlibs/spca50x/library.c:604
-msgid "Could not reset camera.\n"
-msgstr "カメラをリセットすることが出来ませんでした。\n"
-
-#: camlibs/gsmart/library.c:431 camlibs/gsmart300/library.c:346
-#: camlibs/spca50x/library.c:508
-#, c-format
-msgid ""
-"Your camera does only support deleting the last file on the camera. In this "
-"case, this is file '%s'."
-msgstr ""
-"お使いのカメラでは最後のファイルの削除のみサポートしています。現在このファイ"
-"ルは '%s' に該当します。"
-
-#: camlibs/gsmart300/library.c:163
-#, fuzzy
-msgid ""
-"gsmart300 library \n"
-"Till Adam <till@adam-lilienthal.de>\n"
-"Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
-"Support for Mustek gSmart 300 digital cameras\n"
-"based on several other gphoto2 camlib modules and the specifications kindly "
-"provided by Mustek.\n"
-"\n"
-msgstr ""
-"\n"
-"Till Adam <till@adam-lilienthal.de>\n"
-"いくつかの gPhoto2 camlib モジュールと Mustek 社から提供して頂いた Windows 向"
-"けのドライバ・ソースを流用したデジタルカメラの Mustek gSmart ミニ・シリーズの"
-"サポート。\n"
-"\n"
-
-#: camlibs/gsmart300/library.c:199
-#, fuzzy, c-format
-msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
 msgstr ""
 "サポートしていないポートの種類: %d 【このドライバは USB カメラでのみ動作しま"
 "す】\n"
@@ -2764,14 +2800,31 @@ msgstr ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder ドライバ\n"
 "Andrew Selkirk <aselkirk@mailandnews.com>"
 
-#: camlibs/pccam600/library.c:199
-msgid "Downloading file..."
-msgstr "ファイルのダウンロード中..."
+#: camlibs/pccam300/library.c:239
+#, c-format
+msgid ""
+" Total memory is %8d bytes.\n"
+" Free memory is  %8d bytes.\n"
+" Filecount: %d"
+msgstr ""
 
-#: camlibs/pccam600/library.c:259 camlibs/pccam300/library.c:250
+#: camlibs/pccam300/library.c:250 camlibs/pccam600/library.c:259
 #: camlibs/spca504_flash/library.c:174
 msgid "Manual Not Implemented Yet"
 msgstr "取り扱い説明書は未だ実装されていません。"
+
+#: camlibs/pccam300/library.c:258
+msgid ""
+"Creative PC-CAM 300\n"
+" Authors: Till Adam\n"
+"<till@adam-lilienthal.de>\n"
+"and: Miah Gregory\n"
+" <mace@darksilence.net>"
+msgstr ""
+
+#: camlibs/pccam600/library.c:199
+msgid "Downloading file..."
+msgstr "ファイルのダウンロード中..."
 
 #: camlibs/pccam600/library.c:266
 msgid ""
@@ -2783,29 +2836,12 @@ msgstr ""
 " 作者: Peter Kajberg\n"
 " E-メール: <pbk@odense.kollegienet.dk>\n"
 
-#: camlibs/pccam300/library.c:239
-#, c-format
-msgid ""
-" Total memory is %8d bytes.\n"
-" Free memory is  %8d bytes.\n"
-" Filecount: %d"
-msgstr ""
-
-#: camlibs/pccam300/library.c:258
-msgid ""
-"Creative PC-CAM 300\n"
-" Authors: Till Adam\n"
-"<till@adam-lilienthal.de>\n"
-"and: Miah Gregory\n"
-" <mace@darksilence.net>"
-msgstr ""
-
 #: camlibs/polaroid/pdc320.c:455
 msgid ""
 "Download program for several Polaroid cameras. Originally written by Peter "
 "Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan "
-"Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <urc8@rz.uni-"
-"karlsruhe.de>.\n"
+"Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users."
+"sf.net>.\n"
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
 msgstr ""
 
@@ -2817,8 +2853,8 @@ msgstr ""
 #: camlibs/polaroid/pdc640.c:887
 msgid ""
 "Download program for GrandTek 98x based cameras. Originally written by Chris "
-"Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller <urc8@rz."
-"uni-karlsruhe.de>.Protocol enhancements and postprocessing  for Jenoptik "
+"Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller "
+"<lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik "
 "JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus "
 "Meissner <marcus@jet.franken.de>."
 msgstr ""
@@ -2984,167 +3020,167 @@ msgstr ""
 msgid "The requested port type (%i) is not supported by this driver."
 msgstr "このドライバでは要求したポート型式 (%i) をサポートしていません。"
 
-#: camlibs/ptp2/library.c:102
+#: camlibs/ptp2/library.c:102 camlibs/ptp/library.c:99
 msgid "PTP Undefined Error"
 msgstr "PTP の不明なエラー"
 
-#: camlibs/ptp2/library.c:103
+#: camlibs/ptp2/library.c:103 camlibs/ptp/library.c:100
 msgid "PTP OK!"
 msgstr "PTP OK!"
 
-#: camlibs/ptp2/library.c:104
+#: camlibs/ptp2/library.c:104 camlibs/ptp/library.c:101
 msgid "PTP General Error"
 msgstr "PTP の一般的なエラー"
 
-#: camlibs/ptp2/library.c:105
+#: camlibs/ptp2/library.c:105 camlibs/ptp/library.c:102
 msgid "PTP Session Not Open"
 msgstr "PTP のセッションが開かれていません"
 
-#: camlibs/ptp2/library.c:106
+#: camlibs/ptp2/library.c:106 camlibs/ptp/library.c:103
 msgid "PTP Invalid Transaction ID"
 msgstr "PTP の不正なトランザクション ID"
 
-#: camlibs/ptp2/library.c:107
+#: camlibs/ptp2/library.c:107 camlibs/ptp/library.c:104
 msgid "PTP Operation Not Supported"
 msgstr "サポートされていない PTP 操作"
 
-#: camlibs/ptp2/library.c:108
+#: camlibs/ptp2/library.c:108 camlibs/ptp/library.c:105
 msgid "PTP Parameter Not Supported"
 msgstr "サポートされていない PTP パラメータ"
 
-#: camlibs/ptp2/library.c:109
+#: camlibs/ptp2/library.c:109 camlibs/ptp/library.c:106
 msgid "PTP Incomplete Transfer"
 msgstr "PTP の転送が完了していません"
 
-#: camlibs/ptp2/library.c:110
+#: camlibs/ptp2/library.c:110 camlibs/ptp/library.c:107
 msgid "PTP Invalid Storage ID"
 msgstr "PTP の不正なストレージ ID"
 
-#: camlibs/ptp2/library.c:111
+#: camlibs/ptp2/library.c:111 camlibs/ptp/library.c:108
 msgid "PTP Invalid Object Handle"
 msgstr "PTP 不正なオブジェクト操作"
 
-#: camlibs/ptp2/library.c:112
+#: camlibs/ptp2/library.c:112 camlibs/ptp/library.c:109
 msgid "PTP Device Prop Not Supported"
 msgstr "サポートされていない PTP デバイス Prop"
 
-#: camlibs/ptp2/library.c:113
+#: camlibs/ptp2/library.c:113 camlibs/ptp/library.c:110
 msgid "PTP Invalid Object Format Code"
 msgstr "PTP の不正なオブジェクト書式コード"
 
-#: camlibs/ptp2/library.c:114
+#: camlibs/ptp2/library.c:114 camlibs/ptp/library.c:111
 msgid "PTP Store Full"
 msgstr "PTP の空き容量がありません"
 
-#: camlibs/ptp2/library.c:115
+#: camlibs/ptp2/library.c:115 camlibs/ptp/library.c:112
 msgid "PTP Object Write Protected"
 msgstr "PTP オブジェクトへの書き込み保護が有効です"
 
-#: camlibs/ptp2/library.c:116
+#: camlibs/ptp2/library.c:116 camlibs/ptp/library.c:113
 msgid "PTP Store Read Only"
 msgstr "PTP は読み込み専用です"
 
-#: camlibs/ptp2/library.c:117
+#: camlibs/ptp2/library.c:117 camlibs/ptp/library.c:114
 msgid "PTP Access Denied"
 msgstr "PTP へのアクセスが拒否されました"
 
-#: camlibs/ptp2/library.c:118
+#: camlibs/ptp2/library.c:118 camlibs/ptp/library.c:115
 msgid "PTP No Thumbnail Present"
 msgstr "PTP にはサムネイルがありません"
 
-#: camlibs/ptp2/library.c:119
+#: camlibs/ptp2/library.c:119 camlibs/ptp/library.c:116
 msgid "PTP Self Test Failed"
 msgstr "PTP の自己診断に失敗しました"
 
-#: camlibs/ptp2/library.c:120
+#: camlibs/ptp2/library.c:120 camlibs/ptp/library.c:117
 msgid "PTP Partial Deletion"
 msgstr "PTP の部分的な削除"
 
-#: camlibs/ptp2/library.c:121
+#: camlibs/ptp2/library.c:121 camlibs/ptp/library.c:118
 msgid "PTP Store Not Available"
 msgstr "PTP に格納できません"
 
-#: camlibs/ptp2/library.c:123
+#: camlibs/ptp2/library.c:123 camlibs/ptp/library.c:120
 msgid "PTP Specification By Format Unsupported"
 msgstr "サポートしていない PTP 書式の指定"
 
-#: camlibs/ptp2/library.c:124
+#: camlibs/ptp2/library.c:124 camlibs/ptp/library.c:121
 msgid "PTP No Valid Object Info"
 msgstr "PTP の不正なオブジェクト情報"
 
-#: camlibs/ptp2/library.c:125
+#: camlibs/ptp2/library.c:125 camlibs/ptp/library.c:122
 msgid "PTP Invalid Code Format"
 msgstr "PTP の不正なコード書式"
 
-#: camlibs/ptp2/library.c:126
+#: camlibs/ptp2/library.c:126 camlibs/ptp/library.c:123
 msgid "PTP Unknown Vendor Code"
 msgstr "PTP の不明なベンダーコードです"
 
-#: camlibs/ptp2/library.c:128
+#: camlibs/ptp2/library.c:128 camlibs/ptp/library.c:125
 msgid "PTP Capture Already Terminated"
 msgstr "PTP のキャプチャは中断しました"
 
-#: camlibs/ptp2/library.c:129
+#: camlibs/ptp2/library.c:129 camlibs/ptp/library.c:126
 msgid "PTP Device Bus"
 msgstr "PTP のデバイス・バス"
 
-#: camlibs/ptp2/library.c:130
+#: camlibs/ptp2/library.c:130 camlibs/ptp/library.c:127
 msgid "PTP Invalid Parent Object"
 msgstr "PTP 不正なオブジェクト"
 
-#: camlibs/ptp2/library.c:131
+#: camlibs/ptp2/library.c:131 camlibs/ptp/library.c:128
 msgid "PTP Invalid Device Prop Format"
 msgstr "PTP の不正なデバイス Prop 書式"
 
-#: camlibs/ptp2/library.c:132
+#: camlibs/ptp2/library.c:132 camlibs/ptp/library.c:129
 msgid "PTP Invalid Device Prop Value"
 msgstr "PTP の不正なデバイス Prop 値"
 
-#: camlibs/ptp2/library.c:133
+#: camlibs/ptp2/library.c:133 camlibs/ptp/library.c:130
 msgid "PTP Invalid Parameter"
 msgstr "PTP の不正なパラメータ"
 
-#: camlibs/ptp2/library.c:134
+#: camlibs/ptp2/library.c:134 camlibs/ptp/library.c:131
 msgid "PTP Session Already Opened"
 msgstr "PTP のセッションはオープンしています"
 
-#: camlibs/ptp2/library.c:135
+#: camlibs/ptp2/library.c:135 camlibs/ptp/library.c:132
 msgid "PTP Transaction Canceled"
 msgstr "PTP トランザクションがキャンセルされました"
 
-#: camlibs/ptp2/library.c:137
+#: camlibs/ptp2/library.c:137 camlibs/ptp/library.c:134
 msgid "PTP Specification Of Destination Unsupported"
 msgstr "サポートしていない PTP 転送先の指定"
 
-#: camlibs/ptp2/library.c:138
+#: camlibs/ptp2/library.c:138 camlibs/ptp/library.c:135
 msgid "PTP EK Filename Required"
 msgstr "PTP EK ファイル名が必要です"
 
-#: camlibs/ptp2/library.c:139
+#: camlibs/ptp2/library.c:139 camlibs/ptp/library.c:136
 msgid "PTP EK Filename Conflicts"
 msgstr "PTP EK ファイル名が重複しています"
 
-#: camlibs/ptp2/library.c:140
+#: camlibs/ptp2/library.c:140 camlibs/ptp/library.c:137
 msgid "PTP EK Filename Invalid"
 msgstr "PTP EK 不正なファイル名です"
 
-#: camlibs/ptp2/library.c:142
+#: camlibs/ptp2/library.c:142 camlibs/ptp/library.c:139
 msgid "PTP I/O error"
 msgstr "PTP I/O エラーです"
 
-#: camlibs/ptp2/library.c:143
+#: camlibs/ptp2/library.c:143 camlibs/ptp/library.c:140
 msgid "PTP Error: bad parameter"
 msgstr "PTP エラー: パラメータが正しくありません"
 
-#: camlibs/ptp2/library.c:144
+#: camlibs/ptp2/library.c:144 camlibs/ptp/library.c:141
 msgid "PTP Protocol error, data expected"
 msgstr "PTP プロトコル・エラー (期待値: データ)"
 
-#: camlibs/ptp2/library.c:145
+#: camlibs/ptp2/library.c:145 camlibs/ptp/library.c:142
 msgid "PTP Protocol error, response expected"
 msgstr "PTP プロトコル・エラー (期待値: 応答)"
 
-#: camlibs/ptp2/library.c:547
+#: camlibs/ptp2/library.c:548
 #, fuzzy
 msgid ""
 "PTP2 driver\n"
@@ -3152,7 +3188,7 @@ msgid ""
 "Enjoy!"
 msgstr "Mariusz Woloszyn 氏 <emsi@ipartners.pl> が担当しました。Enjoy!"
 
-#: camlibs/ptp2/library.c:583
+#: camlibs/ptp2/library.c:584
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3162,25 +3198,25 @@ msgid ""
 "Vendor extension description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:623
+#: camlibs/ptp2/library.c:624
 #, fuzzy
 msgid "Number of values"
 msgstr "写真の数: %d\n"
 
-#: camlibs/ptp2/library.c:627
+#: camlibs/ptp2/library.c:628
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/library.c:640
+#: camlibs/ptp2/library.c:641
 msgid "Current value"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1082
+#: camlibs/ptp2/library.c:1083
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "カメラを OFF にします"
 
-#: camlibs/ptp2/library.c:1154
+#: camlibs/ptp2/library.c:1155 camlibs/ptp/library.c:1065
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP は USB カメラのみサポートしています。"
 
@@ -3551,6 +3587,10 @@ msgstr "電源ランプなし"
 #, fuzzy
 msgid "EK UI Language"
 msgstr "言語"
+
+#: camlibs/ptp/library.c:533
+msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
+msgstr "Mariusz Woloszyn 氏 <emsi@ipartners.pl> が担当しました。Enjoy!"
 
 #: camlibs/ricoh/library.c:215
 msgid ""
@@ -4400,11 +4440,6 @@ msgstr ""
 "    設定機能を完全にするために開発に協力してくれるのならば\n"
 "    gphoto-devel@gphoto.net の開発者に連絡して下さい。\n"
 
-#: camlibs/sierra/sierra-desc.c:173
-#, c-format
-msgid "%lld (unknown)"
-msgstr "%lld (不明)"
-
 #: camlibs/sierra/sierra.c:679 camlibs/soundvision/soundvision.c:411
 msgid "The file to be uploaded has a null length"
 msgstr "アップロードしたファイルのサイズが NULL です"
@@ -4698,6 +4733,11 @@ msgstr ""
 "Olymus C-3030Z の USB サポートの実装では\n"
 "Data Engines 氏 (www.dataengines.com)\n"
 "に感謝します。"
+
+#: camlibs/sierra/sierra-desc.c:173
+#, c-format
+msgid "%lld (unknown)"
+msgstr "%lld (不明)"
 
 #: camlibs/sipix/blink.c:911
 msgid ""
@@ -5246,6 +5286,10 @@ msgstr "カメラライブラリの不明なエラー"
 msgid "Unknown error"
 msgstr "不明なエラー"
 
+#, fuzzy
+#~ msgid "Could not identify camera based on name \"%s\""
+#~ msgstr "ディスク名を取得することが出来ませんでした: %s"
+
 #~ msgid ""
 #~ "Expected %i bytes, got %i. Please report this error to <gphoto-"
 #~ "devel@gphoto.org>."
@@ -5263,9 +5307,6 @@ msgstr "不明なエラー"
 #, fuzzy
 #~ msgid "Driver Configuration"
 #~ msgstr "カメラの設定"
-
-#~ msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
-#~ msgstr "Mariusz Woloszyn 氏 <emsi@ipartners.pl> が担当しました。Enjoy!"
 
 #, fuzzy
 #~ msgid "(ptp2) Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
-"POT-Creation-Date: 2003-07-11 14:53+0200\n"
+"POT-Creation-Date: 2003-07-13 10:18+0200\n"
 "PO-Revision-Date: 2003-06-22 23:47+0200\n"
 "Last-Translator: Aurélien Croc <aurelien@ap2c.com>\n"
 "Language-Team: Français\n"
@@ -15,6 +15,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Report-Msgid-Bugs-To: \n"
 "X-Generator: KBabel 1.2beta3\n"
+
+#: camlibs/agfa-cl20/agfa_cl20.c:540
+msgid ""
+"agfa_cl20\n"
+"The Agfa CL20 Linux Driver People!\n"
+"     Email us at cl20@poeml.de    \n"
+" Visit us at http://cl20.poeml.de "
+msgstr ""
 
 #: camlibs/barbie/barbie.c:149
 #, c-format
@@ -131,6 +139,33 @@ msgstr ""
 #: camlibs/canon/canon.c:2170
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr "Impossible d'extraire la vignette JPEG des données: pas de début/fin"
+
+#: camlibs/canon/canon.h:180 camlibs/canon/canon.h:194
+#, c-format
+msgid "NULL parameter \"%s\" in %s line %i"
+msgstr ""
+
+#: camlibs/canon/canon.h:376
+#, c-format
+msgid ""
+"Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
+msgstr ""
+
+#: camlibs/canon/crc.c:221
+#, c-format
+msgid "FATAL ERROR: initial CRC value for length %d unknown\n"
+msgstr ""
+
+#: camlibs/canon/crc.c:234
+msgid "unable to guess initial CRC value\n"
+msgstr ""
+
+#: camlibs/canon/crc.c:261
+#, c-format
+msgid ""
+"warning: CRC not checked (add len %d, value 0x%04x) "
+"#########################\n"
+msgstr ""
 
 #: camlibs/canon/library.c:134
 msgid ""
@@ -306,7 +341,7 @@ msgstr "Impossible de créer le dossier \\DCIM."
 msgid "Could not create destination directory."
 msgstr "Impossible d'obtenir le contenu du répertoire destination."
 
-#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:616
+#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:617
 msgid "Camera and Driver Configuration"
 msgstr "Configuration de l'appareil et du pilote"
 
@@ -343,7 +378,7 @@ msgstr "Mettre l'appareil à la date du PC"
 msgid "Firmware revision (readonly)"
 msgstr "Révision de microcode (lecture seule)"
 
-#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:618
+#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:619
 msgid "Power (readonly)"
 msgstr "Énergie (lecture seule)"
 
@@ -990,8 +1025,8 @@ msgid "Problem taking live image"
 msgstr "Problème à la prise de vue en temps-réel"
 
 #: camlibs/dimera/dimera3500.c:771 camlibs/kodak/dc210/dc210.c:168
-#: camlibs/polaroid/pdc700.c:982 camlibs/sierra/sierra-desc.c:192
-#: camlibs/sierra/sierra.c:822 camlibs/sierra/sierra.c:1399
+#: camlibs/polaroid/pdc700.c:982 camlibs/sierra/sierra.c:822
+#: camlibs/sierra/sierra.c:1399 camlibs/sierra/sierra-desc.c:192
 msgid "Camera Configuration"
 msgstr "Configuration de l'appareil"
 
@@ -1219,6 +1254,46 @@ msgstr "Modèle :"
 msgid "Available memory: "
 msgstr "Mémoire disponible:"
 
+#: camlibs/gsmart300/library.c:163
+msgid ""
+"gsmart300 library \n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
+"Support for Mustek gSmart 300 digital cameras\n"
+"based on several other gphoto2 camlib modules and the specifications kindly "
+"provided by Mustek.\n"
+"\n"
+msgstr ""
+"Bibliothèque gsmart300\n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"Jérôme Lodewyck <jerome.lodewyck@ens.fr>\n"
+"Support pour les appareils photos Mustek gSmart 300\n"
+"basé sur divers autres modules d'appareils gphoto2 et les spécifications "
+"gentiment fournies par Mustek.\n"
+"\n"
+
+#: camlibs/gsmart300/library.c:199
+#, c-format
+msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
+msgstr ""
+"Type de port non supporté: %d. Ce pilote ne marche qu'avec des appareils "
+"USB.\n"
+
+#: camlibs/gsmart300/library.c:216 camlibs/gsmart/library.c:284
+#: camlibs/spca50x/library.c:604
+msgid "Could not reset camera.\n"
+msgstr "Impossible de remettre l'appareil à zéro.\n"
+
+#: camlibs/gsmart300/library.c:346 camlibs/gsmart/library.c:431
+#: camlibs/spca50x/library.c:508
+#, c-format
+msgid ""
+"Your camera does only support deleting the last file on the camera. In this "
+"case, this is file '%s'."
+msgstr ""
+"Votre appareil ne supporte que la suppression du dernier fichier de "
+"l'appareil. Dans ce cas, il s'agit du fichier '%s'."
+
 #: camlibs/gsmart/library.c:213
 msgid "gsmart library v"
 msgstr "Bibliothèque gsmart v"
@@ -1247,46 +1322,6 @@ msgstr ""
 #: camlibs/gsmart/library.c:255 camlibs/spca50x/library.c:563
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr ""
-"Type de port non supporté: %d. Ce pilote ne marche qu'avec des appareils "
-"USB.\n"
-
-#: camlibs/gsmart/library.c:284 camlibs/gsmart300/library.c:216
-#: camlibs/spca50x/library.c:604
-msgid "Could not reset camera.\n"
-msgstr "Impossible de remettre l'appareil à zéro.\n"
-
-#: camlibs/gsmart/library.c:431 camlibs/gsmart300/library.c:346
-#: camlibs/spca50x/library.c:508
-#, c-format
-msgid ""
-"Your camera does only support deleting the last file on the camera. In this "
-"case, this is file '%s'."
-msgstr ""
-"Votre appareil ne supporte que la suppression du dernier fichier de "
-"l'appareil. Dans ce cas, il s'agit du fichier '%s'."
-
-#: camlibs/gsmart300/library.c:163
-msgid ""
-"gsmart300 library \n"
-"Till Adam <till@adam-lilienthal.de>\n"
-"Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
-"Support for Mustek gSmart 300 digital cameras\n"
-"based on several other gphoto2 camlib modules and the specifications kindly "
-"provided by Mustek.\n"
-"\n"
-msgstr ""
-"Bibliothèque gsmart300\n"
-"Till Adam <till@adam-lilienthal.de>\n"
-"Jérôme Lodewyck <jerome.lodewyck@ens.fr>\n"
-"Support pour les appareils photos Mustek gSmart 300\n"
-"basé sur divers autres modules d'appareils gphoto2 et les spécifications "
-"gentiment fournies par Mustek.\n"
-"\n"
-
-#: camlibs/gsmart300/library.c:199
-#, c-format
-msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
 msgstr ""
 "Type de port non supporté: %d. Ce pilote ne marche qu'avec des appareils "
 "USB.\n"
@@ -2803,25 +2838,6 @@ msgstr ""
 "Pilote pour Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "Andrew Selkirk <aselkirk@mailandnews.com>"
 
-#: camlibs/pccam600/library.c:199
-msgid "Downloading file..."
-msgstr "Téléchargement du fichier..."
-
-#: camlibs/pccam600/library.c:259 camlibs/pccam300/library.c:250
-#: camlibs/spca504_flash/library.c:174
-msgid "Manual Not Implemented Yet"
-msgstr "Le manuel n'est pas encore implémenté."
-
-#: camlibs/pccam600/library.c:266
-msgid ""
-"Creative PC-CAM600\n"
-" Author: Peter Kajberg\n"
-" email: <pbk@odense.kollegienet.dk>\n"
-msgstr ""
-"Creative PC-CAM600\n"
-" Auteur: Peter Kajberg\n"
-" email: <pbk@odense.kollegienet.dk>\n"
-
 #: camlibs/pccam300/library.c:239
 #, c-format
 msgid ""
@@ -2832,6 +2848,11 @@ msgstr ""
 "L'espace mémoire total est de %8d octets.\n"
 "L'espace mémoire libre est de %8d octets.\n"
 "Nombre de fichiers : %d"
+
+#: camlibs/pccam300/library.c:250 camlibs/pccam600/library.c:259
+#: camlibs/spca504_flash/library.c:174
+msgid "Manual Not Implemented Yet"
+msgstr "Le manuel n'est pas encore implémenté."
 
 #: camlibs/pccam300/library.c:258
 msgid ""
@@ -2847,18 +2868,33 @@ msgstr ""
 "et : Miah Gregory\n"
 " <mace@darksilence.net>"
 
+#: camlibs/pccam600/library.c:199
+msgid "Downloading file..."
+msgstr "Téléchargement du fichier..."
+
+#: camlibs/pccam600/library.c:266
+msgid ""
+"Creative PC-CAM600\n"
+" Author: Peter Kajberg\n"
+" email: <pbk@odense.kollegienet.dk>\n"
+msgstr ""
+"Creative PC-CAM600\n"
+" Auteur: Peter Kajberg\n"
+" email: <pbk@odense.kollegienet.dk>\n"
+
 #: camlibs/polaroid/pdc320.c:455
+#, fuzzy
 msgid ""
 "Download program for several Polaroid cameras. Originally written by Peter "
 "Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan "
-"Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <urc8@rz.uni-"
-"karlsruhe.de>.\n"
+"Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users."
+"sf.net>.\n"
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
 msgstr ""
 "Téléchargé le programme pour quelques appareils photos Polaroïd. "
 "Originellement écrit par Peter Desnoyers <pjd@fred.cambridge.ma.us>, et "
 "adapté pour GPhoto2 par Nathan Stenzel <nathanstenzel@user.sourceforge.net> "
-"et Lutz Müeller <urc8rz.uni- karlsruhe.de>. \n"
+"et Lutz Müeller <lutz@users.sf.net>. \n"
 "Les tests du Polaroïd 640SE ont été effectués par Michael Golden "
 "<naugrim@juno.com>."
 
@@ -2868,19 +2904,20 @@ msgid "Model: %x, %x, %x, %x"
 msgstr "Modèle : %x, %x, %x, %x"
 
 #: camlibs/polaroid/pdc640.c:887
+#, fuzzy
 msgid ""
 "Download program for GrandTek 98x based cameras. Originally written by Chris "
-"Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller <urc8@rz."
-"uni-karlsruhe.de>.Protocol enhancements and postprocessing  for Jenoptik "
+"Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller "
+"<lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik "
 "JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus "
 "Meissner <marcus@jet.franken.de>."
 msgstr ""
 "Programme de récupération pour les appareils photos basés sur le GrandTek "
 "98x. Originellement écrit par Chris Byrne <adapt@ihug.co.nz>, et adapté pour "
-"gphoto2 par Lutz Müeller <lutz@users.sf.net>. Améliorations du "
-"protocole et traitement post-opératoire pour les Jenoptik JD350e par Michael "
-"Trawny <trawny99@users.sourceforge.net>. Résolution de bugs par Marcus "
-"Meissner <marcus@jet.franken.de>."
+"gphoto2 par Lutz Müeller <lutz@users.sf.net>. Améliorations du protocole et "
+"traitement post-opératoire pour les Jenoptik JD350e par Michael Trawny "
+"<trawny99@users.sourceforge.net>. Résolution de bugs par Marcus Meissner "
+"<marcus@jet.franken.de>."
 
 #: camlibs/polaroid/pdc700.c:159
 msgid "Image Quality"
@@ -2998,7 +3035,7 @@ msgid ""
 msgstr ""
 "Téléchargé le programme des appareils photos Polaroïd DC700. Originellement "
 "écrit par Ryan Lantzer <rlantzer@umr.edu> pour GPhoto 4.X. Adapté pour "
-"GPhoto2 by Lutz Müeller <urc8@rz-karlsruhe.de>."
+"GPhoto2 by Lutz Müeller <lutz@users.sf.net>."
 
 #: camlibs/polaroid/pdc700.c:997
 msgid "How long will it take until the camera powers off?"
@@ -3047,167 +3084,167 @@ msgid "The requested port type (%i) is not supported by this driver."
 msgstr ""
 "Le type de port demandé (%i) n'est pas supporté par ce pilote logiciel."
 
-#: camlibs/ptp2/library.c:102
+#: camlibs/ptp2/library.c:102 camlibs/ptp/library.c:99
 msgid "PTP Undefined Error"
 msgstr "PTP Erreur non définie"
 
-#: camlibs/ptp2/library.c:103
+#: camlibs/ptp2/library.c:103 camlibs/ptp/library.c:100
 msgid "PTP OK!"
 msgstr "PTP OK!"
 
-#: camlibs/ptp2/library.c:104
+#: camlibs/ptp2/library.c:104 camlibs/ptp/library.c:101
 msgid "PTP General Error"
 msgstr "PTP Erreur générale"
 
-#: camlibs/ptp2/library.c:105
+#: camlibs/ptp2/library.c:105 camlibs/ptp/library.c:102
 msgid "PTP Session Not Open"
 msgstr "PTP Session non-ouverte"
 
-#: camlibs/ptp2/library.c:106
+#: camlibs/ptp2/library.c:106 camlibs/ptp/library.c:103
 msgid "PTP Invalid Transaction ID"
 msgstr "PTP ID de transaction invalide"
 
-#: camlibs/ptp2/library.c:107
+#: camlibs/ptp2/library.c:107 camlibs/ptp/library.c:104
 msgid "PTP Operation Not Supported"
 msgstr "PTP Opération non supportée"
 
-#: camlibs/ptp2/library.c:108
+#: camlibs/ptp2/library.c:108 camlibs/ptp/library.c:105
 msgid "PTP Parameter Not Supported"
 msgstr "PTP Paramètre non supporté"
 
-#: camlibs/ptp2/library.c:109
+#: camlibs/ptp2/library.c:109 camlibs/ptp/library.c:106
 msgid "PTP Incomplete Transfer"
 msgstr "PTP Transfert incomplet"
 
-#: camlibs/ptp2/library.c:110
+#: camlibs/ptp2/library.c:110 camlibs/ptp/library.c:107
 msgid "PTP Invalid Storage ID"
 msgstr "PTP Storage ID invalide"
 
-#: camlibs/ptp2/library.c:111
+#: camlibs/ptp2/library.c:111 camlibs/ptp/library.c:108
 msgid "PTP Invalid Object Handle"
 msgstr "PTP identificateur d'objet invalide"
 
-#: camlibs/ptp2/library.c:112
+#: camlibs/ptp2/library.c:112 camlibs/ptp/library.c:109
 msgid "PTP Device Prop Not Supported"
 msgstr "PTP Propriété de périphérique non supportée"
 
-#: camlibs/ptp2/library.c:113
+#: camlibs/ptp2/library.c:113 camlibs/ptp/library.c:110
 msgid "PTP Invalid Object Format Code"
 msgstr "PTP Code de format d'objet incorrect"
 
-#: camlibs/ptp2/library.c:114
+#: camlibs/ptp2/library.c:114 camlibs/ptp/library.c:111
 msgid "PTP Store Full"
 msgstr "PTP plus d'espace"
 
-#: camlibs/ptp2/library.c:115
+#: camlibs/ptp2/library.c:115 camlibs/ptp/library.c:112
 msgid "PTP Object Write Protected"
 msgstr "PTP Objet protégé en écriture"
 
-#: camlibs/ptp2/library.c:116
+#: camlibs/ptp2/library.c:116 camlibs/ptp/library.c:113
 msgid "PTP Store Read Only"
 msgstr "PTP Mémoire en lecture seule"
 
-#: camlibs/ptp2/library.c:117
+#: camlibs/ptp2/library.c:117 camlibs/ptp/library.c:114
 msgid "PTP Access Denied"
 msgstr "PTP Accès refusé"
 
-#: camlibs/ptp2/library.c:118
+#: camlibs/ptp2/library.c:118 camlibs/ptp/library.c:115
 msgid "PTP No Thumbnail Present"
 msgstr "Pas de miniature présente"
 
-#: camlibs/ptp2/library.c:119
+#: camlibs/ptp2/library.c:119 camlibs/ptp/library.c:116
 msgid "PTP Self Test Failed"
 msgstr "PTP Echec de l'autotest "
 
-#: camlibs/ptp2/library.c:120
+#: camlibs/ptp2/library.c:120 camlibs/ptp/library.c:117
 msgid "PTP Partial Deletion"
 msgstr "PTP Effacement partiel"
 
-#: camlibs/ptp2/library.c:121
+#: camlibs/ptp2/library.c:121 camlibs/ptp/library.c:118
 msgid "PTP Store Not Available"
 msgstr "PTP espace non disponible"
 
-#: camlibs/ptp2/library.c:123
+#: camlibs/ptp2/library.c:123 camlibs/ptp/library.c:120
 msgid "PTP Specification By Format Unsupported"
 msgstr "PTP Spécification de format non supportée"
 
-#: camlibs/ptp2/library.c:124
+#: camlibs/ptp2/library.c:124 camlibs/ptp/library.c:121
 msgid "PTP No Valid Object Info"
 msgstr "PTP Pas d'information valide sur l'objet"
 
-#: camlibs/ptp2/library.c:125
+#: camlibs/ptp2/library.c:125 camlibs/ptp/library.c:122
 msgid "PTP Invalid Code Format"
 msgstr "PTP Format de code incorrect"
 
-#: camlibs/ptp2/library.c:126
+#: camlibs/ptp2/library.c:126 camlibs/ptp/library.c:123
 msgid "PTP Unknown Vendor Code"
 msgstr "PTP Modèle inconnu"
 
-#: camlibs/ptp2/library.c:128
+#: camlibs/ptp2/library.c:128 camlibs/ptp/library.c:125
 msgid "PTP Capture Already Terminated"
 msgstr "PTP Capture déjà terminé"
 
-#: camlibs/ptp2/library.c:129
+#: camlibs/ptp2/library.c:129 camlibs/ptp/library.c:126
 msgid "PTP Device Bus"
 msgstr "PTP Bus des périphériques"
 
-#: camlibs/ptp2/library.c:130
+#: camlibs/ptp2/library.c:130 camlibs/ptp/library.c:127
 msgid "PTP Invalid Parent Object"
 msgstr "PTP Objet père incorrect"
 
-#: camlibs/ptp2/library.c:131
+#: camlibs/ptp2/library.c:131 camlibs/ptp/library.c:128
 msgid "PTP Invalid Device Prop Format"
 msgstr "PTP Format de propriété de périphérique incorrect"
 
-#: camlibs/ptp2/library.c:132
+#: camlibs/ptp2/library.c:132 camlibs/ptp/library.c:129
 msgid "PTP Invalid Device Prop Value"
 msgstr "PTP Valeur de propriété de périphérique incorrect"
 
-#: camlibs/ptp2/library.c:133
+#: camlibs/ptp2/library.c:133 camlibs/ptp/library.c:130
 msgid "PTP Invalid Parameter"
 msgstr "PTP Paramètre incorrect"
 
-#: camlibs/ptp2/library.c:134
+#: camlibs/ptp2/library.c:134 camlibs/ptp/library.c:131
 msgid "PTP Session Already Opened"
 msgstr "PTP Session déjà ouverte"
 
-#: camlibs/ptp2/library.c:135
+#: camlibs/ptp2/library.c:135 camlibs/ptp/library.c:132
 msgid "PTP Transaction Canceled"
 msgstr "PTP Opération annulée"
 
-#: camlibs/ptp2/library.c:137
+#: camlibs/ptp2/library.c:137 camlibs/ptp/library.c:134
 msgid "PTP Specification Of Destination Unsupported"
 msgstr "PTP Spécification de la destination non supportée "
 
-#: camlibs/ptp2/library.c:138
+#: camlibs/ptp2/library.c:138 camlibs/ptp/library.c:135
 msgid "PTP EK Filename Required"
 msgstr "PTP Nom de fichier EK nécessaire"
 
-#: camlibs/ptp2/library.c:139
+#: camlibs/ptp2/library.c:139 camlibs/ptp/library.c:136
 msgid "PTP EK Filename Conflicts"
 msgstr "PTP Conflit de nom de fichier EK"
 
-#: camlibs/ptp2/library.c:140
+#: camlibs/ptp2/library.c:140 camlibs/ptp/library.c:137
 msgid "PTP EK Filename Invalid"
 msgstr "PTP Nom de fichier EK incorrect"
 
-#: camlibs/ptp2/library.c:142
+#: camlibs/ptp2/library.c:142 camlibs/ptp/library.c:139
 msgid "PTP I/O error"
 msgstr "PTP erreur d'entrée sortie"
 
-#: camlibs/ptp2/library.c:143
+#: camlibs/ptp2/library.c:143 camlibs/ptp/library.c:140
 msgid "PTP Error: bad parameter"
 msgstr "PTP Erreur: mauvais paramètre"
 
-#: camlibs/ptp2/library.c:144
+#: camlibs/ptp2/library.c:144 camlibs/ptp/library.c:141
 msgid "PTP Protocol error, data expected"
 msgstr "PTP Erreur de protocole, données attendues"
 
-#: camlibs/ptp2/library.c:145
+#: camlibs/ptp2/library.c:145 camlibs/ptp/library.c:142
 msgid "PTP Protocol error, response expected"
 msgstr "PTP Errur de protocole, réponse attendue"
 
-#: camlibs/ptp2/library.c:547
+#: camlibs/ptp2/library.c:548
 msgid ""
 "PTP2 driver\n"
 "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -3217,7 +3254,7 @@ msgstr ""
 "(c) 2001-2003 par Mariusz Woloszyn <emsi@ipartners.pl>.\n"
 "Bonne chance !"
 
-#: camlibs/ptp2/library.c:583
+#: camlibs/ptp2/library.c:584
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3232,23 +3269,23 @@ msgstr ""
 "ID étendue du vendeur : 0x%08x\n"
 "Description étendue du vendeur : %s\n"
 
-#: camlibs/ptp2/library.c:623
+#: camlibs/ptp2/library.c:624
 msgid "Number of values"
 msgstr "Nombre de valeurs"
 
-#: camlibs/ptp2/library.c:627
+#: camlibs/ptp2/library.c:628
 msgid "Supported values"
 msgstr "Valeurs supportées"
 
-#: camlibs/ptp2/library.c:640
+#: camlibs/ptp2/library.c:641
 msgid "Current value"
 msgstr "Valeur actuelle"
 
-#: camlibs/ptp2/library.c:1082
+#: camlibs/ptp2/library.c:1083
 msgid "Initializing Camera"
 msgstr "Initialisation de l'appareil photo"
 
-#: camlibs/ptp2/library.c:1154
+#: camlibs/ptp2/library.c:1155 camlibs/ptp/library.c:1065
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP est implémenté uniquement pour les appareils USB."
 
@@ -3563,6 +3600,14 @@ msgstr "Économie d'énergie EK"
 #: camlibs/ptp2/ptpcam.c:549
 msgid "EK UI Language"
 msgstr "Langue interface EK"
+
+#: camlibs/ptp/library.c:533
+#, fuzzy
+msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
+msgstr ""
+"Pilote PTP2\n"
+"(c) 2001-2003 par Mariusz Woloszyn <emsi@ipartners.pl>.\n"
+"Bonne chance !"
 
 #: camlibs/ricoh/library.c:215
 msgid ""
@@ -4404,11 +4449,6 @@ msgstr ""
 "    pour supporter une configuration complète,\n"
 "    veuillez contacter gphoto-devel@gphoto.net\n"
 
-#: camlibs/sierra/sierra-desc.c:173
-#, c-format
-msgid "%lld (unknown)"
-msgstr "%lld (inconnu)"
-
 #: camlibs/sierra/sierra.c:679 camlibs/soundvision/soundvision.c:411
 msgid "The file to be uploaded has a null length"
 msgstr "Le fichier à envoyer est de longueur nulle"
@@ -4711,6 +4751,11 @@ msgstr ""
 "Merci à Data Engines (www.dataengines.com)\n"
 "pour l'utilisation de leur Olympus C-3030Z\n"
 "pour le support de l'interface USB."
+
+#: camlibs/sierra/sierra-desc.c:173
+#, c-format
+msgid "%lld (unknown)"
+msgstr "%lld (inconnu)"
 
 #: camlibs/sipix/blink.c:911
 msgid ""
