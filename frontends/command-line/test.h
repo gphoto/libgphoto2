@@ -1,1 +1,1 @@
-int test_library ();
+int test_gphoto ();

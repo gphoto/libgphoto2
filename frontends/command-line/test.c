@@ -4,7 +4,10 @@
 
 #include <gphoto2.h>
 
-int test_library() {
+int test_gphoto() {
+	/* This will let the user check to see the status of their
+	   gPhoto installation and test to make sure everything is
+	   in working order */
 
 	CameraAbilities a;
 	CameraPortSettings s;

@@ -2,7 +2,8 @@
 
 bin_PROGRAMS = gphoto2
 
-CFLAGS = @CFLAGS@ -I$(top_srcdir)/include
+CFLAGS = @CFLAGS@ -g -I$(top_srcdir)/include
+LDFLAGS = @LDFLAGS@ -g
 
 gphoto2_SOURCES = \
 		main.c main.h \

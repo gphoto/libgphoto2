@@ -1,9 +1,11 @@
 /* Make it easy to add command-line options */
 
 #define OPTION_CALLBACK(_a)		void _a (char *arg)
+#define	SHORT_OPTION			"-"
+#define LONG_OPTION			"--"
 
 typedef struct {
-	char	short_id;
+	char	short_id[3];
 	char	long_id[20];
 	char	argument[16];
 	char	description[35];
