@@ -5,6 +5,7 @@
         * adding filetypes: search for "jpg", copy line and change extension
 */
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,7 +27,8 @@ char *extension[] = {
         NULL
 };
 
-int is_image (char *filename) {
+int is_image (char *filename) 
+{
 
         char *dot;
         int x=0;
@@ -42,16 +44,16 @@ int is_image (char *filename) {
         return (0);
 }
 
-int camera_id (CameraText *id) {
-
+int camera_id (CameraText *id) 
+{
         strcpy(id->text, "directory");
 
         return (GP_OK);
 }
 
 
-int camera_abilities (CameraAbilitiesList *list) {
-
+int camera_abilities (CameraAbilitiesList *list) 
+{
         CameraAbilities *a;
 
         a = gp_abilities_new();
@@ -70,9 +72,9 @@ int camera_abilities (CameraAbilitiesList *list) {
         return (GP_OK);
 }
 
-int camera_init (Camera *camera) {
-
-        int i=0;
+int camera_init (Camera *camera) 
+{
+        int i = 0;
         DirectoryStruct *d;
         char buf[256];
 
@@ -84,6 +86,7 @@ int camera_init (Camera *camera) {
         camera->functions->folder_list  	= camera_folder_list;
         camera->functions->file_list    	= camera_file_list;
         camera->functions->file_get     	= camera_file_get;
+	camera->functions->file_info_set	= camera_file_info_set;
 	camera->functions->config_get		= camera_config_get;
 	camera->functions->config_set		= camera_config_set;
         camera->functions->config       	= camera_config;
@@ -110,8 +113,8 @@ int camera_init (Camera *camera) {
         return (GP_OK);
 }
 
-int camera_exit (Camera *camera) {
-
+int camera_exit (Camera *camera) 
+{
         DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
         free(d);
@@ -119,8 +122,62 @@ int camera_exit (Camera *camera) {
         return (GP_OK);
 }
 
-int camera_file_list(Camera *camera, CameraList *list, char *folder) {
+int camera_file_info_set (Camera *camera, CameraFileInfo *info, char *folder, char *file)
+{
+	int retval;
+	char *path_old;
+	char *path_new;
 
+	if ((info->file.fields == GP_FILE_INFO_NONE) && (info->preview.fields == GP_FILE_INFO_NONE))
+		return (GP_OK);
+
+	/* We only support basic renaming in the same folder. */
+	if (!((info->file.fields == GP_FILE_INFO_NAME) && (info->preview.fields == GP_FILE_INFO_NONE))) 
+		return (GP_ERROR_NOT_SUPPORTED);
+	
+	if (!strcmp (info->file.name, file))
+		return (GP_OK);
+
+	/* We really have to rename the poor file... */
+	path_old = malloc (strlen (folder) + 1 + strlen (file) + 1);
+	path_new = malloc (strlen (folder) + 1 + strlen (info->file.name));
+	strcpy (path_old, folder);
+	strcpy (path_new, folder);
+	path_old [strlen (folder)] = '/';
+	path_new [strlen (folder)] = '/';
+	strcpy (path_old + strlen (folder) + 1, file);
+	strcpy (path_new + strlen (folder) + 1, info->file.name);
+	
+	/* If folder = "/", we have paths like "//folder/..." */
+	if (!strcmp (folder, "/"))
+		retval = rename (path_old + 1, path_new + 1);
+	else 
+		retval = rename (path_old, path_new);
+	free (path_old);
+	free (path_new);
+
+	if (retval != 0) {
+		switch (errno) {
+		case EISDIR:
+			return (GP_ERROR_DIRECTORY_EXISTS);
+		case EEXIST:
+			return (GP_ERROR_FILE_EXISTS);
+		case EINVAL:
+			return (GP_ERROR_BAD_PARAMETERS);
+		case EIO:
+			return (GP_ERROR_IO);
+		case ENOMEM:
+			return (GP_ERROR_NO_MEMORY);
+		default:
+			return (GP_ERROR);
+		}
+	}
+	
+	return (GP_OK);
+}
+
+int camera_file_list(Camera *camera, CameraList *list, char *folder) 
+{
         GP_SYSTEM_DIR d;
         GP_SYSTEM_DIRENT de;
         char buf[1024], f[1024];
@@ -146,8 +203,8 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
         return (GP_OK);
 }
 
-int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
-
+int camera_folder_list(Camera *camera, CameraList *list, char *folder) 
+{
         GP_SYSTEM_DIR d;
         GP_SYSTEM_DIRENT de;
         char buf[1024], f[1024];
@@ -183,8 +240,8 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
         return (GP_OK);
 }
 
-int folder_index(Camera *camera) {
-
+int folder_index(Camera *camera) 
+{
         GP_SYSTEM_DIR dir;
         GP_SYSTEM_DIRENT de;
         char fname[1024];
@@ -209,8 +266,8 @@ int folder_index(Camera *camera) {
         return (GP_OK);
 }
 
-int directory_folder_set(Camera *camera, char *folder_name) {
-
+int directory_folder_set(Camera *camera, char *folder_name) 
+{
         DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
         strcpy(d->directory, folder_name);
@@ -218,8 +275,8 @@ int directory_folder_set(Camera *camera, char *folder_name) {
         return (folder_index(camera));
 }
 
-int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) {
-
+int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) 
+{
         /**********************************/
         /* file_number now starts at 0!!! */
         /**********************************/
@@ -237,7 +294,8 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
         return (GP_OK);
 }
 
-int camera_config_get (Camera *camera, CameraWidget **window) {
+int camera_config_get (Camera *camera, CameraWidget **window) 
+{
 	CameraWidget *widget;
 	char buf[256];
 	int val;
@@ -252,7 +310,8 @@ int camera_config_get (Camera *camera, CameraWidget **window) {
 	return (GP_OK);
 }
 
-int camera_config_set (Camera *camera, CameraWidget *window) {
+int camera_config_set (Camera *camera, CameraWidget *window) 
+{
 	CameraWidget *widget;
 	char buf[256];
 	int val;
@@ -268,7 +327,8 @@ int camera_config_set (Camera *camera, CameraWidget *window) {
 
 /* DEPRECATED */
 /* This function is deprecated! Do not implement!*/
-int camera_config (Camera *camera) {
+int camera_config (Camera *camera) 
+{
 	CameraWidget *window;
 
 	camera_config_get (camera, &window);
@@ -284,8 +344,8 @@ int camera_config (Camera *camera) {
         return (GP_OK);
 } /* END DEPRECATED */
 
-int camera_summary (Camera *camera, CameraText *summary) {
-
+int camera_summary (Camera *camera, CameraText *summary) 
+{
         DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
         sprintf(summary->text, "Current directory:\n%s", d->directory);
@@ -293,15 +353,15 @@ int camera_summary (Camera *camera, CameraText *summary) {
         return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual) {
-
+int camera_manual (Camera *camera, CameraText *manual) 
+{
         strcpy(manual->text, "The Directory Browse \"camera\" lets you index\nphotos on your hard drive. The folder list on the\nleft contains the folders on your hard drive,\nbeginning at the root directory (\"/\").");
 
         return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) {
-
+int camera_about (Camera *camera, CameraText *about) 
+{
         strcpy(about->text, "Directory Browse Mode\nScott Fritzinger <scottf@unr.edu>");
 
         return (GP_OK);

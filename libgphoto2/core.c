@@ -57,7 +57,8 @@ static char *result_string[] = {
         /* GP_ERROR_MODEL_NOT_FOUND     -105 */ N_("Unknown model"),
         /* GP_ERROR_NOT_SUPPORTED       -106 */ N_("Unsupported operation"),
         /* GP_ERROR_DIRECTORY_NOT_FOUND -107 */ N_("Directory not found"),
-        /* GP_ERROR_FILE_NOT_FOUND      -108 */ N_("File not found")
+        /* GP_ERROR_FILE_NOT_FOUND      -108 */ N_("File not found"),
+	/* GP_ERROR_DIRECTORY_EXISTS    -109 */ N_("Directory exists")
 };
 
 static int have_initted = 0;

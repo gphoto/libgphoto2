@@ -24,6 +24,7 @@
 #define GP_ERROR_NOT_SUPPORTED	     -106 /* Some op. is unsupported	*/
 #define GP_ERROR_DIRECTORY_NOT_FOUND -107 /* Directory not found	*/
 #define GP_ERROR_FILE_NOT_FOUND	     -108 /* File not found		*/
+#define GP_ERROR_DIRECTORY_EXISTS    -109 /* Directory exists		*/
 
 /* Macros
    ---------------------------------------------------------------- */
