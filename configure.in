@@ -48,7 +48,7 @@ else
   AC_MSG_ERROR([
 ***
 *** libgpio is required
-*** Available from GNOME CVS module 'libgpio'.
+*** Available from gPhoto's SourceForge CVS, module 'libgpio'.
 ***])
   exit 1
 fi
