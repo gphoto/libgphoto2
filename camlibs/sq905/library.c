@@ -72,7 +72,8 @@ struct {
         {"iConcepts digital camera" ,
                               GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
 	{"ViviCam3350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
-	{"DC-N130t",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},                                      
+	{"DC-N130t",          GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Argus DC-1730",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x913c},
 	{NULL,0,0}
 };
 
@@ -133,7 +134,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 
 	"All known S&Q cameras have two resolution settings. What\n" 
 	"those are, will depend on your particular camera.\n"
-	"A few of these cameras allow deletion of photos. Most do not.\n"
+	"A few of these cameras allow deletion of all photos. Most do not.\n"
 	"Uploading of data to the camera is not supported.\n"
 	"The photo compression mode found on many of the S&Q\n" 
 	"cameras is supported, to some extent.\n" 
@@ -355,9 +356,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
 			break;
 		}
-		if (comp_ratio==1) {
-			sq_postprocess(camera->pl,w, h, ptr, entry); /* For compression, the postprocessing interferes */
-		}
+		/* if (comp_ratio==1) { */
+		/*	sq_postprocess(camera->pl,w, h, ptr, entry); */ /* For compression, the postprocessing interferes */
+		/* } */
 		gp_gamma_fill_table (gtable, .5); 
 		gp_gamma_correct_single (gtable, ptr, w * h); 
     		gp_file_set_mime_type (file, GP_MIME_PPM);
