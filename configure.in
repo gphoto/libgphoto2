@@ -384,6 +384,7 @@ camlibs/samsung/Makefile
 camlibs/sierra/Makefile
 camlibs/sipix/Makefile
 camlibs/sipixblink/Makefile
+camlibs/smal/Makefile
 camlibs/sonydscf1/Makefile
 camlibs/sonydscf55/Makefile
 camlibs/soundvision/Makefile
