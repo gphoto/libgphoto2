@@ -730,11 +730,6 @@ OPTION_CALLBACK (delete_picture)
 
         CHECK_RESULT (set_globals ());
 
-        if (!(glob_camera->abilities->file_operations & GP_FILE_OPERATION_DELETE)) {
-                cli_error_print("Camera can not delete pictures");
-                return (GP_ERROR_NOT_SUPPORTED);
-        }
-
         return for_each_image_in_range(glob_folder, arg, delete_picture_action, 1);
 }
 
@@ -757,16 +752,15 @@ OPTION_CALLBACK (upload_picture)
 
         CHECK_RESULT (set_globals ());
 
-        if (!(glob_camera->abilities->folder_operations &
-              GP_FOLDER_OPERATION_PUT_FILE))
-                return (GP_ERROR_NOT_SUPPORTED);
-
         CHECK_RESULT (gp_file_new (&file));
-        CHECK_RESULT (gp_file_open (file, arg));
+	res = gp_file_open (file, arg);
+	if (res < 0) {
+		gp_file_unref (file);
+		return (res);
+	}
 
         res = gp_camera_folder_put_file (glob_camera, glob_folder, file);
-
-        gp_file_free (file);
+        gp_file_unref (file);
 
         return (res);
 }
