@@ -432,6 +432,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* In which register do we have to look for data? */
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
+	case GP_FILE_TYPE_EXIF:
 		regd = 15;
 		break;
 	case GP_FILE_TYPE_NORMAL:
@@ -440,11 +441,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_AUDIO:
 		regd = 44;
 		break;
-#ifdef HAVE_EXIF
-	case GP_FILE_TYPE_EXIF:
-		regd = 15;
-		break;
-#endif
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
@@ -2050,8 +2046,13 @@ camera_init (Camera *camera, GPContext *context)
         CHECK_FREE (camera, gp_port_set_settings (camera->port, s));
         CHECK_FREE (camera, gp_port_set_timeout (camera->port, TIMEOUT));
 
-	/* Send initialization sequence */
-	CHECK (sierra_init (camera, context));
+	/*
+	 * Send initialization sequence. Do not do this for the
+	 * 'Polaroid PDC 2300Z' (reported by William Bader
+	 * <williambader@hotmail.com>).
+	 */
+	if (strcmp (a.model, "Polaroid PDC 2300Z"))
+		CHECK (sierra_init (camera, context));
 
         /* Establish a connection */
         CHECK_FREE (camera, camera_start (camera, context));
