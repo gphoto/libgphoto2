@@ -2,13 +2,7 @@ Makefile.in
 Makefile
 .deps
 .libs
-core.lo
-exif.lo
-file.lo
-library.lo
-settings.lo
-util.lo
-widget.lo
+*.lo
 libgphoto2.la
 .cvsignore
 libgphoto2Conf.sh
