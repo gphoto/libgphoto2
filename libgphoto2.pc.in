@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libgphoto
+Name: libgphoto2
 Description: Library for easy access to digital cameras
 Requires:
 Version: @VERSION@
