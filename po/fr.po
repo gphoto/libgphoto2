@@ -2820,7 +2820,7 @@ msgstr "32 octets attendus, %i reçus. Merci de contacter <gphoto-devel@gphoto.or
 
 #: camlibs/sierra/library.c:1360
 msgid "Not implemented!"
-msgstr "Pas développé !"
+msgstr "Pas implémenté !"
 
 #: camlibs/sonydscf1/sonydscf1.c:133
 msgid ""
@@ -2834,7 +2834,7 @@ msgstr ""
 "M. Adam Kendall <joker@penguinpub.com>\n"
 "Basé sur l'interface ligne de commande chotplay\n"
 "de Ken-ichi Hayashi\n"
-"Portage gPhoto2 port par Bart van Leeuwen <bart@netage.nl>"
+"Portage gPhoto2 par Bart van Leeuwen <bart@netage.nl>"
 
 #: camlibs/sonydscf55/camera.c:92
 msgid ""
@@ -2843,10 +2843,10 @@ msgid ""
 "Originally written by Mark Davies <mdavies@dial.pipex.com>\n"
 "gPhoto2 port by Raymond Penners <raymond@dotsphinx.com>"
 msgstr ""
-"Bibliothèque gphoto  pour le Sony DSC-F55/505\n"
+"Bibliothèque gphoto pour le Sony DSC-F55/505\n"
 "supportant le Sony MSAC-SR1 et le Memory Stick utilisé par le DCR-PC100\n"
 "Version initiale écrite par Mark Davies <mdavies@dial.pipex.com>\n"
-"adaptation à gphoto2 réalisé par Raymond Penners <raymond@dotsphinx.com>"
+"adaptation à gphoto2 réalisée par Raymond Penners <raymond@dotsphinx.com>"
 
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
 msgid "Bad exposure (not enough light probably)"
@@ -3474,7 +3474,7 @@ msgstr "                                              : Image\n"
 
 #: frontends/command-line/main.c:440
 msgid "                                 : Video\n"
-msgstr "                                              : Video\n"
+msgstr "                                              : Vidéo\n"
 
 #: frontends/command-line/main.c:442
 msgid "                                 : Audio\n"
@@ -3549,7 +3549,7 @@ msgid ""
 "colon so I am going to guess what you mean."
 msgstr ""
 "Les ports doivent ressembler à «serial:/dev/ttyS0» ou «usb:», mais il manque "
-"un «:» à '%s' donc je vais essayer de deviner ce que vous voulez dire."
+"un «:» à '%s'; je vais donc essayer de deviner ce que vous voulez dire."
 
 #: frontends/command-line/main.c:679
 msgid ""
@@ -3565,8 +3565,8 @@ msgid ""
 "ALWAYS INCLUDE THE FOLLOWING LINE WHEN SENDING DEBUG MESSAGES TO THE MAILING "
 "LIST:"
 msgstr ""
-"TOUJOURS FOURNIR LES LIGNES CI-DESSOUS LORS DE L'ENVOIE DE MESSAGE DE DEBUG "
-"A LA MAILING LIST:"
+"TOUJOURS FOURNIR LES LIGNES CI-DESSOUS LORS DE L'ENVOI DE MESSAGE(S) DE DÉBOGAGE "
+"À LA LISTE DE DIFFUSION :"
 
 #: frontends/command-line/main.c:829
 #, c-format

@@ -250,7 +250,7 @@ msgstr "Impossible de déverrouiller le périphérique '%s'."
 #: serial/unix.c:261
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr "Le périphérique '%s' ne peut être déverrouillé car verouillé par processus %d."
+msgstr "Le périphérique '%s' ne peut être déverrouillé car verrouillé par le processus %d."
 
 #: serial/unix.c:265
 #, c-format
