@@ -991,7 +991,7 @@ int
 camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
-	short ret;
+	short ret,i;
 
 	/* Make sure our port is a USB port */
 	if (camera->port->type != GP_PORT_USB) {
@@ -1049,10 +1049,15 @@ camera_init (Camera *camera, GPContext *context)
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
 	&camera->pl->params.deviceinfo));
 
+	GP_DEBUG ("Device info:");
 	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
 	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
 	GP_DEBUG ("  model: %s", camera->pl->params.deviceinfo.Model);
 	GP_DEBUG ("  device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
+	GP_DEBUG ("Supported operations:");
+	for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++) {
+		GP_DEBUG ("  0x%x",camera->pl->params.deviceinfo.OperationsSupported[i]);
+	}
 
 	/* init internal ptp objectfiles (required for fs implementation) */
 	init_ptp_fs (camera, context);
