@@ -71,10 +71,10 @@
  * respective USB IDs and a flag denoting RS232 serial support.
  **/
 
-#define S32K	32 * 1024
-#define S1M	1024 * 1024
-#define S2M	2 * S1M
-#define S10M	10 * S1M
+#define S32K	(32 * 1024)
+#define S1M	(1024 * 1024)
+#define S2M	(2 * S1M)
+#define S10M	(10 * S1M)
 
 const struct canonCamModelData models[] =
 {
