@@ -1073,7 +1073,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
         return (GP_OK);
 }
 
-static char *
+static const char *
 camera_result_as_string (Camera* camera, int result)
 {
         /* Really an error? */
