@@ -1,3 +1,9 @@
+2001-08-30  Dan Fandrich <dan@coneharvesters.com>
+	* libgphoto2/file.c:
+	* include/gphoto2-file.h:
+	* camlibs/dimera/dimera3500.c: removed traces of the PNM
+	pseudo-file type and added PGM.
+
 2001-08-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/dimera/dimera3500.c (camera_file_get): Use
