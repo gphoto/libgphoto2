@@ -50,12 +50,12 @@ typedef enum {
 } CameraFilePermissions;
 
 typedef enum {
-	GP_FILE_STATUS_UNKNOWN,
 	GP_FILE_STATUS_NOT_DOWNLOADED,
 	GP_FILE_STATUS_DOWNLOADED
 } CameraFileStatus;
 
-typedef struct {
+typedef struct _CameraFileInfoFile CameraFileInfoFile;
+struct _CameraFileInfoFile {
 	CameraFileInfoFields fields;
 	char type[64];
 	CameraFilePermissions permissions;
@@ -64,28 +64,31 @@ typedef struct {
 	unsigned int width, height;
 	CameraFileStatus status;
 	time_t time;
-} CameraFileInfoFile;
+};
 
-typedef struct {
+typedef struct _CameraFileInfoPreview CameraFileInfoPreview;
+struct _CameraFileInfoPreview {
 	CameraFileInfoFields fields;
 	char type[64];
 	unsigned int size;
 	unsigned int width, height;
 	CameraFileStatus status;
-} CameraFileInfoPreview;
+};
 
-typedef struct {
+typedef struct _CameraFileInfoAudio CameraFileInfoAudio;
+struct _CameraFileInfoAudio {
 	CameraFileInfoFields fields;
 	char type[64];
 	unsigned int size;
 	CameraFileStatus status;
-} CameraFileInfoAudio;
+};
 
-typedef struct {
+typedef struct _CameraFileInfo CameraFileInfo;
+struct _CameraFileInfo {
 	CameraFileInfoPreview preview;
 	CameraFileInfoFile    file;
 	CameraFileInfoAudio   audio;
-} CameraFileInfo;
+};
 
 /* You don't really want to know what's inside, do you? */
 typedef struct _CameraFilesystem CameraFilesystem;

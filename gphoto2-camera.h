@@ -48,116 +48,14 @@ typedef enum {
 	GP_CAPTURE_SOUND
 } CameraCaptureType;
 
-/**
- * CameraExitFunc:
- * @camera: a #Camera
- *
- * Implement this function in camera drivers if you need to clean up on
- * exit. You need this function for example if you use camera->pl and 
- * allocated memory for that on #camera_init. Then, you would free the
- * memory here.
- *
- * Return value: a gphoto2 error code
- **/
 typedef int (*CameraExitFunc)      (Camera *camera);
-
-/**
- * CameraGetConfigFunc:
- * @camera: a #Camera
- * @widget:
- *
- * Implement this function if your camera supports some configuration
- * operations (like adjusting exposure).
- *
- * Return value: a gphoto2 error code
- **/
 typedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget);
-
-/**
- * CameraSetConfigFunc:
- * @camera: a #Camera
- * @widget: a #CameraWidget
- *
- * If you implement the #CameraGetConfigFunc, you should also implement this
- * function in order to make it possible for frontends to actually adjust
- * configuration options. Parse the @widget tree and check for each item
- * if the value has been changed (using #gp_widget_changed). If this is the
- * case, adjust this configuration option on the camera.
- *
- * Return value: a gphoto2 error code
- **/
 typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget);
-
-/**
- * CameraCaptureFunc: 
- * @camera: a #Camera
- * @type: a #CameraCaptureType
- * @path: a #CameraFilePath
- *
- * Implement this function if your camera supports remote capturing of images.
- * When capturing an image, this image needs to be saved on the camera. The
- * location of the image on the camera should then be written into 
- * supplied @path so that the frontend will know where to get the 
- * newly captured image from. Don't forget to tell the #CameraFilesystem 
- * (camera->fs) that a new picture is on the camera using
- * #gp_filesystem_append.
- *
- * Return value: a gphoto2 error code
- **/
 typedef int (*CameraCaptureFunc)        (Camera *camera, CameraCaptureType type,
 				         CameraFilePath *path);
-
-/**
- * CameraCapturePreviewFunc:
- * @camera: a #Camera
- * @file: a #CameraFile
- *
- * Implement this function if your camera supports capturing
- * previews of low resolution. Those previews must not be stored on the camera.
- * They need to be written to the supplied @file (using for example
- * #gp_file_set_data_and_size).
- *
- * Return value: a gphoto2 error code
- **/
 typedef int (*CameraCapturePreviewFunc) (Camera *camera, CameraFile *file);
-
-/**
- * CameraSummaryFunc:
- * @camera: a #Camera
- * @text: a #CameraText
- *
- * Implement this function if your camera provides static information and
- * non-configurable data like serial number or number of pictures taken. All
- * configurable data should be displayed through #CameraGetConfigFunc 
- * instead.
- *
- * Return value: a gphoto2 error code
- **/
 typedef int (*CameraSummaryFunc) (Camera *camera, CameraText *text);
-
-/**
- * CameraManualFunc:
- * @camera: a #Camera
- * @text: a #CameraText
- *
- * Implement this function if you need to give the user instructions on
- * how to use his camera. Here, you can for example inform the user about known
- * limitations of the protocol.
- *
- * Return value: a gphoto2 error code
- **/
 typedef int (*CameraManualFunc)  (Camera *camera, CameraText *text);
-
-/**
- * CameraAboutFunc:
- * @camera: a #Camera
- * @text: a #CameraText
- *
- * Implement this function if you want to give frontends the possibility to 
- * inform users who wrote this driver or who contributed to it.
- *
- * Return value: a gphoto2 error code
- **/
 typedef int (*CameraAboutFunc)   (Camera *camera, CameraText *text);
 
 /**
@@ -175,14 +73,8 @@ typedef int (*CameraAboutFunc)   (Camera *camera, CameraText *text);
  **/
 typedef int (*CameraPrePostFunc) (Camera *camera);
 
-/**
- * CameraFunctions:
- *
- * Those functions are optionally. Depending on the features of the protocol,
- * you would implement some functions and leave others out. Tell gphoto2
- * what functions you provide on #camera_init.
- **/
-typedef struct {
+typedef struct _CameraFunctions CameraFunctions;
+struct _CameraFunctions {
 
 	/* Those will be called before and after each operation */
 	CameraPrePostFunc pre_func;
@@ -203,7 +95,7 @@ typedef struct {
 	CameraManualFunc  manual;
 	CameraAboutFunc   about;
 
-} CameraFunctions;
+};
 
 /* Those are DEPRECATED */
 typedef GPPort     CameraPort;
