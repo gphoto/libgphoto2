@@ -3,6 +3,21 @@
 #include <stdio.h>
 #include <gphoto2.h>
 
+typedef struct {
+	char name [128];
+} CameraFilesystemFile;
+
+typedef struct {
+	int count;
+	char name [128];
+	CameraFilesystemFile **file;
+} CameraFilesystemFolder;
+
+struct _CameraFilesystem {
+	int count;
+	CameraFilesystemFolder **folder;
+};
+
 CameraFilesystemFile *gp_filesystem_entry_new (const char *filename) {
 
         CameraFilesystemFile *fse;
@@ -136,8 +151,7 @@ int gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 
 	for (file_num = 0; file_num < fs->folder[folder_num]->count; file_num++)
 		gp_list_append (list,
-				fs->folder[folder_num]->file[file_num]->name,
-				GP_LIST_FILE);
+				fs->folder[folder_num]->file[file_num]->name);
 
 	return (GP_OK);
 }
@@ -183,8 +197,7 @@ int gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 				else
 					offset = strlen (folder) + 1;
 				gp_list_append (list,
-						fs->folder[i]->name + offset,
-						GP_LIST_FOLDER);
+						fs->folder[i]->name + offset);
 			}
 		}
 
