@@ -283,7 +283,6 @@ static struct {
 	{"Sony:DSC-F717 (PTP mode)",  0x054c, 0x004e},
 	{"Sony:DSC-F828 (PTP mode)",  0x054c, 0x004e},
 	{"Sony:DSC-P30 (PTP mode)",   0x054c, 0x004e},
-	/* P32 reported on May 1st by Justin Alexander <justin (at) harshangel.com> */
 	{"Sony:DSC-P31 (PTP mode)",   0x054c, 0x004e}, 
 	{"Sony:DSC-P32 (PTP mode)",   0x054c, 0x004e}, 
 	{"Sony:DSC-P41 (PTP mode)",   0x054c, 0x004e}, 
@@ -304,39 +303,23 @@ static struct {
 	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e},
 	{"Sony:MVC-CD500 (PTP mode)", 0x054c, 0x004e},
 
-	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109},
-	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
 	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d},
-	/* Nikon CoolPix 4500: T. Kaproncai, 22 Aug 2003 */
 	{"Nikon CoolPix 4500 (PTP mode)", 0x04b0, 0x010b},
-	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
 	{"Nikon:Coolpix 4300 (PTP mode)", 0x04b0, 0x010f},
-	/* Nikon Coolpix 3500: M. Meissner, 07 May 2003 */
 	{"Nikon:Coolpix 3500 (PTP mode)", 0x04b0, 0x0111},
-	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
 	{"Nikon:Coolpix 885 (PTP mode)",  0x04b0, 0x0112},
-	/* Nikon Coolpix 5000, Firmware v1.7 or later */
 	{"Nikon:Coolpix 5000 (PTP mode)", 0x04b0, 0x0113},
-	/* Nikon Coolpix 3100 */
 	{"Nikon:Coolpix 3100 (PTP mode)", 0x04b0, 0x0115},
-	/* Nikon Coolpix 2100 */
 	{"Nikon:Coolpix 2100 (PTP mode)", 0x04b0, 0x0117},
-	/* Nikon Coolpix 5400: T. Kaproncai, 25 Jul 2003 */
 	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119},
-	/* Nikon Coolpix 3700: T. Ehlers, 18 Jan 2004 */
 	{"Nikon:Coolpix 3700 (PTP mode)", 0x04b0, 0x011d},
-	/* Nikon Coolpix 3200 */
 	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121},
-	/* Nikon Coolpix 2200 */
 	{"Nikon:Coolpix 2200 (PTP mode)", 0x04b0, 0x0122},
-	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
+	{"Nikon:Coolpix 4100 (PTP mode)", 0x04b0, 0x012d},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202},
-	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204},
-	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302},
-	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402},
 	{"Nikon:DSC D70 (PTP mode)",      0x04b0, 0x0406},
 

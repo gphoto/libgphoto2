@@ -1,3 +1,9 @@
+2004-12-22  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Nikon CoolPix 4100 as reported.
+		     Removed the comments above the Nikons,
+		     they are not necessary.
+
 2004-12-21  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Kodak DX7590 (bug #1089154)
