@@ -51,6 +51,7 @@ int dc3200_set_speed(Camera *camera, int baudrate);
 int dc3200_setup(Camera *camera);
 
 int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command, const char *folder, const char *filename);
+int dc3200_cancel_get_data(Camera *camera);
 
 int dc3200_send_command(Camera *camera, u_char *cmd, int cmd_len, u_char *ack, int *ack_len);
 int dc3200_recv_response(Camera *camera, u_char *resp, int *resp_len);

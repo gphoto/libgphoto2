@@ -16,7 +16,6 @@
 #include <string.h>
 #include <time.h>
 #include <gphoto2.h>
-#include <gphoto2.h>
 #include <gphoto2-port.h>
 
 #define CMD_LIST_FILES		0
@@ -28,8 +27,10 @@
 struct _CameraPrivateLibrary {
 	int			pkt_seqnum;	/* sequence number */
 	int			cmd_seqnum;	/* command seqnum */
+	int			rec_seqnum;	/* last received seqnum */
 	int			debug;
 	time_t			last;		/* remember last recv time */
+	GPContext		*context;	/* for progress updates */
 };
 
 int init(Camera *camera);
