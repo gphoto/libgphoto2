@@ -1,3 +1,8 @@
+2001-10-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* frontends/command-line/interface.c: Don't jump to the next line
+	  for status messages - this disturbs the nice formatting of listings.
+
 2001-10-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/casio/casio-qv.c: On capture, append the file to the 

@@ -14,8 +14,10 @@ status_func (Camera *camera, const char *status, void *data)
 	if (glob_quiet)
 		return;
 
-	if (*status)
-		printf ("Status: %s\n", status);
+	if (*status) {
+		printf ("Status: %s\r", status);
+		fflush(stdout);
+	}
 }
 
 void
