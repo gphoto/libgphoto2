@@ -117,28 +117,35 @@ g3_channel_read_bytes(GPPort *port, int *channel, char **buffer, int expected)
 	return GP_OK;
 }
 
-
 static int
 g3_channel_write(GPPort *port, int channel, char *buffer, int len)
 {
 	unsigned char *xbuf;
-	int ret, nlen;
+	int ret = GP_OK, nlen, curlen = 0;
 
-	nlen = (4 + 4 + len + 1 +  3) & ~3;
-	xbuf = calloc(nlen,1);
+	while (len > 0) {
+		int sendlen = len;
+		
+		if (sendlen>65536) sendlen = 65536;
+		nlen = (4 + 4 + sendlen + 1 +  3) & ~3;
+		xbuf = calloc(nlen,1);
 
-	xbuf[0] = 1;
-	xbuf[1] = channel;
-	xbuf[2] = 0;
-	xbuf[3] = 0;
-	xbuf[4] =  len      & 0xff;
-	xbuf[5] = (len>>8)  & 0xff;
-	xbuf[6] = (len>>16) & 0xff;
-	xbuf[7] = (len>>24) & 0xff;
-	memcpy(xbuf+8, buffer, len);
-	xbuf[8+len] = 0x03;
-	ret = gp_port_write( port, xbuf, nlen);
-	free(xbuf);
+		xbuf[0] = 1;
+		xbuf[1] = channel;
+		xbuf[2] = 0;
+		xbuf[3] = 0;
+		xbuf[4] =  sendlen      & 0xff;
+		xbuf[5] = (sendlen>>8)  & 0xff;
+		xbuf[6] = (sendlen>>16) & 0xff;
+		xbuf[7] = (sendlen>>24) & 0xff;
+		memcpy(xbuf+8, buffer + curlen, sendlen);
+		curlen += sendlen;
+		xbuf[8+sendlen] = 0x03;
+		ret = gp_port_write( port, xbuf, nlen);
+		free(xbuf);
+		if (ret < GP_OK) break;
+		len -= sendlen;
+	}
 	return ret;
 }
 
@@ -203,12 +210,6 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_exit (Camera *camera, GPContext *context) 
-{
-	return (GP_OK);
-}
-
-static int
 g3_cwd_command( GPPort *port, const char *folder) {
 	char *cmd, *reply = NULL;
 	int ret;
@@ -255,9 +256,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		sscanf(buf, "150 data connection for RETR.(%d)", &bytes);
 		break;
 	case GP_FILE_TYPE_EXIF:
-		if (!strstr(filename,".JPG") && !strstr(filename,".jpg"))
-			return GP_ERROR_NOT_SUPPORTED;
-
+		if (!strstr(filename,".JPG") && !strstr(filename,".jpg")) {
+			gp_context_error (context,_("No EXIF data available for %s."),
+                                          filename);
+                        ret = GP_ERROR_FILE_NOT_FOUND;
+			goto out;
+		}
 		cmd = malloc(strlen("-SRET ") + strlen(filename) + 2 + 1);
 		sprintf(cmd,"-SRET %s", filename);
 		ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
@@ -267,9 +271,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			ret = GP_ERROR_FILE_NOT_FOUND;
 			goto out;
 		}
-
 		bytes = seek = 0;
 		sscanf(buf, "150 %d byte Seek=%d", &bytes, &seek);
+		if (seek == -2) {
+			/* FIXME: pretty bad, the camera has some time out problems
+			 * if this happens */
+			gp_context_error (context,_("No EXIF data available for %s."),
+                                          filename);
+                        ret = GP_ERROR_FILE_NOT_FOUND;
+			g3_channel_read(camera->port, &channel, &reply, &len); /* reply */
+			goto out;
+		}
 		bytes += seek;
 		break;
 	default:
@@ -289,19 +301,47 @@ out:
 	return (GP_OK);
 }
 
+#if 0
+/* Works to some degree, but the firmware on the camera is not really happy
+ * with it and sometimes refuses to send data the correct way
+ */
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	       void *data, GPContext *context)
 {
-	/*Camera *camera;*/
+	Camera *camera = data;
+	char *buf = NULL, *reply = NULL, *cmd =NULL;
+	const char *fn = NULL, *imgdata = NULL;
+	int ret, channel, len;
+	long size;
 
-	/*
-	 * Upload the file to the camera. Use gp_file_get_data_and_size,
-	 * gp_file_get_name, etc.
-	 */
+	ret = g3_cwd_command (camera->port, folder);
+	if (ret < GP_OK) goto out;
 
+	ret = gp_file_get_name (file, &fn);
+	if (ret < GP_OK) goto out;
+	ret = gp_file_get_data_and_size (file, &imgdata, &size);
+	if (ret < GP_OK) goto out;
+
+	cmd = malloc(strlen("-STOR ") + 20 + strlen(fn) + 2 + 1);
+	sprintf(cmd,"-STOR %ld %s", size, fn);
+	ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
+	free(cmd);
+	if (ret < GP_OK) goto out;
+	if (buf[0] != '1') { /* error, most likely file not found */
+		ret = GP_ERROR;
+		goto out;
+	}
+	ret = g3_channel_write(camera->port, 2, (char*)imgdata, size); /* data */
+	if (ret < GP_OK) goto out;
+	ret = g3_channel_read(camera->port, &channel, &reply, &len); /* reply */
+	if (ret < GP_OK) goto out;
+out:
+	if (buf) free(buf);
+	if (reply) free(reply);
 	return (GP_OK);
 }
+#endif
 
 static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
@@ -320,6 +360,10 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK)
 		goto out;
+	if (reply[0] == '5') {
+		gp_context_error (context, _("Could not delete file."));
+		ret = GP_ERROR;
+	}
 out:
 	if (cmd) free(cmd);
 	if (reply) free(reply);
@@ -343,6 +387,10 @@ rmdir_func (CameraFilesystem *fs, const char *folder,
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK)
 		goto out;
+	if (reply[0] == '5') {
+		gp_context_error (context, _("Could not remove directory."));
+		ret = GP_ERROR;
+	}
 out:
 	if (cmd) free(cmd);
 	if (reply) free(reply);
@@ -366,6 +414,10 @@ mkdir_func (CameraFilesystem *fs, const char *folder,
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK)
 		goto out;
+	if (reply[0] == '5') {
+		gp_context_error (context, _("Could not create directory."));
+		ret = GP_ERROR;
+	}
 out:
 	if (cmd) free(cmd);
 	if (reply) free(reply);
@@ -373,69 +425,66 @@ out:
 }
 
 static int
-camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
-{
-	gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
-
-	/* Append your sections and widgets here. */
-
-	return (GP_OK);
-}
-
-static int
-camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
-{
-	/*
-	 * Check if the widgets' values have changed. If yes, tell the camera.
-	 */
-
-	return (GP_OK);
-}
-
-static int
-camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
-{
-	/*
-	 * Capture a preview and return the data in the given file (again,
-	 * use gp_file_set_data_and_size, gp_file_set_mime_type, etc.).
-	 * libgphoto2 assumes that previews are NOT stored on the camera's 
-	 * disk. If your camera does, please delete it from the camera.
-	 */
-
-	return (GP_OK);
-}
-
-static int
-camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
-		GPContext *context)
-{
-	/*
-	 * Capture an image and tell libgphoto2 where to find it by filling
-	 * out the path.
-	 */
-
-	return (GP_OK);
-}
-
-static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-	/*
-	 * Fill out the summary with some information about the current 
-	 * state of the camera (like pictures taken, etc.).
-	 */
+	char *t = summary->text;
+	int ret;
+	char *buf = NULL;
 
-	return (GP_OK);
-}
-
-static int
-camera_manual (Camera *camera, CameraText *manual, GPContext *context)
-{
-	/*
-	 * If you would like to tell the user some information about how 
-	 * to use the camera or the driver, this is the place to do.
-	 */
-
+	t[0]='\0';
+	ret = g3_ftp_command_and_reply (camera->port, "-VER", &buf);
+	if (ret == GP_OK)
+		sprintf(t+strlen(t), _("Version: %s\n"), buf+4); /* skip "200 " */
+	ret = g3_ftp_command_and_reply(camera->port, "-RTST", &buf); /* RTC test */
+	if (ret == GP_OK) {
+		int rtcstat;
+		if (sscanf(buf, "200 RTC status=%d", &rtcstat))
+			sprintf(t+strlen(t), _("RTC Status: %d\n"), rtcstat);
+	}
+	ret = g3_ftp_command_and_reply(camera->port, "-TIME", &buf);
+	if (ret == GP_OK) {
+		char day[20], time[20];
+		if (sscanf(buf, "200 %s %s for -TIME", day, time))
+			sprintf(t+strlen(t), _("Camera time: %s %s\n"), day, time);
+	}
+	ret = g3_ftp_command_and_reply(camera->port, "-GCID", &buf);
+	if (ret == GP_OK) {
+		char camid[40];
+		if (sscanf(buf, "200 CameraID=%s for -GCID", camid))
+			sprintf(t+strlen(t), _("Camera ID: %s\n"), camid);
+	}
+	ret = g3_ftp_command_and_reply(camera->port, "-GSID", &buf);
+	if (ret == GP_OK) {
+		char cardid[40];
+		if (strstr(buf, "200 SD ID= for -GSID")) {
+			sprintf(t+strlen(t), _("No SD Card inserted.\n"));
+		} else {
+			if (sscanf(buf, "200 SD ID=%s for -GSID", cardid)) {
+				sprintf(t+strlen(t), _("SD Card ID: %s\n"), cardid);
+			}
+		}
+	}
+	ret = g3_ftp_command_and_reply(camera->port, "-GTPN", &buf);
+	if (ret == GP_OK) {
+		int total;
+		if (sscanf (buf, "200 TotalPhotoNo=%d for -GTPN", &total))
+			sprintf(t+strlen(t), _("Photos on camera: %d\n"), total);
+	}
+	ret = g3_ftp_command_and_reply(camera->port, "-DCAP /EXT0", &buf);
+	if (ret == GP_OK) {
+		int space, sfree;
+		if (sscanf (buf, "200 /EXT0 capacity %d byte,free %d byte.", &space, &sfree)) {
+			sprintf(t+strlen(t), _("SD memory: %d MB total, %d MB free.\n"), space/1024/1024, sfree/1024/1024);
+		}
+	}
+	ret = g3_ftp_command_and_reply(camera->port, "-DCAP /IROM", &buf);
+	if (ret == GP_OK) {
+		int space, sfree;
+		if (sscanf (buf, "200 /IROM capacity %d byte,free %d byte.", &space, &sfree)) {
+			sprintf(t+strlen(t), _("Internal memory: %d MB total, %d MB free.\n"), space/1024/1024, sfree/1024/1024);
+		}
+	}
+	if (buf) free (buf);
 	return (GP_OK);
 }
 
@@ -477,7 +526,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!strcmp(filename+9,"MTA") || !strcmp(filename+9,"mta"))
 		strcpy(info->file.type,"text/plain");
 
-	cmd = malloc(6+strlen(folder)+1+strlen(filename)+1);
+	cmd = malloc(strlen("-FDAT ")+strlen(folder)+1+strlen(filename)+1);
 	sprintf(cmd, "-FDAT %s/%s", folder,filename);
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK) goto out;
@@ -628,17 +677,11 @@ out:
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	char *buf;
+	/*char *buf;*/
 	GPPortSettings settings;
 
-        /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
-        camera->functions->get_config           = camera_config_get;
-        camera->functions->set_config           = camera_config_set;
-        camera->functions->capture              = camera_capture;
-        camera->functions->capture_preview      = camera_capture_preview;
+        /* First, set up all the needed function pointers */
         camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
@@ -648,7 +691,7 @@ camera_init (Camera *camera, GPContext *context)
 				      camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
+	gp_filesystem_set_folder_funcs (camera->fs, NULL, NULL,
 					mkdir_func, rmdir_func, camera);
 
 
@@ -668,14 +711,9 @@ camera_init (Camera *camera, GPContext *context)
 	 * connection to the camera can be established.
 	 */
 
+	/* testing code ... 
 	buf = NULL;
-	g3_ftp_command_and_reply(camera->port, "-VER", &buf);
-	g3_ftp_command_and_reply(camera->port, "-RTST", &buf); /* RTC test */
-	g3_ftp_command_and_reply(camera->port, "-TIME", &buf);
-	g3_ftp_command_and_reply(camera->port, "-GCID", &buf);
-	g3_ftp_command_and_reply(camera->port, "-GSID", &buf);
-	g3_ftp_command_and_reply(camera->port, "-GTPN", &buf);
-	g3_ftp_command_and_reply(camera->port, "-DCAP /EXT0", &buf);
-	g3_ftp_command_and_reply(camera->port, "-DCAP /IROM", &buf);
+	g3_ftp_command_and_reply(camera->port, "-PWOF STDBY", &buf);
+	*/
 	return (GP_OK);
 }

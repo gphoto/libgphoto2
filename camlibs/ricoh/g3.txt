@@ -1,16 +1,15 @@
--STOR
 -SPWD
--PRET
--CCTL
+-PRET			- partial retrieve I think, %s %d.
+-CCTL			- control?
 -SINF
--FMT
+-FMT			- format card?
 -ATTR
--PWOF
--SDIS
--GDIS
--ABOR
+-PWOF			- power off?
+-SDIS <filename>	- set distinction ? what is a distinction? 
+-GDIS			- get distinction ?
+-ABOR			- abort for data transfer?
 QUIT
--FUPL
+-FUPL			- upload?
 -FDWL
 -GFCI
 -GFGI
@@ -42,6 +41,10 @@ Internal ftp style commands:
 			  250 -SRET command success.
 
 			 => Downloads exif data, at seek position is the thumbnail.
+
+"-STOR size filename"	- 150 ... 
+			  ... data transfer ... 
+			  200 done
 
 Generic ftp style commands:
 

@@ -9,8 +9,10 @@
 
 	  Status:
 		Directory Listing, download of images, exif data and
-		audio, deleting files, creating and removing directories
-		works.
+		audio, deleting files, creating and removing directories,
+		summary report works.
+		put file is possibly working too, but confuses the firmware 
+		and this driver a bit.
 
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
 
