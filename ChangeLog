@@ -1,3 +1,7 @@
+2001-02-04  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: felt like 2.0beta5dev2 - nothing more
+
 2002-02-02  Lutz Müller <lutz@users.sourceforge.net>
 
 	* frontends/command-line: Let --show-exif accept image numbers, too.
