@@ -29,9 +29,26 @@ for_each_subfolder (char *folder, folder_action faction,
 		strcat(prefix, glob_folder);
 
 	res = gp_camera_folder_list_folders (glob_camera, prefix, &folderlist);
+
+	/* We don't print any information here when faction is
+	 * for_each_image(). We let for_each_image() do the output
+	 * in this case.
+	 */
+	if (gp_list_count(&folderlist) && (faction != for_each_image)) {
+		if (glob_quiet)
+			printf ("%i\n", gp_list_count (&folderlist));
+		else
+			printf ("Folders in %s:\n", prefix);
+	}
+
 	if (res != GP_OK)
 		return (res);
 
+	/* This loop is splitted is two parts. The first one
+	 * only applies faction() and the second one do the
+	 * recursion. This way, we obtain a cleaner display
+	 * when file names are displayed. 
+	 */
 	for (i = 0; i < gp_list_count(&folderlist); i++) {
 		const char *name;
 
@@ -43,6 +60,15 @@ for_each_subfolder (char *folder, folder_action faction,
 		res = faction (subfolder, iaction, 0);
 		if (res != GP_OK)
 			return (res);
+	}
+
+	for (i = 0; i < gp_list_count(&folderlist); i++) {
+		const char *name;
+
+		gp_list_get_name (&folderlist, i, &name);
+		while (*prefix && prefix[l=strlen(prefix)-1] == '/')
+			prefix[l] = '\0';
+		sprintf(subfolder, "%s/%s", prefix, name);
 
 		if (recurse) 
 			for_each_subfolder (subfolder, faction, iaction, 

@@ -9,13 +9,12 @@
 /* ------------------------------------------------------------ */
 
 int print_folder(char *subfolder, image_action action, int reverse) {
-	/* print paths relative to glob_folder */
 	char *c;
 	
-	c = subfolder + strlen(glob_folder);
+	/* remove the basename for clarity purposes */
+	c = strrchr(subfolder, '/');
 	if (*c == '/')
 		c++;
-
 	printf("\"%s\"\n", c);
 		
 	return (GP_OK);

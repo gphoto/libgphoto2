@@ -1,9 +1,16 @@
 2001-10-05  Fabrice Bellet <fabrice@gnu.org>
 
-	* command-line/actions.c:
-	* command-line/actions.h:
-	* command-line/foreach.c:
-	* command-line/main.c: The --recurse option should now work
+	* frontends/command-line/actions.c:
+	* frontends/command-line/foreach.c:
+	* frontends/command-line/main.c: Print directory names at
+	each step of the recursion when using '--list-folders --recurse'.
+
+2001-10-05  Fabrice Bellet <fabrice@gnu.org>
+
+	* frontends/command-line/actions.c:
+	* frontends/command-line/actions.h:
+	* frontends/command-line/foreach.c:
+	* frontends/command-line/main.c: The --recurse option should now work
 	with --get-all-thumbnails, --get-all-images, --get-all-raw-data,
 	--list-files and --list-folders.
 

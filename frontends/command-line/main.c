@@ -441,9 +441,6 @@ OPTION_CALLBACK (list_folders)
 {
         CHECK_RESULT (set_globals ());
 
-        if (!glob_quiet)
-                printf("Subfolders of \"%s\":\n", glob_folder);
-
         return for_each_subfolder(glob_folder, print_folder, NULL, glob_recurse);
 }
 
