@@ -4,6 +4,8 @@ AC_INIT(configure.in)
 AM_INIT_AUTOMAKE(gphoto2_gtk2, 0.1)
 AM_CONFIG_HEADER(config.h)
 
+AM_ACLOCAL_INCLUDE(macros)
+
 AC_ISC_POSIX
 AC_PROG_CC
 AM_PROG_CC_STDC
@@ -47,6 +49,48 @@ if test "x$GCC" = "xyes"; then
   esac
 fi
 changequote([,])dnl
+
+dnl ------
+dnl GNOME?
+dnl ------
+dnl Let the user disable GNOME even if it can be found.
+AC_ARG_ENABLE(gnome, 
+		[  --disable-gnome         Do not try to use GNOME ],
+		enable_gnome="$enableval",)
+if test x$enable_gnome != xno; then
+  GNOME_INIT_HOOK([have_gnome=yes])
+fi
+AM_CONDITIONAL(HAVE_GNOME, test x$have_gnome = xyes)
+if test x$have_gnome != xyes; then
+  dnl -------------------
+  dnl We don't have GNOME
+  dnl -------------------
+  AC_DEFINE(WITHOUT_GNOME)
+  GNOMEUI_LIBS="$GTK_LIBS"
+  GNOME_INCLUDEDIR="$GTK_CFLAGS"
+else
+  dnl -------------
+  dnl We have GNOME
+  dnl -------------
+  dnl ------------------
+  dnl Check for libglade
+  dnl ------------------
+  AC_MSG_CHECKING(for Glade libraries >= 0.11)
+  if gnome-config --libs libglade > /dev/null 2>&1; then 
+    vers=`gnome-config --modversion libglade | awk 'BEGIN { FS = "."; } { print $1 * 1000 + $2;}'`
+    if test "$vers" -ge 11; then
+        AC_MSG_RESULT(found)
+    else
+        AC_MSG_ERROR(You need at least libglade 0.11 for this version of gphoto)
+    fi
+  else
+    AC_MSG_ERROR(Did not find libglade installed)
+  fi
+  EXTRA_GNOME_LIBS=`gnome-config --libs libglade`
+  EXTRA_GNOME_CFLAGS=`gnome-config --cflags libglade`
+  AC_SUBST(EXTRA_GNOME_LIBS)
+  AC_SUBST(EXTRA_GNOME_CFLAGS)
+fi
 
 AC_OUTPUT([
 Makefile
