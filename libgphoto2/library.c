@@ -1,7 +1,6 @@
-#include <dirent.h>
-#include <dlfcn.h>
 #include <stdio.h>
 #include <sys/types.h>
+
 #include <gphoto2.h>
 
 #include "core.h"
@@ -19,10 +18,10 @@ int is_library(char *library_filename) {
 #else
         sprintf(buf, "%s/%s", CAMLIBS, library_filename);
 #endif
-        if ((lh = dlopen(buf, RTLD_LAZY))==NULL)
+        if (GP_DLOPEN(lh, buf)==NULL)
                 return (GP_ERROR);
 
-        dlclose(lh);
+        GP_DLCLOSE(lh);
 
         return (GP_OK);
 }
@@ -35,15 +34,15 @@ int load_library (Camera *camera, char *camera_name) {
         for (x=0; x<glob_abilities_list->count; x++) {
            if (strcmp(glob_abilities_list->abilities[x]->model, camera_name)==0) {
                 sprintf(buf, "%s/%s", CAMLIBS, glob_abilities_list->abilities[x]->library);
-                if ((lh = dlopen(buf, RTLD_LAZY))==NULL) {
+                if (GP_DLOPEN(lh, buf)==NULL) {
                         if (glob_debug)
                                 perror("core:\tload_library");
                         return (GP_ERROR);
                 }
                 camera->library_handle 		= lh;
-                camera->functions->id 		= dlsym(lh, "camera_id");
-                camera->functions->abilities 	= dlsym(lh, "camera_abilities");
-                camera->functions->init 	= dlsym(lh, "camera_init");
+		GP_DLSYM(camera->functions->id, lh, "camera_id");
+		GP_DLSYM(camera->functions->abilities, lh, "camera_abilities");
+		GP_DLSYM(camera->functions->init, lh, "camera_init");
 
                 return (GP_OK);
            }
@@ -66,32 +65,32 @@ int load_camera_list (char *library_filename) {
         sprintf(buf, "%s/%s", CAMLIBS, library_filename);
 
         /* try to open the library */
-        if ((lh = dlopen(buf, RTLD_LAZY))==NULL) {
+        if (GP_DLOPEN(lh, buf)==NULL) {
                 if (glob_debug)
                         perror("core:\tload_camera_list");
                 return 0;
         }
 
         /* check to see if this library has been loaded */
-        load_camera_id = dlsym(lh, "camera_id");
-        load_camera_id(&id);
+	GP_DLSYM(load_camera_id, lh, "camera_id");
+	load_camera_id(&id);
 
         if (glob_debug)
                 printf("core:\t library id: %s\n", id.text);
 
         for (x=0; x<glob_abilities_list->count; x++) {
                 if (strcmp(glob_abilities_list->abilities[x]->id, id.text)==0) {
-                        dlclose(lh);
+                        GP_DLCLOSE(lh);
                         return (GP_ERROR);
                 }
         }
 
         /* load in the camera_abilities function */
-        load_camera_abilities = dlsym(lh, "camera_abilities");
+	GP_DLSYM(load_camera_abilities, lh, "camera_abilities");
 	old_count = glob_abilities_list->count;
 
         if (load_camera_abilities(glob_abilities_list) == GP_ERROR) {
-                dlclose(lh);
+                GP_DLCLOSE(lh);
                 return 0;
         }
 
@@ -101,7 +100,7 @@ int load_camera_list (char *library_filename) {
 		strcpy(glob_abilities_list->abilities[x]->library, library_filename);
 	}
 
-        dlclose(lh);
+        GP_DLCLOSE(lh);
 
         return (x);
 }
@@ -135,7 +134,7 @@ int load_cameras() {
                    } else {
                         if (glob_debug) {
                                 printf("no\n");
-				printf("core: reason: %s\n", dlerror());
+				printf("core: reason: %s\n", GP_DLERROR());
 			}
                 }
            }
@@ -164,7 +163,7 @@ int load_cameras() {
 
 int close_library (Camera *camera) {
 
-        dlclose(camera->library_handle);
+        GP_DLCLOSE(camera->library_handle);
 
         return (GP_OK);
 }
