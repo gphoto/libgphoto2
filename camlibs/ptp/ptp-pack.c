@@ -69,16 +69,18 @@ static inline char*
 ptp_unpack_string(PTPParams *params, PTPReq *req, uint16_t offset, uint8_t *len)
 {
 	int i;
-	char *string;
+	char *string=NULL;
 
 	*len=dtoh8a(&req->data[offset]);
-	string=malloc(*len);
-	memset(string, 0, *len);
-	for (i=0;i<*len && i< MAXFILENAMELEN; i++) {
-		string[i]=(char)dtoh16a(&req->data[offset+i*2+1]);
+	if (*len) {
+		string=malloc(*len);
+		memset(string, 0, *len);
+		for (i=0;i<*len && i< MAXFILENAMELEN; i++) {
+			string[i]=(char)dtoh16a(&req->data[offset+i*2+1]);
+		}
+		// be paranoid! :(
+		string[*len-1]=0;
 	}
-	// be paranoid! :)
-	string[*len-1]=0;
 	return (string);
 }
 
@@ -318,6 +320,8 @@ ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 	char *capture_date;
 	char tmp[16];
 	struct tm tm;
+
+	memset(&tm,0,sizeof(tm));
 
 	oi->StorageID=dtoh32a(&req->data[PTP_oi_StorageID]);
 	oi->ObjectFormat=dtoh16a(&req->data[PTP_oi_ObjectFormat]);
