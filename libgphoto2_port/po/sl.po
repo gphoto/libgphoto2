@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
-"POT-Creation-Date: 2002-05-28 23:25+0200\n"
+"POT-Creation-Date: 2002-11-20 19:29+0100\n"
 "PO-Revision-Date: 2002-01-04 19:28+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -22,82 +22,79 @@ msgstr ""
 msgid "The port has not yet been initialized"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:272
+#: libgphoto2_port/gphoto2-port.c:278
 msgid "open"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:295
+#: libgphoto2_port/gphoto2-port.c:301
 #, fuzzy
 msgid "close"
 msgstr "Zapri"
 
-#. Check if we wrote all bytes
-#: libgphoto2_port/gphoto2-port.c:373
+#: libgphoto2_port/gphoto2-port.c:376
 #, fuzzy
 msgid "write"
 msgstr "Natisni"
 
-#. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:405
+#: libgphoto2_port/gphoto2-port.c:408
 #, fuzzy
 msgid "read"
 msgstr "Ustvari"
 
-#. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:441 libgphoto2_port/gphoto2-port.c:478
+#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
 msgid "check_int"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:578
+#: libgphoto2_port/gphoto2-port.c:581
 msgid "update"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:624
+#: libgphoto2_port/gphoto2-port.c:627
 msgid "get_pin"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:676
+#: libgphoto2_port/gphoto2-port.c:679
 msgid "set_pin"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:691
+#: libgphoto2_port/gphoto2-port.c:694
 msgid "send_break"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:704
+#: libgphoto2_port/gphoto2-port.c:707
 msgid "flush"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:720
+#: libgphoto2_port/gphoto2-port.c:723
 msgid "find_device"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:732
+#: libgphoto2_port/gphoto2-port.c:735
 msgid "find_device_by_class"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:746
+#: libgphoto2_port/gphoto2-port.c:749
 msgid "clear_halt"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:766
+#: libgphoto2_port/gphoto2-port.c:769
 msgid "msg_write"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:786
+#: libgphoto2_port/gphoto2-port.c:789
 msgid "msg_read"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:846
+#: libgphoto2_port/gphoto2-port.c:849
 msgid "No error description available"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:285
+#: libgphoto2_port/gphoto2-port-info-list.c:266
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:479
+#: libgphoto2_port/gphoto2-port-info-list.c:460
 msgid "Generic Port"
 msgstr ""
 
@@ -196,8 +193,8 @@ msgstr "Ne morem dobiti vzorca"
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (e.g. dc2xx) is using the device and you have read/write access to "
-"the device."
+"module (e.g. dc2xx or stv680) is using the device and you have read/write "
+"access to the device."
 msgstr ""
 
 #: usb/libusb.c:157
@@ -324,627 +321,3 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Ne morem dobiti ¹tevila slik"
-
-#~ msgid "No configuration options."
-#~ msgstr "Ni nastavitev."
-
-#~ msgid "Mail image needs to be implemented!"
-#~ msgstr "Po¹iljanje slike z e-po¹to ¹e ni narejeno!"
-
-#~ msgid "Taking picture..."
-#~ msgstr "Slikam..."
-
-#~ msgid "Could not take a picture."
-#~ msgstr "Nisem uspel slikati."
-
-#~ msgid "New picture is #%03i"
-#~ msgstr "Nova slika je #%03i"
-
-#~ msgid "Deleting ALL pictures."
-#~ msgstr "Bri¹em VSE slike."
-
-#~ msgid "Deleting %i...\n"
-#~ msgstr "Bri¹em %i...\n"
-
-#~ msgid "Deleted all images."
-#~ msgstr "Vse slike zbrisane."
-
-#~ msgid "Deleting selected pictures..."
-#~ msgstr "Bri¹em izbrane slike..."
-
-#~ msgid "Done."
-#~ msgstr "Opravljeno."
-
-#~ msgid "Nothing selected to be deleted."
-#~ msgstr "Niè ni izbrano za brisanje."
-
-#~ msgid "Are you sure you want to DELETE the selected images?"
-#~ msgstr "Ste preprièani, da ¾elite ZBRISATI izbrane slike?"
-
-#~ msgid "Are you sure you want to DELETE all the images from memory?"
-#~ msgstr "Ste preprièani, da ¾elite ZBRISATI vse slike iz pomnilnika?"
-
-#~ msgid "Yes"
-#~ msgstr "Da"
-
-#~ msgid "No"
-#~ msgstr "Ne"
-
-#~ msgid "Could not save #%i"
-#~ msgstr "Ne morem shraniti #%i"
-
-#~ msgid "Filename prefix:"
-#~ msgstr "Predpona imena datoteke:"
-
-#~ msgid "Saving Image #%03i..."
-#~ msgstr "Sharnjujem sliko #%03i..."
-
-#~ msgid "Saving Thumbnail #%03i..."
-#~ msgstr "Shranjujem vzorec #%03i..."
-
-#~ msgid "%s-thumbnail-%03i"
-#~ msgstr "%s-vzorec-%03i"
-
-#~ msgid "Done. Images saved in %s"
-#~ msgstr "Opravljeno. Slike shranjene v %s"
-
-#~ msgid "%s/gphoto-image-%03i.jpg"
-#~ msgstr "%s/gphoto-slika-%03i.jpg"
-
-#~ msgid "Select model/port..."
-#~ msgstr "Izberi model/vrata..."
-
-#~ msgid "Camera Model:"
-#~ msgstr "Model fotoaparata:"
-
-#~ msgid ""
-#~ "\n"
-#~ "gPhoto user(s) that reported this model:\n"
-#~ msgstr ""
-#~ "\n"
-#~ "gPhoto uporabniki, ki so sporoèili ta model:\n"
-
-#~ msgid "Port:"
-#~ msgstr "Vrata:"
-
-#~ msgid "Save"
-#~ msgstr "Shrani"
-
-#~ msgid "Cancel"
-#~ msgstr "Preklièi"
-
-#~ msgid "Missing Serial Device Permissions"
-#~ msgstr "Ni dovoljenja za serijsko napravo"
-
-#~ msgid "Please check the permissions (see the manual)."
-#~ msgstr "Prosim preverite dovoljenja (poglejte priroènik)."
-
-#~ msgid "Opened %s."
-#~ msgstr "Odprl %s."
-
-#~ msgid "Could not open $HOME/.gphoto/gphotorc for writing."
-#~ msgstr "Ne morem odpreti $HOME/.gphoto/gphotorc za pisanje."
-
-#~ msgid "Could not open $HOME/.gphoto/gphotorc for writing.\n"
-#~ msgstr "Ne morem odpreti $HOME/.gphoto/gphotorc za pisanje.\n"
-
-#~ msgid ""
-#~ "Version Information-------------------Current Version: %sNew features all "
-#~ "over the place. Please seethe ChangeLog for more information.As always, "
-#~ "report bugs gphoto-devel@gphoto.orgThanx much."
-#~ msgstr ""
-#~ "Podatki o razlièici-------------------Trenutna razlièica: %s Novitete so "
-#~ "povsod. Prosim poglejte datoteko ChangeLog za veè podatkov. Kot vedno, "
-#~ "sporoèite hro¹èe na gphoto-devel@gphoto.org. HvalaZelo."
-
-#~ msgid "User's Manual"
-#~ msgstr "Uporabni¹ki priroènik"
-
-#~ msgid "OK"
-#~ msgstr "V redu"
-
-#~ msgid ""
-#~ "This program is free software; you can redistribute it and/or modifyit "
-#~ "under the terms of the GNU General Public License as published bythe Free "
-#~ "Software Foundation; either version 2 of the License, or(at your option) "
-#~ "any later version.This program is distributed in the hope that it will be "
-#~ "useful,but WITHOUT ANY WARRANTY; without even the implied warranty "
-#~ "ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See theGNU "
-#~ "General Public License for more details.You should have received a copy "
-#~ "of the GNU General Public Licensealong with this program; if not, write "
-#~ "to the Free SoftwareFoundation, Inc., 675 Mass Ave, Cambridge, MA 02139, "
-#~ "USA.See http://www.gnu.org for more details on the GNU project."
-#~ msgstr ""
-#~ "To je prosto programje -- Lahko ga spremijate in/ali raz¹irjate, vendarv "
-#~ "skladu z GNU Splo¹no Javno Licenco, ki jo je objavila Fundacija za "
-#~ "prostoprogramje; lahko uporabite drugo ali (po lastni presoji) katerokoli "
-#~ "kasnej¹o razlièico licence.\n"
-#~ "Ta program se raz9irja z upanjem, da bi bil uporaben, a BREZ "
-#~ "KAKR©NIHKOLI  JAMSTEV; celo brez implicitnih jamstev USTREZNOSTI ZA "
-#~ "PRODAJO ali UPRABNOSTI ZA DOLOÈEN NAMEN. Za veè podrobnosti si oglejte "
-#~ "GNU Splo¹no Javno Licenco.Zraven tega programa bi morali prejeti GNU "
-#~ "Splo¹no javno licenco. Èe je niste,pi¹ite Fundaciji za prosto programje "
-#~ "na naslov: Free software fundation, Inc., 675 Mass Ave, Cambridge, MA "
-#~ "02139, USA. Oglejte si http://www.gnu.org za veè podrobnosti o projektu "
-#~ "GNU."
-
-#~ msgid "%s is not yet implemented"
-#~ msgstr "%s ¹e ni implementiran"
-
-#~ msgid "Getting thumbnail %i..."
-#~ msgstr "Dobivam vzorec %i..."
-
-#~ msgid "Picture #%i\n"
-#~ msgstr "Slika #%i\n"
-
-#~ msgid "Getting Index..."
-#~ msgstr "Dobivam kazalo..."
-
-#~ msgid "num_pictures_taken is %d\n"
-#~ msgstr "©t_posnetih_slik je %d\n"
-
-#~ msgid "Download cancelled."
-#~ msgstr "Prena¹anje preklicano."
-
-#~ msgid "Done getting index."
-#~ msgstr "Kazalo prene¹eno."
-
-#~ msgid "Nothing selected for download."
-#~ msgstr "Niè ni izbrano za prenos."
-
-#~ msgid "Getting Image #%03i..."
-#~ msgstr "Dobivam sliko #%03i..."
-
-#~ msgid "Getting Thumbnail #%03i..."
-#~ msgstr "Dobivam vzorec #%03i..."
-
-#~ msgid "Done downloading."
-#~ msgstr "Prena¹anje opravljeno."
-
-#~ msgid "Download halted."
-#~ msgstr "Prena¹anje ustavljeno."
-
-#~ msgid "Save all opened images"
-#~ msgstr "Shrani vse odprte slike"
-
-#~ msgid "Save Image(s)..."
-#~ msgstr "Shrani sliko/e..."
-
-#~ msgid "Saving the index is not yet supported"
-#~ msgstr "Shranjevanje kazala ¹e ni podprto"
-
-#~ msgid "Open Image..."
-#~ msgstr "Odpri Sliko..."
-
-#~ msgid "Can't print the index yet."
-#~ msgstr "Tiskanje kazala ¹e ni podprto."
-
-#~ msgid "Print Image..."
-#~ msgstr "Natisni sliko..."
-
-#~ msgid "Print Command:"
-#~ msgstr "Ukaz za tiskanje:"
-
-#~ msgid "Now spooling..."
-#~ msgstr "Tiskanje èaka..."
-
-#~ msgid "Spooling done. Printing may take a minute."
-#~ msgstr "Èakanje konèano. Tiskanje lahko traja kak¹no minuto."
-
-#~ msgid "Can't modify the index colors."
-#~ msgstr "Barve kazala se ni mogoèe spremeniti."
-
-#~ msgid "Can't scale the index."
-#~ msgstr "Velikosti kazala ni mogoèe spreminjati."
-
-#~ msgid "Resize Image..."
-#~ msgstr "Spremeni velikost slike..."
-
-#~ msgid "Width:"
-#~ msgstr "©irina:"
-
-#~ msgid "Height:"
-#~ msgstr "Vi¹ina:"
-
-#~ msgid "Resize"
-#~ msgstr "Spremeni velikost"
-
-#~ msgid "Can't manipulate the index."
-#~ msgstr "Ne morem manipulirati kazala."
-
-#~ msgid "Can't scale the index!"
-#~ msgstr "Velikosti kazala ni mogoèe spreminjati!"
-
-#~ msgid "Scaling image by 50%..."
-#~ msgstr "Pomanj¹ujem sliko za 50%..."
-
-#~ msgid "Scaling image by 200%..."
-#~ msgstr "Poveèujem sliko za 100%..."
-
-#~ msgid "Post-Processing Options"
-#~ msgstr "Mo¾nosti naknadne obdelave"
-
-#~ msgid "Enable post-processing"
-#~ msgstr "Vkljuèi naknandno obdelavo"
-
-#~ msgid "Post-processing command-line:"
-#~ msgstr "Ukazna vrstica za naknadno obdelavo:"
-
-#~ msgid "http://www.gphoto.org/help.php3"
-#~ msgstr "http://www.gphoto.org/help.php3"
-
-#~ msgid "http://www.gphoto.org/"
-#~ msgstr "http://www.gphoto.org/"
-
-#~ msgid "http://www.gphoto.org/feedback.php3"
-#~ msgstr "http://www.gphoto.org/feedback.php3"
-
-#~ msgid "http://www.gphoto.org/news.php3"
-#~ msgstr "http://www.gphoto.org/news.php3"
-
-#~ msgid "http://www.gphoto.org/download.php3"
-#~ msgstr "http://www.gphoto.org/download.php3"
-
-#~ msgid "http://www.gphoto.org/cameras.php3"
-#~ msgstr "http://www.gphoto.org/cameras.php3"
-
-#~ msgid "http://www.gphoto.org/supporting.php3"
-#~ msgstr "http://www.gphoto.org/supporting.php3"
-
-#~ msgid "http://www.gphoto.org/lists.php3"
-#~ msgstr "http://www.gphoto.org/lists.php3"
-
-#~ msgid "http://www.gphoto.org/team.php3"
-#~ msgstr "http://www.gphoto.org/team.php3"
-
-#~ msgid "http://www.gphoto.org/themes.php3"
-#~ msgstr "http://www.gphoto.org/themes.php3"
-
-#~ msgid "http://www.gphoto.org/links.php3"
-#~ msgstr "http://www.gphoto.org/links.php3"
-
-#~ msgid "http://www.gphoto.org/todo.php3"
-#~ msgstr "http://www.gphoto.org/todo.php3"
-
-#~ msgid ""
-#~ "%s summary:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "%s povzetek:\n"
-#~ "%s"
-
-#~ msgid "gPhoto %s (%s) - the GNU digital camera application\n"
-#~ msgstr "gPhoto %s (%s) - GNU program za digitalne fotoaparate\n"
-
-#~ msgid ""
-#~ "Copyright (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Avtorske pravice pridr¾ane (C) 1998-2000 Scott Fritzinger <scottf@unr."
-#~ "edu>\n"
-#~ "\n"
-
-#~ msgid "Usage: gphoto [-h] [-c] [-n] [-s # filename] [-t # filename]\n"
-#~ msgstr "Uporaba: gphoto [-h] [-c] [-n] [-s # datoteka] [-t # datoteka]\n"
-
-#~ msgid "              [-d #] [-p filename] [-l filename]\n"
-#~ msgstr "              [-d #] [-p datoteka] [-l datoteka]\n"
-
-#~ msgid "\t-h                    display this help screen\n"
-#~ msgstr "\t-h                    prika¾i to pomoè\n"
-
-#~ msgid "\t-c                    display camera summary\n"
-#~ msgstr "\t-c                    prika¾i povzetek fotoaparata\n"
-
-#~ msgid "\t-n                    display the # of pictures\n"
-#~ msgstr "\t-n                    poka¾i ¹tevilo slik\n"
-
-#~ msgid "\t-s # filename         save image # as filename\n"
-#~ msgstr "\t-s # datoteka         shrani sliko # kot datoteka\n"
-
-#~ msgid "\t-t # filename         save thumbnail # as filename\n"
-#~ msgstr "\t-t # datoteka         shrani vzorec # kot datoteka\n"
-
-#~ msgid "\t-d #                  delete image # from camera\n"
-#~ msgstr "\t-d #                  zbri¹i sliko # iz fotoaparata\n"
-
-#~ msgid "\t-p filename           take picture and save as filename\n"
-#~ msgstr "\t-p datoteka           slikaj in shrani sliko kot datoteka\n"
-
-#~ msgid ""
-#~ "\t-l filename           save live preview as filename\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\t-l datoteka           shrani ¾iv vzorec kot datoteka\n"
-#~ "\n"
-
-#~ msgid "gPhoto is free GNU software; you can redistribute it and/or\n"
-#~ msgstr "gPHoto je prosto GNUjevo programje; lahko ga raz¹irjate in/ali\n"
-
-#~ msgid "modify it under the terms of the GNU General Public License \n"
-#~ msgstr "spreminjate pod pogoji GNU Splo¹ne Javne Licence \n"
-
-#~ msgid "as published by the Free Software Foundation; either version \n"
-#~ msgstr "kot jo je objavila Fundacija za prosto progamje; uporabite lahko\n"
-
-#~ msgid "2 of the License, or any later version.  Visit gphoto/COPYING\n"
-#~ msgstr ""
-#~ "drugo ali katerokoli kasnej¹o razlièico Licence. Licenca se nahaja\n"
-
-#~ msgid ""
-#~ "in the source distribution to read the GNU GPL license terms.\n"
-#~ "\n"
-#~ msgstr "v datoteki gphoto/COPYING v distribuciji izvorne kode.\n"
-
-#~ msgid "Report bugs and camera success to gphoto-devel@gphoto.org.\n"
-#~ msgstr ""
-#~ "Sporoèite hro¹èe in uspehe s fotoaparati na gphoto-devel@gphoto.org.\n"
-
-#~ msgid "See http://www.gphoto.org for the latest news and updates.\n"
-#~ msgstr ""
-#~ "Na http://www.gphoto.org lahko najdete najnovej¹e novice in popravke\n"
-
-#~ msgid "%i\n"
-#~ msgstr "%i\n"
-
-#~ msgid "ERROR: could not get image.\n"
-#~ msgstr "NAPAKA: ne morem dobiti slike.\n"
-
-#~ msgid "ERROR: could not save image.\n"
-#~ msgstr "NAPAKA: ne morem shraniti slike.\n"
-
-#~ msgid "ERROR: 'filename' not specified.\n"
-#~ msgstr "NAPAKA: 'datoteka' ni bila navedena.\n"
-
-#~ msgid "ERROR: '#' and 'filename' not specified.\n"
-#~ msgstr "NAPAKA '#' in 'datoteka' nista bila navedena.\n"
-
-#~ msgid "ERROR: Could not delete image.\n"
-#~ msgstr "NAPAKA: Ne morem zbrisati slike.\n"
-
-#~ msgid "ERROR: '#' not specified.\n"
-#~ msgstr "NAPAKA: '#' ni bil naveden.\n"
-
-#~ msgid "ERROR: filename not specified.\n"
-#~ msgstr "NAPKA: datoteka ni bila navedena.\n"
-
-#~ msgid "Taking picture...\n"
-#~ msgstr "Slikam...\n"
-
-#~ msgid "ERROR: could not take the picture.\n"
-#~ msgstr "NAPAKA: nisem mogel slikati.\n"
-
-#~ msgid "Saving the new image (# %i) as %s: "
-#~ msgstr "Shranjujem novo sliko (# %i) kot %s: "
-
-#~ msgid ""
-#~ "\n"
-#~ "ERROR: could not get image.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "NAPAKA: ne morem dobiti slike.\n"
-
-#~ msgid "gPhoto release %s was brought to you by"
-#~ msgstr "gPhoto razlièico %s so ustvarili"
-
-#~ msgid "Web Page"
-#~ msgstr "Spletna stran"
-
-#~ msgid "Previous"
-#~ msgstr "Nazaj"
-
-#~ msgid "Next"
-#~ msgstr "Naprej"
-
-#~ msgid ""
-#~ "The gPhoto AUTHORS file appears to be missing!\n"
-#~ "\t      There should be a file called "
-#~ msgstr ""
-#~ "gPhotova datoteka AUTHORS se zdi pogre¹ana!\n"
-#~ "\t      Morala bi obstajati imenovana "
-
-#~ msgid ""
-#~ " in the\n"
-#~ "\t      %s directory.\n"
-#~ "Please check your installation."
-#~ msgstr ""
-#~ " v\n"
-#~ "\t      imeniku %s.\n"
-#~ "Prosim preverite va¹o namestitev."
-
-#~ msgid "Select an Output Directory..."
-#~ msgstr "Izberi izhodni imenik..."
-
-#~ msgid "Gallery Name:"
-#~ msgstr "Ime galerije:"
-
-#~ msgid "Theme:"
-#~ msgstr "Tema:"
-
-#~ msgid "Output Directory:"
-#~ msgstr "Izhodni imenik:"
-
-#~ msgid "Change..."
-#~ msgstr "Spremeni..."
-
-#~ msgid "Export file as *.shtml?"
-#~ msgstr "Izvozi datoteko kot *.shtml"
-
-#~ msgid "Set table border width to zero for thumbnails?"
-#~ msgstr "Za vzorce nastavi ¹irino robu tabele na niè?"
-
-#~ msgid ""
-#~ "Set image border width to zero? (so you don't see the link colors...)"
-#~ msgstr "Nastavi ¹irino robu slik na niè? (torej ne vidite barv povezave...)"
-
-#~ msgid "You must select a theme!"
-#~ msgstr "Izbrati morate temo!"
-
-#~ msgid "Getting Thumbnail #%i..."
-#~ msgstr "Dobivam vzorec #%i..."
-
-#~ msgid "Not Available"
-#~ msgstr "Ni na voljo"
-
-#~ msgid "<a href=\"picture-%03i.html\">Click Me<\\/a>"
-#~ msgstr "<a href=\"slika-%03i.html\">Klikni me<\\/a>"
-
-#~ msgid "thumbnail-%03i.%s"
-#~ msgstr "vzorec-%03i.%s"
-
-#~ msgid "Getting Image #%i..."
-#~ msgstr "Dobivam sliko #%i..."
-
-#~ msgid "<img alt=\"%03i\" src=\"picture-%03i.%s\">"
-#~ msgstr "<img alt=\"%03i\" src=\"slika-%03i.%s\">"
-
-#~ msgid "picture-%03i.%s"
-#~ msgstr "slika-%03i.%s"
-
-#~ msgid "picture-%03i.html"
-#~ msgstr "slika-%03i.html"
-
-#~ msgid "%spicture-%03i.html"
-#~ msgstr "%sslika-%03i.html"
-
-#~ msgid "Loaded file:%s%s in %s"
-#~ msgstr "Nalo¾ena datoteka %s%s v %s"
-
-#~ msgid "Gallery saved in: %s"
-#~ msgstr "Galerija shranjena v: %s"
-
-#~ msgid "Color Adjustment"
-#~ msgstr "Nastavitev barv"
-
-#~ msgid "gPhoto - Color Adjustment"
-#~ msgstr "gPhoto - Nastavitev barv"
-
-#~ msgid "Colour Settings"
-#~ msgstr "Nstavitev barv"
-
-#~ msgid "Gray Controls"
-#~ msgstr "Kontorla sivine"
-
-#~ msgid "Red Controls"
-#~ msgstr "Kontrola rdeèe"
-
-#~ msgid "Green Controls"
-#~ msgstr "Kontrola zelene"
-
-#~ msgid "Blue Controls"
-#~ msgstr "Kontrola modre"
-
-#~ msgid "Colour Modifications:"
-#~ msgstr "Spremembe barv:"
-
-#~ msgid "Apply"
-#~ msgstr "Uporabi"
-
-#~ msgid "Keep"
-#~ msgstr "Obdr¾i"
-
-#~ msgid "Reset"
-#~ msgstr "Ponastavi"
-
-#~ msgid "Reset all the color changes to normal values"
-#~ msgstr "Ponastavi vse spremembe barv na obièajne vrednosti"
-
-#~ msgid "Always Apply"
-#~ msgstr "Vedno uporabi"
-
-#~ msgid "Getting live image..."
-#~ msgstr "Dobivam ¾ivo sliko..."
-
-#~ msgid "Live Camera!"
-#~ msgstr "®iva slika!"
-
-#~ msgid "Update Picture"
-#~ msgstr "Obnovi sliko"
-
-#~ msgid "Take Picture"
-#~ msgstr "Slikaj"
-
-#~ msgid ""
-#~ "\n"
-#~ "Launching Gnome Bugbuddy...\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Poganjam Gnome Bug-buddy...\n"
-
-#~ msgid "gPhoto %s - the GNU digital camera application"
-#~ msgstr "gPhoto %s - GNU program za digitalne fotoaparate"
-
-#~ msgid "Image Index"
-#~ msgstr "Kazalo slik"
-
-#~ msgid "Open Image"
-#~ msgstr "Odpri sliko"
-
-#~ msgid "Save Opened Image(s)"
-#~ msgstr "Shrani odprto sliko(e)"
-
-#~ msgid "Print Image"
-#~ msgstr "Natisni sliko"
-
-#~ msgid "Close Image"
-#~ msgstr "Zapri sliko"
-
-#~ msgid "Previous page"
-#~ msgstr "Prej¹nja stran"
-
-#~ msgid "Next page"
-#~ msgstr "Naslednja stran"
-
-#~ msgid "Download Thumbnail Index"
-#~ msgstr "Nalo¾i kazalo vzorcev"
-
-#~ msgid "Download Empty Index"
-#~ msgstr "Nalo¾i prazno kazalo"
-
-#~ msgid "Download Selected Images"
-#~ msgstr "Nalo¾i izbrane slike"
-
-#~ msgid "Delete Selected Images"
-#~ msgstr "Zbri¹i izbrane slike"
-
-#~ msgid "Halt Download"
-#~ msgstr "Ustavi nalaganje"
-
-#~ msgid "Rotate Clockwise"
-#~ msgstr "Zavrti v smeri urinega kazalca"
-
-#~ msgid "Rotate Counter-Clockwise"
-#~ msgstr "Zavrti v nasprotni smeri urinega kazalca"
-
-#~ msgid "Flip Horizontal"
-#~ msgstr "Prevrni vodoravno"
-
-#~ msgid "Flip Vertical"
-#~ msgstr "Prevrni navpièNo"
-
-#~ msgid "Colors"
-#~ msgstr "Barve"
-
-#~ msgid "Camera Configuration"
-#~ msgstr "Nastaviteve fotoaparata"
-
-#~ msgid "Help"
-#~ msgstr "Pomoè"
-
-#~ msgid "Exit gPhoto"
-#~ msgstr "Izhod iz gPhota"
-
-#~ msgid "gPhoto Message"
-#~ msgstr "gPhoto sporoèilo"
-
-#~ msgid "Confirm"
-#~ msgstr "Potrdi"
-
-#~ msgid "File %s exists. Overwrite?"
-#~ msgstr "Datoteka %s ¾e obstaja prepi¹em?"
-
-#~ msgid "load_image_mem: could not load image\n"
-#~ msgstr "load_image_mem: ne morem nalo¾iti slike\n"
-
-#~ msgid "Fork failed. Exiting. \n"
-#~ msgstr "Fork ni uspel. Zakljuèujem. \n"

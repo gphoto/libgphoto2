@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2002-06-18 23:10-0400\n"
+"POT-Creation-Date: 2002-11-20 19:29+0100\n"
 "PO-Revision-Date: 2002-06-15 19:39+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@list.linux.net.cn>\n"
@@ -30,17 +30,14 @@ msgstr "打开"
 msgid "close"
 msgstr "关闭"
 
-#. Check if we wrote all bytes
 #: libgphoto2_port/gphoto2-port.c:376
 msgid "write"
 msgstr "写入"
 
-#. Check if we read as many bytes as expected
 #: libgphoto2_port/gphoto2-port.c:408
 msgid "read"
 msgstr "读出"
 
-#. Check if we read as many bytes as expected
 #: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
 msgid "check_int"
 msgstr "完整性检查"

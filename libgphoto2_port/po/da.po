@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
-"POT-Creation-Date: 2002-05-28 23:25+0200\n"
+"POT-Creation-Date: 2002-11-20 19:29+0100\n"
 "PO-Revision-Date: 2000-04-19 10:12+02:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Dansk <dansk@klid.dk>\n"
@@ -23,82 +23,79 @@ msgstr ""
 msgid "The port has not yet been initialized"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:272
+#: libgphoto2_port/gphoto2-port.c:278
 msgid "open"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:295
+#: libgphoto2_port/gphoto2-port.c:301
 #, fuzzy
 msgid "close"
 msgstr "Luk"
 
-#. Check if we wrote all bytes
-#: libgphoto2_port/gphoto2-port.c:373
+#: libgphoto2_port/gphoto2-port.c:376
 #, fuzzy
 msgid "write"
 msgstr "Udskriv"
 
-#. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:405
+#: libgphoto2_port/gphoto2-port.c:408
 #, fuzzy
 msgid "read"
 msgstr "Opret"
 
-#. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:441 libgphoto2_port/gphoto2-port.c:478
+#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
 msgid "check_int"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:578
+#: libgphoto2_port/gphoto2-port.c:581
 msgid "update"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:624
+#: libgphoto2_port/gphoto2-port.c:627
 msgid "get_pin"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:676
+#: libgphoto2_port/gphoto2-port.c:679
 msgid "set_pin"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:691
+#: libgphoto2_port/gphoto2-port.c:694
 msgid "send_break"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:704
+#: libgphoto2_port/gphoto2-port.c:707
 msgid "flush"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:720
+#: libgphoto2_port/gphoto2-port.c:723
 msgid "find_device"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:732
+#: libgphoto2_port/gphoto2-port.c:735
 msgid "find_device_by_class"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:746
+#: libgphoto2_port/gphoto2-port.c:749
 msgid "clear_halt"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:766
+#: libgphoto2_port/gphoto2-port.c:769
 msgid "msg_write"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:786
+#: libgphoto2_port/gphoto2-port.c:789
 msgid "msg_read"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:846
+#: libgphoto2_port/gphoto2-port.c:849
 msgid "No error description available"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:285
+#: libgphoto2_port/gphoto2-port-info-list.c:266
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:479
+#: libgphoto2_port/gphoto2-port-info-list.c:460
 msgid "Generic Port"
 msgstr ""
 
@@ -197,8 +194,8 @@ msgstr "Kunne ikke finde smugkig"
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (e.g. dc2xx) is using the device and you have read/write access to "
-"the device."
+"module (e.g. dc2xx or stv680) is using the device and you have read/write "
+"access to the device."
 msgstr ""
 
 #: usb/libusb.c:157
@@ -325,618 +322,3 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kunne ikke hente antal billeder"
-
-#~ msgid "No configuration options."
-#~ msgstr "Ingen konfigurationsvalg."
-
-#~ msgid "Mail image needs to be implemented!"
-#~ msgstr "Send billede skal implementeres!"
-
-#~ msgid "Taking picture..."
-#~ msgstr "Ta'r billede..."
-
-#~ msgid "Could not take a picture."
-#~ msgstr "Kunne ikke tage billede."
-
-#~ msgid "New picture is #%03i"
-#~ msgstr "Nyt billede er #%03i"
-
-#~ msgid "Deleting ALL pictures."
-#~ msgstr "Sletter ALLE billeder."
-
-#~ msgid "Deleting %i...\n"
-#~ msgstr "Sletter %i...\n"
-
-#~ msgid "Deleted all images."
-#~ msgstr "Slettede alle billeer."
-
-#~ msgid "Deleting selected pictures..."
-#~ msgstr "Sletter valgte billeder..."
-
-#~ msgid "Done."
-#~ msgstr "Færdig."
-
-#~ msgid "Nothing selected to be deleted."
-#~ msgstr "Intet valgt til sletning"
-
-#~ msgid "Are you sure you want to DELETE the selected images?"
-#~ msgstr "Er du sikker på at du vil SLETTE de valgte billeder?"
-
-#~ msgid "Are you sure you want to DELETE all the images from memory?"
-#~ msgstr "Er du sikker på at du vil SLETTE alle billederne fra hukommelsen?"
-
-#~ msgid "Yes"
-#~ msgstr "Ja"
-
-#~ msgid "No"
-#~ msgstr "Nej"
-
-#~ msgid "Could not save #%i"
-#~ msgstr "Kunne ikke gemme #%i"
-
-#~ msgid "Filename prefix:"
-#~ msgstr "Filnavn præfiks:"
-
-#~ msgid "Saving Image #%03i..."
-#~ msgstr "Gemmer billede #%03i..."
-
-#~ msgid "Saving Thumbnail #%03i..."
-#~ msgstr "Gemmer miniature #%03i..."
-
-#~ msgid "%s-thumbnail-%03i"
-#~ msgstr "%s-miniature-%03i"
-
-#~ msgid "Done. Images saved in %s"
-#~ msgstr "Færdig. Billeder gemt i %s"
-
-#~ msgid "%s/gphoto-image-%03i.jpg"
-#~ msgstr "%s/gphoto-billede-%03i.jpg"
-
-#~ msgid "Select model/port..."
-#~ msgstr "Vælg model/port..."
-
-#~ msgid "Camera Model:"
-#~ msgstr "Kameramodel:"
-
-#~ msgid ""
-#~ "\n"
-#~ "gPhoto user(s) that reported this model:\n"
-#~ msgstr ""
-#~ "\n"
-#~ "gPhoto bruger(e) som har rapporteret denne model:\n"
-
-#~ msgid "Port:"
-#~ msgstr "Port:"
-
-#~ msgid "Save"
-#~ msgstr "Gem"
-
-#~ msgid "Cancel"
-#~ msgstr "Afbryd"
-
-#~ msgid "Missing Serial Device Permissions"
-#~ msgstr "Mangler rettigheder til seriel-enheden"
-
-#~ msgid "Please check the permissions (see the manual)."
-#~ msgstr "Tjek venligst rettighederne (se manualen)."
-
-#~ msgid "Opened %s."
-#~ msgstr "Åbnede %s."
-
-#~ msgid "Could not open $HOME/.gphoto/gphotorc for writing."
-#~ msgstr "Kunne ikke åbne $HOME/.gphoto/gphotorc for skriving."
-
-#~ msgid "Could not open $HOME/.gphoto/gphotorc for writing.\n"
-#~ msgstr "Kunne ikke åbne $HOME/.gphoto/gphotorc for skriving.\n"
-
-#~ msgid ""
-#~ "Version Information-------------------Current Version: %sNew features all "
-#~ "over the place. Please seethe ChangeLog for more information.As always, "
-#~ "report bugs gphoto-devel@gphoto.orgThanx much."
-#~ msgstr ""
-#~ "Versionsinformation-------------------Denne version: %sNye funktioner "
-#~ "over det hele. Se venligst ChangeLog for mere information. Som altid, "
-#~ "rapportér fejl til gphoto-devel@gphoto.org. Mange tak."
-
-#~ msgid "User's Manual"
-#~ msgstr "Brugermanual"
-
-#~ msgid "OK"
-#~ msgstr "Ok"
-
-#~ msgid ""
-#~ "This program is free software; you can redistribute it and/or modifyit "
-#~ "under the terms of the GNU General Public License as published bythe Free "
-#~ "Software Foundation; either version 2 of the License, or(at your option) "
-#~ "any later version.This program is distributed in the hope that it will be "
-#~ "useful,but WITHOUT ANY WARRANTY; without even the implied warranty "
-#~ "ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See theGNU "
-#~ "General Public License for more details.You should have received a copy "
-#~ "of the GNU General Public Licensealong with this program; if not, write "
-#~ "to the Free SoftwareFoundation, Inc., 675 Mass Ave, Cambridge, MA 02139, "
-#~ "USA.See http://www.gnu.org for more details on the GNU project."
-#~ msgstr ""
-#~ "Dette program er frit programmel; du kan redistribuere det og/eller ændre "
-#~ "det under betingelserne i GNUs Generelle Offentlige Licens (GPL) som "
-#~ "offentliggjort af Free Software Foundation; enten version 2 af licensen, "
-#~ "eller (efter dit eget valg) en hvilkensomhelst senere version. Dette "
-#~ "program er distribueret i håbet om at det vil være nyttigt, men UDEN "
-#~ "NOGENSOMHELST GARANTI; endog uden en underliggende garanti om SALGBARHED "
-#~ "eller EGNETHED FOR ET BESTEMT FORMÅL. Se GNUs Generelle Offentlige Licens "
-#~ "for flere detaljer. Du skulle have modtaget en kopi af GNUs Generelle "
-#~ "Offentlige Licens sammen med dette program; hvis dette ikke er tilfældet, "
-#~ "så skriv til Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA "
-#~ "02139, USA. Se http://www.gnu.org for flere detaljer om GNU-projektet."
-
-#~ msgid "%s is not yet implemented"
-#~ msgstr "%s er ikke implementeret endnu"
-
-#~ msgid "Getting thumbnail %i..."
-#~ msgstr "Henter miniature %i..."
-
-#~ msgid "Picture #%i\n"
-#~ msgstr "Billede #%i\n"
-
-#~ msgid "Getting Index..."
-#~ msgstr "Henter indeks..."
-
-#~ msgid "num_pictures_taken is %d\n"
-#~ msgstr "num_pictures_taken er %d\n"
-
-#~ msgid "Download cancelled."
-#~ msgstr "Nedlastning afbrudt."
-
-#~ msgid "Done getting index."
-#~ msgstr "Færdig med at hente indeks."
-
-#~ msgid "Nothing selected for download."
-#~ msgstr "Ingenting valgt for nedlastning."
-
-#~ msgid "Getting Image #%03i..."
-#~ msgstr "Henter billede #%03i..."
-
-#~ msgid "Getting Thumbnail #%03i..."
-#~ msgstr "Henter miniature #%03i..."
-
-#~ msgid "Done downloading."
-#~ msgstr "Nedlastning fuldført."
-
-#~ msgid "Download halted."
-#~ msgstr "Nedlastning stoppet."
-
-#~ msgid "Save all opened images"
-#~ msgstr "Gem alle åbne billeder"
-
-#~ msgid "Save Image(s)..."
-#~ msgstr "Gem billede(r)..."
-
-#~ msgid "Saving the index is not yet supported"
-#~ msgstr "Gemning af indeks er ikke understøttet endnu"
-
-#~ msgid "Open Image..."
-#~ msgstr "Åbn billede..."
-
-#~ msgid "Can't print the index yet."
-#~ msgstr "Kan ikke udskrive indeksen endnu."
-
-#~ msgid "Print Image..."
-#~ msgstr "Udskriv billede..."
-
-#~ msgid "Print Command:"
-#~ msgstr "Udskriftskommando:"
-
-#~ msgid "Now spooling..."
-#~ msgstr "Sender udskrift..."
-
-#~ msgid "Spooling done. Printing may take a minute."
-#~ msgstr "Sending af udskrift færdig. Udskrift kan tage lidt tid."
-
-#~ msgid "Can't modify the index colors."
-#~ msgstr "Kan ikke ændre indeksfarverne."
-
-#~ msgid "Can't scale the index."
-#~ msgstr "Kan ikke skalere indeksen."
-
-#~ msgid "Resize Image..."
-#~ msgstr "Ændr billedestørrelse..."
-
-#~ msgid "Width:"
-#~ msgstr "Bredde:"
-
-#~ msgid "Height:"
-#~ msgstr "Højde:"
-
-#~ msgid "Resize"
-#~ msgstr "Ændr størrelse"
-
-#~ msgid "Can't manipulate the index."
-#~ msgstr "Kan ikke manipulere indekset."
-
-#~ msgid "Can't scale the index!"
-#~ msgstr "Kan ikke skalére indekset!"
-
-#~ msgid "Scaling image by 50%..."
-#~ msgstr "Skalérer billede med 50%..."
-
-#~ msgid "Scaling image by 200%..."
-#~ msgstr "Skalérer billede med 200%..."
-
-#~ msgid "Post-Processing Options"
-#~ msgstr "Efterbehandlingsindstillinger"
-
-#~ msgid "Enable post-processing"
-#~ msgstr "Aktivér efterbehandling"
-
-#~ msgid "Post-processing command-line:"
-#~ msgstr "Kommandolinje for efterbehandling:"
-
-#~ msgid "http://www.gphoto.org/help.php3"
-#~ msgstr "http://www.gphoto.org/help.php3"
-
-#~ msgid "http://www.gphoto.org/"
-#~ msgstr "http://www.gphoto.org/"
-
-#~ msgid "http://www.gphoto.org/feedback.php3"
-#~ msgstr "http://www.gphoto.org/feedback.php3"
-
-#~ msgid "http://www.gphoto.org/news.php3"
-#~ msgstr "http://www.gphoto.org/news.php3"
-
-#~ msgid "http://www.gphoto.org/download.php3"
-#~ msgstr "http://www.gphoto.org/download.php3"
-
-#~ msgid "http://www.gphoto.org/cameras.php3"
-#~ msgstr "http://www.gphoto.org/cameras.php3"
-
-#~ msgid "http://www.gphoto.org/supporting.php3"
-#~ msgstr "http://www.gphoto.org/supporting.php3"
-
-#~ msgid "http://www.gphoto.org/lists.php3"
-#~ msgstr "http://www.gphoto.org/lists.php3"
-
-#~ msgid "http://www.gphoto.org/team.php3"
-#~ msgstr "http://www.gphoto.org/team.php3"
-
-#~ msgid "http://www.gphoto.org/themes.php3"
-#~ msgstr "http://www.gphoto.org/themes.php3"
-
-#~ msgid "http://www.gphoto.org/links.php3"
-#~ msgstr "http://www.gphoto.org/links.php3"
-
-#~ msgid "http://www.gphoto.org/todo.php3"
-#~ msgstr "http://www.gphoto.org/todo.php3"
-
-#~ msgid ""
-#~ "%s summary:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "%s oversigt:\n"
-#~ "%s"
-
-#~ msgid "gPhoto %s (%s) - the GNU digital camera application\n"
-#~ msgstr "gPhoto %s (%s) - Gnu applikation for digitale kameraer\n"
-
-#~ msgid ""
-#~ "Copyright (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Ophavsret (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
-#~ "\n"
-
-#~ msgid "Usage: gphoto [-h] [-c] [-n] [-s # filename] [-t # filename]\n"
-#~ msgstr "Brug: gphoto [-h] [-c] [-n] [-s nr filnavn] [-t nr filnavn]\n"
-
-#~ msgid "              [-d #] [-p filename] [-l filename]\n"
-#~ msgstr "                 [-d nr] [-p filnavn] [-l filnavn]\n"
-
-#~ msgid "\t-h                    display this help screen\n"
-#~ msgstr "-h                      vis denne hjælpetekst\n"
-
-#~ msgid "\t-c                    display camera summary\n"
-#~ msgstr "\t-c                    vis kamera oversigt\n"
-
-#~ msgid "\t-n                    display the # of pictures\n"
-#~ msgstr "\t-n                    vis antal billeder\n"
-
-#~ msgid "\t-s # filename         save image # as filename\n"
-#~ msgstr "\t-s nr filnavn         gem billede nummer nr som filnavn\n"
-
-#~ msgid "\t-t # filename         save thumbnail # as filename\n"
-#~ msgstr "\t-t # filnavn         gem miniature nummer nr som filnavn\n"
-
-#~ msgid "\t-d #                  delete image # from camera\n"
-#~ msgstr "\t-d nr                  slet billede nummer nr fra kamera\n"
-
-#~ msgid "\t-p filename           take picture and save as filename\n"
-#~ msgstr "\t-p filnavn           tag billede og gem som filnavn\n"
-
-#~ msgid ""
-#~ "\t-l filename           save live preview as filename\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\t-l filnavn           gem levende smugkig som filnavn\n"
-#~ "\n"
-
-#~ msgid "gPhoto is free GNU software; you can redistribute it and/or\n"
-#~ msgstr "gPhoto er frit programmel; du kan redistribuere det og/eller\n"
-
-#~ msgid "modify it under the terms of the GNU General Public License \n"
-#~ msgstr ""
-#~ "ændre det under betingelserne i GNUs Generelle Offentlige Licens (GPL)\n"
-
-#~ msgid "as published by the Free Software Foundation; either version \n"
-#~ msgstr "som offentliggjort af Free Software Foundation; enten version \n"
-
-#~ msgid "2 of the License, or any later version.  Visit gphoto/COPYING\n"
-#~ msgstr ""
-#~ "2 af licensen, eller en hvilkensomhelst senere version. Se gphoto/"
-#~ "COPYING\n"
-
-#~ msgid ""
-#~ "in the source distribution to read the GNU GPL license terms.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "i kilde-distributionen for at læse licensbetingelserne for GNU GPL.\n"
-#~ "\n"
-
-#~ msgid "Report bugs and camera success to gphoto-devel@gphoto.org.\n"
-#~ msgstr "Rapportér bugs og kamera succes til gphoto-devel@gphoto.org.\n"
-
-#~ msgid "See http://www.gphoto.org for the latest news and updates.\n"
-#~ msgstr "Se http://www.gphoto.org for de seneste nyheder og opdateringer.\n"
-
-#~ msgid "%i\n"
-#~ msgstr "%i\n"
-
-#~ msgid "ERROR: could not get image.\n"
-#~ msgstr "FEJL: kunne ikke få fat på billede.\n"
-
-#~ msgid "ERROR: could not save image.\n"
-#~ msgstr "FEJL: kunne ikke gemme billede.\n"
-
-#~ msgid "ERROR: 'filename' not specified.\n"
-#~ msgstr "FEJL: 'filename' ikke angivet.\n"
-
-#~ msgid "ERROR: '#' and 'filename' not specified.\n"
-#~ msgstr "FEJL: 'nummer' og 'filnavn' ikke angivet.\n"
-
-#~ msgid "ERROR: Could not delete image.\n"
-#~ msgstr "FEJL: Kunne ikke slette billede.\n"
-
-#~ msgid "ERROR: '#' not specified.\n"
-#~ msgstr "FEJL: 'nummer' ikke angivet.\n"
-
-#~ msgid "ERROR: filename not specified.\n"
-#~ msgstr "FEJL: filnavn ikke angivet.\n"
-
-#~ msgid "Taking picture...\n"
-#~ msgstr "Tager billede...\n"
-
-#~ msgid "ERROR: could not take the picture.\n"
-#~ msgstr "FEJL: kunne ikke tage billedet.\n"
-
-#~ msgid "Saving the new image (# %i) as %s: "
-#~ msgstr "Gemmer det billede (nummer %i) som %s: "
-
-#~ msgid ""
-#~ "\n"
-#~ "ERROR: could not get image.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "FEJL: kunne ikke få fat på billede.\n"
-
-#~ msgid "gPhoto release %s was brought to you by"
-#~ msgstr "gPhoto version %s blev bragt til dig af"
-
-#~ msgid "Web Page"
-#~ msgstr "Web side"
-
-#~ msgid "Previous"
-#~ msgstr "Foregående"
-
-#~ msgid "Next"
-#~ msgstr "Næste"
-
-#~ msgid ""
-#~ "The gPhoto AUTHORS file appears to be missing!\n"
-#~ "\t      There should be a file called "
-#~ msgstr ""
-#~ "gPhoto AUTHORS filen ser ud til at mangle!\n"
-#~ "\t      Der skulle være en fil kaldet "
-
-#~ msgid "Select an Output Directory..."
-#~ msgstr "Vælg et uddata-katalog..."
-
-#~ msgid "Gallery Name:"
-#~ msgstr "Galleri-navn:"
-
-#~ msgid "Theme:"
-#~ msgstr "Tema:"
-
-#~ msgid "Output Directory:"
-#~ msgstr "Uddata-katalog:"
-
-#~ msgid "Change..."
-#~ msgstr "Ændr..."
-
-#~ msgid "Export file as *.shtml?"
-#~ msgstr "Eksport fil som *.shtml?"
-
-#~ msgid "Set table border width to zero for thumbnails?"
-#~ msgstr "Sæt tabelkantens bredde til nul for miniaturer?"
-
-#~ msgid ""
-#~ "Set image border width to zero? (so you don't see the link colors...)"
-#~ msgstr "Sæt billedkantens bredde til nul? (så du ikke ser lænke-farver...)"
-
-#~ msgid "You must select a theme!"
-#~ msgstr "Du skal vælge a tema!"
-
-#~ msgid "Getting Thumbnail #%i..."
-#~ msgstr "Finder miniature #%i..."
-
-#~ msgid "Not Available"
-#~ msgstr "Ikke tilgængelig"
-
-#~ msgid "<a href=\"picture-%03i.html\">Click Me<\\/a>"
-#~ msgstr "<a href=\"picture-%03i.html\">Click Me<\\/a>"
-
-#~ msgid "thumbnail-%03i.%s"
-#~ msgstr "thumbnail-%03i.%s"
-
-#~ msgid "Getting Image #%i..."
-#~ msgstr "Finder Billede nummer %i..."
-
-#~ msgid "<img alt=\"%03i\" src=\"picture-%03i.%s\">"
-#~ msgstr "<img alt=\"%03i\" src=\"picture-%03i.%s\">"
-
-#~ msgid "picture-%03i.%s"
-#~ msgstr "picture-%03i.%s"
-
-#~ msgid "picture-%03i.html"
-#~ msgstr "picture-%03i.html"
-
-#~ msgid "%spicture-%03i.html"
-#~ msgstr "%spicture-%03i.html"
-
-#~ msgid "Loaded file:%s%s in %s"
-#~ msgstr "Indlæste fil:%s%s in %s"
-
-#~ msgid "Gallery saved in: %s"
-#~ msgstr "Galleri gemt i: %s"
-
-#~ msgid "Color Adjustment"
-#~ msgstr "Farvejustering"
-
-#~ msgid "gPhoto - Color Adjustment"
-#~ msgstr "gPhoto - farvejustering"
-
-#~ msgid "Colour Settings"
-#~ msgstr "Farveindstillinger"
-
-#~ msgid "Gray Controls"
-#~ msgstr "Grå kontrol"
-
-#~ msgid "Red Controls"
-#~ msgstr "Rød kontrol"
-
-#~ msgid "Green Controls"
-#~ msgstr "Grøn kontrol"
-
-#~ msgid "Blue Controls"
-#~ msgstr "Blå kontrol"
-
-#~ msgid "Colour Modifications:"
-#~ msgstr "Farveændringer:"
-
-#~ msgid "Apply"
-#~ msgstr "Anvend"
-
-#~ msgid "Keep"
-#~ msgstr "Behold"
-
-#~ msgid "Reset"
-#~ msgstr "Sæt tilbage"
-
-#~ msgid "Reset all the color changes to normal values"
-#~ msgstr "Sæt alle farveændringerne tilbage til normale værdier"
-
-#~ msgid "Always Apply"
-#~ msgstr "Anvend altid"
-
-#~ msgid "Getting live image..."
-#~ msgstr "Finder levende billede..."
-
-#~ msgid "Live Camera!"
-#~ msgstr "Levende kamera!"
-
-#~ msgid "Update Picture"
-#~ msgstr "Opdatér billede"
-
-#~ msgid "Take Picture"
-#~ msgstr "Tag billede"
-
-#~ msgid ""
-#~ "\n"
-#~ "Launching Gnome Bugbuddy...\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Stater Gnome Bugbuddy...\n"
-
-#~ msgid "gPhoto %s - the GNU digital camera application"
-#~ msgstr "gPhoto %s - Gnu applikation for digitale kameraer"
-
-#~ msgid "Image Index"
-#~ msgstr "Billedindeks"
-
-#~ msgid "Open Image"
-#~ msgstr "Åbn billede"
-
-#~ msgid "Save Opened Image(s)"
-#~ msgstr "Gem åbnet billede(s)"
-
-#~ msgid "Print Image"
-#~ msgstr "Udskriv billede"
-
-#~ msgid "Close Image"
-#~ msgstr "Luk billede"
-
-#~ msgid "Previous page"
-#~ msgstr "Forrige billede"
-
-#~ msgid "Next page"
-#~ msgstr "Næste side"
-
-#~ msgid "Download Thumbnail Index"
-#~ msgstr "Hent miniatureindeks"
-
-#~ msgid "Download Empty Index"
-#~ msgstr "Hent tomt indeks"
-
-#~ msgid "Download Selected Images"
-#~ msgstr "Hent valgte billeder"
-
-#~ msgid "Delete Selected Images"
-#~ msgstr "Slet valgte billeder"
-
-#~ msgid "Halt Download"
-#~ msgstr "Stop nedhentning"
-
-#~ msgid "Rotate Clockwise"
-#~ msgstr "Rotér med uret"
-
-#~ msgid "Rotate Counter-Clockwise"
-#~ msgstr "Rotér mod uret"
-
-#~ msgid "Flip Horizontal"
-#~ msgstr "Vend vandret"
-
-#~ msgid "Flip Vertical"
-#~ msgstr "Vend lodret"
-
-#~ msgid "Colors"
-#~ msgstr "Farver"
-
-#~ msgid "Camera Configuration"
-#~ msgstr "Konfiguration af kamera"
-
-#~ msgid "Help"
-#~ msgstr "Hjælp"
-
-#~ msgid "Exit gPhoto"
-#~ msgstr "Afslut gPhoto"
-
-#~ msgid "gPhoto Message"
-#~ msgstr "gPhoto besked"
-
-#~ msgid "Confirm"
-#~ msgstr "Bekræft"
-
-#~ msgid "File %s exists. Overwrite?"
-#~ msgstr "File %s eksisterer. Overskriv?"
-
-#~ msgid "load_image_mem: could not load image\n"
-#~ msgstr "load_image_mem: kunne ikke hente billede\n"
-
-#~ msgid "Fork failed. Exiting. \n"
-#~ msgstr "Fork fejlede. Afslutter. \n"

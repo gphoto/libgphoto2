@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
-"POT-Creation-Date: 2002-05-28 23:25+0200\n"
+"POT-Creation-Date: 2002-11-20 19:29+0100\n"
 "PO-Revision-Date: 2000-06-27 16:33+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <ru@li.org>\n"
@@ -22,82 +22,79 @@ msgstr ""
 msgid "The port has not yet been initialized"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:272
+#: libgphoto2_port/gphoto2-port.c:278
 msgid "open"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:295
+#: libgphoto2_port/gphoto2-port.c:301
 #, fuzzy
 msgid "close"
 msgstr "Закрити"
 
-#. Check if we wrote all bytes
-#: libgphoto2_port/gphoto2-port.c:373
+#: libgphoto2_port/gphoto2-port.c:376
 #, fuzzy
 msgid "write"
 msgstr "Друкувати"
 
-#. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:405
+#: libgphoto2_port/gphoto2-port.c:408
 #, fuzzy
 msgid "read"
 msgstr "Створити"
 
-#. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:441 libgphoto2_port/gphoto2-port.c:478
+#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
 msgid "check_int"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:578
+#: libgphoto2_port/gphoto2-port.c:581
 msgid "update"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:624
+#: libgphoto2_port/gphoto2-port.c:627
 msgid "get_pin"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:676
+#: libgphoto2_port/gphoto2-port.c:679
 msgid "set_pin"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:691
+#: libgphoto2_port/gphoto2-port.c:694
 msgid "send_break"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:704
+#: libgphoto2_port/gphoto2-port.c:707
 msgid "flush"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:720
+#: libgphoto2_port/gphoto2-port.c:723
 msgid "find_device"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:732
+#: libgphoto2_port/gphoto2-port.c:735
 msgid "find_device_by_class"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:746
+#: libgphoto2_port/gphoto2-port.c:749
 msgid "clear_halt"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:766
+#: libgphoto2_port/gphoto2-port.c:769
 msgid "msg_write"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:786
+#: libgphoto2_port/gphoto2-port.c:789
 msgid "msg_read"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:846
+#: libgphoto2_port/gphoto2-port.c:849
 msgid "No error description available"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:285
+#: libgphoto2_port/gphoto2-port-info-list.c:266
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:479
+#: libgphoto2_port/gphoto2-port-info-list.c:460
 msgid "Generic Port"
 msgstr ""
 
@@ -196,8 +193,8 @@ msgstr "Не вдалось отримати перегляд"
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (e.g. dc2xx) is using the device and you have read/write access to "
-"the device."
+"module (e.g. dc2xx or stv680) is using the device and you have read/write "
+"access to the device."
 msgstr ""
 
 #: usb/libusb.c:157
@@ -324,624 +321,3 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Не вдалось отримати к╕лькост╕ зображень"
-
-#~ msgid "No configuration options."
-#~ msgstr "Нема╓ параметр╕в конф╕гурац╕╖."
-
-#~ msgid "Mail image needs to be implemented!"
-#~ msgstr "Поштове зображення мусить бути реал╕зовано!"
-
-#~ msgid "Taking picture..."
-#~ msgstr "Отримання зображення..."
-
-#~ msgid "Could not take a picture."
-#~ msgstr "Не вдалось отримати зображення."
-
-#~ msgid "New picture is #%03i"
-#~ msgstr "Нове зображення #%03i"
-
-#~ msgid "Deleting ALL pictures."
-#~ msgstr "Стирання ВС╤Х зображень."
-
-#~ msgid "Deleting %i...\n"
-#~ msgstr "Стира╓ться %i...\n"
-
-#~ msgid "Deleted all images."
-#~ msgstr "Стерто вс╕ зображення."
-
-#~ msgid "Deleting selected pictures..."
-#~ msgstr "Стирання вибраних зображень..."
-
-#~ msgid "Done."
-#~ msgstr "Виконано."
-
-#~ msgid "Nothing selected to be deleted."
-#~ msgstr "Н╕чого не вибрано для стирання."
-
-#~ msgid "Are you sure you want to DELETE the selected images?"
-#~ msgstr "Ви впевнен╕, що хочете СТЕРТИ вибран╕ зображення?"
-
-#~ msgid "Are you sure you want to DELETE all the images from memory?"
-#~ msgstr "Ви впевнен╕, що хочете СТЕРТИ вс╕ зображення з пам'ят╕?"
-
-#~ msgid "Yes"
-#~ msgstr "Так"
-
-#~ msgid "No"
-#~ msgstr "Н╕"
-
-#~ msgid "Could not save #%i"
-#~ msgstr "Не вдалось зберегти #%i"
-
-#~ msgid "Filename prefix:"
-#~ msgstr "Преф╕кс назви файлу:"
-
-#~ msgid "Saving Image #%03i..."
-#~ msgstr "Збереження зображення #%03i..."
-
-#~ msgid "Saving Thumbnail #%03i..."
-#~ msgstr "Збереження м╕н╕атюри #%03i..."
-
-#~ msgid "%s-thumbnail-%03i"
-#~ msgstr "%s-м╕н╕атюри-%03i"
-
-#~ msgid "Done. Images saved in %s"
-#~ msgstr "Виконано. Зображення збережен╕ в %s"
-
-#~ msgid "%s/gphoto-image-%03i.jpg"
-#~ msgstr "%s/gphoto-image-%03i.jpg"
-
-#~ msgid "Select model/port..."
-#~ msgstr "Вибрать модель/порт..."
-
-#~ msgid "Camera Model:"
-#~ msgstr "Модель камери:"
-
-#~ msgid ""
-#~ "\n"
-#~ "gPhoto user(s) that reported this model:\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Користувач gPhoto, що пов╕домив про цю модель:\n"
-
-#~ msgid "Port:"
-#~ msgstr "Порт:"
-
-#~ msgid "Save"
-#~ msgstr "Зберегти"
-
-#~ msgid "Cancel"
-#~ msgstr "В╕дм╕на"
-
-#~ msgid "Missing Serial Device Permissions"
-#~ msgstr "В╕дсутн╕ права на посл╕довний порт"
-
-#~ msgid "Please check the permissions (see the manual)."
-#~ msgstr "Будь ласка, перев╕рте права (подив╕ться в кер╕вництво)."
-
-#~ msgid "Opened %s."
-#~ msgstr "В╕дкрито %s."
-
-#~ msgid "Could not open $HOME/.gphoto/gphotorc for writing."
-#~ msgstr "Не вдалося в╕дкрити $HOME/.gphoto/gphotorc для запису."
-
-#~ msgid "Could not open $HOME/.gphoto/gphotorc for writing.\n"
-#~ msgstr "Не вдалося в╕дкрити $HOME/.gphoto/gphotorc для запису.\n"
-
-#~ msgid ""
-#~ "Version Information-------------------Current Version: %sNew features all "
-#~ "over the place. Please seethe ChangeLog for more information.As always, "
-#~ "report bugs gphoto-devel@gphoto.orgThanx much."
-#~ msgstr ""
-#~ "╤нформац╕я про верс╕ю-------------------Поточна верс╕я: %sНов╕ "
-#~ "можливост╕! Дивиться докладн╕ше в ChangeLog. Пов╕домляйте про помилки на "
-#~ "адресу gphoto-devel@gphoto.org. Дяку╓мо."
-
-#~ msgid "User's Manual"
-#~ msgstr "Кер╕вництво користувача"
-
-#~ msgid "OK"
-#~ msgstr "Гаразд"
-
-#~ msgid ""
-#~ "This program is free software; you can redistribute it and/or modifyit "
-#~ "under the terms of the GNU General Public License as published bythe Free "
-#~ "Software Foundation; either version 2 of the License, or(at your option) "
-#~ "any later version.This program is distributed in the hope that it will be "
-#~ "useful,but WITHOUT ANY WARRANTY; without even the implied warranty "
-#~ "ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See theGNU "
-#~ "General Public License for more details.You should have received a copy "
-#~ "of the GNU General Public Licensealong with this program; if not, write "
-#~ "to the Free SoftwareFoundation, Inc., 675 Mass Ave, Cambridge, MA 02139, "
-#~ "USA.See http://www.gnu.org for more details on the GNU project."
-#~ msgstr ""
-#~ "Це в╕льна програма, ви можете розповсюджувати ╕/або модиф╕кувати ╖╖ на "
-#~ "умовах GNU General Public License, опубл╕ковано╖ Free Software Foundation "
-#~ "верс╕╖ 2 чи п╕зн╕шо╖ (з вашого огляду). Ця програма розповсюджу╓ться в "
-#~ "розрахунку на те, що вона буде потр╕бною, аде БЕЗ БУДЬ-ЯКИХ ╫АРАНТ╤Й, в "
-#~ "том числ╕ без типово╖ гарант╕╖ КОМЕРЦ╤ЙНО╥ Ц╤ННОСТ╤ чи ПОТР╤БНОСТ╤ ДЛЯ "
-#~ "БУДЬ-ЯКИХ Ц╤ЛЕЙ. Див╕ться GNU General Public License для подробиць. Ви "
-#~ "мали отримати коп╕ю GNU General Public License разом з ц╕╓ю програмою. "
-#~ "Якщо це не так, напиш╕ть в Free Software Foundation Inc. за адресою: 675 "
-#~ "Mass Ave, Cambridge, MA 02139, USA. В╕дв╕дайте http://www.gnu.org, щоб "
-#~ "взнати детальн╕ше про пороект GNU."
-
-#~ msgid "%s is not yet implemented"
-#~ msgstr "%s ще не реал╕зовано"
-
-#~ msgid "Getting thumbnail %i..."
-#~ msgstr "Отримання м╕н╕атюри %i..."
-
-#~ msgid "Picture #%i\n"
-#~ msgstr "Зображення #%i\n"
-
-#~ msgid "Getting Index..."
-#~ msgstr "Отримання покажчика..."
-
-#~ msgid "num_pictures_taken is %d\n"
-#~ msgstr "num_pictures_taken - %d\n"
-
-#~ msgid "Download cancelled."
-#~ msgstr "Прийом в╕дм╕нено."
-
-#~ msgid "Done getting index."
-#~ msgstr "Покажчик отримано."
-
-#~ msgid "Nothing selected for download."
-#~ msgstr "Н╕чего не вибрано для прийому."
-
-#~ msgid "Getting Image #%03i..."
-#~ msgstr "Отримання зображення #%03i..."
-
-#~ msgid "Getting Thumbnail #%03i..."
-#~ msgstr "Отримання м╕н╕атюри #%03i..."
-
-#~ msgid "Done downloading."
-#~ msgstr "Прийом завершено."
-
-#~ msgid "Download halted."
-#~ msgstr "Прийом зупинено."
-
-#~ msgid "Save all opened images"
-#~ msgstr "Зберегти вс╕ в╕дкрит╕ зображення"
-
-#~ msgid "Save Image(s)..."
-#~ msgstr "Зберегти зображення..."
-
-#~ msgid "Saving the index is not yet supported"
-#~ msgstr "Збереження покажчика ще не п╕дтриму╓ться"
-
-#~ msgid "Open Image..."
-#~ msgstr "В╕дкрити зображення..."
-
-#~ msgid "Can't print the index yet."
-#~ msgstr "Ще неможливо надрукувати покажчик."
-
-#~ msgid "Print Image..."
-#~ msgstr "Друк зображення..."
-
-#~ msgid "Print Command:"
-#~ msgstr "Команда друку:"
-
-#~ msgid "Now spooling..."
-#~ msgstr "В╕дправлення в чергу..."
-
-#~ msgid "Spooling done. Printing may take a minute."
-#~ msgstr "Завдання в╕дправлено. Друк може продовжуватись дек╕лька хвилин."
-
-#~ msgid "Can't modify the index colors."
-#~ msgstr "Неможливо модиф╕кувати кольори покажчика."
-
-#~ msgid "Can't scale the index."
-#~ msgstr "Неможливо масштабувати покажчик."
-
-#~ msgid "Resize Image..."
-#~ msgstr "Зм╕нити розм╕р зображення..."
-
-#~ msgid "Width:"
-#~ msgstr "Ширина:"
-
-#~ msgid "Height:"
-#~ msgstr "Висота:"
-
-#~ msgid "Resize"
-#~ msgstr "Зм╕нити розм╕р"
-
-#~ msgid "Can't manipulate the index."
-#~ msgstr "Невозможно ман╕пулювати покажчиком."
-
-#~ msgid "Can't scale the index!"
-#~ msgstr "Неможливо масштабувати покажчик!"
-
-#~ msgid "Scaling image by 50%..."
-#~ msgstr "Масштаб зображення 50%..."
-
-#~ msgid "Scaling image by 200%..."
-#~ msgstr "Масштаб зображення 200%..."
-
-#~ msgid "Post-Processing Options"
-#~ msgstr "Параметри подальшо╖ обробки"
-
-#~ msgid "Enable post-processing"
-#~ msgstr "Дозволити подальшу обробку"
-
-#~ msgid "Post-processing command-line:"
-#~ msgstr "Команда для подальшо╖ обробки:"
-
-#~ msgid "http://www.gphoto.org/help.php3"
-#~ msgstr "http://www.gphoto.org/help.php3"
-
-#~ msgid "http://www.gphoto.org/"
-#~ msgstr "http://www.gphoto.org/"
-
-#~ msgid "http://www.gphoto.org/feedback.php3"
-#~ msgstr "http://www.gphoto.org/feedback.php3"
-
-#~ msgid "http://www.gphoto.org/news.php3"
-#~ msgstr "http://www.gphoto.org/news.php3"
-
-#~ msgid "http://www.gphoto.org/download.php3"
-#~ msgstr "http://www.gphoto.org/download.php3"
-
-#~ msgid "http://www.gphoto.org/cameras.php3"
-#~ msgstr "http://www.gphoto.org/cameras.php3"
-
-#~ msgid "http://www.gphoto.org/supporting.php3"
-#~ msgstr "http://www.gphoto.org/supporting.php3"
-
-#~ msgid "http://www.gphoto.org/lists.php3"
-#~ msgstr "http://www.gphoto.org/lists.php3"
-
-#~ msgid "http://www.gphoto.org/team.php3"
-#~ msgstr "http://www.gphoto.org/team.php3"
-
-#~ msgid "http://www.gphoto.org/themes.php3"
-#~ msgstr "http://www.gphoto.org/themes.php3"
-
-#~ msgid "http://www.gphoto.org/links.php3"
-#~ msgstr "http://www.gphoto.org/links.php3"
-
-#~ msgid "http://www.gphoto.org/todo.php3"
-#~ msgstr "http://www.gphoto.org/todo.php3"
-
-#~ msgid ""
-#~ "%s summary:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Зведення %s:\n"
-#~ "%s"
-
-#~ msgid "gPhoto %s (%s) - the GNU digital camera application\n"
-#~ msgstr "gPhoto %s (%s) - програма GNU для роботи з цифровою камерою\n"
-
-#~ msgid ""
-#~ "Copyright (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Авторське право (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
-#~ "\n"
-
-#~ msgid "Usage: gphoto [-h] [-c] [-n] [-s # filename] [-t # filename]\n"
-#~ msgstr ""
-#~ "Використання: gphoto [-h] [-c] [-n] [-s # назва_файлу] [-t # "
-#~ "назва_файлу]\n"
-
-#~ msgid "              [-d #] [-p filename] [-l filename]\n"
-#~ msgstr "              [-d #] [-p назва_файлу] [-l назва_файлу]\n"
-
-#~ msgid "\t-h                    display this help screen\n"
-#~ msgstr "\t-h                    показати цей дов╕дковий екран\n"
-
-#~ msgid "\t-c                    display camera summary\n"
-#~ msgstr "\t-c                    показати зведення камери\n"
-
-#~ msgid "\t-n                    display the # of pictures\n"
-#~ msgstr "\t-n                    показати к╕льк╕сть зображень\n"
-
-#~ msgid "\t-s # filename         save image # as filename\n"
-#~ msgstr ""
-#~ "\t-s # назва_файлу      зберегти зображення з вказаним номером у файл╕ з "
-#~ "вказаною назвою\n"
-
-#~ msgid "\t-t # filename         save thumbnail # as filename\n"
-#~ msgstr ""
-#~ "\t-t # назва_файлу      зберегти м╕н╕атюру з вказаним номером у файл╕ з "
-#~ "вказаною назвою\n"
-
-#~ msgid "\t-d #                  delete image # from camera\n"
-#~ msgstr ""
-#~ "\t-d #                  видалити вказаний номер зображення з камери\n"
-
-#~ msgid "\t-p filename           take picture and save as filename\n"
-#~ msgstr ""
-#~ "\t-p назва_файлу               отримати зображення ╕ зберегти його з "
-#~ "вказаною назвою\n"
-
-#~ msgid ""
-#~ "\t-l filename           save live preview as filename\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\t-l назва_файлу         зберегти live preview з вказаною назвою\n"
-#~ "\n"
-
-#~ msgid "gPhoto is free GNU software; you can redistribute it and/or\n"
-#~ msgstr ""
-#~ "gPhoto - в╕льне програмне забезпечення GNU; ви можете разповсюджувати\n"
-
-#~ msgid "modify it under the terms of the GNU General Public License \n"
-#~ msgstr "╕/або зм╕нювати його на умовах GNU General Public License \n"
-
-#~ msgid "as published by the Free Software Foundation; either version \n"
-#~ msgstr "опубл╕ковано╖ Фондом В╕льного програмного забезпечення; л╕ценз╕╖\n"
-
-#~ msgid "2 of the License, or any later version.  Visit gphoto/COPYING\n"
-#~ msgstr "верс╕╖ 2 чи б╕льш п╕зньо╖. Див╕ться gphoto/COPYING\n"
-
-#~ msgid ""
-#~ "in the source distribution to read the GNU GPL license terms.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "в поставц╕ для ознайомлення з умовами л╕ценз╕╖ GNU GPL.\n"
-#~ "\n"
-
-#~ msgid "Report bugs and camera success to gphoto-devel@gphoto.org.\n"
-#~ msgstr "Пов╕домляйте про помилки за адресою gphoto-devel@gphoto.org.\n"
-
-#~ msgid "See http://www.gphoto.org for the latest news and updates.\n"
-#~ msgstr "Останн╕ новини та поновлення шукайте на http://www.gphoto.org\n"
-
-#~ msgid "%i\n"
-#~ msgstr "%i\n"
-
-#~ msgid "ERROR: could not get image.\n"
-#~ msgstr "ПОМИЛКА: не вдалось отримати зображення.\n"
-
-#~ msgid "ERROR: could not save image.\n"
-#~ msgstr "ПОМИЛКА: не вдалось зберегти зображення.\n"
-
-#~ msgid "ERROR: 'filename' not specified.\n"
-#~ msgstr "ПОМИЛКА: не вказано назви файлу.\n"
-
-#~ msgid "ERROR: '#' and 'filename' not specified.\n"
-#~ msgstr "ПОМИЛКА: не вказан╕ \"#\" та назви файлу'\n"
-
-#~ msgid "ERROR: Could not delete image.\n"
-#~ msgstr "ПОМИЛКА: не вдалось стерти зображення.\n"
-
-#~ msgid "ERROR: '#' not specified.\n"
-#~ msgstr "ПОМИЛКА: не вказано \"#\".\n"
-
-#~ msgid "ERROR: filename not specified.\n"
-#~ msgstr "ПОМИЛКА: не вказано назви файлу.\n"
-
-#~ msgid "Taking picture...\n"
-#~ msgstr "Отримання зображення...\n"
-
-#~ msgid "ERROR: could not take the picture.\n"
-#~ msgstr "ПОМИЛКА: не вдалось отримати зображення.\n"
-
-#~ msgid "Saving the new image (# %i) as %s: "
-#~ msgstr "Збереження нового зображення (# %i) як %s: "
-
-#~ msgid ""
-#~ "\n"
-#~ "ERROR: could not get image.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "ПОМИЛКА: не вдалось отримати зображення.\n"
-
-#~ msgid "gPhoto release %s was brought to you by"
-#~ msgstr "gPhoto верс╕╖ %s було створено для вас"
-
-#~ msgid "Web Page"
-#~ msgstr "Web-стор╕нка"
-
-#~ msgid "Previous"
-#~ msgstr "Назад"
-
-#~ msgid "Next"
-#~ msgstr "Дал╕"
-
-#~ msgid ""
-#~ "The gPhoto AUTHORS file appears to be missing!\n"
-#~ "\t      There should be a file called "
-#~ msgstr "Файл gPhoto AUTHORS зда╓ться з╕псовано!"
-
-#~ msgid "Select an Output Directory..."
-#~ msgstr "Виб╕р каталогу виводу..."
-
-#~ msgid "Gallery Name:"
-#~ msgstr "Назва галере╖:"
-
-#~ msgid "Theme:"
-#~ msgstr "Тема:"
-
-#~ msgid "Output Directory:"
-#~ msgstr "Каталог виводу:"
-
-#~ msgid "Change..."
-#~ msgstr "Зм╕нити..."
-
-#~ msgid "Export file as *.shtml?"
-#~ msgstr "Експортувати файл как *.shtml?"
-
-#~ msgid "Set table border width to zero for thumbnails?"
-#~ msgstr "Встановити для м╕н╕атюри ширину рамки таблиц╕ в нуль?"
-
-#~ msgid ""
-#~ "Set image border width to zero? (so you don't see the link colors...)"
-#~ msgstr ""
-#~ "Встановити ширину рамки зображення в нуль? (так що ви не побачите "
-#~ "пов'язаних кольор╕в...)"
-
-#~ msgid "You must select a theme!"
-#~ msgstr "Необх╕дно вибрати тему!"
-
-#~ msgid "Getting Thumbnail #%i..."
-#~ msgstr "Отримання м╕н╕атюри #%i..."
-
-#~ msgid "Not Available"
-#~ msgstr "Не доступно"
-
-#~ msgid "<a href=\"picture-%03i.html\">Click Me<\\/a>"
-#~ msgstr "<a href=\"picture-%03i.html\">Натисни<\\/a>"
-
-#~ msgid "thumbnail-%03i.%s"
-#~ msgstr "thumbnail-%03i.%s"
-
-#~ msgid "Getting Image #%i..."
-#~ msgstr "Отримання зображення #%i..."
-
-#~ msgid "<img alt=\"%03i\" src=\"picture-%03i.%s\">"
-#~ msgstr "<img alt=\"%03i\" src=\"picture-%03i.%s\">"
-
-#~ msgid "picture-%03i.%s"
-#~ msgstr "picture-%03i.%s"
-
-#~ msgid "picture-%03i.html"
-#~ msgstr "picture-%03i.html"
-
-#~ msgid "%spicture-%03i.html"
-#~ msgstr "%spicture-%03i.html"
-
-#~ msgid "Loaded file:%s%s in %s"
-#~ msgstr "Завантажено файл:%s%s в %s"
-
-#~ msgid "Gallery saved in: %s"
-#~ msgstr "Галерею збережено в: %s"
-
-#~ msgid "Color Adjustment"
-#~ msgstr "П╕дб╕р кольору"
-
-#~ msgid "gPhoto - Color Adjustment"
-#~ msgstr "gPhoto - П╕дб╕р кольору"
-
-#~ msgid "Colour Settings"
-#~ msgstr "Налаштування кольор╕в"
-
-#~ msgid "Gray Controls"
-#~ msgstr "Р╕вень с╕рого"
-
-#~ msgid "Red Controls"
-#~ msgstr "Р╕вень червоного"
-
-#~ msgid "Green Controls"
-#~ msgstr "Р╕вень зеленого"
-
-#~ msgid "Blue Controls"
-#~ msgstr "Р╕вень синього"
-
-#~ msgid "Colour Modifications:"
-#~ msgstr "Модиф╕кац╕╖ кольор╕в:"
-
-#~ msgid "Apply"
-#~ msgstr "Застосувати"
-
-#~ msgid "Keep"
-#~ msgstr "Лишити"
-
-#~ msgid "Reset"
-#~ msgstr "Скасувати"
-
-#~ msgid "Reset all the color changes to normal values"
-#~ msgstr "Скасувати вс╕ зм╕ни кольору на звичан╕ значення"
-
-#~ msgid "Always Apply"
-#~ msgstr "Завжди застосовувати"
-
-#~ msgid "Getting live image..."
-#~ msgstr "Отримання живого зображення..."
-
-#~ msgid "Live Camera!"
-#~ msgstr "Жива камера!"
-
-#~ msgid "Update Picture"
-#~ msgstr "Поновити малюнок"
-
-#~ msgid "Take Picture"
-#~ msgstr "Отримати малюнок"
-
-#~ msgid ""
-#~ "\n"
-#~ "Launching Gnome Bugbuddy...\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Запуск Gnome Bugbuddy...\n"
-
-#~ msgid "gPhoto %s - the GNU digital camera application"
-#~ msgstr "gPhoto %s - програма GNU для роботи з цифровою камерою"
-
-#~ msgid "Image Index"
-#~ msgstr "Покажчик зображень"
-
-#~ msgid "Open Image"
-#~ msgstr "В╕дкрити зображення"
-
-#~ msgid "Save Opened Image(s)"
-#~ msgstr "Зберегти в╕дкрит╕ зображення"
-
-#~ msgid "Print Image"
-#~ msgstr "Надрукувати зображення"
-
-#~ msgid "Close Image"
-#~ msgstr "Закрити зображення"
-
-#~ msgid "Previous page"
-#~ msgstr "Попередня стор╕нка"
-
-#~ msgid "Next page"
-#~ msgstr "Наступна стор╕нка"
-
-#~ msgid "Download Thumbnail Index"
-#~ msgstr "Прийняти покажчик м╕н╕атюр"
-
-#~ msgid "Download Empty Index"
-#~ msgstr "Прийняти порожн╕й покажчик"
-
-#~ msgid "Download Selected Images"
-#~ msgstr "Прийняти вибран╕ зображення"
-
-#~ msgid "Delete Selected Images"
-#~ msgstr "Стерти вибран╕ зображення"
-
-#~ msgid "Halt Download"
-#~ msgstr "Зупинити прийом"
-
-#~ msgid "Rotate Clockwise"
-#~ msgstr "Повернуть за годинниковою"
-
-#~ msgid "Rotate Counter-Clockwise"
-#~ msgstr "Повернути проти годинниково╖"
-
-#~ msgid "Flip Horizontal"
-#~ msgstr "В╕дзеркалити горизонтально"
-
-#~ msgid "Flip Vertical"
-#~ msgstr "В╕дзеркалити вертикально"
-
-#~ msgid "Colors"
-#~ msgstr "Кольори"
-
-#~ msgid "Camera Configuration"
-#~ msgstr "Конф╕гурац╕я камери"
-
-#~ msgid "Help"
-#~ msgstr "Дов╕дка"
-
-#~ msgid "Exit gPhoto"
-#~ msgstr "Вийти з gPhoto"
-
-#~ msgid "gPhoto Message"
-#~ msgstr "Пов╕домлення gPhoto"
-
-#~ msgid "Confirm"
-#~ msgstr "П╕дтвердити"
-
-#~ msgid "File %s exists. Overwrite?"
-#~ msgstr "Файл %s ╕сну╓. Переписати?"
-
-#~ msgid "load_image_mem: could not load image\n"
-#~ msgstr "load_image_mem: не вдалось завантажити зображення\n"
-
-#~ msgid "Fork failed. Exiting. \n"
-#~ msgstr "Не вдалось запустити процес-нащадок. Вих╕д.\n"

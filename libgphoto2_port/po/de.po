@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2002-11-12 01:02-0800\n"
+"POT-Creation-Date: 2002-11-20 19:29+0100\n"
 "PO-Revision-Date: 2002-11-12 01:03-0800\n"
 "Last-Translator: \n"
 "Language-Team:  <en@li.org>\n"
@@ -198,7 +198,8 @@ msgid ""
 msgstr ""
 "Konnte Schnittstelle %d nicht reservieren (%m). Stellen Sie sicher, dass "
 "kein\n"
-"anderes Programm oder Kernelmodul (z.B. dc2xx oder stv680) das Gerät verwendet und Sie \n"
+"anderes Programm oder Kernelmodul (z.B. dc2xx oder stv680) das Gerät "
+"verwendet und Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
 #: usb/libusb.c:157
@@ -224,7 +225,8 @@ msgstr "Konnte Alternativ-Setting %d/%d nicht setzen (%m)"
 #: usb/libusb.c:391
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
+msgstr ""
+"Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
 #: usb/libusb.c:439
 #, c-format
@@ -334,10 +336,3 @@ msgstr "Konnte »%s« nicht leeren (%m)."
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
-
-#~ msgid "Could not set interface %d/%d (%m)"
-#~ msgstr "Konnte Schnittstelle %d/%d nicht setzen (%m)"
-
-#~ msgid "Could not close device (%s)"
-#~ msgstr "Konnte Gerät nicht schließen (%s)"
-

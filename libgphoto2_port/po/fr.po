@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-11-19 17:47+0100\n"
+"POT-Creation-Date: 2002-11-20 19:29+0100\n"
 "PO-Revision-Date: 2002-06-18 16:33--500\n"
 "Last-Translator: christophe barbé <christophe@ufies.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
@@ -88,7 +88,8 @@ msgstr "Pas de description d'erreur disponible"
 #: libgphoto2_port/gphoto2-port-info-list.c:266
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
-msgstr "Ne peut charger aucune bibliothèque d'E/S car '%s' ne peut être ouvert (%m)"
+msgstr ""
+"Ne peut charger aucune bibliothèque d'E/S car '%s' ne peut être ouvert (%m)"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:460
 msgid "Generic Port"
