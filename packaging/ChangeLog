@@ -1,42 +1,4 @@
-2002-07-30  Hans Ulrich Niedermann <gp@n-dimensional.de>
+2002-08-08  Lutz Müller <lutz@users.sourceforge.net>
 
-	* linux-hotplug/print-usb-usermap.c: moved code here from CLI
-	* linux-hotplug/Makefile.am: added print-usb-usermap
-
-2002-06-11  Hans Ulrich Niedermann <gp@n-dimensional.de>
-
-	* rpm/package.spec.in: package dependency on libusb only if required
-
-2002-06-04  Hans Ulrich Niedermann <gp@n-dimensional.de>
-
-	* rpm/package.spec.in: added PDF manual
-	
-2002-05-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
-
-	* rpm/package.spec.in:
-		- comment out requirements if not used (gtk-doc, transfig)
-		- provide libgphoto2_port - for future compatibility
-		- fixed handling of misc HTML docs (API docs and docbook-generated manual)
-		- install linux-hotplug scripts into a directory of that name
-		- added gphoto2_port(3) man page
-
-2002-05-25  Hans Ulrich Niedermann <gp@n-dimensional.de>
-
-	* linux-hotplug/usbcam.console: Fixed *silly* typo by me (chown vs chmod)
-
-2002-05-18  Hans Ulrich Niedermann  <gp@n-dimensional.de>
-
-	* rpm/package.spec.in: added API HTML docs to the -devel package
-	
-2002-05-10  Hans Ulrich Niedermann  <gp@n-dimensional.de>
-
-	* rpm/package.spec.in: made RPMs build again thanks to Redhat 7.3 RPM :-)
-
-2002-03-22  Hans Ulrich Niedermann <gp@n-dimensional.de>
-
-	* packaging/usbcam*: moved to packaging/linux-hotplug/*
-	* packaging/Makefile.am: reflect that
-
-2001-10-28 Hans Ulrich Niedermann <gp@n-dimensional.de>
-
-	* packaging/rpm/package.spec.in: cleaned up file lists, moved .a and .la to -devel
+	* linux-hotplug/Makefile.am: Point to the right correction of
+	  libgphoto2.la.
