@@ -107,28 +107,6 @@ static int sierra_valid_type (char b)
 	return ret_status;
 }
 
-/**
- * sierra_is_single_byte_packet:
- * @b : first byte of the packet to be checked
- *
- * Check if the received packet is a single byte length packet
- * Method: Check if the byte is either TYPE_DATA or TYPE_DATA_END.
- *
- * Returns: 1 if the packet is a single byte length packet, 0 otherwise
- */
-static int sierra_is_single_byte_packet(char b)
-{
-	int ret_status = 1;
-
-	if (b == TYPE_DATA ||
-	    b == TYPE_DATA_END)
-		ret_status = 0;
-
-	GP_DEBUG ("* sierra_is_single_byte_packet return %d", ret_status);
-
-	return ret_status;
-}
-
 int sierra_change_folder (Camera *camera, const char *folder, GPContext *context)
 {	
 	int st = 0,i = 1;
@@ -437,12 +415,12 @@ sierra_write_nak (Camera *camera)
  *     - GP_ERROR_IO_* on other IO error.
  */
 static int
-sierra_read_packet (Camera *camera, char *packet)
+sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 {
 	int y, r = 0, ret_status = GP_ERROR_IO, done = 0, length;
-	int blocksize = 1, bytes_read;
+	int blocksize = 1, br;
 
-	GP_DEBUG ("* sierra_read_packet");
+	GP_DEBUG ("Reading packet...");
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
@@ -465,82 +443,101 @@ sierra_read_packet (Camera *camera, char *packet)
 		/* Reset the return status */
 		ret_status = GP_ERROR_IO;
 
-		if (r > 0) {
-			GP_DEBUG ("* reading again...");
-		}
-
 		/* Clear the USB bus
 		   (what about the SERIAL bus : do we need to flush it?) */
 		if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
 			gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
 
-
-		/* Read data through the bus */
+		/*
+		 * Read data through the bus. If an error occurred,
+		 * try again.
+		 */
 		if (camera->port->type == GP_PORT_USB && camera->pl->usb_wrap)
-			bytes_read = usb_wrap_read_packet (camera->port, packet, blocksize);
+			br = usb_wrap_read_packet (camera->port, packet,
+						   blocksize);
 		else
-			bytes_read = gp_port_read (camera->port, packet, blocksize);
-		
-		GP_DEBUG ("* bytes_read: %d", bytes_read);
-		GP_DEBUG ("* packet[0] : %x", (unsigned char) packet[0]);
-
-		/* If an error was encoutered reading data though the bus, try again */
-		if (bytes_read < 0) {
+			br = gp_port_read (camera->port, packet, blocksize);
+		if (br < 0) {
+			GP_DEBUG ("Read failed ('%s').",
+				  gp_result_as_string (br));
+			if (r + 1 >= RETRIES) {
+				if (camera->port->type == GP_PORT_USB &&
+				    !camera->pl->usb_wrap)
+					gp_port_usb_clear_halt (camera->port,
+						GP_PORT_USB_ENDPOINT_IN);
+				return (br);
+			}
+			GP_DEBUG ("Retrying...");
 			continue;
 		}
 
-		/* If the first read byte is not known, exit the processing */
-		else if ( sierra_valid_type(packet[0]) != GP_OK ) {
-
-			ret_status = GP_ERROR_CORRUPTED_DATA;
-			done = 1;
+		/*
+		 * If the first read byte is not known, 
+		 * report an error and exit the processing.
+		 */
+		if (sierra_valid_type (packet[0]) != GP_OK ) {
+			if (camera->port->type == GP_PORT_USB &&
+			    !camera->pl->usb_wrap)
+				gp_port_usb_clear_halt (camera->port,
+						GP_PORT_USB_ENDPOINT_IN);
+			gp_context_error (context, _("The first byte "
+				"received (0x%x) is not valid."), packet[0]);
+			return (GP_ERROR_CORRUPTED_DATA);
 		}
 
-		/* For single byte data packets, the work is done... */      
-		else if ( sierra_is_single_byte_packet(packet[0]) ) {
-			ret_status = GP_OK;
-			done = 1;
+		/* For single byte data packets, the work is done... */
+		if ((packet[0] == TYPE_DATA) ||
+		    (packet[0] == TYPE_DATA_END)) {
+			if (camera->port->type == GP_PORT_USB &&
+			    !camera->pl->usb_wrap)
+				gp_port_usb_clear_halt (camera->port,
+						GP_PORT_USB_ENDPOINT_IN);
+			return (GP_OK);
 		}
 
-		/* Process several byte length packet */
-		else {
-
-			/* The data packet size is not known yet if the communication
-			   is performed through the serial bus : read it */
-			if (camera->port->type == GP_PORT_SERIAL) {
-				bytes_read = gp_port_read(camera->port, packet+1, 3);
-				if (bytes_read < 0) {
-					/* Maybe we should retry here? */
-					ret_status = GP_ERROR_IO;
-					done = 1;
-					break;
-				}
-				else
-					bytes_read = 4;
-			}
-	 
-			/* Determine the packet length (add 6 for the packet type,
-			   the packet subtype or sequence, the length of data and the checksum
-			   see description) */
-			length = (unsigned char)packet[2] + ((unsigned char)packet[3]*256) + 6;
-
-			/* Read until the end of the packet is reached
-			   or an IO error occured */
-			for (ret_status=GP_OK, y = bytes_read ; ret_status == GP_OK && y < length ; 
-			     y += blocksize) {
-				bytes_read = gp_port_read (camera->port, &packet[y], blocksize);
-				if (bytes_read < 0)
-					ret_status = bytes_read;
-			}
-
-			/* Retry on IO error only */
-			if (ret_status == GP_ERROR_TIMEOUT) {
-				sierra_write_nak (camera);
-				GP_SYSTEM_SLEEP(10);
-			}
-			else
-				done = 1;
+		/*
+		 * We've got a packet containing several bytes.
+		 * The data packet size is not known yet if the communication
+		 * is performed through the serial bus : read it then.
+		 */
+		if (camera->port->type == GP_PORT_SERIAL) {
+			br = gp_port_read (camera->port, packet + 1, 3);
+			if (br < 0) {
+				if (camera->port->type == GP_PORT_USB &&
+				    !camera->pl->usb_wrap)
+					gp_port_usb_clear_halt (camera->port,
+						GP_PORT_USB_ENDPOINT_IN);
+				return (br);
+			} else
+				br = 4;
 		}
+
+		/*
+		 * Determine the packet length (add 6 for the packet type,
+		 * the packet subtype or sequence, the length
+		 * of data and the checksum, see description).
+		 */
+		length = (unsigned char) packet[2] +
+			((unsigned char) packet[3] * 256) + 6;
+
+		/* 
+		 * Read until the end of the packet is reached
+		 * or an IO error occured
+		 */
+		for (ret_status = GP_OK, y = br;
+		     ret_status == GP_OK && y < length; y += blocksize) {
+			br = gp_port_read (camera->port, &packet[y], blocksize);
+			if (br < 0)
+				ret_status = br;
+		}
+
+		/* Retry on IO error only */
+		if (ret_status == GP_ERROR_TIMEOUT) {
+			GP_DEBUG ("Timeout!");
+			sierra_write_nak (camera);
+			GP_SYSTEM_SLEEP(10);
+		} else
+			break;
 	}
 
 	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
@@ -594,7 +591,7 @@ sierra_write_ack (Camera *camera)
 	return (ret);
 }
 
-int sierra_ping (Camera *camera) 
+int sierra_ping (Camera *camera, GPContext *context) 
 {
 	int ret, r = 0;
 	char buf[4096];
@@ -615,7 +612,7 @@ int sierra_ping (Camera *camera)
 		if (ret != GP_OK)
 			return ret;;
 
-		ret = sierra_read_packet (camera, buf);
+		ret = sierra_read_packet (camera, buf, context);
 		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		if (ret != GP_OK)
@@ -711,7 +708,7 @@ sierra_write_action_command_and_wait (Camera *camera, int action_code,
 	/* Wait for the Action Complete Notification */
 	for (r = 0; r < RETRIES; r++) {
 		
-		ret = sierra_read_packet (camera, buf);
+		ret = sierra_read_packet (camera, buf, context);
 		if (ret == GP_OK) {
 			switch ((unsigned char)buf[0]) {
 			case ENQ:
@@ -765,7 +762,7 @@ int sierra_set_int_register (Camera *camera, int reg, int value, GPContext *cont
 
 		CHECK (sierra_write_packet (camera, p));
 
-		ret = sierra_read_packet (camera, buf);
+		ret = sierra_read_packet (camera, buf, context);
 		if (ret == GP_ERROR_TIMEOUT) {
 			if (r == RETRIES - 1)
 				GP_DEBUG ("Transmission timed out.");
@@ -828,7 +825,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 		else
 			CHECK (sierra_write_packet (camera, packet));
 
-		ret = sierra_read_packet (camera, buf);
+		ret = sierra_read_packet (camera, buf, context);
 		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		CHECK (ret);
@@ -916,7 +913,7 @@ int sierra_set_string_register (Camera *camera, int reg, const char *s, long int
 				continue;
 			CHECK (ret);
 
-			ret = sierra_read_packet (camera, buf);
+			ret = sierra_read_packet (camera, buf, context);
 			if (ret == GP_ERROR_TIMEOUT)
 				continue;
 			CHECK (ret);
@@ -980,7 +977,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	do {
 
 		/* Read one packet */
-		CHECK (sierra_read_packet (camera, packet));
+		CHECK (sierra_read_packet (camera, packet, context));
 		if (packet[0] == DC1) {
 			gp_context_error (context, _("Could not get "
 				"string register %i. Please contact "
@@ -1007,7 +1004,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	return (GP_OK);
 }
 
-int sierra_delete_all (Camera *camera)
+int sierra_delete_all (Camera *camera, GPContext *context)
 {
 	char packet[4096], buf[4096], r, done, ret;
 
@@ -1023,7 +1020,7 @@ int sierra_delete_all (Camera *camera)
 	CHECK (sierra_write_packet (camera, packet));
 
 	/* Read command acknowledgement */
-	CHECK (sierra_read_packet (camera, buf));
+	CHECK (sierra_read_packet (camera, buf, context));
 	if (buf[0] != ACK)
 		return GP_ERROR_CORRUPTED_DATA;
 
@@ -1033,7 +1030,7 @@ int sierra_delete_all (Camera *camera)
 
 		GP_SYSTEM_SLEEP (QUICKSLEEP);
 
-		ret = sierra_read_packet (camera, buf);
+		ret = sierra_read_packet (camera, buf, context);
 		if (ret == GP_OK) {
 			done = 1;
 			ret  = (buf[0] == ENQ) ? GP_OK : GP_ERROR_CORRUPTED_DATA;
@@ -1067,7 +1064,7 @@ int sierra_delete (Camera *camera, int picture_number, GPContext *context)
 			continue;
 		CHECK (ret);
 
-		ret = sierra_read_packet (camera, buf);
+		ret = sierra_read_packet (camera, buf, context);
 		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 		CHECK (ret);
@@ -1076,7 +1073,7 @@ int sierra_delete (Camera *camera, int picture_number, GPContext *context)
 
 		if (done) {
 			/* read in the ENQ */
-			if (sierra_read_packet (camera, buf) != GP_OK)
+			if (sierra_read_packet (camera, buf, context) != GP_OK)
 				return ((buf[0] == ENQ)? GP_OK : GP_ERROR_IO);
 			
 		}
@@ -1089,7 +1086,7 @@ int sierra_delete (Camera *camera, int picture_number, GPContext *context)
 	return (GP_OK);
 }
 
-int sierra_end_session (Camera *camera) 
+int sierra_end_session (Camera *camera, GPContext *context) 
 {
 	char packet[4096], buf[4096];
 	unsigned char c;
@@ -1105,7 +1102,7 @@ int sierra_end_session (Camera *camera)
 	r = 0; done = 0;
 	while ((!done) && (r++<RETRIES)) {
 		CHECK (sierra_write_packet (camera, packet));
-		CHECK (sierra_read_packet (camera, buf));
+		CHECK (sierra_read_packet (camera, buf, context));
 
 		c = (unsigned char)buf[0];
 		if (c == TRM)
@@ -1116,7 +1113,7 @@ int sierra_end_session (Camera *camera)
 		if (done) {
 
 			/* read in the ENQ */
-			CHECK (sierra_read_packet (camera, buf));
+			CHECK (sierra_read_packet (camera, buf, context));
 			c = (unsigned char)buf[0];
 			return ((c == ENQ)? GP_OK : GP_ERROR_IO);
 		}

@@ -1,3 +1,8 @@
+2002-02-17  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: Improved debugging messages. I hope I didn't break
+	  the logic...
+
 2002-02-16  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: Additional debugging messages.

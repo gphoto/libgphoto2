@@ -481,7 +481,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	/* Set the working folder and delete all pictures there */
 	CHECK (camera_start (camera, context));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder, context));
-	CHECK_STOP (camera, sierra_delete_all (camera));
+	CHECK_STOP (camera, sierra_delete_all (camera, context));
 
 	/*
 	 * Mick Grant <mickgr@drahthaar.clara.net> found out that his
