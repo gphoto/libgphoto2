@@ -42,10 +42,10 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #endif
 #ifdef HAVE_SERIAL
 			"serial "
+
 #ifdef HAVE_RESMGR
 			"resmgr locking",
-#endif
-#ifdef HAVE_BAUDBOY
+#elif HAVE_BAUDBOY
 			"baudboy locking",
 #elif HAVE_TTYLOCK
 			"ttylock locking",
@@ -54,6 +54,7 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #else
 			"without locking",
 #endif
+
 #else
 			"no serial",
 #endif
