@@ -1,4 +1,8 @@
 2002-12-03  Marcus Meissner <marcus@jet.franken.de>
+	
+	* License changed to LGPL v2 (with Vincents agreement) 
+
+2002-12-03  Marcus Meissner <marcus@jet.franken.de>
 
 	* Initial import of camlib driver written by
 		Vincent Sanders <vince@kyllikki.org>
