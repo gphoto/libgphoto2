@@ -1,3 +1,11 @@
+2004-08-15  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added EOS 1D Mark II
+
+2004-08-12  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Canon Powershot S60 as it works.
+
 2004-08-04 Marcus Meissner   <meissner@suse.de>
 	
 	* Added Canon PowerShot A310 ids as reported.
