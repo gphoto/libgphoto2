@@ -1,4 +1,3 @@
-gphoto.spec
 .*~ *~
 *.patch *.patch.new
 config.guess
