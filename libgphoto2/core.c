@@ -116,38 +116,45 @@ load_cameras_search (char *directory)
         GP_SYSTEM_DIRENT de;
         char buf[1024];
 
-        gp_debug_printf(GP_DEBUG_LOW, "core","Trying to load camera libraries in:");
-        gp_debug_printf(GP_DEBUG_LOW, "core","\t%s", directory);
+        gp_debug_printf (GP_DEBUG_LOW, "core","Trying to load camera "
+			 "libraries in '%s:", directory);
 
         /* Look for available camera libraries */
-        d = GP_SYSTEM_OPENDIR(directory);
+        d = GP_SYSTEM_OPENDIR (directory);
         if (!d) {
-                gp_debug_printf(GP_DEBUG_LOW, "core", "couldn't open %s", directory);
-                return GP_ERROR_DIRECTORY_NOT_FOUND;
+                gp_debug_printf (GP_DEBUG_LOW, "core", "Couldn't open %s",
+				 directory);
+                return GP_ERROR;
         }
 
         do {
-           /* Read each entry */
-           de = GP_SYSTEM_READDIR(d);
-           if (de) {
-                sprintf(buf, "%s%c%s", directory, GP_SYSTEM_DIR_DELIM, GP_SYSTEM_FILENAME(de));
-                gp_debug_printf(GP_DEBUG_LOW, "core", "\tis %s a library? ", buf);
+		
+		/* Read each entry */
+		de = GP_SYSTEM_READDIR (d);
+		if (de) {
+			const char *filename = GP_SYSTEM_FILENAME (de);
+			sprintf (buf, "%s%c%s", directory,
+				 GP_SYSTEM_DIR_DELIM, filename);
 
-                /* Don't try to open ".*" */
-                if (*buf && (buf[0] == '.'))
-                        continue;
+			/* Don't try to open ".*" */
+			if (filename[0] == '.')
+				continue;
 
-                /* Try to open the library */
-                if (is_library (buf) == GP_OK) {
-                        gp_debug_printf(GP_DEBUG_LOW, "core", "yes");
-                        load_camera_list (buf);
-                   } else {
-                        gp_debug_printf(GP_DEBUG_LOW, "core", "no. reason: %s", GP_SYSTEM_DLERROR ());
-                }
-           }
-        } while (de);
+			/* Try to open the library */
+			if (is_library (buf) == GP_OK) {
+				gp_debug_printf (GP_DEBUG_LOW, "core",
+						 "Loading '%s'", filename);
+				load_camera_list (buf);
+			} else {
+				gp_debug_printf (GP_DEBUG_LOW, "core",
+						 "Failed to load '%s' (%s)",
+						 filename,
+						 GP_SYSTEM_DLERROR ());
+			}
+		}
+	} while (de);
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 static int
