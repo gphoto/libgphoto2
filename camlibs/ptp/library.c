@@ -636,7 +636,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		char storagetxt[MAXFILENAMELEN];
 		/* be paranoid, allways!!! */
 		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+1) return (GP_ERROR);
-		sprintf(storagetxt,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
+		snprintf(storagetxt,11,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
 		storage=strtol(storagetxt,NULL,16);
 	}
 
@@ -698,7 +698,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		char storagetxt[MAXFILENAMELEN];
 		/* be paranoid, allways!!! */
 		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+1) return (GP_ERROR);
-		sprintf(storagetxt,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
+		snprintf(storagetxt,11,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
 		storage=strtol(storagetxt,NULL,16);
 	} else return (GP_ERROR);
 	/* Get (parent) folder handle omiting storage pseudofolder */
