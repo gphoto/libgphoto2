@@ -1,3 +1,5 @@
+EXTRA_DIST = README main.c
+
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_ptp.la
 
