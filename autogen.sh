@@ -61,27 +61,23 @@ esac
 
 ACLOCAL_FLAGS="-I ${srcdir}/libgphoto2_port/m4 ${ACLOCAL_FLAGS}"
 
-for dir in . libgphoto2_port
+for dir in libgphoto2_port .
 do 
-    echo processing "$dir"
-    cd "$dir"
-    if [ $? != 0 ] ; then
-        echo "Fatal: Could not enter directory $dir."
-        exit 1
-    fi
-    echo "Running gettextize --force --copy"
-    gettextize --force --copy
-    echo "Running aclocal $ACLOCAL_FLAGS"
-    aclocal $ACLOCAL_FLAGS
-    echo "Running autoheader"
-    autoheader
-    echo "Running automake --add-missing --gnu $am_opt"
-    automake --add-missing --gnu $am_opt
-    echo "Running autoconf"
-    autoconf
-    echo "Running ./configure"
-    ./configure "$@"
-    cd ${srcdir}
+   (echo processing "$dir";					\
+    cd "$dir";							\
+    echo "Running gettextize --force --copy";			\
+    gettextize --force --copy;					\
+    echo "Running aclocal $ACLOCAL_FLAGS";			\
+    aclocal $ACLOCAL_FLAGS;					\
+    echo "Running autoheader";					\
+    autoheader;							\
+    echo "Running automake --add-missing --gnu $am_opt";	\
+    automake --add-missing --gnu $am_opt;			\
+    echo "Running autoconf";					\
+    autoconf;							\
+    echo "Running ./configure";					\
+    ./configure "$@";						\
+   )
 done
 
 ./configure "$@"
