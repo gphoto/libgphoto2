@@ -536,16 +536,19 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	if (type != GP_CAPTURE_IMAGE) {
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-/* XXX
+
+	if (!ptp_operation_issupported(&camera->pl->params,
+		PTP_OC_InitiateCapture)) return GP_ERROR_NOT_SUPPORTED;
+
 	CPR(context,ptp_initiatecapture(&camera->pl->params, 0x00000000, 0x00000000));
-	while (ptp_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
-	if (event.EventCode==PTP_EC_ObjectAdded) {
-		while (ptp_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
-		if (event.EventCode==PTP_EC_CaptureComplete) {
+	while (ptp_usb_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
+	if (event.Code==PTP_EC_ObjectAdded) {
+		while (ptp_usb_event_wait (&camera->pl->params, &event)!=PTP_RC_OK);
+		if (event.Code==PTP_EC_CaptureComplete) {
 			return GP_OK;
 		}
 	} 
-*/
+
 	/* we're not going to set path, ptp does not use paths anyway ;) */
 	return GP_ERROR;
 }
@@ -1063,7 +1066,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 int
 camera_init (Camera *camera, GPContext *context)
 {
-	GPPortSettings settings;
+	/*GPPortSettings settings;*/
 	short ret,i;
 
 	/* Make sure our port is a USB port */
