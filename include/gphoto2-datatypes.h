@@ -53,9 +53,7 @@ typedef enum {
 
 struct CameraWidget;
 
-#define CameraWidgetCallback(_a) int (*_a) (CameraWidget *widget)
-
-typedef struct {
+struct CameraWidget {
 
 	/* Publicly accessible
 	   ------------------------------ */
@@ -79,10 +77,12 @@ typedef struct {
 	int 		(*callback)(struct CameraWidget *widget);
 	/* Private (don't access)
 	   ------------------------------ */
-	struct CameraWidget *children;
-	int 		     children_count;
+	struct CameraWidget**	children;
+	int 			children_count;
 
-} CameraWidget;
+};
+
+typedef struct CameraWidget CameraWidget;
 
 typedef gpio_device_info CameraPortInfo;
 
