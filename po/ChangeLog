@@ -1,3 +1,8 @@
+2002-03-21  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* POTFILES.in: 2 new files added from commandline frontend.
+	* de.po: Some new translations.
+
 2002-03-13  Colin Marquardt  <colin@marquardt-home.de>
 
 	* es.po: New translation from Fabian Mandelbaum
