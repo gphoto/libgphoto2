@@ -60,6 +60,8 @@ typedef enum {
  * @CANON_PS_A5: PowerShot A5
  * @CANON_PS_A5_ZOOM: PowerShot A5 Zoom
  * @CANON_PS_A50: PowerShot A50
+ * @CANON_PS_A60: PowerShot A60
+ * @CANON_PS_A70: PowerShot A70
  * @CANON_PS_PRO70: PowerShot Pro70
  * @CANON_PS_S10: PowerShot S10
  * @CANON_PS_S20: PowerShot S20
@@ -94,6 +96,8 @@ typedef enum {
 	CANON_PS_A5,
 	CANON_PS_A5_ZOOM,
 	CANON_PS_A50,
+	CANON_PS_A60,
+	CANON_PS_A70,
 	CANON_PS_S10,
 	CANON_PS_S20,
 	CANON_PS_S30,

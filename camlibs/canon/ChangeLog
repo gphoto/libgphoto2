@@ -1,3 +1,12 @@
+2003-05-19 Marcus Meissner <marcus@jet.franken.de>
+	
+	* canon.c, canon.h: Added 3 patches with support
+	  for the S400, A60 and A70. (Might not be 100% correct
+	  in specifying subtypes and capture ability.)
+
+	  These seem to parallel support PTP and Canon mode
+	  with 1 USB id according to traces sent. Strange.
+
 2003-05-06 Marcus Meissner <marcus@jet.franken.de>
 	
 	* library.c,canon.c: 2 bug fixes for audio files from

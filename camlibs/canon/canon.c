@@ -132,13 +132,21 @@ const struct canonCamModelData models[] = {
         /* 0x3071 is S230 in PTP mode */
 	{"Canon:Digital IXUS v3 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, CAP_SUP, S99M, S32K, NULL},
         /* 0x3071 is IXUS v3 in PTP mode */
+	/* reported working on SourceForge patch tracker. */
+	/* FIXME: dunno about capture, assuming none for now -Marcus */
+	{"Canon Digital IXUS 400",              CANON_PS_S230,  0x04A9, 0x3075, CAP_NON, S99M, S32K, NULL},
+	{"Canon PowerShot S400",                CANON_PS_S230,  0x04A9, 0x3075, CAP_NON, S99M, S32K, NULL},
 	/* A70 product ID for PTP mode is 0x3072; apparently there is
 	 * no "Canon" mode, so this camera will never be supported by
 	 * this driver. */
-	/* A60 product ID for PTP is 0x3074 */
-	/* S400 product ID for PTP mode is 0x3075; there may be no
-	 * "Canon" mode, so it will be supported by the PTP driver,
-	 * not here. */
+	
+	/* added from report on mailinglist. XXX: assuming capture works -Marcus */
+	/* reports suggest that they provide 1 interface which does
+	 * both PTP and Canon access modes.
+	 */
+	{"Canon PowerShot A60",         CANON_PS_A60,           0x04A9, 0x3074, CAP_SUP,  S2M, S32K},
+	{"Canon PowerShot A70",         CANON_PS_A70,           0x04A9, 0x3073, CAP_SUP,  S2M, S32K},
+
 	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, NULL},
 	/* Canon MVX2i in some mode is 0x3067 - but it is not clear yet whether it uses our protocol */
 	/* Canon MVX2i in some mode is 0x306B - but it is not clear yet whether it uses our protocol */
