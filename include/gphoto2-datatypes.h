@@ -229,9 +229,10 @@ typedef struct {
 struct Camera {
 	char		model[128];
 
+	CameraPortSettings *port;
+
 	int 		debug;
-	int		number;
-	char		folder[1024];
+
 	void*		library_handle;
 
 	CameraAbilities *abilities;

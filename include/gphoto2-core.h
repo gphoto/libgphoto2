@@ -49,15 +49,14 @@
 	int gp_camera_abilities 	(int camera_number, CameraAbilities *abilities);
 	int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities);
 
-	/* Set the current camera library */
+	/* Create a new camera */
 	/* ============================================================================== */
 	int gp_camera_new 	  (Camera **camera, int camera_number, CameraPortSettings *port);
 	int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortSettings *port);
 
-	/* Init/Exit, a camera library */
+	/* Free a camera */
 	/* ============================================================================== */
-	int gp_camera_init (Camera *camera, CameraInit *init);
-	int gp_camera_exit (Camera *camera);
+	int gp_camera_free	  (Camera *camera);
 
 	/* Folder operations */
 	/* ============================================================================== */
