@@ -11,4 +11,4 @@ gphoto2_SOURCES = \
 		test.c test.h
 
 gphoto2_LDADD = ../../libgphoto2/libgphoto2.la \
-		../libgphoto2_util/libgphoto2_frontend.la
+		../libgphoto2_frontend/libgphoto2_frontend.la
