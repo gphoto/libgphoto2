@@ -25,9 +25,13 @@
 
 int camera_id (CameraText *id) {
 
+#if defined HAVE_STRNCPY
+	strncpy(id->text, "minolta-dimagev", sizeof(id->text));
+#else
 	strcpy(id->text, "minolta-dimagev");
+#endif
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int camera_abilities (CameraAbilitiesList *list) {
@@ -36,7 +40,11 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 	a = gp_abilities_new();
 
+#if defined HAVE_STRNCPY
+	strncpy(a->model, "Minolta Dimage V", sizeof(a->model));
+#else
 	strcpy(a->model, "Minolta Dimage V");
+#endif
 	a->port     = GP_PORT_SERIAL;
 	a->speed[0] = 38400;
 	a->speed[1] = 0;
@@ -48,7 +56,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 	gp_abilities_list_append(list, a);
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int camera_init (Camera *camera, CameraInit *init) {
@@ -96,8 +104,11 @@ int camera_init (Camera *camera, CameraInit *init) {
 
 	gpio_set_timeout(dimagev->dev, 5000);
 
-	/* The current max for a path is set to 64. Best to avoide overruns. */
-	strncpy(dimagev->settings.serial.port, init->port.path, 64);
+#if defined HAVE_STRNCPY
+	strncpy(dimagev->settings.serial.port, init->port.path, sizeof(dimagev->settings.serial.port));
+#else
+	strcpy(dimagev->settings.serial.port, init->port.path);
+#endif
 	dimagev->settings.serial.speed = 38400;
 	dimagev->settings.serial.bits = 8;
 	dimagev->settings.serial.parity = 0;
@@ -173,7 +184,7 @@ int camera_exit (Camera *camera) {
 
 	free(dimagev);
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int camera_folder_list	(Camera *camera, CameraList *list, char *folder) {
@@ -195,17 +206,13 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 		return GP_ERROR;
 	}
 
-	if ( camera->debug != 0 ) {
-		dimagev_dump_camera_status(dimagev->status);
-	}
-
 	gp_filesystem_populate(dimagev->fs, "/", DIMAGEV_FILENAME_FMT, dimagev->status->number_images);
 
 	for ( i = 0 ; i < dimagev->status->number_images ; i++ ) {
 		gp_list_append(list, gp_filesystem_name(dimagev->fs, "/", i), GP_LIST_FILE);
 	}
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) {
@@ -216,19 +223,20 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 
 	file_number = gp_filesystem_number(dimagev->fs, folder, filename);
 
-	if ( dimagev->debug != 0 ) {
-		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "file number is %d", file_number);
-	}
-
 	if ( dimagev_get_picture(dimagev, file_number + 1, file) == GP_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_get::unable to retireve image file");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_get::unable to retrieve image file");
 		}
 		return GP_ERROR;
 	}
 
-	snprintf(file->type, 63, "image/jpg");
-	snprintf(file->name, 63, "%s", filename);
+#if defined HAVE_SNPRINTF
+	snprintf(file->type, sizeof(file->type), "image/jpg");
+	snprintf(file->name, sizeof(file->name), "%s", filename);
+#else
+	sprintf(file->type, "image/jpg");
+	sprintf(file->name, "%s", filename);
+#endif
 
 	return GP_OK;
 }
@@ -245,23 +253,25 @@ int camera_file_get_preview (Camera *camera, CameraFile *file,
 
 	if ( dimagev_get_thumbnail(dimagev, file_number + 1, file) == GP_ERROR ) {
 		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_get_preview::unable to retireve image file");
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_file_get_preview::unable to retrieve image file");
 		}
 		return GP_ERROR;
 	}
 
 	/* The previews are stored in PPM format. See util.c for more details. */
-	snprintf(file->type, 63, "image/ppm");
-	/* Always name the image 0, for predictablity reasons. */
-	snprintf(file->name, 63, DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
-
+#if defined HAVE_SNPRINTF
+	snprintf(file->type, sizeof(file->type), "image/ppm");
+	snprintf(file->name, sizeof(file->name), DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
+#else
+	sprintf(file->type, "image/ppm");
+	sprintf(file->name, DIMAGEV_THUMBNAIL_FMT, ( file_number + 1) );
+#endif
 	return GP_OK;
-	return (GP_OK);
 }
 
 int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int camera_file_delete (Camera *camera, char *folder, char *filename) {
@@ -278,12 +288,12 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 int camera_config_get (Camera *camera, CameraWidget *window) {
 	printf("Getting config.\n");
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int camera_config_set (Camera *camera, CameraSetting *conf, int count) {
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
@@ -334,10 +344,16 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 			}
 			return GP_ERROR;
 		}
-		/* The Dimage V always uses EXIF/JPEG for images, RGB for previews. */
-		snprintf(file->type, 63, "image/ppm");
+
 		/* Always name the image 0, for predictablity reasons. */
-		snprintf(file->name, 63, DIMAGEV_THUMBNAIL_FMT, 0);
+#if defined HAVE_SNPRINTF
+		snprintf(file->type, sizeof(file->type), "image/ppm");
+		snprintf(file->name, sizeof(file->name), DIMAGEV_THUMBNAIL_FMT, 0);
+#else
+		sprintf(file->type, "image/ppm");
+		sprintf(file->name, DIMAGEV_THUMBNAIL_FMT, 0);
+#endif
+
 	}
 	else if ( info->type == GP_CAPTURE_IMAGE ) {
 		if ( dimagev_get_picture(dimagev, ( dimagev->status->number_images ), file ) == GP_ERROR ) {
@@ -346,10 +362,15 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 			}
 			return GP_ERROR;
 		}
-		/* The Dimage V always uses EXIF/JPEG for images, RGB for previews. */
-		snprintf(file->type, 63, "image/jpg");
-		/* Always name the image 0, for predictablity reasons. */
-		snprintf(file->name, 63, DIMAGEV_FILENAME_FMT, 0);
+
+#if defined HAVE_SNPRINTF
+		snprintf(file->type, sizeof(file->type), "image/jpg");
+		snprintf(file->name, sizeof(file->name), DIMAGEV_FILENAME_FMT, 0);
+#else
+		sprintf(file->type, "image/jpg");
+		sprintf(file->name, DIMAGEV_FILENAME_FMT, 0);
+#endif
+
 	}
 	
 	/* Now delete it. */
@@ -403,14 +424,27 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	/* i keeps track of the length. */
 	i = 0;
 	/* First the stuff from the dimagev_info_t */
-	i = snprintf(summary->text, 32766, "\t\tGeneral Information\nModel:\t\t\t%s Dimage V (%s)\nHardware Revision:\t%s\nFirmware Revision:\t%s\n\n", dimagev->info->vendor, dimagev->info->model, dimagev->info->hardware_rev, dimagev->info->firmware_rev);
+#if defined HAVE_SNPRINTF
+	i = snprintf(summary->text, sizeof(summary->text),
+#else
+	i = snprintf(summary->text,
+#endif
+		"\t\tGeneral Information\nModel:\t\t\t%s Dimage V (%s)\n"
+		"Hardware Revision:\t%s\nFirmware Revision:\t%s\n\n",
+		dimagev->info->vendor, dimagev->info->model,
+		dimagev->info->hardware_rev, dimagev->info->firmware_rev);
 
 	if ( i > 0 ) {
 		count += i;
 	}
 
 	/* Now the stuff from dimagev_data_t */
-	i = snprintf(&(summary->text[count]), 32766 - count, "\t\tCurrent Information\n"
+#if defined HAVE_SNPRINTF
+	i = snprintf(&(summary->text[count]), sizeof(summary->text) - count,
+#else
+	i = sprintf(&(summary->text[count]),
+#endif
+		"\t\tCurrent Information\n"
 		"Host Mode:\t\t%s\n"
 		"Exposure Correction:\t%s\n"
 		"Exposure Data:\t\t%d\n"
@@ -443,16 +477,16 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	/* Flash is a special case, a switch is needed. */
 	switch ( dimagev->data->flash_mode ) {
 		case 0:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Automatic\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Automatic\n");
 			break;
 		case 1:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Force Flash\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Force Flash\n");
 			break;
 		case 2:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Prohibit Flash\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Prohibit Flash\n");
 			break;
 		default:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Invalid Value ( %d )\n", dimagev->data->flash_mode);
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Invalid Value ( %d )\n", dimagev->data->flash_mode);
 			break;
 	}
 
@@ -461,14 +495,17 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	}
 
 	/* Now for the information in dimagev_status_t */
-	i = snprintf(&(summary->text[count]), 32766 - count,
+#if defined HAVE_SNPRINTF
+	i = snprintf(&(summary->text[count]), sizeof(summary->text) - count,
+#else
+	i = sprintf(&(summary->text[count]),
+#endif
 		"Battery Level:\t\t%s\n"
 		"Number of Images:\t%d\n"
 		"Minimum Capacity Left:\t%d\n"
 		"Busy:\t\t\t%s\n"
 		"Flash Charging:\t\t%s\n"
-		"Lens Status:\t\t"
-		,
+		"Lens Status:\t\t",
 		( dimagev->status->battery_level ? "Not Full" : "Full" ),
 		dimagev->status->number_images,
 		dimagev->status->minimum_images_can_take,
@@ -484,16 +521,16 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	/* Lens status is another switch. */
 	switch ( dimagev->status->lens_status ) {
 		case 0:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Normal\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Normal\n");
 			break;
 		case 1: case 2:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Lens direction does not match flash light\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Lens direction does not match flash light\n");
 			break;
 		case 3:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Lens is not connected\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Lens is not connected\n");
 			break;
 		default:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Bad value for lens status %d\n", dimagev->status->lens_status);
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Bad value for lens status %d\n", dimagev->status->lens_status);
 			break;
 	}
 
@@ -502,26 +539,26 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	}
 
 	/* Card status is another switch. */
-	i = snprintf(&(summary->text[count]), 32766 - count, "Card Status:\t\t");
+	i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Card Status:\t\t");
 	if ( i > 0 ) {
 		count += i;
 	}
 
 	switch ( dimagev->status->card_status ) {
 		case 0:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Normal\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Normal\n");
 			break;
 		case 1:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Full\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Full\n");
 			break;
 		case 2:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Write-protected\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Write-protected\n");
 			break;
 		case 3:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Unsuitable card\n");
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Unsuitable card\n");
 			break;
 		default:
-			i = snprintf(&(summary->text[count]), 32766 - count, "Bade value for card status %d\n", dimagev->status->card_status);
+			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, "Bade value for card status %d\n", dimagev->status->card_status);
 			break;
 	}
 	
@@ -530,22 +567,29 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	}
 
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 int camera_manual (Camera *camera, CameraText *manual) {
 
+#if defined HAVE_STRNCPY
+	strncpy(manual->text, "Manual not available.", sizeof(manual->text));
+#else
 	strcpy(manual->text, "Manual not available.");
-	return (GP_OK);
+#endif
+	return GP_OK;
 }
 
 int camera_about (Camera *camera, CameraText *about) {
-
-	strcpy(about->text,
-"Minolta Dimage V
+#if defined HAVE_SNPRINTF
+	snprintf(about->text, sizeof(about->text),
+#else
+	sprintf(about->text,
+#endif
+"Minolta Dimage V Camera Library
+%s
 Gus Hartmann <gphoto@gus-the-cat.org>
-Simple library for a simple camera.
-Special thanks to Minolta for the spec.");
+Special thanks to Minolta for the spec.", DIMAGEV_VERSION);
 
-	return (GP_OK);
+	return GP_OK;
 }
