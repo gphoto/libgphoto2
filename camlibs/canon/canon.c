@@ -1378,12 +1378,12 @@ int gp_camera_config(Camera *camera)
 		return GP_OK;
 	}
 
-	gp_camera_config_set (camera, window);
+	camera_config_set (camera, window);
 	gp_widget_unref (window);
 	return GP_OK;
 }
 
-int gp_camera_config_set (Camera *camera, CameraWidget *window)
+int camera_config_set (Camera *camera, CameraWidget *window)
 {
         struct canon_info *cs = (struct canon_info*)camera->camlib_data;
         CameraWidget *w;
