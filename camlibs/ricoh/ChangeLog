@@ -1,3 +1,7 @@
+2005-03-01  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* g3.c: Split RZ1 and R1 entries to avoid slashes.
+
 2005-02-13  Marcus Meissner  <marcus@jet.franken.de>
 
 	* g3.c: Added Ricoh Caplio R1v as reported by

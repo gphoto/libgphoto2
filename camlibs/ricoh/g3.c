@@ -250,7 +250,13 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_product	= 0x220b;
 	gp_abilities_list_append(list, a);
 
-	strcpy(a.model, "Ricoh:Caplio R1/RZ1");
+	strcpy(a.model, "Ricoh:Caplio R1");
+	a.usb_vendor	= 0x5ca;
+	a.usb_product	= 0x220d;
+	gp_abilities_list_append(list, a);
+
+	/* same id as above */
+	strcpy(a.model, "Ricoh:Caplio RZ1");
 	a.usb_vendor	= 0x5ca;
 	a.usb_product	= 0x220d;
 	gp_abilities_list_append(list, a);
