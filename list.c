@@ -34,10 +34,10 @@ gp_list_new (CameraList **list)
 	CHECK_NULL (list);
 
 	*list = malloc (sizeof (CameraList));
-        if (!list)
+        if (!*list)
 		return (GP_ERROR_NO_MEMORY);
 
-	memset (list, 0, sizeof (CameraList));
+	memset (*list, 0, sizeof (CameraList));
 
 	return (GP_OK);
 }
