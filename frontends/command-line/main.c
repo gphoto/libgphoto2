@@ -1144,12 +1144,17 @@ set_globals (void)
 	CR (gp_abilities_list_load (al, glob_context));
 
 	/* Eventually override the abilities list (option usbid) */
-	count=0;
+	count = 0;
 	CR (gp_abilities_list_new (&al_mod));
 	for (x = 0; x < gp_abilities_list_count (al); x++) {
-		gp_abilities_list_get_abilities (al,x, &abilities);
+		gp_abilities_list_get_abilities (al, x, &abilities);
 		if (abilities.usb_vendor==glob_usbid[2]
 				&& abilities.usb_product==glob_usbid[3]) {
+			cli_debug_print ("Overriding USB vendor/product id "
+					 "0x%x/0x%x with 0x%x/0x%x",
+					 abilities.usb_vendor, abilities.usb_product,
+					 glob_usbid[0], glob_usbid[1]);
+			
 			abilities.usb_vendor  = glob_usbid[0];
 			abilities.usb_product = glob_usbid[1];
 			count++;
@@ -1157,9 +1162,13 @@ set_globals (void)
 		gp_abilities_list_append (al_mod, abilities);
 	}
 
-	if (count) cli_debug_print ("%d override(s) done.", count);
-	gp_abilities_list_free (al);
-	al=al_mod; al_mod=NULL;
+	if (count) {
+		cli_debug_print ("%d override(s) done.", count);
+		gp_abilities_list_free (al);
+		al = al_mod;
+		al_mod = NULL;
+	} else
+		gp_abilities_list_free (al_mod);
 
 	CR (gp_port_info_list_new (&il));
 	CR (gp_port_info_list_load (il));
@@ -1192,7 +1201,7 @@ set_globals (void)
 		} else {
 
 			/* More than one camera detected */
-/*FIXME: Let the user choose from the list!*/
+			/*FIXME: Let the user choose from the list!*/
 			CR (gp_list_get_name (&list, 0, &name));
 			CR (gp_list_get_value (&list, 0, &value));
 			model = gp_abilities_list_lookup_model (al, name);
