@@ -26,7 +26,7 @@
 int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	int length, total_packets, i;
 	dimagev_packet *p, *r;
-	unsigned char char_buffer, command_buffer[8];
+	unsigned char char_buffer, command_buffer[3];
 #ifdef _gphoto_exif_
 	exifparser exifdat;
 #endif
@@ -231,12 +231,21 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 
 int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 	dimagev_packet *p, *raw;
-	unsigned char char_buffer, command_buffer[8];
+	unsigned char char_buffer, command_buffer[3];
 
 	if ( dimagev == NULL ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::unable to use NULL dimagev_t");
 		return GP_ERROR;
 	}
+
+	/* An image can only be deleted if the card is normal or full. */
+	if (( dimagev->status->card_status != 0 ) || ( dimagev->status->card_status != 1 )) {
+		if ( dimagev->debug != 0 ) {
+				gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_delete_picture::memory card does not permit deletion");
+		}
+		return GP_ERROR;
+	}
+			
 
 	if ( dimagev->data->host_mode != 1 ) {
 
@@ -383,7 +392,7 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 
 int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	dimagev_packet *p, *r;
-	unsigned char char_buffer, command_buffer[8], *ycrcb_data;
+	unsigned char char_buffer, command_buffer[3], *ycrcb_data;
 
 	if ( dimagev->data->host_mode != 1 ) {
 
@@ -577,6 +586,43 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 /* This function handles the ugliness of converting Y:Cb:Cr data to RGB. The
    return value is a pointer to an array of unsigned chars that has 14413)
    members. The additional thirteen bytes are the PPM "rawbits" header.
+
+   The Dimage V returns 9600 bytes of data for a thumbnail, in what is referred
+   to in the documentation as a "Y:Cb:Cr (4:2:2)" format. This means that the
+   data is in a Y:Cr:Cb solor space, and is horizontally compressed so that
+   the Cb and Cr values are used for two adjacent bytes. The data essentially
+   looks like this:
+
+   Y(0):Y(1):Cb(0):Cr(0):Y(2):Y(3) ... Y(9599):Y(9600):Cb(9599):Cr(9599)
+
+	Each of the above is a byte. The image is defined as having 80 pixels of
+	width and 60 of height, and this information is not included in the 9600
+	bytes of data. Since Y:Cb:Cr data is essentially useless, this function
+	converts it into RGB data, with a PPM "rawbits" header containing the
+	height and width. The formulae to convert Y:Cb:Cr to RGB are below:
+
+	B(0,0) = (Cb - 128) * (2 - ( 2 * Cr_Coeff )) + Y(0,0)
+	R(0,0) = (Cr - 128) * (2 - ( 2 * Y_Coeff  )) + Y(0,0)
+	G(0,0) = (Y(0,0) - ( Cr_Coeff * B(0,0) + Y_Coeff * R(0,0)) ) / Cb_Coeff
+
+	Still with me? Good. The values for the three coefficients all add up to
+	one; the values used here are defined in dimagev.h . The code below is
+	more complex than this, however; Minolta has not been forthcoming with
+	the permitted ranges for the values of Y, Cb, and Cr, so I have had to
+	do some guesswork based on the math. I don't know much about colorspaces,
+	and I'm not looking to know more. It looks like Cb and Cr have a range
+	of (0,128) and Y has a range of (0,255). The Dimage V sometimes returns
+	values for Cb and Cr slightly over this range; I crop these to 128. Also,
+	sometimes the values returned by the conversion formulae are greater
+	than 255, which would overflow the unsigned char used to store them, so
+	I crop these to 0. I used to just drop them to 255, but this lead to
+	image corruption in dark areas. An afternoon of guesswork later, I tried
+	cutting them to 0, and it works well enough for me.
+
+	I could not have possibly figured this out without the help of these sites:
+	http://www.butaman.ne.jp/~tsuruzoh/Computer/Digicams/exif-e.html
+	http://www.efg2.com/lab/Graphics/Colors/YUV.htm#411
+	http://www.dcs.ed.ac.uk/home/mxr/gfx/2d-hi.html
 */
 unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr) {
 	unsigned char *rgb_data, *ycrcb_current, *rgb_current;
@@ -592,7 +638,7 @@ unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr) {
 	rgb_current = &(rgb_data[13]);
 
 	/* This is the header for a PPM "rawbits" bitmap of size 80x60. */
-	if ( snprintf(rgb_data, 14, "P6\n80 60\n255\n") < 13 ) {
+	if ( snprintf(rgb_data, sizeof(rgb_data), "P6\n80 60\n255\n") < 13 ) {
 		fprintf(stderr, "dimagev_ycbcr_to_ppm::failed to printf PPM header\n");
 		return NULL;
 	}
