@@ -1,3 +1,7 @@
+2001-11-21  Colin Marquardt  <colin@marquardt-home.de>
+
+	* po/POTFILES.in: Removed ../camlibs/canon/psa50.c
+
 2001-11-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	I quote from an e-mail: "You (Lutz) should remove the code you added
