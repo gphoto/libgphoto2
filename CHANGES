@@ -1,5 +1,8 @@
 gphoto2 CVS
 
+   * repaired "make rpm" target
+   * started "real" gphoto2 manual
+
 gphoto2 command-line interface:
 
    * optional readline support
@@ -7,7 +10,7 @@ gphoto2 command-line interface:
 libgphoto2:
 
    * support for periodic keep-alive-messages
-   * support for Canon EOS D60, Canon PowerShot A40, 
+   * support for Canon EOS D60, Canon PowerShot A40, Canon PowerShot A30, 
         Canon PowerShot S200, Canon Digital IXUS 330,
         Canon PowerShot S10 (fixed it)
 
