@@ -1336,7 +1336,8 @@ int
 gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 			const char *filename, CameraFileInfo *info)
 {
-	int x, y, result;
+	int x, y, result, name, e;
+	CameraFileInfo inf;
 
 	CHECK_NULL (fs && folder && filename && info);
 	CHECK_ABS (folder);
@@ -1352,23 +1353,60 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
 	CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename));
 
+	/* Check if people want to set read-only attributes */
+	if ((info->file.fields    & GP_FILE_INFO_TYPE)   ||
+	    (info->file.fields    & GP_FILE_INFO_SIZE)   ||
+	    (info->file.fields    & GP_FILE_INFO_WIDTH)  ||
+	    (info->file.fields    & GP_FILE_INFO_HEIGHT) ||
+	    (info->file.fields    & GP_FILE_INFO_STATUS) ||
+	    (info->preview.fields & GP_FILE_INFO_TYPE)   ||
+	    (info->preview.fields & GP_FILE_INFO_SIZE)   ||
+	    (info->preview.fields & GP_FILE_INFO_WIDTH)  ||
+	    (info->preview.fields & GP_FILE_INFO_HEIGHT) ||
+	    (info->preview.fields & GP_FILE_INFO_STATUS) ||
+	    (info->audio.fields   & GP_FILE_INFO_TYPE)   ||
+	    (info->audio.fields   & GP_FILE_INFO_SIZE)   ||
+	    (info->audio.fields   & GP_FILE_INFO_STATUS))
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	/* We need an internal copy as we are going to modify it */
+	memcpy (&inf, info, sizeof (CameraFileInfo));
+
 	/*
 	 * Set the info. If anything goes wrong, mark info as dirty, 
 	 * because the operation could have been partially successful.
+	 *
+	 * Handle name changes in a separate round.
 	 */
-	result = fs->set_info_func (fs, folder, filename, info, fs->info_data);
+	name = (inf.file.fields & GP_FILE_INFO_NAME);
+	inf.file.fields &= ~GP_FILE_INFO_NAME;
+	result = fs->set_info_func (fs, folder, filename, &inf, fs->info_data);
 	if (result < 0) {
 		fs->folder[x].file[y].info_dirty = 1;
-		if (info->file.fields & GP_FILE_INFO_NAME)
-			fs->folder[x].files_dirty = 1;
 		return (result);
 	}
+	if (inf.file.fields & GP_FILE_INFO_PERMISSIONS)
+		fs->folder[x].file[y].info.file.permissions = 
+						inf.file.permissions;
 
-	memcpy (&fs->folder[x].file[y].info, info, sizeof (CameraFileInfo));
-	fs->folder[x].file[y].info_dirty = 0;
-	if (info->file.fields & GP_FILE_INFO_NAME)
-		strncpy (fs->folder[x].file[y].name, info->file.name,
+	/* Handle name change */
+	if (name) {
+
+		/* Make sure the file does not exist */
+		e = gp_filesystem_number (fs, folder, inf.file.name);
+		if (e != GP_ERROR_FILE_NOT_FOUND)
+			return (e);
+		
+		inf.preview.fields = GP_FILE_INFO_NONE;
+		inf.file.fields = GP_FILE_INFO_NAME;
+		inf.audio.fields = GP_FILE_INFO_NONE;
+		CHECK_RESULT (fs->set_info_func (fs, folder, filename, &inf,
+						 fs->info_data));
+		strncpy (fs->folder[x].file[y].info.file.name, inf.file.name,
+			 sizeof (fs->folder[x].file[y].info.file.name));
+		strncpy (fs->folder[x].file[y].name, inf.file.name,
 			 sizeof (fs->folder[x].file[y].name));
+	}
 
 	return (GP_OK);
 }
