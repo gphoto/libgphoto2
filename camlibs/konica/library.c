@@ -342,6 +342,8 @@ test_speed (Camera *camera, GPContext *context)
 		if (k_init (camera->port) == GP_OK)
 			break;
 		gp_context_progress_update (context, id, i + 1);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
 	}
 	gp_context_progress_stop (context, id);
 	if (i == 10) {
