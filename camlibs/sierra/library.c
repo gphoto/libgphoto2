@@ -1510,10 +1510,8 @@ int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked,
 		       GPContext *context)
 {
 	CHECK (sierra_set_int_register (camera, 4, n, context));
-
-	gp_context_error (context, _("Not implemented!"));
-	return GP_ERROR;
-
+	CHECK (sierra_sub_action (camera, SIERRA_ACTION_PROT_STATE,
+				  (int) locked, context));
 	return GP_OK;
 }
 
