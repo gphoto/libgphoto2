@@ -89,9 +89,8 @@ gettext_version=`gettextize --version 2>&1 | sed -n 's/^.*GNU gettext.* \([0-9]*
 case $gettext_version in
 0.10.*)
 	;;
-	
 *)
-	gettext_opt="$gettext_opt --intl";;
+	gettext_opt="$gettext_opt --no-changelog --intl";;
 esac
 
 # Clean automake stuff; must be done *before* subprojects
