@@ -26,6 +26,9 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
+#ifdef HAVE_LIMITS_H
+#include <limits.h>
+#endif
 #ifdef OS2
 #include <db.h>
 #endif
@@ -49,6 +52,13 @@
 #endif
 
 #include "digita.h"
+
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
 
 static struct {
 	char *model;
