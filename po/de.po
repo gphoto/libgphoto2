@@ -514,19 +514,19 @@ msgstr ""
 #: camlibs/dimera/dimera3500.c:695
 #, fuzzy
 msgid "Getting Image Info"
-msgstr "Lösche Bild %s."
+msgstr "Lade Bild-Informationen"
 
 #: camlibs/dimera/dimera3500.c:712
 #, fuzzy
 msgid "Loading Image"
-msgstr "Lade Bild %s hoch."
+msgstr "Lade Bild"
 
 #. 8 bits per pixel in raw CCD format
 #: camlibs/dimera/dimera3500.c:728 camlibs/dimera/dimera3500.c:751
 #: camlibs/dimera/dimera3500.c:778
 #, fuzzy
 msgid "Downloading Image"
-msgstr "Lade Bild %s herunter."
+msgstr "Lade Bild herunter."
 
 #: camlibs/dimera/dimera3500.c:761 camlibs/dimera/dimera3500.c:788
 msgid "Retransmitting"
@@ -1579,19 +1579,17 @@ msgstr ""
 "Gphoto2-Portierung von Bart van Leeuwen <bart@netage.nl>"
 
 #: libgphoto2/gphoto2-camera.c:662
-#, fuzzy
 msgid "Initializing camera..."
-msgstr "Initialisiere Kamera %s"
+msgstr "Initialisiere Kamera..."
 
 #: libgphoto2/gphoto2-camera.c:737
-#, fuzzy
 msgid "Getting configuration..."
-msgstr "Kamera-Konfiguration"
+msgstr "Lade Kamera-Konfiguration..."
 
 #: libgphoto2/gphoto2-camera.c:764
 #, fuzzy
 msgid "Setting configuration..."
-msgstr "Kamera-Konfiguration"
+msgstr "Setze Kamera-Konfiguration..."
 
 #: libgphoto2/gphoto2-camera.c:791
 msgid "Getting summary..."

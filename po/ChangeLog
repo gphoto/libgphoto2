@@ -1,5 +1,12 @@
 2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Dan Fandrich <dan@coneharvesters.com> explained that fuzzy 
+	translations can be dangerous:
+
+	* de.po: Remove invalid "%s" in fuzzy translations.
+
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Contributed by Colin Marquardt <colin@marquardt-home.de>:
 
 	* de.po: Updated.
