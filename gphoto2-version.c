@@ -26,6 +26,8 @@
 
 const char **gp_library_version(GPVersionVerbosity verbose)
 {
+	/* we could also compute/parse the short strings from the long
+	   ones, but the current method is easier for now :-) */
 	static const char *shrt[] =
 		{
 			VERSION,
