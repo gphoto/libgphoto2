@@ -1,5 +1,14 @@
 ----------------------------------------------------------------------------
 libgphoto2 CVS HEAD
+
+General libgphoto2 features:
+
+
+Drivers (camlibs):
+
+
+----------------------------------------------------------------------------
+libgphoto2 2.1.5
  
    * Support multiple USB devices by introducing additional USB ports,
      usb:<bus>,<device>. 
