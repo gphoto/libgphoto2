@@ -215,7 +215,7 @@ canon_serial_get_byte (GPPort *gdev)
 	}
 
 	recv = gp_port_read (gdev, cache, 1);
-	if(recv<0) /* an error occurred */
+	if (recv < 0) /* An error occurred */
 		return -1;
 
 	cachep = cache;
@@ -269,9 +269,10 @@ canon_serial_recv_frame (Camera *camera, int *len)
 	unsigned char *p = buffer;
 	int c;
 
-	while ((c = canon_serial_get_byte (camera->port)) != CANON_FBEG)
+	while ((c = canon_serial_get_byte (camera->port)) != CANON_FBEG) {
 		if (c == -1)
 			return NULL;
+	}
 	while ((c = canon_serial_get_byte (camera->port)) != CANON_FEND) {
 		if (c < 0)
 			return NULL;
@@ -1140,7 +1141,7 @@ int
 canon_serial_ready (Camera *camera)
 {
 	unsigned char type, seq;
-	int good_ack, speed, try, len;
+	int good_ack, speed, try, len, i;
 	char *pkt;
 	int res;
 
@@ -1244,60 +1245,34 @@ canon_serial_ready (Camera *camera)
 
 	camera->pl->first_init = 0;
 
-	if (!strcmp ("DE300 Canon Inc.", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "PowerShot A5");
-		camera->pl->model = CANON_PS_A5;
-		if (camera->pl->speed > 57600)
-			camera->pl->slow_send = 1;
-		camera->pl->A5 = 1;
-	} else if (!strcmp ("Canon PowerShot A5 Zoom", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "PowerShot A5 Zoom");
-		camera->pl->model = CANON_PS_A5_ZOOM;
-		if (camera->pl->speed > 57600)
-			camera->pl->slow_send = 1;
-		camera->pl->A5 = 1;
-	} else if (!strcmp ("Canon PowerShot A50", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot A50");
-		camera->pl->model = CANON_PS_A50;
-		if (camera->pl->speed > 57600)
-			camera->pl->slow_send = 1;
-	} else if (!strcmp ("Canon PowerShot S20", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot S20");
-		camera->pl->model = CANON_PS_S20;
-	} else if (!strcmp ("Canon PowerShot G1", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot G1");
-		camera->pl->model = CANON_PS_G1;
-	} else if (!strcmp ("Canon PowerShot A10", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot A10");
-		camera->pl->model = CANON_PS_A10;
-	} else if (!strcmp ("Canon PowerShot A20", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot A20");
-		camera->pl->model = CANON_PS_A20;
-	} else if (!strcmp ("Canon EOS D30", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a EOS D30");
-		camera->pl->model = CANON_EOS_D30;
-	} else if (!strcmp ("Canon PowerShot Pro90 IS", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot Pro90 IS");
-		camera->pl->model = CANON_PS_PRO90_IS;
-	} else if (!strcmp ("Canon PowerShot Pro70", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot Pro70");
-		camera->pl->model = CANON_PS_A70;
-	} else if ((!strcmp ("Canon DIGITAL IXUS", camera->pl->psa50_id))
-		   || (!strcmp ("Canon IXY DIGITAL", camera->pl->psa50_id))
-		   || (!strcmp ("Canon PowerShot S100", camera->pl->psa50_id))
-		   || (!strcmp ("Canon DIGITAL IXUS v", camera->pl->psa50_id))) {
-		gp_camera_status (camera,
-				  "Detected a Digital IXUS series / IXY DIGITAL / PowerShot S100 series");
-		camera->pl->model = CANON_PS_S100;
-	} else if ((!strcmp ("Canon DIGITAL IXUS 300", camera->pl->psa50_id))
-		   || (!strcmp ("Canon IXY DIGITAL 300", camera->pl->psa50_id))
-		   || (!strcmp ("Canon PowerShot S300", camera->pl->psa50_id))) {
-		gp_camera_status (camera,
-				  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / PowerShot S300");
-		camera->pl->model = CANON_PS_S300;
-	} else {
-		gp_camera_status (camera, "Detected a PowerShot S10");
-		camera->pl->model = CANON_PS_S10;
+	/* Compare what the camera identified itself as with our list of known models */
+	i = 0;
+	while (models[i].name != NULL) {
+		if (!strcmp (models[i].name, camera->pl->psa50_id)) {
+			GP_DEBUG ("canon_usb_identify: Serial ID string matches '%s'",
+				  models[i].name);
+			gp_camera_status (camera, "Detected a %s", models[i].name);
+			camera->pl->model = models[i].model;
+			break;
+		}
+		i++;
+	}
+
+	if (models[i].name == NULL) {
+		gp_camera_set_error (camera, "Unknown model '%s'", camera->pl->psa50_id);
+		return GP_ERROR_MODEL_NOT_FOUND;
+	}
+	
+	/* take care of some model specific things */
+	switch (camera->pl->model) {
+		case CANON_PS_A5:
+		case CANON_PS_A5_ZOOM:
+		case CANON_PS_A50:
+			if (camera->pl->speed > 57600)
+				camera->pl->slow_send = 1;
+			break;
+		default:
+			break;
 	}
 
 	//  5 seconds  delay should  be enough for   big flash cards.   By
