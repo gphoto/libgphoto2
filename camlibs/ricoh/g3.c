@@ -107,7 +107,7 @@ g3_channel_read_bytes(
 		*buffer = realloc (*buffer, expected);
 	xbuf = malloc(65536 + 12);
 
-	id = gp_context_progress_start (context, expected, msg);
+	id = gp_context_progress_start (context, expected, "%s", msg);
 
 	/* The camera lets us read in packets of at least max 64kb size. */
 	while (expected > 0) {

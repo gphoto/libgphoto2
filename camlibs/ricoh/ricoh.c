@@ -663,7 +663,7 @@ ricoh_set_date (Camera *camera, GPContext *context, time_t time)
 	time += timezone;
 	t = localtime (&time);
 	GP_DEBUG ("ricoh_set_date: converted time to localtime %s "
-		  "(timezone is %i)", asctime (t), timezone);
+		  "(timezone is %ld)", asctime (t), timezone);
 
 	p[1] = HEX (t->tm_year / 100 + 19);
 	p[2] = HEX (t->tm_year % 100);
