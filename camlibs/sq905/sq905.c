@@ -207,6 +207,7 @@ sq_read_picture_data (GPPort *port, unsigned char *data, int size )
 {
 	int remainder = size % 0x8000;
 	int offset = 0;
+	char c;
 
 	while ((offset + 0x8000 < size)) {
 		sq_read_data (port, data + offset, 0x8000);
@@ -214,7 +215,6 @@ sq_read_picture_data (GPPort *port, unsigned char *data, int size )
 	}
  	sq_read_data (port, data + offset, remainder);
 
-	char c;
     	SQWRITE (port, 0x0c, 0xc0, 0x00, &c, 1);  
     	return GP_OK;
 } 

@@ -241,13 +241,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 
 		} else {
+			unsigned char * data;
+			unsigned char * ptr;
+			unsigned char * result = NULL;
 
 			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&lb,0x0001);
 			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&lb,0x0001);
 
-			unsigned char * data = (unsigned char *)calloc(size, 0x100);
-			unsigned char * ptr = data;
-			unsigned char * result = NULL;
+			data = (unsigned char *)calloc(size, 0x100);
+			ptr = data;
 			
 			gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x000B,NULL,0x0);
 			if (size < 100) {

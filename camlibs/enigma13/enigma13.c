@@ -108,8 +108,9 @@ static int
 enigma13_flash_delete_all(CameraFilesystem *fs, const char *folder, void *data,
                  GPContext *context)
 {
-        gp_log(GP_LOG_DEBUG, "enigma13","Delete all files");
-  Camera *cam = data;
+   Camera *cam;
+   gp_log(GP_LOG_DEBUG, "enigma13","Delete all files");
+   cam = data;
    CHECK (gp_port_usb_msg_write (cam->port, 0x52, 0x0, 0x0, NULL, 0x0) );
    return GP_OK;                             
 }

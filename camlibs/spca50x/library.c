@@ -590,10 +590,11 @@ camera_init (Camera *camera, GPContext *context)
 	while (model) {
 		if (abilities.usb_vendor == models[x].usb_vendor
 		 && abilities.usb_product == models[x].usb_product) {
+			int same;
 			char *m = strdup( models[x].model );
 			char *p = strchr (m, ':' );
 			*p = ' ';
-			int same = !strcmp (m, abilities.model);
+			same = !strcmp (m, abilities.model);
 			free (m);
 			if (same) {
 				camera->pl->bridge = models[x].bridge;

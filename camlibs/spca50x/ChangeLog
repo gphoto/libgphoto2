@@ -1,3 +1,8 @@
+2004-10-28  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c (camera_init): Fix build for gcc 2.95
+	(bug #105586)
+
 2004-02-22 Till Adam  <till@adam-lilienthal.de>
   * add support for Dakota disposable cameras. This is the 
     work of John Maushammer <gphoto2@maushammer.com>

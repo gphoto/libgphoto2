@@ -673,12 +673,12 @@ typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
 					unsigned char **data, unsigned int *recvlen);
 /* debug functions */
 typedef void (* PTPErrorFunc) (void *data, const char *format, va_list args)
-#ifdef __GNUC__
+#if (__GNUC__ >= 3)
 	__attribute__((__format__(printf,2,0)))
 #endif
 ;
 typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args)
-#ifdef __GNUC__
+#if (__GNUC__ >= 3)
 	__attribute__((__format__(printf,2,0)))
 #endif
 ;

@@ -44,26 +44,26 @@ typedef enum _GPContextFeedback GPContextFeedback;
 typedef void (* GPContextIdleFunc)     (GPContext *context, void *data);
 typedef void (* GPContextErrorFunc)    (GPContext *context, const char *format,
 					va_list args, void *data)
-#ifdef __GNUC__
+#if (__GNUC__ >= 3)
 	__attribute__((__format__(printf,2,0)))
 #endif
 ;
 typedef void (* GPContextStatusFunc)   (GPContext *context, const char *format,
 					va_list args, void *data)
-#ifdef __GNUC__
+#if (__GNUC__ >= 3)
 	__attribute__((__format__(printf,2,0)))
 #endif
 ;
 typedef void (* GPContextMessageFunc)  (GPContext *context, const char *format,
 					va_list args, void *data)
-#ifdef __GNUC__
+#if (__GNUC__ >= 3)
 	__attribute__((__format__(printf,2,0)))
 #endif
 ;
 typedef GPContextFeedback (* GPContextQuestionFunc) (GPContext *context,
 						     const char *format,
 						     va_list args, void *data)
-#ifdef __GNUC__
+#if (__GNUC__ >= 3)
 	__attribute__((__format__(printf,2,0)))
 #endif
 ;
@@ -73,7 +73,7 @@ typedef unsigned int (* GPContextProgressStartFunc)  (GPContext *context,
 						      float target,
 						      const char *format,
 						      va_list args, void *data)
-#ifdef __GNUC__
+#if (__GNUC__ >= 3)
 	__attribute__((__format__(printf,3,0)))
 #endif
 ;

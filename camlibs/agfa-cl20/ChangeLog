@@ -1,3 +1,8 @@
+2004-10-28  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* agfa_cl20.c (get_file_func): Fix build for gcc 2.95 
+	(bug #1055868)
+
 2004-03-16 Dennis Noordsij
 	- fix compactflash detection
 	- fix number of picturs detection

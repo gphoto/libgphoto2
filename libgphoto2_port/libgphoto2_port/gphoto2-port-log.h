@@ -43,7 +43,7 @@ typedef enum {
 
 typedef void (* GPLogFunc) (GPLogLevel level, const char *domain,
 			    const char *format, va_list args, void *data)
-#ifdef __GNUC__
+#if (__GNUC__ >= 3)
 	__attribute__((__format__(printf,3,0)))
 #endif
 ;
