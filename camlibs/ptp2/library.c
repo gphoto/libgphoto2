@@ -367,7 +367,10 @@ static struct {
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)", 0x132b, 0x0001},
 
 	/* Fuji PTP cameras */
-	{"Fuji:FinePix S7000 (PictBridge mode)", 0x04cb, 0x0142},	
+	{"Fuji:FinePix S7000 (PictBridge mode)",0x04cb, 0x0142},	
+
+	/* Ricoh Caplio GX */
+	{"Ricoh:Caplio GX",                     0x05ca, 0x0325},	
 
 	/* more coming soon :) */
 	{NULL, 0, 0}

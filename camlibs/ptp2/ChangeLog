@@ -1,6 +1,7 @@
 2004-08-04 Marcus Meissner   <meissner@suse.de>
 	
-	* Added Canon PowerShot A310 as reported.
+	* Added Canon PowerShot A310 ids as reported.
+	* Added Ricoh Caplio GX ids as reported.
 
 2004-07-16 Mariusz Woloszyn
 	* ptp.h: Added NIKON extension code by Corey Manders 
