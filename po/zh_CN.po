@@ -1,24 +1,26 @@
 # Simplified Chinese Translation.
-# Copyright (C) 2000-2002 Scott Fritzinger <scottf@unr.edu> et al.
+# Copyright (C) 2000-2002
 # Wang Li <charlesw1234@163.com>, 2002
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-02-18 19:03+0100\n"
-"PO-Revision-Date: 2002-02-18 19:25+0100\n"
+"POT-Creation-Date: 2002-04-06 18:55+0200\n"
+"PO-Revision-Date: 2002-04-06 23:22+0800\n"
 "Last-Translator: Wang Li <charlesw1234@163.com>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: camlibs/agfa/agfa.c:211 camlibs/digita/digita.c:389
+# camlibs/agfa/agfa.c:221 camlibs/digita/digita.c:389
+#: camlibs/agfa/agfa.c:221 camlibs/digita/digita.c:389
 #, c-format
 msgid "Number of pictures: %d"
 msgstr "照片数量：%d"
 
-#: camlibs/agfa/agfa.c:218
+# camlibs/agfa/agfa.c:228
+#: camlibs/agfa/agfa.c:228
 msgid ""
 "Agfa CL18\n"
 "Vince Weaver <vince@deater.net>\n"
@@ -26,6 +28,7 @@ msgstr ""
 "爱克发 CL18\n"
 "Vince Weaver <vince@deater.net>\n"
 
+# camlibs/barbie/barbie.c:149
 #: camlibs/barbie/barbie.c:149
 #, c-format
 msgid ""
@@ -35,6 +38,7 @@ msgstr ""
 "照片数量：%i\n"
 "固件版本：%s"
 
+# camlibs/barbie/barbie.c:159
 #: camlibs/barbie/barbie.c:159
 msgid ""
 "Barbie/HotWheels/WWF\n"
@@ -59,18 +63,21 @@ msgstr ""
 "根据网上找到的文档实现。由 Vision\n"
 " 授权。"
 
-#: camlibs/canon/canon.c:476
+# camlibs/canon/canon.c:651
+#: camlibs/canon/canon.c:651
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
 "allowed."
 msgstr "名称“%s”(%i 个字符)太长(%i 个字符)，最多允许 30 个字符。"
 
-#: camlibs/canon/canon.c:1408
+# camlibs/canon/canon.c:1490
+#: camlibs/canon/canon.c:1490
 msgid "File protected."
 msgstr "文件已受到保护。"
 
-#: camlibs/canon/library.c:88
+# camlibs/canon/library.c:89
+#: camlibs/canon/library.c:91
 msgid ""
 "For the A50, 115200 may not be faster than 57600\n"
 "Folders are NOT supported\n"
@@ -81,30 +88,42 @@ msgstr ""
 "不支持文件夹\n"
 "如果您遇到了大量的传输错误，请时您的计算机尽可能保持空闲 (例如：不使用磁盘)"
 
-#: camlibs/canon/library.c:155 camlibs/canon/library.c:795
-#: camlibs/canon/library.c:808
+# camlibs/canon/library.c:165 camlibs/canon/library.c:889
+# camlibs/canon/library.c:902
+#: camlibs/canon/library.c:169 camlibs/canon/library.c:1129
+#: camlibs/canon/library.c:1142
 msgid "Camera unavailable"
 msgstr "相机不可用"
 
-#: camlibs/canon/library.c:166
+# camlibs/canon/library.c:176
+#: camlibs/canon/library.c:180
 msgid "Switching Camera Off"
 msgstr "关闭相机"
 
-#: camlibs/canon/library.c:217
+# camlibs/canon/library.c:232
+#: camlibs/canon/library.c:236
+msgid "Error capturing image"
+msgstr "捕获图像出错"
+
+# camlibs/canon/library.c:267
+#: camlibs/canon/library.c:271
 #, c-format
 msgid "Could not get disk name: %s"
 msgstr "无法获取磁盘名：%s"
 
-#: camlibs/canon/library.c:218
+# camlibs/canon/library.c:268
+#: camlibs/canon/library.c:272
 msgid "No reason available"
 msgstr "不知缘由"
 
-#: camlibs/canon/library.c:225
+# camlibs/canon/library.c:275
+#: camlibs/canon/library.c:279
 #, c-format
 msgid "Could not get disk info: %s"
 msgstr "无法获取磁盘信息：%s"
 
-#: camlibs/canon/library.c:474
+# camlibs/canon/library.c:568
+#: camlibs/canon/library.c:572
 #, c-format
 msgid ""
 "  Drive %s\n"
@@ -115,35 +134,44 @@ msgstr ""
 "  共计 %11s 字节\n"
 "  可用 %11s 字节"
 
-#: camlibs/canon/library.c:482 camlibs/canon/library.c:488
-#: camlibs/canon/library.c:757 camlibs/canon/library.c:763
+# camlibs/canon/library.c:576 camlibs/canon/library.c:582
+# camlibs/canon/library.c:851 camlibs/canon/library.c:857
+#: camlibs/canon/library.c:580 camlibs/canon/library.c:586
+#: camlibs/canon/library.c:1085 camlibs/canon/library.c:1091
 msgid "AC adapter"
 msgstr "交流变压器"
 
-#: camlibs/canon/library.c:482 camlibs/canon/library.c:488
-#: camlibs/canon/library.c:757 camlibs/canon/library.c:763
+# camlibs/canon/library.c:576 camlibs/canon/library.c:582
+# camlibs/canon/library.c:851 camlibs/canon/library.c:857
+#: camlibs/canon/library.c:580 camlibs/canon/library.c:586
+#: camlibs/canon/library.c:1085 camlibs/canon/library.c:1091
 msgid "on battery"
 msgstr "使用电池"
 
-#: camlibs/canon/library.c:484 camlibs/canon/library.c:759
+# camlibs/canon/library.c:578 camlibs/canon/library.c:853
+#: camlibs/canon/library.c:582 camlibs/canon/library.c:1087
 msgid "power OK"
 msgstr "电力充足"
 
-#: camlibs/canon/library.c:484 camlibs/canon/library.c:759
+# camlibs/canon/library.c:578 camlibs/canon/library.c:853
+#: camlibs/canon/library.c:582 camlibs/canon/library.c:1087
 msgid "power bad"
 msgstr "电力不足"
 
-#: camlibs/canon/library.c:492
+# camlibs/canon/library.c:586
+#: camlibs/canon/library.c:590
 #, c-format
 msgid "not available: %s"
 msgstr "不可用：%s"
 
-#: camlibs/canon/library.c:504
+# camlibs/canon/library.c:598
+#: camlibs/canon/library.c:602
 #, c-format
 msgid "%s (host time %s%i seconds)"
 msgstr "%s (主机时间 %s%i 秒)"
 
-#: camlibs/canon/library.c:514
+# camlibs/canon/library.c:608
+#: camlibs/canon/library.c:612
 #, c-format
 msgid ""
 "\n"
@@ -170,7 +198,8 @@ msgstr ""
 "\n"
 "时间：%s\n"
 
-#: camlibs/canon/library.c:531
+# camlibs/canon/library.c:625
+#: camlibs/canon/library.c:629
 msgid ""
 "Canon PowerShot series driver by\n"
 "Wolfgang G. Reissnegger,\n"
@@ -188,24 +217,29 @@ msgstr ""
 "A5 由 Ole W. Saastad\n"
 "Holger Klemm 添加\n"
 
-#: camlibs/canon/library.c:570
+# camlibs/canon/library.c:664
+#: camlibs/canon/library.c:668
 msgid "Error deleting file"
 msgstr "删除文件出错"
 
-#: camlibs/canon/library.c:586
+# camlibs/canon/library.c:680
+#: camlibs/canon/library.c:684
 msgid "Error deleting associated thumbnail file"
 msgstr "删除相关缩略图文件出错"
 
-#: camlibs/canon/library.c:619
+# camlibs/canon/library.c:713
+#: camlibs/canon/library.c:814 camlibs/canon/library.c:943
 msgid ""
 "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr "该相机不支持高于 57600 的速度的上载"
 
-#: camlibs/canon/library.c:636
+# camlibs/canon/library.c:730
+#: camlibs/canon/library.c:831 camlibs/canon/library.c:960
 msgid "Could not get flash drive letter"
 msgstr "无法获取闪存驱动字符"
 
-#: camlibs/canon/library.c:660
+# camlibs/canon/library.c:754
+#: camlibs/canon/library.c:875 camlibs/canon/library.c:984
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
@@ -213,213 +247,276 @@ msgstr ""
 "无法上载，没有可用的空闲文件夹了！\n"
 "已有 999 个佳能文件夹名称存在而且每个文件夹中都有照片 AUT_9999.JPG。"
 
-#: camlibs/canon/library.c:680
+# camlibs/canon/library.c:774
+#: camlibs/canon/library.c:897 camlibs/canon/library.c:1004
 msgid "Could not create \\DCIM directory."
 msgstr "无法创建目录 \\DCIM。"
 
-#: camlibs/canon/library.c:686
+# camlibs/canon/library.c:780
+#: camlibs/canon/library.c:903 camlibs/canon/library.c:1010
 msgid "Could not create destination directory."
 msgstr "无法创建目标目录。"
 
-#: camlibs/canon/library.c:712
+# camlibs/canon/library.c:806
+#: camlibs/canon/library.c:1040
 msgid "Camera and Driver Configuration"
 msgstr "相机及驱动器配置"
 
-#: camlibs/canon/library.c:714
+# camlibs/canon/library.c:808 camlibs/polaroid/pdc700.c:983
+#: camlibs/canon/library.c:1042 camlibs/polaroid/pdc700.c:983
 msgid "Camera"
 msgstr "相机"
 
-#: camlibs/canon/library.c:717
+# camlibs/canon/library.c:811
+#: camlibs/canon/library.c:1045
 msgid "Camera Model (readonly)"
 msgstr "相机型号 (只读)"
 
-#: camlibs/canon/library.c:721 camlibs/canon/library.c:791
+# camlibs/canon/library.c:815 camlibs/canon/library.c:885
+#: camlibs/canon/library.c:1049 camlibs/canon/library.c:1125
 msgid "Owner name"
 msgstr "所有者姓名"
 
-#: camlibs/canon/library.c:728 camlibs/canon/library.c:732
-#: camlibs/canon/library.c:737
+# camlibs/canon/library.c:822 camlibs/canon/library.c:826
+# camlibs/canon/library.c:831
+#: camlibs/canon/library.c:1056 camlibs/canon/library.c:1060
+#: camlibs/canon/library.c:1065
 msgid "Date and Time (readonly)"
 msgstr "日期和时间 (只读)"
 
-#: camlibs/canon/library.c:733
+# camlibs/canon/library.c:827
+#: camlibs/canon/library.c:1061
 msgid "Error"
 msgstr "错误"
 
-#: camlibs/canon/library.c:738 camlibs/canon/library.c:765
+# camlibs/canon/library.c:832 camlibs/canon/library.c:859
+#: camlibs/canon/library.c:1066 camlibs/canon/library.c:1093
 msgid "Unavailable"
 msgstr "不可用"
 
-#: camlibs/canon/library.c:742 camlibs/canon/library.c:804
+# camlibs/canon/library.c:836 camlibs/canon/library.c:898
+#: camlibs/canon/library.c:1070 camlibs/canon/library.c:1138
 msgid "Set camera date to PC date"
 msgstr "将相机日期设置为 PC 日期"
 
-#: camlibs/canon/library.c:745
+# camlibs/canon/library.c:839
+#: camlibs/canon/library.c:1073
 msgid "Firmware revision (readonly)"
 msgstr "固件版本 (只读)"
 
-#: camlibs/canon/library.c:769
+# camlibs/canon/library.c:863
+#: camlibs/canon/library.c:1097
 msgid "Power (readonly)"
 msgstr "电源 (只读)"
 
-#: camlibs/canon/library.c:773
+# camlibs/canon/library.c:867
+#: camlibs/canon/library.c:1101
 msgid "Driver"
 msgstr "驱动器"
 
-#: camlibs/canon/library.c:776 camlibs/canon/library.c:818
+# camlibs/canon/library.c:870 camlibs/canon/library.c:912
+#: camlibs/canon/library.c:1104 camlibs/canon/library.c:1152
 msgid "List all files"
 msgstr "列出所有文件"
 
-#: camlibs/canon/library.c:798
+#: camlibs/canon/library.c:1109 camlibs/canon/library.c:1160
+msgid "Keep filename on upload"
+msgstr "上传时保持文件名"
+
+# camlibs/canon/library.c:892
+#: camlibs/canon/library.c:1132
 msgid "Owner name changed"
 msgstr "所有者姓名已改变"
 
-#: camlibs/canon/library.c:800
+# camlibs/canon/library.c:894
+#: camlibs/canon/library.c:1134
 msgid "could not change owner name"
 msgstr "无法改变所有者姓名"
 
-#: camlibs/canon/library.c:811
+# camlibs/canon/library.c:905
+#: camlibs/canon/library.c:1145
 msgid "time set"
 msgstr "时间设置"
 
-#: camlibs/canon/library.c:813
+# camlibs/canon/library.c:907
+#: camlibs/canon/library.c:1147
 msgid "could not set time"
 msgstr "无法设置时间"
 
-#: camlibs/canon/library.c:1005
+# camlibs/canon/library.c:1107
+#: camlibs/canon/library.c:1366
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr "给出未知端口类型 %i = 0x%x。不可能初始化。"
 
+# camlibs/canon/serial.c:625 camlibs/canon/serial.c:690
 #: camlibs/canon/serial.c:625 camlibs/canon/serial.c:690
 msgid "Battery exhausted, camera off."
 msgstr "电池没电，关闭相机。"
 
+# camlibs/canon/serial.c:628
 #: camlibs/canon/serial.c:628
 msgid "ERROR: unexpected message"
 msgstr "错误：未预期的消息"
 
+# camlibs/canon/serial.c:638
 #: camlibs/canon/serial.c:638
 msgid "ERROR: message overrun"
 msgstr "错误：过多的消息"
 
+# camlibs/canon/serial.c:667
 #: camlibs/canon/serial.c:667
 msgid "ERROR: out of sequence."
 msgstr "错误：顺序错误。"
 
+# camlibs/canon/serial.c:672
 #: camlibs/canon/serial.c:672
 msgid "ERROR: unexpected packet type."
 msgstr "错误：未预期的包类型。"
 
+# camlibs/canon/serial.c:682
 #: camlibs/canon/serial.c:682
 msgid "ERROR: message format error."
 msgstr "错误：消息格式错误。"
 
+# camlibs/canon/serial.c:694
 #: camlibs/canon/serial.c:694
 msgid "ERROR: unexpected message2."
 msgstr "错误：未预期的消息2。"
 
+# camlibs/canon/serial.c:888
 #: camlibs/canon/serial.c:888
 msgid "Uploading file..."
 msgstr "正在上载文件..."
 
+# camlibs/canon/serial.c:946 camlibs/digita/digita.c:256
 #: camlibs/canon/serial.c:946 camlibs/digita/digita.c:256
 msgid "Getting file..."
 msgstr "正在获取文件..."
 
+# camlibs/canon/serial.c:1172
 #: camlibs/canon/serial.c:1172
 msgid "Error changing speed."
 msgstr "改变速度出错。"
 
+# camlibs/canon/serial.c:1181
 #: camlibs/canon/serial.c:1181
 msgid "Resetting protocol..."
 msgstr "正在重置协议..."
 
+# camlibs/canon/serial.c:1190
 #: camlibs/canon/serial.c:1190
 msgid "Camera OK.\n"
 msgstr "相机就绪。\n"
 
+# camlibs/canon/serial.c:1203
 #. Camera was off...
 #: camlibs/canon/serial.c:1203
 msgid "Looking for camera ..."
 msgstr "正在寻找相机..."
 
+# camlibs/canon/serial.c:1213
 #: camlibs/canon/serial.c:1213
 msgid "Trying to contact camera..."
 msgstr "正试图与相机联络..."
 
+# camlibs/canon/serial.c:1217
 #: camlibs/canon/serial.c:1217
 msgid "Communication error 1"
 msgstr "通讯错误 1"
 
+# camlibs/canon/serial.c:1227 camlibs/canon/serial.c:1231
+# camlibs/dimera/dimera3500.c:970
 #: camlibs/canon/serial.c:1227 camlibs/canon/serial.c:1231
 #: camlibs/dimera/dimera3500.c:970
 msgid "No response from camera"
 msgstr "相机无应答"
 
+# camlibs/canon/serial.c:1235
 #: camlibs/canon/serial.c:1235
 msgid "Unrecognized response"
 msgstr "不可识别的应答"
 
+# camlibs/canon/serial.c:1278
 #: camlibs/canon/serial.c:1278
 msgid "Bad EOT"
 msgstr "错误的 EOT"
 
+# camlibs/canon/serial.c:1284
 #: camlibs/canon/serial.c:1284
 msgid "Communication error 2"
 msgstr "通讯错误 2"
 
+# camlibs/canon/serial.c:1307
 #: camlibs/canon/serial.c:1307
 msgid "Communication error 3"
 msgstr "通讯错误 3"
 
+# camlibs/canon/serial.c:1311
 #: camlibs/canon/serial.c:1311
 msgid "Changing speed... wait..."
 msgstr "正在改变速度... 请等待..."
 
+# camlibs/canon/serial.c:1316
 #: camlibs/canon/serial.c:1316
 msgid "Error changing speed"
 msgstr "改变速度出错"
 
+# camlibs/canon/serial.c:1328
 #: camlibs/canon/serial.c:1328
 msgid "Error waiting ACK during initialization retrying"
 msgstr "初始化重试中等待 ACK 时出错"
 
+# camlibs/canon/serial.c:1334
 #: camlibs/canon/serial.c:1334
 msgid "Error waiting ACK during initialization"
 msgstr "初始化中等待 ACK 时出错"
 
+# camlibs/canon/serial.c:1338
 #: camlibs/canon/serial.c:1338
 msgid "Connected to camera"
 msgstr "已连接到相机"
 
+# camlibs/canon/serial.c:1400
 #: camlibs/canon/serial.c:1400
 msgid "Getting thumbnail..."
 msgstr "正在获取缩略图..."
 
-#: camlibs/canon/usb.c:215
+# camlibs/canon/usb.c:215
+#: camlibs/canon/usb.c:217
 msgid "Could not apply USB settings"
 msgstr "无法应用 USB 设置"
 
-#: camlibs/canon/usb.c:240
+# camlibs/canon/usb.c:240
+#: camlibs/canon/usb.c:242
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
 msgstr "相机未就绪，多个“鉴别相机”请求均失败：%s"
 
-#: camlibs/canon/usb.c:249
+# camlibs/canon/usb.c:249
+#: camlibs/canon/usb.c:251
 #, c-format
 msgid "Camera not ready, could not lock camera keys: %s"
 msgstr "相机未就绪，无法锁定相机键：%s"
 
-#: camlibs/canon/usb.c:581
+# camlibs/canon/usb.c:640
+#: camlibs/canon/usb.c:642
 msgid "Receiving data..."
 msgstr "正在接收数据..."
 
-#: camlibs/canon/usb.c:811
+#: camlibs/canon/usb.c:937
+msgid ""
+"File was too big. You may have to turn your camera off and back on before "
+"uploading more files."
+msgstr "文件太大。你可能需要将相机关闭再打开，才能上传更多文件。"
+
+# camlibs/canon/usb.c:871
+#: camlibs/canon/usb.c:1033
 #, c-format
 msgid "Detected a '%s'."
 msgstr "已监测到一个“%s”。"
 
+# camlibs/digita/digita.c:396
 #: camlibs/digita/digita.c:396
 msgid ""
 "Digita\n"
@@ -428,33 +525,40 @@ msgstr ""
 "Digita\n"
 "Johannes Erdfelt <johannes@erdfelt.com>"
 
+# camlibs/dimera/dimera3500.c:295
 #: camlibs/dimera/dimera3500.c:295
 #, c-format
 msgid ""
 "Only root folder is supported - you requested a file listing for folder '%s'."
 msgstr "仅支持根文件夹 - 您请求文件“%s”的文件列表。"
 
+# camlibs/dimera/dimera3500.c:303 camlibs/dimera/dimera3500.c:497
 #: camlibs/dimera/dimera3500.c:303 camlibs/dimera/dimera3500.c:497
 msgid "Problem getting number of images"
 msgstr "获取图像数量时出问题"
 
+# camlibs/dimera/dimera3500.c:347
 #: camlibs/dimera/dimera3500.c:347
 msgid "Image type is not supported"
 msgstr "图像类型不支持"
 
+# camlibs/dimera/dimera3500.c:402 camlibs/dimera/dimera3500.c:648
 #: camlibs/dimera/dimera3500.c:402 camlibs/dimera/dimera3500.c:648
 msgid "Problem getting image information"
 msgstr "获取图像信息时出问题"
 
+# camlibs/dimera/dimera3500.c:433
 #: camlibs/dimera/dimera3500.c:433
 msgid "Capture type is not supported"
 msgstr "不支持的捕捉类型"
 
+# camlibs/dimera/dimera3500.c:518
 #: camlibs/dimera/dimera3500.c:518
 #, c-format
 msgid " (battery is %d%% full)"
 msgstr " (电池 %d%% 满)"
 
+# camlibs/dimera/dimera3500.c:522
 #: camlibs/dimera/dimera3500.c:522
 #, c-format
 msgid ""
@@ -472,76 +576,95 @@ msgstr ""
 "分辨率设置为 %s\n"
 "相机使用电源 %s %s\n"
 
+# camlibs/dimera/dimera3500.c:533 camlibs/konica/library.c:744
+# camlibs/konica/library.c:984
 #. Flash
-#: camlibs/dimera/dimera3500.c:533 camlibs/konica/library.c:743
-#: camlibs/konica/library.c:983
+#: camlibs/dimera/dimera3500.c:533 camlibs/konica/library.c:744
+#: camlibs/konica/library.c:984
 msgid "Flash"
 msgstr "闪光灯"
 
+# camlibs/dimera/dimera3500.c:533
 #: camlibs/dimera/dimera3500.c:533
 msgid "NO Flash"
 msgstr "无闪光灯"
 
+# camlibs/dimera/dimera3500.c:535
 #: camlibs/dimera/dimera3500.c:535
 msgid "Dual Iris"
 msgstr "双光圈"
 
+# camlibs/dimera/dimera3500.c:535
 #: camlibs/dimera/dimera3500.c:535
 msgid "NO Dual Iris"
 msgstr "非双光圈"
 
+# camlibs/dimera/dimera3500.c:537
 #: camlibs/dimera/dimera3500.c:537
 msgid "Resolution Switch"
 msgstr "分辨率切换"
 
+# camlibs/dimera/dimera3500.c:537
 #: camlibs/dimera/dimera3500.c:537
 msgid "NO Resolution Switch"
 msgstr "无分辨率切换"
 
+# camlibs/dimera/dimera3500.c:539
 #: camlibs/dimera/dimera3500.c:539
 msgid "NO Power Light"
 msgstr "无电源指示灯"
 
+# camlibs/dimera/dimera3500.c:541
 #: camlibs/dimera/dimera3500.c:541
 msgid "ON"
 msgstr "开"
 
+# camlibs/dimera/dimera3500.c:541
 #: camlibs/dimera/dimera3500.c:541
 msgid "OFF"
 msgstr "关"
 
+# camlibs/dimera/dimera3500.c:543
 #: camlibs/dimera/dimera3500.c:543
 msgid "ready"
 msgstr "就绪"
 
+# camlibs/dimera/dimera3500.c:543
 #: camlibs/dimera/dimera3500.c:543
 msgid "NOT ready"
 msgstr "未就绪"
 
+# camlibs/dimera/dimera3500.c:545
 #: camlibs/dimera/dimera3500.c:545
 msgid "in fill mode"
 msgstr "处于填充模式"
 
+# camlibs/dimera/dimera3500.c:545
 #: camlibs/dimera/dimera3500.c:545
 msgid "NOT in fill mode"
 msgstr "不处于填充模式"
 
+# camlibs/dimera/dimera3500.c:547
 #: camlibs/dimera/dimera3500.c:547
 msgid "low (320x240)"
 msgstr "低 (320x240)"
 
+# camlibs/dimera/dimera3500.c:547
 #: camlibs/dimera/dimera3500.c:547
 msgid "high (640x480)"
 msgstr "高 (640x480)"
 
+# camlibs/dimera/dimera3500.c:549
 #: camlibs/dimera/dimera3500.c:549
 msgid "externally"
 msgstr "外部"
 
+# camlibs/dimera/dimera3500.c:549
 #: camlibs/dimera/dimera3500.c:549
 msgid "internally"
 msgstr "内部"
 
+# camlibs/dimera/dimera3500.c:559
 #: camlibs/dimera/dimera3500.c:559
 msgid ""
 "* Image glitches or problems communicating are\n"
@@ -560,6 +683,7 @@ msgstr ""
 "  捉预览函数自动设定的。\n"
 "* 当前图像质量比可能的图像质量低。\n"
 
+# camlibs/dimera/dimera3500.c:573
 #: camlibs/dimera/dimera3500.c:573
 msgid ""
 "gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
@@ -590,113 +714,146 @@ msgstr ""
 "     关于协议、原始数据格式的信息。\n"
 "     移植到 gphoto2\n"
 
+# camlibs/dimera/dimera3500.c:666
 #: camlibs/dimera/dimera3500.c:666
 msgid "Problem reading image from flash"
 msgstr "从闪存读取图像出问题"
 
+# camlibs/dimera/dimera3500.c:684 camlibs/dimera/dimera3500.c:850
+# camlibs/dimera/dimera3500.c:918
 #: camlibs/dimera/dimera3500.c:684 camlibs/dimera/dimera3500.c:850
 #: camlibs/dimera/dimera3500.c:918
 msgid "Out of memory"
 msgstr "内存耗尽"
 
+# camlibs/dimera/dimera3500.c:701 camlibs/dimera/dimera3500.c:737
+# camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:211
 #: camlibs/dimera/dimera3500.c:701 camlibs/dimera/dimera3500.c:737
-#: camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:211
+#: camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:214
 msgid "Downloading image..."
 msgstr "正在下载图像..."
 
+# camlibs/dimera/dimera3500.c:723 camlibs/dimera/dimera3500.c:759
 #: camlibs/dimera/dimera3500.c:723 camlibs/dimera/dimera3500.c:759
 msgid "Problem downloading image"
 msgstr "下载图像出问题"
 
+# camlibs/dimera/dimera3500.c:731
 #: camlibs/dimera/dimera3500.c:731
 msgid "User canceled download"
 msgstr "用户取消下载"
 
+# camlibs/dimera/dimera3500.c:865
 #: camlibs/dimera/dimera3500.c:865
 msgid "Problem taking live image"
 msgstr "获取现场图像有问题"
 
+# camlibs/dimera/dimera3500.c:937
 #: camlibs/dimera/dimera3500.c:937
 msgid "Problem opening port"
 msgstr "打开端口出问题"
 
+# camlibs/dimera/dimera3500.c:947
 #: camlibs/dimera/dimera3500.c:947
 msgid "Problem resetting camera"
 msgstr "重置相机出问题"
 
+# camlibs/dimera/dimera3500.c:957
 #: camlibs/dimera/dimera3500.c:957
 msgid "Problem setting camera communication speed"
 msgstr "设置相机通讯速度出问题"
 
+# camlibs/dimera/dimera3500.c:976
 #: camlibs/dimera/dimera3500.c:976
 msgid "Looks like a modem, not a camera"
 msgstr "看起来象调制解调器，而不象相机"
 
+# camlibs/directory/directory.c:159
 #: camlibs/directory/directory.c:159
 #, c-format
 msgid "Listing files in '%s'..."
 msgstr "正在“%s”中列举文件..."
 
+# camlibs/directory/directory.c:195
 #: camlibs/directory/directory.c:195
 #, c-format
 msgid "Could not get information about '%s' (%m)."
 msgstr "无法获取关于“%s”(%m) 的信息。"
 
+# camlibs/directory/directory.c:201
 #: camlibs/directory/directory.c:201
 #, c-format
 msgid "Could not follow the link '%s' (%m)."
 msgstr "无法跟随连接“%s”(%m)。"
 
+# camlibs/directory/directory.c:228
 #: camlibs/directory/directory.c:228
 #, c-format
 msgid "Listing folders in '%s'..."
 msgstr "正在“%s”中列举文件夹..."
 
+# camlibs/directory/directory.c:269
 #: camlibs/directory/directory.c:269
-#, fuzzy, c-format
+#, c-format
 msgid "Could not get information about '%s' in '%s' (%m)."
-msgstr "无法从“%2$s”(%3$m) 中获取关于“%1$s”的信息。"
+msgstr "无法从“%2$s”中获取关于“%1$s”的信息 (%3$m)。"
 
+# camlibs/directory/directory.c:275
 #: camlibs/directory/directory.c:275
-#, fuzzy, c-format
+#, c-format
 msgid "Could not follow the link '%s' in '%s' (%m)."
-msgstr "无法跟随“%2$s”(%3$m) 中的连接“%1$s”。"
+msgstr "无法跟随“%2$s”中的连接“%1$s”(%3$m)。"
 
+# camlibs/directory/directory.c:340
 #: camlibs/directory/directory.c:340
-#, fuzzy, c-format
+#, c-format
 msgid "Could not change time of file '%s' in '%s' (%m)."
-msgstr "无法改变“%2$s”(%3$m) 中的文件“%1$s”的时间。"
+msgstr "无法改变“%2$s”中的文件“%1$s”的时间(%3$m)。"
 
+# camlibs/directory/directory.c:421
 #: camlibs/directory/directory.c:421
 #, c-format
 msgid "Could not open '%s'."
 msgstr "无法打开“%s”。"
 
+# camlibs/directory/directory.c:461
 #: camlibs/directory/directory.c:461
 msgid "Directory Browse"
 msgstr "浏览目录"
 
+# camlibs/directory/directory.c:462 camlibs/directory/directory.c:493
 #: camlibs/directory/directory.c:462 camlibs/directory/directory.c:493
 msgid "View hidden directories"
 msgstr "查看隐藏的目录"
 
+# camlibs/directory/directory.c:506
 #: camlibs/directory/directory.c:506
 msgid ""
 "The Directory Browse \"camera\" lets you index photos on your hard drive."
 msgstr "目录浏览“相机”允许您为您硬盘上的照片编制索引。"
 
+# camlibs/directory/directory.c:515
 #: camlibs/directory/directory.c:515
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
 msgstr "目录浏览模式 - 由 Scott Fritzinger <scottf@unr.edu> 编制。"
 
+# camlibs/directory/directory.c:562
+#: camlibs/directory/directory.c:562
+#, c-format
+msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
+msgstr "无法删除文件夹“%2$s”中的文件“%1$s”(错误码 %3$i：%4$m)。"
+
+# camlibs/jamcam/jamcam.c:280
 #: camlibs/jamcam/jamcam.c:280
 msgid "jamcam library v"
 msgstr "jamcam 库 v"
 
+# camlibs/jamcam/jamcam.c:281 camlibs/panasonic/coolshot/coolshot.c:265
 #: camlibs/jamcam/jamcam.c:281 camlibs/panasonic/coolshot/coolshot.c:265
 msgid " "
 msgstr " "
 
+# camlibs/jamcam/jamcam.c:281
 #: camlibs/jamcam/jamcam.c:281
 msgid ""
 "\n"
@@ -711,14 +868,17 @@ msgstr ""
 "KBGear JamCam v2.0 & v3.0 数码相机\n"
 "\n"
 
+# camlibs/jamcam/library.c:336 camlibs/jd11/serial.c:455
 #: camlibs/jamcam/library.c:336 camlibs/jd11/serial.c:455
 msgid "Downloading data..."
 msgstr "正在下载数据..."
 
+# camlibs/jamcam/library.c:494 camlibs/jd11/serial.c:375
 #: camlibs/jamcam/library.c:494 camlibs/jd11/serial.c:375
 msgid "Downloading thumbnail..."
 msgstr "正在下载缩略图..."
 
+# camlibs/jd11/jd11.c:174
 #: camlibs/jd11/jd11.c:174
 msgid ""
 "The JD11 camera works rather well with this driver.\n"
@@ -735,6 +895,7 @@ msgstr ""
 "   - 缩略图 (64x48 PGM 格式)\n"
 "   - 全图 (640x480 PPM 格式)\n"
 
+# camlibs/jd11/jd11.c:187
 #: camlibs/jd11/jd11.c:187
 msgid ""
 "JD11\n"
@@ -747,6 +908,7 @@ msgstr ""
 "Jenoptik JD11 相机驱动程序。\n"
 "使用 WINE 和 IDA 对协议进行反向工程。"
 
+# camlibs/jd11/jd11.c:202 camlibs/jd11/jd11.c:254
 #.
 #. * Check if the widgets' values have changed. If yes, tell the camera.
 #.
@@ -754,31 +916,38 @@ msgstr ""
 msgid "Other Settings"
 msgstr "其它设置"
 
+# camlibs/jd11/jd11.c:207 camlibs/jd11/jd11.c:255
 #. Bulb Exposure Time
 #: camlibs/jd11/jd11.c:207 camlibs/jd11/jd11.c:255
 msgid "Bulb Exposure Time"
 msgstr "闪光灯闪光时间"
 
+# camlibs/jd11/jd11.c:215 camlibs/jd11/jd11.c:263
 #: camlibs/jd11/jd11.c:215 camlibs/jd11/jd11.c:263
 msgid "Color Settings"
 msgstr "色彩设置"
 
+# camlibs/jd11/jd11.c:221 camlibs/jd11/jd11.c:265
 #: camlibs/jd11/jd11.c:221 camlibs/jd11/jd11.c:265
 msgid "Red"
 msgstr "红"
 
+# camlibs/jd11/jd11.c:228 camlibs/jd11/jd11.c:270
 #: camlibs/jd11/jd11.c:228 camlibs/jd11/jd11.c:270
 msgid "Green"
 msgstr "绿"
 
+# camlibs/jd11/jd11.c:235 camlibs/jd11/jd11.c:275
 #: camlibs/jd11/jd11.c:235 camlibs/jd11/jd11.c:275
 msgid "Blue"
 msgstr "蓝"
 
+# camlibs/kodak/dc120/dc120.c:31
 #: camlibs/kodak/dc120/dc120.c:31
 msgid "CompactFlash Card"
 msgstr "闪存卡"
 
+# camlibs/kodak/dc120/dc120.c:364
 #: camlibs/kodak/dc120/dc120.c:364
 msgid ""
 "The Kodak DC120 camera uses the KDC file format for storing images. If you "
@@ -790,6 +959,7 @@ msgstr ""
 "像，您就需要下载程序“kdc2tiff”。该程序可以从 http://kdc2tiff.sourceforge.net "
 "得到。"
 
+# camlibs/kodak/dc120/dc120.c:376
 #: camlibs/kodak/dc120/dc120.c:376
 msgid ""
 "Kodak DC120 Camera Library\n"
@@ -802,51 +972,62 @@ msgstr ""
 "柯达 DC120 相机库。\n"
 "(它有广泛的需求)。"
 
-#: camlibs/kodak/dc120/library.c:122 camlibs/kodak/dc240/library.c:296
+# camlibs/kodak/dc120/library.c:122 camlibs/kodak/dc240/library.c:318
+# camlibs/panasonic/dc1000.c:424 camlibs/panasonic/dc1580.c:552
+#: camlibs/kodak/dc120/library.c:122 camlibs/kodak/dc240/library.c:318
 #: camlibs/panasonic/dc1000.c:424 camlibs/panasonic/dc1580.c:552
 msgid "Getting data..."
 msgstr "正在获取数据..."
 
+# camlibs/kodak/dc120/library.c:506
 #. Wait for command completion
 #: camlibs/kodak/dc120/library.c:506
 msgid "Waiting for completion..."
 msgstr "等待完成..."
 
+# camlibs/kodak/dc240/dc240.c:182
 #: camlibs/kodak/dc240/dc240.c:182
 #, c-format
 msgid "Model: Kodak %s\n"
 msgstr "型号：柯达 %s\n"
 
+# camlibs/kodak/dc240/dc240.c:183
 #: camlibs/kodak/dc240/dc240.c:183
 #, c-format
 msgid "Firmware version: %d.%02d\n"
 msgstr "固件版本：%d.%02d\n"
 
+# camlibs/kodak/dc240/dc240.c:185
 #: camlibs/kodak/dc240/dc240.c:185
 #, c-format
 msgid "Battery status: %s, AC Adapter: %s\n"
 msgstr "电池状态：%s，交流变压器：%s\n"
 
+# camlibs/kodak/dc240/dc240.c:189
 #: camlibs/kodak/dc240/dc240.c:189
 #, c-format
 msgid "Number of pictures: %d\n"
 msgstr "照片数量：%d\n"
 
+# camlibs/kodak/dc240/dc240.c:191
 #: camlibs/kodak/dc240/dc240.c:191
 #, c-format
 msgid "Space remaining: High: %d, Medium: %d, Low: %d\n"
 msgstr "剩余空间：高：%d，中：%d，低：%d\n"
 
+# camlibs/kodak/dc240/dc240.c:195
 #: camlibs/kodak/dc240/dc240.c:195
 #, c-format
 msgid "Memory card status (%d): %s\n"
 msgstr "存储卡状态 (%d)：%s\n"
 
+# camlibs/kodak/dc240/dc240.c:199
 #: camlibs/kodak/dc240/dc240.c:199
 #, c-format
 msgid "Total pictures captured: %d, Flashes fired: %d\n"
 msgstr "捕获照片总数：%d，闪光灯闪光次数：%d\n"
 
+# camlibs/kodak/dc240/dc240.c:213
 #: camlibs/kodak/dc240/dc240.c:213
 msgid ""
 "Kodak DC240 Camera Library\n"
@@ -861,46 +1042,57 @@ msgstr ""
 "支持柯达 DC240, DC280, DC3400 及 DC5000 相机的相机库。\n"
 "为 gPhoto2 重写并更新。"
 
-#: camlibs/kodak/dc240/library.c:539
+# camlibs/kodak/dc240/library.c:572
+#: camlibs/kodak/dc240/library.c:572
 msgid "OK"
 msgstr "确认"
 
-#: camlibs/kodak/dc240/library.c:542
+# camlibs/kodak/dc240/library.c:575
+#: camlibs/kodak/dc240/library.c:575
 msgid "Weak"
 msgstr "弱"
 
-#: camlibs/kodak/dc240/library.c:545
+# camlibs/kodak/dc240/library.c:578
+#: camlibs/kodak/dc240/library.c:578
 msgid "Empty"
 msgstr "空"
 
-#: camlibs/kodak/dc240/library.c:550 camlibs/kodak/dc240/library.c:565
+# camlibs/kodak/dc240/library.c:583 camlibs/kodak/dc240/library.c:598
+#: camlibs/kodak/dc240/library.c:583 camlibs/kodak/dc240/library.c:598
 msgid "Invalid"
 msgstr "非法"
 
-#: camlibs/kodak/dc240/library.c:557
+# camlibs/kodak/dc240/library.c:590
+#: camlibs/kodak/dc240/library.c:590
 msgid "Not used"
 msgstr "未使用"
 
-#: camlibs/kodak/dc240/library.c:560
+# camlibs/kodak/dc240/library.c:593
+#: camlibs/kodak/dc240/library.c:593
 msgid "In use"
 msgstr "使用中"
 
-#: camlibs/kodak/dc240/library.c:574
+# camlibs/kodak/dc240/library.c:607
+#: camlibs/kodak/dc240/library.c:607
 msgid "Card is open"
 msgstr "卡已打开"
 
-#: camlibs/kodak/dc240/library.c:577
+# camlibs/kodak/dc240/library.c:610
+#: camlibs/kodak/dc240/library.c:610
 msgid "Card is not open"
 msgstr "卡未打开"
 
-#: camlibs/kodak/dc240/library.c:581
+# camlibs/kodak/dc240/library.c:614
+#: camlibs/kodak/dc240/library.c:614
 msgid "Card is not formatted"
 msgstr "卡尚未格式化"
 
-#: camlibs/kodak/dc240/library.c:585
+# camlibs/kodak/dc240/library.c:618
+#: camlibs/kodak/dc240/library.c:618
 msgid "No card"
 msgstr "无卡"
 
+# camlibs/kodak/dc3200/dc3200.c:38
 #: camlibs/kodak/dc3200/dc3200.c:38
 msgid ""
 "There is currently an operation in progress. This camera only supports one "
@@ -909,11 +1101,13 @@ msgstr ""
 "现在正有一个操作在进行。该相机在同一时刻仅支持一个操作。请等待直到当前操作完"
 "成。"
 
+# camlibs/kodak/dc3200/dc3200.c:142
 #. we have to re-init the camera
 #: camlibs/kodak/dc3200/dc3200.c:142
 msgid "camera inactive for > 9 seconds, re-initing.\n"
 msgstr "相机非活跃时间大于 9 秒，正在重新初始化。\n"
 
+# camlibs/kodak/dc3200/dc3200.c:431
 #: camlibs/kodak/dc3200/dc3200.c:431
 msgid ""
 "Known problems:\n"
@@ -928,6 +1122,7 @@ msgstr ""
 "1. 如果柯达 DC3200 没有在 10 秒内收到至少一个命令，它就将超时，并必须重新初始"
 "化。如果您发现相机没有应答，请重新选择相机。这将导致相机重新初始化。"
 
+# camlibs/kodak/dc3200/dc3200.c:444
 #: camlibs/kodak/dc3200/dc3200.c:444
 msgid ""
 "Kodak DC3200 Driver\n"
@@ -940,31 +1135,37 @@ msgstr ""
 "\n"
 "欢迎问题和评论。"
 
+# camlibs/kodak/dc3200/library.c:386
 #: camlibs/kodak/dc3200/library.c:386
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: camlibs/konica/library.c:141
+# camlibs/konica/library.c:142
+#: camlibs/konica/library.c:142
 msgid "Getting file list..."
 msgstr "正在获取文件列表..."
 
-#: camlibs/konica/library.c:306
+# camlibs/konica/library.c:307
+#: camlibs/konica/library.c:307
 msgid "Testing different speeds..."
 msgstr "正在测试不同的速度..."
 
-#: camlibs/konica/library.c:320
+# camlibs/konica/library.c:321
+#: camlibs/konica/library.c:321
 msgid ""
 "The camera could not be contacted. Please make sure it is conntected to the "
 "computer and turned on."
 msgstr "无法与相机联络。请确信相机已经连接到计算机并确认相机已打开。"
 
-#: camlibs/konica/library.c:404
+# camlibs/konica/library.c:405
+#: camlibs/konica/library.c:405
 #, c-format
 msgid "%i pictures could not be deleted because they are protected"
 msgstr "由于有 %i 个照片已被保护，所以无法被删除"
 
-#: camlibs/konica/library.c:497
+# camlibs/konica/library.c:498
+#: camlibs/konica/library.c:498
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -983,9 +1184,10 @@ msgstr ""
 "名称：%s,\n"
 "制造商：%s\n"
 
+# camlibs/konica/library.c:589
 #. Translators: please write 'M"uller' (that is, with u-umlaut)
 #. if your charset allows it.  If not, use "Mueller".
-#: camlibs/konica/library.c:588
+#: camlibs/konica/library.c:589
 msgid ""
 "Konica library\n"
 "Lutz Mueller <lutz@users.sourceforge.net>\n"
@@ -995,232 +1197,458 @@ msgstr ""
 "Lutz Mueller <lutz@users.sourceforge.net>\n"
 "支持所有柯尼卡相机和几种惠普相机。"
 
-#: camlibs/konica/library.c:616
+# camlibs/konica/library.c:617
+#: camlibs/konica/library.c:617
 msgid "Getting configuration..."
 msgstr "正在获取配置..."
 
+# camlibs/konica/library.c:624
 #. Create the window.
-#: camlibs/konica/library.c:623
+#: camlibs/konica/library.c:624
 msgid "Konica Configuration"
 msgstr "柯尼卡配置"
 
+# camlibs/konica/library.c:629 camlibs/konica/library.c:840
 #. **********************
 #. Persistent Settings
 #. **********************
-#: camlibs/konica/library.c:628 camlibs/konica/library.c:839
+#: camlibs/konica/library.c:629 camlibs/konica/library.c:840
 msgid "Persistent Settings"
 msgstr "永久设置"
 
+# camlibs/konica/library.c:633 camlibs/konica/library.c:844
+# camlibs/polaroid/pdc700.c:1005 camlibs/polaroid/pdc700.c:1018
+# camlibs/polaroid/pdc700.c:1088
 #. Date
-#: camlibs/konica/library.c:632 camlibs/konica/library.c:843
-#: camlibs/polaroid/pdc700.c:965 camlibs/polaroid/pdc700.c:1031
+#: camlibs/konica/library.c:633 camlibs/konica/library.c:844
+#: camlibs/polaroid/pdc700.c:1005 camlibs/polaroid/pdc700.c:1018
+#: camlibs/polaroid/pdc700.c:1088
 msgid "Date and Time"
 msgstr "日期和时间"
 
+# camlibs/konica/library.c:647 camlibs/konica/library.c:858
 #. Beep
-#: camlibs/konica/library.c:646 camlibs/konica/library.c:857
+#: camlibs/konica/library.c:647 camlibs/konica/library.c:858
 msgid "Beep"
 msgstr "鸣笛"
 
-#: camlibs/konica/library.c:648 camlibs/konica/library.c:655
-#: camlibs/konica/library.c:746 camlibs/konica/library.c:755
-#: camlibs/konica/library.c:988 camlibs/sierra/sierra.c:1000
-#: camlibs/sierra/sierra.c:1006 camlibs/sierra/sierra.c:1267
+# camlibs/konica/library.c:649 camlibs/konica/library.c:656
+# camlibs/konica/library.c:747 camlibs/konica/library.c:756
+# camlibs/konica/library.c:989 camlibs/sierra/sierra.c:1003
+# camlibs/sierra/sierra.c:1009 camlibs/sierra/sierra.c:1272
+#: camlibs/konica/library.c:649 camlibs/konica/library.c:656
+#: camlibs/konica/library.c:747 camlibs/konica/library.c:756
+#: camlibs/konica/library.c:989 camlibs/sierra/sierra.c:1015
+#: camlibs/sierra/sierra.c:1021 camlibs/sierra/sierra.c:1284
 msgid "On"
 msgstr "开"
 
-#: camlibs/konica/library.c:649 camlibs/konica/library.c:652
-#: camlibs/konica/library.c:745 camlibs/konica/library.c:752
-#: camlibs/konica/library.c:860 camlibs/konica/library.c:986
-#: camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:894
-#: camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1004
-#: camlibs/sierra/sierra.c:1189 camlibs/sierra/sierra.c:1269
-#: camlibs/sierra/sierra.c:1393 camlibs/sierra/sierra.c:1401
-#: camlibs/sierra/sierra.c:1628
+# camlibs/konica/library.c:650 camlibs/konica/library.c:653
+# camlibs/konica/library.c:746 camlibs/konica/library.c:753
+# camlibs/konica/library.c:861 camlibs/konica/library.c:987
+# camlibs/sierra/sierra.c:888 camlibs/sierra/sierra.c:897
+# camlibs/sierra/sierra.c:1004 camlibs/sierra/sierra.c:1007
+# camlibs/sierra/sierra.c:1194 camlibs/sierra/sierra.c:1274
+# camlibs/sierra/sierra.c:1398 camlibs/sierra/sierra.c:1406
+# camlibs/sierra/sierra.c:1633
+#: camlibs/konica/library.c:650 camlibs/konica/library.c:653
+#: camlibs/konica/library.c:746 camlibs/konica/library.c:753
+#: camlibs/konica/library.c:861 camlibs/konica/library.c:987
+#: camlibs/sierra/sierra.c:900 camlibs/sierra/sierra.c:909
+#: camlibs/sierra/sierra.c:1016 camlibs/sierra/sierra.c:1019
+#: camlibs/sierra/sierra.c:1206 camlibs/sierra/sierra.c:1286
+#: camlibs/sierra/sierra.c:1410 camlibs/sierra/sierra.c:1418
+#: camlibs/sierra/sierra.c:1645
 msgid "Off"
 msgstr "关"
 
-#: camlibs/konica/library.c:658
+# camlibs/konica/library.c:659
+#: camlibs/konica/library.c:659
 msgid "Shall the camera beep when taking a picture?"
 msgstr "相机是否要在拍摄一张照片时鸣笛？"
 
+# camlibs/konica/library.c:663 camlibs/konica/library.c:871
 #. Self Timer Time
-#: camlibs/konica/library.c:662 camlibs/konica/library.c:870
+#: camlibs/konica/library.c:663 camlibs/konica/library.c:871
 msgid "Self Timer Time"
 msgstr "自动定时器时间"
 
+# camlibs/konica/library.c:670 camlibs/konica/library.c:879
 #. Auto Off Time
-#: camlibs/konica/library.c:669 camlibs/konica/library.c:878
+#: camlibs/konica/library.c:670 camlibs/konica/library.c:879
 msgid "Auto Off Time"
 msgstr "自动关机时间"
 
+# camlibs/konica/library.c:677 camlibs/konica/library.c:887
 #. Slide Show Interval
-#: camlibs/konica/library.c:676 camlibs/konica/library.c:886
+#: camlibs/konica/library.c:677 camlibs/konica/library.c:887
 msgid "Slide Show Interval"
 msgstr "幻灯片显示间隔"
 
+# camlibs/konica/library.c:684 camlibs/konica/library.c:896
+# camlibs/sierra/sierra.c:786 camlibs/sierra/sierra.c:1117
+# camlibs/sierra/sierra.c:1468 camlibs/sierra/sierra.c:1677
 #. Resolution
-#: camlibs/konica/library.c:683 camlibs/konica/library.c:895
-#: camlibs/sierra/sierra.c:784 camlibs/sierra/sierra.c:1113
-#: camlibs/sierra/sierra.c:1463 camlibs/sierra/sierra.c:1672
+#: camlibs/konica/library.c:684 camlibs/konica/library.c:896
+#: camlibs/sierra/sierra.c:798 camlibs/sierra/sierra.c:1129
+#: camlibs/sierra/sierra.c:1480 camlibs/sierra/sierra.c:1689
 msgid "Resolution"
 msgstr "分辨率"
 
-#: camlibs/konica/library.c:685 camlibs/konica/library.c:693
-#: camlibs/konica/library.c:900
+# camlibs/konica/library.c:686 camlibs/konica/library.c:694
+# camlibs/konica/library.c:901
+#: camlibs/konica/library.c:686 camlibs/konica/library.c:694
+#: camlibs/konica/library.c:901
 msgid "Low (576 x 436)"
 msgstr "低 (576 x 436)"
 
-#: camlibs/konica/library.c:686 camlibs/konica/library.c:696
+# camlibs/konica/library.c:687 camlibs/konica/library.c:697
+#: camlibs/konica/library.c:687 camlibs/konica/library.c:697
 msgid "Medium (1152 x 872)"
 msgstr "中 (1152 x 872)"
 
-#: camlibs/konica/library.c:687 camlibs/konica/library.c:690
-#: camlibs/konica/library.c:898
+# camlibs/konica/library.c:688 camlibs/konica/library.c:691
+# camlibs/konica/library.c:899
+#: camlibs/konica/library.c:688 camlibs/konica/library.c:691
+#: camlibs/konica/library.c:899
 msgid "High (1152 x 872)"
 msgstr "高 (1152 x 872)"
 
+# camlibs/konica/library.c:704 camlibs/konica/library.c:912
 #. **************
 #. Localization
 #. **************
-#: camlibs/konica/library.c:703 camlibs/konica/library.c:911
+#: camlibs/konica/library.c:704 camlibs/konica/library.c:912
 msgid "Localization"
 msgstr "本地化"
 
+# camlibs/konica/library.c:710 camlibs/konica/library.c:915
+# camlibs/sierra/sierra.c:1544 camlibs/sierra/sierra.c:1728
 #. Localization File
-#: camlibs/konica/library.c:709 camlibs/konica/library.c:914
-#: camlibs/sierra/sierra.c:1539 camlibs/sierra/sierra.c:1723
+#: camlibs/konica/library.c:710 camlibs/konica/library.c:915
+#: camlibs/sierra/sierra.c:1556 camlibs/sierra/sierra.c:1740
 msgid "Language"
 msgstr "语言"
 
-#: camlibs/konica/library.c:716 camlibs/konica/library.c:725
-#: camlibs/konica/library.c:733 camlibs/konica/library.c:919
-#: camlibs/konica/library.c:944 camlibs/konica/library.c:962
+# camlibs/konica/library.c:717 camlibs/konica/library.c:726
+# camlibs/konica/library.c:734 camlibs/konica/library.c:920
+# camlibs/konica/library.c:945 camlibs/konica/library.c:963
+#: camlibs/konica/library.c:717 camlibs/konica/library.c:726
+#: camlibs/konica/library.c:734 camlibs/konica/library.c:920
+#: camlibs/konica/library.c:945 camlibs/konica/library.c:963
 msgid "None selected"
 msgstr "未选择"
 
+# camlibs/konica/library.c:721 camlibs/konica/library.c:942
 #. TV output format
-#: camlibs/konica/library.c:720 camlibs/konica/library.c:941
+#: camlibs/konica/library.c:721 camlibs/konica/library.c:942
 msgid "TV Output Format"
 msgstr "电视输出格式"
 
-#: camlibs/konica/library.c:722 camlibs/konica/library.c:945
+# camlibs/konica/library.c:723 camlibs/konica/library.c:946
+#: camlibs/konica/library.c:723 camlibs/konica/library.c:946
 msgid "NTSC"
 msgstr "NTSC"
 
-#: camlibs/konica/library.c:723 camlibs/konica/library.c:947
+# camlibs/konica/library.c:724 camlibs/konica/library.c:948
+#: camlibs/konica/library.c:724 camlibs/konica/library.c:948
 msgid "PAL"
 msgstr "PAL"
 
-#: camlibs/konica/library.c:724 camlibs/konica/library.c:949
+# camlibs/konica/library.c:725 camlibs/konica/library.c:950
+#: camlibs/konica/library.c:725 camlibs/konica/library.c:950
 msgid "Do not display TV menu"
 msgstr "请勿显示电视菜单"
 
+# camlibs/konica/library.c:729 camlibs/konica/library.c:960
 #. Date format
-#: camlibs/konica/library.c:728 camlibs/konica/library.c:959
+#: camlibs/konica/library.c:729 camlibs/konica/library.c:960
 msgid "Date Format"
 msgstr "日期格式"
 
-#: camlibs/konica/library.c:730 camlibs/konica/library.c:963
+# camlibs/konica/library.c:731 camlibs/konica/library.c:964
+#: camlibs/konica/library.c:731 camlibs/konica/library.c:964
 msgid "Month/Day/Year"
 msgstr "月/日/年"
 
-#: camlibs/konica/library.c:731 camlibs/konica/library.c:965
+# camlibs/konica/library.c:732 camlibs/konica/library.c:966
+#: camlibs/konica/library.c:732 camlibs/konica/library.c:966
 msgid "Day/Month/Year"
 msgstr "日/月/年"
 
-#: camlibs/konica/library.c:732 camlibs/konica/library.c:967
+# camlibs/konica/library.c:733 camlibs/konica/library.c:968
+#: camlibs/konica/library.c:733 camlibs/konica/library.c:968
 msgid "Year/Month/Day"
 msgstr "年/月/日"
 
+# camlibs/konica/library.c:739 camlibs/konica/library.c:980
 #. ******************************
 #. Session-persistent Settings
 #. ******************************
-#: camlibs/konica/library.c:738 camlibs/konica/library.c:979
+#: camlibs/konica/library.c:739 camlibs/konica/library.c:980
 msgid "Session-persistent Settings"
 msgstr "会话永久设置"
 
-#: camlibs/konica/library.c:747 camlibs/konica/library.c:758
-#: camlibs/konica/library.c:990
+# camlibs/konica/library.c:748 camlibs/konica/library.c:759
+# camlibs/konica/library.c:991
+#: camlibs/konica/library.c:748 camlibs/konica/library.c:759
+#: camlibs/konica/library.c:991
 msgid "On, red-eye reduction"
 msgstr "开，消红眼"
 
-#: camlibs/konica/library.c:748 camlibs/konica/library.c:764
-#: camlibs/konica/library.c:779 camlibs/konica/library.c:782
-#: camlibs/konica/library.c:992 camlibs/konica/library.c:1022
-#: camlibs/sierra/sierra.c:785 camlibs/sierra/sierra.c:791
-#: camlibs/sierra/sierra.c:824 camlibs/sierra/sierra.c:830
-#: camlibs/sierra/sierra.c:883 camlibs/sierra/sierra.c:890
-#: camlibs/sierra/sierra.c:944 camlibs/sierra/sierra.c:951
-#: camlibs/sierra/sierra.c:1117 camlibs/sierra/sierra.c:1145
-#: camlibs/sierra/sierra.c:1185 camlibs/sierra/sierra.c:1228
-#: camlibs/sierra/sierra.c:1391 camlibs/sierra/sierra.c:1397
-#: camlibs/sierra/sierra.c:1419 camlibs/sierra/sierra.c:1424
-#: camlibs/sierra/sierra.c:1624 camlibs/sierra/sierra.c:1644
+# camlibs/konica/library.c:749 camlibs/konica/library.c:765
+# camlibs/konica/library.c:780 camlibs/konica/library.c:783
+# camlibs/konica/library.c:993 camlibs/konica/library.c:1023
+# camlibs/sierra/sierra.c:787 camlibs/sierra/sierra.c:793
+# camlibs/sierra/sierra.c:827 camlibs/sierra/sierra.c:833
+# camlibs/sierra/sierra.c:886 camlibs/sierra/sierra.c:893
+# camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:954
+# camlibs/sierra/sierra.c:1121 camlibs/sierra/sierra.c:1150
+# camlibs/sierra/sierra.c:1190 camlibs/sierra/sierra.c:1233
+# camlibs/sierra/sierra.c:1396 camlibs/sierra/sierra.c:1402
+# camlibs/sierra/sierra.c:1424 camlibs/sierra/sierra.c:1429
+# camlibs/sierra/sierra.c:1629 camlibs/sierra/sierra.c:1649
+#: camlibs/konica/library.c:749 camlibs/konica/library.c:765
+#: camlibs/konica/library.c:780 camlibs/konica/library.c:783
+#: camlibs/konica/library.c:993 camlibs/konica/library.c:1023
+#: camlibs/sierra/sierra.c:799 camlibs/sierra/sierra.c:805
+#: camlibs/sierra/sierra.c:839 camlibs/sierra/sierra.c:845
+#: camlibs/sierra/sierra.c:898 camlibs/sierra/sierra.c:905
+#: camlibs/sierra/sierra.c:959 camlibs/sierra/sierra.c:966
+#: camlibs/sierra/sierra.c:1133 camlibs/sierra/sierra.c:1162
+#: camlibs/sierra/sierra.c:1202 camlibs/sierra/sierra.c:1245
+#: camlibs/sierra/sierra.c:1408 camlibs/sierra/sierra.c:1414
+#: camlibs/sierra/sierra.c:1436 camlibs/sierra/sierra.c:1441
+#: camlibs/sierra/sierra.c:1641 camlibs/sierra/sierra.c:1661
 msgid "Auto"
 msgstr "自动"
 
-#: camlibs/konica/library.c:749 camlibs/konica/library.c:761
+# camlibs/konica/library.c:750 camlibs/konica/library.c:762
+#: camlibs/konica/library.c:750 camlibs/konica/library.c:762
 msgid "Auto, red-eye reduction"
 msgstr "自动，消红眼"
 
+# camlibs/konica/library.c:770 camlibs/konica/library.c:1002
 #. Exposure
-#: camlibs/konica/library.c:769 camlibs/konica/library.c:1001
+#: camlibs/konica/library.c:770 camlibs/konica/library.c:1002
 msgid "Exposure"
 msgstr "曝光"
 
+# camlibs/konica/library.c:777 camlibs/konica/library.c:1010
 #. Focus
-#: camlibs/konica/library.c:776 camlibs/konica/library.c:1009
+#: camlibs/konica/library.c:777 camlibs/konica/library.c:1010
 msgid "Focus"
 msgstr "聚焦"
 
-#: camlibs/konica/library.c:778 camlibs/konica/library.c:785
-#: camlibs/sierra/sierra.c:1420 camlibs/sierra/sierra.c:1426
-#: camlibs/sierra/sierra.c:1646
+# camlibs/konica/library.c:779 camlibs/konica/library.c:786
+# camlibs/sierra/sierra.c:1425 camlibs/sierra/sierra.c:1431
+# camlibs/sierra/sierra.c:1651
+#: camlibs/konica/library.c:779 camlibs/konica/library.c:786
+#: camlibs/sierra/sierra.c:1437 camlibs/sierra/sierra.c:1443
+#: camlibs/sierra/sierra.c:1663
 msgid "Fixed"
 msgstr "固定"
 
+# camlibs/konica/library.c:793 camlibs/konica/library.c:1015
 #. **********************
 #. Volatile Settings
 #. **********************
-#: camlibs/konica/library.c:792 camlibs/konica/library.c:1014
+#: camlibs/konica/library.c:793 camlibs/konica/library.c:1015
 msgid "Volatile Settings"
 msgstr "临时设定"
 
+# camlibs/konica/library.c:797 camlibs/konica/library.c:1018
+# camlibs/polaroid/pdc700.c:163
 #. Self Timer
-#: camlibs/konica/library.c:796 camlibs/konica/library.c:1017
-#: camlibs/polaroid/pdc700.c:153
+#: camlibs/konica/library.c:797 camlibs/konica/library.c:1018
+#: camlibs/polaroid/pdc700.c:163
 msgid "Self Timer"
 msgstr "自动定时"
 
-#: camlibs/konica/library.c:798 camlibs/konica/library.c:1027
+# camlibs/konica/library.c:799 camlibs/konica/library.c:1028
+#: camlibs/konica/library.c:799 camlibs/konica/library.c:1028
 msgid "Self Timer (only next picture)"
 msgstr "自动定时 (仅用于下一张照片)"
 
-#: camlibs/konica/library.c:799 camlibs/konica/library.c:806
-#: camlibs/minolta/dimagev/dimagev.c:407 camlibs/sierra/sierra.c:853
-#: camlibs/sierra/sierra.c:860 camlibs/sierra/sierra.c:914
-#: camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:976
-#: camlibs/sierra/sierra.c:982 camlibs/sierra/sierra.c:1164
-#: camlibs/sierra/sierra.c:1207 camlibs/sierra/sierra.c:1251
-#: camlibs/sierra/sierra.c:1446 camlibs/sierra/sierra.c:1450
-#: camlibs/sierra/sierra.c:1663
+# camlibs/konica/library.c:800 camlibs/konica/library.c:807
+# camlibs/minolta/dimagev/dimagev.c:407 camlibs/sierra/sierra.c:856
+# camlibs/sierra/sierra.c:863 camlibs/sierra/sierra.c:917
+# camlibs/sierra/sierra.c:924 camlibs/sierra/sierra.c:979
+# camlibs/sierra/sierra.c:985 camlibs/sierra/sierra.c:1169
+# camlibs/sierra/sierra.c:1212 camlibs/sierra/sierra.c:1256
+# camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1455
+# camlibs/sierra/sierra.c:1668
+#: camlibs/konica/library.c:800 camlibs/konica/library.c:807
+#: camlibs/minolta/dimagev/dimagev.c:407 camlibs/sierra/sierra.c:868
+#: camlibs/sierra/sierra.c:875 camlibs/sierra/sierra.c:929
+#: camlibs/sierra/sierra.c:936 camlibs/sierra/sierra.c:991
+#: camlibs/sierra/sierra.c:997 camlibs/sierra/sierra.c:1181
+#: camlibs/sierra/sierra.c:1224 camlibs/sierra/sierra.c:1268
+#: camlibs/sierra/sierra.c:1463 camlibs/sierra/sierra.c:1467
+#: camlibs/sierra/sierra.c:1680
 msgid "Normal"
 msgstr "普通"
 
-#: camlibs/konica/library.c:802
+# camlibs/konica/library.c:803
+#: camlibs/konica/library.c:803
 msgid "Self Timer (next picture only)"
 msgstr "自动定时 (仅用于下一张照片)"
 
-#: camlibs/konica/library.c:1058
+# camlibs/konica/library.c:1059
+#: camlibs/konica/library.c:1059
 #, c-format
 msgid "Could not find localization data at '%s'"
 msgstr "无法在“%s”找到本地化数据"
 
-#: camlibs/konica/library.c:1122
+# camlibs/konica/library.c:1123
+#: camlibs/konica/library.c:1123
 msgid "Localization file too long!"
 msgstr "本地化文件太大！"
 
+# camlibs/konica/lowlevel.c:382 camlibs/polaroid/pdc700.c:314
+# camlibs/sierra/library.c:989
+#: camlibs/konica/lowlevel.c:382 camlibs/polaroid/pdc700.c:314
+#: camlibs/sierra/library.c:980
+msgid "Downloading..."
+msgstr "正在下载..."
+
+# camlibs/konica/konica.c:62
+#: camlibs/konica/konica.c:62
+msgid "Focusing error."
+msgstr "聚焦错误。"
+
+# camlibs/konica/konica.c:65
+#: camlibs/konica/konica.c:65
+msgid "Iris error."
+msgstr "光圈错误。"
+
+# camlibs/konica/konica.c:68
+#: camlibs/konica/konica.c:68
+msgid "Strobe error."
+msgstr "闪光灯。"
+
+# camlibs/konica/konica.c:71
+#: camlibs/konica/konica.c:71
+msgid "EEPROM checksum error."
+msgstr "EEPROM 校验和错误。"
+
+# camlibs/konica/konica.c:74
+#: camlibs/konica/konica.c:74
+msgid "Internal error (1)."
+msgstr "内部错误 (1)。"
+
+# camlibs/konica/konica.c:77
+#: camlibs/konica/konica.c:77
+msgid "Internal error (2)."
+msgstr "内部错误 (2)。"
+
+# camlibs/konica/konica.c:80
+#: camlibs/konica/konica.c:80
+msgid "No card present."
+msgstr "未插卡。"
+
+# camlibs/konica/konica.c:83
+#: camlibs/konica/konica.c:83
+msgid "Card not supported."
+msgstr "不支持的卡。"
+
+# camlibs/konica/konica.c:86
+#: camlibs/konica/konica.c:86
+msgid "Card removed during access."
+msgstr "访问使取出卡。"
+
+# camlibs/konica/konica.c:89
+#: camlibs/konica/konica.c:89
+msgid "Image number not valid."
+msgstr "图像数量不合法。"
+
+# camlibs/konica/konica.c:92
+#: camlibs/konica/konica.c:92
+msgid "Card can not be written."
+msgstr "无法写入卡。"
+
+# camlibs/konica/konica.c:95
+#: camlibs/konica/konica.c:95
+msgid "Card is write protected."
+msgstr "卡已写保护。"
+
+# camlibs/konica/konica.c:98
+#: camlibs/konica/konica.c:98
+msgid "No space left on card."
+msgstr "卡上没有剩余空间。"
+
+# camlibs/konica/konica.c:101
+#: camlibs/konica/konica.c:101
+msgid "Image protected."
+msgstr "图像已受到保护。"
+
+# camlibs/konica/konica.c:104
+#: camlibs/konica/konica.c:104
+msgid "Light too dark."
+msgstr "光线太暗。"
+
+# camlibs/konica/konica.c:107
+#: camlibs/konica/konica.c:107
+msgid "Autofocus error."
+msgstr "自动聚焦错误。"
+
+# camlibs/konica/konica.c:110
+#: camlibs/konica/konica.c:110
+msgid "System error."
+msgstr "系统错误。"
+
+# camlibs/konica/konica.c:113
+#: camlibs/konica/konica.c:113
+msgid "Illegal parameter."
+msgstr "非法参数。"
+
+# camlibs/konica/konica.c:116
+#: camlibs/konica/konica.c:116
+msgid "Command can not be cancelled."
+msgstr "命令不能被取消。"
+
+# camlibs/konica/konica.c:119
+#: camlibs/konica/konica.c:119
+msgid "Localization data too long."
+msgstr "本地化数据太长。"
+
+# camlibs/konica/konica.c:122
+#: camlibs/konica/konica.c:122
+msgid "Localization data corrupt."
+msgstr "本地化数据崩溃。"
+
+# camlibs/konica/konica.c:125
+#: camlibs/konica/konica.c:125
+msgid "Unsupported command."
+msgstr "不支持的命令。"
+
+# camlibs/konica/konica.c:128
+#: camlibs/konica/konica.c:128
+msgid "Other command executing."
+msgstr "正在执行其它命令。"
+
+# camlibs/konica/konica.c:131
+#: camlibs/konica/konica.c:131
+msgid "Command order error."
+msgstr "命令顺序错误。"
+
+# camlibs/konica/konica.c:134
+#: camlibs/konica/konica.c:134
+msgid "Unknown error."
+msgstr "未知的错误。"
+
+# camlibs/konica/konica.c:137
+#: camlibs/konica/konica.c:137
+#, c-format
+msgid ""
+"The camera has just sent an error that has not yet been discovered. Please "
+"report the following to <gphoto-devel@gphoto.org> with additional "
+"information how you got this error: (0x%x,0x%x). Thank you very much!"
+msgstr ""
+"相机刚刚送出了一个尚未发现的错误。请将以下内容以及您如何得到错误：(0x%x,0x%"
+"x) 的附加信息发送到 <gphoto-devel@gphoto.org>。非常感谢您！"
+
+# camlibs/minolta/dimagev/dimagev.c:272
 #: camlibs/minolta/dimagev/dimagev.c:272
 #, c-format
 msgid ""
@@ -1232,6 +1660,7 @@ msgstr ""
 "硬件版本号：\t%s\n"
 "固件版本号：\t%s\n"
 
+# camlibs/minolta/dimagev/dimagev.c:287
 #: camlibs/minolta/dimagev/dimagev.c:287
 #, c-format
 msgid ""
@@ -1259,63 +1688,84 @@ msgstr ""
 "卡 ID：\t\t\t%d\n"
 "闪光灯模式：\t\t"
 
+# camlibs/minolta/dimagev/dimagev.c:299
 #: camlibs/minolta/dimagev/dimagev.c:299
 msgid "Remote"
 msgstr "远程"
 
+# camlibs/minolta/dimagev/dimagev.c:299
 #: camlibs/minolta/dimagev/dimagev.c:299
 msgid "Local"
 msgstr "本地"
 
+# camlibs/minolta/dimagev/dimagev.c:300 camlibs/minolta/dimagev/dimagev.c:302
+# camlibs/minolta/dimagev/dimagev.c:306 camlibs/minolta/dimagev/dimagev.c:309
+# frontends/command-line/gphoto2-cmd-config.c:372
 #: camlibs/minolta/dimagev/dimagev.c:300 camlibs/minolta/dimagev/dimagev.c:302
 #: camlibs/minolta/dimagev/dimagev.c:306 camlibs/minolta/dimagev/dimagev.c:309
-#: frontends/command-line/gphoto2-cmd-config.c:366
+#: frontends/command-line/gphoto2-cmd-config.c:372
 msgid "Yes"
 msgstr "是"
 
+# camlibs/minolta/dimagev/dimagev.c:300 camlibs/minolta/dimagev/dimagev.c:302
+# camlibs/minolta/dimagev/dimagev.c:306 camlibs/minolta/dimagev/dimagev.c:309
+# frontends/command-line/gphoto2-cmd-config.c:372
 #: camlibs/minolta/dimagev/dimagev.c:300 camlibs/minolta/dimagev/dimagev.c:302
 #: camlibs/minolta/dimagev/dimagev.c:306 camlibs/minolta/dimagev/dimagev.c:309
-#: frontends/command-line/gphoto2-cmd-config.c:366
+#: frontends/command-line/gphoto2-cmd-config.c:372
 msgid "No"
 msgstr "否"
 
-#: camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:1465
-#: camlibs/sierra/sierra.c:1472 camlibs/sierra/sierra.c:1677
+# camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:1470
+# camlibs/sierra/sierra.c:1477 camlibs/sierra/sierra.c:1682
+#: camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:1482
+#: camlibs/sierra/sierra.c:1489 camlibs/sierra/sierra.c:1694
 msgid "Fine"
 msgstr "精细"
 
-#: camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:786
-#: camlibs/sierra/sierra.c:793 camlibs/sierra/sierra.c:1119
-#: camlibs/sierra/sierra.c:1464 camlibs/sierra/sierra.c:1470
-#: camlibs/sierra/sierra.c:1675
+# camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:788
+# camlibs/sierra/sierra.c:795 camlibs/sierra/sierra.c:1123
+# camlibs/sierra/sierra.c:1469 camlibs/sierra/sierra.c:1475
+# camlibs/sierra/sierra.c:1680
+#: camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:800
+#: camlibs/sierra/sierra.c:807 camlibs/sierra/sierra.c:1135
+#: camlibs/sierra/sierra.c:1481 camlibs/sierra/sierra.c:1487
+#: camlibs/sierra/sierra.c:1692
 msgid "Standard"
 msgstr "标准"
 
+# camlibs/minolta/dimagev/dimagev.c:308
 #: camlibs/minolta/dimagev/dimagev.c:308
 msgid "Record"
 msgstr "录制"
 
+# camlibs/minolta/dimagev/dimagev.c:308
 #: camlibs/minolta/dimagev/dimagev.c:308
 msgid "Play"
 msgstr "播放"
 
+# camlibs/minolta/dimagev/dimagev.c:323
 #: camlibs/minolta/dimagev/dimagev.c:323
 msgid "Automatic\n"
 msgstr "自动\n"
 
+# camlibs/minolta/dimagev/dimagev.c:331
 #: camlibs/minolta/dimagev/dimagev.c:331
 msgid "Force Flash\n"
 msgstr "强制闪光\n"
 
+# camlibs/minolta/dimagev/dimagev.c:339
 #: camlibs/minolta/dimagev/dimagev.c:339
 msgid "Prohibit Flash\n"
 msgstr "禁止闪光\n"
 
+# camlibs/minolta/dimagev/dimagev.c:347
 #: camlibs/minolta/dimagev/dimagev.c:347
 #, c-format
 msgid "Invalid Value ( %d )\n"
 msgstr "非法值 ( %d )\n"
 
+# camlibs/minolta/dimagev/dimagev.c:361
 #: camlibs/minolta/dimagev/dimagev.c:361
 #, c-format
 msgid ""
@@ -1333,65 +1783,80 @@ msgstr ""
 "闪光灯正在充电：\t%s\n"
 "镜头状态：\t\t"
 
+# camlibs/minolta/dimagev/dimagev.c:367
 #: camlibs/minolta/dimagev/dimagev.c:367
 msgid "Not Full"
 msgstr "未满"
 
+# camlibs/minolta/dimagev/dimagev.c:367 camlibs/minolta/dimagev/dimagev.c:410
 #: camlibs/minolta/dimagev/dimagev.c:367 camlibs/minolta/dimagev/dimagev.c:410
 msgid "Full"
 msgstr "满"
 
+# camlibs/minolta/dimagev/dimagev.c:370
 #: camlibs/minolta/dimagev/dimagev.c:370
 msgid "Busy"
 msgstr "忙"
 
+# camlibs/minolta/dimagev/dimagev.c:370
 #: camlibs/minolta/dimagev/dimagev.c:370
 msgid "Idle"
 msgstr "闲"
 
+# camlibs/minolta/dimagev/dimagev.c:371
 #: camlibs/minolta/dimagev/dimagev.c:371
 msgid "Charging"
 msgstr "正在充电"
 
+# camlibs/minolta/dimagev/dimagev.c:371
 #: camlibs/minolta/dimagev/dimagev.c:371
 msgid "Ready"
 msgstr "就绪"
 
+# camlibs/minolta/dimagev/dimagev.c:382
 #: camlibs/minolta/dimagev/dimagev.c:382
 msgid "Normal\n"
 msgstr "普通\n"
 
+# camlibs/minolta/dimagev/dimagev.c:385
 #: camlibs/minolta/dimagev/dimagev.c:385
 msgid "Lens direction does not match flash light\n"
 msgstr "镜头方向与闪光灯方向不匹配\n"
 
+# camlibs/minolta/dimagev/dimagev.c:388
 #: camlibs/minolta/dimagev/dimagev.c:388
 msgid "Lens is not connected\n"
 msgstr "镜头未连接\n"
 
+# camlibs/minolta/dimagev/dimagev.c:391
 #: camlibs/minolta/dimagev/dimagev.c:391
 #, c-format
 msgid "Bad value for lens status %d\n"
 msgstr "错误的镜头状态值 %d\n"
 
+# camlibs/minolta/dimagev/dimagev.c:400
 #. Card status is another switch.
 #: camlibs/minolta/dimagev/dimagev.c:400
 msgid "Card Status:\t\t"
 msgstr "卡状态：\t\t"
 
+# camlibs/minolta/dimagev/dimagev.c:413
 #: camlibs/minolta/dimagev/dimagev.c:413
 msgid "Write-protected"
 msgstr "写保护"
 
+# camlibs/minolta/dimagev/dimagev.c:416
 #: camlibs/minolta/dimagev/dimagev.c:416
 msgid "Unsuitable card"
 msgstr "不适当的卡"
 
+# camlibs/minolta/dimagev/dimagev.c:419
 #: camlibs/minolta/dimagev/dimagev.c:419
 #, c-format
 msgid "Bade value for card status %d"
 msgstr "错误的卡状态值 %d"
 
+# camlibs/minolta/dimagev/dimagev.c:438
 #: camlibs/minolta/dimagev/dimagev.c:438
 #, c-format
 msgid ""
@@ -1405,10 +1870,12 @@ msgstr ""
 "Gus Hartmann <gphoto@gus-the-cat.org>\n"
 "特别感谢 Minolta 提供相机规范。"
 
+# camlibs/panasonic/coolshot/coolshot.c:264
 #: camlibs/panasonic/coolshot/coolshot.c:264
 msgid "coolshot library v"
 msgstr "coolshot 库 v"
 
+# camlibs/panasonic/coolshot/coolshot.c:265
 #: camlibs/panasonic/coolshot/coolshot.c:265
 msgid ""
 "\n"
@@ -1423,20 +1890,24 @@ msgstr ""
 "基于串口协议反向工程。\n"
 "\n"
 
+# camlibs/panasonic/dc1000.c:371 camlibs/panasonic/dc1580.c:468
 #: camlibs/panasonic/dc1000.c:371 camlibs/panasonic/dc1580.c:468
 msgid "Disconnecting camera."
 msgstr "正在断开与相机的连接。"
 
+# camlibs/panasonic/dc1000.c:411
 #: camlibs/panasonic/dc1000.c:411
 #, c-format
 msgid "Downloading image %s."
 msgstr "正在下载图像 %s。"
 
+# camlibs/panasonic/dc1000.c:452 camlibs/panasonic/dc1580.c:577
 #: camlibs/panasonic/dc1000.c:452 camlibs/panasonic/dc1580.c:577
 #, c-format
 msgid "Uploading image: %s."
 msgstr "正在上载图像：%s。"
 
+# camlibs/panasonic/dc1000.c:463 camlibs/panasonic/dc1580.c:588
 #: camlibs/panasonic/dc1000.c:463 camlibs/panasonic/dc1580.c:588
 #, c-format
 msgid ""
@@ -1444,15 +1915,18 @@ msgid ""
 "i bytes."
 msgstr "文件大小为 %i 字节。可以上载的文件最大为：%i 字节。"
 
+# camlibs/panasonic/dc1000.c:476 camlibs/panasonic/dc1580.c:599
 #: camlibs/panasonic/dc1000.c:476 camlibs/panasonic/dc1580.c:599
 msgid "Uploading..."
 msgstr "正在上载..."
 
+# camlibs/panasonic/dc1000.c:503 camlibs/panasonic/dc1580.c:625
 #: camlibs/panasonic/dc1000.c:503 camlibs/panasonic/dc1580.c:625
 #, c-format
 msgid "Deleting image %s."
 msgstr "正在删除图像 %s。"
 
+# camlibs/panasonic/dc1000.c:516
 #: camlibs/panasonic/dc1000.c:516
 msgid ""
 "Panasonic DC1000 gPhoto library\n"
@@ -1469,11 +1943,13 @@ msgstr ""
 "和 Galen Brooks <galen@nine.com> 编制的\n"
 "dc1000 程序。"
 
+# camlibs/panasonic/dc1580.c:528
 #: camlibs/panasonic/dc1580.c:528
 #, c-format
 msgid "Downloading %s."
 msgstr "正在下载 %s。"
 
+# camlibs/panasonic/dc1580.c:637
 #: camlibs/panasonic/dc1580.c:637
 msgid ""
 "Panasonic DC1580 gPhoto library\n"
@@ -1490,11 +1966,13 @@ msgstr ""
 "和 Galen Brooks <galen@nine.com> 编制的\n"
 "dc1000 程序。<"
 
+# camlibs/panasonic/l859/l859.c:505
 #: camlibs/panasonic/l859/l859.c:505
 #, c-format
 msgid "Downloading '%s'..."
 msgstr "正在下载“%s”..."
 
+# camlibs/panasonic/l859/l859.c:586
 #: camlibs/panasonic/l859/l859.c:586
 msgid ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
@@ -1513,6 +1991,7 @@ msgstr ""
 "(普通 320x240 和 精细 640x480) 之一存储。从镜头捕捉图像的 CCD 设备仅有 30 万"
 "像素所以只能生成低质量照片。"
 
+# camlibs/panasonic/l859/l859.c:604
 #: camlibs/panasonic/l859/l859.c:604
 msgid ""
 "Known problems:\n"
@@ -1527,6 +2006,7 @@ msgstr ""
 "如果通讯出现问题，重置相机并重新启动应用程序。驱动程序还没有健壮到能够从这些"
 "情况下恢复过来，特别是如果是在速度高于 9600 时出现问题而相机没有正常关闭时。"
 
+# camlibs/panasonic/l859/l859.c:618
 #: camlibs/panasonic/l859/l859.c:618
 msgid ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder Driver\n"
@@ -1535,125 +2015,165 @@ msgstr ""
 "松下 PV-L859-K/PV-L779-K Palmcorder 驱动程序\n"
 "Andrew Selkirk <aselkirk@mailandnews.com>"
 
-#: camlibs/polaroid/pdc700.c:150
+# camlibs/polaroid/pdc700.c:159
+#: camlibs/polaroid/pdc700.c:159
 msgid "Image Quality"
 msgstr "图像质量"
 
-#: camlibs/polaroid/pdc700.c:151
+# camlibs/polaroid/pdc700.c:160
+#: camlibs/polaroid/pdc700.c:160
+msgid "Image Size"
+msgstr "图像大小"
+
+# camlibs/polaroid/pdc700.c:161
+#: camlibs/polaroid/pdc700.c:161
 msgid "Flash Setting"
 msgstr "闪光灯设置"
 
-#: camlibs/polaroid/pdc700.c:152
+# camlibs/polaroid/pdc700.c:162
+#: camlibs/polaroid/pdc700.c:162
 msgid "LCD"
 msgstr "LCD"
 
-#: camlibs/polaroid/pdc700.c:154
+# camlibs/polaroid/pdc700.c:164
+#: camlibs/polaroid/pdc700.c:164
 msgid "Auto Power Off (minutes)"
 msgstr "自动关机 (分钟)"
 
-#: camlibs/polaroid/pdc700.c:155
+# camlibs/polaroid/pdc700.c:165
+#: camlibs/polaroid/pdc700.c:165
 msgid "Information"
 msgstr "信息"
 
-#: camlibs/polaroid/pdc700.c:157
+# camlibs/polaroid/pdc700.c:167
+#: camlibs/polaroid/pdc700.c:167
 msgid "normal"
 msgstr "普通"
 
-#: camlibs/polaroid/pdc700.c:157
+# camlibs/polaroid/pdc700.c:167
+#: camlibs/polaroid/pdc700.c:167
 msgid "fine"
 msgstr "精细"
 
-#: camlibs/polaroid/pdc700.c:157
+# camlibs/polaroid/pdc700.c:167
+#: camlibs/polaroid/pdc700.c:167
 msgid "superfine"
 msgstr "超精细"
 
-#: camlibs/polaroid/pdc700.c:159 camlibs/sierra/sierra.c:1363
-#: camlibs/sierra/sierra.c:1377 camlibs/sierra/sierra.c:1612
+# camlibs/polaroid/pdc700.c:169 camlibs/sierra/sierra.c:1368
+# camlibs/sierra/sierra.c:1382 camlibs/sierra/sierra.c:1617
+#: camlibs/polaroid/pdc700.c:169 camlibs/sierra/sierra.c:1380
+#: camlibs/sierra/sierra.c:1394 camlibs/sierra/sierra.c:1629
 msgid "auto"
 msgstr "自动"
 
-#: camlibs/polaroid/pdc700.c:159 camlibs/polaroid/pdc700.c:160
+# camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
+#: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
 msgid "on"
 msgstr "开"
 
-#: camlibs/polaroid/pdc700.c:159 camlibs/polaroid/pdc700.c:160
+# camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
+#: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
 msgid "off"
 msgstr "关"
 
-#: camlibs/polaroid/pdc700.c:161
+# camlibs/polaroid/pdc700.c:171
+#: camlibs/polaroid/pdc700.c:171
 msgid "play"
 msgstr "播放"
 
-#: camlibs/polaroid/pdc700.c:161
+# camlibs/polaroid/pdc700.c:171
+#: camlibs/polaroid/pdc700.c:171
 msgid "record"
 msgstr "录制"
 
-#: camlibs/polaroid/pdc700.c:161
+# camlibs/polaroid/pdc700.c:171
+#: camlibs/polaroid/pdc700.c:171
 msgid "menu"
 msgstr "菜单"
 
-#: camlibs/polaroid/pdc700.c:162
+# camlibs/polaroid/pdc700.c:172
+#: camlibs/polaroid/pdc700.c:172
 msgid "battery"
 msgstr "电池"
 
-#: camlibs/polaroid/pdc700.c:162
+# camlibs/polaroid/pdc700.c:172
+#: camlibs/polaroid/pdc700.c:172
 msgid "a/c adaptor"
 msgstr "交流变压器"
 
-#: camlibs/polaroid/pdc700.c:163
+# camlibs/polaroid/pdc700.c:173
+#: camlibs/polaroid/pdc700.c:173
 msgid "9600"
 msgstr "9600"
 
-#: camlibs/polaroid/pdc700.c:163
+# camlibs/polaroid/pdc700.c:173
+#: camlibs/polaroid/pdc700.c:173
 msgid "19200"
 msgstr "19200"
 
-#: camlibs/polaroid/pdc700.c:163
+# camlibs/polaroid/pdc700.c:173
+#: camlibs/polaroid/pdc700.c:173
 msgid "38400"
 msgstr "38400"
 
-#: camlibs/polaroid/pdc700.c:164
+# camlibs/polaroid/pdc700.c:174
+#: camlibs/polaroid/pdc700.c:174
 msgid "57600"
 msgstr "57600"
 
-#: camlibs/polaroid/pdc700.c:164
+# camlibs/polaroid/pdc700.c:174
+#: camlibs/polaroid/pdc700.c:174
 msgid "115200"
 msgstr "115200"
 
-#: camlibs/polaroid/pdc700.c:216
+# camlibs/polaroid/pdc700.c:175
+#: camlibs/polaroid/pdc700.c:175
+msgid "VGA (640x480)"
+msgstr "VGA (640x480)"
+
+# camlibs/polaroid/pdc700.c:175
+#: camlibs/polaroid/pdc700.c:175
+msgid "XGA (1024x768"
+msgstr "XGA (1024x768"
+
+# camlibs/polaroid/pdc700.c:229
+#: camlibs/polaroid/pdc700.c:229
 #, c-format
 msgid "Received unexpected header (%i)"
 msgstr "收到意外的头 (%i)"
 
-#: camlibs/polaroid/pdc700.c:229
+# camlibs/polaroid/pdc700.c:242
+#: camlibs/polaroid/pdc700.c:242
 msgid "Received unexpected response"
 msgstr "收到意外应答"
 
-#: camlibs/polaroid/pdc700.c:250
+# camlibs/polaroid/pdc700.c:263
+#: camlibs/polaroid/pdc700.c:263
 msgid "Checksum error"
 msgstr "校验和错误"
 
-#: camlibs/polaroid/pdc700.c:283
+# camlibs/polaroid/pdc700.c:296
+#: camlibs/polaroid/pdc700.c:296
 msgid "The camera did not accept the command."
 msgstr "相机不接受命令。"
 
-#: camlibs/polaroid/pdc700.c:301 camlibs/sierra/library.c:990
-msgid "Downloading..."
-msgstr "正在下载..."
-
-#: camlibs/polaroid/pdc700.c:336
+# camlibs/polaroid/pdc700.c:349
+#: camlibs/polaroid/pdc700.c:349
 #, c-format
 msgid "The camera sent more bytes than expected (%i)"
 msgstr "相机发送了比预期更多的字节 (%i)"
 
-#: camlibs/polaroid/pdc700.c:438
+# camlibs/polaroid/pdc700.c:451
+#: camlibs/polaroid/pdc700.c:451
 #, c-format
 msgid ""
 "Requested information about picture %i (= 0x%x), but got information about "
 "picture %i back"
 msgstr "请求关于照片 %i (= 0x%x) 的信息，但得到了关于照片 %i 的返回信息"
 
-#: camlibs/polaroid/pdc700.c:872
+# camlibs/polaroid/pdc700.c:916
+#: camlibs/polaroid/pdc700.c:916
 #, c-format
 msgid ""
 "%i bytes of an unknown image format have been received. Please write <gphoto-"
@@ -1662,20 +2182,25 @@ msgstr ""
 "已接收 %i 字节的未知格式图像。请写 Email 到 <gphoto-devel@gphoto.org> 以寻求"
 "帮助。"
 
-#: camlibs/polaroid/pdc700.c:937 camlibs/sierra/sierra.c:774
-#: camlibs/sierra/sierra.c:1348
+# camlibs/polaroid/pdc700.c:981 camlibs/sierra/sierra.c:776
+# camlibs/sierra/sierra.c:1353
+#: camlibs/polaroid/pdc700.c:981 camlibs/sierra/sierra.c:788
+#: camlibs/sierra/sierra.c:1365
 msgid "Camera Configuration"
 msgstr "相机配置"
 
-#: camlibs/polaroid/pdc700.c:938
-msgid "Settings"
-msgstr "设置"
-
-#: camlibs/polaroid/pdc700.c:953
+# camlibs/polaroid/pdc700.c:996
+#: camlibs/polaroid/pdc700.c:996
 msgid "How long will it take until the camera powers off?"
 msgstr "在相机关机前须等待多长时间？"
 
-#: camlibs/polaroid/pdc700.c:1048
+# camlibs/polaroid/pdc700.c:999
+#: camlibs/polaroid/pdc700.c:999
+msgid "Image"
+msgstr "图像"
+
+# camlibs/polaroid/pdc700.c:1110
+#: camlibs/polaroid/pdc700.c:1110
 #, c-format
 msgid ""
 "Date: %i/%02i/%02i %02i:%02i:%02i\n"
@@ -1708,15 +2233,292 @@ msgstr ""
 "自动关机：%i 分钟\n"
 "电源来源：%s"
 
-#: camlibs/polaroid/pdc700.c:1167
+# camlibs/polaroid/pdc700.c:1229
+#: camlibs/polaroid/pdc700.c:1229
 #, c-format
 msgid "The requested port type (%i) is not supported by this driver."
 msgstr "该驱动程序不支持请求的端口类型 (%i)。"
 
+# camlibs/ptp/library.c:90
+#: camlibs/ptp/library.c:90
+msgid "PTP Undefined Error"
+msgstr "未定义的 PTP 错误"
+
+# camlibs/ptp/library.c:91
+#: camlibs/ptp/library.c:91
+msgid "PTP OK!"
+msgstr ""
+
+# camlibs/ptp/library.c:92
+#: camlibs/ptp/library.c:92
+msgid "PTP General Error"
+msgstr "PTP 通用错误"
+
+# camlibs/ptp/library.c:93
+#: camlibs/ptp/library.c:93
+msgid "PTP Session Not Open"
+msgstr "PTP 会话未打开"
+
+# camlibs/ptp/library.c:94
+#: camlibs/ptp/library.c:94
+msgid "PTP Invalid Transaction ID"
+msgstr "非法的 PTP 传输 ID"
+
+# camlibs/ptp/library.c:95
+#: camlibs/ptp/library.c:95
+msgid "PTP Operation Not Supported"
+msgstr "不支持的 PTP 操作"
+
+# camlibs/ptp/library.c:96
+#: camlibs/ptp/library.c:96
+msgid "PTP Parameter Not Supported"
+msgstr "不支持的 PTP 参数"
+
+# camlibs/ptp/library.c:97
+#: camlibs/ptp/library.c:97
+msgid "PTP Incomplete Transfer"
+msgstr "未完成的 PTP 传输"
+
+# camlibs/ptp/library.c:98
+#: camlibs/ptp/library.c:98
+msgid "PTP Invalid Storage ID"
+msgstr "非法的 PTP 存储 ID"
+
+# camlibs/ptp/library.c:99
+#: camlibs/ptp/library.c:99
+msgid "PTP Invalid Object Handle"
+msgstr "非法的 PTP 对象句柄"
+
+# camlibs/ptp/library.c:100
+#: camlibs/ptp/library.c:100
+msgid "PTP Device Prop Not Supported"
+msgstr "不支持的 PTP 设备属性"
+
+# camlibs/ptp/library.c:101
+#: camlibs/ptp/library.c:101
+msgid "PTP Invalid Object Format Code"
+msgstr "非法的 PTP 对象格式代码"
+
+# camlibs/ptp/library.c:102
+#: camlibs/ptp/library.c:102
+msgid "PTP Store Full"
+msgstr "PTP 存储已满"
+
+# camlibs/ptp/library.c:103
+#: camlibs/ptp/library.c:103
+msgid "PTP Object Write Protected"
+msgstr "PTP 对象已写保护"
+
+# camlibs/ptp/library.c:104
+#: camlibs/ptp/library.c:104
+msgid "PTP Store Read Only"
+msgstr "只读的 PTP 存储"
+
+# camlibs/ptp/library.c:105
+#: camlibs/ptp/library.c:105
+msgid "PTP Access Denied"
+msgstr "PTP 访问遭拒绝"
+
+# camlibs/ptp/library.c:106
+#: camlibs/ptp/library.c:106
+msgid "PTP No Thumbnail Present"
+msgstr "不存在 PTP 缩略图"
+
+# camlibs/ptp/library.c:107
+#: camlibs/ptp/library.c:107
+msgid "PTP Self Test Failed"
+msgstr "PTP 自检失败"
+
+# camlibs/ptp/library.c:108
+#: camlibs/ptp/library.c:108
+msgid "PTP Partial Deletion"
+msgstr "PTP 部分删除"
+
+# camlibs/ptp/library.c:109
+#: camlibs/ptp/library.c:109
+msgid "PTP Store Not Available"
+msgstr "PTP 存储不可用"
+
+# camlibs/ptp/library.c:111
+#: camlibs/ptp/library.c:111
+msgid "PTP Specification By Format Unsupported"
+msgstr ""
+
+# camlibs/ptp/library.c:112
+#: camlibs/ptp/library.c:112
+msgid "PTP No Valid Object Info"
+msgstr "没有合法的 PTP 对象信息"
+
+# camlibs/ptp/library.c:113
+#: camlibs/ptp/library.c:113
+msgid "PTP Invalid Code Format"
+msgstr "非法的 PTP 代码格式"
+
+# camlibs/ptp/library.c:114
+#: camlibs/ptp/library.c:114
+msgid "PTP Unknown Vendor Code"
+msgstr "未知的 PTP 厂家代码"
+
+# camlibs/ptp/library.c:116
+#: camlibs/ptp/library.c:116
+msgid "PTP Capture Already Terminated"
+msgstr "PTP 捕获已终止"
+
+# camlibs/ptp/library.c:117
+#: camlibs/ptp/library.c:117
+msgid "PTP Device Bus"
+msgstr "PTP 设备总线"
+
+# camlibs/ptp/library.c:118
+#: camlibs/ptp/library.c:118
+msgid "PTP Invalid Parent Object"
+msgstr "非法的 PTP 父对象"
+
+# camlibs/ptp/library.c:119
+#: camlibs/ptp/library.c:119
+msgid "PTP Invalid Device Prop Format"
+msgstr "非法的 PTP 设备属性格式"
+
+# camlibs/ptp/library.c:120
+#: camlibs/ptp/library.c:120
+msgid "PTP Invalid Device Prop Value"
+msgstr "非法的 PTP 设备属性值"
+
+# camlibs/ptp/library.c:121
+#: camlibs/ptp/library.c:121
+msgid "PTP Invalid Parameter"
+msgstr "非法的 PTP 参数"
+
+# camlibs/ptp/library.c:122
+#: camlibs/ptp/library.c:122
+msgid "PTP Session Already Opened"
+msgstr "PTP 会话已打开"
+
+# camlibs/ptp/library.c:123
+#: camlibs/ptp/library.c:123
+msgid "PTP Transaction Canceled"
+msgstr "PTP 传输已取消"
+
+# camlibs/ptp/library.c:125
+#: camlibs/ptp/library.c:125
+msgid "PTP Specification Of Destination Unsupported"
+msgstr "不支持的 PTP 目标规范"
+
+# camlibs/ptp/library.c:126
+#: camlibs/ptp/library.c:126
+msgid "PTP EK Filename Required"
+msgstr "需要 PTP EK 文件名"
+
+# camlibs/ptp/library.c:127
+#: camlibs/ptp/library.c:127
+msgid "PTP EK Filename Conflicts"
+msgstr "PTP EK 文件名冲突"
+
+# camlibs/ptp/library.c:128
+#: camlibs/ptp/library.c:128
+msgid "PTP EK Filename Invalid"
+msgstr "非法的 PTP EK 文件名"
+
+# camlibs/ptp/library.c:130
+#: camlibs/ptp/library.c:130
+msgid "PTP I/O error"
+msgstr "PTP I/O 错误"
+
+# camlibs/ptp/library.c:131
+#: camlibs/ptp/library.c:131
+msgid "PTP Error: bad parameter"
+msgstr "PTP 错误：错误的参数"
+
+# camlibs/ptp/library.c:132
+#: camlibs/ptp/library.c:132
+msgid "PTP Protocol error, data expected"
+msgstr "PTP 协议错误，需要数据"
+
+# camlibs/ptp/library.c:133
+#: camlibs/ptp/library.c:133
+msgid "PTP Protocol error, response expected"
+msgstr "PTP 协议错误，需要响应"
+
+# camlibs/ptp/library.c:422
+#: camlibs/ptp/library.c:423
+msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
+msgstr "由 Mariusz Woloszyn <emsi@ipartners.pl> 编写。请享用！"
+
+# camlibs/ptp/library.c:918
+#: camlibs/ptp/library.c:921
+msgid "PTP is implemented for USB cameras only."
+msgstr "PTP 仅为 USB 相机实现。"
+
+# camlibs/ricoh/library.c:164
+#: camlibs/ricoh/library.c:164
+msgid "Unknown"
+msgstr "未知"
+
+# camlibs/ricoh/library.c:177
+#: camlibs/ricoh/library.c:177
+#, c-format
+msgid ""
+"Camera model: %s\n"
+"Camera ID: %s\n"
+"Memory: %d byte(s) of %d available\n"
+"Camera time: %s\n"
+msgstr ""
+"相机型号：%s\n"
+"相机 ID：%s\n"
+"内存：%2$d 字节中 %1$d 个字节可用\n"
+"相机时间：%s\n"
+
+# camlibs/ricoh/library.c:242
+#: camlibs/ricoh/library.c:242
+msgid "Could not contact camera."
+msgstr "无法检测到任何相机。"
+
+# camlibs/ricoh/library.c:252
+#: camlibs/ricoh/library.c:252
+#, c-format
+msgid "Speed %i is not supported!"
+msgstr "不支持速度 %i！"
+
+# camlibs/ricoh/ricoh.c:66
+#: camlibs/ricoh/ricoh.c:66
+#, c-format
+msgid ""
+"Expected %i, got %i. Please report this error to <gphoto-devel@gphoto.org>."
+msgstr "需要 %i，得到 %i。请将此错误报告到 <gphoto-devel@gphoto.org>。"
+
+# camlibs/ricoh/ricoh.c:75
+#: camlibs/ricoh/ricoh.c:75
+#, c-format
+msgid ""
+"Expected %i bytes, got %i. Please report this error to <gphoto-devel@gphoto."
+"org>."
+msgstr "需要 %i 字节，得到 %i。请将此错误报告到 <gphoto-devel@gphoto.org>。"
+
+# camlibs/ricoh/ricoh.c:165 camlibs/ricoh/ricoh.c:179
+#: camlibs/ricoh/ricoh.c:165 camlibs/ricoh/ricoh.c:179
+#, c-format
+msgid ""
+"We expected 0x%x but received 0x%x. Please contact <gphoto-devel@gphoto.org>."
+msgstr "我们希望得到 0x%x 但收到 0x%x。请联系 <gphoto-devel@gphoto.org>。"
+
+# camlibs/ricoh/ricoh.c:208
+#: camlibs/ricoh/ricoh.c:208
+#, c-format
+msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@gphoto.org>."
+msgstr "错误的字符 (0x%x，0x%x)。请联系 <gphoto-devel@gphoto.org>。"
+
+# camlibs/ricoh/ricoh.c:250
+#: camlibs/ricoh/ricoh.c:250
+msgid ""
+"Camera busy. If the problem persists, please contact <gphoto-devel@gphoto."
+"org>."
+msgstr "相机忙。如果问题总是存在，请联系 <gphoto-devel@gphoto.org>。"
+
+# camlibs/samsung/samsung.c:244
 #. Translators: please write 'M"uller' and 'Mei"sner' (that
 #. is, with u-umlaut and eszett resp.) if your charset
 #. allows it.  If not, use "Mueller" and "Meissner".
-#: camlibs/samsung/samsung.c:244
+#: camlibs/samsung/samsung.c:243
 msgid ""
 "The Samsung digimax 800k driver has been written by James McKenzie "
 "<james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge."
@@ -1727,400 +2529,539 @@ msgstr ""
 "gphoto 编写的。Lutz Mueller <lutz@users.sourceforge.net> 将它移植到 gphoto2。"
 "Marcus Meissner <marcus@jet.franken.de> 修正并增强了移植后的版本。"
 
-#: camlibs/sierra/sierra.c:634
+# camlibs/sierra/sierra.c:635
+#: camlibs/sierra/sierra.c:647
 msgid "The file to be uploaded has a null length"
 msgstr "要上载的文件具有空长度"
 
-#: camlibs/sierra/sierra.c:648
+# camlibs/sierra/sierra.c:649
+#: camlibs/sierra/sierra.c:661
 msgid "Not enough memory available on the memory card"
 msgstr "内存卡上没有足够的内存"
 
-#: camlibs/sierra/sierra.c:655
+# camlibs/sierra/sierra.c:656
+#: camlibs/sierra/sierra.c:668
 msgid "Cannot retrieve the name of the folder containing the pictures"
 msgstr "无法检索含有照片的文件夹名称"
 
-#: camlibs/sierra/sierra.c:662
+# camlibs/sierra/sierra.c:663
+#: camlibs/sierra/sierra.c:675
 #, c-format
 msgid "Upload is supported into the '%s' folder only"
 msgstr "只支持上载到文件夹“%s”"
 
-#: camlibs/sierra/sierra.c:775 camlibs/sierra/sierra.c:1438
+# camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:1443
+#: camlibs/sierra/sierra.c:789 camlibs/sierra/sierra.c:1455
 msgid "Picture Settings"
 msgstr "照片设置"
 
-#: camlibs/sierra/sierra.c:787 camlibs/sierra/sierra.c:795
-#: camlibs/sierra/sierra.c:827 camlibs/sierra/sierra.c:836
-#: camlibs/sierra/sierra.c:1121 camlibs/sierra/sierra.c:1151
+# camlibs/sierra/sierra.c:789 camlibs/sierra/sierra.c:797
+# camlibs/sierra/sierra.c:830 camlibs/sierra/sierra.c:839
+# camlibs/sierra/sierra.c:1125 camlibs/sierra/sierra.c:1156
+#: camlibs/sierra/sierra.c:801 camlibs/sierra/sierra.c:809
+#: camlibs/sierra/sierra.c:842 camlibs/sierra/sierra.c:851
+#: camlibs/sierra/sierra.c:1137 camlibs/sierra/sierra.c:1168
 msgid "High"
 msgstr "高"
 
-#: camlibs/sierra/sierra.c:788 camlibs/sierra/sierra.c:797
-#: camlibs/sierra/sierra.c:1123
+# camlibs/sierra/sierra.c:790 camlibs/sierra/sierra.c:799
+# camlibs/sierra/sierra.c:1127
+#: camlibs/sierra/sierra.c:802 camlibs/sierra/sierra.c:811
+#: camlibs/sierra/sierra.c:1139
 msgid "Best"
 msgstr "最佳"
 
-#: camlibs/sierra/sierra.c:800 camlibs/sierra/sierra.c:839
-#: camlibs/sierra/sierra.c:871 camlibs/sierra/sierra.c:901
-#: camlibs/sierra/sierra.c:932 camlibs/sierra/sierra.c:963
-#: camlibs/sierra/sierra.c:987 camlibs/sierra/sierra.c:1009
-#: camlibs/sierra/sierra.c:1038 camlibs/sierra/sierra.c:1380
-#: camlibs/sierra/sierra.c:1408 camlibs/sierra/sierra.c:1431
-#: camlibs/sierra/sierra.c:1453 camlibs/sierra/sierra.c:1479
-#: camlibs/sierra/sierra.c:1498 camlibs/sierra/sierra.c:1566
+# camlibs/sierra/sierra.c:802 camlibs/sierra/sierra.c:842
+# camlibs/sierra/sierra.c:874 camlibs/sierra/sierra.c:904
+# camlibs/sierra/sierra.c:935 camlibs/sierra/sierra.c:966
+# camlibs/sierra/sierra.c:990 camlibs/sierra/sierra.c:1012
+# camlibs/sierra/sierra.c:1041 camlibs/sierra/sierra.c:1385
+# camlibs/sierra/sierra.c:1413 camlibs/sierra/sierra.c:1436
+# camlibs/sierra/sierra.c:1458 camlibs/sierra/sierra.c:1484
+# camlibs/sierra/sierra.c:1503 camlibs/sierra/sierra.c:1571
+#: camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:854
+#: camlibs/sierra/sierra.c:886 camlibs/sierra/sierra.c:916
+#: camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:978
+#: camlibs/sierra/sierra.c:1002 camlibs/sierra/sierra.c:1024
+#: camlibs/sierra/sierra.c:1053 camlibs/sierra/sierra.c:1397
+#: camlibs/sierra/sierra.c:1425 camlibs/sierra/sierra.c:1448
+#: camlibs/sierra/sierra.c:1470 camlibs/sierra/sierra.c:1496
+#: camlibs/sierra/sierra.c:1515 camlibs/sierra/sierra.c:1583
 #, c-format
 msgid "%i (unknown)"
 msgstr "%i (未知)"
 
-#: camlibs/sierra/sierra.c:812 camlibs/sierra/sierra.c:1133
-msgid "Shutter Speed (microseconds)"
-msgstr "快门速度 (微秒)"
+# camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
+#: camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1149
+msgid "Shutter Speed (microseconds, 0 auto)"
+msgstr "快门速度 (微秒，0 表示自动)"
 
-#: camlibs/sierra/sierra.c:823 camlibs/sierra/sierra.c:1141
-#: camlibs/sierra/sierra.c:1356 camlibs/sierra/sierra.c:1597
+# camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1146
+# camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1602
+#: camlibs/sierra/sierra.c:838 camlibs/sierra/sierra.c:1158
+#: camlibs/sierra/sierra.c:1373 camlibs/sierra/sierra.c:1614
 msgid "Aperture"
 msgstr "光圈"
 
-#: camlibs/sierra/sierra.c:825 camlibs/sierra/sierra.c:832
-#: camlibs/sierra/sierra.c:1147
+# camlibs/sierra/sierra.c:828 camlibs/sierra/sierra.c:835
+# camlibs/sierra/sierra.c:1152
+#: camlibs/sierra/sierra.c:840 camlibs/sierra/sierra.c:847
+#: camlibs/sierra/sierra.c:1164
 msgid "Low"
 msgstr "低"
 
-#: camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:834
-#: camlibs/sierra/sierra.c:1149
+# camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:837
+# camlibs/sierra/sierra.c:1154
+#: camlibs/sierra/sierra.c:841 camlibs/sierra/sierra.c:849
+#: camlibs/sierra/sierra.c:1166
 msgid "Medium"
 msgstr "中"
 
+# camlibs/sierra/sierra.c:855 camlibs/sierra/sierra.c:1165
+# camlibs/sierra/sierra.c:1494 camlibs/sierra/sierra.c:1695
 #. Those values are for a C-2020 Z. If your model differs, we
 #. have to distinguish models here...
-#: camlibs/sierra/sierra.c:852 camlibs/sierra/sierra.c:1160
-#: camlibs/sierra/sierra.c:1489 camlibs/sierra/sierra.c:1690
+#: camlibs/sierra/sierra.c:867 camlibs/sierra/sierra.c:1177
+#: camlibs/sierra/sierra.c:1506 camlibs/sierra/sierra.c:1707
 msgid "Color Mode"
 msgstr "彩色模式"
 
-#: camlibs/sierra/sierra.c:854 camlibs/sierra/sierra.c:862
-#: camlibs/sierra/sierra.c:1166
+# camlibs/sierra/sierra.c:857 camlibs/sierra/sierra.c:865
+# camlibs/sierra/sierra.c:1171
+#: camlibs/sierra/sierra.c:869 camlibs/sierra/sierra.c:877
+#: camlibs/sierra/sierra.c:1183
 msgid "Black/White"
 msgstr "黑白"
 
-#: camlibs/sierra/sierra.c:855 camlibs/sierra/sierra.c:864
-#: camlibs/sierra/sierra.c:1168
+# camlibs/sierra/sierra.c:858 camlibs/sierra/sierra.c:867
+# camlibs/sierra/sierra.c:1173
+#: camlibs/sierra/sierra.c:870 camlibs/sierra/sierra.c:879
+#: camlibs/sierra/sierra.c:1185
 msgid "Sepia"
 msgstr "棕褐色"
 
-#: camlibs/sierra/sierra.c:856 camlibs/sierra/sierra.c:866
-#: camlibs/sierra/sierra.c:1170
+# camlibs/sierra/sierra.c:859 camlibs/sierra/sierra.c:869
+# camlibs/sierra/sierra.c:1175
+#: camlibs/sierra/sierra.c:871 camlibs/sierra/sierra.c:881
+#: camlibs/sierra/sierra.c:1187
 msgid "White Board"
 msgstr "白板"
 
-#: camlibs/sierra/sierra.c:857 camlibs/sierra/sierra.c:868
-#: camlibs/sierra/sierra.c:1172
+# camlibs/sierra/sierra.c:860 camlibs/sierra/sierra.c:871
+# camlibs/sierra/sierra.c:1177
+#: camlibs/sierra/sierra.c:872 camlibs/sierra/sierra.c:883
+#: camlibs/sierra/sierra.c:1189
 msgid "Black Board"
 msgstr "黑板"
 
-#: camlibs/sierra/sierra.c:882 camlibs/sierra/sierra.c:1181
-#: camlibs/sierra/sierra.c:1390 camlibs/sierra/sierra.c:1621
+# camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
+# camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
+#: camlibs/sierra/sierra.c:897 camlibs/sierra/sierra.c:1198
+#: camlibs/sierra/sierra.c:1407 camlibs/sierra/sierra.c:1638
 msgid "Flash Mode"
 msgstr "闪光灯模式"
 
-#: camlibs/sierra/sierra.c:884 camlibs/sierra/sierra.c:892
-#: camlibs/sierra/sierra.c:1187 camlibs/sierra/sierra.c:1392
-#: camlibs/sierra/sierra.c:1399 camlibs/sierra/sierra.c:1626
+# camlibs/sierra/sierra.c:887 camlibs/sierra/sierra.c:895
+# camlibs/sierra/sierra.c:1192 camlibs/sierra/sierra.c:1397
+# camlibs/sierra/sierra.c:1404 camlibs/sierra/sierra.c:1631
+#: camlibs/sierra/sierra.c:899 camlibs/sierra/sierra.c:907
+#: camlibs/sierra/sierra.c:1204 camlibs/sierra/sierra.c:1409
+#: camlibs/sierra/sierra.c:1416 camlibs/sierra/sierra.c:1643
 msgid "Force"
 msgstr "强制"
 
-#: camlibs/sierra/sierra.c:886 camlibs/sierra/sierra.c:896
-#: camlibs/sierra/sierra.c:1191 camlibs/sierra/sierra.c:1394
-#: camlibs/sierra/sierra.c:1403 camlibs/sierra/sierra.c:1630
+# camlibs/sierra/sierra.c:889 camlibs/sierra/sierra.c:899
+# camlibs/sierra/sierra.c:1196 camlibs/sierra/sierra.c:1399
+# camlibs/sierra/sierra.c:1408 camlibs/sierra/sierra.c:1635
+#: camlibs/sierra/sierra.c:901 camlibs/sierra/sierra.c:911
+#: camlibs/sierra/sierra.c:1208 camlibs/sierra/sierra.c:1411
+#: camlibs/sierra/sierra.c:1420 camlibs/sierra/sierra.c:1647
 msgid "Red-eye Reduction"
 msgstr "消红眼"
 
-#: camlibs/sierra/sierra.c:887 camlibs/sierra/sierra.c:898
-#: camlibs/sierra/sierra.c:1193 camlibs/sierra/sierra.c:1395
-#: camlibs/sierra/sierra.c:1405 camlibs/sierra/sierra.c:1632
+# camlibs/sierra/sierra.c:890 camlibs/sierra/sierra.c:901
+# camlibs/sierra/sierra.c:1198 camlibs/sierra/sierra.c:1400
+# camlibs/sierra/sierra.c:1410 camlibs/sierra/sierra.c:1637
+#: camlibs/sierra/sierra.c:902 camlibs/sierra/sierra.c:913
+#: camlibs/sierra/sierra.c:1210 camlibs/sierra/sierra.c:1412
+#: camlibs/sierra/sierra.c:1422 camlibs/sierra/sierra.c:1649
 msgid "Slow Sync"
 msgstr "慢同步"
 
-#: camlibs/sierra/sierra.c:912 camlibs/sierra/sierra.c:1203
+# camlibs/sierra/sierra.c:915 camlibs/sierra/sierra.c:1208
+#: camlibs/sierra/sierra.c:927 camlibs/sierra/sierra.c:1220
 msgid "Brightness/Contrast"
 msgstr "亮度/对比度"
 
-#: camlibs/sierra/sierra.c:915 camlibs/sierra/sierra.c:923
-#: camlibs/sierra/sierra.c:1209
+# camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:926
+# camlibs/sierra/sierra.c:1214
+#: camlibs/sierra/sierra.c:930 camlibs/sierra/sierra.c:938
+#: camlibs/sierra/sierra.c:1226
 msgid "Bright+"
 msgstr "亮度+"
 
-#: camlibs/sierra/sierra.c:916 camlibs/sierra/sierra.c:925
-#: camlibs/sierra/sierra.c:1211
+# camlibs/sierra/sierra.c:919 camlibs/sierra/sierra.c:928
+# camlibs/sierra/sierra.c:1216
+#: camlibs/sierra/sierra.c:931 camlibs/sierra/sierra.c:940
+#: camlibs/sierra/sierra.c:1228
 msgid "Bright-"
 msgstr "亮度-"
 
-#: camlibs/sierra/sierra.c:917 camlibs/sierra/sierra.c:927
-#: camlibs/sierra/sierra.c:1213
+# camlibs/sierra/sierra.c:920 camlibs/sierra/sierra.c:930
+# camlibs/sierra/sierra.c:1218
+#: camlibs/sierra/sierra.c:932 camlibs/sierra/sierra.c:942
+#: camlibs/sierra/sierra.c:1230
 msgid "Contrast+"
 msgstr "对比度+"
 
-#: camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:929
-#: camlibs/sierra/sierra.c:1215
+# camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:932
+# camlibs/sierra/sierra.c:1220
+#: camlibs/sierra/sierra.c:933 camlibs/sierra/sierra.c:944
+#: camlibs/sierra/sierra.c:1232
 msgid "Contrast-"
 msgstr "对比度-"
 
-#: camlibs/sierra/sierra.c:943 camlibs/sierra/sierra.c:1224
-#: camlibs/sierra/sierra.c:1418 camlibs/sierra/sierra.c:1641
+# camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
+# camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
+#: camlibs/sierra/sierra.c:958 camlibs/sierra/sierra.c:1241
+#: camlibs/sierra/sierra.c:1435 camlibs/sierra/sierra.c:1658
 msgid "White Balance"
 msgstr "白平衡"
 
-#: camlibs/sierra/sierra.c:945 camlibs/sierra/sierra.c:953
-#: camlibs/sierra/sierra.c:1230
+# camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:956
+# camlibs/sierra/sierra.c:1235
+#: camlibs/sierra/sierra.c:960 camlibs/sierra/sierra.c:968
+#: camlibs/sierra/sierra.c:1247
 msgid "Skylight"
 msgstr "日光"
 
-#: camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:955
-#: camlibs/sierra/sierra.c:1232
+# camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:958
+# camlibs/sierra/sierra.c:1237
+#: camlibs/sierra/sierra.c:961 camlibs/sierra/sierra.c:970
+#: camlibs/sierra/sierra.c:1249
 msgid "Fluorescent"
 msgstr "荧光"
 
-#: camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:957
-#: camlibs/sierra/sierra.c:1234
+# camlibs/sierra/sierra.c:950 camlibs/sierra/sierra.c:960
+# camlibs/sierra/sierra.c:1239
+#: camlibs/sierra/sierra.c:962 camlibs/sierra/sierra.c:972
+#: camlibs/sierra/sierra.c:1251
 msgid "Tungsten"
 msgstr "钨"
 
-#: camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:960
-#: camlibs/sierra/sierra.c:1236
+# camlibs/sierra/sierra.c:951 camlibs/sierra/sierra.c:963
+# camlibs/sierra/sierra.c:1241
+#: camlibs/sierra/sierra.c:963 camlibs/sierra/sierra.c:975
+#: camlibs/sierra/sierra.c:1253
 msgid "Cloudy"
 msgstr "多云"
 
-#: camlibs/sierra/sierra.c:974 camlibs/sierra/sierra.c:1245
-#: camlibs/sierra/sierra.c:1444 camlibs/sierra/sierra.c:1657
+# camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1250
+# camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
+#: camlibs/sierra/sierra.c:989 camlibs/sierra/sierra.c:1262
+#: camlibs/sierra/sierra.c:1461 camlibs/sierra/sierra.c:1674
 msgid "Lens Mode"
 msgstr "镜头模式"
 
-#: camlibs/sierra/sierra.c:975 camlibs/sierra/sierra.c:980
-#: camlibs/sierra/sierra.c:1249 camlibs/sierra/sierra.c:1445
-#: camlibs/sierra/sierra.c:1448 camlibs/sierra/sierra.c:1661
+# camlibs/sierra/sierra.c:978 camlibs/sierra/sierra.c:983
+# camlibs/sierra/sierra.c:1254 camlibs/sierra/sierra.c:1450
+# camlibs/sierra/sierra.c:1453 camlibs/sierra/sierra.c:1666
+#: camlibs/sierra/sierra.c:990 camlibs/sierra/sierra.c:995
+#: camlibs/sierra/sierra.c:1266 camlibs/sierra/sierra.c:1462
+#: camlibs/sierra/sierra.c:1465 camlibs/sierra/sierra.c:1678
 msgid "Macro"
 msgstr "巨大"
 
-#: camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:984
-#: camlibs/sierra/sierra.c:1253
+# camlibs/sierra/sierra.c:980 camlibs/sierra/sierra.c:987
+# camlibs/sierra/sierra.c:1258
+#: camlibs/sierra/sierra.c:992 camlibs/sierra/sierra.c:999
+#: camlibs/sierra/sierra.c:1270
 msgid "Infinity/Fish-eye"
 msgstr "无限/鱼眼"
 
-#: camlibs/sierra/sierra.c:998 camlibs/sierra/sierra.c:1263
+# camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1268
+#: camlibs/sierra/sierra.c:1013 camlibs/sierra/sierra.c:1280
 msgid "Spot Metering Mode"
 msgstr "场景测量模式"
 
-#: camlibs/sierra/sierra.c:1020 camlibs/sierra/sierra.c:1278
+# camlibs/sierra/sierra.c:1023 camlibs/sierra/sierra.c:1283
+#: camlibs/sierra/sierra.c:1035 camlibs/sierra/sierra.c:1295
 msgid "Zoom"
 msgstr "缩放"
 
-#: camlibs/sierra/sierra.c:1021 camlibs/sierra/sierra.c:1027
+# camlibs/sierra/sierra.c:1024 camlibs/sierra/sierra.c:1030
+#: camlibs/sierra/sierra.c:1036 camlibs/sierra/sierra.c:1042
 msgid "1x"
 msgstr "1x"
 
-#: camlibs/sierra/sierra.c:1022 camlibs/sierra/sierra.c:1032
+# camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1035
+#: camlibs/sierra/sierra.c:1037 camlibs/sierra/sierra.c:1047
 msgid "1.6x"
 msgstr "1.6x"
 
-#: camlibs/sierra/sierra.c:1023 camlibs/sierra/sierra.c:1029
+# camlibs/sierra/sierra.c:1026 camlibs/sierra/sierra.c:1032
+#: camlibs/sierra/sierra.c:1038 camlibs/sierra/sierra.c:1044
 msgid "2x"
 msgstr "2x"
 
-#: camlibs/sierra/sierra.c:1024 camlibs/sierra/sierra.c:1035
+# camlibs/sierra/sierra.c:1027 camlibs/sierra/sierra.c:1038
+#: camlibs/sierra/sierra.c:1039 camlibs/sierra/sierra.c:1050
 msgid "2.5x"
 msgstr "2.5x"
 
-#: camlibs/sierra/sierra.c:1045 camlibs/sierra/sierra.c:1505
+# camlibs/sierra/sierra.c:1048 camlibs/sierra/sierra.c:1510
+#: camlibs/sierra/sierra.c:1060 camlibs/sierra/sierra.c:1522
 msgid "Camera Settings"
 msgstr "相机设置"
 
-#: camlibs/sierra/sierra.c:1052 camlibs/sierra/sierra.c:1297
-#: camlibs/sierra/sierra.c:1512 camlibs/sierra/sierra.c:1704
+# camlibs/sierra/sierra.c:1055 camlibs/sierra/sierra.c:1302
+# camlibs/sierra/sierra.c:1517 camlibs/sierra/sierra.c:1709
+#: camlibs/sierra/sierra.c:1067 camlibs/sierra/sierra.c:1314
+#: camlibs/sierra/sierra.c:1529 camlibs/sierra/sierra.c:1721
 msgid "Auto Off (host) (in seconds)"
 msgstr "自动关机 (连接) (秒)"
 
-#: camlibs/sierra/sierra.c:1054 camlibs/sierra/sierra.c:1514
+# camlibs/sierra/sierra.c:1057 camlibs/sierra/sierra.c:1519
+#: camlibs/sierra/sierra.c:1069 camlibs/sierra/sierra.c:1531
 msgid ""
 "How long will it take until the camera powers off when connected to the "
 "computer?"
 msgstr "在相机连接到计算机以后，须等待多长时间再自动关机？"
 
-#: camlibs/sierra/sierra.c:1066 camlibs/sierra/sierra.c:1307
-#: camlibs/sierra/sierra.c:1526 camlibs/sierra/sierra.c:1714
+# camlibs/sierra/sierra.c:1069 camlibs/sierra/sierra.c:1312
+# camlibs/sierra/sierra.c:1531 camlibs/sierra/sierra.c:1719
+#: camlibs/sierra/sierra.c:1081 camlibs/sierra/sierra.c:1324
+#: camlibs/sierra/sierra.c:1543 camlibs/sierra/sierra.c:1731
 msgid "Auto Off (field) (in seconds)"
 msgstr "自动关机 (未连接) (秒)"
 
-#: camlibs/sierra/sierra.c:1068 camlibs/sierra/sierra.c:1528
+# camlibs/sierra/sierra.c:1071 camlibs/sierra/sierra.c:1533
+#: camlibs/sierra/sierra.c:1083 camlibs/sierra/sierra.c:1545
 msgid ""
 "How long will it take until the camera powers off when not connected to the "
 "computer?"
 msgstr "在未连接到计算机时，须等待多长时间再自动关机？"
 
-#: camlibs/sierra/sierra.c:1080 camlibs/sierra/sierra.c:1317
+# camlibs/sierra/sierra.c:1083 camlibs/sierra/sierra.c:1322
+#: camlibs/sierra/sierra.c:1095 camlibs/sierra/sierra.c:1334
 msgid "LCD Brightness"
 msgstr "LCD 亮度"
 
-#: camlibs/sierra/sierra.c:1090 camlibs/sierra/sierra.c:1326
+# camlibs/sierra/sierra.c:1093 camlibs/sierra/sierra.c:1331
+#: camlibs/sierra/sierra.c:1105 camlibs/sierra/sierra.c:1343
 msgid "LCD Auto Off (in seconds)"
 msgstr "LCD 自动关闭 (以秒为单位)"
 
-#: camlibs/sierra/sierra.c:1350
+# camlibs/sierra/sierra.c:1355
+#: camlibs/sierra/sierra.c:1367
 msgid "Shot Settings"
 msgstr "拍摄设置"
 
-#: camlibs/sierra/sierra.c:1357 camlibs/sierra/sierra.c:1365
-#: camlibs/sierra/sierra.c:1600
+# camlibs/sierra/sierra.c:1362 camlibs/sierra/sierra.c:1370
+# camlibs/sierra/sierra.c:1605
+#: camlibs/sierra/sierra.c:1374 camlibs/sierra/sierra.c:1382
+#: camlibs/sierra/sierra.c:1617
 msgid "F2"
 msgstr "F2"
 
-#: camlibs/sierra/sierra.c:1358 camlibs/sierra/sierra.c:1367
-#: camlibs/sierra/sierra.c:1602
+# camlibs/sierra/sierra.c:1363 camlibs/sierra/sierra.c:1372
+# camlibs/sierra/sierra.c:1607
+#: camlibs/sierra/sierra.c:1375 camlibs/sierra/sierra.c:1384
+#: camlibs/sierra/sierra.c:1619
 msgid "F2.3"
 msgstr "F2.3"
 
-#: camlibs/sierra/sierra.c:1359 camlibs/sierra/sierra.c:1369
-#: camlibs/sierra/sierra.c:1604
+# camlibs/sierra/sierra.c:1364 camlibs/sierra/sierra.c:1374
+# camlibs/sierra/sierra.c:1609
+#: camlibs/sierra/sierra.c:1376 camlibs/sierra/sierra.c:1386
+#: camlibs/sierra/sierra.c:1621
 msgid "F2.8"
 msgstr "F2.8"
 
-#: camlibs/sierra/sierra.c:1360 camlibs/sierra/sierra.c:1371
-#: camlibs/sierra/sierra.c:1606
+# camlibs/sierra/sierra.c:1365 camlibs/sierra/sierra.c:1376
+# camlibs/sierra/sierra.c:1611
+#: camlibs/sierra/sierra.c:1377 camlibs/sierra/sierra.c:1388
+#: camlibs/sierra/sierra.c:1623
 msgid "F4"
 msgstr "F4"
 
-#: camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1373
-#: camlibs/sierra/sierra.c:1608
+# camlibs/sierra/sierra.c:1366 camlibs/sierra/sierra.c:1378
+# camlibs/sierra/sierra.c:1613
+#: camlibs/sierra/sierra.c:1378 camlibs/sierra/sierra.c:1390
+#: camlibs/sierra/sierra.c:1625
 msgid "F5.6"
 msgstr "F5.6"
 
-#: camlibs/sierra/sierra.c:1362 camlibs/sierra/sierra.c:1375
-#: camlibs/sierra/sierra.c:1610
+# camlibs/sierra/sierra.c:1367 camlibs/sierra/sierra.c:1380
+# camlibs/sierra/sierra.c:1615
+#: camlibs/sierra/sierra.c:1379 camlibs/sierra/sierra.c:1392
+#: camlibs/sierra/sierra.c:1627
 msgid "F8"
 msgstr "F8"
 
-#: camlibs/sierra/sierra.c:1421 camlibs/sierra/sierra.c:1428
-#: camlibs/sierra/sierra.c:1648
+# camlibs/sierra/sierra.c:1426 camlibs/sierra/sierra.c:1433
+# camlibs/sierra/sierra.c:1653
+#: camlibs/sierra/sierra.c:1438 camlibs/sierra/sierra.c:1445
+#: camlibs/sierra/sierra.c:1665
 msgid "Custom"
 msgstr "定制"
 
-#: camlibs/sierra/sierra.c:1466 camlibs/sierra/sierra.c:1474
-#: camlibs/sierra/sierra.c:1679
+# camlibs/sierra/sierra.c:1471 camlibs/sierra/sierra.c:1479
+# camlibs/sierra/sierra.c:1684
+#: camlibs/sierra/sierra.c:1483 camlibs/sierra/sierra.c:1491
+#: camlibs/sierra/sierra.c:1696
 msgid "SuperFine"
 msgstr "超精细"
 
-#: camlibs/sierra/sierra.c:1467 camlibs/sierra/sierra.c:1476
-#: camlibs/sierra/sierra.c:1681
+# camlibs/sierra/sierra.c:1472 camlibs/sierra/sierra.c:1481
+# camlibs/sierra/sierra.c:1686
+#: camlibs/sierra/sierra.c:1484 camlibs/sierra/sierra.c:1493
+#: camlibs/sierra/sierra.c:1698
 msgid "HyPict"
 msgstr "合成照片"
 
-#: camlibs/sierra/sierra.c:1490 camlibs/sierra/sierra.c:1493
-#: camlibs/sierra/sierra.c:1693
+# camlibs/sierra/sierra.c:1495 camlibs/sierra/sierra.c:1498
+# camlibs/sierra/sierra.c:1698
+#: camlibs/sierra/sierra.c:1507 camlibs/sierra/sierra.c:1510
+#: camlibs/sierra/sierra.c:1710
 msgid "color"
 msgstr "彩色"
 
-#: camlibs/sierra/sierra.c:1491 camlibs/sierra/sierra.c:1495
-#: camlibs/sierra/sierra.c:1695
+# camlibs/sierra/sierra.c:1496 camlibs/sierra/sierra.c:1500
+# camlibs/sierra/sierra.c:1700
+#: camlibs/sierra/sierra.c:1508 camlibs/sierra/sierra.c:1512
+#: camlibs/sierra/sierra.c:1712
 msgid "black & white"
 msgstr "黑白"
 
-#: camlibs/sierra/sierra.c:1540 camlibs/sierra/sierra.c:1549
-#: camlibs/sierra/sierra.c:1726
+# camlibs/sierra/sierra.c:1545 camlibs/sierra/sierra.c:1554
+# camlibs/sierra/sierra.c:1731
+#: camlibs/sierra/sierra.c:1557 camlibs/sierra/sierra.c:1566
+#: camlibs/sierra/sierra.c:1743
 msgid "Korean"
 msgstr "韩语"
 
-#: camlibs/sierra/sierra.c:1541 camlibs/sierra/sierra.c:1551
-#: camlibs/sierra/sierra.c:1728
+# camlibs/sierra/sierra.c:1546 camlibs/sierra/sierra.c:1556
+# camlibs/sierra/sierra.c:1733
+#: camlibs/sierra/sierra.c:1558 camlibs/sierra/sierra.c:1568
+#: camlibs/sierra/sierra.c:1745
 msgid "English"
 msgstr "英语"
 
-#: camlibs/sierra/sierra.c:1542 camlibs/sierra/sierra.c:1553
-#: camlibs/sierra/sierra.c:1730
+# camlibs/sierra/sierra.c:1547 camlibs/sierra/sierra.c:1558
+# camlibs/sierra/sierra.c:1735
+#: camlibs/sierra/sierra.c:1559 camlibs/sierra/sierra.c:1570
+#: camlibs/sierra/sierra.c:1747
 msgid "French"
 msgstr "法语"
 
-#: camlibs/sierra/sierra.c:1543 camlibs/sierra/sierra.c:1555
-#: camlibs/sierra/sierra.c:1732
+# camlibs/sierra/sierra.c:1548 camlibs/sierra/sierra.c:1560
+# camlibs/sierra/sierra.c:1737
+#: camlibs/sierra/sierra.c:1560 camlibs/sierra/sierra.c:1572
+#: camlibs/sierra/sierra.c:1749
 msgid "German"
 msgstr "德语"
 
-#: camlibs/sierra/sierra.c:1544 camlibs/sierra/sierra.c:1557
-#: camlibs/sierra/sierra.c:1734
+# camlibs/sierra/sierra.c:1549 camlibs/sierra/sierra.c:1562
+# camlibs/sierra/sierra.c:1739
+#: camlibs/sierra/sierra.c:1561 camlibs/sierra/sierra.c:1574
+#: camlibs/sierra/sierra.c:1751
 msgid "Italian"
 msgstr "意大利语"
 
-#: camlibs/sierra/sierra.c:1545 camlibs/sierra/sierra.c:1559
-#: camlibs/sierra/sierra.c:1736
+# camlibs/sierra/sierra.c:1550 camlibs/sierra/sierra.c:1564
+# camlibs/sierra/sierra.c:1741
+#: camlibs/sierra/sierra.c:1562 camlibs/sierra/sierra.c:1576
+#: camlibs/sierra/sierra.c:1753
 msgid "Japanese"
 msgstr "日语"
 
-#: camlibs/sierra/sierra.c:1546 camlibs/sierra/sierra.c:1561
-#: camlibs/sierra/sierra.c:1738
+# camlibs/sierra/sierra.c:1551 camlibs/sierra/sierra.c:1566
+# camlibs/sierra/sierra.c:1743
+#: camlibs/sierra/sierra.c:1563 camlibs/sierra/sierra.c:1578
+#: camlibs/sierra/sierra.c:1755
 msgid "Spanish"
 msgstr "西班牙语"
 
-#: camlibs/sierra/sierra.c:1547 camlibs/sierra/sierra.c:1563
-#: camlibs/sierra/sierra.c:1740
+# camlibs/sierra/sierra.c:1552 camlibs/sierra/sierra.c:1568
+# camlibs/sierra/sierra.c:1745
+#: camlibs/sierra/sierra.c:1564 camlibs/sierra/sierra.c:1580
+#: camlibs/sierra/sierra.c:1757
 msgid "Portugese"
 msgstr "葡萄牙语"
 
-#: camlibs/sierra/sierra.c:1576 camlibs/sierra/sierra.c:1749
+# camlibs/sierra/sierra.c:1581 camlibs/sierra/sierra.c:1754
+#: camlibs/sierra/sierra.c:1593 camlibs/sierra/sierra.c:1766
 msgid "Date & Time"
 msgstr "日期和时间"
 
-#: camlibs/sierra/sierra.c:1791
+# camlibs/sierra/sierra.c:1796
+#: camlibs/sierra/sierra.c:1808
 msgid "NO MEMORY CARD PRESENT\n"
 msgstr "内存卡不存在\n"
 
-#: camlibs/sierra/sierra.c:1801
+# camlibs/sierra/sierra.c:1806
+#: camlibs/sierra/sierra.c:1818
 #, c-format
 msgid "%sCamera Model: %s\n"
 msgstr "%s相机型号：%s\n"
 
-#: camlibs/sierra/sierra.c:1805
+# camlibs/sierra/sierra.c:1810
+#: camlibs/sierra/sierra.c:1822
 #, c-format
 msgid "%sManufacturer: %s\n"
 msgstr "%s制造商：%s\n"
 
-#: camlibs/sierra/sierra.c:1809
+# camlibs/sierra/sierra.c:1814
+#: camlibs/sierra/sierra.c:1826
 #, c-format
 msgid "%sCamera ID: %s\n"
 msgstr "%s相机 ID：%s\n"
 
-#: camlibs/sierra/sierra.c:1813
+# camlibs/sierra/sierra.c:1818
+#: camlibs/sierra/sierra.c:1830
 #, c-format
 msgid "%sSerial Number: %s\n"
 msgstr "%s序列号：%s\n"
 
-#: camlibs/sierra/sierra.c:1817
+# camlibs/sierra/sierra.c:1822
+#: camlibs/sierra/sierra.c:1834
 #, c-format
 msgid "%sSoftware Rev.: %s\n"
 msgstr "%s软件版本号：%s\n"
 
-#: camlibs/sierra/sierra.c:1821
+# camlibs/sierra/sierra.c:1826
+#: camlibs/sierra/sierra.c:1838
 #, c-format
 msgid "%sFrames Taken: %i\n"
 msgstr "%s已用帧：%i\n"
 
-#: camlibs/sierra/sierra.c:1823
+# camlibs/sierra/sierra.c:1828
+#: camlibs/sierra/sierra.c:1840
 #, c-format
 msgid "%sFrames Left: %i\n"
 msgstr "%s剩余帧：%i\n"
 
-#: camlibs/sierra/sierra.c:1825
+# camlibs/sierra/sierra.c:1830
+#: camlibs/sierra/sierra.c:1842
 #, c-format
 msgid "%sBattery Life: %i\n"
 msgstr "%s电池寿命：%i\n"
 
-#: camlibs/sierra/sierra.c:1827
+# camlibs/sierra/sierra.c:1832
+#: camlibs/sierra/sierra.c:1844
 #, c-format
 msgid "%sMemory Left: %i bytes\n"
 msgstr "%s内存剩余：%i 字节\n"
 
-#: camlibs/sierra/sierra.c:1831
+# camlibs/sierra/sierra.c:1836
+#: camlibs/sierra/sierra.c:1848
 #, c-format
 msgid "%sDate: %s\n"
 msgstr "%s日期：%s\n"
 
-#: camlibs/sierra/sierra.c:1847
+# camlibs/sierra/sierra.c:1852
+#: camlibs/sierra/sierra.c:1864
 msgid ""
 "Some notes about Epson cameras:\n"
 "- Some parameters are not controllable remotely:\n"
@@ -2140,7 +3081,8 @@ msgstr ""
 "  而得到的。如果您的相机于此不同，请向 \n"
 "  <gphoto-devel@gphoto.org> 发送电子邮件 (用英语)\n"
 
-#: camlibs/sierra/sierra.c:1859
+# camlibs/sierra/sierra.c:1864
+#: camlibs/sierra/sierra.c:1876
 msgid ""
 "Some notes about Olympus cameras (and others?):\n"
 "(1) Camera Configuration:\n"
@@ -2166,7 +3108,8 @@ msgstr ""
 "    相机控制菜单出现。将USB PC 控制模式\n"
 "    打开。"
 
-#: camlibs/sierra/sierra.c:1882
+# camlibs/sierra/sierra.c:1887
+#: camlibs/sierra/sierra.c:1899
 msgid ""
 "sierra SPARClite library\n"
 "Scott Fritzinger <scottf@unr.edu>\n"
@@ -2186,79 +3129,94 @@ msgstr ""
 "因为使用了他们的奥林巴斯 C-3030Z\n"
 "以实现 USB 支持。"
 
-#: camlibs/sierra/library.c:287
+# camlibs/sierra/library.c:285
+#: camlibs/sierra/library.c:285
 msgid "Cannot retrieve the battery capacity"
 msgstr "无法检索电池容量"
 
-#: camlibs/sierra/library.c:293
+# camlibs/sierra/library.c:291
+#: camlibs/sierra/library.c:291
 #, c-format
 msgid ""
 "The battery level of the camera is too low (%d%%). The operation is aborted."
 msgstr "相机电量太低 (%d%%)。操作取消。"
 
-#: camlibs/sierra/library.c:317
+# camlibs/sierra/library.c:315
+#: camlibs/sierra/library.c:315
 msgid "Cannot retrieve the available memory left"
 msgstr "无法检索剩余可用内存"
 
-#: camlibs/sierra/library.c:504
+# camlibs/sierra/library.c:502
+#: camlibs/sierra/library.c:489
 #, c-format
 msgid "The first byte received (0x%x) is not valid."
 msgstr "接收的第一个字节 (0x%x) 非法。"
 
-#: camlibs/sierra/library.c:622
+# camlibs/sierra/library.c:620
+#: camlibs/sierra/library.c:607
 #, c-format
 msgid ""
 "Transmission of packet timed out even after %i retries. Please contact "
 "<gphoto-devel@gphoto.org>."
 msgstr "在 %i 次重试后包传输仍然超时。请联系 <gphoto-devel@gphoto.org>。"
 
-#: camlibs/sierra/library.c:659
+# camlibs/sierra/library.c:657
+#: camlibs/sierra/library.c:644
 msgid ""
 "Packet got rejected by camera. Please contact <gphoto-devel@gphoto.org>."
 msgstr "相机拒绝包。请联系 <gphoto-devel@gphoto.org>。"
 
-#: camlibs/sierra/library.c:666
+# camlibs/sierra/library.c:664
+#: camlibs/sierra/library.c:651
 #, c-format
 msgid ""
 "Could not transmit packet (error code %i). Please contact <gphoto-"
 "devel@gphoto.org>."
 msgstr "无法传输包 (错误码 %i)。请联系 <gphoto-devel@gphoto.org>。"
 
-#: camlibs/sierra/library.c:746
+# camlibs/sierra/library.c:744
+#: camlibs/sierra/library.c:731
 #, c-format
-msgid "Got unexpected result %i. Please contact <gphoto-devel@gphoto.org>."
-msgstr "得到意外的结果 %i。请联系 <gphoto-devel@gphoto.org>。"
+msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@gphoto.org>."
+msgstr "得到意外的结果 0x%x。请联系 <gphoto-devel@gphoto.org>。"
 
-#: camlibs/sierra/library.c:821
+# camlibs/sierra/library.c:819
+#: camlibs/sierra/library.c:810
 #, c-format
 msgid ""
 "Received unexpected answer (%i). Please contact <gphoto-devel@gphoto.org>."
 msgstr "收到意外的应答 (%i)。请联系 <gphoto-devel@gphoto.org>。"
 
-#: camlibs/sierra/library.c:881
+# camlibs/sierra/library.c:879
+#: camlibs/sierra/library.c:870
 #, c-format
 msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
 msgstr "无法读取寄存器 %i。请联系 <gphoto-devel@gphoto.org>。"
 
-#: camlibs/sierra/library.c:925
+# camlibs/sierra/library.c:923
+#: camlibs/sierra/library.c:914
 msgid "Sending data..."
 msgstr "正在发送数据..."
 
-#: camlibs/sierra/library.c:1000
+# camlibs/sierra/library.c:1010
+#: camlibs/sierra/library.c:1001
 #, c-format
 msgid ""
 "Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
 msgstr "无法读取字符串寄存器 %i。请联系 <gphoto-devel@gphoto.org>。"
 
-#: camlibs/sierra/library.c:1146
+# camlibs/sierra/library.c:1157
+#: camlibs/sierra/library.c:1148
 #, c-format
 msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@gphoto.org>."
 msgstr "需要 32 字节，得到 %i。请连线 <gphoto-devel@gphoto.org>。"
 
-#: camlibs/sierra/library.c:1176
+# camlibs/sierra/library.c:1187
+#: camlibs/sierra/library.c:1178
 msgid "Not implemented!"
 msgstr "未实现！"
 
+# camlibs/sonydscf1/sonydscf1.c:133
 #: camlibs/sonydscf1/sonydscf1.c:133
 msgid ""
 "Sony DSC-F1 Digital Camera Support\n"
@@ -2273,113 +3231,149 @@ msgstr ""
 "Ken-ichi Hayashi\n"
 "由 Bart van Leeuwen <bart@netage.nl> 移植到 gphoto2"
 
-#: camlibs/stv0680/library.c:356 camlibs/stv0680/library.c:390
+# camlibs/sonydscf55/camera.c:91
+#: camlibs/sonydscf55/camera.c:91
+msgid ""
+"Sony DSC-F55/505 gPhoto library\n"
+"Supports Sony MSAC-SR1 and Memory Stick used by DCR-PC100\n"
+"Originally written by Mark Davies <mdavies@dial.pipex.com>\n"
+"gPhoto2 port by Raymond Penners <raymond@dotsphinx.com>"
+msgstr ""
+"索尼 DSC-F55/505 gPhoto 库\n"
+"支持 索尼 MSAC-SR1 和 DCR-PC100 使用的存储体\n"
+"最初由 Mark Davies <mdavies@dial.pipex.com> 编写\n"
+"由 Raymond Penners <raymond@dotsphinx.com> 移植到 gphoto2"
+
+# camlibs/stv0680/library.c:356 camlibs/stv0680/library.c:390
+#: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
 msgid "Bad exposure (not enough light probably)"
 msgstr "曝光失败 (可能是没有充足的光线)"
 
-#: camlibs/stv0680/library.c:520
+# camlibs/stv0680/library.c:520
+#: camlibs/stv0680/library.c:518
 msgid "Information for STV0680 based camera:\n"
 msgstr "关于基于 STV0680 的相机的信息：\n"
 
-#: camlibs/stv0680/library.c:525
+# camlibs/stv0680/library.c:525
+#: camlibs/stv0680/library.c:523
 #, c-format
 msgid "Firmware Revision: %d.%d\n"
 msgstr "固件版本：%d.%d\n"
 
-#: camlibs/stv0680/library.c:529
+# camlibs/stv0680/library.c:529
+#: camlibs/stv0680/library.c:527
 #, c-format
 msgid "ASIC Revision: %d.%d\n"
 msgstr "专用集成电路版本：%d.%d\n"
 
-#: camlibs/stv0680/library.c:533
+# camlibs/stv0680/library.c:533
+#: camlibs/stv0680/library.c:531
 #, c-format
 msgid "Sensor ID: %d.%d\n"
 msgstr "感应器 ID：%d.%d\n"
 
+# camlibs/stv0680/library.c:539
 #. HWCONFIG_COMMSLINK_MASK ... not really needed, the user knows, he
 #. * plugged it in.
-#: camlibs/stv0680/library.c:539
+#: camlibs/stv0680/library.c:537
 #, c-format
 msgid "Camera is configured for lights flickering with %dHz.\n"
 msgstr "相机是按照以 %dHz 闪烁的光源来配置的。\n"
 
-#: camlibs/stv0680/library.c:542
+# camlibs/stv0680/library.c:542
+#: camlibs/stv0680/library.c:540
 #, c-format
 msgid "Memory in camera: %d Mbit.\n"
 msgstr "相机内置内存：%d 兆位。\n"
 
-#: camlibs/stv0680/library.c:546
+# camlibs/stv0680/library.c:546
+#: camlibs/stv0680/library.c:544
 msgid "Camera supports Thumbnails.\n"
 msgstr "相机支持缩略图。\n"
 
-#: camlibs/stv0680/library.c:548
+# camlibs/stv0680/library.c:548
+#: camlibs/stv0680/library.c:546
 msgid "Camera supports Video.\n"
 msgstr "相机支持视频。\n"
 
-#: camlibs/stv0680/library.c:551
+# camlibs/stv0680/library.c:551
+#: camlibs/stv0680/library.c:549
 msgid "Camera pictures are monochrome.\n"
 msgstr "相机照片为黑白照片。\n"
 
+# camlibs/stv0680/library.c:553
 #. Is this useful?
-#: camlibs/stv0680/library.c:553
+#: camlibs/stv0680/library.c:551
 msgid "Camera has memory.\n"
 msgstr "相机有内存。\n"
 
-#: camlibs/stv0680/library.c:555
+# camlibs/stv0680/library.c:555
+#: camlibs/stv0680/library.c:553
 msgid "Camera supports videoformats: "
 msgstr "相机支持的视频格式："
 
-#: camlibs/stv0680/library.c:561
+# camlibs/stv0680/library.c:561
+#: camlibs/stv0680/library.c:559
 #, c-format
 msgid "Vendor ID: %02x%02x\n"
 msgstr "厂家 ID：%02x%02x\n"
 
-#: camlibs/stv0680/library.c:565
+# camlibs/stv0680/library.c:565
+#: camlibs/stv0680/library.c:563
 #, c-format
 msgid "Product ID: %02x%02x\n"
 msgstr "产品 ID：%02x%02x\n"
 
-#: camlibs/stv0680/library.c:572
+# camlibs/stv0680/library.c:572
+#: camlibs/stv0680/library.c:570
 #, c-format
 msgid "Number of Images: %d\n"
 msgstr "图像数量：%d\n"
 
-#: camlibs/stv0680/library.c:575
+# camlibs/stv0680/library.c:575
+#: camlibs/stv0680/library.c:573
 #, c-format
 msgid "Maximum number of Images: %d\n"
 msgstr "最大图像数量：%d\n"
 
-#: camlibs/stv0680/library.c:578
+# camlibs/stv0680/library.c:578
+#: camlibs/stv0680/library.c:576
 #, c-format
 msgid "Image width: %d\n"
 msgstr "图像宽度：%d\n"
 
-#: camlibs/stv0680/library.c:581
+# camlibs/stv0680/library.c:581
+#: camlibs/stv0680/library.c:579
 #, c-format
 msgid "Image height: %d\n"
 msgstr "图像高度：%d\n"
 
-#: camlibs/stv0680/library.c:584
+# camlibs/stv0680/library.c:584
+#: camlibs/stv0680/library.c:582
 #, c-format
 msgid "Image size: %d\n"
 msgstr "图像大小：%d\n"
 
-#: camlibs/stv0680/library.c:588
+# camlibs/stv0680/library.c:588
+#: camlibs/stv0680/library.c:586
 #, c-format
 msgid "Thumbnail width: %d\n"
 msgstr "缩略图宽度：%d\n"
 
-#: camlibs/stv0680/library.c:589
+# camlibs/stv0680/library.c:589
+#: camlibs/stv0680/library.c:587
 #, c-format
 msgid "Thumbnail height: %d\n"
 msgstr "缩略图高度：%d\n"
 
-#: camlibs/stv0680/library.c:590
+# camlibs/stv0680/library.c:590
+#: camlibs/stv0680/library.c:588
 #, c-format
 msgid "Thumbnail size: %d\n"
 msgstr "缩略图大小：%d\n"
 
-#: camlibs/stv0680/stv0680.c:255
+# camlibs/stv0680/stv0680.c:258
+#: camlibs/stv0680/stv0680.c:247
 msgid ""
 "STV0680\n"
 "Adam Harrison <adam@antispin.org>\n"
@@ -2395,87 +3389,106 @@ msgstr ""
 "Carsten Weinholz <c.weinholz@netcologne.de>\n"
 "为 Aiptek PenCam 和其它 STM USB 双模式相机进行了扩展。"
 
+# libgphoto2/gphoto2-camera.c:81
 #. libgphoto2_port doesn't have a GPContext
 #: libgphoto2/gphoto2-camera.c:81
 #, c-format
 msgid "An error occurred in the io-library ('%s'): %s"
 msgstr "io-库 (“%s”) 中出现错误：%s"
 
+# libgphoto2/gphoto2-camera.c:85
 #: libgphoto2/gphoto2-camera.c:85
 msgid "No additional information available."
 msgstr "没有可用的附加信息。"
 
+# libgphoto2/gphoto2-camera.c:662
 #: libgphoto2/gphoto2-camera.c:662
 msgid "Could not detect any camera"
 msgstr "无法检测到任何相机"
 
+# libgphoto2/gphoto2-camera.c:682
 #: libgphoto2/gphoto2-camera.c:682
 msgid "You have to set the port prior initialization of the camera."
 msgstr "您必须在初始化相机以前设定端口。"
 
+# libgphoto2/gphoto2-camera.c:710
 #: libgphoto2/gphoto2-camera.c:710
 #, c-format
 msgid "Could not load required camera driver '%s'."
 msgstr "无法装入必须的相机驱动程序“%s”。"
 
+# libgphoto2/gphoto2-camera.c:728
 #: libgphoto2/gphoto2-camera.c:728
 #, c-format
 msgid "Camera driver '%s' is missing the 'camera_init' function."
 msgstr "相机驱动程序“%s”缺少“camera_init”函数。"
 
+# libgphoto2/gphoto2-camera.c:786
 #: libgphoto2/gphoto2-camera.c:786
 msgid "This camera does not offer any configuration options."
 msgstr "该相机不提供任何配置选项。"
 
+# libgphoto2/gphoto2-camera.c:818
 #: libgphoto2/gphoto2-camera.c:818
 msgid "This camera does not support setting configuration options."
 msgstr "该相机不支持设置配置选项。"
 
+# libgphoto2/gphoto2-camera.c:850
 #: libgphoto2/gphoto2-camera.c:850
 msgid "This camera does not support summaries."
 msgstr "该相机不支持概要。"
 
+# libgphoto2/gphoto2-camera.c:881
 #: libgphoto2/gphoto2-camera.c:881
 msgid "This camera does not offer a manual."
 msgstr "该相机不提供手册。"
 
+# libgphoto2/gphoto2-camera.c:912
 #: libgphoto2/gphoto2-camera.c:912
 msgid "This camera does not provide information about the driver."
 msgstr "该相机不提供关于驱动程序的信息。"
 
+# libgphoto2/gphoto2-camera.c:946
 #: libgphoto2/gphoto2-camera.c:946
 msgid "This camera can not capture."
 msgstr "该相机不能视频捕捉。"
 
+# libgphoto2/gphoto2-camera.c:979
 #: libgphoto2/gphoto2-camera.c:979
 msgid "This camera can not capture previews."
 msgstr "该相机不能预览视频捕捉。"
 
+# libgphoto2/gphoto2-filesys.c:214
 #: libgphoto2/gphoto2-filesys.c:214
 #, c-format
 msgid "The path '%s' is not absolute."
 msgstr "路径“%s”不是绝对路径。"
 
+# libgphoto2/gphoto2-filesys.c:335
 #: libgphoto2/gphoto2-filesys.c:335
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr "文件夹“%s”已存在，无法附加。"
 
+# libgphoto2/gphoto2-filesys.c:514
 #: libgphoto2/gphoto2-filesys.c:514
 #, c-format
 msgid "Could not find folder '%s'."
 msgstr "无法找到文件夹“%s”。"
 
+# libgphoto2/gphoto2-filesys.c:531
 #: libgphoto2/gphoto2-filesys.c:531
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr "文件夹“%s”不含有文件夹“%s”。"
 
+# libgphoto2/gphoto2-filesys.c:594
 #: libgphoto2/gphoto2-filesys.c:594
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr "由于“%s”已存在，所以无法将其附加到文件夹“%s”中。"
 
+# libgphoto2/gphoto2-filesys.c:970
 #: libgphoto2/gphoto2-filesys.c:970
 #, c-format
 msgid ""
@@ -2483,21 +3496,25 @@ msgid ""
 "does not support deletion of files."
 msgstr "您试图从文件夹“%2$s”中删除“%1$s”，但文件系统不支持删除文件。"
 
+# libgphoto2/gphoto2-filesys.c:1071
 #: libgphoto2/gphoto2-filesys.c:1071
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr "您正试图删除的文件夹“%s”中还有文件。"
 
+# libgphoto2/gphoto2-filesys.c:1077
 #: libgphoto2/gphoto2-filesys.c:1077
 #, c-format
 msgid ""
 "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr "您正试图删除的文件夹“%s”中还有子文件夹。"
 
+# libgphoto2/gphoto2-filesys.c:1117
 #: libgphoto2/gphoto2-filesys.c:1117
 msgid "The filesystem does not support upload of files."
 msgstr "文件系统不支持上载文件。"
 
+# libgphoto2/gphoto2-filesys.c:1158
 #: libgphoto2/gphoto2-filesys.c:1158
 #, c-format
 msgid ""
@@ -2505,421 +3522,546 @@ msgid ""
 "%i."
 msgstr "文件夹“%s”只含有 %i 个文件，但您请求编号为 %i 的文件。"
 
+# libgphoto2/gphoto2-filesys.c:1199
 #: libgphoto2/gphoto2-filesys.c:1199
 #, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr "在文件夹“%2$s”中无法找到文件“%1$s”。"
 
+# libgphoto2/gphoto2-filesys.c:1282
 #: libgphoto2/gphoto2-filesys.c:1282
 #, c-format
 msgid "Could not find file '%s'."
 msgstr "无法找到文件“%s”。"
 
+# libgphoto2/gphoto2-filesys.c:1407
 #: libgphoto2/gphoto2-filesys.c:1407
 msgid "The filesystem doesn't support getting files"
 msgstr "文件系统不支持获取文件"
 
+# libgphoto2/gphoto2-filesys.c:1442 libgphoto2/gphoto2-filesys.c:1764
 #: libgphoto2/gphoto2-filesys.c:1442 libgphoto2/gphoto2-filesys.c:1764
 #, c-format
 msgid "Unknown file type %i."
 msgstr "未知的文件类型 %i。"
 
+# libgphoto2/gphoto2-filesys.c:1446
 #: libgphoto2/gphoto2-filesys.c:1446
 #, c-format
 msgid "Downloading '%s' from folder '%s'..."
 msgstr "正在从文件夹“%2$s”下载“%1$s”..."
 
+# libgphoto2/gphoto2-filesys.c:1656
 #: libgphoto2/gphoto2-filesys.c:1656
 msgid "The filesystem doesn't support getting file information"
 msgstr "文件系统不支持获取文件信息"
 
+# libgphoto2/gphoto2-filesys.c:1867
 #: libgphoto2/gphoto2-filesys.c:1867
 msgid "The filesystem doesn't support setting file information"
 msgstr "文件系统不支持设置文件信息"
 
+# libgphoto2/gphoto2-filesys.c:1890
 #: libgphoto2/gphoto2-filesys.c:1890
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr "无法改变像宽度和高度这样的只读文件属性。"
 
+# libgphoto2/gphoto2-abilities-list.c:248
 #: libgphoto2/gphoto2-abilities-list.c:248
 #, c-format
 msgid "Could not open '%s'"
 msgstr "无法打开“%s”"
 
+# libgphoto2/gphoto2-abilities-list.c:260
 #: libgphoto2/gphoto2-abilities-list.c:260
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "正在从“%s”装入相机驱动程序..."
 
+# libgphoto2/gphoto2-abilities-list.c:622
 #: libgphoto2/gphoto2-abilities-list.c:622
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "无法为“%s”找到任何驱动程序"
 
+# libgphoto2/gphoto2-result.c:44
 #: libgphoto2/gphoto2-result.c:44
 msgid "Corrupted data"
 msgstr "已毁坏的数据"
 
+# libgphoto2/gphoto2-result.c:45
 #: libgphoto2/gphoto2-result.c:45
 msgid "File exists"
 msgstr "文件存在"
 
+# libgphoto2/gphoto2-result.c:46
 #: libgphoto2/gphoto2-result.c:46
 msgid "Unknown model"
 msgstr "未知型号"
 
+# libgphoto2/gphoto2-result.c:47
 #: libgphoto2/gphoto2-result.c:47
 msgid "Directory not found"
 msgstr "找不到目录"
 
+# libgphoto2/gphoto2-result.c:48
 #: libgphoto2/gphoto2-result.c:48
 msgid "File not found"
 msgstr "找不到文件"
 
+# libgphoto2/gphoto2-result.c:49
 #: libgphoto2/gphoto2-result.c:49
 msgid "Directory exists"
 msgstr "目录存在"
 
+# libgphoto2/gphoto2-result.c:50
 #: libgphoto2/gphoto2-result.c:50
 msgid "Path not absolute"
 msgstr "路径不是绝对路径"
 
+# frontends/command-line/gphoto2-cmd-capture.c:218
+# libgphoto2/gphoto2-result.c:51
 #: frontends/command-line/gphoto2-cmd-capture.c:218
 #: libgphoto2/gphoto2-result.c:51
 msgid "Operation cancelled"
 msgstr "操作已取消"
 
+# libgphoto2/gphoto2-result.c:76
 #: libgphoto2/gphoto2-result.c:76
 msgid "Unknown camera library error"
 msgstr "未知的相机库错误"
 
+# libgphoto2/gphoto2-result.c:82
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "未知的错误"
 
-#: frontends/command-line/main.c:176
+# frontends/command-line/main.c:187
+#: frontends/command-line/main.c:187
 msgid "Turn on debugging"
 msgstr "开始调试"
 
-#: frontends/command-line/main.c:178
+# frontends/command-line/main.c:189
+#: frontends/command-line/main.c:189
 msgid "Quiet output (default=verbose)"
 msgstr "少量输出 (默认为大量)"
 
+# frontends/command-line/main.c:193
 #. Display and die actions
-#: frontends/command-line/main.c:182
+#: frontends/command-line/main.c:193
 msgid "Display version and exit"
 msgstr "显示版本号并退出"
 
-#: frontends/command-line/main.c:183
+# frontends/command-line/main.c:194
+#: frontends/command-line/main.c:194
 msgid "Displays this help screen"
 msgstr "显示该求助屏幕"
 
-#: frontends/command-line/main.c:184
+# frontends/command-line/main.c:195
+#: frontends/command-line/main.c:195
 msgid "List supported camera models"
 msgstr "列举支持的相机型号"
 
-#: frontends/command-line/main.c:185
+# frontends/command-line/main.c:196
+#: frontends/command-line/main.c:196
 msgid "Create output for usb.usermap"
 msgstr "为 usb.usermap 创建输出"
 
-#: frontends/command-line/main.c:186
+# frontends/command-line/main.c:197
+#: frontends/command-line/main.c:197
 msgid "List supported port devices"
 msgstr "列举支持的端口设备"
 
-#: frontends/command-line/main.c:187
+# frontends/command-line/main.c:198
+#: frontends/command-line/main.c:198
 msgid "Send file to stdout"
 msgstr "将文件发送到标准输出"
 
-#: frontends/command-line/main.c:188
+# frontends/command-line/main.c:199
+#: frontends/command-line/main.c:199
 msgid "Print filesize before data"
 msgstr "在数据前面打印文件大小"
 
-#: frontends/command-line/main.c:189
+# frontends/command-line/main.c:200
+#: frontends/command-line/main.c:200
 msgid "List auto-detected cameras"
 msgstr "列举可以自动检测的相机"
 
+# frontends/command-line/main.c:203
 #. Settings needed for camera functions
-#: frontends/command-line/main.c:192
+#: frontends/command-line/main.c:203
 msgid "Specify port device"
 msgstr "指定端口设备"
 
-#: frontends/command-line/main.c:193
+# frontends/command-line/main.c:204
+#: frontends/command-line/main.c:204
 msgid "Specify serial transfer speed"
 msgstr "指定串行传输速度"
 
-#: frontends/command-line/main.c:194
+# frontends/command-line/main.c:205
+#: frontends/command-line/main.c:205
 msgid "Specify camera model"
 msgstr "指定相机型号"
 
-#: frontends/command-line/main.c:195
+# frontends/command-line/main.c:206
+#: frontends/command-line/main.c:206
 msgid "Specify a filename"
 msgstr "指定文件名"
 
-#: frontends/command-line/main.c:196
+# frontends/command-line/main.c:207
+#: frontends/command-line/main.c:207
 msgid "(expert only) Override USB IDs"
 msgstr "(仅适于专家) 覆盖 USB ID"
 
+# frontends/command-line/main.c:210
 #. Actions that depend on settings
-#: frontends/command-line/main.c:199
+#: frontends/command-line/main.c:210
 msgid "Display camera abilities"
 msgstr "显示相机功能"
 
-#: frontends/command-line/main.c:200
+# frontends/command-line/main.c:211
+#: frontends/command-line/main.c:211
 msgid "Specify camera folder (default=\"/\")"
 msgstr "指定相机文件夹 (默认为 “/”)"
 
-#: frontends/command-line/main.c:201
+# frontends/command-line/main.c:212
+#: frontends/command-line/main.c:212
 msgid "Recursion (default for download)"
 msgstr "递归 (下载时默认)"
 
-#: frontends/command-line/main.c:202
+# frontends/command-line/main.c:213
+#: frontends/command-line/main.c:213
 msgid "No recursion (default for deletion)"
 msgstr "不递归 (删除时默认)"
 
-#: frontends/command-line/main.c:203
+# frontends/command-line/main.c:214
+#: frontends/command-line/main.c:214
 msgid "List folders in folder"
 msgstr "列出文件夹中的文件夹"
 
-#: frontends/command-line/main.c:204
+# frontends/command-line/main.c:215
+#: frontends/command-line/main.c:215
 msgid "List files in folder"
 msgstr "列出文件夹中的文件"
 
-#: frontends/command-line/main.c:205 frontends/command-line/main.c:206
+# frontends/command-line/main.c:216 frontends/command-line/main.c:217
+#: frontends/command-line/main.c:216 frontends/command-line/main.c:217
 msgid "name"
 msgstr "名称"
 
-#: frontends/command-line/main.c:205
+# frontends/command-line/main.c:216
+#: frontends/command-line/main.c:216
 msgid "Create a directory"
 msgstr "创建目录"
 
-#: frontends/command-line/main.c:206
+# frontends/command-line/main.c:217
+#: frontends/command-line/main.c:217
 msgid "Remove a directory"
 msgstr "删除目录"
 
-#: frontends/command-line/main.c:207
+# frontends/command-line/main.c:218
+#: frontends/command-line/main.c:218
 msgid "Display number of files"
 msgstr "显示文件的数量"
 
-#: frontends/command-line/main.c:208
+# frontends/command-line/main.c:219
+#: frontends/command-line/main.c:219
 msgid "Get files given in range"
 msgstr "获取给定范围的文件"
 
-#: frontends/command-line/main.c:209
+# frontends/command-line/main.c:220
+#: frontends/command-line/main.c:220
 msgid "Get all files from folder"
 msgstr "从文件夹中获取所有文件"
 
-#: frontends/command-line/main.c:210
+# frontends/command-line/main.c:221
+#: frontends/command-line/main.c:221
 msgid "Get thumbnails given in range"
 msgstr "获取给定范围的缩略图"
 
-#: frontends/command-line/main.c:211
+# frontends/command-line/main.c:222
+#: frontends/command-line/main.c:222
 msgid "Get all thumbnails from folder"
 msgstr "从文件夹中获取所有缩略图"
 
-#: frontends/command-line/main.c:212
+# frontends/command-line/main.c:223
+#: frontends/command-line/main.c:223
 msgid "Get raw data given in range"
 msgstr "获取给定范围的原始数据"
 
-#: frontends/command-line/main.c:213
+# frontends/command-line/main.c:224
+#: frontends/command-line/main.c:224
 msgid "Get all raw data from folder"
 msgstr "从文件夹中获取所有原始数据"
 
-#: frontends/command-line/main.c:214
+# frontends/command-line/main.c:225
+#: frontends/command-line/main.c:225
 msgid "Get audio data given in range"
 msgstr "获取给定范围的音频数据"
 
-#: frontends/command-line/main.c:215
+# frontends/command-line/main.c:226
+#: frontends/command-line/main.c:226
 msgid "Get all audio data from folder"
 msgstr "从文件夹中获取所有音频数据"
 
-#: frontends/command-line/main.c:216
+# frontends/command-line/main.c:227
+#: frontends/command-line/main.c:227
 msgid "Delete files given in range"
 msgstr "删除给定范围中的文件"
 
-#: frontends/command-line/main.c:217
+# frontends/command-line/main.c:228
+#: frontends/command-line/main.c:228
 msgid "Delete all files in folder"
 msgstr "删除文件夹中的所有文件"
 
-#: frontends/command-line/main.c:218
+# frontends/command-line/main.c:229
+#: frontends/command-line/main.c:229
 msgid "Upload a file to camera"
 msgstr "将一个文件上载到相机"
 
-#: frontends/command-line/main.c:219
-msgid "Capture a quick preview"
-msgstr "捕捉一个快速预览"
-
-#: frontends/command-line/main.c:220
-msgid "Capture an image"
-msgstr "捕捉一幅图像"
-
-#: frontends/command-line/main.c:221
-msgid "Capture a movie "
-msgstr "捕捉一段电影"
-
-#: frontends/command-line/main.c:222
-msgid "Capture an audio clip"
-msgstr "捕捉一个音频片段"
-
-#: frontends/command-line/main.c:224
+# frontends/command-line/main.c:231
+#: frontends/command-line/main.c:231
 msgid "Configure"
 msgstr "配置"
 
-#: frontends/command-line/main.c:227
+# frontends/command-line/main.c:233
+#: frontends/command-line/main.c:233
+msgid "Capture a quick preview"
+msgstr "捕捉一个快速预览"
+
+# frontends/command-line/main.c:234
+#: frontends/command-line/main.c:234
+msgid "Capture an image"
+msgstr "捕捉一幅图像"
+
+# frontends/command-line/main.c:235
+#: frontends/command-line/main.c:235
+msgid "Capture a movie "
+msgstr "捕捉一段电影"
+
+# frontends/command-line/main.c:236
+#: frontends/command-line/main.c:236
+msgid "Capture an audio clip"
+msgstr "捕捉一个音频片段"
+
+# frontends/command-line/main.c:238 frontends/command-line/shell.c:127
+#: frontends/command-line/main.c:238 frontends/command-line/shell.c:127
 msgid "Show EXIF information"
 msgstr "显示 EXIF 信息"
 
-#: frontends/command-line/main.c:229
+# frontends/command-line/main.c:240 frontends/command-line/shell.c:123
+#: frontends/command-line/main.c:240 frontends/command-line/shell.c:123
 msgid "Show info"
 msgstr "显示信息"
 
-#: frontends/command-line/main.c:230
+# frontends/command-line/main.c:241
+#: frontends/command-line/main.c:241
 msgid "Summary of camera status"
 msgstr "相机状态概要"
 
-#: frontends/command-line/main.c:231
+# frontends/command-line/main.c:242
+#: frontends/command-line/main.c:242
 msgid "Camera driver manual"
 msgstr "相机驱动程序手册"
 
-#: frontends/command-line/main.c:232
+# frontends/command-line/main.c:243
+#: frontends/command-line/main.c:243
 msgid "About the camera driver"
 msgstr "关于相机驱动程序"
 
-#: frontends/command-line/main.c:233
+# frontends/command-line/main.c:244
+#: frontends/command-line/main.c:244
 msgid "gPhoto shell"
 msgstr "gPhoto shell"
 
-#: frontends/command-line/main.c:331 frontends/command-line/main.c:336
+# frontends/command-line/main.c:245
+#: frontends/command-line/main.c:245
+msgid "Authors"
+msgstr "作者"
+
+# frontends/command-line/main.c:246
+#: frontends/command-line/main.c:246
+msgid "Licence"
+msgstr "许可证"
+
+# frontends/command-line/main.c:299 frontends/command-line/main.c:320
+#: frontends/command-line/main.c:299 frontends/command-line/main.c:320
+msgid "Could not open '"
+msgstr "无法打开“"
+
+# frontends/command-line/main.c:300 frontends/command-line/main.c:321
+#: frontends/command-line/main.c:300 frontends/command-line/main.c:321
+msgid "/COPYING'. Please verify your installation."
+msgstr "/COPYING”。请检查您的安装。"
+
+# frontends/command-line/main.c:384 frontends/command-line/main.c:389
+#: frontends/command-line/main.c:384 frontends/command-line/main.c:389
 #, c-format
 msgid "%-30s %-16s\n"
 msgstr "%-30s %-16s\n"
 
-#: frontends/command-line/main.c:331
+# frontends/command-line/main.c:384
+#: frontends/command-line/main.c:384
 msgid "Model"
 msgstr "型号"
 
-#: frontends/command-line/main.c:331
+# frontends/command-line/main.c:384
+#: frontends/command-line/main.c:384
 msgid "Port"
 msgstr "端口"
 
-#: frontends/command-line/main.c:332
+# frontends/command-line/main.c:385
+#: frontends/command-line/main.c:385
 msgid "----------------------------------------------------------\n"
 msgstr "----------------------------------------------------------\n"
 
-#: frontends/command-line/main.c:349
+# frontends/command-line/main.c:402
+#: frontends/command-line/main.c:402
 msgid "You need to specify a camera model"
 msgstr "您需要指定相机型号"
 
+# frontends/command-line/main.c:413
 #. Output a parsing friendly abilities table. Split on ":"
-#: frontends/command-line/main.c:360
+#: frontends/command-line/main.c:413
 #, c-format
 msgid "Abilities for camera             : %s\n"
 msgstr "相机功能             ：%s\n"
 
-#: frontends/command-line/main.c:362
+# frontends/command-line/main.c:415
+#: frontends/command-line/main.c:415
 #, c-format
 msgid "Serial port support              : %s\n"
 msgstr "串口支持             ：%s\n"
 
+# frontends/command-line/actions.c:157 frontends/command-line/actions.c:189
+# frontends/command-line/actions.c:201 frontends/command-line/main.c:416
+# frontends/command-line/main.c:418 frontends/command-line/main.c:437
+# frontends/command-line/main.c:439 frontends/command-line/main.c:441
+# frontends/command-line/main.c:443
 #: frontends/command-line/actions.c:157 frontends/command-line/actions.c:189
-#: frontends/command-line/actions.c:201 frontends/command-line/main.c:363
-#: frontends/command-line/main.c:365 frontends/command-line/main.c:384
-#: frontends/command-line/main.c:386 frontends/command-line/main.c:388
-#: frontends/command-line/main.c:390
+#: frontends/command-line/actions.c:201 frontends/command-line/main.c:416
+#: frontends/command-line/main.c:418 frontends/command-line/main.c:437
+#: frontends/command-line/main.c:439 frontends/command-line/main.c:441
+#: frontends/command-line/main.c:443
 msgid "yes"
 msgstr "是"
 
+# frontends/command-line/actions.c:157 frontends/command-line/actions.c:189
+# frontends/command-line/actions.c:201 frontends/command-line/main.c:416
+# frontends/command-line/main.c:418 frontends/command-line/main.c:437
+# frontends/command-line/main.c:439 frontends/command-line/main.c:441
+# frontends/command-line/main.c:443
 #: frontends/command-line/actions.c:157 frontends/command-line/actions.c:189
-#: frontends/command-line/actions.c:201 frontends/command-line/main.c:363
-#: frontends/command-line/main.c:365 frontends/command-line/main.c:384
-#: frontends/command-line/main.c:386 frontends/command-line/main.c:388
-#: frontends/command-line/main.c:390
+#: frontends/command-line/actions.c:201 frontends/command-line/main.c:416
+#: frontends/command-line/main.c:418 frontends/command-line/main.c:437
+#: frontends/command-line/main.c:439 frontends/command-line/main.c:441
+#: frontends/command-line/main.c:443
 msgid "no"
 msgstr "否"
 
-#: frontends/command-line/main.c:364
+# frontends/command-line/main.c:417
+#: frontends/command-line/main.c:417
 #, c-format
 msgid "USB support                      : %s\n"
 msgstr "USB 支持             ：%s\n"
 
-#: frontends/command-line/main.c:367
+# frontends/command-line/main.c:420
+#: frontends/command-line/main.c:420
 msgid "Transfer speeds supported        :\n"
 msgstr "支持的传输速度       ：\n"
 
-#: frontends/command-line/main.c:370
+# frontends/command-line/main.c:423
+#: frontends/command-line/main.c:423
 #, c-format
 msgid "                                 : %i\n"
 msgstr "                     ：%i\n"
 
-#: frontends/command-line/main.c:374
+# frontends/command-line/main.c:427
+#: frontends/command-line/main.c:427
 msgid "Capture choices                  :\n"
 msgstr "捕捉选项             ：\n"
 
-#: frontends/command-line/main.c:376
+# frontends/command-line/main.c:429
+#: frontends/command-line/main.c:429
 msgid "                                 : Image\n"
 msgstr "                     ：图像\n"
 
-#: frontends/command-line/main.c:378
+# frontends/command-line/main.c:431
+#: frontends/command-line/main.c:431
 msgid "                                 : Video\n"
 msgstr "                     ：视频\n"
 
-#: frontends/command-line/main.c:380
+# frontends/command-line/main.c:433
+#: frontends/command-line/main.c:433
 msgid "                                 : Audio\n"
 msgstr "                     ：音频\n"
 
-#: frontends/command-line/main.c:382
+# frontends/command-line/main.c:435
+#: frontends/command-line/main.c:435
 msgid "                                 : Preview\n"
 msgstr "                     ：预览\n"
 
-#: frontends/command-line/main.c:383
+# frontends/command-line/main.c:436
+#: frontends/command-line/main.c:436
 #, c-format
 msgid "Configuration support            : %s\n"
 msgstr "支持配置             ：%s\n"
 
-#: frontends/command-line/main.c:385
+# frontends/command-line/main.c:438
+#: frontends/command-line/main.c:438
 #, c-format
 msgid "Delete files on camera support   : %s\n"
 msgstr "支持删除相机内文件   ：%s\n"
 
-#: frontends/command-line/main.c:387
+# frontends/command-line/main.c:440
+#: frontends/command-line/main.c:440
 #, c-format
 msgid "File preview (thumbnail) support : %s\n"
 msgstr "支持文件预览 (缩略图)：%s\n"
 
-#: frontends/command-line/main.c:389
+# frontends/command-line/main.c:442
+#: frontends/command-line/main.c:442
 #, c-format
 msgid "File upload support              : %s\n"
 msgstr "文件上载支持         ：%s\n"
 
-#: frontends/command-line/main.c:411
+# frontends/command-line/main.c:464
+#: frontends/command-line/main.c:464
 #, c-format
 msgid "Number of supported cameras: %i\n"
 msgstr "支持相机数量         ：%i\n"
 
-#: frontends/command-line/main.c:412
+# frontends/command-line/main.c:465
+#: frontends/command-line/main.c:465
 msgid "Supported cameras:\n"
 msgstr "已支持相机：\n"
 
-#: frontends/command-line/main.c:423
+# frontends/command-line/main.c:476
+#: frontends/command-line/main.c:476
 #, c-format
 msgid "\t\"%s\" (TESTING)\n"
 msgstr "\t\"%s\" (正在测试)\n"
 
-#: frontends/command-line/main.c:426
+# frontends/command-line/main.c:479
+#: frontends/command-line/main.c:479
 #, c-format
 msgid "\t\"%s\" (EXPERIMENTAL)\n"
 msgstr "\t\"%s\" (正在试用)\n"
 
-#: frontends/command-line/main.c:430
+# frontends/command-line/main.c:483
+#: frontends/command-line/main.c:483
 #, c-format
 msgid "\t\"%s\"\n"
 msgstr "\t\"%s\"\n"
 
-#: frontends/command-line/main.c:495
+# frontends/command-line/main.c:548
+#: frontends/command-line/main.c:574
 #, c-format
 msgid "Devices found: %i\n"
 msgstr "找到设备：%i\n"
 
-#: frontends/command-line/main.c:496
+# frontends/command-line/main.c:549
+#: frontends/command-line/main.c:575
 msgid ""
 "Path                             Description\n"
 "--------------------------------------------------------------\n"
@@ -2927,8 +4069,9 @@ msgstr ""
 "路径                             描述\n"
 "--------------------------------------------------------------\n"
 
+# frontends/command-line/main.c:586
 #. User didn't specify the port type; try to guess it
-#: frontends/command-line/main.c:536
+#: frontends/command-line/main.c:612
 #, c-format
 msgid ""
 "Ports must look like 'serial:/dev/ttyS0' or 'usb:', but '%s' is missing a "
@@ -2937,63 +4080,69 @@ msgstr ""
 "端口必须是类似“serial:/dev/ttyS0”或“usb:”的形式，但“%s”缺少冒号，所以我将猜测"
 "您的意图。"
 
-#: frontends/command-line/main.c:555
+# frontends/command-line/main.c:605
+#: frontends/command-line/main.c:631
 #, c-format
 msgid "Guessed port name. Using port '%s' from now on."
 msgstr "猜出端口名。从现在开始使用端口“%s”。"
 
-#: frontends/command-line/main.c:587
+# frontends/command-line/main.c:637
+#: frontends/command-line/main.c:663
 msgid ""
 "Use the following syntax a:b=c:d to treat any USB device detected as a:b as "
 "c:d instead. a b c d should be hexadecimal numbers beginning with '0x'.\n"
 msgstr ""
 "使用诸如 a:b=c:d 的形式将探测为 a:b 的 USB 设备处理为 c:d。a b c d 应为"
-"以‘0x’开始的十六进制数。\n"
+"以“0x”开始的十六进制数。\n"
 
-#: frontends/command-line/main.c:603
-#, c-format
-msgid "%s(ERROR): "
-msgstr "%s(错误)："
-
-#: frontends/command-line/main.c:744
+# frontends/command-line/main.c:799
+#: frontends/command-line/main.c:825
 #, c-format
 msgid "Number of files in folder %s: %i\n"
 msgstr "文件夹 %s 中文件的数量：%i\n"
 
-#: frontends/command-line/main.c:777
+# frontends/command-line/main.c:832
+#: frontends/command-line/main.c:858
 #, c-format
 msgid "Using filename '%s'..."
 msgstr "使用文件名“%s”..."
 
-#: frontends/command-line/main.c:803
+# frontends/command-line/main.c:859
+#: frontends/command-line/main.c:885
 #, c-format
 msgid "File %s exists. Overwrite? [y|n] "
 msgstr "文件 %s 存在。覆盖？[y|n] "
 
-#: frontends/command-line/main.c:814
+# frontends/command-line/main.c:870
+#: frontends/command-line/main.c:896
 msgid "Specify new filename? [y|n] "
 msgstr "给出新文件名？[y|n]"
 
-#: frontends/command-line/main.c:823
+# frontends/command-line/main.c:879
+#: frontends/command-line/main.c:905
 msgid "Enter new filename: "
 msgstr "输入新文件名："
 
-#: frontends/command-line/main.c:828
+# frontends/command-line/main.c:884
+#: frontends/command-line/main.c:910
 #, c-format
 msgid "Saving file as %s\n"
 msgstr "正在将文件另存为 %s\n"
 
-#: frontends/command-line/main.c:832
+# frontends/command-line/main.c:888
+#: frontends/command-line/main.c:914
 #, c-format
 msgid "Can not save file as %s"
 msgstr "无法将文件另存为 %s"
 
-#: frontends/command-line/main.c:1057
+# frontends/command-line/main.c:1122
+#: frontends/command-line/main.c:1148
 #, c-format
 msgid "New file is in location %s%s%s on the camera\n"
 msgstr "新文件在相机中 %s%s%s 处\n"
 
-#: frontends/command-line/main.c:1115
+# frontends/command-line/main.c:1180
+#: frontends/command-line/main.c:1206
 #, c-format
 msgid ""
 "Camera Summary:\n"
@@ -3002,7 +4151,8 @@ msgstr ""
 "相机概要：\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1127
+# frontends/command-line/main.c:1192
+#: frontends/command-line/main.c:1218
 #, c-format
 msgid ""
 "Camera Manual:\n"
@@ -3011,7 +4161,8 @@ msgstr ""
 "相机手册：\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1139
+# frontends/command-line/main.c:1204
+#: frontends/command-line/main.c:1230
 #, c-format
 msgid ""
 "About the library:\n"
@@ -3020,11 +4171,13 @@ msgstr ""
 "关于库：\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1225
+# frontends/command-line/main.c:1290
+#: frontends/command-line/main.c:1316
 msgid "Please specify a model."
 msgstr "请指定一种型号。"
 
-#: frontends/command-line/main.c:1253
+# frontends/command-line/main.c:1318
+#: frontends/command-line/main.c:1344
 #, c-format
 msgid ""
 "The port you specified ('%s') can not be found. Please specify one of the "
@@ -3034,23 +4187,28 @@ msgstr ""
 "无法找到您指定的端口 (“%s”)。请指定一个由“gphoto2 --list-ports”列出的端口并确"
 "信拼写正确 (例如，带有前缀“serial:”或“usb:”)。"
 
-#: frontends/command-line/main.c:1270
+# frontends/command-line/main.c:1335
+#: frontends/command-line/main.c:1361
 msgid "Please specify a port."
 msgstr "请指定一个端口。"
 
-#: frontends/command-line/main.c:1313
+# frontends/command-line/main.c:1378
+#: frontends/command-line/main.c:1404
 msgid "*** Error ***              \n"
 msgstr "*** 错误 ***              \n"
 
-#: frontends/command-line/main.c:1433
+# frontends/command-line/main.c:1543
+#: frontends/command-line/main.c:1569
 msgid "Press any key to continue.\n"
 msgstr "按任意键继续。\n"
 
-#: frontends/command-line/main.c:1498
+# frontends/command-line/main.c:1614
+#: frontends/command-line/main.c:1640
 msgid "ERROR: "
 msgstr "错误："
 
-#: frontends/command-line/main.c:1511
+# frontends/command-line/main.c:1637
+#: frontends/command-line/main.c:1663
 msgid ""
 "\n"
 "Aborting...\n"
@@ -3058,11 +4216,13 @@ msgstr ""
 "\n"
 "正在中断...\n"
 
-#: frontends/command-line/main.c:1517
+# frontends/command-line/main.c:1643
+#: frontends/command-line/main.c:1669
 msgid "Aborted.\n"
 msgstr "已中断。\n"
 
-#: frontends/command-line/main.c:1522
+# frontends/command-line/main.c:1648
+#: frontends/command-line/main.c:1674
 msgid ""
 "\n"
 "Cancelling...\n"
@@ -3070,7 +4230,8 @@ msgstr ""
 "\n"
 "正在取消...\n"
 
-#: frontends/command-line/main.c:1569
+# frontends/command-line/main.c:1699
+#: frontends/command-line/main.c:1725
 msgid ""
 "gPhoto2 for OS/2 requires you to set the enviroment value CAMLIBS to the "
 "location of the camera libraries. e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n"
@@ -3078,7 +4239,8 @@ msgstr ""
 "OS/2 版的 gPhoto2 要求您将环境变量 CAMLIBS 设置为相机库所在的位置。例如，SET "
 "CAMLIBS=C:\\GPHOTO2\\CAM\n"
 
-#: frontends/command-line/main.c:1579
+# frontends/command-line/main.c:1709
+#: frontends/command-line/main.c:1735
 msgid ""
 "gPhoto2 for OS/2 requires you to set the enviroment value IOLIBS to the "
 "location of the io libraries. e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"
@@ -3086,11 +4248,13 @@ msgstr ""
 "OS/2 版的 gPhoto2 要求您将环境变量 IOLIBS 设置为 io 库所在的位置。例如，SET "
 "IOLIBS=C:\\GPHOTO2\\IOLIB\n"
 
-#: frontends/command-line/main.c:1609
+# frontends/command-line/main.c:1750
+#: frontends/command-line/main.c:1776
 msgid "Operation cancelled.\n"
 msgstr "操作已取消。\n"
 
-#: frontends/command-line/main.c:1612
+# frontends/command-line/main.c:1753
+#: frontends/command-line/main.c:1779
 #, c-format
 msgid ""
 "*** Error ('%s') ***       \n"
@@ -3099,7 +4263,8 @@ msgstr ""
 "*** 错误 ('%s') ***       \n"
 "\n"
 
-#: frontends/command-line/main.c:1618
+# frontends/command-line/main.c:1759
+#: frontends/command-line/main.c:1785
 msgid ""
 "For debugging messages, please use the --debug option.\n"
 "Debugging messages may help finding a solution to your problem.\n"
@@ -3115,41 +4280,53 @@ msgstr ""
 "请按以下方式运行 gphoto2：\n"
 "\n"
 
-#: frontends/command-line/gphoto2-cmd-config.c:64
+# frontends/command-line/gphoto2-cmd-config.c:65
+#: frontends/command-line/gphoto2-cmd-config.c:65
 msgid "</B/24>Continue"
 msgstr "</B/24>继续"
 
-#: frontends/command-line/gphoto2-cmd-config.c:64
+# frontends/command-line/gphoto2-cmd-config.c:65
+#: frontends/command-line/gphoto2-cmd-config.c:65
 msgid "</B16>Cancel"
 msgstr "</B16>取消"
 
-#: frontends/command-line/gphoto2-cmd-config.c:70
+# frontends/command-line/gphoto2-cmd-config.c:71
+#: frontends/command-line/gphoto2-cmd-config.c:71
 msgid "<C></5>Error"
 msgstr "<C></5>错误"
 
-#: frontends/command-line/gphoto2-cmd-config.c:72
+# frontends/command-line/gphoto2-cmd-config.c:73
+#: frontends/command-line/gphoto2-cmd-config.c:73
 msgid "Could not set configuration:"
 msgstr "无法设置配置："
 
-#: frontends/command-line/gphoto2-cmd-config.c:116
+# frontends/command-line/gphoto2-cmd-config.c:117
+#: frontends/command-line/gphoto2-cmd-config.c:117
 msgid "Exit"
 msgstr "退出"
 
-#: frontends/command-line/gphoto2-cmd-config.c:118
+# frontends/command-line/gphoto2-cmd-config.c:119
+#: frontends/command-line/gphoto2-cmd-config.c:119
 msgid "Back"
 msgstr "退回"
 
-#: frontends/command-line/gphoto2-cmd-config.c:257
+# frontends/command-line/gphoto2-cmd-config.c:263
+#: frontends/command-line/gphoto2-cmd-config.c:263
 msgid "Time: "
 msgstr "时间："
 
-#: frontends/command-line/gphoto2-cmd-config.c:316
-#: frontends/command-line/gphoto2-cmd-config.c:344
-#: frontends/command-line/gphoto2-cmd-config.c:404
-#: frontends/command-line/gphoto2-cmd-config.c:451
+# frontends/command-line/gphoto2-cmd-config.c:322
+# frontends/command-line/gphoto2-cmd-config.c:350
+# frontends/command-line/gphoto2-cmd-config.c:410
+# frontends/command-line/gphoto2-cmd-config.c:473
+#: frontends/command-line/gphoto2-cmd-config.c:322
+#: frontends/command-line/gphoto2-cmd-config.c:350
+#: frontends/command-line/gphoto2-cmd-config.c:410
+#: frontends/command-line/gphoto2-cmd-config.c:473
 msgid "Value: "
 msgstr "值："
 
+# frontends/command-line/options.c:191
 #: frontends/command-line/options.c:191
 #, c-format
 msgid ""
@@ -3161,14 +4338,17 @@ msgstr ""
 "Copyright (C) 2000,2001 Scott Fritzinger 及其它人\n"
 "%s许可证为 库通用公共许可证 (LGPL)。\n"
 
+# frontends/command-line/options.c:197
 #: frontends/command-line/options.c:197
 msgid "OS/2 port by Bart van Leeuwen\n"
 msgstr "由 Bart van Leeuwen 移植到 OS/2\n"
 
+# frontends/command-line/options.c:212
 #: frontends/command-line/options.c:212
 msgid "Usage:\n"
 msgstr "用法：\n"
 
+# frontends/command-line/options.c:215
 #. Make this 79 characters long. Some languages need the space.
 #: frontends/command-line/options.c:215
 msgid ""
@@ -3178,6 +4358,7 @@ msgstr ""
 "长/短选项 (及参数)                     描述\n"
 "--------------------------------------------------------------------------------\n"
 
+# frontends/command-line/options.c:240
 #. The format line is made translatable so that some
 #. languages can make the table a bit tighter. Make
 #. sure you only use 79 characters (since #80 is
@@ -3187,6 +4368,7 @@ msgstr ""
 msgid "%-38s %s\n"
 msgstr "%-38s %s\n"
 
+# frontends/command-line/options.c:245
 #. Make this 79 characters long. Some languages need the space.
 #: frontends/command-line/options.c:245
 msgid ""
@@ -3197,6 +4379,7 @@ msgstr ""
 "--------------------------------------------------------------------------------\n"
 "[参数由双引号括起]                          [照片编号从 1 开始]\n"
 
+# frontends/command-line/range.c:122 frontends/command-line/range.c:176
 #: frontends/command-line/range.c:122 frontends/command-line/range.c:176
 #, c-format
 msgid ""
@@ -3206,6 +4389,7 @@ msgstr ""
 "%s\n"
 "图像 IDs 必须是一个大于零的数。"
 
+# frontends/command-line/range.c:128 frontends/command-line/range.c:182
 #: frontends/command-line/range.c:128 frontends/command-line/range.c:182
 #, c-format
 msgid ""
@@ -3215,6 +4399,7 @@ msgstr ""
 "%s\n"
 "图像 ID %i 太大。"
 
+# frontends/command-line/range.c:144
 #: frontends/command-line/range.c:144
 #, c-format
 msgid ""
@@ -3224,6 +4409,7 @@ msgstr ""
 "%s\n"
 "范围必须由“,”分隔。"
 
+# frontends/command-line/range.c:158
 #: frontends/command-line/range.c:158
 #, c-format
 msgid ""
@@ -3233,6 +4419,7 @@ msgstr ""
 "%s\n"
 "范围应以数字开头。"
 
+# frontends/command-line/range.c:198
 #: frontends/command-line/range.c:198
 #, c-format
 msgid ""
@@ -3242,6 +4429,7 @@ msgstr ""
 "%s\n"
 "意外字符“%c”。"
 
+# frontends/command-line/range.c:221
 #: frontends/command-line/range.c:221
 #, c-format
 msgid ""
@@ -3251,152 +4439,379 @@ msgstr ""
 "%s\n"
 "不允许缩小范围。您指定了一个从 %i 到 %i 的范围。"
 
+# frontends/command-line/actions.c:77
 #: frontends/command-line/actions.c:77
 #, c-format
 msgid "There are no folders in folder '%s'."
-msgstr "文件夹‘%s’中没有文件夹。"
+msgstr "文件夹“%s”中没有文件夹。"
 
+# frontends/command-line/actions.c:81
 #: frontends/command-line/actions.c:81
 #, c-format
 msgid "There is one folder in folder '%s':"
-msgstr "文件夹‘%s’中有一个文件夹："
+msgstr "文件夹“%s”中有一个文件夹："
 
+# frontends/command-line/actions.c:85
 #: frontends/command-line/actions.c:85
 #, c-format
 msgid "There are %i folders in folder '%s':"
-msgstr "文件夹‘%2$s’中有 %1$i 个文件夹："
+msgstr "文件夹“%2$s”中有 %1$i 个文件夹："
 
-#: frontends/command-line/actions.c:111
+# frontends/command-line/actions.c:111 frontends/command-line/foreach.c:228
+#: frontends/command-line/actions.c:111 frontends/command-line/foreach.c:228
 #, c-format
 msgid "There are no files in folder '%s'."
-msgstr "文件夹‘%s’中没有文件。"
+msgstr "文件夹“%s”中没有文件。"
 
+# frontends/command-line/actions.c:115
 #: frontends/command-line/actions.c:115
 #, c-format
 msgid "There is one file in folder '%s':"
-msgstr "文件夹‘%s’中有一个文件："
+msgstr "文件夹“%s”中有一个文件："
 
+# frontends/command-line/actions.c:119
 #: frontends/command-line/actions.c:119
 #, c-format
 msgid "There are %i files in folder '%s':"
-msgstr "文件夹‘%2$s’中有 %1$i 个文件："
+msgstr "文件夹“%2$s”中有 %1$i 个文件："
 
+# frontends/command-line/actions.c:139
 #: frontends/command-line/actions.c:139
 #, c-format
 msgid "Information on file '%s' (folder '%s'):\n"
-msgstr "关于文件‘%s’(文件夹‘%s’)的信息：\n"
+msgstr "关于文件“%s”(文件夹“%s”)的信息：\n"
 
+# frontends/command-line/actions.c:141
 #: frontends/command-line/actions.c:141
 msgid "File:\n"
 msgstr "文件：\n"
 
+# frontends/command-line/actions.c:143 frontends/command-line/actions.c:177
+# frontends/command-line/actions.c:193
 #: frontends/command-line/actions.c:143 frontends/command-line/actions.c:177
 #: frontends/command-line/actions.c:193
 msgid "  None available.\n"
 msgstr "  不可用。\n"
 
+# frontends/command-line/actions.c:146
 #: frontends/command-line/actions.c:146
 #, c-format
 msgid "  Name:        '%s'\n"
-msgstr "  名称：       ‘%s’\n"
+msgstr "  名称：       “%s”\n"
 
+# frontends/command-line/actions.c:148 frontends/command-line/actions.c:180
 #: frontends/command-line/actions.c:148 frontends/command-line/actions.c:180
 #, c-format
 msgid "  Mime type:   '%s'\n"
-msgstr "  Mime 类型：  ‘%s’\n"
+msgstr "  Mime 类型：  “%s”\n"
 
+# frontends/command-line/actions.c:150 frontends/command-line/actions.c:182
 #: frontends/command-line/actions.c:150 frontends/command-line/actions.c:182
 #, c-format
-msgid "  Size:        %i byte(s)\n"
-msgstr "  大小：       %i 字节\n"
+msgid "  Size:        %li byte(s)\n"
+msgstr "  大小：       %li 字节\n"
 
+# frontends/command-line/actions.c:152 frontends/command-line/actions.c:184
 #: frontends/command-line/actions.c:152 frontends/command-line/actions.c:184
 #, c-format
 msgid "  Width:       %i pixel(s)\n"
 msgstr "  宽度：      %i 像素\n"
 
+# frontends/command-line/actions.c:154 frontends/command-line/actions.c:186
 #: frontends/command-line/actions.c:154 frontends/command-line/actions.c:186
 #, c-format
 msgid "  Height:      %i pixel(s)\n"
 msgstr "  高度：     %i 像素\n"
 
+# frontends/command-line/actions.c:156 frontends/command-line/actions.c:188
 #: frontends/command-line/actions.c:156 frontends/command-line/actions.c:188
 #, c-format
 msgid "  Downloaded:  %s\n"
 msgstr "  已下载： %s\n"
 
+# frontends/command-line/actions.c:159
 #: frontends/command-line/actions.c:159
 msgid "  Permissions: "
 msgstr "  访问权限："
 
+# frontends/command-line/actions.c:162
 #: frontends/command-line/actions.c:162
 msgid "read/delete"
 msgstr "读取/删除"
 
+# frontends/command-line/actions.c:164
 #: frontends/command-line/actions.c:164
 msgid "read"
 msgstr "读取"
 
+# frontends/command-line/actions.c:166
 #: frontends/command-line/actions.c:166
 msgid "delete"
 msgstr "删除"
 
+# frontends/command-line/actions.c:168
 #: frontends/command-line/actions.c:168
 msgid "none"
 msgstr "无"
 
+# frontends/command-line/actions.c:172
 #: frontends/command-line/actions.c:172
 #, c-format
 msgid "  Time:        %s"
 msgstr "  时间：       %s"
 
+# frontends/command-line/actions.c:175
 #: frontends/command-line/actions.c:175
 msgid "Thumbnail:\n"
 msgstr "缩略图：\n"
 
+# frontends/command-line/actions.c:191
 #: frontends/command-line/actions.c:191
 msgid "Audio data:\n"
 msgstr "音频数据：\n"
 
+# frontends/command-line/actions.c:196
 #: frontends/command-line/actions.c:196
 #, c-format
 msgid "  Mime type:  '%s'\n"
-msgstr "  Mime 类型： ‘%s’\n"
+msgstr "  Mime 类型： “%s”\n"
 
+# frontends/command-line/actions.c:198
 #: frontends/command-line/actions.c:198
 #, c-format
-msgid "  Size:       %i byte(s)\n"
-msgstr "  大小：      %i 字节\n"
+msgid "  Size:       %li byte(s)\n"
+msgstr "  大小：      %li 字节\n"
 
+# frontends/command-line/actions.c:200
 #: frontends/command-line/actions.c:200
 #, c-format
 msgid "  Downloaded: %s\n"
 msgstr "  已下载：%s\n"
 
-#: frontends/command-line/actions.c:321
+# frontends/command-line/actions.c:322
+#: frontends/command-line/actions.c:322
 msgid "Could not parse EXIF data."
 msgstr "无法解析 EXIF 数据。"
 
-#: frontends/command-line/actions.c:325
+# frontends/command-line/actions.c:326
+#: frontends/command-line/actions.c:326
 msgid "EXIF tags:"
 msgstr "EXIF 标记："
 
-#: frontends/command-line/actions.c:328
+# frontends/command-line/actions.c:329
+#: frontends/command-line/actions.c:329
 msgid "Tag"
 msgstr "标记"
 
-#: frontends/command-line/actions.c:330
+# frontends/command-line/actions.c:331
+#: frontends/command-line/actions.c:331
 msgid "Value"
 msgstr "值"
 
-#: frontends/command-line/actions.c:345
+# frontends/command-line/actions.c:346
+#: frontends/command-line/actions.c:346
 #, c-format
 msgid "EXIF data contains a thumbnail (%i bytes)."
 msgstr "EXIF 数据含有一幅缩略图 (%i 字节)。"
 
-#: frontends/command-line/actions.c:354
+# frontends/command-line/actions.c:355
+#: frontends/command-line/actions.c:355
 msgid "gphoto2 has been compiled without EXIF support."
 msgstr "gphoto2 编译时没有包含对 EXIF 的支持。"
+
+# frontends/command-line/foreach.c:207
+#: frontends/command-line/foreach.c:207
+#, c-format
+msgid ""
+"Bad file number. You specified %i, but there are only %i files available in "
+"'%s' or its subfolders. Please obtain a valid file number from a file "
+"listing first."
+msgstr ""
+"错误的文件编号。您给出 %1$i，但在“%3$s”和它的子目录中只有 %2$i 个文件。请首先"
+"从文件列表中获取一个合法的文件编号。"
+
+# frontends/command-line/foreach.c:233
+#: frontends/command-line/foreach.c:233
+#, c-format
+msgid ""
+"Bad file number. You specified %i, but there is only 1 file available in '%"
+"s'."
+msgstr "错误的文件编号。您给出 %i，但在“%s”中只有一个文件。"
+
+# frontends/command-line/foreach.c:240
+#: frontends/command-line/foreach.c:240
+#, c-format
+msgid ""
+"Bad file number. You specified %i, but there are only %i files available in "
+"'%s'.Please obtain a valid file number from a file listing first."
+msgstr ""
+"错误的文件编号。您给出 %i，但在“%3$s”中只有 %2$i 个文件。请首先从文件列表中获"
+"取一个合法的文件编号。"
+
+# frontends/command-line/shell.c:73
+#: frontends/command-line/shell.c:73
+#, c-format
+msgid "*** Error (%i: '%s') ***"
+msgstr "*** 错误 (%i：“%s”) ***"
+
+# frontends/command-line/shell.c:112
+#: frontends/command-line/shell.c:112
+msgid "Change to a directory on the camera"
+msgstr "进入相机中的目录"
+
+# frontends/command-line/shell.c:113 frontends/command-line/shell.c:115
+#: frontends/command-line/shell.c:113 frontends/command-line/shell.c:115
+msgid "directory"
+msgstr "目录"
+
+# frontends/command-line/shell.c:114
+#: frontends/command-line/shell.c:114
+msgid "Change to a directory on the local drive"
+msgstr "进入本地驱动器中的目录"
+
+# frontends/command-line/shell.c:116 frontends/command-line/shell.c:134
+# frontends/command-line/shell.c:135
+#: frontends/command-line/shell.c:116 frontends/command-line/shell.c:134
+#: frontends/command-line/shell.c:135
+msgid "Exit the gPhoto shell"
+msgstr "退出 gPhoto shell"
+
+# frontends/command-line/shell.c:117
+#: frontends/command-line/shell.c:117
+msgid "Download a file"
+msgstr "下载一个文件"
+
+# frontends/command-line/shell.c:117 frontends/command-line/shell.c:120
+# frontends/command-line/shell.c:122 frontends/command-line/shell.c:124
+# frontends/command-line/shell.c:125 frontends/command-line/shell.c:128
+#: frontends/command-line/shell.c:117 frontends/command-line/shell.c:120
+#: frontends/command-line/shell.c:122 frontends/command-line/shell.c:124
+#: frontends/command-line/shell.c:125 frontends/command-line/shell.c:128
+msgid "[directory/]filename"
+msgstr "[目录/]文件"
+
+# frontends/command-line/shell.c:119
+#: frontends/command-line/shell.c:119
+msgid "Download a thumbnail"
+msgstr "下载一幅缩略图"
+
+# frontends/command-line/shell.c:121
+#: frontends/command-line/shell.c:121
+msgid "Download raw data"
+msgstr "下载原始数据"
+
+# frontends/command-line/shell.c:125
+#: frontends/command-line/shell.c:125
+msgid "Delete"
+msgstr "删除"
+
+# frontends/command-line/shell.c:130 frontends/command-line/shell.c:136
+#: frontends/command-line/shell.c:130 frontends/command-line/shell.c:136
+msgid "Displays command usage"
+msgstr "显示命令用法"
+
+# frontends/command-line/shell.c:131 frontends/command-line/shell.c:136
+#: frontends/command-line/shell.c:131 frontends/command-line/shell.c:136
+msgid "[command]"
+msgstr "[命令]"
+
+# frontends/command-line/shell.c:132
+#: frontends/command-line/shell.c:132
+msgid "List the contents of the current directory"
+msgstr "列出当前目录的内容"
+
+# frontends/command-line/shell.c:133
+#: frontends/command-line/shell.c:133
+msgid "[directory/]"
+msgstr "[目录]"
+
+# frontends/command-line/shell.c:414
+#: frontends/command-line/shell.c:414
+msgid "Invalid command."
+msgstr "非法命令。"
+
+# frontends/command-line/shell.c:423
+#: frontends/command-line/shell.c:423
+#, c-format
+msgid "The command '%s' requires an argument."
+msgstr "命令“%s”需要一个参数。"
+
+# frontends/command-line/shell.c:476
+#: frontends/command-line/shell.c:476
+msgid "Invalid path."
+msgstr "非法路径。"
+
+# frontends/command-line/shell.c:522
+#: frontends/command-line/shell.c:522
+msgid "Could not find home directory."
+msgstr "无法找到家目录。"
+
+# frontends/command-line/shell.c:530
+#: frontends/command-line/shell.c:530
+#, c-format
+msgid "Could not change to local directory '%s'."
+msgstr "无法进入本地目录“%s”。"
+
+# frontends/command-line/shell.c:533
+#: frontends/command-line/shell.c:533
+#, c-format
+msgid "Local directory now '%s'."
+msgstr "本地目录为“%s”。"
+
+# frontends/command-line/shell.c:564
+#: frontends/command-line/shell.c:564
+#, c-format
+msgid "Remote directory now '%s'."
+msgstr "远程目录为“%s”。"
+
+# frontends/command-line/shell.c:743
+#: frontends/command-line/shell.c:743
+#, c-format
+msgid "Command '%s' not found. Use 'help' to get a list of available commands."
+msgstr "未找到“%s”命令。用“help”获取可用的命令列表。"
+
+# frontends/command-line/shell.c:750
+#. Print the command's syntax.
+#: frontends/command-line/shell.c:750
+#, c-format
+msgid "Help on \"%s\":"
+msgstr "关于“%s”的求助信息："
+
+# frontends/command-line/shell.c:752
+#: frontends/command-line/shell.c:752
+msgid "Usage:"
+msgstr "用法："
+
+# frontends/command-line/shell.c:756
+#: frontends/command-line/shell.c:756
+msgid "Description:"
+msgstr "描述："
+
+# frontends/command-line/shell.c:758
+#: frontends/command-line/shell.c:758
+msgid "* Arguments in brackets [] are optional"
+msgstr "* 出现在方括号 [] 中的参数是可选的"
+
+# frontends/command-line/shell.c:779
+#. No command specified. Print command listing.
+#: frontends/command-line/shell.c:779
+msgid "Available commands:"
+msgstr "可用的命令："
+
+# frontends/command-line/shell.c:784
+#: frontends/command-line/shell.c:784
+msgid "To get help on a particular command, type in 'help command-name'."
+msgstr "为得到特定命令的求助信息，输入“help 命令名”。"
+
+# camlibs/kodak/dc210/dc210.c:313
+#~ msgid "No Manual Available"
+#~ msgstr "没有可用的手册"
+
+#~ msgid "Settings"
+#~ msgstr "设置"
+
+#~ msgid "%s(ERROR): "
+#~ msgstr "%s(错误)："
 
 #~ msgid "Unavaliable"
 #~ msgstr "不可用"
@@ -3439,9 +4854,6 @@ msgstr "gphoto2 编译时没有包含对 EXIF 的支持。"
 #~ msgid "Error opening camera.\n"
 #~ msgstr "打开相机出错。\n"
 
-#~ msgid "Invalid index"
-#~ msgstr "非法索引"
-
 #~ msgid "Could not obtain directory listing"
 #~ msgstr "无法得到目录列表"
 
@@ -3452,57 +4864,3 @@ msgstr "gphoto2 编译时没有包含对 EXIF 的支持。"
 #~ "Recursion is now default and the use of --recurse or -R is now "
 #~ "deprecated.\n"
 #~ msgstr "递归现在是默认值，--recurse 或 -R 现在是过时的了。\n"
-
-#~ msgid "Focusing error"
-#~ msgstr "聚焦错误"
-
-#~ msgid "EEPROM checksum error"
-#~ msgstr "EEPROM 校验和错误"
-
-#~ msgid "Internal error (1)"
-#~ msgstr "内部错误 (1)"
-
-#~ msgid "Internal error (2)"
-#~ msgstr "内部错误 (2)"
-
-#~ msgid "No card present"
-#~ msgstr "未插卡"
-
-#~ msgid "Card not supported"
-#~ msgstr "不支持的卡"
-
-#~ msgid "Card removed during access"
-#~ msgstr "访问使取出卡"
-
-#~ msgid "Image number not valid"
-#~ msgstr "图像数量不合法"
-
-#~ msgid "Card is write protected"
-#~ msgstr "卡已写保护"
-
-#~ msgid "No space left on card"
-#~ msgstr "卡上没有剩余空间"
-
-#~ msgid "Light too dark"
-#~ msgstr "光线太暗"
-
-#~ msgid "Autofocus error"
-#~ msgstr "自动聚焦错误"
-
-#~ msgid "System error"
-#~ msgstr "系统错误"
-
-#~ msgid "Illegal parameter"
-#~ msgstr "非法参数"
-
-#~ msgid "Command can not be cancelled"
-#~ msgstr "命令不能被取消"
-
-#~ msgid "Unsupported command"
-#~ msgstr "不支持的命令"
-
-#~ msgid "Other command executing"
-#~ msgstr "正在执行其它命令"
-
-#~ msgid "Command order error"
-#~ msgstr "命令顺序错误"
