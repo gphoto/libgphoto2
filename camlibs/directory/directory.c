@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <utime.h>
 
 #include <gphoto2-setting.h>
 #include <gphoto2-library.h>
@@ -47,15 +48,23 @@
 #  define N_(String) (String)
 #endif
 
-static const char *extension[] = {
-        "gif", "tif", "jpg", "xpm", "png", "pbm", "pgm", "jpeg", "tiff",
-	NULL
+static const struct {
+	const char *extension;
+	const char *mime_type;
+} mime_table[] = {
+	{"jpg", "image/jpeg"}, 
+	{"tif", "image/tiff"},
+	{"ppm", "image/x-portable-pixmap"},
+	{"pgm", "image/x-portable-graymap"},
+	{"pbm", "image/x-portable-bitmap"},
+	{"png", "image/png"},
+	{NULL, NULL}
 };
 
 #define DEBUG 0
 
-static int
-is_image (char *filename)
+static const char *
+get_mime_type (const char *filename)
 {
 
         char *dot;
@@ -63,17 +72,17 @@ is_image (char *filename)
 
         dot = strrchr(filename, '.');
         if (dot) {
-                while (extension[x]) {
+		for (x = 0; mime_table[x].extension; x++) {
 #ifdef OS2
-                        if (stricmp(extension[x], dot+1)==0)
+			if (!stricmp(mime_table[x].extension, dot+1))
 #else
-                        if (strcasecmp(extension[x], dot+1)==0)
+			if (!strcasecmp (mime_table[x].extension, dot+1))
 #endif
-                                return (1);
-                        x++;
+				return (mime_table[x].mime_type);
                 }
-        }
-        return (0);
+	}
+
+        return (NULL);
 }
 
 int camera_id (CameraText *id)
@@ -126,7 +135,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (strcmp(GP_SYSTEM_FILENAME(de), "." ) &&
 		    strcmp(GP_SYSTEM_FILENAME(de), "..")) {
 			sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
-			if (GP_SYSTEM_IS_FILE (buf) && (is_image (buf)))
+			if (GP_SYSTEM_IS_FILE (buf) && (get_mime_type (buf)))
 				gp_list_append (list, GP_SYSTEM_FILENAME (de),
 						NULL);
 		}
@@ -182,37 +191,55 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		      CameraFileInfo *info, void *data)
 {
-        int result;
-        char buf [1024];
-        CameraFile *cam_file;
-	const char *name;
+	Camera *camera = data;
+	char path[1024], link[1024];
+	char *name;
 	const char *mime_type;
-	const char *d;
-	long int size;
+	struct stat statbuf;
 
-        sprintf (buf, "%s/%s", folder, file);
-        result = gp_file_new (&cam_file);
-	if (result != GP_OK)
-		return (result);
-        result = gp_file_open (cam_file, buf);
-        if (result != GP_OK) {
-                gp_file_free (cam_file);
-                return (result);
-        }
+	if (strlen (folder) == 1)
+		snprintf (path, sizeof (path), "/%s", file);
+	else
+		snprintf (path, sizeof (path), "%s/%s", folder, file);
+	if (lstat (path, &statbuf) != 0) {
+		gp_camera_set_error (camera, _("Could not get information "
+			"about '%s' in '%s' (%m)."), file, folder);
+		return (GP_ERROR);
+	}
+	if (S_ISLNK (statbuf.st_mode)) {
+		if (readlink (path, link, sizeof (link) < 0)) {
+			gp_camera_set_error (camera, _("Could not follow the "
+				"link '%s' in '%s' (%m)."), file, folder);
+			return (GP_ERROR);
+		}
+		name = strrchr (link, '/');
+		if (!name)
+			return (GP_ERROR);
+		else {
+			*name = '\0';
+			name++;
+			return (get_info_func (fs, link, name, info, data));
+		}
+	}
 
         info->preview.fields = GP_FILE_INFO_NONE;
         info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_NAME |
-                            GP_FILE_INFO_TYPE;
+                            GP_FILE_INFO_TYPE | GP_FILE_INFO_PERMISSIONS |
+			    GP_FILE_INFO_TIME;
 
-	gp_file_get_name (cam_file, &name);
-	gp_file_get_mime_type (cam_file, &mime_type);
-	gp_file_get_data_and_size (cam_file, &d, &size);
+	info->file.time = statbuf.st_mtime;
+	info->file.permissions = GP_FILE_PERM_NONE;
+	if (statbuf.st_mode & S_IRUSR)
+		info->file.permissions |= GP_FILE_PERM_READ;
+	if (statbuf.st_mode & S_IWUSR)
+		info->file.permissions |= GP_FILE_PERM_DELETE;
+        strcpy (info->file.name, file);
+        info->file.size = statbuf.st_size;
 
-        strcpy (info->file.type, mime_type);
-        strcpy (info->file.name, name);
-        info->file.size = size;
-
-        gp_file_free (cam_file);
+	mime_type = get_mime_type (file);
+	if (!mime_type)
+		mime_type = "application/octet-stream";
+	strcpy (info->file.type, mime_type);
 
         return (GP_OK);
 }
@@ -221,12 +248,30 @@ static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo info, void *data)
 {
+	Camera *camera = data;
 	int retval;
-	char path_old[1024], path_new[1024];
+	char path_old[1024], path_new[1024], path[1024];
 
-        /* We only support basic renaming in the same folder */
+	/* We don't support updating permissions (yet) */
 	if (info.file.fields & GP_FILE_INFO_PERMISSIONS)
 		return (GP_ERROR_NOT_SUPPORTED);
+
+	if (info.file.fields & GP_FILE_INFO_TIME) {
+		struct utimbuf utimbuf;
+
+		utimbuf.actime  = info.file.time;
+		utimbuf.modtime = info.file.time;
+		if (strlen (folder) == 1)
+			snprintf (path, sizeof (path), "/%s", file);
+		else
+			snprintf (path, sizeof (path), "%s/%s", folder, file);
+		if (utime (path, &utimbuf) != 0) {
+			gp_camera_set_error (camera, _("Could not change "
+				"time of file '%s' in '%s' (%m)."),
+				file, folder);
+			return (GP_ERROR);
+		}
+	}
 
 	if (info.file.fields & GP_FILE_INFO_NAME) {
         	if (!strcmp (info.file.name, file))
@@ -418,12 +463,12 @@ camera_init (Camera *camera)
                 gp_setting_set("directory", "hidden", "1");
 
         gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-                                      folder_list_func, NULL);
+                                      folder_list_func, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-				      set_info_func, NULL);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, NULL);
+				      set_info_func, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
-					make_dir_func, remove_dir_func, NULL);
+					make_dir_func, remove_dir_func, camera);
 
         return (GP_OK);
 }

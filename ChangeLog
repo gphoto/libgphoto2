@@ -1,5 +1,10 @@
 2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-filesys.h: On Mariusz request, add a 
+	  GP_FILE_INFO_TIME
+
+2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-filesys.c: Recover from errors during
 	  file-deletion.
 	* camlibs/sierra/sierra.c: Report an error if, after delete_all, there
