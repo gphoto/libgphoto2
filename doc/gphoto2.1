@@ -23,22 +23,22 @@ gphoto2 \- command-line gphoto2 client
 .SH "SYNOPSIS"
 
 .nf
-\fBgphoto2\fR [--debug] [-q | --quiet] [-v | --verbose] [-h | --help]
+\fBgphoto2\fR [--debug] [\fB-q\fR | \fB--quiet\fR] [\fB-v\fR | \fB--verbose\fR] [\fB-h\fR | \fB--help\fR]
         [--list-cameras] [--usb-usermap-script \fINAME\fR]
         [--print-usb-usermap] [--list-ports] [--stdout]
         [--stdout-size] [--auto-detect] [--port \fIPATH\fR]
         [--speed \fISPEED\fR] [--camera \fIMODEL\fR] [--filename \fIFILENAME\fR]
-        [--usbid \fIUSBID\fR] [-a | --abilities] [--folder \fIFOLDER\fR]
-        [[-R | --recurse] | --norecurse] [-l | --list-folders]
-        [-L | --list-files] [-m \fINAME\fR | --mkdir \fINAME\fR]
-        [-r \fINAME\fR | --rmdir \fINAME\fR] [-n | --num-files]
-        [-p \fIRANGE\fR | --get-file \fIRANGE\fR] [-P | --get-all-files]
-        [-t \fIRANGE\fR | --get-thumbnail \fIRANGE\fR]
-        [-T | --get-all-thumbnails]
-        [-r \fIRANGE\fR | --get-raw-data \fIRANGE\fR] [--get-all-raw-data]
+        [--usbid \fIUSBID\fR] [\fB-a\fR | \fB--abilities\fR] [--folder \fIFOLDER\fR]
+        [[\fB-R\fR | \fB--recurse\fR] | \fB--norecurse\fR] [\fB-l\fR | \fB--list-folders\fR]
+        [\fB-L\fR | \fB--list-files\fR] [\fB-m \fINAME\fR\fR | \fB--mkdir \fINAME\fR\fR]
+        [\fB-r \fINAME\fR\fR | \fB--rmdir \fINAME\fR\fR] [\fB-n\fR | \fB--num-files\fR]
+        [\fB-p \fIRANGE\fR\fR | \fB--get-file \fIRANGE\fR\fR] [\fB-P\fR | \fB--get-all-files\fR]
+        [\fB-t \fIRANGE\fR\fR | \fB--get-thumbnail \fIRANGE\fR\fR]
+        [\fB-T\fR | \fB--get-all-thumbnails\fR]
+        [\fB-r \fIRANGE\fR\fR | \fB--get-raw-data \fIRANGE\fR\fR] [--get-all-raw-data]
         [--get-audio-data \fIRANGE\fR] [--get-all-audio-data]
-        [-d \fIRANGE\fR | --delete-file \fIRANGE\fR] [-D | --delete-all-files]
-        [-u \fIFILENAME\fR | --upload-file \fIFILENAME\fR] [--capture-preview]
+        [\fB-d \fIRANGE\fR\fR | \fB--delete-file \fIRANGE\fR\fR] [\fB-D\fR | \fB--delete-all-files\fR]
+        [\fB-u \fIFILENAME\fR\fR | \fB--upload-file \fIFILENAME\fR\fR] [--capture-preview]
         [--capture-image] [--capture-movie] [--capture-sound]
         [--capture-show-info \fIRANGE\fR]
         [--summary] [--manual] [--about] [--shell]
@@ -106,7 +106,7 @@ Specify serial transfer speed.
 
 .TP
 \fB--camera\fR \fIMODEL\fR
-Specify camera model. Most model names contain spaces: remember to enclose the name in quotes so that the shell knows it is one parameter. For example: \fB\fB--camera\fR "Kodak DC240"\fR.
+Specify camera model. Most model names contain spaces: remember to enclose the name in quotes so that the shell knows it is one parameter. For example: \fB--camera "Kodak DC240"\fR.
 
 .TP
 \fB--filename\fR \fIFILENAME\fR
@@ -289,15 +289,15 @@ List the contents of the current directory on the camera.
 .SH "EXAMPLES"
 
 .TP
-\fB\fBgphoto2\fR \fB--list-files\fR\fR
+\fBgphoto2 --list-files\fR
 List files on camera.
 
 .TP
-\fB\fBgphoto2\fR \fB--get-file\fR \fI7-13\fR\fR
-Get files number 7 through 13 from the list output by fB\fBgphoto2\fR \fB--list-files\fR\fR.
+\fBgphoto2 --get-file 7-13\fR
+Get files number 7 through 13 from the list output by \fBgphoto2 --list-files\fR.
 
 .TP
-\fB\fBgphoto2\fR \fB--usb-usermap-script\fR \fIgphoto2cam\fR \fB--print-usb-usermap\fR\fR >> \fI/etc/hotplug/usb.usermap\fR
+\fBgphoto2 --usb-usermap-script gphoto2cam --print-usb-usermap\fR >> \fI/etc/hotplug/usb.usermap\fR
 Append a line to the \fBhotplug\fR config file \fI/etc/hotplug/usb.usermap\fR for every supported camera, using \fI/etc/hotplug/usb/gphoto2cam\fR for setting up permissions correctly.
 
 .SH AUTHOR
