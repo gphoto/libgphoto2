@@ -28,6 +28,7 @@ Changes
 -------	
 	* 5 August, 2000
 		- filename based communication between library and core
+		- abilities accomodated to the new API
 		
 	* 28 July, 2000
 		- added library for DC1000 series
@@ -46,6 +47,7 @@ Changes
 To be done
 ----------
 
+	* Test DC1000 model.
 	* Setting the time and date of camera.
 	* Writing manual.
 	

@@ -404,43 +404,38 @@ int camera_id (CameraText *id) {
 	return (GP_OK);
 }
 
-int camera_abilities (CameraAbilities *abilities, int *count) {
+int camera_abilities (CameraAbilitiesList *list) {
 
-	*count = 2;
+	CameraAbilities *a;
+	char	*models[] = {
+			"Panasonic DC1580",
+			"Nikon CoolPix 600",
+			NULL };		
+	int 	i;
 
-	/* Fill in each camera model's abilities */
-	/* Make separate entries for each conneciton type (usb, serial, etc...)
-	   if a camera supported multiple ways. */
+	while (models[i]) {
+		if (!(a = gp_abilities_new())) 
+			return GP_ERROR;
+		strcpy(a->model, models[1]);
+		a->port		= GP_PORT_SERIAL;
+		a->speed[0] 	= 9600;
+		a->speed[1] 	= 19200;
+		a->speed[2] 	= 38400;
+		a->speed[3] 	= 57600;			
+		a->speed[4] 	= 115200;	
+		a->speed[5] 	= 0;	
+		a->capture   	= 0;
+		a->config    	= 0;
+		a->file_delete  = 1;
+		a->file_preview = 1;
+		a->file_put  	= 1;
 
-	strcpy(abilities[0].model, "Panasonic DC1580");
-	abilities[0].port     = GP_PORT_SERIAL;
-	abilities[0].speed[0] = 9600;
-	abilities[0].speed[1] = 19200;
-	abilities[0].speed[2] = 38400;
-	abilities[0].speed[3] = 57600;			
-	abilities[0].speed[4] = 115200;	
-	abilities[0].speed[5] = 0;	
-	abilities[0].capture  = 0;
-	abilities[0].config   = 0;
-	abilities[0].file_delete  = 1;
-	abilities[0].file_preview = 1;
-	abilities[0].file_put 	  = 1;
-
-	strcpy(abilities[1].model, "Nikon CoolPix 600");
-	abilities[1].port     = GP_PORT_SERIAL;
-	abilities[1].speed[1] = 9600;
-	abilities[1].speed[1] = 19200;
-	abilities[1].speed[2] = 38400;
-	abilities[1].speed[3] = 57600;			
-	abilities[1].speed[4] = 115200;	
-	abilities[1].speed[5] = 0;	
-	abilities[1].capture  = 0;
-	abilities[1].config   = 0;
-	abilities[1].file_delete  = 1;
-	abilities[1].file_preview = 1;
-	abilities[1].file_put     = 1;
+		if (gp_abilities_list_append(list, a) == GP_ERROR)
+			return GP_ERROR;
+		i++;
+	}
 	
-	return (GP_OK);
+	return GP_OK;
 }
 
 int camera_init (Camera *camera, CameraInit *init) {
