@@ -460,6 +460,12 @@ uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,
 uint16_t ptp_deleteobject	(PTPParams* params, uint32_t handle,
 				uint32_t ofc);
 
+uint16_t ptp_sendobjectinfo	(PTPParams* params, uint32_t* store,
+				uint32_t* parenthandle, uint32_t* handle,
+				PTPObjectInfo* objectinfo);
+uint16_t ptp_sendobject		(PTPParams* params, char* object,
+				uint32_t size);
+
 uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
 				uint32_t ofc);
 

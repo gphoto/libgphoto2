@@ -47,7 +47,7 @@
 
 #include "ptp.h"
 
-#define GP_MODULE "PTP"
+#define GP_MODULE "PTP2"
 
 #define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r); return (translate_ptp_result (r));}}
 
@@ -177,8 +177,8 @@ translate_gp_result (int result)
 	case GP_OK:
 		return (PTP_RC_OK);
 	case GP_ERROR:
-		return (PTP_RC_GeneralError);
 	default:
+		GP_DEBUG ("PTP: gp_port_* function returned 0x%4x \t %i",result,result);
 		return (PTP_RC_GeneralError);
 	}
 }
@@ -516,7 +516,7 @@ static int
 camera_about (Camera *camera, CameraText *text, GPContext *context)
 {
 	strncpy (text->text,
-		 _("Written by Mariusz Woloszyn <emsi@ipartners.pl>. "
+		 _("(ptp2) Written by Mariusz Woloszyn <emsi@ipartners.pl>. "
 		   "Enjoy!"), sizeof (text->text));
 	return (GP_OK);
 }
@@ -790,6 +790,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	uint32_t handle;
 	long int intsize;
 	uint32_t size;
+	PTPParams* params=&camera->pl->params;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 	memset(&oi, 0, sizeof (PTPObjectInfo));
@@ -812,10 +813,18 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	oi.ObjectFormat=get_mimetype(camera, file);
 	oi.ObjectCompressedSize=size;
 	gp_file_get_mtime(file, &oi.ModificationDate);
-	CPR (context, ptp_ek_sendfileobjectinfo (&camera->pl->params,
-		&storage, &parent, &handle, &oi));
-	CPR (context, ptp_ek_sendfileobject (&camera->pl->params,
-		object, size));
+	if (ptp_operation_issupported(params, PTP_OC_EK_SendFileObject)) {
+		CPR (context, ptp_ek_sendfileobjectinfo (params, &storage,
+			&parent, &handle, &oi));
+		CPR (context, ptp_ek_sendfileobject (params, object, size));
+	} else if (ptp_operation_issupported(params, PTP_OC_SendObjectInfo)) {
+		CPR (context, ptp_sendobjectinfo (params, &storage,
+			&parent, &handle, &oi));
+		CPR (context, ptp_sendobject (params, object, size));
+	} else {
+		GP_DEBUG ("The device does not support uploading files!");
+		return GP_ERROR_NOT_SUPPORTED;
+	}
 
 	return (GP_OK);
 }

@@ -252,21 +252,29 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 /**
  * ptp_transaction:
  * params:	PTPParams*
- * 		PTPReq* req		- request phase PTPReq
- * 		uint16_t code		- PTP operation code
+ * 		PTPContainer* ptp	- general ptp container
  * 		uint16_t flags		- lower 8 bits - data phase description
- *					  upper 8 bits - number of params
- *					  of request phase
- * 		unsigned int datalen	- data phase data length
- * 		PTPReq* dataphasebuf	- data phase req bufor
+ * 		unsigned int sendlen	- senddata phase data length
+ * 		char** data		- send or receive data buffer pointer
  *
- * Performs PTP transaction. Uses PTPReq* req for Operation Request Phase,
- * sending it to responder and returns Response Phase response there.
- * PTPReq* dataphasebuf buffor is used for PTP Data Phase, depending on 
- * unsigned short dataphase is used for sending or receiving data.
+ * Performs PTP transaction. ptp is a PTPContainer with appropriate fields
+ * filled in (i.e. operation code and parameters). It's up to caller to do
+ * so.
+ * The flags decide thether the transaction has a data phase and what is its
+ * direction (send or receive). 
+ * If transaction is sending data the sendlen should contain its length in
+ * bytes, otherwise it's ignored.
+ * The data should contain an address of a pointer to data going to be sent
+ * or is filled with such a pointer address if data are received depending
+ * od dataphase direction (send or received) or is beeing ignored (no
+ * dataphase).
+ * The memory for a pointer should be preserved by the caller, if data are
+ * beeing retreived the appropriate amount of memory is beeing allocated
+ * (the caller should handle that!).
  *
  * Return values: Some PTP_RC_* code.
- * Upon success PTPReq* req contains PTP Response Phase response packet.
+ * Upon success PTPContainer* ptp contains PTP Response Phase container with
+ * all fields filled in.
  **/
 static uint16_t
 ptp_transaction (PTPParams* params, PTPContainer* ptp, 
@@ -404,6 +412,8 @@ ptp_opensession (PTPParams* params, uint32_t session)
 	uint16_t ret;
 	PTPContainer ptp;
 
+	ptp_debug(params,"PTP: Opening session");
+
 	/* SessonID field of the operation dataset should be set allways
 	   set to 0 for OpenSession request */
 	params->session_id=0x00000000;
@@ -431,6 +441,8 @@ uint16_t
 ptp_closesession (PTPParams* params)
 {
 	PTPContainer ptp;
+
+	ptp_debug(params,"PTP: Closing session");
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CloseSession;
@@ -565,7 +577,7 @@ ptp_getthumb (PTPParams* params, uint32_t handle,  char** object)
  * ptp_deleteobject:
  * params:	PTPParams*
  *		handle			- object handle
- *		ofc			- object format code
+ *		ofc			- object format code (optional)
  * 
  * Deletes desired objects.
  *
@@ -583,6 +595,71 @@ ptp_deleteobject (PTPParams* params, uint32_t handle,
 	ptp.Param2=ofc;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL);
 }
+
+/**
+ * ptp_sendobjectinfo:
+ * params:	PTPParams*
+ *		uint32_t* store		- destination StorageID on Responder
+ *		uint32_t* parenthandle 	- Parent ObjectHandle on responder
+ * 		uint32_t* handle	- see Return values
+ *		PTPObjectInfo* objectinfo- ObjectInfo that is to be sent
+ * 
+ * Sends ObjectInfo of file that is to be sent via SendFileObject.
+ *
+ * Return values: Some PTP_RC_* code.
+ * Upon success : uint32_t* store	- Responder StorageID in which
+ *					  object will be stored
+ *		  uint32_t* parenthandle- Responder Parent ObjectHandle
+ *					  in which the object will be stored
+ *		  uint32_t* handle	- Responder's reserved ObjectHandle
+ *					  for the incoming object
+ **/
+uint16_t
+ptp_sendobjectinfo (PTPParams* params, uint32_t* store, 
+			uint32_t* parenthandle, uint32_t* handle,
+			PTPObjectInfo* objectinfo)
+{
+	uint16_t ret;
+	PTPContainer ptp;
+	char* oidata=NULL;
+	uint32_t size;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_SendObjectInfo;
+	ptp.Param1=*store;
+	ptp.Param2=*parenthandle;
+	
+	size=ptp_pack_OI(params, objectinfo, oidata);
+	ret=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &oidata); 
+	free(oidata);
+	*store=ptp.Param1;
+	*parenthandle=ptp.Param2;
+	*handle=ptp.Param3; 
+	return ret;
+}
+
+/**
+ * ptp_sendobject:
+ * params:	PTPParams*
+ *		char*	object		- contains the object that is to be sent
+ *		uint32_t size		- object size
+ *		
+ * Sends object to Responder.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+uint16_t
+ptp_sendobject (PTPParams* params, char* object, uint32_t size)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_SendObject;
+
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &object);
+}
+
 
 /**
  * ptp_initiatecapture:
@@ -658,8 +735,7 @@ ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 /**
  * ptp_ek_sendfileobject:
  * params:	PTPParams*
- *		PTPReq*	object		- object->data contain object
- *					  that is to be sent
+ *		char*	object		- contains the object that is to be sent
  *		uint32_t size		- object size
  *		
  * Sends object to Responder.

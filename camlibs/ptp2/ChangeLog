@@ -1,3 +1,8 @@
+2003-01-06 Mariusz Woloszyn
+	* updated some comments, added some extra debug and introduced
+	  support for senobjectinfo and sendobject.
+	* Makefile.am: changed driver name to ptp2
+
 2003-01-03 Mariusz Woloszyn
 	* Commited version 2 of libptp2 and ptp driver.
 	  This code is unfinished yet, but it's meant to be transport layer
