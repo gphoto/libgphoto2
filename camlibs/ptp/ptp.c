@@ -330,6 +330,7 @@ ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
 	PTPReq si;
 	PTPReq req;
 
+	*(int *)(req.data)=htod32(storageid);
 	ret=ptp_transaction(params, &req, PTP_OC_GetStorageInfo,
 		PTP_DP_GETDATA | PTP_RQ_PARAM1, PTP_REQ_DATALEN, &si);
 	ptp_unpack_SI(params, &si, storageinfo);

@@ -73,11 +73,15 @@
 #define find_folder_handle(fn,p,d)	{			\
 		{						\
 		char *backfolder=malloc(strlen(fn));		\
+		char *tmpfolder;				\
 		memcpy(backfolder,fn+1, strlen(fn));		\
-		p=folder_to_handle(backfolder,0,(Camera *)d);\
+		if ((tmpfolder=strchr(backfolder+1,'/'))==NULL) tmpfolder="/";\
+		p=folder_to_handle(tmpfolder+1,0,(Camera *)d);\
 		free(backfolder);				\
 		}						\
 }
+
+#define STORAGE_FOLDER_PREFIX		"store_"
 
 static struct {
 	short n;
@@ -420,9 +424,10 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	return (GP_OK);
 }
 
-#if 0		// following functions are used for fs testing only
+/* following functions are used for fs testing only */
+#if 0
 static void
-add_dir (Camera *camera, uint32_t parent, uint32_t handle, const char *filename)
+add_dir (Camera *camera, uint32_t parent, uint32_t handle, const char *foldername)
 {
 	int n;
 	n=camera->pl->params.handles.n++;
@@ -431,14 +436,14 @@ add_dir (Camera *camera, uint32_t parent, uint32_t handle, const char *filename)
 		sizeof(PTPObjectInfo)*(n+1));
 	camera->pl->params.handles.handler[n]=handle;
 
-	camera->pl->params.objectinfo[n].Filename=malloc(strlen(filename)+1);
-	strcpy(camera->pl->params.objectinfo[n].Filename, filename);
+	camera->pl->params.objectinfo[n].Filename=malloc(strlen(foldername)+1);
+	strcpy(camera->pl->params.objectinfo[n].Filename, foldername);
 	camera->pl->params.objectinfo[n].ObjectFormat=PTP_OFC_Association;
 	camera->pl->params.objectinfo[n].AssociationType=PTP_AT_GenericFolder;
 	
 	camera->pl->params.objectinfo[n].ParentObject=parent;
 }
-#endif
+#endif 
 
 #if 0
 static void
@@ -512,23 +517,35 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
-	uint32_t parent;
-	int i,id;
+	uint32_t parent, storage=0x0000000;
+	int i;
 
-	((PTPData *)((Camera *)data)->pl->params.data)->context = context;
-	id = gp_context_progress_start (context, 0, _("Listing files in "
-		"'%s'..."), folder);
-	/* Get (parent) folder handle */
+	/*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
+
+	/* There should be NO files in root folder */
+	if (!strcmp(folder, "/")) {
+		return (GP_OK);
+	}
+	/* be paranoid, there can be ONLY storage pseudofolders in /, but
+	   check for that! */
+	if (!strncmp(folder,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1)) {
+		/* compute the storageID */
+		char storagetxt[MAXFILENAMELEN];
+		/* be paranoid, allways!!! */
+		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+1) return (GP_ERROR);
+		sprintf(storagetxt,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
+		storage=strtol(storagetxt,NULL,16);
+	}
+
+
+	/* Get (parent) folder handle omiting storage pseudofolder */
 	find_folder_handle(folder,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==parent)
 	if (params->objectinfo[i].ObjectFormat != PTP_OFC_Association)
+	if (params->objectinfo[i].StorageID == storage)
 		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
-	gp_context_progress_update (context, id,
-		(100*i)/ params->handles.n);
-
 	}
-	gp_context_progress_stop (context, id);
 
 	return (GP_OK);
 }
@@ -538,17 +555,49 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
-	uint32_t parent;
 	int i;
 
-	((PTPData *)((Camera *)data)->pl->params.data)->context = context;
-	/* Get (parent) folder handle */
+	/*((PTPData *)((Camera *)data)->pl->params.data)->context = context;*/
+
+	/* add storage pseudofolders in root folder */
+	if (!strcmp(folder, "/")) {
+		PTPStorageIDs storageids;
+		CPR (context, ptp_getstorageids(params,
+		&storageids));
+		for (i=0; i<storageids.n; i++) {
+			char fname[MAXFILENAMELEN];
+			PTPStorageInfo storageinfo;
+			if ((storageids.storage[i]&0x0000ffff)==0) continue;
+			CPR (context, ptp_getstorageinfo(params,
+			storageids.storage[i], &storageinfo));
+			snprintf(fname, MAXFILENAMELEN, STORAGE_FOLDER_PREFIX"%8.8x",
+			storageids.storage[i]);
+			CR (gp_list_append (list, fname, NULL));
+		}
+		return (GP_OK);
+	}
+	{
+	uint32_t parent,storage=0x0000000;
+
+	/* be paranoid, there can be ONLY storage pseudofolders in /, but
+	   check for that! */
+	if (!strncmp(folder,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1)) {
+		/* compute the storageID */
+		char storagetxt[MAXFILENAMELEN];
+		/* be paranoid, allways!!! */
+		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+1) return (GP_ERROR);
+		sprintf(storagetxt,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
+		storage=strtol(storagetxt,NULL,16);
+	}
+	/* Get (parent) folder handle omiting storage pseudofolder */
 	find_folder_handle(folder,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==parent)
+	if (params->objectinfo[i].StorageID == storage)
 	if (params->objectinfo[i].ObjectFormat==PTP_OFC_Association &&
 		params->objectinfo[i].AssociationType==PTP_AT_GenericFolder)
 		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
+	}
 	}
 	return (GP_OK);
 }
@@ -567,7 +616,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
-	/* Get file number */
+	/* Get file number omiting storage pseudofolder */
 	find_folder_handle(folder, object_id, data);
 	object_id = find_child(filename, object_id, camera);
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
@@ -637,7 +686,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	gp_file_get_data_and_size (file, &object, &intsize);
 	size=(uint32_t)intsize;
 
-	/* get parent folder id */
+	/* get parent folder id omiting storage pseudofolder */
 	find_folder_handle(folder,parent,data);
 	/* in Kodak DX3500 (probably others),
 	 * you _have_ to specify store, so we use
@@ -679,7 +728,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
-	/* Get file number */
+	/* Get file number omiting storage pseudofolder */
 	find_folder_handle(folder, object_id, data);
 	object_id = find_child(filename, object_id, camera);
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
@@ -700,7 +749,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
-	/* Get file number */
+	/* Get file number omiting storage pseudofolder */
 	find_folder_handle(folder, object_id, data);
 	object_id = find_child(foldername, object_id, camera);
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
@@ -722,7 +771,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
-	/* Get file number */
+	/* Get file number omiting storage pseudofolder */
 	find_folder_handle(folder, object_id, data);
 	object_id = find_child(filename, object_id, camera);
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
@@ -785,7 +834,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	((PTPData *) camera->pl->params.data)->context = context;
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 
-	/* get parent folder id */
+	/* get parent folder id omiting storage pseudofolder */
 	find_folder_handle(folder,parent,data);
 
 	/* try to obtain StorageID from parent object */
