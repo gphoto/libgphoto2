@@ -55,12 +55,12 @@ int	gp_widget_get_child	     (CameraWidget *widget, int child_number,
 
 /* Retrieve Widgets */
 int	gp_widget_get_child_by_label (CameraWidget *widget,
-				      const char *child_label,
+				      const char *label,
 				      CameraWidget **child);
 int	gp_widget_get_child_by_id    (CameraWidget *widget, int id, 
 				      CameraWidget **child);
 int	gp_widget_get_child_by_name  (CameraWidget *widget,
-                                      const char *child_name,
+                                      const char *name,
 				      CameraWidget **child);
 int	gp_widget_get_root           (CameraWidget *widget,
                                       CameraWidget **root);
@@ -86,7 +86,7 @@ int	gp_widget_get_label	(CameraWidget *widget, const char **label);
 int	gp_widget_set_range	(CameraWidget *range, 
 				 float  low, float  high, float  increment);
 int	gp_widget_get_range	(CameraWidget *range, 
-				 float *low, float *high, float *increment);
+				 float *min, float *max, float *increment);
 
 int	gp_widget_add_choice     (CameraWidget *widget, const char *choice);
 int	gp_widget_count_choices  (CameraWidget *widget);
