@@ -203,18 +203,12 @@ int gp_camera_init (Camera *camera)
 	        /* Set the port type from the path in case the 	*/
 		/* frontend didn't. 				*/
 	        if (camera->port->type == GP_PORT_NONE) {
-	                for (x = 0; x < gp_port_count_get (); x++) {
-	                        gp_port_info_get (x, &info);
-	                        if (strcmp (info.path, camera->port->path) 
-				    == 0) {
-	                                camera->port->type = info.type;
-					break;
-				}
-	                }
-			if (x < 0) 
-				return (x);
-			if (x == gp_port_count_get ())
-				return (GP_ERROR_BAD_PARAMETERS);
+                    if (strncmp(camera->port->path, "serial", 6)==0)
+                        camera->port->type = GP_PORT_SERIAL;
+                    if (strncmp(camera->port->path, "usb", 3)==0)
+                        camera->port->type = GP_PORT_USB;
+                    if (camera->port->type == GP_PORT_NONE)
+                        return (GP_ERROR_BAD_PARAMETERS);
 	        }
 	}
 		
