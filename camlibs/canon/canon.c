@@ -602,8 +602,10 @@ canon_int_identify_camera (Camera *camera, GPContext *context)
 	strncpy (camera->pl->ident, (char *) msg + 12, 32);
 	strncpy (camera->pl->owner, (char *) msg + 44, 32);
 
-	GP_DEBUG ("canon_int_identify_camera: ident '%s' owner '%s'", camera->pl->ident,
-		  camera->pl->owner);
+	GP_DEBUG ("canon_int_identify_camera: ident '%s' owner '%s', firmware %d.%d.%d.%d",
+		  camera->pl->ident, camera->pl->owner,
+		  camera->pl->firmwrev[3], camera->pl->firmwrev[2],
+		  camera->pl->firmwrev[1], camera->pl->firmwrev[0] );
 
 	return GP_OK;
 }
