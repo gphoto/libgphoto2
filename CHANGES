@@ -6,6 +6,14 @@ General libgphoto2 features:
 
 Drivers (camlibs):
 
+   * sierra driver:
+     - We now support the hidden Sierra Mode on Nikon and Pentax
+       cameras (which are otherwise just USB Storage cameras).
+
+       The USB Storage driver is automatically detached on open.
+       
+       This allows remote image capture with those cameras for
+       instance.
 
 ----------------------------------------------------------------------------
 libgphoto2 2.1.5
