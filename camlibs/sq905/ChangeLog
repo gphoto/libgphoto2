@@ -3,6 +3,11 @@
 	* sq905.c: Additional information by Paulo Tribolet Abreu
 	  <paulotex@gmx.net>.
 
+2003-08-01  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sq905.c: Additional information by Paulo Tribolet Abreu
+	  <paulotex@gmx.net>.
+
 2003-07-30  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* library.c: Move some variables around to make non-gcc-compilers happy.

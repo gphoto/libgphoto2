@@ -50,6 +50,7 @@
 #define GP_MODULE "sq905"
 
 struct _CameraPrivateLibrary {
+	SQModel model;
 	SQData data[0x400];
 };
 
@@ -58,19 +59,16 @@ struct {
 	CameraDriverStatus status;
    	unsigned short idVendor;
    	unsigned short idProduct;
-   	char serial;
 } models[] = {
-        {"SQ chip camera", GP_DRIVER_STATUS_EXPERIMENTAL,0x2770,0x9120,0},
-	/* Developed on the following two cameras: */
-        {"Argus DC-1510",GP_DRIVER_STATUS_PRODUCTION,0x2770,0x9120,0},
-	{"Gear to go", GP_DRIVER_STATUS_EXPERIMENTAL,0x2770,0x9120,0},
-	/* Reported to work also on */
-	{"Mitek CD10" , GP_DRIVER_STATUS_EXPERIMENTAL,0x2770,0x9120,0},
-	/* Reputed to have the same chipset */
-	{"GTW Electronics",GP_DRIVER_STATUS_EXPERIMENTAL,0x2770,0x9120,0},
-	{"Concord Eye-Q Easy",GP_DRIVER_STATUS_EXPERIMENTAL,0x2770,0x9120,0},
-	{"Che-ez Snap", GP_DRIVER_STATUS_EXPERIMENTAL,0x2770,0x9120,0},
-	{NULL,0,0,0}
+        {"SQ chip camera",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+        {"Argus DC-1510",     GP_DRIVER_STATUS_PRODUCTION,   0x2770, 0x9120},
+	{"Gear to go",        GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Mitek CD10" ,       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"GTW Electronics",   GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Concord Eye-Q Easy",GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Che-ez Snap",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"PockCam",           GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{NULL,0,0}
 };
 
 int
@@ -165,12 +163,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	comp_ratio = sq_get_comp_ratio (camera->pl->data, k);
     	w = sq_get_picture_width (camera->pl->data, k);
     	switch (w) {
-	case 176:
-		h = 144;
-		break;
-	default:
-		h = 288;
-		break;
+	case 176: h = 144; break;
+	case 640: h = 480; break;
+	case 320: h = 240; break;
+	default:  h = 288; break;
 	}
 
     	buffersize = w * h / comp_ratio;
@@ -258,7 +254,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	GP_DEBUG ("size = %i\n", size);
 
-	gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_BGGR ); 
+	switch (camera->pl->model) {
+	case SQ_MODEL_POCK_CAM:
+		gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_GBRG);
+		break;
+	case SQ_MODEL_ARGUS:
+	default:
+		gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_BGGR);
+		break;
+	}
 
 	/*
 	 * Unsurprisingly, reversing the data requires changing RGGB to BGGR,
@@ -325,7 +329,7 @@ camera_init(Camera *camera, GPContext *context)
 	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 
 	/* Connect to the camera */
-	sq_init (camera->port, camera->pl->data);
+	sq_init (camera->port, &camera->pl->model, camera->pl->data);
 
 	return GP_OK;
 }

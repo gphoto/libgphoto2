@@ -5,8 +5,14 @@
 
 typedef unsigned char SQData;
 
+typedef enum {
+	SQ_MODEL_ARGUS,
+	SQ_MODEL_POCK_CAM,
+	SQ_MODEL_UNKNOWN
+} SQModel;
+
 int sq_reset             (GPPort *port);
-int sq_init              (GPPort *port, SQData *data);
+int sq_init              (GPPort *port, SQModel *, SQData *data);
 
 /* Those functions don't need data transfer with the camera */
 int sq_get_num_pics      (SQData *data); 

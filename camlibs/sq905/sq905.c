@@ -36,7 +36,7 @@
 #define SQREAD  gp_port_usb_msg_read
 
 int
-sq_init (GPPort *port, SQData *data)
+sq_init (GPPort *port, SQModel *m, SQData *data)
 {
         unsigned char setup_data[0x400][0x10];  
         unsigned char c[4]; 
@@ -67,7 +67,15 @@ sq_init (GPPort *port, SQData *data)
 		 */
 		sq_reset (port);
 		SQWRITE (port, 0x0c, 0x06, 0x20, SQ_PING, 1);	
-		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);    
+		SQREAD (port, 0x0c, 0x07, 0x00, c, 1);
+		if (m) {
+			if (!memcmp (c, "\x09\x05\x00\x26", 4))
+				*m = SQ_MODEL_ARGUS;
+			else if (!memcmp (c, "\x09\x05\x01\x19", 4))
+				*m = SQ_MODEL_POCK_CAM;
+			else
+				*m = SQ_MODEL_UNKNOWN;
+		}
 
 		sq_read_data (port, *setup_data, 0x4000);
 		sq_reset (port);
@@ -116,7 +124,7 @@ sq_get_comp_ratio (SQData *data, int n)
 	case 0x41:
 	case 0x42:
 	case 0x43:
-	case 0x76: return 1;
+	case 0x56: return 1;
 	default:
 		GP_DEBUG ("Your camera has unknown resolution settings.\n");
 		return (GP_ERROR_NOT_SUPPORTED);
