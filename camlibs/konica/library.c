@@ -471,7 +471,8 @@ camera_exit (Camera* camera)
 	g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
 	
 	konica_data = (konica_data_t *) camera->camlib_data;
-	g_return_val_if_fail (konica_data, GP_ERROR_BAD_PARAMETERS);
+	if (!konica_data)
+		return (GP_OK);
 	
 	if (konica_data->device) {
 		CHECK (k_exit (konica_data->device));
