@@ -23,6 +23,12 @@ drivers (camlibs):
    * Polaroid driver:
      - added support for USB Jenoptik JD350v
 
+   * SoundVision driver:
+     - Added support for RCA CDS1005, FujiFilm @xia ix-100,
+       Oregon Scientific DShot II, Media-Tech mt-406,
+       and Scott APX 30
+
+
 --------------------------------------------------------------------------------
 gphoto2 2.1.0
 
