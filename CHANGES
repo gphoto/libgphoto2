@@ -3,6 +3,30 @@ libgphoto2 CVS HEAD
  
    * Support multiple USB devices by introducing additional USB ports,
      usb:<bus>,<device>. 
+   
+drivers (camlibs):
+
+   * PTP driver:
+     - Lots of new ids were collected (across all vendors).
+     - Raw download support for newer cameras fixed.
+
+   * sq905, mars, aox drivers:
+     - New drivers written by Theodore Kilgore for:
+	- Aiptek Pencam VGA+, Emprex PCD3600 (mars) 
+	- Concord EyeQ mini (aox)
+	- Lots of SQ 905 based cameras (sq905)
+
+   * sierra driver:
+	- Toshiba PDR support added.
+
+   * sonydscf55 driver:
+	- bugfixes, downloading of MPEGs.
+	
+   * casio-qv driver:
+	- working serial support added.
+
+   * canon driver:
+	- Several new ids added.
 
 ----------------------------------------------------------------------------
 libgphoto2 2.1.4 
