@@ -1,6 +1,8 @@
 
 Unordered TODO list:
 
+-- gp_camera_capture() should return path to captured image!
+
 -- free() all malloced memory upon exit!
 
 -- update params.handles and params.objectinfo structures after deletion of
