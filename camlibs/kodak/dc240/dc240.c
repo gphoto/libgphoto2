@@ -29,34 +29,72 @@ int camera_id (CameraText *id)
 	return (GP_OK);
 }
 
+struct camera_to_usb {
+	char *name;
+	unsigned short idVendor;
+	unsigned short idProduct;
+} camera_to_usb[] = {
+	{ "Kodak DC240", 0x040A, 0x0120 },
+	{ "Kodak DC280", 0x040A, 0x0130 },
+	{ "Kodak DC3400", 0x040A, 0x0132 },
+	{ "Kodak DC5000", 0x040A, 0x0131 },
+        { NULL, 0, 0 }
+};
+
+/*
+  Abilities are based upon what we can do with a DC240.
+  Later cameras have a superset of the DC240 feature and are not
+  currently supported.
+ */
 int camera_abilities (CameraAbilitiesList *list) 
 {
 	CameraAbilities *a;
+        int i;
 
-	a = gp_abilities_new();
-
-	strcpy(a->model, "Kodak DC240");
-	a->port     = GP_PORT_SERIAL | GP_PORT_USB;
-	a->speed[0] = 9600;
-	a->speed[1] = 19200;
-	a->speed[2] = 38400;
-	a->speed[3] = 57600;
-	a->speed[4] = 115200;
-	a->speed[5] = 0;
-        a->usb_vendor  = 0x040A;
-        a->usb_product = 0x0120;
-	a->operations        = 	GP_OPERATION_CAPTURE_IMAGE;
-	a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
-				GP_FILE_OPERATION_PREVIEW;
-	a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
-
-	gp_abilities_list_append(list, a);
-
+        for (i = 0; camera_to_usb[i].name; i++)
+        {
+            a = gp_abilities_new();
+            
+            strcpy(a->model, camera_to_usb[i].name);
+            a->port     = GP_PORT_SERIAL | GP_PORT_USB;
+            a->speed[0] = 9600;
+            a->speed[1] = 19200;
+            a->speed[2] = 38400;
+            a->speed[3] = 57600;
+            a->speed[4] = 115200;
+            a->speed[5] = 0;
+            a->usb_vendor  = camera_to_usb[i].idVendor;
+            a->usb_product = camera_to_usb[i].idProduct;
+            a->operations        = 	GP_OPERATION_CAPTURE_IMAGE;
+            a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
+                                        GP_FILE_OPERATION_PREVIEW;
+            a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
+            
+            gp_abilities_list_append(list, a);
+        }
 	return (GP_OK);
+}
+
+static short find_usb_device_id (const char *model, unsigned short *idVendor, 
+                             unsigned short *idProduct)
+{
+    short i;
+    for (i = 0; i < sizeof (camera_to_usb) / sizeof (struct camera_to_usb); i++)
+    {
+        if (strcmp (model, camera_to_usb[i].name) == 0)
+        {
+            *idVendor = camera_to_usb[i].idVendor;
+            *idProduct = camera_to_usb[i].idProduct;
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 int camera_init (Camera *camera) 
 {
+    unsigned short usb_vendor, usb_product;
     int ret;
     gp_port_settings settings;
     DC240Data *dd;
@@ -100,7 +138,12 @@ int camera_init (Camera *camera)
             free(dd);
             return (GP_ERROR);
         }
-        if (gp_port_usb_find_device(dd->dev, 0x040A, 0x0120) == GP_ERROR) {
+        if (find_usb_device_id (camera->model, &usb_vendor, &usb_product) == 0) {
+            gp_port_free(dd->dev);
+            free (dd);
+            return (GP_ERROR);
+        }
+        if (gp_port_usb_find_device(dd->dev, usb_vendor, usb_product) == GP_ERROR) {
             gp_port_free(dd->dev);
             free (dd);
             return (GP_ERROR);
@@ -260,7 +303,7 @@ int camera_about (Camera *camera, CameraText *about)
 	strcpy (about->text, 
 		_("Kodak DC240 Camera Library\n"
 		"Scott Fritzinger <scottf@gphoto.net>\n"
-		"Camera Library for the Kodak DC240 camera.\n"
+		"Camera Library for the Kodak DC240, DC260, DC3400 and DC5000 cameras.\n"
 		"Rewritten and updated for gPhoto2."));
 
 	return (GP_OK);
