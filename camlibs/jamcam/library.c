@@ -26,6 +26,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <gphoto2.h>
 #include <time.h>
 #include <unistd.h>
@@ -401,9 +402,10 @@ int jamcam_request_image( Camera *camera, CameraFile *file,
 		char *buf, int *len, int number, GPContext *context ) {
 	int position;
 	int result;
-	char tmp_buf[300000];
+	char *tmp_buf;
 
 	GP_DEBUG ("* jamcam_request_image");
+	tmp_buf = malloc(640*480*3);
 
 	position = jamcam_files[number].position;
 
@@ -419,7 +421,7 @@ int jamcam_request_image( Camera *camera, CameraFile *file,
 			0x0000,
 			NULL, 0 );
 	}
-
+	
 	result = jamcam_fetch_memory( camera, file, tmp_buf, position,
 		jamcam_files[number].data_incr, context );
 
@@ -436,12 +438,14 @@ int jamcam_request_image( Camera *camera, CameraFile *file,
 		*len = jamcam_files[number].width * jamcam_files[number].height;
 		memcpy( buf, tmp_buf + 0x10, *len );
 	}
+	free (tmp_buf);
 
 	return( result );
 }
 
 struct jamcam_file *jamcam_file_info(Camera *camera, int number)
 {
+	GP_DEBUG(" * jamcam_file_info, nr is %d", number);
 	return( &jamcam_files[number] );
 }
 
@@ -486,7 +490,6 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 			bytes_to_read = jamcam_files[number].width;
 		}
 	}
-
 
 	/* fetch thumbnail lines and build the thumbnail */
 	position += 10 * jamcam_files[number].width;

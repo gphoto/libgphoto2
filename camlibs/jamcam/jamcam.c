@@ -65,6 +65,7 @@ static struct {
 	{ NULL, 0, 0 }
 };
 
+
 int camera_id (CameraText *id)
 {
 	GP_DEBUG ("* camera_id");
@@ -163,13 +164,21 @@ static int camera_exit (Camera *camera, GPContext *context)
 	return (GP_OK);
 }
 
+#define CHECK_free(result) {		\
+	int res;			\
+	res = result; 			\
+	if (res < 0)  { 		\
+		free(raw); free(ppm);	\
+		return (res);		\
+	}				\
+}
+
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
 			  CameraFile *file, void *user_data, GPContext *context)
 {
 	Camera *camera = user_data;
-	char raw[265000];
-	char ppm[265000 * 3];
+	char *raw, *ppm;
 	char tmp_filename[128];
 	unsigned char gtable[256];
 	char *ptr;
@@ -188,9 +197,14 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 		return (GP_ERROR_CANCEL);
 
+	raw = malloc(640*480 * 3);
+	ppm = malloc(640*480 * 3 + 200);
+	
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
-		CHECK (jamcam_request_thumbnail (camera, file, raw, &size, n, context));
+
+		CHECK_free (jamcam_request_thumbnail (camera, file, raw, &size, n, context));
+
 
 		width = 80;
 		height = 60;
@@ -209,13 +223,13 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		gp_gamma_fill_table( gtable, 0.5 );
 		gp_gamma_correct_single( gtable, ptr, height * width );
 
-		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
-		CHECK (gp_file_set_name (file, filename));
-		CHECK (gp_file_append (file, ppm, size));
+		CHECK_free (gp_file_set_mime_type (file, GP_MIME_PPM));
+		CHECK_free (gp_file_set_name (file, filename));
+		CHECK_free (gp_file_append (file, ppm, size));
 		break;
 
 	case GP_FILE_TYPE_NORMAL:
-		CHECK (jamcam_request_image (camera, file, raw, &size, n, context));
+		CHECK_free (jamcam_request_image (camera, file, raw, &size, n, context));
 
 		jc_file = jamcam_file_info (camera, n);
 
@@ -234,25 +248,26 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		gp_gamma_fill_table( gtable, 0.5 );
 		gp_gamma_correct_single( gtable, ptr, jc_file->width * jc_file->height );
 
-		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
-		CHECK (gp_file_set_name (file, filename));
-		CHECK (gp_file_append (file, ppm, size));
+		CHECK_free (gp_file_set_mime_type (file, GP_MIME_PPM));
+		CHECK_free (gp_file_set_name (file, filename));
+		CHECK_free (gp_file_append (file, ppm, size));
 		break;
 
 	case GP_FILE_TYPE_RAW:
-		CHECK (jamcam_request_image (camera, file, raw, &size, n, context));
-		CHECK (gp_file_set_mime_type (file, GP_MIME_RAW));
+		CHECK_free (jamcam_request_image (camera, file, raw, &size, n, context));
+		CHECK_free (gp_file_set_mime_type (file, GP_MIME_RAW));
 		strcpy( tmp_filename, filename );
 		tmp_filename[strlen(tmp_filename)-3] = 'r';
 		tmp_filename[strlen(tmp_filename)-2] = 'a';
 		tmp_filename[strlen(tmp_filename)-1] = 'w';
-		CHECK (gp_file_set_name (file, tmp_filename));
-		CHECK (gp_file_append (file, raw, size));
+		CHECK_free (gp_file_set_name (file, tmp_filename));
+		CHECK_free (gp_file_append (file, raw, size));
 		break;
 	default:
+		free(raw); free(ppm);
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
-
+	free(raw); free(ppm);
 	return (GP_OK);
 }
 
@@ -266,7 +281,7 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 	/* possibly get # pics, mem free, etc. */
 	count = jamcam_file_count (camera);
 
-	sprintf (tmp, "Frames Taken     : %4d\n", count);
+	sprintf (tmp, _("Frames Taken     : %4d\n"), count);
 	strcat (summary->text, tmp );
 
 	return (GP_OK);
@@ -313,7 +328,7 @@ int camera_init (Camera *camera, GPContext *context)
 		/* Use the defaults the core parsed */
 		break;
 	default:
-		fprintf(stderr, "Unknown port type: %d\n", camera->port->type );
+		fprintf( stderr, "Unknown port type: %d\n", camera->port->type );
 		return ( GP_ERROR );
 		break;
 	}
