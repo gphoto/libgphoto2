@@ -522,8 +522,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	find_folder_handle(folder,parent,data);
 	for (i = 0; i < params->handles.n; i++) {
 	if (params->objectinfo[i].ParentObject==parent)
-	if ((params->objectinfo[i].ObjectFormat != PTP_OFC_Undefined) &&
-		(params->objectinfo[i].ObjectFormat != PTP_OFC_Association))
+	if (params->objectinfo[i].ObjectFormat != PTP_OFC_Association)
 		CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
 	gp_context_progress_update (context, id,
 		(100*i)/ params->handles.n);
@@ -730,7 +729,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	oi=&camera->pl->params.objectinfo[object_id];
-/*	GP_DEBUG ("ObjectInfo for '%s':");
+/*
+	GP_DEBUG ("ObjectInfo for '%s':");
 	GP_DEBUG ("  StorageID: %d", oi->StorageID);
 	GP_DEBUG ("  ObjectFormat: %d", oi->ObjectFormat);
 	GP_DEBUG ("  ObjectCompressedSize: %d", oi->ObjectCompressedSize);

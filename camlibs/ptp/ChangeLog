@@ -1,3 +1,6 @@
+2002-03-14 Mariusz Woloszyn
+	* library.c: undefined file is a file
+
 2002-03-06 Marcus Meissner
 	* library.c: translate the error messages
 
