@@ -583,31 +583,6 @@ gp_camera_unref (Camera *camera)
 	return (GP_OK);
 }
 
-static int
-gp_camera_exit (Camera *camera)
-{
-	int ret;
-
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Exiting camera...");
-
-	CHECK_NULL (camera);
-
-	if (!camera->functions)
-		return (GP_ERROR);
-
-	if (!camera->functions->exit)
-		return (GP_ERROR_NOT_SUPPORTED);
-
-	CHECK_OPEN (camera);
-	ret = camera->functions->exit (camera);
-	CHECK_CLOSE (camera);
-
-	GP_SYSTEM_DLCLOSE (camera->library_handle);
-	CHECK_RESULT (ret);
-
-	return (GP_OK);
-}
-
 /**
  * gp_camera_free:
  * @camera: a #Camera
@@ -622,10 +597,24 @@ gp_camera_free (Camera *camera)
 {
 	CHECK_NULL (camera);
 
-	gp_camera_exit (camera);
+	/* We don't care if anything goes wrong */
+	if (camera->port) {
+		gp_port_open (camera->port);
+		if (camera->functions->exit)
+	        	camera->functions->exit (camera);
+		gp_port_close (camera->port);
+		gp_camera_unset_port (camera);
+	}
 
-	CHECK_RESULT (gp_camera_unset_port (camera));
-	CHECK_RESULT (gp_filesystem_free (camera->fs));
+	if (camera->library_handle) {
+		GP_SYSTEM_DLCLOSE (camera->library_handle);
+		camera->library_handle = NULL;
+	}
+
+	if (camera->fs) {
+		gp_filesystem_free (camera->fs);
+		camera->fs = NULL;
+	}
 
         if (camera->port_info)
                 free (camera->port_info);
@@ -731,8 +720,11 @@ gp_camera_get_config (Camera *camera, CameraWidget **window)
 {
 	CHECK_NULL (camera);
 
-        if (camera->functions->get_config == NULL)
+	if (!camera->functions->get_config) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
+			"not offer any configuration options"));
                 return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	gp_camera_status (camera, _("Getting configuration..."));
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->get_config (camera,
@@ -758,8 +750,11 @@ gp_camera_set_config (Camera *camera, CameraWidget *window)
 {
 	CHECK_NULL (camera && window);
 
-        if (camera->functions->set_config == NULL)
+	if (!camera->functions->set_config) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
+			"not support setting configuration options"));
                 return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	gp_camera_status (camera, _("Setting configuration..."));
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->set_config (camera,
@@ -785,8 +780,11 @@ gp_camera_get_summary (Camera *camera, CameraText *summary)
 {
 	CHECK_NULL (camera && summary);
 
-        if (camera->functions->summary == NULL)
+	if (!camera->functions->summary) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
+			"not support summaries"));
                 return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	gp_camera_status (camera, _("Getting summary..."));
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->summary (camera,
@@ -811,8 +809,11 @@ gp_camera_get_manual (Camera *camera, CameraText *manual)
 {
 	CHECK_NULL (camera && manual);
 
-        if (camera->functions->manual == NULL)
+	if (!camera->functions->manual) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera "
+			"does not offer a manual"));
                 return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->manual (camera,
 								    manual));
@@ -835,8 +836,11 @@ gp_camera_get_about (Camera *camera, CameraText *about)
 {
 	CHECK_NULL (camera && about);
 
-        if (camera->functions->about == NULL)
+	if (!camera->functions->about) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
+			"not provide information about the driver"));
                 return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->about (camera,
 								   about));
@@ -862,8 +866,11 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
 {
 	CHECK_NULL (camera && path);
 
-        if (camera->functions->capture == NULL)
+	if (!camera->functions->capture) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera can "
+			"not capture"));
                 return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	gp_camera_status (camera, "Capturing image...");
 	CHECK_RESULT_OPEN_CLOSE (camera,
@@ -890,8 +897,11 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file)
 {
 	CHECK_NULL (camera && file);
 
-        if (camera->functions->capture_preview == NULL)
+	if (!camera->functions->capture_preview) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera can "
+			"not capture previews"));
                 return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	gp_camera_status (camera, "Capturing preview...");
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->capture_preview (
@@ -1082,8 +1092,11 @@ gp_camera_folder_get_config (Camera *camera, const char *folder,
 {
 	CHECK_NULL (camera && folder && window);
 
-        if (camera->functions->folder_get_config == NULL)
+	if (!camera->functions->folder_get_config) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("The camera does "
+			"not offer any configuration options for folders"));
                 return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_get_config (
 						camera, folder, window));
@@ -1108,8 +1121,12 @@ gp_camera_folder_set_config (Camera *camera, const char *folder,
 {
 	CHECK_NULL (camera && folder && window);
 
-        if (camera->functions->folder_set_config == NULL)
+	if (!camera->functions->folder_set_config) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("The camera does "
+			"not support setting configuration options on "
+			"folders"));
                 return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->folder_set_config (
 						camera, folder, window));
@@ -1283,8 +1300,11 @@ gp_camera_file_get_config (Camera *camera, const char *folder,
 {
 	CHECK_NULL (camera && folder && file && window);
 
-	if (camera->functions->file_get_config == NULL)
+	if (!camera->functions->file_get_config) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
+			"not offer configuration options for files"));
 		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_get_config (
 						camera, folder, file, window));
@@ -1309,8 +1329,11 @@ gp_camera_file_set_config (Camera *camera, const char *folder,
 {
 	CHECK_NULL (camera && window && folder && file);
 
-	if (camera->functions->file_set_config == NULL)
+	if (!camera->functions->file_set_config) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
+			"not support setting configuration options on files"));
 		return (GP_ERROR_NOT_SUPPORTED);
+	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_set_config (
 					camera, folder, file, window));
