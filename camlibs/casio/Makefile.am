@@ -1,4 +1,5 @@
 camlib_LTLIBRARIES = libgphoto2_casio_qv.la
+EXTRA_DIST = PROTOCOL.txt
 
 INCLUDES =                                              \
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
