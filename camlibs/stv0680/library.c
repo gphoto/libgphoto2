@@ -294,7 +294,7 @@ int stv0680_get_image_preview(GPPort *port, int image_no,
 		rh = (imghdr.height[0] << 8) | imghdr.height[1];
 		rsize = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
 		    (imghdr.size[2]<<8) | imghdr.size[3];
-		scale = (w>>8)+1;
+		scale = (rw>>8)+1;
 		break;
 	default:
 	case GP_PORT_SERIAL:
