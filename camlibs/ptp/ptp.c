@@ -142,7 +142,7 @@ ptp_getdata (PTPParams* params, PTPReq* req, uint16_t code,
 		ret = PTP_ERROR_DATA_EXPECTED;
 	} else
 	if (dtoh16(req->code)!=code) {
-		ret = req->code;
+		ret = dtoh16(req->code);
 	}
 	if (ret!=PTP_RC_OK) 
 		ptp_error (params,
@@ -167,7 +167,7 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
 		ret = PTP_ERROR_RESP_EXPECTED;
 	} else
 	if (dtoh16(req->code)!=code) {
-		ret = req->code;
+		ret = dtoh16(req->code);
 	}
 	if (ret!=PTP_RC_OK)
 		ptp_error (params,
