@@ -116,7 +116,7 @@ ptp_unpack_uint16_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint1
 
 	n=dtoh32a(&req->data[offset]);
 	*array = malloc (n*sizeof(uint16_t));
-	while (n>=i) {
+	while (n>i) {
 		(*array)[i]=dtoh16a(&req->data[offset+(sizeof(uint16_t)*(i+2))]);
 		i++;
 	}
