@@ -11,6 +11,7 @@ of new features:
    * Most functions report progress and are cancellable,
    * Support for Samsung 800k, PTP cameras,
    * STV0680 improvements,
+   * Camera summary for Kodak DC240 driver,
    * and more ...
 
 Get it from http://www.gphoto.net/dist/gphoto2-2.0beta4.tar.gz and try
