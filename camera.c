@@ -498,6 +498,9 @@ int delete_one_by_one (Camera *camera, const char *folder)
 
 int gp_camera_folder_delete_all (Camera *camera, const char *folder)
 {
+	CameraList list;
+	int result;
+
         if ((camera == NULL) || (folder == NULL))
                 return (GP_ERROR_BAD_PARAMETERS);
 
@@ -509,6 +512,13 @@ int gp_camera_folder_delete_all (Camera *camera, const char *folder)
 		return (delete_one_by_one (camera, folder));
 
         if (camera->functions->folder_delete_all (camera, folder) != GP_OK)
+		return (delete_one_by_one (camera, folder));
+
+	/* Sanity check: All pictures deleted? */
+	result = gp_camera_folder_list_files (camera, folder, &list);
+	if (result != GP_OK)
+		return (result);
+	if (gp_list_count (&list) > 0)
 		return (delete_one_by_one (camera, folder));
 
 	return (GP_OK);
