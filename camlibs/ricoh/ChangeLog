@@ -1,5 +1,9 @@
 2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c: The camera needs to be in record mode to set settings.
+
+2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+
 	Patch from Martin Fischer <martin.fischer@inka.de>:
 
 	* ricoh.c: Bug Fixes.

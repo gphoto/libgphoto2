@@ -455,6 +455,12 @@ camera_set_config (Camera *c, CameraWidget *window, GPContext *co)
 	CameraWidget *w;
 	const char *v_char;
 	time_t time;
+	RicohMode mode;
+
+	/* We need to be in record mode to set settings. */
+	CR (ricoh_get_mode (c, co, &mode));
+	if (mode != RICOH_MODE_RECORD)
+		CR (ricoh_set_mode (c, co, RICOH_MODE_RECORD));
 
 	/* Copyright */
 	CR (gp_widget_get_child_by_name (window, "copyright", &w));
