@@ -38,6 +38,10 @@ camlibs/dimera:
 camlibs/gsmart:
 	Till Adam <till@adam-lilienthal.de>
 
+camlibs/gsmart:
+	Jérôme Lodewyck <lodewyck@clipper.ens.fr>
+	Till Adam <till@adam-lilienthal.de>
+
 camlibs/jamcam:
 	Chris Pinkham <cpinkham@infi.net>
 
