@@ -478,7 +478,9 @@ OPTION_CALLBACK(filename)
 {
         cli_debug_print("Setting filename to %s", arg);
 
-        strcpy (glob_filename, arg);
+        strncpy (glob_filename, arg, sizeof (glob_filename) - 1);
+        glob_filename[sizeof (glob_filename) - 1] = 0;
+        
         glob_filename_override = 1;
 
         return (GP_OK);
@@ -488,7 +490,8 @@ OPTION_CALLBACK(port)
 {
         cli_debug_print("Setting port to %s", arg);
 
-	strcpy (glob_port, arg);
+	strncpy (glob_port, arg, sizeof (glob_port) - 1);
+	glob_port[sizeof (glob_port) - 1] = 0;
 
 	if (strchr(glob_port, ':') == NULL) {
 		/* User didn't specify the port type; try to guess it */
@@ -532,7 +535,8 @@ OPTION_CALLBACK(model)
 {
         cli_debug_print("Setting camera model to %s", arg);
 
-        strcpy (glob_model, arg);
+        strncpy (glob_model, arg, sizeof (glob_model) - 1);
+        glob_model[sizeof (glob_model) - 1] = 0;
 
         return (GP_OK);
 }
@@ -586,7 +590,8 @@ OPTION_CALLBACK (use_folder)
 {
         cli_debug_print("Setting folder to %s", arg);
 
-        strcpy (glob_folder, arg);
+        strncpy (glob_folder, arg, sizeof (glob_folder) - 1);
+        glob_folder[sizeof (glob_folder) - 1] = 0;
 
         return (GP_OK);
 }

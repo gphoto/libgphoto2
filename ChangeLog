@@ -1,3 +1,10 @@
+2002-01-14  Fredrik <fredrik@krixor.xy.org>
+
+	* frontends/command-line/main.c: Fix some core dumps when parsing
+	  overly long arguments (filename, port, camera, folder). Maybe
+	  this should be changed to checks of unrealistic lengths instead,
+	  but at least this makes us not dump core.
+
 2002-01-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line/main.c: If the user presses 2 times 
