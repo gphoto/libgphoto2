@@ -8,7 +8,7 @@
 #include <sys/times.h>
 #include <fcntl.h>
 
-/**
+/*
  * EXIF file format support library. This API allows to parse, read and
  * modify EXIF data structures. It provides a low-level API which allows
  * to manipulate EXIF tags in a generic way, and a higher-level API which
@@ -150,60 +150,60 @@ static struct tagarray{
 
 extern int exif_debug; /* Non-zero for debug messages */
 
-/**
+/*
  * Parse an exif header, return size of the rest of the file.
  */
 int exif_parse_data(exifparser *exifdat);
 
-/**
+/*
  * Returns the value of a field, identified by its tag and the IFD.
  */
 int exif_get_field( int tag_number, int ifd, exifparser *exifdat, ExifData *tag_data);
 
-/**
+/*
  * Gets a numeric tag
  */
 int exif_get_int_field( int tag_number, int ifd, exifparser *exifdat);
 
-/**
+/*
  * Gets an ASCII tag.
  */
 char * exif_get_ascii_field( int tag_number, int ifd, exifparser *exifdat);
 
-/**
+/*
  * Returns the name of a given tag number
  */
 char *exif_get_tagname(int tag_number);
 
-/**
+/*
  * Returns a pointer to the thumbnail data if it
  * exists.
  */
 unsigned char *exif_get_thumbnail(exifparser *exifdat);
 
-/**
+/*
  * The same as exif_get_thumbnail but returns
  * also the thumbnail size
  */
 unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size);
 
-/**
+/*
  * Gets the comment field if it exists.
  */
 int gpe_get_comment(exifparser *exifdat, char *comment);
 
-/**
+/*
  * Sets the comment field.
  */
 int gpe_set_comment(exifparser *exifdat, char *comment);
 
-/**
+/*
  * COMMENT ME
  */
 int stat_exif(exifparser *exifdata);
 int gpe_dump_exif(exifparser *exifdata);
 
-/**************
+/*
  * Now, all the 'defines'
  */
 
@@ -300,15 +300,3 @@ int gpe_dump_exif(exifparser *exifdata);
 #define EXIF_SceneType                  0xA301
 
 #endif /* _gphoto_exif_ */
-
-
-
-
-
-
-
-
-
-
-
-

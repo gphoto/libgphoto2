@@ -17,11 +17,13 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#include <config.h>
+#include "../include/gphoto2-widget.h"
 
 #include <stdlib.h>
 #include <string.h>
-#include <gphoto2-widget.h>
-#include <gphoto2-result.h>
+
+#include "../include/gphoto2-result.h"
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 
@@ -140,7 +142,7 @@ gp_widget_free (CameraWidget *widget)
 
 /**
  * gp_widget_ref:
- * @widget: a CameraWidget you want to ref-count
+ * @widget: a #CameraWidget you want to ref-count
  *
  * Increments the reference count for the CameraWidget.
  *
@@ -158,7 +160,7 @@ gp_widget_ref (CameraWidget *widget)
 
 /**
  * gp_widget_unref:
- * @widget: a CameraWidget you want to unref
+ * @widget: a #CameraWidget you want to unref
  *
  * Decrements the reference count for the CameraWidget:
  *
@@ -179,7 +181,7 @@ gp_widget_unref (CameraWidget *widget)
 
 /**
  * gp_widget_get_info:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @info:
  *
  * Retrieves the information about the widget.
@@ -198,7 +200,7 @@ gp_widget_get_info (CameraWidget *widget, const char **info)
 
 /**
  * gp_widget_set_info:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @info: Information about above widget
  *
  * Sets the information about the widget.
@@ -216,7 +218,7 @@ gp_widget_set_info (CameraWidget *widget, const char *info)
 
 /**
  * gp_widget_get_name:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @name: Name of above widget
  *
  * Gets the name of the widget.
@@ -234,7 +236,7 @@ gp_widget_get_name (CameraWidget *widget, const char **name)
 
 /**
  * gp_widget_set_name:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @name: Name of above widget
  *
  * Sets the name of the widget.
@@ -254,7 +256,7 @@ gp_widget_set_name (CameraWidget *widget, const char *name)
 
 /**
  * gp_widget_get_id:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @id: 
  *
  * Retreives the unique id of the CameraWidget.
@@ -281,7 +283,7 @@ gp_widget_set_changed (CameraWidget *widget, int changed)
 
 /**
  * gp_widget_get_type:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @type:
  *
  * Retreives the type of the CameraWidget.
@@ -299,7 +301,7 @@ gp_widget_get_type (CameraWidget *widget, CameraWidgetType *type)
 
 /**
  * gp_widget_get_label:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @label:
  *
  * Retreives the label of the CameraWidget.
@@ -317,7 +319,7 @@ gp_widget_get_label (CameraWidget *widget, const char **label)
 
 /**
  * gp_widget_set_value:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @value: 
  *
  * Sets the value of the widget. Please pass
@@ -370,7 +372,7 @@ gp_widget_set_value (CameraWidget *widget, void *value)
 
 /**
  * gp_widget_get_value:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @value:
  *
  * Retreives the value of the CameraWidget.
@@ -434,7 +436,7 @@ gp_widget_append (CameraWidget *parent, CameraWidget *child)
 
 /**
  * gp_widget_prepend:
- * @parent: a CameraWidget
+ * @parent: a #CameraWidget
  * @child: the CameraWidget you would like to prepend to above
  *
  * Prepends a CameraWidget to a CameraWidget.
@@ -468,7 +470,7 @@ gp_widget_prepend (CameraWidget *parent, CameraWidget *child)
 
 /**
  * gp_widget_count_children:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  *
  * Counts the children of the CameraWidget.
  *
@@ -507,8 +509,9 @@ gp_widget_get_child (CameraWidget *parent, int child_number,
 
 /**
  * gp_widget_get_child_by_label:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @label: the label of the child
+ * @child:
  *
  * Retreives the child with label @label of the CameraWidget.
  *
@@ -544,8 +547,9 @@ gp_widget_get_child_by_label (CameraWidget *widget, const char *label,
 
 /**
  * gp_widget_get_child_by_id:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @id: the id of the child
+ * @child:
  *
  * Retreives the child with id @id of the widget.
  *
@@ -580,7 +584,7 @@ gp_widget_get_child_by_id (CameraWidget *widget, int id, CameraWidget **child)
 
 /**
  * gp_widget_get_child_by_name:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @name: the name of the child
  *
  * Retreives the child with name @name of the widget.
@@ -627,7 +631,7 @@ gp_widget_get_parent (CameraWidget *widget, CameraWidget **parent)
 
 /**
  * gp_widget_get_root:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  * @root:
  *
  * Retreives the root of the CameraWidget.
@@ -674,8 +678,8 @@ gp_widget_set_range (CameraWidget *range, float min, float max, float increment)
 }
 
 /**
- * gp_widget_get_range
- * @range: a CameraWidget of type GP_WIDGET_RANGE
+ * gp_widget_get_range:
+ * @range: a #CameraWidget of type GP_WIDGET_RANGE
  * @min:
  * @max:
  * @increment:
@@ -701,7 +705,7 @@ gp_widget_get_range (CameraWidget *range, float *min, float *max,
 
 /**
  * gp_widget_add_choice:
- * @widget: a CameraWidget of type GP_WIDGET_RADIO or GP_WIDGET_MENU
+ * @widget: a #CameraWidget of type GP_WIDGET_RADIO or GP_WIDGET_MENU
  * @choice:
  *
  * Adds a choice to the CameraWidget.
@@ -724,7 +728,7 @@ gp_widget_add_choice (CameraWidget *widget, const char *choice)
 
 /**
  * gp_widget_count_choices:
- * @widget: a CameraWidget of type GP_WIDGET_RADIO or GP_WIDGET_MENU
+ * @widget: a #CameraWidget of type GP_WIDGET_RADIO or GP_WIDGET_MENU
  * 
  * Counts the choices of the CameraWidget.
  *
@@ -743,7 +747,7 @@ gp_widget_count_choices (CameraWidget *widget)
 
 /**
  * gp_widget_get_choice:
- * @widget: a CameraWidget of type GP_WIDGET_RADIO or GP_WIDGET_MENU
+ * @widget: a #CameraWidget of type GP_WIDGET_RADIO or GP_WIDGET_MENU
  * @choice_number:
  * @choice:
  *
@@ -769,7 +773,7 @@ gp_widget_get_choice (CameraWidget *widget, int choice_number,
 
 /**
  * gp_widget_changed:
- * @widget: a CameraWidget
+ * @widget: a #CameraWidget
  *
  * Returns the changed flag (1 if value of widget has been changed) of the 
  * CameraWidget and sets it to 0.

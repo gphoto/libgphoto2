@@ -1,3 +1,9 @@
+2001-10-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-widget.h
+	* libgphoto2/exif.[c,h]
+	* libgphoto2/widget.c: Fix stuff gtk-doc was complaining about.
+	
 2001-10-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* configure.in: Give some feedback (gtk-doc: yes/no?)
