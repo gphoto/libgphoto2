@@ -111,7 +111,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data)
 static int
 camera_config_get (Camera *camera, CameraWidget **window) 
 {
-	*window = gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration");
+	gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
 
 	/* Append your sections and widgets here. */
 
