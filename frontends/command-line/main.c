@@ -1007,6 +1007,15 @@ OPTION_CALLBACK (upload_file)
 		return (res);
 	}
 
+	/* Check if the user specified a filename */
+	if (glob_filename_override) {
+		res = gp_file_set_name (file, glob_filename);
+		if (res < 0) {
+			gp_file_unref (file);
+			return (res);
+		}
+	}
+
         res = gp_camera_folder_put_file (glob_camera, glob_folder, file,
 					 glob_context);
         gp_file_unref (file);
