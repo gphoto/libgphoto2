@@ -48,6 +48,8 @@ xlc )
     am_opt=--include-deps;;
 esac
 
+ACLOCAL_FLAGS="-I $(dirname $0)/m4 ${ACLOCAL_FLAGS}"
+
 for dir in $srcdir
 do 
   echo processing $dir

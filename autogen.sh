@@ -50,6 +50,8 @@ case $CC in
 *xlc | *xlc\ * | *lcc | *lcc\ *) am_opt=--include-deps;;
 esac
 
+ACLOCAL_FLAGS="-I $(dirname $0)/libgphoto2_port/m4 ${ACLOCAL_FLAGS}"
+
 for dir in .
 do 
     echo processing $dir
