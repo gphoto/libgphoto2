@@ -1050,6 +1050,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	guchar 		year, month, day, hour, minute, second;
 	k_date_format_t date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
 	k_tv_output_format_t tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
+	guint		beep = 0;
         gint 		j = 0;
         guchar*		data;
         gulong 		data_size;
@@ -1083,10 +1084,10 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	/* Beep */
 	g_assert ((widget = gp_widget_child_by_label (section, "Beep")) != NULL);
 	if (gp_widget_changed (widget)) {
-		if (strcmp (gp_widget_value_get (widget), "Off") == 0) j = 0;
-		else if (strcmp (gp_widget_value_get (widget), "On") == 0) j = 1;
+		if (strcmp (gp_widget_value_get (widget), "Off") == 0) beep = 0;
+		else if (strcmp (gp_widget_value_get (widget), "On") == 0) beep = 1;
 		else g_assert_not_reached ();
-		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_BEEP, j))) return (GP_ERROR);
+		if (error_happened (camera, k_set_preference (konica_data->device, K_PREFERENCE_BEEP, beep))) return (GP_ERROR);
 	}
 
 	/* Self Timer Time */
