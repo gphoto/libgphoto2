@@ -60,6 +60,7 @@ gboolean error_happened (Camera *camera, k_return_status_t return_status)
                         return (FALSE);
                 case K_ERROR_FOCUSING_ERROR:
                         gp_frontend_message (camera, "Focussing error!");
+			return (TRUE);
                 case K_ERROR_IRIS_ERROR:
                         gp_frontend_message (camera, "Iris error!");
                         return (TRUE);
@@ -406,25 +407,25 @@ camera_folder_list (Camera* camera, CameraList* list, gchar* folder)
 int 
 camera_file_list (Camera* camera, CameraList* list, gchar* folder)
 {
-	guint self_test_result;
-	k_power_level_t power_level;
-	k_power_source_t power_source;
-	k_card_status_t card_status;
-	k_display_t display;
-	guint card_size;
-	guint pictures = 0;
-	guint pictures_left;
-	guchar year;
-	guchar month;
-	guchar day;
-	guchar hour;
-	guchar minute;
-	guchar second;
-	guint io_setting_bit_rate;
-	guint io_setting_flags;
-	guchar flash;
-	guchar quality;
-	guchar focus;
+	guint 			self_test_result;
+	k_power_level_t 	power_level;
+	k_power_source_t 	power_source;
+	k_card_status_t 	card_status;
+	k_display_t 		display;
+	guint 		card_size;
+	guint 		pictures = 0;
+	guint 		pictures_left;
+	guchar 		year;
+	guchar 		month;
+	guchar 		day;
+	guchar 		hour;
+	guchar 		minute;
+	guchar 		second;
+	guint 		io_setting_bit_rate;
+	guint 		io_setting_flags;
+	guchar 		flash;
+	guchar 		quality;
+	guchar 		focus;
 	guchar 		exposure;
 	guint 		total_pictures;
 	guint 		total_strobes;
@@ -477,7 +478,7 @@ camera_file_list (Camera* camera, CameraList* list, gchar* folder)
 	        if (!error_happened (camera, k_get_image_information (
 	                konica_data->device,
 	                konica_data->image_id_long,
-	                i,
+	                i + 1,
 	                &image_id,
 	                &exif_size,
 	                &protected,
@@ -488,6 +489,7 @@ camera_file_list (Camera* camera, CameraList* list, gchar* folder)
 		information_buffer = NULL;
 		g_return_val_if_fail (gp_list_append (list, filename, GP_LIST_FILE) == GP_OK, GP_ERROR);
 		gp_filesystem_append (konica_data->filesystem, "/", filename);
+		g_free (filename);
 	}
 
 	return (GP_OK);
