@@ -528,8 +528,8 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder,
 	CR (x = gp_filesystem_folder_number (fs, buf, context));
 	if (!fs->folder[x].folders_dirty) {
 		gp_context_error (context, 
-			_("Folder '%s' does not contain a folder '%s'."),
-			buf, folder + strlen (buf) + 1);
+			_("Folder '%s' does not contain a folder '%s'."), buf,
+			folder + strlen (buf) + ((strlen (buf) == 1) ? 0 : 1));
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 	}
 
