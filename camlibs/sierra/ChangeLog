@@ -1,5 +1,10 @@
 2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c: If we receive SIERRA_PACKET_SESSION_END, reestablish
+	  the connection and switch to the default speed.
+	  
+2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
+
 	* sierra.c (camera_init): It seems the code I '#if 0'ed out is needed
 	  by USB cameras...
 

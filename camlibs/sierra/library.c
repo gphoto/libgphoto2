@@ -365,6 +365,8 @@ sierra_check_connection (Camera *camera, GPContext *context)
 				return (GP_ERROR);
 			}
 			CHECK (sierra_init (camera, context));
+			CHECK (sierra_set_speed (camera, SIERRA_SPEED_19200,
+						 context));
 			continue;
 		}
 
@@ -743,6 +745,8 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 			 * the connection.
                          */
 			CHECK (sierra_init (camera, context));
+			CHECK (sierra_set_speed (camera, SIERRA_SPEED_19200,
+						 context));
 			continue;
 
 		default:
@@ -1035,9 +1039,12 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			/*
 			 * The camera has ended this session and
 			 * reverted the speed back to 19200. Reinitialize
-			 * the connection and resend the packet.
+			 * the connection and resend the packet. We use the
+			 * default speed from now on.
 			 */
 			CHECK (sierra_init (camera, context));
+			CHECK (sierra_set_speed (camera, SIERRA_SPEED_19200,
+						 context));
 			CHECK (sierra_write_packet (camera, p, context));
 
 			break;
