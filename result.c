@@ -46,7 +46,8 @@ static char *result_string[] = {
 	/* GP_ERROR_DIRECTORY_NOT_FOUND -107 */ N_("Directory not found"),
 	/* GP_ERROR_FILE_NOT_FOUND      -108 */ N_("File not found"),
 	/* GP_ERROR_DIRECTORY_EXISTS    -109 */ N_("Directory exists"),
-	/* GP_ERROR_NO_CAMERA_FOUND     -110 */ N_("No cameras were detected")
+	/* GP_ERROR_NO_CAMERA_FOUND     -110 */ N_("No cameras were detected"),
+	/* GP_ERROR_PATH_NOT_ABSOLUTE   -111 */ N_("Path not absolute")
 };
 
 char *
