@@ -39,13 +39,24 @@ enum _RicohSpeed {
 
 int ricoh_set_speed (Camera *camera, GPContext *context, RicohSpeed speed);
 
+/* We don't know the numbers for the models marked as 'dummy'. */
 typedef enum _RicohModel RicohModel;
 enum _RicohModel {
-	RICOH_MODEL_300   = 0x300,
-	RICOH_MODEL_300Z  = 0x301,
-	RICOH_MODEL_4200  = 0x402,
-	RICOH_MODEL_4300  = 0x403,
-	RICOH_MODEL_ESP80 = 0x400
+	RICOH_MODEL_1        = 0x001, /* dummy */
+	RICOH_MODEL_2        = 0x002, /* dummy */
+	RICOH_MODEL_2E       = 0x003, /* dummy */
+	RICOH_MODEL_100G     = 0x005, /* dummy */
+	RICOH_MODEL_300      = 0x300,
+	RICOH_MODEL_300Z     = 0x301,
+	RICOH_MODEL_4200     = 0x402,
+	RICOH_MODEL_4300     = 0x403,
+	RICOH_MODEL_5000     = 0x004, /* dummy */
+	RICOH_MODEL_ESP2     = 0x006, /* dummy */
+	RICOH_MODEL_ESP50    = 0x007, /* dummy */
+	RICOH_MODEL_ESP60    = 0x008, /* dummy */
+	RICOH_MODEL_ESP70    = 0x009, /* dummy */
+	RICOH_MODEL_ESP80    = 0x010, /* dummy */
+	RICOH_MODEL_ESP80SXG = 0x400
 };
 
 int ricoh_connect    (Camera *camera, GPContext *context, RicohModel *model);

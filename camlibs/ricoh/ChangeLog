@@ -1,5 +1,10 @@
 2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
 
+	* ricoh.h:
+	* library.c: Support a couple of other models.
+
+2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
+
 	Lots of infos from Martin Fischer <martin.fischer@inka.de>:
 
 	* ricoh.[c,h]
