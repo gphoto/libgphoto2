@@ -1,3 +1,12 @@
+2001-12-01  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* configure.in: help cosmetics
+	* m4/documentation.m4: help cosmetics,
+	  added check for transfig and AM_CONDITIONAL BUILD_FIGURES,
+	  simplified mechanism that determines whether to build docs or not
+	* m4/packaging.m4: help cosmetics, renamed PGK_* to GPKG_*,
+	  improved messages
+	
 2001-11-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2_port/gphoto2-port-info-list.c: The logic was still

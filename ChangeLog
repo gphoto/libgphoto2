@@ -1,3 +1,8 @@
+2001-12-01  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	* configure.in: renamed PGK_* to GPKG_*
+	* doc/figures/Makefile.am: build jpg and png figures iff ENABLE_FIGURES is set
+	
 2001-11-30  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2:
