@@ -24,6 +24,8 @@
 #ifndef __GPHOTO2_FILESYS_H__
 #define __GPHOTO2_FILESYS_H__
 
+#include <time.h>
+
 #include <gphoto2-list.h>
 #include <gphoto2-file.h>
 
@@ -36,6 +38,7 @@ typedef enum {
 	GP_FILE_INFO_HEIGHT          = 1 << 4,
 	GP_FILE_INFO_PERMISSIONS     = 1 << 5,
 	GP_FILE_INFO_STATUS	     = 1 << 6,
+	GP_FILE_INFO_TIME	     = 1 << 7,
 	GP_FILE_INFO_ALL             = 0xFF
 } CameraFileInfoFields;
 
@@ -60,6 +63,7 @@ typedef struct {
 	unsigned int size;
 	unsigned int width, height;
 	CameraFileStatus status;
+	time_t time;
 } CameraFileInfoFile;
 
 typedef struct {
