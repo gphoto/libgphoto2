@@ -55,10 +55,13 @@ ptp_debug (PTPParams *params, const char *format, ...)
         va_list args;
 
         va_start (args, format);
-        if (params->debug_func)
+        if (params->debug_func!=NULL)
                 params->debug_func (params->data, format, args);
         else
+	{
                 vfprintf (stderr, format, args);
+		fprintf (stderr,"\n");
+	}
         va_end (args);
 }  
 
@@ -68,10 +71,13 @@ ptp_error (PTPParams *params, const char *format, ...)
         va_list args;
 
         va_start (args, format);
-        if (params->error_func)
+        if (params->error_func!=NULL)
                 params->error_func (params->data, format, args);
         else
+	{
                 vfprintf (stderr, format, args);
+		fprintf (stderr,"\n");
+	}
         va_end (args);
 }
 
@@ -397,7 +403,7 @@ ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 	ptp.Code=PTP_OC_GetDeviceInfo;
 	ptp.Nparam=0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &di);
-	ptp_unpack_DI(params, di, deviceinfo);
+	if (ret == PTP_RC_OK) ptp_unpack_DI(params, di, deviceinfo);
 	free(di);
 	return ret;
 }
@@ -476,7 +482,7 @@ ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 	ptp.Code=PTP_OC_GetStorageIDs;
 	ptp.Nparam=0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &sids);
-	ptp_unpack_SIDs(params, sids, storageids);
+	if (ret == PTP_RC_OK) ptp_unpack_SIDs(params, sids, storageids);
 	free(sids);
 	return ret;
 }
@@ -504,7 +510,7 @@ ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
 	ptp.Param1=storageid;
 	ptp.Nparam=1;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &si);
-	ptp_unpack_SI(params, si, storageinfo);
+	if (ret == PTP_RC_OK) ptp_unpack_SI(params, si, storageinfo);
 	free(si);
 	return ret;
 }
@@ -539,7 +545,7 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 	ptp.Param3=associationOH;
 	ptp.Nparam=3;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &oh);
-	ptp_unpack_OH(params, oh, objecthandles);
+	if (ret == PTP_RC_OK) ptp_unpack_OH(params, oh, objecthandles);
 	free(oh);
 	return ret;
 }
@@ -557,7 +563,7 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 	ptp.Param1=handle;
 	ptp.Nparam=1;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &oi);
-	ptp_unpack_OI(params, oi, objectinfo);
+	if (ret == PTP_RC_OK) ptp_unpack_OI(params, oi, objectinfo);
 	free(oi);
 	return ret;
 }
@@ -720,10 +726,8 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	ptp.Param1=propcode;
 	ptp.Nparam=1;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpd);
-	if (ret == PTP_RC_OK) {
-		ptp_unpack_DPD(params, dpd, devicepropertydesc);
-		free(dpd);
-	}
+	if (ret == PTP_RC_OK) ptp_unpack_DPD(params, dpd, devicepropertydesc);
+	free(dpd);
 	return ret;
 }
 

@@ -1,3 +1,11 @@
+2003-04-25 Mariusz Woloszyn
+	* library.c: added perror on gp_port_read() and write error; it
+	  won't hurt
+	* ptp.c: NULL does not have to be 0 bug fixed;
+	  cosmetics error output tuning;
+	  unpack structures only if transaction succeeded
+	* ChangeLog: reformated this file ;)
+
 2003-04-12 Marcus Meissner <marcus@jet.franken.de>
 	
 	* ptp.c, library.c: Check return codes for property get during
@@ -26,20 +34,25 @@
 	* ptp.c: added ptp_getdevicepropdesc()
 	* ptp.h: introduced some device property describing structures and
 	  constants
+
 2003-03-29 Mariusz Woloszyn
 	* library.c: enabled downloading of nonimage files
 	* ptp.c: fixed a bug in capture code
+
 2003-03-29 Mariusz Woloszyn
 	* library.c: enabled back capture image support
+
 2003-03-29 Mariusz Woloszyn
 	* ptp.h: added Nparam field to PTPContainer
 	* ptp.c: using Nparam field we send requests with only used params
 	  to the camera (although specs says it's legal, some cameras do not
 	  like it)
+
 2003-03-29 Mariusz Woloszyn
 	* ptp.c: fixed a memcopy size bug
 2003-03-27 Mariusz Woloszyn
         * library.c: added HP PhotoSmart 320
+
 2003-01-08 Mariusz Woloszyn
 	* ptp.c: cosmetic
 	* ptp-pack.c: fixed a bug in ptp_unpack_DI(), totallen could be

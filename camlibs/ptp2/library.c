@@ -376,7 +376,10 @@ ptp_read_func (unsigned char *bytes, unsigned int size, void *data)
 	if (result >= 0)
 		return (PTP_RC_OK);
 	else
+	{
+		perror("gp_port_read");
 		return (translate_gp_result (result));
+	}
 }
 
 static short
@@ -393,7 +396,10 @@ ptp_write_func (unsigned char *bytes, unsigned int size, void *data)
 	if (result >= 0)
 		return (PTP_RC_OK);
 	else
+	{
+		perror("gp_port_write");
 		return (translate_gp_result (result));
+	}
 }
 
 static short
