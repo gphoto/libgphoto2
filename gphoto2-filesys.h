@@ -35,6 +35,7 @@ typedef enum {
 	GP_FILE_INFO_WIDTH           = 1 << 3,
 	GP_FILE_INFO_HEIGHT          = 1 << 4,
 	GP_FILE_INFO_PERMISSIONS     = 1 << 5,
+	GP_FILE_INFO_STATUS	     = 1 << 6,
 	GP_FILE_INFO_ALL             = 0xFF
 } CameraFileInfoFields;
 
@@ -45,6 +46,12 @@ typedef enum {
 	GP_FILE_PERM_ALL        = 0xFF
 } CameraFilePermissions;
 
+typedef enum {
+	GP_FILE_STATUS_UNKNOWN,
+	GP_FILE_STATUS_NOT_DOWNLOADED,
+	GP_FILE_STATUS_DOWNLOADED
+} CameraFileStatus;
+
 typedef struct {
 	CameraFileInfoFields fields;
 	char type[64];
@@ -52,6 +59,7 @@ typedef struct {
 	char name[64];
 	unsigned int size;
 	unsigned int width, height;
+	CameraFileStatus status;
 } CameraFileInfoFile;
 
 typedef struct {
@@ -59,12 +67,14 @@ typedef struct {
 	char type[64];
 	unsigned int size;
 	unsigned int width, height;
+	CameraFileStatus status;
 } CameraFileInfoPreview;
 
 typedef struct {
 	CameraFileInfoFields fields;
 	char type[64];
 	unsigned int size;
+	CameraFileStatus status;
 } CameraFileInfoAudio;
 
 typedef struct {
