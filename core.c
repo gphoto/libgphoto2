@@ -384,12 +384,12 @@ int gp_config_set (CameraSetting *setting, int count) {
 	return(glob_c.config_set(setting, count));
 }
 
-int gp_capture (int type) {
+int gp_capture (CameraFile *f, CameraCaptureInfo *info) {
 
 	if (glob_c.capture == NULL)
 		return (GP_ERROR);
 
-	return(glob_c.capture(type));
+	return(glob_c.capture(f, info));
 }
 
 int gp_summary (char *summary) {
