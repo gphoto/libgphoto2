@@ -528,9 +528,11 @@ Saving file as MVI_5418.AVI                                                     
 	    <formalpara>
 	      <title>Debian peculiarity</title>
 	      <para>
-		As Debian uses a structured hotplug setup, you 
-		should use its benefits instead of working against
-		it. Instead of modifying
+		As Debian uses a structured method for setting up
+		linux-hotplug, you should also use this mechanism in
+		order to enjoy its benefits. 
+
+		Instead of modifying
 		<filename>/etc/hotplug/usb.usermap</filename>
 		directly, we set up special file
 		<filename>/usr/lib/hotplug/usbcam/usb.usermap</filename> 
@@ -634,8 +636,11 @@ Saving file as MVI_5418.AVI                                                     
             <para>
               Make the script file you just created and possibly adapted
               <filename>/etc/hotplug/usb/usbcam</filename>
-              executable.
+              executable:
             </para>
+	    <screen>
+<prompt># </prompt><command>chmod <parameter>+x</parameter> <filename>/etc/hotplug/usb/usbcam</filename></command>
+	    </screen>
           </listitem>
 
           <listitem>
