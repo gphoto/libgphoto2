@@ -1,3 +1,8 @@
+2003-08-27  Christophe Barbe <christophe@ufies.org>
+
+	* libgphoto2/gphoto2-filesys.c: Return the max when unable to know 
+	  the available memory instead of failing to build.
+
 2003-06-26  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* configure.in: Hook up camlibs/sq905 (driver by Theodore Kilgore

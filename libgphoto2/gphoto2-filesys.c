@@ -49,6 +49,7 @@
 #	endif
 #	include <sys/sysctl.h>
 #endif
+#include <limits.h>
 
 #ifdef HAVE_EXIF
 #  include <libexif/exif-data.h>
@@ -1962,7 +1963,11 @@ gp_get_free_memory (GPContext *context, unsigned *free)
 	return (GP_OK);
 
 #else
-#error "No way to measure free memory: you need to customize this for your system"
+
+	// No way to know the free memory on this system
+	*free = UINT_MAX;
+	return (GP_OK);
+
 #endif
 
 }
