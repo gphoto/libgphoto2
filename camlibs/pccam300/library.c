@@ -236,7 +236,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 				      &freemem));
 	CHECK (pccam300_get_filecount (camera->port, &filecount));
 	snprintf (summary_text, sizeof (summary_text),
-		  (" Total memory is %8d bytes.\n"
+		  _(" Total memory is %8d bytes.\n"
 		   " Free memory is  %8d bytes.\n"
 		   " Filecount: %d"),
 		  totalmem, freemem, filecount);
@@ -255,8 +255,7 @@ static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text,
-		_
-		("Creative PC-CAM 300\n Authors: Till Adam\n"
+		_("Creative PC-CAM 300\n Authors: Till Adam\n"
 		 "<till@adam-lilienthal.de>\n"
 		 "and: Miah Gregory\n <mace@darksilence.net>"));
 	return GP_OK;
