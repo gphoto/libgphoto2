@@ -127,6 +127,7 @@ typedef struct CameraRegisterSet {
 typedef struct CameraDesc {
 	const CameraRegisterSetType *regset;
 	const char * const manual;
+	const unsigned use_extended_protocol:1;
 } CameraDescType;
 
 extern const CameraDescType sierra_default_cam_desc;

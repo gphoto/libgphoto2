@@ -625,6 +625,5 @@ N_(
 "    The download should function correctly.\n"
 );
 
-
-const CameraDescType cp880_cam_desc = { cp880_desc, cp880_manual };
-const CameraDescType cp995_cam_desc = { cp880_desc, cp995_manual };
+const CameraDescType cp880_cam_desc = { cp880_desc, cp880_manual, TRUE, };
+const CameraDescType cp995_cam_desc = { cp880_desc, cp995_manual, TRUE, };

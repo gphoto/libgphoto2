@@ -1,3 +1,13 @@
+2002-11-01  Patrick Mansfield <patmans@users.sourceforge.net>
+	* PROTOCOL, epson-desc.c, library.c, nikon-desc.c
+	* olympus-desc.c, sierra-desc.h, sierra.c, sierra.h: Add changes to
+	  support the 0x6 get register strings, the extended protocol.
+	  This gives roughly twice the download speed. This is not
+	  supported for the default cases. Thanks to Selmeczi David
+	  <david@esr.elte.hu> for discovering and coding up the original
+	  patch for this support. Also includes a minor change in
+	  library.c for the message when a recursive call is detected.
+
 2002-10-27  Patrick Mansfield <patmans@users.sourceforge.net>
 	* library.c: rename ifdef around recursive call problem, and 
 	  change ifdef-ed out code to use gp_context_progress_start.

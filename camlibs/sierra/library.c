@@ -501,7 +501,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
-		blocksize = 2054;
+		blocksize = 32774;
 		break;
 	case GP_PORT_SERIAL:
 		blocksize = 1;
@@ -1168,18 +1168,21 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
                                 CameraFile *file, unsigned char *b,
 				unsigned int *b_len, GPContext *context)
 {
-	unsigned char p[4096];
+	unsigned char p[34816];
 	const char *file_name;
 	unsigned int packlength, total = *b_len;
 	unsigned int id = 0;
 	int retries, r;
 	static int in_function = 0;
 
-	GP_DEBUG ("sierra_get_string_register:  reg %i, file number %i",
-		  reg, fnumber);
+	GP_DEBUG ("sierra_get_string_register:  reg %i, file number %i,"
+		  " ext protocol %x", reg, fnumber,
+		  camera->pl->use_extended_protocol);
 
 	if (in_function != 0) {
-		GP_DEBUG ("sierra_get_string_register called recursively!\n");
+		gp_context_error (context, _("recursive calls are not"
+			" supported by the sierra driver! Please contact"
+			" <gphoto-devel@gphoto.org>."));
 		return GP_ERROR;
 	}
 	in_function = 1;
@@ -1190,7 +1193,12 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 
 	/* Build and send the request */
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, p));
-	p[4] = 0x04;
+	/* 
+	 * If the extended protocol is enabled, use code 0x06 so we can send
+	 * and receive 32k size packages, otherwise code 0x04 is used and
+	 * we have 2k size packages.
+	 */
+	p[4] = camera->pl->use_extended_protocol ? 0x06 : 0x04;
 	p[5] = reg;
 	CHECK (sierra_write_packet (camera, p, context));
 

@@ -11,7 +11,8 @@ struct _CameraPrivateLibrary {
 	int folders;
 	int speed;
 	int first_packet;
-	int usb_wrap;  /* 0: packets sent "raw", 1: see sierra-usbwrap.h */
+	int usb_wrap:1;  /* 0: packets sent "raw", 1: see sierra-usbwrap.h */
+	int use_extended_protocol:1;
 	struct CameraDesc const *cam_desc;
 	char folder[128];
 };

@@ -1956,6 +1956,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->model = SIERRA_MODEL_DEFAULT;
 	camera->pl->first_packet = 1;
 	camera->pl->usb_wrap = 0;
+	camera->pl->use_extended_protocol = 0;
 
 	/* Retrieve Camera information from name */
 	gp_camera_get_abilities (camera, &a);
@@ -1983,6 +1984,8 @@ camera_init (Camera *camera, GPContext *context)
                         return (GP_ERROR_MODEL_NOT_FOUND);
 		}
 		camera->pl->cam_desc = cam_desc;
+		camera->pl->use_extended_protocol = 
+			cam_desc->use_extended_protocol;
 		camera->functions->get_config = camera_get_config_cam_desc;
 		camera->functions->set_config = camera_set_config_cam_desc;
 		break;

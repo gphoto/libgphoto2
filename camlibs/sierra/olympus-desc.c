@@ -587,5 +587,6 @@ N_(
 "    please contact gphoto-devel@gphoto.net\n"
 );
 
-const CameraDescType oly3040_cam_desc = { oly3040_desc, oly3040_manual };
-const CameraDescType sierra_default_cam_desc = { oly3040_desc, default_manual };
+const CameraDescType oly3040_cam_desc = { oly3040_desc, oly3040_manual, TRUE, };
+const CameraDescType sierra_default_cam_desc = { oly3040_desc, default_manual,
+	FALSE, };

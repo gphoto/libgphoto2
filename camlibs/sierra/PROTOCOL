@@ -73,4 +73,4 @@ For further information , see http://photopc.sourceforge.net/protocol.html.
 
  03 yy zz...	set string register yy to value zz...
  04 yy 		get string register yy
- 
+ 06 yy          get string register yy using 32k packets (USB, extended protocol)

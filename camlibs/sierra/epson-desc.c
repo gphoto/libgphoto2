@@ -556,4 +556,4 @@ N_(
 "  please send a mail to <gphoto-devel@gphoto.org> (in English)\n"
 );
 
-const CameraDescType ep3000z_cam_desc = { ep3000z_desc, ep3000z_manual };
+const CameraDescType ep3000z_cam_desc = { ep3000z_desc, ep3000z_manual, TRUE, };
