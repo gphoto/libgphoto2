@@ -7,7 +7,7 @@
 
 USER=root
 
-# can access it from user space. (Replace root by the user you want
+# can access it from user space. (Replace root with the user you want
 # to have access to the cameras.)
 #
 # Note that for this script to work, you'll need all of the following:
