@@ -48,7 +48,7 @@ int test_gphoto() {
 	/* ---------------------------------------------- */
 	/* Set the camera they chose as the active camera */
 	/* ---------------------------------------------- */
-	strcpy(s.port, "/dev/ttyS0");
+	strcpy(s.path, "/dev/ttyS0");
 	s.speed = 57600;
 	if (gp_camera_set(camnum, &s) == GP_ERROR)
 		printf("cli: ERROR: camera_set error!\n");

@@ -10,10 +10,10 @@
 	/* ============================================================================== */
 
 	/* Set the "key" to "value" */
-	int gp_set_setting (char *key, char *value);
+	int gp_setting_set (char *key, char *value);
 
 	/* Retrieve the value of "key" into "value" */
-	int gp_get_setting (char *key, char *value);
+	int gp_setting_get (char *key, char *value);
 
 	/* Initialize/Quit the gPhoto library */
 	/* ============================================================================== */
@@ -101,6 +101,9 @@
 	/* Frees a CameraFile from memory */
 	int gp_file_free (CameraFile *file);
 
+	/* Captures the current view. Basically, it takes a picture */
+	int gp_capture (int type);
+
 	/* Camera configuration operations */
 	/* ============================================================================== */
 
@@ -113,16 +116,16 @@
 	/* Miscellaneous functions */
 	/* ============================================================================== */
 
-	/* Captures the current view. Basically, it takes a picture */
-	int gp_capture (int type);
-
 	/* Retrieves camera status (number of pictures, charge, etc...) */
+	/* "summary" should be allocated to 32k */
 	int gp_summary (char *summary);
 
 	/* Retrieves usage of the camera library (config settings, problems, etc) */
+	/* "manual" should be allocated to 32k */
 	int gp_manual (char *manual);
 
 	/* Retrieves information about the camera library (author, version, etc) */
+	/* "about" should be allocated to 32k */
 	int gp_about (char *about);
 
 	/* Widget functions */
@@ -155,7 +158,7 @@
 	int gp_progress (float percentage);
 
 	/* Displays a message */
-	int gp_message (char *message);
+	int gp_message      (char *message);
 
 	/* Displays a confirmation. returns 1 if answer was "yes", 0 for "no" */
 	int gp_confirm (char *message);

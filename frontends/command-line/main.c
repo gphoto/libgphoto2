@@ -620,7 +620,7 @@ int set_globals () {
 		return (GP_ERROR);
 	}
 
-	strcpy(s.port, glob_port);
+	strcpy(s.path, glob_port);
 	s.speed = glob_speed;
 
 	if (gp_camera_abilities_by_name(glob_model, &glob_abilities)==GP_ERROR) {

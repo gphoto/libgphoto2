@@ -60,7 +60,7 @@ int camera_init (CameraInit *init) {
 	for (i=0; i<1024; i++)
 		strcpy(dir_images[i], "");
 
-	strcpy(dir_directory, init->port_settings.port);
+	strcpy(dir_directory, init->port_settings.path);
 	if (strlen(dir_directory)==0) {
 		strcpy(dir_directory, "/");
 	}

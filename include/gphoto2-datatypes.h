@@ -35,7 +35,6 @@ typedef enum {
 	GP_PORT_PARALLEL,
 	GP_PORT_USB,
 	GP_PORT_IEEE1394,
-	GP_PORT_IRDA,
 	GP_PORT_SOCKET
 } CameraPortType;
 
@@ -84,10 +83,15 @@ struct CameraWidget {
 
 typedef struct CameraWidget CameraWidget;
 
-typedef gpio_device_info CameraPortInfo;
+typedef struct {
+	CameraPortType type;
+        char name[64];
+        char path[64];
+} CameraPortInfo;
+
 
 typedef struct {
-	char port[128];
+	char path[128];
 		/* path to serial port device 			 */
 		/* For serial port, "/dev/ttyS0" or variants	 */
 		/* For parallel port, "/dev/lpt0" or variants	 */
@@ -108,6 +112,7 @@ typedef struct {
 	int parallel;
 	int usb;
 	int ieee1394;
+	int socket;
 		/* set to 1 if supported, 0 if not.		 */
 
 	int speed[64];
