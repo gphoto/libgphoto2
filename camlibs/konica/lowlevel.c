@@ -310,9 +310,9 @@ l_receive (GPPort *p, GPContext *context,
 	   unsigned char **rb, unsigned int *rbs,
 	   unsigned int timeout)
 {
-	unsigned char c, d;
+	unsigned char c, d, progress = 0;
 	int error_flag;
-	unsigned int i, j, rbs_internal, id;
+	unsigned int i, j, rbs_internal, id = 0;
 	unsigned char checksum;
 	int result;
 	KCommand command;
@@ -367,7 +367,11 @@ l_receive (GPPort *p, GPContext *context,
 	}
 
 	/* Start progress */
-	id = gp_context_progress_start (context, *rbs, _("Downloading..."));
+	if (*rbs > 1000) {
+		id = gp_context_progress_start (context, *rbs,
+						_("Downloading..."));
+		progress = 1;
+	}
 
 	/* Write ACK. */
 	CHECK (gp_port_write (p, "\6", 1));
@@ -547,7 +551,8 @@ while (read < rbs_internal) {
 		case ETX:
 
 			/* We are all done. */
-			gp_context_progress_stop (context, id);
+			if (progress)
+				gp_context_progress_stop (context, id);
 			return (GP_OK);
 
 		case ETB:
@@ -584,7 +589,8 @@ while (read < rbs_internal) {
 			/* Should not happen. */
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
-		gp_context_progress_update (context, id, *rbs);
+		if (progress)
+			gp_context_progress_update (context, id, *rbs);
 	}
 }
 
