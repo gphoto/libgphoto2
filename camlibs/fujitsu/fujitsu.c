@@ -108,6 +108,8 @@ int fujitsu_write_packet (gpio_device *dev, char *packet) {
 	
 	debug_print(" fujitsu_write_packet");
 
+	usleep(50000);
+
 	/* Determing packet length */
 	if ((packet[0] == TYPE_COMMAND) ||
 	    (packet[0] == TYPE_DATA) ||
@@ -165,6 +167,8 @@ int fujitsu_read_packet (gpio_device *dev, char *packet) {
 	packet[0] = 0;
 
 	debug_print(" fujitsu_read_packet");
+
+	usleep(50000);
 
 	done = 0;
 	while (!done && (r++<RETRIES)) {
