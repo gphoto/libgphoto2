@@ -25,6 +25,8 @@
 
 #include <aalib.h>
 
+#include <gphoto2-port-log.h>
+
 #if HAVE_JPEG
 #include <jpeglib.h>
 #endif
@@ -33,18 +35,16 @@ int
 gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 {
 	int result, event;
-	aa_context *context;
+	aa_context *c;
 	aa_renderparams *params;
 	aa_palette palette;
-	unsigned char *bitmap;
 
-	context = aa_autoinit (&aa_defparams);
-	if (!context)
+	c = aa_autoinit (&aa_defparams);
+	if (!c)
 		return (GP_ERROR);
-	aa_autoinitkbd (context, 0);
+	aa_autoinitkbd (c, 0);
 	params = aa_getrenderparams ();
-	bitmap = aa_image (context);
-	aa_hidecursor (context);
+	aa_hidecursor (c);
 
 	result = gp_camera_capture_preview (camera, file);
 	if (result < 0)
@@ -53,9 +53,11 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 	while (1) {
 		const char *data, *type;
 		long int size;
+		unsigned char *bitmap;
 
 		gp_file_get_data_and_size (file, &data, &size);
 		gp_file_get_mime_type (file, &type);
+		bitmap = aa_image (c);
 
 #if HAVE_JPEG
 		if (!strcmp (type, GP_MIME_JPEG)) {
@@ -68,23 +70,36 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 			gp_file_save (file, "/tmp/gphoto.jpg");
 			f = fopen ("/tmp/gphoto.jpg", "r");
 			if (!f) {
-				aa_close (context);
+				aa_close (c);
 				return (GP_ERROR);
 			}
 
 			cinfo.err = jpeg_std_error (&pub);
+			gp_log (GP_LOG_DEBUG, "gphoto2", "Preparing "
+				"decompression...");
 			jpeg_create_decompress (&cinfo);
 			jpeg_stdio_src (&cinfo, f);
 			jpeg_read_header (&cinfo, TRUE);
-			while (aa_imgwidth (context) <
-				(cinfo.image_width / cinfo.scale_denom))
+			while (cinfo.scale_denom) {
+				jpeg_calc_output_dimensions (&cinfo);
+				if ((aa_imgwidth (c) >= cinfo.output_width) &&
+				    (aa_imgheight (c) >= cinfo.output_height))
+					break;
 				cinfo.scale_denom *= 2;
-			while (aa_imgheight (context) <
-				(cinfo.image_height / cinfo.scale_denom))
-				cinfo.scale_denom *= 2;
-
+			}
+			if (!cinfo.scale_denom) {
+				gp_log (GP_LOG_DEBUG, "gphoto2", "Screen "
+					"too small.");
+				jpeg_destroy_decompress (&cinfo);
+				aa_close (c);
+				return (GP_OK);
+			}
+			gp_log (GP_LOG_DEBUG, "gphoto2", "AA: (w,h) = (%i,%i)",
+				aa_imgwidth (c), aa_imgheight (c));
 			jpeg_start_decompress (&cinfo);
-
+			gp_log (GP_LOG_DEBUG, "gphoto2", "JPEG: (w,h) = "
+				"(%i,%i)", cinfo.output_width,
+				cinfo.output_height);
 			cinfo.do_fancy_upsampling = FALSE;
 			cinfo.do_block_smoothing = FALSE;
 			cinfo.out_color_space = JCS_GRAYSCALE;
@@ -94,7 +109,7 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 				lptr = lines;
 				for (i = 0; i < cinfo.rec_outbuf_height; i++) {
 					*lptr++ = dptr;
-					dptr += aa_imgwidth (context);
+					dptr += aa_imgwidth (c);
 				}
 				jpeg_read_scanlines (&cinfo, lines,
 						cinfo.rec_outbuf_height);
@@ -110,30 +125,39 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 #endif
 		{
 			/* Silently skip the preview */
-			aa_close (context);
+			aa_close (c);
 			return (GP_OK);
 		}
 
-		aa_renderpalette (context, palette, params, 0, 0,
-			aa_scrwidth (context), aa_scrheight (context));
-		aa_flush (context);
+		aa_renderpalette (c, palette, params, 0, 0,
+			aa_scrwidth (c), aa_scrheight (c));
+		aa_flush (c);
 		
-		event = aa_getevent (context, 1);
+		event = aa_getevent (c, 1);
 		switch (event) {
+		case AA_RESIZE:
+			aa_resize (c);
+			aa_flush (c);
+			break;
 		case 32:
 			/* Space */
+			result = gp_camera_capture_preview (camera, file);
+			if (result < 0) {
+				aa_close (c);
+				return (result);
+			}
 			break;
 		case 305:
 			/* ESC */
-			aa_close (context);
+			aa_close (c);
 			return (GP_ERROR);
 		default:
-			aa_close (context);
+			aa_close (c);
 			return (GP_OK);
 		}
 	}
 
-	aa_close (context);
+	aa_close (c);
 
 	return (GP_OK);
 }
