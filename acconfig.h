@@ -23,3 +23,5 @@
 #undef HAVE_AA
 #undef HAVE_JPEG
 
+#undef HAVE_MULTI
+

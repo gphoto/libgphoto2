@@ -1039,6 +1039,11 @@ set_globals (void)
 	CameraAbilities abilities;
 	int model = -1, port = -1, count;
 	const char *name, *value;
+	static int initialized = 0;
+
+	if (initialized)
+		return (GP_OK);
+	initialized = 1;
 
         /* takes all the settings and sets up the gphoto lib */
 

@@ -1,5 +1,16 @@
 2001-11-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	I quote from an e-mail: "You (Lutz) should remove the code you added
+	that broke (at least) two of the supported 'libgphoto2' camera
+	libraries!!!" *sigh*. 
+
+	* conigure.in: Add a --with-multi option and a warning that people
+	  who use it will run into troubles with digita and dc240 and that
+	  people who don't use it will run into troubles when using Nautilus
+	  or Konqueror for browsing their camera.
+
+2001-11-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-camera.[c,h]: Add a pre_func and a post_func 
 	  that gets called before and after each access to the camera driver.
 	* camlibs/konica/library.c: Use above functions.
