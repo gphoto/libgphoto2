@@ -315,12 +315,14 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 
 	if (destination->data)
 		free (destination->data);
+
+	memcpy (destination, source, sizeof (CameraFile));
+
 	destination->data = malloc (sizeof (char) * source->size);
 	if (!destination->data)
 		return (GP_ERROR_NO_MEMORY);
 
 	memcpy (destination->data, source->data, source->size);
-	destination->size = source->size;
 
 	return (GP_OK);
 }
