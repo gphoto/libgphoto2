@@ -1,3 +1,8 @@
+2001-11-21  Marcus Meissner <marcus@jet.franken.de>
+	
+	* camlibs/stv0680/stv0680.html: Collected programming information
+	  into nice HTML table.
+
 2001-11-21  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/POTFILES.in: Removed ../camlibs/canon/psa50.c
