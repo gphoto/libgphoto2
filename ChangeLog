@@ -1,3 +1,7 @@
+2002-01-18  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: 2.0beta4dev9 (progress is inevitable)
+
 2002-01-16  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libexif: New
@@ -1683,7 +1687,7 @@
 
 2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-	Patch from Dan Fandrich <<dan@coneharvesters.com>:
+	Patch from Dan Fandrich <dan@coneharvesters.com>:
 
 	* libgphoto2/gphoto2-abilities-list.c:
 	* libgphoto2/gphoto2-camera.c: Make models case-insensitive.
