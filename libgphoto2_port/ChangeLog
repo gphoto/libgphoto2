@@ -1,3 +1,8 @@
+2002-02-23 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2_port/gphoto2-port-info-list.c: Fixed error test for
+	non-GNU regex.
+
 2002-02-23  Lutz Müller <lutz@users.sourceforge.net>
 
 	* [serial,usb]/Makefile.am: LIBADD libgphoto2_port.
