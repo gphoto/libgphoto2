@@ -38,7 +38,8 @@ struct camera_to_usb {
 		{ "Canon PowerShot G1", 0x04A9, 0x3048 },
 		{ "Canon Digital IXUS", 0x4A9, 0x3047 },
 		{ "Canon IXY DIGITAL", 0x4A9, 0x3046 },
-		{ "Canon PowerShot S100", 0x4A9, 0x3045 }
+		{ "Canon PowerShot S100", 0x4A9, 0x3045 },
+		{ "DIGITAL IXUS 300", 0x4A9, 0x304d }
 };
 /*******  new stuff *********/
 

@@ -1178,7 +1178,8 @@ int psa50_ready(Camera *camera)
       A5 = 0;
     } else if ((!strcmp("Canon DIGITAL IXUS",psa50_id))
 	       || (!strcmp("Canon IXY DIGITAL",psa50_id))	
-	       || (!strcmp("Canon PowerShot S100",psa50_id)))
+	       || (!strcmp("Canon PowerShot S100",psa50_id))
+	       || (!strcmp("DIGITAL IXUS 300",psa50_id)))
       {
 	gp_frontend_status(camera, "Detected a Digital IXUS / IXY DIGITAL / Powershot S100");
 	cs->model = CANON_PS_S100;
