@@ -98,7 +98,7 @@ ptp_sendreq (PTPParams* params, PTPReq* databuf, uint16_t code)
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
-		"request code 0x%4x sending req error", code);
+		"PTP: request code 0x%4x sending req error", code);
 	}
 	return ret;
 }
@@ -120,7 +120,7 @@ ptp_senddata (PTPParams* params, PTPReq* req, uint16_t code,
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 		ptp_error (params,
-		"request code 0x%4x sending data error", code);
+		"PTP: request code 0x%4x sending data error", code);
 	}
 	return ret;
 }
@@ -146,7 +146,7 @@ ptp_getdata (PTPParams* params, PTPReq* req, uint16_t code,
 	}
 	if (ret!=PTP_RC_OK) 
 		ptp_error (params,
-		"request code 0x%4.4x getting data error 0x%4.4x", code, ret);
+		"PTP: request code 0x%4.4x getting data error 0x%4.4x", code, ret);
 	return ret;
 }
 
@@ -171,7 +171,7 @@ ptp_getresp (PTPParams* params, PTPReq* databuf, uint16_t code)
 	}
 	if (ret!=PTP_RC_OK)
 		ptp_error (params,
-		"request code 0x%4x getting resp error 0x%4x", code, ret);
+		"PTP: request code 0x%4x getting resp error 0x%4x", code, ret);
 	if (databuf==NULL) free (req);
 	return ret;
 }
