@@ -1362,8 +1362,12 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 			  "EXIF data...");
 		CR (gp_filesystem_get_exif_preview (fs, folder, filename,
 						    context));
-	} else
-		CR (r);
+	} else if (r < 0) {
+		GP_DEBUG ("Download of '%s' from '%s' (type %i) failed. "
+			  "Reason: '%s'", filename, folder, type,
+			  gp_result_as_string (r));
+		return (r);
+	}
 
 	/* We don't trust the camera drivers */
 	CR (gp_file_set_type (file, type));
