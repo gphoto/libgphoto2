@@ -407,13 +407,13 @@ ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi)
 
 /* Custom Type Value Assignement (without Length) macro frequently used below */
 #define CTVAL(type,func,target)  {					\
-		target = malloc(sizeof(type));				\
-		*(type *)target =					\
+		*target = malloc(sizeof(type));				\
+		**(type **)target =					\
 			func(data);\
 }
 
 static inline void
-ptp_unpack_DPV (PTPParams *params, char* data, void* value, uint16_t datatype)
+ptp_unpack_DPV (PTPParams *params, char* data, void** value, uint16_t datatype)
 {
 
 	switch (datatype) {
@@ -440,7 +440,7 @@ ptp_unpack_DPV (PTPParams *params, char* data, void* value, uint16_t datatype)
 		case PTP_DTC_STR:
 		{
 			uint8_t len;
-			(char *)value = ptp_unpack_string (params,data,0,&len);
+			(char *)(*value)=ptp_unpack_string(params,data,0,&len);
 			break;
 		}
 	}
@@ -662,3 +662,68 @@ ptp_pack_DPV (PTPParams *params, void* value, char** dpvptr, uint16_t datatype)
 	*dpvptr=dpv;
 	return size;
 }
+
+
+/*
+    PTP USB Event container unpack
+    Copyright (c) 2003 Nikolai Kopanygin
+*/
+
+#define PTP_ec_Length		0
+#define PTP_ec_Type		4
+#define PTP_ec_Code		6
+#define PTP_ec_TransId		8
+#define PTP_ec_Param1		12
+#define PTP_ec_Param2		16
+#define PTP_ec_Param3		20
+
+static inline void
+ptp_unpack_EC (PTPParams *params, char* data, PTPUSBEventContainer *ec)
+{
+	if (data==NULL)
+		return;
+	ec->length=dtoh32a(&data[PTP_ec_Length]);
+	ec->type=dtoh16a(&data[PTP_ec_Type]);
+	ec->code=dtoh16a(&data[PTP_ec_Code]);
+	ec->trans_id=dtoh32a(&data[PTP_ec_TransId]);
+	if (ec->length>=(PTP_ec_Param1+4))
+		ec->param1=dtoh32a(&data[PTP_ec_Param1]);
+	else
+		ec->param1=0;
+	if (ec->length>=(PTP_ec_Param2+4))
+		ec->param2=dtoh32a(&data[PTP_ec_Param2]);
+	else
+		ec->param2=0;
+	if (ec->length>=(PTP_ec_Param3+4))
+		ec->param3=dtoh32a(&data[PTP_ec_Param3]);
+	else
+		ec->param3=0;
+}
+
+/*
+    PTP Canon Folder Entry unpack
+    Copyright (c) 2003 Nikolai Kopanygin
+*/
+#define PTP_cfe_ObjectHandle		0
+#define PTP_cfe_ObjectFormatCode	4
+#define PTP_cfe_Flags			6
+#define PTP_cfe_ObjectSize		7
+#define PTP_cfe_Time			11
+#define PTP_cfe_Filename		15
+
+static inline void
+ptp_unpack_Canon_FE (PTPParams *params, char* data, PTPCANONFolderEntry *fe)
+{
+	int i;
+	if (data==NULL)
+		return;
+	fe->ObjectHandle=dtoh32a(&data[PTP_cfe_ObjectHandle]);
+	fe->ObjectFormatCode=dtoh16a(&data[PTP_cfe_ObjectFormatCode]);
+	fe->Flags=dtoh8a(&data[PTP_cfe_Flags]);
+	fe->ObjectSize=dtoh32a(&data[PTP_cfe_ObjectSize]);
+	fe->Time=(time_t)dtoh32a(&data[PTP_cfe_Time]);
+	for (i=0; i<PTP_CANON_FilenameBufferLen; i++)
+	fe->Filename[i]=(char)dtoh8a(&data[PTP_cfe_Filename+i]);
+}
+
+

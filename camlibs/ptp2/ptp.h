@@ -141,6 +141,22 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 /* Eastman Kodak extension Operation Codes */
 #define PTP_OC_EK_SendFileObjectInfo	0x9005
 #define PTP_OC_EK_SendFileObject	0x9006
+/* Canon extension Operation Codes */
+#define PTP_OC_CANON_GetObjectSize	0x9001
+#define PTP_OC_CANON_StartShootingMode	0x9008
+#define PTP_OC_CANON_EndShootingMode	0x9009
+#define PTP_OC_CANON_ViewfinderOn	0x900B
+#define PTP_OC_CANON_ViewfinderOff	0x900C
+#define PTP_OC_CANON_ReflectChanges	0x900D
+#define PTP_OC_CANON_CheckEvent		0x9013
+#define PTP_OC_CANON_FocusLock		0x9014
+#define PTP_OC_CANON_FocusUnlock	0x9015
+#define PTP_OC_CANON_InitiateCaptureInMemory	0x901A
+#define PTP_OC_CANON_GetPartialObject	0x901B
+#define PTP_OC_CANON_GetViewfinderImage	0x901d
+#define PTP_OC_CANON_GetChanges		0x9020
+#define PTP_OC_CANON_GetFolderEntries	0x9021
+
 
 /* Response Codes */
 
@@ -205,6 +221,10 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_EC_StorageInfoChanged	0x400C
 #define PTP_EC_CaptureComplete		0x400D
 #define PTP_EC_UnreportedStatus		0x400E
+/* Canon extension Event Codes */
+#define PTP_EC_CANON_DeviceInfoChanged	0xC008
+#define PTP_EC_CANON_RequestObjectTransfer	0xC009
+#define PTP_EC_CANON_CameraModeChanged	0xC00C
 
 /* PTP device info structure (returned by GetDevInfo) */
 
@@ -401,6 +421,21 @@ struct _PTPDevicePropDesc {
 };
 typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 
+/* Canon filesystem's folder entry Dataset */
+
+#define PTP_CANON_FilenameBufferLen	13
+#define PTP_CANON_FolderEntryLen	sizeof(PTPCANONFolderEntry)
+
+struct _PTPCANONFolderEntry {
+	uint32_t	ObjectHandle;
+	uint16_t	ObjectFormatCode;
+	uint8_t		Flags;
+	uint32_t	ObjectSize;
+	time_t		Time;
+    char     Filename[PTP_CANON_FilenameBufferLen];
+};
+typedef struct _PTPCANONFolderEntry PTPCANONFolderEntry;
+
 /* DataType Codes */
 
 #define PTP_DTC_UNDEF		0x0000
@@ -476,9 +511,31 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 #define PTP_DPC_EK_UI_Language		0xD006
 /* Canon extension device property codes */
 #define PTP_DPC_CANON_BeepMode		0xD001
+#define PTP_DPC_CANON_ViewfinderMode	0xD003
+#define PTP_DPC_CANON_ImageQuality	0xD006
+#define PTP_DPC_CANON_D007		0xD007
+#define PTP_DPC_CANON_ImageSize		0xD008
+#define PTP_DPC_CANON_FlashMode		0xD00A
+#define PTP_DPC_CANON_TvAvSetting	0xD00C
+#define PTP_DPC_CANON_MeteringMode	0xD010
+#define PTP_DPC_CANON_MacroMode		0xD011
+#define PTP_DPC_CANON_FocusingPoint	0xD012
+#define PTP_DPC_CANON_WhiteBalance	0xD013
+#define PTP_DPC_CANON_ISOSpeed		0xD01C
+#define PTP_DPC_CANON_Aperture		0xD01D
+#define PTP_DPC_CANON_ShutterSpeed	0xD01E
+#define PTP_DPC_CANON_ExpCompensation	0xD01F
+#define PTP_DPC_CANON_D029		0xD029
+#define PTP_DPC_CANON_Zoom		0xD02A
+#define PTP_DPC_CANON_SizeQualityMode	0xD02C
 #define PTP_DPC_CANON_FlashMemory	0xD031
 #define PTP_DPC_CANON_CameraModel	0xD032
+#define PTP_DPC_CANON_CameraOwner	0xD033
 #define PTP_DPC_CANON_UnixTime		0xD034
+#define PTP_DPC_CANON_RealImageWidth	0xD039
+#define PTP_DPC_CANON_PhotoEffect	0xD040
+#define PTP_DPC_CANON_AssistLight	0xD041
+#define PTP_DPC_CANON_D045		0xD045
 
 /* Device Property Form Flag */
 
@@ -549,7 +606,7 @@ struct _PTPParams {
 	PTPDeviceInfo deviceinfo;
 };
 
-/* last, but not least ptp functions */
+/* last, but not least - ptp functions */
 uint16_t ptp_usb_sendreq	(PTPParams* params, PTPContainer* req);
 uint16_t ptp_usb_senddata	(PTPParams* params, PTPContainer* ptp,
 				unsigned char *data, unsigned int size);
@@ -596,7 +653,7 @@ uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
 uint16_t ptp_getdevicepropdesc	(PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
 uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint16_t propcode,
-				void* value, uint16_t datatype);
+				void** value, uint16_t datatype);
 uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
                         	void* value, uint16_t datatype);
 
@@ -606,6 +663,38 @@ uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 				PTPObjectInfo* objectinfo);
 uint16_t ptp_ek_sendfileobject	(PTPParams* params, char* object,
 				uint32_t size);
+				
+/* Canon PTP extensions */
+
+uint16_t ptp_canon_getobjectsize (PTPParams* params, uint32_t handle,
+				uint32_t p2, uint32_t* size, uint32_t* rp2);
+
+uint16_t ptp_canon_startshootingmode (PTPParams* params);
+uint16_t ptp_canon_endshootingmode (PTPParams* params);
+
+uint16_t ptp_canon_viewfinderon (PTPParams* params);
+uint16_t ptp_canon_viewfinderoff (PTPParams* params);
+
+uint16_t ptp_canon_reflectchanges (PTPParams* params, uint32_t p1);
+uint16_t ptp_canon_checkevent (PTPParams* params, 
+				PTPUSBEventContainer* event, int* isevent);
+uint16_t ptp_canon_focuslock (PTPParams* params);
+uint16_t ptp_canon_focusunlock (PTPParams* params);
+uint16_t ptp_canon_initiatecaptureinmemory (PTPParams* params);
+uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle, 
+				uint32_t offset, uint32_t size,
+				uint32_t pos, char** block, 
+				uint32_t* readnum);
+uint16_t ptp_canon_getviewfinderimage (PTPParams* params, char** image,
+				uint32_t* size);
+uint16_t ptp_canon_getchanges (PTPParams* params, uint16_t** props,
+				uint32_t* propnum); 
+uint16_t ptp_canon_getfolderentries (PTPParams* params, uint32_t store,
+				uint32_t p2, uint32_t parenthandle,
+				uint32_t handle, 
+				PTPCANONFolderEntry** entries,
+				uint32_t* entnum);
+
 
 /* Non PTP protocol functions */
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);

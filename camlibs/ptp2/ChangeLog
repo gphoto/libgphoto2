@@ -1,3 +1,9 @@
+2004-01-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	(merged from libptp2)
+	* ptp.c, ptp-h.c, ptp-pack.c: added Canon specific PTP extension
+          code written by Nikolai Kopanygin.
+
 2003-12-27  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Sony DSC-U20
