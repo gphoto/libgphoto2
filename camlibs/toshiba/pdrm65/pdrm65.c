@@ -123,7 +123,8 @@ int pdrm65_select_file(GPPort *port, int current_pic)
 	char in_buf[1024];
 	
 	//sprintf(&out_buf[6],"%o",current_pic);
-	gp_port_write(port, out_buf, 12);
+	gp_port_write(port, out_buf, 12);bigfoot:/export/home    /home                   nfs     defaults        0 0
+
 	gp_port_read (port, in_buf, 1);
 	
 	if (in_buf[0] != 0x06)
@@ -138,11 +139,13 @@ int pdrm65_get_pict(GPPort *port, const char *pic_number, CameraFile *file)
 	char out_buf[1024];
 	char in_buf[1024];
 	char ok = 0x06;
-	char pic_buf[30656];
+	char pic_buf[JPEG_CHUNK];
 	uint8_t *image;
 	int pic_size = 0;
 	int data_remaining = 0;
+	
 	int image_number = atoi(pic_number);
+	
 	// Set active image to image_number
 	//1b 43 06 00 00 04 01 00 00 00 05 00
 	pdrm65_select_file(port, image_number);
@@ -163,9 +166,10 @@ int pdrm65_get_pict(GPPort *port, const char *pic_number, CameraFile *file)
 	
 	pdrm65_select_file(port, image_number);
 	
-	pic_size = (in_buf[6] * (256*256)) + in_buf[5]*256 + in_buf[4];
+	pic_size = ( (in_buf[6]*(256*256)) + (in_buf[5]*256) + in_buf[4] );
 	GP_DEBUG("Picture is size %d KBytes", pic_size);
-	image = malloc(pic_size);
+	
+	image = malloc(pic_size + (((pic_size / JPEG_CHUNK)+1)*60));
 	
 	//1b 43 02 00 04 0e 12 00
 	//out_bf[0-1]=0x1b 0x43
@@ -176,19 +180,36 @@ int pdrm65_get_pict(GPPort *port, const char *pic_number, CameraFile *file)
 	out_buf[6]=0x12;
 	out_buf[7]=0x00;
 	gp_port_write(port,out_buf,8);
-	while(data_remaining < pic_size)
+	while(data_remaining < sizeof(image))
 	{
+		GP_DEBUG("Size of image = %d, data_remaining = %d", sizeof(image), data_remaining);
+		//Get EXIF Header information for this packet
 		gp_port_read(port, in_buf, 64);
-		gp_port_read(port, pic_buf, 30656);
+		memcpy(image+data_remaining, &in_buf[4], bigfoot:/export/home    /home                   nfs     defaults        0 0
+60);
+				
+		if ((pic_size - data_remaining) > JPEG_CHUNK)
+		{
+			gp_port_read(port, pic_buf, JPEG_CHUNK);
+			memcpy(image+data_remaining+60, pic_buf, JPEG_CHUNK);
+			data_remaining += (JPEG_CHUNK + 60);
+		}
+		else
+		{
+			gp_port_read(port, pic_buf, (pic_size - data_remaining));
+			memcpy(image+(pic_size-data_remaining+60), in_buf, (pic_size - data_remaining));
+			data_remaining += (pic_size - data_remaining + 60 );
+		}bigfoot:/export/home    /home                   nfs     defaults        0 0
+
 		gp_port_read(port, in_buf, 6);
 		gp_port_write(port, &ok, 1);
-		memcpy(image+data_remaining, in_buf, 30656);
-		data_remaining += 30656;
 		
-		GP_DEBUG("data_remaining = %d", data_remaining);
+		
+		
+		GP_DEBUG("data_remaining = %d, sizeof image = %d, size of pic_size = %d", data_remaining, sizeof(image), pic_size);
 		
 	}
-	gp_file_set_mime_type(file, GP_MIME_JPEG);
+	gp_file_set_mime_type(file, GP_MIME_EXIF);
 	gp_file_set_data_and_size(file, image, pic_size);
 	return (GP_OK);
 }
