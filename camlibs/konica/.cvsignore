@@ -6,3 +6,4 @@ lowlevel.lo
 .deps
 Makefile
 Makefile.in
+backups

@@ -1,0 +1,36 @@
+CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgpio -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H  -DEBUG -IC:\xfree86\include\glib12
+CC=gcc
+
+all: start \
+  dll \
+  end
+
+start:
+  @echo ****
+  @echo   Entering:      $(MAKEDIR)
+  @echo   using CCFLAGS: $(CCFLAGS)
+  @echo ****
+
+end:
+  @echo ****
+  @echo   Done: $(MAKEDIR)
+  @echo ****
+
+dll: ..\gpkonica.dll
+
+konica.o : konica.c konica.h
+   @$(CC) -o $@ konica.c $(CCFLAGS)
+
+lowlevel.o : lowlevel.c lowlevel.h
+   @$(CC) -o $@ lowlevel.c $(CCFLAGS)
+
+libary.o : libary.c
+   @$(CC) -o $@ libary.c $(CCFLAGS)
+
+
+konica.def: konica.o
+   @copy konica.df konica.def
+   @emxexp $** >> konica.def
+
+..\gpkonica.dll: konica.o konica.def command.o libary.o
+   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -Le:\emx\lib -lst\check -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldl ..\..\obj\interface.o -lpthreads -lpthrdrtl -lmt\c
