@@ -1,3 +1,7 @@
+2002-09-12  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* configure.in: 2.1.1dev6
+
 2002-08-29  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2/gphoto2-filesys.c: Cosmetic changes. Made code consistent
