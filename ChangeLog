@@ -1,6 +1,7 @@
 2002-04-07  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
-	* doc/gphoto2.txt: added notice about unplugging cam if necessary
+	* doc/gphoto2.txt: added notice about unplugging cam and creating
+	  /etc/hotplug/usb if necessary
 
 2002-04-04  Marcus Meissner <marcus@jet.franken.de>
 
