@@ -12,7 +12,7 @@ maintainer-clean-local: clean
 
 if ENABLE_GTK_DOC
 
-htmldir=@HTML_DIR@
+htmldir=@API_DIR@
 
 TARGET_DIR=$(htmldir)/$(DOC_MODULE)
 
@@ -53,3 +53,7 @@ install-data-local:
 	@echo "Re-run configure with adequate parameters and run make again to build docs."
 
 endif
+
+# Local Variables:
+# mode: makefile
+# End:
