@@ -639,7 +639,7 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
 				 CANON_USB_FUNCTION_CONTROL_CAMERA,
 				 &datalen, payload, payloadlen);
 	if (!msg && datalen != 0x1c) {
-		// ERROR
+		/* ERROR */
 		GP_DEBUG("%s returned msg=%p, datalen=%x",
 			 desc, msg, datalen);
 		return GP_ERROR;
@@ -654,10 +654,8 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
 /**
  * canon_int_capture_image
  * @camera: camera to work with
- * @path: gets filled in with the filename of the captured
- *   image. Since we don't know how to get this information back from
- *   Canon cameras, we insert "*UNKNOWN*" for both pathname and
- *   filename.
+ * @path: gets filled in with the path and filename of the captured
+ *   image, in canonical gphoto2 format.
  * @context: context for error reporting
  *
  * Directs the camera to capture an image (remote shutter release via
@@ -672,6 +670,10 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 			 GPContext *context)
 {
 	unsigned char *data = NULL;
+	unsigned char *initial_state, *final_state; /* For comparing
+						     * before/after
+						     * directories */
+	int initial_state_len, final_state_len;
 	int mstimeout = -1;
 	int transfermode = 0x0;
 	int len;
@@ -682,6 +684,15 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
+		/* List all directories on the camera to get a
+		   baseline to find the new file. */
+		len = canon_usb_list_all_dirs ( camera, &initial_state, &initial_state_len, context );
+
+		if ( len < 0 ) {
+			gp_context_error (context,"canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %i", len );
+			return len;
+		}
+
 		gp_port_get_timeout (camera->port, &mstimeout);
 		GP_DEBUG("canon_int_capture_image: usb port timeout starts at %dms", mstimeout);
 
@@ -690,7 +701,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		 */
 
 		gp_port_set_timeout (camera->port, 15000);
-		// Init, extends camera lens, puts us in remote capture mode //
+		/* Init, extends camera lens, puts us in remote capture mode */
 		if (canon_int_do_control_command (camera, 
 						  CANON_USB_CONTROL_INIT, 0, 0) == GP_ERROR)
 			return GP_ERROR;
@@ -718,9 +729,9 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 						  CANON_USB_CONTROL_SET_TRANSFER_MODE, 
 						  0x04, transfermode) == GP_ERROR)
 			return GP_ERROR;
-		// Verify that msg points to 
-                // 02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
-		// 00 00 00 00 00 00 00 00 00 00 00 00
+		/* Verify that msg points to 
+		   02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
+		   00 00 00 00 00 00 00 00 00 00 00 00 */
 
 		/* Get release parameters a couple of times, just to
                    see if that helps. */
@@ -734,7 +745,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 						  0x04, transfermode) == GP_ERROR)
 			return GP_ERROR;
 
-		// Lock keys here for D30/D60
+		/* Lock keys here for D30/D60 */
 		if ( IS_EOS(camera->pl->md->model) ) {
 			if(canon_usb_lock_keys(camera,context) < 0) {
 				gp_context_error (context, "lock keys failed.\n");
@@ -742,10 +753,10 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 			}
 		}
 
-		// Shutter Release //
-		// Can't use normal "canon_int_do_control_command", as
-		// we must read the interrupt pipe before the response
-		// comes back for this commmand.
+		/* Shutter Release
+		   Can't use normal "canon_int_do_control_command", as
+		   we must read the interrupt pipe before the response
+		   comes back for this commmand. */
 		data = canon_usb_capture_dialogue ( camera, &len, context );
 		if ( data == NULL ) {
 			/* Try to leave camera in a usable state. */
@@ -755,43 +766,99 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 			return GP_ERROR;
 		}
 
-		// Verify that msg points to 
-                // 02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
-		// 00 00 00 00 04 00 00 00 00 00 00 00
+		/* Verify that msg points to 
+		   02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
+		   00 00 00 00 04 00 00 00 00 00 00 00 */
 
-		// End release mode //
+		/* End release mode */
 		if (canon_int_do_control_command (camera,
 						  CANON_USB_CONTROL_EXIT,
 						  0, 0) == GP_ERROR)
 			return GP_ERROR;
 
-		/*
-		 * This is how the computer responds to the event saying there's a 
-		 * thumbnail capture to download, but I don't know how the event
-		 * is transmitted yet.
-		 */
-		/*
-
-		memset (payload, 0, sizeof(payload));
-		payloadlen = 0x10;
-
-		payload[5] = 0x50;
-		payload[8] = 0x02;
-		payload[12] = 0x01;
-		
-		c_res = canon_usb_long_dialogue(camera, CANON_USB_FUNCTION_RETRIEVE_CAPTURE,
-						&data, &datalen, 1024*1024,
-						payload, 0x10, 1, context);
-		if (datalen > 0 && data) {
-			GP_DEBUG ("canon camera_capture: Got the expected amount of data back");
-		} else {
-			gp_context_error (context, 
-					  _("camera_capture: Unexpected "
-					    "amount of data returned (%i bytes)"),
-					    datalen);
-			return GP_ERROR;
+		/* Now list all directories on the camera; this has
+		   presumably added an image file. Find the difference
+		   and decode to return real path and file names. */
+		len = canon_usb_list_all_dirs ( camera, &final_state, &final_state_len, context );
+		if ( len < 0 ) {
+			gp_context_error (context,"canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %i", len );
+			return len;
 		}
-		*/
+
+		/* Compare the directories to find the new image file. */
+		{
+			unsigned char *old_entry = initial_state, *new_entry = final_state;
+
+			path->folder[0] = 0; /* Start with null pathname string. */
+			GP_DEBUG ( "canon_int_capture_image: starting directory compare" );
+			while ( le16atoh ( old_entry+CANON_DIRENT_ATTRS ) != 0
+				|| le32atoh ( old_entry + CANON_DIRENT_SIZE ) != 0
+				|| le32atoh ( old_entry + CANON_DIRENT_TIME ) != 0 ) {
+				GP_DEBUG ( " old entry \"%s\", attr = 0x%02x, size=%i",
+					   old_entry + CANON_DIRENT_NAME,
+					   old_entry[CANON_DIRENT_ATTRS],
+					   le32atoh ( old_entry + CANON_DIRENT_SIZE ) );
+				GP_DEBUG ( " new entry \"%s\", attr = 0x%02x, size=%i",
+					   new_entry + CANON_DIRENT_NAME,
+					   new_entry[CANON_DIRENT_ATTRS],
+					   le32atoh ( new_entry + CANON_DIRENT_SIZE ) );
+				if ( *old_entry != *new_entry
+				     || le32atoh ( old_entry + CANON_DIRENT_SIZE ) != le32atoh ( new_entry + CANON_DIRENT_SIZE )
+				     || le32atoh ( old_entry + CANON_DIRENT_TIME ) != le32atoh ( new_entry + CANON_DIRENT_TIME )
+				     || strcmp ( old_entry + CANON_DIRENT_NAME, new_entry + CANON_DIRENT_NAME ) ) {
+					/* Mismatch. Presumably a
+					   new file, but is it an
+					   image file? */
+					GP_DEBUG ( "Found mismatch" );
+					if ( is_image ( new_entry + CANON_DIRENT_NAME ) ) {
+						/* Yup, we'll assume that this is the new image. */
+						GP_DEBUG ( "  Found our new image file" );
+						strncpy ( path->name, new_entry + CANON_DIRENT_NAME,
+							strlen ( new_entry + CANON_DIRENT_NAME ) );
+						strcpy ( path->folder, canon2gphotopath ( camera, path->folder ) );
+						free ( old_entry );
+						free ( new_entry );
+						break;
+					}
+					else {
+						/* The mismatch is not an image file. There are three possibilities:
+						   1. This is a new directory with no files. The next entry will be
+						      another directory.
+						   2. This is a new directory with new files, and we will enter it.
+						      The next entry in the new directory will be
+						      a new file, which may well be our new image file.
+						   3. This is an auxiliary file (sound, thumbnail, catalog).
+
+						   In all cases, the thing to do is to skip this entry in the
+						   new directory. */
+						new_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( new_entry+CANON_DIRENT_NAME );
+					}
+				}
+				else {
+					if ( le16atoh ( old_entry+CANON_DIRENT_ATTRS ) & CANON_ATTR_RECURS_ENT_DIR ) {
+						/* Entered a new directory; append its name to the current folder path.
+						   But how do I sense the end of a directory and remove this? */
+						if ( !strcmp ( "..", old_entry + CANON_DIRENT_NAME ) ) {
+							/* Pop out of this directory */
+							unsigned char *local_dir = strrchr(path->folder,'\\') + 1;
+							GP_DEBUG ( "Leaving directory \"%s\"", local_dir );
+							local_dir[-1] = 0;
+						}
+						else {
+							GP_DEBUG ( "Entering directory \"%s\"", old_entry + CANON_DIRENT_NAME );
+							if ( old_entry[CANON_DIRENT_NAME] == '.' )
+								/* Ignore a leading dot */
+								strcat ( path->folder, old_entry + CANON_DIRENT_NAME + 1 );
+							else
+								strcat ( path->folder, old_entry + CANON_DIRENT_NAME  );
+						}
+					}
+					/* Move to next entry */
+					new_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( new_entry+CANON_DIRENT_NAME );
+					old_entry += CANON_MINIMUM_DIRENT_SIZE + strlen ( old_entry+CANON_DIRENT_NAME );
+				}
+			}
+		}
 		break;
 	case GP_PORT_SERIAL:
 		return GP_ERROR_NOT_SUPPORTED;
