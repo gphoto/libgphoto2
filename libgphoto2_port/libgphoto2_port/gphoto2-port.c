@@ -53,7 +53,7 @@
 
 #define CHECK_RESULT(result) {int r=(result); if (r<0) return (r);}
 #define CHECK_NULL(m) {if (!(m)) return (GP_ERROR_BAD_PARAMETERS);}
-#define CHECK_SUPP(p,s,o) {if (!(o)) {gp_port_set_error ((p), _("The operation '%s' is not supported by this device"), (s)); return (GP_ERROR_NOT_SUPPORTED);}}
+#define CHECK_SUPP(p,t,o) {if (!(o)) {gp_port_set_error ((p), _("The operation '%s' is not supported by this device"), (t)); return (GP_ERROR_NOT_SUPPORTED);}}
 #define CHECK_INIT(p) {if (!(p)->pc->ops) {gp_port_set_error ((p), _("The port has not yet been initialized")); return (GP_ERROR_BAD_PARAMETERS);}}
 
 /**
