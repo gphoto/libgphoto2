@@ -47,7 +47,7 @@ void dump_hex(Camera *camera, const char *msg, const unsigned char *buf, int len
     char c;
     char line[100];
 	
-    if (cs->debug > 8) { // Only  printout with max. debug level (9)
+ //   if (cs->debug > 8) { // Only  printout with max. debug level (9)
 		start = buf;
       
 #if 0
@@ -100,7 +100,7 @@ void dump_hex(Camera *camera, const char *msg, const unsigned char *buf, int len
 			buf += 16;
 			len -= 16;
 		}				/* end while */
-    } /* end 'if debug' */
+     /* } end 'if debug' */
 }				/* end dump */
 
 void debug_message(Camera *camera, const char * msg, ...)

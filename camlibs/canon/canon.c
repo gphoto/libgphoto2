@@ -78,7 +78,7 @@ int camera_id(CameraText *id)
 
 int camera_manual(Camera *camera, CameraText *manual)
 {
-        strcpy(manual->text, "Manual Not Available");
+        strcpy(manual->text, "For the A50, 115200 may not be faster than 57600");
 
         return GP_OK;
 }
@@ -105,7 +105,7 @@ int camera_abilities(CameraAbilitiesList *list)
         a->config     = 0;
         a->file_delete = 1;
         a->file_preview = 1;
-        a->file_put = 0;
+        a->file_put = 1;
         gp_abilities_list_append(list, a);
         i++;
     }
@@ -165,7 +165,7 @@ static int check_readiness(Camera *camera)
 	
     if (cs->cached_ready) return 1;
     if (psa50_ready(camera)) {
-		debug_message(camera,"Camera type:  %d\n",cs->model);
+		gp_debug_printf(GP_DEBUG_LOW,"canon","Camera type:  %d\n",cs->model);
 		cs->cached_ready = 1;
 		return 1;
     }
@@ -481,7 +481,7 @@ static char *canon_get_picture(Camera *camera, char *filename, char *path, int t
 #if 0
 		picture_number=picture_number*2-1;
 		if (thumbnail) picture_number+=1;
-		debug_message(camera,"Picture number %d\n",picture_number);
+		gp_debug_printf(GP_DEBUG_LOW,"canon","Picture number %d\n",picture_number);
 		
 		image = malloc(sizeof(*image));
 		if (!image) {
@@ -520,7 +520,7 @@ static char *canon_get_picture(Camera *camera, char *filename, char *path, int t
 		memset(image,0,sizeof(*image));
 		
 		sprintf(file,"%s%s",path,filename);
-		debug_message(camera, "canon_get_picture: file = %s\n\tpath=%s, filename=%s\n",
+		gp_debug_printf(GP_DEBUG_LOW,"canon", "canon_get_picture: file = %s\n\tpath=%s, filename=%s\n",
 		       file,path,filename);
 		attribs = 0;
 		if (!check_readiness(camera)) {
@@ -538,8 +538,8 @@ static char *canon_get_picture(Camera *camera, char *filename, char *path, int t
 			image = psa50_get_file(camera, file,size);
 			j = strrchr(path, '\\') - path;
 			path[j] = '\0';
-			debug_message(camera,"We now have to set the \"downloaded\" flag on the  picture\n");
-			debug_message(camera,"The old file attributes were: %#x\n",attribs);
+			gp_debug_printf(GP_DEBUG_LOW,"canon","We now have to set the \"downloaded\" flag on the  picture\n");
+			gp_debug_printf(GP_DEBUG_LOW,"canon","The old file attributes were: %#x\n",attribs);
 			attribs = attribs & 0xdf; // 0xdf = !0x20
 			psa50_set_file_attributes(camera,filename,path,attribs);
 		}
@@ -605,7 +605,7 @@ int camera_file_get(Camera *camera, CameraFile *file, char *folder, char *filena
     strcpy(path, cs->cached_drive);
 
     if (get_file_path(camera, filename,path) == GP_ERROR) {
-        debug_message(camera,"Filename not found!\n");
+        gp_debug_printf(GP_DEBUG_LOW,"canon","Filename not found!\n");
         return GP_ERROR;
     }
 
@@ -642,7 +642,7 @@ int camera_file_get_preview(Camera *camera, CameraFile *preview, char *folder, c
     strcpy(path, cs->cached_drive);
 
     if (get_file_path(camera, filename,path) == GP_ERROR) {
-        debug_message(camera,"Filename not found!\n");
+        gp_debug_printf(GP_DEBUG_LOW,"canon","Filename not found!\n");
         return GP_ERROR;
     }
 
@@ -729,9 +729,12 @@ int camera_init(Camera *camera, CameraInit *init)
 	camera->camlib_data = cs;
 
 	cs->first_init = 1;
+	cs->uploading = 0;
+	cs->slow_send = 0;
 	cs->cached_ready = 0;
 	cs->cached_disk = 0;
 	cs->cached_dir = 0;
+	cs->dump_packets = 0;
 	
 	gphoto2_debug = init->debug;
 	fprintf(stderr,"canon_initialize()\n");
@@ -742,7 +745,7 @@ int camera_init(Camera *camera, CameraInit *init)
 	  cs->speed = 9600;
 	
 	if (gp_setting_get("canon","debug",buf) != GP_OK)
-	  cs->debug = 9;
+	  cs->debug = 1;
 			
 	if (strncmp(buf, "0", 1) == 0)
 	  cs->debug = 0;
@@ -768,21 +771,27 @@ int camera_init(Camera *camera, CameraInit *init)
 	  cs->debug = 9;
 	fprintf(stderr,"Debug level: %i\n",cs->debug);
 
+	if(gp_setting_get("canon","dump_packets",buf) == GP_OK) {
+		if(strncmp(buf, "1", 1) == 0)
+		  cs->dump_packets = 1;
+		if(strncmp(buf, "0", 1) == 0)
+		  cs->dump_packets = 0;
+	}
 
 	switch (init->port.type) { 
 	 case GP_PORT_USB:
-		debug_message(camera,"GPhoto tells us that we should use a USB link.\n");
+		gp_debug_printf(GP_DEBUG_LOW,"canon","GPhoto tells us that we should use a USB link.\n");
 		canon_comm_method = CANON_USB;
 		break;
 	 case GP_PORT_SERIAL:
 	 default:
-		debug_message(camera,"GPhoto tells us that we should use a RS232 link.\n");
+		gp_debug_printf(GP_DEBUG_LOW,"canon","GPhoto tells us that we should use a RS232 link.\n");
 		canon_comm_method = CANON_SERIAL_RS232;
 		break;
 	}
 	
 	if (canon_comm_method == CANON_SERIAL_RS232)
-      debug_message(camera,"Camera transmission speed : %i\n", cs->speed);
+      gp_debug_printf(GP_DEBUG_LOW,"canon","Camera transmission speed : %i\n", cs->speed);
 	
 	return !canon_serial_init(camera,init->port.path);
 }
@@ -913,7 +922,7 @@ int camera_file_delete(Camera *camera, char *folder, char *filename)
         strcpy(path, cs->cached_drive);
 
         if (get_file_path(camera,filename,path) == GP_ERROR) {
-            debug_message(camera,"Filename not found!\n");
+            gp_debug_printf(GP_DEBUG_LOW,"canon","Filename not found!\n");
             return GP_ERROR;
         }
 		if (canon_comm_method != CANON_USB) {
@@ -977,11 +986,12 @@ int camera_file_put(Camera *camera, CameraFile *file, char *folder)
     return psa50_put_file(camera,file, destname, destpath);     
 }
 
-int camera_config (Camera *camera)
+int camera_config(Camera *camera)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-	CameraWidget *window, *t, *section;
-	char power_stats[48];
+	CameraWidget *window, *w, *t, *section;
+	char *wvalue;
+	char power_stats[48], buf[8];
 	int pwr_status, pwr_source;
 	struct tm *camtm;
 	time_t camtime;
@@ -1058,6 +1068,9 @@ int camera_config (Camera *camera)
 	strcpy(t->value, power_stats);
 	gp_widget_append(section,t);
 	
+	section = gp_widget_new(GP_WIDGET_SECTION, "Debug");
+	gp_widget_append(window,section);
+	
 	t = gp_widget_new(GP_WIDGET_MENU, "Debug level");
 	gp_widget_choice_add (t, "none");
 	gp_widget_choice_add (t, "functions");
@@ -1076,21 +1089,89 @@ int camera_config (Camera *camera)
 	}
 	gp_widget_append(section,t);
 
+	t = gp_widget_new(GP_WIDGET_TOGGLE, 
+					  "Dump data by packets to stderr");
+	if(cs->dump_packets == 1)
+	  gp_widget_value_set(t, "1");
+	else
+	  gp_widget_value_set(t, "0");
+	gp_widget_append(section,t);
+
 	/* Prompt the user with the config window */	
 	if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
 		gp_widget_free(window);
 		return GP_OK;
 	}
 	
-	/* Append config_set code here and adapt using:
-		int gp_widget_child_by_name(CameraWidget *window, char *child_name);
-		int gp_widget_changed(CameraWidget *widget);
-		char gp_widget_value_get(CameraWidget *widget);
-	*/
+    if(!window) {
+		fprintf(stderr,"no window");
+		return GP_ERROR;
+	}
+	w = gp_widget_child_by_label(window,"Debug Level");
+	if (gp_widget_changed(w)) {
+		wvalue = gp_widget_value_get(w);
+		if(wvalue) {
+			if(strcmp(wvalue,"none") == 0)
+			  cs->debug = 0;
+			else if (strcmp(wvalue,"functions") == 0)
+			  cs->debug = 1;
+			else if (strcmp(wvalue,"complete") == 0)
+			  cs->debug = 9;
+			
+			sprintf(buf,"%i",cs->debug);
+			gp_setting_set("canon", "debug", buf);
+		}
+	}
+
+	w = gp_widget_child_by_label(window,"Dump data by packets to stderr");
+	if (gp_widget_changed(w)) {
+		wvalue = gp_widget_value_get(w);
+		if(wvalue) {
+			if(atoi(wvalue) == 0)
+			  cs->dump_packets = 0;
+			else if (atoi(wvalue) == 1)
+			  cs->dump_packets = 1;
+			
+			sprintf(buf,"%i",cs->dump_packets);
+			gp_setting_set("canon", "dump_packets", buf);
+		}
+	}
+	
+	w = gp_widget_child_by_label(window,"Owner name");
+	if (gp_widget_changed(w)) {
+		wvalue = gp_widget_value_get(w);
+		if(wvalue) {
+			if(!check_readiness(camera)) {
+				gp_frontend_status(camera,"Camera unavailable");
+			} else {
+				if(psa50_set_owner_name(camera, wvalue))
+				  gp_frontend_status(camera, "Owner name changed");
+				else
+				  gp_frontend_status(camera, "could not change owner name");	
+			}
+		}
+	}
+	
+	w = gp_widget_child_by_label(window,"Set camera date to PC date");
+	if (gp_widget_changed(w)) {
+		wvalue = gp_widget_value_get(w);
+		if(wvalue) {			   
+			if(!check_readiness(camera)) {
+				gp_frontend_status(camera,"Camera unavailable");
+			} else {
+				if(psa50_set_time(camera)) {
+					gp_frontend_status(camera,"time set");
+				} else {
+					gp_frontend_status(camera,"could not set time");
+				}
+			}
+		}
+	}
 
     return GP_OK;
 }
 
+#if 0
 int camera_config_set(Camera *camera, CameraSetting *setting, int count)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
@@ -1099,7 +1180,7 @@ int camera_config_set(Camera *camera, CameraSetting *setting, int count)
 	char buf[8];
 	
 	for (i=0;i<count;i++) {
-		debug_message(camera,"settings[%i] : %s = %s\n",i,setting[i].name,
+		gp_debug_printf(GP_DEBUG_LOW,"canon","settings[%i] : %s = %s\n",i,setting[i].name,
 					  setting[i].value);
 		if (strcmp(setting[i].name,"Debug level") == 0) {
 			if(strcmp(setting[i].value,"none") == 0)
@@ -1114,6 +1195,16 @@ int camera_config_set(Camera *camera, CameraSetting *setting, int count)
 				sprintf(buf,"%i",new_debug);
 				gp_setting_set("canon", "debug", buf);
 			}
+		}
+		
+		if (strcmp(setting[i].name,"Dump data by packets to stderr") == 0) {
+			if(atoi(setting[i].value) == 1)
+			  cs->dump_packets = 1;
+			else
+			  cs->dump_packets = 0;
+			
+			sprintf(buf,"%i", cs->dump_packets);
+			gp_setting_set("canon", "dump_packets", buf);
 		}
 		
 		if (strcmp(setting[i].name,"Owner name") == 0) {
@@ -1149,6 +1240,7 @@ int camera_config_set(Camera *camera, CameraSetting *setting, int count)
 	
     return GP_OK;
 }
+#endif
 
 int camera_capture(Camera *camera, CameraFile *file, CameraCaptureInfo *info)
 {

@@ -36,7 +36,7 @@ struct camera_to_usb {
 		{ "Canon PowerShot S10", 0x04A9, 0x3041 },
 		{ "Canon PowerShot S20", 0x04A9, 0x3043 },
 		{ "Canon Digital IXUS", 0x4A9, 0x3047 },
-		{ "Canon PowerShot S100", 0x4A9, 0x3045}
+		{ "Canon PowerShot S100", 0x4A9, 0x3045 }
 };
 /*******  new stuff *********/
 
@@ -160,7 +160,7 @@ int canon_serial_init(Camera *camera, const char *devname)
 #endif
     gpio_device_settings settings;
 
-	debug_message(camera,"Initializing the camera.\n");
+	gp_debug_printf(GP_DEBUG_LOW,"canon","Initializing the camera.\n");
 	
 //	gpio_init();
 	
@@ -224,7 +224,7 @@ int canon_serial_init(Camera *camera, const char *devname)
 			return -1;
 		}
 		
-		debug_message(camera,"canon_init_serial(): Using serial port on %s\n", devname);
+		gp_debug_printf(GP_DEBUG_LOW,"canon","canon_init_serial(): Using serial port on %s\n", devname);
 		
 		cs->gdev = gpio_new(GPIO_DEVICE_SERIAL);
 		
@@ -302,11 +302,12 @@ int canon_serial_send(Camera *camera, const unsigned char *buf, int len, int sle
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	int i;
 	
+	if (cs->dump_packets == 1)
     dump_hex(camera,"canon_serial_send()", buf, len);
 
 	    /* the A50 does not like to get too much data in a row at 115200
          * The S10 and S20 do not have this problem */
-    if (sleep>0 && cs->model == CANON_PS_A50 && cs->speed>57600) {
+    if (sleep>0 && cs->slow_send == 1) {
 		for(i=0;i<len;i++) {
 			gpio_write(cs->gdev,(char*)buf,1);
 			buf++;

@@ -56,8 +56,12 @@ struct canon_info
 	char owner[32];   /* Owner name */
 	char firmwrev[4]; /* Firmware revision */
 	int debug;
+	int dump_packets;
 	
 	int first_init;  /* first use of camera   1 = yes 0 = no */
+	int uploading;   /* 1 = yes ; 0 = no */
+	int slow_send;   /* to send data via serial with a usleep(1) 
+					  * between each byte 1 = yes ; 0 = no */ 
 
 /*
  * Directory access may be rather expensive, so we cache some information.
