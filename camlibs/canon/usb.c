@@ -415,11 +415,10 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			if ( bytes_read == 0x334 ) {
 				GP_DEBUG ( "canon_usb_lock_keys: Got the expected number of bytes back from \"get picture abilities.\"" );
 			} else {
-				gp_context_error ( context,
+				gp_context_message ( context,
 						   _("canon_usb_lock_keys: "
-						   "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\""),
+						   "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\" We will continue."),
 						   bytes_read, 0x334 );
-				return GP_ERROR_CORRUPTED_DATA;
 			}
 			c_res = canon_usb_dialogue (camera,
 						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
@@ -459,13 +458,13 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			break;
 
 		case CANON_CLASS_5:
-			/* Doesn't implement "get
-                           picture abilities", but isn't an EOS
-                           camera, so we have to use the "normal" key
-                           lock command. Since the S45 is a relatively
-                           new model (in Jan. 2003), I suspect that we
-                           will find more cameras in the future that
-                           work this way. */
+			/* Doesn't implement "get picture abilities",
+                           but isn't an EOS camera, so we have to use
+                           the "normal" key lock command. Since the
+                           S45 is a relatively new model (in
+                           Jan. 2003), I suspect that we will find
+                           more cameras in the future that work this
+                           way. */
 			GP_DEBUG ("Locking camera keys and turning off LCD using class 5 locking code...");
 			c_res = canon_usb_dialogue (camera,
 						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
@@ -499,11 +498,10 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 			else if ( bytes_read == 0x474 ) {
 				GP_DEBUG ( "canon_usb_lock_keys: Got the expected number of bytes back from \"get picture abilities.\"" );
 			} else {
-				gp_context_error ( context,
+				gp_context_message ( context,
 						   _("canon_usb_lock_keys: "
-						   "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\""),
+						   "Unexpected return of %i bytes (expected %i) from \"get picture abilities.\" We will continue."),
 						   bytes_read, 0x334 );
-				return GP_ERROR_CORRUPTED_DATA;
 			} 
 
 			memset (payload, 0, sizeof (payload));
@@ -906,6 +904,13 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 				GP_DEBUG ( "canon_usb_capture_dialogue: couldn't unlock keys after capture." );
 				goto FAIL;
 			}
+			/* Nasty special-case code for 300D, which never seems to give the 0x0f message. */
+			if ( camera->pl->md->usb_product == 0x3084 ) {
+				GP_DEBUG ( "canon_usb_capture_dialogue:"
+					   " final EOS 300D interrupt read at step %i", camera->pl->capture_step );
+				goto EXIT;
+			}
+
 			break;
 		case 0x0f:
 			/* We allow this message as third or
@@ -1066,7 +1071,7 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 		 * this function.
 		 */
 		GP_DEBUG ("canon_usb_dialogue() "
-			  "read_bytes %i won't fit in buffer of size %i!", read_bytes,
+			  "read_bytes %i won't fit in buffer of size %li!", read_bytes,
 			  sizeof (buffer));
 		return NULL;
 	}
@@ -1098,6 +1103,11 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 	packet[0x44] = cmd1;
 	packet[0x47] = cmd2;
 	htole32a (packet + 0x04, cmd3);
+	/* New style of protocol is picky about this byte. */
+	if ( cmd3 == 0x202 )
+		packet[0x46] = 0x20;
+	else
+		packet[0x46] = 0x10;
 	htole32a (packet + 0x4c, serial_code++);	/* serial number */
 	htole32a (packet + 0x48, 0x10 + payload_length);
 	msgsize = 0x50 + payload_length;	/* TOTAL msg size */
@@ -1889,7 +1899,7 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 	 */
 	if (strlen (path) + 4 > sizeof (payload)) {
 		GP_DEBUG ("canon_usb_get_dirents: "
-			  "Path '%s' too long (%i), won't fit in payload buffer.", path,
+			  "Path '%s' too long (%li), won't fit in payload buffer.", path,
 			  strlen (path));
 		gp_context_error (context,
 				  _("canon_usb_get_dirents: "
@@ -1957,8 +1967,8 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
 	 */
 	if (strlen (disk_name) + 4 > sizeof (payload)) {
 		GP_DEBUG ("canon_usb_list_all_dirs: "
-			  "Path '%s' too long (%i), won't fit in payload buffer.", disk_name,
-			  strlen (disk_name));
+			  "Path '%s' too long (%li), won't fit in payload buffer.",
+			  disk_name, strlen (disk_name));
 		gp_context_error (context,
 				  _("canon_usb_list_all_dirs: "
 				  "Couldn't fit payload into buffer, "
