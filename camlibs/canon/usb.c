@@ -530,14 +530,11 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
  * @return_length: number of bytes to read from the camera as response
  * @context: context for error reporting
  *
- * USB version of the #canon_serial_dialogue function.
- * Special case for the "capture image" command, where we must read the
+ * Handles the "capture image" command, where we must read the
  *  interrupt pipe before getting the normal command response.
  *
- * We construct a packet with the known command values (cmd{1,2,3}) of
- * the function requested (#canon_funct) to the camera. If #return_length
- * exists for this function, we read #return_length bytes back from the
- * camera and return this camera response to the caller.
+ * We call canon_usb_dialogue() for the actual "release shutter"
+ *  command, then handle the interrupt pipe here.
  *
  * Returns: a char * that points to the data read from the camera (or
  * NULL on failure), and sets what @return_length points to to the number
@@ -547,106 +544,27 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
 unsigned char *
 canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context )
 {
-	int msgsize, status, i;
-	char cmd1 = 0x13, cmd2 = 0x12, *funct_descr = "";
-	int cmd3 = 0x201, read_bytes = 0x40, read_bytes1 = 0, read_bytes2 = 0;
-	unsigned char packet[1024]; /* used for sending data to camera */
-	static unsigned char buffer[0x9c]; /* used for receiving data from camera */
+	int status, i;
+	unsigned char payload[8]; /* used for sending data to camera */
+	static unsigned char *buffer; /* used for receiving data from camera */
 	unsigned char buf2[0x40]; /* for reading from interrupt endpoint */
 
-	int j, canon_subfunc = 0;
-	char subcmd = 0, *subfunct_descr = "";
-	int additional_read_bytes = 0;
 	int mstimeout = -1;		     /* To save original timeout after shutter release */
 
 	/* clear this to indicate that no data is there if we abort */
 	if (return_length)
 		*return_length = 0;
 
-	/* clearing the receive buffer could be done right before the gp_port_read()
-	 * but by clearing it here we eliminate the possibility that a caller thinks
-	 * data in this buffer is a result of this particular canon_usb_capture_dialogue() call
-	 * if we return error but this is not checked for... good or bad I don't know.
-	 */
-	memset (buffer, 0x00, sizeof (buffer));
-
 	GP_DEBUG ("canon_usb_capture_dialogue()");
 
-	/*
-	 * The CONTROL_CAMERA function is special in that its payload specifies a 
-	 * subcommand, and the size of the return data is dependent on which
-	 * subcommand we're sending the camera.  See "Protocol" file for details.
-	 */
-	i = 0;
-	while (canon_usb_cmd[i].num != 0) {
-		if (canon_usb_cmd[i].num == CANON_USB_FUNCTION_CONTROL_CAMERA) {
-			funct_descr = canon_usb_cmd[i].description;
-			cmd1 = canon_usb_cmd[i].cmd1;
-			cmd2 = canon_usb_cmd[i].cmd2;
-			cmd3 = canon_usb_cmd[i].cmd3;
-			read_bytes = canon_usb_cmd[i].return_length;
-			break;
-		}
-		i++;
-	}
-	if (canon_usb_cmd[i].num == 0) {
-		GP_DEBUG ("canon_usb_capture_dialogue() contained ILLEGAL function %i! Aborting.",
-			  CANON_USB_FUNCTION_CONTROL_CAMERA);
-		return NULL;
-	}
-	GP_DEBUG ("canon_usb_capture_dialogue() cmd 0x%x 0x%x 0x%x (%s)", cmd1, cmd2, cmd3,
-		  funct_descr);
+	/* Build payload for command, which contains subfunction code */
+	memset (payload, 0x00, sizeof (payload));
+	payload[0] = 4;
 
-	canon_subfunc = 0x04;
-	j = 0;
-	while (canon_usb_control_cmd[j].num != 0) {
-		if (canon_usb_control_cmd[j].subcmd == canon_subfunc) {
-			subfunct_descr = canon_usb_control_cmd[j].description;
-			subcmd = canon_usb_control_cmd[j].subcmd;
-			additional_read_bytes = canon_usb_control_cmd[j].additional_return_length;
-			break;
-		}
-		j++;
-	}
-	read_bytes += additional_read_bytes;
-
-	GP_DEBUG ("canon_usb_capture_dialogue() called with CONTROL_CAMERA, %s",
-		  canon_usb_control_cmd[j].description);
-
-	if (read_bytes > sizeof (buffer)) {
-		/* If this message is ever printed, chances are that you just added
-		 * a new command to canon_usb_cmd with a return_length greater than
-		 * all the others and did not update the declaration of 'buffer' in
-		 * this function.
-		 */
-		GP_DEBUG ("canon_usb_capture_dialogue() "
-			  "read_bytes %i won't fit in buffer of size %i!", read_bytes,
-			  sizeof (buffer));
-		return NULL;
-	}
-
-	/* OK, we have now checked for all errors I could think of,
-	 * proceed with the actual work.
-	 */
-
-	/* construct packet to send to camera, including the three
-	 * commands, serial number and a payload if one has been supplied
-	 */
-
-	memset (packet, 0x00, sizeof (packet));	/* zero block */
-	htole32a (packet, 0x18);
-	packet[0x40] = 0x2;
-	packet[0x44] = cmd1;
-	packet[0x47] = cmd2;
-	packet[0x50] = canon_subfunc;
-	htole32a (packet + 0x04, cmd3);
-	htole32a (packet + 0x4c, serial_code++);	/* fake serial number */
-	htole32a (packet + 0x48, 0x18);
-
-	msgsize = 0x58;			     /* TOTAL msg size */
 
 	/* First, let's try to make sure the interrupt pipe is clean. */
 	while ( (status = canon_usb_poll_interrupt_pipe ( camera, buf2, 10 )) > 0 );
+
 	/* Shutter release can take a long time sometimes on EOS
 	 * cameras; perhaps buffer is full and needs to be flushed? */
 	gp_port_get_timeout (camera->port, &mstimeout);
@@ -654,58 +572,22 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 	gp_port_set_timeout (camera->port, 15000);
 
 	/* now send the packet to the camera */
-	status = gp_port_usb_msg_write (camera->port,  0x04, 0x10, 0,
-					packet, msgsize);
-	if (status != msgsize) {
-		GP_DEBUG ("canon_usb_capture_dialogue: write failed! (returned %i)\n", status);
+	buffer = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_CONTROL_CAMERA,
+				      return_length,
+				      payload, sizeof payload );
+
+	if ( buffer == NULL )
 		return NULL;
-	}
-	/* Read response packet: should be 0x5c bytes */
-	/* Divide read_bytes into two parts (two reads): 0x40 bytes and 0x1c bytes.
-	 * This is done because it is how the windows driver does it, and some cameras
-	 * (EOS D30 for example) seem to not like it if we were to read read_bytes
-	 * in a single read instead.
-	 */
-	read_bytes1 = 0x40;
-	read_bytes2 = 0x1c;
-
-	status = gp_port_read (camera->port, buffer, read_bytes1);
-	if ( status < 0 ) {
-		GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue: "
-			 " read 1 of %i bytes failed! (%s)",
-			 read_bytes1, gp_result_as_string ( status ) );
-		goto FAIL;
-	}
-	else if (status != read_bytes1) {
-		GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-			 " read 1 got bogus length! "
-			 "(returned %i, expected %i)", status, read_bytes1);
-		goto FAIL;
-	}
-
-	status = gp_port_read (camera->port, buffer + 0x40, read_bytes2);
-	if ( status < 0 ) {
-		GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-			 " read 2 of %i bytes failed! (%s)",
-			 read_bytes1, gp_result_as_string ( status ) );
-		goto FAIL;
-	}
-	else if (status != read_bytes2) {
-		GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-			 " read 2 got bogus length! "
-			 "(returned %i, expected %i)", status, read_bytes2);
-		goto FAIL;
-	}
 
 	gp_port_set_timeout (camera->port, mstimeout);
 	GP_DEBUG("canon_usb_capture_dialogue:"
 		 " set camera port timeout back to %d seconds...", mstimeout / 1000 );
 
 	/* Check the status code from the camera. */
-	if ( le32atoh ( buffer+0x50 ) != 0 ) {
+	if ( le32atoh ( buffer ) != 0 ) {
 		GP_DEBUG ( "canon_usb_capture_dialogue:"
 			   " got nonzero camera status code"
-			   " %08x in response to capture command", le32atoh ( buffer+0x50 ) );
+			   " %08x in response to capture command", le32atoh ( buffer ) );
 		goto FAIL;
 	}
 
@@ -714,205 +596,133 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 	   times.
 	   Read until we have completion signaled (0x0a for PowerShot,
 	   0x0f for EOS) */
-	if ( IS_EOS(camera->pl->md->model) ) {
-		camera->pl->capture_step = 0;
-		camera->pl->thumb_length = 0; camera->pl->image_length = 0;
-		camera->pl->image_key = 0x81818181;
+	camera->pl->capture_step = 0;
+	camera->pl->thumb_length = 0; camera->pl->image_length = 0;
+	camera->pl->image_key = 0x81818181;
 
-		while ( buf2[4] != 0x0f ) {
-			status = canon_usb_poll_interrupt_pipe ( camera, buf2, MAX_INTERRUPT_TRIES );
-			if ( status > 0x17 )
-				GP_DEBUG ( "canon_usb_capture_dialogue:"
-					   " interrupt read too long (length=%i)", status );
-			else if (  status == 0 )
-				goto FAIL;
+	while ( buf2[4] != 0x0f ) {
+		status = canon_usb_poll_interrupt_pipe ( camera, buf2, MAX_INTERRUPT_TRIES );
+		if ( status > 0x17 )
+			GP_DEBUG ( "canon_usb_capture_dialogue:"
+				   " interrupt read too long (length=%i)", status );
+		else if (  status == 0 )
+			goto FAIL;
 
-			switch ( buf2[4] ) {
-			case 0x08:
-				/* Thumbnail size */
-				if ( status != 0x17 )
-					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-						 " bogus length 0x%04x"
-						 " for thumbnail size packet\n", status );
-				camera->pl->thumb_length = le32atoh ( buf2+0x11 );
-				camera->pl->image_key = le32atoh ( buf2+0x0c );
-				GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size %i, tag=0x%08x",
-					   camera->pl->thumb_length, camera->pl->image_key );
-				break;
-			case 0x0c:
-				/* Full image size */
-				if ( status != 0x17 )
-					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-						 " bogus length 0x%04x"
-						 " for full image size packet\n", status );
-				camera->pl->image_length = le32atoh ( buf2+0x11 );
-				camera->pl->image_key = le32atoh ( buf2+0x0c );
-				GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08x, tag=0x%08x",
-					   camera->pl->image_length, camera->pl->image_key );
-				break;
-			case 0x0a:
-				if ( buf2[12] == 0x1c ) {
-					GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt read" );
-					if ( camera->pl->capture_step == 0 )
-						camera->pl->capture_step++;
-					else if ( camera->pl->capture_step == 2 ) {
-						/* I think this may be a signal that this is the last shot
-						   that will fit on the CF card. */
-						GP_DEBUG ( "canon_usb_capture_dialogue: redundant \"1c\" code; full CF card?" );
-						camera->pl->capture_step = 1;
-					}
-					else {
-						GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-							 " first interrupt read out of sequence" );
-						goto FAIL;
-					}
-				}
-				else if ( buf2[12] == 0x1d ) {
-					GP_DEBUG ( "canon_usb_capture_dialogue: second interrupt read (after image sizes)" );
-					if ( camera->pl->capture_step != 1 ) {
-						GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-						  " second interrupt read out of sequence" );
-						goto FAIL;
-					}
+		switch ( buf2[4] ) {
+		case 0x08:
+			/* Thumbnail size */
+			if ( status != 0x17 )
+				GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+					 " bogus length 0x%04x"
+					 " for thumbnail size packet\n", status );
+			camera->pl->thumb_length = le32atoh ( buf2+0x11 );
+			camera->pl->image_key = le32atoh ( buf2+0x0c );
+			GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size %i, tag=0x%08x",
+				   camera->pl->thumb_length, camera->pl->image_key );
+			break;
+		case 0x0c:
+			/* Full image size */
+			if ( status != 0x17 )
+				GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+					 " bogus length 0x%04x"
+					 " for full image size packet\n", status );
+			camera->pl->image_length = le32atoh ( buf2+0x11 );
+			camera->pl->image_key = le32atoh ( buf2+0x0c );
+			GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08x, tag=0x%08x",
+				   camera->pl->image_length, camera->pl->image_key );
+			break;
+		case 0x0a:
+			if ( buf2[12] == 0x1c ) {
+				GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt read" );
+				if ( camera->pl->capture_step == 0 )
 					camera->pl->capture_step++;
-				}
-				else if ( buf2[12] == 0x0a ) {
-					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-						 " photographic failure signaled, code = 0x%08x",
-						   le32atoh ( buf2+16 ) );
-					goto FAIL;
+				else if ( camera->pl->capture_step == 2 ) {
+					/* I think this may be a signal that this is the last shot
+					   that will fit on the CF card. */
+					GP_DEBUG ( "canon_usb_capture_dialogue: redundant \"1c\" code; full CF card?" );
+					camera->pl->capture_step = 1;
 				}
 				else {
-					GP_DEBUG ( "canon_usb_capture_dialogue: unknown subcode 0x%08x in 0x0a interrupt read",
-						   le32atoh ( buf2+12 ) );
-				}
-				break;
-			case 0x0e:
-				/* The image has been written to local
-				 * storage. Never seen if the transfer
-				 * mode didn't include any local
-				 * storage. */
-				GP_DEBUG ( "canon_usb_capture_dialogue:"
-					   " EOS flash write complete from interrupt read" );
-				if ( camera->pl->capture_step != 2 ) {
 					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-						 " third EOS interrupt read out of sequence" );
+						 " first interrupt read out of sequence" );
+					goto FAIL;
+				}
+			}
+			else if ( buf2[12] == 0x1d ) {
+				GP_DEBUG ( "canon_usb_capture_dialogue: second interrupt read (after image sizes)" );
+				if ( camera->pl->capture_step != 1 ) {
+					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+						 " second interrupt read out of sequence" );
 					goto FAIL;
 				}
 				camera->pl->capture_step++;
-				/* Canon SDK unlocks the keys here for EOS cameras. */
+				/* PowerShot cameras end with this message */
+				if ( !IS_EOS(camera->pl->md->model) )
+					goto EXIT;
+			}
+			else if ( buf2[12] == 0x0a ) {
+				GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+					 " photographic failure signaled, code = 0x%08x",
+					 le32atoh ( buf2+16 ) );
+				goto FAIL;
+			}
+			else {
+				GP_DEBUG ( "canon_usb_capture_dialogue: unknown subcode 0x%08x in 0x0a interrupt read",
+					   le32atoh ( buf2+12 ) );
+			}
+			break;
+		case 0x0e:
+			/* The image has been written to local
+			 * storage. Never seen if the transfer
+			 * mode didn't include any local
+			 * storage. */
+			GP_DEBUG ( "canon_usb_capture_dialogue:"
+				   " EOS flash write complete from interrupt read" );
+			if ( camera->pl->capture_step != 2 ) {
+				GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+					 " third EOS interrupt read out of sequence" );
+				goto FAIL;
+			}
+			camera->pl->capture_step++;
+			/* Canon SDK unlocks the keys here for EOS cameras. */
+			if ( canon_usb_unlock_keys ( camera, context ) < 0 ) {
+				GP_DEBUG ( "canon_usb_capture_dialogue: couldn't unlock keys after capture." );
+				goto FAIL;
+			}
+			break;
+		case 0x0f:
+			/* We allow this message as third or
+			 * fourth, since we may or may not be
+			 * writing to camera storage. */
+			if ( camera->pl->capture_step == 2 ) {
+				/* Keys were never unlocked, as that message never came. */
 				if ( canon_usb_unlock_keys ( camera, context ) < 0 ) {
 					GP_DEBUG ( "canon_usb_capture_dialogue: couldn't unlock keys after capture." );
 					goto FAIL;
 				}
-				break;
-			case 0x0f:
-				/* We allow this message as third or
-				 * fourth, since we may or may not be
-				 * writing to camera storage. */
-				if ( camera->pl->capture_step == 2 ) {
-					/* Keys were never unlocked, as that message never came. */
-					if ( canon_usb_unlock_keys ( camera, context ) < 0 ) {
-						GP_DEBUG ( "canon_usb_capture_dialogue: couldn't unlock keys after capture." );
-						goto FAIL;
-					}
-				}
-				else if ( camera->pl->capture_step == 3 ) {
-					GP_DEBUG ( "canon_usb_capture_dialogue:"
-						   " final EOS interrupt read" );
-				}
-				else {
-					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-						 " fourth EOS interrupt read out of sequence" );
-					goto FAIL;
-				}
-				break;
-			default:
-				/* Unknown */
+			}
+			else if ( camera->pl->capture_step == 3 ) {
 				GP_DEBUG ( "canon_usb_capture_dialogue:"
-					   " unknown code 0x%02x in interrupt read",
-					    buf2[4] );
+					   " final EOS interrupt read" );
+			}
+			else {
+				GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+					 " fourth EOS interrupt read out of sequence" );
 				goto FAIL;
 			}
-		}
-	}
-	else {
-		/* PowerShot cameras are simpler: code 0x0a, subcode
-		   0x1d is the end of capture. */
-		camera->pl->capture_step = 0;
-		camera->pl->thumb_length = 0, camera->pl->image_length = 0;
-		camera->pl->image_key = 0x81818181;
-
-		while ( 1 ) {
-			status = canon_usb_poll_interrupt_pipe ( camera, buf2, MAX_INTERRUPT_TRIES );
-
-			if ( status > 0x17 )
-				GP_DEBUG ( "canon_usb_capture_dialogue:"
-					   " interrupt read too long (length=%i)", status );
-			else if (  status == 0 )
-				goto FAIL;
-
-			switch ( buf2[4] ) {
-			case 0x08:
-				/* Thumbnail size */
-				if ( status != 0x17 )
-					GP_DEBUG ( "canon_usb_capture_dialogue: Bogus length 0x%04x"
-						    " for thumbnail size packet\n", status );
-				camera->pl->thumb_length = le32atoh ( buf2+0x11 );
-				camera->pl->image_key = le32atoh ( buf2+0x0c );
-				GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size 0x%08x, tag=0x%08x",
-					   camera->pl->thumb_length, camera->pl->image_key );
-				break;
-			case 0x0c:
-				/* Full image size */
-				if ( status != 0x17 )
-					GP_DEBUG ( "canon_usb_capture_dialogue: bogus length 0x%04x"
-						    " for full image size packet", status );
-				camera->pl->image_length = le32atoh ( buf2+0x11 );
-				camera->pl->image_key = le32atoh ( buf2+0x0c );
-				GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08x, tag=0x%08x",
-					   camera->pl->image_length, camera->pl->image_key );
-				break;
-			case 0x0a:
-				if ( buf2[12] == 0x1c ) {
-					GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt read" );
-					if ( camera->pl->capture_step != 0 ) {
-						GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-							 " first interrupt read out of sequence" );
-						goto FAIL;
-					}
-					camera->pl->capture_step++;
-				}
-				else if ( buf2[12] == 0x1d ) {
-					GP_DEBUG ( "canon_usb_capture_dialogue:"
-						    " second interrupt read (after image sizes)" );
-					if ( camera->pl->capture_step != 1 ) {
-						GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
-							 " second interrupt read out of sequence" );
-						goto FAIL;
-					}
-					camera->pl->capture_step++;
-					goto EXIT;
-				}
-				else {
-					GP_DEBUG ( "canon_usb_capture_dialogue: unknown subcode"
-						   " 0x%08x in 0x0a interrupt read",
-						   le32atoh ( buf2+12 ) );
-					goto FAIL;
-				}
-				break;
-			default:
-				/* Unknown */
-				GP_DEBUG ( "canon_usb_capture_dialogue: unknown code 0x%02x in interrupt read\n",
-					    buf2[4] );
-				goto FAIL;
-			}
+			break;
+		default:
+			/* Unknown */
+			GP_DEBUG ( "canon_usb_capture_dialogue:"
+				   " unknown code 0x%02x in interrupt read",
+				   buf2[4] );
+			goto FAIL;
 		}
 	}
 
  EXIT:
 	*return_length = 0x1c;
-	return buffer + 0x50;
+	return buffer;
  FAIL:
 	/* Try to purge interrupt pipe, which was left in an unknown state. */
 	for ( i=0; i<5; i++ )
