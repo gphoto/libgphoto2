@@ -40,6 +40,15 @@ else
 fi
 changequote([, ])dnl
 
+dnl Hack to handle .libs subdirectories with old libtool
+if test $objdir = ".libs"; then
+	echo ".libs subdirectory detected : \$dotlibs not defined"
+	dotlibs=""
+else
+	echo ".libs subdirectory not detected : \$dotlibs=.libs"
+	dotlibs=".lib"
+fi
+
 dnl Checks for libraries.
 dnl Replace `main' with a function in -ldl:
 AC_CHECK_LIB(dl, main)
@@ -60,7 +69,7 @@ AC_CHECK_FUNCS(mkdir strdup strncpy strcpy snprintf sprintf)
 echo "Using the bundled gphoto2_port library"
 LIBGPHOTO2_PORT_DIR="libgphoto2_port"
 CFLAGS="$CFLAGS -I`pwd`/libgphoto2_port/include";
-LIBS="$LIBS -L`pwd`/libgphoto2_port/libgphoto2_port/.libs -lgphoto2_port";
+LIBS="$LIBS -L`pwd`/libgphoto2_port/libgphoto2_port/@dotlibs@ -lgphoto2_port";
 
 LIBGPHOTO2_INCLUDEDIR='-I${includedir}'
 LIBGPHOTO2_LIBDIR='-L${libdir}'
@@ -76,6 +85,8 @@ AC_SUBST(LIBGPHOTO2_VERSION)
 
 AC_SUBST(CFLAGS)
 AC_SUBST(LIBS)
+
+AC_SUBST(dotlibs)
 
 dnl Find out which drivers to compile
 

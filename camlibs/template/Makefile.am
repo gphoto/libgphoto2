@@ -7,6 +7,6 @@ libgphoto2_template_la_SOURCES = template.c template.h
 
 libgphoto2_template_la_LDFLAGS =\
  -avoid-version\
- -L$(shell pwd)/$(top_builddir)/libgphoto2/.libs
+ -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
 
 libgphoto2_template_la_LIBADD = -lgphoto2

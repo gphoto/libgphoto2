@@ -12,6 +12,6 @@ libgphoto2_dimera3500_la_SOURCES =\
 
 libgphoto2_dimera3500_la_LDFLAGS =\
  -avoid-version -g\
- -L$(shell pwd)/$(top_builddir)/libgphoto2/.libs
+ -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
 
 libgphoto2_dimera3500_la_LIBADD = -lgphoto2

@@ -1,3 +1,19 @@
+2001-08-16  Christophe Barbe <christophe.barbe@online.fr>
+
+	* configure.in, camlibs/agfa-cl18/Makefile.am,
+	camlibs/barbie/Makefile.am, camlibs/canon/Makefile.am,
+	camlibs/digita/Makefile.am, camlibs/dimera/Makefile.am,
+	camlibs/directory/Makefile.am, camlibs/kodak/dc120/Makefile.am,
+	camlibs/kodak/dc240/Makefile.am, camlibs/kodak/dc3200/Makefile.am,
+	camlibs/konica/Makefile.am, camlibs/minolta/dimagev/Makefile.am,
+	camlibs/panasonic/Makefile.am, camlibs/panasonic/l859/Makefile.am,
+	camlibs/sierra/Makefile.am, camlibs/sonydscf1/Makefile.am,
+	camlibs/stv0680/Makefile.am, camlibs/template/Makefile.am: It 
+	adds code in configure.in to detect when '.libs' is not detected 
+	and in this case defined a variable "dotlibs" which is then 
+	substitued in all Makefile.in. This fix a build problem with 
+	newer libtool (1.4)
+
 2001-08-15  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* camlibs/kodak/dc240/dc240.c (camera_about): Changed a typo in
