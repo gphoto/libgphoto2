@@ -45,6 +45,9 @@ struct _GPContext
 	GPContextStatusFunc   status_func;
 	void                 *status_func_data;
 
+	GPContextMessageFunc  message_func;
+	void                 *message_func_data;
+
 	unsigned int ref_count;
 };
 
@@ -204,6 +207,22 @@ gp_context_status (GPContext *context, const char *format, ...)
 	}
 }
 
+void
+gp_context_message (GPContext *context, const char *format, ...)
+{
+	va_list args;
+
+	if (!context)
+		return;
+
+	if (context->message_func) {
+		va_start (args, format);
+		context->message_func (context, format, args,
+				       context->message_func_data);
+		va_end (args);
+	}
+}
+
 /**
  * gp_context_question:
  * @context: a #GPContext
@@ -324,4 +343,15 @@ gp_context_set_cancel_func (GPContext *context, GPContextCancelFunc func,
 
 	context->cancel_func      = func;
 	context->cancel_func_data = data;
+}
+
+void
+gp_context_set_message_func (GPContext *context, GPContextMessageFunc func,
+			     void *data)
+{
+	if (!context)
+		return;
+
+	context->message_func      = func;
+	context->message_func_data = data;
 }

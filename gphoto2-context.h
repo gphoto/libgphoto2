@@ -42,6 +42,8 @@ typedef void (* GPContextErrorFunc)    (GPContext *context, const char *format,
 					va_list args, void *data);
 typedef void (* GPContextStatusFunc)   (GPContext *context, const char *format,
 					va_list args, void *data);
+typedef void (* GPContextMessageFunc)  (GPContext *context, const char *format,
+					va_list args, void *data);
 typedef GPContextFeedback (* GPContextQuestionFunc) (GPContext *context,
 						     const char *format,
 						     va_list args, void *data);
@@ -75,11 +77,14 @@ void gp_context_set_question_func  (GPContext *context,
 				    GPContextQuestionFunc func, void *data);
 void gp_context_set_cancel_func    (GPContext *context,
 				    GPContextCancelFunc func,   void *data);
+void gp_context_set_message_func   (GPContext *context,
+				    GPContextMessageFunc func,  void *data);
 
 /* Calling those functions (backends) */
 void gp_context_idle     (GPContext *context);
 void gp_context_error    (GPContext *context, const char *format, ...);
 void gp_context_status   (GPContext *context, const char *format, ...);
+void gp_context_message  (GPContext *context, const char *format, ...);
 GPContextFeedback gp_context_question (GPContext *context, const char *format,
 				       ...);
 GPContextFeedback gp_context_cancel   (GPContext *context);

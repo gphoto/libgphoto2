@@ -191,15 +191,10 @@ int gp_camera_file_get		(Camera *camera, const char *folder,
 int gp_camera_file_delete     	(Camera *camera, const char *folder, 
 				 const char *file, GPContext *context);
 
-/* Informing frontends */
-typedef void (* CameraMessageFunc)  (Camera *, const char *msg, void *data);
+/* Informing frontends - DON'T USE! THOSE ARE DEPRECATED!!! */
 typedef void (* CameraStatusFunc)   (Camera *, const char *status, void *data);
 int gp_camera_set_status_func   (Camera *camera, CameraStatusFunc func,
 				 void *data);
-int gp_camera_set_message_func  (Camera *camera, CameraMessageFunc func,
-				 void *data);
-
-int gp_camera_message           (Camera *camera, const char *format, ...);
 int gp_camera_status            (Camera *camera, const char *format, ...);
 
 #endif /* __GPHOTO2_CAMERA_H__ */
