@@ -1,3 +1,9 @@
+2004-08-02 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: Removed Toshiba PDR-M65 driver
+	* camlibs/toshiba/pdrm65/: Removed Toshiba PDR-M65 driver.
+	  PDR-M65 uses the Sierra protocol.
+
 2004-07-14 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: Added camlibs/toshiba/pdrm65/Makefile
