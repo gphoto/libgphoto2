@@ -24,6 +24,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
+#include <math.h>
 
 #include <gphoto2.h>
 #include <gphoto2-port.h>
@@ -243,3 +244,11 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 
 	return(GP_OK);
 }
+
+
+int 
+mars_get_gamma(Info *info, int n) 
+{
+return info[8*n + 7];
+}
+

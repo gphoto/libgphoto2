@@ -44,5 +44,8 @@ int M_COMMAND (GPPort *port, char *command, int size, char *response);
 int mars_write_some_data(Camera *camera, GPPort *port);
 int mars_routine (Info *info, GPPort *port, 
 					char param, int n); 
+int mars_get_gamma(Info *info, int n);
+
+
 #endif
 
