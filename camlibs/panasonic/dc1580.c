@@ -32,14 +32,6 @@
 #  define __FILE__ "dc1580.c"
 #endif
 
-#ifndef uint8_t
-#  define uint8_t unsigned char
-#endif
-
-#ifndef uint32_t
-#  define uint32_t unsigned int
-#endif
-
 /******************************************************************************/
 
 /* Internal utility functions */
@@ -75,7 +67,7 @@ int dsc_retrcmd(dsc_t *dsc) {
 	if (glob_debug)
 		dsc_dumpmem(dsc->buf, s);
 	if (s != 16 || 	dsc->buf[DSC_BUF_BASE] != 0x08 ||
-			dsc->buf[DSC_BUF_SEQ] != 0xff - (uint8_t)dsc->buf[DSC_BUF_SEQC]) {
+			dsc->buf[DSC_BUF_SEQ] != 0xff - (u_int8_t)dsc->buf[DSC_BUF_SEQC]) {
 		DBUG_RETURN(EDSCBADRSP, dsc_retrcmd, GP_ERROR); 
 		/* bad response */
 	}
@@ -211,9 +203,9 @@ int dsc_readimageblock(dsc_t *dsc, int block, char *buffer)
 	dsc_sendcmd(dsc, DSC_CMD_GET_DATA, block, block);
 	
 	if (gpio_read(dsc->dev, dsc->buf, 4) != 4 ||
-			(uint8_t)dsc->buf[0] != 1 ||
-			(uint8_t)dsc->buf[1] != block ||
-			(uint8_t)dsc->buf[3] != 5)
+			(u_int8_t)dsc->buf[0] != 1 ||
+			(u_int8_t)dsc->buf[1] != block ||
+			(u_int8_t)dsc->buf[3] != 5)
 		DBUG_RETURN(EDSCBADRSP, dsc_readimageblock, GP_ERROR);
 		/* bad response */
 	
@@ -369,6 +361,8 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	*count = 1;
 
 	/* Fill in each camera model's abilities */
+	/* Make separate entries for each conneciton type (usb, serial, etc...)
+	   if a camera supported multiple ways. */
 
 	strcpy(abilities[0].model, "Panasonic DC1580");
 	abilities[0].serial   = 1;
@@ -518,7 +512,7 @@ int camera_file_put (CameraFile *file) {
 		gp_message(str);
 		return GP_ERROR;		
 	}
-	if (file->size > sizeof(uint32_t)) {
+	if (file->size > sizeof(u_int32_t)) {
 		DBUG_PRINT_1("File size is %i. Too big to fit in the camera memory.", file->size);
 		sprintf(str, "File size is %i. Too big to fit in the camera memory.", file->size);
 		gp_message(str);

@@ -32,14 +32,6 @@
 #  define __FILE__ "dc.c"
 #endif
 
-#ifndef uint8_t
-#  define uint8_t unsigned char
-#endif
-
-#ifndef uint32_t
-#  define uint32_t unsigned int
-#endif
-
 dsc_t	*dsc = NULL;
 int	glob_debug = 0;
 
@@ -167,7 +159,7 @@ int dsc_dumpmem(void *buf, int size) {
 			stderr,
 			*((char*)buf + i) >= 32 &&
 			*((char*)buf + i) < 127 ? "%c" : "\\x%02x",
-			(uint8_t)*((char*)buf + i)
+			(u_int8_t)*((char*)buf + i)
 		);
 	fprintf(stderr, "\n\n");
 	

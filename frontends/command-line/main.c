@@ -93,7 +93,7 @@ Option option[] = {
 /* Display and die actions */
 {"h", "help",		"",		"Displays this help screen",	help,		0},
 {"",  "verify",		"",		"Verifies gPhoto installation",	test,		0},
-{"D", "daemon",		"",		"gPhoto daemon (stdin/stdout)", daemonmode,		0},
+{"D", "daemon",		"",		"gPhoto daemon (stdin/stdout)", daemonmode,	0},
 {"",  "list-cameras",	"",		"List supported camera models",	list_cameras,	0},
 {"",  "list-ports",	"",		"List supported port devices",	list_ports,	0},
 
