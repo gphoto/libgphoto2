@@ -1,3 +1,8 @@
+2001-03-16  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+	* gphoto2-port-test.c: Applied patch from Michael 
+	  <michael.spanier@abh.uni-karlsruhe.de> which brings the file
+	  in sync with current API.
+
 2000-07-15  Fabrice Bellet  <Fabrice.Bellet@creatis.insa-lyon.fr>
 
 	* gpio-usb.c : removed useless call to usb_release_interface()
