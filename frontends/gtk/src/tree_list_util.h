@@ -7,5 +7,17 @@
   
 */
 
-GtkWidget *create_camera_tree(void);
-GtkWidget *create_local_tree(void);
+#define MAX_PATH 1024
+
+typedef struct {
+  char buf[MAX_PATH];
+  GtkWidget *branch;
+} tree_sig;
+
+
+int isDir(char *buf);
+void create_sub_tree(char *szPath, char *szDir, GtkWidget *item);
+
+GtkWidget *create_camera_tree(GtkWidget *window);
+GtkWidget *create_local_tree(GtkWidget *window);
+
