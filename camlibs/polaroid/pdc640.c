@@ -648,6 +648,7 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 		width = width_pic;
 		height = height_pic;
 		switch (compression_type & 3) {
+		case 1: 
 		case 2:	cmd = 0x10;	// delta compressed
 			break;
 		case 0:	cmd = 0x00;	// uncompressed
@@ -676,7 +677,7 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 		/* Process uncompressed data */
 		CHECK_RESULT (pdc640_processtn (width, height,
 						data, *size));
-	} else if ((compression_type & 3) == 2 ) {
+	} else if (compression_type & 3) {
 		/* Image data is delta encoded so decode it */
 		CHECK_RESULT (pdc640_deltadecode (width, height, 
 						  data, size));

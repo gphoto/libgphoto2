@@ -1,3 +1,9 @@
+2003-04-26  Marcus Meissner <marcus@jet.franken.de>
+	
+	* pdc640.c: compression type 1 appears to be just
+	  like compression type 2, at least for the SiPix
+	  Stylecam.
+
 2003-04-17  Marcus Meissner <marcus@jet.franken.de>
 	
 	* pdc640.c: Added SiPix StyleCam (0x0d64/0x1001),
