@@ -1,21 +1,23 @@
+# translation of de.po to Deutsch
 # German Translation.
 # Copyright © 2000-2002 Scott Fritzinger <scottf@unr.edu> et al.
-# Colin Marquardt <colin@marquardt-home.de>, 2001, 2002.
 #
 # [Please leave these here: öäüßÖÄÜ]
+# Colin Marquardt <colin@marquardt-home.de>, 2001, 2002.
+# Marcus Meissner <marcus@jet.franken.de>, 2003.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port\n"
+"Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-05 23:02+0200\n"
-"PO-Revision-Date: 2002-11-12 01:03-0800\n"
-"Last-Translator: \n"
-"Language-Team:  <de@li.org>\n"
+"POT-Creation-Date: 2003-12-20 09:26+0100\n"
+"PO-Revision-Date: 2003-12-20 11:01+0100\n"
+"Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
+"Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.6\n"
+"X-Generator: KBabel 1.0.2\n"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:268
 #, c-format
@@ -314,18 +316,17 @@ msgstr "Konnte Alternativ-Setting %d/%d nicht setzen (%m)"
 #: usb/libusb.c:391
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
+msgstr "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
 #: usb/libusb.c:417
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
 "not function with gphoto2. Reference: %s"
 msgstr ""
-"Konnte USB-Gerät (Hersteller 0x%x, Produkt 0x%x) nicht finden. \n"
-"Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
-"angeschlossen ist."
+"Das USB-Gerät (Hersteller 0x%x, Produkt 0x%x) ist ein USB Mass Storage "
+"Gerät und wird von System direkt unterstützt (und deshalb nicht von gphoto2). "
+"Lesen Sie hierzu bitte %s"
 
 #: usb/libusb.c:450
 #, c-format
@@ -347,3 +348,4 @@ msgstr ""
 "finden. \n"
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
+
