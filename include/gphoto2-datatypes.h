@@ -221,7 +221,7 @@ typedef struct {
 /* Camera file structure used for transferring files*/
 typedef struct {
 	char		type[64];
-		/* mime-type of file ("image/jpg", "image/tiff", etc..,) */
+		/* mime-type of file ("image/jpeg", "image/tiff", etc..,) */
 
 	char		name[64];
 		/* filename */
@@ -283,6 +283,7 @@ typedef struct CameraWidget {
 	CameraWidgetType type;
 	char    label[32];
 	char	info[1024];
+        char    name[32];
 
 	/* Pointer to the parent */
 	struct CameraWidget *parent;

@@ -32,6 +32,7 @@ extern "C" {
 #include <gphoto2-settings.h>
 #include <gphoto2-widget.h>
 
+
 #ifdef __cplusplus
 }
 #endif

@@ -134,6 +134,7 @@ int gp_widget_get_info (CameraWidget *widget, const char **info)
 	return (GP_OK);
 }
 
+
 /**
  * gp_widget_set_info:
  * @widget: a CameraWidget
@@ -151,6 +152,44 @@ int gp_widget_set_info (CameraWidget *widget, const char *info)
 	strcpy (widget->info, info);
 	return (GP_OK);
 }
+
+/**
+ * gp_widget_get_name:
+ * @widget: a CameraWidget
+ * @name: Name of above widget
+ *
+ * Gets the name of the widget.
+ *
+ * Return value: GPhoto error code.
+ **/
+int gp_widget_get_name (CameraWidget *widget, const char **name)
+{
+	if (!widget || !name)
+		return (GP_ERROR_BAD_PARAMETERS);
+	
+	*name = widget->name;
+	return (GP_OK);
+}
+
+/**
+ * gp_widget_set_name:
+ * @widget: a CameraWidget
+ * @name: Name of above widget
+ *
+ * Sets the name of the widget.
+ *
+ * Return value: GPhoto error code.
+ **/
+int gp_widget_set_name (CameraWidget *widget, const char *name)
+{
+	if (!widget || !name)
+		return (GP_ERROR_BAD_PARAMETERS);
+	
+	strcpy (widget->name, name);
+	return (GP_OK);
+}
+
+
 
 /**
  * gp_widget_get_id:
@@ -469,6 +508,44 @@ int gp_widget_get_child_by_id (CameraWidget *widget, int id,
 
 	return (GP_ERROR_BAD_PARAMETERS);
 }
+
+/**
+ * gp_widget_get_child_by_name:
+ * @widget: a CameraWidget
+ * @name: the name of the child
+ *
+ * Retreives the child with name @name of the widget.
+ *
+ * Return value: GPhoto error code.
+ **/
+int gp_widget_get_child_by_name (CameraWidget *widget, const char *name,
+			         CameraWidget **child)
+{
+	int x;
+
+	if (!widget || !child)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	if (strcmp(widget->name, name)==0) {
+		*child = widget;
+		return (GP_OK);
+	}
+	
+	for (x = 0; x < widget->children_count; x++) {
+		int result;
+		CameraWidget *child_rec;
+		
+		result = gp_widget_get_child_by_name (widget->children[x], name,
+						      &child_rec);
+		if (result == GP_OK) {
+			*child = child_rec;
+			return (GP_OK);
+		}
+	}
+
+	return (GP_ERROR_BAD_PARAMETERS);
+}
+
 
 /**
  * gp_widget_get_root:
