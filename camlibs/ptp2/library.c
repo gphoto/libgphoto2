@@ -200,7 +200,6 @@ static struct {
 	{"Kodak:DC4800", 0x040a, 0x0160},
 	/* Below other camers known to be detected by interface class */
 	
-	{"Kodak:DC3900", 0x040a, 0x0170},
 	{"Kodak:DX3215", 0x040a, 0x0525},
 	{"Kodak:DX3500", 0x040a, 0x0500},
 	{"Kodak:DX3600", 0x040a, 0x0510},
@@ -249,8 +248,6 @@ static struct {
 	{"Nikon:Coolpix 885 (PTP mode)", 0x04b0, 0x0112},
 	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
 	{"Nikon:Coolpix 4300 (PTP mode)", 0x04b0, 0x010f},
-	/* Nikon Coolpix 2500: Marcus Meissner, 05 03 2003 */
-	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109},
 
 
 	/* (at least some) newer Canon cameras can be switched between
@@ -535,7 +532,8 @@ static int
 camera_about (Camera *camera, CameraText *text, GPContext *context)
 {
 	strncpy (text->text,
-		 _("(ptp2) Written by Mariusz Woloszyn <emsi@ipartners.pl>. "
+		 _("PTP2 driver\n"
+		   "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
 		   "Enjoy!"), sizeof (text->text));
 	return (GP_OK);
 }
