@@ -61,6 +61,7 @@ ptp_debug (PTPParams *params, const char *format, ...)
 	{
                 vfprintf (stderr, format, args);
 		fprintf (stderr,"\n");
+		fflush (stderr);
 	}
         va_end (args);
 }  
@@ -77,6 +78,7 @@ ptp_error (PTPParams *params, const char *format, ...)
 	{
                 vfprintf (stderr, format, args);
 		fprintf (stderr,"\n");
+		fflush (stderr);
 	}
         va_end (args);
 }
@@ -731,9 +733,10 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	return ret;
 }
 
+
 uint16_t
 ptp_getdevicepropvalue (PTPParams* params, uint16_t propcode,
-			void* value)
+			void* value, uint16_t datatype)
 {
 	PTPContainer ptp;
 	uint16_t ret;
@@ -745,7 +748,26 @@ ptp_getdevicepropvalue (PTPParams* params, uint16_t propcode,
 	ptp.Param1=propcode;
 	ptp.Nparam=1;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpv);
-	/* unpack */
+	if (ret == PTP_RC_OK) ptp_unpack_DPV(params, dpv, value, datatype);
+	free(dpv);
+	return ret;
+}
+
+uint16_t
+ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
+			void* value, uint16_t datatype)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+	uint32_t size;
+	char* dpv=NULL;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_SetDevicePropValue;
+	ptp.Param1=propcode;
+	ptp.Nparam=1;
+	size=ptp_pack_DPV(params, value, &dpv, datatype);
+	ret=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &dpv);
 	free(dpv);
 	return ret;
 }
