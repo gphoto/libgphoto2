@@ -1,3 +1,10 @@
+2001-08-17  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/kodak/dc210/dc210.c, camlibs/kodak/dc210/dc210.h,
+	camlibs/kodak/dc210/library.c, camlibs/kodak/dc210/library.h,
+	camlibs/kodak/dc210/Makefile.am, camlibs/kodak/dc210/README:
+	Initial release of DC210 driver port.
+
 2001-08-16  Christophe Barbe <christophe.barbe@online.fr>
 
 	* configure.in, camlibs/agfa-cl18/Makefile.am,
