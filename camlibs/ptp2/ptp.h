@@ -586,7 +586,9 @@ uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
 uint16_t ptp_getdevicepropdesc	(PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
 uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint16_t propcode,
-				void* value);
+				void* value, uint16_t datatype);
+uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
+                        	void* value, uint16_t datatype);
 
 
 uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
