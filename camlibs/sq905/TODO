@@ -1,0 +1,27 @@
+Here is a short list of things which might still need work. It is envisioned
+that this list might change from time to time. 
+
+1. The compression mode still is not completely unscrambled. 
+
+2. The function sq_postprocess ( ) could still be improved. People are
+encouraged to test it, to tweak it, to turn it off if totally unsatisfied...
+
+3. The function sq_postprocess ( ) is not at present usable in the
+processing of capture data. The reason for this is that the function as
+presently constituted uses configuration data provided by the camera for
+still photos, and the camera provides no such corresponding data when
+operating in videocam mode. This ought somehow to be addressed. See item 4.
+
+4. The behavior of cameras in capture mode varies wildly according to model
+(perhaps related to the so-called chip ID). For example, I own two cameras
+which, when gphoto2 --capture-preview is used under artificial light,
+produce photos of dramatically different brightness. One of them produces
+fairly normal results, and the photos from the other are nearly black. The
+second camera will work better under such conditions if for example the
+gamma setting is tweaked, but then the first one produces an almost-white
+image. 
+
+5. I cannot get thumbnails to work if I am using digikam. Could be just my
+computer, because digikam seems to work for some other people.
+
+Theodore Kilgore, 6/27/04

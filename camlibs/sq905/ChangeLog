@@ -1,3 +1,26 @@
+2003-06-29 Theodore Kilgore <kilgota@auburn.edu>
+
+	* sq905.c: Major rewrite. Credit to Cedric Cellier 
+		<rixed@happyleptic.org> for several improvements, in particular
+		sq_rewind ( ), which permits random access to photos on camera. 
+	
+	* sq905.h: needed changes declared.
+	
+	* postprocess.c: Anything special done to a photo after download 
+		goes here, especially things which are experimental or 
+		still not complete. 
+	
+	* library.c: Big changes. Video clips and capture-preview supported;
+		delete-all-photos supported for those SQ cameras which will 
+		do it; thumbnails supported for GUI compatibility. 
+		
+	* README: Updated to describe new capabilities of camlib. 
+
+	* TODO: list of things which still need work. 
+	
+	* Makefile.am: postprocess.c added as source file.		
+
+
 2003-11-21 Theodore Kilgore <kilgota@auburn.edu>
 
 	* sq905.h: SQ_MODEL_MAGPIX added; ID number found by T. K.

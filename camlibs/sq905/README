@@ -1,150 +1,222 @@
+/* This is the README file for libgphoto2/camlibs/sq905. This README is an 
+ * integral part of the libgphoto2/camlibs/sq905 library source and is 
+ * distributed with that source under the LGPL license. a copy of which 
+ * license may be seen in any of the source files in libgphoto2/camlibs/sq905, 
+ * or in the head directory of libgphoto2.
+ */ 
+ 
+ 
 INTRODUCTION:
 
-This camera library is for USB cameras with chip from S&Q Technologies,
-which report themselves in /proc/bus/usb/devices as Vendor:Product
-0x2770:0x9120, belonging to Class:Subclass:Protocol ff:ff:ff
-(proprietary:proprietary:proprietary). 
+Cameras with chip from S&Q Technologies are often called DSC(2770) cameras. 
+They have USB Vendor:Product number 0x2770:0x9120, and are classified as  
+Class:Subclass:Protocol ff:ff:ff (proprietary:proprietary:proprietary). 
 
-It could reasonably be suspected that all of these cameras have the same
-chip in them, or similar chips from SQ. Several such cameras are listed in
-sq905/library.c, and it seems that there are probably more. The two cameras
-which I have actually used to develop this driver are an Argus DC-1510, and
-a "Gear to Go."
+These cameras are cheap, basic, and come in many brands and models -- all
+with the same USB Vendor:Product number and identical /proc/bus/devices
+entry. In this broad set of cameras, differences can include such things as
+different resolution capabilities, mirror-imaging of data which requires
+line reversal, and different sensitivity under various lighting conditions,
+apparently due to different video sensor chips.  Further complicating
+matters, neither S&Q Technologies nor the associated camera "manufacturers"
+seem responsive to requests for information about their chips or cameras.
 
-These cameras are very cheap and basic, with maximum resolution 352x288.
-Within the class of cheap cameras they have some interesting features
-nevertheless. For example, these cameras are able to download 16,232 bytes
-in one operation, repeating in order to download a larger image. Thus,
-downloading even a large number of pictures is done very quickly. Some
-cameras are much slower. On maximum resolution setting, these cameras will
-hold 19 or 20 pictures (depending on the particular model and its features).
+At this time, I have four different SQ905 cameras for testing. For other
+cameras, I am totally dependent on reports from users and testers. If you
+have another 0x2770:0x9120 camera and want it to work and it currently does
+not, then I will be very glad to hear from you. Saying this a different way:
+further progress with your camera will depend upon your input.
+
+One would reasonably suspect that all of these cameras have the same chip in
+them, or similar chips from SQ. The cameras do distinguish themselves from
+one another to some extent, reporting a number which can be thought of as a
+"chip id" or "model" ID (for more discussion and a list of known IDs skip
+down to "THE MODEL OR CHIP ID NUMBER").  If your camera reports an unknown
+chip id, then please let me know about that. Your camera may well work
+anyway, but it may require a different color tiling scheme, or it might
+mirror-image the photos. The only way to cure such a problem is for us
+to know about the camera's chip ID and to know precisely what the
+non-conforming behavior is.
+
 
 WHAT CHIP IS ACTUALLY IN THESE CAMERAS? 
 
-The brief answer is that I do not know. There may be more than one chip
-involved here. 
+The brief answer is that I do not know. 
 
-The website of SQ Technologies <www.sq.com.tw> lists an SQ905 chip and also
-an SQ913 chip, and an SQ915, but no SQ912 at all. The INF file for both of
-the camers which I own is called sq9120.inf, and that file lists the
-supported devices as 0x2770:0x9120 and 0x2770:0x9130. This information might
-lead one to suspect that the chip inside these cameras is actually the
-SQ913. However, the byte sequence 09 05 00 26 is used several times in the
-initialization sequence, apparently as an address reference point equivalent
-to sector zero on a harddrive. This might possibly imply that the chip
-inside is the SQ905.  Another possibility, since the "Gear to Go" offers a
-feature ("compression") which the Argus DC-1510 does not have, is that the
-"Gear to Go" contains a later chip, perhaps the SQ913 or SQ915, which is
-backwards compatible with the SQ905, while the Argus DC-1510 contains the
-SQ905.
+The website of SQ Technologies <www.sq.com.tw> lists several camera
+controller chips in addition to the SQ905, and some of the cameras could
+possibly use some of those other chips. All of the SQ cameras discovered so
+far seem to have the same USB ID and to use the same control sequences. The 
+lower-resolution cameras all seem to use the same Hynix video sensor chip. 
+The video chips in higher-resolution cameras do not all behave the same way 
+and thus probably come from several sources. Fortunately, it seems that the 
+"chip id" is a sufficiently reliable indicator of how to process data from 
+the camera.
 
-There is also the reasonable suspicion that the 0x2770:0x9130 device could
-easily be supported by this driver, too. I do not have access to one of
-those cameras. 
 
-An inquiry to SQ Technologies about information and the data sheet on the
-chip in the 0x2770:0x9120, for the purpose of developing a Linux driver for
-the camera, has not been answered. All development of a driver, therefore,
-is based on observation of the traffic between the camera and the computer,
-conbined with observation of what the camera is actually doing while the
-traffic was going on.
+THE MODEL OR CHIP ID NUMBER
+
+Very early during initialization, the camera reports a four-byte string.
+Apparently, this string identifies the model, the precise chip in the
+camera, or perhaps the controller and video imaging chip combination. The
+string may be associated with special behavior. For example, the camera may
+produce photos which are mirror-imaged unless line reversal is done, or
+perhaps the color tiling is different. Fortunately, most of the time one may
+assume that the model is "SQ_MODEL_DEFAULT," but not always. To help in
+those cases where it does make a difference, the model number is recorded
+during camera initialization. You can see what number your camera has, by
+doing any gphoto2 operation in debug mode and saving the debug output into a
+file. For example, to do "gphoto2 --summary --debug 2>debug" will create a
+text logfile called "debug." In that file, look for the place where the
+computer and the camera actually start to talk to each other, and you will
+see the number. A list of known numbers follows:
+
+Brand name/model			Number		Credits to
+
+Argus DC-1510 and many other cameras	09 05 00 26	T. K.
+PockCam, Che-Ez Snap, some others 	09 05 01 19	Paolo Tribolet Abreu,
+							Christian Bulow
+Magpix B350 Binocular Camera		09 05 01 32	T. K.
+Precision Mini				50 05 00 26	Fabien Devaux
+Vivicam 3350				09 05 02 19	T. K.
+DC-N130t				09 05 02 25	Cedric Cellier
+
+Of these models, most actually use the "default" settings for photo processing.
+
 
 WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
 
 	FEATURE LIST					SUPPORTED (Y/N/Part)
 -- USB connection to computer
--- High resolution 352x288 						
-	-- 20 pictures on Argus DC-1510					Y
-	-- 19 pictures on "Gear to Go"					Y
-	-- 38 pictures on "Gear to Go" if using compression		P
-	-- Low resolution 176x144		
-	-- 80 pictures on Argus						Y
-	-- 76 pictures on "Gear to Go"					Y
-	--152 pictures on "Gear to Go" if using compression		P
-	-- Both cameras can be used for video capture 			N
-	-- Ability to "switch" resolution between pictures 		Y
-	-- Ability to download all pictures on camera			Y
-	-- Ability to download the first k pictures, where 
-		k is less than the number on the camera 		Y
-	-- Frequency filter for use in artificial light. Can be set 
-	to cancel 60hz or 50hz interference. Done with button-pushes 
-	on the camera, not with software.
+-- High resolution 352x288 or 640x480, uncompressed 			Y						
+-- Low resolution 176x144 or 320x240, uncompressed			Y		
+-- High resolution 352x288 or 640x480, compressed 			P
+-- Low resolution 176x144 or 320x240, compressed			P
+-- Ability to "switch" resolution between pictures 			Y
+-- Ability to download all pictures on camera				Y
+-- Ability to download the first k pictures, where 
+	k is less than the number on the camera 			Y
+-- Ability to download individual photos				Y
+-- "Video clip" capability. Clips are saved as directories.		Y
+-- Capture and immediate download of a 320x240 snapshot			Y 
+-------------------------------------------------------------------------
+The following things can be done with button-pushes on the camera:
+-------------------------------------------------------------------------
+-- Frequency filter for use in artificial light. Can be set 
+	to cancel 60hz or 50hz interference. 
+-- Delete all, delete last, resolution setting, compression mode setting. 
 
-Notes: 
+Notes:  
 
-"P" means that it is currently possible to get raw pictures from the
-compressed data, or ppm pictures which do not make much sense of the
-original. 
+All known sq905 cameras have either a 640x480 high-resolution setting and a
+320x240 low-resolution setting, or a 352x288 and a 176x144 setting. If your
+sq905 camera uses a new resolution setting, then you will be unable to
+download photos until that new resolution setting is listed in sq905.c in
+sq_get_picture_width () and in library.c where the picture height is chosen.
+If you encounter new resolution settings, then please report them so they
+can be put into the camlib.
 
-The pictures obtained on the uncompressed settings can quite often
-be superior to those obtained using the support for Windows which came with
-the camera. 
+All known sq905 cameras use only 320x240 in capture mode. Also, capture
+never uses high compression, even if it is otherwise turned on. Please
+report any behavior different from this.
 
-Video capture is not yet implemented. Perhaps soon?
+For compression, "P" means that it is currently possible to get raw pictures 
+from the compressed data, or PPM pictures which give a good image, but the  
+colors are not yet correctly mapped. 
 
-WHAT FEATURES DO THESE CAMERAS ABSOLUTELY NOT SUPPORT?
+"Video clip capability" is implemented for all known SQ cameras. "Video
+clip" output is always uncompressed, ignoring the "compression" setting.
+Also, it is possible to create more than one clip or to intersperse clips
+and ordinary still photos on the camera.
+
+The pictures obtained on the uncompressed settings can often be superior to
+those obtained using the software which came with the camera, but not
+always. Generally, considering that they are cheap, low resolution cameras,
+these cameras give relatively good pictures,
+
+Video capture of one photo is done with  "gphoto2 --capture-preview". The
+related command "gphoto2 --capture" is not implemented. It would be used to
+take a photo which can be downloaded later on, through normal photo download
+procedures. But the hardware seems unable to support "gphoto2 --capture".  
+
+The sq905 cameras can function as webcams. A Sourceforge project called
+"sqcam" provides the needed kernel support. If you want to use that module,
+remember that you cannot use a libgphoto2 camlib while the module for the
+same camera is installed. For, the camlib and the module will fight over 
+the camera, and the camlib will lose. 
+
+
+HARDWARE LIMITATIONS AND CONSTRAINTS
 
 1. 	The downloading of "thumbnails" as special files is totally 
-unsupported by the hardware. What, then, does the manufacturer's supplied 
-driver program do? 
+unsupported by the hardware. The manufacturer's driver downloads a
+consecutive list of photos and creates thumbnails, then "saves" only the
+photos which the user selects. Gphoto2 prefers ability to do random access. 
 
-What that supplied software does is only to give the option to download any
-consecutive sequence of photos which are on the camera, starting from the
-first one. As the download completes, "thumbnails" are created (obviously in
-software, on the computer) and displayed. The user may then choose from the
-displayed photos which ones he/she wishes to save to a permanent location.
+2.	The camera's data storage provides only sequential access, not
+random access. In other words, it acts as though it were a tape drive
+instead of a disk. The constraints which this places are obvious.
 
-2.	Considering the way the communication protocols of these cameras
-seem to work, it would seem quite impossible to copy any data to the camera
+3.	Considering the way the communication protocols of these cameras
+seem to work, it would seem nearly impossible to copy any data to the camera
 for storage and transport. The camera clearly does not have files on it,
-only data addresses. And the camera does not keep time. for the same
+only data addresses. And the camera does not keep time. For similar 
 reasons, it would also seem impossible to delete a photo from the camera by
 action of software on the computer. The camera supports two choices for
 deletion: delete the last photo taken, or delete all. Each action is
 performed by an appropriate sequence of button pushes on the camera.
 
-To find a way around these constraints would indeed be most interesting. Who
-knows? Maybe these things can be done. Could be that these chips have
-undocumented capabilities.
+(Addendum: Deletion of all photos is supported on the Argus DC-1510 and
+certain cameras similar to it (Precision Mini?). The routine for starting
+webcam mode will delete all photos on the DC-1510. But not on the Argus
+DC-1512 and apparently not on most other SQ cameras. A "Delete all" function
+is included, for those who have cameras which can use it. If your camera's
+literature warns that using the camera as a webcam or PCcam will cause data
+loss, then "Delete all" will probably work.)
+
+To find a way around the listed constraints would indeed be most
+interesting. Who knows? Maybe these things can be done. Could be that these
+chips have undocumented capabilities. But maybe not.
 
 
-WHAT FEATURES OF GPHOTO2 AND LIBGPHOTO2 DOES MY DRIVER SUPPORT?
+WHAT GUI FRONTENDS DOES THIS CAMERA LIBRARY SUOPPORT?
 
-	A short answer to this is, the relevant options of gphoto2 now
-appear to function as intended, given the constraints of the camera.  A big
-exception is capture, which is not yet supported.
+Gtkam seems to work quite well for me with this library. Note, however, that
+gtkam will require you to download the contents of video clips separately
+from ordinary photos. Clips are put into subdirectories, and you must enter
+a subdirectory to see and download the frames in it.  Digikam does not work
+quite so well for me. But it may work nicely for you, and you are hereby
+encouraged to try it. If you want to use either gtkam or digikam, you are
+encouraged to read the camera's manual. 
 
 
-NOTES FOR DEVELOPERS 
+NOTES  
 
-1.	The program is set up to put out pictures in PPM format. If you want
-raw format, that can easily be put back in. 
+1.	The program is set up to put out pictures in PPM or raw format.  
 
 2.	 The gamma setting (actually seems to be one over gamma) used for
 the construction of PPM image files has been obtained by trial and error. It
 seems to work very well for outdoor pictures, but the setting is a
 compromise between what happens with outdoor photos and what happens with
 indoor photos. Conceivably, the program could support a choice between two
-or more gamma settings, optimizing for different conditions.
+or more gamma settings, optimizing for different conditions. 
 
-3. 	To unscramble the "High Compression" setting on the "Gear to Go" or
-similar cameras is obviously the biggie right now. 
+3. 	A still-experimental postprocessing routine is added, to provide
+some sharpening and color correction for different lighting conditions. The
+routine can easily be turned off if one wishes, and because it is
+experimental you may so wish. To disable it, just comment out the line in
+get_file_func ( ) in library.c where the function sq_postprocess ( ) is
+called. Then (still from within the sq905 directory) do "make install" to
+install your change.
 
-4. 	Landscape-oriented pictures will come out right-side-up. This is
-done by reversing the order of the data, because the picture comes out of
-the camera upside-down. Reversing the order of the data also causes the
-color mappings to reverse from RGGB to BGGR. If you wish to comment out the
-byte-reversal in order to experiment, then please be aware that
-you have reversed blue and red, too. 
+4. 	To unscramble the "High Compression" setting which exists on some
+of these cameras and is the only possible setting on the Magpix B350  
+is obviously the biggest unsolved problem.  
 
-5. Please get back to me with reports about other SQ cameras, with their
+5. 	Please get back to me with reports about other SQ cameras, with their
 specifications (what it says in the manual about resolution and number of
-pictures, as well as make and model would be enough), and with log files. 
-
-6. At this point, I suspect that there are cameras out there which use the
-same or very similar controller chips which may use the same initialization
-routines but support different resolution settings, such as 640x480 or
-higher. Let's be on the lookout for such cameras. 
+pictures, as well as make and model, ID reported, and whether it works or
+not would be enough), and with a log file if there are problems. 
 
 
 ACKNOWLEDGMENTS:
@@ -170,6 +242,9 @@ and encouragement:
 	explanation
 	-- to Christophe Barbe, for encouragement
 	-- to Lutz Miller, for making me do it right.
+	-- to Cedric Cellier, for devising the sq_rewind ( ) function, for 
+	implementing the directory structure for video clips, and in general 
+	for his continued interest in these cameras. 
 
 
 WARRANTY? 
@@ -191,4 +266,4 @@ WARRANTY?
 
 
 Theodore Kilgore
-07/07/03
+07/07/03 (revised 06/26/04)

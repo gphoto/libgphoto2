@@ -27,6 +27,7 @@
 #include <bayer.h>
 #include <gamma.h>
 
+
 #include <gphoto2.h>
 
 #ifdef ENABLE_NLS
@@ -49,11 +50,6 @@
 
 #define GP_MODULE "sq905"
 
-struct _CameraPrivateLibrary {
-	SQModel model;
-	SQData data[0x400];
-};
-
 struct {
    	char *name;
 	CameraDriverStatus status;
@@ -73,6 +69,10 @@ struct {
 	{"Jenoptik JDC 350",  GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Precision Mini Digital Camera",
 			      GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
+        {"iConcepts digital camera" ,
+                              GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
+	{"ViviCam3350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"DC-N130t",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},                                      
 	{NULL,0,0}
 };
 
@@ -102,9 +102,9 @@ camera_abilities (CameraAbilitiesList *list)
        		if (a.status == GP_DRIVER_STATUS_EXPERIMENTAL)
 			a.operations = GP_OPERATION_NONE;
 		else
-			a.operations = GP_OPERATION_CAPTURE_IMAGE;
-       		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-       		a.file_operations   = GP_FILE_OPERATION_NONE; 
+			a.operations = GP_OPERATION_CAPTURE_PREVIEW;
+       		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
+		a.file_operations   = GP_FILE_OPERATION_PREVIEW + GP_FILE_OPERATION_RAW; 
        		gp_abilities_list_append (list, a);
     	}
 
@@ -114,13 +114,43 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-	int num_pics = sq_get_num_pics (camera->pl->data);
-
     	sprintf (summary->text,_("Your USB camera has a S&Q chipset.\n" 
-    			"The number of pictures taken is %i\n"), num_pics);  
+				"The total number of pictures taken is %i\n"
+				"Some of these could be clips containing\n"
+				"several frames\n"), 
+
+				camera->pl->nb_entries);  
 
     	return GP_OK;
 }
+
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+{
+	strcpy(manual->text, 
+	_(
+	"For cameras with S&Q Technologies chip.\n"
+	"Should work with gtkam. Photos will be saved in PPM format.\n\n"
+
+	"All known S&Q cameras have two resolution settings. What\n" 
+	"those are, will depend on your particular camera.\n"
+	"A few of these cameras allow deletion of photos. Most do not.\n"
+	"Uploading of data to the camera is not supported.\n"
+	"The photo compression mode found on many of the S&Q\n" 
+	"cameras is supported, to some extent.\n" 
+	"If present on the camera, video clips are seen as subfolders.\n"
+	"Gtkam will download these separately. When clips are present\n"
+	"on the camera, there is a little triangle before the name of\n"
+	"the camera. If no folders are listed, click on the little \n"
+	"triangle to make them appear. Click on a folder to enter it\n"
+	"and see the frames in it, or to download them. The frames will\n"
+	"be downloaded as separate photos, with special names which\n"
+	"specify from which clip they came. Thus, you may freely \n"
+	"choose to save clip frames in separate directories. or not.\n"
+	)); 
+
+	return (GP_OK);
+}
+
 
 
 static int
@@ -134,17 +164,69 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 
 /*************** File and Downloading Functions *******************/
 
+
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
         Camera *camera = data; 
-    	int n = sq_get_num_pics (camera->pl->data);
+	int i,n;
+	GP_DEBUG ("List files in %s\n", folder);
+	if (0==strcmp(folder, "/")) {
+		for (i=0, n=0; i<camera->pl->nb_entries; i++) {
+			if (!sq_is_clip(camera->pl, i)) n++;
+		}
+		gp_list_populate(list, "pict%03i.ppm", n);
+	} else {
+		char format[16];
+		n = atoi(folder+1+4);	/* '/' + 'clip' */
+		snprintf(format, sizeof(format), "%03i_%%03i.ppm", n);
+		for (i=0; i<camera->pl->nb_entries && n>0; i++) {
+			if (sq_is_clip(camera->pl, i)) n--;
+		}
+		i--;
+		if (!sq_is_clip(camera->pl, i)) return GP_ERROR_DIRECTORY_NOT_FOUND;
+		gp_list_populate(list, format, sq_get_num_frames(camera->pl, i));
+	}
+	return GP_OK;
+}
 
-    	gp_list_populate (list, "pict%03i.ppm", n);
+static int
+folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		void *data, GPContext *context)
+{
+	Camera *camera = data;
+	int i,n;
+	GP_DEBUG ("List folders in %s\n", folder);
+	if (0==strcmp(folder, "/")) {
+		for (i=0, n=0; i<camera->pl->nb_entries; i++) {
+			if (sq_is_clip(camera->pl, i)) n++;
+		}
+		gp_list_populate (list, "clip%03i", n);
 
+	}
     	return GP_OK;
 }
+
+static int
+get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
+		      CameraFileInfo *info, void *data, GPContext *context)
+{
+	char path[1024];
+
+	if (strlen (folder) == 1)
+		snprintf (path, sizeof (path), "/%s", file);
+	else
+		snprintf (path, sizeof (path), "%s/%s", folder, file);
+
+        info->preview.fields = GP_FILE_INFO_NONE;
+        info->file.fields = GP_FILE_INFO_NAME; 
+
+        strcpy (info->file.name, file);
+
+        return (GP_OK);
+}
+
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
@@ -152,165 +234,226 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
     	Camera *camera = user_data; 
-    	int i, m, w, h = 0, buffersize, comp_ratio, k;
-    	unsigned char *data; 
-    	unsigned char *p_data = NULL, temp, *ppm;
+	int i, w, h, b, entry, frame, is_in_clip;
+	int nb_frames, to_fetch;  
+	unsigned char comp_ratio;
+	unsigned char *frame_data; 
+	unsigned char *ppm, *ptr;
 	unsigned char gtable[256];
-	char *ptr;
-	int size = 0;
- 
-    	GP_DEBUG ("Downloading pictures!\n");
+	int size;
 
-    	/* Get the number of the photo on the camera */
-	k = gp_filesystem_number (camera->fs, "/", filename, context); 
+	if (GP_FILE_TYPE_RAW!=type && GP_FILE_TYPE_NORMAL
+				    !=type && GP_FILE_TYPE_PREVIEW!=type) {
 
-    	/* Resolution must be checked for each individual picture. */
-    	comp_ratio = sq_get_comp_ratio (camera->pl->data, k);
-    	w = sq_get_picture_width (camera->pl->data, k);
-    	switch (w) {
-	case 176: h = 144; break;
-	case 640: h = 480; break;
-	case 320: h = 240; break;
-	default:  h = 288; break;
-	}
-
-    	buffersize = w * h / comp_ratio;
-	data = malloc (buffersize + 1);
-	if (!data) return GP_ERROR_NO_MEMORY;
-    	memset (data, 0, buffersize + 1);
-
-	p_data = malloc (w * h);
-	if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
-	memset (p_data, 0, w * h);
-
-    	switch (type) {
-	case GP_FILE_TYPE_NORMAL:
-		sq_read_picture_data (camera->port, data, buffersize);
-		break;
-	/*
-	case GP_FILE_TYPE_PREVIEW:
-		sq_read_picture_data (camera->port, data, buffersize);
-		break;
-	*/
-	default:
-		free (data);
-		free (p_data);
 		return GP_ERROR_NOT_SUPPORTED;
-    	}
-
-	switch (comp_ratio) {
-	case 2:
-
-		/*
-		 * Data seems to be arranged in planar form.
-		 * The colors are still not quite right, but the
-		 * geometry comes through. Evidence from photos of solid color
-		 * seems to show the order of the planes is GBR. The method
-		 * followed here is to try to "decompress" the raw data
-		 * first and then to do Bayer interpolation afterwards.
-		 *
-		 * The even pixels on the odd lines of output are green, and the
-		 * odd pixels on the even lines of output. We don't know if the
-		 * data is right, but the output is at least preserves the 
-		 * geometry of the image. At least for the 09 05 00 26 cameras.
-		 */
-
-		/* Green */
-    		for (m = 0; m < buffersize; m++) {
-			p_data[w * ((m * 4) / w) + 4*(m % (w / 4))
-			                 + ((m * 4) / w) % 2 + 1] = data[m];
-			p_data[w * ((m * 4) / w) + 4*(m % (w / 4))
-			                 + ((m * 4) / w) % 2 + 3] = data[m];
-		}
-
-		/*
-		 * Blue.
-		 * 
-		 * The even pixels on the even output lines are blue.
-		 * We don't know yet if the data represent blue pixels,
-		 * but again the geometry is preserved.
-		 *
-		 * The odd pixels on the odd lines of output are red.
-		 */
-		for (m = 0;  m < buffersize / 4; m++) {
-			p_data[w * (2 * ((m * 4) / w))
-				+ 4 * (m % (w / 4)) + 2] 
-					= data[m + 2 * buffersize / 4];
-			p_data[w * (2 * ((m * 4) / w))
-				+ 4 * (m % (w / 4)) + 4] 
-					= data[m + 2 * buffersize / 4];
-			p_data[w * (2 * ((m * 4) / w) + 1)
-				+ 4 * (m % (w / 4)) + 1] 
-					= data[m + 3 * buffersize / 4];
-			p_data[w * (2 * ((m * 4) / w) +1)
-				+ 4 * (m % (w / 4)) + 3] 
-					= data[m + 3 * buffersize / 4];
-		}
-		break;
-	default:
-		for (m = 0; m < buffersize; m++) { p_data[m] = data[m]; }
 	}
-	free (data);
+	
+	
+	/* Get the entry number of the photo on the camera */
+	entry = -1;
+	if (0==strcmp(folder, "/")) {
+		i = atoi(filename+4);
+		do {
+			do entry++; 
+			while (sq_is_clip(camera->pl, entry) 
+					&& entry<camera->pl->nb_entries); 
+			i--;
+		} 
+		while (i>0);
+		if (entry == camera->pl->nb_entries) return GP_ERROR_FILE_NOT_FOUND;
+		frame = 0;
+		is_in_clip = 0;
+	} else {
+		i = atoi(folder+1+4);
+		do {
+			do entry++; while (!sq_is_clip(camera->pl, entry) && entry<camera->pl->nb_entries);
+			i--;
+		} while (i>0);
+		if (entry == camera->pl->nb_entries) return GP_ERROR_DIRECTORY_NOT_FOUND;
+		frame = atoi(filename+4)-1;
+		if (frame >= sq_get_num_frames(camera->pl, entry)) return GP_ERROR_FILE_NOT_FOUND;
+		is_in_clip = 1;
+	}
+	
+	GP_DEBUG ("Download file %s from %s, entry = %d, frame = %d\n", 
+					    filename, folder, entry, frame);
 
-	/*
-	 * Now we want to get our picture into a file on 
-     	 * the hard drive. We reverse the data string.
-     	 * Otherwise, the picture will be upside down.  
-     	 */
-    	for (i = 0; i <= w * h / 2; ++i) {
-        	temp = p_data[i];
-        	p_data[i] = p_data[w * h -1 -i];
-        	p_data[w * h - 1 - i] = temp;
-    	}    	
-
-	/*
-	 * Now put the data into a real PPM picture file! 
-	 * The results are quite nice if comp_ratio = 1.
-	 * But if comp_ratio=2 this procedure still does 
-	 * give the picture back!
+	/* Fetch entries until the one we need, and toss all but the one we need.
+	 * TODO: Either find out how to use the location info in the catalog to 
+	 * download just the entry needed, or show it is as impossible as it seems. 
 	 */
-	ppm = malloc (w * h * 3 + 256); /* Data + header */
-	if (!ppm) {free (p_data); return GP_ERROR_NO_MEMORY;}
-	memset (ppm, 0, w * h * 3 + 256);
+
+	GP_DEBUG ("last entry was %d\n", camera->pl->last_fetched_entry);
+
+	/* Change register to DATA, but only if necessary */
+	if ((camera->pl->last_fetched_entry == -1) 
+	|| ((is_in_clip) && (frame == 0)) )	
+	
+	sq_access_reg(camera->port, DATA);
+
+	if (camera->pl->last_fetched_entry > entry) {
+		sq_rewind(camera->port, camera->pl);
+	}
+	do {
+		to_fetch = camera->pl->last_fetched_entry;
+		if (to_fetch < entry) {
+			to_fetch++;
+			free(camera->pl->last_fetched_data);
+			camera->pl->last_fetched_data = NULL;
+		}
+		nb_frames = sq_get_num_frames(camera->pl, to_fetch);
+		comp_ratio = sq_get_comp_ratio (camera->pl, to_fetch);
+		w = sq_get_picture_width (camera->pl, to_fetch);
+    		switch (w) {
+		case 176: h = 144; break;
+		case 640: h = 480; break;
+		case 320: h = 240; break;
+		default:  h = 288; break;
+		}
+		b = nb_frames * w * h / comp_ratio;
+
+		if (camera->pl->last_fetched_data) break;
+
+		camera->pl->last_fetched_data = malloc (nb_frames*w*h);
+		if (!camera->pl->last_fetched_data) {
+			sq_rewind(camera->port, camera->pl);
+			return GP_ERROR_NO_MEMORY;
+		}
+		GP_DEBUG("Fetch entry %i\n", to_fetch);
+		sq_read_picture_data 
+				(camera->port, camera->pl->last_fetched_data, b);
+		camera->pl->last_fetched_entry = to_fetch;
+	} while (camera->pl->last_fetched_entry<entry);
+
+	frame_data = camera->pl->last_fetched_data+(w*h)*frame/comp_ratio;
+	/* sq_preprocess ( ) turns the photo right-side-up and for some 
+	 * models must also de-mirror the photo 
+	 */
+
+	if (GP_FILE_TYPE_RAW!=type) {
+		sq_preprocess(camera->pl->model, comp_ratio, is_in_clip, 
+				frame_data, w, h);
+		if (comp_ratio>1) sq_decompress (frame_data, b, w, h);
+		/*
+		 * Now put the data into a PPM image file. 
+		 */
+		ppm = malloc (w * h * 3 + 256); /* room for data + header */
+		if (!ppm) { return GP_ERROR_NO_MEMORY; }
+    		sprintf (ppm,
+			"P6\n"
+			"# CREATOR: gphoto2, SQ905 library\n"
+			"%d %d\n"
+			"255\n", w, h);
+		ptr = ppm + strlen (ppm);	
+		size = strlen (ppm) + (w * h * 3);
+		GP_DEBUG ("size = %i\n", size);
+		switch (camera->pl->model) {
+		case SQ_MODEL_POCK_CAM:
+			gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_GBRG);
+			break;
+		default:
+				gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
+			break;
+		}
+		if (comp_ratio==1) {
+			sq_postprocess(camera->pl,w, h, ptr, entry); /* For compression, the postprocessing interferes */
+		}
+		gp_gamma_fill_table (gtable, .5); 
+		gp_gamma_correct_single (gtable, ptr, w * h); 
+    		gp_file_set_mime_type (file, GP_MIME_PPM);
+    		gp_file_set_name (file, filename); 
+		gp_file_set_data_and_size (file, ppm, size);
+
+	} else {	/* type is GP_FILE_TYPE_RAW */
+		size = w*h/comp_ratio;
+		gp_file_set_mime_type (file, GP_MIME_RAW);
+		gp_file_set_name (file, filename);
+	        gp_file_set_data_and_size (file, frame_data, size);  
+	}
+
+	/* Reset camera when done, for more graceful exit. */
+	if ((!(is_in_clip)&&(entry +1 == camera->pl->nb_entries)) 
+	|| ((is_in_clip)&& (frame +1 == nb_frames )))
+		sq_reset (camera->port);
+
+        return GP_OK;
+}
+
+static int
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+		 GPContext *context)
+{
+	Camera *camera = data;
+
+	GP_DEBUG(" * delete_all_func()");
+	sq_delete_all(camera->port, camera->pl);
+
+	return (GP_OK);
+}
+
+static int
+camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
+
+
+{
+	unsigned char *frame_data; 
+	unsigned char *ppm, *ptr;
+	unsigned char gtable[256];
+	char filename[12] = "sq_cap.ppm";
+	int size;
+	int w = 320;
+	int h = 240;
+	int b=0x12c40;
+
+	camera->pl->last_fetched_data = malloc (b);
+	if (!camera->pl->last_fetched_data) {
+		sq_rewind(camera->port, camera->pl);
+		return GP_ERROR_NO_MEMORY;
+	}
+
+        sq_access_reg(camera->port, CAPTURE);
+	sq_read_picture_data (camera->port, camera->pl->last_fetched_data, b);
+	frame_data = camera->pl->last_fetched_data + 0x40;
+	sq_preprocess(camera->pl->model, 1, 0, frame_data, w, h);
+
+	/* Now put the data into a PPM image file. */
+	ppm = malloc (w * h * 3 + 256); 
+	if (!ppm) { return GP_ERROR_NO_MEMORY; }
     	sprintf (ppm,
 		"P6\n"
 		"# CREATOR: gphoto2, SQ905 library\n"
 		"%d %d\n"
 		"255\n", w, h);
-
 	ptr = ppm + strlen (ppm);	
 	size = strlen (ppm) + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
-
 	switch (camera->pl->model) {
 	case SQ_MODEL_POCK_CAM:
-		gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_GBRG);
+		gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_GBRG);
 		break;
-	case SQ_MODEL_ARGUS:
-	case SQ_MODEL_PRECISION:
 	default:
-		gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_BGGR);
+		gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
 		break;
 	}
-
-	/*
-	 * Unsurprisingly, reversing the data requires changing RGGB to BGGR,
-	 * too!
+	
+	/* TO DO: 
+	 * Adapt postprocessing routine to work here, because results can   
+	 * vary greatly, depending both on lighting conditions and on 
+	 * camera model.
 	 */
-	gp_gamma_fill_table (gtable, .65);
 
-	/*
-	 * gamma of .65 arrived at by experinentation. Maybe could be 
-	 * improved? 
-	 */
-	gp_gamma_correct_single (gtable, ptr, w * h);
-        gp_file_set_mime_type (file, GP_MIME_PPM);
-        gp_file_set_name (file, filename); 
+	/* sq_postprocess(camera->pl,w, h, ptr, 1); */
+	gp_gamma_fill_table (gtable, .5); 
+	gp_gamma_correct_single (gtable, ptr, w * h); 
+	gp_file_set_mime_type (file, GP_MIME_PPM);
+	gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, ppm, size);
 
-	free (p_data);
+	sq_reset(camera->port);
+        sq_access_reg(camera->port, CAPTURE);
+	sq_reset(camera->port);
 
-        return GP_OK;
+	return (GP_OK);
 }
 
 /*************** Exit and Initialization Functions ******************/
@@ -322,6 +465,8 @@ camera_exit (Camera *camera, GPContext *context)
 	sq_reset (camera->port);
 
 	if (camera->pl) {
+		free (camera->pl->catalog);
+		free (camera->pl->last_fetched_data);
 		free (camera->pl);
 		camera->pl = NULL;
 	}
@@ -337,8 +482,11 @@ camera_init(Camera *camera, GPContext *context)
 
 	/* First, set up all the function pointers */
 	camera->functions->summary      = camera_summary;
+        camera->functions->manual	= camera_manual;
 	camera->functions->about        = camera_about;
-	camera->functions->exit	    = camera_exit;
+	camera->functions->capture_preview	
+					= camera_capture_preview;
+	camera->functions->exit	    	= camera_exit;
    
 	GP_DEBUG ("Initializing the camera\n");
 
@@ -349,15 +497,27 @@ camera_init(Camera *camera, GPContext *context)
 	if (ret < 0) return ret; 
 
         /* Tell the CameraFilesystem where to get lists from */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func, 
+					    folder_list_func, camera);
+        gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
-
+	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func, 
+					    NULL, NULL, camera);
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
-	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
+	camera->pl->model = 0;
+	camera->pl->catalog = NULL;
+	camera->pl->nb_entries = 0;
+	camera->pl->last_fetched_entry = -1;
+	camera->pl->last_fetched_data = NULL;
 
 	/* Connect to the camera */
-	sq_init (camera->port, &camera->pl->model, camera->pl->data);
+	ret = sq_init (camera->port, camera->pl);
+	if (ret != GP_OK) {
+		free(camera->pl);
+		return ret;
+	};
+
 
 	return GP_OK;
 }
