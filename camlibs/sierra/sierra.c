@@ -199,8 +199,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* Get the file number from the CameraFilesystem */
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
 
-	CHECK (camera_start (camera));
-
 	/* Set the working folder and the current picture number */
 	CHECK (camera_start (camera));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
