@@ -191,42 +191,31 @@ int gp_camera_unref (Camera *camera)
 
 int gp_camera_session (Camera *camera)
 {
+	if (camera == NULL)
+		return (GP_ERROR_BAD_PARAMETERS);
 
 	return (camera->session);
 
 }
 
-int gp_camera_init (Camera *camera,  CameraPortInfo *settings)
+int gp_camera_init (Camera *camera)
 {
-        int x;
-        CameraPortInfo info;
-        CameraInit ci;
-
+	if (camera == NULL) 
+		return (GP_ERROR_BAD_PARAMETERS);
+		
         if (camera->functions->init == NULL) {
-		gp_debug_printf(GP_DEBUG_LOW, "core", "functions->init is NULL");
                 return(GP_ERROR_NOT_SUPPORTED);
 	}
 
-	/* Copy over the port settings */
-        memcpy(camera->port, settings, sizeof(CameraPortInfo));
-
-	/* Prepare initialization structure */
-        strcpy(ci.model, camera->model);
-        memcpy(&ci.port, settings, sizeof(CameraPortInfo));
-
-	/* Set the port type from the path */
-        for (x=0; x<gp_port_count(); x++) {
-                gp_port_info(x, &info);
-                if (strcmp(info.path, ci.port.path)==0)
-                        ci.port.type = info.type;
-        }
-
-        return(camera->functions->init(camera, &ci));
+        return (camera->functions->init (camera));
 }
 
 int gp_camera_exit (Camera *camera)
 {
         int ret;
+
+	if (camera == NULL)
+		return (GP_ERROR_BAD_PARAMETERS);
 
         if (camera->functions->exit == NULL)
                 return(GP_ERROR_NOT_SUPPORTED);
