@@ -26,7 +26,10 @@ status_func (Camera *camera, const char *status, void *data)
 		 * here.
 		 *
 		 * If we would use '\r' above, we could overwrite an existing
-		 * status message by writing an empty line. But we don't.
+		 * status message by writing an empty line. But we don't, as 
+		 * when you're using the command line, stdout and stderr usually
+		 * get mixed up on the same terminal. And overwriting the last
+		 * program message with status message isn't really clever.
 		 */
 	}
 }
