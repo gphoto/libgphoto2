@@ -18,19 +18,23 @@
  */
 
 #ifndef __GPHOTO2_JPEG_H__
+#define __GPHOTO2_JPEG_H__
 enum jpegmarker {
-    JPEG_START=0xD8,    JPEG_APPO=0xE0,         JPEG_QUANTIZATION=0xDB,
-    JPEG_HUFFMAN=0xC4,  JPEG_SSSEAHAL=0xDA,     JPEG_SOFC0=0xC0
+    JPEG_START=0xD8,        JPEG_COMMENT=0xFE,      JPEG_APPO=0xE0,
+    JPEG_QUANTIZATION=0xDB, JPEG_HUFFMAN=0xC4,      JPEG_SOFC0=0xC0,
+    JPEG_SSSEAHAL=0xDA,     JPEG_EOI=0xD9
 };
 
 const JPEG_MARKERS[] = {
-    JPEG_START,         JPEG_APPO,              JPEG_QUANTIZATION,
-    JPEG_HUFFMAN,       JPEG_SSSEAHAL,          JPEG_SOFC0
+    JPEG_START,             JPEG_COMMENT,           JPEG_APPO,
+    JPEG_QUANTIZATION,      JPEG_HUFFMAN,           JPEG_SOFC0,
+    JPEG_SSSEAHAL,          JPEG_EOI
 };
 
 const char *JPEG_MARKERNAMES[] = {
-    "Start",            "APPO",                 "Quantization table",
-    "Huffman table",    "SsSeAhAl",             "SOFC0"
+    "Start",                "Comment",              "APPO",
+    "Quantization table",   "Huffman table",        "SOFC0",
+    "SsSeAhAl",             "End of image"
 };
 
 typedef struct chunk{
@@ -46,6 +50,7 @@ typedef struct jpeg {
 }jpeg;
 
 chunk *chunk_new(int length);
+chunk *chunk_new_filled(int length, const char *data);
 void chunk_destroy(chunk *mychunk);
 void chunk_print(chunk *mychunk);
 
@@ -57,10 +62,21 @@ void jpeg_destroy(jpeg *myjpeg);
 void jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end);
 void jpeg_parse(jpeg *myjpeg, chunk *picture);
 void jpeg_print(jpeg *myjpeg);
-chunk *jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3);
+
+chunk *jpeg_make_start();
+chunk *jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3, char q1, char q2, char q3);
+chunk *jpeg_makeSsSeAhAl(int huffset1, int huffset2, int huffset3);
 
 void jpeg_print_quantization_table(jpeg_quantization_table *table);
 chunk *jpeg_make_quantization(jpeg_quantization_table *table, int number);
 jpeg_quantization_table *jpeg_quantization2table(chunk *qmarker);
 
+jpeg *jpeg_header(int width, int height,
+    char vh1, char vh2, char vh3,
+    char q1, char q2, char q3,
+    jpeg_quantization_table *quant1, jpeg_quantization_table *quant2,
+    char huffset1, char huffset2, char huffset3,
+    chunk *huff1, chunk *huff2, chunk *huff3, chunk *huff4);
+
+void jpeg_write(CameraFile *file, const char *name, jpeg *myjpeg);
 #endif
