@@ -36,19 +36,18 @@
 
 int dsc1_sendcmd(Camera *camera, u_int8_t cmd, void *data, int size) {
 
-        dsc_t   *dsc = camera->camlib_data;
         int     i;
 
         DEBUG_PRINT_MEDIUM(("Sending command: 0x%02x, data size: %i.", cmd, size));
 
-        memset(dsc->buf, 0, DSC_BUFSIZE);
+        memset(camera->pl->buf, 0, DSC_BUFSIZE);
 
-        memcpy(dsc->buf, c_prefix, 12);
+        memcpy(camera->pl->buf, c_prefix, 12);
 
         for (i = 0; i < 4; i++)
-                dsc->buf[DSC1_BUF_SIZE + i] = (u_int8_t)(size >> 8*(3 - i));
+                camera->pl->buf[DSC1_BUF_SIZE + i] = (u_int8_t)(size >> 8*(3 - i));
 
-        dsc->buf[DSC1_BUF_CMD] = cmd;
+        camera->pl->buf[DSC1_BUF_CMD] = cmd;
 
         if (DSC_BUFSIZE - DSC1_BUF_DATA <= size) {
                 RETURN_ERROR(EDSCOVERFL)
@@ -56,43 +55,42 @@ int dsc1_sendcmd(Camera *camera, u_int8_t cmd, void *data, int size) {
         }
 
         if (data && 0 < size)
-                memcpy(&dsc->buf[DSC1_BUF_DATA], data, size);
+                memcpy(&camera->pl->buf[DSC1_BUF_DATA], data, size);
 
-        return gp_port_write(camera->port, dsc->buf, 17 + size);
+        return gp_port_write(camera->port, camera->pl->buf, 17 + size);
 }
 
 int dsc1_retrcmd(Camera *camera) {
 
-        dsc_t   *dsc = camera->camlib_data;
         int     result = GP_ERROR;
         int     s;
 
-        if ((s = gp_port_read(camera->port, dsc->buf, 17)) == GP_ERROR)
+        if ((s = gp_port_read(camera->port, camera->pl->buf, 17)) == GP_ERROR)
                 return GP_ERROR;
 
 /*      Make sense in debug only. Done on gp_port level.
         if (0 < s)
-                dsc_dumpmem(dsc->buf, s);
+                dsc_dumpmem(camera->pl->buf, s);
 */
                 
-        if (s != 17 ||  memcmp(dsc->buf, r_prefix, 12) != 0 )
+        if (s != 17 ||  memcmp(camera->pl->buf, r_prefix, 12) != 0 )
                 RETURN_ERROR(EDSCBADRSP)
                 /* bad response */
         else
-                result = dsc->buf[DSC1_BUF_CMD];
+                result = camera->pl->buf[DSC1_BUF_CMD];
 
-        dsc->size =
-                (u_int32_t)dsc->buf[DSC1_BUF_SIZE + 3] |
-                ((u_int8_t)dsc->buf[DSC1_BUF_SIZE + 2] << 8) |
-                ((u_int8_t)dsc->buf[DSC1_BUF_SIZE + 1] << 16) |
-                ((u_int8_t)dsc->buf[DSC1_BUF_SIZE] << 24);
+        camera->pl->size =
+                (u_int32_t)camera->pl->buf[DSC1_BUF_SIZE + 3] |
+                ((u_int8_t)camera->pl->buf[DSC1_BUF_SIZE + 2] << 8) |
+                ((u_int8_t)camera->pl->buf[DSC1_BUF_SIZE + 1] << 16) |
+                ((u_int8_t)camera->pl->buf[DSC1_BUF_SIZE] << 24);
 
-        if (DSC_BUFSIZE < dsc->size) {
+        if (DSC_BUFSIZE < camera->pl->size) {
                 RETURN_ERROR(EDSCOVERFL);
                 /* overflow */
         }
 
-        if (gp_port_read(camera->port, dsc->buf, dsc->size) != dsc->size)
+        if (gp_port_read(camera->port, camera->pl->buf, camera->pl->size) != camera->pl->size)
                 return GP_ERROR;
 
         DEBUG_PRINT_MEDIUM(("Retrieved command: %i.", result));
@@ -102,7 +100,7 @@ int dsc1_retrcmd(Camera *camera) {
 
 int dsc1_setbaudrate(Camera *camera, int speed) {
 
-        dsc_t           *dsc = camera->camlib_data;
+	GPPortSettings settings;
         u_int8_t        s_bps;
         int             result;
 
@@ -143,8 +141,9 @@ int dsc1_setbaudrate(Camera *camera, int speed) {
 
         sleep(DSC_PAUSE/2);
 
-        dsc->settings.serial.speed = speed;
-        CHECK (gp_port_settings_set(camera->port, dsc->settings));
+	CHECK (gp_port_settings_get(camera->port, &settings));
+	settings.serial.speed = speed;
+        CHECK (gp_port_settings_set(camera->port, settings));
 
         DEBUG_PRINT_MEDIUM(("Baudrate set to: %i.", speed));
 
@@ -153,8 +152,6 @@ int dsc1_setbaudrate(Camera *camera, int speed) {
 
 int dsc1_getmodel(Camera *camera) {
 
-
-        dsc_t                   *dsc = camera->camlib_data;
         static const char       response[3] = { 'D', 'S', 'C' };
 
         DEBUG_PRINT_MEDIUM(("Getting camera model."));
@@ -163,13 +160,13 @@ int dsc1_getmodel(Camera *camera) {
                 return GP_ERROR;
 
         if (dsc1_retrcmd(camera) != DSC1_RSP_MODEL ||
-                        memcmp(dsc->buf, response, 3) != 0)
+                        memcmp(camera->pl->buf, response, 3) != 0)
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
 
-        DEBUG_PRINT_MEDIUM(("Camera model is: %c.", dsc->buf[3]));
+        DEBUG_PRINT_MEDIUM(("Camera model is: %c.", camera->pl->buf[3]));
 
-        switch (dsc->buf[3]) {
+        switch (camera->pl->buf[3]) {
                 case '1':
                         return DSC1;
 

@@ -58,7 +58,7 @@
 
 /* dsc2_checksum - establish checksum for size bytes in buffer */
 
-u_int8_t dsc2_checksum(char *buffer, int size) {
+static u_int8_t dsc2_checksum(char *buffer, int size) {
 
         int     checksum = 0;
         int     i;
@@ -73,51 +73,49 @@ u_int8_t dsc2_checksum(char *buffer, int size) {
 
 /* dsc2_sendcmd - send command with data to DSC */
 
-int dsc2_sendcmd(Camera *camera, u_int8_t cmd, long int data, u_int8_t sequence) {
+static int dsc2_sendcmd(Camera *camera, u_int8_t cmd, long int data, u_int8_t sequence) {
 
-        dsc_t   *dsc = camera->camlib_data;
         int     i;
 
         DEBUG_PRINT_MEDIUM(("Sending command: 0x%02x, data: %i, sequence: %i.", cmd, data, sequence));
 
-        memset(dsc->buf, 0, 16);
+        memset(camera->pl->buf, 0, 16);
 
-        dsc->buf[0] = 0x08;
-        dsc->buf[1] = sequence;
-        dsc->buf[2] = 0xff - sequence;
-        dsc->buf[3] = cmd;
+        camera->pl->buf[0] = 0x08;
+        camera->pl->buf[1] = sequence;
+        camera->pl->buf[2] = 0xff - sequence;
+        camera->pl->buf[3] = cmd;
 
         for (i = 0; i < sizeof(data); i++)
-                dsc->buf[4 + i] = (u_int8_t)(data >> 8*i);
+                camera->pl->buf[4 + i] = (u_int8_t)(data >> 8*i);
 
-        dsc->buf[14] = dsc2_checksum(dsc->buf, 16);
+        camera->pl->buf[14] = dsc2_checksum(camera->pl->buf, 16);
 
-        return gp_port_write(camera->port, dsc->buf, 16);
+        return gp_port_write(camera->port, camera->pl->buf, 16);
 }
 
 /* dsc2_retrcmd - retrieve command and its data from DSC */
 
-int dsc2_retrcmd(Camera *camera) {
+static int dsc2_retrcmd(Camera *camera) {
         
-        dsc_t   *dsc = camera->camlib_data;
         int     result = GP_ERROR;
         int     s;
 
-        if ((s = gp_port_read(camera->port, dsc->buf, 16)) == GP_ERROR)
+        if ((s = gp_port_read(camera->port, camera->pl->buf, 16)) == GP_ERROR)
                 return GP_ERROR;
 
 /*      Make sense in debug only. Done on gp_port level.
         if (0 < s)
-                dsc_dumpmem(dsc->buf, s);
+                dsc_dumpmem(camera->pl->buf, s);
 
 */
-        if (s != 16 ||  dsc->buf[DSC2_BUF_BASE] != 0x08 ||
-                        dsc->buf[DSC2_BUF_SEQ] != 0xff - (u_int8_t)dsc->buf[DSC2_BUF_SEQC]) {
+        if (s != 16 ||  camera->pl->buf[DSC2_BUF_BASE] != 0x08 ||
+                        camera->pl->buf[DSC2_BUF_SEQ] != 0xff - (u_int8_t)camera->pl->buf[DSC2_BUF_SEQC]) {
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
         }
         else
-                result = dsc->buf[DSC2_BUF_CMD];
+                result = camera->pl->buf[DSC2_BUF_CMD];
 
         DEBUG_PRINT_MEDIUM(("Retrieved command: %i.", result));
 
@@ -126,7 +124,7 @@ int dsc2_retrcmd(Camera *camera) {
 
 /* dsc2_connect - try hand shake with camera and establish connection */
 
-int dsc2_connect(Camera *camera, int speed) {
+static int dsc2_connect(Camera *camera, int speed) {
         
         DEBUG_PRINT_MEDIUM(("Connecting camera with speed: %i.", speed));
 
@@ -151,7 +149,7 @@ int dsc2_connect(Camera *camera, int speed) {
 
 /* dsc2_disconnect - reset camera, free buffers and close files */
 
-int dsc2_disconnect(Camera *camera) {
+static int dsc2_disconnect(Camera *camera) {
         
         DEBUG_PRINT_MEDIUM(("Disconnecting the camera."));
 
@@ -171,9 +169,8 @@ int dsc2_disconnect(Camera *camera) {
 
 /* dsc2_getindex - retrieve the number of images stored in camera memory */
 
-int dsc2_getindex(Camera *camera) {
+static int dsc2_getindex(Camera *camera) {
         
-        dsc_t   *dsc = camera->camlib_data;
         int     result = GP_ERROR;
 
         DEBUG_PRINT_MEDIUM(("Retrieving the number of images."));
@@ -183,10 +180,10 @@ int dsc2_getindex(Camera *camera) {
 
         if (dsc2_retrcmd(camera) == DSC2_RSP_INDEX)
                 result =
-                        ((u_int32_t)dsc->buf[DSC2_BUF_DATA]) |
-                        ((u_int8_t)dsc->buf[DSC2_BUF_DATA + 1] << 8) |
-                        ((u_int8_t)dsc->buf[DSC2_BUF_DATA + 2] << 16) |
-                        ((u_int8_t)dsc->buf[DSC2_BUF_DATA + 3] << 24);
+                        ((u_int32_t)camera->pl->buf[DSC2_BUF_DATA]) |
+                        ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 1] << 8) |
+                        ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 2] << 16) |
+                        ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 3] << 24);
         else
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
@@ -198,7 +195,7 @@ int dsc2_getindex(Camera *camera) {
 
 /* dsc2_delete - delete image #index from camera memory */
 
-int dsc2_delete(Camera *camera, int index) {
+static int dsc2_delete(Camera *camera, int index) {
         
         DEBUG_PRINT_MEDIUM(("Deleting image: %i.", index));
 
@@ -219,9 +216,8 @@ int dsc2_delete(Camera *camera, int index) {
 
 /* dsc2_selectimage - select image to download, return its size */
 
-int dsc2_selectimage(Camera *camera, int index, int thumbnail) {
+static int dsc2_selectimage(Camera *camera, int index, int thumbnail) {
         
-        dsc_t   *dsc = camera->camlib_data;
         int     size = 0;
 
         DEBUG_PRINT_MEDIUM(("Selecting image: %i, thumbnail: %i.", index, thumbnail));
@@ -242,10 +238,10 @@ int dsc2_selectimage(Camera *camera, int index, int thumbnail) {
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
 
-        size =  ((u_int32_t)dsc->buf[DSC2_BUF_DATA]) |
-                ((u_int8_t)dsc->buf[DSC2_BUF_DATA + 1] << 8) |
-                ((u_int8_t)dsc->buf[DSC2_BUF_DATA + 2] << 16) |
-                ((u_int8_t)dsc->buf[DSC2_BUF_DATA + 3] << 24);
+        size =  ((u_int32_t)camera->pl->buf[DSC2_BUF_DATA]) |
+                ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 1] << 8) |
+                ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 2] << 16) |
+                ((u_int8_t)camera->pl->buf[DSC2_BUF_DATA + 3] << 24);
 
         DEBUG_PRINT_MEDIUM(("Selected image: %i, thumbnail: %i, size: %i.", index, thumbnail, size));
 
@@ -254,29 +250,27 @@ int dsc2_selectimage(Camera *camera, int index, int thumbnail) {
 
 /* gp_port_readimageblock - read #block block (1024 bytes) of an image into buf */
 
-int dsc2_readimageblock(Camera *camera, int block, char *buffer) {
-        
-        dsc_t   *dsc = camera->camlib_data;
+static int dsc2_readimageblock(Camera *camera, int block, char *buffer) {
         
         DEBUG_PRINT_MEDIUM(("Reading image block: %i.", block));
 
         if (dsc2_sendcmd(camera, DSC2_CMD_GET_DATA, block, block) != GP_OK)
                 return GP_ERROR;
 
-        if (gp_port_read(camera->port, dsc->buf, DSC_BUFSIZE) != DSC_BUFSIZE)
+        if (gp_port_read(camera->port, camera->pl->buf, DSC_BUFSIZE) != DSC_BUFSIZE)
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
 
-        if ((u_int8_t)dsc->buf[0] != 1 ||
-                        (u_int8_t)dsc->buf[1] != block ||
-                        (u_int8_t)dsc->buf[2] != 0xff - block ||
-                        (u_int8_t)dsc->buf[3] != DSC2_RSP_DATA ||
-                        (u_int8_t)dsc->buf[DSC_BUFSIZE - 2] != dsc2_checksum(dsc->buf, DSC_BUFSIZE))
+        if ((u_int8_t)camera->pl->buf[0] != 1 ||
+                        (u_int8_t)camera->pl->buf[1] != block ||
+                        (u_int8_t)camera->pl->buf[2] != 0xff - block ||
+                        (u_int8_t)camera->pl->buf[3] != DSC2_RSP_DATA ||
+                        (u_int8_t)camera->pl->buf[DSC_BUFSIZE - 2] != dsc2_checksum(camera->pl->buf, DSC_BUFSIZE))
                 RETURN_ERROR(EDSCBADRSP);
                 /* bad response */
 
         if (buffer)
-                memcpy(buffer, &dsc->buf[4], DSC_BLOCKSIZE);
+                memcpy(buffer, &camera->pl->buf[4], DSC_BLOCKSIZE);
 
         DEBUG_PRINT_MEDIUM(("Block: %i read in.", block));
 
@@ -285,7 +279,8 @@ int dsc2_readimageblock(Camera *camera, int block, char *buffer) {
 
 /* dsc2_readimage - read #index image or thumbnail and return its contents */
 
-char *dsc2_readimage(Camera *camera, int index, int thumbnail, int *size) {
+#if 0
+static char *dsc2_readimage(Camera *camera, int index, int thumbnail, int *size) {
 
         char    kind[16];
         int     blocks, i;
@@ -320,10 +315,11 @@ char *dsc2_readimage(Camera *camera, int index, int thumbnail, int *size) {
 
         return buffer;
 }
+#endif
 
 /* dsc2_setimagesize - set size of an image to upload to camera */
 
-int dsc2_setimagesize(Camera *camera, int size) {
+static int dsc2_setimagesize(Camera *camera, int size) {
 
         DEBUG_PRINT_MEDIUM(("Setting image size to: %i.", size));
 
@@ -341,27 +337,25 @@ int dsc2_setimagesize(Camera *camera, int size) {
 
 /* gp_port_writeimageblock - write size bytes from buffer rounded to 1024 bytes to camera */
 
-int dsc2_writeimageblock(Camera *camera, int block, char *buffer, int size) {
+static int dsc2_writeimageblock(Camera *camera, int block, char *buffer, int size) {
 
-        dsc_t   *dsc = camera->camlib_data;
-        
         DEBUG_PRINT_MEDIUM(("Writing image block: %i.", block));
 
-        memset(dsc->buf, 0, DSC_BUFSIZE);
+        memset(camera->pl->buf, 0, DSC_BUFSIZE);
 
-        dsc->buf[0] = 0x01;
-        dsc->buf[1] = block;
-        dsc->buf[2] = 0xff - block;
-        dsc->buf[3] = DSC2_CMD_SEND_DATA;
+        camera->pl->buf[0] = 0x01;
+        camera->pl->buf[1] = block;
+        camera->pl->buf[2] = 0xff - block;
+        camera->pl->buf[3] = DSC2_CMD_SEND_DATA;
 
         if (DSC_BLOCKSIZE < size)
                 size = DSC_BLOCKSIZE;
 
-        memcpy(&dsc->buf[4], buffer, size);
+        memcpy(&camera->pl->buf[4], buffer, size);
 
-        dsc->buf[DSC_BUFSIZE - 2] = dsc2_checksum(dsc->buf, DSC_BUFSIZE);
+        camera->pl->buf[DSC_BUFSIZE - 2] = dsc2_checksum(camera->pl->buf, DSC_BUFSIZE);
 
-        if (gp_port_write(camera->port, dsc->buf, DSC_BUFSIZE) != GP_OK)
+        if (gp_port_write(camera->port, camera->pl->buf, DSC_BUFSIZE) != GP_OK)
                 return GP_ERROR;
 
         if (dsc2_retrcmd(camera) != DSC2_RSP_OK)
@@ -375,7 +369,8 @@ int dsc2_writeimageblock(Camera *camera, int block, char *buffer, int size) {
 
 /* dsc2_writeimage - write an image to camera memory, size bytes at buffer */
 
-int dsc2_writeimage(Camera *camera, char *buffer, int size) {
+#if 0
+static int dsc2_writeimage(Camera *camera, char *buffer, int size) {
         
         int     blocks, blocksize, i;
 
@@ -400,10 +395,12 @@ int dsc2_writeimage(Camera *camera, char *buffer, int size) {
 
         return GP_OK;
 }
+#endif
 
 /* dsc2_preview - show selected image on camera's LCD  */
 
-int dsc2_preview(Camera *camera, int index) {
+#if 0
+static int dsc2_preview(Camera *camera, int index) {
         
         if (index < 1)
                 RETURN_ERROR(EDSCBADNUM);
@@ -418,6 +415,7 @@ int dsc2_preview(Camera *camera, int index) {
 
         return GP_OK;
 }
+#endif
 
 /******************************************************************************/
 
@@ -463,13 +461,18 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 static int camera_exit (Camera *camera) {
         
-        dsc_t   *dsc = camera->camlib_data;
-
         dsc_print_status(camera, _("Disconnecting camera."));
 
         dsc2_disconnect(camera);
 
-        free(dsc);
+	if (camera->pl) {
+		if (camera->pl->buf) {
+			free (camera->pl->buf);
+			camera->pl->buf = NULL;
+		}
+		free (camera->pl->buf);
+		camera->pl->buf = NULL;
+	}
 
         return (GP_OK);
 }
@@ -515,7 +518,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  CameraFile *file, void *data) {
 
 	Camera *camera = data;
-        dsc_t   *dsc = camera->camlib_data;
         int     index, i, size, blocks, result;
 
         dsc_print_status(camera, _("Downloading %s."), filename);
@@ -544,7 +546,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
         for (i = 0; i < blocks; i++) {
 		CHECK (dsc2_readimageblock(camera, i, NULL));
-                CHECK (gp_file_append(file, &dsc->buf[4], DSC_BLOCKSIZE));
+                CHECK (gp_file_append(file, &camera->pl->buf[4], DSC_BLOCKSIZE));
                 gp_camera_progress(camera, (float)(i+1)/(float)blocks);
         }
 
@@ -640,9 +642,8 @@ static int camera_about (Camera *camera, CameraText *about)
 
 int camera_init (Camera *camera) 
 {
-        
-        dsc_t           *dsc = NULL;
-        int             result, selected_speed;
+        GPPortSettings settings;
+        int result, selected_speed;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
@@ -650,28 +651,26 @@ int camera_init (Camera *camera)
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 
-        /* first of all allocate memory for a dsc struct */
-        if ((dsc = (dsc_t*)malloc(sizeof(dsc_t))) == NULL) {
-                dsc_errorprint(EDSCSERRNO, __FILE__, __LINE__);
-                return GP_ERROR;
-        }
-
-        camera->camlib_data = dsc;
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+	camera->pl->buf = malloc (sizeof (char) * DSC_BUFSIZE);
+	if (!camera->pl->buf) {
+		free (camera->pl);
+		camera->pl = NULL;
+		return (GP_ERROR_NO_MEMORY);
+	}
 
         CHECK (gp_port_timeout_set(camera->port, 5000));
 
-	/* Get the settings */
-	CHECK (gp_port_settings_get(camera->port, &(dsc->settings)));
-
-	/* Remember the selected speed */
-	selected_speed = dsc->settings.serial.speed;
-
-	/* Set the initial settings */
-        dsc->settings.serial.speed      = 9600; /* hand shake speed */
-        dsc->settings.serial.bits       = 8;
-        dsc->settings.serial.parity     = 0;
-        dsc->settings.serial.stopbits   = 1;
-        CHECK (gp_port_settings_set(camera->port, dsc->settings));
+	/* Configure the port (and remember the speed) */
+	CHECK (gp_port_settings_get(camera->port, &settings));
+	selected_speed = settings.serial.speed;
+        settings.serial.speed      = 9600; /* hand shake speed */
+        settings.serial.bits       = 8;
+        settings.serial.parity     = 0;
+        settings.serial.stopbits   = 1;
+        CHECK (gp_port_settings_set(camera->port, settings));
 
       	CHECK (gp_filesystem_set_list_funcs (camera->fs,
 		file_list_func, NULL, camera));
@@ -681,13 +680,6 @@ int camera_init (Camera *camera)
 		get_file_func, delete_file_func, camera));
 	CHECK (gp_filesystem_set_folder_funcs (camera->fs,
 		put_file_func, NULL, camera));
-
-        /* allocate memory for a dsc read/write buffer */
-        if ((dsc->buf = (char *)malloc(sizeof(char)*(DSC_BUFSIZE))) == NULL) {
-                dsc_errorprint(EDSCSERRNO, __FILE__, __LINE__);
-                free(dsc);
-                return GP_ERROR;
-        }        
 
 	/* Connect with the selected speed */
         return dsc2_connect(camera, selected_speed);

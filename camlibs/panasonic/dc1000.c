@@ -56,7 +56,7 @@
 
 /* dsc1_connect - try hand shake with camera and establish connection */
 
-int dsc1_connect(Camera *camera, int speed) {
+static int dsc1_connect(Camera *camera, int speed) {
 	
 	u_int8_t	data = 0;
 	
@@ -82,7 +82,7 @@ int dsc1_connect(Camera *camera, int speed) {
 
 /* dsc1_disconnect - reset camera, free buffers and close files */
 
-int dsc1_disconnect(Camera *camera) {
+static int dsc1_disconnect(Camera *camera) {
 	
 	DEBUG_PRINT_MEDIUM(("Disconnecting the camera."));
 	
@@ -102,9 +102,8 @@ int dsc1_disconnect(Camera *camera) {
 
 /* dsc1_getindex - retrieve the number of images stored in camera memory */
 
-int dsc1_getindex(Camera *camera) {
+static int dsc1_getindex(Camera *camera) {
 	
-        dsc_t   *dsc = camera->camlib_data;
 	int	result = GP_ERROR;
 
 	DEBUG_PRINT_MEDIUM(("Retrieving the number of images."));
@@ -113,7 +112,7 @@ int dsc1_getindex(Camera *camera) {
 		return GP_ERROR;
 	
 	if (dsc1_retrcmd(camera) == DSC1_RSP_INDEX)
-		result = dsc->size / 2;
+		result = camera->pl->size / 2;
 	else
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
@@ -125,7 +124,7 @@ int dsc1_getindex(Camera *camera) {
 
 /* dsc1_delete - delete image #index from camera memory */
 
-int dsc1_delete(Camera *camera, u_int8_t index) {
+static int dsc1_delete(Camera *camera, u_int8_t index) {
 	
 	DEBUG_PRINT_MEDIUM(("Deleting image: %i.", index));
 		
@@ -147,9 +146,8 @@ int dsc1_delete(Camera *camera, u_int8_t index) {
 	
 /* dsc1_selectimage - select image to download, return its size */
 
-int dsc1_selectimage(Camera *camera, u_int8_t index)
+static int dsc1_selectimage(Camera *camera, u_int8_t index)
 {
-	dsc_t   *dsc = camera->camlib_data;
         int	size = 0;
 	
 	DEBUG_PRINT_MEDIUM(("Selecting image: %i.", index));	
@@ -165,14 +163,14 @@ int dsc1_selectimage(Camera *camera, u_int8_t index)
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
 	
-	if (dsc->size != 4)
+	if (camera->pl->size != 4)
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
 
-	size =	(u_int32_t)dsc->buf[3] |
-		((u_int8_t)dsc->buf[2] << 8) |
-		((u_int8_t)dsc->buf[1] << 16) |
-		((u_int8_t)dsc->buf[0] << 24);		
+	size =	(u_int32_t)camera->pl->buf[3] |
+		((u_int8_t)camera->pl->buf[2] << 8) |
+		((u_int8_t)camera->pl->buf[1] << 16) |
+		((u_int8_t)camera->pl->buf[0] << 24);		
 	
 	DEBUG_PRINT_MEDIUM(("Selected image: %i, size: %i.", index, size));
 
@@ -181,9 +179,8 @@ int dsc1_selectimage(Camera *camera, u_int8_t index)
 
 /* gp_port_readimageblock - read #block block (1024 bytes) of an image into buf */
 
-int dsc1_readimageblock(Camera *camera, int block, char *buffer) {
+static int dsc1_readimageblock(Camera *camera, int block, char *buffer) {
 	
-        dsc_t   *dsc = camera->camlib_data;
 	char	buf[2];
 	
 	DEBUG_PRINT_MEDIUM(("Reading image block: %i.", block));
@@ -199,16 +196,16 @@ int dsc1_readimageblock(Camera *camera, int block, char *buffer) {
 		/* bad response */
 
 	if (buffer)
-		memcpy(buffer, dsc->buf, dsc->size);
+		memcpy(buffer, camera->pl->buf, camera->pl->size);
 	
 	DEBUG_PRINT_MEDIUM(("Block: %i read in.", block));
 	
-	return dsc->size;
+	return camera->pl->size;
 }
 
 /* dsc1_readimage - read #index image or thumbnail and return its contents */
-
-char *dsc1_readimage(Camera *camera, int index, int *size) {
+#if 0
+static char *dsc1_readimage(Camera *camera, int index, int *size) {
 
 	int	rsize, i, s;
 	char	*buffer = NULL;
@@ -236,10 +233,11 @@ char *dsc1_readimage(Camera *camera, int index, int *size) {
 	
 	return buffer;
 }
+#endif
 
 /* dsc1_setimageres - set image resolution based on its size, used on upload to camera */
 
-int dsc1_setimageres(Camera *camera, int size) {
+static int dsc1_setimageres(Camera *camera, int size) {
 	
 	dsc_quality_t	res;
 	
@@ -266,7 +264,7 @@ int dsc1_setimageres(Camera *camera, int size) {
 
 /* gp_port_writeimageblock - write size bytes from buffer rounded to 1024 bytes to camera */
 
-int dsc1_writeimageblock(Camera *camera, int block, char *buffer, int size) {
+static int dsc1_writeimageblock(Camera *camera, int block, char *buffer, int size) {
 
 	DEBUG_PRINT_MEDIUM(("Writing image block: %i", block));
 
@@ -282,8 +280,8 @@ int dsc1_writeimageblock(Camera *camera, int block, char *buffer, int size) {
 }
 
 /* gp_port_writeimage - write an image to camera memory, size bytes at buffer */
-
-int dsc1_writeimage(Camera *camera, char *buffer, int size)
+#if 0
+static int dsc1_writeimage(Camera *camera, char *buffer, int size)
 {
 	int	blocks, blocksize, i;
 
@@ -308,10 +306,12 @@ int dsc1_writeimage(Camera *camera, char *buffer, int size)
 	
 	return GP_OK;
 }
+#endif
 
 /* dsc1_preview - show selected image on camera's LCD - is it supported? */
 
-int dsc1_preview(Camera *camera, int index)
+#if 0
+static int dsc1_preview(Camera *camera, int index)
 {
 	if (index < 1)
 		RETURN_ERROR(EDSCBADNUM);
@@ -326,6 +326,7 @@ int dsc1_preview(Camera *camera, int index)
 	
 	return GP_OK;
 }
+#endif
 
 /******************************************************************************/
 
@@ -362,14 +363,18 @@ int camera_abilities (CameraAbilitiesList *list) {
 }
 
 static int camera_exit (Camera *camera) {
-	
-	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
-	
+
 	dsc_print_status(camera, _("Disconnecting camera."));
-	
 	dsc1_disconnect(camera);
-	
-	free(dsc);
+
+	if (camera->pl) {
+		if (camera->pl->buf) {
+			free (camera->pl->buf);
+			camera->pl->buf = NULL;
+		}
+		free (camera->pl);
+		camera->pl = NULL;
+	}
 
 	return GP_OK;
 }
@@ -393,7 +398,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  CameraFile *file, void *data) 
 {
 	Camera *camera = data;
-	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int	index, size, rsize, i, s;
 
 	if (type != GP_FILE_TYPE_NORMAL)
@@ -416,7 +420,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		if ((rsize = dsc1_readimageblock(camera, i, NULL)) == GP_ERROR) 
 			return GP_ERROR;
 		s += rsize;
-		gp_file_append (file, dsc->buf, dsc->size);
+		gp_file_append (file, camera->pl->buf, camera->pl->size);
 		gp_camera_progress (camera, (float)(s)/(float)size);
 	}
 	
@@ -517,54 +521,33 @@ static int camera_about (Camera *camera, CameraText *about)
 int camera_init (Camera *camera) {
 
         int ret, selected_speed;
-        dsc_t           *dsc = NULL;
-        
+	GPPortSettings settings;
+
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 
-        if (dsc && camera->port) {
-                gp_port_close(camera->port);
-                gp_port_free(camera->port);
-        }
-        free(camera);
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+	camera->pl->buf = malloc (sizeof (char) * DSC_BUFSIZE);
+	if (!camera->pl->buf) {
+		free (camera->pl);
+		camera->pl = NULL;
+		return (GP_ERROR_NO_MEMORY);
+	}
 
-        /* first of all allocate memory for a dsc struct */
-        if ((dsc = (dsc_t*)malloc(sizeof(dsc_t))) == NULL) { 
-                dsc_errorprint(EDSCSERRNO, __FILE__, __LINE__);
-                return GP_ERROR; 
-        } 
-        
-        camera->camlib_data = dsc;
-        
-        if ((ret = gp_port_new(&(camera->port), GP_PORT_SERIAL)) < 0) {
-            free(camera);
-            return (ret);
-        }
-        
+	/* Configure the port (remember the selected speed) */
         gp_port_timeout_set(camera->port, 5000);
-
-	/* Get the settings */
-	gp_port_settings_get(camera->port, &(dsc->settings));
-
-	/* Remember the selected speed */
-	selected_speed = dsc->settings.serial.speed;
-
-	/* Set the initial settings */
-        dsc->settings.serial.speed      = 9600; /* hand shake speed */
-        dsc->settings.serial.bits       = 8;
-        dsc->settings.serial.parity     = 0;
-        dsc->settings.serial.stopbits   = 1;
-        gp_port_settings_set(camera->port, dsc->settings);
-
-        /* allocate memory for a dsc read/write buffer */
-        if ((dsc->buf = (char *)malloc(sizeof(char)*(DSC_BUFSIZE))) == NULL) {
-                dsc_errorprint(EDSCSERRNO, __FILE__, __LINE__);
-                free(camera);
-                return GP_ERROR;
-        }
+	gp_port_settings_get(camera->port, &settings);
+	selected_speed = settings.serial.speed;
+        settings.serial.speed      = 9600; /* hand shake speed */
+        settings.serial.bits       = 8;
+        settings.serial.parity     = 0;
+        settings.serial.stopbits   = 1;
+        gp_port_settings_set(camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
@@ -574,7 +557,15 @@ int camera_init (Camera *camera) {
 				        NULL, camera);
         
 	/* Connect with selected speed */
-        return dsc1_connect(camera, selected_speed); 
+	ret = dsc1_connect(camera, selected_speed);
+	if (ret < 0) {
+		free (camera->pl->buf);
+		free (camera->pl);
+		camera->pl = NULL;
+		return (ret);
+	}
+
+	return (GP_OK);
 }
 
 

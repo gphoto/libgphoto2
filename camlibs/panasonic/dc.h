@@ -40,11 +40,10 @@ typedef enum {
 	superfine	= 2
 } dsc_quality_t;
 	
-typedef struct {
-	gp_port_settings 	settings;
+struct _CameraPrivateLibrary {
 	char			*buf;
-	int			size;	
-} dsc_t;
+	int			size;
+};
 
 #define DSC_BLOCKSIZE	  0x400   /* amount of image data transfered in a single packet */
 #define DSC_BUFSIZE	  0x406   /* largest possible amount of data transfered in a single packet */

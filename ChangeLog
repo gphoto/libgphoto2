@@ -1,5 +1,10 @@
 2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/panasonic: Prepare for camera->camlib_data removal. Fix lots
+	  of compile warnings. Remove gp_port_[close,free,new] (sic).
+
+2001-10-20 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/agfa/commands.h: Unused -> removed.
 	* camlibs/agfa/Makefile.am: Reflect above.
 	* camlibs/agfa/agfa.[c,h]: Use camera->pl instead of
