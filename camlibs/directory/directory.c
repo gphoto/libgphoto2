@@ -123,19 +123,23 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 
 	GPIO_DIR d;
 	GPIO_DIRENT de;
-	char *ch;
-	char buf[1024];
+	char buf[1024], f[1024];
 	int count=0;
 
 	if ((d = GPIO_OPENDIR(folder))==NULL)
 		return (GP_ERROR);
 
+	/* Make sure we only have 1 delimiter */
+	if (folder[strlen(folder)-1] != GPIO_DIR_DELIM)
+		sprintf(f, "%s%c", folder, GPIO_DIR_DELIM);
+	 else
+		strcpy(f, folder);
+
 	while (de = GPIO_READDIR(d)) {
 		if ((strcmp(GPIO_FILENAME(de), "." )!=0) &&
 		    (strcmp(GPIO_FILENAME(de), "..")!=0)) {
-			sprintf(buf, "%s/%s", folder, GPIO_FILENAME(de));
-			if (GPIO_IS_FILE(buf))
-			   if (is_image(buf))
+			sprintf(buf, "%s%s", f, GPIO_FILENAME(de));
+			if (GPIO_IS_FILE(buf) && (is_image(buf)))
 				gp_list_append(list, GPIO_FILENAME(de), GP_LIST_FILE);
 		}
 	}
@@ -147,17 +151,23 @@ int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
 
 	GPIO_DIR d;
 	GPIO_DIRENT de;
-	char *ch;
-	char buf[1024];
+	char buf[1024], f[1024];
 	int count=0;
 
 	if ((d = GPIO_OPENDIR(folder))==NULL)
 		return (GP_ERROR);
 
+	/* Make sure we only have 1 delimiter */
+	if (folder[strlen(folder)-1] != GPIO_DIR_DELIM)
+		sprintf(f, "%s%c", folder, GPIO_DIR_DELIM);
+	 else
+		strcpy(f, folder);
+
+
 	while (de = GPIO_READDIR(d)) {
 		if ((strcmp(GPIO_FILENAME(de), "." )!=0) &&
 		    (strcmp(GPIO_FILENAME(de), "..")!=0)) {
-			sprintf(buf, "%s/%s", folder, GPIO_FILENAME(de));
+			sprintf(buf, "%s%s", f, GPIO_FILENAME(de));
 			if (GPIO_IS_DIR(buf))
 				gp_list_append(list, GPIO_FILENAME(de), GP_LIST_FOLDER);
 		}
@@ -170,7 +180,7 @@ int folder_index(Camera *camera) {
 
 	GPIO_DIR dir;
 	GPIO_DIRENT de;
-	char *dot, fname[1024];
+	char fname[1024];
 	DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
 	d->num_images = 0;
@@ -252,10 +262,8 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 int camera_config_get (Camera *camera, CameraWidget *window) {
 
 	CameraWidget *t, *section;
-	int num;
-	char buf[1024];
 
-	debug_print("Building configuration window");
+	// printf("Building configuration window");
 
 	/* Create a new section for "Quality" */
 	section = gp_widget_new(GP_WIDGET_SECTION, "Quality");
@@ -326,21 +334,14 @@ int camera_summary (Camera *camera, CameraText *summary) {
 
 int camera_manual (Camera *camera, CameraText *manual) {
 
-	strcpy(manual->text, 
-"The Directory Browse \"camera\" lets you index
-photos on your hard drive. The folder list on the
-left contains the folders on your hard drive,
-beginning at the root directory (\"/\").
-");
+	strcpy(manual->text, "The Directory Browse \"camera\" lets you index\nphotos on your hard drive. The folder list on the\nleft contains the folders on your hard drive,\nbeginning at the root directory (\"/\").");
 
 	return (GP_OK);
 }
 
 int camera_about (Camera *camera, CameraText *about) {
 
-	strcpy(about->text,
-"Directory Browse Mode
-Scott Fritzinger <scottf@unr.edu>");
+	strcpy(about->text, "Directory Browse Mode\nScott Fritzinger <scottf@unr.edu>");
 
 	return (GP_OK);
 }

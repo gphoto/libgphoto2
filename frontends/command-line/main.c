@@ -22,6 +22,12 @@
 
 #define MAX_IMAGE_NUMBER		1024
 
+#ifdef WIN32
+#define FOLDER_DELIM			'\\'
+#else
+#define FOLDER_DELIM			'/'
+#endif
+
 /* Command-line option functions */
 void usage();
 int  verify_options (int argc, char **argv);
@@ -424,12 +430,10 @@ int for_each_subfolder(char *folder, folder_action faction,
 		strcat(prefix, folder);
 	else
 		strcat(prefix, glob_folder);
-
-	if (prefix[strlen(prefix) - 1] != '/')
-			strcat(prefix, "/");
-	
+	if (prefix[strlen(prefix) - 1] != FOLDER_DELIM)
+		sprintf(prefix, "%s%c", prefix, FOLDER_DELIM);
 	gp_camera_folder_list(glob_camera, &folderlist, prefix);
-			
+	
 	for (i = 0; i < gp_list_count(&folderlist); i++) {
 		entry = gp_list_entry(&folderlist, i);
 		sprintf(subfolder, "%s%s", prefix, entry->name);
@@ -477,10 +481,13 @@ int for_each_image(char *folder, image_action iaction, int reverse) {
 
 int print_folder(char *subfolder, image_action action, int reverse) {
 	/* print paths relative to glob_folder */
-	if (strcmp(glob_folder, "/") != 0)
-		printf("\"%s\"\n", subfolder + strlen(glob_folder) + 1);
-	else
-		printf("\"%s\"\n", subfolder + strlen(glob_folder));
+	char *c;
+	
+	c = subfolder + strlen(glob_folder);
+	if (*c == GPIO_DIR_DELIM)
+		c++;
+
+	printf("\"%s\"\n", c);
 		
 	return (GP_OK);
 }
@@ -970,7 +977,7 @@ int init_globals () {
 	strcpy(glob_model, "");
 	strcpy(glob_port, "");
 	strcpy(glob_filename, "gphoto");
-	strcpy(glob_folder, "/");
+	sprintf(glob_folder, "%c", FOLDER_DELIM);
 
 	glob_camera = NULL;
 	glob_speed = 0;

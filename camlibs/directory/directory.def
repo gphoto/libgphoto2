@@ -1,21 +1,20 @@
-LIBRARY GPDIRBRS
-EXPORTS
-; From directory.obj
-  "camera_id"
-  "camera_debug_set"
-  "camera_abilities"
-  "camera_init"
-  "camera_exit"
-  "camera_folder_list"
-  "camera_folder_set"
-  "camera_file_count"
-  "camera_file_get"
-  "camera_file_get_preview"
-  "camera_file_put"
-  "camera_file_delete"
-  "camera_config_get"
-  "camera_config_set"
-  "camera_capture"
-  "camera_summary"
-  "camera_manual"
-  "camera_about"
+LIBRARY		DIRECTRY
+DESCRIPTION "gPhoto2 directory browse library"
+
+EXPORTS	 
+	camera_id
+	camera_abilities
+	camera_init
+	camera_exit
+	camera_folder_list
+	camera_file_list
+	camera_file_get
+	camera_file_get_preview
+	camera_file_put
+	camera_file_delete
+	camera_config_get
+	camera_config_set
+	camera_capture
+	camera_summary
+	camera_manual
+	camera_about
