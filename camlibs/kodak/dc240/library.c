@@ -541,14 +541,13 @@ int dc240_capture (Camera *camera, CameraFilePath *path)
     char *p = dc240_packet_new(0x7C);
 
     /* Take the picture to Flash memory */
-    gp_frontend_status (NULL, "Taking picture...");
     ret = dc240_packet_write(camera, p, 8, 1);
     free (p); 
     if (ret != GP_OK) {
 	return ret;
     }
 
-    gp_frontend_status (NULL, "Waiting for completion...");
+    gp_camera_status (camera, "Waiting for completion...");
     ret = dc240_wait_for_completion(camera);
     if (ret != GP_OK) {
 	return ret;
