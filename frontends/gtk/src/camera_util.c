@@ -15,11 +15,22 @@
 #include "globals.h"
 #include "camera_util.h"
 
-int gp_gtk_camera_init;
-Camera *gp_gtk_camera;
 
 int camera_set() {
 
   gp_gtk_camera_init = 0;
 
+  return 1;
+
 } /* end camera_set */
+
+void camera_config_retrieve_rec(CameraWidget *cw, GtkWidget *window, 
+				CameraSetting *settings, int *count) {
+
+  
+}
+
+void camera_config_build_rec(CameraWidget *cw, GtkWidget *box, 
+			     GtkWidget *window) {
+
+}
