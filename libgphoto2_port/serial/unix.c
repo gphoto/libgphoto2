@@ -505,9 +505,10 @@ int gp_port_serial_set_baudrate(gp_port * dev)
 
         ULONG rc;
         ULONG   ulParmLen = 2;     /* Maximum size of the parameter packet */
+        //printf("Baudrate: %d\n",dev->settings.serial.speed);
         rc = DosDevIOCtl (dev->device_fd, /* Device handle                  */
                       0x0001,       /* Serial-device control          */
-                      0x0041, /* Sets bit rate                  */
+                      0x0043, /* Sets bit rate                  */
                       (PULONG) &dev->settings.serial.speed,   /* Points at bit rate             */
                       sizeof(dev->settings.serial.speed),     /* Maximum size of parameter list */
                       &ulParmLen,        /* Size of parameter packet       */
@@ -515,7 +516,7 @@ int gp_port_serial_set_baudrate(gp_port * dev)
                       0,                 /* Maximum size of data packet    */
                       NULL);             /* Size of data packet            */
         if(rc != 0)
-           perror("DosDevIOCtl baudrate error");
+           printf("DosDevIOCtl baudrate error:%d\n",rc);
 
 #endif /*ifndef OS2*/
 

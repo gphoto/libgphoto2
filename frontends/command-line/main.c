@@ -293,8 +293,8 @@ OPTION_CALLBACK(abilities) {
             printf("                                 : Video\n");
         if (abilities.operations & GP_OPERATION_CAPTURE_AUDIO)
             printf("                                 : Audio\n");
-	if (abilities.operations & GP_OPERATION_CAPTURE_PREVIEW)
-	    printf("                                 : Preview\n");
+        if (abilities.operations & GP_OPERATION_CAPTURE_PREVIEW)
+            printf("                                 : Preview\n");
         printf("Configuration support            : %s\n",
                 abilities.operations & GP_OPERATION_CONFIG? "yes":"no");
         printf("Delete files on camera support   : %s\n",
@@ -480,19 +480,19 @@ OPTION_CALLBACK(num_pictures) {
 
         cli_debug_print ("Counting pictures");
 
-	res = set_globals();
-	if (res != GP_OK)
-		return (res);
+        res = set_globals();
+        if (res != GP_OK)
+                return (res);
 
-	res = gp_camera_folder_list_files (glob_camera, glob_folder, &list);
-	if (res != GP_OK)
-		return (res);
+        res = gp_camera_folder_list_files (glob_camera, glob_folder, &list);
+        if (res != GP_OK)
+                return (res);
 
         if (glob_quiet)
                 printf ("%i\n", gp_list_count(&list));
            else
-                printf ("Number of pictures in folder %s: %i\n", 
-			glob_folder, gp_list_count(&list));
+                printf ("Number of pictures in folder %s: %i\n",
+                        glob_folder, gp_list_count(&list));
 
         return (GP_OK);
 }
@@ -565,17 +565,17 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
         file = gp_file_new();
 
         if (thumbnail) {
-		res = gp_camera_file_get_preview (glob_camera, folder, 
-						  filename, file);
-		if (res != GP_OK) {
-                        cli_error_print ("Can not get preview for %s.", 
-					 filename);
+                res = gp_camera_file_get_preview (glob_camera, folder,
+                                                  filename, file);
+                if (res != GP_OK) {
+                        cli_error_print ("Can not get preview for %s.",
+                                         filename);
                         return (res);
                 }
          } else {
-	 	res = gp_camera_file_get_file (glob_camera, folder, filename, 
-					       file);
-		if (res != GP_OK) {
+                res = gp_camera_file_get_file (glob_camera, folder, filename,
+                                               file);
+                if (res != GP_OK) {
                         cli_error_print("Can not get picture %s", filename);
                         return (res);
                 }
@@ -719,21 +719,21 @@ OPTION_CALLBACK(upload_picture) {
 
         cli_debug_print("Uploading picture");
 
-	res = set_globals();
-	if (res != GP_OK)
-		return (res);
+        res = set_globals();
+        if (res != GP_OK)
+                return (res);
 
-        if (!(glob_camera->abilities->folder_operations & 
-	      GP_FOLDER_OPERATION_PUT_FILE))
+        if (!(glob_camera->abilities->folder_operations &
+              GP_FOLDER_OPERATION_PUT_FILE))
                 return (GP_ERROR_NOT_SUPPORTED);
 
-	res = gp_file_open(file, arg);
-	if (res != GP_OK) {
+        res = gp_file_open(file, arg);
+        if (res != GP_OK) {
                 cli_error_print("Could not open file %s", arg);
                 return (res);
         }
 
-	res = gp_camera_folder_put_file (glob_camera, glob_folder, file);
+        res = gp_camera_folder_put_file (glob_camera, glob_folder, file);
 
         gp_file_free(file);
 
@@ -751,30 +751,30 @@ int capture_generic (int type, char *name) {
                 return (result);
 
         if (type == GP_OPERATION_CAPTURE_PREVIEW) {
-		file = gp_file_new ();
-            	if ((result = gp_camera_capture_preview(glob_camera, file)) != GP_OK) {
-                	cli_error_print("Could not capture the preview.");
-                	return (result);
-        	}
-        	save_camera_file_to_file(file, 0);
-        	gp_file_free(file);
+                file = gp_file_new ();
+                if ((result = gp_camera_capture_preview(glob_camera, file)) != GP_OK) {
+                        cli_error_print("Could not capture the preview.");
+                        return (result);
+                }
+                save_camera_file_to_file(file, 0);
+                gp_file_free(file);
         } else {
-		result =  gp_camera_capture (glob_camera, type, &path);
-		if (result != GP_OK) {
-        		cli_error_print("Could not capture.");
-        		return (result);
-        	}
+                result =  gp_camera_capture (glob_camera, type, &path);
+                if (result != GP_OK) {
+                        cli_error_print("Could not capture.");
+                        return (result);
+                }
 
                 if (strcmp(path.folder, "/") == 0)
-				pathsep = "";
-			else
-				pathsep = "/";
+                                pathsep = "";
+                        else
+                                pathsep = "/";
 
-        	if (glob_quiet)
-        		printf ("%s%s%s\n", path.folder, pathsep, path.name);
-        	else
-        		printf ("New file is in location %s%s%s on the camera\n",
-				path.folder, pathsep, path.name);
+                if (glob_quiet)
+                        printf ("%s%s%s\n", path.folder, pathsep, path.name);
+                else
+                        printf ("New file is in location %s%s%s on the camera\n",
+                                path.folder, pathsep, path.name);
         }
 
         return (GP_OK);
@@ -806,13 +806,13 @@ OPTION_CALLBACK(summary) {
         CameraText buf;
         int res;
 
-	res = set_globals ();
-	if (res != GP_OK)
-		return (res);
+        res = set_globals ();
+        if (res != GP_OK)
+                return (res);
 
-	res = gp_camera_get_summary (glob_camera, &buf);
-	if (res != GP_OK)
-		return (res);
+        res = gp_camera_get_summary (glob_camera, &buf);
+        if (res != GP_OK)
+                return (res);
 
         printf("Camera Summary:\n%s\n", buf.text);
 
@@ -825,13 +825,13 @@ OPTION_CALLBACK(manual) {
         int res;
         CameraText buf;
 
-	res = set_globals ();
-	if (res != GP_OK)
-		return (res);
+        res = set_globals ();
+        if (res != GP_OK)
+                return (res);
 
-	res = gp_camera_get_manual (glob_camera, &buf);
-	if (res != GP_OK)
-		return (res);
+        res = gp_camera_get_manual (glob_camera, &buf);
+        if (res != GP_OK)
+                return (res);
 
         printf ("Camera Manual:\n%s\n", buf.text);
 
@@ -843,13 +843,13 @@ OPTION_CALLBACK(about) {
         int res;
         CameraText buf;
 
-	res = set_globals ();
-	if (res != GP_OK)
-		return (res);
+        res = set_globals ();
+        if (res != GP_OK)
+                return (res);
 
-	res = gp_camera_get_about (glob_camera, &buf);
-	if (res != GP_OK)
-		return (res);
+        res = gp_camera_get_about (glob_camera, &buf);
+        if (res != GP_OK)
+                return (res);
 
         printf ("About the library:\n%s\n", buf.text);
 
@@ -965,11 +965,11 @@ int main (int argc, char **argv) {
         int result;
 
 #ifdef ENABLE_NLS
-	bindtextdomain (PACKAGE, GPHOTO2_LOCALEDIR);
-	textdomain (PACKAGE);
+        bindtextdomain (PACKAGE, GPHOTO2_LOCALEDIR);
+        textdomain (PACKAGE);
 #endif
 
-	/* Initialize the globals */
+        /* Initialize the globals */
         init_globals();
 
         signal(SIGINT, signal_exit);
@@ -1020,13 +1020,13 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
         gp_frontend_register(gp_interface_status, gp_interface_progress,
                 gp_interface_message, gp_interface_confirm, NULL);
         if ((result = execute_options(argc, argv)) != GP_OK) {
-                printf ("gPhoto2 reported the error '%s'\n", 
-			gp_camera_get_result_as_string (glob_camera, result));
+                printf ("gPhoto2 reported the error '%s'\n",
+                        gp_camera_get_result_as_string (glob_camera, result));
                 exit(EXIT_FAILURE);
         }
 
 #ifdef OS2
-       printf("\nErrors occuring beyond this point are 'expected' on OS/2\ninvestigation pending\n");
+//       printf("\nErrors occuring beyond this point are 'expected' on OS/2\ninvestigation pending\n");
 #endif
 
         /* Exit gPhoto core */
