@@ -397,7 +397,6 @@ camera_init (Camera *camera)
 	CHECK_RESULT (gp_port_timeout_set (camera->port, 1000));
 
 	/* Check if the camera is really there */
-	CHECK_RESULT (gp_port_open (camera->port));
 	for (i = 0; i < 4; i++) {
 		settings.serial.speed = speeds[i];
 		CHECK_RESULT (gp_port_settings_set (camera->port, settings));

@@ -174,11 +174,6 @@ mesa_port_open( gp_port *port, char const *device )
 		return ret;
 	}
 
-	if ((ret = gp_port_open(port)) != GP_OK) {
-		debuglog("mesa_port_open(): error opening port");
-		return ret;
-	}
-
 	return GP_OK;
 }
 

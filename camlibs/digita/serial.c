@@ -189,10 +189,6 @@ int digita_serial_open(struct digita_device *dev, Camera *camera)
         digita_read = digita_serial_read;
 
         gp_port_settings_set(dev->gpdev, settings);
-        if (gp_port_open(dev->gpdev) < 0) {
-                fprintf(stderr, "error opening device\n");
-                return 0;
-        }
 
         tcsendbreak(dev->gpdev->device_fd, 4);
 

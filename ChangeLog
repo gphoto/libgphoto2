@@ -1,5 +1,26 @@
 2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/camera.c
+	(gp_camera_init): Do a simple CHECK_RESULT_OPEN_CLOSE on the init_func
+	(gp_camera_set_port): Set the path if the port is a serial one.
+	* camlibs/template/template.c:
+	* camlibs/sierra/sierra.c:
+	* camlibs/samsung/samsung.c:
+	* camlibs/polaroid/pdc700.c:
+	* camlibs/polaroid/pdc320.c:
+	* camlibs/panasonic/coolshot/coolshot.c:
+	* camlibs/konica/library.c:
+	* camlibs/dimera/mesalib.c:
+	* camlibs/digita/usb.c:
+	* camlibs/digita/serial.c:
+	* camlibs/casio/casio-qv.c:
+	* camlibs/canon/serial.c:
+	* camlibs/barbie/barbie.c:
+	* camlibs/agfa-cl18/agfa.c: Don't open the port. This is always done
+	by libgphoto2.
+
+2001-09-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/camera.c (gp_camera_list_folders), (gp_camera_list_files):
 	Return the result instead of GP_OK if anything goes wrong
 	* libgphoto2/filesys.c: Check if path to folder is absolute. If not, 

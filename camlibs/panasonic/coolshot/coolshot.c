@@ -280,7 +280,6 @@ int camera_init (Camera *camera)
 	CHECK (gp_port_settings_set (camera->port, settings));
 
 	CHECK (gp_port_timeout_set (camera->port, TIMEOUT));
-	CHECK (gp_port_open (camera->port));
 
 	/* check to see if camera is really there */
 	CHECK (coolshot_enq (camera));

@@ -191,7 +191,6 @@ camera_init (Camera *camera)
         settings.serial.stopbits= 1;
 
         gp_port_settings_set (camera->port, settings);
-        gp_port_open (camera->port);
 
         res = barbie_ping (camera->port);
         if (res)

@@ -457,11 +457,9 @@ camera_init (Camera *camera)
 	CHECK_RESULT (gp_port_timeout_set (camera->port, 15000));
 
 	/* Check if the camera is really there */
-	CHECK_RESULT (gp_port_open (camera->port));
-	result = pdc320_init (camera->port);
-	gp_port_close (camera->port);
+	CHECK_RESULT (pdc320_init (camera->port));
 
-	return (result);
+	return (GP_OK);
 }
 
 

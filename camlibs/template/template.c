@@ -177,10 +177,7 @@ camera_init (Camera *camera)
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, set_info_func,
 				      camera);
 
-	/* Open the port and check if the camera is there */
-	gp_port_open (camera->port);
-	// Do something here.
-	gp_port_close (camera->port);
+	/* Check if the camera is there */
 
 	return (GP_OK);
 }

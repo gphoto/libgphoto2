@@ -126,12 +126,7 @@ int canon_serial_init(Camera *camera, const char *devname)
 	    canon_read = canon_usb_read; */
     
     gp_port_settings_set(camera->port, settings);
-    if (gp_port_open(camera->port) != GP_OK) {
-      fprintf(stderr,"Camera used by other USB device!\n");
-      //exit(1);
-      return -1;
-    }
-    
+ 
     gp_port_usb_msg_read(camera->port,0x55,msg,1);
     //      fprintf(stderr,"%c\n",msg[0]);
     gp_port_usb_msg_read(camera->port,0x1,msg,0x58);
@@ -163,11 +158,7 @@ int canon_serial_init(Camera *camera, const char *devname)
     settings.serial.stopbits = 1;
     
     gp_port_settings_set(camera->port, settings); /* Sets the serial device name */
-    if ( gp_port_open(camera->port) == GP_ERROR) {      /* open the device */
-      perror("Unable to open the serial port");
-      return -1;
-    }
-    
+
     return 0;
   }
 }

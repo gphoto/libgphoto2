@@ -295,9 +295,7 @@ camera_init (Camera *camera)
 	CHECK_RESULT (gp_port_timeout_set (camera->port, SDSC_TIMEOUT));
 
 	/* Open the port and check if the camera is there */
-	CHECK_RESULT (gp_port_open (camera->port));
-	result = SDSC_initialize (camera->port);
-	gp_port_close (camera->port);
+	CHECK_RESULT (SDSC_initialize (camera->port));
 
-	return (result);
+	return (GP_OK);
 }

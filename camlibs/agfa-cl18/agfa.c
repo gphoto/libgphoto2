@@ -287,10 +287,6 @@ int camera_init(Camera *camera) {
             ret=gp_port_settings_set(camera->port,settings);
             if (ret<0) return ret;
        
-               /* Open the port */
-            ret=gp_port_open(camera->port);
-            if (ret<0) return ret;
-        
             break;
        case GP_PORT_SERIAL:
             return GP_ERROR_IO_SUPPORTED_SERIAL;
