@@ -64,6 +64,11 @@ camera_abilities (CameraAbilitiesList *list)
 	a.file_operations	=  GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_EXIF;
 	a.folder_operations	=  GP_FOLDER_OPERATION_NONE;
 	gp_abilities_list_append(list, a);
+
+	/* reported by Terry Lewis <mrkennie@amscomputers.biz> */
+	strcpy(a.model, "SiPix SC2100");
+	a.usb_product		= 0x1002;
+	gp_abilities_list_append(list, a);
 	return (GP_OK);
 }
 
