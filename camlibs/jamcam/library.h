@@ -75,4 +75,4 @@ int gp_bayer_decode(int w, int h, unsigned char *input, unsigned char *output,
 
 #endif
 
-#endif __LIBRARY_H__
+#endif /* __LIBRARY_H__ */
