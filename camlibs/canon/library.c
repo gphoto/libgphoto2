@@ -293,13 +293,17 @@ recurse (Camera *camera, const char *name)
 {
 	struct canon_dir *dir, *walk;
 	char buffer[300];	/* longest path, etc. */
-	int count, curr;
+	int count, curr, res;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "recurse() name '%s'", name);
 
-	dir = canon_int_list_directory (camera, name);
-	if (!dir)
-		return 1;	/* assume it's empty @@@ */
+	res = canon_int_list_directory (camera, &dir, name);
+	if (res != GP_OK)
+		return res;
+
+	if (dir == NULL)
+		return 1;
+
 	count = 0;
 	for (walk = dir; walk->name; walk++)
 		if (walk->size && (is_image (walk->name) || is_movie (walk->name)))
@@ -344,11 +348,15 @@ dir_tree (Camera *camera, const char *path)
 {
 	struct canon_dir *dir, *walk;
 	char buffer[300];	/* longest path, etc. */
+	int res;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "dir_tree() path '%s'", path);
 
-	dir = canon_int_list_directory (camera, path);
-	if (!dir)
+	res = canon_int_list_directory (camera, &dir, path);
+	if (res != GP_OK)
+		return NULL;
+
+	if (dir == NULL)
 		return NULL;	/* assume it's empty @@@ */
 	for (walk = dir; walk->name; walk++) {
 		if (walk->is_file) {
@@ -513,10 +521,10 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 		   unsigned char **data, int *size)
 {
 	unsigned char attribs;
-	char file[300];
+	char complete_filename[300];
 	int res;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_get_picture()");
+	GP_DEBUG ("canon_get_picture()");
 
 	if (!check_readiness (camera)) {
 		return GP_ERROR;
@@ -528,8 +536,7 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 			picture_number = picture_number * 2 - 1;
 			if (thumbnail)
 				picture_number += 1;
-			gp_debug_printf (GP_DEBUG_LOW, "canon", _("Picture number %d\n"),
-					 picture_number);
+			GP_DEBUG ("Picture number %i", picture_number);
 
 			if (!picture_number || picture_number > cached_images) {
 				gp_camera_status (camera, _("Invalid index"));
@@ -543,10 +550,9 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 			if (res != GP_OK)
 				return res;
 #else
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
-					 "canon_get_picture: downloading "
-					 "pictures disabled for cameras: PowerShot A5, "
-					 "PowerShot A5 ZOOM");
+			GP_DEBUG ("canon_get_picture: downloading "
+				  "pictures disabled for cameras: PowerShot A5, "
+				  "PowerShot A5 ZOOM");
 
 			return GP_ERROR_NOT_SUPPORTED;
 #endif /* 0 */
@@ -560,10 +566,14 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 				return GP_ERROR;
 			}
 
-			snprintf (file, sizeof (file), "%s%s", path, filename);
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
-					 "canon_get_picture: file = %s\n\tpath=%s, filename=%s\n",
-					 file, path, filename);
+			/* strip trailing backslash on path, if any */
+			if (path[strlen (path) - 1] == '\\')
+				path[strlen (path) - 1] = 0;
+
+			snprintf (complete_filename, sizeof (complete_filename), "%s\\%s",
+				  path, filename);
+
+			GP_DEBUG ("canon_get_picture: path='%s', file='%s'\n\tcomplete filename='%s'\n", path, filename, complete_filename);
 			attribs = 0;
 			if (!check_readiness (camera)) {
 				return GP_ERROR;
@@ -573,58 +583,48 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 				 * we replace .AVI by .THM to download the thumbnail (jpeg format)
 				 */
 				if (is_movie (filename)) {
-					strcpy (file + (strlen (file) - 3), "THM");
+					strcpy (complete_filename +
+						(strlen (complete_filename) - 3), "THM");
 					/* XXX check that this works */
-					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "canon_get_picture: movie thumbnail: %s\n",
-							 file);
-					return canon_int_get_file (camera, file, data, size);
+					GP_DEBUG ("canon_get_picture: movie thumbnail: %s\n",
+						  complete_filename);
+					return canon_int_get_file (camera, complete_filename,
+								   data, size);
 				} else {
-					*data = canon_int_get_thumbnail (camera, file, size);
+					*data = canon_int_get_thumbnail (camera,
+									 complete_filename,
+									 size);
 					if (*data)
 						return GP_OK;
 					else {
-						gp_debug_printf (GP_DEBUG_LOW, "canon",
-								 "canon_get_picture: ",
-								 "canon_int_get_thumbnail() '%s' %d failed!",
-								 file, size);
+						GP_DEBUG ("canon_get_picture: ",
+							  "canon_int_get_thumbnail() '%s' %d failed!",
+							  complete_filename, size);
 						return GP_ERROR;
 					}
 				}
 			} else {
-				res = canon_int_get_file (camera, file, data, size);
+				res = canon_int_get_file (camera, complete_filename, data,
+							  size);
 				if (res != GP_OK) {
-					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "canon_get_picture: canon_int_get_file() failed! returned %i",
-							 res);
+					GP_DEBUG ("canon_get_picture: "
+						  "canon_int_get_file() failed! returned %i",
+						  res);
 					return res;
 				}
 
-				/* find rightmost \ in path and terminate the string there */
-				if (strrchr (path, '\\') == NULL) {
-					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "camera_file_get: "
-							 "Could not determine directory part of path '%s'",
-							 path);
-					return GP_ERROR;
-				}
-				/* trucate path at the position of the last \ (not after) */
-				path[strrchr (path, '\\') - path] = '\0';
-
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "canon_get_picture: We now have to set the \"downloaded\" flag on the picture\n");
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "canon_get_picture: The old file attributes were: %#x\n",
-						 attribs);
+				GP_DEBUG ("canon_get_picture: We now have to set the \"downloaded\" " "flag on the picture");
+				/* XXX this is bogus, attrib is not fetched - it is always set to 0 above */
+				GP_DEBUG ("canon_get_picture: The old file attributes were: %#x\n", attribs);
 				attribs &= ~CANON_ATTR_DOWNLOADED;
 				res = canon_int_set_file_attributes (camera, filename, path,
 								     attribs);
 				if (res != GP_OK) {
 					/* warn but continue since we allready have the downloaded picture */
-					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "canon_get_picture: WARNING: canon_int_set_file_attributes on "
-							 "'%s' '%s' to 0x%x failed! returned %d.",
-							 path, filename, attribs, res);
+					GP_DEBUG ("canon_get_picture: "
+						  "WARNING: canon_int_set_file_attributes on "
+						  "'%s' '%s' to 0x%x failed! returned %d.",
+						  path, filename, attribs, res);
 				}
 			}
 			return GP_OK;
@@ -646,55 +646,70 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
  *
  * _get_file_path is an internal function and is only called from #get_file_path.
  *
- * This is a strange function. Its name suggests it would return the path to a file
- * of a known name, but it returns *path = the whole filename (the filename argument
- * we are called with). So in effect, this function only does a lot of is_*() checking
- * and if we are not using USB it prepends a \ to the name. Prepending the \ should
- * be made somewhere else, IMO.
+ * This function recursively looks for @filename in @tree and returns a concatenated
+ * @path if the filename is found somewhere in @tree.
  *
  * Return value: a gphoto2 error code.
  **/
 int
-_get_file_path (Camera *camera, struct canon_dir *tree, const char *filename, char *path)
+_get_file_path (Camera *camera, struct canon_dir *tree, const char *filename, char *path,
+		int recursively_entered)
 {
-	GP_DEBUG ("_get_file_path() called: filename '%s' path '%s'", filename, path);
+	static char newpath[1024];
+	char *temp_ch;
+
+	GP_DEBUG ("_get_file_path() called: filename '%s' path '%s' recurs %i", filename, path,
+		  recursively_entered);
 
 	if (tree == NULL)
 		return GP_ERROR;
 
-	if (camera->pl->canon_comm_method != CANON_USB) {
-		path = strchr (path, 0);
-		*path = '\\';
-	}
+	/* initiate newpath if we are not recursively entered */
+	if (!recursively_entered)
+		strcpy (newpath, path);
+
+	/* add trailing backslash if missing */
+	if (newpath[strlen (newpath) - 1] != '\\')
+		strcat (newpath, "\\");
 
 	while (tree->name) {
-		if (!is_image (tree->name) && !is_movie (tree->name)
-		    && !is_thumbnail (tree->name)) {
-			switch (camera->pl->canon_comm_method) {
-				case CANON_USB:
-					strcpy (path, tree->name);
-					break;
-				case CANON_SERIAL_RS232:
-				default:
-					strcpy (path + 1, tree->name);
-					break;
-			}
-		}
-		if ((is_image (tree->name)
-		     || (is_movie (tree->name) || is_thumbnail (tree->name)))
-		    && strcmp (tree->name, filename) == 0) {
+		if (strcmp (tree->name, filename) == 0 &&
+		    (is_image (tree->name) || is_movie (tree->name) ||
+		     is_thumbnail (tree->name))) {
+			/* we've got a match! */
 			GP_DEBUG ("_get_file_path() returns with "
 				  "filename '%s' path '%s'", filename, path);
+			if (!recursively_entered)
+				strcpy (path, newpath);
 			return GP_OK;
-		} else if (!tree->is_file) {
-			if (_get_file_path (camera, tree->user, filename, path) == GP_OK) {
-				GP_DEBUG ("_get_file_path() returns with "
-					  "filename '%s' path '%s'", filename, path);
+		}
+		if (!tree->is_file) {
+			/* remember where newpath ends */
+			temp_ch = strrchr (newpath, 0);
+
+			/* not a file, must be a directory. append name to newpath */
+			strncat (newpath, tree->name, sizeof (newpath) - strlen (newpath));
+			newpath[sizeof (newpath) - 1] = 0;
+
+			/* enter self recursively */
+			if (_get_file_path (camera, tree->user, filename, (char *) newpath, 1)
+			    == GP_OK) {
+				/* file found somewhere underneath */
+
+				if (!recursively_entered)
+					strcpy (path, newpath);
+
 				return GP_OK;
 			}
+			/* back out appending of this tree->name to newpath
+			 * since filename was not found in this newpath
+			 */
+			*temp_ch = 0;
 		}
 		tree++;
 	}
+
+	/* the requested file was not found */
 
 	return GP_ERROR;
 }
@@ -702,7 +717,7 @@ _get_file_path (Camera *camera, struct canon_dir *tree, const char *filename, ch
 static int
 get_file_path (Camera *camera, const char *filename, char *path)
 {
-	return _get_file_path (camera, camera->pl->cached_tree, filename, path);
+	return _get_file_path (camera, camera->pl->cached_tree, filename, path, 0);
 }
 
 static int
@@ -739,7 +754,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	gp_debug_printf (GP_DEBUG_HIGH, "canon", "camera_file_get: "
-			 "Found picture, '%s'/'%s'", path, filename);
+			 "Found picture, '%s' '%s'", path, filename);
 
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
