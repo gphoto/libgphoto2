@@ -61,10 +61,16 @@ int ricoh_get_mode  (Camera *camera, GPContext *context, RicohMode *mode);
 int ricoh_set_mode  (Camera *camera, GPContext *context, RicohMode  mode);
 
 int ricoh_get_num   (Camera *camera, GPContext *context, unsigned int *n);
-int ricoh_get_size  (Camera *camera, GPContext *context, unsigned int n,
-		     unsigned long *size);
-int ricoh_get_date  (Camera *camera, GPContext *context, unsigned int n,
-		     time_t *date);
+
+int ricoh_get_pic_size  (Camera *camera, GPContext *context, unsigned int n,
+		         unsigned long *size);
+int ricoh_get_pic_date  (Camera *camera, GPContext *context, unsigned int n,
+		         time_t *date);
+int ricoh_get_pic_name  (Camera *camera, GPContext *context, unsigned int n,
+			 const char **name);
+int ricoh_get_pic_memo  (Camera *camera, GPContext *context, unsigned int n,
+			 const char **memo);
+
 int ricoh_del_pic   (Camera *camera, GPContext *context, unsigned int n);
 
 typedef enum _RicohFileType RicohFileType;

@@ -1,5 +1,9 @@
 2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
 
+	* ricoh.c: Flesh out ricoh_get_pic_date.
+
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
 	* ricoh.c: Simplify code by introducing ricoh_transmit. As a side 
 	  effect, this should improve error recovery, too.
 

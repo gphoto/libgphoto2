@@ -378,8 +378,8 @@ ricoh_set_mode (Camera *camera, GPContext *context, RicohMode mode)
 }
 
 int
-ricoh_get_size (Camera *camera, GPContext *context, unsigned int n,
-		unsigned long *size)
+ricoh_get_pic_size (Camera *camera, GPContext *context, unsigned int n,
+		    unsigned long *size)
 {
 	unsigned char p[3], buf[0xff], len;
 
@@ -391,26 +391,81 @@ ricoh_get_size (Camera *camera, GPContext *context, unsigned int n,
 	CR (ricoh_transmit (camera, context, 0x95, p, 3, buf, &len));
 	C_LEN (context, len, 2);
 
-	*size = (buf[0] << 8) | buf[1] << 0;
+	if (size)
+		*size = (buf[0] << 8) | buf[1] << 0;
 
 	return (GP_OK);
 }
 
 int
-ricoh_get_date (Camera *camera, GPContext *context, unsigned int n,
-		time_t *date)
+ricoh_get_pic_date (Camera *camera, GPContext *context, unsigned int n,
+		    time_t *date)
 {
-	unsigned char p[3], cmd, buf[0xff], len;
+	unsigned char p[3], buf[0xff], len;
+	struct tm time;
 
 	GP_DEBUG ("Getting date of picture %i...", n);
 
 	p[0] = 0x03;
 	p[1] = n >> 0;
 	p[2] = n >> 8;
-	CR (ricoh_send (camera, context, 0x95, 0, p, 3));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, 0x95);
+	CR (ricoh_transmit (camera, context, 0x95, p, 3, buf, &len));
 	C_LEN (context, len, 6);
+
+	if (date) {
+		time.tm_year = buf[0] + 2000;
+		time.tm_mon  = buf[1];
+		time.tm_mday = buf[2];
+		time.tm_hour = buf[3];
+		time.tm_min  = buf[4];
+		time.tm_sec  = buf[5];
+		time.tm_isdst = -1;
+		*date = mktime (&time);
+	}
+
+	return (GP_OK);
+}
+
+int
+ricoh_get_pic_name (Camera *camera, GPContext *context, unsigned int n,
+		    const char **name)
+{
+	unsigned char p[3], len;
+	static unsigned char buf[0xff];
+
+	GP_DEBUG ("Getting name of picture %i...", n);
+
+	p[0] = 0x03;
+	p[1] = n >> 0;
+	p[2] = n >> 8;
+	CR (ricoh_transmit (camera, context, 0x95, p, 3, buf, &len));
+
+	if (name && *name) {
+		*name = buf;
+		buf[len] = '\0';
+	}
+
+	return (GP_OK);
+}
+
+int
+ricoh_get_pic_memo (Camera *camera, GPContext *context, unsigned int n,
+		    const char **memo)
+{
+	unsigned char p[3], len;
+	static unsigned char buf[0xff];
+
+	GP_DEBUG ("Getting memo of picture %i...", n);
+
+	p[0] = 0x02;
+	p[1] = n >> 0;
+	p[2] = n >> 8;
+	CR (ricoh_transmit (camera, context, 0x95, p, 3, buf, &len));
+
+	if (memo && *memo) {
+		*memo = buf;
+		buf[len] = '\0';
+	}
 
 	return (GP_OK);
 }

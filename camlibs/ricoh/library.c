@@ -99,10 +99,14 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
-	unsigned int n;
+	unsigned int n, i;
+	const char *name;
 
 	CR (ricoh_get_num (camera, context, &n));
-	CR (gp_list_populate (list, "rdc%04i.jpg", n));
+	for (i = 0; i < n; i++) {
+		CR (ricoh_get_pic_name (camera, context, i + 1, &name));
+		CR (gp_list_append (list, name, NULL));
+	}
 
 	return (GP_OK);
 }
