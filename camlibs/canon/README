@@ -1,0 +1,114 @@
+This driver  is  for the Canon   PowerShot series. It  works  with the
+following models:
+
+ - Powershot A5
+ - Powershot A5 Zoom
+ - Powershot A50
+ - Powershot S10
+ - Powershot S20
+
+ It doesn't  work with the  PowerShot  350. However, the  PS350 uses a
+vaguely similar protocol, so some parts of the sources can probably be
+shared.
+
+The driver caches a lot of information. If the camera status changes
+during a session or if the driver gets stuck for some other reason,
+the caches can be manually flushed using "Configure camera".
+
+
+Change history
+==============
+
+Version 6 (19-MAY-2000)
+---------
+
+- Included USB support in the driver
+- More options in the configuration file
+- Debug output can be mostly disabled
+- The driver now sets the "downloaded" bit on downloaded images
+
+Version 5 (09-MAY-2000)
+---------
+
+- Support for  full-speed transfers (115200)
+- Most protocol commands are  implemented, or at least discovered (see
+  the 'Protocol' file)
+- USB protocol description
+- Get/Set owner name
+- Get date
+- Get firmware rev.
+- Get battery status
+- Use libgpio for serial transfers
+- More reliable error recovery
+- Better configuration dialog
+- Support for all current powershot models (A5 to S20)
+- Low battery condition detection
+
+
+Version 4 (3-SEP-1999)
+---------
+
+ - changed uint16_t to unsigned short and removed inclusion of stdint.h, for
+   compatibility :-(
+
+
+Version 3 (1-SEP-1999)
+---------
+
+ - lowered number of tries when initializing from 50 to 10 (50 was for
+   experiments)
+ - increased camera ID buffer to be large enough for PS350 responses
+ - serial input is now flushed before testing or attempting synchronization
+ - directories are now sorted alphabetically, implicitly ordering images by
+   date
+ - fixed a few memory leaks in directory handling
+ - added arbitrary file download to Configure/Configure Camera (experimental;
+   very fragile)
+
+
+Version 2 (29-AUG-1999)
+---------
+
+ - integrated into gphoto-2.3.5 (from CVS)
+ - added support for large directories (listing occupies > 1 message)
+ - receive timeout is now raised from 1 to 10 seconds after first response
+ - renamed a50_select_disk to a50_disk_info. It now returns disk capacity
+   and available space.
+ - completed CRC table
+ - properly integrated into gPhoto
+ - lots of cleanups
+
+
+Version 1 (27-AUG-1999)
+---------
+
+ - a little bit of code cleanup, added a50.h, doc/, full recursive download
+   in canon.c, and fixed a few documentation bugs, adjusted send/receive
+   buffers
+ - a50_send_msg incremented seq_tx when skipping retransissions while waiting
+   for ACK
+
+
+Version 0 (27-AUG-1999)
+---------
+
+ - initial release which demonstrates most functions in a way that's
+   completely useless for gPhoto
+
+
+To do
+=====
+
+- code structure is still pretty ugly. Things that absolutely need fixing:
+  - command codes and fffbs are spread all over the place
+  - "ping" (empty message) should probably be merged into normal message
+    handling; perhaps also 03 message -> wait_for_ack can be merged too
+  - psa50.c must not invoke GUI functions
+  - change many fprintf(stderr,... to GUI calls or callbacks
+- improve error handling: distinguish between severe and harmless errors
+  (e.g. duplicate EOT vs. ten timeouts in a row)
+- find out how error recovery works (need traces)
+- get traces for other operations:
+   - idle period/restart (keepalive ?)
+   - upload file, create directory
+- find out how to avoid blocking gPhoto during transfer

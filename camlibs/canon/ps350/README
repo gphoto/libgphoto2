@@ -1,0 +1,20 @@
+Contents:
+
+  ps350proto.txt   Description of the PS 350 protocol
+
+  pd350chk.c       C program to calculate checksum of PS 350 packets
+
+  notes.txt        Some other notes
+
+  ps350init        Script to initialize the PS350 and get it to 115200 at
+                   once. Needs system-dependent modifications!
+  camera*             Files used by ps350init
+  SerialIn            Sample camera-returned data, created in /tmp by ps350init
+
+  renamejpg.c      C program that automatically renames PS350 AUT/THM
+                   files (given as arguments) to a `recording-time' format
+                   that is much easier to interpret than the original
+                   name, like
+                     AUT_0365.JPG  =>  aut_19990626-124040.jpg
+                   If the destination name already exists, names with
+                   appended `-2', `-3' etc. are tried.

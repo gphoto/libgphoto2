@@ -1,0 +1,50 @@
+#! /bin/sh
+
+# The tty to use
+tty=/dev/ttyS1
+
+# Make the tty completely `raw' -- even more than `stty raw' does.
+# Works For Me [tm] on a Debian 2.1 system (kernel 2.0.36)
+stty sane < "$tty"
+stty -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok echonl -echoctl -echoke < "$tty"
+stty intr undef quit undef erase undef kill undef eof undef eol undef eol2 undef start undef stop undef susp undef rprnt undef werase undef lnext undef flush undef < "$tty"
+
+stty 9600 < "$tty"
+
+# Capture incoming signals to a file
+cat < "$tty" > /tmp/SerialIn &
+catpid=$!
+
+cat compu1 > "$tty"
+sleep 1s
+# This lets camera answer
+
+cat compu3 > "$tty"
+sleep 1s
+
+# Imitate a serial break
+stty 50 < "$tty"
+cat compu3c > "$tty"
+sleep 1s
+
+stty 9600 < "$tty"
+
+cat compu3d > "$tty"
+sleep 1s
+cat compu3e-4 > "$tty"
+sleep 1s
+
+stty 115200 < "$tty"
+
+cat compu3c > "$tty"
+sleep 1s
+cat compu3f > "$tty"
+sleep 1s
+
+cat compu5 > "$tty"
+sleep 1s
+
+cat compu6 > "$tty"
+sleep 2s
+
+kill $catpid

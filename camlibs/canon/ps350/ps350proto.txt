@@ -1,0 +1,740 @@
+
+                    Canon Powershot 350 / A5 Protocol Notes
+
+                                 J.A. Bezemer
+                                 5 July  1999
+
+
+
+GENERAL
+=======
+
+This document tries to describe the protocol that is observed in the
+serial communication between the Canon Powershot 350 and A5 (Zoom) cameras
+and a computer (or any other device equipped with a serial port). Only RX,
+TX and GND pins are used, with speeds of up to 115200 baud.
+
+Please read this document at least twice before complaining you don't
+understand anything at all.
+
+This document is likely to contain errors. USE THIS DOCUMENT AT YOUR OWN
+RISK. NO WARRANTY WHATSOEVER. 
+
+This document is copyright (C) 1999 J.A. Bezemer. It may be modified/
+distributed according to the terms of the GNU General Public License. More
+details in the file COPYING, or on the GNU website (http://www.gnu.org).
+
+
+At this moment, this document only describes the protocol of the PS 350.
+The A5 protocol is believed to be very similar to the 350 protocol.
+Please inform me if there are notable differences in the A5 protocol.
+
+
+PACKETS
+=======
+
+After (and also during) initialization, communication between camera and
+computer is organized in 300-byte packets. All packets start with 0xC0 and
+end with 0xC1. The last two bytes are a checksum, so one packet looks like
+this: 
+
+   0xC0  ---296 data bytes---  ---2 byte checksum---  0xC1
+
+
+The method of checksumming is a 16-bit CRC calculation. The file
+ps350chk.c contains more info and a sample implementation. 
+
+A packet contains a `length' field which indicates the length of the
+valid data in the packet. Non-valid extra bytes are sent as 0x00, but I
+don't know if that specific value is required.
+
+
+COMMUNICATION STRUCTURE
+=======================
+
+The communication is organized as follows:
+
+ 1. Computer sends command (always 1 packet)
+ 2. Camera sends reply (1 or more packets)
+ 3. Camera sends End-Of-Transmission packet
+ 4. Computer sends ACKnowledge packet
+
+A `command-counter' is used that is incremented with each command. 
+Computer and camera seem to increment the counter independently; there may
+be a possibility of getting out-of-sync (this may be corrected with a
+"ping" command, see below). It is an 8-bit value that warps from 255 to 0
+(assumption!). 
+
+This `count' is transmitted in every first packet of steps 1 through 4
+(i.e. not in the "extra" packets of a "long" camera-reply), except steps 1
+and 2 of a "ping" command. 
+
+
+PACKET STRUCTURES
+=================
+
+In the following, a large number of packets will be described. The 0xC0
+header byte will be omitted. In the diagrams, all numbers are in hex,
+unless otherwise stated. Multi-byte values are transmitted LSByte-first.
+
+
+"ping" command (sent by computer)
+--------------
+
+  00  10  0C  00  |  00  00  00  00  |  31  00  01  60  |  0C  00  00  00
+          <len->                       comm                <---totlen--->
+                     <--------------------0C bytes---------------------->
+
+`len' is length of this packet; `totlen' is total length of complete
+packet sequence. totlen != len only in multi-packet replies from camera.
+
+The length starts counting from the 5th byte of the "real" data (the 0xC0
+excluded).
+
+`comm' is the command number (at least, that's what I call it).
+
+Note that there are a lot of 0x00 bytes, a checksum and 0xC1 trailer after
+the bytes specified above (always 300 bytes in a packet).
+
+The "ping" command and reply are identical in all cases (no command count
+number).
+
+This command is sent every few seconds when the system is otherwise idle.
+If there is no reply, the camera is assumed to be disconnected or turned
+off (possibly due to empty batteries).
+
+
+"ping" reply (sent by camera)
+------------
+
+  00  10  30  00  |  01  00  00  00  |  09  00  03  00  |  30  00  00  00
+          <len->                       comm                <---totlen--->
+  00  00  00  00  |  00  00  00  00  |  00  00  00  00  |  00  00  00  00
+  04  00  03  00  |  00  00  00  00  |  00  00  00  00  |  00  00  00  00
+  00  00  00  00
+
+Normally the `comm' bytes are equal in command and reply, except here.
+
+The 5th byte is 00 in computer packets and 01 in camera packets.
+
+
+EOT packet (sent by camera)
+----------
+
+  xx  03  04  00  |  01  00  00  00
+ count    <len->
+
+
+ACK packet (sent by computer)
+----------
+
+  xx  04  04  00  |  00  00  00  00
+ count    <len->
+
+
+"unknown1" command ("get settings"???)
+------------------
+
+  00  10  10  00  |  00  00  00  00  |  1E  00  01  60  |  10  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00
+ count
+
+The M$Win driver sends this when count=07.
+
+
+"unknown1" reply
+----------------
+
+  00  10  18  00  |  01  00  00  00  |  1E  00  02  60  |  18  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00  |  00  00  00  00
+ count
+
+After this, the usual EOT/ACK packets follow.
+
+
+"get disks" command
+-------------------
+
+  00  10  14  00  |  00  00  00  00  |  18  00  01  60  |  14  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  1E  00  00  00
+ count
+
+The M$Win driver sends this when count=08.
+
+
+"get disks" reply
+-----------------
+
+  00  10  23  00  |  01  00  00  00  |  18  00  22  A0  |  23  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00  |  52  45  4D  4F  |  56  41  42  4C
+ count                                  R   E   M   O      V   A   B   L
+  45  5F  31  3A  |  2F  00  00
+  E   _   1   :      /
+
+Normally, a string is 0-terminated. I think the second terminating zero
+indicates the end of a (possible) list of strings.
+
+After this, the usual EOT/ACK packets follow. I won't indicate this again
+below.
+
+
+"use disk" command
+------------------
+
+  00  10  21  00  |  00  00  00  00  |  14  00  21  A0  |  21  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  52  45  4D  4F  |  56  41  42  4C  |  45  5F  31  3A
+ count               R   E   M   O      V   A   B   L      E   _   1   :
+  00  00  00  00  |  00
+
+I don't know what those extra 00's mean.
+
+The M$Win driver sends this when count=09.
+
+
+"use disk" reply
+----------------
+
+  00  10  1C  00  |  01  00  00  00  |  14  00  02  60  |  1C  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00  |  00  60  1E  00  |  00  xx  xx  00
+ count                                                         ??????
+
+`?????' is different each time.
+
+
+"name for dir" command
+----------------------
+
+  00  10  xx  xx  |  00  00  00  00  |  02  00  21  A0  |  xx  xx  xx  xx
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  xx  xx  xx...       ...xx  00
+ count               dirname (string)           termination
+
+E.g. "REMOVABLE_1:\DC97" has len=0x22
+
+
+"name for dir" reply for existing directory
+--------------------
+
+  00  10  18  00  |  01  00  00  00  |  02  00  02  60  |  18  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00  |  xx  xx  xx  xx
+ count                                  <---sector--->
+
+I call the returned number `sector' because I don't know what it is ;-)
+This `sector' is used in further communications.
+
+
+"name for dir" reply for non-existing (maybe also empty??) directory
+--------------------
+
+  00  10  18  00  |  01  00  00  00  |  02  00  02  60  |  18  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  02  00  00  20  |  02  00  00  20
+ count                |
+                      |
+This 0x02 may indicate that something is wrong. But I only have one
+occurrence, so I'm not sure.
+
+
+"forget dir" command
+--------------------
+
+  00  10  14  00  |  00  00  00  00  |  03  00  01  60  |  14  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  xx  xx  xx  xx
+ count               <---sector--->
+
+This command is used after a "name for dir" to check for dir existence and
+also after a full dir download.
+
+sector is the number that was sent in the "name for dir" reply. In case of
+a non-existent dir, sector is here 00 00 00 00.
+
+
+"forget dir" reply
+------------------
+
+  00  10  14  00  |  01  00  00  00  |  03  00  02  60  |  14  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00  
+ count
+
+
+"prepare for dir download" command
+----------------------------------
+
+  00  10  14  00  |  00  00  00  00  |  04  00  01  60  |  14  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  xx  xx  xx  xx
+ count               <---sector--->
+
+This command is sent to indicate that a dir download will follow.
+
+(I speak of "download" because I see the camera as "information server".)
+
+
+"prepare for dir download" reply
+--------------------------------
+
+  00  10  14  00  |  01  00  00  00  |  04  00  02  60  |  14  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00
+ count
+
+
+"dir download" command
+----------------------
+
+  00  10  1C  00  |  00  00  00  00  |  2A  00  81  A0  |  1C  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  xx  xx  xx  xx  |  E8  03  00  00  |  00  00  00  00
+ count               <---sector--->
+
+I don't know what the E8 03 means, but it's there always.
+
+
+"dir download" reply
+--------------------
+This is possibly a multi-packet sequence. The first (or only) packet:
+
+  00  10  xx  xx  |  01  00  00  00  |  2A  00  42  A0  |  xx  xx  xx  xx
+ num      <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00  |  xx  xx  xx  xx  |  xx...    ...xx
+ count                                 <#files> <----dir data-------- - -
+
+All next packets (if any):
+
+  xx  10  xx  xx  |  xx  xx...       ...xx
+ num      <len->     <----dir data---- - -
+
+(The following applies to all "sequenced packets":)
+
+num is the serial number of the packet in the sequence. The first packet
+has num=00, second 01, etc.
+
+len is the number of valid data bytes in every individual packet, _always_
+starting with the fifth byte (0xC0 header excluded). totlen is the sum of
+all len's in the sequence.
+
+Note that there's no need for len to be 300-8=292=0x0124. Notably
+directory entries are not split across packets, so there's always some
+empty space at the end of directory-download packets. 
+
+The MSBit of len is 1 in all not-last packets, and 0 only in the last
+packet. So the first packet may have a len=12 81 (LSByte first)=0x8112.
+
+The EOT packet following a multi-packet sequence has non-zero values for
+bytes 5,6,7,8. I don't know what they mean. But the ACK packet is still
+`normal', so there shouldn't be a problem.
+
+(This is only for "dir download":)
+
+#files is the number of files in the directory; I don't know if that
+includes erased files. See below for more on the directory entries.
+
+The dir data is not terminated (unlike 0-terminated strings).
+
+After a dir download, a "forget dir" command follows.
+
+
+"name for file" command
+-----------------------
+
+  00  10  xx  xx  |  00  00  00  00  |  01  00  41  A0  |  xx  xx  xx  xx
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  01  00  00  00  |  xx  xx...       ...xx 00
+ count                                  filename (string)     termination
+
+E.g. "REMOVABLE_1:\DC97\CTG_0001\THM_0073.JPG" has len=0x3C
+
+
+"name for file" reply for existing file
+---------------------
+
+  00  10  18  00  |  01  00  00  00  |  01  00  02  60  |  18  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00  |  xx  xx  xx  xx
+ count                                  <---sector--->
+
+I don't know what is returned for a non-existing file.
+
+
+"prepare for file download" command
+-----------------------------------
+
+  00  10  14  00  |  00  00  00  00  |  17  00  01  60  |  14  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  xx  xx  xx  xx
+ count               <---sector--->
+
+sector as returned in the "name for file" reply.
+
+
+"prepare for file download" reply
+---------------------------------
+
+  00  10  18  00  |  01  00  00  00  |  17  00  02  60  |  18  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00  |  xx  xx  xx  xx
+ count                                  <--file len-->
+
+`file len' is the length of the file that is to be downloaded.
+
+
+"file download" command
+-----------------------
+
+  00  10  18  00  |  00  00  00  00  |  12  00  01  60  |  18  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  xx  xx  xx  xx  |  xx  xx  xx  xx
+ count               <---sector--->     <-len2Bdownl->
+
+`len2Bdownl' is the length of the piece of the file that should be sent to
+the computer in the reply packet-sequence. The M$Win driver limits this to
+0x245C (which (if I'm correct) nicely fills up 0x20 packets). If the reply
+packet-sequence has been received, another identical "file download"
+command is sent, and transmission will continue. The last "file download"
+command should have a len2Bdownl that exactly matches the length of the
+remainder of the file. 
+
+Note that the "start point for download" is not specified; the camera
+remembers this.
+
+
+"file download" reply
+---------------------
+This is possibly a multi-packet sequence. The first (or only) packet:
+
+  00  10  xx  xx  |  01  00  00  00  |  12  00  C2  A0  |  xx  xx  xx  xx
+ num      <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00  |  xx  xx  xx  xx  |  xx  xx  xx  xx
+ count                                  <---sector--->     <---offset--->
+  xx  xx  xx  xx  |  xx  00  00  00  |  xx  xx...       ...xx
+  <-len2Bdownl->    last                <----file data--- - -
+
+All next packets have same structure as those of "dir download" reply
+(see above). Everything mentioned there for "sequenced packets" applies
+here as well.
+
+This packet format is repeated for every "resumed download".
+
+`offset' is the number of bytes of the file that have been transmitted
+before this sequence (so starts at 0 at the first sequence).
+
+`last' is 0x01 only in the last sequence, and 0x00 in non-last sequences.
+
+Like dirs, the file data is not terminated (unlike 0-terminated strings).
+
+After a completed file download, a "forget file" command follows.
+
+
+"forget file" command
+---------------------
+
+  00  10  14  00  |  00  00  00  00  |  11  00  01  60  |  14  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  xx  xx  xx  xx
+ count               <---sector--->
+
+
+"forget file" reply
+-------------------
+
+  00  10  14  00  |  01  00  00  00  |  11  00  02  60  |  14  00  00  00
+          <len->                       comm                <---totlen--->
+  xx  00  00  00  |  00  00  00  00
+ count
+
+
+"turn off" command
+------------------
+
+  00  01  00  00
+          <len->
+
+This tells the camera to turn itself off. This seems the only way of
+getting out of the computer-controlled mode. The M$Win driver issues this
+command upon exitting it.
+
+
+"turn off" reply
+----------------
+
+  00  10  10  00  |  01  00  00  00  |  39  00  02  60  |  10  00  00  00
+          <len->                       comm                <---totlen--->
+  00  00  00  00
+(count)
+
+count seems to be 0x00 in all cases.
+
+After this, a regular EOT packet (with the correct `count' number) is
+sent, after which the camera turns itself off. The computer does not send
+an ACK packet.
+
+
+Other packets
+-------------
+
+There are also packets for file/all-files deletion, getting battery status
+and getting/setting owner's name, but I don't have information on these at
+this moment. 
+
+
+INITIALIZATION
+==============
+
+Below is the initialization procedure that the M$Win driver uses. Most
+numbers are in hex.
+
+Connection check:
+
+1.  Speed = 9600 baud
+2.  Computer sends 00 53 55 55 55 55
+3.  Camera returns "identicifation" reply packet:
+
+  00  06  64  00  |  62  00  44  43  |  49  44  5C  00  |  00  00  01  00
+          <len->
+  00  01  00  01  |  EA  04  01  01  |  00  00  00  00  |  4D  6F  64  65
+count?                                                     M   o   d   e
+  6C  4E  61  6D  |  65  3D  50  6F  |  77  65  72  53  |  68  6F  74  20
+  l   N   a   m      e   =   P   o      w   e   r   S      h   o   t
+  33  35  30  20  |  20  2C  46  69  |  72  6D  77  61  |  72  65  20  76
+  3   5   0              ,   F   i      r   m   w   a      r   e       v
+  65  72  73  69  |  6F  6E  3D  30  |  31  3A  30  32  |  2C  4D  61  6E
+  e   r   s   i      o   n   =   0      1   :   0   2      ,   M   a   n
+  75  66  61  63  |  74  75  72  65  |  72  3D  43  61  |  6E  6F  6E  20
+  u   f   a   c      t   u   r   e      r   =   C   a      n   o   n
+  49  6E  63  2E  |  20  20  20  00
+  I   n   c   .
+
+4.  Camera sends regular EOT packet with count=00
+5.  Computer sends ACK 
+
+Try possible speeds:
+
+6.  Computer sends serial break signal; a 00 at 50 baud also works
+7.  Camera answers with serial break
+8.  Speed = 9600
+9.  Computer sends 42 00  (42 0x = speed change)
+10. Speed = 9600
+11. Computer sends 00 53
+12. Computer sends "ping" packet
+13. Camera returns "ping" reply
+14. Camera sends EOT packet with count=01
+15. Computer sends ACK packet with count=01
+
+16. Computer sends serial break signal
+17. Camera answers with serial break
+18. Speed = 9600
+19. Computer sends 42 01
+20. Speed = 19200
+21. Computer sends 00 53
+22. Computer sends "ping" packet
+23. Camera returns "ping" reply
+24. Camera sends EOT packet with count=02
+25. Computer sends ACK packet with count=02
+
+26. Computer sends serial break signal
+27. Camera answers with serial break
+28. Speed = 9600
+29. Computer sends 42 02
+30. Speed = 38400
+31. Computer sends 00 53
+32. Computer sends "ping" packet
+33. Camera returns "ping" reply
+34. Camera sends EOT packet with count=03
+35. Computer sends ACK packet with count=03
+
+36. Computer sends serial break signal
+37. Camera answers with serial break
+38. Speed = 9600
+39. Computer sends 42 03
+40. Speed = 57600
+41. Computer sends 00 53
+42. Computer sends "ping" packet
+43. Camera returns "ping" reply
+44. Camera sends EOT packet with count=04
+45. Computer sends ACK packet with count=04
+
+46. Computer sends serial break signal
+47. Camera answers with serial break
+48. Speed = 9600
+49. Computer sends 42 04
+50. Speed = 115200
+51. Computer sends 00 53
+52. Computer sends "ping" packet
+53. Camera returns "ping" reply
+54. Camera sends EOT packet with count=05
+55. Computer sends ACK packet with count=05
+
+Resume communication at chosen speed:
+
+56. Computer sends serial break signal
+57. Camera answers with serial break
+58. Speed = 9600
+59. Computer sends 42 04
+60. Speed = 115200
+61. Computer sends 00 53
+62. Computer sends "ping" packet
+63. Camera returns "ping" reply
+64. Camera sends EOT packet with count=06
+65. Computer sends ACK packet with count=06
+
+After this, communication is as described in the next section.
+
+It's not needed to try all speeds. The following sequence has been tried
+succesfully: 1, 2, 3, 4, 5, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65 (but
+then 64 and 65 with count=01).
+
+
+MORE COMMUNICATION
+==================
+
+After initialization, the following communication takes place:
+
+66. Computer sends "unknown1" command (see above), camera returns reply,
+    EOT, ACK (count=07)
+67. Computer sends "get disks" command, camera returns reply, EOT, ACK
+    (count=08)
+68. Computer sends "use disk" command, camera returns reply, EOT, ACK
+    (count=09)
+69. Computer sends "name for dir" command to check if "REMOVABLE_1:\DC97"
+    is present, camera returns reply (`exists'), EOT, ACK (count=0A)
+70. Computer sends "forget dir" command, camera returns reply, EOT, ACK
+    (count=0B)
+71. Computer sends "name for dir" command to check if
+    "REMOVABLE_1:\PWRSHOT" is present, camera returns reply (`does not
+    exist'), EOT, ACK (count=0C)
+72. Computer sends "forget dir" command, camera returns reply, EOT, ACK
+    (count=0D)
+73. Computer sends "name for dir" command for download of
+    "REMOVABLE_1:\DC97", camera returns reply, EOT, ACK (count=0E)
+74. Computer sends "prepare for dir download" command, camera returns
+    reply, EOT, ACK (count=0F)
+75. Computer sends "dir download" command, camera returns reply, EOT, ACK
+    (count=10)
+    The dir info returns
+      .
+      ..
+      CTG_0000
+      CTG_0001
+    and possibly more CTG's. These CTG's are `catalogs'; there may only be
+    a limited number of files in a CTG subdir, and a new subdir is added
+    when needed.
+76. Computer sends "forget dir" command, camera returns reply, EOT, ACK
+    (count=11)
+
+Now the computer gets each CTG_* directory with "name for dir", "prepare
+for dir download", "dir download" and "forget dir" commands. Dir names are
+"REMOVABLE_1:\DC97\CTG_0000" etc.
+
+In the CTG directories, there are two files for each picture: a thumbnail
+file (e.g. THM_0021.JPG) and a `real picture' file (e.g. AUT_0021.JPG).
+
+The M$Win driver first gets up to 9 thumbnail files (more don't fit in the
+driver's window), using commands "name for file", "prepare for file
+download", "file download" and "forget file". Sample file name:
+"REMOVABLE_1:\DC97\CTG_0001\THM_0073.JPG"
+
+More thumbnails are loaded when a scroll button is pressed. During `idle
+time', "ping" packets are sent every second.
+
+When a picture is selected, the `Aquire' button initiates a communication
+just like a thumbnail download, only there may be repeated "file
+download" commands. And in the file name it's "AUT" instead of "THM".
+
+When the driver is exitted, a "turn off" command is sent.
+
+
+DIRECTORY ENTRIES
+=================
+
+The directory information (as sent over the serial link) has 21=0x15 bytes
+of information per file. Example entry (numbers in hex):
+
+  20   2A 08 00 00   AA 28 3B 37   54 48 4D 5F 30 30 37 33 2E 4A 50 47
+ type  <--size--->   <--time--->   T  H  M  _  0  0  7  3  .  J  P  G
+                                   <---------------name-------------->
+
+type is 0x20 for a regular file, 0x10 for a directory. 
+
+size is the file size in bytes, also returned in the "prepare for file
+download" reply.
+
+time is the standard UNIX time_t-format time of file/dir creation.
+
+name seems to be left-aligned; e.g. a ".." directory entry has in the name
+field ".." followed by ten 00-bytes.
+
+Erased files have 0xE5 as first byte of the file name.
+
+Directories have a size 00 00 00 00.
+
+On the Compact Flash memory card, there is a normal FAT12 filesystem. The
+CF card behaves like a hard disk (has a partition table), of which
+the first (and only) partition spans the entire disk=memory. The PCMCIA
+kernel modules recognize it as an `ide' card.
+
+
+JPG FILE
+========
+
+The header of all JPG files has some interesting fields. Example:
+
+
+  FF  D8  FF  E0  |  00  10  4A  46  |  49  46  00  01  |  02  01  00  B4
+                             J   F      I   F
+  00  B4  00  00  |  FF  E0  00  A0  |  49  49  1A  00  |  00  00  48  45
+                                                                   H   E
+  41  50  4A  50  |  47  4D  02  00  |  01  00  00  00  |  00  00  00  00
+  A   P   J   P      G   M
+  00  00  44  F8  |  4F  37  00  00  |  00  00  00  00  |  00  00  43  61
+          <-----time------>                                        C   a
+  6E  6F  6E  20  |  49  6E  63  2E  |  20  20  20  00  |  50  6F  77  65
+  n   o   n          I   n   c   .                         P   o   w   e
+  72  53  68  6F  |  74  20  33  35  |  30  20  20  00  |  46  69  72  6D
+  r   S   h   o      t       3   5      0                  F   i   r   m
+  77  61  72  65  |  20  76  65  72  |  73  69  6F  6E  |  20  31  2E  30
+  w   a   r   e          v   e   r      s   i   o   n          1   .   0
+  32  00  01  00  |  0B  08  16  00  |  00  00  00  00  |  00  00  16  00
+  2
+  00  00  02  00  |  0A  08  1E  00  |  00  00  00  00  |  00  00  04  30
+
+
+The time field is exactly the same as in the directory.
+
+Except for the time field, this piece of the header (and possibly more) 
+seems to be identical for all JPG files (THM_* and AUT_*). 
+
+THM and AUT files are numbered, starting from {THM,AUT}_0000.JPG when the
+camera is new (and possibly when the batteries have been out a few days)
+and incremented for each picture. Incrementing is normally not interrupted
+by a CF card swap (i.e. if you place a new card after AUT_0168, then
+AUT_0169 will be the first picture on the new card). However, I have seen
+one occurrence of the same file name on two cards. The "right" method of
+ordering the files is by using the `time' field that is returned in the
+directory info. (Note that the time of AUT and THM files may be a few
+seconds apart.) 
+
+
+For the PS 350, the THM files are 80 x 60 and AUT 640 x 480 pixels. There
+are three quality modes for the AUT files (recording-time choice), "Fine",
+"Normal" and "Economy", which correspond to JPEG quality factors of about
+90%, 75% and 50%. THM files are about 2.5 kB and AUT files about 150 kB,
+70 kB and 32 kB depending on the quality mode.
+
+
+CONTACT INFORMATION
+===================
+
+I'm reachable preferably as <costar@panic.et.tudelft.nl>. If that
+shouldn't work, try <J.A.Bezemer@ITS.TUDelft.NL> or else <mcbzmr@dds.nl>. 
+In the latter case, please indicate that you're trying to send a message
+to me (and not to my brother ;-)
+

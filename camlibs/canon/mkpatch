@@ -1,0 +1,33 @@
+#!/bin/sh
+cd ../..
+ref=${1:-gphoto.ref}
+work=${2:-gphoto.work}
+[ -d $ref ] || { echo $ref/ is missing; exit; }
+[ -d $work ] || { echo $work/ is missing; exit; }
+for n in `awk '$1 !~ /^#/ {print$1}' <<EOF
+#--- gphoto -------------------------------------------------------------------
+Makefile.am
+configure.in
+#--- gphoto/canon -------------------------------------------------------------
+canon/README
+canon/Protocol
+canon/Makefile.am
+canon/canon.c
+canon/canon.h
+canon/psa50.c
+canon/psa50.h
+canon/crc.c
+canon/crc.h
+canon/serial.c
+canon/serial.h
+canon/util.c
+canon/util.h
+canon/mkpatch
+#--- gphoto/src ---------------------------------------------------------------
+src/Makefile.am
+src/cameras.h
+  `; do
+  s=$ref/$n
+  if [ ! -f $s ]; then s=/dev/null; fi
+  diff -u $s $work/$n
+done

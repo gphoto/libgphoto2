@@ -1,0 +1,13 @@
+
+Some notes about a driver for the PS 350/A5/...
+
+
+- When I use the M$Win driver on my 486DX50 laptop, it gets to 115200 but
+  then has much problems getting even one thumbnail. It would be nice to
+  be able to force the speed to lower bitrates. Or: default 115200 unless
+  otherwise indicated (trying all possible speeds as the M$Win driver does 
+  is quite useless IMO).
+
+- I don't know if gphoto already does this, but I'd like a program that
+  just copies all images off the camera without user intervention. Maybe
+  a few simple commandline options, no GUI.
