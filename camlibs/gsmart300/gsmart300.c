@@ -250,7 +250,7 @@ gsmart300_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 		return (GP_ERROR_NO_MEMORY);
 
 	tmp = *buf;
-	snprintf (tmp, sizeof (pbm_header), pbm_header);
+	snprintf (tmp, sizeof (pbm_header), "%s", pbm_header);
 	tmp += sizeof (pbm_header) - 1;
 
 	yuv_p = mybuf;
