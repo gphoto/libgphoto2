@@ -32,6 +32,9 @@ camlibs/kodak/dc120:
 camlibs/kodak/dc240:
 	Hubert Figuiere <hfiguiere@teaser.fr>
 
+camlibs/panasonic
+	Mariusz Zynel <mariusz@math.uwb.edu.pl>
+
 camlibs/panasonic/coolshot:
 	Chris Pinkham <cpinkham@infi.net>
 

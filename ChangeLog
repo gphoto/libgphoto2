@@ -1,3 +1,8 @@
+2001-09-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* MAINTAINERS: Added Marius for panasonic
+	* camlibs/panasonic/coolshot/Makefile.am: @dotlibs
+
 2001-09-06  Chris Pinkham <cpinkham@infi.net>
 
 	* camlibs/panasonic/coolshot/README
