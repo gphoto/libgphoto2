@@ -1,31 +1,34 @@
+/* core.c
+ *
+ * Copyright (C) 2000 Scott Fritzinger
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include "gphoto2-core.h"
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
 
-#include <gphoto2.h>
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (PACKAGE, String)
-#  ifdef gettext_noop
-#      define N_(String) gettext_noop (String)
-#  else
-#      define N_(String) (String)
-#  endif
-#else
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
-
-#include "core.h"
-#include "library.h"
-#include "settings.h"
-#include "util.h"
+#include <gphoto2-abilities.h>
+#include <gphoto2-setting.h>
+#include <gphoto2-result.h>
+#include <gphoto2-abilities-list.h>
+#include <gphoto2-camera.h>
 
 /* Debug level */
 int             glob_debug = 0;
@@ -33,36 +36,136 @@ int             glob_debug = 0;
 /* Camera List */
 CameraAbilitiesList *glob_abilities_list;
 
-/* Currently loaded settings */
-int             glob_setting_count = 0;
-Setting         glob_setting[512];
-
-/* Sessions */
-int             glob_session_camera = 0;
-int             glob_session_file   = 0;
-
-/* Front-end function pointers */
-CameraStatus   gp_fe_status   = NULL;
-CameraProgress gp_fe_progress = NULL;
-CameraMessage  gp_fe_message  = NULL;
-CameraConfirm  gp_fe_confirm  = NULL;
-CameraPrompt   gp_fe_prompt   = NULL;
-
-static char *result_string[] = {
-        /* GP_ERROR_BAD_PARAMETERS      -100 */ N_("Bad parameters"),
-        /* GP_ERROR_IO                  -101 */ N_("I/O problem"),
-        /* GP_ERROR_CORRUPTED_DATA      -102 */ N_("Corrupted data"),
-        /* GP_ERROR_FILE_EXISTS         -103 */ N_("File exists"),
-        /* GP_ERROR_NO_MEMORY           -104 */ N_("Insufficient memory"),
-        /* GP_ERROR_MODEL_NOT_FOUND     -105 */ N_("Unknown model"),
-        /* GP_ERROR_NOT_SUPPORTED       -106 */ N_("Unsupported operation"),
-        /* GP_ERROR_DIRECTORY_NOT_FOUND -107 */ N_("Directory not found"),
-        /* GP_ERROR_FILE_NOT_FOUND      -108 */ N_("File not found"),
-	/* GP_ERROR_DIRECTORY_EXISTS    -109 */ N_("Directory exists"),
-        /* GP_ERROR_NO_CAMERA_FOUND     -110 */ N_("No cameras were detected")
-};
-
 static int have_initted = 0;
+
+int is_library(char *library_filename)
+{
+	int ret = GP_OK;
+        void *lh;
+	c_id id;
+       
+	if ((lh = GP_SYSTEM_DLOPEN(library_filename)) == NULL)
+                return (GP_ERROR);
+	id = (c_id)GP_SYSTEM_DLSYM(lh, "camera_id");
+	if (!id)
+		ret = GP_ERROR;
+	GP_SYSTEM_DLCLOSE(lh);
+
+        return (ret);
+}
+
+/* Returns the number of cameras added to the CameraChoice list */
+/* 0 implies an error occurred */
+int load_camera_list(char *library_filename)
+{
+	CameraText id;
+	void *lh;
+        c_abilities load_camera_abilities;
+        c_id load_camera_id;
+        int x, old_count;
+
+        /* try to open the library */
+        if ((lh = GP_SYSTEM_DLOPEN(library_filename))==NULL) {
+                if (glob_debug)
+                        perror("core:\tload_camera_list");
+                return 0;
+        }
+
+        /* check to see if this library has been loaded */
+	load_camera_id = (c_id)GP_SYSTEM_DLSYM(lh, "camera_id");
+	load_camera_id(&id);
+	gp_debug_printf(GP_DEBUG_LOW, "core", "\t library id: %s", id.text);
+
+	for (x=0; x<glob_abilities_list->count; x++) {
+		if (strcmp(glob_abilities_list->abilities[x]->id, id.text)==0) {
+			GP_SYSTEM_DLCLOSE(lh);
+			return (GP_ERROR);
+		}
+	}
+
+	/* load in the camera_abilities function */
+	load_camera_abilities = (c_abilities)GP_SYSTEM_DLSYM(lh, "camera_abilities");
+	old_count = glob_abilities_list->count;
+
+        if (load_camera_abilities(glob_abilities_list) != GP_OK) {
+                GP_SYSTEM_DLCLOSE(lh);
+                return 0;
+        }
+
+	/* Copy in the core-specific information */
+	for (x=old_count; x<glob_abilities_list->count; x++) {
+		strcpy(glob_abilities_list->abilities[x]->id, id.text);
+		strcpy(glob_abilities_list->abilities[x]->library, library_filename);
+	}
+
+        GP_SYSTEM_DLCLOSE(lh);
+
+	return x;
+}
+
+int load_cameras_search(char *directory)
+{
+        GP_SYSTEM_DIR d;
+        GP_SYSTEM_DIRENT de;
+	char buf[1024];
+
+	gp_debug_printf(GP_DEBUG_LOW, "core","Trying to load camera libraries in:");
+	gp_debug_printf(GP_DEBUG_LOW, "core","\t%s", directory);
+
+        /* Look for available camera libraries */
+        d = GP_SYSTEM_OPENDIR(directory);
+        if (!d) {
+                gp_debug_printf(GP_DEBUG_LOW, "core", "couldn't open %s", directory);
+                return GP_ERROR_DIRECTORY_NOT_FOUND;
+        }
+
+        do {
+           /* Read each entry */
+           de = GP_SYSTEM_READDIR(d);
+           if (de) {
+		sprintf(buf, "%s%c%s", directory, GP_SYSTEM_DIR_DELIM, GP_SYSTEM_FILENAME(de));
+                gp_debug_printf(GP_DEBUG_LOW, "core", "\tis %s a library? ", buf);
+                /* try to open the library */
+                if (is_library(buf) == GP_OK) {
+                        gp_debug_printf(GP_DEBUG_LOW, "core", "yes");
+                        load_camera_list(buf);
+                   } else {
+			gp_debug_printf(GP_DEBUG_LOW, "core", "no. reason: %s", GP_SYSTEM_DLERROR());
+                }
+           }
+        } while (de);
+
+        return (GP_OK);
+}
+
+int load_cameras() {
+
+	int x, y, z;
+	CameraAbilities *t;
+
+	/* Where should we search for camera libraries? */
+
+	/* The installed camera library directory */
+	load_cameras_search(CAMLIBS);
+
+	/* Current directory */
+	/* load_cameras_search("."); */
+
+        /* Sort the camera list */
+        for (x=0; x<glob_abilities_list->count-1; x++) {
+                for (y=x+1; y<glob_abilities_list->count; y++) {
+                        z = strcmp(glob_abilities_list->abilities[x]->model, 
+				   glob_abilities_list->abilities[y]->model);
+                        if (z > 0) {
+			  t = glob_abilities_list->abilities[x];
+			  glob_abilities_list->abilities[x] = glob_abilities_list->abilities[y];
+			  glob_abilities_list->abilities[y] = t;
+                        }
+                }
+        }
+
+	return GP_OK;
+}
 
 int gp_init (int debug)
 {
@@ -79,7 +182,6 @@ int gp_init (int debug)
 
         /* Initialize the globals */
         glob_abilities_list = gp_abilities_list_new();
-        glob_setting_count   = 0;
 
         /* Make sure the directories are created */
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Creating $HOME/.gphoto");
@@ -176,38 +278,44 @@ void gp_debug_printf (int level, char *id, char *format, ...)
         }
 }
 
-int gp_frontend_register (CameraStatus status, CameraProgress progress,
-                          CameraMessage message, CameraConfirm confirm,
-                          CameraPrompt prompt)
+int gp_camera_count ()
 {
-        gp_fe_status   = status;
-        gp_fe_progress = progress;
-        gp_fe_message  = message;
-        gp_fe_confirm  = confirm;
-        gp_fe_prompt   = prompt;
-
-        return (GP_OK);
+	return (glob_abilities_list->count);
 }
 
-char *gp_result_as_string (int result)
+int gp_camera_name (int camera_number, char *camera_name)
 {
-        /* Really an error? */
-        if (result > 0)
-                return _("Unknown error");
+	if (glob_abilities_list == NULL)
+		return (GP_ERROR_MODEL_NOT_FOUND);
 
-        /* IOlib error? Pass through. */
-        if ((result <= 0) && (result >= -99))
-            return gp_port_result_as_string(result);
+	if (camera_number > glob_abilities_list->count)
+		return (GP_ERROR_MODEL_NOT_FOUND);
 
-        /* Camlib error? You should have called gp_camera_result_as_string... */
-        if (result <= -1000)
-                return _("Unknown camera library error");
-
-        /* Do we have an error description? */
-        if ((-result - 100) < (int) (sizeof (result_string) / 
-				     sizeof (*result_string)))
-                return _(result_string[-result - 100]);
-
-        return _("Unknown error");
+	strcpy (camera_name,
+			glob_abilities_list->abilities[camera_number]->model);
+	return (GP_OK);
 }
 
+int gp_camera_abilities (int camera_number, CameraAbilities *abilities)
+{
+	memcpy (abilities, glob_abilities_list->abilities[camera_number],
+		sizeof(CameraAbilities));
+	
+	if (glob_debug)
+		gp_abilities_dump (abilities);
+
+	return (GP_OK);
+}
+
+int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities)
+{
+	int x;
+	
+	for (x = 0; x < glob_abilities_list->count; x++) {
+		if (strcmp (glob_abilities_list->abilities[x]->model,
+					camera_name) == 0)
+			return (gp_camera_abilities(x, abilities));
+	}
+
+	return (GP_ERROR_MODEL_NOT_FOUND);
+}

@@ -6,19 +6,18 @@ CFLAGS= @CFLAGS@ \
 	-DDOCDIR=\"$(prefix)/doc/gphoto2\"
 
 libgphoto2_la_LDFLAGS = -version-info 0:0:0
-libgphoto2_la_SOURCES = \
-	camera.c \
-	core.c core.h \
-	exif.c exif.h \
-	file.c \
-	filesys.c \
-	frontend.c \
-	globals.h \
-	library.c library.h \
-	lists.c \
-	port.c \
-	settings.c settings.h \
-	util.c util.h \
+libgphoto2_la_SOURCES = 	\
+	abilities.c		\
+	abilities-list.c	\
+	camera.c		\
+	core.c			\
+	exif.c exif.h		\
+	file.c			\
+	filesys.c		\
+	frontend.c		\
+	list.c			\
+	result.c		\
+	setting.c		\
 	widget.c
 
 pkgconfigdir = $(libdir)/pkgconfig

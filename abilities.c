@@ -1,12 +1,54 @@
-#include <stdio.h>
-#include <string.h>
+/* abilities.c
+ *
+ * Copyright (C) 2000 Scott Fritzinger
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include "gphoto2-abilities.h"
+
 #include <stdlib.h>
-#include <gphoto2.h>
 
-#include "util.h"
+#include "gphoto2-result.h"
+#include "gphoto2-core.h"
 
-int gp_abilities_dump (CameraAbilities *abilities) {
+CameraAbilities *
+gp_abilities_new (void)
+{
+	CameraAbilities *abilities;
 
+	abilities = malloc (sizeof (CameraAbilities));
+	if (!abilities)
+		return (NULL);
+
+	return (abilities);
+}
+
+int
+gp_abilities_free (CameraAbilities *abilities)
+{
+	if (!abilities)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	free (abilities);
+	return (GP_OK);
+}
+
+int gp_abilities_dump (CameraAbilities *abilities)
+{
 	int x=0;
 
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Abilities for camera                  : %s", 
@@ -51,10 +93,10 @@ int gp_abilities_dump (CameraAbilities *abilities) {
 	return (GP_OK);
 }
 
-int gp_abilities_clear (CameraAbilities *abilities) {
-
+int gp_abilities_clear (CameraAbilities *abilities)
+{
 	strcpy(abilities->model, "");
-	abilities->port = 0;
+	abilities->port = GP_PORT_NONE;
 	abilities->speed[0] = 0;
 	abilities->operations        = GP_OPERATION_NONE;
 	abilities->file_operations   = GP_FILE_OPERATION_NONE;

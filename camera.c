@@ -1,11 +1,33 @@
+/* camera.c
+ *
+ * Copyright (C) 2000 Scott Fritzinger
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include "gphoto2-camera.h"
+
 #include <stdlib.h>
 #include <string.h>
-#include <gphoto2.h>
 
-#ifdef HAVE_CONFIG_H
+#include "gphoto2-result.h"
+#include "gphoto2-frontend.h"
+#include "gphoto2-core.h"
+
 #include <config.h>
-#endif
-
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -20,61 +42,14 @@
 #  define N_(String) (String)
 #endif
 
-#include "globals.h"
-#include "library.h"
-#include "settings.h"
-#include "util.h"
+static int glob_session_camera = 0;
 
 int gp_camera_exit (Camera *camera);
-
-int gp_camera_count ()
-{
-	return (glob_abilities_list->count);
-} 
-
-int gp_camera_name (int camera_number, char *camera_name)
-{
-	if (glob_abilities_list == NULL)
-		return (GP_ERROR_MODEL_NOT_FOUND);
-
-        if (camera_number > glob_abilities_list->count)
-                return (GP_ERROR_MODEL_NOT_FOUND);
-
-        strcpy (camera_name, 
-		glob_abilities_list->abilities[camera_number]->model);
-        return (GP_OK);
-}
-
-int gp_camera_abilities (int camera_number, CameraAbilities *abilities)
-{
-        memcpy (abilities, glob_abilities_list->abilities[camera_number],
-               sizeof(CameraAbilities));
-
-        if (glob_debug)
-                gp_abilities_dump (abilities);
-
-        return (GP_OK);
-}
-
-
-int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities)
-{
-
-        int x;
-
-	for (x = 0; x < glob_abilities_list->count; x++) {
-                if (strcmp (glob_abilities_list->abilities[x]->model, 
-			    camera_name) == 0)
-                        return (gp_camera_abilities(x, abilities));
-        }
-
-        return (GP_ERROR_MODEL_NOT_FOUND);
-}
 
 int gp_camera_new (Camera **camera)
 {
 
-        *camera = (Camera*)malloc(sizeof(Camera));
+        *camera = malloc (sizeof (Camera));
 	if (!*camera) 
 		return (GP_ERROR_NO_MEMORY);
 
@@ -246,27 +221,24 @@ int gp_camera_init (Camera *camera)
 	}
 
 	/* Fill in camera abilities. */
-	gp_debug_printf (GP_DEBUG_LOW, "core", 
-			 "Looking up abilities for model %s...", camera->model);
-	for (x = 0; x < glob_abilities_list->count; x++) {
-		if (strcmp (glob_abilities_list->abilities[x]->model, 
-			    camera->model) == 0)
-			break;
-	}
-	if (x == glob_abilities_list->count)
-		return GP_ERROR_MODEL_NOT_FOUND;
-	camera->abilities->file_operations = 
-		glob_abilities_list->abilities[x]->file_operations;
-	camera->abilities->folder_operations = 
-		glob_abilities_list->abilities[x]->folder_operations;
-	camera->abilities->operations = 
-		glob_abilities_list->abilities[x]->operations;
+	result = gp_camera_abilities_by_name (camera->model, camera->abilities);
+	if (result != GP_OK)
+		return (result);
 
 	/* Load the library. */
-	gp_debug_printf (GP_DEBUG_LOW, "core", "Loading library %s...", 
-			 glob_abilities_list->abilities[x]->library);
-	if ((result = load_library(camera)) != GP_OK)
-		return (result);
+	gp_debug_printf (GP_DEBUG_LOW, "core", "Loading library...");
+	camera->library_handle = GP_SYSTEM_DLOPEN (camera->abilities->library);
+	if (!camera->library_handle) {
+		gp_camera_free (camera);
+		return (GP_ERROR);
+	}
+
+	camera->functions->id = GP_SYSTEM_DLSYM (camera->library_handle,
+						 "camera_id");
+	camera->functions->abilities = GP_SYSTEM_DLSYM (camera->library_handle,
+					                "camera_abilities");
+	camera->functions->init = GP_SYSTEM_DLSYM (camera->library_handle,
+						   "camera_init");
 
         return (camera->functions->init (camera));
 }
@@ -384,7 +356,8 @@ int gp_camera_exit (Camera *camera)
                 return (GP_ERROR_NOT_SUPPORTED);
 
         ret = camera->functions->exit (camera);
-        close_library (camera);
+
+	GP_SYSTEM_DLCLOSE (camera->library_handle);
 
         return (ret);
 }

@@ -1,12 +1,47 @@
+/* setting.c
+ *
+ * Copyright (C) 2000 Scott Fritzinger
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include "gphoto2-setting.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <gphoto2.h>
+#include "gphoto2-result.h"
+#include "gphoto2-core.h"
 
-#include "settings.h"
-#include "globals.h"
-#include "util.h"
+typedef struct {
+	/* key = value settings */
+	char id[256];
+	char key[256];
+	char value[256];
+} Setting;
+
+/* Currently loaded settings */
+int             glob_setting_count = 0;
+Setting         glob_setting[512];
+
+extern int glob_debug;
+
+static int save_settings (void);
+static int dump_settings (void);
 
 int gp_setting_get (char *id, char *key, char *value)
 {
@@ -40,20 +75,20 @@ int gp_setting_set (char *id, char *key, char *value)
                 if ((strcmp(glob_setting[x].id, id)==0) &&
 		    (strcmp(glob_setting[x].key, key)==0)) {
                         strcpy(glob_setting[x].value, value);
-                        save_settings(glob_setting, glob_setting_count);
+                        save_settings ();
                         return (GP_OK);
                 }
 	}
         strcpy(glob_setting[glob_setting_count].id, id);
         strcpy(glob_setting[glob_setting_count].key, key);
         strcpy(glob_setting[glob_setting_count++].value, value);
-        save_settings(glob_setting, glob_setting_count);
+        save_settings ();
 
         return (GP_OK);
 }
 
-int verify_settings (char *settings_file) {
-
+int verify_settings (char *settings_file)
+{
 	FILE *f;
 	char buf[1024];
 	int x, equals;
@@ -87,8 +122,8 @@ int verify_settings (char *settings_file) {
 	return (GP_OK);
 }
 
-int load_settings () {
-
+int load_settings (void)
+{
 	FILE *f;
 	char buf[1024], *id, *key, *value;
 
@@ -128,14 +163,15 @@ int load_settings () {
 		}
 	}
 	if (glob_debug)
-		dump_settings();
+		dump_settings ();
 
 	return (GP_OK);
 }
 
 
-int save_settings () {
-
+static int
+save_settings (void)
+{
 	FILE *f;
 	char buf[1024];
 	int x=0;
@@ -163,9 +199,10 @@ int save_settings () {
 	return (GP_OK);
 }
 
-int dump_settings () {
-
+static int dump_settings (void)
+{
 	int x;
+
 	gp_debug_printf(GP_DEBUG_LOW, "core", "All settings:");
 	for (x=0; x<glob_setting_count; x++)
 		gp_debug_printf(GP_DEBUG_LOW, "core", "\t (%s) \"%s\" = \"%s\"", glob_setting[x].id,
