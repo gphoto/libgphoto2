@@ -74,10 +74,9 @@ int option_is_present (char *op, int argc, char **argv) {
         return (GP_ERROR_BAD_PARAMETERS);
 }
 
-int verify_options (int argc, char **argv) {
-        /* This function makes sure that all command-line options are
-           valid and have the correct number of arguments */
-
+int
+verify_options (int argc, char **argv)
+{
         int x, y, match, missing_arg, which;
         char s[5], l[24];
 
