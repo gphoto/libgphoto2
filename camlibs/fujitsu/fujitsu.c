@@ -197,8 +197,6 @@ int fujitsu_read_packet (gpio_device *dev, char *packet) {
 		length += 6;
 	} else {
 		fujitsu_dump_packet(packet);
-		if (packet[0] == DC1)
-			return (GP_ERROR);
 		return (fujitsu_valid_packet(packet));
 	}
 
@@ -367,22 +365,34 @@ int fujitsu_set_int_register (gpio_device *dev, int reg, int value) {
 	sprintf(buf, "Setting register #%i to %i", reg, value);
 	debug_print(buf);
 
-	fujitsu_build_packet(TYPE_COMMAND, 0, 6, p);
+	if (value < 0)
+		fujitsu_build_packet(TYPE_COMMAND, 0, 2, p);
+	   else
+		fujitsu_build_packet(TYPE_COMMAND, 0, 6, p);
 
         /* Fill in the data */
         p[4] = 0x00;
         p[5] = reg;
-	p[6] = (value)     & 0xff;
-	p[7] = (value>>8)  & 0xff;
-	p[8] = (value>>16) & 0xff;
-	p[9] = (value>>24) & 0xff;
+	if (value >= 0) {
+		p[6] = (value)     & 0xff;
+		p[7] = (value>>8)  & 0xff;
+		p[8] = (value>>16) & 0xff;
+		p[9] = (value>>24) & 0xff;
+	}
 
 	while (r++<RETRIES) {
 		if (fujitsu_write_packet(dev, p)==GP_ERROR)
 			return (GP_ERROR);
 
-		if (fujitsu_read_ack(dev)==GP_OK)
+		if (fujitsu_read_packet(dev, buf)==GP_ERROR)
+			return (GP_ERROR);
+
+		if (buf[0] == ACK)
 			return (GP_OK);
+
+		/* DC1 = invalid register or value */
+		if (buf[0] == DC1)
+			return (GP_ERROR);
 	}
 
 	debug_print("too many retries");
@@ -437,6 +447,7 @@ int fujitsu_set_string_register (gpio_device *dev, int reg, char *s, int length)
 
 	char packet[4096], buf[4096];
 	char type;
+	unsigned char c;
 	int x=0, seq=0, size=0, done, r;
 
 	sprintf(buf, "Setting string in register #%i to \"%s\"", reg, s);
@@ -474,7 +485,14 @@ int fujitsu_set_string_register (gpio_device *dev, int reg, char *s, int length)
 			if (fujitsu_read_packet(dev, buf)==GP_ERROR)
 				return (GP_ERROR);
 
-			done = (buf[0] == NAK)? 0 : 1;
+			c = (unsigned char)buf[0];
+			if (c == ACK)
+				done = 1;
+			   else	{
+				if ((c != DC1) && (c != NAK))
+					return (GP_ERROR);
+			}
+
 		}
 		if (r > RETRIES) {
 			debug_print("too many NAKs from camera");

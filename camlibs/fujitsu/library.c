@@ -7,8 +7,10 @@
 #include "fujitsu.h"
 
 int 		glob_debug	=0;
+int		glob_folders	=0;
 gpio_device*	glob_dev;
 char		glob_folder[128];
+
 
 void debug_print(char *message) {
 
@@ -147,6 +149,7 @@ int camera_init (CameraInit *init) {
 	settings.serial.parity 	 = 0;
 	settings.serial.stopbits = 1;
 	gpio_set_settings(glob_dev, settings);
+	gpio_set_timeout(glob_dev, 2000);
 
 	if (gpio_open(glob_dev)==GPIO_ERROR) {
 		gp_message("Can not open the port");
@@ -164,10 +167,22 @@ int camera_init (CameraInit *init) {
 	}
 
 	if (fujitsu_get_int_register(glob_dev, 1, &value)==GP_ERROR) {
-		gp_message("Can not talk to camera after speed change");
+		gp_message("Could not communicate with camera after speed change");
 		return (GP_ERROR);
 	}
 
+
+	fujitsu_set_int_register(glob_dev, 83, -1);
+
+	gpio_set_timeout(glob_dev, 50);
+	if (fujitsu_set_string_register(glob_dev, 84, "\\", 1)==GP_ERROR)
+		glob_folders = 0;
+	   else
+		glob_folders = 1;
+
+	if (glob_folders)
+		debug_print("Camera supports folders");
+	gpio_set_timeout(glob_dev, 2000);
 	return (GP_OK);
 }
 
@@ -187,10 +202,10 @@ int camera_folder_list(char *folder_name, CameraFolderInfo *list) {
 
 	debug_print("Listing folders");
 
-	strcpy(list[0].name, "<photos>");
+	if (!glob_folders) /* camera doesn't support folders */
+		return (0);
 
-	/* return only 1 folder (root) on camera */
-	return (1);
+	return (0);
 }
 
 int camera_folder_set(char *folder_name) {
