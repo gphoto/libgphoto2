@@ -2,6 +2,7 @@
 
 	* configure.in: disabled gsmart, benq, spca504_flash camlibs
 	  (now replaced by spca50x camlib).
+	  Handle camlibs with - in the name by replacing it with _.
 
 2003-05-12  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
