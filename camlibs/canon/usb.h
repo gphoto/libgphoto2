@@ -256,7 +256,7 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,	"Lock keys and turn off LCD",	0x20, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_1,	"Unknown EOS 20D function",	0x21, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_2,	"Unknown EOS 20D function",	0x22, 0x12, 0x201,	0x54},
-	{CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,	"New EOS get body ID",		0x23, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,	"New EOS get body ID",		0x23, 0x12, 0x201,	0x58},
 	{CANON_USB_FUNCTION_GET_PIC_ABILITIES_2, "New get picture abilities",	0x24, 0x12, 0x201,	0x474},
 	{CANON_USB_FUNCTION_20D_UNKNOWN_3,	"Unknown EOS 20D function",	0x25, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2, "New download a captured image", 0x26, 0x12, 0x202,	0x54},
