@@ -1,3 +1,11 @@
+2001-01-15  Kurt Garloff <garloff@suse.de>
+
+	* demosaic_sharpen.c:
+	  Add demosaicing which uses adaptive weighted interpolation
+	  rather than the simplistic bilinear one.
+	  Results in sharper and less noisy pictures.
+	  Further reduce traditional sharpening.
+	  
 2001-01-09  Dan Fandrich <dan@coneharvesters.com>
 
 	* sharpen.c: Added include of string.h to get memcpy prototype
