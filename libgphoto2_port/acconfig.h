@@ -1,5 +1,14 @@
-#undef HAVE_TERMIOS_H
-#undef HAVE_STRFTIME
-#undef HAVE_LOCALTIME
-#undef HAVE_FCNTL_H
+/* Name of package.	*/
+#undef PACKAGE
+
+/* Version of package.	*/
+#undef VERSION
+
+/* Languages */
+#undef ENABLE_NLS
+#undef HAVE_CATGETS
+#undef HAVE_GETTEXT
+#undef HAVE_LC_MESSAGES
+#undef HAVE_STPCPY
+
 #undef HAVE_RTS_IOCTL

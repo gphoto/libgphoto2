@@ -27,6 +27,20 @@
 #include "../include/gphoto2-port.h"
 #include "library.h"
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#      define N_(String) gettext_noop (String)
+#  else
+#      define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 gp_port_info     device_list[256];
 int              device_count;
 
@@ -38,12 +52,36 @@ void gp_port_debug_printf (int target_debug_level, int debug_level, char *format
         va_list arg;
 
         if ((debug_level > 0)&&(debug_level >= target_debug_level)) {
-                fprintf(stderr, "gpio: ");
+                fprintf(stderr, "gp_port: ");
                 va_start(arg, format);
                 vfprintf(stderr, format, arg);
                 va_end(arg);
                 fprintf(stderr, "\n");
         }
+}
+
+char *gp_port_result_as_string (int result) {
+
+    /* gp_port error range is -1 .. -99 */
+
+    if ((result < -99) || (result > 0))
+        return (N_("Unknown error"));
+
+    switch (result) {
+    case 0:
+        return (N_("No error"));
+        break;
+    case -1:
+        return (N_("Generic error"));
+        break;
+    case -2:
+        return (N_("There was a timeout reading from or writing to the port"));
+        break;
+    default:
+        break;
+    }
+
+    return (N_("Unknown error"));
 }
 
 /*

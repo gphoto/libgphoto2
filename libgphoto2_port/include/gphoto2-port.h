@@ -154,6 +154,9 @@ struct gp_port {
 	void gp_port_debug_printf (int target_debug_level, int debug_level, char *format, ...);
 		/* issues debugging messages */
 
+        char *gp_port_result_as_string (int result);
+                /* Returns a string describing the error */
+
 	int gp_port_init (int debug_level);
 		/* Initializes the library.
 			return values:

@@ -25,6 +25,10 @@ AC_PROG_CC
 AC_PROG_CPP
 AM_PROG_LIBTOOL
 
+dnl Languages
+ALL_LINGUAS=""
+AM_GNU_GETTEXT
+
 dnl Turn on debugging and catch GNU features incompatible with ANSI C.
 CFLAGS="$CFLAGS -g -Wall -ansi"
 LDFLAGS="$LDFLAGS -g -Wall -ansi"
@@ -117,4 +121,6 @@ usb/Makefile \
 ieee1394/Makefile \
 network/Makefile \
 include/Makefile \
-gphoto2-port-config)
+gphoto2-port-config \
+intl/Makefile \
+po/Makefile.in)
