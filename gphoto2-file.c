@@ -335,17 +335,25 @@ gp_file_clean (CameraFile *file)
 int
 gp_file_copy (CameraFile *destination, CameraFile *source)
 {
+	int ref_count;
+
 	CHECK_NULL (destination && source);
 
-	if (destination->data)
+	gp_log (GP_LOG_DEBUG, "gphoto2-file", "Copying '%s' onto '%s'...",
+		source->name, destination->name);
+
+	ref_count = destination->ref_count;
+	if (destination->data) {
 		free (destination->data);
+		destination->data = NULL;
+	}
 
 	memcpy (destination, source, sizeof (CameraFile));
+	destination->ref_count = ref_count;
 
 	destination->data = malloc (sizeof (char) * source->size);
 	if (!destination->data)
 		return (GP_ERROR_NO_MEMORY);
-
 	memcpy (destination->data, source->data, source->size);
 
 	return (GP_OK);
