@@ -1,0 +1,3824 @@
+# Traducción al castellano
+# Copyright (C) 2002 Fabian Mandelbaum <fabman@mandrakesoft.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gphoto2\n"
+"POT-Creation-Date: 2002-03-13 23:38+0100\n"
+"PO-Revision-Date: 2002-03-12 16:00-0300\n"
+"Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
+"Language-Team: Castellano <traduc@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 0.9.5\n"
+
+#: camlibs/agfa/agfa.c:221 camlibs/digita/digita.c:389
+#, c-format
+msgid "Number of pictures: %d"
+msgstr "Cantidad de fotos: %d"
+
+#: camlibs/agfa/agfa.c:228
+msgid ""
+"Agfa CL18\n"
+"Vince Weaver <vince@deater.net>\n"
+msgstr ""
+"Agfa CL18\n"
+"Vince Weaver <vince@deater.net>\n"
+
+#: camlibs/barbie/barbie.c:149
+#, c-format
+msgid ""
+"Number of pictures: %i\n"
+"Firmware Version: %s"
+msgstr ""
+"Cantidad de fotos: %i\n"
+"Versión del firmware: %s"
+
+#: camlibs/barbie/barbie.c:159
+msgid ""
+"Barbie/HotWheels/WWF\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Andreas Meyer <ahm@spies.com>\n"
+"Pete Zaitcev <zaitcev@metabyte.com>\n"
+"\n"
+"Reverse engineering of image data by:\n"
+"Jeff Laing <jeffl@SPATIALinfo.com>\n"
+"\n"
+"Implemented using documents found on\n"
+"the web. Permission given by Vision."
+msgstr ""
+"Barbie/HotWheels/WWF\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Andreas Meyer <ahm@spies.com>\n"
+"Pete Zaitcev <zaitcev@metabyte.com>\n"
+"\n"
+"Ingeniería inversa de los datos de imagen por:\n"
+"Jeff Laing <jeffl@SPATIALinfo.com>\n"
+"\n"
+"Implementado utilizando documentos encontrados\n"
+"en la web. Permiso acrodado por Vision."
+
+#: camlibs/canon/canon.c:474
+#, c-format
+msgid ""
+"Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
+"allowed."
+msgstr ""
+"El nombre '%s' (%i caracteres) es muy largo (%i car.), sólo se permiten 30 "
+"caracteres."
+
+#: camlibs/canon/canon.c:1313
+msgid "File protected."
+msgstr "Archivo protegido."
+
+#: camlibs/canon/library.c:89
+msgid ""
+"For the A50, 115200 may not be faster than 57600\n"
+"Folders are NOT supported\n"
+"if you experience a lot of transmissions errors, try to have you computer as "
+"idle as possible (ie: no disk activity)"
+msgstr ""
+"Para la A50, 115200 no será más rápido que 57600\n"
+"NO se soportan los directorios\n"
+"si Usted experimenta un montón de errores de transmisión, intente tener a su "
+"computadora lo más calma posible (ej: sin actividad en el disco)"
+
+#: camlibs/canon/library.c:156 camlibs/canon/library.c:840
+#: camlibs/canon/library.c:853
+msgid "Camera unavailable"
+msgstr "Cámara no disponible"
+
+#: camlibs/canon/library.c:167
+msgid "Switching Camera Off"
+msgstr "Apagando la cámara"
+
+#: camlibs/canon/library.c:218
+#, c-format
+msgid "Could not get disk name: %s"
+msgstr "No se puede obtener el nombre del disco: %s"
+
+#: camlibs/canon/library.c:219
+msgid "No reason available"
+msgstr "Razón desconocida"
+
+#: camlibs/canon/library.c:226
+#, c-format
+msgid "Could not get disk info: %s"
+msgstr "No se puede obtener información del disco: %s"
+
+#: camlibs/canon/library.c:519
+#, c-format
+msgid ""
+"  Drive %s\n"
+"  %11s bytes total\n"
+"  %11s bytes available"
+msgstr ""
+"  Disco %s\n"
+"  %11s bytes en total\n"
+"  %11s bytes disponibles"
+
+#: camlibs/canon/library.c:527 camlibs/canon/library.c:533
+#: camlibs/canon/library.c:802 camlibs/canon/library.c:808
+msgid "AC adapter"
+msgstr "Transformador de CA"
+
+#: camlibs/canon/library.c:527 camlibs/canon/library.c:533
+#: camlibs/canon/library.c:802 camlibs/canon/library.c:808
+msgid "on battery"
+msgstr "con baterías"
+
+#: camlibs/canon/library.c:529 camlibs/canon/library.c:804
+msgid "power OK"
+msgstr "energía OK"
+
+#: camlibs/canon/library.c:529 camlibs/canon/library.c:804
+msgid "power bad"
+msgstr "energía no-OK"
+
+#: camlibs/canon/library.c:537
+#, c-format
+msgid "not available: %s"
+msgstr "no disponible: %s"
+
+#: camlibs/canon/library.c:549
+#, c-format
+msgid "%s (host time %s%i seconds)"
+msgstr "%s (hora del PC %s%i segundos)"
+
+#: camlibs/canon/library.c:559
+#, c-format
+msgid ""
+"\n"
+"Camera identification:\n"
+"  Model: %s\n"
+"  Owner: %s\n"
+"\n"
+"Power status: %s\n"
+"\n"
+"Flash disk information:\n"
+"%s\n"
+"\n"
+"Time: %s\n"
+msgstr ""
+"\n"
+"Identificación de la cámara:\n"
+"  Modelo: %s\n"
+"  Dueño: %s\n"
+"\n"
+"Estado de energía: %s\n"
+"\n"
+"Información del disco Flash:\n"
+"%s\n"
+"\n"
+"Hora: %s\n"
+
+#: camlibs/canon/library.c:576
+msgid ""
+"Canon PowerShot series driver by\n"
+"Wolfgang G. Reissnegger,\n"
+"Werner Almesberger,\n"
+"Edouard Lafargue,\n"
+"Philippe Marzouk,\n"
+"A5 additions by Ole W. Saastad\n"
+"Holger Klemm\n"
+msgstr ""
+"Controlador de las Canon PowerShot por\n"
+"Wolfgang G. Reissnegger,\n"
+"Werner Almesberger,\n"
+"Edouard Lafargue,\n"
+"Philippe Marzouk,\n"
+"Adiciones para el modelo A5 por Ole W. Saastad\n"
+"Holger Klemm\n"
+
+#: camlibs/canon/library.c:615
+msgid "Error deleting file"
+msgstr "Error al borrar el archivo"
+
+#: camlibs/canon/library.c:631
+msgid "Error deleting associated thumbnail file"
+msgstr "Error al borrar la diapositiva asociada"
+
+#: camlibs/canon/library.c:664
+msgid ""
+"Speeds greater than 57600 are not supported for uploading to this camera"
+msgstr "Esta cámara no soporta recibir a velocidades superiores a 57600"
+
+#: camlibs/canon/library.c:681
+msgid "Could not get flash drive letter"
+msgstr "No se puede obtener la letra del disco Flash"
+
+#: camlibs/canon/library.c:705
+msgid ""
+"Could not upload, no free folder name available!\n"
+"999CANON folder name exists and has an AUT_9999.JPG picture in it."
+msgstr ""
+"¡No se puede recibir, no hay un directorio libre!\n"
+"Existe el directorio 999CANON y contiene una foto AUT_9999.JPG."
+
+#: camlibs/canon/library.c:725
+msgid "Could not create \\DCIM directory."
+msgstr "No se puede crear el directorio \\DCIM."
+
+#: camlibs/canon/library.c:731
+msgid "Could not create destination directory."
+msgstr "No se puede crear el directorio de destino."
+
+#: camlibs/canon/library.c:757
+msgid "Camera and Driver Configuration"
+msgstr "Configuración del controlador y la cámara"
+
+#: camlibs/canon/library.c:759
+msgid "Camera"
+msgstr "Cámara"
+
+#: camlibs/canon/library.c:762
+msgid "Camera Model (readonly)"
+msgstr "Modelo de cámara (sólo lectura)"
+
+#: camlibs/canon/library.c:766 camlibs/canon/library.c:836
+msgid "Owner name"
+msgstr "Nombre del dueño"
+
+#: camlibs/canon/library.c:773 camlibs/canon/library.c:777
+#: camlibs/canon/library.c:782
+msgid "Date and Time (readonly)"
+msgstr "Fecha y hora (sólo lectura)"
+
+#: camlibs/canon/library.c:778
+msgid "Error"
+msgstr "Error"
+
+#: camlibs/canon/library.c:783 camlibs/canon/library.c:810
+msgid "Unavailable"
+msgstr "No disponible"
+
+#: camlibs/canon/library.c:787 camlibs/canon/library.c:849
+msgid "Set camera date to PC date"
+msgstr "Configurar la fecha de la cámara con la de la PC"
+
+#: camlibs/canon/library.c:790
+msgid "Firmware revision (readonly)"
+msgstr "Revisión del firmware (sólo lectura)"
+
+#: camlibs/canon/library.c:814
+msgid "Power (readonly)"
+msgstr "Energía (sólo lectura)"
+
+#: camlibs/canon/library.c:818
+msgid "Driver"
+msgstr "Controlador"
+
+#: camlibs/canon/library.c:821 camlibs/canon/library.c:863
+msgid "List all files"
+msgstr "Lista de todos los archivos"
+
+#: camlibs/canon/library.c:843
+msgid "Owner name changed"
+msgstr "El nombre del dueño cambió"
+
+#: camlibs/canon/library.c:845
+msgid "could not change owner name"
+msgstr "no se pudo cambiar el nombre del dueño"
+
+#: camlibs/canon/library.c:856
+msgid "time set"
+msgstr "hora configurada"
+
+#: camlibs/canon/library.c:858
+msgid "could not set time"
+msgstr "no se pudo configurar la hora"
+
+#: camlibs/canon/library.c:1050
+#, c-format
+msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
+msgstr ""
+"Tipo de puerto no soportado, recibido %i = 0x%x. Inicialización imposible."
+
+#: camlibs/canon/serial.c:625 camlibs/canon/serial.c:690
+msgid "Battery exhausted, camera off."
+msgstr "Se terminaron las baterías, cámara apagada."
+
+#: camlibs/canon/serial.c:628
+msgid "ERROR: unexpected message"
+msgstr "ERROR: mensaje inesperado"
+
+#: camlibs/canon/serial.c:638
+msgid "ERROR: message overrun"
+msgstr "ERROR: exceso de mensajes"
+
+#: camlibs/canon/serial.c:667
+msgid "ERROR: out of sequence."
+msgstr "ERROR: fuera de secuencia."
+
+#: camlibs/canon/serial.c:672
+msgid "ERROR: unexpected packet type."
+msgstr "ERROR: tipo de paquete inesperado."
+
+#: camlibs/canon/serial.c:682
+msgid "ERROR: message format error."
+msgstr "ERROR: formato erróneo del mensaje."
+
+#: camlibs/canon/serial.c:694
+msgid "ERROR: unexpected message2."
+msgstr "ERROR: mensaje2 inesperado."
+
+#: camlibs/canon/serial.c:888
+msgid "Uploading file..."
+msgstr "Enviando archivo..."
+
+#: camlibs/canon/serial.c:946 camlibs/digita/digita.c:256
+msgid "Getting file..."
+msgstr "Obteniendo archivo..."
+
+#: camlibs/canon/serial.c:1172
+msgid "Error changing speed."
+msgstr "Error al cambiar la velocidad."
+
+#: camlibs/canon/serial.c:1181
+msgid "Resetting protocol..."
+msgstr "Volviendo a inicializar el protocolo..."
+
+#: camlibs/canon/serial.c:1190
+msgid "Camera OK.\n"
+msgstr "Cámara OK.\n"
+
+#. Camera was off...
+#: camlibs/canon/serial.c:1203
+msgid "Looking for camera ..."
+msgstr "Buscando la cámara..."
+
+#: camlibs/canon/serial.c:1213
+msgid "Trying to contact camera..."
+msgstr "Intentando contactar con la cámara..."
+
+#: camlibs/canon/serial.c:1217
+msgid "Communication error 1"
+msgstr "Error de comunicación 1"
+
+#: camlibs/canon/serial.c:1227 camlibs/canon/serial.c:1231
+#: camlibs/dimera/dimera3500.c:970
+msgid "No response from camera"
+msgstr "No hay respuesta de la cámara"
+
+#: camlibs/canon/serial.c:1235
+msgid "Unrecognized response"
+msgstr "Respuesta no reconocida"
+
+#: camlibs/canon/serial.c:1278
+msgid "Bad EOT"
+msgstr "Fin de la transmisión (EOT) no válido"
+
+#: camlibs/canon/serial.c:1284
+msgid "Communication error 2"
+msgstr "Error de comunicación 2"
+
+#: camlibs/canon/serial.c:1307
+msgid "Communication error 3"
+msgstr "Error de comunicación 3"
+
+#: camlibs/canon/serial.c:1311
+msgid "Changing speed... wait..."
+msgstr "Cambiando velocidad... espere..."
+
+#: camlibs/canon/serial.c:1316
+msgid "Error changing speed"
+msgstr "Error al cambiar velocidad"
+
+#: camlibs/canon/serial.c:1328
+msgid "Error waiting ACK during initialization retrying"
+msgstr ""
+"Error esperando acuse de recibo (ACK) durante el reintento de inicialización"
+
+#: camlibs/canon/serial.c:1334
+msgid "Error waiting ACK during initialization"
+msgstr "Error esperando acuse de recibo (ACK) durante la inicialización"
+
+#: camlibs/canon/serial.c:1338
+msgid "Connected to camera"
+msgstr "Conectado a la cámara"
+
+#: camlibs/canon/serial.c:1400
+msgid "Getting thumbnail..."
+msgstr "Obteniendo diapositivas..."
+
+#: camlibs/canon/usb.c:215
+msgid "Could not apply USB settings"
+msgstr "No se puede aplicar las configuraciones USB"
+
+#: camlibs/canon/usb.c:240
+#, c-format
+msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
+msgstr ""
+"La cámara no está lista, fallaron los intentos múltiples de pedido de "
+"identificación de la cámara: %s"
+
+#: camlibs/canon/usb.c:249
+#, c-format
+msgid "Camera not ready, could not lock camera keys: %s"
+msgstr "La cámara no está lista, no se puede trabar la cámara: %s"
+
+#: camlibs/canon/usb.c:583
+msgid "Receiving data..."
+msgstr "Recibiendo datos..."
+
+#: camlibs/canon/usb.c:813
+#, c-format
+msgid "Detected a '%s'."
+msgstr "Se detectó '%s'."
+
+#: camlibs/digita/digita.c:396
+msgid ""
+"Digita\n"
+"Johannes Erdfelt <johannes@erdfelt.com>"
+msgstr ""
+"Digita\n"
+"Johannes Erdfelt <johannes@erdfelt.com>"
+
+#: camlibs/dimera/dimera3500.c:295
+#, c-format
+msgid ""
+"Only root folder is supported - you requested a file listing for folder '%s'."
+msgstr ""
+"Sólo se soporta el directorio raíz, Usted pidió una lista para el directorio "
+"'%s'."
+
+#: camlibs/dimera/dimera3500.c:303 camlibs/dimera/dimera3500.c:497
+msgid "Problem getting number of images"
+msgstr "Problema al obtener la cantidad de archivos"
+
+#: camlibs/dimera/dimera3500.c:347
+msgid "Image type is not supported"
+msgstr "Tipo de imagen no soportado"
+
+#: camlibs/dimera/dimera3500.c:402 camlibs/dimera/dimera3500.c:648
+msgid "Problem getting image information"
+msgstr "Problema al obtener la información de la imagen"
+
+#: camlibs/dimera/dimera3500.c:433
+msgid "Capture type is not supported"
+msgstr "Tipo de captura no soportado"
+
+#: camlibs/dimera/dimera3500.c:518
+#, c-format
+msgid " (battery is %d%% full)"
+msgstr " (la batería está un %d%% llena)"
+
+# FIXME
+#: camlibs/dimera/dimera3500.c:522
+#, c-format
+msgid ""
+"Dimera 3500 ver. %s %d/%d %d:%d\n"
+"%d pictures used of approximately %d (high res) or %d (low res)\n"
+"Camera features: %s, %s, %s, %s\n"
+"Flash is %s, is %s and is %s\n"
+"Resolution is set to %s\n"
+"Camera is %s powered%s\n"
+msgstr ""
+"Dimera 3500 ver. %s %d/%d %d:%d\n"
+"%d imágenes utilizadas de aproximadamente %d (alta resolución) o %d (baja "
+"resolución)\n"
+"Características de la cámara: %s, %s, %s, %s\n"
+"El Flash es %s, %s y %s\n"
+"La resolución está configurada en %s\n"
+"La camara funciona con %s %s\n"
+
+#. Flash
+#: camlibs/dimera/dimera3500.c:533 camlibs/konica/library.c:744
+#: camlibs/konica/library.c:984
+msgid "Flash"
+msgstr "Flash"
+
+#: camlibs/dimera/dimera3500.c:533
+msgid "NO Flash"
+msgstr "SIN Flash"
+
+#: camlibs/dimera/dimera3500.c:535
+msgid "Dual Iris"
+msgstr "Doble diafragma"
+
+#: camlibs/dimera/dimera3500.c:535
+msgid "NO Dual Iris"
+msgstr "SIN doble diafragma"
+
+#: camlibs/dimera/dimera3500.c:537
+msgid "Resolution Switch"
+msgstr "Interruptor de selección de la resolución"
+
+#: camlibs/dimera/dimera3500.c:537
+msgid "NO Resolution Switch"
+msgstr "SIN interruptor de selección de la resolución"
+
+#: camlibs/dimera/dimera3500.c:539
+msgid "NO Power Light"
+msgstr "SIN indicador de energía"
+
+#: camlibs/dimera/dimera3500.c:541
+msgid "ON"
+msgstr "ENCENDIDA"
+
+#: camlibs/dimera/dimera3500.c:541
+msgid "OFF"
+msgstr "APAGADA"
+
+#: camlibs/dimera/dimera3500.c:543
+msgid "ready"
+msgstr "lista"
+
+#: camlibs/dimera/dimera3500.c:543
+msgid "NOT ready"
+msgstr "NO lista"
+
+#: camlibs/dimera/dimera3500.c:545
+msgid "in fill mode"
+msgstr "en modo de carga"
+
+#: camlibs/dimera/dimera3500.c:545
+msgid "NOT in fill mode"
+msgstr "NO en modo de carga"
+
+#: camlibs/dimera/dimera3500.c:547
+msgid "low (320x240)"
+msgstr "baja (320x240)"
+
+#: camlibs/dimera/dimera3500.c:547
+msgid "high (640x480)"
+msgstr "alta (640x480)"
+
+#: camlibs/dimera/dimera3500.c:549
+msgid "externally"
+msgstr "externamente"
+
+#: camlibs/dimera/dimera3500.c:549
+msgid "internally"
+msgstr "internamente"
+
+#: camlibs/dimera/dimera3500.c:559
+msgid ""
+"* Image glitches or problems communicating are\n"
+"  often caused by a low battery.\n"
+"* Images captured remotely on this camera are stored\n"
+"  in temporary RAM and not in the flash memory card.\n"
+"* Exposure control when capturing all images is\n"
+"  automatically set by the capture preview function.\n"
+"* Image quality is currently lower than it could be.\n"
+msgstr ""
+"* Los pequeños problemas de imagen o de comunicación generalmente\n"
+"  son causados por una batería con poca carga.\n"
+"* Las imágenes capturadas remotamente en esta cámara se almacenan\n"
+"  en memoria temporal y no en la tarjeta de memoria Flash.\n"
+"* El control de la exposición cuando se capturan todas las imágenes se\n"
+"  configura automáticamente con la función de previsualización de la "
+"captura.\n"
+"* La calidad de la imagen en este momento es menor de lo que podría ser.\n"
+
+#: camlibs/dimera/dimera3500.c:573
+msgid ""
+"gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
+"This software was created with the\n"
+"help of proprietary information belonging\n"
+"to StarDot Technologies.\n"
+"\n"
+"Author:\n"
+"  Brian Beattie  <URL:http://www.beattie-home.net>\n"
+"Contributors:\n"
+"  Chuck Homic <chuck@vvisions.com>\n"
+"     Converting raw camera images to RGB\n"
+"  Dan Fandrich <dan@coneharvesters.com>\n"
+"     Information on protocol, raw image format,\n"
+"     gphoto2 port\n"
+msgstr ""
+"gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
+"Este software fue creado con la ayuda sobre la\n"
+"información propietaria que pertenece a\n"
+"StarDot Technologies.\n"
+"\n"
+"Autor :\n"
+"  Brian Beattie  <URL:http://www.beattie-home.net>\n"
+"Contribuyentes:\n"
+"  Chuck Homic <chuck@vvisions.com>\n"
+"     Conversión de los archivos \"en crudo\" de la cámara a RGB\n"
+"  Dan Fandrich <dan@coneharvesters.com>\n"
+"     Informaciones sobre el protocolo, formato de archivos \"en crudo\",\n"
+"     y portado a gphoto2\n"
+
+#: camlibs/dimera/dimera3500.c:666
+msgid "Problem reading image from flash"
+msgstr "Problema leyendo la imagen de la memoria Flash"
+
+#: camlibs/dimera/dimera3500.c:684 camlibs/dimera/dimera3500.c:850
+#: camlibs/dimera/dimera3500.c:918
+msgid "Out of memory"
+msgstr "Sin memoria"
+
+#: camlibs/dimera/dimera3500.c:701 camlibs/dimera/dimera3500.c:737
+#: camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:211
+msgid "Downloading image..."
+msgstr "Descargando imagen..."
+
+#: camlibs/dimera/dimera3500.c:723 camlibs/dimera/dimera3500.c:759
+msgid "Problem downloading image"
+msgstr "Problema durante la descarga de la imagen"
+
+#: camlibs/dimera/dimera3500.c:731
+msgid "User canceled download"
+msgstr "El usuario canceló la descarga"
+
+#: camlibs/dimera/dimera3500.c:865
+msgid "Problem taking live image"
+msgstr "Problema tomando imagen en tiempo real"
+
+#: camlibs/dimera/dimera3500.c:937
+msgid "Problem opening port"
+msgstr "Problema abriendo el puerto"
+
+#: camlibs/dimera/dimera3500.c:947
+msgid "Problem resetting camera"
+msgstr "Problema volviendo a cero a la cámara"
+
+#: camlibs/dimera/dimera3500.c:957
+msgid "Problem setting camera communication speed"
+msgstr "Problema configurando la velocidad de comunicación de la cámara"
+
+#: camlibs/dimera/dimera3500.c:976
+msgid "Looks like a modem, not a camera"
+msgstr "Parece un módem, no una cámara"
+
+#: camlibs/directory/directory.c:159 camlibs/ptp/library.c:517
+#, c-format
+msgid "Listing files in '%s'..."
+msgstr "Listando los archivos en '%s'..."
+
+#: camlibs/directory/directory.c:195
+#, c-format
+msgid "Could not get information about '%s' (%m)."
+msgstr "No se puede obtener información acerca de '%s' (%m)."
+
+#: camlibs/directory/directory.c:201
+#, c-format
+msgid "Could not follow the link '%s' (%m)."
+msgstr "No se puede seguir el vínculo '%s' (%m)."
+
+#: camlibs/directory/directory.c:228
+#, c-format
+msgid "Listing folders in '%s'..."
+msgstr "Listado de los directorios en '%s'..."
+
+#: camlibs/directory/directory.c:269
+#, c-format
+msgid "Could not get information about '%s' in '%s' (%m)."
+msgstr "No se puede obtener información acerca de '%s' en '%s' (%m)."
+
+#: camlibs/directory/directory.c:275
+#, c-format
+msgid "Could not follow the link '%s' in '%s' (%m)."
+msgstr "No se puede seguir el vínculo '%s' en '%s' (%m)."
+
+#: camlibs/directory/directory.c:340
+#, c-format
+msgid "Could not change time of file '%s' in '%s' (%m)."
+msgstr "No se puede cambiar la fecha del archivo '%s' en '%s' (%m)."
+
+#: camlibs/directory/directory.c:421
+#, c-format
+msgid "Could not open '%s'."
+msgstr "No se puede abrir '%s'."
+
+#: camlibs/directory/directory.c:461
+msgid "Directory Browse"
+msgstr "Examinar el Directorio"
+
+#: camlibs/directory/directory.c:462 camlibs/directory/directory.c:493
+msgid "View hidden directories"
+msgstr "Ver directorios ocultos"
+
+#: camlibs/directory/directory.c:506
+msgid ""
+"The Directory Browse \"camera\" lets you index photos on your hard drive."
+msgstr ""
+"La \"cámara\" 'Examinar el Directorio' le permite indexar las fotos en su "
+"disco."
+
+#: camlibs/directory/directory.c:515
+msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
+msgstr ""
+"Modo Examinar el Directorio - escrito por Scott Fritzinger <scottf@unr.edu>."
+
+#: camlibs/directory/directory.c:562
+#, fuzzy, c-format
+msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
+msgstr "No se puede cambiar la fecha del archivo '%s' en '%s' (%m)."
+
+#: camlibs/jamcam/jamcam.c:280
+msgid "jamcam library v"
+msgstr "Biblioteca jamcam v"
+
+#: camlibs/jamcam/jamcam.c:281 camlibs/panasonic/coolshot/coolshot.c:265
+msgid " "
+msgstr " "
+
+#: camlibs/jamcam/jamcam.c:281
+msgid ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Support for KBGear JamCam v2.0 & v3.0 digital cameras\n"
+"based on reverse engineering serial protocol.\n"
+"\n"
+msgstr ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Soporte para las cámaras digitales KBGear JamCam v2.0 y v3.0\n"
+"basado en la ingeniería inversa del protocolo serie.\n"
+"\n"
+
+#: camlibs/jamcam/library.c:336 camlibs/jd11/serial.c:455
+msgid "Downloading data..."
+msgstr "Descargando los datos..."
+
+#: camlibs/jamcam/library.c:494 camlibs/jd11/serial.c:375
+msgid "Downloading thumbnail..."
+msgstr "Descargando la diapositiva..."
+
+#: camlibs/jd11/jd11.c:174
+msgid ""
+"The JD11 camera works rather well with this driver.\n"
+"An RS232 interface @ 115 kbit is required for image transfer.\n"
+"The driver allows you to get\n"
+"\n"
+"   - thumbnails (64x48 PGM format)\n"
+"   - full images (640x480 PPM format)\n"
+msgstr ""
+"La cámara JD11 funciona bastante bien con este controlador.\n"
+"Se necesita una interfaz RS232 a 115 Kbps para transferir las imágenes.\n"
+"El controlador le permite obtener\n"
+"\n"
+"   - diapositivas (64x48, formato PGM)\n"
+"   - imágenes completas (640x480, formato PPM)\n"
+
+#: camlibs/jd11/jd11.c:187
+msgid ""
+"JD11\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"Driver for the Jenoptik JD11 camera.\n"
+"Protocol reverse engineered using WINE and IDA."
+msgstr ""
+"JD11\n"
+"Marcus Meißner <marcus@jet.franken.de>\n"
+"Controlador para la cámara Jenoptik JD11.\n"
+"Ingeniería inversa del protocolo usando WINE e IDA."
+
+#.
+#. * Check if the widgets' values have changed. If yes, tell the camera.
+#.
+#: camlibs/jd11/jd11.c:202 camlibs/jd11/jd11.c:254
+msgid "Other Settings"
+msgstr "Otras configuraciones"
+
+#. Bulb Exposure Time
+#: camlibs/jd11/jd11.c:207 camlibs/jd11/jd11.c:255
+msgid "Bulb Exposure Time"
+msgstr "Tiempo de exposición del bulbo"
+
+#: camlibs/jd11/jd11.c:215 camlibs/jd11/jd11.c:263
+msgid "Color Settings"
+msgstr "Configuraciones de color"
+
+#: camlibs/jd11/jd11.c:221 camlibs/jd11/jd11.c:265
+msgid "Red"
+msgstr "Rojo (R)"
+
+#: camlibs/jd11/jd11.c:228 camlibs/jd11/jd11.c:270
+msgid "Green"
+msgstr "Verde (G)"
+
+#: camlibs/jd11/jd11.c:235 camlibs/jd11/jd11.c:275
+msgid "Blue"
+msgstr "Azul (B)"
+
+#: camlibs/kodak/dc120/dc120.c:31
+msgid "CompactFlash Card"
+msgstr "Tarjeta CompactFlash"
+
+#: camlibs/kodak/dc120/dc120.c:364
+msgid ""
+"The Kodak DC120 camera uses the KDC file format for storing images. If you "
+"want to view the images you download from your camera, you will need to "
+"download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
+"sourceforge.net"
+msgstr ""
+"La cámara Kodak DC120 utiliza el formato de archivo KDC para almacenar las "
+"imágenes. Si desea ver las imágenes que transfiere desde la cámara, "
+"necesitará descargar el programa \"kdc2tiff\". Está disponible en http://"
+"kdc2tiff.sourceforge.net"
+
+#: camlibs/kodak/dc120/dc120.c:376
+msgid ""
+"Kodak DC120 Camera Library\n"
+"Scott Fritzinger <scottf@gphoto.net>\n"
+"Camera Library for the Kodak DC120 camera.\n"
+"(by popular demand)."
+msgstr ""
+"Biblioteca para la cámara Kodak DC120\n"
+"Scott Fritzinger <scottf@gphoto.net>\n"
+"Biblioteca para la cámara Kodak DC120\n"
+"(a pedido popular)."
+
+#: camlibs/kodak/dc120/library.c:122 camlibs/kodak/dc240/library.c:324
+#: camlibs/panasonic/dc1000.c:424 camlibs/panasonic/dc1580.c:552
+msgid "Getting data..."
+msgstr "Obteniendo los datos..."
+
+#. Wait for command completion
+#: camlibs/kodak/dc120/library.c:506
+msgid "Waiting for completion..."
+msgstr "Esperando que finalice la operación..."
+
+#: camlibs/kodak/dc240/dc240.c:182
+#, c-format
+msgid "Model: Kodak %s\n"
+msgstr "Modelo: Kodak %s\n"
+
+#: camlibs/kodak/dc240/dc240.c:183
+#, c-format
+msgid "Firmware version: %d.%02d\n"
+msgstr "Revisión del firmware: %d.%02d\n"
+
+#: camlibs/kodak/dc240/dc240.c:185
+#, c-format
+msgid "Battery status: %s, AC Adapter: %s\n"
+msgstr "Estado de la batería: %s, transformador CA: %s\n"
+
+#: camlibs/kodak/dc240/dc240.c:189
+#, c-format
+msgid "Number of pictures: %d\n"
+msgstr "Cantidad de fotos: %d\n"
+
+#: camlibs/kodak/dc240/dc240.c:191
+#, c-format
+msgid "Space remaining: High: %d, Medium: %d, Low: %d\n"
+msgstr "Espacio restante: Alta: %d, Media: %d, Baja: %d\n"
+
+#: camlibs/kodak/dc240/dc240.c:195
+#, c-format
+msgid "Memory card status (%d): %s\n"
+msgstr "Estado de la tarjeta de memoria (%d): %s\n"
+
+#: camlibs/kodak/dc240/dc240.c:199
+#, c-format
+msgid "Total pictures captured: %d, Flashes fired: %d\n"
+msgstr "Cantidad total de fotos capturadas: %d, iluminaciones del flash: %d\n"
+
+#: camlibs/kodak/dc240/dc240.c:213
+msgid ""
+"Kodak DC240 Camera Library\n"
+"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser."
+"fr>\n"
+"Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
+"Rewritten and updated for gPhoto2."
+msgstr ""
+"Biblioteca para la cámara Kodak DC240\n"
+"Scott Fritzinger <scottf@gphoto.net> y Hubert Figuiere <hfiguiere@teaser."
+"fr>\n"
+"Biblioteca para la cámara Kodak DC240, DC280, DC3400 y DC5000.\n"
+"Vuelto a escribir y actualizado para gPhoto2."
+
+#: camlibs/kodak/dc240/library.c:572
+msgid "OK"
+msgstr "OK"
+
+#: camlibs/kodak/dc240/library.c:575
+msgid "Weak"
+msgstr "Débil"
+
+#: camlibs/kodak/dc240/library.c:578
+msgid "Empty"
+msgstr "Vacía"
+
+#: camlibs/kodak/dc240/library.c:583 camlibs/kodak/dc240/library.c:598
+msgid "Invalid"
+msgstr "No válida"
+
+#: camlibs/kodak/dc240/library.c:590
+msgid "Not used"
+msgstr "No utilizada"
+
+#: camlibs/kodak/dc240/library.c:593
+msgid "In use"
+msgstr "En uso"
+
+#: camlibs/kodak/dc240/library.c:607
+msgid "Card is open"
+msgstr "La tarjeta está abierta"
+
+#: camlibs/kodak/dc240/library.c:610
+msgid "Card is not open"
+msgstr "La tarjeta no está abierta"
+
+#: camlibs/kodak/dc240/library.c:614
+msgid "Card is not formatted"
+msgstr "La tarjeta no está formateada"
+
+#: camlibs/kodak/dc240/library.c:618
+msgid "No card"
+msgstr "Sin tarjeta"
+
+#: camlibs/kodak/dc3200/dc3200.c:38
+msgid ""
+"There is currently an operation in progress. This camera only supports one "
+"operation at a time. Please wait until the current operation has finished."
+msgstr ""
+"Actualmente hay una operación en curso. Esta cámara sólo soporta una "
+"operación a la vez. Por favor, espere a que haya finalizado la operación en "
+"curso."
+
+#. we have to re-init the camera
+#: camlibs/kodak/dc3200/dc3200.c:142
+msgid "camera inactive for > 9 seconds, re-initing.\n"
+msgstr "cámara inactiva por más de 9 segundos, volviendo a inicializar.\n"
+
+#: camlibs/kodak/dc3200/dc3200.c:431
+msgid ""
+"Known problems:\n"
+"\n"
+"1. If the Kodak DC3200 does not receive a command at least every 10 seconds, "
+"it will time out, and will have to be re-initialized. If you notice the "
+"camera does not respond, simply re-select the camera. This will cause it to "
+"reinitialize."
+msgstr ""
+"Problemas conocidos:\n"
+"\n"
+"1. Si la Kodak DC3200 no recibe un comando al menos cada 10 segundos, "
+"entrará en time-out, y tendrá que ser reiniciada. Si nota que la cámara no "
+"responde, simplemente vuelva a seleccionarla. Esto provocará al "
+"reinicialización."
+
+#: camlibs/kodak/dc3200/dc3200.c:444
+msgid ""
+"Kodak DC3200 Driver\n"
+"Donn Morrison <dmorriso@gulf.uvic.ca>\n"
+"\n"
+"Questions and comments appreciated."
+msgstr ""
+"Controlador de la Kodak DC3200\n"
+"Donn Morrison <dmorriso@gulf.uvic.ca>\n"
+"\n"
+"Preguntas y comentarios bienvenidos."
+
+#: camlibs/kodak/dc3200/library.c:386
+#, c-format
+msgid "%s"
+msgstr "%s"
+
+#: camlibs/konica/library.c:142
+msgid "Getting file list..."
+msgstr "Obteniendo la lista de archivos..."
+
+#: camlibs/konica/library.c:307
+msgid "Testing different speeds..."
+msgstr "Probando velocidades diferentes..."
+
+#: camlibs/konica/library.c:321
+msgid ""
+"The camera could not be contacted. Please make sure it is conntected to the "
+"computer and turned on."
+msgstr ""
+"No se puede contactar con la cámara. Por favor, asegúrese que está conectada "
+"a la computadora y está encendida."
+
+#: camlibs/konica/library.c:405
+#, c-format
+msgid "%i pictures could not be deleted because they are protected"
+msgstr "no se pudieron borrar %i imágenes porque están protegidas"
+
+#: camlibs/konica/library.c:498
+#, c-format
+msgid ""
+"Model: %s\n"
+"Serial Number: %s,\n"
+"Hardware Version: %i.%i\n"
+"Software Version: %i.%i\n"
+"Testing Software Version: %i.%i\n"
+"Name: %s,\n"
+"Manufacturer: %s\n"
+msgstr ""
+"Modelo: %s\n"
+"Número de serie: %s,\n"
+"Versión del hardware: %i.%i\n"
+"Versión del software: %i.%i\n"
+"Versión del software de prueba: %i.%i\n"
+"Nombre: %s,\n"
+"Fabricante: %s\n"
+
+#. Translators: please write 'M"uller' (that is, with u-umlaut)
+#. if your charset allows it.  If not, use "Mueller".
+#: camlibs/konica/library.c:589
+msgid ""
+"Konica library\n"
+"Lutz Mueller <lutz@users.sourceforge.net>\n"
+"Support for all Konica and several HP cameras."
+msgstr ""
+"Bibilioteca Konica\n"
+"Lutz Müller <lutz@users.sourceforge.net>\n"
+"Soporta todas las cámaras Konica y varias cámaras HP."
+
+#: camlibs/konica/library.c:617
+msgid "Getting configuration..."
+msgstr "Obteniendo configuración..."
+
+#. Create the window.
+#: camlibs/konica/library.c:624
+msgid "Konica Configuration"
+msgstr "Configuración de Konica"
+
+#. **********************
+#. Persistent Settings
+#. **********************
+#: camlibs/konica/library.c:629 camlibs/konica/library.c:840
+msgid "Persistent Settings"
+msgstr "Parámetros persistentes"
+
+#. Date
+#: camlibs/konica/library.c:633 camlibs/konica/library.c:844
+#: camlibs/polaroid/pdc700.c:965 camlibs/polaroid/pdc700.c:1031
+msgid "Date and Time"
+msgstr "Fecha y hora"
+
+#. Beep
+#: camlibs/konica/library.c:647 camlibs/konica/library.c:858
+msgid "Beep"
+msgstr "Bip"
+
+#: camlibs/konica/library.c:649 camlibs/konica/library.c:656
+#: camlibs/konica/library.c:747 camlibs/konica/library.c:756
+#: camlibs/konica/library.c:989 camlibs/sierra/sierra.c:1001
+#: camlibs/sierra/sierra.c:1007 camlibs/sierra/sierra.c:1268
+msgid "On"
+msgstr "Sí"
+
+#: camlibs/konica/library.c:650 camlibs/konica/library.c:653
+#: camlibs/konica/library.c:746 camlibs/konica/library.c:753
+#: camlibs/konica/library.c:861 camlibs/konica/library.c:987
+#: camlibs/sierra/sierra.c:886 camlibs/sierra/sierra.c:895
+#: camlibs/sierra/sierra.c:1002 camlibs/sierra/sierra.c:1005
+#: camlibs/sierra/sierra.c:1190 camlibs/sierra/sierra.c:1270
+#: camlibs/sierra/sierra.c:1394 camlibs/sierra/sierra.c:1402
+#: camlibs/sierra/sierra.c:1629
+msgid "Off"
+msgstr "No"
+
+#: camlibs/konica/library.c:659
+msgid "Shall the camera beep when taking a picture?"
+msgstr "¿La cámara debería emitir un sonido cuando se toma una foto?"
+
+#. Self Timer Time
+#: camlibs/konica/library.c:663 camlibs/konica/library.c:871
+msgid "Self Timer Time"
+msgstr "Hora del temporizador"
+
+#. Auto Off Time
+#: camlibs/konica/library.c:670 camlibs/konica/library.c:879
+msgid "Auto Off Time"
+msgstr "Hora de apagado automático"
+
+#. Slide Show Interval
+#: camlibs/konica/library.c:677 camlibs/konica/library.c:887
+msgid "Slide Show Interval"
+msgstr "Intervalo del proyector de diapositivas"
+
+#. Resolution
+#: camlibs/konica/library.c:684 camlibs/konica/library.c:896
+#: camlibs/sierra/sierra.c:785 camlibs/sierra/sierra.c:1114
+#: camlibs/sierra/sierra.c:1464 camlibs/sierra/sierra.c:1673
+msgid "Resolution"
+msgstr "Resolución"
+
+#: camlibs/konica/library.c:686 camlibs/konica/library.c:694
+#: camlibs/konica/library.c:901
+msgid "Low (576 x 436)"
+msgstr "Baja (576 x 436)"
+
+#: camlibs/konica/library.c:687 camlibs/konica/library.c:697
+msgid "Medium (1152 x 872)"
+msgstr "Media (1152 x 872)"
+
+#: camlibs/konica/library.c:688 camlibs/konica/library.c:691
+#: camlibs/konica/library.c:899
+msgid "High (1152 x 872)"
+msgstr "Alta (1152 x 872)"
+
+#. **************
+#. Localization
+#. **************
+#: camlibs/konica/library.c:704 camlibs/konica/library.c:912
+msgid "Localization"
+msgstr "Localización"
+
+#. Localization File
+#: camlibs/konica/library.c:710 camlibs/konica/library.c:915
+#: camlibs/sierra/sierra.c:1540 camlibs/sierra/sierra.c:1724
+msgid "Language"
+msgstr "Idioma"
+
+#: camlibs/konica/library.c:717 camlibs/konica/library.c:726
+#: camlibs/konica/library.c:734 camlibs/konica/library.c:920
+#: camlibs/konica/library.c:945 camlibs/konica/library.c:963
+msgid "None selected"
+msgstr "Ninguno selecccionado"
+
+#. TV output format
+#: camlibs/konica/library.c:721 camlibs/konica/library.c:942
+msgid "TV Output Format"
+msgstr "Formato de salida de TV"
+
+#: camlibs/konica/library.c:723 camlibs/konica/library.c:946
+msgid "NTSC"
+msgstr "NTSC"
+
+#: camlibs/konica/library.c:724 camlibs/konica/library.c:948
+msgid "PAL"
+msgstr "PAL"
+
+#: camlibs/konica/library.c:725 camlibs/konica/library.c:950
+msgid "Do not display TV menu"
+msgstr "No mostrar el menú TV"
+
+#. Date format
+#: camlibs/konica/library.c:729 camlibs/konica/library.c:960
+msgid "Date Format"
+msgstr "Formato de la fecha"
+
+#: camlibs/konica/library.c:731 camlibs/konica/library.c:964
+msgid "Month/Day/Year"
+msgstr "Mes/Día/Año"
+
+#: camlibs/konica/library.c:732 camlibs/konica/library.c:966
+msgid "Day/Month/Year"
+msgstr "Día/Mes/Año"
+
+#: camlibs/konica/library.c:733 camlibs/konica/library.c:968
+msgid "Year/Month/Day"
+msgstr "Año/Mes/Día"
+
+#. ******************************
+#. Session-persistent Settings
+#. ******************************
+#: camlibs/konica/library.c:739 camlibs/konica/library.c:980
+msgid "Session-persistent Settings"
+msgstr "Parámetros de la sesión"
+
+#: camlibs/konica/library.c:748 camlibs/konica/library.c:759
+#: camlibs/konica/library.c:991
+msgid "On, red-eye reduction"
+msgstr "Sí, reducción de ojos rojos"
+
+#: camlibs/konica/library.c:749 camlibs/konica/library.c:765
+#: camlibs/konica/library.c:780 camlibs/konica/library.c:783
+#: camlibs/konica/library.c:993 camlibs/konica/library.c:1023
+#: camlibs/sierra/sierra.c:786 camlibs/sierra/sierra.c:792
+#: camlibs/sierra/sierra.c:825 camlibs/sierra/sierra.c:831
+#: camlibs/sierra/sierra.c:884 camlibs/sierra/sierra.c:891
+#: camlibs/sierra/sierra.c:945 camlibs/sierra/sierra.c:952
+#: camlibs/sierra/sierra.c:1118 camlibs/sierra/sierra.c:1146
+#: camlibs/sierra/sierra.c:1186 camlibs/sierra/sierra.c:1229
+#: camlibs/sierra/sierra.c:1392 camlibs/sierra/sierra.c:1398
+#: camlibs/sierra/sierra.c:1420 camlibs/sierra/sierra.c:1425
+#: camlibs/sierra/sierra.c:1625 camlibs/sierra/sierra.c:1645
+msgid "Auto"
+msgstr "Automática"
+
+#: camlibs/konica/library.c:750 camlibs/konica/library.c:762
+msgid "Auto, red-eye reduction"
+msgstr "Automática, reducción de ojos rojos"
+
+#. Exposure
+#: camlibs/konica/library.c:770 camlibs/konica/library.c:1002
+msgid "Exposure"
+msgstr "Exposición"
+
+#. Focus
+#: camlibs/konica/library.c:777 camlibs/konica/library.c:1010
+msgid "Focus"
+msgstr "Foco"
+
+#: camlibs/konica/library.c:779 camlibs/konica/library.c:786
+#: camlibs/sierra/sierra.c:1421 camlibs/sierra/sierra.c:1427
+#: camlibs/sierra/sierra.c:1647
+msgid "Fixed"
+msgstr "Fijo"
+
+#. **********************
+#. Volatile Settings
+#. **********************
+#: camlibs/konica/library.c:793 camlibs/konica/library.c:1015
+msgid "Volatile Settings"
+msgstr "Parámetros temporarios"
+
+#. Self Timer
+#: camlibs/konica/library.c:797 camlibs/konica/library.c:1018
+#: camlibs/polaroid/pdc700.c:153
+msgid "Self Timer"
+msgstr "Temporizador"
+
+#: camlibs/konica/library.c:799 camlibs/konica/library.c:1028
+msgid "Self Timer (only next picture)"
+msgstr "Temporizador (sólo la foto siguiente)"
+
+#: camlibs/konica/library.c:800 camlibs/konica/library.c:807
+#: camlibs/minolta/dimagev/dimagev.c:407 camlibs/sierra/sierra.c:854
+#: camlibs/sierra/sierra.c:861 camlibs/sierra/sierra.c:915
+#: camlibs/sierra/sierra.c:922 camlibs/sierra/sierra.c:977
+#: camlibs/sierra/sierra.c:983 camlibs/sierra/sierra.c:1165
+#: camlibs/sierra/sierra.c:1208 camlibs/sierra/sierra.c:1252
+#: camlibs/sierra/sierra.c:1447 camlibs/sierra/sierra.c:1451
+#: camlibs/sierra/sierra.c:1664
+msgid "Normal"
+msgstr "Normal"
+
+#: camlibs/konica/library.c:803
+msgid "Self Timer (next picture only)"
+msgstr "Temporizador (sólo la foto siguiente)"
+
+#: camlibs/konica/library.c:1059
+#, c-format
+msgid "Could not find localization data at '%s'"
+msgstr "No se puede encontrar la información de localización en '%s'"
+
+#: camlibs/konica/library.c:1123
+msgid "Localization file too long!"
+msgstr "¡Archivo de localización muy largo!"
+
+#: camlibs/konica/lowlevel.c:382 camlibs/polaroid/pdc700.c:301
+#: camlibs/sierra/library.c:989
+msgid "Downloading..."
+msgstr "Descargando..."
+
+#: camlibs/konica/konica.c:62
+msgid "Focusing error."
+msgstr ""
+
+#: camlibs/konica/konica.c:65
+msgid "Iris error."
+msgstr ""
+
+#: camlibs/konica/konica.c:68
+msgid "Strobe error."
+msgstr ""
+
+#: camlibs/konica/konica.c:71
+#, fuzzy
+msgid "EEPROM checksum error."
+msgstr "Error de la suma de control"
+
+#: camlibs/konica/konica.c:74
+msgid "Internal error (1)."
+msgstr ""
+
+#: camlibs/konica/konica.c:77
+msgid "Internal error (2)."
+msgstr ""
+
+#: camlibs/konica/konica.c:80
+#, fuzzy
+msgid "No card present."
+msgstr "Sin tarjeta"
+
+#: camlibs/konica/konica.c:83
+#, fuzzy
+msgid "Card not supported."
+msgstr "Tipo de captura no soportado"
+
+#: camlibs/konica/konica.c:86
+msgid "Card removed during access."
+msgstr ""
+
+#: camlibs/konica/konica.c:89
+msgid "Image number not valid."
+msgstr ""
+
+#: camlibs/konica/konica.c:92
+#, fuzzy
+msgid "Card can not be written."
+msgstr "La tarjeta no está formateada"
+
+#: camlibs/konica/konica.c:95
+#, fuzzy
+msgid "Card is write protected."
+msgstr "Protegida contra escritura"
+
+#: camlibs/konica/konica.c:98
+msgid "No space left on card."
+msgstr ""
+
+#: camlibs/konica/konica.c:101
+#, fuzzy
+msgid "Image protected."
+msgstr "Archivo protegido."
+
+#: camlibs/konica/konica.c:104
+msgid "Light too dark."
+msgstr ""
+
+#: camlibs/konica/konica.c:107
+msgid "Autofocus error."
+msgstr ""
+
+#: camlibs/konica/konica.c:110
+msgid "System error."
+msgstr ""
+
+#: camlibs/konica/konica.c:113
+msgid "Illegal parameter."
+msgstr ""
+
+#: camlibs/konica/konica.c:116
+msgid "Command can not be cancelled."
+msgstr ""
+
+#: camlibs/konica/konica.c:119
+#, fuzzy
+msgid "Localization data too long."
+msgstr "¡Archivo de localización muy largo!"
+
+#: camlibs/konica/konica.c:122
+#, fuzzy
+msgid "Localization data corrupt."
+msgstr "Localización"
+
+#: camlibs/konica/konica.c:125
+#, fuzzy
+msgid "Unsupported command."
+msgstr "Cámaras soportadas:\n"
+
+#: camlibs/konica/konica.c:128
+msgid "Other command executing."
+msgstr ""
+
+#: camlibs/konica/konica.c:131
+msgid "Command order error."
+msgstr ""
+
+#: camlibs/konica/konica.c:134
+#, fuzzy
+msgid "Unknown error."
+msgstr "Error desconocido"
+
+#: camlibs/konica/konica.c:137
+#, c-format
+msgid ""
+"The camera has just sent an error that has not yet been discovered. Please "
+"report the following to <gphoto-devel@gphoto.org> with additional "
+"information how you got this error: (0x%x,0x%x). Thank you very much!"
+msgstr ""
+
+#: camlibs/minolta/dimagev/dimagev.c:272
+#, c-format
+msgid ""
+"Model:\t\t\tMinolta Dimage V (%s)\n"
+"Hardware Revision:\t%s\n"
+"Firmware Revision:\t%s\n"
+msgstr ""
+"Modelo:\t\t\tMinolta Dimage V (%s)\n"
+"Revisión de hardware:\t%s\n"
+"Revisión de firmware:\t%s\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:287
+#, c-format
+msgid ""
+"Host Mode:\t\t%s\n"
+"Exposure Correction:\t%s\n"
+"Exposure Data:\t\t%d\n"
+"Date Valid:\t\t%s\n"
+"Date:\t\t\t%d/%02d/%02d %02d:%02d:%02d\n"
+"Self Timer Set:\t\t%s\n"
+"Quality Setting:\t%s\n"
+"Play/Record Mode:\t%s\n"
+"Card ID Valid:\t\t%s\n"
+"Card ID:\t\t%d\n"
+"Flash Mode:\t\t"
+msgstr ""
+"Modo de conexión:\t\t%s\n"
+"Corrección de la exposición:\t%s\n"
+"Datos de la exposición:\t\t%d\n"
+"Fecha válida:\t\t%s\n"
+"Fecha:\t\t\t%d/%02d/%02d %02d:%02d:%02d\n"
+"Temporizador:\t\t%s\n"
+"Parámetros de calidad:\t%s\n"
+"Modo de reproducción/grabación:\t%s\n"
+"Identificador de tarjeta válido:\t\t%s\n"
+"Identificador de tarjeta:\t\t%d\n"
+"Modo del flash:\t\t"
+
+#: camlibs/minolta/dimagev/dimagev.c:299
+msgid "Remote"
+msgstr "Remota"
+
+#: camlibs/minolta/dimagev/dimagev.c:299
+msgid "Local"
+msgstr "Local"
+
+#: camlibs/minolta/dimagev/dimagev.c:300 camlibs/minolta/dimagev/dimagev.c:302
+#: camlibs/minolta/dimagev/dimagev.c:306 camlibs/minolta/dimagev/dimagev.c:309
+#: frontends/command-line/gphoto2-cmd-config.c:366
+msgid "Yes"
+msgstr "Sí"
+
+#: camlibs/minolta/dimagev/dimagev.c:300 camlibs/minolta/dimagev/dimagev.c:302
+#: camlibs/minolta/dimagev/dimagev.c:306 camlibs/minolta/dimagev/dimagev.c:309
+#: frontends/command-line/gphoto2-cmd-config.c:366
+msgid "No"
+msgstr "No"
+
+#: camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:1466
+#: camlibs/sierra/sierra.c:1473 camlibs/sierra/sierra.c:1678
+msgid "Fine"
+msgstr "Fina"
+
+#: camlibs/minolta/dimagev/dimagev.c:307 camlibs/sierra/sierra.c:787
+#: camlibs/sierra/sierra.c:794 camlibs/sierra/sierra.c:1120
+#: camlibs/sierra/sierra.c:1465 camlibs/sierra/sierra.c:1471
+#: camlibs/sierra/sierra.c:1676
+msgid "Standard"
+msgstr "Estándar"
+
+#: camlibs/minolta/dimagev/dimagev.c:308
+msgid "Record"
+msgstr "Grabación"
+
+#: camlibs/minolta/dimagev/dimagev.c:308
+msgid "Play"
+msgstr "Reproducción"
+
+#: camlibs/minolta/dimagev/dimagev.c:323
+msgid "Automatic\n"
+msgstr "Automática\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:331
+msgid "Force Flash\n"
+msgstr "Forzar el flash\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:339
+msgid "Prohibit Flash\n"
+msgstr "Prohibir el flash\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:347
+#, c-format
+msgid "Invalid Value ( %d )\n"
+msgstr "Valor no válido (%d)\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:361
+#, c-format
+msgid ""
+"Battery Level:\t\t%s\n"
+"Number of Images:\t%d\n"
+"Minimum Capacity Left:\t%d\n"
+"Busy:\t\t\t%s\n"
+"Flash Charging:\t\t%s\n"
+"Lens Status:\t\t"
+msgstr ""
+"Nivel de batería:\t\t%s\n"
+"Cantidad de imágenes:\t%d\n"
+"Capacidad mínima restante:\t%d\n"
+"Ocupado:\t\t\t%s\n"
+"Cargando el flash:\t\t%s\n"
+"Estado de la lente:\t\t"
+
+#: camlibs/minolta/dimagev/dimagev.c:367
+msgid "Not Full"
+msgstr "No llena"
+
+#: camlibs/minolta/dimagev/dimagev.c:367 camlibs/minolta/dimagev/dimagev.c:410
+msgid "Full"
+msgstr "Llena"
+
+#: camlibs/minolta/dimagev/dimagev.c:370
+msgid "Busy"
+msgstr "Ocupado"
+
+#: camlibs/minolta/dimagev/dimagev.c:370
+msgid "Idle"
+msgstr "Libre"
+
+#: camlibs/minolta/dimagev/dimagev.c:371
+msgid "Charging"
+msgstr "En curso de carga"
+
+#: camlibs/minolta/dimagev/dimagev.c:371
+msgid "Ready"
+msgstr "Lista"
+
+#: camlibs/minolta/dimagev/dimagev.c:382
+msgid "Normal\n"
+msgstr "Normal\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:385
+msgid "Lens direction does not match flash light\n"
+msgstr "La dirección de la lente no cuadra con el flash\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:388
+msgid "Lens is not connected\n"
+msgstr "La lente no está conectada\n"
+
+#: camlibs/minolta/dimagev/dimagev.c:391
+#, c-format
+msgid "Bad value for lens status %d\n"
+msgstr "Valor incorrecto para el estado de la lente %d\n"
+
+#. Card status is another switch.
+#: camlibs/minolta/dimagev/dimagev.c:400
+msgid "Card Status:\t\t"
+msgstr "Estado de la tarjeta:\t\t"
+
+#: camlibs/minolta/dimagev/dimagev.c:413
+msgid "Write-protected"
+msgstr "Protegida contra escritura"
+
+#: camlibs/minolta/dimagev/dimagev.c:416
+msgid "Unsuitable card"
+msgstr "Tarjeta no conveniente"
+
+#: camlibs/minolta/dimagev/dimagev.c:419
+#, c-format
+msgid "Bade value for card status %d"
+msgstr "Valor no válido para el estado de la tarjeta %d"
+
+#: camlibs/minolta/dimagev/dimagev.c:438
+#, c-format
+msgid ""
+"Minolta Dimage V Camera Library\n"
+"%s\n"
+"Gus Hartmann <gphoto@gus-the-cat.org>\n"
+"Special thanks to Minolta for the spec."
+msgstr ""
+"Biblioteca para la cámara Minolta Dimage V\n"
+"%s\n"
+"Gus Hartmann <gphoto@gus-the-cat.org>\n"
+"Agradecimientos especiales a Minolta por las especificaciones."
+
+#: camlibs/panasonic/coolshot/coolshot.c:264
+msgid "coolshot library v"
+msgstr "Biblioteca coolshot v"
+
+#: camlibs/panasonic/coolshot/coolshot.c:265
+msgid ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Support for Panasonic Coolshot digital cameras\n"
+"based on reverse engineering serial protocol.\n"
+"\n"
+msgstr ""
+"\n"
+"Chris Pinkham <cpinkham@infi.net>\n"
+"Soporte para las cámaras digitales Panasonic Coolshot\n"
+"basado en la ingeniería reversa del protocolo serie.\n"
+"\n"
+
+#: camlibs/panasonic/dc1000.c:371 camlibs/panasonic/dc1580.c:468
+msgid "Disconnecting camera."
+msgstr "Desconectando la cámara."
+
+#: camlibs/panasonic/dc1000.c:411
+#, c-format
+msgid "Downloading image %s."
+msgstr "Descargando la imagen %s."
+
+#: camlibs/panasonic/dc1000.c:452 camlibs/panasonic/dc1580.c:577
+#, c-format
+msgid "Uploading image: %s."
+msgstr "Enviando la imagen: %s."
+
+#: camlibs/panasonic/dc1000.c:463 camlibs/panasonic/dc1580.c:588
+#, c-format
+msgid ""
+"File size is %i bytes. The size of the largest file possible to upload is: %"
+"i bytes."
+msgstr ""
+"El tamaño del archivo es %i bytes. El tamaño máximo de archivo a enviar es "
+"de: %i bytes."
+
+#: camlibs/panasonic/dc1000.c:476 camlibs/panasonic/dc1580.c:599
+msgid "Uploading..."
+msgstr "Enviando..."
+
+#: camlibs/panasonic/dc1000.c:503 camlibs/panasonic/dc1580.c:625
+#, c-format
+msgid "Deleting image %s."
+msgstr "Borrando imagen %s."
+
+#: camlibs/panasonic/dc1000.c:516
+msgid ""
+"Panasonic DC1000 gPhoto library\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Based on dc1000 program written by\n"
+"Fredrik Roubert <roubert@df.lth.se> and\n"
+"Galen Brooks <galen@nine.com>."
+msgstr ""
+"Biblioteca gPhoto para la cámara Panasonic DC1000\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Basada en el programa dc1000 escrito por\n"
+"Fredrik Roubert <roubert@df.lth.se> y\n"
+"Galen Brooks <galen@nine.com>."
+
+#: camlibs/panasonic/dc1580.c:528
+#, c-format
+msgid "Downloading %s."
+msgstr "Descargando %s."
+
+#: camlibs/panasonic/dc1580.c:637
+msgid ""
+"Panasonic DC1580 gPhoto library\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Based on dc1000 program written by\n"
+"Fredrik Roubert <roubert@df.lth.se> and\n"
+"Galen Brooks <galen@nine.com>."
+msgstr ""
+"Biblioteca gPhoto para la cámara Panasonic DC1580\n"
+"Mariusz Zynel <mariusz@mizar.org>\n"
+"\n"
+"Basada en el programa dc1000 escrito por\n"
+"Fredrik Roubert <roubert@df.lth.se> y\n"
+"Galen Brooks <galen@nine.com>."
+
+#: camlibs/panasonic/l859/l859.c:505
+#, c-format
+msgid "Downloading '%s'..."
+msgstr "Descargando '%s'..."
+
+#: camlibs/panasonic/l859/l859.c:586
+msgid ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
+"\n"
+"Panasonic introduced image capturing technology called PHOTOSHOT for the "
+"first time to this series of Palmcorders.  Images are stored in JPEG format "
+"on an internal flashcard and can be transfered to a computer through the "
+"built-in serial port.  Images are saved in one of two resolutions; NORMAL is "
+"320x240 and FINE is 640x480.  The CCD device which captures the images from "
+"the lens is only 300K and thus produces only low quality pictures."
+msgstr ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
+"\n"
+"Panasonic ha presentado la tecnología de captura de imágenes PHOTOSHOT por "
+"primera vez para esta serie de Palmcorders. Las imágenes se almacenan en el "
+"formato JPEG en una tarjeta Flash interna y se pueden transferir a una "
+"computadora a través del puerto serie integrado. Las imágenes se registran "
+"en una de dos resoluciones; NORMAL es 320x240 y FINA es 640x480. El "
+"dispositivo CCD que captura las imágenes de la lente solo posee 300.000 "
+"pixels, y por lo tanto sólo produce imágenes de calidad baja."
+
+#: camlibs/panasonic/l859/l859.c:604
+msgid ""
+"Known problems:\n"
+"\n"
+"If communications problems occur, reset the camera and restart the "
+"application.  The driver is not robust enough yet to recover from these "
+"situations, especially if a problem occurs and the camera is not properly "
+"shutdown at speeds faster than 9600."
+msgstr ""
+"Problemas conocidos:\n"
+"\n"
+"Si ocurren problemas de comunicaciones, vuelva a cero la cámara y vuelva a "
+"iniciar la aplicación. El controlador no es lo suficientemente robusto como "
+"para recuperarse de estas situaciones, especialmente si ocurre un problema y "
+"la cámara no se apaga adecuadamente a velocidades mayores a 9600."
+
+#: camlibs/panasonic/l859/l859.c:618
+msgid ""
+"Panasonic PV-L859-K/PV-L779-K Palmcorder Driver\n"
+"Andrew Selkirk <aselkirk@mailandnews.com>"
+msgstr ""
+"Controlador para Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
+"Andrew Selkirk <aselkirk@mailandnews.com>"
+
+#: camlibs/polaroid/pdc700.c:150
+msgid "Image Quality"
+msgstr "Calidad de imagen"
+
+#: camlibs/polaroid/pdc700.c:151
+msgid "Flash Setting"
+msgstr "Configuración del flash"
+
+#: camlibs/polaroid/pdc700.c:152
+msgid "LCD"
+msgstr "LCD"
+
+#: camlibs/polaroid/pdc700.c:154
+msgid "Auto Power Off (minutes)"
+msgstr "Apagado automático (en minutos)"
+
+#: camlibs/polaroid/pdc700.c:155
+msgid "Information"
+msgstr "Información"
+
+#: camlibs/polaroid/pdc700.c:157
+msgid "normal"
+msgstr "normal"
+
+#: camlibs/polaroid/pdc700.c:157
+msgid "fine"
+msgstr "fina"
+
+#: camlibs/polaroid/pdc700.c:157
+msgid "superfine"
+msgstr "superfina"
+
+#: camlibs/polaroid/pdc700.c:159 camlibs/sierra/sierra.c:1364
+#: camlibs/sierra/sierra.c:1378 camlibs/sierra/sierra.c:1613
+msgid "auto"
+msgstr "automática"
+
+#: camlibs/polaroid/pdc700.c:159 camlibs/polaroid/pdc700.c:160
+msgid "on"
+msgstr "activa"
+
+#: camlibs/polaroid/pdc700.c:159 camlibs/polaroid/pdc700.c:160
+msgid "off"
+msgstr "inactiva"
+
+#: camlibs/polaroid/pdc700.c:161
+msgid "play"
+msgstr "lectura"
+
+#: camlibs/polaroid/pdc700.c:161
+msgid "record"
+msgstr "escritura"
+
+#: camlibs/polaroid/pdc700.c:161
+msgid "menu"
+msgstr "menú"
+
+#: camlibs/polaroid/pdc700.c:162
+msgid "battery"
+msgstr "batería"
+
+#: camlibs/polaroid/pdc700.c:162
+msgid "a/c adaptor"
+msgstr "transformador CA"
+
+#: camlibs/polaroid/pdc700.c:163
+msgid "9600"
+msgstr "9600"
+
+#: camlibs/polaroid/pdc700.c:163
+msgid "19200"
+msgstr "19200"
+
+#: camlibs/polaroid/pdc700.c:163
+msgid "38400"
+msgstr "38400"
+
+#: camlibs/polaroid/pdc700.c:164
+msgid "57600"
+msgstr "57600"
+
+#: camlibs/polaroid/pdc700.c:164
+msgid "115200"
+msgstr "115200"
+
+#: camlibs/polaroid/pdc700.c:216
+#, c-format
+msgid "Received unexpected header (%i)"
+msgstr "Se recibió un encabezado no esperado (%i)"
+
+#: camlibs/polaroid/pdc700.c:229
+msgid "Received unexpected response"
+msgstr "Se recibió una respuesta no esperada"
+
+#: camlibs/polaroid/pdc700.c:250
+msgid "Checksum error"
+msgstr "Error de la suma de control"
+
+#: camlibs/polaroid/pdc700.c:283
+msgid "The camera did not accept the command."
+msgstr "La cámara no aceptó el comando."
+
+#: camlibs/polaroid/pdc700.c:336
+#, c-format
+msgid "The camera sent more bytes than expected (%i)"
+msgstr "La cámara envió más bytes que lo esperado (%i)"
+
+#: camlibs/polaroid/pdc700.c:438
+#, c-format
+msgid ""
+"Requested information about picture %i (= 0x%x), but got information about "
+"picture %i back"
+msgstr ""
+"Se pidió información sobre la foto %i (= 0x%x), pero se recibión información "
+"sobre la foto %i."
+
+#: camlibs/polaroid/pdc700.c:872
+#, c-format
+msgid ""
+"%i bytes of an unknown image format have been received. Please write <gphoto-"
+"devel@gphoto.org> for assistance."
+msgstr ""
+"se han recibido %i bytes de un formato de imágen desconocido. Por favor, "
+"escriba a <gphoto-devel@gphoto.org> para asistencia."
+
+#: camlibs/polaroid/pdc700.c:937 camlibs/sierra/sierra.c:775
+#: camlibs/sierra/sierra.c:1349
+msgid "Camera Configuration"
+msgstr "Configuración de la cámara"
+
+#: camlibs/polaroid/pdc700.c:938
+msgid "Settings"
+msgstr "Parámetros"
+
+#: camlibs/polaroid/pdc700.c:953
+msgid "How long will it take until the camera powers off?"
+msgstr "¿Cuanto tiempo debería pasar hasta que la cámara se apague?"
+
+#: camlibs/polaroid/pdc700.c:1048
+#, c-format
+msgid ""
+"Date: %i/%02i/%02i %02i:%02i:%02i\n"
+"Pictures taken: %i\n"
+"Free pictures: %i\n"
+"Software version: %s\n"
+"Baudrate: %s\n"
+"Memory: %i megabytes\n"
+"Camera mode: %s\n"
+"Image quality: %s\n"
+"Flash setting: %s\n"
+"Information: %s\n"
+"Timer: %s\n"
+"LCD: %s\n"
+"Auto power off: %i minutes\n"
+"Power source: %s"
+msgstr ""
+"Fecha: %i/%02i/%02i %02i:%02i:%02i\n"
+"Fotos tomadas: %i\n"
+"Fotos libres: %i\n"
+"Versión del software: %s\n"
+"Velocidad (baud): %s\n"
+"Memoria: %i megabytes\n"
+"Modo: %s\n"
+"Calidad de la imagen: %s\n"
+"Configuración del flash: %s\n"
+"Información: %s\n"
+"Temporizador: %s\n"
+"LCD: %s\n"
+"Apagado automático: %i minutos\n"
+"Fuente de energía: %s"
+
+#: camlibs/polaroid/pdc700.c:1167
+#, c-format
+msgid "The requested port type (%i) is not supported by this driver."
+msgstr "Este controlador no soporta el tipo de puerto pedido (%i)."
+
+#: camlibs/ptp/library.c:86
+msgid "PTP Undefined Error"
+msgstr ""
+
+#: camlibs/ptp/library.c:87
+msgid "PTP OK!"
+msgstr ""
+
+#: camlibs/ptp/library.c:88
+msgid "PTP General Error"
+msgstr ""
+
+#: camlibs/ptp/library.c:89
+msgid "PTP Session Not Open"
+msgstr ""
+
+#: camlibs/ptp/library.c:90
+msgid "PTP Invalid Transaction ID"
+msgstr ""
+
+#: camlibs/ptp/library.c:91
+msgid "PTP Operation Not Supported"
+msgstr ""
+
+#: camlibs/ptp/library.c:92
+#, fuzzy
+msgid "PTP Parameter Not Supported"
+msgstr "Tipo de captura no soportado"
+
+#: camlibs/ptp/library.c:93
+msgid "PTP Incomplete Transfer"
+msgstr ""
+
+#: camlibs/ptp/library.c:94
+msgid "PTP Invalid Storage ID"
+msgstr ""
+
+#: camlibs/ptp/library.c:95
+msgid "PTP Invalid Object Handle"
+msgstr ""
+
+#: camlibs/ptp/library.c:96
+msgid "PTP Device Prop Not Supported"
+msgstr ""
+
+#: camlibs/ptp/library.c:97
+msgid "PTP Invalid Object Format Code"
+msgstr ""
+
+#: camlibs/ptp/library.c:98
+msgid "PTP Store Full"
+msgstr ""
+
+#: camlibs/ptp/library.c:99
+#, fuzzy
+msgid "PTP Object Write Protected"
+msgstr "Protegida contra escritura"
+
+#: camlibs/ptp/library.c:100
+msgid "PTP Store Read Only"
+msgstr ""
+
+#: camlibs/ptp/library.c:101
+msgid "PTP Access Denied"
+msgstr ""
+
+#: camlibs/ptp/library.c:102
+msgid "PTP No Thumbnail Present"
+msgstr ""
+
+#: camlibs/ptp/library.c:103
+msgid "PTP Self Test Failed"
+msgstr ""
+
+#: camlibs/ptp/library.c:104
+msgid "PTP Partial Deletion"
+msgstr ""
+
+#: camlibs/ptp/library.c:105
+#, fuzzy
+msgid "PTP Store Not Available"
+msgstr "  Ninguno disponible.\n"
+
+#: camlibs/ptp/library.c:107
+msgid "PTP Specification By Format Unsupported"
+msgstr ""
+
+#: camlibs/ptp/library.c:108
+msgid "PTP No Valid Object Info"
+msgstr ""
+
+#: camlibs/ptp/library.c:109
+msgid "PTP Invalid Code Format"
+msgstr ""
+
+#: camlibs/ptp/library.c:110
+#, fuzzy
+msgid "PTP Unknown Vendor Code"
+msgstr "Modelo desconocido"
+
+#: camlibs/ptp/library.c:112
+msgid "PTP Capture Already Terminated"
+msgstr ""
+
+#: camlibs/ptp/library.c:113
+msgid "PTP Device Bus"
+msgstr ""
+
+#: camlibs/ptp/library.c:114
+msgid "PTP Invalid Parent Object"
+msgstr ""
+
+#: camlibs/ptp/library.c:115
+msgid "PTP Invalid Device Prop Format"
+msgstr ""
+
+#: camlibs/ptp/library.c:116
+msgid "PTP Invalid Device Prop Value"
+msgstr ""
+
+#: camlibs/ptp/library.c:117
+msgid "PTP Invalid Parameter"
+msgstr ""
+
+#: camlibs/ptp/library.c:118
+msgid "PTP Session Already Opened"
+msgstr ""
+
+#: camlibs/ptp/library.c:119
+#, fuzzy
+msgid "PTP Transaction Canceled"
+msgstr "Operación cancelada"
+
+#: camlibs/ptp/library.c:121
+msgid "PTP Specification Of Destination Unsupported"
+msgstr ""
+
+#: camlibs/ptp/library.c:122
+msgid "PTP EK Filename Required"
+msgstr ""
+
+#: camlibs/ptp/library.c:123
+msgid "PTP EK Filename Conflicts"
+msgstr ""
+
+#: camlibs/ptp/library.c:124
+msgid "PTP EK Filename Invalid"
+msgstr ""
+
+#: camlibs/ptp/library.c:126
+msgid "PTP I/O error"
+msgstr ""
+
+#: camlibs/ptp/library.c:127
+msgid "PTP Error: bad parameter"
+msgstr ""
+
+#: camlibs/ptp/library.c:128
+msgid "PTP Protocol error, data expected"
+msgstr ""
+
+#: camlibs/ptp/library.c:129
+msgid "PTP Protocol error, response expected"
+msgstr ""
+
+#: camlibs/ptp/library.c:418
+msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
+msgstr ""
+
+#: camlibs/ptp/library.c:851
+msgid "PTP is implemented for USB cameras only."
+msgstr ""
+
+#: camlibs/ricoh/library.c:178
+#, fuzzy
+msgid "Could not contact camera."
+msgstr "No se puede detectar cámara alguna"
+
+#: camlibs/ricoh/library.c:188
+#, fuzzy, c-format
+msgid "Speed %i is not supported!"
+msgstr "Tipo de captura no soportado"
+
+#: camlibs/ricoh/ricoh.c:65
+#, fuzzy, c-format
+msgid ""
+"Expected %i, got %i. Please report this error to <gphoto-devel@gphoto.org>."
+msgstr ""
+"32 bytes esperados, %i recibidos. Por favor, contactar a <gphoto-"
+"devel@gphoto.org>."
+
+#: camlibs/ricoh/ricoh.c:74
+#, fuzzy, c-format
+msgid ""
+"Expected %i bytes, got %i. Please report this error to <gphoto-devel@gphoto."
+"org>."
+msgstr ""
+"32 bytes esperados, %i recibidos. Por favor, contactar a <gphoto-"
+"devel@gphoto.org>."
+
+#. Translators: please write 'M"uller' and 'Mei"sner' (that
+#. is, with u-umlaut and eszett resp.) if your charset
+#. allows it.  If not, use "Mueller" and "Meissner".
+#: camlibs/samsung/samsung.c:244
+msgid ""
+"The Samsung digimax 800k driver has been written by James McKenzie "
+"<james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge."
+"net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and "
+"enhanced the port."
+msgstr ""
+"El controlador para la Samsung digimax 800k fué escrito por James McKenzie "
+"<james@fishsoup.dhs.org>. Lutz Müller <lutz@users.sourceforge.net> lo portó "
+"a gphoto2. Marcus Meißner <marcus@jet.franken.de> lo corrigió y mejoró."
+
+#: camlibs/sierra/sierra.c:635
+msgid "The file to be uploaded has a null length"
+msgstr "El archivo a enviar tiene longitud nula"
+
+#: camlibs/sierra/sierra.c:649
+msgid "Not enough memory available on the memory card"
+msgstr "No hay suficiente memoria disponible en la tarjeta de memoria"
+
+#: camlibs/sierra/sierra.c:656
+msgid "Cannot retrieve the name of the folder containing the pictures"
+msgstr "No se puede obtener el nombre del directorio que contiene las fotos"
+
+#: camlibs/sierra/sierra.c:663
+#, c-format
+msgid "Upload is supported into the '%s' folder only"
+msgstr "Sólo se soporta el envío al directorio '%s'"
+
+#: camlibs/sierra/sierra.c:776 camlibs/sierra/sierra.c:1439
+msgid "Picture Settings"
+msgstr "Parámetros de la imagen"
+
+#: camlibs/sierra/sierra.c:788 camlibs/sierra/sierra.c:796
+#: camlibs/sierra/sierra.c:828 camlibs/sierra/sierra.c:837
+#: camlibs/sierra/sierra.c:1122 camlibs/sierra/sierra.c:1152
+msgid "High"
+msgstr "Alta"
+
+#: camlibs/sierra/sierra.c:789 camlibs/sierra/sierra.c:798
+#: camlibs/sierra/sierra.c:1124
+msgid "Best"
+msgstr "Mejor"
+
+#: camlibs/sierra/sierra.c:801 camlibs/sierra/sierra.c:840
+#: camlibs/sierra/sierra.c:872 camlibs/sierra/sierra.c:902
+#: camlibs/sierra/sierra.c:933 camlibs/sierra/sierra.c:964
+#: camlibs/sierra/sierra.c:988 camlibs/sierra/sierra.c:1010
+#: camlibs/sierra/sierra.c:1039 camlibs/sierra/sierra.c:1381
+#: camlibs/sierra/sierra.c:1409 camlibs/sierra/sierra.c:1432
+#: camlibs/sierra/sierra.c:1454 camlibs/sierra/sierra.c:1480
+#: camlibs/sierra/sierra.c:1499 camlibs/sierra/sierra.c:1567
+#, c-format
+msgid "%i (unknown)"
+msgstr "%i (desconocida)"
+
+#: camlibs/sierra/sierra.c:813 camlibs/sierra/sierra.c:1134
+msgid "Shutter Speed (microseconds)"
+msgstr "Velocidad del obturador (microsegundos)"
+
+#: camlibs/sierra/sierra.c:824 camlibs/sierra/sierra.c:1142
+#: camlibs/sierra/sierra.c:1357 camlibs/sierra/sierra.c:1598
+msgid "Aperture"
+msgstr "Apertura"
+
+#: camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:833
+#: camlibs/sierra/sierra.c:1148
+msgid "Low"
+msgstr "Baja"
+
+#: camlibs/sierra/sierra.c:827 camlibs/sierra/sierra.c:835
+#: camlibs/sierra/sierra.c:1150
+msgid "Medium"
+msgstr "Media"
+
+#. Those values are for a C-2020 Z. If your model differs, we
+#. have to distinguish models here...
+#: camlibs/sierra/sierra.c:853 camlibs/sierra/sierra.c:1161
+#: camlibs/sierra/sierra.c:1490 camlibs/sierra/sierra.c:1691
+msgid "Color Mode"
+msgstr "Modo de color"
+
+#: camlibs/sierra/sierra.c:855 camlibs/sierra/sierra.c:863
+#: camlibs/sierra/sierra.c:1167
+msgid "Black/White"
+msgstr "Blanco y negro"
+
+#: camlibs/sierra/sierra.c:856 camlibs/sierra/sierra.c:865
+#: camlibs/sierra/sierra.c:1169
+msgid "Sepia"
+msgstr "Sepia"
+
+#: camlibs/sierra/sierra.c:857 camlibs/sierra/sierra.c:867
+#: camlibs/sierra/sierra.c:1171
+msgid "White Board"
+msgstr "Pizarra blanca"
+
+#: camlibs/sierra/sierra.c:858 camlibs/sierra/sierra.c:869
+#: camlibs/sierra/sierra.c:1173
+msgid "Black Board"
+msgstr "Pizarra negra"
+
+#: camlibs/sierra/sierra.c:883 camlibs/sierra/sierra.c:1182
+#: camlibs/sierra/sierra.c:1391 camlibs/sierra/sierra.c:1622
+msgid "Flash Mode"
+msgstr "Modo del flash"
+
+#: camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:893
+#: camlibs/sierra/sierra.c:1188 camlibs/sierra/sierra.c:1393
+#: camlibs/sierra/sierra.c:1400 camlibs/sierra/sierra.c:1627
+msgid "Force"
+msgstr "Forzado"
+
+#: camlibs/sierra/sierra.c:887 camlibs/sierra/sierra.c:897
+#: camlibs/sierra/sierra.c:1192 camlibs/sierra/sierra.c:1395
+#: camlibs/sierra/sierra.c:1404 camlibs/sierra/sierra.c:1631
+msgid "Red-eye Reduction"
+msgstr "Reducción de ojos rojos"
+
+#: camlibs/sierra/sierra.c:888 camlibs/sierra/sierra.c:899
+#: camlibs/sierra/sierra.c:1194 camlibs/sierra/sierra.c:1396
+#: camlibs/sierra/sierra.c:1406 camlibs/sierra/sierra.c:1633
+msgid "Slow Sync"
+msgstr "Sincronización lenta"
+
+#: camlibs/sierra/sierra.c:913 camlibs/sierra/sierra.c:1204
+msgid "Brightness/Contrast"
+msgstr "Brillo/Contraste"
+
+#: camlibs/sierra/sierra.c:916 camlibs/sierra/sierra.c:924
+#: camlibs/sierra/sierra.c:1210
+msgid "Bright+"
+msgstr "Brillo+"
+
+#: camlibs/sierra/sierra.c:917 camlibs/sierra/sierra.c:926
+#: camlibs/sierra/sierra.c:1212
+msgid "Bright-"
+msgstr "Brillo-"
+
+#: camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:928
+#: camlibs/sierra/sierra.c:1214
+msgid "Contrast+"
+msgstr "Contraste+"
+
+#: camlibs/sierra/sierra.c:919 camlibs/sierra/sierra.c:930
+#: camlibs/sierra/sierra.c:1216
+msgid "Contrast-"
+msgstr "Contraste-"
+
+#: camlibs/sierra/sierra.c:944 camlibs/sierra/sierra.c:1225
+#: camlibs/sierra/sierra.c:1419 camlibs/sierra/sierra.c:1642
+msgid "White Balance"
+msgstr "Balance de blanco"
+
+#: camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:954
+#: camlibs/sierra/sierra.c:1231
+msgid "Skylight"
+msgstr "Luz de día"
+
+#: camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:956
+#: camlibs/sierra/sierra.c:1233
+msgid "Fluorescent"
+msgstr "Fluorescente"
+
+#: camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:958
+#: camlibs/sierra/sierra.c:1235
+msgid "Tungsten"
+msgstr "Tungsteno"
+
+#: camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:961
+#: camlibs/sierra/sierra.c:1237
+msgid "Cloudy"
+msgstr "Nublado"
+
+#: camlibs/sierra/sierra.c:975 camlibs/sierra/sierra.c:1246
+#: camlibs/sierra/sierra.c:1445 camlibs/sierra/sierra.c:1658
+msgid "Lens Mode"
+msgstr "Modo de lente"
+
+#: camlibs/sierra/sierra.c:976 camlibs/sierra/sierra.c:981
+#: camlibs/sierra/sierra.c:1250 camlibs/sierra/sierra.c:1446
+#: camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
+msgid "Macro"
+msgstr "Macro"
+
+#: camlibs/sierra/sierra.c:978 camlibs/sierra/sierra.c:985
+#: camlibs/sierra/sierra.c:1254
+msgid "Infinity/Fish-eye"
+msgstr "Infinito/Ojo de pez"
+
+# Translation thanks to Martin Kroeker. [Colin]
+#: camlibs/sierra/sierra.c:999 camlibs/sierra/sierra.c:1264
+msgid "Spot Metering Mode"
+msgstr "Modo de medición de punto"
+
+#: camlibs/sierra/sierra.c:1021 camlibs/sierra/sierra.c:1279
+msgid "Zoom"
+msgstr "Zoom"
+
+#: camlibs/sierra/sierra.c:1022 camlibs/sierra/sierra.c:1028
+msgid "1x"
+msgstr "1x"
+
+#: camlibs/sierra/sierra.c:1023 camlibs/sierra/sierra.c:1033
+msgid "1.6x"
+msgstr "1.6x"
+
+#: camlibs/sierra/sierra.c:1024 camlibs/sierra/sierra.c:1030
+msgid "2x"
+msgstr "2x"
+
+#: camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1036
+msgid "2.5x"
+msgstr "2.5x"
+
+#: camlibs/sierra/sierra.c:1046 camlibs/sierra/sierra.c:1506
+msgid "Camera Settings"
+msgstr "Parámetros de la cámara"
+
+#: camlibs/sierra/sierra.c:1053 camlibs/sierra/sierra.c:1298
+#: camlibs/sierra/sierra.c:1513 camlibs/sierra/sierra.c:1705
+msgid "Auto Off (host) (in seconds)"
+msgstr "Apagado automático (en la máquina) (en segundos)"
+
+#: camlibs/sierra/sierra.c:1055 camlibs/sierra/sierra.c:1515
+msgid ""
+"How long will it take until the camera powers off when connected to the "
+"computer?"
+msgstr ""
+"¿Cuánto tiempo pasará hasta que la cámara se apague cuando está conectada a "
+"la computadora?"
+
+#: camlibs/sierra/sierra.c:1067 camlibs/sierra/sierra.c:1308
+#: camlibs/sierra/sierra.c:1527 camlibs/sierra/sierra.c:1715
+msgid "Auto Off (field) (in seconds)"
+msgstr "Apagado automático (en el campo) (en segundos)"
+
+#: camlibs/sierra/sierra.c:1069 camlibs/sierra/sierra.c:1529
+msgid ""
+"How long will it take until the camera powers off when not connected to the "
+"computer?"
+msgstr ""
+"¿Cuánto tiempo pasará hasta que la cámara se apague cuando no está conectada "
+"a la computadora?"
+
+#: camlibs/sierra/sierra.c:1081 camlibs/sierra/sierra.c:1318
+msgid "LCD Brightness"
+msgstr "Brillo del LCD"
+
+#: camlibs/sierra/sierra.c:1091 camlibs/sierra/sierra.c:1327
+msgid "LCD Auto Off (in seconds)"
+msgstr "Apagado automático del LCD (en segundos)"
+
+#: camlibs/sierra/sierra.c:1351
+msgid "Shot Settings"
+msgstr "Configuración de la toma"
+
+#: camlibs/sierra/sierra.c:1358 camlibs/sierra/sierra.c:1366
+#: camlibs/sierra/sierra.c:1601
+msgid "F2"
+msgstr "F2"
+
+#: camlibs/sierra/sierra.c:1359 camlibs/sierra/sierra.c:1368
+#: camlibs/sierra/sierra.c:1603
+msgid "F2.3"
+msgstr "F2.3"
+
+#: camlibs/sierra/sierra.c:1360 camlibs/sierra/sierra.c:1370
+#: camlibs/sierra/sierra.c:1605
+msgid "F2.8"
+msgstr "F2.8"
+
+#: camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1372
+#: camlibs/sierra/sierra.c:1607
+msgid "F4"
+msgstr "F4"
+
+#: camlibs/sierra/sierra.c:1362 camlibs/sierra/sierra.c:1374
+#: camlibs/sierra/sierra.c:1609
+msgid "F5.6"
+msgstr "F5.6"
+
+#: camlibs/sierra/sierra.c:1363 camlibs/sierra/sierra.c:1376
+#: camlibs/sierra/sierra.c:1611
+msgid "F8"
+msgstr "F8"
+
+#: camlibs/sierra/sierra.c:1422 camlibs/sierra/sierra.c:1429
+#: camlibs/sierra/sierra.c:1649
+msgid "Custom"
+msgstr "Personalizada"
+
+#: camlibs/sierra/sierra.c:1467 camlibs/sierra/sierra.c:1475
+#: camlibs/sierra/sierra.c:1680
+msgid "SuperFine"
+msgstr "SuperFina"
+
+#: camlibs/sierra/sierra.c:1468 camlibs/sierra/sierra.c:1477
+#: camlibs/sierra/sierra.c:1682
+msgid "HyPict"
+msgstr "HyPict"
+
+#: camlibs/sierra/sierra.c:1491 camlibs/sierra/sierra.c:1494
+#: camlibs/sierra/sierra.c:1694
+msgid "color"
+msgstr "coulor"
+
+#: camlibs/sierra/sierra.c:1492 camlibs/sierra/sierra.c:1496
+#: camlibs/sierra/sierra.c:1696
+msgid "black & white"
+msgstr "blanco y negro"
+
+#: camlibs/sierra/sierra.c:1541 camlibs/sierra/sierra.c:1550
+#: camlibs/sierra/sierra.c:1727
+msgid "Korean"
+msgstr "Coreano"
+
+#: camlibs/sierra/sierra.c:1542 camlibs/sierra/sierra.c:1552
+#: camlibs/sierra/sierra.c:1729
+msgid "English"
+msgstr "Inglés"
+
+#: camlibs/sierra/sierra.c:1543 camlibs/sierra/sierra.c:1554
+#: camlibs/sierra/sierra.c:1731
+msgid "French"
+msgstr "Francés"
+
+#: camlibs/sierra/sierra.c:1544 camlibs/sierra/sierra.c:1556
+#: camlibs/sierra/sierra.c:1733
+msgid "German"
+msgstr "Alemán"
+
+#: camlibs/sierra/sierra.c:1545 camlibs/sierra/sierra.c:1558
+#: camlibs/sierra/sierra.c:1735
+msgid "Italian"
+msgstr "Italiano"
+
+#: camlibs/sierra/sierra.c:1546 camlibs/sierra/sierra.c:1560
+#: camlibs/sierra/sierra.c:1737
+msgid "Japanese"
+msgstr "Japonés"
+
+#: camlibs/sierra/sierra.c:1547 camlibs/sierra/sierra.c:1562
+#: camlibs/sierra/sierra.c:1739
+msgid "Spanish"
+msgstr "Español"
+
+#: camlibs/sierra/sierra.c:1548 camlibs/sierra/sierra.c:1564
+#: camlibs/sierra/sierra.c:1741
+msgid "Portugese"
+msgstr "Portugués"
+
+#: camlibs/sierra/sierra.c:1577 camlibs/sierra/sierra.c:1750
+msgid "Date & Time"
+msgstr "Fecha y hora"
+
+#: camlibs/sierra/sierra.c:1792
+msgid "NO MEMORY CARD PRESENT\n"
+msgstr "LA TARJETA DE MEMORIA NO ESTÁ PRESENTE\n"
+
+#: camlibs/sierra/sierra.c:1802
+#, c-format
+msgid "%sCamera Model: %s\n"
+msgstr "%sModelo de la cámara: %s\n"
+
+#: camlibs/sierra/sierra.c:1806
+#, c-format
+msgid "%sManufacturer: %s\n"
+msgstr "%sFabricante : %s\n"
+
+#: camlibs/sierra/sierra.c:1810
+#, c-format
+msgid "%sCamera ID: %s\n"
+msgstr "%sIdentificador de la cámara: %s\n"
+
+#: camlibs/sierra/sierra.c:1814
+#, c-format
+msgid "%sSerial Number: %s\n"
+msgstr "%sNúmero de serie: %s\n"
+
+#: camlibs/sierra/sierra.c:1818
+#, c-format
+msgid "%sSoftware Rev.: %s\n"
+msgstr "%sRevisión del software: %s\n"
+
+# Haesslich [Colin]
+#: camlibs/sierra/sierra.c:1822
+#, c-format
+msgid "%sFrames Taken: %i\n"
+msgstr "%sCuadros tomados: %i\n"
+
+# Haesslich... [Colin]
+#: camlibs/sierra/sierra.c:1824
+#, c-format
+msgid "%sFrames Left: %i\n"
+msgstr "%sCuadros restantes: %i\n"
+
+#: camlibs/sierra/sierra.c:1826
+#, c-format
+msgid "%sBattery Life: %i\n"
+msgstr "%sDuración de la batería: %i\n"
+
+#: camlibs/sierra/sierra.c:1828
+#, c-format
+msgid "%sMemory Left: %i bytes\n"
+msgstr "%sMemoria restante: %i octets\n"
+
+#: camlibs/sierra/sierra.c:1832
+#, c-format
+msgid "%sDate: %s\n"
+msgstr "%sFecha: %s\n"
+
+#: camlibs/sierra/sierra.c:1848
+msgid ""
+"Some notes about Epson cameras:\n"
+"- Some parameters are not controllable remotely:\n"
+"  * zoom\n"
+"  * focus\n"
+"  * custom white balance setup\n"
+"- Configuration has been reverse-engineered with\n"
+"  a PhotoPC 3000z, if your camera acts differently\n"
+"  please send a mail to <gphoto-devel@gphoto.org> (in English)\n"
+msgstr ""
+"Algunas notas acerca de las cámaras Epson:\n"
+"- Ciertos parámetros no se pueden controlar remotamente:\n"
+"  * el zoom\n"
+"  * la puesta en foco\n"
+"  * la configuración personalizada del balance de blanco\n"
+"- La configuración fue hecha con ingeniería reversa de una cámara\n"
+"  PhotoPC 3000z, si su cámara se comporta diferente, por favor\n"
+"  envíe un correo a <gphoto-devel@gphoto.org> (en inglés)\n"
+
+#: camlibs/sierra/sierra.c:1860
+msgid ""
+"Some notes about Olympus cameras (and others?):\n"
+"(1) Camera Configuration:\n"
+"    A value of 0 will take the default one (auto).\n"
+"(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
+"    and others) have a USB PC Control mode. In order\n"
+"    to use this mode, the camera must be switched \n"
+"    into 'USB PC control mode'. To get to the menu \n"
+"    for switching modes, open the memory card access\n"
+"    door and then press and hold both of the menu \n"
+"    buttons until the camera control menu appears.\n"
+"    Set it to ON."
+msgstr ""
+"Algunas notas sobre las cámaras Olympus (¿y otras?):\n"
+"(1) Configuración de la cámara:\n"
+"    El valor 0 definirá el valor por defecto (automático).\n"
+"(2) La Olympus C-3040Z (y posiblemente también la C-2040Z,\n"
+"    y otras) tienen un modo de control por USB. Para poder\n"
+"    utilizar este modo, la cámara se debe colocar en\n"
+"    'USB PC control mode'. Para obtener el menú para cambiarlo,\n"
+"    abra la puerta de acceso a la tarjeta de memoria\n"
+"    y luego presione y sostenga ambos botones menú\n"
+"    hasta que aparece el menú de control de cámara.\n"
+"    Póngalo en ON."
+
+# Ist "Freigabe" richtig? [Colin]
+#: camlibs/sierra/sierra.c:1883
+msgid ""
+"sierra SPARClite library\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Support for sierra-based digital cameras\n"
+"including Olympus, Nikon, Epson, and others.\n"
+"\n"
+"Thanks to Data Engines (www.dataengines.com)\n"
+"for the use of their Olympus C-3030Z for USB\n"
+"support implementation."
+msgstr ""
+"Biblioteca sierra SPARClite\n"
+"Scott Fritzinger <scottf@unr.edu>\n"
+"Soporte para las cámaras digitales basadas en\n"
+"componentes sierra tales como Olympus,\n"
+"Nikon, Epson, y otras.\n"
+"\n"
+"Gracias a Data Engines (www.dataengines.com)\n"
+"por la utilización de su Olympus C-3030Z\n"
+"para la implementación del soporte USB."
+
+#: camlibs/sierra/library.c:285
+msgid "Cannot retrieve the battery capacity"
+msgstr "No se puede obtener la capacidad de la batería"
+
+#: camlibs/sierra/library.c:291
+#, c-format
+msgid ""
+"The battery level of the camera is too low (%d%%). The operation is aborted."
+msgstr ""
+"El nivel de la batería de la cámara es muy bajo (%d%%). Operación anulada."
+
+#: camlibs/sierra/library.c:315
+msgid "Cannot retrieve the available memory left"
+msgstr "No se puede obtener la cantidad de memoria disponible"
+
+#: camlibs/sierra/library.c:502
+#, c-format
+msgid "The first byte received (0x%x) is not valid."
+msgstr "El primer byte recibido (0x%x) no es válido."
+
+#: camlibs/sierra/library.c:620
+#, c-format
+msgid ""
+"Transmission of packet timed out even after %i retries. Please contact "
+"<gphoto-devel@gphoto.org>."
+msgstr ""
+"La transmisión del paquete superó el tiempo de espera incluso luego de %i "
+"reintentos. Por favor, contacte a <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:657
+msgid ""
+"Packet got rejected by camera. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"La cámara rechazó al paquete. Por favor, contacte a <gphoto-devel@gphoto."
+"org>."
+
+#: camlibs/sierra/library.c:664
+#, c-format
+msgid ""
+"Could not transmit packet (error code %i). Please contact <gphoto-"
+"devel@gphoto.org>."
+msgstr ""
+"No se puede transmitir el paquete (código de error %i). Por favor, contactar "
+"a <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:744
+#, c-format
+msgid "Got unexpected result %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"Resultado inesperado %i. Por favor, contactar a <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:819
+#, c-format
+msgid ""
+"Received unexpected answer (%i). Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"Recibida respuesta inesperada (%i). Por favor, contactar a <gphoto-"
+"devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:879
+#, c-format
+msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"No se puede obtener el registro %i. Por favor, contactar a <gphoto-"
+"devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:923
+msgid "Sending data..."
+msgstr "Enviando datos..."
+
+#: camlibs/sierra/library.c:1010
+#, c-format
+msgid ""
+"Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"No se puede obtener el registro %i. Por favor, contactar a <gphoto-"
+"devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:1157
+#, c-format
+msgid "Expected 32 bytes, got %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"32 bytes esperados, %i recibidos. Por favor, contactar a <gphoto-"
+"devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:1187
+msgid "Not implemented!"
+msgstr "¡No implementado!"
+
+#: camlibs/sonydscf1/sonydscf1.c:133
+msgid ""
+"Sony DSC-F1 Digital Camera Support\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"Based on the chotplay CLI interface from\n"
+"Ken-ichi Hayashi\n"
+"Gphoto2 port by Bart van Leeuwen <bart@netage.nl>"
+msgstr ""
+"Soporte de las cámaras digitales Sony DSC-F1\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"Basado en la interfaz CLI chotplay de\n"
+"Ken-ichi Hayashi\n"
+"Portado a gPhoto2 por Bart van Leeuwen <bart@netage.nl>"
+
+#: camlibs/sonydscf55/camera.c:91
+msgid ""
+"Sony DSC-F55/505 gPhoto library\n"
+"Supports Sony MSAC-SR1 and Memory Stick used by DCR-PC100\n"
+"Originally written by Mark Davies <mdavies@dial.pipex.com>\n"
+"gPhoto2 port by Raymond Penners <raymond@dotsphinx.com>"
+msgstr ""
+
+#: camlibs/stv0680/library.c:356 camlibs/stv0680/library.c:390
+msgid "Bad exposure (not enough light probably)"
+msgstr "Exposición mala (probablemente no sin luz suficiente)"
+
+#: camlibs/stv0680/library.c:520
+msgid "Information for STV0680 based camera:\n"
+msgstr "Información para la cámara basada en STV0680:\n"
+
+#: camlibs/stv0680/library.c:525
+#, c-format
+msgid "Firmware Revision: %d.%d\n"
+msgstr "Revisión del firmware: %d.%d\n"
+
+#: camlibs/stv0680/library.c:529
+#, c-format
+msgid "ASIC Revision: %d.%d\n"
+msgstr "Revisión del ASIC: %d.%d\n"
+
+#: camlibs/stv0680/library.c:533
+#, c-format
+msgid "Sensor ID: %d.%d\n"
+msgstr "ID del sensor: %d.%d\n"
+
+#. HWCONFIG_COMMSLINK_MASK ... not really needed, the user knows, he
+#. * plugged it in.
+#: camlibs/stv0680/library.c:539
+#, c-format
+msgid "Camera is configured for lights flickering with %dHz.\n"
+msgstr "La cámara está configurada para una luz centelleante a %dHz.\n"
+
+#: camlibs/stv0680/library.c:542
+#, c-format
+msgid "Memory in camera: %d Mbit.\n"
+msgstr "Memoria en la cámara: %d Mbit.\n"
+
+#: camlibs/stv0680/library.c:546
+msgid "Camera supports Thumbnails.\n"
+msgstr "La cámara soporta diapositivas.\n"
+
+#: camlibs/stv0680/library.c:548
+msgid "Camera supports Video.\n"
+msgstr "La cámara soporta vídeo.\n"
+
+#: camlibs/stv0680/library.c:551
+msgid "Camera pictures are monochrome.\n"
+msgstr "Las fotos de la cámara son monocromáticas.\n"
+
+#. Is this useful?
+#: camlibs/stv0680/library.c:553
+msgid "Camera has memory.\n"
+msgstr "La cámara tiene memoria.\n"
+
+#: camlibs/stv0680/library.c:555
+msgid "Camera supports videoformats: "
+msgstr "La cámara soporta los formatos de vídeo: "
+
+#: camlibs/stv0680/library.c:561
+#, c-format
+msgid "Vendor ID: %02x%02x\n"
+msgstr "Identificador del fabricante: %02x%02x\n"
+
+#: camlibs/stv0680/library.c:565
+#, c-format
+msgid "Product ID: %02x%02x\n"
+msgstr "Identificador del producto: %02x%02x\n"
+
+#: camlibs/stv0680/library.c:572
+#, c-format
+msgid "Number of Images: %d\n"
+msgstr "Cantidad de imágenes: %d\n"
+
+#: camlibs/stv0680/library.c:575
+#, c-format
+msgid "Maximum number of Images: %d\n"
+msgstr "Cantidad máxima de imágenes: %d\n"
+
+#: camlibs/stv0680/library.c:578
+#, c-format
+msgid "Image width: %d\n"
+msgstr "Ancho de la imagen: %d\n"
+
+#: camlibs/stv0680/library.c:581
+#, c-format
+msgid "Image height: %d\n"
+msgstr "Alto de la imagen: %d\n"
+
+#: camlibs/stv0680/library.c:584
+#, c-format
+msgid "Image size: %d\n"
+msgstr "Tamaño de la imagen: %d\n"
+
+#: camlibs/stv0680/library.c:588
+#, c-format
+msgid "Thumbnail width: %d\n"
+msgstr "Ancho de la diapositiva: %d\n"
+
+#: camlibs/stv0680/library.c:589
+#, c-format
+msgid "Thumbnail height: %d\n"
+msgstr "Alto de la diapositiva: %d\n"
+
+#: camlibs/stv0680/library.c:590
+#, c-format
+msgid "Thumbnail size: %d\n"
+msgstr "Tamaño de la diapositiva: %d\n"
+
+#: camlibs/stv0680/stv0680.c:258
+msgid ""
+"STV0680\n"
+"Adam Harrison <adam@antispin.org>\n"
+"Driver for cameras using the STV0680 processor ASIC.\n"
+"Protocol reverse engineered using CommLite Beta 5\n"
+"Carsten Weinholz <c.weinholz@netcologne.de>\n"
+"Extended for Aiptek PenCam and other STM USB Dual-mode cameras."
+msgstr ""
+"STV0680\n"
+"Adam Harrison <adam@antispin.org>\n"
+"Controlador para cámaras que utilizan el procesador ASIC STV0680.\n"
+"Protocolo basado en ingenería reversa utilizando CommLite Beta 5\n"
+"Carsten Weinholz <c.weinholz@netcologne.de>\n"
+"Extendido para las Aiptek PenCam y otras cámaras USB de modo STM doble."
+
+#. libgphoto2_port doesn't have a GPContext
+#: libgphoto2/gphoto2-camera.c:81
+#, c-format
+msgid "An error occurred in the io-library ('%s'): %s"
+msgstr "Ocurrió un error en la biblioteca de entrada-salida ('%s'): %s"
+
+#: libgphoto2/gphoto2-camera.c:85
+msgid "No additional information available."
+msgstr "No hay información adicional disponible."
+
+#: libgphoto2/gphoto2-camera.c:662
+msgid "Could not detect any camera"
+msgstr "No se puede detectar cámara alguna"
+
+#: libgphoto2/gphoto2-camera.c:682
+msgid "You have to set the port prior initialization of the camera."
+msgstr "Debe configurar el puerto antes de la inicialización de la cámara."
+
+#: libgphoto2/gphoto2-camera.c:710
+#, c-format
+msgid "Could not load required camera driver '%s'."
+msgstr "No se puede cargar el controlador necesario de la cámara '%s'."
+
+#: libgphoto2/gphoto2-camera.c:728
+#, c-format
+msgid "Camera driver '%s' is missing the 'camera_init' function."
+msgstr "Flata la fucnión 'camera_init' en el controlador de la cámara '%s'."
+
+#: libgphoto2/gphoto2-camera.c:786
+msgid "This camera does not offer any configuration options."
+msgstr "Esta cámara no ofrece opciones de configuración."
+
+#: libgphoto2/gphoto2-camera.c:818
+msgid "This camera does not support setting configuration options."
+msgstr "Esta cámara no soporta la configuración de las opciones."
+
+#: libgphoto2/gphoto2-camera.c:850
+msgid "This camera does not support summaries."
+msgstr "Esta cámara no soporta resúmenes."
+
+#: libgphoto2/gphoto2-camera.c:881
+msgid "This camera does not offer a manual."
+msgstr "Esta cámara no ofrece un manual."
+
+#: libgphoto2/gphoto2-camera.c:912
+msgid "This camera does not provide information about the driver."
+msgstr "Esta cámara no brinda información acerca del controlador."
+
+#: libgphoto2/gphoto2-camera.c:946
+msgid "This camera can not capture."
+msgstr "Esta cámara no puede capturar."
+
+#: libgphoto2/gphoto2-camera.c:979
+msgid "This camera can not capture previews."
+msgstr "Esta cámara no permite la pre-visualización de las capturas."
+
+#: libgphoto2/gphoto2-filesys.c:214
+#, c-format
+msgid "The path '%s' is not absolute."
+msgstr "La ruta '%s' no es absoulta."
+
+#: libgphoto2/gphoto2-filesys.c:335
+#, c-format
+msgid "Could not append folder '%s' as this folder already exists."
+msgstr "No se puede adjuntar la carpeta '%s' porque esta ya existe."
+
+#: libgphoto2/gphoto2-filesys.c:514
+#, c-format
+msgid "Could not find folder '%s'."
+msgstr "No se puede encontrar la carpeta '%s'."
+
+#: libgphoto2/gphoto2-filesys.c:531
+#, c-format
+msgid "Folder '%s' does not contain a folder '%s'."
+msgstr "La carpeta '%s' no contiene una sub-carpeta '%s'."
+
+#: libgphoto2/gphoto2-filesys.c:594
+#, c-format
+msgid "Could not append '%s' to folder '%s' because this file already exists."
+msgstr ""
+"No se puede adjuntar el archivo '%s' a la carpeta '%s' porque ya existe."
+
+#: libgphoto2/gphoto2-filesys.c:970
+#, c-format
+msgid ""
+"You have been trying to delete '%s' from folder '%s', but the filesystem "
+"does not support deletion of files."
+msgstr ""
+"Ha estado intentando borrar '%s' de la carpeta '%s', pero el sistema de "
+"archivos no soporta el borrado de archivos."
+
+#: libgphoto2/gphoto2-filesys.c:1071
+#, c-format
+msgid "There are still files in folder '%s' that you are trying to remove."
+msgstr ""
+"Todavía hay archivos en la carpeta '%s' que Usted está intentando eliminar."
+
+#: libgphoto2/gphoto2-filesys.c:1077
+#, c-format
+msgid ""
+"There are still subfolders in folder '%s' that you are trying to remove."
+msgstr ""
+"Todavía hay sub-carpetas en la carpeta '%s' que Usted está intentado "
+"eliminar."
+
+#: libgphoto2/gphoto2-filesys.c:1117
+msgid "The filesystem does not support upload of files."
+msgstr "Este sistema de archivos no soporta el envío de archivos."
+
+#: libgphoto2/gphoto2-filesys.c:1158
+#, c-format
+msgid ""
+"Folder '%s' does only contain %i files, but you requested a file with number "
+"%i."
+msgstr ""
+"La carpeta '%s' sólo contiene %i archivos, pero Usted pidió un archivo con "
+"número %i."
+
+#: libgphoto2/gphoto2-filesys.c:1199
+#, c-format
+msgid "File '%s' could not be found in folder '%s'."
+msgstr "El archivo '%s' no se puede encontrar en la carpeta '%s'."
+
+#: libgphoto2/gphoto2-filesys.c:1282
+#, c-format
+msgid "Could not find file '%s'."
+msgstr "No se puede encontrar el archivo '%s'."
+
+#: libgphoto2/gphoto2-filesys.c:1407
+msgid "The filesystem doesn't support getting files"
+msgstr "El sistema de archivos no soporta la recuperación de archivos"
+
+#: libgphoto2/gphoto2-filesys.c:1442 libgphoto2/gphoto2-filesys.c:1764
+#, c-format
+msgid "Unknown file type %i."
+msgstr "Tipo de archivo %i desconocido."
+
+#: libgphoto2/gphoto2-filesys.c:1446
+#, c-format
+msgid "Downloading '%s' from folder '%s'..."
+msgstr "Descargando '%s' de la carpeta '%s'..."
+
+#: libgphoto2/gphoto2-filesys.c:1656
+msgid "The filesystem doesn't support getting file information"
+msgstr ""
+"El sistema de archivos no soporta obtener información sobre los archivos"
+
+#: libgphoto2/gphoto2-filesys.c:1867
+msgid "The filesystem doesn't support setting file information"
+msgstr ""
+"El sistema de archivos no soporta modificar la información sobre los archivos"
+
+#: libgphoto2/gphoto2-filesys.c:1890
+msgid "Read-only file attributes like width and height can not be changed."
+msgstr "Los atributos de sólo lectura no se pueden cambiar (ej: ancho y alto)."
+
+#: libgphoto2/gphoto2-abilities-list.c:248
+#, c-format
+msgid "Could not open '%s'"
+msgstr "No se puede abrir '%s'"
+
+#: libgphoto2/gphoto2-abilities-list.c:260
+#, c-format
+msgid "Loading camera drivers from '%s'..."
+msgstr "Cargando los controladores para la cámara desde '%s'..."
+
+#: libgphoto2/gphoto2-abilities-list.c:622
+#, c-format
+msgid "Could not find any driver for '%s'"
+msgstr "No se puede encontrar un controlador para '%s'"
+
+#: libgphoto2/gphoto2-result.c:44
+msgid "Corrupted data"
+msgstr "Datos corruptos"
+
+#: libgphoto2/gphoto2-result.c:45
+msgid "File exists"
+msgstr "El archivo existe"
+
+#: libgphoto2/gphoto2-result.c:46
+msgid "Unknown model"
+msgstr "Modelo desconocido"
+
+#: libgphoto2/gphoto2-result.c:47
+msgid "Directory not found"
+msgstr "Directorio no encontrado"
+
+#: libgphoto2/gphoto2-result.c:48
+msgid "File not found"
+msgstr "Archivo no encontrado"
+
+#: libgphoto2/gphoto2-result.c:49
+msgid "Directory exists"
+msgstr "El directorio existe"
+
+#: libgphoto2/gphoto2-result.c:50
+msgid "Path not absolute"
+msgstr "Ruta relativa"
+
+#: frontends/command-line/gphoto2-cmd-capture.c:218
+#: libgphoto2/gphoto2-result.c:51
+msgid "Operation cancelled"
+msgstr "Operación cancelada"
+
+#: libgphoto2/gphoto2-result.c:76
+msgid "Unknown camera library error"
+msgstr "Error desonocido de la biblioteca de la cámara"
+
+#: libgphoto2/gphoto2-result.c:82
+msgid "Unknown error"
+msgstr "Error desconocido"
+
+#: frontends/command-line/main.c:187
+msgid "Turn on debugging"
+msgstr "Activar la depuración"
+
+#: frontends/command-line/main.c:189
+msgid "Quiet output (default=verbose)"
+msgstr "Salida silenciosa (por defecto=verbosa)"
+
+#. Display and die actions
+#: frontends/command-line/main.c:193
+msgid "Display version and exit"
+msgstr "Mostrar la versión y salir"
+
+#: frontends/command-line/main.c:194
+msgid "Displays this help screen"
+msgstr "Muestra esta pantalla de ayuda"
+
+#: frontends/command-line/main.c:195
+msgid "List supported camera models"
+msgstr "Lista los modelos de cámara soportados"
+
+#: frontends/command-line/main.c:196
+msgid "Create output for usb.usermap"
+msgstr "Crea el contenido para usb.usermap"
+
+#: frontends/command-line/main.c:197
+msgid "List supported port devices"
+msgstr "Lista los tipos de puerto soportados"
+
+#: frontends/command-line/main.c:198
+msgid "Send file to stdout"
+msgstr "Enviar archivo a la salida estándar"
+
+#: frontends/command-line/main.c:199
+msgid "Print filesize before data"
+msgstr "Mostrar el tamaño del archivo antes que los datos"
+
+#: frontends/command-line/main.c:200
+msgid "List auto-detected cameras"
+msgstr "Listar las cámaras detectadas automáticamente"
+
+#. Settings needed for camera functions
+#: frontends/command-line/main.c:203
+msgid "Specify port device"
+msgstr "Especificar el puerto del dispositivo"
+
+#: frontends/command-line/main.c:204
+msgid "Specify serial transfer speed"
+msgstr "Especificar la velocidad de transferencia serie"
+
+#: frontends/command-line/main.c:205
+msgid "Specify camera model"
+msgstr "Especificar el modelo de la cámara"
+
+#: frontends/command-line/main.c:206
+msgid "Specify a filename"
+msgstr "Especificar un nombre de archivo"
+
+#: frontends/command-line/main.c:207
+msgid "(expert only) Override USB IDs"
+msgstr "(sólo expertos) Ignorar los IDs de USB"
+
+#. Actions that depend on settings
+#: frontends/command-line/main.c:210
+msgid "Display camera abilities"
+msgstr "Mostrar las capacidades de la cámara"
+
+#: frontends/command-line/main.c:211
+msgid "Specify camera folder (default=\"/\")"
+msgstr "Especificar la carpeta (por defecto=\"/\")"
+
+#: frontends/command-line/main.c:212
+msgid "Recursion (default for download)"
+msgstr "Recursión (por defecto para la descarga)"
+
+#: frontends/command-line/main.c:213
+msgid "No recursion (default for deletion)"
+msgstr "Sin recursión (por defecto para el borrado)"
+
+#: frontends/command-line/main.c:214
+msgid "List folders in folder"
+msgstr "Listar las carpetas en la carpeta"
+
+#: frontends/command-line/main.c:215
+msgid "List files in folder"
+msgstr "Listar lso archivos en la carpeta"
+
+#: frontends/command-line/main.c:216 frontends/command-line/main.c:217
+msgid "name"
+msgstr "nombre"
+
+#: frontends/command-line/main.c:216
+msgid "Create a directory"
+msgstr "Crear un directorio"
+
+#: frontends/command-line/main.c:217
+msgid "Remove a directory"
+msgstr "Eliminar un directorio"
+
+#: frontends/command-line/main.c:218
+msgid "Display number of files"
+msgstr "Mostrar la cantidad de archivos"
+
+#: frontends/command-line/main.c:219
+msgid "Get files given in range"
+msgstr "Obtener los archivos del intervalo"
+
+#: frontends/command-line/main.c:220
+msgid "Get all files from folder"
+msgstr "Obtener todos los archivos de la carpeta"
+
+#: frontends/command-line/main.c:221
+msgid "Get thumbnails given in range"
+msgstr "Ontener las diapositivas del intervalo"
+
+#: frontends/command-line/main.c:222
+msgid "Get all thumbnails from folder"
+msgstr "Obtener todas las diapositivas de la carpeta"
+
+#: frontends/command-line/main.c:223
+msgid "Get raw data given in range"
+msgstr "Obtener los datos \"en crudo\" del intervalo"
+
+#: frontends/command-line/main.c:224
+msgid "Get all raw data from folder"
+msgstr "Obtener los datos \"en crudo\" de la carpeta"
+
+#: frontends/command-line/main.c:225
+msgid "Get audio data given in range"
+msgstr "Obtener los datos de audio del intervalo"
+
+#: frontends/command-line/main.c:226
+msgid "Get all audio data from folder"
+msgstr "Obtener todos los datos de audio de la carpeta"
+
+#: frontends/command-line/main.c:227
+msgid "Delete files given in range"
+msgstr "Borrar los archivos del intervalo"
+
+#: frontends/command-line/main.c:228
+msgid "Delete all files in folder"
+msgstr "Borrar todos los archivos de la carpeta"
+
+#: frontends/command-line/main.c:229
+msgid "Upload a file to camera"
+msgstr "Enviar un archivo a la cámara"
+
+#: frontends/command-line/main.c:230
+msgid "Capture a quick preview"
+msgstr "Capturar una pre-visualización"
+
+#: frontends/command-line/main.c:231
+msgid "Capture an image"
+msgstr "Capturar una imagen"
+
+#: frontends/command-line/main.c:232
+msgid "Capture a movie "
+msgstr "Capturar una película "
+
+#: frontends/command-line/main.c:233
+msgid "Capture an audio clip"
+msgstr "Capturar un clip de audio"
+
+#: frontends/command-line/main.c:235
+msgid "Configure"
+msgstr "Configurar"
+
+#: frontends/command-line/main.c:238
+msgid "Show EXIF information"
+msgstr "Mostrar la información EXIF"
+
+#: frontends/command-line/main.c:240
+msgid "Show info"
+msgstr "Mostrar información"
+
+#: frontends/command-line/main.c:241
+msgid "Summary of camera status"
+msgstr "Resumen del estado de la cámara"
+
+#: frontends/command-line/main.c:242
+msgid "Camera driver manual"
+msgstr "Manual del controlador de la cámara"
+
+#: frontends/command-line/main.c:243
+msgid "About the camera driver"
+msgstr "Acerca del controlador de la cámara"
+
+#: frontends/command-line/main.c:244
+msgid "gPhoto shell"
+msgstr "Intérprete gPhoto"
+
+#: frontends/command-line/main.c:245
+#, fuzzy
+msgid "Authors"
+msgstr "Automática"
+
+#: frontends/command-line/main.c:246
+msgid "Licence"
+msgstr ""
+
+#: frontends/command-line/main.c:299 frontends/command-line/main.c:320
+#, fuzzy
+msgid "Could not open '"
+msgstr "No se puede abrir '%s'"
+
+#: frontends/command-line/main.c:300 frontends/command-line/main.c:321
+msgid "/COPYING'. Please verify your installation."
+msgstr ""
+
+#: frontends/command-line/main.c:384 frontends/command-line/main.c:389
+#, c-format
+msgid "%-30s %-16s\n"
+msgstr "%-30s %-16s\n"
+
+#: frontends/command-line/main.c:384
+msgid "Model"
+msgstr "Modelo"
+
+#: frontends/command-line/main.c:384
+msgid "Port"
+msgstr "Puerto"
+
+#: frontends/command-line/main.c:385
+msgid "----------------------------------------------------------\n"
+msgstr "----------------------------------------------------------\n"
+
+#: frontends/command-line/main.c:402
+msgid "You need to specify a camera model"
+msgstr "Debe especificar un modelo de cámara"
+
+#. Output a parsing friendly abilities table. Split on ":"
+#: frontends/command-line/main.c:413
+#, c-format
+msgid "Abilities for camera             : %s\n"
+msgstr "Capacidades de la cámara                : %s\n"
+
+#: frontends/command-line/main.c:415
+#, c-format
+msgid "Serial port support              : %s\n"
+msgstr "Soporte de puerto serie                 : %s\n"
+
+#: frontends/command-line/actions.c:157 frontends/command-line/actions.c:189
+#: frontends/command-line/actions.c:201 frontends/command-line/main.c:416
+#: frontends/command-line/main.c:418 frontends/command-line/main.c:437
+#: frontends/command-line/main.c:439 frontends/command-line/main.c:441
+#: frontends/command-line/main.c:443
+msgid "yes"
+msgstr "sí"
+
+#: frontends/command-line/actions.c:157 frontends/command-line/actions.c:189
+#: frontends/command-line/actions.c:201 frontends/command-line/main.c:416
+#: frontends/command-line/main.c:418 frontends/command-line/main.c:437
+#: frontends/command-line/main.c:439 frontends/command-line/main.c:441
+#: frontends/command-line/main.c:443
+msgid "no"
+msgstr "no"
+
+#: frontends/command-line/main.c:417
+#, c-format
+msgid "USB support                      : %s\n"
+msgstr "Soporte de puerto USB                   : %s\n"
+
+#: frontends/command-line/main.c:420
+msgid "Transfer speeds supported        :\n"
+msgstr "Velocidades de transferencia soportadas :\n"
+
+#: frontends/command-line/main.c:423
+#, c-format
+msgid "                                 : %i\n"
+msgstr "                                        : %i\n"
+
+#: frontends/command-line/main.c:427
+msgid "Capture choices                  :\n"
+msgstr "Opciones de captura                     :\n"
+
+#: frontends/command-line/main.c:429
+msgid "                                 : Image\n"
+msgstr "                                        : Imagen\n"
+
+#: frontends/command-line/main.c:431
+msgid "                                 : Video\n"
+msgstr "                                        : Vídeo\n"
+
+#: frontends/command-line/main.c:433
+msgid "                                 : Audio\n"
+msgstr "                                        : Audio\n"
+
+#: frontends/command-line/main.c:435
+msgid "                                 : Preview\n"
+msgstr "                                        : Pre-visualización\n"
+
+#: frontends/command-line/main.c:436
+#, c-format
+msgid "Configuration support            : %s\n"
+msgstr "Soporte de configuración                : %s\n"
+
+#: frontends/command-line/main.c:438
+#, c-format
+msgid "Delete files on camera support   : %s\n"
+msgstr "Soporte de borrado de archivo en cámara : %s\n"
+
+#: frontends/command-line/main.c:440
+#, c-format
+msgid "File preview (thumbnail) support : %s\n"
+msgstr "Soporte de diapositivas                 : %s\n"
+
+#: frontends/command-line/main.c:442
+#, c-format
+msgid "File upload support              : %s\n"
+msgstr "Soporte de envío de archivos            : %s\n"
+
+#: frontends/command-line/main.c:464
+#, c-format
+msgid "Number of supported cameras: %i\n"
+msgstr "Cantidad de cámaras soportadas          : %i\n"
+
+#: frontends/command-line/main.c:465
+msgid "Supported cameras:\n"
+msgstr "Cámaras soportadas:\n"
+
+#: frontends/command-line/main.c:476
+#, c-format
+msgid "\t\"%s\" (TESTING)\n"
+msgstr "\t\"%s\" (PRUEBA)\n"
+
+#: frontends/command-line/main.c:479
+#, c-format
+msgid "\t\"%s\" (EXPERIMENTAL)\n"
+msgstr "\t\"%s\" (EXPERIMENTAL)\n"
+
+#: frontends/command-line/main.c:483
+#, c-format
+msgid "\t\"%s\"\n"
+msgstr "\t\"%s\"\n"
+
+#: frontends/command-line/main.c:548
+#, c-format
+msgid "Devices found: %i\n"
+msgstr "Dispositivos encontrados: %i\n"
+
+#: frontends/command-line/main.c:549
+msgid ""
+"Path                             Description\n"
+"--------------------------------------------------------------\n"
+msgstr ""
+"Ruta                             Descripción\n"
+"--------------------------------------------------------------\n"
+
+#. User didn't specify the port type; try to guess it
+#: frontends/command-line/main.c:586
+#, c-format
+msgid ""
+"Ports must look like 'serial:/dev/ttyS0' or 'usb:', but '%s' is missing a "
+"colon so I am going to guess what you mean."
+msgstr ""
+"Los puertos deben lucir como «serial:/dev/ttyS0» o «usb:», pero falta un «:» "
+"en '%s' por lo que voy a intentar adivinar lo que quiso decir."
+
+#: frontends/command-line/main.c:605
+#, c-format
+msgid "Guessed port name. Using port '%s' from now on."
+msgstr "Nombre del puerto adivinado. Usando puerto '%s' de ahora en más."
+
+#: frontends/command-line/main.c:637
+msgid ""
+"Use the following syntax a:b=c:d to treat any USB device detected as a:b as "
+"c:d instead. a b c d should be hexadecimal numbers beginning with '0x'.\n"
+msgstr ""
+"Utilice la sintaxis a:b=c:d para tratar a cualquier dispositivo USB "
+"detectado como a:b como si fuera c:d. a b c y d deberían ser números "
+"hexadecimales que comienzan con '0x'.\n"
+
+#: frontends/command-line/main.c:799
+#, c-format
+msgid "Number of files in folder %s: %i\n"
+msgstr "Cantidad de archivos en la carpeta %s: %i\n"
+
+#: frontends/command-line/main.c:832
+#, c-format
+msgid "Using filename '%s'..."
+msgstr "Usando nombre de archivo '%s'..."
+
+# !!! [y/n] !!! [CM]
+#: frontends/command-line/main.c:859
+#, c-format
+msgid "File %s exists. Overwrite? [y|n] "
+msgstr "El archivo %s existe. ¿Sobreescribir? [y|n] "
+
+#: frontends/command-line/main.c:870
+msgid "Specify new filename? [y|n] "
+msgstr "¿Especificar un nombre de archivo nuevo? [y|n] "
+
+#: frontends/command-line/main.c:879
+msgid "Enter new filename: "
+msgstr "Ingrese el nombre de archivo nuevo: "
+
+#: frontends/command-line/main.c:884
+#, c-format
+msgid "Saving file as %s\n"
+msgstr "Guardando archivo como %s\n"
+
+#: frontends/command-line/main.c:888
+#, c-format
+msgid "Can not save file as %s"
+msgstr "No se puede guardar el archivo como %s"
+
+#: frontends/command-line/main.c:1122
+#, c-format
+msgid "New file is in location %s%s%s on the camera\n"
+msgstr "El archivo nuevo está en la ubicación %s%s%s en la cámara\n"
+
+#: frontends/command-line/main.c:1180
+#, c-format
+msgid ""
+"Camera Summary:\n"
+"%s\n"
+msgstr ""
+"Resumen de la cámara:\n"
+"%s\n"
+
+#: frontends/command-line/main.c:1192
+#, c-format
+msgid ""
+"Camera Manual:\n"
+"%s\n"
+msgstr ""
+"Manual de la cámara:\n"
+"%s\n"
+
+#: frontends/command-line/main.c:1204
+#, c-format
+msgid ""
+"About the library:\n"
+"%s\n"
+msgstr ""
+"Acerca de la biiblioteca:\n"
+"%s\n"
+
+#: frontends/command-line/main.c:1290
+msgid "Please specify a model."
+msgstr "Por favor, especifique un modelo."
+
+#: frontends/command-line/main.c:1318
+#, c-format
+msgid ""
+"The port you specified ('%s') can not be found. Please specify one of the "
+"ports found by 'gphoto2 --list-ports' and make sure the spelling is correct "
+"(i.e. with prefix 'serial:' or 'usb:')."
+msgstr ""
+"No se puede encontrar el puerto que especificó ('%s'). Por favor, "
+"especifique uno de los puertos encontrados por «gphoto2 --list-ports» y "
+"asegúrese que la sintaxis es correcta (es decir, con el prefijo 'serial:' o "
+"'usb:'.)"
+
+#: frontends/command-line/main.c:1335
+msgid "Please specify a port."
+msgstr "Por favor, especifique un puerto."
+
+#: frontends/command-line/main.c:1378
+msgid "*** Error ***              \n"
+msgstr "*** Error ***              \n"
+
+#: frontends/command-line/main.c:1543
+msgid "Press any key to continue.\n"
+msgstr "Presione una tecla para continuar.\n"
+
+#: frontends/command-line/main.c:1614
+msgid "ERROR: "
+msgstr "ERROR: "
+
+#: frontends/command-line/main.c:1637
+msgid ""
+"\n"
+"Aborting...\n"
+msgstr ""
+"\n"
+"Abandonando...\n"
+
+#: frontends/command-line/main.c:1643
+msgid "Aborted.\n"
+msgstr "Abandonado.\n"
+
+#: frontends/command-line/main.c:1648
+msgid ""
+"\n"
+"Cancelling...\n"
+msgstr ""
+"\n"
+"Cancelando...\n"
+
+#: frontends/command-line/main.c:1699
+msgid ""
+"gPhoto2 for OS/2 requires you to set the enviroment value CAMLIBS to the "
+"location of the camera libraries. e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n"
+msgstr ""
+"gPhoto2 para OS/2 necesita que configure la variable de entorno CAMLIBS con "
+"la ubicación de las bibliotecas de soporte de las cámaras. Por ejemplo SET "
+"CAMLIBS=C:\\GPHOTO2\\CAM\n"
+
+#: frontends/command-line/main.c:1709
+msgid ""
+"gPhoto2 for OS/2 requires you to set the enviroment value IOLIBS to the "
+"location of the io libraries. e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"
+msgstr ""
+"gPhoto2 para OS/2 necesita que configure la variable de entorno IOLIBS con "
+"la ubicación de las bibliotecas de comunicación. Por ejemplo SET IOLIBS=C:"
+"\\GPHOTO2\\IOLIB\n"
+
+#: frontends/command-line/main.c:1750
+msgid "Operation cancelled.\n"
+msgstr "Operación cancelada.\n"
+
+#: frontends/command-line/main.c:1753
+#, c-format
+msgid ""
+"*** Error ('%s') ***       \n"
+"\n"
+msgstr ""
+"*** Error ('%s') ***        \n"
+"\n"
+
+#: frontends/command-line/main.c:1759
+msgid ""
+"For debugging messages, please use the --debug option.\n"
+"Debugging messages may help finding a solution to your problem.\n"
+"If you intend to send any error or debug messages to the gphoto\n"
+"developer mailing list <gphoto-devel@gphoto.org>, please run\n"
+"gphoto2 as follows:\n"
+"\n"
+msgstr ""
+"Por favor, utilice la opción --debug para obtener los mensajes de "
+"depuración.\n"
+"Estos mensajes pueden ayudar a encontrar la solución a su problema.\n"
+"Si intenta enviar cualquier mensaje de error o de depuración a la lista\n"
+"de distribución de desarrolladores de gPhoto <gphoto-devel@gphoto.org>,\n"
+"por favor ejecute gphoto2 como sigue:\n"
+"\n"
+
+#: frontends/command-line/gphoto2-cmd-config.c:64
+msgid "</B/24>Continue"
+msgstr "</B/24>Continuar"
+
+#: frontends/command-line/gphoto2-cmd-config.c:64
+msgid "</B16>Cancel"
+msgstr "</B16>Cancelar"
+
+#: frontends/command-line/gphoto2-cmd-config.c:70
+msgid "<C></5>Error"
+msgstr "<C></5>Error"
+
+#: frontends/command-line/gphoto2-cmd-config.c:72
+msgid "Could not set configuration:"
+msgstr "No se puede aplicar la configuración:"
+
+#: frontends/command-line/gphoto2-cmd-config.c:116
+msgid "Exit"
+msgstr "Salir"
+
+#: frontends/command-line/gphoto2-cmd-config.c:118
+msgid "Back"
+msgstr "Regresar"
+
+#: frontends/command-line/gphoto2-cmd-config.c:257
+msgid "Time: "
+msgstr "Hora: "
+
+#: frontends/command-line/gphoto2-cmd-config.c:316
+#: frontends/command-line/gphoto2-cmd-config.c:344
+#: frontends/command-line/gphoto2-cmd-config.c:404
+#: frontends/command-line/gphoto2-cmd-config.c:451
+msgid "Value: "
+msgstr "Valor: "
+
+#: frontends/command-line/options.c:191
+#, c-format
+msgid ""
+"gPhoto (v%s) - Cross-platform digital camera library.\n"
+"Copyright (C) 2000,2001 Scott Fritzinger and others\n"
+"%sLicensed under the Library GNU Public License (LGPL).\n"
+msgstr ""
+"gPhoto (v%s) - Biblioteca multi-plataforma de cámaras digitales.\n"
+"Copyright (C) 2000,2001 Scott Fritzinger y otros\n"
+"%s Publicada bajo la Licencia Pública General de Biblioteca GNU (LGPL).\n"
+
+#: frontends/command-line/options.c:197
+msgid "OS/2 port by Bart van Leeuwen\n"
+msgstr "Portado a OS/2 por Bart van Leeuwen\n"
+
+#: frontends/command-line/options.c:212
+msgid "Usage:\n"
+msgstr "Uso:\n"
+
+#. Make this 79 characters long. Some languages need the space.
+#: frontends/command-line/options.c:215
+msgid ""
+"Short/long options (& argument)        Description\n"
+"--------------------------------------------------------------------------------\n"
+msgstr ""
+"Opciones cortas/largas (& argumento)   Descripción\n"
+"--------------------------------------------------------------------------------\n"
+
+#. The format line is made translatable so that some
+#. languages can make the table a bit tighter. Make
+#. sure you only use 79 characters (since #80 is
+#. needed for the line break).
+#: frontends/command-line/options.c:240
+#, c-format
+msgid "%-38s %s\n"
+msgstr "%-32s %s\n"
+
+#. Make this 79 characters long. Some languages need the space.
+#: frontends/command-line/options.c:245
+msgid ""
+"--------------------------------------------------------------------------------\n"
+"[Use double-quotes around arguments]        [Picture numbers begin with one "
+"(1)]\n"
+msgstr ""
+"--------------------------------------------------------------------------------\n"
+"[Usar comillas para los arg.]     [Los números de imagen comienzan con un "
+"(1)]\n"
+
+#: frontends/command-line/range.c:122 frontends/command-line/range.c:176
+#, c-format
+msgid ""
+"%s\n"
+"Image IDs must be a number greater than zero."
+msgstr ""
+"%s\n"
+"Los ID de imagen deben ser un número superior a cero."
+
+#: frontends/command-line/range.c:128 frontends/command-line/range.c:182
+#, c-format
+msgid ""
+"%s\n"
+"Image ID %i too high."
+msgstr ""
+"%s\n"
+"ID de imagen %i muy grande."
+
+#: frontends/command-line/range.c:144
+#, c-format
+msgid ""
+"%s\n"
+"Ranges must be separated by ','."
+msgstr ""
+"%s\n"
+"Los intervalos deben estar separados por ','."
+
+#: frontends/command-line/range.c:158
+#, c-format
+msgid ""
+"%s\n"
+"Ranges need to start with a number."
+msgstr ""
+"%s\n"
+"Los intervalos deben comenzar con un número."
+
+#: frontends/command-line/range.c:198
+#, c-format
+msgid ""
+"%s\n"
+"Unexpected character '%c'."
+msgstr ""
+"%s\n"
+"Caracter inesperado '%c'."
+
+#: frontends/command-line/range.c:221
+#, c-format
+msgid ""
+"%s\n"
+"Decreasing ranges are not allowed. You specified a range from %i to %i."
+msgstr ""
+"%s\n"
+"Los rangos decrecientes no están permitidos. Especificó un rango de %i a %i."
+
+#: frontends/command-line/actions.c:77
+#, c-format
+msgid "There are no folders in folder '%s'."
+msgstr "No hay carpetas en la carpeta '%s'."
+
+#: frontends/command-line/actions.c:81
+#, c-format
+msgid "There is one folder in folder '%s':"
+msgstr "Hay una carpeta en la carpeta '%s' :"
+
+#: frontends/command-line/actions.c:85
+#, c-format
+msgid "There are %i folders in folder '%s':"
+msgstr "Hay %i carpetas en la carpeta '%s' :"
+
+#: frontends/command-line/actions.c:111
+#, c-format
+msgid "There are no files in folder '%s'."
+msgstr "No hay archivos en la carpeta '%s'."
+
+#: frontends/command-line/actions.c:115
+#, c-format
+msgid "There is one file in folder '%s':"
+msgstr "Hay un archivo en la carpeta '%s'."
+
+#: frontends/command-line/actions.c:119
+#, c-format
+msgid "There are %i files in folder '%s':"
+msgstr "Hay %i archivos en la carpeta '%s'."
+
+#: frontends/command-line/actions.c:139
+#, c-format
+msgid "Information on file '%s' (folder '%s'):\n"
+msgstr "Información sobre el archivo '%s' (carpeta '%s'):\n"
+
+#: frontends/command-line/actions.c:141
+msgid "File:\n"
+msgstr "Archivo:\n"
+
+#: frontends/command-line/actions.c:143 frontends/command-line/actions.c:177
+#: frontends/command-line/actions.c:193
+msgid "  None available.\n"
+msgstr "  Ninguno disponible.\n"
+
+#: frontends/command-line/actions.c:146
+#, c-format
+msgid "  Name:        '%s'\n"
+msgstr "  Nombre:      '%s'\n"
+
+#: frontends/command-line/actions.c:148 frontends/command-line/actions.c:180
+#, c-format
+msgid "  Mime type:   '%s'\n"
+msgstr "  Tipo MIME :  '%s'\n"
+
+#: frontends/command-line/actions.c:150 frontends/command-line/actions.c:182
+#, fuzzy, c-format
+msgid "  Size:        %li byte(s)\n"
+msgstr "  Tamaño:      %i byte(s)\n"
+
+#: frontends/command-line/actions.c:152 frontends/command-line/actions.c:184
+#, c-format
+msgid "  Width:       %i pixel(s)\n"
+msgstr "  Ancho:       %i pixel(s)\n"
+
+#: frontends/command-line/actions.c:154 frontends/command-line/actions.c:186
+#, c-format
+msgid "  Height:      %i pixel(s)\n"
+msgstr "  Alto:        %i pixel(s)\n"
+
+#: frontends/command-line/actions.c:156 frontends/command-line/actions.c:188
+#, c-format
+msgid "  Downloaded:  %s\n"
+msgstr "  Descargado:  %s\n"
+
+#: frontends/command-line/actions.c:159
+msgid "  Permissions: "
+msgstr "  Permisos: "
+
+#: frontends/command-line/actions.c:162
+msgid "read/delete"
+msgstr "lectura/borrado"
+
+#: frontends/command-line/actions.c:164
+msgid "read"
+msgstr "lectura"
+
+#: frontends/command-line/actions.c:166
+msgid "delete"
+msgstr "borrado"
+
+#: frontends/command-line/actions.c:168
+msgid "none"
+msgstr "ninguno"
+
+#: frontends/command-line/actions.c:172
+#, c-format
+msgid "  Time:        %s"
+msgstr "  Hora:        %s"
+
+#: frontends/command-line/actions.c:175
+msgid "Thumbnail:\n"
+msgstr "Diapositiva: \n"
+
+#: frontends/command-line/actions.c:191
+msgid "Audio data:\n"
+msgstr "Datos de audio:\n"
+
+#: frontends/command-line/actions.c:196
+#, c-format
+msgid "  Mime type:  '%s'\n"
+msgstr "  Tipo MIME : '%s'\n"
+
+#: frontends/command-line/actions.c:198
+#, fuzzy, c-format
+msgid "  Size:       %li byte(s)\n"
+msgstr "  Tamaño:     %i byte(s)\n"
+
+#: frontends/command-line/actions.c:200
+#, c-format
+msgid "  Downloaded: %s\n"
+msgstr "  Descargado: %s\n"
+
+#: frontends/command-line/actions.c:322
+msgid "Could not parse EXIF data."
+msgstr "No se pueden analizar los datos EXIF."
+
+#: frontends/command-line/actions.c:326
+msgid "EXIF tags:"
+msgstr "Etiquetas EXIF :"
+
+#: frontends/command-line/actions.c:329
+msgid "Tag"
+msgstr "Etiqueta"
+
+#: frontends/command-line/actions.c:331
+msgid "Value"
+msgstr "Valor"
+
+#: frontends/command-line/actions.c:346
+#, c-format
+msgid "EXIF data contains a thumbnail (%i bytes)."
+msgstr "Los datos EXIF contienen una diapositiva (%i bytes)."
+
+#: frontends/command-line/actions.c:355
+msgid "gphoto2 has been compiled without EXIF support."
+msgstr "gphoto2 ha sido compilado sin soporte para EXIF."
+
+#, fuzzy
+#~ msgid "No Manual Available"
+#~ msgstr "Razón desconocida"
+
+#~ msgid "%s(ERROR): "
+#~ msgstr "%s(ERROR): "
