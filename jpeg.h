@@ -1,14 +1,37 @@
-/* This code was written by Nathan Stenzel for gphoto */
-/* GPL */
+/* jpeg.h
+ * This code was written by Nathan Stenzel for gphoto
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 
-enum jpegmarker {start=0xD8, APPO=0xE0, quantization=0xDB, huffman=0xC4, SsSeAhAl=0xDA, SOFC0=0xC0};
-
-const markers[] = {
-    start, APPO, quantization, huffman, SsSeAhAl, SOFC0
+#ifndef __GPHOTO2_JPEG_H__
+enum jpegmarker {
+    JPEG_START=0xD8,    JPEG_APPO=0xE0,         JPEG_QUANTIZATION=0xDB,
+    JPEG_HUFFMAN=0xC4,  JPEG_SSSEAHAL=0xDA,     JPEG_SOFC0=0xC0
 };
 
-const char *markernames[] = {
-    "Start", "APPO", "Quantization table", "Huffman table", "SsSeAhAl", "SOFC0" };
+const JPEG_MARKERS[] = {
+    JPEG_START,         JPEG_APPO,              JPEG_QUANTIZATION,
+    JPEG_HUFFMAN,       JPEG_SSSEAHAL,          JPEG_SOFC0
+};
+
+const char *JPEG_MARKERNAMES[] = {
+    "Start",            "APPO",                 "Quantization table",
+    "Huffman table",    "SsSeAhAl",             "SOFC0"
+};
 
 struct chunk{
     int size;
@@ -41,3 +64,5 @@ void jpeg_parse(struct jpeg *myjpeg, struct chunk *picture);
 void jpeg_print(struct jpeg *myjpeg);
 
 char *jpeg_markername(int c);
+
+#endif
