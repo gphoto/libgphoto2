@@ -448,7 +448,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 {
         int regl, regd, file_number;
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	char *jpeg_data;
+	char *jpeg_data = NULL;
 	int jpeg_size;
 	const char *data, *mime_type;
 	long int size;
@@ -476,6 +476,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 		regd = 14;
 		break;
 	default:
+		CHECK (camera_stop (camera));
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -509,8 +510,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 		if (jpeg_data) {
 			/* Append data to the output file */
 			gp_file_set_data_and_size (file, jpeg_data, jpeg_size);
-		}
-		else {
+		} else {
 			/* No valid JPEG data found */
 			camera_stop (camera);
 			return GP_ERROR_CORRUPTED_DATA;
