@@ -236,6 +236,9 @@ void dimagev_dump_camera_info(dimagev_info_t *info);
 /* These functions are in capture.c */
 int dimagev_shutter(dimagev_t *dimagev);
 
+/* These functions are in upload.c */
+int dimagev_put_file(dimagev_t* dimagev, CameraFile *file);
+
 /* These functions are in util.c */
 int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file);
 int dimagev_delete_picture(dimagev_t *dimagev, int file_number);
