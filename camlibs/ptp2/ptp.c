@@ -720,8 +720,10 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	ptp.Param1=propcode;
 	ptp.Nparam=1;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpd);
-	ptp_unpack_DPD(params, dpd, devicepropertydesc);
-	free(dpd);
+	if (ret == PTP_RC_OK) {
+		ptp_unpack_DPD(params, dpd, devicepropertydesc);
+		free(dpd);
+	}
 	return ret;
 }
 

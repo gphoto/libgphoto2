@@ -589,7 +589,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	GP_DEBUG ("Form Flag = 0x%.2x",dpd.FormFlag);
 	if (dpd.DataType!=PTP_DTC_UINT8) {
 		ptp_free_devicepropdesc(&dpd);
-		return GP_OK;
+		return GP_ERROR_NOT_SUPPORTED;
 	}
 	GP_DEBUG ("Factory Default Value = %0.2x",*(uint8_t *)dpd.FactoryDefaultValue);
 	GP_DEBUG ("Current Value = %0.2x",*(uint8_t *)dpd.CurrentValue);
