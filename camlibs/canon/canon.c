@@ -315,7 +315,7 @@ canon_int_filename2audioname (Camera *camera, const char *filename)
 		return NULL;
 	}
 
-	char *result = filename_to_audio (filename, ".WAV");
+	const char *result = filename_to_audio (filename, ".WAV");
 
 	GP_DEBUG ("canon_int_filename2audioname: audio for file \"%s\" is external: \"%s\"",
 		  filename, result);
