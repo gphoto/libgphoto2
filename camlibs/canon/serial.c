@@ -982,6 +982,7 @@ canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext 
 		msg = canon_serial_recv_msg (camera, 0x1, 0x21, &len, context);
 	}
 	free (file);
+	file = NULL;
 	return NULL;
 }
 
@@ -1046,6 +1047,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			gp_context_error (context, "canon_serial_get_dirents: "
 					     "Failed to read another directory entry");
 			free (data);
+			data = NULL;
 			return GP_ERROR;
 		}
 
@@ -1061,6 +1063,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			gp_context_error (context, "canon_serial_get_dirents: "
 					     "Truncated directory entry received");
 			free (data);
+			data = NULL;
 			return GP_ERROR;
 		}
 
@@ -1086,6 +1089,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 				gp_context_error (context, "canon_serial_get_dirents: "
 						     "Too many dirents, we must be looping.");
 				free (data);
+				data = NULL;
 				return GP_ERROR;
 			}
 
@@ -1096,6 +1100,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 						     "Could not resize dirent buffer "
 						     "to %i bytes", mallocd_bytes);
 				free (data);
+				data = NULL;
 				return GP_ERROR;
 			}
 			data = temp_ch;

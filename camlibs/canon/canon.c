@@ -942,6 +942,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 				     "initial message too short (%i < minimum %i)",
 				     dirents_length, CANON_MINIMUM_DIRENT_SIZE);
 		free (dirent_data);
+		dirent_data = NULL;
 		return GP_ERROR;
 	}
 
@@ -962,6 +963,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 				     "Reached end of packet while "
 				     "examining the first dirent");
 		free (dirent_data);
+		dirent_data = NULL;
 		return GP_ERROR;
 	}
 	pos++;			/* skip NULL byte terminating directory name */
@@ -1026,6 +1028,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 					     "canon_int_list_dir: "
 					     "truncated directory entry encountered");
 			free (dirent_data);
+			dirent_data = NULL;
 			return GP_ERROR;
 		}
 
@@ -1166,6 +1169,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 		pos += dirent_ent_size;
 	}
 	free (dirent_data);
+	dirent_data = NULL;
 
 	GP_DEBUG ("<FILESYSTEM-DUMP>");
 	gp_filesystem_dump (camera->fs);
@@ -1335,6 +1339,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 	if (res != GP_OK) {
 		GP_DEBUG ("canon_int_get_thumbnail: couldn't extract thumbnail data");
 		free (data);
+		data = NULL;
 		return res;
 	}
 	GP_DEBUG ("canon_int_get_thumbnail: extracted thumbnail data");
@@ -1513,6 +1518,8 @@ old_canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 	}
 
 	free (data);
+	data = NULL;
+	
 	return NULL;
 }
 #endif

@@ -597,6 +597,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 					 "gp_port_read() returned error (%i) or no data\n",
 					 bytes_read);
 			free (*data);
+			*data = NULL;
 
 			/* here, it is an error to get 0 bytes from gp_port_read()
 			 * too, but 0 is GP_OK so if bytes_read is 0 return GP_ERROR_CORRUPTED_DATA
