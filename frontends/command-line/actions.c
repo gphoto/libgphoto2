@@ -8,7 +8,9 @@
 /* Folder actions 						*/
 /* ------------------------------------------------------------ */
 
-int print_folder(char *subfolder, image_action action, int reverse) {
+int
+print_folder (const char *subfolder, image_action action, int reverse)
+{
 	char *c;
 	
 	/* remove the basename for clarity purposes */
@@ -23,7 +25,8 @@ int print_folder(char *subfolder, image_action action, int reverse) {
 /* File actions 						*/
 /* ------------------------------------------------------------ */
 
-int print_picture_action(char *folder, char *filename)
+int
+print_picture_action (const char *folder, const char *filename)
 {
 	static int x=0;
 
@@ -54,21 +57,31 @@ int print_picture_action(char *folder, char *filename)
 	return (GP_OK);
 }
 
-int save_picture_action(char *folder, char *filename) {
-
+int
+save_picture_action (const char *folder, const char *filename)
+{
 	return (save_picture_to_file(folder, filename, GP_FILE_TYPE_NORMAL));
 }
 
-int save_thumbnail_action(char *folder, char *filename) {
-	
-	return (save_picture_to_file(folder, filename, GP_FILE_TYPE_PREVIEW));
+int
+save_thumbnail_action (const char *folder, const char *filename)
+{
+	return (save_picture_to_file (folder, filename, GP_FILE_TYPE_PREVIEW));
 }
 
-int save_raw_action(char *folder, char *filename) {
-	return (save_picture_to_file(folder, filename, GP_FILE_TYPE_RAW));
+int
+save_raw_action (const char *folder, const char *filename)
+{
+	return (save_picture_to_file (folder, filename, GP_FILE_TYPE_RAW));
 }
 
-int delete_picture_action(char *folder, char *filename) {
+int
+save_audio_action (const char *folder, const char *filename)
+{
+	return (save_picture_to_file (folder, filename, GP_FILE_TYPE_AUDIO));
+}
 
+int delete_picture_action (const char *folder, const char *filename)
+{
 	return (gp_camera_file_delete(glob_camera, folder, filename));
 }

@@ -12,7 +12,7 @@
 #include "foreach.h"
 
 int
-for_each_subfolder (char *folder, folder_action faction, 
+for_each_subfolder (const char *folder, folder_action faction, 
 		    image_action iaction, int recurse)
 {
 	CameraList folderlist;
@@ -79,7 +79,7 @@ for_each_subfolder (char *folder, folder_action faction,
 }
 
 int
-for_each_image (char *folder, image_action iaction, int reverse)
+for_each_image (const char *folder, image_action iaction, int reverse)
 {
 	CameraList filelist;
 	int i, res;
@@ -115,7 +115,7 @@ for_each_image (char *folder, image_action iaction, int reverse)
 
 
 int
-for_each_image_in_range (char *folder, char *range, image_action action,
+for_each_image_in_range (const char *folder, char *range, image_action action,
 			 int reverse)
 {
 	char	index[MAX_IMAGE_NUMBER];

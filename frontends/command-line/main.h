@@ -25,5 +25,8 @@ typedef struct {
 
 void 	cli_debug_print(char *format, ...);
 void 	cli_error_print(char *format, ...);
-int	save_picture_to_file(char *folder, char *filename, CameraFileType type);
-int 	get_picture_common(char *arg, CameraFileType type);
+
+int	save_picture_to_file (const char *folder, const char *filename,
+			      CameraFileType type);
+
+int 	get_picture_common (char *arg, CameraFileType type);

@@ -114,6 +114,8 @@ OPTION_CALLBACK(get_thumbnail);
 OPTION_CALLBACK(get_all_thumbnails);
 OPTION_CALLBACK(get_raw_data);
 OPTION_CALLBACK(get_all_raw_data);
+OPTION_CALLBACK(get_audio_data);
+OPTION_CALLBACK(get_all_audio_data);
 OPTION_CALLBACK(delete_picture);
 OPTION_CALLBACK(delete_all_pictures);
 OPTION_CALLBACK(upload_picture);
@@ -172,13 +174,15 @@ Option option[] = {
 {"T", "get-all-thumbnails","",          "Get all thumbnails from folder",get_all_thumbnails,0},
 {"r", "get-raw-data", "range",      "Get raw data given in range", get_raw_data, 0},
 {"", "get-all-raw-data", "",        "Get all raw data from folder", get_all_raw_data, 0},
-{"d", "delete-picture", "range",        "Delete pictures given in range", delete_picture, 0},
-{"D", "delete-all-images","",         "Delete all pictures in folder",delete_all_pictures,0},
-{"u", "upload-image", "filename",     "Upload a picture to camera",   upload_picture, 0},
-{"" , "capture-preview","",             "Capture a quick preview",      capture_preview, 0},
-{"" , "capture-image",  "",             "Capture an image",             capture_image,  0},
-{"" , "capture-movie",  "",             "Capture a movie ",             capture_movie,  0},
-{"" , "capture-sound",  "",             "Capture an audio clip",        capture_sound,  0},
+{"", "get-audio-data", "range", N_("Get audio data given in range"), get_audio_data, 0},
+{"", "get-all-audio-data", "", N_("Get all audio data from folder"), get_all_audio_data, 0},
+{"d", "delete-picture", "range", N_("Delete pictures given in range"), delete_picture, 0},
+{"D", "delete-all-images","", N_("Delete all pictures in folder"), delete_all_pictures,0},
+{"u", "upload-image", "filename", N_("Upload a picture to camera"), upload_picture, 0},
+{"" , "capture-preview", "", N_("Capture a quick preview"), capture_preview, 0},
+{"" , "capture-image",  "", N_("Capture an image"), capture_image,  0},
+{"" , "capture-movie",  "", N_("Capture a movie "), capture_movie,  0},
+{"" , "capture-sound",  "", N_("Capture an audio clip"), capture_sound, 0},
 #if HAVE_CDK
 {"" , "config",		"", 		"Configure",			config,		0},
 #endif
@@ -524,7 +528,7 @@ OPTION_CALLBACK(model)
 }
 
 static void
-debug_func (int level, const char *domain, const char *format,
+debug_func (GPLogLevel level, const char *domain, const char *format,
 	    va_list args, void *data)
 {
 	if (level == GP_LOG_ERROR)
@@ -587,7 +591,7 @@ OPTION_CALLBACK (list_folders)
 {
         CHECK_RESULT (set_globals ());
 
-        return for_each_subfolder(glob_folder, print_folder, NULL, glob_recurse);
+        return for_each_subfolder (glob_folder, print_folder, NULL, glob_recurse);
 }
 
 #if HAVE_CDK
@@ -717,7 +721,8 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
 
 
 int
-save_picture_to_file (char *folder, char *filename, CameraFileType type)
+save_picture_to_file (const char *folder, const char *filename,
+		      CameraFileType type)
 {
         int res;
 
@@ -765,11 +770,11 @@ get_picture_common(char *arg, CameraFileType type )
 
         switch (type) {
         case GP_FILE_TYPE_PREVIEW:
-                return for_each_image_in_range(glob_folder, arg, save_thumbnail_action, 0);
+                return for_each_image_in_range (glob_folder, arg, save_thumbnail_action, 0);
         case GP_FILE_TYPE_NORMAL:
-                return for_each_image_in_range(glob_folder, arg, save_picture_action, 0);
+                return for_each_image_in_range (glob_folder, arg, save_picture_action, 0);
         case GP_FILE_TYPE_RAW:
-                return for_each_image_in_range(glob_folder, arg, save_raw_action, 0);
+                return for_each_image_in_range (glob_folder, arg, save_raw_action, 0);
         default:
                 return (GP_ERROR_NOT_SUPPORTED);
         }
@@ -825,6 +830,22 @@ OPTION_CALLBACK (get_all_raw_data)
                 return (GP_OK);
 
         return for_each_subfolder(glob_folder, for_each_image, save_raw_action, glob_recurse);
+}
+
+OPTION_CALLBACK (get_audio_data)
+{
+	return (get_picture_common (arg, GP_FILE_TYPE_AUDIO));
+}
+
+OPTION_CALLBACK (get_all_audio_data)
+{
+	CHECK_RESULT (set_globals ());
+	CHECK_RESULT (for_each_image (glob_folder, save_audio_action, 0));
+
+	if (!glob_recurse)
+		return (GP_OK);
+
+	return for_each_subfolder (glob_folder, for_each_image, save_audio_action, glob_recurse);
 }
 
 OPTION_CALLBACK (delete_picture)
