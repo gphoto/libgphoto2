@@ -1,5 +1,10 @@
 2001-10-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/directory/directory.h: Removed.
+	* camlibs/directory/directory.c: Remove cruft
+
+2001-10-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/canon/psa50.c
 	* camlibs/dimera/dimera3500.c:
 	* camlibs/kodak/dc120/library.c:

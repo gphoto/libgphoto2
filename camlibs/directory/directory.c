@@ -12,8 +12,6 @@
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
-#include "directory.h"
-
 char *extension[] = {
         "gif",
         "tif",
@@ -151,16 +149,6 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 }
 
 static int
-camera_exit (Camera *camera)
-{
-        DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
-
-        free (d);
-
-        return (GP_OK);
-}
-
-static int
 camera_file_get_info (Camera *camera, const char *folder, const char *file,
 		      CameraFileInfo *info)
 {
@@ -259,43 +247,6 @@ camera_file_set_info (Camera *camera, const char *folder, const char *file,
 }
 
 static int
-folder_index(Camera *camera)
-{
-        GP_SYSTEM_DIR dir;
-        GP_SYSTEM_DIRENT de;
-        char fname[1024];
-        DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
-
-        d->num_images = 0;
-
-        dir = GP_SYSTEM_OPENDIR(d->directory);
-        if (!dir)
-                return (GP_ERROR);
-        de = GP_SYSTEM_READDIR(dir);
-        while (de) {
-                sprintf(fname, "%s/%s", d->directory, GP_SYSTEM_FILENAME(de));
-                if (GP_SYSTEM_IS_FILE(fname)) {
-                        strcpy(d->images[d->num_images++], GP_SYSTEM_FILENAME(de));
-                        gp_debug_printf(GP_DEBUG_LOW, "directory", "found \"%s\"\n", GP_SYSTEM_FILENAME(de));
-                }
-                de = GP_SYSTEM_READDIR(dir);
-        }
-        GP_SYSTEM_CLOSEDIR(dir);
-
-        return (GP_OK);
-}
-
-static int
-directory_folder_set (Camera *camera, const char *folder_name)
-{
-        DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
-
-        strcpy (d->directory, folder_name);
-
-        return (folder_index (camera));
-}
-
-static int
 camera_file_get (Camera *camera, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file)
 {
@@ -305,14 +256,11 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 
         char buf[1024];
         int result;
-        DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
 
 	if (type != GP_FILE_TYPE_NORMAL)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-        directory_folder_set(camera, folder);
-
-        sprintf(buf, "%s/%s", d->directory, filename);
+        sprintf(buf, "%s/%s", folder, filename);
 
         if ((result = gp_file_open(file, buf)) != GP_OK)
                 return (result);
@@ -356,16 +304,6 @@ camera_set_config (Camera *camera, CameraWidget *window)
 }
 
 static int
-camera_summary (Camera *camera, CameraText *summary)
-{
-        DirectoryStruct *d = (DirectoryStruct*)camera->camlib_data;
-
-        sprintf(summary->text, "Current directory:\n%s", d->directory);
-
-        return (GP_OK);
-}
-
-static int
 camera_manual (Camera *camera, CameraText *manual)
 {
         strcpy(manual->text, "The Directory Browse \"camera\" lets you index\nphotos on your hard drive. The folder list on the\nleft contains the folders on your hard drive,\nbeginning at the root directory (\"/\").");
@@ -384,30 +322,16 @@ camera_about (Camera *camera, CameraText *about)
 int
 camera_init (Camera *camera)
 {
-        int i = 0;
-        DirectoryStruct *d;
         char buf[256];
 
         /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
         camera->functions->file_get             = camera_file_get;
         camera->functions->file_get_info        = camera_file_get_info;
         camera->functions->file_set_info        = camera_file_set_info;
         camera->functions->get_config           = camera_get_config;
         camera->functions->set_config           = camera_set_config;
-        camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
-
-        d = (DirectoryStruct*)malloc(sizeof(DirectoryStruct));
-        camera->camlib_data = d;
-
-        d->num_images = 0;
-
-        for (i=0; i<1024; i++)
-                strcpy(d->images[i], "");
-
-        strcpy(d->directory, "/");
 
         if (gp_setting_get("directory", "hidden", buf) != GP_OK)
                 gp_setting_set("directory", "hidden", "1");
