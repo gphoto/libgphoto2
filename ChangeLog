@@ -1,3 +1,11 @@
+2004-07-14 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* configure.in: Added camlibs/toshiba/pdrm65/Makefile
+	* camlibs/toshiba/pdrm11/Makefile.am: Renamed current PDR-M11 
+	  camlib "toshiba" to "toshiba_pdrm11"
+	* camlibs/toshiba/pdrm65/: Added files for PDR-M65 driver.
+	  The PDR-M65 driver is developed by Sean Bruno.
+
 2004-05-29 Theodore Kilgore <kilgota@auburn.edu>
 
 	* MAINTAINERS: added myself as maintainer of aox, mars, sq905 camlibs.  

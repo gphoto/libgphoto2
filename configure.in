@@ -429,6 +429,7 @@ camlibs/stv0680/Makefile
 camlibs/sx330z/Makefile
 camlibs/toshiba/Makefile
 camlibs/toshiba/pdrm11/Makefile
+camlibs/toshiba/pdrm65/Makefile
 tests/Makefile
 libgphoto2/Makefile
 libgphoto2/libgphoto2.pc
