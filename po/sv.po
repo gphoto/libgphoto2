@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
 "Report-Msgid-Bugs-To: <gphoto-translation@lists.sourceforge.net>\n"
-"POT-Creation-Date: 2004-08-23 07:58+0200\n"
+"POT-Creation-Date: 2004-11-26 08:24+0100\n"
 "PO-Revision-Date: 2003-01-09 08:13+0100\n"
 "Last-Translator: Stefan Björnelund <stefanb@update.uu.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: camlibs/agfa-cl20/agfa_cl20.c:553
+#: camlibs/agfa-cl20/agfa_cl20.c:555
 msgid ""
 "agfa_cl20\n"
 "The Agfa CL20 Linux Driver People!\n"
@@ -72,77 +72,82 @@ msgstr ""
 "Implementerat med hjälp av dokument från\n"
 "nätet. Med tillstånd från Vision."
 
-#: camlibs/canon/canon.c:492
+#: camlibs/canon/canon.c:502
 #, fuzzy, c-format
 msgid "Could not create directory %s."
 msgstr "Kunde inte skapa \\DCIM-katalogen."
 
-#: camlibs/canon/canon.c:495
+#: camlibs/canon/canon.c:505
 #, fuzzy, c-format
 msgid "Could not remove directory %s."
 msgstr "Kunde inte skapa \\DCIM-katalogen."
 
-#: camlibs/canon/canon.c:837 camlibs/canon/canon.c:1057
+#: camlibs/canon/canon.c:847 camlibs/canon/canon.c:1067
 #: camlibs/canon/usb.c:229
 msgid "lock keys failed."
 msgstr ""
 
-#: camlibs/canon/canon.c:900 camlibs/canon/canon.c:901
+#: camlibs/canon/canon.c:910 camlibs/canon/canon.c:911
 msgid "*UNKNOWN*"
 msgstr ""
 
-#: camlibs/canon/canon.c:1006
+#: camlibs/canon/canon.c:1016
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
 "status %i"
 msgstr ""
 
-#: camlibs/canon/canon.c:1087
+#: camlibs/canon/canon.c:1097
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
 "i"
 msgstr ""
 
-#: camlibs/canon/canon.c:1206
+#: camlibs/canon/canon.c:1216
 #, fuzzy, c-format
 msgid "Name '%s' (%i characters) too long, maximum 30 characters are allowed."
 msgstr ""
 "Namnet '%s' (%i tecken) är för långt (%i tecken), maximalt 30 tecken tillåts."
 
-#: camlibs/canon/canon.c:1733
+#: camlibs/canon/canon.c:1591
+#, c-format
+msgid "Lower case letters in %s not allowed."
+msgstr ""
+
+#: camlibs/canon/canon.c:1748
 #, c-format
 msgid "canon_int_list_dir: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
 
-#: camlibs/canon/canon.c:1755
+#: camlibs/canon/canon.c:1770
 msgid ""
 "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
 
-#: camlibs/canon/canon.c:1840
+#: camlibs/canon/canon.c:1855
 msgid "canon_int_list_dir: truncated directory entry encountered"
 msgstr ""
 
-#: camlibs/canon/canon.c:2151
+#: camlibs/canon/canon.c:2166
 msgid "File protected."
 msgstr "Filen skyddad."
 
-#: camlibs/canon/canon.c:2222
+#: camlibs/canon/canon.c:2237
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
 
-#: camlibs/canon/canon.c:2247
+#: camlibs/canon/canon.c:2262
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr ""
 
-#: camlibs/canon/canon.h:225 camlibs/canon/canon.h:239
+#: camlibs/canon/canon.h:261 camlibs/canon/canon.h:275
 #, c-format
 msgid "NULL parameter \"%s\" in %s line %i"
 msgstr ""
 
-#: camlibs/canon/canon.h:421
+#: camlibs/canon/canon.h:457
 #, c-format
 msgid ""
 "Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
@@ -154,7 +159,6 @@ msgid "FATAL ERROR: initial CRC value for length %d unknown\n"
 msgstr ""
 
 #: camlibs/canon/crc.c:250
-#, c-format
 msgid "unable to guess initial CRC value\n"
 msgstr ""
 
@@ -178,8 +182,8 @@ msgstr ""
 "om du märker många överföringsfel, försök att ha datorn så lätt lastad som "
 "möjligt (d.v.s. ingen diskettaktivitet)"
 
-#: camlibs/canon/library.c:248 camlibs/canon/library.c:1338
-#: camlibs/canon/library.c:1351
+#: camlibs/canon/library.c:248 camlibs/canon/library.c:1340
+#: camlibs/canon/library.c:1353
 msgid "Camera unavailable"
 msgstr "Kameran ej tillgänglig"
 
@@ -232,20 +236,20 @@ msgstr ""
 "  %11s bytes tillgängliga"
 
 #: camlibs/canon/library.c:776 camlibs/canon/library.c:782
-#: camlibs/canon/library.c:1293 camlibs/canon/library.c:1299
+#: camlibs/canon/library.c:1295 camlibs/canon/library.c:1301
 msgid "AC adapter"
 msgstr "Nätadapter"
 
 #: camlibs/canon/library.c:776 camlibs/canon/library.c:782
-#: camlibs/canon/library.c:1293 camlibs/canon/library.c:1299
+#: camlibs/canon/library.c:1295 camlibs/canon/library.c:1301
 msgid "on battery"
 msgstr "på batteri"
 
-#: camlibs/canon/library.c:778 camlibs/canon/library.c:1295
+#: camlibs/canon/library.c:778 camlibs/canon/library.c:1297
 msgid "power OK"
 msgstr "kraft OK"
 
-#: camlibs/canon/library.c:778 camlibs/canon/library.c:1295
+#: camlibs/canon/library.c:778 camlibs/canon/library.c:1297
 msgid "power bad"
 msgstr "kraft dålig"
 
@@ -312,16 +316,16 @@ msgstr "Fel vid filradering"
 msgid "Error deleting associated thumbnail file"
 msgstr "Fel vid radering av associerad minibild till fil"
 
-#: camlibs/canon/library.c:1023 camlibs/canon/library.c:1150
+#: camlibs/canon/library.c:1024 camlibs/canon/library.c:1152
 msgid ""
 "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr "Kameran stöder inte hastigheter överstigande 57600 vid uppladdning."
 
-#: camlibs/canon/library.c:1040 camlibs/canon/library.c:1167
+#: camlibs/canon/library.c:1041 camlibs/canon/library.c:1169
 msgid "Could not get flash drive letter"
 msgstr "Kunde inte få tag på flash-enhetens enhetsbokstav"
 
-#: camlibs/canon/library.c:1083 camlibs/canon/library.c:1190
+#: camlibs/canon/library.c:1084 camlibs/canon/library.c:1192
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
@@ -329,85 +333,86 @@ msgstr ""
 "Kunde inte ladda upp, inget ledigt mappnamn tillgängligt!\n"
 "Mappnamnet 999CANON existerar och har en bild AUT_9999.JPG."
 
-#: camlibs/canon/library.c:1105 camlibs/canon/library.c:1210
+#: camlibs/canon/library.c:1106 camlibs/canon/library.c:1212
 msgid "Could not create \\DCIM directory."
 msgstr "Kunde inte skapa \\DCIM-katalogen."
 
-#: camlibs/canon/library.c:1111 camlibs/canon/library.c:1216
+#: camlibs/canon/library.c:1112 camlibs/canon/library.c:1218
 msgid "Could not create destination directory."
 msgstr "Kunde inte skapa destinationskatalogen."
 
-#: camlibs/canon/library.c:1248 camlibs/ptp2/library.c:971
+#: camlibs/canon/library.c:1250 camlibs/ptp2/library.c:1323
+#: camlibs/ptp2/library.c:1411
 msgid "Camera and Driver Configuration"
 msgstr "Kamera- och drivrutinskonfiguration"
 
-#: camlibs/canon/library.c:1250 camlibs/polaroid/pdc700.c:982
+#: camlibs/canon/library.c:1252 camlibs/polaroid/pdc700.c:982
 msgid "Camera"
 msgstr "Kamera"
 
-#: camlibs/canon/library.c:1253
+#: camlibs/canon/library.c:1255
 msgid "Camera Model (readonly)"
 msgstr "Kameramodell (skrivskyddad)"
 
-#: camlibs/canon/library.c:1257 camlibs/canon/library.c:1334
+#: camlibs/canon/library.c:1259 camlibs/canon/library.c:1336
 msgid "Owner name"
 msgstr "Ägarnamn"
 
-#: camlibs/canon/library.c:1264 camlibs/canon/library.c:1268
-#: camlibs/canon/library.c:1273
+#: camlibs/canon/library.c:1266 camlibs/canon/library.c:1270
+#: camlibs/canon/library.c:1275
 msgid "Date and Time (readonly)"
 msgstr "Datum och Tid (skrivskyddad)"
 
-#: camlibs/canon/library.c:1269
+#: camlibs/canon/library.c:1271
 msgid "Error"
 msgstr "Fel"
 
-#: camlibs/canon/library.c:1274 camlibs/canon/library.c:1301
+#: camlibs/canon/library.c:1276 camlibs/canon/library.c:1303
 msgid "Unavailable"
 msgstr "Otillgänglig"
 
-#: camlibs/canon/library.c:1278 camlibs/canon/library.c:1347
+#: camlibs/canon/library.c:1280 camlibs/canon/library.c:1349
 msgid "Set camera date to PC date"
 msgstr "Sätt kamerans datum till datorns datum"
 
-#: camlibs/canon/library.c:1281
+#: camlibs/canon/library.c:1283
 msgid "Firmware revision (readonly)"
 msgstr "Fastvarurevision (skrivskyddad)"
 
-#: camlibs/canon/library.c:1305 camlibs/ptp2/library.c:1018
-#: camlibs/ptp2/library.c:1048
+#: camlibs/canon/library.c:1307 camlibs/ptp2/library.c:1357
+#: camlibs/ptp2/library.c:1387
 msgid "Power (readonly)"
 msgstr "Kraft (skrivskyddad)"
 
-#: camlibs/canon/library.c:1309
+#: camlibs/canon/library.c:1311
 msgid "Driver"
 msgstr "Drivrutin"
 
-#: camlibs/canon/library.c:1312 camlibs/canon/library.c:1361
+#: camlibs/canon/library.c:1314 camlibs/canon/library.c:1363
 msgid "List all files"
 msgstr "Lista alla filer"
 
-#: camlibs/canon/library.c:1317 camlibs/canon/library.c:1369
+#: camlibs/canon/library.c:1319 camlibs/canon/library.c:1371
 msgid "Keep filename on upload"
 msgstr "Behåll filnamnet vid uppladdning"
 
-#: camlibs/canon/library.c:1341
+#: camlibs/canon/library.c:1343
 msgid "Owner name changed"
 msgstr "Ägarnamnet ändrat"
 
-#: camlibs/canon/library.c:1343
+#: camlibs/canon/library.c:1345
 msgid "could not change owner name"
 msgstr "kunde inte ändra ägarnamnet"
 
-#: camlibs/canon/library.c:1354
+#: camlibs/canon/library.c:1356
 msgid "time set"
 msgstr "tiden inställd"
 
-#: camlibs/canon/library.c:1356
+#: camlibs/canon/library.c:1358
 msgid "could not set time"
 msgstr "kunde inte ställa in tiden"
 
-#: camlibs/canon/library.c:1572
+#: camlibs/canon/library.c:1574
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr "Ej stödd port typ %i = 0x%x given. Initialisering omöjlig."
@@ -525,49 +530,49 @@ msgstr "Detekterade ett '%s'."
 msgid "Unknown model \"%s\""
 msgstr "Okänd modell"
 
-#: camlibs/canon/serial.c:1408
+#: camlibs/canon/serial.c:1407
 msgid "Bad EOT"
 msgstr "Dålig EOT"
 
-#: camlibs/canon/serial.c:1414
+#: camlibs/canon/serial.c:1413
 msgid "Communication error 2"
 msgstr "Kommunikationsfel 2"
 
-#: camlibs/canon/serial.c:1437
+#: camlibs/canon/serial.c:1436
 msgid "Communication error 3"
 msgstr "Kommunikationsfel 3"
 
-#: camlibs/canon/serial.c:1441
+#: camlibs/canon/serial.c:1440
 msgid "Changing speed... wait..."
 msgstr "Ändrar hastighet... vänta..."
 
-#: camlibs/canon/serial.c:1446
+#: camlibs/canon/serial.c:1445
 msgid "Error changing speed"
 msgstr "Fel vid ändring av hastighet"
 
-#: camlibs/canon/serial.c:1457
+#: camlibs/canon/serial.c:1456
 #, fuzzy
 msgid "Error waiting for ACK during initialization retrying"
 msgstr "Fel väntande ACK under initialisering, försöker igen "
 
-#: camlibs/canon/serial.c:1463
+#: camlibs/canon/serial.c:1462
 msgid "Error waiting ACK during initialization"
 msgstr "Fel väntande ACK under initialisering"
 
-#: camlibs/canon/serial.c:1467
+#: camlibs/canon/serial.c:1466
 msgid "Connected to camera"
 msgstr "Ansluten till kamera"
 
-#: camlibs/canon/serial.c:1505
+#: camlibs/canon/serial.c:1504
 msgid "ERROR: a fatal error condition was detected, can't continue "
 msgstr ""
 
-#: camlibs/canon/serial.c:1521
+#: camlibs/canon/serial.c:1520
 #, c-format
 msgid "ERROR: %d is too big"
 msgstr ""
 
-#: camlibs/canon/serial.c:1531
+#: camlibs/canon/serial.c:1530
 msgid "Getting thumbnail..."
 msgstr "Hämtar minibild..."
 
@@ -648,100 +653,116 @@ msgid "Camera not ready, get_battery failed: %s"
 msgstr ""
 "Kamera ej redo, flera 'Identifiera kamera'-förfrågningar misslyckades: %s\""
 
-#: camlibs/canon/usb.c:351 camlibs/canon/usb.c:379 camlibs/canon/usb.c:428
-#, c-format
-msgid ""
-"canon_usb_lock_keys: Unexpected amount of data returned (%i bytes, expected %"
-"i)"
-msgstr ""
-
-#: camlibs/canon/usb.c:416
+#: camlibs/canon/usb.c:341
 #, c-format
 msgid ""
 "canon_usb_lock_keys: Unexpected return of %i bytes (expected %i) from \"get "
 "picture abilities.\""
 msgstr ""
 
-#: camlibs/canon/usb.c:472
+#: camlibs/canon/usb.c:353 camlibs/canon/usb.c:374 camlibs/canon/usb.c:397
+#, c-format
+msgid ""
+"canon_usb_lock_keys: Unexpected amount of data returned (%i bytes, expected %"
+"i)"
+msgstr ""
+
+#: camlibs/canon/usb.c:436
 #, c-format
 msgid ""
 "canon_usb_unlock_keys: Unexpected amount of data returned (%i bytes, "
 "expected %i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:523
+#: camlibs/canon/usb.c:485
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, \"%s\""
 msgstr ""
 
-#: camlibs/canon/usb.c:576
+#: camlibs/canon/usb.c:538
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
 "\""
 msgstr ""
 
-#: camlibs/canon/usb.c:674
+#: camlibs/canon/usb.c:636
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
 msgstr ""
 
-#: camlibs/canon/usb.c:685
+#: camlibs/canon/usb.c:647
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
 msgstr ""
 
-#: camlibs/canon/usb.c:705
+#: camlibs/canon/usb.c:667
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:713
+#: camlibs/canon/usb.c:675
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:723
+#: camlibs/canon/usb.c:685
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
 msgstr ""
 
-#: camlibs/canon/usb.c:741
+#: camlibs/canon/usb.c:703
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:768
+#: camlibs/canon/usb.c:730
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:923
+#: camlibs/canon/usb.c:885
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:1077
+#: camlibs/canon/usb.c:1039
 msgid "Receiving data..."
 msgstr "Tar emot data..."
 
-#: camlibs/canon/usb.c:1358 camlibs/canon/usb.c:1433 camlibs/canon/usb.c:1454
+#: camlibs/canon/usb.c:1320 camlibs/canon/usb.c:1456
 #, c-format
 msgid "Out of memory: %d bytes needed."
 msgstr ""
 
-#: camlibs/canon/usb.c:1444
+#: camlibs/canon/usb.c:1383
+msgid "canon_usb_set_file_attributes: canon_usb_dialogue failed"
+msgstr ""
+
+#: camlibs/canon/usb.c:1390
+#, c-format
+msgid ""
+"canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%"
+"08x from camera"
+msgstr ""
+
+#: camlibs/canon/usb.c:1467
 #, fuzzy, c-format
 msgid "Couldn't read from file \"%s\""
 msgstr "Kunde inte få tag på disk info: %s"
 
-#: camlibs/canon/usb.c:1487 camlibs/canon/usb.c:1498 camlibs/canon/usb.c:1534
-#: camlibs/canon/usb.c:1545 camlibs/canon/usb.c:1556
+#: camlibs/canon/usb.c:1477
+#, c-format
+msgid "Out of memory: %ld bytes needed."
+msgstr ""
+
+#: camlibs/canon/usb.c:1510 camlibs/canon/usb.c:1521 camlibs/canon/usb.c:1557
+#: camlibs/canon/usb.c:1568 camlibs/canon/usb.c:1579
 #, fuzzy
 msgid "File upload failed."
 msgstr "Laddar upp fil..."
 
-#: camlibs/canon/usb.c:1577
+#: camlibs/canon/usb.c:1600
 msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
@@ -749,51 +770,40 @@ msgstr ""
 "Filen var för stor. Du kan behöva stänga av kameran och slå på den ingen "
 "innan du kan ladda upp mer filer."
 
-#: camlibs/canon/usb.c:1623
+#: camlibs/canon/usb.c:1646
 #, c-format
 msgid ""
 "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
 "too long."
 msgstr ""
 
-#: camlibs/canon/usb.c:1640
+#: camlibs/canon/usb.c:1663
 #, c-format
 msgid ""
 "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
 
-#: camlibs/canon/usb.c:1690
+#: camlibs/canon/usb.c:1713
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
 "'%.96s' (truncated) too long."
 msgstr ""
 
-#: camlibs/canon/usb.c:1709
+#: camlibs/canon/usb.c:1732
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
 
-#: camlibs/canon/usb.c:1761
-msgid "canon_usb_set_file_attributes: canon_usb_dialogue failed"
-msgstr ""
-
-#: camlibs/canon/usb.c:1768
-#, c-format
-msgid ""
-"canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%"
-"08x from camera"
-msgstr ""
-
-#: camlibs/canon/usb.c:1839
+#: camlibs/canon/usb.c:1801
 #, c-format
 msgid "Detected a '%s'."
 msgstr "Detekterade ett '%s'."
 
-#: camlibs/canon/usb.c:1845
+#: camlibs/canon/usb.c:1807
 #, c-format
 msgid "Name \"%s\" from camera does not match any known camera"
 msgstr ""
@@ -991,7 +1001,7 @@ msgstr "Slut på minne"
 
 #: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
 #: camlibs/konica/qm150.c:259 camlibs/panasonic/coolshot/library.c:375
-#: camlibs/ricoh/g3.c:295 camlibs/samsung/samsung.c:214
+#: camlibs/ricoh/g3.c:301 camlibs/samsung/samsung.c:214
 #: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:127
 #: camlibs/smal/ultrapocket.c:173
 msgid "Downloading image..."
@@ -1168,7 +1178,7 @@ msgid "Camera sent unexpected byte 0x%02x."
 msgstr "Kameran skickade oväntad byte 0x%02x."
 
 #: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
-#: camlibs/polaroid/pdc700.c:314 camlibs/ricoh/g3.c:289
+#: camlibs/polaroid/pdc700.c:314 camlibs/ricoh/g3.c:295
 msgid "Downloading..."
 msgstr "Nerladdning..."
 
@@ -1265,7 +1275,7 @@ msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
 msgstr ""
 "Porttypen stöds ej: %d. Denna drivrutin fungerar bara med USB kamror.\n"
 
-#: camlibs/gsmart300/library.c:216 camlibs/spca50x/library.c:627
+#: camlibs/gsmart300/library.c:216 camlibs/spca50x/library.c:628
 msgid "Could not reset camera.\n"
 msgstr "Kunde inte nollställa kameran.\n"
 
@@ -1454,9 +1464,9 @@ msgid "Capture"
 msgstr "Foto"
 
 #: camlibs/kodak/dc210/dc210.c:220 camlibs/kodak/dc210/dc210.c:379
-#: camlibs/konica/qm150.c:1039 camlibs/ptp2/ptp.c:1529
-#: camlibs/ricoh/library.c:499 camlibs/sierra/sierra.c:1086
-#: camlibs/sierra/sierra.c:1346
+#: camlibs/konica/qm150.c:1039 camlibs/ptp2/library.c:1305
+#: camlibs/ptp2/ptp.c:1528 camlibs/ricoh/library.c:499
+#: camlibs/sierra/sierra.c:1086 camlibs/sierra/sierra.c:1346
 msgid "Zoom"
 msgstr "Zoom"
 
@@ -1550,7 +1560,10 @@ msgstr "Röda ögon reduktion"
 #: camlibs/konica/qm150.c:815 camlibs/konica/qm150.c:857
 #: camlibs/konica/qm150.c:870 camlibs/konica/qm150.c:1027
 #: camlibs/konica/qm150.c:1034 camlibs/konica/qm150.c:1041
-#: camlibs/konica/qm150.c:1048 camlibs/ricoh/library.c:338
+#: camlibs/konica/qm150.c:1048 camlibs/ptp2/library.c:1075
+#: camlibs/ptp2/library.c:1077 camlibs/ptp2/library.c:1089
+#: camlibs/ptp2/library.c:1151 camlibs/ptp2/library.c:1153
+#: camlibs/ptp2/library.c:1165 camlibs/ricoh/library.c:338
 #: camlibs/ricoh/library.c:369 camlibs/sierra/nikon-desc.c:271
 #: camlibs/sierra/sierra.c:1066 camlibs/sierra/sierra.c:1072
 #: camlibs/sierra/sierra.c:1335
@@ -1566,7 +1579,10 @@ msgstr "På"
 #: camlibs/konica/qm150.c:818 camlibs/konica/qm150.c:856
 #: camlibs/konica/qm150.c:863 camlibs/konica/qm150.c:1028
 #: camlibs/konica/qm150.c:1031 camlibs/konica/qm150.c:1042
-#: camlibs/konica/qm150.c:1045 camlibs/ricoh/library.c:339
+#: camlibs/konica/qm150.c:1045 camlibs/ptp2/library.c:1076
+#: camlibs/ptp2/library.c:1077 camlibs/ptp2/library.c:1093
+#: camlibs/ptp2/library.c:1152 camlibs/ptp2/library.c:1153
+#: camlibs/ptp2/library.c:1169 camlibs/ricoh/library.c:339
 #: camlibs/ricoh/library.c:368 camlibs/ricoh/library.c:376
 #: camlibs/sierra/epson-desc.c:153 camlibs/sierra/nikon-desc.c:202
 #: camlibs/sierra/nikon-desc.c:270 camlibs/sierra/nikon-desc.c:325
@@ -1757,7 +1773,6 @@ msgstr ""
 "avslutats."
 
 #: camlibs/kodak/dc3200/dc3200.c:142
-#, c-format
 msgid "camera inactive for > 9 seconds, re-initing.\n"
 msgstr "kameran inaktiv för > 9 sekunder, återinitialiseras.\n"
 
@@ -1788,6 +1803,19 @@ msgstr ""
 "Donn Morrison <dmorriso@gulf.uvic.ca>\n"
 "\n"
 "Frågor och kommentarter uppskattas."
+
+#: camlibs/kodak/ez200/library.c:111
+#, c-format
+msgid ""
+"Your USB camera is a Kodak EZ200.\n"
+"Number of PICs = %i\n"
+msgstr ""
+
+#: camlibs/kodak/ez200/library.c:124
+msgid ""
+"Kodak EZ200 driver\n"
+"Bucas Jean-Francois <jfbucas@tuxfamily.org>\n"
+msgstr ""
 
 #: camlibs/konica/konica.c:62
 msgid "Focusing error."
@@ -2123,7 +2151,6 @@ msgstr "Självutlösare (endast nästa bild)"
 #: camlibs/sierra/sierra.c:1275 camlibs/sierra/sierra.c:1319
 #: camlibs/sierra/sierra.c:1514 camlibs/sierra/sierra.c:1518
 #: camlibs/sierra/sierra.c:1731
-#, c-format
 msgid "Normal"
 msgstr "Normal"
 
@@ -2249,7 +2276,7 @@ msgstr "Av"
 msgid "Day-lt"
 msgstr "Dagsljus"
 
-#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptp.c:1483
+#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptp.c:1482
 msgid "Sharpness"
 msgstr ""
 
@@ -2320,39 +2347,33 @@ msgid "Everywhere"
 msgstr ""
 
 #: camlibs/konica/qm150.c:1140
-#, fuzzy, c-format
+#, fuzzy
 msgid "Battery"
 msgstr "batteri"
 
 #: camlibs/konica/qm150.c:1142
-#, c-format
 msgid "AC"
 msgstr ""
 
 #: camlibs/konica/qm150.c:1145 camlibs/minolta/dimagev/dimagev.c:306
 #: camlibs/sierra/nikon-desc.c:327
-#, c-format
 msgid "Play"
 msgstr "Spela upp"
 
 #: camlibs/konica/qm150.c:1147 camlibs/minolta/dimagev/dimagev.c:306
 #: camlibs/sierra/nikon-desc.c:326
-#, c-format
 msgid "Record"
 msgstr "Spela in"
 
 #: camlibs/konica/qm150.c:1157
-#, c-format
 msgid "DD/MM/YYYY"
 msgstr ""
 
 #: camlibs/konica/qm150.c:1162
-#, c-format
 msgid "YYYY/MM/AA"
 msgstr ""
 
 #: camlibs/konica/qm150.c:1166
-#, c-format
 msgid "MM/DD/YYYY"
 msgstr ""
 
@@ -2370,7 +2391,6 @@ msgid ""
 msgstr ""
 
 #: camlibs/konica/qm150.c:1193
-#, c-format
 msgid ""
 "Konica Q-M150 Library\n"
 "Marcus Meissner <marcus@jet.franken.de>\n"
@@ -2380,7 +2400,6 @@ msgid ""
 msgstr ""
 
 #: camlibs/konica/qm150.c:1208
-#, c-format
 msgid ""
 "About Konica Q-M150:\n"
 "This camera does not support to do any changes\n"
@@ -2414,27 +2433,27 @@ msgstr ""
 "\n"
 "Hanterar Largan Lmini kamror.\n"
 
-#: camlibs/mars/library.c:106
+#: camlibs/mars/library.c:109
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
-"There is %i photo in it.\n"
+"There is %i photo in it. \n"
 msgstr ""
 
-#: camlibs/mars/library.c:110
+#: camlibs/mars/library.c:113
 #, c-format
 msgid ""
 "Mars MR97310 camera.\n"
-"There are %i photos in it.\n"
+"There are %i photos in it. \n"
 msgstr ""
 
-#: camlibs/mars/library.c:121
+#: camlibs/mars/library.c:125
 msgid ""
-"This driver supports cameras with Mars MR97310 chip\n"
-"and should work with gtkam.\n"
+"This driver supports cameras with Mars MR97310 chip (and direct\n"
+"equivalents ??Pixart PACx07??) and should work with gtkam.\n"
 "The driver allows you to get\n"
 "   - thumbnails for gtkam\n"
-"   - full images (640x480 or 320x240PPM format)\n"
+"   - full images (640x480 or 320x240PPM format) (??352x288 & 176x144??)\n"
 "The camera does not support deletion of photos, nor uploading\n"
 "of data. This driver does not support the optional photo\n"
 "compression mode.\n"
@@ -2442,7 +2461,7 @@ msgid ""
 "as consecutive still photos.\n"
 msgstr ""
 
-#: camlibs/mars/library.c:142
+#: camlibs/mars/library.c:146
 msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -2518,17 +2537,14 @@ msgid "Standard"
 msgstr "Standard"
 
 #: camlibs/minolta/dimagev/dimagev.c:321
-#, c-format
 msgid "Automatic\n"
 msgstr "Automatisk\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:329
-#, c-format
 msgid "Force Flash\n"
 msgstr "Alltid blixt\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:337
-#, c-format
 msgid "Prohibit Flash\n"
 msgstr "Aldrig blixt\n"
 
@@ -2559,7 +2575,6 @@ msgid "Not Full"
 msgstr "Inte full"
 
 #: camlibs/minolta/dimagev/dimagev.c:365 camlibs/minolta/dimagev/dimagev.c:408
-#, c-format
 msgid "Full"
 msgstr "Full"
 
@@ -2580,17 +2595,14 @@ msgid "Ready"
 msgstr "Klar"
 
 #: camlibs/minolta/dimagev/dimagev.c:380
-#, c-format
 msgid "Normal\n"
 msgstr "Normal\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:383
-#, c-format
 msgid "Lens direction does not match flash light\n"
 msgstr "Linsriktningen överensstämmer inte med blixtljuset\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:386
-#, c-format
 msgid "Lens is not connected\n"
 msgstr "Linsen är inte ansluten\n"
 
@@ -2600,17 +2612,14 @@ msgid "Bad value for lens status %d\n"
 msgstr "Felaktigt värde för linsstatus %d\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:398
-#, c-format
 msgid "Card Status:\t\t"
 msgstr "Kortstatus:\t\t"
 
 #: camlibs/minolta/dimagev/dimagev.c:411
-#, c-format
 msgid "Write-protected"
 msgstr "Skrivskyddad"
 
 #: camlibs/minolta/dimagev/dimagev.c:414
-#, c-format
 msgid "Unsuitable card"
 msgstr "Olämpligt kort"
 
@@ -2656,39 +2665,39 @@ msgstr "Blixt : Av"
 msgid "FlashLight : undefined"
 msgstr "Blixt : odefinierat"
 
-#: camlibs/mustek/mdc800.c:232
+#: camlibs/mustek/mdc800.c:231
 msgid "Summary for Mustek MDC800:\n"
 msgstr "Summering för Mustek MDC800:\n"
 
-#: camlibs/mustek/mdc800.c:235
+#: camlibs/mustek/mdc800.c:234
 msgid "no status reported."
 msgstr "ingen status rapporterad."
 
-#: camlibs/mustek/mdc800.c:241
+#: camlibs/mustek/mdc800.c:240
 msgid "Compact Flash Card detected\n"
 msgstr "CompactFlash kort detekterat\n"
 
-#: camlibs/mustek/mdc800.c:243
+#: camlibs/mustek/mdc800.c:242
 msgid "No Compact Flash Card detected\n"
 msgstr "Inget CompactFlash kort detekterat\n"
 
-#: camlibs/mustek/mdc800.c:247
+#: camlibs/mustek/mdc800.c:246
 msgid "Current Mode: Camera Mode\n"
 msgstr "Nuvarande läge: Kameraläge\n"
 
-#: camlibs/mustek/mdc800.c:249
+#: camlibs/mustek/mdc800.c:248
 msgid "Current Mode: Playback Mode\n"
 msgstr "Nuvarande läge: Uppspelningsläge\n"
 
-#: camlibs/mustek/mdc800.c:258
+#: camlibs/mustek/mdc800.c:257
 msgid "Batteries are ok."
 msgstr "Batterierna är ok."
 
-#: camlibs/mustek/mdc800.c:260
+#: camlibs/mustek/mdc800.c:259
 msgid "Batteries are low."
 msgstr "Batterierna är låga."
 
-#: camlibs/mustek/mdc800.c:279
+#: camlibs/mustek/mdc800.c:278
 msgid ""
 "Mustek MDC-800 gPhoto2 Library\n"
 "Henning Zabel <henning@uni-paderborn.de>\n"
@@ -2844,7 +2853,7 @@ msgid ""
 " Filecount: %d"
 msgstr ""
 
-#: camlibs/pccam300/library.c:248 camlibs/pccam600/library.c:260
+#: camlibs/pccam300/library.c:248 camlibs/pccam600/library.c:250
 msgid "Manual Not Implemented Yet"
 msgstr "Manual inte implementerat ännu"
 
@@ -2857,11 +2866,11 @@ msgid ""
 " <mace@darksilence.net>"
 msgstr ""
 
-#: camlibs/pccam600/library.c:200
+#: camlibs/pccam600/library.c:190
 msgid "Downloading file..."
 msgstr "Nerladdning av fil..."
 
-#: camlibs/pccam600/library.c:267
+#: camlibs/pccam600/library.c:257
 msgid ""
 "Creative PC-CAM600\n"
 " Author: Peter Kajberg\n"
@@ -2870,6 +2879,31 @@ msgstr ""
 "Creative PC-CAM600\n"
 " Författare: Peter Kajberg\n"
 " e-post: <pbk@odense.kollegienet.dk>\n"
+
+#: camlibs/pccam600/pccam600.c:128 camlibs/pccam600/pccam600.c:157
+#, c-format
+msgid "pccam600_init:Expected > %d blocks got %d"
+msgstr ""
+
+#: camlibs/pccam600/pccam600.c:141
+#, c-format
+msgid "pccam600_get_file:got index %d but expected index > %d"
+msgstr ""
+
+#: camlibs/pccam600/pccam600.c:183
+#, c-format
+msgid "pccam600_close:return value was %d instead of %d"
+msgstr ""
+
+#: camlibs/pccam600/pccam600.c:217
+#, c-format
+msgid "pccam600_init:Expected %d blocks got %d"
+msgstr ""
+
+#: camlibs/pccam600/pccam600.c:228
+#, c-format
+msgid "pccam600 init:Unexpected error: gp_port_read returned %d instead of %d"
+msgstr ""
 
 #: camlibs/polaroid/pdc320.c:455
 msgid ""
@@ -2894,12 +2928,12 @@ msgid ""
 "Meissner <marcus@jet.franken.de>."
 msgstr ""
 
-#: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/ptp.c:1516
+#: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/ptp.c:1515
 msgid "Image Quality"
 msgstr "Bildkvalitet"
 
-#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptp.c:1463
-#: camlibs/ptp2/ptp.c:1517
+#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptp.c:1462
+#: camlibs/ptp2/ptp.c:1516
 msgid "Image Size"
 msgstr "Bildstorlek"
 
@@ -3056,167 +3090,167 @@ msgstr ""
 msgid "The requested port type (%i) is not supported by this driver."
 msgstr "Den begärda porttypen (%i) stöds ej av denna drivrutin."
 
-#: camlibs/ptp2/library.c:116
+#: camlibs/ptp2/library.c:117
 msgid "PTP Undefined Error"
 msgstr "PTP odefinierat fel"
 
-#: camlibs/ptp2/library.c:117
+#: camlibs/ptp2/library.c:118
 msgid "PTP OK!"
 msgstr "PTP OK!"
 
-#: camlibs/ptp2/library.c:118
+#: camlibs/ptp2/library.c:119
 msgid "PTP General Error"
 msgstr "PTP generellt fel"
 
-#: camlibs/ptp2/library.c:119
+#: camlibs/ptp2/library.c:120
 msgid "PTP Session Not Open"
 msgstr "PTP sessionen inte öppen"
 
-#: camlibs/ptp2/library.c:120
+#: camlibs/ptp2/library.c:121
 msgid "PTP Invalid Transaction ID"
 msgstr "PTP ogiltig transaktion"
 
-#: camlibs/ptp2/library.c:121
+#: camlibs/ptp2/library.c:122
 msgid "PTP Operation Not Supported"
 msgstr "PTP operationen stöds ej"
 
-#: camlibs/ptp2/library.c:122
+#: camlibs/ptp2/library.c:123
 msgid "PTP Parameter Not Supported"
 msgstr "PTP parameter stöds ej"
 
-#: camlibs/ptp2/library.c:123
+#: camlibs/ptp2/library.c:124
 msgid "PTP Incomplete Transfer"
 msgstr "PTP ofullständig överföring"
 
-#: camlibs/ptp2/library.c:124
+#: camlibs/ptp2/library.c:125
 msgid "PTP Invalid Storage ID"
 msgstr "PTP ogiltig lagrings ID"
 
-#: camlibs/ptp2/library.c:125
+#: camlibs/ptp2/library.c:126
 msgid "PTP Invalid Object Handle"
 msgstr "PTP ogiltigt objekt hantag"
 
-#: camlibs/ptp2/library.c:126
+#: camlibs/ptp2/library.c:127
 msgid "PTP Device Prop Not Supported"
 msgstr "PTP enhet egenskap stöds ej"
 
-#: camlibs/ptp2/library.c:127
+#: camlibs/ptp2/library.c:128
 msgid "PTP Invalid Object Format Code"
 msgstr "PTP ogiltigt objektformatkod"
 
-#: camlibs/ptp2/library.c:128
+#: camlibs/ptp2/library.c:129
 msgid "PTP Store Full"
 msgstr "PTP lagring full"
 
-#: camlibs/ptp2/library.c:129
+#: camlibs/ptp2/library.c:130
 msgid "PTP Object Write Protected"
 msgstr "PTP objekt skrivskyddat"
 
-#: camlibs/ptp2/library.c:130
+#: camlibs/ptp2/library.c:131
 msgid "PTP Store Read Only"
 msgstr "PTP lagring skrivskyddad"
 
-#: camlibs/ptp2/library.c:131
+#: camlibs/ptp2/library.c:132
 msgid "PTP Access Denied"
 msgstr "PTP åtkomst nekad"
 
-#: camlibs/ptp2/library.c:132
+#: camlibs/ptp2/library.c:133
 msgid "PTP No Thumbnail Present"
 msgstr "PTP ingen minibild tillgänglig"
 
-#: camlibs/ptp2/library.c:133
+#: camlibs/ptp2/library.c:134
 msgid "PTP Self Test Failed"
 msgstr "PTP självtest misslyckades"
 
-#: camlibs/ptp2/library.c:134
+#: camlibs/ptp2/library.c:135
 msgid "PTP Partial Deletion"
 msgstr "PTP delvis radering"
 
-#: camlibs/ptp2/library.c:135
+#: camlibs/ptp2/library.c:136
 msgid "PTP Store Not Available"
 msgstr "PTP lagring inte tillgänglig"
 
-#: camlibs/ptp2/library.c:137
+#: camlibs/ptp2/library.c:138
 msgid "PTP Specification By Format Unsupported"
 msgstr "PTP specifikation av format stöds ej"
 
-#: camlibs/ptp2/library.c:138
+#: camlibs/ptp2/library.c:139
 msgid "PTP No Valid Object Info"
 msgstr "PTP ingen giltig objekt information"
 
-#: camlibs/ptp2/library.c:139
+#: camlibs/ptp2/library.c:140
 msgid "PTP Invalid Code Format"
 msgstr "PTP ogiltig format kod"
 
-#: camlibs/ptp2/library.c:140
+#: camlibs/ptp2/library.c:141
 msgid "PTP Unknown Vendor Code"
 msgstr "PTP okänd tillvekarkod"
 
-#: camlibs/ptp2/library.c:142
+#: camlibs/ptp2/library.c:143
 msgid "PTP Capture Already Terminated"
 msgstr "PTP fotografering redan avslutad"
 
-#: camlibs/ptp2/library.c:143
+#: camlibs/ptp2/library.c:144
 msgid "PTP Device Bus"
 msgstr "PTP enhets buss"
 
-#: camlibs/ptp2/library.c:144
+#: camlibs/ptp2/library.c:145
 msgid "PTP Invalid Parent Object"
 msgstr "PTP ogiltigt förändra objekt"
 
-#: camlibs/ptp2/library.c:145
+#: camlibs/ptp2/library.c:146
 msgid "PTP Invalid Device Prop Format"
 msgstr "PTP ogiltig enhets parameter format"
 
-#: camlibs/ptp2/library.c:146
+#: camlibs/ptp2/library.c:147
 msgid "PTP Invalid Device Prop Value"
 msgstr "PTP ogiltigt enhets parameter värde"
 
-#: camlibs/ptp2/library.c:147
+#: camlibs/ptp2/library.c:148
 msgid "PTP Invalid Parameter"
 msgstr "PTP ogiltig parameter"
 
-#: camlibs/ptp2/library.c:148
+#: camlibs/ptp2/library.c:149
 msgid "PTP Session Already Opened"
 msgstr "PTP sessionen redan öppen"
 
-#: camlibs/ptp2/library.c:149
+#: camlibs/ptp2/library.c:150
 msgid "PTP Transaction Canceled"
 msgstr "PTP transaktionen avbruten"
 
-#: camlibs/ptp2/library.c:151
+#: camlibs/ptp2/library.c:152
 msgid "PTP Specification Of Destination Unsupported"
 msgstr "PTP specifikationen av mottagare stöds ej"
 
-#: camlibs/ptp2/library.c:152
+#: camlibs/ptp2/library.c:153
 msgid "PTP EK Filename Required"
 msgstr "PTP EK filnamn krävs"
 
-#: camlibs/ptp2/library.c:153
+#: camlibs/ptp2/library.c:154
 msgid "PTP EK Filename Conflicts"
 msgstr "PTP EK filnamns konflikt"
 
-#: camlibs/ptp2/library.c:154
+#: camlibs/ptp2/library.c:155
 msgid "PTP EK Filename Invalid"
 msgstr "PTP EK filnamn ogiltigt"
 
-#: camlibs/ptp2/library.c:156
+#: camlibs/ptp2/library.c:157
 msgid "PTP I/O error"
 msgstr "PTP I/O fel"
 
-#: camlibs/ptp2/library.c:157
+#: camlibs/ptp2/library.c:158
 msgid "PTP Error: bad parameter"
 msgstr "PTP fel: felaktig parameter"
 
-#: camlibs/ptp2/library.c:158
+#: camlibs/ptp2/library.c:159
 msgid "PTP Protocol error, data expected"
 msgstr "PTP protokollfel, data föråldrat"
 
-#: camlibs/ptp2/library.c:159
+#: camlibs/ptp2/library.c:160
 msgid "PTP Protocol error, response expected"
 msgstr "PTP protokollfel, svar förväntat"
 
-#: camlibs/ptp2/library.c:670
+#: camlibs/ptp2/library.c:685
 #, fuzzy
 msgid ""
 "PTP2 driver\n"
@@ -3224,35 +3258,35 @@ msgid ""
 "Enjoy!"
 msgstr "Skrivet av Mariusz Woloszyn <emsi@ipartners.pl>. Njut!"
 
-#: camlibs/ptp2/library.c:716
+#: camlibs/ptp2/library.c:731
 #, fuzzy
 msgid "Sorry, your camera does not support generic capture"
 msgstr "Din kamera stödjer inte ändring av filnamn."
 
-#: camlibs/ptp2/library.c:763
+#: camlibs/ptp2/library.c:778
 msgid "Capture command completed, but no confirmation received"
 msgstr ""
 
-#: camlibs/ptp2/library.c:770
+#: camlibs/ptp2/library.c:785
 #, c-format
 msgid "Received event 0x%04x"
 msgstr ""
 
-#: camlibs/ptp2/library.c:848
+#: camlibs/ptp2/library.c:863
 #, fuzzy
 msgid "read only"
 msgstr "redo"
 
-#: camlibs/ptp2/library.c:849
+#: camlibs/ptp2/library.c:864
 msgid "readwrite"
 msgstr ""
 
-#: camlibs/ptp2/library.c:850 camlibs/ptp2/library.c:852
+#: camlibs/ptp2/library.c:865 camlibs/ptp2/library.c:867
 #, fuzzy
 msgid "Unknown"
 msgstr "%i (okänd)"
 
-#: camlibs/ptp2/library.c:864
+#: camlibs/ptp2/library.c:879
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3262,264 +3296,302 @@ msgid ""
 "Vendor extension description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:976
-#, fuzzy
-msgid "Camera settings"
-msgstr "Kamerainställningar"
+#: camlibs/ptp2/library.c:1008 camlibs/ptp2/library.c:1025
+#: camlibs/ptp2/library.c:1059
+#, fuzzy, c-format
+msgid "unexpected datatype %i"
+msgstr "FEL: oväntad pakettyp."
 
-#: camlibs/ptp2/library.c:979 camlibs/ptp2/ptp.c:1533
+#: camlibs/ptp2/library.c:1295 camlibs/ptp2/ptp.c:1532
 #, fuzzy
 msgid "Camera Owner"
 msgstr "Kamera OK.\n"
 
-#: camlibs/ptp2/library.c:995 camlibs/ptp2/ptp.c:1531
+#: camlibs/ptp2/library.c:1296 camlibs/ptp2/ptp.c:1531
+#, fuzzy
+msgid "Camera Model"
+msgstr "%sKameramodell: %s\n"
+
+#: camlibs/ptp2/library.c:1297 camlibs/ptp2/ptp.c:1530
 #, fuzzy
 msgid "Flash Memory"
 msgstr "Blixt Läge"
 
-#: camlibs/ptp2/library.c:1027
+#: camlibs/ptp2/library.c:1298 camlibs/ptp2/library.c:1299
+#, fuzzy
+msgid "Camera Time"
+msgstr "Kamera"
+
+#: camlibs/ptp2/library.c:1300 camlibs/ptp2/ptp.c:1502 camlibs/ptp2/ptp.c:1513
+#, fuzzy
+msgid "Beep Mode"
+msgstr "LED-läge"
+
+#: camlibs/ptp2/library.c:1306 camlibs/ptp2/ptp.c:1536
+msgid "Assist Light"
+msgstr ""
+
+#: camlibs/ptp2/library.c:1307 camlibs/ptp2/ptp.c:1527
+#: camlibs/sierra/nikon-desc.c:425 camlibs/sierra/nikon-desc.c:448
+#: camlibs/sierra/olympus-desc.c:457
+msgid "Exposure Compensation"
+msgstr "Exponeringskompensation"
+
+#: camlibs/ptp2/library.c:1312 camlibs/sierra/epson-desc.c:282
+#: camlibs/sierra/nikon-desc.c:594 camlibs/sierra/olympus-desc.c:640
+#: camlibs/sierra/olympus-desc.c:690 camlibs/sierra/olympus-desc.c:704
+#: camlibs/sierra/sierra.c:1111 camlibs/sierra/sierra.c:1573
+msgid "Camera Settings"
+msgstr "Kamerainställningar"
+
+#: camlibs/ptp2/library.c:1313
+#, fuzzy
+msgid "Capture Settings"
+msgstr "Bildinställningar"
+
+#: camlibs/ptp2/library.c:1366
 #, fuzzy
 msgid "Number of values"
 msgstr "Antal bilder: %d\n"
 
-#: camlibs/ptp2/library.c:1031
+#: camlibs/ptp2/library.c:1370
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1039
+#: camlibs/ptp2/library.c:1378
 msgid "Current value"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1529
+#: camlibs/ptp2/library.c:1904
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "Stänger av kameran"
 
-#: camlibs/ptp2/library.c:1601
+#: camlibs/ptp2/library.c:1976
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP endast implementerat för USB kamror."
 
-#: camlibs/ptp2/ptp.c:1399
+#: camlibs/ptp2/ptp.c:1398
 #, fuzzy
 msgid "PTP: Undefined Error"
 msgstr "PTP odefinierat fel"
 
-#: camlibs/ptp2/ptp.c:1400
+#: camlibs/ptp2/ptp.c:1399
 #, fuzzy
 msgid "PTP: OK!"
 msgstr "PTP OK!"
 
-#: camlibs/ptp2/ptp.c:1401
+#: camlibs/ptp2/ptp.c:1400
 #, fuzzy
 msgid "PTP: General Error"
 msgstr "PTP generellt fel"
 
-#: camlibs/ptp2/ptp.c:1402
+#: camlibs/ptp2/ptp.c:1401
 #, fuzzy
 msgid "PTP: Session Not Open"
 msgstr "PTP sessionen inte öppen"
 
-#: camlibs/ptp2/ptp.c:1403
+#: camlibs/ptp2/ptp.c:1402
 #, fuzzy
 msgid "PTP: Invalid Transaction ID"
 msgstr "PTP ogiltig transaktion"
 
-#: camlibs/ptp2/ptp.c:1404
+#: camlibs/ptp2/ptp.c:1403
 #, fuzzy
 msgid "PTP: Operation Not Supported"
 msgstr "PTP operationen stöds ej"
 
-#: camlibs/ptp2/ptp.c:1405
+#: camlibs/ptp2/ptp.c:1404
 #, fuzzy
 msgid "PTP: Parameter Not Supported"
 msgstr "PTP parameter stöds ej"
 
-#: camlibs/ptp2/ptp.c:1406
+#: camlibs/ptp2/ptp.c:1405
 #, fuzzy
 msgid "PTP: Incomplete Transfer"
 msgstr "PTP ofullständig överföring"
 
-#: camlibs/ptp2/ptp.c:1407
+#: camlibs/ptp2/ptp.c:1406
 #, fuzzy
 msgid "PTP: Invalid Storage ID"
 msgstr "PTP ogiltig lagrings ID"
 
-#: camlibs/ptp2/ptp.c:1408
+#: camlibs/ptp2/ptp.c:1407
 #, fuzzy
 msgid "PTP: Invalid Object Handle"
 msgstr "PTP ogiltigt objekt hantag"
 
-#: camlibs/ptp2/ptp.c:1409
+#: camlibs/ptp2/ptp.c:1408
 #, fuzzy
 msgid "PTP: Device Prop Not Supported"
 msgstr "PTP enhet egenskap stöds ej"
 
-#: camlibs/ptp2/ptp.c:1410
+#: camlibs/ptp2/ptp.c:1409
 #, fuzzy
 msgid "PTP: Invalid Object Format Code"
 msgstr "PTP ogiltigt objektformatkod"
 
-#: camlibs/ptp2/ptp.c:1411
+#: camlibs/ptp2/ptp.c:1410
 #, fuzzy
 msgid "PTP: Store Full"
 msgstr "PTP lagring full"
 
-#: camlibs/ptp2/ptp.c:1412
+#: camlibs/ptp2/ptp.c:1411
 #, fuzzy
 msgid "PTP: Object Write Protected"
 msgstr "PTP objekt skrivskyddat"
 
-#: camlibs/ptp2/ptp.c:1413
+#: camlibs/ptp2/ptp.c:1412
 #, fuzzy
 msgid "PTP: Store Read Only"
 msgstr "PTP lagring skrivskyddad"
 
-#: camlibs/ptp2/ptp.c:1414
+#: camlibs/ptp2/ptp.c:1413
 #, fuzzy
 msgid "PTP: Access Denied"
 msgstr "PTP åtkomst nekad"
 
-#: camlibs/ptp2/ptp.c:1415
+#: camlibs/ptp2/ptp.c:1414
 #, fuzzy
 msgid "PTP: No Thumbnail Present"
 msgstr "PTP ingen minibild tillgänglig"
 
-#: camlibs/ptp2/ptp.c:1416
+#: camlibs/ptp2/ptp.c:1415
 #, fuzzy
 msgid "PTP: Self Test Failed"
 msgstr "PTP självtest misslyckades"
 
-#: camlibs/ptp2/ptp.c:1417
+#: camlibs/ptp2/ptp.c:1416
 #, fuzzy
 msgid "PTP: Partial Deletion"
 msgstr "PTP delvis radering"
 
-#: camlibs/ptp2/ptp.c:1418
+#: camlibs/ptp2/ptp.c:1417
 #, fuzzy
 msgid "PTP: Store Not Available"
 msgstr "PTP lagring inte tillgänglig"
 
-#: camlibs/ptp2/ptp.c:1420
+#: camlibs/ptp2/ptp.c:1419
 #, fuzzy
 msgid "PTP: Specification By Format Unsupported"
 msgstr "PTP specifikation av format stöds ej"
 
-#: camlibs/ptp2/ptp.c:1421
+#: camlibs/ptp2/ptp.c:1420
 #, fuzzy
 msgid "PTP: No Valid Object Info"
 msgstr "PTP ingen giltig objekt information"
 
-#: camlibs/ptp2/ptp.c:1422
+#: camlibs/ptp2/ptp.c:1421
 #, fuzzy
 msgid "PTP: Invalid Code Format"
 msgstr "PTP ogiltig format kod"
 
-#: camlibs/ptp2/ptp.c:1423
+#: camlibs/ptp2/ptp.c:1422
 #, fuzzy
 msgid "PTP: Unknown Vendor Code"
 msgstr "PTP okänd tillvekarkod"
 
-#: camlibs/ptp2/ptp.c:1425
+#: camlibs/ptp2/ptp.c:1424
 #, fuzzy
 msgid "PTP: Capture Already Terminated"
 msgstr "PTP fotografering redan avslutad"
 
-#: camlibs/ptp2/ptp.c:1426
+#: camlibs/ptp2/ptp.c:1425
 #, fuzzy
 msgid "PTP: Device Bus"
 msgstr "PTP enhets buss"
 
-#: camlibs/ptp2/ptp.c:1427
+#: camlibs/ptp2/ptp.c:1426
 #, fuzzy
 msgid "PTP: Invalid Parent Object"
 msgstr "PTP ogiltigt förändra objekt"
 
-#: camlibs/ptp2/ptp.c:1428
+#: camlibs/ptp2/ptp.c:1427
 #, fuzzy
 msgid "PTP: Invalid Device Prop Format"
 msgstr "PTP ogiltig enhets parameter format"
 
-#: camlibs/ptp2/ptp.c:1429
+#: camlibs/ptp2/ptp.c:1428
 #, fuzzy
 msgid "PTP: Invalid Device Prop Value"
 msgstr "PTP ogiltigt enhets parameter värde"
 
-#: camlibs/ptp2/ptp.c:1430
+#: camlibs/ptp2/ptp.c:1429
 #, fuzzy
 msgid "PTP: Invalid Parameter"
 msgstr "PTP ogiltig parameter"
 
-#: camlibs/ptp2/ptp.c:1431
+#: camlibs/ptp2/ptp.c:1430
 #, fuzzy
 msgid "PTP: Session Already Opened"
 msgstr "PTP sessionen redan öppen"
 
-#: camlibs/ptp2/ptp.c:1432
+#: camlibs/ptp2/ptp.c:1431
 #, fuzzy
 msgid "PTP: Transaction Canceled"
 msgstr "PTP transaktionen avbruten"
 
-#: camlibs/ptp2/ptp.c:1434
+#: camlibs/ptp2/ptp.c:1433
 #, fuzzy
 msgid "PTP: Specification Of Destination Unsupported"
 msgstr "PTP specifikationen av mottagare stöds ej"
 
-#: camlibs/ptp2/ptp.c:1435
+#: camlibs/ptp2/ptp.c:1434
 #, fuzzy
 msgid "PTP: EK Filename Required"
 msgstr "PTP EK filnamn krävs"
 
-#: camlibs/ptp2/ptp.c:1436
+#: camlibs/ptp2/ptp.c:1435
 #, fuzzy
 msgid "PTP: EK Filename Conflicts"
 msgstr "PTP EK filnamns konflikt"
 
-#: camlibs/ptp2/ptp.c:1437
+#: camlibs/ptp2/ptp.c:1436
 #, fuzzy
 msgid "PTP: EK Filename Invalid"
 msgstr "PTP EK filnamn ogiltigt"
 
-#: camlibs/ptp2/ptp.c:1439
+#: camlibs/ptp2/ptp.c:1438
 #, fuzzy
 msgid "PTP: I/O error"
 msgstr "PTP I/O fel"
 
-#: camlibs/ptp2/ptp.c:1440
+#: camlibs/ptp2/ptp.c:1439
 #, fuzzy
 msgid "PTP: Error: bad parameter"
 msgstr "PTP fel: felaktig parameter"
 
-#: camlibs/ptp2/ptp.c:1441
+#: camlibs/ptp2/ptp.c:1440
 #, fuzzy
 msgid "PTP: Protocol error, data expected"
 msgstr "PTP protokollfel, data föråldrat"
 
-#: camlibs/ptp2/ptp.c:1442
+#: camlibs/ptp2/ptp.c:1441
 #, fuzzy
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP protokollfel, svar förväntat"
 
-#: camlibs/ptp2/ptp.c:1460
+#: camlibs/ptp2/ptp.c:1459
 #, fuzzy
 msgid "PTP Undefined Property"
 msgstr "PTP odefinierat fel"
 
-#: camlibs/ptp2/ptp.c:1461
+#: camlibs/ptp2/ptp.c:1460
 #, fuzzy
 msgid "Battery Level"
 msgstr "%sBatteritid: %i\n"
 
-#: camlibs/ptp2/ptp.c:1462
+#: camlibs/ptp2/ptp.c:1461
 #, fuzzy
 msgid "Functional Mode"
 msgstr "Operationsläge."
 
-#: camlibs/ptp2/ptp.c:1464
+#: camlibs/ptp2/ptp.c:1463
 #, fuzzy
 msgid "Compression Setting"
 msgstr "Kompression"
 
-#: camlibs/ptp2/ptp.c:1465 camlibs/ptp2/ptp.c:1524
+#: camlibs/ptp2/ptp.c:1464 camlibs/ptp2/ptp.c:1523
 #: camlibs/sierra/epson-desc.c:176 camlibs/sierra/nikon-desc.c:259
 #: camlibs/sierra/olympus-desc.c:300 camlibs/sierra/olympus-desc.c:319
 #: camlibs/sierra/sierra.c:1009 camlibs/sierra/sierra.c:1292
@@ -3527,299 +3599,280 @@ msgstr "Kompression"
 msgid "White Balance"
 msgstr "Vitbalans"
 
-#: camlibs/ptp2/ptp.c:1466
+#: camlibs/ptp2/ptp.c:1465
 msgid "RGB Gain"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1467
+#: camlibs/ptp2/ptp.c:1466
 msgid "F-Number"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1468
+#: camlibs/ptp2/ptp.c:1467
 msgid "Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1469
+#: camlibs/ptp2/ptp.c:1468
 #, fuzzy
 msgid "Focus Distance"
 msgstr "Fokusläge"
 
-#: camlibs/ptp2/ptp.c:1470 camlibs/sierra/nikon-desc.c:297
+#: camlibs/ptp2/ptp.c:1469 camlibs/sierra/nikon-desc.c:297
 #: camlibs/sierra/olympus-desc.c:335
 msgid "Focus Mode"
 msgstr "Fokusläge"
 
-#: camlibs/ptp2/ptp.c:1471
+#: camlibs/ptp2/ptp.c:1470
 #, fuzzy
 msgid "Exposure Metering Mode"
 msgstr "Exponeringsmätning"
 
-#: camlibs/ptp2/ptp.c:1472 camlibs/ptp2/ptp.c:1518 camlibs/sierra/sierra.c:948
+#: camlibs/ptp2/ptp.c:1471 camlibs/ptp2/ptp.c:1517 camlibs/sierra/sierra.c:948
 #: camlibs/sierra/sierra.c:1249 camlibs/sierra/sierra.c:1458
 #: camlibs/sierra/sierra.c:1689
 msgid "Flash Mode"
 msgstr "Blixt Läge"
 
-#: camlibs/ptp2/ptp.c:1473
+#: camlibs/ptp2/ptp.c:1472
 #, fuzzy
 msgid "Exposure Time"
 msgstr "Exponering med bollslutare"
 
-#: camlibs/ptp2/ptp.c:1474
+#: camlibs/ptp2/ptp.c:1473
 #, fuzzy
 msgid "Exposure Program Mode"
 msgstr "Exponeringsmätning"
 
-#: camlibs/ptp2/ptp.c:1476
+#: camlibs/ptp2/ptp.c:1475
 msgid "Exposure Index (film speed ISO)"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1478
+#: camlibs/ptp2/ptp.c:1477
 #, fuzzy
 msgid "Exposure Bias Compensation"
 msgstr "Exponeringskompensation"
 
-#: camlibs/ptp2/ptp.c:1479
+#: camlibs/ptp2/ptp.c:1478
 #, fuzzy
 msgid "Date Time"
 msgstr "Datum & Tid"
 
-#: camlibs/ptp2/ptp.c:1480
+#: camlibs/ptp2/ptp.c:1479
 msgid "Pre-Capture Delay"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1481
+#: camlibs/ptp2/ptp.c:1480
 msgid "Still Capture Mode"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1482
+#: camlibs/ptp2/ptp.c:1481
 #, fuzzy
 msgid "Contrast"
 msgstr "Kontrast-"
 
-#: camlibs/ptp2/ptp.c:1484 camlibs/sierra/nikon-desc.c:519
+#: camlibs/ptp2/ptp.c:1483 camlibs/sierra/nikon-desc.c:519
 #: camlibs/sierra/nikon-desc.c:542
 msgid "Digital Zoom"
 msgstr "Digital Zoom"
 
-#: camlibs/ptp2/ptp.c:1485
+#: camlibs/ptp2/ptp.c:1484
 #, fuzzy
 msgid "Effect Mode"
 msgstr "Inspelningsläge"
 
-#: camlibs/ptp2/ptp.c:1486
+#: camlibs/ptp2/ptp.c:1485
 msgid "Burst Number"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1487
+#: camlibs/ptp2/ptp.c:1486
 msgid "Burst Interval"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1488
+#: camlibs/ptp2/ptp.c:1487
 msgid "Timelapse Number"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1489
+#: camlibs/ptp2/ptp.c:1488
 msgid "Timelapse Interval"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1490
+#: camlibs/ptp2/ptp.c:1489
 #, fuzzy
 msgid "Focus Metering Mode"
 msgstr "Punktmätningsläge"
 
-#: camlibs/ptp2/ptp.c:1491
+#: camlibs/ptp2/ptp.c:1490
 msgid "Upload URL"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1492
+#: camlibs/ptp2/ptp.c:1491
 msgid "Artist"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1493
+#: camlibs/ptp2/ptp.c:1492
 #, fuzzy
 msgid "Copyright Info"
 msgstr "Copyright"
 
-#: camlibs/ptp2/ptp.c:1500
+#: camlibs/ptp2/ptp.c:1499
 msgid "Color Temperature"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1502
+#: camlibs/ptp2/ptp.c:1501
 #, fuzzy
 msgid "Date Time Stamp Format"
 msgstr "Datumformat"
 
-#: camlibs/ptp2/ptp.c:1503 camlibs/ptp2/ptp.c:1514
-#, fuzzy
-msgid "Beep Mode"
-msgstr "LED-läge"
-
-#: camlibs/ptp2/ptp.c:1504
+#: camlibs/ptp2/ptp.c:1503
 msgid "Video Out"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1505
+#: camlibs/ptp2/ptp.c:1504
 #, fuzzy
 msgid "Power Saving"
 msgstr "EJ extraljus"
 
-#: camlibs/ptp2/ptp.c:1506
+#: camlibs/ptp2/ptp.c:1505
 #, fuzzy
 msgid "UI Language"
 msgstr "Språk"
 
-#: camlibs/ptp2/ptp.c:1515
+#: camlibs/ptp2/ptp.c:1514
 msgid "Viewfinder Mode"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1520
+#: camlibs/ptp2/ptp.c:1519
 msgid "TV A/V Setting"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1521
+#: camlibs/ptp2/ptp.c:1520
 #, fuzzy
 msgid "Metering Mode"
 msgstr "Punktmätningsläge"
 
-#: camlibs/ptp2/ptp.c:1522
+#: camlibs/ptp2/ptp.c:1521
 #, fuzzy
 msgid "Macro Mode"
 msgstr "Inspelningsläge"
 
-#: camlibs/ptp2/ptp.c:1523
+#: camlibs/ptp2/ptp.c:1522
 #, fuzzy
 msgid "Focusing Point"
 msgstr "Fokuseringsfel."
 
-#: camlibs/ptp2/ptp.c:1525 camlibs/sierra/olympus-desc.c:538
+#: camlibs/ptp2/ptp.c:1524 camlibs/sierra/olympus-desc.c:538
 msgid "ISO Speed"
 msgstr "ISO hastighet"
 
-#: camlibs/ptp2/ptp.c:1526 camlibs/sierra/sierra.c:888
+#: camlibs/ptp2/ptp.c:1525 camlibs/sierra/sierra.c:888
 #: camlibs/sierra/sierra.c:1209 camlibs/sierra/sierra.c:1424
 #: camlibs/sierra/sierra.c:1665
 msgid "Aperture"
 msgstr "Bländare"
 
-#: camlibs/ptp2/ptp.c:1527
+#: camlibs/ptp2/ptp.c:1526
 #, fuzzy
 msgid "ShutterSpeed"
 msgstr "Slutartid sekunder (0 auto)"
 
-#: camlibs/ptp2/ptp.c:1528 camlibs/sierra/nikon-desc.c:425
-#: camlibs/sierra/nikon-desc.c:448 camlibs/sierra/olympus-desc.c:457
-msgid "Exposure Compensation"
-msgstr "Exponeringskompensation"
-
-#: camlibs/ptp2/ptp.c:1530
+#: camlibs/ptp2/ptp.c:1529
 #, fuzzy
 msgid "Size Quality Mode"
 msgstr "Bildkvalitet"
 
-#: camlibs/ptp2/ptp.c:1532
-#, fuzzy
-msgid "Camera Model"
-msgstr "%sKameramodell: %s\n"
-
-#: camlibs/ptp2/ptp.c:1534
+#: camlibs/ptp2/ptp.c:1533
 msgid "UNIX Time"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1535
+#: camlibs/ptp2/ptp.c:1534
 #, fuzzy
 msgid "Real Image Width"
 msgstr "Bildbredd: %d\n"
 
-#: camlibs/ptp2/ptp.c:1536
+#: camlibs/ptp2/ptp.c:1535
 msgid "Photo Effect"
 msgstr ""
 
-#: camlibs/ptp2/ptp.c:1537
-msgid "Assist Light"
-msgstr ""
-
-#: camlibs/ricoh/g3.c:291
+#: camlibs/ricoh/g3.c:297
 #, fuzzy
 msgid "Downloading movie..."
 msgstr "Nerladdning av fil..."
 
-#: camlibs/ricoh/g3.c:297
+#: camlibs/ricoh/g3.c:303
 #, fuzzy
 msgid "Downloading audio..."
 msgstr "Nerladdning..."
 
-#: camlibs/ricoh/g3.c:312
+#: camlibs/ricoh/g3.c:318
 #, fuzzy
 msgid "Downloading EXIF data..."
 msgstr "Nerladdning av data..."
 
-#: camlibs/ricoh/g3.c:314 camlibs/ricoh/g3.c:333
+#: camlibs/ricoh/g3.c:320 camlibs/ricoh/g3.c:339
 #, fuzzy, c-format
 msgid "No EXIF data available for %s."
 msgstr "ej tillgänglig: %s"
 
-#: camlibs/ricoh/g3.c:419
+#: camlibs/ricoh/g3.c:425
 #, fuzzy
 msgid "Could not delete file."
 msgstr "Kunde inte hitta filen '%s'."
 
-#: camlibs/ricoh/g3.c:446
+#: camlibs/ricoh/g3.c:452
 #, fuzzy
 msgid "Could not remove directory."
 msgstr "Kunde inte skapa \\DCIM-katalogen."
 
-#: camlibs/ricoh/g3.c:473
+#: camlibs/ricoh/g3.c:479
 #, fuzzy
 msgid "Could not create directory."
 msgstr "Kunde inte skapa \\DCIM-katalogen."
 
-#: camlibs/ricoh/g3.c:492
+#: camlibs/ricoh/g3.c:498
 #, fuzzy, c-format
 msgid "Version: %s\n"
 msgstr "Version: "
 
-#: camlibs/ricoh/g3.c:497
+#: camlibs/ricoh/g3.c:503
 #, fuzzy, c-format
 msgid "RTC Status: %d\n"
 msgstr "Kortstatus:\t\t"
 
-#: camlibs/ricoh/g3.c:503
+#: camlibs/ricoh/g3.c:509
 #, fuzzy, c-format
 msgid "Camera time: %s %s\n"
 msgstr "%sKamera ID: %s\n"
 
-#: camlibs/ricoh/g3.c:509
+#: camlibs/ricoh/g3.c:515
 #, fuzzy, c-format
 msgid "Camera ID: %s\n"
 msgstr "%sKamera ID: %s\n"
 
-#: camlibs/ricoh/g3.c:515
-#, fuzzy, c-format
+#: camlibs/ricoh/g3.c:521
+#, fuzzy
 msgid "No SD Card inserted.\n"
 msgstr "Kort stöds ej."
 
-#: camlibs/ricoh/g3.c:518
+#: camlibs/ricoh/g3.c:524
 #, fuzzy, c-format
 msgid "SD Card ID: %s\n"
 msgstr "%sKamera ID: %s\n"
 
-#: camlibs/ricoh/g3.c:526
+#: camlibs/ricoh/g3.c:532
 #, fuzzy, c-format
 msgid "Photos on camera: %d\n"
 msgstr "Minne i kameran: %d Mbit.\n"
 
-#: camlibs/ricoh/g3.c:532
+#: camlibs/ricoh/g3.c:538
 #, c-format
 msgid "SD memory: %d MB total, %d MB free.\n"
 msgstr ""
 
-#: camlibs/ricoh/g3.c:539
+#: camlibs/ricoh/g3.c:545
 #, c-format
 msgid "Internal memory: %d MB total, %d MB free.\n"
 msgstr ""
 
-#: camlibs/ricoh/g3.c:549
+#: camlibs/ricoh/g3.c:555
 msgid ""
 "Ricoh Caplio G3.\n"
 "Marcus Meissner <marcus@jet.franken.de>\n"
@@ -4203,13 +4256,6 @@ msgstr "Portugiska"
 #: camlibs/sierra/sierra.c:1506
 msgid "Picture Settings"
 msgstr "Bildinställningar"
-
-#: camlibs/sierra/epson-desc.c:282 camlibs/sierra/nikon-desc.c:594
-#: camlibs/sierra/olympus-desc.c:640 camlibs/sierra/olympus-desc.c:690
-#: camlibs/sierra/olympus-desc.c:704 camlibs/sierra/sierra.c:1111
-#: camlibs/sierra/sierra.c:1573
-msgid "Camera Settings"
-msgstr "Kamerainställningar"
 
 #: camlibs/sierra/epson-desc.c:289
 #, fuzzy
@@ -5042,17 +5088,14 @@ msgid "Sorry, taking pictures is not implemented..."
 msgstr "Ledsen, att ta bilder är inte implementerat..."
 
 #: camlibs/sonydscf1/dsc_f1.c:152
-#, c-format
 msgid "Couldn't open camera.\n"
 msgstr "Kunde inte öppna kameran.\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:166
-#, c-format
 msgid "Error opening camera\n"
 msgstr "Fel vid öppning av kamera\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:171
-#, c-format
 msgid "Picture number is too large.\n"
 msgstr "Bildnumret är för stort.\n"
 
@@ -5075,7 +5118,6 @@ msgstr ""
 "Detta lib kanske inte fungerar. YMMV\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:187 camlibs/sonydscf1/dsc_f1.c:188
-#, c-format
 msgid "Error opening camera.\n"
 msgstr "Fel vid öppning av kameran.\n"
 
@@ -5172,7 +5214,7 @@ msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
 msgstr ""
 "Porttypen stöds ej: %d. Denna drivrutin fungerar bara med USB kamror.\n"
 
-#: camlibs/sq905/library.c:117
+#: camlibs/sq905/library.c:120
 #, c-format
 msgid ""
 "Your USB camera has a S&Q chipset.\n"
@@ -5181,14 +5223,14 @@ msgid ""
 "several frames\n"
 msgstr ""
 
-#: camlibs/sq905/library.c:131
+#: camlibs/sq905/library.c:134
 msgid ""
 "For cameras with S&Q Technologies chip.\n"
 "Should work with gtkam. Photos will be saved in PPM format.\n"
 "\n"
 "All known S&Q cameras have two resolution settings. What\n"
 "those are, will depend on your particular camera.\n"
-"A few of these cameras allow deletion of photos. Most do not.\n"
+"A few of these cameras allow deletion of all photos. Most do not.\n"
 "Uploading of data to the camera is not supported.\n"
 "The photo compression mode found on many of the S&Q\n"
 "cameras is supported, to some extent.\n"
@@ -5203,7 +5245,7 @@ msgid ""
 "choose to save clip frames in separate directories. or not.\n"
 msgstr ""
 
-#: camlibs/sq905/library.c:159
+#: camlibs/sq905/library.c:162
 msgid ""
 "sq905 generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -5320,7 +5362,7 @@ msgstr "Minibildhöjd: %d\n"
 msgid "Thumbnail size: %d\n"
 msgstr "Minibildstorlek: %d\n"
 
-#: camlibs/stv0680/stv0680.c:268
+#: camlibs/stv0680/stv0680.c:270
 msgid ""
 "STV0680\n"
 "Adam Harrison <adam@antispin.org>\n"
@@ -5360,20 +5402,25 @@ msgid ""
 "Toshiba pdr-m11 driver.\n"
 msgstr ""
 
-#: libgphoto2/gphoto2-abilities-list.c:181
-#: libgphoto2/gphoto2-abilities-list.c:278
+#: libgphoto2/gphoto2-abilities-list.c:183
+#: libgphoto2/gphoto2-abilities-list.c:280
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "Laddar kamera-drivrutiner från '%s'..."
 
-#: libgphoto2/gphoto2-abilities-list.c:266
+#: libgphoto2/gphoto2-abilities-list.c:268
 #, c-format
 msgid "Could not open '%s'"
 msgstr "Kunde inte öppna '%s'"
 
-#: libgphoto2/gphoto2-abilities-list.c:698
+#: libgphoto2/gphoto2-abilities-list.c:725
 #, c-format
 msgid "Could not find any driver for '%s'"
+msgstr "Kunde inte finna någon drivrutin för '%s'"
+
+#: libgphoto2/gphoto2-abilities-list.c:755
+#, fuzzy, c-format
+msgid "Could not find any driver for '%s' / '%s'"
 msgstr "Kunde inte finna någon drivrutin för '%s'"
 
 #: libgphoto2/gphoto2-camera.c:81
@@ -5604,6 +5651,10 @@ msgstr "Okänt kamerabiblioteksfel"
 #: libgphoto2/gphoto2-result.c:83
 msgid "Unknown error"
 msgstr "Okänt fel"
+
+#, fuzzy
+#~ msgid "Camera settings"
+#~ msgstr "Kamerainställningar"
 
 #, fuzzy
 #~ msgid "No thumbnail could be found for %s"
