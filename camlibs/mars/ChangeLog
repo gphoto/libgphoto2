@@ -1,3 +1,14 @@
+2004-10-26  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: ID for Haimei HE-501A, reported by
+		     Scott MacKenzie <irrational@poboxes.com>  
+		     ID for Elta Medi@ digicam, reported by
+		     Nils Naumann, <nau@gmx.net>
+		     Support patch submitted by Scott, tested by Nils.
+	* mars.c:    Scott's patch applied. 
+	* protocol.txt: byte codes for new 352x288 and 176x144 resolution 
+			settings recorded; section "UPDATES and REVISIONS" added. 	     
+
+
 2004-09-04  Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: Vivitar Vivicam 55 added. Credits to 
 		     Sebastien Soilen <sebastien@soilen.net>
