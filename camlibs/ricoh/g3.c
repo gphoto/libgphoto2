@@ -717,7 +717,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 		for (n=0;n < len/32;n++) {
 			if (buf[n*32+11] == 0x20) {
-				char xfn[12];
+				char xfn[13];
 
 				strcpy(xfn, buf+n*32);
 				xfn[8] = '.';
