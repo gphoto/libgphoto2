@@ -85,7 +85,6 @@ int gp_file_copy           (CameraFile *destination, CameraFile *source);
  */
 typedef enum {
 	GP_FILE_CONVERSION_METHOD_CHUCK,
-	GP_FILE_CONVERSION_METHOD_JOHANNES
 } CameraFileConversionMethod;
 
 int gp_file_set_color_table  (CameraFile *file,
