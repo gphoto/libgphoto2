@@ -549,6 +549,7 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder,
  * @fs: a #CameraFilesystem
  * @folder: the folder where to put the file in
  * @filename: filename of the file
+ * @context: a #GPContext
  *
  * Tells the @fs that there is a file called @filename in folder 
  * called @folder. Usually, camera drivers will call this function after
@@ -699,6 +700,7 @@ gp_filesystem_delete_all_one_by_one (CameraFilesystem *fs, const char *folder,
  * gp_filesystem_delete_all
  * @fs: a #CameraFilesystem
  * @folder: the folder in which to delete all files
+ * @context: a #GPContext
  *
  * Deletes all files in the given @folder from the @fs. If the @fs has not
  * been supplied with a delete_all_func, it tries to delete the files
@@ -761,6 +763,7 @@ gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,
  * @fs: a #CameraFilesystem
  * @folder: a folder of which a file list should be generated
  * @list: a #CameraList where to put the list of files into
+ * @context: a #GPContext
  *
  * Lists the files in @folder using either cached values or (if there
  * aren't any) the file_list_func which (hopefully) has been previously
@@ -823,6 +826,7 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
  * @fs: a #CameraFilesystem
  * @folder: a folder
  * @list: a #CameraList where subfolders should be listed
+ * @context: a #GPContext
  *
  * Generates a list of subfolders of the supplied @folder either using 
  * cached values (if there are any) or the folder_list_func if it has been 
@@ -917,6 +921,7 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
  * gp_filesystem_count:
  * @fs: a #CameraFilesystem
  * @folder: a folder in which to count the files
+ * @context: a #GPContext
  *
  * Counts the files in the @folder.
  *
@@ -942,6 +947,7 @@ gp_filesystem_count (CameraFilesystem *fs, const char *folder,
  * @fs: a #CameraFilesystem
  * @folder: a folder in which to delete the file
  * @filename: the name of the file to delete
+ * @context: a #GPContext
  *
  * If a delete_file_func has been supplied to the @fs, this function will
  * be called and, if this function returns without error, the file will be 
@@ -1002,6 +1008,7 @@ gp_filesystem_delete_file_noop (CameraFilesystem *fs, const char *folder,
  * @fs: a #CameraFilesystem
  * @folder: the folder in which the directory should be created
  * @name: the name of the directory to be created
+ * @context: a #GPContext
  *
  * Creates a new directory called @name in given @folder.
  *
@@ -1087,6 +1094,7 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
  * @fs: a #CameraFilesystem
  * @folder: the folder where to put the @file into
  * @file: the file
+ * @context: a #GPContext
  *
  * Uploads a file to the camera if a put_file_func has been previously 
  * supplied to the @fs. If the upload is successful, the file will get
@@ -1127,6 +1135,7 @@ gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
  * @folder: the folder where to look up the file with the @filenumber
  * @filenumber: the number of the file
  * @filename:
+ * @context: a #GPContext
  *
  * Looks up the @filename of file with given @filenumber in given @folder.
  * See gp_filesystem_number for exactly the opposite functionality.
@@ -1161,6 +1170,7 @@ gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
  * @fs: a #CameraFilesystem
  * @folder: the folder where to look for file called @filename
  * @filename: the file to look for
+ * @context: a #GPContext
  *
  * Looks for a file called @filename in the given @folder. See
  * gp_filesystem_name for exactly the opposite functionality.
@@ -1240,6 +1250,7 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
  * @fs: a #CameraFilesystem
  * @filename: the name of the file to search in the @fs
  * @folder:
+ * @context: a #GPContext
  *
  * Searches a file called @filename in the @fs and returns the first 
  * occurrency. This functionality is needed for camera drivers that cannot
@@ -1461,6 +1472,7 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
  * @filename: the name of the file to download
  * @type: the type of the file
  * @file:
+ * @context: a #GPContext
  *
  * Downloads the file called @filename from the @folder using the 
  * get_file_func if such a function has been previously supplied. If the 
@@ -1618,6 +1630,7 @@ gp_filesystem_set_info_funcs (CameraFilesystem *fs,
  * @folder:
  * @filename:
  * @info:
+ * @context: a #GPContext
  *
  * Return value: a gphoto2 error code.
  **/
@@ -1681,6 +1694,7 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
  * @fs: a #CameraFilesystem
  * @folder:
  * @file: a #CameraFile
+ * @context: a #GPContext
  *
  * Tells the @fs about a file. Typically, camera drivers will call this
  * function in case they get information about a file (i.e. preview) "for free"
@@ -1776,6 +1790,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
  * @fs: a #CameraFilesystem
  * @folder:
  * @info:
+ * @context: a #GPContext
  *
  * In contrast to #gp_filesystem_set_info, #gp_filesystem_set_info_noop
  * will only change the file information in the @fs. Typically, camera
@@ -1810,6 +1825,7 @@ gp_filesystem_set_info_noop (CameraFilesystem *fs, const char *folder,
  * @folder:
  * @filename:
  * @info:
+ * @context: a #GPContext
  *
  * Return value: a gphoto2 error code.
  **/

@@ -242,6 +242,7 @@ struct _CameraPrivateCore {
 /**
  * gp_camera_exit:
  * @camera: a #Camera
+ * @context: a #GPContext
  *
  * Closes a connection to the camera and therefore gives other application
  * the possibility to access the camera, too. It is recommended that you 
@@ -603,6 +604,7 @@ gp_camera_free (Camera *camera)
 /**
  * gp_camera_init:
  * @camera: a #camera
+ * @context: a #GPContext
  *
  * Initiates a connection to the camera. Before calling this function, the
  * @camera should be set up using #gp_camera_set_port_path or
@@ -767,6 +769,7 @@ gp_camera_init (Camera *camera, GPContext *context)
  * gp_camera_get_config:
  * @camera: a #Camera
  * @window:
+ * @context: a #GPContext
  *
  * Retrieves a configuration @window for the @camera. This window can be
  * used for construction of a configuration dialog.
@@ -797,6 +800,7 @@ gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
  * gp_camera_set_config:
  * @camera: a #Camera
  * @window: a #CameraWidget
+ * @context: a #GPContext
  *
  * Sets the configuration. Typically, a @window is retrieved using
  * #gp_camera_get_config and passed to this function in order to adjust
@@ -828,6 +832,7 @@ gp_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
  * gp_camera_get_summary:
  * @camera: a #Camera
  * @summary: a #CameraText
+ * @context: a #GPContext
  *
  * Retrieves a camera @summary. This summary typically contains information
  * like manufacturer, pictures taken, or generally information that is
@@ -859,6 +864,7 @@ gp_camera_get_summary (Camera *camera, CameraText *summary, GPContext *context)
  * gp_camera_get_manual:
  * @camera: a #Camera
  * @manual: a #CameraText
+ * @context: a #GPContext
  *
  * Retrieves the @manual for given @camera. This manual typically contains
  * information about using the camera.
@@ -889,6 +895,7 @@ gp_camera_get_manual (Camera *camera, CameraText *manual, GPContext *context)
  * gp_camera_get_about:
  * @camera: a #Camera
  * @about: a #CameraText
+ * @context: a #GPContext
  *
  * Retrieves information about the camera driver. Typically, this information
  * contains name and address of the author, acknowledgements, etc.
@@ -920,6 +927,7 @@ gp_camera_get_about (Camera *camera, CameraText *about, GPContext *context)
  * @camera: a #Camera
  * @type: a #CameraCaptureType
  * @path: a #CameraFilePath
+ * @context: a #GPContext
  *
  * Captures an image, movie, or sound clip depending on the given @type.
  * The resulting file will be stored on the camera. The location gets stored
@@ -951,6 +959,7 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
  * gp_camera_capture_preview:
  * @camera: a #Camera
  * @file: a #CameraFile
+ * @context: a #GPContext
  *
  * Captures a preview that won't be stored on the camera but returned in 
  * supplied @file. For example, you could use #gp_capture_preview for 
@@ -985,6 +994,7 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
  * @camera: a #Camera
  * @folder: a folder
  * @list: a #CameraList
+ * @context: a #GPContext
  *
  * Lists the files in supplied @folder.
  *
@@ -1014,6 +1024,7 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
  * @camera: a #Camera
  * @folder: a folder
  * @list: a #CameraList
+ * @context: a #GPContext
  *
  * Lists the folders in supplied @folder.
  *
@@ -1042,6 +1053,7 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
  * gp_camera_folder_delete_all:
  * @camera: a #Camera
  * @folder: a folder
+ * @context: a #GPContext
  *
  * Deletes all files in a given @folder.
  *
@@ -1069,6 +1081,7 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder,
  * @camera: a #Camera
  * @folder: a folder
  * @file: a #CameraFile
+ * @context: a #GPContext
  *
  * Uploads a file into given @folder.
  *
@@ -1097,6 +1110,7 @@ gp_camera_folder_put_file (Camera *camera, const char *folder,
  * @folder: a folder
  * @file: the name of the file
  * @info:
+ * @context: a #GPContext
  *
  * Retrieves information about a @file.
  *
@@ -1168,6 +1182,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
  * @folder: a folder
  * @file: the name of a file
  * @info: the #CameraFileInfo
+ * @context: a #GPContext
  *
  * Sets some file properties like name or permissions.
  *
@@ -1195,6 +1210,7 @@ gp_camera_file_set_info (Camera *camera, const char *folder,
  * @file: the name of a file
  * @type: the #CameraFileType
  * @camera_file: a #CameraFile
+ * @context: a #GPContext
  *
  * Retrieves a @file from the @camera.
  *
@@ -1235,6 +1251,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
  * @camera: a #Camera
  * @folder: a folder
  * @file: the name of a file
+ * @context: a #GPContext
  *
  * Deletes the @file from a @folder.
  *
@@ -1262,6 +1279,7 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file,
  * @camera: a #Camera
  * @folder: the location where to create the new directory
  * @name: the name of the directory to be created
+ * @context: a #GPContext
  *
  * Creates a new directory called @name in given @folder.
  *
@@ -1286,6 +1304,7 @@ gp_camera_folder_make_dir (Camera *camera, const char *folder,
  * @camera: a #Camera
  * @folder: the folder from which to remove the directory
  * @name: the name of the directory to be removed
+ * @context: a #GPContext
  *
  * Removes an (empty) directory called @name from the given @folder.
  *
