@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * File: serial.c 
+ * File: serial.c
  *
  * Serial communication layer.
  *
@@ -27,8 +27,8 @@
 
 
 /****  new stuff ********/
-#include <gpio/gpio.h>
-extern struct Model *camera_model;  
+#include <gpio.h>
+extern struct Model *camera_model;
 int gpio_usb_find_device(int idvendor, int idproduct, struct usb_device **device);
 int gpio_usb_msg_write(gpio_device *dev, int value, char *bytes, int size);
 int gpio_usb_msg_read(gpio_device *dev, int value, char *bytes, int size);
@@ -75,11 +75,11 @@ int canon_serial_change_speed(int speed)
   settings.serial.speed = speed;
   gpio_set_settings(iodev, settings);
 
-	usleep(70000);
+        usleep(70000);
 
     return 1;
 }
- 
+
 
 /*****************************************************************************
  *
@@ -95,7 +95,7 @@ int canon_serial_change_speed(int speed)
  ****************************************************************************/
 int canon_serial_get_cts(void)
 {
-	return gpio_get_pin(iodev,PIN_CTS);
+        return gpio_get_pin(iodev,PIN_CTS);
 }
 
 
@@ -105,7 +105,7 @@ int canon_serial_get_cts(void)
  *
  * Initializes the given serial or USB device.
  *
- * devname - the name of the device to open 
+ * devname - the name of the device to open
  *
  * Returns 0 on success.
  * Returns -1 on any error.
@@ -129,82 +129,82 @@ int canon_serial_init(const char *devname)
   switch (canon_comm_method) {
   case CANON_USB:
 #ifdef GPIO_USB
-    
+
     if (gpio_usb_find_device(camera_model->idVendor,
-			     camera_model->idProduct, &udev)) {
+                             camera_model->idProduct, &udev)) {
       printf("found '%s' @ %d/%d\n", camera_model->name,
-	     udev->bus->busnum, udev->devicenum);
+             udev->bus->busnum, udev->devicenum);
     }
     else
       {
-	printf("Found no camera!\n");
-	exit(1);
+        printf("Found no camera!\n");
+        exit(1);
       }
     iodev = gpio_new(GPIO_DEVICE_USB);
     if (!iodev)
       {
-	 return -1; 
+         return -1;
       }
-      
-    
+
+
     settings.usb.udev = udev;
 
-	settings.usb.inep = 0x81;
-	settings.usb.outep = 0x02;
-	settings.usb.config = 1;
-	settings.usb.interface = 0;
-	settings.usb.altsetting = 0;
+        settings.usb.inep = 0x81;
+        settings.usb.outep = 0x02;
+        settings.usb.config = 1;
+        settings.usb.interface = 0;
+        settings.usb.altsetting = 0;
 
-	/*	canon_send = canon_usb_send;
-		canon_read = canon_usb_read; */
+        /*      canon_send = canon_usb_send;
+                canon_read = canon_usb_read; */
 
-	gpio_set_settings(iodev, settings);
-	if (gpio_open(iodev) < 0) {
-	  fprintf(stderr,"Camera used by other USB device!\n");
-	  exit(1);
-	  /* return -1; */
-	}
+        gpio_set_settings(iodev, settings);
+        if (gpio_open(iodev) < 0) {
+          fprintf(stderr,"Camera used by other USB device!\n");
+          exit(1);
+          /* return -1; */
+        }
 
-	gpio_usb_msg_read(iodev,0x55,msg,1);
-	//	fprintf(stderr,"%c\n",msg[0]);
-	gpio_usb_msg_read(iodev,0x1,msg,0x58);
-	gpio_usb_msg_write(iodev,0x11,msg+0x48,0x10);
-	gpio_read(iodev, buffer, 0x44);
-	//	fprintf(stderr,"Antal b: %x\n",buffer[0]);
-	if (buffer[0]==0x54)
-	  gpio_read(iodev, buffer, 0x40);
-	return 0;
-	/* #else
-	   return -1;*/ 
+        gpio_usb_msg_read(iodev,0x55,msg,1);
+        //      fprintf(stderr,"%c\n",msg[0]);
+        gpio_usb_msg_read(iodev,0x1,msg,0x58);
+        gpio_usb_msg_write(iodev,0x11,msg+0x48,0x10);
+        gpio_read(iodev, buffer, 0x44);
+        //      fprintf(stderr,"Antal b: %x\n",buffer[0]);
+        if (buffer[0]==0x54)
+          gpio_read(iodev, buffer, 0x40);
+        return 0;
+        /* #else
+           return -1;*/
 #else
-	fprintf(stderr,"This computer does not support USB, please try to select 'RS-232'\n"
-		       " in the configuration panel (Configure/Configure camera...).\n");
-	return -1;
+        fprintf(stderr,"This computer does not support USB, please try to select 'RS-232'\n"
+                       " in the configuration panel (Configure/Configure camera...).\n");
+        return -1;
 #endif
-	break;
+        break;
   case CANON_SERIAL_RS232:
   default:
-    
+
     if (!devname)
       {
-	fprintf(stderr, "INVALID device string (NULL)\n");
-	return -1;
+        fprintf(stderr, "INVALID device string (NULL)\n");
+        return -1;
       }
-    
+
     debug_message("canon_init_serial(): Using serial port on %s\n", devname);
-    
+
     iodev = gpio_new(GPIO_DEVICE_SERIAL);
-    
+
     strcpy(settings.serial.port, devname);
     settings.serial.speed = 9600;
     settings.serial.bits = 8;
     settings.serial.parity = 0;
     settings.serial.stopbits = 1;
-    
+
     gpio_set_settings(iodev, settings); /* Sets the serial device name */
-    if ( gpio_open(iodev) == GPIO_ERROR) {	/* open the device */
+    if ( gpio_open(iodev) == GPIO_ERROR) {      /* open the device */
       perror("Unable to open the serial port");
-	return -1;
+        return -1;
     }
 
     return 0;
@@ -216,7 +216,7 @@ int canon_serial_init(const char *devname)
  * canon_serial_restore
  *
  * Restores the saved settings for the serial device
- * 
+ *
  * Returns 0 on success.
  * Returns -1 on any error.
  *
@@ -246,20 +246,20 @@ int canon_serial_restore()
 
 int canon_serial_send(const unsigned char *buf, int len, int sleep)
 {
-	int i;
+        int i;
     dump_hex("canon_serial_send()", buf, len);
 
     if (sleep>0) {
       for(i=0;i<len;i++) {
-    	gpio_write(iodev,buf,1);
-	buf++;
-	usleep(sleep);
+        gpio_write(iodev,buf,1);
+        buf++;
+        usleep(sleep);
       }
     }
     else {
       gpio_write(iodev,buf,len);
     }
-    
+
     return 0;
 }
 
@@ -293,21 +293,21 @@ int canon_serial_get_byte()
     /* if still data in cache, get it */
     if (cachep < cachee)
     {
-	return (int) *cachep++;
+        return (int) *cachep++;
     }
 
 
     recv = gpio_read(iodev, cache, 1);
     if (recv == GPIO_ERROR || recv == GPIO_TIMEOUT)
-	return -1;
-	cachep = cache;
-	cachee = cache + recv;
+        return -1;
+        cachep = cache;
+        cachee = cache + recv;
 
-	if (recv)
-	{
-	    return (int) *cachep++;
-	}
-    
+        if (recv)
+        {
+            return (int) *cachep++;
+        }
+
     return -1;
 }
 
