@@ -99,6 +99,7 @@ camera_abilities (CameraAbilitiesList *list)
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_abilities()");
 
 	for (i = 0; models[i].id_str; i++) {
+		memset (&a, 0, sizeof(a));
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		strcpy (a.model, models[i].id_str);
 		a.port = 0;
