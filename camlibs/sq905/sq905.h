@@ -12,5 +12,6 @@ unsigned int sq_config_get_comp    (SQConfig data, unsigned int n);
 
 int sq_init  (GPPort *port, SQConfig data);
 int sq_reset (GPPort *port);
+int sq_read  (GPPort *port, unsigned char *buf, unsigned int buf_len);
 
 #endif /* __SQ905_H__ */

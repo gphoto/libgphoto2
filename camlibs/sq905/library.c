@@ -4,8 +4,11 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <libgphoto2/gphoto2-library.h>
+#include <libgphoto2/bayer.h>
+#include <libgphoto2/gamma.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -101,27 +104,87 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
-	unsigned int n;
-
-	n = sq_config_get_num_pic (camera->pl->data);
-	gp_list_populate (list, "pict%02i.ppm", n);
-
-	return GP_OK;
-}
-
-static int
-get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *user_data,
-	       GPContext *context)
-{
-	Camera *camera = (Camera *) user_data;
+	unsigned int i, j, n;
+	unsigned char name[1024];
+	CameraFile *file;
 	unsigned int w, h, c;
-	int n;
+	unsigned char *buf, b;
+	unsigned char header[1024]; /* Should be enough */
+	unsigned int buf_len, read, id;
+	unsigned char *buf_out, t[256];
 
-	n = gp_filesystem_number (camera->fs, folder, filename, context);
-	w = sq_config_get_width  (camera->pl->data, n);
-	h = sq_config_get_height (camera->pl->data, n);
-	c = sq_config_get_comp   (camera->pl->data, n);
+	/* There is only a root folder. */
+	if (strcmp (folder, "/")) return GP_OK;
+
+	/*
+	 * The protocol is super stupid. You need to download all
+	 * pictures at once. Therefore, we add the pictures here and
+	 * don't return a list. The filesystem is clever enough to 
+	 * figure out what happened.
+	 */
+	n = sq_config_get_num_pic (camera->pl->data);
+	id = gp_context_progress_start (context, n, _("Downloading..."));
+	for (i = 0; i < n; i++) {
+		snprintf (name, sizeof (name), "pict%02i.ppm", i + 1);
+		gp_filesystem_append (fs, folder, name, context);
+		
+		w = sq_config_get_width  (camera->pl->data, n);
+		h = sq_config_get_height (camera->pl->data, n);
+		c = sq_config_get_comp   (camera->pl->data, n);
+
+		buf_len = w * h / c;
+		buf = malloc (buf_len);
+		if (!buf) return GP_ERROR_NO_MEMORY;
+
+		/* Download the data from the camera */
+		read = 0;
+		id = gp_context_progress_start (context, buf_len,
+						_("Downloading..."));
+		while (read < buf_len) {
+			sq_read (camera->port, buf + read, MAX (0x8000,
+								buf_len-read));
+			read += MAX (0x8000, buf_len - read);
+		}
+
+		/* Store the file with raw data */
+		gp_file_new (&file);
+		gp_file_set_type (file, GP_FILE_TYPE_RAW);
+		gp_file_set_data_and_size (file, buf, buf_len);
+		gp_filesystem_set_file_noop (fs, folder, file, context);
+		gp_file_unref (file);
+
+		/* Reverse the data, else the pic is upside down. */
+		for (j = 0; j < buf_len / 2; j++) {
+			b = buf[j];
+			buf[j] = buf[buf_len - 1 - j];
+			buf[buf_len - 1 - j] = b;
+		}
+
+		/* Decode the data and postprocess. */
+		buf_out = malloc (w * h * 3);
+		if (!buf_out) return GP_ERROR_NO_MEMORY;
+		gp_bayer_decode (buf, w, h, buf_out, BAYER_TILE_BGGR);
+		gp_gamma_fill_table (t, .65);
+		gp_gamma_correct_single (t, buf_out, w * h);
+
+		snprintf (header, sizeof (header), 
+			"P6\n"
+			"# CREATOR: gphoto2, SQ905 library\n"
+			"%d %d\n"
+			"255\n", w, h);
+		gp_file_new (&file);
+		gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
+		gp_file_set_mime_type (file, GP_MIME_PPM);
+		gp_file_append (file, header, strlen (header));
+		gp_file_append (file, buf_out, w * h * 3);
+		free (buf_out);
+		gp_filesystem_set_file_noop (fs, folder, file, context);
+		gp_file_unref (file);
+
+		gp_context_progress_update (context, id, i + 1);
+	}
+	gp_context_progress_stop (context, id);
+	sq_reset (camera->port);
 
 	return GP_OK;
 }
@@ -153,7 +216,6 @@ camera_init (Camera *camera, GPContext *context)
 	}
 
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
 	return GP_OK;
 }

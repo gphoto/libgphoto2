@@ -118,16 +118,7 @@ sq_init (GPPort *port, SQConfig data)
 
 		SQWRITE (port, 0x0c, 0x06, 0xf0, SQ905_PING, 1);
 		SQREAD  (port, 0x0c, 0x07, 0x00, &c[0], 1);
-		SQWRITE (port, 0x0c, 0x03, 0x04, SQ905_GET, 1);
-
-		/*
-		 * We put a four bytes coin in the camera. What is in the 
-		 * four bytes seems absolutely not to matter, but to be safe
-		 * we made sure they are all zero.
-		 */
-		memset (c, 0, sizeof (c));
-		gp_port_write (port, c, 4);
-		gp_port_read  (port, c, 4);
+		sq_read (port, &c[0], 4);
 
 		/*
 		 * If all is OK we receive "09 05 00 26"  Translates to "905 &"
@@ -140,23 +131,24 @@ sq_init (GPPort *port, SQConfig data)
 		SQREAD  (port, 0x0c, 0x07, 0x00, &c[0], 1);
 		SQWRITE (port, 0x0c, 0x06, 0x20, SQ905_PING, 1);
 		SQREAD  (port, 0x0c, 0x07, 0x00, &c[0], 1);
-		SQWRITE (port, 0x0c, 0x03, 0x4000, SQ905_GET, 1);
+		sq_read  (port, msg, 0x4000);
+		sq_reset (port);
 
-		/*
-		 * Put coin in camera, worth 0x4000 bytes, which is the
-		 * configuration data plus a lot of junk. Then kick the camera.
-		 */
-		memset (msg, 0, sizeof (msg));
-		gp_port_write (port, msg, 0x4000);
-		gp_port_read (port, &data[0], 0x4000);
-
-		SQWRITE (port, 0x0c, 0xc0, 0x00, SQ905_GET, 1);
-		SQWRITE (port, 0x0c, 0x06, 0xa0, SQ905_PING, 1);
+		SQWRITE (port, 0x0c, 0xc0, 0x00, SQ905_PING, 1);
+		SQWRITE (port, 0x0c, 0x06, 0x30, SQ905_PING, 1);
 		SQREAD  (port, 0x0c, 0x07, 0x00, &c[0], 1);
-
-		/* Reset and do it again. */
-		sq905_reset (port);
 	}
 
 	return GP_OK;
+}
+
+int
+sq_read (GPPort *port, unsigned char *buf, unsigned int buf_len)
+{
+	 SQWRITE (port, 0x0c, 0x03, buf_len, SQ905_GET, 1);
+	 memset (buf, 0, buf_len);
+	 gp_port_write (port, buf, buf_len);
+	 gp_port_read (port, buf, buf_len);
+
+	 return GP_OK;
 }
