@@ -1,3 +1,7 @@
+2002-02-09 Dan Fandrich <dan@coneharvesters.com>
+
+	* serial/unix.c: Added serial ports for Tru64 UNIX
+
 2002-02-06  Lutz Müller <lutz@users.sourceforge.net>
 
 	* m4/documentation.m4: Fix #510543.

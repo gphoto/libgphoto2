@@ -116,6 +116,13 @@
 #define GP_PORT_SERIAL_RANGE_HIGH       32
 #endif
 
+/* Tru64 UNIX */
+#if defined(__osf__)
+#define GP_PORT_SERIAL_PREFIX   "/dev/tty%02i"
+#define GP_PORT_SERIAL_RANGE_LOW        0
+#define GP_PORT_SERIAL_RANGE_HIGH       4
+#endif
+
 /* Darwin */
 #if defined(__APPLE__)
 /* This is the Keyspan USB serial adapter device (UNTESTED) */
