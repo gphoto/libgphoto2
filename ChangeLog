@@ -1,5 +1,11 @@
 2001-08-03	Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/sierra/library.c: Add a note that the Nikon CoolPix 880 
+	simply ignores (!) the delete_all command. Thanks to Mick Grant 
+	<mickgr@drahthaar.clara.net> for figuring this out.
+
+2001-08-03	Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/camera.c: Even if the camera reports success on 
 	delete_all, check if all pictures have been deleted.
 
