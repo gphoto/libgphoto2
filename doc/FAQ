@@ -40,10 +40,24 @@ A: You have to set up the permissions on your USB device correctly.
 
 ========================================================================
 
-Q: My Canon PowerShot G1 doesn't work with gphoto2. What should I do?
+Q: My Canon PowerShot G1/Pro 90 IS doesn't work with gphoto2 when using
+   the AC adapter. What should I do?
   
-A: This is a known bug which is being worked on. In the mean time, run 
-   the camera on battery instead of the AC adapter.
+A: This is a known bug which we cannot fix since none of the active
+   gphoto2 developers own one of these cameras. Your alternatives are as
+   follows :
+
+       Fix it and send us a patch.
+
+       Donate a G1 to one of the active Canon driver developers.
+
+       Run the camera on battery instead of the AC adapter.
+
+   There is some more info regarding this at
+
+       http://krixor.xy.org/fredrik/gp/canon-g1-ac-problem/
+
+   good luck.
 
 ========================================================================
 
