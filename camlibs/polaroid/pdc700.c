@@ -975,6 +975,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	PDCInfo info;
 	time_t time;
 	struct tm tm;
+	int xtime;
 
 	CR (pdc700_info (camera, &info, context));
 
@@ -1017,8 +1018,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	GP_DEBUG ("time: %X", (unsigned int) time);
 	gp_widget_new (GP_WIDGET_DATE, _("Date and Time"), &child);
 	gp_widget_append (section, child);
-	gp_widget_set_value (child, (int*) &time);
-
+	xtime = time;
+	gp_widget_set_value (child, &xtime);
 	return GP_OK;
 }
 
