@@ -7,6 +7,8 @@
 #include "globals.h"
 #include "shell.h"
 
+#define CHECK(result) {int r=(result);if(r<0) return(r);}
+#define CHECK_CONT(result) {int r=(result);if(r<0){printf ("*** Error ('%s') ***\n", gp_result_as_string (result));printf ("%s\n", gp_camera_get_error (glob_camera));}}
 
 /* Valid shell commands */
 shell_function func[] = {
@@ -15,6 +17,7 @@ shell_function func[] = {
 {"exit", 		shell_exit,		"Exit the gPhoto shell",				""},
 {"get",			shell_get,		"Download the file to the current directory",		"[directory/]filename"},
 {"get-thumbnail",	shell_get_thumbnail,	"Download the thumbnail to the current directory",	"[directory/]filename"},
+{"get-raw",		shell_get_raw,		"Download raw data to the current directory",		"[directory/]filename"},
 {"help",		shell_help,		"Displays command usage",				"command"},
 {"ls", 			shell_ls,		"List the contents of the current directory",		"[directory/]"},
 {"q", 			shell_exit,		"Exit the gPhoto shell",				""},
@@ -78,11 +81,10 @@ shell_arg (char *args, int arg_num, char *arg)
 int
 shell_prompt (void)
 {
-	int x, found;
+	int x;
 	char buf[1024], cmd[1024], arg[1024];
 
 	while (!shell_done) {
-		found=0;
 		if (glob_quiet) {
 			printf(">\n");
 		} else {
@@ -99,20 +101,21 @@ shell_prompt (void)
 		buf[strlen(buf)-1]=0;			/* Chop the newline */
 
 							/* Extract command and argument */
-		if (shell_arg_count(buf) > 0) {
-			shell_arg (buf, 0, cmd);
-			strcpy(arg, &buf[strlen(cmd)]);
-			x=-1;
-			while (func[++x].function) {		/* Execute the associated function */
-				if (strcmp(cmd, func[x].command)==0) {
-					found = 1;
-					func[x].function(arg);
-					break;
-				}
+
+		/* If we don't have any command, start from the beginning */
+		if (shell_arg_count (buf) <= 0)
+			continue;
+		
+		shell_arg (buf, 0, cmd);
+		strcpy(arg, &buf[strlen(cmd)]);
+		for (x = 0; func[x].function; x++) {
+			if (!strcmp (cmd, func[x].command)) {
+				CHECK_CONT (func[x].function (arg));
+				break;
 			}
-			if (!found)
-				cli_error_print("Invalid command");
 		}
+		if (!func[x].function)
+			cli_error_print ("Invalid command");
 	}
 
 	return (GP_OK);
@@ -294,38 +297,36 @@ shell_ls (char *arg)
 }
 
 static int
-shell_get_common (char *arg, CameraFileType type)
+shell_get_common (char *args, CameraFileType type)
 {
-	char tmp_folder[1024];
+	char tmp_folder[1024], arg[1024];
 	char *slash, *tmp_filename;
-	int arg_count = shell_arg_count(arg);
+	int x, arg_count = shell_arg_count (args);
 
 	if (!arg_count) {
 		cli_error_print("No filename specified");
 		return (GP_ERROR);
 	}
 
-	if (arg_count > 1) {
-		cli_error_print("Too many filenames specified");
-		return (GP_ERROR);
+	for (x = 0; x < arg_count; x++) {
+
+		shell_arg (args, x, arg);
+
+		if (strchr (arg, '/')) {
+			slash = strrchr (arg, '/');
+			tmp_filename = slash + 1;
+			*slash = 0;
+			if (strlen (arg)==0)
+				strcpy (tmp_folder, "/");
+			   else
+				strcpy (tmp_folder, arg);
+		} else {
+			tmp_filename = arg;
+			strcpy (tmp_folder, glob_folder);
+		}
+
+		CHECK (save_picture_to_file (tmp_folder, tmp_filename, type));
 	}
-
-	/* shell_arg(arg, 0, arg_filename); */
-
-	if (strchr(arg, '/')) {
-		slash = strrchr(arg, '/');
-		tmp_filename = slash + 1;
-		*slash = 0;
-		if (strlen(arg)==0)
-			strcpy(tmp_folder, "/");
-		   else
-			strcpy(tmp_folder, arg);
-	} else {
-		tmp_filename = arg;
-		strcpy(tmp_folder, glob_folder);
-	}
-
-	save_picture_to_file(tmp_folder, tmp_filename, type);
 
 	return (GP_OK);		
 }
@@ -333,7 +334,7 @@ shell_get_common (char *arg, CameraFileType type)
 int
 shell_get_thumbnail (char *arg)
 {
-	shell_get_common (arg, GP_FILE_TYPE_PREVIEW);
+	CHECK (shell_get_common (arg, GP_FILE_TYPE_PREVIEW));
 
 	return (GP_OK);
 }
@@ -342,7 +343,7 @@ int
 shell_get (char *arg)
 {
 
-	shell_get_common (arg, GP_FILE_TYPE_NORMAL);
+	CHECK (shell_get_common (arg, GP_FILE_TYPE_NORMAL));
 
 	return (GP_OK);
 }
@@ -350,7 +351,7 @@ shell_get (char *arg)
 int
 shell_get_raw (char *arg)
 {
-	shell_get_common (arg, GP_FILE_TYPE_RAW);
+	CHECK (shell_get_common (arg, GP_FILE_TYPE_RAW));
 
 	return (GP_OK);
 }
