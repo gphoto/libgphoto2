@@ -138,16 +138,45 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_CopyObject               0x101A
 #define PTP_OC_GetPartialObject         0x101B
 #define PTP_OC_InitiateOpenCapture      0x101C
+
 /* Eastman Kodak extension Operation Codes */
 #define PTP_OC_EK_SendFileObjectInfo	0x9005
 #define PTP_OC_EK_SendFileObject	0x9006
+
 /* Canon extension Operation Codes */
 #define PTP_OC_CANON_GetObjectSize	0x9001
+#define PTP_OC_CANON_9002		0x9002
+/* 9002 - sends 2 uint32, nothing back  */
+#define PTP_OC_CANON_9003		0x9003
+/* 9003 - sends nothing, nothing back  */
+/* no 9004 observed yet */
+/* no 9005 observed yet */
+/* 9006 - sends a ptp string, gets back a uint32 */
+#define PTP_OC_CANON_9006		0x9006
+/* no 9007 observed yet */
 #define PTP_OC_CANON_StartShootingMode	0x9008
 #define PTP_OC_CANON_EndShootingMode	0x9009
+/* 900a - sends nothing, nothing back */
+#define PTP_OC_CANON_900a		0x900A
 #define PTP_OC_CANON_ViewfinderOn	0x900B
 #define PTP_OC_CANON_ViewfinderOff	0x900C
 #define PTP_OC_CANON_ReflectChanges	0x900D
+/* 900e - send nothing, gets 5 uint16t in 32bit entities back in 20byte datablob */
+#define PTP_OC_CANON_900e		0x900E
+/* 900f - gets data ... hmm, object handles ? */
+#define PTP_OC_CANON_900f		0x900F
+
+#define PTP_OC_CANON_9010		0x9010
+/* 9010 - gets 65536 kb of data?, 1 parameter input */
+#define PTP_OC_CANON_9011		0x9011
+/* 9011 - sends 65536 kb of data?, 1 parameter input */
+
+
+/* initiate movie capture:
+   9010 startmoviecapture?
+   9003 stopmoviecapture?
+*/
+
 #define PTP_OC_CANON_CheckEvent		0x9013
 #define PTP_OC_CANON_FocusLock		0x9014
 #define PTP_OC_CANON_FocusUnlock	0x9015
