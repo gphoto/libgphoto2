@@ -849,6 +849,7 @@ gp_camera_init (Camera *camera)
 		gp_port_close (camera->port);
 		GP_SYSTEM_DLCLOSE (camera->pc->lh);
 		camera->pc->lh = NULL;
+		memset (camera->functions, 0, sizeof (CameraFunctions));
 		gp_camera_status (camera, "");
 		return (result);
 	}
