@@ -138,8 +138,8 @@ static struct {
 	},
 	{"Trust:PowerC@m 350FS", 0x6d6, 0x002e, {
 		 	jd350e,
-			BAYER_TILE_BGGR,
-			&flip_vertical,
+			BAYER_TILE_RGGB,
+			&trust350fs_postprocessing,
 			"trust%04i.ppm"
 		}
 	},

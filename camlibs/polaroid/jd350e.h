@@ -25,4 +25,5 @@
 #define __JD350E_H__
 int jd350e_postprocessing(int width, int height, unsigned char* rgb);
 int jd350e_postprocessing_and_flip(int width, int height, unsigned char* rgb);
+int trust350fs_postprocessing(int width, int height, unsigned char* rgb);
 #endif

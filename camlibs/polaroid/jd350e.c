@@ -151,3 +151,64 @@ int jd350e_postprocessing_and_flip(int width, int height, unsigned char* rgb){
 	free(tmpline);
 	return GP_OK;
 }
+
+int trust350fs_postprocessing(int width, int height, unsigned char* rgb) {
+	int		i,x,y,min=255,max=0;
+	double		amplify;
+	unsigned char	*buf;
+	const int	brightness_adjust = 16;
+	
+	/* flip horizontal */
+#define RED(p,x,y,w) *((p)+3*((y)*(w)+(x))  )
+#define GREEN(p,x,y,w) *((p)+3*((y)*(w)+(x))+1)
+#define BLUE(p,x,y,w) *((p)+3*((y)*(w)+(x))+2)
+
+#define SWAP(a,b) {unsigned char t=(a); (a)=(b); (b)=t;}
+
+	for( y=0; y<height; y++){
+		for( x=0; x<width/2; x++ ){
+			SWAP( RED(rgb,x,y,width), RED(rgb,width-x-1,y,width));
+			SWAP( GREEN(rgb,x,y,width), GREEN(rgb,width-x-1,y,width));
+			SWAP( BLUE(rgb,x,y,width), BLUE(rgb,width-x-1,y,width));
+		}
+	}
+	
+	/* flip vertical */
+	buf = malloc(width*3);
+	if (!buf) return GP_ERROR_NO_MEMORY;
+	for (i=0;i<height/2;i++) {
+		memcpy(buf,rgb+i*width*3,width*3);
+		memcpy(rgb+i*width*3,rgb+(height-i-1)*width*3,width*3);
+		memcpy(rgb+(height-i-1)*width*3,buf,width*3);
+	}
+	free(buf);
+	
+	/* Normalize & adjust brightness ... */
+#define MINMAX(a,min,max) { (min)=MIN(min,a); (max)=MAX(max,a); }
+
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
+	for(i=0; i<(width*height*3); i++)
+			MINMAX( rgb[i], min, max  );
+
+	amplify = 255.0/(max-min);
+
+	for(i=0; i<(width*height*3); i++)
+	{
+		int val = amplify * (rgb[i] - min);
+		
+		if(val < brightness_adjust)
+		   rgb[i] = val * 2;
+		else if (val > (255 - brightness_adjust))
+		   rgb[i] = 255;
+		else
+		   rgb[i] = val + brightness_adjust;
+	}
+	
+	return GP_OK;
+}
