@@ -1,3 +1,8 @@
+2004-04-01  Marcus Meissner <marcus@jet.franken.de>
+	
+	* merged patch for Snap from Thomas Coffy <karm@happycoders.org>,
+	  changes some usb lowlevel stuff.
+
 2004-01-19  Marcus Meissner <marcus@jet.franken.de>
 
 	* blink2.c: Some alignment issues, set altsetting.

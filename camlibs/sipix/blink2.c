@@ -55,8 +55,10 @@ blink2_getnumpics(
 ) {
     char buf[6];
     int ret;
-
-    ret = gp_port_usb_msg_read(port, BLINK2_GET_NUMPICS, 0x03, 0, buf, 6);
+    
+    ret = gp_port_usb_msg_read(port, 0x18, 0x03, 0, buf, 6);
+    ret = gp_port_usb_msg_read(port, BLINK2_GET_NUMPICS, 0x03, 0, buf, 2);
+    ret = gp_port_usb_msg_read(port, BLINK2_GET_NUMPICS, 0x03, 0, buf, 2);
     if (ret<GP_OK)
 	return ret;
     *numpics = (buf[0]<<8) | buf[1];
@@ -96,7 +98,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	bytes = ((8*(1+numpics))+0x3f) & ~0x3f;
 	xbuf = malloc(bytes);
-	ret = gp_port_usb_msg_read( camera->port,BLINK2_GET_DIR,0x03,0,buf,8 );
+	ret = gp_port_usb_msg_read( camera->port,BLINK2_GET_DIR,0x03,0,buf,1 );
 	if (ret < GP_OK)  {
 		free(xbuf);
 		return ret;
@@ -144,7 +146,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(xbuf);
 		return GP_ERROR_NO_MEMORY;
 	}
-	ret = gp_port_usb_msg_read( camera->port,BLINK2_GET_DIR,0x03,0,buf,8 );
+	ret = gp_port_usb_msg_read( camera->port,BLINK2_GET_DIR,0x03,0,buf,1 );
 	if (ret < GP_OK) {
 		free(addrs);
 		free(xbuf);
@@ -388,10 +390,12 @@ camera_init (Camera *camera, GPContext *context)
 	settings.usb.altsetting = 0;
 	ret = gp_port_set_settings (camera->port, settings);
 	if (ret < GP_OK) return ret;
-	ret = gp_port_usb_msg_read( camera->port, 0x18, 0x0300, 0x0000, buf, 6);
+
+	ret = gp_port_usb_msg_read( camera->port, 0x18, 0x03, 0, buf, 6);
 	if (ret < GP_OK)
 		return ret;
-	ret = gp_port_usb_msg_read( camera->port, 0x04, 0x0300, 0x0000, buf, 8);
+
+	ret = gp_port_usb_msg_read( camera->port, 0x04, 0x03, 0, buf, 1);
 	if (ret < GP_OK)
 		return ret;
 	return GP_OK;
