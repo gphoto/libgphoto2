@@ -63,3 +63,6 @@ Canon driver, package building, hotplug, and various other things
 
 Christophe Barbé <christophe.barbe@ufies.org>
 Release building and small fixes.
+
+Dennis Noordsij <dennis.noordsij@wiral.com>, Philipp Poeml <poml@poeml.de>
+Agfa CL20 driver.

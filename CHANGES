@@ -12,12 +12,13 @@ drivers (camlibs):
        Canon PowerShot S45, Canon PowerShot G2
      - G2 works again running from AC adapter
 
-   * PTP driver:
-     - fixed some bugs
-
    * PTP2 driver:
-     - next generation PTP driver added
-     - FIXME: Which one is being used if both are built? 
+     - next generation PTP driver added, using this as default now.
+
+   * New Agfa CL20 driver from http://cl20.poeml.de/.
+
+   * New camera library spca50x for all chips supporting the spca50x bridges
+     (merging the gsmart, benq and spca504_flash driver into one).
 
 
 ----------------------------------------------------------------------------
