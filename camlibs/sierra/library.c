@@ -710,19 +710,19 @@ sierra_write_ack (Camera *camera)
 }
 
 int
-sierra_ping (Camera *camera, GPContext *context) 
+sierra_init (Camera *camera, GPContext *context) 
 {
 	char buf[4096], packet[4096];
 	int r = 0;
 
-	GP_DEBUG ("Pinging camera...");
+	GP_DEBUG ("Sending initialization sequence to the camera...");
 
 	packet[0] = NUL;
 
 	while (1) {
 		CHECK (sierra_write_packet (camera, packet));
 		CHECK (sierra_read_packet_wait (camera, buf, context));
-
+		
 		switch (buf[0]) {
 		case NAK:
 			return (GP_OK);

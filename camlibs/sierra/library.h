@@ -47,7 +47,7 @@ int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked,
 int sierra_set_speed		  (Camera *camera, int speed,
 				   GPContext *context);
 int sierra_end_session		  (Camera *camera, GPContext *context);
-int sierra_ping			  (Camera *camera, GPContext *context);
+int sierra_init			  (Camera *camera, GPContext *context);
 int sierra_get_memory_left        (Camera *camera, int *memory,
 				   GPContext *context);
 int sierra_check_battery_capacity (Camera *camera, GPContext *context);
