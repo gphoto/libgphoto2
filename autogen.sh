@@ -87,7 +87,10 @@ ACLOCAL_FLAGS="-I ${srcdir}/libgphoto2_port/m4 ${ACLOCAL_FLAGS}"
 
 gettext_version=`gettextize --version 2>&1 | sed -n 's/^.*GNU gettext.* \([0-9]*\.[0-9.]*\).*$/\1/p'`
 case $gettext_version in
-0.11.*)
+0.10.*)
+	;;
+	
+*)
 	gettext_opt="$gettext_opt --intl";;
 esac
 
@@ -139,7 +142,9 @@ do
     fi
 
     case $gettext_version in
-    0.10.*)
+    0.11.?)
+    	;;
+    *)
     	grep "intl/Makefile" configure.in > /dev/null ||
 	( sed -e 's#^AC_OUTPUT(\[#AC_OUTPUT(\[ intl/Makefile po/Makefile.in#' \
 	configure.in >configure.in.new && mv configure.in.new configure.in )
