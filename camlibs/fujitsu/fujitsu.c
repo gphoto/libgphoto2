@@ -413,7 +413,7 @@ int fujitsu_get_int_register (gpio_device *dev, int reg, int *value) {
 			return (GP_ERROR);
 
 		if (buf[0] == TYPE_DATA_END) {
-			fujitsu_write_ack(dev);
+//			fujitsu_write_ack(dev);
 			r =((unsigned char)buf[4]) +
 			   ((unsigned char)buf[5] * 256) +
 			   ((unsigned char)buf[6] * 65536) +
