@@ -1,3 +1,7 @@
+2003-07-28 Mariusz Woloszyn
+	* library.c: removed Kodak DC290, DX4230, DX4300, changed productID
+	  of Kodak CX4210 and added Nikon Coolpix 5400. Thanks to T.
+	  Kaproncai
 2003-07-17 Mariusz Woloszyn
 	* library.c: added following cameras: Kodak DC290, Kodak DX4530,
 	  Kodak DX6440, Kodak DX6490, Kodak LS663, Kodak CX4230,
