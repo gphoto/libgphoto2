@@ -50,7 +50,7 @@ AC_SUBST(BUILD_INCLUDED_LIBINTL)
 dnl USE_INCLUDED_LIBINTL=no
 dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
-ALL_LINGUAS="da de es fr hu it ja no ru sl sv uk zh_CN"
+ALL_LINGUAS="da de es fr hu it ja nb ru sl sv uk zh_CN"
 # EVIL HACKS
 AC_MSG_CHECKING([for po/Makevars requiring evil hack])
 GETTEXT_PACKAGE="${PACKAGE}-${LIBGPHOTO2_CURRENT}"
