@@ -110,4 +110,8 @@ gp_debug_history_set_size (unsigned int size)
 	return (gp_port_debug_history_set_size (size));
 }
 
-
+int
+gp_debug_history_get_size (void)
+{
+	return (gp_port_debug_history_get_size ());
+}
