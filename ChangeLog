@@ -1,5 +1,16 @@
 2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Daniel Resare <noa@metamatrix.se> suggested using AC_CONFIG_SUBDIRS:
+
+	* configure.in: Use AC_CONFIG_SUBDIRS(libgphoto2_port).
+	* Makefile.am: build.sh isn't needed any more
+	* INSTALL: Update installation instructions
+	
+	* doc/Makefile.am: Removed OVERVIEW and NOTES. This should have 
+	happened a long time ago.
+
+2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Ilya Konstantinov <gphoto-devel@future.galanet.net> pointed me to
 	this bug:
 

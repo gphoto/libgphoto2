@@ -155,6 +155,11 @@ else
 fi
 AC_SUBST(HTML_DIR)
 
+dnl *************************
+dnl Configure libgphoto2-port
+dnl *************************
+AC_CONFIG_SUBDIRS(libgphoto2_port)
+
 AC_OUTPUT([
 Makefile
 camlibs/Makefile

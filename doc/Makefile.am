@@ -1,8 +1,5 @@
 SUBDIRS = api
 
-text_files =		\
-	OVERVIEW	\
-	DAEMON		\
-	NOTES
+text_files = DAEMON
 
 EXTRA_DIST = $(text_files)

@@ -13,7 +13,5 @@ SUBDIRS = 			\
 	po 			\
 	doc
 
-EXTRA_DIST = build.sh
-
 gphotodocdir = $(prefix)/doc/gphoto2
 gphotodoc_DATA = AUTHORS COPYING
