@@ -1,5 +1,14 @@
 2002-04-21 Matt Martin <matt.martin@ieee.org>
 
+	* library.c In post_func: Bring serial port speed back down
+	immediately after resetting the camera (kills the high speed at
+	least on the DS7).  Note that this doesn't seem to be a problem
+	immediately following the speed change command. Needs to be tested
+	on all cams in light of Lutz's earlier comment that the speed
+	isn't getting reset !
+
+2002-04-21 Matt Martin <matt.martin@ieee.org>
+
 	* fuji.c Remove 0xff escaping code now done by libgphoto2_port
 
 2002-04-21  Lutz Müller <lutz@users.sourceforge.net>

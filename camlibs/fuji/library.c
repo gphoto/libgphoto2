@@ -304,6 +304,7 @@ pre_func (Camera *camera, GPContext *context)
 		 */
 		settings.serial.speed = Speeds[i].bit_rate;
 		CR (gp_port_set_settings (camera->port, settings));
+		GP_DEBUG("Pinging to check new speed %i.", Speeds[i].bit_rate);
 		CR (fuji_ping (camera, context));
 
 	} else {
@@ -338,10 +339,14 @@ pre_func (Camera *camera, GPContext *context)
 static int
 post_func (Camera *camera, GPContext *context)
 {
+	GPPortSettings settings;
 	GP_DEBUG ("Terminating connection...");
 
 	/* Reset the camera and put it back to 9600 bps. */
 	CR (fuji_reset (camera, context));
+	CR (gp_port_get_settings (camera->port, &settings));
+	settings.serial.speed = 9600;
+	CR (gp_port_set_settings (camera->port, settings));
 	CR (fuji_set_speed (camera, FUJI_SPEED_9600, context));
 
 	return (GP_OK);
@@ -527,7 +532,7 @@ camera_init (Camera *camera, GPContext *context)
 	 * What commands does this camera support? The question is not
 	 * easy to answer, as "One issue the DS7 has is that the 
 	 * supported command list command is not supported" 
-	 * (Matt Martin <mgmartin@screaminet.com>).
+	 * (Matt Martin <matt.martin@ieee.org>).
 	 */
 	if (fuji_get_cmds (camera, camera->pl->cmds, context) >= 0) {
 		GP_DEBUG ("Your camera supports the following command(s):");

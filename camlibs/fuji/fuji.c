@@ -756,6 +756,7 @@ fuji_set_speed (Camera *camera, FujiSpeed speed, GPContext *context)
 	unsigned char cmd[5], buf[1024];
 	unsigned int buf_len = 0;
 
+	GP_DEBUG("Attempting to set speed to %i",speed);
 	cmd[0] = 1;
 	cmd[1] = FUJI_CMD_SPEED;
 	cmd[2] = 1;
@@ -777,6 +778,8 @@ fuji_set_speed (Camera *camera, FujiSpeed speed, GPContext *context)
 			"%i (camera responded with %i)."), speed, buf[0]);
 		return (GP_ERROR);
 	}
+
+	GP_DEBUG("Success with speed %i.",speed);
 
 	/* Reset the connection */
 	CR (fuji_reset (camera, context));
