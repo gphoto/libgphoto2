@@ -199,7 +199,17 @@ find_init (int len)
 	return len < 1024 ? crc_init[len] : -1;
 }
 
-
+/**
+ * canon_psa50_gen_crc
+ * @pkt: packet data on which to calculate checksum
+ * @len: length of @pkt
+ *
+ * Calculate a CRC on a Canon packet
+ *
+ * Returns: CRC value. On error doesn't return at all but exits
+ *   program with a message to stderr.
+ *
+ */
 unsigned short
 canon_psa50_gen_crc (const unsigned char *pkt, int len)
 {
@@ -225,7 +235,18 @@ guess (const unsigned char *m, int len, int crc)
 	exit (1);
 }
 
-
+/**
+ * canon_psa50_chk_crc:
+ * @pkt: packet
+ * @len: length of @pkt
+ * @crc: presumed checksum
+ *
+ * Calculate a new checksum for the packet and compare it with an existing checksum to detect transmission errors.
+ *
+ * Returns: 1 on success or if checksum calculation would fail
+ *          0 if checksums don't match
+ *
+ */
 int
 canon_psa50_chk_crc (const unsigned char *pkt, int len, unsigned short crc)
 {

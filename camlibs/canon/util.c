@@ -30,8 +30,14 @@
 /**
  * is_thumbnail:
  * @name: name of file to examine
+ *
  * Test whether the given @name corresponds to a thumbnail (.THM).
- **/
+ *
+ * Returns:
+ *   1 if filename is the name of a thumbnail (i.e. ends with ".THM" )
+ *   0 if not
+ *
+ */
 int
 is_thumbnail (const char *name)
 {
@@ -50,8 +56,13 @@ is_thumbnail (const char *name)
  * is_image:
  * @name: name of file to examine
  *
- * Test whether the given @name corresponds to an image (.JPG or .CRW).
- **/
+ * Tests whether the given @name corresponds to an image (.JPG or .CRW).
+ *
+ * Returns:
+ *   1 if filename is the name of an image
+ *   0 if not
+ *
+ */
 int
 is_image (const char *name)
 {
@@ -74,7 +85,11 @@ is_image (const char *name)
  * @name: name of file to examine
  *
  * Test whether the given @name corresponds to a JPEG image (.JPG).
- **/
+ * Returns:
+ *   1 if filename is the name of a JPEG image (i.e. ends with ".JPG" )
+ *   0 if not
+ *
+ */
 int
 is_jpeg (const char *name)
 {
@@ -93,8 +108,13 @@ is_jpeg (const char *name)
  * is_crw:
  * @name: name of file to examine
  *
- * Test whether the name given corresponds to a raw CRW image (.CRW).
- **/
+ * Tests whether the name given corresponds to a raw CRW image (.CRW).
+ *
+ * Returns:
+ *   1 if filename is the name of a raw image (i.e. ends with .CRW )
+ *   0 if not
+ *
+ */
 int
 is_crw (const char *name)
 {
@@ -115,6 +135,11 @@ is_crw (const char *name)
  *
  * Test whether the name given corresponds
  * to a movie (.AVI)
+ *
+ * Returns:
+ *   1 if filename is the name of a movie (i.e. ends with ".AVI" )
+ *   0 if not
+ *
  */
 int
 is_movie (const char *name)
@@ -132,12 +157,12 @@ is_movie (const char *name)
 
 /**
  * filename2mimetype:
- * @filename: name of file to examine
+ * @filename: name of file to examine
  *
- * Deduce MIME type of file by considering the file name ending.
+ * Deduces MIME type of file by considering the file name ending.
  *
- * @Returns: pointer to immutable string with the MIME type
- **/
+ * Returns: pointer to immutable string with the MIME type
+ */
 
 const char *
 filename2mimetype (const char *filename)

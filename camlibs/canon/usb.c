@@ -49,17 +49,23 @@
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
+/* Include PS 230 here just as a guess; I really don't know. */
+#define IS_EOS(cam) ( ((cam)==CANON_EOS_D30) \
+                      || ((cam)==CANON_EOS_D60) \
+                      || ((cam)==CANON_PS_S230 ) )
 
-/*****************************************************************************
- *
- * canon_usb_camera_init
+/**
+ * canon_usb_camera_init:
+ * @camera: camera to initialize
+ * @context: context for error reporting
+ *  GP_OK on success.
+ *  GP_ERROR on any error.
  *
  * Initializes the USB camera through a series of read/writes
  *
- * Returns GP_OK on success.
- * Returns GP_ERROR on any error.
+ * Returns: gphoto2 error code
  *
- ****************************************************************************/
+ */
 int
 canon_usb_camera_init (Camera *camera, GPContext *context)
 {
@@ -203,16 +209,16 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
-/*****************************************************************************
- *
- * canon_usb_init
+/**
+ * canon_usb_init:
+ * @camera: camera to lock keys on
+ * @context: context for error reporting
  *
  * Initializes the given USB device.
  *
- * Returns GP_OK on success.
+ * Returns: gphoto2 error code (%GP_OK on success).
  *
- ****************************************************************************/
-
+ */
 int
 canon_usb_init (Camera *camera, GPContext *context)
 {
@@ -280,10 +286,13 @@ canon_usb_init (Camera *camera, GPContext *context)
 /**
  * canon_usb_lock_keys:
  * @camera: camera to lock keys on
- * @Returns: gphoto2 error code
+ * @context: context for error reporting
  *
  * Lock the keys on the camera and turn off the display
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_usb_lock_keys (Camera *camera, GPContext *context)
 {
@@ -375,10 +384,12 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 /**
  * canon_usb_unlock_keys:
  * @camera: camera to unlock keys on
- * @Returns: gphoto2 error code
  *
  * Unlocks the keys on cameras that support this
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_usb_unlock_keys (Camera *camera)
 {
@@ -414,13 +425,7 @@ canon_usb_unlock_keys (Camera *camera)
 /**
  * canon_usb_capture_dialogue:
  * @camera: the Camera to work with
- * @canon_funct: integer constant that identifies function we are execute
  * @return_length: number of bytes to read from the camera as response
- * @payload: data we are to send to the camera
- * @payload_length: length of #payload
- * @Returns: a char * that points to the data read from the camera (or
- * NULL on failure), and sets what @return_length points to to the number
- * of bytes read.
  *
  * USB version of the #canon_serial_dialogue function.
  * Special case for the "capture image" command, where we must read the
@@ -431,11 +436,11 @@ canon_usb_unlock_keys (Camera *camera)
  * exists for this function, we read #return_length bytes back from the
  * camera and return this camera response to the caller.
  *
- * Example :
+ * Example:
  *
  *	This function gets called with
- *		#canon_funct = CANON_USB_FUNCTION_SET_TIME
- *		#payload = already constructed payload with the new time
+ *		@canon_funct = %CANON_USB_FUNCTION_SET_TIME
+ *		@payload = already constructed payload with the new time
  *	we construct a complete command packet and send this to the camera.
  *	The canon_usb_cmdstruct indicates that command
  *	CANON_USB_FUNCTION_SET_TIME returns four bytes, so we read those
@@ -446,16 +451,20 @@ canon_usb_unlock_keys (Camera *camera)
  *	unsigned char ** which can be pointed to our buffer and an int
  *	returned with GP_OK or some error code.
  *
- **/
+ * Returns: a char * that points to the data read from the camera (or
+ * NULL on failure), and sets what @return_length points to to the number
+ * of bytes read.
+ *
+ */
 unsigned char *
 canon_usb_capture_dialogue (Camera *camera, int *return_length )
 {
 	int msgsize, status, i;
 	char cmd1 = 0x13, cmd2 = 0x12, *funct_descr = "";
 	int cmd3 = 0x201, read_bytes = 0x40, read_bytes1 = 0, read_bytes2 = 0;
-	unsigned char packet[1024];	/* used for sending data to camera */
-	static unsigned char buffer[0x9c];	/* used for receiving data from camera */
-	unsigned char buf2[0x17];	     /* for reading from interrupt endpoint */
+	unsigned char packet[1024]; /* used for sending data to camera */
+	static unsigned char buffer[0x9c]; /* used for receiving data from camera */
+	unsigned char buf2[0x40]; /* for reading from interrupt endpoint */
 
 	int j, canon_subfunc = 0;
 	char subcmd = 0, *subfunct_descr = "";
@@ -549,8 +558,6 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
 	msgsize = 0x58;			     /* TOTAL msg size */
 
 	/* now send the packet to the camera */
-/* 	status = gp_port_usb_msg_write (camera->port, msgsize > 1 ? 0x04 : 0x0c, 0x10, 0, */
-/* 					packet, msgsize); */
 	status = gp_port_usb_msg_write (camera->port,  0x04, 0x10, 0,
 					packet, msgsize);
 	if (status != msgsize) {
@@ -580,33 +587,160 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
 		return NULL;
 	}
 
-#define MAX_TRIES 3000
-
 	// Now we need to read from the interrupt pipe. Since we have
-	// to use the short timeout (50 ms), we need to try several
-	// times.
-	for ( n_tries=0; n_tries<MAX_TRIES; n_tries++ ) {
-		// GP_DEBUG ("canon_usb_capture_dialogue: first interrupt packet try %d\n", n_tries);
-		status = gp_port_check_int_fast ( camera->port,
-						  buf2, 0x10 );
-		if ( status == 0x10 )	     /* Did we get the full packet? */
-			break;
+	//  to use the short timeout (50 ms), we need to try several
+	//  times.
+	// Read until we have completion signaled (0x0a for PowerShot,
+	//  0x0f for EOS)
+	if ( IS_EOS(camera->pl->md->model) ) {
+		int failed = 1;
+		//fprintf ( stderr, "Camera is an EOS\n" );
+		while ( buf2[4] != 0x0f ) {
+			// Read repeatedly until we get either an
+			// error or a non-zero size.
+			for ( n_tries=0; n_tries<MAX_INTERRUPT_TRIES; n_tries++ ) {
+				status = gp_port_check_int_fast ( camera->port,
+								  buf2, 0x40 );
+				if ( status != 0 ) /* Either some real data, or failure */
+					break;
+			}
+			GP_DEBUG ( "canon_usb_capture_dialogue:"
+				   " interrupt packet took %d tries\n", n_tries );
+			if ( status < 0 || status > 0x17 ) {
+				GP_DEBUG ( "canon_usb_capture_dialogue:"
+					   " interrupt read failed, status= %d\n", status );
+				return NULL;
+			}
+			switch ( buf2[4] ) {
+			case 0x08:
+				/* Thumbnail size */
+				if ( status != 0x17 )
+					GP_DEBUG ( "canon_usb_capture_dialogue: Bogus length 0x%04x"
+						    " for thumbnail size packet\n", status );
+				GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size 0x%08x, tag=0x%08x\n",
+					    buf2[0x11] | buf2[0x12]<<8
+					    | buf2[0x13]<<16 | buf2[0x14]<<24,
+					    buf2[0x0c] | buf2[0x0d]<<8
+					    | buf2[0x0e]<<16 | buf2[0x0f]<<24 );
+				break;
+			case 0x0c:
+				/* Full image size */
+				if ( status != 0x17 )
+					GP_DEBUG ( "canon_usb_capture_dialogue: Bogus length 0x%04x"
+						    " for full image size packet\n", status );
+				GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08x, tag=0x%08x\n",
+					    buf2[0x11] | buf2[0x12]<<8
+					    | buf2[0x13]<<16 | buf2[0x14]<<24,
+					    buf2[0x0c] | buf2[0x0d]<<8
+					    | buf2[0x0e]<<16 | buf2[0x0f]<<24  );
+				break;
+			case 0x0a:
+				if ( buf2[12] == 0x1c ) {
+					GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt read\n" );
+					/* Canon RemoteCapture unlocks the keys here for EOS cameras;
+					   let's try it. */
+					if ( canon_usb_unlock_keys ( camera ) < 0 ) {
+						GP_DEBUG ( "canon_usb_capture_dialogue: couldn't unlock keys after capture.\n" );
+						return NULL;
+					}
+				}
+				else if ( buf2[12] == 0x1d )
+					GP_DEBUG ( "canon_usb_capture_dialogue: second interrupt read (after image sizes)\n" );
+				else if ( buf2[12] == 0x0a )
+					GP_DEBUG ( "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x\n",
+						    buf2[0x10] | buf2[0x11]<<8
+						    | buf2[0x12]<<16 | buf2[0x13]<<24 );
+				else
+					GP_DEBUG ( "canon_usb_capture_dialogue: unknown subcode 0x%08x in 0x0a interrupt read\n",
+						    buf2[12] | (buf2[13]<<8)
+						    | (buf2[14]<<16) | (buf2[15]<<24) );
+				break;
+			case 0x0e:
+				GP_DEBUG ( "canon_usb_capture_dialogue: EOS ok from interrupt read\n" );
+				failed = 0;
+				break;
+			case 0x0f:
+				if ( failed ) {
+					GP_DEBUG ( "canon_usb_capture_dialogue: EOS photographic failure.\n" );
+					/* But keys remain locked... */
+					return NULL;
+				}
+				else
+					GP_DEBUG ( "canon_usb_capture_dialogue: final EOS interrupt read\n" );
+				break;
+			default:
+				/* Unknown */
+				GP_DEBUG ( "canon_usb_capture_dialogue: unknown code 0x%02x in interrupt read\n",
+					    buf2[4] );
+				return NULL;
+			}
+		}
 	}
-	GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt packet took %d tries\n", n_tries );
+	else {
+		/* PowerShot cameras are simpler: code 0x0a, subcode 0x1d is the
+		   end of capture. */
+		while ( 1 ) {
+			// Read repeatedly until we get either an
+			// error or a non-zero size.
+			for ( n_tries=0; n_tries<MAX_INTERRUPT_TRIES; n_tries++ ) {
+				status = gp_port_check_int_fast ( camera->port,
+								  buf2, 0x40 );
+				if ( status != 0 )	     /* Either some real data, or failure */
+					break;
+			}
+			GP_DEBUG ( "canon_usb_capture_dialogue:"
+				   " interrupt packet took %d tries", n_tries );
 
-	// Between here, we might need to field one or two
-	// messages if we asked for the image or the thumbnail
-	// to be transferred to the PC.
-
-	for ( n_tries=0; n_tries<10; n_tries++ ) {
-		/*GP_DEBUG ("canon_usb_capture_dialogue: second interrupt packet try %d\n", n_tries);*/
-		status = gp_port_check_int_fast ( camera->port,
-						  buf2, 0x10 );
-		if ( status == 0x10 )	     /* Did we get the full packet? */
-			break;
+			if ( status < 0 || status > 0x17 ) {
+				GP_DEBUG ( "canon_usb_capture_dialogue:"
+					   " interrupt read failed, status= %d", status );
+				return NULL;
+			}
+			switch ( buf2[4] ) {
+			case 0x08:
+				/* Thumbnail size */
+				if ( status != 0x17 )
+					GP_DEBUG ( "canon_usb_capture_dialogue: Bogus length 0x%04x"
+						    " for thumbnail size packet\n", status );
+				GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size: 0x%08x",
+					    buf2[0x11] | buf2[0x12]<<8
+					    | buf2[0x13]<<16 | buf2[0x14]<<24 );
+				break;
+			case 0x0c:
+				/* Full image size */
+				if ( status != 0x17 )
+					GP_DEBUG ( "canon_usb_capture_dialogue: bogus length 0x%04x"
+						    " for full image size packet", status );
+				GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08x",
+					    buf2[0x11] | buf2[0x12]<<8
+					    | buf2[0x13]<<16 | buf2[0x14]<<24 );
+				break;
+			case 0x0a:
+				if ( buf2[12] == 0x1c ) {
+					GP_DEBUG ( "canon_usb_capture_dialogue: first interrupt read" );
+				}
+				else if ( buf2[12] == 0x1d ) {
+					GP_DEBUG ( "canon_usb_capture_dialogue:"
+						    " second interrupt read (after image sizes)" );
+					goto EXIT;
+				}
+				else {
+					GP_DEBUG ( "canon_usb_capture_dialogue: unknown subcode"
+						   " 0x%08x in 0x0a interrupt read",
+						    buf2[12] | (buf2[13]<<8)
+						    | (buf2[14]<<16) | (buf2[15]<<24) );
+				}
+				break;
+			default:
+				/* Unknown */
+				GP_DEBUG ( "canon_usb_capture_dialogue: unknown code 0x%02x in interrupt read\n",
+					    buf2[4] );
+				return NULL;
+			}
+		}
 	}
-	GP_DEBUG ( "canon_usb_capture_dialogue: second interrupt packet took %d tries\n", n_tries );
 
+ EXIT:
 	*return_length = 0x1c;
 	return buffer + 0x50;
 }
@@ -618,9 +752,6 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
  * @return_length: number of bytes to read from the camera as response
  * @payload: data we are to send to the camera
  * @payload_length: length of #payload
- * @Returns: a char * that points to the data read from the camera (or
- * NULL on failure), and sets what @return_length points to to the number
- * of bytes read.
  *
  * USB version of the #canon_serial_dialogue function.
  *
@@ -632,7 +763,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
  * Example :
  *
  *	This function gets called with
- *		#canon_funct = CANON_USB_FUNCTION_SET_TIME
+ *		#canon_funct = %CANON_USB_FUNCTION_SET_TIME
  *		#payload = already constructed payload with the new time
  *	we construct a complete command packet and send this to the camera.
  *	The canon_usb_cmdstruct indicates that command
@@ -644,7 +775,11 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length )
  *	unsigned char ** which can be pointed to our buffer and an int
  *	returned with GP_OK or some error code.
  *
- **/
+ * Returns: a char * that points to the data read from the camera (or
+ * NULL on failure), and sets what @return_length points to to the number
+ * of bytes read.
+ *
+ */
 unsigned char *
 canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const char *payload,
 		    int payload_length)
@@ -831,12 +966,16 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
  * @payload: data we are to send to the camera
  * @payload_length: length of #payload
  * @display_status: Whether you want progress bar for this operation or not
+ * @context: context for error reporting
  *
  * This function is used to invoke camera commands which return L (long) data.
  * It calls #canon_usb_dialogue(), if it gets a good response it will malloc()
  * memory and read the entire returned data into this malloc'd memory and store
  * a pointer to the malloc'd memory in 'data'.
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 			 int *data_length, int max_data_size, const char *payload,
@@ -934,7 +1073,19 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 	return GP_OK;
 }
 
-
+/**
+ * canon_usb_get_file:
+ * @camera: camera to lock keys on
+ * @name: name of file to fetch
+ * @data: to receive image data
+ * @length: to receive length of image data
+ * @context: context for error reporting
+ *
+ * Get a file from a USB_connected Canon camera.
+ *
+ * Returns: gphoto2 error code, length in @length, and image data in @data.
+ *
+ */
 int
 canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length,
 		    GPContext *context)
@@ -973,6 +1124,20 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 	return GP_OK;
 }
 
+/**
+ * canon_usb_get_thumbnail:
+ * @camera: camera to lock keys on
+ * @name: name of thumbnail to fetch
+ * @data: to receive image data
+ * @length: to receive length of image data
+ * @context: context for error reporting
+ *
+ * Gets a thumbnail from a USB_connected Canon camera.
+ *
+ * Returns: gphoto2 error code, length in @length, and image data in
+ *    @data.
+ *
+ */
 int
 canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length,
 			 GPContext *context)
@@ -1011,9 +1176,17 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 	return GP_OK;
 }
 
-/*
- * Upload to USB Camera
+/**
+ * canon_usb_put_file:
+ * @camera: camera to lock keys on
+ * @file: CameraFile object to upload
+ * @destname: name file should have on camera
+ * @destpath: pathname for directory to put file
+ * @context: context for error reporting
  * 
+ * Uploads file to USB camera
+ *
+ * Bugs:
  * at the moment, files bigger than 65572-length(filename), while being
  * correctly uploaded, cause the camera to not accept any more uploads.
  * Smaller files work fine.
@@ -1023,6 +1196,8 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
  * once with big files during one session without encountering the problem 
  * described. <kramm@quiss.org>
  * 
+ * Returns: gphoto2 error code
+ *
  */
 int
 canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath,
@@ -1182,6 +1357,19 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 #endif /* CANON_EXPERIMENTAL_UPLOAD */
 }
 
+/**
+ * canon_usb_get_dirents:
+ * @camera: camera to initialize
+ * @dirent_data: to receive directory data
+ * @dirents_length: to receive length of @dirent_data
+ * @path: pathname of directory to list
+ * @context: context for error reporting
+ *
+ * Lists a directory.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 		       unsigned int *dirents_length, const char *path, GPContext *context)
@@ -1234,10 +1422,12 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 /**
  * canon_usb_ready:
  * @camera: camera to get ready
- * @Returns: gphoto2 error code
  *
  * USB part of canon_int_ready
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_usb_ready (Camera *camera)
 {
@@ -1250,6 +1440,19 @@ canon_usb_ready (Camera *camera)
 	return GP_OK;
 }
 
+/**
+ * canon_usb_identify:
+ * @camera: camera to identify
+ * @context: context for error reporting
+ *  GP_ERROR_MODEL_NOT_FOUND if not found in our list;
+ *    this is a code inconsistency.
+ *  GP_OK otherwise
+ *
+ * Identify a supported camera by looking through our list of models.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_usb_identify (Camera *camera, GPContext *context)
 {

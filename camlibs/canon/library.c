@@ -110,8 +110,11 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 	strcpy (manual->text,
 		_("For the A50, 115200 may not be faster than 57600\n"
 		  "Folders are NOT supported\n"
-		  "if you experience a lot of transmissions errors,"
-		  " try to have you computer as idle as possible (ie: no disk activity)"));
+		  "if you experience a lot of transmission errors,"
+		  " try to have your computer as idle as possible\n"
+		  " (ie: no disk activity)\n"
+		  "Capture is experimental for EOS D30/D60"
+			));
 
 	return GP_OK;
 }
@@ -171,6 +174,13 @@ camera_abilities (CameraAbilitiesList *list)
 	return GP_OK;
 }
 
+/**
+ * clear_readiness
+ * @camera: the camera to affect
+ *
+ * Clears the cached flag indicating that the camera is ready.
+ *
+ */
 void
 clear_readiness (Camera *camera)
 {
@@ -1057,6 +1067,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 
 /****************************************************************************/
 
+/* Get configuration into screen widgets for display. */
+
 static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
@@ -1144,6 +1156,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	return GP_OK;
 }
 
+/* Set camera configuration from screen widgets. */
 static int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {

@@ -7,6 +7,10 @@
 # (http://www.jps.net/~koma/). There are two slightly different formats
 # recognized.
 #
+# NOTE: All "interesting" URB's generate a line ending with "***", so the
+#  command "urb-interpret foo.LOG | grep '\*\*\*$'" will generate a summary
+#  of the log.
+#
 
 use strict;
 use warnings;
@@ -297,13 +301,13 @@ foreach $file (@ARGV) {
 				next;
 			} else {
 				if ( $n_skipped ) {
-					print ( "\n*** Skipped $n_skipped KEEP-ALIVE packets ***\n" );
+					print ( "\n*** Skipped $n_skipped null interrupt reads ***\n" );
 					$n_skipped = 0;
 				}
 				if ($op eq "READ") {
 					if ( defined($length) ) {
 						if ( $pipe eq "2" ) {
-						    print ( "\n*** URB $current_urb INTERRUPT READ ***\n\n" );
+						    printf ( "\n*** URB $current_urb interrupt read 0x%02x bytes ***\n\n", $length );
 						} elsif ($length == 0x40) {
 							print("\n\n\n\n*** URB $current_urb possible CANON RESPONSE ***\n");
 						} elsif ($length == 0x01) {
@@ -337,7 +341,7 @@ foreach $file (@ARGV) {
 								warn ( "Command string is $cmd at URB $current_urb\n" );
 							}
 							elsif ($canon_cmd{$cmd}) {
-								print("\n\n\n\n*** URB $current_urb CANON COMMAND '$canon_cmd{$cmd}' ($cmd)");
+								printf("\n\n\n\n*** URB $current_urb CANON COMMAND '$canon_cmd{$cmd}' ($cmd) 0x%02x bytes", $length);
 								if ( $cmd eq "0x13 0x12 0x201" ) {
 									if ( $control_subcmd{$urbdata{$current_urb}{subcmd}} ) {
 										print ( ": $control_subcmd{$urbdata{$current_urb}{subcmd}} ***\n\n" );
@@ -348,15 +352,15 @@ foreach $file (@ARGV) {
 									print ( " ***\n\n" );
 								}
 							} elsif ($cmd3 eq "0x201" or $cmd3 eq "0x202") {
-								print("\n\n\n\n*** URB $current_urb PROBABLE CANON COMMAND ($cmd) ***\n\n");
+								printf("\n\n\n\n*** URB $current_urb PROBABLE CANON COMMAND ($cmd) 0x%02x bytes ***\n\n", $length);
 							} else {
-								print("\n\n\n\n*** URB $current_urb possible CANON COMMAND ($cmd) ***\n\n");
+								printf("\n\n\n\n*** URB $current_urb possible CANON COMMAND ($cmd) 0x%02x bytes ***\n\n", $length);
 							}
 						} elsif ($cmd3 eq "0x201" or $cmd3 eq "0x202") {
 							if ($canon_cmd{$cmd}) {
-								print("\n\n\n\n*** URB $current_urb CANON COMMAND '$canon_cmd{$cmd}' ($cmd) ***\n\n");
+								printf("\n\n\n\n*** URB $current_urb CANON COMMAND '$canon_cmd{$cmd}' ($cmd) 0x%02x bytes ***\n\n", $length);
 							} else {
-								print("\n\n\n\n*** URB $current_urb PROBABLE CANON COMMAND ($cmd) ***\n\n");
+								printf("\n\n\n\n*** URB $current_urb PROBABLE CANON COMMAND ($cmd) 0x%02x bytes ***\n\n", $length);
 							}
 						}
 					}

@@ -77,7 +77,7 @@
  *
  * Note that at least some serial cameras require a certain name for
  * correct detection.
- **/
+ */
 
 #define S32K	(32 * 1024)
 #define S1M	(1024 * 1024)
@@ -121,7 +121,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, CAP_SUP, S99M, S32K, NULL},
         /* 0x306D is S45 in PTP mode */
-	{"Canon:PowerShot G3 (normal mode)",	CANON_PS_G3,	0x04A9, 0x306E, CAP_SUP, S99M, S32K, NULL}, 
+	{"Canon:PowerShot G3 (normal mode)",	CANON_PS_G3,	0x04A9, 0x306E, CAP_SUP, S99M, S32K, NULL},
         /* 0x306F is G3 in PTP mode */
 	{"Canon:PowerShot S230 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, CAP_SUP, S99M, S32K, NULL},
         /* 0x3071 is S230 in PTP mode */
@@ -162,13 +162,14 @@ extern long int timezone;
  * canon_int_filename2thumbname:
  * @camera: Camera to work on
  * @filename: the file to get the name of the thumbnail of
- * @Returns: identifier for corresponding thumbnail
  *
  * The identifier returned is 
  *  a) NULL if no thumbnail exists for this file or an internal error occured
  *  b) pointer to empty string if thumbnail is contained in the file itself
  *  c) pointer to string with file name of the corresponding thumbnail
  *  d) pointer to filename in case filename is a thumbnail itself
+ *
+ * Returns: identifier for corresponding thumbnail
  */
 
 const char *
@@ -237,9 +238,20 @@ canon_int_filename2thumbname (Camera *camera, const char *filename)
 	return NULL;
 }
 
-/*
- * does operations on a directory based on the value
- * of action : DIR_CREATE, DIR_REMOVE
+/**
+ * canon_int_directory_operations:
+ * @camera: Camera to work on
+ * @path: Path to directory on which to operate
+ * @action: either %DIR_CREATE or %DIR_REMOVE
+ * @context: context for error reporting
+ *
+ * Creates or removes a directory in camera storage.
+ *
+ *
+ * Returns: gphoto2 status code. %GP_OK on success, otherwise status
+ * from canon_serial_error(), %GP_ERROR if USB operation fails,
+ * %GP_ERROR_CORRUPTED_DATA if the camera response is not the expected
+ * length, %GP_ERROR_BAD_PARAMETERS if @action is invalid.
  *
  */
 int
@@ -306,7 +318,7 @@ canon_int_directory_operations (Camera *camera, const char *path, int action,
 /**
  * canon_int_identify_camera:
  * @camera: the camera to work with
- * @Returns: gphoto2 error code
+ * @context: context for error reporting
  *
  * Gets the camera identification string, usually the owner name.
  *
@@ -314,7 +326,10 @@ canon_int_directory_operations (Camera *camera, const char *path, int action,
  * is a global variable for the driver.
  *
  * This function also gets the firmware revision in the camera struct.
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_int_identify_camera (Camera *camera, GPContext *context)
 {
@@ -363,10 +378,13 @@ canon_int_identify_camera (Camera *camera, GPContext *context)
  * @camera: the camera to work on
  * @pwr_status: pointer to integer determining power status
  * @pwr_source: pointer to integer determining power source
- * @Returns: gphoto2 error code
+ * @context: context for error reporting
  *
  * Gets battery status.
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPContext *context)
 {
@@ -405,7 +423,8 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 		*pwr_source = msg[7];
 
 	GP_DEBUG ("canon_int_get_battery: Status: %02x (%s) / Source: %02x (%s)\n",
-		  msg[4], (msg[4]&0x4?"OK":"BAD"), msg[7], (msg[7]&0x20?"BATTERY":"AC") );
+		  msg[4], (msg[4]==CAMERA_POWER_OK?"OK":"BAD"),
+		  msg[7], (msg[7]&CAMERA_MASK_BATTERY?"BATTERY":"AC") );
 
 	return GP_OK;
 }
@@ -414,7 +433,6 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
  * canon_int_get_picture_abilities:
  * @camera: the camera to work on
  * @context: the context to print on error
- * @Returns: gphoto2 error code
  *
  * Reads the camera picture abilities, but ignores them as we don't
  *  know how to interpret the data.
@@ -424,11 +442,14 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
  *  EOS D30
  *  EOS D60
  *  PowerShot S45.
- * NOTE: The documentation said that exactly 0x380 (900) bytes would
+ * NOTE: The "Protocol" file said that exactly 0x380 (900) bytes would
  *  be returned, but it's actually 904 bytes for the PowerShot G2.
  *  I don't know whether this was an error in the "Protocol" document
  *  or if different models return different lengths. -swestin 2002.01.09
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_int_get_picture_abilities (Camera *camera, GPContext *context)
 {
@@ -464,8 +485,24 @@ canon_int_get_picture_abilities (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
-
-
+/**
+ * canon_int_pack_control_subcmd
+ * @payload: to receive payload for %CANON_USB_FUNCTION_CONTROL_CAMERA
+ *   command
+ * @subcmd: Subcommand for remote capture command
+ *   (e.g. %CANON_USB_CONTROL_SHUTTER_RELEASE)
+ * @word0: 32-bit first word of payload (first command parameter)
+ * @word1: 32-bit second word of payload (second command parameter)
+ * @desc: to receive string describing subcommand.
+ *
+ * Builds the payload for a remote capture command. The length varies
+ * by command, so this function a buffer of the correct size with the
+ * proper stuff.
+ *
+ * Returns: size of payload buffer, payload data in @payload, command
+ *  description in @desc
+ *
+ */
 int
 canon_int_pack_control_subcmd (unsigned char *payload, int subcmd,
 			       int word0, int word1,
@@ -495,6 +532,21 @@ canon_int_pack_control_subcmd (unsigned char *payload, int subcmd,
 	return paysize;
 }
 
+/**
+ * canon_int_do_control_command:
+ * @camera: Camera to work on
+ * @subcmd: Subcommand for remote capture command
+ *   (e.g. %CANON_USB_CONTROL_INIT)
+ * @a: 32-bit first word of payload (first command parameter)
+ * @b: 32-bit second word of payload (second command parameter)
+ *
+ * Executes a normal remote capture command (i.e. not
+ * %CANON_USB_CONTROL_SHUTTER_RELEASE, which has its own special
+ * function).
+ *
+ * Returns: gphoto2 status code
+ *
+ */
 int
 canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
 {
@@ -527,11 +579,15 @@ canon_int_do_control_command (Camera *camera, int subcmd, int a, int b)
  * canon_int_capture_image
  * @camera: camera to work with
  * @path: gets filled in with the filename of the captured image
- * @Returns: gphoto2 error code
+ * @context: context for error reporting
  *
- * Directs the camera to capture an image (remote shutter release via USB).
- * See the 'Protocol' file for details.
- **/
+ * Directs the camera to capture an image (remote shutter release via
+ * USB).  See the 'Protocol' file for details. Capture through serial
+ * port is not (yet) supported.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_int_capture_image (Camera *camera, CameraFilePath *path, 
 			 GPContext *context)
@@ -658,10 +714,13 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
  * @file: file to work on
  * @dir: directory to work in
  * @attrs: attribute bit field
- * @Returns: gphoto2 error code
+ * @context: context for error reporting
  *
  * Sets a file's attributes. See the 'Protocol' file for details.
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir,
 			       unsigned char attrs, GPContext *context)
@@ -729,11 +788,15 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
  * canon_int_set_owner_name:
  * @camera: the camera to set the owner name of
  * @name: owner name to set the camera to
+ * @context: context for error reporting
  *
  * Sets the camera owner name. The string should not be more than 30
  * characters long. We call #get_owner_name afterwards in order to
  * check that everything went fine.
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 {
@@ -781,7 +844,7 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
  * canon_int_get_time:
  * @camera: camera to get the current time of
  * @camera_time: pointer to where you want the camera time (NOT IN UTC!!!)
- * @Returns: gphoto2 error code
+ * @context: context for error reporting
  *
  * Get camera's current time.
  *
@@ -798,7 +861,10 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
  * if that is what the display says and not to display the cameras time
  * converted to local timezone (which will of course be wrong if you
  * are not in the timezone the cameras clock was set in).
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_int_get_time (Camera *camera, time_t *camera_time, GPContext *context)
 {
@@ -844,12 +910,15 @@ canon_int_get_time (Camera *camera, time_t *camera_time, GPContext *context)
  * canon_int_set_time:
  * @camera: camera to get the current time of
  * @date: the date to set (in UTC)
- * @Returns: gphoto2 error code
+ * @context: context for error reporting
  *
  * Set camera's current time.
  *
  * Canon cameras know nothing about time zones so we have to convert it to local
  * time (but still expressed in UNIX time format (seconds since 1970-01-01).
+ *
+ * Returns: gphoto2 error code
+ *
  */
 
 int
@@ -919,10 +988,13 @@ canon_int_set_time (Camera *camera, time_t date, GPContext *context)
 /**
  * canon_int_ready:
  * @camera: camera to get ready
- * @Returns: gphoto2 error code
+ * @context: context for error reporting
  *
  * Switches the camera on, detects the model and sets its speed.
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_int_ready (Camera *camera, GPContext *context)
 {
@@ -946,11 +1018,14 @@ canon_int_ready (Camera *camera, GPContext *context)
 /**
  * canon_int_get_disk_name:
  * @camera: camera to ask for disk drive
- * @Returns: name of disk
+ * @context: context for error reporting
  *
  * Ask the camera for the name of the flash storage
  * device. Usually "D:" or something like that.
- **/
+ *
+ * Returns: name of disk
+ *
+ */
 char *
 canon_int_get_disk_name (Camera *camera, GPContext *context)
 {
@@ -1008,10 +1083,13 @@ canon_int_get_disk_name (Camera *camera, GPContext *context)
  * @name: name of the disk
  * @capacity: returned maximum disk capacity
  * @available: returned currently available disk capacity
- * @Returns: boolean value denoting success (FIXME: ATTENTION!)
+ * @context: context for error reporting
  *
  * Gets available room and max capacity of a disk given by @name.
- **/
+ *
+ * Returns: boolean value denoting success (FIXME: ATTENTION!)
+ *
+ */
 int
 canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, int *available,
 			      GPContext *context)
@@ -1064,10 +1142,15 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 
 /**
  * gphoto2canonpath:
+ * @camera: camera to use
  * @path: gphoto2 path 
+ * @context: context for error reporting
  *
  * convert gphoto2 path  (e.g.   "/DCIM/116CANON/IMG_1240.JPG")
  * into canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
+ *
+ * Returns: string with converted path name
+ *
  */
 const char *
 gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
@@ -1106,7 +1189,8 @@ gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
 }
 
 /**
- * cancon2gphotopath:
+ * canon2gphotopath:
+ * @camera: camera to use
  * @path: canon style path
  *
  * convert canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
@@ -1114,6 +1198,9 @@ gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
  *
  * Assumes @path to start with drive name followed by a colon.
  * It just drops the drive name.
+ *
+ * Returns: immutable string with gphoto2 path
+ *
  */
 const char *
 canon2gphotopath (Camera *camera, const char *path)
@@ -1147,6 +1234,13 @@ canon2gphotopath (Camera *camera, const char *path)
 	return (tmp);
 }
 
+/**
+ * debug_fileinfo:
+ * @info: information block
+ *
+ * Writes file info to debug log. Usable only from within "canon.c".
+ *
+ */
 static void
 debug_fileinfo (CameraFileInfo * info)
 {
@@ -1180,9 +1274,19 @@ debug_fileinfo (CameraFileInfo * info)
 }
 
 /**
- * Get the directory tree of a given flash device.
+ * canon_int_list_directory:
+ * @camera:
+ * @folder:
+ * @list:
+ * @flags:
+ * @context: context for error reporting
+ *
+ * Gets the directory tree of a given flash device.
  *
  * Implicitly assumes that uint8_t[] is a char[] for strings.
+ *
+ * Returns: 
+ *
  */
 int
 canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
@@ -1508,6 +1612,22 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 	return GP_OK;
 }
 
+/**
+ * canon_int_get_file:
+ * @camera:
+ * @name: name of file to fetch
+ * @data: to receive file data
+ * @length: length of @data
+ * @context: context for error reporting
+ *
+ * Gets the directory tree of a given flash device.
+ *
+ * Implicitly assumes that uint8_t[] is a char[] for strings.
+ *
+ * Returns: gphoto2 error code, file contents in @data,
+ *  length of file in @length.
+ *
+ */
 int
 canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int *length,
 		    GPContext *context)
@@ -1532,14 +1652,17 @@ canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int 
  * @name: image to get thumbnail of
  * @length: length of data returned
  * @retdata: The thumbnail data
+ * @context: context for error reporting
  *
  * NOTE: Since cameras that do not store the thumbnail in a separate
  * file does not return just the thumbnail but the first 10813 bytes
  * of the image (most oftenly the EXIF header with thumbnail data in
  * it) this must be treated before called a true thumbnail.
  *
- * Returns GPError.
- **/
+ * Returns: result from canon_usb_get_thumbnail()
+ *   or canon_serial_get_thumbnail()
+ *
+ */
 int
 canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retdata,
 			 int *length, GPContext *context)
@@ -1569,6 +1692,18 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 	return res;
 }
 
+/**
+ * canon_int_delete_file:
+ * @camera: camera to work with
+ * @name: image to delete
+ * @dir: directory from which to delete the file
+ * @context: context for error reporting
+ *
+ * Deletes a file from the camera storage.
+ *
+ * Returns: result from canon_usb_dialogue() or canon_serial_dialogue()
+ *
+ */
 int
 canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPContext *context)
 {
@@ -1617,8 +1752,17 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
 	return GP_OK;
 }
 
-/*
- * Upload a file to the camera
+/**
+ * canon_int_put_file:
+ * @camera: camera to work with
+ * @file: gphoto2 file object to upload
+ * @destname: name for file on camera
+ * @destpath: directory in which to put the file
+ * @context: context for error reporting
+ *
+ * Uploads a file to the camera.
+ *
+ * Returns: result from canon_usb_put_file() or canon_serial_put_file()
  *
  */
 int
@@ -1642,10 +1786,18 @@ canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 
 /**
  * canon_int_extract_jpeg_thumb:
+ * @data: raw JFIF from which to extract thumbnail
+ * @datalen: length of @data
+ * @retdata: to receive extracted thumbnail
+ * @retdatalen: length of @retdata
+ * @context: context for error reporting
  *
- * extract thumbnail from JFIF image (A70) or movie .thm file.
+ * Extracts thumbnail from JFIF image (A70) or movie .thm file.
  * just extracted the code from the old #canon_int_get_thumbnail
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 
 int
 canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,

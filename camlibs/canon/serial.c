@@ -61,30 +61,42 @@
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
+/**
+ * serial_flush_input
+ * @gdev: serial port to use
+ *
+ * Dummy function.
+ *
+ */
 void
 serial_flush_input (GPPort *gdev)
 {
 }
 
+/**
+ * serial_flush_output
+ * @gdev: serial port to use
+ *
+ * Dummy function.
+ *
+ */
 void
 serial_flush_output (GPPort *gdev)
 {
 }
 
-/*****************************************************************************
- *
+/**
  * canon_serial_change_speed
+ * @gdev: serial port to use
+ * @speed: the new speed
  *
- * change the speed of the communication.
+ * Changes the speed of the communication.
  *
- * speed - the new speed
+ * Returns: 1 on success.
+ *          0 on any error.
  *
- * Returns 1 on success.
- * Returns 0 on any error.
- *
- ****************************************************************************/
+ */
 
-int
 canon_serial_change_speed (GPPort *gdev, int speed)
 {
 	gp_port_settings settings;
@@ -100,18 +112,18 @@ canon_serial_change_speed (GPPort *gdev, int speed)
 }
 
 
-/*****************************************************************************
- *
+/**
  * canon_serial_get_cts
+ * @gdev: serial port to use
  *
  * Gets the status of the CTS (Clear To Send) line on the serial port.
  *
  * CTS is "1" when the camera is ON, and "0" when it is OFF.
  *
- * Returns 1 on CTS high.
- * Returns 0 on CTS low.
+ * Returns: 1 on CTS high.
+ *          0 on CTS low.
  *
- ****************************************************************************/
+ */
 int
 canon_serial_get_cts (GPPort *gdev)
 {
@@ -121,18 +133,15 @@ canon_serial_get_cts (GPPort *gdev)
 	return (level);
 }
 
-/*****************************************************************************
- *
+/**
  * canon_serial_init
+ * @camera: Camera object to initialize
  *
- * Initializes the given serial device.
+ * Initializes the given serial device by setting speed, parity, etc.
  *
- * devname - the name of the device to open
+ * Returns: %GP_OK
  *
- * Returns 0 on success.
- * Returns -1 on any error.
- *
- ****************************************************************************/
+ */
 
 int
 canon_serial_init (Camera *camera)
@@ -156,20 +165,18 @@ canon_serial_init (Camera *camera)
 	return GP_OK;
 }
 
-/*****************************************************************************
- *
+/**
  * canon_serial_send
+ * @camera: Camera object to work with
+ * @buf:    the raw data buffer to send
+ * @len:    the length of the buffer
+ * @sleep:  time in usec to wait between characters
  *
  * Send the given buffer with given length over the serial line.
  *
- * buf   - the raw data buffer to send
- * len   - the length of the buffer
- * sleep - time in usec to wait between characters
+ * Returns: 0 on success, -1 on error.
  *
- * Returns 0 on success, -1 on error.
- *
- ****************************************************************************/
-
+ */
 int
 canon_serial_send (Camera *camera, const unsigned char *buf, int len, int sleep)
 {
@@ -192,7 +199,12 @@ canon_serial_send (Camera *camera, const unsigned char *buf, int len, int sleep)
 
 
 /**
+ * serial_set_timeout
+ * @gdev: serial port to use
+ * @to:   timeout in milliseconds
+ *
  * Sets the timeout, in miliseconds.
+ *
  */
 void
 serial_set_timeout (GPPort *gdev, int to)
@@ -200,17 +212,17 @@ serial_set_timeout (GPPort *gdev, int to)
 	gp_port_set_timeout (gdev, to);
 }
 
-/*****************************************************************************
- *
+/**
  * canon_serial_get_byte
+ * @gdev: serial port to use
  *
- * Get the next byte from the serial line.
+ * Gets the next byte from the serial line.
  * Actually the function reads chunks of data and keeps them in a cache.
  * Only one byte per call will be returned.
  *
- * Returns the byte on success, -1 on error.
+ * Returns: the byte on success, -1 on error.
  *
- ****************************************************************************/
+ */
 int
 canon_serial_get_byte (GPPort *gdev)
 {
@@ -240,6 +252,17 @@ canon_serial_get_byte (GPPort *gdev)
 
 /* ------------------------- Frame-level processing ------------------------- */
 
+/**
+ * canon_serial_send_frame
+ * @camera: Camera object to work with
+ * @pkt: Data to send to camera
+ * @len: Length of packet
+ *
+ * Sends a frame of data to camera
+ *
+ * Returns: 1 if canon_serial_send() succeeds, 0 if it fails
+ *
+ */
 int
 canon_serial_send_frame (Camera *camera, const unsigned char *pkt, int len)
 {
@@ -268,7 +291,17 @@ canon_serial_send_frame (Camera *camera, const unsigned char *pkt, int len)
 	return !canon_serial_send (camera, buffer, p - buffer, USLEEP2);
 }
 
-
+/**
+ * canon_serial_recv_frame
+ * @camera: Camera object to work with
+ * @len:    to receive the length of the buffer
+ *
+ * Receive a frame from the camera
+ *
+ * Returns: a buffer containing a frame from the camera, or NULL on error.
+ *          On success, @len will contain the length of the buffer.
+ *
+ */
 unsigned char *
 canon_serial_recv_frame (Camera *camera, int *len)
 {
@@ -307,7 +340,21 @@ canon_serial_recv_frame (Camera *camera, int *len)
 
 /* ------------------------ Packet-level processing ------------------------- */
 
-
+/**
+ * canon_serial_send_packet
+ * @camera: Camera object to work with
+ * @type: 
+ * @seq: 
+ * @pkt: data to send to camera
+ * @len: length of data
+ *
+ * frames a packet (generates CRC, packs with sequence number and
+ * length) and sends it to the camera through the serial port using
+ * canon_serial_send_frame().
+ *
+ * Returns: status from canon_serial_send_frame()
+ *
+ */
 int
 canon_serial_send_packet (Camera *camera, unsigned char type, unsigned char seq,
 			  unsigned char *pkt, int len)
@@ -340,6 +387,22 @@ canon_serial_send_packet (Camera *camera, unsigned char type, unsigned char seq,
 	return canon_serial_send_frame (camera, hdr, len + PKT_HDR_LEN + 2);
 }
 
+/**
+ * canon_serial_recv_packet
+ * @camera: Camera object to work with
+ * @type: Type of packet
+ * @seq: Sequence number of packet
+ * @len: length of data received
+ *
+ * Receives a packet from the serial port using
+ * canon_serial_send_frame(), decodes frame information (type,
+ * sequence number, and length), and returns it stripped of frame
+ * information.
+ *
+ * Returns: packet data (or NULL if failure). Type in @type, sequence
+ *   number in @seq, and length in @len.
+ *
+ */
 unsigned char *
 canon_serial_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int *len)
 {
@@ -384,9 +447,12 @@ canon_serial_recv_packet (Camera *camera, unsigned char *type, unsigned char *se
 
 
 /**
+ * canon_serial_wait_for_ack
+ * @camera: Camera object to work with
+ *
  * Waits for an "ACK" from the camera.
  *
- * Return values:
+ * Returns:
  *  1 : ACK received
  *  0 : communication error (no reply received for example)
  * -1 : NACK received.
@@ -454,15 +520,18 @@ canon_serial_wait_for_ack (Camera *camera)
 }
 
 /**
+ * canon_serial_send_msg
+ * @camera: Camera object to work with
+ * @mtype:  message type.
+ * @dir:    direction.
+ * @ap:     message payload (list of arguments, see 'man va_start'
+ *
  * Sends a message to the camera.
  *
- * See the "Protocol" file for an explanation of the various
- * elements needed to create a message.
- *
- * Arguments:
- *  mtype : message type.
- *  dir   : direction.
- *  ap    : message payload (list of arguments, see 'man va_start'
+ * Returns:
+ *   -1 on error
+ *    0 if canon_serial_send_packet() fails
+ *    1 on good ACK received
  */
 static int
 canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list * ap)
@@ -565,18 +634,21 @@ canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, v
 }
 
 /**
- * Receive a message from the camera.
+ * canon_serial_recv_msg
+ * @camera: Camera object to work with
+ * @mtype:  message type.
+ * @dir:    direction.
+ * @total:  payload length (set by this function).
+ * @context: context for error reporting
+ *
+ * Receives a message from the camera.
  *
  * See the "Protocol" file for an explanation of the various
  * elements needed to handle a message.
  *
- * Arguments:
- *  mtype : message type.
- *  dir   : direction.
- *  total : payload length (set by this function).
- *
  * Returns:
- *  char* : pointer to the message payload.
+ *  char* pointer to the message payload; NULL on failure.
+ *
  */
 unsigned char *
 canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *total,
@@ -728,11 +800,12 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
 
 /**
  * canon_serial_dialogue:
- *
+ * @camera: camera with which to communicate
+ * @context: context for error reporting
  * @mtype : type
  * @dir   : direction
  * @len   : length of the received payload
- * @...   : The rest of the arguments will be put together to
+ * @Varargs: The rest of the arguments will be put together to
  *          fill up the payload of the request message.
  *
  * Higher level function: sends a message and waits for a
@@ -745,7 +818,9 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, i
  * Example: To send a string called "name" :
  * canon_serial_dialogue(0x05,0x12,&len,name,strlen(name)+1,NULL);
  *
- **/
+ * Returns: buffer received from canon_serial_recv_msg(), NULL if failure
+ *
+ */
 unsigned char *
 canon_serial_dialogue (Camera *camera, GPContext *context, unsigned char mtype,
 		       unsigned char dir, int *len, ...)
@@ -803,9 +878,11 @@ canon_serial_dialogue (Camera *camera, GPContext *context, unsigned char mtype,
 /**
  * canon_serial_end:
  * @camera: the camera to switch off
- * @Returns: GP_OK
  *
- * Switches the #camera off
+ * Switches the @camera off
+ *
+ * Returns: %GP_OK
+ *
  */
 int
 canon_serial_end (Camera *camera)
@@ -818,11 +895,13 @@ canon_serial_end (Camera *camera)
 /**
  * canon_serial_off:
  * @camera: the camera to switch off
- * @Returns: GP_OK
  *
  * Switches the #camera off, and resets the serial driver to 9600 bauds,
  * in order to be ready to switch the camera back on again if wanted.
  * Should better be named psa50_serial_off
+ *
+ * Returns: %GP_OK
+ *
  */
 int
 canon_serial_off (Camera *camera)
@@ -835,9 +914,13 @@ canon_serial_off (Camera *camera)
 
 
 
-/*
- * print a message corresponding
+/**
+ * canon_serial_error_type
+ * @camera: Camera object to work with
+ *
+ * logs a debug message corresponding
  * to the error encountered
+ *
  */
 void
 canon_serial_error_type (Camera *camera)
@@ -855,8 +938,17 @@ canon_serial_error_type (Camera *camera)
 	}
 }
 
-/*
- * Upload to Camera via serial
+/**
+ * canon_serial_put_file
+ * @camera: Camera object to work with
+ * @file: CameraFile object to upload
+ * @destname: name file should have on camera
+ * @destpath: pathname for directory to put file
+ * @context: context for error reporting
+ *
+ * Uploads file to @camera via serial port
+ *
+ * Returns: gphoto2 error code
  *
  */
 int
@@ -924,6 +1016,19 @@ canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *d
 	return GP_OK;
 }
 
+/**
+ * canon_serial_get_file:
+ * @camera: camera to lock keys on
+ * @name: name of file to fetch
+ * @length: to receive length of image data
+ * @context: context for error reporting
+ *
+ * Get a file from a USB_connected Canon camera.
+ *
+ * Returns: buffer containing file data (or NULL on failure); length
+ * in @length.
+ *
+ */
 unsigned char *
 canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext *context)
 {
@@ -987,6 +1092,19 @@ canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext 
 	return NULL;
 }
 
+/**
+ * canon_serial_get_dirents:
+ * @camera: camera to initialize
+ * @dirent_data: to receive directory data
+ * @dirents_length: to receive length of @dirent_data
+ * @path: pathname of directory to list
+ * @context: context for error reporting
+ *
+ * Lists a directory.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			  unsigned int *dirents_length, const char *path, GPContext *context)
@@ -1129,10 +1247,13 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 /**
  * canon_serial_ready:
  * @camera: camera to get ready
- * @Returns: gphoto2 error code
+ * @context: context for error reporting
  *
  * serial part of canon_int_ready
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_serial_ready (Camera *camera, GPContext *context)
 {
@@ -1354,16 +1475,18 @@ canon_serial_ready (Camera *camera, GPContext *context)
 
 /**
  * canon_serial_get_thumbnail:
- *
  * @camera: camera to work on
  * @name: file name (complete canon path) of file to get thumbnail for
  * @data: pointer to data pointer
  * @length: pointer to data length
- * @Returns: GP_ERROR code
+ * @context: context for error reporting
  *
  * This is just the serial specific part extracted from the older
  * canon_get_thumbnail() routine. 
- **/
+ *
+ * Returns: gphoto2 error code
+ *
+ */
 int
 canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 			    int *length, GPContext *context)

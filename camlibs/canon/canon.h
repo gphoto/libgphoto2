@@ -14,13 +14,6 @@
 #warning COMPILING WITH EXPERIMENTAL UPLOAD FEATURE
 #endif
 
-/* Defines for error handling */
-#define NOERROR		0
-#define ERROR_RECEIVED	1
-#define ERROR_ADDRESSED	2
-#define FATAL_ERROR	3
-#define ERROR_LOWBATT	4
-
 /* Battery status values:
 
  * hopefully obsolete values first - we now just use the bit 
@@ -34,6 +27,13 @@
 #define CAMERA_POWER_BAD    4
 
 #define CAMERA_MASK_BATTERY  32
+
+/* Flags to find important points in JFIF or EXIF files */
+#define JPEG_ESC        0xFF
+#define JPEG_BEG        0xD8
+#define JPEG_SOS        0xDB
+#define JPEG_A50_SOS    0xC4
+#define JPEG_END        0xD9
 
 
 /**
@@ -68,12 +68,29 @@ typedef enum {
 	CANON_PS_G3
 } canonCamModel;
 
+/**
+ * CON_CHECK_PARAM_NULL
+ * @param: value to check for NULL
+ *
+ * Checks if the given parameter is NULL. If so, reports through
+ *  gp_context_error() (assuming that "context" is defined) and returns
+ *  @GP_ERROR_BAD_PARAMETERS from the enclosing function.
+ *
+ */
 #define CON_CHECK_PARAM_NULL(param) \
 	if (param == NULL) { \
 		gp_context_error (context, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
 		return GP_ERROR_BAD_PARAMETERS; \
 	}
 
+/**
+ * CHECK_PARAM_NULL
+ * @param: value to check for NULL
+ *
+ * Checks if the given parameter is NULL. If so, returns
+ *  @GP_ERROR_BAD_PARAMETERS from the enclosing function.
+ *
+ */
 #define CHECK_PARAM_NULL(param) \
 	if (param == NULL) { \
 		GP_LOG (GP_LOG_ERROR, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
@@ -81,8 +98,13 @@ typedef enum {
 	}
 
 
-/**
+/*
+ * canonCaptureSupport:
+ *
  * State of capture support
+ *  Non-zero if any support exists, but lets caller know
+ *  if support is to be trusted.
+ *
  */
 typedef enum {
 	CAP_NON = 0, /* no support */
@@ -175,6 +197,15 @@ struct _CameraPrivateLibrary
 /* These contain the default label for all the 
  * switch (camera->port->type) statements
  */
+
+/**
+ * GP_PORT_DEFAULT_RETURN_INTERNAL:
+ * @return_statement: Statement to use for return
+ *
+ * Used only by GP_PORT_DEFAULT_RETURN_EMPTY(),
+ *  GP_PORT_DEFAULT_RETURN(), and GP_PORT_DEFAULT()
+ *
+ */
 #define GP_PORT_DEFAULT_RETURN_INTERNAL(return_statement) \
 		default: \
 			gp_context_error (context, "Don't know how to handle " \
@@ -184,8 +215,32 @@ struct _CameraPrivateLibrary
 			return_statement; \
 			break;
 
+/**
+ * GP_PORT_DEFAULT_RETURN_EMPTY:
+ *
+ * Return as a default case in switch (camera->port->type)
+ * statements in functions returning void.
+ *
+ */
 #define GP_PORT_DEFAULT_RETURN_EMPTY   GP_PORT_DEFAULT_RETURN_INTERNAL(return)
+/**
+ * GP_PORT_DEFAULT_RETURN
+ * @RETVAL: Value to return from this function
+ *
+ * Return as a default case in switch (camera->port->type)
+ * statements in functions returning a value.
+ *
+ */
 #define GP_PORT_DEFAULT_RETURN(RETVAL) GP_PORT_DEFAULT_RETURN_INTERNAL(return RETVAL)
+
+/**
+ * GP_PORT_DEFAULT
+ *
+ * Return as a default case in switch (camera->port->type) statements
+ * in functions returning a gphoto2 error code where this value of
+ * camera->port->type is unexpected.
+ *
+ */
 #define GP_PORT_DEFAULT                GP_PORT_DEFAULT_RETURN(GP_ERROR_BAD_PARAMETERS)
 
 /*

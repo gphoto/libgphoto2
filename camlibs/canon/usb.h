@@ -78,13 +78,13 @@ int canon_usb_identify (Camera *camera, GPContext *context);
 #define CANON_USB_CONTROL_SET_ZOOM_POS          7
 #define CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE   8
 #define CANON_USB_CONTROL_GET_EXT_PARAMS        9
-/* unobserved, commands present in canon headers defines */
 #define CANON_USB_CONTROL_EXIT                  10
 #define CANON_USB_CONTROL_VIEWFINDER_START      11
 #define CANON_USB_CONTROL_VIEWFINDER_STOP       12
 #define CANON_USB_CONTROL_GET_AVAILABLE_SHOT    13
-#define CANON_USB_CONTROL_SET_CUSTOM_FUNC       14
 #define CANON_USB_CONTROL_GET_CUSTOM_FUNC       15
+/* unobserved, commands present in canon headers defines */
+#define CANON_USB_CONTROL_SET_CUSTOM_FUNC       14
 #define CANON_USB_CONTROL_GET_EXT_PARAMS_VER    16
 #define CANON_USB_CONTROL_SET_EXT_PARAMS        17
 #define CANON_USB_CONTROL_SELECT_CAM_OUTPUT     18
@@ -100,6 +100,14 @@ struct canon_usb_control_cmdstruct
 	int additional_return_length;
 };
 
+/**
+ * MAX_INTERRUPT_TRIES
+ *
+ * Maximum number of times to try a read from the interrupt pipe. We
+ * will keep reading until an error, a read of non-zero length, or for
+ * a maximum of this many times.
+ */
+#define MAX_INTERRUPT_TRIES 4000
 
 
 

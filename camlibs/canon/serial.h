@@ -51,6 +51,12 @@ int canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char 
 #define HDR_FIXED_LEN 30
 #define DATA_BLOCK 1536
 
+/* Defines for error handling */
+#define NOERROR		0
+#define ERROR_RECEIVED	1
+#define ERROR_ADDRESSED	2
+#define FATAL_ERROR	3
+#define ERROR_LOWBATT	4
 
 /* ------------------------- Frame-level processing ------------------------- */
 
@@ -107,12 +113,6 @@ int canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char 
 /* ----------------------- Command-level processing ------------------------ */
 
 
-
-#define JPEG_ESC        0xFF
-#define JPEG_BEG        0xD8
-#define JPEG_SOS        0xDB
-#define JPEG_A50_SOS    0xC4
-#define JPEG_END        0xD9
 
 #define SPEED_9600   "\x00\x03\x02\x02\x01\x10\x00\x00\x00\x00\xc0\x39"
 #define SPEED_19200  "\x00\x03\x08\x02\x01\x10\x00\x00\x00\x00\x13\x1f"
