@@ -176,6 +176,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, S2M, NULL},
 	/* 0x3099 is the EOS 300D/Digital Rebel in PTP mode */
 	{"Canon:EOS 300D (normal mode)",	CANON_EOS_300D, 0x04A9, 0x3084, CAP_SUP, S10M, S32K, S2M, NULL},
+	{"Canon:EOS Digital Rebel (normal mode)",CANON_EOS_300D,0x04A9, 0x3084, CAP_SUP, S10M, S32K, S2M, NULL},
 
 	{NULL}
 	/* *INDENT-ON* */
