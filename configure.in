@@ -417,25 +417,47 @@ dnl           commands in the gphoto2 shell or to use <up> or <down> to
 dnl           navigate through the history.
 dnl ---------------------------------------------------------------------------
 rl_msg="no (cnswww.cns.cwru.edu/~chet/readline/rltop.html)"
-try_rl=true
-have_rl=false
+try_readline=true
+have_readline=false
 AC_ARG_WITH(readline, [  --without-readline        Don't use readline],
-        if test x$withval = xno; then
+        if test "x${withval}" = "xno"; then
                 try_readline=false
         fi
 )
 if $try_readline; then
-        AC_CHECK_HEADER(readline/readline.h,[
-		AC_CHECK_LIB(readline, rl_completion_matches, [
-			have_readline=true
-                	rl_msg=yes
-                	AC_DEFINE(HAVE_RL)
-			RL_LIBS=-lreadline
-			RL_CFLAGS=""])])
+        # first check for readline header
+        AC_CHECK_HEADER(readline/readline.h,,[
+                try_readline=false
+                rl_msg="no (header not found)"])
+        if $try_readline; then
+                # now check whether we can link against readline without ncurses
+                AC_CHECK_LIB(readline, rl_completion_matches, [
+        		have_readline=true
+                       	rl_msg="yes (doesn' require explicit -lncurses)"
+        		RL_LIBS="-lreadline"
+	        	RL_CFLAGS=""])
+                if ! $have_readline; then
+                        # check whether we can link against readline with ncurses
+                        # we use another function to avoid the configure caching
+                        # to kick in
+                        AC_CHECK_LIB(readline, rl_copy_text, [
+                                have_readline=true
+                                rl_msg="yes (requires explicit -lncurses)"
+                		RL_LIBS="-lreadline -lncurses"
+               			RL_CFLAGS=""],,
+                                [-lncurses])
+                fi
+                if ! $have_readline; then
+                        rl_msg="no (couldn't link against it)"
+                fi
+        fi
 else
         rl_msg="no (not requested)"
 fi
-AM_CONDITIONAL(HAVE_RL, $have_rl)
+if $have_readline; then
+        AC_DEFINE(HAVE_RL,,[whether we use the readline library])
+fi
+AM_CONDITIONAL(HAVE_RL, $have_readline)
 AC_SUBST(RL_LIBS)
 AC_SUBST(RL_CFLAGS)
 
