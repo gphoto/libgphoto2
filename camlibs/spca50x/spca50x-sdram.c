@@ -600,7 +600,6 @@ spca50x_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		CHECK (gp_port_read (lib->gpdev, mybuf, size));
 	}
 	*len = t_width * t_height * 3 + headerlength;
-	*len += 45;
 	*buf = malloc (*len);
 	if (!*buf)
 		return (GP_ERROR_NO_MEMORY);
@@ -611,7 +610,7 @@ spca50x_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 
 	yuv_p = mybuf;
 	rgb_p = tmp;
-	while (yuv_p < mybuf + size) {
+	while (yuv_p < mybuf + (t_width * t_height * 2)) {
 		unsigned int u, v, y, y2;
 		unsigned int r, g, b;
 

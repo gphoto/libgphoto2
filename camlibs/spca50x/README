@@ -108,3 +108,5 @@ above anyway, so I wont list them again.
 
 Big thanks to Richard Curnow <rc@rc0.org.uk> who fixed several bug in the
 gsmart mini support. His patches went in during the merge. 
+
+Hartmut Henkel <hartmut_henkel@gmx.de> helped debug a crash with thumbnails.
