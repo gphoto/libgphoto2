@@ -1541,6 +1541,13 @@ unsigned char *psa50_get_file_usb(Camera *camera, const char *name,int *length)
 	gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: %d is too big\n",total);
 	break;
       }
+
+      /* Thumbnails show up as less than 8K, which causes a segfault, so we need
+	 to set a minimum of 8k */
+
+      if (total < 0x2000) {
+	total = 0x2000;
+      }
       file = malloc(total);
       if (!file) {
 	gp_debug_printf(GP_DEBUG_LOW,"canon","ERROR: Alloc problems!\n");

@@ -285,7 +285,7 @@ static int is_image(const char *name)
 
 	pos = strchr(name,'.');
 	if (!pos) return 0;
-	return !strcmp(pos,".JPG");
+	return (!strcmp(pos,".JPG") || !strcmp(pos,".THM"));
 }
 
 /*
