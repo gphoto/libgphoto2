@@ -35,6 +35,7 @@ gp_abilities_new (CameraAbilities **abilities)
 	CHECK_NULL (abilities);
 
 	CHECK_MEM (*abilities = malloc (sizeof (CameraAbilities)));
+	memset (*abilities, 0, sizeof (CameraAbilities));
 
 	return (GP_OK);
 }
