@@ -9,3 +9,5 @@ libgphoto_sony_dscf1_la_SOURCES = tty.c command.c getuint.c \
 	tty.h command.h getuint.h chotplay.h pmp.h config.h common.h
 
 libgphoto_sony_dscf1_la_LDFLAGS = -version-info 0:0:0
+
+libgphoto_sony_dscf1_la_LIBADD = -lgphoto2
