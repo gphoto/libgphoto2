@@ -1,10 +1,10 @@
-CCFLAGS=-O2 -c -I.. -I..\..\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
+CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgpio -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H
 CC=gcc
 
 all: ..\gpdirbrw.dll
 
 ..\..\obj\directory.o : directory.c directory.h
-   $(CC) -o $@ directory.c
+   $(CC) -o $@ directory.c $(CCFLAGS)
 
 ..\gpdirbrw.dll: ..\..\obj\directory.o
    $(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** directory.def -lwrap -Le:\emx\lib -lst\check -lgcc -LE:\NETLABS\GNOME\GPHOTO2\LIB -llibgphoto2 -llibgpio -ldl E:\NETLABS\GNOME\GPHOTO2\obj\interface.o -lpthreads -lpthrdrtl -lmt\c
