@@ -141,7 +141,7 @@ int load_cameras() {
 	load_cameras_search(CAMLIBS);
 
 	/* Current directory */
-	load_cameras_search(".");
+	/* load_cameras_search("."); */
 
         /* Sort the camera list */
         for (x=0; x<glob_abilities_list->count-1; x++) {
