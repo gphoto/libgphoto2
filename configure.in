@@ -79,6 +79,17 @@ fi
 dnl Replace `main' with a function in -libs:
 AC_CHECK_LIB(ibs, main)
 
+LIBJPEG=""
+libjpeg_msg="no"
+AC_SUBST(LIBJPEG)
+AC_CHECK_LIB(jpeg,jpeg_start_decompress,[
+	AC_CHECK_HEADER(jpeglib.h,[
+		AC_DEFINE(HAVE_LIBJPEG,1,[define if we found LIBJPEG and its headers])
+		LIBJPEG="-ljpeg"
+		libjpeg_msg="yes"
+	])
+])
+
 dnl ---------------------------------------------------------------------------
 dnl Checks for header files.
 dnl ---------------------------------------------------------------------------
@@ -434,6 +445,7 @@ Configuration (libgphoto2):
 	Build API documentation:   $gtkdoc_msg
 	pkg-config:                $pkgconfig_msg
 	EXIF support:              $exif_msg
+	JPEG mangling support:     $libjpeg_msg
 	Use ltdl.h:                $ltdl_msg
 	/proc/meminfo:             $proc_meminfo_msg
 "
