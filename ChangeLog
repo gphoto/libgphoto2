@@ -1,3 +1,7 @@
+2001-11-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/polaroid/pdc700.c: Checksum is only 1 byte long.
+
 2001-11-05  Chris Pinkham <cpinkham@infi.net>
 
 	* camlibs/panasonic/coolshot/coolshot.c

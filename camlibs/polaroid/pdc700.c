@@ -33,6 +33,25 @@
 
 #include <gphoto2-library.h>
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #define PDC700_INIT	0x01
 #define PDC700_INFO	0x02
 
@@ -69,36 +88,38 @@ calc_checksum (unsigned char *cmd, int len)
 }
 
 static int
-pdc700_read (GPPort *port, unsigned char *cmd, int cmd_len,
+pdc700_read (Camera *camera, unsigned char *cmd, int cmd_len,
 	     unsigned char *buf, int *buf_len, int *status)
 {
-	unsigned char header[3];
-	int checksum, i;
+	unsigned char header[3], checksum;
+	int i;
 
 	/* Finish the command and send it */
 	cmd[0] = 0x40;
 	cmd[1] = (cmd_len - 3) >> 8;
 	cmd[2] = (cmd_len - 3) & 0xff;
 	cmd[cmd_len - 1] = calc_checksum (cmd + 3, cmd_len - 1 - 3);
-	CHECK_RESULT (gp_port_write (port, cmd, cmd_len));
+	CHECK_RESULT (gp_port_write (camera->port, cmd, cmd_len));
 
 	/*
 	 * Read the header (0x40 plus 2 bytes indicating how many bytes
 	 * will follow)
 	 */
-	CHECK_RESULT (gp_port_read (port, header, 3));
+	CHECK_RESULT (gp_port_read (camera->port, header, 3));
 	if (header[0] != 0x40)
 		return (GP_ERROR_CORRUPTED_DATA);
 	*buf_len = (header[2] << 8) | header [1];
 
 	/* Read the remaining bytes */
-	CHECK_RESULT (gp_port_read (port, buf, *buf_len));
+	CHECK_RESULT (gp_port_read (camera->port, buf, *buf_len));
 	
 	/*
 	 * The first byte indicates if this the response for our command. 
 	 */
-	if (buf[0] != (0x80 | cmd[3]))
+	if (buf[0] != (0x80 | cmd[3])) {
+		gp_camera_set_error (camera, _("Received unexpected response"));
 		return (GP_ERROR_CORRUPTED_DATA);
+	}
 
 	/*
 	 * The next byte indicates if other packets will follow (in case
@@ -109,8 +130,10 @@ pdc700_read (GPPort *port, unsigned char *cmd, int cmd_len,
 	/* Check the checksum */
 	for (checksum = i = 0; i < *buf_len - 1; i++)
 		checksum += buf[i];
-	if (checksum != buf[*buf_len - 1])
+	if (checksum != buf[*buf_len - 1]) {
+		gp_camera_set_error (camera, _("Checksum error"));
 		return (GP_ERROR_CORRUPTED_DATA);
+	}
 
 	/* We no longer need the first two bytes and the last byte */
 	memmove (buf, buf + 2, 2);
@@ -120,7 +143,7 @@ pdc700_read (GPPort *port, unsigned char *cmd, int cmd_len,
 }
 
 static int
-pdc700_baud (GPPort *port, int baud)
+pdc700_baud (Camera *camera, int baud)
 {
 	unsigned char b;
 	unsigned char cmd[6];
@@ -145,7 +168,7 @@ pdc700_baud (GPPort *port, int baud)
 
 	cmd[3] = PDC700_BAUD;
 	cmd[4] = b;
-	CHECK_RESULT (pdc700_read (port, cmd, 6, buf, &buf_len, &status));
+	CHECK_RESULT (pdc700_read (camera, cmd, 6, buf, &buf_len, &status));
 	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
@@ -153,14 +176,14 @@ pdc700_baud (GPPort *port, int baud)
 }
 
 static int
-pdc700_init (GPPort *port)
+pdc700_init (Camera *camera)
 {
 	int status, buf_len;
 	unsigned char cmd[5];
 	unsigned char buf[2048];
 
 	cmd[3] = PDC700_INIT;
-	CHECK_RESULT (pdc700_read (port, cmd, 5, buf, &buf_len, &status));
+	CHECK_RESULT (pdc700_read (camera, cmd, 5, buf, &buf_len, &status));
 	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
@@ -168,7 +191,7 @@ pdc700_init (GPPort *port)
 }
 
 static int
-pdc700_picinfo (GPPort *port, int n, int *size_thumb, int *size_pic)
+pdc700_picinfo (Camera *camera, int n, int *size_thumb, int *size_pic)
 {
 	int status, buf_len;
 	unsigned char cmd[7];
@@ -177,7 +200,7 @@ pdc700_picinfo (GPPort *port, int n, int *size_thumb, int *size_pic)
 	cmd[3] = PDC700_PICINFO;
 	cmd[4] = n && 0xff;
 	cmd[5] = n >> 8;
-	CHECK_RESULT (pdc700_read (port, cmd, 7, buf, &buf_len, &status));
+	CHECK_RESULT (pdc700_read (camera, cmd, 7, buf, &buf_len, &status));
 	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
@@ -189,14 +212,14 @@ pdc700_picinfo (GPPort *port, int n, int *size_thumb, int *size_pic)
 }
 
 static int
-pdc700_num (GPPort *port, int *num, int *num_free)
+pdc700_num (Camera *camera, int *num, int *num_free)
 {
 	int status, buf_len;
 	unsigned char buf[2048];
 	unsigned char cmd[5];
 
 	cmd[3] = PDC700_INFO;
-	CHECK_RESULT (pdc700_read (port, cmd, 5, buf, &buf_len, &status));
+	CHECK_RESULT (pdc700_read (camera, cmd, 5, buf, &buf_len, &status));
 	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
@@ -209,7 +232,7 @@ pdc700_num (GPPort *port, int *num, int *num_free)
 }
 
 static int
-pdc700_pic (GPPort *port, int n, unsigned char **data, int *size,
+pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
 	    int thumb)
 {
 	unsigned char cmd[8];
@@ -219,7 +242,7 @@ pdc700_pic (GPPort *port, int n, unsigned char **data, int *size,
 	unsigned char sequence_num;
 
 	/* Picture size? Allocate the memory */
-	CHECK_RESULT (pdc700_picinfo (port, n, &size_thumb, &size_pic));
+	CHECK_RESULT (pdc700_picinfo (camera, n, &size_thumb, &size_pic));
 	*data = malloc (sizeof (char) * ((thumb) ? size_thumb : size_pic));
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
@@ -229,7 +252,7 @@ pdc700_pic (GPPort *port, int n, unsigned char **data, int *size,
 	cmd[4] = PDC700_FIRST;
 	cmd[5] = n & 0xff;
 	cmd[6] = n >> 8;
-	CHECK_RESULT_FREE (pdc700_read (port, cmd, 8,
+	CHECK_RESULT_FREE (pdc700_read (camera, cmd, 8,
 					buf, &len, &status), *data);
 	sequence_num = buf[0];
 	memcpy (*data, buf + 1, len - 1);
@@ -239,7 +262,7 @@ pdc700_pic (GPPort *port, int n, unsigned char **data, int *size,
 	while (status != PDC700_LAST) {
 		cmd[4] = PDC700_DONE;
 		cmd[5] = sequence_num;
-		CHECK_RESULT_FREE (pdc700_read (port, cmd, 7,
+		CHECK_RESULT_FREE (pdc700_read (camera, cmd, 7,
 						buf, &len, &status), *data);
 		sequence_num = buf[0];
 		memcpy (*data + i, buf + 1, len - 1);
@@ -249,7 +272,7 @@ pdc700_pic (GPPort *port, int n, unsigned char **data, int *size,
 	/* Terminate transfer */
 	cmd[4] = PDC700_LAST;
 	cmd[5] = sequence_num;
-	CHECK_RESULT_FREE (pdc700_read (port, cmd, 7, buf, &len, &status),
+	CHECK_RESULT_FREE (pdc700_read (camera, cmd, 7, buf, &len, &status),
 			   *data);
 
 	return (GP_OK);
@@ -309,8 +332,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
 
 	/* Get the file */
-	CHECK_RESULT (pdc700_pic (camera->port, n, &data, &size, 
-				(type == GP_FILE_TYPE_NORMAL) ? 0 : 1));
+	CHECK_RESULT (pdc700_pic (camera, n, &data, &size, 
+				  (type == GP_FILE_TYPE_NORMAL) ? 0 : 1));
 
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
 	CHECK_RESULT (gp_file_set_name (file, filename));
@@ -335,7 +358,7 @@ camera_summary (Camera *camera, CameraText *about)
 {
 	int num, num_free;
 
-	CHECK_RESULT (pdc700_num (camera->port, &num, &num_free));
+	CHECK_RESULT (pdc700_num (camera, &num, &num_free));
 
 	sprintf (about->text, "There are %i pictures on the camera. "
 		 "There is place for another %i one(s).", num, num_free);
@@ -351,7 +374,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera *camera = data;
 
 	/* Fill the list */
-	CHECK_RESULT (pdc700_num (camera->port, &num, NULL));
+	CHECK_RESULT (pdc700_num (camera, &num, NULL));
 	gp_list_populate (list, "PDC700%04i.jpg", num);
 
 	return (GP_OK);
@@ -367,7 +390,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	/* Get the picture number from the CameraFilesystem */
 	CHECK_RESULT (n = gp_filesystem_number (fs, folder, file));
 
-	CHECK_RESULT (pdc700_picinfo (camera->port, n, &size_thumb, &size_pic));
+	CHECK_RESULT (pdc700_picinfo (camera, n, &size_thumb, &size_pic));
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	strcpy (info->file.type, GP_MIME_JPEG);
@@ -400,10 +423,10 @@ camera_init (Camera *camera)
 	for (i = 0; i < 5; i++) {
 		settings.serial.speed = speeds[i];
 		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
-		result = pdc700_init (camera->port);
+		result = pdc700_init (camera);
 		if (result == GP_OK)
 			break;
-		result = pdc700_init (camera->port);
+		result = pdc700_init (camera);
 		if (result == GP_OK)
 			break;
 	}
@@ -412,7 +435,7 @@ camera_init (Camera *camera)
 
 	/* Set the speed to the highest one */
 	if (speeds[i] < 57600) {
-		CHECK_RESULT (pdc700_baud (camera->port, 57600));
+		CHECK_RESULT (pdc700_baud (camera, 57600));
 		settings.serial.speed = 57600;
 		CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 	}
