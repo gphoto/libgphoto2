@@ -115,18 +115,17 @@ models[] =
 	{"Benq:DC1300", 0x04a5, 0x3003,
 	        BRIDGE_SPCA504, 0 },
 	/* Some other 500a cams with flash */
-/*	
-	{"Trust Familycam 300", 0x084d, 0x0003,
-		BRIDGE_SPCA500, SPCA50X_SDRAM},	
+/*	{"Trust Familycam 300", 0x084d, 0x0003,
+		BRIDGE_SPCA500, SPCA50X_FLASH},	
 	{"D-Link DSC 350+", 0x084d, 0x0003,
-		BRIDGE_SPCA500, SPCA50X_SDRAM},	
+		BRIDGE_SPCA500, SPCA50X_FLASH},	*/
        // This is reported to work, but I can't reach the reporter and don't
        // know the id's. Presumably this is also a 0x084d 0x0003 like the two
        // above.
-        {"Minton S-Cam F5", 0x0, 0x0,
-	        BRIDGE_SPCA500, SPCA50X_SDRAM},	
-*/
-		{NULL, 0, 0, 0, 0}
+    /*    {"Minton S-Cam F5", 0x084d, 0x0003,
+	        BRIDGE_SPCA500, SPCA50X_FLASH},	*/
+
+	{NULL, 0, 0, 0, 0}
 };
 
 int
@@ -150,9 +149,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.port = GP_PORT_USB;
 		a.speed[0] = 0;	
 		a.status = GP_DRIVER_STATUS_TESTING;
-		if (models[x].bridge == BRIDGE_SPCA504) {
-			a.operations = GP_OPERATION_CAPTURE_IMAGE;
-		} 		
+		 		
 		a.file_operations = GP_FILE_OPERATION_PREVIEW 
 			          | GP_FILE_OPERATION_DELETE;
 
@@ -161,6 +158,12 @@ camera_abilities (CameraAbilitiesList *list)
 		a.usb_vendor = models[x].usb_vendor;
 		a.usb_product = models[x].usb_product;
 
+		if (models[x].bridge == BRIDGE_SPCA504) {
+			// FIXME which cams can do it?
+			if (a.usb_product == 0xc420
+			 || a.usb_product == 0xc520)
+				a.operations = GP_OPERATION_CAPTURE_IMAGE;
+		}
 		gp_abilities_list_append (list, a);
 
 		ptr = models[++x].model;
