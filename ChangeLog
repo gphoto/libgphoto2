@@ -1,3 +1,8 @@
+2001-10-04  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/kodak/dc240/library.c: patch by Peter Fales <peter@fales.com>
+	compute the packet checksum and ask to resend it.
+
 2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include/gphoto2-debug.h: #include <gphoto2-port-debug.h>

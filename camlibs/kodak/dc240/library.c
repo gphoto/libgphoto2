@@ -194,7 +194,8 @@ static int dc240_packet_exchange (Camera *camera, CameraFile *file,
                            int *size, int block_size) {
 
     /* Reads in multi-packet data, appending it to the "file". */
-
+    char check_sum;
+    int i;
     int num_packets=1, num_bytes, retval;
     int x=0, retries=0;
     float t;
@@ -242,6 +243,16 @@ read_data_read_again:
             }
         }
 
+	/* Validate checksum */
+	check_sum = 0;
+	for (i = 1; i < block_size + 1; i++) {
+	    check_sum ^= packet [i];
+	}
+	if (check_sum != packet [i]) {
+	    dc240_packet_write_nak (camera);
+	    goto read_data_read_again;
+	}
+	
         /* Check for error in command/path */
         if ((unsigned char)packet[0] > 0xe0)
             return GP_ERROR;
