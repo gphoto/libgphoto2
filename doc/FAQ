@@ -1,0 +1,30 @@
+========================================================================
+
+Q: gphoto2 does not find my camera. What shall I do?
+
+A: First try to run "gphoto2 --list-ports" and look whether the ports 
+   you want to use are listed.
+   Then try to run "gphoto2 --auto-detect" and look whether the camera
+   is detected.
+   If you gphoto2 cannot access the USB device, you have to set up
+   hotplugging correctly. See gphoto2.txt for details.
+
+========================================================================
+
+Q: My Canon PowerShot G1 doesn't work with gphoto2. What should I do?
+
+A: This is a known bug which is being worked on. In the mean time, run 
+   the camera on battery instead of the AC adapter.
+
+========================================================================
+
+Q: I run Linux 2.4.x and I can't get USB to work at all. I keep getting
+
+   kernel: usb_control/bulk_msg: timeout
+   kernel: usbdevfs: USBDEVFS_BULK failed dev 3 ep 0x81 len 64 ret -110
+
+   How can I make USB work?
+
+A: No idea. Sometimes it works and sometimes it doesn't.
+
+========================================================================
