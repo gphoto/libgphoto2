@@ -11,7 +11,7 @@
 /* Return Values */
 #define	GP_OK				 0
 #define GP_ERROR			-1
-#define GP_ERROR_CRITICAL		-2
+#define GP_ERROR_NONCRITICAL		-2
 
 /* File Types */
 typedef enum {

@@ -89,6 +89,14 @@ int gp_init () {
 	(void)mkdir(buf, 0700);
 
 	if (glob_debug)
+		printf("core: Initializing gpio:\n");
+
+	if (gpio_init() == GPIO_ERROR) {
+		gp_message("ERROR: Can not initialize libgpio");
+		return (GP_ERROR);
+	}
+
+	if (glob_debug)
 		printf("core: Trying to load settings:\n");
 	/* Load settings */
 	load_settings();
@@ -108,10 +116,7 @@ int gp_init () {
 		if (glob_camera_count == 0)
 			printf("core:\tNone\n");
 		printf("core: Initializing the gPhoto IO library (libgpio)\n");
-	}
-	if (gpio_init()==GPIO_ERROR)
-		return (GP_ERROR);
-	
+	}	
 
 	return (GP_OK);
 }
