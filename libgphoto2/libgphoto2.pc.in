@@ -1,9 +1,9 @@
+VERSION=@VERSION@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 driverdir=@camlibdir@
-VERSION=@VERSION@
 
 Name: libgphoto2
 Description: Library for easy access to digital cameras
