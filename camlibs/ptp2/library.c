@@ -410,6 +410,7 @@ static struct {
 
 	/* Fuji PTP cameras */
 	{"Fuji:FinePix S7000 (PictBridge mode)",0x04cb, 0x0142, 0},
+	{"Fuji:FinePix A330 (PictBridge mode)",0x04cb, 0x014a, 0},
 
 	/* Ricoh Caplio GX */
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
