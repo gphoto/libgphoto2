@@ -23,9 +23,6 @@ OS/2:
 				 CAMERA DRIVERS
 --------------------------------------------------------------------------------
 
-camlibs/agfa:
-	Vince Weaver <vince@deater.net>
-
 camlibs/barbie:
 	Scott Fritzinger <scottf@unr.edu> 
 
@@ -92,6 +89,9 @@ camlibs/sipix:
 
 camlibs/sonydscf55:
 	Raymond Penners <raymond@dotsphinx.com>
+
+camlibs/soundvision:
+	Vince Weaver <vince@deater.net>
 
 camlibs/stv0680:
 	Carsten Weinholz <cweinholz@users.sourceforge.net>
