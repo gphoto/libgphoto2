@@ -768,7 +768,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	GP_DEBUG ("camera_get_config()");
 
-	gp_widget_new (GP_WIDGET_WINDOW, _("Driver Configuration"), window);
+	gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Exposure"), &section);
 	gp_widget_append (*window, section);
