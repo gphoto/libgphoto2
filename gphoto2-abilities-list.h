@@ -49,16 +49,16 @@ typedef enum {
         GP_FILE_OPERATION_DELETE        = 1 << 1,
         GP_FILE_OPERATION_PREVIEW       = 1 << 3,
         GP_FILE_OPERATION_RAW           = 1 << 4,
-	GP_FILE_OPERATION_AUDIO		= 1 << 5,
-	GP_FILE_OPERATION_EXIF		= 1 << 6
+        GP_FILE_OPERATION_AUDIO         = 1 << 5,
+        GP_FILE_OPERATION_EXIF          = 1 << 6
 } CameraFileOperation;
 
 typedef enum {
         GP_FOLDER_OPERATION_NONE        = 0, 
         GP_FOLDER_OPERATION_DELETE_ALL  = 1 << 0,
         GP_FOLDER_OPERATION_PUT_FILE    = 1 << 1,
-	GP_FOLDER_OPERATION_MAKE_DIR    = 1 << 2,
-	GP_FOLDER_OPERATION_REMOVE_DIR  = 1 << 3
+        GP_FOLDER_OPERATION_MAKE_DIR    = 1 << 2,
+        GP_FOLDER_OPERATION_REMOVE_DIR  = 1 << 3
 } CameraFolderOperation;
 
 typedef struct {
@@ -75,11 +75,21 @@ typedef struct {
         CameraFolderOperation folder_operations;
 
         int usb_vendor, usb_product;
-	int usb_class, usb_subclass, usb_protocol;
+        int usb_class, usb_subclass, usb_protocol;
 
         /* For core use */
         char library [1024];
         char id [1024];
+
+		/* Reserved space to use in the future w/out changing the struct size */
+        int reserved1;
+        int reserved2;
+        int reserved3;
+        int reserved4;
+        int reserved5;
+        int reserved6;
+        int reserved7;
+        int reserved8;
 } CameraAbilities;
 
 typedef struct _CameraAbilitiesList CameraAbilitiesList;

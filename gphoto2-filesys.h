@@ -62,30 +62,32 @@ typedef enum {
 typedef struct _CameraFileInfoFile CameraFileInfoFile;
 struct _CameraFileInfoFile {
 	CameraFileInfoFields fields;
-	char type[64];
-	CameraFilePermissions permissions;
-	char name[64];
-	unsigned int size;
-	unsigned int width, height;
 	CameraFileStatus status;
+	unsigned long size;
+	char type[64];
+
+	unsigned int width, height;
+	char name[64];
+	CameraFilePermissions permissions;
 	time_t mtime;
 };
 
 typedef struct _CameraFileInfoPreview CameraFileInfoPreview;
 struct _CameraFileInfoPreview {
 	CameraFileInfoFields fields;
-	char type[64];
-	unsigned int size;
-	unsigned int width, height;
 	CameraFileStatus status;
+	unsigned long size;
+	char type[64];
+
+	unsigned int width, height;
 };
 
 typedef struct _CameraFileInfoAudio CameraFileInfoAudio;
 struct _CameraFileInfoAudio {
 	CameraFileInfoFields fields;
-	char type[64];
-	unsigned int size;
 	CameraFileStatus status;
+	unsigned long size;
+	char type[64];
 };
 
 typedef struct _CameraFileInfo CameraFileInfo;
