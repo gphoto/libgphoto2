@@ -231,10 +231,14 @@ int gp_port_debug_set (gp_port *dev, int debug_level)
         return (GP_OK);
 }
 
-int gp_port_open(gp_port *dev)
+int gp_port_open (gp_port *dev)
         /* Open a device for reading/writing */
 {
         int retval = 0;
+
+	/* I don't know what to report here... */
+	if (!dev)
+		return (GP_OK);
 
         /* Try to open device */
         retval = dev->ops->open(dev);
@@ -249,21 +253,25 @@ int gp_port_open(gp_port *dev)
                         return GP_ERROR;
                 }
                 gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_open: OK");
+		
+		/* Set the default timeout */
+		gp_port_timeout_set (dev, dev->timeout);
+
                 return GP_OK;
         }
         gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_open: open error");
         return GP_ERROR;
 }
 
-int gp_port_close(gp_port *dev)
+int gp_port_close (gp_port *dev)
         /* Close the device to prevent reading/writing */
 {
         int retval = 0;
 
-        if (!dev) {
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_close: bad device");
-                return GP_ERROR;
-        }
+	/* I don't know what to report here... */
+        if (!dev)
+		return (GP_OK);
+
         if (dev->type == GP_PORT_SERIAL && dev->device_fd == 0) {
                 gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_close: OK");
                 return GP_OK;
@@ -276,10 +284,16 @@ int gp_port_close(gp_port *dev)
         return retval;
 }
 
-int gp_port_free(gp_port *dev)
+int gp_port_free (gp_port *dev)
         /* Frees a device struct */
 {
-        int retval = dev->ops->exit(dev);
+        int retval;
+
+	/* I don't know what to report here... */
+	if (!dev)
+		return (GP_OK);
+
+	retval = dev->ops->exit(dev);
 
         gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
                 "gp_port_free: exit %s", retval < 0? "error":"ok");

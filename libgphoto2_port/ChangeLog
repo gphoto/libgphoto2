@@ -1,3 +1,8 @@
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/gp_port.c: if (!dev) return (GP_OK) instead of
+	accessing dev->whatever... Plus, set the timeout on gp_port_open.
+
 2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Suggestion from Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>:
