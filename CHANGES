@@ -8,7 +8,9 @@ drivers (camlibs):
 
    * Ricoh
 
-   * added support for Canon PowerShot A100, Canon PowerShot A200
+   * Canon driver: 
+     - added support for Canon PowerShot A100, Canon PowerShot A200
+     - fixed Canon EOS D60 unlocking
 
 --------------------------------------------------------------------------------
 gphoto2 2.1.0
