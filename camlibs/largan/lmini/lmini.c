@@ -48,8 +48,7 @@ static struct largan_baud_rate {
 	{38400, 0x03 },
 	{ 9600, 0x01 },
 	{ 4800, 0x00 },
-	{    0, 0x00 },
-	{19200, 0x02 }
+	{    0, 0x00 }
 };
 
 enum {
@@ -100,12 +99,16 @@ void largan_pict_alloc_data (largan_pict_info * ptr, uint32_t size)
 int largan_open (Camera * camera)
 {
 	int ret;
-
-	ret = purge_camera (camera);
-	if (ret == GP_ERROR) {
-		return ret;
+	
+        ret = largan_get_num_pict (camera);
+        if (ret < 0){
+                ret = purge_camera (camera);
+                if (ret == GP_ERROR) {
+                        return ret;
+                }
+                ret = wakeup_camera (camera);
 	}
-	return wakeup_camera (camera);
+        return ret;     /* here: number of pictures */
 }
 
 /*
@@ -155,7 +158,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 			param = 0x00;
 			break;
 		default:
-			GP_DEBUG ("largan_get_pict(): wrong picture type !\n");
+			GP_DEBUG ("largan_get_pict(): wrong picture type requested !\n");
 			return GP_ERROR;
 	}
 	ret = largan_send_command (camera, LARGAN_GET_PICT_CMD, param, index);
@@ -168,14 +171,32 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
  or 00 for an thumbnail for an lowres picture
  or 01 for an thumbnail for an hires picture
  bytes 4 5 6 7 contain the number of byte coming in the datastream */
-	ret = largan_recv_reply (camera, &reply, &code, NULL);
+/* the 1st and the 2nd byte are read here */
 	if (ret < 0) {
-		return ret;
-	}
-	if ((reply != LARGAN_GET_PICT_CMD) || (code != 0x01)) {
-		GP_DEBUG ("largan_get_pict(): code != 0x01\n");
+                /* clean up and give it a 2nd chance */
+                wakeup_camera (camera);
+                largan_send_command (camera, LARGAN_GET_PICT_CMD, param, index);
+                GP_DEBUG ("largan_get_pict(): command sent 2nd time\n");
+                ret = largan_recv_reply (camera, &reply, &code, NULL);
+                if (ret < 0) {
+                        /* clean up and give it even a 3rd chance */
+                        wakeup_camera (camera);
+                        sleep (5);
+                        largan_send_command (camera, LARGAN_GET_PICT_CMD, param, index);
+                        GP_DEBUG ("largan_get_pict(): command sent 3rd time\n");
+                        ret = largan_recv_reply (camera, &reply, &code, NULL);
+                        if (ret < 0) {
+                                GP_DEBUG ("largan_get_pict(): timeout after command sent 3rd time\n");
+                                return ret;     /* timeout after 3rd trial */
+                        }
+                }
+        }
+        if ((reply != LARGAN_GET_PICT_CMD) || ((code != 0x01) && (code != 0x00))) {
+                GP_DEBUG ("largan_get_pict(): code != 0x01 && 0x00\n");
 		return GP_ERROR;
 	}
+	
+	/* the remaining 5 bytes are read here */
 
 	ret = gp_port_read (camera->port, buf, sizeof(buf));
 	if (ret < GP_OK) {
@@ -199,7 +220,8 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 	}
 	pict->type = type;
 	pict_size = be32atoh (&buf[1]);
-	if (type == LARGAN_PICT) {
+	switch (type) {
+	case LARGAN_PICT: 
 		largan_pict_alloc_data (pict, pict_size);
 		ret = gp_port_read (camera->port, pict->data, pict->data_size);
 		if (ret < GP_OK) {
@@ -210,19 +232,26 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 			return GP_ERROR;
 		}
 		pict->quality = 0xff;	/* this is not a thumbnail */
-	}
-	else {
-		char * buffer = malloc (pict_size);
-		ret = gp_port_read (camera->port, buffer, pict_size);
-		if (ret < GP_OK) {
-			return ret;
+		break;
+	case LARGAN_THUMBNAIL: 
+		{
+			char * buffer = (char*)malloc(pict_size);
+			ret = gp_port_read (camera->port, buffer, pict_size);
+			if (ret < GP_OK) {
+				return ret;
+			}
+			largan_pict_alloc_data (pict, 19200 + sizeof(BMPheader));
+			memcpy (pict->data, BMPheader, sizeof(BMPheader));
+			/*this is the segfaulty function */
+			largan_ccd2dib (buffer, pict->data + sizeof(BMPheader), 240, 1);
+			
+			free (buffer);
+			pict->quality = buf[0];
+			break;
 		}
-		largan_pict_alloc_data (pict, 19200 + sizeof(BMPheader));
-		memcpy (pict->data, BMPheader, sizeof(BMPheader));
-		largan_ccd2dib (buffer, pict->data + sizeof(BMPheader), 240, 1);
-
-		free (buffer);
-		pict->quality = buf[0];
+	default:
+		GP_DEBUG ("largan_get_pict(): type not LARGAN_PICT nor LARGAN_THUMBNAIL\n");
+                return GP_ERROR;
 	}
 	return GP_OK;
 }
@@ -381,7 +410,7 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 		break;
 	default:
 		packet_size = 0;
-		GP_DEBUG("Unkown reply.\n");
+		GP_DEBUG("largan_receive_reply: Unkown reply.\n");
 		break;
 	}
 	if (reply) {
@@ -405,15 +434,6 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 			*code2 = packet[2];
 		}
 	}
-#if 0
-	if (packet_size = 7) {
-		ret = gp_port_read (camera->port, &packet[3], 4);
-		*code3 = packet[3];
-		*code4 = packet[4];
-		*code5 = packet[5];
-		*code6 = packet[6];
-	} 
-#endif
 
 	return ret;
 }

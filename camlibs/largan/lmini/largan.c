@@ -50,6 +50,8 @@
 #  define N_(String) (String)
 #endif
 
+#define TIMEOUT 1500
+
 /* internal functions prototypes */
 static uint8_t convert_name_to_index (const char * name);
 
@@ -108,7 +110,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 	
 		if (a.port) {
-			// only append if port is defined.
+			/* only append if port is defined.*/
 			gp_abilities_list_append(list, a);
 		}
 	}
@@ -217,7 +219,6 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	
 	return ret;
 }
-
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
@@ -361,13 +362,17 @@ camera_init (Camera *camera, GPContext *context)
 		/* Remember the selected speed */
 		selected_speed = settings.serial.speed;
 
-		settings.serial.speed    = 19200;// initial speed is 19200
+		settings.serial.speed    = 19200;/* initial speed is 19200 */
 		settings.serial.bits     = 8;
 		settings.serial.parity   = 0;
 		settings.serial.stopbits = 1;
+		ret = gp_port_set_timeout (camera->port, TIMEOUT);
+		if (ret < 0) {
+			return (ret);
+		}
 		break;
 	case GP_PORT_USB:
-		// TODO check with a USB camera....
+		/* TODO check with a USB camera.... */
 		settings.usb.inep       = 0x82;
 		settings.usb.outep      = 0x01;
 		settings.usb.config     = 1;
@@ -382,11 +387,6 @@ camera_init (Camera *camera, GPContext *context)
 	if (ret < 0)
 		return (ret);
 
-/*
-	ret = gp_port_set_timeout (camera->port, TIMEOUT);
-	if (ret < 0)
-		return (ret);
-*/
 	/*
 	 * Once you have configured the port, you should check if a 
 	 * connection to the camera can be established.
