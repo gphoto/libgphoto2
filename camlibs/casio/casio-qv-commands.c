@@ -30,26 +30,33 @@
 
 #define CASIO_QV_RETRIES 5
 
-#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+#define CR(result) {int r = (result); if (r < 0) return (r);}
 
 int
 QVping (Camera *camera)
 {
 	unsigned char c;
-	int result = GP_OK, i;
+	int result = GP_OK, i = 0;
 
 	/* Send ENQ and wait for ACK */
-	for (i = 0; i < CASIO_QV_RETRIES; i++) {
+	while (1) {
 		c = ENQ;
-		CHECK_RESULT (gp_port_write (camera->port, &c, 1));
+		CR (gp_port_write (camera->port, &c, 1));
 		result = gp_port_read (camera->port, &c, 1);
-		if (result >= 0)
+
+		/* If we got ACK, everything is fine. */
+		if ((result >= 0) && (c == ACK))
 			break;
-		if (c == ACK)
-			break;
+
+		if (++i < CASIO_QV_RETRIES)
+			continue;
+
+		/* If we got an error from libgphoto2_port, pass it along */
+		CR (result);
+
+		/* Return some error code */
+		return (GP_ERROR_CORRUPTED_DATA);
 	}
-	if (i == CASIO_QV_RETRIES)
-		return (result);
 
 	return (GP_OK);
 }
@@ -62,22 +69,22 @@ QVsend (Camera *camera, unsigned char *cmd, int cmd_len,
 	int i;
 
 	/* Write the request and calculate the checksum */
-	CHECK_RESULT (gp_port_write (camera->port, cmd, cmd_len));
+	CR (gp_port_write (camera->port, cmd, cmd_len));
 	for (i = 0, checksum = 0; i < cmd_len; i++)
 		checksum += cmd[i];
 
 	/* Read the checksum */
-	CHECK_RESULT (gp_port_read (camera->port, &c, 1));
+	CR (gp_port_read (camera->port, &c, 1));
 	if (c != ~checksum)
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	/* Send ACK */
 	c = ACK;
-	CHECK_RESULT (gp_port_write (camera->port, &c, 1));
+	CR (gp_port_write (camera->port, &c, 1));
 
 	/* Receive the answer */
 	if (buf_len)
-		CHECK_RESULT (gp_port_read (camera->port, buf, buf_len));
+		CR (gp_port_read (camera->port, buf, buf_len));
 
 	return (GP_OK);
 }
@@ -91,16 +98,16 @@ QVblockrecv (Camera *camera, unsigned char *buf, int buf_size)
 	unsigned char sum;
 
 	/* Send DC2 */
-	CHECK_RESULT (gp_port_write (camera->port, &c, 1));
+	CR (gp_port_write (camera->port, &c, 1));
 
 	while (1) {
 
 		/* Read STX */
-		CHECK_RESULT (gp_port_read (camera->port, &c, 1));
+		CR (gp_port_read (camera->port, &c, 1));
 		if (c != STX) {
 			retries++;
 			c = NAK;
-			CHECK_RESULT (gp_port_write (camera->port, &c, 1));
+			CR (gp_port_write (camera->port, &c, 1));
 			if (retries > CASIO_QV_RETRIES)
 				return (GP_ERROR_CORRUPTED_DATA);
 			else
@@ -108,29 +115,29 @@ QVblockrecv (Camera *camera, unsigned char *buf, int buf_size)
 		}
 
 		/* Read sector size */
-		CHECK_RESULT (gp_port_read (camera->port, buffer, 2));
+		CR (gp_port_read (camera->port, buffer, 2));
 		size = (buffer[0] << 8) | buffer[1];
 		sum = buffer[0] + buffer[1];
 
 		/* Get the sector */
-		CHECK_RESULT (gp_port_read (camera->port, buf + pos, size));
+		CR (gp_port_read (camera->port, buf + pos, size));
 		for (i = 0; i < size; i++)
 			sum += buf[i + pos];
 
 		/* Get EOT or ETX and the checksum */
-		CHECK_RESULT (gp_port_read (camera->port, buffer, 2));
+		CR (gp_port_read (camera->port, buffer, 2));
 		sum += buffer[0];
 
 		/* Verify the checksum */
 		if (sum != ~buffer[1]) {
 			c = NAK;
-			CHECK_RESULT (gp_port_write (camera->port, &c, 1));
+			CR (gp_port_write (camera->port, &c, 1));
 			continue;
 		}	
 
 		/* Acknowledge and prepare for next packet */
 		c = ACK;
-		CHECK_RESULT (gp_port_write (camera->port, &c, 1));
+		CR (gp_port_write (camera->port, &c, 1));
 		pos += size;
 
 		/* Are we done? */
@@ -157,7 +164,7 @@ QVbattery (Camera *camera, float *battery)
 	cmd[3] = 0xff;
 	cmd[4] = 0xfe;
 	cmd[5] = 0xe6;
-	CHECK_RESULT (QVsend (camera, cmd, 6, &b, 1));
+	CR (QVsend (camera, cmd, 6, &b, 1));
 	*battery = b / 16.;
 
 	return (GP_OK);
@@ -171,7 +178,7 @@ QVrevision (Camera *camera, long int *revision)
 
 	cmd[0] = 'S';
 	cmd[1] = 'U';
-	CHECK_RESULT (QVsend (camera, cmd, 2, buf, 4));
+	CR (QVsend (camera, cmd, 2, buf, 4));
 	*revision = (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3];
 
 	return (GP_OK);
@@ -185,7 +192,7 @@ QVnumpic (Camera *camera)
 
 	cmd[0] = 'M';
 	cmd[1] = 'P';
-	CHECK_RESULT (QVsend (camera, cmd, 2, &b, 1));
+	CR (QVsend (camera, cmd, 2, &b, 1));
 
 	return (b);
 }
@@ -198,7 +205,7 @@ QVpicattr (Camera *camera, int n, unsigned char *picattr)
 
 	cmd[0] = 'D';
 	cmd[1] = 'Y';
-	CHECK_RESULT (QVsend (camera, cmd, 2, &b, 1));
+	CR (QVsend (camera, cmd, 2, &b, 1));
 	*picattr = b;
 
 	return (GP_OK);
@@ -212,7 +219,7 @@ QVshowpic (Camera *camera, int n)
 	cmd[0] = 'D';
 	cmd[1] = 'A';
 	cmd[2] = n;
-	CHECK_RESULT (QVsend (camera, cmd, 3, NULL, 0));
+	CR (QVsend (camera, cmd, 3, NULL, 0));
 
 	return (GP_OK);
 }
@@ -224,7 +231,7 @@ QVsetpic (Camera *camera)
 
 	cmd[0] = 'D';
 	cmd[1] = 'L';
-	CHECK_RESULT (QVsend (camera, cmd, 2, NULL, 0));
+	CR (QVsend (camera, cmd, 2, NULL, 0));
 
 	return (GP_OK);
 }
@@ -236,8 +243,8 @@ QVgetpic (Camera *camera, unsigned char *data, long int size)
 
 	cmd[0] = 'M';
 	cmd[1] = 'G';
-	CHECK_RESULT (QVsend (camera, cmd, 2, NULL, 0));
-	CHECK_RESULT (QVblockrecv (camera, data, size));
+	CR (QVsend (camera, cmd, 2, NULL, 0));
+	CR (QVblockrecv (camera, data, size));
 
 	return (GP_OK);
 }
@@ -251,7 +258,7 @@ QVdelete (Camera *camera, int n)
 	cmd[1] = 'F';
 	cmd[2] = n;
 	cmd[3] = 0xff;
-	CHECK_RESULT (QVsend (camera, cmd, 4, NULL, 0));
+	CR (QVsend (camera, cmd, 4, NULL, 0));
 
 	return (GP_OK);
 }
@@ -264,7 +271,7 @@ QVsize (Camera *camera, long int *size)
 
 	cmd[0] = 'E';
 	cmd[1] = 'M';
-	CHECK_RESULT (QVsend (camera, cmd, 2, buf, 4));
+	CR (QVsend (camera, cmd, 2, buf, 4));
 	*size = (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3];
 
 	return (GP_OK);
@@ -277,7 +284,7 @@ QVcapture (Camera *camera)
 
 	cmd[0] = 'D';
 	cmd[1] = 'R';
-	CHECK_RESULT (QVsend (camera, cmd, 2, NULL, 0));
+	CR (QVsend (camera, cmd, 2, NULL, 0));
 
 	return (GP_OK);
 }
