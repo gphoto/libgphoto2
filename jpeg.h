@@ -40,33 +40,27 @@ typedef struct chunk{
 
 typedef char jpeg_quantization_table[64];
 
-chunk *chunk_new(int length);
-
-void chunk_print(chunk *mychunk);
-
-void chunk_destroy(chunk *mychunk);
-
 typedef struct jpeg {
     int count;
     struct chunk *marker[20]; /* I think this should be big enough */
 }jpeg;
 
-void jpeg_init(jpeg *myjpeg);
-
-void jpeg_destroy(jpeg *myjpeg);
+chunk *chunk_new(int length);
+void chunk_destroy(chunk *mychunk);
+void chunk_print(chunk *mychunk);
 
 char jpeg_findff(int *location, chunk *picture);
-
 char jpeg_findactivemarker(char *id, int *location, chunk *picture);
-
-void jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end);
-
-void jpeg_parse(jpeg *myjpeg, chunk *picture);
-
-void jpeg_print(jpeg *myjpeg);
-
 char *jpeg_markername(int c);
-
+void jpeg_init(jpeg *myjpeg);
+void jpeg_destroy(jpeg *myjpeg);
+void jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end);
+void jpeg_parse(jpeg *myjpeg, chunk *picture);
+void jpeg_print(jpeg *myjpeg);
 chunk *jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3);
+
+void jpeg_print_quantization_table(jpeg_quantization_table *table);
+chunk *jpeg_make_quantization(jpeg_quantization_table *table, int number);
+jpeg_quantization_table *jpeg_quantization2table(chunk *qmarker);
 
 #endif
