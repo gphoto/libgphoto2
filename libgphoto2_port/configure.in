@@ -293,8 +293,6 @@ libgphoto2_port/Makefile
 serial/Makefile
 usb/Makefile
 gphoto2-port-config
-intl/Makefile
-po/Makefile.in
 test/Makefile
 doc/Makefile
 m4/Makefile
