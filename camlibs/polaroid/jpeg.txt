@@ -4,20 +4,22 @@ Oh well, I will try to explain here anyway.
 
 Jpeg markers in general:
 ------------
-0xFF marker# 0x00 lenth data
+0xFF marker# lenth(2 bytes) data
 length is the size of the information after the 0xFF XX
 
 Quantization tables:
 -------------------
-0xFF 0xDB 0x00 length data
+0xFF 0xDB 0x00 length tables
 Funny.....for what I have the data is all 0x01's.
 I guess there is a precision number in there somewhere, but I don't know.
 For what I have, both quantization tables are precision 0.
+Precision 1 will not be used by us. We need precision 0.
 
 Start of Frame 0:
 ----------------
 0xFF 0xC0 0x00 length bits-per-pixel 0x00 height(2 bytes) width(2 bytes)
-  #_of_components component# v/h huh component# v/h huh component# v/h huh
+  #_of_components sets(1 or 3 of them)
+A set would be component# v/h quantization table number.
 The v/h is the vertical to horizontal compression ratio.
 I forget what the "huh" is.
 I misplaced some info I had on the components here.
@@ -31,15 +33,21 @@ I need to sift through my email to find what number is for what.
 
 Huffman tables:
 --------------
-0xFF 0xC4 0x00 length table# data
+0xFF 0xC4 0x00 length ACorDC bits(16 bytes) Huffman_values
 length is the size of that huffman table (you don't count the FFCO)
-Table# is 0x00, 0x01, 0x10, or 0x11
+Repeat until length is exhausted (usually 4 Huffman tables):
+	If ACorDC>0x10 it is an AC table, otherwise, it is a DC table
+	The length of the Huffman_values is the sum of the previous 16 bytes
 
 Ending piece of header (I have no clue what to call it):
 -------------------------------------------------------
-0xFF 0xDA 0x00 length sets
-The sets are 3 bytes long.
-I think the sets are supposed to correspond with the huffman tables.
+0xFF 0xDA length(2 bytes) #_of_components(1 byte) sets Ss Se Ah Al
+Ss and Se, I guess are each one byte.
+I guess Ah and Al are one byte total.
+The sets are: component#(1 byte) DC+ACtable#'s
+For DC+ACtable#'s, the high nibble is DC table# and the low byte is AC table#
+
+
 
 
 
