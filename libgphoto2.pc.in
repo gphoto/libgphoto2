@@ -1,8 +1,8 @@
-VERSION=@VERSION@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
+VERSION=@VERSION@
 driverdir=@camlibdir@
 
 Name: libgphoto2
