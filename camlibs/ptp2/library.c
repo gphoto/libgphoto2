@@ -1896,7 +1896,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 static int
 init_ptp_fs (Camera *camera, GPContext *context)
 {
-	int i,id;
+	int i,id,nroot;
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
@@ -1951,6 +1951,30 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		10+(90*i)/camera->pl->params.handles.n);
 	}
 	gp_context_progress_stop (context, id);
+
+	/* Count number of root directory objects */
+	nroot = 0;
+	for (i = 0; i < camera->pl->params.handles.n; i++)
+		if (camera->pl->params.objectinfo[i].ParentObject == 0)
+			nroot++;
+
+	GP_DEBUG("Found %d root directory objects", nroot);
+
+	/* If no root directory objects, look for "DCIM".  This way, we can
+	 * handle cameras that report the wrong ParentObject ID for root
+	 */
+	if (nroot == 0 && camera->pl->params.handles.n > 0)
+		for (i = 0; i < camera->pl->params.handles.n; i++)
+		{
+			PTPObjectInfo *oi = &camera->pl->params.objectinfo[i];
+
+			if (strcmp(oi->Filename, "DCIM") == 0)
+			{
+				GP_DEBUG("Changing DCIM ParentObject ID from 0x%x to 0",
+					oi->ParentObject);
+				oi->ParentObject = 0;
+			}
+		}
 
 #if 0
 	add_dir (camera, 0x00000000, 0xff000000, "DIR1");
