@@ -28,6 +28,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef HAVE_LTDL
+#include <ltdl.h>
+#endif
+
 #include "gphoto2-port-result.h"
 #include "gphoto2-port-info-list.h"
 #include "gphoto2-port-library.h"
@@ -62,7 +66,11 @@ struct _GPPortPrivateCore {
 
 	GPPortInfo info;
 	GPPortOperations *ops;
+#ifdef HAVE_LTDL
+	lt_dlhandle lh;
+#else
 	void *lh; /* Library handle */
+#endif
 };
 
 /**
@@ -86,6 +94,10 @@ gp_port_new (GPPort **port)
         if (!(*port))
 		return (GP_ERROR_NO_MEMORY);
         memset (*port, 0, sizeof (GPPort));
+
+#ifdef HAVE_LTDL
+	lt_dlinit ();
+#endif
 
 	(*port)->pc = malloc (sizeof (GPPortPrivateCore));
 	if (!(*port)->pc) {
@@ -147,10 +159,19 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		free (port->pc->ops);
 		port->pc->ops = NULL;
 	}
-	if (port->pc->lh)
+	if (port->pc->lh) {
+#ifdef HAVE_LTDL
+		lt_dlclose (port->pc->lh);
+#else
 		GP_SYSTEM_DLCLOSE (port->pc->lh);
+#endif
+	}
 
+#ifdef HAVE_LTDL
+	port->pc->lh = lt_dlopen (info.library_filename);
+#else
 	port->pc->lh = GP_SYSTEM_DLOPEN (info.library_filename);
+#endif
 	if (!port->pc->lh) {
 		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not load "
 			"'%s' ('%s')", info.library_filename,
@@ -159,12 +180,23 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 	}
 
 	/* Load the operations */
+#ifdef HAVE_LTDL
+	ops_func = lt_dlsym (port->pc->lh, "gp_port_library_operations");
+#else
 	ops_func = GP_SYSTEM_DLSYM (port->pc->lh, "gp_port_library_operations");
+#endif
 	if (!ops_func) {
+#ifdef HAVE_LTDL
+		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not find "
+			"'gp_port_library_operations' in '%s' ('%s')",
+			info.library_filename, lt_dlerror ());
+		lt_dlclose (port->pc->lh);
+#else
 		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not find "
 			"'gp_port_library_operations' in '%s' ('%s')",
 			info.library_filename, GP_SYSTEM_DLERROR ());
 		GP_SYSTEM_DLCLOSE (port->pc->lh);
+#endif
 		port->pc->lh = NULL;
 		return (GP_ERROR_LIBRARY);
 	}
@@ -293,7 +325,11 @@ gp_port_free (GPPort *port)
 		}
 
 		if (port->pc->lh) {
+#ifdef HAVE_LTDL
+			lt_dlclose (port->pc->lh);
+#else
 		        GP_SYSTEM_DLCLOSE (port->pc->lh);
+#endif
 			port->pc->lh = NULL;
 		}
 
@@ -302,6 +338,10 @@ gp_port_free (GPPort *port)
 	}
 
         free (port);
+
+#ifdef HAVE_LTDL
+	lt_dlexit ();
+#endif
 
         return GP_OK;
 }

@@ -26,6 +26,10 @@
 #include <stdio.h>
 #include <regex.h>
 
+#if HAVE_LTDL
+#include <ltdl.h>
+#endif
+
 #include <gphoto2-port-result.h>
 #include <gphoto2-port-library.h>
 #include <gphoto2-port-log.h>
@@ -81,6 +85,10 @@ gp_port_info_list_new (GPPortInfoList **list)
 		return (GP_ERROR_NO_MEMORY);
 	memset (*list, 0, sizeof (GPPortInfoList));
 
+#ifdef HAVE_LTDL
+	lt_dlinit ();
+#endif
+
 	return (GP_OK);
 }
 
@@ -102,6 +110,10 @@ gp_port_info_list_free (GPPortInfoList *list)
 		list->info = NULL;
 	}
 	list->count = 0;
+
+#ifdef HAVE_LTDL
+	lt_dlexit ();
+#endif
 
 	return (GP_OK);
 }
@@ -147,6 +159,32 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 	return (list->count - 1 - generic);
 }
 
+#ifdef HAVE_LTDL
+
+#define MAX_COUNT 8
+typedef struct _LibrariesList LibrariesList;
+struct _LibrariesList {
+	unsigned int count;
+	char path[MAX_COUNT][1024];
+};
+
+static int
+foreach_func (const char *filename, lt_ptr data)
+{
+	LibrariesList *list = data;
+
+	if (list->count >= MAX_COUNT)
+		return (GP_ERROR_NO_MEMORY);
+
+	strncpy (list->path[list->count], filename,
+		 sizeof (list->path[list->count]));
+	list->count++;
+
+	return (0);
+}
+
+#endif
+
 /**
  * gp_port_info_list_load:
  * @list: a #GPPortInfoList
@@ -160,19 +198,81 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 int
 gp_port_info_list_load (GPPortInfoList *list)
 {
+	int i, result;
+	GPPortLibraryType lib_type;
+	GPPortLibraryList lib_list;
+	GPPortType type;
+	unsigned int old_size = list->count;
+#ifdef HAVE_LTDL
+	LibrariesList flist;
+	lt_dlhandle lh;
+	int j;
+#else
 	GP_SYSTEM_DIR d;
 	GP_SYSTEM_DIRENT de;
 	char path[1024];
 	void *lh;
-	GPPortLibraryType lib_type;
-	GPPortLibraryList lib_list;
-	GPPortType type;
-	int i, result;
-	unsigned int old_size = list->count;
 	const char *filename;
+#endif
 
 	CHECK_NULL (list);
+	gp_log (GP_LOG_DEBUG, "gp-port-info-list", "Loading io-drivers "
+		"from '" IOLIBS "'...");
 
+#ifdef HAVE_LTDL
+	flist.count = 0;
+	result = lt_dlforeachfile (IOLIBS, foreach_func, &flist);
+	if (result < 0)
+		return (result);
+	for (i = 0; i < flist.count; i++) {
+		lh = lt_dlopenext (flist.path[i]);
+		if (!lh) {
+			gp_log (GP_LOG_DEBUG, "gp-port-info-list",
+				"Could not load '%s': '%s'.", flist.path[i],
+				lt_dlerror ());
+			continue;
+		}
+
+		lib_type = lt_dlsym (lh, "gp_port_library_type");
+		lib_list = lt_dlsym (lh, "gp_port_library_list");
+		if (!lib_type || !lib_list) {
+			gp_log (GP_LOG_DEBUG, "gp-port-info-list",
+				"Could not find some functions in '%s': '%s'.",
+				flist.path[i], lt_dlerror ());
+			lt_dlclose (lh);
+			continue;
+		}
+
+		type = lib_type ();
+		for (j = 0; j < list->count; j++)
+			if (list->info[j].type == type)
+				break;
+		if (j != list->count) {
+			gp_log (GP_LOG_DEBUG, "gp-port-info-list",
+				"'%s' already loaded", flist.path[j]);
+			lt_dlclose (lh);
+			continue;
+		}
+
+		result = lib_list (list);
+		lt_dlclose (lh);
+		if (result < 0) {
+			gp_log (GP_LOG_DEBUG, "gp-port-info-list",
+				"Could not load list: '%s'.",
+				gp_port_result_as_string (result));
+			continue;
+		}
+
+		for (j = old_size; j < list->count; j++){
+			gp_log (GP_LOG_DEBUG, "gp-port-info-list",
+				"Loaded '%s' ('%s') from '%s'.",
+				list->info[j].name, list->info[j].path,
+				flist.path[i]);
+			strcpy (list->info[j].library_filename, flist.path[i]);
+		}
+		old_size = list->count;
+	}
+#else
 	d = GP_SYSTEM_OPENDIR (IOLIBS);
         if (!d) {
                 gp_log (GP_LOG_ERROR, "gphoto2-port-core",
@@ -247,6 +347,7 @@ gp_port_info_list_load (GPPortInfoList *list)
         } while (1);
 
         GP_SYSTEM_CLOSEDIR (d);
+#endif
 
         return (GP_OK);
 }

@@ -1,3 +1,8 @@
+2001-12-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Check if ltdl.h is available and ...
+	* libgphoto2_port: ... use it.
+
 2001-12-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Remove some error codes, and move some variable names into the

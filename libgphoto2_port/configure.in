@@ -24,7 +24,6 @@ AC_LIBTOOL_DLOPEN
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
-AM_PROG_LIBTOOL
 AC_PROG_INSTALL
 
 dnl The following is a hack to get gphoto2 to build on gettext-0.10.35
@@ -35,9 +34,38 @@ AC_SUBST(BUILD_INCLUDED_LIBINTL)
 dnl USE_INCLUDED_LIBINTL=no
 dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
-dnl Languages
+dnl ---------------------------------------------------------------------------
+dnl i18n support
+dnl ---------------------------------------------------------------------------
 ALL_LINGUAS="de"
 AM_GNU_GETTEXT
+
+dnl ---------------------------------------------------------------------------
+dnl Check for libtool: lt_dlforeachfile has been introduced in 
+dnl                    libtool-1.4. However, there are still systems out
+dnl                    there running libtool-1.3. For those, we will need
+dnl                    dlopen. Note that on some systems (e.g. FreeBSD)
+dnl                    -ldl isn't needed.
+dnl ---------------------------------------------------------------------------
+AM_PROG_LIBTOOL
+no_libtool=true
+AC_CHECK_LIB(ltdl, lt_dlforeachfile,
+        AC_CHECK_HEADER(ltdl.h,
+                AC_DEFINE(HAVE_LTDL)
+                LTDL_LIBS="-lltdl"
+                no_libtool=false
+        )
+)
+if $no_libtool; then
+        AC_CHECK_FUNC(dlopen,,
+                AC_CHECK_LIB(dl, dlopen,
+                        LTDL_LIBS="-ldl",
+                        AC_ERROR([
+*** Could not determine how to handle
+*** shared libraries!
+])))
+fi
+AC_SUBST(LTDL_LIBS)
 
 AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 # same trick as with libdl in libgphoto2:

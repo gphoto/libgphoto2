@@ -22,3 +22,5 @@
 #undef HAVE_LOCKDEV
 
 #undef HAVE_GNU_REGEX
+
+#undef HAVE_LTDL
