@@ -44,16 +44,18 @@
 void
 gp_debug_printf (int level, const char *id, const char *format, ...)
 {
-	char buffer[2048];
-	va_list arg;
+	va_list args;
+	int loglevel;
 
-	va_start (arg, format);
-#if HAVE_VSNPRINTF
-	vsnprintf (buffer, sizeof (buffer), format, arg);
-#else
-	vsprintf (buffer, format, arg);
-#endif
-	va_end (arg);
+	switch (level) {
+	case GP_DEBUG_NONE:   loglevel = GP_LOG_ERROR; break;
+	case GP_DEBUG_LOW:    loglevel = GP_LOG_VERBOSE; break;
+	case GP_DEBUG_MEDIUM: loglevel = GP_LOG_DEBUG; break;
+	case GP_DEBUG_HIGH:   loglevel = GP_LOG_DEBUG; break;
+	default:              loglevel = GP_LOG_DEBUG; break;
+	}
 
-	gp_log (GP_LOG_DEBUG, id, "%s", buffer);
+	va_start (args, format);
+	gp_logv (loglevel, id, format, args);
+	va_end (args);
 }
