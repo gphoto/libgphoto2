@@ -93,8 +93,8 @@ int gp_port_get_info    (GPPort *port, GPPortInfo *info);
 int gp_port_open        (GPPort *port);
 int gp_port_close       (GPPort *port);
 
-int gp_port_write       (GPPort *port, char *data, int size);
-int gp_port_read        (GPPort *port, char *data, int size);
+int gp_port_write       (GPPort *port, const char *data, int size);
+int gp_port_read        (GPPort *port,       char *data, int size);
 
 int gp_port_get_timeout  (GPPort *port, int *timeout);
 int gp_port_set_timeout  (GPPort *port, int  timeout);

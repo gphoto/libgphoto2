@@ -357,7 +357,7 @@ gp_port_free (GPPort *port)
  * Return value: a gphoto2 error code
  **/
 int
-gp_port_write (GPPort *port, char *data, int size)
+gp_port_write (GPPort *port, const char *data, int size)
 {
 	int retval;
 

@@ -30,8 +30,8 @@ struct _GPPortOperations {
         int (*exit)     (GPPort *);
         int (*open)     (GPPort *);
         int (*close)    (GPPort *);
-        int (*read)     (GPPort *, char *, int);
-        int (*write)    (GPPort *, char *, int);
+        int (*read)     (GPPort *,       char *, int);
+        int (*write)    (GPPort *, const char *, int);
         int (*update)   (GPPort *);
 
         /* Pointers to devices. Please note these are stubbed so there is

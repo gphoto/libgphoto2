@@ -420,7 +420,7 @@ gp_port_serial_close (GPPort *dev)
 }
 
 static int
-gp_port_serial_write (GPPort *dev, char *bytes, int size)
+gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 {
         int len, ret;
 

@@ -194,15 +194,15 @@ gp_port_usb_clear_halt_lib(GPPort *port, int ep)
 }
 
 static int
-gp_port_usb_write(GPPort *port, char *bytes, int size)
+gp_port_usb_write (GPPort *port, const char *bytes, int size)
 {
         int ret;
 
 	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	ret = usb_bulk_write(port->pl->dh, port->settings.usb.outep,
-                           bytes, size, port->timeout);
+	ret = usb_bulk_write (port->pl->dh, port->settings.usb.outep,
+                           (char *) bytes, size, port->timeout);
         if (ret < 0)
 		return (GP_ERROR_IO_WRITE);
 
