@@ -29,7 +29,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[3] = 57600;
 	a->speed[4] = 115200;
 	a->speed[5] = 0;
-	a->capture  = 0;
+	a->capture  = GP_CAPTURE_IMAGE;
 	a->config   = 0;
 	a->file_delete  = 1;
 	a->file_preview = 1;
@@ -264,29 +264,36 @@ int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
 int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
+	DC120Data *dd = camera->camlib_data;
+	int retval;
 
-	return (camera_file_action(camera, DC120_ACTION_DELETE, NULL, folder, filename));
+	retval = camera_file_action(camera, DC120_ACTION_DELETE, NULL, folder, filename);
+
+	if (retval == GP_OK)
+		gp_filesystem_delete(dd->fs, folder, filename);
+
+	return (retval);
 }
 
 int camera_config_get (Camera *camera, CameraWidget *window) {
 
 	DC120Data *dd = camera->camlib_data;
 
-	return (GP_OK);
+	return (GP_ERROR);
 }
 
 int camera_config_set (Camera *camera, CameraSetting *conf, int count) {
 
 	DC120Data *dd = camera->camlib_data;
 
-	return (GP_OK);
+	return (GP_ERROR);
 }
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	DC120Data *dd = camera->camlib_data;
 
-	return (GP_OK);
+	return (dc120_capture(dd, file));
 }
 
 int camera_summary (Camera *camera, CameraText *summary) {

@@ -10,3 +10,4 @@ int   dc120_get_status   (DC120Data *dd);
 int   dc120_get_albums	 (DC120Data *dd, int from_card, CameraList *list);
 int   dc120_file_action	 (DC120Data *dd, int action, int from_card, int album_number, 
 			  int file_number, CameraFile *file);
+int   dc120_capture	 (DC120Data *dd, CameraFile *file);
