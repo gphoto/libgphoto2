@@ -126,14 +126,14 @@ int gp_port_library_list (gp_port_info *list, int *count) {
 
         /* Copy in the serial port prefix */
         strcpy(prefix, GP_PORT_SERIAL_PREFIX);
-
 #ifdef __linux
         /* devfs */
         if (stat("/dev/tts", &s)==0)
-                strcpy(prefix, "/dev/tts/%i");
+            strcpy(prefix, "/dev/tts/%i");
+
 #endif
         for (x=GP_PORT_SERIAL_RANGE_LOW; x<=GP_PORT_SERIAL_RANGE_HIGH; x++) {
-                sprintf(buf, prefix, x);
+            sprintf(buf, prefix, x);
 #ifdef OS2
            rc = DosOpen(buf,&fh,&option,0,0,1,OPEN_FLAGS_FAIL_ON_ERROR|OPEN_SHARE_DENYREADWRITE,0);
            DosClose(fh);
@@ -143,7 +143,8 @@ int gp_port_library_list (gp_port_info *list, int *count) {
                 if (fd != -1) {
                         close(fd);
                         list[*count].type = GP_PORT_SERIAL;
-                        strcpy(list[*count].path, buf);
+                        strcpy(list[*count].path, "serial:");
+                        strcat(list[*count].path, buf);
                         sprintf(buf, "Serial Port %i", x);
                         strcpy(list[*count].name, buf);
                         /* list[*count].argument_needed = 0; */
@@ -183,21 +184,24 @@ int gp_port_serial_exit (gp_port *dev) {
 
 int gp_port_serial_open(gp_port * dev)
 {
-
+    char *port = strchr(dev->settings.serial.port, ':');
+    if (!port)
+        return GP_ERROR_IO_UNKNOWN_PORT;
+    port++;
 #ifdef __FreeBSD__
-        dev->device_fd = open(dev->settings.serial.port, O_RDWR | O_NOCTTY | O_NONBLOCK);
+        dev->device_fd = open(port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 #elif OS2
         int fd;
-        fd = open(dev->settings.serial.port, O_RDWR | O_BINARY);
-        dev->device_fd = open(dev->settings.serial.port, O_RDWR | O_BINARY);
+        fd = open(port, O_RDWR | O_BINARY);
+        dev->device_fd = open(port, O_RDWR | O_BINARY);
         close(fd);
         //printf("fd %d for %s\n",dev->device_fd,dev->settings.serial.port);
 #else
-        dev->device_fd = open(dev->settings.serial.port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
+        dev->device_fd = open(port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif
         if (dev->device_fd == -1) {
                 fprintf(stderr, "gp_port_serial_open: failed to open ");
-                perror(dev->settings.serial.port);
+                perror(port);
                 return GP_ERROR_IO_OPEN;
         }
 
