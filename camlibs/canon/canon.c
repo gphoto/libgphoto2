@@ -109,6 +109,8 @@ const struct canonCamModelData models[] = {
 	{"Canon:Digital IXUS 300",	CANON_PS_S300,		0x04A9, 0x304D, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A20",		CANON_PS_A20,		0x04A9, 0x304E, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A10",		CANON_PS_A10,		0x04A9, 0x304F, CAP_SUP, S10M, S32K, NULL},
+	/* Mac OS includes this as a valid ID; don't know which camera model --swestin */
+	/*{"Canon:PowerShot ??",		CANON_PS_A10,		0x04A9, 0x3050, CAP_SUP, S10M, S32K, NULL},*/
 	/* Canon IXY DIGITAL 200 here? */
 	{"Canon:PowerShot S110",	CANON_PS_S100,		0x04A9, 0x3051, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:DIGITAL IXUS v",	CANON_PS_S100,		0x04A9, 0x3052, CAP_SUP, S10M, S32K, NULL},
@@ -117,6 +119,8 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot S30",		CANON_PS_S30,		0x04A9, 0x3057, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A40",		CANON_PS_A40,		0x04A9, 0x3058, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A30",		CANON_PS_A30,		0x04A9,	0x3059, CAP_SUP, S10M, S32K, NULL},
+	/* 305c is in MacOS Info.plist, but I don't know what it is --swestin. */
+	/*{"Canon:PowerShot ????",		CANON_PS_A30,		0x04A9,	0x305c, CAP_SUP, S10M, S32K, NULL},*/
 	{"Canon:EOS D60",		CANON_EOS_D60,		0x04A9, 0x3060, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A100",	CANON_PS_A100,		0x04A9, 0x3061, CAP_SUP, S10M, S32K, NULL},
 	{"Canon:PowerShot A200",	CANON_PS_A200,		0x04A9, 0x3062, CAP_SUP, S10M, S32K, NULL},
@@ -126,6 +130,9 @@ const struct canonCamModelData models[] = {
 	{"Canon:Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, NULL},
 	{"Canon PowerShot S50 (normal mode)",	CANON_PS_S50,	0x04A9, 0x3077, CAP_SUP, S99M, S32K, NULL},
 	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, CAP_SUP, S99M, S32K, NULL},
+	/* 306a is in MacOS Info.plist, but I don't know what it is --swestin. */
+	/*{"Canon:Digital ???",	CANON_PS_??,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, NULL},*/
+	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306a, CAP_SUP, S99M, S32K, NULL},
         /* 0x306D is S45 in PTP mode */
 	{"Canon:PowerShot G3 (normal mode)",	CANON_PS_G3,	0x04A9, 0x306E, CAP_SUP, S99M, S32K, NULL},
         /* 0x306F is G3 in PTP mode */
@@ -137,10 +144,7 @@ const struct canonCamModelData models[] = {
 	/* FIXME: dunno about capture, assuming none for now -Marcus */
 	{"Canon Digital IXUS 400",              CANON_PS_S230,  0x04A9, 0x3075, CAP_NON, S99M, S32K, NULL},
 	{"Canon PowerShot S400",                CANON_PS_S230,  0x04A9, 0x3075, CAP_NON, S99M, S32K, NULL},
-	/* A70 product ID for PTP mode is 0x3072; apparently there is
-	 * no "Canon" mode, so this camera will never be supported by
-	 * this driver. */
-	
+
 	/* added from report on mailinglist. XXX: assuming capture works -Marcus */
 	/* reports suggest that they provide 1 interface which does
 	 * both PTP and Canon access modes.
@@ -148,9 +152,16 @@ const struct canonCamModelData models[] = {
 	{"Canon PowerShot A60",         CANON_PS_A60,           0x04A9, 0x3074, CAP_SUP,  S2M, S32K},
 	{"Canon PowerShot A70",         CANON_PS_A70,           0x04A9, 0x3073, CAP_SUP,  S2M, S32K},
 
+	/* S400 product ID for PTP mode is 0x3075; there may be no
+	 * "Canon" mode, so it will be supported by the PTP driver,
+	 * not here. */
+	/* 3078 and 307a are in MacOS Info.plist, but I don't know
+	 * what they are --swestin. */
+	/*{"Canon:PowerShot ?????",		CANON_PS_A60,		0x04A9, 0x3078, CAP_SUP, S10M, S32K, NULL},*/
+	/*{"Canon:PowerShot ?????",		CANON_PS_A60,		0x04A9, 0x307a, CAP_SUP, S10M, S32K, NULL},*/
+>>>>>>> 1.205
 	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, NULL},
-	/* Canon MVX2i in some mode is 0x3067 - but it is not clear yet whether it uses our protocol */
-	/* Canon MVX2i in some mode is 0x306B - but it is not clear yet whether it uses our protocol */
+	/* Canon MVX2i in some mode is 0x3067 - probably PTP */
 	/* Apparently the MVX2i is the same as Optura 200 MC (Philippe
 	 * Gramoulle), so share the code. */
 	{"Canon:Optura 200 MC",		CANON_OPT_200,		0x04A9, 0x306B, CAP_SUP, S10M, S32K, NULL},
@@ -1918,8 +1929,6 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
  * @context: context for error reporting
  *
  * Gets the directory tree of a given flash device.
- *
- * Implicitly assumes that uint8_t[] is a char[] for strings.
  *
  * Returns: gphoto2 error code, file contents in @data,
  *  length of file in @length.
