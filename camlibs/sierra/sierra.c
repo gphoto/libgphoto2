@@ -767,6 +767,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	CameraWidget *section;
 	char t[1024];
 	int ret, value;
+	float float_value;
 
 	GP_DEBUG ("*** camera_get_config_olympus");
 
@@ -810,10 +811,11 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
         if (ret >= 0) {
 		
 		gp_widget_new (GP_WIDGET_RANGE, 
-			       _("Shutter Speed (microseconds)"), 
+			       _("Shutter Speed (microseconds, 0 auto)"), 
 			       &child);
-		gp_widget_set_range (child, 0, 2000, 1);
-		gp_widget_set_value (child, &value);
+		gp_widget_set_range (child, 0, 2000000, 1);
+		float_value = value;
+		gp_widget_set_value (child, &float_value);
 		gp_widget_append (section, child);
         }
 
@@ -1104,6 +1106,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	CameraWidget *child;
 	char *value;
 	int i = 0;
+	float float_value;
 
 	GP_DEBUG ("*** camera_set_config");
 
@@ -1131,9 +1134,10 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	/* Shutter Speed */
 	GP_DEBUG ("*** setting shutter speed");
 	if ((gp_widget_get_child_by_label (window, 
-		_("Shutter Speed (microseconds)"), &child) >= 0) &&
+		_("Shutter Speed (microseconds, 0 auto)"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
-		gp_widget_get_value (child, &i);
+		gp_widget_get_value (child, &float_value);
+		i = float_value;
 		CHECK_STOP (camera, sierra_set_int_register (camera, 3, i, context));
 	}
 

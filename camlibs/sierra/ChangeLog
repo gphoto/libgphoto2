@@ -1,3 +1,9 @@
+2002-03-14  Patrick Mansfield <patman@aracnet.com>
+
+	* sierra.c (camera_get_config_olympus, camera_set_config_olympus):
+	  Fix getting/setting the shutter speed via conversion to int or
+	  float.
+
 2002-02-27  Lutz Müller <lutz@users.sourceforge.net>
 
 	Patch by Patrick Mansfield <patman@aracnet.com>:
