@@ -56,7 +56,6 @@ typedef struct {
 	char                    camera_type_id;   
 	char                    firmwareMajor;    
 	char                    firmwareMinor;  
-	char                    fast_preview;    
 	char                    battery;     	
 	char                    acstatus;       
 	long int                time;	        

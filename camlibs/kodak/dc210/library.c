@@ -445,8 +445,10 @@ static int dc210_read_to_file
 	  fatal_error = 1;
 	  for (k = 0; k < RETRIES; k++){
 		  /* read packet */
-		  if (gp_port_read(camera->port, b, blocksize) < 0)
+	          if (gp_port_read(camera->port, b, blocksize) < 0){
+		          dc210_write_single_char(camera, DC210_ILLEGAL_PACKET);
 			  continue;
+		  };
 		  /* read checksum */
 		  if (dc210_read_single_char(camera, &cs_read) == GP_ERROR){
 			  free(b); 
@@ -1180,9 +1182,8 @@ int dc210_get_status (Camera *camera, dc210_status *status) {
 
 	status->firmwareMajor         = data[2];
 	status->firmwareMinor         = data[3];
-	status->fast_preview          = data[8];
-	status->battery               = data[9];
-	status->acstatus              = data[10];
+	status->battery               = data[8];
+	status->acstatus              = data[9];
 	
 	/* seconds since unix epoc */
 	status->time = CAMERA_GET_EPOC + ((unsigned char) data[12] * 0x1000000 + 

@@ -5,6 +5,4 @@ There are still some minor problems/issues:
 - Internationalization
 - Allow switching the thumbnail type in preferences
 - Clean up the code and add some more comments
-
-To tackle these problems I have to update my linux installation,
-so don't expect them too soon.
+- Find the error in reading the battery status

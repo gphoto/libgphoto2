@@ -534,18 +534,13 @@ static int camera_summary (Camera *camera, CameraText *summary,
 	};
 	strcat(summary_string, buff);
         
-	if (status.fast_preview)
-		snprintf(buff, 1024, "Fast preview is on\n");
-	else
-		snprintf(buff, 1024, "Fast preview is off\n");
-	strcat(summary_string, buff);
-
-	switch (status.battery){
+	/* battery check still doesn't work */
+	/* switch (status.battery){
 	case 0: snprintf(buff,1024,"Battery charge is good\n"); break;
 	case 1: snprintf(buff,1024,"Battery charge is low\n"); break;
 	case 2: snprintf(buff,1024,"Battery is not charged\n"); break;
 	};
-        strcat(summary_string,buff);
+        strcat(summary_string,buff);*/
         
 	if (status.acstatus)
 		snprintf(buff,1024,"AC adapter is connected\n");
