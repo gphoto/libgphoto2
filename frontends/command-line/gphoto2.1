@@ -24,7 +24,7 @@ gphoto2 \- command-line gPhoto2 client
 
 .nf
 \fBgphoto2\fR [--debug] [-q | --quiet] [-v | --verbose] [-h | --help]
-        [--list-cameras] [--print-usb-usermap] [--list-ports]
+        [--list-cameras] [--usb-usermap-script \fINAME\fR] [--print-usb-usermap] [--list-ports]
         [--stdout] [--stdout-size] [--auto-detect] [--port \fIPATH\fR]
         [--speed \fISPEED\fR] [--camera \fIMODEL\fR] [--filename \fIFILENAME\fR]
         [--usbid \fIUSBID\fR] [-a | --abilities] [--folder \fIFOLDER\fR]
@@ -70,6 +70,10 @@ Display a short usage message.
 .TP
 \fB--list-cameras\fR
 List supported camera models.
+
+.TP
+\fB--usb-usermap-script\fR \fINAME\fR
+Specify name of hotplug usb script used in the output of \fB--print-usb-usermap\fR.
 
 .TP
 \fB--print-usb-usermap\fR
