@@ -1,5 +1,10 @@
 2001-10-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/polaroid/pdc640.c: Remove non-existant
+	  GP_ERROR_NO_CAMERA_FOUND.
+
+2001-10-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-result.[c,h]: Documented.
 
 2001-10-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>

@@ -766,9 +766,7 @@ camera_init (Camera *camera)
 	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
 
 	/* Is the camera at 115200? */
-	result = pdc640_ping_high (camera->port);
-	if (result != GP_OK)
-		return(GP_ERROR_NO_CAMERA_FOUND);
+	CHECK_RESULT (pdc640_ping_high (camera->port));
 
 	/* Switch to a higher timeout */
 	CHECK_RESULT (gp_port_timeout_set (camera->port, 5000));
