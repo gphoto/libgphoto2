@@ -656,6 +656,88 @@ int camera_capture_preview (Camera *camera, CameraFile *file)
 	return (camera_stop (camera));
 }
 
+static void dump_register (Camera *camera)
+{
+	int ret, value, i;
+	const char *description[] = {
+		"?",
+		"resolution",			//   1
+		"?",
+		"shutter speed",
+		"current image number",
+		"aperture",
+		"color mode",
+		"flash mode",
+		"?",
+		"?",
+		"frames taken",			//  10
+		"frames left",
+		"size of current image",
+		"size of thumbnail of current image",
+		"current preview (captured)",
+		"?",
+		"battery life"
+		"?",
+		"?",
+		"brightness/contrast",
+		"white balance",		//  20
+		"?",
+		"camera id",
+		"auto off (host)",
+		"auto off (field)",
+		"serial number",
+		"?"
+		"?"
+		"memory left",
+		"?",
+		"?",				//  30
+		"?",
+		"?",
+		"lens mode",
+		"?",
+		"lcd brightness",
+		"?",
+		"?",
+		"lcd auto off",
+		"?",
+		"?",				//  40
+		"?", "?", "?", "?", "?", "?", "?", "?", "?",
+		"?",				//  50
+		"?", "?", "?", "?", "?", "?", "?", "?", "?",
+		"?",				//  60
+		"?", "?", "?", "?", "?", "?", "?", "?", "?",
+		"?",				//  70
+		"?",
+		"zoom",
+		"?", "?", "?", "?", "?", "?", 
+		"current filename",
+		"?",				//  80
+		"?", "?",
+		"number of folders in current folder/folder number",
+		"current folder name",
+		"?", "?", "?", "?", "?",
+		"?",				//  90
+		"?", "?", "?", "?", "?", "?", "?", "?", "?",
+		"?", 				// 100
+		"?", "?", "?", "?", "?", "?", "?", "?", "?",
+		"?", 				// 110
+		"?", "?", "?", "?", "?", "?", "?", "?", "?",
+		"?",				// 120
+		"?", "?", "?", "?", "?", "?", "?", "?", "?",
+		"?"				// 130
+	};
+		
+
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** Register:");
+	for (i = 0; i < 128; i++) {
+		ret = sierra_get_int_register (camera, i, &value);
+		if (ret == GP_OK)
+			gp_debug_printf (GP_DEBUG_LOW, "sierra", 
+					 "***  %3i: %12i (%s)", i, value, 
+					 description [i]);
+	}
+}
+
 int camera_get_config (Camera *camera, CameraWidget **window)
 {
 	CameraWidget *child;
@@ -666,6 +748,7 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_get_config");
 
 	CHECK (camera_start (camera));
+	dump_register (camera);
 
 	*window = gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration");
 	section = gp_widget_new (GP_WIDGET_SECTION, "Picture Settings");
@@ -704,7 +787,7 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 		
 		child = gp_widget_new (GP_WIDGET_RANGE, 
 				       "Shutter Speed (microseconds)");
-		gp_widget_range_set (child, 0, 255, 1);
+		gp_widget_range_set (child, 0, 2000, 1);
 		gp_widget_value_set (child, &value);
 		gp_widget_append (section, child);
         }
@@ -740,18 +823,26 @@ int camera_get_config (Camera *camera, CameraWidget **window)
         ret = sierra_get_int_register (camera, 6, &value);
         if (ret == GP_OK) {
 
+		// Those values are for a C-2020 Z. If your model differs, we
+		// have to distinguish models here...
 		child = gp_widget_new (GP_WIDGET_RADIO, "Color Mode");
-		gp_widget_choice_add (child, "Auto");
-		gp_widget_choice_add (child, "Color");
+		gp_widget_choice_add (child, "Normal");
 		gp_widget_choice_add (child, "Black/White");
+		gp_widget_choice_add (child, "Sepia");
+		gp_widget_choice_add (child, "White Board");
+		gp_widget_choice_add (child, "Black Board");
 
                 switch (value) {
-		case 0: strcpy (t, "Auto");
+		case 0: strcpy (t, "Normal");
 			break;
-                case 1: strcpy (t, "Color");
+                case 1: strcpy (t, "Black/White");
                         break;
-                case 2: strcpy (t, "Black/White");
+                case 2: strcpy (t, "Sepia");
                         break;
+		case 3: strcpy (t, "White Board");
+			break;
+		case 4: strcpy (t, "Black Board");
+			break;
                 default:
                         sprintf (t, "%i (unknown)", value);
 			gp_widget_choice_add (child, t);
@@ -860,7 +951,7 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 		gp_widget_choice_add (child, "Normal");
 		gp_widget_choice_add (child, "Infinity/Fish-eye");
 
-                switch(value) {
+                switch (value) {
                 case 1: strcpy (t, "Macro");
                         break;
                 case 2: strcpy (t, "Normal");
@@ -874,6 +965,35 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 		gp_widget_value_set (child, t);
 		gp_widget_append (section, child);
         }
+
+	/* Zoom */
+	ret = sierra_get_int_register (camera, 72, &value);
+	if (ret == GP_OK) {
+
+		child = gp_widget_new (GP_WIDGET_RADIO, "Zoom");
+		gp_widget_choice_add (child, "1x");
+		gp_widget_choice_add (child, "1.6x");
+		gp_widget_choice_add (child, "2x");
+		gp_widget_choice_add (child, "2.5x");
+
+		switch (value) {
+		case 0: strcpy (t, "1x");
+			break;
+		case 8: strcpy (t, "2x");
+			break;
+		case 520:
+			strcpy (t, "1.6x");
+			break;
+		case 1032:
+			strcpy (t, "2.5x");
+			break;
+		default:
+			sprintf (t, "%i (unknown)", value);
+			gp_widget_choice_add (child, t);
+		}
+		gp_widget_value_set (child, t);
+		gp_widget_append (section, child);
+	}
 
 	section = gp_widget_new (GP_WIDGET_SECTION, "Camera Settings");
 	gp_widget_append (*window, section);
@@ -984,12 +1104,16 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 	child = gp_widget_child_by_label (window, "Color Mode");
 	if (child && gp_widget_changed (child)) {
 		gp_widget_value_get (child, &value);
-		if (strcmp (value, "Auto") == 0) {
+		if (strcmp (value, "Normal") == 0) {
 			i = 0;
-		} else if (strcmp (value, "Color") == 0) {
-			i = 1;
 		} else if (strcmp (value, "Black/White") == 0) {
+			i = 1;
+		} else if (strcmp (value, "Sepia") == 0) {
 			i = 2;
+		} else if (strcmp (value, "White Board") == 0) {
+			i = 3;
+		} else if (strcmp (value, "Black Board") == 0) {
+			i = 4;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 6, i));
@@ -1071,6 +1195,24 @@ int camera_set_config (Camera *camera, CameraWidget *window)
 			return (GP_ERROR_NOT_SUPPORTED);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 33, i));
         }
+
+	/* Zoom */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting zoom");
+	child = gp_widget_child_by_label (window, "Zoom");
+	if (child && gp_widget_changed (child)) {
+		gp_widget_value_get (child, &value);
+		if (strcmp (value, "1x") == 0) {
+			i = 0;
+		} else if (strcmp (value, "2x") == 0) {
+			i = 8;
+		} else if (strcmp (value, "1.6x") == 0) {
+			i = 520;
+		} else if (strcmp (value, "2.5x") == 0) {
+			i = 1032;
+		} else 
+			return (GP_ERROR_NOT_SUPPORTED);
+		CHECK_STOP (camera, sierra_set_int_register (camera, 72, i));
+	}
 
         /* Auto Off (host) */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** setting auto off (host)");
