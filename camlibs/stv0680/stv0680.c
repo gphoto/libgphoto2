@@ -89,7 +89,10 @@ struct camera_to_usb {
 	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA */
 	{ "la ronde by DigitalDream",   0x0553, 0x0202, 0 },
 	/* reported by jerry white */
-	{ "Argus DC-1500",              0x0553, 0x0202, 1 },
+	{ "Argus DC-1500",		0x0553, 0x0202, 1 },
+	/* reported by Philippe Libat <philippe@mandrakesoft.com>,
+	 * serial only. */
+	{ "Yahoo!Cam",			0x0   , 0x0   , 1 },
 
 	{ "AEG Snap 300",               0x0553, 0x0202, 0 },
 	/* SiPix Stylecam looks like stv0680, but reportedly is not  */
@@ -105,7 +108,7 @@ struct camera_to_usb {
 	{ "Fuji IX-1",                  0x0553, 0x0202, 0 }, /* Unconfirmed */
 
 	/* Added for the konica e-mini by Roland Marcus Rutschmann<Rutschmann@gmx.de>*/
-	{ "Konica e-mini",              0x04c8, 0x0722 },
+	{ "Konica e-mini",              0x04c8, 0x0722, 0 },
 };
 
 int camera_id (CameraText *id) 
