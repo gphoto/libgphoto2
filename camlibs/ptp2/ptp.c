@@ -356,9 +356,9 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 			ret=PTP_ERROR_BADPARAM;
 	}
 	if (ret!=PTP_RC_OK) {
-		ret = PTP_ERROR_IO;
 		ptp_error (params,
 			"PTP: reading event an error 0x%04x occured", ret);
+		ret = PTP_ERROR_IO;
 		/* reading event error is nonfatal (for example timeout) */
 	} 
 	/* if we read anything over interrupt endpoint it must be an event */

@@ -965,7 +965,7 @@ typedef int (*put_func)(CameraWidget *widget, PTPDevicePropDesc *dpd);
 
 static int _get_AUINT8_as_CHAR_ARRAY(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
 	int	j;
-	char value[64];
+	char 	value[64];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(name), widget);
 	if (dpd->DataType != PTP_DTC_AUINT8) {
@@ -995,8 +995,11 @@ static int _get_STR(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
 
 static int _put_AUINT8_as_CHAR_ARRAY(CameraWidget *widget, PTPDevicePropDesc *dpd) {
 	char *value;
+	int ret;
 
-	gp_widget_get_value (widget, &value);
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		fprintf(stderr,"could not get value!\n");
 	fprintf (stderr, "value is %s\n", value);
 	return (GP_OK);
 }
@@ -1023,6 +1026,15 @@ static int _get_UINT32_as_time(CameraWidget **widget, char *name, PTPDevicePropD
 	return (GP_OK);
 }
 
+static int _put_UINT32_as_time(CameraWidget *widget, PTPDevicePropDesc *dpd) {
+	time_t	camtime;
+
+	gp_widget_get_value (widget,&camtime);
+	dpd->CurrentValue.u32 = camtime;
+	dpd->DataType = PTP_DTC_UINT32;
+	return (GP_OK);
+}
+
 static int _put_None(CameraWidget *widget, PTPDevicePropDesc *dpd) {
 	return (GP_ERROR_NOT_SUPPORTED);
 }
@@ -1045,7 +1057,7 @@ struct submenu camera_settings_menu[] = {
 	{ N_("Camera Owner"), PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Camera Model"), PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
 	{ N_("Flash Memory"), PTP_DPC_CANON_FlashMemory, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_MB, _put_None },
-	{ N_("Camera Time"),  PTP_DPC_CANON_UnixTime,    PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_None },
+	{ N_("Camera Time"),  PTP_DPC_CANON_UnixTime,    PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
 	{ NULL },
 };
 
@@ -1067,15 +1079,14 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
-			if (!have_prop(camera,cursub->vendorid,cursub->propid))
-				continue;
+			if (!have_prop(camera,cursub->vendorid,cursub->propid)) continue;
 			memset(&dpd,0,sizeof(dpd));
 			ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
 			cursub->getfunc (&widget, cursub->name, &dpd);
 			gp_widget_append (section,widget);
+			ptp_free_devicepropdesc(&dpd);
 		}
 	}
-	ptp_free_devicepropdesc(&dpd);
 #if 0
 	char value[255];
 	if (have_prop(camera,0,PTP_DPC_BatteryLevel)) {
@@ -1134,9 +1145,41 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			break;
 		default: break;
 		}
-		ptp_free_devicepropdesc(&dpd);
 	}
 #endif
+	return GP_OK;
+}
+
+static int
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
+{
+	CameraWidget *section, *widget, *subwindow;
+	PTPDevicePropDesc dpd;
+	int menuno, submenuno, ret;
+
+	ret = gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow);
+	if (ret != GP_OK) return ret;
+	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
+		ret = gp_widget_get_child_by_label (subwindow, _(menus[menuno].name), &section);
+		/* fprintf (stderr, "menu %s\n", _(menus[menuno].name)); */
+		if (ret != GP_OK) {
+			/* fprintf (stderr, "menu %s not found\n", _(menus[menuno].name)); */
+			continue;
+		}
+		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
+			struct submenu *cursub = menus[menuno].submenus+submenuno;
+			if (!have_prop(camera,cursub->vendorid,cursub->propid)) continue;
+			memset(&dpd,0,sizeof(dpd));
+			ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
+			ret = gp_widget_get_child_by_label (section, _(cursub->name), &widget);
+			if (ret != GP_OK) {
+				/* fprintf (stderr, "submenu %s not found\n", _(cursub->name)); */
+				continue;
+			}
+			cursub->putfunc (widget, &dpd);
+			ptp_free_devicepropdesc(&dpd);
+		}
+	}
 	return GP_OK;
 }
 
@@ -1685,7 +1728,9 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->capture = camera_capture;
 	camera->functions->summary = camera_summary;
 	camera->functions->get_config = camera_get_config;
-
+/*
+	camera->functions->set_config = camera_set_config;
+ */
 	/* We need some data that we pass around */
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
