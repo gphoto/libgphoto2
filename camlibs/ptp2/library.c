@@ -348,7 +348,7 @@ static struct {
 	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099},
 	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099},
 	{"Canon:EOS Kiss Digital (PTP mode)",   0x04a9, 0x3099},
-	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309A},
+	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309a},
 	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b},
 	{"Canon:PowerShot S1 IS (PTP mode)",    0x04a9, 0x309c},
 	{"Canon:Digital IXUS 500 (PTP mode)",   0x04a9, 0x30b4},
@@ -357,6 +357,8 @@ static struct {
 	{"Canon:PowerShot A75 (PTP mode)",      0x04a9, 0x30b5},
 
 	{"Canon:PowerShot SD110 (PTP mode)",    0x04a9, 0x30b6},
+
+	{"Canon:PowerShot A310 (PTP mode)",     0x04a9, 0x30b8},
 
 	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba},
 	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba},
