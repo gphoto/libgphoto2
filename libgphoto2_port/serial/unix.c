@@ -158,7 +158,7 @@ struct _GPPortPrivateLibrary {
 	int baudrate; /* Current speed */
 };
 
-static int gp_port_serial_check_baudrate (GPPort *dev);
+static int gp_port_serial_check_speed (GPPort *dev);
 
 GPPortType
 gp_port_library_type () 
@@ -432,7 +432,7 @@ gp_port_serial_write (GPPort *dev, char *bytes, int size)
 		CHECK (gp_port_serial_open (dev));
 
 	/* Make sure we are operating at the specified speed */
-	CHECK (gp_port_serial_check_baudrate (dev));
+	CHECK (gp_port_serial_check_speed (dev));
 
         len = 0;
         while (len < size) {
@@ -482,7 +482,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 		CHECK (gp_port_serial_open (dev));
 
 	/* Make sure we are operating at the specified speed */
-	CHECK (gp_port_serial_check_baudrate (dev));
+	CHECK (gp_port_serial_check_speed (dev));
 
         FD_ZERO (&readfs);
         FD_SET (dev->pl->fd, &readfs);
@@ -695,7 +695,7 @@ gp_port_serial_baudconv (int baudrate)
 }
 
 static int
-gp_port_serial_check_baudrate (GPPort *dev)
+gp_port_serial_check_speed (GPPort *dev)
 {
 #ifdef OS2
 	ULONG rc;
