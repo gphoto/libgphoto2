@@ -25,6 +25,7 @@ int fujitsu_read_packet (gpio_device *dev, char *packet);
 int fujitsu_build_packet (char type, char subtype, int data_length, char *packet);
 
 /* Communications functions */
+int fujitsu_set_speed(gpio_device *dev, int speed);
 int fujitsu_ack(gpio_device *dev);
 int fujitsu_ping(gpio_device *dev);
 int fujitsu_set_int_register (gpio_device *dev, int reg, int value);

@@ -3,45 +3,46 @@
 #include "fujitsu.h"
 #include "library.h"
 
+int glob_first_packet = 1;
+
 void fujitsu_dump_packet (char *packet) {
-	/* packet is assumed to have gone through ntohs() already */
 
 	int x, 	length=0;
 	char buf[4096];
 
-
 	if ((packet[0] == TYPE_COMMAND) ||
 	    (packet[0] == TYPE_SEQUENCE) ||
 	    (packet[0] == TYPE_END)) {
-		length = 6 + packet[2];
+                length = ((unsigned char)packet[2] & 0xff) | ((unsigned char)packet[3] << 8);
+		length += 6;
 	} else {
 		switch((unsigned char)packet[0]) {
 			case NUL:
-				strcpy(buf, " packet: NUL");
+				strcpy(buf, "  packet: NUL");
 				break;
 			case ENQ:
-				strcpy(buf, " packet: ENQ");
+				strcpy(buf, "  packet: ENQ");
 				break;
 			case ACK:
-				strcpy(buf, " packet: ACK");
+				strcpy(buf, "  packet: ACK");
 				break;
 			case DC1:
-				strcpy(buf, " packet: DC1");
+				strcpy(buf, "  packet: DC1");
 				break;
 			case NAK:
-				strcpy(buf, " packet: NAK (Camera Signature)");
+				strcpy(buf, "  packet: NAK (Camera Signature)");
 				break;
 			case TRM:
-				strcpy(buf, " packet: TRM");
+				strcpy(buf, "  packet: TRM");
 				break;
 			default:
-				sprintf(buf, " packet: 0x%02x (UNKNOWN!)", packet[0]);
+				sprintf(buf, "  packet: 0x%02x (UNKNOWN!)", packet[0]);
 		}
 		debug_print(buf);
 		return;
 	}
 
-	strcpy(buf, " packet:");
+	strcpy(buf, "  packet:");
 	for (x=0; x<length; x++)
 		sprintf(buf, "%s 0x%02x", buf, (unsigned char)packet[x]);
 	
@@ -52,30 +53,28 @@ int fujitsu_valid_type(char b) {
 
 	unsigned char byte = (unsigned char)b;
 
-	if (
-		(byte == NUL) ||
-		(byte == ENQ) ||
-		(byte == ACK) ||
-		(byte == DC1) ||
-		(byte == NAK) ||
-//		(byte == TRM) ||
-		(byte == TYPE_COMMAND) ||
-		(byte == TYPE_SEQUENCE) ||
-		(byte == TYPE_END)
-	    )
+	if ((byte == NUL) ||
+	    (byte == ENQ) ||
+	    (byte == ACK) ||
+	    (byte == DC1) ||
+	    (byte == NAK) ||
+	    (byte == TRM) ||
+	    (byte == TYPE_COMMAND) ||
+	    (byte == TYPE_SEQUENCE) ||
+	    (byte == TYPE_END))
 		return (GP_OK);
 	return (GP_ERROR);
 }
 
 int fujitsu_valid_packet (char *packet) {
-	/* assumes ntohs() done already */
 
 	int length;
 
 	if ((packet[0] == TYPE_COMMAND) ||
 	    (packet[0] == TYPE_SEQUENCE) ||
 	    (packet[0] == TYPE_END)) {
-		length = 6 + packet[2];
+                length = ((unsigned char)packet[2] & 0xff) | ((unsigned char)packet[3] << 8);
+		length += 6;
 	} else {
 		switch(packet[0]) {
 			case NUL:
@@ -99,13 +98,14 @@ int fujitsu_write_packet (gpio_device *dev, char *packet) {
 	int x, ret, checksum=0, length;
 	char buf[4096], p[4096];
 	
-	debug_print("fujitsu_write_packet");
+	debug_print(" fujitsu_write_packet");
 
 	/* Determing packet length */
 	if ((packet[0] == TYPE_COMMAND) ||
 	    (packet[0] == TYPE_SEQUENCE) ||
 	    (packet[0] == TYPE_END)) {
-		length = 6 + (((unsigned char)packet[3]<<8)|((unsigned char)packet[2]));
+                length = ((unsigned char)packet[2] & 0xff) | ((unsigned char)packet[3] << 8);
+		length += 6;
 	} else {
 		length = 1;
 	}
@@ -118,17 +118,12 @@ int fujitsu_write_packet (gpio_device *dev, char *packet) {
 	        packet[length-1]= (checksum >> 8) & 0xff; 
 	}
 
+
+	/* Dump packet if debug */
 	fujitsu_dump_packet(packet);
 
-	strncpy(p, packet, length);
+        ret = gpio_write(dev, packet, length);
 
-	/* Convert to network order */
-	if (length > 1) {
-		for (x=2; x<length-1; x++)
-			p[x] = (unsigned char)htons(packet[x]);
-	}
-
-        ret = gpio_write(dev, p, length);
 	if (ret != GPIO_OK) {
 		if (ret == GPIO_TIMEOUT)
 			debug_print(" write failed (timeout)");
@@ -148,45 +143,39 @@ int fujitsu_read_packet (gpio_device *dev, char *packet) {
 	buf[0] = 0;
 	packet[0] = 0;
 
-	debug_print("fujitsu_read_packet");
+	debug_print(" fujitsu_read_packet");
 
 	done = 0;
 	while (!done && (r++<RETRIES)) {
-		ret = gpio_read(dev, buf, 1);
+		ret = gpio_read(dev, packet, 1);
 		if (ret == GPIO_ERROR)
 			return (GP_ERROR);
-		if (fujitsu_valid_type(buf[0])==GP_OK)
+		if (fujitsu_valid_type(packet[0])==GP_OK)
 			done = 1;
 	}
 
 	if (r==RETRIES)
 		return (GP_ERROR);
 
-	if ((buf[0] == TYPE_COMMAND) ||
-	    (buf[0] == TYPE_SEQUENCE) ||
-	    (buf[0] == TYPE_END)) {
-		if (gpio_read(dev, &buf[1], 2)==GPIO_ERROR)
+	if ((packet[0] == TYPE_COMMAND) ||
+	    (packet[0] == TYPE_SEQUENCE) ||
+	    (packet[0] == TYPE_END)) {
+		if (gpio_read(dev, &packet[1], 3)==GPIO_ERROR)
 			return (GP_ERROR);
-                length = 6 + ((packet[3]<<8)|(packet[2]));
+                length = ((unsigned char)packet[2] & 0xff) | ((unsigned char)packet[3] << 8);
+		length += 6;
 	} else {
-		packet[0] = buf[0];
 		fujitsu_dump_packet(packet);
 		return (fujitsu_valid_packet(packet));
 	}
 
-	sprintf(buf, " length %i", length);
+	sprintf(buf, "  packet length: %i", length);
 	debug_print(buf);
 
-	strncpy(packet, buf, 3);
-
-	if (gpio_read(dev, packet, length-3)==GPIO_ERROR)
+	if (gpio_read(dev, &packet[4], length-4)==GPIO_ERROR)
 		return (GP_ERROR);
 
-	for (x=2; x<length; x++)
-		packet[x] = ntohs((unsigned char)packet[x]);
-
 	fujitsu_dump_packet(packet);
-
 
 	return (GP_OK);
 
@@ -195,7 +184,13 @@ int fujitsu_read_packet (gpio_device *dev, char *packet) {
 int fujitsu_build_packet (char type, char subtype, int data_length, char *packet) {
 
 	packet[0] = type;
-	packet[1] = subtype;
+	if (type == TYPE_COMMAND) {
+		if (glob_first_packet)
+			packet[1] = SUBTYPE_COMMAND_FIRST;
+		   else
+			packet[1] = SUBTYPE_COMMAND;
+		glob_first_packet = 0;
+	}
 	packet[2] = data_length &  0xff;
 	packet[3] = data_length >> 8;
 
@@ -224,6 +219,14 @@ int fujitsu_write_ack(gpio_device *dev) {
 	return (fujitsu_write_packet(dev, buf));
 }
 
+int fujitsu_write_nak(gpio_device *dev) {
+
+	char buf[4096];
+
+	buf[0] = NAK;
+	return (fujitsu_write_packet(dev, buf));
+}
+
 int fujitsu_ping(gpio_device *dev) {
 
 	int r=0;
@@ -248,6 +251,48 @@ int fujitsu_ping(gpio_device *dev) {
 	return (GP_ERROR);
 }
 
+int fujitsu_set_speed(gpio_device *dev, int speed) {
+
+	gpio_device_settings settings;
+	char buf[1024];
+
+	sprintf(buf, "Setting speed to %i", speed);
+	debug_print(buf);
+
+	glob_first_packet = 1;
+
+	gpio_get_settings(dev, &settings);
+	settings.serial.speed = speed;
+	switch (speed) {		
+		case 9600:
+			speed = 1;
+			break;
+		case 19200:
+			speed = 2;
+			break;
+		case 38400:
+			speed = 3;
+			break;
+		case 57600:
+			speed = 4;
+			break;
+		case 0:		/* Default speed */
+		case 115200:
+			speed = 5;
+			break;
+		default:
+			return (GP_ERROR);
+	}
+
+	if (fujitsu_set_int_register(dev, 17, speed)==GP_ERROR)
+		return (GP_ERROR);
+	sleep(1);
+	if (gpio_set_settings(dev, settings)==GPIO_ERROR)
+		return (GP_ERROR);
+
+	return (GP_OK);
+}
+
 int fujitsu_set_int_register (gpio_device *dev, int reg, int value) {
 
 	int l=0, r=0;
@@ -257,7 +302,7 @@ int fujitsu_set_int_register (gpio_device *dev, int reg, int value) {
 	sprintf(buf, "Setting register #%i to %i", reg, value);
 	debug_print(buf);
 
-	fujitsu_build_packet(TYPE_COMMAND, SUBTYPE_COMMAND_FIRST,6, p);
+	fujitsu_build_packet(TYPE_COMMAND, 0, 6, p);
 
         /* Fill in the data */
         p[4] = 0x00;
@@ -281,31 +326,41 @@ int fujitsu_set_int_register (gpio_device *dev, int reg, int value) {
 
 int fujitsu_get_int_register (gpio_device *dev, int reg) {
 
-	int l=0, r=0, do_ack;
+	int l=0, r=0, write_nak=0;
 	char packet[4096];
 	char buf[4096];
 
 	sprintf(buf, "Getting register #%i value", reg);
 	debug_print(buf);
 
-	fujitsu_build_packet(TYPE_COMMAND, SUBTYPE_COMMAND_FIRST,2, packet);
+	fujitsu_build_packet(TYPE_COMMAND, 0, 2, packet);
 
         /* Fill in the data */
 	packet[4] = 0x01;
 	packet[5] = reg;
 
 	while (r++<RETRIES) {
-		do_ack = 0;
-		if (fujitsu_write_packet(dev, packet)==GP_ERROR)
-			return (GP_ERROR);
-
-		if (fujitsu_read_ack(dev)==GP_ERROR)
-			return (GP_ERROR);
+		if (write_nak) {
+			if (fujitsu_write_nak(dev)==GP_ERROR)
+				return (GP_ERROR);
+		}  else {
+			if (fujitsu_write_packet(dev, packet)==GP_ERROR)
+				return (GP_ERROR);
+		}
 
 		if (fujitsu_read_packet(dev, buf)==GP_ERROR)
 			return (GP_ERROR);
-		   else
+
+		if (buf[0] == 0x03) {
 			fujitsu_write_ack(dev);
+			r = (int)buf[4] | 
+			   ((int)buf[5] << 8)  | 
+			   ((int)buf[6] << 16) | 
+			   ((int)buf[7] << 24);
+			return (r);
+		} else {
+			write_nak = 1;
+		}
 	}
 
 	debug_print("too many retries");
