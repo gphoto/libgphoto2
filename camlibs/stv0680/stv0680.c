@@ -81,6 +81,9 @@ struct camera_to_usb {
 	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA */
 	{ "la ronde by DigitalDream",   0x0553, 0x0202 },
 
+	/* reported by jerry white */
+	{ "Argus DC-1500",		0x0553, 0x0202 },
+
 	{ "AEG Snap 300",               0x0553, 0x0202 },
 	/* SiPix Stylecam looks like stv0680, but reportedly is not  */
 	/* (has USB id 0xd64/0x1001) */
