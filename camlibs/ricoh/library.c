@@ -436,7 +436,7 @@ camera_get_config (Camera *c, CameraWidget **window, GPContext *co)
 	/* Copyright */
 	CR (gp_widget_new (GP_WIDGET_TEXT, _("Copyright"), &w));
 	CR (gp_widget_set_name (w, "copyright"));
-	CR (gp_widget_set_info (w, _("Copyright (max. 20 characters")));
+	CR (gp_widget_set_info (w, _("Copyright (max. 20 characters)")));
 	CR (gp_widget_append (s, w));
 	CR (ricoh_get_copyright (c, co, &copyright));
 	CR (gp_widget_set_value (w, (void *) copyright));

@@ -425,7 +425,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		gp_context_error (context,
 				  _
 				  ("Your camera does only support deleting the "
-				   "last file on the camera. In this case, this"
+				   "last file on the camera. In this case, this "
 				   "is file '%s'."), name);
 		return (GP_ERROR);
 	}
