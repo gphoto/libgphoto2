@@ -1,5 +1,10 @@
 2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c: The first packet after initialization (sierra_init)
+	  needs a special flag.
+
+2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
+
 	* sierra.c (camera_init): Check if the computer supports high speeds
 	  (i.e. 115200).
 

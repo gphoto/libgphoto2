@@ -92,7 +92,7 @@ enum _SierraAction {
 
 int sierra_change_folder (Camera *camera, const char *folder, GPContext *context)
 {	
-	int st = 0,i = 1;
+	int st = 0, i;
 	char target[128];
 
 	GP_DEBUG ("*** sierra_change_folder");
@@ -105,18 +105,21 @@ int sierra_change_folder (Camera *camera, const char *folder, GPContext *context
 	if (!camera->pl->folders || !strcmp (camera->pl->folder, folder))
 		return GP_OK;
 
-	if (folder[0]) {
-		strncpy(target, folder, sizeof(target)-1);
-		target[sizeof(target)-1]='\0';
-		if (target[strlen(target)-1] != '/') strcat(target, "/");
-	} else
-		strcpy(target, "/");
+	/* We will later need a path ending with '/'. */
+	memset (target, 0, sizeof (target));
+	if (folder && folder[0])
+		strncpy (target, folder, sizeof (target) - 1);
+	if (target[strlen (target) - 1] != '/')
+		strcat (target, "/");
 
-	if (target[0] != '/')
+	/* If the given path is absolute, we need to start in '/'. */
+	if (target[0] == '/') {
+		CHECK (sierra_set_string_register (camera, 84, "\\", 1,
+						   context));
+		i = 1;
+	} else
 		i = 0;
-	else {
-		CHECK (sierra_set_string_register (camera, 84, "\\", 1, context));
-	}
+
 	st = i;
 	for (; target[i]; i++) {
 		if (target[i] == '/') {
@@ -380,6 +383,28 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 	int x, checksum=0, length;
 
 	CHECK (sierra_check_connection (camera, context));
+
+	/*
+	 * We need to check if this is the first packet. Note that USB
+	 * cameras don't care.
+	 */
+	switch (packet[0]) {
+	case SIERRA_PACKET_COMMAND:
+		switch (camera->port->type) {
+		case GP_PORT_SERIAL:
+			packet[1] = (camera->pl->first_packet ? 
+					SUBSIERRA_PACKET_COMMAND_FIRST :
+					SUBSIERRA_PACKET_COMMAND);
+			camera->pl->first_packet = 0;
+			break;
+		default:
+			packet[1] = SUBSIERRA_PACKET_COMMAND;
+			break;
+		}
+		break;
+	default:
+		break;
+	}
 
 	/* Determing packet length */
 	if ((packet[0] == SIERRA_PACKET_COMMAND) ||
@@ -741,14 +766,10 @@ sierra_build_packet (Camera *camera, char type, char subtype,
 	packet[0] = type;
 	switch (type) {
 	case SIERRA_PACKET_COMMAND:
-		if (camera->port->type == GP_PORT_USB)
-				/* USB cameras don't care about first packets */
-			camera->pl->first_packet = 0;
-		if (camera->pl->first_packet)
-			packet[1] = SUBSIERRA_PACKET_COMMAND_FIRST;
-		else
-			packet[1] = SUBSIERRA_PACKET_COMMAND;
-		camera->pl->first_packet = 0;
+
+		/* sierra_write_packet will check for the first packet */
+		packet[1] = SUBSIERRA_PACKET_COMMAND;
+
 		break;
 	case SIERRA_PACKET_DATA:
 	case SIERRA_PACKET_DATA_END:
@@ -897,7 +918,6 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 
 	/* Tell the camera about the new speed. */
 	GP_DEBUG ("Setting speed to %i (%i bps)...", speed, bit_rate);
-	camera->pl->first_packet = 1;
 	CHECK (sierra_set_int_register (camera, 17, speed, context));
 
 	/* Now switch the port to the new speed. */
@@ -969,17 +989,19 @@ sierra_set_int_register (Camera *camera, int reg, int value,
 int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *context) 
 {
 	int r = 0;
-	unsigned char packet[4096], buf[4096];
-
-	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, packet));
-
-	/* Fill in the data */
-	packet[4] = 0x01;
-	packet[5] = reg;
+	unsigned char p[4096], buf[4096];
 
 	GP_DEBUG ("Getting integer value of register 0x%02x...", reg);
-	CHECK (sierra_write_packet (camera, packet, context));
+
+	/* Build and send the packet. */
+	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, p));
+	p[4] = 0x01;
+	p[5] = reg; 
+	CHECK (sierra_write_packet (camera, p, context));
+
 	while (1) {
+
+		/* Read the response */
 		CHECK (sierra_read_packet_wait (camera, buf, context));
 		GP_DEBUG ("Successfully read packet. Interpreting result "
 			  "(0x%02x)...", buf[0]);
@@ -1013,10 +1035,11 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			/*
 			 * The camera has ended this session and
 			 * reverted the speed back to 19200. Reinitialize
-			 * the connection.
+			 * the connection and resend the packet.
 			 */
 			CHECK (sierra_init (camera, context));
-			CHECK (sierra_write_packet (camera, packet, context));
+			CHECK (sierra_write_packet (camera, p, context));
+
 			break;
 
 		default:
@@ -1093,28 +1116,28 @@ int sierra_set_string_register (Camera *camera, int reg, const char *s, long int
 	return GP_OK;
 }
 
-int sierra_get_string_register (Camera *camera, int reg, int file_number, 
+int sierra_get_string_register (Camera *camera, int reg, int fnumber, 
                                 CameraFile *file, unsigned char *b,
 				unsigned int *b_len, GPContext *context)
 {
-	unsigned char packet[4096];
+	unsigned char p[4096];
 	unsigned int packlength, total = *b_len;
 	unsigned int id = 0;
 	int retries, r;
 
 	GP_DEBUG ("* sierra_get_string_register");
 	GP_DEBUG ("* register: %i", reg);
-	GP_DEBUG ("* file number: %i", file_number);
+	GP_DEBUG ("* file number: %i", fnumber);
 
 	/* Set the current picture number */
-	if (file_number >= 0)
-		CHECK (sierra_set_int_register (camera, 4, file_number, context));
+	if (fnumber >= 0)
+		CHECK (sierra_set_int_register (camera, 4, fnumber, context));
 
 	/* Build and send the request */
-	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, packet));
-	packet[4] = 0x04;
-	packet[5] = reg;
-	CHECK (sierra_write_packet (camera, packet, context));
+	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, p));
+	p[4] = 0x04;
+	p[5] = reg;
+	CHECK (sierra_write_packet (camera, p, context));
 
 	if (file)
 		id = gp_context_progress_start (context, total, _("Downloading..."));
@@ -1125,7 +1148,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	do {
 
 		/* Read one packet and retry on timeout. */
-		r = sierra_read_packet (camera, packet, context);
+		r = sierra_read_packet (camera, p, context);
 		if (r == GP_ERROR_TIMEOUT) {
 			if (++retries > RETRIES)
 				return (r);
@@ -1136,7 +1159,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		}
 		CHECK (r);
 
-		switch (packet[0]) {
+		switch (p[0]) {
 		case SIERRA_PACKET_INVALID:
 			gp_context_error (context, _("Could not get "
 				"string register %i. Please contact "
@@ -1147,33 +1170,35 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		}
 		CHECK (sierra_write_ack (camera, context));
 
-		packlength = packet[2] | (packet[3] << 8);
+		packlength = p[2] | (p[3] << 8);
 		GP_DEBUG ("Packet length: %d", packlength);
 
 		if (b)
-			memcpy (&b[*b_len], &packet[4], packlength);
+			memcpy (&b[*b_len], &p[4], packlength);
 		*b_len += packlength;
 
 		if (file) {
-			CHECK (gp_file_append (file, &packet[4], packlength));
+			CHECK (gp_file_append (file, &p[4], packlength));
 			gp_context_progress_update (context, id, *b_len);
 		}
 
-	} while (packet[0] != SIERRA_PACKET_DATA_END);
+	} while (p[0] != SIERRA_PACKET_DATA_END);
 	if (file)
 		gp_context_progress_stop (context, id);
 
 	return (GP_OK);
 }
 
-int sierra_delete_all (Camera *camera, GPContext *context)
+int
+sierra_delete_all (Camera *camera, GPContext *context)
 {
 	CHECK (sierra_action (camera, SIERRA_ACTION_DELETE_ALL, context));
 
 	return GP_OK;
 }
 
-int sierra_delete (Camera *camera, int picture_number, GPContext *context) 
+int
+sierra_delete (Camera *camera, int picture_number, GPContext *context) 
 {
 	/* Tell the camera which picture to delete and execute command. */
 	CHECK (sierra_set_int_register (camera, 4, picture_number, context));
@@ -1182,14 +1207,16 @@ int sierra_delete (Camera *camera, int picture_number, GPContext *context)
 	return (GP_OK);
 }
 
-int sierra_end_session (Camera *camera, GPContext *context) 
+int
+sierra_end_session (Camera *camera, GPContext *context) 
 {
 	CHECK (sierra_action (camera, SIERRA_ACTION_END, context));
 
 	return (GP_OK);
 }
 
-int sierra_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
+int
+sierra_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	unsigned int size;
 
@@ -1199,14 +1226,16 @@ int sierra_capture_preview (Camera *camera, CameraFile *file, GPContext *context
 
 	/* Retrieve the preview and set the MIME type */
 	CHECK (sierra_get_int_register (camera, 12, &size, context));
-	CHECK (sierra_get_string_register (camera, 14, 0, file, NULL, &size, context));
-	CHECK (gp_file_set_mime_type (file, "image/jpeg"));
+	CHECK (sierra_get_string_register (camera, 14, 0, file, NULL, &size,
+					   context));
+	CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
 	return (GP_OK);
 }
 
-int sierra_capture (Camera *camera, CameraCaptureType type,
-		    CameraFilePath *filepath, GPContext *context)
+int
+sierra_capture (Camera *camera, CameraCaptureType type,
+		CameraFilePath *filepath, GPContext *context)
 {
 	int n, len = 0;
 	char filename[128];
