@@ -2,11 +2,12 @@
 
 INCLUDES = \
 	-I$(top_srcdir)/intl \
+	$(GNOME_INCLUDEDIR) \
+	$(EXTRA_GNOME_CFLAGS) \
 	@GTK_CFLAGS@
 
-CFLAGS = @CFLAGS@ `gphoto2-config --cflags` `gdk-pixbuf-config --cflags`
-LDFLAGS = @LDFLAGS@ `gphoto2-config --libs` `gdk-pixbuf-config --libs`
-
+CFLAGS = @CFLAGS@ `gphoto2-config --cflags` `gpio-config --cflags` `gdk-pixbuf-config --cflags`
+LDFLAGS = @LDFLAGS@ `gphoto2-config --libs` `gpio-config --libs` `gdk-pixbuf-config --libs` 
 bin_PROGRAMS = gphoto2_gtk2
 
 gphoto2_gtk2_SOURCES = \
@@ -19,4 +20,8 @@ gphoto2_gtk2_SOURCES = \
 	camera_util.c camera_util.h \
 	gp_util.c gp_util.h
 
-gphoto2_gtk2_LDADD = @GTK_LIBS@ $(INTLLIBS)
+gphoto2_gtk2_LDADD = \
+	@GTK_LIBS@ \
+	$(INTLLIBS) \
+	$(GNOMEUI_LIBS) \
+	$(EXTRA_GNOME_LIBS)
