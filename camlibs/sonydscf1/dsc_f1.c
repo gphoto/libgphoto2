@@ -18,12 +18,9 @@
 #endif
 #include "common.h"
 #include "command.h"
-#include "tty.h"
 #include <termios.h>
 #include "pmp.h"
 #include "chotplay.h"
-#include "../gphoto-0.4.3/src/gphoto.h"
-#include "../gphoto-0.4.3/src/util.h"
 
 #define MAX_PICTURE_NUM 200
 

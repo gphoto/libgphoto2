@@ -33,7 +33,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
         //*count = 1;
         CameraAbilities *a;
-        printf("->camera_abilities\n");
+        // printf("->camera_abilities\n");
         a = gp_abilities_new();
         /* Fill in each camera model's abilities */
         /* Make separate entries for each conneciton type (usb, serial, etc...)
@@ -47,7 +47,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         a->file_preview = 1;
         a->file_put = 1;
         gp_abilities_list_append(list, a);
-        printf("<-camera_abilities\n");
+        // printf("<-camera_abilities\n");
         return (GP_OK);
 }
 
@@ -89,7 +89,8 @@ int camera_init (Camera *camera) {
             return (ret);
         }
 
-        /*printf("1\n");
+        /*
+	printf("1\n");
         if (dev) {
                 gpio_close(dev);
                 gpio_free(dev);
@@ -110,7 +111,9 @@ int camera_init (Camera *camera) {
 
         gpio_open(dev);
         printf("6\n");
-        strcpy(glob_camera_model, camera->model);*/
+        strcpy(glob_camera_model, camera->model);
+	*/
+
         gp_port_timeout_set(b->dev, 5000);
         strcpy(settings.serial.port, camera->port->path);
 

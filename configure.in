@@ -51,15 +51,30 @@ dnl Checks for library functions.
 AC_CHECK_FUNCS(mkdir strdup strncpy strcpy snprintf sprintf)
 
 AC_PATH_PROG(LIBGPPORT_CONFIG,gphoto2-port-config)
+required_gphoto2_port_version=0.0.3
+USE_BUNDLED_GPPORT=1
 if test -n "${LIBGPPORT_CONFIG}"; then
-  LIBGPHOTO2_PORT_DIR=""
-  CFLAGS="$CFLAGS `$LIBGPPORT_CONFIG --cflags`"
-  LIBS="$LIBS `$LIBGPPORT_CONFIG --libs`"
- else
-  dnl Use the bundled gphoto2_port
+
+  echo checking for gphoto2-port - version == $required_gphoto2_port_version
+  gphoto2_port_version=`$LIBGPPORT_CONFIG --version | \
+           sed 's/\(.*\) \(.*\)/\2/'`
+  if test -n "${gphoto2_port_version}"; then
+  	if test "$required_gphoto2_port_version" = "$gphoto2_port_version" ; then
+		USE_BUNDLED_GPPORT=
+  	fi
+  fi
+fi
+  
+if test -n "${USE_BUNDLED_GPPORT}"; then
+  echo "Using the bundled gphoto2_port library"
   LIBGPHOTO2_PORT_DIR="libgphoto2_port"
   CFLAGS="$CFLAGS -I`pwd`/libgphoto2_port/include";
   LIBS="$LIBS -L`pwd`/libgphoto2_port/libgphoto2_port/.libs -lgphoto2_port";
+ else
+   echo "Using the already-installed gphoto2_port library"
+  LIBGPHOTO2_PORT_DIR=""
+  CFLAGS="$CFLAGS `$LIBGPPORT_CONFIG --cflags`"
+  LIBS="$LIBS `$LIBGPPORT_CONFIG --libs`"
 fi
 
 LIBGPHOTO2_INCLUDEDIR='-I${includedir}'
@@ -79,9 +94,7 @@ AC_SUBST(LIBS)
 
 dnl Find out which drivers to compile
 
-dnl Add the sonydscf1 back in!
-
-camlibs='barbie canon directory sierra konica panasonic digita kodak minolta stv0680'
+camlibs='barbie canon directory sierra konica panasonic digita kodak minolta stv0680 sonydscf1'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -94,8 +107,8 @@ AC_ARG_WITH(drivers,
   [                            'all' compiles all drivers; ]
   [                            possible drivers are: ]
   [                            barbie, canon, digita, directory, kodak, ]
-  [                            konica, minolta, panasonic, sierra sonydscf1 ]
-  [                            stv0680 ],
+  [                            konica, minolta, panasonic, sierra, ]
+  [                            sonydscf1 stv0680 ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
@@ -140,6 +153,7 @@ camlibs/kodak/dc240/Makefile \
 camlibs/kodak/dc3200/Makefile \
 camlibs/minolta/Makefile \
 camlibs/minolta/dimagev/Makefile \
+camlibs/sonydscf1/Makefile \
 camlibs/stv0680/Makefile \
 frontends/Makefile \
 frontends/command-line/Makefile \
