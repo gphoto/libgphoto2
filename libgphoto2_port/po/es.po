@@ -1,0 +1,331 @@
+# Spanish Translation.
+# Copyright (C) 2002 Fabian Mandelbaum.
+# Fabian Mandelbaum <fabman@mandrakesoft.com>, 2002.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgphoto2_port\n"
+"POT-Creation-Date: 2002-06-18 23:10-0400\n"
+"PO-Revision-Date: 2002-06-18 22:59-0300\n"
+"Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: libgphoto2_port/gphoto2-port.c:56
+#, c-format
+msgid "The operation '%s' is not supported by this device"
+msgstr "Este dispositivo no soporta la operación '%s'"
+
+#: libgphoto2_port/gphoto2-port.c:57
+msgid "The port has not yet been initialized"
+msgstr "Todavía no se ha inicializado el puerto"
+
+#: libgphoto2_port/gphoto2-port.c:278
+msgid "open"
+msgstr "abrir"
+
+#: libgphoto2_port/gphoto2-port.c:301
+msgid "close"
+msgstr "cerrar"
+
+#. Check if we wrote all bytes
+#: libgphoto2_port/gphoto2-port.c:376
+msgid "write"
+msgstr "escribir"
+
+#. Check if we read as many bytes as expected
+#: libgphoto2_port/gphoto2-port.c:408
+msgid "read"
+msgstr "leer"
+
+#. Check if we read as many bytes as expected
+#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
+msgid "check_int"
+msgstr "check_int"
+
+#: libgphoto2_port/gphoto2-port.c:581
+msgid "update"
+msgstr "actualizar"
+
+#: libgphoto2_port/gphoto2-port.c:627
+msgid "get_pin"
+msgstr "get_pin"
+
+#: libgphoto2_port/gphoto2-port.c:679
+msgid "set_pin"
+msgstr "set_pin"
+
+#: libgphoto2_port/gphoto2-port.c:694
+msgid "send_break"
+msgstr "send_break"
+
+#: libgphoto2_port/gphoto2-port.c:707
+msgid "flush"
+msgstr "vaciar"
+
+#: libgphoto2_port/gphoto2-port.c:723
+msgid "find_device"
+msgstr "find_device"
+
+#: libgphoto2_port/gphoto2-port.c:735
+msgid "find_device_by_class"
+msgstr "find_device_by_class"
+
+#: libgphoto2_port/gphoto2-port.c:749
+msgid "clear_halt"
+msgstr "clear_halt"
+
+#: libgphoto2_port/gphoto2-port.c:769
+msgid "msg_write"
+msgstr "msg_write"
+
+#: libgphoto2_port/gphoto2-port.c:789
+msgid "msg_read"
+msgstr "msg_read"
+
+#: libgphoto2_port/gphoto2-port.c:849
+msgid "No error description available"
+msgstr "No está disponible la descripción del error"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:266
+#, c-format
+msgid "Could not load any io-library because '%s' could not be opened (%m)"
+msgstr ""
+"No se pudo cargar biblioteca de entrada/salida alguna porque '%s' no se pudo "
+"abrir (%m)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:460
+msgid "Generic Port"
+msgstr "Puerto genérico"
+
+#: libgphoto2_port/gphoto2-port-result.c:58
+msgid "No error"
+msgstr "Sin error"
+
+#: libgphoto2_port/gphoto2-port-result.c:60
+msgid "Unspecified error"
+msgstr "Error no especificado"
+
+#: libgphoto2_port/gphoto2-port-result.c:62
+msgid "I/O problem"
+msgstr "Problema de E/S"
+
+#: libgphoto2_port/gphoto2-port-result.c:64
+msgid "Bad parameters"
+msgstr "Parámetros incorrectos"
+
+#: libgphoto2_port/gphoto2-port-result.c:66
+msgid "Unsupported operation"
+msgstr "Operación no soportada"
+
+#: libgphoto2_port/gphoto2-port-result.c:68
+msgid "Timeout reading from or writing to the port"
+msgstr "Tiempo de espera agotado leyendo de, o escribiendo en, el puerto"
+
+#: libgphoto2_port/gphoto2-port-result.c:70
+msgid "Serial port not supported"
+msgstr "Puerto serie no soportado"
+
+#: libgphoto2_port/gphoto2-port-result.c:72
+msgid "USB port not supported"
+msgstr "Puerto USB no soportado"
+
+#: libgphoto2_port/gphoto2-port-result.c:74
+msgid "Unknown port"
+msgstr "Puerto desconocido"
+
+#: libgphoto2_port/gphoto2-port-result.c:76
+msgid "Out of memory"
+msgstr "Sin memoria"
+
+#: libgphoto2_port/gphoto2-port-result.c:78
+msgid "Error loading a library"
+msgstr "Error cargando una biblioteca"
+
+#: libgphoto2_port/gphoto2-port-result.c:80
+msgid "Error initializing the port"
+msgstr "Error inicializando el puerto"
+
+#: libgphoto2_port/gphoto2-port-result.c:82
+msgid "Error reading from the port"
+msgstr "Error leyendo desde el puerto"
+
+#: libgphoto2_port/gphoto2-port-result.c:84
+msgid "Error writing to the port"
+msgstr "Error escribiendo en el puerto"
+
+#: libgphoto2_port/gphoto2-port-result.c:86
+msgid "Error updating the port settings"
+msgstr "Error actualizando las configuraciones del puerto"
+
+#: libgphoto2_port/gphoto2-port-result.c:88
+msgid "Error setting the serial port speed"
+msgstr "Error configurando la velocidad del puerto serie"
+
+#: libgphoto2_port/gphoto2-port-result.c:90
+msgid "Error clearing a halt condition on the USB port"
+msgstr "Error borrando una condición de parada en el puerto USB"
+
+#: libgphoto2_port/gphoto2-port-result.c:92
+msgid "Could not find the requested device on the USB port"
+msgstr "No se pudo encontrar el dispositivo pedido en el puerto USB"
+
+#: libgphoto2_port/gphoto2-port-result.c:94
+msgid "Could not claim the USB device"
+msgstr "No se pudo reclamar el dispositivo USB"
+
+#: libgphoto2_port/gphoto2-port-result.c:96
+msgid "Could not lock the device"
+msgstr "No se pudo trabar el dispositivo"
+
+#: libgphoto2_port/gphoto2-port-result.c:98
+msgid "Unknown error"
+msgstr "Error desconocido"
+
+#: usb/libusb.c:131
+#, c-format
+msgid "Could not open USB device (%m)."
+msgstr "No se pudo abrir el dispositivo USB (%m)."
+
+#: usb/libusb.c:138
+#, c-format
+msgid ""
+"Could not claim interface %d (%m). Make sure no other program or kernel "
+"module (e.g. dc2xx or stv680) is using the device and you have read/write "
+"access to the device."
+msgstr ""
+"No se pudo reclamar la interfaz %d (%m). Debe asegurarse que ningún otro "
+"programa o módulo del núcleo (ej: dc2xx o stv680) esté utilizando el "
+"dispositivo y que Usted tiene acceso de lectura/escritura al dispositivo."
+
+#: usb/libusb.c:157
+#, c-format
+msgid "Could not release interface %d (%m)."
+msgstr "No se pudo liberar la interfaz %d (%m)."
+
+#: usb/libusb.c:164
+#, c-format
+msgid "Could not close USB port (%m)."
+msgstr "No se pudo cerrar el puerto USB (%m)."
+
+#: usb/libusb.c:294
+#, c-format
+msgid "Could not set config %d/%d (%m)"
+msgstr "No se pudo ajustar la configuración %d%d (%m)"
+
+#: usb/libusb.c:316
+#, c-format
+msgid "Could not set altsetting %d/%d (%m)"
+msgstr "No se pudo configurar alternativa %d%d (%m)"
+
+#: usb/libusb.c:391
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr ""
+"El fabricante o ID de producto proporcionado (0x%x, 0x%x) no es válido."
+
+#: usb/libusb.c:439
+#, c-format
+msgid ""
+"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
+"is connected to the computer."
+msgstr ""
+"No se pudo encontrar el dispositivo USB (fabricante 0x%x, producto 0x%x). "
+"Debe asegurarse que este dispositivo está conectado a la computadora."
+
+#: usb/libusb.c:547
+#, c-format
+msgid ""
+"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
+"sure this device is connected to the computer."
+msgstr ""
+"No se pudo encontrar el dispositivo USB (clase 0x%x, subclase 0x%x, "
+"protocolo 0x%x). Debe asegurarse que este dispositivo está conectado a la "
+"computadora."
+
+#: serial/unix.c:214
+#, c-format
+msgid "Could not lock device '%s'"
+msgstr "No se pudo trabar el dispositivo '%s'"
+
+#: serial/unix.c:223
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr "El dispositivo '%s' está trabado por el pid %d"
+
+#: serial/unix.c:226
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr "No se pudo trabar el dispositivo '%s' (dev_lock devolvió %d)"
+
+#: serial/unix.c:249
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr "No se pudo destrabar el dispositivo '%s'."
+
+#: serial/unix.c:261
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr ""
+"No se pudo destrabar el dispositivo '%s' ya que está trabado por el pid %d."
+
+#: serial/unix.c:265
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr "No se pudo destrabar el dispositivo '%s' (dev_unlock devolvió %d)"
+
+#: serial/unix.c:332
+#, c-format
+msgid "Serial Port %i"
+msgstr "Puerto serie %i"
+
+#: serial/unix.c:417
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr "No se pudo abrir '%s' (%m)."
+
+#: serial/unix.c:435
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "No se pudo cerrar '%s' (%m)."
+
+#: serial/unix.c:488
+#, c-format
+msgid "Could not write to port (%m)"
+msgstr "No se pudo escribir en el puerto (%m)"
+
+#: serial/unix.c:560
+msgid "Parity error."
+msgstr "Error de paridad."
+
+#: serial/unix.c:564
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr "Secuencia de respuesta de paridad 0xff, 0x%02x no esperada."
+
+#: serial/unix.c:607
+#, c-format
+msgid "Unknown pin %i."
+msgstr "Pin %i desconocido."
+
+#: serial/unix.c:629
+#, c-format
+msgid "Could not get level of pin %i (%m)."
+msgstr "No se pudo obtener el nivel de pin %i (%m)."
+
+#: serial/unix.c:662
+#, c-format
+msgid "Could not set level of pin %i to %i (%m)."
+msgstr "No se pudo configurar el nivel de pin %i como %i (%m)."
+
+#: serial/unix.c:685
+#, c-format
+msgid "Could not flush '%s' (%m)."
+msgstr "No se pudo vaciar '%s' (%m)."
+
+#: serial/unix.c:796
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr "No se pudo configurar la tasa de baud en %d"
