@@ -1,7 +1,13 @@
+2002-01-19 Dan Fandrich <dan@coneharvesters.com>
+
+	* configure.in: Replaced AC_TRY_RUN with AC_TRY_LINK in ttylock test
+	  so cross-compiling is possible.
+
 2002-01-13 Dan Fandrich <dan@coneharvesters.com>
 
 	* libgphoto2_port/gphoto2-port-log.h
-	* libgphoto2_port/gphoto2-port.h: Put #ifdef HAVE_CONFIG_H around include
+	* libgphoto2_port/gphoto2-port.h: Put #ifdef HAVE_CONFIG_H around
+	  include
 
 2002-01-12  Hans Ulrich Niedermann <gp@n-dimensional.de>
 	

@@ -164,21 +164,13 @@ fi
 if $try_ttylock; then
 	AC_CHECK_HEADER(ttylock.h,
 		AC_MSG_CHECKING(if ttylock needs lockdev)
-		AC_TRY_RUN([#include <ttylock.h>
-			    int main (void) {
-			    	ttylocked ("/dev/foo");
-			    	return (0);
-			    }],
+		AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],
 			AC_MSG_RESULT(no)
 			AC_DEFINE(HAVE_TTYLOCK)
 			ttylock_msg=yes
 			try_lockdev=false,
 			LDFLAGS="$LDFLAGS -llockdev"
-			AC_TRY_RUN([#include <ttylock.h>
-				    int main (void) {
-				    	ttylocked ("/dev/foo");
-					return (0);
-				    }],
+			AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],
 				AC_MSG_RESULT(yes)
 				AC_DEFINE(HAVE_TTYLOCK)
 				ttylock_msg=yes
