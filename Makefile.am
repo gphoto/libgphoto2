@@ -3,7 +3,7 @@
 bin_SCRIPTS = gphoto2-config
 
 SUBDIRS = 			\
-	@LIBGPHOTO2_PORT_DIR@ 	\
+	libgphoto2_port 	\
 	intl 			\
 	include 		\
 	libgphoto2 		\
@@ -11,6 +11,8 @@ SUBDIRS = 			\
 	frontends 		\
 	po 			\
 	doc
+
+EXTRA_DIST = build.sh
 
 gphotodocdir = $(prefix)/doc/gphoto2
 gphotodoc_DATA = AUTHORS COPYING

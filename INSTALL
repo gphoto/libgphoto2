@@ -1,8 +1,8 @@
 
 The installation procedure should be quite simple:
 
-1) ./autogen.sh
-2) make
-3) make install
+1) ./build.sh
+	* pass build.sh any configure options
+2) make install
 
 

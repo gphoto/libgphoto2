@@ -60,10 +60,8 @@ do
     autoheader; automake --add-missing --gnu $am_opt; autoconf)
 done
 
-echo Entering libgphoto2_port
 cd libgphoto2_port
 ./autogen.sh "$@"
-echo Leaving libgphoto2_port
 cd ..
 ./configure "$@"
 

@@ -6,7 +6,7 @@ LDFLAGS = @LDFLAGS@ -g
 INCLUDES = -I$(top_srcdir)/include
 
 libgphoto2_dimera3500_la_SOURCES =\
- dimera3500.c dimera3500.h\
+ dimera3500.c \
  mesalib.c mesalib.h\
  dimeratab.h
 
