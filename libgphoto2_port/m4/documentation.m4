@@ -70,6 +70,9 @@ AC_ARG_WITH(fig2dev, [  --without-fig2dev         Don't use fig2dev],[
 		try_fig2dev=false
 	fi])
 if $try_fig2dev; then
+	AC_CHECK_PROG(have_fig2dev,fig2dev,true,false)
+fi
+if $have_fig2dev; then
         fig2dev -L ps > /dev/null <<EOF
 #FIG 3.2
 Landscape
@@ -82,8 +85,8 @@ Single
 1200 2
 1 3 0 1 0 7 50 0 -1 0.000 1 0.0000 3000 3750 270 270 3000 3750 3150 3975
 EOF
-        if test $? = 0; then
-                have_fig2dev=true
+        if test $? != 0; then
+                have_fig2dev=false
         fi
 fi
 AM_CONDITIONAL(ENABLE_FIGURES, $have_fig2dev)
@@ -130,14 +133,24 @@ AC_SUBST(API_DIR)
 dnl ------------------------------------------------------------------------
 dnl try to find xmlto (required for generation of man pages and html docs)
 dnl ------------------------------------------------------------------------
-AC_MSG_CHECKING([for xmlto])
-AM_CONDITIONAL(XMLTOHTML, xmlto --help | grep html > /dev/null 2>&1)
-AM_CONDITIONAL(XMLTOMAN, xmlto --help | grep man > /dev/null 2>&1)
-
-dnl hack for xmlto pdf not working yet
-AM_CONDITIONAL(XMLTOPDF, xmlto --help | grep pdf > /dev/null 2>&1)
-dnl AM_CONDITIONAL(XMLTOPS, xmlto --help | grep ps > /dev/null 2>&1)
-AM_CONDITIONAL(XMLTOPS, false)
+manual_msg="no (http://cyberelk.net/tim/xmlto/)"
+try_xmlto=true
+have_xmlto=false
+AC_ARG_WITH(xmlto, [  --without-xmlto           Don't use xmlto],[
+	if test x$withval = xno; then
+		try_xmlto=false
+	fi])
+if $try_xmlto; then
+	AC_CHECK_PROG(have_xmlto,xmlto,true,false)
+fi
+AM_CONDITIONAL(XMLTO, $have_xmlto)
+if $have_xmlto; then
+	AM_CONDITIONAL(XMLTOHTML,[xmlto --help | grep html > /dev/null 2>&1])
+	AM_CONDITIONAL(XMLTOMAN,[xmlto --help | grep man > /dev/null 2>&1])
+dnl pdf and ps not working yet
+	AM_CONDITIONAL(XMLTOPDF,[xmlto --help | grep pdf > /dev/null 2>&1])
+	AM_CONDITIONAL(XMLTOPS,[xmlto --help | grep ps > /dev/null 2>&1])
+fi
 
 # create list of supported formats
 xxx=""
@@ -172,11 +185,6 @@ then
         fi
         manual_msg="in (${xxx} ) format with${fig_out} figures"
         AC_MSG_RESULT([support for {${xxx} } found])
-else
-        manual_msg="no (http://cyberelk.net/tim/xmlto/)"
-        AC_MSG_RESULT([no])
 fi
-
-AM_CONDITIONAL(XMLTO, test "x$xxx" != "x")
 
 ])dnl
