@@ -1,0 +1,2 @@
+#!/bin/sh
+gcc -g -Wall -DBARBIE_DEBUG -DBUILD_PROGRAM -lgpio barbie.c main.c -o barbie

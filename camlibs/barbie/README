@@ -1,0 +1,5 @@
+To compile stand-alone, libgpio needs to be installed. If it is, run:
+
+	./compile
+
+the resulting binary, named "barbie" can be put anywhere.

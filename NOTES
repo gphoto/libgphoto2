@@ -1,0 +1,2 @@
+* CameraFile's must be created using gp_file_new()
+* gp_file_clean/free do 2 different things

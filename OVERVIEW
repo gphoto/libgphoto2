@@ -1,0 +1,191 @@
+Notes
+=========================================================================
+
+	* When the cache is turned on, the front-end should
+	not manipulate images directly. use the gp_image_ functions to do
+	manipulation. the gp_image_ functions return the changed image.
+	Saving images is done through gp_file_save.
+
+Program Flow
+=========================================================================
+Here is the program flow (covering most everything hopefully):
+
+[FE] - Front-end
+[GC] - gPhoto core
+[LI] - gPhoto camera library
+
+Choosing a Camera
+------------------------------------------------------------------------
+User selects "Choose Camera"
+
+[FE] Calls "gp_camera_count" to retrieve the number of available cameras
+	\
+	[GC] open the library directory. opens each library
+	supported-camera file ("libraryname.supported").
+	A master list is generated and sorted. Total number
+	of support cameras is returned.
+	/
+[FE] Retrieve each camera name by calling "gp_camera_name".
+	\
+	[GC] returns the camera name from the master list.
+	/
+[FE] Presents the camera list to the user. They choose. "gp_camera_set"
+is then called
+	\
+	[GC] Camera library is loaded based on camera_number. 
+	library functions are loaded. "init" is called.
+		\
+		[LI] Does whatever it needs to do to initialize
+		/
+	[GC] sits here and looks pretty
+	/
+[FE] Calls "gp_camera_abilities" to get the abilities of the selected
+camera.
+	\
+	[GC] calls "abilities"
+		\
+		[LI] returns the cameras abilities
+		/
+	[GC] doh dee doh
+	/
+[FE] Configure GUI/settings according to the camera abilities (black
+out "preview" if it doesn't support it, etc...)
+
+
+Getting an Index
+------------------------------------------------------------------------
+User selects "Get Index"
+
+[FE] calls "gp_folder_count"
+	\
+	[GC] calls "folder_count"
+		\
+		[LI] returns the number of folders on the camera.
+		If folder don't exist (only 1 place to keep images),
+		returns 1.
+		/
+	[GC] returns the number of folders
+	/
+[FE] if the number of folders is > 1, calls "gp_folder_name" for each
+folder.
+	\
+	[GC] calls "folder_name"
+		\
+		[LI] returns the name of a particular folder
+		/
+	[GC] ...
+	/
+[FE] presents user with a folder list. user selects which folder. 
+"gp_folder_set" is called
+	\
+	[GC] if another folder is open already, calls "folder_close"
+		\
+		[LI] does stuff to close the current folder
+		/
+	[GC] "folder_set" is called.
+		\
+		[LI] does stuff to set the current folder
+		/
+	[GC] "folder_open" is called
+		\
+		[LI] does stuff to open the current folder
+		/
+	[GC] uhhh..
+	/
+[FE] calls "gp_file_count" to retrieve the number of pictures in the
+current folder.
+	\
+	[GC] calls "file_count"
+		\
+		[LI] returns the number of files.
+		/
+	[GC] nothing.
+	/
+[FE] calls "gp_file_get_preview" for each picture to get the thumbnail index.
+	\
+	[GC] "file_get_preview" is called
+		\
+		[LI] retrieves the preview
+		/
+	[GC] Caches the preview file. returns the file data
+	/
+[FE] displays the index
+
+Getting a picture/sound/etc...
+------------------------------------------------------------------------
+User select "Get Picture/Sound/etc..."
+
+[FE] calls "gp_file_get"
+	\
+	[GC] calls "file_get"
+		\
+		[LI] retrieves the file
+		/
+	[GC] caches the file. returns the file information.
+	/
+[FE] displays the file
+
+Manipulating Images (rotate/flip)
+------------------------------------------------------------------------
+User selects "Rotate/Flip Image" (either full-size image, or thumbnail)
+
+[FE] Calls 	gp_image_(flip_v | flip_h | rotate)
+     or		gp_image_preview_(flip_v | flip_h | rotate)
+	\
+	[GC] Rotates image in cache. returns altered image.
+	/
+[FE] Displays new image
+
+Saving Images
+------------------------------------------------------------------------
+User selects "Save (Image | Sound | whatever...)"
+
+[FE] Calls "gp_file_save"
+	\
+	[GC] If file exists, calls gp_confirm. If return == GP_OK,
+	then overwrites the file. If return == GP_ERROR, then just
+	returns.
+	/
+[FE] Says "File saved as ...".
+
+Retrieving library information (summary, manual, about)
+------------------------------------------------------------------------
+User wants to know something about the camera/library.
+
+[FE] calls "gp_(summary | manual | about"
+	\
+	[GC] calls (summary | manual | about )
+		\
+		[LI] returns the appropriate information
+		/
+	[GC] ...
+	/
+[FE] displays the information
+
+Files needed by each camera library
+-----------------------------------
+	* library itself
+		"libgphoto_name.so"
+		ex: "libgphoto_casio.so"
+
+	* supported camera list
+		"libgphoto_name.supported"
+		ex: "libgphoto_casio.supported"
+
+		contents are a list of cameras, each on a separate
+		line, that that library supports.
+		ex:
+			Casio QV10
+			Casio QV100
+			Casio QV39483
+		and so on. this makes it easy to add cameras to
+		gPhoto when they are confirmed to work.
+
+	* configuration specification
+		"libgphoto_name.config"
+		ex: "libgphoto_casio.config"
+
+		contents are the spcification for the configuration
+		interface. this format needs to be defined. check
+		the gphoto.h file for a proposal. this makes it easy
+		to change the configuration interface.
