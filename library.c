@@ -7,8 +7,8 @@
 #include "library.h"
 #include "util.h"
 
-int is_library(char *library_filename) {
-
+int is_library(char *library_filename)
+{
 	int ret = GP_OK;
         void *lh;
 	c_id id;
@@ -23,33 +23,35 @@ int is_library(char *library_filename) {
         return (ret);
 }
 
-int load_library (Camera *camera, char *camera_name) {
+int load_library(Camera *camera, char *camera_name)
+{
+	void *lh;
+	int x;
 
-        void *lh;
-        int x;
-        for (x=0; x<glob_abilities_list->count; x++) {
-           if (strcmp(glob_abilities_list->abilities[x]->model, camera_name)==0) {
-                if ((lh = GPIO_DLOPEN(glob_abilities_list->abilities[x]->library))==NULL) {
-                        if (glob_debug)
-                                perror("core:\tload_library");
-                        return (GP_ERROR);
-                }
-                camera->library_handle = lh;
-		camera->functions->id = (c_id)GPIO_DLSYM(lh, "camera_id");
-		camera->functions->abilities = (c_abilities)GPIO_DLSYM(lh, "camera_abilities");
-		camera->functions->init = (c_init)GPIO_DLSYM(lh, "camera_init");
+	for (x=0; x<glob_abilities_list->count; x++) {
+		if (strcmp(glob_abilities_list->abilities[x]->model, camera_name)==0) {
+			if ((lh = GPIO_DLOPEN(glob_abilities_list->abilities[x]->library))==NULL) {
+				if (glob_debug)
+					perror("core:\tload_library");
+				return (GP_ERROR);
+			}
 
-                return (GP_OK);
-           }
-        }
+			camera->library_handle = lh;
+			camera->functions->id = (c_id)GPIO_DLSYM(lh, "camera_id");
+			camera->functions->abilities = (c_abilities)GPIO_DLSYM(lh, "camera_abilities");
+			camera->functions->init = (c_init)GPIO_DLSYM(lh, "camera_init");
 
-        return (GP_ERROR);
+			return GP_OK;
+		}
+	}
+
+	return GP_ERROR;
 }
 
-int load_camera_list (char *library_filename) {
-        /* Returns the number of cameras added to the CameraChoice list */
-        /* 0 implies an error occurred */
-
+/* Returns the number of cameras added to the CameraChoice list */
+/* 0 implies an error occurred */
+int load_camera_list(char *library_filename)
+{
 	CameraText id;
 	void *lh;
         c_abilities load_camera_abilities;
@@ -68,14 +70,14 @@ int load_camera_list (char *library_filename) {
 	load_camera_id(&id);
 	gp_debug_printf(GP_DEBUG_LOW, "core", "\t library id: %s", id.text);
 
-        for (x=0; x<glob_abilities_list->count; x++) {
-                if (strcmp(glob_abilities_list->abilities[x]->id, id.text)==0) {
-                        GPIO_DLCLOSE(lh);
-                        return (GP_ERROR);
-                }
-        }
+	for (x=0; x<glob_abilities_list->count; x++) {
+		if (strcmp(glob_abilities_list->abilities[x]->id, id.text)==0) {
+			GPIO_DLCLOSE(lh);
+			return (GP_ERROR);
+		}
+	}
 
-        /* load in the camera_abilities function */
+	/* load in the camera_abilities function */
 	load_camera_abilities = (c_abilities)GPIO_DLSYM(lh, "camera_abilities");
 	old_count = glob_abilities_list->count;
 
@@ -92,11 +94,11 @@ int load_camera_list (char *library_filename) {
 
         GPIO_DLCLOSE(lh);
 
-        return (x);
+	return x;
 }
 
-int load_cameras_search (char *directory) {
-
+int load_cameras_search(char *directory)
+{
         GPIO_DIR d;
         GPIO_DIRENT de;
 	char buf[1024];
@@ -163,12 +165,13 @@ int load_cameras() {
 	}
 */ 
 
-	return (GP_OK);
+	return GP_OK;
 }
 
-int close_library (Camera *camera) {
-
+int close_library(Camera *camera)
+{
         GPIO_DLCLOSE(camera->library_handle);
 
-        return (GP_OK);
+	return GP_OK;
 }
+
