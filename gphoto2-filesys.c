@@ -1,4 +1,4 @@
-/* filesys.c
+/* gphoto2-filesys.c
  *
  * Copyright (C) 2000 Scott Fritzinger
  *
