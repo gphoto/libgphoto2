@@ -221,6 +221,8 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		gp_port_set_timeout (port, 500);
 		break;
 	case GP_PORT_USB:
+		strncpy (port->settings.usb.port, info.path,
+			 sizeof (port->settings.usb.port));
 		port->settings.usb.inep = -1;
 		port->settings.usb.outep = -1;
 		port->settings.usb.config = -1;
