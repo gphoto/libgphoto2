@@ -50,26 +50,27 @@ USB Mass Storage protocol:
  * Casio QV [2x00,3x00,8000]
  * Fuji FinePix S1 Pro, [1400,2400,4700]Zoom, 1300, 4500
  * HP PhotoSmart 315, 618, 912
- * Leica Digilux 4.3
  * Konica KD300Z
  * Kyocera Finecam s3
- * Minolta Dimage 7
- * Nikon Coolpix 995
+ * Leica Digilux 4.3
+ * Minolta Dimage 5 & 7
+ * Nikon Coolpix 775, 995
  * Olympus C-100, C-200Z, C-700, C-860L, C-2040, C-3020Z, C-3040Z, 
    C-4040Zoom, D-510, E-10
  * Pentax Optio 330
- * Sony DSC-F505(V), DSC P5, DSC-F707
+ * Sony DSC-F505(V), DSC-P1, DSC-P5, DSC-P20, DSC-P30, DSC-F707
 Again, those cameras cannot be accessed through gphoto2.
 
 Other camera support a protocol called PTP or USB Imaging Devices that has
 been developped by Kodak and other. gphoto2 does not support PTP yet, but 
 jPhoto <http://jphoto.sourceforge.net/> does. Here is a short list of 
 camera that use this protocol:
+ * HP PhotoSmart 318
  * Kodak DC-4800, DX-3215, DX-3500, DX-3600, DX-3700, DX-3900, MC3 and all the
    camera that use Kodak Easy Share(tm) system.
- * Sony DSC-P5, DSC-F707 (both need user configuration of the camera)
-These camera won't be supported until gphoto2 implement PTP.
-
+ * Sony DSC-P5, DSC-F707 (all need user configuration of the camera)
+There is currently a PTP driver in progress for gphoto2. Support should
+be available soon.
 
 Platforms
 ---------
