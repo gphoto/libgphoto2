@@ -5,8 +5,7 @@
 # RPM spec file for gphoto2
 #
 # TODO list concerning packaging
-# - review and coordinate RPM packaging for gphoto2, libusb, gtkam
-# - handle presence/absence of gphoto2.pdf if it cannot be created
+# - review and coordinate RPM packaging for libgphoto2, gphoto2, gtkam
 #
 ########################################################################
 
@@ -31,8 +30,6 @@ BuildRequires: findutils perl
 
 # the following requirements are optional
 @ENABLE_GTK_DOC_TRUE@BuildRequires: gtk-doc
-@ENABLE_FIGURES_TRUE@BuildRequires: transfig
-@XMLTO_TRUE@BuildRequires: xmlto >= 0.0.8
 @RPM_LIBUSB_DEVEL_TRUE@Requires: libusb >= 0.0.5
 @RPM_LIBUSB_DEVEL_TRUE@BuildRequires: libusb-devel >= 0.0.5
 
@@ -45,11 +42,11 @@ connections. Note that
 a) for some older camera models you must use the old "gphoto" package.
 b) for USB mass storage models you must use the driver in the kernel
 
-This package contains
-i) the library that digital camera applications can use
-ii) the command-line utility gphoto2 
+This libgphoto2 package contains only the library that digital 
+camera applications can use.
 
-Other (GUI) frontends are available seperately.
+Frontend like the command-line utility gphoto2 and other (GUI)
+frontends are available seperately.
 
 ####################################
 %package devel
@@ -64,11 +61,14 @@ Group: Development/Libraries
 The gPhoto2 project is a universal, free application and library
 framework that lets you download images from several different
 digital camera models, including the newer models with USB
-connections. Note that for some older camera models you must use
-the old "gphoto" package.
+connections. Note that
+a) for some older camera models you must use the old "gphoto" package.
+b) for USB mass storage models you must use the driver in the kernel
 
-This package contains the files needed to compile applications that
-use libgphoto2.
+This libgphoto2-devel package contains the files needed to compile 
+frontends like the command-line utility gphoto2 and other (GUI)
+frontends, which are available seperately.
+
 
 ########################################################################
 # Building and installing the beast into %{buildroot}
@@ -103,10 +103,6 @@ perl -p -i -e "s|^libdir.*|libdir='$RPM_BUILD_ROOT%{_libdir}'|g" \
 find $RPM_BUILD_ROOT -name '*.la' | \
   xargs perl -p -i -e "s|$RPM_BUILD_ROOT||g"
 
-# we should move that into the proper Makefile.am eventually
-install -d -m755 %{buildroot}/etc/hotplug/usb/
-install -m755 packaging/linux-hotplug/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
-
 @ENABLE_GTK_DOC_TRUE@cp -a %{buildroot}%{_docdir}/%{name}-%{version}/html html
 @ENABLE_GTK_DOC_TRUE@cp -a %{buildroot}%{_docdir}/libgphoto2_port-0.5.1/html/api/gphoto2-port html/api
 @ENABLE_GTK_DOC_TRUE@find html -name '*.sgml' | xargs rm
@@ -115,15 +111,12 @@ install -m755 packaging/linux-hotplug/usbcam.console %{buildroot}/etc/hotplug/us
 %find_lang %{name}
 
 # build file list
-#find %{buildroot} -type f -or -type l \
-#        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.allfiles
+find %{buildroot} -type f -or -type l \
+        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.allfiles
 
-#find %{buildroot} \( -type f -or -type l \) -and -name '*.so*' \
-#        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.sofiles
+grep '\.so$' < %{name}-%{version}.allfiles > %{name}-%{version}.sofiles
 
-#find %{buildroot} \( -type f -or -type l \) -and \
-#        \( -name '*.la' -or -name '*.a' -or -name '*.h' \) \
-#        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.devel-files
+egrep '\.(la|a|h)$' < %{name}-%{version}.allfiles > %{name}-%{version}.devel-files
 
 # figure out list of documentation stuff
 #htmldir=$(grep '/html/' < "%{name}-%{version}.files" | sed 's/html\/.*/html/' | sort -u)
@@ -141,12 +134,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 ####################################
 %files -f %{name}.lang
 %defattr(-,root,root)
-%doc doc/gphoto2.txt doc/gphoto2-cli.txt doc/FAQ
-%doc AUTHORS README COPYING
-%doc html/manual
-@XMLTOPDF_TRUE@%doc doc/gphoto2.pdf
-%{_bindir}/gphoto2
-/etc/hotplug/usb/usbcam
+%doc AUTHORS README COPYING CHANGES
 %{_datadir}/gphoto2
 %dir %{_libdir}/gphoto2_port
 %dir %{_libdir}/gphoto2_port/*
@@ -161,7 +149,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 
 # add supported cameras to /etc/hotplug/usb.usermap
 grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
-/usr/bin/gphoto2 --print-usb-usermap >> /etc/hotplug/usb.usermap.tmp
+/usr/lib/gphoto2/print-usb-usermap >> /etc/hotplug/usb.usermap.tmp
 mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 
 # register libraries
