@@ -57,33 +57,33 @@ int camera_abilities (CameraAbilitiesList *list)
 
 int init(Camera *camera)
 {
-	gp_port_settings settings;
+	GPPortSettings settings;
 	DC3200Data *dd = camera->camlib_data;
+	int ret;
 
-	strcpy(settings.serial.port, camera->port_info->path);
+	ret = gp_port_settings_get (camera->port, &settings);
+	if (ret < 0)
+		return (ret);
+
 	settings.serial.speed    = 9600;
 	settings.serial.bits     = 8;
 	settings.serial.parity   = 0;
 	settings.serial.stopbits = 1;
 
-	/* set up the port */
-	if (gp_port_settings_set(dd->dev, settings) == GP_ERROR)
-		return GP_ERROR;
+	ret = gp_port_settings_set (camera->port, settings);
+	if (ret < 0)
+		return (ret);
 
-	/* open the port */
-	if (gp_port_open(dd->dev) == GP_ERROR)
-		return GP_ERROR;
-
-	gp_port_timeout_set(dd->dev, TIMEOUT);
+	gp_port_timeout_set (camera->port, TIMEOUT);
 
 	if (dc3200_set_speed(dd, camera->port_info->speed) == GP_ERROR)
 		return GP_ERROR;
 
-	settings.serial.speed = camera->port_info->speed;
-
 	/* set the new speed */
-	if (gp_port_settings_set(dd->dev, settings) == GP_ERROR)
-		return GP_ERROR;
+	settings.serial.speed = camera->port_info->speed;
+	ret = gp_port_settings_set (camera->port, settings);
+	if (ret < 0)
+		return (ret);
 
 	/* Wait for it to update */
 	sleep(1);
@@ -99,18 +99,13 @@ int init(Camera *camera)
 	return GP_OK;
 }
 
-int camera_exit (Camera *camera)
+static int camera_exit (Camera *camera)
 {
 	DC3200Data	*dd = camera->camlib_data;
-	if (!dd)
-		return (GP_OK);
 
-	gp_filesystem_free(dd->fs);
-
-	if (dd->dev) {
-		if (gp_port_close(dd->dev) == GP_ERROR)
-			{ /* camera did a bad, bad thing */ }
-		gp_port_free(dd->dev);
+	if (dd) {
+		free (dd);
+		camera->camlib_data = NULL;
 	}
 
 	return (GP_OK);
@@ -132,9 +127,10 @@ int check_last_use(Camera *camera)
 	return GP_OK;
 }
 
-int camera_folder_list_folders (Camera *camera, const char *folder, 
-				CameraList *list)
+static int folder_list_func (CameraFilesystem *fs, const char *folder,
+			     CameraList *list, void *user_data)
 {
+	Camera 		*camera = user_data;
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
 	long		data_len = 0;
@@ -202,9 +198,10 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 	return (dc3200_keep_alive (dd));
 }
 
-int camera_folder_list_files (Camera *camera, const char *folder, 
-			      CameraList *list)
+static int file_list_func (CameraFilesystem *fs, const char *folder,
+			   CameraList *list, void *user_data)
 {
+	Camera		*camera = user_data;
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
 	long		data_len = 0;
@@ -267,9 +264,11 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 	return (dc3200_keep_alive(dd));
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFileType type, CameraFile *file)
+static int get_file_func (CameraFilesystem *fs, const char *folder,
+			  const char *filename, CameraFileType type,
+			  CameraFile *file, void *user_data)
 {
+	Camera		*camera = user_data;
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
 	long		data_len = 0;
@@ -302,13 +301,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	return (dc3200_keep_alive(dd));
 }
 
-int camera_summary (Camera *camera, CameraText *summary)
-{
-	strcpy(summary->text, _("No summary information yet"));
-	return (GP_OK);
-}
-
-int camera_manual (Camera *camera, CameraText *manual)
+static int camera_manual (Camera *camera, CameraText *manual)
 {
 	strcpy (manual->text, 
 		_("Known problems:\n"
@@ -325,7 +318,7 @@ int camera_manual (Camera *camera, CameraText *manual)
 	return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about)
+static int camera_about (Camera *camera, CameraText *about)
 {
 	strcpy	(about->text, 
 		_("Kodak DC3200 Driver\n"
@@ -335,7 +328,7 @@ int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-const char* camera_result_as_string (Camera *camera, int result)
+static const char* camera_result_as_string (Camera *camera, int result)
 {
 	if (result >= 0) return (_("This is not an error..."));
 	if (-result < 100) return gp_result_as_string (result);
@@ -345,43 +338,32 @@ const char* camera_result_as_string (Camera *camera, int result)
 int camera_init (Camera *camera) 
 {
         DC3200Data *dd;
-        int ret;
-
-        if (!camera)
-                return (GP_ERROR);
+	int ret;
 
         dd = (DC3200Data*)malloc(sizeof(DC3200Data));
         if (!dd)
-                return (GP_ERROR);
+                return (GP_ERROR_NO_MEMORY);
 	dd->camera = camera;
+	dd->dev = camera->port;
+	camera->camlib_data = dd;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->folder_list_folders  = camera_folder_list_folders;
-        camera->functions->folder_list_files    = camera_folder_list_files;
-        camera->functions->file_get             = camera_file_get;
-        camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
         camera->functions->result_as_string     = camera_result_as_string;
+
+	/* Set up the CameraFilesystem */
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
+				      folder_list_func, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
         
-        if ((ret = gp_port_new(&(dd->dev), GP_PORT_SERIAL)) < 0) {
+        /* initialize the camera */
+	ret = init (camera);
+	if (ret < 0) {
                 free(dd);
                 return (ret);
         }
-
-        camera->camlib_data = dd;
-
-        /* initialize the camera */
-        if (init(camera) == GP_ERROR) {
-                gp_port_close(dd->dev);
-                gp_port_free(dd->dev);
-                free(dd);
-                return (GP_ERROR);
-        }
-
-        /* Everything went OK. Save the data*/
-        gp_filesystem_new(&dd->fs);
 
         return (dc3200_keep_alive(dd));
 }

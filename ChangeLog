@@ -1,3 +1,11 @@
+2001-10-19  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/kodak/dc240: Use camera->fs - this should fix file deletion
+	  that I broke earlier.
+	* camlibs/kodak/dc3200: Use camera->fs. Don't use
+	  gp_port_[new,free,open,close]. Declare some functions static in
+	  order to fix compile warnings.
+
 2001-10-18  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line/main.c: Port to gp_log

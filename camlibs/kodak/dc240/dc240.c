@@ -85,23 +85,29 @@ camera_exit (Camera *camera)
 }
 
 static int
-camera_folder_list_folders (Camera *camera, const char *folder, 
-				CameraList *list) 
+folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		  void *data) 
 {
+	Camera *camera = data;
+
 	return (dc240_get_folders (camera, list, folder));
 }
 
 static int
-camera_folder_list_files (Camera *camera, const char *folder, 
-			      CameraList *list) 
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+		void *data) 
 {
+	Camera *camera = data;
+
 	return (dc240_get_filenames (camera, list, folder));
 }
 
 static int
-camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		 CameraFileType type, CameraFile *file) 
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *data) 
 {
+	Camera *camera = data;
+
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		return (dc240_file_action (camera, DC240_ACTION_IMAGE, file,
@@ -115,15 +121,22 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 }
 
 static int
-camera_file_delete (Camera *camera, const char *folder, const char *filename) 
+delete_file_func (CameraFilesystem *fs, const char *folder,
+		  const char *filename, void *data)
 {
+	Camera *camera = data;
+
 	return (dc240_file_action (camera, DC240_ACTION_DELETE, NULL, folder, 
     				   filename));
 }
 
 static int
-camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
+camera_capture (Camera *camera, CameraCaptureType type,
+		CameraFilePath *path) 
 {
+	if (type != GP_CAPTURE_IMAGE)
+		return (GP_ERROR_NOT_SUPPORTED);
+
 	return dc240_capture(camera, path);
 }
 
@@ -159,24 +172,26 @@ int
 camera_init (Camera *camera) 
 {
 	int ret;
-	gp_port_settings settings;
+	GPPortSettings settings;
 	
 	/* First, set up all the function pointers */
 	camera->functions->exit             = camera_exit;
-#warning This library is broken. Please use camera->fs!
-	camera->functions->folder_list_folders = camera_folder_list_folders;
-	camera->functions->folder_list_files   = camera_folder_list_files;
-	camera->functions->file_get         = camera_file_get;
-#warning Deletion only using camera->fs! Please change!
-//	camera->functions->file_delete      = camera_file_delete;
 	camera->functions->capture          = camera_capture;
 	camera->functions->summary          = camera_summary;
 	camera->functions->manual           = camera_manual;
 	camera->functions->about            = camera_about;
 
+	/* Set up the CameraFilesystem */
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
+				      folder_list_func, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      delete_file_func, camera);
+
+	ret = gp_port_settings_get (camera->port, &settings);
+	if (ret < 0)
+		return (ret);
 	switch (camera->port->type) {
 	case GP_PORT_SERIAL:
-		strcpy(settings.serial.port, camera->port_info->path);
 		settings.serial.speed    = 9600;
 		settings.serial.bits     = 8;
 		settings.serial.parity   = 0;
