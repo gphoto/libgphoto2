@@ -548,7 +548,7 @@ canon_int_get_disk_name (Camera *camera)
 				return NULL;
 			}
 			break;
-		GP_PORT_DEFAULT
+		GP_PORT_DEFAULT_RETURN(NULL)
 	}
 
 	if (camera->port->type == GP_PORT_SERIAL) {
@@ -1077,7 +1077,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 							     &total_file_size);
 			}
 			break;
-		GP_PORT_DEFAULT
+		GP_PORT_DEFAULT_RETURN(NULL)
 	}
 
 	switch (camera->pl->md->model) {
