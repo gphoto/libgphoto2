@@ -1,4 +1,4 @@
-EXTRA_DIST = jpeg.txt jpeghead.h
+EXTRA_DIST = jpeg.txt jpeghead.h pdc320.html gt98x.html
 
 camlib_LTLIBRARIES =			\
 	libgphoto2_polaroid_pdc320.la	\
