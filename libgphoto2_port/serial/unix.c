@@ -183,6 +183,8 @@
 #define GP_PORT_SERIAL_RANGE_HIGH       0
 #endif
 
+#define GP_MODULE "serial"
+
 struct _GPPortPrivateLibrary {
 	int fd;       /* Device handle */
 	int baudrate; /* Current speed */
@@ -748,6 +750,7 @@ gp_port_serial_baudconv (int baudrate)
 static int
 gp_port_serial_check_speed (GPPort *dev)
 {
+	speed_t speed;
 #ifdef OS2
 	ULONG rc;
 	ULONG   ulParmLen = 2;     /* Maximum size of the parameter packet */
@@ -772,6 +775,7 @@ gp_port_serial_check_speed (GPPort *dev)
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
 		"Setting baudrate to %d...", dev->settings.serial.speed);
+	speed = gp_port_serial_baudconv (dev->settings.serial.speed);
 
 #ifdef OS2
 	rc = DosDevIOCtl (dev->pl->fd,       /* Device handle               */
@@ -820,17 +824,35 @@ gp_port_serial_check_speed (GPPort *dev)
 		tio.c_cflag |= PARODD;
 	}
 
-        cfsetispeed (&tio, gp_port_serial_baudconv (dev->settings.serial.speed));
-        cfsetospeed (&tio, gp_port_serial_baudconv (dev->settings.serial.speed));
-
+	/* Set the new speed. */
+	cfsetispeed (&tio, speed);
+	cfsetospeed (&tio, speed);
         if (tcsetattr (dev->pl->fd, TCSANOW, &tio) < 0) {
-                perror("tcsetattr");
+		GP_DEBUG ("Error on 'tcsetattr'.");
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
-        if (fcntl(dev->pl->fd, F_SETFL, 0) < 0) {    /* clear O_NONBLOCK */
-                perror("fcntl F_SETFL");
+
+	/* Clear O_NONBLOCK. */
+        if (fcntl (dev->pl->fd, F_SETFL, 0) < 0) {
+		GP_DEBUG ("Error on 'fcntl'.");
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
+
+	/*
+	 * Verify if the speed change has been successful.
+	 * This is needed because some Solaris systems just ignore unsupported
+	 * speeds (like 115200) instead of complaining.
+	 */
+	if (tcgetattr (dev->pl->fd, &tio)) {
+		GP_DEBUG ("Error on 'tcgetattr'.");
+		return (GP_ERROR_IO_SERIAL_SPEED);
+	}
+	if ((cfgetispeed (&tio) != speed) || (cfgetospeed (&tio) != speed)) {
+		GP_DEBUG ("Cannot set baudrate to %d...",
+			  dev->settings.serial.speed);
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
 #else /* !HAVE_TERMIOS_H */
         if (ioctl (dev->pl->fd, TIOCGETP, &ttyb) < 0) {
                 perror("ioctl(TIOCGETP)");
@@ -840,7 +862,7 @@ gp_port_serial_check_speed (GPPort *dev)
         ttyb.sg_ospeed = dev->settings.serial.speed;
         ttyb.sg_flags = 0;
 
-        if (ioctl(dev->pl->fd, TIOCSETP, &ttyb) < 0) {
+        if (ioctl (dev->pl->fd, TIOCSETP, &ttyb) < 0) {
                 perror("ioctl(TIOCSETP)");
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
@@ -856,10 +878,7 @@ gp_port_serial_update (GPPort *dev)
 {
 	memcpy (&dev->settings, &dev->settings_pending, sizeof (dev->settings));
 
-	/*
-	 * The speed is set prior the next read or write operation
-	 * (if needed)
-	 */
+	CHECK (gp_port_serial_check_speed (dev));
 
 	return GP_OK;
 }

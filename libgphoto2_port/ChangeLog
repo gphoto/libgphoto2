@@ -1,3 +1,9 @@
+2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Dave Woodman <dave@naffnet.org>, slightly modified:
+
+	* serial/unix.c: Make sure speed changes have been successful.
+
 2002-05-23  Lutz Müller <lutz@users.sourceforge.net>
 
 	* test/test-gp-port.c: More tests.
