@@ -199,7 +199,7 @@ camera_abilities (CameraAbilitiesList *list)
 			a.folder_operations |= GP_FOLDER_OPERATION_PUT_FILE;
 		}
 
-		a.file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
+		a.file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_EXIF;
 		gp_abilities_list_append (list, a);
 	}
 

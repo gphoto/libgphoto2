@@ -1,3 +1,7 @@
+2003-02-27  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: We support EXIF download.
+
 2002-11-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* Makefile.am: also tell driver that i18n stuff is in $(PACKAGE)/$(VERSION)

@@ -226,7 +226,8 @@ camera_abilities (CameraAbilitiesList* list)
                                GP_OPERATION_CAPTURE_IMAGE |
                                GP_OPERATION_CAPTURE_PREVIEW;
                 a.file_operations = GP_FILE_OPERATION_DELETE |
-                                    GP_FILE_OPERATION_PREVIEW;
+                                    GP_FILE_OPERATION_PREVIEW | 
+				    GP_FILE_OPERATION_EXIF;
                 a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
                 gp_abilities_list_append (list, a);
         }
