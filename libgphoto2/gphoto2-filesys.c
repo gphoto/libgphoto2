@@ -113,10 +113,23 @@ delete_all_files (CameraFilesystem *fs, int x)
 
 		/* Get rid of cached files */
                 for (y = 0; y < fs->folder[x].count; y++) {
-                        gp_file_unref (fs->folder[x].file[y].preview);
-                        gp_file_unref (fs->folder[x].file[y].normal);
-                        gp_file_unref (fs->folder[x].file[y].raw);
-                }
+			if (fs->folder[x].file[y].preview) {
+	                        gp_file_unref (fs->folder[x].file[y].preview);
+				fs->folder[x].file[y].preview = NULL;
+			}
+			if (fs->folder[x].file[y].normal) {
+				gp_file_unref (fs->folder[x].file[y].normal);
+				fs->folder[x].file[y].normal = NULL;
+			}
+			if (fs->folder[x].file[y].raw) {
+				gp_file_unref (fs->folder[x].file[y].raw);
+				fs->folder[x].file[y].raw = NULL;
+			}
+			if (fs->folder[x].file[y].audio) {
+				gp_file_unref (fs->folder[x].file[y].audio);
+				fs->folder[x].file[y].audio = NULL;
+			}
+		}
 
                 free (fs->folder[x].file);
                 fs->folder[x].file = NULL;
@@ -504,9 +517,22 @@ delete_file (CameraFilesystem *fs, int x, int y)
 	CameraFilesystemFile *new_fip;
 
 	/* Get rid of cached files */
-	gp_file_unref (fs->folder[x].file[y].preview);
-	gp_file_unref (fs->folder[x].file[y].normal);
-	gp_file_unref (fs->folder[x].file[y].raw);
+	if (fs->folder[x].file[y].preview) {
+		gp_file_unref (fs->folder[x].file[y].preview);
+		fs->folder[x].file[y].preview = NULL;
+	}
+	if (fs->folder[x].file[y].normal) {
+		gp_file_unref (fs->folder[x].file[y].normal);
+		fs->folder[x].file[y].normal = NULL;
+	}
+	if (fs->folder[x].file[y].raw) {
+		gp_file_unref (fs->folder[x].file[y].raw);
+		fs->folder[x].file[y].raw = NULL;
+	}
+	if (fs->folder[x].file[y].audio) {
+		gp_file_unref (fs->folder[x].file[y].audio);
+		fs->folder[x].file[y].audio = NULL;
+	}
 
 	/* Move all files behind one position up */
 	if (y < fs->folder[x].count - 1)
@@ -618,9 +644,9 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 
 		gp_log (GP_LOG_DEBUG, "gphoto2-filesystem",
 			"Querying folder %s...", folder);
+		CHECK_RESULT (delete_all_files (fs, x));
 		CHECK_RESULT (fs->file_list_func (fs, folder, list,
 						  fs->list_data));
-		CHECK_RESULT (delete_all_files (fs, x));
 
 		CHECK_RESULT (count = gp_list_count (list));
 		for (y = 0; y < count; y++) {
@@ -1165,7 +1191,6 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 			CameraFile *file)
 {
 	int x, y, result;
-	CameraFile *tmp;
 
 	CHECK_NULL (fs && folder && file && filename);
 	CHECK_ABS (folder);
@@ -1207,56 +1232,32 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR);
 	}
 
-	CHECK_RESULT (gp_file_new (&tmp));
-	gp_file_set_name (tmp, filename);
-	gp_file_set_type (tmp, type);
-	result = fs->get_file_func (fs, folder, filename, type, tmp,
+	result = fs->get_file_func (fs, folder, filename, type, file,
 				    fs->file_data);
 	if (result != GP_OK) {
 		gp_log (GP_LOG_DEBUG, "gphoto2-fs", "Failed to get file.");
-		gp_file_unref (tmp);
 		return (result);
 	}
 
-	switch (type) {
-	case GP_FILE_TYPE_PREVIEW:
-		fs->folder[x].file[y].preview = tmp;
-		break;
-	case GP_FILE_TYPE_NORMAL:
-		fs->folder[x].file[y].normal = tmp;
-		break;
-	case GP_FILE_TYPE_RAW:
-		fs->folder[x].file[y].raw = tmp;
-		break;
-	case GP_FILE_TYPE_AUDIO:
-		fs->folder[x].file[y].audio = tmp;
-		break;
-	default:
-		gp_file_unref (tmp);
-		gp_log (GP_LOG_ERROR, "gphoto2-filesystem",
-			_("Unknown file type %i"), type); 
-		return (GP_ERROR);
-	}
-
 	/* We don't trust the camera drivers */
-	CHECK_RESULT (gp_file_set_type (tmp, type));
-	CHECK_RESULT (gp_file_set_name (tmp, filename));
+	CHECK_RESULT (gp_file_set_type (file, type));
+	CHECK_RESULT (gp_file_set_name (file, filename));
+
+	/* Cache this file */
+	CHECK_RESULT (gp_filesystem_set_file_noop (fs, folder, file));
 
 	/*
 	 * Often, thumbnails are of a different mime type than the normal
 	 * picture. In this case, we should rename the file.
 	 */
 	if (type != GP_FILE_TYPE_NORMAL)
-		CHECK_RESULT (gp_file_adjust_name_for_mime_type (tmp));
-
-	/* Remember the file (cache) */
-	CHECK_RESULT (gp_file_copy (file, tmp));
+		CHECK_RESULT (gp_file_adjust_name_for_mime_type (file));
 
 	return (GP_OK);
 }
 
 /**
- * gp_filesystem_set_info-funcs:
+ * gp_filesystem_set_info_funcs:
  * @fs: a #CameraFilesystem
  * @get_info_func: the function to retrieve file information
  * @set_info_func: the function to set file information
@@ -1319,6 +1320,101 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	}
 
 	memcpy (info, &fs->folder[x].file[y].info, sizeof (CameraFileInfo));
+
+	return (GP_OK);
+}
+
+/**
+ * gp_filesystem_set_file_noop:
+ * @fs: a #CameraFilesystem
+ * @folder:
+ * @file: a #CameraFile
+ *
+ * Tells the @fs about a file. Typically, camera drivers will call this
+ * function in case they get information about a file (i.e. preview) "for free"
+ * on #gp_camera_capture or #gp_camera_folder_list_files.
+ *
+ * Return value: a gphoto2 error code.
+ **/
+int
+gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
+			     CameraFile *file)
+{
+	CameraFileType type;
+	const char *filename;
+	int x, y;
+
+	CHECK_NULL (fs && folder && file);
+	CHECK_ABS (folder);
+
+	/* Search folder and file */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+	CHECK_RESULT (gp_file_get_name (file, &filename));
+	CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename));
+
+	CHECK_RESULT (gp_file_get_type (file, &type));
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
+		if (fs->folder[x].file[y].preview)
+			gp_file_unref (fs->folder[x].file[y].preview);
+		fs->folder[x].file[y].preview = file;
+		gp_file_ref (file);
+		break;
+	case GP_FILE_TYPE_NORMAL:
+		if (fs->folder[x].file[y].normal)
+			gp_file_unref (fs->folder[x].file[y].normal);
+		fs->folder[x].file[y].normal = file;
+		gp_file_ref (file);
+		break;
+	case GP_FILE_TYPE_RAW:
+		if (fs->folder[x].file[y].raw)
+			gp_file_unref (fs->folder[x].file[y].raw);
+		fs->folder[x].file[y].raw = file;
+		gp_file_ref (file);
+		break;
+	case GP_FILE_TYPE_AUDIO:
+		if (fs->folder[x].file[y].audio)
+			gp_file_unref (fs->folder[x].file[y].audio);
+		fs->folder[x].file[y].audio = file;
+		gp_file_ref (file);
+		break;
+	default:
+		gp_log (GP_LOG_ERROR, "gphoto2-filesystem",
+			_("Unknown file type %i"), type);
+		return (GP_ERROR);
+	}
+
+	return (GP_OK);
+}
+
+/**
+ * gp_filesystem_set_info_noop:
+ * @fs: a #CameraFilesystem
+ * @folder:
+ * @info:
+ *
+ * In contrast to #gp_filesystem_set_info, #gp_filesystem_set_info_noop
+ * will only change the file information in the @fs. Typically, camera
+ * drivers will use this function in case they get file information "for free"
+ * on #gp_camera_capture or #gp_camera_folder_list_files.
+ *
+ * Return value: a gphoto2 error code
+ **/
+int
+gp_filesystem_set_info_noop (CameraFilesystem *fs, const char *folder,
+			     CameraFileInfo *info)
+{
+	int x, y;
+
+	CHECK_NULL (fs && folder && info);
+	CHECK_ABS (folder);
+
+	/* Search folder and file */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+	CHECK_RESULT (y = gp_filesystem_number (fs, folder, info->file.name));
+
+	memcpy (&fs->folder[x].file[y].info, info, sizeof (CameraFileInfo));
+	fs->folder[x].file[y].info_dirty = 0;
 
 	return (GP_OK);
 }

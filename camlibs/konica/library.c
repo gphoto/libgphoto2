@@ -55,6 +55,7 @@
 #define CHECK_NULL(r) {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 
 #define LOG_ERR(c,r,e) {if ((r)==result) gp_camera_set_error((c),(e));}
+#define GP_MODULE "konica"
 
 static void
 log_error (Camera *c, int result)
@@ -113,19 +114,46 @@ struct _CameraPrivateLibrary {
 static int localization_file_read (Camera* camera, const char* file_name,
                                    unsigned char** data, long int* data_size);
 
+static int
+get_info (Camera *camera, unsigned int n, CameraFileInfo *info)
+{
+	unsigned long image_id;
+	unsigned int buffer_size, exif_size;
+	unsigned char *buffer = NULL;
+	int protected;
+
+	GP_DEBUG ("*** Getting info for picture %i...", n);
+	CHECK (camera, k_get_image_information (camera->port,
+		camera->pl->image_id_long, n, &image_id, &exif_size, &protected,
+		&buffer, &buffer_size));
+	free (buffer);
+
+	info->audio.fields = GP_FILE_INFO_NONE;
+
+	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	info->preview.size = buffer_size;
+	strcpy (info->preview.type, GP_MIME_JPEG);
+
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS |
+			    GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
+	info->file.size = exif_size;
+	info->file.permissions = GP_FILE_PERM_READ;
+	if (!protected)
+		info->file.permissions |= GP_FILE_PERM_DELETE;
+	strcpy (info->file.type, GP_MIME_JPEG);
+	snprintf (info->file.name, sizeof (info->file.name),
+		  "%06i.jpeg", (int) image_id);
+
+	return (GP_OK);
+}
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data)
 {
+	CameraFileInfo info;
         KStatus status;
         unsigned int i;
-        unsigned char *information_buffer = NULL;
-        unsigned int exif_size, information_buffer_size;
-        int protected;
-        unsigned long image_id;
-        char filename[1024];
-        int result;
         Camera *camera = data;
 
         /*
@@ -137,17 +165,14 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
         for (i = 0; i < status.pictures; i++) {
 
                 /* Get information */
-                result = k_get_image_information (camera->port,
-                        camera->pl->image_id_long, i + 1, &image_id,
-			&exif_size, &protected, &information_buffer,
-                        &information_buffer_size);
-                free (information_buffer);
-                information_buffer = NULL;
-                CHECK (camera, result);
+		CHECK (camera, get_info (camera, i + 1, &info));
 
-                /* Append to the list */
-                sprintf (filename, "%06i.jpeg", (int) image_id);
-                CHECK (camera, gp_list_append (list, filename, NULL));
+                /*
+		 * Append directly to the filesystem instead of to the list,
+		 * because we have additional information.
+		 */
+		gp_filesystem_append (camera->fs, folder, info.file.name);
+		gp_filesystem_set_info_noop (camera->fs, folder, &info);
         }
 
         return (GP_OK);
@@ -332,35 +357,17 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 static int
-get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
+get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
                CameraFileInfo *info, void *data)
 {
         Camera *camera = data;
-        unsigned long image_id;
-        unsigned int information_buffer_size, exif_size;
-        unsigned char *information_buffer = NULL;
-        int protected, n;
+        int n;
 
 	/* We need image numbers starting with 1 */
-	CHECK (camera, n = gp_filesystem_number (camera->fs, folder, file));
+	CHECK (camera, n = gp_filesystem_number (camera->fs, folder, filename));
 	n++;
 
-        CHECK (camera, k_get_image_information (camera->port,
-		camera->pl->image_id_long, n, &image_id, &exif_size, &protected,
-		&information_buffer, &information_buffer_size));
-        free (information_buffer);
-
-        info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
-        info->preview.size = information_buffer_size;
-        strcpy (info->preview.type, GP_MIME_JPEG);
-
-        info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS |
-                            GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
-        info->file.size = exif_size;
-        info->file.permissions = GP_FILE_PERM_READ;
-        if (!protected) info->file.permissions |= GP_FILE_PERM_DELETE;
-        strcpy (info->file.type, GP_MIME_JPEG);
-        strcpy (info->file.name, file);
+	CHECK (camera, get_info (camera, n, info));
 
         return (GP_OK);
 }
@@ -521,9 +528,11 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path)
 {
         unsigned long image_id;
 	int exif_size;
-	unsigned char *information_buffer = NULL;
-	unsigned int information_buffer_size;
+	unsigned char *buffer = NULL;
+	unsigned int buffer_size;
 	int protected;
+	CameraFile *file = NULL;
+	CameraFileInfo info;
 
 	CHECK_NULL (camera && path);
 
@@ -533,15 +542,35 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path)
 
         /* Take the picture. */
         CHECK (camera, k_take_picture (camera->port, camera->pl->image_id_long,
-		&image_id, &exif_size, &information_buffer,
-		&information_buffer_size, &protected));
-
-        free (information_buffer);
-
+		&image_id, &exif_size, &buffer, &buffer_size, &protected));
 	sprintf (path->name, "%06i.jpeg", (int) image_id);
-        strcpy (path->folder, "/");
-        CHECK (camera, gp_filesystem_append (camera->fs, path->folder,
+	strcpy (path->folder, "/");
+	CHECK (camera, gp_filesystem_append (camera->fs, path->folder,
 					     path->name));
+
+	info.preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	info.preview.size = buffer_size;
+	strcpy (info.preview.type, GP_MIME_JPEG);
+
+	info.file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS |
+			    GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
+	info.file.size = exif_size;
+	info.file.permissions = GP_FILE_PERM_READ;
+	if (!protected)
+		info.file.permissions |= GP_FILE_PERM_DELETE;
+	strcpy (info.file.type, GP_MIME_JPEG);
+	snprintf (info.file.name, sizeof (info.file.name),
+		  "%06i.jpeg", (int) image_id);
+	gp_filesystem_set_info_noop (camera->fs, path->folder, &info);
+
+	gp_file_new (&file);
+	gp_file_set_name (file, info.file.name);
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
+	gp_file_set_type (file, GP_FILE_TYPE_PREVIEW);
+	gp_file_set_data_and_size (file, buffer, buffer_size);
+	free (buffer);
+	gp_filesystem_set_file_noop (camera->fs, path->folder, file);
+	gp_file_unref (file);
 
         return (GP_OK);
 }
