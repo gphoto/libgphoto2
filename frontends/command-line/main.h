@@ -23,7 +23,11 @@ typedef struct {
 	int	required;
 } Option;
 
+#ifdef ENABLE_DEBUGGING
 void 	cli_debug_print(char *format, ...);
+#else
+#define cli_debug_print(format, args...) /**/
+#endif
 void 	cli_error_print(char *format, ...);
 
 int	save_picture_to_file (const char *folder, const char *filename,

@@ -149,6 +149,16 @@ else
   AC_MSG_RESULT($drivers)
 fi
 
+dnl ******************************
+dnl disable debugging if requested
+dnl ******************************
+AC_ARG_ENABLE(debugging,
+  [  --disable-debugging     do not include debugging code],
+  [if test "$enableval" = "yes"; then
+    AC_DEFINE(ENABLE_DEBUGGING)
+  fi],
+  AC_DEFINE(ENABLE_DEBUGGING))
+
 dnl ************************************************************
 dnl find out where to install documentation files
 dnl ************************************************************

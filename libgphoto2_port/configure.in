@@ -217,6 +217,16 @@ dnl GNU regex?
 dnl **********
 AC_CHECK_FUNC(re_compile_pattern, AC_DEFINE(HAVE_GNU_REGEX))
 
+dnl ******************************
+dnl disable debugging if requested
+dnl ******************************
+AC_ARG_ENABLE(debugging,
+  [  --disable-debugging     do not include debugging code],
+  [if test "$enableval" = "yes"; then
+    AC_DEFINE(ENABLE_DEBUGGING)
+  fi],
+  AC_DEFINE(ENABLE_DEBUGGING))
+
 dnl ****************************************
 dnl What libraries do other programs need if 
 dnl they want to use libgphoto2_port?

@@ -28,6 +28,7 @@
 
 #include <gphoto2-port-result.h>
 
+#ifdef ENABLE_DEBUGGING
 typedef struct {
 	unsigned int id;
 	GPLogLevel   level;
@@ -257,3 +258,56 @@ gp_log (GPLogLevel level, const char *domain, const char *format, ...)
 	gp_logv (level, domain, format, args);
 	va_end (args);
 }
+
+#else /* ENABLE_DEBUGGING */
+
+/*
+ * Even if debugging is disabled, we must keep stubs to these functions
+ * around so that programs dynamically linked to this library will still run.
+ */
+
+/* Remove these macros so we can compile functions with these names */
+#ifdef gp_log_add_func
+#undef gp_log_add_func
+#endif
+#ifdef gp_log_remove_func
+#undef gp_log_remove_func
+#endif
+#ifdef gp_log_data
+#undef gp_log_data
+#endif
+#ifdef gp_logv
+#undef gp_logv
+#endif
+#ifdef gp_log
+#undef gp_log
+#endif
+
+int
+gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
+{
+	return 0;
+}
+
+int
+gp_log_remove_func (int id)
+{
+	return 0;
+}
+
+void
+gp_log_data (const char *domain, const char *data, unsigned int size)
+{
+}
+
+void
+gp_logv (GPLogLevel level, const char *domain, const char *format,
+	 va_list args)
+{
+}
+
+void
+gp_log (GPLogLevel level, const char *domain, const char *format, ...)
+{
+}
+#endif /* ENABLE_DEBUGGING */

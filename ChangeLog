@@ -1,3 +1,14 @@
+2001-12-02 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2_port/acconfig.h
+	* libgphoto2_port/configure.in
+	* libgphoto2_port/libgphoto2_port/gphoto2-port-log.c
+	* libgphoto2_port/libgphoto2_port/gphoto2-port-log.h
+	* frontends/command-line/main.c
+	* frontends/command-line/main.h
+	* acconfig.h
+	* configure.in: Added --disable-debugging option to configure
+
 2001-12-01  Marcus Meissner <marcus@jet.franken.de>
 
 	* camlibs/stv0680: Partial rewrite.

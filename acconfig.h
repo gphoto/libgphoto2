@@ -11,6 +11,9 @@
 #undef HAVE_LC_MESSAGES
 #undef HAVE_STPCPY
 
+/* Debugging */
+#undef ENABLE_DEBUGGING
+
 /* Needed for driver selection	*/
 #undef CONFIG_DRIVER_BARBIE
 #undef CONFIG_DRIVER_DIRECTORY
