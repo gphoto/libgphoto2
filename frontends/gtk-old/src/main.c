@@ -8,7 +8,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <gphoto2/gphoto2.h>
+#include <gphoto2.h>
 
 #include "interface.h"
 #include "support.h"
@@ -41,7 +41,7 @@ main (int argc, char *argv[])
    */
   main_window = create_main_window ();
   gtk_widget_show (main_window);
-
+  
 /*
   message_window_long = create_message_window_long ();
   gtk_widget_show (message_window_long);

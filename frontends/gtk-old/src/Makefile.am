@@ -4,6 +4,9 @@ INCLUDES = \
 	-I$(top_srcdir)/intl \
 	@GTK_CFLAGS@
 
+CFLAGS = @CFLAGS@ `gphoto2-config --cflags`
+LDFLAGS = @LDFLAGS@ `gphoto2-config --libs`
+
 bin_PROGRAMS = gphoto2_gtk
 
 gphoto2_gtk_SOURCES = \
@@ -12,4 +15,4 @@ gphoto2_gtk_SOURCES = \
 	interface.c interface.h \
 	callbacks.c callbacks.h
 
-gphoto2_gtk_LDADD = @GTK_LIBS@ $(INTLLIBS) 
+gphoto2_gtk_LDADD = @GTK_LIBS@ $(INTLLIBS)

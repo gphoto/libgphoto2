@@ -5,8 +5,9 @@ CFLAGS= @CFLAGS@ \
 	-Wall \
 	-I$(top_srcdir)/include \
 	-DCAMLIBS=\"$(pkglibdir)\" \
-	-DDEBUG
-LDFLAGS = @LDFLAGS@ -g
+	-DDEBUG \
+	`gpio-config --cflags`
+LDFLAGS = @LDFLAGS@ -g `gpio-config --libs`
 
 libgphoto2_la_LDFLAGS = -version-info 0:0:0
 libgphoto2_la_SOURCES = \
