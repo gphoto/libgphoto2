@@ -478,7 +478,7 @@ ptp_closesession (PTPParams* params)
  * ptp_getststorageids:
  * params:	PTPParams*
  *
- * Getsearray of StorageiDs and fills the storageids structure.
+ * Gets array of StorageIDs and fills the storageids structure.
  *
  * Return values: Some PTP_RC_* code.
  **/
