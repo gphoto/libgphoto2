@@ -7,7 +7,7 @@ VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\" -DHAVE_TERMIOS_H
 ## Executable files
 bin_SCRIPTS = gphoto2-port-config
 
-SUBDIRS = po intl libgphoto2_port include test @IOLIB_SUBDIRS@ doc
+SUBDIRS = po intl libgphoto2_port include test @IOLIB_SUBDIRS@ doc m4
 
 ## GNOME configuration script
 confexecdir=$(libdir)
@@ -24,6 +24,9 @@ EXTRA_DIST = 		\
 	libgphoto2_port.spec \
 	gphoto2-port-config.in \
 	gphoto2portConf.sh.in 
+
+docdir = @DOC_DIR@
+doc_DATA = AUTHORS README NEWS
 
 gphoto2portConf.sh: gphoto2portConf.sh.in Makefile
 ## Use sed and then mv to avoid problems if the user interrupts.
