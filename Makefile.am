@@ -62,6 +62,6 @@ if MAINTAINER_MODE
 # released version
 .PHONY: cvs-tags
 cvs-tags: Makefile
-	@echo cvs tag "@PACKAGE@-$$(echo '@VERSION@' | sed 's/\./_/g')"
+	@echo cvs tag "@PACKAGE@-$$(echo '@VERSION@' | sed -e 's/\./_/g' -e 's/rc/-rc/g')"
 
 endif
