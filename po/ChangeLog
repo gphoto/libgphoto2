@@ -1,3 +1,8 @@
+2002-02-14  Colin Marquardt  <colin@marquardt-home.de>
+
+	* *.po: Time for a totally new set of files which have all the
+       	        updates from the source. fr.po has new translated strings.
+
 2002-02-06  Colin Marquardt  <colin@marquardt-home.de>
 
 	* zh_CN.po: New translation by Wang Li <charlesw1234@163.com>. 

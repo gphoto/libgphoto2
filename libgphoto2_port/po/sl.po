@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
-"POT-Creation-Date: 2002-01-04 11:08+0100\n"
+"POT-Creation-Date: 2002-01-26 21:31+0100\n"
 "PO-Revision-Date: 2002-01-04 19:28+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -87,12 +87,12 @@ msgstr ""
 msgid "No error description available"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:279
+#: libgphoto2_port/gphoto2-port-info-list.c:285
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:473
+#: libgphoto2_port/gphoto2-port-info-list.c:479
 msgid "Generic Port"
 msgstr ""
 
@@ -100,94 +100,94 @@ msgstr ""
 msgid "No error"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:59
+#: libgphoto2_port/gphoto2-port-result.c:60
 msgid "Unspecified error"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:60
+#: libgphoto2_port/gphoto2-port-result.c:62
 msgid "I/O problem"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:61
+#: libgphoto2_port/gphoto2-port-result.c:64
 msgid "Bad parameters"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:62
+#: libgphoto2_port/gphoto2-port-result.c:66
 msgid "Unsupported operation"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:63
+#: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Timeout reading from or writing to the port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:65
+#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Serial port not supported"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:67
+#: libgphoto2_port/gphoto2-port-result.c:72
 msgid "USB port not supported"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:68
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Unknown port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:69
+#: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Out of memory"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:70
+#: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Error loading a library"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:71
+#: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error initializing the port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:72
+#: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error reading from the port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:73
+#: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error writing to the port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:74
+#: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error updating the port settings"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:75
+#: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error setting the serial port speed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:77
+#: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error clearing a halt condition on the USB port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:79
+#: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Could not find the requested device on the USB port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:81
+#: libgphoto2_port/gphoto2-port-result.c:94
 #, fuzzy
 msgid "Could not claim the USB device"
 msgstr "Ne morem dobiti vzorca"
 
-#: libgphoto2_port/gphoto2-port-result.c:83
+#: libgphoto2_port/gphoto2-port-result.c:96
 #, fuzzy
 msgid "Could not lock the device"
 msgstr "Ne morem dobiti vzorca"
 
-#: libgphoto2_port/gphoto2-port-result.c:85
+#: libgphoto2_port/gphoto2-port-result.c:98
 msgid "Unknown error"
 msgstr ""
 
-#: usb/libusb.c:125
+#: usb/libusb.c:131
 #, fuzzy, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Ne morem dobiti vzorca"
 
-#: usb/libusb.c:132
+#: usb/libusb.c:138
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -195,118 +195,118 @@ msgid ""
 "the device."
 msgstr ""
 
-#: usb/libusb.c:151
+#: usb/libusb.c:157
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr ""
 
-#: usb/libusb.c:158
+#: usb/libusb.c:164
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr ""
 
-#: usb/libusb.c:274
+#: usb/libusb.c:278
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr ""
 
-#: usb/libusb.c:296
+#: usb/libusb.c:300
 #, fuzzy, c-format
-msgid "Could not set interface %d/%d (%m)"
+msgid "Could not set altsetting %d/%d (%m)"
 msgstr "Ne morem dobiti #%i"
 
-#: usb/libusb.c:332
+#: usb/libusb.c:374
 #, c-format
-msgid "The supplied vendor or product id (%i,%i) is not valid."
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 
-#: usb/libusb.c:351
+#: usb/libusb.c:419
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
 
-#: usb/libusb.c:434
+#: usb/libusb.c:524
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
 "sure this device is connected to the computer."
 msgstr ""
 
-#: serial/unix.c:183
+#: serial/unix.c:190
 #, fuzzy, c-format
 msgid "Could not lock device '%s'"
 msgstr "Ne morem dobiti vzorca"
 
-#: serial/unix.c:192
+#: serial/unix.c:199
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr ""
 
-#: serial/unix.c:195
+#: serial/unix.c:202
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr ""
 
-#: serial/unix.c:217
+#: serial/unix.c:224
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr ""
 
-#: serial/unix.c:229
+#: serial/unix.c:236
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 
-#: serial/unix.c:233
+#: serial/unix.c:240
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 
-#: serial/unix.c:300
+#: serial/unix.c:307
 #, c-format
 msgid "Serial Port %i"
 msgstr ""
 
-#: serial/unix.c:382
+#: serial/unix.c:389
 #, fuzzy, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Napaka: nisem uspel odpreti %s"
 
-#: serial/unix.c:400
+#: serial/unix.c:407
 #, fuzzy, c-format
 msgid "Could not close '%s' (%m)."
 msgstr ""
 "Ne morem odpreti:\n"
 " %s"
 
-#: serial/unix.c:445
+#: serial/unix.c:452
 #, fuzzy, c-format
 msgid "Could not write to port (%m)"
 msgstr "Ne morem dobiti #%i"
 
-#: serial/unix.c:532
+#: serial/unix.c:539
 #, c-format
 msgid "Unknown pin %i."
 msgstr ""
 
-#: serial/unix.c:554
+#: serial/unix.c:561
 #, fuzzy, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Ne morem dobiti #%i"
 
-#: serial/unix.c:587
+#: serial/unix.c:594
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr ""
 
-#: serial/unix.c:610
+#: serial/unix.c:617
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr ""
 
-#: serial/unix.c:719
+#: serial/unix.c:726
 #, fuzzy, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Ne morem dobiti ¹tevila slik"

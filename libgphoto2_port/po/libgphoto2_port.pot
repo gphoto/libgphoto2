@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-01-13 17:45+0100\n"
+"POT-Creation-Date: 2002-01-26 21:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,12 +85,12 @@ msgstr ""
 msgid "No error description available"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:279
+#: libgphoto2_port/gphoto2-port-info-list.c:285
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:473
+#: libgphoto2_port/gphoto2-port-info-list.c:479
 msgid "Generic Port"
 msgstr ""
 
@@ -98,83 +98,83 @@ msgstr ""
 msgid "No error"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:59
+#: libgphoto2_port/gphoto2-port-result.c:60
 msgid "Unspecified error"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:60
+#: libgphoto2_port/gphoto2-port-result.c:62
 msgid "I/O problem"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:61
+#: libgphoto2_port/gphoto2-port-result.c:64
 msgid "Bad parameters"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:62
+#: libgphoto2_port/gphoto2-port-result.c:66
 msgid "Unsupported operation"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:63
+#: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Timeout reading from or writing to the port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:65
+#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Serial port not supported"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:67
+#: libgphoto2_port/gphoto2-port-result.c:72
 msgid "USB port not supported"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:68
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Unknown port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:69
+#: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Out of memory"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:70
+#: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Error loading a library"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:71
+#: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error initializing the port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:72
+#: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error reading from the port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:73
+#: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error writing to the port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:74
+#: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error updating the port settings"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:75
+#: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error setting the serial port speed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:77
+#: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error clearing a halt condition on the USB port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:79
+#: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Could not find the requested device on the USB port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:81
+#: libgphoto2_port/gphoto2-port-result.c:94
 msgid "Could not claim the USB device"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:83
+#: libgphoto2_port/gphoto2-port-result.c:96
 msgid "Could not lock the device"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:85
+#: libgphoto2_port/gphoto2-port-result.c:98
 msgid "Unknown error"
 msgstr ""
 
@@ -216,14 +216,14 @@ msgstr ""
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 
-#: usb/libusb.c:412
+#: usb/libusb.c:419
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
 "is connected to the computer."
 msgstr ""
 
-#: usb/libusb.c:508
+#: usb/libusb.c:524
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
