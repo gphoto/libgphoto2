@@ -73,10 +73,15 @@ struct _CameraPrivateLibrary
 #define SPCA50X_FLASH 0x02
 #define SPCA50X_CARD  0x04
 
+#define SPCA50X_JPG_DEFAULT_HEADER_LENGTH 589
 int spca50x_get_firmware_revision (CameraPrivateLibrary *lib);
 int spca50x_detect_storage_type (CameraPrivateLibrary *lib);
 int spca50x_reset (CameraPrivateLibrary * lib);
 int spca50x_capture (CameraPrivateLibrary * lib);
 int yuv2rgb (int y, int u, int v, int *r, int *g, int *b);
+void create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex,
+				   int w, int h, uint8_t format,
+				   int original_size, int *size,
+				   int omit_huffman_table, int omit_escape);
 
 #endif /* __SPCA50X_H__ */

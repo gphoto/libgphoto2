@@ -34,7 +34,6 @@
 #include "spca50x.h"
 #include "spca50x-sdram.h"
 #include "spca50x-registers.h"
-#include "spca50x-jpeg-header.h"
 #include "spca50x-avi-header.h"
 
 #ifdef ENABLE_NLS
@@ -65,10 +64,6 @@ static int spca50x_download_data (CameraPrivateLibrary * lib, uint32_t start,
 static int spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype);
 static int spca50x_sdram_get_file_count_and_fat_count 
                             (CameraPrivateLibrary * lib, int dramtype);
-static void create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex,
-				   int w, int h, uint8_t format,
-				   int original_size, int *size,
-				   int omit_huffman_table, int omit_escape);
 static int spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib,
 				     uint8_t ** buf, unsigned int *len,
 				     struct SPCA50xFile *g_file);
@@ -894,65 +889,6 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 	}
 
 	return GP_OK;
-}
-
-static void
-create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
-		       int h, uint8_t format, int o_size, int *size,
-		       int omit_huffman_table, int omit_escape)
-{
-
-	int i = 0;
-	uint8_t *start;
-	uint8_t value;
-
-	start = dst;
-	/* copy the header from the template */
-	memcpy (dst, SPCA50xJPGDefaultHeaderPart1, 
-			SPCA50X_JPG_DEFAULT_HEADER_PART1_LENGTH);
-
-	/* modify quantization table */
-	memcpy (dst + 7, SPCA50xQTable[qIndex * 2], 64);
-	memcpy (dst + 72, SPCA50xQTable[qIndex * 2 + 1], 64);
-
-	dst += SPCA50X_JPG_DEFAULT_HEADER_PART1_LENGTH;
-
-	/* copy Huffman table */
-	if (!omit_huffman_table) {
-	    memcpy (dst, SPCA50xJPGDefaultHeaderPart2, 
-			    SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH);
-	    dst += SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH;
-	}
-	memcpy (dst, SPCA50xJPGDefaultHeaderPart3, 
-			SPCA50X_JPG_DEFAULT_HEADER_PART3_LENGTH);
-
-	/* modify the image width, height */
-	*(dst + 8) = w & 0xFF;	//Image width low byte
-	*(dst + 7) = w >> 8 & 0xFF;	//Image width high byte
-	*(dst + 6) = h & 0xFF;	//Image height low byte
-	*(dst + 5) = h >> 8 & 0xFF;	//Image height high byte
-
-	/* set the format */
-	*(dst + 11) = format;
-
-	/* point to real JPG compress data start position and copy */
-	dst += SPCA50X_JPG_DEFAULT_HEADER_PART3_LENGTH;
-
-	for (i = 0; i < o_size; i++) {
-		value = *(src + i) & 0xFF;
-		*(dst) = value;
-		dst++;
-
-		if (value == 0xFF && !omit_escape) {
-			*(dst) = 0x00;
-			dst++;
-		}
-	}
-	/* Add end of image marker */
-	*(dst++) = 0xFF;
-	*(dst++) = 0xD9;
-
-	*size = dst - start;
 }
 
 static inline uint8_t *
