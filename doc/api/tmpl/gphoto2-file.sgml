@@ -163,6 +163,13 @@ An abstraction of files
 
 
 
+<!-- ##### MACRO GP_MIME_BMP ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO GP_MIME_CRW ##### -->
 <para>
   Canon cameras store files in a special format, the Canon RaW file format.
@@ -180,30 +187,21 @@ An abstraction of files
 
 
 
-<!-- ##### MACRO GP_MIME_UNKNOWN ##### -->
+<!-- ##### MACRO GP_MIME_PGM ##### -->
 <para>
-  For files that are not recognized by our driver yet.
-  DO NOT use this when you're just too lazy to use the proper MIME
-  type, or we will feed you to Crud Puppy.
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_PNG ##### -->
+<para>
+
 </para>
 
 
 
 <!-- ##### MACRO GP_MIME_PPM ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GP_MIME_BMP ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GP_MIME_TIFF ##### -->
 <para>
 
 </para>
@@ -217,21 +215,30 @@ An abstraction of files
 
 
 
-<!-- ##### MACRO GP_MIME_WAV ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GP_MIME_PGM ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO GP_MIME_RAW ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_TIFF ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_UNKNOWN ##### -->
+<para>
+  For files that are not recognized by our driver yet.
+  DO NOT use this when you're just too lazy to use the proper MIME
+  type, or we will feed you to Crud Puppy.
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_WAV ##### -->
 <para>
 
 </para>
@@ -276,6 +283,82 @@ An abstraction of files
 @Returns: 
 
 
+<!-- ##### FUNCTION gp_file_convert ##### -->
+<para>
+
+</para>
+
+@file: 
+@mime_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_copy ##### -->
+<para>
+
+</para>
+
+@destination: 
+@source: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_get_last_chunk ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_set_color_table ##### -->
+<para>
+
+</para>
+
+@file: 
+@red_table: 
+@red_size: 
+@green_table: 
+@green_size: 
+@blue_table: 
+@blue_size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_set_conversion_method ##### -->
+<para>
+
+</para>
+
+@file: 
+@method: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_set_header ##### -->
+<para>
+
+</para>
+
+@file: 
+@header: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_set_width_and_height ##### -->
+<para>
+
+</para>
+
+@file: 
+@width: 
+@height: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gp_file_get_data_and_size ##### -->
 <para>
 
@@ -283,8 +366,9 @@ An abstraction of files
 
 @Param1: 
 @data: 
-@size: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@size: 
 
 
 <!-- ##### FUNCTION gp_file_set_data_and_size ##### -->
@@ -294,7 +378,8 @@ An abstraction of files
 
 @Param1: 
 @data: 
-@size: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@size: 
 
 

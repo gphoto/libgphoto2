@@ -438,6 +438,15 @@ Error reporting can be performed using #gp_camera_set_error and #gp_camera_get_e
 @Returns: 
 
 
+<!-- ##### FUNCTION gp_camera_exit ##### -->
+<para>
+
+</para>
+
+@camera: 
+@Returns: 
+
+
 <!-- ##### TYPEDEF CameraFilePath ##### -->
 <para>
 
