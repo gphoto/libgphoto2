@@ -82,7 +82,7 @@ rm -rf "${RPM_BUILD_DIR}/%{name}-%{version}"
 %build
 %define __libtoolize :
 # FIXME: We should copy the disable- arguments here
-%configure --enable-docs --with-docs-dir=%{buildroot}%{_docdir}/%{name}
+%configure --enable-docs --with-docs-dir=%{buildroot}%{_docdir}/%{name} --with-doc-formats=html,man,pdf
 make
 # --with-html-dir=%{_docdir}/%{name}-%{version}/html
 make
