@@ -1,3 +1,7 @@
+2002-01-16  Colin Marquardt  <colin@marquardt-home.de>
+
+	* dimera3500.c: Fix typo.
+
 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* dimera3500.c: Remove references to gp_camera_set_error.

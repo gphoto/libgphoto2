@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.43  2002/01/16 21:41:58  cmarqu
+ * Fix typo in dimera3500.c.
+ *
  * Revision 1.42  2002/01/15 23:49:38  lutz
  * 2002-01-16  Lutz Müller <lutz@users.sourceforge.net>
  *
@@ -723,7 +726,7 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 		{
 			free( rbuffer );
 			*size = 0;
-			gp_context_error (context, _("User canceled download"));
+			gp_context_error (context, _("User cancelled download"));
 			return NULL;
 		}
 	}
