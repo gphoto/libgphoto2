@@ -459,6 +459,7 @@ const char *canon2gphotopath(Camera *camera, const char *path);
 const char *gphoto2canonpath(Camera *camera, const char *path, GPContext *context);
 
 const char *canon_int_filename2thumbname (Camera *camera, const char *filename);
+const char *canon_int_filename2audioname (Camera *camera, const char *filename);
 
 int canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen, unsigned char **retdata, unsigned int *retdatalen, GPContext *context);
 

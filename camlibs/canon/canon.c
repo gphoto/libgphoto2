@@ -164,9 +164,10 @@ extern long int timezone;
 #define extra_file_for_thumb_of_jpeg FALSE
 #define extra_file_for_thumb_of_crw TRUE
 
-const char *
+static const char *
 replace_filename_extension(const char *filename, const char *newext)
 {
+	char *p;
 	static char buf[1024];
 
 	/* We just replace file ending by .THM and assume this is the
@@ -211,11 +212,8 @@ replace_filename_extension(const char *filename, const char *newext)
 const char *
 canon_int_filename2audioname (Camera *camera, const char *filename)
 {
-	char *p;
-	static char *nullstring = "";
-
         /* FIXME: I want capabilities */
-	switch camera->pl->model {
+	switch (camera->pl->md->model) {
 	case CANON_PS_S30:
 	case CANON_PS_S40:
 	case CANON_PS_S45:
@@ -273,7 +271,6 @@ canon_int_filename2audioname (Camera *camera, const char *filename)
 const char *
 canon_int_filename2thumbname (Camera *camera, const char *filename)
 {
-	char *p;
 	static char *nullstring = "";
 
 	/* First handle cases where we shouldn't try to get extra .THM
