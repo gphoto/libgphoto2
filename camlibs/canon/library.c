@@ -218,7 +218,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		 * note that this will move to capabilities when ready
 		 * for normal code */
 		/* case CANON_EOS_D30: */
-		/* case CANON_PS_G2: */
+	case CANON_PS_G2:
 	case CANON_PS_S40:
 		break;
 	default:
