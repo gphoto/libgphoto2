@@ -36,7 +36,8 @@ typedef struct {
 typedef struct {
 	int count;
 	char name [128];
-	int dirty;
+	int files_dirty;
+	int folders_dirty;
 	CameraFilesystemFile *file;
 } CameraFilesystemFolder;
 
@@ -47,25 +48,43 @@ struct _CameraFilesystem {
 	CameraFilesystemInfoFunc get_info_func;
 	CameraFilesystemInfoFunc set_info_func;
 	void *info_data;
+
+	CameraFilesystemFileListFunc file_list_func;
+	CameraFilesystemFolderListFunc folder_list_func;
+	void *list_data;
 };
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
+static int gp_filesystem_append_folder (CameraFilesystem *, const char *);
+
 int
 gp_filesystem_new (CameraFilesystem **fs)
 {
+	int result;
+
 	CHECK_NULL (fs);
 
-        *fs = malloc (sizeof (CameraFilesystem));
-	if (!*fs)
-		return (GP_ERROR_NO_MEMORY);
+	CHECK_MEM (*fs = malloc (sizeof (CameraFilesystem)));
 
         (*fs)->folder = NULL;
         (*fs)->count = 0;
+
 	(*fs)->set_info_func = NULL;
 	(*fs)->get_info_func = NULL;
+	(*fs)->info_data = NULL;
+
+	(*fs)->file_list_func = NULL;
+	(*fs)->folder_list_func = NULL;
+	(*fs)->list_data = NULL;
+
+	result = gp_filesystem_append_folder (*fs, "/");
+	if (result != GP_OK) {
+		free (*fs);
+		return (result);
+	}
 
         return (GP_OK);
 }
@@ -75,7 +94,10 @@ gp_filesystem_free (CameraFilesystem *fs)
 {
         gp_filesystem_format (fs);
 
-        free (fs);
+	/* Now, we've only got left over the root folder. Free that and
+	 * the filesystem. */
+	free (fs->folder);
+	free (fs);
 
         return (GP_OK);
 }
@@ -83,7 +105,9 @@ gp_filesystem_free (CameraFilesystem *fs)
 static int
 gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 {
-	int x, len;
+	int x, y, len;
+	char buf[128];
+	CameraList list;
 
 	CHECK_NULL (fs && folder);
 
@@ -99,7 +123,30 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder)
 		if (!strncmp (fs->folder[x].name, folder, len))
 			return (x);
 
-	return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	/* Ok, we didn't find the folder. Do we have a parent? */
+	if (!strcmp (folder, "/"))
+		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+
+	/* If the parent folder is not dirty, return. */
+	strncpy (buf, folder, len);
+	for (y = strlen (buf) - 1; y >= 0; y--)
+		if (buf[y] == '/')
+			break;
+	if (y)
+		buf[y] = '\0';
+	else
+		buf[y + 1] = '\0'; /* Parent is root */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, buf));
+	if (!fs->folder[x].folders_dirty)
+		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+
+	/*
+	 * The parent folder is dirty. List the folders in the parent 
+	 * folder to make it clean.
+	 */
+	CHECK_RESULT (gp_filesystem_list_folders (fs, buf, &list));
+
+	return (gp_filesystem_folder_number (fs, folder));
 }
 
 static int
@@ -107,8 +154,12 @@ gp_filesystem_append_folder (CameraFilesystem *fs, const char *folder)
 {
 	CameraFilesystemFolder *new;
 	int x;
+	char buf[128];
 
 	CHECK_NULL (fs && folder);
+
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Appending folder '%s'...",
+			 folder);
 
 	/* Make sure the directory doesn't exist */
 	x = gp_filesystem_folder_number (fs, folder);
@@ -116,6 +167,22 @@ gp_filesystem_append_folder (CameraFilesystem *fs, const char *folder)
 		return (GP_ERROR_DIRECTORY_EXISTS);
 	else if (x != GP_ERROR_DIRECTORY_NOT_FOUND)
 		return (x);
+
+	/* Make sure the parent exist. If not, create it. */
+	strcpy (buf, folder);
+	for (x = strlen (buf) - 1; x >= 0; x--)
+		if (buf[x] == '/')
+			break;
+	if (x > 0) {
+		buf[x] = '\0';
+		gp_debug_printf (GP_DEBUG_HIGH, "core", "Making sure that "
+				 "parent '%s' exists...", buf);
+		x = gp_filesystem_folder_number (fs, buf);
+		if (x == GP_ERROR_DIRECTORY_NOT_FOUND)
+			CHECK_RESULT (gp_filesystem_append_folder (fs, buf))
+		else if (x < 0)
+			return (x);
+	}
 
 	/* Allocate the folder pointer and the actual folder */
 	if (fs->count)
@@ -132,7 +199,10 @@ gp_filesystem_append_folder (CameraFilesystem *fs, const char *folder)
 	    (fs->folder[fs->count - 1].name[strlen (folder) - 1] == '/'))
 		fs->folder[fs->count - 1].name[strlen (folder) - 1] = '\0';
 	fs->folder[fs->count - 1].count = 0;
-	fs->folder[fs->count - 1].dirty = 0;
+	fs->folder[fs->count - 1].files_dirty = 1;
+	fs->folder[fs->count - 1].folders_dirty = 1;
+
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Added folder '%s'...", folder);
 
 	return (GP_OK);
 }
@@ -182,6 +252,13 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	strcpy (fs->folder[x].file[fs->folder[x].count - 1].name, filename);
 	fs->folder[x].file[fs->folder[x].count - 1].info_dirty = 1;
 
+	/*
+	 * If people manually add files, they probably know the contents of
+	 * this folder.
+	 */
+	fs->folder[x].files_dirty = 0;
+	fs->folder[x].folders_dirty = 0;
+
         return (GP_OK);
 }
 
@@ -201,49 +278,97 @@ gp_filesystem_dump (CameraFilesystem *fs)
 	return (GP_OK);
 }
 
+static int
+gp_filesystem_delete_all_files (CameraFilesystem *fs, const char *folder)
+{
+	int x, count;
+	CameraList list;
+	const char *name;
+
+	CHECK_NULL (fs && folder);
+
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Deleting all files in "
+			 "'%s'...", folder);
+
+	CHECK_RESULT (gp_filesystem_list_files (fs, folder, &list));
+	CHECK_RESULT (count = gp_list_count (&list));
+	for (x = 0; x < count; x++) {
+		CHECK_RESULT (gp_list_get_name (&list, x, &name));
+		CHECK_RESULT (gp_filesystem_delete (fs, folder, name));
+	}
+	fs->folder[x].files_dirty = 0;
+
+	return (GP_OK);
+}
+
+static int
+gp_filesystem_delete_all_folders (CameraFilesystem *fs, const char *folder)
+{
+	int x, count;
+	CameraList list;
+	const char *name;
+	char buf[128];
+
+	CHECK_NULL (fs && folder);
+
+	gp_debug_printf (GP_DEBUG_HIGH, "core", "Deleting all folders in "
+			 "'%s'...", folder);
+
+	CHECK_RESULT (gp_filesystem_list_folders (fs, folder, &list));
+	CHECK_RESULT (count = gp_list_count (&list));
+	for (x = 0; x < count; x++) {
+		CHECK_RESULT (gp_list_get_name (&list, x, &name));
+		strcpy (buf, folder);
+		if (strcmp (folder, "/"))
+			strcat (buf, "/");
+		strcat (buf, name);
+		CHECK_RESULT (gp_filesystem_delete (fs, buf, NULL));
+	}
+	fs->folder[x].folders_dirty = 0;
+
+	return (GP_OK);
+}
+
 int
 gp_filesystem_list_files (CameraFilesystem *fs, const char *folder, 
 		          CameraList *list)
 {
-	int x, y;
+	int x, y, count;
+	const char *name;
 
 	CHECK_NULL (fs && list && folder);
 
 	list->count = 0;
 
+	/* Search the folder */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+
+	/* If the folder is dirty, delete the contents and query the camera */
+	if (fs->folder[x].files_dirty && fs->file_list_func) {
+		/*
+		 * Declare the older clean so that we don't get called again
+		 * and delete all files in it.
+		 */
+		fs->folder[x].files_dirty = 0; 
+		CHECK_RESULT (gp_filesystem_delete_all_files (fs, folder));
+		CHECK_RESULT (fs->file_list_func (fs, folder, list,
+						  fs->list_data));
+		CHECK_RESULT (count = gp_list_count (list));
+		for (y = 0; y < count; y++) {
+			CHECK_RESULT (gp_list_get_name (list, y, &name));
+			CHECK_RESULT (gp_filesystem_append (fs, folder, name));
+		}
+		CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+		list->count = 0;
+	}
 
 	for (y = 0; y < fs->folder[x].count; y++)
 		CHECK_RESULT (gp_list_append (list,
 					      fs->folder[x].file[y].name,
 					      NULL));
 
-	return (GP_OK);
-}
-
-int
-gp_filesystem_folder_is_dirty (CameraFilesystem *fs, const char *folder)
-{
-	int x;
-
-	CHECK_NULL (fs && folder);
-
-	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
-
-	return (fs->folder[x].dirty);
-}
-
-int
-gp_filesystem_folder_set_dirty (CameraFilesystem *fs, const char *folder, 
-				int dirty)
-{
-	int x;
-
-	CHECK_NULL (fs);
-
-	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
-
-	fs->folder[x].dirty = dirty;
+	/* The folder is clean now */
+	fs->folder[x].files_dirty = 0;
 
 	return (GP_OK);
 }
@@ -252,7 +377,9 @@ int
 gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 			    CameraList *list)
 {
-	int x, j, offset;
+	int x, y, j, offset, count;
+	char buf[128];
+	const char *name;
 
 	CHECK_NULL (fs && folder && list);
 
@@ -261,8 +388,30 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 
 	list->count = 0;
 
-	/* Make sure we've got this folder */
-	CHECK_RESULT (gp_filesystem_folder_number (fs, folder));
+	/* Search the folder */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+
+	/* If the folder is dirty, query the contents. */
+	if (fs->folder[x].folders_dirty && fs->folder_list_func) {
+		/*
+		 * Declare the folder clean so that we don't get called again
+		 * and delete all folders in it.
+		 */
+		fs->folder[x].folders_dirty = 0;
+		CHECK_RESULT (gp_filesystem_delete_all_folders (fs, folder));
+		CHECK_RESULT (fs->folder_list_func (fs, folder, list,
+						    fs->list_data));
+		CHECK_RESULT (count = gp_list_count (list));
+		for (y = 0; y < count; y++) {
+			CHECK_RESULT (gp_list_get_name (list, y, &name));
+			strcpy (buf, folder);
+			if (strlen (folder) != 1)
+				strcat (buf, "/");
+			strcat (buf, name);
+			CHECK_RESULT (gp_filesystem_append_folder (fs, buf));
+		}
+		list->count = 0;
+	}
 
 	for (x = 0; x < fs->count; x++)
 		if (!strncmp (fs->folder[x].name, folder, strlen (folder))) {
@@ -292,6 +441,10 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 						NULL));
 			}
 		}
+
+	/* The folder is clean now */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+	fs->folder[x].folders_dirty = 0;
 
 	return (GP_OK);
 }
@@ -386,6 +539,9 @@ gp_filesystem_delete (CameraFilesystem *fs, const char *folder,
 		fs->folder[x].file = new_fip;
 		fs->folder[x].count--;
 	} else {
+		/* If this is root, just ignore the request */
+		if (!strcmp (folder, "/"))
+			return (GP_OK);
 
 		/* Move all folders behind one position up */
 		for (; x < fs->count - 1; x++)
@@ -407,33 +563,14 @@ gp_filesystem_delete (CameraFilesystem *fs, const char *folder,
 int
 gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder)
 {
-	CameraList list;
-	int y;
-	char path [1024];
-	const char *name;
-
 	CHECK_NULL (fs && folder);
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core",
-			 "Deleting all files in '%s'...", folder);
+			 "Deleting everything in '%s'...", folder);
 
-	/* Check for subfolders and delete those */
-	CHECK_RESULT (gp_filesystem_list_folders (fs, folder, &list));
-	for (y = 0; y < gp_list_count (&list); y++) {
-		CHECK_RESULT (gp_list_get_name (&list, y, &name));
-		if (strlen (folder) == 1)
-			sprintf (path, "/%s", name);
-		else
-			sprintf (path, "%s/%s", folder, name);
-		CHECK_RESULT (gp_filesystem_delete (fs, path, NULL));
-	}
-
-	/* Delete the files in this folder */
-	CHECK_RESULT (gp_filesystem_list_files (fs, folder, &list));
-	for (y = 0; y < gp_list_count (&list); y++) {
-		CHECK_RESULT (gp_list_get_name (&list, y, &name));
-		CHECK_RESULT (gp_filesystem_delete (fs, folder, name));
-	}
+	/* Delete subfolders and files */
+	CHECK_RESULT (gp_filesystem_delete_all_folders (fs, folder));
+	CHECK_RESULT (gp_filesystem_delete_all_files (fs, folder));
 
 	return (GP_OK);
 }
@@ -454,6 +591,12 @@ gp_filesystem_format (CameraFilesystem *fs)
 	if (fs->count)
 		free (fs->folder);
 	fs->count = 0;
+
+	/* 
+	 * Append the root folder so that list_[folders,files] will stop
+	 * there when recursively looking up parent folders.
+	 */
+	CHECK_RESULT (gp_filesystem_append_folder (fs, "/"));
 
         return (GP_OK);
 }
@@ -508,6 +651,21 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 			}
 
 	return (GP_ERROR_FILE_NOT_FOUND);
+}
+
+int
+gp_filesystem_set_list_funcs (CameraFilesystem *fs,
+			      CameraFilesystemFileListFunc file_list_func,
+			      CameraFilesystemFolderListFunc folder_list_func,
+			      void *data)
+{
+	CHECK_NULL (fs);
+
+	fs->file_list_func = file_list_func;
+	fs->folder_list_func = folder_list_func;
+	fs->list_data = data;
+
+	return (GP_OK);
 }
 
 int
