@@ -301,10 +301,11 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (is_null (buffer))
 			continue;
 		if (!strcmp(buffer,filename)) {
-			info->file.fields	= GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | GP_FILE_INFO_SIZE;
+			info->file.fields	= GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | GP_FILE_INFO_SIZE | GP_FILE_INFO_NAME;
 			info->file.width	= 1024;
 			info->file.height	= 768;
 			strcpy(info->file.type,GP_MIME_JPEG);
+			strcpy(info->file.name,buffer);
 			sscanf(buffer+12,"%ld",&info->file.size);
 			return GP_OK;
 	        }
