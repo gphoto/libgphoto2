@@ -47,19 +47,20 @@ struct canon_dir {
  */
 typedef enum {
 	CANON_PS_A5,
-	  CANON_PS_A5_ZOOM,
-	  CANON_PS_A50,
-	  CANON_PS_S10,
-	  CANON_PS_S20,
-	  CANON_PS_A70,
-  	  CANON_PS_S100,
-          CANON_PS_S300,
-	  CANON_PS_G1,
-	  CANON_PS_G2,
-          CANON_PS_A10,
-          CANON_PS_A20,
-          CANON_EOS_D30,
-          CANON_PS_PRO90_IS
+	CANON_PS_A5_ZOOM,
+	CANON_PS_A50,
+	CANON_PS_S10,
+	CANON_PS_S20,
+	CANON_PS_S30,
+	CANON_PS_A70,
+	CANON_PS_S100,
+	CANON_PS_S300,
+	CANON_PS_G1,
+	CANON_PS_G2,
+	CANON_PS_A10,
+	CANON_PS_A20,
+	CANON_EOS_D30,
+	CANON_PS_PRO90_IS
 } canonCamModel;
 
 

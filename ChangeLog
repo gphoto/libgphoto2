@@ -1,4 +1,14 @@
 2001-11-25  Hans Ulrich Niedermann <hun@n-dimensional.de>
+	
+	* configure.in: 2.0beta4dev2
+	* camlibs/canon/canon.c: added support for PowerShot S30
+	* camlibs/canon/canon.h: added support for PowerShot S30
+	* camlibs/canon/library.c: added support for PowerShot S30
+	* camlibs/canon/usb.c: added support for PowerShot S30
+	* intl/Makefile.in: add include dir for config.h
+	* libgphoto2_port/intl/Makefile.in: add include dir for config.h
+
+2001-11-25  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* camlibs/canon/{canon,library}.[ch]: renamed files according to rules
 	* camlibs/canon/doc/: added developers' docs

@@ -6,9 +6,9 @@
  *   (c) 1999 Wolfgang G. Reissnegger
  *   Developed for the Canon PowerShot A50
  *   Additions for PowerShot A5 by Ole W. Saastad
- *   (c) 2000 : Other additions  by Edouard Lafargue, Philippe Marzouk.
+ *   (c) 2000: Other additions  by Edouard Lafargue, Philippe Marzouk
  *
- * $Header$
+ * $Id$
  ****************************************************************************/
 
 
@@ -96,8 +96,6 @@ models[] =
 	, {
 	"Canon PowerShot G1", 0x04A9, 0x3048, 1}
 	, {
-	"Canon PowerShot G2", 0x04A9, 0x3055, 0}
-	, {
 	"Canon PowerShot Pro90 IS", 0x04A9, 0x3049, 1}
 	, {
 	"Canon IXY DIGITAL 300", 0x04A9, 0x304B, 0}
@@ -113,6 +111,10 @@ models[] =
 	"Canon PowerShot S110", 0x04A9, 0x3051, 0}
 	, {
 	"Canon DIGITAL IXUS v", 0x04A9, 0x3052, 0}
+	, {
+	"Canon PowerShot G2", 0x04A9, 0x3055, 0}
+	, {
+	"Canon PowerShot S30", 0x4A9, 0x3057, 0}
 	, {
 	NULL, 0, 0, 0}
 };
@@ -869,6 +871,9 @@ camera_summary (Camera *camera, CameraText *summary)
 			break;
 		case CANON_PS_S20:
 			model = "Canon Powershot S20";
+			break;
+		case CANON_PS_S30:
+			model = "Canon Powershot S30";
 			break;
 		case CANON_PS_G1:
 			model = "Canon Powershot G1";

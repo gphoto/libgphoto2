@@ -470,6 +470,10 @@ canon_int_ready (Camera *camera)
 				gp_camera_status (camera, "Detected a Powershot S10");
 				camera->pl->model = CANON_PS_S10;
 				return GP_OK;
+			} else if (!strcmp ("Canon PowerShot S30", camera->pl->ident)) {
+				gp_camera_status (camera, "Detected a Powershot S30");
+				camera->pl->model = CANON_PS_S30;
+				return GP_OK;
 			} else if (!strcmp ("Canon PowerShot G1", camera->pl->ident)) {
 				gp_camera_status (camera, "Detected a Powershot G1");
 				camera->pl->model = CANON_PS_G1;
