@@ -10,15 +10,15 @@ int gp_abilities_dump (CameraAbilities *abilities) {
 	printf("core: Abilities for camera                  : %s\n", 
 		abilities->model);
 	printf("core: Serial port support                   : %s\n", 
-		abilities->serial == 0? "no":"yes");
+		SERIAL_SUPPORTED(abilities->port)? "yes":"no");
 	printf("core: Parallel port support                 : %s\n", 
-		abilities->parallel == 0? "no":"yes");
+		PARALLEL_SUPPORTED(abilities->port)? "yes":"no");
 	printf("core: USB support                           : %s\n", 
-		abilities->usb == 0? "no":"yes");
+		USB_SUPPORTED(abilities->port)? "yes":"no");
 	printf("core: IEEE1394 support                      : %s\n", 
-		abilities->ieee1394 == 0? "no":"yes");
+		IEEE1394_SUPPORTED(abilities->port)? "yes":"no");
 	printf("core: Network support                       : %s\n", 
-		abilities->network == 0? "no":"yes");
+		NETWORK_SUPPORTED(abilities->port)? "yes":"no");
 	if (abilities->speed[0] != 0) {
 	printf("core: Transfer speeds supported             :\n");
 		do {	
@@ -43,11 +43,7 @@ int gp_abilities_dump (CameraAbilities *abilities) {
 int gp_abilities_clear (CameraAbilities *abilities) {
 
 	strcpy(abilities->model, "");
-	abilities->serial = 0;
-	abilities->parallel = 0;
-	abilities->ieee1394 = 0;
-	abilities->usb = 0;
-	abilities->network = 0;
+	abilities->port = 0;
 	abilities->speed[0] = 0;
 	abilities->capture = 0;
 	abilities->config = 0;
