@@ -27,8 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lmini_ccd.h"
-
 #include <gphoto2-library.h>
 #include <gphoto2-result.h>
 
@@ -780,9 +778,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ydata = malloc(640*480*3);
 
 	_check_image_header(xdata, picsize);
-
-	largan_ccd2dib (xdata+7, ydata, 240, 1);
-	{ FILE *f = fopen("bla","w"); fwrite(ydata,640*480*3,1,f); fclose(f); } 
 
 	if (0) { /* disabled. replace 0 by 1 to enable */
 		int cur;
