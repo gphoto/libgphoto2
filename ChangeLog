@@ -1,3 +1,8 @@
+2001-08-22  Stephane Castejon <scastejo@club-internet.fr>
+
+	* frontends/command-line/main.c : fix option --debug so that it
+	  really put the GP_DEBUG_HIGH mode.
+
 2001-08-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* */*: Small parameter changes to make gphoto2 API more consistent.
@@ -37,7 +42,7 @@
 
 	* README: Updated list of USB Mass Storage cameras. Thanks Hubert!
 
-2001-08-22  Stephane Castejon <scastejo@club-internet.fr>
+2001-08-21  Stephane Castejon <scastejo@club-internet.fr>
  
         * Removing unused variables
 

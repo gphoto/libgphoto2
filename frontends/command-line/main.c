@@ -379,7 +379,7 @@ OPTION_CALLBACK(model) {
 
 OPTION_CALLBACK(debug) {
 
-        glob_debug = 1;
+        glob_debug = GP_DEBUG_HIGH;
         cli_debug_print("Turning on debug mode");
 
         return (GP_OK);
@@ -963,7 +963,7 @@ main (int argc, char **argv)
 
         /* Peek ahead: Check to see if we need to turn on debugging output */
         if (option_is_present("debug", argc, argv)==GP_OK)
-                glob_debug=1;
+                glob_debug=GP_DEBUG_HIGH;
 
 #ifdef OS2 /*check if environment is set otherwise quit*/
         if(CAMLIBS==NULL)
@@ -993,7 +993,7 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
         }
 
         /* Initialize gPhoto core */
-        gp_init(glob_debug? GP_DEBUG_HIGH: GP_DEBUG_NONE);
+        gp_init(glob_debug);
         gp_frontend_register(gp_interface_status, gp_interface_progress,
                 gp_interface_message, gp_interface_confirm, NULL);
         if ((result = execute_options(argc, argv)) != GP_OK) {
