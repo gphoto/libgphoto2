@@ -1,4 +1,4 @@
-AC_DEFUN(PKG_CHECK_RPM,
+AC_DEFUN(GPKG_CHECK_RPM,
 [
 AC_ARG_WITH(rpmbuild, [  --with-rpmbuild=PATH  program to use for building RPMs])
 
