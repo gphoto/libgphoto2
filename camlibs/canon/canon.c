@@ -258,14 +258,16 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 	}
 
 	if (len != 8)
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 
 	if (pwr_status)
-		*pwr_status = msg[4];
+		*pwr_status = le32atoh (msg + 4);
 	if (pwr_source)
-		*pwr_source = msg[7];
+		*pwr_source = le32atoh (msg + 7);
+
 	GP_DEBUG ("canon_int_get_battery: Status: %i / Source: %i\n", *pwr_status,
 		  *pwr_source);
+
 	return GP_OK;
 }
 
