@@ -35,7 +35,6 @@ int sierra_set_string_register	(Camera *camera, int reg, char *s, int length);
 int sierra_get_string_register	(Camera *camera, int reg, int file_number,
 				 CameraFile *file, char *s, int *length);
 int sierra_folder_set		(Camera *camera, const char *folder);
-int sierra_file_count		(Camera *camera);
 int sierra_delete		(Camera *camera, int picture_number);
 int sierra_delete_all           (Camera *camera);
 int sierra_capture		(Camera *camera, int capture_type, 

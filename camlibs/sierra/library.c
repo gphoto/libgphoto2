@@ -722,20 +722,6 @@ int sierra_end_session (Camera *camera)
 	return (GP_OK);
 }
 
-int sierra_file_count (Camera *camera) {
- 
-        int value;
-	int ret;
-
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_file_count");
- 
- 	ret = sierra_get_int_register (camera, 10, &value);
-	if (ret != GP_OK) 
-		return (ret);
- 
-        return (value);
-} 
-
 static int do_capture (Camera *camera, char *packet)
 {
 	char buf[8];
@@ -835,8 +821,8 @@ int sierra_capture (Camera *camera, int capture_type, CameraFilePath *filepath)
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* get picture number...");
 	CHECK (sierra_get_int_register (camera, 4, &picnum));
 
-	//FIXME: In which folder???
-	strcpy (filepath->folder, "/");
+	//FIXME: This is the folder of a C2020-Z. What about other models?
+	strcpy (filepath->folder, "/DCIM/100OLYMP");
 
 	/* Get the picture filename */
 	gp_debug_printf (GP_DEBUG_LOW, "sierra",

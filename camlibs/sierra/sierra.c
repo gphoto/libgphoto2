@@ -30,6 +30,7 @@
 
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
+int sierra_change_folder (Camera *camera, const char *folder);
 
 int camera_id (CameraText *id) 
 {
@@ -148,16 +149,75 @@ int camera_abilities (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
+int update_fs_for_folder (Camera *camera, const char *folder)
+{
+	SierraData *fd = (SierraData*)camera->camlib_data;
+	int i, j, count, bsize;
+	char buf[1024], new_folder[1024];
+
+	gp_filesystem_append (fd->fs, folder, NULL);
+
+	/* List the files */
+	if (fd->folders)
+		CHECK (sierra_change_folder (camera, folder));
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** counting files in '%s'"
+			 "...", folder);
+	CHECK (sierra_get_int_register (camera, 10, &count));
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** found %i files", count);
+	for (i = 0; i < count; i++) {
+		CHECK (sierra_set_int_register (camera, 4, i + 1));
+		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting filename "
+				 "of picture %i...", i);
+		CHECK (sierra_get_string_register (camera, 79, 0, NULL,
+						   buf, &bsize));
+		if (bsize <= 0)
+			sprintf (buf, "P101%04i.JPG", i);
+		gp_filesystem_append (fd->fs, folder, buf);
+	}
+
+	/* List the folders */
+	if (fd->folders) {
+		CHECK (sierra_change_folder (camera, folder));
+		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** counting folders "
+				 "in '%s'...", folder);
+		CHECK (sierra_get_int_register (camera, 83, &count));
+		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** found %i folders",
+				 count);
+		for (i = 0; i < count; i++) {
+			CHECK (sierra_change_folder (camera, folder));
+			CHECK (sierra_set_int_register (camera, 83, i + 1));
+			bsize = 1024;
+			gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting "
+					 "name of folder %i...", i + 1);
+			CHECK (sierra_get_string_register (camera, 84, 0, 
+							   NULL, buf, &bsize));
+
+			/* Remove trailing spaces */
+			for (j = strlen (buf) - 1; j >= 0 && buf[j] == ' '; j--)
+				buf[j] = '\0';
+			strcpy (new_folder, folder);
+			if (strcmp (folder, "/"))
+				strcat (new_folder, "/");
+			strcat (new_folder, buf);
+			update_fs_for_folder (camera, new_folder);
+		}
+	}
+
+	return (GP_OK);
+}
+
 int camera_init (Camera *camera) 
 {
-	int value=0, count;
+	int value=0;
 	int x=0, ret;
 	int vendor=0, product=0, inep=0, outep=0;
         gp_port_settings settings;
 	SierraData *fd;
 
 
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*******************");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init ***");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*******************");
 
 	if (!camera)
 		return (GP_ERROR_BAD_PARAMETERS);
@@ -302,24 +362,23 @@ int camera_init (Camera *camera)
 				 "*** folder support: yes");
 	}
 
-	fd->fs = gp_filesystem_new ();
-	CHECK_STOP_FREE (camera, (count = sierra_file_count (camera)));
-
-        /* Populate the filesystem */
-	CHECK_STOP_FREE (camera, 
-		         gp_filesystem_populate (fd->fs, "/", 
-			                         "PIC%04i.jpg", count));
-
+	/* We are in "/" */
 	strcpy (fd->folder, "/");
+	fd->fs = gp_filesystem_new ();
+	CHECK (update_fs_for_folder (camera, "/"));
 
 	CHECK_STOP_FREE (camera, gp_port_timeout_set (fd->dev, TIMEOUT));
 
 	CHECK_STOP_FREE (camera, camera_stop (camera));
 
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "************************");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init done ***");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "************************"); 
+
 	return (GP_OK);
 }
 
-static int sierra_change_folder (Camera *camera, const char *folder)
+int sierra_change_folder (Camera *camera, const char *folder)
 {	
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	int st = 0,i = 1;
@@ -409,106 +468,24 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 			      CameraList *list) 
 {
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	int x=0, count;
-
+	
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** camera_folder_list_files");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
-	if ((!fd->folders) && (strcmp ("/", folder) != 0))
-		return (GP_ERROR);
-
-	CHECK (camera_start (camera));
-
-	if (fd->folders)
-		CHECK (sierra_change_folder (camera, folder));
-
-	count = sierra_file_count (camera);
-	if (count < 0)
-		return (count);
-
-	for (x = 0; x < count; x++) {
-		char buf[128];
-		int length;
-		
-		/* Set the current picture number */
-		CHECK_STOP (camera, sierra_set_int_register (camera, 4, x + 1));
-
-		/* Get the picture filename */
-		gp_debug_printf (GP_DEBUG_LOW, "sierra", 
-				 "*** getting filename of picture %i...", x);
-		CHECK_STOP (camera, sierra_get_string_register (camera, 79, 0, 
-						NULL, buf, &length));
-
-		if (length > 0) {
-
-			/* Filename supported. Use the camera filename */
-			gp_list_append (list, buf, GP_LIST_FILE);
-			gp_filesystem_append (fd->fs, folder, buf);
-
-		} else {
-
-			/* Filename not supported. Use CameraFileSystem entry */
-			gp_list_append (list, gp_filesystem_name (fd->fs, 
-					folder, x), GP_LIST_FILE);
-		}
-	}
-
-	return (camera_stop (camera));
+	return (gp_filesystem_list_files (fd->fs, folder, list));
 }
 
 int camera_folder_list_folders (Camera *camera, const char *folder, 
 				CameraList *list) 
 {
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	int count, i, j, bsize, ret;
-	char buf[1024];
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", 
 			 "*** camera_folder_list_folders");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
-	if ((!fd->folders) && (strcmp (folder, "/") !=0 ))
-		return GP_ERROR;
-
-	if (!fd->folders)
-		return GP_OK;
-
-	CHECK (camera_start (camera));
-
-	CHECK_STOP (camera, sierra_change_folder (camera, folder));
-
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting number of "
-			 "folders...");
-	CHECK_STOP (camera, sierra_get_int_register (camera, 83, &count));
-
-	for (i = 0; i < count; i++) {
-
-		ret = sierra_change_folder (camera, folder);
-		if (ret != GP_OK) 
-			break;
-
-		ret = sierra_set_int_register (camera, 83, i + 1);
-		if (ret != GP_OK)
-			break;
-
-		bsize = 1024;
-		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** getting name of "
-				 "folder %i...", i + 1);
-		ret = sierra_get_string_register (camera, 84, 0, NULL, buf, 
-						  &bsize);
-		if (ret != GP_OK)
-			break;
-
-		/* remove trailing spaces */
-		for (j = strlen (buf)-1; j >= 0 && buf[j] == ' '; j--)
-			buf[j]='\0';
-
-		/* append the folder name on to the folder list */
-		gp_list_append (list, buf, GP_LIST_FOLDER);
-	}
-
-	return (camera_stop (camera));
+	return (gp_filesystem_list_folders (fd->fs, folder, list));
 }
 
 int sierra_folder_set (Camera *camera, const char *folder) 
@@ -654,26 +631,22 @@ int camera_file_get_info (Camera *camera, const char *folder,
 	info->file.size = l;
 
 	/* Type of image? */
-	if (strstr (filename, ".MOV") != NULL)
+	if (strstr (filename, ".MOV") != NULL) {
 		strcpy (info->file.type, "video/quicktime");
-	else if (strstr (filename, ".TIF") != NULL)
+		strcpy (info->preview.type, "image/jpeg");
+	} else if (strstr (filename, ".TIF") != NULL) {
 		strcpy (info->file.type, "image/tiff");
-	else
+		strcpy (info->file.type, "image/tiff");
+	} else {
 		strcpy (info->file.type, "image/jpeg");
+		strcpy (info->file.type, "image/jpeg");
+	}
 
 	/* Get the size of the current thumbnail */
 	CHECK_STOP (camera, sierra_get_int_register (camera, 13, &l));
 	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info->preview.size = l;
 	
-	/* Type of thumbnail? */
-	if (strstr (filename, ".MOV") == NULL)
-		strcpy (info->preview.type, "video/quicktime");
-	else if (strstr (filename, ".TIF") == NULL)
-		strcpy (info->preview.type, "image/tiff");
-	else
-		strcpy (info->preview.type, "image/jpeg");
-
 	return (camera_stop (camera));
 }
 
@@ -728,12 +701,16 @@ int camera_file_delete (Camera *camera, const char *folder,
 
 int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
 {
+	SierraData *fd = (SierraData*)camera->camlib_data;
+
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_capture");
 
 	CHECK (camera_start (camera));
 
 	CHECK_STOP (camera, sierra_capture (camera, capture_type, path));
-	
+	CHECK_STOP (camera, gp_filesystem_append (fd->fs, path->folder, 
+						  path->name));
+
 	return (camera_stop (camera));
 }
 
