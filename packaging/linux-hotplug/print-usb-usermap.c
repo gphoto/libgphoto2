@@ -90,7 +90,7 @@ static int print_usb_usermap(const char *usermap_script, const int add_comments)
 		if (!(a.port & GP_PORT_USB))
 		    continue;
 
-		if (a.usb_vendor && a.usb_product) {
+		if (a.usb_vendor) { /* usb product id may be 0! */
 			class = 0;
 			subclass = 0;
 			proto = 0;

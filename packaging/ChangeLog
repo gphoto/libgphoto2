@@ -1,3 +1,8 @@
+2002-09-14  Marcus Meissner <marcus@jet.franken.de>
+	
+	* print-usb-usermap.c: usb_product can be 0 (for instance
+	  with the Jenoptik JD350v).
+
 2002-08-08  Lutz Müller <lutz@users.sourceforge.net>
 
 	* linux-hotplug/Makefile.am: Point to the right correction of
