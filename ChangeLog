@@ -1,3 +1,9 @@
+2001-11-22  Marcus Meissner <marcus@jet.franken.de>
+
+	* camlibs/stv0680/library.c: file_count can also use 
+	  a different USB control message (0x8d), and it gets 
+	  2 bytes for the number of images.
+
 2001-11-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* libgphoto2_port/libgphoto2_port/gphoto2-port.c (gp_port_write):
