@@ -819,8 +819,8 @@ canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const c
 
 		/* Check end of this dirent, 10 is to skip over
 		 * 2    attributes + 0x00
-		 * 4    file date (UNIX localtime)
 		 * 4    file size
+		 * 4    file date (UNIX localtime)
 		 * to where the direntry name begins.
 		 */
 		dirent_name = pos + 10;
