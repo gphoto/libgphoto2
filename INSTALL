@@ -10,8 +10,11 @@ The installation procedure should be quite simple:
    tarball), you have to run ./autogen.sh instead of ./configure in 
    step 1).  In this case, you will need to have the following software
    installed:
+
 	autoconf
+
 	automake (ver. >= 1.5)
+
 	libtool (ver. >= 1.4)
 
 1) ./configure --prefix=/usr --sysconfdir=/etc
@@ -20,19 +23,26 @@ The installation procedure should be quite simple:
    See the end of this file for some hints on configuring for certain
    platforms.
 
-   In order to get USB support, you must have libusb installed on
-   your system (http://sourceforge.net/projects/libusb). As of
-   2002-01-01, a current CVS version of libusb (or the upcoming 0.1.5
-   release) is required.
-
    The following software components are optional, and will improve the
    libraries' and/or command-line client's functionality if present:
+
 	libusb (ver. >= 0.1.5) -- Universal Serial Bus camera support
+	    <URL:http://sourceforge.net/projects/libusb/>
+
 	gettext (ver. >= 0.10.35) -- internationalization using shared library
-	cdk -- camera configuration dialogs
+
 	aalib -- picture preview
-	jpeglib -- JPEG picture preview
+	    <URL:http://www.sourceforge.net/projects/aa-project/>
+
+	cdk -- camera configuration dialogs
+	    <URL:http://www.swi.com/~glover/cdk/>
+
 	gtk-doc -- documentation built in doc/api/
+
+	jpeglib -- JPEG picture preview
+
+	libexif - EXIF tag support
+	    <URL:http://www.sourceforge.net/projects/libexif>
 
 2) make install
 
@@ -65,6 +75,12 @@ Please report any changes to this list to the gphoto2 developer mailing
 list.  As of this writing, USB support is only available on Linux and
 FreeBSD as those are the only systems on which libusb is available.
 
+If you have build problems in the intl or po directories, try re-running
+configure with the --disable-nls flag.  If configure stops due to an error
+with 'test', try re-running configure with the --without-usb flag.  If
+'make' reports an error, try using GNU make (often called gmake or gnumake)
+instead of the make that comes with your system.
+
 i386:
   Debian GNU/Linux 2.2
   Red Hat Linux 7.1
@@ -75,13 +91,20 @@ i386:
 	Try the following to configure the optional libraries:
 	  env CFLAGS="-I/usr/local/include" CPPFLAGS="-I/usr/local/include" \
 	  LDFLAGS="-I/usr/local/lib" ./configure
-	(you may also need to append the flag --disable-included-nls).
+	(you may also need to append the flag --disable-nls).
 	Use GNU make to build (gmake).
 
 Alpha:
   OpenBSD 3.0
   NetBSD 1.5.1
+  	Configure with this command:
+  	  ./configure --disable-nls
+	Use GNU make to build (gmake).
   Debian GNU/Linux 2.2
+  Tru64 5.1A
+  	Configure with this command:
+  	  CFLAGS='-D__STDC_VERSION__=0' ./configure --disable-nls
+	Use GNU make to build (gnumake).
 
 PowerPC:
   Debian GNU/Linux 2.2
@@ -117,13 +140,6 @@ Itanium:
   	prevent full compilation (but is fairly simple to overcome).
   	Need better libtool support.
   Red Hat 7.1 (sgicc)
-  	Need better libtool support.
-
-Alpha:
-  Tru64 5.1A
-  	Configure with this command:
-  	  CFLAGS='-D__STDC_VERSION__=0' ./configure --disable-nls
-	Use GNU make to build (gnumake).
   	Need better libtool support.
 
 Sparc:
