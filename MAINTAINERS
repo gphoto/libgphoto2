@@ -51,6 +51,9 @@ camlibs/kodak/dc120:
 camlibs/kodak/dc240:
 	Hubert Figuiere <hfiguiere@teaser.fr>
 
+camlibs/mustek:
+	Marcus Meissner <marcus@jet.franken.de>
+
 camlibs/panasonic
 	Mariusz Zynel <mariusz@math.uwb.edu.pl>
 
@@ -90,8 +93,9 @@ digikam (http://digikam.sourceforge.net):
 	KDE frontend
 	Renchi Raju <renchi@green.tam.uiuc.edu>
 
-kamera (?):
+kamera:
 	KDE integration (konqueror)
+	Marcus Meissner <marcus@jet.franken.de>
 	Ilya Konstantinov <future@shiny.co.il>
 
 gtkam (http://www.topfrose.de):
