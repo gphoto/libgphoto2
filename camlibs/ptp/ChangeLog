@@ -1,3 +1,6 @@
+2002-10-16 Stephen H. Westin
+	* library.c: Nikon D100 has a PTP mode
+
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2

@@ -209,6 +209,9 @@ static struct {
 	{"Sony DSC-S85",  0x054c, 0x004e},
 	{"Sony MVC-CD300",  0x054c, 0x004e},
 
+	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
+	{"Nikon DSC D100", 0x04b0, 0x0402},
+
 	/* more comming soon :) */
 	{NULL, 0, 0}
 };
