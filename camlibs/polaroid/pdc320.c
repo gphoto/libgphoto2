@@ -37,14 +37,29 @@
 /* All of them are about the same and I believe they are for image correction. */
 /*******************************************************************************/
 
+/* Notes on what needs work for the Polaroid Fun! 320:
+ * 	Make a better header that could correct color problems....
+ *		or manage to decode, color correct, and save the image.
+ *
+ * Notes on what needs work for the Polaroid 640SE:
+ *	The tests gave totally wrong frame numbers.
+ *	Needs to be retested with CORRECT buffer size.
+ *	The delete-all-raw-data timed out
+ */
+
 /*
  * Those are the answers to some of the commands stated below. We should
  * (at some point in the future) understand the contents and compare
  * the return value against them.
  */
+
+#define ENDINIT_PDC640SE 	"\x0\x78\x0\x0\x2\x10\xf1\xf5"
+#define ENDINIT_PDC320		"\x0\x50\x0\x0\x7\xd0\xf0\xe6"
+
 #define ID_PDC640SE    "\x0\x58\x49\x52\x4c\x49\x4e\x4b\x2\x1\x3\x1\x16\xbf"
 #define ID_PDC320      "\x0\x58\x49\x52\x4c\x49\x4e\x4b\x2\x1\x3\x0\x16\xc0"
 
+// What I got back from someone's PDC640SE test: 02 40 02 80 01 e0 00 05 02 80 01 e0 00 05 00 78
 #define STATE_PDC640SE "\x40\x2\x80\x1\xe0\x0\x5\x2\x80\x1\xe0\x0\x5\x0\x78\x0\x78\x0\x0\x2\x10"
 #define STATE_PDC320   "\x2\x3f\x1\x40\x0\xf0\x0\x5\x1\x40\x0\xf0\x0\x5\x0\x50\x0\x50\x0\x0\x7\xd0\xf0\xe6"
 
@@ -213,7 +228,7 @@ pdc320_size (Camera *camera, int n)
 			 * Do we need to dump some bytes here before trying
 			 * again?
                          * Yes, but how many is not known for the PDC 320.
-			 */                         
+			 */
 //			if (camera->model==PDC640SE) {
                         if (camera->model[9]=='6') {
 				CHECK_RESULT (gp_port_read (camera->port, buf, buf[0]+2));
@@ -264,12 +279,12 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 
 //			if (camera->model==PDC640SE) {
                         if (camera->model[9]=='6') {
-				chunksize=213;
+				chunksize=528;
 //			} else if (camera->model==PDC320) {
                         } else if (camera->model[9]=='F') {
 				chunksize=2000;
 			}
-			else 
+			else
 gp_debug_printf (GP_DEBUG_LOW, "pdc320", "pdc320_pic could not determine camera");
 
 	len = *size;
@@ -461,6 +476,7 @@ camera_init (Camera *camera)
 
 	return (GP_OK);
 }
+
 
 
 
