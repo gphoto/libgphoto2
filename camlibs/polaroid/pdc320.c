@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -18,7 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/* Originally written by Peter Desnoyers <pjd@fred.cambridge.ma.us>, 
+/* Originally written by Peter Desnoyers <pjd@fred.cambridge.ma.us>,
  * and adapted for gphoto2 by
  * Nathan Stenzel <nathanstenzel@users.sourceforge.net> and
  * Lutz Müller <urc8@rz.uni-karlsruhe.de>
@@ -30,6 +30,12 @@
 #include <gphoto2-core.h>
 #include <stdlib.h>
 #include <string.h>
+#include "jpeghead.h"
+
+/*******************************************************************************/
+/* NOTICE: There is a 16x8 block of pixels after the image data.               */
+/* All of them are about the same and I believe they are for image correction. */
+/*******************************************************************************/
 
 /*
  * Those are the answers to some of the commands stated below. We should
@@ -45,11 +51,11 @@
 /*
  * For the PDC320SE, the init sequence is INIT,ID,ENDINIT,STATE,NUM,SIZE,
  * handshake?, PIC.
- * 
+ *
  * During handshake, if the first read byte is not 6 then it is not good. Read
  * the number of bytes mentioned +2 ("FE FF"?)and then INIT and try SIZE
- * again (this is a loop). 
- * 
+ * again (this is a loop).
+ *
  * It is possible that the PDC320 might do a similar handshaking sequence at
  * that same point.
  */
@@ -126,7 +132,7 @@ pdc320_init (CameraPort *port)
 	CHECK_RESULT (gp_port_read (port, buf, 16));
 
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "*** PDC320_ENDINIT ***");
-	CHECK_RESULT (gp_port_write (port, PDC320_ENDINIT, 
+	CHECK_RESULT (gp_port_write (port, PDC320_ENDINIT,
 				     sizeof (PDC320_ENDINIT) - 1));
 	CHECK_RESULT (gp_port_read (port, buf, 8));
 
@@ -255,7 +261,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 	cmd[7] = 0xff - n;
 
 	CHECK_RESULT_FREE (gp_port_write (camera->port, cmd, sizeof (cmd)), *data);
-	
+
 	len = *size;
 	for (i = 0; i < *size; i += 2000) {
 
@@ -310,22 +316,23 @@ camera_abilities (CameraAbilitiesList *list)
 
 		CHECK_RESULT (gp_abilities_list_append (list, a));
 	}
-	
+
 	return (GP_OK);
 }
 
 static int
-camera_file_get (Camera *camera, const char *folder, const char *filename, 
+camera_file_get (Camera *camera, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file)
 {
 	int n, size;
-	unsigned char *data;
+    unsigned char *data;
+    unsigned char *temp;
 
-	if (type != GP_FILE_TYPE_RAW)
+	if ((type != GP_FILE_TYPE_RAW) && (type != GP_FILE_TYPE_NORMAL))
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	/*
-	 * Get the number of the picture from the filesystem and increment 
+	 * Get the number of the picture from the filesystem and increment
 	 * since we need a range starting with 1.
 	 */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Getting number from fs...");
@@ -335,11 +342,22 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 	/* Get the file */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Getting file %i...", n);
 	CHECK_RESULT (pdc320_pic (camera, n, &data, &size));
-
+if (type == GP_FILE_TYPE_RAW) {
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
 	CHECK_RESULT (gp_file_set_name (file, filename));
 	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
-
+    } else {
+    temp=data;
+    temp+=6;
+//   	CHECK_RESULT (gp_file_set_data_and_size (file, picture, 0));
+	CHECK_RESULT (gp_file_set_name (file, filename));
+	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
+    for (n=0; n<10; n++) {
+        gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Adding jpegheader[%i].data",n);
+        CHECK_RESULT (gp_file_append(file, jpegheader[n].data, jpegheader[n].size));
+    }
+    CHECK_RESULT (gp_file_append(file, temp, size));
+    }
 	return (GP_OK);
 }
 
@@ -354,7 +372,7 @@ camera_folder_delete_all (Camera *camera, const char *folder)
 }
 
 static int
-camera_about (Camera *camera, CameraText *about) 
+camera_about (Camera *camera, CameraText *about)
 {
 	strcpy (about->text, "Download program for several Polaroid cameras. "
 		"Originally written by Peter Desnoyers "
@@ -392,7 +410,7 @@ camera_summary (Camera *camera, CameraText *summary)
 }
 
 int
-camera_init (Camera *camera) 
+camera_init (Camera *camera)
 {
 	int result;
 	gp_port_settings settings;
@@ -423,5 +441,6 @@ camera_init (Camera *camera)
 
 	return (result);
 }
+
 
 
