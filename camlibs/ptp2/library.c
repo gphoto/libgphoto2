@@ -904,6 +904,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		ptp_getdevicepropdesc (params, dpc, &dpd);
 
 		sprintf (txt, "(%s) ",_get_getset(dpd.GetSet));txt += strlen (txt);
+		sprintf (txt, "(type=0x%x) ",dpd.DataType);txt += strlen (txt);
 		switch (dpd.FormFlag) {
 		case PTP_DPFF_None:	break;
 		case PTP_DPFF_Range: {
@@ -965,14 +966,33 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 	return 0;
 }
 
-typedef int (*get_func)(CameraWidget **widget, char* name, PTPDevicePropDesc *dpd);
+struct submenu;
+typedef int (*get_func)(CameraWidget **widget, struct submenu* menu, PTPDevicePropDesc *dpd);
 typedef int (*put_func)(CameraWidget *widget, PTPPropertyValue *propval);
 
-static int _get_AUINT8_as_CHAR_ARRAY(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
+struct submenu {
+	char 		*label;
+	char		*name;
+	uint16_t	propid;
+	uint16_t	vendorid;
+	uint16_t	type;
+	get_func	getfunc;
+	put_func	putfunc;
+};
+
+struct menu {
+	char		*label;
+	char		*name;
+	struct	submenu	*submenus;
+};
+
+static int
+_get_AUINT8_as_CHAR_ARRAY(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	int	j;
 	char 	value[128];
 
-	gp_widget_new (GP_WIDGET_TEXT, _(name), widget);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	if (dpd->DataType != PTP_DTC_AUINT8) {
 		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
 	} else {
@@ -984,10 +1004,12 @@ static int _get_AUINT8_as_CHAR_ARRAY(CameraWidget **widget, char *name, PTPDevic
 	return (GP_OK);
 }
 
-static int _get_STR(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
+static
+int _get_STR(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	char value[64];
 
-	gp_widget_new (GP_WIDGET_TEXT, _(name), widget);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	if (dpd->DataType != PTP_DTC_STR) {
 		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
 		gp_widget_set_value (*widget,value);
@@ -998,7 +1020,8 @@ static int _get_STR(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
 }
 
 
-static int _put_AUINT8_as_CHAR_ARRAY(CameraWidget *widget, PTPPropertyValue *propval) {
+static int
+_put_AUINT8_as_CHAR_ARRAY(CameraWidget *widget, PTPPropertyValue *propval) {
 	char	*value;
 	int	i, ret;
 
@@ -1015,10 +1038,12 @@ static int _put_AUINT8_as_CHAR_ARRAY(CameraWidget *widget, PTPPropertyValue *pro
 	return (GP_OK);
 }
 
-static int _get_UINT32_as_MB(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
+static int
+_get_UINT32_as_MB(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	char value[64];
 
-	gp_widget_new (GP_WIDGET_TEXT, _(name), widget);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	if (dpd->DataType != PTP_DTC_UINT32) {
 		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
 	} else {
@@ -1028,16 +1053,158 @@ static int _get_UINT32_as_MB(CameraWidget **widget, char *name, PTPDevicePropDes
 	return (GP_OK);
 }
 
-static int _get_UINT32_as_time(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
+static int
+_get_Canon_AssistLight(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return (GP_ERROR);
+	gp_widget_add_choice (*widget,_("On"));
+	gp_widget_add_choice (*widget,_("Off"));
+	gp_widget_set_value (*widget,(dpd->CurrentValue.u16?_("On"):_("Off")));
+	return (GP_OK);
+}
+
+static int
+_put_Canon_AssistLight(CameraWidget *widget, PTPPropertyValue *propval) {
+	char *value;
+	int ret;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	if (!strcmp (value, _("On"))) {
+		propval->u16 = 1;
+		return (GP_OK);
+	}
+	if (!strcmp (value, _("Off"))) {
+		propval->u16 = 0;
+		return (GP_OK);
+	}
+	return (GP_ERROR);
+}
+
+static int
+_get_Canon_ExpCompensation(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	float t, b, s, f;
+	int min, max, i;
+
+	min = 256; max = 0;
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR);
+	f = (float)dpd->CurrentValue.u8;
+
+	for (i=0; i<dpd->FORM.Enum.NumberOfValues;i++) {
+		if (min > dpd->FORM.Enum.SupportedValue[i].u8)
+			min = dpd->FORM.Enum.SupportedValue[i].u8;
+		if (max < dpd->FORM.Enum.SupportedValue[i].u8)
+			max = dpd->FORM.Enum.SupportedValue[i].u8;
+	}
+	/* -2.0  ... 2.0 is shown on the camera, the property has:
+	   Belichtungskompensation(0xd01f):(readwrite) (type=0x2) Enumeration [8,11,13,16,19,21,24,27,29,32,35,37,40] value: 24
+	 */
+	f = f * 20./((float)(max - min));
+	b =   0.0;
+	t =  20.0;
+	s =   1.0; /* actually just 13 steps on my canon */
+	gp_widget_set_range (*widget, b, t, s);
+	gp_widget_set_value (*widget, &f);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_ExpCompensation(CameraWidget *widget, PTPPropertyValue *propval) {
+	float value;
+	int ret;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	fprintf (stderr, "set exp comp to %g\n", value);
+	return (GP_ERROR);
+}
+static int
+_get_Canon_BeepMode(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR);
+	gp_widget_add_choice (*widget,_("On"));
+	gp_widget_add_choice (*widget,_("Off"));
+	gp_widget_set_value (*widget,(dpd->CurrentValue.u8?_("On"):_("Off")));
+	return (GP_OK);
+}
+
+static int
+_put_Canon_BeepMode(CameraWidget *widget, PTPPropertyValue *propval) {
+	char *value;
+	int ret;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	if (!strcmp (value, _("On"))) {
+		propval->u8 = 1;
+		return (GP_OK);
+	}
+	if (!strcmp (value, _("Off"))) {
+		propval->u8 = 0;
+		return (GP_OK);
+	}
+	return (GP_ERROR);
+}
+
+static int
+_get_Canon_ZoomRange(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
+	float	f, t, b, s;
+
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	f = (float)dpd->CurrentValue.u16;
+	if (!(dpd->FormFlag & PTP_DPFF_Range))
+		return (GP_ERROR);
+	b = (float)dpd->FORM.Range.MinimumValue.u16;
+	t = (float)dpd->FORM.Range.MaximumValue.u16;
+	s = (float)dpd->FORM.Range.StepSize.u16;
+	gp_widget_set_range (*widget, b, t, s);
+	gp_widget_set_value (*widget, &f);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_ZoomRange(CameraWidget *widget, PTPPropertyValue *propval)
+{
+	float	f;
+	int	ret;
+
+	f = 0.0;
+	ret = gp_widget_get_value (widget,&f);
+	if (ret != GP_OK) return ret;
+	propval->u16 = (unsigned short)f;
+	return (GP_OK);
+}
+
+static int
+_get_UINT32_as_time(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	time_t	camtime;
 
-	gp_widget_new (GP_WIDGET_DATE, _(name), widget);
+	gp_widget_new (GP_WIDGET_DATE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
 	camtime = dpd->CurrentValue.u32;
 	gp_widget_set_value (*widget,&camtime);
 	return (GP_OK);
 }
 
-static int _put_UINT32_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
+static int
+_put_UINT32_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
 	time_t	camtime;
 	int	ret;
 
@@ -1049,14 +1216,16 @@ static int _put_UINT32_as_time(CameraWidget *widget, PTPPropertyValue *propval) 
 	return (GP_OK);
 }
 
-static int _get_STR_as_time(CameraWidget **widget, char *name, PTPDevicePropDesc *dpd) {
+static int
+_get_STR_as_time(CameraWidget **widget, struct submenu *menu, PTPDevicePropDesc *dpd) {
 	time_t		camtime;
 	struct tm	tm;
 	char		capture_date[64],tmp[5];
 
 	/* strptime() is not widely accepted enough to use yet */
 	memset(&tm,0,sizeof(tm));
-	gp_widget_new (GP_WIDGET_DATE, _(name), widget);
+	gp_widget_new (GP_WIDGET_DATE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	strncpy(capture_date,dpd->CurrentValue.str,sizeof(capture_date));
 	strncpy (tmp, capture_date, 4);
 	tmp[4] = 0;
@@ -1081,7 +1250,8 @@ static int _get_STR_as_time(CameraWidget **widget, char *name, PTPDevicePropDesc
 	return (GP_OK);
 }
 
-static int _put_STR_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
+static int
+_put_STR_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
 	time_t		camtime;
 #ifdef HAVE_GMTIME_R
 	struct tm	xtm;
@@ -1105,35 +1275,31 @@ static int _put_STR_as_time(CameraWidget *widget, PTPPropertyValue *propval) {
 	return (GP_OK);
 }
 
-static int _put_None(CameraWidget *widget, PTPPropertyValue *dpd) {
+static int
+_put_None(CameraWidget *widget, PTPPropertyValue *dpd) {
 	return (GP_ERROR_NOT_SUPPORTED);
 }
 
-struct submenu {
-	char 		*name;
-	uint16_t	propid;
-	uint16_t	vendorid;
-	uint16_t	type;
-	get_func	getfunc;
-	put_func	putfunc;
-};
-
-struct menu {
-	char		*name;
-	struct	submenu	*submenus;
-};
-
 struct submenu camera_settings_menu[] = {
-	{ N_("Camera Owner"), PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
-	{ N_("Camera Model"), PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
-	{ N_("Flash Memory"), PTP_DPC_CANON_FlashMemory, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_MB, _put_None },
-	{ N_("Camera Time"),  PTP_DPC_CANON_UnixTime,    PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
-	{ N_("Camera Time"),  PTP_DPC_DateTime,          0,                PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },
+	{ N_("Camera Owner"), "owner", PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
+	{ N_("Camera Model"), "model", PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
+	{ N_("Flash Memory"), "internalmemory", PTP_DPC_CANON_FlashMemory, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_MB, _put_None },
+	{ N_("Camera Time"),  "time", PTP_DPC_CANON_UnixTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
+	{ N_("Camera Time"),  "time", PTP_DPC_DateTime,           0,                PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },
+	{ N_("Beep Mode"),  "beep",   PTP_DPC_CANON_BeepMode,     PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_BeepMode, _put_Canon_BeepMode },
+	{ NULL },
+};
+
+struct submenu capture_settings_menu[] = {
+	{ N_("Zoom"), "zoom", PTP_DPC_CANON_Zoom, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ZoomRange, _put_Canon_ZoomRange},
+	{ N_("Assist Light"), "assistlight", PTP_DPC_CANON_AssistLight, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AssistLight, _put_Canon_AssistLight},
+	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
 	{ NULL },
 };
 
 struct menu menus[] = {
-	{ N_("Camera Settings"), camera_settings_menu },
+	{ N_("Camera Settings"), "settings", camera_settings_menu },
+	{ N_("Capture Settings"), "capturesettings", capture_settings_menu },
 };
 
 static int
@@ -1144,16 +1310,20 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	int menuno, submenuno;
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
+	gp_widget_set_name (*window, "main");
 	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
-		gp_widget_new (GP_WIDGET_SECTION, _(menus[menuno].name), &section);
+		gp_widget_new (GP_WIDGET_SECTION, _(menus[menuno].label), &section);
+		gp_widget_set_name (section, menus[menuno].name);
 		gp_widget_append (*window, section);
 
 		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
-			if (!have_prop(camera,cursub->vendorid,cursub->propid)) continue;
+			if (!have_prop(camera,cursub->vendorid,cursub->propid)) {
+				continue;
+			}
 			memset(&dpd,0,sizeof(dpd));
 			ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
-			cursub->getfunc (&widget, cursub->name, &dpd);
+			cursub->getfunc (&widget, cursub, &dpd);
 			gp_widget_append (section,widget);
 			ptp_free_devicepropdesc(&dpd);
 		}
@@ -1228,25 +1398,20 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	int menuno, submenuno, ret;
 
 	ret = gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow);
-	if (ret != GP_OK) {
-		/* fprintf(stderr,"main not found.\n"); */
+	if (ret != GP_OK)
 		return ret;
-	}
 	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
-		ret = gp_widget_get_child_by_label (subwindow, _(menus[menuno].name), &section);
-		/* fprintf (stderr, "menu %s\n", _(menus[menuno].name)); */
-		if (ret != GP_OK) {
-			/* fprintf (stderr, "menu %s not found\n", _(menus[menuno].name)); */
+		ret = gp_widget_get_child_by_label (subwindow, _(menus[menuno].label), &section);
+		if (ret != GP_OK)
 			continue;
-		}
-		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
+		for (submenuno = 0; menus[menuno].submenus[submenuno].label ; submenuno++ ) {
 			PTPPropertyValue	propval;
 
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
 			if (!have_prop(camera,cursub->vendorid,cursub->propid))
 				continue;
 
-			ret = gp_widget_get_child_by_label (section, _(cursub->name), &widget);
+			ret = gp_widget_get_child_by_label (section, _(cursub->label), &widget);
 			if (ret != GP_OK)
 				continue;
 
@@ -1254,10 +1419,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				continue;
 
 			ret = cursub->putfunc (widget, &propval);
-			if (ret == GP_OK) {
+			if (ret == GP_OK)
 				ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
-			} else {
-			}
 			ptp_free_devicepropvalue (cursub->type, &propval);
 		}
 	}

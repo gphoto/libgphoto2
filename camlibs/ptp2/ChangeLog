@@ -1,3 +1,13 @@
+2004-09-11  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Use widget name to mark up config entries.
+
+	  Added more config cases from Canon in capture mode.
+	  - zoom (working)
+	  - auto focus assist light
+	  - beep mode
+	  - exposure compensation (not fully done)
+
 2004-09-05  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* ptp-pack.c: Pack integer arrays.
