@@ -104,7 +104,12 @@ camera_abilities (CameraAbilitiesList *list)
 
 	for (i = 0; models[i].id_str; i++) {
 		memset (&a, 0, sizeof (a));
+#ifdef EXPERIMENTAL_CAPTURE
+		/* should be set only if the camera indeed supports capturing */
+		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+#else
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
+#endif
 		strcpy (a.model, models[i].id_str);
 		a.port = 0;
 		if (models[i].usb_vendor && models[i].usb_product) {
@@ -213,17 +218,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	GP_DEBUG ("CANON REMOTE CAPTURE IS EXPERIMENTAL CODE, WORK IN PROGRESS "
 		  "AND MAYBE NOT WORKING AT ALL. NOT FOR THE FAINT OF HEART.");
 
-	switch (camera->pl->md->model) {
-		/* add your camera here if you want to test the code
-		 * note that this will move to capabilities when ready
-		 * for normal code */
-		/* case CANON_EOS_D30: */
-	case CANON_PS_G2:
-	case CANON_PS_S40:
-		break;
-	default:
-		return GP_ERROR_NOT_SUPPORTED;
-	}
+	/* As this is experimental code anyway, we don't test for the
+	 * camera here. And if we wanted to, there would be another
+	 * place better suited (in camera_init()). */
 
 	if (type != GP_CAPTURE_IMAGE) {
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1054,6 +1051,7 @@ camera_init (Camera *camera, GPContext *context)
 	/* First, set up all the function pointers */
 	camera->functions->exit = camera_exit;
 #ifdef EXPERIMENTAL_CAPTURE
+	/* we should only set this if the camera supports it */
 	camera->functions->capture_preview = camera_capture_preview;
 	camera->functions->capture = camera_capture;
 #endif /* EXPERIMENTAL_CAPTURE */
