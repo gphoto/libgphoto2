@@ -1,5 +1,10 @@
 2001-11-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* gphoto2-file.c: Added GP_FILE_TYPE_AUDIO for cameras that can
+	  attach audio data to a picture.
+
+2001-11-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch by Peter Jay Salzmann <p@dirac.org> (slightly adapted):
 
 	* camlibs/polaroid/pdc700.c: Tell the user about the current image

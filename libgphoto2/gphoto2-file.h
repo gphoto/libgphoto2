@@ -34,7 +34,8 @@
 typedef enum {
 	GP_FILE_TYPE_PREVIEW,
 	GP_FILE_TYPE_NORMAL,
-	GP_FILE_TYPE_RAW
+	GP_FILE_TYPE_RAW,
+	GP_FILE_TYPE_AUDIO
 } CameraFileType;
 
 /* Internals are private */

@@ -57,6 +57,7 @@ typedef struct {
 	CameraFile *preview;
 	CameraFile *normal;
 	CameraFile *raw;
+	CameraFile *audio;
 } CameraFilesystemFile;
 
 typedef struct {
@@ -1196,6 +1197,11 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 			return (gp_file_copy (file,
 					fs->folder[x].file[y].raw));
 		break;
+	case GP_FILE_TYPE_AUDIO:
+		if (fs->folder[x].file[y].audio)
+			return (gp_file_copy (file,
+					fs->folder[x].file[y].audio));
+		break;
 	default:
 		gp_log (GP_LOG_ERROR, "gphoto2-filesystem",
 			_("Unknown file type %i"), type);
@@ -1219,6 +1225,9 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		break;
 	case GP_FILE_TYPE_RAW:
 		fs->folder[x].file[y].raw = tmp;
+		break;
+	case GP_FILE_TYPE_AUDIO:
+		fs->folder[x].file[y].audio = tmp;
 		break;
 	default:
 		gp_file_unref (tmp);
