@@ -134,6 +134,7 @@ camlibs/sonydscf1/Makefile \
 camlibs/template/Makefile \
 camlibs/kodak/Makefile \
 camlibs/kodak/dc120/Makefile \
+camlibs/kodak/dc240/Makefile \
 camlibs/minolta/Makefile \
 camlibs/minolta/dimagev/Makefile \
 frontends/Makefile \

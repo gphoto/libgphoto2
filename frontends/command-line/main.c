@@ -177,7 +177,7 @@ int  glob_stdout_size=0;
 /*    Again, use the OPTION_CALLBACK(function) macro.                   */
 /*    glob_debug is set if the user types in the "--debug" flag. Use    */
 /*    cli_debug_print(char *format, ...) to display debug output. Use   */
-/*    cli_error_print(char *format, ...) to display error output.               */
+/*    cli_error_print(char *format, ...) to display error output.       */
 
 
 OPTION_CALLBACK(help) {
