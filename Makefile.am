@@ -7,14 +7,7 @@ bin_SCRIPTS = gphoto2-config
 
 EXTRA_DIST = HACKING MAINTAINERS makefile.os2 os2mak.inc TESTERS CHANGES
 
-SUBDIRS = 			\
-	libgphoto2_port 	\
-	libgphoto2 		\
-	camlibs 		\
-	tests			\
-	po			\
-	packaging		\
-	doc
+SUBDIRS = camlibs doc libgphoto2 libgphoto2_port packaging po tests
 
 docdir = @DOC_DIR@
 doc_DATA = AUTHORS COPYING README
