@@ -246,6 +246,11 @@ canon_usb_keylock (Camera *camera)
 		return GP_OK;
 	}
 
+	if (camera->pl->model == CANON_EOS_D30) {
+		GP_DEBUG ("Key locking is currently not working on EOS D30 cameras. Stay tuned.");
+		return GP_OK;	
+	}
+	
 	c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_KEYLOCK, &bytes_read, NULL, 0);
 	if (bytes_read == 0x4) {
 		GP_DEBUG ("Got the expected number of bytes back, "
