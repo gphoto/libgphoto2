@@ -13,7 +13,7 @@ dnl                      0 if you incremented CURRENT.
 dnl  - CURRENT (Major):  Increment if the interface has additions, changes,
 dnl                      removals.
 dnl ---------------------------------------------------------------------------
-LIBGPHOTO2_PORT_AGE=0
+LIBGPHOTO2_PORT_AGE=1
 LIBGPHOTO2_PORT_REVISION=5
 LIBGPHOTO2_PORT_CURRENT=0
 AC_SUBST(LIBGPHOTO2_PORT_AGE)
@@ -156,6 +156,10 @@ AC_ARG_WITH(serial, [  --without-serial        Don't compile in SERIAL support],
 if $have_serial; then
 	IOLIB_SUBDIRS="$IOLIB_SUBDIRS serial"
 fi
+case "$serial_msg" in
+	yes*) AC_DEFINE(HAVE_SERIAL,1,[Whether you have serial support enabled])
+	*     ;;
+esac
 
 dnl -----------------------------------------
 dnl Serial port locking: We try to use either
@@ -260,6 +264,10 @@ if $try_usb; then
 	])
 	fi
 fi
+case "$usb_msg" in
+	yes*) AC_DEFINE(HAVE_USB,1,[Whether you have USB support enabled])
+	*     ;;
+esac
 
 AC_SUBST(USB_CFLAGS)
 AC_SUBST(USB_LIBS)
