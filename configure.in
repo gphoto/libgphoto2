@@ -73,7 +73,7 @@ LIBS="$LIBS -L`pwd`/libgphoto2_port/libgphoto2_port/@dotlibs@ -lgphoto2_port";
 
 LIBGPHOTO2_INCLUDEDIR='-I${includedir}'
 LIBGPHOTO2_LIBDIR='-L${libdir}'
-LIBGPHOTO2_LIBS="-lgphoto2"
+LIBGPHOTO2_LIBS="-lgphoto2 -lm"
 LIBGPHOTO2_VERSION=$VERSION
 
 AC_SUBST(LIBGPHOTO2_PORT_DIR)

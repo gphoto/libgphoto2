@@ -1,5 +1,13 @@
 2001-10-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* configure.in: -lm
+	* libgphoto2/Makefile.am
+	* libgphoto2/bayer.[c,h]
+	* libgphoto2/gamma.[c,h]: New
+	* camlibs/polaroid/pdc640.c: Use above
+
+2001-10-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch from Chris Byrne <adapt@ihug.co.nz>:
 
 	* camlibs/polaroid/pdc640.c: Updated

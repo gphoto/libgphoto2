@@ -20,9 +20,13 @@
 
 #include <gphoto2-library.h>
 #include <gphoto2-core.h>
+#include <gphoto2-debug.h>
+
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "camlibs/jamcam/library.h"
+
+#include "libgphoto2/bayer.h"
 
 #define PDC640_PING  "\x01"
 #define PDC640_SPEED "\x69\x0b"
@@ -196,6 +200,7 @@ pdc640_speed (CameraPort *port, int speed)
 	return (GP_OK);
 }
 
+#if 0
 static int
 pdc640_unknown5 (CameraPort *port)
 {
@@ -208,7 +213,9 @@ pdc640_unknown5 (CameraPort *port)
 
 	return (GP_OK);
 }
+#endif
 
+#if 0
 static int
 pdc640_unknown20 (CameraPort* port)
 {
@@ -218,6 +225,7 @@ pdc640_unknown20 (CameraPort* port)
 
 	return (GP_OK);
 }
+#endif
 
 static int
 pdc640_caminfo (CameraPort *port, int *numpic)
@@ -447,7 +455,7 @@ pdc640_getpic (CameraPort *port, int n, int thumbnail, int justraw,
 	strcpy(outdata, ppmheader);
 
 	/* Decode and interpolate the Bayer Mask */
-	result = gp_bayer_decode(width, height, *data,
+	result = gp_bayer_decode(*data, width, height,
 				&outdata[result], BAYER_TILE_RGGB);
 	if (result < 0) {
 		free (outdata);
@@ -572,6 +580,7 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 	return (GP_OK);
 }
 
+#if 0
 static int
 camera_folder_delete_all (Camera *camera, const char *folder)
 {
@@ -579,6 +588,7 @@ camera_folder_delete_all (Camera *camera, const char *folder)
 
 	return (GP_OK);
 }
+#endif
 
 static int
 camera_file_delete (Camera *camera, const char *folder, const char *file)
@@ -609,6 +619,7 @@ camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
+static int
 camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 {
 	int num, numpic;
