@@ -558,7 +558,7 @@ int mdc800_setFlashLight (Camera* camera,int value)
 		printCoreError ("(mdc800_setFlashLight) sending command fails.\n");
 		return ret;
 	}
-	printCoreNote (mdc800_getFlashLightString(value));
+	printCoreNote ("%s", mdc800_getFlashLightString(value));
 	printCoreNote ("\n");
 	return GP_OK;
 }

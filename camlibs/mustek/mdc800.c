@@ -89,11 +89,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = data;
-	int	nr, result;
-	long int size;
+	int	size, nr, result;
 
 	nr = gp_filesystem_number(fs, folder, filename, context);
-
 	if(nr < 0)
 		return nr;
 
@@ -104,10 +102,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 #endif
 	case GP_FILE_TYPE_NORMAL:
-		result = mdc800_getImage(camera,nr,&data,(int*)&size);
+		result = mdc800_getImage(camera,nr,&data,&size);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		result = mdc800_getThumbnail(camera,nr,&data,(int*)&size);
+		result = mdc800_getThumbnail(camera,nr,&data,&size);
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
