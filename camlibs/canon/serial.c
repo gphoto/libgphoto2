@@ -77,9 +77,9 @@ void serial_flush_output(gp_port *gdev)
 int canon_serial_change_speed(gp_port *gdev, int speed)
 {
          /* set speed */
-	gp_port_get_settings(gdev, &settings);
+	gp_port_settings_get(gdev, &settings);
 	settings.serial.speed = speed;
-	gp_port_set_settings(gdev, settings);
+	gp_port_settings_set(gdev, settings);
 	
 	usleep(70000);
 	
@@ -101,7 +101,7 @@ int canon_serial_change_speed(gp_port *gdev, int speed)
  ****************************************************************************/
 int canon_serial_get_cts(gp_port *gdev)
 {
-        return gp_port_get_pin(gdev,PIN_CTS);
+        return gp_port_pin_get(gdev,PIN_CTS);
 }
 
 /*****************************************************************************
@@ -330,7 +330,7 @@ void serial_set_timeout(gp_port *gdev, int to)
 {
 //	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	
-	gp_port_set_timeout(gdev,to);
+	gp_port_timeout_set(gdev,to);
 }
 
 /*****************************************************************************

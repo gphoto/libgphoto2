@@ -161,14 +161,14 @@ struct gp_port {
 				unsuccessful: GP_ERROR
 		*/
 
-	int gp_port_get_count ();
+	int gp_port_count_get ();
 		/* Get a count of available devices
 			return values:
 				  successful: valid gp_port_list struct
 				unsuccessful: GP_ERROR
 		*/
 
-	int gp_port_get_info (int device_number, gp_port_info *info);
+	int gp_port_info_get (int device_number, gp_port_info *info);
 		/* Get information about a device
 			return values:
 				  successful: valid gp_port_list struct
@@ -189,7 +189,7 @@ gp_port *gp_port_new		(gp_port_type type);
 				unsuccessful: GP_ERROR
 		*/
 
-	int gp_port_set_debug (gp_port *dev, int debug_level);
+	int gp_port_debug_set (gp_port *dev, int debug_level);
 		/* 
 			Set the debugging level specific to a device 
 		*/
@@ -208,19 +208,19 @@ gp_port *gp_port_new		(gp_port_type type);
 				unsuccessful: GP_ERROR
 		*/
 
-       int gp_port_set_timeout 	(gp_port *dev, int millisec_timeout);
+       int gp_port_timeout_set 	(gp_port *dev, int millisec_timeout);
 		/* Sets the read/write timeout
 				  successful: GP_OK
 				unsuccessful: GP_ERROR
 		*/
 
-       int gp_port_get_timeout 	(gp_port *dev, int *millisec_timeout);
+       int gp_port_timeout_get 	(gp_port *dev, int *millisec_timeout);
 		/* Sets the read/write timeout
 				  successful: GP_OK
 				unsuccessful: GP_ERROR
 		*/
 
-       int gp_port_set_settings 	(gp_port *dev, 
+       int gp_port_settings_set	(gp_port *dev,
 				 gp_port_settings settings);
 		/* Sets the settings
 				  successful: GP_OK
@@ -228,7 +228,7 @@ gp_port *gp_port_new		(gp_port_type type);
 		*/
 
 
-       int gp_port_get_settings 	(gp_port *dev, 
+       int gp_port_settings_get	(gp_port *dev,
 				 gp_port_settings *settings);
 		/* Returns settings in "settings"
 				  successful: GP_OK
@@ -253,7 +253,7 @@ gp_port *gp_port_new		(gp_port_type type);
 /* Serial and Parallel specific functions
    -------------------------------------------------------------- */
 
-	int gp_port_get_pin   (gp_port *dev, int pin);
+	int gp_port_pin_get   (gp_port *dev, int pin);
 		/* Give the status of pin from dev
 			pin values:
 				 see PIN_ constants in the various .h files	
@@ -262,7 +262,7 @@ gp_port *gp_port_new		(gp_port_type type);
 				unsuccessful: GP_ERROR
 		*/
 
-	int gp_port_set_pin   (gp_port *dev, int pin, int level);
+	int gp_port_pin_set   (gp_port *dev, int pin, int level);
 		/* set the status of pin from dev to level
 			pin values:
 				 see PIN_ constants in the various .h files	

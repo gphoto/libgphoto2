@@ -82,7 +82,7 @@ int camera_init (Camera *camera) {
 
 	/* open and configure serial port */
 	device->gpiod = gp_port_new(GP_PORT_SERIAL);
-	gp_port_set_timeout(device->gpiod, 1000);
+	gp_port_timeout_set(device->gpiod, 1000);
 
 	strcpy(gpiod_settings.serial.port, camera->port->path);
 	gpiod_settings.serial.speed = camera->port->speed;
@@ -90,7 +90,7 @@ int camera_init (Camera *camera) {
 	gpiod_settings.serial.parity = 0;
 	gpiod_settings.serial.stopbits = 1;
 
-	gp_port_set_settings(device->gpiod, gpiod_settings);
+	gp_port_settings_set(device->gpiod, gpiod_settings);
 	gp_port_open(device->gpiod);
 
 	/* create camera filesystem */

@@ -104,7 +104,7 @@ int camera_init (Camera *camera) {
         return (GP_ERROR);
     }
 
-    if (gp_port_set_settings(dd->dev, settings) == GP_ERROR) {
+    if (gp_port_settings_set(dd->dev, settings) == GP_ERROR) {
         gp_port_free(dd->dev);
         free(dd);
         return (GP_ERROR);
@@ -116,7 +116,7 @@ int camera_init (Camera *camera) {
         return (GP_ERROR);
     }
 
-    gp_port_set_timeout(dd->dev, TIMEOUT);
+    gp_port_timeout_set(dd->dev, TIMEOUT);
 
     if (camera->port->type == GP_PORT_SERIAL) {
         /* Reset the camera to 9600 */

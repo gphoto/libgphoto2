@@ -185,14 +185,14 @@ int gp_camera_init (Camera *camera)
 
         /* Set the port type from the path in case the frontend didn't. */
         if (camera->port->type == GP_PORT_NONE) {
-                for (x=0; x<gp_port_get_count(); x++) {
-                        gp_port_get_info(x, &info);
+                for (x=0; x<gp_port_count_get(); x++) {
+                        gp_port_info_get(x, &info);
                         if (strcmp(info.path, camera->port->path)==0) {
                                 camera->port->type = info.type;
 				break;
 			}
                 }
-		if (x == gp_port_get_count ())
+		if (x == gp_port_count_get ())
 			return (GP_ERROR_BAD_PARAMETERS);
         }
 		

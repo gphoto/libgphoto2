@@ -138,7 +138,7 @@ int dsc1_setbaudrate(dsc_t *dsc, int speed) {
         sleep(DSC_PAUSE/2);
 
         dsc->settings.serial.speed = speed;
-        if (gp_port_set_settings(dsc->dev, dsc->settings) != GP_OK)
+        if (gp_port_settings_set(dsc->dev, dsc->settings) != GP_OK)
                 return GP_ERROR;
 
         DEBUG_PRINT(("Baudrate set to: %i.", speed));

@@ -75,7 +75,7 @@ int camera_init(Camera *camera) {
 	camera->camlib_data = b;
 
 	b->dev = gp_port_new(GP_PORT_SERIAL);
-	gp_port_set_timeout(b->dev, 5000);
+	gp_port_timeout_set(b->dev, 5000);
 	strcpy(settings.serial.port, camera->port->path);
 
 	settings.serial.speed	= 57600;
@@ -83,7 +83,7 @@ int camera_init(Camera *camera) {
 	settings.serial.parity	= 0;
 	settings.serial.stopbits= 1;
 
-	gp_port_set_settings(b->dev, settings);
+	gp_port_settings_set(b->dev, settings);
 	gp_port_open(b->dev);
 
 	/* Create the filesystem */

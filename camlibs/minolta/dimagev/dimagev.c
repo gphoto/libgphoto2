@@ -92,7 +92,7 @@ int camera_init (Camera *camera) {
 		return GP_ERROR;
 	}
 
-	gp_port_set_timeout(dimagev->dev, 5000);
+	gp_port_timeout_set(dimagev->dev, 5000);
 
 #if defined HAVE_STRNCPY
 	strncpy(dimagev->settings.serial.port, camera->port->path, sizeof(dimagev->settings.serial.port));
@@ -109,7 +109,7 @@ int camera_init (Camera *camera) {
 		return GP_ERROR;
 	}
 
-	gp_port_set_settings(dimagev->dev, dimagev->settings);
+	gp_port_settings_set(dimagev->dev, dimagev->settings);
 	gp_port_open(dimagev->dev);
 
 	if  ( dimagev_get_camera_data(dimagev) == GP_ERROR ) {

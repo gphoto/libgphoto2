@@ -382,14 +382,14 @@ int camera_init (Camera *camera) {
 	
 	dsc->dev = gp_port_new(GP_PORT_SERIAL);
 	
-	gp_port_set_timeout(dsc->dev, 5000);
+	gp_port_timeout_set(dsc->dev, 5000);
 	strcpy(dsc->settings.serial.port, camera->port->path);
 	dsc->settings.serial.speed 	= 9600; /* hand shake speed */
 	dsc->settings.serial.bits	= 8;
 	dsc->settings.serial.parity	= 0;
 	dsc->settings.serial.stopbits	= 1;
 
-	gp_port_set_settings(dsc->dev, dsc->settings);
+	gp_port_settings_set(dsc->dev, dsc->settings);
 
 	gp_port_open(dsc->dev);
 	

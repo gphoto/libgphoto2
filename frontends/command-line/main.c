@@ -296,7 +296,7 @@ OPTION_CALLBACK(list_ports) {
         gp_port_info info;
         int x, count;
 
-        if ((count = gp_port_get_count()) < 0) {
+        if ((count = gp_port_count_get()) < 0) {
                 cli_error_print("Could not get number of ports");
                 return (count);
         }
@@ -307,7 +307,7 @@ OPTION_CALLBACK(list_ports) {
         } else
           printf("%i\n", count);
         for(x=0; x<count; x++) {
-                gp_port_get_info(x, &info);
+                gp_port_info_get(x, &info);
                 printf("%-32s %-32s\n",info.path,info.name);
         }
 

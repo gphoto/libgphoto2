@@ -53,7 +53,7 @@ l_init (gp_port* device)
 
 	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 
-	gp_port_set_timeout (device, DEFAULT_TIMEOUT);
+	gp_port_timeout_set (device, DEFAULT_TIMEOUT);
 	if (gp_port_open (device) == GP_ERROR) return GP_ERROR_IO;
 	for (i = 0; ; i++) {
 		/****************/
@@ -326,9 +326,9 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 
 	for (i = 0; ; ) {
-		gp_port_set_timeout (device, timeout);  
+		gp_port_timeout_set (device, timeout);
 		if (gp_port_read (device, &c, 1) < 1) return (GP_ERROR_IO);
-		gp_port_set_timeout (device, DEFAULT_TIMEOUT);
+		gp_port_timeout_set (device, DEFAULT_TIMEOUT);
 		switch (c) {
 		case ENQ:
 			/******************************************************/

@@ -29,7 +29,7 @@ int dc120_packet_write (DC120Data *dd, char *packet, int size, int read_response
 write_again:
 	/* If retry, give camera some recup time */
 	if (x > 0)
-		GP_PORT_SLEEP(SLEEP_TIMEOUT);
+		GP_SYSTEM_SLEEP(SLEEP_TIMEOUT);
 
 	/* Return error if too many retries */
 	if (x++ > RETRIES) 
@@ -161,7 +161,7 @@ int dc120_set_speed (DC120Data *dd, int speed) {
 	char *p = dc120_packet_new(0x41);
 	gp_port_settings settings;
 
-	gp_port_get_settings(dd->dev, &settings);
+	gp_port_settings_get(dd->dev, &settings);
 
 	switch (speed) {
 		case 9600:
@@ -204,12 +204,12 @@ int dc120_set_speed (DC120Data *dd, int speed) {
 	if (dc120_packet_write(dd, p, 8, 1) == GP_ERROR)
 		return (GP_ERROR);
 
-	if (gp_port_set_settings (dd->dev, settings) == GP_ERROR)	
+	if (gp_port_settings_set (dd->dev, settings) == GP_ERROR)
 		return (GP_ERROR);
 
 	free (p);
 
-	GP_PORT_SLEEP(300);
+	GP_SYSTEM_SLEEP(300);
 
 	/* Speed change went OK. */
 	return (GP_OK);
@@ -322,7 +322,7 @@ int dc120_get_file_preview (DC120Data *dd, CameraFile *file, int file_number, ch
 		gp_file_append(file, buf, strlen(buf));
 	}
 
-	GP_PORT_SLEEP(1000);
+	GP_SYSTEM_SLEEP(1000);
 	return (GP_OK);
 }
 

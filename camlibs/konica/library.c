@@ -225,7 +225,7 @@ camera_init (Camera* camera)
 	if (camera->port->speed != 0) {
 		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Quick test for given speed %i.\n", camera->port->speed);
 		device_settings.serial.speed = camera->port->speed;
-		gp_port_set_settings (device, device_settings);
+		gp_port_settings_set (device, device_settings);
 		if (k_init (device) == GP_OK) return (GP_OK);
 	}
 
@@ -235,7 +235,7 @@ camera_init (Camera* camera)
 	for (i = 0; i < 10; i++) {
 		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Testing speed %i.\n", test_bit_rate[i]);
 		device_settings.serial.speed = test_bit_rate[i];
-		gp_port_set_settings (device, device_settings); 
+		gp_port_settings_set (device, device_settings);
 		if (k_init (device) == GP_OK) break; 
 	}
 	if ((i == 1) && (camera->port->speed == 0)) {
@@ -291,7 +291,7 @@ camera_init (Camera* camera)
 			return (result);
 		}
                 device_settings.serial.speed = bit_rate[i];
-                gp_port_set_settings (device, device_settings);
+                gp_port_settings_set (device, device_settings);
                 if ((result = k_init (device)) != GP_OK) {
 			gp_port_free (device);
 			return (result);

@@ -60,13 +60,13 @@ int gp_port_init(int debug)
         return (gp_port_library_list(device_list, &device_count));
 }
 
-int gp_port_get_count(void)
+int gp_port_count_get(void)
 {
         gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Device count: %i", device_count);
         return device_count;
 }
 
-int gp_port_get_info(int device_number, gp_port_info *info)
+int gp_port_info_get(int device_number, gp_port_info *info)
 {
         gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Getting device info...");
 
@@ -113,29 +113,22 @@ gp_port *gp_port_new(gp_port_type type)
                 settings.serial.bits = 8;
                 settings.serial.parity = 0;
                 settings.serial.stopbits = 1;
-                gp_port_set_settings(dev, settings);
-                gp_port_set_timeout(dev, 500);
+                gp_port_settings_set(dev, settings);
+                gp_port_timeout_set(dev, 500);
                 break;
         case GP_PORT_PARALLEL:
-#ifdef GP_PORT_PARALLEL
                 sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
                 strcpy(settings.parallel.port, buf);
-#endif
+
                 break;
         case GP_PORT_NETWORK:
-#ifdef GP_PORT_NETWORK
-                gp_port_set_timeout(dev, 50000);
-#endif
+                gp_port_timeout_set(dev, 50000);
                 break;
         case GP_PORT_USB:
-#ifdef GP_PORT_USB
-                gp_port_set_timeout(dev, 5000);
-#endif
+                gp_port_timeout_set(dev, 5000);
                 break;
         case GP_PORT_IEEE1394:
-#ifdef GP_PORT_IEEE1394
                 /* blah ? */
-#endif
                 break;
         default:
                 /* ERROR! */
@@ -147,7 +140,7 @@ gp_port *gp_port_new(gp_port_type type)
         return (dev);
 }
 
-int gp_port_set_debug (gp_port *dev, int debug_level)
+int gp_port_debug_set (gp_port *dev, int debug_level)
 {
 	dev->debug_level = debug_level;
 
@@ -271,7 +264,7 @@ int gp_port_read(gp_port *dev, char *bytes, int size)
 	return (retval);
 }
 
-int gp_port_set_timeout(gp_port *dev, int millisec_timeout)
+int gp_port_timeout_set(gp_port *dev, int millisec_timeout)
 {
         dev->timeout = millisec_timeout;
 
@@ -281,7 +274,7 @@ int gp_port_set_timeout(gp_port *dev, int millisec_timeout)
         return GP_OK;
 }
 
-int gp_port_get_timeout(gp_port *dev, int *millisec_timeout)
+int gp_port_timeout_get(gp_port *dev, int *millisec_timeout)
 {
         *millisec_timeout = dev->timeout;
 
@@ -291,7 +284,7 @@ int gp_port_get_timeout(gp_port *dev, int *millisec_timeout)
         return GP_OK;
 }
 
-int gp_port_set_settings(gp_port *dev, gp_port_settings settings)
+int gp_port_settings_set(gp_port *dev, gp_port_settings settings)
 {
 	int retval;
 
@@ -305,7 +298,7 @@ int gp_port_set_settings(gp_port *dev, gp_port_settings settings)
 }
 
 
-int gp_port_get_settings(gp_port *dev, gp_port_settings * settings)
+int gp_port_settings_get(gp_port *dev, gp_port_settings * settings)
 {
         memcpy(settings, &dev->settings, sizeof(gp_port_settings));
 	gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_get_settings: ok");
@@ -316,7 +309,7 @@ int gp_port_get_settings(gp_port *dev, gp_port_settings * settings)
 /* Serial and Parallel-specific functions */
 /* ------------------------------------------------------------------ */
 
-int gp_port_get_pin(gp_port *dev, int pin)
+int gp_port_pin_get(gp_port *dev, int pin)
 {
 	int retval;
 
@@ -331,7 +324,7 @@ int gp_port_get_pin(gp_port *dev, int pin)
 	return (retval);
 }
 
-int gp_port_set_pin(gp_port *dev, int pin, int level)
+int gp_port_pin_set(gp_port *dev, int pin, int level)
 {
 	int retval;
 
@@ -363,8 +356,6 @@ int gp_port_send_break (gp_port *dev, int duration)
 
 /* USB-specific functions */
 /* ------------------------------------------------------------------ */
-
-#ifdef GP_PORT_USB
 
 int gp_port_usb_find_device (gp_port * dev, int idvendor, int idproduct)
 {
@@ -429,4 +420,3 @@ int gp_port_usb_msg_read (gp_port * dev, int value, char *bytes, int size)
 		"gp_port_usb_msg_read: msg_read %s", retval < 0? "error":"ok");
 	return (retval);
 }
-#endif

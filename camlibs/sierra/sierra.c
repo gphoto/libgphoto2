@@ -210,7 +210,7 @@ int camera_init (Camera *camera) {
 				free (fd);
 		                return (GP_ERROR);
 			}
-		        gp_port_set_timeout (fd->dev, 5000);
+		        gp_port_timeout_set (fd->dev, 5000);
         		settings.usb.inep 	= inep;
         		settings.usb.outep 	= outep;
         		settings.usb.config 	= 1;
@@ -223,13 +223,13 @@ int camera_init (Camera *camera) {
 	                return (GP_ERROR);
 	}
 
-	if (gp_port_set_settings(fd->dev, settings) == GP_ERROR) {
+	if (gp_port_settings_set(fd->dev, settings) == GP_ERROR) {
 		gp_port_free(fd->dev);
 		free (fd);
                 return (GP_ERROR);
 	}
 
-	gp_port_set_timeout(fd->dev, TIMEOUT);
+	gp_port_timeout_set(fd->dev, TIMEOUT);
 	fd->type = camera->port->type;
 
 	if (gp_port_open(fd->dev)==GP_ERROR) {
@@ -268,7 +268,7 @@ int camera_init (Camera *camera) {
 
 	sierra_set_int_register(camera, 83, -1);
 
-	gp_port_set_timeout(fd->dev, 50);
+	gp_port_timeout_set(fd->dev, 50);
 	if (sierra_set_string_register(camera, 84, "\\", 1)==GP_ERROR)
 		fd->folders = 0;
 	   else
@@ -286,7 +286,7 @@ int camera_init (Camera *camera) {
 
 	strcpy(fd->folder, "/");
 
-	gp_port_set_timeout(fd->dev, TIMEOUT);
+	gp_port_timeout_set(fd->dev, TIMEOUT);
 
 	camera_stop(camera);
 	return (GP_OK);
