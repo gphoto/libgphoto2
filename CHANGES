@@ -1,6 +1,7 @@
 libgphoto2 2.1.2
 
    * fixed nasty stack overflow/segfault bug
+   * improved/fixed support for Sun
 
 drivers (camlibs):
 
