@@ -135,7 +135,7 @@ int sierra_change_folder (Camera *camera, const char *folder, GPContext *context
 
 int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPContext *context)
 {
-	int count, i, len = 0;
+	int count, i, len = 0, r;
 	char filename[1024];
 
 	GP_DEBUG ("Listing files in folder '%s'...", folder);
@@ -160,9 +160,9 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	 */
 	GP_DEBUG ("Getting filename of first file...");
 	CHECK (sierra_set_int_register (camera, 4, 1, context));
-	CHECK (sierra_get_string_register (camera, 79, 0, NULL,
-					   filename, &len, context));
-	if ((len <= 0) || !strcmp (filename, "        ")) {
+	r = sierra_get_string_register (camera, 79, 0, NULL, filename,
+					&len, context);
+	if ((r < 0) || (len <= 0) || !strcmp (filename, "        ")) {
 		CHECK (gp_list_populate (list, "P101%04i.JPG", count));
 		return (GP_OK);
 	}

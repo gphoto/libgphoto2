@@ -421,8 +421,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	SierraPicInfo info;
 #ifdef HAVE_EXIF
 	ExifData *exif_data;
-	unsigned char *buf;
-	unsigned int buf_len;
+	unsigned char *buf = NULL;
+	unsigned int buf_len = 0;
 #endif
 
 	/*
@@ -509,9 +509,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_EXIF:
 		CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
-		CHECK (exif_data = exif_data_new_from_data (
-			       (const unsigned char*)data,
-			       (unsigned int)size));
+		exif_data = exif_data_new_from_data (
+			       (const unsigned char *) data,
+			       (unsigned int) size);
 
 		exif_data_save_data (exif_data, &buf, &buf_len);
 		exif_data_unref (exif_data);

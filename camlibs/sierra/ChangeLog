@@ -1,3 +1,13 @@
+2002-02-11  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: As long as there is EXIF code in here, add
+	  EXIF_[CFLAGS,LIBS]. However, there shouldn't be any EXIF code here,
+	  it should all be done by the CameraFilesystem...
+	* library.c (sierra_list_files): Some cameras don't support filenames.
+	  We are now that good in catching errors that we needed to adjust
+	  the check here.
+	* sierra.c: Remove wrong use of CHECK
+
 2002-02-11  Gilles Grandou <gilles@grandou.net>
 
 	* sierra.c: added EXIF support.
