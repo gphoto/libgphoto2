@@ -136,6 +136,13 @@ static struct {
 			"stylo%04i.ppm"
 		}
 	},
+	{"Trust:PowerC@m 350FS", 0x6d6, 0x002e, {
+		 	jd350e,
+			BAYER_TILE_BGGR,
+			&rotate180,
+			"stylo%04i.ppm"
+		}
+	},
 	{NULL,}
 };
 
