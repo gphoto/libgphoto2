@@ -67,10 +67,19 @@ The installation procedure should be quite simple:
       you can build .deb packages and install these. The packages will
       be located in FIXME. 
 
-gphoto2 is not designed to be installed as a setuid/setgid program.  Doing
-so will open up a security hole in your system!  If you have permission
-problems when accessing your camera, you will probably want to create a
-new user group for the users that are to have camera access and change the
+3) ready to rock
+
+Note that gphoto2 is not designed to be installed as a setuid/setgid
+program. Running ANY gphoto2 frontend as root or setuid root or in a
+similar fashion will open up a SECURITY HOLE in your system!
+
+Read doc/FAQ if you run into problems.
+Read doc/gphoto2.txt for more general information about how to
+configure gphoto2.
+
+If you have permission problems when accessing your camera, read
+doc/gphoto2.txt -- you will probably want to create a new user group
+for the users that are to have camera access and change the
 permissions of the serial or USB device to match.
 
 
