@@ -26,6 +26,7 @@
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
 
+
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -613,18 +614,22 @@ camera_exit (Camera *camera, GPContext *context)
 
 	/* get port settings */
 	CR (gp_port_get_settings (camera->port, &settings));
-	if (camera->pl) {
-#if 0
-		/* it won't hurt */
-		GP_DEBUG ("Clearing STALL condition on ep: 0x%x",
-		settings.usb.outep);
-		gp_port_usb_clear_halt(camera->port, settings.usb.outep);
-#endif
+	if (camera->pl!=NULL) {
 		/* close ptp session */
 		ptp_closesession (&camera->pl->params);
 		free (camera->pl);
 		camera->pl = NULL;
 	}
+	if (camera->port!=NULL)  {
+		/* clear halt */
+		gp_port_usb_clear_halt
+				(camera->port, GP_PORT_USB_ENDPOINT_IN);
+		gp_port_usb_clear_halt
+				(camera->port, GP_PORT_USB_ENDPOINT_OUT);
+		gp_port_usb_clear_halt
+				(camera->port, GP_PORT_USB_ENDPOINT_INT);
+	}
+
 	/* FIXME: free all camera->pl->params.objectinfo[] and
 	   other malloced data */
 

@@ -1,3 +1,5 @@
+2004-07-16 Mariusz Woloszyn
+	* ptp.h: Added NIKON extension code by Corey Manders 
 2004-06-23  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Kodak LS-473
