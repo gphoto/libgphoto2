@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-03-03 11:54-0800\n"
+"POT-Creation-Date: 2001-03-07 08:48-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,6 +14,6 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: ENCODING\n"
 
-#: libgphoto2_port/gp_port.c:72 libgphoto2_port/gp_port.c:98
+#: libgphoto2_port/gp_port.c:72 libgphoto2_port/gp_port.c:99
 msgid "Unknown error"
 msgstr ""

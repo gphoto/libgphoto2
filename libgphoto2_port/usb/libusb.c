@@ -183,6 +183,7 @@ int gp_port_usb_clear_halt_lib(gp_port * dev, int ep)
 int gp_port_usb_write(gp_port * dev, char *bytes, int size)
 {
         int ret;
+/*
         if (dev->debug_level) {
             int i;
 
@@ -191,7 +192,7 @@ int gp_port_usb_write(gp_port * dev, char *bytes, int size)
                 printf("%02x ",(unsigned char)bytes[i]);
             printf("\n");
         }
-
+*/
         ret = usb_bulk_write(dev->device_handle, dev->settings.usb.outep,
                            bytes, size, dev->timeout);
         if (ret < 0)
@@ -205,9 +206,10 @@ int gp_port_usb_read(gp_port * dev, char *bytes, int size)
 
 	ret = usb_bulk_read(dev->device_handle, dev->settings.usb.inep,
 			     bytes, size, dev->timeout);
-	if (ret < 0)
+        if (ret < 0)
 		return GP_ERROR_IO_READ;
 
+/*
         if (dev->debug_level) {
             int i;
 
@@ -216,6 +218,7 @@ int gp_port_usb_read(gp_port * dev, char *bytes, int size)
                 printf("%02x ",(unsigned char)(bytes[i]));
             printf("\n");
         }
+*/
 
         return ret;
 }

@@ -15,7 +15,7 @@
 typedef struct {
 	char	short_id[3];
 	char	long_id[20];
-	char	argument[16];
+	char	argument[32];
 	char	description[35];
 	OPTION_CALLBACK((*execute));
 	int	required;
@@ -25,4 +25,4 @@ void 	cli_debug_print(char *format, ...);
 void 	cli_error_print(char *format, ...);
 int	save_picture_to_file(char *folder, char *filename, int thumbnail);
 int 	get_picture_common(char *arg, int thumbnail);
-int 	capture_generic (int type, int duration);
+int 	capture_generic (int type, char *capture_choice);

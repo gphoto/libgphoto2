@@ -74,6 +74,7 @@ int             gp_port_serial_update (gp_port *dev);
 int             gp_port_serial_get_pin(gp_port *dev, int pin, int *level);
 int             gp_port_serial_set_pin(gp_port *dev, int pin, int level);
 int             gp_port_serial_send_break (gp_port *dev, int duration);
+int             gp_port_serial_flush(gp_port *dev, int direction);
 
 
 /* private */
@@ -105,6 +106,7 @@ gp_port_operations *gp_port_library_operations () {
         ops->get_pin = gp_port_serial_get_pin;
         ops->set_pin = gp_port_serial_set_pin;
         ops->send_break = gp_port_serial_send_break;
+        ops->flush  = gp_port_serial_flush;
 
         return (ops);
 }
@@ -181,10 +183,11 @@ int gp_port_serial_exit (gp_port *dev) {
 
 int gp_port_serial_open(gp_port * dev)
 {
-        int fd;
+
 #ifdef __FreeBSD__
         dev->device_fd = open(dev->settings.serial.port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 #elif OS2
+        int fd;
         fd = open(dev->settings.serial.port, O_RDWR | O_BINARY);
         dev->device_fd = open(dev->settings.serial.port, O_RDWR | O_BINARY);
 
@@ -382,6 +385,34 @@ int gp_port_serial_set_pin(gp_port * dev, int pin, int level)
         return GP_OK;
 }
 
+int gp_port_serial_flush (gp_port * dev, int direction)
+{
+
+#if HAVE_TERMIOS_H
+    int q;
+
+    switch (direction) {
+    case 0:
+        q = TCIFLUSH;
+        break;
+    case 1:
+        q = TCOFLUSH;
+        break;
+    default:
+        return GP_ERROR_IO_SERIAL_FLUSH;
+    }
+
+    if (tcflush (dev->device_fd, q) < 0)
+        return (GP_ERROR_IO_SERIAL_FLUSH);
+
+    return GP_OK;
+#else
+#warning SERIAL FLUSH NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
+    return GP_ERROR_IO_SERIAL_FLUSH;
+#endif
+}
+
+
 /*
  * This function will apply the settings to
  * the device. The device has to be opened
@@ -530,6 +561,7 @@ int gp_port_serial_send_break (gp_port *dev, int duration) {
         tcdrain(dev->device_fd);
 #else
         /* ioctl */
+#warning SEND BREAK NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
         return GP_ERROR_IO_SERIAL_BREAK;
 #endif
         return GP_OK;

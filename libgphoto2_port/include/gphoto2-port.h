@@ -56,9 +56,10 @@
 
 #define GP_ERROR_IO_SERIAL_SPEED        -19
 #define GP_ERROR_IO_SERIAL_BREAK        -20
+#define GP_ERROR_IO_SERIAL_FLUSH        -21
 
-#define GP_ERROR_IO_USB_CLEAR_HALT      -21
-#define GP_ERROR_IO_USB_FIND            -22
+#define GP_ERROR_IO_USB_CLEAR_HALT      -22
+#define GP_ERROR_IO_USB_FIND            -23
 
 /* Debugging definitions for init */
 #define GP_DEBUG_NONE           0
@@ -122,10 +123,11 @@ struct gp_port_operations {
         /* Pointers to devices. Please note these are stubbed so there is
          no need to #ifdef GP_PORT_* anymore. */
 
-        /* for serial and parallel devices */
+        /* for serial devices */
         int (*get_pin)   (gp_port *, int, int*);
         int (*set_pin)   (gp_port *, int, int);
         int (*send_break)(gp_port *, int);
+        int (*flush)     (gp_port *, int);
 
         /* for USB devices */
         int (*find_device)(gp_port * dev, int idvendor, int idproduct);
@@ -299,6 +301,11 @@ struct gp_port {
 
         int gp_port_send_break (gp_port *dev, int duration);
                 /* send a break (duration is in seconds) */
+
+        int gp_port_flush (gp_port *dev, int direction);
+                /* Flush either an input or output line */
+                /* Input line is 0, Output is 1         */
+                /* (think STDIO/STDOUT file descriptors */
 
 /* USB specific functions
    -------------------------------------------------------------- */

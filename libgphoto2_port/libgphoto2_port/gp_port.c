@@ -92,8 +92,9 @@ char *gp_port_result_as_string (int result) {
     GP_ERR_RES(-18, "Error with the port");
     GP_ERR_RES(-19, "Error setting the serial port speed");
     GP_ERR_RES(-20, "Error sending a break to the serial port");
-    GP_ERR_RES(-21, "Error clearing a halt condition on the USB port");
-    GP_ERR_RES(-22, "Could not find the requested device on the USB port");
+    GP_ERR_RES(-21, "Error flushing the serial line");
+    GP_ERR_RES(-22, "Error clearing a halt condition on the USB port");
+    GP_ERR_RES(-23, "Could not find the requested device on the USB port");
 
     return (N_("Unknown error"));
 }
@@ -384,7 +385,7 @@ int gp_port_settings_set(gp_port *dev, gp_port_settings settings)
 
 int gp_port_settings_get(gp_port *dev, gp_port_settings * settings)
 {
-        memcpy(settings, &dev->settings, sizeof(gp_port_settings));
+        memcpy(settings, &(dev->settings), sizeof(gp_port_settings));
         gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_get_settings: ok");
 
         return GP_OK;
@@ -437,6 +438,22 @@ int gp_port_send_break (gp_port *dev, int duration)
                 "gp_port_send_break: send_break %s", retval < 0? "error":"ok");
         return (retval);
 }
+
+int gp_port_flush (gp_port *dev, int direction)
+{
+        int retval;
+
+        if (!dev->ops->flush) {
+                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_flush: gp_port_flush NULL");
+                return (GP_ERROR);
+        }
+
+        retval = dev->ops->flush(dev, direction);
+        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+                "gp_port_flush: flush %s", retval < 0? "error":"ok");
+        return (retval);
+}
+
 
 /* USB-specific functions */
 /* ------------------------------------------------------------------ */
