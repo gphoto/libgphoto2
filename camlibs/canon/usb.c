@@ -606,7 +606,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 {
 	int bytes_read;
 	unsigned int total_data_size = 0, bytes_received = 0, read_bytes = USB_BULK_READ_SIZE;
-	char *lpacket;		/* "length packet" */
+	unsigned char *lpacket;		/* "length packet" */
 	unsigned int id = 0;
 
 	/* indicate there is no data if we bail out somewhere */
