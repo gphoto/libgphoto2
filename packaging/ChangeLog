@@ -1,3 +1,7 @@
+2002-10-13  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* linux-hotplug/Makefile.am: made hotplug stuff installation location configurable
+
 2002-09-14  Marcus Meissner <marcus@jet.franken.de>
 	
 	* print-usb-usermap.c: usb_product can be 0 (for instance

@@ -1,3 +1,8 @@
+2002-10-13  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* *.am, libgphoto2_port/m4/packaging.m4, libgphoto2_port/m4/packaging.m4: moved definition of docdir from Makefile.am to m4 macros
+	* configure.in: 2.1.1dev7
+
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
 
 	* libgphoto2/gphoto2-abilities-list.[c,h] (gp_abilities_list_reset):
