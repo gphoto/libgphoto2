@@ -9,7 +9,7 @@ List of work that still has to be done on this driver:
 
  - make file upload work
 
- - set attributes after successful download
+ - set "downloaded" attribute after successful download
 
  - getting other info on file (resolution and stuff)
 
