@@ -718,7 +718,7 @@ fuji_pic_get (Camera *camera, unsigned int i, unsigned char **data,
 int
 fuji_set_speed (Camera *camera, FujiSpeed speed, GPContext *context)
 {
-	unsigned char cmd[5], buf[1024], c;
+	unsigned char cmd[5], buf[1024];
 	unsigned int buf_len;
 
 	cmd[0] = 1;
@@ -736,9 +736,18 @@ fuji_set_speed (Camera *camera, FujiSpeed speed, GPContext *context)
 		return (GP_ERROR);
 	}
 
-	/* Close the connection. */
-	c = EOT;
-	gp_port_write (camera->port, &c, 1);
+	/* Reset the connection */
+	CR (fuji_reset (camera, context));
+
+	return (GP_OK);
+}
+
+int
+fuji_reset (Camera *camera, GPContext *context)
+{
+	unsigned char c = EOT;
+
+	CR (gp_port_write (camera->port, &c, 1));
 	
 	return (GP_OK);
 }

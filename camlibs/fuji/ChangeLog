@@ -1,6 +1,11 @@
 2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c:
+	* fuji.[c,h]: Use the [pre,post]_func-tions.
+
+2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c:
 	* fuji.[c,h]: Check for supported commands.
 
 2002-04-18  Lutz Müller <lutz@users.sourceforge.net>

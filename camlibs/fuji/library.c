@@ -74,6 +74,7 @@ static struct {
 };
 
 struct _CameraPrivateLibrary {
+	unsigned long speed;
 	unsigned char cmds[0xff];
 };
 
@@ -246,42 +247,16 @@ camera_exit (Camera *camera, GPContext *context)
 	return (GP_OK);
 }
 
-int
-camera_init (Camera *camera, GPContext *context)
+static int
+pre_func (Camera *camera, GPContext *context)
 {
-	GPPortSettings settings;
-	unsigned int speed, i;
 	int r;
+	unsigned int i;
 
-	/* Setup all function pointers */
-	camera->functions->about = camera_about;
-	camera->functions->exit  = camera_exit;
+	GP_DEBUG ("Initializing connection...");
 
-	/* We need to store some data */
-	camera->pl = malloc (sizeof (CameraPrivateLibrary));
-	if (!camera->pl)
-		return (GP_ERROR_NO_MEMORY);
-
-	/* Set up the port, but remember the current speed. */
-	CR (gp_port_set_timeout (camera->port, 1000));
-	CR (gp_port_get_settings (camera->port, &settings));
-	speed = settings.serial.speed;
-	settings.serial.speed    = 9600;
-	settings.serial.bits     = 8;
-	settings.serial.parity   = GP_PORT_SERIAL_PARITY_EVEN;
-	settings.serial.stopbits = 1;
-	CR (gp_port_set_settings (camera->port, settings));
-
-	/* Set up the filesystem. */
-	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
-					  camera));
-	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
-					  del_file_func, camera));
-
-	/* Is the camera there? */
 	CR (fuji_ping (camera, context));
-
-	if (!speed) {
+	if (!camera->pl->speed) {
 
 		/* Set to the highest possible speed. */
 		for (i = 0; Speeds[i].bit_rate; i++) {
@@ -295,20 +270,70 @@ camera_init (Camera *camera, GPContext *context)
 
 		/* User specified a speed. Check if the speed is possible */
 		for (i = 0; Speeds[i].bit_rate; i++)
-			if (Speeds[i].bit_rate == speed)
+			if (Speeds[i].bit_rate == camera->pl->speed)
 				break;
 		if (!Speeds[i].bit_rate) {
 			gp_context_error (context, _("Bit rate %i is not "
-				"supported."), speed);
+					"supported."), camera->pl->speed);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
 
 		/* Change the speed if necessary. */
-		if (speed != Speeds[i].bit_rate) {
+		if (camera->pl->speed != Speeds[i].bit_rate) {
 			CR (fuji_set_speed (camera, Speeds[i].speed, context));
 			CR (fuji_ping (camera, context));
 		}
 	}
+
+	return (GP_OK);
+}
+
+static int
+post_func (Camera *camera, GPContext *context)
+{
+	GP_DEBUG ("Terminating connection...");
+
+	CR (fuji_reset (camera, context));
+
+	return (GP_OK);
+}
+
+int
+camera_init (Camera *camera, GPContext *context)
+{
+	GPPortSettings settings;
+	unsigned int i;
+
+	/* Setup all function pointers */
+	camera->functions->pre_func  = pre_func;
+	camera->functions->post_func = post_func;
+	camera->functions->about     = camera_about;
+	camera->functions->exit      = camera_exit;
+
+	/* We need to store some data */
+	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	if (!camera->pl)
+		return (GP_ERROR_NO_MEMORY);
+	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
+
+	/* Set up the port, but remember the current speed. */
+	CR (gp_port_set_timeout (camera->port, 1000));
+	CR (gp_port_get_settings (camera->port, &settings));
+	camera->pl->speed = settings.serial.speed;
+	settings.serial.speed    = 9600;
+	settings.serial.bits     = 8;
+	settings.serial.parity   = GP_PORT_SERIAL_PARITY_EVEN;
+	settings.serial.stopbits = 1;
+	CR (gp_port_set_settings (camera->port, settings));
+
+	/* Set up the filesystem. */
+	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
+					  camera));
+	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+					  del_file_func, camera));
+
+	/* Initialize the connection */
+	CR (pre_func (camera, context));
 
 	/* What commands does this camera support? */
 	CR (fuji_get_cmds (camera, camera->pl->cmds, context));

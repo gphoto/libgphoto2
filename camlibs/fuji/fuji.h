@@ -44,6 +44,7 @@ int fuji_get_cmds  (Camera *camera, unsigned char *cmds, GPContext *context);
 
 int fuji_ping      (Camera *camera, GPContext *context);
 int fuji_pic_count (Camera *camera, unsigned int *n, GPContext *context);
+int fuji_reset     (Camera *camera, GPContext *context);
 
 /* Operations on pictures */
 int fuji_pic_name      (Camera *camera, unsigned int i, const char **name,
