@@ -1,3 +1,13 @@
+2001-11-23  Marcus Meissner <marcus@jet.franken.de>
+
+	* camlibs/stv0680/library.c: Major rework of the Capture Preview
+	  mode. It now supports all common formats of the camera and should
+	  not stop after some captures.
+	  Removed some of the double error conversions.
+	
+	* camlibs/stv0680/stv680.html: Some documentation fixes regarding 
+	  Capture Image.
+	   
 2001-11-23  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-camera.c: Don't free a camera if it is 
