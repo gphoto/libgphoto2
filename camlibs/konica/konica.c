@@ -158,6 +158,7 @@ k_return_status_t k_erase_image (konica_data_t *konica_data, gulong image_id)
 	guchar *rb = NULL;
 	guint rbs;
 
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 
 	if (!konica_data->image_id_long) {
 		sb[6] = image_id;
 		sb[7] = image_id >> 8;
@@ -256,6 +257,7 @@ k_return_status_t k_erase_all (
 	guchar *rb = NULL;
 	guint rbs;
 	
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 
 	g_return_val_if_fail (
 		number_of_images_not_erased != NULL, 
 		K_PROGRAM_ERROR);
@@ -312,6 +314,7 @@ k_return_status_t k_set_protect_status (
 	guchar *rb = NULL;
 	guint rbs;
 
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 
 	if (!konica_data->image_id_long) {
 		if (protected) sb[8] = 0x01;
 		sb[6] = image_id;
@@ -387,6 +390,7 @@ k_return_status_t k_get_image (
 	guchar *rb = NULL;
 	guint rbs;
 
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 
 	g_return_val_if_fail (image_buffer != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (*image_buffer == NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (image_buffer_size != NULL, K_PROGRAM_ERROR);
@@ -483,6 +487,7 @@ k_return_status_t k_get_image_information (
 	guchar *rb = NULL;
 	guint rbs;
 
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 
 	g_return_val_if_fail (image_id != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (exif_size != NULL, K_PROGRAM_ERROR); 
 	g_return_val_if_fail (protected != NULL, K_PROGRAM_ERROR);
@@ -562,6 +567,7 @@ k_return_status_t k_get_preview (
 	guchar *rb = NULL;
 	guint rbs;
 
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 
         g_return_val_if_fail (image_buffer != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (*image_buffer == NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (image_buffer_size != NULL, K_PROGRAM_ERROR);
@@ -626,6 +632,7 @@ k_return_status_t k_get_io_capability (
 	guchar *rb = NULL;
 	guint rbs;
 
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 
 	g_return_val_if_fail (bit_rate_300 != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (bit_rate_600 != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (bit_rate_1200 != NULL, K_PROGRAM_ERROR);
@@ -786,7 +793,7 @@ k_return_status_t k_get_information (
 	guchar *rb = NULL;
 	guint rbs;
 
-	g_return_val_if_fail (model != NULL, K_PROGRAM_ERROR);
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 	g_return_val_if_fail (model != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (*model == NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (serial_number != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (*serial_number == NULL, K_PROGRAM_ERROR);
@@ -939,6 +946,7 @@ k_return_status_t k_get_status (
 	guchar *rb = NULL;
 	guint rbs;
 
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 
 	g_return_val_if_fail (self_test_result != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (power_level != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (power_source != NULL, K_PROGRAM_ERROR);
@@ -1077,6 +1085,7 @@ k_return_status_t k_get_date_and_time (
 	guchar *rb = NULL;
 	guint rbs;
 
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 
         g_return_val_if_fail (year != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (month != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (day != NULL, K_PROGRAM_ERROR);
@@ -1140,7 +1149,8 @@ k_return_status_t k_get_preferences (
 	guchar *rb = NULL;
 	guint rbs;
 
-	g_return_val_if_fail (shutoff_time != NULL, K_PROGRAM_ERROR);
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR);
+       	g_return_val_if_fail (shutoff_time != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (self_timer_time != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (beep != NULL, K_PROGRAM_ERROR);
 	g_return_val_if_fail (slide_show_interval != NULL, K_PROGRAM_ERROR);
@@ -1196,6 +1206,7 @@ k_return_status_t k_set_io_capability (
 	guchar *rb = NULL;
 	guint rbs;
 	
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR);
 	switch (bit_rate) {
 		case 300:
 			sb[4] = (1 << 0);
@@ -1325,6 +1336,7 @@ k_return_status_t k_set_preference (
 	guchar *rb = NULL;
 	guint rbs;
         
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR);
 	switch (preference) {
 		case K_PREFERENCE_RESOLUTION:
 			sb[4] = 0x00;
@@ -1395,6 +1407,7 @@ k_return_status_t k_reset_preferences (konica_data_t *konica_data)
 	guchar *rb = NULL;
 	guint rbs;
 
+	g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR);
         l_return_status = l_send_receive (konica_data, sb, 4, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb); 
@@ -1451,16 +1464,14 @@ k_return_status_t k_take_picture (
 	guchar *rb = NULL;
 	guint rbs;
 
+	g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (image_id != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (exif_size != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (protected != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (information_buffer != NULL, K_PROGRAM_ERROR);
         g_return_val_if_fail (*information_buffer == NULL, K_PROGRAM_ERROR);
-        g_return_val_if_fail (information_buffer_size != NULL, K_PROGRAM_ERROR);	l_return_status = l_send_receive_receive (
-		konica_data, 
-		sb, 6, 
-		information_buffer, information_buffer_size, 
-		&rb, &rbs, 60000);
+        g_return_val_if_fail (information_buffer_size != NULL, K_PROGRAM_ERROR);
+	l_return_status = l_send_receive_receive (konica_data, sb, 6, information_buffer, information_buffer_size, &rb, &rbs, 60000);
 	if (l_return_status != L_SUCCESS) {
 		g_free (rb);
 		return K_RETURN_STATUS (l_return_status);
@@ -1483,32 +1494,145 @@ k_return_status_t k_take_picture (
 }
 
 
-k_return_status_t k_put_localization_data (
-	konica_data_t *konica_data,
-	guchar *data,
-	gulong data_size)
+k_return_status_t k_localization_tv_output_format_set (konica_data_t *konica_data, k_tv_output_format tv_output_format)
+{
+        /************************************************/
+        /* Command for various localization issues.     */
+        /* Here: Setting of tv output format.           */
+        /*                                              */
+        /* 0x00: Byte 0 of command identifier           */
+        /* 0x92: Byte 1 of command identifier           */
+        /* 0x00: Reserved                               */
+        /* 0x00: Reserved                               */
+        /* 0x01: Byte 0 of localization type identifier */
+        /*              0x00: transmission of           */
+        /*                    localization data         */
+        /*              0x01: setting of tv output 	*/
+	/*                    format 			*/
+        /*              0x02: setting of date format    */
+        /* 0x00: Byte 1 of localization type identifier */
+        /* 0xXX: Byte 0 of tv output format             */
+        /*              0x00: NTSC                      */
+        /*              0x01: PAL                       */
+        /*              0x02: None                      */
+        /* 0x00: Byte 1 of tv output format             */
+        /*                                              */
+        /* Return values:                               */
+        /* 0x00: Byte 0 of command identifier           */
+        /* 0x92: Byte 1 of command identifier           */
+        /* 0xXX: Byte 0 of return status                */
+        /* 0xXX: Byte 1 of return status                */
+        /************************************************/
+        guchar sb[] = {0x00, 0x92, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00};
+        l_return_status_t l_return_status;
+        k_return_status_t k_return_status;
+        guchar *rb = NULL;
+        guint rbs;
+
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR);
+        switch (tv_output_format) {
+        case K_TV_OUTPUT_FORMAT_NTSC:
+                sb[6] = 0x00;
+                break;
+        case K_TV_OUTPUT_FORMAT_PAL:
+                sb[6] = 0x01;
+                break;
+        case K_TV_OUTPUT_FORMAT_HIDE:
+                sb[6] = 0x02;
+                break;
+	default: 
+		return (K_PROGRAM_ERROR);
+        }
+        l_return_status = l_send_receive (konica_data, sb, 8, &rb, &rbs);
+        if (l_return_status != L_SUCCESS) {
+                g_free (rb);
+                return K_RETURN_STATUS (l_return_status);
+        }
+        k_return_status = return_status_translation (rb[2], rb[3]);
+        g_free (rb);
+        return (k_return_status);
+}
+
+
+k_return_status_t k_localization_date_format_set (konica_data_t *konica_data, k_date_format_t date_format)
+{
+        /************************************************/
+        /* Command for various localization issues.     */
+	/* Here: Setting of date format.		*/
+        /*                                              */
+        /* 0x00: Byte 0 of command identifier           */
+        /* 0x92: Byte 1 of command identifier           */
+        /* 0x00: Reserved                               */
+        /* 0x00: Reserved                               */
+        /* 0x02: Byte 0 of localization type identifier */
+        /*              0x00: transmission of           */
+        /*                    localization data         */
+        /*              0x01: setting of tv output      */
+        /*                    format                    */
+        /*              0x02: setting of date format    */
+        /* 0x00: Byte 1 of localization type identifier */
+	/* 0xXX: Byte 0 of date format			*/
+	/*		0x00: month/day/year		*/
+	/*		0x01: day/month/year		*/
+	/*		0x02: year/month/day		*/
+        /* 0x00: Byte 1 of date format                  */
+	/*						*/
+        /* Return values:                               */
+        /* 0x00: Byte 0 of command identifier           */
+        /* 0x92: Byte 1 of command identifier           */
+        /* 0xXX: Byte 0 of return status                */
+        /* 0xXX: Byte 1 of return status                */
+        /************************************************/
+        guchar sb[] = {0x00, 0x92, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00};
+        l_return_status_t l_return_status;
+        k_return_status_t k_return_status;
+        guchar *rb = NULL;
+        guint rbs;
+
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR);
+	switch (date_format) {
+	case K_DATE_FORMAT_MONTH_DAY_YEAR:
+		sb[6] = 0x00;
+		break;
+	case K_DATE_FORMAT_DAY_MONTH_YEAR:
+		sb[6] = 0x01;
+		break;
+	case K_DATE_FORMAT_YEAR_MONTH_DAY:
+		sb[6] = 0x02;
+		break;
+	default:
+		return (K_PROGRAM_ERROR);
+	}
+        l_return_status = l_send_receive (konica_data, sb, 8, &rb, &rbs);
+        if (l_return_status != L_SUCCESS) {
+                g_free (rb);
+                return K_RETURN_STATUS (l_return_status);
+        }
+        k_return_status = return_status_translation (rb[2], rb[3]);
+        g_free (rb);
+        return (k_return_status);
+}
+
+
+k_return_status_t k_localization_data_put (konica_data_t *konica_data, guchar *data, gulong data_size)
 {
 	/************************************************/
-	/* Command to send a localization file to the	*/
-	/* camera.					*/
+        /* Command for various localization issues.     */
+	/* Here: Transmission of localization data.	*/
 	/*						*/
 	/* 0x00: Byte 0 of command identifier		*/
 	/* 0x92: Byte 1 of command identifier		*/
 	/* 0x00: Reserved				*/
 	/* 0x00: Reserved				*/
-	/* 0xXX: Byte 0 of transmission status		*/
-	/*		0x00: packet attached		*/
-	/*		0x01: all packets transmitted	*/
-	/*		0x02: end of transmission	*/
-	/* 0x00: Byte 1 of transmission status		*/
-	/* 0xXX: Byte 0 of language			*/
-	/*		0x00: English			*/
-	/*		0x01: French			*/
-	/* 0x00: Byte 1 of language			*/
-	/*						*/
-	/* In case of transmission status 0x00 0x00,	*/
-	/* the following bytes are attached.		*/
-	/*						*/
+        /* 0x00: Byte 0 of localization type identifier */
+        /*              0x00: transmission of           */
+        /*                    localization data         */
+        /*              0x01: setting of tv output      */
+        /*                    format                    */
+        /*              0x02: setting of date format    */
+        /* 0x00: Byte 1 of localization type identifier */
+        /* 0x00: Byte 0 of ?                            */
+        /* 0x00: Byte 1 of ?                            */
 	/* 0xXX: Byte 0 of number of bytes of packet	*/
 	/* 0xXX: Byte 1 of number of bytes of packet	*/
 	/* 0xXX: Byte 3 of memory address where to 	*/
@@ -1532,41 +1656,52 @@ k_return_status_t k_put_localization_data (
 	/************************************************/
 	l_return_status_t l_return_status;
 	k_return_status_t k_return_status;
-	guchar sb[1040];
 	guchar *rb = NULL;
 	guint rbs;
 	gulong i, j;
 	guint packet_size = 1024;
+	guchar sb[16 + packet_size];
 
 	g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR);
+	g_return_val_if_fail (data_size >= 512, K_PROGRAM_ERROR);
 	g_return_val_if_fail (data != NULL, K_PROGRAM_ERROR);
-	g_return_val_if_fail (data_size >= 112, K_PROGRAM_ERROR);
-	/****************************************/
-	/* Write data to the camera's memory.	*/
-	/****************************************/
-	for (i = 0; i < packet_size + 16; i++) sb[i] = 0;
 	sb[0] = 0x00;
 	sb[1] = 0x92;
 	sb[2] = 0x00;
 	sb[3] = 0x00;
 	sb[4] = 0x00;
 	sb[5] = 0x00;
-	sb[6] = data[52];
+	sb[6] = 0x00;
 	sb[7] = 0x00;
 	sb[8] = packet_size;
 	sb[9] = packet_size >> 8;
-	for (i = 0; i <= 65536; i+= packet_size) {
+	sb[10] = 0x00;
+	sb[11] = 0x00;
+	sb[12] = 0x00;
+	sb[13] = 0x00;
+	sb[14] = 0x00;
+	sb[15] = 0x00;
+	i = 0;
+	while (TRUE) {
+		/* Set up the packet. */
 		sb[10] = i >> 16;
 		sb[11] = i >> 24;
 		sb[12] = i;
 		sb[13] = i >> 8;
-		sb[14] = 0x00;
-		sb[15] = 0x00;
-		if (i + packet_size > 65536) sb[14] = 1;
-		for (j = 0; j < packet_size; j++) {
-			if ((i + j) < data_size) sb[16 + j] = data[i + j];
-			else sb[16 + j] = 0xFF;
-		}
+                for (j = 0; j < packet_size; j++) {
+                        if ((i + j) < data_size) sb[16 + j] = data[i + j];
+                        else sb[16 + j] = 0xFF;
+                }
+		/********************************************************/
+		/* We could wait until the camera sends us 		*/
+		/* K_ERROR_LOCALIZATION_DATA_EXCESS, but it does that 	*/
+		/* not until the 70000th byte or so. However, as we can */
+		/* provoke the message with sb[14] = 0x01, we do so as	*/
+		/* soon as we exceed the 65535th byte to shorten the 	*/
+		/* transmission time. We can't do that before or the 	*/
+		/* camera reports K_ERROR_LOCALIZATION_DATA_CORRUPT.	*/
+		/********************************************************/
+		if (i + packet_size > 65536) sb[14] = 0x01;
 		if (konica_data->debug_flag) 
 			printf ("-> Sending packet starting at "
 				"memory address %i.\n", (gint) i);
@@ -1580,38 +1715,20 @@ k_return_status_t k_put_localization_data (
 		}
 		k_return_status = return_status_translation (rb[2], rb[3]);
 		g_free (rb);
-		if (k_return_status != K_SUCCESS) 
-			if (k_return_status != K_ERROR_LOCALIZATION_DATA_EXCESS)
-				return (k_return_status);
+		switch (k_return_status) {
+		case K_SUCCESS:
+			/* Everything is fine. Continue sending packets. However, make sure we don't loop forever. */
+			if (i > 131072) return (K_PROGRAM_ERROR);
+			break;
+		case K_ERROR_LOCALIZATION_DATA_EXCESS:
+			/* The camera does no longer want to receive localization data. We are done. */
+			return (K_SUCCESS);
+		default:
+			/* Something went wrong. */
+			return (k_return_status);
+		}
+		i += packet_size;
 	}
-	/****************************************/
-	/* Send the information that all	*/
-	/* packets have been transmitted.	*/
-	/****************************************/
-	if (konica_data->debug_flag) printf ("-> Sending 1.\n");
-	sb[4] = 1;
-	l_return_status = l_send_receive (konica_data, sb, 8, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	}
-	k_return_status = return_status_translation (rb[2], rb[3]);
-	g_free (rb);
-	if (k_return_status != K_SUCCESS) return (k_return_status);
-	/****************************************/
-	/* Send the information that the 	*/
-	/* localization is done.		*/
-	/****************************************/
-	if (konica_data->debug_flag) printf ("-> Sending 2.\n");
-	sb[4] = 2;
-	l_return_status = l_send_receive (konica_data, sb, 8, &rb, &rbs);
-	if (l_return_status != L_SUCCESS) {
-		g_free (rb); 
-		return K_RETURN_STATUS (l_return_status);
-	}
-	k_return_status = return_status_translation (rb[2], rb[3]);
-	g_free (rb);
-	return (k_return_status);
 }
 
 
@@ -1642,6 +1759,7 @@ k_return_status_t k_cancel (
 	guchar *rb = NULL;
 	guint rbs;
 
+        g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR); 
 	g_return_val_if_fail (command != NULL, K_PROGRAM_ERROR);
         l_return_status = l_send_receive (
 		konica_data,

@@ -272,6 +272,20 @@ typedef enum {
 } k_card_status_t;
 
 
+typedef enum {
+	K_DATE_FORMAT_MONTH_DAY_YEAR,
+	K_DATE_FORMAT_DAY_MONTH_YEAR,
+	K_DATE_FORMAT_YEAR_MONTH_DAY
+} k_date_format_t;
+
+
+typedef enum {
+	K_TV_OUTPUT_FORMAT_NTSC,
+	K_TV_OUTPUT_FORMAT_PAL,
+	K_TV_OUTPUT_FORMAT_HIDE
+} k_tv_output_format;
+
+
 /****************************************************************/
 /* Functions							*/
 /****************************************************************/
@@ -453,7 +467,17 @@ k_return_status_t k_set_protect_status (
 	gboolean protected);
 
 
-k_return_status_t k_put_localization_data (
+k_return_status_t k_localization_tv_output_format_set (
+	konica_data_t *konica_data,
+	k_tv_output_format tv_output_format);
+
+
+k_return_status_t k_localization_date_format_set (
+        konica_data_t *konica_data,
+        k_date_format_t date_format);
+
+
+k_return_status_t k_localization_data_put (
         konica_data_t *konica_data,
 	guchar *data,
 	gulong data_size);
