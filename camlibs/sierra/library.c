@@ -67,6 +67,9 @@ enum _SierraPacket {
 	SIERRA_PACKET_SESSION_END	= 0xff
 };
 
+/* Size of requested packet */
+#define SIERRA_PACKET_SIZE		32774
+
 /* Sub-types */
 #define SUBSIERRA_PACKET_COMMAND_FIRST   0x53
 #define SUBSIERRA_PACKET_COMMAND         0x43
@@ -520,7 +523,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
-		blocksize = 32774;
+		blocksize = SIERRA_PACKET_SIZE;
 		break;
 	case GP_PORT_SERIAL:
 		blocksize = 1;
@@ -735,7 +738,7 @@ static int
 sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 {
 	int r = 0, result;
-	unsigned char buf[4096];
+	unsigned char buf[SIERRA_PACKET_SIZE];
 
 	while (1) {
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
@@ -847,7 +850,7 @@ sierra_write_ack (Camera *camera, GPContext *context)
 int
 sierra_init (Camera *camera, GPContext *context) 
 {
-	unsigned char buf[4096], packet[4096];
+	unsigned char buf[SIERRA_PACKET_SIZE], packet[4096];
 	int ret, r = 0;
 	GPPortSettings settings;
 
@@ -980,7 +983,7 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 int sierra_sub_action (Camera *camera, SierraAction action, int sub_action,
 		       GPContext *context)
 {
-	char buf[4096];
+	char buf[SIERRA_PACKET_SIZE];
 
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 3, buf));
 	buf[4] = 0x02;
@@ -1041,7 +1044,7 @@ sierra_set_int_register (Camera *camera, int reg, int value,
 int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *context) 
 {
 	int r = 0;
-	unsigned char p[4096], buf[4096];
+	unsigned char p[4096], buf[SIERRA_PACKET_SIZE];
 
 	GP_DEBUG ("sierra_get_int_register: register 0x%02x...", reg);
 
