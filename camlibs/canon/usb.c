@@ -548,10 +548,10 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
  *  gphoto2 error code from read that results in an I/O error.
  *
  */
-static int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
-					       int camera_flags[],
-					       unsigned char *buf, int n_tries,
-					       int *which )
+int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
+					int camera_flags[],
+					unsigned char *buf, int n_tries,
+					int *which )
 {
 	int i = 0, status = 0;
 
