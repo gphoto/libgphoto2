@@ -1,5 +1,7 @@
 2002-02-06  Colin Marquardt  <colin@marquardt-home.de>
 
+	* CHANGES (Module): Add info about new chinese translation.
+
 	* configure.in (ALL_LINGUAS): Added zh_CN.
 
 2002-02-06  Lutz Müller <lutz@users.sourceforge.net>

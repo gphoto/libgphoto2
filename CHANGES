@@ -10,7 +10,7 @@ gphoto2 command-line interface:
       produced by most digital cameras).
    * Fixed broken --delete-all-images. Also, recursion is now the
       default for downloading but _not_ for deleting.
-
+   * Localization for Simplified Chinese.
 
 --------------------------------------------------------------------------------
 gphoto2-2.0beta4
@@ -26,9 +26,11 @@ libgphoto2:
    * Samsung 800k support.
    * Fixed digita thumbnails bug.
    * French localization.
+   * Japanese localization.
 
 gphoto2 command-line interface:
    * Now reports progress information (when user can see it).
    * Folder recursion is now the default behaviour.
    * French localization.
+   * Japanese localization.
 
