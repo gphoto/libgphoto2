@@ -162,7 +162,7 @@ int canon_serial_init(Camera *camera, const char *devname)
 
 	debug_message(camera,"Initializing the camera.\n");
 	
-	gpio_init();
+//	gpio_init();
 	
 	switch (canon_comm_method) {
 	 case CANON_USB:
