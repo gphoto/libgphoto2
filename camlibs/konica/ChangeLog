@@ -1,0 +1,4 @@
+2001-12-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* lowlevel.c: Do not read one byte after another - that makes
+	  debugging output easier to read.

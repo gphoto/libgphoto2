@@ -18,13 +18,18 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gphoto2-result.h>
-#include <gphoto2-debug.h>
+#include <config.h>
+#include "lowlevel.h"
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "library.h"
-#include "lowlevel.h"
+#include <gphoto2-result.h>
+#include <gphoto2-debug.h>
+#include <gphoto2-port-log.h>
+
+#define GP_MODULE "konica"
 
 #define DEFAULT_TIMEOUT	500
 
@@ -387,6 +392,59 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 
 			/* Read 'rbs_internal' bytes data plus ESC quotes. */
 			error_flag = 0;
+#if 1
+{
+unsigned int read = 0, r = 0;
+while (read < rbs_internal) {
+
+	/*
+	 * Read the specified amount of bytes. We will probably read more
+	 * because some bytes will be quoted.
+	 */
+	GP_DEBUG ("Reading %i bytes (%i of %i already read)...", 
+		  rbs_internal - read, read, rbs_internal);
+	result = gp_port_read (device, &((*rb)[*rbs + read]),
+			       rbs_internal - read);
+	if (result < 0) {
+		error_flag = 1;
+		break;
+	}
+	r = rbs_internal - read;
+
+	/* Unescape the data we just read */
+	for (i = read; i < read + r; i++) {
+		unsigned char *c = &(*rb)[*rbs + i];
+
+	        if ((*c == STX) || (*c == ETX) || (*c == ENQ ) ||
+		    (*c == ACK) || (*c == XOFF) || (*c == XON) ||
+		    (*c == NACK) || (*c == ETB)) {
+			GP_DEBUG ("Wrong ESC masking!");
+			error_flag = 1;
+			break;
+		} else if (*c == ESC) {
+			if (i == read + r - 1) {
+				CHECK (gp_port_read (device,
+						&((*rb)[*rbs + i + 1]), 1));
+				r++;
+			}
+			*c = (~*(c + 1) & 0xff);
+			if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) &&
+			    (*c != ACK ) && (*c != XOFF) && (*c != XON) &&
+			    (*c != NACK) && (*c != ETB ) && (*c != ESC)) {
+				GP_DEBUG ("Wrong ESC masking!");
+				error_flag = 1;
+				break;
+			}
+			memmove (c + 1, c + 2, read + r - i);
+			r--;
+		}
+		checksum += (*rb)[*rbs + i];
+	}
+	if (error_flag)
+		break;
+	read += r;
+}}
+#else
 			for (i = 0; i < rbs_internal; i++) {
 				result = l_esc_read (device, &((*rb)[*rbs + i]));
 				switch (result) {
@@ -411,6 +469,7 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 				if (error_flag)
 					break;
 			}
+#endif
 			if (!error_flag) {
 				CHECK (gp_port_read (device, &d, 1));
 				switch (d) {
@@ -420,6 +479,7 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 					 * ETX received. This is the last
 					 * packet.
 					 */
+					GP_DEBUG ("Last packet.");
 					break;
 
 				case ETB:
@@ -428,6 +488,7 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 					 * ETB received. There are more
 					 * packets to come.
 					 */
+					GP_DEBUG ("More packets coming.");
 					break;
 
 				default:
@@ -466,6 +527,8 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 				 * camera will send us the data at the most
 				 * three times.
 				 */
+				GP_DEBUG ("Checksum wrong: expected %i, "
+					  "got %i.", c, checksum);
 				if (j == 2)
 					return (GP_ERROR_CORRUPTED_DATA);
 
@@ -528,7 +591,6 @@ l_receive (GPPort *device, unsigned char **rb, unsigned int *rbs,
 		}
 	}
 }
-
 
 int 
 l_send_receive (
