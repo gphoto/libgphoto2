@@ -461,10 +461,10 @@ pdc700_expand (unsigned char *src, unsigned char *dst)
 
 	for (y = 0; y < 60; y++)
 		for (x = 0; x < 80; x += 2) {
-			Y  = src[0]; Y  += 128;
-			U  = src[1]; U  -= 0;
-			Y2 = src[2]; Y2 += 128;
-			V  = src[3]; V  -= 0;
+			Y  = (char*) src[0]; Y  += 128;
+			U  = (char*) src[1]; U  -= 0;
+			Y2 = (char*) src[2]; Y2 += 128;
+			V  = (char*) src[3]; V  -= 0;
 
 			if ((Y  > -16) && (Y  < 16)) Y  = 0;
 			if ((Y2 > -16) && (Y2 < 16)) Y2 = 0;
@@ -497,8 +497,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	const char header[] = "P6\n80 60\n255\n";
 	unsigned char *data = NULL, *ppm;
 
+#if 0
 	if (type == GP_FILE_TYPE_RAW)
 		return (GP_ERROR_NOT_SUPPORTED);
+#endif
 
 	/* Get the number of the picture from the filesystem */
 	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename));
@@ -535,6 +537,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 
 	case GP_FILE_TYPE_RAW:
+#if 1
+		CRF (gp_file_set_data_and_size (file, data, size), data);
+		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
+		break;
+#endif
 	default:
 		free (data);
 		return (GP_ERROR_NOT_SUPPORTED);
