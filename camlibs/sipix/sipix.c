@@ -20,6 +20,7 @@
 #include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <gphoto2-library.h>
 #include <gphoto2-result.h>
@@ -78,8 +79,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = data;
-	int i, image_no, result, flags, aeflag, junk;
-	short fupp[13];
+	int image_no, result, flags, aeflag, junk;
 
 	if (strcmp(folder,"/"))
 	    return GP_ERROR_BAD_PARAMETERS;
