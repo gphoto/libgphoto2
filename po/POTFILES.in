@@ -36,6 +36,7 @@ camlibs/panasonic/l859/l859.c
 camlibs/pccam600/library.c
 camlibs/polaroid/pdc700.c
 camlibs/ptp/library.c
+camlibs/ptp2/library.c
 camlibs/ricoh/library.c
 camlibs/ricoh/ricoh.c
 camlibs/samsung/samsung.c
@@ -53,6 +54,7 @@ camlibs/sonydscf1/sonydscf1.c
 camlibs/sonydscf55/camera.c
 camlibs/soundvision/soundvision.c
 camlibs/spca504_flash/library.c
+camlibs/stv0674/stv0674.c
 camlibs/stv0680/library.c
 camlibs/stv0680/stv0680.c
 camlibs/sx330z/library.c
