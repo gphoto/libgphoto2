@@ -52,6 +52,8 @@ static const char *extension[] = {
 	NULL
 };
 
+#define DEBUG 0
+
 static int
 is_image (char *filename)
 {
@@ -300,7 +302,7 @@ static int
 camera_get_config (Camera *camera, CameraWidget **window)
 {
 	CameraWidget *widget;
-#if 0
+#if DEBUG
 	CameraWidget *section;
 #endif
         char buf[256];
@@ -314,12 +316,17 @@ camera_get_config (Camera *camera, CameraWidget **window)
         gp_widget_set_value (widget, &val);
         gp_widget_append (*window, widget);
 
-#if 0
+#if DEBUG
 	gp_widget_new (GP_WIDGET_SECTION, "Testing", &section);
 	gp_widget_append (*window, section);
 
 	gp_widget_new (GP_WIDGET_TEXT, "Text", &widget);
 	gp_widget_set_value (widget, "This is some text.");
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_DATE, "Date & Time", &widget);
+	val = time (NULL) - 100000;
+	gp_widget_set_value (widget, &val);
 	gp_widget_append (section, widget);
 #endif
 
