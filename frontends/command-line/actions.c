@@ -221,7 +221,7 @@ print_file_action (const char *folder, const char *filename)
 				(info.file.permissions & GP_FILE_PERM_DELETE) ? "d" : "-");
 		    }
 		    if (info.file.fields & GP_FILE_INFO_SIZE)
-			printf(" %5d KB", (info.file.size+1023) / 1024);
+			printf(" %5ld KB", (info.file.size+1023) / 1024);
 		    if ((info.file.fields & GP_FILE_INFO_WIDTH) && +
 			    (info.file.fields & GP_FILE_INFO_HEIGHT))
 			printf(" %4dx%-4d", info.file.width, info.file.height);
