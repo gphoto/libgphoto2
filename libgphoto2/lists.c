@@ -5,6 +5,8 @@
 #include <config.h>
 #endif
 
+#include "util.h"
+
 CameraList *gp_list_new()
 {
 	CameraList *list;
