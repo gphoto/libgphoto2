@@ -1,3 +1,7 @@
+2002-11-02  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* canon.[ch]: support for PowerShot S45
+
 2002-10-25  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* usb.c: added fix for EOS D60 unlocking by Fredrik (reported to work)

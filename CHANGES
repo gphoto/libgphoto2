@@ -9,7 +9,8 @@ drivers (camlibs):
    * Ricoh
 
    * Canon driver: 
-     - added support for Canon PowerShot A100, Canon PowerShot A200
+     - added support for Canon PowerShot A100, Canon PowerShot A200,
+       Canon PowerShot S45
      - fixed Canon EOS D60 unlocking
 
    * PTP driver:
