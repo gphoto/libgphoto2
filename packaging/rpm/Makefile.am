@@ -16,4 +16,5 @@ rpm: Makefile package.spec
 		mkdir -p "RPMS/$${arch}"; \
 	done
 	ln -f "$(top_srcdir)/@PACKAGE@-@VERSION@.tar.gz" SOURCES/
-	rpm --define "_topdir $$(pwd)" -ba package.spec
+	ln -f package.spec SPECS/@PACKAGE@-@VERSION@.spec
+	rpm --define "_topdir $$(pwd)" -ba SPECS/@PACKAGE@-@VERSION@.spec
