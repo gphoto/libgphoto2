@@ -90,7 +90,7 @@ camera_abilities (CameraAbilitiesList *list)
 		else
 			a.operations = GP_OPERATION_CAPTURE_IMAGE;
        		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-       		a.file_operations   = GP_FILE_OPERATION_NONE; 
+       		a.file_operations   = GP_FILE_OPERATION_PREVIEW; 
        		gp_abilities_list_append (list, a);
     	}
     	return GP_OK;
@@ -196,6 +196,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     	aox_read_picture_data (camera->port, data, len, n);
 
 	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
 	case GP_FILE_TYPE_NORMAL:
 		if ((w == 320)) {
 			gp_file_detect_mime_type (file); /* Detected as "raw"*/
@@ -213,7 +214,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         				p_data[w*i + w  - 1 - j] = temp;
 				}
     			}    	
-			/* Not only this, but some colunns are 
+			/* Not only this, but some columns are 
 			 * interchanged, too. */
 			for (i = 0; i < w*h/4; i++) {
 				temp = p_data[4*i +1];

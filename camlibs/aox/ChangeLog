@@ -1,3 +1,9 @@
+2004-06-27  Theodore Kilgore <kilgota@auburn.edu>
+	
+	* library.c: Support for PREVIEW added.
+	* README:    Updated to reflect recent changes.
+
+
 2004-04-05  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* aox.c (aox_get_picture_size): Declare variables first 

@@ -55,6 +55,11 @@ first and the high-resolution photos only after that. In other words, in
 that situation the pictures will not be downloaded in the order in which you
 took them. 
 
+The camera also supports "video clip" mode, in which the camera keeps taking 
+frames so long as one holds down the shutter button. Unfortunately, there is 
+not much point in implementing that until the low-resolution non-standard JPEG 
+format is better understood, because that is what it uses. 
+
 Some things which work for me, with various gphoto2 options:
 
 gphoto2 --summary 
@@ -91,5 +96,22 @@ it should work for others, too. Please report any problems or bugs to me or
 to the gphoto-devel mailing list. 
 
 Copyright by Theodore Kilgore, November 11, 2003.
+kilgota at auburn.edu
 
-kilgota@auburn.edu
+Additional remarks, June 27, 2004:
+
+First the good news:
+Thumbnail capability has been added, and the library should be fully functional 
+now with a GUI frontend. I have tested both gtkam and digikam. Gtkam works very 
+nicely for me, but for unknown reasons my digikam somehow fails to display the 
+thumbnails. That is probably the fault of my digikam setup, because it fails for 
+all of my cameras. It may work for you and if you want to use digikam then 
+certainly you should try it. 
+
+The bad news:
+The camera has "video clip" capability, meaning that with a certain camera 
+setting it is possible to hold down the shutter button and keep shooting 
+frames (the only limitation being the amount of free memory in the camera). 
+Unfortunately, the clip mode uses the non-standard JPEG compression, and thus 
+there is no point in trying to implement clip mode until the compression mode 
+is understood. 
