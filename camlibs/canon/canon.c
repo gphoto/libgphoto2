@@ -143,8 +143,8 @@ const struct canonCamModelData models[] = {
         /* 0x3071 is IXUS v3 in PTP mode */
 	/* reported working on SourceForge patch tracker. */
 	/* FIXME: dunno about capture, assuming none for now -Marcus */
-	{"Canon:Digital IXUS 400",              CANON_PS_S230,  0x04A9, 0x3075, CAP_SUP, S99M, S32K, S2M, NULL},
-	{"Canon:PowerShot S400",                CANON_PS_S230,  0x04A9, 0x3075, CAP_SUP, S99M, S32K, S2M, NULL},
+	{"Canon:Digital IXUS 400",              CANON_PS_S400,  0x04A9, 0x3075, CAP_SUP, S99M, S32K, S2M, NULL},
+	{"Canon:PowerShot S400",                CANON_PS_S400,  0x04A9, 0x3075, CAP_SUP, S99M, S32K, S2M, NULL},
 
 	/* added from report on mailinglist. XXX: assuming capture works -Marcus */
 	/* reports suggest that they provide 1 interface which does
@@ -232,6 +232,42 @@ replace_filename_extension(const char *filename, const char *newext)
 	}
 }
 
+static const char *
+filename_to_audio(const char *filename, const char *newext)
+{
+	char *p;
+	static char buf[1024];
+
+	/* We just replace file ending by .WAV, the first three
+	 * letters by SND and assume this is the name of the audio file.
+	 */
+	if (strncpy (buf, filename, sizeof (buf)) < 0) {
+		GP_DEBUG ("filename_to_audio: Buffer too small in %s line %i.",
+			  __FILE__, __LINE__);
+		return NULL;
+	}
+	if (strlen(buf) > 3) {
+		buf[0] = 'S';
+		buf[1] = 'N';
+		buf[2] = 'D';
+	}
+	if ((p = strrchr (buf, '.')) == NULL) {
+		GP_DEBUG ("filename_to_audio: No '.' found in filename '%s' "
+			  "in %s line %i.", filename, __FILE__, __LINE__);
+		return NULL;
+	}
+	if (((p - buf) < sizeof (buf) - 4) && strncpy (p, ".THM", 4)) {
+		GP_DEBUG ("filename_to_audio: New name for '%s' is '%s'",
+			  filename, buf);
+		return buf;
+	} else {
+		GP_DEBUG ("filename_to_audio: "
+			  "New name for filename '%s' doesnt fit in %s line %i.",
+			  filename, __FILE__, __LINE__);
+		return NULL;
+	}
+}
+
 /**
  * canon_int_filename2audioname:
  * @camera: Camera to work on
@@ -248,11 +284,12 @@ replace_filename_extension(const char *filename, const char *newext)
 const char *
 canon_int_filename2audioname (Camera *camera, const char *filename)
 {
-        /* FIXME: I want capabilities */
+	/* FIXME: I want capabilities */
 	switch (camera->pl->md->model) {
 	case CANON_PS_S30:
 	case CANON_PS_S40:
 	case CANON_PS_S45:
+	case CANON_PS_S400:
 	case CANON_PS_G3:
 		break;
 	default:
@@ -263,7 +300,7 @@ canon_int_filename2audioname (Camera *camera, const char *filename)
 	}
 
 	/* We use the audio file itself as the audio file of the
-	 * audio file file. In short audiofile = audiofile(audiofile)
+	 * audio file file. In short: audiofile = audiofile(audiofile)
 	 */
 	if (is_audio (filename)) {
 		GP_DEBUG ("canon_int_filename2audioname: \"%s\" IS an audio file",
@@ -272,22 +309,18 @@ canon_int_filename2audioname (Camera *camera, const char *filename)
 	}
 
 	/* There are only audio files for images and movies */
-	if (!is_movie (filename) && !is_image (filename)) {
+	if (!(is_movie (filename) || is_image (filename))) {
 		GP_DEBUG ("canon_int_filename2audioname: "
 			  "\"%s\" is neither movie nor image -> no audio file", filename);
 		return NULL;
 	}
 
-	GP_DEBUG ("canon_int_filename2audioname: audio for file \"%s\" is external",
-		  filename);
+	char *result = filename_to_audio (filename, ".WAV");
 
-	/* We just replace file ending by .WAV and assume this is the
-	 * name of the audio file.
-	 */
-	return replace_filename_extension (filename, ".WAV");
+	GP_DEBUG ("canon_int_filename2audioname: audio for file \"%s\" is external: \"%s\"",
+		  filename, result);
 
-	/* never reached */
-	return NULL;
+	return result;
 }
 
 /**
@@ -1869,7 +1902,6 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 					 */
 					if (!camera->pl->list_all_files
 					    && !is_image (info.file.name)
-					    && !is_audio (info.file.name)
 					    && !is_movie (info.file.name)) {
 						/* do nothing */
 						GP_DEBUG ("Ignored %s/%s", folder,
