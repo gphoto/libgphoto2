@@ -150,6 +150,8 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 				continue;
 
 			/* Try to open the library */
+			gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+				"Trying to load '%s'...", buf);
 			lh = GP_SYSTEM_DLOPEN (buf);
 			if (!lh) {
 				gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",

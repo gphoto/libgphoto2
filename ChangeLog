@@ -1,3 +1,9 @@
+2001-10-29 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-abilities-list.c: Additional debug message. Spews
+	  a lot of output, but people get segfaults when loading camera 
+	  libraries and we need to know on which library.
+
 2001-10-29 Marcus Meissner <marcus@jet.franken.de>
 
 	* camlibs/jd11/jd11.c: Added Quark Probe 99, Argus DC-100 and DC-2000
