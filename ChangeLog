@@ -1,3 +1,7 @@
+2002-07-06  Patrick Mansfield <patman@aracnet.com>
+
+	* MAINTAINERS: Add myself to camlibs/sierra
+
 2002-07-05  Lutz Müller <lutz@users.sourceforge.net>
 
 	* configure.in: Add camlibs/sx330z.
