@@ -1,3 +1,7 @@
+2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/jpeg.c: #define CHECK_RESULT(...) (...)
+
 2001-09-23  Chris Pinkham <cpinkham@infi.net>
 
 	* camlibs/jamcam/jamcam.c
