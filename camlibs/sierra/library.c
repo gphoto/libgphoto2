@@ -1127,8 +1127,8 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 
 	/* Make use of the progress bar when the packet is "large enough" */
 	if (length > MAX_DATA_FIELD_LENGTH) {
-		do_percent = 1;
 #ifdef RECURSION_REMOVED
+		do_percent = 1;
 		/*
 		 * This code can lead to recursive calls in gtkam - the
 		 * main problem is when thumbnails are being downloaded,
