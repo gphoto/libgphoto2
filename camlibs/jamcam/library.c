@@ -81,7 +81,7 @@ static int jamcam_get_int_at_pos( unsigned char *buf, int pos ) {
 }
 
 static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
-	char reply[4];
+	char reply[8];
 
 	GP_DEBUG ("* jamcam_set_usb_mem_pointer");
 	GP_DEBUG ("*** position:  %d (0x%x)",
@@ -97,7 +97,7 @@ static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
 		0xa0,
 		0,
 		0,
-		reply, 4 );
+		reply, 8 );
 
 	return( GP_OK );
 }

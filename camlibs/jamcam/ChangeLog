@@ -1,3 +1,8 @@
+2002-01-05  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: We need to read a reply of 8 bytes, or the kernel
+	  reports data overflow.
+
 2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
 
 	* Makefile.am: Don't use glib.
