@@ -344,14 +344,9 @@ gp_abilities_list_load (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-/**
- * gp_abilities_list_detect_usb:
- * 
- * @list: a #CameraAbilitiesList
- * @info: a #GPPortInfo
- * @port: a #GPPort
- */
-int gp_abilities_list_detect_usb(CameraAbilitiesList *list, GPPortInfo *info, GPPort *port)
+static int
+gp_abilities_list_detect_usb (CameraAbilitiesList *list,
+			      GPPortInfo *info, GPPort *port)
 {
 	int i, count, res = GP_ERROR_IO_USB_FIND;
 
@@ -380,8 +375,8 @@ int gp_abilities_list_detect_usb(CameraAbilitiesList *list, GPPortInfo *info, GP
 				 */
 				gp_log(GP_LOG_DEBUG, __FILE__,
 					"gp_port_usb_find_device(vendor=0x%x, "
-					"product=0x%x) returned %i, clearing error message on port",
-					v, p, res);
+					"product=0x%x) returned %i, clearing "
+					"error message on port", v, p, res);
 			}
 
 			if (res != GP_ERROR_IO_USB_FIND)
@@ -406,8 +401,9 @@ int gp_abilities_list_detect_usb(CameraAbilitiesList *list, GPPortInfo *info, GP
 				 */
 				gp_log(GP_LOG_DEBUG, __FILE__,
 					"gp_port_usb_find_device_by_class("
-					"class=0x%x, subclass=0x%x, protocol=0x%x) "
-					"returned %i, clearing error message on port",
+					"class=0x%x, subclass=0x%x, "
+					"protocol=0x%x) returned %i, "
+					"clearing error message on port",
 					c, s, p, res);
 			}
 
@@ -452,13 +448,13 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 		CHECK_RESULT (gp_port_set_info (port, info));
 		switch (info.type) {
 		case GP_PORT_USB:
-			res = gp_abilities_list_detect_usb(list, &info, port);
+			res = gp_abilities_list_detect_usb (list, &info, port);
 			if (res == GP_OK) {
 				gp_list_append(l,
 					list->abilities[i].model,
 					info.path);
 			} else if (res < 0)
-				gp_port_set_error(port, NULL);
+				gp_port_set_error (port, NULL);
 
 			break;
 
