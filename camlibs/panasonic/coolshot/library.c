@@ -23,6 +23,7 @@
 /* Free Software Foundation, Inc., 59 Temple Place - Suite 330, */
 /* Boston, MA 02111-1307, USA.                                  */
 /****************************************************************/
+#include <config.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -30,6 +31,25 @@
 #include <time.h>
 #include "library.h"
 #include <unistd.h>
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 #define	COOL_SLEEP	10000
 
@@ -221,7 +241,7 @@ int coolshot_file_count (Camera *camera) {
 }
 
 int coolshot_request_image( Camera *camera, CameraFile *file,
-		char *buf, int *len, int number ) {
+		char *buf, int *len, int number, GPContext *context ) {
 	char packet[16];
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_request_image");
@@ -250,13 +270,13 @@ int coolshot_request_image( Camera *camera, CameraFile *file,
 	coolshot_read_packet( camera, packet );
 
 	/* read data */
-	coolshot_download_image( camera, file, buf, len, 0 );
+	coolshot_download_image( camera, file, buf, len, 0, context );
 
 	return( GP_OK );
 }
 
 int coolshot_request_thumbnail( Camera *camera, CameraFile *file,
-		char *buf, int *len, int number ) {
+		char *buf, int *len, int number, GPContext *context ) {
 	char packet[16];
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_request_thumbnail");
@@ -287,7 +307,7 @@ int coolshot_request_thumbnail( Camera *camera, CameraFile *file,
 	coolshot_read_packet( camera, packet );
 
 	/* read data */
-	coolshot_download_image( camera, file, buf, len, 1 );
+	coolshot_download_image( camera, file, buf, len, 1, context );
 
 	return( GP_OK );
 }
@@ -317,12 +337,12 @@ int coolshot_check_checksum( char *packet, int length ) {
 }
 
 int coolshot_download_image( Camera *camera, CameraFile *file,
-		char *buf, int *len, int thumbnail ) {
+		char *buf, int *len, int thumbnail, GPContext *context ) {
 	char packet[1024];
 	int data_len;
 	int bytes_read = 0;
 	int last_good = 0;
-	double percentage;
+	unsigned int id;
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_download_image");
 
@@ -349,6 +369,8 @@ int coolshot_download_image( Camera *camera, CameraFile *file,
 		last_good = 0;
 	}
 
+	id = gp_context_progress_start (context, thumbnail ? 1800 : 80000, 
+		_("Downloading image..."));
 	while( strncmp( packet + 2, "DT", 2 ) == 0 ) {
 		/* process packet */
 		if ( last_good ) {
@@ -360,14 +382,8 @@ int coolshot_download_image( Camera *camera, CameraFile *file,
 			bytes_read += data_len;
 		}
 
-		if ( thumbnail ) {
-			percentage = bytes_read > 1800 ? 1.0 : (float)(bytes_read)/1800.0;
-		} else {
-			percentage = bytes_read > 80000 ? 1.0 : (float)(bytes_read)/80000.0;
-		}
-		/* fixme, add ability to cancel download by checking result */
-
-		gp_file_progress( file, percentage );
+		gp_context_progress_update (context, id, bytes_read);
+		/* fixme, add ability to cancel download */
 
 		coolshot_read_packet( camera, packet );
 
@@ -385,6 +401,7 @@ int coolshot_download_image( Camera *camera, CameraFile *file,
 			last_good = 0;
 		}
 	}
+	gp_context_progress_stop (context, id);
 
 	coolshot_ack( camera );
 

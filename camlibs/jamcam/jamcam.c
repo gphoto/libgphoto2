@@ -154,7 +154,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
-static int camera_exit (Camera *camera)
+static int camera_exit (Camera *camera, GPContext *context)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_exit");
 
@@ -173,7 +173,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	unsigned char gtable[256];
 	char *ptr;
 	int size = 0, n = 0;
-	int res;
 	int width, height;
 	struct jamcam_file *jc_file;
 
@@ -185,14 +184,12 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	CHECK (n = gp_filesystem_number (camera->fs, folder,
 					 filename, context));
 
-	res = gp_file_progress( file, 0 );
-	if ( res < 0 ) {
-		return( res );
-	}
+	if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+		return (GP_ERROR_CANCEL);
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
-		CHECK (jamcam_request_thumbnail (camera, file, raw, &size, n));
+		CHECK (jamcam_request_thumbnail (camera, file, raw, &size, n, context));
 
 		width = 80;
 		height = 60;
@@ -217,7 +214,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		break;
 
 	case GP_FILE_TYPE_NORMAL:
-		CHECK (jamcam_request_image (camera, file, raw, &size, n));
+		CHECK (jamcam_request_image (camera, file, raw, &size, n, context));
 
 		jc_file = jamcam_file_info (camera, n);
 
@@ -242,7 +239,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		break;
 
 	case GP_FILE_TYPE_RAW:
-		CHECK (jamcam_request_image (camera, file, raw, &size, n));
+		CHECK (jamcam_request_image (camera, file, raw, &size, n, context));
 		CHECK (gp_file_set_mime_type (file, GP_MIME_RAW));
 		strcpy( tmp_filename, filename );
 		tmp_filename[strlen(tmp_filename)-3] = 'r';
@@ -258,7 +255,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
-static int camera_summary (Camera *camera, CameraText *summary)
+static int camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	int count;
 	char tmp[1024];
@@ -274,16 +271,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
 	return (GP_OK);
 }
 
-static int camera_manual (Camera *camera, CameraText *manual)
-{
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_manual");
-
-	strcpy (manual->text, _("Some notes:\n"
-		"    No notes here yet.\n"));
-	return (GP_OK);
-}
-
-static int camera_about (Camera *camera, CameraText *about)
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* camera_about");
 
@@ -298,7 +286,7 @@ static int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera)
+int camera_init (Camera *camera, GPContext *context)
 {
 	int count;
 	GPPortSettings settings;
@@ -312,7 +300,6 @@ int camera_init (Camera *camera)
 	/* First, set up all the function pointers */
 	camera->functions->exit 	= camera_exit;
 	camera->functions->summary	= camera_summary;
-	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
 	CHECK (gp_port_get_settings (camera->port, &settings));

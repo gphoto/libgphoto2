@@ -58,7 +58,7 @@
 #endif
 
 int
-gp_cmd_capture_preview (Camera *camera, CameraFile *file)
+gp_cmd_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	int result, event, contrast, bright;
 	aa_context *c;
@@ -76,7 +76,7 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 	bright = params->bright;
 	aa_hidecursor (c);
 
-	result = gp_camera_capture_preview (camera, file);
+	result = gp_camera_capture_preview (camera, file, context);
 	if (result < 0)
 		return (result);
 
@@ -197,7 +197,8 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 		case AA_NONE:
 		case 32:
 			/* Space */
-			result = gp_camera_capture_preview (camera, file);
+			result = gp_camera_capture_preview (camera, file,
+							    context);
 			if (result < 0) {
 				aa_close (c);
 				return (result);
@@ -206,8 +207,8 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file)
 		case 305:
 			/* ESC */
 			aa_close (c);
-			gp_camera_set_error (camera, _("Operation cancelled"));
-			return (GP_ERROR);
+			gp_context_error (context, _("Operation cancelled"));
+			return (GP_ERROR_CANCEL);
 		default:
 			aa_close (c);
 			return (GP_OK);

@@ -693,7 +693,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 static int
-camera_about (Camera *camera, CameraText *about)
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text, "Download program for Polaroid Fun Flash 640. "
 		"Originally written by Chris Byrne <adapt@ihug.co.nz>, "
@@ -791,7 +791,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 static int
-camera_exit (Camera *camera)
+camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl) {
 		free (camera->pl);
@@ -802,7 +802,7 @@ camera_exit (Camera *camera)
 }
 
 int
-camera_init (Camera *camera)
+camera_init (Camera *camera, GPContext *context)
 {
 	int result, i;
 	GPPortSettings settings;

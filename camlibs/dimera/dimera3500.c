@@ -21,6 +21,20 @@
  *
  * History:
  * $Log$
+ * Revision 1.40  2002/01/12 23:31:42  lutz
+ * 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         Finished the GPContext stuff - changes all over the place. Basically,
+ *         gp_[file,camera]_progress has been replaced by gp_context_progress_*.
+ *         Well, we haven't release a gphoto2-2.0 yet, therefore I hope you don't
+ *         mind the API change...
+ *
+ *         * libgphoto2/gphoto2-camera.[c,h]: Added a GPContext parameter to
+ *           any function that can possibly communicate with the camera. That
+ *           makes every function cancellable (which is good), makes it possible
+ *           to report multiple errors during execution of a command, offers
+ *           several (nested) progress reports, and many other goodies.
+ *
  * Revision 1.39  2002/01/10 23:06:54  lutz
  * 2002-01-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -178,7 +192,7 @@ static char     Dimera_stdhdr[] =
 
 static uint8_t *
 Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
-			Camera *camera, CameraFile *file);
+			Camera *camera, CameraFile *file, GPContext *context);
 
 static uint8_t *
 Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera );
@@ -241,7 +255,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-static int camera_exit(Camera *camera) {
+static int camera_exit(Camera *camera, GPContext *context) {
 
 	return mesa_port_close(camera->port);
 }
@@ -298,13 +312,14 @@ static int get_file_func (CameraFilesystem *fs, const char *folder, const char *
 	case GP_FILE_TYPE_NORMAL:
 	case GP_FILE_TYPE_RAW:
 		data = Dimera_Get_Full_Image (num, &size,
-					      &width, &height, camera, file);
+					      &width, &height, camera,
+					      file, context);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		data = Dimera_Get_Thumbnail (num, (int*) &size, camera);
 		break;
 	default:
-		gp_camera_set_error(camera, _("Image type is not supported"));
+		gp_context_error (context, _("Image type is not supported"));
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -420,7 +435,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	return (GP_OK);
 }
 
-static int camera_capture_preview(Camera *camera, CameraFile *file) {
+static int camera_capture_preview(Camera *camera, CameraFile *file, GPContext *context) {
         long int size;
 	char *data;
 
@@ -435,7 +450,7 @@ static int camera_capture_preview(Camera *camera, CameraFile *file) {
         return GP_OK;
 }
 
-static int camera_summary (Camera *camera, CameraText *summary) {
+static int camera_summary (Camera *camera, CameraText *summary, GPContext *context) {
 	int num, eeprom_capacity, hi_pics_max, lo_pics_max;
 	struct mesa_id Id;
 	char version_string[MESA_VERSION_SZ];
@@ -521,7 +536,7 @@ static int camera_summary (Camera *camera, CameraText *summary) {
 	return GP_OK;
 }
 
-static int camera_manual (Camera *camera, CameraText *manual) {
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) {
 
 	strcpy(manual->text, _(
 	"  Image glitches or problems communicating are\n"
@@ -536,7 +551,7 @@ static int camera_manual (Camera *camera, CameraText *manual) {
 	return GP_OK;
 }
 
-static int camera_about (Camera *camera, CameraText *about) {
+static int camera_about (Camera *camera, CameraText *about, GPContext *context) {
 	strcpy(about->text, _(
 		"gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
 		"This software was created with the\n"
@@ -595,12 +610,13 @@ Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 buffer */
 static uint8_t *
 Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
-			Camera *camera, CameraFile *file)
+			Camera *camera, CameraFile *file, GPContext *context)
 {
 	static struct mesa_image_arg	ia;
 	int32_t				r;
 	uint8_t			*b, *rbuffer = NULL;
 	int				hires, s, retry;
+	unsigned int id;
 
 	*size = 0;
 	*width = 0;
@@ -698,6 +714,8 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 		}
 	}
 #else
+	id = gp_context_progress_start (context, *height + 4,
+					_("Downloading image..."));
 	for ( ia.row = 4, b = rbuffer; ia.row < (*height + 4) ;
 			ia.row++, b += s )
 	{
@@ -723,14 +741,15 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 			gp_camera_set_error(camera, _("Problem downloading image"));
 			return NULL;
 		}
-		if (gp_file_progress(file, ia.row / (*height + 4) ) < 0)
+		gp_context_progress_update (context, id, ia.row);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 		{
 			free( rbuffer );
 			*size = 0;
-			gp_camera_set_error(camera, _("User canceled download"));
 			return NULL;
 		}
 	}
+	gp_context_progress_stop (context, id);
 #endif
 
 	return (rbuffer);
@@ -857,7 +876,7 @@ Dimera_Preview( int *size, Camera *camera )
 	return image;
 }
 
-int camera_init (Camera *camera) {
+int camera_init (Camera *camera, GPContext *context) {
 
 	GPPortSettings settings;
         int ret, selected_speed;

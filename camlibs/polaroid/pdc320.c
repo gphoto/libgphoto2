@@ -381,7 +381,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 }
 
 static int
-camera_about (Camera *camera, CameraText *about)
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text, "Download program for several Polaroid cameras. "
 		"Originally written by Peter Desnoyers "
@@ -409,7 +409,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 }
 
 static int
-camera_summary (Camera *camera, CameraText *summary)
+camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	const char *model;
 
@@ -421,7 +421,7 @@ camera_summary (Camera *camera, CameraText *summary)
 }
 
 static int
-camera_exit (Camera *camera)
+camera_exit (Camera *camera, GPContext *context)
 {
 	if (!camera)
 		return (GP_ERROR_BAD_PARAMETERS);
@@ -435,7 +435,7 @@ camera_exit (Camera *camera)
 }
 
 int
-camera_init (Camera *camera)
+camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 	CameraAbilities abilities;

@@ -224,7 +224,7 @@ shell_cd (char *arg)
 	shell_get_new_folder (glob_folder, arg, tmp_folder);
 	printf("tmp_folder=%s\n", tmp_folder);
 
-	res = gp_camera_folder_list_folders (glob_camera, tmp_folder, &list);
+	res = gp_camera_folder_list_folders (glob_camera, tmp_folder, &list, glob_context);
 	if (res == GP_OK)
 		strcpy (glob_folder, tmp_folder);
 	else
@@ -249,7 +249,7 @@ shell_ls (char *arg)
 		strcpy (tmp_folder, glob_folder);
 	}
 
-	res = gp_camera_folder_list_folders (glob_camera, tmp_folder, &list);
+	res = gp_camera_folder_list_folders (glob_camera, tmp_folder, &list, glob_context);
 	if (res != GP_OK) {
 		if (arg_count)
 			cli_error_print("Folder %s does not exist", tmp_folder);
@@ -273,7 +273,7 @@ shell_ls (char *arg)
 		}
 	}
 
-	res = gp_camera_folder_list_files (glob_camera, tmp_folder, &list);
+	res = gp_camera_folder_list_files (glob_camera, tmp_folder, &list, glob_context);
 	if (res != GP_OK)
 		return (res);
 

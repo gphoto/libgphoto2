@@ -351,7 +351,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 }
 
 /**
- * gp_abilities_list_load_ctx:
+ * gp_abilities_list_load:
  * @list: a #CameraAbilitiesList
  * @context: a #GPContext
  *
@@ -361,7 +361,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
  * Return value: a gphoto2 error code
  **/
 int
-gp_abilities_list_load_ctx (CameraAbilitiesList *list, GPContext *context)
+gp_abilities_list_load (CameraAbilitiesList *list, GPContext *context)
 {
 	CHECK_NULL (list);
 
@@ -369,12 +369,6 @@ gp_abilities_list_load_ctx (CameraAbilitiesList *list, GPContext *context)
 	CHECK_RESULT (gp_abilities_list_sort (list));
 
 	return (GP_OK);
-}
-
-int
-gp_abilities_list_load (CameraAbilitiesList *list)
-{
-	return (gp_abilities_list_load_ctx (list, NULL));
 }
 
 static int
@@ -463,7 +457,8 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
  **/
 int
 gp_abilities_list_detect (CameraAbilitiesList *list,
-			  GPPortInfoList *info_list, CameraList *l)
+			  GPPortInfoList *info_list, CameraList *l,
+			  GPContext *context)
 {
 	GPPortInfo info;
 	GPPort *port;

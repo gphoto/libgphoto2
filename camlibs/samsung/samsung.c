@@ -160,12 +160,6 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_exit (Camera *camera) 
-{
-	return (GP_OK);
-}
-
-static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
@@ -228,7 +222,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_about (Camera *camera, CameraText *about) 
+camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
 	strcpy (about->text, "The Samsung digimax 800k driver has "
 		"been written by James Mckenzie "
@@ -268,12 +262,11 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 }
 
 int
-camera_init (Camera *camera) 
+camera_init (Camera *camera, GPContext *context) 
 {
 	GPPortSettings settings;
 
         /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
         camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists and info */

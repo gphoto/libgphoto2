@@ -1,3 +1,16 @@
+2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	Finished the GPContext stuff - changes all over the place. Basically,
+	gp_[file,camera]_progress has been replaced by gp_context_progress_*.
+	Well, we haven't release a gphoto2-2.0 yet, therefore I hope you don't
+	mind the API change...
+
+	* libgphoto2/gphoto2-camera.[c,h]: Added a GPContext parameter to
+	  any function that can possibly communicate with the camera. That
+	  makes every function cancellable (which is good), makes it possible
+	  to report multiple errors during execution of a command, offers 
+	  several (nested) progress reports, and many other goodies.
+
 2002-01-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/gphoto2-context.[c,h]: Support for multiple progress

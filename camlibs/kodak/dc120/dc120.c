@@ -313,7 +313,8 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 
 }
 
-static int camera_summary (Camera *camera, CameraText *summary) 
+static int camera_summary (Camera *camera, CameraText *summary,
+			   GPContext *context) 
 {
     static char summary_string[2048] = "";
     char buff[1024];
@@ -353,7 +354,8 @@ static int camera_summary (Camera *camera, CameraText *summary)
 }
 
 
-static int camera_manual (Camera *camera, CameraText *manual) 
+static int camera_manual (Camera *camera, CameraText *manual,
+			  GPContext *context) 
 {
 	strcpy (manual->text, 
 		_("The Kodak DC120 camera uses the KDC file format "
@@ -365,7 +367,7 @@ static int camera_manual (Camera *camera, CameraText *manual)
 	return (GP_OK);
 }
 
-static int camera_about (Camera *camera, CameraText *about) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
 	strcpy(about->text, 
 		_("Kodak DC120 Camera Library\n"
@@ -376,7 +378,7 @@ static int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera) {
+int camera_init (Camera *camera, GPContext *context) {
 
         GPPortSettings settings;
 	int speed;

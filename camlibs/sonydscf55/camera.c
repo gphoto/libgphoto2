@@ -62,7 +62,7 @@ int camera_abilities(CameraAbilitiesList * list)
 /**
  * De-initialises camera
  */
-static int camera_exit(Camera * camera)
+static int camera_exit(Camera * camera, GPContext *context)
 {
 	int rc;
 
@@ -82,7 +82,7 @@ static int camera_exit(Camera * camera)
 
 
 
-static int camera_about(Camera * camera, CameraText * about)
+static int camera_about(Camera * camera, CameraText * about, GPContext *context)
 {
 	strcpy(about->text,
 	       _("Sony DSC-F55/505 gPhoto library\n"
@@ -173,7 +173,7 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 /**
  * Initialises camera
  */
-int camera_init(Camera * camera)
+int camera_init(Camera * camera, GPContext *context)
 {
 	CameraAbilities a;
 	int is_msac, rc;

@@ -91,7 +91,7 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_exit (Camera *camera) 
+camera_exit (Camera *camera, GPContext *context) 
 {
 	dc240_close (camera);
 	
@@ -168,7 +168,7 @@ camera_capture (Camera *camera, CameraCaptureType type,
 }
 
 static int
-camera_summary (Camera *camera, CameraText *summary) 
+camera_summary (Camera *camera, CameraText *summary, GPContext *context) 
 {
     char buf [32 * 1024];
     char temp [1024];
@@ -205,15 +205,7 @@ camera_summary (Camera *camera, CameraText *summary)
 }
 
 static int
-camera_manual (Camera *camera, CameraText *manual) 
-{
-	strcpy(manual->text, _("No Manual Available"));
-
-	return (GP_OK);
-}
-
-static int
-camera_about (Camera *camera, CameraText *about) 
+camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
 	strcpy (about->text, 
 		_("Kodak DC240 Camera Library\n"
@@ -225,7 +217,7 @@ camera_about (Camera *camera, CameraText *about)
 }
 
 int
-camera_init (Camera *camera) 
+camera_init (Camera *camera, GPContext *context) 
 {
 	int ret, selected_speed = 0;
 	GPPortSettings settings;
@@ -234,7 +226,6 @@ camera_init (Camera *camera)
 	camera->functions->exit             = camera_exit;
 	camera->functions->capture          = camera_capture;
 	camera->functions->summary          = camera_summary;
-	camera->functions->manual           = camera_manual;
 	camera->functions->about            = camera_about;
 
 	/* Set up the CameraFilesystem */

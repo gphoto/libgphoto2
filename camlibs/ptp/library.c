@@ -354,7 +354,7 @@ camera_id (CameraText *id)
 }
 
 static int
-camera_exit (Camera *camera)
+camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl) {
 		ptp_closesession (&camera->pl->params);
@@ -366,7 +366,7 @@ camera_exit (Camera *camera)
 }
 
 static int
-camera_about (Camera *camera, CameraText *text)
+camera_about (Camera *camera, CameraText *text, GPContext *context)
 {
 	strncpy (text->text,
 		 _("Written by Mariusz Woloszyn <emsi@ipartners.pl>. "
@@ -691,7 +691,7 @@ init_ptp_fs (Camera *camera)
 
 
 int
-camera_init (Camera *camera)
+camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 	short ret;

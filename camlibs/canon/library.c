@@ -80,7 +80,7 @@ camera_id (CameraText *id)
 }
 
 static int
-camera_manual (Camera *camera, CameraText *manual)
+camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_manual()");
 
@@ -174,7 +174,7 @@ canon_int_switch_camera_off (Camera *camera)
 }
 
 static int
-camera_exit (Camera *camera)
+camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->port->type == GP_PORT_USB) {
 		canon_usb_unlock_keys (camera);
@@ -675,7 +675,7 @@ pretty_number (int number, char *buffer)
 }
 
 static int
-camera_summary (Camera *camera, CameraText *summary)
+camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	char a[20], b[20];
 	int pwr_source, pwr_status;
@@ -746,7 +746,7 @@ camera_summary (Camera *camera, CameraText *summary)
 /****************************************************************************/
 
 static int
-camera_about (Camera *camera, CameraText *about)
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_about()");
 
@@ -935,7 +935,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 /****************************************************************************/
 
 static int
-camera_get_config (Camera *camera, CameraWidget **window)
+camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
@@ -1014,7 +1014,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
 }
 
 static int
-camera_set_config (Camera *camera, CameraWidget *window)
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *w;
 	char *wvalue;
@@ -1135,13 +1135,14 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 /**
  * camera_init:
  * @camera: the camera to initialize
+ * @context: a #GPContext
  *
  * This routine initializes the serial/USB port and also load the
  * camera settings. Right now it is only the speed that is
  * saved.
  **/
 int
-camera_init (Camera *camera)
+camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 

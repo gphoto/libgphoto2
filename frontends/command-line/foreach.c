@@ -28,7 +28,8 @@ for_each_subfolder (const char *folder, folder_action faction,
 	else
 		strcat(prefix, glob_folder);
 
-	res = gp_camera_folder_list_folders (glob_camera, prefix, &folderlist);
+	res = gp_camera_folder_list_folders (glob_camera, prefix, &folderlist,
+					     glob_context);
 
 	/* We don't print any information here when faction is
 	 * for_each_image(). We let for_each_image() do the output
@@ -85,7 +86,8 @@ for_each_image (const char *folder, image_action iaction, int reverse)
 	int i, res;
 	const char *name;
 
-	res = gp_camera_folder_list_files (glob_camera, folder, &filelist);
+	res = gp_camera_folder_list_files (glob_camera, folder, &filelist,
+					   glob_context);
 	if (res != GP_OK)
 		return (res);
 
@@ -132,7 +134,8 @@ for_each_image_in_range (const char *folder, char *range, image_action action,
 		return (res);
 	}
 
-	res = gp_camera_folder_list_files (glob_camera, folder, &filelist);
+	res = gp_camera_folder_list_files (glob_camera, folder, &filelist,
+					   glob_context);
 	if (res != GP_OK)
 		return (res);
 

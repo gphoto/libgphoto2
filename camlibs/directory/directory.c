@@ -337,7 +337,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         char path[1024];
 	int result = GP_OK;
 #ifdef DEBUG
-	unsigned int i;
+	unsigned int i, id;
 #endif
 
 	if (strlen (folder) == 1)
@@ -361,19 +361,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (result);
 
 #ifdef DEBUG
+	id = gp_context_progress_start (context, 500., "Getting file...");
 	for (i = 0; i < 500; i++) {
-		result = gp_file_progress (file, (float) i / 500.);
-		if (result < 0)
-			return (result);
+		gp_context_progress_update (context, id, i + 1);
+		if (gp_context_chancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
 		usleep (10);
 	}
+	gp_context_progress_stop (context, id);
 #endif
 
 	return (GP_OK);
 }
 
 static int
-camera_get_config (Camera *camera, CameraWidget **window)
+camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *widget;
 #ifdef DEBUG
@@ -408,7 +410,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
 }
 
 static int
-camera_set_config (Camera *camera, CameraWidget *window)
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
         CameraWidget *widget;
         char buf[256];
@@ -425,7 +427,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
 }
 
 static int
-camera_manual (Camera *camera, CameraText *manual)
+camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
         strcpy(manual->text, "The Directory Browse \"camera\" lets you index\nphotos on your hard drive. The folder list on the\nleft contains the folders on your hard drive,\nbeginning at the root directory (\"/\").");
 
@@ -433,7 +435,7 @@ camera_manual (Camera *camera, CameraText *manual)
 }
 
 static int
-camera_about (Camera *camera, CameraText *about)
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
         strcpy(about->text, "Directory Browse Mode\nScott Fritzinger <scottf@unr.edu>");
 
@@ -492,7 +494,7 @@ put_file_func (CameraFilesystem *fs, const char *folder,
 	const char *name;
 	int result;
 #ifdef DEBUG
-	unsigned int i;
+	unsigned int i, id;
 #endif
 
 	gp_file_get_name (file, &name);
@@ -507,19 +509,21 @@ put_file_func (CameraFilesystem *fs, const char *folder,
 		return (result);
 
 #ifdef DEBUG
+	id = gp_context_progress_start (context, 500., "Uploading file...");
 	for (i = 0; i < 500; i++) {
-		result = gp_file_progress (file, (float) i / 500.);
-		if (result < 0)
+		gp_context_progress_update (context, id, i + 1);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 			return (result);
 		usleep (10);
 	}
+	gp_context_progress_stop (context, id);
 #endif
 
 	return (GP_OK);
 }
 
 int
-camera_init (Camera *camera)
+camera_init (Camera *camera, GPContext *context)
 {
         char buf[256];
 

@@ -49,6 +49,7 @@ typedef struct {
 	Camera *camera;
 	CDKSCREEN *screen;
 	CameraWidget *window;
+	GPContext *context;
 } CmdConfig;
 
 #define CHECK(result) {int r=(result);if(r<0)return(r);}
@@ -63,7 +64,8 @@ set_config (CmdConfig *cmd_config)
 	char *buttons[] = {N_("</B/24>Continue"), N_("</B16>Cancel")};
 	CDKDIALOG *question = NULL;
 
-	result = gp_camera_set_config (cmd_config->camera, cmd_config->window);
+	result = gp_camera_set_config (cmd_config->camera, cmd_config->window, 
+				       cmd_config->context);
 	if (result < 0) {
 		msg[0] = N_("<C></5>Error");
 		msg[1] = "";
@@ -536,7 +538,7 @@ status_func (Camera *camera, const char *status, void *data)
 }
 
 int
-gp_cmd_config (Camera *camera)
+gp_cmd_config (Camera *camera, GPContext *context)
 {
 	CmdConfig cmd_config;
 	CameraWidget *config;
@@ -547,7 +549,7 @@ gp_cmd_config (Camera *camera)
 	if (!camera)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	result = gp_camera_get_config (camera, &config);
+	result = gp_camera_get_config (camera, &config, context);
 	if (result < 0)
 		return (result);
 
@@ -559,9 +561,10 @@ gp_cmd_config (Camera *camera)
 	initCDKColor ();
 
 	/* Go! */
-	cmd_config.camera = camera;
-	cmd_config.screen = screen;
-	cmd_config.window = config;
+	cmd_config.camera  = camera;
+	cmd_config.screen  = screen;
+	cmd_config.window  = config;
+	cmd_config.context = context;
 	gp_camera_set_status_func (camera, status_func, &cmd_config);
 	result = show_widget (&cmd_config, config);
 

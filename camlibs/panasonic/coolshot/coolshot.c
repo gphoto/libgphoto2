@@ -168,7 +168,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 	return (camera_stop (camera));
 }
 
-static int camera_exit (Camera *camera)
+static int camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl) {
 		free (camera->pl);
@@ -194,9 +194,9 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	CHECK (camera_start (camera));
 
-	n = gp_file_progress( file, 0 );
-	if ( n < 0 ) {
-		return (camera_stop (camera));
+	if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+		camera_stop (camera);
+		return (GP_ERROR_CANCEL);
 	}
 
 	/*
@@ -209,7 +209,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
-		CHECK (coolshot_request_thumbnail (camera, file, data, &size, n));
+		CHECK (coolshot_request_thumbnail (camera, file, data, &size, n, context));
 		CHECK (coolshot_build_thumbnail (data, &size));
 		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
 
@@ -221,7 +221,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		break;
 
 	case GP_FILE_TYPE_NORMAL:
-		CHECK (coolshot_request_image (camera, file, data, &size, n));
+		CHECK (coolshot_request_image (camera, file, data, &size, n, context));
 		CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 		CHECK (gp_file_set_name (file, filename));
 		break;
@@ -234,7 +234,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	return (camera_stop (camera));
 }
 
-static int camera_summary (Camera *camera, CameraText *summary)
+static int camera_summary (Camera *camera, CameraText *summary,
+			   GPContext *context)
 {
 	int count;
 	char tmp[1024];
@@ -252,16 +253,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
 	return (camera_stop (camera));
 }
 
-static int camera_manual (Camera *camera, CameraText *manual)
-{
-	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_manual");
-
-	strcpy (manual->text, _("Some notes:\n"
-		"    No notes here yet.\n"));
-	return (GP_OK);
-}
-
-static int camera_about (Camera *camera, CameraText *about)
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* camera_about");
 
@@ -276,7 +268,7 @@ static int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera)
+int camera_init (Camera *camera, GPContext *context)
 {
 	int count;
 	GPPortSettings settings;
@@ -284,7 +276,6 @@ int camera_init (Camera *camera)
 	/* First, set up all the function pointers */
 	camera->functions->exit 	= camera_exit;
 	camera->functions->summary	= camera_summary;
-	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));

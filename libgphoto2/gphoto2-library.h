@@ -24,6 +24,7 @@
 #include <config.h>
 #include <gphoto2-abilities-list.h>
 #include <gphoto2-camera.h>
+#include <gphoto2-context.h>
 
 /**
  * CameraLibraryIdFunc:
@@ -48,6 +49,7 @@ typedef int (* CameraLibraryAbilitiesFunc) (CameraAbilitiesList *list);
 /**
  * CameraLibraryInitFunc:
  * @camera: a #Camera
+ * @context: a #GPContext
  *
  * Initializes the camera. The camera driver will establish a first connection
  * to the camera and configure the @camera variable (i.e. using 
@@ -55,7 +57,7 @@ typedef int (* CameraLibraryAbilitiesFunc) (CameraAbilitiesList *list);
  *
  * Return value: a gphoto2 error code
  **/
-typedef int (* CameraLibraryInitFunc)      (Camera *camera);
+typedef int (* CameraLibraryInitFunc)      (Camera *camera, GPContext *context);
 
 /*
  * If you want to write a camera library, you need to implement 
@@ -64,6 +66,6 @@ typedef int (* CameraLibraryInitFunc)      (Camera *camera);
  */
 int camera_id		(CameraText *id);
 int camera_abilities 	(CameraAbilitiesList *list);
-int camera_init 	(Camera *camera);
+int camera_init 	(Camera *camera, GPContext *context);
 
 #endif /* __GPHOTO2_LIBRARY_H__ */

@@ -136,7 +136,7 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
 #endif
 
 static int
-camera_summary (Camera *camera, CameraText *summary)
+camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
         int num;
         char *firm;
@@ -152,28 +152,20 @@ camera_summary (Camera *camera, CameraText *summary)
 }
 
 static int
-camera_manual (Camera *camera, CameraText *manual)
-{
-        strcpy (manual->text, _("No manual available."));
-
-        return GP_OK;
-}
-static int
-        camera_about (Camera *camera, CameraText *about)
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
         strcpy (about->text,_("Barbie/HotWheels/WWF\nScott Fritzinger <scottf@unr.edu>\nAndreas Meyer <ahm@spies.com>\nPete Zaitcev <zaitcev@metabyte.com>\n\nReverse engineering of image data by:\nJeff Laing <jeffl@SPATIALinfo.com>\n\nImplemented using documents found on\nthe web. Permission given by Vision."));
         return GP_OK;
 }
 
 int
-camera_init (Camera *camera)
+camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
         int res;
 
         /* First, set up all the function pointers */
         camera->functions->summary      = camera_summary;
-        camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
 
         /* Set up the CameraFilesystem */

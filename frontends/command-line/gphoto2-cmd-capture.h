@@ -23,6 +23,7 @@
 
 #include <gphoto2-camera.h>
 
-int gp_cmd_capture_preview (Camera *camera, CameraFile *file);
+int gp_cmd_capture_preview (Camera *camera, CameraFile *file,
+			    GPContext *context);
 
 #endif /* __GPHOTO2_CMD_CAPTURE_H__ */

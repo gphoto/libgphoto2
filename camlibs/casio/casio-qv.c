@@ -124,7 +124,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_about (Camera *camera, CameraText *about) 
+camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
 	strcpy (about->text, "Download program for Casio QV cameras. "
 		"Originally written for gphoto-0.4. Adapted for gphoto2 by "
@@ -134,7 +134,7 @@ camera_about (Camera *camera, CameraText *about)
 }
 
 static int
-camera_summary (Camera *camera, CameraText *about)
+camera_summary (Camera *camera, CameraText *about, GPContext *context)
 {
 	float battery;
 	long int revision;
@@ -208,7 +208,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 }
 
 int
-camera_init (Camera *camera) 
+camera_init (Camera *camera, GPContext *context) 
 {
 	int result = GP_OK, i;
 	gp_port_settings settings;

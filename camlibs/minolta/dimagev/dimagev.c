@@ -75,7 +75,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	return GP_OK;
 }
 
-static int camera_exit (Camera *camera) 
+static int camera_exit (Camera *camera, GPContext *context) 
 {
 	/* Set the camera back into a normal mode. */
 	if (camera->pl) {
@@ -233,7 +233,7 @@ static int delete_all_func (CameraFilesystem *fs, const char *folder,
 	return (ret);
 }
 
-static int camera_summary (Camera *camera, CameraText *summary) 
+static int camera_summary (Camera *camera, CameraText *summary, GPContext *context) 
 {
 	int i = 0, count = 0;
 
@@ -424,17 +424,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
 	return GP_OK;
 }
 
-static int camera_manual (Camera *camera, CameraText *manual) 
-{
-#if defined HAVE_STRNCPY
-	strncpy(manual->text, _("Manual not available."), sizeof(manual->text));
-#else
-	strcpy(manual->text, _("Manual not available."));
-#endif
-	return GP_OK;
-}
-
-static int camera_about (Camera *camera, CameraText *about) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
 #if defined HAVE_SNPRINTF
 	snprintf(about->text, sizeof(about->text),
@@ -446,7 +436,7 @@ _("Minolta Dimage V Camera Library\n%s\nGus Hartmann <gphoto@gus-the-cat.org>\nS
 	return GP_OK;
 }
 
-int camera_init (Camera *camera) 
+int camera_init (Camera *camera, GPContext *context) 
 {
 	GPPortSettings settings;
 
@@ -454,7 +444,6 @@ int camera_init (Camera *camera)
         camera->functions->exit                 = camera_exit;
         camera->functions->capture              = camera_capture;
         camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 
         gp_debug_printf(GP_DEBUG_LOW, "dimagev", "initializing the camera");

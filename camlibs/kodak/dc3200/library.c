@@ -907,7 +907,7 @@ int dc3200_clear_read_buffer(Camera *camera)
 	
 //	printf("dc3200_clear_read_buffer\n");
 	
-	gp_port_timeout_set(camera->port, 0);
+	gp_port_set_timeout(camera->port, 0);
 	
 	while(gp_port_read(camera->port, &byte, 1) > 0)
 		count++;
@@ -915,7 +915,7 @@ int dc3200_clear_read_buffer(Camera *camera)
 	if(count > 0)
 		printf("cleared %d bytes from read buffer\n", count);
 	
-	gp_port_timeout_set(camera->port, TIMEOUT);
+	gp_port_set_timeout(camera->port, TIMEOUT);
 	
 	return GP_OK;
 }

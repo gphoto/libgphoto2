@@ -316,14 +316,18 @@ set_speed (Camera *camera, unsigned int speed)
 }
 
 static int
-test_speed (Camera *camera)
+test_speed (Camera *camera, GPContext *context)
 {
 	int i;
 	unsigned int speeds[] = {115200, 9600, 57600, 38400, 19200, 
 				 4800, 2400, 1200, 600, 300};
+	unsigned int id;
 	GPPortSettings settings;
 
 	CHECK (camera, gp_port_get_settings (camera->port, &settings));
+
+	id = gp_context_progress_start (context, 10,
+					_("Testing different speeds..."));
 	for (i = 0; i < 10; i++) {
 		gp_log (GP_LOG_DEBUG, "konica", "Testing speed %d",
 			speeds[i]);
@@ -331,9 +335,15 @@ test_speed (Camera *camera)
 		CHECK (camera, gp_port_set_settings (camera->port, settings));
 		if (k_init (camera->port) == GP_OK)
 			break;
+		gp_context_progress_update (context, id, i + 1);
 	}
-	if (i == 10)
+	gp_context_progress_stop (context, id);
+	if (i == 10) {
+		gp_context_error (context, _("The camera could not be "
+			"contacted. Please make sure it is conntected to the "
+			"computer and turned on."));
 		return (GP_ERROR_IO);
+	}
 
 	return (speeds[i]);
 }
@@ -390,7 +400,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_exit (Camera* camera)
+camera_exit (Camera* camera, GPContext *context)
 {
         if (camera->pl) {
                 free (camera->pl);
@@ -490,7 +500,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
-camera_summary (Camera* camera, CameraText* summary)
+camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 {
         char *model = NULL;
         char *serial_number = NULL;
@@ -528,7 +538,7 @@ camera_summary (Camera* camera, CameraText* summary)
 }
 
 static int
-camera_capture_preview (Camera* camera, CameraFile* file)
+camera_capture_preview (Camera* camera, CameraFile* file, GPContext *context)
 {
         unsigned char *data = NULL;
         long int size = 0;
@@ -595,7 +605,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 }
 
 static int
-camera_about (Camera* camera, CameraText* about)
+camera_about (Camera* camera, CameraText* about, GPContext *context)
 {
 	CHECK_NULL (camera && about);
 
@@ -608,7 +618,7 @@ camera_about (Camera* camera, CameraText* about)
 }
 
 static int
-camera_get_config (Camera* camera, CameraWidget** window)
+camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
 {
         CameraWidget *widget;
         CameraWidget *section;
@@ -822,7 +832,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
 }
 
 static int
-camera_set_config (Camera *camera, CameraWidget *window)
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
         CameraWidget *section;
         CameraWidget *widget_focus;
@@ -1162,7 +1172,7 @@ localization_file_read (Camera *camera, const char *file_name,
 }
 
 static int
-camera_pre_func (Camera *camera)
+camera_pre_func (Camera *camera, GPContext *context)
 {
 	/* Set best speed */
 	set_speed (camera, 0);
@@ -1171,7 +1181,7 @@ camera_pre_func (Camera *camera)
 }
 
 static int
-camera_post_func (Camera *camera)
+camera_post_func (Camera *camera, GPContext *context)
 {
 	/* Set default speed */
 	set_speed (camera, 9600);
@@ -1180,7 +1190,7 @@ camera_post_func (Camera *camera)
 }
 
 int
-camera_init (Camera* camera)
+camera_init (Camera* camera, GPContext *context)
 {
         int i, speed;
         GPPortSettings settings;
@@ -1222,7 +1232,7 @@ camera_init (Camera* camera)
                 CHECK (camera, gp_port_set_settings (camera->port, settings));
 
                 /* Initiate the connection */
-		speed = test_speed (camera);
+		speed = test_speed (camera, context);
 		CHECK (camera, speed);
 #if 0
 //Ideally, we need to reset the speed to the speed that we encountered

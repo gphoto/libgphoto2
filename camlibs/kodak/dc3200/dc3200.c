@@ -102,7 +102,7 @@ int init(Camera *camera)
 	return GP_OK;
 }
 
-static int camera_exit (Camera *camera)
+static int camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl) {
 		free (camera->pl);
@@ -301,7 +301,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	return (dc3200_keep_alive(camera));
 }
 
-static int camera_manual (Camera *camera, CameraText *manual)
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	strcpy (manual->text, 
 		_("Known problems:\n"
@@ -318,7 +318,7 @@ static int camera_manual (Camera *camera, CameraText *manual)
 	return (GP_OK);
 }
 
-static int camera_about (Camera *camera, CameraText *about)
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy	(about->text, 
 		_("Kodak DC3200 Driver\n"
@@ -328,7 +328,7 @@ static int camera_about (Camera *camera, CameraText *about)
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera) 
+int camera_init (Camera *camera, GPContext *context) 
 {
 	int ret;
 

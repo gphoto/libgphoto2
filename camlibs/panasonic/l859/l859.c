@@ -374,7 +374,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return GP_OK;
 }
 
-static int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera, GPContext *context) {
 
 	GP_DEBUG ("Camera Exit");
 
@@ -476,10 +476,11 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	int		index;
 	int		size;
-	int		i, r;
+	int		i;
 	int		s;
 	char	buffer[112];
 	int		bufIndex;
+	unsigned int id;
 
 	GP_DEBUG ("Get File %s", filename);
 
@@ -500,6 +501,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	if (size < 0)
 		return (size);
 
+	id = gp_context_progress_start (context, size,
+		_("Downloading '%s'..."), filename);
 	for (i = 0, s = 0; s < size; i++) {
 
 		if (l859_sendcmd(camera, L859_CMD_ACK) != GP_OK)
@@ -517,11 +520,11 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		gp_file_append (file, buffer, bufIndex - 3);
 
 		/* Check for cancellation */
-		r = gp_file_progress (file, (float)(s)/(float)size);
-		if (r < 0) {
+		gp_context_progress_update (context, id, s);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 			l859_disconnect (camera);
 			l859_connect    (camera);
-			return (r);
+			return (GP_ERROR_CANCEL);
 		}
 	}
 
@@ -576,7 +579,8 @@ static int delete_all_func (CameraFilesystem *fs, const char *folder,
 	return GP_OK;
 }
 
-static int camera_summary (Camera *camera, CameraText *summary) {
+static int camera_summary (Camera *camera, CameraText *summary,
+			   GPContext *context) {
 
 	strcpy (summary->text,
 		_("Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
@@ -593,7 +597,8 @@ static int camera_summary (Camera *camera, CameraText *summary) {
 	return (GP_OK);
 }
 
-static int camera_manual (Camera *camera, CameraText *manual) {
+static int camera_manual (Camera *camera, CameraText *manual,
+			  GPContext *context) {
 
 	strcpy (manual->text,
 		_("Known problems:\n"
@@ -606,7 +611,8 @@ static int camera_manual (Camera *camera, CameraText *manual) {
 	return (GP_OK);
 }
 
-static int camera_about (Camera *camera, CameraText *about) {
+static int camera_about (Camera *camera, CameraText *about,
+			 GPContext *context) {
 
 	strcpy(about->text,
 			_("Panasonic PV-L859-K/PV-L779-K Palmcorder Driver\n"
@@ -614,7 +620,7 @@ static int camera_about (Camera *camera, CameraText *about) {
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera) {
+int camera_init (Camera *camera, GPContext *context) {
 
         int ret;
 	GPPortSettings settings;

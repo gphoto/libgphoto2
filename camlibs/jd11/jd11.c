@@ -129,15 +129,15 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	switch (type) {
 	case GP_FILE_TYPE_RAW:
 		result =  jd11_get_image_full (camera, file, image_no, &data,
-					    (int*) &size, 1);
+					    (int*) &size, 1, context);
 		break;
 	case GP_FILE_TYPE_NORMAL:
 		result =  jd11_get_image_full (camera, file, image_no, &data,
-					    (int*) &size, 0);
+					    (int*) &size, 0, context);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		result =  jd11_get_image_preview (camera, file, image_no,
-						&data, (int*) &size);
+						&data, (int*) &size, context);
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -163,13 +163,7 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
     return jd11_erase_all(camera->port);
 }
 
-static int camera_summary (Camera *camera, CameraText *summary) 
-{
-	strcpy(summary->text, _("No summary available."));
-	return (GP_OK);
-}
-
-static int camera_manual (Camera *camera, CameraText *manual) 
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
 {
 	strcpy(manual->text, 
 	_(
@@ -183,7 +177,7 @@ static int camera_manual (Camera *camera, CameraText *manual)
 	return (GP_OK);
 }
 
-static int camera_about (Camera *camera, CameraText *about) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
 	strcpy (about->text, 
 		_("JD11\n"
@@ -193,7 +187,8 @@ static int camera_about (Camera *camera, CameraText *about)
 
 	return (GP_OK);
 }
-static int camera_config_get (Camera *camera, CameraWidget **window) 
+static int camera_config_get (Camera *camera, CameraWidget **window,
+			      GPContext *context) 
 {
 	CameraWidget *widget,*section;
 	float value_float,red,green,blue;
@@ -243,7 +238,8 @@ static int camera_config_get (Camera *camera, CameraWidget **window)
 	return (GP_OK);
 }
 
-static int camera_config_set (Camera *camera, CameraWidget *window) 
+static int camera_config_set (Camera *camera, CameraWidget *window,
+			      GPContext *context) 
 {
 	float f,red,green,blue;
 	CameraWidget *widget,*section;
@@ -284,13 +280,12 @@ static int camera_config_set (Camera *camera, CameraWidget *window)
 
 }
 
-int camera_init (Camera *camera) 
+int camera_init (Camera *camera, GPContext *context) 
 {
         gp_port_settings settings;
 	int ret;
 
         /* First, set up all the function pointers */
-        camera->functions->summary	= camera_summary;
         camera->functions->manual	= camera_manual;
         camera->functions->about	= camera_about;
 	camera->functions->get_config	= camera_config_get;

@@ -361,7 +361,7 @@ int camera_stop (Camera *camera)
 }
 
 static int
-camera_exit (Camera *camera) 
+camera_exit (Camera *camera, GPContext *context) 
 {
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_exit");
 
@@ -534,7 +534,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 }
 
 static int
-camera_capture_preview (Camera *camera, CameraFile *file)
+camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	CHECK (camera_start (camera));
 	CHECK_STOP (camera, sierra_capture_preview (camera, file));
@@ -694,7 +694,7 @@ static void dump_register (Camera *camera)
 }
 
 static int
-camera_get_config_olympus (Camera *camera, CameraWidget **window)
+camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *child;
 	CameraWidget *section;
@@ -1030,7 +1030,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window)
 }
 
 static int
-camera_set_config_olympus (Camera *camera, CameraWidget *window)
+camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *child;
 	char *value;
@@ -1266,7 +1266,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window)
 
 
 static int
-camera_get_config_epson (Camera *camera, CameraWidget **window)
+camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *child;
 	CameraWidget *section;
@@ -1514,7 +1514,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window)
 }
 
 static int
-camera_set_config_epson (Camera *camera, CameraWidget *window)
+camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *child;
 	char *value;
@@ -1690,23 +1690,23 @@ camera_set_config_epson (Camera *camera, CameraWidget *window)
 
 
 static int
-camera_get_config_default (Camera *camera, CameraWidget **window)
+camera_get_config_default (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	// This really should change in the near future...
-	return camera_get_config_olympus (camera, window);
+	return camera_get_config_olympus (camera, window, context);
 }
 
 
 static int
-camera_set_config_default (Camera *camera, CameraWidget *window)
+camera_set_config_default (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	// This really should change in the near futur...
-	return camera_set_config_olympus (camera, window);
+	return camera_set_config_olympus (camera, window, context);
 }
 
 
 static int
-camera_summary (Camera *camera, CameraText *summary) 
+camera_summary (Camera *camera, CameraText *summary, GPContext *context) 
 {
 	char buf[1024*32];
 	int value, ret;
@@ -1769,7 +1769,7 @@ camera_summary (Camera *camera, CameraText *summary)
 }
 
 static int
-camera_manual (Camera *camera, CameraText *manual) 
+camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
 {
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_manual");
 
@@ -1806,7 +1806,7 @@ camera_manual (Camera *camera, CameraText *manual)
 }
 
 static int
-camera_about (Camera *camera, CameraText *about) 
+camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_about");
 	
@@ -1865,7 +1865,7 @@ int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_s
 	return ret_status;
 }
 
-int camera_init (Camera *camera) 
+int camera_init (Camera *camera, GPContext *context) 
 {
         int value=0;
         int x=0, ret;
@@ -1898,14 +1898,6 @@ int camera_init (Camera *camera)
                         usb_wrap = sierra_cameras[x].usb_wrap;
                }
 	}
-
-        /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
-        camera->functions->capture_preview      = camera_capture_preview;
-        camera->functions->capture              = camera_capture;
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
-        camera->functions->about                = camera_about;
 
 	switch (camera->pl->model) {
 	case SIERRA_MODEL_EPSON:

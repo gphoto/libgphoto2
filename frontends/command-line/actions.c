@@ -34,7 +34,7 @@ print_picture_action (const char *folder, const char *filename)
 		printf ("\"%s\"\n", filename);
 	else {
 		CameraFileInfo info;
-		if (gp_camera_file_get_info(glob_camera, folder, filename, &info) == GP_OK) {
+		if (gp_camera_file_get_info(glob_camera, folder, filename, &info, NULL) == GP_OK) {
 		    printf("#%-5i %-27s", x+1, filename);
 		    if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
 			printf("%s%s",
@@ -83,5 +83,5 @@ save_audio_action (const char *folder, const char *filename)
 
 int delete_picture_action (const char *folder, const char *filename)
 {
-	return (gp_camera_file_delete(glob_camera, folder, filename));
+	return (gp_camera_file_delete(glob_camera, folder, filename, glob_context));
 }

@@ -81,7 +81,7 @@ int camera_abilities(CameraAbilitiesList *list) {
     return GP_OK;
 }
 
-static int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera, GPContext *context) {
    
     if (camera->pl) {
 	if (camera->pl->file_list) {
@@ -199,7 +199,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
     return GP_OK;
 }
 
-static int camera_summary(Camera *camera, CameraText *summary) {
+static int camera_summary(Camera *camera, CameraText *summary,
+			  GPContext *context) {
 
     int taken;
 
@@ -211,15 +212,7 @@ static int camera_summary(Camera *camera, CameraText *summary) {
     return GP_OK;
 }
 
-static int camera_manual(Camera *camera, CameraText *manual) {
-
-    strcpy(manual->text, _("Manual Not Implemented Yet"));
-
-    return GP_OK;
-
-}
-
-static int camera_about(Camera *camera, CameraText *about) {
+static int camera_about(Camera *camera, CameraText *about, GPContext *context) {
         
     strcpy(about->text, _("Agfa CL18\nVince Weaver <vince@deater.net>\n"));
 
@@ -257,7 +250,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 
-int camera_init(Camera *camera) {
+int camera_init(Camera *camera, GPContext *context) {
    
     GPPortSettings settings;
     int ret = 0;
@@ -265,7 +258,6 @@ int camera_init(Camera *camera) {
        /* First, set up all the function pointers */
     camera->functions->exit         = camera_exit;
     camera->functions->summary      = camera_summary;
-    camera->functions->manual       = camera_manual;
     camera->functions->about        = camera_about;
     camera->functions->capture      = camera_capture;
    

@@ -82,11 +82,11 @@ typedef struct _CameraAbilitiesList CameraAbilitiesList;
 int gp_abilities_list_new    (CameraAbilitiesList **list);
 int gp_abilities_list_free   (CameraAbilitiesList *list);
 
-int gp_abilities_list_load     (CameraAbilitiesList *list);
-int gp_abilities_list_load_ctx (CameraAbilitiesList *list, GPContext *context);
+int gp_abilities_list_load     (CameraAbilitiesList *list, GPContext *context);
 
 int gp_abilities_list_detect (CameraAbilitiesList *list,
-			      GPPortInfoList *info_list, CameraList *l);
+			      GPPortInfoList *info_list, CameraList *l,
+			      GPContext *context);
 
 int gp_abilities_list_append (CameraAbilitiesList *list,
 			      CameraAbilities abilities);

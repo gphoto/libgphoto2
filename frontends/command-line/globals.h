@@ -15,3 +15,4 @@ extern int  		glob_stdout;
 extern int  		glob_stdout_size;
 extern Camera*		glob_camera;
 extern Option 		option[];
+extern GPContext       *glob_context;

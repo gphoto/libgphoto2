@@ -17,6 +17,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#include <config.h>
 
 #include <stdio.h>
 #include <assert.h>
@@ -31,6 +32,25 @@
 
 #include "serial.h"
 #include "decomp.h"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 #if 0
 static int
@@ -329,13 +349,13 @@ jd11_erase_all(GPPort *port) {
 }
 
 int
-jd11_get_image_preview(Camera *camera,CameraFile*file,int nr, char **data, int *size) {
+jd11_get_image_preview(Camera *camera,CameraFile*file,int nr, char **data, int *size, GPContext *context) {
 	int	xsize,curread=0,ret=0;
 	char	*indexbuf,*src,*dst;
 	int	y;
 	char	header[200];
 	GPPort	*port = camera->port;
-
+	unsigned int id;
 
 	if (nr < 0) return GP_ERROR_BAD_PARAMETERS;
 
@@ -351,6 +371,8 @@ jd11_get_image_preview(Camera *camera,CameraFile*file,int nr, char **data, int *
 	indexbuf = malloc(xsize);
 	if (!indexbuf) return GP_ERROR_NO_MEMORY;
 	_send_cmd(port,0xfff1);
+	id = gp_context_progress_start (context, xsize,
+					_("Downloading thumbnail..."));
 	while (1) {
 	    	int readsize = xsize-curread;
 		if (readsize>200) readsize = 200;
@@ -360,14 +382,15 @@ jd11_get_image_preview(Camera *camera,CameraFile*file,int nr, char **data, int *
 		curread+=ret;
 		if (ret<200)
 			break;
-		ret = gp_file_progress(file,(1.0*curread)/xsize);
-		if (ret < 0) { /* cancelled */
+		gp_context_progress_update (context, id, curread);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 		    /* What to do...Just free the stuff we allocated for now.*/
 		    free(indexbuf);
-		    return ret;
+		    return GP_ERROR_CANCEL;
 		}
 		_send_cmd(port,0xfff1);
 	}
+	gp_context_progress_stop (context, id);
 	strcpy(header,"P5\n# gPhoto2 JD11 thumbnail image\n64 48 255\n");
 	*size = 64*48+strlen(header);
 	*data = malloc(*size);
@@ -416,9 +439,10 @@ jd11_file_count(GPPort *port,int *count) {
 }
 
 static int
-serial_image_reader(Camera *camera,CameraFile *file,int nr,unsigned char ***imagebufs,int *sizes) {
+serial_image_reader(Camera *camera,CameraFile *file,int nr,unsigned char ***imagebufs,int *sizes, GPContext *context) {
     int	picnum,curread,ret=0;
     GPPort *port = camera->port;
+    unsigned int id;
 
     jd11_select_image(port,nr);
     *imagebufs = (unsigned char**)malloc(3*sizeof(char**));
@@ -427,6 +451,8 @@ serial_image_reader(Camera *camera,CameraFile *file,int nr,unsigned char ***imag
 	sizes[picnum] = jd11_imgsize(port);
 	(*imagebufs)[picnum]=(unsigned char*)malloc(sizes[picnum]+400);
 	_send_cmd(port,0xfff1);
+	id = gp_context_progress_start (context, sizes[picnum],
+			_("Downloading data..."));
 	while (curread<sizes[picnum]) {
 	    int readsize = sizes[picnum]-curread;
 	    if (readsize > 200) readsize = 200;
@@ -436,30 +462,31 @@ serial_image_reader(Camera *camera,CameraFile *file,int nr,unsigned char ***imag
 	    curread+=ret;
 	    if (ret<200)
 		break;
-	    ret = gp_file_progress(file,1.0*picnum/3.0+(curread*1.0)/sizes[picnum]/3.0);
-	    if (ret < 0) { /* cancelled */
+	    gp_context_progress_update (context, id, curread);
+	    if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 		int j;
 		/* What to do ... Just free the stuff we allocated for now. */
 		for (j=0;j<picnum;j++)
 		    free((*imagebufs)[picnum]);
 		free(*imagebufs);
-		return ret;
+		return GP_ERROR_CANCEL;
 	    }
 	    _send_cmd(port,0xfff1);
 	}
+	gp_context_progress_stop (context, id);
     }
     return GP_OK;
 }
 
 
 int
-jd11_get_image_full(Camera *camera,CameraFile*file,int nr, char **data, int *size,int raw) {
+jd11_get_image_full(Camera *camera,CameraFile*file,int nr, char **data, int *size,int raw, GPContext *context) {
     unsigned char	*s,*uncomp[3],**imagebufs;
     int			ret,sizes[3];
     char		header[200];
     int 		h;
 
-    ret = serial_image_reader(camera,file,nr,&imagebufs,sizes);
+    ret = serial_image_reader(camera,file,nr,&imagebufs,sizes, context);
     if (ret!=GP_OK)
 	return ret;
     uncomp[0] = malloc(320*480);

@@ -461,7 +461,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         return GP_OK;
 }
 
-static int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera, GPContext *context) {
         
         dsc_print_status(camera, _("Disconnecting camera."));
 
@@ -619,21 +619,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
         return dsc2_delete(camera, index);
 }
 
-static int camera_summary (Camera *camera, CameraText *summary) 
-{
-        strcpy(summary->text, _("Summary not available."));
-
-        return (GP_OK);
-}
-
-static int camera_manual (Camera *camera, CameraText *manual) 
-{
-        strcpy(manual->text, _("Manual not available."));
-
-        return (GP_OK);
-}
-
-static int camera_about (Camera *camera, CameraText *about) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
         strcpy(about->text,
                         _("Panasonic DC1580 gPhoto library\n"
@@ -644,15 +630,13 @@ static int camera_about (Camera *camera, CameraText *about)
         return (GP_OK);
 }
 
-int camera_init (Camera *camera) 
+int camera_init (Camera *camera, GPContext *context) 
 {
         GPPortSettings settings;
         int result, selected_speed;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));

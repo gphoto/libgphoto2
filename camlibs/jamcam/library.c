@@ -22,6 +22,7 @@
 /* Free Software Foundation, Inc., 59 Temple Place - Suite 330, */
 /* Boston, MA 02111-1307, USA.                                  */
 /****************************************************************/
+#include <config.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -31,6 +32,25 @@
 #include <math.h>
 
 #include "library.h"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 struct jamcam_file jamcam_files[1024];
 static int jamcam_count = 0;
@@ -294,7 +314,7 @@ int jamcam_file_count (Camera *camera) {
 }
 
 int jamcam_fetch_memory( Camera *camera, CameraFile *file,
-		char *data, int start, int length ) {
+		char *data, int start, int length, GPContext *context) {
 	char tmp_buf[16];
 	char packet[16];
 	int new_start;
@@ -303,12 +323,17 @@ int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 	int bytes_to_read;
 	int bytes_left = length;
 	int res = GP_OK;
+	unsigned int id = 0;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_fetch_memory");
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * start:  %d (0x%x)",
 		start, start);
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * length: %d (0x%x)",
 		length, length);
+
+	if ( length > 1000 )
+		id = gp_context_progress_start (context, length,
+			_("Downloading data..."));
 
 	while( bytes_left ) {
 		switch( camera->port->type ) {
@@ -355,14 +380,16 @@ int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 		/* hate this hardcoded, but don't want to update here */
 		/* when downloading parts of a thumbnail              */
 		if ( length > 1000 ) {
-			res = gp_file_progress( file,
-				(float)(bytes_read)/(float)(length) );
-			if ( res < 0 ) {
+			gp_context_progress_update (context, id, bytes_read);
+			if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 				gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * CANCELED");
 				break;
 			}
 		}
 	}
+
+	if ( length > 1000 )
+		gp_context_progress_stop (context, id);
 
 	if ( res == GP_OK ) {
 		gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * returning OK");
@@ -371,7 +398,7 @@ int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 }
 
 int jamcam_request_image( Camera *camera, CameraFile *file,
-		char *buf, int *len, int number ) {
+		char *buf, int *len, int number, GPContext *context ) {
 	int position;
 	int result;
 	char tmp_buf[300000];
@@ -394,7 +421,7 @@ int jamcam_request_image( Camera *camera, CameraFile *file,
 	}
 
 	result = jamcam_fetch_memory( camera, file, tmp_buf, position,
-		jamcam_files[number].data_incr );
+		jamcam_files[number].data_incr, context );
 
 	/* this seems to reset the camera to a sane status */
 	if ( camera->port->type == GP_PORT_USB ) {
@@ -419,7 +446,7 @@ struct jamcam_file *jamcam_file_info(Camera *camera, int number)
 }
 
 int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
-		char *buf, int *len, int number ) {
+		char *buf, int *len, int number, GPContext *context ) {
 	char line[2048];
 	char packet[16];
 	int position;
@@ -427,6 +454,7 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 	int res = GP_OK;
 	char *ptr;
 	int bytes_to_read;
+	unsigned int id;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_request_thumbnail");
 
@@ -462,12 +490,14 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 
 	/* fetch thumbnail lines and build the thumbnail */
 	position += 10 * jamcam_files[number].width;
+	id = gp_context_progress_start (context, 60.,
+					_("Downloading thumbnail..."));
 	for( y = 0 ; y < 60 ; y++ ) {
-		jamcam_fetch_memory( camera, file, line, position, bytes_to_read );
+		jamcam_fetch_memory( camera, file, line, position, bytes_to_read, context );
 
-		res = gp_file_progress( file, (float)(y)/60.0 );
-		gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * progress: %.2f", (float)(y)/60.0);
-		if ( res < 0 ) {
+		gp_context_progress_update (context, id, y);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+			res = GP_ERROR_CANCEL;
 			break;
 		}
 
@@ -491,6 +521,7 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 			}
 		}
 	}
+	gp_context_progress_stop (context, id);
 
 	/* this seems to reset the camera to a sane status */
 	if ( camera->port->type == GP_PORT_USB ) {

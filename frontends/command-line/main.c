@@ -214,8 +214,8 @@ char glob_cwd[1024];
 int  glob_speed;
 int  glob_num=1;
 
-static GPContext *glob_context = NULL;
 Camera    *glob_camera  = NULL;
+GPContext *glob_context = NULL;
 
 int  glob_debug;
 int  glob_shell=0;
@@ -280,10 +280,10 @@ OPTION_CALLBACK (auto_detect)
         const char *name, *value;
 
 	gp_abilities_list_new (&al);
-	gp_abilities_list_load (al);
+	gp_abilities_list_load (al, glob_context);
 	gp_port_info_list_new (&il);
 	gp_port_info_list_load (il);
-	gp_abilities_list_detect (al, il, &list);
+	gp_abilities_list_detect (al, il, &list, glob_context);
 	gp_abilities_list_free (al);
 	gp_port_info_list_free (il);
 
@@ -312,7 +312,7 @@ OPTION_CALLBACK (abilities)
         }
 
 	CHECK_RESULT (gp_abilities_list_new (&al));
-	CHECK_RESULT (gp_abilities_list_load (al));
+	CHECK_RESULT (gp_abilities_list_load (al, glob_context));
 	CHECK_RESULT (x = gp_abilities_list_lookup_model (al, glob_model));
 	CHECK_RESULT (gp_abilities_list_get_abilities (al, x, &abilities));
 	CHECK_RESULT (gp_abilities_list_free (al));
@@ -363,7 +363,7 @@ OPTION_CALLBACK(list_cameras) {
         cli_debug_print("Listing Cameras");
 
 	CHECK_RESULT (gp_abilities_list_new (&al));
-	CHECK_RESULT (gp_abilities_list_load (al));
+	CHECK_RESULT (gp_abilities_list_load (al, glob_context));
         CHECK_RESULT (n = gp_abilities_list_count (al));
 
         if (glob_quiet)
@@ -414,7 +414,7 @@ OPTION_CALLBACK(print_usb_usermap) {
         cli_debug_print("Listing Cameras");
 
 	CHECK_RESULT (gp_abilities_list_new (&al));
-	CHECK_RESULT (gp_abilities_list_load (al));
+	CHECK_RESULT (gp_abilities_list_load (al, glob_context));
 	CHECK_RESULT (n = gp_abilities_list_count (al));
 
         for (x = 0; x < n; x++) {
@@ -610,7 +610,7 @@ OPTION_CALLBACK(config)
 {
 	CHECK_RESULT (set_globals ());
 
-	CHECK_RESULT (gp_cmd_config (glob_camera));
+	CHECK_RESULT (gp_cmd_config (glob_camera, glob_context));
 
 	return (GP_OK);
 }
@@ -636,7 +636,7 @@ OPTION_CALLBACK (num_pictures)
 
         CHECK_RESULT (set_globals ());
         CHECK_RESULT (gp_camera_folder_list_files (glob_camera, glob_folder,
-                                                   &list));
+                                                   &list, glob_context));
         CHECK_RESULT (count = gp_list_count (&list));
 
         if (glob_quiet)
@@ -735,29 +735,6 @@ save_camera_file_to_file (CameraFile *file, CameraFileType type)
         return (result);
 }
 
-static int
-download_progress_func (CameraFile *file, float percentage, void *data)
-{
-	const char *name;
-
-	/* Check for cancellation */
-	if (glob_cancel)
-		return (GP_ERROR_CANCEL);
-
-	if (glob_quiet)
-		return (GP_OK);
-
-	CHECK_RESULT (gp_file_get_name (file, &name));
-	if (strlen (name))
-		printf ("Downloading '%s': %02.01f\r", name, 
-			percentage * 100.);
-	else
-		printf ("Downloading: %02.01f\r", percentage * 100.);
-	fflush (stdout);
-
-	return (GP_OK);
-}
-
 int
 save_picture_to_file (const char *folder, const char *filename,
 		      CameraFileType type)
@@ -767,11 +744,8 @@ save_picture_to_file (const char *folder, const char *filename,
         CameraFile *file;
 
         CHECK_RESULT (gp_file_new (&file));
-	CHECK_RESULT (gp_file_set_progress_func (file,
-					download_progress_func, NULL));
         CHECK_RESULT (gp_camera_file_get (glob_camera, folder, filename, type,
-                                          file));
-	CHECK_RESULT (gp_file_set_progress_func (file, NULL, NULL));
+                                          file, glob_context));
 
         if (glob_stdout) {
                 const char *data;
@@ -905,31 +879,10 @@ OPTION_CALLBACK (delete_all_pictures)
         cli_debug_print("Deleting all pictures");
 
         CHECK_RESULT (set_globals ());
-        CHECK_RESULT (gp_camera_folder_delete_all (glob_camera, glob_folder));
+        CHECK_RESULT (gp_camera_folder_delete_all (glob_camera, glob_folder,
+						   glob_context));
 
         return (GP_OK);
-}
-
-static int
-upload_progress_func (CameraFile *file, float percentage, void *data)
-{
-	const char *name;
-
-	/* Check for cancellation */
-	if (glob_cancel)
-		return (GP_ERROR_CANCEL);
-
-	if (glob_quiet)
-		return (GP_OK);
-
-	CHECK_RESULT (gp_file_get_name (file, &name));
-	if (strlen (name))
-		printf ("Uploading '%s': %02.01f\r", name, percentage * 100.);
-	else
-		printf ("Uploading: %02.01f\r", percentage * 100.);
-	fflush (stdout);
-
-	return (GP_OK);
 }
 
 OPTION_CALLBACK (upload_picture)
@@ -948,9 +901,8 @@ OPTION_CALLBACK (upload_picture)
 		return (res);
 	}
 
-	gp_file_set_progress_func (file, upload_progress_func, NULL);
-        res = gp_camera_folder_put_file (glob_camera, glob_folder, file);
-	gp_file_set_progress_func (file, NULL, NULL);
+        res = gp_camera_folder_put_file (glob_camera, glob_folder, file,
+					 glob_context);
         gp_file_unref (file);
 
         return (res);
@@ -961,7 +913,8 @@ OPTION_CALLBACK (make_dir)
 	CHECK_RESULT (set_globals ());
 
 	CHECK_RESULT (gp_camera_folder_make_dir (glob_camera,
-						 glob_folder, arg));
+						 glob_folder, arg, 
+						 glob_context));
 
 	return (GP_OK);
 }
@@ -971,7 +924,8 @@ OPTION_CALLBACK (remove_dir)
 	CHECK_RESULT (set_globals ());
 
 	CHECK_RESULT (gp_camera_folder_remove_dir (glob_camera,
-						   glob_folder, arg));
+						   glob_folder, arg,
+						   glob_context));
 
 	return (GP_OK);
 }
@@ -985,7 +939,7 @@ capture_generic (CameraCaptureType type, char *name)
 
         CHECK_RESULT (set_globals ());
 
-	result =  gp_camera_capture (glob_camera, type, &path);
+	result =  gp_camera_capture (glob_camera, type, &path, glob_context);
 	if (result != GP_OK) {
 		cli_error_print("Could not capture.");
 		return (result);
@@ -1030,9 +984,9 @@ OPTION_CALLBACK (capture_preview)
 
 	CHECK_RESULT (gp_file_new (&file));
 #if HAVE_AA
-	result = gp_cmd_capture_preview (glob_camera, file);
+	result = gp_cmd_capture_preview (glob_camera, file, glob_context);
 #else
-	result = gp_camera_capture_preview (glob_camera, file);
+	result = gp_camera_capture_preview (glob_camera, file, glob_context);
 #endif
 	if (result < 0) {
 		gp_file_free (file);
@@ -1055,7 +1009,7 @@ OPTION_CALLBACK(summary)
         CameraText buf;
 
         CHECK_RESULT (set_globals ());
-        CHECK_RESULT (gp_camera_get_summary (glob_camera, &buf));
+        CHECK_RESULT (gp_camera_get_summary (glob_camera, &buf, glob_context));
 
         printf(_("Camera Summary:\n%s\n"), buf.text);
 
@@ -1067,7 +1021,7 @@ OPTION_CALLBACK (manual)
         CameraText buf;
 
         CHECK_RESULT (set_globals ());
-        CHECK_RESULT (gp_camera_get_manual (glob_camera, &buf));
+        CHECK_RESULT (gp_camera_get_manual (glob_camera, &buf, glob_context));
 
         printf (_("Camera Manual:\n%s\n"), buf.text);
 
@@ -1079,7 +1033,7 @@ OPTION_CALLBACK (about)
         CameraText buf;
 
         CHECK_RESULT (set_globals ());
-        CHECK_RESULT (gp_camera_get_about (glob_camera, &buf));
+        CHECK_RESULT (gp_camera_get_about (glob_camera, &buf, glob_context));
 
         printf (_("About the library:\n%s\n"), buf.text);
 
@@ -1111,14 +1065,15 @@ set_globals (void)
         CHECK_RESULT (gp_camera_new (&glob_camera));
 
 	CHECK_RESULT (gp_abilities_list_new (&al));
-	CHECK_RESULT (gp_abilities_list_load_ctx (al, glob_context));
+	CHECK_RESULT (gp_abilities_list_load (al, glob_context));
 
 	CHECK_RESULT (gp_port_info_list_new (&il));
 	CHECK_RESULT (gp_port_info_list_load (il));
 
 	/* Model? */
 	if (!strcmp ("", glob_model)) {
-		CHECK_RESULT (gp_abilities_list_detect (al, il, &list));
+		CHECK_RESULT (gp_abilities_list_detect (al, il, &list,
+							glob_context));
 		count = gp_list_count (&list);
 		CHECK_RESULT (count);
 		if (count == 1) {
@@ -1209,7 +1164,6 @@ set_globals (void)
 	        CHECK_RESULT (gp_camera_set_port_speed (glob_camera, glob_speed));
 
 	gp_camera_set_status_func (glob_camera, status_func, NULL);
-	gp_camera_set_progress_func (glob_camera, progress_func, NULL);
 	gp_camera_set_message_func (glob_camera, message_func, NULL);
 
         return (GP_OK);
@@ -1228,8 +1182,10 @@ static void
 ctx_error_func (GPContext *context, const char *format, va_list args,
 		void *data)
 {
-	fprintf  (stderr, _("*** Error ***\n"));
+	fprintf  (stderr, "\n");
+	fprintf  (stderr, _("*** Error ***              \n"));
 	vfprintf (stderr, format, args);
+	fprintf  (stderr, "\n");
 	fflush   (stderr);
 }
 
@@ -1257,7 +1213,7 @@ static void
 ctx_progress_update_func (GPContext *context, unsigned int id,
 			  float current, void *data)
 {
-	printf ("Percent completed: %02.01f\r", current / targets[id]);
+	printf ("Percent completed: %02.01f\r", current / targets[id] * 100.);
 	fflush(stdout);
 }
 
@@ -1429,14 +1385,8 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 			printf (_("Operation cancelled.\n"));
 			break;
 		default:
-			printf (_("*** Error ('%s') ***\n"),
-				_(gp_result_as_string (result)));
-			printf (_("The following message is the last "
-				  "internal error message.\n"
-				  "This message may currently still be "
-				  "unrelated to the real error:\n\n"
-				  "%s\n\n"),
-				_(gp_camera_get_error (glob_camera)));
+			fprintf (stderr, _("*** Error ('%s') ***       \n\n"),
+				 _(gp_result_as_string (result)));
 #ifndef DISABLE_DEBUGGING
 			if (!glob_debug) {
 				int n;
@@ -1459,10 +1409,14 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 			}
 #endif
 
-			/* Unref the camera and exit */
+			/* Clean up and exit */
 			if (glob_camera) {
 				gp_camera_unref (glob_camera);
 				glob_camera = NULL;
+			}
+			if (glob_context) {
+				gp_context_unref (glob_context);
+				glob_context = NULL;
 			}
 			exit (EXIT_FAILURE);
 		}
@@ -1472,10 +1426,14 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 //       printf(_("\nErrors occuring beyond this point are 'expected' on OS/2\ninvestigation pending\n"));
 #endif
 
-	/* Unref existing cameras */
+	/* Clean up */
 	if (glob_camera) {
 		gp_camera_unref (glob_camera);
 		glob_camera = NULL;
+	}
+	if (glob_context) {
+		gp_context_unref (glob_context);
+		glob_context = NULL;
 	}
 
         return (EXIT_SUCCESS);

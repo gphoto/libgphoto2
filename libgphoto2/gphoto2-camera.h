@@ -21,6 +21,8 @@
 #ifndef __GPHOTO2_CAMERA_H__
 #define __GPHOTO2_CAMERA_H__
 
+#include <gphoto2-context.h>
+
 typedef struct _Camera Camera;
 
 #include <gphoto2-port.h>
@@ -49,15 +51,21 @@ typedef enum {
 	GP_CAPTURE_SOUND
 } CameraCaptureType;
 
-typedef int (*CameraExitFunc)      (Camera *camera);
-typedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget);
-typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget);
+typedef int (*CameraExitFunc)      (Camera *camera, GPContext *context);
+typedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget,
+				    GPContext *context);
+typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget,
+				    GPContext *context);
 typedef int (*CameraCaptureFunc)   (Camera *camera, CameraCaptureType type,
 				    CameraFilePath *path, GPContext *context);
-typedef int (*CameraCapturePreviewFunc) (Camera *camera, CameraFile *file);
-typedef int (*CameraSummaryFunc) (Camera *camera, CameraText *text);
-typedef int (*CameraManualFunc)  (Camera *camera, CameraText *text);
-typedef int (*CameraAboutFunc)   (Camera *camera, CameraText *text);
+typedef int (*CameraCapturePreviewFunc) (Camera *camera, CameraFile *file,
+					 GPContext *context);
+typedef int (*CameraSummaryFunc)   (Camera *camera, CameraText *text,
+				    GPContext *context);
+typedef int (*CameraManualFunc)    (Camera *camera, CameraText *text,
+				    GPContext *context);
+typedef int (*CameraAboutFunc)     (Camera *camera, CameraText *text,
+				    GPContext *context);
 
 /**
  * CameraPrePostFunc:
@@ -72,7 +80,7 @@ typedef int (*CameraAboutFunc)   (Camera *camera, CameraText *text);
  *
  * Return value: a gphoto2 error code
  **/
-typedef int (*CameraPrePostFunc) (Camera *camera);
+typedef int (*CameraPrePostFunc) (Camera *camera, GPContext *context);
 
 typedef struct _CameraFunctions CameraFunctions;
 struct _CameraFunctions {
@@ -133,45 +141,55 @@ int gp_camera_set_port_speed    (Camera *camera, int speed);
 int gp_camera_get_port_speed    (Camera *camera);
 
 /* Initialization */
-int gp_camera_init               (Camera *camera);
-int gp_camera_exit               (Camera *camera);
+int gp_camera_init               (Camera *camera, GPContext *context);
+int gp_camera_exit               (Camera *camera, GPContext *context);
 
 /* Operations on cameras */
 int gp_camera_ref   		 (Camera *camera);
 int gp_camera_unref 		 (Camera *camera);
 int gp_camera_free 		 (Camera *camera);
-int gp_camera_get_config	 (Camera *camera, CameraWidget **window);
-int gp_camera_set_config	 (Camera *camera, CameraWidget  *window);
-int gp_camera_get_summary	 (Camera *camera, CameraText *summary);
-int gp_camera_get_manual	 (Camera *camera, CameraText *manual);
-int gp_camera_get_about		 (Camera *camera, CameraText *about);
+
+int gp_camera_get_config	 (Camera *camera, CameraWidget **window,
+				  GPContext *context);
+int gp_camera_set_config	 (Camera *camera, CameraWidget  *window,
+				  GPContext *context);
+int gp_camera_get_summary	 (Camera *camera, CameraText *summary,
+				  GPContext *context);
+int gp_camera_get_manual	 (Camera *camera, CameraText *manual,
+				  GPContext *context);
+int gp_camera_get_about		 (Camera *camera, CameraText *about,
+				  GPContext *context);
 int gp_camera_capture 		 (Camera *camera, CameraCaptureType type,
-				  CameraFilePath *path);
-int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file);
+				  CameraFilePath *path, GPContext *context);
+int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file,
+				  GPContext *context);
 
 /* Operations on folders */
 int gp_camera_folder_list_files   (Camera *camera, const char *folder, 
-				   CameraList *list);
+				   CameraList *list, GPContext *context);
 int gp_camera_folder_list_folders (Camera *camera, const char *folder, 
-				   CameraList *list);
-int gp_camera_folder_delete_all   (Camera *camera, const char *folder);
+				   CameraList *list, GPContext *context);
+int gp_camera_folder_delete_all   (Camera *camera, const char *folder,
+				   GPContext *context);
 int gp_camera_folder_put_file     (Camera *camera, const char *folder,
-				   CameraFile *file);
+				   CameraFile *file, GPContext *context);
 int gp_camera_folder_make_dir     (Camera *camera, const char *folder,
-				   const char *name);
+				   const char *name, GPContext *context);
 int gp_camera_folder_remove_dir   (Camera *camera, const char *folder,
-				   const char *name);
+				   const char *name, GPContext *context);
 
 /* Operations on files */
 int gp_camera_file_get_info 	(Camera *camera, const char *folder, 
-				 const char *file, CameraFileInfo *info);
+				 const char *file, CameraFileInfo *info,
+				 GPContext *context);
 int gp_camera_file_set_info 	(Camera *camera, const char *folder, 
-				 const char *file, CameraFileInfo info);
+				 const char *file, CameraFileInfo info,
+				 GPContext *context);
 int gp_camera_file_get		(Camera *camera, const char *folder, 
 				 const char *file, CameraFileType type,
-				 CameraFile *camera_file);
+				 CameraFile *camera_file, GPContext *context);
 int gp_camera_file_delete     	(Camera *camera, const char *folder, 
-				 const char *file);
+				 const char *file, GPContext *context);
 
 /* Informing frontends */
 typedef void (* CameraMessageFunc)  (Camera *, const char *msg, void *data);
@@ -187,10 +205,5 @@ int gp_camera_status            (Camera *camera, const char *format, ...);
 /* Error reporting */
 int         gp_camera_set_error (Camera *camera, const char *format, ...);
 const char *gp_camera_get_error (Camera *camera);
-
-/* DEPRECATED */
-typedef void (* CameraProgressFunc) (Camera *, float, void *);
-int gp_camera_set_progress_func     (Camera *, CameraProgressFunc, void *);
-int gp_camera_progress              (Camera *, float);
 
 #endif /* __GPHOTO2_CAMERA_H__ */

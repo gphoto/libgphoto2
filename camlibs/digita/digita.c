@@ -108,7 +108,7 @@ int camera_id(CameraText *id)
 	return GP_OK;
 }
 
-static int camera_exit(Camera *camera)
+static int camera_exit(Camera *camera, GPContext *context)
 {
 	if (camera->pl) {
 		free(camera->pl);
@@ -379,7 +379,7 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 	return GP_OK;
 }
 
-static int camera_summary(Camera *camera, CameraText *summary)
+static int camera_summary(Camera *camera, CameraText *summary, GPContext *context)
 {
 	int taken;
 
@@ -391,14 +391,7 @@ static int camera_summary(Camera *camera, CameraText *summary)
 	return GP_OK;
 }
 
-static int camera_manual(Camera *camera, CameraText *manual)
-{
-	strcpy(manual->text, _("Manual Not Available"));
-
-	return GP_ERROR;
-}
-
-static int camera_about(Camera *camera, CameraText *about)
+static int camera_about(Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy(about->text, _("Digita\n" \
 		"Johannes Erdfelt <johannes@erdfelt.com>"));
@@ -435,7 +428,7 @@ static int delete_picture(int index)
 }
 #endif
 
-int camera_init(Camera *camera)
+int camera_init(Camera *camera, GPContext *context)
 {
 	int ret = 0;
 
@@ -445,7 +438,6 @@ int camera_init(Camera *camera)
 	/* First, set up all the function pointers */
 	camera->functions->exit		= camera_exit;
 	camera->functions->summary	= camera_summary;
-	camera->functions->manual	= camera_manual;
 	camera->functions->about	= camera_about;
 
 	/* Set up the CameraFilesystem */

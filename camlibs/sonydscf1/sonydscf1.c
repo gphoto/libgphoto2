@@ -59,7 +59,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         return (GP_OK);
 }
 
-static int camera_exit (Camera *camera) {
+static int camera_exit (Camera *camera, GPContext *context) {
         if(F1ok())
            return(GP_ERROR);
         return (F1fclose());
@@ -119,7 +119,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
         /*return (F1deletepicture(file_number));*/
 }
 
-static int camera_summary (Camera *camera, CameraText *summary)
+static int camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
         /*printf("->camera summary");*/
         int i;
@@ -129,15 +129,7 @@ static int camera_summary (Camera *camera, CameraText *summary)
         return (F1newstatus(1, summary->text));
 }
 
-static int camera_manual (Camera *camera, CameraText *manual)
-{
-                /*printf("sony dscf1: manual\n");*/
-        strcpy(manual->text, _("Manual Not Available"));
-
-        return (GP_OK);
-}
-
-static int camera_about (Camera *camera, CameraText *about)
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
         strcpy(about->text,
 _("Sony DSC-F1 Digital Camera Support\nM. Adam Kendall <joker@penguinpub.com>\nBased on the chotplay CLI interface from\nKen-ichi Hayashi\nGphoto2 port by Bart van Leeuwen <bart@netage.nl>"));
@@ -161,12 +153,11 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
         return GP_OK;
 }
 
-int camera_init (Camera *camera) {
+int camera_init (Camera *camera, GPContext *context) {
         GPPortSettings settings;
 
         camera->functions->exit         = camera_exit;
         camera->functions->summary      = camera_summary;
-        camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
 
 	/* FIXME: This won't work with several frontends. NO GLOBALS PLEASE! */

@@ -858,7 +858,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_about (Camera *camera, CameraText *about) 
+camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
 	strcpy (about->text, "Download program for Polaroid DC700 camera. "
 		"Originally written by Ryan Lantzer "
@@ -889,7 +889,7 @@ add_radio (CameraWidget *section, const char *blurb, const char **opt,
   
 
 static int
-camera_get_config (Camera *camera, CameraWidget **window)
+camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *child;
 	CameraWidget *section;
@@ -959,7 +959,7 @@ which_radio_button (CameraWidget *window, const char *label,
 }
 
 static int
-camera_set_config (Camera *camera, CameraWidget *window)
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
   	CameraWidget *child;
 	int i = 0, r;
@@ -1004,7 +1004,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
 }
 
 static int
-camera_summary (Camera *camera, CameraText *about)
+camera_summary (Camera *camera, CameraText *about, GPContext *context)
 {
 	PDCInfo info;
 
@@ -1080,7 +1080,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 }
 
 int
-camera_init (Camera *camera) 
+camera_init (Camera *camera, GPContext *context) 
 {
 	int result = GP_OK, i;
 	GPPortSettings settings;

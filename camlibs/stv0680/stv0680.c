@@ -222,7 +222,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	return (GP_OK);
 }
 
-static int camera_capture_preview (Camera *camera, CameraFile *file)
+static int camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	char *data;
 	int result;
@@ -239,20 +239,13 @@ static int camera_capture_preview (Camera *camera, CameraFile *file)
 	return (GP_OK);
 }
 
-static int camera_summary (Camera *camera, CameraText *summary) 
+static int camera_summary (Camera *camera, CameraText *summary, GPContext *context) 
 {
 	stv0680_summary(camera->port,summary->text);
 	return (GP_OK);
 }
 
-static int camera_manual (Camera *camera, CameraText *manual) 
-{
-	strcpy(manual->text, _("No manual available."));
-
-	return (GP_OK);
-}
-
-static int camera_about (Camera *camera, CameraText *about) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
 	strcpy (about->text, 
 		_("STV0680\n"
@@ -275,14 +268,13 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
 	return stv0680_delete_all(camera->port);
 }
 
-int camera_init (Camera *camera) 
+int camera_init (Camera *camera, GPContext *context) 
 {
 	GPPortSettings settings;
         int ret;
 
         /* First, set up all the function pointers */
         camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 	camera->functions->capture_preview	= camera_capture_preview;
 	camera->functions->capture		= camera_capture;

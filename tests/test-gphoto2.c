@@ -54,7 +54,7 @@ main (int argc, char *argv [])
 	 */
 	printf ("Setting model...\n");
 	CHECK (gp_abilities_list_new (&al));
-	CHECK (gp_abilities_list_load (al));
+	CHECK (gp_abilities_list_load (al, NULL));
 	CHECK (m = gp_abilities_list_lookup_model (al, "Directory Browse"));
 	CHECK (gp_abilities_list_get_abilities (al, m, &abilities));
 	CHECK (gp_abilities_list_free (al));
@@ -64,14 +64,14 @@ main (int argc, char *argv [])
 	 * Now, initialize the camera (establish a connection).
 	 */
 	printf ("Initializing camera...\n");
-	CHECK (gp_camera_init (camera));
+	CHECK (gp_camera_init (camera, NULL));
 
 	/*
 	 * At this point, you can do whatever you want.
 	 * You could get files, capture images...
 	 */
 	printf ("Getting information about the driver...\n");
-	CHECK (gp_camera_get_about (camera, &text));
+	CHECK (gp_camera_get_about (camera, &text, NULL));
 	printf ("%s\n", text.text);
 
 	/*

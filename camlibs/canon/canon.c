@@ -1301,7 +1301,6 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 	CAM_CHECK_PARAM_NULL(retdata);
 	CAM_CHECK_PARAM_NULL(length);
 
-	gp_camera_progress (camera, 0);
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			res = canon_usb_get_thumbnail (camera, name, &data, length);
