@@ -58,7 +58,7 @@ AC_TRY_COMPILE([#include <sys/ioctl.h>], [int foo = TIOCM_RTS;],
 			AC_DEFINE(HAVE_RTS_IOCTL))
 
 GPPORT_LIBDIR='-L${libdir}'
-GPPORT_INCLUDEDIR='-I${includedir}'
+GPPORT_INCLUDEDIR='-I${includedir}/gphoto2'
 GPPORT_LIBS="-lgphoto2_port"
 
 dnl Compile in serial support
