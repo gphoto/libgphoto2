@@ -170,10 +170,10 @@ long exif_get_lilend(unsigned char *data, int size){
   for (--size;size>=0;size--){
     total<<=8;
     total+=data[size];
-  };
+  }
 
   return(total);
-};
+}
 
 /*
  * Convert to  signed Intel-Endian number
@@ -186,12 +186,12 @@ long exif_get_slilend(unsigned char *data, int size){
   for (--size;size>=0;size--){
     total<<=8;
     total+=data[size];
-  };
+  }
 
   if (total&mask) total-=mask;
 
   return(total);
-};
+}
 
 
 /*
@@ -199,7 +199,7 @@ long exif_get_slilend(unsigned char *data, int size){
  */
 int gpe_theval(unsigned char *data,int tagind){
  return(exif_get_lilend(data+tagind*12+10,4));
-};
+}
 
 
 /*
@@ -210,7 +210,7 @@ void gpe_setval(unsigned char *data,int tagind,long newval){
   for (i=0;i<4;i++) data[tagind*12+10+i]=0xff&(newval>>(i*8));
   if (gpe_getvalue(data,tagind)!=newval) 
     printf("Setptr: error %d inst %ld\n",gpe_theval(data,tagind),newval);
-};
+}
 
 
 /*
@@ -267,7 +267,7 @@ int exif_parse_data(exifparser *exifdat) {
     printf("%c,Intel-Endian format only supported right now!\n",
 	   exifdat->data[0]);
     return(-1);
-  };
+  }
 
   offset=exif_get_lilend(exifdat->data+4,4); /*Get offset of first IFD */
   exifdat->ifdcnt=-1;
@@ -371,7 +371,7 @@ int exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag
       if (data==NULL){
 	fprintf(stderr,"exif_get_field: could not malloc\n");
 	return 0;
-      };
+      }
 
     if (tag_data->type == EXIF_ASCII) {
 	memcpy(data,ifdp,tag_data->size);  /* Normally, the exif data includes a terminating 0 */
@@ -403,7 +403,6 @@ int exif_get_field( int tag_number, int ifd, exifparser *exifdata, ExifData *tag
     if (exif_debug) printf("\n"); /*end of this tag */
     return 1;
   }
-  return 0;
 }
 
 /*
@@ -457,8 +456,6 @@ int exif_get_int_field( int tag_number, int ifd, exifparser *exifdat) {
     free(tagdat.data);   /* ??? */
     return tmp;
   }  
-  return 0;
-
 }
 
 
@@ -495,7 +492,6 @@ int exif_get_comment(exifparser *exifdat, char *comment) {
     comment = tagdat.data;
     return tagdat.size;
   }  
-  return 0;
 }
 
 /*
@@ -538,7 +534,7 @@ unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size) {
   if (newimg==NULL){
     fprintf(stderr,"exif_get_thumbnail: could not malloc\n");
     return(NULL);
-  };
+  }
 
   /* Copy header*/
   memcpy(newimg,exifdat->data,8);
@@ -555,16 +551,16 @@ unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size) {
       /*printf(" -> %s\n",comment); Not OK on Linux */
       exif_get_field( EXIF_SubjectDistance, 2, exifdat, &owner);
       /*      dump_exif(exifdat);       */
-  };
+  }
 
   /* Skip to Thumbnail image data */
   if(exifdat->ifdcnt<2) {
     if (exif_debug) {
       fprintf(stderr,"Too few ifds, doesn't look right. Giving up\n");
-    };
+    }
     *size = 0;
     return(NULL); /* Things don't look right...*/
-  };
+  }
 
   /* Jump to thumbnail image data */
   exifimg=exifdat->ifds[1];
@@ -587,12 +583,12 @@ unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size) {
       fprintf(stderr,"No Jpeg size tag for thumbnail, skipping\n");
       *size = 0;
       return(NULL);
-    };
+    }
     imagedata=exifdat->data+tmp;
     memcpy(newimg,imagedata,dsize);
     *size += dsize;
     return(newimg);
-  };
+  }
 
   /* Try a TIFF */
   tmp=gpe_getintval(exifimg,EXIF_StripOffsets); /*imagedata start*/
@@ -600,7 +596,7 @@ unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size) {
     fprintf(stderr,"gpe_get_thumbnail: Tiff or jpeg data not found, skipping\n");
     *size = 0;
     return(NULL);
-  };
+  }
   imagedata=exifdat->data+tmp;
 
   dataptr=gpe_getintval(exifimg,EXIF_StripByteCounts);        /* imagedata size */
@@ -608,7 +604,7 @@ unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size) {
     printf("Split two\n");
     *size = 0;
     return(NULL);
-  };
+  }
 
   if (exif_debug) printf("Imagedata size is %ld bytes\n",dataptr);
 
@@ -640,17 +636,15 @@ unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size) {
         memcpy(curptr,exifimg+12*i+2,12);
 	curptr+=12;
 	*size += 12;
-      };
-    };
-  };
+      }
+    }
+  }
   memcpy(curptr,exifimg+12*entry+10,4); /* Write 4 zero bytes */
   curptr+=4;
   memcpy(curptr,imagedata,dataptr);/* ? */
   curptr+=dataptr;
   *size += 4+dataptr;
   return newimg;
-
-  return 0;
 }
 
 /**
@@ -663,7 +657,7 @@ unsigned char *exif_get_thumbnail_and_size(exifparser *exifdat, long *size) {
  */
 int gpe_tagnum( char *data,int tagind){
  return(exif_get_lilend(data+tagind*12+2,2));
-};
+}
 
 /*
  * Get the value of a tag as an integer.
@@ -690,12 +684,12 @@ int gpe_getintval(unsigned char *data, int tagnum) {
  if(tag!=tagnum) {
    if (exif_debug) fprintf(stderr,"Tag %d not found\n",tagnum);
    return(-1);
- };
+ }
 
  tagtype=exif_get_lilend(data+i*12+4,2);    /* tag type */
 
  return(exif_get_lilend(data+i*12+10,exif_sizetab[tagtype-1]));
-};
+}
 
 /**
  *  Return "value" of directory entry at tagind
@@ -705,7 +699,7 @@ int gpe_getintval(unsigned char *data, int tagnum) {
  */
 int gpe_getvalue(unsigned char *data,int tagind){
  return(exif_get_lilend(data+tagind*12+10,4));
-};
+}
 
 
 /**
@@ -717,8 +711,8 @@ int gpe_exif_add_all(exifparser *exifdata,int ifdnum,char **datastrings){
   for (i=0;i<exifdata->ifdtags[ifdnum];i++){
     togphotostr(exifdata,ifdnum,i,datastrings+i*2,datastrings+i*2+1);
     /*    printf("%s = %s\n",datastrings[i*2],datastrings[i*2+1]);*/
-  };
-};
+  }
+}
 #endif
 
 
@@ -766,9 +760,9 @@ int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars){
 	else {
 	  value =exif_get_lilend(thedata+j*typelen,typelen);
 	  printf("%d ",value);
-	};
+	}
 	
-      };
+      }
 
       printf("\n"); /*end of this tag */
 
@@ -783,9 +777,9 @@ int gpe_dump_ifd(int ifdnum,exifparser *exifdata,char **allpars){
 }
 /***/
 
-    };
+    }
     return 1;
-};
+}
 
 
 
@@ -812,16 +806,16 @@ int gpe_dump_exif(exifparser *exifdata){
        
 
     gpe_dump_ifd(i,exifdata,NULL);
-  };
+  }
   return 1;
-};
+}
 
 /**
  * Return data size of directory entry at tagind
  */
 int gpe_datsize(unsigned char *data,int tagind){
   return(exif_sizetab[exif_get_lilend(data+tagind*12+4,2)]*exif_get_lilend(data+tagind*12+6,4));
-};
+}
 
 int stat_exif(exifparser *exifdata) {
   long offset=0;
@@ -832,7 +826,7 @@ int stat_exif(exifparser *exifdata) {
     printf("%c,Intel-Endian format only supported right now!\n",
            exifdata->data[0]);
     return(-1);
-  };
+  }
 
   offset=exif_get_lilend(exifdata->data+4,4); /*Get offset of first IFD*/
 
@@ -850,4 +844,4 @@ int stat_exif(exifparser *exifdata) {
 
   exifdata->preparsed=1;
   return(0);
-};
+}
