@@ -148,11 +148,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CR (ricoh_get_pic (camera, context, n,
 				   RICOH_FILE_TYPE_NORMAL, &data, &size));
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
+		break;
 	case GP_FILE_TYPE_PREVIEW:
 		CR (ricoh_get_pic (camera, context, n,
 				   RICOH_FILE_TYPE_PREVIEW, &data, &size));
 		gp_file_set_mime_type (file, GP_MIME_TIFF);
-
 		break;		
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -187,7 +187,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 		_("Ricoh / Philips driver by \n"
 		  "Lutz Müller <lutz@users.sourceforge.net>, \n"
 		  "Martin Fischer <martin.fischer@inka.de>, \n"
-		  "based on Bob Paauw's driver\n" )
+		  "based on Bob Paauwe's driver\n" )
 		);
 
 	return GP_OK;
@@ -255,6 +255,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	const char *copyright;
 	time_t time;
 	RicohResolution resolution;
+	RicohExposure exposure;
 
 	CR (gp_widget_new (GP_WIDGET_WINDOW, _("Configuration"), window));
 
@@ -302,6 +303,54 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		break;
 	}
 
+	/* Exposure */
+	CR (gp_widget_new (GP_WIDGET_RADIO, _("Exposure"), &widget));
+	CR (gp_widget_set_name (widget, "exposure"));
+	CR (gp_widget_set_info (widget, _("Exposure")));
+	CR (gp_widget_append (section, widget));
+	CR (gp_widget_add_choice (widget, "-2.0"));
+	CR (gp_widget_add_choice (widget, "-1.5"));
+	CR (gp_widget_add_choice (widget, "0.0"));
+	CR (gp_widget_add_choice (widget, "+1.5"));
+	CR (gp_widget_add_choice (widget, "+2.0"));
+	CR (gp_widget_add_choice (widget, _("Auto")));
+	CR (ricoh_get_exposure (camera, context, &exposure));
+	switch (exposure) {
+	case RICOH_EXPOSURE_M20:
+		CR (gp_widget_set_value (widget, "-2.0"));
+		break;
+	case RICOH_EXPOSURE_M15:
+		CR (gp_widget_set_value (widget, "-1.5"));
+		break;
+	case RICOH_EXPOSURE_M10:
+		CR (gp_widget_set_value (widget, "-1.0"));
+		break;
+	case RICOH_EXPOSURE_M05:
+		CR (gp_widget_set_value (widget, "-0.5"));
+		break;
+	case RICOH_EXPOSURE_00:
+		CR (gp_widget_set_value (widget, "0.0"));
+		break;
+	case RICOH_EXPOSURE_05:
+		CR (gp_widget_set_value (widget, "+0.5"));
+		break;
+	case RICOH_EXPOSURE_10:
+		CR (gp_widget_set_value (widget, "+1.0"));
+		break;
+	case RICOH_EXPOSURE_15:
+		CR (gp_widget_set_value (widget, "+1.5"));
+		break;
+	case RICOH_EXPOSURE_20:
+		CR (gp_widget_set_value (widget, "+2.0"));
+		break;
+	case RICOH_EXPOSURE_AUTO:
+		CR (gp_widget_set_value (widget, _("Auto")));
+		break;
+	default:
+		CR (gp_widget_set_value (widget, _("unknown")));
+		break;
+	}
+
 	return (GP_OK);
 }
 
@@ -312,6 +361,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	const char *v_char;
 	time_t time;
 	RicohResolution resolution;
+	RicohExposure exposure;
 
 	/* Copyright */
 	CR (gp_widget_get_child_by_name (window, "copyright", &widget));
@@ -338,6 +388,35 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		else 
 			resolution = 0;
 		CR (ricoh_set_resolution (camera, context, resolution));
+	}
+
+	/* Exposure */
+	CR (gp_widget_get_child_by_name (window, "exposure", &widget));
+	if (gp_widget_changed (widget)) {
+		CR (gp_widget_get_value (widget, &v_char));
+		if (!strcmp (v_char, "-2.0"))
+			exposure = RICOH_EXPOSURE_M20;
+		else if (!strcmp (v_char, "-1.5"))
+			exposure = RICOH_EXPOSURE_M15;
+		else if (!strcmp (v_char, "-1.0"))
+			exposure = RICOH_EXPOSURE_M10;
+		else if (!strcmp (v_char, "-0.5"))
+			exposure = RICOH_EXPOSURE_M05;
+		else if (!strcmp (v_char, "0.0"))
+			exposure = RICOH_EXPOSURE_00;
+		else if (!strcmp (v_char, "+0.5"))
+			exposure = RICOH_EXPOSURE_05;
+		else if (!strcmp (v_char, "+1.0"))
+			exposure = RICOH_EXPOSURE_10;
+		else if (!strcmp (v_char, "+1.5"))
+			exposure = RICOH_EXPOSURE_15;
+		else if (!strcmp (v_char, "+2.0"))
+			exposure = RICOH_EXPOSURE_20;
+		else if (!strcmp (v_char, _("Auto")))
+			exposure = RICOH_EXPOSURE_AUTO;
+		else
+			exposure = 0;
+		CR (ricoh_set_exposure (camera, context, exposure));
 	}
 
 	return (GP_OK);

@@ -117,4 +117,23 @@ int ricoh_get_resolution (Camera *camera, GPContext *context,
 int ricoh_set_resolution (Camera *camera, GPContext *context,
 			  RicohResolution resolution);
 
+typedef enum _RicohExposure RicohExposure;
+enum _RicohExposure {
+	RICOH_EXPOSURE_M20  = 0x01, /* -2.0 */
+	RICOH_EXPOSURE_M15  = 0x02,
+	RICOH_EXPOSURE_M10  = 0x03,
+	RICOH_EXPOSURE_M05  = 0x04,
+	RICOH_EXPOSURE_00   = 0x05,
+	RICOH_EXPOSURE_05   = 0x06,
+	RICOH_EXPOSURE_10   = 0x07,
+	RICOH_EXPOSURE_15   = 0x08,
+	RICOH_EXPOSURE_20   = 0x09, /* +2.0 */
+	RICOH_EXPOSURE_AUTO = 0xff
+};
+
+int ricoh_get_exposure (Camera *camera, GPContext *context,
+			RicohExposure *exposure);
+int ricoh_set_exposure (Camera *camera, GPContext *context,
+			RicohExposure exposure);
+
 #endif /* __RICOH_H__ */

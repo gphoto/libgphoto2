@@ -1,3 +1,15 @@
+2002-07-02  LUtz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.[c,h]:
+	* library.c: Exposure setting.
+
+2002-07-02  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Martin Fischer <martin.fischer@inka.de>:
+
+	* ricoh.c:
+	* library.c: Some bug fixes.
+
 2002-06-21  Lutz Müller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]:

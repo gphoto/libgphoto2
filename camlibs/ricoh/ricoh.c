@@ -639,7 +639,7 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	 * Receive data.
 	 * r ... number of bytes received
 	 */
-	for (r = 0; r < *size; r += len) {
+	for (r = 0; r < (*size) - header_len; r += len) {
 		CRF (ricoh_recv (camera, context, &cmd, NULL,
 				 *data + header_len + r, &len), *data);
 		C_CMD (context, cmd, 0xa2);
@@ -647,7 +647,7 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 
 	/* In case of previews, copy over the TIFF header. */
 	if (type == RICOH_FILE_TYPE_PREVIEW)
-		memcpy (data, header, header_len);
+		memcpy (*data, header, header_len);
 
 	return (GP_OK);
 }
@@ -753,6 +753,22 @@ ricoh_get_resolution (Camera *camera, GPContext *context,
 }
 
 int
+ricoh_get_exposure (Camera *camera, GPContext *context,
+		    RicohExposure *exposure)
+{
+	unsigned char p[1], buf[0xff], len;
+
+	p[0] = 0x03;
+	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));
+	C_LEN (context, len, 1);
+
+	if (exposure)
+		*exposure = buf[0];
+
+	return (GP_OK);
+}
+
+int
 ricoh_set_resolution (Camera *camera, GPContext *context,
 		      RicohResolution resolution)
 {
@@ -760,7 +776,20 @@ ricoh_set_resolution (Camera *camera, GPContext *context,
 
 	p[0] = 0x09;
 	p[1] = (unsigned char) resolution;
-	CR (ricoh_transmit (camera, context, 0x51, p, 2, buf, &len));
+	CR (ricoh_transmit (camera, context, 0x50, p, 2, buf, &len));
+
+	return (GP_OK);
+}
+
+int
+ricoh_set_exposure (Camera *camera, GPContext *context,
+		    RicohExposure exposure)
+{
+	unsigned char p[2], buf[0xff], len;
+
+	p[0] = 0x03;
+	p[1] = (unsigned char) exposure;
+	CR (ricoh_transmit (camera, context, 0x50, p, 2, buf, &len));
 
 	return (GP_OK);
 }
