@@ -9,6 +9,7 @@ libgphoto2_la_LDFLAGS = -version-info 0:0:0
 libgphoto2_la_SOURCES = 	\
 	abilities.c		\
 	abilities-list.c	\
+	bayer.c bayer.h		\
 	camera.c		\
 	core.c			\
 	debug.c			\
@@ -16,6 +17,7 @@ libgphoto2_la_SOURCES = 	\
 	file.c			\
 	filesys.c		\
 	frontend.c		\
+	gamma.c gamma.h		\
 	jpeg.c jpeg.h		\
 	list.c			\
 	pattrec.c pattrec.h	\
