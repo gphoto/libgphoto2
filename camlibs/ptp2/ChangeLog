@@ -1,6 +1,10 @@
+2003-10-10 Olivier Crete <tester@tester.ca>
+	* library.c: Add Canon A80
+
 2003-10-01 Mariusz Woloszyn
 	* library.c: removed Canon Digital Rebel, as the report was with the
 	  wrong Product ID
+
 2003-09-30 Marcus Meissner 
 
 	* library.c: Added Canon Digital Rebel as reported by Yves Boisjoly
