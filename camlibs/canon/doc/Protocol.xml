@@ -17,7 +17,7 @@
   <!-- ================================================================================ -->
 
   <title><phrase role="strong">Canon PowerShot Series Transfer
- Protocol Specifications</phrase> Monday, December 13, 2004</title>
+ Protocol Specifications</phrase> Monday, December 20, 2004</title>
 
   <chapter id="chap.Intro">
     <title>Introduction</title>
@@ -1346,10 +1346,30 @@ do {
 
     <section id="sec.USBFlashID">
       <title>Flash Device Identification</title>
-      <para>Data received via a long_bulk_in_read: (Flash device identification)</para>
+
+      <para>Example command: 0x40 bytes</para>
+
       <programlisting>
-00000000 44 3A 00 00                                     D:..
-        </programlisting>
+0000  10 00 00 00 02 02 00 00 00 00 00 00 00 00 00 00  ................
+0010  80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80  ................
+0020  80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80  ................
+0030  80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80  ................
+0040  02 00 00 00 0a 00 00 11 10 00 00 00 20 f6 12 00  ............ ...
+      </programlisting>
+
+      <para>Response: (PowerShot G2) 0x44 bytes</para>
+
+      <para>Data received via a long_bulk_in_read: (Flash device
+         identification)</para>
+
+      <programlisting>
+0000  00 00 00 00 02 03 04 00 00 00 00 00 00 00 00 00  ................
+0010  80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80  ................
+0020  80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80  ................
+0030  80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80  ................
+0000  44 3a 00 00                                      D:..
+      </programlisting>
+
     </section>
     <section id="sec.USBGetDirectory">
       <title>Get Directory</title>
@@ -2729,6 +2749,18 @@ do {
         mapping between what goes out and what comes back,
         though. Here the first three words of both command payload and
         response payload are 1,0,1, but then they diverge.</para>
+
+        <programlisting>
+0000 01 00 00 00  00 00 00 00  01 00 00 00  00 00 00 00
+     01 00 00 00  00 00 00 00  01 00 00 00  ac 00 00 00
+
+0010 00 00 00 00  b8 c7 12 00  9b 2b 40 00  58 c8 12 00
+     5e b5 ff ff  55 1b 00 00  10 00 54 1b  0c 00 ef 19
+
+0020 b8 6d 4f 00  02 00 00 00  01 e6 12 00
+     9c 0f 53 02  58 9d 0c 00  ef 19 ee 26
+        </programlisting>
+
     </section>
 
     <section id="sec.USBEOSLock">
