@@ -584,7 +584,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	GP_DEBUG ("Data Type = 0x%.4x",dpd.DataType);
 	GP_DEBUG ("Get/Set = 0x%.2x",dpd.GetSet);
 	GP_DEBUG ("Form Flag = 0x%.2x",dpd.FormFlag);
-	if (dpd.DataType!=PTP_DTC_UINT8) return GP_OK;
+	if (dpd.DataType!=PTP_DTC_UINT8) {
+		ptp_free_devicepropdesc(&dpd);
+		return GP_OK;
+	}
 	GP_DEBUG ("Factory Default Value = %0.2x",*(uint8_t *)dpd.FactoryDefaultValue);
 	GP_DEBUG ("Current Value = %0.2x",*(uint8_t *)dpd.CurrentValue);
 
@@ -617,6 +620,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		gp_widget_set_value (widget,value);
 		gp_widget_append (section,widget);
 	}
+	ptp_free_devicepropdesc(&dpd);
 	return GP_OK;
 }
 

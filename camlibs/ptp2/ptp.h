@@ -584,4 +584,7 @@ uint16_t ptp_ek_sendfileobject	(PTPParams* params, char* object,
 int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
 int ptp_property_issupported	(PTPParams* params, uint16_t property);
 
+void ptp_free_devicepropdesc	(PTPDevicePropDesc* dpd);
+
+
 #endif /* __PTP_H__ */

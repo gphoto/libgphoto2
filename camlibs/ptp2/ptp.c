@@ -837,3 +837,25 @@ ptp_property_issupported(PTPParams* params, uint16_t property)
 	}
 	return 0;
 }
+
+// ptp structures feeing functions
+
+void
+ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
+{
+	uint16_t i;
+
+	free(dpd->FactoryDefaultValue);
+	free(dpd->CurrentValue);
+	switch (dpd->FormFlag) {
+		case PTP_DPFF_Range:
+		free (dpd->FORM.Range.MinimumValue);
+		free (dpd->FORM.Range.MaximumValue);
+		free (dpd->FORM.Range.StepSize);
+		break;
+		case PTP_DPFF_Enumeration:
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++)
+			free(dpd->FORM.Enum.SupportedValue[i]);
+		free(dpd->FORM.Enum.SupportedValue);
+	}
+}

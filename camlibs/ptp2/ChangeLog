@@ -1,4 +1,9 @@
-2003-03-03 Mariusz Woloszyn
+2003-04-03 Mariusz Woloszyn
+	* ptp.c: added ptp_free_devicepropdesc()
+	* ptp.h: added ptp_free_devicepropdesc()
+	* library.c: ptp_free_devicepropdesc() used to free allocated
+	  structures
+2003-04-03 Mariusz Woloszyn
 	* library.c: enabled getting config support;
 	  curently only getting batery level is supported;
 	* ptp-pack.c: "finished" Device Property Describing Dataset
