@@ -14,4 +14,9 @@ else
     AC_MSG_RESULT([${RPMBUILD} (autodetect)])
 fi
 AM_CONDITIONAL(ENABLE_RPM, test "$RPMBUILD" != "/bin/false")
+
+# whether libusb-devel is installed or not defines whether the RPM
+# packages we're going to build will depend on libusb and libusb-devel
+# RPM packages or not.
+AM_CONDITIONAL(RPM_LIBUSB_DEVEL, rpm -q libusb-devel > /dev/null 2>&1)
 ])

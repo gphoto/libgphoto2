@@ -26,14 +26,14 @@ Requires: libgphoto2_port
 # absolute requirements
 PreReq: hotplug >= 2001_04_24-13
 PreReq: /sbin/ldconfig, grep, fileutils
-Requires: libusb >= 0.0.5
-BuildRequires: libusb-devel >= 0.0.5
 BuildRequires: findutils perl
+
 # the following requirements are optional
-# FIXME: They should be deactivated if not detected on the building system
 @ENABLE_GTK_DOC_TRUE@BuildRequires: gtk-doc
 @ENABLE_FIGURES_TRUE@BuildRequires: transfig
 @XMLTO_TRUE@BuildRequires: xmlto >= 0.0.8
+@RPM_LIBUSB_DEVEL_TRUE@Requires: libusb >= 0.0.5
+@RPM_LIBUSB_DEVEL_TRUE@BuildRequires: libusb-devel >= 0.0.5
 
 ####################################
 %description
