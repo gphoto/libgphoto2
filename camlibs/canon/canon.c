@@ -171,8 +171,9 @@ const struct canonCamModelData models[] = {
 	/* 3078 and 307a are in MacOS Info.plist, but I don't know
 	 * what they are --swestin. */
 	{"Canon:PowerShot unknown 5",		CANON_PS_UNK5,	0x04A9, 0x307a, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-	/* MV630i seems to be a DV camcorder */
+	/* MV630i is a DV camcorder */
 	{"Canon:MV630i",		CANON_MV630I,		0x04A9, 0x307b, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:MV650i",		CANON_MV650I,		0x04A9, 0x3079, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Optura 20",		CANON_OPT_20,		0x04A9, 0x307f, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:Optura 10",		CANON_OPT_10,		0x04A9, 0x3081, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 

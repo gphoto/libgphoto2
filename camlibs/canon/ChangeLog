@@ -1,3 +1,8 @@
+2004-01-31  Marcus Meissner <marcus@jet.franken.de>
+
+	* canon.c, canon.h: Richard Simpson <richard@huskydog.org.uk>
+	  Support for Canon MV650i.
+
 2004-01-14  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.c, canon.h: Add support for Canon ZR-70MC
