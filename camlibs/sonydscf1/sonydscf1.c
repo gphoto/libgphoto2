@@ -44,7 +44,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         //*count = 1;
         CameraAbilities *a;
 
-        a = gp_abilities_new();
+        gp_abilities_new(&a);
         /* Fill in each camera model's abilities */
         /* Make separate entries for each conneciton type (usb, serial, etc...)
            if a camera supported multiple ways. */

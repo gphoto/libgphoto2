@@ -337,10 +337,12 @@ int camera_id (CameraText *id) {
 
 int camera_abilities (CameraAbilitiesList *list) {
 
+	int ret;
 	CameraAbilities *a;
 
-	if (!(a = gp_abilities_new())) 
-		return GP_ERROR;
+	ret = gp_abilities_new (&a);
+	if (ret != GP_OK)
+		return (ret);
 
 	strcpy(a->model, "Panasonic DC1000");
 	a->port		= GP_PORT_SERIAL;

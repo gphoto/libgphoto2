@@ -21,6 +21,15 @@
  *
  * History:
  * $Log$
+ * Revision 1.8  2001/08/24 21:23:11  lutz
+ * 2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * libgphoto2/abilities.c:
+ *         * include/gphoto2-abilities.h: Let gp_abilities_new return an error
+ *         code. This was the last one.
+ *         * camlibs/*: Adjust to above change.
+ *         * camlibs/canon/canon.c: #if 0 some code to kill some warnings
+ *
  * Revision 1.7  2001/08/23 12:02:20  lutz
  * 2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -180,7 +189,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 	while (models[x]) {
 
-		a = gp_abilities_new();
+		gp_abilities_new(&a);
 
 		strcpy(a->model, models[x]);
 		a->port     = GP_PORT_SERIAL;

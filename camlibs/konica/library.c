@@ -211,7 +211,7 @@ camera_abilities (CameraAbilitiesList* list)
 	g_return_val_if_fail (list != NULL, GP_ERROR_BAD_PARAMETERS);
 
 	for (i = 0; konica_cameras [i].model; i++) {
-		a = gp_abilities_new ();
+		gp_abilities_new (&a);
 		strcpy (a->model, konica_cameras [i].model);
 		if (konica_cameras [i].vendor) {
 			a->port = GP_PORT_USB;

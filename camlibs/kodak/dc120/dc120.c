@@ -36,7 +36,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 	CameraAbilities *a;
 
-	a = gp_abilities_new();
+	gp_abilities_new(&a);
 
 	strcpy(a->model, "Kodak DC120");
 	a->port     = GP_PORT_SERIAL;

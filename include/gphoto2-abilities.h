@@ -73,9 +73,9 @@ typedef struct {
 	char id [1024];
 } CameraAbilities;
 
-CameraAbilities *gp_abilities_new   (void);
-int              gp_abilities_free  (CameraAbilities *abilities);
-int              gp_abilities_dump  (CameraAbilities *abilities);
-int              gp_abilities_clear (CameraAbilities *abilities);
+int gp_abilities_new   (CameraAbilities **abilities);
+int gp_abilities_free  (CameraAbilities *abilities);
+int gp_abilities_dump  (CameraAbilities *abilities);
+int gp_abilities_clear (CameraAbilities *abilities);
 
 #endif /* __GPHOTO2_ABILITIES_H__ */

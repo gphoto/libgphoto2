@@ -53,7 +53,7 @@ int camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities *a;
 
-	a = gp_abilities_new();
+	gp_abilities_new(&a);
 
 #if defined HAVE_STRNCPY
 	strncpy(a->model, "Minolta Dimage V", sizeof(a->model));

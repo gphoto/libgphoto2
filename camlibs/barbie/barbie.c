@@ -46,7 +46,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         while (models[x]) {
 
                 /* Allocate the new abilities */
-                a = gp_abilities_new();
+                gp_abilities_new(&a);
 
                 /* Fill in the appropriate flags/data */
                 strcpy(a->model, models[x]);

@@ -1,5 +1,13 @@
 2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/abilities.c:
+	* include/gphoto2-abilities.h: Let gp_abilities_new return an error 
+	code. This was the last one.
+	* camlibs/*: Adjust to above change.
+	* camlibs/canon/canon.c: #if 0 some code to kill some warnings
+
+2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* include/gphoto2-abilities-list.h: Make gp_abilities_list_new
 	return an error code. Introduce gp_abilities_list_sort and
 	gp_abilities_list_count.

@@ -60,7 +60,7 @@ int camera_abilities(CameraAbilitiesList *list) {
     CameraAbilities *a;
 
     for(i=0; models[i].name; i++) {
-       a=gp_abilities_new();
+       gp_abilities_new(&a);
        strcpy(a->model, models[i].name);
        a->port       = GP_PORT_USB;
        a->usb_vendor = models[i].idVendor;

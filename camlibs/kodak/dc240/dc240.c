@@ -53,7 +53,7 @@ int camera_abilities (CameraAbilitiesList *list)
 
         for (i = 0; camera_to_usb[i].name; i++)
         {
-            a = gp_abilities_new();
+            gp_abilities_new(&a);
             
             strcpy(a->model, camera_to_usb[i].name);
             a->port     = GP_PORT_SERIAL | GP_PORT_USB;

@@ -49,7 +49,7 @@ int camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities *a;
 
-	a = gp_abilities_new();
+	gp_abilities_new(&a);
 
 	strcpy(a->model, "STV0680");
 	a->port     = GP_PORT_SERIAL|GP_PORT_USB;

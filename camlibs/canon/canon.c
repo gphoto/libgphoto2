@@ -110,7 +110,7 @@ int camera_abilities(CameraAbilitiesList *list)
     gp_debug_printf(GP_DEBUG_LOW,"canon","camera_abilities()");
 
     for (i=0; models[i].name; i++) {
-        a = gp_abilities_new();
+        gp_abilities_new(&a);
         strcpy(a->model, models[i].name);
 	a->port = 0;
 	if (models[i].idProduct) {
@@ -170,7 +170,7 @@ static int check_readiness(Camera *camera)
     return 0;
 }
 
-void switch_camera_off(Camera *camera)
+static void switch_camera_off(Camera *camera)
 {
 	gp_debug_printf(GP_DEBUG_LOW,"canon","switch_camera_off()");
 
@@ -202,7 +202,7 @@ int camera_exit(Camera *camera)
 	return GP_OK;
 }
 
-int canon_get_batt_status(Camera *camera, int *pwr_status, int *pwr_source)
+static int canon_get_batt_status(Camera *camera, int *pwr_status, int *pwr_source)
 {
 	gp_debug_printf(GP_DEBUG_LOW,"canon","canon_get_batt_status()");
 	
@@ -212,6 +212,7 @@ int canon_get_batt_status(Camera *camera, int *pwr_status, int *pwr_source)
 	return psa50_get_battery(camera, pwr_status, pwr_source);
 }
 
+#if 0
 char *camera_model_string(Camera *camera)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
@@ -252,6 +253,7 @@ char *camera_model_string(Camera *camera)
 		return _("Unknown model!");
 	}
 }
+#endif
 
 
 static int update_disk_cache(Camera *camera)
@@ -1402,6 +1404,7 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 	return GP_OK;
 }
 
+#if 0
 int camera_config(Camera *camera)
 {
 	CameraWidget *window;
@@ -1418,6 +1421,7 @@ int camera_config(Camera *camera)
 	gp_widget_unref (window);
 	return GP_OK;
 }
+#endif
 
 int camera_set_config (Camera *camera, CameraWidget *window)
 {

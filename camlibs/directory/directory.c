@@ -61,7 +61,7 @@ int camera_abilities (CameraAbilitiesList *list)
 {
         CameraAbilities *a;
 
-        a = gp_abilities_new();
+        gp_abilities_new(&a);
 
         strcpy(a->model, "Directory Browse");
         a->port     = GP_PORT_NONE;

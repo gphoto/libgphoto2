@@ -25,31 +25,36 @@
 #include "gphoto2-result.h"
 #include "gphoto2-core.h"
 
-CameraAbilities *
-gp_abilities_new (void)
+#define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
+#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+#define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
+
+int
+gp_abilities_new (CameraAbilities **abilities)
 {
-	CameraAbilities *abilities;
+	CHECK_NULL (abilities);
 
-	abilities = malloc (sizeof (CameraAbilities));
-	if (!abilities)
-		return (NULL);
+	CHECK_MEM (*abilities = malloc (sizeof (CameraAbilities)));
 
-	return (abilities);
+	return (GP_OK);
 }
 
 int
 gp_abilities_free (CameraAbilities *abilities)
 {
-	if (!abilities)
-		return (GP_ERROR_BAD_PARAMETERS);
+	CHECK_NULL (abilities);
 
 	free (abilities);
+
 	return (GP_OK);
 }
 
-int gp_abilities_dump (CameraAbilities *abilities)
+int
+gp_abilities_dump (CameraAbilities *abilities)
 {
-	int x=0;
+	int x = 0;
+
+	CHECK_NULL (abilities);
 
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Abilities for camera                  : %s", 
 		abilities->model);
@@ -93,9 +98,12 @@ int gp_abilities_dump (CameraAbilities *abilities)
 	return (GP_OK);
 }
 
-int gp_abilities_clear (CameraAbilities *abilities)
+int
+gp_abilities_clear (CameraAbilities *abilities)
 {
-	strcpy(abilities->model, "");
+	CHECK_NULL (abilities);
+
+	strcpy (abilities->model, "");
 	abilities->port = GP_PORT_NONE;
 	abilities->speed[0] = 0;
 	abilities->operations        = GP_OPERATION_NONE;

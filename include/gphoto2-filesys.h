@@ -28,39 +28,34 @@
 /* You don't really want to know what's inside, do you? */
 typedef struct _CameraFilesystem CameraFilesystem;
 
-int               gp_filesystem_new	 (CameraFilesystem **fs);
-int		  gp_filesystem_free	 (CameraFilesystem *fs);
-int 		  gp_filesystem_populate (CameraFilesystem *fs, 
-					  const char *folder, char *format, 
-					  int count);
-int 		  gp_filesystem_append   (CameraFilesystem *fs, 
-					  const char *folder, 
-					  const char *filename);
+int gp_filesystem_new	 (CameraFilesystem **fs);
+int gp_filesystem_free	 (CameraFilesystem *fs);
 
-int 		  gp_filesystem_format     (CameraFilesystem *fs);
-int 		  gp_filesystem_delete     (CameraFilesystem *fs, 
-					    const char *folder, 
-					    const char *filename);
-int               gp_filesystem_delete_all (CameraFilesystem *fs,
-					    const char *folder);
+/* Adding */
+int gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
+			    char *format, int count);
+int gp_filesystem_append   (CameraFilesystem *fs, const char *folder,
+			    const char *filename);
 
-int 		  gp_filesystem_count	 (CameraFilesystem *fs, 
-					  const char *folder);
-int		  gp_filesystem_name     (CameraFilesystem *fs, 
-					  const char *folder, int filenumber,
-					  const char **filename);
-int		  gp_filesystem_number   (CameraFilesystem *fs, 
-					  const char *folder, 
-					  const char *filename);
+/* Deleting */
+int gp_filesystem_format     (CameraFilesystem *fs);
+int gp_filesystem_delete     (CameraFilesystem *fs, const char *folder,
+			      const char *filename);
+int gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder);
 
-int               gp_filesystem_get_folder (CameraFilesystem *fs,
-					    const char *filename,
-					    const char **folder);
-
+/* Information retreival */
+int gp_filesystem_count	       (CameraFilesystem *fs, const char *folder);
+int gp_filesystem_name         (CameraFilesystem *fs, const char *folder,
+			        int filenumber, const char **filename);
+int gp_filesystem_number       (CameraFilesystem *fs, const char *folder,
+			        const char *filename);
+int gp_filesystem_get_folder   (CameraFilesystem *fs, const char *filename,
+			        const char **folder);
 int gp_filesystem_list_files   (CameraFilesystem *fs, const char *folder,
 				CameraList *list);
 int gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 				CameraList *list);
+
 int gp_filesystem_dump         (CameraFilesystem *fs);
 
 #endif /* __GPHOTO2_FILESYS_H__ */

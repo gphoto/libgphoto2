@@ -379,12 +379,14 @@ int camera_id (CameraText *id) {
 
 int camera_abilities (CameraAbilitiesList *list) {
 
+	int ret;
 	CameraAbilities *a;
 
 	l859_debug("Camera Abilities");
 
-	if (!(a = gp_abilities_new()))
-		return GP_ERROR;
+	ret = gp_abilities_new (&a);
+	if (ret != GP_OK)
+		return (ret);
 
 	strcpy(a->model, "Panasonic PV-L859");
 	a->port		= GP_PORT_SERIAL;

@@ -135,7 +135,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	CameraAbilities *a;
 
 	for (x = 0; strlen (sierra_cameras[x].model) > 0; x++) {
-		a = gp_abilities_new();
+		gp_abilities_new (&a);
 		strcpy (a->model, sierra_cameras[x].model);
 		a->port     = GP_PORT_SERIAL;
 		if ((sierra_cameras[x].usb_vendor  > 0) &&
