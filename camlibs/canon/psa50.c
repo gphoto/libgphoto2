@@ -1223,6 +1223,10 @@ int psa50_ready(Camera *camera)
       gp_frontend_status(camera, "Detected a Powershot Pro90 IS");
       cs->model = CANON_PS_PRO90_IS;
       A5 = 0;
+    } else if (!strcmp("Canon PowerShot Pro70",psa50_id)) {
+      gp_frontend_status(camera, "Detected a Powershot Pro70");
+      cs->model = CANON_PS_A70;
+      A5=0;
     } else if ((!strcmp("Canon DIGITAL IXUS",psa50_id))
 	       || (!strcmp("Canon IXY DIGITAL",psa50_id))	
 	       || (!strcmp("Canon PowerShot S100",psa50_id))
