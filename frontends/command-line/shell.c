@@ -54,6 +54,13 @@
 #  define N_(String) (String)
 #endif
 
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
 #define CHECK(result) {int r=(result);if(r<0) return(r);}
 #define CHECK_CONT(result)					\
 {								\
