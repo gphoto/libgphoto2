@@ -97,7 +97,6 @@ AC_ARG_WITH(serial, [  --without-serial        Don't compile in SERIAL support],
 )
 if $have_serial; then
 	IOLIB_SUBDIRS="$IOLIB_SUBDIRS serial"
-	IOLIB_LDFLAGS="$IOLIB_LDFLAGS -Lserial -lgphoto2_port_serial"
 fi
 
 dnl -----------------------------------------
@@ -225,17 +224,6 @@ AC_ARG_ENABLE(debugging,
   [if test "$enableval" = "no"; then
     AC_DEFINE(DISABLE_DEBUGGING)
   fi])
-
-dnl ****************************************
-dnl What libraries do other programs need if 
-dnl they want to use libgphoto2_port?
-dnl ****************************************
-GPPORT_LIBDIR='-L${libdir}'
-GPPORT_INCLUDEDIR='-I${includedir}/gphoto2'
-GPPORT_LIBS="-lgphoto2_port"
-AC_SUBST(GPPORT_LIBDIR)
-AC_SUBST(GPPORT_LIBS)
-AC_SUBST(GPPORT_INCLUDEDIR)
 
 dnl ********
 dnl gtk-doc?
