@@ -37,7 +37,7 @@ static int tile_colors[8][4] = {
 #define GREEN 1
 #define BLUE 2
 
-static int
+int
 gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 		 BayerTile tile)
 {
