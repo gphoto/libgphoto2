@@ -1,10 +1,12 @@
 gphoto2 2.0beta5
 
-Lutz:
-	* Remove libexif and check in configure.in for availability.
+libgphoto2:
+   * Added Sony DCR-PC100 support.
+	* Fixed serial cameras bug introduced in beta4. 
 
-Raymond:
-	* Sony: Added "Sony DCR-PC100"  
+gphoto2 command-line interface:
+   * EXIF support (extra tags that contain information about the image
+		produced by most digital cameras).
 
 --------------------------------------------------------------------------------
 gphoto2-2.0beta4
@@ -17,7 +19,7 @@ libgphoto2:
 		 systems support, RAW-File support.
    * Added ptp cameras support (Kodak DX series and much more).
    * Camera Summary for Kodak DC240 driver.
-	* Samsung 800k support.
+   * Samsung 800k support.
    * Fixed digita thumbnails bug.
    * French localization.
 
