@@ -68,8 +68,13 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
  * mymod before you can use #GP_LOG().
  **/
 
+#ifdef __GNUC__
 #define GP_LOG(level, msg, params...) \
         gp_log(level, GP_MODULE "/" __FILE__, msg, ##params)
+#else
+#define GP_LOG(level, ...) \
+        gp_log(level, GP_MODULE "/" __FILE__, __VA_ARGS__)
+#endif
 
 /**
  * GP_DEBUG:
@@ -82,8 +87,13 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
  * mymod before using #GP_DEBUG().
  **/
 
+#ifdef __GNUC__
 #define GP_DEBUG(msg, params...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
+#else
+#define GP_DEBUG(...) \
+        gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, __VA_ARGS__)
+#endif
 
 #else /* DISABLE_DEBUGGING */
 
