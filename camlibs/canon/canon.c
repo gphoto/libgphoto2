@@ -176,9 +176,9 @@ const struct canonCamModelData models[] = {
 	{"Canon:Digital IXUS II (normal mode)",	CANON_CLASS_5,	0x04A9, 0x3072, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	/* added from report on mailinglist. XXX: assuming capture works -Marcus */
 	/* PS A70 uses the same ProductID for PTP and Canon, with protocol autodetection */
-	{"Canon:PowerShot A70",		CANON_CLASS_5,	0x04A9, 0x3073, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot A70",		CANON_CLASS_1,	0x04A9, 0x3073, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	/* PS A60 uses the same ProductID for PTP and Canon, with protocol autodetection */
-	{"Canon:PowerShot A60",		CANON_CLASS_5,	0x04A9, 0x3074, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:PowerShot A60",		CANON_CLASS_1,	0x04A9, 0x3074, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	/* reported working on SourceForge patch tracker. */
 	/* PS S400 uses the same ProductID for PTP and Canon, with protocol autodetection */
 	{"Canon:Digital IXUS 400",	CANON_CLASS_1,	0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -240,9 +240,13 @@ const struct canonCamModelData models[] = {
 	/* Is 0x30e9 EOS 1D Mark II in Canon mode? */
 	/* 0x30ea is EOS 1D Mark II in PTP mode */
 
-	/*{"Canon:EOS 20D (normal mode)",		CANON_CLASS_6,	0x04A9, 0x30eb, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},*/
+	{"Canon:EOS 20D (normal mode)",		CANON_CLASS_6,	0x04A9, 0x30eb, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	/* 0x30ec is EOS 20D in PTP mode */
 
+	/* Don't really know if this is PTP or Canon mode, or shared. */
+	{"Canon:EOS 350D (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30ef, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:Digital Rebel XT (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30ef, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon: EOS Kiss Digital N (normal mode)",		CANON_CLASS_4,	0x04A9, 0x30ef, CAP_EXP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{NULL}
 	/* *INDENT-ON* */
 };
@@ -579,8 +583,8 @@ canon_int_identify_camera (Camera *camera, GPContext *context)
 
 	/* Store these values in our "camera" structure: */
 	memcpy (camera->pl->firmwrev, (char *) msg + 8, 4);
-	strncpy (camera->pl->ident, (char *) msg + 12, 30);
-	strncpy (camera->pl->owner, (char *) msg + 44, 30);
+	strncpy (camera->pl->ident, (char *) msg + 12, 32);
+	strncpy (camera->pl->owner, (char *) msg + 44, 32);
 
 	GP_DEBUG ("canon_int_identify_camera: ident '%s' owner '%s'", camera->pl->ident,
 		  camera->pl->owner);
@@ -1523,9 +1527,15 @@ canon_int_get_disk_name (Camera *camera, GPContext *context)
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			res = canon_usb_long_dialogue (camera,
-						       CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,
-						       &msg, &len, 1024, NULL, 0, 0, context);
+			if ( camera->pl->md->model == CANON_CLASS_6 )
+				/* Newer protocol uses a different code, but with same response. */
+				res = canon_usb_long_dialogue (camera,
+							       CANON_USB_FUNCTION_FLASH_DEVICE_IDENT_2,
+							       &msg, &len, 1024, NULL, 0, 0, context);
+			else
+				res = canon_usb_long_dialogue (camera,
+							       CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,
+							       &msg, &len, 1024, NULL, 0, 0, context);
 			if (res != GP_OK) {
 				GP_DEBUG ("canon_int_get_disk_name: canon_usb_long_dialogue "
 					  "failed! returned %i", res);
@@ -1549,7 +1559,7 @@ canon_int_get_disk_name (Camera *camera, GPContext *context)
 			if ( msg == NULL ) {
 				GP_DEBUG ("canon_int_get_disk_name: could not allocate %li "
 					  "bytes of memory to hold response",
-					  strlen ((char *) msg + 4));
+					  (long)(strlen ((char *) msg + 4)));
 				return NULL;
 			}
 			break;
@@ -1582,6 +1592,7 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 			      GPContext *context)
 {
 	unsigned char *msg = NULL;
+	char name_local[128];
 	int len, cap, ava;
 
 	GP_DEBUG ("canon_int_get_disk_name_info() name '%s'", name);
@@ -1592,8 +1603,18 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DISK_INFO, &len,
-						  name, strlen (name) + 1);
+			if ( camera->pl->md->model == CANON_CLASS_6 ) {
+				/* Newer protocol uses a different code, but with same response. */
+				strncpy ( name_local, name, sizeof(name_local) );
+				len = strlen(name_local);
+				if ( name_local[len-1] == '\\' )
+					name_local[len-1] = 0;
+				msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DISK_INFO_2, &len,
+							  name_local, len );
+			}
+			else
+				msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DISK_INFO, &len,
+							  name, strlen (name) + 1);
 			if ( msg == NULL )
 				return GP_ERROR_OS_FAILURE;
 			break;
@@ -1658,6 +1679,7 @@ gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
 		camera->pl->cached_drive = canon_int_get_disk_name (camera, context);
 		if (camera->pl->cached_drive == NULL) {
 			GP_DEBUG ("2nd NULL camera->pl->cached_drive in gphoto2canonpath");
+			return NULL;
 		}
 	}
 
@@ -1712,7 +1734,7 @@ canon2gphotopath (Camera *camera, const char *path)
 	/* 3 is D: plus NULL byte */
 	if (strlen (path) - 3 > sizeof (tmp)) {
 		GP_DEBUG ("canon2gphotopath called on too long canon path (%li bytes): %s",
-			  strlen (path), path);
+			  (long)(strlen (path)), path);
 		return NULL;
 	}
 
@@ -1973,7 +1995,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 		/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
 		GP_LOG (GP_LOG_DATA,
 			"canon_int_list_dir: dirent determined to be %li=0x%lx bytes :",
-			dirent_ent_size, dirent_ent_size);
+			(long)dirent_ent_size, (long)dirent_ent_size);
 		gp_log_data ("canon", pos, dirent_ent_size);
 		if (dirent_name_len) {
 			/* OK, this directory entry has a name in it. */
@@ -2218,8 +2240,13 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
 			memcpy (payload + strlen (dir) + 1, name, strlen (name) + 1);
 			payload_length = strlen (dir) + strlen (name) + 2;
 			payload[payload_length++] = 0; /* Double NUL to end command */
-			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE, &len,
-						  payload, payload_length);
+			if ( camera->pl->md->model == CANON_CLASS_6 )
+				/* Newer protocol uses a different code, but with same response. */
+				msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE_2, &len,
+							  payload, payload_length);
+			else
+				msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE, &len,
+							  payload, payload_length);
 			if ( msg == NULL )
 				return GP_ERROR_OS_FAILURE;
 
