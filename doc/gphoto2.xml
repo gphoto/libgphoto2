@@ -3,6 +3,10 @@
  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+
   <bookinfo>
     <title>The gPhoto2 Manual</title>
     <authorgroup>
@@ -26,18 +30,92 @@
       </editor>
     </authorgroup>
   </bookinfo>
+ 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+
+  <!--
+  <preface>
+    <title>About this manual</title>
+    <variablelist>
+      <title>Typographic conventions</title>
+      <varlistentry>
+        <term><command>command</command></term>
+        <listitem>
+          <simpara>This is a system command which can be executed by
+            entering it into a shell. </simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><systemitem class="library">library</systemitem></term>
+        <listitem>
+          <simpara>This is a system library.</simpara>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </preface>
+  -->
+ 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
 
   <chapter>
-    <title>Short guide to setting up and using 
-      <xref linkend="gphoto2-cli"/> and <xref linkend="libgphoto2"/>
+    <title>Quick start</title>
+    <subtitle>How you quickly get your pictures to your computer,
+      assuming somebody has already set up everything correctly</subtitle>
+
+    <para>This chapter assumes that somebody has set up your system
+      correctly for use with 
+      <systemitem class="library">libgphoto2</systemitem>. This is
+      something the packages from your system vendor (RPM packages,
+      DEB packages or BSD ports) and/or your system administrator
+      should already have done for you. If not, follow the
+      instructions in <xref linkend="setup"/> first.
+    </para>
+
+    <para>Currently, please take a look at the
+      <link linkend="cli-examples">command line examples</link> from
+      <xref linkend="gphoto2-cli"/> and the examples described on 
+      <ulink url="http://www.gphoto.org/">www.gphoto.org</ulink>.
+    </para>
+    
+    <para>FIXME: We will add more examples here in the future.</para>
+  </chapter>
+ 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+
+  <chapter id="setup">
+    <title>Setting up your system for use with 
+      <systemitem class="library">libgphoto2</systemitem>
+      and <command>gphoto2</command>
     </title>
+
+    <abstract>
+      <para>This chapter aims to help you set up your system such that
+        you can use 
+        <systemitem class="library">libgphoto2</systemitem>
+        with any frontend. However, we will have some examples using
+        the <xref linkend="gphoto2-cli"/> command line frontend, as
+        this is the frontend which is always provided.
+      </para>
+    </abstract>
+
     <section>
-      <title>Overview</title>
+      <title>System Overview</title>
       <para>
         gPhoto2 consists of two libraries
-        (<xref linkend="libgphoto2"/> and
-        <xref linkend="libgphoto2_port"/>) and
-        a command line frontend (<xref linkend="gphoto2-cli"/>). 
+        <systemitem class="library">libgphoto2</systemitem> (
+        see <xref linkend="libgphoto2"/>), and
+        <systemitem class="library">libgphoto2_port</systemitem>
+        (see <xref linkend="libgphoto2_port"/>), which is used by the
+        former, 
+        and a command line frontend (<command>gphoto2</command>, 
+        see <xref linkend="gphoto2-cli"/>). 
         Other (GUI) frontends (like e.g. gtkam) are available as
         separate packages.
       </para>
@@ -298,45 +376,57 @@
         </orderedlist>
       </section>
     </section>
+
     <section>
       <title>Specifying the port and camera you use</title>
       <para>
-        libgphoto2 identifies a camera two values:
+        <systemitem class="library">libgphoto2</systemitem> 
+        identifies a camera by two values:
         <orderedlist numeration="loweralpha">
           <listitem>
-            <simpara>the port it is connected to</simpara>
+            <simpara>the <link linkend="ports">port</link> it 
+              is connected to</simpara>
           </listitem>
           <listitem>
-            <simpara>the name of the camera</simpara>
+            <simpara>the <link linkend="cameras">name</link> of the
+              camera</simpara>
           </listitem>
         </orderedlist>
       </para>
+
       <para>
-        How these may be specified is discussed in the following
-        sections.
+        How these may be specified is discussed in this chapter.
       </para>
       
-      <section>
-        <title>Serial ports</title>
-        <para>
-          Serial ports are named like 
-          <systemitem class="resource">serial:/dev/ttyS2</systemitem>
-          if you want to use the serial device
-          <filename class="devicefile">/dev/ttyS2</filename>.
-        </para>
+      <section id="ports">
+        <title>Ports</title>
+        <variablelist>
+          <varlistentry>
+            <term>Serial ports</term>
+            <listitem>
+              <para>
+                are named like 
+                <systemitem class="resource">serial:/dev/ttyS2</systemitem>
+                if you want to use the serial device
+                <filename class="devicefile">/dev/ttyS2</filename>.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>USB ports</term>
+            <listitem>
+              <para>
+                As USB works with auto detection, you do not have to specify a device
+                file. Therefore you just use the gphoto2 port 
+                <systemitem class="resource">usb:</systemitem>.
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
       </section>
 
       <section>
-        <title>USB ports</title>
-        <para>
-          As USB works with auto detection, you do not have to specify a device
-          file. Therefore you just use the gphoto2 port 
-          <systemitem class="resource">usb:</systemitem>.
-        </para>
-      </section>
-
-      <section>
-        <title>Name of the camera</title>
+        <title>Camera name</title>
         <para>
           The model name of the camera does not have to be specified when using
           the <systemitem class="resource">usb:</systemitem> port. 
@@ -346,12 +436,200 @@
           the list of supported models rather than just trying to type
           your camera model. 
         </para>
+        <screen>
+          <prompt>[me@home ~]$ </prompt><command>gphoto2</command> <parameter>--camera</parameter> <parameter>"<replaceable>Canon PowerShot G2</replaceable>"</parameter> <parameter>--list-files</parameter>
+        </screen>
       </section>
     </section>
   </chapter>
 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+
+  <chapter>
+    <title>Developer Documentation: The Inner Workings</title>
+    <subtitle>How it works internally, how you can work on it and how
+      you can use it in your own software</subtitle>
+
+    <para>The APIs defined here are described in more detail by the
+      autogenerated documentation at FIXME. Eventually, they should be
+      included here, but as they currently are in Docbook SGML and
+      this was written in Docbook XML, this isn't trivial.</para>
+
+    <para>Anyway, we provide you with the architecture context here
+      and will let you read up on the API details in the respective
+      external documentation.</para>
+
+
+    <section>
+      <title>The gPhoto2 software architecture</title>
+      <figure id="architecture-overview">
+        <title>The gPhoto2 system architecture</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/architecture.eps" format="EPS"/>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="../figures/architecture.png" format="PNG"/>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="../figures/architecture.jpg" format="JPG"/>
+          </imageobject>
+          <textobject>
+            <phrase>Diagram describing the gPhoto2 software architecture</phrase>
+          </textobject>
+          <caption>
+            <para>Diagram describing how frontends, libgphoto2,
+              camlibs, libgphoto2_port and your Operating System work
+              together.</para>
+          </caption>
+        </mediaobject>
+      </figure>
+    </section>
+
+
+    <section>
+      <title>The <systemitem class="library">libgphoto2</systemitem>
+        API</title>
+
+      <figure id="architecture-libgphoto2">
+        <title>The gPhoto2 system architecture</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/libgphoto2-api.eps" format="EPS"/>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="../figures/libgphoto2-api.png" format="PNG"/>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="../figures/libgphoto2-api.jpg" format="JPG"/>
+          </imageobject>
+          <textobject>
+            <phrase>The libgphoto2 API within the context of gPhoto2 software architecture</phrase>
+          </textobject>
+          <caption>
+            <para>Diagram describing where the libgphoto2 API is
+              located within the gPhoto2 software architecture</para>
+          </caption>
+        </mediaobject>
+      </figure>
+
+    </section>
+
+
+    <section>
+      <title>The <systemitem class="library">camlib</systemitem>
+        API</title>
+
+      <figure id="architecture-camlib">
+        <title>The gPhoto2 system architecture</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/libgphoto2-camlib.eps" format="EPS"/>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="../figures/libgphoto2-camlib.png" format="PNG"/>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="../figures/libgphoto2-camlib.jpg" format="JPG"/>
+          </imageobject>
+          <textobject>
+            <phrase>The camlib API within the context of gPhoto2 software architecture</phrase>
+          </textobject>
+          <caption>
+            <para>Diagram describing where the camlib API is
+              located within the gPhoto2 software architecture</para>
+          </caption>
+        </mediaobject>
+      </figure>
+
+    </section>
+
+
+    <section>
+      <title>The <systemitem class="library">libgphoto2_port</systemitem>
+        API</title>
+
+      <figure id="architecture-libgphoto2_port">
+        <title>The gPhoto2 system architecture</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/libgphoto2_port.eps" format="EPS"/>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="../figures/libgphoto2_port.png" format="PNG"/>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="../figures/libgphoto2_port.jpg" format="JPG"/>
+          </imageobject>
+          <textobject>
+            <phrase>The libgphoto2_port API within the context of gPhoto2 software architecture</phrase>
+          </textobject>
+          <caption>
+            <para>Diagram describing where the libgphoto2_port API is
+              located within the gPhoto2 software architecture</para>
+          </caption>
+        </mediaobject>
+      </figure>
+
+    </section>
+
+  </chapter>
+
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+
+  <chapter>
+    <title>Utopia: A look into the possible future</title>
+    <subtitle>Things that may or may not be implemented in the
+      future</subtitle>
+
+    <section>
+      <title>Language Bindings</title>
+      <para>If somebody is interested in writing a
+        <systemitem class="library">libgphoto2</systemitem>
+        frontend in another programming language, it would be nice to
+        have language bindings for that language. Perl, Python and
+        Java (JNI) come to mind...
+      </para>
+    </section>
+
+    <section>
+      <title>The gPhoto2 file system</title>
+
+      <figure id="gphoto2fs">
+        <title>The gPhoto2 file system architecture</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/gphotofs.eps" format="EPS"/>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="../figures/gphotofs.png" format="PNG"/>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="../figures/gphotofs.jpg" format="JPG"/>
+          </imageobject>
+          <textobject>
+            <phrase>The gPhoto2 file system software architecture</phrase>
+          </textobject>
+          <caption>
+            <para>Diagram describing where the gPhoto2 file system is
+              located within the gPhoto2 and system software architecture</para>
+          </caption>
+        </mediaobject>
+      </figure>
+    </section>
+
+  </chapter>
+
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+
 <reference>
-  <title>The gPhoto2 Reference</title>
+  <title>The gPhoto2 Reference (the man pages)</title>
 
   <refentry id="gphoto2-cli">
     <refentryinfo>
@@ -931,7 +1209,7 @@
       </para>
     </refsect1>
 
-    <refsect1>
+    <refsect1 id="cli-examples">
       <title>Examples</title>
       <variablelist>
         <varlistentry>
@@ -1084,6 +1362,47 @@
     </refentry>
 
   </reference>
+
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== -->
+  
+  <appendix>
+    <title>Resources: Where to find related information</title>
+    <variablelist>
+      <varlistentry>
+        <term><ulink url="http://www.gphoto.org/">http://www.gphoto.org/</ulink></term>
+        <listitem>
+          <simpara>The home page of the gPhoto project.</simpara>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><ulink url="http://sourceforge.net/projects/gphoto/">http://sourceforge.net/projects/gphoto/</ulink></term>
+        <listitem>
+          <simpara>The gPhoto project page.</simpara>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><ulink url="http://libusb.sourceforge.net/">http://libusb.sourceforge.net/</ulink></term>
+        <listitem>
+          <simpara>The <systemitem class="library">libusb</systemitem>
+          home page.</simpara>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><ulink url="http://sourceforge.net/projects/libexif/">http://sourceforge.net/projects/libexif/</ulink></term>
+        <listitem>
+          <simpara>The
+            <systemitem class="library">libexif</systemitem> project
+            page.</simpara>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </appendix>
+
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== -->
 
 </book>
 
