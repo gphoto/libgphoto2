@@ -82,26 +82,6 @@ gp_camera_new (Camera **camera)
         return(GP_OK);
 }
 
-/************************************************************************
- * Part I:								*
- *             Operations on CAMERAS					*
- *									*
- *   - ref                 : Ref the camera				*
- *   - unref               : Unref the camera				*
- *   - free                : Free					*
- *   - init                : Initialize the camera			*
- *   - get_session         : Get the session identifier			*
- *   - get_config          : Get configuration options			*
- *   - set_config          : Set those configuration options		*
- *   - get_summary         : Get information about the camera		*
- *   - get_manual          : Get information about the driver		*
- *   - get_about           : Get information about authors of the driver*
- *   - capture             : Capture an image				*
- *   - capture_preview     : Capture a preview				*
- *									*
- *   - get_result_as_string: Translate a result into a string		*
- ************************************************************************/
-
 int
 gp_camera_ref (Camera *camera)
 {
@@ -354,52 +334,23 @@ gp_camera_get_result_as_string (Camera *camera, int result)
         return (gp_result_as_string (result));
 }
 
-/************************************************************************
- * Part II:								*
- *             Operations on FOLDERS					*
- *									*
- *   - list_files  : Get a list of files in this folder			*
- *   - list_folders: Get a list of folders in this folder		*
- *   - delete_all  : Delete all files in this folder			*
- *   - put_file    : Upload a file into this folder			*
- *   - get_config  : Get configuration options of a folder		*
- *   - set_config  : Set those configuration options			*
- ************************************************************************/
-
 int
 gp_camera_folder_list_files (Camera *camera, const char *folder, 
 			     CameraList *list)
 {
-        CameraListEntry t;
-        int x, ret, y, z;
-
 	CHECK_NULL (camera && folder && list);
 
 	if (camera->functions->folder_list_files == NULL)
 		return (GP_ERROR_NOT_SUPPORTED);
 
-        /* Initialize the folder list to a known state */
-        list->count = 0;
+	CHECK_RESULT (gp_list_remove_all (list));
 
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting file list for "
 			 "folder '%s'...", folder);
-        ret = camera->functions->folder_list_files (camera, folder, list);
-        if (ret != GP_OK)
-                return (ret);
-
-        /* Sort the file list */
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Sorting file list...");
-        for (x = 0; x < list->count - 1; x++) {
-                for (y = x + 1; y < list->count; y++) {
-                        z = strcmp (list->entry[x].name, list->entry[y].name);
-                        if (z > 0) {
-                                memcpy (&t, &list->entry[x], sizeof (t));
-                                memcpy (&list->entry[x], &list->entry[y], 
-					sizeof (t));
-                                memcpy (&list->entry[y], &t, sizeof (t));
-                        }
-                }
-        }
+	CHECK_RESULT (gp_list_remove_all (list));
+	CHECK_RESULT (camera->functions->folder_list_files (camera, folder,
+							    list));
+	CHECK_RESULT (gp_list_sort (list));
 
         return (GP_OK);
 }
@@ -408,35 +359,17 @@ int
 gp_camera_folder_list_folders (Camera *camera, const char* folder, 
 			       CameraList *list)
 {
-        CameraListEntry t;
-        int x, y, z;
-
 	CHECK_NULL (camera && folder && list);
 
 	if (camera->functions->folder_list_folders == NULL)
 		return (GP_ERROR_NOT_SUPPORTED);
 	
-	/* Initialize the folder list to a known state */
-        list->count = 0;
-
 	gp_debug_printf (GP_DEBUG_HIGH, "core", "Getting folder list for "
 			 "folder '%s'...", folder);
+	CHECK_RESULT (gp_list_remove_all (list));
 	CHECK_RESULT (camera->functions->folder_list_folders (camera, folder,
 							      list));
-
-        /* Sort the folder list */
-	gp_debug_printf (GP_DEBUG_HIGH, "core", "Sorting file list...");
-        for (x = 0; x < list->count - 1; x++) {
-                for (y = x + 1; y < list->count; y++) {
-                        z = strcmp (list->entry[x].name, list->entry[y].name);
-                        if (z > 0) {
-                                memcpy (&t, &list->entry[x], sizeof (t));
-                                memcpy (&list->entry[x], &list->entry[y], 
-					sizeof(t));
-                                memcpy (&list->entry[y], &t, sizeof (t));
-                        }
-                }
-        }
+	CHECK_RESULT (gp_list_sort (list));
 
         return (GP_OK);
 }
@@ -520,19 +453,6 @@ gp_camera_folder_set_config (Camera *camera, const char *folder,
         return (camera->functions->folder_set_config (camera, folder, window));
 }
 
-/************************************************************************
- * Part III:								*
- *             Operations on FILES					*
- *									*
- *   - get_info   : Get specific information about a file		*
- *   - set_info   : Set specific parameters of a file			*
- *   - get_file   : Get a file						*
- *   - get_preview: Get the preview of a file				*
- *   - get_config : Get additional configuration options of a file	*
- *   - set_config : Set those additional configuration options		*
- *   - delete     : Delete a file					*
- ************************************************************************/
-
 int
 gp_camera_file_get_info (Camera *camera, const char *folder, 
 			 const char *file, CameraFileInfo *info)
@@ -548,7 +468,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	if (!camera->functions->file_get_info) {
 		CameraFile *cfile;
 
-		cfile = gp_file_new ();
+		CHECK_RESULT (gp_file_new (&cfile));
 
 		/* Get the file */
 		info->file.fields = GP_FILE_INFO_NONE;
@@ -570,7 +490,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 			strcpy (info->preview.type, cfile->type);
 		}
 
-		gp_file_unref (cfile);
+		CHECK_RESULT (gp_file_unref (cfile));
 
 	} else
 		result = camera->functions->file_get_info (camera, folder,
