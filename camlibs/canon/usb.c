@@ -994,6 +994,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
         camera->pl->thumb_length = 0; camera->pl->image_length = 0;
         camera->pl->image_key = 0x81818181;
 
+	sleep(1);
         while ( buf2[4] != 0x0f ) {
                 status = canon_usb_poll_interrupt_pipe ( camera, buf2, MAX_INTERRUPT_TRIES );
                 if ( status > 0x17 )
@@ -1532,7 +1533,7 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
                 if ((total_data_size - bytes_received) > camera->pl->xfer_length )
                         /* Limit max transfer length */
                         read_bytes = camera->pl->xfer_length;
-                else if ((total_data_size - bytes_received) > 0x040 )
+                else if ((total_data_size - bytes_received) > 0x040 && camera->pl->md->model != CANON_CLASS_6 )
                         /* Round longer transfers down to nearest 0x40 */
                         read_bytes = (total_data_size - bytes_received) / 0x40 * 0x40;
                 else
@@ -1663,24 +1664,49 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
                          GPContext *context)
 {
         char payload[100];
-        int payload_length, res;
+        int payload_length, res, offset;
+
+        GP_DEBUG ("canon_usb_get_thumbnail() called for file '%s'", name);
 
         /* 8 is strlen ("11111111") */
-        if (8 + strlen (name) > sizeof (payload) - 1) {
-                GP_DEBUG ("canon_usb_get_thumbnail: ERROR: "
-                          "Supplied file name '%s' does not fit in payload buffer.", name);
-                return GP_ERROR_BAD_PARAMETERS;
+/*         if (8 + strlen (name) > sizeof (payload) - 1) { */
+/*                 GP_DEBUG ("canon_usb_get_thumbnail: ERROR: " */
+/*                           "Supplied file name '%s' does not fit in payload buffer.", name); */
+/*                 return GP_ERROR_BAD_PARAMETERS; */
+/*         } */
+        if ( camera->pl->md->model == CANON_CLASS_6 ) {
+                offset = 4;
+                if ( offset + strlen (name) > sizeof (payload) - 2 ) {
+                        GP_DEBUG ("canon_usb_get_file: ERROR: "
+                                  "Supplied file name '%s' does not fit in payload buffer.", name);
+                        return GP_ERROR_BAD_PARAMETERS;
+                }
+                strncpy ( payload+offset, name, sizeof(payload)-offset-1 );
+                payload[offset + strlen (payload+offset)] = 0;
+                payload_length = offset + strlen (payload+offset) + 2;
+                GP_DEBUG ( "canon_usb_get_file: payload 0x%08x:%s",
+                           le32atoh(payload), payload+offset );
+        }
+        else {
+                offset = 8;
+                if ( offset + strlen (name) > sizeof (payload) - 1 ) {
+                        GP_DEBUG ("canon_usb_get_file: ERROR: "
+                                  "Supplied file name '%s' does not fit in payload buffer.", name);
+                        return GP_ERROR_BAD_PARAMETERS;
+                }
+                htole32a (payload + 0x4, camera->pl->xfer_length);
+                strncpy ( payload+offset, name, sizeof(payload)-offset );
+                payload_length = offset + strlen (payload+offset) + 1;
+                GP_DEBUG ( "canon_usb_get_file: payload 0x%08x:0x%08x:%s",
+                           le32atoh(payload), le32atoh(payload+4), payload+offset );
         }
 
         /* Construct payload containing file name, buffer size and function request.
          * See the file Protocol in this directory for more information.
          */
-        sprintf (payload, "11111111%s", name);
-        GP_DEBUG ("canon_usb_get_thumbnail: payload %s", payload);
-        payload_length = strlen (payload) + 1;
+/*         sprintf (payload, "11111111%s", name); */
 
         htole32a (payload, 0x1);        /* get thumbnail */
-        htole32a (payload + 0x4, camera->pl->xfer_length);
 
         /* 0 is to not show status */
         res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
