@@ -217,8 +217,12 @@ static struct {
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode 
 	 */
-	{"Canon PowerShot S45 (PTP mode)", 0x04a9, 0x306d}, /* 0x306c is S45 in normal (canon) mode */
-	{"Canon PowerShot S230 (PTP mode)", 0x04a9, 0x3071}, /* 0x3070 is S230 in normal (canon) mode */
+	{"Canon PowerShot S45 (PTP mode)", 0x04a9, 0x306d},
+		/* 0x306c is S45 in normal (canon) mode */
+	{"Canon PowerShot S230 (PTP mode)", 0x04a9, 0x3071},
+		/* 0x3070 is S230 in normal (canon) mode */
+	{"Canon Digital IXUS v3 (PTP mode)",  0x04a9, 0x3071},
+		/* it's the same as S230 */
 
 	/* more comming soon :) */
 	{NULL, 0, 0}
