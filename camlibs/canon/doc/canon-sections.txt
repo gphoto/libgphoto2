@@ -122,6 +122,8 @@ canon_usb_capture_dialogue
 canon_usb_dialogue
 canon_usb_get_file
 canon_usb_get_thumbnail
+canon_usb_get_captured_thumbnail
+canon_usb_get_captured_image
 canon_usb_identify
 canon_usb_init
 canon_usb_lock_keys
@@ -149,10 +151,7 @@ CANON_USB_CONTROL_VIEWFINDER_START
 CANON_USB_CONTROL_VIEWFINDER_STOP
 CANON_USB_CONTROL_SELECT_CAM_OUTPUT
 CANON_USB_CONTROL_SET_TRANSFER_MODE
-REMOTE_CAPTURE_FULL_TO_DRIVE
-REMOTE_CAPTURE_FULL_TO_PC
-REMOTE_CAPTURE_THUMB_TO_DRIVE
-REMOTE_CAPTURE_THUMB_TO_PC
+canonTransferMode
 CANON_USB_CONTROL_SHUTTER_RELEASE
 CANON_USB_FUNCTION_DELETE_FILE
 CANON_USB_FUNCTION_DISK_INFO
@@ -191,6 +190,7 @@ GP_PORT_DEFAULT_RETURN
 GP_PORT_DEFAULT_RETURN_EMPTY
 GP_PORT_DEFAULT_RETURN_INTERNAL
 canonJpegMarkerCode
+canonDownloadImageType
 <SUBSECTION Unused>
 GP_MODULE
 </SECTION>
@@ -214,6 +214,7 @@ canon_int_ready
 canon_int_get_disk_name
 canon_int_get_disk_name_info
 canon_int_capture_image
+canon_int_capture_preview
 canon_int_get_file
 canon_int_get_thumbnail
 canon_int_put_file
@@ -231,9 +232,11 @@ is_image
 is_jpeg
 is_movie
 is_thumbnail
+is_audio
 canon_int_do_control_command
 canon_int_extract_jpeg_thumb
 canon_int_filename2thumbname
+canon_int_filename2audioname
 canon_int_get_picture_abilities
 canon_int_pack_control_subcmd
 </SECTION>
