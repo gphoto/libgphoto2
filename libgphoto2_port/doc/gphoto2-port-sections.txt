@@ -68,15 +68,12 @@ gp_port_result_as_string
 <SECTION>
 <FILE>gphoto2-port-log</FILE>
 <TITLE>GPhoto2-Port-Log</TITLE>
-GP_LOG_ERROR
-GP_LOG_VERBOSE
-GP_LOG_DEBUG
-GP_LOG_DATA
-GPLogFunc
 GPLogLevel
+GPLogFunc
 gp_log_add_func
 gp_log_remove_func
 gp_log
+gp_logv
 gp_log_data
 </SECTION>
 

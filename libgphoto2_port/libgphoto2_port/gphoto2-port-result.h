@@ -22,9 +22,7 @@
 #define __GPHOTO2_PORT_RESULT_H__
 
 /* Return values. gphoto2-port should only return values from 0 to -99 */
-
 #define GP_OK                            0
-
 #define GP_ERROR                        -1
 #define GP_ERROR_BAD_PARAMETERS		-2
 #define GP_ERROR_NO_MEMORY		-3

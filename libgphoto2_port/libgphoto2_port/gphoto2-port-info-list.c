@@ -112,7 +112,10 @@ gp_port_info_list_free (GPPortInfoList *list)
  * @info: the info to append
  *
  * Appends an entry to the @list. This function is typically called by
- * an io-driver on #gp_port_library_list.
+ * an io-driver during #gp_port_library_list. If you leave info.name blank,
+ * #gp_port_info_list_lookup_path will try to match non-existent paths
+ * against info.path and - if successfull - will append this entry to the 
+ * list.
  *
  * Return value: The index of the new entry or a gphoto2 error code
  **/
