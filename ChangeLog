@@ -1,5 +1,10 @@
 2001-08-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/camera.c (gp_camera_file_get_info): Make sure the field
+	name is always set.
+
+2001-08-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* README: Updated list of USB Mass Storage cameras. Thanks Hubert!
 
 2001-08-22  Stephane Castejon <scastejo@club-internet.fr>
