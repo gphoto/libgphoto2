@@ -53,7 +53,7 @@ USB Mass Storage protocol:
  * Minolta Dimage 7
  * Nikon Coolpix 995
  * Olympus C-200Z, C-860L, C-2040, C-3040Z
- * Sony DSC-F505(V), DSC-F707, DSC P5
+ * Sony DSC-F505(V), DSC P5
 Again, those cameras cannot be accessed through gphoto2.
 
 Requirements
