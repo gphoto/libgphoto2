@@ -4,29 +4,37 @@ dnl
 
 AC_DEFUN(GP_CHECK_DOC_DIR,
 [
-echo -n "checking for main (root) docdir... "
+AC_ARG_WITH(doc-dir, [  --with-doc-dir=PATH  where to install docs ])
+
 # check for the main ("root") documentation directory
-if test -d "/usr/share/doc"
+if test "x${with_doc_dir}" = "x"
 then
-    maindocdir='${prefix}/share/doc'
-    echo "${maindocdir}"
-elif test -d "/usr/doc"
-then
-    maindocdir='${prefix}/doc'
-    echo "${maindocdir}"
+    echo -n "checking for main (root) docdir... "
+    if test -d "/usr/share/doc"
+    then
+        maindocdir='${prefix}/share/doc'
+        echo "${maindocdir}"
+    elif test -d "/usr/doc"
+    then
+        maindocdir='${prefix}/doc'
+        echo "${maindocdir}"
+    else
+        maindocdir='${datadir}/doc'
+        echo "${maindocdir} (default value)"
+    fi
+    echo -n "checking for docdir... "
+    # check whether to include package version into documentation path
+    if ls -d /usr/{share/,}doc/*-[[]0-9[]]* > /dev/null 2>&1
+    then
+        DOC_DIR="${maindocdir}/${PACKAGE}-${VERSION}"
+        echo "${DOC_DIR} (redhat style)"
+    else
+        DOC_DIR="${maindocdir}/${PACKAGE}"
+        echo "${DOC_DIR} (default style)"
+    fi
 else
-    maindocdir='${datadir}/doc'
-    echo "${maindocdir} (default value)"
-fi
-echo -n "checking for docdir... "
-# check whether to include package version into documentation path
-if ls -d /usr/{share/,}doc/*-[[]0-9[]]* > /dev/null 2>&1
-then
-    DOC_DIR="${maindocdir}/${PACKAGE}-${VERSION}"
-    echo "${DOC_DIR} (redhat style)"
-else
-    DOC_DIR="${maindocdir}/${PACKAGE}"
-    echo "${DOC_DIR} (default style)"
+    DOC_DIR="${with_doc_dir}"
+    echo "${DOC_DIR} (from parameter)"
 fi
 AC_SUBST(DOC_DIR)
 ])dnl
@@ -50,7 +58,7 @@ if test x$enable_gtk_doc = xauto ; then
     fi
 fi
 AM_CONDITIONAL(ENABLE_GTK_DOC, test x$enable_gtk_doc = xyes)
-AC_ARG_WITH(html-dir, [  --with-html-dir=PATH path to installed docs ])
+AC_ARG_WITH(html-dir, [  --with-html-dir=PATH  where to install html docs ])
 
 echo -n "checking for html dir... "
 if test "x${with_html_dir}" = "x" ; then
