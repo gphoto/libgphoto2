@@ -1,3 +1,9 @@
+2004-05-13  Raymond Penners  <raymond@dotsphinx.com>
+
+	* *.[ch]: Merged in Sony DSC-F55 patches from Alberto Garlassi:
+	added support for downloading MPEG files, and fixed thumbnail
+	downloading.
+
 2004-04-08  Raymond Penners  <raymond@dotsphinx.com>
 
 	* *.[ch]: Merged in patch from Alberto Garlassi: serial

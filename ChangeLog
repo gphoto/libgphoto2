@@ -1,3 +1,9 @@
+2004-05-13  Raymond Penners  <raymond@dotsphinx.com>
+
+	* camlibs/sonydscf55: Merged in Sony DSC-F55 patches from Alberto
+	Garlassi: added support for downloading MPEG files, and fixed
+	thumbnail downloading.
+	
 2004-05-01 Theodore Kilgore <kilgota@auburn.edu>
 
 	* configure.in: Hook up camlibs/mars

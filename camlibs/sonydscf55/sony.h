@@ -21,10 +21,14 @@
 #define SONY_H
 
 #define SONY_CAMERA_ID "sonydscf55"
-#define SONY_MODEL_MSAC_SR1 "Sony:MSAC-SR1"
-#define SONY_MODEL_DCR_PC100 "Sony:DCR-PC100"
-#define SONY_MODEL_TRV_20E   "Sony:TRV-20E"
-#define SONY_MODEL_DSC_F55 "Sony:DSC-F55"
+
+typedef enum {
+	SONY_MODEL_MSAC_SR1 = 0,
+	SONY_MODEL_DCR_PC100,
+	SONY_MODEL_TRV_20E,
+	SONY_MODEL_DSC_F55,
+	SONY_MODEL_SIZEOF
+} SonyModel;
 
 #define SONY_FILE_NAME_FMT "dsc%05d.jpg"
 
@@ -37,21 +41,32 @@ typedef struct _tagPacket {
 
 struct _CameraPrivateLibrary {
 	unsigned short int sequence_id;
-	int msac_sr1;
 	long current_baud_rate;
+	int current_mpeg_mode;
+	SonyModel model;
 };
 
-int sony_init(Camera * camera, int ismsac);
+
+typedef enum
+{
+	SONY_FILE_EXIF=0,
+	SONY_FILE_THUMBNAIL,
+	SONY_FILE_IMAGE,
+	SONY_FILE_MPEG
+} SonyFileType;
+
+int sony_init(Camera * camera, SonyModel model);
 int sony_exit(Camera * camera);
-int sony_image_count(Camera * camera);
-int sony_mpeg_count(Camera * camera);
+int sony_file_count(Camera * camera, SonyFileType file_type, int * count);
 int sony_image_get(Camera * camera, int imageid, CameraFile * file, GPContext *context);
 int sony_thumbnail_get(Camera * camera, int imageid, CameraFile * file, GPContext *context);
 int sony_exif_get(Camera * camera, int imageid, CameraFile * file, GPContext *context);
-int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info, GPContext *context);
-int sony_file_name_get(Camera *camera, int imageid, char buf[13]);
+int sony_mpeg_get(Camera * camera, int imageid, CameraFile * file, GPContext *context);
+int sony_image_info(Camera * camera, int imageid, SonyFileType file_type, CameraFileInfo * info, GPContext *context);
+int sony_file_name_get(Camera *camera, int imageid, SonyFileType file_type, char buf[13]);
+int sony_is_mpeg_file_name(const char * file_name);
 
-#endif				/* SONY_H */
+#endif /* SONY_H */
 
 /*
  * Local Variables:

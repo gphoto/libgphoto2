@@ -1,9 +1,3 @@
-* The original 0.4 driver contained code for downloading MPEG files.
-Unfortunately, that code did not work correctly when using an Sony
-MSAC-SR1 in combination with memory sticks from a Sony DCR-PC100. In this
-case, when the device is queried for a list of MPEG files it lists the
-JPEG still images. For now, the MPEG code has been left out.
-
 * Fix all FIXME's
 
 * Add calls to gp_frontend_status()

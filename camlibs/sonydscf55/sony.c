@@ -43,12 +43,6 @@
 #define SONY_START_CHAR		0xc0
 #define SONY_END_CHAR		0xc1
 
-enum
-{
-	SONY_FILE_EXIF=0,
-	SONY_FILE_THUMBNAIL,
-	SONY_FILE_IMAGE
-};
 
 static unsigned char START_PACKET = 192;
 static unsigned char END_PACKET = 193;
@@ -131,7 +125,8 @@ static const int baud_rate = 9600;
 /**
  * Returns transfer rate ID
  */
-static int sony_baud_to_id(long baud)
+static int
+sony_baud_to_id(long baud)
 {
 	int r;
 
@@ -160,7 +155,8 @@ static int sony_baud_to_id(long baud)
 /**
  * Reads a byte
  */
-static int sony_read_byte(Camera * camera, unsigned char *b)
+static int
+sony_read_byte(Camera * camera, unsigned char *b)
 {
 	int n = gp_port_read(camera->port, b, 1);
 	if (n != 1)
@@ -174,7 +170,8 @@ static int sony_read_byte(Camera * camera, unsigned char *b)
 /**
  * Returns the checksum for a packet
  */
-static unsigned char sony_packet_checksum(Packet * p)
+static unsigned char
+sony_packet_checksum(Packet * p)
 {
 	unsigned short int o = 0;
 	unsigned long int sum = 0;
@@ -190,7 +187,8 @@ static unsigned char sony_packet_checksum(Packet * p)
 /**
  * Returns TRUE iff the packet is valid
  */
-static int sony_packet_validate(Camera * camera, Packet * p)
+static int
+sony_packet_validate(Camera * camera, Packet * p)
 {
 	unsigned char c = sony_packet_checksum(p);
 
@@ -301,7 +299,8 @@ static int sony_packet_read(Camera * camera, Packet * pack)
 /**
  * Sends a packet
  */
-static int sony_packet_write(Camera * camera, Packet * p)
+static int
+sony_packet_write(Camera * camera, Packet * p)
 {
 	unsigned short int count;
 	int rc;
@@ -384,7 +383,8 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 					break;
 
 				case SONY_INVALID_SEQUENCE:
-					if (camera->pl->msac_sr1) {
+					if (camera->pl->model
+					    != SONY_MODEL_DSC_F55) {
 						invalid_sequence = 1;
 						sony_packet_make(camera,
 								 &ps, str,
@@ -450,7 +450,8 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
 /**
  * Sets baud rate
  */
-static int sony_baud_port_set(Camera * camera, long baud)
+static int
+sony_baud_port_set(Camera * camera, long baud)
 {
 	gp_port_settings settings;
 
@@ -466,7 +467,8 @@ static int sony_baud_port_set(Camera * camera, long baud)
 /**
  * Sets baud rate
  */
-static int sony_baud_set(Camera * camera, long baud)
+static int
+sony_baud_set(Camera * camera, long baud)
 {
 	Packet dp;
 	int rc;
@@ -498,7 +500,8 @@ static int sony_baud_set(Camera * camera, long baud)
 /**
  * Port initialisation
  */
-static int sony_init_port (Camera *camera)
+static int
+sony_init_port (Camera *camera)
 {
 	gp_port_settings settings;
 	int rc;
@@ -524,7 +527,8 @@ static int sony_init_port (Camera *camera)
 /**
  * Establish first contact (remember the prime directive? :)
  */
-static int sony_init_first_contact (Camera *camera)
+static int
+sony_init_first_contact (Camera *camera)
 {
 	int count = 0;
 	Packet dp;
@@ -547,15 +551,25 @@ static int sony_init_first_contact (Camera *camera)
 }
 
 /**
+ * Device supports MPEG?
+ */
+static int
+sony_is_mpeg_supported (Camera * camera)
+{
+	return camera->pl->model == SONY_MODEL_DSC_F55;
+}
+
+/**
  * Initialises camera
  */
-int sony_init (Camera * camera, int msac)
+int
+sony_init (Camera * camera, SonyModel model)
 {
 	int rc;
-
-	camera->pl->msac_sr1 = msac;
+	camera->pl->model = model;
 	camera->pl->current_baud_rate = -1;
-	
+	camera->pl->current_mpeg_mode = -1;
+
 	rc = sony_init_port (camera);
 	if (rc == GP_OK)
 		rc = sony_init_first_contact (camera);
@@ -566,7 +580,8 @@ int sony_init (Camera * camera, int msac)
 /**
  * Reset the camera sequence count and baud rate.
  */
-int sony_exit(Camera * camera)
+int
+sony_exit(Camera * camera)
 {
 	Packet dp;
 	int rc = GP_ERROR;
@@ -579,73 +594,104 @@ int sony_exit(Camera * camera)
 	return rc;
 }
 
+
+static int
+sony_set_file_mode(Camera * camera, SonyFileType file_type)
+{
+	int rc = GP_OK;
+	Packet dp;
+	if (file_type == SONY_FILE_MPEG) {
+		if (camera->pl->current_mpeg_mode != 1) {
+			rc = sony_converse(camera, &dp, MpegImage, 21);
+			if (rc == GP_OK) {
+				camera->pl->current_mpeg_mode = 1;
+			}
+		}
+	}
+	else {
+		if (camera->pl->current_mpeg_mode != 0) {
+			rc = sony_converse(camera, &dp, StillImage, 19);
+			if (rc == GP_OK) {
+				camera->pl->current_mpeg_mode = 0;
+			}
+		}
+	}
+	return rc;
+}
+
+
 /**
  * Return count of images taken.
  */
-static int
-sony_item_count(Camera * camera, unsigned char *from, int from_len)
+int
+sony_file_count(Camera * camera, SonyFileType file_type, int *count)
 {
 	Packet dp;
 	int rc;
 
-	GP_DEBUG( "sony_item_count()");
-	rc = sony_converse(camera, &dp, SetTransferRate, 4);
-	if (rc == GP_OK) {
-		rc = sony_converse(camera, &dp, from, from_len);
+	GP_DEBUG( "sony_file_count()");
+	if (file_type == SONY_FILE_MPEG
+	    && (! sony_is_mpeg_supported(camera))) {
+		    rc = GP_OK;
+		    *count = 0;
+	}
+	else {
+		*count = -1;
+		rc = sony_converse(camera, &dp, SetTransferRate, 4);
 		if (rc == GP_OK) {
-			rc = sony_converse(camera, &dp, SendImageCount, 3);
+			int rc = sony_set_file_mode(camera, file_type);
 			if (rc == GP_OK) {
-				int nr = dp.buffer[5] | (dp.buffer[4]<<8);
-				GP_DEBUG ("count = %d", nr);
-				return nr;
+				rc = sony_converse(camera, &dp, SendImageCount, 3);
+				if (rc == GP_OK) {
+					int nr = dp.buffer[5] | (dp.buffer[4]<<8);
+					GP_DEBUG ("count = %d", nr);
+					*count = nr;
+				}
 			}
 		}
 	}
-	return GP_ERROR;
+	return rc;
 }
 
-
-/**
- * Returns number of still images
- */
-int sony_image_count(Camera * camera)
-{
-	return sony_item_count(camera, StillImage, sizeof(StillImage));
-}
-
-
-/**
- * Returns number of still images
- */
-int sony_mpeg_count(Camera * camera)
-{
-	return sony_item_count(camera, MpegImage, sizeof(MpegImage));
-}
 
 
 /**
  * Fetches file name.
  */
 int
-sony_file_name_get(Camera *camera, int imageid, char buf[13])
+sony_file_name_get(Camera *camera, int imageid, SonyFileType mpeg, char buf[13])
 {
        Packet dp;
        int rc;
- 
+
        GP_DEBUG( "sony_file_name_get()");
-       sony_baud_set(camera, baud_rate);
-       /* FIXME: Not nice, changing global data like this. */
-       SelectImage[3] = (imageid >> 8);
-       SelectImage[4] = imageid & 0xff;
-       rc = sony_converse(camera, &dp, SelectImage, 7);
+       rc = sony_set_file_mode(camera, mpeg);
        if (rc == GP_OK) {
-	       memcpy(buf, &dp.buffer[5], 8);
-	       buf[8] = '.';
-	       memcpy(buf+9, &dp.buffer[5+8], 3);
-	       buf[12] = 0;
+	       sony_baud_set(camera, baud_rate);
+	       /* FIXME: Not nice, changing global data like this. */
+	       SelectImage[3] = (imageid >> 8);
+	       SelectImage[4] = imageid & 0xff;
+	       rc = sony_converse(camera, &dp, SelectImage, 7);
+	       if (rc == GP_OK) {
+		       memcpy(buf, &dp.buffer[5], 8);
+		       buf[8] = '.';
+		       memcpy(buf+9, &dp.buffer[5+8], 3);
+		       buf[12] = 0;
+	       }
        }
        return rc;
 }
+
+
+/**
+ * Is it an MPEG file?
+ */
+int
+sony_is_mpeg_file_name(const char * file_name)
+{
+	return strncmp(file_name,"MOV",3)==0;
+}
+
 
 
 /**
@@ -658,9 +704,15 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 	int sc;			/* count of bytes to skip at start of packet */
 	Packet dp;
 	int rc;
-	char buffer[128];
+	char buffer[128];                                                 
 
 	GP_DEBUG( "sony_file_get()");
+
+	rc = sony_set_file_mode(camera, file_type);
+	if (rc != GP_OK) {
+		return rc;
+	}
+	
 	if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 		return GP_ERROR_CANCEL;
 	}
@@ -677,16 +729,16 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 
 		sony_baud_set(camera, baud_rate);
 
-		rc = sony_converse(camera, &dp, StillImage, 19);
+		rc = sony_set_file_mode(camera, file_type);
 		if (rc == GP_OK) {
 			if (file_type == SONY_FILE_THUMBNAIL) {
 				sc = 0x247;
-
 				SelectImage[3] = (imageid >> 8);
 				SelectImage[4] = imageid & 0xff;
 				sony_converse(camera, &dp, SelectImage, 7);
 
-				if (camera->pl->msac_sr1) {
+				if (camera->pl->model
+				    != SONY_MODEL_DSC_F55) {
 					gp_file_append(file,
 						       "\xff\xd8\xff", 3);
 				}
@@ -764,9 +816,10 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 }
 
 /**
- * Fetches an image.
+ * Fetches a thumbnail image.
  */
-int sony_thumbnail_get(Camera * camera, int imageid, CameraFile * file, GPContext *context)
+int
+sony_thumbnail_get(Camera * camera, int imageid, CameraFile * file, GPContext *context)
 {
 	return sony_file_get(camera, imageid, SONY_FILE_THUMBNAIL, file, context);
 }
@@ -774,7 +827,8 @@ int sony_thumbnail_get(Camera * camera, int imageid, CameraFile * file, GPContex
 /**
  * Fetches an image.
  */
-int sony_image_get(Camera * camera, int imageid, CameraFile * file, GPContext *context)
+int
+sony_image_get(Camera * camera, int imageid, CameraFile * file, GPContext *context)
 {
 	return sony_file_get(camera, imageid, SONY_FILE_IMAGE, file, context);
 }
@@ -782,21 +836,38 @@ int sony_image_get(Camera * camera, int imageid, CameraFile * file, GPContext *c
 /**
  * Fetches EXIF information.
  */
-int sony_exif_get(Camera * camera, int imageid, CameraFile * file, GPContext *context)
+int
+sony_exif_get(Camera * camera, int imageid, CameraFile * file, GPContext *context)
 {
 	return sony_file_get(camera, imageid, SONY_FILE_EXIF, file, context);
+}
+
+/**
+ * Fetches an Mpeg.
+ */
+int
+sony_mpeg_get(Camera * camera, int imageid, CameraFile * file, GPContext *context)
+{
+	return sony_file_get(camera, imageid, SONY_FILE_MPEG, file, context);
 }
 
 
 /**
  * Fetches image details.
  */
-int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info, GPContext *context)
+int
+sony_image_info(Camera * camera, int imageid, SonyFileType file_type,
+		CameraFileInfo * info, GPContext *context)
 {
 	unsigned int l = 0;
 	int rc;
 	Packet dp;
 
+	rc = sony_set_file_mode(camera, file_type);
+	if (rc != GP_OK) {
+		return rc;
+	}
+	
 	if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 		return GP_ERROR_CANCEL;
 	}
@@ -812,9 +883,15 @@ int sony_image_info(Camera * camera, int imageid, CameraFileInfo * info, GPConte
 
 		info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 		info->file.size = l;
-		strcpy (info->file.type, GP_MIME_JPEG);
 
 		info->preview.fields = GP_FILE_INFO_TYPE;
+
+		if (file_type == SONY_FILE_MPEG) {
+			strcpy (info->file.type, GP_MIME_AVI);
+		}
+		else {
+			strcpy (info->file.type, GP_MIME_JPEG);
+		}
 	}
 	return rc;
 }
