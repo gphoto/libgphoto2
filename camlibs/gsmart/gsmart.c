@@ -538,6 +538,7 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	u_int8_t *yuv_p;
 	u_int8_t *rgb_p;
 	unsigned char pbm_header[16];
+	int headerlength;
 
 	p = g_file->fat;
 
@@ -547,8 +548,8 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	size = g_file->width * g_file->height * 2 / 64;
 	t_width = g_file->width / 8;
 	t_height = g_file->height / 8;
-	snprintf (pbm_header, sizeof (pbm_header), "P6 %d %d 255\n", t_width,
-		  t_height);
+	headerlength = snprintf (pbm_header, sizeof (pbm_header), 
+			"P6 %d %d 255\n", t_width, t_height);
 
 	/* align */
 	if (size % 64 != 0)
@@ -571,15 +572,15 @@ gsmart_get_image_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 		sleep (1);
 		CHECK (gp_port_read (lib->gpdev, mybuf, size));
 	}
-	*len = t_width * t_height * 3 + sizeof (pbm_header);
+	*len = t_width * t_height * 3 + headerlength;
 	*len += 45;
 	*buf = malloc (*len);
 	if (!*buf)
 		return (GP_ERROR_NO_MEMORY);
 
 	tmp = *buf;
-	snprintf (tmp, sizeof (pbm_header), pbm_header);
-	tmp += sizeof (pbm_header) - 1;
+	snprintf (tmp, headerlength+1, pbm_header);
+	tmp += headerlength;
 
 	yuv_p = mybuf;
 	rgb_p = tmp;

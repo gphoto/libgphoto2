@@ -1,3 +1,8 @@
+Fri Jan 24 12:15:01 2003  Till Adam  <till@adam-lilienthal.de>
+
+ * fix thumbnail colors for low res images. Ported from a patch by 
+   Mark Zimmerman <mark@foresthaven.com> for the spca504_flash camlib
+
 Don Jan 16 23:34:21 2003  Till Adam  <till@adam-lilienthal.de>
  
  * add avi support for the Maxell and related models
