@@ -1,16 +1,13 @@
 SUBDIRS = api figures
 
 # distribute manual Portable Document Format (PDF) if possible
-# manual_pdf = gphoto2.pdf
-manual_pdf =
+manual_pdf = @manual_pdf@
 
 # distribute manual in PostScript (PS) format if possible
-# manual_ps = gphoto2.ps
-manual_ps =
+manual_ps = @manual_ps@
 
 # build HTML manual if possible
-manual_html = manual
-# manual_html =
+manual_html = @manual_html@
 
 EXTRA_DIST = DAEMON build_OS2.txt 					\
 	camlib_devel.lyx 						\
@@ -71,11 +68,9 @@ endif
 if XMLTOHTML
 
 # do not empty this variable
-manual_dir=manual
-
 htmldir=@HTML_DIR@
 
-TARGET_DIR=$(htmldir)/$(manual_dir)
+TARGET_DIR=$(htmldir)/manual
 
 manual: gphoto2.xml
 	xmlto html -o "$@" "$<"
@@ -83,16 +78,17 @@ manual: gphoto2.xml
 
 clean_local_manual = clean-local-manual
 clean-local-manual:
-	rm -rf "$(manual_dir)/"
+	rm -rf "manual/"
 
 install_data_local_manual = install-data-local-manual
 install-data-local-manual:
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(TARGET_DIR)
-	$(INSTALL_DATA) ./$(manual_dir)/*.html $(DESTDIR)$(TARGET_DIR)
+	$(INSTALL_DATA) ./manual/*.html $(DESTDIR)$(TARGET_DIR)
 
 dist_hook_manual = dist-hook-manual
 dist-hook-manual:
-	(cd $(srcdir) ; tar cvf - $(manual_dir)) | (cd $(distdir); tar xf -)
+	(cd $(srcdir) ; tar cvf - manual/) | (cd $(distdir); tar xf -)
+	(cd $(srcdir) ; tar cvf - $(figure_dir)) | (cd $(distdir)/manual/; tar xf -)
 endif
 ########################################################################
 
@@ -109,4 +105,5 @@ dist-hook: $(dist_hook_manual)
 	@echo "Dummy $@ target"
 
 all-local: $(man_MANS) $(manual_pdf) $(manual_ps) $(manual_html)
+	-(cd $(manual_dir) && ln -s ../figures)
 	@echo "Dummy $@ target"
