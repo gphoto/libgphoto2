@@ -134,34 +134,38 @@ canon_int_identify_camera (Camera *camera)
 	unsigned char *msg;
 	int len;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_int_identify_camera() called");
+	GP_DEBUG ("canon_int_identify_camera() called");
 
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
-			len = 0x4c;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_IDENTIFY_CAMERA,
 						  &len, NULL, 0);
+			if (!msg)
+				return GP_ERROR;
 			break;
 		case CANON_SERIAL_RS232:
 		default:
 			msg = canon_serial_dialogue (camera, 0x01, 0x12, &len, NULL);
+			if (!msg) {
+				gp_debug_printf (GP_DEBUG_LOW, "canon",
+						 "canon_int_identify_camera: " "msg error");
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
 
 	}
 
-	if (!msg) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "canon_int_identify_camera: " "msg error");
-		canon_serial_error_type (camera);
+	if (len != 0x4c)
 		return GP_ERROR;
-	}
 
 	/* Store these values in our "camera" structure: */
 	memcpy (camera->pl->firmwrev, (char *) msg + 8, 4);
 	strncpy (camera->pl->ident, (char *) msg + 12, 30);
 	strncpy (camera->pl->owner, (char *) msg + 44, 30);
-	gp_debug_printf (GP_DEBUG_HIGH, "canon", "canon_int_identify_camera: "
-			 "ident '%s' owner '%s'", camera->pl->ident, camera->pl->owner);
+
+	GP_DEBUG ("canon_int_identify_camera: ident '%s' owner '%s'", camera->pl->ident,
+		  camera->pl->owner);
 
 	return GP_OK;
 }
@@ -181,29 +185,35 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 	unsigned char *msg;
 	int len;
 
+	GP_DEBUG ("canon_int_get_battery()");
+
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
-			len = 0x8;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_POWER_STATUS,
 						  &len, NULL, 0);
+			if (!msg)
+				return GP_ERROR;
 			break;
 		case CANON_SERIAL_RS232:
 		default:
 			msg = canon_serial_dialogue (camera, 0x0a, 0x12, &len, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
+
 			break;
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
+	if (len != 8)
 		return GP_ERROR;
-	}
 
 	if (pwr_status)
 		*pwr_status = msg[4];
 	if (pwr_source)
 		*pwr_source = msg[7];
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "Status: %i / Source: %i\n", *pwr_status,
-			 *pwr_source);
+	GP_DEBUG ("canon_int_get_battery: Status: %i / Source: %i\n", *pwr_status,
+		  *pwr_source);
 	return GP_OK;
 }
 
@@ -354,23 +364,26 @@ canon_int_get_time (Camera *camera)
 	time_t date;
 
 	GP_DEBUG ("canon_int_get_time()");
-	
+
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
-			len = 0x10;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_GET_TIME, &len,
 						  NULL, 0);
+			if (!msg)
+				return GP_ERROR;
 			break;
 		case CANON_SERIAL_RS232:
 		default:
 			msg = canon_serial_dialogue (camera, 0x03, 0x12, &len, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
+	if (len != 0x10)
 		return GP_ERROR;
-	}
 
 	/* XXX will fail when sizeof(int) != 4. Should use u_int32_t or
 	 * something instead. Investigate portability issues.
@@ -399,9 +412,10 @@ canon_int_set_time (Camera *camera)
 
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
-			len = 0x10;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_SET_TIME, &len,
 						  NULL, 0);
+			if (!msg)
+				return GP_ERROR;
 			break;
 		case CANON_SERIAL_RS232:
 		default:
@@ -409,15 +423,18 @@ canon_int_set_time (Camera *camera)
 						     sizeof (pcdate),
 						     "\x00\x00\x00\x00\x00\x00\x00\x00", 8,
 						     NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
+
 			break;
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return 0;
-	}
+	if (len != 0x10)
+		return GP_ERROR;
 
-	return 1;
+	return GP_OK;
 }
 
 /**
@@ -481,13 +498,13 @@ canon_int_get_disk_name (Camera *camera)
 		case CANON_SERIAL_RS232:
 		default:
 			msg = canon_serial_dialogue (camera, 0x0a, 0x11, &len, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return NULL;
+			}
 			break;
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return NULL;
-	}
 	if (camera->pl->canon_comm_method == CANON_SERIAL_RS232) {
 		/* this is correct even though it looks a bit funny. canon_serial_dialogue()
 		 * has a static buffer, strdup() part of that buffer and return to our caller.
@@ -529,21 +546,23 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 		case CANON_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DISK_INFO, &len,
 						  name, strlen (name) + 1);
+			if (!msg)
+				return GP_ERROR;
 			break;
 		case CANON_SERIAL_RS232:
 		default:
 			msg = canon_serial_dialogue (camera, 0x09, 0x11, &len, name,
 						     strlen (name) + 1, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return 0;	/* FALSE */
-	}
 	if (len < 12) {
 		GP_DEBUG ("ERROR: truncated message");
-		return 0;	/* FALSE */
+		return GP_ERROR;
 	}
 	cap = get_int (msg + 4);
 	ava = get_int (msg + 8);
@@ -555,7 +574,7 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 	GP_DEBUG ("canon_int_get_disk_name_info: capacity %i kb, available %i kb",
 		  cap > 0 ? (cap / 1024) : 0, ava > 0 ? (ava / 1024) : 0);
 
-	return 1;		/* TRUE */
+	return GP_OK;
 }
 
 
@@ -827,7 +846,7 @@ canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const c
 				if (filedate_str[strlen (filedate_str) - 1] == '\n')
 					filedate_str[strlen (filedate_str) - 1] = 0;
 			} else {
-				strcpy(filedate_str, "           -");
+				strcpy (filedate_str, "           -");
 			}
 
 			/* This produces ls(1) like output, one line per file :
@@ -1099,7 +1118,6 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 			memcpy (payload, dir, strlen (dir) + 1);
 			memcpy (payload + strlen (dir) + 1, name, strlen (name) + 1);
 			payload_length = strlen (dir) + strlen (name) + 2;
-			len = 0x4;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE, &len,
 						  payload, payload_length);
 			break;
@@ -1112,14 +1130,14 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 	}
 	if (!msg) {
 		canon_serial_error_type (camera);
-		return -1;
+		return GP_ERROR;
 	}
 	if (msg[0] == 0x29) {
 		gp_camera_message (camera, _("File protected"));
-		return -1;
+		return GP_ERROR;
 	}
 
-	return 0;
+	return GP_OK;
 }
 
 /*
