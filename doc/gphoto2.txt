@@ -50,15 +50,34 @@ The operating system has to determine which users may access a device
 dynamically. As the operating system cannot determine this by itself,
 there have to be some helper applications.
 
+The configuration of these helper applications is explained in the
+following section.
+
 
 2.2.1 USB ports on Linux
 ========================
+
+As gphoto2 provides a user space driver, in order to have gphoto2
+access your camera, you have to disable all kernel drivers which want
+to handle the camera themselves (e.g. the Linux dc2xx driver).
+
+On Linux systems, you have basically two options to allow user access
+to USB devices:
+a) allow a certain user/group or the world access to ALL USB devices
+   by mounting /proc/bus/usb accordingly
+b) use hotplug and allow access only to the USB devices you want to be
+   accessible
+
+Solution b) has a huge advantage over a): It doesn't allow the
+user/group to interfere with or eavesdrop on any other USB devices
+which might be attached, such as USB keyboards, fingerprint reader or
+similar. The following paragraphs thus describe setting up b).
 
 On Linux systems, from the 2.4 kernel series on, the kernel supports
 hotplugging. You may have to compile a kernel with hotplug support if
 you're not already running one. You may have to install the hotplug
 package (http://linux-hotplug.sourceforge.net/) if you don't have it
-already.
+installed already.
 
 You can find out if your kernel has hotplug support by looking for the
 file /proc/sys/kernel/hotplug. If it exists, you have a hotplug
@@ -66,9 +85,9 @@ enabled kernel. If "cat /proc/sys/kernel/hotplug" prints the path to
 your hotplug binary (usually /sbin/hotplug) and this binary exists,
 you are ready to rock.
 
-Note that the following solution does *not* provide real security, but
-it allows you to run gphoto2 as a non-root user and avoids chance
-conflicts between to different users accessing the camera.
+Also note that the following solution does *not* provide absolute
+security and that you know the security implications of the respective
+usbcam script you are going to use.
 
 0. Load your USB driver and mount the USB device filesystem, i.e. e.g.
       modprobe usb-uhci
@@ -78,12 +97,17 @@ conflicts between to different users accessing the camera.
 
 1. Add the output of "gphoto2 --print-usb-usermap" to
    /etc/hotplug/usb.usermap
+   This makes hotplug recognise all USB cameras which your version 
+   of gphoto2 supports and makes hotplug run the usbcam script you
+   choose in step 2 whenever one of these cameras is attached.
 
 2. Choose the right /etc/hotplug/usb/usbcam script for you.
    Example scripts are found in packages/ in the source tree
    and in linux-hotplug/ after installation and in the doc dir of 
    the binary package. Choose one, adapt it for your needs, and copy
-   it to /etc/hotplug/usb/usbcam.
+   it to /etc/hotplug/usb/usbcam. All three scripts shipped with
+   gphoto2 also have extensive commentary explaining their usage in
+   more detail.
 
    a) The most simple solution is using usbcam.console. This
       changes the permissions so that the user owning /dev/console can
@@ -96,12 +120,12 @@ conflicts between to different users accessing the camera.
    b) If you want only one user to have access to the camera, use
       usbcam.user and change it accordingly.
 
-   c) If you want multiple users to have access to the camera, put all
-      of these users in one group - either a special "camera" group or
-      a generic "users" group will do - and use that group in the
-      "chgrp" line in usbcam.group.
+   c) If you want multiple users to have access to the camera, add all
+      of these users to one group - either a special "camera" group or
+      a generic "users" group will do - and use that group in
+      usbcam.group.
 
-   Don't forget to make the script executable.
+   Don't forget to make the script /etc/hotplug/usb/usbcam executable.
 
 4. Plug in the camera and switch it on - your /var/log/messages 
    will now display some messages.
