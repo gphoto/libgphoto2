@@ -13,7 +13,7 @@ OBJS=konica.o \
      library.o \
 
 .c.o :
-   @$(CC) -o $@ $< $(CCFLAGS)
+   @$(CC) -o $@ $< $(CCFLAGS) -Ic:\xfree86\include\glib12 -IE:\gs\gs6.61\zlib
 
 konica.def: library.o
    $(MAKEDEF)

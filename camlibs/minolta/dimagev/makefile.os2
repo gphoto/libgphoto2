@@ -19,7 +19,8 @@ OBJS= util.o \
       download.o \
       capture.o \
       status.o \
-      dimagev.o
+      dimagev.o \
+      upload.o
 
 dimagev.def: dimagev.o
    @$(MAKEDEF)

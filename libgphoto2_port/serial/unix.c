@@ -191,7 +191,7 @@ int gp_port_serial_open(gp_port * dev)
         fd = open(dev->settings.serial.port, O_RDWR | O_BINARY);
         dev->device_fd = open(dev->settings.serial.port, O_RDWR | O_BINARY);
         close(fd);
-        /*printf("fd %d for %s\n",dev->device_fd,dev->settings.serial.port);*/
+        //printf("fd %d for %s\n",dev->device_fd,dev->settings.serial.port);
 #else
         dev->device_fd = open(dev->settings.serial.port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif

@@ -8,8 +8,11 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-
+#ifdef DEBUG
 #define dprintf(x) printf x
+#else
+#define dprintf(x)
+#endif
 
 #include <gphoto2.h>
 
@@ -43,7 +46,6 @@ void wbyte(u_char c)
 u_char rbyte()
 {
   u_char        c[2];
-
   //if (readtty(F1fd, &c, 1) < 0) {
   if (gp_port_read(dev,c, 1) <0) {
     perror("rbtyte");
@@ -334,7 +336,7 @@ long F1fread(u_char *data, long len)
 
   buf[6] = (len >> 8) & 0xff;
   buf[7] = 0xff & len;
-
+  fprintf(stderr, "x");
   sendcommand(buf, 8);
   rstr(buf, 9);
   if((buf[2] != 0x02) || (buf[3] != 0x0C) || (buf[4] != 0x00)){

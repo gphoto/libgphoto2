@@ -156,7 +156,7 @@ int make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
   else {
     cur = cur + sprintf(&jpeg_comment[cur],
                         "Date-Taken: %d/%02d/%02d %02d:%02d:%02d\n",
-    1900+(*(buf+PMP_TAKE_YEAR)), *(buf+PMP_TAKE_MONTH),
+    2000+(*(buf+PMP_TAKE_YEAR)), *(buf+PMP_TAKE_MONTH),
     *(buf+PMP_TAKE_DATE), *(buf+PMP_TAKE_HOUR), *(buf+PMP_TAKE_MINUTE),
     *(buf+PMP_TAKE_SECOND));
   }
@@ -169,7 +169,7 @@ int make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
   else {
     cur = cur + sprintf(&jpeg_comment[cur],
                         "Date-Edited: %d/%02d/%02d %02d:%02d:%02d\n",
-    1900+(*(buf+PMP_EDIT_YEAR)), *(buf+PMP_EDIT_MONTH),
+    2000+(*(buf+PMP_EDIT_YEAR)), *(buf+PMP_EDIT_MONTH),
     *(buf+PMP_EDIT_DATE), *(buf+PMP_EDIT_HOUR), *(buf+PMP_EDIT_MINUTE),
     *(buf+PMP_EDIT_SECOND));
   }

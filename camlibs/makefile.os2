@@ -13,31 +13,46 @@ end:
   @echo ****
 
 dll:
-  @cd canon
+  @cd barbie
   @nmake -nologo -f makefile.os2
   @cd..
-  @cd barbie
+  @cd canon
   @nmake -nologo -f makefile.os2
   @cd..
   @cd digita
   @nmake -nologo -f makefile.os2
   @cd..
+  @cd dimera
+  @nmake -nologo -f makefile.os2
+  @cd..
   @cd directory
   @nmake -nologo -f makefile.os2
   @cd..
-  @cd sonydscf1
+  @cd kodak\dc120
+  @nmake -nologo -f makefile.os2
+  @cd..\..
+  @cd kodak\dc240
+  @nmake -nologo -f makefile.os2
+  @cd..\..
+  @cd kodak\dc3200
+  @nmake -nologo -f makefile.os2
+  @cd..\..
+  @cd konica
   @nmake -nologo -f makefile.os2
   @cd..
   @cd minolta\dimagev
   @nmake -nologo -f makefile.os2
   @cd..\..
-  @cd kodak\dc120
+  @cd panasonic
   @nmake -nologo -f makefile.os2
-  @cd..\..
+  @cd..
   @cd sierra
   @nmake -nologo -f makefile.os2
   @cd..
-  @cd panasonic
+  @cd sonydscf1
+  @nmake -nologo -f makefile.os2
+  @cd..
+  @cd stv0680
   @nmake -nologo -f makefile.os2
   @cd..
 

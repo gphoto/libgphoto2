@@ -18,4 +18,4 @@ barbie.def: barbie.o
    @$(MAKEDEF)
 
 $(CAMLIBS)\gpbarbie.dll: $(OBJS) barbie.def
-   @$(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)
+   $(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)

@@ -52,9 +52,9 @@ int camera_abilities (CameraAbilitiesList *list) {
         a->port=GP_PORT_SERIAL;
         a->speed[0] = 0;
         a->operations        =  GP_OPERATION_NONE;
-	a->file_operations   =  GP_FILE_OPERATION_DELETE | 
-				GP_FILE_OPERATION_PREVIEW;
-	a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
+        a->file_operations   =  GP_FILE_OPERATION_DELETE |
+                                GP_FILE_OPERATION_PREVIEW;
+        a->folder_operations =  GP_FOLDER_OPERATION_NONE;
         gp_abilities_list_append(list, a);
 
         return (GP_OK);
@@ -75,14 +75,14 @@ int camera_init (Camera *camera) {
         camera->functions->abilities    = camera_abilities;
         camera->functions->init         = camera_init;
         camera->functions->exit         = camera_exit;
-        camera->functions->folder_list_folders 	= camera_folder_list_folders;
-	camera->functions->folder_list_files 	= camera_folder_list_files;
+        camera->functions->folder_list_folders  = camera_folder_list_folders;
+        camera->functions->folder_list_files    = camera_folder_list_files;
         //camera->functions->folder_set   = camera_folder_set;
         //camera->functions->file_count   = camera_file_count;
         camera->functions->file_get     = camera_file_get;
         camera->functions->file_get_preview = camera_file_get_preview;
         camera->functions->file_delete  = camera_file_delete;
-        camera->functions->capture      = camera_capture;
+//        camera->functions->capture      = camera_capture;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
@@ -118,21 +118,21 @@ int camera_exit (Camera *camera) {
         return (F1fclose());
 }
 
-int camera_folder_list_folders (Camera *camera, const char *folder, 
-				CameraList *list) 
+int camera_folder_list_folders (Camera *camera, const char *folder,
+                                CameraList *list)
 {
        /* printf("sony dscf1: folderlist\n");*/
         return (GP_OK);
 }
 
-int camera_folder_set(Camera *camera, const char *folder_name) 
+int camera_folder_set(Camera *camera, const char *folder_name)
 {
 /*                printf("sony dscf1: folder set\n");*/
         printf("folder: %s\n",folder_name);
         return (GP_OK);
 }
 
-int camera_file_count (Camera *camera) 
+int camera_file_count (Camera *camera)
 {
         if(!F1ok())
            return (GP_ERROR);
@@ -140,8 +140,8 @@ int camera_file_count (Camera *camera)
         return (F1howmany());
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename, 
-		     CameraFile *file) 
+int camera_file_get (Camera *camera, const char *folder, const char *filename,
+                     CameraFile *file)
 {
         int size, num;
         SonyStruct *b = (SonyStruct*)camera->camlib_data;
@@ -165,8 +165,8 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 }
 
 
-int camera_file_get_preview (Camera *camera, const char *folder, 
-			     const char *filename, CameraFile *preview) 
+int camera_file_get_preview (Camera *camera, const char *folder,
+                             const char *filename, CameraFile *preview)
 {
         /**********************************/
         /* file_number now starts at 0!!! */
@@ -194,8 +194,8 @@ int camera_file_get_preview (Camera *camera, const char *folder,
         return (GP_OK);
 }
 
-int camera_file_delete (Camera *camera, const char *folder , 
-			const char *filename) 
+int camera_file_delete (Camera *camera, const char *folder ,
+                        const char *filename)
 {
         int max, num;
         SonyStruct *b = (SonyStruct*)camera->camlib_data;
@@ -209,7 +209,7 @@ int camera_file_delete (Camera *camera, const char *folder ,
         /*return (F1deletepicture(file_number));*/
 }
 
-int camera_summary (Camera *camera, CameraText *summary) 
+int camera_summary (Camera *camera, CameraText *summary)
 {
         /*printf("->camera summary");*/
         int i;
@@ -219,7 +219,7 @@ int camera_summary (Camera *camera, CameraText *summary)
         return (F1newstatus(1, summary->text));
 }
 
-int camera_manual (Camera *camera, CameraText *manual) 
+int camera_manual (Camera *camera, CameraText *manual)
 {
                 /*printf("sony dscf1: manual\n");*/
         strcpy(manual->text, _("Manual Not Available"));
@@ -227,7 +227,7 @@ int camera_manual (Camera *camera, CameraText *manual)
         return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) 
+int camera_about (Camera *camera, CameraText *about)
 {
         strcpy(about->text,
 _("Sony DSC-F1 Digital Camera Support\nM. Adam Kendall <joker@penguinpub.com>\nBased on the chotplay CLI interface from\nKen-ichi Hayashi\nGphoto2 port by Bart van Leeuwen <bart@netage.nl>"));
@@ -235,8 +235,8 @@ _("Sony DSC-F1 Digital Camera Support\nM. Adam Kendall <joker@penguinpub.com>\nB
         return (GP_OK);
 }
 
-int camera_folder_list_files (Camera *camera, const char *folder, 
-			      CameraList *list) 
+int camera_folder_list_files (Camera *camera, const char *folder,
+                              CameraList *list)
 {
         int count, x;
         SonyStruct *b = (SonyStruct*)camera->camlib_data;
@@ -248,8 +248,8 @@ int camera_folder_list_files (Camera *camera, const char *folder,
         gp_filesystem_populate(b->fs, "/", "PSN%05i.jpg", count);
 
         for (x=0; x<gp_filesystem_count(b->fs, folder); x++)
-                gp_list_append (list, gp_filesystem_name(b->fs, folder, x), 
-				GP_LIST_FILE);
+                gp_list_append (list, gp_filesystem_name(b->fs, folder, x),
+                                GP_LIST_FILE);
 
         return GP_OK;
 }

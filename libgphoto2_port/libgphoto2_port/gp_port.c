@@ -50,8 +50,8 @@ int              glob_debug_level=0;
 void gp_port_debug_printf (int target_debug_level, int debug_level, char *format, ...)
 {
         va_list arg;
-
         if ((debug_level > 0)&&(debug_level >= target_debug_level)) {
+
                 fprintf(stderr, "gp_port: ");
                 va_start(arg, format);
                 vfprintf(stderr, format, arg);
