@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <gphoto2.h>
-#include <gpio/gpio.h>
+#include <gpio.h>
 
 #ifdef sun
 	typedef uint8_t u_int8_t;

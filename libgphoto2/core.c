@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <gpio/gpio.h>
+#include <gpio.h>
 #include <gphoto2.h>
 
 #ifdef HAVE_CONFIG_H

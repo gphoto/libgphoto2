@@ -2,6 +2,9 @@
 
 SUBDIRS = intl po src
 
+gphoto2gtkdocdir = $(prefix)/doc/gphoto2_gtk
+gphoto2gtkdoc_DATA = AUTHORS MANUAL
+
 install-data-local:
 	@$(NORMAL_INSTALL)
 	if test -d $(srcdir)/pixmaps; then \
@@ -22,4 +25,3 @@ dist-hook:
 	    fi \
 	  done \
 	fi
-

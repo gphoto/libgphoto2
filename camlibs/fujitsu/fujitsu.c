@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
-#include <gpio/gpio.h>
+#include <gpio.h>
 
 #include "library.h"
 #include "fujitsu.h"

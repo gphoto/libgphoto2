@@ -677,7 +677,7 @@ create_main_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (open_button);
   tooltip = gtk_tooltips_new();
-  gtk_tooltips_set_tip (tooltip, open_button, "Open a photo", NULL);
+  gtk_tooltips_set_tip (tooltip, open_button, _("Open a photo"), NULL);
   gtk_signal_connect(GTK_OBJECT(open_button), "clicked", 
 	GTK_SIGNAL_FUNC(open_photo), NULL);
 
@@ -693,7 +693,7 @@ create_main_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (save_button);
   tooltip = gtk_tooltips_new();
-  gtk_tooltips_set_tip (tooltip, save_button, "Save selected photos", NULL);
+  gtk_tooltips_set_tip (tooltip, save_button, _("Save selected photos"), NULL);
   gtk_signal_connect(GTK_OBJECT(save_button), "clicked", 
 	GTK_SIGNAL_FUNC(save_selected_photo), NULL);
 
@@ -709,7 +709,7 @@ create_main_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (delete_button);
   tooltip = gtk_tooltips_new();
-  gtk_tooltips_set_tip (tooltip, delete_button, "Delete selected photos", NULL);
+  gtk_tooltips_set_tip (tooltip, delete_button, _("Delete selected photos"), NULL);
   gtk_signal_connect(GTK_OBJECT(delete_button), "clicked", 
 	GTK_SIGNAL_FUNC(camera_delete_selected), NULL);
 
@@ -734,7 +734,7 @@ create_main_window (void)
   gtk_signal_connect(GTK_OBJECT(refresh_button), "clicked", 
 	GTK_SIGNAL_FUNC(folder_refresh), NULL);
   tooltip = gtk_tooltips_new();
-  gtk_tooltips_set_tip (tooltip, refresh_button, "Refresh photo index", NULL);
+  gtk_tooltips_set_tip (tooltip, refresh_button, _("Reload photo index"), NULL);
 
   label2 = gtk_label_new (_("     "));
   gtk_widget_ref (label2);
@@ -755,7 +755,7 @@ create_main_window (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (configure_button);
   tooltip = gtk_tooltips_new();
-  gtk_tooltips_set_tip (tooltip, configure_button, "Configure the camera", NULL);
+  gtk_tooltips_set_tip (tooltip, configure_button, _("Configure the camera"), NULL);
   gtk_signal_connect(GTK_OBJECT(configure_button), "clicked", 
 	GTK_SIGNAL_FUNC(camera_configure), NULL);
 
@@ -780,7 +780,7 @@ create_main_window (void)
 	GTK_SIGNAL_FUNC(main_quit), NULL);
   gtk_widget_show (exit_button);
   tooltip = gtk_tooltips_new();
-  gtk_tooltips_set_tip (tooltip, exit_button, "Exit gPhoto", NULL);
+  gtk_tooltips_set_tip (tooltip, exit_button, _("Exit gPhoto"), NULL);
 
   hpaned1 = gtk_hpaned_new ();
   gtk_widget_ref (hpaned1);
