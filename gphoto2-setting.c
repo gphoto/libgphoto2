@@ -1,4 +1,4 @@
-/* setting.c
+/* gphoto2-setting.c
  *
  * Copyright (C) 2000 Scott Fritzinger
  *
@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include "gphoto2-setting.h"
 
 #include <stdio.h>
@@ -43,6 +44,8 @@ static int save_settings (void);
 
 #define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
+
+static int load_settings (void);
 
 int gp_setting_get (char *id, char *key, char *value)
 {
@@ -129,7 +132,8 @@ verify_settings (char *settings_file)
 	return (GP_OK);
 }
 
-int load_settings (void)
+static int
+load_settings (void)
 {
 	FILE *f;
 	char buf[1024], *id, *key, *value;

@@ -5,3 +5,7 @@ Makefile
 *.lo
 libgphoto2.la
 libgphoto-2.0.pc
+stamp-h
+stamp-h.in
+config.h
+config.h.in
