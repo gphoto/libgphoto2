@@ -42,7 +42,7 @@ dnl ---------------------------------------------------------------------------
 CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
 LDFLAGS="$LDFLAGS -g -Wall"
 AC_SUBST(CFLAGS)
-AC_SUBST(LIBS)
+AC_SUBST(LDFLAGS)
 
 dnl Solaris hack for grep and tr
 changequote(, )dnl
