@@ -60,7 +60,7 @@ int camera_init (Camera *camera, CameraInit *init) {
     camera->functions->folder_list      = camera_folder_list;
     camera->functions->file_list	= camera_file_list;
     camera->functions->file_get 	= camera_file_get;
-    camera->functions->file_get_preview =  camera_file_get_preview;
+    camera->functions->file_get_preview = camera_file_get_preview;
     camera->functions->file_put 	= camera_file_put;
     camera->functions->file_delete 	= camera_file_delete;
     camera->functions->config           = camera_config;
@@ -89,7 +89,6 @@ int camera_init (Camera *camera, CameraInit *init) {
             return (GP_ERROR);
         }
         if (gpio_usb_find_device(dd->dev, 0x040A, 0x0120) == GPIO_ERROR) {
-
             gpio_free(dd->dev);
             free (dd);
             return (GP_ERROR);
@@ -135,13 +134,6 @@ int camera_init (Camera *camera, CameraInit *init) {
 
     /* Open the CF card */
     if (dc240_open(dd) == GP_ERROR) {
-        gpio_close(dd->dev);
-        gpio_free(dd->dev);
-        free(dd);
-        return (GP_ERROR);
-    }
-    /* Try to talk after speed change */
-    if (dc240_get_status(dd) == GP_ERROR) {
         gpio_close(dd->dev);
         gpio_free(dd->dev);
         free(dd);
@@ -241,7 +233,7 @@ int camera_summary (Camera *camera, CameraText *summary) {
 
 /*	DC240Data *dd = camera->camlib_data; */
 
-	strcpy(summary->text, "No summary information yet");
+	strcpy(summary->text, "No summary information.");
 
 	return (GP_OK);
 }
@@ -263,7 +255,7 @@ int camera_about (Camera *camera, CameraText *about) {
 "Kodak DC240 Camera Library \
 Scott Fritzinger <scottf@gphoto.net> \
 Camera Library for the Kodak DC240 camera. \
-Rewritten and updated for USB.");
+Rewritten and updated for gPhoto2.");
 
 	return (GP_OK);
 }
