@@ -1120,23 +1120,37 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 			payload_length = strlen (dir) + strlen (name) + 2;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE, &len,
 						  payload, payload_length);
+			if (! msg)
+				return GP_ERROR;
+				
 			break;
 		case CANON_SERIAL_RS232:
 		default:
 			msg = canon_serial_dialogue (camera, 0xd, 0x11, &len, dir,
 						     strlen (dir) + 1, name, strlen (name) + 1,
 						     NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
 	}
-	if (!msg) {
-		canon_serial_error_type (camera);
+	
+	if (len != 4) {
+		/* XXX should mark folder as dirty since we can't be sure if the file
+		 * got deleted or not
+		 */
 		return GP_ERROR;
 	}
+	
 	if (msg[0] == 0x29) {
 		gp_camera_message (camera, _("File protected"));
 		return GP_ERROR;
 	}
 
+	/* XXX we should mark folder as dirty, re-read it and check if the file
+	 * is gone or not.
+	 */
 	return GP_OK;
 }
 

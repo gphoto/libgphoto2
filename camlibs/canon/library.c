@@ -998,59 +998,58 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 {
 	Camera *camera = data;
 	char path[300], thumbname[300];
-	int j;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_delete()");
+	GP_DEBUG ("delete_file_func() (previously known as camera_file_delete())");
 
 	// initialize memory to avoid problems later
-	for (j = 0; j < sizeof (path); j++)
-		path[j] = '\0';
+	memset (path, 0, sizeof (path));
 	memset (thumbname, 0, sizeof (thumbname));
 
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
-	if (!(camera->pl->model == CANON_PS_A5 || camera->pl->model == CANON_PS_A5_ZOOM)) {	/* Tested only on PowerShot A50 */
+	if (camera->pl->model == CANON_PS_A5 || camera->pl->model == CANON_PS_A5_ZOOM) {
+		GP_DEBUG ("delete_file_func: deleting "
+			  "pictures disabled for cameras: PowerShot A5, "
+			  "PowerShot A5 ZOOM");
 
-		if (!update_dir_cache (camera)) {
-			gp_camera_status (camera, _("Could not obtain directory listing"));
-			return 0;
-		}
-		strcpy (path, camera->pl->cached_drive);
+		return GP_ERROR_NOT_SUPPORTED;
+	}
 
-		if (get_file_path (camera, filename, path) == GP_ERROR) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "Filename not found!\n");
+	if (!update_dir_cache (camera)) {
+		gp_camera_status (camera, _("Could not obtain directory listing"));
+		return GP_ERROR;
+	}
+	strcpy (path, camera->pl->cached_drive);
+
+	if (get_file_path (camera, filename, path) != GP_OK) {
+		gp_debug_printf (GP_DEBUG_LOW, "canon", "Filename not found!\n");
+		return GP_ERROR;
+	}
+		
+	/* strip trailing backslash on path, if any */
+	if (path[strlen (path) - 1] == '\\')
+		path[strlen (path) - 1] = 0;
+
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "filename: %s\n path: %s\n", filename,
+			 path);
+	if (canon_int_delete_file (camera, filename, path) != GP_OK) {
+		gp_camera_set_error (camera, _("Error deleting file"));
+		return GP_ERROR;
+	}
+
+	/* If we have a movie, delete its thumbnail as well */
+	if (is_movie (filename)) {
+		strcpy (thumbname, filename);
+		strcpy (thumbname + strlen ("MVI_XXXX"), ".THM\0");
+		if (canon_int_delete_file (camera, thumbname, path) != GP_OK) {
+			gp_camera_set_error (camera,
+					  _("Error deleting movie thumbnail"));
 			return GP_ERROR;
-		}
-		if (camera->pl->canon_comm_method != CANON_USB) {
-			j = strrchr (path, '\\') - path;
-			path[j] = '\0';
-		} else {
-			j = strchr (path, '\0') - path;
-			path[j] = '\0';
-//                      path[j+1] = '\0';
-		}
-
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "filename: %s\n path: %s\n", filename,
-				 path);
-		if (canon_int_delete_file (camera, filename, path)) {
-			gp_camera_status (camera, _("error deleting file"));
-			return GP_ERROR;
-		} else {
-			/* If we have a movie, delete its thumbnail as well */
-			if (is_movie (filename)) {
-				strcpy (thumbname, filename);
-				strcpy (thumbname + strlen ("MVI_XXXX"), ".THM\0");
-				if (canon_int_delete_file (camera, thumbname, path)) {
-					gp_camera_status (camera,
-							  _("error deleting thumbnail"));
-					return GP_ERROR;
-				}
-			}
-			return GP_OK;
 		}
 	}
-	return GP_ERROR;
+
+	return GP_OK;
 }
 
 /****************************************************************************/

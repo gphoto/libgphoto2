@@ -1,3 +1,9 @@
+2001-12-06  Fredrik <fredrik@krixor.xy.org>
+
+	* canon.c, library.c:
+	  Re-worked file deleting after reports saying it didn't
+	  work. Now it works for me at least.
+
 2001-12-05  Fredrik <fredrik@krixor.xy.org>
 
 	* usb.h:
