@@ -29,6 +29,11 @@ endif
 	for arch in i386 i486 i586 i686 alpha noarch; do \
 		mkdir -p "RPMS/$${arch}"; \
 	done
-	ln -f "$(top_srcdir)/@PACKAGE@-@VERSION@.tar.gz" SOURCES/
-	ln -f package.spec SPECS/@PACKAGE@-@VERSION@.spec
+	$(MAKE) SOURCES/@PACKAGE@-@VERSION@.tar.gz SPECS/@PACKAGE@-@VERSION@.spec
 	@RPMBUILD@ --define "_topdir $$(pwd)" -ba SPECS/@PACKAGE@-@VERSION@.spec
+
+SOURCES/@PACKAGE@-@VERSION@.tar.gz: $(top_srcdir)/@PACKAGE@-@VERSION@.tar.gz
+	ln -f $< $@
+
+SPECS/@PACKAGE@-@VERSION@.spec: package.spec
+	ln -f $< $@
