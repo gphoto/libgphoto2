@@ -245,6 +245,7 @@ static struct {
 	{"Kodak:DX4530", 0x040a, 0x0576},
 	{"Kodak:DX7630", 0x040a, 0x0577},
 	{"Kodak:CX7300", 0x040a, 0x0578},
+	{"Kodak:CX7310", 0x040a, 0x0578},
 	{"Kodak:CX7220", 0x040a, 0x0579},
 	{"Kodak:CX7330", 0x040a, 0x057a},
 	{"Kodak:CX7430", 0x040a, 0x057b},
