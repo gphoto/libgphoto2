@@ -180,7 +180,7 @@ AC_SUBST(camlibdir)
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='agfa-cl20 barbie canon casio digita dimera directory fuji gsmart300 jamcam jd11 kodak konica largan minolta mustek panasonic pccam300 pccam600 polaroid ptp2 ricoh samsung sierra sipix smal sonydscf1 sonydscf55 soundvision spca50x stv0674 stv0680 sx330z toshiba'
+camlibs='agfa-cl20 barbie canon casio digita dimera directory fuji gsmart300 jamcam jd11 kodak konica largan minolta mustek panasonic pccam300 pccam600 polaroid ptp2 ricoh samsung sierra sipix smal sonydscf1 sonydscf55 soundvision spca50x sq905 stv0674 stv0680 sx330z toshiba'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z- A-Z_`
@@ -198,7 +198,7 @@ AC_ARG_WITH(drivers,
   [                            minolta, panasonic, pccam300, pccam600,]
   [                            polaroid, ptp2, ricoh, samsung, smal,]
   [                            sierra, sipix, sonydscf1, sonydscf55,]
-  [                            soundvision, spca50x, stv0680, sx330z ],
+  [                            soundvision, spca50x, sq905, stv0680, sx330z ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
@@ -408,6 +408,7 @@ camlibs/sonydscf1/Makefile
 camlibs/sonydscf55/Makefile
 camlibs/soundvision/Makefile
 camlibs/spca50x/Makefile
+camlibs/sq905/Makefile
 camlibs/stv0674/Makefile
 camlibs/stv0680/Makefile
 camlibs/sx330z/Makefile

@@ -1,3 +1,8 @@
+2003-06-26  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* configure.in: Hook up camlibs/sq905 (driver by Theodore Kilgore
+	  <kilgota@banach.math.auburn.edu).
+
 2003-06-22  Christophe Barbe <christophe@ufies.org>
 
 	* gphoto2/main.c, po/*.po:
