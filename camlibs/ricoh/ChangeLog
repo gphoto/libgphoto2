@@ -1,3 +1,11 @@
+2002-06-18  Martin Fischer <martin.fischer@inka.de>
+
+	Patch adapted by Lutz Müller <lutz@users.sourceforge.net>.
+
+	* ricoh.[c,h]
+	* library.c: The driver supports GP_FILE_OPERATION_PREVIEW. 
+	  Support for Philips ESP80 was added. camera_about was added.
+	
 2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]

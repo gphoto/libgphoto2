@@ -41,9 +41,11 @@ int ricoh_set_speed (Camera *camera, GPContext *context, RicohSpeed speed);
 
 typedef enum _RicohModel RicohModel;
 enum _RicohModel {
-	RICOH_MODEL_300  = 0x0300,
-	RICOH_MODEL_300Z = 0x0301,
-	RICOH_MODEL_4300 = 0x0400
+	RICOH_MODEL_300   = 0x300,
+	RICOH_MODEL_300Z  = 0x301,
+	RICOH_MODEL_4200  = 0x402,
+	RICOH_MODEL_4300  = 0x403,
+	RICOH_MODEL_ESP80 = 0x400
 };
 
 int ricoh_ping      (Camera *camera, GPContext *context, RicohModel *model);
@@ -64,7 +66,14 @@ int ricoh_get_size  (Camera *camera, GPContext *context, unsigned int n,
 int ricoh_get_date  (Camera *camera, GPContext *context, unsigned int n,
 		     time_t *date);
 int ricoh_del_pic   (Camera *camera, GPContext *context, unsigned int n);
+
+typedef enum _RicohFileType RicohFileType;
+enum _RicohFileType {
+	RICOH_FILE_TYPE_NORMAL  = 0xa0,
+	RICOH_FILE_TYPE_PREVIEW = 0xa4
+};
 int ricoh_get_pic   (Camera *camera, GPContext *context, unsigned int n,
+		     RicohFileType type,
 		     unsigned char **data, unsigned int *size);
 
 int ricoh_take_pic  (Camera *camera, GPContext *context);
@@ -73,6 +82,5 @@ int ricoh_get_cam_date  (Camera *camera, GPContext *context, time_t *time);
 int ricoh_get_cam_mem   (Camera *camera, GPContext *context, int *mem);
 int ricoh_get_cam_amem  (Camera *camera, GPContext *context, int *mem);
 int ricoh_get_cam_id    (Camera *camera, GPContext *context, char *cam_id);
-
 
 #endif /* __RICOH_H__ */

@@ -56,11 +56,14 @@ static struct {
 	RicohModel id;
 	const char *model;
 } models[] = {
-	{RICOH_MODEL_300,  "Ricoh RDC-300"},
-	{RICOH_MODEL_300Z, "Ricoh RDC-300Z"},
-	{RICOH_MODEL_4300, "Ricoh RDC-4300"},
+	{RICOH_MODEL_300,   "Ricoh RDC-300"},
+	{RICOH_MODEL_300Z,  "Ricoh RDC-300Z"},
+	{RICOH_MODEL_4200,  "Ricoh RDC-4200"},
+	{RICOH_MODEL_4300,  "Ricoh RDC-4300"},
+	{RICOH_MODEL_ESP80, "Philips ESP80SXG"},
 	{0, NULL}
 };
+
 
 int
 camera_abilities (CameraAbilitiesList *list)
@@ -74,7 +77,8 @@ camera_abilities (CameraAbilitiesList *list)
 		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 		a.port = GP_PORT_SERIAL;
 		a.operations = GP_OPERATION_CAPTURE_IMAGE;
-		a.file_operations = GP_FILE_OPERATION_DELETE;
+		a.file_operations = GP_FILE_OPERATION_DELETE |
+				    GP_FILE_OPERATION_PREVIEW;
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 		CR (gp_abilities_list_append (list, a));
 	}
@@ -118,14 +122,20 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		CR (ricoh_get_pic (camera, context, n, &data, &size));
-		break;
+		CR (ricoh_get_pic (camera, context, n,
+				   RICOH_FILE_TYPE_NORMAL, &data, &size));
+		gp_file_set_mime_type (file, GP_MIME_JPEG);
+	case GP_FILE_TYPE_PREVIEW:
+		CR (ricoh_get_pic (camera, context, n,
+				   RICOH_FILE_TYPE_PREVIEW, &data, &size));
+		gp_file_set_mime_type (file, GP_MIME_TIFF);
+
+		break;		
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	gp_file_set_data_and_size (file, data, size);
-	gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 	return (GP_OK);
 }
@@ -145,6 +155,21 @@ del_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	return (GP_OK);
 }
 
+static int
+camera_about (Camera *camera, CameraText *about, GPContext *context)
+{
+	GP_DEBUG ("camera_about()");
+
+	strcpy (about->text,
+		_("Ricoh / Philips driver by \n"
+		  "Lutz Müller <lutz@users.sourceforge.net>, \n"
+		  "Martin Fischer <martin.fischer@inka.de>, \n"
+		  "based on Bob Paauw's driver\n" )
+		);
+
+	return GP_OK;
+}
+
 int
 camera_id (CameraText *id)
 {
@@ -156,30 +181,19 @@ camera_id (CameraText *id)
 static int
 camera_summary (Camera *camera, CameraText *about, GPContext *context)
 {
-	unsigned int i;
 	int avail_mem, total_mem;
 	time_t camtime;
 	char cam_id[128];
-	RicohModel model;
-	const char *model_string = N_("Unknown");
 
-	CR (ricoh_ping (camera, context, &model));
-	for (i = 0; models[i].model; i++)
-		if (models[i].id == model)
-			break;
-	if (models[i].model)
-		model_string = models[i].model;
 	CR (ricoh_get_cam_id   (camera, context, cam_id));
 	CR (ricoh_get_cam_amem (camera, context, &avail_mem));
 	CR (ricoh_get_cam_mem  (camera, context, &total_mem));
 	CR (ricoh_get_cam_date (camera, context, &camtime));
 
-	sprintf(about->text, _("Camera model: %s\n"
-			       "Camera ID: %s\n"
+	sprintf(about->text, _("Camera ID: %s\n"
 			       "Memory: %d byte(s) of %d available\n"
 			       "Camera time: %s\n"),
-		_(model_string), cam_id, avail_mem, total_mem,
-		ctime (&camtime));
+		cam_id, avail_mem, total_mem, ctime (&camtime));
 
 	return (GP_OK);
 }
@@ -223,6 +237,7 @@ camera_init (Camera *camera, GPContext *context)
 	GPPortSettings settings;
 	unsigned int speed, i;
 	int result;
+	RicohModel model;
 
 	/* Try to contact the camera */
 	CR (gp_port_set_timeout (camera->port, 5000));
@@ -232,7 +247,7 @@ camera_init (Camera *camera, GPContext *context)
 		GP_DEBUG ("Trying speed %i...", speeds[i].speed);
 		settings.serial.speed = speeds[i].speed;
 		CR (gp_port_set_settings (camera->port, settings));
-		result = ricoh_ping (camera, NULL, NULL);
+		result = ricoh_ping (camera, NULL, &model);
 		if (result == GP_OK)
 			break;
 	}
@@ -256,13 +271,14 @@ camera_init (Camera *camera, GPContext *context)
 		CR (ricoh_set_speed (camera, context, speeds[i].rspeed));
 		settings.serial.speed = speed;
 		CR (gp_port_set_settings (camera->port, settings));
-		CR (ricoh_ping (camera, context, NULL));
 	}
 
 	/* setup the function calls */
 	camera->functions->exit = camera_exit;
 	camera->functions->summary = camera_summary;
 	camera->functions->capture = camera_capture;
+	camera->functions->about = camera_about;
+	
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL,
 					  camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
@@ -270,3 +286,4 @@ camera_init (Camera *camera, GPContext *context)
 
 	return (GP_OK);
 }
+
