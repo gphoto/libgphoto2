@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-01-16 22:42+0100\n"
-"PO-Revision-Date: 2002-01-16 22:42+0100\n"
+"POT-Creation-Date: 2002-01-18 01:38+0100\n"
+"PO-Revision-Date: 2002-01-18 01:52+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1636,7 +1636,7 @@ msgstr "Prüfsummenfehler"
 msgid "The camera did not accept the command."
 msgstr "Die Kamera hat das Kommando nicht akzeptiert."
 
-#: camlibs/polaroid/pdc700.c:301
+#: camlibs/polaroid/pdc700.c:301 camlibs/sierra/library.c:973
 msgid "Downloading..."
 msgstr "Lade herunter..."
 
@@ -2193,6 +2193,83 @@ msgstr ""
 "Dank an Data Engines (www.dataengines.com) für die\n"
 "Freigabe ihrer Olympus C-3030Z for USB-Implementierung."
 
+#: camlibs/sierra/library.c:287
+msgid "Cannot retrieve the battery capacity"
+msgstr "Kann die Batteriekapazität nicht bekommen"
+
+#: camlibs/sierra/library.c:293
+#, c-format
+msgid ""
+"The battery level of the camera is too low (%d%%). The operation is aborted."
+msgstr ""
+"Der Batteriestand der Kamera ist zu niedrig (%d%%). Befehl wird abgebrochen."
+
+#: camlibs/sierra/library.c:317
+msgid "Cannot retrieve the available memory left"
+msgstr "Kann verbleibenden Speicherplatz nicht abfragen"
+
+#: camlibs/sierra/library.c:483
+#, c-format
+msgid "The first byte received (0x%x) is not valid."
+msgstr "Das erste empfangene Byte (0x%x) ist nicht gültig."
+
+#: camlibs/sierra/library.c:670
+#, c-format
+msgid "Setting speed to %i baud..."
+msgstr "Setze Datenrate auf %i Baud..."
+
+#. Unable to execute the command
+#: camlibs/sierra/library.c:722
+msgid ""
+"The camera is not able to execute this command. Please report this error to "
+"<gphoto-devel@gphoto.org>."
+msgstr ""
+"Die Kamera kann diesen Befehl nicht ausführen. \n"
+"Bitte melden Sie diesen Fehler (auf Englisch) an <gphoto-devel@gphoto.org>."
+
+#: camlibs/sierra/library.c:760
+msgid "Transmitting data..."
+msgstr "Übertrage Daten..."
+
+#: camlibs/sierra/library.c:783
+#, c-format
+msgid ""
+"Could not set int register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"Konnte Integer-Register %i nicht setzen. \n"
+"Bitte kontaktieren Sie <gphoto-devel@gphoto.org> (auf Englisch)."
+
+#: camlibs/sierra/library.c:835
+#, c-format
+msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"Konnte Register %i nicht lesen. \n"
+"Bitte kontaktieren Sie <gphoto-devel@gphoto.org> (auf Englisch)."
+
+#: camlibs/sierra/library.c:877
+msgid "Sending data..."
+msgstr "Sende Daten..."
+
+#: camlibs/sierra/library.c:923
+#, c-format
+msgid ""
+"Could not set string register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"Konnte String-Register %i nicht setzen. \n"
+"Bitte kontaktieren Sie <gphoto-devel@gphoto.org> (auf Englisch)."
+
+#: camlibs/sierra/library.c:982
+#, c-format
+msgid ""
+"Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+"Konnte String-Register %i nicht lesen. \n"
+"Bitte kontaktieren Sie <gphoto-devel@gphoto.org> (auf Englisch)."
+
+#: camlibs/sierra/library.c:1248
+msgid "Not implemented!"
+msgstr "Nicht implementiert!"
+
 #: camlibs/sonydscf1/sonydscf1.c:133
 msgid ""
 "Sony DSC-F1 Digital Camera Support\n"
@@ -2485,17 +2562,17 @@ msgstr ""
 "\"Nur-Lesen\"-Dateiattribute wie Höhe und Breite können nicht geändert "
 "werden."
 
-#: libgphoto2/gphoto2-abilities-list.c:238
+#: libgphoto2/gphoto2-abilities-list.c:246
 #, c-format
 msgid "Could not open '%s'"
 msgstr "Konnte »%s« nicht öffnen"
 
-#: libgphoto2/gphoto2-abilities-list.c:250
+#: libgphoto2/gphoto2-abilities-list.c:258
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "Lade Kamertreiber von »%s«..."
 
-#: libgphoto2/gphoto2-abilities-list.c:612
+#: libgphoto2/gphoto2-abilities-list.c:620
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "Konnte keinen Treiber für »%s« finden."
@@ -3126,9 +3203,6 @@ msgstr ""
 
 #~ msgid "Name too long, max is 30 characters!"
 #~ msgstr "Name zu lang, maximal 30 Zeichen!"
-
-#~ msgid "Not implemented!"
-#~ msgstr "Nicht implementiert!"
 
 #~ msgid "You need to set a port prior trying to set the speed"
 #~ msgstr "Sie müssen einen Port setzen, bevor Sie die Datenrate setzen können"

@@ -1,3 +1,7 @@
+2002-01-18  Colin Marquardt  <colin@marquardt-home.de>
+
+        * po/POTFILES.in: add camlibs/sierra/library.c.
+
 2002-01-16  Colin Marquardt  <colin@marquardt-home.de>
 
  	* fr.po: Update from Jerome.

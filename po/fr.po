@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-01-16 21:48+0100\n"
+"POT-Creation-Date: 2002-01-18 01:38+0100\n"
 "PO-Revision-Date: 2002-01-16 22:42MET\n"
 "Last-Translator: Jérôme Fenal <jerome@fenal.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
@@ -209,7 +209,8 @@ msgid "Error deleting associated thumbnail file"
 msgstr "Erreur à l'effacement de la vignette associée"
 
 #: camlibs/canon/library.c:855
-msgid "Speeds greater than 57600 are not supported for uploading to this camera"
+msgid ""
+"Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr ""
 "Les vitesses supérieures à 57600 ne sont pas supportées pour télécharger "
 "vers l'appareil"
@@ -366,7 +367,7 @@ msgid "Communication error 1"
 msgstr "Erreur de communication 1"
 
 #: camlibs/canon/serial.c:1221 camlibs/canon/serial.c:1225
-#: camlibs/dimera/dimera3500.c:966
+#: camlibs/dimera/dimera3500.c:969
 msgid "No response from camera"
 msgstr "Pas de réponse de l'appareil"
 
@@ -417,7 +418,8 @@ msgstr "Ne peut appliquer les propriétés USB"
 #: camlibs/canon/usb.c:227
 #, c-format
 msgid "Camera not ready, identify camera request failed: %s"
-msgstr "Appareil pas prêt, la requête d'identification de l'appareil a échoué : %s"
+msgstr ""
+"Appareil pas prêt, la requête d'identification de l'appareil a échoué : %s"
 
 #: camlibs/canon/usb.c:235
 #, c-format
@@ -441,35 +443,37 @@ msgstr ""
 "Digita\n"
 "Johannes Erdfelt <johannes@erdfelt.com>"
 
-#: camlibs/dimera/dimera3500.c:285
+#: camlibs/dimera/dimera3500.c:288
 #, c-format
-msgid "Only root folder is supported - you requested a file listing for folder '%s'."
+msgid ""
+"Only root folder is supported - you requested a file listing for folder '%s'."
 msgstr ""
 "Seul le dossier racine est supporté, vous avez demandé la liste pour le "
 "dossier '%s'."
 
-#: camlibs/dimera/dimera3500.c:294 camlibs/dimera/dimera3500.c:495
+#: camlibs/dimera/dimera3500.c:297 camlibs/dimera/dimera3500.c:498
 msgid "Problem getting number of images"
 msgstr "Problème à l'obtention du nombre d'images"
 
-#: camlibs/dimera/dimera3500.c:336
+#: camlibs/dimera/dimera3500.c:339
 msgid "Image type is not supported"
 msgstr "Type d'image non supporté"
 
-#: camlibs/dimera/dimera3500.c:391 camlibs/dimera/dimera3500.c:645
+#: camlibs/dimera/dimera3500.c:394 camlibs/dimera/dimera3500.c:648
 msgid "Problem getting image information"
 msgstr "Problème à l'obtention des informations sur l'image"
 
-#: camlibs/dimera/dimera3500.c:422
+#: camlibs/dimera/dimera3500.c:425
 msgid "Capture type is not supported"
 msgstr "Type de capture non supporté"
 
-#: camlibs/dimera/dimera3500.c:515
+#: camlibs/dimera/dimera3500.c:518
+#, c-format
 msgid " (battery is %d%% full)"
 msgstr " (la batterie est chargée à %d%%)"
 
 # FIXME
-#: camlibs/dimera/dimera3500.c:519
+#: camlibs/dimera/dimera3500.c:522
 #, c-format
 msgid ""
 "Dimera 3500 ver. %s %d/%d %d:%d\n"
@@ -487,76 +491,76 @@ msgstr ""
 "L'appareil fonctionne sur %s %s\n"
 
 #. Flash
-#: camlibs/dimera/dimera3500.c:530 camlibs/konica/library.c:776
+#: camlibs/dimera/dimera3500.c:533 camlibs/konica/library.c:776
 #: camlibs/konica/library.c:1016
 msgid "Flash"
 msgstr "Flash"
 
-#: camlibs/dimera/dimera3500.c:530
+#: camlibs/dimera/dimera3500.c:533
 msgid "NO Flash"
 msgstr "PAS de flash"
 
-#: camlibs/dimera/dimera3500.c:532
+#: camlibs/dimera/dimera3500.c:535
 msgid "Dual Iris"
 msgstr "Double diaphragme"
 
-#: camlibs/dimera/dimera3500.c:532
+#: camlibs/dimera/dimera3500.c:535
 msgid "NO Dual Iris"
 msgstr "Pas de double diaphragme"
 
-#: camlibs/dimera/dimera3500.c:534
+#: camlibs/dimera/dimera3500.c:537
 msgid "Resolution Switch"
 msgstr "Interrupteur de choix de la résolution"
 
-#: camlibs/dimera/dimera3500.c:534
+#: camlibs/dimera/dimera3500.c:537
 msgid "NO Resolution Switch"
 msgstr "Pas d'interrupteur de choix de la résolution"
 
-#: camlibs/dimera/dimera3500.c:536
+#: camlibs/dimera/dimera3500.c:539
 msgid "NO Power Light"
 msgstr "Pas d'indicateur de mise sous tension"
 
-#: camlibs/dimera/dimera3500.c:538
+#: camlibs/dimera/dimera3500.c:541
 msgid "ON"
 msgstr "Sous tension"
 
-#: camlibs/dimera/dimera3500.c:538
+#: camlibs/dimera/dimera3500.c:541
 msgid "OFF"
 msgstr "Hors tension"
 
-#: camlibs/dimera/dimera3500.c:540
+#: camlibs/dimera/dimera3500.c:543
 msgid "ready"
 msgstr "prêt"
 
-#: camlibs/dimera/dimera3500.c:540
+#: camlibs/dimera/dimera3500.c:543
 msgid "NOT ready"
 msgstr "PAS prêt"
 
-#: camlibs/dimera/dimera3500.c:542
+#: camlibs/dimera/dimera3500.c:545
 msgid "in fill mode"
 msgstr "en mode remplissage"
 
-#: camlibs/dimera/dimera3500.c:542
+#: camlibs/dimera/dimera3500.c:545
 msgid "NOT in fill mode"
 msgstr "PAS en mode remplissage"
 
-#: camlibs/dimera/dimera3500.c:544
+#: camlibs/dimera/dimera3500.c:547
 msgid "low (320x240)"
 msgstr "basse (320x240)"
 
-#: camlibs/dimera/dimera3500.c:544
+#: camlibs/dimera/dimera3500.c:547
 msgid "high (640x480)"
 msgstr "haute (640x480)"
 
-#: camlibs/dimera/dimera3500.c:546
+#: camlibs/dimera/dimera3500.c:549
 msgid "externally"
 msgstr "externe"
 
-#: camlibs/dimera/dimera3500.c:546
+#: camlibs/dimera/dimera3500.c:549
 msgid "internally"
 msgstr "interne"
 
-#: camlibs/dimera/dimera3500.c:556
+#: camlibs/dimera/dimera3500.c:559
 msgid ""
 "  Image glitches or problems communicating are\n"
 "often caused by a low battery.\n"
@@ -575,7 +579,7 @@ msgstr ""
 "capture.\n"
 "  La qualité de l'image est inférieure à ce qu'elle pourrait être.\n"
 
-#: camlibs/dimera/dimera3500.c:570
+#: camlibs/dimera/dimera3500.c:573
 msgid ""
 "gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
 "This software was created with the\n"
@@ -605,62 +609,64 @@ msgstr ""
 "     Informations sur le protocole, format des images brutes,\n"
 "     portage gphoto2\n"
 
-#: camlibs/dimera/dimera3500.c:641
+#: camlibs/dimera/dimera3500.c:644
 msgid "Getting Image Info"
 msgstr "Récupération des informations sur l'image"
 
-#: camlibs/dimera/dimera3500.c:659
+#: camlibs/dimera/dimera3500.c:662
 msgid "Loading Image"
 msgstr "Chargement de l'image"
 
-#: camlibs/dimera/dimera3500.c:663
+#: camlibs/dimera/dimera3500.c:666
 msgid "Problem reading image from flash"
 msgstr "Problème à la lecture de l'image depuis la mémoire flash"
 
 #. 8 bits per pixel in raw CCD format
-#: camlibs/dimera/dimera3500.c:676 camlibs/dimera/dimera3500.c:700
-#: camlibs/dimera/dimera3500.c:736
+#: camlibs/dimera/dimera3500.c:679 camlibs/dimera/dimera3500.c:703
+#: camlibs/dimera/dimera3500.c:739
 msgid "Downloading Image"
 msgstr "Téléchargement de l'image"
 
-#: camlibs/dimera/dimera3500.c:681 camlibs/dimera/dimera3500.c:846
-#: camlibs/dimera/dimera3500.c:914
+#: camlibs/dimera/dimera3500.c:684 camlibs/dimera/dimera3500.c:849
+#: camlibs/dimera/dimera3500.c:917
 msgid "Out of memory"
 msgstr "Plus de mémoire"
 
-#: camlibs/dimera/dimera3500.c:710 camlibs/dimera/dimera3500.c:746
+#: camlibs/dimera/dimera3500.c:713 camlibs/dimera/dimera3500.c:749
 msgid "Retransmitting"
 msgstr "Re-transmission"
 
-#: camlibs/dimera/dimera3500.c:719 camlibs/dimera/dimera3500.c:755
+#: camlibs/dimera/dimera3500.c:722 camlibs/dimera/dimera3500.c:758
 msgid "Problem downloading image"
 msgstr "Problème au téléchargement de l'image"
 
-#: camlibs/dimera/dimera3500.c:726
-msgid "User canceled download"
+#: camlibs/dimera/dimera3500.c:729
+#, fuzzy
+msgid "User cancelled download"
 msgstr "L'utilisateur a annulé le téléchargement"
 
-#: camlibs/dimera/dimera3500.c:732 camlibs/samsung/samsung.c:211
+#: camlibs/dimera/dimera3500.c:735 camlibs/samsung/samsung.c:211
 msgid "Downloading image..."
 msgstr "Téléchargement de l'image..."
 
-#: camlibs/dimera/dimera3500.c:861
+#: camlibs/dimera/dimera3500.c:864
 msgid "Problem taking live image"
 msgstr "Problème à la prise de vue en temps-réel"
 
-#: camlibs/dimera/dimera3500.c:933
+#: camlibs/dimera/dimera3500.c:936
 msgid "Problem opening port"
 msgstr "Problème à l'ouverture du port"
 
-#: camlibs/dimera/dimera3500.c:943
+#: camlibs/dimera/dimera3500.c:946
 msgid "Problem resetting camera"
 msgstr "Problème à la remise à zéro de l'appareil"
 
-#: camlibs/dimera/dimera3500.c:953
+#: camlibs/dimera/dimera3500.c:956
 msgid "Problem setting camera communication speed"
-msgstr "Problème à la configuration du débt de la communication vers l'appareil"
+msgstr ""
+"Problème à la configuration du débt de la communication vers l'appareil"
 
-#: camlibs/dimera/dimera3500.c:972
+#: camlibs/dimera/dimera3500.c:975
 msgid "Looks like a modem, not a camera"
 msgstr "Ça ressemble à un modem, pas un appareil-photo"
 
@@ -707,6 +713,15 @@ msgstr "Navigation dans le répertoire"
 #: camlibs/directory/directory.c:439 camlibs/directory/directory.c:470
 msgid "View hidden directories"
 msgstr "Voir les répertoires cachés"
+
+#: camlibs/directory/directory.c:483
+msgid ""
+"The Directory Browse \"camera\" lets you index photos on your hard drive."
+msgstr ""
+
+#: camlibs/directory/directory.c:492
+msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
+msgstr ""
 
 #: camlibs/jd11/jd11.c:174
 msgid ""
@@ -772,8 +787,8 @@ msgstr "Carte CompactFlash"
 msgid ""
 "The Kodak DC120 camera uses the KDC file format for storing images. If you "
 "want to view the images you download from your camera, you will need to "
-"download the \"kdc2tiff\" program. It is available from "
-"http://kdc2tiff.sourceforge.net"
+"download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
+"sourceforge.net"
 msgstr ""
 "L'appareil-photo Kodak DC120 utilise le format de fichier KDC pour "
 "enregistrer les images. Si vous voulez voir les images que vous téléchargez "
@@ -831,14 +846,14 @@ msgstr "Total des images capturées : %d, Allumages du flash : %d\n"
 #: camlibs/kodak/dc240/dc240.c:211
 msgid ""
 "Kodak DC240 Camera Library\n"
-"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere "
-"<hfiguiere@teaser.fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser."
+"fr>\n"
 "Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 "Rewritten and updated for gPhoto2."
 msgstr ""
 "Bibliothèque pour l'appareil-photo Kodak DC240\n"
-"Scott Fritzinger <scottf@gphoto.net> et Hubert Figuiere "
-"<hfiguiere@teaser.fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> et Hubert Figuiere <hfiguiere@teaser."
+"fr>\n"
 "Bibliothèque pour les appareils-photo Kodak DC240, DC280, DC3400 et DC5000.\n"
 "Ré-écrit et mis à jour pour gPhoto2."
 
@@ -1226,6 +1241,7 @@ msgstr "Paramètres temporaires"
 
 #. Self Timer
 #: camlibs/konica/library.c:829 camlibs/konica/library.c:1050
+#: camlibs/polaroid/pdc700.c:153
 msgid "Self Timer"
 msgstr "Retardateur"
 
@@ -1462,8 +1478,8 @@ msgstr "Envoi de l'image: %s."
 #: camlibs/panasonic/dc1000.c:463 camlibs/panasonic/dc1580.c:588
 #, c-format
 msgid ""
-"File size is %i bytes. The size of the largest file possible to upload is: "
-"%i bytes."
+"File size is %i bytes. The size of the largest file possible to upload is: %"
+"i bytes."
 msgstr ""
 "La taille du fichier est de %i octets. La taille du plus grand fichier est "
 "de : %i octets."
@@ -1513,6 +1529,28 @@ msgstr ""
 "Basée sur le programme dc1000 écrit par\n"
 "Fredrik Roubert <roubert@df.lth.se> et\n"
 "Galen Brooks <galen@nine.com>."
+
+#: camlibs/polaroid/pdc700.c:150
+msgid "Image Quality"
+msgstr ""
+
+#: camlibs/polaroid/pdc700.c:151
+#, fuzzy
+msgid "Flash Setting"
+msgstr "Réglage de la prise de vue"
+
+#: camlibs/polaroid/pdc700.c:152
+msgid "LCD"
+msgstr ""
+
+#: camlibs/polaroid/pdc700.c:154
+#, fuzzy
+msgid "Auto Power Off (minutes)"
+msgstr "Auto-extinction de l'écran LCD (en secondes)"
+
+#: camlibs/polaroid/pdc700.c:155
+msgid "Information"
+msgstr ""
 
 #: camlibs/polaroid/pdc700.c:157
 msgid "normal"
@@ -1596,7 +1634,7 @@ msgstr "Erreur sur somme de contrôle"
 msgid "The camera did not accept the command."
 msgstr "L'appareil a refusé la commande."
 
-#: camlibs/polaroid/pdc700.c:301
+#: camlibs/polaroid/pdc700.c:301 camlibs/sierra/library.c:973
 msgid "Downloading..."
 msgstr "Téléchargement..."
 
@@ -1617,8 +1655,8 @@ msgstr ""
 #: camlibs/polaroid/pdc700.c:872
 #, c-format
 msgid ""
-"%i bytes of an unknown image format have been received. Please write "
-"<gphoto-devel@gphoto.org> for assistance."
+"%i bytes of an unknown image format have been received. Please write <gphoto-"
+"devel@gphoto.org> for assistance."
 msgstr ""
 "%i octets d'une image de format inconnu reçus. Merci d'écrire à <gphoto- "
 "devel@gphoto.org> pour une assistance."
@@ -1672,7 +1710,8 @@ msgstr ""
 #: camlibs/polaroid/pdc700.c:1167
 #, c-format
 msgid "The requested port type (%i) is not supported by this driver."
-msgstr "Le type de port demandé (%i) n'est pas supporté par ce pilote logiciel."
+msgstr ""
+"Le type de port demandé (%i) n'est pas supporté par ce pilote logiciel."
 
 #: camlibs/samsung/samsung.c:241
 msgid ""
@@ -1749,6 +1788,8 @@ msgstr "Faible"
 msgid "Medium"
 msgstr "Moyenne"
 
+#. Those values are for a C-2020 Z. If your model differs, we
+#. have to distinguish models here...
 #: camlibs/sierra/sierra.c:784 camlibs/sierra/sierra.c:1092
 #: camlibs/sierra/sierra.c:1421 camlibs/sierra/sierra.c:1622
 msgid "Color Mode"
@@ -2152,6 +2193,75 @@ msgstr ""
 "pour l'utilisation de leur Olympus C-3030Z\n"
 "pour le support de l'interface USB."
 
+#: camlibs/sierra/library.c:287
+#, fuzzy
+msgid "Cannot retrieve the battery capacity"
+msgstr "Impossible d'obtenir le nom du répertoire contenant les images"
+
+#: camlibs/sierra/library.c:293
+#, c-format
+msgid ""
+"The battery level of the camera is too low (%d%%). The operation is aborted."
+msgstr ""
+
+#: camlibs/sierra/library.c:317
+msgid "Cannot retrieve the available memory left"
+msgstr ""
+
+#: camlibs/sierra/library.c:483
+#, c-format
+msgid "The first byte received (0x%x) is not valid."
+msgstr ""
+
+#: camlibs/sierra/library.c:670
+#, fuzzy, c-format
+msgid "Setting speed to %i baud..."
+msgstr "Réception des données..."
+
+#. Unable to execute the command
+#: camlibs/sierra/library.c:722
+msgid ""
+"The camera is not able to execute this command. Please report this error to "
+"<gphoto-devel@gphoto.org>."
+msgstr ""
+
+#: camlibs/sierra/library.c:760
+#, fuzzy
+msgid "Transmitting data..."
+msgstr "Réception des données..."
+
+#: camlibs/sierra/library.c:783
+#, c-format
+msgid ""
+"Could not set int register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+
+#: camlibs/sierra/library.c:835
+#, c-format
+msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+
+#: camlibs/sierra/library.c:877
+#, fuzzy
+msgid "Sending data..."
+msgstr "Réception des données..."
+
+#: camlibs/sierra/library.c:923
+#, c-format
+msgid ""
+"Could not set string register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+
+#: camlibs/sierra/library.c:982
+#, c-format
+msgid ""
+"Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
+msgstr ""
+
+#: camlibs/sierra/library.c:1248
+msgid "Not implemented!"
+msgstr ""
+
 #: camlibs/sonydscf1/sonydscf1.c:133
 msgid ""
 "Sony DSC-F1 Digital Camera Support\n"
@@ -2166,108 +2276,108 @@ msgstr ""
 "de Ken-ichi Hayashi\n"
 "Portage gPhoto2 port par Bart van Leeuwen <bart@netage.nl>"
 
-#: camlibs/stv0680/library.c:352 camlibs/stv0680/library.c:386
+#: camlibs/stv0680/library.c:353 camlibs/stv0680/library.c:387
 msgid "Bad exposure (not enough light probably)"
 msgstr "Mauvaise exposition (probablement manque de lumière)"
 
-#: camlibs/stv0680/library.c:516
+#: camlibs/stv0680/library.c:517
 msgid "Information for STV0680 based camera:\n"
 msgstr "Informations pour les appareils basés sur le STV0680 :\n"
 
-#: camlibs/stv0680/library.c:521
+#: camlibs/stv0680/library.c:522
 #, c-format
 msgid "Firmware Revision: %d.%d\n"
 msgstr "Révision de microcode : %d.%d\n"
 
-#: camlibs/stv0680/library.c:525
+#: camlibs/stv0680/library.c:526
 #, c-format
 msgid "ASIC Revision: %d.%d\n"
 msgstr "Révision de l'ASIC : %d.%d\n"
 
-#: camlibs/stv0680/library.c:529
+#: camlibs/stv0680/library.c:530
 #, c-format
 msgid "Sensor ID: %d.%d\n"
 msgstr "ID du capteur : %d.%d\n"
 
 #. HWCONFIG_COMMSLINK_MASK ... not really needed, the user knows, he
 #. * plugged it in.
-#: camlibs/stv0680/library.c:535
+#: camlibs/stv0680/library.c:536
 #, c-format
 msgid "Camera is configured for lights flickering with %dHz.\n"
 msgstr "L'appareil est configuré pour une lumière scintillant à %dHz.\n"
 
-#: camlibs/stv0680/library.c:538
+#: camlibs/stv0680/library.c:539
 #, c-format
 msgid "Memory in camera: %d Mbit.\n"
 msgstr "Mémoire dans l'appareil : %d Mbit.\n"
 
-#: camlibs/stv0680/library.c:542
+#: camlibs/stv0680/library.c:543
 msgid "Camera supports Thumbnails.\n"
 msgstr "L'appareil gère les vignettes.\n"
 
-#: camlibs/stv0680/library.c:544
+#: camlibs/stv0680/library.c:545
 msgid "Camera supports Video.\n"
 msgstr "L'appareil gère la video.\n"
 
-#: camlibs/stv0680/library.c:547
+#: camlibs/stv0680/library.c:548
 msgid "Camera pictures are monochrome.\n"
 msgstr "Les images de l'appareil sont monochromes.\n"
 
 #. Is this useful?
-#: camlibs/stv0680/library.c:549
+#: camlibs/stv0680/library.c:550
 msgid "Camera has memory.\n"
 msgstr "L'appareil embarque de la mémoire.\n"
 
-#: camlibs/stv0680/library.c:551
+#: camlibs/stv0680/library.c:552
 msgid "Camera supports videoformats: "
 msgstr "L'appareil produit les formats suivants : "
 
-#: camlibs/stv0680/library.c:557
+#: camlibs/stv0680/library.c:558
 #, c-format
 msgid "Vendor ID: %02x%02x\n"
 msgstr "Identifiant fabricant : %02x%02x\n"
 
-#: camlibs/stv0680/library.c:561
+#: camlibs/stv0680/library.c:562
 #, c-format
 msgid "Product ID: %02x%02x\n"
 msgstr "Identifiant produit : %02x%02x\n"
 
-#: camlibs/stv0680/library.c:568
+#: camlibs/stv0680/library.c:569
 #, c-format
 msgid "Number of Images: %d\n"
 msgstr "Nombre d'images : %d\n"
 
-#: camlibs/stv0680/library.c:571
+#: camlibs/stv0680/library.c:572
 #, c-format
 msgid "Maximum number of Images: %d\n"
 msgstr "Nombre maximum d'images : %d\n"
 
-#: camlibs/stv0680/library.c:574
+#: camlibs/stv0680/library.c:575
 #, c-format
 msgid "Image width: %d\n"
 msgstr "Largeur d'image : %d\n"
 
-#: camlibs/stv0680/library.c:577
+#: camlibs/stv0680/library.c:578
 #, c-format
 msgid "Image height: %d\n"
 msgstr "Hauteur d'image : %d\n"
 
-#: camlibs/stv0680/library.c:580
+#: camlibs/stv0680/library.c:581
 #, c-format
 msgid "Image size: %d\n"
 msgstr "Poids de l'image : %d\n"
 
-#: camlibs/stv0680/library.c:584
+#: camlibs/stv0680/library.c:585
 #, c-format
 msgid "Thumbnail width: %d\n"
 msgstr "Largeur de la vignette : %d\n"
 
-#: camlibs/stv0680/library.c:585
+#: camlibs/stv0680/library.c:586
 #, c-format
 msgid "Thumbnail height: %d\n"
 msgstr "Hauteur de la vignette : %d\n"
 
-#: camlibs/stv0680/library.c:586
+#: camlibs/stv0680/library.c:587
 #, c-format
 msgid "Thumbnail size: %d\n"
 msgstr "Poids de la vignette : %d\n"
@@ -2287,6 +2397,16 @@ msgstr ""
 "Protocole rétro-conçu avec CommLite Beta 5\n"
 "Carsten Weinholz <c.weinholz@netcologne.de>\n"
 "Étendu les appareils Aiptek PenCam et autres appareils USB double mode STM."
+
+#. libgphoto2_port doesn't have a GPContext
+#: libgphoto2/gphoto2-camera.c:81
+#, c-format
+msgid "An error occurred in the io-library ('%s'): %s"
+msgstr ""
+
+#: libgphoto2/gphoto2-camera.c:85
+msgid "No additional information available."
+msgstr ""
 
 #: libgphoto2/gphoto2-camera.c:660
 msgid "Could not detect any camera"
@@ -2334,6 +2454,11 @@ msgstr "Cet appareil ne peut être piloté pour la capture."
 msgid "This camera can not capture previews."
 msgstr "Cet appareil ne peut fournir de pré-visualisation de la capture."
 
+#: libgphoto2/gphoto2-filesys.c:120
+#, fuzzy, c-format
+msgid "The path '%s' is not absolute."
+msgstr "Chemin relatif"
+
 #: libgphoto2/gphoto2-filesys.c:239
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
@@ -2352,7 +2477,8 @@ msgstr "Le dossier '%s' ne contient pas de sous-dossier '%s'."
 #: libgphoto2/gphoto2-filesys.c:494
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
-msgstr "Impossible d'ajouter le fichier '%s' au dossier '%s' car il existe déjà."
+msgstr ""
+"Impossible d'ajouter le fichier '%s' au dossier '%s' car il existe déjà."
 
 #: libgphoto2/gphoto2-filesys.c:855
 #, c-format
@@ -2372,7 +2498,8 @@ msgstr ""
 
 #: libgphoto2/gphoto2-filesys.c:957
 #, c-format
-msgid "There are still subfolders in folder '%s' that you are trying to remove."
+msgid ""
+"There are still subfolders in folder '%s' that you are trying to remove."
 msgstr ""
 "Il existe toujours des sous-dossiers dans le dossier '%s' que vous essayez "
 "d'effacer."
@@ -2427,17 +2554,17 @@ msgstr ""
 "Les attributs en lecture seule ne peuvent être modifiés (comme la hauteur et "
 "la largeur.) "
 
-#: libgphoto2/gphoto2-abilities-list.c:238
+#: libgphoto2/gphoto2-abilities-list.c:246
 #, c-format
 msgid "Could not open '%s'"
 msgstr "Impossible d'ouvrir '%s'"
 
-#: libgphoto2/gphoto2-abilities-list.c:250
+#: libgphoto2/gphoto2-abilities-list.c:258
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "Chargement des pilotes depuis '%s'..."
 
-#: libgphoto2/gphoto2-abilities-list.c:612
+#: libgphoto2/gphoto2-abilities-list.c:620
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "Impossible de trouver un pilote pour '%s'"
@@ -2814,7 +2941,8 @@ msgid "%s(ERROR): "
 msgstr "%s(ERREUR): "
 
 #: frontends/command-line/main.c:602
-msgid "Recursion is now default and the use of --recurse or -R is now deprecated.\n"
+msgid ""
+"Recursion is now default and the use of --recurse or -R is now deprecated.\n"
 msgstr ""
 "La récursion est maintenant activée par défaut et l'utilisation de --recurse "
 "ou -R est maintenant obsolète.\n"
@@ -2951,8 +3079,8 @@ msgid ""
 "location of the io libraries. e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"
 msgstr ""
 "gPhoto2 pour OS/2 requiert que vous positionnez la variable d'environnement "
-"IOLIBS à l'emplacement des bibliothèques de communication, ie. SET "
-"CAMLIBS=C:\\GPHOTO2\\IOLIB\n"
+"IOLIBS à l'emplacement des bibliothèques de communication, ie. SET CAMLIBS=C:"
+"\\GPHOTO2\\IOLIB\n"
 
 #: frontends/command-line/main.c:1417
 msgid "Operation cancelled.\n"
@@ -2982,16 +3110,6 @@ msgstr ""
 "liste de distribution des développeurs gPhoto <gphoto-devel@gphoto.org>,\n"
 "merci de lancer gphoto2 comme suit :\n"
 "\n"
-
-#: frontends/command-line/main.c:1458
-msgid ""
-"\n"
-"Errors occuring beyond this point are 'expected' on OS/2\n"
-"investigation pending\n"
-msgstr ""
-"\n"
-"Des erreurs intervenant à partir de maintenant sont attendues\n"
-"sous OS/2. Les investigations sont en cours\n"
 
 #: frontends/command-line/gphoto2-cmd-config.c:64
 msgid "</B/24>Continue"
@@ -3051,12 +3169,10 @@ msgstr "Usage :\n"
 #: frontends/command-line/options.c:199
 msgid ""
 "Short/long options (& argument)        Description\n"
-"-----------------------------------------------------------------------------"
-"---\n"
+"--------------------------------------------------------------------------------\n"
 msgstr ""
 "Option courtes/longues (& arg.)  Description\n"
-"-----------------------------------------------------------------------------"
-"---\n"
+"--------------------------------------------------------------------------------\n"
 
 #. The format line is made translatable so that some
 #. languages can make the table a bit tighter. Make
@@ -3070,13 +3186,19 @@ msgstr "%-32s %s\n"
 #. Make this 79 characters long. Some languages need the space.
 #: frontends/command-line/options.c:229
 msgid ""
-"-----------------------------------------------------------------------------"
-"---\n"
+"--------------------------------------------------------------------------------\n"
 "[Use double-quotes around arguments]        [Picture numbers begin with one "
 "(1)]\n"
 msgstr ""
-"-----------------------------------------------------------------------------"
-"---\n"
+"--------------------------------------------------------------------------------\n"
 "[Utiliser «\"» pour les arg.]     [Les numéros d'images commencent à un "
 "(1)]\n"
 
+#~ msgid ""
+#~ "\n"
+#~ "Errors occuring beyond this point are 'expected' on OS/2\n"
+#~ "investigation pending\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Des erreurs intervenant à partir de maintenant sont attendues\n"
+#~ "sous OS/2. Les investigations sont en cours\n"
