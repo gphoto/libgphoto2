@@ -72,11 +72,6 @@ struct _GPPortSettingsUSB {
 	int config;
 	int interface;
 	int altsetting;
-
-	/* must be last to avoid binary incompatibility.
-	 * luckily we just need to make sure this struct does not 
-	 * get larger than _GPPortSettingsSerial. */
-	char port[64];
 };
 
 typedef union _GPPortSettings GPPortSettings;

@@ -78,38 +78,12 @@ int
 gp_port_library_list (GPPortInfoList *list)
 {
 	GPPortInfo info;
-	struct usb_bus *bus;
-	struct usb_device *dev;
 
-	/* default port first */
 	info.type = GP_PORT_USB;
 	strcpy (info.name, "Universal Serial Bus");
         strcpy (info.path, "usb:");
 	CHECK (gp_port_info_list_append (list, info));
 
-	usb_init ();
-	usb_find_busses ();
-	usb_find_devices ();
-
-	bus = usb_get_busses();
-	/* Look and enumerate all USB ports. */
-	while (bus) { 
-		for (dev = bus->devices; dev; dev = dev->next) {
-			/* Devices which are definitely not cameras. */
-			if (	(dev->descriptor.bDeviceClass == USB_CLASS_HUB)		||
-				(dev->descriptor.bDeviceClass == USB_CLASS_HID)		||
-				(dev->descriptor.bDeviceClass == USB_CLASS_PRINTER)	||
-				(dev->descriptor.bDeviceClass == USB_CLASS_COMM)
-			)
-				continue;
-			/* Note: We do not skip USB storage. Some devices can support both,
-			 * and the Ricoh erronously reports it.
-			 */ 
-			sprintf (info.path, "usb:%s,%s", bus->dirname, dev->filename);
-			CHECK (gp_port_info_list_append (list, info));
-		}
-		bus = bus->next;
-	}
 	return (GP_OK);
 }
 
@@ -306,14 +280,7 @@ gp_port_usb_update (GPPort *port)
 {
 	int ret;
 
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
-
-	/* The portname can also be changed with the device still fully closed. */
-	memcpy(&port->settings.usb.port, &port->settings_pending.usb.port,
-		sizeof(port->settings.usb.port));
-
- 	if (!port->pl->dh)
+	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
 
 	memcpy(&port->settings.usb, &port->settings_pending.usb,
@@ -410,27 +377,10 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 {
 	struct usb_bus *bus;
 	struct usb_device *dev;
-	char *s;
-	char busname[64], devname[64];
 
 	if (!port)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	s = strchr (port->settings.usb.port,':');
-	busname[0] = devname[0] = '\0';
-	if (s && (s[1] != '\0')) { /* usb:%d,%d */
-		strncpy(busname,s+1,sizeof(busname));
-		busname[sizeof(busname)-1] = '\0';
-
-		s = strchr(busname,',');
-		if (s) {
-			strncpy(devname, s+1,sizeof(devname));
-			devname[sizeof(devname)-1] = '\0';
-			*s = '\0';
-		} else {
-			busname[0] = '\0';
-		}
-	}
 	/*
 	 * NULL idvendor is not valid.
 	 * NULL idproduct is ok.
@@ -444,13 +394,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 	}
 
 	for (bus = usb_busses; bus; bus = bus->next) {
-		if ((busname[0] != '\0') && strcmp(busname, bus->dirname))
-			continue;
-
 		for (dev = bus->devices; dev; dev = dev->next) {
-			if ((devname[0] != '\0') && strcmp(devname, dev->filename))
-				continue;
-
 			if ((dev->descriptor.idVendor == idvendor) &&
 			    (dev->descriptor.idProduct == idproduct)) {
 				int config, interface, altsetting;
@@ -559,27 +503,10 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 {
 	struct usb_bus *bus;
 	struct usb_device *dev;
-	char *s;
-	char busname[64], devname[64];
 
 	if (!port)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	busname[0] = devname[0] = '\0';
-	s = strchr (port->settings.usb.port,':');
-	if (s && (s[1] != '\0')) { /* usb:%d,%d */
-		strncpy(busname,s+1,sizeof(busname));
-		busname[sizeof(busname)-1] = '\0';
-
-		s = strchr(busname,',');
-		if (s) {
-			strncpy(devname, s+1,sizeof(devname));
-			devname[sizeof(devname)-1] = '\0';
-			*s = '\0';
-		} else {
-			busname[0] = '\0';
-		}
-	}
 	/*
 	 * NULL class is not valid.
 	 * NULL subclass and protocol is ok.
@@ -590,14 +517,8 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 		return GP_ERROR_BAD_PARAMETERS;
 
 	for (bus = usb_busses; bus; bus = bus->next) {
-		if ((busname[0] != '\0') && strcmp(busname, bus->dirname))
-			continue;
-
 		for (dev = bus->devices; dev; dev = dev->next) {
 			int ret, config, interface, altsetting;
-
-			if ((devname[0] != '\0') && strcmp(devname, dev->filename))
-				continue;
 
 			ret = gp_port_usb_match_device_by_class(dev, class, subclass, protocol, &config, &interface, &altsetting);
 			if (!ret)
