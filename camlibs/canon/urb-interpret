@@ -31,6 +31,7 @@ my %canon_cmd = (
 		 #"0x1a 0x12 0x201" => "Mystery command",
 		 "0x1b 0x12 0x201" => "EOS lock keys",
 		 "0x1c 0x12 0x201" => "EOS unlock keys",
+		 "0x1d 0x12 0x201" => "EOS get body ID",
 		 "0x1f 0x12 0x201" => "Get camera photo abilities?",
 		 "0x20 0x12 0x201" => "Lock keys, turn off LCD"	
 		);
@@ -72,6 +73,7 @@ foreach $file (@ARGV) {
 	my $current_urb = -1;
 	my $buffer = 0;
 	my $direction;
+	my $current_lines;
 
 	warn("FILE: $file\n");
 
@@ -98,6 +100,7 @@ foreach $file (@ARGV) {
 				     || $line =~ /^(\d+)\s+(\d+\.\d+)\s+0000:\s+/ ) {
 					#warn ( "dumping URB data\n" );
 					$dumping_urbdata = 1;
+					$current_lines = 0;
 					$byte_offset = "0000";
 				
 					# start of urbdata, decide which buffer this is
@@ -174,7 +177,10 @@ foreach $file (@ARGV) {
 							}
 						}
 
-						push(@{ $urbdata{$current_urb}{ $buffer } }, hex_format($byte_offset, $hex));
+						if ( $current_lines < 65 ) {
+							push(@{ $urbdata{$current_urb}{ $buffer } }, hex_format($byte_offset, $hex));
+						}
+						$current_lines++;
 						$byte_offset = -1;
 						next;
 					}
@@ -183,11 +189,23 @@ foreach $file (@ARGV) {
 					if ($line =~ /\sInterface\[0\]: Pipes\[(\d+)\] : PipeHandle\s+= 0x([\da-f]+)	/) {
 						# remember URB pipe
 						$urbpipe{$2} = $1;
-						#warn("PIPE $2 = $1\n");
+						warn("PIPE $2 = $1\n");
+						print ( "Pipe $2 = $1" );
+						if ( $1 == 0 ) {
+						    print ( " (main)\n" );
+						} elsif ( $1 == 2 ) {
+						    print ( " (interrupt)\n" );
+						} else {
+						    print ( "\n" );
+						}
 					} elsif ($line =~ /\sPipeHandle\s+= ([\da-f]+)/) {
 						# check if we know this URB pipe
-						$urbdata{$current_urb}{pipe} = $urbpipe{$1};
-						#warn("URB $current_urb PIPE $1 = $urbpipe{$1}\n");
+						if ( defined ( $urbpipe{$1} ) ) {
+							$urbdata{$current_urb}{pipe} = $urbpipe{$1};
+						} else {
+							$urbdata{$current_urb}{pipe} = "UNKNOWN";
+						}
+						#warn("URB $current_urb PIPE $1 = $urbdata{$current_urb}{pipe}\n");
 					}
 					
 					if ($line =~ /\sTransferFlags.+USBD_TRANSFER_DIRECTION_(OUT|IN)/) {
@@ -267,16 +285,12 @@ foreach $file (@ARGV) {
 
 		if ( defined($op) ) {
 			if ( defined($pipe) ) {
-				if ( $pipe eq "2") {
+				if ( $pipe eq "2" && $length eq "0") {
 					$keep_alive = 1;
 				}
 			}
 			if ( !defined($length) ) {
 				warn ( "Missing operation length in URB $current_urb\n" );
-			}
-			elsif ( ( $op eq "READ" && $length eq "0" )
-				|| ( $op eq "WRITE" && $length eq "64" ) ) {
-				$keep_alive = 1;
 			}
 			if ( $keep_alive ) {
 				$n_skipped++;
@@ -288,8 +302,10 @@ foreach $file (@ARGV) {
 				}
 				if ($op eq "READ") {
 					if ( defined($length) ) {
-						if ($length == 0x40) {
-							print("\n*** URB $current_urb possible CANON RESPONSE ***\n");
+						if ( $pipe eq "2" ) {
+						    print ( "\n*** URB $current_urb INTERRUPT READ ***\n\n" );
+						} elsif ($length == 0x40) {
+							print("\n\n\n\n*** URB $current_urb possible CANON RESPONSE ***\n");
 						} elsif ($length == 0x01) {
 							print("\n\n\n\n*** URB $current_urb PROBABLY CAMERA INIT ***\n\n");
 						} else {
@@ -315,7 +331,6 @@ foreach $file (@ARGV) {
 					} else {
 						$cmd = "$cmd LOST";
 					}
-					#my $cmd = "$urbdata{$current_urb}{cmd1} $urbdata{$current_urb}{cmd2} $urbdata{$current_urb}{cmd3}";
 					if ( defined ( $length ) ) {
 						if ($length >= 0x50) {
 							if ( $cmd eq "LOST LOST LOST" ) {
@@ -409,7 +424,7 @@ sub hex_format
 	my $ch;
 	foreach $ch (@chars) {
 		my $i = hex($ch);
-		if ($i > 32 and $i < 127) {
+		if ($i >= 32 and $i < 127) {
 			$out_rad .= sprintf("%c", $i);
 		} else {
 			$out_rad .= ".";
