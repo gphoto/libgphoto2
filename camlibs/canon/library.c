@@ -768,7 +768,7 @@ get_last_file (Camera *camera, char *directory, char *destname,
 			         !isdigit(name[7])))
 		continue;
 
-	    if(!result[0] || strcmp(list->entry[t].name, result) > 0)
+	    if(!result[0] || strcmp((list->entry[t].name)+4, result+4) > 0)
 		strcpy(result, list->entry[t].name);
 	}
 	gp_list_free(list);
