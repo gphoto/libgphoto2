@@ -148,7 +148,8 @@ read_packet_again:
 		/* Determine the packet type */
 		if (!((packet[0] == TYPE_COMMAND) ||
 		    (packet[0] == TYPE_DATA) ||
-		    (packet[0] == TYPE_DATA_END))) {
+		    (packet[0] == TYPE_DATA_END) ||
+		    ((unsigned char)packet[0] == TRM) )) {
 		    	if (fd->type == GP_PORT_USB)
 				gp_port_usb_clear_halt (fd->dev,
 						GP_PORT_USB_ENDPOINT_IN);
