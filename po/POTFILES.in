@@ -7,6 +7,7 @@ camlibs/canon/crc.c
 camlibs/canon/library.c
 camlibs/canon/serial.c
 camlibs/canon/usb.c
+camlibs/casio/casio-qv.c
 camlibs/digita/digita.c
 camlibs/dimera/dimera3500.c
 camlibs/directory/directory.c
