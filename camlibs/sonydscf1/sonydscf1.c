@@ -95,7 +95,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 {
         int num;
 	long int size;
-	const char *data = NULL;
+	char *data = NULL;
         SonyStruct *b = (SonyStruct*)camera->camlib_data;
         printf("folder: %s, file: %s\n", folder, filename);
         /*gp_frontend_progress(camera, NULL, 0.00);*/

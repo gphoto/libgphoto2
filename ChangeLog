@@ -1,5 +1,17 @@
 2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch from Carsten Pfeiffer <carpdjih@sp.zrz.tu-berlin.de>
+
+	* camlibs/sonydscf1.sonydscf1.c:
+	* include/gphoto2-core.h:
+	* include/gphoto2-file.h:
+	* include/gphoto2-filesys.h:
+	* libgphoto2/core.c:
+	* libgphoto2/file.c:
+	* libgphoto2/filesys.c: char *whatever -> const char *whatever.
+
+2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch from Ilya Konstantinov <future@shiny.co.il>:
 
 	* camlibs/sierra/sierra.c (get_info_func): Set the filename.

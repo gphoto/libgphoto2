@@ -66,7 +66,7 @@ int gp_filesystem_free	 (CameraFilesystem *fs);
 
 /* Adding */
 int gp_filesystem_populate (CameraFilesystem *fs, const char *folder,
-			    char *format, int count);
+			    const char *format, int count);
 int gp_filesystem_append   (CameraFilesystem *fs, const char *folder,
 			    const char *filename);
 

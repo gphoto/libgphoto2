@@ -28,7 +28,7 @@ int gp_init           (int debug);
 int gp_is_initialized (void);
 int gp_exit           (void);
 
-void gp_debug_printf (int level, char *id, char *format, ...);
+void gp_debug_printf (int level, const char *id, const char *format, ...);
 
 int  gp_autodetect (CameraList *list);
 
