@@ -156,7 +156,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 #docdir doc/api/html
 #docdir libgphoto2_port/doc/html
 %{_libdir}/gphoto2portConf.sh
-%{_datadir}/locale/de/LC_MESSAGES/@PACKAGE@.mo
+%{_datadir}/locale/de/LC_MESSAGES/*
 %{_libdir}/pkgconfig/libgphoto-2.0.pc
 /etc/hotplug/usb/usbcam
 %{_datadir}/gphoto2/konica/*
