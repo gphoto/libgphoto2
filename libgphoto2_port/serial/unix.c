@@ -1,33 +1,34 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
-/* gphoto2-port-serial.c - Serial IO functions
-
-   Modifications:
-   Copyright (C) 2000 Philippe Marzouk <pmarzouk@bigfoot.com>
-   Copyright (C) 2000 Edouard Lafargue <Edouard.Lafargue@bigfoot.com>
-   Copyright (C) 1999 Johannes Erdfelt <johannes@erdfelt.com>
-   Copyright (C) 1999 Scott Fritzinger <scottf@unr.edu>
-
-   Based on work by:
-   Copyright (C) 1999 Beat Christen <spiff@longstreet.ch>
-   for the toshiba gPhoto library.
-
-   The GPIO Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
-
-   The GPIO Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Library General Public
-   License along with the GPIO Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.
+/*
+ * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * Copyright (C) 2000 Philippe Marzouk <pmarzouk@bigfoot.com>
+ * Copyright (C) 2000 Edouard Lafargue <Edouard.Lafargue@bigfoot.com>
+ * Copyright (C) 1999 Johannes Erdfelt <johannes@erdfelt.com>
+ * Copyright (C) 1999 Scott Fritzinger <scottf@unr.edu>
+ *
+ * Based on work by:
+ * Copyright (C) 1999 Beat Christen <spiff@longstreet.ch>
+ * 	for the toshiba gPhoto library.
+ *                   
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  */
 
 #include <config.h>
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -89,62 +90,17 @@ static struct sgttyb term_old;
 #  define N_(String) (String)
 #endif
 
-typedef struct {
-	char lock_file[MAXPATHLEN];
-} DeviceHandle;
+#define CHECK(result) {int r=(result); if (r<0) return (r);}
 
-/* Serial prototypes
-   ------------------------------------------------------------------ */
-int             gp_port_serial_init(gp_port *dev);
-int             gp_port_serial_exit(gp_port *dev);
+struct _GPPortPrivateLibrary {
+	int fd; 			/* Device handle */
+	char lock_file[MAXPATHLEN];	/* Lockfile */
+};
 
-int             gp_port_serial_open(gp_port *dev);
-int             gp_port_serial_close(gp_port *dev);
-
-int             gp_port_serial_read(gp_port *dev, char *bytes, int size);
-int             gp_port_serial_write(gp_port *dev, char *bytes, int size);
-
-int             gp_port_serial_update (gp_port *dev);
-
-/* Specific */
-int             gp_port_serial_get_pin(gp_port *dev, int pin, int *level);
-int             gp_port_serial_set_pin(gp_port *dev, int pin, int level);
-int             gp_port_serial_send_break (gp_port *dev, int duration);
-int             gp_port_serial_flush(gp_port *dev, int direction);
-
-
-/* private */
-int             gp_port_serial_set_baudrate(gp_port *dev);
-static speed_t  gp_port_serial_baudconv(int rate);
-
-/* Dynamic library functions
-   --------------------------------------------------------------------- */
-
-gp_port_type gp_port_library_type () {
-
+GPPortType
+gp_port_library_type () 
+{
         return (GP_PORT_SERIAL);
-}
-
-gp_port_operations *gp_port_library_operations () {
-
-        gp_port_operations *ops;
-
-        ops = (gp_port_operations*)malloc(sizeof(gp_port_operations));
-        memset(ops, 0, sizeof(gp_port_operations));
-
-        ops->init   = gp_port_serial_init;
-        ops->exit   = gp_port_serial_exit;
-        ops->open   = gp_port_serial_open;
-        ops->close  = gp_port_serial_close;
-        ops->read   = gp_port_serial_read;
-        ops->write  = gp_port_serial_write;
-        ops->update = gp_port_serial_update;
-        ops->get_pin = gp_port_serial_get_pin;
-        ops->set_pin = gp_port_serial_set_pin;
-        ops->send_break = gp_port_serial_send_break;
-        ops->flush  = gp_port_serial_flush;
-
-        return (ops);
 }
 
 #ifndef LOCK_DIR
@@ -160,7 +116,7 @@ gp_port_operations *gp_port_library_operations () {
 #endif
 
 static int
-gp_port_serial_lock (gp_port *dev)
+gp_port_serial_lock (GPPort *dev)
 {
 #if HAVE_TTYLOCK || HAVE_BAUDBOY
 	const char *port;
@@ -203,7 +159,6 @@ gp_port_serial_lock (gp_port *dev)
 	return (GP_ERROR_IO_LOCK);
 
 #else /* !HAVE_LOCKDEV */
-	DeviceHandle *handle = dev->device_handle;
 	char lock_buffer[12];
 	int fd, pid, n;
 
@@ -225,7 +180,7 @@ gp_port_serial_lock (gp_port *dev)
 		return (GP_ERROR_IO_LOCK);
 	}
 	
-	slprintf (handle->lock_file, sizeof (handle->lock_file),
+	slprintf (dev->pl->lock_file, sizeof (dev->pl->lock_file),
 		  "%s/LK.%03d.%03d.%03d", LOCK_DIR, major (sbuf.st_dev),
 		  major (sbuf.st_rdev), minor (sbuf.st_rdev));
 #else /* SVR4 */
@@ -236,26 +191,26 @@ gp_port_serial_lock (gp_port *dev)
 
 	if ((p = strrchr (port, '/')) != NULL)
 		port = p + 1;
-	sprintf (handle->lock_file, "%s/LCK..%s", LOCK_DIR, port);
+	sprintf (dev->pl->lock_file, "%s/LCK..%s", LOCK_DIR, port);
 #endif /* !SVR4 */
 	
-	while ((fd = open (handle->lock_file, O_EXCL | O_CREAT | O_RDWR,
+	while ((fd = open (dev->pl->lock_file, O_EXCL | O_CREAT | O_RDWR,
 			   0644)) < 0) {
 		if (errno != EEXIST) {
 			gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
 				_("Cannot create lock file '%s' (%m)"),
-				handle->lock_file);
+				dev->pl->lock_file);
 			break;
 		}
 		
 		/* Read the lock file to find out who has the device locked. */
-		fd = open (handle->lock_file, O_RDONLY, 0);
+		fd = open (dev->pl->lock_file, O_RDONLY, 0);
 		if (fd < 0) {
 			if (errno == ENOENT) /* This is just a timing problem */
 				continue;
 			gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
 				_("Cannot open existing lock file '%s' (%m)"),
-				handle->lock_file);
+				dev->pl->lock_file);
 			break;
 		}
 #ifndef LOCK_BINARY
@@ -268,7 +223,7 @@ gp_port_serial_lock (gp_port *dev)
 		if (n <= 0) {
 			gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
 				_("Cannot read pid from lock file '%s'"),
-				handle->lock_file);
+				dev->pl->lock_file);
 			break;
 		} 
 		
@@ -280,7 +235,7 @@ gp_port_serial_lock (gp_port *dev)
 		if (pid == getpid ())
 			return 1;      /* somebody else locked it for us */
 		if (pid == 0 || (kill (pid, 0) == -1 && errno == ESRCH)) {
-			if (unlink (handle->lock_file) == 0) {
+			if (unlink (dev->pl->lock_file) == 0) {
 				gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
 					_("Removed stale lock on '%s' "
 					  "(pid %d)"), port, pid);
@@ -297,7 +252,7 @@ gp_port_serial_lock (gp_port *dev)
 	}
 
 	if (fd < 0) {
-		handle->lock_file[0] = 0;
+		dev->pl->lock_file[0] = 0;
 		return (GP_ERROR_IO_LOCK);
 	}
 	
@@ -316,7 +271,7 @@ gp_port_serial_lock (gp_port *dev)
 }
 
 static int
-gp_port_serial_unlock (gp_port *dev)
+gp_port_serial_unlock (GPPort *dev)
 {
 #if HAVE_TTYLOCK || HAVE_BAUDBOY
 	const char *port;
@@ -355,11 +310,9 @@ gp_port_serial_unlock (gp_port *dev)
 
 #else /* !HAVE_LOCKDEV */
 						
-	DeviceHandle *handle = dev->device_handle;
-
-	if (handle->lock_file[0]) {
-		unlink (handle->lock_file);
-		handle->lock_file[0] = 0;
+	if (dev->pl->lock_file[0]) {
+		unlink (dev->pl->lock_file);
+		dev->pl->lock_file[0] = 0;
 	}
 
 	return (GP_OK);
@@ -414,48 +367,45 @@ gp_port_library_list (gp_port_info *list, int *count)
         return (GP_OK);
 }
 
-/* Serial API functions
-   ------------------------------------------------------------------ */
-
-int
-gp_port_serial_init (gp_port *dev)
+static int
+gp_port_serial_init (GPPort *dev)
 {
-	DeviceHandle *handle;
+	dev->pl = malloc (sizeof (GPPortPrivateLibrary));
+	if (!dev->pl)
+		return (GP_ERROR_NO_MEMORY);
+	memset (dev->pl, 0, sizeof (GPPortPrivateLibrary));
 
 #if HAVE_TERMIOS_H
-        if (tcgetattr(dev->device_fd, &term_old) < 0) {
+        if (tcgetattr (dev->pl->fd, &term_old) < 0) {
                 perror("tcgetattr2");
                 /*return GP_ERROR_IO_INIT;*/
         }
 #else
-        if (ioctl(dev->device_fd, TIOCGETP, &term_old) < 0) {
+        if (ioctl (dev->pl->fd, TIOCGETP, &term_old) < 0) {
                 perror("ioctl(TIOCGETP)");
                 return GP_ERROR_IO_INIT;
         }
 #endif
 
-	handle = malloc (sizeof (DeviceHandle));
-	handle->lock_file[0] = 0;
-	dev->device_handle = handle;
-	
         return GP_OK;
 }
 
-int gp_port_serial_exit (gp_port *dev)
+static int
+gp_port_serial_exit (GPPort *dev)
 {
 	if (!dev)
 		return (GP_OK);
 
-	if (dev->device_handle) {
-		free (dev->device_handle);
-		dev->device_handle = NULL;
+	if (dev->pl) {
+		free (dev->pl);
+		dev->pl = NULL;
 	}
-		
+
         return GP_OK;
 }
 
-int
-gp_port_serial_open (gp_port *dev)
+static int
+gp_port_serial_open (GPPort *dev)
 {
 	int result, max_tries = 5, i;
 #ifdef OS2
@@ -484,43 +434,39 @@ gp_port_serial_open (gp_port *dev)
 	}
 
 #ifdef __FreeBSD__
-        dev->device_fd = open(port, O_RDWR | O_NOCTTY | O_NONBLOCK);
+        dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 #elif OS2
-        fd = open(port, O_RDWR | O_BINARY);
-        dev->device_fd = open(port, O_RDWR | O_BINARY);
+        fd = open (port, O_RDWR | O_BINARY);
+	dev->pl->fd = open (port, O_RDWR | O_BINARY);
         close(fd);
-        //printf("fd %d for %s\n",dev->device_fd,dev->settings.serial.port);
 #else
-        dev->device_fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
+        dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif
-        if (dev->device_fd == -1) {
+        if (dev->pl->fd == -1) {
 		gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
 			_("Failed to open '%s'"), port);
+		dev->pl->fd = 0;
                 return GP_ERROR_IO_OPEN;
         }
 
-/*      if (ioctl (dev->device_fd, TIOCMBIC, &RTS) <0) {
-                perror("ioctl(TIOCMBIC)");
-                return GP_ERROR;
-        } */
         return GP_OK;
 }
 
-int
-gp_port_serial_close (gp_port * dev)
+static int
+gp_port_serial_close (GPPort *dev)
 {
 	int result;
 
 	if (!dev)
 		return (GP_OK);
 
-	if (dev->device_fd) {
-		if (close (dev->device_fd) == -1) {
+	if (dev->pl->fd) {
+		if (close (dev->pl->fd) == -1) {
 			gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
 				_("Could not close device!"));
 	                return GP_ERROR_IO_CLOSE;
 	        }
-		dev->device_fd = 0;
+		dev->pl->fd = 0;
 	}
 
 	/* Unlock the port */
@@ -531,50 +477,56 @@ gp_port_serial_close (gp_port * dev)
         return GP_OK;
 }
 
-int gp_port_serial_write(gp_port * dev, char *bytes, int size)
+static int
+gp_port_serial_write(GPPort *dev, char *bytes, int size)
 {
         int len, ret;
 
         len = 0;
-        while (len < size) {    /* Make sure we write all data while handling */
-                /* the harmless errors */
-                if ((ret = write(dev->device_fd, bytes, size - len)) == -1)
-                {        printf("err: %d\n",errno);
+        while (len < size) {
+		
+		/*
+		 * Make sure we write all data while handling
+		 * the harmless errors
+		 */
+		ret = write (dev->pl->fd, bytes, size - len);
+                if (ret == -1) {
                         switch (errno) {
                         case EAGAIN:
                         case EINTR:
                                 ret = 0;
                                 break;
                         default:
-                                perror("gp_port_serial_write");
-
+				gp_log (GP_LOG_ERROR, "gphoto2-port-serial",
+					"Could not write to port (%m)");
                                 return GP_ERROR_IO_WRITE;
                         }
-                   }
-                len += ret;
+		}
+		len += ret;
         }
 
         /* wait till all bytes are really sent */
 #ifndef OS2
 #if HAVE_TERMIOS_H
-        tcdrain(dev->device_fd);
+        tcdrain (dev->pl->fd);
 #else
-        ioctl(dev->device_fd, TCDRAIN, 0);
+        ioctl (dev->pl->fd, TCDRAIN, 0);
 #endif
 #endif
         return GP_OK;
 }
 
 
-int gp_port_serial_read(gp_port * dev, char *bytes, int size)
+static int
+gp_port_serial_read (GPPort *dev, char *bytes, int size)
 {
         struct timeval timeout;
         fd_set readfs;          /* file descriptor set */
         int readen = 0;
         int rc;
 
-        FD_ZERO(&readfs);
-        FD_SET(dev->device_fd, &readfs);
+        FD_ZERO (&readfs);
+        FD_SET (dev->pl->fd, &readfs);
 
         while (readen < size) {
                 /* set timeout value within input loop */
@@ -584,7 +536,7 @@ int gp_port_serial_read(gp_port * dev, char *bytes, int size)
                                                           */
 
 
-                rc = select(dev->device_fd + 1, &readfs, NULL, NULL, &timeout);
+                rc = select(dev->pl->fd + 1, &readfs, NULL, NULL, &timeout);
 /*              if ( (rc == 0) && (readen == 0)) { */
                 /* Timeout before reading anything */
 /*                printf("gp_port_serial_read (timeout)\n"); */
@@ -593,8 +545,8 @@ int gp_port_serial_read(gp_port * dev, char *bytes, int size)
                 if (0 == rc) {
                         return GP_ERROR_IO_TIMEOUT;
                 }
-                if (FD_ISSET(dev->device_fd, &readfs)) {
-                        int now = read(dev->device_fd, bytes, size - readen);
+                if (FD_ISSET(dev->pl->fd, &readfs)) {
+                        int now = read(dev->pl->fd, bytes, size - readen);
 
                         if (now < 0) {
                                 perror("gp_port_serial_read (read fails)");
@@ -611,11 +563,8 @@ int gp_port_serial_read(gp_port * dev, char *bytes, int size)
         return readen;
 }
 
-/*
- * Get the status of the lines of the serial port
- *
- */
-int gp_port_serial_get_pin(gp_port * dev, int pin, int *level)
+static int
+gp_port_serial_get_pin (GPPort *dev, int pin, int *level)
 {
         int j, bit;
 
@@ -642,7 +591,7 @@ int gp_port_serial_get_pin(gp_port * dev, int pin, int *level)
                         return GP_ERROR_IO_PIN;
         }
 
-        if (ioctl(dev->device_fd, TIOCMGET, &j) < 0) {
+        if (ioctl(dev->pl->fd, TIOCMGET, &j) < 0) {
                 perror("gp_port_serial_status (Getting hardware status bits)");
                 return GP_ERROR_IO_PIN;
         }
@@ -656,7 +605,8 @@ int gp_port_serial_get_pin(gp_port * dev, int pin, int *level)
 * level is 0 for off and 1 for on
 *
 */
-int gp_port_serial_set_pin(gp_port * dev, int pin, int level)
+static int
+gp_port_serial_set_pin (GPPort *dev, int pin, int level)
 {
         int bit,request;
 
@@ -694,7 +644,7 @@ int gp_port_serial_set_pin(gp_port * dev, int pin, int level)
                         return GP_ERROR_IO_PIN;
         }
 
-        if (ioctl (dev->device_fd, request, &bit) <0) {
+        if (ioctl (dev->pl->fd, request, &bit) <0) {
             perror("ioctl(TIOCMBI[CS])");
             return GP_ERROR_IO_PIN;
         }
@@ -702,7 +652,8 @@ int gp_port_serial_set_pin(gp_port * dev, int pin, int level)
         return GP_OK;
 }
 
-int gp_port_serial_flush (gp_port * dev, int direction)
+static int
+gp_port_serial_flush (GPPort *dev, int direction)
 {
 
 #if HAVE_TERMIOS_H
@@ -719,7 +670,7 @@ int gp_port_serial_flush (gp_port * dev, int direction)
         return GP_ERROR_IO_SERIAL_FLUSH;
     }
 
-    if (tcflush (dev->device_fd, q) < 0)
+    if (tcflush (dev->pl->fd, q) < 0)
         return (GP_ERROR_IO_SERIAL_FLUSH);
 
     return GP_OK;
@@ -729,119 +680,14 @@ int gp_port_serial_flush (gp_port * dev, int direction)
 #endif
 }
 
-
-/*
- * This function will apply the settings to
- * the device. The device has to be opened
- */
-int gp_port_serial_update(gp_port * dev)
-{
-        memcpy(&dev->settings, &dev->settings_pending, sizeof(dev->settings));
-
-        if (dev->device_fd != 0) {
-                if (gp_port_serial_close(dev))
-                        return GP_ERROR_IO_CLOSE;
-                if (gp_port_serial_open(dev))
-                        return GP_ERROR_IO_OPEN;
-
-                return gp_port_serial_set_baudrate(dev);
-        }
-        return GP_OK;
-}
-
-/*
-   Serial port specific helper functions
-   ----------------------------------------------------------------
- */
-
-/* Called to set the baud rate */
-int gp_port_serial_set_baudrate(gp_port * dev)
-{
-#ifndef OS2
-#if HAVE_TERMIOS_H
-        struct termios tio;
-
-        if (tcgetattr(dev->device_fd, &tio) < 0) {
-                perror("tcgetattr1");
-                return GP_ERROR_IO_SERIAL_SPEED;
-        }
-        tio.c_cflag = (tio.c_cflag & ~CSIZE) | CS8;
-
-        /* Set into raw, no echo mode */
-#if defined(__FreeBSD__) || defined(__NetBSD__)
-        tio.c_iflag &= ~(IGNBRK | IGNCR | INLCR | ICRNL |
-                         IXANY | IXON | IXOFF | INPCK | ISTRIP);
-#else
-        tio.c_iflag &= ~(IGNBRK | IGNCR | INLCR | ICRNL | IUCLC |
-                         IXANY | IXON | IXOFF | INPCK | ISTRIP);
-#endif
-        tio.c_iflag |= (BRKINT | IGNPAR);
-        tio.c_oflag &= ~OPOST;
-        tio.c_lflag &= ~(ICANON | ISIG | ECHO | ECHONL | ECHOE |
-                         ECHOK | IEXTEN);
-        tio.c_cflag &= ~(CRTSCTS | PARENB | PARODD);
-        tio.c_cflag |= CLOCAL | CREAD;
-
-        tio.c_cc[VMIN] = 1;
-        tio.c_cc[VTIME] = 0;
-
-        cfsetispeed(&tio, gp_port_serial_baudconv(dev->settings.serial.speed));
-        cfsetospeed(&tio, gp_port_serial_baudconv(dev->settings.serial.speed));
-
-        if (tcsetattr(dev->device_fd, TCSANOW, &tio) < 0) {
-                perror("tcsetattr");
-                return GP_ERROR_IO_SERIAL_SPEED;
-        }
-        if (fcntl(dev->device_fd, F_SETFL, 0) < 0) {    /* clear O_NONBLOCK */
-                perror("fcntl F_SETFL");
-                return GP_ERROR_IO_SERIAL_SPEED;
-        }
-#else
-        struct sgttyb ttyb;
-
-        if (ioctl(dev->device_fd, TIOCGETP, &ttyb) < 0) {
-                perror("ioctl(TIOCGETP)");
-                return GP_ERROR_IO_SERIAL_SPEED;
-        }
-        ttyb.sg_ispeed = dev->settings.serial.speed;
-        ttyb.sg_ospeed = dev->settings.serial.speed;
-        ttyb.sg_flags = 0;
-
-        if (ioctl(dev->device_fd, TIOCSETP, &ttyb) < 0) {
-                perror("ioctl(TIOCSETP)");
-                return GP_ERROR_IO_SERIAL_SPEED;
-        }
-#endif
-#else /*ifndef OS2*/
-
-        ULONG rc;
-        ULONG   ulParmLen = 2;     /* Maximum size of the parameter packet */
-        //printf("Baudrate: %d\n",dev->settings.serial.speed);
-        rc = DosDevIOCtl (dev->device_fd, /* Device handle                  */
-                      0x0001,       /* Serial-device control          */
-                      0x0043, /* Sets bit rate                  */
-                      (PULONG) &dev->settings.serial.speed,   /* Points at bit rate             */
-                      sizeof(dev->settings.serial.speed),     /* Maximum size of parameter list */
-                      &ulParmLen,        /* Size of parameter packet       */
-                      NULL,              /* No data packet                 */
-                      0,                 /* Maximum size of data packet    */
-                      NULL);             /* Size of data packet            */
-        if(rc != 0)
-           printf("DosDevIOCtl baudrate error:%d\n",rc);
-
-#endif /*ifndef OS2*/
-
-        return GP_OK;
-}
-
-/* Called to convert a int baud to the POSIX enum value */
-static speed_t gp_port_serial_baudconv(int baud)
+static speed_t
+gp_port_serial_baudconv (int baudrate)
 {
 #define BAUDCASE(x)     case (x): { ret = B##x; break; }
         speed_t ret;
 
-        ret = (speed_t) baud;
-        switch (baud) {
+        switch (baudrate) {
+
                 /* POSIX defined baudrates */
                 BAUDCASE(0);
                 BAUDCASE(50);
@@ -879,26 +725,164 @@ static speed_t gp_port_serial_baudconv(int baud)
 #ifdef B230400
                 BAUDCASE(230400);
 #endif
-
         default:
-                fprintf(stderr, "baudconv: baudrate %d is undefined; using as is\n", baud);
+		ret = (speed_t) baudrate;
+		gp_log (GP_LOG_DEBUG, "gphoto2-port-serial", "Baudrate %d "
+			"unknown - using as is", baudrate);
         }
 
         return ret;
 #undef BAUDCASE
 }
 
-int gp_port_serial_send_break (gp_port *dev, int duration) {
+static int
+gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
+{
+#ifndef OS2
+#if HAVE_TERMIOS_H
+        struct termios tio;
 
+        if (tcgetattr(dev->pl->fd, &tio) < 0) {
+                perror("tcgetattr1");
+                return GP_ERROR_IO_SERIAL_SPEED;
+        }
+        tio.c_cflag = (tio.c_cflag & ~CSIZE) | CS8;
+
+        /* Set into raw, no echo mode */
+#if defined(__FreeBSD__) || defined(__NetBSD__)
+        tio.c_iflag &= ~(IGNBRK | IGNCR | INLCR | ICRNL |
+                         IXANY | IXON | IXOFF | INPCK | ISTRIP);
+#else
+        tio.c_iflag &= ~(IGNBRK | IGNCR | INLCR | ICRNL | IUCLC |
+                         IXANY | IXON | IXOFF | INPCK | ISTRIP);
+#endif
+        tio.c_iflag |= (BRKINT | IGNPAR);
+        tio.c_oflag &= ~OPOST;
+        tio.c_lflag &= ~(ICANON | ISIG | ECHO | ECHONL | ECHOE |
+                         ECHOK | IEXTEN);
+        tio.c_cflag &= ~(CRTSCTS | PARENB | PARODD);
+        tio.c_cflag |= CLOCAL | CREAD;
+
+        tio.c_cc[VMIN] = 1;
+        tio.c_cc[VTIME] = 0;
+
+        cfsetispeed (&tio, gp_port_serial_baudconv (baudrate));
+        cfsetospeed (&tio, gp_port_serial_baudconv (baudrate));
+
+        if (tcsetattr (dev->pl->fd, TCSANOW, &tio) < 0) {
+                perror("tcsetattr");
+                return GP_ERROR_IO_SERIAL_SPEED;
+        }
+        if (fcntl(dev->pl->fd, F_SETFL, 0) < 0) {    /* clear O_NONBLOCK */
+                perror("fcntl F_SETFL");
+                return GP_ERROR_IO_SERIAL_SPEED;
+        }
+#else
+        struct sgttyb ttyb;
+
+        if (ioctl (dev->pl->fd, TIOCGETP, &ttyb) < 0) {
+                perror("ioctl(TIOCGETP)");
+                return GP_ERROR_IO_SERIAL_SPEED;
+        }
+        ttyb.sg_ispeed = baudrate;
+        ttyb.sg_ospeed = baudrate;
+        ttyb.sg_flags = 0;
+
+        if (ioctl(dev->pl->fd, TIOCSETP, &ttyb) < 0) {
+                perror("ioctl(TIOCSETP)");
+                return GP_ERROR_IO_SERIAL_SPEED;
+        }
+#endif
+#else /*ifndef OS2*/
+
+        ULONG rc;
+        ULONG   ulParmLen = 2;     /* Maximum size of the parameter packet */
+        rc = DosDevIOCtl (dev->pl->fd, /* Device handle                  */
+                      0x0001,       /* Serial-device control          */
+                      0x0043, /* Sets bit rate                  */
+                      (PULONG) &baudrate,   /* Points at bit rate             */
+                      sizeof(baudrate),     /* Maximum size of parameter list */
+                      &ulParmLen,        /* Size of parameter packet       */
+                      NULL,              /* No data packet                 */
+                      0,                 /* Maximum size of data packet    */
+                      NULL);             /* Size of data packet            */
+        if(rc != 0)
+           printf("DosDevIOCtl baudrate error:%d\n",rc);
+
+#endif /*ifndef OS2*/
+
+        return GP_OK;
+}
+
+static int
+gp_port_serial_update (GPPort *dev)
+{
+	unsigned int baudrate;
+	int fd = dev->pl->fd;
+	int result;
+
+	memcpy (&dev->settings, &dev->settings_pending, sizeof (dev->settings));
+
+	/* If the port is open, close it */
+	if (fd)
+		CHECK (gp_port_serial_close (dev));
+
+	/* Open the port */
+	CHECK (gp_port_serial_open (dev));
+
+	/* 
+	 * If the requested speed is 0, this means that we should
+	 * use a default speed.
+	 */
+	baudrate = dev->settings.serial.speed;
+	if (!baudrate)
+		baudrate = 9600;
+
+	/* Set the baudrate and revert to state before */
+	result = gp_port_serial_set_baudrate (dev, baudrate);
+	if (!fd)
+		CHECK (gp_port_serial_close (dev));
+	CHECK (result);
+
+	return GP_OK;
+}
+
+static int
+gp_port_serial_send_break (GPPort *dev, int duration)
+{
         /* Duration is in milliseconds */
 
 #if HAVE_TERMIOS_H
-        tcsendbreak(dev->device_fd, duration / 310);
-        tcdrain(dev->device_fd);
+        tcsendbreak (dev->pl->fd, duration / 310);
+        tcdrain (dev->pl->fd);
 #else
-        /* ioctl */
-#warning SEND BREAK NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
-        return GP_ERROR_IO_SERIAL_BREAK;
+#  warning SEND BREAK NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
+	return GP_ERROR_IO_SERIAL_BREAK;
 #endif
         return GP_OK;
+}
+
+GPPortOperations *
+gp_port_library_operations ()
+{
+	GPPortOperations *ops;
+
+        ops = malloc (sizeof (GPPortOperations));
+	if (!ops)
+		return (NULL);
+        memset (ops, 0, sizeof (GPPortOperations)); 
+
+        ops->init   = gp_port_serial_init;
+        ops->exit   = gp_port_serial_exit;
+        ops->open   = gp_port_serial_open;
+        ops->close  = gp_port_serial_close;
+        ops->read   = gp_port_serial_read;
+        ops->write  = gp_port_serial_write;
+        ops->update = gp_port_serial_update;
+        ops->get_pin = gp_port_serial_get_pin;
+        ops->set_pin = gp_port_serial_set_pin;
+        ops->send_break = gp_port_serial_send_break;
+        ops->flush  = gp_port_serial_flush;
+
+        return (ops);
 }

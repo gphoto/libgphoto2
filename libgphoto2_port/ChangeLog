@@ -1,3 +1,11 @@
+2001-10-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Add some more warning flags
+	* include/gphoto2-port.h: More cleanup in preparation of documentation
+	* libgphoto2_port/gp_port.c: Move internals into port->pc
+	* serial/unix.c: Move internals into port->pl. If speed in settings
+	  is 0, set to 9600 (default).
+
 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2_port/gphoto2-port-log.[c,h]: Added GP_LOG_DATA

@@ -1,33 +1,33 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
-/* gpio.c - Core IO library functions
-
-   Modifications:
-   Copyright (C) 1999 Scott Fritzinger <scottf@unr.edu>
-
-   The GPIO Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
-
-   The GPIO Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Library General Public
-   License along with the GPIO Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.
+/*
+ * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * Copyright (C) 1999 Scott Fritzinger <scottf@unr.edu>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  */
+
+#include <config.h>
+#include "gphoto2-port.h"
 
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include <gphoto2-port.h>
-#include <gphoto2-port-result.h>
-
+#include "gphoto2-port-result.h"
 #include "gphoto2-port-core.h"
 #include "gphoto2-port-library.h"
 #include "gphoto2-port-log.h"
@@ -50,39 +50,46 @@
 #define CHECK_NULL(m) {if (!(m)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_SUPP(s,o) {if (!(o)) {gp_log (GP_LOG_ERROR, "gphoto2-port", ("The operation '%s' is not supported by this device"), (s)); return (GP_ERROR_NOT_SUPPORTED);}}
 
-static int
-gp_port_library_load (GPPort *device, gp_port_type type) {
+struct _GPPortPrivateCore {
+	void *lh; /* Library handle */
+};
 
+static int
+gp_port_library_load (GPPort *device, GPPortType type)
+{
 	const char *library;
         GPPortLibraryOperations ops_func;
 
 	CHECK_RESULT (gp_port_core_get_library (type, &library));
 
 	/* Open the correct library */
-	device->library_handle = GP_SYSTEM_DLOPEN (library);
-	if (!device->library_handle) {
-		gp_log (GP_LOG_ERROR, "gphoto2-port", "bad handle: %s %s ",
-			library, GP_SYSTEM_DLERROR());
+	device->pc->lh = GP_SYSTEM_DLOPEN (library);
+	if (!device->pc->lh) {
+		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not load "
+			"'%s' ('%s')", library, GP_SYSTEM_DLERROR ());
 		return (GP_ERROR_LIBRARY);
 	}
 
 	/* Load the operations */
-	ops_func = GP_SYSTEM_DLSYM(device->library_handle, "gp_port_library_operations");
+	ops_func = GP_SYSTEM_DLSYM (device->pc->lh,
+				    "gp_port_library_operations");
 	if (!ops_func) {
-		gp_log (GP_LOG_ERROR, "gphoto2-port", "can't load ops: %s %s ",
-			library, GP_SYSTEM_DLERROR());
-		GP_SYSTEM_DLCLOSE(device->library_handle);
+		gp_log (GP_LOG_ERROR, "gphoto2-port", "Could not find "
+			"'gp_port_library_operations' in '%s' ('%s')",
+			library, GP_SYSTEM_DLERROR ());
+		GP_SYSTEM_DLCLOSE (device->pc->lh);
+		device->pc->lh = NULL;
 		return (GP_ERROR_LIBRARY);
 	}
-	device->ops = ops_func();
+	device->ops = ops_func ();
 	
 	return (GP_OK);
 }
 
 int
-gp_port_new (GPPort **dev, gp_port_type type)
+gp_port_new (GPPort **dev, GPPortType type)
 {
-        gp_port_settings settings;
+	GPPortSettings settings;
         char buf[1024];
 	int result;
 
@@ -127,20 +134,27 @@ gp_port_new (GPPort **dev, gp_port_type type)
 		return GP_ERROR_UNKNOWN_PORT;
         }
 
-        *dev = malloc (sizeof (gp_port));
+        *dev = malloc (sizeof (GPPort));
         if (!(*dev))
 		return (GP_ERROR_NO_MEMORY);
-        memset (*dev, 0, sizeof (gp_port));
+        memset (*dev, 0, sizeof (GPPort));
+
+	(*dev)->pc = malloc (sizeof (GPPortPrivateCore));
+	if (!(*dev)->pc) {
+		gp_port_free (*dev);
+		return (GP_ERROR_NO_MEMORY);
+	}
+	memset ((*dev)->pc, 0, sizeof (GPPortPrivateCore));
 
 	result = gp_port_library_load (*dev, type);
 	if (result < 0) {
-		free(*dev);
+		gp_port_free (*dev);
 		return (result);
         }
 
         (*dev)->type = type;
         (*dev)->device_fd = 0;
-        (*dev)->ops->init(*dev);
+        (*dev)->ops->init (*dev);
 
         switch ((*dev)->type) {
         case GP_PORT_SERIAL:
@@ -227,9 +241,13 @@ gp_port_free (GPPort *dev)
 		dev->ops = NULL;
 	}
 
-	if (dev->library_handle) {
-	        GP_SYSTEM_DLCLOSE (dev->library_handle);
-		dev->library_handle = NULL;
+	if (dev->pc) {
+		if (dev->pc->lh) {
+		        GP_SYSTEM_DLCLOSE (dev->pc->lh);
+			dev->pc->lh = NULL;
+		}
+		free (dev->pc);
+		dev->pc = NULL;
 	}
 
         free (dev);

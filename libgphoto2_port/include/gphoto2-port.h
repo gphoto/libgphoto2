@@ -61,49 +61,47 @@ enum {
         GP_PORT_USB_ENDPOINT_OUT
 };
 
-struct gp_port;
-typedef struct gp_port gp_port;
-struct gp_port_operations {
-        int (*init)     (gp_port *);
-        int (*exit)     (gp_port *);
-        int (*open)     (gp_port *);
-        int (*close)    (gp_port *);
-        int (*read)     (gp_port *, char *, int);
-        int (*write)    (gp_port *, char *, int);
-        int (*update)   (gp_port *);
+typedef struct _GPPort           GPPort;
+typedef struct _GPPortOperations GPPortOperations;
+typedef struct _GPPortPrivateLibrary GPPortPrivateLibrary;
+typedef struct _GPPortPrivateCore    GPPortPrivateCore;
+
+struct _GPPortOperations {
+        int (*init)     (GPPort *);
+        int (*exit)     (GPPort *);
+        int (*open)     (GPPort *);
+        int (*close)    (GPPort *);
+        int (*read)     (GPPort *, char *, int);
+        int (*write)    (GPPort *, char *, int);
+        int (*update)   (GPPort *);
 
         /* Pointers to devices. Please note these are stubbed so there is
          no need to #ifdef GP_PORT_* anymore. */
 
         /* for serial devices */
-        int (*get_pin)   (gp_port *, int, int*);
-        int (*set_pin)   (gp_port *, int, int);
-        int (*send_break)(gp_port *, int);
-        int (*flush)     (gp_port *, int);
+        int (*get_pin)   (GPPort *, int, int*);
+        int (*set_pin)   (GPPort *, int, int);
+        int (*send_break)(GPPort *, int);
+        int (*flush)     (GPPort *, int);
 
         /* for USB devices */
-        int (*find_device)(gp_port * dev, int idvendor, int idproduct);
-        int (*clear_halt) (gp_port * dev, int ep);
-        int (*msg_write)  (gp_port * dev, int request, int value, int index,
+        int (*find_device)(GPPort * dev, int idvendor, int idproduct);
+        int (*clear_halt) (GPPort * dev, int ep);
+        int (*msg_write)  (GPPort * dev, int request, int value, int index,
 				char *bytes, int size);
-        int (*msg_read)   (gp_port * dev, int request, int value, int index,
+        int (*msg_read)   (GPPort * dev, int request, int value, int index,
 				char *bytes, int size);
 
 };
 
-typedef struct gp_port_operations gp_port_operations;
-typedef gp_port_operations GPPortOperations;
+struct _GPPort {
 
-/* Specify the device information */
-struct gp_port {
-        /* This struct is available via wrappers. don't modify
-           directly. */
-        gp_port_type type;
+	GPPortType type;
 
-        gp_port_operations *ops;
+        GPPortOperations *ops;
 
-        gp_port_settings settings;
-        gp_port_settings settings_pending;
+        GPPortSettings settings;
+        GPPortSettings settings_pending;
 
         int device_fd;
 #ifdef WIN32
@@ -114,55 +112,58 @@ struct gp_port {
 	void *device;
         int timeout; /* in milli seconds */
 
-        void *library_handle;
+	GPPortPrivateLibrary *pl;
+	GPPortPrivateCore    *pc;
 };
 
-typedef gp_port GPPort;
+/* DEPRECATED */
+typedef GPPort gp_port;
+typedef GPPortOperations gp_port_operations;
 
 /* Core functions
    -------------------------------------------------------------- */
 
-        int gp_port_new         (gp_port **dev, gp_port_type type);
+        int gp_port_new         (GPPort **dev, gp_port_type type);
                 /* Create a new device of type "type"
                         return values:
                                   successful: valid gp_port struct
                                 unsuccessful: < 0
                 */
 
-        int gp_port_free        (gp_port *dev);
+        int gp_port_free        (GPPort *dev);
                 /* Frees an IO device from memory
                         return values:
                                   successful: GP_OK
                                 unsuccessful: < 0
                 */
 
-        int gp_port_open        (gp_port *dev);
+        int gp_port_open        (GPPort *dev);
                 /* Open the device for reading and writing
                         return values:
                                   successful: GP_OK
                                 unsuccessful: GP_ERROR
                 */
 
-        int gp_port_close       (gp_port *dev);
+        int gp_port_close       (GPPort *dev);
                 /* Close the device to prevent reading and writing
                         return values:
                                   successful: GP_OK
                                 unsuccessful: GP_ERROR
                 */
 
-       int gp_port_timeout_set  (gp_port *dev, int millisec_timeout);
+       int gp_port_timeout_set  (GPPort *dev, int millisec_timeout);
                 /* Sets the read/write timeout
                                   successful: GP_OK
                                 unsuccessful: GP_ERROR
                 */
 
-       int gp_port_timeout_get  (gp_port *dev, int *millisec_timeout);
+       int gp_port_timeout_get  (GPPort *dev, int *millisec_timeout);
                 /* Sets the read/write timeout
                                   successful: GP_OK
                                 unsuccessful: GP_ERROR
                 */
 
-       int gp_port_settings_set (gp_port *dev,
+       int gp_port_settings_set (GPPort *dev,
                                  gp_port_settings settings);
                 /* Sets the settings
                                   successful: GP_OK
@@ -170,21 +171,21 @@ typedef gp_port GPPort;
                 */
 
 
-       int gp_port_settings_get (gp_port *dev,
+       int gp_port_settings_get (GPPort *dev,
                                  gp_port_settings *settings);
                 /* Returns settings in "settings"
                                   successful: GP_OK
                                 unsuccessful: GP_ERROR
                 */
 
-       int gp_port_write                (gp_port *dev, char *bytes, int size);
+       int gp_port_write                (GPPort *dev, char *bytes, int size);
                 /* Writes "bytes" of size "size" to the device
                         return values:
                                   successful: GP_OK
                                 unsuccessful: GP_ERROR
                 */
 
-       int gp_port_read         (gp_port *dev, char *bytes, int size);
+       int gp_port_read         (GPPort *dev, char *bytes, int size);
                 /* Reads "size" bytes in to "bytes" from the device
                         return values:
                                   successful: number of bytes read
@@ -195,7 +196,7 @@ typedef gp_port GPPort;
 /* Serial and Parallel specific functions
    -------------------------------------------------------------- */
 
-        int gp_port_pin_get   (gp_port *dev, int pin, int *level);
+        int gp_port_pin_get   (GPPort *dev, int pin, int *level);
                 /* Give the status of pin from dev
                         pin values:
                                  see PIN_ constants in the various .h files
@@ -204,7 +205,7 @@ typedef gp_port GPPort;
                                 unsuccessful: GP_ERROR
                 */
 
-        int gp_port_pin_set   (gp_port *dev, int pin, int level);
+        int gp_port_pin_set   (GPPort *dev, int pin, int level);
                 /* set the status of pin from dev to level
                         pin values:
                                  see PIN_ constants in the various .h files
@@ -216,10 +217,10 @@ typedef gp_port GPPort;
                                 unsuccessful: GP_ERROR
                 */
 
-        int gp_port_send_break (gp_port *dev, int duration);
+        int gp_port_send_break (GPPort *dev, int duration);
                 /* send a break (duration is in milli seconds) */
 
-        int gp_port_flush (gp_port *dev, int direction);
+        int gp_port_flush (GPPort *dev, int direction);
                 /* Flush either an input or output line */
                 /* Input line is 0, Output is 1         */
                 /* (think STDIO/STDOUT file descriptors */
@@ -228,11 +229,11 @@ typedef gp_port GPPort;
    -------------------------------------------------------------- */
 
         /* must port libusb to other platforms for this to drop-in */
-        int gp_port_usb_find_device (gp_port * dev, int idvendor, int idproduct);
-        int gp_port_usb_clear_halt  (gp_port * dev, int ep);
-        int gp_port_usb_msg_write   (gp_port * dev, int request, int value,
+        int gp_port_usb_find_device (GPPort * dev, int idvendor, int idproduct);
+        int gp_port_usb_clear_halt  (GPPort * dev, int ep);
+        int gp_port_usb_msg_write   (GPPort * dev, int request, int value,
 		int index, char *bytes, int size);
-        int gp_port_usb_msg_read    (gp_port * dev, int request, int value,
+        int gp_port_usb_msg_read    (GPPort * dev, int request, int value,
 		int index, char *bytes, int size);
 
 
