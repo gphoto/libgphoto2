@@ -128,7 +128,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = data;
         int image_no, result;
 	int	i, ret, numpics, bytes;
-	unsigned char	*xbuf, buf[8], wbuf[0x40];
+	unsigned char	*xbuf, buf[8];
 
 	struct xaddr {
 		unsigned int type, start,len;
@@ -152,12 +152,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(xbuf);
 		return ret;
 	}
-	/*ret = gp_port_write (camera->port, wbuf, sizeof(wbuf));
-	if (ret < GP_OK) {
-		free(addrs);
-		free(xbuf);
-		return ret;
-	}*/
 	ret = gp_port_read (camera->port, xbuf, bytes);
 	if (ret < GP_OK) {
 		free(addrs);
@@ -264,7 +258,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		}
 		for (i = 0; i < dinfo.output_height ; i++ ) {
 			int j;
-			jpeg_read_scanlines(&dinfo,(JSAMPARRAY)&rawline,1);
+			jpeg_read_scanlines(&dinfo,(JSAMPARRAY)(char*)&rawline,1);
 
 			memcpy(convline+((dinfo.output_width/16-1)*16+8)*3, rawline+((dinfo.output_width/16-1)*16+8)*3, 8*3);
 			memcpy(convline+pitch/2, rawline, 8*3);
