@@ -24,7 +24,7 @@
 #include <string.h>
 
 #include <gphoto2-library.h>
-#include <gphoto2-port.h>
+#include <gphoto2-port-log.h>
 #include <bayer.h>
 
 #include "jd350e.h"
@@ -93,7 +93,7 @@ pdc640_read_packet (GPPort *port, char *buf, int buf_size)
 
 	/* Read the checksum */
 	CHECK_RESULT (gp_port_read (port, &c, 1));
-	GP_LOG ("Checksum: %d calculated, %d received", checksum, c);
+	GP_DEBUG ("Checksum: %d calculated, %d received", checksum, c);
 	if (checksum != c)
 		return (GP_ERROR_CORRUPTED_DATA);
 
@@ -373,7 +373,7 @@ pdc640_deltadecode (int width, int height, char **rawdata, int *rawsize)
 	int size;
 	int e, d, o, val;
 
-	GP_LOG ("pdc640_deltacode ()");
+	GP_DEBUG ("pdc640_deltacode ()");
 
 	/* Create a buffer to store RGB data in */
 	size = width * height;
@@ -460,7 +460,7 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 
 	/* Evaluate parameters */
 	if (thumbnail) {
-		GP_LOG ("Size %d, width %d, height %d",
+		GP_DEBUG ("Size %d, width %d, height %d",
 			size_thumb, width_thumb, height_thumb);
 
 		*size = size_thumb;
@@ -468,7 +468,7 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 		height = height_thumb;
 		cmd = 0x03;
 	} else {
-		GP_LOG ("Size %d, width %d, height %d",
+		GP_DEBUG ("Size %d, width %d, height %d",
 			size_pic, width_pic, height_pic);
 
 		*size = size_pic;
@@ -514,7 +514,7 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 	if (justraw)
 		return(GP_OK);
 
-	GP_LOG ("Bayer decode...");
+	GP_DEBUG ("Bayer decode...");
 	sprintf (ppmheader, "P6\n"
 			    "# CREATOR: gphoto2, pdc640/jd350e library\n"
 			    "%d %d\n"
@@ -814,7 +814,7 @@ camera_init (Camera *camera)
 	camera->pl = 0;
 	for( i=0; models[i].model; i++ ){
 		if (!strcmp(models[i].model, abilities.model)) {
-			GP_LOG ("Model: %s", abilities.model);
+			GP_DEBUG ("Model: %s", abilities.model);
 			camera->pl = malloc( sizeof(struct _CameraPrivateLibrary) );
 			if( camera->pl ){
 				*(camera->pl) = models[i].pl;
