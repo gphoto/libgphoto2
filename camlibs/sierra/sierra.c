@@ -116,7 +116,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a->speed[3] = 57600;
 		a->speed[4] = 115200;
 		a->speed[5] = 0;
-		a->capture  = GP_CAPTURE_IMAGE;
+		a->capture  = GP_CAPTURE_IMAGE | GP_CAPTURE_IMAGE;
 		a->config   = 0;
 		a->file_delete  = 1;
 		a->file_preview = 1;
@@ -591,7 +591,7 @@ if (camera_start(camera)==GP_ERROR)
 return (GP_ERROR);
 
 	sierra_debug_print(fd, "Capturing image");
-	retval = sierra_capture(camera, file);
+	retval = sierra_capture(camera, file, info);
 
 if (camera_stop(camera)==GP_ERROR)
 return (GP_ERROR);

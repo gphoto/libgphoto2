@@ -776,7 +776,7 @@ int sierra_file_count (Camera *camera) {
 } 
 
 
-int sierra_capture (Camera *camera, CameraFile *file) {
+int sierra_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	int r, done, retval, picnum;
@@ -785,19 +785,30 @@ int sierra_capture (Camera *camera, CameraFile *file) {
 	struct tm *t;
 	time_t tt;
 
-	/* Take a picture */
-	sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
-	packet[4] = 0x02;
-	packet[5] = 0x02;
-	packet[6] = 0x00;
+	if (info == NULL) return (GP_ERROR_BAD_PARAMETERS);
 
-#if 0
-	/* Take a quick preview */
-	sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
-	packet[4] = 0x02;
-	packet[5] = 0x05;
-	packet[6] = 0x00;
-#endif
+	switch (info->type) {
+	case GP_CAPTURE_IMAGE:
+	
+		/* Take a picture */
+		sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
+		packet[4] = 0x02;
+		packet[5] = 0x02;
+		packet[6] = 0x00;
+		break;
+		
+	case GP_CAPTURE_PREVIEW:
+
+		/* Take a quick preview */
+		sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
+		packet[4] = 0x02;
+		packet[5] = 0x05;
+		packet[6] = 0x00;
+		break;
+		
+	default:
+		return (GP_ERROR_BAD_PARAMETERS);
+	}
 
 	r=0; done=0;
 	while ((!done)&&(r++<RETRIES)) {
@@ -838,22 +849,32 @@ int sierra_capture (Camera *camera, CameraFile *file) {
 	if ((r >= RETRIES) || (c!=ENQ))
 		return (GP_ERROR);
 
-	/* After picture is taken, register 4 is set to current picture */
-	if (sierra_get_int_register(camera, 4, &picnum)==GP_ERROR)
-		return (GP_ERROR);
+	switch (info->type) {
+	case GP_CAPTURE_IMAGE:
 
-	/* Retrieve the just-taken picture */
-	if (sierra_get_string_register(camera, 14, picnum, file, NULL, NULL)==GP_ERROR)
-                return (GP_ERROR);
+		/* After picture is taken, register 4 is set to current picture */
+		if (sierra_get_int_register(camera, 4, &picnum)==GP_ERROR)
+			return (GP_ERROR);
 
-	/* Delete the just-taken picture */
-	if (sierra_delete(camera, picnum)==GP_ERROR)
-		return (GP_ERROR);
-#if 0
-	/* Retrieve the quick preview */
-	if (sierra_get_string_register(camera, 14, 0, file, NULL, NULL)==GP_ERROR)
-                return (GP_ERROR);
-#endif
+		/* Retrieve the just-taken picture */
+		if (sierra_get_string_register(camera, 14, picnum, file, NULL, NULL)==GP_ERROR)
+	                return (GP_ERROR);
+
+		/* Delete the just-taken picture */
+		if (sierra_delete(camera, picnum)==GP_ERROR)
+			return (GP_ERROR);
+		break;
+	
+	case GP_CAPTURE_PREVIEW:
+	
+		/* Retrieve the quick preview */
+		if (sierra_get_string_register(camera, 14, 0, file, NULL, NULL)==GP_ERROR)
+	                return (GP_ERROR);
+		break;
+		
+	default:
+		return (GP_ERROR_BAD_PARAMETERS);
+	}
 
 	tt = time(&tt);
 	t = gmtime(&tt);
