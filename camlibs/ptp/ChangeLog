@@ -1,5 +1,7 @@
+2002-11-26 Mariusz Woloszyn
+	* library.c: one more camera added (thx to Tim Looney)
 2002-11-22 Mariusz Woloszyn
-	* library.c: added several Kodak cammeras.
+	* library.c: added several Kodak cammera (thx to Tim Looney)
 	  Changed namig convention od Kodak devices. Dash removed (less
 	  readable, but conforms to original Kodak naming scheme).
 
