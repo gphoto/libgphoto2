@@ -257,7 +257,7 @@ ptp_unpack_SI (PTPParams *params, char* data, PTPStorageInfo *si)
 #define PTP_oi_filenamelen		52
 #define PTP_oi_Filename			53
 
-static inline int
+static inline uint32_t
 ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, char** oidataptr)
 {
 	char* oidata;
@@ -404,6 +404,48 @@ ptp_unpack_OI (PTPParams *params, char* data, PTPObjectInfo *oi)
 	free(capture_date);
 }
 
+// Custom Type Value Assignement (without Length) macro frequently used below
+#define CTVAL(type,func,target)  {					\
+		target = malloc(sizeof(type));				\
+		*(type *)target =					\
+			func(data);\
+}
+
+static inline void
+ptp_unpack_DPV (PTPParams *params, char* data, void* value, uint16_t datatype)
+{
+
+	switch (datatype) {
+		case PTP_DTC_INT8:
+			CTVAL(int8_t,dtoh8a,value);
+			break;
+		case PTP_DTC_UINT8:
+			CTVAL(uint8_t,dtoh8a,value);
+			break;
+		case PTP_DTC_INT16:
+			CTVAL(int16_t,dtoh16a,value);
+			break;
+		case PTP_DTC_UINT16:
+			CTVAL(uint16_t,dtoh16a,value);
+			break;
+		case PTP_DTC_INT32:
+			CTVAL(int32_t,dtoh32a,value);
+			break;
+		case PTP_DTC_UINT32:
+			CTVAL(uint32_t,dtoh32a,value);
+			break;
+		/* XXX: other int types are unimplemented */
+		/* XXX: int arrays are unimplemented also */
+		case PTP_DTC_STR:
+		{
+			uint8_t len;
+			(char *)value = ptp_unpack_string (params,data,0,&len);
+			break;
+		}
+	}
+}
+
+
 // Device Property pack/unpack
 
 #define PTP_dpd_DevicePropertyCode	0
@@ -523,6 +565,7 @@ ptp_unpack_DPD (PTPParams *params, char* data, PTPDevicePropDesc *dpd)
 			break;
 		/* XXX: other int types are unimplemented */
 		/* XXX: int arrays are unimplemented also */
+		/* XXX: does it make any sense: "a range of strings"? */
 		}
 		break;
 		case PTP_DPFF_Enumeration:
@@ -549,8 +592,71 @@ ptp_unpack_DPD (PTPParams *params, char* data, PTPDevicePropDesc *dpd)
 			case PTP_DTC_UINT32:
 			MCTVA(uint32_t,dtoh16a,dpd->FORM.Enum.SupportedValue,N);
 			break;
+			case PTP_DTC_STR:
+			{
+			int i;
+			for(i=0;i<N;i++)
+			{
+				(char *)dpd->FORM.Enum.SupportedValue[i]=
+					ptp_unpack_string
+					(params,data,PTP_dpd_FactoryDefaultValue
+					+totallen,&len);
+				totallen+=len*2+1;
+			}
+			}
+			break;
 		}
 	}
 }
 
+static inline uint32_t
+ptp_pack_DPV (PTPParams *params, void* value, char** dpvptr, uint16_t datatype)
+{
+	char* dpv;
+	uint32_t size=0;
 
+	switch (datatype) {
+		case PTP_DTC_INT8:
+			size=sizeof(int8_t);
+			dpv=malloc(size);
+			htod8a(dpv,*(int8_t*)value);
+			break;
+		case PTP_DTC_UINT8:
+			size=sizeof(uint8_t);
+			dpv=malloc(size);
+			htod8a(dpv,*(uint8_t*)value);
+			break;
+		case PTP_DTC_INT16:
+			size=sizeof(int16_t);
+			dpv=malloc(size);
+			htod16a(dpv,*(int16_t*)value);
+			break;
+		case PTP_DTC_UINT16:
+			size=sizeof(uint16_t);
+			dpv=malloc(size);
+			htod16a(dpv,*(uint16_t*)value);
+			break;
+		case PTP_DTC_INT32:
+			size=sizeof(int32_t);
+			dpv=malloc(size);
+			htod32a(dpv,*(int32_t*)value);
+			break;
+		case PTP_DTC_UINT32:
+			size=sizeof(uint32_t);
+			dpv=malloc(size);
+			htod32a(dpv,*(uint32_t*)value);
+			break;
+		/* XXX: other int types are unimplemented */
+		/* XXX: int arrays are unimplemented also */
+		case PTP_DTC_STR:
+		{
+		uint8_t len;
+			size=strlen((char*)value)*2+3;
+			dpv=malloc(size);
+			memset(dpv,0,size);
+			ptp_pack_string(params, (char *)value, dpv, 0, &len);
+		}
+		break;
+	}
+	return size;
+}
