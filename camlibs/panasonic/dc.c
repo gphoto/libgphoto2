@@ -247,7 +247,7 @@ void dsc_print_status(Camera *camera, char *format, ...) {
 	
 	if (camera->debug)
 		dsc_debugprint(__FILE__, str);
-	gp_camera_status(camera, str);
+	gp_frontend_status(camera, str);
 }
 
 void dsc_print_message(Camera *camera, char *format, ...) {
@@ -261,7 +261,7 @@ void dsc_print_message(Camera *camera, char *format, ...) {
 	
 	if (camera->debug)
 		dsc_debugprint(__FILE__, str);
-	gp_camera_message(camera, str);
+	gp_frontend_message(camera, str);
 }
 
 /* End of dc.c */

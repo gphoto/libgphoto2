@@ -364,8 +364,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_put 		= camera_file_put;
 	camera->functions->file_delete 		= camera_file_delete;
-	camera->functions->config_get   	= camera_config_get;
-	camera->functions->config_set   	= camera_config_set;
+	camera->functions->config 	  	= camera_config;
 	camera->functions->capture 		= camera_capture;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
@@ -391,7 +390,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	dsc->dev = gpio_new(GPIO_DEVICE_SERIAL);
 	
 	gpio_set_timeout(dsc->dev, 5000);
-	strcpy(dsc->settings.serial.port, init->port_settings.path);
+	strcpy(dsc->settings.serial.port, init->port.path);
 	dsc->settings.serial.speed 	= 9600; /* hand shake speed */
 	dsc->settings.serial.bits	= 8;
 	dsc->settings.serial.parity	= 0;
@@ -417,7 +416,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 		return GP_ERROR;
 	}
 	
-	return dsc1_connect(dsc, init->port_settings.speed); 
+	return dsc1_connect(dsc, init->port.speed); 
 		/* connect with selected speed */
 }
 
@@ -479,14 +478,14 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 	strcpy(file->name, filename);
 	strcpy(file->type, "image/jpg");
 
-	gp_camera_progress(camera, file, 0.00);
+	gp_frontend_progress(camera, file, 0.00);
 
 	for (i = 0, s = 0; s < size; i++) {
 		if ((rsize = dsc1_readimageblock(dsc, i, NULL)) == GP_ERROR) 
 			return GP_ERROR;
 		s += rsize;
 		gp_file_append(file, dsc->buf, dsc->size);
-		gp_camera_progress(camera, file, (float)(s)/(float)size*100.0);
+		gp_frontend_progress(camera, file, (float)(s)/(float)size*100.0);
 	}
 	
 	return (GP_OK);
@@ -519,7 +518,7 @@ int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 	if ((dsc1_setimageres(dsc, file->size)) != GP_OK)
 		return GP_ERROR;
 	
-	gp_camera_progress(camera, file, 0.00);
+	gp_frontend_progress(camera, file, 0.00);
 	
 	blocks = (file->size - 1)/DSC_BLOCKSIZE + 1;
 			
@@ -530,7 +529,7 @@ int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 		if (dsc1_writeimageblock(dsc, i, &file->data[i*DSC_BLOCKSIZE], blocksize) != GP_OK) {
 			return GP_ERROR;
 		}
-		gp_camera_progress(camera, file, (float)(i+1)/(float)blocks*100.0);
+		gp_frontend_progress(camera, file, (float)(i+1)/(float)blocks*100.0);
 	}
 
 	return GP_OK;
@@ -550,14 +549,9 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 	return dsc1_delete(dsc, index + 1);
 }
 
-int camera_config_get (Camera *camera, CameraWidget *window) {
+int camera_config (Camera *camera) {
 
         return GP_ERROR;
-}
-
-int camera_config_set (Camera *camera, CameraSetting *setting, int count) {
-
-	return (GP_ERROR);
 }
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {

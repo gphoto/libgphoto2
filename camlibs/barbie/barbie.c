@@ -68,8 +68,7 @@ int camera_init(Camera *camera, CameraInit *init) {
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_put 	= NULL;
 	camera->functions->file_delete 	= camera_file_delete;
-	camera->functions->config_get   = camera_config_get;
-	camera->functions->config_set   = camera_config_set;
+	camera->functions->config       = camera_config;
 	camera->functions->capture 	= NULL;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
@@ -85,7 +84,7 @@ int camera_init(Camera *camera, CameraInit *init) {
 
 	b->dev = gpio_new(GPIO_DEVICE_SERIAL);
 	gpio_set_timeout(b->dev, 5000);
-	strcpy(settings.serial.port, init->port_settings.path);
+	strcpy(settings.serial.port, init->port.path);
 
 	settings.serial.speed	= 57600;
 	settings.serial.bits	= 8;
@@ -143,7 +142,7 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 	if (b->debug)
 		printf("barbie: Getting a picture\n");
 
-	gp_camera_progress(camera, NULL, 0.00);
+	gp_frontend_progress(camera, NULL, 0.00);
 	
 	strcpy(file->name, filename);
 	strcpy(file->type, "image/ppm");
@@ -167,7 +166,7 @@ int camera_file_get_preview (Camera *camera, CameraFile *file, char *folder, cha
 	if (b->debug)
 		printf("barbie: Getting a preview\n");
 
-	gp_camera_progress(camera, NULL, 0.00);
+	gp_frontend_progress(camera, NULL, 0.00);
 
 	strcpy(file->name, filename);
 	strcpy(file->type, "image/ppm");
@@ -194,14 +193,9 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 	return GP_ERROR;
 }
 
-int camera_config_get (Camera *camera, CameraWidget *window) {
+int camera_config (Camera *camera) {
 
 	return GP_ERROR;
-}
-
-int camera_config_set (Camera *camera, CameraSetting *setting, int count) {
-
-	return GP_OK;
 }
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {

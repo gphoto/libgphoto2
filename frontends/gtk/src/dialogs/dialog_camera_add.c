@@ -53,7 +53,7 @@ gboolean on_combo_entry_model_focus_out_event (
                         lookup_widget (widget, "combo_model"))->entry));
 	if (strcmp ("", model) == 0) return (FALSE);
         if (gp_camera_abilities_by_name (model, &abilities) == GP_ERROR) {
-		gp_camera_message (NULL, "Could not get camera abilities!");
+		gp_frontend_message (NULL, "Could not get camera abilities!");
 		gtk_widget_destroy (
 			lookup_widget (widget, "window_camera_add"));
 	}
@@ -230,13 +230,13 @@ void dialog_camera_add (void)
 	
 	/* Fill model combo box */
 	if ((number_of_models = gp_camera_count ()) == GP_ERROR) {
-		gp_camera_message (NULL, _("Could not count cameras!"));
+		gp_frontend_message (NULL, _("Could not count cameras!"));
 		gtk_widget_destroy (window_camera_add);
 	}
 	model_list = g_list_alloc ();
         for (i = 0; i < number_of_models; i++) {
         	if (gp_camera_name (i, buffer) == GP_ERROR) {
-			gp_camera_message (
+			gp_frontend_message (
 				NULL, 
 				_("Could not get camera name!"));
 			gtk_widget_destroy (window_camera_add);
@@ -249,13 +249,13 @@ void dialog_camera_add (void)
 
 	/* Fill port box */
 	if ((number_of_ports = gp_port_count ()) == GP_ERROR) {
-		gp_camera_message (NULL, _("Could not count ports!"));
+		gp_frontend_message (NULL, _("Could not count ports!"));
 		gtk_widget_destroy (window_camera_add);
 	}
 	port_list = g_list_alloc ();
 	for (i = 0; i < number_of_ports; i++) {
 		if (gp_port_info (i, &info) == GP_ERROR) {
-			gp_camera_message (
+			gp_frontend_message (
 				NULL, 
 				_("Could not get port info!"));
 			gtk_widget_destroy (window_camera_add);

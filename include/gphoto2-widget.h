@@ -32,3 +32,5 @@ int		gp_widget_choice_count (CameraWidget *widget);
 char*		gp_widget_choice (CameraWidget *widget, int choice_number);
 
 int		gp_widget_dump (CameraWidget *widget);
+
+int		gp_widget_changed (CameraWidget *widget);

@@ -64,8 +64,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_put 	= camera_file_put;
 	camera->functions->file_delete 	= camera_file_delete;
-	camera->functions->config_get   = camera_config_get;
-	camera->functions->config_set   = camera_config_set;
+	camera->functions->config       = camera_config;
 	camera->functions->capture 	= camera_capture;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
@@ -77,7 +76,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 		return (GP_ERROR);
 	}
 
-	strcpy(settings.serial.port, init->port_settings.path);
+	strcpy(settings.serial.port, init->port.path);
 	settings.serial.speed    = 9600;
 	settings.serial.bits     = 8;
 	settings.serial.parity   = 0;
@@ -103,7 +102,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	/* Wait for it to update */
 	GPIO_SLEEP(1500);
 
-	if (dc120_set_speed(dd, init->port_settings.speed) == GP_ERROR) {
+	if (dc120_set_speed(dd, init->port.speed) == GP_ERROR) {
 		gpio_close(dd->dev);
 		gpio_free(dd->dev);
 		free(dd);
@@ -286,14 +285,7 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 	return (retval);
 }
 
-int camera_config_get (Camera *camera, CameraWidget *window) {
-
-/*	DC120Data *dd = camera->camlib_data; */
-
-	return (GP_ERROR);
-}
-
-int camera_config_set (Camera *camera, CameraSetting *conf, int count) {
+int camera_config_get (Camera *camera) {
 
 /*	DC120Data *dd = camera->camlib_data; */
 

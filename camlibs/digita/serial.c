@@ -180,7 +180,7 @@ struct digita_device *digita_serial_open(Camera *camera, CameraInit *init)
                 return NULL;
 
 
-        strcpy(settings.serial.port,init->port_settings.path);
+        strcpy(settings.serial.port,init->port.path);
 
         //strcpy(settings.serial.port, "/dev/ttyS0");
         settings.serial.speed = 9600;
@@ -205,7 +205,7 @@ struct digita_device *digita_serial_open(Camera *camera, CameraInit *init)
         usleep(50);
 
 
-        dev->gpdev->settings.serial.speed =init->port_settings.speed ;
+        dev->gpdev->settings.serial.speed =init->port.speed ;
         gpio_serial_set_baudrate(dev->gpdev);
 
         usleep(2000);
@@ -227,7 +227,7 @@ struct digita_device *digita_serial_open(Camera *camera, CameraInit *init)
         beacon_ack.cf_reserved = 0;
         beacon_ack.cf_pod_receive_mode = 0;
         beacon_ack.cf_host_receive_mode = 0;
-        beacon_ack.dataspeed = htonl(init->port_settings.speed);
+        beacon_ack.dataspeed = htonl(init->port.speed);
         beacon_ack.deviceframesize = htons(1023);
         beacon_ack.hostframesize = htons(1023);
         beacon_ack.checksum = 0;
@@ -256,4 +256,3 @@ printf("%d\n", ntohl(beacon_comp.dataspeed));
 
         return dev;
 }
-

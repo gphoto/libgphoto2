@@ -72,17 +72,10 @@ int camera_file_delete 		(Camera *camera,
 	/* Deletes a picture from the current folder on the	*/
 	/* camera. 						*/
 
-int camera_config_get		(Camera *camera, 
-				 CameraWidget *window);
+int camera_config		(Camera *camera);
 	/* Builds the configuration window interface using the	*/
 	/* gp_widget_* functions. This is a toolkit independent	*/
 	/* widget set that is very generic and easy to use.	*/
-
-int camera_config_set		(Camera *camera, 
-				 CameraSetting *conf,
-				 int count);
-	/* Sets configuration values in the library. These	*/
-	/* values are obtained from the configuration dialog.	*/
 
 int camera_capture 		(Camera *camera,
 				 CameraFile *file,

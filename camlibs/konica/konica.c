@@ -109,7 +109,7 @@ k_return_status_t return_status_translation (guchar byte1, guchar byte2)
 			"Thank you very much!\n",
 			byte1,
 			byte2);
-		gp_camera_message (NULL, buffer);
+		gp_frontend_message (NULL, buffer);
 		return (K_PROGRAM_ERROR);
 	}
 }

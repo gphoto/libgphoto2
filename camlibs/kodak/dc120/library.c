@@ -128,7 +128,7 @@ read_data_write_again:
 				if ((num_packets == 16)&&(x==16))
 					p[0] = CANCL;
 				/* No break on purpose */
-				gp_camera_progress(NULL, file, (float)(100.0 * (float)((x-1)*block_size)/(float)(*size)));
+				gp_frontend_progress(NULL, file, (float)(100.0 * (float)((x-1)*block_size)/(float)(*size)));
 				break;
 			   default:
 				/* Nada */
@@ -372,7 +372,7 @@ int dc120_wait_for_completion (DC120Data *dd) {
 		   default:
 			done = 1;
 		}
-		gp_camera_progress(NULL, NULL, (float)(100.0*(float)x/25.0));
+		gp_frontend_progress(NULL, NULL, (float)(100.0*(float)x/25.0));
 	}
 
 	if (x==25)
@@ -442,11 +442,11 @@ int dc120_capture (DC120Data *dd, CameraFile *file) {
 	int count;
 
 	/* Take the picture to Flash memory */
-	gp_camera_message (NULL, "Taking picture...");
+	gp_frontend_message (NULL, "Taking picture...");
 	if (dc120_packet_write(dd, cmd_packet, 8, 1) == GP_ERROR)
 		return (GP_ERROR);
 
-	gp_camera_message (NULL, "Waiting for completion...");
+	gp_frontend_message (NULL, "Waiting for completion...");
 	if (dc120_wait_for_completion(dd)==GP_ERROR)
 		return (GP_ERROR);
 

@@ -1018,8 +1018,13 @@ int set_globals () {
 		return (GP_ERROR);
 	}
 
-	if (gp_camera_new_by_name(&glob_camera, glob_model, &s)==GP_ERROR) {
-		cli_error_print("Can not initialize camera \"%s\"",glob_model);
+	if (gp_camera_new_by_name(&glob_camera, glob_model)==GP_ERROR) {
+		cli_error_print("Can not create camera data \"%s\"",glob_model);
+		return (GP_ERROR);
+	}
+
+	if (gp_camera_init(glob_camera, &s)==GP_ERROR) {
+		cli_error_print("Can not initialize the camera \"s\"",glob_model);
 		return (GP_ERROR);
 	}
 
@@ -1284,7 +1289,7 @@ e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n");
         /* Initialize gPhoto core */
         gp_init(glob_debug? GP_DEBUG_HIGH: GP_DEBUG_NONE);
 	gp_frontend_register(gp_interface_status, gp_interface_progress, 
-		gp_interface_message, gp_interface_confirm);
+		gp_interface_message, gp_interface_confirm, NULL);
         if (execute_options(argc, argv) == GP_ERROR) {
 //              if (!glob_quiet)
 //                      usage();

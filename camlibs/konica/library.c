@@ -50,91 +50,91 @@ gboolean error_happened (Camera *camera, k_return_status_t return_status)
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
         switch (return_status) {
 		case K_PROGRAM_ERROR:
-			gp_camera_message (camera, "Program error!");
+			gp_frontend_message (camera, "Program error!");
 			return (TRUE);
                 case K_L_IO_ERROR:
-                        gp_camera_message (camera, "IO error!");
+                        gp_frontend_message (camera, "IO error!");
                         return (TRUE);
                 case K_L_TRANSMISSION_ERROR:
-                        gp_camera_message (camera, "Transmission error!\n");
+                        gp_frontend_message (camera, "Transmission error!\n");
                         return (TRUE);
                 case K_L_SUCCESS:
                         return (FALSE);
                 case K_SUCCESS:
                         return (FALSE);
                 case K_ERROR_FOCUSING_ERROR:
-                        gp_camera_message (camera, "Focussing error!");
+                        gp_frontend_message (camera, "Focussing error!");
                 case K_ERROR_IRIS_ERROR:
-                        gp_camera_message (camera, "Iris error!");
+                        gp_frontend_message (camera, "Iris error!");
                         return (TRUE);
                 case K_ERROR_STROBE_ERROR:
-                        gp_camera_message (camera, "Strobe error!");
+                        gp_frontend_message (camera, "Strobe error!");
                         return (TRUE);
                 case K_ERROR_EEPROM_CHECKSUM_ERROR:
-                        gp_camera_message (camera, "Eeprom checksum error!");
+                        gp_frontend_message (camera, "Eeprom checksum error!");
                         return (TRUE);
                 case K_ERROR_INTERNAL_ERROR1:
-                        gp_camera_message (camera, "Internal error (1)!");
+                        gp_frontend_message (camera, "Internal error (1)!");
                         return (TRUE);
                 case K_ERROR_INTERNAL_ERROR2:
-                        gp_camera_message (camera, "Internal error (2)!");
+                        gp_frontend_message (camera, "Internal error (2)!");
                         return (TRUE);
                 case K_ERROR_NO_CARD_PRESENT:
-                        gp_camera_message (camera, "No card present!");
+                        gp_frontend_message (camera, "No card present!");
                         return (TRUE);
                 case K_ERROR_CARD_NOT_SUPPORTED:
-                        gp_camera_message (camera, "Card not supported!");
+                        gp_frontend_message (camera, "Card not supported!");
                         return (TRUE);
                 case K_ERROR_CARD_REMOVED_DURING_ACCESS:
-                        gp_camera_message (camera, "Card removed during access!");
+                        gp_frontend_message (camera, "Card removed during access!");
                         return (TRUE);
                 case K_ERROR_IMAGE_NUMBER_NOT_VALID:
-                        gp_camera_message (camera, "Image number not valid!");
+                        gp_frontend_message (camera, "Image number not valid!");
                         return (TRUE);
                 case K_ERROR_CARD_CAN_NOT_BE_WRITTEN:
-                        gp_camera_message (camera, "Card can not be written!");
+                        gp_frontend_message (camera, "Card can not be written!");
                         return (TRUE);
                 case K_ERROR_CARD_IS_WRITE_PROTECTED:
-                        gp_camera_message (camera, "Card is write protected!");
+                        gp_frontend_message (camera, "Card is write protected!");
                         return (TRUE);
                 case K_ERROR_NO_SPACE_LEFT_ON_CARD:
-                        gp_camera_message (camera, "ERROR!\n");
+                        gp_frontend_message (camera, "ERROR!\n");
                         return (TRUE);
                 case K_ERROR_NO_PICTURE_ERASED_AS_IMAGE_PROTECTED:
-                        gp_camera_message (camera, "No picture erased as image protected!");
+                        gp_frontend_message (camera, "No picture erased as image protected!");
                         return (TRUE);
                 case K_ERROR_LIGHT_TOO_DARK:
-                        gp_camera_message (camera, "Light too dark!");
+                        gp_frontend_message (camera, "Light too dark!");
                         return (TRUE);
                 case K_ERROR_AUTOFOCUS_ERROR:
-                        gp_camera_message (camera, "Autofocus error!");
+                        gp_frontend_message (camera, "Autofocus error!");
                         return (TRUE);
                 case K_ERROR_SYSTEM_ERROR:
-                        gp_camera_message (camera, "System Error!");
+                        gp_frontend_message (camera, "System Error!");
                         return (TRUE);
                 case K_ERROR_ILLEGAL_PARAMETER:
-                        gp_camera_message (camera, "Illegal parameter!");
+                        gp_frontend_message (camera, "Illegal parameter!");
                         return (TRUE);
                 case K_ERROR_COMMAND_CANNOT_BE_CANCELLED:
-                        gp_camera_message (camera, "Command cannot be cancelled!");
+                        gp_frontend_message (camera, "Command cannot be cancelled!");
                         return (TRUE);
 		case K_ERROR_LOCALIZATION_DATA_EXCESS:
-			gp_camera_message (camera, "Too much localization data!\n");
+			gp_frontend_message (camera, "Too much localization data!\n");
 			return (TRUE);
 		case K_ERROR_LOCALIZATION_DATA_CORRUPT:
-			gp_camera_message (camera, "Localization data corrupt!\n");
+			gp_frontend_message (camera, "Localization data corrupt!\n");
 			return (TRUE);
                 case K_ERROR_UNSUPPORTED_COMMAND:
-                        gp_camera_message (camera, "Unsupported command!");
+                        gp_frontend_message (camera, "Unsupported command!");
                         return (TRUE);
                 case K_ERROR_OTHER_COMMAND_EXECUTING:
-                        gp_camera_message (camera, "Other command executing!");
+                        gp_frontend_message (camera, "Other command executing!");
                         return (TRUE);
                 case K_ERROR_COMMAND_ORDER_ERROR:
-                        gp_camera_message (camera, "Command order error!");
+                        gp_frontend_message (camera, "Command order error!");
                         return (TRUE);
                 case K_ERROR_UNKNOWN_ERROR:
-                        gp_camera_message (camera, "Unknown error!");
+                        gp_frontend_message (camera, "Unknown error!");
                         return (TRUE);
                 default:
                         return (TRUE);
@@ -242,8 +242,7 @@ int camera_init (Camera *camera, CameraInit *init)
 	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_put 		= camera_file_put;
 	camera->functions->file_delete 		= camera_file_delete;
-	camera->functions->config_get   	= camera_config_get;
-	camera->functions->config_set   	= camera_config_set;
+	camera->functions->config 	  	= camera_config;
 	camera->functions->capture 		= camera_capture;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
@@ -251,7 +250,7 @@ int camera_init (Camera *camera, CameraInit *init)
 	/* Store some data we constantly need. */
 	konica_data = g_new (konica_data_t, 1);
 	camera->camlib_data = konica_data;
-	konica_data->port_settings = init->port_settings;
+	konica_data->port_settings = init->port;
 	konica_data->debug_flag = (camera->debug == 1);
 konica_data->debug_flag = TRUE;
 	konica_data->filesystem = gp_filesystem_new ();
@@ -276,7 +275,7 @@ konica_data->debug_flag = TRUE;
 	/*          to the given one.                                         */
 	/* In case we got a speed not 0, let's first 	*/
 	/* test if we do already have the given speed.	*/
-	if (init->port_settings.speed != 0) {
+	if (init->port.speed != 0) {
 		if (k_init (konica_data) == K_L_SUCCESS) {
 			if (konica_data->debug_flag) 
 				printf ("*** Leaving camera_init.\n");
@@ -292,7 +291,7 @@ konica_data->debug_flag = TRUE;
 		konica_data->port_settings.speed = test_bit_rate[i]; 
 		if (k_init (konica_data) == K_L_SUCCESS) break; 
 	}
-	if ((i == 1) && (init->port_settings.speed == 0)) {
+	if ((i == 1) && (init->port.speed == 0)) {
 		/* We have a speed of 0 and are already communicating at the  */
 		/* highest bit rate possible. What else do we want?           */
 		if (konica_data->debug_flag) 
@@ -300,7 +299,7 @@ konica_data->debug_flag = TRUE;
 		return (GP_OK);
 	}
 	if (i == 10) {
-		gp_camera_message (
+		gp_frontend_message (
 			camera, 
 			"Could not communicate with camera!");
 		return (GP_ERROR);
@@ -324,7 +323,7 @@ konica_data->debug_flag = TRUE;
 		&bit_flag_parity_on,
 		&bit_flag_parity_odd,
 		&bit_flag_use_hw_flow_control))) return (GP_ERROR);
-	if (init->port_settings.speed == 0) {
+	if (init->port.speed == 0) {
 		/* We are given 0. Set 	*/
 		/* the highest speed.	*/
 		for (i = 9; i >= 0; i--) if (bit_rate_supported[i]) break;
@@ -371,7 +370,7 @@ konica_data->debug_flag = TRUE;
 			 (speed !=  38400) &&
 			 (speed !=  57600) &&
 			 (speed != 115200))) {
-			gp_camera_message (camera, "Unsupported speed!");
+			gp_frontend_message (camera, "Unsupported speed!");
 			return (GP_ERROR);
 		}
 		/* Now we can set the given speed. */
@@ -725,7 +724,7 @@ int camera_summary (Camera *camera, CameraText *summary)
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) 
 {
-	gp_camera_message (camera, "Not yet implemented...\n");
+	gp_frontend_message (camera, "Not yet implemented...\n");
 	return (GP_ERROR);
 }
 
@@ -750,9 +749,9 @@ int camera_about (Camera *camera, CameraText *about)
 }
 
 
-int camera_config_get (Camera *camera, CameraWidget *window)
+int camera_config (Camera *camera)
 {
-        CameraWidget *widget, *section;
+        CameraWidget *window, *widget, *section;
         guint shutoff_time, self_timer_time, beep, slide_show_interval;
         guint self_test_result;
         k_power_level_t power_level;
@@ -778,6 +777,12 @@ int camera_config_get (Camera *camera, CameraWidget *window)
         guint total_strobes;
 	konica_data_t *konica_data;
 	gchar buffer[1024];
+
+	/************************/
+	/*  Create the window   */
+	/************************/
+
+	window = gp_widget_new (GP_WIDGET_WINDOW, "Konica Configuration");
 
 	g_return_val_if_fail (camera != NULL, GP_ERROR);
 	g_return_val_if_fail (window != NULL, GP_ERROR);
@@ -812,6 +817,7 @@ int camera_config_get (Camera *camera, CameraWidget *window)
                 &self_timer_time,
                 &beep,
                 &slide_show_interval))) return (GP_ERROR);
+
         /************************/
         /* Persistent Settings  */
         /************************/
@@ -954,6 +960,19 @@ int camera_config_get (Camera *camera, CameraWidget *window)
 		gp_widget_value_set (widget, "Normal");
                 break;
         }
+
+        /* Prompt the user with the config window */
+        if (gp_frontend_prompt (camera, window) == GP_PROMPT_CANCEL) {
+                gp_widget_free(window);
+                return GP_OK;
+        }
+ 
+        /* Append config_set code here and adapt using:
+                int gp_widget_child_by_name(CameraWidget *window, char *child_name);
+                int gp_widget_changed(CameraWidget *widget);
+                char gp_widget_value_get(CameraWidget *widget);
+        */
+
         return (GP_OK);
 }
 
@@ -1087,7 +1106,7 @@ gboolean localization_file_read (
 	g_return_val_if_fail (data_size != NULL, FALSE);
 	konica_data = (konica_data_t *) camera->camlib_data;
 	if ((file = fopen (file_name, "r")) == NULL) {
-		gp_camera_message (camera, "Could not open requested localization file!");
+		gp_frontend_message (camera, "Could not open requested localization file!");
 		return (FALSE);
 	}
 	*data_size = 0;
@@ -1132,7 +1151,7 @@ gboolean localization_file_read (
 					"\"%c\" in line %i is not allowed.", 
 					f,
 					(gint) line_number);
-				gp_camera_message (camera, message);
+				gp_frontend_message (camera, message);
 				g_free (message);
 				fclose (file);
 				return (FALSE);
@@ -1140,7 +1159,7 @@ gboolean localization_file_read (
 			c[j] = f;
 			if (j == 1) {
 				if (sscanf (&c[0], "%X", &d) != 1) {
-					gp_camera_message (
+					gp_frontend_message (
 						camera,
 						"There seems to be an error in"
 						" the localization file.");
@@ -1150,7 +1169,7 @@ gboolean localization_file_read (
 				(*data)[*data_size] = d;
 				(*data_size)++;
 				if (*data_size == 65536) {
-					gp_camera_message (
+					gp_frontend_message (
 						camera, 
 						"Localization file too long!");
 					fclose (file);
@@ -1178,4 +1197,3 @@ gboolean localization_file_read (
 		printf ("-> %i bytes read.\n", (gint) *data_size);
 	return (TRUE);
 }
-

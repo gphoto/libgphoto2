@@ -9,6 +9,7 @@ int test_gphoto() {
 	   gPhoto installation and test to make sure everything is
 	   in working order */
 
+	return (GP_OK);
 }
 
 #if 0

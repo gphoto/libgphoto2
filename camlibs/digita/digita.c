@@ -74,8 +74,7 @@ int camera_init(Camera *camera, CameraInit *init)
         camera->functions->file_get_preview =  camera_file_get_preview;
         camera->functions->file_put     = NULL;
         camera->functions->file_delete  = camera_file_delete;
-        camera->functions->config_get   = camera_config_get;
-        camera->functions->config_set   = camera_config_set;
+        camera->functions->config       = camera_config;
         camera->functions->capture      = camera_capture;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
@@ -89,7 +88,7 @@ int camera_init(Camera *camera, CameraInit *init)
                 gpio_open(dev->gpdev);
         }
 
-        if (!strcmp(init->port_settings.path, "usb"))
+        if (!strcmp(init->port.path, "usb"))
                 dev = digita_usb_open(camera);
         else
                 dev = digita_serial_open(camera,init);
@@ -169,7 +168,7 @@ digita_file_list[index].fn.dosname);
 	}
 	memset(data, 0, buflen);
 
-	gp_camera_progress(NULL, NULL, 0.00);
+	gp_frontend_progress(NULL, NULL, 0.00);
 
 	if (digita_get_file_data(dev, thumbnail, &fn, &tag, data) < 0) {
 		printf("digita_get_picture: digita_get_file_data failed\n");
@@ -189,7 +188,7 @@ digita_file_list[index].fn.dosname);
 	len = ntohl(tag.filesize);
 	pos = ntohl(tag.length);
 	while (pos < len) {
-		gp_camera_progress(NULL, NULL, (float)pos / (float)len);
+		gp_frontend_progress(NULL, NULL, (float)pos / (float)len);
 
 		tag.offset = htonl(pos);
 		if ((len - pos) > GFD_BUFSIZE)
@@ -204,7 +203,7 @@ digita_file_list[index].fn.dosname);
 		pos += ntohl(tag.length);
 	}
 
-        gp_camera_progress(NULL, NULL, 1.00);
+        gp_frontend_progress(NULL, NULL, 1.00);
 
         return data;
 }
@@ -310,12 +309,7 @@ int camera_file_delete(Camera *camera, char *folder, char *filename)
         return GP_OK;
 }
 
-int camera_config_get(Camera *camera, CameraWidget *window)
-{
-        return GP_ERROR;
-}
-
-int camera_config_set(Camera *camera, CameraSetting *setting, int count)
+int camera_config(Camera *camera)
 {
         return GP_ERROR;
 }

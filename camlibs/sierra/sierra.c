@@ -151,8 +151,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_put 	= camera_file_put;
 	camera->functions->file_delete 	= camera_file_delete;
-	camera->functions->config_get   = camera_config_get;
-	camera->functions->config_set   = camera_config_set;
+	camera->functions->config       = camera_config;
 	camera->functions->capture 	= camera_capture;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
@@ -166,7 +165,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 
 	sierra_debug_print(fd, "Initializing camera");
 
-	switch (init->port_settings.type) {
+	switch (init->port.type) {
 		case GP_PORT_SERIAL:
 			sierra_debug_print(fd, "Serial Device");
 			fd->dev = gpio_new(GPIO_DEVICE_SERIAL);
@@ -175,7 +174,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 				free(fd);
 				return (GP_ERROR);
 			}
-			strcpy(settings.serial.port, init->port_settings.path);
+			strcpy(settings.serial.port, init->port.path);
 			settings.serial.speed 	 = 19200;
 			settings.serial.bits 	 = 8;
 			settings.serial.parity 	 = 0;
@@ -233,7 +232,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 	}
 
 	gpio_set_timeout(fd->dev, TIMEOUT);
-	fd->type = init->port_settings.type;
+	fd->type = init->port.type;
 
 	if (gpio_open(fd->dev)==GPIO_ERROR) {
 		gpio_free(fd->dev);
@@ -241,7 +240,7 @@ int camera_init (Camera *camera, CameraInit *init) {
 		return (GP_ERROR);
 	}
 
-	switch (init->port_settings.type) {
+	switch (init->port.type) {
 		case GP_PORT_SERIAL:
 			if (sierra_ping(camera)==GP_ERROR) {
 				gpio_free(fd->dev);
@@ -249,12 +248,12 @@ int camera_init (Camera *camera, CameraInit *init) {
 				return (GP_ERROR);
 			}
 
-			if (sierra_set_speed(camera, init->port_settings.speed)==GP_ERROR) {
+			if (sierra_set_speed(camera, init->port.speed)==GP_ERROR) {
 				gpio_free(fd->dev);
 				free (fd);
 				return (GP_ERROR);
 			}
-			fd->speed = init->port_settings.speed;
+			fd->speed = init->port.speed;
 			break;
 #ifdef GPIO_USB
 		case GP_PORT_USB:
@@ -583,28 +582,13 @@ return (GP_ERROR);
 	return (ret);
 }
 
-int camera_config_get (Camera *camera, CameraWidget *window) {
+int camera_config (Camera *camera) {
 
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	sierra_debug_print(fd, "Building configuration window");
 
 	return (GP_ERROR);
-}
-
-int camera_config_set (Camera *camera, CameraSetting *setting, int count) {
-
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
-if (camera_start(camera)==GP_ERROR)
-return (GP_ERROR);
-
-	sierra_debug_print(fd, "Setting configuration values");
-
-if (camera_stop(camera)==GP_ERROR)
-return (GP_ERROR);
-
-	return (GP_OK);
 }
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {

@@ -11,10 +11,12 @@ int gp_camera_name  (int camera_number, char *camera_name);
 int gp_camera_abilities	    (int camera_number, CameraAbilities *abilities);
 int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities);
 
-int gp_camera_new 	  (Camera **camera, int camera_number, CameraPortInfo *port);
-int gp_camera_new_by_name (Camera **camera, char *camera_name, CameraPortInfo *port);
+int gp_camera_new 	  (Camera **camera, int camera_number);
+int gp_camera_new_by_name (Camera **camera, char *camera_name);
 
 int gp_camera_free (Camera *camera);
+
+int gp_camera_init (Camera *camera, CameraPortInfo *settings);
 
 int gp_camera_session (Camera *camera);
 	
@@ -35,10 +37,4 @@ int gp_camera_summary (Camera *camera, CameraText *summary);
 int gp_camera_manual  (Camera *camera, CameraText *manual);
 int gp_camera_about   (Camera *camera, CameraText *about);
 
-int gp_camera_config_get (Camera *camera, CameraWidget *window);
-int gp_camera_config_set (Camera *camera, CameraSetting *setting, int count);
-
-int gp_camera_status   (Camera *camera, char *status);
-int gp_camera_message  (Camera *camera, char *message);
-int gp_camera_confirm  (Camera *camera, char *message);
-int gp_camera_progress (Camera *camera, CameraFile *file, float percentage);
+int gp_camera_config (Camera *camera);

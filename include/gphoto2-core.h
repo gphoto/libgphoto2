@@ -11,4 +11,5 @@ int 	gp_exit();
 void 	gp_debug_printf(int level, char *id, char *format, ...);
 
 int 	gp_frontend_register(CameraStatus status, CameraProgress progress, 
-			     CameraMessage message, CameraConfirm confirm);
+			     CameraMessage message, CameraConfirm confirm,
+			     CameraPrompt prompt);

@@ -657,13 +657,13 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 
 			gp_file_append(file, &packet[4], packlength);
 
-		/* 2) Call gp_camera_progress to let the front-end know */
+		/* 2) Call gp_frontend_progress to let the front-end know */
 		/*    the current transfer status. The front-end has 	*/
 		/*    the option of reading the data that was just	*/
 		/*    transferred by using gp_file_chunk		*/
 
 			if (do_percent)
-			   gp_camera_progress(camera, file, (float)(100.0*(float)x/(float)(l)));
+			   gp_frontend_progress(camera, file, (float)(100.0*(float)x/(float)(l)));
 		}
 
 		x += packlength;
@@ -811,7 +811,7 @@ int sierra_capture (Camera *camera, CameraFile *file) {
 
 		done = (c == NAK)? 0 : 1;
 
-		gp_camera_progress(camera, file, 0.0);
+		gp_frontend_progress(camera, file, 0.0);
 	}
 	if (r >= RETRIES) {
 		sierra_debug_print(fd, "too many NAKs from camera");
@@ -831,7 +831,7 @@ int sierra_capture (Camera *camera, CameraFile *file) {
 			done = 1;
 		}
 		c = (unsigned char)buf[0];
-		gp_camera_progress(camera, file, 0.0);
+		gp_frontend_progress(camera, file, 0.0);
 	}
 	if ((r >= RETRIES) || (c!=ENQ))
 		return (GP_ERROR);

@@ -19,6 +19,7 @@
 #define	GP_DEBUG_MEDIUM			2
 #define GP_DEBUG_HIGH			3
 
+
 /* Macros
    ---------------------------------------------------------------- */
 
@@ -59,8 +60,23 @@ typedef enum {
 	GP_WIDGET_RADIO,
 	GP_WIDGET_MENU,
 	GP_WIDGET_BUTTON,
+	GP_WIDGET_DATE,
 	GP_WIDGET_NONE
 } CameraWidgetType;
+
+/* Window prompt return values */
+typedef enum {
+	GP_PROMPT_CANCEL	= -1,
+	GP_PROMPT_OK		= 0,
+} CameraPromptValue;
+
+/* Confirm return values */
+typedef enum {
+	GP_CONFIRM_YES,
+	GP_CONFIRM_YESTOALL,
+	GP_CONFIRM_NO,
+	GP_CONFIRM_NOTOALL
+} CameraConfirmValue;
 
 /* Folder list entries */
 typedef enum {
@@ -71,26 +87,31 @@ typedef enum {
 /* Structures
    ---------------------------------------------------------------- */
 
+#define WIDGET_CHOICE_MAX	32
+
 /* CameraWidget structure */
 typedef struct CameraWidget {
 	CameraWidgetType type;
-	char		 label[32];
+	char		label[32];
 	
 	/* Current value of the widget */
-	char		 value[128];
+	char		value[128];
 
 	/* For Radio and Menu */
-	char 		 choice[32][64];
-	int		 choice_count;
+	char 		choice[WIDGET_CHOICE_MAX][64];
+	int		choice_count;
 
 	/* For Range */
-	float		 min;
-	float 		 max;
-	float		 increment;
+	float		min;
+	float 		max;
+	float		increment;
 
 	/* Child info */
 	struct CameraWidget	*children[64];
 	int 			children_count;
+
+	/* Widget was changed */
+	int 		changed;
 } CameraWidget;
 
 /* Capture information structure */
@@ -168,9 +189,9 @@ typedef struct {
 typedef struct {
 	char model[128]; 		   /* Name of the camera */
 
-	CameraPortInfo port_settings;		/* Port settings */
+	CameraPortInfo port;		   /* Port settings */
 
-	int debug;	          /* Debugging output 0=off 1=on */
+	int debug;
 } CameraInit;
 
 /* Camera file structure used for transferring files*/
@@ -241,8 +262,7 @@ typedef int (*c_file_get_preview)(struct Camera*, CameraFile*, char*, char*);
 typedef int (*c_file_put)	 (struct Camera*, CameraFile*, char*);
 typedef int (*c_file_delete)	 (struct Camera*, char*, char*);
 typedef int (*c_capture)	 (struct Camera*, CameraFile*, CameraCaptureInfo *);
-typedef int (*c_config_get)	 (struct Camera*, CameraWidget*);
-typedef int (*c_config_set)	 (struct Camera*, CameraSetting*, int);
+typedef int (*c_config)		 (struct Camera*);
 typedef int (*c_summary)	 (struct Camera*, CameraText*);
 typedef int (*c_manual)		 (struct Camera*, CameraText*);
 typedef int (*c_about)		 (struct Camera*, CameraText*);
@@ -259,8 +279,7 @@ typedef struct {
 	c_file_get_preview	file_get_preview;
 	c_file_put		file_put;
 	c_file_delete		file_delete;
-	c_config_get		config_get;
-	c_config_set		config_set;
+	c_config		config;
 	c_capture		capture;
 	c_summary		summary;
 	c_manual		manual;
@@ -290,3 +309,4 @@ typedef int (*CameraStatus)	(Camera*, char*);
 typedef int (*CameraProgress)	(Camera*, CameraFile*, float);
 typedef int (*CameraMessage)	(Camera*, char*);
 typedef int (*CameraConfirm)	(Camera*, char*);
+typedef int (*CameraPrompt)	(Camera*, CameraWidget *window);

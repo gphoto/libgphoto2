@@ -28,10 +28,11 @@ int		glob_session_camera = 0;
 int		glob_session_file   = 0;
 
 /* Front-end function pointers */
-CameraStatus   gp_fe_status = NULL;
+CameraStatus   gp_fe_status   = NULL;
 CameraProgress gp_fe_progress = NULL;
-CameraMessage  gp_fe_message = NULL;
-CameraConfirm  gp_fe_confirm = NULL;
+CameraMessage  gp_fe_message  = NULL;
+CameraConfirm  gp_fe_confirm  = NULL;
+CameraPrompt   gp_fe_prompt   = NULL;
 
 
 int gp_init (int debug)
@@ -58,10 +59,8 @@ int gp_init (int debug)
 	(void)GPIO_MKDIR(buf);
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing gpio");
 
-        if (gpio_init(debug) == GPIO_ERROR) {
-                gp_camera_message(NULL, "ERROR: Can not initialize libgpio");
+        if (gpio_init(debug) == GPIO_ERROR)
                 return (GP_ERROR);
-        }
 
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Trying to load settings");
         /* Load settings */
@@ -108,12 +107,14 @@ void gp_debug_printf(int level, char *id, char *format, ...)
 }
 
 int gp_frontend_register(CameraStatus status, CameraProgress progress, 
-			 CameraMessage message, CameraConfirm confirm) {
+			 CameraMessage message, CameraConfirm confirm,
+			 CameraPrompt prompt) {
 
 	gp_fe_status   = status;
 	gp_fe_progress = progress;
 	gp_fe_message  = message;
 	gp_fe_confirm  = confirm;
+	gp_fe_prompt   = prompt;
 
 	return (GP_OK);
 }
