@@ -152,3 +152,20 @@ Q: I want to use GNU stow, but that fails.
 A: I don't know what stow is, but have a look at #553647.
 
 ========================================================================
+
+Q: I wanna have CVS write access. How do I get one?
+
+A: We provide CVS write access to persons that show _continued_ interest in 
+   a _specific part_ of gphoto2. If there is already a person maintaining this
+   specific part of gphoto2 (i.e. a camera driver), we prefer you submit
+   patches to the maintainer who will then check them in or request
+   modifications.
+
+========================================================================
+
+Q: You took away my CVS write access! What did I do wrong?
+
+A: If your name is not listed in gphoto2/MAINTAINERS, and if we haven't heard
+   from you lately, we assume that you finished your work on gphoto2 and that
+   you don't need write access any longer. If this is not the case, please
+   contact one of the project admins.
