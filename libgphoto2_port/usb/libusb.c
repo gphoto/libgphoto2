@@ -327,8 +327,11 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 	 * Should the USB layer report that ? I don't know.
 	 * Better to check here.
 	 */
-	if (!idvendor || !idproduct)
+	if (!idvendor || !idproduct) {
+		gp_port_set_error (port, _("The supplied vendor or product "
+			"id (%i,%i) is not valid."));
 		return GP_ERROR_BAD_PARAMETERS;
+	}
 
 	for (bus = usb_busses; bus; bus = bus->next) {
 		for (dev = bus->devices; dev; dev = dev->next) {
