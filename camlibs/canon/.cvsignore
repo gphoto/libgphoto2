@@ -1,3 +1,4 @@
+*~ .*~
 libgphoto2_canon.la
 *.lo
 .libs
@@ -6,3 +7,4 @@ Makefile
 Makefile.in
 *.patch
 protocol.xml
+crw
