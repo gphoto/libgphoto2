@@ -220,7 +220,7 @@ ptp_transaction (PTPParams* params, PTPReq* req, uint16_t code,
 		return PTP_ERROR_BADPARAM;
 	params->transaction_id++;
 	// calculate the request phase container length
-	req->len=PTP_REQ_HDR_LEN+((flags>>8)*sizeof(uint32_t));
+	req->len=htod32(PTP_REQ_HDR_LEN+((flags>>8)*sizeof(uint32_t)));
 	// send request
 	CHECK_PTP_RC(ptp_sendreq(params, req, code));
 	switch (flags&PTP_DP_DATA_MASK) {
