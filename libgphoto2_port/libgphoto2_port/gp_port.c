@@ -84,6 +84,36 @@ gp_port *gp_port_new(gp_port_type type)
 
         gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Creating new device... ");
 
+        switch(type) {
+        case GP_PORT_SERIAL:
+#ifndef GP_PORT_SUPPORTED_SERIAL
+            return NULL;
+#endif
+            break;
+        case GP_PORT_USB:
+#ifndef GP_PORT_SUPPORTED_USB
+            return NULL;
+#endif
+            break;
+        case GP_PORT_PARALLEL:
+#ifndef GP_PORT_SUPPORTED_PARALLEL
+            return NULL;
+#endif
+            break;
+        case GP_PORT_NETWORK:
+#ifndef GP_PORT_SUPPORTED_NETWORK
+            return NULL;
+#endif
+            break;
+        case GP_PORT_IEEE1394:
+#ifndef GP_PORT_SUPPORTED_IEEE1394
+            return NULL;
+#endif
+            break;
+        default:
+            return NULL;
+        }
+
         dev = (gp_port *) malloc(sizeof(gp_port));
         if (!dev) {
                 gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Can not allocate device!");
@@ -106,33 +136,32 @@ gp_port *gp_port_new(gp_port_type type)
 
         switch (dev->type) {
         case GP_PORT_SERIAL:
-                sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
-                strcpy(settings.serial.port, buf);
-                /* set some defaults */
-                settings.serial.speed = 9600;
-                settings.serial.bits = 8;
-                settings.serial.parity = 0;
-                settings.serial.stopbits = 1;
-                gp_port_settings_set(dev, settings);
-                gp_port_timeout_set(dev, 500);
-                break;
+            sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
+            strcpy(settings.serial.port, buf);
+            /* set some defaults */
+            settings.serial.speed = 9600;
+            settings.serial.bits = 8;
+            settings.serial.parity = 0;
+            settings.serial.stopbits = 1;
+            gp_port_settings_set(dev, settings);
+            gp_port_timeout_set(dev, 500);
+            break;
         case GP_PORT_PARALLEL:
-                sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
-                strcpy(settings.parallel.port, buf);
-
-                break;
+            sprintf(buf, GP_PORT_SERIAL_PREFIX, GP_PORT_SERIAL_RANGE_LOW);
+            strcpy(settings.parallel.port, buf);
+            break;
         case GP_PORT_NETWORK:
-                gp_port_timeout_set(dev, 50000);
-                break;
+            gp_port_timeout_set(dev, 50000);
+            break;
         case GP_PORT_USB:
-                gp_port_timeout_set(dev, 5000);
-                break;
+            gp_port_timeout_set(dev, 5000);
+            break;
         case GP_PORT_IEEE1394:
-                /* blah ? */
-                break;
+            /* blah ? */
+            break;
         default:
-                /* ERROR! */
-                break;
+            /* ERROR! */
+            break;
         }
 
         gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Created device successfully...");
