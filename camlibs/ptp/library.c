@@ -318,6 +318,19 @@ camera_abilities (CameraAbilitiesList *list)
 		CR (gp_abilities_list_append (list, a));
 	}
 
+	strcpy(a.model, "USB PTP Class Camera");
+	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+	a.port   = GP_PORT_USB;
+	a.speed[0] = 0;
+	a.usb_class = 6;
+	a.usb_subclass = -1;
+	a.usb_protocol = -1;
+	a.operations        = GP_OPERATION_NONE;
+	a.file_operations   = GP_FILE_OPERATION_PREVIEW|
+				GP_FILE_OPERATION_DELETE;
+	a.folder_operations = GP_FOLDER_OPERATION_NONE;
+	CR (gp_abilities_list_append (list, a));
+
 	return (GP_OK);
 }
 
