@@ -97,6 +97,7 @@ serial_flush_output (GPPort *gdev)
  *
  */
 
+int
 canon_serial_change_speed (GPPort *gdev, int speed)
 {
 	gp_port_settings settings;
