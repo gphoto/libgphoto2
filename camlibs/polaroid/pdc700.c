@@ -63,6 +63,14 @@
 #define PDC700_DONE	0x01
 #define PDC700_LAST	0x02
 
+typedef enum _PDCBaud PDCBaud;
+enum _PDCBaud {
+	PDC_BAUD_9600  = 0x00,
+	PDC_BAUD_19200 = 0x01,
+	PDC_BAUD_38400 = 0x02,
+	PDC_BAUD_57600 = 0x03
+};
+
 typedef struct _PDCDate PDCDate;
 struct _PDCDate {
 	unsigned char year, month, day; /* Years since 1980 */
@@ -89,7 +97,8 @@ struct _PDCInfo {
 	char version[6];
 	PDCDate date;
 	PDCQuality quality;
-	PDCFlash flash;
+	PDCFlash   flash;
+	PDCBaud    speed;
 };
 
 typedef struct _PDCPicInfo PDCPicInfo;
@@ -246,29 +255,27 @@ pdc700_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 static int
 pdc700_baud (Camera *camera, int baud)
 {
-	unsigned char b;
 	unsigned char cmd[6];
 	unsigned char buf[2048];
 	int buf_len;
 
+	cmd[3] = PDC700_BAUD;
 	switch (baud) {
 	case 57600:
-		b = 0x03;
+		cmd[4] = PDC_BAUD_57600;
 		break;
 	case 38400:
-		b = 0x02;
+		cmd[4] = PDC_BAUD_38400;
 		break;
 	case 19200:
-		b = 0x01;
+		cmd[4] = PDC_BAUD_19200;
 		break;
 	case 9600:
-	default:
-		b = 0x00;
+		cmd[4] = PDC_BAUD_9600;
 		break;
+	default:
+		return (GP_ERROR_IO_SERIAL_SPEED);
 	}
-
-	cmd[3] = PDC700_BAUD;
-	cmd[4] = b;
 	CR (pdc700_transmit (camera, cmd, 6, buf, &buf_len));
 
 	return (GP_OK);
@@ -382,19 +389,26 @@ pdc700_info (Camera *camera, PDCInfo *info)
 	info->date.minute = buf[24];
 	info->date.second = buf[25];
 
+	/* Speed (kind of bogus as we already know about it) */
+	info->speed = buf[26];
+	if (info->speed < 0 || info->speed > 3) {
+		GP_DEBUG ("Unknown speed: %i", info->speed);
+		info->speed = PDC_BAUD_9600;
+	}
+
 	/*
-	 * buf[26-63]: We don't know:
+	 * buf[27-63]: We don't know:
 	 * 
-	 * 03 00 f8 b2 64 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+	 * 00 f8 b2 64 03 00 00 01 00 00 00 00 00 00 00 00 00 00 00
 	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 	 *
-	 * 03 00 c6 03 86 28 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+	 * 00 c6 03 86 28 00 00 01 00 00 00 00 00 00 00 00 00 00 00
 	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 	 *
-	 * 03 00 3a 7f 65 83 00 00 01 00 00 00 00 00 00 00 00 00 00 00 
+	 * 00 3a 7f 65 83 00 00 01 00 00 00 00 00 00 00 00 00 00 00 
 	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 	 *
-	 * 03 00 23 25 66 83 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+	 * 00 23 25 66 83 00 00 01 00 00 00 00 00 00 00 00 00 00 00
 	 * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 	 */
 
