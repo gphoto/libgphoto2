@@ -1128,7 +1128,7 @@ localization_file_read (Camera *camera, const char *file_name,
                 default:
                         /****************************************/
                         /* j == 0: We have to read the second   */
-                        /* half of the byte to send.    */
+                        /* half of the byte to send.            */
                         /* j == 1: We'll compose our byte.      */
                         /****************************************/
                         if ((f != '0') && (f != '1') && (f != '2') &&
@@ -1248,9 +1248,9 @@ camera_init (Camera* camera, GPContext *context)
                 /* Initiate the connection */
 		C(speed = test_speed (camera, context));
 #if 0
-/* Ideally, we need to reset the speed to the speed that we encountered */
-/* after each operation (multiple programs accessing the camera). However, */
-/* that takes quite a bit of time for HP cameras... */
+/* Ideally, we need to reset the speed to the speed that we encountered
+   after each operation (multiple programs accessing the camera). However,
+   that takes quite a bit of time for HP cameras... */
 		camera->pl->speed = speed;
 #endif
 
