@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2002-11-22 13:57+0100\n"
-"PO-Revision-Date: 2002-06-15 19:39+0800\n"
+"POT-Creation-Date: 2002-11-26 18:09+0100\n"
+"PO-Revision-Date: 2002-11-21 13:11+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@list.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
@@ -269,14 +269,14 @@ msgid "Could not open USB device (%m)."
 msgstr "无法打开 USB 设备 (%m)。"
 
 #: usb/libusb.c:138
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
 "module (e.g. dc2xx or stv680) is using the device and you have read/write "
 "access to the device."
 msgstr ""
-"无法请求界面 %d (%m)。请确认没有其它程序或内核模块 (例如 dc2xx) 正在使用该设"
-"备并且您有对该设备的读/写权。"
+"无法请求界面 %d (%m)。请确认没有其它程序或内核模块 (例如 dc2xx 或 stv680) 正"
+"在使用该设备并且您有对该设备的读/写权。"
 
 #: usb/libusb.c:157
 #, c-format

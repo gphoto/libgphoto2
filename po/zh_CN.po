@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-11-23 15:48+0100\n"
-"PO-Revision-Date: 2002-06-15 20:09+0800\n"
+"POT-Creation-Date: 2002-11-26 18:15+0100\n"
+"PO-Revision-Date: 2002-11-21 11:02+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
@@ -976,9 +976,8 @@ msgstr "可用的内存："
 
 # camlibs/jamcam/jamcam.c:280
 #: camlibs/gsmart/library.c:209
-#, fuzzy
 msgid "gsmart library v"
-msgstr "jamcam 库 v"
+msgstr "gsmart 库 v"
 
 # camlibs/jamcam/jamcam.c:281 camlibs/panasonic/coolshot/coolshot.c:265
 #: camlibs/gsmart/library.c:210 camlibs/jamcam/jamcam.c:281
@@ -995,24 +994,28 @@ msgid ""
 "provided by Mustek.\n"
 "\n"
 msgstr ""
+"\n"
+"Till Adam <till@adam-lilienthal.de>\n"
+"根据一些其它 gphoto2 相机库和由 Mustek 友好提供的 Windows 驱动程序源代码编制"
+"的支持 Mustek gSmart mini 系列数码相机的库。\n"
+"\n"
 
 #: camlibs/gsmart/library.c:251
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr ""
+msgstr "不支持的端口类型：%d。该驱动程序只支持 USB 照相机。\n"
 
 # libgphoto2/gphoto2-camera.c:662
 #: camlibs/gsmart/library.c:280
-#, fuzzy
 msgid "Could not reset camera.\n"
-msgstr "无法检测到任何相机"
+msgstr "无法重置相机。\n"
 
 #: camlibs/gsmart/library.c:427
 #, c-format
 msgid ""
 "Your camera does only support deleting the last file on the camera. In this "
 "case, this is file '%s'."
-msgstr ""
+msgstr "您的相机只支持删除相机中的最后一个文件。在此情况下，这是文件“%s”。"
 
 # camlibs/jamcam/jamcam.c:280
 #: camlibs/jamcam/jamcam.c:280
@@ -1157,19 +1160,17 @@ msgstr "相机配置"
 
 # frontends/command-line/actions.c:141
 #: camlibs/kodak/dc210/dc210.c:170
-#, fuzzy
 msgid "File"
-msgstr "文件：\n"
+msgstr "文件"
 
 # libgphoto2/gphoto2-result.c:45
 #: camlibs/kodak/dc210/dc210.c:173 camlibs/kodak/dc210/dc210.c:342
-#, fuzzy
 msgid "File type"
-msgstr "文件存在"
+msgstr "文件类型"
 
 #: camlibs/kodak/dc210/dc210.c:175 camlibs/kodak/dc210/dc210.c:180
 msgid "JPEG"
-msgstr ""
+msgstr "JPEG"
 
 # camlibs/dimera/dimera3500.c:533 camlibs/konica/library.c:744
 # camlibs/konica/library.c:984
@@ -1182,41 +1183,38 @@ msgstr "闪光灯"
 # camlibs/sierra/sierra.c:786 camlibs/sierra/sierra.c:1117
 # camlibs/sierra/sierra.c:1468 camlibs/sierra/sierra.c:1677
 #: camlibs/kodak/dc210/dc210.c:186 camlibs/kodak/dc210/dc210.c:351
-#, fuzzy
 msgid "File resolution"
-msgstr "分辨率"
+msgstr "文件分辨率"
 
 # camlibs/polaroid/pdc700.c:175
 #: camlibs/kodak/dc210/dc210.c:188 camlibs/kodak/dc210/dc210.c:193
 #: camlibs/ricoh/library.c:318
-#, fuzzy
 msgid "640 x 480"
-msgstr "VGA (640x480)"
+msgstr "640 x 480"
 
 #: camlibs/kodak/dc210/dc210.c:189 camlibs/kodak/dc210/dc210.c:195
 msgid "1152 x 864"
-msgstr ""
+msgstr "1152 x 864"
 
 #: camlibs/kodak/dc210/dc210.c:201 camlibs/kodak/dc210/dc210.c:364
 msgid "File compression"
-msgstr ""
+msgstr "文件压缩"
 
 #: camlibs/kodak/dc210/dc210.c:203 camlibs/kodak/dc210/dc210.c:209
 msgid "Low (best quality)"
-msgstr ""
+msgstr "低 (最佳质量)"
 
 #: camlibs/kodak/dc210/dc210.c:204 camlibs/kodak/dc210/dc210.c:211
 msgid "Medium (better quality)"
-msgstr ""
+msgstr "中 (良好质量)"
 
 #: camlibs/kodak/dc210/dc210.c:205 camlibs/kodak/dc210/dc210.c:213
 msgid "High (good quality)"
-msgstr ""
+msgstr "高 (普通质量)"
 
 # camlibs/sierra/sierra.c:826 camlibs/sierra/sierra.c:1146
 # camlibs/sierra/sierra.c:1361 camlibs/sierra/sierra.c:1602
 #: camlibs/kodak/dc210/dc210.c:217
-#, fuzzy
 msgid "Capture"
 msgstr "光圈"
 
@@ -1240,27 +1238,27 @@ msgstr "巨大"
 
 #: camlibs/kodak/dc210/dc210.c:231
 msgid "58 mm"
-msgstr ""
+msgstr "58 mm"
 
 #: camlibs/kodak/dc210/dc210.c:233
 msgid "51 mm"
-msgstr ""
+msgstr "51 mm"
 
 #: camlibs/kodak/dc210/dc210.c:235
 msgid "41 mm"
-msgstr ""
+msgstr "41 mm"
 
 #: camlibs/kodak/dc210/dc210.c:237
 msgid "34 mm"
-msgstr ""
+msgstr "34 mm"
 
 #: camlibs/kodak/dc210/dc210.c:239
 msgid "29 mm"
-msgstr ""
+msgstr "29 mm"
 
 #: camlibs/kodak/dc210/dc210.c:245 camlibs/kodak/dc210/dc210.c:404
 msgid "Exposure compensation"
-msgstr ""
+msgstr "曝光补偿"
 
 # camlibs/konica/library.c:749 camlibs/konica/library.c:765
 # camlibs/konica/library.c:780 camlibs/konica/library.c:783
@@ -1305,13 +1303,12 @@ msgstr "强制"
 # frontends/command-line/actions.c:168
 #: camlibs/kodak/dc210/dc210.c:257 camlibs/kodak/dc210/dc210.c:265
 #: camlibs/ricoh/library.c:346
-#, fuzzy
 msgid "None"
 msgstr "无"
 
 #: camlibs/kodak/dc210/dc210.c:269 camlibs/kodak/dc210/dc210.c:422
 msgid "Red eye flash"
-msgstr ""
+msgstr "红眼闪光灯"
 
 # camlibs/konica/library.c:649 camlibs/konica/library.c:656
 # camlibs/konica/library.c:747 camlibs/konica/library.c:756
@@ -1350,45 +1347,45 @@ msgstr "关"
 
 #: camlibs/kodak/dc210/dc210.c:280
 msgid "Other"
-msgstr ""
+msgstr "其它"
 
 # camlibs/panasonic/dc1000.c:371 camlibs/panasonic/dc1580.c:468
 #: camlibs/kodak/dc210/dc210.c:286
-#, fuzzy
 msgid "Set clock in camera"
-msgstr "正在断开与相机的连接。"
+msgstr "设置相机时钟"
 
 # camlibs/kodak/dc240/library.c:590
 #: camlibs/kodak/dc210/dc210.c:290 camlibs/kodak/dc210/dc210.c:415
-#, fuzzy
 msgid "Port speed"
-msgstr "未使用"
+msgstr "端口速度"
 
 #: camlibs/kodak/dc210/dc210.c:300 camlibs/kodak/dc210/library.c:697
 msgid "Album name"
-msgstr ""
+msgstr "相册名称"
 
 #: camlibs/kodak/dc210/dc210.c:303
 msgid "Name to set on card when formatting."
-msgstr ""
+msgstr "格式化时在卡上设置的名称。"
 
 #: camlibs/kodak/dc210/dc210.c:305
 msgid "Format compact flash"
-msgstr ""
+msgstr "格式化闪存"
 
 #: camlibs/kodak/dc210/dc210.c:308
 msgid "Format card and set album name."
-msgstr ""
+msgstr "格式化卡片并设置相册名。"
 
 #: camlibs/kodak/dc210/dc210.c:311
 msgid "Debug"
-msgstr ""
+msgstr "调试"
 
 #: camlibs/kodak/dc210/dc210.c:329
 msgid ""
 "Execute predefined command\n"
 "with parameter values."
 msgstr ""
+"带参数值运行\n"
+"预定义命令。"
 
 #: camlibs/kodak/dc210/dc210.c:625
 msgid ""
@@ -1397,30 +1394,34 @@ msgid ""
 "please send a message to koltan@gmx.de to let me know, if you have any "
 "troubles with this driver library or if everything is okay."
 msgstr ""
+"该库已经在柯达 DC 215 缩放相机上进行过测试。它可能可以在 DC200 和 DC210 上工"
+"作。如果您碰巧拥有这样的相机，请给 koltan@gmx.de 发送邮件以便让我知道您是否在"
+"使用该驱动程序时遇到了麻烦，或者一切正常。"
 
 #: camlibs/kodak/dc210/dc210.c:637
 msgid ""
 "Camera Library for the Kodak DC215 Zoom camera.\n"
 "Michael Koltan <koltan@gmx.de>\n"
 msgstr ""
+"用于柯达 DC215 缩放相机的相机库。\n"
+"Michael Koltan <koltan@gmx.de>\n"
 
 # camlibs/panasonic/dc1000.c:476 camlibs/panasonic/dc1580.c:599
 #: camlibs/kodak/dc210/library.c:349
-#, fuzzy
 msgid "Waiting..."
-msgstr "正在上载..."
+msgstr "正在等待..."
 
 #: camlibs/kodak/dc210/library.c:1369
 msgid "Parameter 1"
-msgstr ""
+msgstr "参数 1"
 
 #: camlibs/kodak/dc210/library.c:1373
 msgid "Parameter 2"
-msgstr ""
+msgstr "参数 2"
 
 #: camlibs/kodak/dc210/library.c:1377
 msgid "Parameter 3"
-msgstr ""
+msgstr "参数 3"
 
 # camlibs/kodak/dc240/dc240.c:182
 #: camlibs/kodak/dc240/dc240.c:180
@@ -1732,9 +1733,8 @@ msgstr "无法与相机联络。请确信相机已经连接到计算机并确认
 
 # libgphoto2/gphoto2-camera.c:850
 #: camlibs/konica/library.c:372
-#, fuzzy
 msgid "Your camera does not support changing filenames."
-msgstr "该相机不支持概要。"
+msgstr "您的相机不支持文件改名。"
 
 # camlibs/konica/library.c:405
 #: camlibs/konica/library.c:431
@@ -2004,7 +2004,7 @@ msgstr "本地化文件太大！"
 
 #: camlibs/largan/lmini/largan.c:247
 msgid "There is nothing to summarize for this camera."
-msgstr ""
+msgstr "对这个相机来说没有概要。"
 
 # camlibs/konica/library.c:800 camlibs/konica/library.c:807
 # camlibs/minolta/dimagev/dimagev.c:407 camlibs/sierra/sierra.c:856
@@ -2015,9 +2015,8 @@ msgstr ""
 # camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1455
 # camlibs/sierra/sierra.c:1668
 #: camlibs/largan/lmini/largan.c:259
-#, fuzzy
 msgid "No manual"
-msgstr "普通"
+msgstr "无手册"
 
 #: camlibs/largan/lmini/largan.c:267
 msgid ""
@@ -2026,6 +2025,10 @@ msgid ""
 "\n"
 "Handles Largan Lmini camera.\n"
 msgstr ""
+"Largan 驱动程序\n"
+"Hubert Figuiere <hfiguiere@teaser.fr>\n"
+"\n"
+"Handles Largan Lmini 相机。\n"
 
 # camlibs/minolta/dimagev/dimagev.c:272
 #: camlibs/minolta/dimagev/dimagev.c:270
@@ -2248,67 +2251,63 @@ msgstr ""
 
 # camlibs/konica/library.c:750 camlibs/konica/library.c:762
 #: camlibs/mustek/core.c:575
-#, fuzzy
 msgid "FlashLight : Auto (RedEye Reduction)"
-msgstr "自动，消红眼"
+msgstr "闪光灯：自动 (消红眼)"
 
 #: camlibs/mustek/core.c:577
 msgid "FlashLight : Auto"
-msgstr ""
+msgstr "闪光灯：自动"
 
 #: camlibs/mustek/core.c:579
 msgid "FlashLight : On (RedEye Reduction)"
-msgstr ""
+msgstr "闪光灯：开 (消红眼)"
 
 #: camlibs/mustek/core.c:581
 msgid "FlashLight : On"
-msgstr ""
+msgstr "闪光灯：开"
 
 #: camlibs/mustek/core.c:583
 msgid "FlashLight : Off"
-msgstr ""
+msgstr "闪光灯：关"
 
 #: camlibs/mustek/core.c:585
 msgid "FlashLight : undefined"
-msgstr ""
+msgstr "闪光灯：未定义"
 
 #: camlibs/mustek/mdc800.c:228
 msgid "Summary for Mustek MDC800:\n"
-msgstr ""
+msgstr "关于 Mustek MDC800 的概要：\n"
 
 # camlibs/konica/konica.c:83
 #: camlibs/mustek/mdc800.c:231
-#, fuzzy
 msgid "no status reported."
-msgstr "不支持的卡。"
+msgstr "无报告状态。"
 
 # camlibs/kodak/dc120/dc120.c:31
 #: camlibs/mustek/mdc800.c:237
-#, fuzzy
 msgid "Compact Flash Card detected\n"
-msgstr "闪存卡"
+msgstr "探测到闪存卡\n"
 
 # camlibs/kodak/dc120/dc120.c:31
 #: camlibs/mustek/mdc800.c:239
-#, fuzzy
 msgid "No Compact Flash Card detected\n"
-msgstr "闪存卡"
+msgstr "未探测到闪存卡\n"
 
 #: camlibs/mustek/mdc800.c:243
 msgid "Current Mode: Camera Mode\n"
-msgstr ""
+msgstr "当前模式：照相机模式\n"
 
 #: camlibs/mustek/mdc800.c:245
 msgid "Current Mode: Playback Mode\n"
-msgstr ""
+msgstr "当前模式：回放模式\n"
 
 #: camlibs/mustek/mdc800.c:254
 msgid "Batteries are ok."
-msgstr ""
+msgstr "电池就绪。"
 
 #: camlibs/mustek/mdc800.c:256
 msgid "Batteries are low."
-msgstr ""
+msgstr "电池低电量。"
 
 #: camlibs/mustek/mdc800.c:275
 msgid ""
@@ -2317,6 +2316,10 @@ msgid ""
 "Ported to gphoto2 by Marcus Meissner <marcus@jet.franken.de>\n"
 "Supports Serial and USB Protocol."
 msgstr ""
+"Mustek MDC-800 gPhoto2 库\n"
+"Henning Zabel <henning@uni-paderborn.de>\n"
+"由 Marcus Meissner <marcus@jet.franken.de> 移植到 gphoto2\n"
+"支持串口和 USB 协议。"
 
 # camlibs/panasonic/coolshot/coolshot.c:264
 #: camlibs/panasonic/coolshot/coolshot.c:264
@@ -2467,15 +2470,13 @@ msgstr ""
 # camlibs/dimera/dimera3500.c:701 camlibs/dimera/dimera3500.c:737
 # camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:211
 #: camlibs/pccam600/library.c:199
-#, fuzzy
 msgid "Downloading file..."
-msgstr "正在下载图像..."
+msgstr "正在下载文件..."
 
 # camlibs/sierra/library.c:1187
 #: camlibs/pccam600/library.c:259 camlibs/spca504_flash/library.c:172
-#, fuzzy
 msgid "Manual Not Implemented Yet"
-msgstr "未实现！"
+msgstr "手册尚未实现！"
 
 #: camlibs/pccam600/library.c:266
 msgid ""
@@ -2483,6 +2484,9 @@ msgid ""
 " Author: Peter Kajberg\n"
 " email: <pbk@odense.kollegienet.dk>\n"
 msgstr ""
+"创新 PC-CAM600\n"
+" 作者：Peter Kajberg\n"
+" 电子邮件：<pbk@odense.kollegienet.dk>\n"
 
 # camlibs/polaroid/pdc700.c:159
 #: camlibs/polaroid/pdc700.c:159
@@ -2918,70 +2922,71 @@ msgid ""
 "Martin Fischer <martin.fischer@inka.de>,\n"
 "based on Bob Paauwe's driver\n"
 msgstr ""
+"尼康 / 菲力浦驱动程序由\n"
+"Lutz Mueller <lutz@users.sourceforge.net>,\n"
+"Martin Fischer <martin.fischer@inka.de>,\n"
+"根据 Bob Paauwe 的驱动程序编制\n"
 
 #: camlibs/ricoh/library.c:249
 #, c-format
 msgid "unknown (0x%02x)"
-msgstr ""
+msgstr "未知 (0x%02x)"
 
 # camlibs/ricoh/library.c:177
 #: camlibs/ricoh/library.c:252
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Model: %s\n"
 "Memory: %d byte(s) of %d available"
 msgstr ""
-"相机型号：%s\n"
-"相机 ID：%s\n"
-"内存：%2$d 字节中 %1$d 个字节可用\n"
-"相机时间：%s\n"
+"型号：%s\n"
+"内存：%d(字节)/%d 可用"
 
 #: camlibs/ricoh/library.c:302
 msgid "-2.0"
-msgstr ""
+msgstr "-2.0"
 
 #: camlibs/ricoh/library.c:303
 msgid "-1.5"
-msgstr ""
+msgstr "-1.5"
 
 #: camlibs/ricoh/library.c:304
 msgid "-1.0"
-msgstr ""
+msgstr "-1.0"
 
 #: camlibs/ricoh/library.c:305
 msgid "-0.5"
-msgstr ""
+msgstr "-0.5"
 
 #: camlibs/ricoh/library.c:306
 msgid "0.0"
-msgstr ""
+msgstr "0.0"
 
 #: camlibs/ricoh/library.c:307
 msgid "0.5"
-msgstr ""
+msgstr "0.5"
 
 #: camlibs/ricoh/library.c:308
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #: camlibs/ricoh/library.c:309
 msgid "1.5"
-msgstr ""
+msgstr "1.5"
 
 #: camlibs/ricoh/library.c:310
 msgid "2.0"
-msgstr ""
+msgstr "2.0"
 
 #: camlibs/ricoh/library.c:319
 msgid "1280 x 960"
-msgstr ""
+msgstr "1280 x 960"
 
 # camlibs/dimera/dimera3500.c:684 camlibs/dimera/dimera3500.c:850
 # camlibs/dimera/dimera3500.c:918
 #: camlibs/ricoh/library.c:327
-#, fuzzy
 msgid "Outdoor"
-msgstr "内存耗尽"
+msgstr "户外"
 
 # camlibs/sierra/sierra.c:949 camlibs/sierra/sierra.c:958
 # camlibs/sierra/sierra.c:1237
@@ -2997,7 +3002,6 @@ msgstr ""
 # camlibs/sierra/sierra.c:1496 camlibs/sierra/sierra.c:1500
 # camlibs/sierra/sierra.c:1700
 #: camlibs/ricoh/library.c:330
-#, fuzzy
 msgid "Black & White"
 msgstr "黑白"
 
@@ -3010,34 +3014,31 @@ msgstr "棕褐色"
 
 #: camlibs/ricoh/library.c:347
 msgid "Maximal"
-msgstr ""
+msgstr "最大的"
 
 # camlibs/polaroid/pdc700.c:167
 #: camlibs/ricoh/library.c:349
-#, fuzzy
 msgid "Minimal"
-msgstr "普通"
+msgstr "最小的"
 
 # camlibs/canon/library.c:576 camlibs/canon/library.c:582
 # camlibs/canon/library.c:851 camlibs/canon/library.c:857
 #: camlibs/ricoh/library.c:357
-#, fuzzy
 msgid "Character"
-msgstr "交流变压器"
+msgstr "人物"
 
 #: camlibs/ricoh/library.c:358
 msgid "Sound"
-msgstr ""
+msgstr "音效"
 
 # camlibs/polaroid/pdc700.c:160
 #: camlibs/ricoh/library.c:359
-#, fuzzy
 msgid "Image & Sound"
-msgstr "图像大小"
+msgstr "图像和音效"
 
 #: camlibs/ricoh/library.c:360
 msgid "Character & Sound"
-msgstr ""
+msgstr "人物和音效"
 
 # camlibs/sierra/sierra.c:1026 camlibs/sierra/sierra.c:1032
 #: camlibs/ricoh/library.c:377 camlibs/sierra/sierra.c:1013
@@ -3047,82 +3048,74 @@ msgstr "2x"
 
 #: camlibs/ricoh/library.c:378
 msgid "3x"
-msgstr ""
+msgstr "3x"
 
 #: camlibs/ricoh/library.c:379
 msgid "4x"
-msgstr ""
+msgstr "4x"
 
 # camlibs/sierra/sierra.c:1027 camlibs/sierra/sierra.c:1038
 #: camlibs/ricoh/library.c:380
-#, fuzzy
 msgid "5x"
-msgstr "2.5x"
+msgstr "5x"
 
 # camlibs/sierra/sierra.c:1025 camlibs/sierra/sierra.c:1035
 #: camlibs/ricoh/library.c:381
-#, fuzzy
 msgid "6x"
-msgstr "1.6x"
+msgstr "6x"
 
 #: camlibs/ricoh/library.c:382
 msgid "7x"
-msgstr ""
+msgstr "7x"
 
 #: camlibs/ricoh/library.c:383
 msgid "8x"
-msgstr ""
+msgstr "8x"
 
 #: camlibs/ricoh/library.c:384
 msgid "9x"
-msgstr ""
+msgstr "9x"
 
 # camlibs/polaroid/pdc700.c:981 camlibs/sierra/sierra.c:776
 # camlibs/sierra/sierra.c:1353
 #: camlibs/ricoh/library.c:430
-#, fuzzy
 msgid "Configuration"
-msgstr "相机配置"
+msgstr "配置"
 
 # camlibs/polaroid/pdc700.c:167
 #: camlibs/ricoh/library.c:433
-#, fuzzy
 msgid "General"
 msgstr "普通"
 
 # camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:926
 # camlibs/sierra/sierra.c:1214
 #: camlibs/ricoh/library.c:437
-#, fuzzy
 msgid "Copyright"
-msgstr "亮度+"
+msgstr "版权"
 
 #: camlibs/ricoh/library.c:439
 msgid "Copyright (max. 20 characters)"
-msgstr ""
+msgstr "版权 (最多 20 个字符)"
 
 # camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:1443
 #: camlibs/ricoh/library.c:453
-#, fuzzy
 msgid "Pictures"
-msgstr "照片设置"
+msgstr "照片"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
 #: camlibs/ricoh/library.c:497
-#, fuzzy
 msgid "White level"
 msgstr "白平衡"
 
 # camlibs/minolta/dimagev/dimagev.c:308
 #: camlibs/ricoh/library.c:501
-#, fuzzy
 msgid "Record Mode"
-msgstr "录制"
+msgstr "录制模式"
 
 #: camlibs/ricoh/library.c:502
 msgid "Compression"
-msgstr ""
+msgstr "压缩"
 
 # camlibs/ricoh/library.c:252
 #: camlibs/ricoh/library.c:561
@@ -3167,43 +3160,38 @@ msgstr "相机忙。如果问题总是存在，请联系 <gphoto-devel@gphoto.or
 
 # camlibs/sierra/library.c:620
 #: camlibs/ricoh/ricoh.c:292
-#, fuzzy
 msgid "Timeout even after 2 retries. Please contact <gphoto-devel@gphoto.org>."
-msgstr "在 %i 次重试后包传输仍然超时。请联系 <gphoto-devel@gphoto.org>。"
+msgstr "两次重试后仍然超时。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:620
 #: camlibs/ricoh/ricoh.c:308
-#, fuzzy
 msgid ""
 "Communication error even after 2 retries. Please contact <gphoto-"
 "devel@gphoto.org>."
-msgstr "在 %i 次重试后包传输仍然超时。请联系 <gphoto-devel@gphoto.org>。"
+msgstr "两次重试后仍然通讯错误。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/ricoh/ricoh.c:250
 #: camlibs/ricoh/ricoh.c:340
-#, fuzzy
 msgid "Camera is in wrong mode. Please contact <gphoto-devel@gphoto.org>."
-msgstr "相机忙。如果问题总是存在，请联系 <gphoto-devel@gphoto.org>。"
+msgstr "相机处于错误的模式。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:879
 #: camlibs/ricoh/ricoh.c:349
-#, fuzzy
 msgid ""
 "Camera did not accept the parameters. Please contact <gphoto-devel@gphoto."
 "org>."
-msgstr "无法读取寄存器 %i。请联系 <gphoto-devel@gphoto.org>。"
+msgstr "相机无法接收参数。请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:879
 #: camlibs/ricoh/ricoh.c:355
-#, fuzzy
 msgid "An unknown error occurred. Please contact <gphoto-devel@gphoto.org>."
-msgstr "无法读取寄存器 %i。请联系 <gphoto-devel@gphoto.org>。"
+msgstr "遇到未知的错误。请联系 <gphoto-devel@gphoto.org>。"
 
 #: camlibs/ricoh/ricoh.c:817
 #, c-format
 msgid ""
 "The filename's length must not exceed 12 characters ('%s' has %i characters)."
-msgstr ""
+msgstr "文件名的长度不能超过 12 个字符 (“%s” 含有 %i 个字符)。"
 
 # camlibs/samsung/samsung.c:244
 #: camlibs/samsung/samsung.c:243
@@ -3220,18 +3208,16 @@ msgstr ""
 # camlibs/dimera/dimera3500.c:537
 #: camlibs/sierra/epson-desc.c:82 camlibs/sierra/nikon-desc.c:91
 #: camlibs/sierra/olympus-desc.c:103
-#, fuzzy
 msgid "Resolution plus Size"
-msgstr "分辨率切换"
+msgstr "分辨率加尺寸"
 
 # camlibs/konica/library.c:633 camlibs/konica/library.c:844
 # camlibs/polaroid/pdc700.c:1005 camlibs/polaroid/pdc700.c:1018
 # camlibs/polaroid/pdc700.c:1088
 #: camlibs/sierra/epson-desc.c:100 camlibs/sierra/nikon-desc.c:109
 #: camlibs/sierra/olympus-desc.c:121
-#, fuzzy
 msgid "Date and time (GMT)"
-msgstr "日期和时间"
+msgstr "日期和时间 (GMT)"
 
 # camlibs/sierra/sierra.c:777 camlibs/sierra/sierra.c:1443
 #: camlibs/sierra/epson-desc.c:179 camlibs/sierra/nikon-desc.c:175
@@ -3252,7 +3238,6 @@ msgstr "彩色模式"
 # camlibs/polaroid/pdc700.c:161
 #: camlibs/sierra/epson-desc.c:212 camlibs/sierra/nikon-desc.c:208
 #: camlibs/sierra/olympus-desc.c:246
-#, fuzzy
 msgid "Flash Settings"
 msgstr "闪光灯设置"
 
@@ -3322,9 +3307,8 @@ msgstr ""
 
 # camlibs/konica/konica.c:80
 #: camlibs/sierra/library.c:142 camlibs/sierra/library.c:1341
-#, fuzzy
 msgid "No memory card present"
-msgstr "未插卡。"
+msgstr "未插内存卡"
 
 # camlibs/sierra/library.c:285
 #: camlibs/sierra/library.c:288
@@ -3414,11 +3398,10 @@ msgstr "正在发送数据..."
 
 # camlibs/sierra/library.c:657
 #: camlibs/sierra/library.c:1194
-#, fuzzy
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact "
 "<gphoto-devel@gphoto.org>."
-msgstr "相机拒绝包。请联系 <gphoto-devel@gphoto.org>。"
+msgstr "Sierra 驱动程序不支持递归调用！请联系 <gphoto-devel@gphoto.org>。"
 
 # camlibs/sierra/library.c:1010
 #: camlibs/sierra/library.c:1243
@@ -3440,40 +3423,35 @@ msgstr "未实现！"
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
 #: camlibs/sierra/nikon-desc.c:127 camlibs/sierra/olympus-desc.c:140
-#, fuzzy
 msgid "Shutter Speed microseconds (0 auto)"
 msgstr "快门速度 (微秒，0 表示自动)"
 
 # camlibs/sierra/sierra.c:814 camlibs/sierra/sierra.c:1137
 #: camlibs/sierra/nikon-desc.c:158 camlibs/sierra/olympus-desc.c:179
-#, fuzzy
 msgid "Shutter Speed (in seconds)"
-msgstr "快门速度 (微秒，0 表示自动)"
+msgstr "快门速度 (秒)"
 
 #: camlibs/sierra/nikon-desc.c:227
 msgid "Image Adjustment"
-msgstr ""
+msgstr "图像调整"
 
 # camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1250
 # camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
 #: camlibs/sierra/nikon-desc.c:275
-#, fuzzy
 msgid "LED Mode"
-msgstr "镜头模式"
+msgstr "LED 模式"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
 #: camlibs/sierra/nikon-desc.c:295 camlibs/sierra/olympus-desc.c:281
-#, fuzzy
 msgid "Focus Mode"
-msgstr "闪光灯模式"
+msgstr "聚焦模式"
 
 # frontends/command-line/gphoto2-cmd-capture.c:218
 # libgphoto2/gphoto2-result.c:51
 #: camlibs/sierra/nikon-desc.c:342
-#, fuzzy
 msgid "Operation Mode"
-msgstr "操作已取消"
+msgstr "操作模式"
 
 # camlibs/sierra/sierra.c:1083 camlibs/sierra/sierra.c:1322
 #: camlibs/sierra/nikon-desc.c:356 camlibs/sierra/olympus-desc.c:317
@@ -3483,36 +3461,34 @@ msgstr "LCD 亮度"
 
 # camlibs/sierra/sierra.c:1093 camlibs/sierra/sierra.c:1331
 #: camlibs/sierra/nikon-desc.c:371 camlibs/sierra/olympus-desc.c:359
-#, fuzzy
 msgid "LCD Auto Shut Off (seconds)"
-msgstr "LCD 自动关闭 (以秒为单位)"
+msgstr "LCD 自动关闭 (秒)"
 
 #: camlibs/sierra/nikon-desc.c:423 camlibs/sierra/nikon-desc.c:446
 #: camlibs/sierra/olympus-desc.c:403
 msgid "Exposure Compensation"
-msgstr ""
+msgstr "曝光补偿"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
 #: camlibs/sierra/nikon-desc.c:463 camlibs/sierra/olympus-desc.c:418
-#, fuzzy
 msgid "Exposure Metering"
-msgstr "曝光"
+msgstr "曝光测定"
 
 #: camlibs/sierra/nikon-desc.c:481 camlibs/sierra/olympus-desc.c:434
 msgid "Zoom (in millimeters)"
-msgstr ""
+msgstr "缩放 (毫米)"
 
 #: camlibs/sierra/nikon-desc.c:518 camlibs/sierra/nikon-desc.c:541
 msgid "Digital Zoom"
-msgstr ""
+msgstr "数字缩放"
 
 #: camlibs/sierra/nikon-desc.c:523
 msgid "Misc exposure/lense settings"
-msgstr ""
+msgstr "其它曝光/镜头设置"
 
 #: camlibs/sierra/nikon-desc.c:546
 msgid "Auto exposure lock"
-msgstr ""
+msgstr "自动曝光锁"
 
 #: camlibs/sierra/nikon-desc.c:600
 msgid ""
@@ -3530,6 +3506,20 @@ msgid ""
 "        Put the camera in 'M' mode in order to\n"
 "        to set the shutter speed.\n"
 msgstr ""
+"尼康 Coolpix 880：\n"
+"    相机配置 (或首选项)：\n"
+"\n"
+"        光学缩放尚未正常\n"
+"        工作。\n"
+"\n"
+"\n"
+"        不是所有的配置信息\n"
+"        都能够正确读入或写出，\n"
+"        例如，微调白平衡，\n"
+"        和语言设置。\n"
+"\n"
+"        将相机设置为 'M' 模式\n"
+"        以便设置快门速度。\n"
 
 #: camlibs/sierra/nikon-desc.c:619
 msgid ""
@@ -3542,35 +3532,40 @@ msgid ""
 "\n"
 "    The download should function correctly.\n"
 msgstr ""
+"尼康 Coolpix 995:\n"
+"    该相机的相机配置 (首选项) 尚未\n"
+"    完成，如果您愿意为该驱动程序\n"
+"    作出贡献的话，请发送 Email 到\n"
+"    gphoto-devel@gphoto.net与 gphoto\n"
+"    开发者联系。\n"
+"\n"
+"    下载应该能正常工作了。\n"
 
 # camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1250
 # camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
 #: camlibs/sierra/olympus-desc.c:302
-#, fuzzy
 msgid "LCD Mode"
-msgstr "镜头模式"
+msgstr "LCD 模式"
 
 #: camlibs/sierra/olympus-desc.c:451
 msgid "Digital zoom"
-msgstr ""
+msgstr "数字缩放"
 
 #: camlibs/sierra/olympus-desc.c:468
 msgid "ISO Speed"
-msgstr ""
+msgstr "ISO 速度"
 
 #: camlibs/sierra/olympus-desc.c:484
 msgid "Focus position"
-msgstr ""
+msgstr "聚焦位置"
 
 # camlibs/konica/library.c:729 camlibs/konica/library.c:960
 #: camlibs/sierra/olympus-desc.c:501
-#, fuzzy
 msgid "Time format"
-msgstr "日期格式"
+msgstr "时间格式"
 
 # camlibs/sierra/sierra.c:1864
 #: camlibs/sierra/olympus-desc.c:556
-#, fuzzy
 msgid ""
 "Some notes about Olympus cameras:\n"
 "(1) Camera Configuration:\n"
@@ -3590,7 +3585,7 @@ msgid ""
 "    state, you should reconnect the camera to the\n"
 "    PC and switch LCD to 'Off'."
 msgstr ""
-"关于奥林巴斯相机 (以及其它？) 的一些事项：\n"
+"关于奥林巴斯相机的一些事项：\n"
 "(1) 相机配置：\n"
 "    0 值表示使用默认值 (自动)。\n"
 "(2) 奥林巴斯 C-3040Z (可能还有\n"
@@ -3600,7 +3595,13 @@ msgstr ""
 "    为了得到切换模式的菜单，打开内存卡\n"
 "    访问门，而后按住两个菜单按钮直到\n"
 "    相机控制菜单出现。将USB PC 控制模式\n"
-"    打开。"
+"    打开。\n"
+"(3) 如果您从“LCD 模式”切换到“监视器”或\n"
+"    “普通”模式，不要忘记在断开连接前将它\n"
+"    切换回“关闭”状态。否则您将无法使用\n"
+"    相机的按钮。如果您以此状态结束，您应\n"
+"    该重新将相机连接到 PC 上并从 LCD 切换\n"
+"    到“关闭”。"
 
 #: camlibs/sierra/olympus-desc.c:577
 msgid ""
@@ -3618,6 +3619,19 @@ msgid ""
 "    code to support complete configuration,\n"
 "    please contact gphoto-devel@gphoto.net\n"
 msgstr ""
+"默认 sierra 驱动程序：\n"
+"\n"
+"    这是默认的 sierra 驱动程序，\n"
+"    它应该能够支持下载和浏览您\n"
+"    的相机中的照片。\n"
+"\n"
+"    相机配置 (或首选项) 设置\n"
+"    是基于奥林巴斯 3040 的，\n"
+"    似乎并不完整。如果您证实\n"
+"    配置设置对您的相机来说是\n"
+"    完整的，或您能为支持完整的\n"
+"    配置作出贡献，请联络\n"
+"    gphoto-devel@gphoto.net\n"
 
 # camlibs/sierra/sierra.c:802 camlibs/sierra/sierra.c:842
 # camlibs/sierra/sierra.c:874 camlibs/sierra/sierra.c:904
@@ -3628,9 +3642,9 @@ msgstr ""
 # camlibs/sierra/sierra.c:1458 camlibs/sierra/sierra.c:1484
 # camlibs/sierra/sierra.c:1503 camlibs/sierra/sierra.c:1571
 #: camlibs/sierra/sierra-desc.c:172
-#, fuzzy, c-format
+#, c-format
 msgid "%lld (unknown)"
-msgstr "%i (未知)"
+msgstr "%lld (未知)"
 
 # camlibs/sierra/sierra.c:635
 #: camlibs/sierra/sierra.c:620
@@ -4015,7 +4029,7 @@ msgstr "葡萄牙语"
 
 #: camlibs/sierra/sierra.c:1790
 msgid "Note: no memory card present, some values may be invalid\n"
-msgstr ""
+msgstr "注意：没有内存卡，有些值可能是无效的\n"
 
 # camlibs/sierra/sierra.c:1806
 #: camlibs/sierra/sierra.c:1797
@@ -4073,13 +4087,12 @@ msgstr "%s内存剩余：%i 字节\n"
 
 # camlibs/sierra/sierra.c:1836
 #: camlibs/sierra/sierra.c:1820
-#, fuzzy, c-format
+#, c-format
 msgid "%sDate: %s"
-msgstr "%s日期：%s\n"
+msgstr "%s日期：%s"
 
 # camlibs/sierra/sierra.c:1864
 #: camlibs/sierra/sierra.c:1855
-#, fuzzy
 msgid ""
 "Some notes about Olympus cameras (and others?):\n"
 "(1) Camera Configuration:\n"
@@ -4109,7 +4122,13 @@ msgstr ""
 "    为了得到切换模式的菜单，打开内存卡\n"
 "    访问门，而后按住两个菜单按钮直到\n"
 "    相机控制菜单出现。将USB PC 控制模式\n"
-"    打开。"
+"    打开。\n"
+"(3) 如果您从“LCD 模式”切换到“监视器”或\n"
+"    “普通”模式，不要忘记在断开连接前将它\n"
+"    切换回“关闭”状态。否则您将无法使用\n"
+"    相机的按钮。如果您以此状态结束，您应\n"
+"    该重新将相机连接到 PC 上并从 LCD 切换\n"
+"    到“关闭”。"
 
 # camlibs/sierra/sierra.c:1887
 #: camlibs/sierra/sierra.c:1884
@@ -4138,6 +4157,9 @@ msgid ""
 "Marcus Meissner <marcus@jet.franken.de>\n"
 "Driver for accessing the SiPix Web2 camera."
 msgstr ""
+"SiPix Web2\n"
+"Marcus Meissner <marcus@jet.franken.de>\n"
+"用于访问 SiPix Web2 相机的驱动程序。"
 
 #: camlibs/sipixblink/sipixblink.c:323
 msgid ""
@@ -4145,6 +4167,9 @@ msgid ""
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
 msgstr ""
+"Sipix StyleCam Blink 驱动程序\n"
+"Vincent Sanders <vince@kyllikki.org>\n"
+"Marcus Meissner <marcus@jet.franken.de>.\n"
 
 #: camlibs/sonydscf1/dsc_f1.c:134
 msgid "Sorry, this function not implemented..."
@@ -4162,7 +4187,7 @@ msgstr ""
 #: camlibs/sonydscf1/dsc_f1.c:152
 #, fuzzy
 msgid "Couldn't open camera.\n"
-msgstr "无法检测到任何相机"
+msgstr "无法重置相机。\n"
 
 # camlibs/dimera/dimera3500.c:947
 #: camlibs/sonydscf1/dsc_f1.c:166
@@ -4228,26 +4253,25 @@ msgstr ""
 
 # camlibs/stv0680/library.c:529
 #: camlibs/soundvision/soundvision.c:229
-#, fuzzy, c-format
+#, c-format
 msgid "Revision: %8s"
-msgstr "专用集成电路版本：%d.%d\n"
+msgstr "版本：%8s"
 
 # camlibs/agfa/agfa.c:228
 #: camlibs/soundvision/soundvision.c:236
-#, fuzzy
 msgid ""
 "Soundvision Driver\n"
 "Vince Weaver <vince@deater.net>\n"
 msgstr ""
-"爱克发 CL18\n"
+"Soundvision 驱动程序\n"
 "Vince Weaver <vince@deater.net>\n"
 
-#: camlibs/spca504_flash/library.c:181
+#: camlibs/spca504_flash/library.c:182
 msgid ""
 "spca504_flash camlib\n"
 " Authors: Till Adam\n"
 " <till@adam-lilienthal.de>\n"
-"based on work by Matthias Krau\n"
+"based on work by Matthias Krauss\n"
 "and Mark A. Zimmerman <mark@foresthaven.com>"
 msgstr ""
 
@@ -4395,9 +4419,9 @@ msgstr ""
 
 # camlibs/konica/library.c:617
 #: camlibs/sx330z/library.c:135
-#, fuzzy, c-format
+#, c-format
 msgid "Getting information on %i files..."
-msgstr "正在获取配置..."
+msgstr "正在获取第 %i 个文件的信息..."
 
 #: camlibs/sx330z/library.c:239
 msgid ""
@@ -4406,6 +4430,10 @@ msgid ""
 "Even the 4100 Cameras could work.\n"
 "Not tested, please report if this driver works with them!)\n"
 msgstr ""
+"0.1 旅行者 SX330z ALDI-cam\n"
+"(许多其它产品，比如 Jenoptik、Skanhex、Maginon 也应该能工作。\n"
+"甚至 4100 相机也能用。\n"
+"未测试，如果该驱动程序能同它们工作，请报告！)\n"
 
 #: camlibs/sx330z/library.c:253
 msgid ""
@@ -4413,10 +4441,13 @@ msgid ""
 "See summary for more information\n"
 "Dominik Kuhlen <dkuhlen@fhm.edu>\n"
 msgstr ""
+"(旅行者) SX330z 库\n"
+"更多信息参见概要\n"
+"Dominik Kuhlen <dkuhlen@fhm.edu>\n"
 
 #: camlibs/sx330z/library.c:274
 msgid "sx330z is USB only"
-msgstr ""
+msgstr "sx330z 只支持 USB"
 
 # libgphoto2/gphoto2-abilities-list.c:260
 #: libgphoto2/gphoto2-abilities-list.c:178
@@ -4615,17 +4646,17 @@ msgstr "文件系统不支持获取文件信息"
 msgid ""
 "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
 "filesystem is mounted."
-msgstr ""
+msgstr "无法打开“/proc/meminfo”以便读入(“%m”)。确认加载了 proc 文件系统。"
 
 #: libgphoto2/gphoto2-filesys.c:1862
 #, c-format
 msgid "An error occured while reading '/proc/meminfo' ('%m')."
-msgstr ""
+msgstr "读入“/proc/meminfo”时出错 (“%m”)。"
 
 #: libgphoto2/gphoto2-filesys.c:1896
 #, c-format
 msgid "sysctl call failed ('%m')."
-msgstr ""
+msgstr "sysctl 调用失败 (“%m”)。"
 
 # libgphoto2/gphoto2-filesys.c:1867
 #: libgphoto2/gphoto2-filesys.c:2229
@@ -4687,3 +4718,6 @@ msgstr "未知的相机库错误"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "未知的错误"
+
+#~ msgid ":"
+#~ msgstr "："

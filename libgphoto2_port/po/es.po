@@ -5,13 +5,86 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2002-11-22 13:57+0100\n"
+"POT-Creation-Date: 2002-11-20 19:29+0100\n"
 "PO-Revision-Date: 2002-06-18 22:59-0300\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: libgphoto2_port/gphoto2-port.c:56
+#, c-format
+msgid "The operation '%s' is not supported by this device"
+msgstr "Este dispositivo no soporta la operación '%s'"
+
+#: libgphoto2_port/gphoto2-port.c:57
+msgid "The port has not yet been initialized"
+msgstr "Todavía no se ha inicializado el puerto"
+
+#: libgphoto2_port/gphoto2-port.c:278
+msgid "open"
+msgstr "abrir"
+
+#: libgphoto2_port/gphoto2-port.c:301
+msgid "close"
+msgstr "cerrar"
+
+#: libgphoto2_port/gphoto2-port.c:376
+msgid "write"
+msgstr "escribir"
+
+#: libgphoto2_port/gphoto2-port.c:408
+msgid "read"
+msgstr "leer"
+
+#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
+msgid "check_int"
+msgstr "check_int"
+
+#: libgphoto2_port/gphoto2-port.c:581
+msgid "update"
+msgstr "actualizar"
+
+#: libgphoto2_port/gphoto2-port.c:627
+msgid "get_pin"
+msgstr "get_pin"
+
+#: libgphoto2_port/gphoto2-port.c:679
+msgid "set_pin"
+msgstr "set_pin"
+
+#: libgphoto2_port/gphoto2-port.c:694
+msgid "send_break"
+msgstr "send_break"
+
+#: libgphoto2_port/gphoto2-port.c:707
+msgid "flush"
+msgstr "vaciar"
+
+#: libgphoto2_port/gphoto2-port.c:723
+msgid "find_device"
+msgstr "find_device"
+
+#: libgphoto2_port/gphoto2-port.c:735
+msgid "find_device_by_class"
+msgstr "find_device_by_class"
+
+#: libgphoto2_port/gphoto2-port.c:749
+msgid "clear_halt"
+msgstr "clear_halt"
+
+#: libgphoto2_port/gphoto2-port.c:769
+msgid "msg_write"
+msgstr "msg_write"
+
+#: libgphoto2_port/gphoto2-port.c:789
+msgid "msg_read"
+msgstr "msg_read"
+
+#: libgphoto2_port/gphoto2-port.c:849
+msgid "No error description available"
+msgstr "No está disponible la descripción del error"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:266
 #, c-format
@@ -108,78 +181,66 @@ msgstr "No se pudo trabar el dispositivo"
 msgid "Unknown error"
 msgstr "Error desconocido"
 
-#: libgphoto2_port/gphoto2-port.c:56
+#: usb/libusb.c:131
 #, c-format
-msgid "The operation '%s' is not supported by this device"
-msgstr "Este dispositivo no soporta la operación '%s'"
+msgid "Could not open USB device (%m)."
+msgstr "No se pudo abrir el dispositivo USB (%m)."
 
-#: libgphoto2_port/gphoto2-port.c:57
-msgid "The port has not yet been initialized"
-msgstr "Todavía no se ha inicializado el puerto"
+#: usb/libusb.c:138
+#, c-format
+msgid ""
+"Could not claim interface %d (%m). Make sure no other program or kernel "
+"module (e.g. dc2xx or stv680) is using the device and you have read/write "
+"access to the device."
+msgstr ""
+"No se pudo reclamar la interfaz %d (%m). Debe asegurarse que ningún otro "
+"programa o módulo del núcleo (ej: dc2xx o stv680) esté utilizando el "
+"dispositivo y que Usted tiene acceso de lectura/escritura al dispositivo."
 
-#: libgphoto2_port/gphoto2-port.c:278
-msgid "open"
-msgstr "abrir"
+#: usb/libusb.c:157
+#, c-format
+msgid "Could not release interface %d (%m)."
+msgstr "No se pudo liberar la interfaz %d (%m)."
 
-#: libgphoto2_port/gphoto2-port.c:301
-msgid "close"
-msgstr "cerrar"
+#: usb/libusb.c:164
+#, c-format
+msgid "Could not close USB port (%m)."
+msgstr "No se pudo cerrar el puerto USB (%m)."
 
-#: libgphoto2_port/gphoto2-port.c:376
-msgid "write"
-msgstr "escribir"
+#: usb/libusb.c:294
+#, c-format
+msgid "Could not set config %d/%d (%m)"
+msgstr "No se pudo ajustar la configuración %d%d (%m)"
 
-#: libgphoto2_port/gphoto2-port.c:408
-msgid "read"
-msgstr "leer"
+#: usb/libusb.c:316
+#, c-format
+msgid "Could not set altsetting %d/%d (%m)"
+msgstr "No se pudo configurar alternativa %d%d (%m)"
 
-#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:481
-msgid "check_int"
-msgstr "check_int"
+#: usb/libusb.c:391
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr ""
+"El fabricante o ID de producto proporcionado (0x%x, 0x%x) no es válido."
 
-#: libgphoto2_port/gphoto2-port.c:581
-msgid "update"
-msgstr "actualizar"
+#: usb/libusb.c:439
+#, c-format
+msgid ""
+"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
+"is connected to the computer."
+msgstr ""
+"No se pudo encontrar el dispositivo USB (fabricante 0x%x, producto 0x%x). "
+"Debe asegurarse que este dispositivo está conectado a la computadora."
 
-#: libgphoto2_port/gphoto2-port.c:627
-msgid "get_pin"
-msgstr "get_pin"
-
-#: libgphoto2_port/gphoto2-port.c:679
-msgid "set_pin"
-msgstr "set_pin"
-
-#: libgphoto2_port/gphoto2-port.c:694
-msgid "send_break"
-msgstr "send_break"
-
-#: libgphoto2_port/gphoto2-port.c:707
-msgid "flush"
-msgstr "vaciar"
-
-#: libgphoto2_port/gphoto2-port.c:723
-msgid "find_device"
-msgstr "find_device"
-
-#: libgphoto2_port/gphoto2-port.c:735
-msgid "find_device_by_class"
-msgstr "find_device_by_class"
-
-#: libgphoto2_port/gphoto2-port.c:749
-msgid "clear_halt"
-msgstr "clear_halt"
-
-#: libgphoto2_port/gphoto2-port.c:769
-msgid "msg_write"
-msgstr "msg_write"
-
-#: libgphoto2_port/gphoto2-port.c:789
-msgid "msg_read"
-msgstr "msg_read"
-
-#: libgphoto2_port/gphoto2-port.c:849
-msgid "No error description available"
-msgstr "No está disponible la descripción del error"
+#: usb/libusb.c:547
+#, c-format
+msgid ""
+"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
+"sure this device is connected to the computer."
+msgstr ""
+"No se pudo encontrar el dispositivo USB (clase 0x%x, subclase 0x%x, "
+"protocolo 0x%x). Debe asegurarse que este dispositivo está conectado a la "
+"computadora."
 
 #: serial/unix.c:214
 #, c-format
@@ -265,64 +326,3 @@ msgstr "No se pudo vaciar '%s' (%m)."
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "No se pudo configurar la tasa de baud en %d"
-
-#: usb/libusb.c:131
-#, c-format
-msgid "Could not open USB device (%m)."
-msgstr "No se pudo abrir el dispositivo USB (%m)."
-
-#: usb/libusb.c:138
-#, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (e.g. dc2xx or stv680) is using the device and you have read/write "
-"access to the device."
-msgstr ""
-"No se pudo reclamar la interfaz %d (%m). Debe asegurarse que ningún otro "
-"programa o módulo del núcleo (ej: dc2xx o stv680) esté utilizando el "
-"dispositivo y que Usted tiene acceso de lectura/escritura al dispositivo."
-
-#: usb/libusb.c:157
-#, c-format
-msgid "Could not release interface %d (%m)."
-msgstr "No se pudo liberar la interfaz %d (%m)."
-
-#: usb/libusb.c:164
-#, c-format
-msgid "Could not close USB port (%m)."
-msgstr "No se pudo cerrar el puerto USB (%m)."
-
-#: usb/libusb.c:294
-#, c-format
-msgid "Could not set config %d/%d (%m)"
-msgstr "No se pudo ajustar la configuración %d%d (%m)"
-
-#: usb/libusb.c:316
-#, c-format
-msgid "Could not set altsetting %d/%d (%m)"
-msgstr "No se pudo configurar alternativa %d%d (%m)"
-
-#: usb/libusb.c:391
-#, c-format
-msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"El fabricante o ID de producto proporcionado (0x%x, 0x%x) no es válido."
-
-#: usb/libusb.c:439
-#, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"No se pudo encontrar el dispositivo USB (fabricante 0x%x, producto 0x%x). "
-"Debe asegurarse que este dispositivo está conectado a la computadora."
-
-#: usb/libusb.c:547
-#, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"No se pudo encontrar el dispositivo USB (clase 0x%x, subclase 0x%x, "
-"protocolo 0x%x). Debe asegurarse que este dispositivo está conectado a la "
-"computadora."
