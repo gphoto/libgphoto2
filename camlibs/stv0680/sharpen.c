@@ -194,7 +194,7 @@ void  sharpen(int width, int height,
 		    neg_rows[(row + 3) & 3] + img_bpp);
 
 	    /** Set the row...  **/
-	    memcpy((dest_region + pitch*(y+1)), dst_row, pitch);
+	    memcpy((dest_region + pitch*y), dst_row, pitch);
 	}
 	else if (count == 2)
 	{
