@@ -12,6 +12,7 @@ INCLUDES =	\
 noinst_PROGRAMS = print-usb-usermap
 
 # FIXME: This should only be built if target system is linux
+#	 and not cross-compiled.
 print_usb_usermap_SOURCE = print-usb-usermap.c
 print_usb_usermap_LDADD = ../../libgphoto2/libgphoto2.la
 

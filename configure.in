@@ -281,14 +281,19 @@ dnl ---------------------------------------------------------------------------
 dnl /proc/meminfo: If the meminfo /proc entry is available, we use it
 dnl to limit the libgphoto2 filesystem cache size.
 dnl ---------------------------------------------------------------------------
-AC_CHECK_FILE(/proc/meminfo, [
-	proc_meminfo_msg="available";
-	proc_meminfo=true;
-	AC_DEFINE(HAVE_PROCMEMINFO,1,[whether we get memory info from /proc/meminfo])
-], [
-	proc_meminfo_msg="not available";
+if test "$cross_compiling" != yes; then
+	AC_CHECK_FILE(/proc/meminfo, [
+		proc_meminfo_msg="available";
+		proc_meminfo=true;
+		AC_DEFINE(HAVE_PROCMEMINFO,1,[whether we get memory info from /proc/meminfo])
+	], [
+		proc_meminfo_msg="not available";
+		proc_meminfo=false;
+	])
+else
+	proc_meminfo_msg="state not known, cross-compilation";
 	proc_meminfo=false;
-])
+fi
 
 dnl Check for sysctl()
 AC_MSG_CHECKING([for sysctl on BSD])
