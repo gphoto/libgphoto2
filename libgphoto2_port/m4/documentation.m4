@@ -136,6 +136,10 @@ dnl ------------------------------------------------------------------------
 manual_msg="no (http://cyberelk.net/tim/xmlto/)"
 try_xmlto=true
 have_xmlto=false
+have_xmltohtml=false
+have_xmltoman=false
+have_xmltopdf=false
+have_xmltops=false
 AC_ARG_WITH(xmlto, [  --without-xmlto           Don't use xmlto],[
 	if test x$withval = xno; then
 		try_xmlto=false
@@ -143,14 +147,25 @@ AC_ARG_WITH(xmlto, [  --without-xmlto           Don't use xmlto],[
 if $try_xmlto; then
 	AC_CHECK_PROG(have_xmlto,xmlto,true,false)
 fi
-AM_CONDITIONAL(XMLTO, $have_xmlto)
 if $have_xmlto; then
-	AM_CONDITIONAL(XMLTOHTML,[xmlto --help | grep html > /dev/null 2>&1])
-	AM_CONDITIONAL(XMLTOMAN,[xmlto --help | grep man > /dev/null 2>&1])
-dnl pdf and ps not working yet
-	AM_CONDITIONAL(XMLTOPDF,[xmlto --help | grep pdf > /dev/null 2>&1])
-	AM_CONDITIONAL(XMLTOPS,[xmlto --help | grep ps > /dev/null 2>&1])
+	if xmlto --help | grep html > /dev/null 2>&1; then
+		have_xmltohtml=true
+	fi
+	if xmlto --help | grep man > /dev/null 2>&1; then
+		have_xmltoman=true
+	fi
+	if xmlto --help | grep pdf > /dev/null 2>&1; then
+		have_xmltopdf=true
+	fi
+	if xmlto --help | grep ps > /dev/null 2>&1; then
+		have_xmltops=true
+	fi
 fi
+AM_CONDITIONAL(XMLTO, $have_xmlto)
+AM_CONDITIONAL(XMLTOHTML,$have_xmltohtml)
+AM_CONDITIONAL(XMLTOMAN,$have_xmltoman)
+AM_CONDITIONAL(XMLTOPDF,$have_xmltopdf)
+AM_CONDITIONAL(XMLTOPS,$have_xmltops)
 
 # create list of supported formats
 xxx=""
