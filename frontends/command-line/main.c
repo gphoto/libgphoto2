@@ -479,12 +479,14 @@ OPTION_CALLBACK(model)
 }
 
 static void
-debug_func (GPLogLevels levels, const char *domain, const char *msg,
-	    void *data)
+debug_func (GPLogLevels levels, const char *domain, const char *format,
+	    va_list args, void *data)
 {
 	if (levels & GP_LOG_ERROR)
 		printf ("*** ERROR *** ");
-	printf ("%s: %s\n", domain, msg);
+	printf ("%s: ", domain);
+	vprintf (format, args);
+	printf ("\n");
 }
 
 OPTION_CALLBACK (debug)
