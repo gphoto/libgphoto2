@@ -104,7 +104,8 @@
 #define PTP_ERROR_RESP_EXPECTED		0x2FD
 #define PTP_ERROR_BADPARAM		0x2fC
 
-#define PTP_REQ_DATALEN                 16384
+#define PTP_REQ_HDR_LEN                 (2*sizeof(int)+2*sizeof(short))
+#define PTP_REQ_DATALEN			16384
 
 // PTP device info structure (returned by GetDevInfo)
 
@@ -174,6 +175,7 @@ struct _PTPParams {
 
 	/* Used by libptp */
 	unsigned int transaction_id;
+	PTPObjectHandles handles;
 };
 
 

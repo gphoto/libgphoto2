@@ -271,15 +271,14 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
 	Camera *camera = data;
-	PTPObjectHandles handles;
 	int i;
 	char filename[1024];
 
 
-	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &handles));
+	CPR (camera, ptp_getobjecthandles (&camera->pl->params, &camera->pl->params.handles));
 
-	 for (i = 0; i < handles.n; i++) {
-		 sprintf (filename, "image%03i.jpg", i); 	// 999 pictures
+	 for (i = 0; i < camera->pl->params.handles.n; i++) {
+		 sprintf (filename, "image%04i.jpg", i); 	// 9999 pictures
 		 CR (gp_list_append (list, filename, NULL));
 	 }
 
@@ -287,14 +286,44 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 }
 
 static int
-get_file_func (CameraFilesystem *fs, const char *folder, const char *name,
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data)
 {
 	Camera *camera = data;
+	unsigned char *fdata = NULL;
+	char image_id_string[] = {0, 0, 0, 0, 0};
+	unsigned long image_id;
+	PTPObjectInfo ptp_objectinfo;
 
-	camera = NULL;
 
-	return (GP_ERROR);
+	if (strlen (filename) != 14)
+		return (GP_ERROR_FILE_NOT_FOUND);
+	if (strcmp (folder, "/"))
+		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+
+
+	// Get ID from filename
+	strncpy (image_id_string, filename+5,4);
+	image_id = atol (image_id_string);
+
+
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
+		&camera->pl->params.handles, image_id, &ptp_objectinfo));
+		fdata=malloc(ptp_objectinfo.ObjectCompressedSize+PTP_REQ_HDR_LEN);
+		CPR (camera, ptp_getobject(&camera->pl->params,
+		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
+		break;
+
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	}
+
+	CPR (camera, gp_file_set_data_and_size (file, fdata+PTP_REQ_HDR_LEN, ptp_objectinfo.ObjectCompressedSize));
+	CPR (camera, gp_file_set_mime_type (file, GP_MIME_JPEG));
+
+	return (GP_OK);
 }
 
 static int
@@ -404,14 +433,14 @@ camera_init (Camera *camera)
 
 	/* Configure the CameraFilesystem */
 	CR (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
-					  folder_list_func, camera));
+					  NULL, camera));
 	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func,
 					  set_info_func, camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 					  delete_file_func, camera));
-	CR (gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					    NULL, mkdir_func,
-					    rmdir_func, camera));
+	CR (gp_filesystem_set_folder_funcs (camera->fs, NULL,
+					    NULL, NULL,
+					    NULL, camera));
 
 	return (GP_OK);
 }
