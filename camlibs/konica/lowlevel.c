@@ -188,6 +188,10 @@ l_esc_read (GPPort *p, unsigned char *c)
 	 * ESC. As before, if it is not one of those, we'll not report an
 	 * error, as it will be recovered automatically later.
 	 */
+	 /* The HP PhotoSmart does not escape every special code, only
+	  * some and it gets confused if we do this checks. By relaxing
+	  * these, it now downloads images etc.
+	  */
 #ifndef LESSER_ESCAPES
 	if ((*c == STX ) || (*c == ETX) || (*c == ENQ ) || (*c == ACK) ||
 	    (*c == XOFF) || (*c == XON) || (*c == NACK) || (*c == ETB)) {
@@ -436,6 +440,10 @@ while (read < rbs_internal) {
 	for (i = read; i < read + r; i++) {
 		unsigned char *c = &(*rb)[*rbs + i];
 
+		 /* The HP PhotoSmart does not escape every special code, only
+		  * some and it gets confused if we do this checks. By relaxing
+		  * these, it now downloads images etc.
+		  */
 #ifndef LESSER_ESCAPES
 	        if ((*c == STX) || (*c == ETX) || (*c == ENQ ) ||
 		    (*c == ACK) || (*c == XOFF) || (*c == XON) ||
