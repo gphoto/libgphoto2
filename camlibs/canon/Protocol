@@ -957,6 +957,7 @@ time is a word (UNIX time)
 
 Control_transfer_write
   requesttype=0x40
+  requestvalue=0x04
   value=0x10
   length=0x40
   data=0x00000000 0x0203 0x40+len1[explained later] [0x00 repeated 0x38]
@@ -983,7 +984,9 @@ len1[explained later] 0x00 0x00 0x00000403 0x00000000 0x00000000
 
 bulk_in_read [0x5c bytes]
 
-This is repeated until the whole file is transmitted:
+The whole procedure (i.e. Control_transfer_write(0x40 bytes) -> bulkread(0x40 bytes) -> 
+bulkwrite(len1+0x40 bytes) -> bulkread(0x5c bytes))
+is repeated until the whole file is transmitted:
 
 - offs is a word that starts at 0 and increments with blocksize each time.
 
