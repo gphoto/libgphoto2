@@ -1,0 +1,61 @@
+$Id$
+
+This file tries to explain some stuff about building gphoto RPMs.
+
+
+
+============
+1. RPM setup
+============
+
+We do NOT build packages as root. So we choose a directory where RPM
+may place its packages and which is writable by the user running the
+build. We'll call it "${RPMBASE}" here.
+
+Create a directory structure as follows:
+
+mkdir -p "${RPMBASE}/BUILD"
+mkdir -p "${RPMBASE}/RPMS/i386"
+mkdir -p "${RPMBASE}/RPMS/noarch"
+mkdir -p "${RPMBASE}/RPMS/alpha"
+mkdir -p "${RPMBASE}/RPMS/i686"
+mkdir -p "${RPMBASE}/SOURCES
+mkdir -p "${RPMBASE}/SPECS"
+mkdir -p "${RPMBASE}/SRPMS"
+
+Then create a new file ~/.rpmmacros:
+
+echo "%_topdir ${RPMBASE}" >> .rpmmacros
+
+
+=======================================
+2. Build a .tar.gz distribution package
+=======================================
+
+Go to the gphoto source directory. Run
+
+  ./autogen.sh && make dist
+
+Now you should have a file named
+
+  gphoto-VERSION.tar.gz
+
+in this directory.
+
+
+=====================
+3. Build RPM packages
+=====================
+
+Run
+
+  rpm -ta gphoto-VERSION.tar.gz
+
+Now you should have the RPM packages in the appropriate directory.
+
+Examine the install scripts before installing. Examine the file list
+before installing. Report everything that does not conform to your
+distribution's standards. Report errors.
+
+AND INSTALL ONLY AT YOUR OWN RISK!
+
