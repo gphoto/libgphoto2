@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2003-07-10 16:46-0400\n"
-"PO-Revision-Date: 2003-07-10 16:48-0400\n"
+"POT-Creation-Date: 2003-07-10 17:22-0400\n"
+"PO-Revision-Date: 2003-07-10 17:31-0400\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -50,29 +50,33 @@ msgstr ""
 "Implementiert mit Hilfe von Dokumenten\n"
 "aus dem Web. Mit Erlaubnis von Vision."
 
-#: camlibs/canon/canon.c:391 camlibs/canon/canon.c:420
+#: camlibs/canon/canon.c:391
 msgid "create"
 msgstr "anlegen"
 
-#: camlibs/canon/canon.c:391 camlibs/canon/canon.c:420
-#, fuzzy
+#: camlibs/canon/canon.c:391
 msgid "remove"
-msgstr "Entfernen"
+msgstr "entfernen"
 
-#: camlibs/canon/canon.c:418
-#, fuzzy, c-format
-msgid "Could not %s directory %s."
-msgstr "Konnte Verzeichnis \\\\DCIM nicht anlegen."
+#: camlibs/canon/canon.c:419
+#, c-format
+msgid "Could not create directory %s."
+msgstr "Konnte Verzeichnis >>%s<< nicht anlegen."
 
-#: camlibs/canon/canon.c:761
+#: camlibs/canon/canon.c:422
+#, c-format
+msgid "Could not remove directory %s."
+msgstr "Konnte Verzeichnis >>%s<< nicht löschen."
+
+#: camlibs/canon/canon.c:764 camlibs/canon/canon.c:986 camlibs/canon/usb.c:229
 msgid "lock keys failed."
 msgstr "koennte Tasten nicht sperren."
 
-#: camlibs/canon/canon.c:824 camlibs/canon/canon.c:825
+#: camlibs/canon/canon.c:827 camlibs/canon/canon.c:828
 msgid "*UNKNOWN*"
 msgstr "*UNBEKANNT*"
 
-#: camlibs/canon/canon.c:932
+#: camlibs/canon/canon.c:935
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
@@ -81,12 +85,7 @@ msgstr ""
 "canon_int_capture_image: erste canon_usb_list_all_dirs() fehlgeschlagen mit "
 "status %i"
 
-#: camlibs/canon/canon.c:983 camlibs/canon/usb.c:229
-#, fuzzy
-msgid "lock keys failed.\n"
-msgstr "koennte Tasten nicht sperren."
-
-#: camlibs/canon/canon.c:1013
+#: camlibs/canon/canon.c:1016
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
@@ -95,40 +94,40 @@ msgstr ""
 "canon_int_capture_image: finalletzte canon_usb_list_all_dirs() "
 "fehlgeschlagen mit status %i"
 
-#: camlibs/canon/canon.c:1132
-#, fuzzy, c-format
+#: camlibs/canon/canon.c:1135
+#, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximum 30 characters are "
 "allowed."
 msgstr ""
 "Name »%s« (%i Zeichen) ist zu lang (%i Zeichen), maximal 30 Zeichen erlaubt."
 
-#: camlibs/canon/canon.c:1653
+#: camlibs/canon/canon.c:1656
 #, c-format
 msgid "canon_int_list_dir: ERROR: initial message too short (%i < minimum %i)"
 msgstr "canon_int_list_dir: ERROR: erste Meldung zu kurz (%i < minimum %i)"
 
-#: camlibs/canon/canon.c:1675
+#: camlibs/canon/canon.c:1678
 msgid ""
 "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
 "canon_int_list_dir: Ende des Pakets erreicht als erste Verzeichniselemente "
 "untersich wird"
 
-#: camlibs/canon/canon.c:1760
+#: camlibs/canon/canon.c:1763
 msgid "canon_int_list_dir: truncated directory entry encountered"
 msgstr "canon_int_list_dir: verkurzte Verzeichniselemente gefunden"
 
-#: camlibs/canon/canon.c:2071
+#: camlibs/canon/canon.c:2074
 msgid "File protected."
 msgstr "Datei geschützt."
 
-#: camlibs/canon/canon.c:2142
+#: camlibs/canon/canon.c:2145
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
 "Koennte JPEG Vorschaubild von Daten nicht ausziehen: Daten sind nicht JFIF"
 
-#: camlibs/canon/canon.c:2167
+#: camlibs/canon/canon.c:2170
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr "Koennte JPEG Vorschaubild von Daten nicht ausziehen: keine Anfang/Ende"
 
@@ -184,9 +183,9 @@ msgid "No thumbnail could be fould for %s"
 msgstr "Kein Vorschaubild für %s gefunden"
 
 #: camlibs/canon/library.c:545
-#, fuzzy, c-format
-msgid "No audio file could be fould for %s"
-msgstr "Datei »%s« konnte nicht im Verzeichnis »%s« gefunden werden."
+#, c-format
+msgid "No audio file could be found for %s"
+msgstr "Keine Tondatei für »%s« konnte gefunden werden."
 
 #: camlibs/canon/library.c:741
 #, c-format
@@ -495,14 +494,14 @@ msgid "Unrecognized response"
 msgstr "Nicht erkannte Antwort"
 
 #: camlibs/canon/serial.c:1378
-#, fuzzy, c-format
+#, c-format
 msgid "Detected a \"%s\" aka \"%s\""
-msgstr "Erkannte eine »%s«."
+msgstr "Erkannte eine »%s« alias >>%s<<"
 
 #: camlibs/canon/serial.c:1386
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown model \"%s\""
-msgstr "Unbekanntes Modell"
+msgstr "Unbekanntes Modell >>%s<<"
 
 #: camlibs/canon/serial.c:1408
 msgid "Bad EOT"
@@ -525,7 +524,6 @@ msgid "Error changing speed"
 msgstr "Fehler beim Ändern der Datenrate"
 
 #: camlibs/canon/serial.c:1457
-#, fuzzy
 msgid "Error waiting for ACK during initialization retrying"
 msgstr ""
 "Fehler beim Warten auf ACK, während die Initialisierung erneut versucht wird"
@@ -556,9 +554,8 @@ msgid "NOT RECOGNIZED"
 msgstr "UNBEKANNT"
 
 #: camlibs/canon/usb.c:94
-#, fuzzy
 msgid "Could not establish initial contact with camera"
-msgstr "Konnte Kamera nicht kontaktieren."
+msgstr "Konnte Kamera nicht anfänglich kontaktieren."
 
 #: camlibs/canon/usb.c:100
 msgid "Camera was already active"
@@ -569,9 +566,8 @@ msgid "Camera was woken up"
 msgstr "Kamera wurde aufgeweckt"
 
 #: camlibs/canon/usb.c:107
-#, fuzzy
 msgid "Unknown (some kind of error))"
-msgstr "Unbekannter Fehler des Kamera-Treibers"
+msgstr "Unbekannter Antwort (Kamerafehler) bei Initialisierung"
 
 #: camlibs/canon/usb.c:111
 #, c-format
@@ -743,9 +739,8 @@ msgstr "Konnte Daten vom Datei >>%s<< nicht holen"
 
 #: camlibs/canon/usb.c:1481 camlibs/canon/usb.c:1492 camlibs/canon/usb.c:1528
 #: camlibs/canon/usb.c:1539 camlibs/canon/usb.c:1550
-#, fuzzy
 msgid "File upload failed."
-msgstr "Lade Bild hoch..."
+msgstr "Bildhochladung fehlgeschlagen."
 
 #: camlibs/canon/usb.c:1571
 msgid ""
@@ -809,9 +804,9 @@ msgid "Detected a '%s'."
 msgstr "Erkannte eine »%s«."
 
 #: camlibs/canon/usb.c:1839
-#, fuzzy, c-format
-msgid "Could not identify camera based on name \"%s\""
-msgstr "Konnte Plattennamen nicht holen: %s"
+#, c-format
+msgid "Name \"%s\" from camera does not match any known camera"
+msgstr "Name >>%s<< passt mit keinem bekanntes Modell"
 
 #: camlibs/digita/digita.c:331
 msgid "Unsupported image type"
@@ -1297,7 +1292,6 @@ msgstr ""
 "dies Datei »%s«."
 
 #: camlibs/gsmart300/library.c:163
-#, fuzzy
 msgid ""
 "gsmart300 library \n"
 "Till Adam <till@adam-lilienthal.de>\n"
@@ -1925,7 +1919,7 @@ msgid "Unknown error."
 msgstr "Unbekannter Fehler."
 
 #: camlibs/konica/konica.c:137
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The camera has just sent an error that has not yet been discovered. Please "
 "report the following to <gphoto-devel@lists.sourceforge.net> with additional "
@@ -2271,9 +2265,8 @@ msgid "White balance"
 msgstr "Weißabgleich"
 
 #: camlibs/konica/qm150.c:965 camlibs/konica/qm150.c:976
-#, fuzzy
 msgid "Office"
-msgstr "Aus"
+msgstr "Büro"
 
 #: camlibs/konica/qm150.c:966 camlibs/konica/qm150.c:973
 msgid "Day-lt"
@@ -2297,9 +2290,8 @@ msgid "Color"
 msgstr "farbig"
 
 #: camlibs/konica/qm150.c:1001 camlibs/konica/qm150.c:1011
-#, fuzzy
 msgid "Light"
-msgstr "Hell-"
+msgstr "Hell"
 
 #: camlibs/konica/qm150.c:1002 camlibs/konica/qm150.c:1014
 #, fuzzy
@@ -2307,7 +2299,6 @@ msgid "Deep"
 msgstr "Ton"
 
 #: camlibs/konica/qm150.c:1003 camlibs/konica/qm150.c:1017
-#, fuzzy
 msgid "Black and White"
 msgstr "schwarz/weiß"
 
@@ -2319,9 +2310,8 @@ msgid "Sepia"
 msgstr "Sepia"
 
 #: camlibs/konica/qm150.c:1055 camlibs/konica/qm150.c:1059
-#, fuzzy
 msgid "Single"
-msgstr "fein"
+msgstr "Einzelbild"
 
 #: camlibs/konica/qm150.c:1056 camlibs/konica/qm150.c:1062
 msgid "Sequence 9"
@@ -2336,12 +2326,10 @@ msgid "Anywhere"
 msgstr "Überall"
 
 #: camlibs/konica/qm150.c:1070 camlibs/konica/qm150.c:1076
-#, fuzzy
 msgid "Play mode"
-msgstr "Blitzmodus"
+msgstr "Wiedergabemodus"
 
 #: camlibs/konica/qm150.c:1071 camlibs/konica/qm150.c:1084
-#, fuzzy
 msgid "Record mode"
 msgstr "Aufnahmemodus"
 
@@ -2350,9 +2338,8 @@ msgid "Everywhere"
 msgstr "Überall"
 
 #: camlibs/konica/qm150.c:1140
-#, fuzzy
 msgid "Battery"
-msgstr "Batterie "
+msgstr "Batterie"
 
 #: camlibs/konica/qm150.c:1142
 msgid "AC"
@@ -3015,7 +3002,7 @@ msgstr ""
 "Informationen über Bild %i"
 
 #: camlibs/polaroid/pdc700.c:916
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%i bytes of an unknown image format have been received. Please write <gphoto-"
 "devel@lists.sourceforge.net> for assistance."
@@ -3785,12 +3772,12 @@ msgstr ""
 "sourceforge.net> (auf Englisch)."
 
 #: camlibs/ricoh/ricoh.c:75
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Expected %i bytes, got %i. Please report this error to <gphoto-devel@lists."
 "sourceforge.net>."
 msgstr ""
-"%i erwartet, %i erhalten. Bitte kontaktieren Sie <gphoto-devel@lists."
+"%i Bytes erwartet, %i erhalten. Bitte kontaktieren Sie <gphoto-devel@lists."
 "sourceforge.net> (auf Englisch)."
 
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
@@ -3804,14 +3791,13 @@ msgstr ""
 "Englisch)."
 
 #: camlibs/ricoh/ricoh.c:215
-#, fuzzy, c-format
+#, c-format
 msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@gphoto.org>."
 msgstr ""
 "Fehlerhafte Zeichen (0x%x, 0x%x). Bitte kontaktieren Sie <gphoto-"
 "devel@gphoto.org> (auf Englisch)."
 
 #: camlibs/ricoh/ricoh.c:257 camlibs/ricoh/ricoh.c:326
-#, fuzzy
 msgid ""
 "Camera busy. If the problem persists, please contact <gphoto-devel@lists."
 "sourceforge.net>."
@@ -3828,7 +3814,6 @@ msgstr ""
 "Bitte kontaktieren Sie <gphoto-devel@lists.sourceforge.net> (auf Englisch)."
 
 #: camlibs/ricoh/ricoh.c:308
-#, fuzzy
 msgid ""
 "Communication error even after 2 retries. Please contact <gphoto-devel@lists."
 "sourceforge.net>."
@@ -3844,7 +3829,6 @@ msgstr ""
 "Bitte kontaktieren Sie <gphoto-devel@lists.sourceforge.net> (auf Englisch)."
 
 #: camlibs/ricoh/ricoh.c:349
-#, fuzzy
 msgid ""
 "Camera did not accept the parameters. Please contact <gphoto-devel@lists."
 "sourceforge.net>."
@@ -4065,7 +4049,7 @@ msgstr ""
 "devel@gphoto.org> (auf Englisch)."
 
 #: camlibs/sierra/library.c:789
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not transmit packet (error code %i). Please contact <gphoto-"
 "devel@lists.sourceforge.net>."
@@ -5333,6 +5317,13 @@ msgstr "Unbekannter Fehler des Kamera-Treibers"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
+
+#~ msgid "Could not identify camera based on name \"%s\""
+#~ msgstr "Name >>%s<< passt mit keinem bekanntes Modell"
+
+#, fuzzy
+#~ msgid "lock keys failed.\n"
+#~ msgstr "koennte Tasten nicht sperren."
 
 #~ msgid ""
 #~ "Expected %i bytes, got %i. Please report this error to <gphoto-"
