@@ -1109,8 +1109,16 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 	/* Make use of the progress bar when the packet is "large enough" */
 	if (length > MAX_DATA_FIELD_LENGTH) {
 		do_percent = 1;
-#ifdef GTKAM_IS_MODIFIED
-		id = gp_context_progress_update (context, length,
+#ifdef RECURSION_REMOVED
+		/*
+		 * This code can lead to recursive calls in gtkam - the
+		 * main problem is when thumbnails are being downloaded,
+		 * gtkam tries to download another thumbnail when
+		 * gp_context_progress_update() is called. There are also
+		 * other areas in gtkam that can recursively call into
+		 * this function.
+		 */
+		id = gp_context_progress_start (context, length,
 						_("Sending data..."));
 #endif
 	}
@@ -1145,7 +1153,7 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 
 		/* Transmit packet */
 		CHECK (sierra_transmit_ack (camera, packet, context));
-#ifdef GTKAM_IS_MODIFIED
+#ifdef RECURSION_REMOVED
 		if (do_percent)
 			gp_context_progress_update (context, id, x);
 #endif
