@@ -40,8 +40,6 @@ int gp_init (int debug)
         char buf[1024];
         int x;
 
-printf("debug=%i\n", debug);
-
         glob_debug = debug;
 
         /* Initialize the globals */
