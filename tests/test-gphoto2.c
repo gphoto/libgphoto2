@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-#define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); exit (1);}}
+#define CHECK(f) {int res = f; if (res < 0) {printf ("ERROR: %s\n", gp_result_as_string (res)); return (1);}}
 
 int
 main (int argc, char *argv [])
