@@ -26,7 +26,7 @@
 #include <string.h>
 
 #ifdef HAVE_LTDL
-#include <ltdl.h>
+#  include <ltdl.h>
 #endif
 
 #include "gphoto2-result.h"
@@ -95,7 +95,7 @@ gp_abilities_list_new (CameraAbilitiesList **list)
 	CHECK_MEM (*list = malloc (sizeof (CameraAbilitiesList)));
 	memset (*list, 0, sizeof (CameraAbilitiesList));
 
-#if HAVE_LTDL
+#ifdef HAVE_LTDL
 	lt_dlinit ();
 #endif
 
@@ -135,7 +135,11 @@ foreach_func (const char *filename, lt_ptr data)
 {
 	CameraList *list = data;
 
-	return (gp_list_append (list, filename, NULL));
+	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+		"Found '%s'.", filename);
+	gp_list_append (list, filename, NULL);
+
+	return (0);
 }
 #endif
 
@@ -147,29 +151,32 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	CameraLibraryAbilitiesFunc ab;
 	CameraText text;
 	int x, old_count, new_count;
-	unsigned int i, n, p;
+	unsigned int i;
 	const char *filename;
 #ifdef HAVE_LTDL
 	CameraList flist;
-	int i, count;
+	int count;
 	lt_dlhandle lh;
 #else
 	GP_SYSTEM_DIR d;
 	GP_SYSTEM_DIRENT de;
 	char buf[1024];
 	void *lh;
+	unsigned int n, p;
 #endif
 
 	CHECK_NULL (list && dir);
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
 		"Loading camera libraries in '%s'...", dir);
+#ifndef HAVE_LTDL
 	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
 		"Note that failing to load *.a and *.la is NOT an error!");
+#endif
 
 #ifdef HAVE_LTDL
 	CHECK_RESULT (gp_list_reset (&flist));
-	CHECK_RESULT (lt_dlforeachfile (dir, foreach_func, &flist));
+	lt_dlforeachfile (dir, foreach_func, &flist);
 	CHECK_RESULT (count = gp_list_count (&flist));
 	for (i = 0; i < count; i++) {
 		CHECK_RESULT (gp_list_get_name (&flist, i, &filename));

@@ -1,3 +1,10 @@
+2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in:
+	* libgphoto2/gphoto2-camera.c:
+	* libgphoto2/gphoto2-abilities-list.c: Fixes for HAVE_LTDL. Still
+	  doesn't work.
+
 2002-06-12  Christophe Barbé <christophe.barbe@ufies.org>
 
 	* libgphoto2_port/m4/documentation.m4: Added --with-doc-formats option and
