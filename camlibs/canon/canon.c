@@ -54,17 +54,6 @@
 #include "canon.h"
 #include "serial.h"
 
-/* ========================================================================
- * function prototype declarations
- * move these to psa50.h to make them publicly available
- * ========================================================================
- */
-
-unsigned char *canon_serial_get_file (Camera *camera, const char *name, int *length);
-int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath);
-int canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath);
-
-
 
 /*
  * does operations on a directory based on the value

@@ -7,6 +7,11 @@
 	* camlibs/canon/usb.c: added support for PowerShot S30
 	* intl/Makefile.in: add include dir for config.h
 	* libgphoto2_port/intl/Makefile.in: add include dir for config.h
+	* doc/api/.cvsignore
+	* libgphoto2_port/doc/.cvsignore: ignore -symbols.txt
+	* camlibs/canon/serial.h
+	* camlibs/canon/canon.c
+	* camlibs/canon/usb.h: small cleanups
 
 2001-11-25  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
