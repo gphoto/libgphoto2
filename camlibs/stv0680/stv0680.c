@@ -92,8 +92,11 @@ struct camera_to_usb {
 	/* http://www.umax.de/digicam/AstraPen_SL.htm.
 	 * There is an additional 100K (CIF), 300K (VGA) tag after the name. */
 	{ "UMAX AstraPen",              0x0553, 0x0202, 0 }, /* SV and SL */
+
+	/* The Umax AstraPix 320S is a SiPix Stylecam clone, reported by Marius
+	 * Schaefer. */
 	/* http://www.umax.de/digicam/AstraPix320S.htm, VGA */
-	{ "UMAX AstraPix 320S",         0x0553, 0x0202, 0 },
+
 	{ "Fuji IX-1",                  0x0553, 0x0202, 0 }, /* Unconfirmed */
 };
 
