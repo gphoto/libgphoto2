@@ -24,12 +24,13 @@ Provides: libgphoto2
 # absolute requirements
 PreReq: hotplug
 PreReq: grep
-Requires: libusb >= 0.0.4
-BuildRequires: libusb-devel
+Requires: libusb >= 0.0.5
+BuildRequires: libusb-devel >= 0.0.5
 BuildRequires: findutils perl
 # the following requirements are optional
 # FIXME: They should be deactivated if not detected on the building system
 BuildRequires: gtk-doc
+BuildRequires: transfig
 # FIXME: the usbcam.console hotplug script requires xdm/kdm/gdm
 
 ####################################
@@ -207,6 +208,9 @@ fi
 # ChangeLog
 ########################################################################
 %changelog
+* Sat Apr 06 2002 Hans Ulrich Niedermann <gp@n-dimensional.de>
+- require libusb >= 0.0.5 and for building require transfig
+
 * Sat Oct 27 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
 - fixed update behaviour for hotplug list (do not erase it when updating)
 
