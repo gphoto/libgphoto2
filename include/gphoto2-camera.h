@@ -117,6 +117,11 @@ typedef void (* CameraStatusFunc)   (Camera *, const char *status, void *data);
 typedef void (* CameraProgressFunc) (Camera *, float percentage, void *data);
 
 struct _Camera {
+
+	/*
+	 * Don't use, use abilities->model instead. This entry will 
+	 * disappear at some point in the future.
+	 */
 	char            model[128];
 
 	GPPortInfo     *port_info;
@@ -148,11 +153,11 @@ struct _Camera {
 
 /* Create a new camera device */
 int gp_camera_new               (Camera **camera);
-int gp_camera_set_model         (Camera *camera, const char *model);
-int gp_camera_get_model         (Camera *camera, const char **model);
-int gp_camera_set_port_name     (Camera *camera, const char *port_name);
+int gp_camera_set_abilities     (Camera *camera, CameraAbilities  abilities);
+int gp_camera_get_abilities	(Camera *camera, CameraAbilities *abilities);
+int gp_camera_set_port_name     (Camera *camera, const char  *port_name);
 int gp_camera_get_port_name     (Camera *camera, const char **port_name);
-int gp_camera_set_port_path     (Camera *camera, const char *port_path);
+int gp_camera_set_port_path     (Camera *camera, const char  *port_path);
 int gp_camera_get_port_path     (Camera *camera, const char **port_path);
 
 /* Don't use */

@@ -1,5 +1,11 @@
 2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* frontends/command-line/main.c: Use gp_camera_set_abilities.
+	* include/gphoto2-camera.h:
+	* libgphoto2/camera.c:Introduce gp_camera_[set,get]_abilities.
+
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-result.[c,h]: GP_ERROR_NOT_SUPPORTED now in
 	  libgphoto2_port.
 

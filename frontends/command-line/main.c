@@ -837,11 +837,14 @@ OPTION_CALLBACK (about)
 static int
 set_globals (void)
 {
+	CameraAbilities abilities;
+
         /* takes all the settings and sets up the gphoto lib */
 
         cli_debug_print ("Setting globals...");
         CHECK_RESULT (gp_camera_new (&glob_camera));
-        CHECK_RESULT (gp_camera_set_model (glob_camera, glob_model));
+	CHECK_RESULT (gp_camera_abilities_by_name (glob_model, &abilities));
+	CHECK_RESULT (gp_camera_set_abilities (glob_camera, abilities));
         if (strcmp (glob_model, "Directory Browse"))
                 CHECK_RESULT (gp_camera_set_port_path (glob_camera, glob_port));
         CHECK_RESULT (gp_camera_set_port_speed (glob_camera, glob_speed));

@@ -31,6 +31,7 @@
 #include "gphoto2-library.h"
 #include "gphoto2-debug.h"
 #include "gphoto2-port-core.h"
+#include "gphoto2-port-log.h"
 
 #include <config.h>
 #ifdef ENABLE_NLS
@@ -121,23 +122,57 @@ gp_camera_new (Camera **camera)
         return(GP_OK);
 }
 
+/* DEPRECATED */
+int gp_camera_set_model (Camera *, const char *);
 int
 gp_camera_set_model (Camera *camera, const char *model)
 {
+	CameraAbilities abilities;
+
 	CHECK_NULL (camera && model);
 
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Setting model to '%s'", model);
+	CHECK_RESULT (gp_camera_abilities_by_name (model, &abilities));
+	CHECK_RESULT (gp_camera_set_abilities (camera, abilities));
 	strncpy (camera->model, model, sizeof (camera->model));
 	
 	return (GP_OK);
 }
 
+/* DEPRECATED */
+int gp_camera_get_model (Camera *, const char **);
 int
 gp_camera_get_model (Camera *camera, const char **model)
 {
 	CHECK_NULL (camera && model);
 
-	*model = camera->model;
+	*model = camera->abilities->model;
+
+	return (GP_OK);
+}
+
+int
+gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
+{
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting abilibites ('%s')...",
+		abilities.model);
+
+	CHECK_NULL (camera);
+
+	memcpy (camera->abilities, &abilities, sizeof (CameraAbilities));
+
+//FIXME: Remove this. Up to now, some camera drivers still need it.
+	strcpy (camera->model, abilities.model);
+
+	return (GP_OK);
+}
+
+int
+gp_camera_get_abilities (Camera *camera, CameraAbilities *abilities)
+{
+	CHECK_NULL (camera && abilities);
+
+	memcpy (abilities, camera->abilities, sizeof (CameraAbilities));
 
 	return (GP_OK);
 }
@@ -434,8 +469,8 @@ gp_camera_init (Camera *camera)
 	 * If the port or the model hasn't been indicated, try to
 	 * figure it out (USB only). Beware of "Directory Browse".
 	 */
-	if (strcmp (camera->model, "Directory Browse")) {
-		if (!camera->port || !strcmp ("", camera->model)) {
+	if (strcmp (camera->abilities->model, "Directory Browse")) {
+		if (!camera->port || !strcmp ("", camera->abilities->model)) {
 			
 			/* Call auto-detect and choose the first camera */
 			CRS (camera, gp_autodetect (&list));
@@ -451,10 +486,6 @@ gp_camera_init (Camera *camera)
 			return (GP_ERROR_UNKNOWN_PORT);
 		}
 
-		/* Fill in camera abilities. */
-		CRS (camera, gp_camera_abilities_by_name (camera->model,
-							  camera->abilities));
-
 		/* In case of USB, find the device */
 		switch (camera->port->type) {
 		case GP_PORT_USB:
@@ -466,11 +497,6 @@ gp_camera_init (Camera *camera)
 			break;
 		}
 
-	} else {
-		
-		/* Fill in camera abilities. */
-		CRS (camera, gp_camera_abilities_by_name (camera->model,
-							  camera->abilities));
 	}
 
 	/* Load the library. */
