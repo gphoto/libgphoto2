@@ -114,6 +114,7 @@ int gp_camera_new (Camera **camera, int camera_number)
 	(*camera)->functions->manual		= NULL;
 	(*camera)->functions->about		= NULL;
 	(*camera)->functions->result_as_string	= NULL;
+	(*camera)->functions->config		= NULL;
 
 	/* Fill the abilities. */
 	(*camera)->abilities->file_delete	= glob_abilities_list->abilities[camera_number]->file_delete;
