@@ -162,7 +162,7 @@ GP_BUILD_DOCS()dnl
 dnl ************************************************************
 dnl initialize packaging RPMs
 dnl ************************************************************
-PKG_CHECK_RPM()dnl
+GPKG_CHECK_RPM()dnl
 
 dnl *************************
 dnl Configure libgphoto2-port
