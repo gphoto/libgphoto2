@@ -1,4 +1,12 @@
 2004-08-22  Marcus Meissner <marcus@jet.franken.de>
+	
+	* libgphoto_port/gphoto-port.h, gphoto-port-log.h:
+
+	  Added attributes so gcc knows gp_log* are varargs
+	  using printf style functions and can warn on bad
+	  format strings.
+
+2004-08-22  Marcus Meissner <marcus@jet.franken.de>
 
 	* Detach USB kernel drivers (unless storage or usbfs)
 	  before claiming interface. This should help stv680

@@ -160,7 +160,11 @@ int gp_port_usb_msg_read    (GPPort *port, int request, int value,
 			     int index, char *bytes, int size);
 
 /* Error reporting */
-int         gp_port_set_error (GPPort *port, const char *format, ...);
+int         gp_port_set_error (GPPort *port, const char *format, ...)
+#ifdef __GNUC__
+	__attribute__((__format__(printf,2,3)))
+#endif
+;
 const char *gp_port_get_error (GPPort *port);
 
 /* DEPRECATED */

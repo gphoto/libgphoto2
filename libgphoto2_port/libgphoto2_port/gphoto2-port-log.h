@@ -42,7 +42,11 @@ typedef enum {
 #define GP_LOG_ALL GP_LOG_DATA
 
 typedef void (* GPLogFunc) (GPLogLevel level, const char *domain,
-			    const char *format, va_list args, void *data);
+			    const char *format, va_list args, void *data)
+#ifdef __GNUC__
+	__attribute__((__format__(printf,3,0)))
+#endif
+;
 
 #ifndef DISABLE_DEBUGGING
 
@@ -51,9 +55,17 @@ int  gp_log_remove_func (int id);
 
 /* Logging */
 void gp_log      (GPLogLevel level, const char *domain,
-		  const char *format, ...);
+		  const char *format, ...)
+#ifdef __GNUC__
+	__attribute__((__format__(printf,3,4)))
+#endif
+;
 void gp_logv     (GPLogLevel level, const char *domain, const char *format,
-		  va_list args);
+		  va_list args)
+#ifdef __GNUC__
+	__attribute__((__format__(printf,3,0)))
+#endif
+;
 void gp_log_data (const char *domain, const char *data, unsigned int size);
 
 /**
