@@ -534,6 +534,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free (ppm);
 		CHECK_RESULT (gp_file_set_name (file, filename));
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
+		CHECK_RESULT (gp_file_adjust_name_for_mime_type (file));
 		break;
 
 	case GP_FILE_TYPE_RAW:
