@@ -165,4 +165,7 @@ int canon_int_directory_operations(Camera *camera, const char *path, int action)
 int canon_int_identify_camera(Camera *camera);
 int canon_int_set_owner_name(Camera *camera, const char *name);
 
+/* for the macros abbreviating gp_log* */
+#define GP_MODULE "canon"
+
 #endif /* _LIBRARY_H */
