@@ -1,3 +1,8 @@
+2002-01-04  Chris Pinkham <cpinkham@infi.net>
+
+	* coolshot.c, library.c, library.h: updated code to use new
+	  gp_file_progress instead of gp_camera_progress.
+
 2001-11-28  Chris Pinkham <cpinkham@infi.net>
 
 	* README: took out mention of protocol.txt until file is ready.

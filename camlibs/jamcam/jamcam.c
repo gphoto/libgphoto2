@@ -181,11 +181,14 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
 
-	gp_camera_progress( camera, 0 );
+	n = gp_file_progress( file, 0 );
+	if ( n < 0 ) {
+		return( n );
+	}
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
-		CHECK (jamcam_request_thumbnail (camera, raw, &size, n));
+		CHECK (jamcam_request_thumbnail (camera, file, raw, &size, n));
 
 		width = 80;
 		height = 60;
@@ -210,7 +213,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		break;
 
 	case GP_FILE_TYPE_NORMAL:
-		CHECK (jamcam_request_image (camera, raw, &size, n));
+		CHECK (jamcam_request_image (camera, file, raw, &size, n));
 
 		jc_file = jamcam_file_info (camera, n);
 
@@ -235,7 +238,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		break;
 
 	case GP_FILE_TYPE_RAW:
-		CHECK (jamcam_request_image (camera, raw, &size, n));
+		CHECK (jamcam_request_image (camera, file, raw, &size, n));
 		CHECK (gp_file_set_mime_type (file, GP_MIME_RAW));
 		strcpy( tmp_filename, filename );
 		tmp_filename[strlen(tmp_filename)-3] = 'r';

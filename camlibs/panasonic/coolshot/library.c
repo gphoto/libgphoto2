@@ -220,7 +220,8 @@ int coolshot_file_count (Camera *camera) {
 	return( count );
 }
 
-int coolshot_request_image( Camera *camera, char *buf, int *len, int number ) {
+int coolshot_request_image( Camera *camera, CameraFile *file,
+		char *buf, int *len, int number ) {
 	char packet[16];
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_request_image");
@@ -249,12 +250,13 @@ int coolshot_request_image( Camera *camera, char *buf, int *len, int number ) {
 	coolshot_read_packet( camera, packet );
 
 	/* read data */
-	coolshot_download_image( camera, buf, len, 0 );
+	coolshot_download_image( camera, file, buf, len, 0 );
 
 	return( GP_OK );
 }
 
-int coolshot_request_thumbnail( Camera *camera, char *buf, int *len, int number ) {
+int coolshot_request_thumbnail( Camera *camera, CameraFile *file,
+		char *buf, int *len, int number ) {
 	char packet[16];
 
 	gp_debug_printf (GP_DEBUG_LOW, "coolshot", "* coolshot_request_thumbnail");
@@ -285,7 +287,7 @@ int coolshot_request_thumbnail( Camera *camera, char *buf, int *len, int number 
 	coolshot_read_packet( camera, packet );
 
 	/* read data */
-	coolshot_download_image( camera, buf, len, 0 );
+	coolshot_download_image( camera, file, buf, len, 1 );
 
 	return( GP_OK );
 }
@@ -314,7 +316,8 @@ int coolshot_check_checksum( char *packet, int length ) {
 	}
 }
 
-int coolshot_download_image( Camera *camera, char *buf, int *len, int thumbnail ) {
+int coolshot_download_image( Camera *camera, CameraFile *file,
+		char *buf, int *len, int thumbnail ) {
 	char packet[1024];
 	int data_len;
 	int bytes_read = 0;
@@ -358,11 +361,13 @@ int coolshot_download_image( Camera *camera, char *buf, int *len, int thumbnail 
 		}
 
 		if ( thumbnail ) {
-			percentage = bytes_read > 1800 ? 1.0 : ( 1.0 * bytes_read ) / 1800;
+			percentage = bytes_read > 1800 ? 1.0 : (float)(bytes_read)/1800.0;
 		} else {
-			percentage = bytes_read > 80000 ? 1.0 : ( 1.0 * bytes_read ) / 80000;
+			percentage = bytes_read > 80000 ? 1.0 : (float)(bytes_read)/80000.0;
 		}
-		gp_camera_progress( camera, percentage );
+		/* fixme, add ability to cancel download by checking result */
+
+		gp_file_progress( file, percentage );
 
 		coolshot_read_packet( camera, packet );
 

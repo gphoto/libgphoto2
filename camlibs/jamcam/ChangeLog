@@ -1,3 +1,8 @@
+2002-01-04  Chris Pinkham <cpinkham@infi.net>
+
+	* jamcam.c, library.c, library.h: updated code to use new
+	  gp_file_progress instead of gp_camera_progress.
+
 2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* jamcam.c: Don't include <libgphoto2/*.>, include <*.h> instead.

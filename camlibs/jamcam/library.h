@@ -46,8 +46,8 @@ int jamcam_write_packet(Camera *camera, char *packet, int length);
 int jamcam_read_packet(Camera *camera, char *packet, int length);
 int jamcam_file_count(Camera *camera);
 struct jamcam_file *jamcam_file_info(Camera *camera, int number);
-int jamcam_fetch_memory(Camera *camera, char *data, int start, int length );
-int jamcam_request_image(Camera *camera, char *buf, int *len, int number);
-int jamcam_request_thumbnail(Camera *camera, char *buf, int *len, int number );
+int jamcam_fetch_memory(Camera *camera, CameraFile *file, char *data, int start, int length );
+int jamcam_request_image(Camera *camera, CameraFile *file, char *buf, int *len, int number);
+int jamcam_request_thumbnail(Camera *camera, CameraFile *file, char *buf, int *len, int number );
 
 #endif /* __LIBRARY_H__ */

@@ -293,7 +293,8 @@ int jamcam_file_count (Camera *camera) {
 	return( jamcam_count );
 }
 
-int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
+int jamcam_fetch_memory( Camera *camera, CameraFile *file,
+		char *data, int start, int length ) {
 	char tmp_buf[16];
 	char packet[16];
 	int new_start;
@@ -301,7 +302,7 @@ int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
 	int bytes_read = 0;
 	int bytes_to_read;
 	int bytes_left = length;
-	float percentage;
+	int res = GP_OK;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_fetch_memory");
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * start:  %d (0x%x)",
@@ -354,16 +355,23 @@ int jamcam_fetch_memory( Camera *camera, char *data, int start, int length ) {
 		/* hate this hardcoded, but don't want to update here */
 		/* when downloading parts of a thumbnail              */
 		if ( length > 1000 ) {
-			percentage = ( 1.0 * bytes_read ) / length;
-			gp_camera_progress( camera, percentage );
+			res = gp_file_progress( file,
+				(float)(bytes_read)/(float)(length) );
+			if ( res < 0 ) {
+				gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * CANCELED");
+				break;
+			}
 		}
 	}
 
-	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_fetch_memory OK");
-	return( GP_OK );
+	if ( res == GP_OK ) {
+		gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * returning OK");
+	}
+	return( res );
 }
 
-int jamcam_request_image( Camera *camera, char *buf, int *len, int number ) {
+int jamcam_request_image( Camera *camera, CameraFile *file,
+		char *buf, int *len, int number ) {
 	int position;
 	int result;
 	char tmp_buf[300000];
@@ -385,7 +393,7 @@ int jamcam_request_image( Camera *camera, char *buf, int *len, int number ) {
 			NULL, 0 );
 	}
 
-	result = jamcam_fetch_memory( camera, tmp_buf, position,
+	result = jamcam_fetch_memory( camera, file, tmp_buf, position,
 		jamcam_files[number].data_incr );
 
 	/* this seems to reset the camera to a sane status */
@@ -410,13 +418,14 @@ struct jamcam_file *jamcam_file_info(Camera *camera, int number)
 	return( &jamcam_files[number] );
 }
 
-int jamcam_request_thumbnail( Camera *camera, char *buf, int *len, int number ) {
+int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
+		char *buf, int *len, int number ) {
 	char line[2048];
 	char packet[16];
 	int position;
 	int x, y;
+	int res = GP_OK;
 	char *ptr;
-	float percentage;
 	int bytes_to_read;
 
 	gp_debug_printf (GP_DEBUG_LOW, "jamcam", "* jamcam_request_thumbnail");
@@ -454,10 +463,13 @@ int jamcam_request_thumbnail( Camera *camera, char *buf, int *len, int number ) 
 	/* fetch thumbnail lines and build the thumbnail */
 	position += 10 * jamcam_files[number].width;
 	for( y = 0 ; y < 60 ; y++ ) {
-		jamcam_fetch_memory( camera, line, position, bytes_to_read );
+		jamcam_fetch_memory( camera, file, line, position, bytes_to_read );
 
-		percentage = (1.0 * y) / 60;
-		gp_camera_progress( camera, percentage );
+		res = gp_file_progress( file, (float)(y)/60.0 );
+		gp_debug_printf (GP_DEBUG_LOW, "jamcam", "  * progress: %.2f", (float)(y)/60.0);
+		if ( res < 0 ) {
+			break;
+		}
 
 		if ( jamcam_files[number].width == 600 ) {
 			for( x = 22; x < 578 ; x += 7 ) {
@@ -489,7 +501,7 @@ int jamcam_request_thumbnail( Camera *camera, char *buf, int *len, int number ) 
 			NULL, 0 );
 	}
 
-	return( GP_OK );
+	return( res );
 }
 
 int jamcam_write_packet (Camera *camera, char *packet, int length) {

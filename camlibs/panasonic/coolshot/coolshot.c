@@ -192,7 +192,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	CHECK (camera_start (camera));
 
-	gp_camera_progress( camera, 0 );
+	n = gp_file_progress( file, 0 );
+	if ( n < 0 ) {
+		return (camera_stop (camera));
+	}
 
 	/*
 	 * Get the file number from the CameraFileSystem (and increment 
@@ -203,7 +206,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
-		CHECK (coolshot_request_thumbnail (camera, data, &size, n));
+		CHECK (coolshot_request_thumbnail (camera, file, data, &size, n));
 		CHECK (coolshot_build_thumbnail (data, &size));
 		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
 
@@ -215,7 +218,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		break;
 
 	case GP_FILE_TYPE_NORMAL:
-		CHECK (coolshot_request_image (camera, data, &size, n));
+		CHECK (coolshot_request_image (camera, file, data, &size, n));
 		CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 		CHECK (gp_file_set_name (file, filename));
 		break;
