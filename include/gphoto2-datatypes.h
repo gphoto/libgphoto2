@@ -46,8 +46,7 @@ typedef enum {
 /* Capture Type */
 typedef enum {
 	GP_CAPTURE_IMAGE	= 1 << 0,
-	GP_CAPTURE_AUDIO 	= 1 << 1,
-	GP_CAPTURE_VIDEO	= 1 << 2
+	GP_CAPTURE_VIDEO	= 1 << 1
 } CameraCaptureType;
 
 /* Widget types */
@@ -98,7 +97,6 @@ typedef struct CameraWidget {
 typedef struct {
 	CameraCaptureType type;
 	int duration;
-	int quality;
 } CameraCaptureInfo;
 
 /* Port information/settings */

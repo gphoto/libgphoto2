@@ -75,6 +75,10 @@
 	int gp_camera_folder_list(Camera *camera, CameraList *list, char *folder);
 	int gp_camera_file_list(Camera *camera, CameraList *list, char *folder);
 
+	/* Create and free a list */
+	CameraList *gp_list_new();
+	int         gp_list_free(CameraList *list);
+	
 	/* Helper for the libraries to add entries to the list */
 	int gp_list_append(CameraList *list, char *name, CameraListType type);
 

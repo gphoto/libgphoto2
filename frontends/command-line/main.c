@@ -89,6 +89,8 @@ OPTION_CALLBACK(get_all_thumbnails);
 OPTION_CALLBACK(delete_picture);
 OPTION_CALLBACK(delete_all_pictures);
 OPTION_CALLBACK(upload_picture);
+OPTION_CALLBACK(capture_image);
+OPTION_CALLBACK(capture_movie);
 OPTION_CALLBACK(summary);
 OPTION_CALLBACK(manual);
 OPTION_CALLBACK(about);
@@ -135,6 +137,8 @@ Option option[] = {
 {"d", "delete-picture",	"range",	"Delete pictures given in range", delete_picture, 0},
 {"D", "delete-all-pictures","",		"Delete all pictures in folder",delete_all_pictures,0},
 {"u", "upload-picture",	"filename",	"Upload a picture to camera", 	upload_picture, 0},
+{"" , "capture-image",  "",		"Capture an image and download",capture_image,  0},
+{"" , "capture-movie",  "duration",	"Capture a movie and download", capture_movie,  0},
 {"",  "summary",	"",		"Summary of camera status",	summary,	0},
 {"",  "manual",		"",		"Camera driver manual",		manual,		0},
 {"",  "about",		"",		"About the camera driver",	about,		0},
@@ -883,6 +887,57 @@ OPTION_CALLBACK(upload_picture) {
         gp_file_free(file);
 
         return (GP_OK);
+}
+
+int capture_generic (int type, int duration) {
+
+	CameraCaptureInfo info;
+	CameraFile *file;
+	char out_filename[1024];
+
+        if (set_globals() == GP_ERROR)
+                return (GP_ERROR);
+
+	info.type     = type;
+	info.duration = duration;
+
+	file = gp_file_new();
+
+        if (gp_camera_capture(glob_camera, file, &info)==GP_ERROR) {
+                cli_error_print("Could not capture.");
+                return (GP_ERROR);
+        }
+
+	if ((glob_filename_override)&&(strlen(glob_filename)>0))
+		strcpy(out_filename, glob_filename);
+	   else {
+		if (strlen(file->name) == 0) {
+			printf("Could not determine filename.\nRename to approprite filename and extension.\n");
+			strcpy(out_filename, "capture.dat");
+		} else {
+			strcpy(out_filename, file->name);
+		}
+	}
+
+	if (!glob_quiet)
+		printf("Saving capture as %s\n", out_filename);
+	if (gp_file_save(file, out_filename) == GP_ERROR) 
+		cli_error_print("Can not save capture as %s.\nSpecify a different filename using \"--filename\"\n", out_filename);
+
+	gp_file_free(file);
+
+	return (GP_OK);
+}
+
+
+OPTION_CALLBACK(capture_image) {
+
+	return (capture_generic(GP_CAPTURE_IMAGE, 0));
+}
+
+OPTION_CALLBACK(capture_movie) {
+
+	return (capture_generic(GP_CAPTURE_VIDEO, atoi(arg)));
 }
 
 OPTION_CALLBACK(summary) {

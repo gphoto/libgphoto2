@@ -361,6 +361,25 @@ int gp_camera_file_list(Camera *camera, CameraList *list, char *folder)
         return (GP_OK);
 }
 
+CameraList *gp_list_new()
+{
+	CameraList *list;
+
+	list = (CameraList*)malloc(sizeof(CameraList));
+	if (!list)
+		return NULL;
+
+	memset(list, 0, sizeof(CameraList));
+	return (list);
+}
+
+int gp_list_free(CameraList *list) {
+
+	if (list)
+		free(list);
+	return (GP_OK);
+}
+
 int gp_list_append(CameraList *list, char *name, CameraListType type)
 {
         strcpy(list->entry[list->count].name, name);
