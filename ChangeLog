@@ -1,3 +1,8 @@
+2001-11-05  Colin Marquardt  <colin@marquardt-home.de>
+
+	* po/de.po: Update. Convert quote signs to the ones recommended by
+                    the folks at de@li.org.
+
 2001-11-05  Chris Pinkham <cpinkham@infi.net>
 
 	* camlibs/jamcam/jamcam.c
