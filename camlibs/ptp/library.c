@@ -790,7 +790,9 @@ init_ptp_fs (Camera *camera, GPContext *context)
 
 	/* Get file handles array for filesystem */
 	id = gp_context_progress_start (context, 0, "Initializing Camera");
-	CPR (context, ptp_getobjecthandles (&camera->pl->params, &camera->pl->params.handles, 0xffffffff)); // XXX return from all stores
+	CPR (context, ptp_getobjecthandles
+	(&camera->pl->params, 0xffffffff, 0x000000, 0x000000,
+	&camera->pl->params.handles)); // XXX return from all stores
 	gp_context_progress_update (context, id, 10);
 	// wee need that for fileststem :/
 	camera->pl->params.objectinfo = (PTPObjectInfo*)malloc(sizeof(PTPObjectInfo)*camera->pl->params.handles.n);

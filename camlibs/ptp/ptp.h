@@ -296,8 +296,9 @@ uint16_t ptp_closesession (PTPParams *params);
 
 uint16_t ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids);
 
-uint16_t ptp_getobjecthandles(PTPParams *params,
-			PTPObjectHandles* objecthandles, uint32_t store);
+uint16_t ptp_getobjecthandles (PTPParams* params, uint32_t storage,
+			uint32_t objectformatcode, uint32_t associationOH,
+			PTPObjectHandles* objecthandles);
 uint16_t ptp_getobjectinfo	(PTPParams *params, uint32_t handle,
 			PTPObjectInfo* objectinfo);
 uint16_t ptp_getobject	(PTPParams *params, uint32_t handle,

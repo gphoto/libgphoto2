@@ -1,3 +1,8 @@
+2002-03-05 Mariusz Woloszyn
+	* ptp.c: updated ptp_getobjecthandles() to be protocol compliant
+	* ptp.c: rewrited ptp_transaction and ptp_sendreq code to send no
+	  more bytes than expected by device (fix for HP cameras)
+	
 2002-03-04 Mariusz Woloszyn
 	* library.c: some vendor/product IDs added
 	* library.c: changed initial transaction_id

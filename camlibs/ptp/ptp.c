@@ -257,7 +257,7 @@ ptp_getdevinfo (PTPParams* params, PTPDeviceInfo* devinfo)
 /**
  * ptp_opensession:
  * params:	PTPParams*
- * 		uint32_t session		- session number 
+ * 		session			- session number 
  *
  * Establishes a new session.
  *
@@ -315,25 +315,29 @@ ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 /**
  * ptp_getobjecthandles:
  * params:	PTPParams*
- *		PTPObjectHandles*	- pointer to structute
- *		uint32_t store		- StoreID
+ *		storage			- StorageID
+ *		objectformatcode	- ObjectFormatCode (optional)
+ *		associationOH		- ObjectHandle of Association for
+ *					  wich a list of children is desired
+ *					  (optional)
+ *		objecthandles		- pointer to structute
  *
  * Fills objecthandles with structure returned by device.
  *
  * Return values: Some PTP_RC_* code.
  **/
-//     XXX !!! this function prototype gonna change soon!
-// XXX still ObjectFormatCode and ObjectHandle of Assiciation NOT
-//     IMPLEMENTED (parameter 2 and 3)
 uint16_t
-ptp_getobjecthandles (PTPParams* params, PTPObjectHandles* objecthandles,
-			uint32_t store)
+ptp_getobjecthandles (PTPParams* params, uint32_t storage,
+			uint32_t objectformatcode, uint32_t associationOH,
+			PTPObjectHandles* objecthandles)
 {
 	uint16_t ret;
 	PTPReq req;
 	PTPReq oh;
 	
-	*(int *)(req.data)=htod32(store);
+	*(int *)(req.data)=htod32(storage);
+	*(int *)(req.data+4)=htod32(objectformatcode);
+	*(int *)(req.data+8)=htod32(associationOH);
 
 	ret=ptp_transaction(params, &req, PTP_OC_GetObjectHandles,
 		PTP_DP_GETDATA | PTP_RQ_PARAM1, PTP_REQ_DATALEN, &oh);
@@ -383,7 +387,7 @@ ptp_getthumb (PTPParams* params, uint32_t handle,
  * ptp_deleteobject:
  * params:	PTPParams*
  *		uint32_t handle		- object handle
- *		uint32_t ofc	- object format code
+ *		uint32_t ofc		- object format code
  * 
  * Deletes desired objects.
  *
