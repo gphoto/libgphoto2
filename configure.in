@@ -6,6 +6,23 @@ AM_INIT_AUTOMAKE(gphoto2, 2.0beta6dev1)
 AM_MAINTAINER_MODE
 AC_LIBTOOL_DLOPEN
 
+dnl ---------------------------------------------------------------------------
+dnl Versioning (libgphoto2-(AGE.)CURRENT.REVISION):
+dnl  - AGE (Micro):      Increment if any interfaces have been added; set to 0
+dnl                      if any interfaces have been removed. Removal has 
+dnl                      precedence over adding, so set to 0 if both happened.
+dnl  - REVISION (Minor): Increment any time the source changes; set to 
+dnl                      0 if you incremented CURRENT.
+dnl  - CURRENT (Major):  Increment if the interface has additions, changes,
+dnl                      removals.
+dnl ---------------------------------------------------------------------------
+LIBGPHOTO2_AGE=0
+LIBGPHOTO2_REVISION=0
+LIBGPHOTO2_CURRENT=2
+AC_SUBST(LIBGPHOTO2_AGE)
+AC_SUBST(LIBGPHOTO2_REVISION)
+AC_SUBST(LIBGPHOTO2_CURRENT)
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP

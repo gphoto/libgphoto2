@@ -1,3 +1,8 @@
+2002-02-13  Lutz Müller <lutz@users.sourceforge.net>
+
+	* libgphoto2/Makefile.am:
+	* configure.in: Introduce versions.
+
 2002-02-12  Fredrik <fredrik@krixor.xy.org>
 
 	* libgphoto2/gphoto2-filesys.c: Fix month off-by-one bug in

@@ -7,7 +7,8 @@ INCLUDES =						\
 
 lib_LTLIBRARIES = libgphoto2.la
 
-libgphoto2_la_LDFLAGS = -version-info 0:0:0
+libgphoto2_la_LDFLAGS = -version-info $(LIBGPHOTO2_CURRENT):$(LIBGPHOTO2_REVISION):$(LIBGPHOTO2_AGE)
+
 libgphoto2_la_SOURCES = 	\
 	gphoto2-abilities-list.c\
 	bayer.c bayer.h		\
