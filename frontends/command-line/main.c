@@ -421,7 +421,8 @@ OPTION_CALLBACK(list_files) {
         if ((result = set_globals()) != GP_OK)
                 return (result);
 
-        print_files(glob_folder, NULL, 0);
+        if ((result = print_files (glob_folder, NULL, 0)) != GP_OK)
+		return (result);
 
         if (!glob_recurse)
                 return (GP_OK);

@@ -50,7 +50,8 @@ int for_each_image(char *folder, image_action iaction, int reverse) {
 	CameraListEntry *entry;
 	int		i, result;
 
-	gp_camera_file_list(glob_camera, &filelist, folder);
+	if ((result = gp_camera_file_list(glob_camera, &filelist, folder)) != GP_OK)
+		return (result);
 
 	if (reverse) {
 		for (i = gp_list_count(&filelist) - 1; 0 <= i; i--) {

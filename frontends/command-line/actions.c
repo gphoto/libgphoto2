@@ -25,9 +25,12 @@ int print_files(char *subfolder, image_action iaction, int reverse) {
 
 	CameraList filelist;
 	CameraListEntry *entry;
-	int x;
+	int x, result;
 	char buf[64];
-	gp_camera_file_list(glob_camera, &filelist, subfolder);
+	
+	if ((result = gp_camera_file_list(glob_camera, &filelist, subfolder)) != GP_OK)
+		return (result);
+
 	if (glob_quiet)
 		printf("%i\n", gp_list_count(&filelist));
 	   else

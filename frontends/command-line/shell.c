@@ -225,7 +225,7 @@ int shell_ls (char *arg) {
 	CameraList list;
 	CameraListEntry *entry;
 	char buf[1024], tmp_folder[1024];
-	int x, y=1;
+	int x, y=1, result;
 	int arg_count = shell_arg_count(arg);
 
 	if (arg_count) {
@@ -258,9 +258,9 @@ int shell_ls (char *arg) {
 		}
 	}
 
-	if (gp_camera_file_list(glob_camera, &list, tmp_folder) != GP_OK) {
-		cli_error_print("Could not retrieve the file list");
-		return (GP_ERROR);
+	if ((result = gp_camera_file_list(glob_camera, &list, tmp_folder)) != GP_OK) {
+//		cli_error_print("Could not retrieve the file list");
+		return (result);
 	}
 
 	if (glob_quiet)
