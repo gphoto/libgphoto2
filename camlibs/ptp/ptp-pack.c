@@ -115,7 +115,7 @@ ptp_unpack_uint32_t_array(PTPParams *params, PTPReq *req, uint16_t offset, uint3
 #define PTP_di_VendorExtensionVersion	 6
 #define PTP_di_VendorExtensionDesc	 8
 
-// ObjectHandles pack/unpack
+// ObjectHandles array pack/unpack
 
 #define PTP_oh				 0
 
@@ -125,7 +125,7 @@ ptp_unpack_OH (PTPParams *params, PTPReq *req, PTPObjectHandles *oh)
 	oh->n = ptp_unpack_uint32_t_array(params, req, PTP_oh, oh->handler);
 }
 
-// StoreIDs pack/unpack
+// StoreIDs array pack/unpack
 
 #define PTP_sids			 0
 
@@ -134,6 +134,33 @@ ptp_unpack_SIDs (PTPParams *params, PTPReq *req, PTPStorageIDs *sids)
 {
 	sids->n = ptp_unpack_uint32_t_array(params, req, PTP_sids,
 	sids->storage);
+}
+
+// StorageInfo pack/unpack
+
+#define PTP_si_StorageType		 0
+#define PTP_si_FilesystemType		 2
+#define PTP_si_AccessCapability		 4
+#define PTP_si_MaxCapability		 6
+#define PTP_si_FreeSpaceInBytes		14
+#define PTP_si_FreeSpaceInImages	22
+#define PTP_si_StorageDescription	26
+
+static inline void
+ptp_unpack_SI (PTPParams *params, PTPReq *req, PTPStorageInfo *si)
+{
+	uint8_t storagedescriptionlen;
+
+	si->StorageType=dtoh16a(&req->data[PTP_si_StorageType]);
+	si->FilesystemType=dtoh16a(&req->data[PTP_si_FilesystemType]);
+	si->AccessCapability=dtoh16a(&req->data[PTP_si_AccessCapability]);
+	// XXX no dtoh64a !!! skiping next two
+	si->FreeSpaceInImages=dtoh32a(&req->data[PTP_si_FreeSpaceInImages]);
+	si->StorageDescription=ptp_unpack_string(params, req,
+		PTP_si_StorageDescription, &storagedescriptionlen);
+	si->VolumeLabel=ptp_unpack_string(params, req,
+		PTP_si_StorageDescription+storagedescriptionlen*2+1,
+		&storagedescriptionlen);
 }
 
 // ObjectInfo pack/unpack

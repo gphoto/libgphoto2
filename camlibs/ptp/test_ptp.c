@@ -68,9 +68,9 @@ PTPParams* ptp_params;
 	
 	ptp_opensession (ptp_params, 1);
 
-	sleep(4);
+	sleep(3);
 	printf("Checking event ep\n");
-	ret=usb_bulk_read(device_handle, eventep, buf, 16384, 100);
+	ret=usb_bulk_read(device_handle, eventep, buf, 16384, 5000);
 	if (ret<=0) {
 		perror ("bulk_read():");
 	} else {

@@ -313,6 +313,30 @@ ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 }
 
 /**
+ * ptp_getststorageinfo:
+ * params:	PTPParams*
+ *		storageid		- StorageID
+ *
+ * Gets StorageInfo dataset of desired storage and fills storageinfo
+ * structure.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
+			PTPStorageInfo* storageinfo)
+{
+	uint16_t ret;
+	PTPReq si;
+	PTPReq req;
+
+	ret=ptp_transaction(params, &req, PTP_OC_GetStorageInfo,
+		PTP_DP_GETDATA | PTP_RQ_PARAM1, PTP_REQ_DATALEN, &si);
+	ptp_unpack_SI(params, &si, storageinfo);
+	return ret;
+}
+
+/**
  * ptp_getobjecthandles:
  * params:	PTPParams*
  *		storage			- StorageID

@@ -268,6 +268,27 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_PS_NoProtection			0x0000
 #define PTP_PS_ReadOnly				0x0001
 
+// PTP Storage Types
+
+#define PTP_ST_Undefined			0x0000
+#define PTP_ST_FixedROM				0x0001
+#define PTP_ST_RemovableROM			0x0002
+#define PTP_ST_FixedRAM				0x0003
+#define PTP_ST_RemovableRAM			0x0004
+
+// PTP FilesystemType Values
+
+#define PTP_FST_Undefined			0x0000
+#define PTP_FST_GenericFlat			0x0001
+#define PTP_FST_GenericHierarchical		0x0002
+#define PTP_FST_DCF				0x0003
+
+// PTP StorageInfo AccessCapability Values
+
+#define PTP_AC_ReadWrite			0x0000
+#define PTP_AC_ReadOnly				0x0001
+#define PTP_AC_ReadOnly_with_Object_Deletion	0x0002
+
 // Glue stuff
 
 typedef short (* PTPIOReadFunc)  (unsigned char *bytes, unsigned int size,
