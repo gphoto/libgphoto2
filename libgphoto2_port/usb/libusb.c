@@ -327,7 +327,7 @@ gp_port_usb_find_bulk(struct usb_device *dev, int config, int interface, int alt
 	for (i = 0; i < intf->bNumEndpoints; i++) {
 		if ((intf->endpoint[i].bEndpointAddress & USB_ENDPOINT_DIR_MASK) == direction &&
 		    (intf->endpoint[i].bmAttributes & USB_ENDPOINT_TYPE_MASK) == USB_ENDPOINT_TYPE_BULK)
-			return intf->endpoint[i].bEndpointAddress & USB_ENDPOINT_ADDRESS_MASK;
+			return intf->endpoint[i].bEndpointAddress;
 	}
 
 	return -1;
