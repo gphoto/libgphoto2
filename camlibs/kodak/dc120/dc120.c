@@ -263,7 +263,7 @@ int camera_file_action (Camera *camera, int action, CameraFile *file,
 	}
 
 	if (file)
-		strcpy(file->name, filename);
+		gp_file_set_name (file, filename);
 
 	return (dc120_file_action(dd, action, from_card, album_num, picnum+1, file));
 }

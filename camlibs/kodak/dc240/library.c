@@ -507,8 +507,8 @@ int dc240_file_action (DC240Data *dd, int action, CameraFile *file,
     free(path_packet);
 
     if ((filename) && (file)) {
-	strcpy(file->name, filename);
-	strcpy(file->type, "image/jpeg");
+	gp_file_set_name (file, filename);
+	gp_file_set_type (file, "image/jpeg");
     }
 
     return (retval);

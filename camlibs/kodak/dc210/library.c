@@ -466,9 +466,8 @@ int kodak_dc210_get_thumbnail (DC210Data * dd, int picNum, CameraFile *file)
                 }
             }
 
-	    gp_file_append(file, imData, fileSize + 54);
-		
-	    strcpy(file->type, "image/bmp");
+	    gp_file_append (file, imData, fileSize + 54);
+	    gp_file_set_type (file, "image/bmp");
 	    strncpy(file->name, picInfo.fileName, 12);
 	    file->name[12] = 0;
         }

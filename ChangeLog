@@ -1,5 +1,16 @@
 2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/sierra/library.c: Remove some unnecessary casts, put in some
+	CHECKs
+	* camlibs/kodak/dc120/dc120.c:
+	* camlibs/kodak/dc210/library.c:
+	* camlibs/kodak/dc240/library.c: Use gp_file_* instead of directly
+	accessing the struct.
+	* libgphoto2/filesys.c: Remove lots of redundancy, always check if
+	folder has a trailing slash (and ignore it if this is the case).
+
+2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/agfa-cl18/agfa.c: Use gp_file_* instead of directly
 	accessing the struct.
 	* camlibs/barbie/barbie.c: And here.
