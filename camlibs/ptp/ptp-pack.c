@@ -82,6 +82,19 @@ ptp_unpack_string(PTPParams *params, PTPReq *req, uint16_t offset, uint8_t *len)
 	return (string);
 }
 
+static inline void
+ptp_pack_string(PTPParams *params, char *string, PTPReq *req, uint16_t offset, uint8_t *len)
+{
+	int i;
+	*len = (uint8_t)strlen(string);
+
+	htod8a(&req->data[offset],*len+1);
+	for (i=0;i<*len && i< MAXFILENAMELEN; i++) {
+		htod16a(&req->data[offset+i*2+1],(uint16_t)string[i]);
+	}
+}
+
+
 #define PTP_di_StandardVersion		 0
 #define PTP_di_VendorExtensionID	 2
 #define PTP_di_VendorExtensionVersion	 6
@@ -108,7 +121,6 @@ ptp_unpack_string(PTPParams *params, PTPReq *req, uint16_t offset, uint8_t *len)
 static inline int
 ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 {
-	int i;
 	uint8_t filenamelen;
 	uint8_t capturedatelen=0;
 #if 0
@@ -131,18 +143,20 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, PTPReq *req)
 	htod32a(&req->data[PTP_oi_AssociationDesc],oi->AssociationDesc);
 	htod32a(&req->data[PTP_oi_SequenceNumber],oi->SequenceNumber);
 	
+	ptp_pack_string(params, oi->Filename, req, PTP_oi_filenamelen, &filenamelen);
+/*
 	filenamelen=(uint8_t)strlen(oi->Filename);
 	htod8a(&req->data[PTP_oi_filenamelen],filenamelen+1);
 	for (i=0;i<filenamelen && i< MAXFILENAMELEN; i++) {
 		req->data[PTP_oi_Filename+i*2]=oi->Filename[i];
 	}
-
+*/
 	/*
 	 *XXX Fake date.
 	 * for example Kodak sets Capture date on the basis of EXIF data.
 	 * Spec says that this field is from perspective of Initiator.
 	 */
-#if 0	// seems now we don't need to data packed in OI dataset... for now ;)
+#if 0	// seems now we don't need any data packed in OI dataset... for now ;)
 	capturedatelen=strlen(capture_date);
 	htod8a(&req->data[PTP_oi_Filename+(filenamelen+1)*2],
 		capturedatelen+1);
