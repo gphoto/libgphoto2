@@ -1438,7 +1438,7 @@ set_globals (void)
 		}
 	}
 
-	/* We set the port not in case of "Directory Browse" */
+	/* We do not set the port in case of "Directory Browse" */
 	if (strcmp (glob_model, "Directory Browse")) {
 		CR (gp_port_info_list_get_info (il, port, &info));
 		CR (gp_camera_set_port_info (glob_camera, info));
