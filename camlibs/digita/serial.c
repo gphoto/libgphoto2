@@ -195,7 +195,7 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
         digita_send = digita_serial_send;
         digita_read = digita_serial_read;
 
-        tcsendbreak(dev->gpdev->device_fd, 4);
+//        tcsendbreak(dev->gpdev->device_fd, 4);
 
         dev->gpdev->settings.serial.speed = 0;
         gp_port_serial_set_baudrate(dev->gpdev);

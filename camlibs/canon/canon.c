@@ -1503,7 +1503,6 @@ camera_init (Camera *camera)
 {
 	GPPortSettings settings;
 	char buf[8];
-	const char *path;
 
 	/* First, set up all the function pointers */
 	camera->functions->exit = camera_exit;
@@ -1597,6 +1596,5 @@ camera_init (Camera *camera)
 
 
 	/* This is bogus. You don't have to change the path */
-	gp_camera_get_port_path (camera, &path);
-	return canon_serial_init (camera, path);
+	return canon_serial_init (camera);
 }

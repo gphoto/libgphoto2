@@ -14,7 +14,7 @@
  ****************************************************************************/
 
 int canon_serial_change_speed(GPPort *gdev, int speed);
-int canon_serial_init(Camera *camera, const char *devname);
+int canon_serial_init(Camera *camera);
 int canon_serial_send(Camera *camera, const unsigned char *buf, int len, int sleep);
 int canon_serial_get_byte(GPPort *gdev);
 int canon_serial_get_cts(GPPort *gdev);

@@ -1,5 +1,13 @@
 2001-10-25 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/canon/serial.[c,h]: No need to set the port path anywhere.
+	  This is fully handled by gphoto2. That is: gp_settings_get, 
+	  adjust what needs to be adjusted, and then gp_settings_set.
+	* camlibs/canon/canon.c: Adjust parameters to canon_serial_init
+	* camlibs/digita/serial.c: there is no dev->device_fd any more
+
+2001-10-25 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* frontends/command-line/main.c: Remember --camera and --port
 
 2001-10-25 Lutz Müller <urc8@rz.uni-karlsruhe.de>

@@ -200,67 +200,52 @@ canon_usb_camera_init (Camera *camera)
  ****************************************************************************/
 
 int
-canon_serial_init (Camera *camera, const char *devname)
+canon_serial_init (Camera *camera)
 {
 	int res;
-	gp_port_settings settings;
+	GPPortSettings settings;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "Initializing the camera.\n");
 
+	/* Get the current settings */
+	gp_port_settings_get (camera->port, &settings);
+
+	/* Adjust the current settings */
 	switch (canon_comm_method) {
-		case CANON_USB:
-
-			res = gp_port_settings_get (camera->port, &settings);
-			if (res != GP_OK) {
-				fprintf (stderr,
-					 "canon_init_serial(): Cannot get USB port settings (returned %i)",
-					 res);
-				return GP_ERROR;
-			}
-
-			settings.usb.inep = 0x81;
-			settings.usb.outep = 0x02;
-			settings.usb.config = 1;
-			settings.usb.altsetting = 0;
-
-			res = gp_port_settings_set (camera->port, settings);
-			if (res != GP_OK) {
-				fprintf (stderr,
-					 "canon_init_serial(): Cannot apply USB port settings (returned %i) "
-					 "Camera not operational.\n", res);
-				return GP_ERROR;
-			}
-
-			res = canon_usb_camera_init (camera);
-			if (res != GP_OK) {
-				fprintf (stderr,
-					 "canon_init_serial(): Cannot initialize camera, canon_usb_camera_init() "
-					 "returned %i\n", res);
-				return GP_ERROR;
-			}
-			break;
-		case CANON_SERIAL_RS232:
-		default:
-
-			if (!devname) {
-				fprintf (stderr, "INVALID device string (NULL)\n");
-				return GP_ERROR;
-			}
-
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
-					 "canon_init_serial(): Using serial port on %s\n",
-					 devname);
-
-			strcpy (settings.serial.port, devname);
-			settings.serial.speed = 9600;
-			settings.serial.bits = 8;
-			settings.serial.parity = 0;
-			settings.serial.stopbits = 1;
-
-			gp_port_settings_set (camera->port, settings);	/* Sets the serial device name */
-
-			break;
+	case CANON_USB:
+		settings.usb.inep = 0x81;
+		settings.usb.outep = 0x02;
+		settings.usb.config = 1;
+		settings.usb.altsetting = 0;
+		break;
+	case CANON_SERIAL_RS232:
+	default:
+		settings.serial.speed = 9600;
+		settings.serial.bits = 8;
+		settings.serial.parity = 0;
+		settings.serial.stopbits = 1;
+		break;
 	}
+
+	/* Set the new settings */
+	gp_port_settings_set (camera->port, settings);
+
+	/* Do further initialization */
+	switch (canon_comm_method) {
+	case CANON_USB:
+		res = canon_usb_camera_init (camera);
+		if (res != GP_OK) {
+			fprintf (stderr, "canon_init_serial(): "
+				 "Cannot initialize camera, "
+				 "canon_usb_camera_init() "
+				 "returned %i\n", res);
+			return GP_ERROR;
+		}
+		break;
+	default:
+		break;
+	}
+
 	return GP_OK;
 }
 
