@@ -123,11 +123,15 @@ typedef void (* CameraMessageFunc)  (Camera *, const char *msg, void *data);
 typedef void (* CameraStatusFunc)   (Camera *, const char *status, void *data);
 typedef void (* CameraProgressFunc) (Camera *, float percentage, void *data);
 
+typedef struct _CameraPrivateLibrary  CameraPrivateLibrary;
+typedef struct _CameraPrivateCore     CameraPrivateCore;
+typedef struct _CameraPrivateFrontend CameraPrivateFrontend;
+
 struct _Camera {
 
 	/*
-	 * Don't use, use abilities->model instead. This entry will 
-	 * disappear at some point in the future.
+	 * Don't use, use gp_camera_get_abilities and abilities.model
+	 * instead. This entry will disappear at some point in the future.
 	 */
 	char            model[128];
 
@@ -135,28 +139,19 @@ struct _Camera {
 	 * Don't use. It'll disappear sooner or later
 	 */
 	GPPortInfo     *port_info;
-	
-	int             ref_count;
-	
-	void            *library_handle;
-	
-	CameraAbilities *abilities;
-	CameraFunctions *functions;
 
+	/* Don't use */
 	void            *camlib_data;
 	void            *frontend_data;
 
-	GPPort          *port;
+	/* Those should be accessed only by the camera driver */
+	GPPort           *port;
 	CameraFilesystem *fs;
+	CameraFunctions  *functions;
 
-	CameraStatusFunc   status_func;
-	void              *status_data;
-
-	CameraProgressFunc progress_func;
-	void              *progress_data;
-
-	CameraMessageFunc  message_func;
-	void              *message_data;
+	CameraPrivateLibrary  *pl; /* Private data of camera libraries    */
+	CameraPrivateCore     *pc; /* Private data of the core of gphoto2 */
+	CameraPrivateFrontend *pf; /* Private data of the frontend        */
 };
 
 /* Create a new camera device */

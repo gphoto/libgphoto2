@@ -64,6 +64,25 @@
 
 #define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); gp_camera_status ((c), ""); gp_camera_progress ((c), 0.0); return (r);}; CHECK_CLOSE (c);}
 
+struct _CameraPrivateCore {
+	CameraStatusFunc   status_func;
+	void              *status_data;
+
+	CameraProgressFunc progress_func;
+	void              *progress_data;
+
+	CameraMessageFunc  message_func;
+	void              *message_data;
+
+	/* The abilities of this camera */
+	CameraAbilities a;
+
+	/* Library handle */
+	void *lh;
+
+	unsigned int ref_count;
+};
+
 /**
  * gp_camera_new:
  * @camera:
@@ -93,38 +112,32 @@ gp_camera_new (Camera **camera)
         /* Initialize the members */
         (*camera)->port_info = malloc (sizeof(CameraPortInfo));
 	if (!(*camera)->port_info) {
-		free (*camera);
+		gp_camera_free (*camera);
 		return (GP_ERROR_NO_MEMORY);
 	}
 	memset ((*camera)->port_info, 0, sizeof (CameraPortInfo));
 	(*camera)->port_info->type = GP_PORT_NONE;
 
-        (*camera)->abilities = malloc(sizeof(CameraAbilities));
-	if (!(*camera)->abilities) {
-		free ((*camera)->port);
-		free (*camera);
-		return (GP_ERROR_NO_MEMORY);
-	}
-	memset ((*camera)->abilities, 0, sizeof (CameraAbilities));
-
         (*camera)->functions = malloc(sizeof(CameraFunctions));
 	if (!(*camera)->functions) {
-		free ((*camera)->port);
-		free ((*camera)->abilities);
-		free (*camera);
+		gp_camera_free (*camera);
 		return (GP_ERROR_NO_MEMORY);
 	}
 	memset ((*camera)->functions, 0, sizeof (CameraFunctions));
 
-        (*camera)->ref_count  = 1;
+	(*camera)->pc = malloc (sizeof (CameraPrivateCore));
+	if (!(*camera)->pc) {
+		gp_camera_free (*camera);
+		return (GP_ERROR_NO_MEMORY);
+	}
+	memset ((*camera)->pc, 0, sizeof (CameraPrivateCore));
+
+        (*camera)->pc->ref_count = 1;
 
 	/* Create the filesystem */
 	result = gp_filesystem_new (&(*camera)->fs);
 	if (result != GP_OK) {
-		free ((*camera)->functions);
-		free ((*camera)->port);
-		free ((*camera)->abilities);
-		free (*camera);
+		gp_camera_free (*camera);
 		return (result);
 	}
 
@@ -154,7 +167,7 @@ gp_camera_get_model (Camera *camera, const char **model)
 {
 	CHECK_NULL (camera && model);
 
-	*model = camera->abilities->model;
+	*model = camera->pc->a.model;
 
 	return (GP_OK);
 }
@@ -181,7 +194,7 @@ gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 
 	CHECK_NULL (camera);
 
-	memcpy (camera->abilities, &abilities, sizeof (CameraAbilities));
+	memcpy (&camera->pc->a, &abilities, sizeof (CameraAbilities));
 
 //FIXME: Remove this. Up to now, some camera drivers still need it.
 	strcpy (camera->model, abilities.model);
@@ -203,7 +216,7 @@ gp_camera_get_abilities (Camera *camera, CameraAbilities *abilities)
 {
 	CHECK_NULL (camera && abilities);
 
-	memcpy (abilities, camera->abilities, sizeof (CameraAbilities));
+	memcpy (abilities, &camera->pc->a, sizeof (CameraAbilities));
 
 	return (GP_OK);
 }
@@ -389,8 +402,8 @@ gp_camera_set_progress_func (Camera *camera, CameraProgressFunc func,
 {
 	CHECK_NULL (camera);
 
-	camera->progress_func = func;
-	camera->progress_data = data;
+	camera->pc->progress_func = func;
+	camera->pc->progress_data = data;
 
 	return (GP_OK);
 }
@@ -415,8 +428,8 @@ gp_camera_set_status_func (Camera *camera, CameraStatusFunc func,
 {
 	CHECK_NULL (camera);
 
-	camera->status_func = func;
-	camera->status_data = data;
+	camera->pc->status_func = func;
+	camera->pc->status_data = data;
 
 	return (GP_OK);
 }
@@ -441,8 +454,8 @@ gp_camera_set_message_func (Camera *camera, CameraMessageFunc func,
 {
 	CHECK_NULL (camera);
 
-	camera->message_func = func;
-	camera->message_data = data;
+	camera->pc->message_func = func;
+	camera->pc->message_data = data;
 
 	return (GP_OK);
 }
@@ -476,8 +489,9 @@ gp_camera_status (Camera *camera, const char *format, ...)
 #endif
 	va_end (arg);
 
-	if (camera->status_func)
-		camera->status_func (camera, buffer, camera->status_data);
+	if (camera->pc->status_func)
+		camera->pc->status_func (camera, buffer,
+					 camera->pc->status_data);
 
 	return (GP_OK);
 }
@@ -508,8 +522,9 @@ gp_camera_message (Camera *camera, const char *format, ...)
 #endif
 	va_end (arg);
 
-	if (camera->message_func)
-		camera->message_func (camera, buffer, camera->message_data);
+	if (camera->pc->message_func)
+		camera->pc->message_func (camera, buffer,
+					  camera->pc->message_data);
 
 	return (GP_OK);
 }
@@ -536,9 +551,9 @@ gp_camera_progress (Camera *camera, float percentage)
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 
-	if (camera->progress_func)
-		camera->progress_func (camera, percentage,
-				       camera->progress_data);
+	if (camera->pc->progress_func)
+		camera->pc->progress_func (camera, percentage,
+					   camera->pc->progress_data);
 
 	return (GP_OK);
 }
@@ -556,7 +571,7 @@ gp_camera_ref (Camera *camera)
 {
 	CHECK_NULL (camera);
 
-	camera->ref_count += 1;
+	camera->pc->ref_count += 1;
 
 	return (GP_OK);
 }
@@ -575,9 +590,16 @@ gp_camera_unref (Camera *camera)
 {
 	CHECK_NULL (camera);
 
-	camera->ref_count -= 1;
+	if (!camera->pc->ref_count) {
+		gp_log (GP_LOG_ERROR, "gphoto2-camera", "gp_camera_unref on "
+			"a camera with ref_count == 0 should not happen "
+			"at all");
+		return (GP_ERROR);
+	}
 
-	if (camera->ref_count == 0)
+	camera->pc->ref_count -= 1;
+
+	if (!camera->pc->ref_count)
 		gp_camera_free (camera);
 
 	return (GP_OK);
@@ -603,12 +625,16 @@ gp_camera_free (Camera *camera)
 		if (camera->functions->exit)
 	        	camera->functions->exit (camera);
 		gp_port_close (camera->port);
-		gp_camera_unset_port (camera);
+		gp_port_free (camera->port);
+		camera->port = NULL;
 	}
 
-	if (camera->library_handle) {
-		GP_SYSTEM_DLCLOSE (camera->library_handle);
-		camera->library_handle = NULL;
+	if (camera->pc) {
+		if (camera->pc->lh) {
+			GP_SYSTEM_DLCLOSE (camera->pc->lh);
+			camera->pc->lh = NULL;
+		}
+		free (camera->pc);
 	}
 
 	if (camera->fs) {
@@ -616,12 +642,15 @@ gp_camera_free (Camera *camera)
 		camera->fs = NULL;
 	}
 
-        if (camera->port_info)
+        if (camera->port_info) {
                 free (camera->port_info);
-        if (camera->abilities) 
-                free (camera->abilities);
-        if (camera->functions) 
+		camera->port_info = NULL;
+	}
+
+        if (camera->functions) {
                 free (camera->functions);
+		camera->functions = NULL;
+	}
  
 	free (camera);
 
@@ -654,8 +683,8 @@ gp_camera_init (Camera *camera)
 	 * If the port or the model hasn't been indicated, try to
 	 * figure it out (USB only). Beware of "Directory Browse".
 	 */
-	if (strcasecmp (camera->abilities->model, "Directory Browse")) {
-		if (!camera->port || !strcmp ("", camera->abilities->model)) {
+	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
+		if (!camera->port || !strcmp ("", camera->pc->a.model)) {
 			
 			/* Call auto-detect and choose the first camera */
 			CRS (camera, gp_autodetect (&list));
@@ -675,8 +704,8 @@ gp_camera_init (Camera *camera)
 		switch (camera->port->type) {
 		case GP_PORT_USB:
 			CRS (camera, gp_port_usb_find_device (camera->port,
-					camera->abilities->usb_vendor,
-					camera->abilities->usb_product));
+					camera->pc->a.usb_vendor,
+					camera->pc->a.usb_product));
 			break;
 		default:
 			break;
@@ -686,15 +715,15 @@ gp_camera_init (Camera *camera)
 
 	/* Load the library. */
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Loading '%s'...",
-		camera->abilities->library);
-	camera->library_handle = GP_SYSTEM_DLOPEN (camera->abilities->library);
-	if (!camera->library_handle) {
+		camera->pc->a.library);
+	camera->pc->lh = GP_SYSTEM_DLOPEN (camera->pc->a.library);
+	if (!camera->pc->lh) {
 		gp_camera_status (camera, "");
 		return (GP_ERROR_LIBRARY);
 	}
 
 	/* Initialize the camera */
-	init_func = GP_SYSTEM_DLSYM (camera->library_handle, "camera_init");
+	init_func = GP_SYSTEM_DLSYM (camera->pc->lh, "camera_init");
 	if (!init_func) {
 		gp_camera_status (camera, "");
 		return (GP_ERROR_LIBRARY);
