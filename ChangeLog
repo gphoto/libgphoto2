@@ -1,3 +1,7 @@
+2002-07-29  Lutz Müller <lutz@users.sourceforge.net>
+
+	* README: First attempt to separate gphoto2 from libgphoto2.
+
 2002-07-28  Lutz Müller <lutz@users.sourceforge.net>
 
 	* configure.in: Detect new version of libexif (forgot to check 
