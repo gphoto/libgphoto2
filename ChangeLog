@@ -1,3 +1,13 @@
+2002-01-10  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/Makefile.am
+	* libgphoto2/gphoto2-context.[c,h]: New files
+	* libgphoto2/gphoto2-abilities-list.[c,h]
+	  (gp_abilities_list_load_ctx): Sample function for showing the 
+	  benefits of above new files.
+	* frontends/command-line/main.c: Use gp_abilities_list_load_ctx to
+	  make that operation cancellable.
+
 2002-01-09  Colin Marquardt  <colin@marquardt-home.de>
 
 	*  TESTERS: Added Kristian Rink as a tester for the Kodak DC3200.

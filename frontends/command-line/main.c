@@ -55,9 +55,6 @@
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
-/* Global variable for cancelling */
-static unsigned char cancelled = 0;
-
 /* Takes the current globals, and sets up the gPhoto lib with them */
 static int set_globals (void);
 
@@ -217,7 +214,8 @@ char glob_cwd[1024];
 int  glob_speed;
 int  glob_num=1;
 
-Camera         *glob_camera=NULL;
+static GPContext *glob_context = NULL;
+Camera    *glob_camera  = NULL;
 
 int  glob_debug;
 int  glob_shell=0;
@@ -227,6 +225,7 @@ int  glob_recurse=0;
 char glob_filename[128];
 int  glob_stdout=0;
 int  glob_stdout_size=0;
+static char glob_cancel = 0;
 
 /* 4) Finally, add your callback function.                              */
 /*    ----------------------------------------------------------------- */
@@ -741,7 +740,7 @@ download_progress_func (CameraFile *file, float percentage, void *data)
 	const char *name;
 
 	/* Check for cancellation */
-	if (cancelled)
+	if (glob_cancel)
 		return (GP_ERROR_CANCEL);
 
 	if (glob_quiet)
@@ -916,7 +915,7 @@ upload_progress_func (CameraFile *file, float percentage, void *data)
 	const char *name;
 
 	/* Check for cancellation */
-	if (cancelled)
+	if (glob_cancel)
 		return (GP_ERROR_CANCEL);
 
 	if (glob_quiet)
@@ -1111,7 +1110,7 @@ set_globals (void)
         CHECK_RESULT (gp_camera_new (&glob_camera));
 
 	CHECK_RESULT (gp_abilities_list_new (&al));
-	CHECK_RESULT (gp_abilities_list_load (al));
+	CHECK_RESULT (gp_abilities_list_load_ctx (al, glob_context));
 
 	CHECK_RESULT (gp_port_info_list_new (&il));
 	CHECK_RESULT (gp_port_info_list_load (il));
@@ -1215,6 +1214,41 @@ set_globals (void)
         return (GP_OK);
 }
 
+static void
+ctx_status_func (GPContext *context, const char *format, va_list args,
+		 void *data)
+{
+	vfprintf (stderr, format, args);
+	fprintf  (stderr, "\n");
+	fflush   (stderr);
+}
+
+static void
+ctx_error_func (GPContext *context, const char *format, va_list args,
+		void *data)
+{
+	fprintf  (stderr, _("*** Error ***\n"));
+	vfprintf (stderr, format, args);
+	fflush   (stderr);
+}
+
+static void
+ctx_progress_func (GPContext *context, float percentage, void *data)
+{
+	fprintf (stderr, "Progress: %02.01f\r", percentage * 100.);
+	fflush  (stderr);
+}
+
+static GPContextFeedback
+ctx_cancel_func (GPContext *context, void *data)
+{
+	if (glob_cancel) {
+		return (GP_CONTEXT_FEEDBACK_CANCEL);
+		glob_cancel = 0;
+	} else
+		return (GP_CONTEXT_FEEDBACK_OK);
+}
+
 static int
 init_globals (void)
 {
@@ -1234,6 +1268,12 @@ init_globals (void)
         glob_quiet = 0;
         glob_filename_override = 0;
         glob_recurse = 0;
+
+	glob_context = gp_context_new ();
+	gp_context_set_cancel_func   (glob_context, ctx_cancel_func,   NULL);
+	gp_context_set_progress_func (glob_context, ctx_progress_func, NULL);
+	gp_context_set_error_func    (glob_context, ctx_error_func,    NULL);
+	gp_context_set_status_func   (glob_context, ctx_status_func,   NULL);
 
         return GP_OK;
 }
@@ -1275,7 +1315,7 @@ signal_exit (int signo)
         if (!glob_quiet)
                 printf(_("\nCancelling...\n"));
 
-	cancelled = 1;
+	glob_cancel = 1;
 
 #if 0
 	/* If we've got a camera, unref it */
