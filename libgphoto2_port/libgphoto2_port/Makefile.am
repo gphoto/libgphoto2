@@ -19,6 +19,7 @@ libgphoto2_port_la_SOURCES =		\
 
 libgphoto2_portincludedir = $(includedir)/gphoto2
 libgphoto2_portinclude_HEADERS =	\
+	gphoto2-port.h			\
 	gphoto2-port-info-list.h	\
 	gphoto2-port-log.h		\
 	gphoto2-port-portability.h	\
