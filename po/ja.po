@@ -6,9 +6,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: gphoto2 2.0beta6dev2\n"
-"POT-Creation-Date: 2002-06-13 23:51+0200\n"
-"PO-Revision-Date: 2002-02-25 19:34+0100\n"
+"Project-Id-Version: gphoto2 2.1.0rc2\n"
+"POT-Creation-Date: 2002-06-21 12:30-0400\n"
+"PO-Revision-Date: 2002-06-22 01:18+0900\n"
 "Last-Translator: Takeshi Aihana <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
@@ -96,9 +96,8 @@ msgid "Switching Camera Off"
 msgstr "カメラを OFF にします"
 
 #: camlibs/canon/library.c:242
-#, fuzzy
 msgid "Error capturing image"
-msgstr "ファイルの削除中にエラー"
+msgstr "画像のキャプチャ中にエラー"
 
 #: camlibs/canon/library.c:277
 #, c-format
@@ -282,7 +281,7 @@ msgstr "全ファイルの一覧"
 
 #: camlibs/canon/library.c:1130 camlibs/canon/library.c:1181
 msgid "Keep filename on upload"
-msgstr ""
+msgstr "アップロード時にファイル名を保持する"
 
 #: camlibs/canon/library.c:1153
 msgid "Owner name changed"
@@ -436,6 +435,8 @@ msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
 msgstr ""
+"ファイルが大きすぎます。お使いのカメラの電源を OFF にして、ファイルをアップ"
+"ロードする前に戻して下さい。"
 
 #: camlibs/canon/usb.c:1034
 #, c-format
@@ -443,9 +444,8 @@ msgid "Detected a '%s'."
 msgstr "'%s' を検出しました。"
 
 #: camlibs/digita/digita.c:331
-#, fuzzy
 msgid "Unsupported image type"
-msgstr "サポートするカメラ:\n"
+msgstr "サポートしていない画像の種類"
 
 #: camlibs/digita/digita.c:396
 msgid ""
@@ -719,61 +719,63 @@ msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
 msgstr "ディレクトリ参照モード - Scott Fritzinger <scottf@unr.edu> 氏の提供。"
 
 #: camlibs/directory/directory.c:562
-#, fuzzy, c-format
+#, c-format
 msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
 msgstr ""
-"ファイル '%s' ('%s' の中にある) (%m) の時刻を変更することが出来ませんでした。"
+"ファイル '%s' (フォルダ '%s' の中にある) を削除することが出来ませんでした (エ"
+"ラーコード %i:%m)。"
 
 #: camlibs/fuji/fuji.c:85
-#, fuzzy, c-format
+#, c-format
 msgid "The camera sent only %i byte(s), but we need at least %i."
-msgstr "カメラが予期しないサイズ以上を送信しました (%i)"
+msgstr ""
+"カメラが %i バイトのみ送信しましたが、必要なバイト数は少なくとも %i です。"
 
 #: camlibs/fuji/fuji.c:126 camlibs/ricoh/library.c:242
-#, fuzzy
 msgid "Could not contact camera."
-msgstr "カメラを検出することが出来ませんでした"
+msgstr "カメラに接続することが出来ませんでした。"
 
 #: camlibs/fuji/fuji.c:188
-#, fuzzy, c-format
+#, c-format
 msgid "Received unexpected data (0x%02x, 0x%02x)."
-msgstr "不明なヘッダを受け取りました (%i)"
+msgstr "予期しないデータを受け取りました (0x%02x, 0x%02x)。"
 
 #: camlibs/fuji/fuji.c:214
 #, c-format
 msgid "Wrong escape sequence: expected 0x%02x, got 0x%02x."
 msgstr ""
+"エスケープ・シーケンスが間違っています: 0x%02x なのに 0x%02x を受け取りまし"
+"た。"
 
 #: camlibs/fuji/fuji.c:231
 #, c-format
 msgid "Bad data - got 0x%02x, expected 0x%02x."
-msgstr ""
+msgstr "データがおかしいです - 0x%02x を取得しました (期待値: 0x%02x)"
 
 #: camlibs/fuji/fuji.c:244
 #, c-format
 msgid "Bad data - got 0x%02x, expected 0x%02x or 0x%02x."
 msgstr ""
+"データがおかしいです - 0x%02x を取得しました (期待値: 0x%02x または 0x%02x)"
 
 #: camlibs/fuji/fuji.c:251
 #, c-format
 msgid "Bad checksum - got 0x%02x, expected 0x%02x."
-msgstr ""
+msgstr "チェックサムがおかしいです - 0x%02x を取得しました (期待値: 0x%02x)"
 
 #: camlibs/fuji/fuji.c:289 camlibs/fuji/fuji.c:728
-#, fuzzy
 msgid "Camera rejected the command."
-msgstr "カメラはコマンドを受け付けませんでした。"
+msgstr "カメラがコマンドを受け付けませんでした。"
 
 #. Camera got fed up and reset itself.
 #: camlibs/fuji/fuji.c:298 camlibs/fuji/fuji.c:737
-#, fuzzy
 msgid "Camera reset itself."
-msgstr "カメラの設定"
+msgstr "カメラがリセットしました。"
 
 #: camlibs/fuji/fuji.c:302 camlibs/fuji/fuji.c:742
 #, c-format
 msgid "Camera sent unexpected byte 0x%02x."
-msgstr ""
+msgstr "カメラが予期しないバイト 0x%02x を送信してきました。"
 
 #: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
 #: camlibs/polaroid/pdc700.c:314 camlibs/sierra/library.c:1156
@@ -784,46 +786,52 @@ msgstr "ダウンロード中..."
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the thumbnail."
 msgstr ""
+"サムネイルをダウンロードするのに必要な %i バイトを確保することが出来ませんで"
+"した。"
 
 #: camlibs/fuji/fuji.c:572
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the picture."
 msgstr ""
+"画像をダウンロードするのに必要な %i バイトを確保することが出来ませんでした。"
 
 #: camlibs/fuji/fuji.c:671
-#, fuzzy, c-format
+#, c-format
 msgid "The camera does not accept '%s' as filename."
-msgstr "カメラはコマンドを受け付けませんでした。"
+msgstr "カメラはファイル名として '%s' を受け付けませんでした。"
 
 #: camlibs/fuji/fuji.c:675
 #, c-format
 msgid "Could not initialize upload (camera responded with 0x%02x)."
 msgstr ""
+"アップロードを初期化することが出来ませんでした (カメラからの応答: 0x%02x)。"
 
 #: camlibs/fuji/fuji.c:773
-#, fuzzy, c-format
+#, c-format
 msgid "The camera does not support speed %i."
-msgstr "このカメラはサマリをサポートしていません。"
+msgstr "カメラはスピード %i をサポートしていません。"
 
 #: camlibs/fuji/fuji.c:777
 #, c-format
 msgid "Could not set speed to %i (camera responded with %i)."
-msgstr ""
+msgstr "スピードを %i にセットできませんでした (カメラからの応答: %i)。"
 
 #: camlibs/fuji/library.c:153
 msgid ""
 "Matthew G. Martin\n"
 "Based on fujiplay by Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
 msgstr ""
+"Matthew G. Martin 氏\n"
+"Thierry Bousch <bousch@topo.math.u-psud.fr> 作の fujiplay がベースです。\n"
 
 #: camlibs/fuji/library.c:317
-#, fuzzy, c-format
+#, c-format
 msgid "Bit rate %i is not supported."
-msgstr "キャプチャの種類がサポートされていません"
+msgstr "ビットレート %i はサポートされていません。"
 
 #: camlibs/fuji/library.c:365
 msgid "Configuration for your FUJI camera"
-msgstr ""
+msgstr "FUJI カメラの設定"
 
 #. Date & Time
 #: camlibs/fuji/library.c:370 camlibs/fuji/library.c:403
@@ -834,21 +842,19 @@ msgstr "日付と時間"
 #. ID
 #: camlibs/fuji/library.c:385 camlibs/fuji/library.c:418
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: camlibs/fuji/library.c:438
-#, fuzzy
 msgid "Version: "
-msgstr "  権限: "
+msgstr "バージョン: "
 
 #: camlibs/fuji/library.c:444
-#, fuzzy
 msgid "Model: "
-msgstr "型式"
+msgstr "型式: "
 
 #: camlibs/fuji/library.c:451
 msgid "Available memory: "
-msgstr ""
+msgstr "有効なメモリ: "
 
 #: camlibs/jamcam/jamcam.c:280
 msgid "jamcam library v"
@@ -1388,113 +1394,103 @@ msgstr "ローカライズファイルが長すぎます！"
 
 #: camlibs/konica/konica.c:62
 msgid "Focusing error."
-msgstr ""
+msgstr "フォーカスのエラーです。"
 
 #: camlibs/konica/konica.c:65
 msgid "Iris error."
-msgstr ""
+msgstr "アイリスのエラーです。"
 
 #: camlibs/konica/konica.c:68
 msgid "Strobe error."
-msgstr ""
+msgstr "ストローブのエラーです。"
 
 #: camlibs/konica/konica.c:71
-#, fuzzy
 msgid "EEPROM checksum error."
-msgstr "チェックサム・エラー"
+msgstr "EEPROM チェックサム・エラーです。"
 
 #: camlibs/konica/konica.c:74
 msgid "Internal error (1)."
-msgstr ""
+msgstr "内部エラー (1) です。"
 
 #: camlibs/konica/konica.c:77
 msgid "Internal error (2)."
-msgstr ""
+msgstr "内部エラー (2) です。"
 
 #: camlibs/konica/konica.c:80
-#, fuzzy
 msgid "No card present."
-msgstr "カードがありません"
+msgstr "カードがありません。"
 
 #: camlibs/konica/konica.c:83
-#, fuzzy
 msgid "Card not supported."
-msgstr "キャプチャの種類がサポートされていません"
+msgstr "カードをサポートしていません。"
 
 #: camlibs/konica/konica.c:86
 msgid "Card removed during access."
-msgstr ""
+msgstr "カードがアクセス中に抜き取られました。"
 
 #: camlibs/konica/konica.c:89
 msgid "Image number not valid."
-msgstr ""
+msgstr "画像の番号が正しくありません。"
 
 #: camlibs/konica/konica.c:92
-#, fuzzy
 msgid "Card can not be written."
-msgstr "カードがフォーマットされていません"
+msgstr "カードに書き込めません。"
 
 #: camlibs/konica/konica.c:95
-#, fuzzy
 msgid "Card is write protected."
-msgstr "書き込み保護つき"
+msgstr "カードへの書き込み保護が有効です。"
 
 #: camlibs/konica/konica.c:98
 msgid "No space left on card."
-msgstr ""
+msgstr "カードに残り容量がありません。"
 
 #: camlibs/konica/konica.c:101
-#, fuzzy
 msgid "Image protected."
-msgstr "ファイルが保護されています。"
+msgstr "画像が保護されています。"
 
 #: camlibs/konica/konica.c:104
 msgid "Light too dark."
-msgstr ""
+msgstr "フラッシュが暗すぎます。"
 
 #: camlibs/konica/konica.c:107
 msgid "Autofocus error."
-msgstr ""
+msgstr "自動フォーカスのエラーです。"
 
 #: camlibs/konica/konica.c:110
 msgid "System error."
-msgstr ""
+msgstr "システムのエラーです。"
 
 #: camlibs/konica/konica.c:113
 msgid "Illegal parameter."
-msgstr ""
+msgstr "不正なパラメータです。"
 
 #: camlibs/konica/konica.c:116
 msgid "Command can not be cancelled."
-msgstr ""
+msgstr "コマンドはキャンセルできません。"
 
 #: camlibs/konica/konica.c:119
-#, fuzzy
 msgid "Localization data too long."
-msgstr "ローカライズファイルが長すぎます！"
+msgstr "日本語データが長すぎます。"
 
 #: camlibs/konica/konica.c:122
-#, fuzzy
 msgid "Localization data corrupt."
-msgstr "日本語化"
+msgstr "日本語データがおかしいです。"
 
 #: camlibs/konica/konica.c:125
-#, fuzzy
 msgid "Unsupported command."
-msgstr "サポートするカメラ:\n"
+msgstr "サポートしていないコマンドです。"
 
 #: camlibs/konica/konica.c:128
 msgid "Other command executing."
-msgstr ""
+msgstr "他のコマンドの実行が中止されました。"
 
 #: camlibs/konica/konica.c:131
 msgid "Command order error."
-msgstr ""
+msgstr "コマンドの実行順でエラーです。"
 
 #: camlibs/konica/konica.c:134
-#, fuzzy
 msgid "Unknown error."
-msgstr "不明なエラー"
+msgstr "エラーを特定できません。"
 
 #: camlibs/konica/konica.c:137
 #, c-format
@@ -1503,6 +1499,9 @@ msgid ""
 "report the following to <gphoto-devel@gphoto.org> with additional "
 "information how you got this error: (0x%x,0x%x). Thank you very much!"
 msgstr ""
+"カメラが不明なエラーを返してきました。このエラー (0x%x,0x%x) を再現する方法を"
+"バグ・レポートとして <gphoto-devel@gphoto.org> に報告して下さい。ご協力に感謝"
+"します！"
 
 #: camlibs/minolta/dimagev/dimagev.c:272
 #, c-format
@@ -1826,9 +1825,8 @@ msgid "Image Quality"
 msgstr "画像の品質"
 
 #: camlibs/polaroid/pdc700.c:160
-#, fuzzy
 msgid "Image Size"
-msgstr "画像サイズ: %d\n"
+msgstr "画像サイズ"
 
 #: camlibs/polaroid/pdc700.c:161
 msgid "Flash Setting"
@@ -1912,13 +1910,12 @@ msgid "115200"
 msgstr "115200"
 
 #: camlibs/polaroid/pdc700.c:175
-#, fuzzy
 msgid "VGA (640x480)"
-msgstr "高 (640 x 480)"
+msgstr "VGA (640 x 480)"
 
 #: camlibs/polaroid/pdc700.c:175
 msgid "XGA (1024x768"
-msgstr ""
+msgstr "XGA (1024x768"
 
 #: camlibs/polaroid/pdc700.c:229
 #, c-format
@@ -1971,7 +1968,7 @@ msgstr "カメラをパワーオフするまでの時間を指定して下さい。"
 
 #: camlibs/polaroid/pdc700.c:999
 msgid "Image"
-msgstr ""
+msgstr "画像"
 
 #: camlibs/polaroid/pdc700.c:1110
 #, c-format
@@ -2013,181 +2010,175 @@ msgstr "このドライバでは要求したポート型式 (%i) をサポートしていません。"
 
 #: camlibs/ptp/library.c:90
 msgid "PTP Undefined Error"
-msgstr ""
+msgstr "PTP の不明なエラー"
 
 #: camlibs/ptp/library.c:91
 msgid "PTP OK!"
-msgstr ""
+msgstr "PTP OK!"
 
 #: camlibs/ptp/library.c:92
 msgid "PTP General Error"
-msgstr ""
+msgstr "PTP の一般的なエラー"
 
 #: camlibs/ptp/library.c:93
 msgid "PTP Session Not Open"
-msgstr ""
+msgstr "PTP のセッションが開かれていません"
 
 #: camlibs/ptp/library.c:94
 msgid "PTP Invalid Transaction ID"
-msgstr ""
+msgstr "PTP の不正なトランザクション ID"
 
 #: camlibs/ptp/library.c:95
 msgid "PTP Operation Not Supported"
-msgstr ""
+msgstr "サポートされていない PTP 操作"
 
 #: camlibs/ptp/library.c:96
-#, fuzzy
 msgid "PTP Parameter Not Supported"
-msgstr "キャプチャの種類がサポートされていません"
+msgstr "サポートされていない PTP パラメータ"
 
 #: camlibs/ptp/library.c:97
 msgid "PTP Incomplete Transfer"
-msgstr ""
+msgstr "PTP の転送が完了していません"
 
 #: camlibs/ptp/library.c:98
 msgid "PTP Invalid Storage ID"
-msgstr ""
+msgstr "PTP の不正なストレージ ID"
 
 #: camlibs/ptp/library.c:99
 msgid "PTP Invalid Object Handle"
-msgstr ""
+msgstr "PTP 不正なオブジェクト操作"
 
 #: camlibs/ptp/library.c:100
 msgid "PTP Device Prop Not Supported"
-msgstr ""
+msgstr "サポートされていない PTP デバイス Prop"
 
 #: camlibs/ptp/library.c:101
 msgid "PTP Invalid Object Format Code"
-msgstr ""
+msgstr "PTP の不正なオブジェクト書式コード"
 
 #: camlibs/ptp/library.c:102
 msgid "PTP Store Full"
-msgstr ""
+msgstr "PTP の空き容量がありません"
 
 #: camlibs/ptp/library.c:103
-#, fuzzy
 msgid "PTP Object Write Protected"
-msgstr "書き込み保護つき"
+msgstr "PTP オブジェクトへの書き込み保護が有効です"
 
 #: camlibs/ptp/library.c:104
 msgid "PTP Store Read Only"
-msgstr ""
+msgstr "PTP は読み込み専用です"
 
 #: camlibs/ptp/library.c:105
 msgid "PTP Access Denied"
-msgstr ""
+msgstr "PTP へのアクセスが拒否されました"
 
 #: camlibs/ptp/library.c:106
 msgid "PTP No Thumbnail Present"
-msgstr ""
+msgstr "PTP にはサムネイルがありません"
 
 #: camlibs/ptp/library.c:107
 msgid "PTP Self Test Failed"
-msgstr ""
+msgstr "PTP の自己診断に失敗しました"
 
 #: camlibs/ptp/library.c:108
 msgid "PTP Partial Deletion"
-msgstr ""
+msgstr "PTP の部分的な削除"
 
 #: camlibs/ptp/library.c:109
-#, fuzzy
 msgid "PTP Store Not Available"
-msgstr " 使用不可です。\n"
+msgstr "PTP に格納できません"
 
 #: camlibs/ptp/library.c:111
 msgid "PTP Specification By Format Unsupported"
-msgstr ""
+msgstr "サポートしていない PTP 書式の指定"
 
 #: camlibs/ptp/library.c:112
 msgid "PTP No Valid Object Info"
-msgstr ""
+msgstr "PTP の不正なオブジェクト情報"
 
 #: camlibs/ptp/library.c:113
 msgid "PTP Invalid Code Format"
-msgstr ""
+msgstr "PTP の不正なコード書式"
 
 #: camlibs/ptp/library.c:114
-#, fuzzy
 msgid "PTP Unknown Vendor Code"
-msgstr "不明な型式"
+msgstr "PTP の不明なベンダーコードです"
 
 #: camlibs/ptp/library.c:116
 msgid "PTP Capture Already Terminated"
-msgstr ""
+msgstr "PTP のキャプチャは中断しました"
 
 #: camlibs/ptp/library.c:117
 msgid "PTP Device Bus"
-msgstr ""
+msgstr "PTP のデバイス・バス"
 
 #: camlibs/ptp/library.c:118
 msgid "PTP Invalid Parent Object"
-msgstr ""
+msgstr "PTP 不正なオブジェクト"
 
 #: camlibs/ptp/library.c:119
 msgid "PTP Invalid Device Prop Format"
-msgstr ""
+msgstr "PTP の不正なデバイス Prop 書式"
 
 #: camlibs/ptp/library.c:120
 msgid "PTP Invalid Device Prop Value"
-msgstr ""
+msgstr "PTP の不正なデバイス Prop 値"
 
 #: camlibs/ptp/library.c:121
 msgid "PTP Invalid Parameter"
-msgstr ""
+msgstr "PTP の不正なパラメータ"
 
 #: camlibs/ptp/library.c:122
 msgid "PTP Session Already Opened"
-msgstr ""
+msgstr "PTP のセッションはオープンしています"
 
 #: camlibs/ptp/library.c:123
-#, fuzzy
 msgid "PTP Transaction Canceled"
-msgstr "操作をキャンセルしました"
+msgstr "PTP トランザクションがキャンセルされました"
 
 #: camlibs/ptp/library.c:125
 msgid "PTP Specification Of Destination Unsupported"
-msgstr ""
+msgstr "サポートしていない PTP 転送先の指定"
 
 #: camlibs/ptp/library.c:126
 msgid "PTP EK Filename Required"
-msgstr ""
+msgstr "PTP EK ファイル名が必要です"
 
 #: camlibs/ptp/library.c:127
 msgid "PTP EK Filename Conflicts"
-msgstr ""
+msgstr "PTP EK ファイル名が重複しています"
 
 #: camlibs/ptp/library.c:128
 msgid "PTP EK Filename Invalid"
-msgstr ""
+msgstr "PTP EK 不正なファイル名です"
 
 #: camlibs/ptp/library.c:130
 msgid "PTP I/O error"
-msgstr ""
+msgstr "PTP I/O エラーです"
 
 #: camlibs/ptp/library.c:131
 msgid "PTP Error: bad parameter"
-msgstr ""
+msgstr "PTP エラー: パラメータが正しくありません"
 
 #: camlibs/ptp/library.c:132
 msgid "PTP Protocol error, data expected"
-msgstr ""
+msgstr "PTP プロトコル・エラー (期待値: データ)"
 
 #: camlibs/ptp/library.c:133
 msgid "PTP Protocol error, response expected"
-msgstr ""
+msgstr "PTP プロトコル・エラー (期待値: 応答)"
 
 #: camlibs/ptp/library.c:463
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
-msgstr ""
+msgstr "Mariusz Woloszyn 氏 <emsi@ipartners.pl> が担当しました。Enjoy!"
 
 #: camlibs/ptp/library.c:995
 msgid "PTP is implemented for USB cameras only."
-msgstr ""
+msgstr "PTP は USB カメラのみサポートしています。"
 
 #: camlibs/ricoh/library.c:164
-#, fuzzy
 msgid "Unknown"
-msgstr "不明なエラー"
+msgstr "不明"
 
 #: camlibs/ricoh/library.c:177
 #, c-format
@@ -2197,51 +2188,54 @@ msgid ""
 "Memory: %d byte(s) of %d available\n"
 "Camera time: %s\n"
 msgstr ""
+"Camera 型式: %s\n"
+"Camera ID: %s\n"
+"メモリ: 有効 %d バイト (合計 %d バイト)\n"
+"時刻: %s\n"
 
 #: camlibs/ricoh/library.c:252
-#, fuzzy, c-format
+#, c-format
 msgid "Speed %i is not supported!"
-msgstr "キャプチャの種類がサポートされていません"
+msgstr "スピード %i はサポートされていません！"
 
 #: camlibs/ricoh/ricoh.c:66
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Expected %i, got %i. Please report this error to <gphoto-devel@gphoto.org>."
 msgstr ""
-"32 バイトを期待しましたが、%i バイトを受け取りました。<gphoto-devel@gphoto."
-"org> に連絡して下さい。"
+"%i を期待しましたが、%i を受け取りました。<gphoto-devel@gphoto.org> に連絡し"
+"て下さい。"
 
 #: camlibs/ricoh/ricoh.c:75
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Expected %i bytes, got %i. Please report this error to <gphoto-devel@gphoto."
 "org>."
 msgstr ""
-"32 バイトを期待しましたが、%i バイトを受け取りました。<gphoto-devel@gphoto."
+"%i バイトを期待しましたが、%i バイトを受け取りました。<gphoto-devel@gphoto."
 "org> に連絡して下さい。"
 
 #: camlibs/ricoh/ricoh.c:165 camlibs/ricoh/ricoh.c:179
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "We expected 0x%x but received 0x%x. Please contact <gphoto-devel@gphoto.org>."
 msgstr ""
-"予期しない結果 %i を取得しました。<gphoto-devel@gphoto.org> に連絡して下さ"
-"い。"
+"0x%x を期待しましたが、0x%x を受け取りました。<gphoto-devel@gphoto.org> に連"
+"絡して下さい。"
 
 #: camlibs/ricoh/ricoh.c:208
-#, fuzzy, c-format
+#, c-format
 msgid "Bad characters (0x%x, 0x%x). Please contact <gphoto-devel@gphoto.org>."
 msgstr ""
-"予期しない結果 %i を取得しました。<gphoto-devel@gphoto.org> に連絡して下さ"
-"い。"
+"おかしな文字 (0x%x, 0x%x) です。<gphoto-devel@gphoto.org> に連絡して下さい。"
 
 #: camlibs/ricoh/ricoh.c:250
-#, fuzzy
 msgid ""
 "Camera busy. If the problem persists, please contact <gphoto-devel@gphoto."
 "org>."
 msgstr ""
-"レジスタ %i を取得できません。<gphoto-devel@gphoto.org> に連絡して下さい。"
+"カメラがビジーです。この状態が長く続いた場合は <gphoto-devel@gphoto.org> に連"
+"絡して下さい。"
 
 #. Translators: please write 'M"uller' and 'Mei"sner' (that
 #. is, with u-umlaut and eszett resp.) if your charset
@@ -2303,9 +2297,8 @@ msgid "%i (unknown)"
 msgstr "%i (不明)"
 
 #: camlibs/sierra/sierra.c:783 camlibs/sierra/sierra.c:1106
-#, fuzzy
 msgid "Shutter Speed (microseconds, 0 auto)"
-msgstr "シャッター速度 (マイクロ秒)"
+msgstr "シャッター速度 (マイクロ秒, 0:自動)"
 
 #: camlibs/sierra/sierra.c:795 camlibs/sierra/sierra.c:1115
 #: camlibs/sierra/sierra.c:1330 camlibs/sierra/sierra.c:1571
@@ -2729,7 +2722,7 @@ msgstr "有効なメモリ残量を取得できません。"
 
 #: camlibs/sierra/library.c:336
 msgid "Camera refused 3 times to keep a connection open."
-msgstr ""
+msgstr "接続を保持するのに３回失敗しました。"
 
 #.
 #. * This byte is not valid. Dump everything that
@@ -2751,7 +2744,7 @@ msgstr ""
 
 #: camlibs/sierra/library.c:703 camlibs/sierra/library.c:727
 msgid "Could not transmit packet even after several retries."
-msgstr ""
+msgstr "リトライ後もパケット送信が出来ませんでした。"
 
 #: camlibs/sierra/library.c:718
 msgid ""
@@ -2770,18 +2763,15 @@ msgstr ""
 "に連絡して下さい。"
 
 #: camlibs/sierra/library.c:837
-#, fuzzy
 msgid "Transmission timed out even after 2 retries. Giving up..."
-msgstr ""
-"パケットを %i 回送信しましたが、タイムアウトしました。<gphoto-devel@gphoto."
-"org> に連絡して下さい。"
+msgstr "二回再送しましたがタイムアウトしました。終了します..."
 
 #: camlibs/sierra/library.c:856
-#, fuzzy, c-format
+#, c-format
 msgid "Got unexpected result 0x%x. Please contact <gphoto-devel@gphoto.org>."
 msgstr ""
-"予期しない結果 %i を取得しました。<gphoto-devel@gphoto.org> に連絡して下さ"
-"い。"
+"予期しない結果 0x%x を受け取りました。<gphoto-devel@gphoto.org> に連絡して下"
+"さい。"
 
 #: camlibs/sierra/library.c:954
 #, c-format
@@ -2799,7 +2789,7 @@ msgstr ""
 
 #: camlibs/sierra/library.c:1037 camlibs/sierra/library.c:1057
 msgid "Too many retries failed."
-msgstr ""
+msgstr "リトライに失敗しました。"
 
 #: camlibs/sierra/library.c:1090
 msgid "Sending data..."
@@ -2845,6 +2835,11 @@ msgid ""
 "Originally written by Mark Davies <mdavies@dial.pipex.com>\n"
 "gPhoto2 port by Raymond Penners <raymond@dotsphinx.com>"
 msgstr ""
+"Sony DSC-F55/505 gPhoto ライブラリ\n"
+"Sony MSAC-SR1 と DCR-PC100 が使用するメモリ・ステックのサポート\n"
+"Mark Davies 氏 <mdavies@dial.pipex.com> が作成したものがベースです。\n"
+"gPhoto2 へのポーティングは Raymond Penners 氏 <raymond@dotsphinx.com> が担当"
+"しました。"
 
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
 msgid "Bad exposure (not enough light probably)"
@@ -2987,9 +2982,9 @@ msgid "You have to set the port prior initialization of the camera."
 msgstr "カメラの初期化を行う前に先にポートをセットして下さい。"
 
 #: libgphoto2/gphoto2-camera.c:716
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load required camera driver '%s' (%s)."
-msgstr "指定したカメラのドライバ '%s' を読み込めませんでした。"
+msgstr "必要なカメラのドライバ '%s' (%s) が読み込めませんでした。"
 
 #: libgphoto2/gphoto2-camera.c:725
 #, c-format
@@ -3124,18 +3119,18 @@ msgstr "ファイルシステムはこの形式のファイル情報の設定をサポートしていません"
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr "ファイルの幅と高さなどの読み込み専用属性を変更することはできません。"
 
-#: libgphoto2/gphoto2-abilities-list.c:206
-#: libgphoto2/gphoto2-abilities-list.c:301
+#: libgphoto2/gphoto2-abilities-list.c:181
+#: libgphoto2/gphoto2-abilities-list.c:276
 #, c-format
 msgid "Loading camera drivers from '%s'..."
 msgstr "'%s' からカメラのドライバを読み込み中..."
 
-#: libgphoto2/gphoto2-abilities-list.c:289
+#: libgphoto2/gphoto2-abilities-list.c:264
 #, c-format
 msgid "Could not open '%s'"
 msgstr "'%s' を開くことが出来ませんでした"
 
-#: libgphoto2/gphoto2-abilities-list.c:663
+#: libgphoto2/gphoto2-abilities-list.c:638
 #, c-format
 msgid "Could not find any driver for '%s'"
 msgstr "'%s' 用のドライバが見つかりませんでした"
@@ -3204,7 +3199,7 @@ msgstr "サポートしているカメラ型式の一覧"
 
 #: frontends/command-line/main.c:209
 msgid "usb.usermap script (dflt=\"usbcam\")"
-msgstr ""
+msgstr "usb.usermap スクリプト (dflt=\"usbcam\")"
 
 #: frontends/command-line/main.c:210
 msgid "Create output for usb.usermap"
@@ -3377,23 +3372,20 @@ msgid "gPhoto shell"
 msgstr "gPhoto シェル"
 
 #: frontends/command-line/main.c:259
-#, fuzzy
 msgid "Authors"
-msgstr "自動"
+msgstr "作者"
 
 #: frontends/command-line/main.c:260
-#, fuzzy
 msgid "License"
-msgstr "レンズモード"
+msgstr "ライセンス"
 
 #: frontends/command-line/main.c:309 frontends/command-line/main.c:330
-#, fuzzy
 msgid "Could not open '"
-msgstr "'%s' を開くことが出来ませんでした"
+msgstr "COPYING ファイルが開けませんでした。"
 
 #: frontends/command-line/main.c:310 frontends/command-line/main.c:331
 msgid "/COPYING'. Please verify your installation."
-msgstr ""
+msgstr "インストールを確認して下さい。"
 
 #: frontends/command-line/main.c:393 frontends/command-line/main.c:398
 #, c-format
@@ -3557,6 +3549,8 @@ msgid ""
 "ALWAYS INCLUDE THE FOLLOWING LINE WHEN SENDING DEBUG MESSAGES TO THE MAILING "
 "LIST:"
 msgstr ""
+"[メーリングリストにデバッグメッセージを送信する場合は、必ず次の行を挿入して下"
+"さい]:"
 
 #: frontends/command-line/main.c:829
 #, c-format
@@ -3756,14 +3750,14 @@ msgid "Value: "
 msgstr "値: "
 
 #: frontends/command-line/options.c:193
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "gPhoto (v%s) - Cross-platform digital camera library.\n"
 "Copyright (C) 2000-2002 Scott Fritzinger and others\n"
 "%sLicensed under the Library GNU Public License (LGPL).\n"
 msgstr ""
-"gPhoto (Ver%s) - Cross-platform ディジタルカメラ・ライブラリ。\n"
-"Copyright (C) 2000-2002 Scott Fritzinger\n"
+"gPhoto (v%s) - Cross-platform ディジタルカメラ・ライブラリ。\n"
+"Copyright (C) 2000-2002 Scott Fritzinger 他\n"
 "Library GNU 公有使用許諾契約書 (LGPL) 下の %sライセンス了承済み\n"
 
 #: frontends/command-line/options.c:199
@@ -3911,9 +3905,9 @@ msgid "  Mime type:   '%s'\n"
 msgstr "  MIME 型:     '%s'\n"
 
 #: frontends/command-line/actions.c:149 frontends/command-line/actions.c:181
-#, fuzzy, c-format
+#, c-format
 msgid "  Size:        %li byte(s)\n"
-msgstr "  サイズ:      %i バイト\n"
+msgstr "  サイズ:      %li バイト\n"
 
 #: frontends/command-line/actions.c:151 frontends/command-line/actions.c:183
 #, c-format
@@ -3969,9 +3963,9 @@ msgid "  Mime type:  '%s'\n"
 msgstr "  MIME 型:    '%s'\n"
 
 #: frontends/command-line/actions.c:197
-#, fuzzy, c-format
+#, c-format
 msgid "  Size:       %li byte(s)\n"
-msgstr "  サイズ:     %i バイト\n"
+msgstr "  サイズ:     %li バイト\n"
 
 #: frontends/command-line/actions.c:199
 #, c-format
@@ -4010,6 +4004,9 @@ msgid ""
 "'%s' or its subfolders. Please obtain a valid file number from a file "
 "listing first."
 msgstr ""
+"ファイル番号がおかしいです。%i を指定しましたが、%i 個のファイルしか '%s' の"
+"中にはないか、またはサブフォルダのようです。まず最初にファイル一覧から正しい"
+"番号を取得して下さい。"
 
 #: frontends/command-line/foreach.c:255
 #, c-format
@@ -4017,6 +4014,8 @@ msgid ""
 "Bad file number. You specified %i, but there is only 1 file available in '%"
 "s'."
 msgstr ""
+"ファイル番号がおかしいです。%i を指定しましたが、1個のファイルしか '%s' の中"
+"にありません。"
 
 #: frontends/command-line/foreach.c:262
 #, c-format
@@ -4024,154 +4023,133 @@ msgid ""
 "Bad file number. You specified %i, but there are only %i files available in "
 "'%s'.Please obtain a valid file number from a file listing first."
 msgstr ""
+"ファイル番号がおかしいです。%i を指定ましたが、%i 個のファイルしか '%s' の中"
+"にありません。まず最初にファイル一覧から正しい番号を取得して下さい。"
 
 #: frontends/command-line/shell.c:73
-#, fuzzy, c-format
+#, c-format
 msgid "*** Error (%i: '%s') ***"
-msgstr ""
-"*** エラー ('%s') ***      \n"
-"\n"
+msgstr "*** エラー (%i: '%s') ***"
 
 #: frontends/command-line/shell.c:115
 msgid "Change to a directory on the camera"
-msgstr ""
+msgstr "カメラ上でディレクトリを変更します"
 
 #: frontends/command-line/shell.c:116 frontends/command-line/shell.c:118
-#, fuzzy
 msgid "directory"
-msgstr "ディレクトリの削除"
+msgstr "ディレクトリ"
 
 #: frontends/command-line/shell.c:117
 msgid "Change to a directory on the local drive"
-msgstr ""
+msgstr "ローカルディスク上でディレクトリを変更します"
 
 #: frontends/command-line/shell.c:119 frontends/command-line/shell.c:137
 #: frontends/command-line/shell.c:138
-#, fuzzy
 msgid "Exit the gPhoto shell"
-msgstr "gPhoto シェル"
+msgstr "gPhoto シェルを終了します"
 
 #: frontends/command-line/shell.c:120
-#, fuzzy
 msgid "Download a file"
-msgstr "画像のダウンロード中..."
+msgstr "ファイルのダウンロード"
 
 #: frontends/command-line/shell.c:120 frontends/command-line/shell.c:123
 #: frontends/command-line/shell.c:125 frontends/command-line/shell.c:127
 #: frontends/command-line/shell.c:128 frontends/command-line/shell.c:131
 msgid "[directory/]filename"
-msgstr ""
+msgstr "[ディレクトリ/]ファイル名"
 
 #: frontends/command-line/shell.c:122
-#, fuzzy
 msgid "Download a thumbnail"
-msgstr "サムネイルのダウンロード中..."
+msgstr "サムネイルのダウンロード"
 
 #: frontends/command-line/shell.c:124
-#, fuzzy
 msgid "Download raw data"
-msgstr "データのダウンロード中..."
+msgstr "生データのダウンロード"
 
 #: frontends/command-line/shell.c:128
-#, fuzzy
 msgid "Delete"
 msgstr "削除"
 
 #: frontends/command-line/shell.c:133 frontends/command-line/shell.c:139
-#, fuzzy
 msgid "Displays command usage"
-msgstr "バージョン情報を表示して終了する"
+msgstr "コマンドの用法を表示する"
 
 #: frontends/command-line/shell.c:134 frontends/command-line/shell.c:139
 msgid "[command]"
-msgstr ""
+msgstr "[コマンド]"
 
 #: frontends/command-line/shell.c:135
 msgid "List the contents of the current directory"
-msgstr ""
+msgstr "このディレクトリの一覧を表示します"
 
 #: frontends/command-line/shell.c:136
-#, fuzzy
 msgid "[directory/]"
-msgstr "ディレクトリの削除"
+msgstr "[ディレクトリ/]"
 
 #: frontends/command-line/shell.c:418
-#, fuzzy
 msgid "Invalid command."
-msgstr "サポートするカメラ:\n"
+msgstr "コマンドが正しくありません。"
 
 #: frontends/command-line/shell.c:427
 #, c-format
 msgid "The command '%s' requires an argument."
-msgstr ""
+msgstr "コマンド '%s' には引数が必要です。"
 
 #: frontends/command-line/shell.c:480
-#, fuzzy
 msgid "Invalid path."
-msgstr "不正"
+msgstr "パス名が正しくありません。"
 
 #: frontends/command-line/shell.c:526
-#, fuzzy
 msgid "Could not find home directory."
-msgstr "フォルダ '%s' が見つかりませんでした。"
+msgstr "ホーム・ディレクトリが見つかりませんでした。"
 
 #: frontends/command-line/shell.c:534
-#, fuzzy, c-format
+#, c-format
 msgid "Could not change to local directory '%s'."
-msgstr "フォルダ '%s' が見つかりませんでした。"
+msgstr "ローカルのディレクトリ '%s' に移動できませんでした。"
 
 #: frontends/command-line/shell.c:537
 #, c-format
 msgid "Local directory now '%s'."
-msgstr ""
+msgstr "現在のローカルディレクトリは '%s' です。"
 
 #: frontends/command-line/shell.c:568
-#, fuzzy, c-format
+#, c-format
 msgid "Remote directory now '%s'."
-msgstr "ディレクトリの削除"
+msgstr "現在のリモートのディレクトリは '%s' です。"
 
 #: frontends/command-line/shell.c:729
 #, c-format
 msgid "Command '%s' not found. Use 'help' to get a list of available commands."
 msgstr ""
+"コマンド '%s' が見つかりませんでした。'help' で利用可能なコマンド一覧を表示し"
+"ます。"
 
 #. Print the command's syntax.
 #: frontends/command-line/shell.c:736
 #, c-format
 msgid "Help on \"%s\":"
-msgstr ""
+msgstr "\"%s\" のヘルプ:"
 
 #: frontends/command-line/shell.c:738
-#, fuzzy
 msgid "Usage:"
-msgstr "用法:\n"
+msgstr "用法:"
 
 #: frontends/command-line/shell.c:742
 msgid "Description:"
-msgstr ""
+msgstr "説明:"
 
 #: frontends/command-line/shell.c:744
 msgid "* Arguments in brackets [] are optional"
-msgstr ""
+msgstr "* [] 内の引数はオプションです。"
 
 #. No command specified. Print command listing.
 #: frontends/command-line/shell.c:765
 msgid "Available commands:"
-msgstr ""
+msgstr "利用可能なコマンド:"
 
 #: frontends/command-line/shell.c:770
 msgid "To get help on a particular command, type in 'help command-name'."
 msgstr ""
-
-#~ msgid "Guessed port name. Using port '%s' from now on."
-#~ msgstr "ポート名を推測しました。これから '%s' を使用して下さい。"
-
-#~ msgid "Settings"
-#~ msgstr "設定"
-
-#, fuzzy
-#~ msgid "No Manual Available"
-#~ msgstr "使用不可の理由"
-
-#~ msgid "%s(ERROR): "
-#~ msgstr "%s(エラー): "
+"特定のコマンドに対するヘルプを表示する場合は 'help コマンド名' と入力して下さ"
+"い。"

@@ -1,8 +1,14 @@
+2002-06-21  Christophe Barbé <christophe.barbe@ufies.org>
+
+   po files from Takeshi AIHANA <aihana@jcom.home.ne.jp>
+
+	* libgphoto2_port/po/ja.po: Update Japan translation.
+			
 2002-06-18  Christophe Barbé <christophe.barbe@ufies.org>
 
    po file from Fabian Mandelbaum <fabman@mandrakesoft.com>
 
-	   * libgphoto2_port/po/es.po: Spanish translation.
+	* libgphoto2_port/po/es.po: Spanish translation.
 
 2002-06-17  Lutz Müller <lutz@users.sourceforge.net>
 
@@ -26,8 +32,8 @@
 
 2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
 
-        * libgphoto2_port/Makefile.am:
-        * configure.in: Fix (?) -version-info
+	* libgphoto2_port/Makefile.am:
+	* configure.in: Fix (?) -version-info
 
 2002-06-14  Lutz Müller <lutz@users.sourceforge.net>
 
