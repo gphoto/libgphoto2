@@ -1,3 +1,7 @@
+Wed Jun 04 18:26:23 2003  Till Adam  <till@adam-lilienthal.de>
+  * use ids to detect the model instead of strcmp which fails
+    after the : change
+
 Sat May 17 08:34:29 2003  Till Adam  <till@adam-lilienthal.de>
   * fix crash in thumbnail generation due to brainfart on my part.
     Thanks to Hartmut Henkel <hartmut_henkel@gmx.de> for the help.
