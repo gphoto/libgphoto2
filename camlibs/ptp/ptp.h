@@ -196,6 +196,7 @@ short ptp_getobject	(PTPParams *params, PTPObjectHandles* objecthandles,
 short ptp_getthumb	(PTPParams *params, PTPObjectHandles* objecthandles,
 			PTPObjectInfo* objectinfo, int n,
 			char* object);
-void ptp_objectfilename	(PTPObjectInfo* objectinfo, char* filename);
+void ptp_getobjectfilename	(PTPObjectInfo* objectinfo, char* filename);
+void ptp_getobjectcapturedate	(PTPObjectInfo* objectinfo, char* date);
 
 #endif /* __PTP_H__ */

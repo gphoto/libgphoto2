@@ -521,12 +521,24 @@ ptp_getthumb(PTPParams* params, PTPObjectHandles* objecthandles,
 }
 
 void
-ptp_objectfilename (PTPObjectInfo* objectinfo, char* filename) {
+ptp_getobjectfilename (PTPObjectInfo* objectinfo, char* filename) {
 	int i;
 
 	memset (filename, 0, MAXFILELEN);
 
 	for (i=0;i<objectinfo->filenamelen&&i<MAXFILELEN;i++) {
 		filename[i]=objectinfo->data[i*2];
+	}
+}
+
+void
+ptp_getobjectcapturedate (PTPObjectInfo* objectinfo, char* date) {
+	int i;
+	int p=objectinfo->filenamelen;
+
+	memset (date, 0, MAXFILELEN);
+
+	for (i=0;i<objectinfo->data[p*2]&&i<MAXFILELEN;i++) {
+		date[i]=objectinfo->data[(i+p)*2+1];
 	}
 }
