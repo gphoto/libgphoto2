@@ -1,3 +1,13 @@
+2002-03-11 Mariusz Woloszyn
+	* libgphoto2_port/gphoto2-port-library.h: added
+	  check_event to GPPortOperationsl
+	* libgphoto2_port/gphoto2-port.h: added eventep to
+	  GPPortSettingsUSB
+	* usb/libusb.c: added gp_port_usb_check_event(),
+	  changed gp_port_usb_find_bulk to gp_port_usb_find_ep(),
+	  added setting of eventsep to gp_port_usb_find_device_lib()
+	* libgphoto2_port/gphoto2-port.[ch]: added gp_port_check_event()
+
 2002-02-23 Dan Fandrich <dan@coneharvesters.com>
 
 	* libgphoto2_port/gphoto2-port-info-list.c: Fixed error test for
