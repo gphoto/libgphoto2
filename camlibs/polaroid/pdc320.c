@@ -30,7 +30,9 @@
 #include <gphoto2-core.h>
 #include <stdlib.h>
 #include <string.h>
-#include "jpeghead.h"
+//#include "jpeghead.h"
+#include "pdc320.h"
+#include <libgphoto2/jpeg.h>
 
 /*******************************************************************************/
 /* NOTICE: There is a 16x8 block of pixels after the image data.               */
@@ -41,23 +43,9 @@
  * 	Make a better header that could correct color problems....
  *		or manage to decode, color correct, and save the image.
  *
- * 	Fix some bug where the pdc320_num returns a strange response after 
+ * 	Fix some bug where the pdc320_num returns a strange response after
  *		pdc320_delete is called. Perhaps it needs to reset or something
-/*
- * Those are the answers to some of the commands stated below. We should
- * (at some point in the future) understand the contents and compare
- * the return value against them.
  */
-
-#define ENDINIT_PDC640SE 	"\x0\x78\x0\x0\x2\x10\xf1\xf5"
-#define ENDINIT_PDC320		"\x0\x50\x0\x0\x7\xd0\xf0\xe6"
-
-#define ID_PDC640SE    "\x0\x58\x49\x52\x4c\x49\x4e\x4b\x2\x1\x3\x1\x16\xbf"
-#define ID_PDC320      "\x0\x58\x49\x52\x4c\x49\x4e\x4b\x2\x1\x3\x0\x16\xc0"
-
-// What I got back from someone's PDC640SE test: 02 40 02 80 01 e0 00 05 02 80 01 e0 00 05 00 78
-#define STATE_PDC640SE "\x40\x2\x80\x1\xe0\x0\x5\x2\x80\x1\xe0\x0\x5\x0\x78\x0\x78\x0\x0\x2\x10"
-#define STATE_PDC320   "\x2\x3f\x1\x40\x0\xf0\x0\x5\x1\x40\x0\xf0\x0\x5\x0\x50\x0\x50\x0\x0\x7\xd0\xf0\xe6"
 
 /*
  * For the PDC640SE, the init sequence is INIT,ID,ENDINIT,STATE,NUM,SIZE,
@@ -72,31 +60,6 @@
  */
 
 //                                                        xf?
-#define PDC320_INIT     "\xe6\xe6\xe6\xe6\xe6\xe6\xe6\xe6\x0\xff\xff"
-#define PDC320_ID                       "\xe6\xe6\xe6\xe6\x1\xfe\xff"
-#define PDC320_STATE                    "\xe6\xe6\xe6\xe6\x2\xfd\xff"
-#define PDC320_NUM                      "\xe6\xe6\xe6\xe6\x3\xfc\xff"
-#define PDC320_SIZE     {0xe6, 0xe6, 0xe6, 0xe6, 0x4, 0x00, 0xfb, 0x0}
-#define PDC320_PIC      {0xe6, 0xe6, 0xe6, 0xe6, 0x5, 0x00, 0xfa, 0x0}
-#define PDC320_DEL                      "\xe6\xe6\xe6\xe6\x7\xf8\xff"
-#define PDC320_ENDINIT                  "\xe6\xe6\xe6\xe6\xa\xf5\xff"
-#define PDC320_UNKNOWN3                 "\xe6\xe6\xe6\xe6\xc\xf3\xf3"
-
-#define ACK 0x06
-
-#define RETRIES 3
-
-#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
-#define CHECK_RESULT_FREE(result, data) {int r = (result); if (r < 0) {free (data); return (r);}}
-
-static struct {
-	const char *model;
-	unsigned char id;
-} models[] = {
-	{"Polaroid Fun! 320", 0x3f},
-	{"Polaroid 640SE",    0x40},
-	{NULL,                0x00}
-};
 
 static int
 pdc320_id (CameraPort *port, const char **model)
@@ -146,7 +109,6 @@ pdc320_init (CameraPort *port)
 	CHECK_RESULT (gp_port_write (port, PDC320_ENDINIT,
 				     sizeof (PDC320_ENDINIT) - 1));
 	CHECK_RESULT (gp_port_read (port, buf, 8));
-
 	return (GP_OK);
 }
 
@@ -186,15 +148,15 @@ pdc320_delete (CameraPort *port)
 	 */
 	CHECK_RESULT (gp_port_write (port, PDC320_DEL,
 				     sizeof (PDC320_DEL) - 1));
-/* Since the Polaroid 640SE times out here, I will read one byte at a time to 
-   find out how many bytes to read. 
+/* Since the Polaroid 640SE times out here, I will read one byte at a time to
+   find out how many bytes to read.
  * Now, let's see how many bytes it reads before it times out. : )
  */
 /*	CHECK_RESULT (gp_port_read (port, buf, 1));
 	CHECK_RESULT (gp_port_read (port, buf, 1));
 	CHECK_RESULT (gp_port_read (port, buf, 1));
 */
-	CHECK_RESULT (gp_port_read (port, buf, 3));	
+	CHECK_RESULT (gp_port_read (port, buf, 3));
 #if 0
 	if ((buf[0] != 0x08) ||
 	    (buf[1] != 0xf7) ||
@@ -262,7 +224,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 	unsigned char cmd[] = PDC320_PIC;
 	unsigned char buf[2048];
 	int remaining, f1, f2, i, len, checksum;
-	int chunksize; //=2000;
+	int chunksize=2000;
 	/* Get the size of the picture and allocate the memory */
 	gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Checking size of image %i...",
 			 n);
@@ -348,6 +310,8 @@ static int
 camera_file_get (Camera *camera, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file)
 {
+    jpeg *myjpeg;
+    chunk *tempchunk;
 	int n, size;
     unsigned char *data;
     unsigned char *temp;
@@ -371,21 +335,34 @@ if (type == GP_FILE_TYPE_RAW) {
 	CHECK_RESULT (gp_file_set_name (file, filename));
 	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
     } else {
-    temp=data;
+    if (camera->model[9]=='6')
+        myjpeg = jpeg_header(640,240, 11,11,21, 1,0,0, &chrominance, &luminance,
+            0,0,0, chunk_new_filled(HUFF_00), chunk_new_filled(HUFF_10), NULL, NULL);
+    else if (camera->model[9]=='F')
+        myjpeg = jpeg_header(320,120, 11,11,21, 1,0,0, &chrominance, &luminance,
+            0,0,0, chunk_new_filled(HUFF_00), chunk_new_filled(HUFF_10), NULL, NULL);
+    tempchunk = chunk_new(size);
+    tempchunk->data = data;
+    jpeg_add_marker(myjpeg, tempchunk, 6, size-1);
+    write_jpeg(file, filename, myjpeg);
+    jpeg_destroy(myjpeg);
+/* Here is the old code */
+/*    temp=data;
     temp+=6;
 //   	CHECK_RESULT (gp_file_set_data_and_size (file, picture, 0));
 	CHECK_RESULT (gp_file_set_name (file, filename));
 	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
+
     for (n=0; n<4; n++) {
         gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Adding jpegheader[%i].data",n);
         CHECK_RESULT (gp_file_append(file, jpegheader[n].data, jpegheader[n].size));
     }
 //  if (camera->model==PDC640SE) {
     if (camera->model[9]=='6') {
-	CHECK_RESULT (gp_file_append(file, SOFC0_640x248, jpegheader[4].size));	
+	CHECK_RESULT (gp_file_append(file, SOFC0_640x240, jpegheader[4].size));
 //  } else if (camera->model==PDC320) {
     } else if (camera->model[9]=='F') {
-	CHECK_RESULT (gp_file_append(file, SOFCO_320x128, jpegheader[4].size));
+	CHECK_RESULT (gp_file_append(file, SOFCO_320x120, jpegheader[4].size));
     }
     for (n=5; n<10; n++) {
         gp_debug_printf (GP_DEBUG_LOW, "pdc320", "Adding jpegheader[%i].data",n);
@@ -393,8 +370,9 @@ if (type == GP_FILE_TYPE_RAW) {
     }
 
     CHECK_RESULT (gp_file_append(file, temp, size));
+*/
     }
-	return (GP_OK);
+    return (GP_OK);
 }
 
 static int
