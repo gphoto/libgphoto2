@@ -186,7 +186,6 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	}
 
 	dimagev->data->play_rec_mode = 0;
-	dimagev->data->host_mode = 0;
 
 	if ( dimagev_send_data(dimagev) == GP_ERROR ) {
 		if ( dimagev->debug != 0 ) {
