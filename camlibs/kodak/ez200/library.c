@@ -121,8 +121,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-    	strcpy (about->text, _("Kodak EZ200 driver\n"
-			    "Bucas Jean-François <jfbucas@tuxfamily.org>\n"));
+    	strcpy (about->text, _("Kodak EZ200 driver\nBucas Jean-Francois <jfbucas@tuxfamily.org>\n"));
     	return GP_OK;
 }
 
