@@ -104,13 +104,12 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	switch(num_pics) {
 	case 1:
     	sprintf (summary->text,_("Mars MR97310 camera.\n" 
-			"There is %i photo in it. \n"), num_pics);  
+			"There is %i photo in it.\n"), num_pics);  
 	break;
 	default:
     	sprintf (summary->text,_("Mars MR97310 camera.\n" 
-			"There are %i photos in it. \n"), num_pics);  
-	}	
-
+			"There are %i photos in it.\n"), num_pics);  
+	}
     	return GP_OK;
 }
 
