@@ -144,6 +144,7 @@ gp_context_progress_start (GPContext *context, float target,
 		id = context->progress_start_func (context, target, format,
 					args, context->progress_func_data);
 		va_end (args);
+		return (id);
 	}
 
 	return (0);
