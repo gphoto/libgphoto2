@@ -2,6 +2,16 @@
 	
 	* canon.c: Added PowerShot SD200.
 
+2005-01-15  Stephen Westin
+
+	* canon.c: Commented out EOS 20D in table, as it doesn't work at all yet.
+	* canon.c: Added audio files to directory listings.
+
+2005-01-04  Stephen Westing
+
+	* *.c: Better status reporting on errors
+	       Minor formatting cleanup
+
 2004-12-19  Marcus Meissner  <marcus@jet.franken.de>
 
 	* canon.[ch]: Added PowerShot S70.
