@@ -24,8 +24,6 @@ int gp_dump_abilities (CameraAbilities *abilities) {
 		abilities->parallel == 0? "no":"yes");
 	printf("core: \tIEEE1394 support		: %s\n", 
 		abilities->ieee1394 == 0? "no":"yes");
-	printf("core: \tCancel transfer support	   	: %s\n", 
-		abilities->cancel == 0? "no":"yes");
 	printf("core: \tCapture from computer support	: %s\n", 
 		abilities->capture == 0? "no":"yes");
 	printf("core: \tConfiguration  support		: %s\n", 
@@ -36,8 +34,6 @@ int gp_dump_abilities (CameraAbilities *abilities) {
 		abilities->file_preview == 0? "no":"yes");
 	printf("core: \tFile upload support		: %s\n", 
 		abilities->file_put == 0? "no":"yes");
-	printf("core: \tProtect files support		: %s\n", 
-		abilities->lock == 0? "no":"yes");
 	printf("core: End of Abilities\n");
 
 	return (GP_OK);
