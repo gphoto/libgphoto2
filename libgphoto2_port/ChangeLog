@@ -1,5 +1,12 @@
 2001-09-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch from Fredrik <fredrik@krixor.xy.org>:
+
+	* usb/libusb.c: Only set configuration stuff on gp_port_usb_update
+	(instead of gp_port_usb_open).
+
+2001-09-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2_port/gp_port.c: Set some default settings in case of
 	GP_PORT_USB, too.
 
