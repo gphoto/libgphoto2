@@ -63,6 +63,24 @@ int pdrm65_get_filenames(GPPort *port, CameraList *list)
 	char out_buf[1024];
 	char in_buf[1024];
 	char ok = 0x06;
+
+	gp_port_set_timeout(port, 10000);
+	out_buf[0] = 0x1b;
+	out_buf[1] = 0x43; 
+	out_buf[2] = 0x02;
+	out_buf[3] = 0x00;
+	out_buf[4] = 0x01;
+	out_buf[5] = 0x10;
+	out_buf[6] = 0x11;
+	out_buf[7] = 0x00;
+	
+	
+	gp_port_write(port, out_buf, 8);
+	gp_port_read (port, in_buf, 10);
+	/* trying to remain endian friendly */
+	gp_port_write(port, &ok, 1);
+	
+	
 	out_buf[0] = 0x1b;
 	out_buf[1] = 0x43; 
 	out_buf[2] = 0x02;
@@ -72,13 +90,13 @@ int pdrm65_get_filenames(GPPort *port, CameraList *list)
 	out_buf[6] = 0x0b;
 	out_buf[7] = 0x00;
 	
-	gp_port_set_timeout(port, 10000);
+	
 	gp_port_write(port, out_buf, 8);
-	gp_port_read (port, in_buf, 9);
+	gp_port_read (port, in_buf, 10);
 	/* trying to remain endian friendly */
 	gp_port_write(port, &ok, 1);
 	
-	numPics = le16atoh(&in_buf[3]) + (le16atoh(&in_buf[4]) * 256);
+	numPics = in_buf[4] + (in_buf[5] * 256);
 	GP_DEBUG("found %d pictures", numPics);
 
 	
