@@ -76,7 +76,7 @@ if test "$drivers" = "all"; then
         CONFIG_DRIVER_BARBIE=1
         CONFIG_DRIVER_DIRECTORY=1
         CONFIG_DRIVER_FUJITSU=1
-dnl        CONFIG_DRIVER_KONICA=1
+        CONFIG_DRIVER_KONICA=1
 	CONFIG_DRIVER_PANASONIC=1
         AC_DEFINE(CONFIG_DRIVER_BARBIE)
         AC_DEFINE(CONFIG_DRIVER_DIRECTORY)
@@ -102,7 +102,7 @@ else
                 AC_DEFINE(CONFIG_DRIVER_FUJITSU)
                 ;;
       konica)
-dnl                CONFIG_DRIVER_KONICA=1
+                CONFIG_DRIVER_KONICA=1
                 AC_DEFINE(CONFIG_DRIVER_KONICA)
                 ;;
       panasonic)
@@ -136,6 +136,7 @@ camlibs/barbie/Makefile \
 camlibs/fujitsu/Makefile \
 camlibs/directory/Makefile \
 camlibs/panasonic/Makefile \
+camlibs/konica/Makefile \
 frontends/Makefile \
 frontends/command-line/Makefile \
 frontends/libgphoto2_frontend/Makefile \

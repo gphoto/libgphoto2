@@ -1,0 +1,39 @@
+History
+-------
+This library is heavily based upon the work of Phill Hugo who based his work 
+heavily "on reverse engineering work by Jesper Skov and his Perl script of 
+similar functionality". Additionally, Konica has been very supportive by 
+issuing their own driver explaining the syntax of the commands. Konica even 
+responded to my questions and gave additional hints. Thank you!
+
+Supported Cameras
+-----------------
+ - HP PhotoSmart C20
+ - HP PhotoSmart C30
+ - HP PhotoSmart C200
+ - Konica Q-EZ
+ - Konica Q-M100
+ - Konica Q-M100V
+ - Konica Q-M200
+ - Konica QM100
+ - Konica QM200
+
+Features
+--------
+Lots of them :-) This driver supports all features that gphoto provides, plus 
+some additional ones. To access those, I have yet to write the configuration 
+dialog. Don't hesitate to ask me to write one.
+
+Licence
+-------
+This library is released under the terms of the GNU General Public Licence. 
+Please see the file COPYING for details.
+
+Reporting Bugs
+--------------
+If you find any, please report them to <gphoto-devel@gphoto.org>.
+
+Author
+------
+Lutz Müller <urc8@rz.uni-karlsruhe.de>
+

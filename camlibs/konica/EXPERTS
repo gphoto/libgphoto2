@@ -1,0 +1,49 @@
+                                   Expert Mode
+                                   -----------
+
+This document describes how to enter the expert mode and adjust several low level settings like the brightness of the flash that can't be accessed through the user menu or a driver. 
+
+********************************************************************************
+* This information has to be handled with care. By entering the expert mode,   *
+* you are able to render your camera unfunctional. Only enter the expert mode  *
+* when you are willing to sacrifice your camera.                               *
+********************************************************************************
+
+Recommendation: Please write down the initial values for each (sub)menu before you ever change a value. The values have been chosen carefully by the manufacturer. 
+
+This document is by no means perfect. Please tell me if you find out additional things about the expert mode that should be included in this document.
+
+How to enter
+------------
+Keep the "Menu" button pressed while turning on the camera. Press ">", "<", "<", ">", ">", ">", "<", "<", ">". You'll now see the expert menu in the small display.
+
+How to navigate
+---------------
+You can select the different menus by pressing the "Menu" button. If a menu contains a submenu, you'll automatically be in the first one. You can scroll through submenus by pressing the "OK" button.
+   --------------------------------------------------------------------------
+   | Menu | Submenu(s) | Description                                        |
+   --------------------------------------------------------------------------
+   | Aut  | -          | Self test. Result will be shown on the small       |
+   |      |            | display.                                           |
+   | Inf  | -          | Adjustment of the focus (DANGER!).                 |
+   | Seb  | -          | Adjustment of the strobe brightness                |
+   | -    | Lcd        | Adjustment of the big Lcd screen                   |
+   |      | Nts        | Adjustment of the TV output (NTSC)                 |
+   |      | Pal        | Adjustment of the TV output (PAL)                  |
+   | -    | Pru        | Live preview                                       |
+   |      | Pr1        | Live preview (black/white only)                    |
+   |      | Pr2        | Live preview (?)                                   |
+   | -    | Adr        | ? (Range: 0x00 to 0xFF)                            |
+   |      | Dat        | ? (Range: 0x00 to oxFF)                            |
+   | Ldp  | -          | Equivalent to exposure (Range: 0 to 255)           |
+   | Sht  |            | Shutter? Preview (Pr*) get's brighter and darker.  |
+   |      | -          | (Range: 100, 106-109)                              |
+   |      | -          | (Range: 200, 208-213)                              |
+   |      | -          | (Range: 300, 310-316)                              |
+   | End  | -          | Exit the expert mode                               |
+   --------------------------------------------------------------------------
+Start a process (e.g. self test) or store a value by pressing the release button. Values can be selected by pressing "<" or ">". When a process has been sucessfully started or a value stored, the camera will beep.
+
+How to exit
+-----------
+Select the "End" menu. Press the release button.
