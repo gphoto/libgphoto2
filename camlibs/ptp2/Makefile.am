@@ -13,5 +13,5 @@ libgphoto2_ptp2_la_LDFLAGS = -module -avoid-version
 libgphoto2_ptp2_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
 
 noinst_PROGRAMS = ptpcam
-ptpcam_SOURCES = test_ptp.c
+ptpcam_SOURCES = ptpcam.c
 ptpcam_LDADD = -lusb ptp.o

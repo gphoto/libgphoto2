@@ -1,30 +1,39 @@
 libptp2 (c)2001-2003 Mariusz Woloszyn <emsi@ipartners.pl>
-
+ptpcam  (c)2001-2003 Mariusz Woloszyn <emsi@ipartners.pl>
 
 =====================
 *About this software*
 =====================
 
-This is libptp2 and ptp2 gphoto2 driver code!
+This folder contains following code:
+ptp.c		- the main libptp2 code; this library is used to communicate
+		  with PTP devices
+ptp.h		- libptp2 header files
+ptp-pack.c	- this file is included into ptp.c (internal code)
+library.c	- gphoto2 PTP driver (used by gphoto2 to communicate with
+		  PTP devices)
+ptpcam.c	- the software to manimpulate PTP cameras
+		  (currently get/set properties); it does things that
+		  you can't do with gphoto2
 
-This library is under developement yet, but is considered to be functional
-and quite stable.
-It's designed to use with gphoto2, but can be easily used with any other
+The libptp2 library is under developement yet, but is considered to be
+functional and quite stable.
+It was written to be used with gphoto2, but can be easily used with any other
 software.
 
-There is a sample test_ptp.c code which shows how to use libptp2 without
-gphoto2. You can use test_ptp.c as a quick startup for your own ptp
-application. Vide library.c to see how to use libptp2.
-If you'd like to write an application using this code, please let me know.
-Sorry, no docs yet :(
-
-test_ptp.c compiles as ptp_test so don't get mistaken ;)
 
 
 ===================
 *Supported Cameras*
 ===================
 
+NOTE that if your camera is not on the list it DOES NOT mean that it is not
+supported! Most of USB cameras designed after 2002 are PTP or USB Mass
+Storage. In both cases the camera is supported under Linux!
+
+Below the list of cameras explicitly supported by gphoto2 ptp driver:
+
+=============================================+
 Model			|Vendor ID|Product ID|
 ========================|=========|==========|
 Kodak DC240 (PTP)	| 0x040a  |  0x0121  |
@@ -80,7 +89,7 @@ Canon Digital IXUS v3	| 0x04a9  |  0x3071  |
 Canon PowerShot A70	| 0x04a9  |  0x3073  |
 ==============================================
 
-Above list might be outdated.
+Above list might be outdated!
 
 Note that for some HP, Nikon, Canon and Sony cameras you have to switch
 them to PTP mode as in most cases the camera is dual mode:
@@ -90,23 +99,25 @@ it does not match the one listed above, just switch the mode.
 Don't ask me how to do it. Refer to camera documentation.
 
 If you know that your camera might be a PTP one, you may test it
-against this driver even if it's not on the list above. If it's really in
+against this code even if it's not on the list above. If it's really in
 PTP mode, the USB interface class should be set to 6 (it's called "still").
 You may check this by reading /proc/bus/usb/devices, for example:
 
 cat /proc/bus/usb/devices | grep "Cls=06"
 
-If you seen an output for example like this:
+If you find something like this:
 
 I:  If#= 0 Alt= 0 #EPs= 3 Cls=06(still) Sub=01 Prot=01 Driver=(none)
-
+                          ^^^^^^^^^^^^^
 that means that your camera is a PTP one.
 The ptp driver should detect that camera by interface class as "USB PTP
 Class Camera" and allow downloading the pictures and do other stuff exactly
 the same way as if it would be detected by product and vendor ID.
 
-If you're not Linux user try compiling ptp_test.
-ptp_test --list-devices will search through all usb devices looking for a
+If you're not Linux user try compiling ptpcam (if you have the source
+tarball of libgphoto2 ptpcam is build automaticaly camlibs/ptp2 folder).
+
+ptpcam --list-devices will search through all usb devices looking for a
 PTP one.
 
 
@@ -125,7 +136,8 @@ Unable to get descriptor (-1)
 
 it may mean that you're working as user while the usb access is restricted.
 See gphoto2-manual, section "Setting up your system for use with libgphoto2
-and gphoto2", subsection "Setting up permissions for USB ports".
+and gphoto2", subsection "Setting up permissions for USB ports"
+(http://gphoto.sourceforge.net/doc/manual/permissions-usb.html).
 
 If the gphoto2 detects the camera but then fails with some error messages
 please report the bug sending the mail to gphoto-devel@gphoto.org or
