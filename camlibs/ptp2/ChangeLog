@@ -1,3 +1,7 @@
+2003-09-10  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Sony DSC-P31
+
 2003-08-05 Mariusz Woloszyn
 	* library.c: ups... PTP_OFC_EXIF_JPEG thumbnails may not contain
 	  EXIF information... revertig to previous behavior :(
