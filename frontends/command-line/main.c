@@ -978,7 +978,7 @@ OPTION_CALLBACK (delete_file)
 		return (delete_file_action (glob_folder, arg));
 
 	return for_each_file_in_range (glob_folder, delete_file_action,
-					glob_flags, arg);
+				       glob_flags, arg);
 }
 
 OPTION_CALLBACK (delete_all_files)
@@ -1666,6 +1666,17 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"));
 			glob_flags &= ~FOR_EACH_FLAGS_RECURSE;
 	}
 
+	/*
+	 * If we delete single files, do it in the reverse order. It should
+	 * work the other way, too, but one never knows...
+	 */
+	if ((option_is_present ("delete-file", argc, argv) == GP_OK) ||
+	    (option_is_present ("d", argc, argv) == GP_OK))
+		glob_flags |= FOR_EACH_FLAGS_REVERSE;
+	else
+		glob_flags &= ~FOR_EACH_FLAGS_REVERSE;
+
+	/* Now actually do something. */
 	result = execute_options (argc, argv);
         if (result < 0) {
 		switch (result) {

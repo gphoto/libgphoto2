@@ -1,5 +1,14 @@
 2002-02-26  Lutz Müller <lutz@users.sourceforge.net>
 
+	* frontends/command-line/foreach.c (for_each_file_in_range): If 
+	  deleting files not recursively, adjust the image ID for subsequent
+	  images.
+	* frontends/commane-line/main.c (main): If deleting files, do
+	  it in reverse order such that above case does never occur. Fixes
+	  #522796.
+
+2002-02-26  Lutz Müller <lutz@users.sourceforge.net>
+
 	* frontends/command-line/shell.c: Patch from Rob Hillis
 	  <rob@hillis.dyndns.org>: Use SHELL_PROMPT instead of 
 	  shell_prompt_text.

@@ -273,14 +273,27 @@ for_each_file_in_range (const char *folder, FileAction action,
 					(unsigned int) i, ffolder, ffile));
 				CR (action (ffolder, ffile));
 			}
-	} else 
-		for (i = 0; i <= max; i++)
+	} else {
+		unsigned int count;
+
+		/*
+		 * File deletion modifies the CameraFilesystem. Therefore
+		 * the IDs of subsequent images change. This only affects us
+		 * if not deleting reversely. This is the case here and we need
+		 * to adjust the image IDs after a successful deletion.
+		 */
+		for (count = i = 0; i <= max; i++)
 			if (index[i]) {
-				GP_DEBUG ("Now processing ID %i...", i);
+				GP_DEBUG ("Now processing ID %i "
+					  "(originally %i)...", i - count, i);
 				CR (get_path_for_id (folder, flags,
-					(unsigned int) i, ffolder, ffile));
+					(unsigned int) i - count,
+					ffolder, ffile));
 				CR (action (ffolder, ffile));
+				if (action == delete_file_action)
+					count++;
 			}
+	}
 		
 	return (GP_OK);
 }
