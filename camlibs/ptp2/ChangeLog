@@ -1,4 +1,8 @@
 2004-11-29  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: D70 PTP mode has 0x406 id.
+
+2004-11-29  Marcus Meissner  <marcus@jet.franken.de>
 	
 	Edward Kuns
 	* library.c: Added hack to detect / if no 
