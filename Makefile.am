@@ -5,7 +5,7 @@
 
 bin_SCRIPTS = gphoto2-config
 
-EXTRA_DIST = HACKING MAINTAINERS makefile.os2 os2mak.inc TESTERS
+EXTRA_DIST = HACKING MAINTAINERS makefile.os2 os2mak.inc TESTERS CHANGES
 
 SUBDIRS = 			\
 	libgphoto2_port 	\
