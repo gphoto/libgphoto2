@@ -1,0 +1,10 @@
+*~ .*~
+*.lo
+*.la
+.libs
+.deps
+Makefile
+Makefile.in
+*.patch
+protocol.xml
+crw
