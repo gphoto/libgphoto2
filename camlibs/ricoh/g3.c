@@ -69,10 +69,14 @@ g3_channel_read(GPPort *port, int *channel, char **buffer, int *len)
 
 	*channel = xbuf[1];
 	*len = xbuf[4] + (xbuf[5]<<8) + (xbuf[6]<<16) + (xbuf[7]<<24);
+	/* Safety buffer of 0x800 ... we can only read in 0x800 chunks, 
+	 * otherwise the communication gets hickups. However *len might be
+	 * less.
+	 */
 	if (!*buffer)
-		*buffer = malloc(*len + 1);
+		*buffer = malloc(*len + 1 + 0x800);
 	else
-		*buffer = realloc(*buffer, *len + 1);
+		*buffer = realloc(*buffer, *len + 1 + 0x800);
 	tocopy = *len;
 	if (tocopy > 0x800-8) tocopy = 0x800-8;
 	memcpy(*buffer, xbuf+8, tocopy);
