@@ -1,9 +1,72 @@
-/* 	Header file for gPhoto2
+/* gphoto2-camera.h
+ *
+ * Copyright (C) 2000 Scott Fritzinger
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 
-	Author: Scott Fritzinger <scottf@unr.edu>
+#ifndef __GPHOTO2_CAMERA_H__
+#define __GPHOTO2_CAMERA_H__
 
-	This library is covered by the LGPL.
-*/
+#include <gphoto2-widget.h>
+#include <gphoto2-lists.h>
+#include <gphoto2-file.h>
+
+typedef struct {
+	char text [32 * 1024];
+} CameraText;
+
+typedef struct {
+	char name [128];
+	char folder [1024];
+} CameraFilePath;
+
+typedef enum {
+	GP_FILE_INFO_NONE            = 0,
+	GP_FILE_INFO_TYPE            = 1 << 0,
+	GP_FILE_INFO_NAME            = 1 << 1,
+	GP_FILE_INFO_SIZE            = 1 << 2,
+	GP_FILE_INFO_WIDTH           = 1 << 3,
+	GP_FILE_INFO_HEIGHT          = 1 << 4,
+	GP_FILE_INFO_PERMISSIONS     = 1 << 5,
+	GP_FILE_INFO_ALL             = 0xFF
+} CameraFileInfoFields;
+
+typedef enum {
+	GP_FILE_PERM_NONE       = 0,
+	GP_FILE_PERM_READ       = 1 << 0,
+	GP_FILE_PERM_DELETE     = 1 << 1,
+	GP_FILE_PERM_ALL        = 0xFF
+} CameraFilePermissions;
+
+typedef struct {
+	CameraFileInfoFields fields;
+	char type [64];
+	CameraFilePermissions permissions; /* Don't use with preview */
+	char name [64];
+	int size;
+	int width, height;
+} CameraFileInfoStruct;
+
+typedef struct {
+	CameraFileInfoStruct    preview;
+	CameraFileInfoStruct    file;
+} CameraFileInfo;
+
+typedef struct _Camera Camera;
 
 /* Retrieve the number of available cameras */
 int gp_camera_count ();
@@ -106,4 +169,4 @@ int gp_camera_file_set_config  	(Camera *camera, const char *folder,
 int gp_camera_file_delete     	(Camera *camera, const char *folder, 
 				 const char *file);
 
-
+#endif /* __GPHOTO2_CAMERA_H__ */

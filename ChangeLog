@@ -1,5 +1,13 @@
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-camera.h:
+	* include/gphoto2-file.h:
+	* include/gphoto2-widget.h: Sort some stuff, put in LGPL notice.
+	* libgphoto2/widget.c: Hide CameraWidget internals here. No need to
+	publish all that stuff.
+
+2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* include/gphoto2-datatypes.h: Move the declaration of the lists to ...
 	* include/gphoto2-lists.h: ... here. This is a first step towards 
 	cleaning up the include-mess. Realized that CameraListType isn't 
