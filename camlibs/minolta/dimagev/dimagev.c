@@ -172,9 +172,11 @@ int camera_exit (Camera *camera)
 		free(dimagev->status);
 	}
 
+/*
 	if ( dimagev->info != NULL ) {
 		free(dimagev->info);
 	}
+*/
 
 	free(dimagev);
 
