@@ -28,3 +28,4 @@
 -T CameraWidget
 -T GPContext
 -T time_t
+-T CameraFileInfo
