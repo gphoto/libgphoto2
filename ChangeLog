@@ -1,3 +1,8 @@
+2001-11-13 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/gphoto2-filesys.c: Adjust filename only for thumbnails,
+	  audio files, etc, not for normal pictures.
+
 2001-11-12 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* configure.in:

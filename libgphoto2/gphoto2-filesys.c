@@ -1244,7 +1244,13 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 	/* We don't trust the camera drivers */
 	CHECK_RESULT (gp_file_set_type (tmp, type));
 	CHECK_RESULT (gp_file_set_name (tmp, filename));
-	CHECK_RESULT (gp_file_adjust_name_for_mime_type (tmp));
+
+	/*
+	 * Often, thumbnails are of a different mime type than the normal
+	 * picture. In this case, we should rename the file.
+	 */
+	if (type != GP_FILE_TYPE_NORMAL)
+		CHECK_RESULT (gp_file_adjust_name_for_mime_type (tmp));
 
 	/* Remember the file (cache) */
 	CHECK_RESULT (gp_file_copy (file, tmp));
