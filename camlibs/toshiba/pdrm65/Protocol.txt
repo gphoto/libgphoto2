@@ -1,0 +1,169 @@
+Legend:
+HD==Header    
+LN=Legnth    
+RV=Reserved   
+CS=CheckSum, Two bytes LSB first, then MSB
+
+Note 1, looks like a bug in the camera with the check sum, sometimes it's
+there, sometimes it will just be returned as 00, so don't bother checking it at
+all as it can't be counted on.  The check sum should be a sum of the data
+fields ONLY.
+
+
+From PC
+----: HD HD LN RV       CS CS
+0000: 1b 43 02 00 04 1b 1f 00 
+From Camera
+----: HD HD LN RV "S  I  1 5"    CS CS
+0000: 03 00 05 00 53 49 31 35 00 00 00 
+From PC : STS Ok
+0000: 06
+
+From PC
+----: HD HD LN RV       CS CS
+0000: 1b 43 02 00 01 02 03 00 
+From Camera
+----: CM RS LN RV             CS CS
+0000: 03 00 04 00 01 00 00 00 01 00 
+From PC : STS Ok
+0000: 06
+
+From PC
+----: HD HD LN RV       CS CS
+0000: 1b 43 02 00 04 1b 1f 00 
+From Camera
+----: HD HD LN RV "S I  1  5"    CS CS
+0000: 03 00 05 00 53 49 31 35 00 00 00 
+From PC : STS Ok
+0000: 06
+
+From PC
+What Model Are you?
+----: HD HD LN RV       CS CS
+0000: 1b 43 02 00 04 16 1a 00 
+From Camera
+----: HD HD LN RV "P  D  R -  M  6  5"    CS CS
+0000: 03 00 08 00 50 44 52 2d 4d 36 35 00 00 00 
+From PC : STS Ok
+0000: 06
+
+This may be about folders, if the #of photos exceeds 9999, then a new folder
+is created.  The default, not configureable, is "100"  The next folder would
+be "101"
+From PC
+----: HD HD LN RV       CS CS
+0000: 1b 43 02 00 01 10 11 00 
+From Camera
+----: HD HD LN RV             CS CS
+0000: 03 00 04 00 00 00 00 00 00 00 
+From PC : STS Ok
+0000: 06
+
+HOW MANY PICTURES ARE THERE?
+From PC
+----: HD HD LN RV       CS CS
+0000: 1b 43 02 00 01 0a 0b 00 
+From Camera
+How many Pictures do you have?
+----  HD HD LN RV 4p          CS CS
+0000: 03 00 04 00 04 00 00 00 04 00 
+From PC : STS Ok
+0000: 06
+
+From PC
+----: HD HD LN RV                   CS CS
+0000: 1b 43 06 00 00 04 01 00 00 00 05 00 
+From Camera : STS Ok
+0000: 06
+
+The windows driver has an issue with the return from this command.  Let's try
+not to use it.
+From PC
+----: HD HD LN RV       CS CS
+0000: 1b 43 02 00 04 4f 53 00 
+From Camera
+----:       LN RV CS CS
+0000: 03 00 00 00 00 00 
+
+From PC : STS Resend?
+0000: 15
+From Camera
+0000: 03 00 00 00 00 00
+
+From PC : STS Resend?
+0000: 15
+From Camera
+0000: 03 00 00 00 00 00
+
+From PC : STS Resend?
+0000: 15
+From Camera
+0000: 03 00 00 00 00 00
+
+From PC : STS Nevermind?
+0000: 18
+
+From PC
+----: HD HD LN RV                   CS CS
+0000: 1b 43 06 00 00 04 01 00 00 00 05 00 
+From Camera : STS Ok
+0000: 06
+
+This looks important, not real sure what it is.
+From PC
+----: HD HD LN RV       CS CS
+0000: 1b 43 02 00 04 2f 33 00 
+From Camera
+----: HD HD LN RV 
+0000: 03 00 20 00 d9 c8 08 00 a4 0f 00 00 00 00 00 00
+----:
+0010: 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+----:             CS CS
+0020: 00 00 00 00 00 00 
+From PC : STS Ok
+0000: 06
+
+Set active file to Image 1 in the list.
+From PC
+----: HD HD LN RV       #           CS CS
+0000: 1b 43 06 00 00 04 01 00 00 00 05 00 
+From Camera : STS Ok
+0000: 06
+
+This message contains the size of the image to return back to the camera.  It
+s sent LSB first, so in this case the size of the picture in
+bytes in 0x097d9f or 621,983 bytes.  This should be kept and checked against
+what is sent from the camera in a counter somewhere.
+From PC
+----: HD HD LN RV       CS CS
+0000: 1b 43 02 00 01 0c 0d 00 
+From Camera
+----: HD HD LN RV             CS CS
+0000: 03 00 04 00 9f 7d 09 00 25 01 
+From PC : STS Ok
+0000: 06
+
+From PC
+0000: 1b 43 06 00 00 04 01 00 00 00 05 00 
+From Camera : STS Ok
+0000: 06
+
+This sequence initiates the transfer of the photos
+From PC
+0000: 1b 43 02 00 04 0e 12 00 
+From Camera
+0000: 02 00 00 78 ff d8 ff e1 0c 29 45 78 69 66 00 00 
+0010: 49 49 2a 00 08 00 00 00 0b 00 0e 01 02 00 20 00 
+0020: 00 00 92 00 00 00 0f 01 02 00 10 00 00 00 b2 00 
+0030: 00 00 10 01 02 00 10 00 00 00 c2 00 00 00 12 01 
+
+Then The Camera Starts Sending Packets of Pictures:
+0000: 03 00 01 00 00 00 01 00 00 00 1a 01 05 00 01 00 
+More follows, but this is the header of the first packet which is capped 
+at a max size of 30656 Bytes each
+Then the camera sends 6 bytes after each
+0000: 0000: 72 8c 61 23 00 00 
+Then we ack:
+0000: 06 
+
+
