@@ -27,9 +27,9 @@ typedef enum {
 } GPLogLevels;
 
 /* Custom log function */
-typedef void (* GPLogFunc) (const char *domain, GPLogLevels levels,
+typedef void (* GPLogFunc) (GPLogLevels levels, const char *domain,
 			    const char *msg, void *data);
-int  gp_log_add_func    (GPLogFunc func, void *data);
+int  gp_log_add_func    (GPLogLevels levels, GPLogFunc func, void *data);
 int  gp_log_remove_func (int id);
 
 void gp_log      (const char *domain, GPLogLevel levels,
