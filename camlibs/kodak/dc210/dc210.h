@@ -98,7 +98,7 @@ typedef struct {
 } dc210_picture_info ;
 
 #undef DEBUG
-#define TIMEOUT 1000
+#define TIMEOUT 500
 #define RETRIES 5
 #define GP_MODULE "kodak-dc210"
 
