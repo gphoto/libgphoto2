@@ -1,8 +1,10 @@
+.cvsignore~
 Makefile
 Makefile.in
 gphoto2-api.html
 html
 sgml
+tmpl
 gphoto2-scan.c
 gphoto2-scan
 gphoto2-decl.txt
@@ -12,4 +14,3 @@ gphoto2-undocumented.txt
 html.stamp
 sgml.stamp
 tmpl.stamp
-
