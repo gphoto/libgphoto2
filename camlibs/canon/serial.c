@@ -141,8 +141,10 @@ canon_usb_camera_init (Camera *camera)
 			break;
 	}
 	if (camstat != 'A' && camstat != 'C') {
-		fprintf (stderr, "canon_usb_camera_init(): initial camera response: %c/'%s' "
-			 "not 'A' or 'C'. Camera not operational.\n", camstat, camstat_str);
+		gp_debug_printf (GP_DEBUG_NONE, "canon",
+				 "canon_usb_camera_init(): initial camera response: %c/'%s' "
+				 "not 'A' or 'C'. Camera not operational.", camstat,
+				 camstat_str);
 		return GP_ERROR;
 	}
 	gp_debug_printf (GP_DEBUG_LOW, "canon",
@@ -151,17 +153,17 @@ canon_usb_camera_init (Camera *camera)
 
 	i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, msg, 0x58);
 	if (i != 0x58) {
-		fprintf (stderr,
-			 "canon_usb_camera_init(): step #2 read failed! (returned %i, expected %i) "
-			 "Camera not operational.\n", i, 0x58);
+		gp_debug_printf (GP_DEBUG_NONE, "canon",
+				 "canon_usb_camera_init(): step #2 read failed! (returned %i, expected %i) "
+				 "Camera not operational.", i, 0x58);
 		return GP_ERROR;
 	}
 
 	i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg + 0x48, 0x10);
 	if (i != 0x10) {
-		fprintf (stderr,
-			 "canon_usb_camera_serial(): step #3 write failed! (returned %i, expected %i) "
-			 "Camera not operational.\n", i, 0x10);
+		gp_debug_printf (GP_DEBUG_NONE, "canon",
+				 "canon_usb_camera_serial(): step #3 write failed! (returned %i, expected %i) "
+				 "Camera not operational.", i, 0x10);
 		return GP_ERROR;
 	}
 	gp_debug_printf (GP_DEBUG_LOW, "canon",
@@ -177,9 +179,9 @@ canon_usb_camera_init (Camera *camera)
 				 "\"54 78 00 00\" at the end, so we just ignore the whole bunch",
 				 0x44, i);
 	} else {
-		fprintf (stderr,
-			 "canon_usb_camera_init(): step #4 read failed! (returned %i, expected %i) "
-			 "Camera might still work though. Continuing.\n", i, 0x44);
+		gp_debug_printf (GP_DEBUG_NONE, "canon",
+				 "canon_usb_camera_init(): step #4 read failed! (returned %i, expected %i) "
+				 "Camera might still work though. Continuing.", i, 0x44);
 	}
 	return GP_OK;
 }

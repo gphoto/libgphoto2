@@ -1,3 +1,34 @@
+2001-10-22 Fredrik <fredrik@krixor.xy.org>
+
+	* camlibs/canon/psa50.c:
+	Added all USB commands to a nice structure so that you call
+	psa50_usb_dialogue() with a function identifier and don't have to keep
+	track of cmd1,cmd2,cmd3 and length of camera reply.
+
+	* camlibs/canon/psa50.c:
+	Separated the "returns L (long) data" commands from psa50_usb_dialogue()
+	and made a new psa50_usb_long_dialogue() that handles these correctly.
+	This should fix a number of problems with those kinds of transfers (I
+	previously fixed this for get_file, now it is fixed for all functions
+	using this). Large directorys filling more than one USB bulk packet
+	probably never worked before, but should work now.
+
+	* camlibs/canon/canon.c:
+	* camlibs/canon/psa50.c:
+	* camlibs/canon/serial.c:
+	* camlibs/canon/usb.c:
+	Improved function error reporting for fetching of thumbnails and
+	pictures and at the same time fixed a one-byte-per-pic-downloaded memory
+	leak ;)
+
+	Added lots of error checking and better debug result reporting to various
+	functions.
+
+	Changed hard-coded attribute values to easier-to-understand-and-maintain
+	defines.
+
+	Changed a bunch of fprintf() and perror() to gp_debug_printf().
+
 2001-10-21 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* doc/api: Some additions

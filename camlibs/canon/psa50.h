@@ -121,6 +121,46 @@ typedef unsigned long u32;
 #endif
 #endif
 
+#define CANON_USB_FUNCTION_GET_FILE		1
+#define CANON_USB_FUNCTION_IDENTIFY_CAMERA	2
+#define CANON_USB_FUNCTION_GET_TIME		3
+#define CANON_USB_FUNCTION_SET_TIME		4
+#define CANON_USB_FUNCTION_MKDIR		5
+#define CANON_USB_FUNCTION_CAMERA_CHOWN		6
+#define CANON_USB_FUNCTION_RMDIR		7
+#define CANON_USB_FUNCTION_DISK_INFO		8
+#define CANON_USB_FUNCTION_FLASH_DEVICE_IDENT	9
+#define CANON_USB_FUNCTION_POWER_STATUS		10
+#define CANON_USB_FUNCTION_GET_DIRENT		11
+#define CANON_USB_FUNCTION_DELETE_FILE		12
+#define CANON_USB_FUNCTION_SET_ATTR		13
+
+struct canon_usb_cmdstruct 
+{
+	int num;
+	char *description;
+	char cmd1, cmd2;
+	int cmd3;
+	int return_length;
+};
+
+static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
+	{CANON_USB_FUNCTION_GET_FILE,		"Get file",		0x01, 0x11, 0x202,	0x40},
+	{CANON_USB_FUNCTION_IDENTIFY_CAMERA,	"Identify camera",	0x01, 0x12, 0x201,	0x9c},
+	{CANON_USB_FUNCTION_GET_TIME,		"Get time",		0x03, 0x12, 0x201,	0x60},
+	{CANON_USB_FUNCTION_SET_TIME,		"Set time",		0x04, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_MKDIR,		"Make directory",	0x05, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_CAMERA_CHOWN,	"Change camera owner",	0x05, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_RMDIR,		"Remove directory",	0x06, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_DISK_INFO,		"Disk info request",	0x09, 0x11, 0x201,	0x5c},
+	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,	"Flash device ident",	0x0a, 0x11, 0x202,	0x40},
+	{CANON_USB_FUNCTION_POWER_STATUS,	"Power supply status",	0x0a, 0x12, 0x201,	0x58},
+	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entrys",	0x0b, 0x11, 0x202,	0x40},
+	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",		0x0d, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",	0x0e, 0x11, 0x201,	0x54},
+	{ 0 }
+};
+
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
@@ -152,10 +192,10 @@ int psa50_disk_info(Camera *camera, const char *name,int *capacity,int *availabl
  */
 struct psa50_dir *psa50_list_directory(Camera *camera, const char *name);
 void psa50_free_dir(Camera *camera, struct psa50_dir *list);
-unsigned char *psa50_get_file(Camera *camera, const char *name,int *length);
+int psa50_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
 unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length);
 int psa50_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath);
-int psa50_set_file_attributes(Camera *camera, const char *file, const char *dir, char attrs);
+int psa50_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs);
 int psa50_delete_file(Camera *camera, const char *name, const char *dir);
 int psa50_end(Camera *camera);
 int psa50_off(Camera *camera);
