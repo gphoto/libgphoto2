@@ -41,6 +41,16 @@
 #include "stv0680.h"
 #include "library.h"
 
+struct camera_to_usb {
+	  char *name;
+	  unsigned short idVendor;
+	  unsigned short idProduct;
+} camera_to_usb[] = {
+	{ "STM USB Dual-mode camera", 0x0553, 0x0202 },
+	{ "Aiptek PenCam Trio", 0x0553, 0x0202 },
+	{ "STV0680", 0x0, 0x0 }				
+};
+
 int camera_id (CameraText *id) 
 {
 	strcpy(id->text, "STV0680");
@@ -51,17 +61,34 @@ int camera_id (CameraText *id)
 int camera_abilities (CameraAbilitiesList *list) 
 {
 	CameraAbilities a;
+	int i;
 
-	strcpy(a.model, "STV0680");
-	a.status = GP_DRIVER_STATUS_PRODUCTION;
-	a.port     = GP_PORT_SERIAL|GP_PORT_USB;
-	a.speed[0] = 115200;
-	a.speed[1] = 0;
-	a.operations        = GP_OPERATION_NONE;
-	a.file_operations   = GP_FILE_OPERATION_PREVIEW;
-	a.folder_operations = GP_FOLDER_OPERATION_NONE;
+	/* 10/11/01/cw rewritten to add cameras via array */
 
-	gp_abilities_list_append(list, a);
+	for (i = 0; i < sizeof(camera_to_usb) / sizeof(struct camera_to_usb); i++) {
+
+		strcpy(a.model, camera_to_usb[i].name);
+		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
+
+		if (!camera_to_usb[i].idVendor) {
+			a.port     = GP_PORT_SERIAL;
+			a.speed[0] = 115200;
+			a.speed[1] = 0;
+			a.operations        = GP_OPERATION_NONE;
+			a.file_operations   = GP_FILE_OPERATION_PREVIEW;
+			a.folder_operations = GP_FOLDER_OPERATION_NONE;
+		} else {
+			a.port     = GP_PORT_USB;
+			a.speed[0] = 0;
+			a.operations        = GP_OPERATION_CAPTURE_PREVIEW;
+			a.file_operations   = GP_FILE_OPERATION_PREVIEW;
+			a.folder_operations = GP_FOLDER_OPERATION_NONE;
+			a.usb_vendor  = camera_to_usb[i].idVendor;		
+			a.usb_product = camera_to_usb[i].idProduct;
+		}
+
+		gp_abilities_list_append(list, a);
+	}
 
 	return (GP_OK);
 }
@@ -80,6 +107,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 	return (GP_OK);
 }
+
+
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
@@ -117,6 +146,23 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+int camera_capture_preview (Camera *camera, CameraFile *file)
+{
+	char *data;
+	int result;
+	long int size;
+
+	result = stv0680_capture_preview (camera->port, &data, (int*) &size);
+	if (result < 0)
+		return result;
+
+	gp_file_set_name (file, "capture.pnm");
+	gp_file_set_mime_type (file, "image/pnm"); 
+	gp_file_set_data_and_size (file, data, size);
+	
+	return (GP_OK);
+}
+
 static int camera_summary (Camera *camera, CameraText *summary) 
 {
 	strcpy(summary->text, _("No summary available."));
@@ -137,7 +183,9 @@ static int camera_about (Camera *camera, CameraText *about)
 		_("STV0680\n"
 		"Adam Harrison <adam@antispin.org>\n"
 		"Driver for cameras using the STV0680 processor ASIC.\n"
-		"Protocol reverse engineered using CommLite Beta 5"));
+		"Protocol reverse engineered using CommLite Beta 5"
+		"Carsten Weinholz <c.weinholz@netcologne.de>\n"
+		"Extended for Aiptek PenCam and other STM USB Dual-mode cameras."));
 
 	return (GP_OK);
 }
@@ -159,14 +207,28 @@ int camera_init (Camera *camera)
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
         camera->functions->result_as_string     = camera_result_as_string;
+	camera->functions->capture_preview	= camera_capture_preview;
 
-	/* Configure serial port */
-        gp_port_timeout_set(camera->port, 1000);
 	gp_port_settings_get(camera->port, &settings);
-        settings.serial.bits = 8;
-        settings.serial.parity = 0;
-        settings.serial.stopbits = 1;
-        gp_port_settings_set(camera->port, settings);
+	switch(camera->port->type) {
+	case GP_PORT_SERIAL:		
+        	gp_port_timeout_set(camera->port, 1000);
+        	settings.serial.bits = 8;
+        	settings.serial.parity = 0;
+        	settings.serial.stopbits = 1;
+		break;
+	case GP_PORT_USB:
+    		settings.usb.inep = 0x82;
+    		settings.usb.outep = 0x00;
+    		settings.usb.config = 1;
+    		settings.usb.interface = 0;
+    		settings.usb.altsetting = 1;
+		break;
+	default:
+		return (GP_ERROR_UNKNOWN_PORT);
+		break;
+	}
+	gp_port_settings_set(camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
@@ -177,4 +239,3 @@ int camera_init (Camera *camera)
 
 	return (ret);
 }
-
