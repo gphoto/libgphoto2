@@ -27,7 +27,7 @@ srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 test "$srcdir" = "." && srcdir=`pwd`
 
-PROJECT=gphoto2
+PROJECT=libgphoto2
 
 # failure subroutine.
 # syntax: do-something || fail
