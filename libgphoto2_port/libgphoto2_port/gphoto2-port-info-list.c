@@ -288,11 +288,11 @@ gp_port_info_list_load (GPPortInfoList *list)
                 lh = GP_SYSTEM_DLOPEN (path);
                 if (!lh) {
 			size_t len;
-			len = strlen(buf);
+			len = strlen(path);
 			if ((len >= 3) &&
-			    (buf[len-1] == 'a') &&
-			    ((buf[len-2] == '.') ||
-			     ((buf[len-2] == 'l') && (buf[len-3] == '.'))
+			    (path[len-1] == 'a') &&
+			    ((path[len-2] == '.') ||
+			     ((path[len-2] == 'l') && (path[len-3] == '.'))
 				    )) {
 				/* *.la or *.a - we cannot load these, so no error msg */
 			} else {
