@@ -29,6 +29,7 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 	static const char *shrt[] =
 		{
 			VERSION,
+			HAVE_CC,
 #ifdef HAVE_EXIF
 			"EXIF",
 #else
@@ -49,6 +50,7 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 	static const char *verb[] =
 		{
 			VERSION,
+			HAVE_CC " (C compiler used)",
 #ifdef HAVE_EXIF
 			"EXIF (for special handling of EXIF files)",
 #else

@@ -30,6 +30,8 @@ AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
 
+AC_DEFINE_UNQUOTED(HAVE_CC,"\"$CC\"",[The C compiler we're using])
+
 dnl ---------------------------------------------------------------------------
 dnl i18n support (including some hacks)
 dnl ---------------------------------------------------------------------------

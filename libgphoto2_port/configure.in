@@ -36,6 +36,8 @@ AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
 
+AC_DEFINE_UNQUOTED(HAVE_CC,"\"$CC\"",[The C compiler we're using])
+
 dnl The following is a hack to get gphoto2 to build on gettext-0.10.35
 dnl systems - BUILD_INCLUDED_LIBINTL is set only in gettext-0.10.37 which is
 dnl the gettext version provided with gphoto2.
