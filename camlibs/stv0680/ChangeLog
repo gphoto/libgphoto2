@@ -1,3 +1,8 @@
+2001-12-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* stv0680.c (camera_capture): Tell the filesystem about the new
+	  file.
+
 2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* library.c: Fix includes

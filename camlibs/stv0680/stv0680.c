@@ -177,6 +177,12 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	    return GP_ERROR; /* unclear what went wrong  ... hmm */
 	strcpy(path->folder,"/");
 	sprintf(path->name,"image%03i.pnm",count);
+
+	/* Tell the filesystem about it */
+	result = gp_filesystem_append (camera->fs, path->folder, path->name);
+	if (result < 0)
+		return (result);
+
 	return (GP_OK);
 }
 
