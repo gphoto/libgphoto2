@@ -68,6 +68,7 @@ camera_abilities (CameraAbilitiesList *list)
 
         for (i = 0; camera_to_usb[i].name; i++)
         {
+	    memset (&a, 0, sizeof (a));
             strcpy(a.model, camera_to_usb[i].name);
 	    a.status = GP_DRIVER_STATUS_PRODUCTION;
             a.port     = GP_PORT_SERIAL | GP_PORT_USB;
@@ -187,11 +188,11 @@ camera_summary (Camera *camera, CameraText *summary)
 	sprintf (temp, _("Space remaining: High: %d, Medium: %d, Low: %d\n"), 
 		 table.remPictHigh, table.remPictMed, table.remPictLow);
 	strcat (buf, temp);
-/*
-	sprintf (temp, _("Memory card status: %s\n", 
-			 dc240_get_memcard_status_str(table.memCardStatus));
+	
+	sprintf (temp, _("Memory card status (%d): %s\n"), table.memCardStatus,
+		 dc240_get_memcard_status_str(table.memCardStatus));
 	strcat (buf, temp);
-*/
+
 	sprintf (temp, _("Total pictures captured: %d, Flashes fired: %d\n"), 
 		 table.totalPictTaken, table.totalStrobeFired); 
 	strcat (buf, temp);

@@ -5,76 +5,78 @@
 #ifndef __DC240_LIBRARY_H__
 #define __DC240_LIBRARY_H__
 
-#define DC240_ACTION_PREVIEW    (unsigned char)0x93
-#define DC240_ACTION_IMAGE      (unsigned char)0x9A
-#define DC240_ACTION_DELETE     (unsigned char)0x9D
+#define DC240_ACTION_PREVIEW    (uint8_t)0x93
+#define DC240_ACTION_IMAGE      (uint8_t)0x9A
+#define DC240_ACTION_DELETE     (uint8_t)0x9D
+
+#include <_byteorder.h>
 
 
-
-const char *dc240_convert_type_to_camera (int type);
-const char *dc240_get_battery_status_str (char status);
-const char *dc240_get_ac_status_str (char status);
+const char *dc240_convert_type_to_camera (uint16_t type);
+const char *dc240_get_battery_status_str (uint8_t status);
+const char *dc240_get_ac_status_str (uint8_t status);
+const char *dc240_get_memcard_status_str(uint8_t status);
 
 /* Define the status table for DC240 and DC280. */
 typedef struct {
-    char cameraType; /* 1 */
-    char fwVersInt; /* 2 */
-    char fwVersDec; /* 3 */
-    char romVers32Int; /* 4 */
-    char romVers32Dec; /* 5 */
-    char romVers8Int; /* 6 */
-    char romVers8Dec; /* 7 */
-    char battStatus; /* 8 */
-    char acAdapter; /* 9 */
-    char strobeStatus; /* 10 */
-    char memCardStatus; /* 11 */
-    char videoFormat; /* 12 */
-    char quickViewMode; /* 13 DC280 */
-    short numPict; /* 14-15 BigEndian */
-    char volumeID[11]; /* 16-26 */
-    char powerSave; /* 27 DC280 */
-    char cameraID[32]; /* 28-59 */
-    short remPictLow; /* 60-61 BE */
-    short remPictMed; /* 62-63 BE */
-    short remPictHigh; /* 64-65 BE */
-    short totalPictTaken; /* 66-67 BE */
-    short totalStrobeFired; /* 68-69 BE */
-    char langType; /* 70 DC280 */
-    char beep; /* 71 */
+    uint8_t cameraType; /* 1 */
+    uint8_t fwVersInt; /* 2 */
+    uint8_t fwVersDec; /* 3 */
+    uint8_t romVers32Int; /* 4 */
+    uint8_t romVers32Dec; /* 5 */
+    uint8_t romVers8Int; /* 6 */
+    uint8_t romVers8Dec; /* 7 */
+    uint8_t battStatus; /* 8 */
+    uint8_t acAdapter; /* 9 */
+    uint8_t strobeStatus; /* 10 */
+    uint8_t memCardStatus; /* 11 */
+    uint8_t videoFormat; /* 12 */
+    uint8_t quickViewMode; /* 13 DC280 */
+    uint16_t numPict; /* 14-15 BigEndian */
+    uint8_t volumeID[11]; /* 16-26 */
+    uint8_t powerSave; /* 27 DC280 */
+    uint8_t cameraID[32]; /* 28-59 */
+    uint16_t remPictLow; /* 60-61 BE */
+    uint16_t remPictMed; /* 62-63 BE */
+    uint16_t remPictHigh; /* 64-65 BE */
+    uint16_t totalPictTaken; /* 66-67 BE */
+    uint16_t totalStrobeFired; /* 68-69 BE */
+    uint8_t langType; /* 70 DC280 */
+    uint8_t beep; /* 71 */
 
-    char fileType; /* 78 */
-    char pictSize; /* 79 */
-    char imgQuality; /* 80 */
-    char ipChainDisable; /* 81 */ /* ????? what does that mean reserved on DC280 */
-    char imageIncomplete; /* 82 */
-    char timerMode; /* 83 */
+    uint8_t fileType; /* 78 */
+    uint8_t pictSize; /* 79 */
+    uint8_t imgQuality; /* 80 */
+    uint8_t ipChainDisable; /* 81 */ /* ????? what does that mean reserved on DC280 */
+    uint8_t imageIncomplete; /* 82 */
+    uint8_t timerMode; /* 83 */
     
-    short year; /* 88-89 BE */
-    char month; /* 90 */
-    char day; /* 91 */
-    char hour; /* 92 */
-    char minute; /* 93 */
-    char second; /* 94 */
-    char tenmSec; /* 95 */
+    uint16_t year; /* 88-89 BE */
+    uint8_t month; /* 90 */
+    uint8_t day; /* 91 */
+    uint8_t hour; /* 92 */
+    uint8_t minute; /* 93 */
+    uint8_t second; /* 94 */
+    uint8_t tenmSec; /* 95 */
     
-    char strobeMode; /* 97 */
-    short exposureComp; /* 98-99 BE see note */
-    char aeMode; /* 100 */
-    char focusMode; /* 101 */
-    char afMode; /* 102 */
-    char awbMode; /* 103 */
-    long zoomMag; /* 104-107 BE see doc */
+    uint8_t strobeMode; /* 97 */
+    uint16_t exposureComp; /* 98-99 BE see note */
+    uint8_t aeMode; /* 100 */
+    uint8_t focusMode; /* 101 */
+    uint8_t afMode; /* 102 */
+    uint8_t awbMode; /* 103 */
+    uint32_t zoomMag; /* 104-107 BE see doc */
     
-    char exposureMode; /* 129 */
+    uint8_t exposureMode; /* 129 */
 
-    char sharpControl; /* 131 */
-    long expTime; /* 132-135 BE */
-    short fValue; /* 136-137 BE */
-    char imageEffect; /* 138 */
-    char dateTimeStamp; /* 139 */
-    char borderFileName [11]; /* 140-151 */
-    char exposureLock; /* 152 */
-    char isoMode; /* 153 DC280 */
+    uint8_t sharpControl; /* 131 */
+    uint32_t expTime; /* 132-135 BE */
+    uint16_t fValue; /* 136-137 BE */
+    uint8_t imageEffect; /* 138 */
+    uint8_t dateTimeStamp; /* 139 */
+    uint8_t borderFileName [11]; /* 140-151 */
+    uint8_t exposureLock; /* 152 */
+    uint8_t isoMode; /* 153 DC280 */
 } DC240StatusTable;
 
 
