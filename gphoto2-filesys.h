@@ -97,13 +97,15 @@ int gp_filesystem_new	 (CameraFilesystem **fs);
 int gp_filesystem_free	 (CameraFilesystem *fs);
 
 /* Manual editing */
-int gp_filesystem_append        (CameraFilesystem *fs, const char *folder,
-			         const char *filename);
-int gp_filesystem_set_info_noop (CameraFilesystem *fs, const char *folder,
-				 CameraFileInfo info);
-int gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
-				 CameraFile *file);
-int gp_filesystem_reset         (CameraFilesystem *fs);
+int gp_filesystem_append           (CameraFilesystem *fs, const char *folder,
+			            const char *filename);
+int gp_filesystem_set_info_noop    (CameraFilesystem *fs, const char *folder,
+				    CameraFileInfo info);
+int gp_filesystem_set_file_noop    (CameraFilesystem *fs, const char *folder,
+				    CameraFile *file);
+int gp_filesystem_delete_file_noop (CameraFilesystem *fs, const char *folder,
+				    const char *filename);
+int gp_filesystem_reset            (CameraFilesystem *fs);
 
 /* Information retrieval */
 int gp_filesystem_count	       (CameraFilesystem *fs, const char *folder);

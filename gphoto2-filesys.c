@@ -848,6 +848,23 @@ gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder,
 	return (GP_OK);
 }
 
+int
+gp_filesystem_delete_file_noop (CameraFilesystem *fs, const char *folder,
+				const char *filename)
+{
+	int x, y;
+
+	CHECK_NULL (fs && folder && filename);
+	CHECK_ABS (folder);
+
+	/* Search the folder and the file */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+	CHECK_RESULT (y = gp_filesystem_number (fs, folder, filename));
+	CHECK_RESULT (delete_file (fs, x, y));
+
+	return (GP_OK);
+}
+
 /**
  * gp_filesystem_make_dir:
  * @fs: a #CameraFilesystem
