@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
+#include <locale.h>
 
 #ifndef WIN32
 #include <signal.h>
