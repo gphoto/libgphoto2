@@ -453,7 +453,7 @@ int dc3200_get_data(Camera *camera, u_char **data, u_long *data_len, int command
 		}
 	} while(num_left > 1);
 
-	if(pid != 0 && command == CMD_GET_FILE)
+	if(pid != 0 && (command == CMD_GET_FILE || command == CMD_GET_PREVIEW))
 		gp_context_progress_stop(camera->pl->context, pid);
 
 	return GP_OK;
