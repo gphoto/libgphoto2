@@ -58,14 +58,6 @@
 #include "serial.h"
 #include "usb.h"
 
-/* Global variable to set debug level.                        */
-/* Defined levels so far :                                    */
-/*   0 : no debug output                                      */
-/*   1 : debug actions                                        */
-/*   9 : debug everything, including hex dumps of the packets */
-
-int canon_debug_driver = 9;
-
 #ifndef HAVE_SNPRINTF
 #warning You do not seem to have a snprintf() function. Using sprintf instead.
 #warning Note that this leads to SECURITY RISKS!
@@ -450,7 +442,6 @@ _canon_file_list (struct canon_dir *tree, const char *folder, CameraList *list)
 {
 
 	if (!tree) {
-//        debug_message(camera,"no directory listing available!\n");
 		return GP_ERROR;
 	}
 
@@ -1293,28 +1284,6 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_new (GP_WIDGET_SECTION, _("Debug"), &section);
 	gp_widget_append (*window, section);
 
-	gp_widget_new (GP_WIDGET_MENU, _("Debug level"), &t);
-	gp_widget_add_choice (t, "none");
-	gp_widget_add_choice (t, "functions");
-	gp_widget_add_choice (t, "complete");
-	switch (camera->pl->debug) {
-		case 0:
-		default:
-			gp_widget_set_value (t, "none");
-			break;
-		case 1:
-			gp_widget_set_value (t, "functions");
-			break;
-		case 9:
-			gp_widget_set_value (t, "complete");
-			break;
-	}
-	gp_widget_append (section, t);
-
-	gp_widget_new (GP_WIDGET_TOGGLE, _("Dump data by packets to stderr"), &t);
-	gp_widget_set_value (t, &(camera->pl->dump_packets));
-	gp_widget_append (section, t);
-
 	return GP_OK;
 }
 
@@ -1323,30 +1292,8 @@ camera_set_config (Camera *camera, CameraWidget *window)
 {
 	CameraWidget *w;
 	char *wvalue;
-	char buf[8];
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_set_config()");
-
-	gp_widget_get_child_by_label (window, _("Debug level"), &w);
-	if (gp_widget_changed (w)) {
-		gp_widget_get_value (w, &wvalue);
-		if (strcmp (wvalue, "none") == 0)
-			camera->pl->debug = 0;
-		else if (strcmp (wvalue, "functions") == 0)
-			camera->pl->debug = 1;
-		else if (strcmp (wvalue, "complete") == 0)
-			camera->pl->debug = 9;
-
-		sprintf (buf, "%i", camera->pl->debug);
-		gp_setting_set ("canon", "debug", buf);
-	}
-
-	gp_widget_get_child_by_label (window, _("Dump data by packets to stderr"), &w);
-	if (gp_widget_changed (w)) {
-		gp_widget_get_value (w, &(camera->pl->dump_packets));
-		sprintf (buf, "%i", camera->pl->dump_packets);
-		gp_setting_set ("canon", "dump_packets", buf);
-	}
 
 	gp_widget_get_child_by_label (window, _("Owner name"), &w);
 	if (gp_widget_changed (w)) {
@@ -1462,7 +1409,6 @@ int
 camera_init (Camera *camera)
 {
 	GPPortSettings settings;
-	char buf[8];
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon camera_init()");
 
@@ -1488,39 +1434,6 @@ camera_init (Camera *camera)
 	camera->pl->first_init = 1;
 	camera->pl->seq_tx = 1;
 	camera->pl->seq_rx = 1;
-
-	if (gp_setting_get ("canon", "debug", buf) != GP_OK)
-		camera->pl->debug = 1;
-
-	if (strncmp (buf, "0", 1) == 0)
-		camera->pl->debug = 0;
-	if (strncmp (buf, "1", 1) == 0)
-		camera->pl->debug = 1;
-	if (strncmp (buf, "2", 1) == 0)
-		camera->pl->debug = 2;
-	if (strncmp (buf, "3", 1) == 0)
-		camera->pl->debug = 3;
-	if (strncmp (buf, "4", 1) == 0)
-		camera->pl->debug = 4;
-	if (strncmp (buf, "5", 1) == 0)
-		camera->pl->debug = 5;
-	if (strncmp (buf, "6", 1) == 0)
-		camera->pl->debug = 6;
-	if (strncmp (buf, "7", 1) == 0)
-		camera->pl->debug = 7;
-	if (strncmp (buf, "8", 1) == 0)
-		camera->pl->debug = 8;
-	if (strncmp (buf, "9", 1) == 0)
-		camera->pl->debug = 9;
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "Debug level: %i", camera->pl->debug);
-
-	if (gp_setting_get ("canon", "dump_packets", buf) == GP_OK) {
-		if (strncmp (buf, "1", 1) == 0)
-			camera->pl->dump_packets = 1;
-		if (strncmp (buf, "0", 1) == 0)
-			camera->pl->dump_packets = 0;
-	}
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:

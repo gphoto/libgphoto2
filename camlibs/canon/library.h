@@ -1,5 +1,5 @@
 /*
- * psa50.h - Canon PowerShot A50 "native" operations.
+ * library.h - Canon "native" operations.
  *
  * Written 1999 by Wolfgang G. Reissnegger and Werner Almesberger
  *
@@ -70,8 +70,6 @@ struct _CameraPrivateLibrary
 	char ident[32];   /* Model ID string given by the camera */
 	char owner[32];   /* Owner name */
 	char firmwrev[4]; /* Firmware revision */
-	int debug;
-	int dump_packets;
 	int A5;
 	char psa50_id[200];	/* some models may have a lot to report */
 	int canon_comm_method;
