@@ -11,7 +11,9 @@
 #    camera you are using. You can get the correct lines for all cameras 
 #    supported by gphoto2 by running "gphoto2 --print-usb-usermap".
 # b) a setup using pam_console that chown's /dev/console to the 
-#    user currently using the "console"
+#    user currently using the "console". You can check for that
+#    by executing "ls -l /dev/console" and verifying that /dev/console
+#    belongs to the appropriate user.
 # c) a Linux kernel supporting hotplug and usbdevfs
 # d) the hotplug package (http://linux-hotplug.sourceforge.net/)
 #
