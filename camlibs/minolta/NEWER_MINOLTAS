@@ -1,4 +1,26 @@
-	Below is a message from Minolta regarding the dim possibility of them
+UPDATE: 
+
+Here is an update about what is written below. Most recent Minolta
+digital camera now use USB Mass Storage device protocol for USB
+connectivity. That means that they can be mounted as a disk device
+within the OS without additionnal support (Linux 2.4.x, *BSD,
+etc.). This is a great step forward to having these camera universally
+supported without requiring complex and non-standard device driver
+support.
+
+This list includes Dimage 5, Dimage 7, Dimage X and probably many
+other. I recommend to consult
+<http://www.teaser.fr/~hfiguiere/linux/digicam.html> for an up to date
+compatibility chart.
+
+The bottom line, the text below is probably now really obsolete.
+
+-- Hubert Figuiere <hfiguiere@teaser.fr> - June 19th 2002
+
+
+-----------------------------------------------------------------------------
+
+Below is a message from Minolta regarding the dim possibility of them
 releasing the protocols for their newer cameras. In short, the official line
 is to buy a flash reader when not using a supported system.
 

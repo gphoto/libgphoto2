@@ -1,3 +1,8 @@
+2002-06-19  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* camlibs/minolta/NEWER_MINOLTAS (UPDATE): updated the statement
+	  about newer Minolta camera support.
+
 2002-06-19  Christophe Barbé <christophe.barbe@ufies.org>
 
 	* Makefile.am: Added CHANGES in EXTRA_DIST.
