@@ -15,8 +15,8 @@ tmpl_sources =				\
 
 gphoto2_docdir = $(HTML_DIR)
 gphoto2_doc_DATA = 		\
-	gphoto2-api.sgml	\
-	gphoto2-api.html
+	gphoto2-api.sgml
+#	gphoto2-api.html
 
 EXTRA_DIST = $(gphoto2_doc_DATA)
 
