@@ -1,3 +1,7 @@
+Fre Jan 24 11:47:04 2003  Till Adam  <till@adam-lilienthal.de>
+ * apply patch by Mark Zimmermann <mark@foresthaven.com> 
+   fixing thumbnails for low res images 
+
 Fri Jan 24 08:15:59 2003  Till Adam  <till@adam-lilienthal.de>
  * apply patch by Mark Zimmermann <mark@foresthaven.com> 
    fixing reporting of preview height

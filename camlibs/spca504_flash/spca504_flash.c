@@ -193,7 +193,7 @@ spca504_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 	/* For images, we are done now, thumbnails need to be converted from
 	 * yuv to rgb and a pbm header added. */
 	if (thumbnail) {
-		int size,w,h;
+		int size,w,h,hdrlen;
 		u_int8_t *p2 = lib->toc + index*2*32;
 
 		/* thumbnails are generated from dc coefficients and are
@@ -204,16 +204,16 @@ spca504_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 		w = ((p2[0x0c] & 0xff) + (p2[0x0d] & 0xff) * 0x100) / 8; 
 		h = ((p2[0x0e] & 0xff) + (p2[0x0f] & 0xff) * 0x100) / 8;
 		
-		snprintf (pbm_header, sizeof (pbm_header), "P6 %d %d 255\n", 
-				w, h );
-		size = w * h * 3 + sizeof(pbm_header);
+		hdrlen = snprintf (pbm_header, sizeof (pbm_header),
+				"P6 %d %d 255\n", w, h );
+		size = w * h * 3 + hdrlen;
 		tmp = malloc (size);
 		if (!tmp)
 			return GP_ERROR_NO_MEMORY;
 
-		snprintf ( tmp, sizeof(pbm_header), pbm_header);	
+		snprintf ( tmp, size, pbm_header);	
 		yuv_p = buf;
-		rgb_p = tmp + sizeof (pbm_header);
+		rgb_p = tmp + hdrlen;
 		while (yuv_p < buf + file_size) {
 			unsigned int u, v, y, y2;
 			unsigned int r, g, b;
