@@ -1,3 +1,7 @@
+2001-01-09  Dan Fandrich <dan@coneharvesters.com>
+
+	* sharpen.c: Added include of string.h to get memcpy prototype
+
 2001-01-08  Marcus Meissner <marcus@jet.franken.de>
 	
 	* bayer.c, saturate.c, library.c:
