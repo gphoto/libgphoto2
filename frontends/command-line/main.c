@@ -556,10 +556,8 @@ int get_picture_common(char *arg, int thumbnail) {
                 return (GP_ERROR_NOT_SUPPORTED);
         }
 
-        if (strchr(arg, '.')) {
-                save_picture_to_file(glob_folder, arg, thumbnail);
-                return (GP_OK);
-        }
+        if (strchr(arg, '.')) 
+                return (save_picture_to_file(glob_folder, arg, thumbnail));
 
         if (thumbnail)
                 return for_each_image_in_range(glob_folder, arg, save_thumbnail_action, 0);

@@ -50,24 +50,25 @@ l_init (gp_port* device)
 {
 	guchar 	c;
 	gint 	i;
+	gint	result;
 
 	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 
 	gp_port_timeout_set (device, DEFAULT_TIMEOUT);
-	if (gp_port_open (device) == GP_ERROR) return GP_ERROR_IO;
+	if ((result = gp_port_open (device)) != GP_OK) return (result);
 	for (i = 0; ; i++) {
 		/****************/
 		/* Write ENQ. 	*/
 		/****************/
-		if (gp_port_write (device, "\5", 1) == GP_ERROR) return GP_ERROR_IO;
-		if (gp_port_read (device, &c, 1) < 1) {
+		if ((result = gp_port_write (device, "\5", 1)) != GP_OK) return (result);
+		if ((result = gp_port_read (device, &c, 1)) < 1) {
 			/******************************************************/
 			/* We didn't receive anything. We'll try up to five   */
 			/* time.                                              */
 			/******************************************************/
 			if (i == 4) {
 			        gp_port_close (device);
-				return (GP_ERROR_IO);
+				return (result);
 			}
 			continue;
 		}
@@ -95,17 +96,18 @@ l_exit (gp_port* device)
 {
 	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 	
-	if (gp_port_close (device) == GP_ERROR) return (GP_ERROR_IO);
-	return (GP_OK);
+	return (gp_port_close (device));
 }
 
 
 gint 
 l_esc_read (gp_port* device, guchar* c)
 {
+	gint result;
+	
 	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 
-	if (gp_port_read (device, c, 1) < 1) return GP_ERROR_IO;
+	if ((result = gp_port_read (device, c, 1)) < 1) return (result);
 	/**********************************************************************/
 	/* STX, ETX, ENQ, ACK, XOFF, XON, NACK, and ETB have to be masked by  */
 	/* ESC. If we receive one of those (except ETX and ETB) without mask, */
@@ -124,7 +126,7 @@ l_esc_read (gp_port* device, guchar* c)
 		if ((*c == ETX) || (*c == ETB)) return (GP_ERROR_CORRUPTED_DATA);
 
 	} else if (*c == ESC) {
-		if (gp_port_read (device, c, 1) < 1) return GP_ERROR_IO;
+		if ((result = gp_port_read (device, c, 1)) < 1) return (result);
 		*c = (~*c & 0xff);
 		if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) && (*c != ACK ) && (*c != XOFF) && (*c != XON) && (*c != NACK) && (*c != ETB ) && (*c != ESC))
 			gp_debug_printf (GP_DEBUG_HIGH, "konica", "Wrong ESC masking!");
@@ -145,6 +147,7 @@ l_send (gp_port* device, guchar* send_buffer, guint send_buffer_size)
 	guchar*	sb; 	
 	guint	sbs;
 	gint 	i;
+	gint 	result;
 
 	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
 
@@ -153,16 +156,16 @@ l_send (gp_port* device, guchar* send_buffer, guint send_buffer_size)
 		/****************/
 		/* Write ENQ.	*/
 		/****************/
-		if (gp_port_write (device, "\5", 1) == GP_ERROR) return (GP_ERROR_IO);
+		if ((result = gp_port_write (device, "\5", 1)) != GP_OK) return (result);
 		/****************/
 		/* Read.	*/
 		/****************/
-		if (gp_port_read (device, &c, 1) < 1) {
+		if ((result = gp_port_read (device, &c, 1)) < 1) {
 			/************************************/
 			/* Let's try for a couple of times. */
 			/************************************/
 			i++;
-			if (i == 5) return (GP_ERROR_IO);
+			if (i == 5) return (result);
 			continue;
 		}
 		switch (c) {
@@ -189,9 +192,9 @@ l_send (gp_port* device, guchar* send_buffer, guint send_buffer_size)
 			/* Write NACK.	*/
 			/****************/
 			c = NACK;
-			if (gp_port_write (device, &c, 1) == GP_ERROR) return (GP_ERROR_IO);
+			if ((result = gp_port_write (device, &c, 1)) != GP_OK) return (result);
 			for (;;) {
-				if (gp_port_read (device, &c, 1) < 1) return (GP_ERROR_IO);
+				if ((result = gp_port_read (device, &c, 1)) < 1) return (result);
 				switch (c) {
 				case ENQ: 
 					/**************************************/
@@ -276,13 +279,13 @@ l_send (gp_port* device, guchar* send_buffer, guint send_buffer_size)
 		/************************/
 		/* Write data as above.	*/
 		/************************/
-		if (gp_port_write (device, sb, sbs) == GP_ERROR) {
+		if ((result = gp_port_write (device, sb, sbs)) != GP_OK) {
 			g_free (sb);
-			return (GP_ERROR_IO);
+			return (result);
 		}
-		if (gp_port_read (device, &c, 1) < 1) {
+		if ((result = gp_port_read (device, &c, 1)) < 1) {
 			g_free (sb);
-			return GP_ERROR_IO;
+			return (result);
 		}
 		switch (c) {
 		case ACK:
@@ -294,7 +297,7 @@ l_send (gp_port* device, guchar* send_buffer, guint send_buffer_size)
 			/* Write EOT.	*/
 			/****************/
 			c = EOT;
-			if (gp_port_write (device, &c, 1) == GP_ERROR) return (GP_ERROR_IO);
+			if ((result = gp_port_write (device, &c, 1)) != GP_OK) return (result);
 			return (GP_OK);
 		case NACK:
 			/******************************************************/
@@ -327,7 +330,7 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 
 	for (i = 0; ; ) {
 		gp_port_timeout_set (device, timeout);
-		if (gp_port_read (device, &c, 1) < 1) return (GP_ERROR_IO);
+		if ((result = gp_port_read (device, &c, 1)) < 1) return (result);
 		gp_port_timeout_set (device, DEFAULT_TIMEOUT);
 		switch (c) {
 		case ENQ:
@@ -361,7 +364,7 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 			/* error).                                            */
 			/******************************************************/
 			for (;;) {
-				if (gp_port_read (device, &c, 1) < 0) return (GP_ERROR_CORRUPTED_DATA); 
+				if ((result = gp_port_read (device, &c, 1)) < 0) return (result); 
 				if (c == ENQ) break;
 			}
 			break;
@@ -371,10 +374,10 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 	/**************/
 	/* Write ACK. */
 	/**************/
-	if (gp_port_write (device, "\6", 1) == GP_ERROR) return (GP_ERROR_IO);
+	if ((result = gp_port_write (device, "\6", 1)) != GP_OK) return (result);
 	for (*rbs = 0; ; ) {
 		for (j = 0; ; j++) {
-			if (gp_port_read (device, &c, 1) < 1) return (GP_ERROR_IO);
+			if ((result = gp_port_read (device, &c, 1)) < 1) return (result);
 			switch (c) {
 			case STX:
 				/**********************************************/
@@ -407,8 +410,6 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 			for (i = 0; i < rbs_internal; i++) {
 				result = l_esc_read (device, &((*rb)[*rbs + i]));
 				switch (result) {
-				case GP_ERROR_IO: 
-					return (GP_ERROR_IO);
 				case GP_ERROR_CORRUPTED_DATA:
 					/**************************************/
 					/* We already received ETX or ETB.    */
@@ -424,11 +425,13 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 					/**************************************/
 					checksum += (*rb)[*rbs + i];
 					break;
+				default:
+					return (result);
 				}
 				if (error_flag) break;
 			}
 			if (!error_flag) {
-				if (gp_port_read (device, &d, 1) < 1) return (GP_ERROR_IO);
+				if ((result = gp_port_read (device, &d, 1)) < 1) return (result);
 				switch (d) {
 				case ETX:
 					/**************************************/
@@ -452,7 +455,7 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 					/* reject the packet.                 */
 					/**************************************/
 					while ((d != ETX) && (d != ETB)) {
-						if (gp_port_read (device, &d, 1) < 1) return (GP_ERROR_IO);
+						if ((result = gp_port_read (device, &d, 1)) < 1) return (result);
 					}
 					error_flag = TRUE;
 					break;
@@ -462,14 +465,13 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 			/******************************************************/
 			/* Read 1 byte for checksum plus ESC quotes.          */
 			/******************************************************/
-			result = l_esc_read (device, &c);
-			if (result != GP_OK) return (result);
+			if ((result = l_esc_read (device, &c)) != GP_OK) return (result);
 			if ((c == checksum) && (!error_flag)) {
 				*rbs += rbs_internal;
 				/****************/
 				/* Write ACK.	*/
 				/****************/
-				if (gp_port_write (device, "\6", 1) == GP_ERROR) return (GP_ERROR_IO);
+				if ((result = gp_port_write (device, "\6", 1)) != GP_OK) return (result);
 				break;
 			} else {
 				/**********************************************/
@@ -482,12 +484,11 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 				/* Write NACK.	*/
 				/****************/
 				c = NACK;
-				if (gp_port_write (device, &c, 1) == GP_ERROR) return (GP_ERROR_IO);
+				if ((result = gp_port_write (device, &c, 1)) != GP_OK) return (result);
 				continue;
 			}
 		}
-		if (gp_port_read (device, &c, 1) < 1) 
-			return (GP_ERROR_IO);
+		if ((result = gp_port_read (device, &c, 1)) < 1) return (result);
 		switch (c) {
 			case EOT:
 				/**********************************************/
@@ -520,7 +521,7 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 			/****************/
 			/* Read ENQ.	*/
 			/****************/
-			if (gp_port_read (device, &c, 1) < 1) return (GP_ERROR_IO);
+			if ((result = gp_port_read (device, &c, 1)) < 1) return (result);
 			switch (c) {
 			case ENQ:
 				/**********************************************/
@@ -536,8 +537,7 @@ l_receive (gp_port* device, guchar** rb, guint* rbs, guint timeout)
 			/****************/
 			/* Write ACK.	*/
 			/****************/
-			if (gp_port_write (device, "\6", 1) == GP_ERROR) 
-				return (GP_ERROR_IO);
+			if ((result = gp_port_write (device, "\6", 1)) != GP_OK) return (result);
 			break;
 		default:
 			/******************************************************/

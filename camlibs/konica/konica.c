@@ -1136,8 +1136,7 @@ k_set_io_capability (
 			sb[5] = (1 << 1);
 			break;
 		default:
-			return (GP_ERROR);
-			break;
+			return (GP_ERROR_NOT_SUPPORTED);
 	}
 	sb[6] = (bit_flag_7_or_8_bits | (bit_flag_stop_2_bits << 1) | (bit_flag_parity_on << 2) | (bit_flag_parity_odd << 3) | (bit_flag_use_hw_flow_control << 4));
 	result = l_send_receive (device, sb, 8, &rb, &rbs);

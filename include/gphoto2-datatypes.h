@@ -9,7 +9,7 @@
    ---------------------------------------------------------------- */
 
 /* Return values. 
-   Return values below -99 (starting with -100) are defined by the 
+   Return values below -999 (starting with -1000) are defined by the 
    individual camera library. 
    
    Don't forget to add the corresponding error descriptions in 
@@ -24,9 +24,6 @@
 #define GP_ERROR_NOT_SUPPORTED	     -106 /* Some op. is unsupported	*/
 #define GP_ERROR_DIRECTORY_NOT_FOUND -107 /* Directory not found	*/
 #define GP_ERROR_FILE_NOT_FOUND	     -108 /* File not found		*/
-
-/* #define GP_NUM_ERRORS	12 */
-
 
 /* Macros
    ---------------------------------------------------------------- */

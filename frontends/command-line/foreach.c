@@ -74,6 +74,7 @@ int for_each_image_in_range(char *folder, char *range, image_action action, int 
 	
 	char	index[MAX_IMAGE_NUMBER];
 	int 	i, max = 0;
+	int	result;
 
 	CameraList 	filelist;
 	CameraListEntry *entry;
@@ -90,24 +91,22 @@ int for_each_image_in_range(char *folder, char *range, image_action action, int 
 
 	for (max = MAX_IMAGE_NUMBER - 1; !index[max]; max--) {}
 	
-	if (gp_list_count(&filelist) < max + 1) {
+	if (gp_list_count(&filelist) < max + 1) 
 		cli_error_print("Picture number %i is too large. Available %i picture(s).", max + 1, gp_list_count(&filelist));
-		return (GP_ERROR);
-	}
 	
 	if (reverse) {
 		for (i = max; 0 <= i; i--)
 			if (index[i]) {
 				entry = gp_list_entry(&filelist, i);
-				if (action(folder, entry->name) != GP_OK)
-					return (GP_ERROR);
+				if ((result = action(folder, entry->name)) != GP_OK)
+					return (result);
 			}
 	} else 
 		for (i = 0; i <= max; i++)
 			if (index[i]) {
 				entry = gp_list_entry(&filelist, i);
-				if (action(folder, entry->name) != GP_OK)
-					return (GP_ERROR);
+				if ((result = action(folder, entry->name)) != GP_OK)
+					return (result);
 			}
 		
 	return (GP_OK);

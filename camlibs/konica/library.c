@@ -355,9 +355,9 @@ camera_exit (Camera* camera)
 	g_return_val_if_fail (camera, 							GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (konica_data = (konica_data_t *) camera->camlib_data, 	GP_ERROR_BAD_PARAMETERS);
 	
-	if ((result = k_exit (konica_data->device)) != GP_OK) return (result);
-	if ((result = gp_filesystem_free (konica_data->filesystem)) != GP_OK) return (result);
-        if ((result = gp_port_free (konica_data->device)) != GP_OK) return (GP_ERROR);
+	if ((result = k_exit (konica_data->device)) != GP_OK) 			return (result);
+	if ((result = gp_filesystem_free (konica_data->filesystem)) != GP_OK) 	return (result);
+        if ((result = gp_port_free (konica_data->device)) != GP_OK)		 return (result);
 	return (GP_OK);
 }
 
@@ -472,7 +472,7 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 {
 	gulong 		image_id;
 	gchar		image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
-	konica_data_t*	konica_data;
+	konica_data_t*	kd;
 	gchar*		tmp;
 	gint		result;
 
@@ -481,7 +481,11 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (filename, GP_ERROR_BAD_PARAMETERS);
 
-	konica_data = (konica_data_t *) camera->camlib_data;
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_get_generic ***");
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** folder: %s", folder);
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** file:   %s", filename);
+
+	kd = (konica_data_t *) camera->camlib_data;
 
 	/* Check if we can get the image id from the filename. */
 	g_return_val_if_fail (filename[0] != '?', GP_ERROR);
@@ -489,25 +493,19 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 	image_id = atol (image_id_string);
 	
 	/* Get the image. */
-	result = k_get_image (
-                konica_data->device,
-                konica_data->image_id_long,
-                image_id,
-                image_type,
-                (guchar **) &file->data,
-                (guint *) &file->size);
+	if ((result = k_get_image (kd->device, kd->image_id_long, image_id, image_type, (guchar **) &file->data, (guint *) &file->size)) != GP_OK) return (result);
 
-	if (result == GP_OK) {
-		strcpy (file->type, "image/jpg");
-		if (image_type == K_THUMBNAIL) {
-			tmp = g_strdup_printf ("%06i-thumbnail.jpg", (int) image_id);
-			strcpy (file->name, tmp);
-			g_free (tmp);
-		} else {
-			strcpy (file->name, filename);
-		}
+	strcpy (file->type, "image/jpg");
+	if (image_type == K_THUMBNAIL) {
+		tmp = g_strdup_printf ("%06i-thumbnail.jpg", (int) image_id);
+		strcpy (file->name, tmp);
+		g_free (tmp);
+	} else {
+		strcpy (file->name, filename);
 	}
-	return (result);
+
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_get_generic ***");
+	return (GP_OK);
 }
 
 
@@ -1263,10 +1261,10 @@ camera_result_as_string (Camera* camera, gint result)
 	g_return_val_if_fail (result < 0, _("Unknown error"));
 
 	/* libgphoto2 error? */
-	if (-result < 100) return (gp_result_as_string (result));
+	if (-result < 1000) return (gp_result_as_string (result));
 
 	/* Our error? */
-	if ((0 - result - 100) < (guint) (sizeof (konica_results) / sizeof (*konica_results))) return _(konica_results [0 - result - 100]);
+	if ((0 - result - 1000) < (guint) (sizeof (konica_results) / sizeof (*konica_results))) return _(konica_results [0 - result - 1000]);
 	
 	return _("Unknown error");
 }
