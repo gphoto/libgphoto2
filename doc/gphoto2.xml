@@ -48,10 +48,10 @@
 	  <arg>--help</arg>
 	</group><sbr/>
 	<arg choice="opt">--list-cameras</arg>
-	<arg choice="opt">--usb-usermap-script <replaceable>NAME</replaceable></arg>
+	<arg choice="opt">--usb-usermap-script <replaceable>NAME</replaceable></arg><sbr/>
 	<arg choice="opt">--print-usb-usermap</arg>
-	<arg choice="opt">--list-ports</arg><sbr/>
-	<arg choice="opt">--stdout</arg>
+	<arg choice="opt">--list-ports</arg>
+	<arg choice="opt">--stdout</arg><sbr/>
 	<arg choice="opt">--stdout-size</arg>
 	<arg choice="opt">--auto-detect</arg>
 	<arg choice="opt">--port <replaceable>PATH</replaceable></arg><sbr/>
@@ -625,9 +625,7 @@
     </refnamediv>
 
     <refsynopsisdiv>
-      <cmdsynopsis>
-        <command>#include &lt;gphoto2.h&gt;</command>
-      </cmdsynopsis>
+      <synopsis>#include &lt;gphoto2.h&gt;</synopsis>
     </refsynopsisdiv>
 
     <refsect1>
