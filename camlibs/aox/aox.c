@@ -39,10 +39,10 @@
 int aox_init (GPPort *port, Model *model, Info *info) 
 {
 	unsigned char c[4];
-	memset(c,0,sizeof(c));
 	unsigned char hi[2];
-	memset (hi,0,2);
 	unsigned char lo[2];
+	memset(c,0,sizeof(c));
+	memset (hi,0,2);
 	memset (lo,0,2);
 
 	GP_DEBUG("Running aox_init\n");
