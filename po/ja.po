@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2 2.1.1rc2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-05 23:02+0200\n"
+"Report-Msgid-Bugs-To: <gphoto-translation@lists.sourceforge.net>\n"
+"POT-Creation-Date: 2003-09-16 18:03+0200\n"
 "PO-Revision-Date: 2002-11-26 00:46+0900\n"
 "Last-Translator: Takeshi Aihana <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -57,40 +57,40 @@ msgstr ""
 "WEB 上に実装済みの使用方法のドキュメント\n"
 "があります。Vison の承諾済み。"
 
-#: camlibs/canon/canon.c:470
+#: camlibs/canon/canon.c:472
 #, fuzzy, c-format
 msgid "Could not create directory %s."
 msgstr "\\DCIM ディレクトリを作成することが出来ませんでした"
 
-#: camlibs/canon/canon.c:473
+#: camlibs/canon/canon.c:475
 #, fuzzy, c-format
 msgid "Could not remove directory %s."
 msgstr "\\DCIM ディレクトリを作成することが出来ませんでした"
 
-#: camlibs/canon/canon.c:815 camlibs/canon/canon.c:1037
+#: camlibs/canon/canon.c:817 camlibs/canon/canon.c:1039
 #: camlibs/canon/usb.c:229
 msgid "lock keys failed."
 msgstr ""
 
-#: camlibs/canon/canon.c:878 camlibs/canon/canon.c:879
+#: camlibs/canon/canon.c:880 camlibs/canon/canon.c:881
 msgid "*UNKNOWN*"
 msgstr ""
 
-#: camlibs/canon/canon.c:986
+#: camlibs/canon/canon.c:988
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
 "status %i"
 msgstr ""
 
-#: camlibs/canon/canon.c:1067
+#: camlibs/canon/canon.c:1069
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
 "i"
 msgstr ""
 
-#: camlibs/canon/canon.c:1186
+#: camlibs/canon/canon.c:1188
 #, fuzzy, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximum 30 characters are "
@@ -99,29 +99,29 @@ msgstr ""
 "名前 '%s' (%i 個の文字) は長すぎます (%i 個の文字)。最大 30 文字まで有効で"
 "す。"
 
-#: camlibs/canon/canon.c:1707
+#: camlibs/canon/canon.c:1709
 #, c-format
 msgid "canon_int_list_dir: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
 
-#: camlibs/canon/canon.c:1729
+#: camlibs/canon/canon.c:1731
 msgid ""
 "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
 
-#: camlibs/canon/canon.c:1814
+#: camlibs/canon/canon.c:1816
 msgid "canon_int_list_dir: truncated directory entry encountered"
 msgstr ""
 
-#: camlibs/canon/canon.c:2124
+#: camlibs/canon/canon.c:2126
 msgid "File protected."
 msgstr "ファイルが保護されています。"
 
-#: camlibs/canon/canon.c:2195
+#: camlibs/canon/canon.c:2197
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
 
-#: camlibs/canon/canon.c:2220
+#: camlibs/canon/canon.c:2222
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr ""
 
@@ -325,7 +325,7 @@ msgstr "\\DCIM ディレクトリを作成することが出来ませんでした"
 msgid "Could not create destination directory."
 msgstr "対象となるディレクトリを作成することが出来ませんでした"
 
-#: camlibs/canon/library.c:1249 camlibs/ptp2/library.c:639
+#: camlibs/canon/library.c:1249 camlibs/ptp2/library.c:659
 msgid "Camera and Driver Configuration"
 msgstr "カメラとドライバの設定"
 
@@ -362,7 +362,8 @@ msgstr "カメラの日付を PC の日付にセットします"
 msgid "Firmware revision (readonly)"
 msgstr "ファームウェアのリビジョン (読み取りのみ)"
 
-#: camlibs/canon/library.c:1306 camlibs/ptp2/library.c:641
+#: camlibs/canon/library.c:1306 camlibs/ptp2/library.c:661
+#: camlibs/ptp2/library.c:692
 msgid "Power (readonly)"
 msgstr "電源 (読み取りのみ)"
 
@@ -998,7 +999,7 @@ msgid "Problem taking live image"
 msgstr "リアルタイム画像の取得中に問題が発生しました"
 
 #: camlibs/dimera/dimera3500.c:771 camlibs/kodak/dc210/dc210.c:168
-#: camlibs/polaroid/pdc700.c:982 camlibs/sierra/sierra.c:828
+#: camlibs/polaroid/pdc700.c:982 camlibs/sierra/sierra.c:827
 #: camlibs/sierra/sierra.c:1405 camlibs/sierra/sierra-desc.c:192
 msgid "Camera Configuration"
 msgstr "カメラの設定"
@@ -1452,7 +1453,7 @@ msgstr "ズーム"
 
 #: camlibs/kodak/dc210/dc210.c:227 camlibs/kodak/dc210/dc210.c:241
 #: camlibs/konica/qm150.c:1025 camlibs/ricoh/library.c:498
-#: camlibs/sierra/epson-desc.c:273 camlibs/sierra/nikon-desc.c:289
+#: camlibs/sierra/epson-desc.c:218 camlibs/sierra/nikon-desc.c:289
 #: camlibs/sierra/olympus-desc.c:328 camlibs/sierra/sierra.c:1030
 #: camlibs/sierra/sierra.c:1035 camlibs/sierra/sierra.c:1306
 #: camlibs/sierra/sierra.c:1502 camlibs/sierra/sierra.c:1505
@@ -1494,16 +1495,16 @@ msgstr "露出度"
 #: camlibs/konica/qm150.c:985 camlibs/konica/qm150.c:988
 #: camlibs/konica/qm150.c:1005 camlibs/konica/qm150.c:1008
 #: camlibs/ricoh/library.c:311 camlibs/ricoh/library.c:326
-#: camlibs/ricoh/library.c:367 camlibs/sierra/epson-desc.c:206
-#: camlibs/sierra/epson-desc.c:224 camlibs/sierra/nikon-desc.c:134
+#: camlibs/ricoh/library.c:367 camlibs/sierra/epson-desc.c:151
+#: camlibs/sierra/epson-desc.c:169 camlibs/sierra/nikon-desc.c:134
 #: camlibs/sierra/nikon-desc.c:168 camlibs/sierra/nikon-desc.c:200
 #: camlibs/sierra/nikon-desc.c:218 camlibs/sierra/nikon-desc.c:248
 #: camlibs/sierra/olympus-desc.c:150 camlibs/sierra/olympus-desc.c:194
 #: camlibs/sierra/olympus-desc.c:226 camlibs/sierra/olympus-desc.c:274
 #: camlibs/sierra/olympus-desc.c:291 camlibs/sierra/olympus-desc.c:310
 #: camlibs/sierra/olympus-desc.c:329 camlibs/sierra/olympus-desc.c:514
-#: camlibs/sierra/sierra.c:839 camlibs/sierra/sierra.c:845
-#: camlibs/sierra/sierra.c:879 camlibs/sierra/sierra.c:885
+#: camlibs/sierra/sierra.c:838 camlibs/sierra/sierra.c:844
+#: camlibs/sierra/sierra.c:878 camlibs/sierra/sierra.c:884
 #: camlibs/sierra/sierra.c:938 camlibs/sierra/sierra.c:945
 #: camlibs/sierra/sierra.c:999 camlibs/sierra/sierra.c:1006
 #: camlibs/sierra/sierra.c:1173 camlibs/sierra/sierra.c:1202
@@ -1515,7 +1516,7 @@ msgid "Auto"
 msgstr "自動"
 
 #: camlibs/kodak/dc210/dc210.c:256 camlibs/kodak/dc210/dc210.c:263
-#: camlibs/sierra/epson-desc.c:207 camlibs/sierra/nikon-desc.c:201
+#: camlibs/sierra/epson-desc.c:152 camlibs/sierra/nikon-desc.c:201
 #: camlibs/sierra/olympus-desc.c:275 camlibs/sierra/sierra.c:939
 #: camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:1244
 #: camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1456
@@ -1558,7 +1559,7 @@ msgstr "ON"
 #: camlibs/konica/qm150.c:1031 camlibs/konica/qm150.c:1042
 #: camlibs/konica/qm150.c:1045 camlibs/ricoh/library.c:339
 #: camlibs/ricoh/library.c:368 camlibs/ricoh/library.c:376
-#: camlibs/sierra/epson-desc.c:208 camlibs/sierra/nikon-desc.c:202
+#: camlibs/sierra/epson-desc.c:153 camlibs/sierra/nikon-desc.c:202
 #: camlibs/sierra/nikon-desc.c:269 camlibs/sierra/nikon-desc.c:324
 #: camlibs/sierra/olympus-desc.c:276 camlibs/sierra/olympus-desc.c:349
 #: camlibs/sierra/olympus-desc.c:497 camlibs/sierra/olympus-desc.c:547
@@ -1981,7 +1982,7 @@ msgstr "スライドショーの表示間隔"
 
 #: camlibs/konica/library.c:718 camlibs/konica/library.c:932
 #: camlibs/konica/qm150.c:777 camlibs/ricoh/library.c:495
-#: camlibs/sierra/sierra.c:838 camlibs/sierra/sierra.c:1169
+#: camlibs/sierra/sierra.c:837 camlibs/sierra/sierra.c:1169
 #: camlibs/sierra/sierra.c:1520 camlibs/sierra/sierra.c:1729
 msgid "Resolution"
 msgstr "解像度"
@@ -2006,7 +2007,7 @@ msgid "Localization"
 msgstr "日本語化"
 
 #: camlibs/konica/library.c:744 camlibs/konica/library.c:951
-#: camlibs/sierra/epson-desc.c:374 camlibs/sierra/nikon-desc.c:399
+#: camlibs/sierra/epson-desc.c:246 camlibs/sierra/nikon-desc.c:399
 #: camlibs/sierra/sierra.c:1596 camlibs/sierra/sierra.c:1780
 msgid "Language"
 msgstr "言語"
@@ -2075,7 +2076,7 @@ msgid "Focus"
 msgstr "フォーカス"
 
 #: camlibs/konica/library.c:813 camlibs/konica/library.c:820
-#: camlibs/sierra/epson-desc.c:225 camlibs/sierra/sierra.c:1477
+#: camlibs/sierra/epson-desc.c:170 camlibs/sierra/sierra.c:1477
 #: camlibs/sierra/sierra.c:1483 camlibs/sierra/sierra.c:1703
 msgid "Fixed"
 msgstr "固定"
@@ -2098,7 +2099,7 @@ msgstr "セルフタイマ (次の写真のみ)"
 #: camlibs/konica/library.c:834 camlibs/konica/library.c:841
 #: camlibs/konica/qm150.c:1098 camlibs/konica/qm150.c:1105
 #: camlibs/minolta/dimagev/dimagev.c:405 camlibs/ricoh/library.c:348
-#: camlibs/sierra/epson-desc.c:274 camlibs/sierra/nikon-desc.c:219
+#: camlibs/sierra/epson-desc.c:219 camlibs/sierra/nikon-desc.c:219
 #: camlibs/sierra/nikon-desc.c:290 camlibs/sierra/olympus-desc.c:256
 #: camlibs/sierra/olympus-desc.c:351 camlibs/sierra/sierra.c:908
 #: camlibs/sierra/sierra.c:915 camlibs/sierra/sierra.c:969
@@ -2177,20 +2178,20 @@ msgid "No answer from the camera."
 msgstr "カメラから反応がありません"
 
 #: camlibs/konica/qm150.c:779 camlibs/konica/qm150.c:787
-#: camlibs/sierra/nikon-desc.c:169 camlibs/sierra/sierra.c:880
-#: camlibs/sierra/sierra.c:887 camlibs/sierra/sierra.c:1204
+#: camlibs/sierra/nikon-desc.c:169 camlibs/sierra/sierra.c:879
+#: camlibs/sierra/sierra.c:886 camlibs/sierra/sierra.c:1204
 msgid "Low"
 msgstr "低"
 
 #: camlibs/konica/qm150.c:780 camlibs/konica/qm150.c:790
-#: camlibs/sierra/nikon-desc.c:170 camlibs/sierra/sierra.c:881
-#: camlibs/sierra/sierra.c:889 camlibs/sierra/sierra.c:1206
+#: camlibs/sierra/nikon-desc.c:170 camlibs/sierra/sierra.c:880
+#: camlibs/sierra/sierra.c:888 camlibs/sierra/sierra.c:1206
 msgid "Medium"
 msgstr "中"
 
 #: camlibs/konica/qm150.c:781 camlibs/konica/qm150.c:784
-#: camlibs/sierra/sierra.c:841 camlibs/sierra/sierra.c:849
-#: camlibs/sierra/sierra.c:882 camlibs/sierra/sierra.c:891
+#: camlibs/sierra/sierra.c:840 camlibs/sierra/sierra.c:848
+#: camlibs/sierra/sierra.c:881 camlibs/sierra/sierra.c:890
 #: camlibs/sierra/sierra.c:1177 camlibs/sierra/sierra.c:1208
 msgid "High"
 msgstr "高い"
@@ -2232,7 +2233,7 @@ msgstr "OFF"
 msgid "Day-lt"
 msgstr "晴天"
 
-#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptpcam.c:573
+#: camlibs/konica/qm150.c:981
 msgid "Sharpness"
 msgstr ""
 
@@ -2244,7 +2245,7 @@ msgstr ""
 msgid "Soft"
 msgstr ""
 
-#: camlibs/konica/qm150.c:999 camlibs/sierra/epson-desc.c:191
+#: camlibs/konica/qm150.c:999 camlibs/sierra/epson-desc.c:136
 #: camlibs/sierra/nikon-desc.c:185
 #, fuzzy
 msgid "Color"
@@ -2451,8 +2452,8 @@ msgstr "いいえ"
 msgid "Fine"
 msgstr "ファイン"
 
-#: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:840
-#: camlibs/sierra/sierra.c:847 camlibs/sierra/sierra.c:1175
+#: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:839
+#: camlibs/sierra/sierra.c:846 camlibs/sierra/sierra.c:1175
 #: camlibs/sierra/sierra.c:1521 camlibs/sierra/sierra.c:1527
 #: camlibs/sierra/sierra.c:1732
 msgid "Standard"
@@ -2827,7 +2828,7 @@ msgstr ""
 msgid "Image Quality"
 msgstr "画像の品質"
 
-#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptpcam.c:553
+#: camlibs/polaroid/pdc700.c:160
 msgid "Image Size"
 msgstr "画像サイズ"
 
@@ -2855,7 +2856,7 @@ msgstr "ファイン"
 msgid "superfine"
 msgstr "スーパーファイン"
 
-#: camlibs/polaroid/pdc700.c:169 camlibs/sierra/epson-desc.c:171
+#: camlibs/polaroid/pdc700.c:169 camlibs/sierra/epson-desc.c:116
 #: camlibs/sierra/sierra.c:1420 camlibs/sierra/sierra.c:1434
 #: camlibs/sierra/sierra.c:1669
 msgid "auto"
@@ -2984,167 +2985,167 @@ msgstr ""
 msgid "The requested port type (%i) is not supported by this driver."
 msgstr "このドライバでは要求したポート型式 (%i) をサポートしていません。"
 
-#: camlibs/ptp2/library.c:102
+#: camlibs/ptp2/library.c:112
 msgid "PTP Undefined Error"
 msgstr "PTP の不明なエラー"
 
-#: camlibs/ptp2/library.c:103
+#: camlibs/ptp2/library.c:113
 msgid "PTP OK!"
 msgstr "PTP OK!"
 
-#: camlibs/ptp2/library.c:104
+#: camlibs/ptp2/library.c:114
 msgid "PTP General Error"
 msgstr "PTP の一般的なエラー"
 
-#: camlibs/ptp2/library.c:105
+#: camlibs/ptp2/library.c:115
 msgid "PTP Session Not Open"
 msgstr "PTP のセッションが開かれていません"
 
-#: camlibs/ptp2/library.c:106
+#: camlibs/ptp2/library.c:116
 msgid "PTP Invalid Transaction ID"
 msgstr "PTP の不正なトランザクション ID"
 
-#: camlibs/ptp2/library.c:107
+#: camlibs/ptp2/library.c:117
 msgid "PTP Operation Not Supported"
 msgstr "サポートされていない PTP 操作"
 
-#: camlibs/ptp2/library.c:108
+#: camlibs/ptp2/library.c:118
 msgid "PTP Parameter Not Supported"
 msgstr "サポートされていない PTP パラメータ"
 
-#: camlibs/ptp2/library.c:109
+#: camlibs/ptp2/library.c:119
 msgid "PTP Incomplete Transfer"
 msgstr "PTP の転送が完了していません"
 
-#: camlibs/ptp2/library.c:110
+#: camlibs/ptp2/library.c:120
 msgid "PTP Invalid Storage ID"
 msgstr "PTP の不正なストレージ ID"
 
-#: camlibs/ptp2/library.c:111
+#: camlibs/ptp2/library.c:121
 msgid "PTP Invalid Object Handle"
 msgstr "PTP 不正なオブジェクト操作"
 
-#: camlibs/ptp2/library.c:112
+#: camlibs/ptp2/library.c:122
 msgid "PTP Device Prop Not Supported"
 msgstr "サポートされていない PTP デバイス Prop"
 
-#: camlibs/ptp2/library.c:113
+#: camlibs/ptp2/library.c:123
 msgid "PTP Invalid Object Format Code"
 msgstr "PTP の不正なオブジェクト書式コード"
 
-#: camlibs/ptp2/library.c:114
+#: camlibs/ptp2/library.c:124
 msgid "PTP Store Full"
 msgstr "PTP の空き容量がありません"
 
-#: camlibs/ptp2/library.c:115
+#: camlibs/ptp2/library.c:125
 msgid "PTP Object Write Protected"
 msgstr "PTP オブジェクトへの書き込み保護が有効です"
 
-#: camlibs/ptp2/library.c:116
+#: camlibs/ptp2/library.c:126
 msgid "PTP Store Read Only"
 msgstr "PTP は読み込み専用です"
 
-#: camlibs/ptp2/library.c:117
+#: camlibs/ptp2/library.c:127
 msgid "PTP Access Denied"
 msgstr "PTP へのアクセスが拒否されました"
 
-#: camlibs/ptp2/library.c:118
+#: camlibs/ptp2/library.c:128
 msgid "PTP No Thumbnail Present"
 msgstr "PTP にはサムネイルがありません"
 
-#: camlibs/ptp2/library.c:119
+#: camlibs/ptp2/library.c:129
 msgid "PTP Self Test Failed"
 msgstr "PTP の自己診断に失敗しました"
 
-#: camlibs/ptp2/library.c:120
+#: camlibs/ptp2/library.c:130
 msgid "PTP Partial Deletion"
 msgstr "PTP の部分的な削除"
 
-#: camlibs/ptp2/library.c:121
+#: camlibs/ptp2/library.c:131
 msgid "PTP Store Not Available"
 msgstr "PTP に格納できません"
 
-#: camlibs/ptp2/library.c:123
+#: camlibs/ptp2/library.c:133
 msgid "PTP Specification By Format Unsupported"
 msgstr "サポートしていない PTP 書式の指定"
 
-#: camlibs/ptp2/library.c:124
+#: camlibs/ptp2/library.c:134
 msgid "PTP No Valid Object Info"
 msgstr "PTP の不正なオブジェクト情報"
 
-#: camlibs/ptp2/library.c:125
+#: camlibs/ptp2/library.c:135
 msgid "PTP Invalid Code Format"
 msgstr "PTP の不正なコード書式"
 
-#: camlibs/ptp2/library.c:126
+#: camlibs/ptp2/library.c:136
 msgid "PTP Unknown Vendor Code"
 msgstr "PTP の不明なベンダーコードです"
 
-#: camlibs/ptp2/library.c:128
+#: camlibs/ptp2/library.c:138
 msgid "PTP Capture Already Terminated"
 msgstr "PTP のキャプチャは中断しました"
 
-#: camlibs/ptp2/library.c:129
+#: camlibs/ptp2/library.c:139
 msgid "PTP Device Bus"
 msgstr "PTP のデバイス・バス"
 
-#: camlibs/ptp2/library.c:130
+#: camlibs/ptp2/library.c:140
 msgid "PTP Invalid Parent Object"
 msgstr "PTP 不正なオブジェクト"
 
-#: camlibs/ptp2/library.c:131
+#: camlibs/ptp2/library.c:141
 msgid "PTP Invalid Device Prop Format"
 msgstr "PTP の不正なデバイス Prop 書式"
 
-#: camlibs/ptp2/library.c:132
+#: camlibs/ptp2/library.c:142
 msgid "PTP Invalid Device Prop Value"
 msgstr "PTP の不正なデバイス Prop 値"
 
-#: camlibs/ptp2/library.c:133
+#: camlibs/ptp2/library.c:143
 msgid "PTP Invalid Parameter"
 msgstr "PTP の不正なパラメータ"
 
-#: camlibs/ptp2/library.c:134
+#: camlibs/ptp2/library.c:144
 msgid "PTP Session Already Opened"
 msgstr "PTP のセッションはオープンしています"
 
-#: camlibs/ptp2/library.c:135
+#: camlibs/ptp2/library.c:145
 msgid "PTP Transaction Canceled"
 msgstr "PTP トランザクションがキャンセルされました"
 
-#: camlibs/ptp2/library.c:137
+#: camlibs/ptp2/library.c:147
 msgid "PTP Specification Of Destination Unsupported"
 msgstr "サポートしていない PTP 転送先の指定"
 
-#: camlibs/ptp2/library.c:138
+#: camlibs/ptp2/library.c:148
 msgid "PTP EK Filename Required"
 msgstr "PTP EK ファイル名が必要です"
 
-#: camlibs/ptp2/library.c:139
+#: camlibs/ptp2/library.c:149
 msgid "PTP EK Filename Conflicts"
 msgstr "PTP EK ファイル名が重複しています"
 
-#: camlibs/ptp2/library.c:140
+#: camlibs/ptp2/library.c:150
 msgid "PTP EK Filename Invalid"
 msgstr "PTP EK 不正なファイル名です"
 
-#: camlibs/ptp2/library.c:142
+#: camlibs/ptp2/library.c:152
 msgid "PTP I/O error"
 msgstr "PTP I/O エラーです"
 
-#: camlibs/ptp2/library.c:143
+#: camlibs/ptp2/library.c:153
 msgid "PTP Error: bad parameter"
 msgstr "PTP エラー: パラメータが正しくありません"
 
-#: camlibs/ptp2/library.c:144
+#: camlibs/ptp2/library.c:154
 msgid "PTP Protocol error, data expected"
 msgstr "PTP プロトコル・エラー (期待値: データ)"
 
-#: camlibs/ptp2/library.c:145
+#: camlibs/ptp2/library.c:155
 msgid "PTP Protocol error, response expected"
 msgstr "PTP プロトコル・エラー (期待値: 応答)"
 
-#: camlibs/ptp2/library.c:570
+#: camlibs/ptp2/library.c:585
 #, fuzzy
 msgid ""
 "PTP2 driver\n"
@@ -3152,7 +3153,7 @@ msgid ""
 "Enjoy!"
 msgstr "Mariusz Woloszyn 氏 <emsi@ipartners.pl> が担当しました。Enjoy!"
 
-#: camlibs/ptp2/library.c:606
+#: camlibs/ptp2/library.c:622
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3162,25 +3163,25 @@ msgid ""
 "Vendor extension description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:646
+#: camlibs/ptp2/library.c:670
 #, fuzzy
 msgid "Number of values"
 msgstr "写真の数: %d\n"
 
-#: camlibs/ptp2/library.c:650
+#: camlibs/ptp2/library.c:674
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/library.c:663
+#: camlibs/ptp2/library.c:683
 msgid "Current value"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1107
+#: camlibs/ptp2/library.c:1161
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "カメラを OFF にします"
 
-#: camlibs/ptp2/library.c:1179
+#: camlibs/ptp2/library.c:1234
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP は USB カメラのみサポートしています。"
 
@@ -3384,175 +3385,6 @@ msgstr "PTP プロトコル・エラー (期待値: データ)"
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP プロトコル・エラー (期待値: 応答)"
 
-#: camlibs/ptp2/ptpcam.c:550
-#, fuzzy
-msgid "PTP Undefined Property"
-msgstr "PTP の不明なエラー"
-
-#: camlibs/ptp2/ptpcam.c:551
-#, fuzzy
-msgid "Battery Level"
-msgstr "%sバッテリーの寿命: %i\n"
-
-#: camlibs/ptp2/ptpcam.c:552
-#, fuzzy
-msgid "Functional Mode"
-msgstr "操作モード"
-
-#: camlibs/ptp2/ptpcam.c:554
-#, fuzzy
-msgid "Compression Setting"
-msgstr "圧縮"
-
-#: camlibs/ptp2/ptpcam.c:555 camlibs/sierra/epson-desc.c:231
-#: camlibs/sierra/nikon-desc.c:259 camlibs/sierra/olympus-desc.c:300
-#: camlibs/sierra/olympus-desc.c:319 camlibs/sierra/sierra.c:998
-#: camlibs/sierra/sierra.c:1281 camlibs/sierra/sierra.c:1475
-#: camlibs/sierra/sierra.c:1698
-msgid "White Balance"
-msgstr "ホワイトバランス"
-
-#: camlibs/ptp2/ptpcam.c:556
-msgid "RGB Gain"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:557
-msgid "F-Number"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:558
-msgid "Focal Length"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:559
-#, fuzzy
-msgid "Focus Distance"
-msgstr "フォーカス位置"
-
-#: camlibs/ptp2/ptpcam.c:560 camlibs/sierra/nikon-desc.c:296
-#: camlibs/sierra/olympus-desc.c:335
-msgid "Focus Mode"
-msgstr "フォーカス・モード"
-
-#: camlibs/ptp2/ptpcam.c:561
-#, fuzzy
-msgid "Exposure Metering Mode"
-msgstr "露出補正"
-
-#: camlibs/ptp2/ptpcam.c:562 camlibs/sierra/sierra.c:937
-#: camlibs/sierra/sierra.c:1238 camlibs/sierra/sierra.c:1447
-#: camlibs/sierra/sierra.c:1678
-msgid "Flash Mode"
-msgstr "フラッシュモード"
-
-#: camlibs/ptp2/ptpcam.c:563
-#, fuzzy
-msgid "Exposure Time"
-msgstr "バルブ露出時間"
-
-#: camlibs/ptp2/ptpcam.c:564
-msgid "Exposure Program Mode"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:566
-msgid "Exposure Index (film speed ISO)"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:568
-#, fuzzy
-msgid "Exposure Bias Compensation"
-msgstr "露出度"
-
-#: camlibs/ptp2/ptpcam.c:569
-#, fuzzy
-msgid "Date Time"
-msgstr "日付と時間"
-
-#: camlibs/ptp2/ptpcam.c:570
-msgid "Pre-Capture Delay"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:571
-msgid "Still Capture Mode"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:572
-#, fuzzy
-msgid "Contrast"
-msgstr "コントラスト(-)"
-
-#: camlibs/ptp2/ptpcam.c:574 camlibs/sierra/nikon-desc.c:518
-#: camlibs/sierra/nikon-desc.c:541
-msgid "Digital Zoom"
-msgstr "デジタル・ズーム"
-
-#: camlibs/ptp2/ptpcam.c:575
-#, fuzzy
-msgid "Effect Mode"
-msgstr "記録モード"
-
-#: camlibs/ptp2/ptpcam.c:576
-msgid "Burst Number"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:577
-msgid "Burst Interval"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:578
-msgid "Timelapse Number"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:579
-msgid "Timelapse Interval"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:580
-#, fuzzy
-msgid "Focus Metering Mode"
-msgstr "スポット測光モード"
-
-#: camlibs/ptp2/ptpcam.c:581
-msgid "Upload URL"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:582
-msgid "Artist"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:583
-#, fuzzy
-msgid "Copyright Info"
-msgstr "コピーライト"
-
-#: camlibs/ptp2/ptpcam.c:590
-msgid "EK Color Temperature"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:592
-#, fuzzy
-msgid "EK Date Time Stamp Format"
-msgstr "データ形式"
-
-#: camlibs/ptp2/ptpcam.c:593
-#, fuzzy
-msgid "EK Beep Mode"
-msgstr "液晶モード"
-
-#: camlibs/ptp2/ptpcam.c:594
-msgid "EK Video Out"
-msgstr ""
-
-#: camlibs/ptp2/ptpcam.c:595
-#, fuzzy
-msgid "EK Power Saving"
-msgstr "電源ランプなし"
-
-#: camlibs/ptp2/ptpcam.c:596
-#, fuzzy
-msgid "EK UI Language"
-msgstr "言語"
-
 #: camlibs/ricoh/library.c:215
 msgid ""
 "Ricoh / Philips driver by\n"
@@ -3634,7 +3466,7 @@ msgstr "蛍光灯"
 msgid "Incandescent"
 msgstr "白熱灯"
 
-#: camlibs/ricoh/library.c:330 camlibs/sierra/epson-desc.c:192
+#: camlibs/ricoh/library.c:330 camlibs/sierra/epson-desc.c:137
 msgid "Black & White"
 msgstr "モノクロ"
 
@@ -3830,112 +3662,119 @@ msgstr "解像度の増分値"
 msgid "Date and time (GMT)"
 msgstr "日付と時間 (GMT)"
 
-#: camlibs/sierra/epson-desc.c:182 camlibs/sierra/nikon-desc.c:176
+#: camlibs/sierra/epson-desc.c:127 camlibs/sierra/nikon-desc.c:176
 #: camlibs/sierra/olympus-desc.c:215 camlibs/sierra/olympus-desc.c:247
 msgid "Aperature Settings"
 msgstr "外観の設定"
 
-#: camlibs/sierra/epson-desc.c:197 camlibs/sierra/nikon-desc.c:191
+#: camlibs/sierra/epson-desc.c:142 camlibs/sierra/nikon-desc.c:191
 #: camlibs/sierra/olympus-desc.c:265 camlibs/sierra/sierra.c:907
 #: camlibs/sierra/sierra.c:1217 camlibs/sierra/sierra.c:1546
 #: camlibs/sierra/sierra.c:1747
 msgid "Color Mode"
 msgstr "カラーモード"
 
-#: camlibs/sierra/epson-desc.c:209 camlibs/sierra/sierra.c:941
+#: camlibs/sierra/epson-desc.c:154 camlibs/sierra/sierra.c:941
 #: camlibs/sierra/sierra.c:951 camlibs/sierra/sierra.c:1248
 #: camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1460
 #: camlibs/sierra/sierra.c:1687
 msgid "Red-eye Reduction"
 msgstr "赤目軽減発光"
 
-#: camlibs/sierra/epson-desc.c:210 camlibs/sierra/sierra.c:942
+#: camlibs/sierra/epson-desc.c:155 camlibs/sierra/sierra.c:942
 #: camlibs/sierra/sierra.c:953 camlibs/sierra/sierra.c:1250
 #: camlibs/sierra/sierra.c:1452 camlibs/sierra/sierra.c:1462
 #: camlibs/sierra/sierra.c:1689
 msgid "Slow Sync"
 msgstr "スローシンクロ"
 
-#: camlibs/sierra/epson-desc.c:215 camlibs/sierra/nikon-desc.c:209
+#: camlibs/sierra/epson-desc.c:160 camlibs/sierra/nikon-desc.c:209
 #: camlibs/sierra/olympus-desc.c:282
 msgid "Flash Settings"
 msgstr "フラッシュの設定"
 
-#: camlibs/sierra/epson-desc.c:226 camlibs/sierra/sierra.c:1478
+#: camlibs/sierra/epson-desc.c:171 camlibs/sierra/sierra.c:1478
 #: camlibs/sierra/sierra.c:1485 camlibs/sierra/sierra.c:1705
 msgid "Custom"
 msgstr "カスタム"
 
-#: camlibs/sierra/epson-desc.c:248 camlibs/sierra/olympus-desc.c:400
+#: camlibs/sierra/epson-desc.c:176 camlibs/sierra/nikon-desc.c:259
+#: camlibs/sierra/olympus-desc.c:300 camlibs/sierra/olympus-desc.c:319
+#: camlibs/sierra/sierra.c:998 camlibs/sierra/sierra.c:1281
+#: camlibs/sierra/sierra.c:1475 camlibs/sierra/sierra.c:1698
+msgid "White Balance"
+msgstr "ホワイトバランス"
+
+#: camlibs/sierra/epson-desc.c:193 camlibs/sierra/olympus-desc.c:400
 msgid "Host power save (seconds)"
 msgstr "ホストのパワーセーブ (秒)"
 
-#: camlibs/sierra/epson-desc.c:264 camlibs/sierra/olympus-desc.c:385
+#: camlibs/sierra/epson-desc.c:209 camlibs/sierra/olympus-desc.c:385
 msgid "Camera power save (seconds)"
 msgstr "カメラのパワーセーブ (秒)"
 
-#: camlibs/sierra/epson-desc.c:279 camlibs/sierra/sierra.c:1029
+#: camlibs/sierra/epson-desc.c:224 camlibs/sierra/sierra.c:1029
 #: camlibs/sierra/sierra.c:1302 camlibs/sierra/sierra.c:1501
 #: camlibs/sierra/sierra.c:1714
 msgid "Lens Mode"
 msgstr "レンズモード"
 
-#: camlibs/sierra/epson-desc.c:361 camlibs/sierra/sierra.c:1597
+#: camlibs/sierra/epson-desc.c:233 camlibs/sierra/sierra.c:1597
 #: camlibs/sierra/sierra.c:1606 camlibs/sierra/sierra.c:1783
 msgid "Korean"
 msgstr "韓国語"
 
-#: camlibs/sierra/epson-desc.c:362 camlibs/sierra/nikon-desc.c:384
+#: camlibs/sierra/epson-desc.c:234 camlibs/sierra/nikon-desc.c:384
 #: camlibs/sierra/sierra.c:1598 camlibs/sierra/sierra.c:1608
 #: camlibs/sierra/sierra.c:1785
 msgid "English"
 msgstr "英語"
 
-#: camlibs/sierra/epson-desc.c:363 camlibs/sierra/nikon-desc.c:385
+#: camlibs/sierra/epson-desc.c:235 camlibs/sierra/nikon-desc.c:385
 #: camlibs/sierra/sierra.c:1599 camlibs/sierra/sierra.c:1610
 #: camlibs/sierra/sierra.c:1787
 msgid "French"
 msgstr "フランス語"
 
-#: camlibs/sierra/epson-desc.c:364 camlibs/sierra/nikon-desc.c:386
+#: camlibs/sierra/epson-desc.c:236 camlibs/sierra/nikon-desc.c:386
 #: camlibs/sierra/sierra.c:1600 camlibs/sierra/sierra.c:1612
 #: camlibs/sierra/sierra.c:1789
 msgid "German"
 msgstr "ドイツ語"
 
-#: camlibs/sierra/epson-desc.c:365 camlibs/sierra/sierra.c:1601
+#: camlibs/sierra/epson-desc.c:237 camlibs/sierra/sierra.c:1601
 #: camlibs/sierra/sierra.c:1614 camlibs/sierra/sierra.c:1791
 msgid "Italian"
 msgstr "イタリア語"
 
-#: camlibs/sierra/epson-desc.c:366 camlibs/sierra/sierra.c:1602
+#: camlibs/sierra/epson-desc.c:238 camlibs/sierra/sierra.c:1602
 #: camlibs/sierra/sierra.c:1616 camlibs/sierra/sierra.c:1793
 msgid "Japanese"
 msgstr "日本語"
 
-#: camlibs/sierra/epson-desc.c:367 camlibs/sierra/sierra.c:1603
+#: camlibs/sierra/epson-desc.c:239 camlibs/sierra/sierra.c:1603
 #: camlibs/sierra/sierra.c:1618 camlibs/sierra/sierra.c:1795
 msgid "Spanish"
 msgstr "スペイン語"
 
-#: camlibs/sierra/epson-desc.c:368 camlibs/sierra/sierra.c:1604
+#: camlibs/sierra/epson-desc.c:240 camlibs/sierra/sierra.c:1604
 #: camlibs/sierra/sierra.c:1620 camlibs/sierra/sierra.c:1797
 msgid "Portugese"
 msgstr "ポルトガル語"
 
-#: camlibs/sierra/epson-desc.c:541 camlibs/sierra/nikon-desc.c:589
+#: camlibs/sierra/epson-desc.c:278 camlibs/sierra/nikon-desc.c:589
 #: camlibs/sierra/olympus-desc.c:620 camlibs/sierra/olympus-desc.c:631
-#: camlibs/sierra/sierra.c:829 camlibs/sierra/sierra.c:1495
+#: camlibs/sierra/sierra.c:828 camlibs/sierra/sierra.c:1495
 msgid "Picture Settings"
 msgstr "写真の設定"
 
-#: camlibs/sierra/epson-desc.c:545 camlibs/sierra/nikon-desc.c:593
+#: camlibs/sierra/epson-desc.c:282 camlibs/sierra/nikon-desc.c:593
 #: camlibs/sierra/olympus-desc.c:624 camlibs/sierra/olympus-desc.c:638
 #: camlibs/sierra/sierra.c:1100 camlibs/sierra/sierra.c:1562
 msgid "Camera Settings"
 msgstr "カメラの設定"
 
-#: camlibs/sierra/epson-desc.c:552
+#: camlibs/sierra/epson-desc.c:289
 #, fuzzy
 msgid ""
 "Some notes about Epson cameras:\n"
@@ -4133,6 +3972,10 @@ msgstr "液晶モード"
 msgid "Infinity"
 msgstr "∞/フラッシュアイ"
 
+#: camlibs/sierra/nikon-desc.c:296 camlibs/sierra/olympus-desc.c:335
+msgid "Focus Mode"
+msgstr "フォーカス・モード"
+
 #: camlibs/sierra/nikon-desc.c:327
 msgid "Preview Thumbnail"
 msgstr ""
@@ -4205,6 +4048,10 @@ msgstr "ファイルの種類"
 msgid "Wide"
 msgstr ""
 
+#: camlibs/sierra/nikon-desc.c:518 camlibs/sierra/nikon-desc.c:541
+msgid "Digital Zoom"
+msgstr "デジタル・ズーム"
+
 #: camlibs/sierra/nikon-desc.c:523
 msgid "Misc exposure/lense settings"
 msgstr "その他の露出/レンズの設定"
@@ -4244,11 +4091,12 @@ msgstr ""
 "        'M' モードにして下さい。\n"
 
 #: camlibs/sierra/nikon-desc.c:619
+#, fuzzy
 msgid ""
 "Nikon Coolpix 995:\n"
 "    Camera configuration (preferences) for this\n"
 "    camera are incomplete, contact the gphoto\n"
-"    developers at gphoto-devel@gphoto.net\n"
+"    developer mailing list\n"
 "    if you would like to contribute to this\n"
 "    driver.\n"
 "\n"
@@ -4349,6 +4197,7 @@ msgstr ""
 "    液晶を \"OFF\" に切り替えて下さい。"
 
 #: camlibs/sierra/olympus-desc.c:666
+#, fuzzy
 msgid ""
 "Default sierra driver:\n"
 "\n"
@@ -4362,7 +4211,7 @@ msgid ""
 "    that the configuration settings are\n"
 "    complete for your camera, or can contribute\n"
 "    code to support complete configuration,\n"
-"    please contact gphoto-devel@gphoto.net\n"
+"    please contact the developer mailing list.\n"
 msgstr ""
 "デフォルト Sierra ドライバ:\n"
 "\n"
@@ -4393,12 +4242,12 @@ msgstr "写真を格納するフォルダ名が取得できません"
 msgid "Upload is supported into the '%s' folder only"
 msgstr "フォルダ '%s' へのアップロードのみサポートしています"
 
-#: camlibs/sierra/sierra.c:842 camlibs/sierra/sierra.c:851
+#: camlibs/sierra/sierra.c:841 camlibs/sierra/sierra.c:850
 #: camlibs/sierra/sierra.c:1179
 msgid "Best"
 msgstr "ベスト"
 
-#: camlibs/sierra/sierra.c:854 camlibs/sierra/sierra.c:894
+#: camlibs/sierra/sierra.c:853 camlibs/sierra/sierra.c:893
 #: camlibs/sierra/sierra.c:926 camlibs/sierra/sierra.c:956
 #: camlibs/sierra/sierra.c:987 camlibs/sierra/sierra.c:1018
 #: camlibs/sierra/sierra.c:1042 camlibs/sierra/sierra.c:1064
@@ -4410,11 +4259,11 @@ msgstr "ベスト"
 msgid "%i (unknown)"
 msgstr "%i (不明)"
 
-#: camlibs/sierra/sierra.c:866 camlibs/sierra/sierra.c:1189
+#: camlibs/sierra/sierra.c:865 camlibs/sierra/sierra.c:1189
 msgid "Shutter Speed (microseconds, 0 auto)"
 msgstr "シャッター速度 (マイクロ秒, 0:自動)"
 
-#: camlibs/sierra/sierra.c:878 camlibs/sierra/sierra.c:1198
+#: camlibs/sierra/sierra.c:877 camlibs/sierra/sierra.c:1198
 #: camlibs/sierra/sierra.c:1413 camlibs/sierra/sierra.c:1654
 msgid "Aperture"
 msgstr "絞り"
@@ -4433,6 +4282,11 @@ msgstr "白板"
 #: camlibs/sierra/sierra.c:1229
 msgid "Black Board"
 msgstr "黒板"
+
+#: camlibs/sierra/sierra.c:937 camlibs/sierra/sierra.c:1238
+#: camlibs/sierra/sierra.c:1447 camlibs/sierra/sierra.c:1678
+msgid "Flash Mode"
+msgstr "フラッシュモード"
 
 #: camlibs/sierra/sierra.c:967 camlibs/sierra/sierra.c:1260
 msgid "Brightness/Contrast"
@@ -4554,67 +4408,67 @@ msgstr "色彩"
 msgid "black & white"
 msgstr "モノクロ"
 
-#: camlibs/sierra/sierra.c:1856
+#: camlibs/sierra/sierra.c:1854
 msgid "Note: no memory card present, some values may be invalid\n"
 msgstr ""
 "注意: メモリ・カードがありません。いくつかの値が不正になるかもしれません。\n"
 
-#: camlibs/sierra/sierra.c:1864
+#: camlibs/sierra/sierra.c:1862
 #, c-format
 msgid "%sCamera Model: %s\n"
 msgstr "%sカメラの型式: %s\n"
 
-#: camlibs/sierra/sierra.c:1866
+#: camlibs/sierra/sierra.c:1864
 #, c-format
 msgid "%sManufacturer: %s\n"
 msgstr "%s製造: %s\n"
 
-#: camlibs/sierra/sierra.c:1868
+#: camlibs/sierra/sierra.c:1866
 #, c-format
 msgid "%sCamera ID: %s\n"
 msgstr "%sカメラID: %s\n"
 
-#: camlibs/sierra/sierra.c:1870
+#: camlibs/sierra/sierra.c:1868
 #, c-format
 msgid "%sSerial Number: %s\n"
 msgstr "%sシリアル番号: %s\n"
 
-#: camlibs/sierra/sierra.c:1872
+#: camlibs/sierra/sierra.c:1870
 #, c-format
 msgid "%sSoftware Rev.: %s\n"
 msgstr "%sソフトウェア・リビジョン: %s\n"
 
-#: camlibs/sierra/sierra.c:1876
+#: camlibs/sierra/sierra.c:1874
 #, c-format
 msgid "%sFrames Taken: %i\n"
 msgstr "%sフレーム数: %i\n"
 
-#: camlibs/sierra/sierra.c:1878
+#: camlibs/sierra/sierra.c:1876
 #, c-format
 msgid "%sFrames Left: %i\n"
 msgstr "%s残りフレーム数: %i\n"
 
-#: camlibs/sierra/sierra.c:1880
+#: camlibs/sierra/sierra.c:1878
 #, c-format
 msgid "%sBattery Life: %i\n"
 msgstr "%sバッテリーの寿命: %i\n"
 
-#: camlibs/sierra/sierra.c:1882
+#: camlibs/sierra/sierra.c:1880
 #, c-format
 msgid "%sMemory Left: %i bytes\n"
 msgstr "%sメモリの空き容量: %i バイト\n"
 
-#: camlibs/sierra/sierra.c:1887
+#: camlibs/sierra/sierra.c:1885
 #, c-format
 msgid "%sDate: %s"
 msgstr "%s日付: %s"
 
-#: camlibs/sierra/sierra.c:1903
+#: camlibs/sierra/sierra.c:1901
 #, fuzzy
 msgid "No camera manual available.\n"
 msgstr "カメラが無効です"
 
-#: camlibs/sierra/sierra.c:1910
+#: camlibs/sierra/sierra.c:1908
 #, fuzzy, c-format
 msgid ""
 "Some notes about Epson cameras:\n"
@@ -4635,7 +4489,7 @@ msgstr ""
 "  お使いのカメラがおかしな動きをした場合は\n"
 "  <gphoto-devel@lists.sourceforge.net> (英語で) まで連絡して下さい。\n"
 
-#: camlibs/sierra/sierra.c:1922
+#: camlibs/sierra/sierra.c:1920
 msgid ""
 "Some notes about Olympus cameras (and others?):\n"
 "(1) Camera Configuration:\n"
@@ -4671,7 +4525,7 @@ msgstr ""
 "    もしこのような状態になったら、PC から取り外しして再び接続し\n"
 "    液晶を \"OFF\" に切り替えて下さい。"
 
-#: camlibs/sierra/sierra.c:1951
+#: camlibs/sierra/sierra.c:1949
 msgid ""
 "sierra SPARClite library\n"
 "Scott Fritzinger <scottf@unr.edu>\n"
@@ -5202,6 +5056,74 @@ msgstr "カメラライブラリの不明なエラー"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "不明なエラー"
+
+#, fuzzy
+#~ msgid "PTP Undefined Property"
+#~ msgstr "PTP の不明なエラー"
+
+#, fuzzy
+#~ msgid "Battery Level"
+#~ msgstr "%sバッテリーの寿命: %i\n"
+
+#, fuzzy
+#~ msgid "Functional Mode"
+#~ msgstr "操作モード"
+
+#, fuzzy
+#~ msgid "Compression Setting"
+#~ msgstr "圧縮"
+
+#, fuzzy
+#~ msgid "Focus Distance"
+#~ msgstr "フォーカス位置"
+
+#, fuzzy
+#~ msgid "Exposure Metering Mode"
+#~ msgstr "露出補正"
+
+#, fuzzy
+#~ msgid "Exposure Time"
+#~ msgstr "バルブ露出時間"
+
+#, fuzzy
+#~ msgid "Exposure Bias Compensation"
+#~ msgstr "露出度"
+
+#, fuzzy
+#~ msgid "Date Time"
+#~ msgstr "日付と時間"
+
+#, fuzzy
+#~ msgid "Contrast"
+#~ msgstr "コントラスト(-)"
+
+#, fuzzy
+#~ msgid "Effect Mode"
+#~ msgstr "記録モード"
+
+#, fuzzy
+#~ msgid "Focus Metering Mode"
+#~ msgstr "スポット測光モード"
+
+#, fuzzy
+#~ msgid "Copyright Info"
+#~ msgstr "コピーライト"
+
+#, fuzzy
+#~ msgid "EK Date Time Stamp Format"
+#~ msgstr "データ形式"
+
+#, fuzzy
+#~ msgid "EK Beep Mode"
+#~ msgstr "液晶モード"
+
+#, fuzzy
+#~ msgid "EK Power Saving"
+#~ msgstr "電源ランプなし"
+
+#, fuzzy
+#~ msgid "EK UI Language"
+#~ msgstr "言語"
 
 #, fuzzy
 #~ msgid "No thumbnail could be found for %s"
