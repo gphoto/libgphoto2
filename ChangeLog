@@ -1,3 +1,13 @@
+2004-11-26  Theodore Kilgore <kilgota@auburn.edu>
+
+	* camlibs/iclick/*: New camera driver written by T. K. and 
+	  Stephen Pollei <stephen_pollei@comcast.net>. 
+	* configure.in: camlibs/iclick hooked up.
+	* AUTHORS: authors of camlibs/iclick added.
+	* MAINTAINERS: listed T. K. as the (current) maintainer. 
+
+
+
 2004-11-18  Lutz Mueller <lutz@users.sourceforge.net>
 
 	* camlibs/kodak/Makefile.am: Hook up the new ez200-driver.
