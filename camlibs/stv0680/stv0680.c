@@ -58,6 +58,9 @@ struct camera_to_usb {
 	{ "l'esprit by DigitalDream",   0x0553, 0x0202 },
 	{ "la ronde by DigitalDream",   0x0553, 0x0202 },
 	{ "AEG Snap 300",               0x0553, 0x0202 },
+	/* http://www.sipix.com/stylecam.shtml, unconfirmed, but the
+	 * feature list reads like the stv680 chipset. */
+	{ "SiPix StyleCam",             0x0553, 0x0202 },
 	{ "Fuji IX-1",                  0x0553, 0x0202 }, /* Unconfirmed */
 	{ "STV0680",                    0x0000, 0x0000 }  /* serial version */
 };
