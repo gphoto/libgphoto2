@@ -47,16 +47,16 @@ struct _CameraFile {
         char name [64];
         unsigned long int size;
         unsigned char *data;
-        int bytes_read;
+        long bytes_read;
         int ref_count;
 
-	time_t mtime;
+        time_t mtime;
 
+        CameraFileConversionMethod method;
+        int width, height;
         unsigned char *red_table, *blue_table, *green_table;
         int red_size, blue_size, green_size;
         char header [128];
-        int width, height;
-        CameraFileConversionMethod method;
 };
 
 int
@@ -431,7 +431,11 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 		if (!strcmp (file->mime_type, table[x])) {
 
 			/* Search the current suffix and erase it */
+#ifdef HAVE_STRCHR
+			suffix = strrchr (file->name, '.');
+#else
 			suffix = rindex (file->name, '.');
+#endif
 			if (suffix++)
 				*suffix = '\0';
 			strcat (file->name, table[x + 1]);
