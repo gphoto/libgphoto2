@@ -131,7 +131,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 int camera_init (Camera *camera, CameraInit *init) {
 
-	int value=0, x=0;
+	int value=0, x=0, count;
 #ifdef GPIO_USB
 	int vendor=0, product=0, inep=0, outep=0;
 #endif
@@ -285,6 +285,9 @@ int camera_init (Camera *camera, CameraInit *init) {
 		sierra_debug_print(fd, "Camera doesn't support folders. Using CameraFilesystem emu.");
 
 	fd->fs = gp_filesystem_new();
+	count = sierra_file_count(camera);
+        /* Populate the filesystem */
+	gp_filesystem_populate(fd->fs, "/", "PIC%04i.jpg", count);
 
 	strcpy(fd->folder, "/");
 
@@ -388,11 +391,6 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 		if (sierra_change_folder(camera, folder))
 			return (GP_ERROR);
 	}
-
-	count = sierra_file_count(camera);
-
-        /* Populate the filesystem */
-	gp_filesystem_populate(fd->fs, folder, "PIC%04i.jpg", count);
 
 	while ((x<count)&&(!error)) {
 #if 0
@@ -515,6 +513,10 @@ return (GP_ERROR);
 	/* Get the file number from the CameraFileSystem */
 	file_number = gp_filesystem_number(fd->fs, folder, filename);
 
+gp_filesystem_dump(fd->fs);
+	if (file_number == GP_ERROR)
+		return GP_ERROR;
+
 	if (thumbnail) {
 		sprintf(buf, "Getting thumbnail \"%s\" (#%i)", filename, file_number+1);
 		regl = 13;
@@ -524,6 +526,7 @@ return (GP_ERROR);
 		regl = 12;
 		regd = 14;
 	}
+
 	sierra_debug_print(fd, buf);
 
 	/* Fill in the file structure */	
