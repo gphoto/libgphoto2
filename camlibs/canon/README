@@ -56,7 +56,7 @@ with the PTP driver:
 Support for the following cameras is mostly there as they were supported
 in gphoto 0.4.x but several API changes and rewrites have probably broken
 something along the way. If you are interested in fixing it mail 
-gphoto-devel@gphoto.net or philm@users.sourceforge.net:
+gphoto-devel@lists.sourceforge.net:
  
  - PowerShot A5
  - PowerShot A5 Zoom
