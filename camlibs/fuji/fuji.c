@@ -604,6 +604,7 @@ fuji_pic_name (Camera *camera, unsigned int i, const char **name,
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_PIC_NAME;
 	cmd[2] = 2;
+	cmd[3] = 0;
 	cmd[4] = i;
 	cmd[5] = (i >> 8);
 
@@ -623,6 +624,7 @@ fuji_pic_del (Camera *camera, unsigned int i, GPContext *context)
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_PIC_NAME;
 	cmd[2] = 2;
+	cmd[3] = 0;
 	cmd[4] = i;
 	cmd[5] = (i >> 8);
 
@@ -641,6 +643,7 @@ fuji_pic_size (Camera *camera, unsigned int i, unsigned int *size,
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_PIC_SIZE;
 	cmd[2] = 2;
+	cmd[3] = 0;
 	cmd[4] = i;
 	cmd[5] = (i >> 8);
 
@@ -670,6 +673,7 @@ fuji_pic_get_thumb (Camera *camera, unsigned int i, unsigned char **data,
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_PIC_GET_THUMB;
 	cmd[2] = 2;
+	cmd[3] = 0;
 	cmd[4] = i;
 	cmd[5] = (i >> 8);
 
@@ -699,6 +703,7 @@ fuji_pic_get (Camera *camera, unsigned int i, unsigned char **data,
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_PIC_GET;
 	cmd[2] = 2;
+	cmd[3] = 0;
 	cmd[4] = i;
 	cmd[5] = (i >> 8);
 
