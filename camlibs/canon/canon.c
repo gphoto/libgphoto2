@@ -83,6 +83,8 @@
  *   detection.
  * - Newer Canon USB cameras also support a PTP mode. See ptp2 camlib.
  * - No IEEE1394 cameras supported yet.
+ * - The size limit constants aren't used properly anywhere. We should
+ *   probably get rid of them altogether.
  **/
 
 /* SL_* - size limit constants */

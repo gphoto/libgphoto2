@@ -258,6 +258,7 @@ struct canonCamModelData
 	unsigned short usb_vendor;
 	unsigned short usb_product;
 	canonCaptureSupport usb_capture_support;
+	/* these three constants aren't used properly */
 	unsigned int max_movie_size;
 	unsigned int max_thumbnail_size;
 	unsigned int max_picture_size;

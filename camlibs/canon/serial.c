@@ -1058,7 +1058,7 @@ canon_serial_get_file (Camera *camera, const char *name, int *length, GPContext 
 		if (!file) {
 			total = le32atoh (msg + 4);
 
-			if (total > camera->pl->md->max_picture_size) {
+			if (total > camera->pl->md->max_movie_size) {
 				GP_DEBUG ("ERROR: %d is too big\n", total);
 				break;
 			}
