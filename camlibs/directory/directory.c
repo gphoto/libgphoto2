@@ -489,7 +489,8 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-        strcpy(about->text, "Directory Browse Mode\nScott Fritzinger <scottf@unr.edu>");
+        strcpy (about->text, _("Directory Browse Mode - written "
+		"by Scott Fritzinger <scottf@unr.edu>."));
 
         return (GP_OK);
 }
