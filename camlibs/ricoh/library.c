@@ -213,7 +213,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 
 	strcpy (about->text,
 		_("Ricoh / Philips driver by \n"
-		  "Lutz Müller <lutz@users.sourceforge.net>, \n"
+		  "Lutz Mueller <lutz@users.sourceforge.net>, \n"
 		  "Martin Fischer <martin.fischer@inka.de>, \n"
 		  "based on Bob Paauwe's driver\n" )
 		);
