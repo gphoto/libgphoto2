@@ -2,6 +2,8 @@
 
 	* canon.c: started to add duplicate cams
 	* library.c: report upload cap only if possible
+	* mkpatch: removed, last change from 2000, and not useful for quite
+		some time now
 
 2002-05-01  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
