@@ -3,8 +3,13 @@
 #
 # /etc/hotplug/usb/usbcam
 #
-# Sets up newly plugged in USB camera so that group "camera"
-# can access it from user space
+# Sets up newly plugged in USB camera so that only members of the 
+# group
+
+GROUP=camera
+
+# can access it from user space. (Replace camera by the name of the
+# group you want to have access to the cameras.)
 #
 # Note that for this script to work, you'll need all of the following:
 # a) a line in the file /etc/hotplug/usermap that corresponds to the 
@@ -21,7 +26,7 @@
 
 if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
 then
-    chmod g-rw "${DEVICE}"
-    chgrp camera "${DEVICE}"
+    chmod o-rwx "${DEVICE}"
+    chgrp "${GROUP}" "${DEVICE}"
     chmod g+rw "${DEVICE}"
 fi
