@@ -93,6 +93,9 @@ camlibs/polaroid/pdc700.c:
 camlibs/ptp2:
 	Mariusz Woloszyn <emsi@ipartners.pl>
 
+camlibs/ricoh/g3:
+	Marcus Meissner <marcus@jet.franken.de>
+
 camlibs/samsung:
 	Marcus Meissner <marcus@jet.franken.de>
 

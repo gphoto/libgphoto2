@@ -12,6 +12,8 @@ drivers (camlibs):
      - fixed support for serial cameras
      - fixed thumbnail stuff
 
+   * New driver for Ricoh Caplio G3.
+
    * Smal driver:
      - misc improvements
 
