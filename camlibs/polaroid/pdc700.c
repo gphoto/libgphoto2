@@ -76,7 +76,9 @@ enum _PDCConf {
 	PDC_CONF_LCD      = 0x03,
 	PDC_CONF_QUALITY  = 0x04,
 	PDC_CONF_TIME     = 0x05,
-	PDC_CONF_POWEROFF = 0x06
+	PDC_CONF_POWEROFF = 0x06,
+	PDC_CONF_SIZE     = 0x07
+	/* I think we have them all... 8 and 9 return failure */ 
 };
 
 typedef enum _PDCBaud PDCBaud;
@@ -119,6 +121,12 @@ enum _PDCQuality {
 	PDC_QUALITY_SUPERFINE = 2
 };
 
+typedef enum _PDCSize PDCSize;
+enum _PDCSize {
+	PDC_SIZE_VGA = 0,
+	PDC_SIZE_XGA = 1,
+};
+
 typedef enum _PDCFlash PDCFlash;
 enum _PDCFlash {
 	PDC_FLASH_AUTO = 0,
@@ -135,6 +143,7 @@ struct _PDCInfo {
 	PDCDate date;
 	PDCMode mode;
 	PDCQuality quality;
+	PDCSize size;
 	PDCFlash   flash;
 	PDCBaud    speed;
 	PDCBool caption, timer, lcd, ac_power;
@@ -148,6 +157,7 @@ struct _PDCPicInfo {
 };
 
 #define IMAGE_QUALITY _("Image Quality")
+#define IMAGE_SIZE    _("Image Size")
 #define FLASH_SETTING _("Flash Setting")
 #define LCD_STATE     _("LCD")
 #define SELF_TIMER    _("Self Timer")
@@ -162,9 +172,12 @@ static const char *mode[]    = {N_("play"), N_("record"), N_("menu"), NULL};
 static const char *power[]   = {N_("battery"), N_("a/c adaptor"), NULL};
 static const char *speed[]   = {N_("9600"), N_("19200"), N_("38400"), 
 				N_("57600"), N_("115200"), NULL};
+static const char *size[]    = {N_("VGA (640x480)"), N_("XGA (1024x768"), NULL};
 
 #define CR(result) {int r=(result);if(r<0) return (r);}
 #define CRF(result,d)      {int r=(result);if(r<0) {free(d);return(r);}}
+
+#define PDC_EPOCH(info) ((!strcmp ((info)->version, "v2.45")) ? 1980 : 2000)
 
 /*
  * Every command sent to the camera begins with 0x40 followed by two bytes
@@ -598,7 +611,38 @@ pdc700_info (Camera *camera, PDCInfo *info, GPContext *context)
 
 	/* Here follow lots of 0s */
 
+	info->size = 0;
+
 	return (GP_OK);
+}
+
+static int
+pdc700_set_date (Camera *camera, time_t time, GPContext *context)
+{
+	unsigned char cmd[15];
+	unsigned char buf[512];
+	int buf_len;
+	struct tm *tm;
+	PDCInfo info;
+
+	CR (pdc700_info (camera, &info, context));
+
+	tm = localtime(&time);
+
+	cmd[3]  = PDC700_CONFIG;
+	cmd[4]  = PDC_CONF_TIME;
+
+	cmd[5]  = (tm->tm_year + 1900) - PDC_EPOCH(&info);
+	cmd[6]  = tm->tm_mon + 1;
+	cmd[7]  = tm->tm_mday;
+	cmd[8]  = tm->tm_hour;
+	cmd[9]  = tm->tm_min;
+	cmd[10] = tm->tm_sec;
+
+	GP_DEBUG (buf);
+	CR (pdc700_transmit (camera, cmd, 12, buf, &buf_len, context));
+
+	return GP_OK;
 }
 
 static int
@@ -935,11 +979,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	CR (pdc700_info (camera, &info, context));
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
-	gp_widget_new (GP_WIDGET_SECTION, _("Settings"), &section);
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Camera"), &section);
 	gp_widget_append (*window, section);
 
-	add_radio (section, IMAGE_QUALITY, quality, info.quality);
-	add_radio (section, FLASH_SETTING, flash,   info.flash);
 	add_radio (section, LCD_STATE,     bool,    info.lcd);
 	add_radio (section, SELF_TIMER,    bool,    info.timer);
 	add_radio (section, SHOW_CAPTIONS, bool,    info.caption);
@@ -953,6 +996,15 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_info (child, _("How long will it take until the "
 				     "camera powers off?"));
 
+	gp_widget_new (GP_WIDGET_SECTION, _("Image"), &section);
+	gp_widget_append (*window, section);
+	add_radio (section, IMAGE_QUALITY, quality, info.quality);
+	add_radio (section, IMAGE_SIZE, size, info.size);
+	add_radio (section, FLASH_SETTING, flash,   info.flash);
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Date and Time"), &section);
+	gp_widget_append (*window, section);
+
 	/* Date and time */
 	tm.tm_year = info.date.year +
 		((!strcmp (info.version, "v2.45")) ? 1980 : 2000) - 1900;
@@ -962,6 +1014,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	tm.tm_min = info.date.minute;
 	tm.tm_sec = info.date.second;
 	time = mktime (&tm);
+	GP_DEBUG ("time: %X", (unsigned int) time);
 	gp_widget_new (GP_WIDGET_DATE, _("Date and Time"), &child);
 	gp_widget_append (section, child);
 	gp_widget_set_value (child, (int*) &time);
@@ -1003,6 +1056,10 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		CR (pdc700_config (camera, PDC_CONF_QUALITY,
 				   (unsigned char) i, context));
 
+	if ((i = which_radio_button (window, IMAGE_SIZE, size)) >= 0)
+		CR (pdc700_config (camera, PDC_CONF_SIZE,
+				   (unsigned char) i, context));
+
 	if ((i = which_radio_button (window, FLASH_SETTING, flash)) >= 0)
 		CR (pdc700_config (camera, PDC_CONF_FLASH,
 				   (unsigned char) i, context));
@@ -1031,8 +1088,13 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	r = gp_widget_get_child_by_label (window, _("Date and Time"), &child);
 	if ((r == GP_OK) && gp_widget_changed (child)) {
 		gp_widget_get_value (child, &i);
-		GP_DEBUG ("Implement setting of date & time!");
+		if (i != -1)
+		  pdc700_set_date(camera, (time_t) i, context);
+		else
+		  GP_DEBUG ("date widget returned -1, not setting datee/time");
+		//GP_DEBUG ("Implement setting of date & time!");
 	}
+
 
 	return GP_OK;
 }
