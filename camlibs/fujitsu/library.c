@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
 #include <gpio/gpio.h>
@@ -93,8 +94,8 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 
 int camera_init (CameraInit *init) {
 
-	char buf[4096];
 	char *p;
+
 	int l, value=0;
 	gpio_device_settings settings;
 
@@ -123,28 +124,13 @@ int camera_init (CameraInit *init) {
 		return (GP_ERROR);
 	}
 
-	if (fujitsu_set_speed(glob_dev, 57600)==GP_ERROR) {
+	if (fujitsu_set_speed(glob_dev, init->port_settings.speed)==GP_ERROR) {
 		interface_message("Can not set the serial port speed");
 		return (GP_ERROR);
 	}
 
-	value = fujitsu_get_int_register(glob_dev, 1);
-	if (value == GP_ERROR) {
-		interface_message("Can not get the quality setting");
-		return (GP_ERROR);
-	}
-
-	if (fujitsu_set_int_register(glob_dev, 1, 2)==GP_ERROR) {
-		interface_message("Can not set camera quality");
-		return (GP_ERROR);
-	}
-/*
-	if (fujitsu_ping(glob_dev)==GP_ERROR) {
-		interface_message("Can not talk to camera after speed change");
-		return (GP_ERROR);
-	}
-printf("BLAH\n");
-	if (fujitsu_ping(glob_dev)==GP_ERROR) {
+/* Need to establish connection?
+	if (fujitsu_get_int_register(glob_dev, 1, &value)==GP_ERROR) {
 		interface_message("Can not talk to camera after speed change");
 		return (GP_ERROR);
 	}
@@ -155,6 +141,11 @@ printf("BLAH\n");
 int camera_exit () {
 
 	debug_print("Exiting camera");
+
+	if (fujitsu_set_speed(glob_dev, -1)==GP_ERROR) {
+		interface_message("Can not end camera session");
+		return (GP_ERROR);
+	}
 
 	return (GP_OK);
 }
@@ -183,17 +174,40 @@ int camera_folder_set(char *folder_name) {
 
 int camera_file_count () {
 
+	int value;
+
 	debug_print("Counting files");
 
-	return (0);
+	if (fujitsu_get_int_register(glob_dev, 10, &value)==GP_ERROR) {
+                interface_message("Could not get number of files on camera.");
+                return (GP_ERROR);
+        }
+
+	return (value);
 }
 
 int camera_file_get (int file_number, CameraFile *file) {
 
 	char buf[4096];
+	char pic[500000];
+	int length;
+	FILE *f;
 
 	sprintf(buf, "Getting file #%i", file_number);
 	debug_print(buf);
+
+	if (fujitsu_set_int_register(glob_dev, 4, 1)==GP_ERROR) {
+		interface_message("Can not set current image");
+		return (GP_ERROR);
+	}
+
+	if (fujitsu_get_string_register(glob_dev, 14, pic, &length)==GP_ERROR) {
+		interface_message("Can not get picture");
+		return (GP_ERROR);
+	}
+	f = fopen("/home/scottf/first.jpg", "w");
+	fwrite(pic, sizeof(char), length, f);
+	fclose(f);
 
 	return (GP_OK);
 }
@@ -272,8 +286,7 @@ int camera_about (char *about) {
 "Fujitsu SPARClite library
 Scott Fritzinger <scottf@unr.edu>
 Support for Fujitsu-based digital cameras
-including Olympus, Nikon, Epson, and a few
-others.");
+including Olympus, Nikon, Epson, and others.");
 
 	return (GP_OK);
 }

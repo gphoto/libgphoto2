@@ -88,7 +88,7 @@ Option option[] = {
 
 /* Display and die actions */
 {"h", "help",		"",		"Displays this help screen",	help,		0},
-{"",  "test",		"",		"Verifies gPhoto installation",	test,		0},
+{"",  "verify",		"",		"Verifies gPhoto installation",	test,		0},
 {"",  "list-cameras",	"",		"List supported camera models",	list_cameras,	0},
 {"",  "list-ports",	"",		"List supported port devices",	list_ports,	0},
 
@@ -373,7 +373,7 @@ OPTION_CALLBACK(num_pictures) {
 	count = gp_file_count();
 	
 	if (count == GP_ERROR) {
-		error_print("Picture number is too large.\nRemember that numbering begins at zero (0)", "");
+		error_print("Could not get number of pictures on camera", "");
 		return (GP_ERROR);
 	}
 

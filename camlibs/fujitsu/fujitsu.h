@@ -29,4 +29,6 @@ int fujitsu_set_speed(gpio_device *dev, int speed);
 int fujitsu_ack(gpio_device *dev);
 int fujitsu_ping(gpio_device *dev);
 int fujitsu_set_int_register (gpio_device *dev, int reg, int value);
-int fujitsu_get_int_register (gpio_device *dev, int reg);
+int fujitsu_get_int_register (gpio_device *dev, int reg, int *value);
+int fujitsu_set_string_register (gpio_device *dev, int reg, char *string, int length);
+int fujitsu_get_string_register (gpio_device *dev, int reg, char *string, int *length);
