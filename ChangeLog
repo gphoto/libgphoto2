@@ -1,3 +1,13 @@
+2001-08-22  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* MAINTAINERS: take over DC240 maintenance.
+	* camlibs/kodak/dc240/library.h: removed unused functions.
+	* camlibs/kodak/dc240/library.c: moved lot of functions to static.
+	(dc240_wait_for_busy_completion): implemented. (NEW)
+	(dc240_capture): finished implementation and prototype update. 
+	* camlibs/kodak/dc240/dc240.c (camera_init): activate capture_image
+	(camera_capture): reimplemented and updated prototype
+
 2001-08-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/camera.c (gp_camera_file_get_info): Make sure the field

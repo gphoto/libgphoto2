@@ -10,12 +10,6 @@
 #define DC240_ACTION_DELETE     (unsigned char)0x9D
 
 
-char *dc240_packet_new   (int command_byte);
-int   dc240_packet_write (DC240Data *dd, char *packet, int size,
-                          int read_response);
-int   dc240_packet_read  (DC240Data *dd, char *packet, int size);
-
-int   dc240_packet_set_size (DC240Data *dd, short int size);
 
 int   dc240_open         (DC240Data *dd);
 int   dc240_close        (DC240Data *dd);
@@ -30,6 +24,7 @@ int   dc240_get_filenames(DC240Data *dd, CameraList *list, const char *folder);
 int   dc240_file_action	 (DC240Data *dd, int action, CameraFile *file,
                           const char *folder, const char *filename);
 
-int   dc240_capture	 (DC240Data *dd, CameraFile *file);
+int   dc240_capture	 (DC240Data *dd, CameraFilePath *path);
+int   dc240_packet_set_size (DC240Data *dd, short int size);
 
 #endif /*__DC240_LIBRARY_H__*/

@@ -12,7 +12,14 @@
 #include "dc240.h"
 #include "library.h"
 
-char *dc240_packet_new (int command_byte) {
+static char *dc240_packet_new   (int command_byte);
+static int   dc240_packet_write (DC240Data *dd, char *packet, int size,
+				 int read_response);
+static int   dc240_packet_read  (DC240Data *dd, char *packet, int size);
+
+
+
+static char *dc240_packet_new (int command_byte) {
 
     char *p = (char *)malloc(sizeof(char) * 8);
 
@@ -24,7 +31,7 @@ char *dc240_packet_new (int command_byte) {
     return p;
 }
 
-char *dc240_packet_new_path (const char *folder, const char *filename) {
+static char *dc240_packet_new_path (const char *folder, const char *filename) {
 
     char *p;
     char buf[1024];
@@ -59,7 +66,7 @@ char *dc240_packet_new_path (const char *folder, const char *filename) {
 }
 
 
-int dc240_packet_write (DC240Data *dd, char *packet, int size, int read_response) {
+static int dc240_packet_write (DC240Data *dd, char *packet, int size, int read_response) {
 
     /* Writes the packet and returns the result */
 
@@ -88,12 +95,12 @@ write_again:
     return (GP_OK);
 }
 
-int dc240_packet_read (DC240Data *dd, char *packet, int size) {
+static int dc240_packet_read (DC240Data *dd, char *packet, int size) {
 
     return (gp_port_read(dd->dev, packet, size));
 }
 
-int dc240_packet_write_ack (DC240Data *dd) {
+static int dc240_packet_write_ack (DC240Data *dd) {
 
     char p[2];
 
@@ -104,7 +111,7 @@ int dc240_packet_write_ack (DC240Data *dd) {
 
 }
 
-int dc240_packet_write_nak (DC240Data *dd) {
+static int dc240_packet_write_nak (DC240Data *dd) {
 
     char p[2];
 
@@ -114,7 +121,7 @@ int dc240_packet_write_nak (DC240Data *dd) {
     return GP_OK;
 }
 
-int dc240_wait_for_completion (DC240Data *dd) {
+static int dc240_wait_for_completion (DC240Data *dd) {
 
     char p[8];
     int retval;
@@ -143,7 +150,46 @@ int dc240_wait_for_completion (DC240Data *dd) {
 
 }
 
-int dc240_packet_exchange (DC240Data *dd, CameraFile *file,
+/*
+  Implement the wait state aka busy case
+  See 2.7.2 in the DC240 Host interface Specification
+ */
+static int dc240_wait_for_busy_completion (DC240Data *dd) 
+{
+    enum {
+	BUSY_RETRIES = 100
+    };
+    char p[8];
+    int retval;
+    int x=0, done=0;
+
+    /* Wait for command completion */
+    while ((x++ < BUSY_RETRIES)&&(!done)) {
+	retval = dc240_packet_read(dd, p, 1);
+	switch (retval) {
+	case GP_ERROR:
+	    return retval; 
+	    break;
+	case GP_ERROR_IO_READ:
+	case GP_ERROR_TIMEOUT: 
+	    /* in busy state, GP_ERROR_IO_READ can happend */
+	    break;
+	default:
+	    if (*p != 0xf0) {
+		done = 1;
+	    }
+	}
+	gp_frontend_progress(NULL, NULL, 0.0);
+    }
+    
+    if (x == BUSY_RETRIES)
+	return (GP_ERROR);
+    
+    return GP_OK;
+}
+
+
+static int dc240_packet_exchange (DC240Data *dd, CameraFile *file,
                            char *cmd_packet, char *path_packet,
                            int *size, int block_size) {
 
@@ -267,7 +313,7 @@ int dc240_close (DC240Data *dd) {
     return (retval);
 }
 
-int dc240_get_file_size (DC240Data *dd, const char *folder, const char *filename, int thumb) {
+static int dc240_get_file_size (DC240Data *dd, const char *folder, const char *filename, int thumb) {
 
     CameraFile *f;
     char *p1, *p2;
@@ -369,7 +415,7 @@ int dc240_get_status (DC240Data *dd) {
     return (retval);
 }
 
-int dc240_get_directory_list (DC240Data *dd, CameraList *list, const char *folder,
+static int dc240_get_directory_list (DC240Data *dd, CameraList *list, const char *folder,
                              unsigned char attrib) {
 
     CameraFile *file;
@@ -466,28 +512,66 @@ int dc240_file_action (DC240Data *dd, int action, CameraFile *file,
     return (retval);
 }
 
-int dc240_capture (DC240Data *dd, CameraFile *file) {
-
+/*
+  See 5.1.27 in the DC240 Host Spec.
+  Capture a picture on the flash card and retrieve its full
+  name.
+  See also 5.1.19
+ */
+int dc240_capture (DC240Data *dd, CameraFilePath *path) 
+{
+    CameraFile *file;
+    int size = 256;
+    int ret = GP_OK;
     char *p = dc240_packet_new(0x7C);
 
     /* Take the picture to Flash memory */
     gp_frontend_status (NULL, "Taking picture...");
-    if (dc240_packet_write(dd, p, 8, 1) == GP_ERROR)
-            return (GP_ERROR);
+    ret = dc240_packet_write(dd, p, 8, 1);
+    free (p); 
+    if (ret != GP_OK) {
+	return ret;
+    }
 
     gp_frontend_status (NULL, "Waiting for completion...");
-    if (dc240_wait_for_completion(dd)==GP_ERROR)
-            return (GP_ERROR);
-
+    ret = dc240_wait_for_completion(dd);
+    if (ret != GP_OK) {
+	return ret;
+    }
+    
+    ret = dc240_wait_for_busy_completion(dd);
+    if (ret != GP_OK) {
+	return ret;
+    }
+ 
+    fprintf (stderr, " dc240_wait_() end \n");
     /*
      get the last picture taken location (good firmware developers)
-     dc240_get_filenames (dd, list);
-
      */
-
+    file = gp_file_new();
+    p = dc240_packet_new(0x4C); /* 5.1.19 Send last taken image name */
+    ret = dc240_packet_exchange(dd, file, p, NULL, &size, 256);
     free(p);
+    if (ret != GP_OK) {
+	path->name[0] = 0;
+	path->folder[0] = 0;
+	free (file);
+	return ret;
+    }
+    else {
+	/* this part assumes that the response is of fixed size */
+	/* according to the specs, this is the case since only the */
+	/* numbering changes */
+	strncpy (path->folder, file->data, 14);
+	path->folder [14] = 0;
+	path->folder [0] = '/';
+	path->folder [5] = '/';
+	strncpy (path->name, &(file->data[15]), 13);
+	path->name[13] = 0;
+    }
+    free (file);
 
-    return (GP_OK);
+    return GP_OK;
 }
 
 int dc240_packet_set_size (DC240Data *dd, short int size) {

@@ -116,7 +116,7 @@ int camera_init (Camera *camera)
     camera->functions->file_get 	= camera_file_get;
     camera->functions->file_get_preview = camera_file_get_preview;
     camera->functions->file_delete 	= camera_file_delete;
-//    camera->functions->capture 	        = camera_capture;
+    camera->functions->capture 	        = camera_capture;
     camera->functions->summary	        = camera_summary;
     camera->functions->manual 	        = camera_manual;
     camera->functions->about 	        = camera_about;
@@ -269,14 +269,12 @@ int camera_file_delete (Camera *camera, const char *folder,
     			       filename));
 }
 
-#if 0
 int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
 {
     DC240Data *dd = camera->camlib_data;
 
-    return (dc240_capture(dd, file));
+    return dc240_capture(dd, path);
 }
-#endif
 
 int camera_summary (Camera *camera, CameraText *summary) 
 {
