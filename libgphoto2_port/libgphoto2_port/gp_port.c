@@ -256,56 +256,23 @@ gp_port_free (gp_port *dev)
 int
 gp_port_write(gp_port *dev, char *bytes, int size)
 {
-        int x, retval;
-        char t[8];
-        char *buf;
+	gp_port_debug_printf (GP_DEBUG_MEDIUM, dev->debug_level,
+			      "gp_port_write: %05i bytes", size);
+	gp_port_debug_print_data (GP_DEBUG_HIGH, dev->debug_level, bytes, size);
 
-        if (glob_debug_level == GP_DEBUG_HIGH) {
-                buf = (char *)malloc(sizeof(char)*(4*size+64));
-                buf[0] = 0;
-                for (x=0; x<size; x++) {
-                        sprintf(t, "%02x ", (unsigned char)bytes[x]);
-                        strcat(buf, t);
-                }
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
-                        "gp_port_write: (size=%05i) DATA: %s", size, buf);
-                free(buf);
-        }
-        retval =  dev->ops->write(dev, bytes, size);
-
-        if (retval == GP_ERROR_IO_TIMEOUT)
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_write: write timeout");
-        if (retval == GP_ERROR)
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_write: write error");
-
-        return (retval);
+	return (dev->ops->write (dev, bytes, size));
 }
 
 int
 gp_port_read (gp_port *dev, char *bytes, int size)
 {
-        int x, retval;
-        char t[8];
-        char *buf;
+        int retval;
 
-        retval = dev->ops->read(dev, bytes, size);
+        retval = dev->ops->read (dev, bytes, size);
 
-        if ((retval > 0)&&(glob_debug_level == GP_DEBUG_HIGH)) {
-                buf = (char *)malloc(sizeof(char)*(4*retval+64));
-                buf[0] = 0;
-                for (x=0; x<retval; x++) {
-                        sprintf(t, "%02x ", (unsigned char)bytes[x]);
-                        strcat(buf, t);
-                }
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
-                        "gp_port_read:  (size=%05i) DATA: %s", retval, buf);
-                free(buf);
-        }
-
-        if (retval == GP_ERROR_IO_TIMEOUT)
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_read: read timeout");
-        if (retval == GP_ERROR)
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_read: read error");
+	gp_port_debug_printf (GP_DEBUG_MEDIUM, dev->debug_level,
+			      "gp_port_read: %05i bytes", size);
+	gp_port_debug_print_data (GP_DEBUG_HIGH, dev->debug_level, bytes, size);
 
         return (retval);
 }

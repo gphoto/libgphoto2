@@ -28,8 +28,11 @@
 #define GP_DEBUG_HIGH           3
 
 void gp_port_debug_set_level (int level);
-void gp_port_debug_printf (int target_debug_level, int debug_level,
-			   char *format, ...);
+
+void gp_port_debug_print_data (int target_debug_level, int debug_level,
+			       const char *bytes, int size);
+void gp_port_debug_printf     (int target_debug_level, int debug_level,
+			       char *format, ...);
 
 /* Custom debugging function */
 typedef void (* GPPortDebugFunc) (const char *msg, void *data);

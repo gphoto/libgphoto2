@@ -49,6 +49,127 @@ gp_port_debug_set_func (GPPortDebugFunc func, void *data)
 	debug_func_data = data;
 }
 
+/*
+ * gp_port_debug_print_data:
+ * 
+ * Takes the buffer and creates a hexdump string formatted like
+ * 00000000 00 11 22 33 44 55 66 77-88 99 aa bb cc dd ee ff ...ASCIIcodes...
+ * 00000010 00 11 22 33 44 55 66 77-88 99                   ...ASCIIco
+ *
+ * At the moment, this routine calls the following expensive methods:
+ *  - malloc()   1 time per call
+ *  - and nothing more :-)
+ *
+ * If you want to make it faster, use a static buffer instead of
+ * dynamically malloc'ing the result - and don't forget to check
+ * the size parameter if the hexdump fit into that static buffer.
+ */
+
+/*
+ * Width of offset field in characters. Note that HEXDUMP_COMPLETE_LINE 
+ * needs to be changed when this value is changed.
+ */
+#define HEXDUMP_OFFSET_WIDTH 4
+
+/*
+ * Distance between offset, hexdump and ascii blocks. Note that
+ * HEXDUMP_COMPLETE_LINE needs to be changed when this value is changed.
+ */
+#define HEXDUMP_BLOCK_DISTANCE 2
+
+/* Initial value for x "pointer" (for hexdump) */
+#define HEXDUMP_INIT_X (HEXDUMP_OFFSET_WIDTH + HEXDUMP_BLOCK_DISTANCE)
+
+/* Initial value for y "pointer" (for ascii values) */
+#define HEXDUMP_INIT_Y (HEXDUMP_INIT_X + 3 * 16 - 1 + HEXDUMP_BLOCK_DISTANCE)
+
+/* Used to switch to next line */
+#define HEXDUMP_LINE_WIDTH (HEXDUMP_INIT_Y + 16)
+
+/* Used to put the '-' character in the middle of the hexdumps */
+#define HEXDUMP_MIDDLE (HEXDUMP_INIT_X + 3 * 8 - 1)
+
+/*
+ * We are lazy and do our typing only once. Please not that you have to
+ * add/remove some lines when increasing/decreasing the values of 
+ * HEXDUMP_BLOCK_DISTANCE and/or HEXDUMP_OFFSET_WIDTH.
+ */
+#define HEXDUMP_COMPLETE_LINE {\
+	curline[HEXDUMP_OFFSET_WIDTH - 4] = hexchars[(index >> 12) & 0xf]; \
+	curline[HEXDUMP_OFFSET_WIDTH - 3] = hexchars[(index >>  8) & 0xf]; \
+	curline[HEXDUMP_OFFSET_WIDTH - 2] = hexchars[(index >>  4) & 0xf]; \
+	curline[HEXDUMP_OFFSET_WIDTH - 1] = '0'; \
+	curline[HEXDUMP_OFFSET_WIDTH + 0] = ' '; \
+	curline[HEXDUMP_OFFSET_WIDTH + 1] = ' '; \
+	curline[HEXDUMP_MIDDLE] = '-'; \
+	curline[HEXDUMP_INIT_Y-2] = ' '; \
+	curline[HEXDUMP_INIT_Y-1] = ' '; \
+	curline[HEXDUMP_LINE_WIDTH] = '\n'; \
+	curline = curline + (HEXDUMP_LINE_WIDTH + 1);}
+
+void
+gp_port_debug_print_data (int target_debug_level, int debug_level,
+			  const char *bytes, int size)
+{
+	static char hexchars[16] = "0123456789abcdef";
+	char *curline, *result;
+	int x = HEXDUMP_INIT_X;
+	int y = HEXDUMP_INIT_Y;
+	int index;
+	unsigned char value;
+
+	if (!bytes) {
+		gp_port_debug_printf (target_debug_level, debug_level,
+				      "No hexdump (NULL buffer)");
+		return;
+	}
+
+	if (size < 0) {
+		gp_port_debug_printf (target_debug_level, debug_level,
+				      "No hexdump of buffer with negative "
+				      "size");
+		return;
+	}
+
+	if (size == 0) {
+		gp_port_debug_printf (target_debug_level, debug_level,
+				      "Empty hexdump of empty buffer");
+		return;
+	}
+
+	curline = result = malloc ((HEXDUMP_LINE_WIDTH+1)*(((size-1)/16)+1)+1);
+	if (!result)
+		return;
+
+	for (index = 0; index < size; ++index) {
+		value = (unsigned char)bytes[index];
+		curline[x] = hexchars[value >> 4];
+		curline[x+1] = hexchars[value & 0xf];
+		curline[x+2] = ' ';
+		curline[y++] = ((value>=32)&&(value<127))?value:'.';
+		x += 3;
+		if ((index & 0xf) == 0xf) { /* end of line */
+			x = HEXDUMP_INIT_X;
+			y = HEXDUMP_INIT_Y;
+			HEXDUMP_COMPLETE_LINE;
+		}
+	}
+	if ((index & 0xf) != 0) { /* not at end of line yet? */
+		/* if so, complete this line */
+		while (y < HEXDUMP_INIT_Y + 16) {
+			curline[x+0] = ' ';
+			curline[x+1] = ' ';
+			curline[x+2] = ' ';
+			curline[y++] = ' ';
+			x += 3;
+		}
+		HEXDUMP_COMPLETE_LINE;
+	}
+	curline[0] = '\0';
+	gp_port_debug_printf (target_debug_level, debug_level, result);
+	free (result);
+}
+
 void
 gp_port_debug_printf (int target_debug_level, int debug_level,
 		      char *format, ...)

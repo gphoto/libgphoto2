@@ -1,5 +1,14 @@
 2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	Patch from Hans Ulrich Niedermann <hun@n-dimensional.de>, slightly
+	adapted:
+
+	* include/gphoto2-port-debug.h
+	* libgphoto2_port/debug.c (gp_port_debug_print_data): New
+	* libgphoto2_port/gp_port.c: Use the new function.
+
+2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2_port/debug.c: #include <config.h>
 
 2001-10-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
