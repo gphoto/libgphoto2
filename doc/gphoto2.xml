@@ -7,7 +7,7 @@
   <refentry id="gphoto2-cli">
     <refentryinfo>
       <author>
-	<firstname>The gphoto2</firstname><surname>team</surname>
+	<firstname>The gPhoto2</firstname><surname>Team</surname>
       </author>
 
       <editor>
@@ -604,7 +604,7 @@
 
   <refentry id="libgphoto2">
     <refentryinfo>
-      <author><firstname>The gphoto2</firstname><surname>team</surname></author>
+      <author><firstname>The gPhoto2</firstname><surname>Team</surname></author>
       <editor>
 	<firstname>Hans Ulrich</firstname>
 	<surname>Niedermann</surname>
