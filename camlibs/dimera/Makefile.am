@@ -3,7 +3,7 @@ camlib_LTLIBRARIES = libgphoto2_dimera3500.la
 
 CFLAGS = @CFLAGS@ -g -Wall
 LDFLAGS = @LDFLAGS@ -g
-INCLUDES = -I$(top_srcdir)/include
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
 
 libgphoto2_dimera3500_la_SOURCES =\
  dimera3500.c \

@@ -1,3 +1,17 @@
+2001-10-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* include/gphoto2-widget.h
+	* include/gphoto2-filesys.h: Moved to ...
+	* libgphoto2/gphoto2-widget.h
+	* libgphoto2/gphoto2-filesys.h: ... here.
+	* libgphoto2/widget.c
+	* libgphoto2/filesys.c: Moved to ...
+	* libgphoto2/gphoto2-widget.c
+	* libgphoto2/gphoto2-widget.h: ... here.
+	* include/Makefile.am
+	* libgphoto2/Makefile.am: Updated.
+	* camlibs/.../Makefile.am: Updated to reflect changes above
+
 2001-10-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/libgphoto-2.0.pc.in: -I${includedir}

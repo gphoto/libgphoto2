@@ -1,7 +1,7 @@
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_kodak_dc3200.la
 
-INCLUDES = -I$(top_srcdir)/include
+INCLUDES = -I$(top_srcdir)/include  -I$(top_srcdir)/libgphoto2
 
 libgphoto2_kodak_dc3200_la_SOURCES = dc3200.c dc3200.h library.c library.h
 

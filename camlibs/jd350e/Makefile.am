@@ -1,7 +1,7 @@
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_jd350e.la
 
-INCLUDES = -I$(top_srcdir)/include
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
 
 libgphoto2_jd350e_la_SOURCES = jd350e.c jd350e.h library.c library.h bayer.c bayer.h redcurve.h
 

@@ -35,40 +35,32 @@
 #  define N_(String) (String)
 #endif
 
-static char *result_string[] = {
-	/* GP_ERROR_BAD_PARAMETERS      -100 */ N_("Bad parameters"),
-	/* GP_ERROR_IO                  -101 */ N_("I/O problem"),
-	/* GP_ERROR_CORRUPTED_DATA      -102 */ N_("Corrupted data"),
-	/* GP_ERROR_FILE_EXISTS         -103 */ N_("File exists"),
-	/* GP_ERROR_NO_MEMORY           -104 */ N_("Insufficient memory"),
-	/* GP_ERROR_MODEL_NOT_FOUND     -105 */ N_("Unknown model"),
-	/* GP_ERROR_NOT_SUPPORTED       -106 */ N_("Unsupported operation"),
-	/* GP_ERROR_DIRECTORY_NOT_FOUND -107 */ N_("Directory not found"),
-	/* GP_ERROR_FILE_NOT_FOUND      -108 */ N_("File not found"),
-	/* GP_ERROR_DIRECTORY_EXISTS    -109 */ N_("Directory exists"),
-	/* GP_ERROR_NO_CAMERA_FOUND     -110 */ N_("No cameras were detected"),
-	/* GP_ERROR_PATH_NOT_ABSOLUTE   -111 */ N_("Path not absolute")
-};
+#define GP_ERR_RES(num,str) {if (result == (num)) return (N_(str));}
 
 const char *
 gp_result_as_string (int result)
 {
-	/* Really an error? */
-	if (result > 0)
-		return _("Unknown error");
-
 	/* IOlib error? Pass through. */
 	if ((result <= 0) && (result >= -99))
 		return gp_port_result_as_string (result);
 
 	/* Camlib error? You should have called gp_camera_result_as_string... */
 	if (result <= -1000)
-		return _("Unknown camera library error"); 
-	
-	/* Do we have an error description? */
-	if ((-result - 100) < (int) (sizeof (result_string) /
-						sizeof (*result_string)))
-		return _(result_string [-result - 100]);
-	
-	return _("Unknown error");
+		return (N_("Unknown camera library error")); 
+
+	GP_ERR_RES (GP_ERROR_IO, N_("I/O problem"));
+	GP_ERR_RES (GP_ERROR_CORRUPTED_DATA, N_("Corrupted data"));
+	GP_ERR_RES (GP_ERROR_FILE_EXISTS, N_("File exists"));
+	GP_ERR_RES (GP_ERROR_NO_MEMORY, N_("Insufficient memory"));
+	GP_ERR_RES (GP_ERROR_MODEL_NOT_FOUND, N_("Unknown model"));
+	GP_ERR_RES (GP_ERROR_NOT_SUPPORTED, N_("Unsupported operation"));
+	GP_ERR_RES (GP_ERROR_DIRECTORY_NOT_FOUND, N_("Directory not found"));
+	GP_ERR_RES (GP_ERROR_FILE_NOT_FOUND, N_("File not found"));
+	GP_ERR_RES (GP_ERROR_DIRECTORY_EXISTS, N_("Directory exists"));
+	GP_ERR_RES (GP_ERROR_NO_CAMERA_FOUND, N_("No cameras were detected"));
+	GP_ERR_RES (GP_ERROR_PATH_NOT_ABSOLUTE, N_("Path not absolute"));
+
+	return (N_("Unknown error"));
 }
+
+#undef GP_ERR_RES

@@ -15,15 +15,20 @@ libgphoto2_la_SOURCES = 	\
 	debug.c			\
 	exif.c exif.h		\
 	file.c			\
-	filesys.c		\
+	gphoto2-filesys.c	\
 	gamma.c gamma.h		\
 	jpeg.c jpeg.h		\
 	list.c			\
 	pattrec.c pattrec.h	\
 	result.c		\
 	setting.c		\
-	widget.c
+	gphoto2-widget.c
 libgphoto2_la_LIBADD = -lm
+
+libgphoto2includedir = $(prefix)/include/gphoto2
+libgphoto2include_HEADERS =		\
+	gphoto2-filesys.h	\
+	gphoto2-widget.h
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgphoto-2.0.pc

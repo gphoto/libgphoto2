@@ -24,7 +24,6 @@
 /* Additional error codes are defined here */
 #include <gphoto2-port-result.h>
 
-#define GP_ERROR_BAD_PARAMETERS      -100 /* for checking function-param. */
 #define GP_ERROR_IO                  -101 /* IO problem                 */
 #define GP_ERROR_CORRUPTED_DATA      -102 /* Corrupted data             */
 #define GP_ERROR_FILE_EXISTS         -103 /* File exists                */

@@ -8,7 +8,7 @@ EXTRA_DIST = EXPERTS
 INCLUDES =\
  -I$(top_srcdir)/include\
  -DLOCALIZATION=\"$(datadir)/gphoto2/konica\"\
- -DG_LOG_DOMAIN=\"$(PACKAGE)\"
+ -I$(top_srcdir)/libgphoto2
 
 libgphoto2_konica_la_SOURCES = \
  lowlevel.c lowlevel.h \

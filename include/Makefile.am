@@ -9,10 +9,8 @@ gphotohead_HEADERS=			\
 	gphoto2-core.h			\
 	gphoto2-debug.h			\
 	gphoto2-file.h			\
-	gphoto2-filesys.h		\
 	gphoto2-library.h		\
 	gphoto2-list.h			\
 	gphoto2-setting.h		\
-	gphoto2-result.h		\
-	gphoto2-widget.h
+	gphoto2-result.h
 

@@ -1,7 +1,7 @@
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_panasonic_l859.la
 
-INCLUDES = -I$(top_srcdir)/include
+INCLUDES = -I$(top_srcdir)/include  -I$(top_srcdir)/libgphoto2
 
 libgphoto2_panasonic_l859_la_SOURCES = l859.c l859.h
 

@@ -1,7 +1,7 @@
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_sony_dscf1.la
 
-INCLUDES = -I$(top_srcdir)/include
+INCLUDES = -I$(top_srcdir)/include  -I$(top_srcdir)/libgphoto2
 
 libgphoto2_sony_dscf1_la_SOURCES = \
 	command.c getuint.c chotplay.c sonydscf1.c sonydscf1.h \

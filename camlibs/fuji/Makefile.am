@@ -1,7 +1,7 @@
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_fuji.la
 
-INCLUDES = -I$(top_srcdir)/include
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
 
 libgphoto2_fuji_la_SOURCES = fuji.c fuji.h fuji_exif.c exif.c
 

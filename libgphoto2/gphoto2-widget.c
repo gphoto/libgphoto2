@@ -1,4 +1,4 @@
-/* widget.c
+/* gphoto2-widget.c
  *
  * Copyright (C) 2000 Scott Fritzinger
  *
@@ -18,7 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 #include <config.h>
-#include "../include/gphoto2-widget.h"
+#include "gphoto2-widget.h"
 
 #include <stdlib.h>
 #include <string.h>

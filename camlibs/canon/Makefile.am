@@ -3,7 +3,7 @@ camlib_LTLIBRARIES = libgphoto2_canon.la
 
 CFLAGS = @CFLAGS@ -g -Wall
 LDFLAGS = @LDFLAGS@ -g
-INCLUDES = -I$(top_srcdir)/include
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
 
 libgphoto2_canon_la_SOURCES =\
  canon.c canon.h\
