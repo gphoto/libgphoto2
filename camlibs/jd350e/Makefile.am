@@ -3,7 +3,7 @@ camlib_LTLIBRARIES = libgphoto2_jd350e.la
 
 INCLUDES = -I$(top_srcdir)/include
 
-libgphoto2_jd350e_la_SOURCES = jd350e.c jd350e.h library.c library.h bayer.c bayer.h
+libgphoto2_jd350e_la_SOURCES = jd350e.c jd350e.h library.c library.h bayer.c bayer.h redcurve.h
 
 libgphoto2_jd350e_la_LDFLAGS =\
  -avoid-version\
