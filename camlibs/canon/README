@@ -34,6 +34,7 @@ Cameras supported
  - PowerShot Pro90 IS (not tested)
  - EOS D30
  - Digital IXUS 330
+ - Optura 200 MC
 
 Support for the following cameras is mostly there as they were supported
 in gphoto 0.4.x but several API changes and rewrites have probably broken

@@ -141,6 +141,7 @@ const struct canonCamModelData models[] = {
 	 * "Canon" mode, so it will be supported by the PTP driver,
 	 * not here. */
 	{"Canon:EOS 10D",		CANON_EOS_10D,		0x04A9, 0x3083, CAP_SUP, S10M, S32K, NULL},
+	{"Canon:Optura 200 MC",		CANON_OPT_200,		0x04A9, 0x306B, CAP_SUP, S10M, S32K, NULL},
 	{NULL}
 	/* *INDENT-ON* */
 };

@@ -392,6 +392,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 		case CANON_PS_S200:
 		case CANON_PS_A100:
 		case CANON_PS_A200:
+		case CANON_OPT_200:
 			/* Previous default; I doubt that any new
 			 * cameras will work this way, so it now is
 			 * explicit for the older cameras that use
