@@ -668,13 +668,15 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		if (ptp_usb_event_wait(&camera->pl->params, &event)!=PTP_RC_OK)
 			goto out;
 		if (event.Code==PTP_EC_CaptureComplete) {
-			return GP_OK;
 			CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
+			return GP_OK;
 		}
 	} 
 
 	out:
 	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT));
+	gp_context_error (context,
+		_("Capture command completed, but no confirmation received"));
 
 	/* we're not going to set path, ptp does not use paths anyway ;) */
 	return GP_ERROR;
