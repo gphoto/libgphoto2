@@ -21,9 +21,15 @@
 #include <config.h>
 #include "bayer.h"
 
+#include <stdio.h>
+
 #include <gphoto2-result.h>
 
-static int tile_colors[4][4] = {
+static int tile_colors[8][4] = {
+	{0, 1, 1, 2},
+	{1, 0, 2, 1},
+	{2, 1, 1, 0},
+	{1, 2, 0, 1},
 	{0, 1, 1, 2},
 	{1, 0, 2, 1},
 	{2, 1, 1, 0},
@@ -37,30 +43,60 @@ static int
 gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 		 BayerTile tile)
 {
-	int x, y, i;
+	int x, y, i, offset = 1;
 	int colour, bayer;
 	char *ptr = input;
 
-	for (y = 0; y < h; ++y)
-		for (x = 0; x < w; ++x) {
-			bayer = (x&1?0:1) + (y&1?0:2);
+	switch (tile) {
 
-			colour = tile_colors[tile][bayer];
+		case BAYER_TILE_RGGB:
+		case BAYER_TILE_GRBG:
+		case BAYER_TILE_BGGR:
+		case BAYER_TILE_GBRG: 
 
-			i = (y * w + x) * 3;
+			for (y = 0; y < h; ++y)
+				for (x = 0; x < w; ++x, ++ptr) {
+					bayer = (x&1?0:1) + (y&1?0:2);
 
-			output[i+RED]    = 0;
-			output[i+GREEN]  = 0;
-			output[i+BLUE]   = 0;
-			output[i+colour] = *(ptr++);
-		}
+					colour = tile_colors[tile][bayer];
+
+					i = (y * w + x) * 3;
+
+					output[i+RED]    = 0;
+					output[i+GREEN]  = 0;
+					output[i+BLUE]   = 0;
+					output[i+colour] = *ptr;
+				}
+			break;
+
+		case BAYER_TILE_RGGB_INTERLACED:
+		case BAYER_TILE_GRBG_INTERLACED:
+		case BAYER_TILE_BGGR_INTERLACED:
+		case BAYER_TILE_GBRG_INTERLACED:
+ 
+
+			for (y = 0; y < h; ++y, ptr+=w)
+				for (x = 0; x < w; ++x) {
+					bayer = (x&1?0:1) + (y&1?0:2);
+	
+					colour = tile_colors[tile][bayer];
+	
+					i = (y * w + x) * 3;
+
+					output[i+RED]    = 0;
+					output[i+GREEN]  = 0;
+					output[i+BLUE]   = 0;
+					output[i+colour] = (x&1)? ptr[x>>1]:ptr[(w>>1)+(x>>1)];
+				}
+			break;
+	}
 
 	return (GP_OK);
 }
 
 #define AD(x, y, w) ((y)*(w)*3+3*(x))
 
-static int
+int
 gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 {
 	int x, y, bayer;
@@ -70,15 +106,19 @@ gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 	switch (tile) {
 	default:
 	case BAYER_TILE_RGGB:
+	case BAYER_TILE_RGGB_INTERLACED:
 		p0 = 0; p1 = 1; p2 = 2; p3 = 3;
 		break;
 	case BAYER_TILE_GRBG:
+	case BAYER_TILE_GRBG_INTERLACED:
 		p0 = 1; p1 = 0; p2 = 3; p3 = 2;
 		break;
 	case BAYER_TILE_BGGR:
+	case BAYER_TILE_BGGR_INTERLACED:
 		p0 = 3; p1 = 2; p2 = 1; p3 = 0;
 		break;
 	case BAYER_TILE_GBRG:
+	case BAYER_TILE_GBRG_INTERLACED:	
 		p0 = 2; p1 = 3; p2 = 0; p3 = 1;
 		break;
 	}
@@ -234,4 +274,4 @@ gp_bayer_decode (unsigned char *input, int w, int h, unsigned char *output,
 
 	return (GP_OK);
 }
-		     
+

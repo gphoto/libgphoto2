@@ -25,10 +25,17 @@ typedef enum {
 	BAYER_TILE_RGGB = 0,
 	BAYER_TILE_GRBG = 1,
 	BAYER_TILE_BGGR = 2,
-	BAYER_TILE_GBRG = 3
+	BAYER_TILE_GBRG = 3,
+	BAYER_TILE_RGGB_INTERLACED = 4,		// scanline order: R1,G1,R2,G2,...,G1,B1,G2,B2,...  
+	BAYER_TILE_GRBG_INTERLACED = 5,
+	BAYER_TILE_BGGR_INTERLACED = 6,
+	BAYER_TILE_GBRG_INTERLACED = 7,
 } BayerTile;
 
 int gp_bayer_decode (unsigned char *input, int w, int h, unsigned char *output,
 		     BayerTile tile);
+int gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile);
 
 #endif /* __BAYER_H__ */
+
+
