@@ -26,18 +26,10 @@
 #define GP_DEBUG_MEDIUM 2
 #define GP_DEBUG_HIGH 3
 
+/* DEPRECATED. Use gphoto2-port-log */
 void gp_debug_printf    (int level, const char *id, const char *format, ...);
 
 void gp_debug_set_level (int level);
 int  gp_debug_get_level (void);
-
-/* Custom debugging function */
-typedef void (* GPDebugFunc) (const char *id, const char *msg, void *data);
-void gp_debug_set_func  (GPDebugFunc func, void *data);
-
-/* History */
-int         gp_debug_history_set_size (unsigned int size);
-int         gp_debug_history_get_size (void);
-const char *gp_debug_history_get      (void);
 
 #endif /* __GPHOTO2_DEBUG_H__ */

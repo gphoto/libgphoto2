@@ -24,6 +24,7 @@
 #include "shell.h"
 
 #include "gphoto2-port-core.h"
+#include "gphoto2-port-log.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -879,6 +880,8 @@ set_globals (void)
 
         /* takes all the settings and sets up the gphoto lib */
 
+	gp_log_history_set_size (1024);
+
         cli_debug_print ("Setting globals...");
         CHECK_RESULT (gp_camera_new (&glob_camera));
 	CHECK_RESULT (gp_camera_abilities_by_name (glob_model, &abilities));
@@ -1032,7 +1035,7 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
 		if (gp_debug_get_level () == GP_DEBUG_NONE) {
 			printf ("Last debugging messages (use --debug for "
 				"more):\n");
-			printf ("%s\n", gp_debug_history_get ());
+			printf ("%s\n", gp_log_history_get ());
 		}
                 exit (EXIT_FAILURE);
         }

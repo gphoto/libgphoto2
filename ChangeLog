@@ -1,5 +1,10 @@
 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* frontends/command-line/main.c: Use gp_log.
+	* libgphoto2/gphoto2-debug.[c,h]: Use gp_log.
+
+2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/gphoto2-debug.c: Make tranition to gp_log_*
 	* camlibs/sierra: Adjust parameters of camera_capture
 
