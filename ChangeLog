@@ -14,6 +14,8 @@
 
 	* HACKING: we prefer patches against CVS and camlibs should use
 	  their own ChangeLog files
+	* doc/figures/*.fig: My, we are k3wl. We have CVS $Id$s in PIX!
+	* doc/figures/gphotofs.fig: added sketch of gphotofs idea flash
 	* libgphoto2/gphoto2-file.h: added note about CRW (Canon RaW)
 
 2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
