@@ -329,8 +329,10 @@ read_data_read_again:
 
         if ((retval == GP_ERROR) || (retval == GP_ERROR_TIMEOUT)) {
             /* ERROR reading response/data */
-            if (retries++ > RETRIES)
+            if (retries++ > RETRIES) {
+		gp_context_progress_stop (context, id);
                 return (GP_ERROR_TIMEOUT);
+	    }
 
             if (x==0) {
                 /* If first packet didn't come, write command again */
@@ -341,7 +343,6 @@ read_data_read_again:
                 goto read_data_read_again;
             }
         }
-	gp_context_progress_stop (context, id);
 
 	/* Validate checksum */
 	check_sum = 0;
@@ -354,12 +355,16 @@ read_data_read_again:
 	}
 	
         /* Check for error in command/path */
-        if ((unsigned char)packet[0] > DC240_SC_FIRST_ERROR)
+        if ((unsigned char)packet[0] > DC240_SC_FIRST_ERROR) {
+	    gp_context_progress_stop (context, id);
             return GP_ERROR;
+	}
 
         /* Check for end of data */
-        if ((unsigned char)packet[0] == DC240_SC_COMPLETE)
+        if ((unsigned char)packet[0] == DC240_SC_COMPLETE) {
+	    gp_context_progress_stop (context, id);
             return GP_OK;
+	}
 
         /* Write packet was OK */
         if (dc240_packet_write_ack(camera) < GP_OK)
@@ -386,6 +391,7 @@ read_data_read_again:
         x++;
         retries = 0;
     }
+    gp_context_progress_stop (context, id);
 
     /* Read in command completed */
     dc240_wait_for_completion(camera);
