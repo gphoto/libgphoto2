@@ -1,5 +1,5 @@
 # Slovenian translation file for gphoto.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright © 2000 Free Software Foundation, Inc.
 # Andraz Tori <andraz.tori1@guest.arnes.si> 2000
 #
 msgid ""
@@ -665,7 +665,7 @@ msgstr ""
 #, fuzzy
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
 msgstr ""
-"Avtorske pravice pridr¾ane (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
+"Avtorske pravice pridr¾ane © 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
 "\n"
 
 #: camlibs/directory/directory.c:594

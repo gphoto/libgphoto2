@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /* gphoto2-port-usb.c - USB transport functions
 
-   Copyright (C) 1999-2000 Johannes Erdfelt <johannes@erdfelt.com>
+   Copyright © 1999-2000 Johannes Erdfelt <johannes@erdfelt.com>
 
    The GPIO Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as

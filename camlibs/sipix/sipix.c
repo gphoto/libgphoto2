@@ -1,6 +1,6 @@
 /* sipix.c
  *
- * Copyright (C) 2002 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright © 2002 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

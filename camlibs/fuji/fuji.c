@@ -2,7 +2,7 @@
  * 
  * Fuji Camera library for the gphoto project.
  * 
- * (C) 2001 Matthew G. Martin <matt.martin@ieee.org>
+ * © 2001 Matthew G. Martin <matt.martin@ieee.org>
  *     2002 Lutz Müller <lutz@users.sourceforge.net>
  * 
  * This routine works for Fuji DS-7 and DX-5,7,10 and 
@@ -20,10 +20,10 @@
  *
  *  Portions of this code were adapted from
  *  GDS7 v0.1 interactive digital image transfer software for DS-7 camera
- *  Copyright (C) 1998 Matthew G. Martin
+ *  Copyright © 1998 Matthew G. Martin
 
  *  Some of which was derived from get_ds7 , a Perl Language library
- *  Copyright (C) 1997 Mamoru Ohno
+ *  Copyright © 1997 Mamoru Ohno
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -279,7 +279,7 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 
 		/* Receive ACK (hopefully) */
 		CR (gp_port_read (camera->port, &c, 1));
-		switch (c) {
+		switch © {
 		case ACK:
 			break;
 		case NAK:
@@ -717,7 +717,7 @@ fuji_upload (Camera *camera, const unsigned char *data,
 
 			/* Receive ACK (hopefully) */
 			CR (gp_port_read (camera->port, &c, 1));
-			switch (c) {
+			switch © {
 			case ACK:
 				break;
 			case NAK:

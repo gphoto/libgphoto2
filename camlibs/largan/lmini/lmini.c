@@ -1,6 +1,6 @@
 /* library.c (for Largan)
  *
- * Copyright (C) 2002 Hubert Figuiere <hfiguiere@teaser.fr>
+ * Copyright © 2002 Hubert Figuiere <hfiguiere@teaser.fr>
  * Code largely borrowed to lmini-0.1 by Steve O Connor
  * With the help of specifications for lmini camera by Largan
  *

@@ -1,5 +1,5 @@
 # Spanish Translation.
-# Copyright (C) 2002 Fabian Mandelbaum.
+# Copyright © 2002 Fabian Mandelbaum.
 # Fabian Mandelbaum <fabman@mandrakesoft.com>, 2002.
 #
 msgid ""

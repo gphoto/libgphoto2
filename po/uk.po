@@ -1,5 +1,5 @@
 # Ukrainian translation of gPhoto.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright ╘ 2000 Free Software Foundation, Inc.
 # Yuri Syrota <rasta@renome.rovno.ua>, 2000.
 #
 msgid ""
@@ -665,7 +665,7 @@ msgstr ""
 #, fuzzy
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
 msgstr ""
-"Авторське право (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
+"Авторське право ╘ 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
 "\n"
 
 #: camlibs/directory/directory.c:594

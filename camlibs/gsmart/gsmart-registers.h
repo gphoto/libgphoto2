@@ -2,7 +2,7 @@
 /* gsmart-registers.h - Gphoto2 library for the Mustek gSmart   */
 /*                      mini 2                                  */
 /*                                                              */
-/* Copyright (C) 2002 Till Adam                                 */
+/* Copyright © 2002 Till Adam                                 */
 /*                                                              */
 /* Author: Till Adam <till@adam-lilienthal.de>                  */
 /*                                                              */

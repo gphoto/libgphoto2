@@ -1,4 +1,4 @@
-/* RenameJPG    Copyright (C) 1999 J.A. Bezemer   GPL'd */
+/* RenameJPG    Copyright © 1999 J.A. Bezemer   GPL'd */
 
 #include <stdio.h>
 #include <stdlib.h>

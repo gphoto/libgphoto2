@@ -1,5 +1,5 @@
 # libgphoto2_port ja.po.
-# Copyright (C) 2001-2002 Free Software Foundation, Inc.
+# Copyright © 2001-2002 Free Software Foundation, Inc.
 # Takeshi Aihana <aihana@gnome.gr.jp>, 2001-2002.
 # AMANO Kazuhiro <haa13142@jnb.odn.ne.jp>, 2002.
 # 

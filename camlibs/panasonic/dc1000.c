@@ -1,7 +1,7 @@
 /*
-	Copyright (c) 2000 Mariusz Zynel <mariusz@mizar.org> (gPhoto port)
-	Copyright (C) 2000 Fredrik Roubert <roubert@df.lth.se> (idea)
-	Copyright (C) 1999 Galen Brooks <galen@nine.com> (DC1580 code)
+	Copyright © 2000 Mariusz Zynel <mariusz@mizar.org> (gPhoto port)
+	Copyright © 2000 Fredrik Roubert <roubert@df.lth.se> (idea)
+	Copyright © 1999 Galen Brooks <galen@nine.com> (DC1580 code)
 
 	This file is part of the gPhoto project and may only be used,  modified,
 	and distributed under the terms of the gPhoto project license,  COPYING.

@@ -39,7 +39,7 @@ static unsigned short crctab[256] = {
 };
 
 /*
- * updcrc macro derived from article Copyright (C) 1986 Stephen Satchell. 
+ * updcrc macro derived from article Copyright © 1986 Stephen Satchell. 
  *  NOTE: First srgument must be in range 0 to 255.
  *        Second argument is referenced twice.
  * 
@@ -53,7 +53,7 @@ static unsigned short crctab[256] = {
 #define updcrc(cp, crc) ( crctab[((crc >> 8) & 255)] ^ (crc << 8) ^ cp)
 
 /*
- * Copyright (C) 1986 Gary S. Brown.  You may use this program, or
+ * Copyright © 1986 Gary S. Brown.  You may use this program, or
  * code or tables extracted from it, as desired without restriction.
  */
 

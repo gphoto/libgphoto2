@@ -1,5 +1,5 @@
 # German Translation.
-# Copyright (C) 2000-2002 Scott Fritzinger <scottf@unr.edu> et al.
+# Copyright © 2000-2002 Scott Fritzinger <scottf@unr.edu> et al.
 # Lutz Müller <urc8@rz.uni-karlsruhe.de>, 2000.
 # Colin Marquardt <colin@marquardt-home.de>, 2001, 2002.
 #

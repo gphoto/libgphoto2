@@ -1,7 +1,7 @@
 #include "exif.h"
 /*
   EXIF file library for GPHOTO package
-  Copyright (C) 1999 Matthew G. Martin
+  Copyright © 1999 Matthew G. Martin
 
   Generic gphoto implementation and extension by Edouard Lafargue.
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1999/2000 by 
+ * Copyright © 1999/2000 by 
  *     Henning Zabel <henning@uni-paderborn.de>
  *
  * This program is free software; you can redistribute it and/or modify it

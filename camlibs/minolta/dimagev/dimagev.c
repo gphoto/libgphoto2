@@ -1,6 +1,6 @@
 /**********************************************************************;
 *       Minolta Dimage V digital camera communication library         *
-*               Copyright (C) 2000,2001 Gus Hartmann                  *
+*               Copyright © 2000,2001 Gus Hartmann                  *
 *                                                                     *
 *    This program is free software; you can redistribute it and/or    *
 *    modify it under the terms of the GNU General Public License as   *

@@ -1,4 +1,4 @@
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright © 2000 Free Software Foundation, Inc.
 # Valek Filippov <frob@df.ru>, 2000.
 #
 msgid ""

@@ -2,7 +2,7 @@
 /* coolshot.c - Gphoto2 library for accessing the Panasonic     */
 /*              Coolshot KXL-600A & KXL-601A digital cameras.   */
 /*                                                              */
-/* Copyright (C) 2001 Chris Pinkham                             */
+/* Copyright © 2001 Chris Pinkham                             */
 /*                                                              */
 /* Author: Chris Pinkham <cpinkham@infi.net>                    */
 /*                                                              */

@@ -1,7 +1,7 @@
 # $Id$
 #
 # create an RPM package out of an automake based source distribution
-# (C) 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
+# © 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
 #
 
 EXTRA_DIST = package.spec.in

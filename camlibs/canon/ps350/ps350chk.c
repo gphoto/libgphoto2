@@ -1,6 +1,6 @@
 /* Canon PowerShot 350 Checksum Calculation
 
-   Copyright (C) 1999 J.A. Bezemer
+   Copyright © 1999 J.A. Bezemer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

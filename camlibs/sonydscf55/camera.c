@@ -1,5 +1,5 @@
 /* Sony DSC-F55 & MSAC-SR1 - gPhoto2 camera library
- * Copyright (C) 2001, 2002 Raymond Penners <raymond@dotsphinx.com>
+ * Copyright © 2001, 2002 Raymond Penners <raymond@dotsphinx.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

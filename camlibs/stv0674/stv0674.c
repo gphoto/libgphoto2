@@ -1,6 +1,6 @@
 /*
  * STV0674 Camera Chipset Driver
- * Copyright (C) 2002 Vincent Sanders <vince@kyllikki.org>
+ * Copyright © 2002 Vincent Sanders <vince@kyllikki.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

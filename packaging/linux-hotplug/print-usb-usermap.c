@@ -1,8 +1,8 @@
 /* $Id$
  *
- * Copyright (C) 2002 Hans Ulrich Niedermann <hun@users.sourceforge.net>
- * Portions Copyright (C) 2002 Lutz Müller <lutz@users.sourceforge.net>
- * Portions Copyright (C) 2002 FIXME
+ * Copyright © 2002 Hans Ulrich Niedermann <hun@users.sourceforge.net>
+ * Portions Copyright © 2002 Lutz Müller <lutz@users.sourceforge.net>
+ * Portions Copyright © 2002 FIXME
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

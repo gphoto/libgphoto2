@@ -1,7 +1,7 @@
 /* largan.c
  *
- * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
- * Copyright (C) 2002 Hubert Figuiere <hfiguiere@teaser.fr>
+ * Copyright © 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * Copyright © 2002 Hubert Figuiere <hfiguiere@teaser.fr>
  * Code largely borrowed to lmini-0.1 by Steve O Connor
  *
  * This library is free software; you can redistribute it and/or

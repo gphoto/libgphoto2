@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000-2001, Brian Beattie <beattie@aracnet.com>, et. al.
+ * Copyright © 2000-2001, Brian Beattie <beattie@aracnet.com>, et. al.
  *
  *	This software was created with the help of proprietary
  *      information belonging to StarDot Technologies

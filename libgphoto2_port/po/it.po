@@ -1,5 +1,5 @@
 # Italian translation of gPhoto.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright © 2000 Free Software Foundation, Inc.
 # Daniele Medri <madrid@linux.it>, 2000.
 #
 msgid ""

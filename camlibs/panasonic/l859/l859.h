@@ -1,7 +1,7 @@
 /*
 	$Id$
 
-	Copyright (c) 2001 Andrew Selkirk <aselkirk@mailandnews.com>
+	Copyright © 2001 Andrew Selkirk <aselkirk@mailandnews.com>
 
 	This file is part of the gPhoto project and may only be used,  modified,
 	and distributed under the terms of the gPhoto project license,  COPYING.

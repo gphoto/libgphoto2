@@ -1,11 +1,11 @@
 /*
  * soundvision.c
  *
- * Copyright (c) 2002 Vince Weaver <vince@deater.net>
+ * Copyright © 2002 Vince Weaver <vince@deater.net>
  * 
  * based on the digita driver 
- * Copyright (c) 1999-2000 Johannes Erdfelt
- * Copyright (c) 1999-2000 VA Linux Systems
+ * Copyright © 1999-2000 Johannes Erdfelt
+ * Copyright © 1999-2000 VA Linux Systems
  */
 
 #include "config.h"

@@ -3,7 +3,7 @@
  * White balancing and brightness correction for the Jenoptik 
  * JD350 entrance camera
  *
- * Copyright (C) 2001 Michael Trawny <trawny99@users.sourceforge.net>
+ * Copyright © 2001 Michael Trawny <trawny99@users.sourceforge.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

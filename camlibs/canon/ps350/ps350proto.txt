@@ -20,7 +20,7 @@ understand anything at all.
 This document is likely to contain errors. USE THIS DOCUMENT AT YOUR OWN
 RISK. NO WARRANTY WHATSOEVER. 
 
-This document is copyright (C) 1999 J.A. Bezemer. It may be modified/
+This document is copyright © 1999 J.A. Bezemer. It may be modified/
 distributed according to the terms of the GNU General Public License. More
 details in the file COPYING, or on the GNU website (http://www.gnu.org).
 

@@ -1,5 +1,5 @@
 # Ukrainian translation of gPhoto.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright © 2000 Free Software Foundation, Inc.
 # Yuri Syrota <rasta@renome.rovno.ua>, 2000.
 #
 msgid ""

@@ -5,7 +5,7 @@
  * of the known value.
  * Of course, smaller differences mean higher weights.
  * 
- * (c) Kurt Garloff <garloff@suse.de>, 2002/01/15
+ * © Kurt Garloff <garloff@suse.de>, 2002/01/15
  * License: GNU GPL
  * 
  * Note: Interpolation techniques more intelligent than

@@ -1,6 +1,6 @@
 /* lowlevel.c
  *
- * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * Copyright © 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -82,7 +82,7 @@ l_ping_rec (GPPort *p, unsigned int level)
 	c = ENQ;
 	CHECK (gp_port_write (p, &c, 1));
 	CHECK (gp_port_read (p, &c, 1));
-	switch (c) {
+	switch © {
 	case ACK:
 		return (GP_OK);
 	case NACK:
@@ -110,7 +110,7 @@ l_ping_rec (GPPort *p, unsigned int level)
 		CHECK (gp_port_write (p, &c, 1));
 		for (;;) {
 			CHECK (gp_port_read (p, &c, 1));
-			switch (c) {
+			switch © {
 			case ENQ:
 
 				/* The camera has not yet given up. */
@@ -288,7 +288,7 @@ l_send (GPPort *p, GPContext *context, unsigned char *send_buffer,
 		/* Write data as above.	*/
 		CHECK_FREE (gp_port_write (p, sb, sbs), sb);
 		CHECK_FREE (gp_port_read (p, &c, 1), sb);
-		switch (c) {
+		switch © {
 		case ACK:
 
 			/* ACK received. We can proceed. */
@@ -333,7 +333,7 @@ l_receive (GPPort *p, GPContext *context,
 		CHECK (gp_port_set_timeout (p, timeout));
 		CHECK (gp_port_read (p, &c, 1));
 		CHECK (gp_port_set_timeout (p, DEFAULT_TIMEOUT));
-		switch (c) {
+		switch © {
 		case ENQ:
 
 			/* ENQ received. We can proceed. */
@@ -388,7 +388,7 @@ l_receive (GPPort *p, GPContext *context,
 	for (*rbs = 0; ; ) {
 		for (j = 0; ; j++) {
 			CHECK (gp_port_read (p, &c, 1));
-			switch (c) {
+			switch © {
 			case STX:
 
 				/* STX received. We can proceed. */
@@ -546,7 +546,7 @@ while (read < rbs_internal) {
 			}
 		}
 		CHECK (gp_port_read (p, &c, 1));
-		switch (c) {
+		switch © {
 			case EOT:
 
 				/* EOT received. We can proceed. */
@@ -577,7 +577,7 @@ while (read < rbs_internal) {
 
 			/* We expect more data. Read ENQ. */
 			CHECK (gp_port_read (p, &c, 1));
-			switch (c) {
+			switch © {
 			case ENQ:
 
 				/* ENQ received. We can proceed. */

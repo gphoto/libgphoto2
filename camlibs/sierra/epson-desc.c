@@ -2,7 +2,7 @@
  *
  * Olympus-specific code: David Selmeczi <david@esr.elte.hu>
  * Original code:
- *  Copyright (C) 2002 Patrick Mansfield <patman@aracnet.com>
+ *  Copyright © 2002 Patrick Mansfield <patman@aracnet.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

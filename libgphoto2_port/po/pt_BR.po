@@ -1,5 +1,5 @@
 # Brazilian Portuguese Translation.
-# Copyright (C) 2002 Free Software Foundation, Inc.
+# Copyright © 2002 Free Software Foundation, Inc.
 # Evandro Gardenali<evandro@fasternet.com.br>, 2002.
 #
 msgid ""

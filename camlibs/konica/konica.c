@@ -1,6 +1,6 @@
 /* konica.c
  *
- * Copyright (C) 2001 Lutz Müller
+ * Copyright © 2001 Lutz Müller
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -150,7 +150,7 @@ k_check (GPContext *c, const char *rb)
 		free (rb);				\
 		return r;				\
 	}						\
-	r = k_check ((c), rb);				\
+	r = k_check (©, rb);				\
 	if (r < 0) {					\
 		free (rb);				\
 		return r;				\

@@ -1,5 +1,5 @@
 # Traducción al castellano
-# Copyright (C) 2002 Fabian Mandelbaum <fabman@mandrakesoft.com>
+# Copyright © 2002 Fabian Mandelbaum <fabman@mandrakesoft.com>
 #
 msgid ""
 msgstr ""

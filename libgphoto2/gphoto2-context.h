@@ -1,6 +1,6 @@
 /* gphoto2-context.h
  *
- * Copyright (C) 2001 Lutz Müller <lutz@users.sourceforge.net>
+ * Copyright © 2001 Lutz Müller <lutz@users.sourceforge.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

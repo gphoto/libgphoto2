@@ -1,5 +1,5 @@
 # Norwegian translation of gphoto
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright © 2000 Free Software Foundation, Inc.
 # Kjartan Maraas <kmaraas@online.no> 2000.
 #
 msgid ""

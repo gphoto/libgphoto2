@@ -1,5 +1,5 @@
 # Traduction française
-# Copyright (C) 2001 Jérôme Fenal <jerome@fenal.org>
+# Copyright © 2001 Jérôme Fenal <jerome@fenal.org>
 #
 msgid ""
 msgstr ""

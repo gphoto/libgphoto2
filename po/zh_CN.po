@@ -1,5 +1,5 @@
 # Simplified Chinese Translation.
-# Copyright (C) 2000-2002
+# Copyright © 2000-2002
 # Wang Li <charle@linux.net.cn>, 2002
 # 
 msgid ""

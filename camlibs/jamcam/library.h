@@ -1,7 +1,7 @@
 /****************************************************************/
 /* library.h  - Gphoto2 library for the KBGear JamCam v2 and v3 */
 /*                                                              */
-/* Copyright (C) 2001 Chris Pinkham                             */
+/* Copyright © 2001 Chris Pinkham                             */
 /*                                                              */
 /* Author: Chris Pinkham <cpinkham@infi.net>                    */
 /*                                                              */

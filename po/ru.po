@@ -1,4 +1,4 @@
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright ╘ 2000 Free Software Foundation, Inc.
 # Valek Filippov <frob@df.ru>, 2000.
 #
 msgid ""
@@ -664,7 +664,7 @@ msgstr ""
 #, fuzzy
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
 msgstr ""
-"Авторское право (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
+"Авторское право ╘ 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
 "\n"
 
 #: camlibs/directory/directory.c:594
