@@ -3,6 +3,9 @@ marked EXPERIMENTAL.
 	
 Any comments email me at pbk@odense.kollegienet.dk
 
+16/08-2002
+	Fixed a newline compile error with gcc 2.96. 
+
 09/08-2002
 	Først release of the library.
 	As this is the first release there might be errors, please report them.	
