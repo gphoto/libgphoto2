@@ -103,6 +103,66 @@ gp_camera_get_model (Camera *camera, const char **model)
 }
 
 int
+gp_camera_set_port_path (Camera *camera, const char *port_path)
+{
+	int x, count;
+	CameraPortInfo info;
+
+	CHECK_NULL (camera && port_path);
+
+	CHECK_RESULT (count = gp_port_count_get ());
+	for (x = 0; x < count; x++)
+		if ((gp_port_info_get (x, &info) == GP_OK) &&
+		    (!strcmp (port_path, info.path))) {
+			strcpy (camera->port->path, info.path);
+			strcpy (camera->port->name, info.name);
+			return (GP_OK);
+		}
+
+	return (GP_ERROR_IO_UNKNOWN_PORT); 
+}
+
+int
+gp_camera_get_port_path (Camera *camera, const char **port_path)
+{
+	CHECK_NULL (camera && port_path);
+
+	*port_path = camera->port->path;
+
+	return (GP_OK);
+}
+
+int
+gp_camera_set_port_name (Camera *camera, const char *port_name)
+{
+	int x, count;
+	CameraPortInfo info;
+
+	CHECK_NULL (camera && port_name);
+
+	CHECK_RESULT (count = gp_port_count_get ());
+	for (x = 0; x < count; x++)
+		if ((gp_port_info_get (x, &info) == GP_OK) &&
+		    (!strcmp (port_name, info.name))) {
+			strcpy (camera->port->path, info.path);
+			strcpy (camera->port->name, info.name);
+			return (GP_OK);
+		}
+	
+	return (GP_ERROR_IO_UNKNOWN_PORT);
+}
+
+int
+gp_camera_get_port_name (Camera *camera, const char **port_name)
+{
+	CHECK_NULL (camera && port_name);
+
+	*port_name = camera->port->name;
+
+	return (GP_OK);
+}
+
+int
 gp_camera_ref (Camera *camera)
 {
 	CHECK_NULL (camera);
@@ -166,9 +226,7 @@ gp_camera_free (Camera *camera)
 int
 gp_camera_init (Camera *camera)
 {
-	int x, count;
-        gp_port_info info;
-        CameraList *list;
+        CameraList list;
 	const char *model, *port;
 
 	CHECK_NULL (camera);
@@ -178,33 +236,22 @@ gp_camera_init (Camera *camera)
 
 		/* Set the port's path if only the name has been indicated. */
 		if ((strcmp (camera->port->path, "") == 0) && 
-		    (strcmp (camera->port->name, "") != 0)) {
-			count = gp_port_count_get ();
-			CHECK_RESULT (count);
-			for (x = 0; x < count; x++)
-				if ((gp_port_info_get (x, &info) == GP_OK) &&
-				    (!strcmp (camera->port->name, info.name))) {
-					strcpy (camera->port->path, info.path);
-					break;
-				}
-			if (x == count)
-				return (GP_ERROR_IO_UNKNOWN_PORT);
-		}
+		    (strcmp (camera->port->name, "") != 0))
+			CHECK_RESULT (gp_camera_set_port_name (camera, 
+						camera->port->name));
 	
 		/* If the port hasn't been indicated, try to figure it 	*/
 		/* out (USB only). 					*/
 		if (strcmp (camera->port->path, "") == 0) {
-			CHECK_RESULT (gp_list_new (&list));
 			
 			/* Call auto-detect */
-			CHECK_RESULT (gp_autodetect (list));
+			CHECK_RESULT (gp_autodetect (&list));
 
 			/* Retrieve the first auto-detected camera */
-			CHECK_RESULT (gp_list_get_name  (list, 0, &model));
-			strcpy (camera->model, model);
-			CHECK_RESULT (gp_list_get_value (list, 0, &port));
-			strcpy (camera->port->path, port);
-			CHECK_RESULT (gp_list_free (list));
+			CHECK_RESULT (gp_list_get_name  (&list, 0, &model));
+			CHECK_RESULT (gp_camera_set_model (camera, model));
+			CHECK_RESULT (gp_list_get_value (&list, 0, &port));
+			CHECK_RESULT (gp_camera_set_port_path (camera, port));
 		}
 	
 	        /* Set the port type from the path in case the 	*/
@@ -222,17 +269,15 @@ gp_camera_init (Camera *camera)
 	/* If the model hasn't been indicated, try to figure it out 	*/
 	/* through probing. 						*/
 	if (!strcmp (camera->model, "")) {
-		CHECK_RESULT (gp_list_new (&list));
 
 		/* Call auto-detect */
-		CHECK_RESULT (gp_autodetect (list));
+		CHECK_RESULT (gp_autodetect (&list));
 
 		/* Retrieve the first auto-detected camera */
-		CHECK_RESULT (gp_list_get_name  (list, 0, &model));
-		strcpy (camera->model, model);
-		CHECK_RESULT (gp_list_get_value (list, 0, &port));
-		strcpy (camera->port->path, port);
-		CHECK_RESULT (gp_list_free (list));
+		CHECK_RESULT (gp_list_get_name  (&list, 0, &model));
+		CHECK_RESULT (gp_camera_set_model (camera, model));
+		CHECK_RESULT (gp_list_get_value (&list, 0, &port));
+		CHECK_RESULT (gp_camera_set_port_path (camera, port));
 	}
 
 	/* Fill in camera abilities. */
