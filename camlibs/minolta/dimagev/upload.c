@@ -85,13 +85,13 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 	total_packets = ( file->size / 993 ) +1;
 
 	/* The first packet is a special case. */
-	if ( ( packet_buffer = malloc(993)) == NULL ) {
+	if ( ( packet_buffer = malloc((size_t)993)) == NULL ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_put_file::unable to allocate packet buffer");
 		return GP_ERROR_NO_MEMORY;
 	}
 
 	packet_buffer[0]= total_packets;
-	memcpy(&(packet_buffer[1]), file->data, 992);
+	memcpy(&(packet_buffer[1]), file->data, (size_t) 992);
 
 	if ( ( p = dimagev_make_packet(packet_buffer, 993, 0) ) == NULL ) {
 		gp_debug_printf(GP_DEBUG_LOW, "dimagev", "dimagev_put_file::unable to allocate command packet");
