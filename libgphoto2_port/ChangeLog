@@ -1,3 +1,7 @@
+2005-01-17  Colin Marquardt  <colin@marquardt-home.de>
+
+	* po/ja.po: Update thanks to Takeshi AIHANA.
+
 2005-01-04  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* libpghoto2_port/gphoto2-port.c, gphoto2-port-info-list.c:
