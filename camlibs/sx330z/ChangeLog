@@ -1,3 +1,7 @@
+2005-01-21  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Lifetec LT 5995
+
 2004-01-07  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Maginon SX-410z (reported by style(at)wtal.de)
