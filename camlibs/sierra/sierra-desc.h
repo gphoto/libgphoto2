@@ -95,10 +95,10 @@ typedef struct {
 
 typedef struct {
 	CameraWidgetType reg_widget_type;
-	u_int32_t regs_mask;
+	uint32_t regs_mask;
 	char *regs_short_name;		/* for command line use */
 	char *regs_long_name;		/* for gui/curses use */
-	u_int32_t reg_val_name_cnt;	/* number of regs_value_names entries */
+	uint32_t reg_val_name_cnt;	/* number of regs_value_names entries */
 	ValueNameType *regs_value_names;	/* list of reg value/names */
 } RegisterDescriptorType;
 
@@ -107,20 +107,20 @@ typedef struct {
  * normally type cast its usage.
  */
 typedef struct {
-	u_int32_t reg_number; 	/* register number */
-	u_int32_t reg_len;	/* size in bytes of data at register */
-	u_int64_t reg_value; 	/* stored value, has no valid initial value;
+	uint32_t reg_number; 	/* register number */
+	uint32_t reg_len;	/* size in bytes of data at register */
+	uint64_t reg_value; 	/* stored value, has no valid initial value;
 				 * The size would have to be increased, or
 				 * this space must be allocated for
 				 * register values longer than 8 bytes. */
 	GetSetType	reg_get_set;
-	u_int32_t reg_desc_cnt;	/* number of reg_desc entries */
+	uint32_t reg_desc_cnt;	/* number of reg_desc entries */
 	RegisterDescriptorType *reg_desc; /* list of reg descriptors */
 } CameraRegisterType;
 
 typedef struct CameraRegisterSet {
 	char *window_name;
-	u_int32_t reg_cnt;
+	uint32_t reg_cnt;
 	CameraRegisterType *regs;
 } CameraRegisterSetType;
 

@@ -1,3 +1,9 @@
+2003-05-28  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* epson-desc.c, nikon-desc.c, olympus-desc.c, and sierr.c
+	  sierra-desc.c, sierra-desc.h, sierra.c: change u_int* to uint*_t,
+	  and include stdint.h
+
 2003-03-01  Patrick Mansfield <patmans@users.sourceforge.net>
 
 	* sierra.c: Fix SIERRA_SKIP_INIT usage and add vendor/product

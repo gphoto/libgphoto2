@@ -20,6 +20,7 @@
 #include "config.h"
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -60,7 +61,7 @@ extern double round(double x);
 
 static int 
 camera_cam_desc_get_value (ValueNameType *val_name_p, CameraWidgetType widge, 
-			   u_int32_t reg_len, void *buff, int mask, 
+			   uint32_t reg_len, void *buff, int mask, 
 			   CameraWidget *child)
 {
 	if ((widge == GP_WIDGET_RADIO) || (widge == GP_WIDGET_MENU)) {
@@ -258,7 +259,7 @@ camera_cam_desc_set_value (Camera *camera, CameraRegisterType *reg_p,
 	 */
 	if ((reg_desc_p->reg_widget_type == GP_WIDGET_RADIO) || 
 	    (reg_desc_p->reg_widget_type == GP_WIDGET_MENU)) {
-		u_int32_t new_value;
+		uint32_t new_value;
 
 		GP_DEBUG ("set value comparing data '%s' with name '%s'", *(char**)data,
 			  val_name_p->name);
