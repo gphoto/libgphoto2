@@ -1,3 +1,8 @@
+2002-01-09 Dan Fandrich <dan@coneharvesters.com>
+
+	* frontends/command-line/gphoto2-cmd-config.c
+	* configure.in: Allow cdk.h to be found outside a cdk directory.
+
 2002-01-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* configure.in: Substitute AM_PROG_LIBTOOL by AC_PROG_LIBTOOL (first

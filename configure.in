@@ -210,7 +210,7 @@ if $try_cdk; then
 	CPPFLAGS="-I$cdk_prefix/include -I$cdk_prefix/include/cdk $CPPFLAGS"
 	AC_CHECK_HEADER(cdk.h, [
 		have_cdk=true
-		CDK_CFLAGS="-I$cdk_prefix/include"
+		CDK_CFLAGS="-I$cdk_prefix/include -I$cdk_prefix/include/cdk"
 		CDK_LIBS="-L$cdk_prefix/lib -lcdk -lncurses"
 		AC_DEFINE(HAVE_CDK)
 		LDFLAGS_save="$LDFLAGS"
