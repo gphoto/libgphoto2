@@ -164,6 +164,8 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
 		"Loading camera libraries in '%s'...", dir);
+	gp_log (GP_LOG_DEBUG, "gphoto2-abilities-list",
+		"Note that failing to load *.a and *.la is NOT an error!");
 
 #ifdef HAVE_LTDL
 	CHECK_RESULT (gp_list_reset (&flist));
