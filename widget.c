@@ -35,7 +35,7 @@ int gp_widget_new (CameraWidgetType type, const char *label,
 
         (*widget)->ref_count    	= 1;
 	(*widget)->choice_count 	= 0;
-	(*widget)->id		= i++;
+	(*widget)->id			= i++;
 
         /* Alloc 64 children pointers */
 	memset ((*widget)->children, 0, sizeof (CameraWidget*) * 64);
@@ -211,7 +211,11 @@ int gp_widget_get_label (CameraWidget *widget, const char **label)
  * @widget: a CameraWidget
  * @value: 
  *
- * Sets the value of the widget.
+ * Sets the value of the widget. Please pass
+ * (char*) for GP_WIDGET_MENU, GP_WIDGET_TEXT,
+ * (float) for GP_WIDGET_RANGE,
+ * (int)   for GP_WIDGET_DATE, GP_WIDGET_TOGGLE, GP_WIDGET_RADIO, and
+ * (CameraWidgetCallback) for GP_WIDGET_BUTTON.
  *
  * Return value: GPhoto error code.
  **/
@@ -225,8 +229,8 @@ int gp_widget_set_value (CameraWidget *widget, void *value)
 		widget->callback = (CameraWidgetCallback)value;
 		return (GP_OK);
 	case GP_WIDGET_MENU:
-        case GP_WIDGET_TEXT:
 	case GP_WIDGET_RADIO:
+        case GP_WIDGET_TEXT:
 	        if (widget->value_string) {
                 	if (strcmp (widget->value_string, (char*)value) != 0)
                     		widget->changed = 1;
@@ -273,8 +277,8 @@ int gp_widget_get_value (CameraWidget *widget, void *value)
 	case GP_WIDGET_BUTTON:
 		*(CameraWidgetCallback*)value = widget->callback;
 		return (GP_OK);
-	case GP_WIDGET_RADIO:
 	case GP_WIDGET_MENU:
+	case GP_WIDGET_RADIO:
         case GP_WIDGET_TEXT:
         	*((char**)value) = widget->value_string;
         	return (GP_OK);
