@@ -1,0 +1,12 @@
+2002-05-10  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* rpm/package.spec.in: made RPMs build again thanks to Redhat 7.3 RPM :-)
+
+2002-03-22  Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* packaging/usbcam*: moved to packaging/linux-hotplug/*
+	* packaging/Makefile.am: reflect that
+
+2001-10-28 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* packaging/rpm/package.spec.in: cleaned up file lists, moved .a and .la to -devel

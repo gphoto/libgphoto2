@@ -20,10 +20,11 @@ Group: Applications/Multimedia
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Source: http://www.gphoto.org/dist/@PACKAGE@-@VERSION@.tar.gz
 Url: http://www.gphoto.org/
+ExcludeArch: s390 s390x
 Provides: libgphoto2
 # absolute requirements
-PreReq: hotplug
-PreReq: grep
+PreReq: hotplug >= 2001_04_24-11
+PreReq: /sbin/ldconfig, grep, fileutils
 Requires: libusb >= 0.0.5
 BuildRequires: libusb-devel >= 0.0.5
 BuildRequires: findutils perl
@@ -31,7 +32,6 @@ BuildRequires: findutils perl
 # FIXME: They should be deactivated if not detected on the building system
 BuildRequires: gtk-doc
 BuildRequires: transfig
-# FIXME: the usbcam.console hotplug script requires xdm/kdm/gdm
 
 ####################################
 %description
@@ -50,7 +50,7 @@ Other (GUI) frontends are available seperately.
 
 ####################################
 %package devel
-Summary: Headers and links to compile against the libgphoto2 library.
+Summary: Headers and libraries to compile against the libgphoto2 library.
 Requires: %{name} = %{version}
 Provides: libgphoto2-devel
 Group: Development/Libraries
@@ -77,102 +77,86 @@ rm -rf "${RPM_BUILD_DIR}/%{name}-%{version}"
 
 ####################################
 %build
-CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ;
-CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ;
-FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ;
-%{?__libtoolize:[ -f configure.in ] && %{__libtoolize} --copy --force} ;
-./configure %{_target_platform} \
-        --prefix=%{_prefix} \
-        --exec-prefix=%{_exec_prefix} \
-        --bindir=%{_bindir} \
-        --sbindir=%{_sbindir} \
-        --sysconfdir=%{_sysconfdir} \
-        --datadir=%{_datadir} \
-        --includedir=%{_includedir} \
-        --libdir=%{_libdir} \
-        --libexecdir=%{_libexecdir} \
-        --localstatedir=%{_localstatedir} \
-        --sharedstatedir=%{_sharedstatedir} \
-        --mandir=%{_mandir} \
-        --infodir=%{_infodir} \
-        --with-html-dir=%{_docdir}/%{name}-%{version}/html
+%define __libtoolize :
 # FIXME: We should copy the disable- arguments here
+%configure --enable-docs --with-docs-dir=%{buildroot}%{_docdir}/%{name}
+make
+# --with-html-dir=%{_docdir}/%{name}-%{version}/html
 make
 
 ####################################
 %install
 rm -rf "${RPM_BUILD_ROOT}"
 
-make DESTDIR=%{buildroot} \
-        prefix=%{_prefix} \
-        exec_prefix=%{_exec_prefix} \
-        bindir=%{_bindir} \
-        sbindir=%{_sbindir} \
-        sysconfdir=%{_sysconfdir} \
-        datadir=%{_datadir} \
-        docdir=%{_docdir}/%{name}-%{version} \
-        includedir=%{_includedir} \
-        libdir=%{_libdir} \
-        libexecdir=%{_libexecdir} \
-        localstatedir=%{_localstatedir} \
-        sharedstatedir=%{_sharedstatedir} \
-        mandir=%{_mandir} \
-        infodir=%{_infodir} \
-install
+# Convince gphoto2 to be packaged.
+perl -p -i -e "s|^libdir.*|libdir='$RPM_BUILD_ROOT%{_libdir}'|g" \
+	libgphoto2_port/libgphoto2_port/libgphoto2_port.la
+
+%makeinstall
+
+# Fix up libtool libraries.
+find $RPM_BUILD_ROOT -name '*.la' | \
+  xargs perl -p -i -e "s|$RPM_BUILD_ROOT||g"
 
 # we should move that into the proper Makefile.am eventually
 install -d -m755 %{buildroot}/etc/hotplug/usb/
 install -m755 packaging/linux-hotplug/usbcam.console %{buildroot}/etc/hotplug/usb/usbcam
 
+cp -a %{buildroot}%{_docdir}/%{name}-%{version}/html/%{name} installed-doc
+find installed-doc -name '*.sgml' | xargs rm
+
+
+%find_lang %{name}
+
 # build file list
-find %{buildroot} -type f -or -type l \
-        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.allfiles
+#find %{buildroot} -type f -or -type l \
+#        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.allfiles
 
-find %{buildroot} \( -type f -or -type l \) -and -name '*.so*' \
-        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.sofiles
+#find %{buildroot} \( -type f -or -type l \) -and -name '*.so*' \
+#        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.sofiles
 
-find %{buildroot} \( -type f -or -type l \) -and \
-        \( -name '*.la' -or -name '*.a' -or -name '*.h' \) \
-        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.devel-files
+#find %{buildroot} \( -type f -or -type l \) -and \
+#        \( -name '*.la' -or -name '*.a' -or -name '*.h' \) \
+#        | sed 's!^%{buildroot}!!' | sort > %{name}-%{version}.devel-files
 
 # figure out list of documentation stuff
-htmldir=$(grep '/html/' < "%{name}-%{version}.files" | sed 's/html\/.*/html/' | sort -u)
-echo "%docdir ${htmldir}" > %{name}-%{version}.docfiles
+#htmldir=$(grep '/html/' < "%{name}-%{version}.files" | sed 's/html\/.*/html/' | sort -u)
+#echo "%docdir ${htmldir}" > %{name}-%{version}.docfiles
 
 
 ####################################
 %clean
-# rm -rf "${RPM_BUILD_ROOT}"
+rm -rf "${RPM_BUILD_ROOT}"
 
 ########################################################################
 # file list and installation for main package
 ########################################################################
 
 ####################################
-%files -f %{name}-%{version}.sofiles
+%files -f %{name}.lang
 %defattr(-,root,root)
+%doc doc/gphoto2.txt doc/gphoto2-cli.txt doc/FAQ
+%doc AUTHORS README COPYING
 %{_bindir}/gphoto2
-%doc doc/gphoto2.txt doc/gphoto2-cli.txt
-%doc AUTHORS README COPYING doc/FAQ
+/etc/hotplug/usb/usbcam
+%{_datadir}/gphoto2
+%dir %{_libdir}/gphoto2_port
+%dir %{_libdir}/gphoto2_port/*
+%{_libdir}/gphoto2_port/*/*.so
+%{_libdir}/gphoto2/*/*.so
+%{_libdir}/*.so.*
+%{_mandir}/man1/gphoto2.1*
+# %{_mandir}/man3/gphoto2.3*
 %doc packaging/linux-hotplug/usbcam.console
 %doc packaging/linux-hotplug/usbcam.user
 %doc packaging/linux-hotplug/usbcam.group
-%doc frontends/command-line/gphoto2.1
-%doc frontends/command-line/gphoto2.3
-%{_datadir}/locale/*/LC_MESSAGES/*
-%{_libdir}/pkgconfig/*.pc
-/etc/hotplug/usb/usbcam
-%{_datadir}/gphoto2/konica/*
-# -f #{name}-#{version}.docfiles
-#docdir doc/api/html
-#docdir libgphoto2_port/doc/html
 
 ####################################
 %post
 
 # add supported cameras to /etc/hotplug/usb.usermap
 grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
-gphoto2 --print-usb-usermap >> /etc/hotplug/usb.usermap.tmp
+/usr/bin/gphoto2 --print-usb-usermap >> /etc/hotplug/usb.usermap.tmp
 mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 
 # register libraries
@@ -184,16 +168,11 @@ mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 # unregister libraries
 /sbin/ldconfig
 
-# remove supported cameras from /etc/hotplug/usb.usermap
-# this has to be done in postun as we have to test 
-# whether there is still a usbcam script or not, i.e.
-# whether we were removed in the course of an update or not.
-if [ -x /etc/hotplug/usb/usbcam ]
-then
-        echo "Not removing usbcam lines from /etc/hotplug/usb.usermap"
-else
-        grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
-        mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
+if [ "$1" = 0 ]; then
+    # remove supported cameras from /etc/hotplug/usb.usermap
+    # if erasing the package not as part of a package update
+    grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.new
+    mv /etc/hotplug/usb.usermap.new /etc/hotplug/usb.usermap
 fi
 
 
@@ -202,19 +181,86 @@ fi
 ########################################################################
 
 ####################################
-%files devel -f %{name}-%{version}.devel-files
+%files devel
 %defattr(-,root,root)
-%docdir %{_docdir}/%{name}-%{version}/html
+%doc installed-doc/html
 %{_bindir}/gphoto2-config
 %{_bindir}/gphoto2-port-config
-
+%{_includedir}/gphoto2
+%{_libdir}/*.la
+%{_libdir}/*.so
+%{_libdir}/pkgconfig/*
 
 ########################################################################
 # ChangeLog
 ########################################################################
 %changelog
+* Thu May  9 2002 Hans Ulrich Niedermann <gp@n-dimensional.de> 2.0dev6-1
+- merged changes from current Redhat spec file into gphoto2 distribution
+  as they managed to get the beast to build
+- re-added FAQ to package (Redhat left it out regrettably)
+- only require hotplug 2001_04_24-11 instead of 2001_04_24-13
+
+* Mon Apr 29 2002 Tim Waugh <twaugh@redhat.com> 2.0-6
+- In fact, don't even build for mainframe.
+
+* Mon Apr 29 2002 Florian La Roche <Florian.LaRoche@redhat.de> 2.0-5
+- do not require hotplug for mainframe
+
+* Mon Apr 15 2002 Nalin Dahyabhai <nalin@redhat.com> 2.0-4
+- Set the owner of the device to the console lock holder, not the owner
+  of /dev/console, in the hotplug agent, fixing access for users who log
+  in at VTs and use startx (#62976).
+
+* Fri Apr 12 2002 Tim Waugh <twaugh@redhat.com> 2.0-3
+- Rebuild (fixed bug #63355).
+
 * Sat Apr 06 2002 Hans Ulrich Niedermann <gp@n-dimensional.de>
 - require libusb >= 0.0.5 and for building require transfig
+
+* Wed Feb 27 2002 Tim Waugh <twaugh@redhat.com> 2.0-2
+- Fix from CVS: close port unconditionally in gp_camera_exit().
+
+* Mon Feb 25 2002 Tim Waugh <twaugh@redhat.com> 2.0-1
+- 2.0 is released.
+- Ship the .so symlinks in the devel package.
+
+* Mon Feb 25 2002 Tim Waugh <twaugh@redhat.com> 2.0-0.rc4.1
+- 2.0rc4.
+
+* Fri Feb 22 2002 Tim Waugh <twaugh@redhat.com> 2.0-0.rc3.1
+- 2.0rc3.  No longer need CVS patch.
+- Build no longer requires xmlto.
+
+* Thu Feb 21 2002 Tim Waugh <twaugh@redhat.com> 2.0-0.rc2.2
+- Fix DC240 hangs (patch from CVS).
+- Rebuild in new environment.
+
+* Tue Feb 19 2002 Tim Waugh <twaugh@redhat.com> 2.0-0.rc2.1
+- 2.0rc2 (bug #59993).  No longer need docs patch or man page.
+- Really fix up libtool libraries (bug #60002).
+
+* Fri Feb 15 2002 Tim Waugh <twaugh@redhat.com> 2.0-0.beta5.2
+- PreReq /sbin/ldconfig, grep, and fileutils (bug #59941).
+
+* Tue Feb 12 2002 Tim Waugh <twaugh@redhat.com> 2.0-0.beta5.1
+- 2.0beta5.
+- Fix Makefiles so that documentation can be built.
+- Ship pkgconfig file.
+- Add man page.
+
+* Thu Feb  7 2002 Tim Waugh <twaugh@redhat.com> 2.0-0.beta4.1
+- 2.0beta4.
+- Build requires transfig, and at least version 0.1.5 of libusb.
+- Clean up file lists.
+- Build documentation.
+
+* Fri Jan 25 2002 Tim Waugh <twaugh@redhat.com> 2.0-0.beta3.2
+- Rebuild in new environment.
+- Dump docbook-dtd30-sgml requirement; gtk-doc is sufficient.
+
+* Sun Nov 18 2001 Tim Waugh <twaugh@redhat.com> 2.0-0.beta3.1
+- Adapted for Red Hat Linux.
 
 * Sat Oct 27 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
 - fixed update behaviour for hotplug list (do not erase it when updating)
