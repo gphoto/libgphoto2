@@ -36,6 +36,7 @@ gp_port_set_error
 <SECTION>
 <FILE>gphoto2-port-info-list</FILE>
 <TITLE>GPhoto2-Port-Info-List</TITLE>
+GPPortType
 GPPortInfo
 GPPortInfoList
 
@@ -75,6 +76,20 @@ gp_log_remove_func
 gp_log
 gp_logv
 gp_log_data
+</SECTION>
+
+<SECTION>
+<FILE>gphoto2-port-library</FILE>
+<TITLE>GPhoto2-Port-Library</TITLE>
+GPPortOperations
+
+GPPortLibraryType
+GPPortLibraryList
+GPPortLibraryOperations
+
+gp_port_library_type
+gp_port_library_list
+gp_port_library_operations
 </SECTION>
 
 

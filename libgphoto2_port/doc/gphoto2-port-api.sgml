@@ -4,11 +4,52 @@
 <!entity gphoto2-port-info-list SYSTEM "sgml/gphoto2-port-info-list.sgml">
 <!entity gphoto2-port-result    SYSTEM "sgml/gphoto2-port-result.sgml">
 <!entity gphoto2-port           SYSTEM "sgml/gphoto2-port.sgml">
+<!entity gphoto2-port-library   SYSTEM "sgml/gphoto2-port-library.sgml">
 ]>
 
 <book id="index">
   <bookinfo>
     <title>GPhoto2-Port API Reference Manual</title>
+
+    <authorgroup>
+      <author>
+        <firstname>Lutz</firstname>
+        <surname>Müller</surname>
+        <affiliation> 
+          <address>
+            <email>urc8@rz.uni-karlsruhe.de</email>
+          </address>
+        </affiliation>
+      </author>
+    </authorgroup>
+
+    <copyright>
+      <year>2000</year>
+      <holder>The Free Software Foundation</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>
+        Permission is granted to copy, distribute and/or modify this
+        document under the terms of the <citetitle>GNU Free
+        Documentation License</citetitle>, Version 1.1 or any later
+        version published by the Free Software Foundation with no
+        Invariant Sections, no Front-Cover Texts, and no Back-Cover
+        Texts. You may obtain a copy of the <citetitle>GNU Free
+        Documentation License</citetitle> from the Free Software
+        Foundation by visiting <ulink type="http"
+        url="http://www.fsf.org">their Web site</ulink> or by writing
+        to:
+
+        <address>
+          The Free Software Foundation, Inc.,
+          <street>59 Temple Place</street> - Suite 330,
+          <city>Boston</city>, <state>MA</state> <postcode>02111-1307</postcode>,
+          <country>USA</country>
+        </address>
+      </para>
+    </legalnotice>
+
     <abstract>
       <para>
 	This manual documents the GPhoto2-Port library.
@@ -51,5 +92,6 @@
       &gphoto2-port-result;
       &gphoto2-port-info-list;
       &gphoto2-port;
+      &gphoto2-port-library;
   </chapter>
 </book>
