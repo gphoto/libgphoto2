@@ -34,12 +34,12 @@ void idle() {
 }
 
 int camera_set() {
-	/* Takes the settings 'camera', 'port', and 'speed' and
-	   sets it to the current camera */
 
-	GtkWidget *message, *message_label, *camera_label;
+	GtkWidget *camera_tree, *message, *message_label, *camera_label, *icon_list;
 	CameraPortSettings ps;
 	char camera[1024], port[1024], speed[1024];
+
+	gp_gtk_camera_init = 0;
 
 	/* create a transient window */
 	message = create_message_window_transient();
@@ -65,7 +65,11 @@ int camera_set() {
 
 	if (gp_camera_set_by_name(camera, &ps)==GP_ERROR) {
 		gtk_widget_destroy(message);
-		gp_gtk_camera_init = 0;
+		return (GP_ERROR);
+	}
+
+	if (gp_folder_set("/")==GP_ERROR) {
+		gtk_widget_destroy(message);
 		return (GP_ERROR);
 	}
 
@@ -73,6 +77,16 @@ int camera_set() {
 	gtk_label_set_text(GTK_LABEL(camera_label), camera);
 	gtk_widget_destroy(message);
 
+	/* Clear out the icon listing */
+	icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
+	gtk_icon_list_clear (GTK_ICON_LIST(icon_list));
+
+	/* Clear out the folder tree */
+	camera_tree = (GtkWidget*) lookup_widget(gp_gtk_main_window, "camera_tree");
+	gtk_object_remove_data(GTK_OBJECT(camera_tree), "expanded");
+	gtk_tree_item_collapse(GTK_TREE_ITEM(camera_tree));
+
+	/* Label the camera as init'd */
 	gp_gtk_camera_init = 1;
 	return (GP_OK);
 }
@@ -229,6 +243,8 @@ void folder_set (GtkWidget *tree_item, gpointer data) {
 		gp_message(buf);
 		return;
 	}
+
+	camera_index_thumbnails();
 }
 
 GtkWidget *folder_item (GtkWidget *tree, char *text) {
@@ -277,44 +293,36 @@ GtkWidget *tree_item_icon (GtkWidget *tree, char *text, char *icon_name) {
 void folder_expand (GtkWidget *tree_item, gpointer data) {
 
 	GtkWidget *tree, *item;
-	CameraFolderInfo list[256], t;
+	CameraFolderInfo list[256];
 	char *path = (char*)gtk_object_get_data(GTK_OBJECT(tree_item), "path");
 	char buf[1024];
-	int x=0, y=0, z=0, count=0;
+	int x, count=0;
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
-	tree = GTK_TREE_ITEM(tree_item)->subtree;
-
 	/* See if we've expanded this before! */
 	if (gtk_object_get_data(GTK_OBJECT(tree_item), "expanded")) return;
 
+	/* Count however many folders are in this folder */
 	if ((count = gp_folder_list(path, list))==GP_ERROR) {
 		sprintf(buf, "Could not open folder\n%s", path);
 		gp_message(buf);
 		return;
 	}
 
-	if (count == 0) {
-		if (strcmp(path, "/")!=0)
-			gtk_tree_item_remove_subtree(GTK_TREE_ITEM(tree_item));
+	/* Remove any existing subtree */
+	gtk_tree_item_remove_subtree(GTK_TREE_ITEM(tree_item));
+
+	if (count == 0)
 		return;
-	}
 
-	/* sort the folder list (old bubble) */
-	for (x=0; x<count-1; x++) {
-		for (y=x+1; y<count; y++) {
-			z = strcmp(list[x].name, list[y].name);
-			if (z > 0) {
-				memcpy(&t, &list[x], sizeof(t));
-				memcpy(&list[x], &list[y], sizeof(list[x]));
-				memcpy(&list[y], &t, sizeof(list[y]));
-			}
-		}
-	}
+	/* Create a new subtree */
+	tree = gtk_tree_new();
+	gtk_widget_show(tree);
+	gtk_tree_item_set_subtree(GTK_TREE_ITEM(tree_item), tree);
 
-	/* Append the new folders */
+	/* Append the new folders to the new subtree */
 	for (x=0; x<count; x++) {
 		if (strcmp(path, "/")==0)
 			sprintf(buf, "/%s", list[x].name);
@@ -324,7 +332,11 @@ void folder_expand (GtkWidget *tree_item, gpointer data) {
 		gtk_object_set_data(GTK_OBJECT(item), "path", strdup(buf));
 	}
 
+	/* Mark this item as expanded (so we don't have to build the folder again */
 	gtk_object_set_data(GTK_OBJECT(tree_item), "expanded", "yes");
+
+	/* Now, actually expand the newly built tree */
+	gtk_tree_item_expand(GTK_TREE_ITEM(tree_item));
 }
 
 /* Camera operations */
@@ -567,7 +579,7 @@ void camera_index_common(int thumbnails) {
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
 
-	icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
+	icon_list   = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
 	GTK_ICON_LIST(icon_list)->is_editable = FALSE;
 
 	if ((count = gp_file_count())==GP_ERROR) {
@@ -575,8 +587,17 @@ void camera_index_common(int thumbnails) {
 		return;
 	}
 
+	if (count == 0)
+		return;
+
 	gtk_icon_list_clear (GTK_ICON_LIST(icon_list));
-	for (x=0; x<count; x++) {
+	x=0;
+	gp_progress(0.00);
+	gtk_widget_show(gp_gtk_progress_window);
+	while ((x<count)&&(GTK_WIDGET_VISIBLE(gp_gtk_progress_window))) {
+		sprintf(buf,"Getting Thumbnail #%04i of %04i", x, count);
+		gp_message(buf);
+		idle();
 		sprintf(buf,"#%04i", x);
 		item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
 			no_thumbnail_xpm,buf,NULL);
@@ -588,9 +609,12 @@ void camera_index_common(int thumbnails) {
 			}
 			gp_file_free(f);
 		}
-		idle();
 		gp_progress(100.0*(float)x/(float)count);
+		idle();
+		x++;
 	}
+	gp_progress(0.00);
+	gtk_widget_hide(gp_gtk_progress_window);
 }
 
 void camera_index_thumbnails() {

@@ -19,6 +19,7 @@
 #include "support.h"
 
 GtkWidget *gp_gtk_main_window;
+GtkWidget *gp_gtk_progress_window;
 int	   gp_gtk_debug;
 char	   gp_gtk_camera_model[1024];
 int	   gp_gtk_camera_init=0;
@@ -45,12 +46,12 @@ main (int argc, char *argv[])
 			gp_gtk_debug = 0;
 	}
 
-	gp_debug_set(gp_gtk_debug);
-	gp_init();
+	gp_init(gp_gtk_debug);
 
 	add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
 	add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
 
+	gp_gtk_progress_window = create_progress_window();
 	gp_gtk_main_window = create_main_window ();
 	gtk_widget_show (gp_gtk_main_window);
 
@@ -77,8 +78,6 @@ main (int argc, char *argv[])
 
 	gtk_signal_connect (GTK_OBJECT(gp_gtk_main_window), "delete_event",
 		GTK_SIGNAL_FUNC(main_quit), NULL);
-
-	gp_message("crash on multiple indexes");
 	
 	gtk_main ();
 	return 0;
