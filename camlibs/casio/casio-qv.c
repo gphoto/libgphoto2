@@ -19,7 +19,7 @@
  */
 
 /*
- * 2001/08/31 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * 2001/08/31 Lutz Müller <lutz@users.sourceforge.net>
  *
  * I cannot test this stuff - I simply don't have this camera. If you have
  * one, please contact me so that we can get this stuff up and running.
@@ -50,14 +50,14 @@ static struct {
 	int               public;
 	unsigned long int revision;
 } models[] = {
-	{"Casio QV10",  1, 0x00538b8f},
-	{"Casio QV10",  0, 0x00531719},
-	{"Casio QV10A", 1, 0x00800003},
-	{"Casio QV70",  1, 0x00835321},
-	{"Casio QV100", 1, 0x0103ba90},
-	{"Casio QV300", 1, 0x01048dc0},
-	{"Casio QV700", 1, 0x01a0e081},
-	{"Casio QV770", 1, 0x01a10000},
+	{"Casio:QV10",  1, 0x00538b8f},
+	{"Casio:QV10",  0, 0x00531719},
+	{"Casio:QV10A", 1, 0x00800003},
+	{"Casio:QV70",  1, 0x00835321},
+	{"Casio:QV100", 1, 0x0103ba90},
+	{"Casio:QV300", 1, 0x01048dc0},
+	{"Casio:QV700", 1, 0x01a0e081},
+	{"Casio:QV770", 1, 0x01a10000},
 	{NULL}
 };
 
