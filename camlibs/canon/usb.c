@@ -262,6 +262,9 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 		case CANON_PS_S100:
 			GP_DEBUG ("canon_usb_lock_keys: Your camera model does not need the keylock.");
 			break;
+		case CANON_PS_PRO90_IS:
+			GP_DEBUG ("canon_usb_lock_keys: Your camera model does not support keylocking.");
+			break;
 		case CANON_EOS_D30:
 			memset (payload, 0, sizeof (payload));
 			payload[0] = 0x06;
