@@ -21,6 +21,11 @@
  *
  * History:
  * $Log$
+ * Revision 1.14  2001/08/29 22:04:54  dfandrich
+ * Now using predefined camera->port and camera->fs structures. Removed
+ * unneeded include files. Now using predefined MIME types. Made all local
+ * functions static. Updated camera_manual text.
+ *
  * Revision 1.13  2001/08/29 17:52:57  lutz
  * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
@@ -29,18 +34,18 @@
  *         camera_id here. That belongs into gphoto2-library.h.
  *         * libgphoto2/camera.c:
  *         * libgphoto2/core.c: Adapt
- *         * camlibs/*: Move camera_init to the bottom of the file. Camera
+ *         * camlibs/?*: Move camera_init to the bottom of the file. Camera
  *         driver authors, could you please declare the functions above static?
  *         Except camera_id and camera_abilities.
  *
  * Revision 1.12  2001/08/29 10:09:57  lutz
  * 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
- *         * camlibs/sierra/*:
+ *         * camlibs/sierra/?*:
  *         * camlibs/directory/directory.c (camera_folder_list_folders),
  *         (camera_folder_list_files), (camera_file_[get,set]_info): Removed.
  *         Use the camera->fs. Use camera->port.
- *         * camlibs/*: camera->port->* -> camera->port_info->*
+ *         * camlibs/?*: camera->port->* -> camera->port_info->*
  *         * include/gphoto2-camera.h:
  *         * libgphoto2/camera.c: Open the port before accessing a camera,
  *         close it after.
@@ -78,10 +83,10 @@
  *         * libgphoto2/frontend.c: Kill a warning.
  *         * libgphoto2/libgphoto-2.0.pc.in: CFlags -> Cflags
  *         * libgphoto2/widget.c: Include gphoto2-result.h instead of gphoto2.h
- *         * camlibs/*: Prepare support for download of raw data. Remove lots of
+ *         * camlibs/?*: Prepare support for download of raw data. Remove lots of
  *         redundant code (people just copied & pasted the code for file_get
  *         and file_get_preview...). I hope everything works as it did before.
- *         * frontend/command-line/*: Prepare support for download of raw data
+ *         * frontend/command-line/?*: Prepare support for download of raw data
  *
  * Revision 1.8  2001/08/24 21:23:11  lutz
  * 2001-08-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
@@ -89,7 +94,7 @@
  *         * libgphoto2/abilities.c:
  *         * include/gphoto2-abilities.h: Let gp_abilities_new return an error
  *         code. This was the last one.
- *         * camlibs/*: Adjust to above change.
+ *         * camlibs/?*: Adjust to above change.
  *         * camlibs/canon/canon.c: #if 0 some code to kill some warnings
  *
  * Revision 1.7  2001/08/23 12:02:20  lutz
@@ -154,8 +159,6 @@
 #include <gphoto2.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <math.h>
 #include "mesalib.h"
 #include "dimeratab.h"
 
@@ -173,7 +176,6 @@
 
 #define IMAGE_NAME_TEMPLATE "dimera%02i.ppm"
 #define RAM_IMAGE_TEMPLATE "temp.ppm"
-#define PNM_MIME_TYPE "image/x-portable-anymap"
 
 /* PNM headers */
 #define VIEWFIND_SZ	(128*96)
@@ -209,11 +211,9 @@ Dimera_Preview( int *size, Camera *camera );
 /* Gphoto2 */
 
 typedef struct {
-        gp_port *dev;
         unsigned exposure; 
         int auto_exposure; 
         int auto_flash; 
-        CameraFilesystem *fs;
 } DimeraStruct;
 
 
@@ -228,13 +228,12 @@ the temporary picture in RAM, which might not always be available. */
 static int populate_filesystem(gp_port *port, CameraFilesystem *fs) {
         int count = mesa_get_image_count(port);
 
+		gp_debug_printf(GP_DEBUG_LOW, "dimera", "%d pictures", count);
         if (count < 0)
-        	return count;
+        	return count;	// count must hold error code
 
         /* Populate the filesystem */
-        gp_filesystem_populate(fs, "/", IMAGE_NAME_TEMPLATE, count);
-
-	return GP_OK;
+        return gp_filesystem_populate(fs, "/", IMAGE_NAME_TEMPLATE, count);
 }
 
 
@@ -276,39 +275,34 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_exit(Camera *camera) {
+static int camera_exit(Camera *camera) {
 
-	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
-
-	gp_filesystem_free(cam->fs);
-	return mesa_port_close(cam->dev);
+	return mesa_port_close(camera->port);
 }
 
-int camera_folder_list_folders(Camera *camera, const char *folder, CameraList *list) {
+static int camera_folder_list_folders(Camera *camera, const char *folder, CameraList *list) {
 	/* there are never any subfolders */
 
 	return (GP_OK);
 }
 
-int camera_folder_list_files(Camera *camera, const char *folder, CameraList *list) {
+static int camera_folder_list_files(Camera *camera, const char *folder, CameraList *list) {
 	int x;
-	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 	const char *name;
 
 	/* Update filesystem in case images were added */
-	populate_filesystem(cam->dev, cam->fs);
+	populate_filesystem(camera->port, camera->fs);
 
-	for (x=0; x<gp_filesystem_count(cam->fs, folder); x++) {
-		gp_filesystem_name (cam->fs, folder, x, &name);
+	for (x=0; x<gp_filesystem_count(camera->fs, folder); x++) {
+		gp_filesystem_name (camera->fs, folder, x, &name);
 		gp_list_append(list, name, NULL);
 	}
 	return GP_OK;
 }
 
-int camera_file_get (Camera *camera, const char *folder, const char *filename, CameraFileType type, CameraFile *file) {
+static int camera_file_get (Camera *camera, const char *folder, const char *filename, CameraFileType type, CameraFile *file) {
 
 	int num, width, height;
-	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 	char *data;
 	long int size;
 
@@ -319,7 +313,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename, C
 		/* Magic file name specifies magic image number */
 		num = RAM_IMAGE_NUM;
 	else
-		num = gp_filesystem_number(cam->fs, "/", filename);
+		num = gp_filesystem_number(camera->fs, "/", filename);
 
 	if (num < 0)
 		return num;
@@ -372,22 +366,21 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename, C
 	return GP_OK;
 }
 
-int camera_file_get_info (Camera *camera, const char *folder, const char *filename, CameraFileInfo *info) {
-	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
+static int camera_file_get_info (Camera *camera, const char *folder, const char *filename, CameraFileInfo *info) {
 	int num, std_res;
 
-	num = gp_filesystem_number(cam->fs, folder, filename);
+	num = gp_filesystem_number(camera->fs, folder, filename);
 	if (num < 0)
 		return num;
 
-	if ( (std_res = mesa_read_image_info( cam->dev, num, NULL )) < 0 )
+	if ( (std_res = mesa_read_image_info( camera->port, num, NULL )) < 0 )
 	{
 		ERROR("Can't get Image Info");
 		return std_res;
 	}
 
 	info->preview.fields = GP_FILE_INFO_ALL;
-	strcpy(info->preview.type, PNM_MIME_TYPE);
+	strcpy(info->preview.type, GP_MIME_PNM);
 	strcpy(info->preview.name, filename);
 	info->preview.permissions = GP_FILE_PERM_READ;
 	info->preview.size = MESA_THUMB_SZ + sizeof( Dimera_thumbhdr ) - 1;
@@ -395,7 +388,7 @@ int camera_file_get_info (Camera *camera, const char *folder, const char *filena
 	info->preview.height = 48;
 
 	info->file.fields = GP_FILE_INFO_ALL;
-	strcpy(info->file.type, PNM_MIME_TYPE);
+	strcpy(info->file.type, GP_MIME_PNM);
 	strcpy(info->file.name, filename);
 	info->file.permissions = GP_FILE_PERM_READ;
 
@@ -411,20 +404,20 @@ int camera_file_get_info (Camera *camera, const char *folder, const char *filena
 	return GP_OK;
 }
 
-int camera_file_set_info (Camera *camera, const char *folder, const char *filename, CameraFileInfo *info) {
+static int camera_file_set_info (Camera *camera, const char *folder, const char *filename, CameraFileInfo *info) {
 	    return GP_ERROR_NOT_SUPPORTED;
 }
 
-int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
+static int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
         DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 
 	if (capture_type == GP_OPERATION_CAPTURE_IMAGE) {
 		if (cam->auto_flash) {
-			if ( mesa_snap_picture( cam->dev, cam->exposure*4 ) != GP_OK)
+			if ( mesa_snap_picture( camera->port, cam->exposure*4 ) != GP_OK)
 				return GP_ERROR;
 		}
 		else {
-			if ( mesa_snap_image( cam->dev, cam->exposure*4 ) != GP_OK)
+			if ( mesa_snap_image( camera->port, cam->exposure*4 ) != GP_OK)
 				return GP_ERROR;
 		}
 
@@ -436,12 +429,12 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
 	return (GP_ERROR);
 }
 
-int camera_capture_preview(Camera *camera, CameraFile *file) {
+static int camera_capture_preview(Camera *camera, CameraFile *file) {
         long int size;
 	char *data;
 
 	gp_file_set_name (file, RAM_IMAGE_TEMPLATE);
-	gp_file_set_mime_type (file, PNM_MIME_TYPE);
+	gp_file_set_mime_type (file, GP_MIME_PNM);
 
         data = Dimera_Preview((int*) &size, camera);
         if (!data)
@@ -451,12 +444,11 @@ int camera_capture_preview(Camera *camera, CameraFile *file) {
         return GP_OK;
 }
 
-int camera_summary (Camera *camera, CameraText *summary) {
-	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
+static int camera_summary (Camera *camera, CameraText *summary) {
 	int num, eeprom_capacity, hi_pics_max, lo_pics_max;
 	struct mesa_id Id;
 	char version_string[MESA_VERSION_SZ];
-	char battery_string[50];
+	char battery_string[80];
 	struct mesa_feature features;
 	u_int8_t eeprom_info[MESA_EEPROM_SZ];
 	/* Table of EEPROM capacities in Mb based on part compatibility ID */
@@ -477,14 +469,14 @@ int camera_summary (Camera *camera, CameraText *summary) {
 		/* 0D */ 4
 	};
 
-	num = mesa_get_image_count(cam->dev);
+	num = mesa_get_image_count(camera->port);
 	if (num < 0)
 		return num;
 
-	mesa_send_id( cam->dev, &Id );
-	mesa_version(cam->dev, version_string);
-	mesa_read_features(cam->dev, &features);
-	mesa_eeprom_info(cam->dev, 1, eeprom_info);
+	mesa_send_id( camera->port, &Id );
+	mesa_version(camera->port, version_string);
+	mesa_read_features(camera->port, &features);
+	mesa_eeprom_info(camera->port, 1, eeprom_info);
 	eeprom_capacity = 0;
 	if (eeprom_info[4] == 0xc9) {
 		if (eeprom_info[11] < sizeof(eeprom_size_table))
@@ -497,7 +489,7 @@ int camera_summary (Camera *camera, CameraText *summary) {
 		battery_string[0] = '\0';
 	else
 		sprintf( battery_string, " (battery is %d%% full)",
-			mesa_battery_check(cam->dev));
+			mesa_battery_check(camera->port));
 
 	sprintf( summary->text, 
 			"Dimera 3500 ver. %s %d/%d %d:%d\n"
@@ -524,23 +516,24 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	return GP_OK;
 }
 
-int camera_manual (Camera *camera, CameraText *manual) {
+static int camera_manual (Camera *camera, CameraText *manual) {
 
         strcpy(manual->text,
-	"  Poor image quality or problems communicating are\n"
+	"  Image glitches or problems communicating are\n"
 	"often caused by a low battery.\n"
 	"  Images captured remotely on this camera are stored\n"
 	"in temporary RAM and not in the flash memory card.\n"
 	"  Exposure control when capturing all images is\n"
 	"automatically set by the capture preview function.\n"
+	"  Image quality is currently lower than it could be.\n"
 	);
 
         return GP_OK;
 }
 
-int camera_about (Camera *camera, CameraText *about) {
+static int camera_about (Camera *camera, CameraText *about) {
 	strcpy(about->text,
-		"gPhoto2 Mustek VDC 3500/Relisys Dimera 3500\n"
+		"gPhoto2 Mustek VDC-3500/Relisys Dimera 3500\n"
 		"This software was created with the\n"
 		"help of proprietary information belonging\n"
 		"to StarDot Technologies.\n"
@@ -561,7 +554,6 @@ int camera_about (Camera *camera, CameraText *about) {
 static u_int8_t *
 Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 {
-	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 	int32_t		r;
 	u_int8_t *image;
 
@@ -570,7 +562,7 @@ Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 	{
 		ERROR( "Get Thumbnail, allocation failed" );
 		*size = 0;
-		return 0;
+		return NULL;
 	}
 
 	/* set image size */
@@ -579,7 +571,7 @@ Dimera_Get_Thumbnail( int picnum, int *size, Camera *camera )
 	/* set image header */
 	memcpy( image, Dimera_thumbhdr, sizeof( Dimera_thumbhdr ) - 1 );
 
-	if ( (r = mesa_read_thumbnail( cam->dev, picnum, image +
+	if ( (r = mesa_read_thumbnail( camera->port, picnum, image +
 			sizeof( Dimera_thumbhdr ) - 1 )) < 0 )
 	{
 		ERROR( "Get Thumbnail, read of thumbnail failed" );
@@ -595,7 +587,6 @@ static u_int8_t *
 Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 		       int *width, int *height)
 {
-	DimeraStruct *cam = (DimeraStruct*)camera->camlib_data;
 	static struct mesa_image_arg	ia;
 	int32_t				r;
 	u_int8_t			*b, *rbuffer = NULL;
@@ -608,7 +599,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 	if ( picnum != RAM_IMAGE_NUM )
 	{
 		update_status( "Getting Image Info" );
-		if ( (r = mesa_read_image_info( cam->dev, picnum, NULL )) < 0 )
+		if ( (r = mesa_read_image_info( camera->port, picnum, NULL )) < 0 )
 		{
 			ERROR("Can't get Image Info");
 			return NULL;
@@ -625,7 +616,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 		}
 
 		update_status( "Loading Image" );
-		if ( mesa_load_image( cam->dev, picnum ) != GP_OK )
+		if ( mesa_load_image( camera->port, picnum ) != GP_OK )
 		{
 			ERROR("Image Load failed");
 			return NULL;
@@ -642,7 +633,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 	rbuffer = (u_int8_t *)malloc( *height * *width );
 	if ( rbuffer == NULL )
 	{
-		return 0;
+		return NULL;
 	}
 
 	ia.start = 28;
@@ -666,7 +657,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 		for ( retry = 10;; )
 		{
 
-			s = mesa_read_image( cam->dev, b, &ia );
+			s = mesa_read_image( camera->port, b, &ia );
 			if( s > 0)
 				break;
 
@@ -693,7 +684,7 @@ Dimera_Get_Full_Image (int picnum, int *size, Camera *camera,
 		for ( retry = 10;; )
 		{
 
-			s = mesa_read_row( cam->dev, b, &ia );
+			s = mesa_read_row( camera->port, b, &ia );
 			if( s > 0)
 				break;
 
@@ -799,7 +790,7 @@ Dimera_Preview( int *size, Camera *camera )
 	/* set image header */
 	memcpy( image, Dimera_viewhdr, sizeof( Dimera_viewhdr ) - 1 );
 
-	if ( mesa_snap_view( cam->dev, buffer, TRUE, 0, 0, 0, cam->exposure,
+	if ( mesa_snap_view( camera->port, buffer, TRUE, 0, 0, 0, cam->exposure,
 			VIEW_TYPE) < 0 )
 	{
 		ERROR( "Get Preview, mesa_snap_view failed" );
@@ -827,7 +818,7 @@ Dimera_Preview( int *size, Camera *camera )
 		brightness / 16.0, cam->exposure);
 
 	if (cam->auto_exposure && (brightness < 96 || brightness > 160)) {
-		/* Picture brightness needs to be corrected */
+		/* Picture brightness needs to be corrected for next time */
 		cam->exposure = calc_new_exposure(cam->exposure, brightness);
 		gp_debug_printf(GP_DEBUG_LOW, "dimera", "New exposure value: %d", cam->exposure);
 	}
@@ -838,6 +829,7 @@ Dimera_Preview( int *size, Camera *camera )
 int camera_init (Camera *camera) {
 
         DimeraStruct *cam;
+        int ret;
 
         debuglog("camera_init()");
 
@@ -880,26 +872,29 @@ int camera_init (Camera *camera) {
         cam->auto_flash = 1;
 
         debuglog("Opening port");
-        if (mesa_port_open(&cam->dev, camera->port_info->path) != GP_OK)
+        if ( (ret = mesa_port_open(camera->port, camera->port_info->path)) != GP_OK)
         {
                 ERROR("Camera Open Failed");
-                return GP_ERROR;
+                return ret;
         }
-
-        /* Create the filesystem */
-        gp_filesystem_new(&cam->fs);
 
         debuglog("Resetting camera");
-        if ( mesa_reset(cam->dev) != GP_OK )
+        if ( (ret = mesa_reset(camera->port)) != GP_OK )
         {
                 ERROR("Camera Reset Failed");
-                return GP_ERROR;
+                return ret;
         }
 
-        mesa_set_speed(cam->dev, camera->port_info->speed);
+        
+        if ( (ret = mesa_set_speed(camera->port, camera->port_info->speed)) != GP_OK )
+        {
+                ERROR("Camera Speed Setting Failed");
+                return ret;
+        }
+
 
         debuglog("Checking for modem");
-        switch ( mesa_modem_check(cam->dev) )
+        switch ( mesa_modem_check(camera->port) )
         {
         case GP_ERROR_IO:
         case GP_ERROR_TIMEOUT:
@@ -913,6 +908,5 @@ int camera_init (Camera *camera) {
         }
 
         /* Create pseudo file names for each picture */
-        return populate_filesystem(cam->dev, cam->fs);
+        return populate_filesystem(camera->port, camera->fs);
 }
-
