@@ -172,6 +172,7 @@ int camera_abilities (CameraAbilitiesList *list)
 			a->speed[7]	= 38400;
 			a->speed[8]	= 57600;
 			a->speed[9]	= 115200;
+			a->speed[10]	= 0
 			a->capture	= 1;
 			a->config	= 1;
 			a->file_delete	= 1;
@@ -252,7 +253,6 @@ int camera_init (Camera *camera, CameraInit *init)
 	camera->camlib_data = konica_data;
 	konica_data->port_settings = init->port;
 	konica_data->debug_flag = (camera->debug == 1);
-konica_data->debug_flag = TRUE;
 	konica_data->filesystem = gp_filesystem_new ();
 	konica_data->image_id_long = FALSE;
 	for (i = 0; i < 2; i++) {
@@ -473,7 +473,7 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder)
 	gp_filesystem_populate (
 		konica_data->filesystem, 
 		"/", 
-		"%i.jpg", 
+		"image%04i.jpg", 
 		(int) pictures);
 	for (i = 0; i < gp_filesystem_count (konica_data->filesystem, folder); i++)
 		gp_list_append (
