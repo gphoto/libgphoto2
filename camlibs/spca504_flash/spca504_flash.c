@@ -192,7 +192,7 @@ spca504_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 	/* For images, we are done now, thumbnails need to be converted from
 	 * yuv to rgb and a pbm header added. */
 	if (thumbnail) {
-		int size,w,h,hdrlen;
+		int alloc_size, true_size, w, h, hdrlen;
 		u_int8_t *p2 = lib->toc + index*2*32;
 
 		/* thumbnails are generated from dc coefficients and are
@@ -202,18 +202,25 @@ spca504_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 		 */
 		w = ((p2[0x0c] & 0xff) + (p2[0x0d] & 0xff) * 0x100) / 8; 
 		h = ((p2[0x0e] & 0xff) + (p2[0x0f] & 0xff) * 0x100) / 8;
-	
-                /* Figure out actual header length */
-                hdrlen = 13;
-                if (w > 99) hdrlen++;
-                if (h > 99) hdrlen++;
 
-		size = w * h * 3 + hdrlen;
-		tmp = malloc (size);
+		/* Allow for a long header; get the true length later.
+		 */
+		hdrlen = 15;
+		alloc_size = w * h * 3 + hdrlen;
+		tmp = malloc (alloc_size);
 		if (!tmp)
 			return GP_ERROR_NO_MEMORY;
 
-		snprintf ( tmp, size, "P6 %d %d 255\n", w, h);	
+		/* Write the header and get its length. Then, verify that
+		 * we allocated enough memory.
+		 * This should never fail; it would be nice to have an error
+		 * code like GP_ERROR_CAMLIB_INTERNAL for cases like this.
+		 */
+		hdrlen = snprintf(tmp, alloc_size, "P6 %d %d 255\n", w, h);	
+		true_size = w * h * 3 + hdrlen;
+		if ( true_size > alloc_size )
+			return GP_ERROR;
+
 		yuv_p = buf;
 		rgb_p = tmp + hdrlen;
 		while (yuv_p < buf + file_size) {
@@ -239,7 +246,7 @@ spca504_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 		}
 		free (buf);
 		*data = tmp;
-		*len = size;
+		*len = true_size;
 	} else {
 		*data = buf;
 		*len = file_size;
