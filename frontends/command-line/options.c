@@ -227,5 +227,5 @@ usage (void)
 
 	/* Make this 79 characters long. Some languages need the space. */
 	printf (_("--------------------------------------------------------------------------------\n"
-		  "[Use double-quotes around arguments]             [Picture numbers begin one (1)]\n"));
+		  "[Use double-quotes around arguments]        [Picture numbers begin with one (1)]\n"));
 }
