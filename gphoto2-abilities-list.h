@@ -25,6 +25,10 @@
 #include <gphoto2-list.h>
 #include <gphoto2-port-info-list.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 typedef enum {
         GP_DRIVER_STATUS_PRODUCTION,
         GP_DRIVER_STATUS_TESTING,
@@ -99,5 +103,9 @@ int gp_abilities_list_lookup_model (CameraAbilitiesList *list,
 
 int gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 				     CameraAbilities *abilities);
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_ABILITIES_LIST_H__ */

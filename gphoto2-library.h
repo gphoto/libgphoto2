@@ -21,12 +21,13 @@
 #ifndef __GPHOTO2_LIBRARY_H__
 #define __GPHOTO2_LIBRARY_H__
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 #include <gphoto2-abilities-list.h>
 #include <gphoto2-camera.h>
 #include <gphoto2-context.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /**
  * CameraLibraryIdFunc:
@@ -69,5 +70,9 @@ typedef int (* CameraLibraryInitFunc)      (Camera *camera, GPContext *context);
 int camera_id		(CameraText *id);
 int camera_abilities 	(CameraAbilitiesList *list);
 int camera_init 	(Camera *camera, GPContext *context);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_LIBRARY_H__ */
