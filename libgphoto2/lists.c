@@ -27,10 +27,9 @@ int gp_list_free (CameraList *list)
         return (GP_OK);
 }
 
-int gp_list_append (CameraList *list, char *name, CameraListType type)
+int gp_list_append (CameraList *list, char *name)
 {
         strcpy (list->entry[list->count].name, name);
-        list->entry [list->count].type = type;
 
         list->count += 1;
 
@@ -64,6 +63,7 @@ int gp_abilities_free (CameraAbilities *abilities)
 
         return (GP_OK);
 }
+
 
 CameraAbilitiesList *gp_abilities_list_new ()
 {

@@ -498,7 +498,7 @@ static int _canon_file_list (struct psa50_dir *tree, const char *folder,
 
   while (tree->name) {
     if(is_image(tree->name) || is_movie(tree->name)) {
-      gp_list_append(list,(char*)tree->name,GP_LIST_FILE);    
+      gp_list_append(list,(char*)tree->name);    
     } else if (!tree->is_file) { 
       _canon_file_list(tree->user, folder, list);      
     }

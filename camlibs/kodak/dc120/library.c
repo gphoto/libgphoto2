@@ -251,7 +251,7 @@ int dc120_get_albums (DC120Data *dd, int from_card, CameraList *list) {
 	for (x=0; x<8; x++) {
 		f = &file->data[x*15];
 		if (strlen(f)>0)
-			gp_list_append(list, f, GP_LIST_FOLDER);
+			gp_list_append(list, f);
 	}
 
 	gp_file_free(file);
@@ -287,7 +287,7 @@ int dc120_get_filenames (DC120Data *dd, int from_card, int album_number, CameraL
 		strncpy(buf, f, 7);
 		buf[7] = 0;
 		strcat(buf, ".kdc");
-		gp_list_append(list, buf, GP_LIST_FILE);
+		gp_list_append(list, buf);
 		x += 20;
 	}
 

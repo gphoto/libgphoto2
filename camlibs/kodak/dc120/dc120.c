@@ -162,8 +162,8 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 	char buf[32];
 
 	if (strcmp(folder, "/")==0) {
-		gp_list_append(list, dc120_folder_memory, GP_LIST_FOLDER);
-		gp_list_append(list, dc120_folder_card, GP_LIST_FOLDER);
+		gp_list_append(list, dc120_folder_memory);
+		gp_list_append(list, dc120_folder_card);
 		return (GP_OK);
 	}
 

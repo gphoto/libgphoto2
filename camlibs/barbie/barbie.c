@@ -137,9 +137,7 @@ int camera_folder_list_files (Camera *camera, const char *folder, CameraList *li
         gp_filesystem_populate (b->fs, "/", "mattel%02i.ppm", count);
 
         for (x = 0; x < gp_filesystem_count (b->fs, folder); x++)
-                gp_list_append (list,
-                                gp_filesystem_name (b->fs, folder, x),
-                                GP_LIST_FILE);
+                gp_list_append (list, gp_filesystem_name (b->fs, folder, x));
 
         return GP_OK;
 }

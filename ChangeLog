@@ -1,5 +1,19 @@
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-datatypes.h: Move the declaration of the lists to ...
+	* include/gphoto2-lists.h: ... here. This is a first step towards 
+	cleaning up the include-mess. Realized that CameraListType isn't 
+	needed at all - removed.
+	* include/gphoto2-filesys.h: Hide the actual contents of 
+	the CameraFilesystem ...
+	* libgphoto2/filesys.c ... here. The normal user doesn't need to 
+	know what's inside.
+	* libgphoto2/core.c:
+	* libgphoto2/lists.c:
+	* camlibs/*: Reflect above changes
+
+2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in: Add libgphoto-2.0.pc
 	* libgphoto2/Makefile.am: Remove the old GNOME configuration stuff. 
 	GNOME uses pkgconfig now:

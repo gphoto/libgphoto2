@@ -250,8 +250,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
         gp_filesystem_populate(b->fs, "/", "PSN%05i.jpg", count);
 
         for (x=0; x<gp_filesystem_count(b->fs, folder); x++)
-                gp_list_append (list, gp_filesystem_name(b->fs, folder, x),
-                                GP_LIST_FILE);
+                gp_list_append (list, gp_filesystem_name(b->fs, folder, x));
 
         return GP_OK;
 }

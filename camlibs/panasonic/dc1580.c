@@ -563,8 +563,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
         gp_filesystem_populate (dsc->fs, "/", DSC_FILENAMEFMT, count);
 
         for (i = 0; i < count; i++)
-                gp_list_append (list, gp_filesystem_name (dsc->fs, "/", i), 
-				GP_LIST_FILE);
+                gp_list_append (list, gp_filesystem_name (dsc->fs, "/", i));
 
         return GP_OK;
 }

@@ -571,7 +571,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 		l859_debug("Filename: %s.", filename);
 
 		gp_filesystem_append(dsc->fs, "/", filename);
-		gp_list_append (list, filename, GP_LIST_FILE);
+		gp_list_append (list, filename);
 /*		l859_debug("Num %i Filename %s", num, gp_filesystem_name (dsc->fs, "/", num)); */
 
 		num = num + 1;

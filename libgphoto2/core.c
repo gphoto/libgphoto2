@@ -145,7 +145,7 @@ int gp_autodetect (CameraList *list)
         product = glob_abilities_list->abilities[x]->usb_product;
         if (vendor) {
             if (gp_port_usb_find_device(dev, vendor, product)==GP_OK) {
-                gp_list_append(list, glob_abilities_list->abilities[x]->model, GP_LIST_CAMERA);
+                gp_list_append(list, glob_abilities_list->abilities[x]->model);
                 strcpy(list->entry[list->count-1].value, "usb:");
                 found = 1;
             }

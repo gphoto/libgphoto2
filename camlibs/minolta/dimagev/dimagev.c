@@ -226,7 +226,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 		
 
 	for ( i = 0 ; i < dimagev->status->number_images ; i++ ) {
-		gp_list_append(list, gp_filesystem_name(dimagev->fs, "/", i), GP_LIST_FILE);
+		gp_list_append(list, gp_filesystem_name(dimagev->fs, "/", i));
 	}
 
 	return GP_OK;

@@ -231,7 +231,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
                     (strcmp(GP_SYSTEM_FILENAME(de), "..")!=0)) {
                         sprintf(buf, "%s%s", f, GP_SYSTEM_FILENAME(de));
                         if (GP_SYSTEM_IS_FILE(buf) && (is_image(buf)))
-                                gp_list_append(list, GP_SYSTEM_FILENAME(de), GP_LIST_FILE);
+                                gp_list_append(list, GP_SYSTEM_FILENAME(de));
                 }
         }
 
@@ -265,12 +265,10 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
                         dirname = GP_SYSTEM_FILENAME(de);
                         if (GP_SYSTEM_IS_DIR (buf)) {
                            if (dirname[0] != '.')
-                                gp_list_append (list, GP_SYSTEM_FILENAME (de),
-                                                GP_LIST_FOLDER);
+                                gp_list_append (list, GP_SYSTEM_FILENAME (de));
                              else
                                if (view_hidden)
-                                gp_list_append (list, GP_SYSTEM_FILENAME (de),
-                                                GP_LIST_FOLDER);
+                                gp_list_append (list, GP_SYSTEM_FILENAME (de));
                         }
                 }
         }

@@ -183,7 +183,7 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
                 }
 
                 if (!found)
-                        gp_list_append(list, path, GP_LIST_FOLDER);
+                        gp_list_append(list, path);
         }
 
         return GP_OK;
@@ -217,8 +217,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
                 if (strcmp(dev->file_list[i].fn.path, folder))
                         continue;
 
-                gp_list_append (list, dev->file_list[i].fn.dosname, 
-				GP_LIST_FOLDER);
+                gp_list_append (list, dev->file_list[i].fn.dosname);
         }
 
         return GP_OK;

@@ -1,3 +1,5 @@
+#include <gphoto2-lists.h>
+
 /* Constants
    ---------------------------------------------------------------- */
 
@@ -92,14 +94,6 @@ typedef enum {
 	GP_CONFIRM_NOTOALL
 } CameraConfirmValue;
 
-/* Folder list entries */
-typedef enum {
-	GP_LIST_FOLDER,
-        GP_LIST_FILE,
-        GP_LIST_CAMERA
-} CameraListType;
-
-
 /* Structures
    ---------------------------------------------------------------- */
 
@@ -124,7 +118,7 @@ struct Camera;
 
 /* Functions supported by the cameras */
 
-typedef struct {
+struct _CameraAbilities {
         char model[128];
                 /* Name of the camera model */
 
@@ -158,12 +152,12 @@ typedef struct {
 	char library[1024];
 	char id[64];
 
-} CameraAbilities;
+};
 
-typedef struct {
+struct _CameraAbilitiesList {
 	int count;
 	CameraAbilities **abilities;
-} CameraAbilitiesList;
+};
 
 /* Valid camera file information fields */
 typedef enum {
@@ -236,41 +230,11 @@ typedef struct {
 	int		ref_count;
 } CameraFile;
 
-
 /* Full path to a file on the camera */
 typedef struct {
     char     name[128];
     char     folder[1024];
 } CameraFilePath;
-
-/* Entry in a folder on the camera */
-typedef struct {
-	CameraListType type;
-	char name[128];
-	char value[128];
-} CameraListEntry;
-
-typedef struct {
-	char folder[1024];
-	int  count;
-	CameraListEntry entry[1024];
-} CameraList;
-
-/* Camera filesystem emulation structs */
-typedef struct {
-	char name[128];
-} CameraFilesystemFile;
-
-typedef struct {
-	int count;
-	char name[128];
-	CameraFilesystemFile **file;
-} CameraFilesystemFolder;
-
-typedef struct {
-	int count;
-	CameraFilesystemFolder **folder ;
-} CameraFilesystem;
 
 /* Text transferred to/from the camera */
 typedef struct {

@@ -21,6 +21,21 @@
  *
  * History:
  * $Log$
+ * Revision 1.4  2001/08/18 00:03:05  lutz
+ * 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+ *
+ *         * include/gphoto2-datatypes.h: Move the declaration of the lists to ...
+ *         * include/gphoto2-lists.h: ... here. This is a first step towards
+ *         cleaning up the include-mess. Realized that CameraListType isn't
+ *         needed at all - removed.
+ *         * include/gphoto2-filesys.h: Hide the actual contents of
+ *         the CameraFilesystem ...
+ *         * libgphoto2/filesys.c ... here. The normal user doesn't need to
+ *         know what's inside.
+ *         * libgphoto2/core.c:
+ *         * libgphoto2/lists.c:
+ *         * camlibs/*: Reflect above changes
+ *
  * Revision 1.3  2001/06/28 22:03:42  dfandrich
  * Integrated Brian Beattie's patch to use mesa_read_row instead of
  * mesa_read_image for picture downloading.  Hopefully, this will
@@ -268,7 +283,7 @@ int camera_folder_list_files(Camera *camera, const char *folder, CameraList *lis
 	populate_filesystem(cam->dev, cam->fs);
 
 	for (x=0; x<gp_filesystem_count(cam->fs, folder); x++)
-		gp_list_append(list, gp_filesystem_name(cam->fs, folder, x), GP_LIST_FILE);
+		gp_list_append(list, gp_filesystem_name(cam->fs, folder, x));
 	return GP_OK;
 }
 

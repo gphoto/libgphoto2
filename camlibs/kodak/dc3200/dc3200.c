@@ -241,7 +241,7 @@ int camera_folder_list_folders (Camera *camera, const char *folder,
 		filename[12] = 0;
 		
 		/* append dir to the list */
-		gp_list_append(list, filename, GP_LIST_FOLDER);
+		gp_list_append(list, filename);
 		
 		ptr_data_buff += 20;
 		i += 20;
@@ -306,7 +306,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 		}
 
 		/* append file to the list */
-		gp_list_append(list, filename, GP_LIST_FOLDER);
+		gp_list_append(list, filename);
 		
 		ptr_data_buff += 20;
 		i += 20;

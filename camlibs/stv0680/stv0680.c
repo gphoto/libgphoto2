@@ -147,8 +147,7 @@ int camera_folder_list_files (Camera *camera, const char *folder,
 
 	for(i = 0; i < gp_filesystem_count(device->fs, folder); ++i)
 		gp_list_append(list,
-			       gp_filesystem_name(device->fs, folder, i),
-			       GP_LIST_FILE);
+			       gp_filesystem_name(device->fs, folder, i));
 
 	return (GP_OK);
 }

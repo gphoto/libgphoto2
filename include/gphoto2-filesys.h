@@ -1,6 +1,32 @@
-/* NOTE: These functions are provided for cameras that do not support filenames.  */
-/* This sets up an emulation layer to let those cameras work properly with the	  */
-/* filename-centric gPhoto2 API.						  */
+/* gphoto2-filesys.h: Filesystem emulation for cameras that don't support 
+ *                    filenames. In addition, it can be used to cache the
+ *                    contents of the camera in order to avoid traffic.
+ *
+ * Copyright (C) 2000 Scott Fritzinger
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef __GPHOTO2_FILESYSTEM_H__
+#define __GPHOTO2_FILESYSTEM_H__
+
+#include <gphoto2-lists.h>
+
+/* You don't really want to know what's inside, do you? */
+typedef struct _CameraFilesystem CameraFilesystem;
 
 CameraFilesystem* gp_filesystem_new	 ();
 int		  gp_filesystem_free	 (CameraFilesystem *fs);
@@ -27,3 +53,5 @@ int gp_filesystem_list_files   (CameraFilesystem *fs, const char *folder,
 int gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 				CameraList *list);
 int gp_filesystem_dump         (CameraFilesystem *fs);
+
+#endif /* __GPHOTO2_FILESYSTEM_H__ */
