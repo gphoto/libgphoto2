@@ -27,6 +27,7 @@ camlibs/panasonic/dc1580.c
 camlibs/panasonic/l859/l859.c
 camlibs/polaroid/pdc700.c
 camlibs/ptp/ptp.c
+camlibs/ptp/library.c
 camlibs/samsung/samsung.c
 camlibs/sierra/sierra.c
 camlibs/sierra/library.c
