@@ -57,6 +57,7 @@ if ENABLE_RPM
 rpm: Makefile
 	$(MAKE) dist
 	$(MAKE) -C packaging/rpm rpm
+	@echo "The RPM packages should now be found in packaging/rpm/RPMS"
 
 endif
 
