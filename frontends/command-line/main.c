@@ -97,7 +97,7 @@ Option option[] = {
 /* Actions that depend on settings */
 {"",  "abilities",	"",		"Display camera abilities",	abilities, 	0},
 {"",  "list-folders",	"",		"List all folders on the camera",list_folders,	0},
-{"",  "set-folder",	"folder",	"Use the specified folder ",	use_folder,	0},
+{"",  "set-folder",	"folder",	"Specify camera folder (default=\"/\")",use_folder,0},
 {"p", "get-picture",	"#", 		"Get picture # from camera", 	get_picture,	0},
 {"t", "get-thumbnail",	"#", 		"Get thumbnail # from camera",	get_thumbnail,	0},
 
