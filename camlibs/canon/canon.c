@@ -811,8 +811,7 @@ gphoto2canonpath (Camera *camera, const char *path, GPContext *context)
 		}
 	}
 
-	strcpy (tmp, camera->pl->cached_drive);
-	strcat (tmp, path);
+	snprintf (tmp, sizeof(tmp), "%s%s", camera->pl->cached_drive, path);
 
 	/* replace all slashes by backslashes */
 	for (p = tmp; *p != '\0'; p++) {
@@ -846,11 +845,19 @@ canon2gphotopath (Camera *camera, const char *path)
 	char *p;
 
 	if (!((path[1] == ':') && (path[2] == '\\'))) {
+		GP_DEBUG ("canon2gphotopath called on invalid canon path '%s'", path);
+		return NULL;
+	}
+	
+	/* 3 is D: plus NULL byte */
+	if (strlen (path) - 3 > sizeof (tmp)) {
+		GP_DEBUG ("canon2gphotopath called on too long canon path (%i bytes): %s",
+			  strlen (path), path);
 		return NULL;
 	}
 
-	p = strchr(path, ':') + 1;
-	strcpy (tmp, p);
+	/* path is something like D:\FOO, we want what is after the colon */
+	strcpy (tmp, path + 2);
 
 	/* replace backslashes by slashes */
 	for (p = tmp; *p != '\0'; p++) {
