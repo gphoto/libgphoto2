@@ -50,7 +50,7 @@
 
 struct _CameraPrivateLibrary {
 	Model model;
-	Info info[0x1ff0];
+	Info info[0x2000];
 };
 
 struct {

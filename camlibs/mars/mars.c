@@ -40,35 +40,27 @@ int
 mars_init (Camera *camera, GPPort *port, Model *model, Info *info) 
 {
 	unsigned char c[16];
-	unsigned char *setup_data;	
-		
 	memset(info,0, sizeof(info)); 
 	memset(c,0,sizeof(c));
-	setup_data= malloc (0x2000);
-	if (!setup_data) {return GP_ERROR_NO_MEMORY;}
-	memset (setup_data,0, sizeof(setup_data));
-
 	GP_DEBUG("Running mars_init\n");
 
 	/* Done twice. First time is a dry run. */ 
 	mars_routine (info, port, INIT, 0);
 	mars_routine (info, port, INIT, 0);    
 	/* Not a typo. This _will_ download the config data ;) */
-	mars_read_picture_data (camera, info, port, setup_data, 0x2000, 0); 
+	mars_read_picture_data (camera, info, port, info, 0x2000, 0); 
 
-	/* Kludge to avoid possible corruption of 
-	 * configuration data. Needed if camera is not replugged.
-	 */
+	/* Removing extraneous line or lines of config data. See "protocol.txt/" */
 	 
-	switch (setup_data[0]) {
+	switch (info[0]) {
+
 	case 0xff:
-		memcpy(info, setup_data + 16, 0x1ff0); /* Saving config */
+		memmove(info, info + 16, 0x1ff0); /* Saving config */
 		break;
 	default: 
-		memcpy(info, setup_data + 144, 0x1ff0); /* Saving config */
+		memcpy(info, info + 144, 0x1f70); /* Saving config */
 	}
 
-	free(setup_data);
 	GP_DEBUG("Leaving mars_init\n");
         return GP_OK;
 }
@@ -211,7 +203,7 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	unsigned char c[16];
 	unsigned char start[2] = {0x19, 0x51};
 	unsigned char do_something[2]; 
-	/* See protocol.txt for my theories about what these mean */
+	/* See protocol.txt for my theories about what these mean. */
 	unsigned char address1[2] = {0x19, info[8*n+1]};
 	unsigned char address2[2] = {0x19, info[8*n+2]};
 	unsigned char address3[2] = {0x19, info[8*n+3]};
