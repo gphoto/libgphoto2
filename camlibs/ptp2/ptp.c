@@ -1531,7 +1531,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		uint16_t dpc;
 		const char *txt;
 	} ptp_device_properties[] = {
-		{PTP_DPC_Undefined,		N_("PTP Undefined Property")},
+		{PTP_DPC_Undefined,		N_("Undefined PTP Property")},
 		{PTP_DPC_BatteryLevel,		N_("Battery Level")},
 		{PTP_DPC_FunctionalMode,	N_("Functional Mode")},
 		{PTP_DPC_ImageSize,		N_("Image Size")},
@@ -1922,7 +1922,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_CompressionSetting, 4, N_("RAW")},
 		{PTP_DPC_CompressionSetting, 5, N_("RAW + JPEG Basic")},
 		{PTP_DPC_WhiteBalance, 2, N_("Auto")},
-		{PTP_DPC_WhiteBalance, 6, N_("Incadesent")},
+		{PTP_DPC_WhiteBalance, 6, N_("Incadescent")},
 		{PTP_DPC_WhiteBalance, 5, N_("Fluorescent")},
 		{PTP_DPC_WhiteBalance, 4, N_("Daylight")},
 		{PTP_DPC_WhiteBalance, 7, N_("Flash")},
