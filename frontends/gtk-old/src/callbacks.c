@@ -582,7 +582,7 @@ void camera_index_common(int thumbnails) {
 			no_thumbnail_xpm,buf,NULL);
 		if (thumbnails) {
 			f = gp_file_new();
-			if (gp_file_get(x, f) == GP_OK) {
+			if (gp_file_get_preview(x, f) == GP_OK) {
 				gdk_image_new_from_data(f->data,f->size,1,&pixmap,&bitmap);
 				gtk_pixmap_set(GTK_PIXMAP(item->pixmap), pixmap, bitmap);
 			}
