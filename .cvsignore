@@ -2,6 +2,7 @@
 *.patch *.patch.new
 autom4te.cache
 config.guess
+config.rpath
 config.sub
 depcomp
 ltconfig

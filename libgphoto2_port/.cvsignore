@@ -15,6 +15,7 @@ configure
 config.log
 config.h
 config.cache
+config.rpath
 libtool
 config.status
 stamp-h
