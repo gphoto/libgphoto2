@@ -892,7 +892,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			char fname[PTP_MAXSTRLEN];
 			PTPStorageInfo storageinfo;
 			if ((storageids.Storage[i]&0x0000ffff)==0) continue;
-			if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
+			if (ptp_operation_issupported(params,PTP_OC_GetStorageInfo)) {
 				CPR (context, ptp_getstorageinfo(params,
 					storageids.Storage[i], &storageinfo));
 			}
