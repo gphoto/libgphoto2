@@ -107,7 +107,7 @@ GtkWidget*
 create_save_window (void)
 {
 
-  GtkWidget *save_window, *hbox, *frame, *photos, *thumbs;
+  GtkWidget *save_window, *hbox, *frame, *photos, *thumbs, *override;
   GtkTooltips *tooltip;
   char buf[1024];
 
@@ -134,7 +134,7 @@ create_save_window (void)
   gtk_widget_show(hbox);
   gtk_container_add(GTK_CONTAINER(frame), hbox);
 
-  photos = gtk_toggle_button_new_with_label("Save Photos");
+  photos = gtk_check_button_new_with_label("Save Photos");
   gtk_widget_ref(photos);
   gtk_object_set_data_full (GTK_OBJECT (save_window), "photos", photos,
                             (GtkDestroyNotify) gtk_widget_unref);
@@ -142,18 +142,34 @@ create_save_window (void)
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(photos), TRUE);
   tooltip = gtk_tooltips_new();
   gtk_tooltips_set_tip (tooltip, photos, 
-	_("Photos will be saved if this button is pressed in."), NULL);
+	_("Photos will be saved if this is checked."), NULL);
   gtk_box_pack_start(GTK_BOX(hbox), photos, TRUE, TRUE, 0);
 
-  thumbs = gtk_toggle_button_new_with_label("Save Thumbnails");
+  thumbs = gtk_check_button_new_with_label("Save Thumbnails");
   gtk_widget_ref(thumbs);
   gtk_object_set_data_full (GTK_OBJECT (save_window), "thumbs", thumbs,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show(thumbs);
   tooltip = gtk_tooltips_new();
   gtk_tooltips_set_tip (tooltip, thumbs, 
-	_("Thumbnails will be saved if this button is pressed in."), NULL);
+	_("Thumbnails will be saved if this is checked."), NULL);
   gtk_box_pack_start(GTK_BOX(hbox), thumbs, TRUE, TRUE, 0);
+
+  /* Create the filename override button */
+  override = gtk_check_button_new_with_label("Use camera-suggested filenames");
+  gtk_widget_ref(override);
+  gtk_object_set_data_full (GTK_OBJECT (save_window), "use_camera_filename", override,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show(override);
+  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(save_window)->main_vbox),override,
+    TRUE, TRUE, 0);
+  tooltip = gtk_tooltips_new();
+  gtk_tooltips_set_tip (tooltip, override,
+	_("Choose whether to use the filename provided by the camera"), NULL);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(override), TRUE);
+  gtk_widget_set_sensitive(GTK_FILE_SELECTION(save_window)->selection_entry, FALSE);
+  gtk_signal_connect(GTK_OBJECT(override), "clicked",
+   GTK_SIGNAL_FUNC(toggle_sensitivity), GTK_FILE_SELECTION(save_window)->selection_entry);
 
   return (save_window);
 }

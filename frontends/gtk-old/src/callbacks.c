@@ -186,9 +186,20 @@ void open_directory() {
 	debug_print("open directory");
 }
 
+void toggle_sensitivity (GtkWidget *button, gpointer data) {
+
+	GtkWidget *widget = (GtkWidget*)data;
+
+	if (GTK_WIDGET_SENSITIVE(widget))
+		gtk_widget_set_sensitive(widget, FALSE);
+	   else
+		gtk_widget_set_sensitive(widget, TRUE);
+}
+
 void save_selected_photo() {
 
-	GtkWidget *icon_list, *window, *ok, *cancel, *hbox, *label, *prefix;
+	GtkWidget *icon_list, *window, *ok, *cancel, *hbox, *label, *prefix,
+		  *use_camera_filename;
 	GtkIconListItem *item;
 	GList *child;
 	int num=0, x;
@@ -211,6 +222,7 @@ void save_selected_photo() {
 	window = create_save_window();
 	ok = GTK_FILE_SELECTION(window)->ok_button;
 	cancel = GTK_FILE_SELECTION(window)->cancel_button;
+	use_camera_filename = (GtkWidget*)lookup_widget(window, "use_camera_filename");
 
 	if (num > 1) {
 		gtk_widget_hide(GTK_FILE_SELECTION(window)->selection_entry);
@@ -223,18 +235,26 @@ void save_selected_photo() {
 		child = gtk_container_children(
 			GTK_CONTAINER(child->next->next->data));
 		gtk_widget_hide(GTK_WIDGET(child->next->data));
+
+		/* Create the hbox to hold the filename prefix label and entry */
 		hbox = gtk_hbox_new(FALSE, 5);
 		gtk_widget_show(hbox);
 		gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(window)->main_vbox),hbox,
 			TRUE, TRUE, 0);
 		gtk_box_reorder_child(GTK_BOX(GTK_FILE_SELECTION(window)->main_vbox),
 			hbox, 256);
+
+		gtk_signal_connect(GTK_OBJECT(use_camera_filename), "clicked",
+			GTK_SIGNAL_FUNC(toggle_sensitivity), hbox);
+
 		label = gtk_label_new("Filename prefix:");
 		gtk_widget_show(label);
 		gtk_box_pack_start(GTK_BOX(hbox),label, FALSE, FALSE, 0);
 		prefix = gtk_entry_new();
 		gtk_widget_show(prefix);
 		gtk_box_pack_start(GTK_BOX(hbox), prefix, TRUE, TRUE, 0);
+		gtk_widget_set_sensitive(hbox, FALSE);
+		
 	}
 
 	if (wait_for_hide(window, ok, cancel)==0)

@@ -4,6 +4,7 @@
 /* ------------------------------------------------------*/
 int main_quit(GtkWidget *widget, gpointer data);
 gboolean toggle_icon (GtkWidget *icon_list, gpointer data);
+void toggle_sensitivity (GtkWidget *button, gpointer data);
 void debug_print (char *message);
 void idle();
 void icon_resize(GtkWidget *window);
