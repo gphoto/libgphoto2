@@ -18,7 +18,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	strcpy(a->model, "CAMERA MODEL");
 	a->port     = GP_PORT_SERIAL | GP_PORT_USB;
 	a->speed[0] = 0;
-	a->capture  = 0;
+	a->capture  = GP_CAPTURE_NONE;
 	a->config   = 0;
 	a->file_delete  = 0;
 	a->file_preview = 0;

@@ -60,7 +60,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         a->port     = GP_PORT_NONE;
         a->speed[0] = 0;
 
-        a->capture   = 0;
+        a->capture   = GP_CAPTURE_NONE;
         a->config    = 1;
         a->file_delete  = 0;
         a->file_preview = 1;

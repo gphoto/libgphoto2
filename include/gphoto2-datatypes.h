@@ -62,6 +62,7 @@ typedef enum {
 
 /* Capture Type */
 typedef enum {
+	GP_CAPTURE_NONE		= 0,
 	GP_CAPTURE_IMAGE	= 1 << 0,
 	GP_CAPTURE_VIDEO	= 1 << 1,
 	GP_CAPTURE_PREVIEW	= 1 << 2
@@ -199,8 +200,8 @@ typedef struct {
 	int file_put;
 		/* Camera can receive files			 */
 
-	int capture;
-		/* Camera can do a capture			 */
+	CameraCaptureType capture;
+		/* Camera can do the specified kinds of capture	 */
 
 	int usb_vendor;
 	int usb_product;

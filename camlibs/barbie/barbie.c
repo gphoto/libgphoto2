@@ -38,7 +38,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a->port      = GP_PORT_SERIAL;
 		a->speed[0]  = 57600;
 		a->speed[1]  = 0;
-		a->capture   = 1;
+		a->capture   = GP_CAPTURE_NONE;
 		a->config    = 0;
 		a->file_delete  = 0;
 		a->file_preview = 1;
@@ -66,10 +66,8 @@ int camera_init(Camera *camera, CameraInit *init) {
 	camera->functions->file_list    = camera_file_list;
 	camera->functions->file_get 	= camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
-	camera->functions->file_put 	= NULL;
 	camera->functions->file_delete 	= camera_file_delete;
 	camera->functions->config       = camera_config;
-	camera->functions->capture 	= NULL;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;

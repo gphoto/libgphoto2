@@ -39,7 +39,7 @@ int camera_abilities (CameraAbilitiesList *list) {
         strcpy(a->model, "Sony DSC-F1");
         a->port=GP_PORT_SERIAL;
         a->speed[0] = 0;
-        a->capture  = 0;
+        a->capture  = GP_CAPTURE_NONE;
         a->config   = 1;
         a->file_delete  = 1;
         a->file_preview = 1;

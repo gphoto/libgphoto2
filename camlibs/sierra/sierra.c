@@ -116,7 +116,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a->speed[3] = 57600;
 		a->speed[4] = 115200;
 		a->speed[5] = 0;
-		a->capture  = 1;
+		a->capture  = GP_CAPTURE_IMAGE;
 		a->config   = 0;
 		a->file_delete  = 1;
 		a->file_preview = 1;

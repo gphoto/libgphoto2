@@ -424,7 +424,7 @@ int camera_abilities (CameraAbilitiesList *list) {
                 a->speed[3]     = 57600;
                 a->speed[4]     = 115200;
                 a->speed[5]     = 0;
-                a->capture      = 0;
+                a->capture      = GP_CAPTURE_NONE;
                 a->config       = 0;
                 a->file_delete  = 1;
                 a->file_preview = 1;
@@ -455,8 +455,6 @@ int camera_init (Camera *camera, CameraInit *init) {
         camera->functions->file_get_preview     = camera_file_get_preview;
         camera->functions->file_put             = camera_file_put;
         camera->functions->file_delete          = camera_file_delete;
-        camera->functions->config               = NULL;
-        camera->functions->capture              = NULL;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;

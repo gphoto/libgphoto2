@@ -92,7 +92,7 @@ erase_all_unprotected_images (Camera* camera, CameraWidget* widget)
 	result = k_erase_all (konica_data->device, &not_erased);
 	if ((result == GP_OK) && (not_erased > 0)) {
 		tmp = g_strdup_printf (_("%i images were protected and have not been erased."), not_erased);
-		gp_frontend_message (camera, tmp);
+		gp_frontend_status (camera, tmp);
 		g_free (tmp);
 	}
 	return (result);
