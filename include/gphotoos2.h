@@ -1,4 +1,5 @@
 #ifndef GPHOTO_OS2_INCLUDED
+#include <db.h>
 #include <sys/param.h>
 #define GPHOTO_OS2_INCLUDED
 
