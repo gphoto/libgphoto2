@@ -1815,8 +1815,10 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *c)
 		sprintf (buf, _("%sMemory Left: %i bytes\n"), buf, v);
 
 	/* Get date */
-	if (sierra_get_int_register (camera, 2, &v, c) >= 0)
-		sprintf (buf, _("%sDate: %s"), buf, ctime ((time_t *) &v));
+	if (sierra_get_int_register (camera, 2, &v, c) >= 0) {
+		time_t vtime = v;
+		sprintf (buf, _("%sDate: %s"), buf, ctime (&vtime));
+	}
 
 	strcpy (summary->text, buf);
 

@@ -1,3 +1,6 @@
+2002-11-17  Marcus Meissner <marcus@jet.franken.de>
+	* sierra.c: Do not cast between time_t* and int*.
+
 2002-11-10  Patrick Mansfield <patmans@users.sourceforge.net>
 	* library.c: oops accidentally took out the retrieval of the
 	  current picture number (it's used to set the file name if no
