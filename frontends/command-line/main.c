@@ -21,6 +21,10 @@
 #include "range.h"
 #include "shell.h"
 
+#if HAVE_CDK
+#include "gphoto2-cmd-config.h"
+#endif
+
 #include "gphoto2-port-core.h"
 #include "gphoto2-port-log.h"
 
@@ -76,6 +80,9 @@ static int set_globals (void);
 /*    Use the OPTION_CALLBACK(function) macro.                          */
 
 OPTION_CALLBACK(abilities);
+#if HAVE_CDK
+OPTION_CALLBACK(config);
+#endif
 OPTION_CALLBACK(help);
 OPTION_CALLBACK(version);
 OPTION_CALLBACK(shell);
@@ -163,6 +170,9 @@ Option option[] = {
 {"" , "capture-image",  "",             "Capture an image",             capture_image,  0},
 {"" , "capture-movie",  "",             "Capture a movie ",             capture_movie,  0},
 {"" , "capture-sound",  "",             "Capture an audio clip",        capture_sound,  0},
+#if HAVE_CDK
+{"" , "config",		"", 		"Configure",			config,		0},
+#endif
 {"",  "summary",        "",             "Summary of camera status",     summary,        0},
 {"",  "manual",         "",             "Camera driver manual",         manual,         0},
 {"",  "about",          "",             "About the camera driver",      about,          0},
@@ -233,8 +243,8 @@ OPTION_CALLBACK(use_stdout) {
         return GP_OK;
 }
 
-OPTION_CALLBACK(use_stdout_size) {
-
+OPTION_CALLBACK(use_stdout_size)
+{
         glob_stdout_size = 1;
         use_stdout(arg);
 
@@ -551,6 +561,17 @@ OPTION_CALLBACK (list_folders)
 
         return for_each_subfolder(glob_folder, print_folder, NULL, glob_recurse);
 }
+
+#if HAVE_CDK
+OPTION_CALLBACK(config)
+{
+	CHECK_RESULT (set_globals ());
+
+	CHECK_RESULT (gp_cmd_config (glob_camera, NULL, NULL));
+
+	return (GP_OK);
+}
+#endif
 
 OPTION_CALLBACK (list_files)
 {

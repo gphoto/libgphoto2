@@ -12,8 +12,15 @@ INCLUDES =						\
 	-I$(top_srcdir)/libgphoto2			\
 	-I$(top_srcdir)
 
+if HAVE_CDK
+CDK_FILES = gphoto2-cmd-config.c gphoto2-cmd-config.h
+else
+CDK_FILES =
+endif
+
 LDFLAGS = @LDFLAGS@ -g 
 gphoto2_SOURCES = 		\
+	$(CDK_FILES)		\
 	actions.c actions.h 	\
 	foreach.c foreach.h 	\
 	globals.h 		\
@@ -25,4 +32,4 @@ gphoto2_SOURCES = 		\
 
 gphoto2_LDFLAGS = -export-dynamic
 
-gphoto2_LDADD = ../../libgphoto2/libgphoto2.la
+gphoto2_LDADD = ../../libgphoto2/libgphoto2.la $(CDK_LIBS)

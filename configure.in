@@ -143,6 +143,28 @@ dnl Configure libgphoto2-port
 dnl *************************
 AC_CONFIG_SUBDIRS(libgphoto2_port)
 
+dnl ***
+dnl CDK
+dnl ***
+cdk_msg=no
+try_cdk=true
+have_cdk=false
+AC_ARG_WITH(cdk, [  --without-cdk     Don't use cdk],
+	if test x$withval = xno; then
+		try_cdk=false
+	fi
+)
+if $try_cdk; then
+	AC_CHECK_HEADER(cdk/cdk.h,
+		have_cdk=true
+		cdk_msg=yes
+		AC_DEFINE(HAVE_CDK)
+		CDK_LIBS="-lcdk -lncurses"
+	)
+fi
+AM_CONDITIONAL(HAVE_CDK, $have_cdk)
+AC_SUBST(CDK_LIBS)
+
 AC_OUTPUT([
 Makefile
 gphoto.spec
@@ -191,8 +213,9 @@ echo "
 
 Configuration (libgphoto2):
 
-	Source code location: ${srcdir}
-	Compiler:             ${CC}
+	Source code location:      ${srcdir}
+	Compiler:                  ${CC}
 
-	Build documenation:   $enable_gtk_doc
+	Build documenation:        $enable_gtk_doc
+	Config. support (gphoto2): $cdk_msg
 "
