@@ -73,13 +73,12 @@
 
 /*
  * Register 1: resolution/size.
+ *
+ * These values suck. why didn't they make these maskable, or use a nibble
+ * for each part?  Just use a the combined resolution + size.  It would be
+ * good to try and break these into two selections.
  */
 static const ValueNameType oly3040_reg_01_val_names[] = {
-	/* 
-	 * These values suck. why didn't they make these maskable, or use
-	 * a nibble for each part?  Just use a the combined resolution + size.
-	 * It would be good to try and break these into two selections.
-	 */
 	{ { 0x01 }, "640x480-Normal" },
 	{ { 0x04 }, "640x480-Fine" },
 	{ { 0x05 }, "1024x768-Normal" },
@@ -103,9 +102,39 @@ static const ValueNameType oly3040_reg_01_val_names[] = {
 };
 static const RegisterDescriptorType oly3040_reg_01[] = { 
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK, 
 		"resolution", N_("Resolution plus Size"),
 		VAL_NAME_INIT (oly3040_reg_01_val_names)
+	}
+};
+
+static const ValueNameType oly750uz_reg_01_val_names[] = {
+	{ { 0x01 }, "SQ2-640x480-NORMAL" },
+	{ { 0x02 }, "SQ1-2048x1536-NORMAL" },
+	{ { 0x03 }, "SQ1-2048x1536-HIGH" },
+	{ { 0x04 }, "SQ2-640x480-HIGH" },
+	{ { 0x05 }, "SQ2-1024x768-NORMAL" },
+	{ { 0x06 }, "SQ2-1024x768-HIGH" },
+	{ { 0x07 }, "SQ1-1280x960-NORMAL" },
+	{ { 0x08 }, "SQ1-1280x960-HIGH" },
+	{ { 0x09 }, "SQ1-1600x1200-NORMAL" },
+	{ { 0x0a }, "SQ1-1600x1200-HIGH" },
+	{ { 0x0d }, "HQ-2288x1712" },
+	{ { 0x0e }, "SHQ-2288x1712" },
+	{ { 0x0f }, "3:2-HQ-2288x1520" },
+	{ { 0x10 }, "3:2-SHQ-2288x1620" },
+	{ { 0x13 }, "LG-HQ-3200x2400" },
+	{ { 0x14 }, "LG-SHQ-3200x2400" },
+	{ { 0x24 }, "TIFF-1600x1200" },
+	{ { 0x25 }, "TIFF-2048x1536" },
+	{ { 0x26 }, "TIFF-2218x1712" },
+	{ { 0x27 }, "3:2-TIFF-2218x1712" },
+};
+static const RegisterDescriptorType oly750uz_reg_01[] = { 
+	{
+		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		"resolution", N_("Resolution plus Size"),
+		VAL_NAME_INIT (oly750uz_reg_01_val_names)
 	}
 };
 
@@ -128,24 +157,12 @@ static const RegisterDescriptorType oly3040_reg_02[] = {
 };
 
 /*
- * Register 3: shutter speed, camera must be in S or M mode.
- * In S mode, aperture is compensated
+ * Register 3: shutter speed, some cameras must be in S or M mode.
+ *
+ * In S mode, aperture is compensated.
+ *
  * Possibly could be any other value in the range of 1250 and 16M
  */
-#ifdef RANGE_FOR_SHUTTER
-static const ValueNameType oly3040_reg_03_val_names[] = { 
-	{
-		{ range: { 0, 16000000, 1000 } }, NULL 
-	}
-};
-static const RegisterDescriptorType oly3040_reg_03[] = { 
-	{
-		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
-		"shutter", N_("Shutter Speed microseconds (0 auto)"),
-		VAL_NAME_INIT (oly3040_reg_03_val_names)
-	}
-};
-#else
 static const ValueNameType oly3040_reg_03_val_names[] = { 
 	{ {       0 }, N_("Auto") },
 	{ {    1250 }, "1/800" },
@@ -164,7 +181,7 @@ static const ValueNameType oly3040_reg_03_val_names[] = {
 	{ {   66667 }, "1/15" },
 	{ {  100000 }, "1/10" },
 	{ {  125000 }, "1/8" },
-	{ {  200000 }, "1/4" },
+	{ {  200000 }, "1/4" }, /* XXX patman should this be 25000? */
 	{ {  500000 }, "1/2" },
 	{ { 1000000 }, "1" },
 	{ { 2000000 }, "2" },
@@ -184,7 +201,86 @@ static const RegisterDescriptorType oly3040_reg_03[] = {
 		VAL_NAME_INIT (oly3040_reg_03_val_names)
 	}
 };
-#endif
+
+static const ValueNameType oly750uz_reg_03_val_names[] = { 
+	/*
+	 * Right now, we are limited to 32 (see "choice [32] [64]" in
+	 * libgphoto2/gphoto2-widget.c.
+	 *
+	 * We have 44, so skip 12 of these. (Don't know why, we can only
+	 * do 31, I must be counting wrong somehow!)
+	 */
+	{ {       0 }, N_("Auto") },
+	{ {    1000 }, "1/1000" },
+	{ {    1250 }, "1/800" },
+	{ {    1538 }, "1/650" },
+	{ {    2000 }, "1/500" },
+	{ {    2500 }, "1/400" },
+	/* { {    3125 }, "1/320" }, skip 1 */
+	{ {    4000 }, "1/250" },
+	{ {    5000 }, "1/200" },
+	/* { {    6250 }, "1/160" }, skip 2 */
+	{ {    8000 }, "1/125" },
+	{ {   10000 }, "1/100" },
+	{ {   12500 }, "1/80" },
+	/* { {   16666 }, "1/60" }, skip 3 */
+	{ {   20000 }, "1/50" },
+	{ {   25000 }, "1/40" },
+	{ {   33333 }, "1/30" },
+	/* { {   40000 }, "1/25" }, skip 4 */
+	{ {   50000 }, "1/20" },
+	{ {   66667 }, "1/15" },
+	/* { {   76923 }, "1/13" }, skip 5 */
+	{ {  100000 }, "1/10" },
+	{ {  125000 }, "1/8" },
+	/* { {  166667 }, "1/6" }, skip 6 */
+	/* { {  200000 }, "1/5" }, skip 7 */
+	{ {  250000 }, "1/4" },
+	{ {  333333 }, "1/3" },
+	{ {  400000 }, "1/2.5" },
+	{ {  500000 }, "1/2" },
+	/* { {  625000 }, "1/1.6" }, skip 8 */
+	/* { {  769230 }, "1/1.3" }, skip 9 */
+	{ { 1000000 }, "1" },
+	/* { { 1300000 }, "1.3" }, skip 10 */
+	/* { { 1600000 }, "1.6" }, skip 11 */
+	{ { 2000000 }, "2" },
+	/* { { 2500000 }, "2.5" }, skip 12 */
+	{ { 3200000 }, "3.2" },
+	{ { 4000000 }, "4" },
+	{ { 5000000 }, "5" },
+	{ { 6000000 }, "6" },
+	{ { 8000000 }, "8" },
+	{ {10000000 }, "10" },
+	/* { {13000000 }, "13" }, skip 13 */
+	{ {16000000 }, "16" },
+};
+static const RegisterDescriptorType oly750uz_reg_03[] = { 
+	{
+		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		"shutter", N_("Shutter Speed (in seconds)"),
+		VAL_NAME_INIT (oly750uz_reg_03_val_names)
+	}
+};
+
+/*
+ * Past behaviour is that you have to pick a supported value, you can't
+ * arbitrarily set this to some value and have it work, so using a range
+ * does not work well, since only about 30 of some 16 million values are
+ * valid.
+ */
+static const ValueNameType olyrange_reg_03_val_names[] = { 
+	{
+		{ range: { 0, 16000000, 100 } }, NULL 
+	}
+};
+static const RegisterDescriptorType olyrange_reg_03[] = { 
+	{
+		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		"shutter", N_("Shutter Speed microseconds (0 auto)"),
+		VAL_NAME_INIT (olyrange_reg_03_val_names)
+	}
+};
 
 /*
  * Olympus 3040 Register 5: aperature settings. Works only in A or M mode
@@ -250,6 +346,30 @@ static const RegisterDescriptorType oly3000z_reg_05[] = {
 };
 
 /*
+ * Olympus 750uz Register 5: aperature settings.
+ */
+static const ValueNameType oly750uz_reg_05_val_names[] = {
+	{ { 0 }, N_("Auto") },
+	{ { 3 }, "F2.8" },
+	{ { 4 }, "F3.2" },
+	{ { 5 }, "F3.5" },
+	{ { 6 }, "F4.0" },
+	{ { 7 }, "F4.5" },
+	{ { 8 }, "F5.0" },
+	{ { 9 }, "F5.6" },
+	{ { 10 }, "F6.3" },
+	{ { 11 }, "F7.0" },
+	{ { 12 }, "F8.0" },
+};
+static const RegisterDescriptorType oly750uz_reg_05[] = { 
+	{
+		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		"aperature", N_("Aperature Settings"),
+		VAL_NAME_INIT (oly750uz_reg_05_val_names)
+	}
+};
+
+/*
  * Register 6: color mode
  */
 static const ValueNameType oly3040_reg_06_val_names[] = {
@@ -262,13 +382,13 @@ static const ValueNameType oly3040_reg_06_val_names[] = {
 static const RegisterDescriptorType oly3040_reg_06[] = { 
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
-		"color", N_("Color Mode"),
+		"color", N_("Color or Function Mode"),
 		VAL_NAME_INIT (oly3040_reg_06_val_names)
 	}
 };
 
 /*
- * Register 7: flash settings
+ * Olyumpus 3040 Register 7: flash settings
  */
 static const ValueNameType oly3040_reg_07_val_names[] = {
 	{ { 0 }, N_("Auto") },
@@ -281,6 +401,25 @@ static const RegisterDescriptorType oly3040_reg_07[] = {
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"flash", N_("Flash Settings"), 
 		VAL_NAME_INIT (oly3040_reg_07_val_names)
+	}
+};
+
+/*
+ * Olumpus 750uz Register 7: flash settings
+ */
+static const ValueNameType oly750uz_reg_07_val_names[] = {
+	{ { 0 }, N_("Auto") },
+	{ { 1 }, N_("Force") },
+	{ { 2 }, N_("Off") },
+	{ { 3 }, N_("Anti-redeye") },
+	{ { 4 }, N_("Slow") }, 
+	/* This is always 4 for slow 1, 2, or slow with redeye */
+};
+static const RegisterDescriptorType oly750uz_reg_07[] = { 
+	{
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
+		"flash", N_("Flash Settings"), 
+		VAL_NAME_INIT (oly750uz_reg_07_val_names)
 	}
 };
 
@@ -318,6 +457,27 @@ static const RegisterDescriptorType oly3000z_reg_20[] = {
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"whitebalance", N_("White Balance"),
 		VAL_NAME_INIT (oly3000z_reg_20_val_names)
+	}
+};
+
+/*
+ * Olympus 750uz: Register 20: white balance. The main difference is that
+ * we have the flourescent 1 2 and 3:
+ */
+static const ValueNameType oly750uz_reg_20_val_names[] = {
+	{ { 0x00 }, N_("Auto") },
+	{ { 0x01 }, N_("Daylight") },
+	{ { 0x03 }, N_("Tungsten") },
+	{ { 0x04 }, N_("Flourescent-1-home-6700K") },
+	{ { 0x05 }, N_("Flourescent-2-desk-5000K") },
+	{ { 0x06 }, N_("Flourescent-3-office-4200K") },
+	{ { 0xff }, N_("Cloudy") },
+};
+static const RegisterDescriptorType oly750uz_reg_20[] = { 
+	{
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
+		"whitebalance", N_("White Balance"),
+		VAL_NAME_INIT (oly750uz_reg_20_val_names)
 	}
 };
 
@@ -524,7 +684,7 @@ static const RegisterDescriptorType oly3040_reg_72[] = {
 };
 
 /*
- * Register 85: ISO speed, read only
+ * Register 85: ISO speed, read only on some cameras
  */
 static const ValueNameType oly3040_reg_85_val_names[] = {
 	{ { 0 }, N_("Auto") },
@@ -541,6 +701,24 @@ static const RegisterDescriptorType oly3040_reg_85[] = {
 };
 
 /*
+ * Olympus 750uz Register 85: ISO speed, writable
+ */
+static const ValueNameType oly750uz_reg_85_val_names[] = {
+	{ { 0 }, N_("Auto") },
+	{ { 1 }, "100" },
+	{ { 2 }, "200" },
+	{ { 3 }, "400" },
+	{ { 4 }, "50" },
+};
+static const RegisterDescriptorType oly750uz_reg_85[] = { 
+	{
+		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		"iso", N_("ISO Speed"),
+		VAL_NAME_INIT (oly750uz_reg_85_val_names)
+	}
+};
+
+/*
  * Register 103: focus position (only applicable in manual focus mode)
  *     1 to 120: macro positions
  *   121 to 240: normal positions
@@ -553,6 +731,22 @@ static const RegisterDescriptorType oly3040_reg_103[] = {
 		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
 		"focus-pos", N_("Focus position"),
 		VAL_NAME_INIT (oly3040_reg_103_val_names)
+	}
+};
+
+/*
+ * Olyumpus 750uz Register 103: focus position
+ *     27 to 120: if in macro mode
+ *      0 to 120: non-macro mode
+ */
+static const ValueNameType oly750uz_reg_103_val_names[] = {
+	{ { range: { 1, 120, 1 } }, NULL },
+};
+static const RegisterDescriptorType oly750uz_reg_103[] = { 
+	{
+		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		"focus-pos", N_("Focus position"),
+		VAL_NAME_INIT (oly750uz_reg_103_val_names)
 	}
 };
 
@@ -644,31 +838,36 @@ static const CameraRegisterSetType oly3040_desc[] = {
 
 /*
  * Olympus 750UZ: All of the register used to modify picture settings.
- *
- * XXX patman for now all except zoom are the same as the 3000 - a mix of
- * 3040 and 3000.
  */
 static CameraRegisterType oly750uz_pic_regs[] =  {
 	/* camera prefix, register number, size of register */
-	CAM_REG_TYPE_INIT (oly3040, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
-	CAM_REG_TYPE_INIT (oly3040, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
-	CAM_REG_TYPE_INIT (oly3000z, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
+	CAM_REG_TYPE_INIT (oly750uz, 01, 4, CAM_DESC_DEFAULT, 0), /* resolution/size */
+	CAM_REG_TYPE_INIT (oly750uz, 03, 4, CAM_DESC_DEFAULT, 0), /* shutter */
+	CAM_REG_TYPE_INIT (oly750uz, 05, 4, CAM_DESC_DEFAULT, 0), /* aperature (f-stop) */
 	CAM_REG_TYPE_INIT (oly3040, 06, 4, CAM_DESC_DEFAULT, 0), /* color mode */
-	CAM_REG_TYPE_INIT (oly3040, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
-	CAM_REG_TYPE_INIT (oly3000z, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
+	CAM_REG_TYPE_INIT (oly750uz, 07, 4, CAM_DESC_DEFAULT, 0), /* flash */
+	CAM_REG_TYPE_INIT (oly750uz, 20, 4, CAM_DESC_DEFAULT, 0), /* white balance */
 	CAM_REG_TYPE_INIT (oly3040, 33, 4, CAM_DESC_DEFAULT, 0), /* focus mode */
-	CAM_REG_TYPE_INIT (oly3040,103, 4, CAM_DESC_DEFAULT, 0), /* focus position */
+	/*
+	 * Note: in "super macro" focus mode, the camera can only auto
+	 * focus. Could not figure out how to set or get super macro mode.
+	 */
+	CAM_REG_TYPE_INIT (oly750uz,103, 4, CAM_DESC_DEFAULT, 0), /* focus position */
 	CAM_REG_TYPE_INIT (oly3040, 69, 8, CAM_DESC_DEFAULT, 0), /* exposure compensation */
 	CAM_REG_TYPE_INIT (oly3040, 70, 4, CAM_DESC_DEFAULT, 0), /* exposure metering */
+	/*
+	 * Could not figure out how or if mulit-metering can be set for
+	 * the exposure metering.
+	 */
 	CAM_REG_TYPE_INIT (oly750uz, 71, 8, CAM_DESC_DEFAULT, 0), /* optical zoom */
 	CAM_REG_TYPE_INIT (oly3040, 72, 4, CAM_DESC_DEFAULT, 0), /* digital zoom + lense +  AE lock */
-	CAM_REG_TYPE_INIT (oly3040, 85, 4, CAM_DESC_DEFAULT, 0), /* ISO Speed, read only  */
+	CAM_REG_TYPE_INIT (oly750uz, 85, 4, CAM_DESC_DEFAULT, 0), /* ISO Speed, read only  */
 };
 
 /*
  * All of the register used to modify camera settings.
  *
- * XXX patman for now all the same as 3040.
+ * All the same as 3040.
  */
 static const CameraRegisterType oly750uz_cam_regs[] = {
 	CAM_REG_TYPE_INIT (oly3040, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */

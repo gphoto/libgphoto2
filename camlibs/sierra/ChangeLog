@@ -1,3 +1,9 @@
+2005-01-05  Patrick Mansfield <patmans@users.sourceforge.net>
+	* olympus-desc.c: Add other Olympus C750UZ camera settings, they
+	  were using the C3040 ones except for the zoom. Also use
+	  GP_WIDGET_MENU instead of GP_WIDGET_RADIO for the resolutions,
+	  as the radio with many elements takes up to much space.
+
 2005-01-04  Patrick Mansfield <patmans@users.sourceforge.net>
 	* sierra-desc.c: Call gp_widget_set_name to properly set the
 	  "name", so new gphoto2 --list-config and such are easier to
