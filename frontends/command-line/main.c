@@ -1280,22 +1280,52 @@ ctx_error_func (GPContext *context, const char *format, va_list args,
 	fflush   (stderr);
 }
 
-static float targets[] = {0, 0, 0, 0, 0, 0, 0, 0};
+
+#define MAX_PROGRESS_STATES 16
+#define MAX_MSG_LEN 48
+
+static struct {
+	char message[MAX_MSG_LEN + 1];
+	float target;
+	unsigned long int count;
+} progress_states[MAX_PROGRESS_STATES];
+
+static const char bar[] = 
+	"==============================================================="
+	"===============================================================";
+static const char spaces[] = 
+	"                                                               "
+	"                                                               ";
 
 static unsigned int
 ctx_progress_start_func (GPContext *context, float target, 
 			 const char *format, va_list args, void *data)
 {
 	unsigned int id;
+	static unsigned char initialized = 0;
 
-	for (id = 0; id < 7; id++)
-		if (!targets[id])
+	if (!initialized) {
+		memset (progress_states, 0, sizeof (progress_states));
+		initialized = 1;
+	}
+
+	/* Remember message and target. */
+	for (id = 0; id < MAX_PROGRESS_STATES; id++)
+		if (!progress_states[id].target)
 			break;
-	targets[id] = target;
+	if (id == MAX_PROGRESS_STATES)
+		id--;
+	progress_states[id].target = target;
+	vsnprintf (progress_states[id].message, MAX_MSG_LEN + 1, format, args);
+	progress_states[id].count = 0;
 
-	vfprintf (stderr, format, args);
-	fprintf  (stderr, "\n");
-	fflush  (stderr);
+	/* If message is too long, shorten it. */
+	if (progress_states[id].message[MAX_MSG_LEN - 1]) {
+		progress_states[id].message[MAX_MSG_LEN - 1] = '\0';
+		progress_states[id].message[MAX_MSG_LEN - 2] = '.';
+		progress_states[id].message[MAX_MSG_LEN - 3] = '.';
+		progress_states[id].message[MAX_MSG_LEN - 4] = '.';
+	}
 
 	return (id);
 }
@@ -1304,15 +1334,39 @@ static void
 ctx_progress_update_func (GPContext *context, unsigned int id,
 			  float current, void *data)
 {
-	fprintf (stdout, "Percent completed: %02.01f\r",
-		 current / targets[id] * 100.);
+	static const char spinner[] = "\\|/-";
+	unsigned int i, width;
+
+	/* Guard against buggy camera drivers */
+	if (id >= MAX_PROGRESS_STATES)
+		return;
+
+	width = 66 - strlen (progress_states[id].message);
+	i = ((MIN (current / progress_states[id].target, 100.) * width) + 0.5);
+
+	fprintf (stdout, "%s |%s%s", progress_states[id].message,
+		 bar + sizeof (bar) - (i + 1),
+		 spaces + (sizeof (spaces) - (width - i + 1)));
+
+	if (current == 100.)
+		fputc ('|', stdout);
+	else
+		fputc (spinner[progress_states[id].count & 0x03], stdout);
+	progress_states[id].count++;
+
+	fprintf (stdout, " %5.1f%%   \r",
+		 current / progress_states[id].target * 100.);
 	fflush (stdout);
 }
 
 static void
 ctx_progress_stop_func (GPContext *context, unsigned int id, void *data)
 {
-	targets[id] = 0;
+	/* Clear the progress bar. */
+	fprintf (stdout, "%s\r", spaces + (sizeof(spaces) - 80));
+	fflush (stdout);
+
+	progress_states[id].target = 0.;
 }
 
 static GPContextFeedback

@@ -10,6 +10,11 @@
 
 2002-02-08  Lutz Müller <lutz@users.sourceforge.net>
 
+	* frontends/command-line/main.c: Implement a progress bar (code
+	  adapted from e2fsck).
+
+2002-02-08  Lutz Müller <lutz@users.sourceforge.net>
+
 	* frontends/command-line: s/image/file and s/picture/file with 
 	  the exception of capture-image.
 
