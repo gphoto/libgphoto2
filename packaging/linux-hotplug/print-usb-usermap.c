@@ -20,6 +20,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#define GP_USB_HOTPLUG_SCRIPT "usbcam"
+
 #define HELP_TEXT \
 "print-usb-usermap - print usb.usermap file for linux-hotplug\n" \
 "\n" \
@@ -34,7 +36,7 @@
 "program aborts regardless of data printed on stdout and returns a non-zero\n" \
 "status code.\n" \
 "If no <scriptname> is given, print-usb-usermap uses the script name\n" \
-"\"usbcam\"."
+"\"" GP_USB_HOTPLUG_SCRIPT "\"."
 
 #include <stdio.h>
 #include <sys/time.h>
@@ -50,8 +52,6 @@
 #ifndef FALSE
 #define FALSE (0!=0)
 #endif
-
-#define GP_USB_HOTPLUG_SCRIPT "usbcam"
 
 #define GP_USB_HOTPLUG_MATCH_VENDOR_ID          0x0001
 #define GP_USB_HOTPLUG_MATCH_PRODUCT_ID         0x0002
