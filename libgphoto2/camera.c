@@ -607,8 +607,7 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
 	 * deletion one by one.
 	 */
         if (!camera->functions->folder_delete_all) {
-		CHECK_RESULT_OPEN_CLOSE (camera, delete_one_by_one (camera,
-								    folder));
+		CHECK_RESULT (delete_one_by_one (camera, folder));
 		return (GP_OK);
 	}
 
