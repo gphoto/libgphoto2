@@ -704,6 +704,10 @@ camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gc
 	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (file,	GP_ERROR_BAD_PARAMETERS);
 
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_config_get ***");
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Folder: %s", folder);
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** File: %s", file);
+
 	/* Our cameras don't support folders. */
 	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
 	
@@ -724,6 +728,8 @@ camera_file_config_get (Camera* camera, CameraWidget** window, gchar* folder, gc
 	gp_widget_value_set (widget, &value_int);
 	gp_widget_append (*window, widget);
 
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Protected: %i", value_int);
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_config_get ***");
 	return (GP_OK);
 }
 
@@ -742,6 +748,10 @@ camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gch
 	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (file, 	GP_ERROR_BAD_PARAMETERS);
 
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_file_config_set ***");
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Folder: %s", folder);
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** File: %s", file);
+
 	/* Our cameras don't support folders. */
 	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
 	
@@ -756,8 +766,11 @@ camera_file_config_set (Camera* camera, CameraWidget* window, gchar* folder, gch
 	g_return_val_if_fail (widget = gp_widget_child_by_label (window, _("Protect")), GP_ERROR_BAD_PARAMETERS);
 	if (gp_widget_changed (widget)) {
 		gp_widget_value_get (widget, &value_int);
+		gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Protected: changed to %i", value_int);
 		result = k_set_protect_status (konica_data->device, konica_data->image_id_long, image_id, (value_int != 0));
 	}
+
+	gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Leaving camera_file_config_set ***");
 		
 	return (result);
 }
