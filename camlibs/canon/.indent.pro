@@ -26,3 +26,5 @@
 -T CameraText
 -T CameraAbilitiesList
 -T CameraWidget
+-T GPContext
+-T time_t
