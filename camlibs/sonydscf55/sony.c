@@ -637,8 +637,6 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 				SelectImage[4] = imageid & 0xff;
 				sony_converse(camera, &dp, SelectImage, 7);
 
-				GP_DEBUG ("XYZ %11.11s", dp.buffer + 5);
-
 				if (camera->pl->msac_sr1) {
 					gp_file_append(file,
 						       "\xff\xd8\xff", 3);
@@ -651,6 +649,8 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 						rc = GP_ERROR_CANCEL;
 						break;
 					}
+					gp_context_idle(context);
+					
 					sony_converse(camera, &dp,
 						      SendThumbnail, 4);
 
@@ -676,6 +676,8 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 						rc = GP_ERROR_CANCEL;
 						break;
 					}
+					gp_context_idle(context);
+
 					gp_file_append(file,
 						       (char *) dp.buffer +
 						       sc, dp.length - sc);
