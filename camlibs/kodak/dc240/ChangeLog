@@ -1,3 +1,9 @@
+2001-12-19  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.h: 
+	* library.c: 
+	* dc240.c (camera_summary): Implemented summary.
+
 2001-12-06  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Definitive fix for bug 438155.

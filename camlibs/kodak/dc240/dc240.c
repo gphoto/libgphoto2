@@ -1,3 +1,12 @@
+/*
+  Kodak DC 240/280/3400/5000 driver.
+  Maintainer:
+       Hubert Figuiere <hfiguiere@teaser.fr>
+
+  $Id$
+ */
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,10 +20,14 @@
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
-#    define _(String) (String)
 #    define N_(String) (String)
 #  endif
 #else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
@@ -143,9 +156,38 @@ camera_capture (Camera *camera, CameraCaptureType type,
 static int
 camera_summary (Camera *camera, CameraText *summary) 
 {
-	strcpy(summary->text, _("No summary information."));
-
-	return (GP_OK);
+    char buf [32 * 1024];
+    char temp [1024];
+    int retval;
+    DC240StatusTable table;
+    
+    retval = dc240_get_status (camera, &table);
+    if (retval == GP_OK) {
+	sprintf (buf, _("Model: Kodak %s\n"), dc240_convert_type_to_camera(table.cameraType));
+	sprintf (temp, _("Firmware version: %d.%02d\n"), table.fwVersInt, table.fwVersDec);
+	strcat (buf, temp);
+	sprintf (temp, _("Battery status: %s, AC Adapter: %s\n"), 
+		 dc240_get_battery_status_str(table.battStatus), 
+		 dc240_get_ac_status_str(table.acAdapter));
+	strcat (buf, temp);
+	sprintf (temp, _("Number of pictures: %d\n"), table.numPict);
+	strcat (buf, temp);
+	sprintf (temp, _("Space remaining: High: %d, Medium: %d, Low: %d\n"), 
+		 table.remPictHigh, table.remPictMed, table.remPictLow);
+	strcat (buf, temp);
+/*
+	sprintf (temp, _("Memory card status: %s\n", 
+			 dc240_get_memcard_status_str(table.memCardStatus));
+	strcat (buf, temp);
+*/
+	sprintf (temp, _("Total pictures captured: %d, Flashes fired: %d\n"), 
+		 table.totalPictTaken, table.totalStrobeFired); 
+	strcat (buf, temp);
+	
+	
+	strcpy(summary->text, buf);
+    }
+    return retval;
 }
 
 static int
@@ -161,7 +203,7 @@ camera_about (Camera *camera, CameraText *about)
 {
 	strcpy (about->text, 
 		_("Kodak DC240 Camera Library\n"
-		"Scott Fritzinger <scottf@gphoto.net>\n"
+		"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser.fr>\n"
 		"Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 		"Rewritten and updated for gPhoto2."));
 

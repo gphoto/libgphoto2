@@ -17,7 +17,41 @@
 #include "dc240.h"
 #include "library.h"
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
+
 #define GP_MODULE "dc240"
+
+
+/* system codes */ 
+enum {
+    DC240_SC_COMPLETE = 0x0,
+    DC240_SC_ACK = 0xd1,
+    DC240_SC_CORRECT = 0xd2,
+    DC240_SC_FIRST_ERROR = 0xe0, /* not really an real code */
+    DC240_SC_NAK = 0xe1,
+    DC240_SC_ERROR = 0xe2,
+    DC240_SC_ILLEGAL = 0xe3,
+    DC240_SC_CANCEL = 0xe4,
+    DC240_SC_BUSY = 0xf0
+};
 
 static char *dc240_packet_new   (int command_byte);
 static int   dc240_packet_write (Camera *camera, char *packet, int size,
@@ -182,7 +216,7 @@ static int dc240_wait_for_busy_completion (Camera *camera)
 	    /* in busy state, GP_ERROR_IO_READ can happend */
 	    break;
 	default:
-	    if (*p != (char)0xf0) {
+	    if (*p != (char)DC240_SC_BUSY) {
 		done = 1;
 	    }
 	}
@@ -261,11 +295,11 @@ read_data_read_again:
 	}
 	
         /* Check for error in command/path */
-        if ((unsigned char)packet[0] > 0xe0)
+        if ((unsigned char)packet[0] > DC240_SC_FIRST_ERROR)
             return GP_ERROR;
 
         /* Check for end of data */
-        if ((unsigned char)packet[0] == 0x00)
+        if ((unsigned char)packet[0] == DC240_SC_COMPLETE)
             return GP_OK;
 
         /* Write packet was OK */
@@ -422,24 +456,171 @@ int dc240_set_speed (Camera *camera, int speed) {
     return (GP_OK);
 }
 
-#if 0
-int dc240_get_status (Camera *camera) {
+static struct _type_to_camera {
+    int status_type;
+    char * name;
+} type_to_camera [] = {
+    { 4, "DC210" },
+    { 5, "DC240" },
+    { 6, "DC280" },
+    { 7, "DC5000" },
+    { 8, "DC3400" },
+    { 0, "Unknown" }   /* unknown type. MUST be last */
+};
+
+
+
+const char *dc240_convert_type_to_camera (int type)
+{
+    int i = 0;
+
+    while (type_to_camera[i].status_type != 0) {
+	if (type_to_camera[i].status_type == type) {
+	    return type_to_camera[i].name;
+	}
+	i++;
+    }
+    /* not found */
+    return type_to_camera[i].name;
+}
+
+const char *dc240_get_battery_status_str (char status)
+{
+    switch (status) {
+    case 0:
+	return _("OK");
+	break;
+    case 1:
+	return _("Weak");
+	break;
+    case 2:
+	return _("Empty");
+	break;
+    default:
+	break;
+    }
+    return _("Invalid");
+}
+
+const char *dc240_get_ac_status_str (char status)
+{
+    switch (status) {
+    case 0:
+	return _("Not used");
+	break;
+    case 1:
+	return _("In use");
+	break;
+    default: 
+	break;
+    }
+    return _("Invalid");
+}
+
+const char * dc240_get_memcard_status_str(char status)
+{
+    return "Not Implemented";
+}
+/*
+  Feed manually the stucture from data.
+ */
+static int dc240_load_status_data_to_table (const char *fdata, DC240StatusTable *table)
+{
+    if (fdata [0] != 0x01) {
+	return GP_ERROR;
+    }
+    GP_DEBUG ("Camera Type = %d, %s\n", fdata[1], dc240_convert_type_to_camera (fdata[1]));
+    table->cameraType = fdata[1];
+    table->fwVersInt = fdata[2];
+    table->fwVersDec = fdata[3];
+    GP_DEBUG ("Firmware version = %d, %d\n", fdata[2], fdata[3]);
+    table->romVers32Int = fdata[4];
+    table->romVers32Dec = fdata[5];
+    table->romVers8Int = fdata[6];
+    table->romVers8Dec = fdata[7];
+    table->battStatus = fdata[8];
+    table->acAdapter = fdata[9];
+    table->strobeStatus = fdata[10];
+    table->memCardStatus = fdata[11];
+    table->videoFormat = fdata[12];
+    table->quickViewMode = fdata[13]; /* DC280 */
+    table->numPict = (fdata[14] << 8) | (fdata[15]);
+    strncpy (table->volumeID, &fdata[16], 11);
+    table->powerSave = fdata[27]; /* DC280 */
+    strncpy (table->cameraID, &fdata[28], 32);
+    table->remPictLow = (fdata[60] << 8) | (fdata[61]);
+    table->remPictMed = (fdata[62] << 8) | (fdata[63]);
+    table->remPictHigh = (fdata[64] << 8) | (fdata[65]);
+    table->totalPictTaken = (fdata[66] << 8) | (fdata[67]);
+    table->totalStrobeFired = (fdata[68] << 8) | (fdata[69]);
+    table->langType = fdata[70]; /* DC 280 */
+    table->beep = fdata[71];
+    table->fileType = fdata[78];
+    table->pictSize = fdata[79];
+    table->imgQuality = fdata[80];
+    table->ipChainDisable = fdata[81]; /* reserved on DC280. WTF is it ? */
+    table->imageIncomplete = fdata[82];
+    table->timerMode = fdata[83];
+    table->year = (fdata[88] << 8) | (fdata[89]);
+    table->month = fdata[90];
+    table->day = fdata[91];
+    table->hour = fdata[92];
+    table->minute = fdata[93];
+    table->second = fdata[94];
+    table->tenmSec = fdata[95];
+    table->strobeMode = fdata[97];
+    table->exposureComp  = (fdata[98] * 100) + (fdata[99]);
+    table->aeMode = fdata[100];
+    table->focusMode = fdata[101];
+    table->afMode = fdata[102];
+    table->awbMode = fdata[103];
+//    table->zoomMag =  ?????
+    table->exposureMode = fdata[129];
+    table->sharpControl = fdata[131];
+//    table->expTime = 
+    table->fValue = (fdata[136] * 100) + (fdata[137]);
+    table->imageEffect = fdata[138];
+    table->dateTimeStamp = fdata[139];
+    strncpy (table->borderFileName, &fdata[140], 11);
+    table->exposureLock = fdata[152];
+    table->isoMode = fdata[153]; /* DC280 */
+
+    return GP_OK;
+}
+
+/*
+  Return the camera status table.
+  See 5.1.29
+ */
+int dc240_get_status (Camera *camera, DC240StatusTable *table) {
 
     CameraFile *file;
     char *p = dc240_packet_new(0x7F);
     int retval;
+    const char *fdata;
+    long int fsize;
     int size = 256;
 
     gp_file_new (&file);
-
+    GP_DEBUG ("enter dc240_get_status() \n");
     retval = dc240_packet_exchange(camera, file, p, NULL, &size, 256);
+
+    if (retval == GP_OK) {
+	gp_file_get_data_and_size (file, &fdata, &fsize);
+	if (fsize != 256) {
+	    GP_DEBUG ("wrong status packet size ! Size is %d", fsize);
+	}
+	if (fdata [0] != 0x01) { /* see 2.6 for why 0x01 */
+	    GP_DEBUG ("not a status table. Is %d", fdata [0]);
+	}
+	dc240_load_status_data_to_table (fdata, table);
+    }
 
     gp_file_free(file);
     free (p);
 
     return (retval);
 }
-#endif
 
 static int dc240_get_directory_list (Camera *camera, CameraList *list, const char *folder,
                              unsigned char attrib) {
@@ -581,7 +762,6 @@ int dc240_capture (Camera *camera, CameraFilePath *path)
 	return ret;
     }
  
-    fprintf (stderr, " dc240_wait_() end \n");
     /*
      get the last picture taken location (good firmware developers)
      */
@@ -629,3 +809,5 @@ int dc240_packet_set_size (Camera *camera, short int size) {
 
     return (GP_OK);
 }
+
+
