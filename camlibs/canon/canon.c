@@ -390,7 +390,7 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 	}
 
 	if (len != 0x8) {
-		GP_DEBUG ("canon_int_get_battery: Unexpected ammount of data returned "
+		GP_DEBUG ("canon_int_get_battery: Unexpected amount of data returned "
 			  "(expected %i got %i)", 0x8, len);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
@@ -400,8 +400,62 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source, GPConte
 	if (pwr_source)
 		*pwr_source = msg[7];
 
-	GP_DEBUG ("canon_int_get_battery: Status: %i / Source: %i\n", *pwr_status,
-		  *pwr_source);
+	GP_DEBUG ("canon_int_get_battery: Status: %02x / Source: %02x\n", msg[4],
+		  msg[7]);
+
+	return GP_OK;
+}
+
+/**
+ * canon_int_get_picture_abilities:
+ * @camera: the camera to work on
+ * @context: the context to print on error
+ * @Returns: gphoto2 error code
+ *
+ * Reads the camera picture abilities, but ignores them as we don't
+ *  know how to interpret the data.
+ * NOTE: Command is not implemented for some cameras
+ *  and will cause an error if issued. The cameras for which we know
+ *  it won't work are
+ *  EOS D30
+ *  EOS D60
+ *  PowerShot S45.
+ * NOTE: The documentation said that exactly 0x380 (900) bytes would
+ *  be returned, but it's actually 904 bytes for the PowerShot G2.
+ *  I don't know whether this was an error in the "Protocol" document
+ *  or if different models return different lengths. -swestin 2002.01.09
+ **/
+int
+canon_int_get_picture_abilities (Camera *camera, GPContext *context)
+{
+	unsigned char *msg;
+	int len;
+
+	GP_DEBUG ("canon_int_get_picture_abilities()");
+
+	switch (camera->port->type) {
+		case GP_PORT_USB:
+			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_GET_PIC_ABILITIES,
+						  &len, NULL, 0);
+			if (!msg)
+				return GP_ERROR;
+			break;
+		case GP_PORT_SERIAL:
+			msg = canon_serial_dialogue (camera, context, 0x1f, 0x12, &len, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
+
+			break;
+		GP_PORT_DEFAULT
+	}
+
+	if (len != 0x334) {
+		GP_DEBUG ("canon_int_get_picture_abilities: Unexpected amount of data returned "
+			  "(expected %i got %i)", 0x334, len);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	return GP_OK;
 }
@@ -480,16 +534,11 @@ int
 canon_int_capture_image (Camera *camera, CameraFilePath *path, 
 			 GPContext *context)
 {
-	int c_res;
-	char payload[0x4c];
-	int payloadlen;
-	unsigned char *msg = NULL;
-
 	unsigned char *data = NULL;
-	int datalen = 0;
 	int mstimeout = -1;
 	int transfermode = 0x0;
-	
+	int len;
+
 	switch (camera->port->type) {
 	case GP_PORT_USB:
 		gp_port_get_timeout (camera->port, &mstimeout);
@@ -499,11 +548,14 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		 * Send a sequence of CONTROL_CAMERA commands.
 		 */
 
+		gp_port_set_timeout (camera->port, 15000);
 		// Init, extends camera lens, puts us in remote capture mode //
 		if (canon_int_do_control_command (camera, 
 						  CANON_USB_CONTROL_INIT, 0, 0) == GP_ERROR)
 			return GP_ERROR;
 
+		gp_port_set_timeout (camera->port, mstimeout);
+		GP_DEBUG("set camera port timeout back to %d seconds...", mstimeout / 1000 );
 
 		/*
 		 * Set the captured image transfer mode.  We have four options 
@@ -511,9 +563,16 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 		 * full to PC, thumb to disk, and full to disk.
 		 *
 		 * The to-PC option requires that we figure out how to get 
-		 * the alter telling us the data is in the camera buffer.
+		 * the alert telling us the data is in the camera buffer.
 		 */
 		transfermode = REMOTE_CAPTURE_THUMB_TO_DRIVE;
+		GP_DEBUG ( "canon_int_capture_image: transfer mode is %x\n", transfermode );
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_SET_TRANSFER_MODE, 
+						  0x04, transfermode) == GP_ERROR)
+			return GP_ERROR;
+		transfermode = REMOTE_CAPTURE_FULL_TO_DRIVE;
+		GP_DEBUG ( "canon_int_capture_image: transfer mode is %x\n", transfermode );
 		if (canon_int_do_control_command (camera,
 						  CANON_USB_CONTROL_SET_TRANSFER_MODE, 
 						  0x04, transfermode) == GP_ERROR)
@@ -522,17 +581,27 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                 // 02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
 		// 00 00 00 00 00 00 00 00 00 00 00 00
 
+		/* Get release parameters a couple of times, just to
+                   see if that helps. */
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_GET_PARAMS, 
+						  0x04, transfermode) == GP_ERROR)
+			return GP_ERROR;
 
+		if (canon_int_do_control_command (camera,
+						  CANON_USB_CONTROL_GET_PARAMS, 
+						  0x04, transfermode) == GP_ERROR)
+			return GP_ERROR;
 
 		// Shutter Release //
-		if (canon_int_do_control_command (camera,
-						  CANON_USB_CONTROL_SHUTTER_RELEASE, 
-						  0, 0) == GP_ERROR)
-			return GP_ERROR;
+		// Can't use normal "canon_int_do_control_command", as
+		// we must read the interrupt pipe before the response
+		// comes back for this commmand.
+		data = canon_usb_capture_dialogue ( camera, &len );
+
 		// Verify that msg points to 
                 // 02 00 00 00 13 00 00 12 1c 00 00 00 xx xx xx xx
 		// 00 00 00 00 04 00 00 00 00 00 00 00
-
 
 		// End release mode //
 		if (canon_int_do_control_command (camera,
