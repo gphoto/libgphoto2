@@ -17,6 +17,7 @@ char  dir_directory[1024];
 char  dir_images[1024][1024];
 int   dir_num_images;
 int   dir_get_index;
+int   dir_indexed=0;
 
 int camera_id (char *id) {
 
@@ -100,14 +101,13 @@ int camera_folder_list(char *folder_name, CameraFolderInfo *list) {
 	return (count);
 }
 
-int camera_folder_set(char *folder_name) {
+int folder_index() {
 
 	DIR *dir;
 	struct dirent *de;
 	struct stat s;
 	char *dot, fname[1024];
 
-	strcpy(dir_directory, folder_name);
 	dir = opendir(dir_directory);
 	if (!dir)
 		return (GP_ERROR);
@@ -136,10 +136,23 @@ int camera_folder_set(char *folder_name) {
 	}
 	closedir(dir);
 
+	dir_indexed=1;
+
+	return (GP_OK);
+}
+
+int camera_folder_set(char *folder_name) {
+
+	strcpy(dir_directory, folder_name);
+
 	return (GP_OK);
 }
 
 int camera_file_count () {
+
+	if (!dir_indexed)
+		if (folder_index()==GP_ERROR)
+			return (GP_ERROR);
 
 	return (dir_num_images);
 }
@@ -153,6 +166,10 @@ int camera_file_get (int file_number, CameraFile *file) {
 	FILE *fp;
 	long imagesize;
 	char filename[1024];
+
+	if (!dir_indexed)
+		if (folder_index()==GP_ERROR)
+			return (GP_ERROR);
 
 	sprintf(filename, "%s/%s", dir_directory,
 		dir_images[file_number]);
@@ -177,9 +194,15 @@ int camera_file_get_preview (int file_number, CameraFile *preview) {
 	/* file_number now starts at 0!!! */
 	/**********************************/
 
+
 	char filename[1024];
 	FILE *fp;
 	long int imagesize;
+
+	if (!dir_indexed)
+		if (folder_index()==GP_ERROR)
+			return (GP_ERROR);
+
 	sprintf(filename, "%s/%s", dir_directory,
 		dir_images[file_number]);	
 	fp = fopen(filename, "r");
@@ -199,11 +222,19 @@ int camera_file_get_preview (int file_number, CameraFile *preview) {
 
 int camera_file_put (CameraFile *file) {
 
+	if (!dir_indexed)
+		if (folder_index()==GP_ERROR)
+			return (GP_ERROR);
+
 	return (GP_ERROR);
 }
 
 
 int camera_file_delete (int file_number) {
+
+	if (!dir_indexed)
+		if (folder_index()==GP_ERROR)
+			return (GP_ERROR);
 
 	return (GP_ERROR);
 }

@@ -159,7 +159,6 @@ typedef struct {
 
 typedef struct {
 	char	name[128];
-	/* reserved: "<photos>" */
 } CameraFolderInfo;
 
 typedef struct {
