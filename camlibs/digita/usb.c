@@ -96,7 +96,7 @@ int digita_usb_open(struct digita_device *dev, Camera *camera)
 	digita_send = digita_usb_send;
 	digita_read = digita_usb_read;
 
-	gp_port_set_settings(dev->gpdev, settings);
+	gp_port_settings_set(dev->gpdev, settings);
 	if (gp_port_open(dev->gpdev) < 0) {
 		fprintf(stderr, "error opening device\n");
 		return -1;

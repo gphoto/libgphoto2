@@ -24,17 +24,17 @@ int main(int argc, char **argv)
 	settings.serial.parity = 0;
 	settings.serial.stopbits = 1;
 
-	gp_port_set_settings(dev, settings);
+	gp_port_settings_set(dev, settings);
 	gp_port_open(dev);		/* open the device */
 	dump(dev);
 
-	gp_port_get_settings(dev, &settings);
+	gp_port_settings_get(dev, &settings);
 	settings.serial.speed = 57600;
-	gp_port_set_settings(dev, settings);
+	gp_port_settings_set(dev, settings);
 
 	dump(dev);
 
-	printf("CTS: %i", gp_port_get_pin(dev,PIN_CTS));
+	printf("CTS: %i", gp_port_pin_get(dev,PIN_CTS));
 
 	gp_port_write(dev, "AT\n", 3);	/* write bytes to the device */
 
