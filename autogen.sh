@@ -1,7 +1,8 @@
 #!/bin/sh
 # Run this to generate all the initial makefiles, etc.
 # This was lifted from the Gimp, and adapted slightly by
-# Raph Levien .
+# Raph Levien.
+# Since then, it has been rewritten quite a lot by misc. people.
 
 DIE=0
 srcdir=`dirname $0`
