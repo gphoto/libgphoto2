@@ -77,7 +77,7 @@ for_each_folder (const char *folder, FolderAction action, ForEachFlags flags)
 				if (path[strlen (path) - 1] != '/')
 					strncat (path, "/", sizeof (path));
 				strncat (path, name, sizeof (path));
-				CR (action (path));
+				CR (for_each_folder (path, action, flags));
 			}
 		} else {
 			for (i = 0; i < count; i++) {
@@ -86,7 +86,7 @@ for_each_folder (const char *folder, FolderAction action, ForEachFlags flags)
 				if (path[strlen (path) - 1] != '/')
 					strncat (path, "/", sizeof (path));
 				strncat (path, name, sizeof (path));
-				CR (action (path));
+				CR (for_each_folder (path, action, flags));
 			}
 		}
 	}

@@ -1,3 +1,9 @@
+2002-02-09  Fredrik <fredrik@krixor.xy.org>
+
+	* frontends/command-line/foreach.c: Fix bug where new
+	  for_each_subfolder() did not descend into subfolders of
+	  subfolders when recursive.
+
 2002-02-08  Christophe Barbé <christophe.barbe@ufies.org>
 
 	* frontends/command-line/main.c: Add usbid option to override 
