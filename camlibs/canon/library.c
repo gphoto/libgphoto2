@@ -67,70 +67,6 @@
 #define snprintf(buf,size,format,arg) sprintf(buf,format,arg)
 #endif
 
-/**
- * models:
- *
- * Contains list of all camera models currently supported with their
- * respective USD IDs and a flag denoting RS232 serial support.
- **/
-
-static struct
-{
-	char *name;
-	unsigned short idVendor;
-	unsigned short idProduct;
-	char serial;
-}
-models[] =
-{
-	{
-	"Canon PowerShot A5", 0, 0, 1}
-	, {
-	"Canon PowerShot A5 Zoom", 0, 0, 1}
-	, {
-	"Canon PowerShot A50", 0, 0, 1}
-	, {
-	"Canon PowerShot Pro70", 0, 0, 1}
-	, {
-	"Canon PowerShot S10", 0x04A9, 0x3041, 1}
-	, {
-	"Canon PowerShot S20", 0x04A9, 0x3043, 1}
-	, {
-	"Canon EOS D30", 0x04A9, 0x3044, 0}
-	, {
-	"Canon PowerShot S100", 0x04A9, 0x3045, 0}
-	, {
-	"Canon IXY DIGITAL", 0x04A9, 0x3046, 0}
-	, {
-	"Canon Digital IXUS", 0x04A9, 0x3047, 0}
-	, {
-	"Canon PowerShot G1", 0x04A9, 0x3048, 1}
-	, {
-	"Canon PowerShot Pro90 IS", 0x04A9, 0x3049, 1}
-	, {
-	"Canon IXY DIGITAL 300", 0x04A9, 0x304B, 0}
-	, {
-	"Canon PowerShot S300", 0x04A9, 0x304C, 0}
-	, {
-	"Canon Digital IXUS 300", 0x04A9, 0x304D, 0}
-	, {
-	"Canon PowerShot A20", 0x04A9, 0x304E, 0}
-	, {
-	"Canon PowerShot A10", 0x04A9, 0x304F, 0}
-	, {
-	"Canon PowerShot S110", 0x04A9, 0x3051, 0}
-	, {
-	"Canon DIGITAL IXUS v", 0x04A9, 0x3052, 0}
-	, {
-	"Canon PowerShot G2", 0x04A9, 0x3055, 0}
-	, {
-	"Canon PowerShot S40", 0x4A9, 0x3056, 0}
-	, {
-	"Canon PowerShot S30", 0x4A9, 0x3057, 0}
-	, {
-	NULL, 0, 0, 0}
-};
-
 int
 camera_id (CameraText *id)
 {
@@ -1010,8 +946,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 
 	if (camera->pl->model == CANON_PS_A5 || camera->pl->model == CANON_PS_A5_ZOOM) {
 		GP_DEBUG ("delete_file_func: deleting "
-			  "pictures disabled for cameras: PowerShot A5, "
-			  "PowerShot A5 ZOOM");
+			  "pictures disabled for cameras: PowerShot A5, PowerShot A5 ZOOM");
 
 		return GP_ERROR_NOT_SUPPORTED;
 	}
@@ -1026,13 +961,12 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "Filename not found!\n");
 		return GP_ERROR;
 	}
-		
+
 	/* strip trailing backslash on path, if any */
 	if (path[strlen (path) - 1] == '\\')
 		path[strlen (path) - 1] = 0;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "filename: %s\n path: %s\n", filename,
-			 path);
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "filename: %s\n path: %s\n", filename, path);
 	if (canon_int_delete_file (camera, filename, path) != GP_OK) {
 		gp_camera_set_error (camera, _("Error deleting file"));
 		return GP_ERROR;
@@ -1043,8 +977,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 		strcpy (thumbname, filename);
 		strcpy (thumbname + strlen ("MVI_XXXX"), ".THM\0");
 		if (canon_int_delete_file (camera, thumbname, path) != GP_OK) {
-			gp_camera_set_error (camera,
-					  _("Error deleting movie thumbnail"));
+			gp_camera_set_error (camera, _("Error deleting movie thumbnail"));
 			return GP_ERROR;
 		}
 	}
