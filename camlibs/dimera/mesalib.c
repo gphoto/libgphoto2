@@ -19,6 +19,7 @@
 */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <sys/time.h>
 
@@ -273,13 +274,7 @@ mesa_version( gp_port *port, char *version_string)
 
 	gp_debug_printf(GP_DEBUG_LOW, "dimera", 
 	 "mesa_version: %02x:%02x:%02x\n", r[0], r[1], r[2] );
-	v[0] = (r[1]&0xf0) ? ((r[1] >> 4)&15)+'0' : ' ';
-	v[1] = (r[1] & 15)+'0';
-	v[2] = '.';
-	v[3] = ((r[0] >> 4)&15) + '0';
-	v[4] = (r[0] & 15)+'0';
-	v[5] = r[2];
-	v[6] = 0;
+	sprintf(v, "%2x.%02x%c", r[1], r[0], r[2]);
 	/* highest byte must be < MESA_VERSION_SZ */
 	return GP_OK;
 }
