@@ -1961,4 +1961,3 @@ gtk_entry_update_ic_attr (GtkWidget *widget)
 }
 #endif /* USE_XIM */
     			  
-

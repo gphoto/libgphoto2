@@ -39,40 +39,48 @@ int camera_set() {
 	CameraPortSettings ps;
 	char camera[1024], port[1024], speed[1024];
 
+	/* Mark camera as not init'd */
 	gp_gtk_camera_init = 0;
 
-	/* create a transient window */
+	/* Create a transient window for "Initizlizing camera" message */
 	message = create_message_window_transient();
 	message_label = (GtkWidget*) lookup_widget(message, "message");
 	gtk_label_set_text(GTK_LABEL(message_label), "Initializing camera...");
 
+	/* Retrieve which camera to use */
 	if (gp_setting_get("camera", camera)==GP_ERROR) {
 		gp_message("You must choose a camera");
 		camera_select();
 	}
 
+	/* Retrieve the port to use */
 	gp_setting_get("port", port);
+
+	/* Retrieve the speed to use */
 	gp_setting_get("speed", speed);
 
+	/* Set up the camera initialization */
 	strcpy(ps.path, port);
 	if (strlen(speed)>0)
 		ps.speed = atoi(speed);
 	   else
 		ps.speed = 0; /* use the default speed */
-
-	gtk_widget_show_all(message);
+	gtk_widget_show(message);
 	idle();
 
+	/* Set the camera model in the gPhoto library */
 	if (gp_camera_set_by_name(camera, &ps)==GP_ERROR) {
 		gtk_widget_destroy(message);
 		return (GP_ERROR);
 	}
 
+	/* Set the current folder */
 	if (gp_folder_set("/")==GP_ERROR) {
 		gtk_widget_destroy(message);
 		return (GP_ERROR);
 	}
 
+	/* Set the current camera model */
 	camera_label = (GtkWidget*) lookup_widget(gp_gtk_main_window, "camera_label");
 	gtk_label_set_text(GTK_LABEL(camera_label), camera);
 	gtk_widget_destroy(message);
@@ -86,8 +94,9 @@ int camera_set() {
 	gtk_object_remove_data(GTK_OBJECT(camera_tree), "expanded");
 	gtk_tree_item_collapse(GTK_TREE_ITEM(camera_tree));
 
-	/* Label the camera as init'd */
+	/* Mark the camera as init'd */
 	gp_gtk_camera_init = 1;
+
 	return (GP_OK);
 }
 
@@ -210,18 +219,45 @@ void size_double() {
 /* ----------------------------------------------------------- */
 
 void select_all() {
+	GtkWidget *icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
+	GtkIconListItem *item;
+	int x;
+
 	debug_print("select all");
 
+	for (x=0; x<GTK_ICON_LIST(icon_list)->num_icons; x++) {
+		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
+		gtk_icon_list_select_icon(GTK_ICON_LIST(icon_list),item);
+	}
 }
 
 void select_inverse() {
+	GtkWidget *icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
+	GtkIconListItem *item;
+	int x;
+
 	debug_print("select inverse");
 
+	for (x=0; x<GTK_ICON_LIST(icon_list)->num_icons; x++) {
+		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
+		if (item->state == GTK_STATE_SELECTED)
+			gtk_icon_list_unselect_icon(GTK_ICON_LIST(icon_list),item);
+		   else
+			gtk_icon_list_select_icon(GTK_ICON_LIST(icon_list),item);
+	}
 }
 
 void select_none() {
+	GtkWidget *icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
+	GtkIconListItem *item;
+	int x;
+
 	debug_print("select none");
 
+	for (x=0; x<GTK_ICON_LIST(icon_list)->num_icons; x++) {
+		item = gtk_icon_list_get_nth(GTK_ICON_LIST(icon_list), x);
+		gtk_icon_list_unselect_icon(GTK_ICON_LIST(icon_list),item);
+	}
 }
 
 /* Folder Callbacks */
@@ -569,6 +605,7 @@ camera_select_again:
 void camera_index_common(int thumbnails) {
 
 	CameraFile *f;
+	CameraAbilities a;
 	GtkWidget *icon_list;
 	GtkIconListItem *item;
 	GdkPixmap *pixmap;
@@ -581,6 +618,17 @@ void camera_index_common(int thumbnails) {
 
 	icon_list   = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
 	GTK_ICON_LIST(icon_list)->is_editable = FALSE;
+
+	if (gp_setting_get("camera", buf)==GP_ERROR) {
+		gp_message ("ERROR: please choose your camera model again");
+		camera_select();
+		return;
+	}
+
+	if (gp_camera_abilities_by_name(buf, &a)==GP_ERROR) {
+		gp_message ("Could not retrieve the camera's abilities");
+		return;
+	}
 
 	if ((count = gp_file_count())==GP_ERROR) {
 		gp_message("Could not retrieve the number of pictures");
@@ -601,7 +649,7 @@ void camera_index_common(int thumbnails) {
 		sprintf(buf,"#%04i", x);
 		item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
 			no_thumbnail_xpm,buf,NULL);
-		if (thumbnails) {
+		if ((thumbnails)&&(a.file_preview)) {
 			f = gp_file_new();
 			if (gp_file_get_preview(x, f) == GP_OK) {
 				gdk_image_new_from_data(f->data,f->size,1,&pixmap,&bitmap);
