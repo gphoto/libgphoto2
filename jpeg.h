@@ -33,35 +33,35 @@ const char *JPEG_MARKERNAMES[] = {
     "Huffman table",    "SsSeAhAl",             "SOFC0"
 };
 
-struct chunk{
+typedef struct chunk{
     int size;
     unsigned char *data;
-};
+} chunk;
 
-void chunk_new(struct chunk *mychunk, int length);
+void chunk_new(chunk *mychunk, int length);
 
-void chunk_print(struct chunk *mychunk);
+void chunk_print(chunk *mychunk);
 
-void chunk_destroy(struct chunk *mychunk);
+void chunk_destroy(chunk *mychunk);
 
-struct jpeg {
+typedef struct jpeg {
     int count;
     struct chunk marker[20]; /* I think this should be big enough */
-};
+}jpeg;
 
-void jpeg_init(struct jpeg *myjpeg);
+void jpeg_init(jpeg *myjpeg);
 
-void jpeg_destroy(struct jpeg *myjpeg);
+void jpeg_destroy(jpeg *myjpeg);
 
-char jpeg_findff(int *location, struct chunk *picture);
+char jpeg_findff(int *location, chunk *picture);
 
-char jpeg_findactivemarker(char *id, int *location, struct chunk *picture);
+char jpeg_findactivemarker(char *id, int *location, chunk *picture);
 
-void jpeg_add_marker(struct jpeg *myjpeg, struct chunk *picture, int start, int end);
+void jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end);
 
-void jpeg_parse(struct jpeg *myjpeg, struct chunk *picture);
+void jpeg_parse(jpeg *myjpeg, chunk *picture);
 
-void jpeg_print(struct jpeg *myjpeg);
+void jpeg_print(jpeg *myjpeg);
 
 char *jpeg_markername(int c);
 

@@ -20,14 +20,14 @@
 #include <stdio.h>
 #include "jpeg.h"
 
-void chunk_new(struct chunk *mychunk, int length)
+void chunk_new(chunk *mychunk, int length)
 {
     mychunk->size=length;
 //    printf("New chunk of size %i\n", mychunk->size);
     mychunk->data = (char *)malloc(length);
 }
 
-void chunk_print(struct chunk *mychunk)
+void chunk_print(chunk *mychunk)
 {
     int x;
 //    printf("Size=%i\n", mychunk->size);
@@ -36,18 +36,18 @@ void chunk_print(struct chunk *mychunk)
     printf("\n");
 }
 
-void chunk_destroy(struct chunk *mychunk)
+void chunk_destroy(chunk *mychunk)
 {
     mychunk->size=0;
     free(mychunk->data);
 }
 
-void jpeg_init(struct jpeg *myjpeg)
+void jpeg_init(jpeg *myjpeg)
 {
     myjpeg->count=0;
 }
 
-void jpeg_destroy(struct jpeg *myjpeg)
+void jpeg_destroy(jpeg *myjpeg)
 {
     int count;
     for (count=0; count<myjpeg->count; count++)
@@ -55,7 +55,7 @@ void jpeg_destroy(struct jpeg *myjpeg)
     myjpeg->count=0;
 }
 
-char jpeg_findff(int *location, struct chunk *picture) {
+char jpeg_findff(int *location, chunk *picture) {
 //printf("Entered jpeg_findamarker!!!!!!\n");
     while(*location<picture->size)
     {
@@ -71,7 +71,7 @@ char jpeg_findff(int *location, struct chunk *picture) {
     return 0;
 }
 
-char jpeg_findactivemarker(char *id, int *location, struct chunk *picture) {
+char jpeg_findactivemarker(char *id, int *location, chunk *picture) {
 //    printf("Entered jpeg_findactivemarker!!!!!!!!\n");
     while(jpeg_findff(location, picture) && ((*location+1)<picture->size))
         if (picture->data[*location+1]) {
@@ -81,7 +81,7 @@ char jpeg_findactivemarker(char *id, int *location, struct chunk *picture) {
     return 0;
 }
 
-void jpeg_add_marker(struct jpeg *myjpeg, struct chunk *picture, int start, int end)
+void jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end)
 {
     int length;
     length=(int)(end-start+1);
@@ -108,7 +108,7 @@ char *jpeg_markername(int c)
     return "Undefined marker";
 }
 
-void jpeg_parse(struct jpeg *myjpeg, struct chunk *picture)
+void jpeg_parse(jpeg *myjpeg, chunk *picture)
 {
     int position=0;
     int lastposition;
@@ -141,7 +141,7 @@ void jpeg_parse(struct jpeg *myjpeg, struct chunk *picture)
     jpeg_add_marker(myjpeg,picture,lastposition,picture->size-1);
 }
 
-void jpeg_print(struct jpeg *myjpeg)
+void jpeg_print(jpeg *myjpeg)
 {
 int c;
 printf("There are %i markers\n", myjpeg->count);
@@ -160,8 +160,8 @@ char testdata[] ={
 
 int main()
 {
-struct chunk picture;
-struct jpeg myjpeg;
+chunk picture;
+jpeg myjpeg;
 char id;
 int location=0,x;
 jpeg_init(&myjpeg);
