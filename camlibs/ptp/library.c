@@ -596,6 +596,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 		
 	default:
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 	CR (set_mimetype (camera, file, oi->ObjectFormat));
 
