@@ -74,13 +74,13 @@ write_again:
 	if (x++ > RETRIES) 
 		return (GP_ERROR);
 
-	if (gp_port_write(camera->port, packet, size) < 0)
+	if (gp_port_write(camera->port, packet, size) < GP_OK)
 		goto write_again;
 
 
 	/* Read in the response from the camera if requested */
 	if (read_response) {
-		if (gp_port_read(camera->port, in, 1) < 0)
+		if (gp_port_read(camera->port, in, 1) < GP_OK)
 			/* On error, write again */
 			goto write_again;
 
@@ -121,7 +121,7 @@ static int dc120_packet_read_data (Camera *camera, CameraFile *file, char *cmd_p
 
 	id = gp_context_progress_start (context, num_packets, _("Getting data..."));
 read_data_write_again:
-	if (dc120_packet_write(camera, cmd_packet, 8, 1) < 0) 
+	if (dc120_packet_write(camera, cmd_packet, 8, 1) < GP_OK) 
 		return (GP_ERROR);
 
 	packets_received = 0;
