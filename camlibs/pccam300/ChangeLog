@@ -1,3 +1,7 @@
+2003/06/26  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* pccam300.c: Fix includes so that the thing compiles.
+
 Mon Jan 20 17:01:57 2003  Till Adam  <till@adam-lilienthal.de>
 
  * initial import

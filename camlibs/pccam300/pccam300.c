@@ -26,7 +26,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <_stdint.h>
+
+#include <libgphoto2/_stdint.h>
 
 #include "pccam300.h"
 
