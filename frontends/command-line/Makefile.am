@@ -1,10 +1,15 @@
 ## Process this file with automake to create a GNU Makefile
 
-EXTRA_DIST = makefile.os2
+# We need to add the source files to the list because sometimes 
+# people without aalib or cdk make dist.
+EXTRA_DIST = makefile.os2				\
+	gphoto2-cmd-config.c gphoto2-cmd-config.h	\
+	gphoto2-cmd-capture.c gphoto2-cmd-capture.h
 
 bin_PROGRAMS = gphoto2
 
-CFLAGS = @CFLAGS@ -g 
+CFLAGS = @CFLAGS@ -g
+LDFLAGS = @LDFLAGS@ -g
 
 INCLUDES =						\
 	-DGPHOTO2_LOCALEDIR=\""$(datadir)/locale"\"	\
@@ -25,7 +30,6 @@ else
 AA_FILES =
 endif
 
-LDFLAGS = @LDFLAGS@ -g 
 gphoto2_SOURCES = 		\
 	$(AA_FILES)		\
 	$(CDK_FILES)		\

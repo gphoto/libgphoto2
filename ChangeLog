@@ -1,3 +1,10 @@
+2002-01-26  Lutz Müller <lutz@users.sourceforge.net>
+
+	Fixes #506075:
+
+	* frontends/command-line/Makefile.am: Include files into EXTRA_DIST
+	  that are only conditionally built.
+
 2002-01-25 Marucs Meissner <marcus@jet.franken.de>
 	
 	* **/Makefile.am: Replaced $(prefix)/lib/ by $(libdir).
