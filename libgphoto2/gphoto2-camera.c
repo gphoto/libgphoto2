@@ -133,7 +133,6 @@
 	if ((c)->functions->pre_func) {					\
 		r = (c)->functions->pre_func (c,ctx);			\
 		if (r < 0) {						\
-			gp_camera_status ((c), "");			\
 			CAMERA_UNUSED (c,ctx);				\
 			return (r);					\
 		}							\
@@ -220,9 +219,6 @@ struct _CameraPrivateCore {
 
 	/* Some information about the port */
 	unsigned int speed;
-
-	CameraStatusFunc   status_func;
-	void              *status_data;
 
 	/* The abilities of this camera */
 	CameraAbilities a;
@@ -498,71 +494,6 @@ gp_camera_get_port_speed (Camera *camera)
 	CHECK_NULL (camera);
 
 	return (camera->pc->speed);
-}
-
-/**
- * gp_camera_set_status_func:
- * @camera: a #Camera
- * @func: a #CameraStatusFunc
- * @data:
- *
- * Sets the function that will be used to display status messages. Status
- * messages are displayed before operations that can take some time.
- * Typically, a frontend would 
- * call this function after #gp_camera_new in order to redirect status 
- * messages to the status bar.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_set_status_func (Camera *camera, CameraStatusFunc func,
-			   void *data)
-{
-	CHECK_NULL (camera);
-
-	camera->pc->status_func = func;
-	camera->pc->status_data = data;
-
-	return (GP_OK);
-}
-
-/**
- * gp_camera_status:
- * @camera: a #Camera
- * @format:
- * @...:
- *
- * Sets the status message. Typically, this function gets called by gphoto2
- * or a camera driver before operations that will take some time. For 
- * example, gphoto2 automatically sets a status message before
- * each file download.
- *
- * Return value: a gphoto2 error code
- **/
-int
-gp_camera_status (Camera *camera, const char *format, ...)
-{
-	char buffer[2048];
-	va_list arg;
-
-	CHECK_NULL (camera && format);
-
-	va_start (arg, format);
-#if HAVE_VSNPRINTF
-	vsnprintf (buffer, sizeof (buffer), format, arg);
-#else
-	vsprintf (buffer, format, arg);
-#endif
-	va_end (arg);
-
-	if (strlen (buffer))
-		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Status: %s", buffer);
-
-	if (camera->pc->status_func)
-		camera->pc->status_func (camera, buffer,
-					 camera->pc->status_data);
-
-	return (GP_OK);
 }
 
 /**
@@ -1371,22 +1302,5 @@ gp_camera_folder_remove_dir (Camera *camera, const char *folder,
 					folder, name, context), context);
 
 	CAMERA_UNUSED (camera, context);
-	return (GP_OK);
-}
-
-int gp_camera_progress (Camera *camera, float percentage);
-int
-gp_camera_progress (Camera *camera, float percentage)
-{
-	gp_log (GP_LOG_DEBUG, "camera", "gp_camera_progress is deprecated. "
-		"Please use gp_context_progress_update. Thank you!");
-	return (GP_OK);
-}
-int gp_camera_message (Camera *camera, const char *format, ...);
-int 
-gp_camera_message (Camera *camera, const char *format, ...)
-{
-	gp_log (GP_LOG_DEBUG, "camera", "gp_camera_message is deprecated. "
-		"Please use gp_context_message. Thank you!");
 	return (GP_OK);
 }

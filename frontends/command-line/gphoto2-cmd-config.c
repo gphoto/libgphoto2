@@ -527,15 +527,6 @@ show_widget (CmdConfig *cmd_config, CameraWidget *widget)
 	return (GP_OK);
 }
 
-static void
-status_func (Camera *camera, const char *status, void *data)
-{
-	CmdConfig *cmd_config = data;
-
-	/* We need to do something in here */
-	cmd_config = NULL;
-}
-
 int
 gp_cmd_config (Camera *camera, GPContext *context)
 {
@@ -564,7 +555,6 @@ gp_cmd_config (Camera *camera, GPContext *context)
 	cmd_config.screen  = screen;
 	cmd_config.window  = config;
 	cmd_config.context = context;
-	gp_camera_set_status_func (camera, status_func, &cmd_config);
 	result = show_widget (&cmd_config, config);
 
 	/* Clean up */

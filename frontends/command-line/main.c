@@ -17,7 +17,6 @@
 
 #include "actions.h"
 #include "foreach.h"
-#include "interface.h"
 #include "options.h"
 #include "range.h"
 #include "shell.h"
@@ -1178,8 +1177,6 @@ set_globals (void)
 	 */
 	if (!strncmp (glob_port, "serial:", 7))
 	        CHECK_RESULT (gp_camera_set_port_speed (glob_camera, glob_speed));
-
-	gp_camera_set_status_func (glob_camera, status_func, NULL);
 
         return (GP_OK);
 }

@@ -23,6 +23,8 @@
 
 #include <stdlib.h>
 
+#include <gphoto2-port-log.h>
+
 struct _GPContext
 {
 	GPContextIdleFunc     idle_func;
@@ -180,6 +182,11 @@ gp_context_error (GPContext *context, const char *format, ...)
 {
 	va_list args;
 
+	/* Log the error message */
+	va_start (args, format);
+	gp_logv (GP_LOG_ERROR, "context", format, args);
+	va_end (args);
+
 	if (!context)
 		return;
 
@@ -196,6 +203,11 @@ gp_context_status (GPContext *context, const char *format, ...)
 {
 	va_list args;
 
+	/* Log the status message */
+	va_start (args, format);
+	gp_logv (GP_LOG_DEBUG, "context", format, args);
+	va_end (args);
+
 	if (!context)
 		return;
 
@@ -211,6 +223,11 @@ void
 gp_context_message (GPContext *context, const char *format, ...)
 {
 	va_list args;
+
+	/* Log the message */
+	va_start (args, format);
+	gp_logv (GP_LOG_DEBUG, "context", format, args);
+	va_end (args);
 
 	if (!context)
 		return;

@@ -64,9 +64,6 @@ gp_cmd_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	aa_context *c;
 	aa_renderparams *params;
 
-	/* We don't want status messages on our screen */
-	gp_camera_set_status_func (camera, NULL, NULL);
-
 	c = aa_autoinit (&aa_defparams);
 	if (!c)
 		return (GP_ERROR);
