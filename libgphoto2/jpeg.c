@@ -200,12 +200,13 @@ void gp_jpeg_print(jpeg *myjpeg)
     }
 }
 
-chunk *gp_jpeg_make_start()
+chunk *gp_jpeg_make_start() //also makes the JFIF marker
 {
     chunk *temp;
-    temp = chunk_new(2);
-    temp->data[0] = 0xFF;
-    temp->data[1] = JPEG_START;
+    // Start marker and
+    // JFIF APPO Marker:Version 1.01, density 1x2 (the 00 01 00 02)
+    temp = chunk_new_filled(20,  "\xFF\xD8"
+        "\xFF\xE0\x00\x10\x4A\x46\x49\x46" "\x00\x01\x01\x00\x00\x01\x00\x02" "\x00\x00");
     return temp;
 }
 
