@@ -351,7 +351,7 @@ int shell_help (char *arg) {
 		while (func[x].function) {
 			if (strcmp(arg_cmd, func[x].command)==0) {
 				printf("Help on \"%s\":\n\n", arg_cmd);
-				printf("Usage: %s %s\n", arg, func[x].description_arg);
+				printf("Usage: %s %s\n", arg_cmd, func[x].description_arg);
 				printf("Description: \n\t%s\n\n", func[x].description);
 				printf("* Arguments in brackets [] are optional\n");
 				return (GP_OK);

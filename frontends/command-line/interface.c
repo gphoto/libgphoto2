@@ -8,11 +8,17 @@ extern int glob_quiet;
 
 int gp_interface_status (Camera *camera, char *status) {
 
+	if (glob_quiet)
+		return (GP_OK);
+
 	printf("Status: %s\n", status);
 	return (GP_OK);
 }
 
 int gp_interface_message (Camera *camera, char *message) {
+
+	if (glob_quiet)
+		return (GP_OK);
 
 	printf("Message: %s\n", message);
 	return (GP_OK);
@@ -21,6 +27,9 @@ int gp_interface_message (Camera *camera, char *message) {
 int gp_interface_confirm (Camera *camera, char *message) {
 
 	char c[1024];
+
+	if (glob_quiet)
+		return (GP_CONFIRM_YES);	/* dangerous? */
 
 	do {
 		printf("%s [y/n] ", message);
@@ -33,7 +42,7 @@ int gp_interface_confirm (Camera *camera, char *message) {
 
 int gp_interface_progress (Camera *camera, CameraFile *file, float percentage) {
 
-	if ((glob_stdout) || (glob_quiet))
+	if (glob_quiet)
 		return GP_OK;
 
 	if (percentage >= 0) {

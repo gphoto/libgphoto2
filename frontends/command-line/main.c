@@ -197,7 +197,7 @@ OPTION_CALLBACK(test) {
 
 OPTION_CALLBACK(use_stdout) {
 
-	glob_quiet = 1; /* implied */
+	glob_quiet  = 1; /* implied */
 	glob_stdout = 1;
 
 	return GP_OK;
