@@ -116,7 +116,7 @@ int camera_init (Camera *camera)
     camera->functions->file_get 	= camera_file_get;
     camera->functions->file_get_preview = camera_file_get_preview;
     camera->functions->file_delete 	= camera_file_delete;
-//  camera->functions->capture 	        = camera_capture;
+//    camera->functions->capture 	        = camera_capture;
     camera->functions->summary	        = camera_summary;
     camera->functions->manual 	        = camera_manual;
     camera->functions->about 	        = camera_about;
@@ -303,7 +303,7 @@ int camera_about (Camera *camera, CameraText *about)
 	strcpy (about->text, 
 		_("Kodak DC240 Camera Library\n"
 		"Scott Fritzinger <scottf@gphoto.net>\n"
-		"Camera Library for the Kodak DC240, DC260, DC3400 and DC5000 cameras.\n"
+		"Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 		"Rewritten and updated for gPhoto2."));
 
 	return (GP_OK);
