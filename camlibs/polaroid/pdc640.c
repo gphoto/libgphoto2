@@ -385,9 +385,9 @@ pdc640_unknown20 (GPPort* port)
 static int
 pdc640_caminfo (GPPort *port, int *numpic)
 {
-	char buf[1532];
+	char buf[1536];
 
-	CHECK_RESULT (pdc640_transmit_packet (port, 0x40, buf, 1532));
+	CHECK_RESULT (pdc640_transmit_packet (port, 0x40, buf, 1536));
 	*numpic = buf[2]; /* thats the only useful info :( */
 	return (GP_OK);
 }
