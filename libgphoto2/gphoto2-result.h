@@ -24,14 +24,65 @@
 /* Additional error codes are defined here */
 #include <gphoto2-port-result.h>
 
-#define GP_ERROR_IO                  -101 /* IO problem                 */
+/**
+ * GP_ERROR_CORRUPTED_DATA:
+ *
+ * Data is corrupt. This error is reported by camera drivers if corrupted
+ * data has been received that can not be automatically handled. Normally,
+ * drivers will do everything possible to automatically recover from this
+ * error.
+ **/
 #define GP_ERROR_CORRUPTED_DATA      -102 /* Corrupted data             */
-#define GP_ERROR_FILE_EXISTS         -103 /* File exists                */
-#define GP_ERROR_MODEL_NOT_FOUND     -105 /* Model not found            */
-#define GP_ERROR_DIRECTORY_NOT_FOUND -107 /* Directory not found        */
-#define GP_ERROR_FILE_NOT_FOUND      -108 /* File not found             */
-#define GP_ERROR_DIRECTORY_EXISTS    -109 /* Directory exists           */
-#define GP_ERROR_PATH_NOT_ABSOLUTE   -111 /* Path not absolute          */
+
+/**
+ * GP_ERROR_FILE_EXISTS:
+ *
+ * An operation failed because a file existed. This error is reported when the
+ * user tries to create a file that already exists.
+ **/
+#define GP_ERROR_FILE_EXISTS         -103
+
+/**
+ * GP_ERROR_MODEL_NOT_FOUND:
+ *
+ * The specified model could not be found. This error is reported when
+ * the user specified a model that does not seem to be supported by 
+ * any driver.
+ **/
+#define GP_ERROR_MODEL_NOT_FOUND     -105
+
+/**
+ * GP_ERROR_DIRECTORY_NOT_FOUND:
+ *
+ * The specified directory could not be found. This error is reported when
+ * the user specified a directory that is non-existent.
+ **/
+#define GP_ERROR_DIRECTORY_NOT_FOUND -107
+
+/**
+ * GP_ERROR_FILE_NOT_FOUND:
+ *
+ * The specified file could not be found. This error is reported when
+ * the user wants to access a file that is non-existent.
+ **/
+#define GP_ERROR_FILE_NOT_FOUND      -108
+
+/**
+ * GP_ERROR_DIRECTORY_EXISTS:
+ *
+ * The specified directory already exists. This error is reported when
+ * the user wants to create a directory that already exists.
+ **/
+#define GP_ERROR_DIRECTORY_EXISTS    -109
+
+/**
+ * GP_ERROR_PATH_NOT_ABSOLUTE:
+ * 
+ * The specified path is not absolute. This error is reported when the user
+ * specifies paths that are not absolute, i.e. paths like "path/to/directory".
+ * As a rule of thumb, in gphoto2, there is nothing like relative paths.
+ **/
+#define GP_ERROR_PATH_NOT_ABSOLUTE   -111
 
 const char *gp_result_as_string      (int result);
 

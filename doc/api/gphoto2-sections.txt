@@ -14,6 +14,11 @@ camera_init
 <SECTION>
 <FILE>gphoto2-abilities-list</FILE>
 <TITLE>CameraAbilitiesList</TITLE>
+CameraDriverStatus
+CameraOperation
+CameraFileOperation
+CameraFolderOperation
+CameraAbilities
 CameraAbilitiesList
 
 gp_abilities_list_new
@@ -25,13 +30,6 @@ gp_abilities_list_count
 gp_abilities_list_lookup_model
 gp_abilities_list_get_abilities
 gp_abilities_list_append
-
-</SECTION>
-
-<SECTION>
-<FILE>gphoto2-abilities</FILE>
-<TITLE>CameraAbilities</TITLE>
-CameraAbilities
 
 </SECTION>
 
@@ -166,7 +164,6 @@ GP_ERROR_DIRECTORY_EXISTS
 GP_ERROR_FILE_EXISTS
 GP_ERROR_FILE_NOT_FOUND
 GP_ERROR_DIRECTORY_NOT_FOUND
-GP_ERROR_IO
 GP_ERROR_MODEL_NOT_FOUND
 
 gp_result_as_string

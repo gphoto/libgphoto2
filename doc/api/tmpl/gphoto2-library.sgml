@@ -58,8 +58,10 @@ This section contains functions that have to be implemented by camera drivers.
 
 </para>
 
-@Param1: 
+@id: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@Param1: 
 
 
 <!-- ##### USER_FUNCTION CameraLibraryAbilitiesFunc ##### -->
@@ -67,8 +69,10 @@ This section contains functions that have to be implemented by camera drivers.
 
 </para>
 
-@Param1: 
+@list: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@Param1: 
 
 
 <!-- ##### USER_FUNCTION CameraLibraryInitFunc ##### -->
@@ -76,8 +80,10 @@ This section contains functions that have to be implemented by camera drivers.
 
 </para>
 
-@Param1: 
+@camera: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@Param1: 
 
 
 <!-- ##### FUNCTION camera_id ##### -->

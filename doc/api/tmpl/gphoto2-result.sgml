@@ -4,7 +4,6 @@ GPhoto2 error codes
 <!-- ##### SECTION Short_Description ##### -->
 GPhoto2 error codes and error reporting
 
-
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 This section covers gphoto2 error codes and a function to get a string 

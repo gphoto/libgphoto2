@@ -30,7 +30,6 @@ typedef struct _Camera Camera;
 #include <gphoto2-list.h>
 #include <gphoto2-file.h>
 #include <gphoto2-filesys.h>
-#include <gphoto2-abilities.h>
 #include <gphoto2-abilities-list.h>
 #include <gphoto2-result.h>
 

@@ -26,7 +26,6 @@ libgphoto2_la_LIBADD = -lm
 libgphoto2includedir = $(includedir)/gphoto2
 libgphoto2include_HEADERS =	\
 	gphoto2.h		\
-	gphoto2-abilities.h	\
 	gphoto2-abilities-list.h\
 	gphoto2-camera.h	\
 	gphoto2-debug.h		\

@@ -14,6 +14,54 @@ CameraAbilitiesList
 
 </para>
 
+<!-- ##### ENUM CameraDriverStatus ##### -->
+<para>
+
+</para>
+
+@GP_DRIVER_STATUS_PRODUCTION: 
+@GP_DRIVER_STATUS_TESTING: 
+@GP_DRIVER_STATUS_EXPERIMENTAL: 
+
+<!-- ##### ENUM CameraOperation ##### -->
+<para>
+
+</para>
+
+@GP_OPERATION_NONE: 
+@GP_OPERATION_CAPTURE_IMAGE: 
+@GP_OPERATION_CAPTURE_VIDEO: 
+@GP_OPERATION_CAPTURE_AUDIO: 
+@GP_OPERATION_CAPTURE_PREVIEW: 
+@GP_OPERATION_CONFIG: 
+
+<!-- ##### ENUM CameraFileOperation ##### -->
+<para>
+
+</para>
+
+@GP_FILE_OPERATION_NONE: 
+@GP_FILE_OPERATION_DELETE: 
+@GP_FILE_OPERATION_CONFIG: 
+@GP_FILE_OPERATION_PREVIEW: 
+@GP_FILE_OPERATION_RAW: 
+
+<!-- ##### ENUM CameraFolderOperation ##### -->
+<para>
+
+</para>
+
+@GP_FOLDER_OPERATION_NONE: 
+@GP_FOLDER_OPERATION_DELETE_ALL: 
+@GP_FOLDER_OPERATION_PUT_FILE: 
+@GP_FOLDER_OPERATION_CONFIG: 
+
+<!-- ##### TYPEDEF CameraAbilities ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### STRUCT CameraAbilitiesList ##### -->
 <para>
 

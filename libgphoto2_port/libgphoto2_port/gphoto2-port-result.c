@@ -55,6 +55,7 @@ gp_port_result_as_string (int result)
 
 	GP_ERR_RES (GP_OK, "No error");
 	GP_ERR_RES (GP_ERROR, "Unspecified error");
+	GP_ERR_RES (GP_ERROR_IO, N_("I/O problem"));
 	GP_ERR_RES (GP_ERROR_BAD_PARAMETERS, N_("Bad parameters"));
 	GP_ERR_RES (GP_ERROR_NOT_SUPPORTED, N_("Unsupported operation"));
 	GP_ERR_RES (GP_ERROR_TIMEOUT,

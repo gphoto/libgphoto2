@@ -6,7 +6,6 @@
 <!entity gphoto2-result         SYSTEM "sgml/gphoto2-result.sgml">
 <!entity gphoto2-library        SYSTEM "sgml/gphoto2-library.sgml">
 <!entity gphoto2-list           SYSTEM "sgml/gphoto2-list.sgml">
-<!entity gphoto2-abilities      SYSTEM "sgml/gphoto2-abilities.sgml">
 <!entity gphoto2-abilities-list SYSTEM "sgml/gphoto2-abilities-list.sgml">
 ]>
 
@@ -67,7 +66,6 @@ locking of serial ports. GPhoto2 currently supports
       </para>
 
 &gphoto2-result;
-&gphoto2-abilities;
 &gphoto2-library;
 
   </chapter>
