@@ -554,7 +554,7 @@ l_return_status_t l_send_receive (gpio_device *device, guchar *send_buffer, guin
 	if (return_status != L_SUCCESS) return (return_status);
 	if (((*receive_buffer)[0] != send_buffer[0]) || 
 	    ((*receive_buffer)[1] != send_buffer[1])) {
-		printf ("Error: Commands differ! %i %i != %i %i.\n", 
+		gp_debug_printf (GP_DEBUG_HIGH, "konica", "Error: Commands differ! %i %i != %i %i.\n", 
 			(*receive_buffer)[0], (*receive_buffer)[1], 
 			send_buffer[0], send_buffer[1]); 
 		return (L_TRANSMISSION_ERROR);
@@ -592,7 +592,7 @@ l_return_status_t l_send_receive_receive (
 	if (return_status != L_SUCCESS) return (return_status);
 	if (((*receive_buffer)[0] != send_buffer[0]) || 
 	    ((*receive_buffer)[1] != send_buffer[1])) {
-		printf ("Error: Commands differ! %i %i != %i %i.\n", 
+		gp_debug_printf (GP_DEBUG_HIGH, "konica", "Error: Commands differ! %i %i != %i %i.\n", 
 			(*receive_buffer)[0], (*receive_buffer)[1], 
 			send_buffer[0], send_buffer[1]); 
 		return (L_TRANSMISSION_ERROR);
