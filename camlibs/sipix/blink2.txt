@@ -81,25 +81,38 @@ Hmm (?) / Resync Routine:
 	control read 0x13, 0x0, 0x00	-> buf[1]
 
 
+Bandwith Allocate(type):
+	320x240: control read 0x14, 0x0, 0x00	-> buf[1]
+	640x480: control read 0x15, 0x0, 0x00	-> buf[1]
+
+	I think this is for ISO transfers, started by 0x04,0x01.
+	You need to change the interface accordingly.
+
+
 Set Exposure Count(value):
 	control read 0x17, 0x03, value	-> buf[1]
+	Unclear.
 
 
 Set Compression(value):
 	control read 0x1b, 0x03, value	-> buf[1]
+	Unclear.
 
 
 Set Whitebalance(value):
 	control read 0x1d, 0x03, value	-> buf[1]
+	Unclear.
 
 
 Set Still Quality(value):
 	control read 0x1a, 0x03, value	-> buf[1]
+	Unclear.
+
 
 Set Flare(value)
 	control read 0x19, 0x03, value	-> buf[1]
+	Unclear.
 
-Notes for Marcus:
 
 Internal Driver Properties:
 	ID	Name		Range	Default
