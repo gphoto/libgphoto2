@@ -4,10 +4,12 @@ Outstanding items in the gphoto2 dimera driver:
 
 - make exposure, auto_exposure, auto_flash user-modifiable config options
 - may need to put /temp.ppm into file list
+- use gettext to allow internationalized strings
 
 Bugs:
 
 - flash capacity in --summary shows 0 for newer flash cards
 - image quality is lower than it could be due to suboptimal Bayer CCD
 conversion routine
+- some serial port speed settings don't work
 
