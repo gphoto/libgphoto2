@@ -1994,9 +1994,9 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 		 */
 		if (dirent_name_len > 256) {
 			GP_DEBUG ("canon_int_list_dir: "
-				  "the name in dirent at position %i of %i is too long. (%i bytes)."
+				  "the name in dirent at position %i of %i is too long. (%li bytes)."
 				  "bailing out with what we've got.", (pos - dirent_data),
-				  (end_of_data - dirent_data), dirent_name_len);
+				  (end_of_data - dirent_data), (long)dirent_name_len);
 			break;
 		}
 
