@@ -60,6 +60,8 @@
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
+#define GP_MODULE "digita"
+
 static struct {
 	char *model;
 	int usb_vendor;
@@ -203,16 +205,16 @@ static int file_list_func(CameraFilesystem *fs, const char *folder,
 
 #define GFD_BUFSIZE 19432
 static char *digita_file_get(Camera *camera, const char *folder, 
-			      const char *filename, int thumbnail, int *size)
+			     const char *filename, int thumbnail, int *size,
+			     GPContext *context)
 {
 	struct filename fn;
 	struct partial_tag tag;
 	unsigned char *data;
 	int pos, len, buflen;
+	unsigned int id;
 
-	fprintf(stderr, "digita_file_get\n");
-
-	fprintf(stderr, "digita: getting %s/%s\n", folder, filename);
+	GP_DEBUG ("Getting %s from folder %s...", filename, folder);
 
 	/* Setup the filename */
 	/* FIXME: This is kinda lame, but it's a quick hack */
@@ -234,8 +236,6 @@ static char *digita_file_get(Camera *camera, const char *folder,
 	}
 	memset(data, 0, buflen);
 
-	gp_camera_progress(camera, 0.00);
-
 	if (digita_get_file_data(camera->pl, thumbnail, &fn, &tag, data) < 0) {
 		gp_debug_printf(GP_DEBUG_HIGH, "digita", "digita_get_picture: digita_get_file_data failed");
 		return NULL;
@@ -253,8 +253,9 @@ static char *digita_file_get(Camera *camera, const char *folder,
 
 	len = ntohl(tag.filesize);
 	pos = ntohl(tag.length);
+	id = gp_context_progress_start (context, len, _("Getting file..."));
 	while (pos < len) {
-		gp_camera_progress(camera, (float)pos / (float)len);
+		gp_context_progress_update (context, id, pos);
 
 		tag.offset = htonl(pos);
 		if ((len - pos) > GFD_BUFSIZE)
@@ -263,13 +264,12 @@ static char *digita_file_get(Camera *camera, const char *folder,
 			tag.length = htonl(len - pos);
 
 		if (digita_get_file_data(camera->pl, thumbnail, &fn, &tag, data + pos) < 0) {
-			gp_debug_printf(GP_DEBUG_HIGH, "digita", "digita_get_picture: digita_get_file_data failed");
+			GP_DEBUG ("digita_get_file_data failed.");
 			return NULL;
 		}
 		pos += ntohl(tag.length);
 	}
-
-	gp_camera_progress(camera, 1.00);
+	gp_context_progress_stop (context, id);
 
 	*size = buflen;
 
@@ -321,11 +321,11 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		fprintf(stderr, "Getting picture\n");
-	        data = digita_file_get(camera, folder, filename, 0, &buflen);
+	        data = digita_file_get(camera, folder, filename, 0, &buflen, context);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		fprintf(stderr, "Getting thumbnail\n");
-		data = digita_file_get(camera, folder, filename, 1, &buflen);
+		data = digita_file_get(camera, folder, filename, 1, &buflen, context);
 		break;
 	default:
 		fprintf(stderr, "Unsupported image type\n");
