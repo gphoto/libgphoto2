@@ -1,3 +1,10 @@
+2002-02-21  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: removed COMM0 and other strange code and replaced them 
+	with the new DC240_SC_* codes.
+	(dc240_load_status_data_to_table): fixed a signedess issue
+	
+
 2002-02-21  Peter Fales	<psfales@lucent.com>
 
 	* library.c (dc240_packet_read): handle COMM0 error packet

@@ -42,6 +42,21 @@
 #define GP_MODULE "dc240"
 
 
+/* legacy from dc240.h */
+/*
+  #define COMM1	(unsigned char)0x00
+  #define READY	(unsigned char)0x10
+  #define ACK	(unsigned char)0xd1
+  #define PACK1	(unsigned char)0xd2
+*/
+/* nice. errors all have upper nibble of 'e' */
+/*
+  #define	NAK	(unsigned char)0xe1
+  #define	COMM0	(unsigned char)0xe2
+  #define PACK0	(unsigned char)0xe3
+  #define CANCL	(unsigned char)0xe4
+*/
+
 /* system codes */ 
 enum {
     DC240_SC_COMPLETE = 0x0,
@@ -151,11 +166,11 @@ dc240_packet_read (Camera *camera, char *packet, int size)
 
     /* 
      * If we try to read data about a non-picture file, we get back 
-     * a single COMM0 byte.  So, if we're trying to read a packet with
+     * a single DC240_SC_ERROR byte.  So, if we're trying to read a packet with
      * size greater than one, but we only get one byte, and it is a
-     * COMM0 error, return failure
+     * DC240_SC_ERROR error, return failure
      */
-    if ((size > 1) && (retval == 1) && ((unsigned char)packet[0] == COMM0)) {
+    if ((size > 1) && (retval == 1) && ((unsigned char)packet[0] == DC240_SC_ERROR)) {
 	return GP_ERROR_NOT_SUPPORTED;
     }
 
@@ -172,7 +187,7 @@ static int dc240_packet_write_ack (Camera *camera)
     int retval;
     char p[2];
 
-    p[0] = PACK1;
+    p[0] = DC240_SC_CORRECT;
     retval = gp_port_write(camera->port, p, 1);
     if (retval < GP_OK) {
 	return retval;
@@ -187,7 +202,7 @@ static int dc240_packet_write_nak (Camera *camera)
     int retval;
     char p[2];
 
-    p[0] = PACK0;
+    p[0] = DC240_SC_ILLEGAL;
     retval = gp_port_write(camera->port, p, 1);
     if (retval < GP_OK) {
 	return retval;
@@ -608,7 +623,7 @@ const char * dc240_get_memcard_status_str(uint8_t status)
 /*
   Feed manually the stucture from data.
  */
-static int dc240_load_status_data_to_table (const int8_t *fdata, DC240StatusTable *table)
+static int dc240_load_status_data_to_table (const uint8_t *fdata, DC240StatusTable *table)
 {
     if (fdata [0] != 0x01) {
 	return GP_ERROR;
@@ -697,7 +712,7 @@ int dc240_get_status (Camera *camera, DC240StatusTable *table, GPContext *contex
 	if (fdata [0] != 0x01) { /* see 2.6 for why 0x01 */
 	    GP_DEBUG ("not a status table. Is %d", fdata [0]);
 	}
-	dc240_load_status_data_to_table (fdata, table);
+	dc240_load_status_data_to_table ((uint8_t *)fdata, table);
     }
 
     gp_file_free(file);
