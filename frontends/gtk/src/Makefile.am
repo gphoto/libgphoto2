@@ -10,8 +10,7 @@ project5_SOURCES = \
 	main.c \
 	support.c support.h \
 	interface.c interface.h \
-	callbacks.c callbacks.h
+	callbacks.c callbacks.h \
 	tree_list_util.c tree_list_util.h
 
 project5_LDADD = @GTK_LIBS@ $(INTLLIBS)
-
