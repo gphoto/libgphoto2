@@ -200,7 +200,7 @@ get_path_for_id_rec (const char *base_folder, unsigned int id,
 	}
 }
 
-static int
+int
 get_path_for_id (const char *base_folder, unsigned char recurse,
 		 unsigned int id, const char **folder, const char **filename)
 {

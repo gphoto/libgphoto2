@@ -30,4 +30,8 @@ int for_each_image          (const char *folder, image_action iaction,
 int for_each_image_in_range (const char *folder, unsigned char recurse,
 			     char *range, image_action action, int reverse);
 
+int get_path_for_id (const char *base_folder, unsigned char recurse,
+		     unsigned int id, const char **folder,
+		     const char **filename);
+
 #endif /* __FOREACH_H__ */
