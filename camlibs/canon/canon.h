@@ -137,16 +137,18 @@ struct _CameraPrivateLibrary
 /* These contain the default label for all the 
  * switch (camera->port->type) statements
  */
-#define GP_PORT_DEFAULT_RETURN(RETVAL) \
+#define GP_PORT_DEFAULT_RETURN_INTERNAL(return_statement) \
 		default: \
 			gp_camera_set_error (camera, "Don't know how to handle " \
 					     "camera->port->type value %i aka 0x%x" \
 					     "in %s line %i.", camera->port->type, \
 					     camera->port->type, __FILE__, __LINE__); \
-			return RETVAL; \
+			return_statement; \
 			break;
 
-#define GP_PORT_DEFAULT GP_PORT_DEFAULT_RETURN(GP_ERROR_BAD_PARAMETERS)
+#define GP_PORT_DEFAULT_RETURN_EMPTY   GP_PORT_DEFAULT_RETURN_INTERNAL(return)
+#define GP_PORT_DEFAULT_RETURN(RETVAL) GP_PORT_DEFAULT_RETURN_INTERNAL(return RETVAL)
+#define GP_PORT_DEFAULT                GP_PORT_DEFAULT_RETURN(GP_ERROR_BAD_PARAMETERS)
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
