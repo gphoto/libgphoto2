@@ -17,7 +17,7 @@ int for_each_subfolder (char *folder, folder_action faction,
 	CameraListEntry		*entry;
 
 	char	prefix[1024], subfolder[1024];
-	int	i;
+	int	i, result;
 	
 	prefix[0] = 0;
 	subfolder[0] = 0;
@@ -35,8 +35,8 @@ int for_each_subfolder (char *folder, folder_action faction,
 	for (i = 0; i < gp_list_count(&folderlist); i++) {
 		entry = gp_list_entry(&folderlist, i);
 		sprintf(subfolder, "%s/%s", prefix, entry->name);
-		if (faction(subfolder, iaction, recurse) != GP_OK) 
-			return (GP_ERROR);
+		if ((result = faction(subfolder, iaction, recurse)) != GP_OK) 
+			return (result);
 		if (recurse) 
 			for_each_subfolder(subfolder, faction, iaction, recurse);
 	}
@@ -48,21 +48,21 @@ int for_each_image(char *folder, image_action iaction, int reverse) {
 	
 	CameraList 	filelist;
 	CameraListEntry *entry;
-	int		i;
+	int		i, result;
 
 	gp_camera_file_list(glob_camera, &filelist, folder);
 
 	if (reverse) {
 		for (i = gp_list_count(&filelist) - 1; 0 <= i; i--) {
 			entry = gp_list_entry(&filelist, i);
-			if (iaction(folder, entry->name) != GP_OK)
-				return (GP_ERROR);
+			if ((result = iaction(folder, entry->name)) != GP_OK)
+				return (result);
 		}
 	} else {
 		for (i = 0; i < gp_list_count(&filelist); i++) {
 			entry = gp_list_entry(&filelist, i);
-			if (iaction(folder, entry->name) != GP_OK)
-				return (GP_ERROR);
+			if ((result = iaction(folder, entry->name)) != GP_OK)
+				return (result);
 		}
 	}
 

@@ -27,14 +27,14 @@ int option_is_present (char *op, int argc, char **argv) {
 
         /* Strictly require an option in the option table */
         if (!found)
-                return (GP_ERROR);
+                return (GP_ERROR_BAD_PARAMETERS);
 
         /* look through argv, if a match is found, return */
         for (x=1; x<argc; x++)
                 if ((strcmp(s, argv[x])==0)||(strcmp(l, argv[x])==0))
                         return (GP_OK);
 
-        return (GP_ERROR);
+        return (GP_ERROR_BAD_PARAMETERS);
 }
 
 int verify_options (int argc, char **argv) {
@@ -83,7 +83,7 @@ int verify_options (int argc, char **argv) {
 					option[which].argument);
 			}   else
 				cli_error_print("    unknown option");
-			return (GP_ERROR);
+			return (GP_ERROR_BAD_PARAMETERS);
 		}
 	}
 
@@ -94,7 +94,7 @@ int verify_options (int argc, char **argv) {
 			printf("Option %s%s is required.\n",
 			 strlen(option[x].short_id)>0? SHORT_OPTION:LONG_OPTION,
 			 strlen(option[x].short_id)>0? option[x].short_id:option[x].long_id);
-			return (GP_ERROR);
+			return (GP_ERROR_BAD_PARAMETERS);
 		}
 	   }
 	}

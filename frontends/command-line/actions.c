@@ -48,22 +48,16 @@ int print_files(char *subfolder, image_action iaction, int reverse) {
 /* ------------------------------------------------------------ */
 
 int save_picture_action(char *folder, char *filename) {
-		
-	if (save_picture_to_file(folder, filename, 0) != GP_OK)
-		return (GP_ERROR);		
-	return (GP_OK);
+
+	return (save_picture_to_file(folder, filename, 0));
 }
 
 int save_thumbnail_action(char *folder, char *filename) {
 	
-	if (save_picture_to_file(folder, filename, 1) != GP_OK)
-		return (GP_ERROR);
-	return (GP_OK);
+	return (save_picture_to_file(folder, filename, 1));
 }
 
 int delete_picture_action(char *folder, char *filename) {
-	
-	if (gp_camera_file_delete(glob_camera, folder, filename) != GP_OK)
-		return (GP_ERROR);		
-	return (GP_OK);
+
+	return (gp_camera_file_delete(glob_camera, folder, filename));
 }

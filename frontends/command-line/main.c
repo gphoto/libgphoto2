@@ -526,12 +526,12 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
                 }
                 printf("Saving %s as %s\n", thumbnail ? "preview" : "image", buf);
         }
-        if (gp_file_save(file, buf) != GP_OK)
+        if ((result = gp_file_save(file, buf)) != GP_OK)
                 cli_error_print("Can not save %s as %s", thumbnail ? "preview" : "image", buf);
 
         gp_file_free(file);
 
-        return (GP_OK);
+        return (result);
 }
 
 /*
