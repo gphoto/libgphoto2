@@ -60,7 +60,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 /** Parses a path for a folder and returns folder number and card */
 static int find_folder( Camera *camera, const char *folder, 
-			int *from_card, int *folder_nr )
+			int *from_card, int *folder_nr, GPContext *context)
 {
     CameraList *albums = NULL;
     const char* album_name;
@@ -111,7 +111,7 @@ static int find_folder( Camera *camera, const char *folder,
 	return (GP_ERROR);
     }
     
-    if( dc120_get_albums(camera, *from_card, albums) != (GP_OK) ) {
+    if( dc120_get_albums(camera, *from_card, albums, context) != (GP_OK) ) {
 	gp_list_free( albums );
 	return (GP_ERROR);
     }
@@ -142,17 +142,17 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
     int folder_nr;
     Camera *camera = data;
     
-    res = find_folder( camera, folder, &from_card, &folder_nr );
+    res = find_folder( camera, folder, &from_card, &folder_nr, context);
     if( res != (GP_OK) ) {
 	return res;
     }
     
     if( !from_card && folder_nr==0 ) {
 	gp_list_append(list, dc120_folder_card, NULL);
-	return (dc120_get_albums(camera, from_card, list));
+	return (dc120_get_albums(camera, from_card, list, context));
     } 
     else if( from_card && folder_nr==0 ) {
-	return (dc120_get_albums(camera, from_card, list));
+	return (dc120_get_albums(camera, from_card, list, context));
     } 
     else {
 	return (GP_OK);
@@ -167,12 +167,12 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
     int folder_nr;
     Camera *camera = data;
     
-    res = find_folder( camera, folder, &from_card, &folder_nr );
+    res = find_folder( camera, folder, &from_card, &folder_nr, context);
     if( res != (GP_OK) ) {
 	return res;
     }
     
-    return dc120_get_filenames(camera, from_card, folder_nr, list);
+    return dc120_get_filenames(camera, from_card, folder_nr, list, context);
     
     /* Save the order of the pics (wtf: no filename access on dc120???) */
 }
@@ -195,7 +195,7 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
     int from_card;
     int folder_nr;
     
-    res = find_folder( camera, folder, &from_card, &folder_nr );
+    res = find_folder( camera, folder, &from_card, &folder_nr, context );
     if( res != (GP_OK) ) {
 	return res;
     }
@@ -205,7 +205,7 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 	return (GP_ERROR);
     }
     
-    res = dc120_get_filenames(camera, from_card, folder_nr, files);
+    res = dc120_get_filenames(camera, from_card, folder_nr, files, context);
     if( res != (GP_OK) ) {
 	return res;
     }
@@ -245,7 +245,7 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 	gp_file_set_name (file, filename);
     }
     
-    return (dc120_file_action(camera, action, from_card, folder_nr, picnum+1, file));
+    return (dc120_file_action(camera, action, from_card, folder_nr, picnum+1, file, context));
 }
 
 
@@ -289,12 +289,12 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	/* capture a image to flash (note: we do not check if full */
-	CHECK_RESULT (dc120_capture(camera, path));
+	CHECK_RESULT (dc120_capture(camera, path, context));
 
 	/* Get the last picture in the Flash memory */
 	gp_list_new(&list);
 
-	dc120_get_filenames (camera, 0, 0, list);
+	dc120_get_filenames (camera, 0, 0, list, context);
 
 	count = gp_list_count(list);
 	gp_list_get_name (list, count - 1, &name);
@@ -320,7 +320,7 @@ static int camera_summary (Camera *camera, CameraText *summary,
     char buff[1024];
     Kodak_dc120_status status;
 
-    if (dc120_get_status (camera, &status))
+    if (dc120_get_status (camera, &status, context))
     {
         strcpy(summary_string,"Kodak DC120\n");
         
@@ -415,7 +415,7 @@ int camera_init (Camera *camera, GPContext *context) {
         }
 
         /* Try to talk after speed change */
-        if (dc120_get_status(camera, NULL) == GP_ERROR) {
+        if (dc120_get_status(camera, NULL, context) == GP_ERROR) {
                 return (GP_ERROR);
         }
 

@@ -1,3 +1,8 @@
+2002-01-15  Lutz Müller <lutz@users.sourceforge.net>
+
+	* dc120.c
+	* library.[c,h]: gp_camera_progress -> gp_context_progress
+
 2001-12-20  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* dc120.c, library.h, library.c:  cleaned it up a 

@@ -46,12 +46,12 @@ int   dc120_response_ok (char response);
 int   dc120_packet_write (Camera *camera, char *packet, int size, int read_response);
 int   dc120_packet_read  (Camera *camera, char *packet, int size);
 int   dc120_set_speed    (Camera *camera, int speed);
-int   dc120_get_status   (Camera *camera, Kodak_dc120_status *status);
-int   dc120_get_albums	 (Camera *camera, int from_card, CameraList *list);
-int   dc120_get_filenames(Camera *camera, int from_card, int album_number, CameraList *list);
+int   dc120_get_status   (Camera *camera, Kodak_dc120_status *status, GPContext *context);
+int   dc120_get_albums	 (Camera *camera, int from_card, CameraList *list, GPContext *context);
+int   dc120_get_filenames(Camera *camera, int from_card, int album_number, CameraList *list, GPContext *context);
 int   dc120_file_action	 (Camera *camera, int action, int from_card, int album_number, 
-			  int file_number, CameraFile *file);
-int dc120_capture (Camera *camera, CameraFilePath *path);
+			  int file_number, CameraFile *file, GPContext *context);
+int dc120_capture (Camera *camera, CameraFilePath *path, GPContext *context);
 
 
 #endif /* _DC120_LIBRARY_H_ */

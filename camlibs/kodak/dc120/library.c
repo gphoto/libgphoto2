@@ -1,3 +1,5 @@
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,6 +8,24 @@
 #include "dc120.h"
 #include "library.h"
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 char *dc120_packet_new (int command_byte) {
 
@@ -81,7 +101,7 @@ int dc120_packet_read (Camera *camera, char *packet, int size) {
 	return (gp_port_read(camera->port, packet, size));
 }
 
-static int dc120_packet_read_data (Camera *camera, CameraFile *file, char *cmd_packet, int *size, int block_size) {
+static int dc120_packet_read_data (Camera *camera, CameraFile *file, char *cmd_packet, int *size, int block_size, GPContext *context) {
 
 	/* Reads in multi-packet data, appending it to the "file". */
 
@@ -90,6 +110,7 @@ static int dc120_packet_read_data (Camera *camera, CameraFile *file, char *cmd_p
 	int  bytes_received;
 	int  retries=0;
 	char packet[2048], p[8];
+	unsigned int id;
 
 	/* Determine number of packets needed on-the-fly */
 	if (*size > 0) {
@@ -98,12 +119,14 @@ static int dc120_packet_read_data (Camera *camera, CameraFile *file, char *cmd_p
 		num_packets = 5;
 	}
 
+	id = gp_context_progress_start (context, num_packets, _("Getting data..."));
 read_data_write_again:
 	if (dc120_packet_write(camera, cmd_packet, 8, 1) < 0) 
 		return (GP_ERROR);
 
 	packets_received = 0;
 	while( packets_received < num_packets ) {
+		gp_context_progress_update (context, id, packets_received);
 		retval = dc120_packet_read(camera, packet, block_size+1);
 		switch (retval) {
 		  case GP_ERROR:
@@ -142,7 +165,6 @@ read_data_write_again:
 				if ((num_packets == 16)&&(packets_received==16))
 					p[0] = CANCL;
 				/* No break on purpose */
-				gp_camera_progress(camera, (float)((float)((packets_received-1)*block_size)/(float)(*size)));
 				break;
 			   default:
 				/* Nada */
@@ -162,6 +184,7 @@ read_data_write_again:
 
 		}
 	}
+	gp_context_progress_stop (context, id);
 
 	if ((unsigned char)p[0] != CANCL)
 		/* Read in command completed. 
@@ -230,7 +253,7 @@ int dc120_set_speed (Camera *camera, int speed) {
 	return (GP_OK);
 }
 
-int dc120_get_status (Camera *camera, Kodak_dc120_status *status ) {
+int dc120_get_status (Camera *camera, Kodak_dc120_status *status, GPContext *context) {
 
 	CameraFile *file;
 	char *p = dc120_packet_new(0x7F);
@@ -240,7 +263,7 @@ int dc120_get_status (Camera *camera, Kodak_dc120_status *status ) {
 
 	gp_file_new (&file);
 	size = 256;
-	retval = dc120_packet_read_data(camera, file, p, &size, 256);
+	retval = dc120_packet_read_data(camera, file, p, &size, 256, context);
 
         if( retval == (GP_OK) && status != NULL )
         {
@@ -308,7 +331,7 @@ int dc120_get_status (Camera *camera, Kodak_dc120_status *status ) {
 	return (retval);
 }
 
-int dc120_get_albums (Camera *camera, int from_card, CameraList *list) {
+int dc120_get_albums (Camera *camera, int from_card, CameraList *list, GPContext *context) {
 
 	CameraFile *file;
 	int x;
@@ -324,7 +347,7 @@ int dc120_get_albums (Camera *camera, int from_card, CameraList *list) {
 	gp_file_new(&file);
 
 	size = 256;
-	if (dc120_packet_read_data(camera, file, p, &size, 256)==GP_ERROR) {
+	if (dc120_packet_read_data(camera, file, p, &size, 256, context)==GP_ERROR) {
 		gp_file_free(file);
 		free (p);
 	}
@@ -342,7 +365,7 @@ int dc120_get_albums (Camera *camera, int from_card, CameraList *list) {
 	return (GP_OK);
 }
 
-int dc120_get_filenames (Camera *camera, int from_card, int album_number, CameraList *list) 
+int dc120_get_filenames (Camera *camera, int from_card, int album_number, CameraList *list, GPContext *context) 
 {
 	CameraFile *file;
 	int x;
@@ -364,7 +387,7 @@ int dc120_get_filenames (Camera *camera, int from_card, int album_number, Camera
 
 	gp_file_new(&file);
 	size = 256; /* packet_read_data has special handling for size */
-	if (dc120_packet_read_data(camera, file, p, &size, size)==GP_ERROR) {
+	if (dc120_packet_read_data(camera, file, p, &size, size, context)==GP_ERROR) {
 		gp_file_free(file);
 		free (p);
 		return (GP_ERROR);
@@ -391,7 +414,7 @@ int dc120_get_filenames (Camera *camera, int from_card, int album_number, Camera
 	return (GP_OK);
 }
 
-static int dc120_get_file_preview (Camera *camera, CameraFile *file, int file_number, char *cmd_packet, int *size) {
+static int dc120_get_file_preview (Camera *camera, CameraFile *file, int file_number, char *cmd_packet, int *size, GPContext *context) {
 
 	CameraFile *f;
 	int x;
@@ -403,7 +426,7 @@ static int dc120_get_file_preview (Camera *camera, CameraFile *file, int file_nu
 
 	/* Create a file for KDC data */
 	gp_file_new(&f);
-	if (dc120_packet_read_data(camera, f, cmd_packet, size, 1024)==GP_ERROR) {
+	if (dc120_packet_read_data(camera, f, cmd_packet, size, 1024, context)==GP_ERROR) {
 		gp_file_free(file);
 		return (GP_ERROR);
 	}
@@ -422,7 +445,7 @@ static int dc120_get_file_preview (Camera *camera, CameraFile *file, int file_nu
 	return (GP_OK);
 }
 
-static int dc120_get_file (Camera *camera, CameraFile *file, int file_number, char *cmd_packet, int *size) 
+static int dc120_get_file (Camera *camera, CameraFile *file, int file_number, char *cmd_packet, int *size, GPContext *context) 
 {
         CameraFile *size_file; /* file used to determine the filesize */
   	char *p;
@@ -439,7 +462,7 @@ static int dc120_get_file (Camera *camera, CameraFile *file, int file_number, ch
 
 	gp_file_new(&size_file);
 	*size = 256; /* packet_read_data has special handling for size */
-	if (dc120_packet_read_data(camera, size_file, p, size, *size)==GP_ERROR) {
+	if (dc120_packet_read_data(camera, size_file, p, size, *size, context)==GP_ERROR) {
 		gp_file_free(size_file);
 		free (p);
 		return (GP_ERROR);
@@ -465,20 +488,22 @@ static int dc120_get_file (Camera *camera, CameraFile *file, int file_number, ch
 	gp_file_free(size_file);
 	free (p);
 
-	if (dc120_packet_read_data(camera, file, cmd_packet, size, 1024)==GP_ERROR)
+	if (dc120_packet_read_data(camera, file, cmd_packet, size, 1024, context)==GP_ERROR)
 	    return (GP_ERROR);
 	
 
 	return (GP_OK);
 }
 
-static int dc120_wait_for_completion (Camera *camera) {
+static int dc120_wait_for_completion (Camera *camera, GPContext *context) {
 
 	char p[8];
 	int retval;
 	int x=0, done=0;
+	unsigned int id;
 
 	/* Wait for command completion */
+	id = gp_context_progress_start (context, 25, _("Waiting for completion..."));
 	while ((x++ < 25)&&(!done)) {
 
 		retval = dc120_packet_read(camera, p, 1);
@@ -491,8 +516,9 @@ static int dc120_wait_for_completion (Camera *camera) {
 		   default:
 			done = 1;
 		}
-		gp_camera_progress(camera, (float)((float)x/25.0));
+		gp_context_progress_update (context, id, x);
 	}
+	gp_context_progress_stop (context, id);
 
 	if (x==25)
 		return (GP_ERROR);
@@ -500,7 +526,7 @@ static int dc120_wait_for_completion (Camera *camera) {
 
 }
 
-static int dc120_delete_file (Camera *camera, char *cmd_packet) {
+static int dc120_delete_file (Camera *camera, char *cmd_packet, GPContext *context) {
 
 	char p[8];
 
@@ -510,14 +536,14 @@ static int dc120_delete_file (Camera *camera, char *cmd_packet) {
 	if (dc120_packet_read(camera, p, 1)==GP_ERROR)
 		return (GP_ERROR);	
 
-	if (dc120_wait_for_completion(camera)==GP_ERROR)
+	if (dc120_wait_for_completion(camera, context)==GP_ERROR)
 		return (GP_ERROR);
 
 	return (GP_OK);
 }
 
 int dc120_file_action (Camera *camera, int action, int from_card, int album_number, 
-		int file_number, CameraFile *file) {
+		int file_number, CameraFile *file, GPContext *context) {
 
 	int retval;
 	int size=0;
@@ -536,15 +562,15 @@ int dc120_file_action (Camera *camera, int action, int from_card, int album_numb
 	switch (action) {
 	   case DC120_ACTION_PREVIEW:
 		p[0] = (from_card? 0x64 : 0x54);
-		retval = dc120_get_file_preview(camera, file, file_number, p, &size);
+		retval = dc120_get_file_preview(camera, file, file_number, p, &size, context);
 		break;
 	   case DC120_ACTION_IMAGE:
 		p[0] = (from_card? 0x64 : 0x54);
-		retval = dc120_get_file(camera, file, file_number, p, &size);
+		retval = dc120_get_file(camera, file, file_number, p, &size, context);
 		break;
 	   case DC120_ACTION_DELETE:
 		p[0] = (from_card? 0x7B : 0x7A);
-		retval = dc120_delete_file(camera, p);
+		retval = dc120_delete_file(camera, p, context);
 		break;
 	   default:
 		retval = GP_ERROR;
@@ -553,7 +579,7 @@ int dc120_file_action (Camera *camera, int action, int from_card, int album_numb
 	return (retval);
 }
 
-int dc120_capture (Camera *camera, CameraFilePath *path) 
+int dc120_capture (Camera *camera, CameraFilePath *path, GPContext *context) 
 {
     int   retval;
     char *p      = dc120_packet_new(0x77);
@@ -562,7 +588,7 @@ int dc120_capture (Camera *camera, CameraFilePath *path)
     if (dc120_packet_write(camera, p, 8, 1) == GP_ERROR) {
 	retval = (GP_ERROR);
     }
-    else if ( dc120_wait_for_completion(camera) == GP_ERROR ) {
+    else if ( dc120_wait_for_completion(camera, context) == GP_ERROR ) {
 	retval = (GP_ERROR);
     }
     else {
