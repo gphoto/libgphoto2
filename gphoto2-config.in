@@ -1,9 +1,5 @@
 #! /bin/sh
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-includedir=@includedir@
-
 usage()
 {
     cat <<EOF
@@ -11,7 +7,7 @@ Usage: gphoto2-config [OPTION]
 
 Known values for OPTION are:
 
-  --prefix=DIR		change libgpio prefix [default $prefix]
+  --prefix=DIR		change libgpio prefix [default @prefix@]
   --libs		print library linking information
   --cflags		print pre-processor and compiler flags
   --help		display this help and exit
@@ -40,7 +36,7 @@ while test $# -gt 0; do
 	;;
 
     --prefix)
-	echo $prefix
+	echo @prefix@
 	;;
 
     --version)
@@ -53,11 +49,11 @@ while test $# -gt 0; do
 	;;
 
     --cflags)
-       	echo -I@prefix@/include/gphoto2 -I@prefix@/include
+       	echo -I@includedir@/gphoto2 -I@includedir@
        	;;
 
     --libs)
-       	echo -L@libdir@ -lgphoto2
+       	echo -L@libdir@ -lgphoto2 -lm
        	;;
 
     *)

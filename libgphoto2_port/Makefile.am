@@ -9,12 +9,6 @@ bin_SCRIPTS = gphoto2-port-config
 
 SUBDIRS = po intl libgphoto2_port test @IOLIB_SUBDIRS@ doc m4
 
-## GNOME configuration script
-confexecdir=$(libdir)
-confexec_DATA = gphoto2portConf.sh
-
-## Extra files 
-CLEANFILES=gphoto2portConf.sh
 EXTRA_DIST = 		\
 	AUTHORS \
 	ChangeLog \
@@ -23,18 +17,8 @@ EXTRA_DIST = 		\
 	README \
 	libgphoto2_port.spec \
 	gphoto2-port-config.in \
-	gphoto2portConf.sh.in \
 	acconfig.h autogen.sh \
 	makefile.os2 lgp2port.df
 
 docdir = @DOC_DIR@
 doc_DATA = AUTHORS README NEWS
-
-gphoto2portConf.sh: gphoto2portConf.sh.in Makefile
-## Use sed and then mv to avoid problems if the user interrupts.
-	sed -e 's?\@GPPORT_LIBDIR\@?$(GPPORT_LIBDIR)?g' \
-	    -e 's?\@GPPORT_INCLUDEDIR\@?$(GPPORT_INCLUDEDIR)?g' \
-	    -e 's?\@GPPORT_LIBS\@?$(GPPORT_LIBS)?g' \
-	    -e 's?\@LIBGPPORT_VERSION\@?$(LIBGPPORT_VERSION)?g' \
-	      < $(srcdir)/gphoto2portConf.sh.in > gphoto2portConf.tmp \
-	  && mv gphoto2portConf.tmp gphoto2portConf.sh
