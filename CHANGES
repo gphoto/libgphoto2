@@ -1,5 +1,12 @@
 gphoto2 CVS
 
+drivers (camlibs):
+
+   * Ricoh
+
+--------------------------------------------------------------------------------
+gphoto2 2.1.0
+
    * repaired "make rpm" target
    * started "real" gphoto2 manual
 
@@ -10,9 +17,25 @@ gphoto2 command-line interface:
 libgphoto2:
 
    * support for periodic keep-alive-messages
-   * support for Canon EOS D60, Canon PowerShot A40, Canon PowerShot A30, 
-        Canon PowerShot S200, Canon Digital IXUS 330,
-        Canon PowerShot S10 (fixed it)
+
+drivers (camlibs):
+
+   * improved support for PTP cameras:
+     - multiple storage media
+     - image capturing
+     - driver stability and robustness improved (less problems with
+       different cameras)
+
+   * added support for Kodak DX-4900, Sony DSC-P5, Sony DSC-F707V,
+        Sony DSC-P30, Sony DSC-P50, Sony DSC-S75, Sony DSC-S85,
+        Sony MVC-CD300
+
+   * added support for Canon EOS D60, Canon PowerShot A40, 
+        Canon PowerShot A30, Canon PowerShot S200 aka 
+        Canon Digital IXUS v2, Canon Digital IXUS 330
+
+   * fixed support for Canon PowerShot S10
+
    * Added SiPix Web2 support.
 
 --------------------------------------------------------------------------------
