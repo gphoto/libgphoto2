@@ -30,7 +30,7 @@
 #include <stdio.h>
 
 #ifdef HAVE_LTDL
-#include <ltdl.h>
+#  include <ltdl.h>
 #endif
 
 #include "gphoto2-context.h"
