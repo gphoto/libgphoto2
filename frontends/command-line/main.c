@@ -945,7 +945,7 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
         gp_frontend_register(gp_interface_status, gp_interface_progress,
                 gp_interface_message, gp_interface_confirm, NULL);
         if ((result = execute_options(argc, argv)) != GP_OK) {
-		printf ("gPhoto2 reported the error '%s'\n", gp_result_as_string (result));
+		printf ("gPhoto2 reported the error '%s'\n", gp_camera_result_as_string (glob_camera, result));
 //              if (!glob_quiet)
 //                      usage();
                 exit(EXIT_FAILURE);
