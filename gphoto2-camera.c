@@ -61,6 +61,7 @@
 #define CRS(c,res) {int r = (res); if (r < 0) {gp_camera_status ((c), ""); return (r);}}
 
 #define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); gp_camera_status ((c), ""); gp_camera_progress ((c), 0.0); return (r);}; CHECK_CLOSE (c);}
+#define CHECK_INIT(c) {if (!(c)->pc->initialized) {CHECK_RESULT(gp_camera_init(c));}}
 
 struct _CameraPrivateCore {
 
@@ -85,6 +86,8 @@ struct _CameraPrivateCore {
 	char error[2048];
 
 	unsigned int ref_count;
+
+	int initialized;
 };
 
 /**
@@ -642,6 +645,9 @@ gp_camera_init (Camera *camera)
 	}
 	CHECK_RESULT_OPEN_CLOSE (camera, init_func (camera));
 
+	/* Ok, the camera is initialized */
+	camera->pc->initialized = 1;
+
 	gp_camera_status (camera, "");
 	return (GP_OK);
 }
@@ -660,6 +666,7 @@ int
 gp_camera_get_config (Camera *camera, CameraWidget **window)
 {
 	CHECK_NULL (camera);
+	CHECK_INIT (camera);
 
 	if (!camera->functions->get_config) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
@@ -690,6 +697,7 @@ int
 gp_camera_set_config (Camera *camera, CameraWidget *window)
 {
 	CHECK_NULL (camera && window);
+	CHECK_INIT (camera);
 
 	if (!camera->functions->set_config) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
@@ -720,6 +728,7 @@ int
 gp_camera_get_summary (Camera *camera, CameraText *summary)
 {
 	CHECK_NULL (camera && summary);
+	CHECK_INIT (camera);
 
 	if (!camera->functions->summary) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
@@ -749,6 +758,7 @@ int
 gp_camera_get_manual (Camera *camera, CameraText *manual)
 {
 	CHECK_NULL (camera && manual);
+	CHECK_INIT (camera);
 
 	if (!camera->functions->manual) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera "
@@ -776,6 +786,7 @@ int
 gp_camera_get_about (Camera *camera, CameraText *about)
 {
 	CHECK_NULL (camera && about);
+	CHECK_INIT (camera);
 
 	if (!camera->functions->about) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera does "
@@ -806,6 +817,7 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
 		   CameraFilePath *path)
 {
 	CHECK_NULL (camera && path);
+	CHECK_INIT (camera);
 
 	if (!camera->functions->capture) {
 		gp_log (GP_LOG_ERROR, "gphoto2-camera", _("This camera can "
@@ -837,6 +849,7 @@ int
 gp_camera_capture_preview (Camera *camera, CameraFile *file)
 {
 	CHECK_NULL (camera && file);
+	CHECK_INIT (camera);
 
 	CHECK_RESULT (gp_file_clean (file));
 
@@ -873,6 +886,7 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
 		folder);
 
 	CHECK_NULL (camera && folder && list);
+	CHECK_INIT (camera);
 	CHECK_RESULT (gp_list_reset (list));
 
 	gp_camera_status (camera, _("Listing files in '%s'..."), folder);
@@ -902,6 +916,7 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
 		folder);
 
 	CHECK_NULL (camera && folder && list);
+	CHECK_INIT (camera);
 	CHECK_RESULT (gp_list_reset (list));
 
 	gp_camera_status (camera, _("Listing folders in '%s'..."), folder);
@@ -929,6 +944,7 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
 		"'%s'...", folder);
 
 	CHECK_NULL (camera && folder);
+	CHECK_INIT (camera);
 
 	gp_camera_status (camera, _("Deleting all files in '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_all (camera->fs,
@@ -955,6 +971,7 @@ gp_camera_folder_put_file (Camera *camera, const char *folder, CameraFile *file)
 		folder);
 
 	CHECK_NULL (camera && folder && file);
+	CHECK_INIT (camera);
 
 	gp_camera_status (camera, _("Uploading file into '%s'..."), folder);
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_put_file (camera->fs,
@@ -989,6 +1006,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 		"in '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file && info);
+	CHECK_INIT (camera);
 
 	memset (info, 0, sizeof (CameraFileInfo));
 
@@ -1053,6 +1071,7 @@ gp_camera_file_set_info (Camera *camera, const char *folder,
 			 const char *file, CameraFileInfo *info)
 {
 	CHECK_NULL (camera && info && folder && file);
+	CHECK_INIT (camera);
 
 	CHECK_RESULT_OPEN_CLOSE (camera,
 		gp_filesystem_set_info (camera->fs, folder, file, info));
@@ -1080,6 +1099,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 		"folder '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file && camera_file);
+	CHECK_INIT (camera);
 
 	CHECK_RESULT (gp_file_clean (camera_file));
 
@@ -1120,6 +1140,7 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 		"folder '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file);
+	CHECK_INIT (camera);
 
 	gp_camera_status (camera, _("Deleting '%s' from folder '%s'..."),
 			  file, folder);
@@ -1145,6 +1166,7 @@ gp_camera_folder_make_dir (Camera *camera, const char *folder,
 			   const char *name)
 {
 	CHECK_NULL (camera && folder && name);
+	CHECK_INIT (camera);
 
 	gp_camera_status (camera, _("Creating folder '%s' in folder '%s'..."),
 			  name, folder);
@@ -1170,6 +1192,7 @@ gp_camera_folder_remove_dir (Camera *camera, const char *folder,
 			     const char *name)
 {
 	CHECK_NULL (camera && folder && name);
+	CHECK_INIT (camera);
 
 	gp_camera_status (camera, _("Removing folder '%s' from folder '%s'..."),
 			  name, folder);
