@@ -1,3 +1,10 @@
+2002-02-21  Peter Fales	<psfales@lucent.com>
+
+	* library.c (dc240_packet_read): handle COMM0 error packet
+	(dc240_packet_exchange): handle a GP_ERROR_NOT_SUPPORTED returned by 
+	dc240_packet_read
+	Fix bug #499404
+
 2002-01-19  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c (dc240_capture): free (file) -> gp_file_unref (file)

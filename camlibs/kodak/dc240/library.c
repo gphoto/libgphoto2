@@ -143,9 +143,22 @@ write_again:
     return GP_OK;
 }
 
-static int dc240_packet_read (Camera *camera, char *packet, int size) {
+static int 
+dc240_packet_read (Camera *camera, char *packet, int size) 
+{
 
     int retval = gp_port_read(camera->port, packet, size);
+
+    /* 
+     * If we try to read data about a non-picture file, we get back 
+     * a single COMM0 byte.  So, if we're trying to read a packet with
+     * size greater than one, but we only get one byte, and it is a
+     * COMM0 error, return failure
+     */
+    if ((size > 1) && (retval == 1) && ((unsigned char)packet[0] == COMM0)) {
+	return GP_ERROR_NOT_SUPPORTED;
+    }
+
     if (retval < GP_OK) {
 	return retval;
     }
@@ -300,6 +313,11 @@ read_data_read_again:
 
         /* Read the response/data */
         retval = dc240_packet_read(camera, packet, block_size+2);
+
+	if (retval == GP_ERROR_NOT_SUPPORTED) {
+	    return retval;
+	}
+
         if ((retval == GP_ERROR) || (retval == GP_ERROR_TIMEOUT)) {
             /* ERROR reading response/data */
             if (retries++ > RETRIES)
