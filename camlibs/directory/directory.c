@@ -160,7 +160,13 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				"'%s'..."), folder);
 	n = 0;
 	while ((de = GP_SYSTEM_READDIR(dir))) {
+
+		/* Give some feedback */
 		gp_context_progress_update (context, id, n + 1);
+		gp_context_idle (context);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
+
 		if (strcmp(GP_SYSTEM_FILENAME(de), "." ) &&
 		    strcmp(GP_SYSTEM_FILENAME(de), "..")) {
 			sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
@@ -229,7 +235,13 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 					"'%s'..."), folder);
 	n = 0;
 	while ((de = GP_SYSTEM_READDIR (dir))) {
+
+		/* Give some feedback */
 		gp_context_progress_update (context, id, n + 1);
+		gp_context_idle (context);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
+
 		if ((strcmp (GP_SYSTEM_FILENAME (de), "." ) != 0) &&
 		    (strcmp (GP_SYSTEM_FILENAME (de), "..") != 0)) {
 			sprintf (buf, "%s%s", f, GP_SYSTEM_FILENAME (de));
@@ -438,6 +450,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("Progress id: %i", id);
 	for (i = 0; i < 500; i++) {
 		gp_context_progress_update (context, id, i + 1);
+		gp_context_idle (context);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 			return (GP_ERROR_CANCEL);
 		usleep (10);
@@ -594,6 +607,7 @@ put_file_func (CameraFilesystem *fs, const char *folder,
 	id = gp_context_progress_start (context, 500., "Uploading file...");
 	for (i = 0; i < 500; i++) {
 		gp_context_progress_update (context, id, i + 1);
+		gp_context_idle (context);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 			return (result);
 		usleep (10);

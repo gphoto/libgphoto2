@@ -1,3 +1,7 @@
+2002-07-17  Lutz Müller <lutz@users.sourceforge.net>
+
+	* directory.c: Improve user feedback by calling gp_context_idle.
+
 2002-02-26  Lutz Müller <lutz@users.sourceforge.net>
 
 	* directory.c (delete_file_func): In case of error, tell the user
