@@ -1,3 +1,7 @@
+2003-02-27  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.c: We support EXIF download.
+
 2003-01-10  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* canon.[ch]: removed CANON_EXPERIMENTAL_CAPTURE #ifdefs
