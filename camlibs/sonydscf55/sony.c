@@ -20,6 +20,7 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <gphoto2.h>
 #include "sony.h"
 
@@ -149,7 +150,7 @@ static int sony_baud_to_id(long baud)
  */
 static int sony_read_byte(Camera * camera, unsigned char *b)
 {
-	int n = gp_port_read(sony_data(camera)->dev, b, 1);
+	int n = gp_port_read(camera->port, b, 1);
 	if (n != 1)
 		return GP_ERROR;
 	else
@@ -299,32 +300,32 @@ static int sony_packet_write(Camera * camera, Packet * p)
 			"sony_packet_write()");
 	data = sony_data(camera);
 
-	rc = gp_port_write(data->dev, &START_PACKET, 1);
+	rc = gp_port_write(camera->port, &START_PACKET, 1);
 
 	p->buffer[p->length] = p->checksum;
 
 	for (count = 0; count < p->length + 1 && rc != GP_ERROR; count++) {
 		switch ((unsigned char) p->buffer[count]) {
 		case SONY_ESCAPE_CHAR:
-			rc = gp_port_write(data->dev, ESC_ESC_STRING, 2);
+			rc = gp_port_write(camera->port, ESC_ESC_STRING, 2);
 			break;
 
 		case SONY_START_CHAR:
-			rc = gp_port_write(data->dev, ESC_START_STRING, 2);
+			rc = gp_port_write(camera->port, ESC_START_STRING, 2);
 			break;
 
 		case SONY_END_CHAR:
-			rc = gp_port_write(data->dev, ESC_END_STRING, 2);
+			rc = gp_port_write(camera->port, ESC_END_STRING, 2);
 			break;
 
 		default:
-			rc = gp_port_write(data->dev,
+			rc = gp_port_write(camera->port,
 					   (char *) &p->buffer[count], 1);
 			break;
 		}
 	}
 	if (rc != GP_ERROR)
-		rc = gp_port_write(data->dev, (char *) &END_PACKET, 1);
+		rc = gp_port_write(camera->port, (char *) &END_PACKET, 1);
 	return rc;
 }
 
@@ -446,14 +447,11 @@ sony_converse(Camera * camera, Packet * out, unsigned char *str, int len)
  */
 static int sony_baud_port_set(Camera * camera, long baud)
 {
-	gp_port *dev;
 	gp_port_settings settings;
 
-	dev = sony_data(camera)->dev;
-
-	gp_port_settings_get(dev, &settings);
+	gp_port_settings_get(camera->port, &settings);
 	settings.serial.speed = baud;
-	gp_port_settings_set(dev, settings);
+	gp_port_settings_set(camera->port, settings);
 
 	usleep(70000);
 
@@ -483,30 +481,80 @@ static int sony_baud_set(Camera * camera, long baud)
 }
 
 /**
- * Initialises camera
+ * Port initialisation
  */
-int sony_init(Camera * camera)
+static int sony_init_port (Camera *camera)
+{
+	gp_port_settings settings;
+	int rc;
+	
+	rc = gp_port_timeout_set (camera->port, 5000);
+	if (rc == GP_OK) { 
+		strcpy(settings.serial.port, camera->port_info->path);
+
+		settings.serial.speed = 9600;
+		settings.serial.bits = 8;
+		settings.serial.parity = 0;
+		settings.serial.stopbits = 1;
+
+		rc = gp_port_settings_set(camera->port, settings);
+		if (rc == GP_OK) {
+			rc = gp_port_flush(camera->port, 0);
+		}
+	}
+	return rc;
+}
+
+/**
+ * Establish first contact (remember the prime directive? :)
+ */
+static int sony_init_first_contact (Camera *camera)
 {
 	int count = 0;
 	Packet dp;
-	SonyData *data = sony_data(camera);
-
-	gp_port_flush(data->dev, 0);
-
+	SonyData *data = sony_data (camera);
+	int rc = GP_ERROR;
+	
 	for (count = 0; count < 3; count++) {
 		data->sequence_id = 0;
 
-		if (sony_converse(camera, &dp, IdentString, 12) == GP_OK) {
+		rc = sony_converse(camera, &dp, IdentString, 12);
+		if (rc == GP_OK) {
 			gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 					"Init OK");
-			data->initialized = TRUE;
-			return GP_OK;
+			break;
 		}
 		usleep(2000);
 		gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 				"Init - Fail %u", count + 1);
 	}
-	return GP_ERROR;
+	return rc;
+}
+
+/**
+ * Initialises camera
+ */
+int sony_init (Camera * camera, int msac)
+{
+	int rc;
+
+	rc = sony_init_port (camera);
+	if (rc == GP_OK) {
+		SonyData *data;
+		data = (SonyData *) malloc(sizeof(SonyData));
+		camera->camlib_data = data;
+		if (data) {
+			rc = sony_init_first_contact (camera);
+			if (rc != GP_OK) {
+				free (data);
+				camera->camlib_data = NULL;
+			}
+		}
+		else {
+			rc = GP_ERROR;
+		}
+	}
+	return rc;
 }
 
 /**
@@ -515,12 +563,16 @@ int sony_init(Camera * camera)
 int sony_exit(Camera * camera)
 {
 	Packet dp;
-	SonyData *data = sony_data(camera);
-	int rc;
+	int rc = GP_ERROR;
 
-	rc = sony_baud_set(camera, 9600);
-	while (rc == GP_OK && data->sequence_id > 0) {
-		rc = sony_converse(camera, &dp, EmptyPacket, 1);
+	if (camera->camlib_data) {
+		SonyData *data = sony_data(camera);
+		rc = sony_baud_set(camera, 9600);
+		while (rc == GP_OK && data->sequence_id > 0) {
+			rc = sony_converse(camera, &dp, EmptyPacket, 1);
+		}
+		free (camera->camlib_data);
+		camera->camlib_data = NULL;
 	}
 	return rc;
 }

@@ -18,12 +18,21 @@
  */
 
 #include <string.h>
-#include <stdlib.h>
 #include <gphoto2.h>
 #include <sys/types.h>
 
 #include "sony.h"
 #include "nls.h"
+#include "gphoto2-camera.h"
+
+int camera_folder_list_files(Camera * camera, const char *folder,
+			     CameraList * list);
+int camera_file_get(Camera * camera, const char *folder, const char *filename,
+		    CameraFileType type, CameraFile * file);
+int camera_file_get_info(Camera * camera, const char *folder,
+			 const char *filename, CameraFileInfo * info);
+int camera_about(Camera * camera, CameraText * about);
+int camera_exit(Camera * camera);
 
 
 int camera_id(CameraText * id)
@@ -61,32 +70,9 @@ int camera_abilities(CameraAbilitiesList * list)
  */
 int camera_exit(Camera * camera)
 {
-	int rc = GP_OK;
-	if (camera) {
-		SonyData *data = sony_data(camera);
-		if (data) {
-			if (data->dev) {
-				if (data->initialized) {
-					sony_exit(camera);
-					data->initialized = FALSE;
-				}
-
-				rc = gp_port_free(data->dev);
-				if (rc == GP_OK)
-					data->dev = NULL;
-			}
-			if (rc == GP_OK && data->fs) {
-				rc = gp_filesystem_free(data->fs);
-				if (rc == GP_OK)
-					data->fs = NULL;
-			}
-			if (rc == GP_OK) {
-				free(data);
-				camera->camlib_data = NULL;
-			}
-		}
-	}
-	return rc;
+	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
+			"camera_exit()");
+	return sony_exit (camera);
 }
 
 
@@ -107,7 +93,6 @@ camera_folder_list_files(Camera * camera, const char *folder,
 			 CameraList * list)
 {
 	int rc;
-	SonyData *b = (SonyData *) camera->camlib_data;
 
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 			"camera_folder_list_files()");
@@ -118,13 +103,13 @@ camera_folder_list_files(Camera * camera, const char *folder,
 		count = rc;
 
 		/* Populate the filesystem */
-		gp_filesystem_populate(b->fs, "/", SONY_FILE_NAME_FMT,
+		gp_filesystem_populate(camera->fs, "/", SONY_FILE_NAME_FMT,
 				       count);
-		for (x = 0; x < gp_filesystem_count(b->fs, folder); x++)
+		for (x = 0; x < gp_filesystem_count(camera->fs, folder); x++)
 		{
 			const char *name;
-			gp_filesystem_name(b->fs, folder, x, &name);
-			gp_list_append(list, name, NULL);
+			gp_filesystem_name (camera->fs, folder, x, &name);
+			gp_list_append (list, name, NULL);
 		}
 		rc = GP_OK;
 	}
@@ -141,7 +126,7 @@ camera_file_get(Camera * camera, const char *folder, const char *filename,
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
 			"camera_file_get(\"%s/%s\")", folder, filename);
 	num =
-	    gp_filesystem_number(sony_data(camera)->fs, folder, filename);
+	    gp_filesystem_number(camera->fs, folder, filename);
 	if (num >= 0) {
 		num++;
 		gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID,
@@ -175,7 +160,7 @@ camera_file_get_info(Camera * camera, const char *folder,
 	int num, rc = GP_ERROR;
 
 	num =
-	    gp_filesystem_number(sony_data(camera)->fs, folder, filename);
+	    gp_filesystem_number(camera->fs, folder, filename);
 	if (num >= 0) {
 		num++;
 		rc = sony_image_info(camera, num, info);
@@ -188,8 +173,7 @@ camera_file_get_info(Camera * camera, const char *folder,
  */
 int camera_init(Camera * camera)
 {
-	gp_port_settings settings;
-	int ret;
+	int is_msac;
 
 	gp_debug_printf(GP_DEBUG_LOW, SONY_CAMERA_ID, "Initialising %s",
 			camera->model);
@@ -200,42 +184,9 @@ int camera_init(Camera * camera)
 	camera->functions->file_get = camera_file_get;
 	camera->functions->file_get_info = camera_file_get_info;
 
-	camera->camlib_data = NULL;
+	is_msac = !strcmp (camera->model, SONY_MODEL_MSAC_SR1);
 
-	camera->camlib_data = (SonyData *) malloc(sizeof(SonyData));
-	if (camera->camlib_data) {
-		SonyData *b = sony_data(camera);
-
-		b->sequence_id = 0;
-		b->dev = NULL;
-		b->fs = NULL;
-		b->initialized = FALSE;
-
-		b->msac_sr1 = !strcmp(camera->model, SONY_MODEL_MSAC_SR1);
-
-		if ((ret = gp_port_new(&(b->dev), GP_PORT_SERIAL)) >= 0) {
-			gp_port_timeout_set(b->dev, 5000);
-			strcpy(settings.serial.port, camera->port_info->path);
-
-			settings.serial.speed = 9600;
-			settings.serial.bits = 8;
-			settings.serial.parity = 0;
-			settings.serial.stopbits = 1;
-
-			gp_port_settings_set(b->dev, settings);
-			if (gp_port_open(b->dev) == GP_OK) {
-				/* Create the filesystem */
-				if (gp_filesystem_new (&b->fs) == GP_OK) {
-					if (sony_init(camera) == GP_OK) {
-						return GP_OK;
-					}
-				}
-			}
-
-		}
-	}
-	camera_exit(camera);
-	return (GP_ERROR);
+	return sony_init (camera, is_msac);
 }
 
 /*

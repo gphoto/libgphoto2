@@ -1,3 +1,8 @@
+2001-09-22  Raymond Penners  <raymond@dotsphinx.com>
+
+	* camlibs/sonydscf55/*: Fixes & eliminated compiler warnings.
+	
+
 2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Carsten Pfeiffer <carpdjih@sp.zrz.tu-berlin.de>
