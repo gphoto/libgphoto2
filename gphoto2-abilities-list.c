@@ -39,6 +39,7 @@ struct _CameraAbilitiesList {
 };
 
 static int gp_abilities_list_lookup_id (CameraAbilitiesList *, const char *);
+static int gp_abilities_list_sort      (CameraAbilitiesList *);
 
 int
 gp_abilities_list_new (CameraAbilitiesList **list)
@@ -278,7 +279,7 @@ gp_abilities_list_count (CameraAbilitiesList *list)
 	return (list->count);
 }
 
-int
+static int
 gp_abilities_list_sort (CameraAbilitiesList *list)
 {
 	CameraAbilities *t;
@@ -346,11 +347,10 @@ gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 {
 	CHECK_NULL (list && abilities);
 
-	if (index > list->count)
+	if (index < 0 || index >= list->count)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	memcpy (abilities, list->abilities[index], sizeof (CameraAbilities));
 
 	return (GP_OK);
 }
-

@@ -38,7 +38,6 @@ int gp_abilities_list_dump_libs (CameraAbilitiesList *list);
 int gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities *);
 
 int gp_abilities_list_count  (CameraAbilitiesList *list);
-int gp_abilities_list_sort   (CameraAbilitiesList *list);
 
 int gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *m);
 int gp_abilities_list_get_model    (CameraAbilitiesList *list, int index,

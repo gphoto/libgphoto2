@@ -588,7 +588,7 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && list && folder);
 	CHECK_ABS (folder);
 
-	list->count = 0;
+	gp_list_reset (list);
 
 	/* Search the folder */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
@@ -611,7 +611,7 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 					 " - %s", name);
 			CHECK_RESULT (gp_filesystem_append (fs, folder, name));
 		}
-		list->count = 0;
+		gp_list_reset (list);
 	}
 
 	/* The folder is clean now */
@@ -656,7 +656,7 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 	CHECK_NULL (fs && folder && list);
 	CHECK_ABS (folder);
 
-	list->count = 0;
+	gp_list_reset (list);
 
 	/* Search the folder */
 	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
@@ -675,7 +675,7 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 			strcat (buf, name);
 			CHECK_RESULT (append_folder (fs, buf));
 		}
-		list->count = 0;
+		gp_list_reset (list);
 	}
 
 	for (x = 0; x < fs->count; x++)
