@@ -113,6 +113,22 @@ else
   AC_MSG_RESULT($drivers)
 fi
 
+dnl ********
+dnl gtk-doc?
+dnl ********
+AC_CHECK_PROG(GTKDOC, gtkdoc-mkdb, true, false)
+AM_CONDITIONAL(HAVE_GTK_DOC, $GTKDOC)
+AC_SUBST(HAVE_GTK_DOC)
+AC_ARG_ENABLE(gtk-doc, [  --enable-gtk-doc  Use gtk-doc to build documentation [default=auto]], enable_gtk_doc="$enableval", enable_gtk_doc=auto)
+if test x$enable_gtk_doc = xauto ; then
+    if test x$GTKDOC = xtrue ; then
+        enable_gtk_doc=yes
+    else
+        enable_gtk_doc=no
+    fi
+fi
+AM_CONDITIONAL(ENABLE_GTK_DOC, test x$enable_gtk_doc = xyes)
+
 AC_OUTPUT(\
 Makefile \
 camlibs/Makefile \
@@ -140,5 +156,7 @@ include/Makefile \
 libgphoto2/Makefile \
 gphoto2-config \
 intl/Makefile \
-po/Makefile.in
+po/Makefile.in \
+doc/Makefile \
+doc/api/Makefile
 )
