@@ -180,7 +180,7 @@ int gp_camera_init (Camera *camera)
 	/* If the model hasn't been indicated, try to figure it out through probing. */
 	if (strcmp (camera->model, "") == 0) {
 		//FIXME: Insert auto-probe here!
-		printf ("*** Auto-probing not implemented! Please specify a model! ***");
+		printf ("*** Auto-probing not yet implemented! Please specify a model! ***\n");
 		return (GP_ERROR);
 	}
 
