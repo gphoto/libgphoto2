@@ -25,6 +25,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <utime.h>
+#include <unistd.h>
 
 #include <gphoto2-setting.h>
 #include <gphoto2-library.h>
@@ -62,7 +63,7 @@ static const struct {
 	{NULL, NULL}
 };
 
-#define DEBUG 0
+//#define DEBUG
 
 static const char *
 get_mime_type (const char *filename)
@@ -104,7 +105,12 @@ int camera_abilities (CameraAbilitiesList *list)
         a.speed[0] = 0;
 
         a.operations = GP_OPERATION_CONFIG;
-        a.file_operations = GP_FILE_OPERATION_PREVIEW;
+#ifdef DEBUG
+        a.file_operations = GP_FILE_OPERATION_PREVIEW |
+			    GP_FILE_OPERATION_DELETE;
+#else
+	a.file_operations = GP_FILE_OPERATION_DELETE;
+#endif
         a.folder_operations = GP_FOLDER_OPERATION_MAKE_DIR |
 			      GP_FOLDER_OPERATION_REMOVE_DIR |
 			      GP_FOLDER_OPERATION_PUT_FILE;
@@ -223,7 +229,11 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		}
 	}
 
+#ifdef DEBUG
+	info->preview.fields = GP_FILE_INFO_SIZE;
+#else
         info->preview.fields = GP_FILE_INFO_NONE;
+#endif
         info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_NAME |
                             GP_FILE_INFO_TYPE | GP_FILE_INFO_PERMISSIONS |
 			    GP_FILE_INFO_TIME;
@@ -236,6 +246,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		info->file.permissions |= GP_FILE_PERM_DELETE;
         strcpy (info->file.name, file);
         info->file.size = statbuf.st_size;
+#ifdef DEBUG
+	info->preview.size = statbuf.st_size;
+#endif
 
 	mime_type = get_mime_type (file);
 	if (!mime_type)
@@ -319,6 +332,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data)
 {
         char path[1024];
+	int result = GP_OK;
+#ifdef DEBUG
+	unsigned int i;
+#endif
 
 	if (strlen (folder) == 1)
 		snprintf (path, sizeof (path), "/%s", filename);
@@ -327,19 +344,36 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		return (gp_file_open (file, path));
+		result = gp_file_open (file, path);
+		break;
+#ifdef DEBUG
 	case GP_FILE_TYPE_PREVIEW:
-		return (gp_file_open (file, path));
+		result = gp_file_open (file, path);
+		break;
+#endif
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
+	if (result < 0)
+		return (result);
+
+#ifdef DEBUG
+	for (i = 0; i < 1000; i++) {
+		result = gp_file_progress (file, (float) i / 1000.);
+		if (result < 0)
+			return (result);
+		usleep (10);
+	}
+#endif
+
+	return (GP_OK);
 }
 
 static int
 camera_get_config (Camera *camera, CameraWidget **window)
 {
 	CameraWidget *widget;
-#if DEBUG
+#ifdef DEBUG
 	CameraWidget *section;
 #endif
         char buf[256];
@@ -353,7 +387,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
         gp_widget_set_value (widget, &val);
         gp_widget_append (*window, widget);
 
-#if DEBUG
+#ifdef DEBUG
 	gp_widget_new (GP_WIDGET_SECTION, "Testing", &section);
 	gp_widget_append (*window, section);
 
@@ -432,6 +466,22 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
 }
 
 static int
+delete_file_func (CameraFilesystem *fs, const char *folder,
+		  const char *file, void *data)
+{
+	char path[2048];
+
+	if (strlen (folder) > 1)
+		snprintf (path, sizeof (path), "%s/%s", folder, file);
+	else
+		snprintf (path, sizeof (path), "/%s", file);
+	if (unlink (path))
+		return (GP_ERROR);
+
+	return (GP_OK);
+}
+
+static int
 put_file_func (CameraFilesystem *fs, const char *folder,
 	       CameraFile *file, void *data)
 {
@@ -466,7 +516,8 @@ camera_init (Camera *camera)
                                       folder_list_func, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func,
 				      set_info_func, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      delete_file_func, camera);
 	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
 					make_dir_func, remove_dir_func, camera);
 

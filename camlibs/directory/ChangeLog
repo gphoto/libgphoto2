@@ -1,3 +1,7 @@
+2001-12-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* directory.c: Debugging stuff, file deletion.
+
 2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* directory.c: Support GP_FILE_TYPE_PREVIEW, too.
