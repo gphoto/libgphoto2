@@ -1255,7 +1255,9 @@ e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n");
 	result = execute_options(argc, argv);
         if (result < 0) {
 		printf ("*** Error ('%s') ***\n", gp_result_as_string (result));
-		printf ("%s\n", gp_camera_get_error (glob_camera));
+		printf("The following message is the last internal error message.\n"
+		       "This message may currently still be unrelated to the real error:\n\n"
+		       "%s\n\n", gp_camera_get_error (glob_camera));
 		if (!glob_debug)
 			printf (_("For debugging messages, please use the "
 				  "--debug option.\n"));
