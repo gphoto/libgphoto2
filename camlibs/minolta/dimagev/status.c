@@ -129,10 +129,6 @@ int dimagev_get_camera_status(dimagev_t *dimagev) {
 			break;
 	}
 
-	if ( dimagev->debug != 0 ) {
-		dimagev_dump_packet(p);
-	}
-
 	if ( ( raw = dimagev_strip_packet(p) ) == NULL ) {
 		if ( dimagev->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::unable to strip data packet");

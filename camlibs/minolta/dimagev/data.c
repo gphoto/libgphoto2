@@ -228,10 +228,6 @@ int dimagev_send_data(dimagev_t *dimagev) {
 		return GP_ERROR;
 	}
 
-	if ( dimagev->debug != 0 ) {
-		dimagev_dump_packet(p);
-	}
-
 	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
 		if ( dimagev->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_send_data::unable to send data packet");
