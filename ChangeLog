@@ -1,5 +1,16 @@
 2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/camera.c:
+	* camlibs/konica/library.c:
+	* camlibs/kodak/dc240/dc240.c:
+	* camlibs/sierra: GP_ERROR_IO_UNKNOWN_PORT -> GP_ERROR_UNKNOWN_PORT
+	* frontends/command-line: Kill warnings
+	* configure.in: There are now some header files in
+	  libgphoto2_port/libgphoto2_port
+	* include/gphoto2-camera.h: Use the new GPPort and GPPortInfo
+
+2001-10-16  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Bug found by Fredrik <fredrik@krixor.xy.org>:
 
 	* doc/api/Makefile.am: Don't if-out everything.
