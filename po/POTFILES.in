@@ -34,6 +34,8 @@ camlibs/panasonic/dc1000.c
 camlibs/panasonic/dc1580.c
 camlibs/panasonic/l859/l859.c
 camlibs/pccam600/library.c
+camlibs/polaroid/pdc320.c
+camlibs/polaroid/pdc640.c
 camlibs/polaroid/pdc700.c
 camlibs/ptp/library.c
 camlibs/ptp2/library.c
