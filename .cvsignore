@@ -28,3 +28,4 @@ mkinstalldirs
 *.tar.bz2
 *.log
 intl
+ABOUT-NLS
