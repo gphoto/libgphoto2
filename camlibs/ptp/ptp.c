@@ -476,10 +476,10 @@ ptp_getthumb(PTPParams* params, PTPObjectHandles* objecthandles,
 		return PTP_ERROR_IO;
 	}
 	{
-	char* obj_tmp=malloc(objectinfo->ObjectCompressedSize+PTP_REQ_HDR_LEN);
+	char* obj_tmp=malloc(objectinfo->ThumbCompressedSize+PTP_REQ_HDR_LEN);
 	ptr=req; req=(PTPReq*)obj_tmp;
 	ret=params->read_func((unsigned char *) req,
-		objectinfo->ObjectCompressedSize+PTP_REQ_HDR_LEN,
+		objectinfo->ThumbCompressedSize+PTP_REQ_HDR_LEN,
 		params->data);	
 	if ((ret!=PTP_RC_OK) ||
 		(req->type!=PTP_TYPE_DATA) ||
@@ -498,7 +498,7 @@ ptp_getthumb(PTPParams* params, PTPObjectHandles* objecthandles,
 		free(req);
 		return ret;
 	}
-	memcpy(object, req->data, objectinfo->ObjectCompressedSize);
+	memcpy(object, req->data, objectinfo->ThumbCompressedSize);
 	free(obj_tmp);
 	}
 	req=ptr;

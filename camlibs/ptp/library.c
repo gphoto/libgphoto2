@@ -258,17 +258,6 @@ camera_about (Camera *camera, CameraText *text)
 }
 
 static int
-folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *lsit,
-		  void *data)
-{
-	Camera *camera = data;
-
-	camera = NULL;
-
-	return (GP_ERROR);
-}
-
-static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
@@ -317,14 +306,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		fdata=malloc(ptp_objectinfo.ObjectCompressedSize);
 		CPR (camera, ptp_getobject(&camera->pl->params,
 		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
+		CHECK (camera, gp_file_set_data_and_size (file, fdata,
+		ptp_objectinfo.ObjectCompressedSize));
 		break;
 
 	case GP_FILE_TYPE_PREVIEW:
 		CPR (camera, ptp_getobjectinfo(&camera->pl->params,
 		&camera->pl->params.handles, image_id, &ptp_objectinfo));
-		fdata=malloc(ptp_objectinfo.ObjectCompressedSize);
+		fdata=malloc(ptp_objectinfo.ThumbCompressedSize);
 		CPR (camera, ptp_getthumb(&camera->pl->params,
 		&camera->pl->params.handles, &ptp_objectinfo, image_id, fdata));
+		CHECK (camera, gp_file_set_data_and_size (file, fdata,
+		ptp_objectinfo.ThumbCompressedSize));
 		break;
 		
 
@@ -332,7 +325,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	}
 
-	CHECK (camera, gp_file_set_data_and_size (file, fdata, ptp_objectinfo.ObjectCompressedSize));
 	CHECK (camera, gp_file_set_mime_type (file, GP_MIME_JPEG));
 
 	return (GP_OK);
@@ -341,28 +333,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 static int
 delete_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 		  void *data)
-{
-	Camera *camera = data;
-
-	camera = NULL;
-
-	return (GP_ERROR);
-}
-
-static int
-mkdir_func (CameraFilesystem *fs, const char *folder, const char *name,
-	    void *data)
-{
-	Camera *camera = data;
-
-	camera = NULL;
-
-	return (GP_ERROR);
-}
-
-static int
-rmdir_func (CameraFilesystem *fs, const char *folder, const char *name,
-	    void *data)
 {
 	Camera *camera = data;
 
