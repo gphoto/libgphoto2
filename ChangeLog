@@ -1,5 +1,9 @@
 2001-10-16 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
+	* doc/api/.cvsignore: added tmpl directory and .cvsignore~
+
+2001-10-16 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
 	* camlibs/casio/casio-qv.c:
 	* camlibs/dimera/dimera3500.c:
 	* camlibs/dimera/mesalib.c:
