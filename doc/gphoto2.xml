@@ -30,6 +30,11 @@ About this file:
 <!-- just to make all references to the name consistent -->
 <!ENTITY docname "The gPhoto2 Manual">
 
+<!-- external FAQ file -->
+<!ENTITY faq SYSTEM "faq.xml">
+
+<!ENTITY camera SYSTEM "api/sgml/gphoto2-camera.sgml">
+
 ]>
 <book>
 
@@ -224,7 +229,7 @@ About this file:
       (<acronym>RPM</acronym> packages, <acronym>DEB</acronym>
       packages or <acronym>BSD</acronym> ports) and/or your system
       administrator should already have done for you. If not, follow
-      the instructions in the <xref linkend="setup"/> chapter first.
+      the instructions in the <xref linkend="setup-perms"/> chapter first.
     </para>
 
     <para>FIXME: We need examples using <acronym>RS232</acronym>
@@ -391,7 +396,17 @@ Saving file as MVI_5418.AVI                                                     
   <!-- =========================================================== --> 
   <!-- =========================================================== --> 
 
-  <chapter id="setup">
+  <chapter>
+    <title>Frequently Asked Questions</title>
+    <subtitle>with answers, and not sorted yet</subtitle>
+    &faq;
+  </chapter>
+ 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+  <!-- =========================================================== --> 
+
+  <chapter id="setup-perms">
     <title>Setting up your system for use with 
       <systemitem class="library">libgphoto2</systemitem>
       and <command>gphoto2</command>
@@ -618,13 +633,16 @@ Saving file as MVI_5418.AVI                                                     
 	      instead of gphoto2 --print-usb-usermap.
 	    </para>
             <para>
-              Add the output of 
+	      In the file <filename>/etc/hotplug/usb.usermap</filename> 
+	      remove all lines beginning with "usbcam".
+            </para>
+	    <para>
+              Then add the output of
               <screen>
 <prompt>[root@home ~]# </prompt><command>gphoto2 <parameter>--print-usb-usermap</parameter></command>
               </screen>
-              to the file
-              <filename>/etc/hotplug/usb.usermap</filename> after
-              removing all lines beginning with "usbcam".
+              to that file
+              (<filename>/etc/hotplug/usb.usermap</filename>).
             </para>
 	    <formalpara>
 	      <title>Debian peculiarity</title>
@@ -1781,6 +1799,8 @@ Saving file as MVI_5418.AVI                                                     
         </para>
       </refsect1>
     </refentry>
+
+      <!-- &camera; -->
 
   </reference>
 
