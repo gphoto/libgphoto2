@@ -9,7 +9,8 @@
  *                                                  *
  ****************************************************/
 
-#ifndef DC3200_H_INCLUDED
+#ifndef __DC3200_H__
+#define __DC3200_H__
 
 #include <gphoto2-camera.h>
 
@@ -31,5 +32,4 @@ struct _CameraPrivateLibrary {
 int init(Camera *camera);
 int check_last_use(Camera *camera);
 
-#define DC3200_H_INCLUDED
 #endif

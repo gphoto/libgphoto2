@@ -12,8 +12,6 @@
 #include <config.h>
 #include "library.h"
 
-#ifndef LIBRARY_H_INCLUDED
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <termios.h>
@@ -984,6 +982,3 @@ u_long bytes_to_l(int a, int b, int c, int d)
 	res = res << 24 | b << 16 | c << 8 | d;
 	return res;
 }
-
-#define LIBRARY_H_INCLUDED
-#endif

@@ -9,7 +9,8 @@
  *                                                  *
  ****************************************************/
 
-#ifndef LIBRARY_H_INCLUDED
+#ifndef __LIBRARY_H__
+#define __LIBRARY_H__
 
 #include <gphoto2-camera.h>
 
@@ -74,5 +75,4 @@ int dc3200_clear_read_buffer(Camera *camera);
 int dump_buffer(unsigned char * buffer, int len, char *title, int bytesperline);
 unsigned long bytes_to_l(int a, int b, int c, int d);
 
-#define LIBRARY_H_INCLUDED
 #endif
