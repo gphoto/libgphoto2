@@ -37,16 +37,12 @@
 /* All of them are about the same and I believe they are for image correction. */
 /*******************************************************************************/
 
-/* Notes on what needs work for the Polaroid Fun! 320:
+/* Notes on what needs work:
  * 	Make a better header that could correct color problems....
  *		or manage to decode, color correct, and save the image.
  *
- * Notes on what needs work for the Polaroid 640SE:
- * 	Make a better header that could correct color problems....
- *		or manage to decode, color correct, and save the image.
- *	The delete-all-raw-data timed out
- */
-
+ * 	Fix some bug where the pdc320_num returns a strange response after 
+ *		pdc320_delete is called. Perhaps it needs to reset or something
 /*
  * Those are the answers to some of the commands stated below. We should
  * (at some point in the future) understand the contents and compare
@@ -64,7 +60,7 @@
 #define STATE_PDC320   "\x2\x3f\x1\x40\x0\xf0\x0\x5\x1\x40\x0\xf0\x0\x5\x0\x50\x0\x50\x0\x0\x7\xd0\xf0\xe6"
 
 /*
- * For the PDC320SE, the init sequence is INIT,ID,ENDINIT,STATE,NUM,SIZE,
+ * For the PDC640SE, the init sequence is INIT,ID,ENDINIT,STATE,NUM,SIZE,
  * handshake?, PIC.
  *
  * During handshake, if the first read byte is not 6 then it is not good. Read
@@ -418,7 +414,9 @@ camera_about (Camera *camera, CameraText *about)
 		"Originally written by Peter Desnoyers "
 		"<pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by "
 		"Nathan Stenzel <nathanstenzel@users.sourceforge.net> and "
-		"Lutz Müller <urc8@rz.uni-karlsruhe.de>.");
+		"Lutz Müller <urc8@rz.uni-karlsruhe.de>.\n"
+		"Polaroid 640SE testing was done by Michael Golden "
+		"<naugrim@juno.com>.");
 
 	return (GP_OK);
 }
@@ -479,6 +477,9 @@ camera_init (Camera *camera)
 
 	return (GP_OK);
 }
+
+
+
 
 
 
