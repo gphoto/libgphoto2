@@ -130,39 +130,41 @@ canon_int_directory_operations (Camera *camera, const char *path, int action)
 			canon_usb_funct = CANON_USB_FUNCTION_RMDIR;
 			break;
 		default:
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
-					 "canon_int_directory_operations: "
-					 "Bad operation specified : %i\n", action);
+			GP_DEBUG ("canon_int_directory_operations: "
+					 "Bad operation specified : %i", action);
 			return GP_ERROR_BAD_PARAMETERS;
 			break;
 	}
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_int_directory_operations() "
-			 "called to %s the directory '%s'",
-			 canon_usb_funct == CANON_USB_FUNCTION_MKDIR ? "create" : "remove",
-			 path);
+	GP_DEBUG ("canon_int_directory_operations() "
+		  "called to %s the directory '%s'", canon_usb_funct == 
+		  CANON_USB_FUNCTION_MKDIR ? "create" : "remove", path);
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, canon_usb_funct, &len, path,
 						  strlen (path) + 1);
+			if (! msg)
+				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, type, 0x11, &len, path,
 						     strlen (path) + 1, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
+
 			break;
 		GP_PORT_DEFAULT
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return GP_ERROR;
-	}
+	if (len != 4)
+		return GP_ERROR_CORRUPTED_DATA;
 
 	if (msg[0] != 0x00) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "Could not %s directory %s",
-				 canon_usb_funct ==
-				 CANON_USB_FUNCTION_MKDIR ? "create" : "remove", path);
+		gp_camera_set_error (camera, "Could not %s directory %s",
+				     canon_usb_funct ==
+				     CANON_USB_FUNCTION_MKDIR ? "create" : "remove", path);
 		return GP_ERROR;
 	}
 
@@ -209,7 +211,7 @@ canon_int_identify_camera (Camera *camera)
 	}
 
 	if (len != 0x4c)
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 
 	/* Store these values in our "camera" structure: */
 	memcpy (camera->pl->firmwrev, (char *) msg + 8, 4);
