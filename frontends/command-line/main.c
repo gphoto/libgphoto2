@@ -57,7 +57,7 @@ int  set_globals();
 OPTION_CALLBACK(abilities);
 OPTION_CALLBACK(help);
 OPTION_CALLBACK(test);
-OPTION_CALLBACK(script);
+OPTION_CALLBACK(daemon);
 OPTION_CALLBACK(list_cameras);
 OPTION_CALLBACK(list_ports);
 OPTION_CALLBACK(filename);
@@ -93,7 +93,7 @@ Option option[] = {
 /* Display and die actions */
 {"h", "help",		"",		"Displays this help screen",	help,		0},
 {"",  "verify",		"",		"Verifies gPhoto installation",	test,		0},
-{"s", "script",		"",		"gPhoto scripting (stdin/stdout)",script,	0},
+{"D", "daemon",		"",		"gPhoto daemon (stdin/stdout)", daemon,		0},
 {"",  "list-cameras",	"",		"List supported camera models",	list_cameras,	0},
 {"",  "list-ports",	"",		"List supported port devices",	list_ports,	0},
 
@@ -135,7 +135,7 @@ int  glob_speed;
 CameraAbilities glob_abilities;
 
 int  glob_debug;
-int  glob_script=0;
+int  glob_daemon=0;
 int  glob_quiet=0;
 int  glob_filename_override=0;
 char glob_filename[128];
@@ -321,12 +321,12 @@ OPTION_CALLBACK(quiet) {
 	return (GP_OK);
 }
 
-OPTION_CALLBACK(script) {
+OPTION_CALLBACK(daemon) {
 
 	char buf[1024];
 	int n=0;
 
-	glob_script = 1;
+	glob_daemon = 1;
 
 	while (1) {
 		n = read(0, buf, 1024);
