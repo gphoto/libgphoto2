@@ -291,8 +291,13 @@ pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info)
 	/* We don't know about the meaning of buf[0-1] */
 
 	/* Check if this information is about the right picture */
-	if (n != (buf[2] | (buf[3] << 8)))
+	if (n != (buf[2] | (buf[3] << 8))) {
+		gp_camera_set_error (camera, _("Requested information about "
+			"picture %i (= 0x%x), but got information about "
+			"picture %i back"), n, cmd[4] | (cmd[5] << 8),
+			buf[2] | (buf[3] << 8));
 		return (GP_ERROR_CORRUPTED_DATA);
+	}
 
 	/* Picture size */
 	info->pic_size = buf[4] | (buf[5] << 8) |
