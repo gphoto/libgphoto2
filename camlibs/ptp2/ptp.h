@@ -309,6 +309,7 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_AVI				0x300A
 #define PTP_OFC_MPEG				0x300B
 #define PTP_OFC_ASF				0x300C
+#define PTP_OFC_QT				0x300D // guessing
 // image formats
 #define PTP_OFC_EXIF_JPEG			0x3801
 #define PTP_OFC_TIFF_EP				0x3802

@@ -291,6 +291,7 @@ static struct {
 	{PTP_OFC_AVI,		GP_MIME_AVI},
 	{PTP_OFC_MPEG,		"video/mpeg"},
 	{PTP_OFC_ASF,		"video/x-asf"},
+	{PTP_OFC_QT,		"video/quicktime"},
 	{PTP_OFC_EXIF_JPEG,	GP_MIME_JPEG},
 	{PTP_OFC_TIFF_EP,	"image/x-tiffep"},
 	{PTP_OFC_FlashPix,	"image/x-flashpix"},
