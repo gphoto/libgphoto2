@@ -40,6 +40,7 @@ int gp_camera_name  (int camera_number, const char **camera_name);
 
 /* Retreive abilities for a given camera */
 int gp_camera_abilities         (int camera_number, CameraAbilities *abilities);
-int gp_camera_abilities_by_name (char *camera_name, CameraAbilities *abilities);
+int gp_camera_abilities_by_name (const char *camera_name,
+				 CameraAbilities *abilities);
 
 #endif /* __GPHOTO2_CORE_H__ */
