@@ -1,8 +1,357 @@
 <?xml version='1.0' ?>
-<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book>
+
+  <bookinfo>
+    <title>The gPhoto2 Manual</title>
+    <authorgroup>
+      <author>
+        <firstname>The gPhoto2</firstname>
+        <surname>Team</surname>
+      </author>
+      <editor>
+        <firstname>Tim</firstname>
+        <surname>Waugh</surname>
+        <affiliation>
+	  <address><email>twaugh@redhat.com</email></address>
+	</affiliation>
+      </editor>
+      <editor>
+        <firstname>Hans Ulrich</firstname>
+        <surname>Niedermann</surname>
+        <affiliation>
+	  <address><email>gp@n-dimensional.de</email></address>
+	</affiliation>
+      </editor>
+    </authorgroup>
+  </bookinfo>
+
+  <chapter>
+    <title>Short guide to setting up and using 
+      <xref linkend="gphoto2-cli"/> and <xref linkend="libgphoto2"/>
+    </title>
+    <section>
+      <title>Overview</title>
+      <para>
+        gPhoto2 consists of two libraries
+        (<xref linkend="libgphoto2"/> and
+        <xref linkend="libgphoto2_port"/>) and
+        a command line frontend (<xref linkend="gphoto2-cli"/>). 
+        Other (GUI) frontends (like e.g. gtkam) are available as
+        separate packages.
+      </para>
+      <para>
+        In order to get access to the camera, your frontend process requires
+        write permissions to the respective device special file, e.g. to
+        <filename class="devicefile">/dev/ttyS3</filename> or 
+        <filename class="devicefile">/proc/bus/usb/1/012</filename>. 
+      </para>
+      <para>
+        For security reasons, we strongly recommend not to run any 
+        <xref linkend="libgphoto2"/>
+        frontend as root. So you have to set up the permissions of your camera
+        device accordingly. This is described in chapter 2 - Setting up
+        permissions. 
+      </para>
+      <para>
+        Then you can run your frontend. For the command line 
+        <xref linkend="libgphoto2"/> frontend 
+        <xref linkend="gphoto2-cli"/>,
+        this is described in the <xref linkend="gphoto2-cli"/> man
+        page.
+      </para>    
+    </section>
+
+    <section>
+      <title>Setting up permissions for serial (RS232) ports</title>
+      <note>
+        I don't have any experience with serial ports for user
+        processes. So take this section with a grain of salt.
+      </note>
+      <para>
+        If you have a serial port reserved for the camera, you may just chown
+        the device file to the user you want to run gphoto2 as.
+      </para>    
+    </section>
+
+    <section>
+      <title>Setting up permissions for USB ports</title>
+      <para>
+        As USB allows hotplugging of devices, there is a mechanism that
+        dynamically creates the device files for the devices currently
+        connected and switched on.
+      </para>
+      <para>
+        The operating system has to determine which users may access a device
+        dynamically. As the operating system cannot determine this by itself,
+        there have to be some helper applications.
+      </para>
+      <para>
+        The configuration of these helper applications is explained in the
+        following section.
+      </para>
+
+      <!-- ================================================== -->
+      <section>
+        <title>USB ports on Linux</title>
+        <para>
+          As gphoto2 provides a user space driver, in order to have gphoto2
+          access your camera, you have to disable all kernel drivers which want
+          to handle the camera themselves (e.g. the Linux dc2xx driver).
+        </para>
+        <para>
+          On Linux systems, you have basically two options to allow user access
+          to USB devices:
+        </para>
+        <orderedlist>
+          <listitem id="usbdevfs">
+            <simpara>
+              allow a certain user/group or the world access to
+              <emphasis>all</emphasis> USB devices
+              by mounting 
+              <filename class="directory">/proc/bus/usb</filename>
+              with adequate user and/or group permissions (default
+              is world-readable and root-only-writable, which is good)
+            </simpara>
+          </listitem>
+
+          <listitem id="hotplug">
+            <simpara>
+              use hotplug (<ulink
+                url="http://linux-hotplug.sourceforge.net/">http://linux-hotplug.sourceforge.net/</ulink>)
+              and allow access only to the USB devices you want to be
+              accessible (you need 
+              <filename class="directory">/proc/bus/usb</filename>
+              mounted here as well, but not mounted writable by
+              anybody else than root) 
+            </simpara>
+          </listitem> 
+        </orderedlist>
+
+        <para>    
+          Solution <xref linkend="hotplug"/> has a huge advantage over 
+          <xref linkend="usbdevfs"/>: It doesn't allow the
+          user/group to interfere with or eavesdrop on any other USB devices
+          which might be attached, such as USB keyboards, fingerprint reader or
+          similar. The following paragraphs thus describe setting up
+          <xref linkend="hotplug"/>.
+        </para>
+
+        <para>
+          On Linux systems, from the 2.4 kernel series on, the kernel supports
+          hotplugging. You may have to compile a kernel with hotplug support if
+          you're not already running one. You may have to install the hotplug
+          package (<ulink url="http://linux-hotplug.sourceforge.net/">http://linux-hotplug.sourceforge.net/</ulink>) if you don't have it
+          installed already.
+        </para>
+
+        <para>
+          You can find out if your kernel has hotplug support by looking for the
+          file <filename>/proc/sys/kernel/hotplug</filename>. 
+          If it exists, you have a hotplug
+          enabled kernel. If 
+          <screen>
+            <command>cat</command>
+            <parameter>/proc/sys/kernel/hotplug</parameter>
+          </screen> prints the path to
+          your hotplug binary (usually 
+          <command>/sbin/hotplug</command>) and this binary exists,
+          you are ready to rock.
+        </para>      
+
+        <para>
+          Also note that the following solution does
+          <emphasis>not</emphasis> 
+          provide absolute security and that you know the security
+          implications of the respective <command>usbcam</command> 
+          script you are going to use.
+        </para>
+
+        <orderedlist>
+          <listitem>
+            <formalpara>
+            Load your USB driver and mount the USB device filesystem,
+            i.e. e.g.
+            <screen>
+              <prompt># </prompt><command>modprobe</command> <parameter>usb-uhci</parameter>
+              <prompt># </prompt><command>modprobe</command> <parameter>usb-ohci</parameter>
+              <prompt># </prompt><command>mount</command> 
+              <parameter>-t usbdevfs</parameter>
+              <parameter>/proc/bus/usb</parameter>
+            </screen>
+                Modern distributions like Redhat 7.2 handle this
+                automatically.
+            </formalpara>
+          </listitem>
+          <!-- ==================== -->
+          <listitem>
+            <formalpara>
+                Add the output of <command>gphoto2</command> <parameter>--print-usb-usermap</parameter> to
+                <filename>/etc/hotplug/usb.usermap</filename>
+                This makes hotplug recognise all USB cameras which your version 
+                of <xref linkend="libgphoto2"/> supports and makes
+                <command>hotplug</command> run the
+                <command>usbcam</command> script you choose in step
+                <xref linkend="chooseusbcamscript"/>whenever one of these
+                cameras is attached.
+            </formalpara>
+          </listitem>
+          <!-- ==================== -->
+          <listitem id="chooseusbcamscript">
+            <para>
+              Choose the right 
+              /etc/hotplug/usb/usbcam 
+              script for you.
+              Example scripts are found in 
+              <filename class="directory">packages/linux-hotplug</filename> 
+              in the source tree and in 
+              <filename class="directory">linux-hotplug/</filename>
+              after installation and in the doc dir of the binary
+              package. Choose one, adapt it for your needs, and copy
+              it to <filename>/etc/hotplug/usb/usbcam</filename>. The
+              directory 
+              <filename class="directory">/etc/hotplug</filename>
+              should already exists, whereas it may be that you have
+              to create the directory 
+              <filename class="directory">/etc/hotplug/usb</filename>.
+            </para>
+            <para>
+              All three scripts shipped with gPhoto2 also have extensive
+              commentary explaining their usage in more detail.
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term><filename>usbcam.console</filename></term>
+                <listitem>
+                  <para>
+                    The most simple solution is using usbcam.console. This
+                    changes the permissions so that the user owning /dev/console can
+                    access the camera. This works if you're logging in with
+                    pam_console, i.e. e.g. using gdm on Redhat Linux.
+                  </para>
+                  <para>
+                    You may want to check with "ls -l /dev/console" whether this
+                    usbcam.console script will work for you: /dev/console must
+                    belong to the user you want to run the gphoto2 frontend as.
+                  </para>              
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term><filename>usbcam.user</filename></term>
+                <listitem>
+                  <simpara>
+                    If you want only one user to have access to the camera, use
+                    <filename>usbcam.user</filename> and change it
+                    accordingly.
+                  </simpara> 
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term><filename>usbcam.group</filename></term>
+                <listitem>
+                  <simpara>
+                    If you want multiple users to have access to the camera, add all
+                    of these users to one group - either a special
+                    group 
+                    <systemitem class="groupname">camera</systemitem>
+                    or a generic group 
+                    <systemitem class="groupname">users</systemitem>
+                    will do - and use that group in 
+                    <filename>usbcam.group</filename>.</simpara>
+                </listitem>
+              </varlistentry>  
+            </variablelist>
+          </listitem>
+          <!-- ==================== -->
+          <listitem>
+            <simpara>
+              Make your script file
+              <filename>/etc/hotplug/usb/usbcam</filename>
+              executable.
+            </simpara>
+          </listitem>
+          <!-- ==================== -->
+          <listitem>
+            <para>
+              Plug in the camera and switch it on. If you already did so, please
+              unplug and/or switch off first. The kernel will now notice that
+              your camera has been connected and, hopefully finding no kernel
+              driver for the device, will ask hotplug to do something about it.
+            </para>
+            <para>
+              Hotplug will then look into 
+              <filename>/etc/hotplug/usb.usermap</filename> and find that
+              the <command>usbcam</command> script is to be called for
+              the newly attached device. Thus
+              <command>/etc/hotplug/usb/usbcam</command> is executed,
+              hopefully setting the device permissions correctly. 
+            </para>
+            <para>Your <filename>/var/log/messages</filename> syslog
+              file will contain some messages to that effect.
+            </para>
+          </listitem>
+          <listitem>
+            Run <xref linkend="gphoto2-cli"/> or any other 
+            <xref linkend="libgphoto2"/> frontend and enjoy :-)
+          </listitem>
+        </orderedlist>
+      </section>
+    </section>
+    <section>
+      <title>Specifying the port and camera you use</title>
+      <para>
+        libgphoto2 identifies a camera two values:
+        <orderedlist numeration="loweralpha">
+          <listitem>
+            <simpara>the port it is connected to</simpara>
+          </listitem>
+          <listitem>
+            <simpara>the name of the camera</simpara>
+          </listitem>
+        </orderedlist>
+      </para>
+      <para>
+        How these may be specified is discussed in the following
+        sections.
+      </para>
+      
+      <section>
+        <title>Serial ports</title>
+        <para>
+          Serial ports are named like 
+          <systemitem class="resource">serial:/dev/ttyS2</systemitem>
+          if you want to use the serial device
+          <filename class="devicefile">/dev/ttyS2</filename>.
+        </para>
+      </section>
+
+      <section>
+        <title>USB ports</title>
+        <para>
+          As USB works with auto detection, you do not have to specify a device
+          file. Therefore you just use the gphoto2 port 
+          <systemitem class="resource">usb:</systemitem>.
+        </para>
+      </section>
+
+      <section>
+        <title>Name of the camera</title>
+        <para>
+          The model name of the camera does not have to be specified when using
+          the <systemitem class="resource">usb:</systemitem> port. 
+          Otherwise you can specify a camera model like 
+          <systemitem class="resource">Canon PowerShot G2</systemitem>. 
+          You will be better off choosing the model from
+          the list of supported models rather than just trying to type
+          your camera model. 
+        </para>
+      </section>
+    </section>
+  </chapter>
+
 <reference>
-  <title>gPhoto2</title>
+  <title>The gPhoto2 Reference</title>
 
   <refentry id="gphoto2-cli">
     <refentryinfo>
@@ -665,15 +1014,17 @@
 
     <refsect1>
       <title>See also</title>
-      <para><xref linkend="gphoto2-cli"/>,
-        <filename path="doc/">gphoto2.txt</filename>,
-        <ulink
-               url="http://www.gphoto.org/">http://www.gphoto.org/</ulink> 
+        <para><xref linkend="gphoto2-cli"/>,
+          <xref linkend="libgphoto2_port"/>,
+          <filename path="doc/">gphoto2.txt</filename>,
+          <ulink
+                 url="http://www.gphoto.org/">http://www.gphoto.org/</ulink> 
       </para>
     </refsect1>
 
   </refentry>
 </reference>
+</book>
 
 <!--
 Local Variables:
