@@ -338,7 +338,7 @@ test_speed (Camera *camera, GPContext *context)
 	gp_context_progress_stop (context, id);
 	if (i == 10) {
 		gp_context_error (context, _("The camera could not be "
-			"contacted. Please make sure it is conntected to the "
+			"contacted. Please make sure it is connected to the "
 			"computer and turned on."));
 		return (GP_ERROR_IO);
 	}
