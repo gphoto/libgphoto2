@@ -7,6 +7,12 @@ typedef enum {
 } dc210_toggle_type;
 
 typedef enum {
+	DC210_FULL_PICTURE = 0,
+	DC210_CFA_THUMB = 1,
+	DC210_RGB_THUMB = 2
+} dc210_picture_type;
+
+typedef enum {
 	DC210_FILE_TYPE_JPEG = 3,
 	DC210_FILE_TYPE_FPX = 4
 } dc210_file_type_type;
@@ -107,15 +113,15 @@ typedef struct {
 #define DC210_CMD_DATA_SIZE         58
 #define DC210_STATUS_SIZE          256
 #define DC210_PICINFO_SIZE         256
+#define DC210_CARD_BLOCK_SIZE      512
+#define DC210_DIRLIST_SIZE         256
 #define DC210_DOWNLOAD_BLOCKSIZE  1024
 
 /* Commands */
 #define DC210_SET_RESOLUTION        0x36 /* implemented */
 #define DC210_SET_FILE_TYPE         0x37 /* implemented */
 #define DC210_SET_SPEED             0x41 /* implemented */
-#define DC210_GET_ALBUM_FILENAMES   0x4A /* not yet implemented;
-					    description seems to be wrong
-					    returns fileinformation in a packet of size 256 */
+#define DC210_GET_ALBUM_FILENAMES   0x4A /* returns information on all files in packets of size 256 */
 #define DC210_GET_PICTURE	    0x64 /* implemented */
 #define DC210_GET_PICINFO           0x65 /* implemented */
 #define DC210_GET_THUMB             0x66 /* implemented */
@@ -137,15 +143,15 @@ typedef struct {
 
 
 /* untested commands */
-#define DC210_CARD_GET_PIC	    0x91 /* needs unknown cmd packet */
-#define DC210_CARD_GET_PICINFO	    0x92 /* needs unknown cmd packet */
+#define DC210_CARD_GET_PICINFO	    0x91 /* needs unknown cmd packet */
+#define DC210_CARD_GET_SUMMARY	    0x92 /* needs unknown cmd packet */
 #define DC210_CARD_READ_THUMB	    0x93 /* needs unknown cmd packet */
 #define DC210_CARD_FORMAT	    0x95 /* needs unknown cmd packet */
 #define DC210_CARD_OPEN		    0x96 /* is working, sets bit 3 in status[30] */
 #define DC210_CARD_CLOSE	    0x97 /* is working, clears bit 3 in status[30] */
 #define DC210_CARD_GET_STATUS	    0x98 /* is working, returns packet of size 16 */
 #define DC210_CARD_GET_DIRECTORY    0x99 /* needs unknown cmd packet */
-#define DC210_CARD_FILE_READ	    0x9A /* needs unknown cmd packet */
+#define DC210_CARD_READ_FILE	    0x9A /* needs unknown cmd packet */
 #define DC210_CARD_UNKNOWN_COMMAND1 0x9C /* needs unknown cmd packet */
 #define DC210_CARD_FILE_DEL	    0x9D /* needs unknown cmd packet */
 #define DC210_CARD_UNKNOWN_COMMAND2 0x9E /* needs unknown cmd packet */
@@ -179,6 +185,7 @@ int dc210_set_exp_compensation (Camera * camera, signed int compensation);
 /* information */
 int dc210_get_status    (Camera *camera, dc210_status *status);
 int dc210_get_picture_info (Camera *camera, dc210_picture_info *picinfo, unsigned int picno);
+int dc210_get_picture_info_by_name (Camera *camera, dc210_picture_info *picinfo, const char * filename);
 int dc210_get_filenames (Camera *camera, CameraList *list, GPContext *context);
 int dc210_get_picture_number (Camera *camera, const char * filename);
 
@@ -186,13 +193,15 @@ int dc210_get_picture_number (Camera *camera, const char * filename);
 int dc210_capture       (Camera *camera, CameraFilePath *path, GPContext *context);
 
 int dc210_download_picture (Camera * camera, CameraFile *file, unsigned int picno, int thumb, GPContext *context);
-int dc210_download_picture_by_name(Camera * camera, CameraFile *file, const char * filename, int thumb, GPContext *context);
+int dc210_download_picture_by_name (Camera * camera, CameraFile *file, const char *filename, dc210_picture_type type, GPContext *context);
 
 int dc210_delete_picture (Camera * camera, unsigned int picno);
 int dc210_delete_last_picture (Camera * camera );
 int dc210_delete_picture_by_name (Camera * camera, const char * filename );
 
 /* other actions */
+int dc210_open_card (Camera * camera);
+int dc210_close_card (Camera * camera);
 int dc210_format_card (Camera * camera, char * album_name, GPContext * context);
 
 /* callbacks */

@@ -75,12 +75,14 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		return dc210_download_picture_by_name(camera, file, filename, 0, context);
+		return dc210_download_picture_by_name(camera, file, filename, DC210_FULL_PICTURE, context);
 	case GP_FILE_TYPE_PREVIEW:
-		return dc210_download_picture_by_name(camera, file, filename, 1, context);
+		return dc210_download_picture_by_name(camera, file, filename, DC210_CFA_THUMB, context);
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	};
+
+	return GP_OK;
 }
 
 static int delete_file_func (CameraFilesystem *fs, const char *folder, 
@@ -97,14 +99,9 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 			  CameraFileInfo *info, void *data, GPContext *context)
 {
         Camera *camera = data;
-	int picno;
 	dc210_picture_info picinfo;
 	
-	picno = dc210_get_picture_number(camera, file);
-
-	if (picno < 1) return GP_ERROR;
-
-	if (dc210_get_picture_info(camera, &picinfo, picno) == GP_ERROR)
+	if (dc210_get_picture_info_by_name(camera, &picinfo, file) == GP_ERROR)
 		return GP_ERROR;
 
 	info->preview.fields |= GP_FILE_INFO_TYPE;
@@ -644,7 +641,7 @@ int camera_init (Camera *camera, GPContext *context) {
         camera->functions->about        = camera_about;
 
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func,
-                                        NULL, camera);
+	  NULL, camera);
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func,
 				      NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
@@ -655,6 +652,7 @@ int camera_init (Camera *camera, GPContext *context) {
 		return GP_ERROR;
 	};
 
+	dc210_open_card(camera);
 
         return (GP_OK);
 }

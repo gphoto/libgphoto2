@@ -29,14 +29,6 @@
 
 int dc210_cmd_error = 0;
 char ppmheader[] = "P6\n96 72\n255\n";
-char bmpheader[] = {
-        0x42, 0x4d, 0x36, 0x24, 0x00, 0x00, 0x00, 0x00, 
-        0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
-	0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x48, 0x00,
-        0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00, 
-	0x00, 0x00, 0x00, 0x24, 0x00, 0x00, 0x00, 0x00, 
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 #ifdef DEBUG
 int firststatus = 1;
@@ -49,6 +41,101 @@ char oldstatus[DC210_STATUS_SIZE];
 
 ****************************************************************************/
 
+static void cfa2ppm 
+(CameraFile * file)
+{
+
+	/* this is a very quick and dirty hack to convert cfa into ppm */
+
+	unsigned char buf[THUMBHEIGHT][THUMBWIDTH];  
+	unsigned char rgb[THUMBHEIGHT][THUMBWIDTH][3];
+	unsigned char val;
+	unsigned int addval;
+
+	const char * data;
+	unsigned long datasize;
+
+	int i, x, y;
+
+	static char ppmheader[] = "P6\n96 72\n255\n";
+
+	/* get data */
+
+	DC210_DEBUG("Converting CFA to PPM\n");
+
+	gp_file_get_data_and_size(file, &data, &datasize);
+
+	/* split 8 bit values into to 4 bit values and blow up again to 8 bit*/
+
+	i = 0;
+	for(y = 0; y < THUMBHEIGHT; y++ )
+		for(x = 0; x < THUMBWIDTH; x+=2 ){
+			val = (unsigned char) data[i] >> 4;
+			buf[y][x] = (val << 4) | val;
+			val = (unsigned char) data[i++] & 0x0F;
+			buf[y][x+1] = (val << 4) | val;
+		};
+
+	/* fill in the exact values */
+	for( y = 0; y < THUMBHEIGHT; y += 2 )
+		for( x = 0; x < THUMBWIDTH; x += 2 )
+		{
+			rgb[y][x][GREEN] = buf[y][x];
+			rgb[y][x+1][GREEN] = buf[y][x];
+			rgb[y+1][x][GREEN] = buf[y+1][x+1];
+			rgb[y+1][x+1][GREEN] = buf[y+1][x+1];
+			rgb[y][x][RED] = buf[y][x+1];
+			rgb[y][x+1][RED] = buf[y][x+1];
+			rgb[y+1][x][RED] = buf[y][x+1];
+			rgb[y+1][x+1][RED] = buf[y][x+1];
+			rgb[y][x][BLUE] = buf[y+1][x]; 
+			rgb[y][x+1][BLUE] = buf[y+1][x];
+			rgb[y+1][x][BLUE] = buf[y+1][x];
+			rgb[y+1][x+1][BLUE] = buf[y+1][x];
+		};
+
+	/* fill in the interpolated values, don't care about borders */
+	for ( y = 1; y < THUMBHEIGHT - 2; y+= 2)
+		for ( x = 0; x < THUMBWIDTH - 2; x +=2){
+			/* 2 missing green values */
+			addval = rgb[y][x][GREEN] + rgb[y][x+2][GREEN] 
+				+ rgb[y-1][x+1][GREEN] + rgb[y+1][x+1][GREEN];
+			rgb[y][x+1][GREEN] = addval / 4;
+
+			addval = rgb[y+1][x-1][GREEN] + rgb[y+1][x+1][GREEN]
+				+ rgb[y][x][GREEN] + rgb[y+2][x][GREEN];
+			rgb[y+1][x][GREEN] = addval / 4;
+
+			/* 3 missing red values */
+			addval = rgb[y-1][x][RED] + rgb[y+1][x][RED];
+			rgb[y][x][RED] = addval / 2;
+
+			addval = rgb[y-1][x][RED] + rgb[y-1][x+2][RED] 
+				+ rgb[y+1][x][RED] + rgb[y+1][x+2][RED];
+			rgb[y][x+1][RED] = addval / 4;
+
+			addval = rgb[y+1][x][RED] + rgb[y+1][x+2][RED];
+			rgb[y+1][x+1][RED] = addval / 2;
+
+			/* 3 missing blue values */
+			addval = rgb[y][x-1][BLUE] + rgb[y][x+1][BLUE];
+			rgb[y][x][BLUE] = addval / 2;
+
+			addval = rgb[y][x-1][BLUE] + rgb[y][x+1][BLUE] 
+				+ rgb[y+2][x-1][BLUE] + rgb[y+2][x+1][BLUE];
+			rgb[y+1][x][BLUE] = addval / 4;
+
+			addval = rgb[y][x+1][BLUE] + rgb[y+2][x+1][BLUE];
+			rgb[y+1][x+1][BLUE] = addval / 2;
+		};
+
+	gp_file_clean(file);
+	gp_file_append(file, ppmheader, sizeof(ppmheader) - 1);
+	gp_file_append(file, (char *) rgb, THUMBWIDTH * THUMBHEIGHT * 3);
+	gp_file_set_mime_type(file, GP_MIME_PPM);
+
+};
+
 /* Utility procedures for command execution */
 
 static void dc210_cmd_init
@@ -60,6 +147,19 @@ static void dc210_cmd_init
 
 	cmd[0] = command_byte;
 	cmd[7] = 0x1a;
+
+};
+
+static void dc210_cmd_packet_init
+(char * cmd_packet, const char * filename)
+{
+	/* prepare command packet */
+	memset (cmd_packet, 0x00, DC210_CMD_DATA_SIZE);
+	memset (cmd_packet + 48, 0xFF, 8);
+	strcpy(cmd_packet, "\\PCCARD\\DCIMAGES\\");
+	strcpy(cmd_packet + 17, filename);
+
+	DC210_DEBUG("Complete filename is %s\n", cmd_packet);
 
 };
 
@@ -340,6 +440,7 @@ static int dc210_read_to_file
 
   fatal_error = 0;
   packets = 0;
+
   while (1 == (packet_following = dc210_wait_for_response(camera, 0, NULL))){
 	  fatal_error = 1;
 	  for (k = 0; k < RETRIES; k++){
@@ -673,48 +774,40 @@ int dc210_set_speed (Camera *camera, int speed) {
 
 /****** Picture actions *****/
 
-static int dc210_take_picture (Camera * camera, GPContext * context){
+static int dc210_take_picture 
+(Camera * camera, GPContext * context)
+{
+	char cmd[8];
+	dc210_cmd_init(cmd, DC210_TAKE_PICTURE);
 
-  char cmd[8];
-  dc210_cmd_init(cmd, DC210_TAKE_PICTURE);
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+	if (dc210_wait_for_response(camera, 5, context) == GP_ERROR) return GP_ERROR;
 
-  if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
-
-  if (dc210_wait_for_response(camera, 5, context) == GP_ERROR)
-    return GP_ERROR;
-
-  return GP_OK;
-
-};
-
-int dc210_delete_picture (Camera * camera, unsigned int picno){
-
-  char cmd[8];
-  dc210_status status;
-  unsigned int pic_offset = picno - 1;
-
-  dc210_cmd_init(cmd, DC210_DELETE_PICTURE);
-  
-  cmd[3] = pic_offset & 0xFF;
-  cmd[2] = (pic_offset >> 8) & 0xFF;
-
-  if (dc210_get_status(camera, &status) == GP_ERROR)
-	  return GP_ERROR;
-
-  if (picno > status.numPicturesInCamera)
-	  return GP_ERROR;
-
-  if (dc210_execute_command(camera, cmd) == GP_ERROR)
-    return GP_ERROR;
-
-  if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR)
-    return GP_ERROR;
-
-  return GP_OK;
+	return GP_OK;
 
 };
 
-int dc210_delete_last_picture (Camera * camera ){
+int dc210_delete_picture 
+(Camera * camera, unsigned int picno)
+{
+
+	char cmd[8];
+	unsigned int pic_offset = picno - 1;
+
+	dc210_cmd_init(cmd, DC210_DELETE_PICTURE);
+	cmd[3] = pic_offset & 0xFF;
+	cmd[2] = (pic_offset >> 8) & 0xFF;
+
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
+
+	return GP_OK;
+
+};
+
+int dc210_delete_last_picture 
+(Camera * camera )
+{
 
   dc210_status status;
 
@@ -728,13 +821,21 @@ int dc210_delete_last_picture (Camera * camera ){
 
 };
 
-int dc210_delete_picture_by_name (Camera * camera, const char * filename ){
+int dc210_delete_picture_by_name 
+(Camera * camera, const char * filename )
+{
 
-	int picno = dc210_get_picture_number(camera, filename);
+        char cmd[8];
+	char cmd_packet[DC210_CMD_DATA_SIZE];
 
-	if (picno < 1) return GP_ERROR;
+	dc210_cmd_init(cmd, DC210_CARD_FILE_DEL);
+	dc210_cmd_packet_init(cmd_packet, filename);
 
-	return dc210_delete_picture(camera, picno);
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+	if (dc210_write_command_packet(camera, cmd_packet) == GP_ERROR) return GP_ERROR;
+	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
+
+	return GP_OK;
 
 };
 
@@ -746,6 +847,8 @@ int dc210_download_picture
 	dc210_picture_info picinfo;
 	char cmd[8];
 	unsigned int pic_offset = picno - 1;
+
+	/* this function is not used anymore */
     
 	if (thumb)
 		dc210_cmd_init(cmd, DC210_GET_THUMB);
@@ -754,7 +857,7 @@ int dc210_download_picture
 	
 	cmd[3] = pic_offset & 0xFF;
 	cmd[2] = (pic_offset >> 8) & 0xFF;
-	if (thumb) cmd[4] = 1; /* colour image instead of grayscale */
+	if (thumb) cmd[4] = 1; /* rgb colour image instead of cfa */
 
 	if (dc210_get_status(camera, &status) == GP_ERROR)
 		return GP_ERROR;
@@ -780,7 +883,7 @@ int dc210_download_picture
 		   nothing more than the correct header */
 
 		gp_file_set_mime_type(file, GP_MIME_PPM);
-		gp_file_append(file, ppmheader, sizeof(ppmheader));
+		gp_file_append(file, ppmheader, sizeof(ppmheader) - 1);
 		dc210_read_to_file(camera, file, DC210_DOWNLOAD_BLOCKSIZE, 96 * 72 * 3, NULL);
 	}
 	else
@@ -790,18 +893,91 @@ int dc210_download_picture
 
 };
 
-int dc210_download_picture_by_name(Camera * camera, CameraFile *file, const char * filename, int thumb, GPContext *context){
+int dc210_open_card
+(Camera * camera)
+{
 
-  int picno = 0;
+	char cmd[8];
+	dc210_cmd_init(cmd, DC210_CARD_OPEN);
 
-  picno = dc210_get_picture_number(camera, filename);
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
 
-  if (picno < 1) return GP_ERROR;
+	return GP_OK;
+};
 
-  if (dc210_download_picture(camera, file, picno, thumb, context) == GP_ERROR) return GP_ERROR;
+int dc210_close_card
+(Camera * camera)
+{
 
-  return GP_OK;
+	char cmd[8];
+	dc210_cmd_init(cmd, DC210_CARD_CLOSE);
 
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
+
+	return GP_OK;
+};
+
+int dc210_download_picture_by_name
+(Camera * camera, CameraFile *file, const char *filename, dc210_picture_type type, GPContext *context)
+{
+  
+        char cmd[8];
+	char cmd_packet[DC210_CMD_DATA_SIZE];
+	dc210_picture_info picinfo;
+
+	/* prepare command */
+	if (type == DC210_FULL_PICTURE){
+		/* we need the file size for the progress bar */
+		if (dc210_get_picture_info_by_name(camera, &picinfo, filename) == GP_ERROR)
+			return GP_ERROR;
+		DC210_DEBUG("Picture size is %d\n", picinfo.picture_size);
+		dc210_cmd_init(cmd, DC210_CARD_READ_FILE);
+	}
+	else
+		dc210_cmd_init(cmd, DC210_CARD_READ_THUMB);
+
+	if (type == DC210_RGB_THUMB) cmd[4] = 1;
+
+	dc210_cmd_packet_init(cmd_packet, filename);
+
+	gp_file_set_name(file, filename);
+
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+	if (dc210_write_command_packet(camera, cmd_packet) == GP_ERROR) return GP_ERROR;
+
+	switch (type){
+	case DC210_FULL_PICTURE:
+		if (picinfo.file_type == DC210_FILE_TYPE_JPEG)
+			gp_file_set_mime_type(file, GP_MIME_JPEG);
+		if (dc210_read_to_file(camera, file, 
+				       DC210_CARD_BLOCK_SIZE, 
+				       picinfo.picture_size, context) == GP_ERROR)
+			return GP_ERROR;
+		break;
+	case DC210_CFA_THUMB:
+		/* this thumb type is much faster to download, because it has just
+		   a 6th of the size of rgb data */
+		if (dc210_read_to_file(camera, file, 
+				       DC210_DOWNLOAD_BLOCKSIZE, 48 * 72, NULL) == GP_ERROR)
+			return GP_ERROR;
+		/* convert cfa data to rgb: */
+		cfa2ppm(file);
+		break;
+	  break;
+	case DC210_RGB_THUMB:
+		/* if you really need nice thumbs, you can use this, but I don't think it's
+		   worth the 6 times longer download time */
+		gp_file_set_mime_type(file, GP_MIME_PPM);
+		gp_file_append(file, ppmheader, sizeof(ppmheader) - 1);
+		if (dc210_read_to_file(camera, file, 
+				       DC210_DOWNLOAD_BLOCKSIZE, 96 * 72 * 3, NULL) == GP_ERROR)
+			return GP_ERROR;
+		break;
+	};
+	
+	return GP_OK;
 };
 
 int dc210_capture (Camera *camera, CameraFilePath *path, GPContext *context) 
@@ -828,131 +1004,136 @@ int dc210_capture (Camera *camera, CameraFilePath *path, GPContext *context)
 
 int dc210_get_picture_number (Camera *camera, const char * filename){
 
-  dc210_status status;
-  dc210_picture_info picinfo;
-  int i;
+	/* This function is terrible slow if you have a lot of pictures
+	   in the camera; therefor it should not be used */
 
-  if (dc210_get_status(camera, &status) == GP_ERROR) return -1;
+	dc210_status status;
+	dc210_picture_info picinfo;
+	int i;
 
-  for (i = 1; i <= status.numPicturesInCamera; i++){
+	if (dc210_get_status(camera, &status) == GP_ERROR) return -1;
 
-    if (dc210_get_picture_info(camera, &picinfo, i) == GP_ERROR) return -1;
-    
-    if (strcmp(picinfo.image_name, filename) == 0){
-      return i;
-    };
+	for (i = 1; i <= status.numPicturesInCamera; i++){
+		
+		if (dc210_get_picture_info(camera, &picinfo, i) == GP_ERROR) return -1;
+		
+		if (strcmp(picinfo.image_name, filename) == 0){
+			return i;
+		};
+		
+	}; 
 
-  }; 
-
-  return -1;
-
-};
-
-int dc210_get_filenames_old (Camera *camera, CameraList *list, GPContext *context) 
-{
-  dc210_status status;
-  dc210_picture_info picinfo;
-  int i;
-
-  if (dc210_get_status(camera, &status) == GP_ERROR)
-    return GP_ERROR;
-
-  if (status.numPicturesInCamera == 0){
-    return GP_OK;
-  };
-
-  for (i = 1; i <= status.numPicturesInCamera; i++){
-    if (dc210_get_picture_info(camera, &picinfo, i)  == GP_ERROR)
-      return GP_ERROR;
-    gp_list_append(list, picinfo.image_name, NULL);
-  };
-
-  return GP_OK;
+	return -1;
 
 };
 
 int dc210_get_filenames (Camera *camera, CameraList *list, GPContext *context) 
 {
-  char cmd[8];
-  CameraFile *file;
-  char filename[13];
-  const char * data;
-  unsigned long datasize;
-  int pictures, i;
+	char cmd[8];
+	CameraFile *file;
+	char filename[13];
+	const char * data;
+	unsigned long datasize;
+	int pictures, i;
 
-  gp_file_new(&file);
+	gp_file_new(&file);
 
-  dc210_cmd_init(cmd, DC210_GET_ALBUM_FILENAMES);
+	dc210_cmd_init(cmd, DC210_GET_ALBUM_FILENAMES);
 
-  dc210_execute_command(camera, cmd);
+	dc210_execute_command(camera, cmd);
   
-  dc210_read_to_file(camera, file, 256, 0, NULL);
+	dc210_read_to_file(camera, file, DC210_DIRLIST_SIZE, 0, NULL);
 
-  gp_file_get_data_and_size(file, &data, &datasize);
+	gp_file_get_data_and_size(file, &data, &datasize);
 
-  pictures = (unsigned char) data[0] * 0x100 + (unsigned char) data[1];
-  DC210_DEBUG("There are %d pictures in the camera\n", pictures);
+	pictures = (unsigned char) data[0] * 0x100 + (unsigned char) data[1];
+	DC210_DEBUG("There are %d pictures in the camera\n", pictures);
 
-  filename[8] = '.';
-  filename[12] = '\0';
-  for (i = 0; i < pictures; i++){
-	  strncpy(filename, data + 2 + i*20, 8);
-	  strncpy(filename + 9, data + 10 + i*20, 3);
-	  DC210_DEBUG("Adding filename %s to list\n", filename);
-	  gp_list_append(list, filename, NULL);
-  };
+	filename[8] = '.';
+	filename[12] = '\0';
+	for (i = 0; i < pictures; i++){
+		strncpy(filename, data + 2 + i*20, 8);
+		strncpy(filename + 9, data + 10 + i*20, 3);
+		DC210_DEBUG("Adding filename %s to list\n", filename);
+		gp_list_append(list, filename, NULL);
+	};
 
-  gp_file_free(file);
+	gp_file_free(file);
 
-  return GP_OK;
+	return GP_OK;
 
 };
 
+static void dc210_picinfo_from_block (dc210_picture_info * picinfo, unsigned char * data){
+
+	picinfo->camera_type = data[1];
+	picinfo->file_type = data[2];
+	picinfo->resolution = data[3];
+	picinfo->compression = data[4];
+	picinfo->picture_number = data[6] * 0x100 + data[7];
+	picinfo->picture_size = data[8] * 0x1000000 + data[9] * 0x10000 + data[10] * 0x100 + data[11];
+	picinfo->preview_size = 96 * 72 * 3 + sizeof(ppmheader);
+	picinfo->picture_time = CAMERA_GET_EPOC + ((data[12] * 0x1000000 + 
+						    data[13] * 0x10000 + 
+						    data[14] * 0x100 + 
+						    data[15]) >> 1);
+	picinfo->flash_used = data[16];
+	picinfo->flash = data[17];
+	picinfo->preflash = (data[17] > 2);
+	if (picinfo->preflash) picinfo->flash -= 3;
+	picinfo->zoom = data[21];
+	picinfo->f_number = data[26];
+	picinfo->battery = data[27];
+	picinfo->exposure_time = data[28] * 0x1000000 + data[29] * 0x10000 + data[30] * 0x100 + data[31];
+	strncpy(picinfo->image_name, &data[32], 12);
+	picinfo->image_name[12] = 0;
+	
+}
+
 int dc210_get_picture_info (Camera *camera, dc210_picture_info *picinfo, unsigned int picno) {
 
-  char cmd[8];
-  unsigned char data[DC210_PICINFO_SIZE];
-  unsigned int pic_offset = picno - 1;
+	char cmd[8];
+	unsigned char data[DC210_PICINFO_SIZE];
+	unsigned int pic_offset = picno - 1;
 
-  dc210_cmd_init(cmd, DC210_GET_PICINFO);
-  cmd[3] = pic_offset & 0xFF;
-  cmd[2] = (pic_offset >> 8) & 0xFF;
+	dc210_cmd_init(cmd, DC210_GET_PICINFO);
+	cmd[3] = pic_offset & 0xFF;
+	cmd[2] = (pic_offset >> 8) & 0xFF;
 	    
-  if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
-
-  if (dc210_read_single_block(camera, data, DC210_PICINFO_SIZE) == GP_ERROR)
-    return GP_ERROR;
-  
-  if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR)
-    return GP_ERROR;
-
-  picinfo->camera_type = data[1];
-  picinfo->file_type = data[2];
-  picinfo->resolution = data[3];
-  picinfo->compression = data[4];
-  picinfo->picture_number = data[6] * 0x100 + data[7];
-  picinfo->picture_size = data[8] * 0x1000000 + data[9] * 0x10000 + data[10] * 0x100 + data[11];
-  picinfo->preview_size = 96 * 72 * 3 + sizeof(ppmheader);
-  picinfo->picture_time = CAMERA_GET_EPOC + ((data[12] * 0x1000000 + data[13] * 0x10000 + data[14] * 0x100 + data[15]) >> 1);
-  picinfo->flash_used = data[16];
-  picinfo->flash = data[17];
-  picinfo->preflash = (data[17] > 2);
-  if (picinfo->preflash) picinfo->flash -= 3;
-  picinfo->zoom = data[21];
-  picinfo->f_number = data[26];
-  picinfo->battery = data[27];
-  picinfo->exposure_time = data[28] * 0x1000000 + data[29] * 0x10000 + data[30] * 0x100 + data[31];
-  strncpy(picinfo->image_name, &data[32], 12);
-  picinfo->image_name[12] = 0;
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+	if (dc210_read_single_block(camera, data, DC210_PICINFO_SIZE) == GP_ERROR) return GP_ERROR;
+	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
+	
+	dc210_picinfo_from_block(picinfo, data);
 		
-  return GP_OK;
+	return GP_OK;
+
+};
+
+int dc210_get_picture_info_by_name (Camera *camera, dc210_picture_info *picinfo, const char * filename) {
+
+	char cmd[8];
+	char cmd_packet[DC210_CMD_DATA_SIZE];
+	unsigned char data[DC210_CARD_BLOCK_SIZE];
+	
+	dc210_cmd_init(cmd, DC210_CARD_GET_PICINFO);
+	dc210_cmd_packet_init(cmd_packet, filename);
+	    
+	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+	if (dc210_write_command_packet(camera, cmd_packet) == GP_ERROR) return GP_ERROR;
+	if (dc210_read_single_block(camera, data, DC210_CARD_BLOCK_SIZE) == GP_ERROR) return GP_ERROR;
+	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
+	
+	dc210_picinfo_from_block(picinfo, data);
+		
+	return GP_OK;
 
 };
 
 int dc210_get_status (Camera *camera, dc210_status *status) {
 
 #ifdef DEBUG
-  int i;
+	int i;
 #endif
 
 	char data[DC210_STATUS_SIZE];
@@ -961,24 +1142,20 @@ int dc210_get_status (Camera *camera, dc210_status *status) {
 	dc210_cmd_init(cmd, DC210_GET_STATUS);
 	
 	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
-					
-	if (dc210_read_single_block(camera, data, DC210_STATUS_SIZE) == GP_ERROR)
-		return GP_ERROR;
-
-	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR)
-		return GP_ERROR;
+	if (dc210_read_single_block(camera, data, DC210_STATUS_SIZE) == GP_ERROR) return GP_ERROR;
+	if (dc210_wait_for_response(camera, 0, NULL) == GP_ERROR) return GP_ERROR;
 
 #ifdef DEBUG
 	if (firststatus){
 	  firststatus = 0;
 	}
 	else{
-	  for (i = 0; i < DC210_STATUS_SIZE; i++){
-	    if (oldstatus[i] != data[i] && (i < 12 || i > 15)){
-	      DC210_DEBUG("Statusdata differs at offset %03d (old: 0x%02X, new: 0x%02X)\n", 
-		     i, (unsigned char) oldstatus[i], (unsigned char) data[i]);
-	    };
-	  };
+		for (i = 0; i < DC210_STATUS_SIZE; i++){
+			if (oldstatus[i] != data[i] && (i < 12 || i > 15)){
+				DC210_DEBUG("Statusdata differs at offset %03d (old: 0x%02X, new: 0x%02X)\n", 
+					    i, (unsigned char) oldstatus[i], (unsigned char) data[i]);
+			};
+		};
 	};
 	memcpy(oldstatus, data, DC210_STATUS_SIZE);
 #endif
@@ -1185,7 +1362,7 @@ int dc210_debug_callback(Camera * camera, CameraWidget * widget, GPContext * con
 
 	/* Put the stuff you want to test here */
 	dc210_get_status(camera, &status);
-	dc210_get_filenames_new(camera, NULL, NULL);
+	dc210_get_filenames(camera, NULL, NULL);
 	dc210_get_status(camera, &status);
 
 	return GP_OK;

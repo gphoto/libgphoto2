@@ -9,7 +9,15 @@
 #define DC210_NAK_ERROR       -4
 #define DC210_GARBAGE_ERROR   -5
 
-static void dc210_cmd_init(char *cmd, unsigned char command_byte);
+#define THUMBHEIGHT 72
+#define THUMBWIDTH 96
+#define RED 0
+#define GREEN 1
+#define BLUE 2
+
+static void cfa2ppm (CameraFile * file);
+static void dc210_cmd_init (char *cmd, unsigned char command_byte);
+static void dc210_cmd_packet_init (char * cmd_packet, const char * filename);
 static int dc210_write_single_char (Camera *camera, unsigned char response);
 static int dc210_write_command_packet(Camera * camera, char * data);
 static int dc210_execute_command (Camera *camera, char *cmd);
@@ -20,6 +28,7 @@ static int dc210_read_single_block (Camera *camera, unsigned char * b, int block
 static int dc210_take_picture (Camera * camera, GPContext *context);
 static int dc210_set_option (Camera * camera, char command, unsigned int value, int valuesize);
 static int dc210_space_on_card(Camera * camera, int * space);
+static void dc210_picinfo_from_block (dc210_picture_info * picinfo, unsigned char * data);
 
 #ifdef DEBUG
 static int dc210_read_dummy_packet(Camera * camera);
