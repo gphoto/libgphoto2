@@ -525,6 +525,59 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
 }
 
 /**
+ * canon_usb_poll_interrupt_multiple:
+ * @camera: Array of Camera's to work with
+ * @n_cameras: Length of #camera
+ * @camera_flags: array of int's corresponding to entries in #camera.
+ *                Non-zero (true) if that camera is to be polled, zero
+ *                (false) if that camera is to be ignored.
+ * @buf: buffer to receive data read from the pipe.
+ * @n_tries: number of times to try
+ * @which: returns index of camera that responded
+ *
+ * Polls the interrupt pipes of several cameras either until one
+ *  responds, or for a specified number of tries.
+ *  We will return when:
+ * 1. a non-zero length is returned,
+ * 2. an error code is returned, or
+ * 3. the number of read attempts reaches @n_tries.
+ *
+ * Returns:
+ *  length of read, or
+ *  zero if n_tries has been exceeded, or
+ *  gphoto2 error code from read that results in an I/O error.
+ *
+ */
+static int canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
+					       int camera_flags[],
+					       unsigned char *buf, int n_tries,
+					       int *which )
+{
+	int i = 0, status = 0;
+
+	memset ( buf, 0x81, 0x40 ); /* Put weird stuff in buffer */
+	*which = 0;			     /* Start with the first camera */
+	/* Read repeatedly until we get either an
+	   error or a non-zero size. */
+	while ( status == 0 && i < n_tries ) {
+		while ( !camera_flags[*which] )
+			*which = (*which+1) % n_cameras;
+
+		status = gp_port_check_int_fast ( camera[*which]->port,
+						  buf, 0x40 );
+	}
+	if ( status <= 0 )
+		GP_LOG ( GP_LOG_ERROR, "canon_usb_poll_interrupt_multiple:"
+			 " interrupt read failed after %i tries, \"%s\"",
+			 i, gp_result_as_string(status) );
+	else
+		GP_DEBUG ( "canon_usb_poll_interrupt_multiple:"
+			   " interrupt packet took %d tries\n", i+1 );
+
+	return status;
+}
+
+/**
  * canon_usb_capture_dialogue:
  * @camera: the Camera to work with
  * @return_length: number of bytes to read from the camera as response
