@@ -75,7 +75,7 @@ if $try_pthread; then
 		    AC_CHECK_LIB(c_r, pthread_create, [
 			AC_DEFINE(HAVE_PTHREAD,,[Define if we use pthread.h.])
 			pthread_msg="yes (-lc_r)"
-		        PTHREAD_LIBS="-lc_r"
+		        PTHREAD_LIBS="-pthread"
 		    ])
 		])
 	])

@@ -1,3 +1,10 @@
+2002-06-24  Christophe Barbé <christophe.barbe@ufies.org>
+
+	Patch for FreeBSD from Arnaud Launay <asl@launay.org>
+
+	* configure.in: Use -pthread instead of -lc_r, libtool 1.4.2a doesn't
+		like -lc_r (unlike plain 1.4.2).
+
 2002-06-21  Christophe Barbé <christophe.barbe@ufies.org>
 
    po files from Takeshi AIHANA <aihana@jcom.home.ne.jp>
