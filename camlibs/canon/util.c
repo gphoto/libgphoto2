@@ -53,6 +53,31 @@ is_thumbnail (const char *name)
 }
 
 /**
+ * is_audio:
+ * @name: name of file to examine
+ *
+ * Test whether the given @name corresponds to an audio file (.WAV).
+ *
+ * Returns:
+ *   1 if filename is the name of an audio file (i.e. ends with ".WAV" )
+ *   0 if not
+ *
+ */
+int
+is_audio (const char *name)
+{
+	const char *pos;
+	int res = 0;
+
+	pos = strchr (name, '.');
+	if (pos)
+		res = (!strcmp (pos, ".WAV"));
+
+	GP_DEBUG ("is_audio(%s) == %i", name, res);
+	return (res);
+}
+
+/**
  * is_image:
  * @name: name of file to examine
  *

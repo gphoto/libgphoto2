@@ -26,6 +26,7 @@
 //void dump_hex(Camera *camera,const char *msg, const unsigned char *buf, int len);
 
 int is_thumbnail (const char *name);
+int is_audio (const char *name);
 int is_image (const char *name);
 int is_movie (const char *name);
 int is_jpeg (const char *name);
