@@ -551,14 +551,9 @@ static int
 remove_colon_from_string (char *str)
 {
 	char *ch;
-	printf("===========================\n");
-	printf("COLON-Fixing \"%s\"\n", str);
 	ch = strchr(str, ':');
 	if (ch) {
 		*ch = ' ';
-		printf("COLON-Fixed: \"%s\"\n", str);
-	} else {
-		printf("NOT COLON-Fixed: \"%s\"\n", str);
 	}
 }
 
