@@ -1,0 +1,19 @@
+* template for CameraAbilities:
+
+	strcpy(abilities[]->model, "Camera Model Name");
+	abilities[]->serial    = ;
+	abilities[]->usb       = ;
+	abilities[]->parallel  = ;
+	abilities[]->ieee1394  = ;
+
+	abilities[]->serial_baud[0] = 9600;
+	abilities[]->serial_baud[1] = 0;
+
+	abilities[]->cancel    = ;
+	abilities[]->capture   = ;
+	abilities[]->config    = ;
+	abilities[]->delete_file  = ;
+	abilities[]->file_preview = ;
+	abilities[]->lock      = ;
+	abilities[]->reset     = ;
+	abilities[]->sleep     = 1;

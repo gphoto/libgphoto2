@@ -16,44 +16,64 @@
 #include "library.h"
 #include "settings.h"
 
-#define DEBUG
-
-/* Some local globals
+/* Some globals
    ---------------------------------------------------------------- */
 
 	CameraPortSettings glob_port_settings;
 
-	int glob_folder_number;	/* currently selected folder number */
-	int glob_camera_number; /* currently selected camera number */
+	/* Currently Selected camera/folder */
+	/* ------------------------------------------------ */
+			/* currently selected folder number */
+	int 		glob_folder_number;
+			/* currently selected camera number */
+	int 		glob_camera_number;
 
 	/* Camera List */
-	int		glob_camera_count; /* total cameras found */
-	CameraChoice	glob_camera[512];  /* camera/library list */
+	/* ------------------------------------------------ */
+			/* total cameras found 		*/
+	int		glob_camera_count;
+			/* camera/library list 		*/
+	CameraChoice	glob_camera[512];
+			/* camera abilities 		*/
+	CameraAbilities glob_camera_abilities[512];
+			/* camera library id's 		*/
+	char		*glob_camera_id[512];
+			/* number of camera library id's*/
+	int		glob_camera_id_count;
 
 	/* Currently loaded settings */
-	int	glob_setting_count; /* number of settings found */
-	Setting	glob_setting[512];  /* setting key/value list   */
+	/* ------------------------------------------------ */
+			/* number of settings found 	*/
+	int		glob_setting_count; 
+			/* setting key/value list   	*/
+	Setting		glob_setting[512];  
 
 
 	/* Current loaded library's handle */
-	void 	*glob_library_handle; /* current library handle    */
-	Camera   glob_c; /* pointer to current camera function set */
+	/* ------------------------------------------------ */
+			/* current library handle    	*/
+	void 		*glob_library_handle; 
+			/* pointer to current camera function set */
+	Camera   	glob_c;
 
 /* Core functions (for front-ends)
    ---------------------------------------------------------------- */
 
 int gp_init () {
 
-	DIR *d;
-	struct dirent *de;
+	int x;
 	char buf[1024];
 
 	/* Initialize the globals */
-	glob_camera_number = 0;
-	glob_camera_count  = 0;
-	glob_setting_count = 0;
-	glob_library_handle = NULL;
-	glob_folder_number = 0;
+	glob_camera_number   = 0;
+	glob_camera_count    = 0;
+	glob_setting_count   = 0;
+	glob_library_handle  = NULL;
+	glob_folder_number   = 0;
+	glob_camera_id_count = 0;
+
+	for(x=0; x<512; x++)
+		glob_camera_id[x] = (char *)malloc(sizeof(char)*64);
 
 #ifdef DEBUG
 	printf(" > Debug Mode On < \n");
@@ -64,34 +84,14 @@ int gp_init () {
 	(void)mkdir(buf, 0700);
 
 #ifdef DEBUG
-	printf("core: Camera library dir: %s\n", CAMLIBS);
-	printf("core: Trying to load libraries:\n");
-#endif
 	/* Load settings */
 	load_settings();
 
-	/* Look for available camera libraries */
-	d = opendir(CAMLIBS); 
-	do {
-	   /* Read each entry */
-	   de = readdir(d);
-	   if (de) {
-#ifdef DEBUG
-	   printf("core:\tis %s a library? ", de->d_name); 
+	printf("core: Camera library dir: %s\n", CAMLIBS);
+	printf("core: Trying to load libraries:\n");
 #endif
-		/* try to open the library */
-		if (is_library(de->d_name) == GP_OK) {
-#ifdef DEBUG
-			printf("yes\n");
-#endif
-			glob_camera_count += load_camera_list(de->d_name, glob_camera, glob_camera_count);
-#ifdef DEBUG
-		   } else {
-			printf("no\n");
-#endif
-		}
-	   }
-	} while (de);
+
+	load_cameras();
 
 #ifdef DEBUG
 	{
@@ -111,6 +111,10 @@ int gp_init () {
 
 int gp_exit () {
 	
+	int x;
+	for(x=0; x<512; x++)
+                free(glob_camera_id[x]);
+
 	gp_camera_exit();
 	return (GP_OK);
 }
@@ -163,10 +167,10 @@ int gp_camera_set (int camera_number) {
 
 int gp_camera_abilities (CameraAbilities *abilities) {
 
-	if (glob_c.abilities == NULL)
-		return(GP_ERROR);
+	memcpy(abilities, &glob_camera_abilities[glob_camera_number],
+	       sizeof(glob_camera_abilities[glob_camera_number]));
 
-	return(glob_c.abilities(abilities));
+	return (GP_OK);
 }
 
 int gp_camera_init (CameraInit *init) {

@@ -18,18 +18,33 @@ char  dir_images[1024][1024];
 int   dir_num_images;
 int   dir_get_index;
 
-int camera_abilities (CameraAbilities *abilities) {
+int camera_id (char *id) {
 
-	abilities->model[0]	= strdup("Browse a directory");
-	abilities->model[1]	= NULL;
+        strcpy(id, "directory-scottf");
 
-	abilities->file_preview = 1;
-	abilities->delete_file  = 0;
-	abilities->capture	= 0;
-	abilities->config	= 0;
-	abilities->lock		= 1;
-	abilities->reset	= 0;
-	abilities->cancel	= 0;
+        return (GP_OK);
+}
+
+int camera_abilities (CameraAbilities *abilities, int *count) {
+
+	*count = 1;
+
+	strcpy(abilities[0].model, "Browse a directory");
+	abilities[0].serial    = 0;
+	abilities[0].usb       = 0;
+	abilities[0].parallel  = 0;
+	abilities[0].ieee1394  = 0;
+
+	abilities[0].serial_baud[0] = 0;
+
+	abilities[0].cancel    = 0;
+	abilities[0].capture   = 0;
+	abilities[0].config    = 1;
+	abilities[0].delete_file  = 0;
+	abilities[0].file_preview = 1;
+	abilities[0].lock      = 0;
+	abilities[0].reset     = 0;
+	abilities[0].sleep     = 0;
 
 	return (GP_OK);
 }

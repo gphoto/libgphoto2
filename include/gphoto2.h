@@ -5,7 +5,7 @@
 	This library is covered by the LGPL.
 */
 
-#include <gphoto-datatypes.h>
-#include <gphoto-core.h>
-#include <gphoto-library.h>
-#include <gphoto-interface.h>
+#include <gphoto2-datatypes.h>
+#include <gphoto2-core.h>
+#include <gphoto2-library.h>
+#include <gphoto2-interface.h>

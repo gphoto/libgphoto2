@@ -52,7 +52,7 @@ typedef struct {
 } CameraPortSettings;
 
 typedef struct {
-	char *model[128];
+	char model[128];
 
 		/* can the library support the following: */
 	int serial		: 1;
@@ -89,8 +89,6 @@ typedef struct {
 		/* Camera can be turned off (sleep) 		 */
 } CameraAbilities;
 
-
-
 typedef struct {
 	char model[128]; 		   /* Name of the camera */
 
@@ -111,6 +109,11 @@ typedef struct {
 		/* Image data */
 
 } CameraFile;
+
+typedef struct {
+	char 		name[128];
+	int		parent;
+} CameraFolder;
 
 typedef struct {
 	char *name;

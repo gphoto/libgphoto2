@@ -2,27 +2,72 @@
 #include <gphoto2.h>
 #include <gpio.h>
 
-int camera_abilities (CameraAbilities *abilities) {
+int camera_id (char *id) {
 
-	abilities->model[0] 	= strdup("Olympus D-220L");
-	abilities->model[1] 	= strdup("Olympus D-320L");
-	abilities->model[2] 	= strdup("Olympus D-620L");
-	abilities->model[3] 	= NULL;
+	strcpy(id, "fujitsu-scottf");
 
-	abilities->serial	= 1;
-	abilities->serial_baud[0] = 19200;
-	abilities->serial_baud[1] = 38400;
-	abilities->serial_baud[2] = 57600;
-	abilities->serial_baud[3] = 115200;
-	abilities->serial_baud[4] = 0;
+	return (GP_OK);
+}
 
-	abilities->cancel	= 0;
-	abilities->capture	= 1;
-	abilities->config	= 1;
-	abilities->delete_file  = 1;
-	abilities->file_preview = 1;
-	abilities->reset	= 1;
-	abilities->sleep	= 1;
+int camera_abilities (CameraAbilities *abilities, int *count) {
+
+	*count = 3;
+
+	/* Fill in each camera model's abilities */
+
+	strcpy(abilities[0].model, "Olympus D-220L");
+	abilities[0].usb	= 0;
+	abilities[0].ieee1394	= 0;
+	abilities[0].parallel	= 0;
+	abilities[0].serial	= 1;
+	abilities[0].serial_baud[0] = 19200;
+	abilities[0].serial_baud[1] = 38400;
+	abilities[0].serial_baud[2] = 57600;
+	abilities[0].serial_baud[3] = 115200;
+	abilities[0].serial_baud[4] = 0;
+	abilities[0].cancel	= 0;
+	abilities[0].capture	= 1;
+	abilities[0].config	= 1;
+	abilities[0].delete_file  = 1;
+	abilities[0].file_preview = 1;
+	abilities[0].reset	= 1;
+	abilities[0].sleep	= 1;
+
+	strcpy(abilities[1].model, "Olympus D-320L");
+	abilities[1].usb	= 0;
+	abilities[1].ieee1394	= 0;
+	abilities[1].parallel	= 0;
+	abilities[1].serial	= 1;
+	abilities[1].serial_baud[0] = 19200;
+	abilities[1].serial_baud[1] = 38400;
+	abilities[1].serial_baud[2] = 57600;
+	abilities[1].serial_baud[3] = 115200;
+	abilities[1].serial_baud[4] = 0;
+	abilities[1].cancel	= 0;
+	abilities[1].capture	= 1;
+	abilities[1].config	= 1;
+	abilities[1].delete_file  = 1;
+	abilities[1].file_preview = 1;
+	abilities[1].reset	= 1;
+	abilities[1].sleep	= 1;
+
+	strcpy(abilities[2].model, "Olympus D-620L");
+	abilities[2].usb	= 0;
+	abilities[2].ieee1394	= 0;
+	abilities[2].parallel	= 0;
+	abilities[2].serial	= 1;
+	abilities[2].serial_baud[0] = 19200;
+	abilities[2].serial_baud[1] = 38400;
+	abilities[2].serial_baud[2] = 57600;
+	abilities[2].serial_baud[3] = 115200;
+	abilities[2].serial_baud[4] = 0;
+	abilities[2].cancel	= 0;
+	abilities[2].capture	= 1;
+	abilities[2].config	= 1;
+	abilities[2].delete_file  = 1;
+	abilities[2].file_preview = 1;
+	abilities[2].reset	= 1;
+	abilities[2].sleep	= 1;
 
 	return (GP_OK);
 }

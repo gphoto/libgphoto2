@@ -246,27 +246,40 @@ printf("size=%i\n", *size);
    =======================================================================
 */
 
-int camera_abilities (CameraAbilities *abilities) {
+int camera_id (char *id) {
+
+	strcpy(id, "barbie-scottf");
+
+	return (GP_OK);
+}
+
+int camera_abilities (CameraAbilities *abilities, int *count) {
+
+	*count = 2;
 
 	/* What models do we support? */
-	abilities->model[0] = strdup("Barbie Cam");
-	abilities->model[1] = strdup("WWF Cam");
-	abilities->model[2] = NULL;
+	strcpy(abilities[0].model, "Barbie Camera");
+	abilities[0].serial    = 1;
+	abilities[0].usb       = 0;
+	abilities[0].parallel  = 0;
+	abilities[0].ieee1394  = 0;
 
-	/* Port options */
-        abilities->serial         = 1;
-	abilities->serial_baud[0] = 57600;
-	abilities->serial_baud[1] = 0;
+	abilities[0].serial_baud[0] = 57600;
+	abilities[0].serial_baud[1] = 0;
 
-	/* Misc options */
-        abilities->cancel  = 0;
-        abilities->capture = 1;
-        abilities->config  = 0;
-        abilities->delete_file  = 0;
-        abilities->file_preview = 1;
-        abilities->lock    = 0;
-        abilities->reset   = 0;
-	abilities->sleep   = 1;
+	abilities[0].cancel    = 0;
+	abilities[0].capture   = 1;
+	abilities[0].config    = 0;
+	abilities[0].delete_file  = 0;
+	abilities[0].file_preview = 1;
+	abilities[0].lock      = 0;
+	abilities[0].reset     = 0;
+	abilities[0].sleep     = 1;
+
+	memcpy(&abilities[1], &abilities[0], sizeof(abilities[0]));
+	strcpy(abilities[1].model, "WWF Camera");
+
+	return (GP_OK);
 }
 
 int camera_init(CameraInit *init) {
