@@ -83,7 +83,6 @@ int gp_camera_new (Camera **camera, int camera_number)
 
         /* Initialize the members */
         strcpy((*camera)->model, glob_abilities_list->abilities[camera_number]->model);
-        (*camera)->debug      = glob_debug;
         (*camera)->port       = (CameraPortInfo*)malloc(sizeof(CameraPortInfo));
         (*camera)->abilities  = (CameraAbilities*)malloc(sizeof(CameraAbilities));
         (*camera)->functions  = (CameraFunctions*)malloc(sizeof(CameraFunctions));
