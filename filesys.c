@@ -330,15 +330,16 @@ gp_filesystem_format (CameraFilesystem *fs)
 {
         int x, y;
 
-        if (fs->folder) {
-                for (x = 0; x < fs->count; x++) {
-                        for (y=0; y<fs->folder[x]->count; y++)
-                                free (fs->folder[x]->file[y]);
-                        free (fs->folder[x]);
-                }
-                free (fs->folder);
-        }
-        fs->count = 0;
+	if (!fs)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+        for (x = 0; x < fs->count; x++) {
+		for (y = 0; y < fs->folder[x]->count; y++)
+			free (fs->folder[x]->file[y]);
+		free (fs->folder[x]);
+	}
+	free (fs->folder);
+	fs->count = 0;
 
         return (GP_OK);
 }
