@@ -205,13 +205,11 @@ static int
 camera_summary (Camera *camera, CameraText *about, GPContext *context)
 {
 	int avail_mem, total_mem;
-	time_t camtime;
 	char model[128];
 	unsigned int i;
 
 	CR (ricoh_get_cam_amem (camera, context, &avail_mem));
 	CR (ricoh_get_cam_mem  (camera, context, &total_mem));
-	CR (ricoh_get_cam_date (camera, context, &camtime));
 
 	memset (model, 0, sizeof (model));
 	for (i = 0; models[i].model; i++)
@@ -224,9 +222,8 @@ camera_summary (Camera *camera, CameraText *about, GPContext *context)
 			  camera->pl->model);
 
 	sprintf (about->text, _("Model: %s\n"
-			        "Memory: %d byte(s) of %d available\n"
-			        "Camera time: %s\n"),
-		model, avail_mem, total_mem, ctime (&camtime));
+			        "Memory: %d byte(s) of %d available"),
+		model, avail_mem, total_mem);
 
 	return (GP_OK);
 }
@@ -257,19 +254,21 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	CameraWidget *section, *widget;
 	const char *copyright;
 	time_t time;
+	RicohResolution resolution;
 
 	CR (gp_widget_new (GP_WIDGET_WINDOW, _("Configuration"), window));
 
+	/* General settings */
 	CR (gp_widget_new (GP_WIDGET_SECTION, _("General"), &section));
 	CR (gp_widget_append (*window, section));
 
 	/* Copyright */
 	CR (gp_widget_new (GP_WIDGET_TEXT, _("Copyright"), &widget));
 	CR (gp_widget_set_name (widget, "copyright"));
-	CR (gp_widget_set_info (widget, _("Copyright")));
+	CR (gp_widget_set_info (widget, _("Copyright (max. 20 characters")));
 	CR (gp_widget_append (section, widget));
 	CR (ricoh_get_copyright (camera, context, &copyright));
-	CR (gp_widget_set_value (widget, copyright));
+	CR (gp_widget_set_value (widget, (void *) copyright));
 
 	/* Date */
 	CR (gp_widget_new (GP_WIDGET_DATE, _("Date & Time"), &widget));
@@ -279,6 +278,30 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	CR (ricoh_get_date (camera, context, &time));
 	CR (gp_widget_set_value (widget, &time));
 
+	/* Picture related settings */
+	CR (gp_widget_new (GP_WIDGET_SECTION, _("Pictures"), &section));
+	CR (gp_widget_append (*window, section));
+
+	/* Resolution */
+	CR (gp_widget_new (GP_WIDGET_RADIO, _("Resolution"), &widget));
+	CR (gp_widget_set_name (widget, "resolution"));
+	CR (gp_widget_set_info (widget, _("Resolution")));
+	CR (gp_widget_append (section, widget));
+	CR (gp_widget_add_choice (widget, "640x480"));
+	CR (gp_widget_add_choice (widget, "1280x960"));
+	CR (ricoh_get_resolution (camera, context, &resolution));
+	switch (resolution) {
+	case RICOH_RESOLUTION_640_480:
+		CR (gp_widget_set_value (widget, "640x480"));
+		break;
+	case RICOH_RESOLUTION_1280_960:
+		CR (gp_widget_set_value (widget, "1280x960"));
+		break;
+	default:
+		CR (gp_widget_set_value (widget, "unknown"));
+		break;
+	}
+
 	return (GP_OK);
 }
 
@@ -286,14 +309,15 @@ static int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *widget;
-	const char *copyright;
+	const char *v_char;
 	time_t time;
+	RicohResolution resolution;
 
 	/* Copyright */
 	CR (gp_widget_get_child_by_name (window, "copyright", &widget));
 	if (gp_widget_changed (widget)) {
-		CR (gp_widget_get_value (widget, &copyright));
-		CR (ricoh_set_copyright (camera, context, copyright));
+		CR (gp_widget_get_value (widget, &v_char));
+		CR (ricoh_set_copyright (camera, context, v_char));
 	}
 
 	/* Date */
@@ -301,6 +325,19 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if (gp_widget_changed (widget)) {
 		CR (gp_widget_get_value (widget, &time));
 		CR (ricoh_set_date (camera, context, time));
+	}
+
+	/* Resolution */
+	CR (gp_widget_get_child_by_name (window, "resolution", &widget));
+	if (gp_widget_changed (widget)) {
+		CR (gp_widget_get_value (widget, &v_char));
+		if (!strcmp (v_char, "640x480"))
+			resolution = RICOH_RESOLUTION_640_480;
+		else if (!strcmp (v_char, "1280x960"))
+			resolution = RICOH_RESOLUTION_1280_960;
+		else 
+			resolution = 0;
+		CR (ricoh_set_resolution (camera, context, resolution));
 	}
 
 	return (GP_OK);

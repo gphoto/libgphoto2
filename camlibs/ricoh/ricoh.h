@@ -106,4 +106,15 @@ int ricoh_get_copyright (Camera *camera, GPContext *context,
 int ricoh_set_copyright (Camera *camera, GPContext *context,
 			 const char *copyright);
 
+typedef enum _RicohResolution RicohResolution;
+enum _RicohResolution {
+	RICOH_RESOLUTION_640_480  = 0x01,
+	RICOH_RESOLUTION_1280_960 = 0x04
+};
+
+int ricoh_get_resolution (Camera *camera, GPContext *context,
+			  RicohResolution *resolution);
+int ricoh_set_resolution (Camera *camera, GPContext *context,
+			  RicohResolution resolution);
+
 #endif /* __RICOH_H__ */

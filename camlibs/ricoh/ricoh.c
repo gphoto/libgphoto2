@@ -711,6 +711,7 @@ ricoh_get_cam_mem (Camera *camera, GPContext *context, int *size)
 	p[0] = 0x00;
 	p[1] = 0x05;
 	CR (ricoh_transmit (camera, context, 'Q', p, 2, buf, &len));
+	C_LEN (context, len, 4);
 
 	if (size)
 		*size = buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0];
@@ -727,9 +728,39 @@ ricoh_get_cam_amem (Camera *camera, GPContext *context, int *size)
 	p[0] = 0x00;
 	p[1] = 0x06;
 	CR (ricoh_transmit (camera, context, 'Q', p, 2, buf, &len));
+	C_LEN (context, len, 4);
 
 	if (size)
 		*size = buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0];
+
+	return (GP_OK);
+}
+
+int
+ricoh_get_resolution (Camera *camera, GPContext *context,
+		      RicohResolution *resolution)
+{
+	unsigned char p[1], buf[0xff], len;
+
+	p[0] = 0x09;
+	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));
+	C_LEN (context, len, 1);
+
+	if (resolution)
+		*resolution = buf[0];
+
+	return (GP_OK);
+}
+
+int
+ricoh_set_resolution (Camera *camera, GPContext *context,
+		      RicohResolution resolution)
+{
+	unsigned char p[2], buf[0xff], len;
+
+	p[0] = 0x09;
+	p[1] = (unsigned char) resolution;
+	CR (ricoh_transmit (camera, context, 0x51, p, 2, buf, &len));
 
 	return (GP_OK);
 }

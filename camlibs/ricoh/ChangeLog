@@ -1,3 +1,8 @@
+2002-06-21  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.[c,h]:
+	* library.c: More settings.
+
 2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]
