@@ -411,18 +411,13 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 				/* Set the defaults */
 				if (dev->config) {
-					gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
-						"class 0x%x, subclass 0x%x",
-						dev->config[config].interface[interface].altsetting[altsetting].bInterfaceClass,
-						dev->config[config].interface[interface].altsetting[altsetting].bInterfaceSubClass);
 					if (dev->config[config].interface[interface].altsetting[altsetting].bInterfaceClass
 					    == USB_CLASS_MASS_STORAGE) {
-						gp_port_set_error (port, 
+						gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
 							_("USB device (vendor 0x%x, product 0x%x) is a mass"
-							  " storage device, and cannot function with gphoto2."
+							  " storage device, and might not function with gphoto2."
 							  " Reference: http://www.linux-usb.org/USB-guide/x498.html"),
 							idvendor, idproduct);
-						return GP_ERROR_IO_USB_FIND;
 					}
 					port->settings.usb.config = dev->config[config].bConfigurationValue;
 					port->settings.usb.interface = dev->config[config].interface[interface].altsetting[altsetting].bInterfaceNumber;
@@ -434,13 +429,16 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 					gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
 						"Detected defaults: config %d, "
 						"interface %d, altsetting %d, "
-						"inep %02x, outep %02x, intep %02x",
+						"inep %02x, outep %02x, intep %02x, "
+						"class %02x, subclass %02x",
 						port->settings.usb.config,
 						port->settings.usb.interface,
 						port->settings.usb.altsetting,
 						port->settings.usb.inep,
 						port->settings.usb.outep,
-						port->settings.usb.intep
+						port->settings.usb.intep,
+						dev->config[config].interface[interface].altsetting[altsetting].bInterfaceClass,
+						dev->config[config].interface[interface].altsetting[altsetting].bInterfaceSubClass
 						);
 				}
 

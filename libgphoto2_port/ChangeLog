@@ -1,3 +1,10 @@
+2003-08-16  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* usb/libusb.c: change the mass storage check to output a debug
+	  message and not prevent the camera from being used, as reported
+	  by Marcus Meissner, at the least the olympus 5050z shows up as a
+	  mass storage device, but works fine with gphoto2.
+
 2003-08-10  Patrick Mansfield <patmans@users.sourceforge.net>
 
 	* usb/libusb.c: Fix the check for mass storage devices.
