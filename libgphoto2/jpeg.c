@@ -1,5 +1,21 @@
-/* This code was written by Nathan Stenzel for gphoto */
-/* GPL */
+/* jpeg.c
+ * This code was written by Nathan Stenzel for gphoto
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 
 #include <stdio.h>
 #include "jpeg.h"
@@ -82,12 +98,12 @@ char *jpeg_markername(int c)
     int x;
 //    printf("searching for marker %X in list\n",c);
 //    printf("%i\n", sizeof(markers));
-    for (x=0; x<sizeof(markers); x++)
+    for (x=0; x<sizeof(JPEG_MARKERS); x++)
     {
 //        printf("checking to see if it is marker %X\n", markers[x]);
 
-        if (c==markers[x])
-            return (char *)markernames[x];
+        if (c==JPEG_MARKERS[x])
+            return (char *)JPEG_MARKERNAMES[x];
     }
     return "Undefined marker";
 }
