@@ -100,6 +100,8 @@ int gp_camera_new (Camera **camera)
 	(*camera)->functions->exit		= NULL;
 	(*camera)->functions->folder_list	= NULL;
 	(*camera)->functions->file_list		= NULL;
+	(*camera)->functions->file_info_get	= NULL;
+	(*camera)->functions->file_info_set	= NULL;
 	(*camera)->functions->file_get_preview	= NULL;
 	(*camera)->functions->file_config_get	= NULL;
 	(*camera)->functions->file_config_set	= NULL;
@@ -107,9 +109,9 @@ int gp_camera_new (Camera **camera)
 	(*camera)->functions->folder_config_set	= NULL;
 	(*camera)->functions->config_get	= NULL;
 	(*camera)->functions->config_set	= NULL;
-	(*camera)->functions->file_put		= NULL;
+	(*camera)->functions->folder_put_file	= NULL;
 	(*camera)->functions->file_delete	= NULL;
-        (*camera)->functions->file_delete_all   = NULL;
+        (*camera)->functions->folder_delete_all = NULL;
         (*camera)->functions->capture		= NULL;
         (*camera)->functions->capture_preview 	= NULL;
 	(*camera)->functions->summary		= NULL;
@@ -238,11 +240,9 @@ int gp_camera_init (Camera *camera)
 	}
 	if (x == glob_abilities_list->count)
 		return GP_ERROR_MODEL_NOT_FOUND;
-	camera->abilities->file_delete   = glob_abilities_list->abilities[x]->file_delete;
-        camera->abilities->file_delete_all = glob_abilities_list->abilities[x]->file_delete_all;
-        camera->abilities->file_preview  = glob_abilities_list->abilities[x]->file_preview;
-	camera->abilities->file_put      = glob_abilities_list->abilities[x]->file_put;
-	camera->abilities->config        = glob_abilities_list->abilities[x]->config;
+	camera->abilities->file_operations   = glob_abilities_list->abilities[x]->file_operations;
+	camera->abilities->folder_operations = glob_abilities_list->abilities[x]->folder_operations;
+	camera->abilities->config            = glob_abilities_list->abilities[x]->config;
 
 	/* Load the library. */
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Loading library %s...", glob_abilities_list->abilities[x]->library);
@@ -337,24 +337,39 @@ int gp_camera_file_list(Camera *camera, CameraList *list, char *folder)
         return (GP_OK);
 }
 
-int gp_camera_file_info (Camera *camera, CameraFileInfo *info,
-                         char *folder, char *filename)
+int gp_camera_file_info_get (Camera *camera, CameraFileInfo *info,
+                         char *folder, char *file)
 {
-        if ((camera == NULL) || (info == NULL) || (folder == NULL) || (filename == NULL))
+        if ((camera == NULL) || (info == NULL) || 
+	    (folder == NULL) || (file == NULL))
                 return (GP_ERROR_BAD_PARAMETERS);
-        if (camera->functions->file_get == NULL)
+
+        if (camera->functions->file_info_get == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 	
 	if (strlen (folder) == 0)
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
-	if (strlen (filename) == 0)
+
+	if (strlen (file) == 0)
 		return (GP_ERROR_FILE_NOT_FOUND);
 
         memset(info, 0, sizeof(CameraFileInfo));
 
-        return (camera->functions->file_info(camera, info, folder, filename));
+        return (camera->functions->file_info_get (camera, info, folder, file));
 }
 
+int gp_camera_file_info_set (Camera *camera, CameraFileInfo *info, 
+			char *folder, char *file)
+{
+	if ((camera == NULL) || (info == NULL) || 
+	    (folder == NULL) || (file == NULL))
+	    	return (GP_ERROR_BAD_PARAMETERS);
+	
+	if (camera->functions->file_info_set == NULL)
+		return (GP_ERROR_NOT_SUPPORTED);
+	
+	return (camera->functions->file_info_set (camera, info, folder, file));
+}
 
 int gp_camera_file_get (Camera *camera, CameraFile *file,
                         char *folder, char *filename)
@@ -454,14 +469,14 @@ int gp_camera_config_set (Camera *camera, CameraWidget *window)
 	return (camera->functions->config_set (camera, window));
 }
 
-int gp_camera_file_put (Camera *camera, CameraFile *file, char *folder)
+int gp_camera_folder_put_file (Camera *camera, CameraFile *file, char *folder)
 {
 	if ((camera == NULL) || (file == NULL) || (folder == NULL))
 		return (GP_ERROR_BAD_PARAMETERS);
-        if (camera->functions->file_put == NULL)
+        if (camera->functions->folder_put_file == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return (camera->functions->file_put(camera, file, folder));
+        return (camera->functions->folder_put_file(camera, file, folder));
 }
 
 int gp_camera_file_delete (Camera *camera, char *folder, char *filename)
@@ -474,14 +489,14 @@ int gp_camera_file_delete (Camera *camera, char *folder, char *filename)
         return (camera->functions->file_delete(camera, folder, filename));
 }
 
-int gp_camera_file_delete_all (Camera *camera, char *folder)
+int gp_camera_folder_delete_all (Camera *camera, char *folder)
 {
 	if ((camera == NULL) || (folder == NULL))
 		return (GP_ERROR_BAD_PARAMETERS);
-        if (camera->functions->file_delete_all == NULL)
+        if (camera->functions->folder_delete_all == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 		
-        return (camera->functions->file_delete_all(camera, folder));
+        return (camera->functions->folder_delete_all(camera, folder));
 }
 
 

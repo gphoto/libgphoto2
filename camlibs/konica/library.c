@@ -132,11 +132,11 @@ camera_abilities (CameraAbilitiesList* list)
 			a->speed[8]	= 57600;
 			a->speed[9]	= 115200;
 			a->speed[10]	= 0;
-			a->capture	= GP_CAPTURE_IMAGE | GP_CAPTURE_PREVIEW;
-			a->config	= GP_CONFIG_CAMERA | GP_CONFIG_FOLDER | GP_CONFIG_FILE;
-			a->file_delete	= 1;
-			a->file_preview	= 1;
-			a->file_put	= 0;
+			a->capture[0].type = GP_CAPTURE_NONE;
+//			a->capture	= GP_CAPTURE_IMAGE | GP_CAPTURE_PREVIEW;
+			a->config	= 1;
+			a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_CONFIG | GP_FILE_OPERATION_INFO;
+			a->folder_operations = GP_FOLDER_OPERATION_CONFIG | GP_FOLDER_OPERATION_DELETE_ALL;
 			gp_abilities_list_append (list, a);
 		}
         }
@@ -174,14 +174,17 @@ camera_init (Camera* camera)
 	camera->functions->file_get 		= camera_file_get;
 	camera->functions->file_get_preview 	= camera_file_get_preview;
 	camera->functions->file_delete 		= camera_file_delete;
+	camera->functions->file_info_get	= camera_file_info_get;
+	camera->functions->file_info_set	= camera_file_info_set;
 	camera->functions->file_config_get	= camera_file_config_get;
 	camera->functions->file_config_set	= camera_file_config_set;
 	camera->functions->folder_config_get	= camera_folder_config_get;
 	camera->functions->folder_config_set	= camera_folder_config_set;
+	camera->functions->folder_delete_all    = camera_folder_delete_all;
 	camera->functions->config_get		= camera_config_get;
 	camera->functions->config_set		= camera_config_set;
 	camera->functions->config 	  	= camera_config;
-	camera->functions->capture 		= camera_capture;
+//	camera->functions->capture 		= camera_capture;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
 	camera->functions->about 		= camera_about;
@@ -335,7 +338,7 @@ camera_exit (Camera* camera)
 	
 	if ((result = k_exit (konica_data->device)) != GP_OK) 			return (result);
 	if ((result = gp_filesystem_free (konica_data->filesystem)) != GP_OK) 	return (result);
-        if ((result = gp_port_free (konica_data->device)) != GP_OK)		 return (result);
+        if ((result = gp_port_free (konica_data->device)) != GP_OK)		return (result);
 	return (GP_OK);
 }
 
@@ -348,6 +351,31 @@ camera_folder_list (Camera* camera, CameraList* list, gchar* folder)
 	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
 	
 	if (strcmp (folder, "/")) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+
+	return (GP_OK);
+}
+
+gint
+camera_folder_delete_all (Camera* camera, gchar* folder)
+{
+	gint		result;
+	konica_data_t*	konica_data;
+	guint		not_erased = 0;
+	gchar*		tmp;
+	
+	g_return_val_if_fail (camera,	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (konica_data = (konica_data_t *) camera->camlib_data, GP_ERROR_BAD_PARAMETERS);
+
+	if (strcmp (folder, "/")) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+
+	if ((result = k_erase_all (konica_data->device, &not_erased)) != GP_OK) return (result);
+	if (not_erased) {
+		tmp = g_strdup_printf (_("%i pictures could not be deleted - they are protected!"), not_erased);
+		gp_frontend_message (camera, tmp);
+		g_free (tmp);
+		return (GP_ERROR);
+	}
 
 	return (GP_OK);
 }
@@ -586,7 +614,7 @@ camera_summary (Camera* camera, CameraText* summary)
 	return (result);
 }
 
-
+#if 0
 gint 
 camera_capture (Camera* camera, CameraFile* file, CameraCaptureInfo* info) 
 {
@@ -660,6 +688,7 @@ camera_capture (Camera* camera, CameraFile* file, CameraCaptureInfo* info)
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 }
+#endif
 
 
 gint 
@@ -683,6 +712,56 @@ camera_about (Camera* camera, CameraText* about)
 		"Support for all Konica and several HP cameras.");
 
 	return (GP_OK);
+}
+
+gint
+camera_file_info_get (Camera* camera, CameraFileInfo* info, gchar* folder, gchar* file)
+{
+	konica_data_t* 	konica_data;
+	gulong		image_id;
+	gint		result;
+	guint		information_buffer_size;
+	guint		exif_size;
+	guchar*		information_buffer = NULL;
+	gboolean	protected;
+
+	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (info, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (file,	GP_ERROR_BAD_PARAMETERS);
+	g_return_val_if_fail (konica_data = (konica_data_t*) camera->camlib_data, GP_ERROR_BAD_PARAMETERS);
+
+	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
+
+	result = k_get_image_information (
+		konica_data->device, 
+		konica_data->image_id_long, 
+		gp_filesystem_number (konica_data->filesystem, folder, file), 
+		&image_id, &exif_size, &protected,
+		&information_buffer, &information_buffer_size);
+	if (result != GP_OK)
+		return (result);
+	
+	g_free (information_buffer);
+
+	info->preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
+	info->preview.size = information_buffer_size;
+	strcpy (info->file.type, "image/jpeg");
+
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS | GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
+	info->file.size = exif_size;
+	info->file.permissions = (gint) protected;
+	strcpy (info->file.type, "image/jpeg");
+	strcpy (info->file.name, file);
+
+	return (GP_OK);
+}
+
+gint
+camera_file_info_set (Camera* camera, CameraFileInfo* info, gchar* folder, gchar* file)
+{
+	//FIXME: Implement
+	return (GP_ERROR);
 }
 
 gint 

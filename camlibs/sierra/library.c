@@ -146,22 +146,18 @@ int sierra_write_packet (Camera *camera, char *packet) {
 	while (x<length) {
 	        ret = gp_port_write(fd->dev, &packet[x], 1);
 
-		if (ret != GP_OK) {
-			if (ret == GP_ERROR_TIMEOUT) {
-				sierra_debug_print(fd, " write timed out. trying again.");
-				if (r++ > RETRIES) {
-					sierra_debug_print(fd, " write failed (too many retries)");
-					return (GP_ERROR);
-				}
-			} else 	if (ret == GP_ERROR) {
-				sierra_debug_print(fd, " write failed");
-		                return (GP_ERROR);
-			} else  {
-				sierra_debug_print(fd, " write failed (unknown error)");
-			}
-		} else {
-			r=0;	/* reset retries */
-			x++;	/* next byte */
+		switch (ret) {
+		case GP_OK:
+			r=0;    /* reset retries */
+			x++;    /* next byte     */
+			break;
+		case GP_ERROR_TIMEOUT:
+			if (r++ > RETRIES)
+				return (ret);
+			sierra_debug_print(fd, " write timed out. trying again.");
+			break;
+		default:
+			return (ret);
 		}
 	}
 
@@ -196,7 +192,7 @@ read_packet_again:
 			blocksize = 1;
 			break;
 		   default:
-			return (GP_ERROR);
+			return (GP_ERROR_IO_UNKNOWN_PORT);
 		}
 		bytes_read = gp_port_read(fd->dev, packet, blocksize);
 
@@ -287,63 +283,34 @@ int sierra_build_packet (Camera *camera, char type, char subtype, int data_lengt
 	return (GP_OK);
 }
 
-int sierra_read_ack(Camera *camera) {
-
-	char buf[4096];
-	SierraData *fd = (SierraData*)camera->camlib_data;
-
-	sierra_debug_print(fd, " sierra_read_ack");
-
-	if (sierra_read_packet(camera, buf)==GP_ERROR) {
-		sierra_debug_print(fd, "Could not read ACK");
-		return (GP_ERROR);
-	}
-
-	if (buf[0] == ACK)
-		return (GP_OK);
-
-	sierra_debug_print(fd, "Could not read ACK");
-	return (GP_ERROR);
-}
-
-
 int sierra_write_ack(Camera *camera) {
 
 	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
+	int ret;
 
 	sierra_debug_print(fd, " sierra_write_ack");
 
 	buf[0] = ACK;
-	if (sierra_write_packet(camera, buf)==GP_OK) {
-		if (fd->type == GP_PORT_USB)
-	                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
-		return (GP_OK);
-	}
-	sierra_debug_print(fd, "Could not write ACK");
+	ret = sierra_write_packet (camera, buf);
 	if (fd->type == GP_PORT_USB)
-                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
-	return (GP_ERROR);
+		gp_port_usb_clear_halt (fd->dev, GP_PORT_USB_ENDPOINT_IN);
+	return (ret);
 }
 
 int sierra_write_nak(Camera *camera) {
 
 	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
+	int ret;
 
 	sierra_debug_print(fd, " sierra_write_nak");
 
 	buf[0] = NAK;
-	if (sierra_write_packet(camera, buf)==GP_OK) {
-		if (fd->type == GP_PORT_USB)
-	                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
-		return (GP_OK);
-	}
-
-	sierra_debug_print(fd, "Could not write NAK");
+	ret = sierra_write_packet (camera, buf);
 	if (fd->type == GP_PORT_USB)
-                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
-	return (GP_ERROR);
+		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_ENDPOINT_IN);
+	return (ret);
 }
 
 int sierra_ping(Camera *camera) {
@@ -376,6 +343,7 @@ int sierra_set_speed (Camera *camera, int speed) {
 	gp_port_settings settings;
 	char buf[1024];
 	SierraData *fd = (SierraData*)camera->camlib_data;
+	int ret;
 
 	sprintf(buf, "Setting speed to %i", speed);
 	sierra_debug_print(fd, buf);
@@ -412,13 +380,16 @@ int sierra_set_speed (Camera *camera, int speed) {
 			speed = 2;
 			break;
 		default:
-			return (GP_ERROR);
+			return (GP_ERROR_IO_SERIAL_SPEED);
 	}
 
-	if (sierra_set_int_register(camera, 17, speed)==GP_ERROR)
-		return (GP_ERROR);
-	if (gp_port_settings_set(fd->dev, settings)==GP_ERROR)
-		return (GP_ERROR);
+	ret = sierra_set_int_register (camera, 17, speed);
+	if (ret != GP_OK)
+		return (ret);
+
+	ret = gp_port_settings_set (fd->dev, settings);
+	if (ret != GP_OK)
+		return (ret);
 
 	GP_SYSTEM_SLEEP(10);
 	return (GP_OK);
@@ -430,6 +401,7 @@ int sierra_set_int_register (Camera *camera, int reg, int value) {
 	char p[4096];
 	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
+	int ret;
 
 	sprintf(buf, "Setting register #%i to %i", reg, value);
 	sierra_debug_print(fd, buf);
@@ -450,8 +422,10 @@ int sierra_set_int_register (Camera *camera, int reg, int value) {
 	}
 
 	while (r++<RETRIES) {
-		if (sierra_write_packet(camera, p)==GP_ERROR)
-			return (GP_ERROR);
+	
+		ret = sierra_write_packet (camera, p);
+		if (ret != GP_OK)
+			return (ret);
 
 		if (sierra_read_packet(camera, buf)==GP_ERROR)
 			return (GP_ERROR);
@@ -466,7 +440,7 @@ int sierra_set_int_register (Camera *camera, int reg, int value) {
 
 	sierra_debug_print(fd, "too many retries");
 
-	sierra_set_speed(camera, -1);
+	sierra_set_speed (camera, -1);
 
 	return (GP_ERROR);
 }
@@ -477,6 +451,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value) {
 	char packet[4096];
 	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
+	int ret;
 
 	sprintf(buf, "Getting register #%i value", reg);
 	sierra_debug_print(fd, buf);
@@ -489,11 +464,13 @@ int sierra_get_int_register (Camera *camera, int reg, int *value) {
 
 	while (r++<RETRIES) {
 		if (write_nak) {
-			if (sierra_write_nak(camera)==GP_ERROR)
-				return (GP_ERROR);
-		}  else {
-			if (sierra_write_packet(camera, packet)==GP_ERROR)
-				return (GP_ERROR);
+			ret = sierra_write_nak (camera);
+			if (ret != GP_OK)
+				return (ret);
+		} else {
+			ret = sierra_write_packet (camera, packet);
+			if (ret != GP_OK)
+				return (ret);
 		}
 
 		if (sierra_read_packet(camera, buf)==GP_ERROR)
@@ -503,13 +480,13 @@ int sierra_get_int_register (Camera *camera, int reg, int *value) {
 		if (buf[0] == DC1)
 			return (GP_ERROR);
 		if (buf[0] == TYPE_DATA_END) {
-			sierra_write_ack(camera);
+			ret = sierra_write_ack(camera);
 			r =((unsigned char)buf[4]) +
 			   ((unsigned char)buf[5] * 256) +
 			   ((unsigned char)buf[6] * 65536) +
 			   ((unsigned char)buf[7] * 16777216);
 			*value = r;
-			return (GP_OK);
+			return (ret);
 		} else {
 			write_nak = 1;
 		}
@@ -587,6 +564,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	char packet[4096], buf[2048];
 	int done, x, packlength, do_percent, l;
 	SierraData *fd = (SierraData*)camera->camlib_data;
+	int ret;
 
 	sprintf(buf, "Getting string in register #%i", reg);
 	sierra_debug_print(fd, buf);
@@ -594,8 +572,10 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	do_percent = 1;
 	/* Set the current picture number */
 	if (file_number >= 0) {
-	        if (sierra_set_int_register(camera, 4, file_number)==GP_ERROR)
-	                return (GP_ERROR);
+
+		ret = sierra_set_int_register (camera, 4, file_number);
+		if (ret != GP_OK)
+			return (ret);
 	}
 
 	switch (reg) {
@@ -632,8 +612,9 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 			return (GP_ERROR);
 		if (packet[0] == DC1)
 			return (GP_ERROR);
-		if (sierra_write_ack(camera)==GP_ERROR)
-			return (GP_ERROR);
+		ret = sierra_write_ack (camera);
+		if (ret != GP_OK)
+			return (ret);
 		packlength = ((unsigned char)packet[2]) +
 			     ((unsigned char)packet[3]  * 256);
 
@@ -673,10 +654,12 @@ int sierra_delete(Camera *camera, int picture_number) {
 	char packet[4096], buf[4096];
 	int r, done;
 	SierraData *fd = (SierraData*)camera->camlib_data;
+	int ret;
 
-       	if (sierra_set_int_register(camera, 4, picture_number)==GP_ERROR) {
+	ret = sierra_set_int_register (camera, 4, picture_number);
+	if (ret != GP_OK) {
 		sierra_debug_print(fd, "Can not set current image");
-       	        return (GP_ERROR);
+		return (ret);
         }
 
 	sierra_build_packet(camera, TYPE_COMMAND, 0, 3, packet);
@@ -757,16 +740,18 @@ int sierra_file_count (Camera *camera) {
  
         int value;
         SierraData *fd = (SierraData*)camera->camlib_data;
+	int ret;
  
         sierra_debug_print(fd, "Counting files");
  
-        if (sierra_get_int_register(camera, 10, &value)==GP_ERROR)
-                return (GP_ERROR);
+ 	ret = sierra_get_int_register (camera, 10, &value);
+	if (ret != GP_OK) 
+		return (ret);
  
         return (value);
 } 
 
-
+#if 0
 int sierra_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	SierraData *fd = (SierraData*)camera->camlib_data;
@@ -880,3 +865,4 @@ int sierra_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	return (GP_OK);
 }
+#endif

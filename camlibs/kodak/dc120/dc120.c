@@ -31,11 +31,11 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[3] = 57600;
 	a->speed[4] = 115200;
 	a->speed[5] = 0;
-	a->capture  = GP_CAPTURE_IMAGE;
+	a->capture[0].type = GP_CAPTURE_NONE;
+//	a->capture = GP_CAPTURE_IMAGE;
 	a->config   = 0;
-	a->file_delete  = 1;
-	a->file_preview = 1;
-	a->file_put = 0;
+	a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
+	a->folder_operations = GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
 
@@ -64,10 +64,8 @@ int camera_init (Camera *camera) {
 	camera->functions->file_list	= camera_file_list;
 	camera->functions->file_get 	= camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
-	camera->functions->file_put 	= camera_file_put;
 	camera->functions->file_delete 	= camera_file_delete;
-	camera->functions->config       = camera_config;
-	camera->functions->capture 	= camera_capture;
+//	camera->functions->capture 	= camera_capture;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
@@ -265,13 +263,6 @@ int camera_file_get_preview (Camera *camera, CameraFile *file,
 	return (camera_file_action(camera, DC120_ACTION_PREVIEW, file, folder, filename));
 }
 
-int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
-
-/*	DC120Data *dd = camera->camlib_data; */
-
-	return (GP_ERROR);
-}
-
 int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
 	DC120Data *dd = camera->camlib_data;
@@ -285,19 +276,14 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 	return (retval);
 }
 
-int camera_config (Camera *camera) {
-
-/*	DC120Data *dd = camera->camlib_data; */
-
-	return (GP_ERROR);
-}
-
+#if 0
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	DC120Data *dd = camera->camlib_data;
 
 	return (dc120_capture(dd, file));
 }
+#endif
 
 int camera_summary (Camera *camera, CameraText *summary) {
 

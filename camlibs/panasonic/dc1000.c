@@ -334,11 +334,10 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[3] 	= 57600;			
 	a->speed[4] 	= 115200;	
 	a->speed[5] 	= 0;	
-	a->capture   	= GP_CAPTURE_NONE;
+	a->capture[0].type = GP_CAPTURE_NONE;
 	a->config    	= 0;
-	a->file_delete  = 1;
-	a->file_preview = 0;
-	a->file_put  	= 1;
+	a->file_operations  = GP_FILE_OPERATION_DELETE;
+	a->folder_operations = GP_FOLDER_OPERATION_PUT;
 
 	if (gp_abilities_list_append(list, a) == GP_ERROR)
 		return GP_ERROR;
@@ -361,7 +360,7 @@ int camera_init (Camera *camera) {
 	camera->functions->folder_list  	= camera_folder_list;
 	camera->functions->file_list 		= camera_file_list;
 	camera->functions->file_get 		= camera_file_get;
-	camera->functions->file_put 		= camera_file_put;
+	camera->functions->folder_put_file	= camera_folder_put_file;
 	camera->functions->file_delete 		= camera_file_delete;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
@@ -486,7 +485,7 @@ int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filen
 	return (GP_OK);
 }
 
-int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
+int camera_folder_put_file (Camera *camera, CameraFile *file, char *folder) {
 
 	dsc_t	*dsc = (dsc_t *)camera->camlib_data;
 	int	blocks, blocksize, i;

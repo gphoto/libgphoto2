@@ -262,11 +262,11 @@ OPTION_CALLBACK(abilities) {
         printf("Configuration support            : %s\n",
                 abilities.config == 0? "no":"yes");
         printf("Delete files on camera support   : %s\n",
-                abilities.file_delete == 0? "no":"yes");
+                abilities.file_operations | GP_FILE_OPERATION_DELETE? "yes":"no");
         printf("File preview (thumbnail) support : %s\n",
-                abilities.file_preview == 0? "no":"yes");
+                abilities.file_operations | GP_FILE_OPERATION_PREVIEW? "yes":"no");
         printf("File upload support              : %s\n",
-                abilities.file_put == 0? "no":"yes");
+                abilities.folder_operations | GP_FOLDER_OPERATION_PUT? "yes":"no");
 
         return (GP_OK);
 }
@@ -570,7 +570,7 @@ int get_picture_common(char *arg, int thumbnail) {
         if ((result = set_globals()) != GP_OK)
                 return (result);
 
-        if (thumbnail && !glob_camera->abilities->file_preview) {
+        if (thumbnail && !glob_camera->abilities->file_operations & GP_FILE_OPERATION_PREVIEW) {
                 cli_error_print("Camera doesn't support picture thumbnails");
                 return (GP_ERROR_NOT_SUPPORTED);
         }
@@ -615,7 +615,7 @@ OPTION_CALLBACK(get_all_thumbnails) {
         if ((result = set_globals()) != GP_OK)
                 return (result);
 
-        if (!glob_camera->abilities->file_preview) {
+        if (!(glob_camera->abilities->file_operations & GP_FILE_OPERATION_PREVIEW)) {
                 cli_error_print("Camera doesn't support picture thumbnails");
                 return (GP_ERROR_NOT_SUPPORTED);
         }
@@ -632,7 +632,7 @@ OPTION_CALLBACK(delete_picture) {
         if ((result = set_globals()) != GP_OK)
                 return (result);
 
-        if (!glob_camera->abilities->file_delete) {
+        if (!(glob_camera->abilities->file_operations & GP_FILE_OPERATION_DELETE)) {
                 cli_error_print("Camera can not delete pictures");
                 return (GP_ERROR_NOT_SUPPORTED);
         }
@@ -650,15 +650,15 @@ OPTION_CALLBACK(delete_all_pictures) {
                 return (result);
 
         /* If the camera supports deleting all the files */
-        if (glob_camera->abilities->file_delete_all) {
-            result = gp_camera_file_delete_all (glob_camera, glob_folder);
+        if (glob_camera->abilities->folder_operations & GP_FOLDER_OPERATION_DELETE_ALL) {
+            result = gp_camera_folder_delete_all (glob_camera, glob_folder);
             /* If that went OK, return. Otherwise, do it 1 by 1 */
             if (result == GP_OK)
                 return GP_OK;
         }
 
 
-        if (!glob_camera->abilities->file_delete) {
+        if (!(glob_camera->abilities->file_operations & GP_FILE_OPERATION_DELETE)) {
                 cli_error_print("Camera can not delete pictures");
                 return (GP_ERROR_NOT_SUPPORTED);
         }
@@ -678,7 +678,7 @@ OPTION_CALLBACK(upload_picture) {
         if ((result = set_globals()) != GP_OK)
                 return (result);
 
-        if (!glob_camera->abilities->file_put) {
+        if (!(glob_camera->abilities->folder_operations & GP_FOLDER_OPERATION_PUT)) {
                 cli_error_print("Camera doesn't support uploading pictures");
                 return (GP_ERROR_NOT_SUPPORTED);
         }
@@ -688,7 +688,7 @@ OPTION_CALLBACK(upload_picture) {
                 return (result);
         }
 
-        if ((result = gp_camera_file_put(glob_camera, file, glob_folder)) != GP_OK) {
+        if ((result = gp_camera_folder_put_file(glob_camera, file, glob_folder)) != GP_OK) {
                 cli_error_print("Could not upload the picture");
                 return (result);
         }

@@ -108,10 +108,9 @@ int camera_abilities(CameraAbilitiesList *list)
         a->speed[4]   = 115200;
         a->speed[5]   = 0;
         a->capture[0].type    = GP_CAPTURE_NONE;
-        a->config     = GP_CONFIG_CAMERA;
-        a->file_delete = 1;
-        a->file_preview = 1;
-        a->file_put = 1;
+        a->config     = 1;
+	a->folder_operations = GP_FOLDER_OPERATION_PUT;
+        a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
         gp_abilities_list_append(list, a);
         i++;
     }
@@ -122,10 +121,9 @@ int camera_abilities(CameraAbilitiesList *list)
         strcpy(a->model, models_USB[i]);
         a->port = GP_PORT_USB;
         a->capture[0].type    = GP_CAPTURE_NONE;
-        a->config     = GP_CONFIG_CAMERA;
-        a->file_delete = 1;
-        a->file_preview = 1;
-        a->file_put = 0;
+        a->config = 1;
+	a->folder_operations = GP_FOLDER_OPERATION_NONE;
+	a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
         gp_abilities_list_append(list, a);
         i++;
     }
@@ -142,10 +140,9 @@ int camera_abilities(CameraAbilitiesList *list)
         a->speed[4]   = 115200;
         a->speed[5]   = 0;
         a->capture[0].type    = GP_CAPTURE_NONE;
-        a->config     = GP_CONFIG_CAMERA;
-        a->file_delete = 1;
-        a->file_preview = 1;
-        a->file_put = 1;
+        a->config = 1;
+	a->folder_operations = GP_FOLDER_OPERATION_PUT;
+	a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
         gp_abilities_list_append(list, a);
         i++;
     }
@@ -812,7 +809,7 @@ int camera_init(Camera *camera)
 	camera->functions->file_list = camera_file_list;
 	camera->functions->file_get  = camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
-	camera->functions->file_put  = camera_file_put;
+	camera->functions->folder_put_file  = camera_folder_put_file;
 	camera->functions->file_delete = camera_file_delete;
 	camera->functions->config_get = camera_config_get;
 	camera->functions->config_set = camera_config_set;
@@ -1152,14 +1149,14 @@ static int get_last_picture(Camera *camera, char *directory, char *filename)
 }
 
 
-int camera_file_put(Camera *camera, CameraFile *file, char *folder)
+int camera_folder_put_file(Camera *camera, CameraFile *file, char *folder)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
     char destpath[300], destname[300], dir[300], dcf_root_dir[10];
 	int j, dirnum=0;
 	char buf[10];
 
-	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_file_put()");
+	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_folder_put_file()");
 	
 	if(check_readiness(camera) != 1)
 	  return GP_ERROR;

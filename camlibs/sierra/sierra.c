@@ -116,11 +116,11 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a->speed[3] = 57600;
 		a->speed[4] = 115200;
 		a->speed[5] = 0;
-		a->capture  = GP_CAPTURE_IMAGE | GP_CAPTURE_IMAGE;
+		a->capture[0].type = GP_CAPTURE_NONE;
+//		a->capture  = GP_CAPTURE_IMAGE | GP_CAPTURE_IMAGE;
 		a->config   = 0;
-		a->file_delete  = 1;
-		a->file_preview = 1;
-		a->file_put = 0;
+		a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
+		a->folder_operations = GP_FOLDER_OPERATION_NONE;
 		a->usb_vendor  = sierra_cameras[x].usb_vendor;
 		a->usb_product = sierra_cameras[x].usb_product;
 		gp_abilities_list_append(list, a);
@@ -153,7 +153,7 @@ int camera_init (Camera *camera) {
 	camera->functions->file_get 	= camera_file_get;
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_delete 	= camera_file_delete;
-	camera->functions->capture 	= camera_capture;
+//	camera->functions->capture 	= camera_capture;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
@@ -579,6 +579,7 @@ return (GP_ERROR);
 	return (ret);
 }
 
+#if 0
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	SierraData *fd = (SierraData*)camera->camlib_data;
@@ -595,6 +596,7 @@ return (GP_ERROR);
 
 	return (retval);
 }
+#endif
 
 int camera_summary (Camera *camera, CameraText *summary) {
 

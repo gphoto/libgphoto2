@@ -40,11 +40,17 @@ int camera_file_list		(Camera *camera,
 	/* Returns a list of file from the 'folder_name'	*/
 	/* folder. 						*/
 
-int camera_file_info            (Camera *camera,
+int camera_file_info_get        (Camera *camera,
                                  CameraFileInfo *info,
                                  char *folder,
                                  char *filename);
         /* Returns information about a file on the camera       */
+
+int camera_file_info_set	(Camera *camera,
+				 CameraFileInfo *info,
+				 char *folder,
+				 char *filename);
+	/* Sets information about a file on the camera		*/
 
 int camera_file_get 	    	(Camera *camera,
 				 CameraFile *file,
@@ -105,7 +111,7 @@ int camera_config_set		(Camera *camera,
 	/* camera_config_get and modified (values) by the 	*/
 	/* frontend.						*/
 
-int camera_file_put 	    	(Camera *camera,
+int camera_folder_put_file    	(Camera *camera,
 				 CameraFile *file,
 				 char *folder);
 	/* Uploads a file to the current folder on the camera. 	*/
@@ -120,7 +126,7 @@ int camera_file_delete 		(Camera *camera,
 	/* Deletes a picture from the current folder on the	*/
 	/* camera. 						*/
 
-int camera_file_delete_all    	(Camera *camera,
+int camera_folder_delete_all   	(Camera *camera,
                                  char *folder);
         /* Delete all files in a given folder.                  */
         /* Some cameras have a built-in command that makes this */

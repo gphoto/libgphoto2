@@ -53,13 +53,22 @@ typedef enum {
         GP_CAPTURE_PREVIEW      = 1 << 3
 } CameraCaptureType;
 
-/* Config Type */
+/* File operations */
 typedef enum {
-	GP_CONFIG_NONE		= 0,
-	GP_CONFIG_CAMERA	= 1 << 0,
-	GP_CONFIG_FOLDER	= 1 << 1,
-	GP_CONFIG_FILE		= 1 << 2
-} CameraConfigType;
+	GP_FILE_OPERATION_NONE		= 0,
+	GP_FILE_OPERATION_DELETE	= 1 << 1,
+	GP_FILE_OPERATION_CONFIG	= 1 << 2,
+	GP_FILE_OPERATION_PREVIEW	= 1 << 3,
+	GP_FILE_OPERATION_INFO		= 1 << 4
+} CameraFileOperation;
+
+/* Folder operations */
+typedef enum {
+	GP_FOLDER_OPERATION_NONE	= 0,
+	GP_FOLDER_OPERATION_DELETE_ALL	= 1 << 0,
+	GP_FOLDER_OPERATION_PUT		= 1 << 1,
+	GP_FOLDER_OPERATION_CONFIG	= 1 << 2
+} CameraFolderOperation;
 
 /* Widget types */
 typedef enum {
@@ -134,21 +143,17 @@ typedef struct {
 		/* a value of 0.      				 */
 
 	int config;
-                /* Camera/Folders/Files can be configured	 */
-                /* This is an OR of 1 or more GP_CONFIG_* types. */
+                /* If set to 1, camera can be configured	 */
 	
-	int file_delete;
-		/* Camera can delete files 			 */
+	CameraFileOperation file_operations;
+		/* What file operations the camera supports.     */
+		/* This is an OR of 1 or more                    */
+		/* GP_FILE_OPERATION_* types                     */
 
-        int file_delete_all;
-                /* Camera can delete all files in a folder       */
-                /* quickly */
-
-	int file_preview;
-		/* Camera can get file previews (thumbnails) 	 */
-
-	int file_put;
-		/* Camera can receive files			 */
+	CameraFolderOperation folder_operations;
+		/* What folder operations the camera supports.   */
+		/* This is an OR of 1 or more                    */
+		/* GP_FOLDER_OPERATION_* types                   */
 
         CameraCaptureSetting capture[32];
                 /* Libraries set the type and should strcpy a    */
@@ -185,41 +190,43 @@ typedef enum {
 
 /* Permissions for files on the camera */
 typedef enum {
-    GP_FILE_PERM_READ            = 1 << 0,
-    GP_FILE_PERM_DELETE          = 1 << 1,
-    GP_FILE_PERM_ALL             = 0xFF
+	GP_FILE_PERM_NONE	= 0,
+	GP_FILE_PERM_READ       = 1 << 0,
+	GP_FILE_PERM_DELETE     = 1 << 1,
+	GP_FILE_PERM_ALL        = 0xFF
 } CameraFilePermissions;
 
 /* Camera file information */
 typedef struct {
 
-    /* An OR'ing of CameraFileInfoFields for valid fields */
-    int    fields;
+	/* An OR'ing of CameraFileInfoFields for valid fields */
+	int    fields;
 
-    /* The MIME type of this file */
-    char   type[64];
+	/* The MIME type of this file */
+	char   type[64];
 
-    /* The filename of this image */
-    char   name[64];
+	/* The permissions of this file. OR'ing of CameraFilePermissions. */
+	/* Please don't use this field in previews. 			  */
+	CameraFilePermissions permissions;
 
-    /* The size of this file */
-    int    size;
+	/* The filename of this image */
+	char   name[64];
 
-    /* The permissions of this file. OR'ing of CameraFilePermissions */
-    int    permissions;
+	/* The size of this file */
+	int    size;
 
-    /* For Images or Movies... */
-    /* The width of this image */
-    int    width;
-    /* The height of this image */
-    int    height;
+	/* For Images or Movies... */
+	/* The width of this image */
+	int    width;
+	/* The height of this image */
+	int    height;
 
 } CameraFileInfoStruct;
 
 /* Information about a file and it's preview on the camera */
 typedef struct {
-    CameraFileInfoStruct preview;
-    CameraFileInfoStruct file;
+	CameraFileInfoStruct 	preview;
+	CameraFileInfoStruct 	file;
 } CameraFileInfo;
 
 /* Camera file structure used for transferring files*/
@@ -332,7 +339,8 @@ typedef int (*c_init)		 (struct Camera*);
 typedef int (*c_exit)		 (struct Camera*);
 typedef int (*c_folder_list)	 (struct Camera*, CameraList*, char*);
 typedef int (*c_file_list)	 (struct Camera*, CameraList*, char*);
-typedef int (*c_file_info)	 (struct Camera*, CameraFileInfo*, char*, char*);
+typedef int (*c_file_info_get)	(struct Camera*, CameraFileInfo*, char*, char*);
+typedef int (*c_file_info_set)	(struct Camera*, CameraFileInfo*, char*, char*);
 typedef int (*c_file_get)	 (struct Camera*, CameraFile*, char*, char*);
 typedef int (*c_file_get_preview)(struct Camera*, CameraFile*, char*, char*);
 typedef int (*c_file_config_get) (struct Camera*, CameraWidget**, char*, char*);
@@ -341,9 +349,9 @@ typedef int (*c_folder_config_get)(struct Camera*, CameraWidget**, char*);
 typedef int (*c_folder_config_set)(struct Camera*, CameraWidget*, char*);
 typedef int (*c_config_get)	 (struct Camera*, CameraWidget**);
 typedef int (*c_config_set)	 (struct Camera*, CameraWidget*);
-typedef int (*c_file_put)	 (struct Camera*, CameraFile*, char*);
+typedef int (*c_folder_put_file) (struct Camera*, CameraFile*, char*);
 typedef int (*c_file_delete)	 (struct Camera*, char*, char*);
-typedef int (*c_file_delete_all) (struct Camera*, char*);
+typedef int (*c_folder_delete_all) (struct Camera*, char*);
 typedef int (*c_capture)	 (struct Camera*, CameraFilePath*, CameraCaptureSetting*);
 typedef int (*c_capture_preview) (struct Camera*, CameraFile*);
 typedef int (*c_config)		 (struct Camera*);
@@ -360,7 +368,8 @@ typedef struct {
 	c_exit			exit;
 	c_folder_list		folder_list;
 	c_file_list		file_list;
-        c_file_info             file_info;
+        c_file_info_get         file_info_get;
+	c_file_info_set		file_info_set;
         c_file_get		file_get;
 	c_file_get_preview	file_get_preview;
 	c_file_config_get	file_config_get;
@@ -369,9 +378,9 @@ typedef struct {
 	c_folder_config_set	folder_config_set;
 	c_config_get		config_get;
 	c_config_set		config_set;
-	c_file_put		file_put;
+	c_folder_put_file	folder_put_file;
         c_file_delete		file_delete;
-        c_file_delete_all       file_delete_all;
+        c_folder_delete_all     folder_delete_all;
 	c_config		config;
         c_capture		capture;
         c_capture_preview       capture_preview;

@@ -35,9 +35,11 @@ int gp_camera_session 		(Camera *camera);
 int gp_camera_folder_list (Camera *camera, CameraList *list, char *folder);
 int gp_camera_file_list   (Camera *camera, CameraList *list, char *folder);
 
-/* Retrieve information about a file on the camera */
-int gp_camera_file_info (Camera *camera, CameraFileInfo *info,
-                         char *folder, char *filename);
+/* Retrieve and set information about a file on the camera */
+int gp_camera_file_info_get (Camera *camera, CameraFileInfo *info,
+			     char *folder, char *filename);
+int gp_camera_file_info_set (Camera *camera, CameraFileInfo *info, 
+			     char *folder, char *filename);
 
 /* Retrieve files  */
 int gp_camera_file_get         (Camera *camera, CameraFile *file, 
@@ -62,11 +64,11 @@ int gp_camera_file_config_set  (Camera *camera, CameraWidget *window,
 				char *folder, char *filename);
 
 /* Upload a file to the camera */
-int gp_camera_file_put (Camera *camera, CameraFile *file, char *folder);
+int gp_camera_folder_put_file (Camera *camera, CameraFile *file, char *folder);
 
 /* Delete a file from the camera */
 int gp_camera_file_delete     (Camera *camera, char *folder, char *filename);
-int gp_camera_file_delete_all (Camera *camera, char *folder);
+int gp_camera_folder_delete_all (Camera *camera, char *folder);
 
 /* Capture a file to the camera */
 int gp_camera_capture (Camera *camera, CameraFilePath *path, CameraCaptureSetting *setting);

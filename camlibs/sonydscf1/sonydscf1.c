@@ -41,11 +41,10 @@ int camera_abilities (CameraAbilitiesList *list) {
         strcpy(a->model, "Sony DSC-F1");
         a->port=GP_PORT_SERIAL;
         a->speed[0] = 0;
-        a->capture  = GP_CAPTURE_NONE;
+        a->capture[0].type = GP_CAPTURE_NONE;
         a->config   = 1;
-        a->file_delete  = 1;
-        a->file_preview = 1;
-        a->file_put = 1;
+        a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
+        a->folder_operations = GP_FOLDER_OPERATION_PUT;
         gp_abilities_list_append(list, a);
         // printf("<-camera_abilities\n");
         return (GP_OK);
@@ -68,16 +67,15 @@ int camera_init (Camera *camera) {
         camera->functions->init         = camera_init;
         camera->functions->exit         = camera_exit;
         camera->functions->folder_list  = camera_folder_list;
-        //camera->functions->folder_set   = camera_folder_set;
-        //camera->functions->file_count   = camera_file_count;
+//	camera->functions->folder_set   = camera_folder_set;
+//	camera->functions->file_count   = camera_file_count;
         camera->functions->file_get     = camera_file_get;
         camera->functions->file_get_preview =  camera_file_get_preview;
-        camera->functions->file_put     = camera_file_put;
+        camera->functions->folder_put_file = camera_folder_put_file;
         camera->functions->file_list    = camera_file_list;
         camera->functions->file_delete  = camera_file_delete;
         camera->functions->config_get   = camera_config_get;
         camera->functions->config_set   = camera_config_set;
-        camera->functions->capture      = camera_capture;
         camera->functions->summary      = camera_summary;
         camera->functions->manual       = camera_manual;
         camera->functions->about        = camera_about;
@@ -208,7 +206,7 @@ int camera_file_get_preview (Camera *camera, CameraFile *preview, char *folder, 
         return (GP_OK);
 }
 
-int camera_file_put (Camera *camera, CameraFile *file,char *folder) {
+int camera_folder_file_put (Camera *camera, CameraFile *file,char *folder) {
                 printf("sony dscf1: file put\n");
         return (GP_ERROR);
 }
@@ -227,11 +225,6 @@ int camera_config_get (Camera *camera, CameraWidget **window) {
 
 int camera_config_set (Camera *camera, CameraWidget *window) {
                 printf("sony dscf1: config set\n");
-        return (GP_ERROR);
-}
-
-int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
-        printf("sony dscf1: camera does not support capture !!\n");
         return (GP_ERROR);
 }
 

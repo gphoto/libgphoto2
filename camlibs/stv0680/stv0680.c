@@ -40,11 +40,10 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->port     = GP_PORT_SERIAL|GP_PORT_USB;
 	a->speed[0] = 115200;
 	a->speed[1] = 0;
-	a->capture  = GP_CAPTURE_NONE;
+	a->capture[0].type  = GP_CAPTURE_NONE;
 	a->config   = 0;
-	a->file_delete  = 0;
-	a->file_preview = 1;
-	a->file_put = 0;
+	a->file_operations = GP_FILE_OPERATION_PREVIEW;
+	a->folder_operations = GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
 
@@ -58,22 +57,18 @@ int camera_init (Camera *camera) {
         struct stv0680_s *device;
 
 	/* First, set up all the function pointers */
-	camera->functions->id 		= camera_id;
-	camera->functions->abilities 	= camera_abilities;
-	camera->functions->init 	= camera_init;
-	camera->functions->exit 	= camera_exit;
-	camera->functions->folder_list  = camera_folder_list;
-	camera->functions->file_list	= camera_file_list;
-	camera->functions->file_get 	= camera_file_get;
-	camera->functions->file_get_preview =  camera_file_get_preview;
-	camera->functions->file_put 	= camera_file_put;
-	camera->functions->file_delete 	= camera_file_delete;
-	camera->functions->config       = camera_config;
-	camera->functions->capture 	= camera_capture;
-	camera->functions->summary	= camera_summary;
-	camera->functions->manual 	= camera_manual;
-	camera->functions->about 	= camera_about;
-	camera->functions->result_as_string = camera_result_as_string;
+	camera->functions->id 			= camera_id;
+	camera->functions->abilities 		= camera_abilities;
+	camera->functions->init 		= camera_init;
+	camera->functions->exit 		= camera_exit;
+	camera->functions->folder_list  	= camera_folder_list;
+	camera->functions->file_list		= camera_file_list;
+	camera->functions->file_get 		= camera_file_get;
+	camera->functions->file_get_preview 	= camera_file_get_preview;
+	camera->functions->summary		= camera_summary;
+	camera->functions->manual 		= camera_manual;
+	camera->functions->about 		= camera_about;
+	camera->functions->result_as_string 	= camera_result_as_string;
 
 	if((device = malloc(sizeof(struct stv0680_s))) == NULL) {
 		return GP_ERROR_NO_MEMORY;
@@ -189,33 +184,14 @@ int camera_file_get_preview (Camera *camera, CameraFile *file,
 					&file->data, (int*) &file->size);
 }
 
-int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
-
-	/* stv0680 has no put support */
-
-	return (GP_ERROR_NOT_SUPPORTED);
-}
-
-int camera_file_delete (Camera *camera, char *folder, char *filename) {
-
-	/* stv0680 has no delete support */
-
-	return (GP_ERROR_NOT_SUPPORTED);
-}
-
-int camera_config (Camera *camera) {
-
-	/* stv0680 has no configureable options */
-
-	return (GP_ERROR_NOT_SUPPORTED);
-}
-
+#if 0
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	/* XXX implement */
 
 	return (GP_ERROR_NOT_SUPPORTED);
 }
+#endif
 
 int camera_summary (Camera *camera, CameraText *summary) {
 

@@ -48,11 +48,11 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->port     = GP_PORT_SERIAL;
 	a->speed[0] = 38400;
 	a->speed[1] = 0;
-	a->capture  = GP_CAPTURE_IMAGE;
+	a->capture[0].type = GP_CAPTURE_NONE;
+//	a->capture  = GP_CAPTURE_IMAGE;
 	a->config   = 0;
-	a->file_delete  = 1;
-	a->file_preview = 1;
-	a->file_put = 0;
+	a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
+	a->folder_operations = GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
 
@@ -65,19 +65,19 @@ int camera_init (Camera *camera) {
         dimagev_t *dimagev = NULL;
 
 	/* First, set up all the function pointers */
-	camera->functions->id 		= camera_id;
-	camera->functions->abilities 	= camera_abilities;
-	camera->functions->init 	= camera_init;
-	camera->functions->exit 	= camera_exit;
-	camera->functions->folder_list  = camera_folder_list;
-	camera->functions->file_list	= camera_file_list;
-	camera->functions->file_get 	= camera_file_get;
-	camera->functions->file_get_preview =  camera_file_get_preview;
-	camera->functions->file_delete 	= camera_file_delete;
-	camera->functions->capture 	= camera_capture;
-	camera->functions->summary	= camera_summary;
-	camera->functions->manual 	= camera_manual;
-	camera->functions->about 	= camera_about;
+	camera->functions->id 			= camera_id;
+	camera->functions->abilities 		= camera_abilities;
+	camera->functions->init 		= camera_init;
+	camera->functions->exit 		= camera_exit;
+	camera->functions->folder_list  	= camera_folder_list;
+	camera->functions->file_list		= camera_file_list;
+	camera->functions->file_get 		= camera_file_get;
+	camera->functions->file_get_preview 	= camera_file_get_preview;
+	camera->functions->file_delete 		= camera_file_delete;
+//	camera->functions->capture 		= camera_capture;
+	camera->functions->summary		= camera_summary;
+	camera->functions->manual 		= camera_manual;
+	camera->functions->about 		= camera_about;
 
 	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "initializing the camera\n");
 
@@ -253,11 +253,6 @@ int camera_file_get_preview (Camera *camera, CameraFile *file,
 	return GP_OK;
 }
 
-int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
-
-	return GP_OK;
-}
-
 int camera_file_delete (Camera *camera, char *folder, char *filename) {
 	dimagev_t *dimagev;
 	int file_number=0;
@@ -269,6 +264,7 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 	return dimagev_delete_picture(dimagev, (file_number + 1 ));
 }
 
+#if 0
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	dimagev_t *dimagev;
@@ -345,6 +341,7 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 
 	return GP_OK;
 }
+#endif
 
 int camera_summary (Camera *camera, CameraText *summary) {
 	dimagev_t *dimagev;
