@@ -19,7 +19,8 @@ int canon_usb_init (Camera *camera, GPContext *context);
 int canon_usb_camera_init (Camera *camera, GPContext *context);
 int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, 
 	        GPContext *context);
-unsigned char *canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context);
+unsigned char *canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *context,
+					   int *thumb_length, int *image_length, int *image_key );
 unsigned char *canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, 
 		const char *payload, int payload_length);
 int canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data, 
@@ -27,6 +28,8 @@ int canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **da
 		int payload_length, int display_status, GPContext *context);
 int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
 int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length, GPContext *context);
+int canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **data, int *length, GPContext *context);
+int canon_usb_get_captured_thumbnail (Camera *camera, const int key, unsigned char **data, int *length, GPContext *context);
 int canon_usb_lock_keys(Camera *camera, GPContext *context);
 int canon_usb_unlock_keys(Camera *camera, GPContext *context);
 int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path, GPContext *context);
@@ -35,7 +38,7 @@ int canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
 int canon_usb_ready (Camera *camera);
 int canon_usb_identify (Camera *camera, GPContext *context);
 
-#define USB_BULK_READ_SIZE 0x3000
+#define USB_BULK_READ_SIZE 0x1400
 #define USB_BULK_WRITE_SIZE 0xC000
 
 #define CANON_USB_FUNCTION_GET_FILE		1
@@ -159,8 +162,8 @@ static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	{CANON_USB_CONTROL_GET_PARAMS,          "Get release params",   0x0a,  0x18,  0x4c},  /* load 0x0a, 0x00 */
 	{CANON_USB_CONTROL_GET_ZOOM_POS,        "Get zoom position",    0x0b,  0x18,  0x20},  /* load 0x0b, 0x00 */
 	{CANON_USB_CONTROL_SET_ZOOM_POS,        "Set zoom position",    0x0c,  0x1c,  0x1c},  /* load 0x0c, 0x04, 0x01 (or 0x0c, 0x04, 0x0b) (or 0x0c, 0x04, 0x0a) or (0x0c, 0x04, 0x09) or (0x0c, 0x04, 0x08) or (0x0c, 0x04, 0x07) or (0x0c, 0x04, 0x06) or (0x0c, 0x04, 0x00) */
-	{CANON_USB_CONTROL_GET_AVAILABLE_SHOT,  "Get available shot",   0x0d,  0x18,  0x60},
-	{CANON_USB_CONTROL_GET_CUSTOM_FUNC,     "Get custom func.",     0x0f,  0x22,  0x66},
+	{CANON_USB_CONTROL_GET_AVAILABLE_SHOT,  "Get available shot",   0x0d,  0x18,  0x20},
+	{CANON_USB_CONTROL_GET_CUSTOM_FUNC,     "Get custom func.",     0x0f,  0x22,  0x26},
 	{CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE, "Get extended release params size",              
 	                                                                0x10,  0x1c,  0x20},  /* load 0x10, 0x00 */
 	{CANON_USB_CONTROL_GET_EXT_PARAMS,      "Get extended release params",              
@@ -178,13 +181,6 @@ static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	{CANON_USB_CONTROL_DO_AE_AF_AWB,        "Do AE, AF, and AWB",   0x15,  0x00,  0x00}, 
 	{ 0 }
 };
-
-#define REMOTE_CAPTURE_THUMB_TO_PC    (0x0001)
-#define REMOTE_CAPTURE_FULL_TO_PC     (0x0002)
-#define REMOTE_CAPTURE_THUMB_TO_DRIVE (0x0004)
-#define REMOTE_CAPTURE_FULL_TO_DRIVE  (0x0008)
-
-
 
 #endif /* _CANON_USB_H */
 
