@@ -1,3 +1,13 @@
+2002-01-04 Dan Fandrich <dan@coneharvesters.com>
+
+	* libgphoto2/bayer.h
+	* libgphoto2/exif.c
+	* libgphoto2/exif.h
+	* libgphoto2/gphoto2-filesys.c
+	* libgphoto2/jpeg.c: Eliminated // comments (for non-C99 compilers)
+	* configure.in: Only add gcc-specific CFLAGS if we're running gcc.
+	* Minor changes to other files to improve portability.
+
 2002-01-04  Colin Marquardt  <colin@marquardt-home.de>
 
 	* configure.in: Add languages for new po files to ALL_LINGUAS.
