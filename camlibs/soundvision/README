@@ -18,18 +18,22 @@ entirely on reverse-engineering USB transactions.
 List of Cameras known to work with this driver:
 
    Agfa ePhoto CL18
-   RCA CDS1005
    Mustek gSmart 350
+   RCA CDS1005
 
    CoolCam CP086
    FujiFilm @xia iX-100   (or "Axia ix-100")
    Media-Tech mt-406
    Oregon Scientific DShot II
+   Oregon Scientific DShot III
    Scott APX 30
    StarCam CP086
    Tiger Fast Flicks
 
-Cameras that might work with the proper USB ID's
+Cameras that might work with the proper USB ID's or are unverified to work:
 
-   Polaroid MP3
+   Digital Dreams l'elite
    Eye Q3X Digital
+   Ixla DualCam 640
+   Polaroid MP3
+
