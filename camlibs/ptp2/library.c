@@ -200,7 +200,7 @@ static struct {
 	 */
 	{"Kodak:DC4800", 0x040a, 0x0160},
 	/* Below other camers known to be detected by interface class */
-	
+
 	{"Kodak:DX3900", 0x040a, 0x0170},
 	{"Kodak:MC3",    0x040a, 0x0400},
 	{"Kodak:DX3500", 0x040a, 0x0500},
@@ -223,8 +223,8 @@ static struct {
 	{"Kodak:DX6440", 0x040a, 0x0572},
 	{"Kodak:CX6230", 0x040a, 0x0573},
 	{"Kodak:CX6200", 0x040a, 0x0574},
+	{"Kodak:DX6490", 0x040a, 0x0575},
 	{"Kodak:DX4530", 0x040a, 0x0576},
-
 
 	/* HP PTP cameras */
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202},
@@ -281,7 +281,7 @@ static struct {
 
 
 	/* (at least some) newer Canon cameras can be switched between
-	 * PTP and "normal" (i.e. Canon) mode 
+	 * PTP and "normal" (i.e. Canon) mode
 	 * Canon PS G3: A. Marinichev, 20 nov 2002
 	 */
 	{"Canon:PowerShot S45 (PTP mode)",   0x04a9, 0x306d},
