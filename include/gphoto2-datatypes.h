@@ -37,15 +37,15 @@ typedef enum {
 } CameraCaptureType;
 
 typedef enum {
-	WIDGET_WINDOW,
-	WIDGET_PAGE,
-	WIDGET_TEXT,
-	WIDGET_RANGE,
-	WIDGET_TOGGLE,
-	WIDGET_RADIO,
-	WIDGET_MENU,
-	WIDGET_BUTTON,
-	WIDGET_NONE
+	GP_WIDGET_WINDOW,
+	GP_WIDGET_PAGE,
+	GP_WIDGET_TEXT,
+	GP_WIDGET_RANGE,
+	GP_WIDGET_TOGGLE,
+	GP_WIDGET_RADIO,
+	GP_WIDGET_MENU,
+	GP_WIDGET_BUTTON,
+	GP_WIDGET_NONE
 } CameraWidgetType;
 
 struct CameraWidget;
@@ -70,8 +70,6 @@ struct CameraWidget {
 	float 		 max;
 	float		 step;
 
-	/* Function Callback */
-	int 		(*callback)(struct CameraWidget *widget);
 	/* Private (don't access)
 	   ------------------------------ */
 	struct CameraWidget**	children;

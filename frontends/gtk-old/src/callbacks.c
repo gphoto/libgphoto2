@@ -962,10 +962,22 @@ void camera_delete_all() {
 
 void camera_configure() {
 
+	CameraWidget *window;
+
 	debug_print("camera configure");
 
 	if (!gp_gtk_camera_init)
 		if (camera_set()==GP_ERROR) {return;}
+
+	window = gp_widget_new(GP_WIDGET_WINDOW, "Camera Configuration");
+	if (gp_config_get(window)==GP_ERROR) {
+		gp_message("Could not retrieve camera configuration information");
+		gp_widget_free(window);
+		return;
+	}
+
+	gp_widget_dump(window);
+
 }
 
 void camera_show_information() {

@@ -138,6 +138,9 @@
 	/* Frees a widget, as well as all the children */
 	int gp_widget_free(CameraWidget *widget);
 
+	/* For debugging purposes, will dump the widget and all child
+	   widget to stdout */
+	int gp_widget_dump(CameraWidget *widget);
 
 	/* Utility functions for libraries */
 	/* ============================================================================== */

@@ -21,7 +21,8 @@ CameraWidget* gp_widget_new(CameraWidgetType type, char *label) {
 
 int gp_widget_append(CameraWidget *parent, CameraWidget *child) {
 
-	parent->children[parent->children_count++] = child;
+	parent->children[parent->children_count] = child;
+	parent->children_count += 1;
 	
 	return (GP_OK);
 }
@@ -35,7 +36,8 @@ int gp_widget_prepend(CameraWidget *parent, CameraWidget *child) {
 		parent->children[x] = parent->children[x-1];
 
 	/* Prepend the child */
-	parent->children[0] = child;	
+	parent->children[0] = child;
+	parent->children_count += 1;
 
 	return (GP_OK);
 }
@@ -64,6 +66,26 @@ int gp_widget_free(CameraWidget *widget) {
 	}
 
 	free(widget);
+
+	return (GP_OK);
+}
+
+void gp_widget_dump_rec (CameraWidget *widget, int depth) {
+
+	int x;
+	char buf[1024];
+
+	for (x=0; x<depth*2; x++)
+		printf(" ");
+	printf("%s\n", widget->label);
+
+	for (x=0; x<widget->children_count; x++)
+		gp_widget_dump_rec(widget->children[x], depth+1);
+}
+
+int gp_widget_dump(CameraWidget *widget) {
+
+	gp_widget_dump_rec(widget, 1);
 
 	return (GP_OK);
 }

@@ -9,6 +9,11 @@ int test_gphoto() {
 	   gPhoto installation and test to make sure everything is
 	   in working order */
 
+}
+
+#if 0
+	/* Example code for using gPhoto2 */
+
 	CameraAbilities a;
 	CameraPortSettings s;
 	CameraFile *f;
@@ -111,4 +116,4 @@ int test_gphoto() {
 	gp_exit();
 
 	return (0);
-}
+#endif

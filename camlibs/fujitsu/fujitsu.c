@@ -369,9 +369,61 @@ return (GP_ERROR);
 
 int camera_config_get (CameraWidget *window) {
 
+	CameraWidget *t, *page;
+	int num;
+	char buf[1024];
+
 	debug_print("Building configuration window");
 
-        return (GP_ERROR);
+	/* set the window label to something more specific */
+	strcpy(window->label, "Fujitsu Camera Settings");
+
+	/* Create a new page for "Quality" */
+	page = gp_widget_new(GP_WIDGET_PAGE, "Quality");
+	gp_widget_append(window, page);
+
+		/* Add the Resolution setting radio buttons */
+		t = gp_widget_new(GP_WIDGET_RADIO, "Resolution");
+		strcpy(t->choice, "Standard");
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(GP_WIDGET_RADIO, "Resolution");
+		strcpy(t->choice, "High");
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(GP_WIDGET_RADIO, "Resolution");
+		strcpy(t->choice, "Best");
+		gp_widget_append(page, t);
+
+	/* Create a new page for "Flash/Lens" and append to window */
+	page = gp_widget_new(GP_WIDGET_PAGE, "Flash/Lens");
+	gp_widget_append(window, page);
+
+		t = gp_widget_new(GP_WIDGET_MENU, "Flash Setting");
+		strcpy(t->choice, "Auto");
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(GP_WIDGET_MENU, "Flash Setting");
+		strcpy(t->choice, "Red-eye");
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(GP_WIDGET_MENU, "Flash Setting");
+		strcpy(t->choice, "Force");
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(GP_WIDGET_MENU, "Flash Setting");
+		strcpy(t->choice, "None");
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(GP_WIDGET_RADIO, "Lens Mode");
+		strcpy(t->choice, "Normal");
+		gp_widget_append(page, t);
+
+		t = gp_widget_new(GP_WIDGET_RADIO, "Lens Mode");
+		strcpy(t->choice, "Macro");
+		gp_widget_append(page, t);
+
+	return (GP_OK);
 }
 
 int camera_config_set (CameraSetting *setting, int count) {
