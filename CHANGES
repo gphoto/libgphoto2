@@ -28,6 +28,8 @@ drivers (camlibs):
        Oregon Scientific DShot II, Media-Tech mt-406,
        and Scott APX 30
 
+   * added support for Aiptek Pencam and Medion MD 5319
+
 
 --------------------------------------------------------------------------------
 gphoto2 2.1.0

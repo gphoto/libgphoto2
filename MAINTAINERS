@@ -99,6 +99,9 @@ camlibs/sonydscf55:
 camlibs/soundvision:
 	Vince Weaver <vince@deater.net>
 
+camlibs/spca504_flash:
+	Till Adam <till@adam-lilienthal.de>
+
 camlibs/stv0680:
 	Carsten Weinholz <cweinholz@users.sourceforge.net>
 	Marcus Meissner <marcus@jet.franken.de>
