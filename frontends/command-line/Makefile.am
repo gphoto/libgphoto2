@@ -4,7 +4,8 @@
 # people without aalib or cdk make dist.
 EXTRA_DIST = makefile.os2				\
 	gphoto2-cmd-config.c gphoto2-cmd-config.h	\
-	gphoto2-cmd-capture.c gphoto2-cmd-capture.h
+	gphoto2-cmd-capture.c gphoto2-cmd-capture.h	\
+	$(man1_MANS) gphoto2.xml
 
 bin_PROGRAMS = gphoto2
 
