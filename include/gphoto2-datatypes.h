@@ -184,6 +184,8 @@ typedef struct {
 	long int	size;
 	char		*data;
 	int		bytes_read;
+
+	int 		session;
 } CameraFile;
 
 /* Entry in a folder on the camera */
@@ -279,6 +281,8 @@ typedef struct Camera {
 
 	void 		*camlib_data;
 	void 		*frontend_data;
+
+	int 		session;
 } Camera;
 
 /* Interface function pointers */

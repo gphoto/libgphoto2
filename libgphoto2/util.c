@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gphoto2.h>
+
 #include "util.h"
 
 int gp_abilities_dump (CameraAbilities *abilities) {

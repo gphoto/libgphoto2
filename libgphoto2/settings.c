@@ -1,10 +1,56 @@
-#include <gphoto2.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "core.h"
+
+#include <gphoto2.h>
+
 #include "settings.h"
 #include "globals.h"
+#include "util.h"
+
+int gp_setting_get (char *id, char *key, char *value)
+{
+        int x;
+
+	if (!id || !key)
+		return (GP_ERROR);
+
+        for (x=0; x<glob_setting_count; x++) {
+                if ((strcmp(glob_setting[x].id, id)==0) &&
+		    (strcmp(glob_setting[x].key, key)==0)) {
+                        strcpy(value, glob_setting[x].value);
+                        return (GP_OK);
+                }
+        }
+        strcpy(value, "");
+        return(GP_ERROR);
+}
+
+int gp_setting_set (char *id, char *key, char *value)
+{
+        int x;
+
+	gp_debug_printf(GP_DEBUG_LOW, "core", "(%s) Setting key \"%s\" to value \"%s\"",
+                        id,key,value);
+
+	if (!id || !key)
+		return (GP_ERROR);
+
+        for (x=0; x<glob_setting_count; x++) {
+                if ((strcmp(glob_setting[x].id, id)==0) &&
+		    (strcmp(glob_setting[x].key, key)==0)) {
+                        strcpy(glob_setting[x].value, value);
+                        save_settings(glob_setting, glob_setting_count);
+                        return (GP_OK);
+                }
+	}
+        strcpy(glob_setting[glob_setting_count].id, id);
+        strcpy(glob_setting[glob_setting_count].key, key);
+        strcpy(glob_setting[glob_setting_count++].value, value);
+        save_settings(glob_setting, glob_setting_count);
+
+        return (GP_OK);
+}
 
 int verify_settings (char *settings_file) {
 
