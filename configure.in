@@ -67,11 +67,11 @@ done
 AC_MSG_CHECKING(which drivers to compile)
 AC_ARG_WITH(drivers,
   [  --with-drivers=<list>     compile drivers in <list>; ]
-  [                         drivers may be separated with commas; ]
-  [                         'all' compiles all drivers; ]
-  [                         possible drivers are: ]
-  [                           barbie, canon, digita, directory, ]
-  [			      fujitsu, konica, panasonic sonydscf1],
+  [                            drivers may be separated with commas; ]
+  [                            'all' compiles all drivers; ]
+  [                            possible drivers are: ]
+  [                            barbie, canon, digita, directory, ]
+  [                            fujitsu, konica, panasonic, sonydscf1 ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
