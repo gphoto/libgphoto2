@@ -92,7 +92,6 @@ htmldir=@HTML_DIR@
 TARGET_DIR=$(htmldir)/manual
 
 manual: gphoto2.xml
-	echo "$$(pwd) $@ $<"
 	$(XMLTO) html -o "$@" "$<"
 	cd $@ && rm -f figures && ln -s ../figures figures # to view docs in src tree
 	touch "$@"
