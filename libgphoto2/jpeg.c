@@ -37,6 +37,15 @@ chunk *mychunk;
     return mychunk;
 }
 
+void chunk_destroy(chunk *mychunk)
+{
+    nullpointerabort(mychunk, "Chunk");
+    mychunk->size=0;
+    free(mychunk->data);
+    free(mychunk);
+}
+
+
 void chunk_print(chunk *mychunk)
 {
     int x;
@@ -47,28 +56,8 @@ void chunk_print(chunk *mychunk)
     printf("\n");
 }
 
-void chunk_destroy(chunk *mychunk)
+char jpeg_findff(int *location, chunk *picture)
 {
-    nullpointerabort(mychunk, "Chunk");
-    mychunk->size=0;
-    free(mychunk->data);
-    free(mychunk);
-}
-
-void jpeg_init(jpeg *myjpeg)
-{
-    myjpeg->count=0;
-}
-
-void jpeg_destroy(jpeg *myjpeg)
-{
-    int count;
-    for (count=0; count<myjpeg->count; count++)
-        chunk_destroy(myjpeg->marker[count]);
-    myjpeg->count=0;
-}
-
-char jpeg_findff(int *location, chunk *picture) {
 //printf("Entered jpeg_findamarker!!!!!!\n");
     nullpointerabort(picture, "Picture");
     while(*location<picture->size)
@@ -85,7 +74,8 @@ char jpeg_findff(int *location, chunk *picture) {
     return 0;
 }
 
-char jpeg_findactivemarker(char *id, int *location, chunk *picture) {
+char jpeg_findactivemarker(char *id, int *location, chunk *picture)
+{
 //    printf("Entered jpeg_findactivemarker!!!!!!!!\n");
     nullpointerabort(picture, "Picture");
     while(jpeg_findff(location, picture) && ((*location+1)<picture->size))
@@ -94,19 +84,6 @@ char jpeg_findactivemarker(char *id, int *location, chunk *picture) {
             return 1;
         }
     return 0;
-}
-
-void jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end)
-{
-    int length;
-    nullpointerabort(picture, "Picture");
-    length=(int)(end-start+1);
-//    printf("Add marker #%i starting from %i and ending at %i for a length of %i\n", myjpeg->count, start, end, length);
-    myjpeg->marker[myjpeg->count] = chunk_new(length);
-//    printf("Read length is: %i\n", myjpeg->marker[myjpeg->count].size);
-    memcpy(myjpeg->marker[myjpeg->count]->data, picture->data+start, length);
-    chunk_print(myjpeg->marker[myjpeg->count]);
-    myjpeg->count++;
 }
 
 char *jpeg_markername(int c)
@@ -122,6 +99,32 @@ char *jpeg_markername(int c)
             return (char *)JPEG_MARKERNAMES[x];
     }
     return "Undefined marker";
+}
+
+void jpeg_init(jpeg *myjpeg)
+{
+    myjpeg->count=0;
+}
+
+void jpeg_destroy(jpeg *myjpeg)
+{
+    int count;
+    for (count=0; count<myjpeg->count; count++)
+        chunk_destroy(myjpeg->marker[count]);
+    myjpeg->count=0;
+}
+
+void jpeg_add_marker(jpeg *myjpeg, chunk *picture, int start, int end)
+{
+    int length;
+    nullpointerabort(picture, "Picture");
+    length=(int)(end-start+1);
+//    printf("Add marker #%i starting from %i and ending at %i for a length of %i\n", myjpeg->count, start, end, length);
+    myjpeg->marker[myjpeg->count] = chunk_new(length);
+//    printf("Read length is: %i\n", myjpeg->marker[myjpeg->count].size);
+    memcpy(myjpeg->marker[myjpeg->count]->data, picture->data+start, length);
+    chunk_print(myjpeg->marker[myjpeg->count]);
+    myjpeg->count++;
 }
 
 void jpeg_parse(jpeg *myjpeg, chunk *picture)
@@ -169,7 +172,7 @@ void jpeg_print(jpeg *myjpeg)
     }
 }
 
-chunk * jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3)
+chunk *jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3)
 {
     chunk *target;
 
@@ -178,7 +181,7 @@ chunk * jpeg_make_SOFC (int width, int height, char vh1, char vh2, char vh3)
         0x40, 0x03, 0x01, 0x11,  0x00, 0x02, 0x21, 0x01,  0x03, 0x11, 0x00
         };
     target = chunk_new(sizeof(sofc_data));
-    nullpointerabort(target, "New SOFC");
+    if (target==NULL) { printf("New SOFC failed allocation\n"); return target; }
     memcpy(target->data, sofc_data, sizeof(sofc_data));
     target->data[5] = (height&0xff00) >> 8;
     target->data[6] = height&0xff;
@@ -205,7 +208,39 @@ void jpeg_print_quantization_table(jpeg_quantization_table *table)
     printf("\n");
 }
 
-#define TESTING_JPEG_C
+
+chunk *jpeg_make_quantization(jpeg_quantization_table *table, int number)
+{
+    chunk *temp;
+    char x,y,z,c;
+    temp = chunk_new(5+64);
+    memcpy(temp->data, "\xFF\xDB\x00\x43\x01", 5);
+    for (c=z=0; z<8; z++)
+        if (z%2)
+            for (y=0,x=z; y<=z; x--,y++)
+                temp->data[5+c++] = (*table)[x+y*8];
+        else
+            for (x=0,y=z; x<=z; x++,y--)
+                temp->data[5+c++] = (*table)[x+y*8];
+    return temp;
+}
+
+jpeg_quantization_table *jpeg_quantization2table(chunk *qmarker)
+{
+    char x,y,z,c;
+    jpeg_quantization_table *table;
+    table = (jpeg_quantization_table *)malloc(64);
+    for (c=z=0; z<8; z++)
+        if (z%2)
+            for (y=0,x=z; y<=z; x--,y++)
+                (*table)[x+y*8] = qmarker->data[5+c++];
+        else
+            for (x=0,y=z; x<=z; x++,y--)
+                (*table)[x+y*8] = qmarker->data[5+c++];
+    return table;
+}
+
+//#define TESTING_JPEG_C
 
 #ifdef TESTING_JPEG_C
 /* TEST CODE SECTION */
