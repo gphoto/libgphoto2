@@ -416,6 +416,7 @@ static struct {
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
 	{"Konica-Minolta:DiMAGE Z3 (PictBridge mode)", 0x132b, 0x0018, 0},
+	{"Konica-Minolta:DiMAGE Z5 (PictBridge mode)", 0x132b, 0x0022, 0},
 
 	/* Fuji PTP cameras */
 	{"Fuji:FinePix S7000 (PictBridge mode)",0x04cb, 0x0142, 0},
