@@ -20,11 +20,11 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
-int stv0680_ping(struct stv0680_s *device);
-int stv0680_file_count(struct stv0680_s *device, int *count);
-int stv0680_get_image(struct stv0680_s *device, int image_no, char **data,
-		      int *size);
-int stv0680_get_image_preview(struct stv0680_s *device, int image_no,
-				char **data, int *size);
+#include <gphoto2-port.h>
+
+int stv0680_ping              (GPPort *);
+int stv0680_file_count        (GPPort *, int *count);
+int stv0680_get_image         (GPPort *, int image_no, char **data, int *size);
+int stv0680_get_image_preview (GPPort *, int image_no, char **data, int *size);
 
 #endif

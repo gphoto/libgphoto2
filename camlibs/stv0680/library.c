@@ -43,7 +43,7 @@
 #define CMD_IO_TIMEOUT		0x02
 #define CMD_BAD_RESPONSE	0x03
 
-int stv0680_remap_gp_port_error(int error)
+static int stv0680_remap_gp_port_error(int error)
 {
 	switch(error) {
 	case GP_ERROR_TIMEOUT:
@@ -57,7 +57,7 @@ int stv0680_remap_gp_port_error(int error)
 	}
 }
 
-unsigned char stv0680_checksum(const unsigned char *data, int start, int end)
+static unsigned char stv0680_checksum(const unsigned char *data, int start, int end)
 {
 	unsigned char sum = 0;
 	int i;
@@ -72,7 +72,7 @@ unsigned char stv0680_checksum(const unsigned char *data, int start, int end)
 	return sum;
 }
 
-int stv0680_cmd(struct stv0680_s *device, unsigned char cmd,
+static int stv0680_cmd(GPPort *device, unsigned char cmd,
 		unsigned char data1, unsigned char data2, unsigned char data3,
 		unsigned char *response, unsigned char response_len)
 {
@@ -90,17 +90,17 @@ int stv0680_cmd(struct stv0680_s *device, unsigned char cmd,
 
 	// write to device
 	printf("Writing packet to device\n");
-	if((ret = gp_port_write(device->gpiod, packet, 8)) != GP_OK)
+	if((ret = gp_port_write(device, packet, 8)) != GP_OK)
 		return stv0680_remap_gp_port_error(ret);
 
 	printf("Reading response header\n");
 	// read response header
-	if((ret = gp_port_read(device->gpiod, rhdr, 6)) != 6)
+	if((ret = gp_port_read(device, rhdr, 6)) != 6)
 		return stv0680_remap_gp_port_error(ret);
 
 	printf("Read response\n");
 	// read response
-	if((ret = gp_port_read(device->gpiod, response, response_len)) != response_len)
+	if((ret = gp_port_read(device, response, response_len)) != response_len)
 		return stv0680_remap_gp_port_error(ret);
 
 	printf("Validating packet [0x%X,0x%X,0x%X,0x%X,0x%X,0x%X]\n",
@@ -117,7 +117,7 @@ rhdr[0], rhdr[1], rhdr[2], rhdr[3], rhdr[4], rhdr[5]);
 	return CMD_OK;
 }
 
-int stv0680_try_cmd(struct stv0680_s *device, unsigned char cmd,
+static int stv0680_try_cmd(GPPort *device, unsigned char cmd,
 		unsigned char data1, unsigned char data2, unsigned char data3,
 		unsigned char *response, unsigned char response_len,
 		int retries)
@@ -142,7 +142,7 @@ int stv0680_try_cmd(struct stv0680_s *device, unsigned char cmd,
 	return CMD_IO_ERROR;
 }
 
-int stv0680_ping(struct stv0680_s *device)
+int stv0680_ping(GPPort *device)
 {
 	unsigned char response[CMD_PING_RLEN];
 	int ret;
@@ -163,7 +163,7 @@ printf("STV: pinging camera\n");
 	}
 }
 
-int stv0680_file_count(struct stv0680_s *device, int *count)
+int stv0680_file_count(GPPort *device, int *count)
 {
 	unsigned char response[CMD_GET_FILE_INFO_RLEN];
 	int ret;
@@ -186,7 +186,7 @@ printf("STV: getting file count\n");
 	}
 }
 
-int stv0680_get_image(struct stv0680_s *device, int image_no,
+int stv0680_get_image(GPPort *device, int image_no,
 			char **data, int *size)
 {
 	unsigned char response[CMD_GET_IMAGE_RLEN], header[64];
@@ -209,7 +209,7 @@ int stv0680_get_image(struct stv0680_s *device, int image_no,
 
 	raw = malloc(*size);
 
-	switch(gp_port_read(device->gpiod, raw, *size)) {
+	switch(gp_port_read(device, raw, *size)) {
 	case GP_ERROR_TIMEOUT:
 		printf("read timeout\n"); break;
 	case GP_ERROR:
@@ -237,7 +237,7 @@ int stv0680_get_image(struct stv0680_s *device, int image_no,
 	return GP_OK;
 }
 
-int stv0680_get_image_preview(struct stv0680_s *device, int image_no,
+int stv0680_get_image_preview(GPPort *device, int image_no,
 			char **data, int *size)
 {
 	unsigned char response[CMD_GET_IMAGE_RLEN], header[64];
@@ -260,7 +260,7 @@ int stv0680_get_image_preview(struct stv0680_s *device, int image_no,
 
 	raw = malloc(*size);
 
-	switch(gp_port_read(device->gpiod, raw, *size)) {
+	switch(gp_port_read(device, raw, *size)) {
 	case GP_ERROR_TIMEOUT:
 		printf("read timeout\n"); break;
 	case GP_ERROR:

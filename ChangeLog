@@ -1,5 +1,10 @@
 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/stv0680: Make direct use of camera->port. Kill compile 
+	  warnings by declaring some functions static.
+
+2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/konica/library.c: Use camera->pl
 	* libgphoto2/gphoto2-camera.[c,h]: Move lots of internals into 
 	  camera->pc (for core use only) and offer hook for camera libraries

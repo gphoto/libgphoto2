@@ -20,9 +20,5 @@
 #ifndef STV0680_H
 #define STV0680_H
 
-struct stv0680_s {
-	gp_port *gpiod;
-};
-
 #endif
 

@@ -66,26 +66,13 @@ int camera_abilities (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-static int camera_exit (Camera *camera) {
-
-	struct stv0680_s *device = camera->camlib_data;
-
-	if (device) {
-		free (device);
-		camera->camlib_data = NULL;
-	}
-
-	return (GP_OK);
-}
-
 static int file_list_func (CameraFilesystem *fs, const char *folder, 
 			   CameraList *list, void *data) 
 {
 	Camera *camera = data;
-	struct stv0680_s *device = camera->camlib_data;
 	int count, result;
 
-	result = stv0680_file_count(device, &count);
+	result = stv0680_file_count(camera->port, &count);
 	if (result != GP_OK)
 		return result;
 
@@ -99,7 +86,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  CameraFile *file, void *user_data)
 {
 	Camera *camera = user_data;
-	struct stv0680_s *device = camera->camlib_data;
 	int image_no, result;
 	char *data;
 	long int size;
@@ -110,12 +96,12 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		result = stv0680_get_image (device, image_no, &data,
+		result = stv0680_get_image (camera->port, image_no, &data,
 					    (int*) &size);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		result = stv0680_get_image_preview (device, image_no, &data,
-						    (int*) &size);
+		result = stv0680_get_image_preview (camera->port, image_no,
+						&data, (int*) &size);
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -167,41 +153,28 @@ int camera_init (Camera *camera)
 {
         gp_port_settings gpiod_settings;
         int ret;
-        struct stv0680_s *device;
 
         /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
         camera->functions->summary              = camera_summary;
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
         camera->functions->result_as_string     = camera_result_as_string;
 
-        if((device = malloc(sizeof(struct stv0680_s))) == NULL) {
-                return GP_ERROR_NO_MEMORY;
-        }
-
-        camera->camlib_data = device;
-	device->gpiod = camera->port;
-
 	/* Configure serial port */
-        gp_port_timeout_set(device->gpiod, 1000);
+        gp_port_timeout_set(camera->port, 1000);
         strcpy(gpiod_settings.serial.port, camera->port_info->path);
         gpiod_settings.serial.speed = camera->port_info->speed;
         gpiod_settings.serial.bits = 8;
         gpiod_settings.serial.parity = 0;
         gpiod_settings.serial.stopbits = 1;
-        gp_port_settings_set(device->gpiod, gpiod_settings);
+        gp_port_settings_set(camera->port, gpiod_settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
 
         /* test camera */
-        ret = stv0680_ping(device);
-	if (ret < 0) {
-		free (device);
-		camera->camlib_data = NULL;
-	}
+        ret = stv0680_ping(camera->port);
 
 	return (ret);
 }
