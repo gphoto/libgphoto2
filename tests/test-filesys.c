@@ -79,6 +79,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (!strcmp (folder, "/whatever")) {
 		gp_list_append (list, "file1", NULL);
 		gp_list_append (list, "file2", NULL);
+		gp_list_append (list, "file3", NULL);
+		gp_list_append (list, "file4", NULL);
+		gp_list_append (list, "file5", NULL);
+		gp_list_append (list, "file6", NULL);
 	}
 
 	return (GP_OK);
@@ -145,12 +149,12 @@ main (int argc, char **argv)
 					     NULL));
 
 	printf ("*** Adding a file...\n");
-	CHECK (gp_filesystem_append (fs, "/", "my.file", NULL));
+	CHECK (gp_filesystem_append (fs, "/", "my.file", context));
 
 	gp_filesystem_dump (fs);
 
 	printf ("*** Removing this file...\n");
-	CHECK (gp_filesystem_delete_file (fs, "/", "my.file", NULL));
+	CHECK (gp_filesystem_delete_file (fs, "/", "my.file", context));
 
 	gp_filesystem_dump (fs);
 
@@ -160,68 +164,68 @@ main (int argc, char **argv)
 	gp_filesystem_dump (fs);
 
 	printf ("*** Adding /...\n");
-	CHECK (gp_filesystem_append (fs, "/", NULL, NULL));
+	CHECK (gp_filesystem_append (fs, "/", NULL, context));
 
 	printf ("*** Adding /whatever ...\n");
-	CHECK (gp_filesystem_append (fs, "/whatever", NULL, NULL));
+	CHECK (gp_filesystem_append (fs, "/whatever", NULL, context));
 
 	printf ("*** Adding /whatever/dir...\n");
-	CHECK (gp_filesystem_append (fs, "/whatever/dir", NULL, NULL));
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", NULL, context));
 
 	printf ("*** Adding /whatever/dir/file1...\n");
-	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file1", NULL));
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file1", context));
 
 	gp_filesystem_dump (fs);
 
 	printf ("*** Adding /whatever/dir/file2...\n");
-	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file2", NULL));
-	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file3", NULL));
-	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file4", NULL));
-	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file5", NULL));
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file2", context));
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file3", context));
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file4", context));
+	CHECK (gp_filesystem_append (fs, "/whatever/dir", "file5", context));
 
 	gp_filesystem_dump (fs);
 
 	printf ("*** Deleting everything below root...\n");
-	CHECK (gp_filesystem_delete_all (fs, "/", NULL));
+	CHECK (gp_filesystem_delete_all (fs, "/", context));
 
 	gp_filesystem_dump (fs);
 
 	printf ("*** Appending root directory...\n");
-	CHECK (gp_filesystem_append (fs, "/", NULL, NULL));
+	CHECK (gp_filesystem_append (fs, "/", NULL, context));
 
 	printf ("*** Appending some directories...\n");
-	CHECK (gp_filesystem_append (fs, "/whatever", NULL, NULL));
-	CHECK (gp_filesystem_append (fs, "/whatever/directory", NULL, NULL));
+	CHECK (gp_filesystem_append (fs, "/whatever", NULL, context));
+	CHECK (gp_filesystem_append (fs, "/whatever/directory", NULL, context));
 
 	printf ("*** Adding some files...\n");
 	CHECK (gp_filesystem_append (fs, "/whatever/directory",
-				     "some.file", NULL));
+				     "some.file", context));
 	CHECK (gp_filesystem_append (fs, "/whatever/directory",
-				     "some.file2", NULL));
+				     "some.file2", context));
 	CHECK (gp_filesystem_append (fs, "/another/directory",
-				     "another.file", NULL));
+				     "another.file", context));
 
 	gp_filesystem_dump (fs);
 
 	printf ("*** Getting info about a file...\n");
 	CHECK (gp_filesystem_get_info (fs, "/whatever/directory", "some.file",
-				       &info, NULL));
+				       &info, context));
 
 	printf ("*** Getting info again (cache!)...\n");
 	CHECK (gp_filesystem_get_info (fs, "/whatever/directory", "some.file",
-				       &info, NULL));
+				       &info, context));
 
 	printf ("*** Set info about another file...\n");
 	CHECK (gp_filesystem_set_info (fs, "/whatever/directory", "some.file2",
-				       info, NULL));
+				       info, context));
 
 	printf ("*** Getting info about this file (cache!)...\n");
 	CHECK (gp_filesystem_get_info (fs, "/whatever/directory", "some.file2",
-				       &info, NULL));
+				       &info, context));
 
 	printf ("*** Deleting a file...\n");
 	CHECK (gp_filesystem_delete_file (fs, "/whatever/directory",
-					  "some.file2", NULL));
+					  "some.file2", context));
 
 	gp_filesystem_dump (fs);
 
@@ -236,12 +240,12 @@ main (int argc, char **argv)
 
 	printf ("*** Getting file list for folder '/whatever/directory'...\n");
 	CHECK (gp_filesystem_list_folders (fs, "/whatever/directory",
-					   &list, NULL));
+					   &list, context));
 
 	printf ("*** Getting file list for folder '/whatever/directory' "
 		"again (cached!)...\n");
 	CHECK (gp_filesystem_list_folders (fs, "/whatever/directory",
-					   &list, NULL));
+					   &list, context));
 
 	printf ("*** Counting the contents...\n");
 	CHECK (count = gp_list_count (&list));
@@ -253,8 +257,15 @@ main (int argc, char **argv)
 	}
 
 	printf ("*** Getting folder of 'file1'...\n");
-	CHECK (gp_filesystem_get_folder (fs, "file1", &name, NULL));
+	CHECK (gp_filesystem_get_folder (fs, "file1", &name, context));
 	printf ("... found in '%s'.\n", name);
+
+	printf ("*** Deleting a couple of files...\n");
+	CHECK (gp_filesystem_delete_file (fs, "/whatever", "file5", context));
+	CHECK (gp_filesystem_delete_file (fs, "/whatever", "file4", context));
+	CHECK (gp_filesystem_delete_file (fs, "/whatever", "file3", context));
+
+	gp_filesystem_dump (fs);
 
 	printf ("*** Freeing file system...\n");
 	CHECK (gp_filesystem_free (fs));
