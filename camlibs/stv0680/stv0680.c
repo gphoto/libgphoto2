@@ -19,7 +19,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 #include <gphoto2.h>
 #include <gphoto2-port.h>
 
@@ -72,7 +72,7 @@ int camera_abilities (CameraAbilitiesList *list)
 		a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
 
 		if (!camera_to_usb[i].idVendor) {
-			a.port     = GP_PORT_SERIAL;
+			a.port     = GP_PORT_SERIAL | GP_PORT_USB;
 			a.speed[0] = 115200;
 			a.speed[1] = 0;
 			a.operations        = GP_OPERATION_NONE;
@@ -184,7 +184,7 @@ static int camera_about (Camera *camera, CameraText *about)
 		_("STV0680\n"
 		"Adam Harrison <adam@antispin.org>\n"
 		"Driver for cameras using the STV0680 processor ASIC.\n"
-		"Protocol reverse engineered using CommLite Beta 5"
+		"Protocol reverse engineered using CommLite Beta 5\n"
 		"Carsten Weinholz <c.weinholz@netcologne.de>\n"
 		"Extended for Aiptek PenCam and other STM USB Dual-mode cameras."));
 
@@ -232,4 +232,6 @@ int camera_init (Camera *camera)
 
 	return (ret);
 }
+
+
 
