@@ -276,3 +276,9 @@ typedef struct Camera {
 	void 		*camlib_data;
 	void 		*frontend_data;
 } Camera;
+
+/* Interface function pointers */
+typedef int (*CameraStatus)		(struct Camera*, char*);
+typedef int (*CameraProgress)	(struct Camera*, CameraFile*, float);
+typedef int (*CameraMessage)	(struct Camera*, char*);
+typedef int (*CameraConfirm)	(struct Camera*, char*);

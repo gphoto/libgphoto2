@@ -1,10 +1,11 @@
-#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 #include <gphoto2.h>
 #include <gpio.h>
 #include "fujitsu.h"
 #include "library.h"
 
-#define		QUICKSLEEP	5000
+#define		QUICKSLEEP	5
 
 void fujitsu_dump_packet (Camera *camera, char *packet) {
 
@@ -106,7 +107,6 @@ int fujitsu_valid_packet (Camera *camera, char *packet) {
 int fujitsu_write_packet (Camera *camera, char *packet) {
 
 	int x, ret, r, checksum=0, length;
-	char buf[4096], p[4096];
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 	
 	fujitsu_debug_print(fd, " fujitsu_write_packet");
@@ -168,7 +168,7 @@ int fujitsu_write_packet (Camera *camera, char *packet) {
 
 int fujitsu_read_packet (Camera *camera, char *packet) {
 
-	int x, y, r=0, ret, done, length=0;
+	int y, r=0, ret, done, length=0;
 	int blocksize, bytes_read;
 	char buf[4096], msg[4096];
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
@@ -182,8 +182,10 @@ read_packet_again:
 //	usleep(QUICKSLEEP);
 
 	done = 0;
+#ifdef GPIO_USB
 	if (fd->type == GP_PORT_USB)
 		gpio_usb_clear_halt(fd->dev);
+#endif
 	while (!done && (r++<RETRIES)) {
 
 		switch (fd->type) {
@@ -250,9 +252,10 @@ read_packet_again:
 	}
 
 	fujitsu_dump_packet(camera, packet);
+#ifdef GPIO_USB
 	if (fd->type == GP_PORT_USB)
 		gpio_usb_clear_halt(fd->dev);
-
+#endif
 	return (GP_OK);
 
 }
@@ -375,7 +378,7 @@ int fujitsu_ping(Camera *camera) {
 	return (GP_ERROR);
 }
 
-int fujitsu_set_speed(Camera *camera, int speed) {
+int fujitsu_set_speed (Camera *camera, int speed) {
 
 	gpio_device_settings settings;
 	char buf[1024];
@@ -423,8 +426,9 @@ int fujitsu_set_speed(Camera *camera, int speed) {
 		return (GP_ERROR);
 	if (gpio_set_settings(fd->dev, settings)==GPIO_ERROR)
 		return (GP_ERROR);
-	usleep(10000);
 
+	GPIO_SLEEP(10);
+printf("speed change OK\n");
 	return (GP_OK);
 }
 
@@ -662,7 +666,7 @@ int fujitsu_get_string_register (Camera *camera, int reg, int file_number,
 		/*    the option of reading the data that was just	*/
 		/*    transferred by using gp_file_chunk_get		*/
 			if (do_percent)
-			   gp_camera_progress(camera, file, 100.0*(float)x/(float)(l));
+			   gp_camera_progress(camera, file, (float)(100.0*(float)x/(float)(l)));
 		}
 
 		x += packlength;
@@ -712,7 +716,7 @@ int fujitsu_delete(Camera *camera, int picture_number) {
 		return (GP_ERROR);
 	}
 
-	usleep(QUICKSLEEP);
+	GPIO_SLEEP(QUICKSLEEP);
 
 	return (GP_OK);
 }

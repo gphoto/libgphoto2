@@ -26,6 +26,12 @@
 
 	int gp_exit();
 
+	/* Frontend registration */
+	/* ============================================================================== */
+	int gp_frontend_register(CameraStatus status, CameraProgress progress, 
+							  CameraMessage message, CameraConfirm confirm);
+		/* register the frontend's feedback functions */
+	
 	/* Port information */
 	/* ============================================================================== */
 

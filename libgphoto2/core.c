@@ -3,9 +3,14 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#ifndef WIN32
+
+#ifdef WIN32
+#include <direct.h>
+#else
 #include <unistd.h>
 #endif
+
+
 #include <gpio.h>
 #include <gphoto2.h>
 
@@ -38,6 +43,12 @@ Setting         glob_setting[512];
 int gp_camera_init (Camera *camera, CameraInit *init);
 int gp_camera_exit (Camera *camera);
 
+CameraStatus   gp_interface_status = NULL;
+CameraProgress gp_interface_progress = NULL;
+CameraMessage  gp_interface_message = NULL;
+CameraConfirm  gp_interface_confirm = NULL;
+
+
 int gp_init (int debug)
 {
         char buf[1024];
@@ -54,9 +65,14 @@ int gp_init (int debug)
         }
 
         /* Make sure the directories are created */
+#ifdef WIN32
+		GetWindowsDirectory(buf, 1024);
+		strcat(buf, "\\gphoto");
+		(void)_mkdir(buf);
+#else
         sprintf(buf, "%s/.gphoto", getenv("HOME"));
         (void)mkdir(buf, 0700);
-
+#endif
         if (glob_debug)
                 printf("core: Initializing gpio:\n");
 
@@ -318,9 +334,7 @@ int gp_camera_file_list(Camera *camera, CameraList *list, char *folder)
 
         if (camera->functions->file_list == NULL)
                 return (GP_ERROR);
-
         ret = camera->functions->file_list(camera, list, folder);
-
         if (ret == GP_ERROR)
                 return (GP_ERROR);
 
@@ -505,27 +519,44 @@ int gp_setting_set (char *id, char *key, char *value)
 /* Front-end interaction functions (libraries calls these!)
    ---------------------------------------------------------------------------- */
 
+int gp_frontend_register(CameraStatus status, CameraProgress progress, 
+						  CameraMessage message, CameraConfirm confirm) {
+
+	gp_interface_status   = status;
+	gp_interface_progress = progress;
+	gp_interface_message  = message;
+	gp_interface_confirm  = confirm;
+
+	return (GP_OK);
+}
+
 int gp_camera_status (Camera *camera, char *status)
 {
-        gp_interface_status(camera, status);
+		if (gp_interface_status)
+			gp_interface_status(camera, status);
         return(GP_OK);
 }
 
 int gp_camera_progress (Camera *camera, CameraFile *file, float percentage)
 {
-        gp_interface_progress(camera, file, percentage);
+		if (gp_interface_progress)
+			gp_interface_progress(camera, file, percentage);
 
         return(GP_OK);
 }
 
 int gp_camera_message (Camera *camera, char *message)
 {
-        gp_interface_message(camera, message);
+		if (gp_interface_message)
+			gp_interface_message(camera, message);
         return(GP_OK);
 }
 
 int gp_camera_confirm (Camera *camera, char *message)
 {
+		if (!gp_interface_confirm)
+			/* return YES. dangerous? */
+			return 1;
         return(gp_interface_confirm(camera, message));
 }
 

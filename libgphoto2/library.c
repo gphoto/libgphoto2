@@ -10,8 +10,10 @@
 
 int is_library(char *library_filename) {
 
+		int ret = GP_OK;
         char buf[1024];
         void *lh;
+		c_id id;
 
 #if defined(OS2) || defined(WIN32)
         sprintf(buf, "%s\\%s", CAMLIBS, library_filename);
@@ -21,10 +23,12 @@ int is_library(char *library_filename) {
         
 		if ((lh = GPIO_DLOPEN(buf)) == NULL)
                 return (GP_ERROR);
+		id = (c_id)GPIO_DLSYM(lh, "camera_id");
+		if (!id)
+			ret = GP_ERROR;
+		GPIO_DLCLOSE(lh);
 
-        GPIO_DLCLOSE(lh);
-
-        return (GP_OK);
+        return (ret);
 }
 
 int load_library (Camera *camera, char *camera_name) {
@@ -161,7 +165,7 @@ int load_cameras() {
 
 	if (glob_debug) {
 		printf("core: Loaded camera list:");
-		gp_abilities_list_dump(glob_abilities_list);
+//		gp_abilities_list_dump(glob_abilities_list);
 	}
 
         return (GP_OK);

@@ -12,8 +12,12 @@ int load_settings () {
 	char buf[1024], *c;
 
 	glob_setting_count = 0;
-
+#ifdef WIN32
+	GetWindowsDirectory(buf, 1024);
+	strcat(buf, "\\gphoto\\settings");
+#else
 	sprintf(buf, "%s/.gphoto/settings", getenv("HOME"));
+#endif
 
 	if (glob_debug)
 		printf("core: Loading settings from file \"%s\"\n", buf);

@@ -28,10 +28,14 @@ int fujitsu_build_packet (Camera *camera, char type, char subtype, int data_leng
 int fujitsu_set_speed		(Camera *camera, int speed);
 int fujitsu_delete_picture	(Camera *camera, int picture_number);
 int fujitsu_end_session		(Camera *camera);
-int fujitsu_ack			(Camera *camera);
+int fujitsu_write_ack		(Camera *camera);
+int fujitsu_write_nak		(Camera *camera);
 int fujitsu_ping		(Camera *camera);
 int fujitsu_set_int_register 	(Camera *camera, int reg, int value);
 int fujitsu_get_int_register 	(Camera *camera, int reg, int *value);
 int fujitsu_set_string_register (Camera *camera, int reg, char *s, int length);
-int fujitsu_get_string_register (Camera *camera, int reg, int file_number, 
-				 CameraFile *file, char *s, int *length);
+int fujitsu_get_string_register (Camera *camera, int reg, int file_number,
+								 CameraFile *file, char *s, int *length);
+int fujitsu_folder_set(Camera *camera, char *folder);
+int fujitsu_file_count (Camera *camera);
+int fujitsu_delete(Camera *camera, int picture_number);

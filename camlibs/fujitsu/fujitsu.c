@@ -8,6 +8,9 @@
 
 #define TIMEOUT	   2000
 
+int camera_start(Camera *camera);
+int camera_stop(Camera *camera);
+
 void fujitsu_debug_print(FujitsuData *fd, char *message) {
 
 	if (fd->debug) {
@@ -123,8 +126,10 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 int camera_init (Camera *camera, CameraInit *init) {
 
-	char *p;
-	int l, value=0, x=0, vendor, product, inep, outep;
+	int value=0, x=0;
+#ifdef GPIO_USB
+	int vendor, product, inep, outep;
+#endif
 	gpio_device_settings settings;
 	FujitsuData *fd;
 
@@ -161,15 +166,14 @@ int camera_init (Camera *camera, CameraInit *init) {
 		case GP_PORT_SERIAL:
 			fujitsu_debug_print(fd, "Serial Device");
 			fd->dev = gpio_new(GPIO_DEVICE_SERIAL);
-
-		        strcpy(settings.serial.port, init->port_settings.path);
+			strcpy(settings.serial.port, init->port_settings.path);
 			settings.serial.speed 	 = 19200;
 			settings.serial.bits 	 = 8;
 			settings.serial.parity 	 = 0;
 			settings.serial.stopbits = 1;
 			break;
-		case GP_PORT_USB:
 #ifdef GPIO_USB
+		case GP_PORT_USB:
 			/* lookup the USB information */
 			while (strlen(fujitsu_cameras[x].model)>0) {			
 				if (strcmp(fujitsu_cameras[x].model, init->model)==0) {
@@ -227,10 +231,13 @@ int camera_init (Camera *camera, CameraInit *init) {
 				gp_camera_message(camera, "Can not set the serial port speed");
 				return (GP_ERROR);
 			}
+			fd->speed = init->port_settings.speed;
 			break;
+#ifdef GPIO_USB
 		case GP_PORT_USB:
 			gpio_usb_clear_halt(fd->dev);
 			break;
+#endif
 		default:
 			break;
 	}
@@ -350,10 +357,11 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 	int x=0, error=0, count;
-	char buf[1024];
 
+	printf("file list\n");
 	if ((!fd->folders)&&(strcmp("/", folder)!=0))
 		return (GP_ERROR);
+
 	if (camera_start(camera)==GP_ERROR)
 		return (GP_ERROR);
 
@@ -364,7 +372,7 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 		}
 	}
 
-        count = fujitsu_file_count(camera);
+	count = fujitsu_file_count(camera);
 
         /* Populate the filesystem */
 	gp_filesystem_populate(fd->fs, folder, "PIC%04i.jpg", count);
@@ -396,7 +404,7 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder) {
 	}
 
 	camera_stop(camera);
-        return GP_OK;
+	return GP_OK;
 }
 
 int camera_folder_list(Camera *camera, CameraList *list, char *folder) {
@@ -498,7 +506,7 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 	char *folder, char *filename, int thumbnail) {
 
 	char buf[4096];
-	int length, regl, regd, file_number;
+	int regl, regd, file_number;
 	FujitsuData *fd = (FujitsuData*)camera->camlib_data;
 
 if (camera_start(camera)==GP_ERROR)
@@ -781,15 +789,7 @@ int camera_about (Camera *camera, CameraText *about) {
 
 	fujitsu_debug_print(fd, "Getting 'about' information");
 
-	strcpy(about->text, 
-"Fujitsu SPARClite library
-Scott Fritzinger <scottf@unr.edu>
-Support for Fujitsu-based digital cameras
-including Olympus, Nikon, Epson, and others.
-
-Thanks to Data Engines (www.dataengines.com)
-for the use of their Olympus C-3030Z for USB
-support implementation.");
+	strcpy(about->text, "Fujitsu SPARClite library\nScott Fritzinger <scottf@unr.edu>\nSupport for Fujitsu-based digital cameras\nincluding Olympus, Nikon, Epson, and others.\n\nThanks to Data Engines (www.dataengines.com)\nfor the use of their Olympus C-3030Z for USB\nsupport implementation.");
 
 	return (GP_OK);
 }
