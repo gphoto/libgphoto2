@@ -168,7 +168,7 @@ sx330z_get_toc_page(Camera *camera,GPContext *context,struct traveler_toc_page *
  sx330z_fill_toc_page(tocbuf,TOC); /* convert */
  
  /*  TOC sanity check   */
- if ((TOC->numEntries<0)||(TOC->numEntries>25)) return(GP_ERROR);
+ if ((TOC->numEntries<0)||(TOC->numEntries>25)) return(GP_ERROR_CORRUPTED_DATA);
  return(GP_OK);
 } /* get toc */
 
