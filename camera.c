@@ -487,7 +487,7 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file)
 	return (GP_OK);
 }
 
-char *
+const char *
 gp_camera_get_result_as_string (Camera *camera, int result)
 {
         /* Camlib error? */

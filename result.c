@@ -50,7 +50,7 @@ static char *result_string[] = {
 	/* GP_ERROR_PATH_NOT_ABSOLUTE   -111 */ N_("Path not absolute")
 };
 
-char *
+const char *
 gp_result_as_string (int result)
 {
 	/* Really an error? */
@@ -75,7 +75,7 @@ gp_result_as_string (int result)
 
 #define RES_DES(r,str) {if (result == (r)) return (N_(str));}
 
-char *
+const char *
 gp_result_as_description (int result)
 {
 	RES_DES (GP_ERROR_IO,
