@@ -24,6 +24,7 @@ void bayer_unshuffle(int w, int h, unsigned char *raw, unsigned char *output);
 void bayer_demosaic(int w, int h, unsigned char *image);
 
 void bayer_unshuffle_preview(int w, int h, int scale, unsigned char *raw, unsigned char *output);
+void light_enhance(int vw, int vh, int coarse, int fine, unsigned char *output);
 
 #endif
 

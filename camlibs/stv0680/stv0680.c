@@ -131,6 +131,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		result = stv0680_get_image (camera->port, image_no, &data,
 					    (int*) &size);
 		break;
+	case GP_FILE_TYPE_RAW:
+		result = stv0680_get_image_raw (camera->port, image_no, &data,
+					    (int*) &size);
+		break;
 	case GP_FILE_TYPE_PREVIEW:
 		result = stv0680_get_image_preview (camera->port, image_no,
 						&data, (int*) &size);

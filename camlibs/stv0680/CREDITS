@@ -17,3 +17,5 @@ The authors of the barbiecam camlib, whose code was relied on heavily
 in writing this driver.
 
 Steve Miller (of STM) for providing the usb command information.
+
+Kevin Sisson for his pencam/pensnap work, especially for the image filters.

@@ -25,7 +25,7 @@
 
 #include "stv0680.h"
 #include "library.h"
-/*#include "sharpen.h"*/
+#include "sharpen.h"
 #include "bayer.h"
 #include <pattrec.h>
 #include "../../libgphoto2/bayer.h"
@@ -37,7 +37,6 @@
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
-#    define _(String) (String)
 #    define N_(String) (String)
 #  endif
 #else
@@ -151,17 +150,13 @@ static int stv0680_try_cmd(GPPort *port, unsigned char cmd,
 }
 
 static int
-stv680_last_error(GPPort *port) {
-    	struct stv680_error_info errinf;
+stv0680_last_error(GPPort *port, struct stv680_error_info *errinf) {
 	int ret;
 
 	ret = stv0680_try_cmd(port, CMDID_CLEAR_COMMS_ERROR, 0,
-		(void*)&errinf, sizeof(errinf));
+		(void*)errinf, sizeof(*errinf));
 	if (ret != GP_OK)
 	    return ret;
-	fprintf(stderr,"last error was: %02x, additional info %02x\n",
-		errinf.error,errinf.info
-	);
 	return GP_OK;
 }
 
@@ -193,7 +188,10 @@ int stv0680_file_count(GPPort *port, int *count)
 	return GP_OK;
 }
 
-int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
+/**
+ * Get image, with just bayer applied.
+ */
+int stv0680_get_image_raw(GPPort *port, int image_no, char **data, int *size)
 {
 	struct stv680_image_header imghdr;
 	char header[64];
@@ -209,10 +207,40 @@ int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
 	h = (imghdr.height[0] << 8) | imghdr.height[1];
 	*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
 	    (imghdr.size[2]<<8) | imghdr.size[3];
+	raw = malloc(*size);
+	if ((ret=gp_port_read(port, raw, *size))<0)
+	    return ret;
+
+	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
+	*data = malloc((*size * 3) + strlen(header));
+	strcpy(*data, header);
+	gp_bayer_decode(raw,w,h,*data+strlen(header),BAYER_TILE_GBRG_INTERLACED);
+	free(raw);
+	*size *= 3;
+	*size += strlen(header);
+	return GP_OK;
+}
+
+int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
+{
+	struct stv680_image_header imghdr;
+	char header[64];
+	unsigned char *raw, *bayerpre;
+	int h,w,ret,coarse,fine;
+
+	ret = stv0680_try_cmd(port, CMDID_UPLOAD_IMAGE, image_no,
+		(void*)&imghdr, sizeof(imghdr));
+	if(ret != GP_OK)
+		return ret;
+
+	w = (imghdr.width[0]  << 8) | imghdr.width[1];
+	h = (imghdr.height[0] << 8) | imghdr.height[1];
+	*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+	    (imghdr.size[2]<<8) | imghdr.size[3];
+	fine = (imghdr.fine_exposure[0]<<8)|imghdr.fine_exposure[1];
+	coarse = (imghdr.coarse_exposure[0]<<8)|imghdr.coarse_exposure[1];
 #if 0
 	fprintf(stderr,"image flag %x\n",imghdr.flags);
-	fprintf(stderr,"fine exp %d\n",(imghdr.fine_exposure[0]<<8)|imghdr.fine_exposure[1]);
-	fprintf(stderr,"coarse exp %d\n",(imghdr.coarse_exposure[0]<<8)|imghdr.coarse_exposure[1]);
 	fprintf(stderr,"sensor gain %d\n",imghdr.sensor_gain);
 	fprintf(stderr,"sensor clkdiv %d\n",imghdr.sensor_clkdiv);
 	fprintf(stderr,"avg pixel value %d\n",imghdr.avg_pixel_value);
@@ -223,9 +251,14 @@ int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
 
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
 	*data = malloc((*size * 3) + strlen(header));
+	bayerpre = malloc((*size * 3));
 	strcpy(*data, header);
-	gp_bayer_decode (raw, w, h, *data + strlen(header), BAYER_TILE_GBRG_INTERLACED);
+	gp_bayer_expand (raw, w, h, bayerpre, BAYER_TILE_GBRG_INTERLACED);
+	light_enhance(w,h,coarse,fine,bayerpre);
+	gp_bayer_interpolate (bayerpre, w, h, BAYER_TILE_GBRG_INTERLACED);
+	sharpen (w, h, bayerpre, *data + strlen(header), 50);
 	free(raw);
+	free(bayerpre);
 	*size *= 3;
 	*size += strlen(header);
 	return GP_OK;
@@ -271,10 +304,8 @@ int stv0680_get_image_preview(GPPort *port, int image_no,
 	w >>=scale;
 	h >>=scale;
 	*size = w * h;
-	printf("Image is %dx%d (%ul bytes)\n", w, h, *size);
 
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
-
 	*data = calloc(1,(*size * 3) + strlen(header));
 	strcpy(*data, header);
 
@@ -291,19 +322,97 @@ int stv0680_get_image_preview(GPPort *port, int image_no,
 
 int stv0680_capture(GPPort *port)
 {
-    int ret;
-    struct stv680_error_info errinf;
+	int ret;
+	struct stv680_error_info errinf;
 
-    ret = stv0680_try_cmd(port, CMDID_GRAB_IMAGE, GRAB_UPDATE_INDEX|GRAB_USE_CAMERA_INDEX, NULL, 0);
-    if (ret!=GP_OK)
-	return ret;
-    do {
-	ret = stv0680_try_cmd(port, CMDID_CLEAR_COMMS_ERROR, 0, (void*)&errinf, sizeof(errinf));
+	ret = stv0680_try_cmd(port, CMDID_GRAB_IMAGE, GRAB_UPDATE_INDEX|GRAB_USE_CAMERA_INDEX, NULL, 0);
+	if (ret!=GP_OK)
+		return ret;
+	/* wait until it is done */
+	do {
+	    ret = stv0680_last_error(port, &errinf);
+	    if (ret != GP_OK)
+		return ret;
+	    if (errinf.error == CAMERR_BAD_EXPOSURE) {
+		gp_port_set_error(port,_("Bad exposure (not enough light probably)"));
+		return GP_ERROR;
+	    }
+	    if (errinf.error != CAMERR_BUSY)
+		fprintf(stderr,"stv680_capture: error was %d.%d\n",errinf.error,errinf.info);
+	} while (errinf.error == CAMERR_BUSY);
+	return GP_OK;
+}
+
+#if 0
+/* this somehow terminates after some images. timeouts due to low exposure?
+ * I haven't found out yet. But this would be the right way to do it.
+ */
+int stv0680_capture_preview(GPPort *port, char **data, int *size)
+{
+	struct stv680_image_header imghdr;
+	struct stv680_image_info imginfo;
+	struct stv680_error_info errinf;
+	char header[64];
+	unsigned char *raw, *bayerpre;
+	int fine,coarse,h,w,ret;
+
+	ret = stv0680_last_error(port, &errinf);
 	if (ret != GP_OK)
 	    return ret;
-    } while (errinf.error == CAMERR_BUSY);
-    return GP_OK;
+
+	ret = stv0680_try_cmd(port, CMDID_GRAB_IMAGE, GRAB_USE_CAMERA_INDEX, NULL,0);
+	if(ret != GP_OK)
+		return ret;
+	do {
+		ret = stv0680_try_cmd(port, CMDID_CLEAR_COMMS_ERROR, 0, (void*)&errinf, sizeof(errinf));
+		if (ret != GP_OK)
+		    return ret;
+		if (errinf.error == CAMERR_BAD_EXPOSURE) {
+		    gp_port_set_error(port,_("Bad exposure (not enough light probably)"));
+		    return GP_ERROR;
+		}
+		if (errinf.error != CAMERR_BUSY)
+		    fprintf(stderr,"stv680_capture: error was %d.%d\n",errinf.error,errinf.info);
+	} while (errinf.error == CAMERR_BUSY);
+
+#if 0
+	fprintf(stderr,"image flag %x\n",imghdr.flags);
+	fprintf(stderr,"sensor gain %d\n",imghdr.sensor_gain);
+	fprintf(stderr,"sensor clkdiv %d\n",imghdr.sensor_clkdiv);
+	fprintf(stderr,"avg pixel value %d\n",imghdr.avg_pixel_value);
+#endif
+	ret = stv0680_try_cmd(port, CMDID_GET_IMAGE_INFO, 0, (void*)&imginfo, sizeof(imginfo));
+	if (ret!=GP_OK)
+	    return ret;
+	ret = stv0680_try_cmd(port, CMDID_UPLOAD_IMAGE, (imginfo.index[0]<<8)|imginfo.index[1], (void*)&imghdr, sizeof(imghdr));
+	if(ret != GP_OK)
+		return ret;
+	fine = (imghdr.fine_exposure[0]<<8)|imghdr.fine_exposure[1];
+	coarse = (imghdr.coarse_exposure[0]<<8)|imghdr.coarse_exposure[1];
+	w = (imghdr.width[0]  << 8) | imghdr.width[1];
+	h = (imghdr.height[0] << 8) | imghdr.height[1];
+	*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+	    (imghdr.size[2]<<8) | imghdr.size[3];
+
+	raw = malloc(*size);
+	if ((ret=gp_port_read(port, raw, *size))<0)
+	    return ret;
+
+	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
+	*data = malloc(((*size) * 3) + strlen(header));
+	strcpy(*data, header);
+	bayerpre = malloc(((*size)*3));
+	gp_bayer_expand (raw, w, h, bayerpre, BAYER_TILE_GBRG_INTERLACED);
+	light_enhance(w,h,coarse,fine,bayerpre);
+	gp_bayer_interpolate (bayerpre, w, h, BAYER_TILE_GBRG_INTERLACED);
+	sharpen (w, h, bayerpre,*data + strlen(header), 66);
+	free(bayerpre);
+	free(raw);
+	*size *= 3;
+	*size += strlen(header);
+	return GP_OK;
 }
+#endif
 
 int stv0680_capture_preview(GPPort *port, char **data, int *size)
 {
@@ -367,16 +476,17 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
 	*data = malloc((*size * 3) + strlen(header));
 	strcpy(*data, header);
-	bayerpre = malloc((*size*3));
-	gp_bayer_decode (raw, w, h, *data + strlen(header), BAYER_TILE_GBRG_INTERLACED);
-	/*gp_bayer_decode (raw, w, h, bayerpre, BAYER_TILE_GBRG_INTERLACED);*/
-	/*sharpen (w, h, bayerpre,*data + strlen(header), 66);*/
+	bayerpre = malloc(((*size)*3));
+	/* no light enhancement here, we do not get the exposure values? */
+	gp_bayer_decode (raw, w, h, bayerpre, BAYER_TILE_GBRG_INTERLACED);
+	sharpen (w, h, bayerpre,*data + strlen(header), 66);
 	free(raw);
 	free(bayerpre);
 	*size *= 3;
 	*size += strlen(header);
 	return GP_OK;
 }
+
 
 int stv0680_delete_all(GPPort *port) {
     return stv0680_try_cmd(port,CMDID_SET_IMAGE_INDEX,0,NULL,0);

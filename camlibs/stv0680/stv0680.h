@@ -125,6 +125,13 @@ struct stv680_image_header { /* For all upload and get image header */
 #define IMAGE_FIRST_OF_MOVIE	0x10 
 };
 
+#define CMDID_GRAB_UPLOAD			0x89
+struct stv680_image_header_small {
+    unsigned char size[4];
+    unsigned char width[2];
+    unsigned char height[2];
+};
+
 #define CMDID_GRAB_IMAGE			0x05
 #define 	GRAB_UPDATE_INDEX	0x1000
 #define 	GRAB_TO_LAST_LOCATION	0x2000

@@ -1,5 +1,16 @@
 2001-12-08  Marcus Meissner <marcus@jet.franken.de>
 	
+	* camlibs/stv0680: Added 'capture-image'. Tried implementing a 
+	  different 'capture-preview' method, but failed (yet).
+	  Merged image enhancements from pencam-0.42 (sharpening, white
+	  balancing, gamma enhancement). Not really perfect yet, but the
+	  images do look better already.
+	  Added 'get-raw-image', for getting just the (old) only bayer
+	  processed images.
+	* camlibs/stv0680/sharpen.[ch]: GIMP Sharpening Plugin.
+
+2001-12-08  Marcus Meissner <marcus@jet.franken.de>
+	
 	* libgphoto2/bayer.[ch]: Export gp_bayer_expand. Needed if you want
 	  to do a lightfilter pass right between bayer expand and bayer
 	  interpolate.
