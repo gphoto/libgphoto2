@@ -27,9 +27,7 @@
 #include <termios.h>
 #include <time.h>
 #include <ctype.h>
-#if 0
-#include <gtk/gtk.h>
-#endif
+
 #include <gphoto2.h>
 #include <gpio.h>
 
@@ -200,17 +198,6 @@ int canon_get_batt_status(Camera *camera, int *pwr_status, int *pwr_source)
 	
 	return psa50_get_battery(camera, pwr_status, pwr_source);
 }
-#if 0
-static void canon_set_owner(GtkWidget *win,GtkWidget *owner)
-{
-        char *entry;
-
-        gp_camera_status(NULL, "Setting owner name.");
-        entry = gtk_entry_get_text(GTK_ENTRY(owner));
-        debug_message(camera,"New owner name: %s\n",entry);
-        psa50_set_owner_name(entry);
-}
-#endif
 
 char *camera_model_string(Camera *camera)
 {
@@ -466,519 +453,12 @@ int camera_file_list(Camera *camera, CameraList *list, char *folder)
 
 }
 
-/**
- * setPathName was borrowed from the konica driver
- */
-static void setPathName(char *fname)
-{
-  char *sp;
-  int   flen;
-  sp = getenv("HOME");
-  if (!sp)
-    sp = ".";
-  strcpy(fname, sp);
-  flen = strlen(fname);
-  while (fname[flen-1] == '/')
-    {
-      fname[flen-1] = '\0';
-      flen--;
-    }
-  if (!strstr(fname, "/.gphoto"))
-      strcat(fname, "/.gphoto");
-}
-/**
- * setFileName was borrowed from the Konica driver
- */
-static void setFileName(char *fname)
-{
-   setPathName(fname);
-   strcat(fname, "/powershotrc");
-}
-
-
-
 /****************************************************************************
  *
  * gphoto library interface calls
  *
  ****************************************************************************/
 
-#if 0
-static int _entry_path(const struct psa50_dir *tree,
-  const struct psa50_dir *entry,char *path)
-{
-    path = strchr(path,0);
-    while (tree->name) {
-        *path = '\\';
-        strcpy(path+1,tree->name);
-        if (tree == entry) return 1;
-        if (!tree->is_file && tree->user)
-            if (_entry_path(tree->user,entry,path)) return 1;
-        tree++;
-    }
-    return 0;
-}
-
-
-static char *entry_path(Camera *camera,const struct psa50_dir *tree,
-  const struct psa50_dir *entry)
-{
-	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-    static char path[300];
-
-    strcpy(path,cs->cached_drive);
-    (void) _entry_path(cs->cached_tree,entry,path);
-    return path;
-}
-#endif
-#if 0
-static void cb_select(GtkItem *item,struct psa50_dir *entry)
-{
-    char *path;
-    unsigned char *file;
-    int length,size;
-    int fd;
-
-    if (!entry || !entry->is_file) {
-        gtk_item_deselect(item);
-        return;
-    }
-    path = entry_path(cached_tree,entry);
-    gp_camera_status(NULL, path);
-    file = psa50_get_file(path,&length);
-    if (!file) return;
-    fd = creat(entry->name,0644);
-    if (fd < 0) {
-        perror("creat");
-        free(file);
-        return;
-    }
-    size = write(fd,file,length);
-    if (size < 0) perror("write");
-    else if (size < length) debug_message(camera,"short write: %d/%d\n",size,length);
-    if (close(fd) < 0) perror("close");
-    free(file);
-    gp_camera_status(NULL, "File saved");
-}
-#endif
-
-#if 0
-static int get_all(struct psa50_dir *entry) {
-
-  if (  entry->is_file) {
-    cb_select(NULL, entry);
-    return 1;
-  }
-  entry = entry->user;
-  if (!entry) return 1;
-  for (; entry->name; entry++)
-    if (!get_all(entry)) return 0;
-  return 1;
-
-}
-#endif
-
-#if 0
-static void cb_get_all(GtkItem *item) {
-
-  get_all(cached_tree);
-
-}
-#endif
-
-#if 0
-static int populate(struct psa50_dir *entry,GtkWidget *branch)
-{
-    GtkWidget *item,*subtree;
-
-    item = gtk_tree_item_new_with_label(entry ? (char *) entry->name :
-      cached_drive);
-    if (!item) return 0;
-    gtk_tree_append(GTK_TREE(branch),item);
-    gtk_widget_show(item);
-    gtk_signal_connect(GTK_OBJECT(item),"select",GTK_SIGNAL_FUNC(cb_select),
-      entry);
-    if (entry && entry->is_file) {
-        entry->user = item;
-        return 1;
-    }
-    entry = entry ? entry->user : cached_tree;
-    if (!entry) return 1;
-    subtree = gtk_tree_new();
-    if (!subtree) return 0;
-    gtk_tree_item_set_subtree(GTK_TREE_ITEM(item),subtree);
-    gtk_tree_item_expand(GTK_TREE_ITEM(item));
-    for (; entry->name; entry++)
-        if (!populate(entry,subtree)) return 0;
-    return 1;
-}
-#endif
-
-#if 0
-static void cb_clear(GtkWidget *widget,GtkWidget *window)
-{
-  //    gtk_widget_destroy(window);
-
-    cached_ready = 0;
-    cached_disk = 0;
-    if (cached_dir) clear_dir_cache();
-    cached_dir = 0;
-}
-#endif
-
-/**
- * Save current driver setup into a settings file (~/.gphoto/powershotrc)
- * Note from scott: use gp_settings_set/get to save and retrieve settings
- */
-void save_rcfile(Camera *camera) {
-	char  fname[128];
-	FILE *fd;
-	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-
-	setFileName(fname);
-	fd = fopen(fname, "w");
-	if (!fd) {
-		char cmd[140];
-		setPathName(fname);
-		sprintf(cmd, "mkdir %s", fname);
-		system(cmd);
-		setFileName(fname);
-		fd = fopen(fname, "w");
-	}
-	if (fd) {
-		struct tm *tp;
-		time_t    mytime;
-		mytime = time(NULL);
-		tp = localtime(&mytime);
-		fprintf(fd, "#  Canon Powershot configuration - saved on %4.4d/%2.2d/%2.2d at %2.2d:%2.2d\n\n",
-				tp->tm_year+1900, tp->tm_mon+1, tp->tm_mday,
-				tp->tm_hour, tp->tm_min);
-		fprintf(fd, "\n\n# Debug level:\n"
-                "# 0: no debug at all\n"
-                "# 1: debug functions\n"
-                "# 9: debug everything, including hex. dumps of packets\n\n");
-		fprintf(fd, "%-12.12s %i\n", "Debug", cs->debug);
-		
-		fclose(fd);
-		gp_camera_status(NULL, "Saved configuration");
-	} else
-	  debug_message(camera,"Unable to open/create %s - configuration not saved\n",
-					fname);
-}
-
-/**
- * Configuration dialog for Canon cameras.
- *
- * This dialog tries to get information from the camera, but in case
- * the camera does not answer, it should show anyway.
- *
- * Main settings available there:
- *
- * - Compact Flash card contents with download
- * - Speed select
- * - Date get/set
- * - Owner name get/set
- * - AC status (battery/AC)
- * - Firmware revision
- */
-
-#if 0
-static int canon_configure(void)
-{
-
-  //    GtkWidget *window,*box,*scrolled_win,*tree,*clear,*done;
-  GtkWidget *dialog, *hbox, *vbox, *label, *tree, *vseparator;
-  GtkWidget *file_list, *button, *cbutton, *clear,*set_button;
-  GtkWidget *combo, *swoff, *sync, *linkCombo;
-  GtkWidget *owner_entry, *ga;
-  GList *list;
-
-  char cam_model[80];
-  char cam_date[34];
-  char firmwrev[48];
-  char power_stats[48];
-  struct tm *camtm;
-  time_t camtime;
-  char *csp;
-  int pwr_status, pwr_source;
-
-
-
-  // First create the dialog window, with title, position and size:
-  dialog = gtk_dialog_new();
-  gtk_window_set_title(GTK_WINDOW(dialog), "Camera Setup");
-  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
-  gtk_container_border_width(GTK_CONTAINER(dialog), 5);
-  gtk_widget_set_usize(dialog, 500, 350);
-
-
-  /* Box going across the dialog... */
-  hbox = gtk_hbox_new(FALSE, 5);
-  gtk_widget_show(hbox);
-  gtk_box_pack_start_defaults(GTK_BOX(GTK_DIALOG(dialog)->vbox),
-                             hbox);
-
-  /* Vertical box holding the file browser */
-  vbox = gtk_vbox_new(FALSE, 0);
-  gtk_widget_show(vbox);
-  gtk_box_pack_start_defaults(GTK_BOX(hbox), vbox);
-
-  label = gtk_label_new("CF card file browser:");
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
-  gtk_widget_show(label);
-
-  file_list = gtk_scrolled_window_new(NULL,NULL);
-  if (!file_list) {
-    gtk_widget_destroy(dialog);
-    return 0;
-  }
-  gtk_container_border_width(GTK_CONTAINER(file_list), 5);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(file_list),
-                                GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
-  gtk_widget_set_usize(file_list,200,400);
-  gtk_widget_show(file_list);
-  gtk_box_pack_start(GTK_BOX(vbox),file_list,TRUE,TRUE,FALSE);
-
-
-  clear = gtk_button_new_with_label("Clear list");
-  if (!clear) {
-    gtk_widget_destroy(dialog);
-    return 0;
-  }
-
-  gtk_signal_connect(GTK_OBJECT(clear),"clicked",GTK_SIGNAL_FUNC(cb_clear),
-                    dialog);
-  gtk_widget_show(clear);
-  gtk_box_pack_start(GTK_BOX(vbox),clear,FALSE,FALSE,5);
-
-  ga = gtk_button_new_with_label("Get All");
-  if (!ga) {
-    gtk_widget_destroy(dialog);
-    return 0;
-  }
-
-  gtk_signal_connect(GTK_OBJECT(ga),"clicked",GTK_SIGNAL_FUNC(cb_get_all),
-                    dialog);
-  gtk_widget_show(ga);
-  gtk_box_pack_start(GTK_BOX(vbox),ga,FALSE,FALSE,5);
-
-  /* Create the tree object that will hold the directory
-   * contents, and fill it.
-   */
-  tree = gtk_tree_new();
-  if (!tree) {
-    gtk_widget_destroy(dialog);
-    return 0;
-  }
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(file_list),
-                                       tree);
-  gtk_widget_show(tree);
-  populate(NULL,tree);
-
-
-  /* The the second half of the dialog: camera model, date and time,
-   * etc...
-   */
-  vseparator = gtk_vseparator_new();
-  gtk_widget_show(vseparator);
-  gtk_box_pack_start(GTK_BOX(hbox), vseparator, FALSE, FALSE, 2);
-
-  vbox = gtk_vbox_new(FALSE, 0);
-  gtk_widget_show(vbox);
-  gtk_box_pack_start(GTK_BOX(hbox), vbox, FALSE, FALSE, 2);
-
-  /* Get the camera model string. This will initiate serial traffic
-   * if the user did not get the index before. */
-  strcpy(cam_model,"Camera model: ");
-  strncat(cam_model, camera_model_string(),60);
-  label = gtk_label_new(cam_model);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
-  gtk_widget_show(label);
-
-  /**
-   * Get the owner name, and put it in a text field.
-   */
-  hbox = gtk_hbox_new(FALSE, 2);
-  gtk_widget_show(hbox);
-  gtk_box_pack_start(GTK_BOX(vbox),hbox,FALSE,FALSE,0);
-  label = gtk_label_new("Owner name: ");
-  gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
-  gtk_widget_show(label);
-
-  owner_entry = gtk_entry_new_with_max_length(30);
-  gtk_entry_set_text(GTK_ENTRY(owner_entry),camera_data.owner);
-  gtk_box_pack_start(GTK_BOX(hbox), owner_entry, FALSE, FALSE, 0);
-  gtk_widget_show(owner_entry);
-
-  set_button = gtk_button_new_with_label("Set");
-  gtk_box_pack_start(GTK_BOX(hbox), set_button, FALSE, FALSE, 1);
-  gtk_widget_show(set_button);
-  gtk_signal_connect(GTK_OBJECT(set_button),"clicked",GTK_SIGNAL_FUNC(canon_set_owner),
-                    owner_entry);
-  gtk_widget_show(label);
-
-  label = gtk_label_new(" ");
-  //  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-  gtk_widget_show(label);
-  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 1);
-
-  if (cached_ready) {
-    strcpy(cam_date,"Date: ");
-    camtime = psa50_get_time();
-    camtm = gmtime(&camtime);
-    strncat(cam_date, asctime(camtm),26);
-  }
-  else
-    strcpy(cam_date,"Date: camera unavailable");
-  label = gtk_label_new(cam_date);
-
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-  gtk_widget_show(label);
-  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 1);
-
-  sprintf(firmwrev,"Firmware revision: %i.%i.%i.%i",
-          camera_data.firmwrev[3],camera_data.firmwrev[2],
-          camera_data.firmwrev[1],camera_data.firmwrev[0] );
-  label = gtk_label_new(firmwrev);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-  gtk_widget_show(label);
-  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 1);
-
-
-  if (cached_ready) {
-    strcpy(power_stats,"Power: ");
-    canon_get_batt_status(&pwr_status,&pwr_source);
-    switch (pwr_source) {
-    case CAMERA_ON_AC:
-      strcat(power_stats, "AC adapter ");
-      break;
-    case CAMERA_ON_BATTERY:
-        strcat(power_stats, "on battery ");
-        break;
-    default:
-        sprintf(power_stats,"Power: unknown (%i",pwr_source);
-        break;
-    }
-    switch (pwr_status) {
-        char cde[16];
-    case CAMERA_POWER_OK:
-      strcat(power_stats, "(power OK)");
-      break;
-    case CAMERA_POWER_BAD:
-        strcat(power_stats, "(power low)");
-        break;
-    default:
-        sprintf(cde," - %i)",pwr_status);
-        strcat(power_stats,cde);
-        break;
-    }
-  }
-  else
-    strcpy(power_stats,"Power: camera unavailable");
-  label = gtk_label_new(power_stats);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-  gtk_widget_show(label);
-  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 1);
-
-  label = gtk_label_new(" ");
-  gtk_widget_show(label);
-  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 1);
-
-  /**
-   * Then, speed settings. We need to save these to a file...
-   */
-
-  /* Make a small horizontal box for speed selection: */
-  hbox = gtk_hbox_new(FALSE, 2);
-  gtk_widget_show(hbox);
-  gtk_box_pack_start(GTK_BOX(vbox),hbox,FALSE,FALSE,5);
-
-  label = gtk_label_new("Speed: ");
-  gtk_widget_show(label);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-  gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 2);
-
-  list = NULL;
-  combo = gtk_combo_new();
-  gtk_widget_show(combo);
-  gtk_box_pack_start(GTK_BOX(hbox), combo, FALSE, FALSE, 1);
-
-  list = g_list_append(list, "9600");
-  list = g_list_append(list, "19200");
-  list = g_list_append(list, "38400");
-  list = g_list_append(list, "57600");
-  list = g_list_append(list, "115200");
-
-  gtk_combo_set_popdown_strings(GTK_COMBO(combo), list);
-  switch (camera_data.speed) {
-  case 9600: csp = "9600"; break;
-  case 19200: csp = "19200"; break;
-  case 38400: csp = "38400"; break;
-  case 57600: csp = "57600"; break;
-  case 115200: csp = "115200"; break;
-  default: csp = "Choose speed";
-  }
-  gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo)->entry),
-                    csp);
-  gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(combo)->entry),FALSE);
-
-
-  // SYNCH TIME Button
-
-  sync = gtk_button_new_with_label("Synchronize Camera Time");
-  gtk_widget_show(sync);
-  gtk_box_pack_start(GTK_BOX(vbox), sync, FALSE, FALSE, 5);
-  gtk_signal_connect(GTK_OBJECT(sync),"clicked",GTK_SIGNAL_FUNC(psa50_sync_time),
-                    dialog);
-
-
-  /* Add a last button to switch off the camera if we want: */
-  swoff = gtk_button_new_with_label("Switch Camera Off");
-  gtk_widget_show(swoff);
-  gtk_box_pack_start(GTK_BOX(vbox), swoff, FALSE, FALSE, 5);
-  gtk_signal_connect(GTK_OBJECT(swoff),"clicked",GTK_SIGNAL_FUNC(switch_camera_off),
-                    dialog);
-
-  /* Buttons at the bottom of the dialog: OK/Save and Cancel */
-
-  button = gtk_button_new_with_label("Save");
-  gtk_widget_show(button);
-  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
-                    button, TRUE, TRUE, 0);
-
-  cbutton = gtk_button_new_with_label("Cancel");
-  gtk_widget_show(cbutton);
-  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
-                    cbutton, TRUE, TRUE, 0);
-
-  if (wait_for_hide(dialog, button, cbutton) == 0)
-      return 1;
-
-  /* If we're there, it's because the user pressed "OK". We should
-   * save the settings now...
-   */
-  csp = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry));
-  if (strncmp(csp, "115200", 6) == 0)
-    camera_data.speed = 115200;
-  else if (strncmp(csp, "57600", 5) == 0)
-    camera_data.speed = 57600;
-  else if (strncmp(csp, "38400", 5) == 0)
-    camera_data.speed = 38400;
-  else if (strncmp(csp, "19200", 5) == 0)
-    camera_data.speed = 19200;
-  else
-    camera_data.speed = 9600;
-
-  save_rcfile();
-
-  return 1;
-
-}
-#endif
-
-/****************************************************************************/
 
 #define JPEG_END        0xFFFFFFD9
 #define JPEG_ESC        0xFFFFFFFF
@@ -1217,27 +697,6 @@ int camera_file_get_preview(Camera *camera, CameraFile *preview, char *folder, c
 }
 /****************************************************************************/
 
-#if 0
-int camera_file_count(Camera *camera)
-{
-	struct canon_info *cs = (struct canon_info*)camera->camlib_data
-	  
-	  /* clear_readiness(); */
-	  if (!update_dir_cache()) {
-		  gp_camera_status(NULL, "Could not obtain directory listing");
-		  return 0;
-	  }
-	
-	
-	switch (cs->model) {
-	 case CANON_PS_A5:
-	 case CANON_PS_A5_ZOOM:
-		return cs->cached_images/2; /* Odd is pictures even is thumbs */
-	 default:
-        return cs->cached_images;
-	}
-}
-#endif
 
 /**
  * This routine initializes the serial port and also load the
@@ -1246,8 +705,6 @@ int camera_file_count(Camera *camera)
  */
 int camera_init(Camera *camera, CameraInit *init)
 {
-//	char fname[1024];
-//	FILE *conf;
 	struct canon_info *cs;
 	char buf[8];
 	
@@ -1286,7 +743,7 @@ int camera_init(Camera *camera, CameraInit *init)
 	  cs->speed = 9600;
 	
 	if (gp_setting_get("canon","debug",buf) != GP_OK)
-	  cs->debug = 1; // by default debug functions
+	  cs->debug = 9;
 			
 	if (strncmp(buf, "0", 1) == 0)
 	  cs->debug = 0;
@@ -1435,48 +892,7 @@ int camera_about(Camera *camera, CameraText *about)
 }
 
 /****************************************************************************/
-#if 0
-/* FIXME: (pm) Do we need to update the directory cache and camera_file_list
-          on deletion ? */
 
-/*
- * mark an entry as deleted in the directory cache
- *
-*/
-int _entry_delete(struct psa50_dir *tree, char *filename)
-{
-    char path[300],file[300], tempfile[300];
-    char attribs;
-        int i,j;
-
-    if(!update_dir_cache()) {
-        gp_camera_status(NULL, "Could not obtain directory listing");
-        return GP_ERROR;
-    }
-
-    fprintf(stderr,"delete: %s\n",file);
-
-    i=0;
-    while(tree->name) {
-        strcpy(tempfile, tree->name);
-        fprintf(stderr,"tempfile: %s\n",tempfile);
-        if(strcmp(tempfile, file)==0) {
-            sprintf(tree->name,"deleted");
-            i++;
-        }
-        else if (!tree->is_file) {
-            i += _entry_delete(tree->user, picture_number - i);
-        }
-        tree++;
-    } 
-    return i;
-}
-
-int entry_delete(char *filename)
-{
-    return _entry_delete(cached_tree, filename);
-}
-#endif
 int camera_file_delete(Camera *camera, char *folder, char *filename)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
@@ -1501,16 +917,22 @@ int camera_file_delete(Camera *camera, char *folder, char *filename)
             debug_message(camera,"Filename not found!\n");
             return GP_ERROR;
         }
-        j = strrchr(path,'\\') - path;
-        path[j] = '\0';
+		if (canon_comm_method != CANON_USB) {
+			j = strrchr(path,'\\') - path;
+			path[j] = '\0';
+		} else {
+			j = strchr(path,'\0') - path;
+			path[j] = '\0';
+//			path[j+1] = '\0';
+		}
 
+		fprintf(stderr,"filename: %s\n path: %s\n",filename,path);
         if (psa50_delete_file(camera, filename,path)) {
             gp_camera_status(NULL, "error deleting file");
             return GP_ERROR;
         }
         else {
-     //       entry_delete(filename);
-            return GP_OK;
+			return GP_OK;
         }
     }
     return GP_ERROR;
@@ -1543,6 +965,7 @@ int camera_file_put(Camera *camera, CameraFile *file, char *folder)
 	
 	if(!psa50_directory_operations(camera,destpath, DIR_CREATE)) 
 	  return GP_ERROR;
+	psa50_delete_file(camera,destname,destpath);
 	
 	destpath[j] = '\\';
 	
@@ -1585,8 +1008,7 @@ int camera_config_get(Camera *camera, CameraWidget *window)
 	  sprintf(t->value,"Unavailable");
 	gp_widget_append(section,t);
 	
-	t = gp_widget_new(GP_WIDGET_BUTTON, "Set camera date to PC date");
-	strcpy(t->value,"psa50_set_time()");
+	t = gp_widget_new(GP_WIDGET_TOGGLE, "Set camera date to PC date");
 	gp_widget_append(section,t);
 	
 	t = gp_widget_new(GP_WIDGET_TEXT,"Firmware revision");
@@ -1667,20 +1089,44 @@ int camera_config_set(Camera *camera, CameraSetting *setting, int count)
 			  new_debug = 1;
 			else if (strcmp(setting[i].value,"complete") == 0)
 			  new_debug = 9;
+			
+			if (cs->debug != new_debug) {
+				cs->debug = new_debug;
+				sprintf(buf,"%i",new_debug);
+				gp_setting_set("canon", "debug", buf);
+			}
 		}
 		
 		if (strcmp(setting[i].name,"Owner name") == 0) {
-			if(strcmp(setting[i].value,cs->owner) != 0)
-			  psa50_set_owner_name(camera, setting[i].value);
+			if(strcmp(setting[i].value,cs->owner) != 0) {
+				if(!check_readiness(camera)) {
+					gp_camera_status(camera,"Camera unavailable");
+				} else {
+					if(psa50_set_owner_name(camera, setting[i].value)) {
+						gp_camera_status(camera, "Owner name changed");
+					} else {
+						gp_camera_status(camera, "could not change owner name");
+					}
+				}
+			}
 		}
 		
+		if (strcmp(setting[i].name,"Set camera date to PC date") == 0) {
+			if(atoi(setting[i].value) == 1) {
+				if(!check_readiness(camera)) {
+					gp_camera_status(camera,"Camera unavailable");
+				} else {
+					if(psa50_set_time(camera)) {
+						gp_camera_status(camera,"time set");
+					} else {
+						gp_camera_status(camera,"could not set time");
+					}
+				}
+			}
+		}
 	}
-	if (cs->debug != new_debug) {
-		cs->debug = new_debug;
-//		save_rcfile(camera);
-		sprintf(buf,"%i",new_debug);
-		gp_setting_set("canon", "debug", buf);
-	}
+			
+	gp_camera_status(camera,"settings saved");
 	
     return GP_OK;
 }

@@ -38,7 +38,7 @@ gpio_device *gdev;
 gpio_device_settings settings;
 /************ new stuff ********/
 
-#define MAX_TRIES 10
+#define MAX_TRIES 15
 
 #define USLEEP1 0
 #define USLEEP2 1
@@ -726,8 +726,7 @@ int psa50_directory_operations(Camera *camera, char *path, int action)
 	
 	switch (canon_comm_method) {
 	 case CANON_USB:
-		debug_message(camera,"USB directory creation not implemented\n");
-		return 0;
+		msg = psa50_usb_dialogue(camera, type,0x11,0x201,&len,path,strlen(path)+1);
 		break;
 	 case CANON_SERIAL_RS232:
 	 default:
@@ -785,7 +784,7 @@ int psa50_get_owner_name(Camera *camera)
 	strncpy(cs->ident,(char *) msg+12,30);
 	strncpy(cs->owner,(char *) msg+44,30);
 	
-	return 0;
+	return 1;
 }
 
 /**
@@ -967,7 +966,7 @@ int psa50_set_time(Camera *camera)
 		psa50_error_type(camera);
 		return 0;
 	}
-
+	
 	return 1;
 }
 
@@ -1688,6 +1687,11 @@ int psa50_delete_file(Camera *camera, const char *name, const char *dir)
 		psa50_error_type(camera);
 		return -1;
     }
+	if (msg[0] == 0x29) {
+		gp_camera_message(camera,"File protected");
+		return -1;
+	}
+
     return 0;
 }
 
@@ -1697,7 +1701,7 @@ int psa50_delete_file(Camera *camera, const char *name, const char *dir)
  */
 int psa50_put_file_usb(Camera *camera, CameraFile *file, char *destname, char *destpath) 
 {
-    gp_camera_message(NULL,"Not implemented!");
+    gp_camera_message(camera,"Not implemented!");
     return GP_ERROR;
 }
 

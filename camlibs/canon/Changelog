@@ -1,3 +1,11 @@
+2000-08-21 
+    philm       deleted unused functions from canon.c (old configure box
+                and related functions).
+                changed delete for USB compatibility, works ?
+                changed delete to report when a file is protected.
+                changed psa50_directory_operations to support USB, works ?
+                changed dialog box to use a toggle for set camera time as
+                buttons are not yet supported.
 2000-08-20
     philm       USB now works thanks to the help of James Tappin and
                 Tuomas Jormola.
