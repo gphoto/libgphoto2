@@ -24,6 +24,7 @@
 /* Boston, MA 02111-1307, USA.                                  */
 /****************************************************************/
 
+#include <config.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -36,7 +37,6 @@
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
-#    define _(String) (String)
 #    define N_(String) (String)
 #  endif
 #else
