@@ -8,7 +8,7 @@
  * $Header$
  */
 
-/**
+/*
  * This file now includes both USB and serial support. This is
  * experimental and not guaranteed to work 100%. Maybe a better
  * design would be to make serial and USB support completely separate,
@@ -634,25 +634,25 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 }
 
 /**
+ * psa50_serial_dialogue:
+ *
+ * @mtype : type
+ * @dir   : direction
+ * @len   : length of the received payload
+ * @...   : The rest of the arguments will be put together to
+ *          fill up the payload of the request message.
+ *
  * Higher level function: sends a message and waits for a
  * reply from the camera.
  *
- * Arguments:
- *   mtype : type
- *   dir   : direction
- *   len   : length of the received payload
- *   ...   : The rest of the arguments will be put together to
- *           fill up the payload of the request message.
- *
- *
- *  Payload: each argument after "len" goes by 2: the variable itself,
+ * Payload: each argument after "len" goes by 2: the variable itself,
  * and the next argument has to be its length. You also have to finish
  * the list by a "NULL".
  *
  * Example: To send a string called "name" :
  * psa50_serial_dialogue(0x05,0x12,&len,name,strlen(name)+1,NULL);
  *
- */
+ **/
 static unsigned char *
 psa50_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, int *len, ...)
 {
@@ -700,8 +700,14 @@ psa50_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, i
 
 
 /**
+ * intatpos:
+ * @block: byte block we are to write the integer into
+ * @pos: position in byte block where we are to write to
+ * @integer: the int number we are to write into the block
+ *
  * Utility function used by psa50_usb_dialogue
- */
+ * FIXME: What about endianness?
+ **/
 void
 intatpos (unsigned char *block, int pos, int integer)
 {
@@ -709,18 +715,25 @@ intatpos (unsigned char *block, int pos, int integer)
 }
 
 /**
- * USB version of the dialogue function.
+ * psa50_usb_dialogue:
+ * @camera: the Camera to work with
+ * @canon_funct: integer constant that identifies function we are execute
+ * @return_length: number of bytes to read from the camera as response
+ * @payload: data we are to send to the camera
+ * @payload_length: length of #payload
+ *
+ * USB version of the #psa50_serial_dialogue function.
  *
  * We construct a packet with the known command values (cmd{1,2,3}) of
- * the function requested (canon_funct) to the camera. If return_length
- * exists for this function, we read return_length bytes back from the
- * camera an return this camera response to the caller.
+ * the function requested (#canon_funct) to the camera. If #return_length
+ * exists for this function, we read #return_length bytes back from the
+ * camera and return this camera response to the caller.
  *
  * Example :
  *
  *	This function gets called with
- *		canon_funct = CANON_USB_FUNCTION_SET_TIME
- *		payload = allready constructed payload with the new time
+ *		#canon_funct = CANON_USB_FUNCTION_SET_TIME
+ *		#payload = already constructed payload with the new time
  *	we construct a complete command packet and send this to the camera.
  *	The canon_usb_cmdstruct indicates that command
  *	CANON_USB_FUNCTION_SET_TIME returns four bytes, so we read those
@@ -731,7 +744,7 @@ intatpos (unsigned char *block, int pos, int integer)
  *	unsigned char ** which can be pointed to our buffer and an int
  *	returned with GP_OK or some error code.
  *
- */
+ **/
 static unsigned char *
 psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 		    const char *payload, int payload_length)
@@ -859,13 +872,17 @@ psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 }
 
 /**
+ * psa50_usb_long_dialogue:
+ * @camera: the Camera to work with
+ * @canon_funct: integer constant that identifies function we are execute
+ * @payload: data we are to send to the camera
+ * @payload_length: length of #payload
  *
  * This function is used to invoke camera commands which return L (long) data.
- * It calls psa50_usb_dialogue(), if it gets a good response it will malloc()
+ * It calls #psa50_usb_dialogue(), if it gets a good response it will malloc()
  * memory and read the entire returned data into this malloc'd memory and store
  * a pointer to the malloc'd memory in 'data'.
- *
- */
+ **/
 static int
 psa50_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 			 int *data_length, int max_data_size, const char *payload,
@@ -997,19 +1014,29 @@ get_int (const unsigned char *p)
 
 
 /**
- * Switches the camera off
+ * psa50_end:
+ * @camera: the camera to switch off
+ * @Returns: GP_OK
+ *
+ * Switches the #camera off
+ * Should better be named psa50_serial_end
  */
 int
 psa50_end (Camera *camera)
 {
 	canon_serial_send (camera, "\xC0\x00\x02\x55\x2C\xC1", 6, USLEEP2);
 	canon_serial_send (camera, "\xC0\x00\x04\x01\x00\x00\x00\x24\xC6\xC1", 8, USLEEP2);
-	return 0;
+	return GP_OK;
 }
 
 /**
- * Switches the camera off, and resets the serial driver to 9600 bauds,
+ * psa50_off:
+ * @camera: the camera to switch off
+ * @Returns: GP_OK
+ *
+ * Switches the #camera off, and resets the serial driver to 9600 bauds,
  * in order to be ready to switch the camera back on again if wanted.
+ * Should better be named psa50_serial_off
  */
 int
 psa50_off (Camera *camera)
@@ -1017,10 +1044,10 @@ psa50_off (Camera *camera)
 	canon_serial_send (camera, "\xC0\x00\x02\x55\x2C\xC1", 6, USLEEP2);
 	canon_serial_send (camera, "\xC0\x00\x04\x01\x00\x00\x00\x24\xC6\xC1", 8, USLEEP2);
 	canon_serial_change_speed (camera->port, 9600);
-	return 0;
+	return GP_OK;
 }
 
-/**
+/*
  * does operations on a directory based on the value
  * of action : DIR_CREATE, DIR_REMOVE
  *
@@ -1081,12 +1108,17 @@ psa50_directory_operations (Camera *camera, const char *path, int action)
 }
 
 /**
- * Gets the camera identification string, usually the owner name.
- * This information is stored in the "camera" structure, which
- * is a global variable for the driver.
- *  This function also gets the firmware revision in the camera struct.
+ * psa50_get_owner_name:
+ * @camera: the camera to work with
+ * @Returns: gphoto2 error code
  *
- */
+ * Gets the camera identification string, usually the owner name.
+ *
+ * This information is then stored in the "camera" structure, which 
+ * is a global variable for the driver.
+ *
+ * This function also gets the firmware revision in the camera struct.
+ **/
 int
 psa50_get_owner_name (Camera *camera)
 {
@@ -1125,8 +1157,14 @@ psa50_get_owner_name (Camera *camera)
 }
 
 /**
- * Get battery status.
- */
+ * psa50_get_battery:
+ * @camera: the camera to work on
+ * @pwr_status: pointer to integer determining power status
+ * @pwr_source: pointer to integer determining power source
+ * @Returns: gphoto2 error code
+ *
+ * Gets battery status.
+ **/
 int
 psa50_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 {
@@ -1147,7 +1185,7 @@ psa50_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 
 	if (!msg) {
 		psa50_error_type (camera);
-		return -1;
+		return GP_ERROR;
 	}
 
 	if (pwr_status)
@@ -1156,13 +1194,20 @@ psa50_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 		*pwr_source = msg[7];
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "Status: %i / Source: %i\n", *pwr_status,
 			 *pwr_source);
-	return 0;
+	return GP_OK;
 }
 
 
 /**
+ * psa50_set_file_attributes:
+ * @camera: camera to work with
+ * @file: file to work on
+ * @dir: directory to work in
+ * @attrs: attribute bit field
+ * @Returns: gphoto2 error code
+ *
  * Sets a file's attributes. See the 'Protocol' file for details.
- */
+ **/
 int
 psa50_set_file_attributes (Camera *camera, const char *file, const char *dir,
 			   unsigned char attrs)
@@ -1172,8 +1217,8 @@ psa50_set_file_attributes (Camera *camera, const char *file, const char *dir,
 	unsigned char attr[4];
 	int len, payload_length;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_set_file_attributes() "
-			 "called for '%s'/'%s', attributes 0x%x", attrs);
+	GP_DEBUG ("psa50_set_file_attributes() "
+		  "called for '%s'/'%s', attributes 0x%x", attrs);
 
 	attr[0] = attr[1] = attr[2] = 0;
 	attr[3] = attrs;
@@ -1181,10 +1226,9 @@ psa50_set_file_attributes (Camera *camera, const char *file, const char *dir,
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
 			if ((4 + strlen (dir) + 1 + strlen (file) + 1) > sizeof (payload)) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "psa50_set_file_attributes: "
-						 "dir '%s' + file '%s' too long, "
-						 "won't fit in payload buffer.", dir, file);
+				GP_DEBUG ("psa50_set_file_attributes: "
+					  "dir '%s' + file '%s' too long, "
+					  "won't fit in payload buffer.", dir, file);
 				return GP_ERROR_BAD_PARAMETERS;
 			}
 			/* create payload (yes, path and filename are two different strings
@@ -1232,11 +1276,14 @@ psa50_set_file_attributes (Camera *camera, const char *file, const char *dir,
 }
 
 /**
- *  Sets   the   camera owner name. The string should
- * not be more than 30 characters long. We call get_owner_name
- * afterwards in order to check that everything went fine.
+ * psa50_set_owner_name:
+ * @camera: the camera to set the owner name of
+ * @name: owner name to set the camera to
  *
- */
+ * Sets the camera owner name. The string should not be more than 30
+ * characters long. We call #get_owner_name afterwards in order to
+ * check that everything went fine.
+ **/
 int
 psa50_set_owner_name (Camera *camera, const char *name)
 {
@@ -1274,6 +1321,10 @@ psa50_set_owner_name (Camera *camera, const char *name)
 
 
 /**
+ * psa50_get_time:
+ * @camera: camera to get the current time of
+ * @Returns: time of camera (local time)
+ *
  * Get camera's current time.
  *
  * The camera gives time in little endian format, therefore we need
@@ -1283,7 +1334,7 @@ psa50_set_owner_name (Camera *camera, const char *name)
  * if you use functions like "ctime", it will be translated to local
  * time _a second time_, and the result will be wrong. Only use functions
  * that don't translate the date into localtime, like "gmtime".
- */
+ **/
 time_t
 psa50_get_time (Camera *camera)
 {
@@ -1358,8 +1409,12 @@ psa50_set_time (Camera *camera)
 }
 
 /**
+ * psa50_ready:
+ * @camera: camera to get ready
+ * @Returns: gphoto2 error code
+ *
  * Switches the camera on, detects the model and sets its speed.
- */
+ **/
 int
 psa50_ready (Camera *camera)
 {
@@ -1691,16 +1746,20 @@ psa50_ready (Camera *camera)
 }
 
 /**
+ * psa50_get_disk:
+ * @camera: camera to ask for disk drive
+ * @Returns: name of disk
+ *
  * Ask the camera for the name of the flash storage
- * device. Usually "D:" or somehting like that.
- */
+ * device. Usually "D:" or something like that.
+ **/
 char *
 psa50_get_disk (Camera *camera)
 {
 	unsigned char *msg;
 	int len, res;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_get_disk()");
+	GP_DEBUG ("psa50_get_disk()");
 
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
@@ -1708,9 +1767,8 @@ psa50_get_disk (Camera *camera)
 						       CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,
 						       &msg, &len, 1024, NULL, 0, 0);
 			if (res != GP_OK) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_get_disk: "
-						 "psa50_usb_long_dialogue failed! returned %i",
-						 res);
+				GP_DEBUG ("psa50_get_disk: psa50_usb_long_dialogue "
+					  "failed! returned %i", res);
 				return NULL;
 			}
 			break;
@@ -1730,22 +1788,29 @@ psa50_get_disk (Camera *camera)
 		t = strdup ((char *) msg + 4);	/* @@@ should check length */
 		free (msg);
 		if (!t) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_get_disk: "
-					 "could not allocate %i bytes of memory to hold response",
-					 strlen ((char *) msg + 4));
+			GP_DEBUG ("psa50_get_disk: could not allocate %i "
+				  "bytes of memory to hold response",
+				  strlen ((char *) msg + 4));
 			return NULL;
 		}
 		msg = t;
 	}
 
-	gp_debug_printf (GP_DEBUG_HIGH, "canon", "psa50_get_disk: disk '%s'", msg);
+	GP_DEBUG ("psa50_get_disk: disk '%s'", msg);
 
 	return msg;
 }
 
 /**
- * Gets available room and max capacity of a given disk.
- */
+ * psa50_disk_info:
+ * @camera: camera to ask about disk
+ * @name: name of the disk
+ * @capacity: returned maximum disk capacity
+ * @available: returned currently available disk capacity
+ * @Returns: boolean value denoting success (FIXME: ATTENTION!)
+ *
+ * Gets available room and max capacity of a disk given by @name.
+ **/
 int
 psa50_disk_info (Camera *camera, const char *name, int *capacity, int *available)
 {
@@ -1768,11 +1833,11 @@ psa50_disk_info (Camera *camera, const char *name, int *capacity, int *available
 
 	if (!msg) {
 		psa50_error_type (camera);
-		return 0;
+		return 0; /* FALSE */
 	}
 	if (len < 12) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: truncated message");
-		return 0;
+		GP_DEBUG("ERROR: truncated message");
+		return 0; /* FALSE */
 	}
 	cap = get_int (msg + 4);
 	ava = get_int (msg + 8);
@@ -1781,11 +1846,10 @@ psa50_disk_info (Camera *camera, const char *name, int *capacity, int *available
 	if (available)
 		*available = ava;
 
-	gp_debug_printf (GP_DEBUG_HIGH, "canon", "psa50_disk_info: "
-			 "capacity %i kb, available %i kb",
-			 cap > 0 ? (cap / 1024) : 0, ava > 0 ? (ava / 1024) : 0);
+	GP_DEBUG ("psa50_disk_info: capacity %i kb, available %i kb",
+		  cap > 0 ? (cap / 1024) : 0, ava > 0 ? (ava / 1024) : 0);
 
-	return 1;
+	return 1; /* TRUE */
 }
 
 
@@ -1799,7 +1863,7 @@ psa50_free_dir (Camera *camera, struct canon_dir *list)
 	free (list);
 }
 
-/**
+/*
  * Get the directory tree of a given flash device.
  */
 struct canon_dir *
@@ -2030,8 +2094,7 @@ psa50_get_file_serial (Camera *camera, const char *name, int *length)
 		expect += size;
 		gp_camera_progress (camera, total ? (expect / (float) total) : 1.);
 		if ((expect == total) != get_int (msg + 16)) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
-					 "ERROR: end mark != end of data\n");
+			GP_DEBUG ("ERROR: end mark != end of data");
 			break;
 		}
 		if (expect == total)
@@ -2148,8 +2211,13 @@ psa50_get_thumbnail_usb (Camera *camera, const char *name, unsigned char **data,
 }
 
 /**
- * Returns the thumbnail of a picture.
- */
+ * psa50_get_thumbnail:
+ * @camera: camera to work with
+ * @name: image to get thumbnail of
+ * @length: length of data returned
+ *
+ * Returns the thumbnail data of the picture designated by @name.
+ **/
 unsigned char *
 psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 {
@@ -2160,25 +2228,23 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 	int i, j, in;
 	unsigned char *thumb;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_get_thumbnail() "
-			 "called for file '%s'", name);
+	GP_DEBUG ("psa50_get_thumbnail() called for file '%s'", name);
 
 	gp_camera_progress (camera, 0);
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
 			i = psa50_get_thumbnail_usb (camera, name, &data, length);
 			if (i != GP_OK) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "psa50_get_thumbnail_usb() failed, returned %i",
-						 i);
+				GP_DEBUG ("psa50_get_thumbnail_usb() failed, "
+					  "returned %i", i);
 				return NULL;	// XXX for now
 			}
 			break;
 		case CANON_SERIAL_RS232:
 		default:
 			if (camera->pl->receive_error == FATAL_ERROR) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "ERROR: can't continue a fatal error condition detected");
+				GP_DEBUG ("ERROR: can't continue a fatal "
+					  "error condition detected");
 				return NULL;
 			}
 
@@ -2194,8 +2260,7 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 
 			total = get_int (msg + 4);
 			if (total > 2000000) {	/* 2 MB thumbnails ? unlikely ... */
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "ERROR: %d is too big\n", total);
+				GP_DEBUG ("ERROR: %d is too big", total);
 				return NULL;
 			}
 			data = malloc (total);
@@ -2213,8 +2278,7 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 				size = get_int (msg + 12);
 				if (get_int (msg + 8) != expect || expect + size > total
 				    || size > total_file_size - 20) {
-					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "ERROR: doesn't fit\n");
+					GP_DEBUG("ERROR: doesn't fit");
 					return NULL;
 				}
 				memcpy (data + expect, msg + 20, size);
@@ -2222,8 +2286,7 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 				gp_camera_progress (camera,
 						    total ? (expect / (float) total) : 1.);
 				if ((expect == total) != get_int (msg + 16)) {
-					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "ERROR: end mark != end of data\n");
+					GP_DEBUG("ERROR: end mark != end of data");
 					return NULL;
 				}
 				if (expect == total) {
@@ -2277,10 +2340,10 @@ psa50_get_thumbnail (Camera *camera, const char *name, int *length)
 			exifdat.header = data;
 			exifdat.data = data + 12;
 
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
-					 "Got thumbnail, extracting it with the EXIF lib.\n");
+			GP_DEBUG ("Got thumbnail, extracting it with the "
+				  "EXIF lib.");
 			if (exif_parse_data (&exifdat) > 0) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon", "Parsed exif data.\n");
+				GP_DEBUG("Parsed exif data.");
 				data = exif_get_thumbnail (&exifdat);	// Extract Thumbnail
 				if (data == NULL) {
 					int f;
