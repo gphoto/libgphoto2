@@ -1,3 +1,8 @@
+2002-01-13  Colin Marquardt  <colin@marquardt-home.de>
+
+	*  libgphoto2_port/po/fr.po: New translation from Jérôme.
+	*  po/fr.po: Update from Jérôme (help screen fits in 80 chars now).
+
 2002-01-13  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* configure.in: 2.0beta4dev8 (to detect old/new canon camlib :-)
