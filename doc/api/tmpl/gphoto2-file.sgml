@@ -2,19 +2,19 @@
 CameraFile
 
 <!-- ##### SECTION Short_Description ##### -->
-
+An abstraction of files
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  Files on cameras are somewhat different from traditional files. For example,
+  cameras can often provide a thumbnail of a file. Some cameras even 
+  provide audio data that is connected to a file.
 </para>
-
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  #CameraFileSystem
 </para>
-
 
 <!-- ##### STRUCT CameraFile ##### -->
 <para>
@@ -31,6 +31,33 @@ CameraFile
 @Returns: 
 
 
+<!-- ##### FUNCTION gp_file_ref ##### -->
+<para>
+
+</para>
+
+@file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_unref ##### -->
+<para>
+
+</para>
+
+@file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_free ##### -->
+<para>
+
+</para>
+
+@file: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gp_file_append ##### -->
 <para>
 
@@ -39,6 +66,35 @@ CameraFile
 @Param1: 
 @data: 
 @size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_open ##### -->
+<para>
+
+</para>
+
+@file: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_save ##### -->
+<para>
+
+</para>
+
+@file: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_clean ##### -->
+<para>
+
+</para>
+
+@file: 
 @Returns: 
 
 
@@ -62,6 +118,24 @@ CameraFile
 @Returns: 
 
 
+<!-- ##### ENUM CameraFileType ##### -->
+<para>
+  For gphoto2, there are several facets of a file. A file is something that
+  you can create and delete, but not split apart. However, you can look at
+  it from different directions.
+</para>
+
+@GP_FILE_TYPE_PREVIEW: A file of this type is a preview of another file.
+@GP_FILE_TYPE_NORMAL: A file of this type is a normal file, i.e. one that
+		      can be read with standard applications.
+@GP_FILE_TYPE_RAW: A file of this type contains raw data. No processing
+		   has been done. Those files typically cannot be
+		   interpreted by standard applications. You need to have
+		   detailed knowledge about the camera model and its raw
+		   data format in order to be able to process the data.
+@GP_FILE_TYPE_AUDIO: A file of this type contains audio data that is 
+		     connected to another file.
+
 <!-- ##### FUNCTION gp_file_get_type ##### -->
 <para>
 
@@ -70,6 +144,98 @@ CameraFile
 @file: 
 @type: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gp_file_set_type ##### -->
+<para>
+
+</para>
+
+@file: 
+@type: 
+@Returns: 
+
+
+<!-- ##### MACRO GP_MIME_AVI ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_CRW ##### -->
+<para>
+  Canon cameras store files in a special format, the Canon RaW file format.
+  See  http://www.shore.net/~dcoffin/powershot/ or 
+  http://www2.primushost.com/~dcoffin/powershot/ for details on this
+  format.
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_JPEG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_UNKNOWN ##### -->
+<para>
+  For files that are not recognized by our driver yet.
+  DO NOT use this when you're just too lazy to use the proper MIME
+  type, or we will feed you to Crud Puppy.
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_PPM ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_BMP ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_TIFF ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_QUICKTIME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_WAV ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_PGM ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GP_MIME_RAW ##### -->
+<para>
+
+</para>
+
 
 
 <!-- ##### FUNCTION gp_file_get_mime_type ##### -->
@@ -82,12 +248,42 @@ CameraFile
 @Returns: 
 
 
+<!-- ##### FUNCTION gp_file_set_mime_type ##### -->
+<para>
+
+</para>
+
+@file: 
+@mime_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_detect_mime_type ##### -->
+<para>
+
+</para>
+
+@file: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gp_file_adjust_name_for_mime_type ##### -->
 <para>
 
 </para>
 
 @file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gp_file_get_data_and_size ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@data: 
+@size: 
 @Returns: 
 
 
