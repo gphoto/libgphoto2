@@ -9,7 +9,7 @@ EXTRA_DIST = HACKING MAINTAINERS makefile.os2 os2mak.inc TESTERS CHANGES
 
 SUBDIRS = libgphoto2_port libgphoto2 camlibs tests po packaging doc
 
-doc_DATA = AUTHORS COPYING README
+doc_DATA = AUTHORS COPYING README CHANGES NEWS
 
 ########################################################################
 # The following default options for aclocal and automake
