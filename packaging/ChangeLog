@@ -1,3 +1,8 @@
+2002-11-01  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* linux-hotplug/Makefile.am: install print-usb-usermap on target
+					system (for cross-compilation)
+
 2002-10-13  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* linux-hotplug/Makefile.am: made hotplug stuff installation location configurable
