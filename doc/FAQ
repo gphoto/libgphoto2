@@ -146,3 +146,9 @@ A: If you do not care about EXIF information:
       jhead -cmd 'jpegtran -rotate 90 -outfile &o &i' my-pic.jpg
 
 ========================================================================
+
+Q: I want to use GNU stow, but that fails.
+
+A: I don't know what stow is, but have a look at #553647.
+
+========================================================================
