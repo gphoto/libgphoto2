@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-11-20 19:23+0100\n"
+"POT-Creation-Date: 2002-11-22 14:02+0100\n"
 "PO-Revision-Date: 2002-06-15 20:09+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -49,7 +49,7 @@ msgstr ""
 " 授权。"
 
 # camlibs/canon/canon.c:651
-#: camlibs/canon/canon.c:674
+#: camlibs/canon/canon.c:676
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
@@ -57,7 +57,7 @@ msgid ""
 msgstr "名称“%s”(%i 个字符)太长(%i 个字符)，最多允许 30 个字符。"
 
 # camlibs/canon/canon.c:1490
-#: camlibs/canon/canon.c:1538
+#: camlibs/canon/canon.c:1540
 msgid "File protected."
 msgstr "文件已受到保护。"
 
@@ -765,76 +765,76 @@ msgid "Looks like a modem, not a camera"
 msgstr "看起来象调制解调器，而不象相机"
 
 # camlibs/directory/directory.c:159
-#: camlibs/directory/directory.c:165
+#: camlibs/directory/directory.c:166
 #, c-format
 msgid "Listing files in '%s'..."
 msgstr "正在“%s”中列举文件..."
 
 # camlibs/directory/directory.c:195
-#: camlibs/directory/directory.c:209
+#: camlibs/directory/directory.c:210
 #, c-format
 msgid "Could not get information about '%s' (%m)."
 msgstr "无法获取关于“%s”(%m) 的信息。"
 
 # camlibs/directory/directory.c:201
-#: camlibs/directory/directory.c:218
+#: camlibs/directory/directory.c:219
 #, c-format
 msgid "Could not follow the link '%s' (%m)."
 msgstr "无法跟随连接“%s”(%m)。"
 
 # camlibs/directory/directory.c:228
-#: camlibs/directory/directory.c:246
+#: camlibs/directory/directory.c:247
 #, c-format
 msgid "Listing folders in '%s'..."
 msgstr "正在“%s”中列举文件夹..."
 
 # camlibs/directory/directory.c:269
-#: camlibs/directory/directory.c:296
+#: camlibs/directory/directory.c:297
 #, c-format
 msgid "Could not get information about '%s' in '%s' (%m)."
 msgstr "无法从“%2$s”中获取关于“%1$s”的信息 (%3$m)。"
 
 # camlibs/directory/directory.c:275
-#: camlibs/directory/directory.c:304
+#: camlibs/directory/directory.c:305
 #, c-format
 msgid "Could not follow the link '%s' in '%s' (%m)."
 msgstr "无法跟随“%2$s”中的连接“%1$s”(%3$m)。"
 
 # camlibs/directory/directory.c:340
-#: camlibs/directory/directory.c:370
+#: camlibs/directory/directory.c:371
 #, c-format
 msgid "Could not change time of file '%s' in '%s' (%m)."
 msgstr "无法改变“%2$s”中的文件“%1$s”的时间(%3$m)。"
 
 # camlibs/directory/directory.c:421
-#: camlibs/directory/directory.c:451
+#: camlibs/directory/directory.c:452
 #, c-format
 msgid "Could not open '%s'."
 msgstr "无法打开“%s”。"
 
 # camlibs/directory/directory.c:461
-#: camlibs/directory/directory.c:492
+#: camlibs/directory/directory.c:493
 msgid "Directory Browse"
 msgstr "浏览目录"
 
 # camlibs/directory/directory.c:462 camlibs/directory/directory.c:493
-#: camlibs/directory/directory.c:493 camlibs/directory/directory.c:524
+#: camlibs/directory/directory.c:494 camlibs/directory/directory.c:525
 msgid "View hidden directories"
 msgstr "查看隐藏的目录"
 
 # camlibs/directory/directory.c:506
-#: camlibs/directory/directory.c:537
+#: camlibs/directory/directory.c:538
 msgid ""
 "The Directory Browse \"camera\" lets you index photos on your hard drive."
 msgstr "目录浏览“相机”允许您为您硬盘上的照片编制索引。"
 
 # camlibs/directory/directory.c:515
-#: camlibs/directory/directory.c:546
+#: camlibs/directory/directory.c:547
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
 msgstr "目录浏览模式 - 由 Scott Fritzinger <scottf@unr.edu> 编制。"
 
 # camlibs/directory/directory.c:562
-#: camlibs/directory/directory.c:593
+#: camlibs/directory/directory.c:594
 #, c-format
 msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
 msgstr "无法删除文件夹“%2$s”中的文件“%1$s”(错误码 %3$i：%4$m)。"
@@ -1150,8 +1150,8 @@ msgstr "等待完成..."
 # camlibs/polaroid/pdc700.c:981 camlibs/sierra/sierra.c:776
 # camlibs/sierra/sierra.c:1353
 #: camlibs/kodak/dc210/dc210.c:168 camlibs/polaroid/pdc700.c:982
-#: camlibs/sierra/sierra.c:763 camlibs/sierra/sierra.c:1340
-#: camlibs/sierra/sierra-desc.c:191
+#: camlibs/sierra/sierra-desc.c:191 camlibs/sierra/sierra.c:763
+#: camlibs/sierra/sierra.c:1340
 msgid "Camera Configuration"
 msgstr "相机配置"
 
@@ -2472,7 +2472,7 @@ msgid "Downloading file..."
 msgstr "正在下载图像..."
 
 # camlibs/sierra/library.c:1187
-#: camlibs/pccam600/library.c:259
+#: camlibs/pccam600/library.c:259 camlibs/spca504_flash/library.c:172
 #, fuzzy
 msgid "Manual Not Implemented Yet"
 msgstr "未实现！"
@@ -2482,10 +2482,6 @@ msgid ""
 "Creative PC-CAM600\n"
 " Author: Peter Kajberg\n"
 " email: <pbk@odense.kollegienet.dk>\n"
-msgstr ""
-
-#: camlibs/pccam600/pccam600.c:57
-msgid ":"
 msgstr ""
 
 # camlibs/polaroid/pdc700.c:159
@@ -2906,12 +2902,12 @@ msgid "PTP Protocol error, response expected"
 msgstr "PTP 协议错误，需要响应"
 
 # camlibs/ptp/library.c:422
-#: camlibs/ptp/library.c:481
+#: camlibs/ptp/library.c:484
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
 msgstr "由 Mariusz Woloszyn <emsi@ipartners.pl> 编写。请享用！"
 
 # camlibs/ptp/library.c:918
-#: camlibs/ptp/library.c:1013
+#: camlibs/ptp/library.c:1016
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP 仅为 USB 相机实现。"
 
@@ -3623,6 +3619,19 @@ msgid ""
 "    please contact gphoto-devel@gphoto.net\n"
 msgstr ""
 
+# camlibs/sierra/sierra.c:802 camlibs/sierra/sierra.c:842
+# camlibs/sierra/sierra.c:874 camlibs/sierra/sierra.c:904
+# camlibs/sierra/sierra.c:935 camlibs/sierra/sierra.c:966
+# camlibs/sierra/sierra.c:990 camlibs/sierra/sierra.c:1012
+# camlibs/sierra/sierra.c:1041 camlibs/sierra/sierra.c:1385
+# camlibs/sierra/sierra.c:1413 camlibs/sierra/sierra.c:1436
+# camlibs/sierra/sierra.c:1458 camlibs/sierra/sierra.c:1484
+# camlibs/sierra/sierra.c:1503 camlibs/sierra/sierra.c:1571
+#: camlibs/sierra/sierra-desc.c:172
+#, fuzzy, c-format
+msgid "%lld (unknown)"
+msgstr "%i (未知)"
+
 # camlibs/sierra/sierra.c:635
 #: camlibs/sierra/sierra.c:620
 msgid "The file to be uploaded has a null length"
@@ -4123,19 +4132,6 @@ msgstr ""
 "因为使用了他们的奥林巴斯 C-3030Z\n"
 "以实现 USB 支持。"
 
-# camlibs/sierra/sierra.c:802 camlibs/sierra/sierra.c:842
-# camlibs/sierra/sierra.c:874 camlibs/sierra/sierra.c:904
-# camlibs/sierra/sierra.c:935 camlibs/sierra/sierra.c:966
-# camlibs/sierra/sierra.c:990 camlibs/sierra/sierra.c:1012
-# camlibs/sierra/sierra.c:1041 camlibs/sierra/sierra.c:1385
-# camlibs/sierra/sierra.c:1413 camlibs/sierra/sierra.c:1436
-# camlibs/sierra/sierra.c:1458 camlibs/sierra/sierra.c:1484
-# camlibs/sierra/sierra.c:1503 camlibs/sierra/sierra.c:1571
-#: camlibs/sierra/sierra-desc.c:172
-#, fuzzy, c-format
-msgid "%lld (unknown)"
-msgstr "%i (未知)"
-
 #: camlibs/sipix/sipix.c:194
 msgid ""
 "SiPix Web2\n"
@@ -4149,6 +4145,58 @@ msgid ""
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
 msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:134
+msgid "Sorry, this function not implemented..."
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:140
+msgid "Sorry, nothing to configure..."
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:146
+msgid "Sorry, taking pictures is not implemented..."
+msgstr ""
+
+# libgphoto2/gphoto2-camera.c:662
+#: camlibs/sonydscf1/dsc_f1.c:152
+#, fuzzy
+msgid "Couldn't open camera.\n"
+msgstr "无法检测到任何相机"
+
+# camlibs/dimera/dimera3500.c:947
+#: camlibs/sonydscf1/dsc_f1.c:166
+#, fuzzy
+msgid "Error opening camera\n"
+msgstr "重置相机出问题"
+
+#: camlibs/sonydscf1/dsc_f1.c:171
+msgid "Picture number is too large.\n"
+msgstr ""
+
+# camlibs/sonydscf1/sonydscf1.c:133
+#: camlibs/sonydscf1/dsc_f1.c:182
+#, fuzzy
+msgid ""
+"Sony DSC-F1 Digital Camera Support\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"\n"
+"Based on the chotplay CLI interface from\n"
+"Ken-ichi Hayashi\n"
+"\n"
+"This lib may not work. YMMV\n"
+msgstr ""
+"索尼 DSC-F1 数码相机支持\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"基于 chotplay CLI 界面。该界面来自于\n"
+"Ken-ichi Hayashi\n"
+"由 Bart van Leeuwen <bart@netage.nl> 移植到 gphoto2"
+
+# camlibs/dimera/dimera3500.c:947
+#: camlibs/sonydscf1/dsc_f1.c:187 camlibs/sonydscf1/dsc_f1.c:188
+#, fuzzy
+msgid "Error opening camera.\n"
+msgstr "重置相机出问题"
 
 # camlibs/sonydscf1/sonydscf1.c:133
 #: camlibs/sonydscf1/sonydscf1.c:132
@@ -4193,6 +4241,15 @@ msgid ""
 msgstr ""
 "爱克发 CL18\n"
 "Vince Weaver <vince@deater.net>\n"
+
+#: camlibs/spca504_flash/library.c:181
+msgid ""
+"spca504_flash camlib\n"
+" Authors: Till Adam\n"
+" <till@adam-lilienthal.de>\n"
+"based on work by Matthias Krau\n"
+"and Mark A. Zimmerman <mark@foresthaven.com>"
+msgstr ""
 
 # camlibs/stv0680/library.c:356 camlibs/stv0680/library.c:390
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388

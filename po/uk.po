@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
-"POT-Creation-Date: 2002-11-20 19:23+0100\n"
+"POT-Creation-Date: 2002-11-22 14:02+0100\n"
 "PO-Revision-Date: 2000-06-27 16:33+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <ru@li.org>\n"
@@ -34,14 +34,14 @@ msgid ""
 "the web. Permission given by Vision."
 msgstr ""
 
-#: camlibs/canon/canon.c:674
+#: camlibs/canon/canon.c:676
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
 "allowed."
 msgstr ""
 
-#: camlibs/canon/canon.c:1538
+#: camlibs/canon/canon.c:1540
 msgid "File protected."
 msgstr ""
 
@@ -602,73 +602,73 @@ msgstr ""
 msgid "Looks like a modem, not a camera"
 msgstr ""
 
-#: camlibs/directory/directory.c:165
+#: camlibs/directory/directory.c:166
 #, c-format
 msgid "Listing files in '%s'..."
 msgstr ""
 
-#: camlibs/directory/directory.c:209
+#: camlibs/directory/directory.c:210
 #, fuzzy, c-format
 msgid "Could not get information about '%s' (%m)."
 msgstr ""
 "Не вдалося в╕дкрити:\n"
 "%s"
 
-#: camlibs/directory/directory.c:218
+#: camlibs/directory/directory.c:219
 #, fuzzy, c-format
 msgid "Could not follow the link '%s' (%m)."
 msgstr ""
 "Не вдалося в╕дкрити:\n"
 "%s"
 
-#: camlibs/directory/directory.c:246
+#: camlibs/directory/directory.c:247
 #, c-format
 msgid "Listing folders in '%s'..."
 msgstr ""
 
-#: camlibs/directory/directory.c:296
+#: camlibs/directory/directory.c:297
 #, c-format
 msgid "Could not get information about '%s' in '%s' (%m)."
 msgstr ""
 
-#: camlibs/directory/directory.c:304
+#: camlibs/directory/directory.c:305
 #, c-format
 msgid "Could not follow the link '%s' in '%s' (%m)."
 msgstr ""
 
-#: camlibs/directory/directory.c:370
+#: camlibs/directory/directory.c:371
 #, c-format
 msgid "Could not change time of file '%s' in '%s' (%m)."
 msgstr ""
 
-#: camlibs/directory/directory.c:451
+#: camlibs/directory/directory.c:452
 #, fuzzy, c-format
 msgid "Could not open '%s'."
 msgstr ""
 "Не вдалося в╕дкрити:\n"
 "%s"
 
-#: camlibs/directory/directory.c:492
+#: camlibs/directory/directory.c:493
 msgid "Directory Browse"
 msgstr ""
 
-#: camlibs/directory/directory.c:493 camlibs/directory/directory.c:524
+#: camlibs/directory/directory.c:494 camlibs/directory/directory.c:525
 msgid "View hidden directories"
 msgstr ""
 
-#: camlibs/directory/directory.c:537
+#: camlibs/directory/directory.c:538
 msgid ""
 "The Directory Browse \"camera\" lets you index photos on your hard drive."
 msgstr ""
 
-#: camlibs/directory/directory.c:546
+#: camlibs/directory/directory.c:547
 #, fuzzy
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
 msgstr ""
 "Авторське право (C) 1998-2000 Scott Fritzinger <scottf@unr.edu>\n"
 "\n"
 
-#: camlibs/directory/directory.c:593
+#: camlibs/directory/directory.c:594
 #, c-format
 msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
 msgstr ""
@@ -930,8 +930,8 @@ msgid "Waiting for completion..."
 msgstr ""
 
 #: camlibs/kodak/dc210/dc210.c:168 camlibs/polaroid/pdc700.c:982
-#: camlibs/sierra/sierra.c:763 camlibs/sierra/sierra.c:1340
-#: camlibs/sierra/sierra-desc.c:191
+#: camlibs/sierra/sierra-desc.c:191 camlibs/sierra/sierra.c:763
+#: camlibs/sierra/sierra.c:1340
 msgid "Camera Configuration"
 msgstr "Конф╕гурац╕я камери"
 
@@ -1948,7 +1948,7 @@ msgstr ""
 msgid "Downloading file..."
 msgstr "Прийом зупинено."
 
-#: camlibs/pccam600/library.c:259
+#: camlibs/pccam600/library.c:259 camlibs/spca504_flash/library.c:172
 #, fuzzy
 msgid "Manual Not Implemented Yet"
 msgstr "%s ще не реал╕зовано"
@@ -1958,10 +1958,6 @@ msgid ""
 "Creative PC-CAM600\n"
 " Author: Peter Kajberg\n"
 " email: <pbk@odense.kollegienet.dk>\n"
-msgstr ""
-
-#: camlibs/pccam600/pccam600.c:57
-msgid ":"
 msgstr ""
 
 #: camlibs/polaroid/pdc700.c:159
@@ -2296,11 +2292,11 @@ msgstr ""
 msgid "PTP Protocol error, response expected"
 msgstr ""
 
-#: camlibs/ptp/library.c:481
+#: camlibs/ptp/library.c:484
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
 msgstr ""
 
-#: camlibs/ptp/library.c:1013
+#: camlibs/ptp/library.c:1016
 msgid "PTP is implemented for USB cameras only."
 msgstr ""
 
@@ -2888,6 +2884,11 @@ msgid ""
 "    please contact gphoto-devel@gphoto.net\n"
 msgstr ""
 
+#: camlibs/sierra/sierra-desc.c:172
+#, c-format
+msgid "%lld (unknown)"
+msgstr ""
+
 #: camlibs/sierra/sierra.c:620
 msgid "The file to be uploaded has a null length"
 msgstr ""
@@ -3255,11 +3256,6 @@ msgid ""
 "support implementation."
 msgstr ""
 
-#: camlibs/sierra/sierra-desc.c:172
-#, c-format
-msgid "%lld (unknown)"
-msgstr ""
-
 #: camlibs/sipix/sipix.c:194
 msgid ""
 "SiPix Web2\n"
@@ -3273,6 +3269,48 @@ msgid ""
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
 msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:134
+msgid "Sorry, this function not implemented..."
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:140
+msgid "Sorry, nothing to configure..."
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:146
+msgid "Sorry, taking pictures is not implemented..."
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:152
+#, fuzzy
+msgid "Couldn't open camera.\n"
+msgstr "Не вдалось отримати зображення."
+
+#: camlibs/sonydscf1/dsc_f1.c:166
+#, fuzzy
+msgid "Error opening camera\n"
+msgstr "В╕дкрити зображення"
+
+#: camlibs/sonydscf1/dsc_f1.c:171
+msgid "Picture number is too large.\n"
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:182
+msgid ""
+"Sony DSC-F1 Digital Camera Support\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"\n"
+"Based on the chotplay CLI interface from\n"
+"Ken-ichi Hayashi\n"
+"\n"
+"This lib may not work. YMMV\n"
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:187 camlibs/sonydscf1/dsc_f1.c:188
+#, fuzzy
+msgid "Error opening camera.\n"
+msgstr "В╕дкрити зображення"
 
 #: camlibs/sonydscf1/sonydscf1.c:132
 msgid ""
@@ -3300,6 +3338,15 @@ msgstr ""
 msgid ""
 "Soundvision Driver\n"
 "Vince Weaver <vince@deater.net>\n"
+msgstr ""
+
+#: camlibs/spca504_flash/library.c:181
+msgid ""
+"spca504_flash camlib\n"
+" Authors: Till Adam\n"
+" <till@adam-lilienthal.de>\n"
+"based on work by Matthias Krau\n"
+"and Mark A. Zimmerman <mark@foresthaven.com>"
 msgstr ""
 
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388

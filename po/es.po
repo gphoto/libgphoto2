@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-11-20 19:23+0100\n"
+"POT-Creation-Date: 2002-11-22 14:02+0100\n"
 "PO-Revision-Date: 2002-06-18 22:37-0300\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Castellano <traduc@traduc.org>\n"
@@ -46,7 +46,7 @@ msgstr ""
 "Implementado utilizando documentos encontrados\n"
 "en la web. Permiso acrodado por Vision."
 
-#: camlibs/canon/canon.c:674
+#: camlibs/canon/canon.c:676
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximal 30 characters are "
@@ -55,7 +55,7 @@ msgstr ""
 "El nombre '%s' (%i caracteres) es muy largo (%i car.), sólo se permiten 30 "
 "caracteres."
 
-#: camlibs/canon/canon.c:1538
+#: camlibs/canon/canon.c:1540
 msgid "File protected."
 msgstr "Archivo protegido."
 
@@ -656,67 +656,67 @@ msgstr "Problema configurando la velocidad de comunicación de la cámara"
 msgid "Looks like a modem, not a camera"
 msgstr "Parece un módem, no una cámara"
 
-#: camlibs/directory/directory.c:165
+#: camlibs/directory/directory.c:166
 #, c-format
 msgid "Listing files in '%s'..."
 msgstr "Listando los archivos en '%s'..."
 
-#: camlibs/directory/directory.c:209
+#: camlibs/directory/directory.c:210
 #, c-format
 msgid "Could not get information about '%s' (%m)."
 msgstr "No se puede obtener información acerca de '%s' (%m)."
 
-#: camlibs/directory/directory.c:218
+#: camlibs/directory/directory.c:219
 #, c-format
 msgid "Could not follow the link '%s' (%m)."
 msgstr "No se puede seguir el vínculo '%s' (%m)."
 
-#: camlibs/directory/directory.c:246
+#: camlibs/directory/directory.c:247
 #, c-format
 msgid "Listing folders in '%s'..."
 msgstr "Listado de los directorios en '%s'..."
 
-#: camlibs/directory/directory.c:296
+#: camlibs/directory/directory.c:297
 #, c-format
 msgid "Could not get information about '%s' in '%s' (%m)."
 msgstr "No se puede obtener información acerca de '%s' en '%s' (%m)."
 
-#: camlibs/directory/directory.c:304
+#: camlibs/directory/directory.c:305
 #, c-format
 msgid "Could not follow the link '%s' in '%s' (%m)."
 msgstr "No se puede seguir el vínculo '%s' en '%s' (%m)."
 
-#: camlibs/directory/directory.c:370
+#: camlibs/directory/directory.c:371
 #, c-format
 msgid "Could not change time of file '%s' in '%s' (%m)."
 msgstr "No se puede cambiar la fecha del archivo '%s' en '%s' (%m)."
 
-#: camlibs/directory/directory.c:451
+#: camlibs/directory/directory.c:452
 #, c-format
 msgid "Could not open '%s'."
 msgstr "No se puede abrir '%s'."
 
-#: camlibs/directory/directory.c:492
+#: camlibs/directory/directory.c:493
 msgid "Directory Browse"
 msgstr "Examinar el Directorio"
 
-#: camlibs/directory/directory.c:493 camlibs/directory/directory.c:524
+#: camlibs/directory/directory.c:494 camlibs/directory/directory.c:525
 msgid "View hidden directories"
 msgstr "Ver directorios ocultos"
 
-#: camlibs/directory/directory.c:537
+#: camlibs/directory/directory.c:538
 msgid ""
 "The Directory Browse \"camera\" lets you index photos on your hard drive."
 msgstr ""
 "La \"cámara\" 'Examinar el Directorio' le permite indexar las fotos en su "
 "disco."
 
-#: camlibs/directory/directory.c:546
+#: camlibs/directory/directory.c:547
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
 msgstr ""
 "Modo Examinar el Directorio - escrito por Scott Fritzinger <scottf@unr.edu>."
 
-#: camlibs/directory/directory.c:593
+#: camlibs/directory/directory.c:594
 #, c-format
 msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
 msgstr ""
@@ -999,8 +999,8 @@ msgid "Waiting for completion..."
 msgstr "Esperando que finalice la operación..."
 
 #: camlibs/kodak/dc210/dc210.c:168 camlibs/polaroid/pdc700.c:982
-#: camlibs/sierra/sierra.c:763 camlibs/sierra/sierra.c:1340
-#: camlibs/sierra/sierra-desc.c:191
+#: camlibs/sierra/sierra-desc.c:191 camlibs/sierra/sierra.c:763
+#: camlibs/sierra/sierra.c:1340
 msgid "Camera Configuration"
 msgstr "Configuración de la cámara"
 
@@ -2109,7 +2109,7 @@ msgstr ""
 msgid "Downloading file..."
 msgstr "Descargando imagen..."
 
-#: camlibs/pccam600/library.c:259
+#: camlibs/pccam600/library.c:259 camlibs/spca504_flash/library.c:172
 #, fuzzy
 msgid "Manual Not Implemented Yet"
 msgstr "¡No implementado!"
@@ -2119,10 +2119,6 @@ msgid ""
 "Creative PC-CAM600\n"
 " Author: Peter Kajberg\n"
 " email: <pbk@odense.kollegienet.dk>\n"
-msgstr ""
-
-#: camlibs/pccam600/pccam600.c:57
-msgid ":"
 msgstr ""
 
 #: camlibs/polaroid/pdc700.c:159
@@ -2468,11 +2464,11 @@ msgstr "PTP. Error de protocolo, se esperaban datos"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP. Error de protocolo, se esperaba respuesta"
 
-#: camlibs/ptp/library.c:481
+#: camlibs/ptp/library.c:484
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
 msgstr "Escrito por Mariusz Woloszyn <emsi@ipartners.pl>. ¡Disfrute!"
 
-#: camlibs/ptp/library.c:1013
+#: camlibs/ptp/library.c:1016
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP está implementado sólo para cámaras USB."
 
@@ -3140,6 +3136,11 @@ msgid ""
 "    please contact gphoto-devel@gphoto.net\n"
 msgstr ""
 
+#: camlibs/sierra/sierra-desc.c:172
+#, fuzzy, c-format
+msgid "%lld (unknown)"
+msgstr "%i (desconocida)"
+
 #: camlibs/sierra/sierra.c:620
 msgid "The file to be uploaded has a null length"
 msgstr "El archivo a enviar tiene longitud nula"
@@ -3532,11 +3533,6 @@ msgstr ""
 "por la utilización de su Olympus C-3030Z\n"
 "para la implementación del soporte USB."
 
-#: camlibs/sierra/sierra-desc.c:172
-#, fuzzy, c-format
-msgid "%lld (unknown)"
-msgstr "%i (desconocida)"
-
 #: camlibs/sipix/sipix.c:194
 msgid ""
 "SiPix Web2\n"
@@ -3550,6 +3546,54 @@ msgid ""
 "Vincent Sanders <vince@kyllikki.org>\n"
 "Marcus Meissner <marcus@jet.franken.de>.\n"
 msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:134
+msgid "Sorry, this function not implemented..."
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:140
+msgid "Sorry, nothing to configure..."
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:146
+msgid "Sorry, taking pictures is not implemented..."
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:152
+#, fuzzy
+msgid "Couldn't open camera.\n"
+msgstr "No se puede detectar cámara alguna"
+
+#: camlibs/sonydscf1/dsc_f1.c:166
+#, fuzzy
+msgid "Error opening camera\n"
+msgstr "Problema volviendo a cero a la cámara"
+
+#: camlibs/sonydscf1/dsc_f1.c:171
+msgid "Picture number is too large.\n"
+msgstr ""
+
+#: camlibs/sonydscf1/dsc_f1.c:182
+#, fuzzy
+msgid ""
+"Sony DSC-F1 Digital Camera Support\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"\n"
+"Based on the chotplay CLI interface from\n"
+"Ken-ichi Hayashi\n"
+"\n"
+"This lib may not work. YMMV\n"
+msgstr ""
+"Soporte de las cámaras digitales Sony DSC-F1\n"
+"M. Adam Kendall <joker@penguinpub.com>\n"
+"Basado en la interfaz CLI chotplay de\n"
+"Ken-ichi Hayashi\n"
+"Portado a gPhoto2 por Bart van Leeuwen <bart@netage.nl>"
+
+#: camlibs/sonydscf1/dsc_f1.c:187 camlibs/sonydscf1/dsc_f1.c:188
+#, fuzzy
+msgid "Error opening camera.\n"
+msgstr "Problema volviendo a cero a la cámara"
 
 #: camlibs/sonydscf1/sonydscf1.c:132
 msgid ""
@@ -3590,6 +3634,15 @@ msgid ""
 msgstr ""
 "Agfa CL18\n"
 "Vince Weaver <vince@deater.net>\n"
+
+#: camlibs/spca504_flash/library.c:181
+msgid ""
+"spca504_flash camlib\n"
+" Authors: Till Adam\n"
+" <till@adam-lilienthal.de>\n"
+"based on work by Matthias Krau\n"
+"and Mark A. Zimmerman <mark@foresthaven.com>"
+msgstr ""
 
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
 msgid "Bad exposure (not enough light probably)"
