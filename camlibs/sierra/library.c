@@ -1,14 +1,78 @@
+/* library.c
+ *
+ * Copyright (C) 2001 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+#include <config.h>
+#include "library.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <gphoto2.h>
 #include <time.h>
+
+#include <gphoto2.h>
+
 #include "sierra.h"
 #include "sierra-usbwrap.h"
-#include "library.h"
+
+/* Short comm. */
+#define NUL             0x00
+#define ENQ             0x05
+#define ACK             0x06
+#define DC1             0x11
+#define NAK             0x15
+#define TRM             0xff
+
+/* Packet types */
+#define TYPE_COMMAND    0x1b
+#define TYPE_DATA       0x02
+#define TYPE_DATA_END   0x03
+
+/* Sub-types */
+#define SUBTYPE_COMMAND_FIRST   0x53
+#define SUBTYPE_COMMAND         0x43
+
+/* Maximum length of the data field within a packet */
+#define MAX_DATA_FIELD_LENGTH   2048
+
+#define RETRIES                 10
 
 #define		QUICKSLEEP	5
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 #define GP_MODULE "sierra"
 
@@ -256,7 +320,8 @@ int sierra_check_battery_capacity (Camera *camera)
  *
  * Returns: a gphoto2 error code
  */
-int sierra_get_memory_left (Camera *camera, int *memory)
+int
+sierra_get_memory_left (Camera *camera, int *memory)
 {
 	int ret;
 
@@ -269,7 +334,8 @@ int sierra_get_memory_left (Camera *camera, int *memory)
 	return GP_OK;
 }
 
-int sierra_write_packet (Camera *camera, char *packet)
+static int
+sierra_write_packet (Camera *camera, char *packet)
 {
 	int x, ret, r, checksum=0, length;
 
@@ -316,6 +382,21 @@ int sierra_write_packet (Camera *camera, char *packet)
 	return (GP_ERROR_IO_TIMEOUT);
 }
 
+static int
+sierra_write_nak (Camera *camera)
+{
+        char buf[4096];
+        int ret;
+
+        gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_nack");
+
+        buf[0] = NAK;
+        ret = sierra_write_packet (camera, buf);
+        if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
+                gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
+        return (ret);
+}
+
 /**
  * sierra_read_packet:
  * @camera : camera data stucture
@@ -346,7 +427,8 @@ int sierra_write_packet (Camera *camera, char *packet)
  *     - GP_ERROR_CORRUPTED_DATA if the received data are invalid,
  *     - GP_ERROR_IO_* on other IO error.
  */
-int sierra_read_packet (Camera *camera, char *packet)
+static int
+sierra_read_packet (Camera *camera, char *packet)
 {
 	int y, r = 0, ret_status = GP_ERROR_IO, done = 0, length;
 	int blocksize = 1, bytes_read;
@@ -459,8 +541,9 @@ int sierra_read_packet (Camera *camera, char *packet)
 	return ret_status;
 }
 
-int sierra_build_packet (Camera *camera, char type, char subtype, 
-			 int data_length, char *packet) 
+static int
+sierra_build_packet (Camera *camera, char type, char subtype,
+		     int data_length, char *packet) 
 {
 	packet[0] = type;
 	switch (type) {
@@ -489,7 +572,8 @@ int sierra_build_packet (Camera *camera, char type, char subtype,
 	return (GP_OK);
 }
 
-int sierra_write_ack (Camera *camera) 
+static int
+sierra_write_ack (Camera *camera) 
 {
 	char buf[4096];
 	int ret;
@@ -500,20 +584,6 @@ int sierra_write_ack (Camera *camera)
 	ret = sierra_write_packet (camera, buf);
 	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
 		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
-	return (ret);
-}
-
-int sierra_write_nak (Camera *camera) 
-{
-	char buf[4096];
-	int ret;
-
-	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_write_nack");
-
-	buf[0] = NAK;
-	ret = sierra_write_packet (camera, buf);
-	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
-		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
 	return (ret);
 }
 
@@ -614,7 +684,7 @@ int sierra_set_speed (Camera *camera, int speed)
  *
  * Returns: error code
  *     - GP_OK if the operation is successful,
- *     - GP_ERROR_BAD_CONDITION if the camera returns an 'Enable to
+ *     - GP_ERROR if the camera returns an 'Enable to
  *       Execute Command' status,
  *     - GP_ERROR_CORRUPTED_DATA if the received data are invalid,
  *     - GP_ERROR_IO_* on other IO error.
@@ -646,7 +716,11 @@ sierra_write_action_command_and_wait (Camera *camera, int action_code)
 				continue;
 			case DC1:
 				/* Unable to execute the command */
-				return GP_ERROR_BAD_CONDITION;
+				gp_camera_set_error (camera, _("The camera "
+					"is not able to execute this command. "
+					"Please report this error to "
+					"<gphoto-devel@gphoto.org>."));
+				return GP_ERROR;
 			default:
 				return GP_ERROR_CORRUPTED_DATA;
 			}

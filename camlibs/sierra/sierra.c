@@ -34,6 +34,25 @@
 
 #define TIMEOUT	   2000
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #define CHECK_STOP(camera,result) {int res; res = result; if (res < 0) {camera_stop (camera); gp_log (GP_LOG_DEBUG, "sierra", "Operation failed!"); return (res);}}
 
 #define CHECK_STOP_FREE(camera,result) {int res; res = result; if (res < 0) {camera_stop (camera); free (camera->pl); camera->pl = NULL; return (res);}}
