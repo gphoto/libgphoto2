@@ -83,21 +83,14 @@ struct camera_to_usb {
 	/* Made by Medion (ALDI hw reseller). Their homepage is broken, so
 	 * no URL. This is the camera I have -Marcus. CIF */
 	{ "Micromaxx:Digital Camera",   0x0553, 0x0202, 0 },
-/* Changed names to fit Vendor:Model notation
-*  Michael Rensing <mrensing@users.sourceforge.net>
-*
-*	http://www.digitaldreamco.com/shop/elegante.htm, VGA 
-*	{ "l'elegante by DigitalDream", 0x0553, 0x0202, 0 },
-*	/* http://www.digitaldreamco.com/shop/espion.htm, CIF 
-*	{ "l'espion by DigitalDream",   0x0553, 0x0202, 0 },
-*	/* http://www.digitaldreamco.com/shop/lesprit.html, CIF 
-*	{ "l'esprit by DigitalDream",   0x0553, 0x0202, 0 },
-*	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA 
-*	{ "la ronde by DigitalDream",   0x0553, 0x0202, 0 },
-*/
+
+	/* http://www.digitaldreamco.com/shop/elegante.htm, VGA */
        	{ "DigitalDream:l'elegante", 0x0553, 0x0202, 0 },
+	/* http://www.digitaldreamco.com/shop/espion.htm, CIF */
       	{ "DigitalDream:l'espion",   0x0553, 0x0202, 0 },
+	/* http://www.digitaldreamco.com/shop/lesprit.html, CIF */
       	{ "DigitalDream:l'esprit",   0x0553, 0x0202, 0 },
+	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA */
       	{ "DigitalDream:la ronde",   0x0553, 0x0202, 0 },
 	
 
