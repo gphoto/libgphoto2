@@ -50,6 +50,7 @@ static int glob_session_camera = 0;
 #define CHECK_OPEN(c)              {gp_port_open ((c)->port);}
 #define CHECK_CLOSE(c)             {gp_port_close ((c)->port);}
 #define CHECK_RESULT_OPEN_CLOSE(c,result) {int r; CHECK_OPEN (c); r = (result); if (r < 0) {CHECK_CLOSE (c); return (r);}; CHECK_CLOSE (c);}
+#define GP_DEBUG(m) {gp_debug_printf (GP_DEBUG_LOW, "core", (m));}
 
 int
 gp_camera_new (Camera **camera)
@@ -258,6 +259,7 @@ gp_camera_exit (Camera *camera)
 {
 	int ret;
 
+	GP_DEBUG ("ENTER: gp_camera_exit");
 	CHECK_NULL (camera);
 
 	if (camera->functions == NULL)
@@ -271,8 +273,10 @@ gp_camera_exit (Camera *camera)
 	CHECK_CLOSE (camera);
 
 	GP_SYSTEM_DLCLOSE (camera->library_handle);
+	CHECK_RESULT (ret);
 
-	return (ret);
+	GP_DEBUG ("LEAVE: gp_camera_exit");
+	return (GP_OK);
 }
 
 int
@@ -305,6 +309,7 @@ gp_camera_init (Camera *camera)
 	const char *model, *port;
 	CameraLibraryInitFunc init_func;
 
+	GP_DEBUG ("ENTER: gp_camera_init");
 	CHECK_NULL (camera);
 
 	/*
@@ -365,8 +370,10 @@ gp_camera_init (Camera *camera)
 	 */
 	result = init_func (camera);
 	gp_port_close (camera->port);
+	CHECK_RESULT (result);
 
-	return (result);
+	GP_DEBUG ("LEAVE: gp_camera_init");
+	return (GP_OK);
 }
 
 int
@@ -494,6 +501,8 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
 			     CameraList *list)
 {
 	int result;
+
+	GP_DEBUG ("ENTER: gp_camera_folder_list_files");
 	CHECK_NULL (camera && folder && list);
 
 	/* Check first if the camera driver uses the filesystem */
@@ -517,6 +526,7 @@ if (list->count)
 							camera, folder, list));
 	CHECK_RESULT (gp_list_sort (list));
 
+	GP_DEBUG ("LEAVE: gp_camera_folder_list_files");
         return (GP_OK);
 }
 
@@ -526,6 +536,7 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
 {
 	int result;
 
+	GP_DEBUG ("ENTER: gp_camera_folder_list_folders");
 	CHECK_NULL (camera && folder && list);
 
 	/* Check first if the camera driver uses the filesystem */
@@ -551,6 +562,7 @@ if (list->count)
 
 	CHECK_RESULT (gp_list_sort (list));
 
+	GP_DEBUG ("LEAVE: gp_camera_folder_list_folders");
         return (GP_OK);
 }
 
@@ -579,6 +591,7 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
 	int result;
 	CameraList list;
 
+	GP_DEBUG ("ENTER: gp_camera_folder_delete_all");
 	CHECK_NULL (camera && folder);
 
 	/* 
@@ -604,6 +617,7 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder)
 		CHECK_RESULT_OPEN_CLOSE (camera, delete_one_by_one (camera,
 								    folder));
 
+	GP_DEBUG ("LEAVE: gp_camera_folder_delete_all");
 	return (GP_OK);
 }
 
@@ -660,6 +674,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	const char *data;
 	long int size;
 
+	GP_DEBUG ("ENTER: gp_camera_file_get_info");
 	CHECK_NULL (camera && folder && file && info);
 
 	memset (info, 0, sizeof (CameraFileInfo));
@@ -707,6 +722,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	strncpy (info->file.name, file, sizeof (info->file.name));
 	info->preview.fields &= ~GP_FILE_INFO_NAME;
 
+	GP_DEBUG ("LEAVE: gp_camera_file_get_info");
 	return (GP_OK);
 }
 
@@ -738,6 +754,7 @@ int
 gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 		    CameraFileType type, CameraFile *camera_file)
 {
+	GP_DEBUG ("ENTER: gp_camera_file_get");
 	CHECK_NULL (camera && folder && file && camera_file);
 
         if (camera->functions->file_get == NULL)
@@ -754,6 +771,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_get (camera,
 					folder, file, type, camera_file));
 
+	GP_DEBUG ("LEAVE: gp_camera_file_get");
 	return (GP_OK);
 }
 
@@ -790,6 +808,7 @@ gp_camera_file_set_config (Camera *camera, const char *folder,
 int
 gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 {
+	GP_DEBUG ("ENTER: gp_camera_file_delete");
 	CHECK_NULL (camera && folder && file);
 
         if (camera->functions->file_delete == NULL)
@@ -798,6 +817,7 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file)
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->file_delete (
 							camera, folder, file));
 
+	GP_DEBUG ("LEAVE: gp_camera_file_delete");
 	return (GP_OK);
 }
 
