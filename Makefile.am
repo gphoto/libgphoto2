@@ -14,7 +14,7 @@ SUBDIRS = 			\
 	camlibs 		\
 	frontends 		\
 	tests			\
-	po 			\
+	po			\
 	doc
 
 docdir = @DOC_DIR@
