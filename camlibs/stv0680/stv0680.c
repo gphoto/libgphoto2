@@ -292,10 +292,7 @@ int camera_init (Camera *camera)
         	settings.serial.stopbits = 1;
 		break;
 	case GP_PORT_USB:
-		/* The camera's descriptors are incomplete, so set the ep */
-		/* numbers by hand */
-		settings.usb.inep = 0x82;
-		settings.usb.outep = 0x00;
+		/* Use the defaults the core parsed */
 		break;
 	default:
 		return (GP_ERROR_UNKNOWN_PORT);
