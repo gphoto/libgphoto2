@@ -1,11 +1,11 @@
-/******************************************************************************/
-/* See konica.h for licence and details.			              */
-/******************************************************************************/
+/*****************************************/
+/* See konica.h for licence and details. */
+/*****************************************/
 
 
-/******************************************************************************/
-/* Included Header Files					              */
-/******************************************************************************/
+/*************************/
+/* Included Header Files */
+/*************************/
 #include <glib.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -15,18 +15,18 @@
 #include "konica.h"
 
 
-/******************************************************************************/
-/* Prototypes							              */
-/******************************************************************************/
+/**************/
+/* Prototypes */
+/**************/
 k_return_status_t K_RETURN_STATUS (l_return_status_t l_return_status);
 
 
 k_return_status_t return_status_translation (guchar byte1, guchar byte2);
 
 
-/******************************************************************************/
-/* Functions							              */
-/******************************************************************************/
+/*************/
+/* Functions */
+/*************/
 k_return_status_t K_RETURN_STATUS (l_return_status_t l_return_status)
 {
 	switch (l_return_status) {
@@ -85,6 +85,10 @@ k_return_status_t return_status_translation (guchar byte1, guchar byte2)
 		return (K_ERROR_ILLEGAL_PARAMETER);
 	case 0x0801:
 		return (K_ERROR_COMMAND_CANNOT_BE_CANCELLED);
+	case 0x0b00:
+		return (K_ERROR_LOCALIZATION_DATA_EXCESS);
+	case 0x0bff:
+		return (K_ERROR_LOCALIZATION_DATA_CORRUPT);
 	case 0x0c01:
 		return (K_ERROR_UNSUPPORTED_COMMAND);
 	case 0x0c02:
@@ -96,9 +100,9 @@ k_return_status_t return_status_translation (guchar byte1, guchar byte2)
 	default:
 		sprintf (
 			buffer, 
-			"The camera has just sent an error that has not"
-			"yet been discovered. Please report the following"
-			"to the maintainer of this driver with some"
+			"The camera has just sent an error that has not "
+			"yet been discovered. Please report the following "
+			"to the maintainer of this driver with some "
 			"additional information how you got this error.\n"
 			" - Byte 1: %i\n"
 			" - Byte 2: %i\n"
@@ -1479,9 +1483,10 @@ k_return_status_t k_take_picture (
 }
 
 
-k_return_status_t k_put_localization_file (
+k_return_status_t k_put_localization_data (
 	konica_data_t *konica_data,
-	char *file_name)
+	guchar *data,
+	gulong data_size)
 {
 	/************************************************/
 	/* Command to send a localization file to the	*/
@@ -1525,150 +1530,49 @@ k_return_status_t k_put_localization_file (
 	/* 0xXX: Byte 0 of return status		*/
 	/* 0xXX: Byte 1 of return status		*/
 	/************************************************/
-	FILE *file;
 	l_return_status_t l_return_status;
 	k_return_status_t k_return_status;
-	char *data = g_new (char, 65536);
-	guchar sb[] = {0x00, 0x92, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	guchar sb[1040];
 	guchar *rb = NULL;
 	guint rbs;
 	gulong i, j;
-	char c[2];
+	guint packet_size = 1024;
 
-	/************************/
-	/* Initialize variable 	*/
-	/* data with 0xFF.	*/
-	/************************/
-	for (i = 0; i < 65536; i++) data[i] = 0xFF;
-	/********************************/
-	/* Read localization file and	*/
-	/* put data into variable data.	*/
-	/********************************/
-	if ((file = fopen (file_name, "r")) == NULL) 
-		return (K_CONFIGURATION_FILE_COULD_NOT_BE_LOADED);
-	i = 0;
-	j = 0;
-	do {
-		c[j] = fgetc (file);
-		switch (c[j]) {
-			case '\n': continue;
-			case EOF: break;
-			case '#':
-				/************************/
-				/* Comment: Discard.	*/
-				/************************/
-				do {
-					c[j] = fgetc (file);
-				} while ((c[j] != '\n') && (c[j] != EOF)); 
-				continue;
-			case '\t': continue;
-			case ' ': continue;
-			default: 
-				/****************************************/
-				/* j == 0: We have to read the second	*/
-				/*         half of the byte to send.	*/
-				/* j == 1: We'll compose our byte.	*/
-				/****************************************/
-				if (j == 0) {
-					j++;
-					continue;
-				} else {
-					data[i] = 0;
-					for (j = 0; j <= 1; j++) {
-						switch (c[j]) {
-							case '0': 
-								data[i] = data[i];
-								break;
-							case '1':
-								data[i] = data[i] | (0x01 << (4 * (1 - j)));
-								break;
-							case '2':
-								data[i] = data[i] | (0x02 << (4 * (1 - j)));
-								break;
-							case '3':
-								data[i] = data[i] | (0x03 << (4 * (1 - j)));
-								break;
-							case '4':
-								data[i] = data[i] | (0x04 << (4 * (1 - j)));
-								break;
-							case '5':
-								data[i] = data[i] | (0x05 << (4 * (1 - j)));
-								break;
-							case '6':
-								data[i] = data[i] | (0x06 << (4 * (1 - j)));
-								break;
-							case '7':
-								data[i] = data[i] | (0x07 << (4 * (1 - j)));
-								break;
-							case '8':
-								data[i] = data[i] | (0x08 << (4 * (1 - j)));
-								break;
-							case '9':
-								data[i] = data[i] | (0x09 << (4 * (1 - j)));
-								break;
-							case 'A':
-								data[i] = data[i] | (0x0A << (4 * (1 - j)));
-								break;
-							case 'B':
-								data[i] = data[i] | (0x0B << (4 * (1 - j)));
-								break;
-							case 'C':
-								data[i] = data[i] | (0x0C << (4 * (1 - j)));
-								break;
-							case 'D':
-								data[i] = data[i] | (0x0D << (4 * (1 - j)));
-								break;
-							case 'E':
-								data[i] = data[i] | (0x0E << (4 * (1 - j)));
-								break;
-							case 'F':
-								data[i] = data[i] | (0x0F << (4 * (1 - j)));
-								break;
-							default:
-								fclose (file);
-								return (K_CONFIGURATION_FILE_FAULTY);
-						} 
-					} 
-					i++;
-					j = 0;
-				} 
-		} 
-	} while (c[j] != EOF);
-	fclose (file);
-	if (j == 1) return (K_CONFIGURATION_FILE_FAULTY);
+	g_return_val_if_fail (konica_data != NULL, K_PROGRAM_ERROR);
+	g_return_val_if_fail (data != NULL, K_PROGRAM_ERROR);
+	g_return_val_if_fail (data_size >= 112, K_PROGRAM_ERROR);
 	/****************************************/
-	/* Write data to the camera's memory in	*/
-	/* 128 byte chunks.			*/
+	/* Write data to the camera's memory.	*/
 	/****************************************/
-	sb[8] = 128;
-	sb[9] = 128 >> 8;
-	for (i = 0; i < 65536; i+= 128) {
+	for (i = 0; i < packet_size + 16; i++) sb[i] = 0;
+	sb[0] = 0x00;
+	sb[1] = 0x92;
+	sb[2] = 0x00;
+	sb[3] = 0x00;
+	sb[4] = 0x00;
+	sb[5] = 0x00;
+	sb[6] = data[52];
+	sb[7] = 0x00;
+	sb[8] = packet_size;
+	sb[9] = packet_size >> 8;
+	for (i = 0; i <= 65536; i+= packet_size) {
 		sb[10] = i >> 16;
 		sb[11] = i >> 24;
 		sb[12] = i;
 		sb[13] = i >> 8;
-		if (i + 128 == 65536) sb[14] = 1;
-		for (j = 0; j < 128; j++) sb[14 + j] = data[i + j];
+		sb[14] = 0x00;
+		sb[15] = 0x00;
+		if (i + packet_size > 65536) sb[14] = 1;
+		for (j = 0; j < packet_size; j++) {
+			if ((i + j) < data_size) sb[16 + j] = data[i + j];
+			else sb[16 + j] = 0xFF;
+		}
+		if (konica_data->debug_flag) 
+			printf ("-> Sending packet starting at "
+				"memory address %i.\n", (gint) i);
 		l_return_status = l_send_receive (
 			konica_data, 
-			sb, 144, 
+			sb, packet_size + 16, 
 			&rb, &rbs);
 		if (l_return_status != L_SUCCESS) {
 			g_free (rb);
@@ -1676,12 +1580,15 @@ k_return_status_t k_put_localization_file (
 		}
 		k_return_status = return_status_translation (rb[2], rb[3]);
 		g_free (rb);
-		if (k_return_status != K_SUCCESS) return (k_return_status);
+		if (k_return_status != K_SUCCESS) 
+			if (k_return_status != K_ERROR_LOCALIZATION_DATA_EXCESS)
+				return (k_return_status);
 	}
 	/****************************************/
 	/* Send the information that all	*/
 	/* packets have been transmitted.	*/
 	/****************************************/
+	if (konica_data->debug_flag) printf ("-> Sending 1.\n");
 	sb[4] = 1;
 	l_return_status = l_send_receive (konica_data, sb, 8, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {
@@ -1695,6 +1602,7 @@ k_return_status_t k_put_localization_file (
 	/* Send the information that the 	*/
 	/* localization is done.		*/
 	/****************************************/
+	if (konica_data->debug_flag) printf ("-> Sending 2.\n");
 	sb[4] = 2;
 	l_return_status = l_send_receive (konica_data, sb, 8, &rb, &rbs);
 	if (l_return_status != L_SUCCESS) {

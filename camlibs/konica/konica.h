@@ -210,8 +210,6 @@ typedef enum {
 	K_L_TRANSMISSION_ERROR,
 	K_L_SUCCESS,
 	K_UNSUPPORTED_BITRATE,
-	K_CONFIGURATION_FILE_COULD_NOT_BE_LOADED,
-	K_CONFIGURATION_FILE_FAULTY,
 	K_PROGRAM_ERROR,
 	K_SUCCESS,
 	K_ERROR_FOCUSING_ERROR,
@@ -233,6 +231,8 @@ typedef enum {
 	K_ERROR_SYSTEM_ERROR,
 	K_ERROR_ILLEGAL_PARAMETER,
 	K_ERROR_COMMAND_CANNOT_BE_CANCELLED,
+	K_ERROR_LOCALIZATION_DATA_EXCESS,
+	K_ERROR_LOCALIZATION_DATA_CORRUPT,
 	K_ERROR_UNSUPPORTED_COMMAND,
 	K_ERROR_OTHER_COMMAND_EXECUTING,
 	K_ERROR_COMMAND_ORDER_ERROR,
@@ -453,9 +453,10 @@ k_return_status_t k_set_protect_status (
 	gboolean protected);
 
 
-k_return_status_t k_put_localization_file (
+k_return_status_t k_put_localization_data (
         konica_data_t *konica_data,
-	char *file_name);
+	guchar *data,
+	gulong data_size);
 
 
 k_return_status_t k_cancel (

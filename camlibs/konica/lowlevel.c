@@ -3,9 +3,9 @@
 /******************************************************************************/
 
 
-/******************************************************************************/
-/* Included header files					              */
-/******************************************************************************/
+/*************************/
+/* Included header files */
+/*************************/
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,10 +15,10 @@
 #include "lowlevel.h"
 
 
-/******************************************************************************/
-/* Definitions						        	      */
-/******************************************************************************/
-#define DEFAULT_TIMEOUT	300
+/***************/
+/* Definitions */
+/***************/
+#define DEFAULT_TIMEOUT	200
 #define STX	0x02	/****************/
 #define ETX	0x03	/*		*/
 #define ENQ	0x05	/*		*/
@@ -31,9 +31,9 @@
 #define EOT	0x04       
 
 
-/******************************************************************************/
-/* Prototypes							              */
-/******************************************************************************/
+/**************/
+/* Prototypes */
+/**************/
 l_return_status_t l_esc_read (konica_data_t *konica_data, guchar *c);
 
 
@@ -50,9 +50,9 @@ l_return_status_t l_receive (
 	guint timeout);
 
 
-/******************************************************************************/
-/* Functions						                      */
-/******************************************************************************/
+/*************/
+/* Functions */
+/*************/
 l_return_status_t l_init (konica_data_t *konica_data)
 {
 	guchar c;
@@ -168,6 +168,7 @@ l_return_status_t l_send (
 	guchar *sb; 	
 	guint   sbs;
 
+	i = 0;
 	for (;;) {
 		/****************/
 		/* Write ENQ.	*/
@@ -178,8 +179,14 @@ l_return_status_t l_send (
 		/****************/
 		/* Read.	*/
 		/****************/
-		if (gpio_read (konica_data->device, &c, 1) < 1) 
-			return (L_IO_ERROR);
+		if (gpio_read (konica_data->device, &c, 1) < 1) {
+			/************************************/
+			/* Let's try for a couple of times. */
+			/************************************/
+			i++;
+			if (i == 5) return (L_IO_ERROR);
+			continue;
+		}
 		if (konica_data->debug_flag) printf ("Received:\n%4i\n", c);
 		switch (c) {
 		case ACK:
@@ -192,8 +199,7 @@ l_return_status_t l_send (
 			/* NACK received. We'll start from the  */
 			/* beginning.				*/
 			/****************************************/
-			i--;
-			break;
+			continue;
 		case ENQ:
 			/******************************************************/
 			/* ENQ received. It seems that the camera would like  */
@@ -216,7 +222,7 @@ l_return_status_t l_send (
 					/**************************************/
 					/* The camera has not yet given up.   */
 					/**************************************/
-					break;
+					continue;
 				case ACK:
 					/**************************************/
 					/* ACK received. We can proceed.      */
@@ -228,17 +234,17 @@ l_return_status_t l_send (
 					/**************************************/
 					return (L_TRANSMISSION_ERROR);
 				}
-				if (c == ACK) break;
+				break;
 			}
 			break;
 		default:
 			/******************************************************/
 			/* The camera seems to send us data. We'll            */
-			/* simply dump it.                                    */
+			/* simply dump it and try again.                      */
 			/******************************************************/
-			break;
+			continue;
 		}
-		if (c == ACK) break;
+		break;
 	}
 	/********************************************************/
 	/* We will write:			 		*/
@@ -467,7 +473,7 @@ l_return_status_t l_receive (
 			if (!error_flag) {
 				if (gpio_read (konica_data->device, &d, 1) < 1) 
 					return (L_IO_ERROR);
-				if (konica_data->debug_flag) printf ("%4i", c);
+				if (konica_data->debug_flag) printf ("%4i", d);
 				switch (d) {
 				case ETX:
 					/**************************************/
@@ -631,7 +637,7 @@ l_return_status_t l_send_receive (
 		konica_data, 
 		receive_buffer, 
 		receive_buffer_size, 
-		2000);
+		3000);
 	if (return_status != L_SUCCESS) return (return_status);
 	if (((*receive_buffer)[0] != send_buffer[0]) || 
 	    ((*receive_buffer)[1] != send_buffer[1])) {

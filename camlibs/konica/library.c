@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
+#include <zlib.h>
 #include <gphoto2.h>
 #include "library.h"
 #include "konica.h"
@@ -34,6 +35,11 @@ char **models[2] = {models_qm100, models_qm200};
 /* Prototypes */
 /**************/
 gboolean error_happened (Camera *camera, k_return_status_t return_status);
+gboolean localization_file_read (
+	Camera *camera, 
+	gchar *file_name, 
+	guchar **data,
+	gulong *data_size);
 
 
 /*************/
@@ -112,6 +118,12 @@ gboolean error_happened (Camera *camera, k_return_status_t return_status)
                 case K_ERROR_COMMAND_CANNOT_BE_CANCELLED:
                         gp_camera_message (camera, "Command cannot be cancelled!");
                         return (TRUE);
+		case K_ERROR_LOCALIZATION_DATA_EXCESS:
+			gp_camera_message (camera, "Too much localization data!\n");
+			return (TRUE);
+		case K_ERROR_LOCALIZATION_DATA_CORRUPT:
+			gp_camera_message (camera, "Localization data corrupt!\n");
+			return (TRUE);
                 case K_ERROR_UNSUPPORTED_COMMAND:
                         gp_camera_message (camera, "Unsupported command!");
                         return (TRUE);
@@ -241,6 +253,7 @@ int camera_init (Camera *camera, CameraInit *init)
 	camera->camlib_data = konica_data;
 	konica_data->port_settings = init->port_settings;
 	konica_data->debug_flag = (camera->debug == 1);
+konica_data->debug_flag = TRUE;
 	konica_data->filesystem = gp_filesystem_new ();
 	konica_data->image_id_long = FALSE;
 	for (i = 0; i < 2; i++) {
@@ -853,10 +866,8 @@ int camera_config_get (Camera *camera, CameraWidget *window)
                 break;
         }
         /* Language */
-        widget = gp_widget_new (GP_WIDGET_MENU, "Language");
+        widget = gp_widget_new (GP_WIDGET_TEXT, "Localization File");
         gp_widget_append (section, widget);
-        gp_widget_choice_add (widget, "English");
-        gp_widget_choice_add (widget, "French");
         /********************************/
         /* Session-persistent Settings  */
         /********************************/
@@ -930,8 +941,291 @@ int camera_config_get (Camera *camera, CameraWidget *window)
 }
 
 
-int camera_config_set (Camera *camera, CameraSetting *conf, int count)
+int camera_config_set (Camera *camera, CameraSetting *setting, int count)
 {
-	gp_camera_message (camera, "Not yet implemented...\n");
-	return (GP_ERROR);
+	guint i, j, focus, self_timer;
+	konica_data_t *konica_data;
+	guchar *data;
+	gulong data_size;
+
+        g_return_val_if_fail (camera != NULL, GP_ERROR);
+	g_return_val_if_fail (setting != NULL, GP_ERROR);
+	focus = 0;
+	self_timer = 0;
+	konica_data = (konica_data_t *) camera->camlib_data;
+	if (konica_data->debug_flag) 
+		printf ("*** Entering camera_config_set.\n");
+	for (i = 0; i < count; i++) {
+		if (konica_data->debug_flag) 
+			printf ("-> Setting \"%s\" to \"%s\".\n", 
+				setting[i].name, 
+				setting[i].value);
+                if (strcmp (setting[i].name, "Beep") == 0) {
+			if (strcmp (setting[i].value, "Off") == 0) j = 0;
+			else j = 1;
+			if (error_happened (camera, k_set_preference (
+				konica_data,
+				K_PREFERENCE_BEEP,
+				j))) return (GP_ERROR);
+                        continue;
+                }
+                if (strcmp (setting[i].name, "Self Timer Time") == 0) {
+                        if (error_happened (camera, k_set_preference (
+				konica_data, 
+				K_PREFERENCE_SELF_TIMER_TIME, 
+				(guint) atoi (setting[i].value)))) 
+				return (GP_ERROR);
+                        continue;
+                }
+                if (strcmp (setting[i].name, "Auto Off Time") == 0) {
+                        if (error_happened (camera, k_set_preference (
+                                konica_data,
+                                K_PREFERENCE_AUTO_OFF_TIME,
+                                (guint) atoi (setting[i].value))))
+                                return (GP_ERROR);
+                        continue;
+                }
+                if (strcmp (setting[i].name, "Slide Show Interval") == 0) {
+                        if (error_happened (camera, k_set_preference (
+                                konica_data,
+                                K_PREFERENCE_SLIDE_SHOW_INTERVAL,
+                                (guint) atoi (setting[i].value))))
+                                return (GP_ERROR);
+                        continue;
+                }
+                if (strcmp (setting[i].name, "Resolution") == 0) {
+			if (strcmp (
+				setting[i].value, 
+				"High (1152 x 872)") == 0) j = 1;
+			if (strcmp (
+				setting[i].value, 
+				"Low (576 x 436)") == 0) j = 3;
+			else j = 0;
+			if (error_happened (camera, k_set_preference (
+				konica_data,
+				K_PREFERENCE_RESOLUTION,
+				j))) return (GP_ERROR);
+                        continue;
+                }
+                if (strcmp (setting[i].name, "Localization File") == 0) {
+                        if (strcmp (setting[i].value, "") != 0) {
+				data = NULL;
+				data_size = 0;
+				/* Read localization file */
+				if (!localization_file_read (
+					camera, 
+					setting[i].value,
+					&data,
+					&data_size)) {
+					g_free (data);
+					return (GP_ERROR);
+				}
+				/* Go! */
+				if (error_happened (
+					camera, 
+					k_put_localization_data (
+						konica_data,
+						data,
+						data_size))) {
+					g_free (data);
+					return (GP_ERROR);
+				}
+				g_free (data);
+			}
+                        continue;
+                }
+                if (strcmp (setting[i].name, "Flash") == 0) {
+			if (strcmp (setting[i].value, "Off") == 0) j = 0;
+			else if (strcmp (setting[i].value, "On") == 0) j = 1;
+			else if (strcmp (
+				setting[i].value, 
+				"On, red-eye reduction") == 0) j = 5;
+			else if (strcmp (
+				setting[i].value, 
+				"Auto, red-eye reduction") == 0) j = 6;
+			else j = 2;
+                        if (error_happened (camera, k_set_preference (
+                                konica_data,
+                                K_PREFERENCE_FLASH,
+                                j))) return (GP_ERROR);
+                        continue;
+                }
+                if (strcmp (setting[i].name, "Exposure") == 0) {
+                        if (error_happened (camera, k_set_preference (
+                                konica_data,
+                                K_PREFERENCE_EXPOSURE,
+                                (guint) atoi (setting[i].value))))
+                                return (GP_ERROR);
+                        continue;
+                }
+                if (strcmp (setting[i].name, "Focus") == 0) {
+			if (strcmp (setting[i].value, "Auto") == 0) focus = 2;
+			if (error_happened (camera, k_set_preference (
+				konica_data, 
+				K_PREFERENCE_FOCUS_SELF_TIMER,
+				focus + self_timer))) return (GP_ERROR);
+                        continue;
+                }
+                if (strcmp (setting[i].name, "Self Timer") == 0) {
+			if (strcmp (
+				setting[i].value, 
+				"Self Timer (only next picture)") == 0) 
+				self_timer = 1;
+			if (error_happened (camera, k_set_preference (
+				konica_data,
+				K_PREFERENCE_FOCUS_SELF_TIMER,
+				focus + self_timer))) return (GP_ERROR);
+                        continue;
+                }
+	}
+	if (konica_data->debug_flag) 
+		printf ("*** Leaving camera_config_set.\n");
+	return (GP_OK);
 }
+
+
+gboolean localization_file_read (
+	Camera *camera, 
+	gchar *file_name, 
+	guchar **data, 
+	gulong *data_size)
+{
+	FILE *file;
+	gulong j;
+	gchar f;
+	guchar c[] = "\0\0";
+	gchar buffer[1024];
+	gulong line_number;
+	konica_data_t *konica_data;
+	guchar checksum;
+	gulong fcs;
+	guint d;
+
+	g_return_val_if_fail (camera != NULL, FALSE);
+	g_return_val_if_fail (file_name != NULL, FALSE);
+	g_return_val_if_fail (data != NULL, FALSE);
+	g_return_val_if_fail (*data == NULL, FALSE);
+	g_return_val_if_fail (data_size != NULL, FALSE);
+	konica_data = (konica_data_t *) camera->camlib_data;
+	if ((file = fopen (file_name, "r")) == NULL) {
+		gp_camera_message (
+			camera, 
+			"Could not open requested localization file!");
+		return (FALSE);
+	}
+	*data_size = 0;
+	*data = g_new (guchar, 65536);
+	j = 0; 
+	line_number = 1;
+        do {
+                f = fgetc (file);
+                switch (f) {
+                case '\n': 
+			line_number++;
+			continue;
+		case EOF:
+			break;
+                case '#':
+			/************************/
+                        /* Comment: Discard.    */
+			/************************/
+                        do {
+                                f = fgetc (file);
+                        } while ((f != '\n') && (f != EOF)); 
+			if (f == '\n') line_number++;
+                        continue;
+                case '\t': 
+			continue;
+                case ' ': 
+			continue;
+                default: 
+                        /****************************************/
+                        /* j == 0: We have to read the second   */
+                        /*         half of the byte to send.    */
+                        /* j == 1: We'll compose our byte.      */
+                        /****************************************/
+			if ((f != '0') && (f != '1') && (f != '2') &&
+			    (f != '3') && (f != '4') && (f != '5') &&
+			    (f != '6') && (f != '7') && (f != '8') &&
+			    (f != '9') && (f != 'A') && (f != 'B') &&
+			    (f != 'C') && (f != 'D') && (f != 'E') &&
+			    (f != 'F')) {
+				sprintf (
+					buffer, 
+					"Error in localization file!\n"
+					"\"%c\" in line %i is not allowed.", 
+					f,
+					(gint) line_number);
+				gp_camera_message (
+					camera,
+					buffer);
+				fclose (file);
+				return (FALSE);
+			}
+			c[j] = f;
+			if (j == 1) {
+				if (sscanf (&c[0], "%X", &d) != 1) {
+					gp_camera_message (
+						camera,
+						"There seems to be an error in"
+						" the localization file.");
+						fclose (file);
+						return (FALSE);
+				}
+				(*data)[*data_size] = d;
+				(*data_size)++;
+				if (*data_size == 65536) {
+					gp_camera_message (
+						camera, 
+						"Localization file too long!");
+					fclose (file);
+					return (FALSE);
+				}
+			}
+			j = 1 - j;
+			continue;
+                } 
+	} while (f != EOF);
+	fclose (file);
+	/*********************************/
+	/* Calculate and check checksum. */
+	/*********************************/
+	checksum = 0;
+	for (j = 112; j < *data_size; j++) checksum += (*data)[j];
+	if ((*data)[100] != checksum) {
+		sprintf (
+			buffer,
+			"Checksum not right:\n"
+			" - File: %i\n"
+			" - Calculated: %i\n"
+			"Continuing nevertheless as the\n"
+			"camera won't check the checksum.",
+			(*data)[100],
+			checksum);
+		gp_camera_message (camera, buffer);
+	}
+	/*********************************************/
+	/* Calculate and check frame check sequence. */
+	/*********************************************/
+//FIXME: How do I calculate a fcs?
+	fcs = 0;
+	if ((((*data)[108] << 8) | (*data)[109]) != fcs) {
+		sprintf (
+			buffer, 
+			"Frame check sequence not right:\n"
+			" - File: %i\n"
+			" - Calculated: %i\n"
+			"I can't check the frame check sequence, as\n"
+			"I don't know how to calculate it. If you\n"
+			"know more, please contact the maintainer\n"
+			"of this driver.\n"
+			"Sending data nevertheless.",
+			((*data)[108] << 8) | (*data)[109],
+			(gint) fcs);
+		gp_camera_message (camera, buffer);
+	}
+	if (konica_data->debug_flag) 
+		printf ("-> %i bytes read.\n", (gint) *data_size);
+	return (TRUE);
+}
+
