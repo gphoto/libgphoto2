@@ -38,12 +38,12 @@
 #endif
 
 #ifdef HAVE_SYSCTL
-#	include <sys/sysctl.h>
 #	if __FreeBSD__
 #		include <sys/types.h>
 #	elif (__NetBSD__ || __OpenBSD__)
 #		include <sys/param.h>
 #	endif
+#	include <sys/sysctl.h>
 #endif
 
 #ifdef HAVE_EXIF
