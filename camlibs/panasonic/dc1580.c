@@ -397,15 +397,15 @@ int dsc2_preview(dsc_t *dsc, int index)
 
 /* Library interface functions */
 
-int camera_id (CameraText *id) {
-
+int camera_id (CameraText *id) 
+{
         strcpy(id->text, "panasonic-dc1580");
 
         return (GP_OK);
 }
 
-int camera_abilities (CameraAbilitiesList *list) {
-
+int camera_abilities (CameraAbilitiesList *list) 
+{
         CameraAbilities *a;
         char    *models[] = {
                         "Panasonic DC1580",
@@ -424,10 +424,10 @@ int camera_abilities (CameraAbilitiesList *list) {
                 a->speed[3]     = 57600;
                 a->speed[4]     = 115200;
                 a->speed[5]     = 0;
-                a->capture      = GP_CAPTURE_NONE;
-                a->config       = 0;
-                a->file_operations  = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
-                a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
+                a->operations        = 	GP_OPERATION_NONE;
+                a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
+					GP_FILE_OPERATION_PREVIEW;
+                a->folder_operations = 	GP_FOLDER_OPERATION_PUT_FILE;
 
                 if (gp_abilities_list_append(list, a) == GP_ERROR)
                         return GP_ERROR;
@@ -437,8 +437,8 @@ int camera_abilities (CameraAbilitiesList *list) {
         return GP_OK;
 }
 
-int camera_init (Camera *camera) {
-
+int camera_init (Camera *camera) 
+{
         int ret;
         dsc_t           *dsc = NULL;
 
@@ -507,8 +507,8 @@ int camera_init (Camera *camera) {
                 /* connect with selected speed */
 }
 
-int camera_exit (Camera *camera) {
-
+int camera_exit (Camera *camera) 
+{
         dsc_t   *dsc = (dsc_t *)camera->camlib_data;
 
         dsc_print_status(camera, "Disconnecting camera.");
@@ -527,31 +527,38 @@ int camera_exit (Camera *camera) {
         return (GP_OK);
 }
 
-int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) {
+int camera_folder_list_folders (Camera *camera, const char *folder, 
+				CameraList *list) 
+{
 
         return GP_OK;   /* folders are unsupported but it is OK */
 }
 
-int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
+int camera_folder_list_files (Camera *camera, const char *folder, 
+			      CameraList *list) {
 
         dsc_t   *dsc = (dsc_t *)camera->camlib_data;
         int     count, i;
 
-        if ((count = dsc2_getindex(dsc)) == GP_ERROR)
-                return GP_ERROR;
+	count = dsc2_getindex (dsc);
+	if (count < 0)
+		return (count);
 
-        gp_filesystem_populate(dsc->fs, "/", DSC_FILENAMEFMT, count);
+        gp_filesystem_populate (dsc->fs, "/", DSC_FILENAMEFMT, count);
 
         for (i = 0; i < count; i++)
-                gp_list_append(list, gp_filesystem_name(dsc->fs, "/", i), GP_LIST_FILE);
+                gp_list_append (list, gp_filesystem_name (dsc->fs, "/", i), 
+				GP_LIST_FILE);
 
         return GP_OK;
 }
 
-int camera_file_get_common (Camera *camera, CameraFile *file, char *filename, int thumbnail) {
+int camera_file_get_common (Camera *camera, CameraFile *file, 
+			    const char *filename, int thumbnail) 
+{
 
         dsc_t   *dsc = (dsc_t *)camera->camlib_data;
-        int     index, i, size, blocks;
+        int     index, i, size, blocks, result;
         char    kind[16];
 
         if (thumbnail == DSC_THUMBNAIL)
@@ -576,30 +583,34 @@ int camera_file_get_common (Camera *camera, CameraFile *file, char *filename, in
         blocks = (size - 1)/DSC_BLOCKSIZE + 1;
 
         for (i = 0; i < blocks; i++) {
-                if (dsc2_readimageblock(dsc, i, NULL) == GP_ERROR)
-                        return (GP_ERROR);
-                gp_file_append(file, &dsc->buf[4], DSC_BLOCKSIZE);
-                gp_frontend_progress(camera, file, (float)(i+1)/(float)blocks*100.0);
+		result = dsc2_readimageblock (dsc, i, NULL);
+		if (result < 0)
+			return (result);
+                gp_file_append (file, &dsc->buf[4], DSC_BLOCKSIZE);
+                gp_frontend_progress (camera, file, 
+				      (float)(i+1)/(float)blocks*100.0);
         }
 
         return (GP_OK);
 }
-int camera_file_get (Camera *camera, char *folder, char *filename,
-                     CameraFile *file) {
 
+int camera_file_get (Camera *camera, const char *folder, const char *filename,
+                     CameraFile *file) 
+{
         return camera_file_get_common(camera, file, filename, DSC_FULLIMAGE);
 }
 
-int camera_file_get_preview (Camera *camera, char *folder, char *filename,
-                             CameraFile *file) {
-
+int camera_file_get_preview (Camera *camera, const char *folder, 
+			     const char *filename, CameraFile *file) 
+{
         return camera_file_get_common(camera, file, filename, DSC_THUMBNAIL);
 }
 
-int camera_folder_put_file (Camera *camera, char *folder, CameraFile *file) {
-
+int camera_folder_put_file (Camera *camera, const char *folder, 
+			    CameraFile *file) 
+{
         dsc_t   *dsc = (dsc_t *)camera->camlib_data;
-        int     blocks, blocksize, i;
+        int     blocks, blocksize, i, result;
 
         dsc_print_status(camera, "Uploading image: %s.", file->name);
 
@@ -611,14 +622,18 @@ int camera_folder_put_file (Camera *camera, char *folder, CameraFile *file) {
         }
 */
         if (file->size > DSC_MAXIMAGESIZE) {
-                dsc_print_message(camera, "File size is %i bytes. The size of the largest file possible to upload is: %i bytes.", file->size, DSC_MAXIMAGESIZE);
+                dsc_print_message (camera, "File size is %i bytes. "
+				   "The size of the largest file possible to "
+				   "upload is: %i bytes.", file->size, 
+				   DSC_MAXIMAGESIZE);
                 return GP_ERROR;
         }
 
-        if ((dsc2_setimagesize(dsc, file->size)) != GP_OK)
-                return GP_ERROR;
+	result = dsc2_setimagesize (dsc, file->size);
+	if (result != GP_OK)
+		return (result);
 
-        gp_frontend_progress(camera, file, 0.00);
+        gp_frontend_progress (camera, file, 0.00);
 
         blocks = (file->size - 1)/DSC_BLOCKSIZE + 1;
 
@@ -626,45 +641,50 @@ int camera_folder_put_file (Camera *camera, char *folder, CameraFile *file) {
                 blocksize = file->size - i*DSC_BLOCKSIZE;
                 if (DSC_BLOCKSIZE < blocksize)
                         blocksize = DSC_BLOCKSIZE;
-                if (dsc2_writeimageblock(dsc, i, &file->data[i*DSC_BLOCKSIZE], blocksize) != GP_OK) {
-                        return GP_ERROR;
-                }
-                gp_frontend_progress(camera, file, (float)(i+1)/(float)blocks*100.0);
+		result = dsc2_writeimageblock (dsc, i, 
+					       &file->data[i*DSC_BLOCKSIZE], 
+					       blocksize);
+		if (result != GP_OK)
+			return (result);
+                gp_frontend_progress (camera, file, 
+				      (float)(i+1)/(float)blocks*100.0);
         }
 
         return GP_OK;
 }
 
-int camera_file_delete (Camera *camera, char *folder, char *filename) {
-
+int camera_file_delete (Camera *camera, const char *folder, 
+			const char *filename) 
+{
         dsc_t   *dsc = (dsc_t *)camera->camlib_data;
         int     index;
 
-        dsc_print_status(camera, "Deleting image %s.", filename);
+        dsc_print_status (camera, "Deleting image %s.", filename);
 
         /* index is the 0-based image number on the camera */
-        if ((index = gp_filesystem_number(dsc->fs, folder, filename)) == GP_ERROR)
-                return GP_ERROR;
+	index = gp_filesystem_number (dsc->fs, folder, filename);
+	if (index < 0)
+		return (index);
 
-        return dsc2_delete(dsc, index + 1);
+        return dsc2_delete (dsc, index + 1);
 }
 
-int camera_summary (Camera *camera, CameraText *summary) {
-
+int camera_summary (Camera *camera, CameraText *summary) 
+{
         strcpy(summary->text, "Summary not available.");
 
         return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual) {
-
+int camera_manual (Camera *camera, CameraText *manual) 
+{
         strcpy(manual->text, "Manual not available.");
 
         return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) {
-
+int camera_about (Camera *camera, CameraText *about) 
+{
         strcpy(about->text,
                         "Panasonic DC1580 gPhoto library\n"
                         "Mariusz Zynel <mariusz@mizar.org>\n\n"

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <gphoto2.h>
 
-CameraFilesystemFile *gp_filesystem_entry_new (char *filename) {
+CameraFilesystemFile *gp_filesystem_entry_new (const char *filename) {
 
         CameraFilesystemFile *fse;
 
@@ -41,7 +41,8 @@ int gp_filesystem_free(CameraFilesystem *fs) {
         return (GP_OK);
 }
 
-int gp_filesystem_append (CameraFilesystem *fs, char *folder, char *filename) {
+int gp_filesystem_append (CameraFilesystem *fs, const char *folder, 
+			  const char *filename) {
 
         int x, y, folder_num=-1, file_num;
 
@@ -49,8 +50,9 @@ int gp_filesystem_append (CameraFilesystem *fs, char *folder, char *filename) {
                 if (strcmp(fs->folder[x]->name, folder) == 0) {
                         folder_num = x;
                         /* If file exists, return error */
-                        for (y=0; y<fs->folder[x]->count; y++)
-                                if (strcmp(fs->folder[x]->file[y]->name, filename)==0)
+                        for (y = 0; y < fs->folder[x]->count; y++)
+                                if (strcmp(fs->folder[x]->file[y]->name, 
+					   filename)==0)
                                         return (GP_ERROR_FILE_EXISTS);
                 }
         }
@@ -100,7 +102,8 @@ int gp_filesystem_append (CameraFilesystem *fs, char *folder, char *filename) {
         return (GP_OK);
 }
 
-int gp_filesystem_populate (CameraFilesystem *fs, char *folder, char *format, int count) {
+int gp_filesystem_populate (CameraFilesystem *fs, const char *folder, 
+			    char *format, int count) {
 
         int x, y, new_folder=-1;
         char buf[1024];
@@ -151,7 +154,7 @@ int gp_filesystem_populate (CameraFilesystem *fs, char *folder, char *format, in
         return (GP_OK);
 }
 
-int gp_filesystem_count (CameraFilesystem *fs, char *folder) {
+int gp_filesystem_count (CameraFilesystem *fs, const char *folder) {
 
         int x;
         for (x=0; x<fs->count; x++) {
@@ -162,7 +165,8 @@ int gp_filesystem_count (CameraFilesystem *fs, char *folder) {
         return (GP_ERROR_DIRECTORY_NOT_FOUND);
 }
 
-int gp_filesystem_delete (CameraFilesystem *fs, char *folder, char *filename) {
+int gp_filesystem_delete (CameraFilesystem *fs, const char *folder, 
+			  const char *filename) {
 
         int x,y, shift=0;
 
@@ -205,7 +209,8 @@ int gp_filesystem_format (CameraFilesystem *fs) {
         return (GP_OK);
 }
 
-char *gp_filesystem_name (CameraFilesystem *fs, char *folder, int filenumber) {
+char *gp_filesystem_name (CameraFilesystem *fs, const char *folder, 
+			  int filenumber) {
 
         int x;
 
@@ -219,14 +224,16 @@ char *gp_filesystem_name (CameraFilesystem *fs, char *folder, int filenumber) {
         return (NULL);
 }
 
-int gp_filesystem_number (CameraFilesystem *fs, char *folder, char *filename) {
+int gp_filesystem_number (CameraFilesystem *fs, const char *folder, 
+			  const char *filename) {
 
         int x, y;
 
         for (x=0; x<fs->count; x++) {
                 if (strcmp(fs->folder[x]->name, folder)==0) {
                         for (y=0; y<fs->folder[x]->count; y++) {
-                                if (strcmp(fs->folder[x]->file[y]->name, filename)==0)
+                                if (strcmp (fs->folder[x]->file[y]->name, 
+					    filename)==0)
                                         return (y);
                         }
 

@@ -23,15 +23,15 @@
 #include "stv0680.h"
 #include "library.h"
 
-int camera_id (CameraText *id) {
-
+int camera_id (CameraText *id) 
+{
 	strcpy(id->text, "STV0680");
 
 	return (GP_OK);
 }
 
-int camera_abilities (CameraAbilitiesList *list) {
-
+int camera_abilities (CameraAbilitiesList *list) 
+{
 	CameraAbilities *a;
 
 	a = gp_abilities_new();
@@ -40,9 +40,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->port     = GP_PORT_SERIAL|GP_PORT_USB;
 	a->speed[0] = 115200;
 	a->speed[1] = 0;
-	a->capture  = GP_CAPTURE_NONE;
-	a->config   = 0;
-	a->file_operations = GP_FILE_OPERATION_PREVIEW;
+	a->operations        = GP_OPERATION_NONE;
+	a->file_operations   = GP_FILE_OPERATION_PREVIEW;
 	a->folder_operations = GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
@@ -50,8 +49,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera) {
-
+int camera_init (Camera *camera) 
+{
 	gp_port_settings gpiod_settings;
         int ret;
         struct stv0680_s *device;
@@ -111,15 +110,17 @@ int camera_exit (Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) {
-
+int camera_folder_list_folders (Camera *camera, const char *folder, 
+				CameraList *list) 
+{
 	/* stv0680 has no folder support */
 
 	return (GP_OK);
 }
 
-int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
-
+int camera_folder_list_files (Camera *camera, const char *folder, 
+			      CameraList *list) 
+{
 	struct stv0680_s *device = camera->camlib_data;
 	int i, count, result;
 
@@ -137,9 +138,9 @@ int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
 	return (GP_OK);
 }
 
-int camera_file_get (Camera *camera, char *folder, char *filename,
-                     CameraFile *file ) {
-
+int camera_file_get (Camera *camera, const char *folder, const char *filename,
+                     CameraFile *file ) 
+{
 	struct stv0680_s *device = camera->camlib_data;
 	int image_no, count, result;
 
@@ -157,11 +158,13 @@ int camera_file_get (Camera *camera, char *folder, char *filename,
 	if(image_no < 0)
 		return image_no;
 
-	return stv0680_get_image(device, image_no, &file->data, (int*) &file->size);
+	return stv0680_get_image (device, image_no, &file->data, 
+				  (int*) &file->size);
 }
 
-int camera_file_get_preview (Camera *camera, char *folder, char *filename,
-                             CameraFile *file) {
+int camera_file_get_preview (Camera *camera, const char *folder, 
+			     const char *filename, CameraFile *file) 
+{
 
 	struct stv0680_s *device = camera->camlib_data;
 	int image_no, count, result;
@@ -184,40 +187,40 @@ int camera_file_get_preview (Camera *camera, char *folder, char *filename,
 					&file->data, (int*) &file->size);
 }
 
-int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
-
+int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
+{
 	/* XXX implement */
 
 	return (GP_ERROR_NOT_SUPPORTED);
 }
 
-int camera_summary (Camera *camera, CameraText *summary) {
-
+int camera_summary (Camera *camera, CameraText *summary) 
+{
 	strcpy(summary->text, "No summary available.");
 
 	return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual) {
-
+int camera_manual (Camera *camera, CameraText *manual) 
+{
 	strcpy(manual->text, "No manual available.");
 
 	return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) {
-
-	strcpy(about->text, 
-"STV0680 
- Adam Harrison <adam@antispin.org>
- Driver for cameras using the STV0680 processor ASIC.
- Protocol reverse engineered using CommLite Beta 5");
+int camera_about (Camera *camera, CameraText *about) 
+{
+	strcpy (about->text, 
+		"STV0680\n"
+		"Adam Harrison <adam@antispin.org>\n"
+		"Driver for cameras using the STV0680 processor ASIC.\n"
+		"Protocol reverse engineered using CommLite Beta 5");
 
 	return (GP_OK);
 }
 
-char* camera_result_as_string (Camera *camera, int result) {
-	
+char* camera_result_as_string (Camera *camera, int result) 
+{
 	if (result >= 0) return ("This is not an error...");
 	if (-result < 100) return gp_result_as_string (result);
 	return ("This is a template specific error.");

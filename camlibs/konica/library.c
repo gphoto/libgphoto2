@@ -132,8 +132,7 @@ camera_abilities (CameraAbilitiesList* list)
 			a->speed[8]	= 57600;
 			a->speed[9]	= 115200;
 			a->speed[10]	= 0;
-			a->capture	= GP_CAPTURE_IMAGE | GP_CAPTURE_PREVIEW;
-			a->config	= 1;
+			a->operations	= GP_OPERATION_CONFIG | GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CAPTURE_PREVIEW;
 			a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_CONFIG;
 			a->folder_operations = GP_FOLDER_OPERATION_CONFIG | GP_FOLDER_OPERATION_DELETE_ALL;
 			gp_abilities_list_append (list, a);
@@ -182,8 +181,8 @@ camera_init (Camera* camera)
 	camera->functions->file_set_config	= camera_file_set_config;
 	camera->functions->get_config		= camera_get_config;
 	camera->functions->set_config		= camera_set_config;
-//	camera->functions->config 	  	= camera_config;
-//	camera->functions->capture 		= camera_capture;
+	camera->functions->capture		= camera_capture;
+	camera->functions->capture_preview	= camera_capture_preview;
 	camera->functions->summary		= camera_summary;
 	camera->functions->manual 		= camera_manual;
 	camera->functions->about 		= camera_about;
@@ -343,7 +342,7 @@ camera_exit (Camera* camera)
 
 
 gint
-camera_folder_list_folders (Camera* camera, gchar* folder, CameraList* list)
+camera_folder_list_folders (Camera* camera, const gchar* folder, CameraList* list)
 {
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (list, 	GP_ERROR_BAD_PARAMETERS);
@@ -355,7 +354,7 @@ camera_folder_list_folders (Camera* camera, gchar* folder, CameraList* list)
 }
 
 gint
-camera_folder_delete_all (Camera* camera, gchar* folder)
+camera_folder_delete_all (Camera* camera, const gchar* folder)
 {
 	gint		result;
 	konica_data_t*	konica_data;
@@ -381,7 +380,7 @@ camera_folder_delete_all (Camera* camera, gchar* folder)
 
 
 gint 
-camera_folder_list_files (Camera* camera, gchar* folder, CameraList* list)
+camera_folder_list_files (Camera* camera, const gchar* folder, CameraList* list)
 {
 	guint 			self_test_result;
 	k_power_level_t 	power_level;
@@ -477,7 +476,7 @@ camera_folder_list_files (Camera* camera, gchar* folder, CameraList* list)
 
 
 gint 
-camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar* filename, k_image_type_t image_type)
+camera_file_get_generic (Camera* camera, CameraFile* file, const gchar* folder, const gchar* filename, k_image_type_t image_type)
 {
 	gulong 		image_id;
 	gchar*		image_id_string;
@@ -518,21 +517,21 @@ camera_file_get_generic (Camera* camera, CameraFile* file, gchar* folder, gchar*
 
 
 gint 
-camera_file_get (Camera* camera, gchar* folder, gchar* filename, CameraFile* file)
+camera_file_get (Camera* camera, const gchar* folder, const gchar* filename, CameraFile* file)
 {
 	return (camera_file_get_generic (camera, file, folder, filename, K_IMAGE_EXIF));
 }
 
 
 gint 
-camera_file_get_preview (Camera* camera, gchar* folder, gchar* filename, CameraFile* file)
+camera_file_get_preview (Camera* camera, const gchar* folder, const gchar* filename, CameraFile* file)
 {
 	return (camera_file_get_generic (camera, file, folder, filename, K_THUMBNAIL));
 }
 
 
 gint 
-camera_file_delete (Camera* camera, gchar* folder, gchar* filename)
+camera_file_delete (Camera* camera, const gchar* folder, const gchar* filename)
 {
 	gulong 		image_id; 
 	gchar		image_id_string[] = {0, 0, 0, 0, 0, 0, 0};
@@ -632,7 +631,7 @@ camera_capture_preview (Camera* camera, CameraFile* file)
 }
 
 gint 
-camera_capture (Camera* camera, int capture_type, CameraFilePath* path)
+camera_capture (Camera* camera, gint type, CameraFilePath* path)
 {
 	konica_data_t*	konica_data;
 	gulong 		image_id;
@@ -645,7 +644,7 @@ camera_capture (Camera* camera, int capture_type, CameraFilePath* path)
 
         gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_capture ***");
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (capture_type == GP_CAPTURE_IMAGE, GP_ERROR_NOT_SUPPORTED);
+	g_return_val_if_fail (type == GP_OPERATION_CAPTURE_IMAGE, GP_ERROR_NOT_SUPPORTED);
 	g_return_val_if_fail (path,	GP_ERROR_BAD_PARAMETERS);
 
         konica_data = (konica_data_t *) camera->camlib_data;
@@ -695,7 +694,7 @@ camera_about (Camera* camera, CameraText* about)
 }
 
 gint
-camera_file_get_info (Camera* camera, gchar* folder, gchar* file, CameraFileInfo* info)
+camera_file_get_info (Camera* camera, const gchar* folder, const gchar* file, CameraFileInfo* info)
 {
 	konica_data_t* 	konica_data;
 	gulong		image_id;
@@ -738,14 +737,14 @@ camera_file_get_info (Camera* camera, gchar* folder, gchar* file, CameraFileInfo
 }
 
 gint
-camera_file_set_info (Camera* camera, gchar* folder, gchar* file, CameraFileInfo* info)
+camera_file_set_info (Camera* camera, const gchar* folder, const gchar* file, CameraFileInfo* info)
 {
 	//FIXME: Implement
 	return (GP_ERROR);
 }
 
 gint 
-camera_file_get_config (Camera* camera, gchar* folder, gchar* file, CameraWidget** window)
+camera_file_get_config (Camera* camera, const gchar* folder, const gchar* file, CameraWidget** window)
 {
 	CameraWidget*	widget;
 	konica_data_t*	konica_data;
@@ -793,7 +792,7 @@ camera_file_get_config (Camera* camera, gchar* folder, gchar* file, CameraWidget
 }
 
 int
-camera_file_set_config (Camera* camera, gchar* folder, gchar* file, CameraWidget* window)
+camera_file_set_config (Camera* camera, const gchar* folder, const gchar* file, CameraWidget* window)
 {
 	CameraWidget* 	widget;
 	gint		result = GP_OK;
@@ -835,7 +834,7 @@ camera_file_set_config (Camera* camera, gchar* folder, gchar* file, CameraWidget
 }
 
 int
-camera_folder_get_config (Camera* camera, gchar* folder, CameraWidget** window)
+camera_folder_get_config (Camera* camera, const gchar* folder, CameraWidget** window)
 {
 	CameraWidget*	widget;
 
@@ -857,7 +856,7 @@ camera_folder_get_config (Camera* camera, gchar* folder, CameraWidget** window)
 }
 
 int
-camera_folder_set_config (Camera* camera, gchar* folder, CameraWidget* window)
+camera_folder_set_config (Camera* camera, const gchar* folder, CameraWidget* window)
 {
 	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
 	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);

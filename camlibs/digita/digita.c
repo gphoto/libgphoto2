@@ -50,10 +50,10 @@ int camera_abilities(CameraAbilitiesList *list)
                 a->port       = GP_PORT_SERIAL | GP_PORT_USB;
                 a->speed[0]   = 57600;
                 a->speed[1]   = 0;
-                a->capture    = GP_CAPTURE_NONE;
-                a->config     = 0;
-		a->folder_operations = GP_FOLDER_OPERATION_NONE;
-                a->file_operations = GP_FILE_OPERATION_PREVIEW | GP_FILE_OPERATION_DELETE;
+                a->operations        = 	GP_OPERATION_NONE;
+		a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
+                a->file_operations   = 	GP_FILE_OPERATION_PREVIEW | 
+					GP_FILE_OPERATION_DELETE;
 
                 gp_abilities_list_append(list, a);
         }
@@ -113,17 +113,16 @@ int camera_init(Camera *camera)
         return GP_OK;
 }
 
-int camera_exit(Camera *camera)
+int camera_exit (Camera *camera)
 {
         return GP_OK;
 }
 
-int camera_folder_list_folders(Camera *camera, char *folder, CameraList *list)
+int camera_folder_list_folders (Camera *camera, const char *folder, 
+				CameraList *list)
 {
         struct digita_device *dev = camera->camlib_data;
         int i, i1;
-
-printf("[digita]camera_folder_list %s\n", folder);
 
         if (!dev)
                 return GP_ERROR;
@@ -175,12 +174,14 @@ printf("[digita]camera_folder_list %s\n", folder);
         return GP_OK;
 }
 
-int camera_folder_list_files(Camera *camera, char *folder, CameraList *list)
+int camera_folder_list_files (Camera *camera, const char *folder, 
+			      CameraList *list)
 {
         struct digita_device *dev = camera->camlib_data;
         int i;
 
-printf("[digita]camera_file_list %s\n", folder);
+	gp_debug_printf (GP_DEBUG_HIGH, "digita", "camera_file_list %s\n", 
+			 folder);
 
         if (!dev)
                 return GP_ERROR;
@@ -201,15 +202,16 @@ printf("[digita]camera_file_list %s\n", folder);
                 if (strcmp(dev->file_list[i].fn.path, folder))
                         continue;
 
-                gp_list_append(list, dev->file_list[i].fn.dosname, GP_LIST_FOLDER);
+                gp_list_append (list, dev->file_list[i].fn.dosname, 
+				GP_LIST_FOLDER);
         }
 
         return GP_OK;
 }
 
 #define GFD_BUFSIZE 19432
-static char *digita_file_get(Camera *camera, char *folder, char *filename,
-                        int thumbnail, int *size)
+static char *digita_file_get (Camera *camera, const char *folder, 
+			      const char *filename, int thumbnail, int *size)
 {
         struct digita_device *dev = camera->camlib_data;
         struct filename fn;
@@ -283,8 +285,8 @@ printf("digita: getting %s%s\n", folder, filename);
         return data;
 }
 
-int camera_file_get(Camera *camera, char *folder, char *filename,
-                    CameraFile *file)
+int camera_file_get (Camera *camera, const char *folder, const char *filename,
+                     CameraFile *file)
 {
         struct digita_device *dev = camera->camlib_data;
         unsigned char *data;
@@ -309,8 +311,8 @@ int camera_file_get(Camera *camera, char *folder, char *filename,
         return GP_OK;
 }
 
-int camera_file_get_preview(Camera *camera, char *folder, char *filename,
-                            CameraFile *file)
+int camera_file_get_preview (Camera *camera, const char *folder, 
+			     const char *filename, CameraFile *file)
 {
         struct digita_device *dev = camera->camlib_data;
         int x, y;

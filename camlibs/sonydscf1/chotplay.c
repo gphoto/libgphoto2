@@ -25,7 +25,7 @@ extern int errno;
 #include "command.h"
 #include <termios.h>
 #include "pmp.h"
-#include <io.h>
+//#include <io.h>
 
 #define MAX_PICTURE_NUM 200
 

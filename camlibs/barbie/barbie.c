@@ -37,9 +37,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a->port      = GP_PORT_SERIAL;
 		a->speed[0]  = 57600;
 		a->speed[1]  = 0;
-		a->capture   = GP_CAPTURE_NONE;
-		a->config    = 0;
-		a->file_operations = GP_FILE_OPERATION_PREVIEW;
+		a->operations        = GP_OPERATION_NONE;
+		a->file_operations   = GP_FILE_OPERATION_PREVIEW;
 		a->folder_operations = GP_FOLDER_OPERATION_NONE;
 
 		/* Append it to the list */
@@ -103,14 +102,15 @@ int camera_exit(Camera *camera) {
 }
 
 
-int camera_folder_list (Camera *camera, CameraList *list, char *folder) {
+int camera_folder_list (Camera *camera, const char *folder, CameraList *list) {
 
 	/* there are never any subfolders */
 
 	return GP_OK;
 }
 
-int camera_file_list (Camera *camera, CameraList *list, char *folder) {
+int camera_file_list (Camera *camera, const char *folder, CameraList *list) 
+{
 
 	int count, x;
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
@@ -118,15 +118,19 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 	count = barbie_file_count(b);
 
 	/* Populate the filesystem */
-	gp_filesystem_populate(b->fs, "/", "mattel%02i.ppm", count);
+	gp_filesystem_populate (b->fs, "/", "mattel%02i.ppm", count);
 
-	for (x=0; x<gp_filesystem_count(b->fs, folder); x++) 
-		gp_list_append(list, gp_filesystem_name(b->fs, folder, x), GP_LIST_FILE);
+	for (x = 0; x < gp_filesystem_count (b->fs, folder); x++) 
+		gp_list_append (list, 
+				gp_filesystem_name (b->fs, folder, x), 
+				GP_LIST_FILE);
 
 	return GP_OK;
 }
 
-int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *file) {
+int camera_file_get (Camera *camera, const char *folder, const char *filename, 
+		     CameraFile *file) 
+{
 
 	int size, num;
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
@@ -147,7 +151,9 @@ int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *f
 	return GP_OK;
 }
 
-int camera_file_get_preview (Camera *camera, char *folder, char *filename, CameraFile *file) {
+int camera_file_get_preview (Camera *camera, const char *folder, 
+			     const char *filename, CameraFile *file) 
+{
 
 	int size, num;
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;

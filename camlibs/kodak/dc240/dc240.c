@@ -7,15 +7,15 @@
 #include "dc240.h"
 #include "library.h"
 
-int camera_id (CameraText *id) {
-
+int camera_id (CameraText *id) 
+{
 	strcpy(id->text, "kodak-dc240");
 
 	return (GP_OK);
 }
 
-int camera_abilities (CameraAbilitiesList *list) {
-
+int camera_abilities (CameraAbilitiesList *list) 
+{
 	CameraAbilities *a;
 
 	a = gp_abilities_new();
@@ -30,18 +30,18 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[5] = 0;
         a->usb_vendor  = 0x040A;
         a->usb_product = 0x0120;
-	a->capture  = GP_CAPTURE_IMAGE;
-	a->config   = 0;
-	a->file_operations  = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
-	a->folder_operations = GP_FOLDER_OPERATION_NONE;
+	a->operations        = 	GP_OPERATION_CAPTURE_IMAGE;
+	a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
+				GP_FILE_OPERATION_PREVIEW;
+	a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
 
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera) {
-
+int camera_init (Camera *camera) 
+{
     int ret;
     gp_port_settings settings;
     DC240Data *dd;
@@ -149,8 +149,8 @@ int camera_init (Camera *camera) {
     return (GP_OK);
 }
 
-int camera_exit (Camera *camera) {
-
+int camera_exit (Camera *camera) 
+{
     DC240Data *dd = camera->camlib_data;
 
     if (!dd)
@@ -168,52 +168,60 @@ int camera_exit (Camera *camera) {
     return (GP_OK);
 }
 
-int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) {
-
+int camera_folder_list_folders (Camera *camera, const char *folder, 
+				CameraList *list) 
+{
     DC240Data *dd = camera->camlib_data;
 
-    return (dc240_get_folders(dd, list, folder));
+    return (dc240_get_folders (dd, list, (char*) folder));
 }
 
-int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
-
+int camera_folder_list_files (Camera *camera, const char *folder, 
+			      CameraList *list) 
+{
     DC240Data *dd = camera->camlib_data;
 
-    return (dc240_get_filenames(dd, list, folder));
+    return (dc240_get_filenames (dd, list, (char*) folder));
 }
 
-int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *file) {
-
+int camera_file_get (Camera *camera, const char *folder, const char *filename, 
+		     CameraFile *file) 
+{
     DC240Data *dd = camera->camlib_data;
 
-    return (dc240_file_action(dd, DC240_ACTION_IMAGE, file, folder, filename));
+    return (dc240_file_action (dd, DC240_ACTION_IMAGE, file, (char*) folder, 
+    			       filename));
 }
 
-int camera_file_get_preview (Camera *camera, char *folder, char *filename, CameraFile *file) {
-
+int camera_file_get_preview (Camera *camera, const char *folder, 
+			     const char *filename, CameraFile *file) 
+{
     DC240Data *dd = camera->camlib_data;
 
-    return (dc240_file_action(dd, DC240_ACTION_PREVIEW, file, folder, filename));
+    return (dc240_file_action (dd, DC240_ACTION_PREVIEW, file, folder, 
+    			       (char*) filename));
 }
 
-int camera_file_delete (Camera *camera, char *folder, char *filename) {
-
+int camera_file_delete (Camera *camera, const char *folder, 
+			const char *filename) 
+{
     DC240Data *dd = camera->camlib_data;
 
-    return (dc240_file_action(dd, DC240_ACTION_DELETE, NULL, folder, filename));
+    return (dc240_file_action (dd, DC240_ACTION_DELETE, NULL, folder, 
+    			       (char*) filename));
 }
 
 #if 0
-int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
-
+int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
+{
     DC240Data *dd = camera->camlib_data;
 
     return (dc240_capture(dd, file));
 }
 #endif
 
-int camera_summary (Camera *camera, CameraText *summary) {
-
+int camera_summary (Camera *camera, CameraText *summary) 
+{
 /*	DC240Data *dd = camera->camlib_data; */
 
 	strcpy(summary->text, "No summary information.");
@@ -221,8 +229,8 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual) {
-
+int camera_manual (Camera *camera, CameraText *manual) 
+{
 /*	DC240Data *dd = camera->camlib_data; */
 
 	strcpy(manual->text, "No Manual Available");
@@ -230,15 +238,15 @@ int camera_manual (Camera *camera, CameraText *manual) {
 	return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) {
-
+int camera_about (Camera *camera, CameraText *about) 
+{
 /*	DC240Data *dd = camera->camlib_data; */
 
-	strcpy(about->text, 
-"Kodak DC240 Camera Library \
-Scott Fritzinger <scottf@gphoto.net> \
-Camera Library for the Kodak DC240 camera. \
-Rewritten and updated for gPhoto2.");
+	strcpy (about->text, 
+		"Kodak DC240 Camera Library\n"
+		"Scott Fritzinger <scottf@gphoto.net>\n"
+		"Camera Library for the Kodak DC240 camera.\n"
+		"Rewritten and updated for gPhoto2.");
 
 	return (GP_OK);
 }

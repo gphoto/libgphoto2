@@ -175,7 +175,7 @@ int dc3200_setup(DC3200Data *dd)
 							0x00, 0x00, 0x00, 2 + strlen(filename), 0x01};
 	*/
 
-int dc3200_get_data(DC3200Data *dd, u_char **data, u_long *data_len, int command, char *folder, char *filename)
+int dc3200_get_data(DC3200Data *dd, u_char **data, u_long *data_len, int command, const char *folder, const char *filename)
 {
 	u_char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
 	int ack_len = ACK_PACKET_LEN, resp_len = DEF_PACKET_LEN;

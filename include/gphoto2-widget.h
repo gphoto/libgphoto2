@@ -5,7 +5,8 @@
 	This library is covered by the LGPL.
 */
 
-CameraWidget* 	gp_widget_new            (CameraWidgetType type, char *label);
+CameraWidget* 	gp_widget_new            (CameraWidgetType type, 
+					  const char *label);
 int           	gp_widget_free           (CameraWidget *widget);
 
 int             gp_widget_ref            (CameraWidget *widget);

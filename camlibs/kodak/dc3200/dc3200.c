@@ -12,15 +12,15 @@
 #include "dc3200.h"
 #include "library.h"
 
-int camera_id (CameraText *id) {
-
+int camera_id (CameraText *id) 
+{
 	strcpy(id->text, "kodak-dc3200");
 
 	return (GP_OK);
 }
 
-int camera_abilities (CameraAbilitiesList *list) {
-
+int camera_abilities (CameraAbilitiesList *list) 
+{
 	CameraAbilities *a;
 
 	a = gp_abilities_new();
@@ -33,9 +33,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[3] = 57600;
 	a->speed[4] = 115200;
 	a->speed[5] = 0;
-	a->capture  = GP_CAPTURE_NONE;
-	a->config   = 0;
-	a->file_operations  = GP_FILE_OPERATION_PREVIEW;
+	a->operations        = GP_OPERATION_NONE;
+	a->file_operations   = GP_FILE_OPERATION_PREVIEW;
 	a->folder_operations = GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
@@ -43,8 +42,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera) {
-
+int camera_init (Camera *camera) 
+{
 	DC3200Data *dd;
         int ret;
 
@@ -167,7 +166,8 @@ int check_last_use(Camera *camera)
 	return GP_OK;
 }
 
-int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list)
+int camera_folder_list_folders (Camera *camera, const char *folder, 
+				CameraList *list)
 {
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
@@ -180,9 +180,9 @@ int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list)
 		return GP_ERROR;
 
 	/* get file list data */
-	res = dc3200_get_data(dd, &data, &data_len, CMD_LIST_FILES, folder, NULL);
-
-	if(res == GP_ERROR)
+	res = dc3200_get_data (dd, &data, &data_len, CMD_LIST_FILES, folder, 
+			       NULL);
+	if (res == GP_ERROR)
 		return GP_ERROR;
 
 	/* check the data length, each record is 20 bytes */
@@ -191,7 +191,7 @@ int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list)
 		return GP_ERROR;
 	}
 	
-	if(data == NULL)
+	if (data == NULL)
 		return GP_ERROR;
 
 	/* add directories to the list */
@@ -230,11 +230,12 @@ int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list)
 		i += 20;
 	}
 
-	free(data);
-	return (dc3200_keep_alive(dd));
+	free (data);
+	return (dc3200_keep_alive (dd));
 }
 
-int camera_folder_list_files (Camera *camera, char *folder, CameraList *list)
+int camera_folder_list_files (Camera *camera, const char *folder, 
+			      CameraList *list)
 {
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
@@ -247,9 +248,9 @@ int camera_folder_list_files (Camera *camera, char *folder, CameraList *list)
 		return GP_ERROR;
 
 	/* get file list data */
-	res = dc3200_get_data(dd, &data, &data_len, CMD_LIST_FILES, folder, NULL);
-
-	if(res == GP_ERROR)
+	res = dc3200_get_data (dd, &data, &data_len, CMD_LIST_FILES, folder, 
+			       NULL);
+	if (res == GP_ERROR)
 		return GP_ERROR;
 
 	/* check the data length */
@@ -298,7 +299,8 @@ int camera_folder_list_files (Camera *camera, char *folder, CameraList *list)
 	return (dc3200_keep_alive(dd));
 }
 
-int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *file)
+int camera_file_get (Camera *camera, const char *folder, const char *filename, 
+		     CameraFile *file)
 {
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
@@ -308,21 +310,22 @@ int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *f
 	if(check_last_use(camera) == GP_ERROR)
 		return GP_ERROR;
 
-	res = dc3200_get_data(dd, &data, &data_len, CMD_GET_FILE, folder, filename);
+	res = dc3200_get_data (dd, &data, &data_len, CMD_GET_FILE, folder, 
+			       filename);
+	if (res == GP_ERROR)
+		return (GP_ERROR);
 
-	if(res == GP_ERROR)
-		return GP_ERROR;
+	if (data == NULL || data_len < 1)
+		return (GP_ERROR);
 
-	if(data == NULL || data_len < 1)
-		return GP_ERROR;
-
-	gp_file_append(file, data, data_len);
+	gp_file_append (file, data, data_len);
 
 	free(data);
 	return (dc3200_keep_alive(dd));
 }
 
-int camera_file_get_preview (Camera *camera, char *folder, char *filename, CameraFile *file)
+int camera_file_get_preview (Camera *camera, const char *folder, 
+			     const char *filename, CameraFile *file)
 {
 	DC3200Data	*dd = camera->camlib_data;
 	u_char		*data = NULL;
@@ -332,10 +335,11 @@ int camera_file_get_preview (Camera *camera, char *folder, char *filename, Camer
 	if(check_last_use(camera) == GP_ERROR)
 		return GP_ERROR;
 
-	res = dc3200_get_data(dd, &data, &data_len, CMD_GET_PREVIEW, folder, filename);
+	res = dc3200_get_data (dd, &data, &data_len, CMD_GET_PREVIEW, folder, 
+			       filename);
 
-	if(res == GP_ERROR)
-		return GP_ERROR;
+	if (res == GP_ERROR)
+		return (GP_ERROR);
 		
 	if(data == NULL || data_len < 1)
 		return GP_ERROR;
@@ -354,26 +358,28 @@ int camera_summary (Camera *camera, CameraText *summary)
 
 int camera_manual (Camera *camera, CameraText *manual)
 {
-	strcpy(manual->text, 
-"Known problems:\n\
-\n\
-1. If the Kodak DC3200 does not receive a command at least \
-every 10 seconds, it will time out, and will have to be \
-re-initialized. If you notice the camera does not respond, \
-simply re-select the camera. This will cause it to re-\
-initialize.\n\n\
-2. If you cancel a picture transfer, the driver will be left \
-in an unknown state, and will most likely need to be re-\
-initialized.");
+	strcpy (manual->text, 
+		"Known problems:\n"
+		"\n"
+		"1. If the Kodak DC3200 does not receive a command at least "
+		"every 10 seconds, it will time out, and will have to be "
+		"re-initialized. If you notice the camera does not respond, "
+		"simply re-select the camera. This will cause it to "
+		"reinitialize.\n"
+		"\n"
+		"2. If you cancel a picture transfer, the driver will be left "
+		"in an unknown state, and will most likely need to be "
+		"reinitialized.");
 	return (GP_OK);
 }
 
 int camera_about (Camera *camera, CameraText *about)
 {
-	strcpy(about->text, 
-"Kodak DC3200 Driver\n\
-Donn Morrison <dmorriso@gulf.uvic.ca>\n\n\
-Questions and comments appreciated.");
+	strcpy	(about->text, 
+		"Kodak DC3200 Driver\n"
+		"Donn Morrison <dmorriso@gulf.uvic.ca>\n"
+		"\n"
+		"Questions and comments appreciated.");
 	return (GP_OK);
 }
 

@@ -48,7 +48,8 @@ int gp_camera_set_config	 (Camera *camera, CameraWidget  *window);
 int gp_camera_get_summary	 (Camera *camera, CameraText *summary);
 int gp_camera_get_manual	 (Camera *camera, CameraText *manual);
 int gp_camera_get_about		 (Camera *camera, CameraText *about);
-int gp_camera_capture 		 (Camera *camera, int capture_type, CameraFilePath *path);
+int gp_camera_capture 		 (Camera *camera, int capture_type,
+				  CameraFilePath *path);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file);
 
 char *gp_camera_get_result_as_string (Camera *camera, int result);
@@ -65,16 +66,16 @@ char *gp_camera_get_result_as_string (Camera *camera, int result);
  *   - set_config  : Set those configuration options                    *
  ************************************************************************/
 
-int gp_camera_folder_list_files   (Camera *camera, char *folder, 
+int gp_camera_folder_list_files   (Camera *camera, const char *folder, 
 				   CameraList *list);
-int gp_camera_folder_list_folders (Camera *camera, char *folder, 
+int gp_camera_folder_list_folders (Camera *camera, const char *folder, 
 				   CameraList *list);
-int gp_camera_folder_delete_all   (Camera *camera, char *folder);
-int gp_camera_folder_put_file     (Camera *camera, char *folder, 
+int gp_camera_folder_delete_all   (Camera *camera, const char *folder);
+int gp_camera_folder_put_file     (Camera *camera, const char *folder, 
 				   CameraFile *file);
-int gp_camera_folder_get_config   (Camera *camera, char *folder, 
+int gp_camera_folder_get_config   (Camera *camera, const char *folder, 
 				   CameraWidget **window);
-int gp_camera_folder_set_config   (Camera *camera, char *folder, 
+int gp_camera_folder_set_config   (Camera *camera, const char *folder, 
 				   CameraWidget  *window);
 								
 /************************************************************************
@@ -90,18 +91,19 @@ int gp_camera_folder_set_config   (Camera *camera, char *folder,
  *   - delete     : Delete a file                                       *
  ************************************************************************/
 
-int gp_camera_file_get_info 	(Camera *camera, char *folder, char *file, 
-				 CameraFileInfo *info);
-int gp_camera_file_set_info 	(Camera *camera, char *folder, char *file, 
-				 CameraFileInfo *info);
-int gp_camera_file_get_file 	(Camera *camera, char *folder, char *file, 
-				 CameraFile *camera_file);
-int gp_camera_file_get_preview 	(Camera *camera, char *folder, char *file, 
-				 CameraFile *camera_file);
-int gp_camera_file_get_config  	(Camera *camera, char *folder, char *file, 
-				 CameraWidget **window);
-int gp_camera_file_set_config  	(Camera *camera, char *folder, char *file, 
-				 CameraWidget  *window);
-int gp_camera_file_delete     	(Camera *camera, char *folder, char *file);
+int gp_camera_file_get_info 	(Camera *camera, const char *folder, 
+				 const char *file, CameraFileInfo *info);
+int gp_camera_file_set_info 	(Camera *camera, const char *folder, 
+				 const char *file, CameraFileInfo *info);
+int gp_camera_file_get_file 	(Camera *camera, const char *folder, 
+				 const char *file, CameraFile *camera_file);
+int gp_camera_file_get_preview 	(Camera *camera, const char *folder, 
+				 const char *file, CameraFile *camera_file);
+int gp_camera_file_get_config  	(Camera *camera, const char *folder, 
+				 const char *file, CameraWidget **window);
+int gp_camera_file_set_config  	(Camera *camera, const char *folder, 
+				 const char *file, CameraWidget  *window);
+int gp_camera_file_delete     	(Camera *camera, const char *folder, 
+				 const char *file);
 
 

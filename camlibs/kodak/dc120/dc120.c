@@ -31,10 +31,10 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[3] = 57600;
 	a->speed[4] = 115200;
 	a->speed[5] = 0;
-	a->capture  = GP_CAPTURE_IMAGE;
-	a->config   = 0;
-	a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
-	a->folder_operations = GP_FOLDER_OPERATION_NONE;
+	a->operations        = 	GP_OPERATION_CAPTURE_IMAGE;
+	a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
+				GP_FILE_OPERATION_PREVIEW;
+	a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
 
@@ -140,8 +140,9 @@ int camera_exit (Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) {
-
+int camera_folder_list_folders (Camera *camera, const char *folder, 
+				CameraList *list) 
+{
 	DC120Data *dd = camera->camlib_data;
 	char buf[32];
 
@@ -153,7 +154,7 @@ int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) 
 
 	/* Chop trailing slash */
 	if (folder[strlen(folder)-1] == '/')
-		folder[strlen(folder)-1] = 0;
+		((char*) folder) [strlen(folder)-1] = 0;
 
 	sprintf(buf, "/%s", dc120_folder_memory);
 	if (strcmp(folder, buf)==0)
@@ -167,8 +168,9 @@ int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) 
 	return (GP_ERROR);
 }
 
-int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
-
+int camera_folder_list_files (Camera *camera, const char *folder, 
+			      CameraList *list) 
+{
 	DC120Data *dd = camera->camlib_data;
 	CameraListEntry *entry;
 	char buf[32];
@@ -177,7 +179,7 @@ int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
 
 	/* Chop trailing slash */
 	if (folder[strlen(folder)-1] == '/')
-		folder[strlen(folder)-1] = 0;
+		((char*) folder) [strlen(folder)-1] = 0;
 
 	sprintf(buf, "/%s", dc120_folder_memory);
 	if (strcmp(folder, buf)==0)
@@ -191,7 +193,7 @@ int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
 
 	sprintf(buf, "/%s/ALBUM", dc120_folder_card);
 	if (strncmp(folder, buf, strlen(dc120_folder_card)+7)==0)
-		retval = dc120_get_filenames(dd, 1, folder[strlen(dc120_folder_card)+8] - '0', list);
+		retval = dc120_get_filenames (dd, 1, folder[strlen (dc120_folder_card)+8] - '0', list);
 
 	/* Save the order of the pics (wtf: no filename access on dc120???) */
 	/* Use the filesystem helpers to maintain picture list */
@@ -205,8 +207,9 @@ int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
 	return (retval);
 }
 
-int camera_file_action (Camera *camera, int action, CameraFile *file, char *folder, char *filename) {
-
+int camera_file_action (Camera *camera, int action, CameraFile *file, 
+			const char *folder, const char *filename) 
+{
 	DC120Data *dd = camera->camlib_data;
 	int picnum=0, album_num=-1, from_card=0;
 	char buf[32];
@@ -250,22 +253,28 @@ int camera_file_action (Camera *camera, int action, CameraFile *file, char *fold
 	return (dc120_file_action(dd, action, from_card, album_num, picnum+1, file));
 }
 
-int camera_file_get (Camera *camera, char *folder, char *filename, CameraFile *file) {
-
-	return (camera_file_action(camera, DC120_ACTION_IMAGE, file, folder, filename));
+int camera_file_get (Camera *camera, const char *folder, const char *filename, 
+		     CameraFile *file) 
+{
+	return (camera_file_action (camera, DC120_ACTION_IMAGE, file, folder, 
+				    filename));
 }
 
-int camera_file_get_preview (Camera *camera, char *folder, char *filename, CameraFile *file) {
-
-	return (camera_file_action(camera, DC120_ACTION_PREVIEW, file, folder, filename));
+int camera_file_get_preview (Camera *camera, const char *folder, 
+			     const char *filename, CameraFile *file) 
+{
+	return (camera_file_action (camera, DC120_ACTION_PREVIEW, file, folder, 
+				    filename));
 }
 
-int camera_file_delete (Camera *camera, char *folder, char *filename) {
-
+int camera_file_delete (Camera *camera, const char *folder, 
+			const char *filename) 
+{
 	DC120Data *dd = camera->camlib_data;
 	int retval;
 
-	retval = camera_file_action(camera, DC120_ACTION_DELETE, NULL, folder, filename);
+	retval = camera_file_action (camera, DC120_ACTION_DELETE, NULL, folder, 
+				     filename);
 
 	if (retval == GP_OK)
 		gp_filesystem_delete(dd->fs, folder, filename);
@@ -282,8 +291,8 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) {
 }
 #endif
 
-int camera_summary (Camera *camera, CameraText *summary) {
-
+int camera_summary (Camera *camera, CameraText *summary) 
+{
 /*	DC120Data *dd = camera->camlib_data; */
 
 	strcpy(summary->text, "No summary information yet");
@@ -291,29 +300,25 @@ int camera_summary (Camera *camera, CameraText *summary) {
 	return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual) {
-
-/*	DC120Data *dd = camera->camlib_data; */
-
-	strcpy(manual->text, 
-"The Kodak DC120 camera uses the KDC file format \
-for storing images. If you want to view the images you \
-download from your camera, you will need to download \
-the \"kdc2tiff\" program. \
-It is available from http://kdc2tiff.sourceforge.net");
+int camera_manual (Camera *camera, CameraText *manual) 
+{
+	strcpy (manual->text, 
+		"The Kodak DC120 camera uses the KDC file format "
+		"for storing images. If you want to view the images you "
+		"download from your camera, you will need to download "
+		"the \"kdc2tiff\" program. "
+		"It is available from http://kdc2tiff.sourceforge.net");
 
 	return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) {
-
-/*	DC120Data *dd = camera->camlib_data; */
-
+int camera_about (Camera *camera, CameraText *about) 
+{
 	strcpy(about->text, 
-"Kodak DC120 Camera Library \
-Scott Fritzinger <scottf@gphoto.net> \
-Camera Library for the Kodak DC120 camera. \
-(by popular demand).");
+		"Kodak DC120 Camera Library\n"
+		"Scott Fritzinger <scottf@gphoto.net>\n"
+		"Camera Library for the Kodak DC120 camera.\n"
+		"(by popular demand).");
 
 	return (GP_OK);
 }

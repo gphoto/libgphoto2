@@ -50,7 +50,7 @@
 int dc3200_set_speed(DC3200Data *dd, int baudrate);
 int dc3200_setup(DC3200Data *dd);
 
-int dc3200_get_data(DC3200Data *dd, u_char **data, u_long *data_len, int command, char *folder, char *filename);
+int dc3200_get_data(DC3200Data *dd, u_char **data, u_long *data_len, int command, const char *folder, const char *filename);
 
 int dc3200_send_command(DC3200Data *dd, u_char *cmd, int cmd_len, u_char *ack, int *ack_len);
 int dc3200_recv_response(DC3200Data *dd, u_char *resp, int *resp_len);

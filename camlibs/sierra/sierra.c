@@ -11,13 +11,13 @@
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
 
-void sierra_debug_print(SierraData *fd, char *message) {
-
+void sierra_debug_print(SierraData *fd, char *message) 
+{
 	gp_debug_printf(GP_DEBUG_LOW, "sierra", message);
 }
 
-int camera_id (CameraText *id) {
-
+int camera_id (CameraText *id) 
+{
 	strcpy(id->text, "sierra");
 
 	return (GP_OK);
@@ -99,8 +99,8 @@ SierraCamera sierra_cameras[] = {
 	{"", 0, 0}
 };
 
-int camera_abilities (CameraAbilitiesList *list) {
-
+int camera_abilities (CameraAbilitiesList *list) 
+{
 	int x=0;
 	CameraAbilities *a;
 
@@ -117,10 +117,10 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a->speed[3] = 57600;
 		a->speed[4] = 115200;
 		a->speed[5] = 0;
-		a->capture  = GP_CAPTURE_IMAGE;
-		a->config   = 0;
-		a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
-		a->folder_operations = GP_FOLDER_OPERATION_NONE;
+		a->operations        = 	GP_OPERATION_CAPTURE_IMAGE;
+		a->file_operations   = 	GP_FILE_OPERATION_DELETE | 
+					GP_FILE_OPERATION_PREVIEW;
+		a->folder_operations = 	GP_FOLDER_OPERATION_NONE;
 		a->usb_vendor  = sierra_cameras[x].usb_vendor;
 		a->usb_product = sierra_cameras[x].usb_product;
 		gp_abilities_list_append(list, a);
@@ -131,8 +131,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 	return (GP_OK);
 }
 
-int camera_init (Camera *camera) {
-
+int camera_init (Camera *camera) 
+{
 	int value=0, count;
 	int x=0, ret;
 	int vendor=0, product=0, inep=0, outep=0;
@@ -272,7 +272,8 @@ int camera_init (Camera *camera) {
 	if (fd->folders)
 		sierra_debug_print(fd, "Camera supports folders");
 	   else
-		sierra_debug_print(fd, "Camera doesn't support folders. Using CameraFilesystem emu.");
+		sierra_debug_print(fd, "Camera doesn't support folders. "
+				   "Using CameraFilesystem emu.");
 
 	fd->fs = gp_filesystem_new();
 	count = sierra_file_count(camera);
@@ -331,8 +332,8 @@ static int sierra_change_folder(Camera *camera, const char *folder)
 	return GP_OK;
 }
 
-int camera_start(Camera *camera) {
-
+int camera_start(Camera *camera) 
+{
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	
 	if (fd->type == GP_PORT_SERIAL) {
@@ -343,8 +344,8 @@ int camera_start(Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_stop(Camera *camera) {
-
+int camera_stop(Camera *camera) 
+{
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	if (fd->type == GP_PORT_SERIAL) {
@@ -355,8 +356,8 @@ int camera_stop(Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_exit (Camera *camera) {
-
+int camera_exit (Camera *camera) 
+{
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	sierra_debug_print(fd, "Exiting camera");
@@ -368,8 +369,9 @@ int camera_exit (Camera *camera) {
 	return (GP_OK);
 }
 
-int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
-
+int camera_folder_list_files (Camera *camera, const char *folder, 
+			      CameraList *list) 
+{
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	int x=0, error=0, count;
 
@@ -419,8 +421,9 @@ int camera_folder_list_files (Camera *camera, char *folder, CameraList *list) {
 	return GP_OK;
 }
 
-int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) {
-
+int camera_folder_list_folders (Camera *camera, const char *folder, 
+				CameraList *list) 
+{
 	SierraData *fd = (SierraData*)camera->camlib_data;
 	int count, i, bsize;
 	char buf[1024];
@@ -465,8 +468,8 @@ int camera_folder_list_folders (Camera *camera, char *folder, CameraList *list) 
 	return (GP_OK);
 }
 
-int sierra_folder_set(Camera *camera, char *folder) {
-
+int sierra_folder_set(Camera *camera, const char *folder) 
+{
 	char buf[4096];
 	char tf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
@@ -504,8 +507,9 @@ int sierra_folder_set(Camera *camera, char *folder) {
 }
 
 int camera_file_get_generic (Camera *camera, CameraFile *file, 
-	char *folder, char *filename, int thumbnail) {
-
+			     const char *folder, const char *filename, 
+			     int thumbnail) 
+{
 	char buf[4096];
 	int regl, regd, file_number;
 	SierraData *fd = (SierraData*)camera->camlib_data;
@@ -545,20 +549,22 @@ return (GP_ERROR);
 	return (GP_OK);
 }
 
-int camera_file_get (Camera *camera, char *folder, char *filename,
-                     CameraFile *file) {
-
+int camera_file_get (Camera *camera, const char *folder, const char *filename,
+                     CameraFile *file) 
+{
 	return (camera_file_get_generic(camera, file, folder, filename, 0));
 }
 
-int camera_file_get_preview (Camera *camera, char *folder, char *filename,
-                             CameraFile *file) {
-
+int camera_file_get_preview (Camera *camera, const char *folder, 
+			     const char *filename,
+                             CameraFile *file) 
+{
 	return (camera_file_get_generic(camera, file, folder, filename, 1));
 }
 
-int camera_file_delete (Camera *camera, char *folder, char *filename) {
-
+int camera_file_delete (Camera *camera, const char *folder, 
+			const char *filename) 
+{
 	int ret, file_number;
 	char buf[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
@@ -600,8 +606,8 @@ return (GP_ERROR);
 }
 #endif
 
-int camera_summary (Camera *camera, CameraText *summary) {
-
+int camera_summary (Camera *camera, CameraText *summary) 
+{
 	char buf[1024*32];
 	int value;
 	char t[1024];
@@ -754,8 +760,8 @@ return (GP_ERROR);
 	return (GP_OK);
 }
 
-int camera_manual (Camera *camera, CameraText *manual) {
-
+int camera_manual (Camera *camera, CameraText *manual) 
+{
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	sierra_debug_print(fd, "Getting camera manual");
@@ -765,13 +771,21 @@ int camera_manual (Camera *camera, CameraText *manual) {
 	return (GP_OK);
 }
 
-int camera_about (Camera *camera, CameraText *about) {
-
+int camera_about (Camera *camera, CameraText *about) 
+{
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	sierra_debug_print(fd, "Getting 'about' information");
 
-	strcpy(about->text, "sierra SPARClite library\nScott Fritzinger <scottf@unr.edu>\nSupport for sierra-based digital cameras\nincluding Olympus, Nikon, Epson, and others.\n\nThanks to Data Engines (www.dataengines.com)\nfor the use of their Olympus C-3030Z for USB\nsupport implementation.");
+	strcpy (about->text, 
+		"sierra SPARClite library\n"
+		"Scott Fritzinger <scottf@unr.edu>\n"
+		"Support for sierra-based digital cameras\n"
+		"including Olympus, Nikon, Epson, and others.\n"
+		"\n"
+		"Thanks to Data Engines (www.dataengines.com)\n"
+		"for the use of their Olympus C-3030Z for USB\n"
+		"support implementation.");
 
 	return (GP_OK);
 }
