@@ -59,6 +59,20 @@
  * in the camera descriptor somewhere. */
 static int serial_code = 0;
 
+/* Map camera status codes (from offset 0x50 in reply block) to
+ * messages. */
+static struct canon_usb_status canon_usb_status_table[] = {
+	{0x00000000, NULL},
+	{0x22000002, "File not found"},
+	{0x29000002, "File was protected"},
+	{0x2a000002, "Compact Flash card full"},
+	{0x81000002, "Failed to lock EOS keys"},
+	{0x82000002, "Failed to unlock EOS keys"},
+	{0x85000002, "Could not switch to capture mode"},
+	{0x86000002, "Invalid command parameters"},
+	{0x87000002, "No storage card in camera"}
+};
+
 /**
  * canon_usb_camera_init:
  * @camera: camera to initialize
@@ -985,6 +999,26 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 }
 
 /**
+ * canon_usb_decode_status
+ * @code: status code returned in offset 0x50 in the response
+ *
+ * Returns: a string with the error message, or NUL if status is OK.
+ */
+static char *canon_usb_decode_status ( int code ) {
+	int i;
+	static char message[100];
+
+	for ( i=0;
+	      i<sizeof(canon_usb_status_table)/sizeof(struct canon_usb_status);
+	      i++ )
+		if ( canon_usb_status_table[i].code == code )
+			return canon_usb_status_table[i].message;
+
+	sprintf ( message, "Unknown status code 0x%08x from camera", code );
+	return message;
+}
+
+/**
  * canon_usb_dialogue:
  * @camera: the Camera to work with
  * @canon_funct: integer constant that identifies function we are execute
@@ -1250,10 +1284,11 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 			*return_length = read_bytes;
 		return buffer;
 	} else {
-		if ( le32atoh ( buffer+0x50 ) != 0 ) {
-			GP_DEBUG ( "canon_usb_dialogue: got nonzero camera status code"
-				 " 0x%08x in response to command 0x%x 0x%x 0x%x (%s)",
-				 le32atoh ( buffer+0x50 ), cmd1, cmd2, cmd3, funct_descr );
+		char *msg = canon_usb_decode_status ( le32atoh ( buffer+0x50 ) );
+		if ( msg != NULL ) {
+			GP_DEBUG ( "canon_usb_dialogue: camera status \"%s\""
+				   " in response to command 0x%x 0x%x 0x%x (%s)",
+				   msg, cmd1, cmd2, cmd3, funct_descr );
 		}
 		if (return_length)
 			*return_length = (read_bytes - 0x50);
@@ -1676,8 +1711,12 @@ canon_usb_set_file_attributes (Camera *camera, unsigned int attr_bits,
 	memcpy (payload + 4 + strlen(dir) + 1, file, strlen (file) );
 	htole32a ( payload, (unsigned long)attr_bits );
 
-	res = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_SET_ATTR, &bytes_read,
-				   payload, payload_length );
+	if ( camera->pl->md->model == CANON_CLASS_6 )
+		res = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_SET_ATTR_2, &bytes_read,
+					   payload, payload_length );
+	else
+		res = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_SET_ATTR, &bytes_read,
+					   payload, payload_length );
 	if ( res == NULL ) {
 		gp_context_error (context,
 				  _("canon_usb_set_file_attributes: "
@@ -1889,10 +1928,12 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 		    else
 			    return GP_ERROR_CORRUPTED_DATA;
 	    }
-	    else if ( le32atoh ( buffer ) != 0 ) {
-		    /* Got a status message back from the camera */
-		    GP_DEBUG ( "canon_put_file_usb: got camera status 0x%08x from read 3",
-			       le32atoh ( buffer ) );
+	    else {
+		    char *msg = canon_usb_decode_status ( le32atoh ( buffer+0x50 ) );
+		    if ( msg != NULL ) {
+			    GP_DEBUG ( "canon_put_file_usb: camera status \"%s\" during upload",
+				       msg );
+		    }
 	    }
 	    offs += len2;
 	}
