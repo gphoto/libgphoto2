@@ -21,23 +21,16 @@
 
 #include "dimagev.h"
 
+/* This function handles sending the camera command to take a new picture, and
+   the Dimage V automatically stores it in the lowest number available, which
+   is the current number of images plus one. Since gphoto2 assumes that images
+   can be captured without being saved on the camera first, camera_capture()
+   is actually made up of a few steps, the primary ones being dimagev_shutter(),
+   dimagev_get_picture(), and dimagev_delete_picture().
+*/
 int dimagev_shutter(dimagev_t *dimagev) {
 	dimagev_packet *p, *raw;
 	unsigned char char_buffer;
-
-	/* This function just flips the shutter. The image is always stored last. */
-
-	dimagev->data->play_rec_mode = 1;
-	dimagev->data->host_mode = 1;
-
-	if ( dimagev_send_data(dimagev) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to set host mode or record mode");
-		}
-		return GP_ERROR;
-	}
-
-	sleep(2);
 
 	/* Check the device. */
 	if ( dimagev->dev == NULL ) {
@@ -46,6 +39,21 @@ int dimagev_shutter(dimagev_t *dimagev) {
 		}
 		return GP_ERROR;
 	}
+
+	/* Make sure we're in record mode and in host mode. */
+	dimagev->data->play_rec_mode = 1;
+	dimagev->data->host_mode = 1;
+
+	/* Make sure we can set the data into the camera. */
+	if ( dimagev_send_data(dimagev) == GP_ERROR ) {
+		if ( dimagev->debug != 0 ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to set host mode or record mode");
+		}
+		return GP_ERROR;
+	}
+
+	/* Maybe reduce this later? */
+	sleep(2);
 
 	/* Let's say hello and get the current status. */
 	if ( ( p = dimagev_make_packet(DIMAGEV_SHUTTER, 1, 0)) == NULL ) {
@@ -62,7 +70,7 @@ int dimagev_shutter(dimagev_t *dimagev) {
 		return GP_ERROR;
 	}
 
-	usleep(500);
+	sleep(1);
 	
 	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
 		if ( dimagev->debug != 0 ) {
@@ -98,7 +106,7 @@ int dimagev_shutter(dimagev_t *dimagev) {
 			break;
 	}
 
-	usleep(500);
+	sleep(1);
 
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
 		if ( dimagev->debug != 0 ) {
@@ -118,6 +126,8 @@ int dimagev_shutter(dimagev_t *dimagev) {
 		return GP_ERROR;
 	}
 
+	free(p);
+
 	if ( raw->buffer[0] != 0 ) {
 		if ( dimagev->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::camera returned error code");
@@ -125,7 +135,7 @@ int dimagev_shutter(dimagev_t *dimagev) {
 		return GP_ERROR;
 	}
 
-	usleep(500);
+	sleep(1);
 
 	char_buffer = DIMAGEV_EOT;
 	if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
