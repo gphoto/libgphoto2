@@ -339,7 +339,7 @@ gp_widget_get_label (CameraWidget *widget, const char **label)
  * Return value: a gphoto2 error code.
  **/
 int
-gp_widget_set_value (CameraWidget *widget, void *value) 
+gp_widget_set_value (CameraWidget *widget, const void *value) 
 {
 	CHECK_NULL (widget && value);
 

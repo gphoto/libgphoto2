@@ -69,7 +69,7 @@ int	gp_widget_get_root           (CameraWidget *widget,
 int     gp_widget_get_parent         (CameraWidget *widget,
 				      CameraWidget **parent);
 
-int	gp_widget_set_value     (CameraWidget *widget, void *value);
+int	gp_widget_set_value     (CameraWidget *widget, const void *value);
 int	gp_widget_get_value     (CameraWidget *widget, void *value);
 
 int     gp_widget_set_name      (CameraWidget *widget, const char  *name);
