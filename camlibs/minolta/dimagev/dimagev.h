@@ -50,7 +50,7 @@
 /* There should be a better way to do this. */
 #include "../../../libgphoto2/exif.h"
 
-#define DIMAGEV_VERSION $Revision$ $Date$
+#define DIMAGEV_VERSION "$Revision$"
 
 /* These are the repsonse codes. */
 #define DIMAGEV_STX 0x02
