@@ -1,0 +1,7 @@
+
+Unordered TODO list:
+
+-- free() all malloced memory upon exit!
+
+-- update params.handles and params.objectinfo structures after upload and
+make folder.

@@ -1,4 +1,8 @@
 2003-04-25 Mariusz Woloszyn
+	* README: added to ptp2
+	* test_ptp.c: added to ptp2
+	* TODO: added to ptp2
+2003-04-25 Mariusz Woloszyn
 	* library.c: added perror on gp_port_read() and write error; it
 	  won't hurt
 	* ptp.c: NULL does not have to be 0 bug fixed;
