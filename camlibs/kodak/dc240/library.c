@@ -1,5 +1,9 @@
 /*
   Kodak DC 240/280/3400/5000 driver.
+  Maintainer:
+       Hubert Figuiere <hfiguiere@teaser.fr>
+
+  $Id$
  */
 
 
@@ -8,9 +12,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gphoto2.h>
+#include <gphoto2-port.h>
 
 #include "dc240.h"
 #include "library.h"
+
+#define GP_MODULE "dc240"
 
 static char *dc240_packet_new   (int command_byte);
 static int   dc240_packet_write (Camera *camera, char *packet, int size,
@@ -447,39 +454,46 @@ static int dc240_get_directory_list (Camera *camera, CameraList *list, const cha
     char *p2 = dc240_packet_new_path(folder, NULL);
     const char *fdata;
     long int fsize;
+    int ret;
+    int num_of_entries = 0; /* number of entries in the listing */
+    int total_size = 0; /* total useful size of the listing */
 
     gp_file_new(&file);
-    if (dc240_packet_exchange(camera, file, p1, p2, &size, 256) < 0)
-        return (GP_ERROR);
+    ret = dc240_packet_exchange(camera, file, p1, p2, &size, 256);
+    if (ret < 0) {
+        return ret;
+    }
     free(p1);
     free(p2);
-    x=2;
-    /* since directory entries are 20 bytes, it is possible that */
-    /* we find some garbage. Ignore it. TODO: check that there is */
-    /* not another bug involving reading this info */
+
+    /* Don't expect to have a fully useful buffer. */
     gp_file_get_data_and_size (file, &fdata, &fsize);
-    while ((x < fsize) && (fsize - x >= 20)) {
-        if ((fdata[x] != '.') &&
-            (attrib == (unsigned char)fdata[x+11]))  {
+
+    /* numbers in DC 240 are Big-Endian. */
+    /* Conversion below should be endian neutral. */
+    num_of_entries = (fdata [0] << 8) + fdata [1] + 1;
+    total_size = 2 + (num_of_entries * 20);
+    GP_DEBUG ("number of file entries : %d, size = %d", num_of_entries, fsize);
+    for (x = 2; x < total_size; x += 20) {
+        if ((fdata[x] != '.') && (attrib == (unsigned char)fdata[x+11]))  {
             /* Files have attrib 0x00, Folders have attrib 0x10 */
             if (attrib == 0x00) {
                 strncpy(buf, &fdata[x], 8);    /* Copy over filename */
                 buf[8] = 0;                         /* NULL terminate */
                 strcat(buf, ".");                   /* Append dot */
                 strcat(buf, &fdata[x+8]);      /* Append extension */
-                // size = dc240_get_file_size(camera, folder, buf, 0);
+		GP_DEBUG ("found file: %s", buf);
             } else {
                 strncpy(buf, &fdata[x], 8);    /* Copy over folder name */
                 z=0;
                 while ((buf[z] != 0x20)&&(z<8))     /* Chop trailing spaces */
                     z++;
                 buf[z] = 0;                         /* NULL terminate */
-                // size = 0;
+		GP_DEBUG ("found folder: %s", buf);
             }
             gp_list_append(list, buf, NULL);
             y++;
         }
-        x += 20;
     }
 
     gp_file_free(file);

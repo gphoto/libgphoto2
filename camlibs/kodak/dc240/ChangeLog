@@ -1,0 +1,4 @@
+2001-12-06  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Definitive fix for bug 438155.
+
