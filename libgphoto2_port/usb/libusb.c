@@ -32,7 +32,6 @@
 #include <usb.h>
 #include "gphoto2-port.h"
 
-#define GP_PORT_USB_DEBUG       1
 
 int gp_port_usb_list(gp_port_info *list, int *count);
 int gp_port_usb_init(gp_port *dev);
@@ -109,7 +108,7 @@ int gp_port_usb_open(gp_port *dev)
 	int ret;
         void *udev;
 
-        if (GP_PORT_USB_DEBUG)
+        if (dev->debug_level)
             printf ("gp_port_usb_open() called\n");
 
         /* Open the device using the previous usb_handle returned by find_device */
@@ -145,7 +144,7 @@ int gp_port_usb_open(gp_port *dev)
 
 int gp_port_usb_close(gp_port *dev)
 {
-        if (GP_PORT_USB_DEBUG)
+        if (dev->debug_level)
             printf ("gp_port_usb_close() called\n");
 
 	if (usb_close(dev->device_handle) < 0)
@@ -184,7 +183,7 @@ int gp_port_usb_clear_halt_lib(gp_port * dev, int ep)
 int gp_port_usb_write(gp_port * dev, char *bytes, int size)
 {
         int ret;
-        if (GP_PORT_USB_DEBUG) {
+        if (dev->debug_level) {
             int i;
 
             printf("gp_port_usb_write(): ");
@@ -209,7 +208,7 @@ int gp_port_usb_read(gp_port * dev, char *bytes, int size)
 	if (ret < 0)
 		return GP_ERROR_IO_READ;
 
-        if (GP_PORT_USB_DEBUG) {
+        if (dev->debug_level) {
             int i;
 
             printf("gp_port_usb_read(timeout=%d): ", dev->timeout);
