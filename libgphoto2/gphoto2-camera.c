@@ -57,8 +57,12 @@
 #define CAMERA_UNUSED(c)						\
 {									\
 	(c)->pc->used--;						\
-	if (!(c)->pc->used && !(c)->pc->ref_count)			\
-		gp_camera_free (c);					\
+	if (!(c)->pc->used) {						\
+		if ((c)->pc->exit_requested)				\
+			gp_camera_exit ((c));				\
+		if (!(c)->pc->ref_count)				\
+			gp_camera_free (c);				\
+	}								\
 }
 
 #define CR(c,result)							\
@@ -229,6 +233,7 @@ struct _CameraPrivateCore {
 
 	unsigned int ref_count;
 	unsigned char used;
+	unsigned char exit_requested;
 
 	int initialized;
 };
@@ -252,6 +257,16 @@ gp_camera_exit (Camera *camera)
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Exiting camera ('%s')...",
 		camera->pc->a.model);
+
+	/*
+	 * We have to postpone this operation if the camera is currently 
+	 * in use. gp_camera_exit will be called again if the
+	 * camera->pc->used will drop to zero.
+	 */
+	if (camera->pc->used) {
+		camera->pc->exit_requested = 1;
+		return (GP_OK);
+	}
 
 	if (camera->functions->exit) {
 #ifdef HAVE_MULTI
@@ -768,6 +783,13 @@ gp_camera_init (Camera *camera)
 	else
 		gp_camera_status (camera, _("Initializing '%s'..."),
 				  camera->pc->a.model);
+
+	/*
+	 * Reset the exit_requested flag. If this flag is set, 
+	 * gp_camera_exit will be called as soon as the camera is no
+	 * longer in use (used flag).
+	 */
+	camera->pc->exit_requested = 0;
 
 	/*
 	 * If the model hasn't been indicated, try to
