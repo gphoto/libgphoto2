@@ -521,6 +521,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	Camera *camera = data;
         int     index, i, size, blocks, result;
+	unsigned int id;
 
         dsc_print_status(camera, _("Downloading %s."), filename);
 
@@ -546,11 +547,15 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
         blocks = (size - 1)/DSC_BLOCKSIZE + 1;
 
+	id = gp_context_progress_start (context, blocks, _("Getting data..."));
         for (i = 0; i < blocks; i++) {
 		CHECK (dsc2_readimageblock(camera, i, NULL));
                 CHECK (gp_file_append(file, &camera->pl->buf[4], DSC_BLOCKSIZE));
-                gp_camera_progress(camera, (float)(i+1)/(float)blocks);
+		gp_context_progress_update (context, id, i + 1);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
         }
+	gp_context_progress_stop (context, id);
 
         return GP_OK;
 }
@@ -564,6 +569,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 	const char      *name;
 	const char      *data;
 	long int        size;
+	unsigned int id;
 
 	gp_file_get_name(file, &name);
         dsc_print_status(camera, _("Uploading image: %s."), name);
@@ -588,6 +594,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 
         blocks = (size - 1)/DSC_BLOCKSIZE + 1;
 
+	id = gp_context_progress_start (context, blocks, _("Uploading..."));
         for (i = 0; i < blocks; i++) {
                 blocksize = size - i*DSC_BLOCKSIZE;
                 if (DSC_BLOCKSIZE < blocksize)
@@ -597,8 +604,11 @@ static int put_file_func (CameraFilesystem *fs, const char *folder,
 					       blocksize);
 		if (result != GP_OK)
 			return result;
-                gp_camera_progress(camera, (float)(i+1)/(float)blocks);
+		gp_context_progress_update (context, id, i + 1);
+		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
+			return (GP_ERROR_CANCEL);
         }
+	gp_context_progress_stop (context, id);
 
         return GP_OK;
 }
