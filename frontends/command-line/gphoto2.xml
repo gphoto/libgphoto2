@@ -48,6 +48,7 @@
 	  <arg>--help</arg>
 	</group><sbr/>
 	<arg choice="opt">--list-cameras</arg>
+	<arg choice="opt">--usb-usermap-script <replaceable>NAME</replaceable></arg>
 	<arg choice="opt">--print-usb-usermap</arg>
 	<arg choice="opt">--list-ports</arg><sbr/>
 	<arg choice="opt">--stdout</arg>
@@ -180,6 +181,13 @@
 	  <term><option>--list-cameras</option></term>
 	  <listitem>
 	    <para>List supported camera models.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--usb-usermap-script</option> <replaceable>NAME</replaceable></term>
+	  <listitem>
+	    <para>Specify name of hotplug usb script.</para>
 	  </listitem>
 	</varlistentry>
 
