@@ -259,6 +259,7 @@ static struct {
 	   product/vendor IDs */
 	{"Sony:PTP",                  0x054c, 0x004e},
 	{"Sony:DSC-P5 (PTP mode)",    0x054c, 0x004e},
+	{"Sony:DSC-P10 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-F707V (PTP mode)", 0x054c, 0x004e},
 	{"Sony:DSC-F828 (PTP mode)",  0x054c, 0x004e},
 	{"Sony:DSC-P30 (PTP mode)",   0x054c, 0x004e},
@@ -274,8 +275,6 @@ static struct {
 	{"Sony:DSC-U20 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:DSC-V1 (PTP mode)",   0x054c, 0x004e},
 	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e},
-
-	{"Sony:DSC-P10 (PTP mode)",   0x054c, 0x0010},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109},
