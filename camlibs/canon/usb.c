@@ -1240,7 +1240,7 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, int *return_l
 
         /* Even the new cameras use multiple reads sometimes,
          * e.g. "Get camera abilities". */
-        if ( camera->pl->md->model != CANON_CLASS_6 && read_length <= 0x400 ) {
+        if ( camera->pl->md->model != CANON_CLASS_6 && read_bytes <= 0x400 ) {
                 /*
                  * Divide read_bytes into two parts.
                  *
