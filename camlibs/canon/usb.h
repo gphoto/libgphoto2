@@ -19,6 +19,7 @@ int canon_usb_init (Camera *camera, GPContext *context);
 int canon_usb_camera_init (Camera *camera, GPContext *context);
 int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, 
 	        GPContext *context);
+unsigned char *canon_usb_capture_dialogue (Camera *camera, int *return_length);
 unsigned char *canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, 
 		const char *payload, int payload_length);
 int canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data, 
@@ -54,6 +55,8 @@ int canon_usb_identify (Camera *camera, GPContext *context);
 #define CANON_USB_FUNCTION_EOS_LOCK_KEYS	16
 #define CANON_USB_FUNCTION_EOS_UNLOCK_KEYS	17
 
+#define CANON_USB_FUNCTION_EOS_GET_BODY_ID	22
+
 
 
 #ifdef CANON_EXPERIMENTAL_CAPTURE
@@ -61,7 +64,7 @@ int canon_usb_identify (Camera *camera, GPContext *context);
 #define CANON_USB_FUNCTION_RETRIEVE_CAPTURE     18
 #define CANON_USB_FUNCTION_RETRIEVE_PREVIEW     19
 #define CANON_USB_FUNCTION_CONTROL_CAMERA       20
-
+#define CANON_USB_FUNCTION_UNKNOWN_FUNCTION	21
 
 /* 
  * CANON_USB_FUNCTION_CONTROL_CAMERA commands are used for a wide range
@@ -131,9 +134,11 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_CONTROL_CAMERA,     "Remote camera control",        0x13, 0x12, 0x201,      0x40},
 	{CANON_USB_FUNCTION_RETRIEVE_CAPTURE,   "Download a captured image",    0x17, 0x12, 0x202,      0x40},
 	{CANON_USB_FUNCTION_RETRIEVE_PREVIEW,   "Download a captured preview",  0x18, 0x12, 0x202,      0x40},
+	{CANON_USB_FUNCTION_UNKNOWN_FUNCTION,	"Unknown function",		0x1a, 0x12, 0x201,	0x80},
 #endif /* CANON_EXPERIMENTAL_CAPTURE */
 	{CANON_USB_FUNCTION_EOS_LOCK_KEYS,	"EOS lock keys",		0x1b, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,	"EOS unlock keys",		0x1c, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_EOS_GET_BODY_ID,	"EOS get body ID",		0x1d, 0x12, 0x201,	0x58},
 	{CANON_USB_FUNCTION_GET_PIC_ABILITIES,	"Get picture abilities",	0x1f, 0x12, 0x201,	0x384},
 	{CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,	"Lock keys and turn off LCD",	0x20, 0x12, 0x201,	0x54},
 	{ 0 }
@@ -151,6 +156,8 @@ static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	{CANON_USB_CONTROL_GET_PARAMS,          "Get release params",   0x0a,  0x18,  0x4c},  /* load 0x0a, 0x00 */
 	{CANON_USB_CONTROL_GET_ZOOM_POS,        "Get zoom position",    0x0b,  0x18,  0x20},  /* load 0x0b, 0x00 */
 	{CANON_USB_CONTROL_SET_ZOOM_POS,        "Set zoom position",    0x0c,  0x1c,  0x1c},  /* load 0x0c, 0x04, 0x01 (or 0x0c, 0x04, 0x0b) (or 0x0c, 0x04, 0x0a) or (0x0c, 0x04, 0x09) or (0x0c, 0x04, 0x08) or (0x0c, 0x04, 0x07) or (0x0c, 0x04, 0x06) or (0x0c, 0x04, 0x00) */
+	{CANON_USB_CONTROL_GET_AVAILABLE_SHOT,  "Get available shot",   0x0d,  0x18,  0x60},
+	{CANON_USB_CONTROL_GET_CUSTOM_FUNC,     "Get custom func.",     0x0f,  0x22,  0x66},
 	{CANON_USB_CONTROL_GET_EXT_PARAMS_SIZE, "Get extended release params size",              
 	                                                                0x10,  0x1c,  0x20},  /* load 0x10, 0x00 */
 	{CANON_USB_CONTROL_GET_EXT_PARAMS,      "Get extended release params",              
@@ -160,9 +167,7 @@ static const struct canon_usb_control_cmdstruct canon_usb_control_cmd[] = {
 	{CANON_USB_CONTROL_EXIT,                "Exit release control", 0x01,  0x18,  0x1c},
 	{CANON_USB_CONTROL_VIEWFINDER_START,    "Start viewfinder",     0x02,  0x00,  0x00},
 	{CANON_USB_CONTROL_VIEWFINDER_STOP,     "Stop viewfinder",      0x03,  0x00,  0x00},
-	{CANON_USB_CONTROL_GET_AVAILABLE_SHOT,  "Get available shot",   0x0d,  0x00,  0x00},
 	{CANON_USB_CONTROL_SET_CUSTOM_FUNC,     "Set custom func.",     0x0e,  0x00,  0x00},
-	{CANON_USB_CONTROL_GET_CUSTOM_FUNC,     "Get custom func.",     0x0f,  0x00,  0x00},
 	{CANON_USB_CONTROL_GET_EXT_PARAMS_VER,  "Get extended params version",
 	                                                                0x11,  0x00,  0x00},
 	{CANON_USB_CONTROL_SET_EXT_PARAMS,      "Set extended params",  0x13,  0x00,  0x00},
