@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include "gphoto2-debug.h"
 
 #include <stdarg.h>
