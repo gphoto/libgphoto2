@@ -1,5 +1,10 @@
 2001-10-30 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/polaroid/pdc640.c: If you malloc memory for camera->pl, 
+	  free it in camera_exit.
+
+2001-10-30 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* frontends/command-line/gphoto2-cmd-config.c:
 	  Implement GP_WIDGET_TEXT and GP_WIDGET_TOGGLE
 	* camlibs/directory/directory.c: Expand configuration dialog

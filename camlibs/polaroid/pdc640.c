@@ -786,12 +786,32 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	return (GP_OK);
 }
 
+static int
+camera_exit (Camera *camera)
+{
+	if (camera->pl) {
+		free (camera->pl);
+		camera->pl = NULL;
+	}
+
+	return (GP_OK);
+}
+
 int
 camera_init (Camera *camera)
 {
 	int result, i;
-	gp_port_settings settings;
-	CameraAbilities  abilities;	
+	GPPortSettings settings;
+	CameraAbilities abilities;
+
+	/*
+	 * First of all, tell gphoto2 about the functions we 
+	 * implement (especially camera_exit so that everything
+	 * gets correctly cleaned up even in case of error).
+	 */
+	camera->functions->about   = camera_about;
+	camera->functions->capture = camera_capture;
+	camera->functions->exit    = camera_exit;
 
 	CHECK_RESULT (gp_camera_get_abilities(camera,&abilities) );
 	camera->pl = 0;
@@ -811,9 +831,6 @@ camera_init (Camera *camera)
 	if( ! camera->pl ){
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
-
-	camera->functions->about   = camera_about;
-	camera->functions->capture = camera_capture;
 
 	/* Tell the filesystem where to get lists and info */
 	CHECK_RESULT (gp_filesystem_set_list_funcs (camera->fs, file_list_func,
