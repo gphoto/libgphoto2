@@ -127,6 +127,23 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
+delete_file_func (CameraFilesystem *fs, const char *folder,
+                  const char *filename, void *data, GPContext *context)
+{
+        Camera *camera = data;
+        int nr ;
+
+        nr = gp_filesystem_number (fs, folder, filename, context);
+        if (nr < 0)
+            return nr;
+
+	CHECK_RESULT (QVprotect (camera, nr, 0));
+	CHECK_RESULT (QVdelete (camera, nr));
+
+        return GP_OK;
+}
+
+static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
 	strcpy (about->text, "Download program for Casio QV cameras. "
@@ -240,6 +257,14 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	return (GP_OK);
 }
 
+static int
+camera_exit (Camera *camera, GPContext *context)
+{
+	CHECK_RESULT (QVreset (camera));
+
+	return (GP_OK);
+}
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
@@ -250,12 +275,13 @@ camera_init (Camera *camera, GPContext *context)
         camera->functions->get_config   = camera_config_get;
 	camera->functions->capture      = camera_capture;
 	camera->functions->summary	= camera_summary;
+	camera->functions->exit		= camera_exit;
         camera->functions->about        = camera_about;
 
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
 
 	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
 	/* 1000 is not enough for some operations */

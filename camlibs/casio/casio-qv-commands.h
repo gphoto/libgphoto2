@@ -43,6 +43,7 @@ int QVnumpic   (Camera *camera);
 int QVstatus   (Camera *camera, char *status);
 
 int QVdelete   (Camera *camera, int n);
+int QVprotect  (Camera *camera, int n, int on);
 int QVpicattr  (Camera *camera, int n, unsigned char *attr);
 int QVshowpic  (Camera *camera, int n);
 int QVsetpic   (Camera *camera);
@@ -52,5 +53,7 @@ int QVgetthumb (Camera *camera, unsigned char **data, unsigned long int *size);
 int QVgetCAMpic(Camera *camera, unsigned char **data, unsigned long int *size, int fine);
 
 int QVcapture  (Camera *camera);
+
+int QVreset    (Camera *camera);
 
 #endif /* __CASIO_QV_COMMANDS_H__ */

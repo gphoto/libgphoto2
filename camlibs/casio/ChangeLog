@@ -1,6 +1,11 @@
 2004-05-02  Lutz Mueller <lutz@users.sourceforge.net>
 
-	* ycctoppm.[c,h]: New files on request of Micael Haardt.
+	* casio-qv.c (and others): Patch that enables deletion of pictures.
+	  Provided by Michael Haardt.
+
+2004-05-02  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* ycctoppm.[c,h]: New files on request of Michael Haardt.
 	* Makefile.am
 
 2004-04-06  Lutz Mueller <lutz@users.sourceforge.net>

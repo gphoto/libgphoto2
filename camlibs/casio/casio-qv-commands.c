@@ -356,6 +356,20 @@ QVdelete (Camera *camera, int n)
 }
 
 int
+QVprotect (Camera *camera, int n, int on)
+{
+	unsigned char cmd[4];
+
+	cmd[0] = 'D';
+	cmd[1] = 'Y';
+	cmd[2] = on ? 1 : 0;
+	cmd[3] = n + 1;
+	CR (QVsend (camera, cmd, 4, NULL, 0));
+
+	return (GP_OK);
+}
+
+int
 QVsize (Camera *camera, long int *size)
 {
 	unsigned char cmd[2];
@@ -390,6 +404,18 @@ QVstatus (Camera *camera, char *status)
         cmd[1] = 'S';
         cmd[2] = STX;
         CR (QVsend (camera, cmd, 3, status, 2));
+
+        return (GP_OK);
+}
+
+int
+QVreset (Camera *camera)
+{
+        unsigned char cmd[2];
+        
+	cmd[0] = 'Q';
+	cmd[1] = 'R';
+	CR (QVsend (camera, cmd, 2, NULL, 0));
 
         return (GP_OK);
 }
