@@ -587,9 +587,11 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 	strcpy (file->name, filename);
 
 	/* Creation of a temporary file */
-	if ((tmp_file = gp_file_new()) == NULL)
-	   return (GP_ERROR);
-	strcpy(tmp_file->name, filename);
+	tmp_file = gp_file_new ();
+	if (!tmp_file)
+		return (GP_ERROR);
+
+	strcpy (tmp_file->name, filename);
 
 	/* Get the picture data */
 	CHECK (sierra_get_string_register (camera, regd, file_number + 1, 
@@ -622,7 +624,8 @@ int camera_file_get_generic (Camera *camera, CameraFile *file,
 
 		free (exifdat.header);
 	} else {
-		//FIXME: What happens here?
+	    	/* This is probably a video. */
+	    	gp_file_append (file, tmp_file->data, tmp_file->size);
 	}
 
 	return (camera_stop (camera));
