@@ -114,7 +114,6 @@ struct _CameraPrivateLibrary
 	char ident[32];   /* Model ID string given by the camera */
 	char owner[32];   /* Owner name */
 	char firmwrev[4]; /* Firmware revision */
-	int A5;
 	char psa50_id[200];	/* some models may have a lot to report */
 	int canon_comm_method;
 	unsigned char psa50_eot[8];
@@ -224,4 +223,4 @@ char *gphoto2canonpath(char *path);
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"
 
-#endif /* _LIBRARY_H */
+#endif /* _CANON_H */
