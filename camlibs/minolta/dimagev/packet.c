@@ -46,7 +46,7 @@ dimagev_packet *dimagev_make_packet(unsigned char *buffer, unsigned int length, 
 	dimagev_packet *p;
 	
 	if ( ( p = calloc(1, sizeof(dimagev_packet) ) ) == NULL ) {
-		perror("dimagev_make_packet::unable to allocate packet");
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev","dimagev_make_packet::unable to allocate packet");
 		return NULL;
 	}
 
@@ -101,36 +101,55 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 	unsigned char char_buffer;
 
 	if ( ( p = malloc(sizeof(dimagev_packet)) ) == NULL ) {
-		perror("dimagev_read_packet::unable to allocate packet");
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev","dimagev_read_packet::unable to allocate packet");
 		return NULL;
 	}
 
 	if ( gp_port_read(dimagev->dev, p->buffer, 4) < GP_OK ) {
-		perror("dimagev_read_packet::unable to read packet header");
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to read packet header - will try to send NAK");
 		free(p);
-		return NULL;
+
+		/* Send a NAK */
+		char_buffer = DIMAGEV_NAK;
+		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to send NAK");
+			return NULL;
+		}
+
+		/* Who likes recursion? */
+		return ( p = dimagev_read_packet(dimagev));
+
 	}
 
 	p->length = ( p->buffer[2] * 256 ) + ( p->buffer[3] );
 
 	if ( gp_port_read(dimagev->dev, &(p->buffer[4]), ( p->length - 4)) < GP_OK ) {
-		/* perror("dimagev_read_packet::unable to read packet body"); */
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to read packet body");
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to read packet body - will try to send NAK");
 		free(p);
-		return NULL;
+
+		/* Send a NAK */
+		char_buffer = DIMAGEV_NAK;
+		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to send NAK");
+			return NULL;
+		}
+
+		/* Who likes recursion? */
+		return ( p = dimagev_read_packet(dimagev));
+
 	}
 
 	/* Now we *should* have a packet. Let's do a sanity check. */
 	if ( dimagev_verify_packet(p) < GP_OK ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::got an invalid packet");
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::got an invalid packet - will try to send NAK");
 		free(p);
 		
 		/* Send a NAK */
 		char_buffer = DIMAGEV_NAK;
 		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
-		perror("dimagev_read_packet::unable to send NAK");
-		return NULL;
-	}
+			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_read_packet::unable to send NAK");
+			return NULL;
+		}
 		
 		/* Who likes recursion? */
 		return ( p = dimagev_read_packet(dimagev));
@@ -162,7 +181,7 @@ dimagev_packet *dimagev_strip_packet(dimagev_packet *p) {
 	}
 
 	if ( ( stripped = malloc(sizeof(dimagev_packet)) ) == NULL ) {
-		perror("dimagev_strip_packet::unable to allocate destination packet");
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev","dimagev_strip_packet::unable to allocate destination packet");
 		return NULL;
 	}
 
