@@ -70,7 +70,7 @@ static struct {
 	{RICOH_MODEL_ESP60, "Philips ESP60"},
 	{RICOH_MODEL_ESP70, "Philips ESP70"},
 	{RICOH_MODEL_ESP80, "Philips ESP80"},
-	{RICOH_MODEL_ESP80, "Philips ESP80SXG"},
+	{RICOH_MODEL_ESP80SXG, "Philips ESP80SXG"},
 	{0, NULL}
 };
 
@@ -131,6 +131,34 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 }
 
 static int
+get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+         CameraFileInfo *info, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	int n;
+	const char *name;
+
+	CR (n = gp_filesystem_number (fs, folder, filename, context));
+	n++;
+	
+	info->audio.fields = GP_FILE_INFO_NONE; 	/* no info anbout audio files */
+	
+	info->preview.width = 80;
+	info->preview.height = 60;
+	info->preview.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT; 
+	
+	CR (ricoh_get_pic_name (camera, context, n, &name));
+	strcpy (info->file.name, name);
+	CR (ricoh_get_pic_date (camera, context, n, &info->file.mtime));
+	CR (ricoh_get_pic_size (camera, context, n, &info->file.size));
+	strcpy (info->file.type, GP_MIME_EXIF);
+	info->file.fields = GP_FILE_INFO_NAME | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME
+		| GP_FILE_INFO_TYPE;
+	
+	return (GP_OK);
+}
+					 
+static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
@@ -147,7 +175,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_NORMAL:
 		CR (ricoh_get_pic (camera, context, n,
 				   RICOH_FILE_TYPE_NORMAL, &data, &size));
-		gp_file_set_mime_type (file, GP_MIME_JPEG);
+		gp_file_set_mime_type (file, GP_MIME_EXIF);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		CR (ricoh_get_pic (camera, context, n,
@@ -532,6 +560,8 @@ camera_init (Camera *camera, GPContext *context)
 					  camera));
 	CR (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 					  del_file_func, camera));
+	CR (gp_filesystem_set_info_funcs (camera->fs, get_info_func,
+						NULL, camera));					
 
 	/*
 	 * Remember the model. It could be that there hasn't been the 

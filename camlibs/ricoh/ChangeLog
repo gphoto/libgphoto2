@@ -1,3 +1,10 @@
+2002-07-10  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Martin Fischer <martin.fischer@inka.de>:
+
+	* ricoh.c (ricoh_get_pic_date): Corrected.
+	* library.c (get_info_func): Implemented.
+
 2002-07-05  Lutz Müller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]:

@@ -411,13 +411,15 @@ ricoh_get_pic_size (Camera *camera, GPContext *context, unsigned int n,
 	p[1] = n >> 0;
 	p[2] = n >> 8;
 	CR (ricoh_transmit (camera, context, 0x95, p, 3, buf, &len));
-	C_LEN (context, len, 2);
+	C_LEN (context, len, 4);
 
 	if (size)
-		*size = (buf[0] << 8) | buf[1] << 0;
+		*size = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0] << 0;
 
 	return (GP_OK);
 }
+
+#define B2H( bcd ) ((bcd>>4)*10+(bcd&0xF))
 
 int
 ricoh_get_pic_date (Camera *camera, GPContext *context, unsigned int n,
@@ -432,15 +434,17 @@ ricoh_get_pic_date (Camera *camera, GPContext *context, unsigned int n,
 	p[1] = n >> 0;
 	p[2] = n >> 8;
 	CR (ricoh_transmit (camera, context, 0x95, p, 3, buf, &len));
-	C_LEN (context, len, 6);
+	C_LEN (context, len, 7);
 
 	if (date) {
-		time.tm_year = buf[0] + 2000;
-		time.tm_mon  = buf[1];
-		time.tm_mday = buf[2];
-		time.tm_hour = buf[3];
-		time.tm_min  = buf[4];
-		time.tm_sec  = buf[5];
+		time.tm_year = B2H (buf[1]);
+		/* correct for Y2K in case older images are read */
+		if (time.tm_year < 90) time.tm_year += 100;			
+		time.tm_mon  = B2H (buf[2]) - 1;
+		time.tm_mday = B2H (buf[3]);
+		time.tm_hour = B2H (buf[4]);
+		time.tm_min  = B2H (buf[5]);
+		time.tm_sec  = B2H (buf[6]);
 		time.tm_isdst = -1;
 		*date = mktime (&time);
 	}
@@ -608,7 +612,8 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	unsigned int r, header_len;
 	RicohMode mode;
 
-	GP_DEBUG( "Getting image %i as %i...", n, type );
+	GP_DEBUG ("Getting image %i as %s...", n, 
+							(type==RICOH_FILE_TYPE_PREVIEW ? "thumbnail":"image"));
 	
 	/* Put camera into play mode, if not already */
 	CR (ricoh_get_mode (camera, context, &mode));
@@ -631,6 +636,7 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	header_len = (type == RICOH_FILE_TYPE_PREVIEW) ? sizeof (header) : 0;
 	*size = buf[17] << 24 | buf[16] << 16 | buf[15] << 8 | buf[14];
 	*size += header_len;
+
 	*data = malloc (*size);
 	if (!*data)
 		return (GP_ERROR_NO_MEMORY);
