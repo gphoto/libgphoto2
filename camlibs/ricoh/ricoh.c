@@ -266,29 +266,98 @@ ricoh_recv (Camera *camera, GPContext *context, unsigned char *cmd,
 	return (GP_OK);
 }
 
+static int
+ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
+                const unsigned char *data, unsigned char len,
+                unsigned char *ret_data, unsigned char *ret_len)
+{
+        unsigned char ret_cmd;
+	unsigned int r = 0;
+ 
+        while (1) {
+                CR (ricoh_send (camera, context, cmd, 0, data, len));
+                CR (ricoh_recv (camera, context, &ret_cmd, NULL,
+                                ret_data, ret_len));
+
+		/* Check if the answer is for our command. */
+		if (cmd != ret_cmd) {
+			GP_DEBUG ("Commands differ (expected 0x%02x, "
+				  "got 0x%02x)!", cmd, ret_cmd);
+			if (++r > 2) {
+				gp_context_error (context, _("Communication "
+					"error even after 2 retries. Please "
+					"contact <gphoto-devel@gphoto.org>."));
+				return (GP_ERROR);
+			}
+			continue;
+		}
+
+		/* Check if the camera reported success. */
+		if ((*ret_len >= 2) && (ret_data[0] == 0x00) &&
+				       (ret_data[1] == 0x00))
+			break;
+
+		/* If camera is busy, try again (but at most 4 times). */
+		if ((*ret_len == 3) && (ret_data[0] == 0x00) &&
+				       (ret_data[1] == 0x04) &&
+				       (ret_data[2] == 0xff)) {
+			if (++r >= 4) {
+				gp_context_error (context, _("Camera busy. "
+					"If the problem persists, please "
+					"contact <gphoto-devel@gphoto.org>."));
+				return (GP_ERROR);
+			}
+			continue;
+		}
+
+		/*
+		 * It could be that the camera is in the wrong mode to
+		 * execute this command.
+		 */
+		if ((*ret_len == 2) && (ret_data[0] == 0x06) &&
+				       (ret_data[1] == 0x00)) {
+			gp_context_error (context, _("Camera is in wrong "
+				"mode. Please contact "
+				"<gphoto-devel@gphoto.org>."));
+			return (GP_ERROR);
+		}
+
+		/* Invalid parameters? */
+		if ((*ret_len == 2) && (ret_data[0] == 0x04) &&
+				       (ret_data[1] == 0x00)) {
+			gp_context_error (context, _("Camera did not "
+				"accept the parameters. Please contact "
+				"<gphoto-devel@gphoto.org>."));
+			return (GP_ERROR);
+		}
+
+		gp_context_error (context, _("An unknown error occurred. "
+			"Please contact <gphoto-devel@gphoto.org>."));
+		return (GP_ERROR);
+        }
+
+	/* Success! We don't need the first two bytes any more. */
+	*ret_len -= 2;
+	if (*ret_len > 0)
+		memmove (ret_data, ret_data + 2, *ret_len);
+
+        return (GP_OK);
+}
+
 /* query what mode(play/record) the camera is in */
 int
 ricoh_get_mode (Camera *camera, GPContext *context, RicohMode *mode)
 {
-	unsigned char p[1], cmd, buf[0xff], len;
-	int i;
+	unsigned char p[1], buf[0xff], len;
 
 	GP_DEBUG ("Getting mode...");
 
 	p[0] = 0x12;
-	for (i = 0; i < 4; i++) {
-		CR (ricoh_send (camera, context, 0x51, 0, p, 1));
-		CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-		C_CMD (context, cmd, 0x51);
-		if(len != 2)
-			break;
-	}
-	C_LEN (context, len, 3);
-
-	/* ignoring the return code(bytes 0,1) */
+	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));
+	C_LEN (context, len, 1);
 
 	/* Mode */
-	*mode = buf[2];
+	*mode = buf[0];
 
 	return (GP_OK);
 }
@@ -296,16 +365,14 @@ ricoh_get_mode (Camera *camera, GPContext *context, RicohMode *mode)
 int
 ricoh_set_mode (Camera *camera, GPContext *context, RicohMode mode)
 {
-	unsigned char p[2], cmd, buf[0xff], len;
+	unsigned char p[2], buf[0xff], len;
 
 	GP_DEBUG ("Setting mode to %i...", mode);
 
 	p[0] = 0x12;
 	p[1] = mode;
-	CR (ricoh_send (camera, context, 0x50, 0, p, 2));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, 0x50);
-	C_LEN (context, len, 2);
+	CR (ricoh_transmit (camera, context, 0x50, p, 2, buf, &len));
+	C_LEN (context, len, 0);
 
 	return (GP_OK);
 }
@@ -314,19 +381,17 @@ int
 ricoh_get_size (Camera *camera, GPContext *context, unsigned int n,
 		unsigned long *size)
 {
-	unsigned char p[3], cmd, buf[0xff], len;
+	unsigned char p[3], buf[0xff], len;
 
 	GP_DEBUG ("Getting size of picture %i...", n);
 
 	p[0] = 0x04;
 	p[1] = n >> 0;
 	p[2] = n >> 8;
-	CR (ricoh_send (camera, context, 0x95, 0, p, 3));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, 0x95);
-	C_LEN (context, len, 4);
+	CR (ricoh_transmit (camera, context, 0x95, p, 3, buf, &len));
+	C_LEN (context, len, 2);
 
-	*size = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[1] << 0;
+	*size = (buf[0] << 8) | buf[1] << 0;
 
 	return (GP_OK);
 }
@@ -381,23 +446,17 @@ ricoh_del_pic (Camera *camera, GPContext *context, unsigned int n)
 int
 ricoh_get_num (Camera *camera, GPContext *context, unsigned int *n)
 {
-	unsigned char p[2], cmd, buf[0xff], len;
-	int i;
+	unsigned char p[2], buf[0xff], len;
 
 	GP_DEBUG ("Getting number of pictures...");
 
 	p[0] = 0x00;
 	p[1] = 0x01;
-	for (i = 0; i < 2; i++) {
-		CR (ricoh_send (camera, context, 0x51, 0, p, 2));
-		CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-		if (len == 4)
-			break;
-	}
-	C_CMD (context, cmd, 0x51);
-	C_LEN (context, len, 4);
+	CR (ricoh_transmit (camera, context, 0x51, p, 2, buf, &len));
+	C_LEN (context, len, 2);
 
-	*n = buf[2];
+	if (n)
+		*n = (buf[1] << 8) | buf[0];
 
 	return (GP_OK);
 }
@@ -405,13 +464,11 @@ ricoh_get_num (Camera *camera, GPContext *context, unsigned int *n)
 int
 ricoh_set_speed (Camera *camera, GPContext *context, RicohSpeed speed)
 {
-	unsigned char p[1], cmd, buf[0xff], len;
+	unsigned char p[1], buf[0xff], len;
 
 	p[0] = speed;
-	CR (ricoh_send (camera, context, 0x32, 0, p, 1));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, 0x32);
-	C_LEN (context, len, 2);
+	CR (ricoh_transmit (camera, context, 0x32, p, 1, buf, &len));
+	C_LEN (context, len, 0);
 
 	/* Wait for camera to switch speed. */
 	sleep (1);
@@ -422,23 +479,19 @@ ricoh_set_speed (Camera *camera, GPContext *context, RicohSpeed speed)
 int
 ricoh_ping (Camera *camera, GPContext *context, RicohModel *model)
 {
-	unsigned char p[3], cmd, buf[0xff], len;
+	unsigned char p[3], buf[0xff], len;
 
 	p[0] = 0x00;
 	p[1] = 0x00;
 	p[2] = 0x00;
-	CR (ricoh_send (camera, context, 0x31, 0, p, 3));
-	CR (ricoh_recv (camera, context, &cmd, NULL, buf, &len));
-	C_CMD (context, cmd, 0x31);
-	C_LEN (context, len, 6);
-
-	/* No idea what buf[0] and buf[1] contain. */
+	CR (ricoh_transmit (camera, context, 0x31, p, 3, buf, &len));
+	C_LEN (context, len, 4);
 
 	/* Model */
 	if (model)
-		*model = buf[2] << 8 | buf[3];
+		*model = (buf[0] << 8) | buf[1];
 
-	/* No idea what buf[4] and buf[5] contain. */
+	/* No idea what buf[2] and buf[3] contain. */
 
 	return (GP_OK);
 }

@@ -1,3 +1,8 @@
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	* ricoh.c: Simplify code by introducing ricoh_transmit. As a side 
+	  effect, this should improve error recovery, too.
+
 2002-06-18  Martin Fischer <martin.fischer@inka.de>
 
 	Patch adapted by Lutz Müller <lutz@users.sourceforge.net>.
