@@ -73,18 +73,23 @@ static int _send_cmd(GPPort *port,unsigned short cmd) {
     return WRITE(port,buf,2);
 }
 
-static void _read_cmd(GPPort *port,unsigned short *xcmd) {
+static int _read_cmd(GPPort *port,unsigned short *xcmd) {
 	unsigned char buf[2];
-	int	i = 0;
+	int	i = 0,ret;
 	*xcmd = 0x4242;
 	do {
-		if (2==READ(port,buf,2)) {
-			if (buf[0]==0xff)
-				break;
-			continue;
+		if (1==(ret=READ(port,buf,1))) {
+			if (buf[0]==0xff) {
+			    if (1==READ(port,buf+1,1)) {
+				*xcmd = (buf[0] << 8)| buf[1];
+				return GP_OK;
+			    }
+			}
+		} else {
+		    return ret;
 		}
 	} while (i++<10);
-	*xcmd = (buf[0]<<8)|buf[1];
+	return GP_ERROR_IO;
 }
 
 #if 0
@@ -97,20 +102,46 @@ static void _dump_buf(unsigned char *buf,int size) {
 }
 #endif
 
+
+static int _send_cmd_2(GPPort *port,unsigned short cmd, unsigned short *xcmd) {
+    unsigned char buf[2];
+    int ret, tries = 3;
+    *xcmd = 0x4242;
+    while (tries--) {
+	int i = 0;
+	buf[0] = cmd>>8;
+	buf[1] = cmd&0xff;
+	ret = WRITE(port,buf,2);
+	do {
+		if (1==(ret=READ(port,buf,1))) {
+			if (buf[0]==0xff) {
+			    if (1==READ(port,buf+1,1)) {
+				*xcmd = (buf[0] << 8)| buf[1];
+				return GP_OK;
+			    }
+			}
+		} else {
+		    return ret;
+		}
+	} while (i++<3);
+    }
+    return GP_ERROR_IO;
+}
+
 int jd11_ping(GPPort *port) {
 	unsigned short xcmd;
 	char	buf[1];
-	int	ret;
+	int	ret,tries = 3;
 
-	while (1==READ(port,buf,1))
-	    	/* drain input queue before PING */;
-	ret=_send_cmd(port,0xff08);
-	if (ret!=GP_OK)
-	    return ret;
-	_read_cmd(port,&xcmd);
-	if (xcmd==0xfff1)
-	    return GP_OK;
-	return GP_ERROR_IO;
+	while (tries--) {
+	    ret = GP_ERROR_IO;
+	    while (1==READ(port,buf,1))
+		    /* drain input queue before PING */;
+	    ret=_send_cmd_2(port,0xff08,&xcmd);
+	    if ((ret==GP_OK) && (xcmd==0xfff1))
+		return GP_OK;
+	}
+	return ret;
 }
 
 int
@@ -160,9 +191,11 @@ jd11_set_rgb(GPPort *port,float red, float green, float blue) {
 int
 jd11_select_index(GPPort *port) {	/* select index */
 	unsigned short xcmd;
+	int ret;
 
-	_send_cmd(port,0xffa4);
-	_read_cmd(port,&xcmd);
+	ret = _send_cmd_2(port,0xffa4,&xcmd);
+	if (ret!=GP_OK)
+	    return ret;
 	if (xcmd!=0xff01)
 	    return GP_ERROR_IO;
 	return GP_OK;
@@ -172,7 +205,8 @@ int
 jd11_select_image(GPPort *port,int nr) {	/* select image <nr> */
 	unsigned short xcmd;
 
-	_send_cmd(port,0xffa1);_send_cmd(port,0xff00|nr);
+	_send_cmd(port,0xffa1);
+	_send_cmd(port,0xff00|nr);
 	_read_cmd(port,&xcmd);
 	if (xcmd != 0xff01)
 	    return GP_ERROR_IO;
@@ -302,7 +336,9 @@ jd11_get_image_preview(Camera *camera,CameraFile*file,int nr, char **data, int *
 	char	header[200];
 	GPPort	*port = camera->port;
 
+
 	if (nr < 0) return GP_ERROR_BAD_PARAMETERS;
+
 	ret = jd11_select_index(port);
 	if (ret != GP_OK)
 	    return ret;
@@ -321,10 +357,15 @@ jd11_get_image_preview(Camera *camera,CameraFile*file,int nr, char **data, int *
 		ret=getpacket(port,indexbuf+curread,readsize);
 		if (ret==0)
 			break;
-		gp_file_progress(file,(1.0*curread)/xsize);
 		curread+=ret;
 		if (ret<200)
 			break;
+		ret = gp_file_progress(file,(1.0*curread)/xsize);
+		if (ret < 0) { /* cancelled */
+		    /* What to do...Just free the stuff we allocated for now.*/
+		    free(indexbuf);
+		    return ret;
+		}
 		_send_cmd(port,0xfff1);
 	}
 	strcpy(header,"P5\n# gPhoto2 JD11 thumbnail image\n64 48 255\n");
@@ -392,10 +433,18 @@ serial_image_reader(Camera *camera,CameraFile *file,int nr,unsigned char ***imag
 	    ret=getpacket(port,(*imagebufs)[picnum]+curread,readsize);
 	    if (ret==0)
 		break;
-	    gp_file_progress(file,1.0*picnum/3.0+(curread*1.0)/sizes[picnum]/3.0);
 	    curread+=ret;
 	    if (ret<200)
 		break;
+	    ret = gp_file_progress(file,1.0*picnum/3.0+(curread*1.0)/sizes[picnum]/3.0);
+	    if (ret < 0) { /* cancelled */
+		int j;
+		/* What to do ... Just free the stuff we allocated for now. */
+		for (j=0;j<picnum;j++)
+		    free((*imagebufs)[picnum]);
+		free(*imagebufs);
+		return ret;
+	    }
 	    _send_cmd(port,0xfff1);
 	}
     }
