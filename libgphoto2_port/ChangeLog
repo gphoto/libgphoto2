@@ -4,6 +4,7 @@
 	                Also look for intep in class based matching.
 			Dump intep in debugoutput.
 			interrupt endpoints are *input* endpoints, not output.
+			Remember we did the altsetting after we did change it.
 
 2002-03-19  Marcus Meissner <marcus@jet.franken.de>
 	

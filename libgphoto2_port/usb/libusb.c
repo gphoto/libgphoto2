@@ -324,6 +324,7 @@ gp_port_usb_update (GPPort *port)
 			"Changed usb.altsetting from %d to %d",
 			port->pl->altsetting,
 			port->settings.usb.altsetting);
+		port->pl->altsetting = port->settings.usb.altsetting;
 	}
 
 	return GP_OK;
