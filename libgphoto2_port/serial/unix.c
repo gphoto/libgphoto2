@@ -614,29 +614,22 @@ gp_port_serial_set_pin (GPPort *dev, int pin, int level)
 static int
 gp_port_serial_flush (GPPort *dev, int direction)
 {
+	/* The device needs to be opened for that operation */
+	if (!dev->pl->fd)
+		CHECK (gp_port_serial_open (dev));
+
+	/* Make sure we are operating at the specified speed */
+	CHECK (gp_port_serial_check_speed (dev));
 
 #if HAVE_TERMIOS_H
-    int q;
-
-    switch (direction) {
-    case 0:
-        q = TCIFLUSH;
-        break;
-    case 1:
-        q = TCOFLUSH;
-        break;
-    default:
-        return GP_ERROR_IO_SERIAL_FLUSH;
-    }
-
-    if (tcflush (dev->pl->fd, q) < 0)
-        return (GP_ERROR_IO_SERIAL_FLUSH);
-
-    return GP_OK;
+	if (tcflush (dev->pl->fd, direction ? TCOFLUSH : TCIFLUSH) < 0)
+		return (GP_ERROR_IO_SERIAL_FLUSH);
 #else
 #warning SERIAL FLUSH NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
-    return GP_ERROR_IO_SERIAL_FLUSH;
+	return GP_ERROR_IO_SERIAL_FLUSH;
 #endif
+
+	return (GP_OK);
 }
 
 static speed_t
@@ -808,8 +801,14 @@ gp_port_serial_update (GPPort *dev)
 static int
 gp_port_serial_send_break (GPPort *dev, int duration)
 {
-        /* Duration is in milliseconds */
+	/* The device needs to be opened for that operation */
+	if (!dev->pl->fd)
+		CHECK (gp_port_serial_open (dev));
 
+	/* Make sure we are operating at the specified speed */
+	CHECK (gp_port_serial_check_speed (dev));
+
+        /* Duration is in milliseconds */
 #if HAVE_TERMIOS_H
         tcsendbreak (dev->pl->fd, duration / 310);
         tcdrain (dev->pl->fd);
@@ -817,6 +816,7 @@ gp_port_serial_send_break (GPPort *dev, int duration)
 #  warning SEND BREAK NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
 	return GP_ERROR_IO_SERIAL_BREAK;
 #endif
+
         return GP_OK;
 }
 

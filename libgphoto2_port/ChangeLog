@@ -1,3 +1,8 @@
+2001-11-25  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* serial/unix.c: For flush and break, check that the device is open
+	  and at the right speed.
+
 2001-11-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* serial/unix.c: Try to fix logic of speed setting: Now check before
