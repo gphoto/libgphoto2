@@ -26,7 +26,7 @@ int canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **da
 int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length);
 int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length);
 int canon_usb_keylock(Camera *camera);
-
+int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path);
 
 #define USB_BULK_READ_SIZE 0x3000
 

@@ -65,14 +65,15 @@ canon_usb_camera_init (Camera *camera)
 	char *camstat_str = "NOT RECOGNIZED";
 	unsigned char camstat;
 
-	GP_DEBUG("canon_usb_camera_init()");
+	GP_DEBUG ("canon_usb_camera_init()");
 
 	memset (msg, 0, sizeof (msg));
 	memset (buffer, 0, sizeof (buffer));
 
 	i = gp_port_usb_msg_read (camera->port, 0x0c, 0x55, 0, msg, 1);
 	if (i != 1) {
-		gp_camera_set_error (camera, "Could not establish initial contact with camera");
+		gp_camera_set_error (camera,
+				     "Could not establish initial contact with camera");
 		return GP_ERROR_IO_INIT;
 	}
 	camstat = msg[0];
@@ -89,28 +90,30 @@ canon_usb_camera_init (Camera *camera)
 			break;
 	}
 	if (camstat != 'A' && camstat != 'C') {
-		gp_camera_set_error (camera, "Initial camera response %c/'%s' unrecognized", 
-			camstat, camstat_str);
+		gp_camera_set_error (camera, "Initial camera response %c/'%s' unrecognized",
+				     camstat, camstat_str);
 		return GP_ERROR_IO_INIT;
 	}
-	GP_DEBUG("canon_usb_camera_init() " 
-		 "initial camera response: %c/'%s'", camstat, camstat_str);
+	GP_DEBUG ("canon_usb_camera_init() "
+		  "initial camera response: %c/'%s'", camstat, camstat_str);
 
 	i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, msg, 0x58);
 	if (i != 0x58) {
-		gp_camera_set_error (camera, "Step #2 of initialization failed! (returned %i, expected %i) "
-				 "Camera not operational", i, 0x58);
+		gp_camera_set_error (camera,
+				     "Step #2 of initialization failed! (returned %i, expected %i) "
+				     "Camera not operational", i, 0x58);
 		return GP_ERROR_IO_INIT;
 	}
 
 	i = gp_port_usb_msg_write (camera->port, 0x04, 0x11, 0, msg + 0x48, 0x10);
 	if (i != 0x10) {
 		gp_camera_set_error (camera, "Step #3 of initialization failed! "
-				"(returned %i, expected %i) Camera not operational", i, 0x10);
+				     "(returned %i, expected %i) Camera not operational", i,
+				     0x10);
 		return GP_ERROR_IO_INIT;
 	}
-	GP_DEBUG("canon_usb_camera_init() "
-		 "PC sign on LCD should be lit now (if your camera has a PC sign)");
+	GP_DEBUG ("canon_usb_camera_init() "
+		  "PC sign on LCD should be lit now (if your camera has a PC sign)");
 
 	/* We expect to get 0x44 bytes here, but the camera is picky at this stage and
 	 * we must read 0x40 bytes, look at position 0 and read 0x4 (or whatever) bytes
@@ -120,47 +123,49 @@ canon_usb_camera_init (Camera *camera)
 	if ((i >= 4)
 	    && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
 	    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
-	    
+
 		/* We have some reports that sometimes the camera takes a long
 		 * time to respond to this read request and then comes back with
 		 * the 54 78 00 00 packet, instead of telling us to read four more
 		 * bytes which is the normal 54 78 00 00 packet.
 		 */
 
-		GP_DEBUG("canon_usb_camera_init() "
-			 "expected %i bytes, got %i bytes with \"54 78 00 00\" "
-			 "at the end, so we just ignore the whole bunch and call it a day",
-			 0x40, i);
+		GP_DEBUG ("canon_usb_camera_init() "
+			  "expected %i bytes, got %i bytes with \"54 78 00 00\" "
+			  "at the end, so we just ignore the whole bunch and call it a day",
+			  0x40, i);
 
 		return GP_OK;
 	}
 	if (i != 0x40) {
 		gp_camera_set_error (camera, "Step #4.1 failed! "
-				"(returned %i, expected %i) Camera not operational", i, 0x40);
+				     "(returned %i, expected %i) Camera not operational", i,
+				     0x40);
 		return GP_ERROR_IO_INIT;
 	}
-	
+
 	i_ptr = (int *) buffer;
 	read_bytes = *i_ptr;
 	if (read_bytes) {
 		i = gp_port_read (camera->port, buffer, read_bytes);
 		if (i != read_bytes) {
 			GP_DEBUG ("canon_usb_camera_init() "
-				"Step #4.2 of initialization failed! (returned %i, expected %i) "
-				"Camera might still work though. Continuing.", i, read_bytes);
+				  "Step #4.2 of initialization failed! (returned %i, expected %i) "
+				  "Camera might still work though. Continuing.", i,
+				  read_bytes);
 		} else {
 			if ((i >= 4)
 			    && (buffer[i - 4] == 0x54) && (buffer[i - 3] == 0x78)
 			    && (buffer[i - 2] == 0x00) && (buffer[i - 1] == 0x00)) {
-			    	if (i != 4) {
-			    		/* Only log this message about anomality if we did not
-			    		 * get exactly four bytes back. We expect to get four
-			    		 * bytes (54 78 00 00) and don't have to log it if we do.
-			    		 */
-					GP_DEBUG("canon_usb_camera_init() "
-						 "expected %i but got %i bytes with \"54 78 00 00\" "
-						 "at the end, so we just ignore the whole bunch",
-						 0x4, i);
+				if (i != 4) {
+					/* Only log this message about anomality if we did not
+					 * get exactly four bytes back. We expect to get four
+					 * bytes (54 78 00 00) and don't have to log it if we do.
+					 */
+					GP_DEBUG ("canon_usb_camera_init() "
+						  "expected %i but got %i bytes with \"54 78 00 00\" "
+						  "at the end, so we just ignore the whole bunch",
+						  0x4, i);
 				}
 			} else {
 				/* I don't think we can ever get here and the camera will still work
@@ -168,16 +173,18 @@ canon_usb_camera_init (Camera *camera)
 				 * I'll leave it here as a comment for now, but change the behaviour
 				 * to return error instead.
 				 * GP_DEBUG("canon_usb_camera_init() "
-				 *	 "Step #4 of initialization failed! (returned %i, expected %i) "
-				 *	 "Camera might still work though. Continuing.", i, 0x44);
+				 *       "Step #4 of initialization failed! (returned %i, expected %i) "
+				 *       "Camera might still work though. Continuing.", i, 0x44);
 				 */
-				gp_camera_set_error (camera, "Step #4 of initialization failed! "
-					"(returned %i, expected %i) Camera not operational", i, read_bytes);
+				gp_camera_set_error (camera,
+						     "Step #4 of initialization failed! "
+						     "(returned %i, expected %i) Camera not operational",
+						     i, read_bytes);
 				return GP_ERROR_IO_INIT;
 			}
-		}	
+		}
 	}
-	
+
 	return GP_OK;
 }
 
@@ -197,7 +204,7 @@ canon_usb_init (Camera *camera)
 	int res;
 	GPPortSettings settings;
 
-	GP_DEBUG("Initializing the (USB) camera.\n");
+	GP_DEBUG ("Initializing the (USB) camera.\n");
 
 	/* Get the current settings */
 	gp_port_get_settings (camera->port, &settings);
@@ -233,11 +240,10 @@ canon_usb_keylock (Camera *camera)
 
 	GP_DEBUG ("canon_usb_keylock()");
 
-	c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_KEYLOCK, &bytes_read,
-					    NULL, 0);
+	c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_KEYLOCK, &bytes_read, NULL, 0);
 	if (bytes_read == 0x4) {
 		GP_DEBUG ("Got the expected number of bytes back, "
-			"unfortuntely we don't know what they mean.");
+			  "unfortuntely we don't know what they mean.");
 	} else {
 		gp_camera_set_error (camera, "canon_usb_keylock: "
 				     "Unexpected amount of data returned (%i bytes, expected %i)",
@@ -320,8 +326,8 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 				 "called for ILLEGAL function %i! Aborting.", canon_funct);
 		return NULL;
 	}
-	GP_DEBUG("canon_usb_dialogue() cmd 0x%x 0x%x 0x%x (%s), payload = %i bytes",
-		 cmd1, cmd2, cmd3, funct_descr, payload_length);
+	GP_DEBUG ("canon_usb_dialogue() cmd 0x%x 0x%x 0x%x (%s), payload = %i bytes",
+		  cmd1, cmd2, cmd3, funct_descr, payload_length);
 
 	if (read_bytes > sizeof (buffer)) {
 		/* If this message is ever printed, chances are that you just added
@@ -329,21 +335,21 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 		 * all the others and did not update the declaration of 'buffer' in
 		 * this function.
 		 */
-		GP_DEBUG("canon_usb_dialogue() "
-			 "read_bytes %i won't fit in buffer of size %i!",
-			 read_bytes, sizeof (buffer));
+		GP_DEBUG ("canon_usb_dialogue() "
+			  "read_bytes %i won't fit in buffer of size %i!",
+			  read_bytes, sizeof (buffer));
 		return NULL;
 	}
 
 	if (payload_length) {
-		GP_DEBUG("Got payload.");
+		GP_DEBUG ("Got payload.");
 		gp_log_data ("canon", payload, payload_length);
 	}
 
 	if ((payload_length + 0x50) > sizeof (packet)) {
-		GP_LOG(GP_LOG_VERBOSE,
-		       "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)",
-		       (payload_length + 0x50), sizeof (packet));
+		GP_LOG (GP_LOG_VERBOSE,
+			"canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)",
+			(payload_length + 0x50), sizeof (packet));
 		return NULL;
 	}
 
@@ -373,7 +379,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 	status = gp_port_usb_msg_write (camera->port, msgsize > 1 ? 0x04 : 0x0c, 0x10, 0,
 					packet, msgsize);
 	if (status != msgsize) {
-		GP_DEBUG("canon_usb_dialogue: write failed! (returned %i)\n", status);
+		GP_DEBUG ("canon_usb_dialogue: write failed! (returned %i)\n", status);
 		return NULL;
 	}
 
@@ -382,8 +388,8 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 	 */
 	status = gp_port_read (camera->port, buffer, read_bytes);
 	if (status != read_bytes) {
-		GP_DEBUG("canon_usb_dialogue: read failed! "
-			 "(returned %i, expected %i)\n", status, read_bytes);
+		GP_DEBUG ("canon_usb_dialogue: read failed! "
+			  "(returned %i, expected %i)\n", status, read_bytes);
 		return NULL;
 	}
 
@@ -432,8 +438,8 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 	if (display_status)
 		gp_camera_progress (camera, 0);
 
-	GP_DEBUG("canon_usb_long_dialogue() function %i, payload = %i bytes",
-		 canon_funct, payload_length);
+	GP_DEBUG ("canon_usb_long_dialogue() function %i, payload = %i bytes",
+		  canon_funct, payload_length);
 
 	/* Call canon_usb_dialogue(), this will not return any data "the usual way"
 	 * but after this we read 0x40 bytes from the USB port, the int at pos 6 in
@@ -443,8 +449,7 @@ canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 	lpacket =
 		canon_usb_dialogue (camera, canon_funct, &bytes_read, payload, payload_length);
 	if (lpacket == NULL) {
-		GP_DEBUG("canon_usb_long_dialogue: canon_usb_dialogue "
-			 "returned error!");
+		GP_DEBUG ("canon_usb_long_dialogue: canon_usb_dialogue " "returned error!");
 		return GP_ERROR;
 	}
 	/* This check should not be needed since we check the return of canon_usb_dialogue()
@@ -619,4 +624,51 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 {
 	gp_camera_message (camera, _("Not implemented!"));
 	return GP_ERROR_NOT_SUPPORTED;
+}
+
+int
+canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
+		       unsigned int *dirents_length, const char *path)
+{
+	unsigned char payload[100];
+	unsigned int payload_length;
+	int res;
+
+	*dirent_data = NULL;
+
+	/* build payload :
+	 *
+	 * 0x00 dirname 0x00 0x00 0x00
+	 *
+	 * the 0x00 before dirname means 'no recursion'
+	 * NOTE: the first 0x00 after dirname is the NULL byte terminating
+	 * the string, so payload_length is strlen(path) + 4 
+	 */
+	if (strlen (path) + 4 > sizeof (payload)) {
+		GP_DEBUG ("canon_usb_get_dirents: "
+			  "Path '%s' too long (%i), won't fit in payload "
+			  "buffer.", path, strlen (path));
+		gp_camera_set_error (camera, "canon_usb_get_dirents: "
+				     "Couldn't fit payload into buffer, "
+				     "'%.96s' (truncated) too long.", path);
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	memset (payload, 0x00, sizeof (payload));
+	memcpy (payload + 1, path, strlen (path));
+	payload_length = strlen (path) + 4;
+
+	/* 1024 * 1024 is max realistic data size, out of the blue.
+	 * 0 is to not show progress status
+	 */
+	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_DIRENT,
+				       dirent_data, dirents_length, 1024 * 1024, payload,
+				       payload_length, 0);
+	if (res != GP_OK) {
+		gp_camera_set_error (camera, "canon_usb_get_dirents: "
+				     "canon_usb_long_dialogue failed to fetch direntrys, "
+				     "returned %i", res);
+		return GP_ERROR;
+	}
+
+	return GP_OK;
 }
