@@ -1,0 +1,32 @@
+CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgpio -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H  -DEBUG
+CC=gcc
+
+all: start \
+  dll \
+  end
+
+start:
+  @echo ****
+  @echo   Entering:      $(MAKEDIR)
+  @echo   using CCFLAGS: $(CCFLAGS)
+  @echo ****
+
+end:
+  @echo ****
+  @echo   Done: $(MAKEDIR)
+  @echo ****
+
+dll: ..\gpsierra.dll
+
+library.o : library.c library.h
+   @$(CC) -o $@ library.c $(CCFLAGS)
+
+sierra.o : sierra.c
+   @$(CC) -o $@ sierra.c $(CCFLAGS)
+
+sierra.def: sierra.o
+   @copy sierra.df sierra.def
+   @emxexp $** >> sierra.def
+
+..\gpsierra.dll: sierra.o sierra.def library.o ..\..\obj\interface.o
+   @$(CC) -g -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lst\check -lgcc -L..\..\LIB -llibgphoto2 -llibgpio -ldl -lpthreads -lpthrdrtl -lmt\c
