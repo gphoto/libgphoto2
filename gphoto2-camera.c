@@ -61,12 +61,12 @@
 
 #define CAMERA_UNUSED(c,ctx)						\
 {									\
-	©->pc->used--;						\
-	if (!©->pc->used) {						\
-		if (©->pc->exit_requested)				\
-			gp_camera_exit (©, (ctx));			\
-		if (!©->pc->ref_count)				\
-			gp_camera_free ©;				\
+	(c)->pc->used--;						\
+	if (!(c)->pc->used) {						\
+		if ((c)->pc->exit_requested)				\
+			gp_camera_exit ((c), (ctx));			\
+		if (!(c)->pc->ref_count)				\
+			gp_camera_free (c);				\
 	}								\
 }
 
@@ -81,11 +81,11 @@
 			gp_context_error ((ctx), _("An error occurred "	\
 				"in the io-library ('%s'): %s"),	\
 				gp_port_result_as_string (r),		\
-				© ? gp_port_get_error (©->port) :	\
+				(c) ? gp_port_get_error ((c)->port) :	\
 				      _("No additional information "	\
 				      "available."));			\
-		if ©							\
-			CAMERA_UNUSED(©,(ctx));			\
+		if (c)							\
+			CAMERA_UNUSED((c),(ctx));			\
 		return (r);						\
 	}								\
 }
@@ -123,15 +123,15 @@
 {									\
 	int r;								\
 									\
-	if (strcmp (©->pc->a.model,"Directory Browse")) {		\
-		r = gp_port_open (©->port);				\
+	if (strcmp ((c)->pc->a.model,"Directory Browse")) {		\
+		r = gp_port_open ((c)->port);				\
 		if (r < 0) {						\
 			CAMERA_UNUSED (c,ctx);				\
 			return (r);					\
 		}							\
 	}								\
-	if (©->functions->pre_func) {					\
-		r = ©->functions->pre_func (c,ctx);			\
+	if ((c)->functions->pre_func) {					\
+		r = (c)->functions->pre_func (c,ctx);			\
 		if (r < 0) {						\
 			CAMERA_UNUSED (c,ctx);				\
 			return (r);					\
@@ -143,8 +143,8 @@
 {                                                                       \
 	int r;								\
 									\
-	if (©->functions->pre_func) {                                 \
-		r = ©->functions->pre_func (c,ctx);                   \
+	if ((c)->functions->pre_func) {                                 \
+		r = (c)->functions->pre_func (c,ctx);                   \
 		if (r < 0) {                                            \
 			CAMERA_UNUSED (c,ctx);				\
 			return (r);                                     \
@@ -158,10 +158,10 @@
 {									\
 	int r;								\
 									\
-	if (strcmp (©->pc->a.model,"Directory Browse"))		\
-		gp_port_close (©->port);				\
-	if (©->functions->post_func) {				\
-		r = ©->functions->post_func (c,ctx);			\
+	if (strcmp ((c)->pc->a.model,"Directory Browse"))		\
+		gp_port_close ((c)->port);				\
+	if ((c)->functions->post_func) {				\
+		r = (c)->functions->post_func (c,ctx);			\
 		if (r < 0) {						\
 			CAMERA_UNUSED (c,ctx);				\
 			return (r);					\
@@ -173,8 +173,8 @@
 {                                                                       \
 	int r;								\
 									\
-	if (©->functions->post_func) {                                \
-		r = ©->functions->post_func (c,ctx);                  \
+	if ((c)->functions->post_func) {                                \
+		r = (c)->functions->post_func (c,ctx);                  \
 		if (r < 0) {                                            \
 			CAMERA_UNUSED (c,ctx);				\
 			return (r);                                     \
@@ -210,9 +210,9 @@
 
 #define CHECK_INIT(c,ctx)						\
 {									\
-	©->pc->used++;						\
-	if (!©->pc->lh)						\
-		CR(©, gp_camera_init (c, ctx), ctx);			\
+	(c)->pc->used++;						\
+	if (!(c)->pc->lh)						\
+		CR((c), gp_camera_init (c, ctx), ctx);			\
 }
 
 struct _CameraPrivateCore {
