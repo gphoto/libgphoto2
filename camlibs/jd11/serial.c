@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <gphoto2.h>
 #include <gphoto2-port.h>
