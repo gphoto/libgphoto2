@@ -2,16 +2,47 @@
 CameraAbilitiesList
 
 <!-- ##### SECTION Short_Description ##### -->
+A list containing supported cameras and the features of those
 
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+A #CameraAbilitiesList contains every camera model that is supported by gphoto2 together with the features of those camera models.
+</para>
 
+<para>
+Camera drivers will get in contact with a #CameraAbilitiesList when the #CameraLibraryAbilitiesFunc is called.
+</para>
+
+<para>
+Frontends will use the #CameraAbilitiesList as an entry point to gphoto2. In 
+order to set up a #Camera, you need to call #gp_camera_set_abilities. The
+#CameraAbilities you pass to that function can be retreived from a
+#CameraAbilitiesList.
+  <example>
+    <title>Using the #CameraAbilitiesList</title>
+    <programlisting>
+      #CameraAbilitiesList *list;
+      #CameraAbilities abilities;
+      int n;
+
+      /* Create a new list */
+      #gp_abilities_list_new (&amp;list);
+
+      /* Scan the system for camera drivers */
+      #gp_abilities_list_load (list);
+
+      /* Retreive the abilities of a specific model */
+      n = #gp_abilities_list_lookup_model (list, "HP PhotoSmart C30");
+      #gp_abilities_list_get_abilities (list, n, &amp;abilities);
+      #gp_abilities_list_free (list);
+    </programlisting>
+  </example>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+#CameraLibraryAbilitiesFunc
 </para>
 
 <!-- ##### ENUM CameraDriverStatus ##### -->
