@@ -190,7 +190,7 @@ AC_SUBST(camlibdir)
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers
 dnl ---------------------------------------------------------------------------
-camlibs='agfa-cl20 aox barbie canon casio digita dimera directory fuji gsmart300 iclick jamcam jd11 kodak konica largan mars minolta mustek panasonic pccam300 pccam600 polaroid ptp2 ricoh samsung sierra sipix smal sonydscf1 sonydscf55 soundvision spca50x sq905 stv0674 stv0680 sx330z toshiba enigma13'
+camlibs='adc65 agfa-cl20 aox barbie canon casio digita dimera directory fuji gsmart300 iclick jamcam jd11 kodak konica largan mars minolta mustek panasonic pccam300 pccam600 polaroid ptp2 ricoh samsung sierra sipix smal sonydscf1 sonydscf55 soundvision spca50x sq905 stv0674 stv0680 sx330z toshiba enigma13'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z- A-Z_`
@@ -202,13 +202,13 @@ AC_ARG_WITH(drivers,
   [                            drivers may be separated with commas; ]
   [                            'all' compiles all drivers; ]
   [                            possible drivers are: ]
-  [                            agfa-cl20, aox, barbie, canon, casio, digita, dimera,]
-  [                            directory, fuji, gsmart300, iclick, jamcam,] 
-  [                            jd11, kodak, konica, mustek, largan, mars,]
-  [                            minolta, panasonic, pccam300, pccam600,]
-  [                            polaroid, ptp2, ricoh, samsung, smal,]
-  [                            sierra, sipix, sonydscf1, sonydscf55, enigma13,]
-  [                            soundvision, spca50x, sq905, stv0680, sx330z ],
+  [                            adcs65, agfa-cl20, aox, barbie, canon, casio,]
+  [                            digita, dimera, directory, enigma13, fuji, gsmart300,] 
+  [                            iclick, jamcam, jd11, kodak, konica, largan,]
+  [                            mars, minolta, mustek, panasonic, pccam300,]
+  [                            pccam600, polaroid, ptp2, ricoh, samsung, sierra,]
+  [                            smal, sipix, sonydscf1, sonydscf55, soundvision,]
+  [                            spca50x, sq905, stv0674, stv0680, sx330z, toshiba],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
@@ -377,6 +377,7 @@ AC_OUTPUT([
 README
 Makefile
 camlibs/Makefile
+camlibs/adc65/Makefile
 camlibs/agfa-cl20/Makefile
 camlibs/aox/Makefile
 camlibs/barbie/Makefile
