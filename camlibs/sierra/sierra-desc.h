@@ -129,8 +129,9 @@ typedef struct CameraDesc {
 	const char * const manual;
 } CameraDescType;
 
+extern const CameraDescType sierra_default_cam_desc;
+extern const CameraDescType oly3040_cam_desc;
 extern const CameraDescType cp880_cam_desc;
 extern const CameraDescType cp995_cam_desc;
-extern const CameraDescType oly3040_cam_desc;
 
 #endif /* __SIERRA_DESC_H__ */

@@ -572,4 +572,20 @@ N_(
 "    PC and switch LCD to 'Off'."
 );
 
+static const char default_manual[] = 
+N_(
+"Default sierra driver:\n\n"
+"    This is the default sierra driver, it\n"
+"    should be capable of supporting the download\n"
+"    and browsing of pictures on your camera.\n\n"
+"    Camera configuration (or preferences)\n"
+"    settings are based on the Olympus 3040,\n"
+"    and are likely incomplete. If you verify\n"
+"    that the configuration settings are\n"
+"    complete for your camera, or can contribute\n"
+"    code to support complete configuration,\n"
+"    please contact gphoto-devel@gphoto.net\n"
+);
+
 const CameraDescType oly3040_cam_desc = { oly3040_desc, oly3040_manual };
+const CameraDescType sierra_default_cam_desc = { oly3040_desc, default_manual };

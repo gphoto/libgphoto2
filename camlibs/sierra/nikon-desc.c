@@ -609,6 +609,11 @@ N_(
 "        to set the shutter speed.\n"
 );
 
+/*
+ *  Note: use of the 995 has not been tested, it might not even be
+ *  possible to control the camera via the USB port since it reportedly
+ *  appears as a USB mass storage device.
+ */
 static const char cp995_manual[] = 
 N_(
 "Nikon Coolpix 995:\n"
