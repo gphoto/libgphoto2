@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <utime.h>
 
 #include <gphoto2-port-log.h>
 
@@ -162,6 +163,7 @@ int
 gp_file_save (CameraFile *file, const char *filename)
 {
         FILE *fp;
+	struct utimbuf u;
 
 	CHECK_NULL (file && filename);
 
@@ -169,6 +171,12 @@ gp_file_save (CameraFile *file, const char *filename)
                 return (GP_ERROR);
 	fwrite (file->data, (size_t)sizeof(char), (size_t)file->size, fp);
         fclose (fp);
+
+	if (file->mtime) {
+		u.actime = file->mtime;
+		u.modtime = file->mtime;
+		utime (filename, &u);
+	}
 
         return (GP_OK);
 }
