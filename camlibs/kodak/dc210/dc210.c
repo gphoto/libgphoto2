@@ -154,83 +154,144 @@ int camera_init (Camera *camera)
 
 int camera_exit (Camera *camera) 
 {
+    int ret;
     DC210Data * dd = (DC210Data *)camera->camlib_data;
 
-    kodak_dc210_close_camera (dd);
+    ret = kodak_dc210_close_camera (dd);
 
     if (dd->dev) {
-        if (gp_port_close(dd->dev) == GP_ERROR)
-                { /* camera did a bad, bad thing */ }
+	gp_port_close(dd->dev);
+        if (ret == GP_ERROR) { 
+	    gp_debug_printf (GP_DEBUG_LOW, "dc210", 
+			     "%s,%d: gp_port_close = %d", 
+			     __FILE__, __LINE__, ret);
+	    
+	}
         gp_port_free(dd->dev);
     }
     free(dd);
 
-    return (GP_OK);
+    return ret;
 }
 
 int camera_folder_list_folders (Camera *camera, const char *folder, 
 				CameraList *list) 
 {
-	return (GP_OK);
+    /* there is only one folder */
+    /* don't list */
+    gp_debug_printf (GP_DEBUG_LOW, "dc210", 
+		     "%s,%d: camera_folder_list_folders: unimplemented", 
+		     __FILE__, __LINE__);
+    
+    return (GP_ERROR);
 }
 
 int camera_folder_list_files (Camera *camera, const char *folder, 
 			      CameraList *list)
 {
-	return (GP_OK);
-}
-
-int camera_file_get (Camera *camera, const char *folder, const char *filename,
-		     CameraFileType type, CameraFile *file) 
-{
-    int numPicBefore;
-    int numPicAfter;
-    struct Image *im = NULL;
-
+    int ret;
     DC210Data * dd = (DC210Data *)camera->camlib_data;
 
-    if (type != GP_FILE_TYPE_PREVIEW)
-	    return (GP_ERROR_NOT_SUPPORTED);
-
-    /*
-     * 2001/08/25: Lutz Müller <urc8@rz.uni-karlsruhe.de>
-     * What's happening here? We are supposed to get the file or the preview,
-     * not capturing an image?!? That's totally screwed up... Please fix.
-     */
-
-    /* find out how many pictures are in the camera so we can
-       make sure a picture was taken later */
-    numPicBefore = kodak_dc210_number_of_pictures(dd);
-    
-    /* take a picture -- it returns the picture number taken */
-    numPicAfter = kodak_dc210_capture (dd);
-    
-    /* if a picture was taken then get the picture from the camera and
-       then delete it */
-    if (numPicBefore + 1 == numPicAfter)
-    {
-        im = kodak_dc210_get_picture (dd, numPicAfter, file);
-        kodak_dc210_delete_picture (dd, numPicAfter);
-    }
-    
-    return (GP_OK);
+    ret = kodak_dc210_get_directory_listing (dd, list);
+/*    gp_debug_printf (GP_DEBUG_LOW, "dc210", 
+			     "kodak_dc210_get_picture_info failed %d", ret);*/
+    return ret;
 }
+
+
+/*
+  Possible ops are:
+  -getPic 0;
+  -getThumbnail 1;
+  -delete 2;
+ */
+static int _camera_file_op (Camera *camera, const char *folder, 
+                            const char *filename, CameraFile *file, int op)
+{
+    int ret = GP_OK;
+    int count = 0;
+    int i;
+    CameraList * list;
+    const char * current;
+    DC210Data * dd = (DC210Data *)camera->camlib_data;
+
+    if (!dd) {
+	gp_debug_printf (GP_DEBUG_LOW, "dc210", "%s,%d: unable to get dd", 
+			 __FILE__, __LINE__);
+   	return GP_ERROR;
+    }
+
+    gp_list_new (&list);
+    ret = kodak_dc210_get_directory_listing (dd, list);
+    count = gp_list_count (list);
+
+    for (i = 0; i < count; i++) {
+        gp_list_get_name (list, i, &current);
+        if (current == NULL) {
+            /* ERROR */
+            ret = GP_ERROR;
+            break;
+        }
+
+        if (strcmp (current, filename) == 0) {
+            /* picture found */
+            switch (op) {
+            case 0:
+                ret = kodak_dc210_get_picture (dd, i, file);
+                break;
+            case 1:
+                ret = kodak_dc210_get_thumbnail (dd, i, file);                
+                break;
+            case 2:
+                ret = kodak_dc210_delete_picture (dd, i);
+                break;
+            default:
+		gp_debug_printf (GP_DEBUG_LOW, "dc210", 
+				 "%s,%d: unknown file op = %d", 
+				 __FILE__, __LINE__, op);
+                /* DOH ! */
+                break;
+            }
+	    /* we found our file */
+            break;
+        }
+    }
+    gp_list_free (list);
+    gp_debug_printf (GP_DEBUG_LOW, "dc210", "%s,%d: file op completed = %d", 
+		     __FILE__, __LINE__, ret);
+    return ret;
+}
+
+
+/* Get the file */
+int camera_file_get (Camera *camera, const char *folder, const char *filename, 
+		     CameraFileType type, CameraFile *file)
+{ 
+    switch (type) 
+    {
+    case GP_FILE_TYPE_NORMAL:
+	return _camera_file_op (camera, folder, filename, file, 0);
+	break;
+    case GP_FILE_TYPE_PREVIEW:
+	return _camera_file_op (camera, folder, filename, file, 1);
+	break;
+    default:
+	return GP_ERROR_NOT_SUPPORTED;
+    }
+}
+
 
 int camera_folder_put_file (Camera *camera, const char *folder, 
 			    CameraFile *file)
 {
-	return (GP_OK);
+    /* not supported */
+    return GP_ERROR;
 }
 
 int camera_file_delete (Camera *camera, const char *folder, 
 			const char *filename) 
 {
-    /* TODO */
-    int picNum = 0;
-    DC210Data * dd = (DC210Data *)camera->camlib_data;
-    
-    kodak_dc210_delete_picture (dd, picNum);
-    return (GP_OK);
+    return _camera_file_op (camera, folder, filename, NULL, 2);
 }
 
 #if 0
@@ -254,11 +315,30 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 
 int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
 {
-	// Capture image/preview/video and return it in 'file'. Don't store it
-	// anywhere on your camera! If your camera does store the image, 
-	// delete it manually here.
-
-	return (GP_OK);
+    int ret = GP_OK;
+    int numPicBefore;
+    int numPicAfter;
+    struct kodak_dc210_picture_info picInfo;    
+    DC210Data * dd = (DC210Data *)camera->camlib_data;
+    
+    /* find out how many pictures are in the camera so we can
+       make sure a picture was taken later */
+    numPicBefore = kodak_dc210_number_of_pictures(dd);
+    
+    /* take a picture -- it returns the picture number taken */
+    numPicAfter = kodak_dc210_capture (dd);
+    
+    /* if a picture was taken then get the picture from the camera and
+       then delete it */
+    if (numPicBefore + 1 == numPicAfter)
+    {
+	strcpy (path->folder, "/");
+	ret = kodak_dc210_get_picture_info (dd, numPicAfter, &picInfo);
+	strncpy (path->name, picInfo.fileName, 12);
+	path->name[12] = 0;
+    }
+    
+    return ret;
 }
 
 int camera_summary (Camera *camera, CameraText *summary) 

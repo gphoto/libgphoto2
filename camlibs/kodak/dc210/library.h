@@ -27,7 +27,9 @@
 #define DC_COMMAND_ACK           0xD1
 #define DC_CORRECT_PACKET        0xD2
 #define DC_COMMAND_NAK           0xE1
+#define DC_COMMAND_EXEC_ERROR    0xE2
 #define DC_ILLEGAL_PACKET        0xE3
+#define DC_CANCEL                0xE4
 #define DC_BUSY                  0xF0
   
 /* Kodak System Commands */
@@ -86,8 +88,13 @@ struct kodak_dc210_picture_info {
 int kodak_dc210_open_camera (DC210Data * dd);
 int kodak_dc210_close_camera (DC210Data * dd);
 
+int kodak_dc210_get_picture_info (DC210Data * dd,
+                                  int picNum,
+                                  struct kodak_dc210_picture_info *picInfo);
 int kodak_dc210_get_picture (DC210Data * dd, int picNum, CameraFile *file);
+int kodak_dc210_get_thumbnail (DC210Data * dd, int picNum, CameraFile *file);
 int kodak_dc210_number_of_pictures (DC210Data * dd);
+int kodak_dc210_get_directory_listing (DC210Data *dd, CameraList *list);
 int kodak_dc210_capture (DC210Data * dd);
 int kodak_dc210_delete_picture (DC210Data * dd, int picNum);
 

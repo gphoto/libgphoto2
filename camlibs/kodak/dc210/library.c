@@ -36,7 +36,9 @@
 static int kodak_dc210_read (DC210Data * dd, unsigned char *buf, int nbytes);
 static int kodak_dc210_write_byte (DC210Data * dd, char b);
 static unsigned char kodak_dc210_checksum(char *packet,int length);
-
+static int kodak_dc210_set_port_speed(DC210Data * dd, int speed);
+static int kodak_dc210_command_complete (DC210Data * dd);
+static int kodak_dc210_read_packet (DC210Data * dd, char *packet, int length);
 
 static int kodak_dc210_send_command (DC210Data * dd, char command, char arg1, char arg2, char arg3, char arg4)
 {
@@ -87,7 +89,7 @@ static int kodak_dc210_send_command (DC210Data * dd, char command, char arg1, ch
   tell the camera to change the port speed,
   then set it.
  */
-int kodak_dc210_set_port_speed(DC210Data * dd, int speed)
+static int kodak_dc210_set_port_speed(DC210Data * dd, int speed)
 {
     int success = 0;
     int arg1, arg2;
@@ -139,7 +141,7 @@ int kodak_dc210_set_port_speed(DC210Data * dd, int speed)
 }
 
 
-int kodak_dc210_command_complete (DC210Data * dd)
+static int kodak_dc210_command_complete (DC210Data * dd)
 {
     int status = DC_BUSY;
     int success = TRUE;
@@ -188,7 +190,7 @@ static int kodak_dc210_write_byte (DC210Data * dd, char b )
     return (gp_port_read(dd->dev, &b, 1));
 }
 
-int kodak_dc210_read_packet (DC210Data * dd, char *packet, int length)
+static int kodak_dc210_read_packet (DC210Data * dd, char *packet, int length)
 {
     int success = TRUE;
     unsigned char sent_checksum;
@@ -311,7 +313,7 @@ int kodak_dc210_capture(DC210Data * dd)
     return kodak_dc210_number_of_pictures(dd);
 }
 
-static int kodak_dc210_get_picture_info (DC210Data * dd,
+int kodak_dc210_get_picture_info (DC210Data * dd,
                                   int picNum,
                                   struct kodak_dc210_picture_info *picInfo)
 {
@@ -467,7 +469,8 @@ int kodak_dc210_get_thumbnail (DC210Data * dd, int picNum, CameraFile *file)
             }
 
 	    gp_file_append (file, imData, fileSize + 54);
-	    gp_file_set_type (file, "image/bmp");
+	    gp_file_set_mime_type (file, GP_MIME_BMP);
+	    gp_file_set_type (file, GP_FILE_TYPE_PREVIEW);
 	    strncpy(file->name, picInfo.fileName, 12);
 	    file->name[12] = 0;
         }
@@ -498,6 +501,7 @@ int kodak_dc210_get_picture (DC210Data * dd, int picNum, CameraFile *file)
     int numBytes;
     struct kodak_dc210_picture_info picInfo;
     char *picData;
+    char name [13];
     
     /* get information (size, name, etc) about the picture */
     kodak_dc210_get_picture_info (dd, picNum, &picInfo);
@@ -532,9 +536,11 @@ int kodak_dc210_get_picture (DC210Data * dd, int picNum, CameraFile *file)
     fprintf(stderr,"%d/%d\n",numRead,fileSize);
     kodak_dc210_command_complete (dd);
 
-    strcpy(file->type, "image/jpeg");
-    strncpy(file->name, picInfo.fileName, 12);
-    file->name[12] = 0;
+    gp_file_set_mime_type (file, GP_MIME_JPEG);
+    gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
+    strncpy (name, picInfo.fileName, 12);
+    name[12] = 0;
+    gp_file_set_name (file, name);
 
     return GP_OK;
 }
@@ -546,6 +552,34 @@ int kodak_dc210_delete_picture (DC210Data * dd, int picNum)
     kodak_dc210_send_command (dd,DC_ERASE_IMAGE_IN_CARD,0x00,(char)picNum,0x00,0x00);
     kodak_dc210_command_complete (dd);
     return (1);
+}
+
+/*
+  By default all image on DC210 are in \DCIMAGES. So well list 
+  all the pictures as if they where on a flat file system.
+ */
+int kodak_dc210_get_directory_listing (DC210Data *dd, CameraList *list)
+{
+    int ret = GP_OK;
+    int num, i;
+    struct kodak_dc210_picture_info picInfo;
+    char fileName [13];
+
+    num = kodak_dc210_number_of_pictures (dd);
+    for (i = 0; i < num; i++) {
+        ret = kodak_dc210_get_picture_info (dd, i, &picInfo);
+        if (ret == GP_OK) {
+            strncpy (fileName, picInfo.fileName, 12);
+            fileName[12] = 0;
+            gp_list_append(list, fileName, NULL);
+        }
+	else {
+	    gp_debug_printf (GP_DEBUG_LOW, "dc210", 
+			     "kodak_dc210_get_picture_info failed %d", ret);
+	    break;
+	}
+    }
+    return ret;
 }
 
 
