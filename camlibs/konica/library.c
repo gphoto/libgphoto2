@@ -224,6 +224,7 @@ camera_init (Camera* camera, CameraInit* init)
 	/* In case we got a speed not 0, let's first 	*/
 	/* test if we do already have the given speed.	*/
 	if (init->port.speed != 0) {
+		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Quick test for given speed %i.\n", init->port.speed);
 		device_settings.serial.speed = init->port.speed;
 		gpio_set_settings (device, device_settings);
 		if (k_init (device) == GP_OK) return (GP_OK);
@@ -246,9 +247,8 @@ camera_init (Camera* camera, CameraInit* init)
 
 	}
 	if (i == 10) {
-		gp_frontend_message (camera, "Could not communicate with camera!");
 		gpio_free (device);
-		return (GP_ERROR);
+		return (GP_ERROR_IO);
 	}
 
 	/* ... and what speed it is able to handle.	*/
@@ -280,7 +280,7 @@ camera_init (Camera* camera, CameraInit* init)
 		for (i = 9; i >= 0; i--) if (bit_rate_supported[i]) break;
 		if (i < 0) {
 			gpio_free (device);
-			return (GP_ERROR);
+			return (GP_ERROR_NOT_SUPPORTED);
 		}
 		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Setting speed to %i.\n", bit_rate[i]);
 		if ((result = k_set_io_capability (device, bit_rate[i], TRUE, FALSE, FALSE, FALSE, FALSE)) != GP_OK) {
@@ -324,22 +324,21 @@ camera_init (Camera* camera, CameraInit* init)
 			 (speed !=  38400) &&
 			 (speed !=  57600) &&
 			 (speed != 115200))) {
-			gp_frontend_message (camera, "Unsupported speed!");
 			gpio_free (device);
-			return (GP_ERROR);
+			return (GP_ERROR_NOT_SUPPORTED);
 		}
 		/* Now we can set the given speed. */
 		if ((result = k_set_io_capability (device, init->port.speed, TRUE, FALSE, FALSE, FALSE, FALSE)) != GP_OK) {
 			gpio_free (device);
-			return (GP_ERROR);
+			return (result);
 		}
 		if ((result = k_exit (device)) != GP_OK) {
 			gpio_free (device);
-			return (GP_ERROR);
+			return (result);
 		}
 		if ((result = k_init (device)) != GP_OK) {
 			gpio_free (device);
-			return (GP_ERROR);
+			return (result);
 		}
 
 		/* We were successful! */
