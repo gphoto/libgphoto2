@@ -312,7 +312,7 @@
               <filename>/etc/hotplug/usb/usbcam</filename>
               script for you.
               Example scripts are found in 
-              <filename class="directory">packages/linux-hotplug</filename> 
+              <filename class="directory">packaging/linux-hotplug</filename> 
               in the source tree and in 
               <filename class="directory">linux-hotplug/</filename>
               after installation and in the doc dir of the binary
