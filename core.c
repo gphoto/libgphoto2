@@ -13,7 +13,6 @@
 #endif
 
 #include "core.h"
-#include "cache.h"
 #include "library.h"
 #include "settings.h"
 
@@ -58,12 +57,10 @@ int gp_init () {
 
 #ifdef DEBUG
 	printf(" > Debug Mode On < \n");
-	printf("core: Creating $HOME/.gphoto and $HOME/.gphoto/cache\n");
+	printf("core: Creating $HOME/.gphoto\n");
 #endif
 	/* Make sure the directories are created */
 	sprintf(buf, "%s/.gphoto", getenv("HOME"));
-	(void)mkdir(buf, 0700);
-	sprintf(buf, "%s/.gphoto/cache", getenv("HOME"));
 	(void)mkdir(buf, 0700);
 
 #ifdef DEBUG
@@ -107,15 +104,12 @@ int gp_init () {
 			printf("core:\tNone\n");
 	}
 #endif
-	cache_delete(-1, -1, -1); /* wipe all the cache clean */
 	if (gp_get_setting("camera", buf) == GP_OK)
 		return (load_library(buf));
 	return (GP_OK);
 }
 
 int gp_exit () {
-
-	cache_delete(-1, -1, -1); /* wipe all the cache clean */
 	
 	gp_camera_exit();
 	return (GP_OK);
@@ -247,42 +241,24 @@ int gp_file_get (int file_number, CameraFile *file) {
 	if (glob_c.file_get == NULL)
 		return (GP_ERROR);
 
-	if (cache_exists(glob_camera_number, glob_folder_number, file_number) == GP_OK)
-		return (cache_get(glob_camera_number, glob_folder_number, file_number, file));
-
 	gp_file_clean(file);
-	glob_c.file_get(file_number, file);
-	cache_put(glob_camera_number, glob_folder_number, file_number, file);
-
-	return (GP_OK);
+	return (glob_c.file_get(file_number, file))
 }
 
 int gp_file_get_preview (int file_number, CameraFile *preview) {
 
 	if (glob_c.file_get_preview == NULL)
 		return (GP_ERROR);
-	if (cache_exists(glob_camera_number, glob_folder_number, file_number)==GP_OK)
-		return (cache_get(glob_camera_number, glob_folder_number, file_number, preview));
 
 	gp_file_clean(preview);
-	glob_c.file_get_preview(file_number, preview);
-
-	cache_put(glob_camera_number, glob_folder_number, file_number, preview);
-
-	return(GP_OK);
+	return (glob_c.file_get_preview(file_number, preview));
 }
 
 int gp_file_delete (int file_number) {
 
-	/*
 	if (glob_c.file_delete == NULL)
 		return (GP_ERROR);
-	glob_c.file_delete(file_number)
-	Remove from the cache
-	update cache itself (picture number shifting)
-	*/
-
-	return(GP_OK);
+	return (glob_c.file_delete(file_number));
 }
 
 int gp_file_lock (int file_number) {
@@ -293,81 +269,6 @@ int gp_file_lock (int file_number) {
 int gp_file_unlock (int file_number) {
 
 	return (GP_ERROR);
-}
-
-int gp_file_save_to_disk (CameraFile *file, char *filename) {
-	
-	FILE *fp;
-
-	if ((fp = fopen(filename, "w"))==NULL)
-		return (GP_ERROR);
-	fwrite(file->data, (size_t)sizeof(char), (size_t)file->size, fp);
-	fclose(fp);
-
-	return (GP_OK);
-}
-
-int gp_file_save (int file_number, char *filename) {
-
-	/*
-	write image data to disk as "filename"
-	*/
-
-	CameraFile *f;
-
-	f = gp_file_new();
-	if (cache_exists(glob_camera_number,glob_folder_number,file_number)
-	    == GP_ERROR)
-		return (GP_ERROR);
-	cache_get(glob_camera_number,glob_folder_number,file_number,f);
-
-	return (gp_file_save_to_disk(f, filename));
-}
-
-
-CameraFile* gp_file_new () {
-
-	/*
-	Allocates a new CameraFile
-	*/
-
-	CameraFile *f;
-
-	f = (CameraFile*)malloc(sizeof(CameraFile));
-	f->type = GP_FILE_UNKNOWN;
-	f->name = NULL;
-	f->data = NULL;
-	f->size = 0;
-
-	return(f);
-}
-
-int gp_file_clean (CameraFile *file) {
-
-	/*
-	frees a CameraFile's components
-	*/
-
-	if (file->name) 
-		free(file->name);
-	if (file->data)
-		free(file->data);
-	file->name = NULL;
-	file->data = NULL;
-	file->size = 0;
-	return(GP_OK);
-}
-
-
-int gp_file_free (CameraFile *file) {
-
-	/* 
-	frees a CameraFile from memory
-	*/
-
-	gp_file_clean(file);
-	free(file);
-	return(GP_OK);
 }
 
 
@@ -418,75 +319,6 @@ int gp_about (char *about) {
 		return (GP_ERROR);
 
 	return(glob_c.about(about));
-}
-
-/* Utility (helper) functions for Front-ends
-   ---------------------------------------------------------------------------- */
-
-/* Image previews */
-int gp_image_preview_rotate (int file_number, int degrees, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-int gp_image_preview_scale (int file_number, int width, int height, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-int gp_image_preview_flip_h (int file_number, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-int gp_image_preview_flip_v (int file_number, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-/* Full-size images */
-int gp_image_rotate (int file_number, int degrees, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-int gp_image_scale (int file_number, int width, int height, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-int gp_image_flip_h (int file_number, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-int gp_image_flip_v (int file_number, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-
-/* Utility (helper) functions for libraries
-   ---------------------------------------------------------------------------- */
-
-int gp_file_image_rotate (CameraFile *old_file, int degrees, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-int gp_file_image_scale (CameraFile *old_file, int width, int height, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-int gp_file_image_flip_h (CameraFile *old_file, CameraFile *new_file) {
-
-	return(GP_OK);
-}
-
-int gp_file_image_flip_v (CameraFile *old_file, CameraFile *new_file) {
-
-	return(GP_OK);
 }
 
 /* Configuration file functions (for front-ends and libraries)
