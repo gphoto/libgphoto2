@@ -113,7 +113,7 @@ int largan_open (Camera * camera)
 int largan_get_num_pict (Camera * camera)
 {
 	int ret;
-	char reply, code;
+	unsigned char reply, code;
 
 	ret = largan_send_command (camera, LARGAN_NUM_PICT_CMD, 0, 0);
 	if (ret < 0) {
