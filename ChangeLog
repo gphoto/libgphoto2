@@ -1,3 +1,12 @@
+2001-10-27 Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* camlibs/canon/canon.c: rmdir/mkdir support
+	* camlibs/canon/psa50.c (psa50_directory_operations): Consistently
+	  return a gphoto2 error code.
+	* camlibs/directory: Add rmdir/mkdir support
+	* libgphoto2/gphoto2-camera.[c,h]
+	* libgphoto2/gphoto2-filesys.[c,h]: Add rmdir/mkdir support
+
 2001-10-26 Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* Makefile.am: moved spec file to packaging/rpm/

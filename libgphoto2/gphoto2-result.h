@@ -37,8 +37,8 @@
 /**
  * GP_ERROR_FILE_EXISTS:
  *
- * An operation failed because a file existed. This error is reported when the
- * user tries to create a file that already exists.
+ * An operation failed because a file existed. This error is reported for
+ * example when the user tries to create a file that already exists.
  **/
 #define GP_ERROR_FILE_EXISTS         -103
 
@@ -70,8 +70,8 @@
 /**
  * GP_ERROR_DIRECTORY_EXISTS:
  *
- * The specified directory already exists. This error is reported when
- * the user wants to create a directory that already exists.
+ * The specified directory already exists. This error is reported for example 
+ * when the user wants to create a directory that already exists.
  **/
 #define GP_ERROR_DIRECTORY_EXISTS    -109
 

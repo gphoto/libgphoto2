@@ -553,7 +553,7 @@ int camera_init (Camera *camera) {
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 				      delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
+	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL, NULL,
 				        NULL, camera);
         
 	/* Connect with selected speed */

@@ -1184,7 +1184,7 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 {
 	Camera *camera = data;
 	char destpath[300], destname[300], dir[300], dcf_root_dir[10];
-	int j, dirnum = 0;
+	int j, dirnum = 0, r;
 	char buf[10];
 	CameraAbilities a;
 
@@ -1262,14 +1262,16 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 				 destpath, destname);
 	}
 
-	if (!psa50_directory_operations (camera, dcf_root_dir, DIR_CREATE)) {
+	r = psa50_directory_operations (camera, dcf_root_dir, DIR_CREATE);
+	if (r < 0) {
 		gp_camera_message (camera, "could not create \\DCIM directory");
-		return GP_ERROR;
+		return (r);
 	}
 
-	if (!psa50_directory_operations (camera, destpath, DIR_CREATE)) {
+	r = psa50_directory_operations (camera, destpath, DIR_CREATE);
+	if (r < 0) {
 		gp_camera_message (camera, "could not create destination directory");
-		return GP_ERROR;
+		return (r);
 	}
 
 
@@ -1478,6 +1480,46 @@ get_info_func (CameraFilesystem * fs, const char *folder, const char *filename,
 	return GP_OK;
 }
 
+static int
+make_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
+	       void *data)
+{
+	Camera *camera = data;
+	char path[2048];
+	int r;
+
+	strncpy (path, folder, sizeof (path));
+	if (strlen (folder) > 1)
+		strncat (path, "/", sizeof (path));
+	strncat (path, name, sizeof (path));
+
+	r = psa50_directory_operations (camera, path, DIR_CREATE);
+	if (r < 0)
+		return (r);
+
+	return (GP_OK);
+}
+
+static int
+remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
+		 void *data)
+{
+	Camera *camera = data;
+	char path[2048];
+	int r;
+
+	strncpy (path, folder, sizeof (path));
+	if (strlen (folder) > 1)
+		strncat (path, "/", sizeof (path));
+	strncat (path, name, sizeof (path));
+
+	r = psa50_directory_operations (camera, path, DIR_REMOVE);
+	if (r < 0)
+		return (r);
+								
+	return (GP_OK);
+}
+
 /****************************************************************************/
 
 /**
@@ -1504,8 +1546,10 @@ camera_init (Camera *camera)
 	/* Set up the CameraFilesystem */
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
-	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL, camera);
+	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
+				      delete_file_func, camera);
+	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
+					make_dir_func, remove_dir_func, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)

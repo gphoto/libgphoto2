@@ -132,13 +132,22 @@ typedef int (*CameraFilesystemPutFileFunc)   (CameraFilesystem *fs,
 					      CameraFile *file, void *data);
 typedef int (*CameraFilesystemDeleteAllFunc) (CameraFilesystem *fs,
 					      const char *folder, void *data);
+typedef int (*CameraFilesystemDirFunc)       (CameraFilesystem *fs,
+					      const char *folder,
+					      const char *name, void *data);
 int gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
-				 CameraFilesystemPutFileFunc put_file_func,
-				 CameraFilesystemDeleteAllFunc delete_all_func,
-				 void *data);
+				  CameraFilesystemPutFileFunc put_file_func,
+				  CameraFilesystemDeleteAllFunc delete_all_func,
+				  CameraFilesystemDirFunc make_dir_func,
+				  CameraFilesystemDirFunc remove_dir_func,
+				  void *data);
 int gp_filesystem_put_file   (CameraFilesystem *fs, const char *folder,
 			      CameraFile *file);
 int gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder);
+int gp_filesystem_make_dir   (CameraFilesystem *fs, const char *folder,
+			      const char *name);
+int gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
+			      const char *name);
 
 /* For debugging */
 int gp_filesystem_dump         (CameraFilesystem *fs);

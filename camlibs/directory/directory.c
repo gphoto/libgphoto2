@@ -318,6 +318,34 @@ camera_about (Camera *camera, CameraText *about)
         return (GP_OK);
 }
 
+static int
+make_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
+	       void *data)
+{
+	char path[2048];
+
+	strncpy (path, folder, sizeof (path));
+	if (strlen (folder) > 1)
+		strncat (path, "/", sizeof (path));
+	strncat (path, name, sizeof (path));
+
+	return (GP_SYSTEM_MKDIR (path));
+}
+
+static int
+remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name,
+		 void *data)
+{
+	char path[2048];
+
+	strncpy (path, folder, sizeof (path));
+	if (strlen (folder) > 1)
+		strncat (path, "/", sizeof (path));
+	strncat (path, name, sizeof (path));
+
+	return (GP_SYSTEM_RMDIR (path));
+}
+
 int
 camera_init (Camera *camera)
 {
@@ -337,6 +365,8 @@ camera_init (Camera *camera)
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func,
 				      set_info_func, NULL);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL, NULL);
+	gp_filesystem_set_folder_funcs (camera->fs, NULL, NULL,
+					make_dir_func, remove_dir_func, NULL);
 
         return (GP_OK);
 }

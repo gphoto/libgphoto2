@@ -448,7 +448,7 @@ camera_init (Camera *camera)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, NULL,
 				      camera);
 	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func,
-					camera);
+					NULL, NULL, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)

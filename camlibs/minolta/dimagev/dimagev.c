@@ -496,7 +496,7 @@ int camera_init (Camera *camera)
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 				      delete_file_func, camera);
 	gp_filesystem_set_folder_funcs (camera->fs, put_file_func,
-					delete_all_func, camera);
+					delete_all_func, NULL, NULL, camera);
 
         return GP_OK;
 }

@@ -679,7 +679,7 @@ int camera_init (Camera *camera)
 	CHECK (gp_filesystem_set_file_funcs (camera->fs,
 		get_file_func, delete_file_func, camera));
 	CHECK (gp_filesystem_set_folder_funcs (camera->fs,
-		put_file_func, NULL, camera));
+		put_file_func, NULL, NULL, NULL, camera));
 
 	/* Connect with the selected speed */
         return dsc2_connect(camera, selected_speed);

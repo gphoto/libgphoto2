@@ -1025,7 +1025,7 @@ psa50_off (Camera *camera)
  *
  */
 int
-psa50_directory_operations (Camera *camera, char *path, int action)
+psa50_directory_operations (Camera *camera, const char *path, int action)
 {
 	unsigned char *msg;
 	int len, canon_usb_funct;
@@ -1043,7 +1043,7 @@ psa50_directory_operations (Camera *camera, char *path, int action)
 		default:
 			gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_directory_operations: "
 					 "Bad operation specified : %i\n", action);
-			return GP_ERROR;
+			return GP_ERROR_BAD_PARAMETERS;
 			break;
 	}
 
@@ -1065,7 +1065,7 @@ psa50_directory_operations (Camera *camera, char *path, int action)
 
 	if (!msg) {
 		psa50_error_type (camera);
-		return 0;
+		return GP_ERROR;
 	}
 
 	if (msg[0] != 0x00) {
@@ -1073,10 +1073,10 @@ psa50_directory_operations (Camera *camera, char *path, int action)
 				 "Could not %s directory %s",
 				 canon_usb_funct ==
 				 CANON_USB_FUNCTION_MKDIR ? "create" : "remove", path);
-		return 0;
+		return GP_ERROR;
 	}
 
-	return 1;
+	return GP_OK;
 }
 
 /**

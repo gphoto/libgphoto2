@@ -1387,11 +1387,7 @@ int camera_init (Camera *camera)
 	CHECK_STOP_FREE (camera, gp_filesystem_set_file_funcs (camera->fs,
 				get_file_func, delete_file_func, camera));
 	CHECK_STOP_FREE (camera, gp_filesystem_set_folder_funcs (camera->fs,
-				NULL, delete_all_func, camera));
-
-        gp_debug_printf (GP_DEBUG_LOW, "sierra", "************************");
-        gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init done ***");
-        gp_debug_printf (GP_DEBUG_LOW, "sierra", "************************"); 
+				NULL, delete_all_func, NULL, NULL, camera));
 
         return (camera_stop (camera));
 }

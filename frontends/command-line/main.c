@@ -124,6 +124,8 @@ OPTION_CALLBACK(capture_sound);
 OPTION_CALLBACK(summary);
 OPTION_CALLBACK(manual);
 OPTION_CALLBACK(about);
+OPTION_CALLBACK(make_dir);
+OPTION_CALLBACK(remove_dir);
 
 /* 2) Add an entry in the option table                          */
 /*    ----------------------------------------------------------------- */
@@ -161,6 +163,8 @@ Option option[] = {
 {"R", "recurse",        "",             "Recursively descend through folders",recurse,  0},
 {"l", "list-folders",   "",             "List folders in folder",       list_folders,   0},
 {"L", "list-files",     "",             "List files in folder",         list_files,     0},
+{"m", "mkdir", N_("name"), N_("Create a directory"), make_dir, 0},
+{"r", "rmdir", N_("name"), N_("Remove a directory"), remove_dir, 0},
 {"n", "num-images",   "",             "Display number of pictures",   num_pictures,   0},
 {"p", "get-image",    "range",        "Get pictures given in range",  get_picture,    0},
 {"P", "get-all-images","",            "Get all pictures from folder", get_all_pictures,0},
@@ -863,6 +867,26 @@ OPTION_CALLBACK (upload_picture)
         gp_file_unref (file);
 
         return (res);
+}
+
+OPTION_CALLBACK (make_dir)
+{
+	CHECK_RESULT (set_globals ());
+
+	CHECK_RESULT (gp_camera_folder_make_dir (glob_camera,
+						 glob_folder, arg));
+
+	return (GP_OK);
+}
+
+OPTION_CALLBACK (remove_dir)
+{
+	CHECK_RESULT (set_globals ());
+
+	CHECK_RESULT (gp_camera_folder_remove_dir (glob_camera,
+						   glob_folder, arg));
+
+	return (GP_OK);
 }
 
 int

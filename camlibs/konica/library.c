@@ -192,8 +192,7 @@ camera_abilities (CameraAbilitiesList* list)
                                GP_OPERATION_CAPTURE_PREVIEW;
                 a.file_operations = GP_FILE_OPERATION_DELETE |
                                     GP_FILE_OPERATION_PREVIEW;
-                a.folder_operations = GP_FOLDER_OPERATION_CONFIG |
-                                      GP_FOLDER_OPERATION_DELETE_ALL;
+                a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
                 gp_abilities_list_append (list, a);
         }
 
@@ -1276,7 +1275,7 @@ camera_init (Camera* camera)
         gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 				      delete_file_func, camera);
 	gp_filesystem_set_folder_funcs (camera->fs, NULL, delete_all_func,
-					camera);
+					NULL, NULL, camera);
 
         return (GP_OK);
 }

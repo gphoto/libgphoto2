@@ -196,7 +196,7 @@ int psa50_end(Camera *camera);
 int psa50_off(Camera *camera);
 time_t psa50_get_time(Camera *camera);
 int psa50_set_time(Camera *camera);
-int psa50_directory_operations(Camera *camera, char *path, int action);
+int psa50_directory_operations(Camera *camera, const char *path, int action);
 int psa50_get_owner_name(Camera *camera);
 int psa50_set_owner_name(Camera *camera, const char *name);
 void psa50_error_type(Camera *camera);

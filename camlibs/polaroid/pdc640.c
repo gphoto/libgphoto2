@@ -743,17 +743,17 @@ camera_init (Camera *camera)
 	CHECK_RESULT (gp_filesystem_set_info_funcs (camera->fs, get_info_func,
 						    NULL, camera));
 	CHECK_RESULT (gp_filesystem_set_folder_funcs (camera->fs, NULL,
-						delete_all_func, camera));
+					delete_all_func, NULL, NULL, camera));
 	CHECK_RESULT (gp_filesystem_set_file_funcs (camera->fs, get_file_func,
 						delete_file_func, camera));
 
 	/* Open the port */
-	CHECK_RESULT (gp_port_settings_get (camera->port, &settings));
+	CHECK_RESULT (gp_port_get_settings (camera->port, &settings));
 	settings.serial.speed = 9600;
-	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
+	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 
 	/* Start with a low timeout (so we don't have to wait if already initialized) */
-	CHECK_RESULT (gp_port_timeout_set (camera->port, 1000));
+	CHECK_RESULT (gp_port_set_timeout (camera->port, 1000));
 
 	/* Is the camera at 9600? */
 	result = pdc640_ping_low (camera->port);
@@ -762,13 +762,13 @@ camera_init (Camera *camera)
 
 	/* Switch to 115200 */
 	settings.serial.speed = 115200;
-	CHECK_RESULT (gp_port_settings_set (camera->port, settings));
+	CHECK_RESULT (gp_port_set_settings (camera->port, settings));
 
 	/* Is the camera at 115200? */
 	CHECK_RESULT (pdc640_ping_high (camera->port));
 
 	/* Switch to a higher timeout */
-	CHECK_RESULT (gp_port_timeout_set (camera->port, 5000));
+	CHECK_RESULT (gp_port_set_timeout (camera->port, 5000));
 
 	return (GP_OK);
 }

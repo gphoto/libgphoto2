@@ -91,6 +91,8 @@ struct _CameraFilesystem {
 
 	CameraFilesystemPutFileFunc put_file_func;
 	CameraFilesystemDeleteAllFunc delete_all_func;
+	CameraFilesystemDirFunc make_dir_func;
+	CameraFilesystemDirFunc remove_dir_func;
 	void *folder_data;
 };
 
@@ -202,7 +204,7 @@ append_folder (CameraFilesystem *fs, const char *folder)
         }
 
         /* Make sure the parent exist. If not, create it. */
-        strcpy (buf, folder);
+	strncpy (buf, folder, sizeof (buf));
         for (x = strlen (buf) - 1; x >= 0; x--)
                 if (buf[x] == '/')
                         break;
@@ -792,6 +794,81 @@ gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder,
 }
 
 /**
+ * gp_filesystem_make_dir:
+ * @fs: a #CameraFilesystem
+ * @folder: the folder in which the directory should be created
+ * @name: the name of the directory to be created
+ *
+ * Creates a new directory called @name in given @folder.
+ *
+ * Return value: a gphoto2 error code
+ **/
+int
+gp_filesystem_make_dir (CameraFilesystem *fs, const char *folder,
+			const char *name)
+{
+	int x;
+	char path[2048];
+
+	CHECK_NULL (fs && folder && name);
+
+	if (!fs->make_dir_func)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	/* Search the folder */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+
+	strncpy (path, folder, sizeof (path));
+	if (strlen (folder) > 1)
+		strncat (path, "/", sizeof (path));
+	strncat (path, name, sizeof (path));
+
+	/* Create the directory */
+	CHECK_RESULT (fs->make_dir_func (fs, folder, name, fs->folder_data));
+	CHECK_RESULT (append_folder (fs, path));
+
+	return (GP_OK);
+}
+
+int
+gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
+			  const char *name)
+{
+	int x;
+	char path[2048];
+	CameraList list;
+
+	CHECK_NULL (fs && folder && name);
+
+	if (!fs->remove_dir_func)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	/*
+	 * Make sure there are neither files nor folders in the folder
+	 * that is to be removed.
+	 */
+	strncpy (path, folder, sizeof (path));
+	if (strlen (folder) > 1)
+		strncat (path, "/", sizeof (path));
+	strncat (path, name, sizeof (path));
+	CHECK_RESULT (gp_filesystem_list_folders (fs, path, &list));
+	if (gp_list_count (&list))
+		return (GP_ERROR_DIRECTORY_EXISTS);
+	CHECK_RESULT (gp_filesystem_list_files (fs, path, &list));
+	if (gp_list_count (&list))
+		return (GP_ERROR_FILE_EXISTS);
+
+	/* Search the folder */
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+
+	/* Remove the directory */
+	CHECK_RESULT (fs->remove_dir_func (fs, folder, name, fs->folder_data));
+	CHECK_RESULT (delete_folder (fs, x));
+
+	return (GP_OK);
+}
+
+/**
  * gp_filesystem_put_file:
  * @fs: a #CameraFilesystem
  * @folder: the folder where to put the @file into
@@ -1047,13 +1124,17 @@ gp_filesystem_set_file_funcs (CameraFilesystem *fs,
 int
 gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
 				CameraFilesystemPutFileFunc put_file_func,
-				CameraFilesystemDeleteAllFunc del_all_func,
+				CameraFilesystemDeleteAllFunc delete_all_func,
+				CameraFilesystemDirFunc make_dir_func,
+				CameraFilesystemDirFunc remove_dir_func,
 				void *data)
 {
 	CHECK_NULL (fs);
 
 	fs->put_file_func = put_file_func;
-	fs->delete_all_func = del_all_func;
+	fs->delete_all_func = delete_all_func;
+	fs->make_dir_func = make_dir_func;
+	fs->remove_dir_func = remove_dir_func;
 	fs->folder_data = data;
 
 	return (GP_OK);
