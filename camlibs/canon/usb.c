@@ -131,6 +131,13 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 		else
 			return GP_ERROR_CORRUPTED_DATA;
 	}
+	/* Get maximum download transfer length from camera, if
+	 * provided */
+	camera->pl->xfer_length = le32atoh (msg+0x4c);
+	if ( camera->pl->xfer_length < 0 )
+		camera->pl->xfer_length = USB_BULK_READ_SIZE; /* Use default */
+	GP_DEBUG ("canon_usb_camera_init() set transfer length to 0x%x",
+		  camera->pl->xfer_length );
 
 	if (camstat == 'A') {
 		/* read another 0x50 bytes */
@@ -1280,7 +1287,7 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
 			 int payload_length, int display_status, GPContext *context)
 {
 	int bytes_read;
-	unsigned int total_data_size = 0, bytes_received = 0, read_bytes = USB_BULK_READ_SIZE;
+	unsigned int total_data_size = 0, bytes_received = 0, read_bytes = camera->pl->xfer_length;
 	unsigned char *lpacket;		/* "length packet" */
 	unsigned int id = 0;
 
@@ -1331,9 +1338,9 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
 
 	bytes_received = 0;
 	while (bytes_received < total_data_size) {
-		if ((total_data_size - bytes_received) > USB_BULK_READ_SIZE )
+		if ((total_data_size - bytes_received) > camera->pl->xfer_length )
 			/* Limit max transfer length */
-			read_bytes = USB_BULK_READ_SIZE;
+			read_bytes = camera->pl->xfer_length;
 		else if ((total_data_size - bytes_received) > 0x040 )
 			/* Round longer transfers down to nearest 0x40 */
 			read_bytes = (total_data_size - bytes_received) / 0x40 * 0x40;
@@ -1341,7 +1348,7 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
 			/* Final transfer; use true length */
 			read_bytes = (total_data_size - bytes_received);
 
-		GP_DEBUG ("canon_usb_long_dialogue: calling gp_port_read(), total_data_size = %i, "
+		GP_DEBUG ("canon_usb_long_dialogue: total_data_size = %i, "
 			  "bytes_received = %i, read_bytes = %i (0x%x)", total_data_size,
 			  bytes_received, read_bytes, read_bytes);
 		bytes_read = gp_port_read (camera->port, *data + bytes_received, read_bytes);
@@ -1380,13 +1387,13 @@ canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned
 
 /**
  * canon_usb_get_file:
- * @camera: camera to lock keys on
+ * @camera: camera to use
  * @name: name of file to fetch
  * @data: to receive image data
  * @length: to receive length of image data
  * @context: context for error reporting
  *
- * Get a file from a USB_connected Canon camera.
+ * Get a file from a USB-connected Canon camera.
  *
  * Returns: gphoto2 error code, length in @length, and image data in @data.
  *
@@ -1396,25 +1403,42 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 		    GPContext *context)
 {
 	char payload[100];
-	int payload_length, res;
+	int payload_length, res, offset;
 
 	GP_DEBUG ("canon_usb_get_file() called for file '%s'", name);
 
-	/* 8 is strlen ("12111111") */
-	if (8 + strlen (name) > sizeof (payload) - 1) {
-		GP_DEBUG ("canon_usb_get_file: ERROR: "
-			  "Supplied file name '%s' does not fit in payload buffer.", name);
-		return GP_ERROR_BAD_PARAMETERS;
-	}
-
-	/* Construct payload containing file name, buffer size and function request.
-	 * See the file Protocol in this directory for more information.
+	/* Construct payload containing file name, buffer size and
+	 * function request.  See the file Protocol.xml in the doc/
+	 * directory for more information.
 	 */
-	sprintf (payload, "12111111%s", name);
-	GP_DEBUG ("canon_usb_get_file: payload %s", payload);
-	payload_length = strlen (payload) + 1;
-	htole32a (payload, 0x0);	/* get picture */
-	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
+	if ( camera->pl->md->model == CANON_CLASS_6 ) {
+		offset = 4;
+		if ( offset + strlen (name) > sizeof (payload) - 2 ) {
+			GP_DEBUG ("canon_usb_get_file: ERROR: "
+				  "Supplied file name '%s' does not fit in payload buffer.", name);
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		htole32a (payload, 0x1);	/* get picture */
+		strncpy ( payload+offset, name, sizeof(payload)-offset-1 );
+		payload[offset + strlen (payload+offset)] = 0;
+		payload_length = offset + strlen (payload+offset) + 2;
+		GP_DEBUG ( "canon_usb_get_file: payload 0x%08x:%s",
+			   le32atoh(payload), payload+offset );
+	}
+	else {
+		offset = 8;
+		if ( offset + strlen (name) > sizeof (payload) - 1 ) {
+			GP_DEBUG ("canon_usb_get_file: ERROR: "
+				  "Supplied file name '%s' does not fit in payload buffer.", name);
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		htole32a (payload, 0x0);	/* get picture */
+		htole32a (payload + 0x4, camera->pl->xfer_length);
+		strncpy ( payload+offset, name, sizeof(payload)-offset );
+		payload_length = strlen (payload+offset) + 1;
+		GP_DEBUG ( "canon_usb_get_file: payload 0x%08x:0x%08x:%s",
+			   le32atoh(payload), le32atoh(payload+4), payload+offset );
+	}
 
 	/* the 1 is to show status */
 	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
@@ -1465,7 +1489,7 @@ canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 	payload_length = strlen (payload) + 1;
 
 	htole32a (payload, 0x1);	/* get thumbnail */
-	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
+	htole32a (payload + 0x4, camera->pl->xfer_length);
 
 	/* 0 is to not show status */
 	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
@@ -1509,7 +1533,7 @@ canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **dat
 	 * See the file Protocol in this directory for more information.
 	 */
 	htole32a (payload, 0x0);	/* always zero */
-	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
+	htole32a (payload + 0x4, camera->pl->xfer_length);
 	htole32a (payload + 0x8, CANON_DOWNLOAD_FULL);
 	htole32a (payload + 0xc, key);
 
@@ -1555,7 +1579,7 @@ canon_usb_get_captured_thumbnail (Camera *camera, const int key, unsigned char *
 	 * See the file Protocol in this directory for more information.
 	 */
 	htole32a (payload, 0x0);	/* get picture */
-	htole32a (payload + 0x4, USB_BULK_READ_SIZE);
+	htole32a (payload + 0x4, camera->pl->xfer_length);
 	htole32a (payload + 0x8, CANON_DOWNLOAD_THUMB);
 	htole32a (payload + 0xc, key);
 
