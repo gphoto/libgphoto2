@@ -13,6 +13,7 @@ gphoto2_gtk_SOURCES = \
 	main.c \
 	support.c support.h \
 	interface.c interface.h \
-	callbacks.c callbacks.h
+	callbacks.c callbacks.h \
+	util.c util.h
 
 gphoto2_gtk_LDADD = @GTK_LIBS@ $(INTLLIBS)
