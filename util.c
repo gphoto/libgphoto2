@@ -23,14 +23,24 @@ int gp_abilities_dump (CameraAbilities *abilities) {
 		NETWORK_SUPPORTED(abilities->port)? "yes":"no");
 	if (abilities->speed[0] != 0) {
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Transfer speeds supported             :");
-		do {	
+        x=0;
+        do {
 	gp_debug_printf(GP_DEBUG_LOW, "core", "                                      : %i", abilities->speed[x]);
 			x++;
 		} while (abilities->speed[x]!=0);
 	}
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Capture from computer support         : %s", 
 		abilities->capture == 0? "no":"yes");
-	gp_debug_printf(GP_DEBUG_LOW, "core", "Configuration  support                : %s", 
+        if (abilities->capture > 0) {
+        gp_debug_printf(GP_DEBUG_LOW, "core", "Capture choices                       :");
+                x=0;
+                while (abilities->capture_setting[x].type != GP_CAPTURE_NONE) {
+        gp_debug_printf(GP_DEBUG_LOW, "core", "                                      : %s",
+                                   abilities->capture_setting[x].name);
+                        x++;
+                }
+        }
+        gp_debug_printf(GP_DEBUG_LOW, "core", "Configuration  support                : %s",
 		abilities->config == 0? "no":"yes");
 	gp_debug_printf(GP_DEBUG_LOW, "core", "Delete files on camera support        : %s", 
 		abilities->file_delete == 0? "no":"yes");
