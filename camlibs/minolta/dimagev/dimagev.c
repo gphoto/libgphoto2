@@ -1,6 +1,6 @@
 /**********************************************************************
 *       Minolta Dimage V digital camera communication library         *
-*               Copyright (C) 2000 Gus Hartmann                       *
+*               Copyright (C) 2000,2001 Gus Hartmann                  *
 *                                                                     *
 *    This program is free software; you can redistribute it and/or    *
 *    modify it under the terms of the GNU General Public License as   *
@@ -48,7 +48,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->port     = GP_PORT_SERIAL;
 	a->speed[0] = 38400;
 	a->speed[1] = 0;
-	a->capture[0].type = GP_CAPTURE_NONE;
+/*	a->capture[0].type = GP_CAPTURE_NONE;*/
+	a->capture[0].type = GP_CAPTURE_IMAGE | GP_CAPTURE_PREVIEW ;
 	a->config   = 0;
 	a->file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 	a->folder_operations = GP_FOLDER_OPERATION_PUT_FILE | GP_FOLDER_OPERATION_DELETE_ALL;
@@ -349,8 +350,7 @@ int camera_folder_put_file (Camera *camera, CameraFile *file, char *folder) {
 
 	dimagev = camera->camlib_data;
 
-
-	return GP_OK;
+	return dimagev_put_file(dimagev, file);
 }
 
 int camera_folder_delete_all (Camera *camera, char *folder) {
