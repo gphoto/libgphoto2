@@ -34,6 +34,20 @@
 #define THUMBNAIL_HEIGHT 36
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo *info, void *data, GPContext *context);
@@ -132,7 +146,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
 		break;
 	default:
-		gp_context_error(context, "Image type %d not supported", type);
+		gp_context_error(context, _("Image type %d not supported"), type);
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
@@ -157,7 +171,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	CHECK_RESULT (get_info_func(fs, folder, filename, &info, data, context));
 
         if (info.file.permissions == GP_FILE_PERM_READ) {
-                gp_context_error(context, "Image %s is delete protected.",
+                gp_context_error(context, _("Image %s is delete protected."),
                         filename);
                 return (GP_ERROR);
         }
@@ -170,9 +184,9 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
-	strcpy (about->text, "Download program for Casio QV cameras. "
+	strcpy (about->text, _("Download program for Casio QV cameras. "
 		"Originally written for gphoto-0.4. Adapted for gphoto2 by "
-		"Lutz Müller <lutz@users.sf.net>.");
+		"Lutz Müller <lutz@users.sf.net>."));
 
 	return (GP_OK);
 }
@@ -186,8 +200,8 @@ camera_summary (Camera *camera, CameraText *about, GPContext *context)
 	CHECK_RESULT (QVbattery  (camera, &battery));
 	CHECK_RESULT (QVrevision (camera, &revision));
 
-	sprintf (about->text, "Battery level: %.1f Volts. "
-			      "Revision: %08x.", battery, (int) revision);
+	sprintf (about->text, _("Battery level: %.1f Volts. "
+			      "Revision: %08x."), battery, (int) revision);
 
 	return (GP_OK);
 }
@@ -244,22 +258,24 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	char status[2];
         char t[1024];
 
-        gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
+        gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
 
         CHECK_RESULT (QVbattery (camera, &battery));
-	gp_widget_new (GP_WIDGET_TEXT, "Battery", &child);
+	gp_widget_new (GP_WIDGET_TEXT, _("Battery"), &child);
+        gp_widget_set_name (child, "battery");
         snprintf(t,sizeof(t),"%.1f V",battery);
 	gp_widget_set_value (child, t);
         gp_widget_append (*window, child);
 
 	CHECK_RESULT (QVstatus (camera, status));
-	gp_widget_new (GP_WIDGET_RADIO, "Brightness", &child);
-        gp_widget_add_choice (child, "Too bright");
-        gp_widget_add_choice (child, "Too dark");
-        gp_widget_add_choice (child, "OK");
-        if (status[0]&0x80) strcpy (t, "Too bright");
-        else if (status[0]&0x40) strcpy (t, "Too dark");
-	else strcpy (t, "OK");                
+	gp_widget_new (GP_WIDGET_RADIO, _("Brightness"), &child);
+        gp_widget_set_name (child, "brightness");
+        gp_widget_add_choice (child, _("Too bright"));
+        gp_widget_add_choice (child, _("Too dark"));
+        gp_widget_add_choice (child, _("OK"));
+        if (status[0]&0x80) strcpy (t, _("Too bright"));
+        else if (status[0]&0x40) strcpy (t, _("Too dark"));
+	else strcpy (t, _("OK"));                
         gp_widget_set_value (child, t);
         gp_widget_append (*window, child);
 
