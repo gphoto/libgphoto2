@@ -1,3 +1,9 @@
+
+2001-09-24  Nathan Stenzel <nathanstenzel@users.sourceforge.net>
+    *libgphoto2/jpeg.h:
+    *libgphoto2/jpeg.c: Can now create and write jpeg files
+    (except for actual encoding of compressed data)
+
 2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/jpeg.h:
@@ -26,6 +32,11 @@
 
 	* libgphoto2/jpeg.c: #define CHECK_RESULT(...) (...)
 
+2001-09-23  Nathan Stenzel <nathanstenzel@users.sourceforge.net>
+
+    * libgphoto2/jpeg.h
+    * libgphoto2/jpeg.c: Quantization table handling is much easier to do.
+
 2001-09-23  Chris Pinkham <cpinkham@infi.net>
 
 	* camlibs/jamcam/jamcam.c
@@ -53,7 +64,7 @@
 2001-09-22  Raymond Penners  <raymond@dotsphinx.com>
 
 	* camlibs/sonydscf55/*: Fixes & eliminated compiler warnings.
-	
+
 2001-09-22  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Carsten Pfeiffer <carpdjih@sp.zrz.tu-berlin.de>
@@ -101,6 +112,11 @@
 
 	* libgphoto2/core.c: Add some CHECK_INITs.
 
+2001-09-11  Nathan Stenzel <nathanstenzel@users.sourceforge.net>
+
+    * libgphoto2/jpeg.c: New
+    * libgphoto2/jpeg.h: New
+
 2001-09-10  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* libgphoto2_port/usb/libusb.c (gp_port_usb_find_device_lib): if
@@ -136,7 +152,7 @@
 
 	* libgphoto2/camera.c (gp_camera_list_folders), (gp_camera_list_files):
 	Return the result instead of GP_OK if anything goes wrong
-	* libgphoto2/filesys.c: Check if path to folder is absolute. If not, 
+	* libgphoto2/filesys.c: Check if path to folder is absolute. If not,
 	return GP_ERROR_PATH_NOT_ABSOLUTE.
 	* libgphoto2/result.c:
 	* include/gphoto2-result.h: GP_ERROR_PATH_NOT_ABSOLUTE: New error.
@@ -235,7 +251,7 @@
 	* camlibs/panasonic/coolshot/coolshot.[c,h]
 	* camlibs/panasonic/coolshot/library.[c,h]:added files to support
 	Panasonic Coolshot KXL-600A & KXL-601A digital cameras.
-	
+
 2001-09-01  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/casio: New
@@ -260,7 +276,7 @@
 2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/samsung/Makefile.am:
-	* camlibs/samsung/samsung.c: New but untested. (Just ported it from 
+	* camlibs/samsung/samsung.c: New but untested. (Just ported it from
 	old gphoto).
 	* configure.in: Added samsung
 
@@ -331,7 +347,7 @@
 	(populate_filesystem): Removed.
 	(camera_folder_list_folders): Removed. We don't support folders anyways
 	(camera_folder_list_files): Renamed to
-	(file_list_func): Don't access the CameraFilesystem here. Just 
+	(file_list_func): Don't access the CameraFilesystem here. Just
 	populate the list. The CameraFilesystem will get updated by libgphoto2.
 	(camera_file_get_info): Renamed to
 	(get_info_func): New
