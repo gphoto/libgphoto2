@@ -839,22 +839,21 @@ int dc240_capture (Camera *camera, CameraFilePath *path, GPContext *context)
     if (ret != GP_OK) {
 	path->name[0] = 0;
 	path->folder[0] = 0;
-	free (file);
+	gp_file_unref (file);
 	return ret;
     }
-    else {
-	/* this part assumes that the response is of fixed size */
-	/* according to the specs, this is the case since only the */
-	/* numbering changes */
-	gp_file_get_data_and_size (file, &fdata, &fsize);
-	strncpy (path->folder, fdata, 14);
-	path->folder [14] = 0;
-	path->folder [0] = '/';
-	path->folder [5] = '/';
-	strncpy (path->name, &(fdata[15]), 13);
-	path->name[13] = 0;
-    }
-    free (file);
+
+    /* this part assumes that the response is of fixed size */
+    /* according to the specs, this is the case since only the */
+    /* numbering changes */
+    gp_file_get_data_and_size (file, &fdata, &fsize);
+    strncpy (path->folder, fdata, 14);
+    path->folder [14] = 0;
+    path->folder [0] = '/';
+    path->folder [5] = '/';
+    strncpy (path->name, &(fdata[15]), 13);
+    path->name[13] = 0;
+    gp_file_unref (file);
 
     return GP_OK;
 }
