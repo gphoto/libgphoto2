@@ -512,23 +512,30 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 /**
  * canon_int_get_time:
  * @camera: camera to get the current time of
- * @Returns: time of camera (GMT) (>= 0) or a gphoto2 error code (< 0)
+ * @camera_time: pointer to where you want the camera time (NOT IN UTC!!!)
+ * @Returns: gphoto2 error code
  *
  * Get camera's current time.
  *
  * The camera gives time in little endian format, therefore we need
  * to swap the 4 bytes on big-endian machines.
  *
- * Note: the time returned from the camera is not GMT but local time. 
- * We convert it to GMT before returning it to simplify time operations 
- * elsewhere.
+ * Note: the time returned from the camera is not UTC but local time.
+ * This means you should only use functions that don't adjust the
+ * timezone, like gmtime(), instead of functions that do, like localtime()
+ * since otherwise you will end up with the wrong time.
+ *
+ * We pass it along to calling functions in local time instead of UTC
+ * since it is more correct to say 'Camera time: 2002-01-01 00:00:00'
+ * if that is what the display says and not to display the cameras time
+ * converted to local timezone (which will of course be wrong if you
+ * are not in the timezone the cameras clock was set in).
  **/
-time_t
-canon_int_get_time (Camera *camera, GPContext *context)
+int
+canon_int_get_time (Camera *camera, time_t *camera_time, GPContext *context)
 {
 	unsigned char *msg;
 	int len;
-	time_t date;
 
 	GP_DEBUG ("canon_int_get_time()");
 
@@ -555,20 +562,20 @@ canon_int_get_time (Camera *camera, GPContext *context)
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 
-	date = (time_t) le32atoh (msg+4);
+	if (camera_time != NULL)
+		*camera_time = (time_t) le32atoh (msg+4);
 
 	/* XXX should strip \n at the end of asctime() return data */
-	GP_DEBUG ("Camera time: %s ", asctime (gmtime (&date)));
+	GP_DEBUG ("Camera time: %s", asctime (gmtime (camera_time)));
 
-	/* convert to GMT before returning */
-	return mktime (gmtime (&date));
+	return GP_OK;
 }
 
 
 /**
  * canon_int_set_time:
  * @camera: camera to get the current time of
- * @date: the date to set (in GMT)
+ * @date: the date to set (in UTC)
  * @Returns: gphoto2 error code
  *
  * Set camera's current time.
@@ -889,6 +896,7 @@ debug_fileinfo (CameraFileInfo * info)
 	if ((info->file.fields & GP_FILE_INFO_MTIME) != 0) {
 		char *p, *time = asctime (gmtime (&info->file.mtime));
 
+		/* remove trailing \n */
 		for (p = time; *p != 0; ++p)
 			/* do nothing */ ;
 		*(p - 1) = '\0';
@@ -1069,6 +1077,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 			"dirent determined to be %i=0x%x bytes :", dirent_ent_size, dirent_ent_size);
 		gp_log_data ("canon", pos, dirent_ent_size);
 		if (dirent_name_len) {
+			/* OK, this directory entry has a name in it. */
+
 			if ((list_folders && is_dir) || (list_files && is_file)) {
 
 				/* we're going to fill out the info structure
@@ -1078,12 +1088,9 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 				/* we start with nothing and continously add stuff */
 				info.file.fields = GP_FILE_INFO_NONE;
 
-				/* OK, this directory entry has a name in it. */
 				strncpy (info.file.name, dirent_name, sizeof (info.file.name));
 				info.file.fields |= GP_FILE_INFO_NAME;
 
-				/* the date is located at offset 6 and is 4
-				 * bytes long, re-order little/big endian */
 				info.file.mtime = dirent_time;
 				if (info.file.mtime != 0)
 					info.file.fields |= GP_FILE_INFO_MTIME;

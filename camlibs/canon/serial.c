@@ -1331,7 +1331,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 	/* Now is a good time to ask the camera for its owner
 	 * name (and Model String as well)  */
 	canon_int_identify_camera (camera, context);
-	canon_int_get_time (camera, context);
+	canon_int_get_time (camera, NULL, context);
 
 	return GP_OK;
 }

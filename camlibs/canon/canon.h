@@ -205,7 +205,7 @@ int canon_int_set_file_attributes(Camera *camera, const char *file, const char *
 int canon_int_delete_file(Camera *camera, const char *name, const char *dir, GPContext *context);
 int canon_serial_end(Camera *camera);
 int canon_serial_off(Camera *camera);
-time_t canon_int_get_time(Camera *camera, GPContext *context);
+int canon_int_get_time(Camera *camera, time_t *camera_time, GPContext *context);
 int canon_int_set_time(Camera *camera, time_t date, GPContext *context);
 int canon_int_directory_operations(Camera *camera, const char *path, int action, GPContext *context);
 int canon_int_identify_camera(Camera *camera, GPContext *context);

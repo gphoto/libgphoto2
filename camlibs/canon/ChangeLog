@@ -14,6 +14,14 @@
 	  archives from around this date. Look for messages about trouble
 	  with Canon G1, Pro90IS and EOS D30 cameras.
 
+	* canon.c, canon.h, library.c, serial.c:
+	  Reverted behaviour of canon_int_get_time() to return time in
+	  cameras time instead of converted to UTC since it makes more
+	  sense to display the same time as the camera does on it's
+	  display.
+
+	  Made canon_int_get_time() always return gphoto2 status codes.
+
 2002-01-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* *.c: gp_camera_status -> gp_context_status

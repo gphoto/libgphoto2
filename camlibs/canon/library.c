@@ -692,7 +692,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	int pwr_source, pwr_status;
 	int res;
 	char disk_str[128], power_str[128], time_str[128];
-	time_t camera_time;
+	time_t camera_time, camera_utc_time;
 	double time_diff;
 	char formatted_camera_time[20];
 
@@ -728,12 +728,13 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 		snprintf (power_str, sizeof (power_str), _("not available: %s"), gp_result_as_string (res));
 	}
 
-	camera_time = canon_int_get_time (camera, context);
-	if (camera_time > 0) {
-		time_diff = difftime(camera_time, time(NULL));
+	res = canon_int_get_time (camera, &camera_time, context);
+	camera_utc_time = mktime( gmtime (&camera_time));
+	if (res == GP_OK) {
+		time_diff = difftime(camera_utc_time, time(NULL));
 	
 		strftime (formatted_camera_time, sizeof (formatted_camera_time),
-			  "%Y-%m-%d %H:%M:%S", localtime(&camera_time));
+			  "%Y-%m-%d %H:%M:%S", gmtime(&camera_time));
 	  
 		snprintf (time_str, sizeof (time_str), _("%s (host time %s%i seconds)"),
 			  formatted_camera_time, time_diff>=0?"+":"", (int) time_diff);
@@ -950,7 +951,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
-	int pwr_status, pwr_source;
+	int pwr_status, pwr_source, res;
 	time_t camtime;
 
 	GP_DEBUG ("camera_get_config()");
@@ -969,8 +970,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (section, t);
 
 	if (camera->pl->cached_ready == 1) {
-		camtime = canon_int_get_time (camera, context);
-		if (camtime >= 0) {
+		res = canon_int_get_time (camera, &camtime, context);
+		if (res == GP_OK) {
 			gp_widget_new (GP_WIDGET_DATE, _("Date and Time (readonly)"), &t);
 			gp_widget_set_value (t, &camtime);
 			gp_widget_append (section, t);
