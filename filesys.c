@@ -34,6 +34,7 @@ typedef struct {
 typedef struct {
 	int count;
 	char name [128];
+	int dirty;
 	CameraFilesystemFile *file;
 } CameraFilesystemFolder;
 
@@ -123,6 +124,7 @@ gp_filesystem_append_folder (CameraFilesystem *fs, const char *folder)
 	    (fs->folder[fs->count - 1].name[strlen (folder) - 1] == '/'))
 		fs->folder[fs->count - 1].name[strlen (folder) - 1] = '\0';
 	fs->folder[fs->count - 1].count = 0;
+	fs->folder[fs->count - 1].dirty = 0;
 
 	return (GP_OK);
 }
@@ -206,6 +208,33 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 		CHECK_RESULT (gp_list_append (list,
 					      fs->folder[x].file[y].name,
 					      NULL));
+
+	return (GP_OK);
+}
+
+int
+gp_filesystem_folder_is_dirty (CameraFilesystem *fs, const char *folder)
+{
+	int x;
+
+	CHECK_NULL (fs && folder);
+
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+
+	return (fs->folder[x].dirty);
+}
+
+int
+gp_filesystem_folder_set_dirty (CameraFilesystem *fs, const char *folder, 
+				int dirty)
+{
+	int x;
+
+	CHECK_NULL (fs);
+
+	CHECK_RESULT (x = gp_filesystem_folder_number (fs, folder));
+
+	fs->folder[x].dirty = dirty;
 
 	return (GP_OK);
 }

@@ -432,8 +432,19 @@ gp_file_set_header (CameraFile *file, const char *header)
 	return (GP_OK);
 }
 
+int
+gp_file_set_conversion_method (CameraFile *file,
+			       CameraFileConversionMethod method)
+{
+	CHECK_NULL (file);
+
+	file->method = method;
+
+	return (GP_OK);
+}
+
 static int
-gp_file_chuck_conversion (CameraFile *file, unsigned char *data)
+gp_file_conversion_chuck (CameraFile *file, unsigned char *data)
 {
 	int x, y;
 	int p1, p2, p3, p4;
@@ -509,6 +520,42 @@ gp_file_chuck_conversion (CameraFile *file, unsigned char *data)
 }
 
 static int
+gp_file_conversion_johannes (CameraFile *file, unsigned char *data)
+{
+	unsigned char *ps;
+	int x, y;
+
+	/* Skip over the thumbnail header */
+	ps = file->data + 16;
+
+	for (y = 0; y < file->height; y++) {
+		char *pd =  data + (file->width * y * 3);
+		for (x = 0; x < file->width / 2; x++) {
+			int _y, u, y1, v, r, g, b;
+
+#define LIMIT(_x) ((((_x)>0xffffff)?0xff0000:(((_x)<=0xffff)?0:(_x)&0xff0000))>>16)
+			u =  *ps++ - 128;
+			_y =  *ps++ - 16;
+			v =  *ps++ - 128;
+			y1 = *ps++ - 16;
+			r = 104635 * v;
+			g = -25690 * u + -53294 * v;
+			b = 132278 * u;
+			_y  *= 76310;
+			y1 *= 76310;
+			*pd++ = LIMIT(r + _y);
+			*pd++ = LIMIT(g + _y);
+			*pd++ = LIMIT(b + _y);
+			*pd++ = LIMIT(r + y1);
+			*pd++ = LIMIT(g + y1);
+			*pd++ = LIMIT(b + y1);
+		}
+	}
+
+	return (GP_OK);
+}
+
+static int
 gp_file_raw_to_pnm (CameraFile *file)
 {
 	unsigned char *new_data, *b;
@@ -517,23 +564,62 @@ gp_file_raw_to_pnm (CameraFile *file)
 
 	CHECK_NULL (file);
 
-	new_size = file->width * file->height * 3 + strlen (file->header);
+	new_size = (file->width * file->height * 3) + strlen (file->header);
 	CHECK_MEM (new_data = malloc (sizeof (char) * new_size));
 
 	strcpy (new_data, file->header);
 
 	b = new_data + strlen (file->header);
-	result = gp_file_chuck_conversion (file, b);
+	switch (file->method) {
+	case GP_FILE_CONVERSION_METHOD_CHUCK:
+		result = gp_file_conversion_chuck (file, b);
+		break;
+	default:
+		result = GP_ERROR_NOT_SUPPORTED;
+		break;
+	}
 	if (result != GP_OK) {
 		free (new_data);
 		return (result);
 	}
 
-	free (file->data);
-	file->data = new_data;
-	file->size = new_size;
-	gp_file_set_mime_type (file, GP_MIME_PNM);
+	CHECK_RESULT (gp_file_set_data_and_size (file, new_data, new_size));
+	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PNM));
 	
+	return (GP_OK);
+}
+
+static int
+gp_file_raw_to_ppm (CameraFile *file)
+{
+	unsigned char *new_data, *b;
+	long int new_size;
+	int result;
+
+	CHECK_NULL (file);
+
+	new_size = (file->width * file->height * 3) + strlen (file->header);
+	CHECK_MEM (new_data = malloc (sizeof (char) * new_size));
+
+	strcpy (new_data, file->header);
+
+	b = new_data + strlen (file->header);
+	switch (file->method) {
+	case GP_FILE_CONVERSION_METHOD_JOHANNES:
+		result = gp_file_conversion_johannes (file, b);
+		break;
+	default:
+		result = GP_ERROR_NOT_SUPPORTED;
+		break;
+	}
+	if (result != GP_OK) {
+		free (new_data);
+		return (result);
+	}
+
+	CHECK_RESULT (gp_file_set_data_and_size (file, new_data, new_size));
+	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_PPM));
+
 	return (GP_OK);
 }
 
@@ -545,6 +631,11 @@ gp_file_convert (CameraFile *file, const char *mime_type)
 	if (!strcmp (file->mime_type, GP_MIME_RAW) &&
 	    !strcmp (mime_type, GP_MIME_PNM))
 		return (gp_file_raw_to_pnm (file));
+
+	else if (!strcmp (file->mime_type, GP_MIME_RAW) &&
+		 !strcmp (mime_type, GP_MIME_PPM))
+		return (gp_file_raw_to_ppm (file));
+
 	else
 		return (GP_ERROR_NOT_SUPPORTED);
 }
