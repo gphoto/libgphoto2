@@ -204,7 +204,7 @@ aa_msg=no
 try_aa=true
 have_aa=false
 AC_ARG_WITH(aalib, [  --without-aalib   Don't use aalib],
-	if text x$withval = xno; then
+	if test x$withval = xno; then
 		try_aa=false
 	fi
 )
