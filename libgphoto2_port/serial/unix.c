@@ -31,16 +31,26 @@
 #include <gphoto2-port-library.h>
 
 #include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#if HAVE_FCNTL_H
 #include <fcntl.h>
+#endif
+#if HAVE_ERRNO_H
 #include <errno.h>
+#endif
 #include <string.h>
 #include <signal.h>
 #include <sys/stat.h>
-#include <sys/time.h>
 #include <sys/types.h>
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+#if HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
+#endif
 
 #if HAVE_TERMIOS_H
 #include <termios.h>
@@ -48,9 +58,6 @@
 #define CRTSCTS  020000000000
 #endif
 #else
-#if HAVE_SYS_IOCTL_H
-#include <sys/ioctl.h>
-#endif
 #include <sgtty.h>
 #endif
 
