@@ -38,6 +38,8 @@ struct _CameraAbilitiesList {
 	CameraAbilities **abilities;
 };
 
+static int gp_abilities_list_lookup_id (CameraAbilitiesList *, const char *);
+
 int
 gp_abilities_list_new (CameraAbilitiesList **list)
 {
@@ -170,8 +172,8 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir)
 
 			/* Copy in the core-specific information */
 			for (x = old_count; x < new_count; x++) {
-				gp_abilities_list_set_id (list, x, text.text);
-				gp_abilities_list_set_library (list, x, buf);
+				strcpy (list->abilities[x]->id, text.text);
+				strcpy (list->abilities[x]->library, buf);
 			}
 		}
 	} while (de);
@@ -207,9 +209,9 @@ gp_abilities_list_detect (CameraAbilitiesList *list, CameraList *l)
 
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Auto-detecting cameras...");
 	for (x = 0; x < count; x++) {
-		if ((gp_abilities_list_get_vendor_and_product (list, x, &v, &p)
-								== GP_OK) &&
-		    (gp_port_usb_find_device (dev, v, p)      == GP_OK) &&
+		v = list->abilities[x]->usb_vendor;
+		p = list->abilities[x]->usb_product;
+		if ((gp_port_usb_find_device (dev, v, p)       == GP_OK) &&
 		    (gp_abilities_list_get_model (list, x, &m) == GP_OK)) {
 			gp_debug_printf (GP_DEBUG_LOW, "abilities-list", 
 					 "Found '%s' (%i,%i)", m, v, p);
@@ -296,7 +298,7 @@ gp_abilities_list_sort (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-int
+static int
 gp_abilities_list_lookup_id (CameraAbilitiesList *list, const char *id)
 {
 	int x;
@@ -308,34 +310,6 @@ gp_abilities_list_lookup_id (CameraAbilitiesList *list, const char *id)
 			return (x);
 
 	return (GP_ERROR);
-}
-
-int
-gp_abilities_list_set_id (CameraAbilitiesList *list, int index,
-			  const char *id)
-{
-	CHECK_NULL (list && id);
-
-	if (index > list->count)
-		return (GP_ERROR_BAD_PARAMETERS);
-
-	strcpy (list->abilities[index]->id, id);
-
-	return (GP_OK);
-}
-
-int
-gp_abilities_list_set_library (CameraAbilitiesList *list, int index,
-			       const char *library)
-{
-	CHECK_NULL (list && library);
-
-	if (index > list->count)
-		return (GP_ERROR_BAD_PARAMETERS);
-
-	strcpy (list->abilities[index]->library, library);
-
-	return (GP_OK);
 }
 
 int
@@ -364,22 +338,6 @@ gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 			return (x);
 
 	return (GP_ERROR_MODEL_NOT_FOUND);
-}
-
-int
-gp_abilities_list_get_vendor_and_product (CameraAbilitiesList *list, int index,
-					  int *usb_vendor,
-					  int *usb_product)
-{
-	CHECK_NULL (list && usb_vendor && usb_product);
-
-	if (index > list->count)
-		return (GP_ERROR_BAD_PARAMETERS);
-
-	*usb_vendor  = list->abilities[index]->usb_vendor;
-	*usb_product = list->abilities[index]->usb_product;
-
-	return (GP_OK);
 }
 
 int
