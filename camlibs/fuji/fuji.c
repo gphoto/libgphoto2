@@ -410,7 +410,9 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 			"(0x%02x, 0x%02x)."), b[0], b[1]);
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
-	*buf_len = ((b[3] << 8) | b[2]) - 2;
+	*buf_len = ((b[2] << 8) | b[3]) - 2;
+	GP_DEBUG ("We are expecting %i byte(s) data (excluding ESC quotes). "
+		  "Let's read them...", *buf_len);
 
 	/* Read the data. Unescape it. Calculate the checksum. */
 	for (check = i = 0; i < *buf_len; i++) {
@@ -418,12 +420,14 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 		if (buf[i] == ESC) {
 			CR (gp_port_read (camera->port, buf + i, 1));
 			if (buf[i] != ESC) {
+				gp_context_error (context,
+					_("Wrong escape sequence: "
+					"expected 0x%02x, got 0x%02x."),
+					ESC, buf[i]);
 
 				/* Dump the remaining data */
 				while (gp_port_read (camera->port, b, 1) >= 0);
 
-				gp_context_error (context,
-					_("Wrong escape sequence."));
 				return (GP_ERROR_CORRUPTED_DATA);
 			}
 		}
