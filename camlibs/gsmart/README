@@ -1,0 +1,32 @@
+Mustek gSmart mini 2
+
+This driver is based on the windows driver source kindly provided  by
+Mustek. It is known to work with the mini 2 but might very well also work with
+other members of the gsmart mini family. I dont have these cameras, so if you
+have one and want support for it, you'll have to do it yourself or send
+me your camera ;).
+
+If you want to hack on this module, or have questions or suggestions,
+don't hesitate to email me:
+
+	Till Adam <till@adam-lilienthal.de>
+
+----------------------------------------------------------------
+
+TODO List
+---------
+	- implement thumbnails for avi files
+	- implement downloading of avi files
+	- implement streaming "webcam" mode
+
+-----------------------------------------------------------------
+Thanks
+-------
+Special thanks go to Bjorn Borud <borud@gua.no> who extorted the above
+mentioned sources for the windows driver from Mustek.
+
+Also thanks to the following people for testing and feedback:
+
+Torfinn Ingolfsen <torfinn.ingolfsen@broadpark.no>
+Mikael Nilsson <mini@nada.kth.se>
+
