@@ -48,6 +48,7 @@ struct camera_to_usb {
 } camera_to_usb[] = {
 	{ "STM USB Dual-mode camera", 0x0553, 0x0202 },
 	{ "Aiptek PenCam Trio", 0x0553, 0x0202 },
+	{ "Micromaxx Digital Camera", 0x553, 0x0202 },
 	{ "STV0680", 0x0, 0x0 }				
 };
 
@@ -231,3 +232,4 @@ int camera_init (Camera *camera)
 
 	return (ret);
 }
+
