@@ -1,7 +1,7 @@
 /*
  
  Fuji Camera library for the gphoto project, 
- (C) 2000 Matthew G. Martin <matt.martin@ieee.org>
+ (C) 2001 Matthew G. Martin <matt.martin@ieee.org>
   This routine works for Fuji DS-7 and DX-5,7,10 and 
   MX-500,600,700,1200,1700,2700,2900,  Apple QuickTake 200,
   Samsung Kenox SSC-350N,Leica Digilux Zoom cameras and possibly others.
@@ -203,7 +203,7 @@ static int attention (void)
 		if (get_byte() == ACK)
 			return 0;
 	}
-	gp_frontend_status(NULL, "The camera does not respond.");
+	//gp_frontend_status(NULL, "The camera does not respond.");
 	return(-1);
 }
 
@@ -336,9 +336,9 @@ rd_pkt:
 		    
 		  DBG3("Recd %d of %d\n",fuji_count,fuji_size);
 
-		  if (curcamfile)
-		    gp_frontend_progress(curcam,curcamfile,
-					 (1.0*fuji_count/fuji_size>1.0)?1.0:1.0*fuji_count/fuji_size);
+		  //if (curcamfile)
+		  //  gp_frontend_progress(curcam,curcamfile,
+		  //		 (1.0*fuji_count/fuji_size>1.0)?1.0:1.0*fuji_count/fuji_size);
 
 		};
 		/* More packets ? */
@@ -705,7 +705,7 @@ static int download_picture(int n,int thumb,CameraFile *file,FujiData *fjd)
 
 	if (fjd->has_cmd[17]&&!thumb){
 	if (!thumb&&(fuji_count != fuji_size)){
-	  gp_frontend_status(NULL,"Short picture file--disk full or quota exceeded\n");
+	  //gp_frontend_status(NULL,"Short picture file--disk full or quota exceeded\n");
 	    return(GP_ERROR);
 	  };
 	};
@@ -1000,7 +1000,8 @@ static int camera_file_list (Camera *camera, const char *folder, CameraList *lis
   for (i=0;i<n;i++) {
     fn=strdup(fuji_picture_name(i+1));
     DBG3("File %s is number %d",fn,i+1);
-    gp_filesystem_append(camera->fs,"/",fn);
+    //gp_filesystem_append(camera->fs,"/",fn);
+    gp_list_append (list, fn, NULL);
   };
   return (GP_OK);
   }
@@ -1131,7 +1132,7 @@ int camera_init (Camera *camera) {
 	camera->functions->file_get 	= camera_file_get;
 	//	camera->functions->file_get_preview =  camera_file_get_preview;
 	//	camera->functions->file_put 	= camera_file_put;
-	camera->functions->file_delete 	= camera_file_delete;
+	//camera->functions->file_delete 	= camera_file_delete;
 	/*	camera->functions->config_get   = camera_config_get;
 		camera->functions->config_set   = camera_config_set;*/
 	camera->functions->capture 	= camera_capture;
@@ -1194,7 +1195,7 @@ int camera_init (Camera *camera) {
 	     in one session */
 	  strcpy(idstring,"Identified ");
 	  strncat(idstring,fuji_version_info(),100);
-	  gp_frontend_status(NULL,idstring);
+	  //gp_frontend_status(NULL,idstring);
 
 	  /* load_fuji_options() */
 	  fuji_initialized=1;  
