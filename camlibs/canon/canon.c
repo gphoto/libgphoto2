@@ -616,10 +616,12 @@ static char *canon_get_picture (Camera *camera, char *filename,
 			 * we replace .AVI by .THM to download the thumbnail (jpeg format)
 			 */
 			if (is_movie(filename)) {
-				j = strrchr(filename,'.') - filename;
-				filename[j+1]='\0';
-				strcat(filename,"THM");
-				sprintf(file,"%s%s",path,filename);
+				char *thumbfile = strdup(filename);
+				j = strrchr(thumbfile,'.') - thumbfile;
+				thumbfile[j+1]='\0';
+				strcat(thumbfile,"THM");
+				sprintf(file,"%s%s",path,thumbfile);
+				free(thumbfile);
 				printf("movie thumbnail: %s\n",file);
 				image = psa50_get_file(camera, file, size);
 			} else {
