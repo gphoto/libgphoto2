@@ -1,3 +1,7 @@
+2001-08-28  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* include/gphoto2-file.h (GP_MIME_BMP): added this mime type.
+
 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* include/gphoto2-file.h: Add a note about the crappy API

@@ -27,6 +27,7 @@
 #define GP_MIME_PPM       "image/ppm"
 #define GP_MIME_JPEG      "image/jpeg"
 #define GP_MIME_TIFF      "image/tiff"
+#define GP_MIME_BMP       "image/bmp"
 #define GP_MIME_QUICKTIME "video/quicktime"
 
 typedef enum {
