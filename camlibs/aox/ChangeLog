@@ -1,0 +1,12 @@
+2004-02-24 Theodore Kilgore <kilgota@auburn.edu>
+
+	* aox.c: Portability improvements, credits to Mika Kousa,
+		    <mkousa@cc.hut.fi>
+
+
+2004-02-24 Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: Second USB id, discovered by Jonathan Kozol 
+		    <jamie@rocksolidnetworks.com>
+		    Portability improvements, credits to Mika Kousa,
+		    <mkousa@cc.hut.fi>
