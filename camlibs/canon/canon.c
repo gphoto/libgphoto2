@@ -438,7 +438,7 @@ static int _canon_file_list(struct psa50_dir *tree, CameraList *list, char *fold
 */
     while (tree->name) {
         if(is_image(tree->name))
-			gp_list_append(list,tree->name,GP_LIST_FILE);
+			gp_list_append(list,(char*)tree->name,GP_LIST_FILE);
         else if (!tree->is_file) { 
             _canon_file_list(tree->user, list, folder);      
         }
