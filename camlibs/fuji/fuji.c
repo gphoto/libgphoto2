@@ -80,6 +80,240 @@
 #define ETB 0x17 /* End of transmission block */
 #define NAK 0x15
 
+#define FUJI_GET_PICCOUNT	0x0b
+#define FUJI_CMD_TAKE		0x27
+#define FUJI_CMD_DELETE		0x19
+#define FUJI_CHARGE_FLASH	0x34
+#define FUJI_PREVIEW		0x64
+
+
+/**
+ * Gets a byte. Already gets rid of parity error generated sequences.
+ */
+static int
+get_byte (GPPort *port)
+{
+	unsigned char c;
+
+	CR(gp_port_read(port, &c, 1));
+	if (c < 255)
+		return c;
+	CR(gp_port_read(port, &c, 1));
+	if (c == 255)
+		return c;	/* escaped '\377' */
+
+	if (c != 0) {
+		fprintf(stderr,"get_byte: impossible escape sequence following 0xFF\n");
+	}
+	/* Otherwise, it's a parity or framing error, drop 1 byte. */
+	CR(gp_port_read(port, &c, 1));
+	return GP_ERROR_IO;
+}
+
+static int
+put_byte (GPPort *port, char c)
+{
+    return gp_port_write(port, &c, 1);
+}
+
+static int
+send_packet (GPPort *port, unsigned char *data, int len, int last)
+{
+	unsigned char *p, *end, buff[3];
+	int check;
+
+	last = last ? ETX : ETB;
+	check = last;
+	end = data + len;
+	for (p = data; p < end; p++)
+		check ^= *p;
+
+	/* Start of frame */
+	buff[0] = ESC;
+	buff[1] = STX;
+
+	CR(gp_port_write(port, buff, 2));
+
+	/* Data */
+	/* This is not so good if we have more than one esc. char */
+	for (p = data; p < end; p++)
+		if (*p == ESC) {
+		    	char c;
+			/* Escape the last character */
+		        CR(gp_port_write(port,data,p-data+1)); /* send up to the ESC*/
+			data = p+1;
+
+			c = ESC;/* send another esc*/
+			CR(gp_port_write(port,&c,1));
+		}
+	CR(gp_port_write(port, data, end-data));
+	/* End of frame */
+	buff[1] = last;
+	buff[2] = check;
+	CR(gp_port_write(port, buff, 3));
+	return GP_OK;
+}
+
+static int
+read_packet (GPPort *port, char **packet, int *size )
+{
+	unsigned char answerheader[4];
+	unsigned char *p = answerheader;
+	int c, cnt, check, incomplete, answerlen = 0;
+
+	if ((get_byte(port) != ESC) || (get_byte(port) != STX)) {
+bad_frame:
+		/* drain input */
+		while (get_byte(port) >= 0)
+			continue;
+		return GP_ERROR_IO;
+	}
+
+	check = 0;cnt = 0;
+	while(1) {
+		if ((c = get_byte(port)) < 0)
+			goto bad_frame;
+		if (c == ESC) {
+			if ((c = get_byte(port)) < 0)
+				goto bad_frame;
+			if (c == ETX || c == ETB) {
+				incomplete = (c == ETB);
+				break;
+			}
+		}
+		*p++ = c;
+		cnt++;
+		if (cnt == 4) {
+			answerlen = (answerheader[2] | (answerheader[3]<<8));
+			*packet = malloc(answerlen+4);
+			*size = answerlen+4;
+			memcpy(*packet,answerheader, 4);
+			p = (*packet)+4;
+		}
+		if ((cnt > 4) && (cnt > answerlen+4)) {
+			fprintf(stderr,"Too much data (only expecting %d byte)!\n",cnt);
+			goto bad_frame;
+		}
+		check ^= c;
+	}
+	/* Append a sentry '\0' at the end of the buffer, for the convenience
+	   of C programmers */
+	*p = '\0';
+	check ^= c;
+	c = get_byte(port);
+	if (c != check)
+		return -1;
+	/* Return 0 for the last packet, 1 otherwise */
+	return incomplete;
+}
+
+static int
+cmd (	Camera *camera, GPContext *context,
+	unsigned char *cmd, int cmdlen, 
+	char **data, int *len
+) {
+	int i, c, timeout=50;
+	int	xsize=0;
+	char	*xdata = NULL;
+
+	fprintf(stderr,"CMD $%X called ",cmd[1]);	
+
+	/* Some commands require large timeouts */
+	switch (cmd[1]) {
+	  case FUJI_CMD_TAKE:	/* Take picture */
+	  case FUJI_CHARGE_FLASH:	/* Recharge the flash */
+	  case FUJI_PREVIEW:	/* Take preview */
+	    timeout = 12;
+	    break;
+	  case FUJI_CMD_DELETE:	/* Erase a picture */
+	    timeout = 1;
+	    break;
+	}
+
+	for (i = 0; i < 3; i++) { /* Three tries to send cmd. */
+		send_packet(camera->port, cmd, cmdlen, 1);
+		c = get_byte(camera->port);
+		if (c == ACK)
+			goto rd_pkt;
+		if (c != NAK){
+			if(fuji_ping(camera, context))
+			    return(GP_ERROR_IO);
+		};
+	}
+	fprintf(stderr,"Command error, aborting.\n");
+	return(-1);
+
+rd_pkt:
+	/*wait_for_input(timeout);*/
+	for (i = 0; i < 3; i++) {
+	    	char *answer;
+		int answerlen;
+		if (i) put_byte(camera->port,NAK);
+		c = read_packet(camera->port, &answer, &answerlen);
+		if (c < 0)
+			continue; /* go and retry */
+		put_byte(camera->port,ACK);
+
+		/* Skip 4 byte */
+		answerlen-=4;
+		xdata = realloc(xdata, xsize+answerlen);
+		memcpy(xdata+xsize, answer, answerlen);
+		xsize+=answerlen;
+		free(answer);answer=NULL;
+
+		/* More packets ? */
+		if (c != 0)
+			goto rd_pkt;
+		*len = xsize;
+		*data = xdata;
+		return 0;
+	}
+	fprintf(stderr,"Cannot receive answer, aborting.");
+	return(GP_ERROR_IO);
+}
+
+/* Zero byte command */
+static int
+cmd0(	
+	Camera *camera, GPContext *context,
+	int c0, int c1, char **data, int *len
+) {
+	unsigned char b[4];
+
+	b[0] = c0; b[1] = c1;
+	b[2] = b[3] = 0;
+	return cmd(camera, context, b, 4, data, len);
+}
+
+
+/* One byte command */
+static int
+cmd1(
+	Camera *camera, GPContext *context,
+	int c0, int c1, int arg,
+	char **data, int *len
+) {
+	unsigned char b[5];
+
+	b[0] = c0; b[1] = c1;
+	b[2] =  1; b[3] =  0;
+	b[4] = arg;
+	return cmd(camera, context, b, 5,  data, len);
+}
+
+/* Two byte command */
+static int cmd2(
+	Camera *camera, GPContext *context, int c0, int c1, int arg,
+	char **data, int *len
+) {
+	unsigned char b[6];
+
+	b[0] = c0; b[1] = c1;
+	b[2] =  2; b[3] =  0;
+	b[4] = arg; b[5] = arg>>8;
+	return cmd(camera, context, b, 6, data, len);
+}
+
 int
 fuji_ping (Camera *camera, GPContext *context)
 {
@@ -117,7 +351,17 @@ fuji_get_cmds (Camera *camera, unsigned char *cmds, GPContext *context)
 int
 fuji_pic_count (Camera *camera, GPContext *context)
 {
-	return (GP_OK);
+    int numpics, gpr, len = 0;
+    char *data = NULL;
+
+    gpr = cmd0 (camera, context, 0, FUJI_GET_PICCOUNT, &data, &len);
+    if (gpr < GP_OK) {
+	if (data) free(data);
+	return gpr;
+    }
+    numpics = data[0] + (data[1]<<8);
+    if (data) free(data);
+    return numpics;
 }
 
 int
@@ -155,7 +399,6 @@ static struct pict_info *pinfo = NULL;
 #define DBG3(x,y,z) GP_DEBUG(x,y,z)
 #define DBG4(w,x,y,z) GP_DEBUG(w,x,y,z)
 
-unsigned char answer[5000];
 static char *fuji_buffer;
 static long fuji_maxbuf=FUJI_MAXBUF_DEFAULT;
 static int answer_len = 0;
@@ -222,23 +465,6 @@ static int wait_for_input (int seconds)
 	return select(1+devfd, &rfds, NULL, NULL, &tv);
 }
 
-static int get_byte (void)
-{
-	int c;
-
-	c = get_raw_byte();
-	if (c < 255)
-		return c;
-	c = get_raw_byte();
-	if (c == 255)
-		return c;	/* escaped '\377' */
-	if (c != 0)
-		DBG("get_byte: impossible escape sequence following 0xFF\n");
-	/* Otherwise, it's a parity or framing error */
-	get_raw_byte();
-	return -1;
-}
-
 static int put_bytes (int n, unsigned char* buff)
 {
 	int ret;
@@ -256,88 +482,6 @@ static int put_bytes (int n, unsigned char* buff)
 	  buff += ret;
 	}
 	return 0;
-}
-
-static int put_byte (int c)
-{
-	unsigned char buff[1];
-
-	buff[0] = c;
-	return put_bytes(1, buff);
-}
-
-static void send_packet (int len, unsigned char *data, int last)
-{
-	unsigned char *p, *end, buff[3];
-	int check;
-
-	last = last ? ETX : ETB;
-	check = last;
-	end = data + len;
-	for (p = data; p < end; p++)
-		check ^= *p;
-
-	/* Start of frame */
-	buff[0] = ESC;
-	buff[1] = STX;
-	put_bytes(2, buff);
-
-	/* Data */
-	// This is not so good if we have more than one esc. char
-	for (p = data; p < end; p++)
-		if (*p == ESC) {
-			/* Escape the last character */
-		        put_bytes(p-data+1, data); /* send up to the ESC*/
-			data = p+1;
-			put_byte(ESC); /* send another esc*/
-		}
-	put_bytes(end-data, data);
-
-	/* End of frame */
-	buff[1] = last;
-	buff[2] = check;
-	put_bytes(3, buff);
-}
-
-static int read_packet (void)
-{
-	unsigned char *p = answer;
-	int c, check, incomplete;
-
-	if (get_byte() != ESC || get_byte() != STX) {
-bad_frame:
-		/* drain input */
-		while (get_byte() >= 0)
-			continue;
-		return -1;
-	}
-	check = 0;
-	while(1) {
-		if ((c = get_byte()) < 0)
-			goto bad_frame;
-		if (c == ESC) {
-			if ((c = get_byte()) < 0)
-				goto bad_frame;
-			if (c == ETX || c == ETB) {
-				incomplete = (c == ETB);
-				break;
-			}
-		}
-		*p++ = c;
-		check ^= c;
-	}
-	/* Append a sentry '\0' at the end of the buffer, for the convenience
-	   of C programmers */
-	*p = '\0';
-	answer_len = p - answer;
-	check ^= c;
-	c = get_byte();
-	if (c != check)
-		return -1;
-	if (answer[2] + (answer[3]<<8) != answer_len - 4)
-		return -1;
-	/* Return 0 for the last packet, 1 otherwise */
-	return incomplete;
 }
 
 
@@ -408,39 +552,6 @@ rd_pkt:
 	}		
 	DBG("Cannot receive answer, aborting.");
 	return(-1);
-}
-
-/* Zero byte command */
-static int cmd0 (int c0, int c1)
-{
-	unsigned char b[4];
-
-	b[0] = c0; b[1] = c1;
-	b[2] = b[3] = 0;
-	return cmd(4, b);
-}
-
-
-/* One byte command */
-static int cmd1 (int c0, int c1, int arg)
-{
-	unsigned char b[5];
-
-	b[0] = c0; b[1] = c1;
-	b[2] =  1; b[3] =  0;
-	b[4] = arg;
-	return cmd(5, b);
-}
-
-/* Two byte command */
-static int cmd2 (int c0, int c1, int arg)
-{
-	unsigned char b[6];
-
-	b[0] = c0; b[1] = c1;
-	b[2] =  2; b[3] =  0;
-	b[4] = arg; b[5] = arg>>8;
-	return cmd(6, b);
 }
 
 static char* fuji_version_info (void)
