@@ -95,7 +95,6 @@ pdc320_id (CameraPort *port, const char **model)
 		for (i = 0; models[i].model; i++)
 			if (buf[1] == models[i].id) {
 				*model = models[i].model;
-				gp_debug_printf(GP_DEBUG_LOW, "Model is %s", *model);
 				break;
 			}
 	}
@@ -424,4 +423,5 @@ camera_init (Camera *camera)
 
 	return (result);
 }
+
 
