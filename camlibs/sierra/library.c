@@ -13,6 +13,8 @@ void sierra_dump_packet (Camera *camera, char *packet) {
 	char buf[4096], msg[4096];
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
+	return;
+
 	if ((packet[0] == TYPE_COMMAND) ||
 	    (packet[0] == TYPE_DATA) ||
 	    (packet[0] == TYPE_DATA_END)) {

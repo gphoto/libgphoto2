@@ -22,7 +22,7 @@ void sierra_debug_print(SierraData *fd, char *message) {
 
 int camera_id (CameraText *id) {
 
-	strcpy(id->text, "sierra-scottf");
+	strcpy(id->text, "sierra");
 
 	return (GP_OK);
 }
@@ -174,6 +174,11 @@ int camera_init (Camera *camera, CameraInit *init) {
 		case GP_PORT_SERIAL:
 			sierra_debug_print(fd, "Serial Device");
 			fd->dev = gpio_new(GPIO_DEVICE_SERIAL);
+			if (!fd->dev) {
+				gpio_free(fd->dev);
+				free(fd);
+				return (GP_ERROR);
+			}
 			strcpy(settings.serial.port, init->port_settings.path);
 			settings.serial.speed 	 = 19200;
 			settings.serial.bits 	 = 8;
@@ -200,8 +205,14 @@ int camera_init (Camera *camera, CameraInit *init) {
 			sierra_debug_print(fd, "USB Device");
 			fd->dev = gpio_new(GPIO_DEVICE_USB);
 
+			if (!fd->dev) {
+				gpio_free(fd->dev);
+				free(fd);
+				return (GP_ERROR);
+			}
+
 		        if (gpio_usb_find_device(fd->dev, vendor, product) == GPIO_ERROR) {
-				gp_camera_message(camera, "Could not find camera on USB");
+				gpio_free(fd->dev);
 				free (fd);
 		                return (GP_ERROR);
 			}
@@ -219,24 +230,32 @@ int camera_init (Camera *camera, CameraInit *init) {
 	                return (GP_ERROR);
 	}
 
-	gpio_set_settings(fd->dev, settings);
+	if (gpio_set_settings(fd->dev, settings) == GPIO_ERROR) {
+		gpio_free(fd->dev);
+		free (fd);
+                return (GP_ERROR);
+	}
+
 	gpio_set_timeout(fd->dev, TIMEOUT);
 	fd->type = init->port_settings.type;
 
 	if (gpio_open(fd->dev)==GPIO_ERROR) {
-		gp_camera_message(camera, "Can not open the port");
+		gpio_free(fd->dev);
+		free (fd);
 		return (GP_ERROR);
 	}
 
 	switch (init->port_settings.type) {
 		case GP_PORT_SERIAL:
 			if (sierra_ping(camera)==GP_ERROR) {
-				gp_camera_message(camera, "Can not talk to camera");
+				gpio_free(fd->dev);
+				free (fd);
 				return (GP_ERROR);
 			}
 
 			if (sierra_set_speed(camera, init->port_settings.speed)==GP_ERROR) {
-				gp_camera_message(camera, "Can not set the serial port speed");
+				gpio_free(fd->dev);
+				free (fd);
 				return (GP_ERROR);
 			}
 			fd->speed = init->port_settings.speed;
@@ -251,8 +270,8 @@ int camera_init (Camera *camera, CameraInit *init) {
 	}
 
 	if (sierra_get_int_register(camera, 1, &value)==GP_ERROR) {
-		gp_camera_message(camera, "Could not communicate with camera after initialization");
-		fd->speed = init->port_settings.speed;
+		gpio_free(fd->dev);
+		free (fd);
 		return (GP_ERROR);
 	}
 
