@@ -73,6 +73,8 @@ do
     cd "$dir";							\
     echo "Running gettextize --force --copy $gettext_opt";	\
     gettextize --force --copy $gettext_opt;			\
+    test -f po/Makevars.template &&				\
+    cp po/Makevars.template po/Makevars;			\
     echo "Running aclocal $ACLOCAL_FLAGS";			\
     aclocal $ACLOCAL_FLAGS;					\
     echo "Running autoheader";					\
