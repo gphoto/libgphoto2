@@ -10,21 +10,21 @@
 
 CameraList *gp_list_new()
 {
-	CameraList *list;
+        CameraList *list;
 
-	list = (CameraList*)malloc(sizeof(CameraList));
-	if (!list)
-		return NULL;
+        list = (CameraList*)malloc(sizeof(CameraList));
+        if (!list)
+                return NULL;
 
-	memset(list, 0, sizeof(CameraList));
-	return (list);
+        memset(list, 0, sizeof(CameraList));
+        return (list);
 }
 
 int gp_list_free(CameraList *list) {
 
-	if (list)
-		free(list);
-	return (GP_OK);
+        if (list)
+                free(list);
+        return (GP_OK);
 }
 
 int gp_list_append(CameraList *list, char *name, CameraListType type)
@@ -84,10 +84,13 @@ int gp_abilities_list_free (CameraAbilitiesList *list)
 
         int x;
 
-        for (x=0; x<list->count; x++)
-                free (list->abilities[x]);
-        free(list);
+        /* TODO: OS/2 Port crashes here... maybe compiler setting */
 
+
+        for (x=0; x<list->count; x++)
+               free (list->abilities[x]);
+
+        free(list);
         return (GP_OK);
 }
 
@@ -105,12 +108,12 @@ int gp_abilities_list_dump (CameraAbilitiesList *list)
 
 int gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities *abilities)
 {
-	if (!list->abilities)
-	        list->abilities = (CameraAbilities**)malloc(
-			sizeof(CameraAbilities*));
-	   else
-	        list->abilities = (CameraAbilities**)realloc(list->abilities,
-	                sizeof(CameraAbilities*)*(list->count+1));
+        if (!list->abilities)
+                list->abilities = (CameraAbilities**)malloc(
+                        sizeof(CameraAbilities*));
+           else
+                list->abilities = (CameraAbilities**)realloc(list->abilities,
+                        sizeof(CameraAbilities*)*(list->count+1));
         if (!list->abilities)
                 return (GP_ERROR_NO_MEMORY);
 
