@@ -1363,7 +1363,6 @@ old_canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 
 	GP_DEBUG ("canon_int_get_thumbnail() called for file '%s'", name);
 
-	gp_camera_progress (camera, 0);
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			i = canon_usb_get_thumbnail (camera, name, &data, length);
@@ -1415,8 +1414,6 @@ old_canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 				}
 				memcpy (data + expect, msg + 20, size);
 				expect += size;
-				gp_camera_progress (camera,
-						    total ? (expect / (float) total) : 1.);
 				if ((expect == total) != le32atoh (msg + 16)) {
 					GP_DEBUG ("ERROR: end mark != end of data");
 					return NULL;

@@ -94,14 +94,6 @@ void dsc_errorprint(int error, char *file, int line);
 	/* Print information on error, including file name, function 	*/
 	/* name and line number.					*/
 
-void dsc_print_status(Camera *camera, char *format, ...);
-	/* Call gp_camera_status() and dsc_debugprint() with the same 	*/
-	/* message.							*/
-
-void dsc_print_message(Camera *camera, char *format, ...);
-	/* Call gp_camera_message() and dsc_debugprint() with the same 	*/
-	/* message.							*/
-
 /******************************************************************************/
 
 /* Pre-procesor macros for verbose messaging and debugging */

@@ -232,30 +232,4 @@ void dsc_errorprint(int error, char *file, int line) {
 			file, line, error, errno, dsc_strerror(error));
 }
 
-void dsc_print_status(Camera *camera, char *format, ...) {
-
-        va_list         pvar;
-        char            str[80];
-
-        va_start(pvar, format);
-        vsprintf(str, format, pvar);
-        va_end(pvar);
-
-        gp_debug_printf(GP_DEBUG_MEDIUM, "panasonic", "%s\n", str);
-        gp_camera_status(camera, str);
-}
-
-void dsc_print_message(Camera *camera, char *format, ...) {
-
-        va_list         pvar;
-        char            str[512];
-
-        va_start(pvar, format);
-        vsprintf(str, format, pvar);
-        va_end(pvar);
-
-        gp_debug_printf(GP_DEBUG_MEDIUM, "panasonic", "%s\n", str);
-        gp_camera_message(camera, str);
-}
-
 /* End of dc.c */
