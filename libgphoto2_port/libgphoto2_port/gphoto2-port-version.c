@@ -41,7 +41,7 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 			"ttylock locking",
 #elif HAVE_LOCKDEV
 			"lockdev locking",
-#else HAVE_SERIAL
+#else
 			"without locking",
 #endif
 #else
