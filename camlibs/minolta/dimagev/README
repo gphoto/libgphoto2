@@ -33,9 +33,10 @@ Notes on specific functions:
 	system time. If it fails, the init function can still suceed; I do not
 	believe that failing to set the clock should mean failure to initialize.
 
-	camera_get_file_preview() returns a 9600 byte file, which is in the
-	"standard" EXIF thumbnail format. I am trying to find a way to convert
-	this into useful image data. The file is currently named thumb_dvXXXXX.jpg
-	but is *not* in JPEG format. I'm working on this also.
+	At long last, the preview thumbnails mostly work. The images are generally
+	good, although there is some bad data occasionally. The files appear as
+	PPM "rawbits" data, and generally one can at least determine if the image
+	is worth downloading by looking at the thumbnail. The distortion that
+	sometimes appears int the thumbnails does *not* occur in the actual images.
 
 --Gus Hartmann, <gphoto-dimagev@gus-the-cat.org>
