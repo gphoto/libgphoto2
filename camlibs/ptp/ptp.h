@@ -61,6 +61,9 @@
 #define PTP_OC_CopyObject               0x101A
 #define PTP_OC_GetPartialObject         0x101B
 #define PTP_OC_InitiateOpenCapture      0x101C
+// Eastman Kodak extension Operation Codes
+#define PTP_OC_EK_SendFileObjectInfo	0x9005
+#define PTP_OC_EK_SendFileObject	0x9006
 
 // Response Codes
 
@@ -97,6 +100,10 @@
 #define PTP_RC_SessionAlreadyOpened     0x201E
 #define PTP_RC_TransactionCanceled      0x201F
 #define PTP_RC_SpecificationOfDestinationUnsupported            0x2020
+// Eastman Kodak extension Response Codes
+#define PTP_RC_EK_FilenameRequired	0xA001
+#define PTP_RC_EK_FilenameConflicts	0xA002
+#define PTP_RC_EK_FilenameInvalid	0xA003
 
 // PTP extended ERROR codes
 
@@ -234,6 +241,7 @@ void ptp_getobjectcapturedate	(PTPObjectInfo* objectinfo, char* date);
 #define PTP_OFC_TIFF_IT				0x380E
 #define PTP_OFC_JP2				0x380F
 #define PTP_OFC_JPX				0x3810
-
+// Eastman Kodak extension ancillary format
+#define PTP_OFC_EK_M3U				0xb002
 
 #endif /* __PTP_H__ */
