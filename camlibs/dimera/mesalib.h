@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000, Brian Beattie <beattie@aracnet.com>
+ * Copyright (C) 2000-2001, Brian Beattie <beattie@aracnet.com>, et. al.
  *
  *	This software was created with the help of proprietary
  *      information belonging to StarDot Technologies
@@ -11,6 +11,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.4  2001/10/16 18:45:10  dfandrich
+ * Added CHECK macro to ease error handling
+ *
  * Revision 1.3  2001/09/10 20:25:44  dfandrich
  * Added missing types for Solaris
  *
@@ -29,6 +32,8 @@ typedef uint8_t u_int8_t;
 typedef uint16_t u_int16_t;
 typedef uint32_t u_int32_t;
 #endif
+
+#define CHECK(result) {int res = (result); if (res < 0) return (res);}
 
 /* MESA commands */
 #define	NOP		0x01	/* No operation */
@@ -184,4 +189,5 @@ int32_t
 mesa_read_image_info( gp_port *port, int i, struct mesa_image_info *info );
 u_int8_t *
 mesa_get_image( gp_port *port, int image );
+
 #endif /* MESALIB_H */
