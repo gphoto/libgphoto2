@@ -1,6 +1,9 @@
 #include <gtk/gtk.h>
 
+/* Misc helpers */
+/* ------------------------------------------------------*/
 int main_quit(GtkWidget *widget, gpointer data);
+gboolean toggle_icon (GtkWidget *icon_list, gpointer data);
 void debug_print (char *message);
 void idle();
 void icon_resize(GtkWidget *window);
@@ -13,16 +16,6 @@ void open_directory();
 void save_selected_photo();
 void export_gallery();
 void close_photo();
-
-/* Editing operations */
-void flip_horizontal();
-void flip_vertical();
-void rotate_90();
-void rotate_180();
-void rotate_270();
-void size_scale();
-void size_half();
-void size_double();
 
 /* Selection operations */
 void select_all();

@@ -23,12 +23,35 @@ void debug_print (char *message) {
 		printf("%s\n", message);
 }
 
+gboolean toggle_icon (GtkWidget *widget, gpointer data) {
+
+	GtkWidget *icon_list = (GtkWidget*) lookup_widget(gp_gtk_main_window, "icons");
+	GtkIconListItem *item;
+	GList *child = GTK_ICON_LIST(icon_list)->icons;
+
+	while (child) {
+		item = (GtkIconListItem*)child->data;
+		if ((item->eventbox == widget)||(item->entry == widget)) {
+
+		   if (item->state == GTK_STATE_SELECTED)
+			gtk_icon_list_unselect_icon(GTK_ICON_LIST(icon_list), item);
+		     else
+			gtk_icon_list_select_icon(GTK_ICON_LIST(icon_list), item);
+		   idle();
+		   gtk_entry_set_position(GTK_ENTRY(item->entry), 10000);
+		   return TRUE;
+		}
+		child = child->next;
+	}
+	return TRUE;
+}
+
 void idle() {
 	/* Let's GTK do some processing */
 
         while (gtk_events_pending())
                 gtk_main_iteration();
-	usleep(300000);
+	usleep(100000);
         while (gtk_events_pending())
                 gtk_main_iteration();
 }
@@ -177,51 +200,6 @@ void close_photo() {
 
 }
 
-
-/* Editing operations */
-/* ----------------------------------------------------------- */
-
-void flip_horizontal() {
-	debug_print("flip horizontal");
-
-}
-
-void flip_vertical() {
-	debug_print("flip vertical");
-
-}
-
-void rotate_90() {
-	debug_print("rotate 90");
-
-}
-
-void rotate_180() {
-	debug_print("rotate 180");
-
-}
-
-void rotate_270() {
-	debug_print("rotate 270");
-
-}
-
-void size_scale() {
-	debug_print("size scale");
-
-}
-
-void size_half() {
-	debug_print("size half");
-
-}
-
-void size_double() {
-	debug_print("size double");
-
-}
-
-
 /* Selection operations */
 /* ----------------------------------------------------------- */
 
@@ -302,6 +280,7 @@ void folder_set (GtkWidget *tree_item, gpointer data) {
 		sprintf(buf, "Could not open folder:\n%s", path);
 		gp_message(buf);
 		return;
+
 	}
 
 	camera_index();
@@ -671,7 +650,6 @@ void camera_index () {
 	gp_progress(0.00);
 	gtk_widget_set_sensitive(camera_tree, FALSE);
 	gtk_widget_show(gp_gtk_progress_window);
-	idle();
 	while ((x<count)&&(GTK_WIDGET_VISIBLE(gp_gtk_progress_window))) {
 		sprintf(buf,"Getting Thumbnail #%04i of %04i", x, count);
 		gp_message(buf);
@@ -679,6 +657,10 @@ void camera_index () {
 		sprintf(buf,"#%04i", x);
 		item = gtk_icon_list_add_from_data(GTK_ICON_LIST(icon_list),
 			no_thumbnail_xpm,buf,NULL);
+		gtk_signal_connect(GTK_OBJECT(item->eventbox), "button_press_event",
+			GTK_SIGNAL_FUNC(toggle_icon), NULL);
+		gtk_signal_connect(GTK_OBJECT(item->entry), "button_press_event",
+			GTK_SIGNAL_FUNC(toggle_icon), NULL);
 		if ((get_thumbnails)&&(a.file_preview)) {
 			f = gp_file_new();
 			if (gp_file_get_preview(x, f) == GP_OK) {
@@ -914,47 +896,6 @@ void on_close_activate (GtkMenuItem *menuitem, gpointer user_data) {
 void on_exit_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	main_quit(NULL, NULL);
 }
-
-
-void on_flip_horizontal_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	flip_horizontal();
-}
-
-
-void on_flip_vertical_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	flip_vertical();
-}
-
-
-void on_90_degrees_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	rotate_90();
-}
-
-
-void on_180_degrees_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	rotate_180();
-}
-
-
-void on_270_degrees_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	rotate_270();
-}
-
-
-void on_scale_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	size_scale();
-}
-
-
-void on_scale_half_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	size_half();
-}
-
-
-void on_scale_double_activate (GtkMenuItem *menuitem, gpointer user_data) {
-	size_double();
-}
-
 
 void on_select_all_activate (GtkMenuItem *menuitem, gpointer user_data) {
 	select_all();

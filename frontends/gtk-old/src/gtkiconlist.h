@@ -22,6 +22,7 @@
 
 
 #include <gdk/gdk.h>
+#include <glib.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,6 +57,7 @@ struct _GtkIconListItem
  
   GtkWidget *pixmap;
   GtkWidget *entry;
+  GtkWidget *eventbox;
 
   gpointer link;
 };
@@ -77,7 +79,7 @@ struct _GtkIconList
   guint row_spacing;  /* space between rows */ 
   guint col_spacing;  /* space between columns */
   guint icon_border;  /* space between icon and entry */
-  
+
   gboolean is_editable;
 
   GtkIconListItem *active_icon;
