@@ -339,6 +339,9 @@ static struct {
 	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309A},
 	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b},
 
+	/* Konica-Minolta PTP cameras */
+	{"Konica-Minolta:DiMAGE A2 (PTP mode)", 0x132b, 0x0001},
+
 	/* more coming soon :) */
 	{NULL, 0, 0}
 };
@@ -692,7 +695,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		if (ret!=PTP_RC_OK) goto err;
 	}
 	while (event.Code==PTP_EC_ObjectAdded) {
-		/* add newsly created object to internal structures */
+		/* add newly created object to internal structures */
 		add_object (camera, event.Param1, context);
 
 		/* I hate workarounds! Nikon is not 100% PTP compatible here! */
