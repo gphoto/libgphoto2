@@ -272,6 +272,7 @@ int camera_abilities (CameraAbilities *abilities, int *count) {
 	abilities[0].config    = 0;
 	abilities[0].delete_file  = 0;
 	abilities[0].file_preview = 1;
+	abilities[0].file_put  = 0;
 	abilities[0].lock      = 0;
 	abilities[0].reset     = 0;
 	abilities[0].sleep     = 1;
@@ -396,6 +397,12 @@ int camera_file_get_preview (int file_number, CameraFile *file) {
 
 	return GP_OK;
 }
+
+int camera_file_put (CameraFile *file) {
+
+	return GP_ERROR;
+}
+
 
 int camera_file_delete (int file_number) {
 

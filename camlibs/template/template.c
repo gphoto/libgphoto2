@@ -4,73 +4,32 @@
 
 int camera_id (char *id) {
 
-	strcpy(id, "fujitsu-scottf");
+	strcpy(id, "REPLACE WITH UNIQUE ID");
 
 	return (GP_OK);
 }
 
 int camera_abilities (CameraAbilities *abilities, int *count) {
 
-	*count = 3;
+	*count = 0;
 
 	/* Fill in each camera model's abilities */
 
-	strcpy(abilities[0].model, "Olympus D-220L");
+	strcpy(abilities[0].model, "CAMERA MODEL");
 	abilities[0].usb	= 0;
 	abilities[0].ieee1394	= 0;
 	abilities[0].parallel	= 0;
-	abilities[0].serial	= 1;
-	abilities[0].serial_baud[0] = 19200;
-	abilities[0].serial_baud[1] = 38400;
-	abilities[0].serial_baud[2] = 57600;
-	abilities[0].serial_baud[3] = 115200;
-	abilities[0].serial_baud[4] = 0;
+	abilities[0].serial	= 0;
+	abilities[0].serial_baud[0] = 9600;
+	abilities[0].serial_baud[1] = 0;
 	abilities[0].cancel	= 0;
-	abilities[0].capture	= 1;
-	abilities[0].config	= 1;
-	abilities[0].delete_file  = 1;
-	abilities[0].file_preview = 1;
+	abilities[0].capture	= 0;
+	abilities[0].config	= 0;
+	abilities[0].delete_file  = 0;
+	abilities[0].file_preview = 0;
 	abilities[0].file_put   = 0;
-	abilities[0].reset	= 1;
-	abilities[0].sleep	= 1;
-
-	strcpy(abilities[1].model, "Olympus D-320L");
-	abilities[1].usb	= 0;
-	abilities[1].ieee1394	= 0;
-	abilities[1].parallel	= 0;
-	abilities[1].serial	= 1;
-	abilities[1].serial_baud[0] = 19200;
-	abilities[1].serial_baud[1] = 38400;
-	abilities[1].serial_baud[2] = 57600;
-	abilities[1].serial_baud[3] = 115200;
-	abilities[1].serial_baud[4] = 0;
-	abilities[1].cancel	= 0;
-	abilities[1].capture	= 1;
-	abilities[1].config	= 1;
-	abilities[1].delete_file  = 1;
-	abilities[1].file_preview = 1;
-	abilities[1].file_put   = 0;
-	abilities[1].reset	= 1;
-	abilities[1].sleep	= 1;
-
-	strcpy(abilities[2].model, "Olympus D-620L");
-	abilities[2].usb	= 0;
-	abilities[2].ieee1394	= 0;
-	abilities[2].parallel	= 0;
-	abilities[2].serial	= 1;
-	abilities[2].serial_baud[0] = 19200;
-	abilities[2].serial_baud[1] = 38400;
-	abilities[2].serial_baud[2] = 57600;
-	abilities[2].serial_baud[3] = 115200;
-	abilities[2].serial_baud[4] = 0;
-	abilities[2].cancel	= 0;
-	abilities[2].capture	= 1;
-	abilities[2].config	= 1;
-	abilities[2].delete_file  = 1;
-	abilities[2].file_preview = 1;
-	abilities[2].file_put   = 0;
-	abilities[2].reset	= 1;
-	abilities[2].sleep	= 1;
+	abilities[0].reset	= 0;
+	abilities[0].sleep	= 0;
 
 	return (GP_OK);
 }
@@ -97,7 +56,7 @@ int camera_close () {
 
 int camera_folder_list(char *folder_name, CameraFolderList *list) {
 
-	return (GP_ERROR);
+	return (GP_OK);
 }
 
 int camera_folder_set(char *folder_name) {
@@ -175,10 +134,9 @@ int camera_manual (char *manual) {
 int camera_about (char *about) {
 
 	strcpy(about, 
-"Scott Fritzinger <scottf@unr.edu>
-Support for Fujitsu-based digital cameras
-including Olympus, Nikon, Epson, and a few
-others.");
+"YOUR NAME <email@somewhere.com>
+Quick description of the library.
+No more than 5 lines if possible.");
 
 	return (GP_OK);
 }
