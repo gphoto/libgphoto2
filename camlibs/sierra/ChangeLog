@@ -1,3 +1,14 @@
+2002-02-27  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Patrick Mansfield <patman@aracnet.com>:
+
+	* library.c: Stop the progress only if any has been started.
+
+2002-02-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (sierra_get_string_register): Retry on timeout (after
+	  sending nak).
+
 2002-02-21  Lutz Müller <lutz@users.sourceforge.net>
 
 	* sierra.c: Olympus C-860L has been reported to work with this driver,

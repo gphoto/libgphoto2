@@ -159,8 +159,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	 * the list with dummy entries and return.
 	 */
 	GP_DEBUG ("Getting filename of first file...");
-	CHECK (sierra_set_int_register (camera, 4, 1, context));
-	r = sierra_get_string_register (camera, 79, 0, NULL, filename,
+	r = sierra_get_string_register (camera, 79, 1, NULL, filename,
 					&len, context);
 	if ((r < 0) || (len <= 0) || !strcmp (filename, "        ")) {
 		CHECK (gp_list_populate (list, "P101%04i.JPG", count));
@@ -174,8 +173,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	CHECK (gp_list_append (list, filename, NULL));
 	for (i = 1; i < count; i++) {
 		GP_DEBUG ("Getting filename of file %i...", i + 1);
-		CHECK (sierra_set_int_register (camera, 4, i + 1, context));
-		CHECK (sierra_get_string_register (camera, 79, 0, NULL,
+		CHECK (sierra_get_string_register (camera, 79, i + 1, NULL,
 						   filename, &len, context));
 		if ((len <= 0) || !strcmp (filename, "        "))
 			snprintf (filename, sizeof (filename),
@@ -966,11 +964,12 @@ int sierra_set_string_register (Camera *camera, int reg, const char *s, long int
 
 int sierra_get_string_register (Camera *camera, int reg, int file_number, 
                                 CameraFile *file, unsigned char *b,
-				unsigned int *b_len, GPContext *context) {
-
+				unsigned int *b_len, GPContext *context)
+{
 	unsigned char packet[4096];
 	unsigned int packlength, total = *b_len;
 	unsigned int id = 0;
+	int retries, r;
 
 	GP_DEBUG ("* sierra_get_string_register");
 	GP_DEBUG ("* register: %i", reg);
@@ -991,10 +990,21 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 
 	/* Read all the data packets */
 	*b_len = 0;
+	retries = 0;
 	do {
 
-		/* Read one packet */
-		CHECK (sierra_read_packet (camera, packet, context));
+		/* Read one packet and retry on timeout. */
+		r = sierra_read_packet (camera, packet, context);
+		if (r == GP_ERROR_TIMEOUT) {
+			if (++retries > RETRIES)
+				return (r);
+			GP_DEBUG ("Timeout! Retrying (%i of %i)...",
+				  retries, RETRIES);
+			CHECK (sierra_write_nak (camera));
+			continue;
+		}
+		CHECK (r);
+
 		switch (packet[0]) {
 		case DC1:
 			gp_context_error (context, _("Could not get "
@@ -1019,7 +1029,8 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		}
 
 	} while (packet[0] != TYPE_DATA_END);
-	gp_context_progress_stop (context, id);
+	if (file)
+		gp_context_progress_stop (context, id);
 
 	return (GP_OK);
 }
