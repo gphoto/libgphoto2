@@ -22,6 +22,7 @@
 #define __PTP_H__
 
 #include <stdarg.h>
+#include <asm/types.h>
 
 // Container types
 
@@ -111,10 +112,11 @@
 
 typedef struct _PTPDeviceInfo PTPDedviceInfo;
 struct _PTPDeviceInfo {
-	short StaqndardVersion;
-	int VendorExtensionID;
-	short VendorExtensionDesc;
-	char data [PTP_REQ_DATALEN-(2*sizeof(short))-sizeof(int)];
+	short StaqndardVersion __attribute__ ((packed));
+	int VendorExtensionID __attribute__ ((packed));
+	short VendorExtensionDesc __attribute__ ((packed));
+	char data [PTP_REQ_DATALEN-(2*sizeof(short))-sizeof(int)]
+	__attribute__ ((packed));
 };
 
 
@@ -131,23 +133,23 @@ struct _PTPObjectHandles {
 
 typedef struct _PTPObjectInfo PTPObjectInfo;
 struct _PTPObjectInfo {
-	int StorageID;
-	short ObjectFormat;
-	short ProtectionStatus;
-	int ObjectCompressedSize;
-	short ThumbFormat;
-	int ThumbCompressedSize;
-	int ThumbPixWidth;
-	int ThumbPixHeight;
-	int ImagePixWidth;
-	int ImagePixHeight;
-	int ImageBitDepth;
-	int ParentObject;
-	short AssociationType;
-	int AssociationDesc;
-	int SequenceNumber;
-	char filenamelen;		// makes reading easyier
-	char data[PTP_REQ_DATALEN-11*sizeof(int)-2*sizeof(short)-sizeof(char)];
+	__u32 StorageID __attribute__ ((packed));
+	__u16 ObjectFormat __attribute__ ((packed));
+	__u16 ProtectionStatus __attribute__ ((packed));
+	__u32 ObjectCompressedSize __attribute__ ((packed));
+	__u16 ThumbFormat __attribute__ ((packed));
+	__u32 ThumbCompressedSize __attribute__ ((packed));
+	__u32 ThumbPixWidth __attribute__ ((packed));
+	__u32 ThumbPixHeight __attribute__ ((packed));
+	__u32 ImagePixWidth __attribute__ ((packed));
+	__u32 ImagePixHeight __attribute__ ((packed));
+	__u32 ImageBitDepth __attribute__ ((packed));
+	__u32 ParentObject __attribute__ ((packed));
+	__u16 AssociationType __attribute__ ((packed));
+	__u32 AssociationDesc __attribute__ ((packed));
+	__u32 SequenceNumber __attribute__ ((packed));
+	__u8  filenamelen __attribute__ ((packed));	// makes reading easyier
+	char data[PTP_REQ_DATALEN-11*sizeof(int)-2*sizeof(short)-sizeof(char)] __attribute__ ((packed));
 };
 
 // Glue stuff
