@@ -208,6 +208,8 @@ int camera_file_get_preview (int file_number, CameraFile *preview) {
 	preview->data = (char *)malloc(sizeof(char)*imagesize);
 	fread(preview->data, (size_t)imagesize, (size_t)sizeof(char),fp);
 	fclose(fp);
+
+	strcpy(preview->name, dir_images[file_number]);
 	preview->type = GP_FILE_JPEG;
 	preview->size = imagesize;
 
