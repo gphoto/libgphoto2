@@ -193,53 +193,53 @@ typedef enum {
 	K_PREFERENCE_FOCUS_SELF_TIMER,
 	K_PREFERENCE_AUTO_OFF_TIME,
 	K_PREFERENCE_BEEP
-} k_preference_t;
+} KPreference;
 
 
 typedef enum {
 	K_POWER_LEVEL_LOW, 
 	K_POWER_LEVEL_NORMAL,
 	K_POWER_LEVEL_HIGH
-} k_power_level_t;
+} KPowerLevel;
 
 
 typedef enum {
 	K_POWER_SOURCE_BATTERY,
 	K_POWER_SOURCE_AC
-} k_power_source_t;
+} KPowerSource;
 
 
 typedef enum {
 	K_THUMBNAIL,
 	K_IMAGE_JPEG,
 	K_IMAGE_EXIF
-} k_image_type_t;
+} KImageType;
 
 
 typedef enum {
 	K_DISPLAY_BUILT_IN,
 	K_DISPLAY_TV
-} k_display_t;
+} KDisplay;
 
 
 typedef enum {
 	K_CARD_STATUS_CARD,
 	K_CARD_STATUS_NO_CARD
-} k_card_status_t;
+} KCardStatus;
 
 
 typedef enum {
 	K_DATE_FORMAT_MONTH_DAY_YEAR,
 	K_DATE_FORMAT_DAY_MONTH_YEAR,
 	K_DATE_FORMAT_YEAR_MONTH_DAY
-} k_date_format_t;
+} KDateFormat;
 
 
 typedef enum {
 	K_TV_OUTPUT_FORMAT_NTSC,
 	K_TV_OUTPUT_FORMAT_PAL,
 	K_TV_OUTPUT_FORMAT_HIDE
-} k_tv_output_format_t;
+} KTVOutputFormat;
 
 
 /****************************************************************/
@@ -253,9 +253,6 @@ typedef enum {
 /* (qm200, unsigned long).                                      */
 /****************************************************************/
 gint k_init (gp_port *device);
-
-
-gint k_exit (gp_port *device);
 
 
 gint k_get_io_capability (
@@ -277,7 +274,7 @@ gint k_get_io_capability (
 	gboolean *bit_flag_hw_flow_control);
 
 
-gint k_set_io_capability (
+int k_set_io_capability (
 	gp_port *device,
 	guint bit_rate,
 	gboolean bit_flag_7_or_8_bits,
@@ -287,13 +284,13 @@ gint k_set_io_capability (
 	gboolean bit_flag_use_hw_flow_control);
 
 
-gint k_erase_all (gp_port *device, guint *number_of_images_not_erased);
+int k_erase_all (gp_port *device, guint *number_of_images_not_erased);
 
 
-gint k_format_memory_card (gp_port *device);
+int k_format_memory_card (gp_port *device);
 
 
-gint k_take_picture (
+int k_take_picture (
 	gp_port *device,
 	gboolean image_id_long,
 	gulong *image_id, 
@@ -303,73 +300,51 @@ gint k_take_picture (
 	gboolean *protected);
 
 
-gint k_get_preview (gp_port *device, gboolean thumbnail, guchar **image_buffer, guint *image_buffer_size);
+int k_get_preview (gp_port *device, gboolean thumbnail, guchar **image_buffer, guint *image_buffer_size);
 
 
-gint k_set_preference (gp_port *device, k_preference_t preference, guint value);
+int k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image_id, gboolean protected);
 
 
-gint k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image_id, gboolean protected);
+int k_erase_image (gp_port *device, gboolean image_id_long, gulong image_id);
 
 
-gint k_erase_image (gp_port *device, gboolean image_id_long, gulong image_id);
+int k_reset_preferences (gp_port *device);
 
+typedef struct {
+	unsigned char year, month, day;
+	unsigned char hour, minute, second;
+} KDate;
 
-gint k_reset_preferences (gp_port *device);
+int k_get_date_and_time (gp_port *device, KDate *date);
+int k_set_date_and_time (gp_port *device, KDate  date);
 
+typedef struct {
+	unsigned int shutoff_time;
+	unsigned int self_timer_time;
+	unsigned int beep;
+	unsigned int slide_show_interval;
+} KPreferences;
 
-gint k_get_date_and_time (
-        gp_port *device,
-	guchar *year, 
-	guchar *month, 
-	guchar *day, 
-	guchar *hour, 
-	guchar *minute, 
-	guchar *second);
+int k_get_preferences (gp_port *device, KPreferences *preferences);
+int k_set_preference  (gp_port *device, KPreference   preference,
+					unsigned int value);
 
+typedef struct {
+	KPowerLevel  power_level;
+	KPowerSource power_source;
+	KCardStatus  card_status;
+	KDisplay     display;
+	unsigned int self_test_result;
+	unsigned int card_size;
+	unsigned int pictures, pictures_left;
+	KDate date;
+	unsigned int io_setting_bit_rate, io_setting_flags;
+	unsigned char flash, resolution, focus, exposure;
+	unsigned char total_pictures, total_strobes;
+} KStatus;
 
-gint k_set_date_and_time (
-	gp_port *device,
-	guchar year, 
-	guchar month, 
-	guchar day, 
-	guchar hour, 
-	guchar minute, 
-	guchar second);
-
-
-gint k_get_preferences (
-	gp_port *device,
-	guint *shutoff_time, 
-	guint *self_timer_time, 
-	guint *beep, 
-	guint *slide_show_interval);
-
-
-gint k_get_status (
-	gp_port *device,
-	guint *self_test_result, 
-	k_power_level_t	*power_level,
-	k_power_source_t *power_source,
-	k_card_status_t	*card_status,
-	k_display_t *display, 
-	guint *card_size,
-	guint *pictures, 
-	guint *pictures_left, 
-	guchar *year, 
-	guchar *month, 
-	guchar *day,
-	guchar *hour,
-	guchar *minute,
-	guchar *second,
-	guint *io_setting_bit_rate,
-	guint *io_setting_flags,
-	guchar *flash,
-	guchar *resolution,
-	guchar *focus,
-	guchar *exposure,
-	guint *total_pictures,
-	guint *total_strobes);
+int k_get_status (gp_port *device, KStatus *status);
 
 
 gint k_get_information (
@@ -397,22 +372,23 @@ gint k_get_image_information (
 	guint *information_buffer_size);
 
 
-gint k_get_image (
+int k_get_image (
 	gp_port *device,
 	gboolean image_id_long,
 	gulong image_id, 
-	k_image_type_t image_type, 
+	KImageType image_type, 
 	guchar **image_buffer, 
 	guint *image_buffer_size);
 
 
-gint k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image_id, gboolean protected);
+int k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image_id, gboolean protected);
 
 
-gint k_localization_tv_output_format_set (gp_port *device, k_tv_output_format_t tv_output_format);
+int k_localization_tv_output_format_set (gp_port *device,
+					 KTVOutputFormat tv_output_format);
 
 
-gint k_localization_date_format_set (gp_port *device, k_date_format_t date_format);
+gint k_localization_date_format_set (gp_port *device, KDateFormat date_format);
 
 
 gint k_localization_data_put (gp_port *device, guchar *data, gulong data_size);

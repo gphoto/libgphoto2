@@ -32,9 +32,6 @@
 gint l_init (gp_port* device);
 
 
-gint l_exit (gp_port* device);
-
-
 /****************************************************************/
 /* Some comments on the structure of send_buffer, image_buffer,	*/
 /* and receive_buffer:						*/

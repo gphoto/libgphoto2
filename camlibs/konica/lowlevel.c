@@ -90,15 +90,6 @@ l_init (gp_port* device)
 
 
 gint 
-l_exit (gp_port* device)
-{
-	g_return_val_if_fail (device, GP_ERROR_BAD_PARAMETERS);
-	
-	return (GP_OK);
-}
-
-
-gint 
 l_esc_read (gp_port* device, guchar* c)
 {
 	gint result;

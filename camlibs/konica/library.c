@@ -60,18 +60,14 @@ static gchar* konica_results[] = {
 	/* KONICA_ERROR_UNKNOWN_ERROR				*/	N_("Unknown error")
 };
 
-typedef struct
-{
+static struct {
 	const gchar *model;
 	gboolean image_id_long;
 	gint vendor;
 	gint product;
 	gint inep;
 	gint outep;
-} KonicaCamera;
-
-KonicaCamera konica_cameras []= 
-{
+} konica_cameras[] = {
 	{"Konica Q-EZ",        FALSE, 0,      0,      0,    0   },
 	{"Konica Q-M100",      FALSE, 0,      0,      0,    0   },
 	{"Konica Q-M100V",     FALSE, 0,      0,      0,    0   },
@@ -82,128 +78,68 @@ KonicaCamera konica_cameras []=
 	{NULL,                 FALSE, 0,      0,      0,    0   }
 };
 
-/********************/
-/* Type definitions */
-/********************/
 typedef struct {
-	gboolean          image_id_long;
+	gboolean image_id_long;
 } KonicaData;
 			
-/**************/
-/* Prototypes */
-/**************/
+
 gboolean localization_file_read (Camera* camera, gchar* file_name, guchar** data, gulong* data_size);
 
-/*************/
-/* Functions */
-/*************/
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data)
 {
-        guint                   self_test_result;
-        k_power_level_t         power_level;
-        k_power_source_t        power_source;
-        k_card_status_t         card_status;
-        k_display_t             display;
-        guint           card_size;
-        guint           pictures = 0;
-        guint           pictures_left;
-        guchar          year;
-        guchar          month;
-        guchar          day;
-        guchar          hour;
-        guchar          minute;
-        guchar          second;
-        guint           io_setting_bit_rate;
-        guint           io_setting_flags;
-        guchar          flash;
-        guchar          quality;
-        guchar          focus;
-        guchar          exposure;
-        guint           total_pictures;
-        guint           total_strobes;
+	KStatus status;
         guint           i;
         guchar*         information_buffer = NULL;
         guint           information_buffer_size;
         guint           exif_size;
         gboolean        protected;
         gulong          image_id;
-        gchar*          filename;
+        char filename[1024];
+	int result;
 	Camera *camera = data;
 	KonicaData *kd = camera->camlib_data;
 
-	if (strcmp (folder, "/"))
-		return (GP_ERROR_DIRECTORY_NOT_FOUND);
-	
-	CHECK (k_get_status (camera->port, &self_test_result,
-                &power_level, &power_source, &card_status, &display, &card_size,
-                &pictures, &pictures_left, &year, &month, &day, &hour, &minute,
-                &second, &io_setting_bit_rate, &io_setting_flags, &flash,
-                &quality, &focus, &exposure, &total_pictures, &total_strobes));
+	/*
+	 * We can't get the filename from the camera. 
+	 * But we decide to call the images %6i.jpeg', with the image id as
+	 * parameter. Therefore, let's get the image ids.
+	 */
+	CHECK (k_get_status (camera->port, &status));
+        for (i = 0; i < status.pictures; i++) {
 
-        /* We can't get the filename from the camera.   */
-        /* But we decide to call the images             */
-        /* %6i.jpeg', with the image id as              */
-        /* parameter. Therefore, let's get the image    */
-        /* ids.                                         */
-        for (i = 0; i < pictures; i++) {
-                if (k_get_image_information (camera->port, kd->image_id_long,
-                       	i + 1, &image_id, &exif_size, &protected,
-			&information_buffer, &information_buffer_size) == GP_OK)
-			filename = g_strdup_printf ("%06i.jpeg",
-						    (int) image_id);
-                else 
-			filename = g_strdup ("??????.jpeg");
-                g_free (information_buffer);
-                information_buffer = NULL;
-		gp_list_append (list, filename, NULL);
-                g_free (filename);
+		/* Get information */
+		result = k_get_image_information (camera->port,
+			kd->image_id_long, i + 1, &image_id, &exif_size,
+			&protected, &information_buffer,
+			&information_buffer_size);
+		g_free (information_buffer);
+		information_buffer = NULL;
+		CHECK (result);
+
+		/* Append to the list */
+		sprintf (filename, "%06i.jpeg", (int) image_id);
+		CHECK (gp_list_append (list, filename, NULL));
         }
 
         return (GP_OK);
 }
 
-
-static gint
-erase_all_unprotected_images (Camera* camera, CameraWidget* widget)
-{
-        KonicaData*  konica_data;
-        gint            not_erased;
-        gint            result;
-        gchar*          tmp;
-
-        konica_data = (KonicaData *) camera->camlib_data;
-
-        result = k_erase_all (camera->port, &not_erased);
-        if ((result == GP_OK) && (not_erased > 0)) {
-                tmp = g_strdup_printf (_("%i images were protected and have "
-				         "not been erased."), not_erased);
-                gp_frontend_status (camera, tmp);
-                g_free (tmp);
-        }
-	gp_filesystem_format (camera->fs);
-        return (result);
-}
-
-
 int 
 camera_id (CameraText* id)
 {
-	g_return_val_if_fail (id != NULL, GP_ERROR_BAD_PARAMETERS);
 	strcpy (id->text, "konica");
+
 	return (GP_OK);
 }
-
 
 int 
 camera_abilities (CameraAbilitiesList* list)
 {
-	gint 			i;
-	CameraAbilities* 	a;
-
-	g_return_val_if_fail (list != NULL, GP_ERROR_BAD_PARAMETERS);
+	int i;
+	CameraAbilities *a;
 
 	for (i = 0; konica_cameras [i].model; i++) {
 		gp_abilities_new (&a);
@@ -353,9 +289,6 @@ init_serial_connection (Camera *camera)
 	CHECK (k_set_io_capability (camera->port, camera->port_info->speed,
 				    TRUE, FALSE, FALSE, FALSE, FALSE)); 
 	
-	/* Disconnect */
-	CHECK (k_exit (camera->port));
-	
 	/* Reconnect */
 	settings.serial.speed = camera->port_info->speed;
 	CHECK (gp_port_settings_set (camera->port, settings));
@@ -444,17 +377,12 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 static int
 camera_exit (Camera* camera)
 {
-        KonicaData* 	konica_data;
+        KonicaData *kd = camera->camlib_data;
 
-	g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
-	
-	konica_data = (KonicaData *) camera->camlib_data;
-	if (!konica_data)
-		return (GP_OK);
-	
-	CHECK (k_exit (camera->port));
-	free (konica_data);
-	camera->camlib_data = NULL;
+	if (kd) {
+		free (kd);
+		kd = NULL;
+	}
 
 	return (GP_OK);
 }
@@ -462,23 +390,19 @@ camera_exit (Camera* camera)
 static int
 camera_folder_delete_all (Camera* camera, const gchar* folder)
 {
-	gint		result;
-	KonicaData*	konica_data;
-	guint		not_erased = 0;
-	gchar*		tmp;
-	
-	g_return_val_if_fail (camera,	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (folder, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (konica_data = (KonicaData *) camera->camlib_data, GP_ERROR_BAD_PARAMETERS);
+	unsigned int not_erased = 0;
+	char tmp[1024];
 
-	if (strcmp (folder, "/")) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	if (strcmp (folder, "/"))
+		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
-	if ((result = k_erase_all (camera->port, &not_erased)) != GP_OK) return (result);
+	CHECK (k_erase_all (camera->port, &not_erased));
+	CHECK (gp_filesystem_format (camera->fs));
+
 	if (not_erased) {
-		tmp = g_strdup_printf (_("%i pictures could not be deleted - they are protected!"), not_erased);
+		sprintf (tmp, _("%i pictures could not be deleted because "
+			 "they are protected!"), not_erased);
 		gp_frontend_message (camera, tmp);
-		g_free (tmp);
-		return (GP_ERROR);
 	}
 
 	return (GP_OK);
@@ -681,78 +605,23 @@ camera_about (Camera* camera, CameraText* about)
 }
 
 static int
-camera_folder_get_config (Camera* camera, const gchar* folder, CameraWidget** window)
-{
-	CameraWidget*	widget;
-
-	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (window, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (!*window,	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (folder,	GP_ERROR_BAD_PARAMETERS);
-
-	/* Our cameras don't support folders. */
-	g_return_val_if_fail (!strcmp (folder, "/"), GP_ERROR_FILE_NOT_FOUND);
-
-	/* Construct the window. */
-	gp_widget_new (GP_WIDGET_WINDOW, folder, window);
-	gp_widget_new (GP_WIDGET_BUTTON, _("Erase all unprotected images"), &widget);
-	gp_widget_set_value (widget, erase_all_unprotected_images);
-	gp_widget_append (*window, widget);
-
-	return (GP_OK);
-}
-
-static int
-camera_folder_set_config (Camera* camera, const gchar* folder, CameraWidget* window)
-{
-	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (window,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (folder,   GP_ERROR_BAD_PARAMETERS);
-	
-	return (GP_OK);
-}
-
-static int
 camera_get_config (Camera* camera, CameraWidget** window)
 {
-        CameraWidget*	widget;
-	CameraWidget*	section;
-        guint 		shutoff_time, self_timer_time, beep, slide_show_interval;
-        guint 		self_test_result;
-        k_power_level_t 	power_level;
-        k_power_source_t 	power_source;
-        k_card_status_t 	card_status;
-        k_display_t 	display;
-        guint 		card_size;
-        guint 		pictures = 0;
-        guint 		pictures_left;
-        guchar 		year, month, day, hour, minute, second;
-        guint 		io_setting_bit_rate, io_setting_flags;
-        guchar 		flash;
-        guchar 		resolution;
-        guchar 		focus_self_timer;
-        guchar 		exposure;
-        guint 		total_pictures;
-        guint 		total_strobes;
-	KonicaData*	kd;
-	gint		year_4_digits;
+        CameraWidget *widget;
+	CameraWidget *section;
+	KStatus status;
+	KPreferences preferences;
+	gint	year_4_digits;
 	struct tm	tm_struct;
 	time_t		t;
-	gfloat		value_float;
+	gfloat value_float;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_get_config ***");
-	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (window, 	GP_ERROR_BAD_PARAMETERS);
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: "
+			 "camera_get_config ***");
 
 	/* Get the current settings. */
-	kd = (KonicaData *) camera->camlib_data;
-	CHECK (k_get_status (camera->port, &self_test_result, &power_level,
-                &power_source, &card_status, &display, &card_size, &pictures,
-                &pictures_left, &year, &month, &day, &hour, &minute, &second,
-                &io_setting_bit_rate, &io_setting_flags, &flash, &resolution,
-                &focus_self_timer, &exposure, &total_pictures, &total_strobes));
-	CHECK (k_get_preferences (camera->port, &shutoff_time, &self_timer_time,
-                &beep, &slide_show_interval));
+	CHECK (k_get_status (camera->port, &status));
+	CHECK (k_get_preferences (camera->port, &preferences));
 
 	/* Create the window. */
         gp_widget_new (GP_WIDGET_WINDOW, _("Konica Configuration"), window);
@@ -766,14 +635,14 @@ camera_get_config (Camera* camera, CameraWidget** window)
 	/* Date */
 	gp_widget_new (GP_WIDGET_DATE, _("Date and Time"), &widget);
 	gp_widget_append (section, widget);
-	if (year > 80) year_4_digits = year + 1900;
-	else year_4_digits = year + 2000;
+	if (status.date.year > 80) year_4_digits = status.date.year + 1900;
+	else year_4_digits = status.date.year + 2000;
 	tm_struct.tm_year = year_4_digits - 1900;
-	tm_struct.tm_mon = month;
-	tm_struct.tm_mday = day;
-	tm_struct.tm_hour = hour;
-	tm_struct.tm_min = minute;
-	tm_struct.tm_sec = second;
+	tm_struct.tm_mon = status.date.month;
+	tm_struct.tm_mday = status.date.day;
+	tm_struct.tm_hour = status.date.hour;
+	tm_struct.tm_min = status.date.minute;
+	tm_struct.tm_sec = status.date.second;
 	t = mktime (&tm_struct);
 	gp_widget_set_value (widget, &t);
 
@@ -782,7 +651,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
         gp_widget_append (section, widget);
 	gp_widget_add_choice (widget, _("On"));
 	gp_widget_add_choice (widget, _("Off"));
-        switch (beep) {
+        switch (preferences.beep) {
         case 0:
 		gp_widget_set_value (widget, _("Off"));
 		break;
@@ -790,27 +659,28 @@ camera_get_config (Camera* camera, CameraWidget** window)
 		gp_widget_set_value (widget, _("On"));
                 break;
         }
-	gp_widget_set_info (widget, _("Shall the camera beep when taking a picture?"));
+	gp_widget_set_info (widget, _("Shall the camera beep when taking a "
+			    "picture?"));
 
         /* Self Timer Time */
         gp_widget_new (GP_WIDGET_RANGE, _("Self Timer Time"), &widget);
         gp_widget_append (section, widget);
         gp_widget_set_range (widget, 3, 40, 1);
-	value_float = self_timer_time;
+	value_float = preferences.self_timer_time;
 	gp_widget_set_value (widget, &value_float);
 
         /* Auto Off Time */
         gp_widget_new (GP_WIDGET_RANGE, _("Auto Off Time"), &widget);
         gp_widget_append (section, widget);
         gp_widget_set_range (widget, 1, 255, 1);
-	value_float = shutoff_time;
+	value_float = preferences.shutoff_time;
 	gp_widget_set_value (widget, &value_float);
 
         /* Slide Show Interval */
         gp_widget_new (GP_WIDGET_RANGE, _("Slide Show Interval"), &widget);
         gp_widget_append (section, widget);
         gp_widget_set_range (widget, 1, 30, 1);
-	value_float = slide_show_interval;
+	value_float = preferences.slide_show_interval;
 	gp_widget_set_value (widget, &value_float);
 
         /* Resolution */
@@ -819,7 +689,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
         gp_widget_add_choice (widget, _("Low (576 x 436)"));
         gp_widget_add_choice (widget, _("Medium (1152 x 872)"));
         gp_widget_add_choice (widget, _("High (1152 x 872)"));
-        switch (resolution) {
+        switch (status.resolution) {
         case 1:
 		gp_widget_set_value (widget, _("High (1152 x 872)"));
                 break;
@@ -858,7 +728,8 @@ camera_get_config (Camera* camera, CameraWidget** window)
         /********************************/
         /* Session-persistent Settings  */
         /********************************/
-        gp_widget_new (GP_WIDGET_SECTION, _("Session-persistent Settings"), &section);
+        gp_widget_new (GP_WIDGET_SECTION, _("Session-persistent Settings"),
+		       &section);
         gp_widget_append (*window, section);
 
         /* Flash */
@@ -869,7 +740,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
         gp_widget_add_choice (widget, _("On, red-eye reduction"));
         gp_widget_add_choice (widget, _("Auto"));
         gp_widget_add_choice (widget, _("Auto, red-eye reduction"));
-        switch (flash) {
+        switch (status.flash) {
         case 0:
 		gp_widget_set_value (widget, _("Off"));
                 break;
@@ -891,7 +762,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
         gp_widget_new (GP_WIDGET_RANGE, _("Exposure"), &widget);
         gp_widget_append (section, widget);
         gp_widget_set_range (widget, 0, 255, 1);
-	value_float = exposure;
+	value_float = status.exposure;
 	gp_widget_set_value (widget, &value_float);
 
         /* Focus */
@@ -899,7 +770,7 @@ camera_get_config (Camera* camera, CameraWidget** window)
         gp_widget_append (section, widget);
         gp_widget_add_choice (widget, _("Fixed"));
         gp_widget_add_choice (widget, _("Auto"));
-        switch ((guint) (focus_self_timer / 2)) {
+        switch ((guint) (status.focus / 2)) {
         case 1:
 		gp_widget_set_value (widget, _("Auto"));
                 break;
@@ -919,9 +790,10 @@ camera_get_config (Camera* camera, CameraWidget** window)
         gp_widget_append (section, widget);
         gp_widget_add_choice (widget, _("Self Timer (only next picture)"));
         gp_widget_add_choice (widget, _("Normal"));
-        switch (focus_self_timer % 2) {
+        switch (status.focus % 2) {
         case 1:
-		gp_widget_set_value (widget, _("Self Timer (only next picture)"));
+		gp_widget_set_value (widget, _("Self Timer ("
+				     "next picture only)"));
                 break;
         default:
 		gp_widget_set_value (widget, _("Normal"));
@@ -935,56 +807,57 @@ camera_get_config (Camera* camera, CameraWidget** window)
 static int
 camera_set_config (Camera *camera, CameraWidget *window)
 {
-	CameraWidget*	section;
-	CameraWidget*	widget_focus;
-	CameraWidget*	widget_self_timer;
-	CameraWidget*	widget;
-	k_date_format_t date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
-	k_tv_output_format_t tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
+	CameraWidget *section;
+	CameraWidget *widget_focus;
+	CameraWidget *widget_self_timer;
+	CameraWidget *widget;
+	KDate date;
+	KDateFormat date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
+	KTVOutputFormat tv_output_format = K_TV_OUTPUT_FORMAT_HIDE;
 	guint		beep = 0;
         gint 		j = 0;
         guchar*		data;
         gulong 		data_size;
 	guchar 		focus_self_timer = 0;
-        KonicaData*	kd;
 	gint		i;
 	gfloat		f;
 	gchar*		c;
 	struct tm*	tm_struct;
-	gint		result;
+	int		result;
 
-        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** Entering camera_set_config ***");
-	g_return_val_if_fail (camera, GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (window, GP_ERROR_BAD_PARAMETERS);
-
-        kd = (KonicaData *) camera->camlib_data;
-	g_return_val_if_fail (kd, GP_ERROR_BAD_PARAMETERS);
+        gp_debug_printf (GP_DEBUG_LOW, "konica", "*** ENTER: "
+			 "camera_set_config ***");
 
         /************************/
         /* Persistent Settings  */
         /************************/
-	gp_widget_get_child_by_label (window, _("Persistent Settings"), &section);
+	gp_widget_get_child_by_label (window, _("Persistent Settings"),
+				      &section);
 
 	/* Date & Time */
 	gp_widget_get_child_by_label (section, _("Date and Time"), &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &i);
 		tm_struct = localtime ((time_t*) &i);
-		CHECK (k_set_date_and_time (camera->port, 
-			tm_struct->tm_year - 100, tm_struct->tm_mon, 
-			tm_struct->tm_mday, tm_struct->tm_hour, 
-			tm_struct->tm_min, tm_struct->tm_sec));
+		date.year   = tm_struct->tm_year - 100;
+		date.month  = tm_struct->tm_mon;
+		date.day    = tm_struct->tm_mday;
+		date.hour   = tm_struct->tm_hour;
+		date.minute = tm_struct->tm_min;
+		date.second = tm_struct->tm_sec;
+		CHECK (k_set_date_and_time (camera->port, date));
 	}
 
 	/* Beep */
 	gp_widget_get_child_by_label (section, _("Beep"), &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &c);
-		if (strcmp (c, _("Off")) == 0) beep = 0;
-		else if (strcmp (c, _("On")) == 0) beep = 1;
-		else g_warning (_("Value '%s' invalid. Valid values are 'Off' "
-				  "and 'On'."), c);
-		CHECK (k_set_preference (camera->port, K_PREFERENCE_BEEP, beep));
+		if (strcmp (c, _("Off")) == 0)
+			beep = 0;
+		else
+			beep = 1;
+		CHECK (k_set_preference (camera->port, K_PREFERENCE_BEEP,
+					 beep));
 	}
 
 	/* Self Timer Time */
@@ -1000,11 +873,12 @@ camera_set_config (Camera *camera, CameraWidget *window)
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &f);
 		CHECK (k_set_preference (camera->port,
-					K_PREFERENCE_AUTO_OFF_TIME, (gint) f));
+					K_PREFERENCE_AUTO_OFF_TIME, (int) f));
 	}
 
 	/* Slide Show Interval */
-	gp_widget_get_child_by_label (section, _("Slide Show Interval"), &widget);
+	gp_widget_get_child_by_label (section, _("Slide Show Interval"),
+				      &widget);
 	if (gp_widget_changed (widget)) {
 		gp_widget_get_value (widget, &f);
 		CHECK (k_set_preference (camera->port,
@@ -1079,13 +953,15 @@ camera_set_config (Camera *camera, CameraWidget *window)
 			date_format = K_DATE_FORMAT_YEAR_MONTH_DAY;
 		else 
 			g_assert_not_reached ();
-		CHECK (k_localization_date_format_set (camera->port,date_format));
+		CHECK (k_localization_date_format_set (camera->port, 
+						       date_format));
 	}
 
         /********************************/
         /* Session-persistent Settings  */
         /********************************/
-	gp_widget_get_child_by_label (window, _("Session-persistent Settings"), &section);
+	gp_widget_get_child_by_label (window, _("Session-persistent Settings"),
+				      &section);
 
 	/* Flash */
 	gp_widget_get_child_by_label (section, _("Flash"), &widget);
@@ -1099,10 +975,8 @@ camera_set_config (Camera *camera, CameraWidget *window)
 			j = 5;
 		else if (!strcmp (c, _("Auto")))
 			j = 2;
-		else if (!strcmp (c, _("Auto, red-eye reduction")))
+		else
 			j = 6;
-		else 
-			g_warning (_("Value '%s' invalid. Valid values are 'On', 'Off', 'On, red-eye reduction', 'Auto' and 'Auto, red-eye reduction'."), c);
 		CHECK (k_set_preference (camera->port, K_PREFERENCE_FLASH, j));
 	}
 
@@ -1123,21 +997,18 @@ camera_set_config (Camera *camera, CameraWidget *window)
 	gp_widget_get_child_by_label (window, _("Volatile Settings"), &section);
 
 	/* Self Timer (and Focus) */
-	gp_widget_get_child_by_label (section, _("Self Timer"), &widget_self_timer);
-	if (gp_widget_changed (widget_focus) && gp_widget_changed (widget_self_timer)) {
+	gp_widget_get_child_by_label (section, _("Self Timer"),
+				      &widget_self_timer);
+	if (gp_widget_changed (widget_focus) &&
+	    gp_widget_changed (widget_self_timer)) {
 		gp_widget_get_value (widget_focus, &c);
 		if (!strcmp (c, _("Auto")))
 			focus_self_timer = 2;
-		else if (!strcmp (c, _("Fixed")))
-			focus_self_timer = 0;
 		else
-			g_assert_not_reached ();
+			focus_self_timer = 0;
 		gp_widget_get_value (widget_self_timer, &c);
 		if (!strcmp (c, _("Self Timer (only next picture)")))
 			focus_self_timer++;
-		else if (!strcmp (c, _("Normal")));
-		else 
-			g_warning (_("Value '%s' invalid. Valid values are 'Self Timer (only next picture)' and 'Normal'"), c);
 		CHECK (k_set_preference (camera->port,
 			K_PREFERENCE_FOCUS_SELF_TIMER, focus_self_timer));
 	}
@@ -1156,7 +1027,9 @@ camera_result_as_string (Camera* camera, gint result)
 	if (-result < 1000) return (gp_result_as_string (result));
 
 	/* Our error? */
-	if ((0 - result - 1000) < (guint) (sizeof (konica_results) / sizeof (*konica_results))) return _(konica_results [0 - result - 1000]);
+	if ((0 - result - 1000) <
+		(guint) (sizeof (konica_results) / sizeof (*konica_results)))
+		return _(konica_results [0 - result - 1000]);
 	
 	return _("Unknown error");
 }
@@ -1282,7 +1155,7 @@ camera_init (Camera* camera)
 {
         gint i;
         gboolean image_id_long;
-        gint vendor, product, inep, outep;
+	int inep, outep;
         KonicaData *kd;
         gp_port_settings settings;
 
@@ -1290,8 +1163,6 @@ camera_init (Camera* camera)
 
         /* First, set up all the function pointers. */
         camera->functions->exit                 = camera_exit;
-        camera->functions->folder_get_config    = camera_folder_get_config;
-        camera->functions->folder_set_config    = camera_folder_set_config;
         camera->functions->folder_delete_all    = camera_folder_delete_all;
         camera->functions->file_get             = camera_file_get;
         camera->functions->file_delete          = camera_file_delete;
@@ -1311,8 +1182,6 @@ camera_init (Camera* camera)
         if (!konica_cameras [i].model)
                 return (GP_ERROR_MODEL_NOT_FOUND);
         image_id_long = konica_cameras [i].image_id_long;
-        vendor        = konica_cameras [i].vendor;
-        product       = konica_cameras [i].product;
         inep          = konica_cameras [i].inep;
         outep         = konica_cameras [i].outep;
 

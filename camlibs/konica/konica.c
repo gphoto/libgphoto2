@@ -1,11 +1,23 @@
-/*****************************************/
-/* See konica.h for licence and details. */
-/*****************************************/
+/* konica.c
+ *
+ * Copyright (C) 2001 Lutz Müller
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 
-
-/*************************/
-/* Included Header Files */
-/*************************/
 #include <gphoto2.h>
 #include <glib.h>
 #include <stdlib.h>
@@ -15,97 +27,61 @@
 #include "lowlevel.h"
 #include "konica.h"
 
-
-/**************/
-/* Prototypes */
-/**************/
-gint GP_RESULT (guchar byte1, guchar byte2);
-
-
-/*************/
-/* Functions */
-/*************/
-gint
-GP_RESULT (guchar byte1, guchar byte2)
+static int
+GP_RESULT (unsigned char byte1, unsigned char byte2)
 {
         switch ((byte2 << 8 ) | byte1) {
         case 0x0000:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got GP_OK!");
                 return (GP_OK);
         case 0x0101:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_FOCUSING_ERROR!");
                 return (KONICA_ERROR_FOCUSING_ERROR);
         case 0x0102:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_IRIS_ERROR!");
                 return (KONICA_ERROR_IRIS_ERROR);
         case 0x0201:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_STROBE_ERROR!");
                 return (KONICA_ERROR_STROBE_ERROR);
         case 0x0203:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_EEPROM_CHECKSUM_ERROR!");
                 return (KONICA_ERROR_EEPROM_CHECKSUM_ERROR);
         case 0x0205:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_INTERNAL_ERROR1!");
                 return (KONICA_ERROR_INTERNAL_ERROR1);
         case 0x0206:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_INTERNAL_ERROR2!");
                 return (KONICA_ERROR_INTERNAL_ERROR2);
         case 0x0301:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_NO_CARD_PRESENT!");
                 return (KONICA_ERROR_NO_CARD_PRESENT);
         case 0x0311:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_CARD_NOT_SUPPORTED!");
                 return (KONICA_ERROR_CARD_NOT_SUPPORTED);
         case 0x0321:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_CARD_REMOVED_DURING_ACCESS!");
                 return (KONICA_ERROR_CARD_REMOVED_DURING_ACCESS);
         case 0x0340:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_IMAGE_NUMBER_NOT_VALID!");
                 return (KONICA_ERROR_IMAGE_NUMBER_NOT_VALID);
         case 0x0341:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_CARD_CAN_NOT_BE_WRITTEN!");
                 return (KONICA_ERROR_CARD_CAN_NOT_BE_WRITTEN);
         case 0x0381:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_CARD_IS_WIRTE_PROTECTED!");
                 return (KONICA_ERROR_CARD_IS_WRITE_PROTECTED);
         case 0x0382:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_NO_SPACE_LEFT_ON_CARD!");
                 return (KONICA_ERROR_NO_SPACE_LEFT_ON_CARD);
         case 0x0390:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_NO_IMAGE_ERASED_AS_IMAGE_PROTECTED!");
                 return (KONICA_ERROR_NO_IMAGE_ERASED_AS_IMAGE_PROTECTED);
         case 0x0401:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_LIGHT_TOO_DARK!");
                 return (KONICA_ERROR_LIGHT_TOO_DARK);
         case 0x0402:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_AUTOFOCUS_ERROR!");
                 return (KONICA_ERROR_AUTOFOCUS_ERROR);
         case 0x0501:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_SYSTEM_ERROR!");
                 return (KONICA_ERROR_SYSTEM_ERROR);
         case 0x0800:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_ILLEGAL_PARAMETER!");
                 return (KONICA_ERROR_ILLEGAL_PARAMETER);
         case 0x0801:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_COMMAND_CANNOT_BE_CANCELLED!");
                 return (KONICA_ERROR_COMMAND_CANNOT_BE_CANCELLED);
         case 0x0b00:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_LOCALIZATION_DATA_EXCESS!");
                 return (KONICA_ERROR_LOCALIZATION_DATA_EXCESS);
         case 0x0bff:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_LOCALIZATION_DATA_CORRUPT!");
                 return (KONICA_ERROR_LOCALIZATION_DATA_CORRUPT);
         case 0x0c01:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_UNSUPPORTED_COMMAND!");
                 return (KONICA_ERROR_UNSUPPORTED_COMMAND);
         case 0x0c02:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_OTHER_COMMAND_EXECUTING!");
                 return (KONICA_ERROR_OTHER_COMMAND_EXECUTING);
         case 0x0c03:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_COMMAND_ORDER_ERROR!");
                 return (KONICA_ERROR_COMMAND_ORDER_ERROR);
         case 0x0fff:
-                gp_debug_printf (GP_DEBUG_MEDIUM, "konica", "*** Got KONICA_ERROR_UNKNOWN_ERROR!");
                 return (KONICA_ERROR_UNKNOWN_ERROR);
         default:
                 gp_debug_printf (GP_DEBUG_MEDIUM, "konica",
@@ -122,22 +98,13 @@ GP_RESULT (guchar byte1, guchar byte2)
         }
 }
 
-
-gint
+int
 k_init (gp_port* device)
 {
         return (l_init (device));
 }
 
-
-gint
-k_exit (gp_port* device)
-{
-        return (l_exit (device));
-}
-
-
-gint
+int
 k_erase_image (gp_port* device, gboolean image_id_long, gulong image_id)
 {
         /************************************************/
@@ -313,12 +280,12 @@ gint k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image
 }
 
 
-gint
+int
 k_get_image (
         gp_port*        device,
         gboolean        image_id_long,
         gulong          image_id,
-        k_image_type_t  image_type,
+	KImageType image_type,
         guchar**        image_buffer,
         guint*          image_buffer_size)
 {
@@ -784,31 +751,8 @@ k_get_information (
 }
 
 
-gint
-k_get_status (
-        gp_port*                device,
-        guint*                  self_test_result,
-        k_power_level_t*        power_level,
-        k_power_source_t*       power_source,
-        k_card_status_t*        card_status,
-        k_display_t*            display,
-        guint*                  card_size,
-        guint*                  pictures,
-        guint*                  pictures_left,
-        guchar*                 year,
-        guchar*                 month,
-        guchar*                 day,
-        guchar*                 hour,
-        guchar*                 minute,
-        guchar*                 second,
-        guint*                  io_setting_bit_rate,
-        guint*                  io_setting_flags,
-        guchar*                 flash,
-        guchar*                 resolution,
-        guchar*                 focus,
-        guchar*                 exposure,
-        guint*                  total_pictures,
-        guint*                  total_strobes)
+int
+k_get_status (gp_port* device, KStatus *status)
 {
         /************************************************/
         /* Command to get the status of the camera.     */
@@ -875,98 +819,82 @@ k_get_status (
         guchar* rb = NULL;
         guint   rbs;
 
-        g_return_val_if_fail (self_test_result,         GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (power_level,              GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (power_source,             GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (card_status,              GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (display,                  GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (card_size,                GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (pictures,                 GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (pictures_left,            GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (year,                     GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (month,                    GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (day,                      GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (hour,                     GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (minute,                   GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (second,                   GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (io_setting_bit_rate,      GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (io_setting_flags,         GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (flash,                    GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (resolution,               GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (focus,                    GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (exposure,                 GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (total_pictures,           GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (total_strobes,            GP_ERROR_BAD_PARAMETERS);
-
         result = l_send_receive (device, sb, 6, &rb, &rbs, 0, NULL, NULL);
         if (result == GP_OK) {
                 result = GP_RESULT (rb[2], rb[3]);
                 if (result == GP_OK) {
-                        *self_test_result       = (rb[5] << 8) | rb[4];
+			status->self_test_result = (rb[5] << 8) | rb[4];
                         switch (rb[6]) {
-                                case 0x00:
-                                        *power_level = K_POWER_LEVEL_LOW;
-                                        break;
-                                case 0x01:
-                                        *power_level = K_POWER_LEVEL_NORMAL;
-                                        break;
-                                case 0x02:
-                                        *power_level = K_POWER_LEVEL_HIGH;
-                                        break;
-                                default:
-                                        power_level = NULL;
-                                        break;
+			case 0x00:
+				status->power_level = K_POWER_LEVEL_LOW;
+				break;
+			case 0x01:
+				status->power_level = K_POWER_LEVEL_NORMAL;
+				break;
+			case 0x02:
+				status->power_level = K_POWER_LEVEL_HIGH;
+				break;
+			default:
+				gp_debug_printf (GP_DEBUG_HIGH, "konica",
+						 "Unknown power level %i!",
+						 rb[6]);
+				break;
                         }
                         switch (rb[7]) {
-                                case 0x00:
-                                        *power_source = K_POWER_SOURCE_BATTERY;
-                                        break;
-                                case 0x01:
-                                        *power_source = K_POWER_SOURCE_AC;
-                                        break;
-                                default:
-                                        power_source = NULL;
-                                        break;
-                        }
-                        switch (rb[8]) {
-                                case 0x07:
-                                        *card_status = K_CARD_STATUS_CARD;
-                                        break;
-                                case 0x12:
-                                        *card_status = K_CARD_STATUS_NO_CARD;
-                                        break;
-                                default:
-                                        card_status = NULL;
-                                        break;
-                        }
-                        switch (rb[9]) {
-                                case 0x00:
-                                        *display = K_DISPLAY_BUILT_IN;
-                                        break;
-                                case 0x02:
-                                        *display = K_DISPLAY_TV;
-                                        break;
-                                default:
-                                        display = NULL;
-                                        break;
-                        }
-                        *card_size              = (rb[11] << 8) | rb[10];
-                        *pictures               = (rb[13] << 8) | rb[12];
-                        *pictures_left          = (rb[15] << 8) | rb[14];
-                        *year                   = rb[16];
-                        *month                  = rb[17];
-                        *day                    = rb[18];
-                        *hour                   = rb[19];
-                        *minute                 = rb[20];
-                        *second                 = rb[21];
-                        *io_setting_bit_rate    = (rb[23] << 8) | rb[22];
-                        *io_setting_flags       = (rb[25] << 8) | rb[24];
-                        *flash                  = rb[26];
-                        *resolution             = rb[27];
-                        *focus                  = rb[28];
-                        *exposure               = rb[29];
-                        *total_pictures         = (rb[31] << 8) | rb[30];
-                        *total_strobes          = (rb[33] << 8) | rb[32];
+			case 0x00:
+				status->power_source = K_POWER_SOURCE_BATTERY;
+				break;
+			case 0x01:
+				status->power_source = K_POWER_SOURCE_AC;
+				break;
+			default:
+				gp_debug_printf (GP_DEBUG_HIGH, "konica",
+						 "Unknown power source %i!",
+						 rb[7]);
+				break;
+			}
+			switch (rb[8]) {
+			case 0x07:
+				status->card_status = K_CARD_STATUS_CARD;
+				break;
+			case 0x12:
+				status->card_status = K_CARD_STATUS_NO_CARD;
+				break;
+			default:
+				gp_debug_printf (GP_DEBUG_HIGH, "konica",
+						 "Unknown card status %i!",
+						 rb[8]);
+				break;
+			}
+			switch (rb[9]) {
+			case 0x00:
+				status->display = K_DISPLAY_BUILT_IN;
+				break;
+			case 0x02:
+				status->display = K_DISPLAY_TV;
+				break;
+			default:
+				gp_debug_printf (GP_DEBUG_HIGH, "konica",
+						 "Unkown display %i!", rb[9]);
+				break;
+			}
+			status->card_size     = (rb[11] << 8) | rb[10];
+                        status->pictures      = (rb[13] << 8) | rb[12];
+                        status->pictures_left = (rb[15] << 8) | rb[14];
+			status->date.year   = rb[16];
+			status->date.month  = rb[17];
+			status->date.day    = rb[18];
+			status->date.hour   = rb[19];
+			status->date.minute = rb[20];
+			status->date.second = rb[21];
+			status->io_setting_bit_rate = (rb[23] << 8) | rb[22];
+			status->io_setting_flags    = (rb[25] << 8) | rb[24];
+			status->flash       = rb[26];
+			status->resolution  = rb[27];
+			status->focus       = rb[28];
+			status->exposure    = rb[29];
+			status->total_pictures = (rb[31] << 8) | rb[30];
+			status->total_strobes  = (rb[33] << 8) | rb[32];
                 }
         }
         g_free (rb);
@@ -974,15 +902,8 @@ k_get_status (
 }
 
 
-gint
-k_get_date_and_time (
-        gp_port*        device,
-        guchar*         year,
-        guchar*         month,
-        guchar*         day,
-        guchar*         hour,
-        guchar*         minute,
-        guchar*         second)
+int
+k_get_date_and_time (gp_port *device, KDate *date)
 {
         /************************************************/
         /* Command to get the date and time from the    */
@@ -1011,37 +932,23 @@ k_get_date_and_time (
         guchar* rb = NULL;
         guint   rbs;
 
-        g_return_val_if_fail (year,     GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (month,    GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (day,      GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (hour,     GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (minute,   GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (second,   GP_ERROR_BAD_PARAMETERS);
-
         result = l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL);
-        if (result == GP_OK) {
-                result = GP_RESULT (rb[2], rb[3]);
-                if (result == GP_OK) {
-                        *year   = rb[4];
-                        *month  = rb[5];
-                        *day    = rb[6];
-                        *hour   = rb[7];
-                        *minute = rb[8];
-                        *second = rb[9];
-                }
-        }
+	if ((result == GP_OK) &&
+	    ((result = GP_RESULT (rb[2], rb[3])) == GP_OK)) {
+		date->year   = rb[4];
+		date->month  = rb[5];
+		date->day    = rb[6];
+		date->hour   = rb[7];
+		date->minute = rb[8];
+		date->second = rb[9];
+	}
         g_free (rb);
         return (result);
 };
 
 
-gint
-k_get_preferences (
-        gp_port*        device,
-        guint*          shutoff_time,
-        guint*          self_timer_time,
-        guint*          beep,
-        guint*          slide_show_interval)
+int
+k_get_preferences (gp_port *device, KPreferences *preferences)
 {
         /************************************************/
         /* Command to get the preferences from the      */
@@ -1072,20 +979,13 @@ k_get_preferences (
         guchar* rb = NULL;
         guint   rbs;
 
-        g_return_val_if_fail (shutoff_time,             GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (self_timer_time,          GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (beep,                     GP_ERROR_BAD_PARAMETERS);
-        g_return_val_if_fail (slide_show_interval,      GP_ERROR_BAD_PARAMETERS);
-
         result = l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL);
-        if (result == GP_OK) {
-                result = GP_RESULT (rb[2], rb[3]);
-                if (result == GP_OK) {
-                        *shutoff_time           = rb[4];
-                        *self_timer_time        = rb[5];
-                        *beep                   = rb[6];
-                        *slide_show_interval    = rb[7];
-                }
+	if ((result == GP_OK) &&
+	    ((result = GP_RESULT (rb[2], rb[3])) == GP_OK)) {
+		preferences->shutoff_time           = rb[4];
+		preferences->self_timer_time        = rb[5];
+		preferences->beep                   = rb[6];
+		preferences->slide_show_interval    = rb[7];
         }
         g_free (rb);
         return (result);
@@ -1168,8 +1068,8 @@ k_set_io_capability (
 }
 
 
-gint
-k_set_date_and_time (gp_port* device, guchar year, guchar month, guchar day, guchar hour, guchar minute, guchar second)
+int
+k_set_date_and_time (gp_port *device, KDate date)
 {
         /************************************************/
         /* Command to set date and time of the camera.  */
@@ -1191,26 +1091,28 @@ k_set_date_and_time (gp_port* device, guchar year, guchar month, guchar day, guc
         /* 0xXX: Byte 0 of return status                */
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
-        guchar  sb[] = {0xb0, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-        gint    result;
+        guchar  sb[] = {0xb0, 0x90, 0x00, 0x00, 0x00,
+			0x00, 0x00, 0x00, 0x00, 0x00};
+	int    result;
         guchar* rb = NULL;
         guint   rbs;
 
-        sb[4] = year;
-        sb[5] = month;
-        sb[6] = day;
-        sb[7] = hour;
-        sb[8] = minute;
-        sb[9] = second;
+        sb[4] = date.year;
+        sb[5] = date.month;
+        sb[6] = date.day;
+        sb[7] = date.hour;
+        sb[8] = date.minute;
+        sb[9] = date.second;
         result = l_send_receive (device, sb, 10, &rb, &rbs, 0, NULL, NULL);
-        if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+        if (result == GP_OK)
+		result = GP_RESULT (rb[2], rb[3]);
         g_free (rb);
         return (result);
 }
 
 
-gint
-k_set_preference (gp_port* device, k_preference_t preference, guint value)
+int
+k_set_preference (gp_port *device, KPreference preference, unsigned int value)
 {
         /************************************************/
         /* Command to set a preference of the camera.   */
@@ -1229,54 +1131,54 @@ k_set_preference (gp_port* device, k_preference_t preference, guint value)
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
         guchar  sb[] = {0xc0, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-        gint    result;
+        int    result;
         guchar* rb = NULL;
         guint   rbs;
 
         switch (preference) {
-                case K_PREFERENCE_RESOLUTION:
-                        sb[4] = 0x00;
-                        sb[5] = 0xc0;
-                        break;
-                case K_PREFERENCE_EXPOSURE:
-                        sb[4] = 0x02;
-                        sb[5] = 0xc0;
-                        break;
-                case K_PREFERENCE_SELF_TIMER_TIME:
-                        sb[4] = 0x04;
-                        sb[5] = 0xc0;
-                        break;
-                case K_PREFERENCE_SLIDE_SHOW_INTERVAL:
-                        sb[4] = 0x06;
-                        sb[5] = 0xc0;
-                        break;
-                case K_PREFERENCE_FLASH:
-                        sb[4] = 0x00;
-                        sb[5] = 0xd0;
-                        break;
-                case K_PREFERENCE_FOCUS_SELF_TIMER:
-                        sb[4] = 0x02;
-                        sb[5] = 0xd0;
-                        break;
-                case K_PREFERENCE_AUTO_OFF_TIME:
-                        sb[4] = 0x04;
-                        sb[5] = 0xd0;
-                        break;
-                case K_PREFERENCE_BEEP:
-                        sb[4] = 0x06;
-                        sb[5] = 0xd0;
-        }
-        sb[6] = value;
-        sb[7] = value >> 8;
-        result = l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL);
-        if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+	case K_PREFERENCE_RESOLUTION:
+		sb[4] = 0x00;
+		sb[5] = 0xc0;
+		break;
+	case K_PREFERENCE_EXPOSURE:
+		sb[4] = 0x02;
+		sb[5] = 0xc0;
+		break;
+	case K_PREFERENCE_SELF_TIMER_TIME:
+		sb[4] = 0x04;
+		sb[5] = 0xc0;
+		break;
+	case K_PREFERENCE_SLIDE_SHOW_INTERVAL:
+		sb[4] = 0x06;
+		sb[5] = 0xc0;
+		break;
+	case K_PREFERENCE_FLASH:
+		sb[4] = 0x00;
+		sb[5] = 0xd0;
+		break;
+	case K_PREFERENCE_FOCUS_SELF_TIMER:
+		sb[4] = 0x02;
+		sb[5] = 0xd0;
+		break;
+	case K_PREFERENCE_AUTO_OFF_TIME:
+		sb[4] = 0x04;
+		sb[5] = 0xd0;
+		break;
+	case K_PREFERENCE_BEEP:
+		sb[4] = 0x06;
+		sb[5] = 0xd0;
+	}
+	sb[6] = value;
+	sb[7] = value >> 8;
+	result = l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL);
+        if (result == GP_OK)
+		result = GP_RESULT (rb[2], rb[3]);
         g_free (rb);
         return (result);
 }
 
-
-gint
-k_reset_preferences (gp_port* device)
+int
+k_reset_preferences (gp_port *device)
 {
         /************************************************/
         /* Command to reset the preferences of the      */
@@ -1294,12 +1196,13 @@ k_reset_preferences (gp_port* device)
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
         guchar  sb[] = {0xc1, 0x90, 0x00, 0x00};
-        gint    result;
+	int    result;
         guchar* rb = NULL;
         guint   rbs;
 
         result = l_send_receive (device, sb, 4, &rb, &rbs, 0, NULL, NULL);
-        if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+        if (result == GP_OK)
+		result = GP_RESULT (rb[2], rb[3]);
         g_free (rb);
         return (result);
 }
@@ -1377,8 +1280,9 @@ k_take_picture (
 }
 
 
-gint
-k_localization_tv_output_format_set (gp_port* device, k_tv_output_format_t tv_output_format)
+int
+k_localization_tv_output_format_set (gp_port *device,
+				     KTVOutputFormat tv_output_format)
 {
         /************************************************/
         /* Command for various localization issues.     */
@@ -1408,7 +1312,7 @@ k_localization_tv_output_format_set (gp_port* device, k_tv_output_format_t tv_ou
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
         guchar  sb[] = {0x00, 0x92, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00};
-        gint    result;
+        int    result;
         guchar* rb = NULL;
         guint   rbs;
 
@@ -1426,14 +1330,15 @@ k_localization_tv_output_format_set (gp_port* device, k_tv_output_format_t tv_ou
                 return (GP_ERROR_BAD_PARAMETERS);
         }
         result = l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL);
-        if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+        if (result == GP_OK)
+		result = GP_RESULT (rb[2], rb[3]);
         g_free (rb);
         return (result);
 }
 
 
-gint
-k_localization_date_format_set (gp_port* device, k_date_format_t date_format)
+int
+k_localization_date_format_set (gp_port* device, KDateFormat date_format)
 {
         /************************************************/
         /* Command for various localization issues.     */
@@ -1463,7 +1368,7 @@ k_localization_date_format_set (gp_port* device, k_date_format_t date_format)
         /* 0xXX: Byte 1 of return status                */
         /************************************************/
         guchar  sb[] = {0x00, 0x92, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00};
-        gint    result;
+        int    result;
         guchar* rb = NULL;
         guint   rbs;
 
@@ -1481,13 +1386,14 @@ k_localization_date_format_set (gp_port* device, k_date_format_t date_format)
                 return (GP_ERROR_BAD_PARAMETERS);
         }
         result = l_send_receive (device, sb, 8, &rb, &rbs, 0, NULL, NULL);
-        if (result == GP_OK) result = GP_RESULT (rb[2], rb[3]);
+        if (result == GP_OK)
+		result = GP_RESULT (rb[2], rb[3]);
         g_free (rb);
         return (result);
 }
 
 
-gint
+int
 k_localization_data_put (gp_port* device, guchar* data, gulong data_size)
 {
         /************************************************/
