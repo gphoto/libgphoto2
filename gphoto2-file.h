@@ -32,20 +32,31 @@
 #define GP_MIME_QUICKTIME "video/quicktime"
 #define GP_MIME_AVI       "video/x-msvideo"
 
-/** GP_MIME_CRW
+/**
+ * GP_MIME_CRW:
+ * 
  * Canon RaW files (CRW). See http://www.shore.net/~dcoffin/powershot/ 
  * or http://www2.primushost.com/~dcoffin/powershot/ for details
  * on the file format
  **/
 #define GP_MIME_CRW       "image/x-canon-raw"
 
-/** GP_MIME_UNKNOWN:
+/**
+ * GP_MIME_UNKNOWN:
+ * 
  * For files that are not recognized by our driver yet.
  * DO NOT use this when you're just too lazy to use the proper MIME
  * type, or we will feed you to Crud Puppy.
  **/
 #define GP_MIME_UNKNOWN   "application/octet-stream"
 
+/**
+ * CameraFileType:
+ *
+ * For gphoto2, there are several facets of a file. A file is something that
+ * you can create and delete, but not split apart. However, you can look at
+ * it from different directions. 
+ **/
 typedef enum {
 	GP_FILE_TYPE_PREVIEW,
 	GP_FILE_TYPE_NORMAL,
