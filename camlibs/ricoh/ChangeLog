@@ -1,3 +1,8 @@
+2005-02-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* g3.c: Added Ricoh Caplio R1v as reported by
+	  Johannes Guenther.
+
 2005-01-27  Marcus Meissner  <meissner@suse.de>
 
 	* g3.c: Added Ricoh Caplio R1 / RZ1 as reported.
