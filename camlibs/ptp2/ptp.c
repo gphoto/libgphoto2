@@ -90,7 +90,6 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	/* build appropriate USB container */
 	usbreq.length=htod32(PTP_USB_BULK_REQ_LEN-
 		(sizeof(uint32_t)*(5-req->Nparam)));
-	ptp_debug(params,"PTP: req->Nparam = %i\n",req->Nparam);
 	usbreq.type=htod16(PTP_USB_CONTAINER_COMMAND);
 	usbreq.code=htod16(req->Code);
 	usbreq.trans_id=htod32(req->Transaction_ID);
@@ -324,6 +323,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 {
 	uint16_t ret;
 	PTPUSBEventContainer usbevent;
+	PTP_CNT_INIT(usbevent);
 
 	if ((params==NULL) || (event==NULL)) 
 		return PTP_ERROR_BADPARAM;
@@ -348,7 +348,6 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	} 
 	/* if we read anything over interrupt endpoint it must be an event */
 	/* build an appropriate PTPContainer */
-	PTP_CNT_INIT(event);
 	event->Code=dtoh16(usbevent.code);
 	event->SessionID=params->session_id;
 	event->Transaction_ID=dtoh32(usbevent.trans_id);

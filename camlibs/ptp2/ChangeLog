@@ -1,4 +1,7 @@
 2003-03-29 Mariusz Woloszyn
+	* library.c: enabled downloading of nonimage files
+	* ptp.c: fixed a bug in capture code
+2003-03-29 Mariusz Woloszyn
 	* library.c: enabled back capture image support
 2003-03-29 Mariusz Woloszyn
 	* ptp.h: added Nparam field to PTPContainer

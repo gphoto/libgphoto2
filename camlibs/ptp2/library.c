@@ -767,21 +767,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	oi=&camera->pl->params.objectinfo[object_id];
-	switch (type) {
-	case GP_FILE_TYPE_NORMAL:
-		if ((oi->ObjectFormat == PTP_OFC_Undefined) ||
-			(oi->ObjectFormat == PTP_OFC_Association))
-			return (GP_ERROR_NOT_SUPPORTED);
-		size=oi->ObjectCompressedSize;
-		CPR (context, ptp_getobject(&camera->pl->params,
-			camera->pl->params.handles.Handler[object_id],
-			&image));
-		CR (gp_file_set_data_and_size (file, image, size));
-		/* XXX does gp_file_set_data_and_size free() image ptr upon
-		   failure?? */
-		break;
 
-	case GP_FILE_TYPE_PREVIEW:
+	GP_DEBUG ("Getting file.");
+	switch (type) {
+
+	case	GP_FILE_TYPE_PREVIEW:
 		/* Don't allow to get thumb of nonimage objects! */
 		if ((oi->ObjectFormat & 0x0800) == 0) return (GP_ERROR_NOT_SUPPORTED);
 		/* if no thumb, for some reason */
@@ -793,9 +783,22 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		/* XXX does gp_file_set_data_and_size free() image ptr upon
 		   failure?? */
 		break;
-		
+
 	default:
-		return (GP_ERROR_NOT_SUPPORTED);
+		/* we do not allow downloading unknown type files as in most
+		cases they are special file (like firmware or control) which
+		sometimes _cannot_ be downloaded. doing so we avoid errors.*/
+		if ((oi->ObjectFormat == PTP_OFC_Undefined) ||
+			(oi->ObjectFormat == PTP_OFC_Association))
+			return (GP_ERROR_NOT_SUPPORTED);
+		size=oi->ObjectCompressedSize;
+		CPR (context, ptp_getobject(&camera->pl->params,
+			camera->pl->params.handles.Handler[object_id],
+			&image));
+		CR (gp_file_set_data_and_size (file, image, size));
+		/* XXX does gp_file_set_data_and_size free() image ptr upon
+		   failure?? */
+		break;
 	}
 	CR (set_mimetype (camera, file, oi->ObjectFormat));
 
