@@ -196,12 +196,12 @@ int stv0680_file_count(GPPort *port, int *count)
 /**
  * Get image, with just bayer applied.
  */
-int stv0680_get_image_raw(GPPort *port, int image_no, char **data, int *size)
+int stv0680_get_image_raw(GPPort *port, int image_no, CameraFile *file)
 {
 	struct stv680_image_header imghdr;
 	char header[80];
-	unsigned char *raw;
-	int h,w,ret;
+	unsigned char *raw, *data;
+	int h,w,ret,size;
 
 	ret = stv0680_try_cmd(port, CMDID_UPLOAD_IMAGE, image_no,
 		(void*)&imghdr, sizeof(imghdr));
@@ -210,29 +210,29 @@ int stv0680_get_image_raw(GPPort *port, int image_no, char **data, int *size)
 
 	w = (imghdr.width[0]  << 8) | imghdr.width[1];
 	h = (imghdr.height[0] << 8) | imghdr.height[1];
-	*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+	size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
 	    (imghdr.size[2]<<8) | imghdr.size[3];
-	raw = malloc(*size);
-	if ((ret=gp_port_read(port, raw, *size))<0)
+	raw = malloc(size);
+	if ((ret=gp_port_read(port, raw, size))<0)
 	    return ret;
 
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
-	*data = malloc((*size * 3) + strlen(header));
-	strcpy(*data, header);
-	gp_bayer_decode(raw,w,h,*data+strlen(header),BAYER_TILE_GBRG_INTERLACED);
+	gp_file_append(file, header, strlen(header));
+	data = malloc(size * 3);
+	gp_bayer_decode(raw,w,h,data,BAYER_TILE_GBRG_INTERLACED);
 	free(raw);
-	*size *= 3;
-	*size += strlen(header);
+	gp_file_append(file, data, size*3);
+	free(data);
 	return GP_OK;
 }
 
-int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
+int stv0680_get_image(GPPort *port, int image_no, CameraFile *file)
 {
 	struct stv680_image_header imghdr;
 	char header[200];
 	unsigned char buf[16];
-	unsigned char *raw, *tmpdata1, *tmpdata2;
-	int h,w,ret,coarse,fine;
+	unsigned char *raw, *tmpdata1, *tmpdata2, *data;
+	int h,w,ret,coarse,fine,size;
 
 	/* Despite the documentation saying so, CMDID_UPLOAD_IMAGE does not
 	 * return an image_header. The first 8 byte are correct, but the
@@ -248,46 +248,44 @@ int stv0680_get_image(GPPort *port, int image_no, char **data, int *size)
 		return ret;
 	w = (imghdr.width[0]  << 8) | imghdr.width[1];
 	h = (imghdr.height[0] << 8) | imghdr.height[1];
-	*size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
+	size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) | 
 	    (imghdr.size[2]<<8) | imghdr.size[3];
 	fine = (imghdr.fine_exposure[0]<<8)|imghdr.fine_exposure[1];
 	coarse = (imghdr.coarse_exposure[0]<<8)|imghdr.coarse_exposure[1];
-	raw = malloc(*size);
+	raw = malloc(size);
 	if (!raw)
 	    return GP_ERROR_NO_MEMORY;
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n#flags %x sgain %d sclkdiv %d avgpix %d fine %d coarse %d\n%d %d\n255\n", imghdr.flags, imghdr.sensor_gain, imghdr.sensor_clkdiv, imghdr.avg_pixel_value, fine, coarse , w, h);
 
-	if ((ret=gp_port_read(port, raw, *size))<0)
+	gp_file_append(file, header, strlen(header));
+	if ((ret=gp_port_read(port, raw, size))<0)
 	    return ret;
 
-	*data = malloc((*size * 3) + strlen(header));
-	tmpdata1 = malloc((*size * 3));
+	data = malloc(size * 3);
+	tmpdata1 = malloc(size * 3);
 	if (!tmpdata1) return GP_ERROR_NO_MEMORY;
-	tmpdata2 = malloc((*size * 3));
+	tmpdata2 = malloc(size * 3);
 	if (!tmpdata2) return GP_ERROR_NO_MEMORY;
-	strcpy(*data, header);
 	gp_bayer_expand (raw, w, h, tmpdata1, BAYER_TILE_GBRG_INTERLACED);
 	light_enhance(w,h,coarse,imghdr.avg_pixel_value,fine,tmpdata1);
 	//gp_bayer_interpolate (tmpdata1, w, h, BAYER_TILE_GBRG_INTERLACED);
 	stv680_hue_saturation (w, h, tmpdata1, tmpdata2 );
 	demosaic_sharpen (w, h, tmpdata2, tmpdata1, 2, BAYER_TILE_GBRG_INTERLACED);
-	sharpen (w, h, tmpdata1, *data + strlen(header), 16);
-	
+	sharpen (w, h, tmpdata1, data, 16);
 	free(tmpdata2);
 	free(tmpdata1);
 	free(raw);
-	*size *= 3;
-	*size += strlen(header);
+	gp_file_append(file, data, 3*size);
+	free(data);
 	return GP_OK;
 }
 
-int stv0680_get_image_preview(GPPort *port, int image_no,
-			char **data, int *size)
+int stv0680_get_image_preview(GPPort *port, int image_no, CameraFile *file)
 {
 	struct stv680_image_header imghdr;
 	char header[64];
-	unsigned char *raw;
-	int h,w,rh,rw,scale,rsize;
+	unsigned char *raw, *data;
+	int h,w,rh,rw,scale,rsize,size;
 	int ret;
 
 	switch (port->type) {
@@ -323,19 +321,19 @@ int stv0680_get_image_preview(GPPort *port, int image_no,
 	}
 	w = rw >> scale;
 	h = rh >> scale;
-	*size = w * h;
+	size = w * h;
 
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
-	*data = calloc(1,(*size * 3) + strlen(header));
-	strcpy(*data, header);
+	gp_file_append(file, header, strlen(header));
+	data = calloc(1,size * 3);
 
 	if (!scale)
-	    gp_bayer_decode(raw, rw, rh, *data + strlen(header), BAYER_TILE_GBRG_INTERLACED);
+	    gp_bayer_decode(raw, rw, rh, data, BAYER_TILE_GBRG_INTERLACED);
 	else
-	    bayer_unshuffle_preview(rw, rh, scale, raw, *data + strlen(header));
+	    bayer_unshuffle_preview(rw, rh, scale, raw, data);
 	free(raw);
-	*size *= 3;
-	*size += strlen(header);
+	gp_file_append(file, data, size*3);
+	free(data);
 	return GP_OK;
 }
 

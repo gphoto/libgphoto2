@@ -1,3 +1,9 @@
+2001-04-05  Marcus Meissner <marcus@jet.franken.de>
+	
+	* library.[ch], stv680.c: Store image data directly in CameraFile,
+	  instead of passing it around unnecessary. (we should add progress
+	  for serial too).
+
 2001-01-23  Kurt Garloff <garloff@suse.de>
 	
 	* library.c, bayer.c: Enhanced the light

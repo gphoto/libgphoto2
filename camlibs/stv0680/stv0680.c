@@ -166,38 +166,27 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = user_data;
 	int image_no, result;
-	char *data;
-	long int size;
 
 	image_no = gp_filesystem_number(camera->fs, folder, filename, context);
 	if(image_no < 0)
 		return image_no;
 
+	gp_file_set_name (file, filename);
+	gp_file_set_mime_type (file, "image/pnm"); 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
-		result = stv0680_get_image (camera->port, image_no, &data,
-					    (int*) &size);
+		result = stv0680_get_image (camera->port, image_no, file);
 		break;
 	case GP_FILE_TYPE_RAW:
-		result = stv0680_get_image_raw (camera->port, image_no, &data,
-					    (int*) &size);
+		result = stv0680_get_image_raw (camera->port, image_no, file);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
-		result = stv0680_get_image_preview (camera->port, image_no,
-						&data, (int*) &size);
+		result = stv0680_get_image_preview (camera->port, image_no, file);
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
-
-	if (result < 0)
-		return result;
-
-	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, "image/pnm"); 
-	gp_file_set_data_and_size (file, data, size);
-
-	return (GP_OK);
+	return result;
 }
 
 static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)

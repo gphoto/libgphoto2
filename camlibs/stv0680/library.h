@@ -25,9 +25,9 @@
 int stv0680_ping              (GPPort *);
 int stv0680_summary           (GPPort *, char*);
 int stv0680_file_count        (GPPort *, int *count);
-int stv0680_get_image         (GPPort *, int image_no, char **data, int *size);
-int stv0680_get_image_raw     (GPPort *, int image_no, char **data, int *size);
-int stv0680_get_image_preview (GPPort *, int image_no, char **data, int *size);
+int stv0680_get_image         (GPPort *, int image_no, CameraFile *file);
+int stv0680_get_image_raw     (GPPort *, int image_no, CameraFile *file);
+int stv0680_get_image_preview (GPPort *, int image_no, CameraFile *file);
 
 int stv0680_capture_preview   (GPPort *device, char **data, int *size);
 int stv0680_capture	      (GPPort *port);
