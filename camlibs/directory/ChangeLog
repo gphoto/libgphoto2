@@ -1,3 +1,7 @@
+2002-11-20  Lutz Müller <lutz@users.sourceforge.net>
+
+	* directory.c: Additional debugging stuff.
+
 2002-11-04  Lutz Müller <lutz@users.sourceforge.net>
 
 	* directory.c: Don't follow links.

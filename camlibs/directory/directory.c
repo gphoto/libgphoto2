@@ -115,7 +115,8 @@ int camera_abilities (CameraAbilitiesList *list)
         a.speed[0] = 0;
 
 #ifdef DEBUG
-	a.operations = GP_OPERATION_CONFIG | GP_OPERATION_CAPTURE_PREVIEW;
+	a.operations = GP_OPERATION_CONFIG | GP_OPERATION_CAPTURE_PREVIEW |
+		       GP_OPERATION_CAPTURE_IMAGE;
 #else
         a.operations = GP_OPERATION_CONFIG;
 #endif
@@ -648,6 +649,18 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	
 	return (GP_OK);
 }
+
+static int
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
+{
+	if (path) {
+		strcpy (path->folder, "/usr/share/pixmaps");
+		strcpy (path->name, "gnome-logo-large.png");
+	}
+
+	return (GP_OK);
+}
 #endif
 
 int
@@ -661,6 +674,7 @@ camera_init (Camera *camera, GPContext *context)
         camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 #ifdef DEBUG
+	camera->functions->capture              = camera_capture;
 	camera->functions->capture_preview	= camera_capture_preview;
 #endif
 
