@@ -930,7 +930,7 @@ int camera_get_config (Camera *camera, CameraWidget **window)
 		child = gp_widget_new (GP_WIDGET_RADIO, "White Balance");
 		gp_widget_choice_add (child, "Auto");
 		gp_widget_choice_add (child, "Skylight");
-		gp_widget_choice_add (child, "Flourescent");
+		gp_widget_choice_add (child, "Fluorescent");
 		gp_widget_choice_add (child, "Tungsten");
 		gp_widget_choice_add (child, "Cloudy");
 
@@ -939,7 +939,7 @@ int camera_get_config (Camera *camera, CameraWidget **window)
                         break;
                 case 1: strcpy (t, "Skylight");
                         break;
-                case 2: strcpy (t, "Flourescent");
+                case 2: strcpy (t, "Fluorescent");
                         break;
                 case 3: strcpy (t, "Tungsten");
                         break;
