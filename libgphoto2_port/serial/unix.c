@@ -681,8 +681,12 @@ gp_port_serial_set_baudrate (GPPort *dev, int baudrate)
 #if HAVE_TERMIOS_H
         struct termios tio;
 
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
+		"Setting baudrate to %d...", baudrate);
+
         if (tcgetattr(dev->pl->fd, &tio) < 0) {
-                perror("tcgetattr1");
+		gp_port_set_error (dev, _("Could not set the baudrate to %d"),
+				   baudrate);
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
         tio.c_cflag = (tio.c_cflag & ~CSIZE) | CS8;
