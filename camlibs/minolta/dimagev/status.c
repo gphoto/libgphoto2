@@ -45,9 +45,11 @@ int dimagev_get_camera_status(dimagev_t *dimagev) {
 
 	if ( gp_port_write(dimagev->dev, p->buffer, p->length) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::unable to write packet");
+		free(p);
 		return GP_ERROR_IO;
 	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::no response from camera");
+		free(p);
 		return GP_ERROR_IO;
 	}
 
@@ -60,15 +62,12 @@ int dimagev_get_camera_status(dimagev_t *dimagev) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera did not acknowledge transmission");
 			return dimagev_get_camera_status(dimagev);
 /*			return GP_ERROR_IO;*/
-			break;
 		case DIMAGEV_CAN:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera cancels transmission");
 			return GP_ERROR_IO;
-			break;
 		default:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera responded with unknown value %x", char_buffer);
 			return GP_ERROR_IO;
-			break;
 	}
 
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
@@ -79,11 +78,13 @@ int dimagev_get_camera_status(dimagev_t *dimagev) {
 	char_buffer = DIMAGEV_EOT;
 	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::unable to send EOT");
+		free(p);
 		return GP_ERROR_IO;
 	}
-		
+
 	if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::no response from camera");
+		free(p);
 		return GP_ERROR_IO;
 	}
 
@@ -92,28 +93,33 @@ int dimagev_get_camera_status(dimagev_t *dimagev) {
 			break;
 		case DIMAGEV_NAK:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera did not acknowledge transmission");
+			free(p);
 			return GP_ERROR_IO;
-			break;
 		case DIMAGEV_CAN:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera cancels transmission");
+			free(p);
 			return GP_ERROR_IO;
-			break;
 		default:
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::camera responded with unknown value %x", char_buffer);
+			free(p);
 			return GP_ERROR_IO;
-			break;
 	}
 
 	if ( ( raw = dimagev_strip_packet(p) ) == NULL ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::unable to strip data packet");
+		free(p);
 		return GP_ERROR;
 	}
 	
+	free(p);
+
 	if ( ( dimagev->status = dimagev_import_camera_status(raw->buffer) ) == NULL ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_status::unable to read camera status");
+		free(raw);
 		return GP_ERROR;
 	}
 
+	free(raw);
 	return GP_OK;
 }
 
@@ -157,8 +163,8 @@ void dimagev_dump_camera_status(dimagev_status_t *status) {
 	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Battery level: %d", status->battery_level);
 	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Number of images: %d", status->number_images);
 	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Minimum images remaining: %d", status->minimum_images_can_take);
-	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Busy: %s ( %d )", status->busy ? "Busy" : "Not Busy", status->busy);
-	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Flash charging: %s ( %d )", status->flash_charging ? "Charging" : "Ready", status->flash_charging);
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Busy: %s ( %d )", status->busy != (unsigned char) 0 ? "Busy" : "Not Busy", status->busy);
+	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Flash charging: %s ( %d )", status->flash_charging != (unsigned char) 0 ? "Charging" : "Ready", status->flash_charging);
 
 	gp_debug_printf(GP_DEBUG_LOW, "dimagev", "Lens status: ");
 	switch ( status->lens_status ) {
