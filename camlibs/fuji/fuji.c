@@ -1,56 +1,134 @@
-/*
- 
- Fuji Camera library for the gphoto project, 
- (C) 2001 Matthew G. Martin <matt.martin@ieee.org>
-  This routine works for Fuji DS-7 and DX-5,7,10 and 
-  MX-500,600,700,1200,1700,2700,2900,  Apple QuickTake 200,
-  Samsung Kenox SSC-350N,Leica Digilux Zoom cameras and possibly others.
+/* fuji.c:
+ * 
+ * Fuji Camera library for the gphoto project.
+ * 
+ * (C) 2001 Matthew G. Martin <matt.martin@ieee.org>
+ *     2002 Lutz Müller <lutz@users.sourceforge.net>
+ * 
+ * This routine works for Fuji DS-7 and DX-5,7,10 and 
+ * MX-500,600,700,1200,1700,2700,2900,  Apple QuickTake 200,
+ * Samsung Kenox SSC-350N,Leica Digilux Zoom cameras and possibly others.
+ *
+ * Preview and take_picture fixes and preview conversion integrated 
+ * by Michael Smith <michael@csuite.ns.ca>.
+ *
+ * This driver was reworked from the "fujiplay" package:
+ *    * A program to control Fujifilm digital cameras, like
+ *    * the DS-7 and MX-700, and their clones.
+ *    * Written by Thierry Bousch <bousch@topo.math.u-psud.fr>
+ *    * and released in the public domain.
+ *
+ *  Portions of this code were adapted from
+ *  GDS7 v0.1 interactive digital image transfer software for DS-7 camera
+ *  Copyright (C) 1998 Matthew G. Martin
 
-   Preview and take_picture fixes and preview conversion integrated 
-   by Michael Smith <michael@csuite.ns.ca>.
-
-   This driver was reworked from the "fujiplay" package:
-      * A program to control Fujifilm digital cameras, like
-      * the DS-7 and MX-700, and their clones.
-      * Written by Thierry Bousch <bousch@topo.math.u-psud.fr>
-      * and released in the public domain.
-
-    Portions of this code were adapted from
-    GDS7 v0.1 interactive digital image transfer software for DS-7 camera
-    Copyright (C) 1998 Matthew G. Martin
-
-    Some of which was derived from get_ds7 , a Perl Language library
-    Copyright (C) 1997 Mamoru Ohno
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
+ *  Some of which was derived from get_ds7 , a Perl Language library
+ *  Copyright (C) 1997 Mamoru Ohno
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 #include <config.h>
+#include "fuji.h"
 
 #include <string.h>
 #include <stdlib.h>
-#include <termios.h>
-#include <errno.h>
+#include <stdio.h>
 
-#include "fuji.h"
-#include "../../libgphoto2/exif.h"
-#include <gphoto2.h>
+#include <gphoto2-port-log.h>
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
+#define GP_MODULE "fuji"
+
+#define CR(result) {int r = (result); if (r < 0) return (r);}
+
+#define STX 0x02 /* Start of data */
+#define ETX 0x03 /* End of data */
+#define EOT 0x04 /* End of session */
+#define ENQ 0x05 /* Enquiry */ 
+#define ACK 0x06
+#define ESC 0x10
+#define ETB 0x17 /* End of transmission block */
+#define NAK 0x15
+
+int
+fuji_ping (Camera *camera, GPContext *context)
+{
+	unsigned char b;
+	unsigned int i;
+	int r;
+
+	GP_DEBUG ("Pinging camera...");
+
+	/* Drain input */
+	while (gp_port_read (camera->port, &b, 1) >= 0);
+
+	i = 0;
+	while (1) {
+		b = ENQ;
+		CR (gp_port_write (camera->port, &b, 1));
+		r = gp_port_read (camera->port, &b, 1);
+		if ((r >= 0) && (b == ACK))
+			return (GP_OK);
+		i++;
+		if (i >= 3) {
+			gp_context_error (context, _("Could not contact "
+				"camera."));
+			return (GP_ERROR);
+		}
+	}
+}
+
+int
+fuji_get_cmds (Camera *camera, unsigned char *cmds, GPContext *context)
+{
+	return (GP_OK);
+}
+
+int
+fuji_pic_count (Camera *camera, GPContext *context)
+{
+	return (GP_OK);
+}
+
+int
+fuji_pic_name (Camera *camera, unsigned int i, const char **name,
+	       GPContext *context)
+{
+	return (GP_OK);
+}
+
+#if 0
 #define serial_port 0
-
-extern unsigned char *fuji_exif_convert(exifparser *exifdat,CameraFile *cfile);
 
 #warning Do not use globals - they break pretty much every GUI for gphoto2,
 #warning including Konqueror (KDE) and Nautilus (GNOME).
@@ -61,6 +139,21 @@ static int interrupted = 0;
 static int pending_input = 0;
 static struct pict_info *pinfo = NULL;
 
+#define STX 0x2  /* Start of data */
+#define ETX 0x3  /* End of data */
+#define EOT 0x4  /* End of session */
+#define ENQ 0x5  /* Enquiry */
+#define ACK 0x6
+#define ESC 0x10
+#define ETB 0x17 /* End of transmission block */
+#define NAK 0x15
+
+#define FUJI_MAXBUF_DEFAULT 9000000
+
+#define DBG(x) GP_DEBUG(x)
+#define DBG2(x,y) GP_DEBUG(x,y)
+#define DBG3(x,y,z) GP_DEBUG(x,y,z)
+#define DBG4(w,x,y,z) GP_DEBUG(w,x,y,z)
 
 unsigned char answer[5000];
 static char *fuji_buffer;
@@ -68,26 +161,6 @@ static long fuji_maxbuf=FUJI_MAXBUF_DEFAULT;
 static int answer_len = 0;
 static Camera *curcam=NULL;
 static CameraFile *curcamfile=NULL;
-
-static char *models_serial[] = {
-        "Apple QuickTake 200",
-        "Fuji DS-7",
-        "Fuji DX-5",
-        "Fuji DX-7",
-        "Fuji DX-10",
-        "Fuji MX-500",
-        "Fuji MX-600",
-        "Fuji MX-700",
-        "Fuji MX-1200",
-        "Fuji MX-1700",
-        "Fuji MX-2700",
-        "Fuji MX-2900",
-        "Leica Digilux Zoom",
-        "Samsung Kenox SSC-350N",
-        "Toshiba PDR-M1",
-        NULL
-};
-
 
 static int fuji_initialized=0; 
 static int fuji_count;
@@ -178,12 +251,7 @@ static int put_bytes (int n, unsigned char* buff)
 	return 0;
 	while (n > 0) {
 	  /*ret = write(devfd, buff, n);*/
-	  ret=gp_port_write(thedev,buff,n); 
-	  if (ret < 0) {
-	    if (errno == EINTR)/* this doesn't fit gpio, does it ?*/
-	      continue;
-	    return -1;
-	  }
+	  CR (ret = gp_port_write(thedev,buff,n)); 
 	  n -= ret;
 	  buff += ret;
 	}
@@ -196,23 +264,6 @@ static int put_byte (int c)
 
 	buff[0] = c;
 	return put_bytes(1, buff);
-}
-
-static int attention (void)
-{
-	int i;
-
-	/* drain input */
-	while (get_byte() >= 0)
-		continue;
-	for (i = 0; i < 3; i++) {
-		put_byte(ENQ);
-		if (get_byte() == ACK)
-			return 0;
-	}
-	//gp_frontend_status(NULL, "The camera does not respond.");
-	DBG("The camera does not respond.");
-	return(-1);
 }
 
 static void send_packet (int len, unsigned char *data, int last)
@@ -299,12 +350,12 @@ static int cmd (int len, unsigned char *data)
 
 	/* Some commands require large timeouts */
 	switch (data[1]) {
-	  case FUJI_TAKE:	/* Take picture */
+	  case FUJI_CMD_TAKE:	/* Take picture */
 	  case FUJI_CHARGE_FLASH:	/* Recharge the flash */
 	  case FUJI_PREVIEW:	/* Take preview */
 	    timeout = 12;
 	    break;
-	  case FUJI_DELETE:	/* Erase a picture */
+	  case FUJI_CMD_DELETE:	/* Erase a picture */
 	    timeout = 1;
 	    break;
 	}
@@ -315,7 +366,7 @@ static int cmd (int len, unsigned char *data)
 		if (c == ACK)
 			goto rd_pkt;
 		if (c != NAK){
-			if(attention()) return(-1);
+			if(fuji_ping(camera, context)) return(-1);
 		};
 	}
 	DBG2("Command error, aborting. %d bytes recd",answer_len);
@@ -394,7 +445,7 @@ static int cmd2 (int c0, int c1, int arg)
 
 static char* fuji_version_info (void)
 {
-	cmd0 (0, FUJI_VERSION);
+	cmd0 (0, FUJI_CMD_VERSION);
 	return answer+4;
 }
 
@@ -466,16 +517,21 @@ static int fuji_set_flash_mode (int mode)
 	return answer[4];
 }
 
-static int fuji_nb_pictures (void)
+int
+fuji_pic_count (Camera *camera, GPContext *context)
 {
 	if (cmd0 (0, 0x0b)) return(-1);
 	return answer[4] + (answer[5]<<8);
 }
 
-static char *fuji_picture_name (int i)
+int
+fuji_pic_name (Camera *camera, unsigned int i, const char **name,
+	       GPContext *context)
 {
 	cmd2 (0, 0x0a, i);
-	return answer+4;
+	*name = answer+4;
+
+	return (GP_OK);
 }
 
 static int fuji_picture_size (int i)
@@ -492,18 +548,26 @@ static int charge_flash (void)
 
 static int take_picture (void)
 {
-	cmd0 (0, FUJI_TAKE);
+	cmd0 (0, FUJI_CMD_TAKE);
 	return answer[4] + (answer[5] << 8) + (answer[6] << 16) + (answer[7] << 24);
 }
 
 static int del_frame (int i)
 {
-	cmd2 (0, FUJI_DELETE, i);
+	cmd2 (0, FUJI_CMD_DELETE, i);
 	return answer[4];
 }
 
-static void get_command_list (CameraPrivateLibrary* fjd)
+int
+fuji_get_cmds (Camera *camera, unsigned char *cmds, GPContext *context)
 {
+	unsigned char answer[0xff];
+	unsigned int answer_len = 0xff;
+
+	memset (cmds, 0, 0xff);
+
+	CR (fuji_cmd0 (camera, 0, FUJI_CMD_CMDS_VALID, answer, &answer_len,
+		       context));
 	int i;
 	DBG("Get command list");
 	memset(fjd->has_cmd, 0, 256);
@@ -632,7 +696,7 @@ static int fix_serial ()
 		DBG2("fix_serial tcsetattr error for %s\n",settings.serial.port);
 		exit(1);
 	}
-       return(attention());
+       return(fuji_ping (camera, context));
 }
 
 static int fuji_set_max_speed (int newspeed)
@@ -675,7 +739,7 @@ static int fuji_set_max_speed (int newspeed)
 
   gp_port_settings_get(thedev, &settings);
   DBG2("Speed set to %d",settings.serial.speed);
-  return(attention());
+  return(fuji_ping (camera, context));
 }
 
 static int download_picture(int n,int thumb,CameraFile *file,CameraPrivateLibrary *fjd)
@@ -931,7 +995,7 @@ static int fuji_get_picture (int picture_number,int thumbnail,CameraFile *cfile,
 static int fuji_delete_image (FujiData *fjd, int picture_number){
   int err_status;
 
-  if (!fjd->has_cmd[FUJI_DELETE]) {
+  if (!fjd->has_cmd[FUJI_CMD_DELETE]) {
     return(0);
   };
 
@@ -951,45 +1015,6 @@ static int fuji_number_of_pictures (){
   return(numpix);
 
 };
-
-int camera_id (CameraText *id) {
-
-	strcpy(id->text, "Fuji");
-
-	return (GP_OK);
-}
-
-int camera_abilities (CameraAbilitiesList *list) {
-	CameraAbilities a;
-	int i;
-
-	DBG("Camera abilities");
-
-	i=0;
-	
-	while (models_serial[i]) {
-
-	  memset(&a, 0, sizeof(a));
-	  strcpy(a.model, models_serial[i]);
-	  a.port     = GP_PORT_SERIAL;
-	  a.speed[0] = 9600;
-	  a.speed[1] = 19200;
-	  a.speed[2] = 38400;
-	  a.speed[3] = 56700;
-	  a.speed[4] = 115200;
-	  a.speed[5] = 0;
-
-	  a.file_operations   =    GP_FILE_OPERATION_PREVIEW;
-	  a.operations        =  	GP_OPERATION_CAPTURE_IMAGE |
-					GP_OPERATION_CAPTURE_PREVIEW |
-	    GP_OPERATION_CONFIG;
-
-	  gp_abilities_list_append(list, a);
-	  i=i+1;
-	};
-
-	return GP_OK;
-}
 
 static int camera_exit (Camera *camera) {
   DBG("Camera exit");
@@ -1035,16 +1060,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera *camera = data;
 	DBG("file_list_func");
 	return (camera_file_list (camera, folder, list));
-}
-
-static int
-folder_list_func (CameraFilesystem *fs, const char *folder,
-		      CameraList *list, void *data)
-{
-  //	Camera *camera = data;
-	DBG("folder_list_func");
-
-	return (GP_OK);
 }
 
 static int get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,CameraFileInfo *info, void *data)
@@ -1101,59 +1116,6 @@ get_file_func (CameraFilesystem *fs, const char *folder,
   DBG3("File %s,%d\n",filename,num);
 
 	return (fuji_get_picture(num,type==0?1:0,file,fjd));
-}
-
-static int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
-
-	return (GP_OK);
-}
-
-static int camera_file_delete (Camera *camera, const char *folder, const char *filename) {
-
-	return (GP_OK);
-}
-
-static int camera_config_get (Camera *camera, CameraWidget *window) {
-
-	return (GP_OK);
-}
-
-static int camera_config_set (Camera *camera, CameraWidget *window) {
-
-	return (GP_OK);
-}
-
-//static int camera__set_config (Camera *camera, CameraSetting *conf, int count) {
-//
-//	return (GP_OK);
-//}
-
-static int camera_capture (Camera *camera, int capture_type, CameraFilePath *file) {
-
-	return (GP_OK);
-}
-
-static int camera_summary (Camera *camera, CameraText *summary) {
-
-	return (GP_OK);
-}
-
-static int camera_manual (Camera *camera, CameraText *manual) {
-
-	return (GP_OK);
-}
-
-static int camera_about (Camera *camera, CameraText *about) {
-
-	strcpy(about->text, 
-"Fuji DS-7\n
-Matthew G. Martin\n
-Based on fujiplay by
-Thierry Bousch<bousch@topo.math.u-psud.fr>
-
-Known to work with Fuji DX-5,DS-7,MX-10,MX-600,MX-1700,MX-2700,Apple QuickTake 200,Samsung Kenox SSC-350N cameras.\n");
-
-	return (GP_OK);
 }
 
 int camera_init (Camera *camera) {
@@ -1236,3 +1198,5 @@ int camera_init (Camera *camera) {
 
 	return (GP_OK);
 }
+
+#endif

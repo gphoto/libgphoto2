@@ -1,57 +1,45 @@
+/* fuji.h
+ *
+ * Copyright (C) 2002 Lutz Müller <lutz@users.sourceforge.net>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details. 
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 
-#define STX 0x2  /* Start of data */
-#define ETX 0x3  /* End of data */
-#define EOT 0x4  /* End of session */
-#define ENQ 0x5  /* Enquiry */
-#define ACK 0x6
-#define ESC 0x10
-#define ETB 0x17 /* End of transmission block */
-#define NAK 0x15
+#ifndef __FUJI_H__
+#define __FUJI_H__
 
-#define FUJI_VERSION 0x09 /* Version Info */
-#define FUJI_SIZE 0x17 /* Get picture size */
-#define FUJI_DELETE 0x19 /*Delete picture*/
-#define FUJI_TAKE 0x27 /*Take picture*/
-#define FUJI_CHARGE_FLASH 0x34 /*Charge the flash*/
-#define FUJI_CMDS_VALID 0x4C /*Get list of supported commands*/
-#define FUJI_PREVIEW 0x64 /*Get a preview*/
+#include <gphoto2-context.h>
+#include <gphoto2-camera.h>
 
-#define FUJI_MAXBUF_DEFAULT 9000000
-
-#define DBG(x) GP_DEBUG(x)
-#define DBG2(x,y) GP_DEBUG(x,y)
-#define DBG3(x,y,z) GP_DEBUG(x,y,z)
-#define DBG4(w,x,y,z) GP_DEBUG(w,x,y,z)
-
-struct _CameraPrivateLibrary {
-  int folders;
-  int speed;
-  int first_packet;
-  int type;
-  gp_port* dev;
-  char folder[128];
-  CameraFilesystem *fs;
-  CameraFile *curcamfile;
-  int fuji_initialized; 
-  int fuji_count;
-  int fuji_size;
-  int maxnum;
-  char has_cmd[256];
+typedef enum _FujiCmd FujiCmd;
+enum _FujiCmd {
+        FUJI_CMD_VERSION        = 0x09, /* Version Info */
+        FUJI_CMD_SIZE           = 0x17, /* Get picture size */
+        FUJI_CMD_DELETE         = 0x19, /* Delete picture */
+        FUJI_CMD_TAKE           = 0x27, /* Take picture */
+        FUJI_CMD_CHARGE_FLASH   = 0x34, /* Charge the flash */
+        FUJI_CMD_CMDS_VALID     = 0x4C, /* Get list of supported commands */
+        FUJI_CMD_PREVIEW        = 0x64 /* Get a preview */
 };
 
-typedef struct {
-  int folders;
-  int speed;
-  int first_packet;
-  int type;
-  gp_port* dev;
-  char folder[128];
-  CameraFilesystem *fs;
-  CameraFile *curcamfile;
-  int fuji_initialized; 
-  int fuji_count;
-  int fuji_size;
-  int maxnum;
-  char has_cmd[256];
+int fuji_get_cmds  (Camera *camera, unsigned char *cmds, GPContext *context);
 
-} FujiData;
+int fuji_ping      (Camera *camera, GPContext *context);
+int fuji_pic_count (Camera *camera, GPContext *context);
+int fuji_pic_name  (Camera *camera, unsigned int i, const char **name,
+		    GPContext *context);
+
+#endif /* __FUJI_H__ */
