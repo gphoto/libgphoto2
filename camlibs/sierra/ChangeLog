@@ -1,5 +1,10 @@
 2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c (sierra_set_speed): A speed change automatically 
+	  starts a new session.
+
+2002-05-25  Lutz Müller <lutz@users.sourceforge.net>
+
 	* library.c: The first packet after initialization (sierra_init)
 	  needs a special flag.
 

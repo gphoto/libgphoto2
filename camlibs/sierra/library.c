@@ -916,8 +916,12 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 	if (settings.serial.speed == bit_rate)
 		return (GP_OK);
 
-	/* Tell the camera about the new speed. */
+	/*
+	 * Tell the camera about the new speed. Note that a speed change
+	 * automatically starts a new session.
+	 */
 	GP_DEBUG ("Setting speed to %i (%i bps)...", speed, bit_rate);
+	camera->pl->first_packet = 1;
 	CHECK (sierra_set_int_register (camera, 17, speed, context));
 
 	/* Now switch the port to the new speed. */
