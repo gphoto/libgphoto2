@@ -2,6 +2,8 @@
 
 	* library.c: Added Canon Digital Rebel as reported by Yves Boisjoly
 		     <Yves.Boisjoly@sympatico.ca>
+	* library.c: Check if we support DeleteObject before calling it. Some
+		     cameras do not have it.
 
 2003-09-24 Marcus Meissner 
 

@@ -1058,6 +1058,9 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	((PTPData *) camera->pl->params.data)->context = context;
 
+	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_DeleteObject))
+		return GP_ERROR_NOT_SUPPORTED;
+
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -1082,6 +1085,9 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	uint32_t storage;
 
 	((PTPData *) camera->pl->params.data)->context = context;
+
+	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_DeleteObject))
+		return GP_ERROR_NOT_SUPPORTED;
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
