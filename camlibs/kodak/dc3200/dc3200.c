@@ -227,8 +227,6 @@ int camera_folder_list	(Camera *camera, CameraList *list, char *folder)
 		/* in case of long directory */
 		filename[12] = 0;
 		
-		printf("%s\n",filename);
-		
 		/* append dir to the list */
 		gp_list_append(list, filename, GP_LIST_FOLDER);
 		
