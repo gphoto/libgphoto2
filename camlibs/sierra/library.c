@@ -251,7 +251,7 @@ int sierra_write_packet (Camera *camera, char *packet) {
  */
 int sierra_read_packet (Camera *camera, char *packet) {
 
-	int y, r = 0, r2, ret, ret_status = GP_ERROR_IO, done = 0, length;
+	int y, r = 0, ret_status = GP_ERROR_IO, done = 0, length;
 	int blocksize = 1, bytes_read;
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
