@@ -64,7 +64,7 @@ AC_CHECK_FUNCS(mkdir strdup strncpy strcpy snprintf sprintf vsnprintf)
 
 echo "Using the bundled gphoto2_port library"
 LIBGPHOTO2_PORT_DIR="libgphoto2_port"
-CFLAGS="$CFLAGS -I`pwd`/libgphoto2_port/include -I`pwd`/libgphoto2_port/libgphoto2_port";
+CFLAGS="$CFLAGS -I`pwd` -I`pwd`/libgphoto2_port/include -I`pwd`/libgphoto2_port/libgphoto2_port";
 LIBS="$LIBS -L`pwd`/libgphoto2_port/libgphoto2_port/@dotlibs@ -lgphoto2_port";
 
 LIBGPHOTO2_INCLUDEDIR='-I${includedir}'
@@ -145,6 +145,7 @@ AC_CONFIG_SUBDIRS(libgphoto2_port)
 
 AC_OUTPUT([
 Makefile
+gphoto.spec
 camlibs/Makefile
 camlibs/agfa/Makefile
 camlibs/barbie/Makefile
