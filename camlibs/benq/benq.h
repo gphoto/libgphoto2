@@ -28,7 +28,6 @@ struct _CameraPrivateLibrary
 };
 
 int benq_init(GPPort *port, GPContext *context);
-int benq_close(GPPort *port, GPContext *context);
 
 int benq_get_TOC(CameraPrivateLibrary *pl, int *filecount);
 int benq_get_file_name(CameraPrivateLibrary *pl, int index, char *name);

@@ -94,12 +94,6 @@ camera_abilities (CameraAbilitiesList *list)
 	return GP_OK;
 }
 
-static int
-camera_exit (Camera *camera, GPContext *context)
-{
-	CHECK(benq_close (camera->port, context));
-	return GP_OK;
-}
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder,
@@ -204,7 +198,6 @@ camera_init (Camera *camera, GPContext *context)
 	GPPortSettings settings;
 	int ret = 0;
 
-	camera->functions->exit = camera_exit;
 	camera->functions->about = camera_about;
 	switch (camera->port->type) {
 		case GP_PORT_USB:

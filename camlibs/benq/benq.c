@@ -167,27 +167,42 @@ benq_get_file (CameraPrivateLibrary *lib, GPContext *context,
 int
 benq_init (GPPort *port, GPContext *context)
 {
-	u_int8_t bytes[5];
-	
+	u_int8_t bytes[7];
+	time_t t;
+	struct tm *ftm;
+	int i;
+
 	/* firmware detection */
 	CHECK (gp_port_usb_msg_read (port, 0x20, 0x0000, 0x0000, bytes, 0x01));
 	CHECK (gp_port_usb_msg_read (port, 0x20, 0x0000, 0x0000, bytes, 0x05));
 
 	CHECK (gp_port_usb_msg_read (port, 0x21, 0x0000, 0x0000, bytes, 0x01));
 
-	bytes[0]=0;
+	/* 
+	 * The cam is supposed to sync up with the computer time here
+	 * somehow, or at least that's what we think. 
+	 */
 	
-	/* Timestamps
-	 * FIXME The cam is supposed to sync up with the computer time here
-	 * somehow, or at least that's what we think. */
+	time(&t);
+	ftm = localtime(&t);
+
+	bytes[0] = ftm->tm_sec;
+	bytes[1] = ftm->tm_min;
+	bytes[2] = ftm->tm_hour;
+	bytes[3] = 0;               /* what is that? either 0x0 or 0x6 */
+	bytes[4] = ftm->tm_mday;
+	bytes[5] = ftm->tm_mon+1;
+	bytes[6] = ftm->tm_year-100; /* stupido. Year is 1900 + tm_year. 
+					We need two digits only. */
+
 	
-	CHECK (gp_port_usb_msg_write (port, 0x29, 0x0000, 0x0000, bytes, 0x01));
-	CHECK (gp_port_usb_msg_write (port, 0x29, 0x0000, 0x0001, bytes, 0x01));
-	CHECK (gp_port_usb_msg_write (port, 0x29, 0x0000, 0x0002, bytes, 0x01));
-	CHECK (gp_port_usb_msg_write (port, 0x29, 0x0000, 0x0003, bytes, 0x01));
-	CHECK (gp_port_usb_msg_write (port, 0x29, 0x0000, 0x0004, bytes, 0x01));
-	CHECK (gp_port_usb_msg_write (port, 0x29, 0x0000, 0x0005, bytes, 0x01));
-	CHECK (gp_port_usb_msg_write (port, 0x29, 0x0000, 0x0006, bytes, 0x01));
+	GP_DEBUG("Timestamp: %4d-%02d-%02d %2d:%02d:%02d",
+			  ftm->tm_year+1900,ftm->tm_mon+1,ftm->tm_mday,
+			              ftm->tm_hour,ftm->tm_min,ftm->tm_sec);
 	
+	for (i=0;i<7;i++)
+		CHECK (gp_port_usb_msg_write (port, 0x29, 0x0000, i, 
+					bytes+i, 0x01));
+
 	return GP_OK;
 }
