@@ -1,7 +1,13 @@
+2004-10-20  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Konica-Minolta DiMAGE Z3
+
 2004-10-17  Marcus Meissner  <marcus@jet.franken.de>
+	
 	* library.c: Added Canon PowerShot G6.
 
 2004-09-28  Marcus Meissner  <marcus@jet.franken.de>
+	
 	* library.c: Added Canon PowerShot A400.
 
 2004-09-21  Marcus Meissner  <marcus@jet.franken.de>
@@ -70,6 +76,7 @@
 	* Added Sony MVC-CD500.
 
 2004-07-16 Mariusz Woloszyn
+
 	* ptp.h: Added NIKON extension code by Corey Manders 
 
 2004-06-23  Hubert Figuiere  <hfiguiere@teaser.fr>
@@ -82,6 +89,7 @@
 	* library.c: Added Canon PowerShot S1 IS.
 
 2004-05-29 Mariusz Woloszyn
+
 	* library.c: Fixed a small problem that caused objects of undefined
 	type not beeing downloadable. Now they are downloadable if the Thumb
 	type is known.

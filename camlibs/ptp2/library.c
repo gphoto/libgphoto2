@@ -383,7 +383,8 @@ static struct {
  	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec},
 
 	/* Konica-Minolta PTP cameras */
-	{"Konica-Minolta:DiMAGE A2 (PTP mode)", 0x132b, 0x0001},
+	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001},
+	{"Konica-Minolta:DiMAGE Z3 (PictBridge mode)", 0x132b, 0x0018},
 
 	/* Fuji PTP cameras */
 	{"Fuji:FinePix S7000 (PictBridge mode)",0x04cb, 0x0142},	
