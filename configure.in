@@ -423,40 +423,36 @@ have_readline=false
 AC_ARG_WITH(readline, [  --without-readline        Don't use readline],
         if test "x${withval}" = "xno"; then
                 try_readline=false
+		rl_msg="no (not requested)"
         fi
 )
 if $try_readline; then
         # First check for readline header.
-        AC_CHECK_HEADER(readline/readline.h,,[
-		try_readline=false])
-else
-	rl_msg="no (not requested)"
+        AC_CHECK_HEADER(readline/readline.h,,[try_readline=false])
 fi
 if $try_readline; then
         # Now check whether we can link against readline without ncurses.
-        AC_CHECK_LIB(readline, rl_newline, [
+        AC_CHECK_LIB(readline, rl_completion_append_character, [
 		have_readline=true
                	rl_msg="yes (doesn' require explicit -lncurses)"
        		RL_LIBS="-lreadline"
         	RL_CFLAGS=""])
-        if ! $have_readline; then
-                # Check whether we can link against readline with ncurses
-                # we use another function to avoid the configure caching
-                # to kick in.
-                AC_CHECK_LIB(readline, rl_copy_text, [
-                        have_readline=true
-                        rl_msg="yes (requires explicit -lncurses)"
-             		RL_LIBS="-lreadline -lncurses"
-       			RL_CFLAGS=""],,[-lncurses])
-        fi
         if $have_readline; then
 		AC_CHECK_LIB(readline, rl_completion_matches,,[
 			have_readline=false
 			rl_msg="no (available version too old)"
 			RL_LIBS=""
-			RL_CFLAGS=""],[-lncurses])
+			RL_CFLAGS=""])
 	else
-                rl_msg="no (couldn't link against it)"
+		# Check whether we can link against readline with ncurses
+		# we use another function to avoid the configure caching
+		# to kick in.
+                AC_CHECK_LIB(readline, rl_completion_matches, [
+                        have_readline=true
+                        rl_msg="yes (requires explicit -lncurses)"
+             		RL_LIBS="-lreadline -lncurses"
+       			RL_CFLAGS=""],[
+			rl_msg="no (couldn't link against it)"],[-lncurses])
         fi
 fi
 if $have_readline; then
