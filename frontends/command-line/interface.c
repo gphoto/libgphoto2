@@ -8,13 +8,14 @@
 extern int glob_stdout;
 extern int glob_quiet;
 
-int gp_interface_status (Camera *camera, char *status) {
-
+void
+status_func (Camera *camera, const char *status, void *data)
+{
 	if (glob_quiet)
-		return (GP_OK);
+		return;
 
-	printf("Status: %s\n", status);
-	return (GP_OK);
+	if (strcmp (status, ""));
+		printf ("Status: %s\n", status);
 }
 
 int gp_interface_message (Camera *camera, char *message) {
@@ -42,14 +43,14 @@ int gp_interface_confirm (Camera *camera, char *message) {
 	return ( ((c[0]=='y') || (c[0]=='Y'))? GP_CONFIRM_YES: GP_CONFIRM_NO);
 }
 
-int gp_interface_progress (Camera *camera, CameraFile *file, float percentage) {
-
+void
+progress_func (Camera *camera, float percentage, void *data)
+{
 	if (glob_quiet)
-		return GP_OK;
+		return;
 
 	if (percentage >= 0) {
-		printf("Percent completed: %02.01f\r", percentage);
+		printf ("Percent completed: %02.01f\r", percentage);
 		fflush(stdout);
 	}
-	return (GP_OK);
 }

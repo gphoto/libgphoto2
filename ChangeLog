@@ -1,5 +1,10 @@
 2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/camera.c: Correctly initialize on gp_camera_new
+	* frontends/command-line: Use the new gp_camera_[status,progress]
+
+2001-10-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2/camera.c
 	* include/gphoto2-camera.h (gp_camera_status*), (gp_camera_progress*):
 	New
