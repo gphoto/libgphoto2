@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -48,10 +49,10 @@ CameraProgress gp_fe_progress = NULL;
 CameraMessage  gp_fe_message = NULL;
 CameraConfirm  gp_fe_confirm = NULL;
 
-
 int gp_init (int debug)
 {
         char buf[1024];
+        int x;
 
         glob_debug = debug;
 
@@ -59,10 +60,8 @@ int gp_init (int debug)
         glob_abilities_list = gp_abilities_list_new();
         glob_setting_count   = 0;
 
-        if (glob_debug) {
-                printf("core: >> Debug Mode On << \n");
-                printf("core: Creating $HOME/.gphoto\n");
-        }
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Debug level %i", debug);
+        gp_debug_printf(GP_DEBUG_LOW, "core", "Creating $HOME/.gphoto");
 
         /* Make sure the directories are created */
 #ifdef WIN32
@@ -73,33 +72,29 @@ int gp_init (int debug)
         sprintf(buf, "%s/.gphoto", getenv("HOME"));
         (void)mkdir(buf, 0700);
 #endif
-        if (glob_debug)
-                printf("core: Initializing gpio:\n");
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing gpio");
 
-        if (gpio_init() == GPIO_ERROR) {
+        if (gpio_init(debug) == GPIO_ERROR) {
                 gp_camera_message(NULL, "ERROR: Can not initialize libgpio");
                 return (GP_ERROR);
         }
 
-        if (glob_debug)
-                printf("core: Trying to load settings:\n");
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Trying to load settings");
         /* Load settings */
         load_settings();
 
-        if (glob_debug)
-                printf("core: Trying to load libraries:\n");
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Trying to load libraries");
         load_cameras();
 
         if (glob_debug) {
-                int x;
-                printf("core: List of cameras found:\n");
+                gp_debug_printf(GP_DEBUG_LOW, "core", "List of cameras found");
                 for (x=0; x<glob_abilities_list->count; x++)
-                        printf("core:\t\"%s\" uses %s\n",
+			gp_debug_printf(GP_DEBUG_LOW, "core", "\t\"%s\" uses %s",
                                 glob_abilities_list->abilities[x]->model,
                                 glob_abilities_list->abilities[x]->library);
                 if (glob_abilities_list->count == 0)
-                        printf("core:\tNone\n");
-                printf("core: Initializing the gPhoto IO library (libgpio)\n");
+                        gp_debug_printf(GP_DEBUG_LOW, "core","\tNone");
+                gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing the gPhoto IO library (libgpio)");
         }
 
         return (GP_OK);
@@ -110,6 +105,22 @@ int gp_exit ()
         gp_abilities_list_free(glob_abilities_list);
 
         return (GP_OK);
+}
+
+void gp_debug_printf(int level, char *id, char *format, ...)
+{
+	va_list arg;
+
+	if (glob_debug == GP_DEBUG_NONE)
+		return;
+
+        if (level >= glob_debug) {
+		fprintf(stderr, "%s: ", id);
+		va_start(arg, format);
+		vfprintf(stderr, format, arg);
+		va_end(arg);
+		fprintf(stderr, "\n");
+	}
 }
 
 int gp_port_count()
@@ -218,8 +229,7 @@ int gp_camera_new (Camera **camera, int camera_number, CameraPortInfo *settings)
         }
 
         /* Initialize the camera library */
-        if (glob_debug)
-                printf("core: Initializing \"%s\" (%s)...\n",
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Initializing \"%s\" (%s)...",
                         glob_abilities_list->abilities[camera_number]->model,
                         glob_abilities_list->abilities[camera_number]->library);
         strcpy(ci.model, glob_abilities_list->abilities[camera_number]->model);
@@ -429,9 +439,9 @@ int gp_camera_config_set (Camera *camera, CameraSetting *setting, int count)
         int x;
 
         if (glob_debug) {
-                printf("core: Dumping CameraSetting:\n");
+                gp_debug_printf(GP_DEBUG_LOW, "core", "Dumping CameraSetting");
                 for (x=0; x<count; x++)
-                        printf("core: \"%s\" = \"%s\"\n", setting[x].name, setting[x].value);
+                        gp_debug_printf(GP_DEBUG_LOW, "core", "\"%s\" = \"%s\"", setting[x].name, setting[x].value);
         }
 
         if (camera->functions->config_set == NULL)
@@ -499,8 +509,7 @@ int gp_setting_set (char *id, char *key, char *value)
 {
         int x;
 
-        if (glob_debug)
-                printf("core: (%s) Setting key \"%s\" to value \"%s\"\n",
+	gp_debug_printf(GP_DEBUG_LOW, "core", "(%s) Setting key \"%s\" to value \"%s\"",
                         id,key,value);
 
 	if (!id || !key)
@@ -616,7 +625,7 @@ int gp_abilities_list_dump (CameraAbilitiesList *list)
         int x;
 
         for (x=0; x<list->count; x++) {
-                printf("core: Camera #%i:\n", x);
+                gp_debug_printf(GP_DEBUG_LOW, "core", "Camera #%i:", x);
                 gp_abilities_dump(list->abilities[x]);
         }
 

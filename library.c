@@ -68,8 +68,7 @@ int load_camera_list (char *library_filename) {
 	load_camera_id = (c_id)GPIO_DLSYM(lh, "camera_id");
 	load_camera_id(&id);
 
-        if (glob_debug)
-                printf("core:\t library id: %s\n", id.text);
+	gp_debug_printf(GP_DEBUG_LOW, "core", "\t library id: %s", id.text);
 
         for (x=0; x<glob_abilities_list->count; x++) {
                 if (strcmp(glob_abilities_list->abilities[x]->id, id.text)==0) {
@@ -104,15 +103,13 @@ int load_cameras_search (char *directory) {
         GPIO_DIRENT de;
 	char buf[1024];
 
-	if (glob_debug) {
-		printf("core: Trying to load camera libraries in:\n");
-		printf("core: \t%s\n", directory);
-	}
+	gp_debug_printf(GP_DEBUG_LOW, "core","Trying to load camera libraries in:");
+	gp_debug_printf(GP_DEBUG_LOW, "core","\t%s", directory);
 
         /* Look for available camera libraries */
         d = GPIO_OPENDIR(directory);
         if (!d) {
-                fprintf(stderr, "core: couldn't open %s\n", directory);
+                gp_debug_printf(GP_DEBUG_LOW, "core", "couldn't open %s", directory);
                 return GP_ERROR;
         }
 
@@ -121,18 +118,13 @@ int load_cameras_search (char *directory) {
            de = GPIO_READDIR(d);
            if (de) {
 		sprintf(buf, "%s%c%s", directory, GPIO_DIR_DELIM, GPIO_FILENAME(de));
-                if (glob_debug)
-                   printf("core:\tis %s a library? ", buf);
+                gp_debug_printf(GP_DEBUG_LOW, "core", "\tis %s a library? ", buf);
                 /* try to open the library */
                 if (is_library(buf) == GP_OK) {
-                        if (glob_debug)
-                                printf("yes\n");
+                        gp_debug_printf(GP_DEBUG_LOW, "core", "yes");
                         load_camera_list(buf);
                    } else {
-                        if (glob_debug) {
-                                printf("no\n");
-				printf("core: \t reason: %s\n", GPIO_DLERROR());
-			}
+			gp_debug_printf(GP_DEBUG_LOW, "core", "no. reason: %s", GPIO_DLERROR());
                 }
            }
         } while (de);
@@ -168,7 +160,7 @@ int load_cameras() {
 
 /* MUCH too verbose. 
 	if (glob_debug) {
-		printf("core: Loaded camera list:\n");
+		gp_debug_printf(GP_DEBUG_LOW, "core", "Loaded camera list");
 		gp_abilities_list_dump(glob_abilities_list);
 	}
 */ 
