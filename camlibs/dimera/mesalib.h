@@ -7,51 +7,6 @@
  * Permission to copy and use and modify this file is granted
  * provided the above notices are retained, intact.
  *
- * $Id$
- *
- * History:
- * $Log$
- * Revision 1.7  2002/01/22 04:57:59  dfandrich
- * 	* TODO: changed note about temp.ppm and added one about multiple ops.
- * 	* mesalib.c: Check for error in mesa_modem_check.
- * 	* mesalib.h: Added include files.
- * 	* dimera3500.c: Put temp.ppm file permanently into file list.
- * 	  Fix percentage given to gp_file_progress.
- * 	  Simplified debugging macros.
- *
- * Revision 1.6  2001/12/06 01:45:49  dfandrich
- * 	* configure.in
- * 	* libgphoto2_port/m4/stdint.m4
- * 	* camlibs/dimera/dimera3500.c
- * 	* camlibs/dimera/mesalib.h
- * 	* camlibs/panasonic/dc.c
- * 	* camlibs/panasonic/dc.h
- * 	* camlibs/panasonic/dc1000.c
- * 	* camlibs/panasonic/dc1580.c
- * 	* camlibs/panasonic/l859/l859.c
- * 	* camlibs/panasonic/l859/l859.h: add AC_NEED_STDINT_H to configure.in
- * 	  and change camera libraries to use C99-style size-specific integer types
- *
- * Revision 1.5  2001/10/19 13:40:28  lutz
- * 2001-10-19  Lutz Müller <urc8@rz.uni-karlsruhe.de>
- *
- *         * camlibs/casio
- *         * camlibs/polaroid
- *         * camlibs/barbie
- *         * camlibs/dimera
- *         * camlibs/jamcam
- *         * camlibs/panasonic/coolshot
- *         * camlibs/samsung: Use camera-fs and get_file_func
- *
- * Revision 1.4  2001/10/16 18:45:10  dfandrich
- * Added CHECK macro to ease error handling
- *
- * Revision 1.3  2001/09/10 20:25:44  dfandrich
- * Added missing types for Solaris
- *
- * Revision 1.2  2001/08/29 21:57:28  dfandrich
- * Changed port parameter to mesa_port_open
- *
  */
 
 #ifndef MESALIB_H
