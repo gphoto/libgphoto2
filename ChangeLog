@@ -1,5 +1,10 @@
 2001-11-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-filesys.h: Expand CameraFileInfo to include 
+	  information about audio data, too.
+
+2001-11-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patches from Greg Ingram <ingram@symsys.com>:
 
 	* camlibs/polaroid/pdc700.c: Lots of new stuff

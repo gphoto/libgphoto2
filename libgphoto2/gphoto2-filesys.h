@@ -47,16 +47,30 @@ typedef enum {
 
 typedef struct {
 	CameraFileInfoFields fields;
-	char type [64];
-	CameraFilePermissions permissions; /* Don't use with preview */
-	char name [64];
-	int size;
-	int width, height;
-} CameraFileInfoStruct;
+	char type[64];
+	CameraFilePermissions permissions;
+	char name[64];
+	unsigned int size;
+	unsigned int width, height;
+} CameraFileInfoFile;
 
 typedef struct {
-	CameraFileInfoStruct    preview;
-	CameraFileInfoStruct    file;
+	CameraFileInfoFields fields;
+	char type[64];
+	unsigned int size;
+	unsigned int width, height;
+} CameraFileInfoPreview;
+
+typedef struct {
+	CameraFileInfoFields fields;
+	char type[64];
+	unsigned int size;
+} CameraFileInfoAudio;
+
+typedef struct {
+	CameraFileInfoPreview preview;
+	CameraFileInfoFile    file;
+	CameraFileInfoAudio   audio;
 } CameraFileInfo;
 
 /* You don't really want to know what's inside, do you? */
