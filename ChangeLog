@@ -1,5 +1,9 @@
 2001-08-18  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* po/POTFILES.in: Add core.c, camera.c and result.c
+
+2001-08-18  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* README: Add notice about USB Mass Storage cameras.
 	* include/*:
 	* libgphoto2/*: Major cleanup - add licence notice to begin of each
