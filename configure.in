@@ -223,7 +223,6 @@ AC_SUBST(AA_CFLAGS)
 
 AC_OUTPUT([
 Makefile
-gphoto.spec
 camlibs/Makefile
 camlibs/agfa/Makefile
 camlibs/barbie/Makefile
@@ -259,6 +258,8 @@ libgphoto2/libgphoto-2.0.pc
 gphoto2-config
 intl/Makefile
 packaging/Makefile
+packaging/rpm/Makefile
+packaging/rpm/package.spec
 po/Makefile.in
 doc/Makefile
 doc/api/Makefile

@@ -1,3 +1,13 @@
+2001-10-26 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* Makefile.am: moved spec file to packaging/rpm/
+	* Makefile.am: added CDPATH warning, rpm target and cvs-tags target
+	* gphoto.spec.in: moved spec file to packaging/rpm/
+	* configure.in: added packaging/rpm/Makefile.am
+	* configure.in: moved spec file to packaging/rpm/
+	* packaging/Makefile.am: added rpm/
+	* packaging/rpm/: new directory with Makefile.am and .cvsignore
+
 2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/canon/serial.c: gp_port_pin_get -> gp_port_get_pin

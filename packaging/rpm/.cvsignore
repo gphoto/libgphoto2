@@ -1,0 +1,8 @@
+*~ .*~
+Makefile Makefile.in
+rpmmacros rpmrc
+BUILD
+RPMS
+SOURCES
+SPECTS
+SRPMS

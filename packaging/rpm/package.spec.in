@@ -5,7 +5,7 @@ Release: 2
 License: LGPL
 Group: Applications/Multimedia
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-Source: http://www.gphoto.org/dist/%{name}-%{version}.tar.gz
+Source: http://www.gphoto.org/dist/@PACKAGE@-@VERSION@.tar.gz
 Url: http://www.gphoto.org/
 Requires: libusb >= 0.0.4
 PreReq: hotplug
@@ -140,13 +140,12 @@ mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 # register libraries
 /sbin/ldconfig
 
-%preun
+%postun
+# unregister libraries
+/sbin/ldconfig
 # remove supported cameras from /etc/hotplug/usb.usermap
 grep -v '^usbcam' /etc/hotplug/usb.usermap > /etc/hotplug/usb.usermap.tmp
 mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
-
-# unregister libraries
-%postun -p /sbin/ldconfig
 
 %files devel
 %defattr(-,root,root)
@@ -158,6 +157,9 @@ mv /etc/hotplug/usb.usermap.tmp /etc/hotplug/usb.usermap
 
 ##### Change log
 %changelog
+* Sat Oct 27 2001 Hans Ulrich Niedermann <gp@n-dimensional.de>
+- tried to fix update behaviour for hotplug list
+
 * Thu Oct 25 2001 Tim Waugh <twaugh@redhat.com>
 - hotplug dependency is a prereq not a requires (the package scripts
   need it)
