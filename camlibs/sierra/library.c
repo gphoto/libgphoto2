@@ -599,8 +599,11 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 	sierra_debug_print(fd, buf);
 
 	do_percent = 1;
-        if (sierra_set_int_register(camera, 4, file_number)==GP_ERROR)
-                return (GP_ERROR);
+	/* Set the current picture number */
+	if (file_number >= 0) {
+	        if (sierra_set_int_register(camera, 4, file_number)==GP_ERROR)
+	                return (GP_ERROR);
+	}
 
 	switch (reg) {
 		case 14:
@@ -617,11 +620,11 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		case 44:
 		        /* Get the size of the current audio */
 			/* will do */
+			break;
 		default:
 			do_percent = 0;
 	}
-        if (sierra_set_int_register(camera, 4, file_number)==GP_ERROR)
-                return (GP_ERROR);
+
 	/* Send request */
 	sierra_build_packet(camera, TYPE_COMMAND, 0, 2, packet);
 	packet[4] = 0x04;
@@ -648,7 +651,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		/* How to support chunk image data transfers 		*/
 		/* ==================================================== */
 
-		/* 1) Use gp_file_data_add to write a chunk of new data */
+		/* 1) Use gp_file_append to write a chunk of new data   */
 		/*    to the CameraFile struct. This will automatcially */
 		/*    update file->size.				*/
 
@@ -657,7 +660,7 @@ int sierra_get_string_register (Camera *camera, int reg, int file_number,
 		/* 2) Call gp_camera_progress to let the front-end know */
 		/*    the current transfer status. The front-end has 	*/
 		/*    the option of reading the data that was just	*/
-		/*    transferred by using gp_file_chunk_get		*/
+		/*    transferred by using gp_file_chunk		*/
 
 			if (do_percent)
 			   gp_camera_progress(camera, file, (float)(100.0*(float)x/(float)(l)));
@@ -840,6 +843,10 @@ int sierra_capture (Camera *camera, CameraFile *file) {
 	/* Retrieve the just-taken picture */
 	if (sierra_get_string_register(camera, 14, picnum, file, NULL, NULL)==GP_ERROR)
                 return (GP_ERROR);
+
+	/* Delete the just-taken picture */
+	if (sierra_delete(camera, picnum)==GP_ERROR)
+		return (GP_ERROR);
 #if 0
 	/* Retrieve the quick preview */
 	if (sierra_get_string_register(camera, 14, 0, file, NULL, NULL)==GP_ERROR)
