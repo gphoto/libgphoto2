@@ -19,6 +19,16 @@
 
 	* libgphoto2_port/po/de.po: Added translation.
 
+2001-11-16  Hans Ulrich Niedermann <hun@n-dimensional.de>
+
+	After Scott just released beta3, I tried to tag the correct file
+	revisions as gphoto-2_0beta3.
+
+	* configure.in: changed version number to 2.0beta4dev0 so we can
+	  distinguish logs with the finer grain revisions. Just increase
+	  the last number every time you made some changes that could
+	  break or fix something of interest.
+
 2001-11-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/ptp: Remove a whole lot of warnings, remove unnecessary
