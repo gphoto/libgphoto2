@@ -11,8 +11,24 @@ A: First try to run "gphoto2 --list-ports" and look whether the ports
 
 ========================================================================
 
-Q: My Canon PowerShot G1 doesn't work with gphoto2. What should I do?
+Q: I get the error message
 
+   *** Error ('Could not claim the USB device') ***
+
+   Could not claim interface 0 (Operation not permitted). Make sure no
+   other program or kernel module (i.e. dc2xx) is using the device and
+   you have read/write access to the device. 
+
+   What can I do to make it work?
+
+A: You have to set up the permissions on your USB device correctly.
+   For Linux, this is described in the file named gphoto2.txt in
+   your gphoto2 documentation directory (named doc/ in the source tree).
+
+========================================================================
+
+Q: My Canon PowerShot G1 doesn't work with gphoto2. What should I do?
+  
 A: This is a known bug which is being worked on. In the mean time, run 
    the camera on battery instead of the AC adapter.
 
