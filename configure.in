@@ -134,9 +134,9 @@ dnl ************************************************************
 GP_CHECK_DOC_DIR()dnl
 
 dnl ********
-dnl gtk-doc?
+dnl build docs?
 dnl ********
-GP_CHECK_GTK_DOC()dnl
+GP_BUILD_DOCS()dnl
 
 dnl *************************
 dnl Configure libgphoto2-port

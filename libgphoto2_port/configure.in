@@ -210,7 +210,7 @@ dnl ********
 dnl gtk-doc?
 dnl ********
 GP_CHECK_DOC_DIR()dnl
-GP_CHECK_GTK_DOC()dnl
+GP_BUILD_DOCS()dnl
 
 AC_OUTPUT([
 libgphoto2_port.spec
