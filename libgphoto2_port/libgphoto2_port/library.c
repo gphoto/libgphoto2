@@ -7,7 +7,6 @@
 #include "library.h"
 
 extern int device_count;
-extern int glob_debug_level;
 extern gp_port_info device_list[];
 void *device_lh;
 
@@ -16,12 +15,12 @@ int gp_port_library_is_valid (const char *filename) {
         void *lh;
 
         if ((lh = GP_SYSTEM_DLOPEN(filename))==NULL) {
-                gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level,
+                gp_port_debug_printf(GP_DEBUG_LOW,
                         "%s is not a library (%s) ", filename, GP_SYSTEM_DLERROR());
                 return (GP_ERROR);
         }
 
-        gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "%s is a library ", filename);
+        gp_port_debug_printf(GP_DEBUG_LOW, "%s is a library ", filename);
         GP_SYSTEM_DLCLOSE(lh);
 
         return (GP_OK);
@@ -42,8 +41,7 @@ int gp_port_library_list_load(const char *filename, int loaded[], gp_port_info *
         lib_list = (gp_port_ptr_list)GP_SYSTEM_DLSYM(lh, "gp_port_library_list");
 
         if ((!list) || (!lib_type)) {
-                gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level,
-                        "could not find type/list symbols: %s ", GP_SYSTEM_DLERROR());
+                gp_port_debug_printf(GP_DEBUG_LOW, "could not find type/list symbols: %s ", GP_SYSTEM_DLERROR());
                 GP_SYSTEM_DLCLOSE(lh);
                 return (GP_ERROR);
         }
@@ -51,7 +49,7 @@ int gp_port_library_list_load(const char *filename, int loaded[], gp_port_info *
         type = lib_type();
 
         if (loaded[type] == 1) {
-                gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level,
+                gp_port_debug_printf(GP_DEBUG_LOW,
                         "%s (%i) already loaded ", filename, type);
                 GP_SYSTEM_DLCLOSE(lh);
                 return (GP_ERROR);
@@ -60,14 +58,14 @@ int gp_port_library_list_load(const char *filename, int loaded[], gp_port_info *
         }
 
         if (lib_list(list, count)==GP_ERROR)
-                gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level,
+                gp_port_debug_printf(GP_DEBUG_LOW,
                         "%s could not list devices ", filename);
 
-        gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level,
+        gp_port_debug_printf(GP_DEBUG_LOW,
                 "Loaded these devices from %s:", filename);
         /* copy in the library path */
         for (x=old_count; x<(*count); x++) {
-                gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level,
+                gp_port_debug_printf(GP_DEBUG_LOW,
                         "\t%s path=\"%s\"", list[x].name, list[x].path);
                 strcpy(list[x].library_filename, filename);
         }
@@ -93,7 +91,7 @@ int gp_port_library_list (gp_port_info *list, int *count) {
         /* Look for available camera libraries */
         d = GP_SYSTEM_OPENDIR(IOLIBS);
         if (!d) {
-                gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level,
+                gp_port_debug_printf(GP_DEBUG_LOW,
                         "couldn't open %s ", IOLIBS);
                 return GP_ERROR;
         }
@@ -130,7 +128,7 @@ int gp_port_library_load (gp_port *device, gp_port_type type) {
                         /* Open the correct library */
                         device->library_handle = GP_SYSTEM_DLOPEN(device_list[x].library_filename);
                         if (!device->library_handle) {
-                                gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level,
+                                gp_port_debug_printf(GP_DEBUG_LOW,
                                         "bad handle: %s %s ",
                                         device_list[x].library_filename, GP_SYSTEM_DLERROR());
                                 return (GP_ERROR);
@@ -139,7 +137,7 @@ int gp_port_library_load (gp_port *device, gp_port_type type) {
                         /* Load the operations */
                         ops_func = (gp_port_ptr_operations)GP_SYSTEM_DLSYM(device->library_handle, "gp_port_library_operations");
                         if (!ops_func) {
-                                gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level,
+                                gp_port_debug_printf(GP_DEBUG_LOW,
                                         "can't load ops: %s %s ",
                                         device_list[x].library_filename, GP_SYSTEM_DLERROR());
                                 GP_SYSTEM_DLCLOSE(device->library_handle);

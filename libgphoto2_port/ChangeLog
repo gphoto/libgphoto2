@@ -1,5 +1,19 @@
 2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-port-debug.h
+	* libgphoto2/debug.c (gp_port_debug_get_level): New. In addition,
+	remove port-dependent debug levels as frontends are not able to 
+	change them dynamically. Just use the global one.
+	* include/gphoto2-port.h
+	* libgphoto2_port/gp_port.c: gp_port_init without debug level. That 
+	can and should be done separately.
+	* libgphoto2_port/library.c
+	* test/test-gp-port.c
+	* serial/unix.c: Adjust to above changes
+	* usb/libusb.c: Use gp_port_debug_printf instead of fprintf
+
+2001-10-06  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Chris Byrne <adapt@ihug.co.nz> found this bug:
 
 	* libgphoto2_port/debug.c: Use "%s" because the string we print can

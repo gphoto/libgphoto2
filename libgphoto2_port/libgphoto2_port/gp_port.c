@@ -30,8 +30,6 @@
 #include <gphoto2-port-result.h>
 #include "library.h"
 
-extern int glob_debug_level;
-
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
@@ -56,28 +54,27 @@ int initialized = 0;
    ----------------------------------------------------------------
  */
 
-int gp_port_init(int debug)
+int gp_port_init (void)
 {
-        gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Initializing...");
+        gp_port_debug_printf(GP_DEBUG_LOW, "Initializing...");
         /* Enumerate all the available devices */
         device_count = 0;
-	gp_port_debug_set_level (debug);
 	initialized = 1;
         return (gp_port_library_list(device_list, &device_count));
 }
 
 int gp_port_count_get(void)
 {
-        gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Device count: %i", device_count);
+        gp_port_debug_printf(GP_DEBUG_LOW, "Device count: %i", device_count);
 	if (!initialized)
-		gp_port_init (glob_debug_level);
+		gp_port_init ();
 
         return device_count;
 }
 
 int gp_port_info_get(int device_number, gp_port_info *info)
 {
-        gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Getting device info...");
+        gp_port_debug_printf(GP_DEBUG_LOW, "Getting device info...");
 
         memcpy(info, &device_list[device_number], sizeof(device_list[device_number]));
 
@@ -91,9 +88,9 @@ gp_port_new (gp_port **dev, gp_port_type type)
         char buf[1024];
 
 	if (!initialized)
-		gp_port_init (glob_debug_level);
+		gp_port_init ();
 
-        gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Creating new device... ");
+        gp_port_debug_printf(GP_DEBUG_LOW, "Creating new device... ");
 
         switch(type) {
         case GP_PORT_SERIAL:
@@ -127,19 +124,17 @@ gp_port_new (gp_port **dev, gp_port_type type)
 
         *dev = (gp_port *) malloc(sizeof(gp_port));
         if (!(*dev)) {
-            gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Can not allocate device!");
+            gp_port_debug_printf(GP_DEBUG_LOW, "Can not allocate device!");
             return (GP_ERROR_IO_MEMORY);
         }
         memset(*dev, 0, sizeof(gp_port));
 
         if (gp_port_library_load(*dev, type)) {
             /* whoops! that type of device isn't supported */
-            gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Device library can't be loaded! (%i)", type);
+            gp_port_debug_printf(GP_DEBUG_LOW, "Device library can't be loaded! (%i)", type);
             free(*dev);
             return (GP_ERROR_IO_LIBRARY);
         }
-
-        (*dev)->debug_level = glob_debug_level;
 
         (*dev)->type = type;
         (*dev)->device_fd = 0;
@@ -183,15 +178,7 @@ gp_port_new (gp_port **dev, gp_port_type type)
 		return GP_ERROR_IO_UNKNOWN_PORT;
         }
 
-        gp_port_debug_printf(GP_DEBUG_LOW, glob_debug_level, "Created device successfully...");
-
-        return (GP_OK);
-}
-
-int
-gp_port_debug_set (gp_port *dev, int debug_level)
-{
-        dev->debug_level = debug_level;
+        gp_port_debug_printf(GP_DEBUG_LOW, "Created device successfully...");
 
         return (GP_OK);
 }
@@ -205,8 +192,17 @@ gp_port_open (gp_port *dev)
 	if (!dev)
 		return (GP_OK);
 
-	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
-			      "Opening port...");
+	switch (dev->type) {
+	case GP_PORT_SERIAL:
+		gp_port_debug_printf (GP_DEBUG_MEDIUM, "Opening SERIAL port");
+		break;
+	case GP_PORT_USB:
+		gp_port_debug_printf (GP_DEBUG_MEDIUM, "Opening USB port");
+		break;
+	default:
+		gp_port_debug_printf (GP_DEBUG_MEDIUM, "Opening port");
+		break;
+	}
 
         /* Try to open device */
         retval = dev->ops->open (dev);
@@ -225,8 +221,7 @@ gp_port_close (gp_port *dev)
         if (!dev)
 		return (GP_OK);
 
-	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
-			      "Closing port...");
+	gp_port_debug_printf (GP_DEBUG_LOW, "Closing port");
 
         retval = dev->ops->close(dev);
         dev->device_fd = 0;
@@ -242,23 +237,25 @@ gp_port_free (gp_port *dev)
 	if (!dev)
 		return (GP_OK);
 
+	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Freeing port");
+
+	gp_port_debug_printf (GP_DEBUG_HIGH, "Exiting...");
 	retval = dev->ops->exit(dev);
+	gp_port_debug_printf (GP_DEBUG_HIGH, "... %ssuccessful",
+			      retval < 0 ? "un" : "");
 
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
-                "gp_port_free: exit %s", retval < 0? "error":"ok");
-
-        gp_port_library_close(dev);
-        free(dev);
+        gp_port_library_close (dev);
+        free (dev);
 
         return GP_OK;
 }
 
 int
-gp_port_write(gp_port *dev, char *bytes, int size)
+gp_port_write (gp_port *dev, char *bytes, int size)
 {
-	gp_port_debug_printf (GP_DEBUG_MEDIUM, dev->debug_level,
-			      "gp_port_write: %05i byte(s)", size);
-	gp_port_debug_print_data (GP_DEBUG_HIGH, dev->debug_level, bytes, size);
+	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Writing %i byte(s) to port",
+			      size);
+	gp_port_debug_print_data (GP_DEBUG_HIGH, bytes, size);
 
 	return (dev->ops->write (dev, bytes, size));
 }
@@ -268,14 +265,14 @@ gp_port_read (gp_port *dev, char *bytes, int size)
 {
         int retval;
 
+	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Reading from port...");
+
         retval = dev->ops->read (dev, bytes, size);
 	if (retval < 0)
 		return (retval);
 
-	gp_port_debug_printf (GP_DEBUG_MEDIUM, dev->debug_level,
-			      "gp_port_read: %05i byte(s)", retval);
-	gp_port_debug_print_data (GP_DEBUG_HIGH, dev->debug_level,
-				  bytes, retval);
+	gp_port_debug_printf (GP_DEBUG_MEDIUM, "... %5i byte(s) read", retval);
+	gp_port_debug_print_data (GP_DEBUG_HIGH, bytes, retval);
 
         return (retval);
 }
@@ -283,10 +280,10 @@ gp_port_read (gp_port *dev, char *bytes, int size)
 int
 gp_port_timeout_set (gp_port *dev, int millisec_timeout)
 {
-        dev->timeout = millisec_timeout;
+	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Setting timeout to %ims",
+			      millisec_timeout);
 
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
-                "gp_port_set_timeout: value=%ims", millisec_timeout);
+        dev->timeout = millisec_timeout;
 
         return GP_OK;
 }
@@ -294,10 +291,10 @@ gp_port_timeout_set (gp_port *dev, int millisec_timeout)
 int
 gp_port_timeout_get (gp_port *dev, int *millisec_timeout)
 {
-        *millisec_timeout = dev->timeout;
+	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Getting timeout: %ims",
+			      dev->timeout);
 
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
-                "gp_port_get_timeout: value=%ims", *millisec_timeout);
+        *millisec_timeout = dev->timeout;
 
         return GP_OK;
 }
@@ -307,15 +304,20 @@ gp_port_settings_set (gp_port *dev, gp_port_settings settings)
 {
         int retval;
 
-        /* need to memcpy() settings to dev->settings_pending */
-        memcpy(&dev->settings_pending, &settings, sizeof(dev->settings_pending));
+        /*
+	 * We copy the settings to settings_pending and call update on the 
+	 * port.
+	 */
+        memcpy (&dev->settings_pending, &settings,
+		sizeof (dev->settings_pending));
 
+	gp_port_debug_printf (GP_DEBUG_MEDIUM, "Setting settings...");
         retval = dev->ops->update(dev);
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
-                "gp_port_set_settings: update %s", retval < 0? "error":"ok");
+	gp_port_debug_printf (GP_DEBUG_MEDIUM, "... %ssuccessful",
+			      retval < 0 ? "un" : "");
+
         return (retval);
 }
-
 
 int
 gp_port_settings_get (gp_port *dev, gp_port_settings * settings)
@@ -333,12 +335,12 @@ int gp_port_pin_get(gp_port *dev, int pin, int *level)
         int retval;
 
         if (!dev->ops->get_pin) {
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_get_pin: get_pin NULL");
+                gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_get_pin: get_pin NULL");
                 return (GP_ERROR);
         }
 
         retval = dev->ops->get_pin(dev, pin, level);
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+        gp_port_debug_printf(GP_DEBUG_LOW,
                 "gp_port_get_pin: get_pin %s", retval < 0? "error":"ok");
         return (retval);
 }
@@ -348,12 +350,12 @@ int gp_port_pin_set(gp_port *dev, int pin, int level)
         int retval;
 
         if (!dev->ops->get_pin) {
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_set_pin: set_pin NULL");
+                gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_set_pin: set_pin NULL");
                 return (GP_ERROR);
         }
 
         retval = dev->ops->set_pin(dev, pin, level);
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+        gp_port_debug_printf(GP_DEBUG_LOW,
                 "gp_port_set_pin: set_pin %s", retval < 0? "error":"ok");
         return (retval);
 }
@@ -363,12 +365,12 @@ int gp_port_send_break (gp_port *dev, int duration)
         int retval;
 
         if (!dev->ops->send_break) {
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_break: gp_port_break NULL");
+                gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_break: gp_port_break NULL");
                 return (GP_ERROR);
         }
 
         retval = dev->ops->send_break(dev, duration);
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+        gp_port_debug_printf(GP_DEBUG_LOW,
                 "gp_port_send_break: send_break %s", retval < 0? "error":"ok");
         return (retval);
 }
@@ -378,12 +380,12 @@ int gp_port_flush (gp_port *dev, int direction)
         int retval;
 
         if (!dev->ops->flush) {
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level, "gp_port_flush: gp_port_flush NULL");
+                gp_port_debug_printf(GP_DEBUG_LOW, "gp_port_flush: gp_port_flush NULL");
                 return (GP_ERROR);
         }
 
         retval = dev->ops->flush(dev, direction);
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+        gp_port_debug_printf(GP_DEBUG_LOW,
                 "gp_port_flush: flush %s", retval < 0? "error":"ok");
         return (retval);
 }
@@ -397,13 +399,13 @@ int gp_port_usb_find_device (gp_port * dev, int idvendor, int idproduct)
         int retval;
 
         if (!dev->ops->find_device) {
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+                gp_port_debug_printf(GP_DEBUG_LOW,
                         "gp_port_usb_find_device: find_device NULL");
                 return (GP_ERROR);
         }
 
         retval = dev->ops->find_device(dev, idvendor, idproduct);
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+        gp_port_debug_printf(GP_DEBUG_LOW,
                 "gp_port_usb_find_device: find_device (0x%04x 0x%04x) %s",
                 idvendor, idproduct, retval < 0? "error":"ok");
         return (retval);
@@ -413,13 +415,13 @@ int gp_port_usb_clear_halt (gp_port * dev, int ep)
         int retval;
 
         if (!dev->ops->clear_halt) {
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+                gp_port_debug_printf(GP_DEBUG_LOW,
                         "gp_port_usb_clear_halt: clear_halt NULL");
                 return (GP_ERROR);
         }
 
         retval = dev->ops->clear_halt(dev, ep);
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+        gp_port_debug_printf(GP_DEBUG_LOW,
                 "gp_port_usb_clear_halt: clear_halt %s", retval < 0? "error":"ok");
         return (retval);
 }
@@ -430,13 +432,13 @@ int gp_port_usb_msg_write (gp_port * dev, int request, int value, int index,
         int retval;
 
         if (!dev->ops->msg_write) {
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+                gp_port_debug_printf(GP_DEBUG_LOW,
                         "gp_port_usb_msg_write: msg_write NULL");
                 return (GP_ERROR);
         }
 
         retval = dev->ops->msg_write(dev, request, value, index, bytes, size);
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+        gp_port_debug_printf(GP_DEBUG_LOW,
                 "gp_port_usb_msg_write: msg_write %s", retval < 0? "error":"ok");
         return (retval);
 }
@@ -447,13 +449,13 @@ int gp_port_usb_msg_read (gp_port * dev, int request, int value, int index,
         int retval;
 
         if (!dev->ops->msg_read) {
-                gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+                gp_port_debug_printf(GP_DEBUG_LOW,
                         "gp_port_usb_msg_read: msg_read NULL");
                 return (GP_ERROR);
         }
 
         retval = dev->ops->msg_read(dev, request, value, index, bytes, size);
-        gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
+        gp_port_debug_printf(GP_DEBUG_LOW,
                 "gp_port_usb_msg_read: msg_read %s", retval < 0? "error":"ok");
         return (retval);
 }

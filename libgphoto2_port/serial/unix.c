@@ -148,12 +148,12 @@ gp_port_serial_lock (gp_port *dev)
 	port = strchr (dev->settings.serial.port, ':');
 	port++;
 
-	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Trying to lock "
+	gp_port_debug_printf (GP_DEBUG_LOW, "Trying to lock "
 			      "'%s'...", port);
 	if (!ttylock ((char*) port))
 		return (GP_OK);
 
-	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device "
+	gp_port_debug_printf (GP_DEBUG_LOW, "Device "
 			      "'%s' is locked.", port);
 	return (GP_ERROR_IO_LOCK);
 
@@ -165,7 +165,7 @@ gp_port_serial_lock (gp_port *dev)
 	port = strchr (dev->settings.serial.port, ':');
 	port++;
 
-	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Trying to lock "
+	gp_port_debug_printf (GP_DEBUG_LOW, "Trying to lock "
 			      "'%s'...", port);
 	pid = dev_lock (port);
 	if (!pid)
@@ -173,10 +173,10 @@ gp_port_serial_lock (gp_port *dev)
 
 	/* Tell the user what went wrong */
 	if (pid > 0)
-		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device "
+		gp_port_debug_printf (GP_DEBUG_LOW, "Device "
 				      "'%s' is locked by pid %d.", port, pid);
 	else
-		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+		gp_port_debug_printf (GP_DEBUG_LOW,
 				      "dev_lock on '%s' returned %d.", 
 				      port, pid);
 
@@ -191,14 +191,14 @@ gp_port_serial_lock (gp_port *dev)
 	struct stat sbuf;
 	
 	if (stat (port, &sbuf) < 0) {
-		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+		gp_port_debug_printf (GP_DEBUG_LOW,
 				      "Cannot get device number for '%s': %m!",
 				      port);
 		return (GP_ERROR_IO_LOCK);
 	}
 	
 	if ((sbuf.st_mode & S_IFMT) != S_IFCHR) {
-		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+		gp_port_debug_printf (GP_DEBUG_LOW,
 				      "Cannot lock '%s': Not a character "
 				      "device!", port);
 		return (GP_ERROR_IO_LOCK);
@@ -221,7 +221,7 @@ gp_port_serial_lock (gp_port *dev)
 	while ((fd = open (handle->lock_file, O_EXCL | O_CREAT | O_RDWR,
 			   0644)) < 0) {
 		if (errno != EEXIST) {
-			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+			gp_port_debug_printf (GP_DEBUG_LOW,
 					      "Cannot create lock file '%s': "
 					      "%m", handle->lock_file);
 			break;
@@ -232,7 +232,7 @@ gp_port_serial_lock (gp_port *dev)
 		if (fd < 0) {
 			if (errno == ENOENT) /* This is just a timing problem */
 				continue;
-			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+			gp_port_debug_printf (GP_DEBUG_LOW,
 					      "Cannot open existing lock file "
 					      "'%s': %m", handle->lock_file);
 			break;
@@ -245,7 +245,7 @@ gp_port_serial_lock (gp_port *dev)
 		close (fd);
 		fd = -1;
 		if (n <= 0) {
-			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+			gp_port_debug_printf (GP_DEBUG_LOW,
 					      "Cannot read pid from lock "
 					      "file '%s'", handle->lock_file);
 			break;
@@ -267,11 +267,11 @@ gp_port_serial_lock (gp_port *dev)
 						      pid);
 				continue;
 			}
-			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+			gp_port_debug_printf (GP_DEBUG_LOW,
 					      "Could not remove stale lock "
 					      "on '%s'", port);
 		} else
-			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+			gp_port_debug_printf (GP_DEBUG_LOW,
 					      "Device '%s' is locked by pid "
 					      "%d", port, pid);
 		break;
@@ -308,7 +308,7 @@ gp_port_serial_unlock (gp_port *dev)
 	if (!ttyunlock ((char*) port))
 		return (GP_OK);
 
-	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device '%s' "
+	gp_port_debug_printf (GP_DEBUG_LOW, "Device '%s' "
 			      "could not be unlocked.", port);
 	return (GP_ERROR_IO_LOCK);
 
@@ -326,10 +326,10 @@ gp_port_serial_unlock (gp_port *dev)
 
 	/* Tell the user what went wrong */
 	if (pid > 0)
-		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device "
+		gp_port_debug_printf (GP_DEBUG_LOW, "Device "
 				      "'%s' is locked by pid %d.", port, pid);
 	else
-		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+		gp_port_debug_printf (GP_DEBUG_LOW,
 				      "dev_unlock on '%s' returned %d.",
 				      port, pid);
 
@@ -457,7 +457,7 @@ gp_port_serial_open (gp_port *dev)
 			result = gp_port_serial_lock (dev);
 			if (result == GP_OK)
 				break;
-			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+			gp_port_debug_printf (GP_DEBUG_LOW,
 					      "Failed to get a lock, trying "
 					      "again...");
 			sleep (1);
@@ -499,7 +499,7 @@ gp_port_serial_close (gp_port * dev)
 
 	if (dev->device_fd) {
 		if (close (dev->device_fd) == -1) {
-			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
+			gp_port_debug_printf (GP_DEBUG_LOW,
 					      "Could not close device!");
 	                return GP_ERROR_IO_CLOSE;
 	        }

@@ -113,15 +113,12 @@ int gp_port_usb_open(gp_port *dev)
 	if (!dev)
 		return (GP_OK);
 
-        if (dev->debug_level)
-            printf ("gp_port_usb_open() called\n");
-
         /*
 	 * Open the device using the previous usb_handle returned by
 	 * find_device
 	 */
 	if (!dev->device) {
-		fprintf(stderr, "gp_port_usb_open: dev->device is NULL\n");
+		gp_port_debug_printf (GP_DEBUG_LOW, "dev->device is NULL!");
 		return GP_ERROR_IO_OPEN;	
 	}
         dev->device_handle = usb_open (dev->device);
@@ -131,8 +128,10 @@ int gp_port_usb_open(gp_port *dev)
 	ret = usb_claim_interface (dev->device_handle,
 				   dev->settings.usb.interface);
 	if (ret < 0) {
-		fprintf(stderr, "gp_port_usb_open: could not claim intf %d: "
-			"%s\n", dev->settings.usb.interface, strerror (errno));
+		gp_port_debug_printf (GP_DEBUG_LOW, "Could not claim "
+				      "interface %d: %s",
+				      dev->settings.usb.interface,
+				      strerror (errno));
 		return GP_ERROR_IO_USB_CLAIM;
 	}
 	
@@ -143,9 +142,6 @@ int gp_port_usb_close (gp_port *dev)
 {
 	if (!dev)
 		return GP_OK;
-
-        if (dev->debug_level)
-		printf ("gp_port_usb_close() called\n");
 
 	/* simply ignore if device handle is NULL */
 	/* should we consider this as an error ? */
@@ -194,20 +190,12 @@ int gp_port_usb_clear_halt_lib(gp_port * dev, int ep)
 int gp_port_usb_write(gp_port * dev, char *bytes, int size)
 {
         int ret;
-/*
-        if (dev->debug_level) {
-            int i;
 
-            printf("gp_port_usb_write(): ");
-            for (i = 0; i < size; i++)
-                printf("%02x ",(unsigned char)bytes[i]);
-            printf("\n");
-        }
-*/
-        ret = usb_bulk_write(dev->device_handle, dev->settings.usb.outep,
+	ret = usb_bulk_write(dev->device_handle, dev->settings.usb.outep,
                            bytes, size, dev->timeout);
         if (ret < 0)
-            return (GP_ERROR_IO_WRITE);
+		return (GP_ERROR_IO_WRITE);
+
         return (ret);
 }
 
@@ -219,17 +207,6 @@ int gp_port_usb_read(gp_port * dev, char *bytes, int size)
 			     bytes, size, dev->timeout);
         if (ret < 0)
 		return GP_ERROR_IO_READ;
-
-/*
-        if (dev->debug_level) {
-            int i;
-
-            printf("gp_port_usb_read(timeout=%d): ", dev->timeout);
-            for (i = 0; i < ret; i++)
-                printf("%02x ",(unsigned char)(bytes[i]));
-            printf("\n");
-        }
-*/
 
         return ret;
 }
@@ -274,8 +251,7 @@ int gp_port_usb_update(gp_port * dev)
 		return GP_ERROR_IO_UPDATE;
 	}
 
-	if (dev->debug_level)
-		printf("gp_port_usb_update() called\n");
+	gp_port_debug_printf (GP_DEBUG_HIGH, "gp_port_usb_update() called.");
 
 	if (memcmp(&dev->settings.usb, &dev->settings_pending.usb, sizeof(dev->settings.usb))) {
 
@@ -285,37 +261,45 @@ int gp_port_usb_update(gp_port * dev)
 			ret = usb_set_configuration(dev->device_handle,
 					     dev->settings_pending.usb.config);
 			if (ret < 0) {
-				fprintf(stderr, "gp_port_usb_update: could not set config %d/%d: "
-					"%s\n", dev->settings_pending.usb.interface,
-					dev->settings_pending.usb.config, strerror(errno));
-
+				gp_port_debug_printf (GP_DEBUG_LOW,
+					"Could not set config %d/%d: %s",
+					dev->settings_pending.usb.interface,
+					dev->settings_pending.usb.config,
+					strerror(errno));
 				return GP_ERROR_IO_UPDATE;	
 			}
-				
-			if (dev->debug_level)
-				printf("gp_port_usb_update: changed usb.config from %d to %d\n",
-						dev->settings.usb.config, dev->settings_pending.usb.config);
+
+			gp_port_debug_printf (GP_DEBUG_LOW, "Changed "
+				"usb.config from %d to %d",
+				dev->settings.usb.config,
+				dev->settings_pending.usb.config);
 			
-			/* copy at once if something else fails so that this does not get re-applied */
+			/*
+			 * Copy at once if something else fails so that this
+			 * does not get re-applied
+			 */
 			dev->settings.usb.config = dev->settings_pending.usb.config;
 		}
 
 		if (dev->settings.usb.altsetting != dev->settings_pending.usb.altsetting) { 
 			ret = usb_set_altinterface(dev->device_handle, dev->settings_pending.usb.altsetting);
 			if (ret < 0) {
-				fprintf(stderr, "gp_port_usb_update: could not set intf %d/%d: "
-					"%s\n", dev->settings_pending.usb.interface,
-					dev->settings_pending.usb.altsetting, strerror(errno));
-
+				gp_port_debug_printf (GP_DEBUG_LOW,
+					"Could not set interface %d/%d: %s",
+					dev->settings_pending.usb.interface,
+					dev->settings_pending.usb.altsetting,
+					strerror(errno));
 				return GP_ERROR_IO_UPDATE;
 			}
 
-			if (dev->debug_level)
-				printf("gp_port_usb_update: changed usb.altsetting from %d to %d\n",
-					dev->settings.usb.altsetting, dev->settings_pending.usb.altsetting);
+			gp_port_debug_printf (GP_DEBUG_HIGH,
+				"Changed usb.altsetting from %d to %d",
+				dev->settings.usb.altsetting,
+				dev->settings_pending.usb.altsetting);
 		}
 		
-		memcpy(&dev->settings.usb, &dev->settings_pending.usb, sizeof(dev->settings.usb));
+		memcpy (&dev->settings.usb, &dev->settings_pending.usb,
+			sizeof (dev->settings.usb));
 	}
 	
 	return GP_OK;
@@ -326,8 +310,11 @@ int gp_port_usb_find_device_lib(gp_port * d, int idvendor, int idproduct)
 	struct usb_bus *bus;
 	struct usb_device *dev;
 
-	/* NULL idvendor and idproduct is not valid. */
-	/* should the USB layer report that ? I don't know. Better to check here */
+	/*
+	 * NULL idvendor and idproduct is not valid.
+	 * Should the USB layer report that ? I don't know.
+	 * Better to check here.
+	 */
 	if ((idvendor == 0) || (idproduct == 0)) {
 		return GP_ERROR_IO_USB_FIND;
 	}

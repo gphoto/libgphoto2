@@ -13,7 +13,7 @@ main (int argc, char **argv)
 	char buf[32];
 	int ret;
 
-	ret = gp_port_init (GP_DEBUG_HIGH);
+	ret = gp_port_init ();
 	if (ret < 0) {
 		printf ("Could not initialize: %s\n",
 			gp_port_result_as_string (ret));

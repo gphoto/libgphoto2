@@ -127,14 +127,12 @@ struct gp_port {
         int timeout; /* in milli seconds */
 
         void *library_handle;
-
-        int debug_level;
 };
 
 /* Core functions
    -------------------------------------------------------------- */
 
-        int gp_port_init (int debug_level);
+        int gp_port_init (void);
                 /* Initializes the library.
                         return values:
                                   successful: GP_OK
@@ -167,11 +165,6 @@ struct gp_port {
                         return values:
                                   successful: GP_OK
                                 unsuccessful: < 0
-                */
-
-        int gp_port_debug_set (gp_port *dev, int debug_level);
-                /*
-                        Set the debugging level specific to a device
                 */
 
         int gp_port_open        (gp_port *dev);

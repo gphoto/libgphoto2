@@ -28,7 +28,7 @@
 
 #include <gphoto2-port-result.h>
 
-int glob_debug_level = 0;
+static int debug_level = GP_DEBUG_NONE;
 
 static GPPortDebugFunc debug_func      = NULL;
 static void           *debug_func_data = NULL;
@@ -39,7 +39,13 @@ static char        *debug_history   = NULL;
 void
 gp_port_debug_set_level (int level)
 {
-	glob_debug_level = level;
+	debug_level = level;
+}
+
+int
+gp_port_debug_get_level (void)
+{
+	return (debug_level);
 }
 
 void
@@ -108,8 +114,7 @@ gp_port_debug_set_func (GPPortDebugFunc func, void *data)
 	curline = curline + (HEXDUMP_LINE_WIDTH + 1);}
 
 void
-gp_port_debug_print_data (int target_debug_level, int debug_level,
-			  const char *bytes, int size)
+gp_port_debug_print_data (int level, const char *bytes, int size)
 {
 	static char hexchars[16] = "0123456789abcdef";
 	char *curline, *result;
@@ -119,21 +124,18 @@ gp_port_debug_print_data (int target_debug_level, int debug_level,
 	unsigned char value;
 
 	if (!bytes) {
-		gp_port_debug_printf (target_debug_level, debug_level,
-				      "No hexdump (NULL buffer)");
+		gp_port_debug_printf (level, "No hexdump (NULL buffer)");
 		return;
 	}
 
 	if (size < 0) {
-		gp_port_debug_printf (target_debug_level, debug_level,
-				      "No hexdump of buffer with negative "
-				      "size");
+		gp_port_debug_printf (level, "No hexdump of buffer with "
+				      "negative size");
 		return;
 	}
 
 	if (size == 0) {
-		gp_port_debug_printf (target_debug_level, debug_level,
-				      "Empty hexdump of empty buffer");
+		gp_port_debug_printf (level, "Empty hexdump of empty buffer");
 		return;
 	}
 
@@ -166,13 +168,12 @@ gp_port_debug_print_data (int target_debug_level, int debug_level,
 		HEXDUMP_COMPLETE_LINE;
 	}
 	curline[0] = '\0';
-	gp_port_debug_printf (target_debug_level, debug_level, "%s", result);
+	gp_port_debug_printf (level, "%s", result);
 	free (result);
 }
 
 void
-gp_port_debug_printf (int target_debug_level, int debug_level,
-		      char *format, ...)
+gp_port_debug_printf (int level, char *format, ...)
 {
 	char buffer[2048];
 	va_list arg;
@@ -187,7 +188,7 @@ gp_port_debug_printf (int target_debug_level, int debug_level,
 
 	gp_port_debug_history_append (buffer);
 
-	if ((debug_level > 0) && (debug_level >= target_debug_level)) {
+	if (debug_level >= level) {
 		if (debug_func) {
 
 			/* Custom debug function */
