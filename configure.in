@@ -26,7 +26,7 @@ ALL_LINGUAS="de"
 AM_GNU_GETTEXT
 
 dnl Turn on debugging and all warnings
-CFLAGS="$CFLAGS -g -Wall"
+CFLAGS="$CFLAGS -g -Wall -Wmissing-declarations -Wmissing-prototypes"
 LDFLAGS="$LDFLAGS -g -Wall"
 
 dnl Solaris hack for grep and tr

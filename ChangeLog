@@ -1,5 +1,19 @@
 2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* configure.in: -Wmissing-prototypes -Wmissing-declarations
+	* camlibs/agfa-cl18/commands.c:
+	* camlibs/agfa-cl18/usb.c:
+	* frontends/command-line/foreach.c:
+	* frontends/command-line/interface.c:
+	* frontends/command-line/main.c:
+	* frontends/command-line/options.c:
+	* frontends/command-line/range.c:
+	* frontends/command-line/shell.h:
+	* include/gphoto2-file.h:
+	* libgphoto2/file.c: First step towards a compilation with -Werror
+
+2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* camlibs/konica/library.c: Format the filesystem before updating it.
 
 2001-08-19  Lutz Müller  <urc8@rz.uni-karlsruhe.de>

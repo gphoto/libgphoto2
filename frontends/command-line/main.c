@@ -27,11 +27,8 @@
 #  include <libintl.h>
 #endif
 
-/* Initializes the globals */
-int  init_globals();
-
 /* Takes the current globals, and sets up the gPhoto lib with them */
-int  set_globals();
+static int set_globals (void);
 
 /* Command-line option
    -----------------------------------------------------------------------
@@ -486,8 +483,9 @@ OPTION_CALLBACK(num_pictures) {
         return (GP_OK);
 }
 
-int save_camera_file_to_file (CameraFile *file, int thumbnail) {
-
+static int
+save_camera_file_to_file (CameraFile *file, int thumbnail)
+{
         char out_filename[1024], out_folder[1024], buf[1024], msg[1024];
         int result;
         char *f;
@@ -848,21 +846,11 @@ OPTION_CALLBACK(about) {
 /* Set/init global variables                                    */
 /* ------------------------------------------------------------ */
 
-int set_globals () {
+static int set_globals () {
 
         int result;
 
         /* takes all the settings and sets up the gphoto lib */
-
-//      if (strlen(glob_model) == 0) {
-//              cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
-//              return (GP_ERROR);
-//      }
-
-//      if ((strlen(glob_port) == 0)&&(strcmp(glob_model, "Directory Browse")!=0)) {
-//              cli_error_print("Must specify a camera port using \"%sport path\"",LONG_OPTION);
-//              return (GP_ERROR);
-//      }
 
         if ((result = gp_camera_new(&glob_camera)) != GP_OK) {
                 cli_error_print("Can not create camera data");
@@ -881,8 +869,8 @@ int set_globals () {
         return (GP_OK);
 }
 
-int init_globals () {
-
+static int init_globals (void)
+{
         glob_option_count = 0;
 
         strcpy(glob_model, "");
@@ -918,8 +906,9 @@ void cli_debug_print(char *format, ...) {
         }
 }
 
-void cli_error_print(char *format, ...) {
-
+void
+cli_error_print(char *format, ...)
+{
         va_list         pvar;
 
         fprintf(stderr, "ERROR: ");
@@ -929,8 +918,9 @@ void cli_error_print(char *format, ...) {
         fprintf(stderr, "\n");
 }
 
-void signal_exit (int signo) {
-
+static void
+signal_exit (int signo)
+{
         if (!glob_quiet)
                 printf("\nExiting gPhoto...\n");
 
@@ -949,8 +939,9 @@ void signal_exit (int signo) {
 /* Main :)                                                              */
 /* -------------------------------------------------------------------- */
 
-int main (int argc, char **argv) {
-
+int
+main (int argc, char **argv)
+{
         int result;
 
 #ifdef ENABLE_NLS

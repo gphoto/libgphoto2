@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "main.h"
+#include "range.h"
 
 /* 
   str_grab_nat() - Grab positive decimal integer (natural number) from str 

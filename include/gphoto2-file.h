@@ -31,7 +31,7 @@ typedef struct {
 	int ref_count;
 } CameraFile;
 
-CameraFile *gp_file_new ();
+CameraFile *gp_file_new (void);
 
 int gp_file_ref            (CameraFile *file);
 int gp_file_unref          (CameraFile *file);

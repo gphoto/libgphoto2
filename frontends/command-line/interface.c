@@ -3,6 +3,8 @@
 
 #include <gphoto2.h>
 
+#include "interface.h"
+
 extern int glob_stdout;
 extern int glob_quiet;
 

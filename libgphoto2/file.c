@@ -28,7 +28,8 @@
 
 static int glob_session_file = 0;
 
-CameraFile* gp_file_new ()
+CameraFile *
+gp_file_new (void)
 {
     CameraFile *file;
 

@@ -9,10 +9,12 @@
 #include "actions.h"
 #include "globals.h"
 #include "range.h"
+#include "foreach.h"
 
-int for_each_subfolder (char *folder, folder_action faction, 
-			image_action iaction, int recurse) {
-	
+int
+for_each_subfolder (char *folder, folder_action faction, 
+		    image_action iaction, int recurse)
+{
 	CameraList		folderlist;
 	CameraListEntry		*entry;
 
@@ -50,8 +52,9 @@ int for_each_subfolder (char *folder, folder_action faction,
 	return (GP_OK);
 }
 
-int for_each_image(char *folder, image_action iaction, int reverse) {
-	
+int
+for_each_image (char *folder, image_action iaction, int reverse)
+{
 	CameraList 	filelist;
 	CameraListEntry *entry;
 	int i, res;
@@ -80,8 +83,10 @@ int for_each_image(char *folder, image_action iaction, int reverse) {
 }
 
 
-int for_each_image_in_range(char *folder, char *range, image_action action, int reverse) {
-	
+int
+for_each_image_in_range (char *folder, char *range, image_action action,
+			 int reverse)
+{
 	char	index[MAX_IMAGE_NUMBER];
 	int 	i, max = 0;
 	int	res;

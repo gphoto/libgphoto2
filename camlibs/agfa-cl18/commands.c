@@ -21,7 +21,7 @@
 #include <gphoto2-port.h>
 
     /* Regular commands always 8 bytes long */
-void build_command(struct agfa_command *cmd, int command, int argument) {
+static void build_command(struct agfa_command *cmd, int command, int argument) {
 
     cmd->length = 8;
     cmd->command = command;
@@ -29,7 +29,7 @@ void build_command(struct agfa_command *cmd, int command, int argument) {
 }
 
     /* Filenames are always 12 bytes long */
-void build_file_command(struct agfa_file_command *cmd, const char *filename) {
+static void build_file_command(struct agfa_file_command *cmd, const char *filename) {
    
     cmd->length=0x0c;
     strncpy(cmd->filename,filename,12);
@@ -294,7 +294,7 @@ int agfa_get_pic(struct agfa_device *dev, const char *filename,
     struct agfa_command cmd;   
     struct agfa_file_command file_cmd;
     int ret,temp; 
-    int taken;
+//  int taken;
    
 //    agfa_photos_taken(dev,&taken);
 //  agfa_get_pic_size(dev,filename);

@@ -33,7 +33,7 @@ struct camera_to_usb {
 	{ "Agfa CL18", 0x06BD, 0x0403 },
 };
 
-int agfa_usb_probe(struct agfa_device *dev, int i)
+static int agfa_usb_probe(struct agfa_device *dev, int i)
 {
 	if (i >= sizeof(camera_to_usb) / sizeof(struct camera_to_usb))
 		goto err;

@@ -27,8 +27,9 @@ shell_function func[] = {
 char*	shell_prompt_text	= "gphoto: {%s} %s> ";
 int 	shell_done		= 0;
 
-int shell_arg_count (char *args) {
-
+static int
+shell_arg_count (char *args)
+{
 	int x=0, in_arg=0, count=0;
 	
 	while (x < strlen(args)) {				/* Edge-triggered */
@@ -44,8 +45,9 @@ int shell_arg_count (char *args) {
 	return (count);
 }
 
-int shell_arg (char *args, int arg_num, char *arg) {
-
+static int
+shell_arg (char *args, int arg_num, char *arg)
+{
 	int x=0, y=0, in_arg=0, count=0, copy=0;
 
 	if (arg_num > shell_arg_count(args)-1)
@@ -73,8 +75,9 @@ int shell_arg (char *args, int arg_num, char *arg) {
 	return (GP_OK);
 }
 
-int shell_prompt () {
-
+int
+shell_prompt (void)
+{
 	int x, found;
 	char buf[1024], cmd[1024], arg[1024];
 
@@ -115,8 +118,9 @@ int shell_prompt () {
 	return (GP_OK);
 }
 
-int shell_get_new_folder (char *relative_path, char *cd_arg, char *new_folder) {
-
+static int
+shell_get_new_folder (char *relative_path, char *cd_arg, char *new_folder)
+{
 	/*
 	   Find what the new folder will be based on the "cd" or "ls" argument.
 	   This can take paths like:
@@ -168,8 +172,9 @@ int shell_get_new_folder (char *relative_path, char *cd_arg, char *new_folder) {
 	return (GP_OK);
 }
 
-int shell_lcd (char *arg) {
-
+int
+shell_lcd (char *arg)
+{
 	char tmp_dir[1024];
 	int arg_count = shell_arg_count(arg);
 
@@ -194,8 +199,9 @@ int shell_lcd (char *arg) {
 	return (GP_OK);
 }
 
-int shell_cd (char *arg) {
-
+int
+shell_cd (char *arg)
+{
 	char tmp_folder[1024];
 	CameraList list;
 	int arg_count = shell_arg_count (arg);
@@ -224,8 +230,9 @@ int shell_cd (char *arg) {
 	return (GP_OK);
 }
 
-int shell_ls (char *arg) {
-
+int
+shell_ls (char *arg)
+{
 	CameraList list;
 	CameraListEntry *entry;
 	char buf[1024], tmp_folder[1024];
@@ -286,8 +293,9 @@ int shell_ls (char *arg) {
 	return (GP_OK);
 }
 
-int shell_get_common (char *arg, int thumbnail) {
-
+static int
+shell_get_common (char *arg, int thumbnail)
+{
 	char tmp_folder[1024];
 	char *slash, *tmp_filename;
 	int arg_count = shell_arg_count(arg);
@@ -322,28 +330,33 @@ int shell_get_common (char *arg, int thumbnail) {
 	return (GP_OK);		
 }
 
-int shell_get_thumbnail (char *arg) {
-
+int
+shell_get_thumbnail (char *arg)
+{
 	shell_get_common (arg, 1);
 
 	return (GP_OK);
 }
 
-int shell_get (char *arg) {
+int
+shell_get (char *arg)
+{
 
 	shell_get_common (arg, 0);
 
 	return (GP_OK);
 }	
 
-int shell_exit (char *arg) {
-
+int
+shell_exit (char *arg)
+{
 	shell_done = 1;
 	return (GP_OK);
 }
 
-int shell_help (char *arg) {
-
+int
+shell_help (char *arg)
+{
 	char arg_cmd[1024];
 	int x=0;
 	int arg_count = shell_arg_count (arg);

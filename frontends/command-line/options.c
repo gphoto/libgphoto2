@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "globals.h"
+#include "options.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
