@@ -167,7 +167,8 @@ static struct {
 	unsigned short usb_product;
 } models[] = {
 //	{"Kodak DC-240 (PTP)",  0x040a, 0x0121}, /* Special firmware */
-	{"Kodak DC-4800", 0x040a, 0x0160},
+	{"Kodak DC-4800", 0x040a, 0x0160},	// DX4800 interface class is
+						// custom!!!
 /*
 	{"Kodak DC-3215", 0x040a, 0x0525},
 	{"Kodak DX-3500", 0x040a, 0x0500},
@@ -433,7 +434,7 @@ folder_to_handle(const char *folder, uint32_t parent, Camera *camera)
 	if (!strlen(folder)) return PTP_HANDLER_ROOT;
 	if (!strcmp(folder,"/")) return PTP_HANDLER_ROOT;
 
-	c=strchr(folder+1,'/');
+	c=strchr(folder,'/');
 	if (c!=NULL) {
 		*c=0;
 		parent=find_child (folder, parent, camera);
