@@ -2,45 +2,36 @@
 /* GPL */
 
 #include <stdio.h>
+#include "jpeg.h"
 
-struct chunk{
-    int size;
-    unsigned char *data;
-};
-
-chunk_new(struct chunk *mychunk, int length)
+void chunk_new(struct chunk *mychunk, int length)
 {
     mychunk->size=length;
-    printf("New chunk of size %li\n", mychunk->size);
+//    printf("New chunk of size %i\n", mychunk->size);
     mychunk->data = (char *)malloc(length);
 }
 
-chunk_print(struct chunk *mychunk)
+void chunk_print(struct chunk *mychunk)
 {
     int x;
-    printf("Size=%li\n", mychunk->size);
+//    printf("Size=%i\n", mychunk->size);
     for (x=0; x<mychunk->size; x++)
         printf("%hX ", mychunk->data[x]);
     printf("\n");
 }
 
-chunk_destroy(struct chunk *mychunk)
+void chunk_destroy(struct chunk *mychunk)
 {
     mychunk->size=0;
     free(mychunk->data);
 }
 
-struct jpeg {
-    int count;
-    struct chunk marker[20]; /* I think this should be big enough */
-};
-
-jpeg_init(struct jpeg *myjpeg)
+void jpeg_init(struct jpeg *myjpeg)
 {
     myjpeg->count=0;
 }
 
-jpeg_destroy(struct jpeg *myjpeg)
+void jpeg_destroy(struct jpeg *myjpeg)
 {
     int count;
     for (count=0; count<myjpeg->count; count++)
@@ -48,14 +39,7 @@ jpeg_destroy(struct jpeg *myjpeg)
     myjpeg->count=0;
 }
 
-enum jpegmarker {start, APPO, quantization, huffman, SsSeAhAl};
-
-const char markers[] = {
-    start, APPO, quantization, huffman, SsSeAhAl
-};
-
 char jpeg_findff(int *location, struct chunk *picture) {
-    char x;
 //printf("Entered jpeg_findamarker!!!!!!\n");
     while(*location<picture->size)
     {
@@ -72,10 +56,8 @@ char jpeg_findff(int *location, struct chunk *picture) {
 }
 
 char jpeg_findactivemarker(char *id, int *location, struct chunk *picture) {
-    int position=start;
-    char temp=*id;
 //    printf("Entered jpeg_findactivemarker!!!!!!!!\n");
-    while(jpeg_findff(location, picture))
+    while(jpeg_findff(location, picture) && ((*location+1)<picture->size))
         if (picture->data[*location+1]) {
             *id=picture->data[*location+1];
             return 1;
@@ -87,19 +69,33 @@ void jpeg_add_marker(struct jpeg *myjpeg, struct chunk *picture, int start, int 
 {
     int length;
     length=(int)(end-start+1);
-    printf("Add marker #%i starting from %li and ending at %li for a length of %li\n", myjpeg->count, start, end, length);
+//    printf("Add marker #%i starting from %i and ending at %i for a length of %i\n", myjpeg->count, start, end, length);
     chunk_new(&(myjpeg->marker[myjpeg->count]), length);
-    printf("Read length is: %li\n", myjpeg->marker[myjpeg->count].size);
+//    printf("Read length is: %i\n", myjpeg->marker[myjpeg->count].size);
     memcpy(myjpeg->marker[myjpeg->count].data, picture->data+start, length);
     chunk_print(&(myjpeg->marker[myjpeg->count]));
     myjpeg->count++;
 }
 
-char jpeg_parse(struct jpeg *myjpeg, struct chunk *picture)
+char *jpeg_markername(int c)
+{
+    int x;
+//    printf("searching for marker %X in list\n",c);
+//    printf("%i\n", sizeof(markers));
+    for (x=0; x<sizeof(markers); x++)
+    {
+//        printf("checking to see if it is marker %X\n", markers[x]);
+
+        if (c==markers[x])
+            return (char *)markernames[x];
+    }
+    return "Undefined marker";
+}
+
+void jpeg_parse(struct jpeg *myjpeg, struct chunk *picture)
 {
     int position=0;
     int lastposition;
-    char index=0;
     char id;
     if (picture->data[0]!=0xff)
         {
@@ -124,21 +120,27 @@ char jpeg_parse(struct jpeg *myjpeg, struct chunk *picture)
             lastposition=position;
             position+=2;
         }
+    position-=2;
+    if (position<picture->size)
+    jpeg_add_marker(myjpeg,picture,lastposition,picture->size-1);
 }
 
-char jpeg_print(struct jpeg *myjpeg)
+void jpeg_print(struct jpeg *myjpeg)
 {
-int c,x;
+int c;
 printf("There are %i markers\n", myjpeg->count);
 for (c=0; c < myjpeg->count; c++)
     {
+    printf("%s:\n",jpeg_markername(myjpeg->marker[c].data[1]));
     chunk_print(&myjpeg->marker[c]);
     }
 }
 
 /* TEST CODE SECTION */
 /*
-char testdata[] ={ 0xff, 1,2,3,4,0xff,6,0xff,0xff,0xff,10,11 };
+char testdata[] ={
+    0xFF,0xD8, 0xFF,0xE0, 0xff,0xDB, 0xFF,0xC4, 0xFF,0xDA,
+    0xFF,0xC0, 0xff,0xff};
 
 int main()
 {
@@ -151,12 +153,12 @@ picture.data=testdata;
 picture.size=sizeof(testdata);
 printf("testdata size is %i\n",picture.size);
 
-printf("Call jpeg_parse\n");
+printf("Call jpeg_parse!!!!!!!!!!!!!!!!!!!!!!!\n");
 jpeg_parse(&myjpeg,&picture);
 
 printf("\nPrint the jpeg table\n");
 jpeg_print(&myjpeg);
-printf("\n\nChunk contruction/deconstruction test\n");
+printf("chunk_new and chunk_destroy tests\n");
 chunk_new(&picture,10);
 for (x=0; x<10; x++) picture.data[x]=x;
 for (x=0; x<10; x++) printf("%hX ",picture.data[x]);
@@ -164,3 +166,4 @@ chunk_destroy(&picture);
 printf("\n");
 }
 */
+
