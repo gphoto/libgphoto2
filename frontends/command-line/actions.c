@@ -25,23 +25,25 @@ int print_files(char *subfolder, image_action iaction, int reverse) {
 
 	CameraList filelist;
 	CameraListEntry *entry;
-	int x, result;
+	int x, res;
 	char buf[64];
-	
-	if ((result = gp_camera_file_list(glob_camera, &filelist, subfolder)) != GP_OK)
-		return (result);
+
+	res = gp_camera_folder_list_files (glob_camera, subfolder, &filelist);
+	if (res != GP_OK)
+		return (res);
 
 	if (glob_quiet)
-		printf("%i\n", gp_list_count(&filelist));
+		printf ("%i\n", gp_list_count (&filelist));
 	   else
-		printf("Files in %s:\n", subfolder);
-	for (x=0; x<gp_list_count(&filelist); x++) {
-		entry = gp_list_entry(&filelist, x);
+		printf ("Files in %s:\n", subfolder);
+
+	for (x = 0; x < gp_list_count (&filelist); x++) {
+		entry = gp_list_entry (&filelist, x);
 		if (glob_quiet)
-			printf("\"%s\"\n", entry->name);
+			printf ("\"%s\"\n", entry->name);
 		   else {
-			sprintf(buf, "%i", x+1);
-			printf("#%-5s %s\n", buf, entry->name);
+			sprintf (buf, "%i", x+1);
+			printf ("#%-5s %s\n", buf, entry->name);
 		}
 	}
 	return (GP_OK);

@@ -198,24 +198,28 @@ int shell_cd (char *arg) {
 
 	char tmp_folder[1024];
 	CameraList list;
-	int arg_count = shell_arg_count(arg);
+	int arg_count = shell_arg_count (arg);
+	int res;
 
 	if (!arg_count)
 		return (GP_OK);
 
 	/* shell_arg(arg, 0, arg_dir); */
 	
-	if (strlen(arg) > 1023) {
-		cli_error_print("Folder value is too long");
+	if (strlen (arg) > 1023) {
+		cli_error_print ("Folder value is too long");
 		return (GP_ERROR);
 	}
 
-	shell_get_new_folder(glob_folder, arg, tmp_folder);	/* Get the new folder value */
-printf("tmp_folder=%s\n", tmp_folder);
-	if (gp_camera_folder_list(glob_camera, &list, tmp_folder) == GP_OK)
-		strcpy(glob_folder, tmp_folder);
-	   else
-		cli_error_print("Folder %s does not exist", tmp_folder);
+	/* Get the new folder value */
+	shell_get_new_folder (glob_folder, arg, tmp_folder);
+	printf("tmp_folder=%s\n", tmp_folder);
+
+	res = gp_camera_folder_list_folders (glob_camera, tmp_folder, &list);
+	if (res == GP_OK)
+		strcpy (glob_folder, tmp_folder);
+	else
+		cli_error_print ("Folder %s does not exist", tmp_folder);
 
 	return (GP_OK);
 }
@@ -225,58 +229,58 @@ int shell_ls (char *arg) {
 	CameraList list;
 	CameraListEntry *entry;
 	char buf[1024], tmp_folder[1024];
-	int x, y=1, result;
+	int x, y=1, res;
 	int arg_count = shell_arg_count(arg);
 
 	if (arg_count) {
 		/* shell_arg(arg, 0, arg_dir); */
-		shell_get_new_folder(glob_folder, arg, tmp_folder);
+		shell_get_new_folder (glob_folder, arg, tmp_folder);
 	} else {
-		strcpy(tmp_folder, glob_folder);
+		strcpy (tmp_folder, glob_folder);
 	}
 
-	if (gp_camera_folder_list(glob_camera, &list, tmp_folder) != GP_OK) {
+	res = gp_camera_folder_list_folders (glob_camera, tmp_folder, &list);
+	if (res != GP_OK) {
 		if (arg_count)
 			cli_error_print("Folder %s does not exist", tmp_folder);
-		  else
+		else
 			cli_error_print("Could not retrieve the folder list");
-		return (GP_ERROR);
+		return (res);
 	}
 
 	if (glob_quiet)
-		printf("%i\n", gp_list_count(&list));
+		printf ("%i\n", gp_list_count(&list));
 
-	for (x=1; x<=gp_list_count(&list); x++) {
-		entry = gp_list_entry(&list, x-1);
+	for (x = 1; x <= gp_list_count (&list); x++) {
+		entry = gp_list_entry (&list, x - 1);
 		if (glob_quiet)
-			printf("%s\n", entry->name);
-		   else {
-			sprintf(buf, "%s/", entry->name);
-			printf("%-20s", buf);
-			if (y++%4==0)
+			printf ("%s\n", entry->name);
+		else {
+			sprintf (buf, "%s/", entry->name);
+			printf ("%-20s", buf);
+			if (y++ % 4 == 0)
 				printf("\n");
 		}
 	}
 
-	if ((result = gp_camera_file_list(glob_camera, &list, tmp_folder)) != GP_OK) {
-//		cli_error_print("Could not retrieve the file list");
-		return (result);
-	}
+	res = gp_camera_folder_list_files (glob_camera, tmp_folder, &list);
+	if (res != GP_OK)
+		return (res);
 
 	if (glob_quiet)
 		printf("%i\n", gp_list_count(&list));
 
-	for (x=1; x<=gp_list_count(&list); x++) {
-		entry = gp_list_entry(&list, x-1);
+	for (x = 1; x <= gp_list_count (&list); x++) {
+		entry = gp_list_entry (&list, x - 1);
 		if (glob_quiet)
-			printf("%s\n", entry->name);
+			printf ("%s\n", entry->name);
 		   else {
-			printf("%-20s", entry->name);
-			if (y++%4==0)
+			printf ("%-20s", entry->name);
+			if (y++ % 4 == 0)
 				printf("\n");
 		}
 	}
-	if ((!glob_quiet)&&(y%4!=1))
+	if ((!glob_quiet) && (y % 4 != 1))
 		printf("\n");
 
 	return (GP_OK);
@@ -342,32 +346,36 @@ int shell_help (char *arg) {
 
 	char arg_cmd[1024];
 	int x=0;
-	int arg_count = shell_arg_count(arg);
+	int arg_count = shell_arg_count (arg);
 
 	if (arg_count > 0) {
 		shell_arg(arg, 0, arg_cmd);
 		while (func[x].function) {
-			if (strcmp(arg_cmd, func[x].command)==0) {
-				printf("Help on \"%s\":\n\n", arg_cmd);
-				printf("Usage: %s %s\n", arg_cmd, func[x].description_arg);
-				printf("Description: \n\t%s\n\n", func[x].description);
-				printf("* Arguments in brackets [] are optional\n");
+			if (strcmp (arg_cmd, func[x].command) == 0) {
+				printf ("Help on \"%s\":\n\n", arg_cmd);
+				printf ("Usage: %s %s\n", arg_cmd, 
+					func[x].description_arg);
+				printf ("Description: \n\t%s\n\n", 
+					func[x].description);
+				printf ("* Arguments in brackets [] are "
+					"optional\n");
 				return (GP_OK);
 			}
 			x++;
 		}
-		cli_error_print("Command not found in 'help'");
+		cli_error_print ("Command not found in 'help'");
 		return (GP_OK);
 	}
 
-	printf("Available commands:\n");
+	printf ("Available commands:\n");
 
 	while (func[x].function) {
-		printf("\t%-16s%s\n", func[x].command, func[x].description);
+		printf ("\t%-16s%s\n", func[x].command, func[x].description);
 		x++;
 	}
 
-	printf("\nTo get help on a particular command, type in 'help command-name'\n\n");
+	printf ("\nTo get help on a particular command, type in "
+		"'help command-name'\n\n");
 
 	return (GP_OK);
 }
