@@ -49,15 +49,6 @@ else
 fi
 changequote([, ])dnl
 
-dnl Hack to handle .libs subdirectories with old libtool
-if test "X$objdir" = "X.libs"; then
-	echo ".libs subdirectory detected : \$dotlibs not defined"
-	dotlibs=""
-else
-	echo ".libs subdirectory not detected : \$dotlibs=.libs"
-	dotlibs=".libs"
-fi
-
 dnl
 dnl Checks for libraries.
 dnl
@@ -97,8 +88,6 @@ AC_SUBST(LIBGPHOTO2_VERSION)
 
 AC_SUBST(CFLAGS)
 AC_SUBST(LIBS)
-
-AC_SUBST(dotlibs)
 
 dnl Create a stdint.h-like file containing size-specific integer definitions
 dnl that will always be available

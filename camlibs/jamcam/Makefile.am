@@ -9,12 +9,6 @@ INCLUDES =                                              \
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
         -I$(top_srcdir)/libgphoto2
 
-libgphoto2_jamcam_la_SOURCES = \
- jamcam.c \
- library.c library.h
-
-libgphoto2_jamcam_la_LDFLAGS =\
- -module -avoid-version\
- -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
-
-libgphoto2_jamcam_la_LIBADD = -lgphoto2 -lm
+libgphoto2_jamcam_la_SOURCES = jamcam.c library.c library.h
+libgphoto2_jamcam_la_LDFLAGS = -module -avoid-version
+libgphoto2_jamcam_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la

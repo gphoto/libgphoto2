@@ -1,5 +1,10 @@
 2001-12-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* configure.in: Remove dotlib hack
+	* camlibs: Do it "the right way"
+
+2001-12-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in: Remove some cruft that survived my auto[make,conf] 
 	  cleanup
 	* libgphoto2/Makefile.am: LIBADD libgphoto2_port.la

@@ -10,14 +10,10 @@ INCLUDES =\
  -I$(top_srcdir)/libgphoto2\
  -I$(top_srcdir)/libgphoto2_port/libgphoto2_port
  
-
 libgphoto2_konica_la_SOURCES = \
  lowlevel.c lowlevel.h \
  konica.c konica.h \
  library.c library.h
 
-libgphoto2_konica_la_LDFLAGS =\
- -module -avoid-version\
- -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
-
-libgphoto2_konica_la_LIBADD = -lgphoto2
+libgphoto2_konica_la_LDFLAGS = -module -avoid-version
+libgphoto2_konica_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la

@@ -9,8 +9,5 @@ INCLUDES =                                              \
 
 libgphoto2_stv0680_la_SOURCES = stv0680.c stv0680.h library.c library.h bayer.c bayer.h
 
-libgphoto2_stv0680_la_LDFLAGS =\
- -module -avoid-version\
- -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
-
-libgphoto2_stv0680_la_LIBADD = -lgphoto2
+libgphoto2_stv0680_la_LDFLAGS = -module -avoid-version
+libgphoto2_stv0680_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la

@@ -6,9 +6,5 @@ INCLUDES =                                              \
         -I$(top_srcdir)/libgphoto2
 
 libgphoto2_panasonic_l859_la_SOURCES = l859.c l859.h
-
-libgphoto2_panasonic_l859_la_LDFLAGS =\
- -module -avoid-version\
- -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
-
-libgphoto2_panasonic_l859_la_LIBADD = -lgphoto2
+libgphoto2_panasonic_l859_la_LDFLAGS = -module -avoid-version
+libgphoto2_panasonic_l859_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la

@@ -5,12 +5,9 @@ INCLUDES =                                              \
         -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
         -I$(top_srcdir)/libgphoto2
 
-libgphoto2_casio_qv_la_SOURCES =			\
+libgphoto2_casio_qv_la_SOURCES =		\
 	casio-qv.c				\
 	casio-qv-commands.c casio-qv-commands.h
 
-libgphoto2_casio_qv_la_LDFLAGS =\
- -module -avoid-version\
- -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
-
-libgphoto2_casio_qv_la_LIBADD = -lgphoto2
+libgphoto2_casio_qv_la_LDFLAGS = -module -avoid-version
+libgphoto2_casio_qv_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la

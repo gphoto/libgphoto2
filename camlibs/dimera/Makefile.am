@@ -14,8 +14,5 @@ libgphoto2_dimera3500_la_SOURCES =\
  mesalib.c mesalib.h\
  dimeratab.h
 
-libgphoto2_dimera3500_la_LDFLAGS =\
- -module -avoid-version -g\
- -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
-
-libgphoto2_dimera3500_la_LIBADD = -lgphoto2
+libgphoto2_dimera3500_la_LDFLAGS = -module -avoid-version
+libgphoto2_dimera3500_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
