@@ -708,14 +708,10 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	char *data;
 	int buflen,i,j, size;
-	char path[300], tempfilename[300];
+	char path[300]={0}, tempfilename[300]={0};
 
 	gp_debug_printf(GP_DEBUG_LOW,"canon","camera_file_get()");
 	
-	// initialize memory to avoid problems later
-	for (i=0; i < sizeof(path); i++)
-	  path[i] = '\0';
-
 	if(check_readiness(camera) != 1)
 	  return GP_ERROR;
 
@@ -757,7 +753,8 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 		   which is FF D9 */
 		/* It would be prettier to get that info from the exif tags */
 		for(size=1;size<buflen;size++)
-			if(data[size-1]==JPEG_ESC) break;
+		  if((data[size-1]==JPEG_ESC) && (data[size]==JPEG_END)) 
+		    break;
 		buflen = size+1;
 		gp_file_set_data_and_size (file, data, buflen);
 		gp_file_set_mime_type (file, "image/jpeg"); /* always */
