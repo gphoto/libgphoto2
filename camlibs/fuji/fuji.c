@@ -486,9 +486,9 @@ static int
 fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 	       unsigned char *buf, unsigned int *buf_len, GPContext *context)
 {
-	unsigned char last = 0, c;
+	unsigned char last = 0, c, p;
 	unsigned int b_len = 1024;
-	int r, retries = 0;
+	int r, retries = 0, id = 0;
 
 	/* Send the command */
 	retries = 0;
@@ -530,7 +530,14 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 		break;
 	}
 
-	/* Read the response */
+	/*
+	 * Read the response. If we expect more than 1024 bytes, show
+	 * progress information.
+	 */
+	p = ((*buf_len > 1024) ? 1 : 0);
+	if (p)
+		id = gp_context_progress_start (context, *buf_len,
+					        _("Downloading..."));
 	*buf_len = 0;
 	retries = 0;
 	while (!last) {
@@ -550,7 +557,12 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 		c = ACK;
 		CR (gp_port_write (camera->port, &c, 1));
 		*buf_len += b_len;
+
+		if (p)
+			gp_context_progress_update (context, id, *buf_len);
 	}
+	if (p)
+		gp_context_progress_stop (context, id);
 
 	return (GP_OK);
 }
@@ -559,7 +571,7 @@ int
 fuji_get_cmds (Camera *camera, unsigned char *cmds, GPContext *context)
 {
 	unsigned char cmd[4], buf[1024];
-	unsigned int i, buf_len;
+	unsigned int i, buf_len = 0;
 
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_CMDS_VALID;
@@ -578,7 +590,7 @@ int
 fuji_pic_count (Camera *camera, unsigned int *n, GPContext *context)
 {
 	unsigned char cmd[4], buf[1024];
-	unsigned int buf_len;
+	unsigned int buf_len = 0;
 
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_PIC_COUNT;
@@ -599,7 +611,7 @@ fuji_pic_name (Camera *camera, unsigned int i, const char **name,
 {
 	static unsigned char buf[1025];
 	unsigned char cmd[6];
-	unsigned int buf_len = 1024;
+	unsigned int buf_len = 0;
 
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_PIC_NAME;
@@ -619,7 +631,7 @@ int
 fuji_pic_del (Camera *camera, unsigned int i, GPContext *context)
 {
 	unsigned char cmd[6], buf[1024];
-	unsigned int buf_len;
+	unsigned int buf_len = 0;
 
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_PIC_NAME;
@@ -638,7 +650,7 @@ fuji_pic_size (Camera *camera, unsigned int i, unsigned int *size,
 	       GPContext *context)
 {
 	unsigned char cmd[6], buf[1024];
-	unsigned int buf_len;
+	unsigned int buf_len = 0;
 
 	cmd[0] = 0;
 	cmd[1] = FUJI_CMD_PIC_SIZE;
@@ -713,10 +725,52 @@ fuji_pic_get (Camera *camera, unsigned int i, unsigned char **data,
 }
 
 int
+fuji_date_get (Camera *camera, FujiDate *date, GPContext *context)
+{
+	unsigned char cmd[4], buf[1024];
+	unsigned int buf_len = 0;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_DATE_GET;
+	cmd[2] = 0;
+	cmd[3] = 0;
+
+	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
+	CLEN (buf_len, 14);
+
+	date->year  = buf[0] * 1000 + buf[1] * 100 + buf[ 2] * 10 + buf[ 3];
+	date->month =                                buf[ 4] * 10 + buf[ 5];
+	date->day   =                                buf[ 6] * 10 + buf[ 7];
+	date->hour  =                                buf[ 8] * 10 + buf[ 9];
+	date->min   =                                buf[10] * 10 + buf[11];
+	date->sec   =                                buf[12] * 10 + buf[13];
+
+	return (GP_OK);
+}
+
+int
+fuji_date_set (Camera *camera, FujiDate date, GPContext *context)
+{
+	unsigned char cmd[1024], buf[1024];
+	unsigned int buf_len = 0;
+
+	cmd[0] = 0;
+	cmd[1] = FUJI_CMD_DATE_SET;
+	cmd[2] = 14;
+	cmd[3] = 0;
+	sprintf (cmd + 4, "%04d%02d%02d%02d%02d%02d", date.year, date.month,
+		 date.day, date.hour, date.min, date.sec);
+
+	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
+
+	return (GP_OK);
+}
+
+int
 fuji_set_speed (Camera *camera, FujiSpeed speed, GPContext *context)
 {
 	unsigned char cmd[5], buf[1024];
-	unsigned int buf_len;
+	unsigned int buf_len = 0;
 
 	cmd[0] = 1;
 	cmd[1] = FUJI_CMD_SPEED;
@@ -752,30 +806,12 @@ fuji_reset (Camera *camera, GPContext *context)
 #if 0
 #define serial_port 0
 
-#warning Do not use globals - they break pretty much every GUI for gphoto2,
-#warning including Konqueror (KDE) and Nautilus (GNOME).
-static gp_port *thedev;
-
 static int pictures;
 static int interrupted = 0;
 static int pending_input = 0;
 static struct pict_info *pinfo = NULL;
 
-#define STX 0x2  /* Start of data */
-#define ETX 0x3  /* End of data */
-#define EOT 0x4  /* End of session */
-#define ENQ 0x5  /* Enquiry */
-#define ACK 0x6
-#define ESC 0x10
-#define ETB 0x17 /* End of transmission block */
-#define NAK 0x15
-
 #define FUJI_MAXBUF_DEFAULT 9000000
-
-#define DBG(x) GP_DEBUG(x)
-#define DBG2(x,y) GP_DEBUG(x,y)
-#define DBG3(x,y,z) GP_DEBUG(x,y,z)
-#define DBG4(w,x,y,z) GP_DEBUG(w,x,y,z)
 
 static char *fuji_buffer;
 static long fuji_maxbuf=FUJI_MAXBUF_DEFAULT;

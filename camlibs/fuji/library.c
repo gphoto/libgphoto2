@@ -22,6 +22,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include <gphoto2-library.h>
 #include <gphoto2-port.h>
@@ -91,9 +92,12 @@ struct {
         {FUJI_CMD_PIC_SIZE,             "get size of picture"},
         {FUJI_CMD_PIC_DEL,              "delete picture"},
         {FUJI_CMD_TAKE,                 "capture picture"},
-        {FUJI_CMD_CHARGE_FLASH,         "charge flash"},
+	{FUJI_CMD_FLASH_GET,		"get flash mode"},
+	{FUJI_CMD_FLASH_SET,		"set flash mode"},
+	{FUJI_CMD_FLASH_CHARGE,         "charge flash"},
         {FUJI_CMD_CMDS_VALID,           "list valid commands"},
         {FUJI_CMD_PREVIEW,              "capture preview"},
+	{FUJI_CMD_DATE_GET,		"get date"},
         {0, NULL}};
 
 static const char *
@@ -135,7 +139,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.folder_operations = GP_FOLDER_OPERATION_NONE;
 		a.file_operations = GP_FILE_OPERATION_PREVIEW |
 				    GP_FILE_OPERATION_DELETE;
-		a.operations = GP_OPERATION_NONE;
+		a.operations = GP_OPERATION_CONFIG;
 		CR (gp_abilities_list_append (list, a));
 	}
 
@@ -174,7 +178,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			CR (gp_list_append (list, name, NULL));
 		}
 	} else
-		CR (gp_list_populate (list, "FUJI%04i.jpg", n));
+		CR (gp_list_populate (list, "DSCF%04i.JPG", n));
 
 	return (GP_OK);
 }
@@ -204,6 +208,7 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 	CR (gp_file_set_data_and_size (file, d, size));
+	CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
 	return (GP_OK);
 }
@@ -298,6 +303,59 @@ post_func (Camera *camera, GPContext *context)
 	return (GP_OK);
 }
 
+static int
+camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
+{
+	CameraWidget *widget;
+	struct tm tm;
+	time_t t;
+	FujiDate date;
+
+	CR (gp_widget_new (GP_WIDGET_WINDOW, _("Configuration for "
+					"your FUJI camera"), window));
+
+	/* Date & Time */
+	CR (fuji_date_get (camera, &date, context));
+	CR (gp_widget_new (GP_WIDGET_DATE, _("Date & Time"), &widget));
+	CR (gp_widget_append (*window, widget));
+	memset (&tm, 0, sizeof (struct tm));
+	tm.tm_year = date.year;
+	tm.tm_mon  = date.month;
+	tm.tm_mday = date.day;
+	tm.tm_hour = date.hour;
+	tm.tm_min  = date.min;
+	tm.tm_sec  = date.sec;
+	t = mktime (&tm);
+	CR (gp_widget_set_value (widget, &t));
+
+	return (GP_OK);
+}
+
+static int
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
+{
+	CameraWidget *widget;
+	FujiDate date;
+	time_t t;
+	struct tm *tm;
+
+	/* Date & Time */
+	CR (gp_widget_get_child_by_label (window, _("Date & Time"), &widget));
+	if (gp_widget_changed (widget)) {
+		CR (gp_widget_get_value (widget, &t));
+		tm = localtime (&t);
+		date.year  = tm->tm_year;
+		date.month = tm->tm_mon;
+		date.day   = tm->tm_mday;
+		date.hour  = tm->tm_hour;
+		date.min   = tm->tm_min;
+		date.sec   = tm->tm_sec;
+		CR (fuji_date_set (camera, date, context));
+	}
+
+	return (GP_OK);
+}
+
 int
 camera_init (Camera *camera, GPContext *context)
 {
@@ -305,10 +363,12 @@ camera_init (Camera *camera, GPContext *context)
 	unsigned int i;
 
 	/* Setup all function pointers */
-	camera->functions->pre_func  = pre_func;
-	camera->functions->post_func = post_func;
-	camera->functions->about     = camera_about;
-	camera->functions->exit      = camera_exit;
+	camera->functions->pre_func   = pre_func;
+	camera->functions->post_func  = post_func;
+	camera->functions->about      = camera_about;
+	camera->functions->exit       = camera_exit;
+	camera->functions->get_config = camera_get_config;
+	camera->functions->set_config = camera_set_config;
 
 	/* We need to store some data */
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));

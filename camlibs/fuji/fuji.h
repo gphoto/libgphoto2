@@ -35,9 +35,13 @@ enum _FujiCmd {
         FUJI_CMD_PIC_SIZE       = 0x17,
         FUJI_CMD_PIC_DEL        = 0x19,
         FUJI_CMD_TAKE           = 0x27,
-        FUJI_CMD_CHARGE_FLASH   = 0x34,
+	FUJI_CMD_FLASH_GET	= 0x30,
+	FUJI_CMD_FLASH_SET	= 0x32,
+        FUJI_CMD_FLASH_CHARGE   = 0x34,
         FUJI_CMD_CMDS_VALID     = 0x4C,
-        FUJI_CMD_PREVIEW        = 0x64
+        FUJI_CMD_PREVIEW        = 0x64,
+	FUJI_CMD_DATE_GET	= 0x84,
+	FUJI_CMD_DATE_SET	= 0x86
 };
 
 int fuji_get_cmds  (Camera *camera, unsigned char *cmds, GPContext *context);
@@ -45,6 +49,19 @@ int fuji_get_cmds  (Camera *camera, unsigned char *cmds, GPContext *context);
 int fuji_ping      (Camera *camera, GPContext *context);
 int fuji_pic_count (Camera *camera, unsigned int *n, GPContext *context);
 int fuji_reset     (Camera *camera, GPContext *context);
+
+typedef struct _FujiDate FujiDate;
+struct _FujiDate {
+	unsigned int year;
+	unsigned int month;
+	unsigned int day;
+	unsigned int hour;
+	unsigned int min;
+	unsigned int sec;
+};
+
+int fuji_date_get  (Camera *camera, FujiDate *date, GPContext *context);
+int fuji_date_set  (Camera *camera, FujiDate  date, GPContext *context);
 
 /* Operations on pictures */
 int fuji_pic_name      (Camera *camera, unsigned int i, const char **name,

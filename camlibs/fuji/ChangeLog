@@ -1,5 +1,10 @@
 2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
 
+	* library.c
+	* fuji.[c,h]: Basic configuration support. Progress information.
+
+2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+
 	* PROTOCOL: Some notes.
 	* fuji.c: Fix calculation of packet length.
 
