@@ -508,7 +508,6 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 
 	info->preview.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | GP_FILE_INFO_SIZE;
 	strcpy(info->preview.type, GP_MIME_JPEG);
-        sprintf(info->preview.name, DSC_THUMBNAMEFMT, index);
         info->preview.size = dsc2_selectimage(camera, index, DSC_THUMBNAIL);
 
         return GP_OK;
@@ -662,16 +661,16 @@ int camera_init (Camera *camera)
 		return (GP_ERROR_NO_MEMORY);
 	}
 
-        CHECK (gp_port_timeout_set(camera->port, 5000));
+	CHECK (gp_port_set_timeout (camera->port, 5000));
 
 	/* Configure the port (and remember the speed) */
-	CHECK (gp_port_settings_get(camera->port, &settings));
+	CHECK (gp_port_get_settings (camera->port, &settings));
 	selected_speed = settings.serial.speed;
         settings.serial.speed      = 9600; /* hand shake speed */
         settings.serial.bits       = 8;
         settings.serial.parity     = 0;
         settings.serial.stopbits   = 1;
-        CHECK (gp_port_settings_set(camera->port, settings));
+        CHECK (gp_port_set_settings (camera->port, settings));
 
       	CHECK (gp_filesystem_set_list_funcs (camera->fs,
 		file_list_func, NULL, camera));
