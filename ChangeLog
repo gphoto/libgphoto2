@@ -1,3 +1,8 @@
+2001-11-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* cammlibs/agfa/agfa.c: Initialize a.speed[0] to 0 instead of 
+	  leaving it uninitialized.
+
 2001-11-13  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* camlibs/kodak/dc240/library.c: Handle GP_ERROR_IO_TIMEOUT errors. Better

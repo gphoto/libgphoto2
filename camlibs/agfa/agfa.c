@@ -67,6 +67,7 @@ int camera_abilities(CameraAbilitiesList *list) {
        strcpy(a.model, models[i].name);
        a.status = GP_DRIVER_STATUS_PRODUCTION;
        a.port       = GP_PORT_USB;
+       a.speed[0] = 0;
        a.usb_vendor = models[i].idVendor;
        a.usb_product= models[i].idProduct;
        a.operations        = 	GP_OPERATION_CAPTURE_IMAGE;
