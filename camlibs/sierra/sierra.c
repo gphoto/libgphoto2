@@ -165,6 +165,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Olympus C-820L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-830L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-840L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus C-860L",	SIERRA_MODEL_OLYMPUS,   0, 0, 0 },
 	{"Olympus C-900 Zoom", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-900L Zoom", SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-1000L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },

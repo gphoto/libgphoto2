@@ -1,3 +1,13 @@
+2002-02-21  Lutz Müller <lutz@users.sourceforge.net>
+
+	* sierra.c: Olympus C-860L has been reported to work with this driver,
+	  too.
+
+2002-02-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c (sierra_list_files): No need to set the int register,
+	  (sierra_get_string_register) will do that for us.
+
 2002-02-18  Lutz Müller <lutz@users.sourceforge.net>
 
 	Per Gilles Grandou's <gilles@grandou.net> request:
