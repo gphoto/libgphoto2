@@ -29,7 +29,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a->speed[3] = 57600;
 	a->speed[4] = 115200;
 	a->speed[5] = 0;
-	a->capture  = 1;
+	a->capture  = 0;
 	a->config   = 0;
 	a->file_delete  = 1;
 	a->file_preview = 1;
@@ -209,8 +209,7 @@ int camera_file_list (Camera *camera, CameraList *list, char *folder) {
 	return (retval);
 }
 
-int camera_file_get_common (Camera *camera, CameraFile *file, char *folder, char *filename,
-	int get_preview) {
+int camera_file_action (Camera *camera, int action, CameraFile *file, char *folder, char *filename) {
 
 	DC120Data *dd = camera->camlib_data;
 	int picnum, album_num=-1, from_card;
@@ -242,32 +241,31 @@ int camera_file_get_common (Camera *camera, CameraFile *file, char *folder, char
 	if (album_num == -1)
 		return (GP_ERROR);
 
-	return (dc120_get_file(dd, get_preview, from_card, album_num, picnum+1, file));
+	return (dc120_file_action(dd, action, from_card, album_num, picnum+1, file));
 }
 
 int camera_file_get (Camera *camera, CameraFile *file, char *folder, char *filename) { 
 
-	return (camera_file_get_common(camera, file, folder, filename, 0));
+	return (camera_file_action(camera, DC120_ACTION_IMAGE, file, folder, filename));
 }
 
 int camera_file_get_preview (Camera *camera, CameraFile *file,
 			     char *folder, char *filename) {
 
-	return (camera_file_get_common(camera, file, folder, filename, 1));
+	return (camera_file_action(camera, DC120_ACTION_PREVIEW, file, folder, filename));
 }
 
 int camera_file_put (Camera *camera, CameraFile *file, char *folder) {
 
 	DC120Data *dd = camera->camlib_data;
 
-	return (GP_OK);
+	return (GP_ERROR);
 }
 
 int camera_file_delete (Camera *camera, char *folder, char *filename) {
 
-	DC120Data *dd = camera->camlib_data;
 
-	return (GP_OK);
+	return (camera_file_action(camera, DC120_ACTION_DELETE, NULL, folder, filename));
 }
 
 int camera_config_get (Camera *camera, CameraWidget *window) {

@@ -303,7 +303,7 @@ int dc120_get_filenames (DC120Data *dd, int from_card, int album_number, CameraL
 	return (GP_OK);
 }
 
-int dc120_read_file_preview_data (DC120Data *dd, CameraFile *file, int file_number, char *cmd_packet, int *size) {
+int dc120_get_file_preview (DC120Data *dd, CameraFile *file, int file_number, char *cmd_packet, int *size) {
 
 	CameraFile *f;
 	int x;
@@ -331,7 +331,7 @@ int dc120_read_file_preview_data (DC120Data *dd, CameraFile *file, int file_numb
 	return (GP_OK);
 }
 
-int dc120_read_file_data (DC120Data *dd, CameraFile *file, int file_number, char *cmd_packet, int *size) {
+int dc120_get_file (DC120Data *dd, CameraFile *file, int file_number, char *cmd_packet, int *size) {
 
 	CameraFile *f;
 	char *p = dc120_packet_new(0x4A);
@@ -358,30 +358,52 @@ int dc120_read_file_data (DC120Data *dd, CameraFile *file, int file_number, char
 	return (GP_OK);
 }
 
-int dc120_get_file (DC120Data *dd, int get_preview, int from_card, int album_number, 
+int dc120_delete_file (DC120Data *dd, char *cmd_packet) {
+
+	char p[8];
+
+	if (dc120_packet_write(dd, cmd_packet, 8, 1) == GP_ERROR)
+		return (GP_ERROR);
+	
+	if (dc120_packet_read(dd, p, 1)==GP_ERROR)
+		return (GP_ERROR);	
+
+	return (GP_OK);
+}
+
+int dc120_file_action (DC120Data *dd, int action, int from_card, int album_number, 
 		int file_number, CameraFile *file) {
 
 	int retval;
 	int size=0;
-	char *p;
-
-	p = dc120_packet_new(from_card? 0x64 : 0x54);
+	char *p = dc120_packet_new(0x00);
 
 	if (from_card)
 		p[1] = 0x01;
 
 	/* Set the picture number */
 	p[2] = (file_number >> 8) & 0xFF;
-	p[3] = file_number & 0xFF;
+	p[3] =  file_number & 0xFF;
 
 	/* Set the album number */
 	p[4] = album_number;
 
-	if (get_preview)
-		retval = dc120_read_file_preview_data(dd, file, file_number, p, &size);
-	   else
-		retval = dc120_read_file_data(dd, file, file_number, p, &size);
-
+	switch (action) {
+	   case DC120_ACTION_PREVIEW:
+		p[0] = (from_card? 0x64 : 0x54);
+		retval = dc120_get_file_preview(dd, file, file_number, p, &size);
+		break;
+	   case DC120_ACTION_IMAGE:
+		p[0] = (from_card? 0x64 : 0x54);
+		retval = dc120_get_file(dd, file, file_number, p, &size);
+		break;
+	   case DC120_ACTION_DELETE:
+		p[0] = (from_card? 0x7B : 0x7A);
+		retval = dc120_delete_file(dd, p);
+		break;
+	   default:
+		retval = GP_ERROR;
+	}
 	free(p);
 	return (retval);
 }
