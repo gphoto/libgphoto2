@@ -54,7 +54,7 @@ l_init (GPPort *device)
 
 	CHECK_NULL (device);
 
-	CHECK (gp_port_timeout_set (device, DEFAULT_TIMEOUT));
+	CHECK (gp_port_set_timeout (device, DEFAULT_TIMEOUT));
 	for (i = 0; ; i++) {
 
 		/* Write ENQ. 	*/
