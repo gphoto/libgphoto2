@@ -11,6 +11,37 @@ the camera drivers in order to avoid unnecessary communication overhead and
 prevent synchronization errors.
 </para>
 
+<para>
+Camera drivers need to set up the #CameraFilesystem on #camera_init in order
+to make the #CameraFilesystem capable of getting file or folder listings, 
+retreiving information about a file, etc.
+  <example>
+    <title>Setting up the #CameraFilesystem</title>
+    <programlisting>
+      int
+      file_list_func (#CameraFilesystem *fs, const char *folder,
+                      #CameraList *list, void *data)
+      {
+          #Camera *camera = data;
+
+          #gp_list_append (list, "file1.jpeg", NULL);
+	  #gp_list_append (list, "file2.jpeg", NULL);
+
+	  return (#GP_OK);
+      }
+
+      int
+      #camera_init (#Camera *camera)
+      {
+          #gp_filesystem_set_list_funcs (camera->fs, file_list_func,
+	                                 NULL, camera);
+
+	  return (#GP_OK);
+      }
+    </programlisting>
+  </example>
+</para>
+
 <!-- ##### SECTION See_Also ##### -->
 <para>
 #CameraLibraryInitFunc

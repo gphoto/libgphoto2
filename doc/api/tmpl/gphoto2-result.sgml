@@ -11,6 +11,47 @@ representation of those. Note that those error codes are supplementary to
 the ones defined in gphoto2-port.
 </para>
 
+<para>
+  <example>
+    <title>Checking error codes</title>
+    <programlisting>
+      #CameraAbilitiesList *list;
+      int result;
+      const char *model = "Unknown model";
+
+      /* Create a new abilities list */
+      result = #gp_abilities_list_new (&amp;list);
+      if (result < 0) {
+          printf ("An error occurred: %s\n", #gp_result_as_string (result));
+	  return (result);
+      }
+
+      /* Fill it */
+      result = #gp_abilities_list_load (list);
+      if (result < 0) {
+          printf ("An error occurred: %s\n", #gp_result_as_string (result));
+	  return (result);
+      }
+
+      /* Look for a camera model */
+      result = #gp_abilities_list_lookup_model (list, model);
+      if (result < 0) {
+          switch (result) {
+	  case #GP_ERROR_MODEL_NOT_FOUND:
+	      printf ("Could not find model '%s'\n", model);
+	  default:
+              printf ("An error occurred: %s\n", #gp_result_as_string (result));
+	  }
+	  return (result);
+       }
+     </programlisting>
+   </example>
+
+   In your code, you would probably use predefined macros for quick and easy
+   checking return codes.
+
+</para>
+
 <!-- ##### SECTION See_Also ##### -->
 <para>
 #gp_port_result_as_string
