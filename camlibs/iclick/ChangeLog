@@ -1,3 +1,8 @@
+2004-11-29  Marcus Meissner  <marcus@jet.franken.de>
+
+	* .cvsignore: ignore stuff
+	* library.c: Fixed C99ism (by Dan Fandrich)
+
 2004-11-26  Theodore Kilgore <kilgota@auburn.edu>
 
 	* *.[c,h]: First check-in. 

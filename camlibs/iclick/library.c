@@ -166,7 +166,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
     	Camera *camera = user_data;
 	int entry, w, h; /* frame; */
-	unsigned char *frame_data;
+	unsigned char *frame_data, *frame_ptr;
 	unsigned char *ppm, *ptr;
 	unsigned char gtable[256];
 	int start;
@@ -278,7 +278,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	ptr = ppm = malloc(ppmsize);
 
-	unsigned char *frame_ptr = frame_data + 0x100;
+	frame_ptr = frame_data + 0x100;
 	/* Here, we just threw away the "superfluous" first 0x100 bytes */	    
 	memcpy(ptr, buf, hdrsize);
 	ptr += hdrsize;
