@@ -5,6 +5,20 @@
 #include <config.h>
 #endif
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#      define N_(String) gettext_noop (String)
+#  else
+#      define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 #include "globals.h"
 #include "library.h"
 #include "settings.h"
@@ -297,7 +311,7 @@ int gp_camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info
 
         gp_file_clean(file);
 
-        return(camera->functions->capture(camera, file, info));
+        return (camera->functions->capture(camera, file, info));
 }
 
 int gp_camera_summary (Camera *camera, CameraText *summary)
@@ -305,7 +319,7 @@ int gp_camera_summary (Camera *camera, CameraText *summary)
         if (camera->functions->summary == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return(camera->functions->summary(camera, summary));
+        return (camera->functions->summary(camera, summary));
 }
 
 int gp_camera_manual (Camera *camera, CameraText *manual)
@@ -313,7 +327,7 @@ int gp_camera_manual (Camera *camera, CameraText *manual)
         if (camera->functions->manual == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return(camera->functions->manual(camera, manual));
+        return (camera->functions->manual(camera, manual));
 }
 
 int gp_camera_about (Camera *camera, CameraText *about)
@@ -321,5 +335,18 @@ int gp_camera_about (Camera *camera, CameraText *about)
         if (camera->functions->about == NULL)
                 return (GP_ERROR_NOT_SUPPORTED);
 
-        return(camera->functions->about(camera, about));
+        return (camera->functions->about(camera, about));
 }
+
+char *gp_camera_result_as_string (Camera *camera, int result)
+{
+	/* Camlib error? */
+	if (-result >= 100) {
+		if (camera->functions->result_as_string == NULL)
+			return _("Error description not available");
+		return (camera->functions->result_as_string (camera, result));
+	}
+
+	return (gp_result_as_string (result));
+}
+
