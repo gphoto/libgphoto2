@@ -45,10 +45,14 @@ ENV=/usr/bin/env
 
 if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
 then
-	chmod a-rwx ${DEVICE}
-	chown ${USER} ${DEVICE}
-	chmod u+rw ${DEVICE}
+    chmod a-rwx ${DEVICE}
+    chown ${USER} ${DEVICE}
+    chmod u+rw ${DEVICE}
 
+    if [ ${USER} != "root" ]
+    then
+	# we don't want to run this as root. definitely not.
 	cd ${HOME}
 	${SU} ${USER} -c "${ENV} DISPLAY=${DISPLAY} HOME=${HOME} ${X11_APP}"
+    fi
 fi
