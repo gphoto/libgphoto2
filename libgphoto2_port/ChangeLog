@@ -1,5 +1,13 @@
 2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	All work from Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>:
+
+	* libgphoto2_port/library.c (gp_port_library_list): Don't try to
+	open .*
+	* usb/libusb.c (gp_port_usb_close): Release the interface here.
+
+2001-08-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* libgphoto2_port/gp_port.c: if (!dev) return (GP_OK) instead of
 	accessing dev->whatever... Plus, set the timeout on gp_port_open.
 

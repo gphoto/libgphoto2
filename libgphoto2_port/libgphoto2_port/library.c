@@ -104,6 +104,10 @@ int gp_port_library_list (gp_port_info *list, int *count) {
 #else
                 sprintf(buf, "%s/%s", IOLIBS, GP_SYSTEM_FILENAME(de));
 #endif
+		/* Don't try to open ".*" */
+		if (*buf && (buf[0] == '.'))
+			continue;
+
                 if (gp_port_library_is_valid(buf) == GP_OK)
                         gp_port_library_list_load(buf, loaded, list, count);
            }

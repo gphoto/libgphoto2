@@ -152,10 +152,18 @@ int gp_port_usb_open(gp_port *dev)
 	return GP_OK;
 }
 
-int gp_port_usb_close(gp_port *dev)
+int gp_port_usb_close (gp_port *dev)
 {
         if (dev->debug_level)
-            printf ("gp_port_usb_close() called\n");
+		printf ("gp_port_usb_close() called\n");
+
+	if (usb_release_interface (dev->device_handle,
+				   dev->settings.usb.interface) < 0) {
+		fprintf (stderr, "gp_port_usb_close: could not release "
+				 "interface %d: %s\n",
+				 dev->settings.usb.interface, strerror (errno));
+		return (GP_ERROR_IO_CLOSE);
+	}
 
 	if (dev->device_handle) {
 		if (usb_close (dev->device_handle) < 0)
