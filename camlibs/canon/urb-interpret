@@ -222,6 +222,13 @@ foreach $file (@ARGV) {
 			} elsif ($urbdata{$current_urb}{pipe} eq "2" && hex($byte_offset) == 0x00 ) {
 			    # An interrupt read; let's save the data for later decoding
 			    $urbdata{$current_urb}{intdata} = $hex;
+			} elsif ($urbdata{$current_urb}{op} eq "READ" && hex($byte_offset) == 0x40 ) {
+			    my @h = split(" ", $hex);
+			    if ( defined($h[0x4]) && defined($h[0x5])
+				 && defined($h[0x6]) && defined($h[0x7]) ) {
+				$urbdata{$current_urb}{usbid} = "(0x$h[0x7]$h[0x6],0x$h[0x5]$h[0x4])";
+				$urbdata{$current_urb}{magic} = "$h[0x3]$h[0x2]$h[0x1]$h[0x0]";
+			    }
 			}
 
 			if ( $current_lines < 65 ) {
@@ -402,7 +409,9 @@ foreach $file (@ARGV) {
 			} elsif ($length == 0x40) {
 			    print("\n\n\n\n*** URB $current_urb possible CANON RESPONSE ***\n");
 			} elsif ($length == 0x01) {
-			    print("\n\n\n\n*** URB $current_urb PROBABLY CAMERA INIT ***\n\n");
+			    print("\n\n\n\n*** URB $current_urb probably CAMERA INIT ***\n\n");
+			} elsif ($length == 0x58 && defined ($urbdata{$current_urb}{usbid}) ) {
+			    print("\n\n\n\n*** URB $current_urb probably camera initial response, USB ID=$urbdata{$current_urb}{usbid}, magic=$urbdata{$current_urb}{magic} ***\n\n");
 			} else {
 			    print("\n");
 			}
