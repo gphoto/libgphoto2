@@ -1,3 +1,8 @@
+2002-01-01  Fredrik <fredrik@krixor.xy.org>
+
+	* usb.c: Don't keylock G1 cameras, they do not
+	  support it. Reported by Jarno Elonen.
+
 2001-12-24  Hans Ulrich Niedermann <hun@n-dimensional.de>
 
 	* library.c: stop reporting broken camera abilities
