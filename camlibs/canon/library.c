@@ -141,7 +141,7 @@ camera_abilities (CameraAbilitiesList *list)
 			a.usb_vendor = models[i].usb_vendor;
 			a.usb_product = models[i].usb_product;
 		}
-		if (models[i].serial_support == SERIAL) {
+		if (models[i].serial_id_string != NULL) {
 			a.port |= GP_PORT_SERIAL;
 			a.speed[0] = 9600;
 			a.speed[1] = 19200;
@@ -157,13 +157,13 @@ camera_abilities (CameraAbilitiesList *list)
 		}
 
 		a.folder_operations =
-#ifdef CANON_EXPERIMENTAL_UPLOAD
-			GP_FOLDER_OPERATION_PUT_FILE 
-#else
-			(models[i].serial_support?GP_FOLDER_OPERATION_PUT_FILE:0)
-#endif
-			| GP_FOLDER_OPERATION_MAKE_DIR |
+			GP_FOLDER_OPERATION_MAKE_DIR |
 			GP_FOLDER_OPERATION_REMOVE_DIR;
+
+		if (UPLOAD_BOOL || (models[i].serial_id_string != NULL)) {
+			a.folder_operations |= GP_FOLDER_OPERATION_PUT_FILE;
+		}
+
 		a.file_operations = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 		gp_abilities_list_append (list, a);
 	}
@@ -837,8 +837,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
-	if (camera->pl->speed > 57600 && (!strcmp (a.model, "Canon:PowerShot A50")
-					  || !strcmp (a.model, "Canon:PowerShot Pro70"))) {
+	if ((camera->pl->speed > 57600) && ((camera->pl->model == CANON_PS_A50)
+					    || (camera->pl->model == CANON_PS_A70))) {
 		gp_context_error (context,
 				  _
 				  ("Speeds greater than 57600 are not supported for uploading to this camera"));
@@ -966,8 +966,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		return GP_ERROR;
 
 	gp_camera_get_abilities (camera, &a);
-	if (camera->pl->speed > 57600 && (!strcmp (a.model, "Canon:PowerShot A50")
-					  || !strcmp (a.model, "Canon:PowerShot Pro70"))) {
+	if ((camera->pl->speed > 57600) && ((camera->pl->model == CANON_PS_A50)
+					    || (camera->pl->model == CANON_PS_A70))) {
 		gp_context_error (context,
 				  _
 				  ("Speeds greater than 57600 are not supported for uploading to this camera"));

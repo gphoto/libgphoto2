@@ -90,14 +90,6 @@ typedef enum {
 	CAP_EXP      /* experimental support */
 } canonCaptureSupport;
 
-/**
- * Whether camera supports serial connections or not
- */
-typedef enum {
-	SER_NO = 0,
-	SERIAL
-} canonSerialSupport;
-
 
 struct canonCamModelData
 {
@@ -105,10 +97,10 @@ struct canonCamModelData
 	canonCamModel model;
 	unsigned short usb_vendor;
 	unsigned short usb_product;
-	canonSerialSupport serial_support;
 	canonCaptureSupport usb_capture_support;
 	unsigned int max_picture_size;
 	unsigned int max_thumbnail_size;
+	char *serial_id_string; /* set to NULL if camera doesn't support serial connections */
 };
 
 extern const struct canonCamModelData models[];

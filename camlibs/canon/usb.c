@@ -1229,6 +1229,7 @@ canon_usb_identify (Camera *camera, GPContext *context)
 		return res;
 	}
 
+	/* ahem. isn't this a tautology? */
 	for (i = 0; models[i].id_str != NULL; i++) {
 		if (models[i].usb_vendor && models[i].usb_product
 		    && !strcmp (models[i].id_str, a.model)) {

@@ -1242,12 +1242,19 @@ canon_serial_ready (Camera *camera, GPContext *context)
 
 	camera->pl->first_init = 0;
 
-	/* Compare what the camera identified itself as with our list of known models */
+	/* Compare what the camera identified itself as with our list
+	 * of known models
+	 *
+	 * We iterate over the model list testing id_str, even if we
+	 * don't actually use id_str, but serial_id_string.
+	 */
 	for (i = 0; models[i].id_str != NULL; i++) {
-		if (!strcmp (models[i].id_str, cam_id_str)) {
+		if ((models[i].serial_id_string != NULL) && 
+		    !strcmp (models[i].serial_id_string, cam_id_str)) {
 			GP_DEBUG ("canon_serial_ready: Serial ID string matches '%s'",
-				  models[i].id_str);
-			gp_context_status (context, "Detected a %s", models[i].id_str);
+				  models[i].serial_id_string);
+			gp_context_status (context, "Detected a \"%s\" aka \"%s\"", 
+					   models[i].id_str, models[i].serial_id_string);
 			camera->pl->md = (struct canonCamModelData *) &models[i];
 			break;
 		}
