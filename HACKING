@@ -1,11 +1,13 @@
 If you want to hack on gphoto2 (or a camera driver for gphoto2),
 please follow some rules to make our work easier: 
 
+
 licensing
 ---------
 
 We urge you to license your contributions under the LGPL so we can
 distribute gphoto2 under the LGPL as well.
+
 
 patches
 -------
@@ -18,6 +20,10 @@ update -dP
 checkout -P
 
 in $HOME/.cvsrc and send us the output of "cvs diff some_file.c".
+
+We prefer patches against the current CVS version very much over
+patches agains old released versions, but these are also welcome :-)
+
 
 camlib
 ------
@@ -44,6 +50,10 @@ Use the port provided by camera->port.
 
 Use the filesystem provided by camera->fs and set up the callbacks so
 that libgphoto2 can cache listings and file-information. 
+
+Please keep track of the changes to the sillycam camlib in the file 
+
+   camlib/sillycam/ChangeLog
 
 
 libgphoto2
