@@ -79,16 +79,21 @@ g3_channel_read(GPPort *port, int *channel, char **buffer, int *len)
 }
 
 static int
-g3_channel_read_bytes(GPPort *port, int *channel, char **buffer, int expected)
-{
+g3_channel_read_bytes(
+	GPPort *port, int *channel, char **buffer, int expected, GPContext *context,
+	const char *msg
+) {
 	unsigned char *xbuf;
-	int ret, len, xlen = 0;
+	int id, ret, len, xlen = 0;
 
 	if (!*buffer)
 		*buffer = malloc (expected);
 	else
 		*buffer = realloc (*buffer, expected);
 	xbuf = malloc(65536 + 12);
+
+	id = gp_context_progress_start (context, expected, msg);
+
 	/* The camera lets us read in packets of at least max 64kb size. */
 	while (expected > 0) {
 		int rest = expected;
@@ -112,7 +117,9 @@ g3_channel_read_bytes(GPPort *port, int *channel, char **buffer, int expected)
 		memcpy(*buffer+xlen, xbuf+8, len);
 		expected	-= len;
 		xlen		+= len;
+		gp_context_progress_update (context, id, xlen);
 	}
+	gp_context_progress_stop (context, id);
 	free(xbuf);
 	return GP_OK;
 }
@@ -234,7 +241,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = data;
-	char *buf = NULL, *reply = NULL, *cmd =NULL;
+	char *buf = NULL, *reply = NULL, *cmd =NULL, *msg = NULL;
 	int ret, channel, bytes, seek, len;
 
 	ret = g3_cwd_command (camera->port, folder);
@@ -242,6 +249,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
+		msg = _("Downloading...");
+		if (strstr(filename,"AVI") || strstr(filename,"avi"))
+			msg = _("Downloading movie...");
+		if (strstr(filename,"jpg") || strstr(filename,"JPG") ||
+		    strstr(filename,"tif") || strstr(filename,"TIF")
+		)
+			msg = _("Downloading image...");
+		if (strstr(filename,"wav") || strstr(filename,"WAV"))
+			msg = _("Downloading audio...");
 		cmd = malloc(strlen("RETR ") + strlen(filename) + 2 + 1);
 		sprintf(cmd,"RETR %s", filename);
 		ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
@@ -256,6 +272,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		sscanf(buf, "150 data connection for RETR.(%d)", &bytes);
 		break;
 	case GP_FILE_TYPE_EXIF:
+		msg = _("Downloading EXIF data...");
 		if (!strstr(filename,".JPG") && !strstr(filename,".jpg")) {
 			gp_context_error (context,_("No EXIF data available for %s."),
                                           filename);
@@ -288,7 +305,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
-	ret = g3_channel_read_bytes(camera->port, &channel, &buf, bytes); /* data */
+	ret = g3_channel_read_bytes(camera->port, &channel, &buf, bytes, context, msg);
 	if (ret < GP_OK) goto out;
 	ret = g3_channel_read(camera->port, &channel, &reply, &len); /* reply */
 	if (ret < GP_OK) goto out;
