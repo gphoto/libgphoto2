@@ -1,3 +1,14 @@
+2002-03-29  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* library.c: merged in USB upload patch by Matthias Kramm 
+	                 (using #ifdef EXPERIMENTAL_UPLOAD)
+                     mark driver as experimental when compiled 
+	                 with any of the EXPERIMENTAL_ flags
+	* canon.h: merged in USB upload patch by Matthias Kramm
+	           properly use EXPERIMENTAL_CAPTURE for int capturing;
+	* usb.c: merged in USB upload patch by Matthias Kramm
+	* Makefile.am: define EXPERIMENTAL_UPLOAD if requested
+
 2002-03-23  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* library.c,Makefile.am: made capture stuff a little easier for testing
