@@ -113,16 +113,16 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 {
 	uint16_t n_toc_entries;
 	int toc_size = 0;
+	if (pl->dirty == 0){
+		/* TOC has been read already, and stored in the pl, 
+		   so let's not read it again unless "dirty" gets set,
+		   e.g. by a reset, delete or capture action... */
+		*filecount = pl->num_files;
+		return GP_OK;
+	}
 
 	if (pl->bridge == BRIDGE_SPCA500) { /* for dsc350 type cams */
-		if (pl->dirty == 0){
-			/* TOC has been read already, and stored in the pl, 
-			   so let's not read it again unless "dirty" gets set,
-			   e.g. by a reset, delete or capture action... */
-			*filecount = pl->num_files;
-			return GP_OK;
-		}
-		/* command mode */
+				/* command mode */
 		CHECK (gp_port_usb_msg_write (pl->gpdev,
 					0x00, 0x0080, 0x0100,
 					NULL, 0x00));
@@ -183,19 +183,20 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 		/* reset to idle */
 		CHECK (gp_port_usb_msg_write(pl->gpdev, 0x00, 0x0000, 0x0100, NULL, 0x0));
 		*filecount = (int)pl->flash_toc[10];
-		pl->num_files = *filecount;
 		/* Now, create the files info buffer */
 		free_files(pl);
 		/* NOTE: using calloc to ensure new block is "empty" */
-		pl->files = calloc (1, pl->num_files * sizeof (struct SPCA50xFile));
+		pl->files = calloc (1, *filecount * sizeof (struct SPCA50xFile));
 		if (!pl->files)
 			return GP_ERROR_NO_MEMORY;
-		/* record that TOC has been updated - clear the "dirty" flag */
-		pl->dirty = 0;
 	} else { /* all other cams with flash... */
 		/* read the TOC from the cam */
 		CHECK (gp_port_read (pl->gpdev, pl->flash_toc, toc_size));
 	}
+	/* record that TOC has been updated - clear the "dirty" flag */
+	pl->num_files = *filecount;
+	pl->dirty = 0;
+
 	return GP_OK;
 }
 
