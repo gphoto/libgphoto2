@@ -1664,8 +1664,8 @@ int camera_config_set(Camera *camera, CameraSetting *setting, int count)
 		
 	}
 	if (cs->debug != new_debug) {
-		save_rcfile(camera);
 		cs->debug = new_debug;
+		save_rcfile(camera);
 	}
 	
     return GP_OK;

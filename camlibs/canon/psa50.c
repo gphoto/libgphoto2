@@ -590,11 +590,12 @@ void intatpos(unsigned char *block, int pos, int integer )
 static unsigned char *psa50_usb_dialogue(Camera *camera,char cmd1, char cmd2, int cmd3, int *retlen, const char *payload, int pay_length)
 {
 #ifdef GPIO_USB
-  int msgsize;
-  char packet[0x3000];
-  static char buffer[0x3000];
-  int i;
-  int lonlen;
+	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
+	int msgsize;
+	char packet[0x3000];
+	static char buffer[0x3000];
+//	int i;
+	int lonlen;
 
     memset(packet,0x00,0x3000);  /* zero block */
     packet[0x40]=0x2;
@@ -613,7 +614,7 @@ static unsigned char *psa50_usb_dialogue(Camera *camera,char cmd1, char cmd2, in
      *  fprintf (stderr,"%x %x\n",i,packet[i]);
      * }
      */
-
+	
     gpio_usb_msg_write(cs->gdev,0x10,packet,msgsize);
     if (cmd3==0x202)
       {
@@ -1456,7 +1457,7 @@ unsigned char *psa50_get_file_usb(Camera *camera, const char *name,int *length)
     unsigned char msg[0x3000];
     unsigned char *msgg;
     char newstr[100];
-    unsigned char *namn;
+//    unsigned char *namn;
     unsigned int total = 0,expect = 0,size;
     int name_len,len,maxfilesize;
 
