@@ -67,6 +67,11 @@
  *
  * Contains list of all camera models currently supported with their
  * respective USB IDs and a flag denoting RS232 serial support.
+ *
+ * Some cameras are sold under different names in different regions,
+ * but are technically the same. So we treat them the same from a
+ * technical point of view, but also add the other model name to
+ * avoid unnecessary questions from users.
  **/
 
 #define S32K	(32 * 1024)
@@ -102,6 +107,7 @@ const struct canonCamModelData models[] = {
 	{"Canon PowerShot A30",		CANON_PS_A30,		0x04A9,	0x3059,	0, S10M, S32K},
 	{"Canon EOS D60",		CANON_EOS_D60,		0x04A9, 0x3060, 0, S10M, S32K},
 	{"Canon PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, 0, S10M, S32K},
+	{"Canon Sigital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, 0, S10M, S32K},
 	{"Canon Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, 0, S10M, S32K},
 	{NULL}
 	/* *INDENT-ON* */
