@@ -196,16 +196,14 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** file: %s", filename);
 
+	/* Get the file number from the CameraFilesystem */
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+
 	CHECK (camera_start (camera));
 
-	/* Set the working folder */
+	/* Set the working folder and the current picture number */
+	CHECK (camera_start (camera));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
-
-	/* Get the file number from the CameraFileSystem */
-	n = gp_filesystem_number (camera->fs, folder, filename);
-	CHECK_STOP (camera, n);
-
-	/* Set the current picture number */
 	CHECK_STOP (camera, sierra_set_int_register (camera, 4, n + 1));
 
 	/* Get the size of the current image */
@@ -284,7 +282,7 @@ int camera_stop (Camera *camera)
 }
 
 static int
- camera_exit (Camera *camera) 
+camera_exit (Camera *camera) 
 {
 	SierraData *fd;
 	
@@ -303,7 +301,7 @@ static int
 camera_file_get (Camera *camera, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file)
 {
-        int regl, regd, file_number;
+        int regl, regd, n;
 	char *jpeg_data = NULL;
 	int jpeg_size;
 	const char *data, *mime_type;
@@ -313,14 +311,9 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
 
-	/* Set the working folder */
-	CHECK (camera_start (camera));
-	CHECK_STOP (camera, sierra_change_folder (camera, folder));
-	CHECK (camera_stop (camera));
-
-	/* Get the file number from the CameraFileSystem */
-	file_number = gp_filesystem_number (camera->fs, folder, filename);
-	CHECK (file_number);
+	/* Get the file number from the CameraFileSystem and set the name */
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
+	CHECK (gp_file_set_name (file, filename));
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
@@ -335,18 +328,15 @@ camera_file_get (Camera *camera, const char *folder, const char *filename,
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	/* Fill in the file structure */
-	CHECK (gp_file_set_name (file, filename));
-
-	/* Get the picture data */
+	/* Set the working folder and get the picture data */
 	CHECK (camera_start (camera));
-	CHECK_STOP (camera, sierra_get_string_register (camera, regd,
-					file_number + 1, file, NULL, NULL));
+	CHECK_STOP (camera, sierra_change_folder (camera, folder));
+	CHECK_STOP (camera, sierra_get_string_register (camera, regd, n + 1,
+							file, NULL, NULL));
 	CHECK (camera_stop (camera));
 
+	/* Now get the data and do some post-processing */
 	CHECK (gp_file_get_data_and_size (file, &data, &size));
-	
-	/* Data postprocessing */
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 
@@ -424,21 +414,22 @@ camera_folder_delete_all (Camera *camera, const char *folder)
 static int
 camera_file_delete (Camera *camera, const char *folder, const char *filename) 
 {
-	int file_number;
+	int n;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_file_delete");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** filename: %s", filename);
 
-	file_number = gp_filesystem_number (camera->fs, folder, filename);
-	CHECK (file_number);
+	/* Get the file number from the CameraFilesystem */
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename));
 
 	/* Set the working folder and delete the file */
 	CHECK (camera_start (camera));
 	CHECK_STOP (camera, sierra_change_folder (camera, folder));
-	CHECK_STOP (camera, sierra_delete (camera, file_number + 1));
+	CHECK_STOP (camera, sierra_delete (camera, n + 1));
 	CHECK (camera_stop (camera));
 
+	/* Now delete the file on the CameraFilesystem */
 	CHECK (gp_filesystem_delete (camera->fs, folder, filename));
 
 	return (GP_OK);
