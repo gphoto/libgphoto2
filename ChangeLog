@@ -1,5 +1,9 @@
 2001-10-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* libgphoto2/gphoto2-debug.[c,h]: Documented.
+
+2001-10-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	Patch approved by Gus Hartmann <hartmann@madison-expat.net>:
 
 	* camlibs/minolta/dimagev/download.c

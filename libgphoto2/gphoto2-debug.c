@@ -1,4 +1,4 @@
-/* debug.c
+/* gphoto2-debug.c
  *
  * Copyright (C) 2001 Lutz Müller
  *
@@ -40,6 +40,15 @@ gp_port_func (const char *msg, void *data)
 		debug_func ("port", msg, data);
 }
 
+/**
+ * gp_debug_set_func:
+ * @func: a #GPDebugFunc
+ * @data: data that should be passed to the func
+ *
+ * Sets a user defined debugging function. Per default, the function is set
+ * to %NULL and a built in debugging function is used which prints messages
+ * onto stderr.
+ **/
 void
 gp_debug_set_func (GPDebugFunc func, void *data)
 {
@@ -52,6 +61,19 @@ gp_debug_set_func (GPDebugFunc func, void *data)
 		gp_port_debug_set_func (NULL, NULL);
 }
 
+/**
+ * gp_debug_printf:
+ * @level: a gphoto2 debug level
+ * @id: an id
+ * @format: the debugging message
+ * @...:
+ *
+ * Prints a debugging message. The debugging message gets added to the
+ * builtin history. If the given @level is higher than the global debug level
+ * (set with #gp_debug_set_level), the message gets printed out either via
+ * the user defined debugging function (set with #gp_debug_set_func) or the
+ * builtin function (default).
+ **/
 void
 gp_debug_printf (int level, const char *id, const char *format, ...)
 {
@@ -86,30 +108,67 @@ gp_debug_printf (int level, const char *id, const char *format, ...)
 	}
 }
 
+/**
+ * gp_debug_set_level:
+ * @level: a gphoto2 debug level
+ *
+ * Sets the debugging level. Only debugging messages with a debugging level
+ * higher than the given @level will be printed.
+ **/
 void
 gp_debug_set_level (int level)
 {
 	gp_port_debug_set_level (level);
 }
 
+/**
+ * gp_debug_get_level:
+ *
+ * Gets the current debugging level.
+ *
+ * Return value: the current gphoto2 debug level or a gphoto2 error code
+ **/
 int
 gp_debug_get_level (void)
 {
 	return (gp_port_debug_get_level ());
 }
 
+/**
+ * gp_debug_history_get:
+ *
+ * Retreives the current debugging history. The size of the history is 
+ * limited - you can change it with #gp_debug_history_set_size.
+ *
+ * Return value: The current debugging history
+ **/
 const char *
 gp_debug_history_get (void)
 {
 	return (gp_port_debug_history_get ());
 }
 
+/**
+ * gp_debug_history_set_size:
+ * @size: the new size of the debugging history
+ *
+ * Sets the size of the builtin debugging history.
+ *
+ * Return value: a gphoto2 error code
+ **/
 int
 gp_debug_history_set_size (unsigned int size)
 {
 	return (gp_port_debug_history_set_size (size));
 }
 
+/**
+ * gp_debug_history_get_size:
+ * 
+ * Retreives the size of the builtin debuggin history.
+ *
+ * Return value: The current debugging history size or a gphoto2 error code
+ **/
 int
 gp_debug_history_get_size (void)
 {
