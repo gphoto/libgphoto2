@@ -607,11 +607,9 @@ gp_file_conversion_johannes (CameraFile *file, unsigned char *data)
 	unsigned char *ps;
 	int x, y;
 
-	/* Skip over the thumbnail header */
-	ps = file->data + 16;
-
 	for (y = 0; y < file->height; y++) {
-		char *pd =  data + (file->width * y * 3);
+		char *pd = data + (file->width * y * 3);
+
 		for (x = 0; x < file->width / 2; x++) {
 			int _y, u, y1, v, r, g, b;
 
