@@ -50,7 +50,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a.speed[4] = 115200;
 	a.speed[5] = 0;
 	a.operations        = 	GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
-	a.file_operations   = 	GP_FILE_OPERATION_NONE;
+	a.file_operations   = 	GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
 	gp_abilities_list_append(list, a);
