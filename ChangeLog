@@ -1,7 +1,10 @@
 
 2001-09-24  Nathan Stenzel <nathanstenzel@users.sourceforge.net>
-    *libgphoto2/jpeg.h:
-    *libgphoto2/jpeg.c: Can now create and write jpeg files
+
+    * camlibs/polaroid/pdc320.h:
+    * camlibs/polaroid/pdc320.c: now uses jpeg.c and jpeg.h
+    * libgphoto2/jpeg.h:
+    * libgphoto2/jpeg.c: Can now create and write jpeg files
     (except for actual encoding of compressed data)
 
 2001-09-24  Lutz Müller <urc8@rz.uni-karlsruhe.de>
