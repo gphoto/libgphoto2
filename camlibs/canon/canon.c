@@ -135,38 +135,34 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot S200",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, S2M, NULL},
 	{"Canon:Digital IXUS v2",	CANON_PS_S200,		0x04A9, 0x3065, CAP_SUP, S10M, S32K, S2M, NULL},
 	{"Canon:Digital IXUS 330",	CANON_PS_S330,		0x04A9, 0x3066, CAP_SUP, S10M, S32K, S2M, NULL},
-	/* Canon MVX2i in some mode is 0x3067 - probably PTP */
 
 	/* 306a is in MacOS Info.plist, but I don't know what it is --swestin. */
 	{"Canon:Digital unknown 3",	CANON_PS_UNK3,		0x04A9, 0x306a, CAP_SUP, S10M, S32K, S2M, NULL},
-	/* Apparently the MVX2i is the same as Optura 200 MC (Philippe
-	 * Gramoulle), so share the code. */
+	/* Canon MVX2i in some mode is 0x3067 - probably PTP */
 	{"Canon:MVX2i",			CANON_OPT_200,		0x04A9, 0x306B, CAP_SUP, S99M, S32K, S2M, NULL},
 	{"Canon:Optura 200 MC",		CANON_OPT_200,		0x04A9, 0x306B, CAP_SUP, S99M, S32K, S2M, NULL},
 	{"Canon:PowerShot S45 (normal mode)",	CANON_PS_S45,	0x04A9, 0x306C, CAP_SUP, S99M, S32K, S2M, NULL},
-        /* 0x306D is S45 in PTP mode */
+	/* 0x306D is S45 in PTP mode */
 	{"Canon:PowerShot G3 (normal mode)",	CANON_PS_G3,	0x04A9, 0x306E, CAP_SUP, S99M, S32K, S2M, NULL},
-        /* 0x306F is G3 in PTP mode */
+	/* 0x306F is G3 in PTP mode */
 	{"Canon:PowerShot S230 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, CAP_SUP, S99M, S32K, S2M, NULL},
 	{"Canon:Digital IXUS v3 (normal mode)",	CANON_PS_S230,	0x04A9, 0x3070, CAP_SUP, S99M, S32K, S2M, NULL},
-        /* 0x3071 is S230/IXUS v3 in PTP mode */
+	/* 0x3071 is S230/IXUS v3 in PTP mode */
 
 	{"Canon:PowerShot SD100 (normal mode)",	CANON_PS_SD100,	0x04A9, 0x3072, CAP_SUP, S99M, S32K, S2M, NULL},
 	{"Canon:Digital IXUS II (normal mode)",	CANON_PS_SD100,	0x04A9, 0x3072, CAP_SUP, S99M, S32K, S2M, NULL},
 	/* added from report on mailinglist. XXX: assuming capture works -Marcus */
-	/* reports suggest that they provide 1 interface which does
-	 * both PTP and Canon access modes.
-	 */
+	/* PS A70 uses the same ProductID for PTP and Canon, with protocol autodetection */
 	{"Canon:PowerShot A70",         CANON_PS_A70,           0x04A9, 0x3073, CAP_SUP, S99M, S32K, S2M, NULL},
+	/* PS A60 uses the same ProductID for PTP and Canon, with protocol autodetection */
 	{"Canon:PowerShot A60",         CANON_PS_A60,           0x04A9, 0x3074, CAP_SUP, S99M, S32K, S2M, NULL},
 	/* reported working on SourceForge patch tracker. */
-	/* S400 product ID is 0x3075; this responds both to Canon
-	 * protocol and PTP. */
 	{"Canon:Digital IXUS 400",      CANON_PS_S400,		0x04A9, 0x3075, CAP_SUP, S99M, S32K, S2M, NULL},
+	/* PS S400 used the same ProductID for PTP and Canon, with protocol autodetection */
 	{"Canon:PowerShot S400",        CANON_PS_S400,		0x04A9, 0x3075, CAP_SUP, S99M, S32K, S2M, NULL},
 
 	{"Canon:PowerShot A300",        CANON_PS_A300,          0x04A9, 0x3076, CAP_SUP, S99M, S32K, S2M, NULL},
-	{"Canon:PowerShot S50 (normal mode)",   CANON_PS_S50,   0x04A9, 0x3077, CAP_SUP, S99M, S32K, NULL},
+	{"Canon:PowerShot S50 (normal mode)",   CANON_PS_S50,   0x04A9, 0x3077, CAP_SUP, S99M, S32K, S2M, NULL},
 
 	/* 3078 and 307a are in MacOS Info.plist, but I don't know
 	 * what they are --swestin. */
@@ -181,7 +177,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:EOS 300D (normal mode)",	CANON_EOS_300D, 0x04A9, 0x3084, CAP_SUP, S10M, S32K, S2M, NULL},
 	{"Canon:EOS Digital Rebel (normal mode)",CANON_EOS_300D,0x04A9, 0x3084, CAP_SUP, S10M, S32K, S2M, NULL},
 	{"Canon:EOS Kiss Digital (normal mode)",CANON_EOS_300D, 0x04A9, 0x3084, CAP_SUP, S10M, S32K, S2M, NULL},
-	/* PS G5 used the same ProductID for PTP and Canon, with protocol autodetection */
+	/* PS G5 uses the same ProductID for PTP and Canon, with protocol autodetection */
 	{"Canon:PowerShot G5 (normal mode)",	CANON_PS_G5,	0x04A9, 0x3085, CAP_SUP, S99M, S32K, S2M, NULL},
 	{"Canon:PowerShot A80 (normal mode)",CANON_PS_A80,      0x04A9, 0x309A, CAP_SUP, S99M, S32K, S2M, NULL},
 
