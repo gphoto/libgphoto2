@@ -52,12 +52,8 @@ struct camera_to_usb {
 	  unsigned short idProduct;
 } camera_to_usb[] = {
 	/* http://www.digitaldreamco.com/shop/xtra.htm, SVGA */
-/* I've taken the liberty of replacing the original model string with one that conforms
-*  to the gphoto2 standard of Manufacturer:Model
-*  Michael Rensing <mrensing@users.sourceforge.net>
-*	{ "l'espion xtra by DigitalDream",   0x05DA, 0x1020 }
-*/
-      { "DigitalDream:l'espion xtra",   0x05DA, 0x1020 }
+      { "DigitalDream:l'espion xtra",   0x05DA, 0x1020 },
+      { "Che-ez!:Splash",   		0x0553, 0x1002 }
 
 };
 
