@@ -330,8 +330,7 @@ canon_int_filename2audioname (Camera *camera, const char *filename)
 	case CANON_PS_G5:
 		break;
 	default:
-		GP_DEBUG ("canon_int_filename2audioname: camera model doesn't support audio files",
-			  filename);
+		GP_DEBUG ("canon_int_filename2audioname: camera model doesn't support audio files");
 		return NULL;
 		break;
 	}
@@ -1205,7 +1204,7 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 	if (strlen (name) > 30) {
 		gp_context_error (context,
 				  _("Name '%s' (%i characters) "
-				    "too long (%i chars), maximum 30 characters are "
+				    "too long, maximum 30 characters are "
 				    "allowed."), name, strlen (name));
 		return GP_ERROR;
 	}
@@ -1343,8 +1342,8 @@ canon_int_set_time (Camera *camera, time_t date, GPContext *context)
 
 #ifdef HAVE_TM_GMTOFF
 	new_date = date + tm->tm_gmtoff;
-	GP_DEBUG ("canon_int_set_time: converted %i to localtime %i (tm_gmtoff is %i)",
-		  date, new_date, tm->tm_gmtoff);
+	GP_DEBUG ("canon_int_set_time: converted %ld to localtime %ld (tm_gmtoff is %ld)",
+		  date, new_date, (long)tm->tm_gmtoff);
 #else
 	new_date = date - timezone;
 	GP_DEBUG ("canon_int_set_time: converted %i to localtime %i (timezone is %i)",
@@ -1653,7 +1652,7 @@ debug_fileinfo (CameraFileInfo * info)
 	if ((info->file.fields & GP_FILE_INFO_TYPE) != 0)
 		GP_DEBUG ("    Type:   %s", info->file.type);
 	if ((info->file.fields & GP_FILE_INFO_SIZE) != 0)
-		GP_DEBUG ("    Size:   %i", info->file.size);
+		GP_DEBUG ("    Size:   %i", (int)info->file.size);
 	if ((info->file.fields & GP_FILE_INFO_WIDTH) != 0)
 		GP_DEBUG ("    Width:  %i", info->file.width);
 	if ((info->file.fields & GP_FILE_INFO_HEIGHT) != 0)
@@ -1669,7 +1668,7 @@ debug_fileinfo (CameraFileInfo * info)
 		for (p = time; *p != 0; ++p)
 			/* do nothing */ ;
 		*(p - 1) = '\0';
-		GP_DEBUG ("    Time:   %s (%i)", time, info->file.mtime);
+		GP_DEBUG ("    Time:   %s (%ld)", time, (long)info->file.mtime);
 	}
 	GP_DEBUG ("  </CameraFileInfoFile>");
 	GP_DEBUG ("</CameraFileInfo>");
@@ -1788,8 +1787,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 			tm   = localtime (&date);
 #ifdef HAVE_TM_GMTOFF
 			dirent_time = tmp_time - tm->tm_gmtoff;
-			GP_DEBUG ("canon_int_list_dir: converted %i to UTC %i (tm_gmtoff is %i)",
-				tmp_time, dirent_time, tm->tm_gmtoff);
+			GP_DEBUG ("canon_int_list_dir: converted %i to UTC %i (tm_gmtoff is %ld)",
+				tmp_time, dirent_time, (long)tm->tm_gmtoff);
 #else
 			dirent_time = tmp_time + timezone;
 			GP_DEBUG ("canon_int_list_dir: converted %i to UTC %i (timezone is %i)",
@@ -1828,7 +1827,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 						  "byte[%i=0x%x] == %i=0x%x", temp_ch - pos,
 						  temp_ch - pos, *temp_ch, *temp_ch);
 					GP_DEBUG ("canon_int_list_dir: "
-						  "pos is 0x%x, end_of_data is 0x%x, temp_ch is 0x%x - diff is 0x%x",
+						  "pos is %p, end_of_data is %p, temp_ch is %p - diff is 0x%x",
 						  pos, end_of_data, temp_ch, temp_ch - pos);
 				}
 			}

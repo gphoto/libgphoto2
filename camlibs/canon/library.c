@@ -557,7 +557,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			thumbname = canon_int_filename2thumbname (camera, canon_path);
 			if (thumbname == NULL) {
 				/* no thumbnail available */
-				GP_DEBUG (_("%s is a file type for which no thumbnail is provided"));
+				GP_DEBUG (_("%s is a file type for which no thumbnail is provided"),canon_path);
 				return (GP_ERROR_NOT_SUPPORTED);
 			}
 #ifdef HAVE_EXIF
@@ -595,7 +595,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			thumbname = canon_int_filename2thumbname (camera, canon_path);
 			if (thumbname == NULL) {
 				/* no thumbnail available */
-				GP_DEBUG (_("%s is a file type for which no thumbnail is provided"));
+				GP_DEBUG (_("%s is a file type for which no thumbnail is provided"), canon_path);
 				return (GP_ERROR_NOT_SUPPORTED);
 			}
 
@@ -795,8 +795,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	tm = localtime (&tmp_time);
 #ifdef HAVE_TM_GMTOFF
 	local_time = tmp_time + tm->tm_gmtoff;
-	GP_DEBUG ("camera_summary: converted %i to localtime %i (tm_gmtoff is %i)", 
-		  tmp_time, local_time, tm->tm_gmtoff);
+	GP_DEBUG ("camera_summary: converted %ld to localtime %ld (tm_gmtoff is %ld)", 
+		  (long)tmp_time, (long)local_time, (long)tm->tm_gmtoff);
 #else
 	local_time = tmp_time - timezone;
 	GP_DEBUG ("camera_summary: converted %i to localtime %i (timezone is %i)",
@@ -1362,7 +1362,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if (gp_widget_changed (w)) {
 		/* XXXXX mark CameraFS as dirty */
 		gp_widget_get_value (w, &camera->pl->list_all_files);
-		GP_DEBUG ("New config value for tmb: %i", &camera->pl->list_all_files);
+		GP_DEBUG ("New config value for tmb: %i", camera->pl->list_all_files);
 	}
 	
 #ifdef CANON_EXPERIMENTAL_UPLOAD

@@ -202,7 +202,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 		/* just check if (int) buffer[0] says 0x4 or not, log a warning if it doesn't. */
 		read_bytes = le32atoh (buffer);
 		if (read_bytes != 4)
-			GP_DEBUG ("canon_usb_camera_init() camera says to read %i more bytes, ",
+			GP_DEBUG ("canon_usb_camera_init() camera says to read %i more bytes, "
 				  "we would have expected 4 - overriding since some cameras are "
 				  "known not to give correct numbers of bytes.", read_bytes);
 
@@ -676,7 +676,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 					 " for thumbnail size packet"), status );
 			camera->pl->thumb_length = le32atoh ( buf2+0x11 );
 			camera->pl->image_key = le32atoh ( buf2+0x0c );
-			GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size %i, tag=0x%08x",
+			GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size %ld, tag=0x%08lx",
 				   camera->pl->thumb_length, camera->pl->image_key );
 			break;
 		case 0x0c:
@@ -687,7 +687,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 					 " for full image size packet"), status );
 			camera->pl->image_length = le32atoh ( buf2+0x11 );
 			camera->pl->image_key = le32atoh ( buf2+0x0c );
-			GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08x, tag=0x%08x",
+			GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08lx, tag=0x%08lx",
 				   camera->pl->image_length, camera->pl->image_key );
 			break;
 		case 0x0a:
