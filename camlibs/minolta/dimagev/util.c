@@ -209,7 +209,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		return GP_ERROR;
 	}
 
-	sleep(2);
+	sleep(1);
 
 #ifdef _gphoto_exif_
 	exifdat.header = file->data;
@@ -383,7 +383,7 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 
 int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	dimagev_packet *p, *r;
-	unsigned char char_buffer, command_buffer[8];
+	unsigned char char_buffer, command_buffer[8], *ycrcb_data;
 
 	if ( dimagev->data->host_mode != 1 ) {
 
@@ -468,14 +468,14 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 	/* Unlike normal images, we are guaranteed 9600 bytes *exactly* */
 
 	/* Allocate an extra byte just in case. */
-	if ( ( file->data = malloc(9601) ) == NULL ) {
+	if ( ( ycrcb_data = malloc(9601) ) == NULL ) {
 		if ( dimagev->debug != 0 ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to allocate buffer for file");
 		}
 		return GP_ERROR;
 	}
 
-	memcpy(file->data, r->buffer, r->length );
+	memcpy(ycrcb_data, r->buffer, r->length );
 	file->size +=  r->length - 1 ;
 
 	free(r);
@@ -506,7 +506,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		
 		free(p);
 
-		memcpy(&( file->data[ ( file->size + 1) ] ), r->buffer, r->length );
+		memcpy(&( ycrcb_data[ ( file->size + 1) ] ), r->buffer, r->length );
 		file->size += r->length;
 
 		free(r);
@@ -566,8 +566,67 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		return GP_ERROR;
 	}
 
-	sleep(2);
+	sleep(1);
+
+	file->data = dimagev_ycbcr_to_ppm(ycrcb_data, 9600);
+	file->size = 14413;
 
 	return GP_OK;
 }
 
+/* This function handles the ugliness of converting Y:Cb:Cr data to RGB. The
+   return value is a pointer to an array of unsigned chars that has (size +13)
+   members. The additional thirteen bytes are the PPM "rawbits" header.
+*/
+unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr, int size) {
+	unsigned char *rgb_data, *ycrcb_current, *rgb_current;
+	int count=0;
+	unsigned int magic_r, magic_g, magic_b;
+
+	if ( ( rgb_data = malloc( ( 1.5 * size ) + 13 ) ) == NULL ) {
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_ycbcr_to_ppm::unable to allocate buffer for Y:Cb:Cr conversion");
+		return NULL;
+	}
+
+	ycrcb_current = ycbcr;
+	rgb_current = &(rgb_data[13]);
+
+	rgb_data[0]='P';
+	rgb_data[1]='6';
+	rgb_data[2]='\n';
+	rgb_data[3]='8';
+	rgb_data[4]='0';
+	rgb_data[5]=' ';
+	rgb_data[6]='6';
+	rgb_data[7]='0';
+	rgb_data[8]='\n';
+	rgb_data[9]='2';
+	rgb_data[10]='5';
+	rgb_data[11]='5';
+	rgb_data[12]='\n';
+
+	while ( count < size ) {
+		magic_b = ( ( ycrcb_current[2] > 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[0];
+		rgb_current[2] = ( magic_b > 255 ? 255 : magic_b );
+		magic_r = ( ( ycrcb_current[3] > 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 - Y_COEFF ) ) + ycrcb_current[0];
+		rgb_current[0] = ( magic_r > 255 ? 255 : magic_r );
+		magic_g = (( ycrcb_current[0] - ( CR_COEFF * rgb_current[2] ) ) - ( Y_COEFF * rgb_current[0])) / CB_COEFF ; 
+		rgb_current[1] = ( magic_g > 255 ? 255 : magic_g );
+
+		magic_b = ( ( ycrcb_current[2] > 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[1];
+		rgb_current[5] = ( magic_b > 255 ? 255 : magic_b );
+		magic_r = ( ( ycrcb_current[3] > 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 - Y_COEFF ) ) + ycrcb_current[1];
+		rgb_current[3] = ( magic_r > 255 ? 255 : magic_r );
+		magic_g = (( ycrcb_current[1] - ( CR_COEFF * rgb_current[5] ) ) - ( Y_COEFF * rgb_current[3])) / CB_COEFF ; 
+		rgb_current[4] = ( magic_g > 255 ? 255 : magic_g );
+
+		/* Wipe everything clean */
+		magic_b = magic_r = magic_g = 0;
+
+		count += 4;
+		ycrcb_current += 4;
+		rgb_current += 6;
+	}
+
+	return rgb_data;
+}
