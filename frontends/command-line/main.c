@@ -66,6 +66,7 @@ OPTION_CALLBACK(help);
 OPTION_CALLBACK(test);
 OPTION_CALLBACK(shell);
 OPTION_CALLBACK(list_cameras);
+OPTION_CALLBACK(auto_detect);
 OPTION_CALLBACK(list_ports);
 OPTION_CALLBACK(filename);
 OPTION_CALLBACK(port);
@@ -116,6 +117,7 @@ Option option[] = {
 {"",  "list-ports",     "",             "List supported port devices",  list_ports,     0},
 {"",  "stdout",         "",             "Send file to stdout",          use_stdout,     0},
 {"",  "stdout-size",    "",             "Print filesize before data",   use_stdout_size,0},
+{"",  "auto-detect",    "",             "List auto-detected cameras",   auto_detect,    0},
 
 /* Settings needed for camera functions */
 {"" , "port",           "path",         "Specify port device",          port,           0},
@@ -138,9 +140,9 @@ Option option[] = {
 {"D", "delete-all-pictures","",         "Delete all pictures in folder",delete_all_pictures,0},
 {"u", "upload-picture", "filename",     "Upload a picture to camera",   upload_picture, 0},
 {"" , "capture-preview","",             "Capture a quick preview",      capture_preview, 0},
-{"" , "capture-image",  "resolution",   "Capture an image",             capture_image,  0},
-{"" , "capture-movie",  "resolution:duration", "Capture a movie ",             capture_movie,  0},
-{"" , "capture-sound",  "resolution:duration", "Capture an audio clip",        capture_sound,  0},
+{"" , "capture-image",  "",             "Capture an image",             capture_image,  0},
+{"" , "capture-movie",  "",             "Capture a movie ",             capture_movie,  0},
+{"" , "capture-sound",  "",             "Capture an audio clip",        capture_sound,  0},
 {"",  "summary",        "",             "Summary of camera status",     summary,        0},
 {"",  "manual",         "",             "Camera driver manual",         manual,         0},
 {"",  "about",          "",             "About the camera driver",      about,          0},
@@ -216,6 +218,34 @@ OPTION_CALLBACK(use_stdout_size) {
         use_stdout(arg);
 
         return GP_OK;
+}
+
+OPTION_CALLBACK(auto_detect) {
+
+    int x;
+    int status;
+    CameraList* list;
+    CameraListEntry* entry;
+
+    list = gp_list_new();
+    if (!list)
+        return GP_ERROR_NO_MEMORY;
+
+    status = gp_autodetect(list);
+    if (status != GP_OK)
+        return status;
+
+    printf("%-30s %-16s\n", "Model", "Port");
+    printf("----------------------------------------------------------\n");
+    for (x=0; x<gp_list_count(list); x++) {
+        entry = gp_list_entry(list, x);
+        printf("%-30s %-16s\n", entry->name, entry->value);
+    }
+
+    gp_list_free(list);
+
+    return GP_OK;
+
 }
 
 OPTION_CALLBACK(abilities) {

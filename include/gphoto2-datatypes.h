@@ -18,6 +18,7 @@
 #define GP_ERROR_DIRECTORY_NOT_FOUND -107 /* Directory not found	*/
 #define GP_ERROR_FILE_NOT_FOUND	     -108 /* File not found		*/
 #define GP_ERROR_DIRECTORY_EXISTS    -109 /* Directory exists		*/
+#define GP_ERROR_NO_CAMERA_FOUND     -110 /* No cameras auto-detected   */
 
 /* Macros
    ---------------------------------------------------------------- */
@@ -94,9 +95,9 @@ typedef enum {
 /* Folder list entries */
 typedef enum {
 	GP_LIST_FOLDER,
-	GP_LIST_FILE
+        GP_LIST_FILE,
+        GP_LIST_CAMERA
 } CameraListType;
-
 
 
 /* Structures
