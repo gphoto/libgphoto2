@@ -623,16 +623,6 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path)
         return (GP_OK);
 }
 
-
-static int
-camera_manual (Camera* camera, CameraText* manual)
-{
-        strcpy(manual->text, _("No manual available."));
-
-        return (GP_OK);
-}
-
-
 static int
 camera_about (Camera* camera, CameraText* about)
 {
@@ -1216,7 +1206,6 @@ camera_init (Camera* camera)
         camera->functions->capture              = camera_capture;
         camera->functions->capture_preview      = camera_capture_preview;
         camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
         camera->functions->about                = camera_about;
 
         /* Lookup model information */
