@@ -1025,7 +1025,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 		gp_camera_set_error (camera, "canon_serial_get_dirents: "
 				     "Initial dirent packet too short (only %i bytes)",
 				     *dirents_length);
-		return NULL;
+		return GP_ERROR;
 	}
 
 	/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
@@ -1057,12 +1057,12 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 	 */
 	while (!p[4]) {
 		GP_DEBUG ("p[4] is %i", (int) p[4]);
-		p = canon_serial_recv_msg (camera, 0xb, 0x21, *dirents_length);
+		p = canon_serial_recv_msg (camera, 0xb, 0x21, dirents_length);
 		if (p == NULL) {
 			gp_camera_set_error (camera, "canon_serial_get_dirents: "
 					     "Failed to read another directory entry");
 			free (data);
-			return NULL;
+			return GP_ERROR;
 		}
 
 		/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
@@ -1077,7 +1077,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			gp_camera_set_error (camera, "canon_serial_get_dirents: "
 					     "Truncated directory entry received");
 			free (data);
-			return NULL;
+			return GP_ERROR;
 		}
 
 		/* check if we need to allocate some more memory,
@@ -1102,7 +1102,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 				gp_camera_set_error (camera, "canon_serial_get_dirents: "
 						     "Too many dirents, we must be looping.");
 				free (data);
-				return NULL;
+				return GP_ERROR;
 			}
 
 			temp_ch = realloc (data, mallocd_bytes);
@@ -1112,7 +1112,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 						     "Could not resize dirent buffer "
 						     "to %i bytes", mallocd_bytes);
 				free (data);
-				return NULL;
+				return GP_ERROR;
 			}
 			data = temp_ch;
 		}
