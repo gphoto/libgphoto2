@@ -26,13 +26,6 @@ AUTOMAKE_OPTIONS = gnu
 # The following rules are only interesting if you want to create
 # distribution packages (as source tarballs or system specific packages)
 
-# create .tar.bz2 distribution package for convenience if the
-# $(TAR) on this system supports it. else do nothing.
-dist-hook:
-	if [ "x${CDPATH}" != "x" ]; then \
-		echo "You have set CDPATH. If make dist fails, try to unset CDPATH."; \
-	fi
-
 if ENABLE_RPM
 
 # create RPM packages
