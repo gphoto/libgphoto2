@@ -306,6 +306,7 @@ ptp_getobjecthandles (PTPParams* params, PTPObjectHandles* objecthandles,
 	ret=ptp_transaction(params, &req, PTP_OC_GetObjectHandles,
 		PTP_DP_GETDATA, sizeof(PTPObjectHandles), oh);
 	memcpy(objecthandles, oh->data, sizeof(PTPObjectHandles));
+	free(oh);
 	return ret;
 }
 
