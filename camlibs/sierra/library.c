@@ -77,7 +77,12 @@ int sierra_change_folder (Camera *camera, const char *folder)
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
 	fd = camera->camlib_data;
-	if (!fd->folders)
+
+	/*
+	 * Do not issue the command if the camera doesn't support folders 
+	 * or if the folder is the current working folder
+	 */
+	if (!fd->folders || !strcmp (fd->folder, folder))
 		return GP_OK;
 
 	if (folder[0]) {
@@ -142,7 +147,11 @@ int sierra_update_fs_for_folder (Camera *camera, const char *folder)
 
 	/* List the folders */
 	if (fd->folders) {
-		CHECK (sierra_change_folder (camera, folder));
+
+		/* 
+		 * Count the folders. We don't need to jump into the folder -
+		 * we already did it.
+		 */
 		gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** counting folders "
 				 "in '%s'...", folder);
 		CHECK (sierra_get_int_register (camera, 83, &count));

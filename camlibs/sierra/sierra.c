@@ -197,7 +197,7 @@ int camera_init (Camera *camera)
 	camera->functions->about 		= camera_about;
 	camera->functions->result_as_string	= camera_result_as_string;
 
-	fd = (SierraData*)malloc(sizeof(SierraData));	
+	fd = calloc (1, sizeof (SierraData));	
 	camera->camlib_data = fd;
 
 	fd->first_packet = 1;
@@ -267,25 +267,12 @@ int camera_init (Camera *camera)
 	}
 
 	CHECK_STOP_FREE (camera, gp_port_settings_set (fd->dev, settings));
-
 	CHECK_STOP_FREE (camera, gp_port_timeout_set (fd->dev, TIMEOUT));
-	fd->type = camera->port->type;
+	fd->speed = camera->port->speed;
+	fd->type  = camera->port->type;
 
-	CHECK_STOP_FREE (camera, gp_port_open (fd->dev));
-
-	/* If it is a serial camera, check if it's really there. */
-	if (camera->port->type == GP_PORT_SERIAL) {
-
-		CHECK_STOP_FREE (camera, sierra_ping (camera));
-
-		CHECK_STOP_FREE (camera, sierra_set_speed (camera, 
-					                camera->port->speed));
-
-		fd->speed = camera->port->speed;
-	}
-	
-	if (camera->port->type == GP_PORT_USB && !fd->usb_wrap)
-		gp_port_usb_clear_halt (fd->dev, GP_PORT_USB_ENDPOINT_IN);
+	/* Establish a connection */
+	CHECK_STOP_FREE (camera, camera_start (camera));
 
 	/* FIXME??? What's that for? */
 	ret = sierra_get_int_register (camera, 1, &value);
@@ -324,13 +311,11 @@ int camera_init (Camera *camera)
 	CHECK_STOP_FREE (camera, gp_filesystem_new (&fd->fs));
 	CHECK_STOP_FREE (camera, sierra_update_fs_for_folder (camera, "/"));
 
-	CHECK_STOP_FREE (camera, camera_stop (camera));
-
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "************************");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_init done ***");
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "************************"); 
 
-	return (GP_OK);
+	return (camera_stop (camera));
 }
 
 int camera_start (Camera *camera)
@@ -339,22 +324,46 @@ int camera_start (Camera *camera)
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_start");
 
-	if (fd->type != GP_PORT_SERIAL)
+	/*
+	 * We open the port here and close it on camera_stop so
+	 * that other programs have the chance to access the
+	 * camera, too.
+	 */
+	CHECK_STOP (camera, gp_port_open (fd->dev));
+
+	switch (fd->type) {
+	case GP_PORT_SERIAL:
+		CHECK_STOP (camera, sierra_set_speed (camera, fd->speed));
 		return (GP_OK);
-	
-	return sierra_set_speed (camera, fd->speed);
+	case GP_PORT_USB:
+		CHECK_STOP (camera, gp_port_timeout_set (fd->dev, 5000));
+		return (GP_OK);
+	default:
+		return (GP_OK);
+	}
 }
 
 int camera_stop (Camera *camera) 
 {
-	SierraData *fd = (SierraData*)camera->camlib_data;
+	SierraData *fd = camera->camlib_data;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_stop");
 
-	if (fd->type != GP_PORT_SERIAL)
-		return (GP_OK);
+	switch (fd->type) {
+	case GP_PORT_SERIAL:
+		CHECK (sierra_set_speed (camera, -1));
+		break;
+	default:
+		break;
+	}
 
-	return (sierra_set_speed (camera, -1));
+	/*
+	 * We close the port here to give other programs the possiblity
+	 * to access the camera, too.
+	 */
+	CHECK (gp_port_close (fd->dev));
+
+	return (GP_OK);
 }
 
 int camera_exit (Camera *camera) 
@@ -365,9 +374,11 @@ int camera_exit (Camera *camera)
 
 	if (camera->camlib_data) {
 		fd = (SierraData*)camera->camlib_data;
-		gp_port_close (fd->dev);
+
+		/* The port is already closed */
 		gp_port_free (fd->dev);
 		free (fd);
+		fd = NULL;
 	}
 
 	return (GP_OK);
@@ -486,6 +497,7 @@ int camera_file_get (Camera *camera, const char *folder, const char *filename,
 			CHECK_STOP (camera,
 				    gp_file_set_mime_type (file, "video/quicktime"));
 	default:
+		CHECK (camera_stop (camera));
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 

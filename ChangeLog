@@ -1,3 +1,13 @@
+2001-08-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+	
+	Suggestions from Fabrice Bellet <Fabrice.Bellet@creatis.insa-lyon.fr>:
+
+	* camlibs/sierra/library.c (sierra_change_folder): Just return if we
+	are already in the requested folder.
+	(sierra_update_fs_for_folder): Dont jump into the folder twice.
+	* camlibs/sierra/sierra.c (camera_init): Use camera_start here instead
+	of reimplementing everything again.
+
 2001-08-26  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* configure.in: fixed a typo in the dotlibs value.
