@@ -1374,14 +1374,16 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if (gp_widget_changed (w)) {
 		/* XXXXX mark CameraFS as dirty */
 		gp_widget_get_value (w, &camera->pl->list_all_files);
-		GP_DEBUG ("New config value for tmb: %i", camera->pl->list_all_files);
+		GP_DEBUG ("New config value for \"List all files\" %i",
+			  camera->pl->list_all_files);
 	}
-	
+
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 	gp_widget_get_child_by_label (window, _("Keep filename on upload"), &w);
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &camera->pl->upload_keep_filename);
-		GP_DEBUG ("New config value for tmb: %i", camera->pl->upload_keep_filename);
+		GP_DEBUG ("New config value for \"Keep filename on upload\": %i",
+			  camera->pl->upload_keep_filename);
 	}
 #endif /* CANON_EXPERIMENTAL_UPLOAD */
 
