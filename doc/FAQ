@@ -16,7 +16,7 @@ Q: I get the error message
    *** Error ('Could not claim the USB device') ***
 
    Could not claim interface 0 (Operation not permitted). Make sure no
-   other program or kernel module (i.e. dc2xx) is using the device and
+   other program or kernel module (e.g. dc2xx) is using the device and
    you have read/write access to the device. 
 
    What can I do to make it work?
