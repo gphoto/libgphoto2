@@ -492,8 +492,8 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, i
 	int i, status = 0;
 
 	memset ( buf, 0x81, 0x40 ); /* Put weird stuff in buffer */
-	// Read repeatedly until we get either an
-	// error or a non-zero size.
+	/* Read repeatedly until we get either an
+	   error or a non-zero size. */
 	for ( i=0; i<n_tries; i++ ) {
 		status = gp_port_check_int_fast ( camera->port,
 						  buf, 0x40 );
@@ -647,7 +647,7 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 
 	msgsize = 0x58;			     /* TOTAL msg size */
 
-	// First, let's try to make sure the interrupt pipe is clean.
+	/* First, let's try to make sure the interrupt pipe is clean. */
 	while ( (status = canon_usb_poll_interrupt_pipe ( camera, buf2, 10 )) > 0 );
 	/* Shutter release can take a long time sometimes on EOS
 	 * cameras; perhaps buffer is full and needs to be flushed? */
@@ -672,39 +672,50 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 	read_bytes2 = 0x1c;
 
 	status = gp_port_read (camera->port, buffer, read_bytes1);
-	if (status != read_bytes1) {
-		GP_DEBUG ("canon_usb_capture_dialogue: read 1 failed! (returned %i, expected %i)",
-			  status, read_bytes1);
+	if ( status < 0 ) {
+		GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue: "
+			 " read 1 of %i bytes failed! (%s)",
+			 read_bytes1, gp_result_as_string ( status ) );
+		goto FAIL;
+	}
+	else if (status != read_bytes1) {
+		GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+			 " read 1 got bogus length! "
+			 "(returned %i, expected %i)", status, read_bytes1);
 		goto FAIL;
 	}
 
 	status = gp_port_read (camera->port, buffer + 0x40, read_bytes2);
 	if ( status < 0 ) {
-		GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue: read 2 failed "
-			 "\"%s\"", gp_result_as_string(status) );
+		GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+			 " read 2 of %i bytes failed! (%s)",
+			 read_bytes1, gp_result_as_string ( status ) );
 		goto FAIL;
 	}
 	else if (status != read_bytes2) {
-		GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue: read bogus length! "
+		GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+			 " read 2 got bogus length! "
 			 "(returned %i, expected %i)", status, read_bytes2);
 		goto FAIL;
 	}
 
 	gp_port_set_timeout (camera->port, mstimeout);
-	GP_DEBUG("canon_usb_capture_dialogue: set camera port timeout back to %d seconds...", mstimeout / 1000 );
+	GP_DEBUG("canon_usb_capture_dialogue:"
+		 " set camera port timeout back to %d seconds...", mstimeout / 1000 );
 
 	/* Check the status code from the camera. */
 	if ( le32atoh ( buffer+0x50 ) != 0 ) {
-		GP_DEBUG ( "canon_usb_capture_dialogue: got nonzero camera status code"
+		GP_DEBUG ( "canon_usb_capture_dialogue:"
+			   " got nonzero camera status code"
 			   " %08x in response to capture command", le32atoh ( buffer+0x50 ) );
 		goto FAIL;
 	}
 
-	// Now we need to read from the interrupt pipe. Since we have
-	//  to use the short timeout (50 ms), we need to try several
-	//  times.
-	// Read until we have completion signaled (0x0a for PowerShot,
-	//  0x0f for EOS)
+	/* Now we need to read from the interrupt pipe. Since we have
+	   to use the short timeout (50 ms), we need to try several
+	   times.
+	   Read until we have completion signaled (0x0a for PowerShot,
+	   0x0f for EOS) */
 	if ( IS_EOS(camera->pl->md->model) ) {
 		int step = 0;
 		int thumb_length = -1, image_length = -1;
@@ -722,8 +733,9 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 			case 0x08:
 				/* Thumbnail size */
 				if ( status != 0x17 )
-					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue: Bogus length 0x%04x"
-						    " for thumbnail size packet\n", status );
+					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+						 " bogus length 0x%04x"
+						 " for thumbnail size packet\n", status );
 				thumb_length = le32atoh ( buf2+0x11 );
 				image_key = le32atoh ( buf2+0x0c );
 				GP_DEBUG ( "canon_usb_capture_dialogue: thumbnail size 0x%08x, tag=0x%08x",
@@ -732,8 +744,9 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 			case 0x0c:
 				/* Full image size */
 				if ( status != 0x17 )
-					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue: Bogus length 0x%04x"
-						    " for full image size packet\n", status );
+					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+						 " bogus length 0x%04x"
+						 " for full image size packet\n", status );
 				image_length = le32atoh ( buf2+0x11 );
 				image_key = le32atoh ( buf2+0x0c );
 				GP_DEBUG ( "canon_usb_capture_dialogue: full image size: 0x%08x, tag=0x%08x",
@@ -772,7 +785,8 @@ canon_usb_capture_dialogue (Camera *camera, int *return_length, GPContext *conte
 					step++;
 				}
 				else if ( buf2[12] == 0x0a ) {
-					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x",
+					GP_LOG ( GP_LOG_ERROR, "canon_usb_capture_dialogue:"
+						 " photographic failure signaled, code = 0x%08x",
 						   le32atoh ( buf2+16 ) );
 					goto FAIL;
 				}
@@ -1032,7 +1046,8 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 
 	if ((payload_length + 0x50) > sizeof (packet)) {
 		GP_LOG (GP_LOG_VERBOSE,
-			"canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)",
+			"canon_usb_dialogue:"
+			" payload too big, won't fit into buffer (%i > %i)",
 			(payload_length + 0x50), sizeof (packet));
 		return NULL;
 	}
@@ -1081,16 +1096,24 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, const c
 
 	status = gp_port_read (camera->port, buffer, read_bytes1);
 	if (status != read_bytes1) {
-		GP_DEBUG ("canon_usb_dialogue: read 1 failed! (returned %i, expected %i)",
-			  status, read_bytes1);
+		if ( status >= 0 )
+			GP_DEBUG ("canon_usb_dialogue: read 1 of %i bytes failed! (returned %i)",
+				  read_bytes1, status);
+		else			     /* Error code */
+			GP_DEBUG ("canon_usb_dialogue: read 1 of %i bytes failed! (%s)",
+				  read_bytes1, gp_result_as_string ( status ) );
 		return NULL;
 	}
 
 	if (read_bytes2) {
 		status = gp_port_read (camera->port, buffer + read_bytes1, read_bytes2);
 		if (status != read_bytes2) {
-			GP_DEBUG ("canon_usb_dialogue: read 2 failed! "
-				  "(returned %i, expected %i)", status, read_bytes2);
+			if ( status >= 0 )
+				GP_DEBUG ("canon_usb_dialogue: read 2 of %i bytes failed! (returned %i)",
+					  read_bytes2, status);
+			else			     /* Error code */
+				GP_DEBUG ("canon_usb_dialogue: read 2 of %i bytes failed! (%s)",
+				  read_bytes2, gp_result_as_string ( status ) );
 			return NULL;
 		}
 	}
@@ -1572,7 +1595,76 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 	if (res != GP_OK) {
 		gp_context_error (context,
 				  "canon_usb_get_dirents: "
-				  "canon_usb_long_dialogue failed to fetch direntrys, "
+				  "canon_usb_long_dialogue failed to fetch direntries, "
+				  "returned %i", res);
+		return GP_ERROR;
+	}
+
+	return GP_OK;
+}
+
+/**
+ * canon_usb_list_all_dirs:
+ * @camera: camera to initialize
+ * @dirent_data: to receive directory data
+ * @dirents_length: to receive length of @dirent_data
+ * @context: context for error reporting
+ *
+ * Lists all directories on camera. This can be executed before and
+ *  after a "capture image" operation. By comparing the results, we can
+ *  see where the new image went. Unfortunately, this seems to be the
+ *  only way to find out, as Canon doesn't return that information from
+ *  a capture command.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
+		       unsigned int *dirents_length, GPContext *context)
+{
+	unsigned char payload[100];
+	unsigned int payload_length;
+	unsigned char *disk_name = canon_int_get_disk_name (camera, context);
+	int res;
+
+	*dirent_data = NULL;
+
+	/* build payload :
+	 *
+	 * 0x0f dirname 0x00 0x00 0x00
+	 *
+	 * the 0x0f before dirname means 'recurse to level 15', which
+	 * should get all the directories on the camera.
+	 * NOTE: the first 0x00 after dirname is the NULL byte terminating
+	 * the string, so payload_length is strlen(dirname) + 4 
+	 */
+	if (strlen (disk_name) + 4 > sizeof (payload)) {
+		GP_DEBUG ("canon_usb_list_all_dirs: "
+			  "Path '%s' too long (%i), won't fit in payload buffer.", disk_name,
+			  strlen (disk_name));
+		gp_context_error (context,
+				  "canon_usb_list_all_dirs: "
+				  "Couldn't fit payload into buffer, "
+				  "'%.96s' (truncated) too long.", disk_name);
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	memset (payload, 0x00, sizeof (payload));
+	memcpy (payload + 1, disk_name, strlen (disk_name));
+	payload[0] = 0x0f;		     /* Recursion depth */
+	payload_length = strlen (disk_name) + 4;
+	free ( disk_name );
+
+	/* Give no max data size.
+	 * 0 is to not show progress status
+	 */
+	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_DIRENT, dirent_data,
+				       dirents_length, 0, payload, payload_length, 0,
+				       context);
+	if (res != GP_OK) {
+		gp_context_error (context,
+				  "canon_usb_list_all_dirs: "
+				  "canon_usb_long_dialogue failed to fetch direntries, "
 				  "returned %i", res);
 		return GP_ERROR;
 	}
