@@ -1,3 +1,8 @@
+2002-02-18  Lutz Müller <lutz@users.sourceforge.net>
+
+	* POTFILES.in: Remove camlibs/sonydscf1/dsc_f1.c - it is not even
+	  compiled.
+
 2002-02-18  Colin Marquardt  <colin@marquardt-home.de>
 
 	* de.po: Update.
