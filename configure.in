@@ -16,8 +16,8 @@ dnl                      0 if you incremented CURRENT.
 dnl  - CURRENT (Major):  Increment if the interface has additions, changes,
 dnl                      removals.
 dnl ---------------------------------------------------------------------------
-LIBGPHOTO2_AGE=0
-LIBGPHOTO2_REVISION=1
+LIBGPHOTO2_AGE=1
+LIBGPHOTO2_REVISION=0
 LIBGPHOTO2_CURRENT=2
 AC_SUBST(LIBGPHOTO2_AGE)
 AC_SUBST(LIBGPHOTO2_REVISION)

@@ -3,7 +3,7 @@
  * Copyright (C) 2000 Scott Fritzinger
  *
  * Contributions:
- * 	2001: Lutz Müller <urc8@rz.uni-karlsruhe.de>
+ * 	2001-2002: Lutz Müller <urc8@rz.uni-karlsruhe.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -237,6 +237,13 @@ struct _CameraPrivateCore {
 	unsigned char exit_requested;
 
 	int initialized;
+
+	/* Timeout functions */
+	CameraTimeoutStartFunc timeout_start_func;
+	CameraTimeoutStopFunc  timeout_stop_func;
+	void                  *timeout_data;
+	unsigned int          *timeout_ids;
+	unsigned int           timeout_ids_len;
 };
 
 /**
@@ -1322,4 +1329,111 @@ gp_camera_folder_remove_dir (Camera *camera, const char *folder,
 
 	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
+}
+
+/**
+ * gp_camera_set_timeout_funcs:
+ * @camera: a #Camera
+ * @start_func:
+ * @stop_func:
+ * @data:
+ *
+ * If your frontend has something like idle loops, it is recommended you
+ * use #gp_camera_set_timeout_funcs in order to give the camera driver the
+ * possibility to keep up the connection to the camera.
+ *
+ * Return value: a gphoto2 error code
+ **/
+void
+gp_camera_set_timeout_funcs (Camera *camera, CameraTimeoutStartFunc start_func,
+			     CameraTimeoutStopFunc stop_func,
+			     void *data)
+{
+	if (!camera || !camera->pc)
+		return;
+
+	camera->pc->timeout_start_func = start_func;
+	camera->pc->timeout_stop_func = stop_func;
+	camera->pc->timeout_data = data;
+}
+
+/**
+ * gp_camera_start_timeout:
+ * @camera: a #Camera
+ * @timeout: the number of seconds that should pass between each call to
+ * 	     @func
+ * @func: the function that should be called each @timeout seconds
+ *
+ * This function should be called by the camera driver during #camera_init
+ * if the camera needs to be sent messages periodically in order to prevent
+ * it to shut down.
+ *
+ * Return value: The id of the background process or a gphoto2 error code
+ **/
+int
+gp_camera_start_timeout (Camera *camera, unsigned int timeout,
+			 CameraTimeoutFunc func)
+{
+	int id;
+	unsigned int *ids;
+
+	if (!camera || !camera->pc)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	if (!camera->pc->timeout_start_func)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	/*
+	 * We remember the id here in order to automatically remove
+	 * the timeout on gp_camera_exit.
+	 */
+	ids = realloc (camera->pc->timeout_ids, sizeof (int) *
+					(camera->pc->timeout_ids_len + 1));
+	if (!ids)
+		return (GP_ERROR_NO_MEMORY);
+	camera->pc->timeout_ids = ids;
+
+	id = camera->pc->timeout_start_func (camera, timeout, func,
+					     camera->pc->timeout_data);
+	if (id < 0)
+		return (id);
+	camera->pc->timeout_ids[camera->pc->timeout_ids_len] = id;
+	camera->pc->timeout_ids_len++;
+
+	return (id);
+}
+
+/**
+ * gp_camera_stop_timeout:
+ * @camera: a #Camera
+ * @id: the id of the background process previously returned by 
+ * 	#gp_camera_start_timeout
+ *
+ * Call this function in the camera driver if you want to stop a periodic
+ * call to a function that has been started using #gp_camera_start_timeout.
+ **/
+void
+gp_camera_stop_timeout (Camera *camera, unsigned int id)
+{
+	unsigned int i;
+
+	if (!camera || !camera->pc)
+		return;
+
+	if (!camera->pc->timeout_stop_func)
+		return;
+
+	/* Check if we know this id. If yes, remove it. */
+	for (i = 0; i < camera->pc->timeout_ids_len; i++)
+		if (camera->pc->timeout_ids[i] == id)
+			break;
+	if (i == camera->pc->timeout_ids_len)
+		return;
+	memmove (camera->pc->timeout_ids + i, camera->pc->timeout_ids + i + 1,
+		 sizeof (int) * (camera->pc->timeout_ids_len - i - 1));
+	camera->pc->timeout_ids_len--;
+	camera->pc->timeout_ids = realloc (camera->pc->timeout_ids,
+				sizeof (int) * camera->pc->timeout_ids_len);
+
+	camera->pc->timeout_stop_func (camera, id, camera->pc->timeout_data);
 }
