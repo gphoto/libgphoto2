@@ -141,6 +141,7 @@ typedef enum {
 	CANON_PS_UNK4,
 	CANON_PS_UNK5,
 	CANON_PS_S400
+	CANON_PS_SD100
 } canonCamModel;
 
 /**
