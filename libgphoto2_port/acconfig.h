@@ -12,4 +12,7 @@
 #undef HAVE_STPCPY
 
 #undef HAVE_RTS_IOCTL
+
+/* Serial port locking */
+#undef HAVE_TTYLOCK
 #undef HAVE_LOCKDEV

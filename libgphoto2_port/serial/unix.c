@@ -50,8 +50,10 @@
 #include <sgtty.h>
 #endif
 
-#if HAVE_LOCKDEV
-#include <lockdev.h>
+#if HAVE_TTYLOCK
+#  include <ttylock.h>
+#elif HAVE_LOCKDEV
+#  include <lockdev.h>
 #endif
 
 #include "../include/gphoto2-port-serial.h"
@@ -134,11 +136,33 @@ gp_port_operations *gp_port_library_operations () {
 #endif
 
 static int
-gp_port_serial_lock (gp_port *dev, const char *port)
+gp_port_serial_lock (gp_port *dev)
 {
-#if HAVE_LOCKDEV
+#if HAVE_TTYLOCK
+	const char *port;
+
+	port = strchr (dev->settings.serial.port, ':');
+	port++;
+
+	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Trying to lock "
+			      "'%s'...", port);
+	if (!ttylock ((char*) port))
+		return (GP_OK);
+
+	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device "
+			      "'%s' is locked.", port);
+	return (GP_ERROR_IO_LOCK);
+
+#elif HAVE_LOCKDEV
+
+	const char *port;
 	int pid;
 
+	port = strchr (dev->settings.serial.port, ':');
+	port++;
+
+	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Trying to lock "
+			      "'%s'...", port);
 	pid = dev_lock (port);
 	if (!pid)
 		return (GP_OK);
@@ -176,7 +200,7 @@ gp_port_serial_lock (gp_port *dev, const char *port)
 		return (GP_ERROR_IO_LOCK);
 	}
 
-#else /* LOCKLIB */
+#else /* !LOCKLIB */
 	char lock_buffer[12];
 	int fd, pid, n; 
 #ifdef SVR4
@@ -200,8 +224,11 @@ gp_port_serial_lock (gp_port *dev, const char *port)
 		  "%s/LK.%03d.%03d.%03d", LOCK_DIR, major (sbuf.st_dev),
 		  major (sbuf.st_rdev), minor (sbuf.st_rdev));
 #else /* SVR4 */
-	char *p;
-	
+	const char *port, *p;
+
+	port = strchr (dev->settings.serial.port, ':');
+	port++;
+
 	if ((p = strrchr (port, '/')) != NULL)
 		port = p + 1;
 	sprintf (handle->lock_file, "%s/LCK..%s", LOCK_DIR, port);
@@ -290,9 +317,26 @@ gp_port_serial_lock (gp_port *dev, const char *port)
 static int
 gp_port_serial_unlock (gp_port *dev)
 {
-#if HAVE_LOCKDEV
+#if HAVE_TTYLOCK
+	const char *port;
+
+	port = strchr (dev->settings.serial.port, ':');
+	port++;
+
+	if (!ttyunlock ((char*) port))
+		return (GP_OK);
+
+	gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level, "Device '%s' "
+			      "could not be unlocked.", port);
+	return (GP_ERROR_IO_LOCK);
+
+#elif HAVE_LOCKDEV
+
 	int pid;
-	const char *port = strchr (dev->settings.serial.port, ':');
+	const char *port;
+	
+	port = strchr (dev->settings.serial.port, ':');
+	port++;
 
 	pid = dev_unlock (port, 0);
 	if (!pid)
@@ -428,10 +472,10 @@ gp_port_serial_open (gp_port *dev)
 		return GP_ERROR_IO_UNKNOWN_PORT;
 	port++;
 
-	result = gp_port_serial_lock (dev, port);
+	result = gp_port_serial_lock (dev);
 	if (result != GP_OK) {
 		for (i = 0; i < max_tries; i++) {
-			result = gp_port_serial_lock (dev, port);
+			result = gp_port_serial_lock (dev);
 			if (result == GP_OK)
 				break;
 			gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,

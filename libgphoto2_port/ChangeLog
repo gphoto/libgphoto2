@@ -1,5 +1,11 @@
 2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* acconfig.h: #undef HAVE_TTYLOCK
+	* configure.in: Improved checks for locking headers/libs
+	* serial/unix.c: Yet another locking lib: ttylock.h
+
+2001-10-03  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* include/gphoto2-port.h:
 	* libgphoto2_port/gp_port.c: Explain to the users why claiming an 
 	interface could fail.

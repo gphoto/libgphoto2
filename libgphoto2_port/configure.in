@@ -72,22 +72,62 @@ IOLIB_SUBDIRS="serial"
 IOLIB_LDFLAGS="-Lserial -lgphoto2_port_serial"
 IOLIB_CFLAGS="-DGP_PORT_SUPPORTED_SERIAL"
 
-dnl Check for lockdev
+dnl -----------------------------------------
+dnl Serial port locking: We try to use either
+dnl  (1) ttylock.h
+dnl  (2) lockdev.h
+dnl -----------------------------------------
+ttylock_msg=no
 lockdev_msg=no
+try_ttylock=true
 try_lockdev=true
+AC_ARG_WITH(ttylock, [  --without-ttylock       Use ttylock library],
+	if test x$withval = xno; then
+		try_ttylock=false
+	fi
+)
 AC_ARG_WITH(lockdev, [  --without-lockdev       Use lockdev library],
 	if test x$withval = xno; then
 		try_lockdev=false
 	fi
 )
+if $try_ttylock; then
+	AC_CHECK_HEADER(ttylock.h,
+		AC_MSG_CHECKING(if ttylock needs lockdev)
+		AC_TRY_RUN([#include <ttylock.h>
+			    int main (void) {
+			    	ttylocked ("/dev/foo");
+			    	return (0);
+			    }],
+			AC_MSG_RESULT(no)
+			AC_DEFINE(HAVE_TTYLOCK)
+			ttylock_msg=yes
+			try_lockdev=false,
+			LDFLAGS="$LDFLAGS -llockdev"
+			AC_TRY_RUN([#include <ttylock.h>
+				    int main (void) {
+				    	ttylocked ("/dev/foo");
+					return (0);
+				    }],
+				AC_MSG_RESULT(yes)
+				AC_DEFINE(HAVE_TTYLOCK)
+				ttylock_msg=yes
+				try_lockdev=false
+				SERIAL_LDFLAGS=-llockdev,
+				AC_MSG_RESULT(unknown),
+				AC_MSG_RESULT(unknown)
+			),
+			AC_MSG_RESULT(unknown)
+		)
+	)
+fi
 if $try_lockdev; then
-	AC_MSG_CHECKING(for lockdev)
-	AC_TRY_COMPILE([#include <lockdev.h>], [int foo = 0;],
-		AC_MSG_RESULT(found)
-		AC_DEFINE(HAVE_LOCKDEV)
-		lockdev_msg=yes
-		SERIAL_LDFLAGS=-llockdev,
-		AC_MSG_RESULT(not found)
+	AC_CHECK_LIB(lockdev, dev_lock,
+		AC_CHECK_HEADER(lockdev.h,
+			AC_DEFINE(HAVE_LOCKDEV)
+			lockdev_msg=yes
+			SERIAL_LDFLAGS=-llockdev
+		)
 	)
 fi
 AC_SUBST(SERIAL_LDFLAGS)
@@ -160,5 +200,6 @@ Configuration
 	Source code location: ${srcdir}
 	Compiler:             ${CC}
 
-	Use liblockdev:       $lockdev_msg
+	Use ttylock:          $ttylock_msg
+	Use lockdev:          $lockdev_msg
 "
