@@ -1,3 +1,21 @@
+2001-10-24 Hans Ulrich Niedermann <gp@n-dimensional.de>
+
+	* camlibs/jamcam/library.h: removed completely unnecessary compiler warning
+	* camlibs/sonydscf1/command.c: added #include <string.h> and
+	hopefully fixed calls to strndup 
+	* frontends/command-line/main.c: added debug output of guessed
+	port, moved debugging interface to final log level handling,
+	output logging information on stderr instead of stdout 
+	* libgphoto2/exif.[ch]: moved definition of tagnames[]= from
+	exif.h to exif.c, left an extern decl
+	* libgphoto2/gphoto2-debug.c: simplified gp_debug_printf by using
+	gp_logv instead of gp_log
+	* libgphoto2_port/libgphoto2_port/gphoto2-port-log.c: moved to
+	final log level mechanism, undefine HEXDUMP_ constants after use
+	* libgphoto2_port/libgphoto2_port/gphoto2-port-log.h: moved to
+	final log level mechanism using lots of comments
+
+
 2001-10-24  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/de.po: Update.
