@@ -1,7 +1,7 @@
 /*
  * soundvision.c
  *
- * Copyright © 2002 Vince Weaver <vince@deater.net>
+ * Copyright © 2002-2003 Vince Weaver <vince@deater.net>
  * 
  * based on the digita driver 
  * Copyright © 1999-2000 Johannes Erdfelt
@@ -54,6 +54,8 @@ struct {
    
         {"RCA:CDS1005",0x0784,0x0100,0},
         {"Ixla:DualCam 640",0x0784,0x0100,0},
+
+        {"Pretec:dc530",0x0784,0x5300,0},
    
         {"Generic SoundVision:Clarity2",0x0919,0x100,0},
         {"CoolCam:CP086",0x0919,0x100,0},
