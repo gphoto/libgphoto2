@@ -490,7 +490,10 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 	unsigned int b_len = 1024;
 	int r, retries = 0, id = 0;
 
-	/* Send the command */
+	/*
+	 * Send the command. If we fail the first time, we only try once more.
+	 * After the third time, the camera would reset itself automatically.
+	 */
 	retries = 0;
 	while (1) {
 
@@ -508,7 +511,7 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 		case NAK:
 
 			/* Camera didn't like the command */
-			if (++retries > 2) {
+			if (++retries > 1) {
 				gp_context_error (context, _("Camera rejected "
 					"the command."));
 				return (GP_ERROR);
