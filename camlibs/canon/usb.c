@@ -226,40 +226,89 @@ canon_usb_init (Camera *camera)
 }
 
 /**
- * canon_usb_keylock:
+ * canon_usb_lock_keys:
  * @camera: camera to lock keys on
  * @Returns: gphoto2 error code
  *
  * Lock the keys on the camera and turn off the display
  **/
 int
-canon_usb_keylock (Camera *camera)
+canon_usb_lock_keys (Camera *camera)
 {
 	unsigned char *c_res;
 	int bytes_read;
+	char payload[4];
 
-	GP_DEBUG ("canon_usb_keylock()");
+	GP_DEBUG ("canon_usb_lock_keys()");
 
-	/* Check for cameras that do not need this command */
-	if (camera->pl->model == CANON_PS_S100) {
-		GP_DEBUG ("Your camera model does not need the keylock.");
-		return GP_OK;
+	switch (camera->pl->model) {
+		case CANON_PS_S100:
+			GP_DEBUG ("canon_usb_lock_keys: Your camera model does not need the keylock.");
+			break;
+		case CANON_EOS_D30:
+			memset (payload, 0, sizeof (payload));
+			payload[0] = 0x06;
+
+			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_LOCK_KEYS,
+						    &bytes_read, payload, 4);
+			if (!c_res)
+				return GP_ERROR;
+
+			break;
+		default:
+			c_res = canon_usb_dialogue (camera,
+						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
+						    &bytes_read, NULL, 0);
+			if (bytes_read == 0x4) {
+				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back, " "unfortuntely we don't know what they mean.");
+			} else {
+				gp_camera_set_error (camera, "canon_usb_lock_keys: "
+						     "Unexpected amount of data returned (%i bytes, expected %i)",
+						     bytes_read, 0x4);
+				return GP_ERROR;
+			}
+			break;
 	}
 
-	if (camera->pl->model == CANON_EOS_D30) {
-		GP_DEBUG ("Key locking is currently not working on EOS D30 cameras. Stay tuned.");
-		return GP_OK;	
-	}
-	
-	c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_KEYLOCK, &bytes_read, NULL, 0);
-	if (bytes_read == 0x4) {
-		GP_DEBUG ("Got the expected number of bytes back, "
-			  "unfortuntely we don't know what they mean.");
-	} else {
-		gp_camera_set_error (camera, "canon_usb_keylock: "
-				     "Unexpected amount of data returned (%i bytes, expected %i)",
-				     bytes_read, 0x4);
-		return GP_ERROR_IO;
+	return GP_OK;
+}
+
+/**
+ * canon_usb_unlock_keys:
+ * @camera: camera to unlock keys on
+ * @Returns: gphoto2 error code
+ *
+ * Unlocks the keys on cameras that support this
+ **/
+int
+canon_usb_unlock_keys (Camera *camera)
+{
+	unsigned char *c_res;
+	int bytes_read;
+	char payload[4];
+
+	GP_DEBUG ("canon_usb_unlock_keys()");
+
+	switch (camera->pl->model) {
+		case CANON_EOS_D30:
+			memset (payload, 0, sizeof (payload));
+			payload[0] = 0x06;
+
+			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
+						    &bytes_read, NULL, 0);
+			/* Should look at the bytes returned, but I don't know what they mean */
+			if (! c_res)
+				return GP_ERROR;
+				
+			break;
+		default:
+			/* Your camera model does not need unlocking, cannot do unlocking or
+			 * we don't know how to unlock it's keys. If unlocking works when
+			 * using the Windows software with your camera, please contact
+			 * <gphoto-devel@gphoto.net>
+			 */
+			GP_DEBUG ("canon_usb_unlock_keys: Not unlocking the kind of camera you have.");
+			break;
 	}
 
 	return GP_OK;
@@ -272,6 +321,9 @@ canon_usb_keylock (Camera *camera)
  * @return_length: number of bytes to read from the camera as response
  * @payload: data we are to send to the camera
  * @payload_length: length of #payload
+ * @Returns: a char * that points to the data read from the camera (or
+ * NULL on failure), and sets what @return_length points to to the number
+ * of bytes read.
  *
  * USB version of the #canon_serial_dialogue function.
  *
@@ -753,7 +805,7 @@ canon_usb_ready (Camera *camera)
 		return GP_ERROR;
 	}
 
-	res = canon_usb_keylock (camera);
+	res = canon_usb_lock_keys (camera);
 	if (res != GP_OK) {
 		gp_camera_set_error (camera, "Camera not ready, "
 				     "could not lock camera keys (returned %i)", res);
@@ -771,4 +823,3 @@ canon_usb_ready (Camera *camera)
 
 	return GP_OK;
 }
-

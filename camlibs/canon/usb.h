@@ -25,7 +25,8 @@ int canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **da
 		int payload_length, int display_status);
 int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length);
 int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length);
-int canon_usb_keylock(Camera *camera);
+int canon_usb_lock_keys(Camera *camera);
+int canon_usb_unlock_keys(Camera *camera);
 int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path);
 int canon_usb_ready (Camera *camera);
 
@@ -46,7 +47,9 @@ int canon_usb_ready (Camera *camera);
 #define CANON_USB_FUNCTION_SET_ATTR		13
 /* GET_PIC_ABILITIES currently not implemented in gPhoto2 camlibs/canon driver */
 #define CANON_USB_FUNCTION_GET_PIC_ABILITIES	14
-#define CANON_USB_FUNCTION_KEYLOCK		15
+#define CANON_USB_FUNCTION_GENERIC_LOCK_KEYS	15
+#define CANON_USB_FUNCTION_EOS_LOCK_KEYS	16
+#define CANON_USB_FUNCTION_EOS_UNLOCK_KEYS	17
 
 struct canon_usb_cmdstruct 
 {
@@ -71,8 +74,10 @@ static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
 	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entrys",		0x0b, 0x11, 0x202,	0x40},
 	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
 	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",		0x0e, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_EOS_LOCK_KEYS,	"EOS lock keys",		0x1b, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,	"EOS unlock keys",		0x1c, 0x12, 0x201,	0x54},
 	{CANON_USB_FUNCTION_GET_PIC_ABILITIES,	"Get picture abilities",	0x1f, 0x12, 0x201,	0x384},
-	{CANON_USB_FUNCTION_KEYLOCK,		"Lock keys and turn off LCD",	0x20, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,	"Lock keys and turn off LCD",	0x20, 0x12, 0x201,	0x54},
 	{ 0 }
 };
 
