@@ -213,7 +213,15 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	GP_DEBUG ("CANON REMOTE CAPTURE IS EXPERIMENTAL CODE, WORK IN PROGRESS "
 		  "AND MAYBE NOT WORKING AT ALL. NOT FOR THE FAINT OF HEART.");
 
-	if (camera->pl->md->model != CANON_PS_S40) {
+	switch (camera->pl->md->model) {
+		/* add your camera here if you want to test the code
+		 * note that this will move to capabilities when ready
+		 * for normal code */
+		/* case CANON_EOS_D30: */
+		/* case CANON_PS_G2: */
+	case CANON_PS_S40:
+		break;
+	default:
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
