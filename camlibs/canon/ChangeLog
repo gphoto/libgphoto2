@@ -1,7 +1,29 @@
-2001-11-27  Hans Ulrich Niedermann <hun@n-dimensional.de>
+2001-12-01  Fredrik <fredrik@krixor.xy.org>
 
-	* canon.[ch]: added conversion routinges between CameraFS and
-	  Canon file paths
+	* usb.c, usb.h:
+	  Added canon_usb_get_dirents().
+
+	* serial.c, serial.h:
+	  Added canon_serial_get_dirents().
+
+	* canon.h: added CANON_MINIMUM_DIRENT_SIZE.
+
+	* canon.c, canon.h:
+	  Exchanged canon_int_list_directorys() with my
+	  rewritten version. At least some hypothetical bugs
+	  fixed, easier to understand and proper error-checking.
+	  This should hopefully not break serial, since this is
+	  almost the same code as I used when debugging other
+	  serial stuff on Philippes computer/camera from 16000
+	  km distance a few weeks ago.
+
+	* library.c:
+	  Re-wrote _get_file_path() since it was really hard to
+	  understand. The first time I tried to understand it I
+	  got it all wrong and even added some faulty comments.
+
+	Also replaced some random gp_debug_printf() with
+	GP_DEBUG() and re-indented *.c.
 
 2001-11-29  Fredrik <fredrik@krixor.xy.org>
 
