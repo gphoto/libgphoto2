@@ -171,46 +171,58 @@ int gp_camera_init (Camera *camera)
 {
 	int x;
 	int result;
-	int camera_number;
 	CameraPortInfo info;
 
 	if (camera == NULL) 
 		return (GP_ERROR_BAD_PARAMETERS);
+
+	/* If the port hasn't been indicated, try to figure it out (USB only). */
+	if (strcmp (camera->port->path, "") == 0) {
+		gp_frontend_message (NULL, "\n"
+			"*** Auto-probe for port has not yet been implemented! ***\n"
+			"*** Please specify a port!                            ***\n");
+		return (GP_ERROR_BAD_PARAMETERS);
+	}
+
+        /* Set the port type from the path in case the frontend didn't. */
+        if (camera->port->type == GP_PORT_NONE) {
+                for (x=0; x<gp_port_count(); x++) {
+                        gp_port_info(x, &info);
+                        if (strcmp(info.path, camera->port->path)==0) {
+                                camera->port->type = info.type;
+				break;
+			}
+                }
+		if (x == gp_port_count ())
+			return (GP_ERROR_BAD_PARAMETERS);
+        }
 		
 	/* If the model hasn't been indicated, try to figure it out through probing. */
 	if (strcmp (camera->model, "") == 0) {
-		//FIXME: Insert auto-probe here!
-		printf ("*** Auto-probing not yet implemented! Please specify a model! ***\n");
-		return (GP_ERROR);
+		gp_frontend_message (NULL, "\n"
+			"*** Auto-probe for model has not yet been implemented! ***\n"
+			"*** Please specify a model!                            ***\n");
+		return (GP_ERROR_BAD_PARAMETERS);
 	}
 
 	/* Fill in camera abilities. */
 	gp_debug_printf (GP_DEBUG_LOW, "core", "Looking up abilities for model %s...", camera->model);
-	for (camera_number = 0; camera_number < glob_abilities_list->count; camera_number++) {
-		if (strcmp (glob_abilities_list->abilities[camera_number]->model, camera->model) == 0)
+	for (x = 0; x < glob_abilities_list->count; x++) {
+		if (strcmp (glob_abilities_list->abilities[x]->model, camera->model) == 0)
 			break;
 	}
-	if (camera_number == glob_abilities_list->count)
+	if (x == glob_abilities_list->count)
 		return GP_ERROR_MODEL_NOT_FOUND;
-	camera->abilities->file_delete       = glob_abilities_list->abilities[camera_number]->file_delete;
-	camera->abilities->file_preview      = glob_abilities_list->abilities[camera_number]->file_preview;
-	camera->abilities->file_put          = glob_abilities_list->abilities[camera_number]->file_put;
-	camera->abilities->capture           = glob_abilities_list->abilities[camera_number]->capture;
-	camera->abilities->config            = glob_abilities_list->abilities[camera_number]->config;
+	camera->abilities->file_delete       = glob_abilities_list->abilities[x]->file_delete;
+	camera->abilities->file_preview      = glob_abilities_list->abilities[x]->file_preview;
+	camera->abilities->file_put          = glob_abilities_list->abilities[x]->file_put;
+	camera->abilities->capture           = glob_abilities_list->abilities[x]->capture;
+	camera->abilities->config            = glob_abilities_list->abilities[x]->config;
 
 	/* Load the library. */
-	gp_debug_printf(GP_DEBUG_LOW, "core", "Loading library %s...", glob_abilities_list->abilities[camera_number]->library);
+	gp_debug_printf(GP_DEBUG_LOW, "core", "Loading library %s...", glob_abilities_list->abilities[x]->library);
 	if ((result = load_library(camera)) != GP_OK)
 		return (result);
-
-	/* Set the port type from the path in case the frontend didn't. */
-	if (camera->port->type == GP_PORT_NONE && (strlen (camera->port->path) > 0)) {
-	        for (x=0; x<gp_port_count(); x++) {
-        	        gp_port_info(x, &info);
-                	if (strcmp(info.path, camera->port->path)==0)
-                        	camera->port->type = info.type;
-	        }
-	}
 
         return (camera->functions->init (camera));
 }

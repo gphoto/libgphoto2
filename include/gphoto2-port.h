@@ -5,7 +5,8 @@
 	This library is covered by the LGPL.
 */
 
-int gp_port_count();
+int gp_port_count ();
  
-int gp_port_info(int port_number, CameraPortInfo *info);      
+int gp_port_info (int port_number, CameraPortInfo *info);
+
 

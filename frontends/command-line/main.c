@@ -216,15 +216,16 @@ OPTION_CALLBACK(use_stdout_size) {
 OPTION_CALLBACK(abilities) {
 
         int x=0;
+	int result;
 
         if (strlen(glob_model)==0) {
                 cli_error_print("Must specify a camera model using \"%scamera model\"",LONG_OPTION);
                 return (GP_ERROR);
         }
 
-        if (gp_camera_abilities_by_name(glob_model, &glob_abilities) != GP_OK) {
+        if ((result = gp_camera_abilities_by_name(glob_model, &glob_abilities)) != GP_OK) {
                 cli_error_print("Could not find camera \"%s\".\nUse \"--list-cameras\" to see available camera models", glob_model);
-                return (GP_ERROR);
+                return (result);
         }
 
         /* Output a parsing friendly abilities table. Split on ":" */
@@ -297,7 +298,7 @@ OPTION_CALLBACK(list_ports) {
 
         if ((count = gp_port_count()) < 0) {
                 cli_error_print("Could not get number of ports");
-                return (GP_ERROR);
+                return (count);
         }
         if (!glob_quiet) {
           printf("Devices found: %i\n", count);
@@ -369,10 +370,12 @@ OPTION_CALLBACK(quiet) {
 
 OPTION_CALLBACK(shell) {
 
+	int result;
+
         cli_debug_print("Entering shell mode");
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         glob_shell = 1;
 
@@ -400,8 +403,10 @@ OPTION_CALLBACK(recurse) {
 
 OPTION_CALLBACK(list_folders) {
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+	int result;
+
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         if (!glob_quiet)
                 printf("Subfolders of \"%s\":\n", glob_folder);
@@ -411,8 +416,10 @@ OPTION_CALLBACK(list_folders) {
 
 OPTION_CALLBACK(list_files) {
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+	int result;
+
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         print_files(glob_folder, NULL, 0);
 
@@ -425,14 +432,15 @@ OPTION_CALLBACK(list_files) {
 OPTION_CALLBACK(num_pictures) {
 
         CameraList list;
+	int result;
 
         cli_debug_print("Counting pictures");
 
-    if (set_globals() != GP_OK)
-                return (GP_ERROR);
+	if ((result = set_globals()) != GP_OK)
+        	return (result);
 
-        if (gp_camera_file_list(glob_camera, &list, glob_folder) != GP_OK)
-                return (GP_ERROR);
+        if ((result = gp_camera_file_list(glob_camera, &list, glob_folder)) != GP_OK)
+                return (result);
 
         if (glob_quiet)
                 printf("%i\n", gp_list_count(&list));
@@ -447,20 +455,21 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
         char out_filename[1024], out_folder[1024], buf[1024], msg[1024];
         char *f;
         int resp1, resp2;
+	int result;
 
         CameraFile *file;
 
         file = gp_file_new();
 
         if (thumbnail) {
-                if (gp_camera_file_get_preview(glob_camera, file, folder, filename) != GP_OK) {
+                if ((result = gp_camera_file_get_preview(glob_camera, file, folder, filename)) != GP_OK) {
                         cli_error_print("Can not get preview for %s.", filename);
-                        return (GP_ERROR);
+                        return (result);
                 }
          } else {
-                if (gp_camera_file_get(glob_camera, file, folder, filename) != GP_OK) {
+                if ((result = gp_camera_file_get(glob_camera, file, folder, filename)) != GP_OK) {
                         cli_error_print("Can not get picture %s", filename);
-                        return (GP_ERROR);
+                        return (result);
                 }
         }
 
@@ -532,17 +541,19 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
 
 int get_picture_common(char *arg, int thumbnail) {
 
+	int result;
+
         if (thumbnail)
                 cli_debug_print("Getting thumbnail(s) %s", arg);
         else
                 cli_debug_print("Getting picture(s) %s", arg);
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         if (thumbnail && !glob_camera->abilities->file_preview) {
                 cli_error_print("Camera doesn't support picture thumbnails");
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
         }
 
         if (strchr(arg, '.')) {
@@ -563,10 +574,12 @@ OPTION_CALLBACK(get_picture) {
 
 OPTION_CALLBACK(get_all_pictures) {
 
+	int result;
+
         cli_debug_print("Getting all pictures");
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         return for_each_image(glob_folder, save_picture_action, 0);
 }
@@ -578,14 +591,16 @@ OPTION_CALLBACK(get_thumbnail) {
 
 OPTION_CALLBACK(get_all_thumbnails) {
 
+	int result;
+
         cli_debug_print("Getting all thumbnails");
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         if (!glob_camera->abilities->file_preview) {
                 cli_error_print("Camera doesn't support picture thumbnails");
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
         }
 
         return for_each_image(glob_folder, save_thumbnail_action, 0);
@@ -593,14 +608,16 @@ OPTION_CALLBACK(get_all_thumbnails) {
 
 OPTION_CALLBACK(delete_picture) {
 
+	int result;
+
         cli_debug_print("Deleting picture(s) %s", arg);
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         if (!glob_camera->abilities->file_delete) {
                 cli_error_print("Camera can not delete pictures");
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
         }
 
         return for_each_image_in_range(glob_folder, arg, delete_picture_action, 1);
@@ -608,14 +625,16 @@ OPTION_CALLBACK(delete_picture) {
 
 OPTION_CALLBACK(delete_all_pictures) {
 
+	int result;
+
         cli_debug_print("Deleting all pictures");
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         if (!glob_camera->abilities->file_delete) {
                 cli_error_print("Camera can not delete pictures");
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
         }
 
         return for_each_image(glob_folder, delete_picture_action, 1);
@@ -624,27 +643,28 @@ OPTION_CALLBACK(delete_all_pictures) {
 OPTION_CALLBACK(upload_picture) {
 
         CameraFile *file;
+	int result;
 
         file = gp_file_new();
 
         cli_debug_print("Uploading picture");
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         if (!glob_camera->abilities->file_put) {
                 cli_error_print("Camera doesn't support uploading pictures");
-                return (GP_ERROR);
+                return (GP_ERROR_NOT_SUPPORTED);
         }
 
-        if (gp_file_open(file, arg) != GP_OK) {
+        if ((result = gp_file_open(file, arg)) != GP_OK) {
                 cli_error_print("Could not open file %s", arg);
-                return (GP_ERROR);
+                return (result);
         }
 
-        if (gp_camera_file_put(glob_camera, file, glob_folder) != GP_OK) {
+        if ((result = gp_camera_file_put(glob_camera, file, glob_folder)) != GP_OK) {
                 cli_error_print("Could not upload the picture");
-                return (GP_ERROR);
+                return (result);
         }
 
         gp_file_free(file);
@@ -657,18 +677,19 @@ int capture_generic (int type, int duration) {
         CameraCaptureInfo info;
         CameraFile *file;
         char out_filename[1024];
+	int result;
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
         info.type     = type;
         info.duration = duration;
 
         file = gp_file_new();
 
-        if (gp_camera_capture(glob_camera, file, &info) != GP_OK) {
+        if ((result = gp_camera_capture(glob_camera, file, &info)) != GP_OK) {
                 cli_error_print("Could not capture.");
-                return (GP_ERROR);
+                return (result);
         }
 
         if ((glob_filename_override)&&(strlen(glob_filename)>0))
@@ -711,13 +732,14 @@ OPTION_CALLBACK(capture_preview) {
 OPTION_CALLBACK(summary) {
 
         CameraText buf;
+	int result;
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
-        if (gp_camera_summary(glob_camera, &buf) != GP_OK) {
+        if ((result = gp_camera_summary(glob_camera, &buf)) != GP_OK) {
                 cli_error_print("Could not get camera summary");
-                return (GP_ERROR);
+                return (result);
         }
         printf("Camera Summary:\n%s\n", buf.text);
 
@@ -727,14 +749,15 @@ OPTION_CALLBACK(summary) {
 
 OPTION_CALLBACK(manual) {
 
+	int result;
         CameraText buf;
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
-        if (gp_camera_manual(glob_camera, &buf) != GP_OK) {
+        if ((result = gp_camera_manual(glob_camera, &buf)) != GP_OK) {
                 cli_error_print("Could not get camera manual");
-                return (GP_ERROR);
+                return (result);
         }
         printf("Camera Manual:\n%s\n", buf.text);
 
@@ -743,16 +766,15 @@ OPTION_CALLBACK(manual) {
 
 OPTION_CALLBACK(about) {
 
-
+	int result;
         CameraText buf;
 
+        if ((result = set_globals()) != GP_OK)
+                return (result);
 
-        if (set_globals() != GP_OK)
-                return (GP_ERROR);
-
-        if (gp_camera_about(glob_camera, &buf) != GP_OK) {
+        if ((result = gp_camera_about(glob_camera, &buf)) != GP_OK) {
                 cli_error_print("Could not get camera driver information");
-                return (GP_ERROR);
+                return (result);
         }
         printf("About the library:\n%s\n", buf.text);
 
@@ -763,6 +785,9 @@ OPTION_CALLBACK(about) {
 /* ------------------------------------------------------------ */
 
 int set_globals () {
+
+	int result;
+	
         /* takes all the settings and sets up the gphoto lib */
 
 //	if (strlen(glob_model) == 0) {
@@ -780,18 +805,18 @@ int set_globals () {
 //	      return (GP_ERROR);
 //	}
 
-        if (gp_camera_new(&glob_camera) != GP_OK) {
+        if ((result = gp_camera_new(&glob_camera)) != GP_OK) {
                 cli_error_print("Can not create camera data");
-                return (GP_ERROR);
+                return (result);
         }
 
 	strcpy (glob_camera->model, glob_model);
 	strcpy (glob_camera->port->path, glob_port);
 	glob_camera->port->speed = glob_speed;
 
-        if (gp_camera_init(glob_camera) != GP_OK) {
+        if ((result = gp_camera_init(glob_camera)) != GP_OK) {
                 cli_error_print("Can not initialize the camera \"%s\"",glob_model);
-                return (GP_ERROR);
+                return (result);
         }
 
         return (GP_OK);

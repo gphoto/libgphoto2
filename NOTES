@@ -3,3 +3,15 @@
 
 * if gp_init() is not called, no cameras will be available
   (found by experience. whoops! :)
+
+
+Quick guide for frontend-writers:
+     - gp_camera_new
+     - strcpy camera->model (get it for example through gp_camera_name)
+     - strcpy on camera->port
+     - gp_camera_init
+  Main loop:
+     - gp_camera_whatever_operation
+  On cleanup:
+     - gp_camera_unref
+

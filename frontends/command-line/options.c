@@ -122,7 +122,7 @@ int execute_options (int argc, char **argv) {
                                         ret=(*option[x].execute)(NULL);
                                    if (ret != GP_OK) {
                                         // cli_error_print("Option \"%s\" did not execute properly.",op);
-                                        return (GP_ERROR);
+                                        return (ret);
                                    }
                                 }
                         }
