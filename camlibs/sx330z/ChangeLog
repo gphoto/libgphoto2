@@ -1,0 +1,10 @@
+2002-07-05  Lutz Müller <lutz@users.sourceforge.net>
+
+	Checked into CVS.
+
+	* library.c: Fixed compile warnings, fixed file_list_func.
+
+2002-06-23  Dominik Kuhlen <dkuhlen@fhm.edu>
+
+	* sx330z.[c,h]: started.
+	* Experimental: Please send reports.
