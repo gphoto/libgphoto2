@@ -226,15 +226,37 @@ pdc700_picinfo (Camera *camera, int n, PDCPicInfo *info)
 	if (status != PDC700_DONE)
 		return (GP_ERROR_CORRUPTED_DATA);
 
-	/* Picture sizes */
+	/* We don't know about the meaning of buf[0] and buf[1] */
+	
+	/* Check if this information is about the right picture */
+	if (n != (buf[2] | (buf[3] << 8)))
+		return (GP_ERROR_CORRUPTED_DATA);
+
+	/* Picture size */
 	info->pic_size = buf[4] | (buf[5] << 8) |
 			(buf[6] << 16) | (buf[7] << 24);
+
+	/* Flash used? */
+	GP_DEBUG ("This picture has been taken with%s flash.",
+		  buf[8] ? "" : "out");
+
+	/* The meaning of buf[9-17] is unknown */
+
+	/* Thumbnail size */
 	info->thumb_size = buf[18] | (buf[19] <<  8) | (buf[20] << 16) |
 			  (buf[21] << 24);
 	GP_DEBUG ("Size of picture: %i", info->pic_size);
 	GP_DEBUG ("Size of thumbnail: %i", info->thumb_size);
 
+	/* The meaning of buf[22] is unknown */
+
+	/* Version info */
 	strncpy (info->version, &buf[23], 6);
+
+	/*
+	 * Now follows some picture data we have yet to reverse
+	 * engineer (buf[29-63]).
+	 */
 
 	return (GP_OK);
 }
@@ -309,13 +331,11 @@ pdc700_pic (Camera *camera, int n, unsigned char **data, int *size,
 		*size += len - 1;
 	}
 
-#if 0
 	/* Terminate transfer */
 	cmd[4] = PDC700_LAST;
 	cmd[5] = sequence_num;
 	CHECK_RESULT_FREE (pdc700_read (camera, cmd, 7, buf, &len, &status),
 			   *data);
-#endif
 
 	return (GP_OK);
 }
