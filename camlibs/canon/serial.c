@@ -258,7 +258,7 @@ canon_serial_get_byte (GPPort *gdev)
 /* ------------------------- Frame-level processing ------------------------- */
 
 int
-psa50_send_frame (Camera *camera, const unsigned char *pkt, int len)
+canon_serial_send_frame (Camera *camera, const unsigned char *pkt, int len)
 {
 	static unsigned char buffer[2100];
 
@@ -288,7 +288,7 @@ psa50_send_frame (Camera *camera, const unsigned char *pkt, int len)
 
 
 unsigned char *
-psa50_recv_frame (Camera *camera, int *len)
+canon_serial_recv_frame (Camera *camera, int *len)
 {
 	static unsigned char buffer[5000];
 
@@ -322,8 +322,8 @@ psa50_recv_frame (Camera *camera, int *len)
 
 
 int
-psa50_send_packet (Camera *camera, unsigned char type,
-		   unsigned char seq, unsigned char *pkt, int len)
+canon_serial_send_packet (Camera *camera, unsigned char type,
+			  unsigned char seq, unsigned char *pkt, int len)
 {
 	unsigned char *hdr = pkt - PKT_HDR_LEN;
 	unsigned short crc;
@@ -350,17 +350,17 @@ psa50_send_packet (Camera *camera, unsigned char type,
 	pkt[len] = crc & 0xff;
 	pkt[len + 1] = crc >> 8;
 
-	return psa50_send_frame (camera, hdr, len + PKT_HDR_LEN + 2);
+	return canon_serial_send_frame (camera, hdr, len + PKT_HDR_LEN + 2);
 }
 
 unsigned char *
-psa50_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int *len)
+canon_serial_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int *len)
 {
 	unsigned char *pkt;
 	unsigned short crc;
 	int raw_length, length = 0;
 
-	pkt = psa50_recv_frame (camera, &raw_length);
+	pkt = canon_serial_recv_frame (camera, &raw_length);
 	if (!pkt)
 		return NULL;
 	if (raw_length < PKT_HDR_LEN) {
@@ -372,7 +372,7 @@ psa50_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int 
 		if (length + PKT_HDR_LEN > raw_length - 2) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: invalid length\n");
 			/*fprintf(stderr,"Sending NACK\n");
-			   psa50_send_packet(PKT_NACK,camera->pl->seq_rx++,camera->pl->psa50_eot+PKT_HDR_LEN,0); */
+			   canon_serial_send_packet(PKT_NACK,camera->pl->seq_rx++,camera->pl->psa50_eot+PKT_HDR_LEN,0); */
 			camera->pl->receive_error = ERROR_RECEIVED;
 			return NULL;
 		}
@@ -405,14 +405,14 @@ psa50_recv_packet (Camera *camera, unsigned char *type, unsigned char *seq, int 
  * -1 : NACK received.
  */
 int
-psa50_wait_for_ack (Camera *camera)
+canon_serial_wait_for_ack (Camera *camera)
 {
 	unsigned char *pkt;
 	unsigned char type, seq, old_seq;
 	int len;
 
 	while (1) {
-		pkt = psa50_recv_packet (camera, &type, &seq, &len);
+		pkt = canon_serial_recv_packet (camera, &type, &seq, &len);
 		if (!pkt)
 			return 0;
 		if (seq == camera->pl->seq_tx && type == PKT_ACK) {
@@ -430,11 +430,11 @@ psa50_wait_for_ack (Camera *camera)
 			if (camera->pl->receive_error == NOERROR) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon",
 						 "Old EOT received, sending corresponding ACK\n");
-				if (!psa50_send_packet
+				if (!canon_serial_send_packet
 				    (camera, PKT_ACK, old_seq,
 				     camera->pl->psa50_eot + PKT_HDR_LEN, 0))
 					return 0;
-				pkt = psa50_recv_packet (camera, &type, &seq, &len);
+				pkt = canon_serial_recv_packet (camera, &type, &seq, &len);
 				if (!pkt)
 					return 0;
 				if (seq == old_seq && type == PKT_ACK) {
@@ -449,7 +449,7 @@ psa50_wait_for_ack (Camera *camera)
 		}
 		/* error already aknowledged, we skip the following ones */
 		if (camera->pl->receive_error == ERROR_RECEIVED) {
-			if (!psa50_send_packet
+			if (!canon_serial_send_packet
 			    (camera, PKT_NACK, old_seq, camera->pl->psa50_eot + PKT_HDR_LEN,
 			     0))
 				return 0;
@@ -459,8 +459,8 @@ psa50_wait_for_ack (Camera *camera)
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
 				 "ERROR: ACK format or sequence error, retrying\n");
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "Sending NACK\n");
-		psa50_send_packet (camera, PKT_NACK, camera->pl->seq_rx++,
-				   camera->pl->psa50_eot + PKT_HDR_LEN, 0);
+		canon_serial_send_packet (camera, PKT_NACK, camera->pl->seq_rx++,
+					  camera->pl->psa50_eot + PKT_HDR_LEN, 0);
 		camera->pl->receive_error = ERROR_RECEIVED;
 
 /*
@@ -482,7 +482,7 @@ psa50_wait_for_ack (Camera *camera)
  *  ap    : message payload (list of arguments, see 'man va_start'
  */
 static int
-psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list * ap)
+canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list * ap)
 {
 	unsigned char buffer[MAX_PKT_PAYLOAD + 2];	/* allow space for CRC */
 	unsigned char upload_buffer[MAX_PKT_PAYLOAD + 2];
@@ -529,19 +529,19 @@ psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list 
 		pkt2 = upload_buffer;
 		memcpy (pkt2, pkt + UPLOAD_DATA_BLOCK, total - UPLOAD_DATA_BLOCK);
 		for (try = 0; try < MAX_TRIES; try++) {
-			psa50_send_packet (camera, PKT_MSG, 0, pkt, UPLOAD_DATA_BLOCK);
-			psa50_send_packet (camera, PKT_MSG, 0x1, pkt2,
-					   total - UPLOAD_DATA_BLOCK);
-			if (!psa50_send_packet
+			canon_serial_send_packet (camera, PKT_MSG, 0, pkt, UPLOAD_DATA_BLOCK);
+			canon_serial_send_packet (camera, PKT_MSG, 0x1, pkt2,
+						  total - UPLOAD_DATA_BLOCK);
+			if (!canon_serial_send_packet
 			    (camera, PKT_UPLOAD_EOT, camera->pl->seq_tx,
 			     camera->pl->psa50_eot + PKT_HDR_LEN, 1))
 				return 0;
-			if (!psa50_send_packet
+			if (!canon_serial_send_packet
 			    (camera, PKT_UPLOAD_EOT, camera->pl->seq_tx,
 			     camera->pl->psa50_eot + PKT_HDR_LEN, 1))
 				return 0;
 
-			good_ack = psa50_wait_for_ack (camera);
+			good_ack = canon_serial_wait_for_ack (camera);
 			if (good_ack == 1)
 				return good_ack;
 		}
@@ -550,13 +550,13 @@ psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list 
 		pkt[MSG_LEN_LSB] = total & 0xff;
 		pkt[MSG_LEN_MSB] = total >> 8;
 		for (try = 1; try < MAX_TRIES; try++) {
-			if (!psa50_send_packet (camera, PKT_MSG, 0, pkt, total))
+			if (!canon_serial_send_packet (camera, PKT_MSG, 0, pkt, total))
 				return 0;
-			if (!psa50_send_packet
+			if (!canon_serial_send_packet
 			    (camera, PKT_EOT, camera->pl->seq_tx,
 			     camera->pl->psa50_eot + PKT_HDR_LEN, 1))
 				return 0;
-			good_ack = psa50_wait_for_ack (camera);
+			good_ack = canon_serial_wait_for_ack (camera);
 			if (good_ack == -1) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon",
 						 "NACK received, retrying command\n");
@@ -567,11 +567,11 @@ psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list 
 						 "No ACK received, retrying command\n");
 				if (try == 2) {
 					//is the camera still there?
-					if (!psa50_send_packet
+					if (!canon_serial_send_packet
 					    (camera, PKT_EOT, camera->pl->seq_tx,
 					     camera->pl->psa50_eot + PKT_HDR_LEN, 0))
 						return 0;
-					good_ack = psa50_wait_for_ack (camera);
+					good_ack = canon_serial_wait_for_ack (camera);
 					if (good_ack == 0) {
 						camera->pl->receive_error = FATAL_ERROR;
 						gp_debug_printf (GP_DEBUG_LOW, "canon",
@@ -601,7 +601,7 @@ psa50_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, va_list 
  *  char* : pointer to the message payload.
  */
 unsigned char *
-psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *total)
+canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *total)
 {
 	static unsigned char *msg = NULL;
 	static int msg_size = 512;	/* initial allocation/2 */
@@ -610,7 +610,7 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 	int len, length = 0, msg_pos = 0;
 
 	while (1) {
-		frag = psa50_recv_packet (camera, &type, NULL, &len);
+		frag = canon_serial_recv_packet (camera, &type, NULL, &len);
 		if (!frag)
 			return NULL;
 		if (type == PKT_MSG)
@@ -620,8 +620,8 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 		if (type == PKT_EOT) {
 			gp_debug_printf (GP_DEBUG_LOW, "canon",
 					 "Old EOT received sending corresponding ACK\n");
-			psa50_send_packet (camera, PKT_ACK, frag[0],
-					   camera->pl->psa50_eot + PKT_HDR_LEN, 0);
+			canon_serial_send_packet (camera, PKT_ACK, frag[0],
+						  camera->pl->psa50_eot + PKT_HDR_LEN, 0);
 		}
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: protocol error, retrying\n");
 	}
@@ -676,7 +676,7 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 			memcpy (msg + msg_pos, frag, len);
 			msg_pos += len;
 		}
-		frag = psa50_recv_packet (camera, &type, &seq, &len);
+		frag = canon_serial_recv_packet (camera, &type, &seq, &len);
 		if (!frag)
 			return NULL;
 		if (type == PKT_EOT) {
@@ -684,8 +684,9 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 			   the 1st packet of the sequence again */
 			if (camera->pl->receive_error == ERROR_RECEIVED) {
 				camera->pl->seq_rx = seq;
-				psa50_send_packet (camera, PKT_NACK, camera->pl->seq_rx,
-						   camera->pl->psa50_eot + PKT_HDR_LEN, 0);
+				canon_serial_send_packet (camera, PKT_NACK, camera->pl->seq_rx,
+							  camera->pl->psa50_eot + PKT_HDR_LEN,
+							  0);
 				camera->pl->receive_error = ERROR_ADDRESSED;
 			} else {
 				if (seq == camera->pl->seq_rx)
@@ -743,7 +744,7 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 		/*we want to be sure the camera U N D E R S T A N D S our packets */
 		if (camera->pl->uploading == 1 && camera->pl->model == CANON_PS_A50)
 			camera->pl->slow_send = 1;
-		if (!psa50_send_packet
+		if (!canon_serial_send_packet
 		    (camera, PKT_ACK, camera->pl->seq_rx++,
 		     camera->pl->psa50_eot + PKT_HDR_LEN, 0)) {
 			if (camera->pl->uploading == 1 && camera->pl->model == CANON_PS_A50)
@@ -761,7 +762,7 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
 }
 
 /**
- * psa50_serial_dialogue:
+ * canon_serial_dialogue:
  *
  * @mtype : type
  * @dir   : direction
@@ -777,11 +778,11 @@ psa50_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, int *tot
  * the list by a "NULL".
  *
  * Example: To send a string called "name" :
- * psa50_serial_dialogue(0x05,0x12,&len,name,strlen(name)+1,NULL);
+ * canon_serial_dialogue(0x05,0x12,&len,name,strlen(name)+1,NULL);
  *
  **/
 unsigned char *
-psa50_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, int *len, ...)
+canon_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, int *len, ...)
 {
 	va_list ap;
 	int okay, try;
@@ -789,7 +790,7 @@ psa50_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, i
 
 	for (try = 1; try < MAX_TRIES; try++) {
 		va_start (ap, len);
-		okay = psa50_send_msg (camera, mtype, dir, &ap);
+		okay = canon_serial_send_msg (camera, mtype, dir, &ap);
 		va_end (ap);
 		if (!okay)
 			return NULL;
@@ -797,21 +798,24 @@ psa50_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, i
 		 * The first ACK has already been received if we are here */
 		if (camera->pl->uploading == 1) {
 			camera->pl->seq_tx--;
-			good_ack = psa50_recv_msg (camera, mtype, dir ^ DIR_REVERSE, len);
+			good_ack =
+				canon_serial_recv_msg (camera, mtype, dir ^ DIR_REVERSE, len);
 			if (!good_ack)
 				return NULL;
 			if (good_ack[0] == camera->pl->seq_tx && good_ack[1] == 0x5) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon",
 						 "ACK received waiting for the confirmation message\n");
 				good_ack =
-					psa50_recv_msg (camera, mtype, dir ^ DIR_REVERSE, len);
+					canon_serial_recv_msg (camera, mtype,
+							       dir ^ DIR_REVERSE, len);
 			} else {
-				okay = psa50_wait_for_ack (camera);
+				okay = canon_serial_wait_for_ack (camera);
 				if (okay == 1)
 					return good_ack;
 			}
 		} else
-			good_ack = psa50_recv_msg (camera, mtype, dir ^ DIR_REVERSE, len);
+			good_ack =
+				canon_serial_recv_msg (camera, mtype, dir ^ DIR_REVERSE, len);
 
 		if (good_ack)
 			return good_ack;
@@ -829,15 +833,14 @@ psa50_serial_dialogue (Camera *camera, unsigned char mtype, unsigned char dir, i
 
 
 /**
- * psa50_end:
+ * canon_serial_end:
  * @camera: the camera to switch off
  * @Returns: GP_OK
  *
  * Switches the #camera off
- * Should better be named psa50_serial_end
  */
 int
-psa50_end (Camera *camera)
+canon_serial_end (Camera *camera)
 {
 	canon_serial_send (camera, "\xC0\x00\x02\x55\x2C\xC1", 6, USLEEP2);
 	canon_serial_send (camera, "\xC0\x00\x04\x01\x00\x00\x00\x24\xC6\xC1", 8, USLEEP2);
@@ -845,7 +848,7 @@ psa50_end (Camera *camera)
 }
 
 /**
- * psa50_off:
+ * canon_serial_off:
  * @camera: the camera to switch off
  * @Returns: GP_OK
  *
@@ -854,7 +857,7 @@ psa50_end (Camera *camera)
  * Should better be named psa50_serial_off
  */
 int
-psa50_off (Camera *camera)
+canon_serial_off (Camera *camera)
 {
 	canon_serial_send (camera, "\xC0\x00\x02\x55\x2C\xC1", 6, USLEEP2);
 	canon_serial_send (camera, "\xC0\x00\x04\x01\x00\x00\x00\x24\xC6\xC1", 8, USLEEP2);
@@ -869,7 +872,7 @@ psa50_off (Camera *camera)
  * to the error encountered
  */
 void
-psa50_error_type (Camera *camera)
+canon_serial_error_type (Camera *camera)
 {
 	switch (camera->pl->receive_error) {
 		case ERROR_LOWBATT:
@@ -891,7 +894,7 @@ psa50_error_type (Camera *camera)
  *
  */
 int
-psa50_put_file_serial (Camera *camera, CameraFile *file, char *destname, char *destpath)
+canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
 	unsigned char *msg;
 	char filename[64];
@@ -937,7 +940,7 @@ psa50_put_file_serial (Camera *camera, CameraFile *file, char *destname, char *d
 			j++;
 		}
 
-		msg = psa50_serial_dialogue (camera, 0x3, 0x11, &len, "\x02\x00\x00\x00", 4,
+		msg = canon_serial_dialogue (camera, 0x3, 0x11, &len, "\x02\x00\x00\x00", 4,
 					     offset2, 4, block_len2, 4,
 					     destpath, strlen (destpath), destname,
 					     strlen (destname) + 1, buf, block_len, NULL);
@@ -953,7 +956,7 @@ psa50_put_file_serial (Camera *camera, CameraFile *file, char *destname, char *d
 }
 
 unsigned char *
-psa50_get_file_serial (Camera *camera, const char *name, int *length)
+canon_serial_get_file (Camera *camera, const char *name, int *length)
 {
 	unsigned char *file = NULL;
 	unsigned char *msg;
@@ -968,10 +971,10 @@ psa50_get_file_serial (Camera *camera, const char *name, int *length)
 		return NULL;
 	}
 	name_len = strlen (name) + 1;
-	msg = psa50_serial_dialogue (camera, 0x1, 0x11, &len, "\x00\x00\x00\x00", 5,
+	msg = canon_serial_dialogue (camera, 0x1, 0x11, &len, "\x00\x00\x00\x00", 5,
 				     &name_len, 1, "\x00", 2, name, strlen (name) + 1, NULL);
 	if (!msg) {
-		psa50_error_type (camera);
+		canon_serial_error_type (camera);
 		return NULL;
 	}
 	while (msg) {
@@ -1016,7 +1019,7 @@ psa50_get_file_serial (Camera *camera, const char *name, int *length)
 		}
 		if (expect == total)
 			return file;
-		msg = psa50_recv_msg (camera, 0x1, 0x21, &len);
+		msg = canon_serial_recv_msg (camera, 0x1, 0x21, &len);
 	}
 	free (file);
 	return NULL;

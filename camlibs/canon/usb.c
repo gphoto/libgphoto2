@@ -135,14 +135,14 @@ canon_usb_camera_init (Camera *camera)
 }
 
 /**
- * psa50_usb_dialogue:
+ * canon_usb_dialogue:
  * @camera: the Camera to work with
  * @canon_funct: integer constant that identifies function we are execute
  * @return_length: number of bytes to read from the camera as response
  * @payload: data we are to send to the camera
  * @payload_length: length of #payload
  *
- * USB version of the #psa50_serial_dialogue function.
+ * USB version of the #canon_serial_dialogue function.
  *
  * We construct a packet with the known command values (cmd{1,2,3}) of
  * the function requested (#canon_funct) to the camera. If #return_length
@@ -166,7 +166,7 @@ canon_usb_camera_init (Camera *camera)
  *
  **/
 unsigned char *
-psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
+canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 		    const char *payload, int payload_length)
 {
 	int msgsize, status, i;
@@ -181,7 +181,7 @@ psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 
 	/* clearing the receive buffer could be done right before the gp_port_read()
 	 * but by clearing it here we eliminate the possibility that a caller thinks
-	 * data in this buffer is a result of this particular psa50_usb_dialogue() call
+	 * data in this buffer is a result of this particular canon_usb_dialogue() call
 	 * if we return error but this is not checked for... good or bad I don't know.
 	 */
 	memset (buffer, 0x00, sizeof (buffer));
@@ -202,12 +202,12 @@ psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 		i++;
 	}
 	if (canon_usb_cmd[i].num == 0) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_usb_dialogue() "
+		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_dialogue() "
 				 "called for ILLEGAL function %i! Aborting.", canon_funct);
 		return NULL;
 	}
 	gp_debug_printf (GP_DEBUG_LOW, "\ncanon",
-			 "psa50_usb_dialogue() cmd 0x%x 0x%x 0x%x (%s), payload = %i bytes",
+			 "canon_usb_dialogue() cmd 0x%x 0x%x 0x%x (%s), payload = %i bytes",
 			 cmd1, cmd2, cmd3, funct_descr, payload_length);
 
 	if (read_bytes > sizeof (buffer)) {
@@ -216,7 +216,7 @@ psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 		 * all the others and did not update the declaration of 'buffer' in
 		 * this function.
 		 */
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_usb_dialogue() "
+		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_dialogue() "
 				 "read_bytes %i won't fit in buffer of size %i!",
 				 read_bytes, sizeof (buffer));
 		return NULL;
@@ -229,7 +229,7 @@ psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 
 	if ((payload_length + 0x50) > sizeof (packet)) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "psa50_usb_dialogue: payload too big, won't fit into buffer (%i > %i)",
+				 "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)",
 				 (payload_length + 0x50), sizeof (packet));
 		return NULL;
 	}
@@ -261,7 +261,7 @@ psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 					packet, msgsize);
 	if (status != msgsize) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "psa50_usb_dialogue: write failed! (returned %i)\n", status);
+				 "canon_usb_dialogue: write failed! (returned %i)\n", status);
 		return NULL;
 	}
 
@@ -271,7 +271,7 @@ psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 	status = gp_port_read (camera->port, buffer, read_bytes);
 	if (status != read_bytes) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "psa50_usb_dialogue: read failed! "
+				 "canon_usb_dialogue: read failed! "
 				 "(returned %i, expected %i)\n", status, read_bytes);
 		return NULL;
 	}
@@ -282,7 +282,7 @@ psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 	/* if cmd3 equals to 0x202, this is a command that returns L (long) data
 	 * and what we return here is the complete packet (ie. not skipping the
 	 * first 0x50 bytes we otherwise would) so that the caller
-	 * (which is psa50_usb_long_dialogue()) can find out how much data to
+	 * (which is canon_usb_long_dialogue()) can find out how much data to
 	 * read from the USB port by looking at offset 6 in this packet.
 	 */
 	if (cmd3 == 0x202)
@@ -292,19 +292,19 @@ psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 }
 
 /**
- * psa50_usb_long_dialogue:
+ * canon_usb_long_dialogue:
  * @camera: the Camera to work with
  * @canon_funct: integer constant that identifies function we are execute
  * @payload: data we are to send to the camera
  * @payload_length: length of #payload
  *
  * This function is used to invoke camera commands which return L (long) data.
- * It calls #psa50_usb_dialogue(), if it gets a good response it will malloc()
+ * It calls #canon_usb_dialogue(), if it gets a good response it will malloc()
  * memory and read the entire returned data into this malloc'd memory and store
  * a pointer to the malloc'd memory in 'data'.
  **/
 int
-psa50_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
+canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 			 int *data_length, int max_data_size, const char *payload,
 			 int payload_length, int display_status)
 {
@@ -319,28 +319,28 @@ psa50_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 		gp_camera_progress (camera, 0);
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon",
-			 "psa50_usb_long_dialogue() function %i, payload = %i bytes",
+			 "canon_usb_long_dialogue() function %i, payload = %i bytes",
 			 canon_funct, payload_length);
 
-	/* Call psa50_usb_dialogue(), this will not return any data "the usual way"
+	/* Call canon_usb_dialogue(), this will not return any data "the usual way"
 	 * but after this we read 0x40 bytes from the USB port, the int at pos 6 in
 	 * the returned data holds the total number of bytes we are to read.
 	 *
 	 */
 	lpacket =
-		psa50_usb_dialogue (camera, canon_funct, &bytes_read, payload, payload_length);
+		canon_usb_dialogue (camera, canon_funct, &bytes_read, payload, payload_length);
 	if (lpacket == NULL) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "psa50_usb_long_dialogue: psa50_usb_dialogue "
+				 "canon_usb_long_dialogue: canon_usb_dialogue "
 				 "returned error!");
 		return GP_ERROR;
 	}
-	/* This check should not be needed since we check the return of psa50_usb_dialogue()
+	/* This check should not be needed since we check the return of canon_usb_dialogue()
 	 * above, but as the saying goes: better safe than sorry.
 	 */
 	if (bytes_read != 0x40) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "psa50_usb_long_dialogue: psa50_usb_dialogue "
+				 "canon_usb_long_dialogue: canon_usb_dialogue "
 				 "did not return (%i bytes) the number of bytes "
 				 "we expected (%i)!. Aborting.", bytes_read, 0x40);
 		return GP_ERROR;
@@ -349,7 +349,7 @@ psa50_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 	total_data_size = *(unsigned *) (lpacket + 0x6);
 
 	if (max_data_size && (total_data_size > max_data_size)) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_usb_long_dialogue: "
+		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_long_dialogue: "
 				 "ERROR: Packet of size %i is too big "
 				 "(max reasonable size specified is %i)",
 				 total_data_size, max_data_size);
@@ -357,7 +357,7 @@ psa50_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 	}
 	*data = malloc (total_data_size);
 	if (!*data) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_usb_long_dialogue: "
+		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_long_dialogue: "
 				 "ERROR: Could not allocate %i bytes of memory",
 				 total_data_size);
 		return GP_ERROR_NO_MEMORY;
@@ -410,17 +410,17 @@ psa50_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data,
 
 
 int
-psa50_get_file_usb (Camera *camera, const char *name, unsigned char **data, int *length)
+canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length)
 {
 	char payload[100];
 	int payload_length, maxfilesize, res;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_get_file_usb() called for file '%s'",
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file() called for file '%s'",
 			 name);
 
 	/* 8 is strlen ("12111111") */
 	if (8 + strlen (name) > sizeof (payload) - 1) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_get_file_usb: ERROR: "
+		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file: ERROR: "
 				 "Supplied file name '%s' does not fit in payload buffer.",
 				 name);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -430,7 +430,7 @@ psa50_get_file_usb (Camera *camera, const char *name, unsigned char **data, int 
 	 * See the file Protocol in this directory for more information.
 	 */
 	sprintf (payload, "12111111%s", name);
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_get_file_usb: payload %s", payload);
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file: payload %s", payload);
 	payload_length = strlen (payload) + 1;
 	intatpos (payload, 0x0, 0x0);	// get picture
 	intatpos (payload, 0x4, USB_BULK_READ_SIZE);
@@ -446,11 +446,11 @@ psa50_get_file_usb (Camera *camera, const char *name, unsigned char **data, int 
 	}
 
 	/* the 1 is to show status */
-	res = psa50_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
+	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
 				       maxfilesize, payload, payload_length, 1);
 	if (res != GP_OK) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "psa50_get_file_usb: psa50_usb_long_dialogue() "
+				 "canon_usb_get_file: canon_usb_long_dialogue() "
 				 "returned error (%i).", res);
 		return res;
 	}
@@ -459,14 +459,14 @@ psa50_get_file_usb (Camera *camera, const char *name, unsigned char **data, int 
 }
 
 int
-psa50_get_thumbnail_usb (Camera *camera, const char *name, unsigned char **data, int *length)
+canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length)
 {
 	char payload[100];
 	int payload_length, res;
 
 	/* 8 is strlen ("11111111") */
 	if (8 + strlen (name) > sizeof (payload) - 1) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_get_thumbnail_usb: ERROR: "
+		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_thumbnail: ERROR: "
 				 "Supplied file name '%s' does not fit in "
 				 "payload buffer.", name);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -476,7 +476,7 @@ psa50_get_thumbnail_usb (Camera *camera, const char *name, unsigned char **data,
 	 * See the file Protocol in this directory for more information.
 	 */
 	sprintf (payload, "11111111%s", name);
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "psa50_get_thumbnail_usb: "
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_thumbnail: "
 			 "payload %s", payload);
 	payload_length = strlen (payload) + 1;
 
@@ -484,12 +484,12 @@ psa50_get_thumbnail_usb (Camera *camera, const char *name, unsigned char **data,
 	intatpos (payload, 0x4, USB_BULK_READ_SIZE);
 
 	/* 0 is to not show status */
-	res = psa50_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
+	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
 				       32 * 1024, payload, payload_length, 0);
 
 	if (res != GP_OK) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "psa50_get_thumbnail_usb: psa50_usb_long_dialogue() "
+				 "canon_usb_get_thumbnail: canon_usb_long_dialogue() "
 				 "returned error (%i).", res);
 		return res;
 	}
@@ -502,7 +502,7 @@ psa50_get_thumbnail_usb (Camera *camera, const char *name, unsigned char **data,
  *
  */
 int
-psa50_put_file_usb (Camera *camera, CameraFile *file, char *destname, char *destpath)
+canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
 	gp_camera_message (camera, _("Not implemented!"));
 	return GP_ERROR_NOT_SUPPORTED;

@@ -200,7 +200,7 @@ check_readiness (Camera *camera)
 
 	if (camera->pl->cached_ready)
 		return 1;
-	if (psa50_ready (camera) == GP_OK) {
+	if (canon_int_ready (camera) == GP_OK) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera type:  %d\n",
 				 camera->pl->model);
 		camera->pl->cached_ready = 1;
@@ -218,7 +218,7 @@ switch_camera_off (Camera *camera)
 
 	gp_camera_status (camera, _("Switching Camera Off"));
 
-	psa50_off (camera);
+	canon_serial_off (camera);
 	clear_readiness (camera);
 }
 
@@ -243,7 +243,7 @@ canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source)
 	if (!check_readiness (camera))
 		return -1;
 
-	return psa50_get_battery (camera, pwr_status, pwr_source);
+	return canon_int_get_battery (camera, pwr_status, pwr_source);
 }
 
 static int
@@ -257,14 +257,15 @@ update_disk_cache (Camera *camera)
 		return 1;
 	if (!check_readiness (camera))
 		return 0;
-	camera->pl->cached_drive = psa50_get_disk (camera);
+	camera->pl->cached_drive = canon_int_get_disk_name (camera);
 	if (!camera->pl->cached_drive) {
 		gp_camera_status (camera, _("No response"));
 		return 0;
 	}
 	snprintf (root, sizeof (root), "%s\\", camera->pl->cached_drive);
-	if (!psa50_disk_info (camera, root,
-			      &camera->pl->cached_capacity, &camera->pl->cached_available)) {
+	if (!canon_int_get_disk_name_info (camera, root,
+					   &camera->pl->cached_capacity,
+					   &camera->pl->cached_available)) {
 		gp_camera_status (camera, _("No response"));
 		return 0;
 	}
@@ -284,7 +285,7 @@ recurse (Camera *camera, const char *name)
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "recurse() name '%s'", name);
 
-	dir = psa50_list_directory (camera, name);
+	dir = canon_int_list_directory (camera, name);
 	if (!dir)
 		return 1;	/* assume it's empty @@@ */
 	count = 0;
@@ -334,7 +335,7 @@ dir_tree (Camera *camera, const char *path)
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "dir_tree() path '%s'", path);
 
-	dir = psa50_list_directory (camera, path);
+	dir = canon_int_list_directory (camera, path);
 	if (!dir)
 		return NULL;	/* assume it's empty @@@ */
 	for (walk = dir; walk->name; walk++) {
@@ -357,7 +358,7 @@ clear_dir_cache (Camera *camera)
 {
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "clear_dir_cache()");
 
-	psa50_free_dir (camera, camera->pl->cached_tree);
+	canon_int_free_dir (camera, camera->pl->cached_tree);
 }
 
 
@@ -527,7 +528,7 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 			if (!check_readiness (camera)) {
 				return GP_ERROR;
 			}
-			res = psa50_get_file (cached_paths[picture_number], size);
+			res = canon_int_get_file (cached_paths[picture_number], size);
 			if (res != GP_OK)
 				return res;
 #else
@@ -566,24 +567,24 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 					gp_debug_printf (GP_DEBUG_LOW, "canon",
 							 "canon_get_picture: movie thumbnail: %s\n",
 							 file);
-					return psa50_get_file (camera, file, data, size);
+					return canon_int_get_file (camera, file, data, size);
 				} else {
-					*data = psa50_get_thumbnail (camera, file, size);
+					*data = canon_int_get_thumbnail (camera, file, size);
 					if (*data)
 						return GP_OK;
 					else {
 						gp_debug_printf (GP_DEBUG_LOW, "canon",
 								 "canon_get_picture: ",
-								 "psa50_get_thumbnail() '%s' %d failed!",
+								 "canon_int_get_thumbnail() '%s' %d failed!",
 								 file, size);
 						return GP_ERROR;
 					}
 				}
 			} else {
-				res = psa50_get_file (camera, file, data, size);
+				res = canon_int_get_file (camera, file, data, size);
 				if (res != GP_OK) {
 					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "canon_get_picture: psa50_get_file() failed! returned %i",
+							 "canon_get_picture: canon_int_get_file() failed! returned %i",
 							 res);
 					return res;
 				}
@@ -605,12 +606,12 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 						 "canon_get_picture: The old file attributes were: %#x\n",
 						 attribs);
 				attribs &= ~CANON_ATTR_DOWNLOADED;
-				res = psa50_set_file_attributes (camera, filename, path,
-								 attribs);
+				res = canon_int_set_file_attributes (camera, filename, path,
+								     attribs);
 				if (res != GP_OK) {
 					/* warn but continue since we allready have the downloaded picture */
 					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "canon_get_picture: WARNING: psa50_set_file_attributes on "
+							 "canon_get_picture: WARNING: canon_int_set_file_attributes on "
 							 "'%s' '%s' to 0x%x failed! returned %d.",
 							 path, filename, attribs, res);
 				}
@@ -990,7 +991,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "filename: %s\n path: %s\n", filename,
 				 path);
-		if (psa50_delete_file (camera, filename, path)) {
+		if (canon_int_delete_file (camera, filename, path)) {
 			gp_camera_status (camera, _("error deleting file"));
 			return GP_ERROR;
 		} else {
@@ -998,7 +999,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 			if (is_movie (filename)) {
 				strcpy (thumbname, filename);
 				strcpy (thumbname + strlen ("MVI_XXXX"), ".THM\0");
-				if (psa50_delete_file (camera, thumbname, path)) {
+				if (canon_int_delete_file (camera, thumbname, path)) {
 					gp_camera_status (camera,
 							  _("error deleting thumbnail"));
 					return GP_ERROR;
@@ -1191,13 +1192,13 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 				 destpath, destname);
 	}
 
-	r = psa50_directory_operations (camera, dcf_root_dir, DIR_CREATE);
+	r = canon_int_directory_operations (camera, dcf_root_dir, DIR_CREATE);
 	if (r < 0) {
 		gp_camera_message (camera, "could not create \\DCIM directory");
 		return (r);
 	}
 
-	r = psa50_directory_operations (camera, destpath, DIR_CREATE);
+	r = canon_int_directory_operations (camera, destpath, DIR_CREATE);
 	if (r < 0) {
 		gp_camera_message (camera, "could not create destination directory");
 		return (r);
@@ -1210,7 +1211,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 
 	clear_readiness (camera);
 
-	return psa50_put_file (camera, file, destname, destpath);
+	return canon_int_put_file (camera, file, destname, destpath);
 }
 
 /****************************************************************************/
@@ -1241,7 +1242,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
 
 	gp_widget_new (GP_WIDGET_TEXT, "date", &t);
 	if (camera->pl->cached_ready == 1) {
-		camtime = psa50_get_time (camera);
+		camtime = canon_int_get_time (camera);
 		if (camtime != GP_ERROR) {
 			camtm = gmtime (&camtime);
 			gp_widget_set_value (t, asctime (camtm));
@@ -1353,7 +1354,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
 		if (!check_readiness (camera)) {
 			gp_camera_status (camera, _("Camera unavailable"));
 		} else {
-			if (psa50_set_owner_name (camera, wvalue) == GP_OK)
+			if (canon_int_set_owner_name (camera, wvalue) == GP_OK)
 				gp_camera_status (camera, _("Owner name changed"));
 			else
 				gp_camera_status (camera, _("could not change owner name"));
@@ -1366,7 +1367,7 @@ camera_set_config (Camera *camera, CameraWidget *window)
 		if (!check_readiness (camera)) {
 			gp_camera_status (camera, _("Camera unavailable"));
 		} else {
-			if (psa50_set_time (camera)) {
+			if (canon_int_set_time (camera)) {
 				gp_camera_status (camera, _("time set"));
 			} else {
 				gp_camera_status (camera, _("could not set time"));
@@ -1421,7 +1422,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *name, void 
 		strncat (path, "/", sizeof (path));
 	strncat (path, name, sizeof (path));
 
-	r = psa50_directory_operations (camera, path, DIR_CREATE);
+	r = canon_int_directory_operations (camera, path, DIR_CREATE);
 	if (r < 0)
 		return (r);
 
@@ -1440,7 +1441,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder, const char *name, voi
 		strncat (path, "/", sizeof (path));
 	strncat (path, name, sizeof (path));
 
-	r = psa50_directory_operations (camera, path, DIR_REMOVE);
+	r = canon_int_directory_operations (camera, path, DIR_REMOVE);
 	if (r < 0)
 		return (r);
 

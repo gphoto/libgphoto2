@@ -16,14 +16,14 @@
  ****************************************************************************/
 
 int canon_usb_camera_init (Camera *camera);
-int psa50_put_file_usb (Camera *camera, CameraFile *file, char *destname, char *destpath);
-unsigned char *psa50_usb_dialogue (Camera *camera, int canon_funct, int *return_length, 
+int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath);
+unsigned char *canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length, 
 		const char *payload, int payload_length);
-int psa50_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data, 
+int canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **data, 
 		int *data_length, int max_data_size, const char *payload,
 		int payload_length, int display_status);
-int psa50_get_file_usb (Camera *camera, const char *name, unsigned char **data, int *length);
-int psa50_get_thumbnail_usb (Camera *camera, const char *name, unsigned char **data, int *length);
+int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length);
+int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length);
                     
 
 #define USB_BULK_READ_SIZE 0x3000

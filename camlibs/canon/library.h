@@ -131,39 +131,39 @@ typedef unsigned long u32;
 /**
  * Switches the camera on, detects the model and sets its speed
  */
-int psa50_ready(Camera *camera);
+int canon_int_ready(Camera *camera);
 
 /**
  *
  */
-char *psa50_get_disk(Camera *camera);
+char *canon_int_get_disk_name(Camera *camera);
 
 /**
  *
  */
-int psa50_get_battery(Camera *camera, int *pwr_status, int *pwr_source);
+int canon_int_get_battery(Camera *camera, int *pwr_status, int *pwr_source);
 
 /**
  *
  */
-int psa50_disk_info(Camera *camera, const char *name,int *capacity,int *available);
+int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,int *available);
 
 /**
  *
  */
-struct canon_dir *psa50_list_directory(Camera *camera, const char *name);
-void psa50_free_dir(Camera *camera, struct canon_dir *list);
-int psa50_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
-unsigned char *psa50_get_thumbnail(Camera *camera, const char *name,int *length);
-int psa50_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath);
-int psa50_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs);
-int psa50_delete_file(Camera *camera, const char *name, const char *dir);
-int psa50_end(Camera *camera);
-int psa50_off(Camera *camera);
-time_t psa50_get_time(Camera *camera);
-int psa50_set_time(Camera *camera);
-int psa50_directory_operations(Camera *camera, const char *path, int action);
-int psa50_get_owner_name(Camera *camera);
-int psa50_set_owner_name(Camera *camera, const char *name);
+struct canon_dir *canon_int_list_directory(Camera *camera, const char *name);
+void canon_int_free_dir(Camera *camera, struct canon_dir *list);
+int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
+unsigned char *canon_int_get_thumbnail(Camera *camera, const char *name,int *length);
+int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath);
+int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs);
+int canon_int_delete_file(Camera *camera, const char *name, const char *dir);
+int canon_serial_end(Camera *camera);
+int canon_serial_off(Camera *camera);
+time_t canon_int_get_time(Camera *camera);
+int canon_int_set_time(Camera *camera);
+int canon_int_directory_operations(Camera *camera, const char *path, int action);
+int canon_int_identify_camera(Camera *camera);
+int canon_int_set_owner_name(Camera *camera, const char *name);
 
 #endif /* _LIBRARY_H */

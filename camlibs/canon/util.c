@@ -133,7 +133,7 @@ debug_message (Camera *camera, const char *msg, ...)
  * @pos: position in byte block where we are to write to
  * @integer: the int number we are to write into the block
  *
- * Utility function used by psa50_usb_dialogue
+ * Utility function used by canon_usb_dialogue
  * FIXME: What about endianness?
  **/
 void
