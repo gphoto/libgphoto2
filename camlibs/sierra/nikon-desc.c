@@ -584,13 +584,42 @@ static const CameraRegisterType cp880_cam_regs[] = {
 	CAM_REG_TYPE_INIT (cp880, 53, 4, CAM_DESC_DEFAULT, 0), /* language */
 };
 
-const CameraRegisterSetType cp880_desc[] = {
-		{ 
-			N_("Picture Settings"), 
-			SIZE_ADDR (CameraRegisterType, cp880_pic_regs)
-		},
-		{ 
-			N_("Camera Settings"), 
-			SIZE_ADDR (CameraRegisterType, cp880_cam_regs)
-		},
+static const CameraRegisterSetType cp880_desc[] = {
+	{ 
+		N_("Picture Settings"), 
+		SIZE_ADDR (CameraRegisterType, cp880_pic_regs)
+	},
+	{ 
+		N_("Camera Settings"), 
+		SIZE_ADDR (CameraRegisterType, cp880_cam_regs)
+	},
 };
+
+static const char cp880_manual[] = 
+N_(
+"Nikon Coolpix 880:\n"
+"    Camera configuration (or preferences):\n\n"
+"        The optical zoom does not properly\n"
+"        function.\n\n"
+"        Not all configuration settings\n"
+"        can be properly read or written, for\n"
+"        example, the fine tuned setting of\n"
+"        white balance, and the language settings.\n\n"
+"        Put the camera in 'M' mode in order to\n"
+"        to set the shutter speed.\n"
+);
+
+static const char cp995_manual[] = 
+N_(
+"Nikon Coolpix 995:\n"
+"    Camera configuration (preferences) for this\n"
+"    camera are incomplete, contact the gphoto\n"
+"    developers at gphoto-devel@gphoto.net\n"
+"    if you would like to contribute to this\n"
+"    driver.\n\n"
+"    The download should function correctly.\n"
+);
+
+
+const CameraDescType cp880_cam_desc = { cp880_desc, cp880_manual };
+const CameraDescType cp995_cam_desc = { cp880_desc, cp995_manual };

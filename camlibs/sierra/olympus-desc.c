@@ -540,7 +540,7 @@ static const CameraRegisterType oly3040_cam_regs[] = {
 	CAM_REG_TYPE_INIT (oly3040, 41, 4, CAM_DESC_DEFAULT, 0), /* time format, read only */
 };
 
-const CameraRegisterSetType oly3040_desc[] = {
+static const CameraRegisterSetType oly3040_desc[] = {
 		{ 
 			N_("Picture Settings"), 
 			SIZE_ADDR (CameraRegisterType, oly3040_pic_regs)
@@ -550,3 +550,26 @@ const CameraRegisterSetType oly3040_desc[] = {
 			SIZE_ADDR (CameraRegisterType, oly3040_cam_regs)
 		},
 };
+
+static const char oly3040_manual[] =
+N_(
+"Some notes about Olympus cameras:\n"
+"(1) Camera Configuration:\n"
+"    A value of 0 will take the default one (auto).\n"
+"(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
+"    and others) have a USB PC Control mode. In order\n"
+"    to use this mode, the camera must be switched \n"
+"    into 'USB PC control mode'. To get to the menu \n"
+"    for switching modes, turn on the camera, open \n"
+"    the memory card access door and then press and \n"
+"    hold both of the menu and LCD buttons until the \n"
+"    camera control menu appears. Set it to ON. \n"
+"(3) If you switch the 'LCD mode' to 'Monitor' or \n"
+"    'Normal', don't forget to switch it back to 'Off' \n"
+"    before disconnectig. Otherwise you cannot use \n"
+"    the camera's buttons. If you end up with this \n"
+"    state, you should reconnect the camera to the \n"
+"    PC and switch LCD to 'Off'."
+);
+
+const CameraDescType oly3040_cam_desc = { oly3040_desc, oly3040_manual };

@@ -12,7 +12,7 @@ struct _CameraPrivateLibrary {
 	int speed;
 	int first_packet;
 	int usb_wrap;  /* 0: packets sent "raw", 1: see sierra-usbwrap.h */
-	struct CameraRegisterSet const *cam_desc;
+	struct CameraDesc const *cam_desc;
 	char folder[128];
 };
 
@@ -24,7 +24,7 @@ typedef struct {
 	int  usb_vendor;
 	int  usb_product;
 	int  usb_wrap;
-	struct CameraRegisterSet const *cam_desc;
+	struct CameraDesc const *cam_desc;
 } SierraCamera;
 
 #define CHECK(result)					\

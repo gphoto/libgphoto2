@@ -62,7 +62,7 @@ typedef struct {
 	int	action;	/* if we are CAM_DESC_ACTION, the action to use.
 			 * The sub-action is stored in the name-value
 			 * field. This is probably not good enough for the
-			 * standard action (calling sierra_action versu
+			 * standard action (calling sierra_action versus
 			 * calling sierra_sub_action).
 			 */
 } GetSetType;
@@ -124,7 +124,13 @@ typedef struct CameraRegisterSet {
 	CameraRegisterType *regs;
 } CameraRegisterSetType;
 
-extern const CameraRegisterSetType cp880_desc[];
-extern const CameraRegisterSetType oly3040_desc[];
+typedef struct CameraDesc {
+	const CameraRegisterSetType *regset;
+	const char * const manual;
+} CameraDescType;
+
+extern const CameraDescType cp880_cam_desc;
+extern const CameraDescType cp995_cam_desc;
+extern const CameraDescType oly3040_cam_desc;
 
 #endif /* __SIERRA_DESC_H__ */

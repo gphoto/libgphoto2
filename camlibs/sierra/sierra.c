@@ -81,7 +81,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Nikon CoolPix 700", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 800", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 880",	SIERRA_MODEL_CAM_DESC,	0x04b0, 0x0103, 0,
-							cp880_desc},
+							&cp880_cam_desc},
 	{"Nikon CoolPix 900", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 900S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 910", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
@@ -89,7 +89,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Nikon CoolPix 950S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 990",	SIERRA_MODEL_DEFAULT,	0x04b0, 0x0102, 0},
 	{"Nikon CoolPix 995",   SIERRA_MODEL_CAM_DESC,  0x04b0, 0x0104, 1,
-							cp880_desc},
+							&cp995_cam_desc},
 	{"Olympus D-100Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus D-200L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus D-220L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
@@ -113,7 +113,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Olympus C-420", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-420L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-700UZ",	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105, 1,
-							oly3040_desc},
+							&oly3040_cam_desc},
 	{"Olympus C-800", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-800L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-820", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
@@ -129,22 +129,22 @@ static SierraCamera sierra_cameras[] = {
 	{"Olympus C-2000Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-2020Z",	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-2040Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105, 1,
-							oly3040_desc},
+							&oly3040_cam_desc},
 	{"Olympus C-2100UZ",    SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0},
 	{"Olympus C-2500L",     SIERRA_MODEL_OLYMPUS,   0, 0, 0 },
 /* Does this model really exist?
  *	{"Olympus C-2500Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
  */
 	{"Olympus C-3000Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x100, 0,
-							oly3040_desc},
+							&oly3040_cam_desc},
 	{"Olympus C-3020Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105, 1,
-							oly3040_desc},
+							&oly3040_cam_desc},
 	{"Olympus C-3030Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x100, 0,
-							oly3040_desc},
+							&oly3040_cam_desc},
 	{"Olympus C-3040Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105, 1,
-							oly3040_desc},
+							&oly3040_cam_desc},
 	{"Olympus C-4040Z",     SIERRA_MODEL_CAM_DESC,  0x07b4, 0x105, 1,
-							oly3040_desc},
+							&oly3040_cam_desc},
 	{"Panasonic Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid PDC 2300Z",	SIERRA_MODEL_DEFAULT,   0, 0, 0 },
@@ -1823,6 +1823,13 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 	GP_DEBUG ("*** camera_manual");
 
 	switch (camera->pl->model) {
+	case SIERRA_MODEL_CAM_DESC:
+		if (camera->pl->cam_desc->manual == NULL) {
+			strcpy (manual->text, "No camera manual available.\n");
+		} else {
+			strcpy (manual->text, camera->pl->cam_desc->manual);
+		}
+		break;
 	case SIERRA_MODEL_EPSON:
 		strcpy (manual->text,
 			_("Some notes about Epson cameras:\n"
@@ -1927,7 +1934,7 @@ camera_init (Camera *camera, GPContext *context)
         int vendor=0, product=0, usb_wrap=0;
 	GPPortSettings s;
 	CameraAbilities a;
-	const CameraRegisterSetType *cam_desc = NULL;
+	const CameraDescType *cam_desc = NULL;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;

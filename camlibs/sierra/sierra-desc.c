@@ -172,7 +172,7 @@ camera_get_config_cam_desc (Camera *camera, CameraWidget **window,
 {
 	CameraWidget *section;
 	int indw, indr;
-	const CameraRegisterSetType *cam_desc;
+	const CameraDescType *cam_desc = NULL;
 
 	GP_DEBUG ("*** camera_get_config_cam_desc");
 	CHECK (camera_start (camera, context));
@@ -180,13 +180,13 @@ camera_get_config_cam_desc (Camera *camera, CameraWidget **window,
 
 	cam_desc = camera->pl->cam_desc;
 	for (indw = 0; indw < 2 /* XXX sizeof () */; indw++) {
-		GP_DEBUG ("%s registers", cam_desc[indw].window_name);
+		GP_DEBUG ("%s registers", cam_desc->regset[indw].window_name);
 		gp_widget_new (GP_WIDGET_SECTION,
-			       cam_desc[indw].window_name, &section);
+			       cam_desc->regset[indw].window_name, &section);
 		gp_widget_append (*window, section);
-		for (indr = 0; indr < cam_desc[indw].reg_cnt;  indr++) {
+		for (indr = 0; indr < cam_desc->regset[indw].reg_cnt;  indr++) {
 			camera_cam_desc_get_widget (camera,
-			      &cam_desc[indw].regs[indr], section,
+			      &cam_desc->regset[indw].regs[indr], section,
 			      context);
 		}
 	}
@@ -397,20 +397,19 @@ camera_set_config_cam_desc (Camera *camera, CameraWidget *window,
 			    GPContext *context)
 {
 	int wind, rind;
-	const CameraRegisterSetType *cam_desc = NULL;
+	const CameraDescType *cam_desc = NULL;
 
 	GP_DEBUG ("*** camera_set_config_cam_desc");
 	CHECK (camera_start (camera, context));
 
 	cam_desc = camera->pl->cam_desc;
 	for (wind = 0; wind < 2 /* XXX sizeof () */; wind++) {
-		GP_DEBUG ("%s registers", cam_desc[wind].window_name);
-		for (rind = 0; rind < cam_desc[wind].reg_cnt;  rind++) {
+		GP_DEBUG ("%s registers", cam_desc->regset[wind].window_name);
+		for (rind = 0; rind < cam_desc->regset[wind].reg_cnt;  rind++) {
 			camera_cam_desc_set_widget (camera,
-			      &cam_desc[wind].regs[rind], window,
+			      &cam_desc->regset[wind].regs[rind], window,
 			      context);
 		}
 	}
 	return (GP_OK);
 }
-
