@@ -1,26 +1,17 @@
-# Traduction fran,Ag(Baise
-# Copyright (C) 2001 J,Ai(Br,At(Bme Fenal <jerome@fenal.org>
+# Traduction française
+# Copyright (C) 2001 Jérôme Fenal <jerome@fenal.org>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-01-13 17:45+0100\n"
-"PO-Revision-Date: 2002-01-13 23:27+0100\n"
+"POT-Creation-Date: 2002-01-14 22:31+0100\n"
+"PO-Revision-Date: 2002-01-14 22:47MET\n"
 "Last-Translator: Jérôme Fenal <jerome@fenal.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.5\n"
-
-#: libgphoto2_port/gphoto2-port.c:56
-#, c-format
-msgid "The operation '%s' is not supported by this device"
-msgstr "L'opération '%s' n'est pas supportée par ce périphérique"
-
-#: libgphoto2_port/gphoto2-port.c:57
-msgid "The port has not yet been initialized"
-msgstr "Ce port n'a pas encore été initialisé"
 
 #: libgphoto2_port/gphoto2-port.c:272
 msgid "open"
@@ -87,8 +78,7 @@ msgstr "Pas de description d'erreur disponible"
 #: libgphoto2_port/gphoto2-port-info-list.c:279
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
-msgstr ""
-"Ne peut charger aucune bibliothèque d'E/S car '%s' ne peut être ouvert (%m)"
+msgstr "Ne peut charger aucune bibliothèque d'E/S car '%s' ne peut être ouvert (%m)"
 
 #: libgphoto2_port/gphoto2-port-info-list.c:473
 msgid "Generic Port"
@@ -98,83 +88,83 @@ msgstr "Port générique"
 msgid "No error"
 msgstr "Pas d'erreur"
 
-#: libgphoto2_port/gphoto2-port-result.c:59
+#: libgphoto2_port/gphoto2-port-result.c:60
 msgid "Unspecified error"
 msgstr "Erreur indéfinie"
 
-#: libgphoto2_port/gphoto2-port-result.c:60
+#: libgphoto2_port/gphoto2-port-result.c:62
 msgid "I/O problem"
 msgstr "Problème d'E/S"
 
-#: libgphoto2_port/gphoto2-port-result.c:61
+#: libgphoto2_port/gphoto2-port-result.c:64
 msgid "Bad parameters"
 msgstr "Mauvais paramètres"
 
-#: libgphoto2_port/gphoto2-port-result.c:62
+#: libgphoto2_port/gphoto2-port-result.c:66
 msgid "Unsupported operation"
 msgstr "Opération non supportée"
 
-#: libgphoto2_port/gphoto2-port-result.c:63
+#: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Timeout reading from or writing to the port"
 msgstr "Attente dépassée à la lecture ou écriture sur le port"
 
-#: libgphoto2_port/gphoto2-port-result.c:65
+#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Serial port not supported"
 msgstr "Port série non supporté"
 
-#: libgphoto2_port/gphoto2-port-result.c:67
+#: libgphoto2_port/gphoto2-port-result.c:72
 msgid "USB port not supported"
 msgstr "Port USB non supporté"
 
-#: libgphoto2_port/gphoto2-port-result.c:68
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Unknown port"
 msgstr "Port inconnu"
 
-#: libgphoto2_port/gphoto2-port-result.c:69
+#: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Out of memory"
 msgstr "Plus de mémoire"
 
-#: libgphoto2_port/gphoto2-port-result.c:70
+#: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Error loading a library"
 msgstr "Erreur au chargement de la bibliothèque"
 
-#: libgphoto2_port/gphoto2-port-result.c:71
+#: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error initializing the port"
 msgstr "Erreur à l'initialisation du port"
 
-#: libgphoto2_port/gphoto2-port-result.c:72
+#: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error reading from the port"
 msgstr "Erreur à la lecture du port"
 
-#: libgphoto2_port/gphoto2-port-result.c:73
+#: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error writing to the port"
 msgstr "Erreur d'écriture sur le port"
 
-#: libgphoto2_port/gphoto2-port-result.c:74
+#: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error updating the port settings"
 msgstr "Erreur de modification de la configuration du port"
 
-#: libgphoto2_port/gphoto2-port-result.c:75
+#: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error setting the serial port speed"
 msgstr "Erreur à la modification de la vitesse du port"
 
-#: libgphoto2_port/gphoto2-port-result.c:77
+#: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error clearing a halt condition on the USB port"
 msgstr "Erreur au nettoyage d'une condition d'arrêt sur le port USB"
 
-#: libgphoto2_port/gphoto2-port-result.c:79
+#: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Could not find the requested device on the USB port"
 msgstr "Impossible de trouver l'appareil requis sur le port USB"
 
-#: libgphoto2_port/gphoto2-port-result.c:81
+#: libgphoto2_port/gphoto2-port-result.c:94
 msgid "Could not claim the USB device"
 msgstr "Impossible d'utiliser le périphérique USB"
 
-#: libgphoto2_port/gphoto2-port-result.c:83
+#: libgphoto2_port/gphoto2-port-result.c:96
 msgid "Could not lock the device"
 msgstr "Impossible de verrouiller le périphérique"
 
-#: libgphoto2_port/gphoto2-port-result.c:85
+#: libgphoto2_port/gphoto2-port-result.c:98
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
@@ -210,9 +200,9 @@ msgid "Could not set config %d/%d (%m)"
 msgstr "Impossible de configurer %d/%d (%m)"
 
 #: usb/libusb.c:300
-#, fuzzy, c-format
+#, c-format
 msgid "Could not set altsetting %d/%d (%m)"
-msgstr "Impossible de configurer %d/%d (%m)"
+msgstr "Impossible de positionner la configuration alternative %d/%d (%m)"
 
 #: usb/libusb.c:374
 #, c-format
@@ -260,8 +250,7 @@ msgstr "Impossible de déverrouiller le device '%s'."
 #: serial/unix.c:236
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
-"Le device '%s' ne peut être déverrouillé car vérouillé par processus %d."
+msgstr "Le device '%s' ne peut être déverrouillé car vérouillé par processus %d."
 
 #: serial/unix.c:240
 #, c-format
@@ -313,5 +302,3 @@ msgstr "Impossible de vider '%s' (%m.)"
 msgid "Could not set the baudrate to %d"
 msgstr "Impossible de configurer le débit à %d"
 
-#~ msgid "Could not set interface %d/%d (%m)"
-#~ msgstr "Impossible de spécifier l'interface %d/%d (%m)"

@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-01-13 23:20+0100\n"
-"PO-Revision-Date: 2002-01-13 21:09MET\n"
+"POT-Creation-Date: 2002-01-14 22:31+0100\n"
+"PO-Revision-Date: 2002-01-14 22:39MET\n"
 "Last-Translator: Jérôme Fenal <jerome@fenal.org>\n"
 "Language-Team: Français <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +63,7 @@ msgstr ""
 msgid "Name too long, max is 30 characters!"
 msgstr "Nom trop long, limité à 30 caractères !"
 
-#: camlibs/canon/canon.c:1557
+#: camlibs/canon/canon.c:1564
 msgid "File protected"
 msgstr "Fichier protégé en écriture"
 
@@ -79,8 +79,8 @@ msgstr ""
 "si vous rencontrez beaucoup d'erreurs de transmission, essayez d'avoir votre "
 "ordinateur aussi calme que possible (c-à-d sans acitivté disque)"
 
-#: camlibs/canon/library.c:154 camlibs/canon/library.c:1028
-#: camlibs/canon/library.c:1041
+#: camlibs/canon/library.c:154 camlibs/canon/library.c:1043
+#: camlibs/canon/library.c:1056
 msgid "Camera unavailable"
 msgstr "Appareil non disponible"
 
@@ -102,12 +102,12 @@ msgstr "Ne peut obtenir d'information sur le disque : %s"
 msgid "Invalid index"
 msgstr "Index invalide"
 
-#: camlibs/canon/library.c:316 camlibs/canon/library.c:535
-#: camlibs/canon/library.c:792 camlibs/canon/library.c:860
+#: camlibs/canon/library.c:316 camlibs/canon/library.c:547
+#: camlibs/canon/library.c:805 camlibs/canon/library.c:873
 msgid "Could not obtain directory listing"
 msgstr "Impossible d'obtenir le contenu du répertoire"
 
-#: camlibs/canon/library.c:700
+#: camlibs/canon/library.c:712
 #, c-format
 msgid ""
 "  Drive %s\n"
@@ -118,35 +118,35 @@ msgstr ""
 "  %11s octets au total\n"
 "  %11s octets disponibles"
 
-#: camlibs/canon/library.c:708 camlibs/canon/library.c:713
-#: camlibs/canon/library.c:992 camlibs/canon/library.c:998
+#: camlibs/canon/library.c:720 camlibs/canon/library.c:725
+#: camlibs/canon/library.c:1005 camlibs/canon/library.c:1011
 msgid "AC adapter"
 msgstr "Transformateur"
 
-#: camlibs/canon/library.c:708 camlibs/canon/library.c:713
-#: camlibs/canon/library.c:992 camlibs/canon/library.c:998
+#: camlibs/canon/library.c:720 camlibs/canon/library.c:725
+#: camlibs/canon/library.c:1005 camlibs/canon/library.c:1011
 msgid "on battery"
 msgstr "sur piles"
 
-#: camlibs/canon/library.c:709 camlibs/canon/library.c:994
+#: camlibs/canon/library.c:721 camlibs/canon/library.c:1007
 msgid "power OK"
 msgstr "énergie OK"
 
-#: camlibs/canon/library.c:709 camlibs/canon/library.c:994
+#: camlibs/canon/library.c:721 camlibs/canon/library.c:1007
 msgid "power bad"
 msgstr "énergie NOK"
 
-#: camlibs/canon/library.c:717
+#: camlibs/canon/library.c:729
 #, c-format
 msgid "not available: %s"
 msgstr "Indisponible : %s"
 
-#: camlibs/canon/library.c:727
+#: camlibs/canon/library.c:739
 #, c-format
 msgid "%s (host time %s%i seconds)"
 msgstr "%s (heure du PC %s%i seconds)"
 
-#: camlibs/canon/library.c:736
+#: camlibs/canon/library.c:748
 #, c-format
 msgid ""
 "\n"
@@ -173,7 +173,7 @@ msgstr ""
 "\n"
 "Heure : %s\n"
 
-#: camlibs/canon/library.c:754
+#: camlibs/canon/library.c:766
 msgid ""
 "Canon PowerShot series driver by\n"
 "Wolfgang G. Reissnegger,\n"
@@ -191,7 +191,7 @@ msgstr ""
 "Ajouts pour le modèle A5 par Ole W. Saastad\n"
 "Holger Klemm\n"
 
-#: camlibs/canon/library.c:800
+#: camlibs/canon/library.c:813
 msgid "Error deleting file"
 msgstr "Erreur à l'effacement du fichier"
 
@@ -199,18 +199,18 @@ msgstr "Erreur à l'effacement du fichier"
 #. * Probably only in case the camera link died,
 #. * but not if the file just had already been
 #. * deleted before.
-#: camlibs/canon/library.c:815
+#: camlibs/canon/library.c:828
 msgid "Error deleting associated thumbnail file"
 msgstr "Erreur à l'effacement de l'imagette associée"
 
-#: camlibs/canon/library.c:844
+#: camlibs/canon/library.c:857
 msgid ""
 "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr ""
 "Les vitesses supérieures à 57600 ne sont pas supportées pour télécharger "
 "vers l'appareil"
 
-#: camlibs/canon/library.c:894
+#: camlibs/canon/library.c:907
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
@@ -218,76 +218,76 @@ msgstr ""
 "Impossible de télécharger, pas de répertoire libre !\n"
 "Le répertoire 999CANON existe et contient déjà une image AUT_9999.JPG."
 
-#: camlibs/canon/library.c:947
+#: camlibs/canon/library.c:960
 msgid "Camera and Driver Configuration"
 msgstr "Configuration de l'appareil et du pilote"
 
-#: camlibs/canon/library.c:949
+#: camlibs/canon/library.c:962
 msgid "Camera"
 msgstr "Appareil"
 
-#: camlibs/canon/library.c:952
+#: camlibs/canon/library.c:965
 msgid "Camera Model (readonly)"
 msgstr "Modèle de l'appareil (lecture seule)"
 
-#: camlibs/canon/library.c:956 camlibs/canon/library.c:1024
+#: camlibs/canon/library.c:969 camlibs/canon/library.c:1039
 msgid "Owner name"
 msgstr "Nom du propriétaire"
 
-#: camlibs/canon/library.c:963 camlibs/canon/library.c:967
-#: camlibs/canon/library.c:972
+#: camlibs/canon/library.c:976 camlibs/canon/library.c:980
+#: camlibs/canon/library.c:985
 msgid "Date and Time (readonly)"
 msgstr "Date et heure (lecture seule)"
 
-#: camlibs/canon/library.c:968
+#: camlibs/canon/library.c:981
 msgid "Error"
 msgstr "Erreur"
 
-#: camlibs/canon/library.c:973
+#: camlibs/canon/library.c:986
 msgid "Unavailable"
 msgstr "Indisponible"
 
-#: camlibs/canon/library.c:977 camlibs/canon/library.c:1037
+#: camlibs/canon/library.c:990 camlibs/canon/library.c:1052
 msgid "Set camera date to PC date"
 msgstr "Mettre l'appareil à la date du PC"
 
-#: camlibs/canon/library.c:980
+#: camlibs/canon/library.c:993
 msgid "Firmware revision (readonly)"
 msgstr "Révision de microcode (lecture seule)"
 
-#: camlibs/canon/library.c:1000
+#: camlibs/canon/library.c:1013
 msgid "Unavaliable"
 msgstr "Indisponible"
 
-#: camlibs/canon/library.c:1002
+#: camlibs/canon/library.c:1017
 msgid "Power (readonly)"
 msgstr "Énergie (lecture seule)"
 
-#: camlibs/canon/library.c:1006
+#: camlibs/canon/library.c:1021
 msgid "Driver"
 msgstr "Pilote"
 
-#: camlibs/canon/library.c:1009 camlibs/canon/library.c:1051
+#: camlibs/canon/library.c:1024 camlibs/canon/library.c:1066
 msgid "List all files"
 msgstr "Liste de tous les fichiers"
 
-#: camlibs/canon/library.c:1031
+#: camlibs/canon/library.c:1046
 msgid "Owner name changed"
 msgstr "Le nom du propriétaire a changé"
 
-#: camlibs/canon/library.c:1033
+#: camlibs/canon/library.c:1048
 msgid "could not change owner name"
 msgstr "ne peut changer le nom du propriétaire"
 
-#: camlibs/canon/library.c:1044
+#: camlibs/canon/library.c:1059
 msgid "time set"
 msgstr "heure mise à jour"
 
-#: camlibs/canon/library.c:1046
+#: camlibs/canon/library.c:1061
 msgid "could not set time"
 msgstr "ne peut mettre à l'heure"
 
-#: camlibs/canon/library.c:1200
+#: camlibs/canon/library.c:1255
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr "Port de type non-supporté, reçu %i = 0x%x. Initialisation impossible."
@@ -321,14 +321,12 @@ msgid "ERROR: unexpected message2."
 msgstr "ERREUR : message inattendu2."
 
 #: camlibs/canon/serial.c:904
-#, fuzzy
 msgid "Uploading file..."
-msgstr "Téléchargement de l'image..."
+msgstr "Téléchargement du fichier..."
 
 #: camlibs/canon/serial.c:964
-#, fuzzy
 msgid "Getting file..."
-msgstr "Réinitialisation du protocole..."
+msgstr "Récupération du fichier..."
 
 #: camlibs/canon/serial.c:1179
 msgid "Error changing speed."
@@ -348,9 +346,8 @@ msgid "Looking for camera ..."
 msgstr "Recherche de l'appareil..."
 
 #: camlibs/canon/serial.c:1222
-#, fuzzy
 msgid "Trying to contact camera..."
-msgstr "Recherche de l'appareil..."
+msgstr "Essai de contact de l'appareil..."
 
 #: camlibs/canon/serial.c:1227
 msgid "Communication error 1"
@@ -399,7 +396,7 @@ msgstr "Connecté à l'appareil-photo."
 
 #: camlibs/canon/serial.c:1411
 msgid "Getting thumbnail..."
-msgstr ""
+msgstr "Récupération de l'imagette..."
 
 #: camlibs/canon/usb.c:217
 msgid "Could not apply USB settings"
@@ -418,7 +415,7 @@ msgstr "Appareil pas prêt, impossible de vérouiller l'appareil : %s"
 
 #: camlibs/canon/usb.c:566
 msgid "Receiving data..."
-msgstr ""
+msgstr "Réception des données..."
 
 #: camlibs/canon/usb.c:716
 msgid "Not implemented!"
@@ -457,7 +454,6 @@ msgid "Capture type is not supported"
 msgstr "Type de capture non supporté"
 
 #: camlibs/dimera/dimera3500.c:506
-#, c-format
 msgid " (battery is %d%% full)"
 msgstr " (la batterie est chargée à %d%%)"
 
@@ -633,7 +629,7 @@ msgstr "Problème au téléchargement de l'image"
 msgid "User canceled download"
 msgstr "L'utilisateur a annulé le téléchargement"
 
-#: camlibs/dimera/dimera3500.c:723
+#: camlibs/dimera/dimera3500.c:723 camlibs/samsung/samsung.c:209
 msgid "Downloading image..."
 msgstr "Téléchargement de l'image..."
 
@@ -658,37 +654,37 @@ msgstr ""
 msgid "Looks like a modem, not a camera"
 msgstr "Ça ressemble à un modem, pas un appareil-photo"
 
-#: camlibs/directory/directory.c:152
-#, fuzzy, c-format
+#: camlibs/directory/directory.c:154
+#, c-format
 msgid "Listing files in '%s'..."
-msgstr "Utilisation du nom de fichier '%s'..."
+msgstr "Listage des fichiers de '%s'..."
 
-#: camlibs/directory/directory.c:204
-#, fuzzy, c-format
+#: camlibs/directory/directory.c:206
+#, c-format
 msgid "Listing folders in '%s'..."
-msgstr "Utilisation du nom de fichier '%s'..."
+msgstr "Listage des dossiers de '%s'..."
 
-#: camlibs/directory/directory.c:245
+#: camlibs/directory/directory.c:247
 #, c-format
 msgid "Could not get information about '%s' in '%s' (%m)."
 msgstr "Impossible de trouver l'information '%s' dans '%s' (%m)."
 
-#: camlibs/directory/directory.c:251
+#: camlibs/directory/directory.c:253
 #, c-format
 msgid "Could not follow the link '%s' in '%s' (%m)."
 msgstr "Impossible de suivre le lien '%s' in '%s' (%m)."
 
-#: camlibs/directory/directory.c:316
+#: camlibs/directory/directory.c:318
 #, c-format
 msgid "Could not change time of file '%s' in '%s' (%m)."
 msgstr "Impossible de modifier l'heure du fichier '%s' in '%s' (%m)."
 
 # Browser == Stöberer? [CM]
-#: camlibs/directory/directory.c:418
+#: camlibs/directory/directory.c:421
 msgid "Directory Browse"
 msgstr "Navigation dans le répertoire"
 
-#: camlibs/directory/directory.c:419 camlibs/directory/directory.c:450
+#: camlibs/directory/directory.c:422 camlibs/directory/directory.c:453
 msgid "View hidden directories"
 msgstr "Voir les répertoires cachés"
 
@@ -756,8 +752,8 @@ msgstr "Carte CompactFlash"
 msgid ""
 "The Kodak DC120 camera uses the KDC file format for storing images. If you "
 "want to view the images you download from your camera, you will need to "
-"download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
-"sourceforge.net"
+"download the \"kdc2tiff\" program. It is available from "
+"http://kdc2tiff.sourceforge.net"
 msgstr ""
 "L'appareil-photo Kodak DC120 utilise le format de fichier KDC pour "
 "enregistrer les images. Si vous voulez voir les images que vous téléchargez "
@@ -815,14 +811,14 @@ msgstr "Total des images capturées : %d, Allumages du flash : %d\n"
 #: camlibs/kodak/dc240/dc240.c:211
 msgid ""
 "Kodak DC240 Camera Library\n"
-"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser."
-"fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere "
+"<hfiguiere@teaser.fr>\n"
 "Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 "Rewritten and updated for gPhoto2."
 msgstr ""
 "Bibliothèque pour l'appareil-photo Kodak DC240\n"
-"Scott Fritzinger <scottf@gphoto.net> et Hubert Figuiere <hfiguiere@teaser."
-"fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> et Hubert Figuiere "
+"<hfiguiere@teaser.fr>\n"
 "Bibliothèque pour les appareils-photo Kodak DC240, DC280, DC3400 et DC5000.\n"
 "Ré-écrit et mis à jour pour gPhoto2."
 
@@ -967,9 +963,8 @@ msgid "Unknown error"
 msgstr "Erreur inconnue"
 
 #: camlibs/konica/library.c:174
-#, fuzzy
 msgid "Getting file list..."
-msgstr "Utilisation du nom de fichier '%s'..."
+msgstr "Récupération de la liste des fichiers..."
 
 #: camlibs/konica/library.c:336
 msgid "Testing different speeds..."
@@ -1018,9 +1013,8 @@ msgstr ""
 "Supporte tous les appareils Konica et certains HP."
 
 #: camlibs/konica/library.c:650
-#, fuzzy
 msgid "Getting configuration..."
-msgstr "Configuration de l'appareil"
+msgstr "Interrogation de la configuration..."
 
 #. Create the window.
 #: camlibs/konica/library.c:657
@@ -1212,7 +1206,6 @@ msgstr "Paramètres temporaires"
 
 #. Self Timer
 #: camlibs/konica/library.c:830 camlibs/konica/library.c:1052
-#: camlibs/polaroid/pdc700.c:150
 msgid "Self Timer"
 msgstr "Retardateur"
 
@@ -1445,8 +1438,8 @@ msgstr "Envoi de l'image: %s."
 #: camlibs/panasonic/dc1000.c:455 camlibs/panasonic/dc1580.c:580
 #, c-format
 msgid ""
-"File size is %i bytes. The size of the largest file possible to upload is: %"
-"i bytes."
+"File size is %i bytes. The size of the largest file possible to upload is: "
+"%i bytes."
 msgstr ""
 "La taille du fichier est de %i octets. La taille du plus grand fichier est "
 "de : %i octets."
@@ -1492,28 +1485,6 @@ msgstr ""
 "Basée sur le programme dc1000 écrit par\n"
 "Fredrik Roubert <roubert@df.lth.se> et\n"
 "Galen Brooks <galen@nine.com>."
-
-#: camlibs/polaroid/pdc700.c:147
-msgid "Image Quality"
-msgstr ""
-
-#: camlibs/polaroid/pdc700.c:148
-#, fuzzy
-msgid "Flash Setting"
-msgstr "Réglage de la prise de vue"
-
-#: camlibs/polaroid/pdc700.c:149
-msgid "LCD"
-msgstr ""
-
-#: camlibs/polaroid/pdc700.c:151
-#, fuzzy
-msgid "Auto Power Off (minutes)"
-msgstr "Auto-extinction de l'écran LCD (en secondes)"
-
-#: camlibs/polaroid/pdc700.c:152
-msgid "Information"
-msgstr ""
 
 #: camlibs/polaroid/pdc700.c:154
 msgid "normal"
@@ -1598,9 +1569,8 @@ msgid "The camera did not accept the command."
 msgstr "L'appareil a refusé la commande."
 
 #: camlibs/polaroid/pdc700.c:294
-#, fuzzy
 msgid "Downloading..."
-msgstr "Téléchargement de %s."
+msgstr "Téléchargement..."
 
 #: camlibs/polaroid/pdc700.c:320
 #, c-format
@@ -1619,8 +1589,8 @@ msgstr ""
 #: camlibs/polaroid/pdc700.c:844
 #, c-format
 msgid ""
-"%i bytes of an unknown image format have been received. Please write <gphoto-"
-"devel@gphoto.org> for assistance."
+"%i bytes of an unknown image format have been received. Please write "
+"<gphoto-devel@gphoto.org> for assistance."
 msgstr ""
 "%i octets d'une image de format inconnu reçus. Merci d'écrire à <gphoto- "
 "devel@gphoto.org> pour une assistance."
@@ -1676,6 +1646,18 @@ msgstr ""
 msgid "The requested port type (%i) is not supported by this driver."
 msgstr ""
 "Le type de port demandé (%i) n'est pas supporté par ce pilote logiciel."
+
+#: camlibs/samsung/samsung.c:239
+msgid ""
+"The Samsung digimax 800k driver has been written by James Mckenzie "
+"<james@fishsoup.dhs.org> for gphoto. Lutz Müller <urc8@rz.uni-karlsruhe.de> "
+"ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and "
+"enhanced the port."
+msgstr ""
+"Le pilote pour Samsung digimax 800k driver a été écrit pour gPhoto par James "
+"Mckenzie <james@fishsoup.dhs.org>.Lutz Müller <urc8@rz.uni-karlsruhe.de>  "
+"l'a porté pour gPhoto2. Marcus Meißner <marcus@jet.franken.de> a corrigé et "
+"amélioré le portage."
 
 #: camlibs/sierra/sierra.c:567
 msgid "The file to be uploaded has a null length"
@@ -1740,8 +1722,6 @@ msgstr "Faible"
 msgid "Medium"
 msgstr "Moyenne"
 
-#. Those values are for a C-2020 Z. If your model differs, we
-#. have to distinguish models here...
 #: camlibs/sierra/sierra.c:783 camlibs/sierra/sierra.c:1091
 #: camlibs/sierra/sierra.c:1420 camlibs/sierra/sierra.c:1621
 msgid "Color Mode"
@@ -2281,12 +2261,6 @@ msgstr ""
 "Carsten Weinholz <c.weinholz@netcologne.de>\n"
 "Étendu les appareils Aiptek PenCam et autres appareils USB double mode STM."
 
-#. libgphoto2_port doesn't have a GPContext
-#: libgphoto2/gphoto2-camera.c:81
-#, c-format
-msgid "An error occurred in the io-library ('%s'): %s"
-msgstr ""
-
 #: libgphoto2/gphoto2-camera.c:791
 msgid "Could not detect any camera"
 msgstr "Impossible de détecter aucun appareil"
@@ -2332,11 +2306,6 @@ msgstr "Cet appareil ne peut être piloté pour la capture."
 #: libgphoto2/gphoto2-camera.c:1101
 msgid "This camera can not capture previews."
 msgstr "Cet appareil ne peut fournir de pré-visualisation de la capture."
-
-#: libgphoto2/gphoto2-filesys.c:112
-#, fuzzy, c-format
-msgid "The path '%s' is not absolute."
-msgstr "Chemin relatif"
 
 #: libgphoto2/gphoto2-filesys.c:231
 #, c-format
@@ -2485,309 +2454,313 @@ msgstr "Opération annulée"
 msgid "Unknown camera library error"
 msgstr "Erreur inconnue de la bibliothèque de l'appareil"
 
-#: frontends/command-line/main.c:146
+#: frontends/command-line/main.c:147
 msgid "Turn on debugging"
 msgstr "Activer le débogage"
 
-#: frontends/command-line/main.c:148
+#: frontends/command-line/main.c:149
 msgid "Quiet output (default=verbose)"
 msgstr "Sortie silencieuse (defaut=verbeux)"
 
 #. Display and die actions
-#: frontends/command-line/main.c:152
+#: frontends/command-line/main.c:153
 msgid "Display version and exit"
 msgstr "Afficher la version et terminer"
 
-#: frontends/command-line/main.c:153
+#: frontends/command-line/main.c:154
 msgid "Displays this help screen"
 msgstr "Afficher cet écran d'aide"
 
-#: frontends/command-line/main.c:154
+#: frontends/command-line/main.c:155
 msgid "List supported camera models"
 msgstr "Lister les modèles d'appareils supportés"
 
-#: frontends/command-line/main.c:155
+#: frontends/command-line/main.c:156
 msgid "Create output for usb.usermap"
 msgstr "Créer le contenu pour usb.usermap"
 
-#: frontends/command-line/main.c:156
+#: frontends/command-line/main.c:157
 msgid "List supported port devices"
 msgstr "Lister les types de ports supportés"
 
-#: frontends/command-line/main.c:157
+#: frontends/command-line/main.c:158
 msgid "Send file to stdout"
 msgstr "Résultats sur la sortie standard"
 
-#: frontends/command-line/main.c:158
+#: frontends/command-line/main.c:159
 msgid "Print filesize before data"
 msgstr "Indiquer taille de fichier avant données"
 
-#: frontends/command-line/main.c:159
+#: frontends/command-line/main.c:160
 msgid "List auto-detected cameras"
 msgstr "Lister les appareils auto-détectés"
 
 #. Settings needed for camera functions
-#: frontends/command-line/main.c:162
+#: frontends/command-line/main.c:163
 msgid "Specify port device"
 msgstr "Spécifier le port de périphérique"
 
-#: frontends/command-line/main.c:163
+#: frontends/command-line/main.c:164
 msgid "Specify serial transfer speed"
 msgstr "Spécifier la vitesse du transfert série"
 
-#: frontends/command-line/main.c:164
+#: frontends/command-line/main.c:165
 msgid "Specify camera model"
 msgstr "Spécifier le modèle d'appareil"
 
-#: frontends/command-line/main.c:165
+#: frontends/command-line/main.c:166
 msgid "Specify a filename"
 msgstr "Spécifier un nom de fichier"
 
 #. Actions that depend on settings
-#: frontends/command-line/main.c:168
+#: frontends/command-line/main.c:169
 msgid "Display camera abilities"
 msgstr "Spécifier les capacités de l'appareil"
 
-#: frontends/command-line/main.c:169
+#: frontends/command-line/main.c:170
 msgid "Specify camera folder (default=\"/\")"
 msgstr "Spécifier le dossier (défaut=\"/\")"
 
-#: frontends/command-line/main.c:170
-msgid "Recursively descend through folders"
-msgstr "Parcourir récursivement les dossiers"
-
 #: frontends/command-line/main.c:171
+msgid "Recursion (default - do not use)"
+msgstr "Récursion (défaut : non)"
+
+#: frontends/command-line/main.c:172
+msgid "Turn off recursion"
+msgstr "Désactiver la récursion"
+
+#: frontends/command-line/main.c:173
 msgid "List folders in folder"
 msgstr "Lister les dossiers dans le dossier"
 
-#: frontends/command-line/main.c:172
+#: frontends/command-line/main.c:174
 msgid "List files in folder"
 msgstr "Lister les fichiers dans le dossier"
 
-#: frontends/command-line/main.c:173 frontends/command-line/main.c:174
+#: frontends/command-line/main.c:175 frontends/command-line/main.c:176
 msgid "name"
 msgstr "nom"
 
-#: frontends/command-line/main.c:173
+#: frontends/command-line/main.c:175
 msgid "Create a directory"
 msgstr "Créer un dossier"
 
-#: frontends/command-line/main.c:174
+#: frontends/command-line/main.c:176
 msgid "Remove a directory"
 msgstr "Effacer un dossier"
 
-#: frontends/command-line/main.c:175
+#: frontends/command-line/main.c:177
 msgid "Display number of pictures"
 msgstr "Afficher le nombre d'images"
 
-#: frontends/command-line/main.c:176
+#: frontends/command-line/main.c:178
 msgid "Get pictures given in range"
 msgstr "Récupérer les images de l'intervalle"
 
-#: frontends/command-line/main.c:177
+#: frontends/command-line/main.c:179
 msgid "Get all pictures from folder"
 msgstr "Récupérer les images du dossier"
 
-#: frontends/command-line/main.c:178
+#: frontends/command-line/main.c:180
 msgid "Get thumbnails given in range"
 msgstr "Récupérer les imagettes de l'intervalle"
 
-#: frontends/command-line/main.c:179
+#: frontends/command-line/main.c:181
 msgid "Get all thumbnails from folder"
 msgstr "Récupérer les imagettes"
 
-#: frontends/command-line/main.c:180
+#: frontends/command-line/main.c:182
 msgid "Get raw data given in range"
 msgstr "Récupérer les images brutes de l'intervalle"
 
-#: frontends/command-line/main.c:181
+#: frontends/command-line/main.c:183
 msgid "Get all raw data from folder"
 msgstr "Récupérer les images brutes du dossier"
 
-#: frontends/command-line/main.c:182
+#: frontends/command-line/main.c:184
 msgid "Get audio data given in range"
 msgstr "Récuperer les données audio de l'intervalle"
 
-#: frontends/command-line/main.c:183
+#: frontends/command-line/main.c:185
 msgid "Get all audio data from folder"
 msgstr "Récupérer les données audio du dossier"
 
-#: frontends/command-line/main.c:184
+#: frontends/command-line/main.c:186
 msgid "Delete pictures given in range"
 msgstr "Effacer les images de l'intervalle"
 
-#: frontends/command-line/main.c:185
+#: frontends/command-line/main.c:187
 msgid "Delete all pictures in folder"
 msgstr "Effacer toutes les images du dossier"
 
-#: frontends/command-line/main.c:186
+#: frontends/command-line/main.c:188
 msgid "Upload a picture to camera"
 msgstr "Envoyer filename sur l'appareil"
 
-#: frontends/command-line/main.c:187
+#: frontends/command-line/main.c:189
 msgid "Capture a quick preview"
 msgstr "Capturer une prévisualisation"
 
-#: frontends/command-line/main.c:188
+#: frontends/command-line/main.c:190
 msgid "Capture an image"
 msgstr "Capturer une image"
 
-#: frontends/command-line/main.c:189
+#: frontends/command-line/main.c:191
 msgid "Capture a movie "
 msgstr "Capturer un film "
 
-#: frontends/command-line/main.c:190
+#: frontends/command-line/main.c:192
 msgid "Capture an audio clip"
 msgstr "Capturer un clip audio"
 
-#: frontends/command-line/main.c:192
+#: frontends/command-line/main.c:194
 msgid "Configure"
 msgstr "Configurer"
 
-#: frontends/command-line/main.c:194
+#: frontends/command-line/main.c:196
 msgid "Summary of camera status"
 msgstr "Résumé de l'état de l'appareil"
 
-#: frontends/command-line/main.c:195
+#: frontends/command-line/main.c:197
 msgid "Camera driver manual"
 msgstr "Manuel du pilote de l'appareil"
 
-#: frontends/command-line/main.c:196
+#: frontends/command-line/main.c:198
 msgid "About the camera driver"
 msgstr "À propos du pilote de l'appareil"
 
-#: frontends/command-line/main.c:197
+#: frontends/command-line/main.c:199
 msgid "gPhoto shell"
 msgstr "Interpréteur gPhoto"
 
-#: frontends/command-line/main.c:292 frontends/command-line/main.c:297
+#: frontends/command-line/main.c:294 frontends/command-line/main.c:299
 #, c-format
 msgid "%-30s %-16s\n"
 msgstr "%-30s %-16s\n"
 
-#: frontends/command-line/main.c:292
+#: frontends/command-line/main.c:294
 msgid "Model"
 msgstr "Modèle"
 
-#: frontends/command-line/main.c:292
+#: frontends/command-line/main.c:294
 msgid "Port"
 msgstr "Port"
 
-#: frontends/command-line/main.c:293
+#: frontends/command-line/main.c:295
 msgid "----------------------------------------------------------\n"
 msgstr "----------------------------------------------------------\n"
 
-#: frontends/command-line/main.c:310
+#: frontends/command-line/main.c:312
 msgid "You need to specify a camera model"
 msgstr "Vous devez spécifier un modèle d'appareil"
 
 #. Output a parsing friendly abilities table. Split on ":"
-#: frontends/command-line/main.c:321
+#: frontends/command-line/main.c:323
 #, c-format
 msgid "Abilities for camera             : %s\n"
 msgstr "Capacités de l'appareil                       : %s\n"
 
-#: frontends/command-line/main.c:323
+#: frontends/command-line/main.c:325
 #, c-format
 msgid "Serial port support              : %s\n"
 msgstr "Support du port série                         : %s\n"
 
-#: frontends/command-line/main.c:324 frontends/command-line/main.c:326
-#: frontends/command-line/main.c:345 frontends/command-line/main.c:347
-#: frontends/command-line/main.c:349 frontends/command-line/main.c:351
+#: frontends/command-line/main.c:326 frontends/command-line/main.c:328
+#: frontends/command-line/main.c:347 frontends/command-line/main.c:349
+#: frontends/command-line/main.c:351 frontends/command-line/main.c:353
 msgid "yes"
 msgstr "oui"
 
-#: frontends/command-line/main.c:324 frontends/command-line/main.c:326
-#: frontends/command-line/main.c:345 frontends/command-line/main.c:347
-#: frontends/command-line/main.c:349 frontends/command-line/main.c:351
+#: frontends/command-line/main.c:326 frontends/command-line/main.c:328
+#: frontends/command-line/main.c:347 frontends/command-line/main.c:349
+#: frontends/command-line/main.c:351 frontends/command-line/main.c:353
 msgid "no"
 msgstr "non"
 
-#: frontends/command-line/main.c:325
+#: frontends/command-line/main.c:327
 #, c-format
 msgid "USB support                      : %s\n"
 msgstr "Support du port USB                           : %s\n"
 
-#: frontends/command-line/main.c:328
+#: frontends/command-line/main.c:330
 msgid "Transfer speeds supported        :\n"
 msgstr "Vitesses de transfert supportées              :\n"
 
-#: frontends/command-line/main.c:331
+#: frontends/command-line/main.c:333
 #, c-format
 msgid "                                 : %i\n"
 msgstr "                                              : %i\n"
 
-#: frontends/command-line/main.c:335
+#: frontends/command-line/main.c:337
 msgid "Capture choices                  :\n"
 msgstr "Choix de capture                              :\n"
 
-#: frontends/command-line/main.c:337
+#: frontends/command-line/main.c:339
 msgid "                                 : Image\n"
 msgstr "                                              : Image\n"
 
-#: frontends/command-line/main.c:339
+#: frontends/command-line/main.c:341
 msgid "                                 : Video\n"
 msgstr "                                              : Video\n"
 
-#: frontends/command-line/main.c:341
+#: frontends/command-line/main.c:343
 msgid "                                 : Audio\n"
 msgstr "                                              : Audio\n"
 
-#: frontends/command-line/main.c:343
+#: frontends/command-line/main.c:345
 msgid "                                 : Preview\n"
 msgstr "                                              : Prévisualisation\n"
 
-#: frontends/command-line/main.c:344
+#: frontends/command-line/main.c:346
 #, c-format
 msgid "Configuration support            : %s\n"
 msgstr "Support de la configuration                   : %s\n"
 
-#: frontends/command-line/main.c:346
+#: frontends/command-line/main.c:348
 #, c-format
 msgid "Delete files on camera support   : %s\n"
 msgstr "Effacer les fichiers du support de l'appareil : %s\n"
 
-#: frontends/command-line/main.c:348
+#: frontends/command-line/main.c:350
 #, c-format
 msgid "File preview (thumbnail) support : %s\n"
 msgstr "Support des imagettes                         : %s\n"
 
-#: frontends/command-line/main.c:350
+#: frontends/command-line/main.c:352
 #, c-format
 msgid "File upload support              : %s\n"
 msgstr "Support de l'envoi de fichiers                : %s\n"
 
-#: frontends/command-line/main.c:372
+#: frontends/command-line/main.c:374
 #, c-format
 msgid "Number of supported cameras: %i\n"
 msgstr "Nombre d'appareils supportés                  : %i\n"
 
-#: frontends/command-line/main.c:373
+#: frontends/command-line/main.c:375
 msgid "Supported cameras:\n"
 msgstr "Appareils supportés :\n"
 
-#: frontends/command-line/main.c:384
+#: frontends/command-line/main.c:386
 #, c-format
 msgid "\t\"%s\" (TESTING)\n"
 msgstr "\t\"%s\" (TEST)\n"
 
-#: frontends/command-line/main.c:387
+#: frontends/command-line/main.c:389
 #, c-format
 msgid "\t\"%s\" (EXPERIMENTAL)\n"
 msgstr "\t\"%s\" (EXPÉRIMENTAL)\n"
 
-#: frontends/command-line/main.c:391
+#: frontends/command-line/main.c:393
 #, c-format
 msgid "\t\"%s\"\n"
 msgstr "\t\"%s\"\n"
 
-#: frontends/command-line/main.c:456
+#: frontends/command-line/main.c:458
 #, c-format
 msgid "Devices found: %i\n"
 msgstr "Dispositifs trouvés : %i\n"
 
-#: frontends/command-line/main.c:457
+#: frontends/command-line/main.c:459
 msgid ""
 "Path                             Description\n"
 "--------------------------------------------------------------\n"
@@ -2796,7 +2769,7 @@ msgstr ""
 "--------------------------------------------------------------\n"
 
 #. User didn't specify the port type; try to guess it
-#: frontends/command-line/main.c:494
+#: frontends/command-line/main.c:496
 #, c-format
 msgid ""
 "Ports must look like 'serial:/dev/ttyS0' or 'usb:', but '%s' is missing a "
@@ -2805,56 +2778,63 @@ msgstr ""
 "Les ports doivent ressembler à «serial:/dev/ttyS0» ou «usb:», mais il manque "
 "un «:» à '%s' donc je vais essayer de deviner ce que vous voulez dire."
 
-#: frontends/command-line/main.c:513
+#: frontends/command-line/main.c:515
 #, c-format
 msgid "Guessed port name. Using port '%s' from now on."
 msgstr "Nom du port deviné. Utilisation du port '%s%' à partir de maintenant."
 
-#: frontends/command-line/main.c:544
+#: frontends/command-line/main.c:546
 #, c-format
 msgid "%s(ERROR): "
 msgstr "%s(ERREUR): "
 
-#: frontends/command-line/main.c:645
+#: frontends/command-line/main.c:598
+msgid ""
+"Recursion is now default and the use of --recurse or -R is now deprecated.\n"
+msgstr ""
+"La récursion est maintenant activée par défaut et l'utilisation de --recurse "
+"ou -R est maintenant obsolète.\n"
+
+#: frontends/command-line/main.c:656
 #, c-format
 msgid "Number of pictures in folder %s: %i\n"
 msgstr "Nombre d'images dans le dossier %s: %i\n"
 
-#: frontends/command-line/main.c:678
+#: frontends/command-line/main.c:689
 #, c-format
 msgid "Using filename '%s'..."
 msgstr "Utilisation du nom de fichier '%s'..."
 
 # !!! [y/n] !!! [CM]
-#: frontends/command-line/main.c:704
+#: frontends/command-line/main.c:715
 #, c-format
 msgid "File %s exists. Overwrite? [y|n] "
 msgstr "Le fichier %s existe. L'écraser ? [y|n] "
 
-#: frontends/command-line/main.c:715
+#: frontends/command-line/main.c:726
 msgid "Specify new filename? [y|n] "
 msgstr "Spécifier un nouveau nom de fichier ? [y|n] "
 
-#: frontends/command-line/main.c:724
+#: frontends/command-line/main.c:735
 msgid "Enter new filename: "
 msgstr "Entrez le nouveau nom de fichier : "
 
-#: frontends/command-line/main.c:729
+#: frontends/command-line/main.c:740
 #, c-format
 msgid "Saving file as %s\n"
 msgstr "Enregistrement du fichier sous %s\n"
 
-#: frontends/command-line/main.c:733
+#: frontends/command-line/main.c:744
 #, c-format
 msgid "Can not save file as %s"
 msgstr "Impossible d'enregistrer le fichier sous %s"
 
-#: frontends/command-line/main.c:956
+#: frontends/command-line/main.c:967
 #, c-format
 msgid "New file is in location %s%s%s on the camera\n"
 msgstr "Le nouveau fichier est à l'emplacement %s%s%s sur l'appareil\n"
 
-#: frontends/command-line/main.c:1014
+#: frontends/command-line/main.c:1025
 #, c-format
 msgid ""
 "Camera Summary:\n"
@@ -2863,7 +2843,7 @@ msgstr ""
 "Résumé de l'appareil :\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1026
+#: frontends/command-line/main.c:1037
 #, c-format
 msgid ""
 "Camera Manual:\n"
@@ -2872,7 +2852,7 @@ msgstr ""
 "Manuel de l'appareil :\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1038
+#: frontends/command-line/main.c:1049
 #, c-format
 msgid ""
 "About the library:\n"
@@ -2881,11 +2861,11 @@ msgstr ""
 "À propos de la bibliothèque :\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1095
+#: frontends/command-line/main.c:1106
 msgid "Please specify a model."
 msgstr "Merci de spcéifier un modèle."
 
-#: frontends/command-line/main.c:1123
+#: frontends/command-line/main.c:1134
 #, c-format
 msgid ""
 "The port you specified ('%s') can not be found. Please specify one of the "
@@ -2896,19 +2876,19 @@ msgstr ""
 "l'un des ports trouvé par la commande «gphoto2 --list-ports» et assurez-vous "
 "que la syntaxe est correcte (i.e. avec le préfixe 'serial:' or 'usb:'.)"
 
-#: frontends/command-line/main.c:1140
+#: frontends/command-line/main.c:1151
 msgid "Please specify a port."
 msgstr "Merci de spécifier un port."
 
-#: frontends/command-line/main.c:1186
+#: frontends/command-line/main.c:1197
 msgid "*** Error ***              \n"
 msgstr "*** Erreur ***             \n"
 
-#: frontends/command-line/main.c:1292
+#: frontends/command-line/main.c:1303
 msgid "ERROR: "
 msgstr "ERREUR : "
 
-#: frontends/command-line/main.c:1303
+#: frontends/command-line/main.c:1314
 msgid ""
 "\n"
 "Cancelling...\n"
@@ -2916,7 +2896,7 @@ msgstr ""
 "\n"
 "Annulation...\n"
 
-#: frontends/command-line/main.c:1356
+#: frontends/command-line/main.c:1367
 msgid ""
 "gPhoto2 for OS/2 requires you to set the enviroment value CAMLIBS to the "
 "location of the camera libraries. e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n"
@@ -2925,20 +2905,20 @@ msgstr ""
 "CAMLIBS à l'emplacement des bibliothèques de support des appareils, ie. SET "
 "CAMLIBS=C:\\GPHOTO2\\CAM\n"
 
-#: frontends/command-line/main.c:1366
+#: frontends/command-line/main.c:1377
 msgid ""
 "gPhoto2 for OS/2 requires you to set the enviroment value IOLIBS to the "
 "location of the io libraries. e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"
 msgstr ""
 "gPhoto2 pour OS/2 requiert que vous positionnez la variable d'environnement "
-"IOLIBS à l'emplacement des bibliothèques de communication, ie. SET CAMLIBS=C:"
-"\\GPHOTO2\\IOLIB\n"
+"IOLIBS à l'emplacement des bibliothèques de communication, ie. SET "
+"CAMLIBS=C:\\GPHOTO2\\IOLIB\n"
 
-#: frontends/command-line/main.c:1384
+#: frontends/command-line/main.c:1395
 msgid "Operation cancelled.\n"
 msgstr "Opération annulée.\n"
 
-#: frontends/command-line/main.c:1387
+#: frontends/command-line/main.c:1398
 #, c-format
 msgid ""
 "*** Error ('%s') ***       \n"
@@ -2947,7 +2927,7 @@ msgstr ""
 "*** Erreur ('%s') ***      \n"
 "\n"
 
-#: frontends/command-line/main.c:1393
+#: frontends/command-line/main.c:1404
 msgid ""
 "For debugging messages, please use the --debug option.\n"
 "Debugging messages may help finding a solution to your problem.\n"
@@ -2962,6 +2942,16 @@ msgstr ""
 "liste de distribution des développeurs gPhoto <gphoto-devel@gphoto.org>,\n"
 "merci de lancer gphoto2 comme suit :\n"
 "\n"
+
+#: frontends/command-line/main.c:1436
+msgid ""
+"\n"
+"Errors occuring beyond this point are 'expected' on OS/2\n"
+"investigation pending\n"
+msgstr ""
+"\n"
+"Des erreurs intervenant à partir de maintenant sont attendues\n"
+"sous OS/2. Les investigations sont en cours\n"
 
 #: frontends/command-line/gphoto2-cmd-config.c:64
 msgid "</B/24>Continue"
@@ -3021,10 +3011,12 @@ msgstr "Usage :\n"
 #: frontends/command-line/options.c:199
 msgid ""
 "Short/long options (& argument)        Description\n"
-"--------------------------------------------------------------------------------\n"
+"-----------------------------------------------------------------------------"
+"---\n"
 msgstr ""
 "Option courtes/longues (& arg.)  Description\n"
-"--------------------------------------------------------------------------------\n"
+"-----------------------------------------------------------------------------"
+"---\n"
 
 #. The format line is made translatable so that some
 #. languages can make the table a bit tighter. Make
@@ -3038,28 +3030,12 @@ msgstr "%-32s %s\n"
 #. Make this 79 characters long. Some languages need the space.
 #: frontends/command-line/options.c:229
 msgid ""
-"--------------------------------------------------------------------------------\n"
+"-----------------------------------------------------------------------------"
+"---\n"
 "[Use double-quotes around arguments]        [Picture numbers begin with one "
 "(1)]\n"
 msgstr ""
-"--------------------------------------------------------------------------------\n"
+"-----------------------------------------------------------------------------"
+"---\n"
 "[Utiliser «\"» pour les arg.]     [Les numéros d'images commencent à un "
 "(1)]\n"
-
-#~ msgid "You need to set a port prior trying to set the speed"
-#~ msgstr "Vous devez spécifier un port avant la vitesse"
-
-#~ msgid "You can specify a speed only with serial ports"
-#~ msgstr "Vous ne pouvez spécifier la vitesse qu'avec un port série"
-
-#~ msgid "No error description available"
-#~ msgstr "Pas de description d'erreur disponible"
-
-#~ msgid ""
-#~ "\n"
-#~ "Errors occuring beyond this point are 'expected' on OS/2\n"
-#~ "investigation pending\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Des erreurs intervenant à partir de maintenant sont attendues\n"
-#~ "sous OS/2. Les investigations sont en cours\n"
