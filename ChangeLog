@@ -1,3 +1,9 @@
+2002-06-12  Christophe Barbé <christophe.barbe@ufies.org>
+
+	* libgphoto2_port/m4/documentation.m4: Added --with-doc-formats option and
+		removed xmlto tests to find the available formats.
+	* libgphoto2_port/configure.in: Duplicated tr hack from main configure.in.
+
 2002-06-12  Lutz Müller <lutz@users.sourceforge.net>
 
 	* doc/FAQ: New entry.

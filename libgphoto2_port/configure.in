@@ -42,6 +42,17 @@ AC_SUBST(BUILD_INCLUDED_LIBINTL)
 dnl USE_INCLUDED_LIBINTL=no
 dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
+dnl Solaris hack for grep and tr
+[
+if test -n "`echo $host_os | grep '[sS]olaris'`"; then
+  TR=/usr/xpg4/bin/tr
+  GREP=/usr/xpg4/bin/grep  
+else
+  TR=tr
+  GREP=grep
+fi
+]
+
 dnl ---------------------------------------------------------------------------
 dnl i18n support
 dnl ---------------------------------------------------------------------------

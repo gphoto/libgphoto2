@@ -154,21 +154,35 @@ if $try_xmlto; then
 		manual_msg="yes"
 	fi
 fi
-if $have_xmlto; then
-	if ${XMLTO} --help | grep html > /dev/null 2>&1; then
-		have_xmltohtml=true
-	fi
-	if ${XMLTO} --help | grep man > /dev/null 2>&1; then
-		have_xmltoman=true
-	fi
-	if ${XMLTO} --help | grep pdf > /dev/null 2>&1; then
-		have_xmltopdf=true
-	fi
-	if ${XMLTO} --help | grep ps > /dev/null 2>&1; then
-		have_xmltops=true
-	fi
-fi
+
 AM_CONDITIONAL(XMLTO, $have_xmlto)
+
+doc_formats_list='man html ps pdf'
+for i in $doc_formats_list; do
+  d=`echo $i | $TR a-z A-Z`
+  eval "have_xmlto$d=false"
+done
+AC_MSG_CHECKING(checking doc formats)
+AC_ARG_WITH(doc_formats,
+  [  --with-doc-formats=<list>   create doc with format in <list>; ]
+  [                            'all' build all doc formats; ]
+  [                            possible formats are: ]
+  [                            man, html, ps, pdf ],
+  doc_formats="$withval", doc_formats="man html")
+if test "$doc_formats" = "all"; then
+  doc_formats=$doc_formats_list;
+else
+  doc_formats=`echo $doc_formats | sed 's/,/ /g'`
+fi
+for i in $doc_formats; do
+  if test -n "`echo $doc_formats_list | $GREP -E \"(^| )$i( |\$)\"`"; then
+    eval "have_xmlto$i=true"
+  else
+    AC_ERROR(Unknown doc format $i!)
+  fi
+done
+AC_MSG_RESULT($doc_formats)
+
 AM_CONDITIONAL(XMLTOHTML,$have_xmltohtml)
 AM_CONDITIONAL(XMLTOMAN,$have_xmltoman)
 AM_CONDITIONAL(XMLTOPDF,$have_xmltopdf)
@@ -206,7 +220,6 @@ then
                 fig_out="out"
         fi
         manual_msg="in (${xxx} ) format with${fig_out} figures"
-        AC_MSG_RESULT([support for {${xxx} } found])
 fi
 
 ])dnl
