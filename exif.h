@@ -191,6 +191,12 @@ int gpe_get_comment(exifparser *exifdat, char *comment);
  */
 int gpe_set_comment(exifparser *exifdat, char *comment);
 
+/**
+ * COMMENT ME
+ */
+int stat_exif(exifparser *exifdata);
+int gpe_dump_exif(exifparser *exifdata);
+
 /**************
  * Now, all the 'defines'
  */
