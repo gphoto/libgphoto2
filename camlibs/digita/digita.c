@@ -44,15 +44,15 @@ int camera_abilities(CameraAbilities *abilities, int *count)
 	abilities[0].file_preview = 1;
 	abilities[0].file_put = 0;
 
-	*count++;
+	*count+=1;
 	memcpy(&abilities[1], &abilities[0], sizeof(abilities[0]));
 	strcpy(abilities[1].model, "Kodak DC265");
 
-	*count++;
+	*count+=1;
 	memcpy(&abilities[2], &abilities[0], sizeof(abilities[0]));
 	strcpy(abilities[2].model, "Kodak DC290");
 
-	*count++;
+	*count+=1;
 	memcpy(&abilities[3], &abilities[0], sizeof(abilities[0]));
 	strcpy(abilities[3].model, "Kodak DC220");
 
