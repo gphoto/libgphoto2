@@ -1,3 +1,8 @@
+2002-01-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+        * configure.in: Substitute AM_PROG_LIBTOOL by AC_PROG_LIBTOOL (first
+          is deprecated).
+
 2002-01-04 Dan Fandrich <dan@coneharvesters.com>
 
 	* libgphoto2_port/configure.in: Only add gcc-specific CFLAGS if we're

@@ -49,8 +49,8 @@ dnl                    -ldl isn't needed.
 dnl ---------------------------------------------------------------------------
 dnl Commented out for now because lt_dlforeachfile will not do anything if it
 dnl has already been called before.
-dnl 
-AM_PROG_LIBTOOL
+dnl
+AC_PROG_LIBTOOL
 no_libtool=true
 dnl AC_CHECK_LIB(ltdl, lt_dlforeachfile,
 dnl         AC_CHECK_HEADER(ltdl.h,

@@ -1,3 +1,8 @@
+2002-01-08  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* configure.in: Substitute AM_PROG_LIBTOOL by AC_PROG_LIBTOOL (first
+	  is deprecated).
+
 2002-01-07  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* frontends/command-line/main.c: Correctly shut down the camera even
