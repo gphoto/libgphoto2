@@ -219,6 +219,7 @@ static struct {
 
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode 
+	 * Canon PS G3: A. Marinichev, 20 nov 2002
 	 */
 	{"Canon PowerShot S45 (PTP mode)", 0x04a9, 0x306d},
 		/* 0x306c is S45 in normal (canon) mode */
