@@ -33,12 +33,8 @@
 
 /************ new stuff ********/
 #include <gpio.h>
-gpio_device *iodev;
+gpio_device *gdev;
 gpio_device_settings settings;
-int gpio_usb_msg_write(gpio_device *dev, int value, char *bytes, int size);
-int gpio_usb_msg_read(gpio_device *dev, int value, char *bytes, int size);
-int gpio_usb_read(gpio_device *dev, char *bytes, int size);
-int gpio_usb_write(gpio_device *dev, char *bytes, int size);
 /************ new stuff ********/
 
 #define MAX_TRIES 10
@@ -565,23 +561,23 @@ static unsigned char *psa50_usb_dialogue(char cmd1, char cmd2, int cmd3, int *re
      * }
      */
 
-    gpio_usb_msg_write(iodev,0x10,packet,msgsize);
+    gpio_usb_msg_write(gdev,0x10,packet,msgsize);
     if (cmd3==0x202)
       {
-        gpio_read(iodev, buffer, 0x40);
+        gpio_read(gdev, buffer, 0x40);
         lonlen=*(unsigned *)(buffer+0x6);
         //fprintf(stderr,"Internal lonlen: %x\n",lonlen);
         if (lonlen>0x3000)
-          gpio_read(iodev,buffer,0x2000);
+          gpio_read(gdev,buffer,0x2000);
         else
-          gpio_read(iodev,buffer,lonlen);
+          gpio_read(gdev,buffer,lonlen);
         *retlen=lonlen;
         return buffer;
       }
     else
       {
         //fprintf(stderr,"Internal retlen: %x\n",*retlen);
-        gpio_read(iodev, buffer, *retlen+0x50);
+        gpio_read(gdev, buffer, *retlen+0x50);
         return buffer+0x50;
       }
 
@@ -1380,7 +1376,7 @@ unsigned char *psa50_get_file_usb(const char *name,int *length) {
       else
         size=0x2000;
 
-      gpio_read(iodev,msg,size);
+      gpio_read(gdev,msg,size);
     }
     free(file);
     return NULL;

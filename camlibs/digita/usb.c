@@ -44,28 +44,17 @@ struct camera_to_usb {
 };
 
 #ifdef GPIO_USB
-int digita_usb_probe(Camera *camera, struct usb_device **udev)
+int digita_usb_probe(struct digita_device *dev, int i)
 {
-        int i;
-
-        fprintf(stderr, "digita: user selected %s\n", camera->model);
-
-        for (i = 0; i < sizeof(camera_to_usb) / sizeof(struct camera_to_usb);
-             i++) {
-                fprintf(stderr, "digita: %s, %s\n", camera->model,
-                        camera_to_usb[i].name);
-
-                if (!strcmp(camera->model, camera_to_usb[i].name))
-                        break;
-        }
 
         if (i >= sizeof(camera_to_usb) / sizeof(struct camera_to_usb))
                 goto err;
 
-        if (gpio_usb_find_device(camera_to_usb[i].idVendor,
-                                 camera_to_usb[i].idProduct, udev)) {
+        if (gpio_usb_find_device(dev->gpdev, camera_to_usb[i].idVendor,
+                                camera_to_usb[i].idProduct) == GPIO_OK) {
                 printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
-                        (*udev)->bus->dirname, (*udev)->filename);
+                        dev->gpdev->usb_device->bus->dirname, 
+                        dev->gpdev->usb_device->filename);
                 return 1;
         }
 
@@ -79,12 +68,11 @@ err:
 struct digita_device *digita_usb_open(Camera *camera)
 {
 #ifdef GPIO_USB
+        int i;
         struct digita_device *dev;
         gpio_device_settings settings;
-        struct usb_device *udev;
 
-        if (!digita_usb_probe(camera, &udev))
-                return NULL;
+        fprintf(stderr, "digita: user selected %s\n", camera->model);
 
         dev = malloc(sizeof(*dev));
         if (!dev)
@@ -94,7 +82,17 @@ struct digita_device *digita_usb_open(Camera *camera)
         if (!dev->gpdev)
                 return NULL;
 
-        settings.usb.udev = udev;
+        for (i = 0; i < sizeof(camera_to_usb) / sizeof(struct camera_to_usb);
+             i++) {
+                fprintf(stderr, "digita: %s, %s\n", camera->model,
+                        camera_to_usb[i].name);
+
+                if (!strcmp(camera->model, camera_to_usb[i].name))
+                        break;
+        }
+
+        if (!digita_usb_probe(dev, i))
+                return NULL;
 
         settings.usb.inep = 0x81;
         settings.usb.outep = 0x02;
@@ -116,4 +114,3 @@ struct digita_device *digita_usb_open(Camera *camera)
         return NULL;
 #endif
 }
-

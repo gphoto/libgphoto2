@@ -95,6 +95,8 @@ int camera_init(Camera *camera, CameraInit *init)
         else
                 dev = digita_serial_open(camera,init);
 
+	camera->camlib_data = dev;
+
         return dev ? GP_OK : GP_ERROR;
 }
 
