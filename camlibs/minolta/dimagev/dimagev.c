@@ -73,8 +73,12 @@ int camera_init (Camera *camera, CameraInit *init) {
 	camera->functions->file_get_preview =  camera_file_get_preview;
 	camera->functions->file_put 	= NULL;
 	camera->functions->file_delete 	= camera_file_delete;
-/*	camera->functions->config_get   = camera_config_get;*/
-/*	camera->functions->config_set   = camera_config_set;*/
+	camera->functions->file_config_get = NULL; 
+	camera->functions->file_config_set = NULL;
+	camera->functions->folder_config_get = NULL;
+	camera->functions->folder_config_set = NULL;
+	camera->functions->config_get   = NULL;
+	camera->functions->config_set   = NULL;
 	camera->functions->capture 	= camera_capture;
 	camera->functions->summary	= camera_summary;
 	camera->functions->manual 	= camera_manual;
@@ -291,17 +295,6 @@ int camera_file_delete (Camera *camera, char *folder, char *filename) {
 	file_number = gp_filesystem_number(dimagev->fs, folder, filename);
 
 	return dimagev_delete_picture(dimagev, (file_number + 1 ));
-}
-
-int camera_config_get (Camera *camera, CameraWidget *window) {
-	printf("Getting config.\n");
-
-	return GP_OK;
-}
-
-int camera_config_set (Camera *camera, CameraSetting *conf, int count) {
-
-	return GP_OK;
 }
 
 int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
