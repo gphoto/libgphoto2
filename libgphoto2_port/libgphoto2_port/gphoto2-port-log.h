@@ -108,18 +108,15 @@ void gp_logv     (GPLogLevel level, const char *domain, const char *format,
 		  va_list args);
 void gp_log_data (const char *domain, const char *data, unsigned int size);
 
-/*#ifndef GP_MODULE
- *#define GP_MODULE "unknown"
- *#endif
- */
-
 /**
  * GP_LOG:
  * @level: gphoto2 log level to log message under
  * @msg: message to log
  * @params: params to message
  *
- * calls #gp_log with an automatically generated domain
+ * Calls #gp_log with an automatically generated domain.
+ * You have to define GP_MODULE as "mymod" for your module
+ * mymod before you can use #GP_LOG().
  **/
 
 #define GP_LOG(level, msg, params...) \
@@ -132,6 +129,8 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
  *
  * Logs message at log level #GP_LOG_DEBUG by calling #gp_log() with
  * an automatically generated domain
+ * You have to define GP_MODULE as "mymod" for your module
+ * mymod before using #GP_DEBUG().
  **/
 
 #define GP_DEBUG(msg, params...) \
