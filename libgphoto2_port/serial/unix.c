@@ -576,7 +576,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 		    now = read (dev->pl->fd, bytes, 1);
 		    if (now < 0)
 			    return GP_ERROR_IO_READ;
-		    if (bytes[0] == -1) {
+		    if (bytes[0] == (char)-1) {
 			now = read (dev->pl->fd, bytes, 1);
 			if (now < 0)
 				return GP_ERROR_IO_READ;
@@ -595,7 +595,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 			    gp_port_set_error (dev, _("Parity error."));
 			    return GP_ERROR_IO_READ;
 			}
-			if (bytes[0] != -1) {
+			if (bytes[0] != (char)-1) {
 			    gp_port_set_error (dev, _("Unexpected parity response sequence 0xff 0x%02x."), bytes[0]);
 			    return GP_ERROR_IO_READ;
 			}
