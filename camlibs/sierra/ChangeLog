@@ -1,4 +1,8 @@
 2003-11-15  Patrick Mansfield <patmans@users.sourceforge.net>
+	* sierra.c: Make all ifdef's the same for recursion check and add
+	  a missing ifdef.
+
+2003-11-15  Patrick Mansfield <patmans@users.sourceforge.net>
 	* olympus-desc.c, sierra-desc.h, sierra.c: Add basic camera
 	  description for the oly 750uz (just the zoom support and
 	  oly750uz_manual for now).

@@ -623,7 +623,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	 * XXX the CHECK() macro's don't allow for cleanup on error.
 	 */
 	/* Get the file number from the CameraFilesystem */
-#ifdef GTKAM_IS_MODIFIED
+#ifdef GTKAM_RECURSION_FIXED
 	gp_context_progress_update (context, id, 0);
 #endif
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
@@ -638,7 +638,9 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	 */
 	CHECK_STOP (camera, sierra_delete (camera, n + 1, context));
 	CHECK (camera_stop (camera, context));
+#ifdef GTKAM_RECURSION_FIXED
 	gp_context_progress_stop (context, id);
+#endif
 	return (GP_OK);
 }
 
