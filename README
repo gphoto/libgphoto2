@@ -1,1 +1,57 @@
-Nothing here yet!
+
+                               gphoto2
+			       -------
+
+Hello and welcome to the wonderful world of gphoto! This is gphoto2, the 
+successor of gphoto with lots of new features and additional camera
+drivers. 
+
+If you miss a feature, would like to report success or failure, or have any
+questions, please don't hesitate to contact our mailing list.
+
+
+
+What is gphoto2?
+----------------
+
+gphoto2 is a library that can be used by applications to access various 
+digital cameras.  
+
+Additionally, the command-line frontend, which is shipped with the library,
+is called gphoto2, too.
+
+For more information on gphoto, see
+
+        http://www.gphoto.org
+
+There, you can also get information on mailing lists, supported cameras,
+and availability of gphoto2. Another source of information is
+
+        http://www.sourceforge.org/projects/gphoto
+
+where you can access our CVS server to fetch the source code of libgpio,
+gphoto2, gtkam and GnoCam (see below).
+
+Requirements
+------------
+
+gphoto2 depends on libgpio which is distributed separately. 
+
+Platforms
+---------
+
+gphoto2 should compile and run on pretty much all Unix-like platforms.
+Additionally, there is a port for OS/2 available. gphoto2 has _not_ (yet?) 
+been ported to any operating system from MicroSoft.
+
+Frontends
+---------
+
+gphoto2 ships with a command line frontend which is quite powerful, 
+especially in combination with scripts. For the GUI lovers, there are for
+example gtkam (GTK based), and GnoCam (GNOME). Additionally, there
+are plugins for other programs available like kio_gphoto (KDE - Konqueror).
+
+
+
+

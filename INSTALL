@@ -1,3 +1,8 @@
-1) ./configure
+
+The installation procedure should be quite simple:
+
+1) ./autogen.sh
 2) make
 3) make install
+
+

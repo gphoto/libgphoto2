@@ -1,15 +1,6 @@
 
 2000/11/29: Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-- Fix the camera settings problem: Leave the gp_frontend_prompt for smaller
-  configuration problems (i.e. right before taking a picture), but add
-   * typedef int (*CameraApply) (Camera*, CameraWidget*)
-   * gp_camera_settings_get (Camera *camera, CameraWidget *window, 
-   				CameraApply apply)
-   * gp_camera_settings_set (Camera *camera, CameraWidget *window)
-
-- Make 'make distcheck' to work.
-
 - Define the way capturing images/videos/previews work. IMHO, it should be
    * image/video: Capture image/video, store it on memory card. That's it.
    * preview: Capture preview, don't store it anywhere but return it 
