@@ -42,14 +42,14 @@
 /*   1 : debug actions                                        */
 /*   9 : debug everything, including hex dumps of the packets */
 
-int canon_debug_driver = 0;
+int canon_debug_driver = 9;
 int gphoto2_debug = 0;
 
 /* DO NOT FORGET to update the NUM_ constants after adding a camera */
 
 #define NUM_SERIAL      4
 #define NUM_USB         2
-#define NUM_SERIAL_USB  2
+#define NUM_SERIAL_USB  3
 
 char *models_serial[] = {
         "Canon PowerShot A5",
@@ -66,6 +66,7 @@ char *models_USB[] = {
 char *models_serialandUSB[] = {
         "Canon PowerShot S10",
         "Canon PowerShot S20",
+        "Canon PowerShot G1",
         NULL
 };
 
@@ -242,6 +243,8 @@ char *camera_model_string(Camera *camera)
 		return "Powershot S10";
 	 case CANON_PS_S20:
 		return "Powershot S20";
+	 case CANON_PS_G1:
+		return "Powershot G1";
 	 case CANON_PS_S100:
 		return "Powershot S100 / Digital IXUS";
 	 default:
@@ -859,6 +862,7 @@ int camera_init(Camera *camera, CameraInit *init)
 	if (canon_comm_method == CANON_SERIAL_RS232)
       gp_debug_printf(GP_DEBUG_LOW,"canon","Camera transmission speed : %i\n", cs->speed);
 	
+
 	return !canon_serial_init(camera,init->port.path);
 }
 
@@ -920,6 +924,7 @@ int camera_summary(Camera *camera, CameraText *summary)
 	 case CANON_PS_A70:     model = "Canon Powershot A70"; break;
 	 case CANON_PS_S10:     model = "Canon Powershot S10"; break;
 	 case CANON_PS_S20:     model = "Canon Powershot S20"; break;
+	 case CANON_PS_G1:      model = "Canon Powershot G1"; break;
 	 case CANON_PS_S100:    model = "Canon Powershot S100 / Digital IXUS"; break;
     }
 		
@@ -1380,6 +1385,9 @@ int camera_config(Camera *camera)
                     }
                 }
         }
+
+	gp_debug_printf(GP_DEBUG_LOW,"canon","done configuring camera.\n");
+	gp_debug_printf(GP_DEBUG_LOW,"canon","done configuring camera.\n");
 
     return GP_OK;
 }

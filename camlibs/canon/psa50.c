@@ -807,9 +807,12 @@ int psa50_get_owner_name(Camera *camera)
 	}
 	
 	if (!msg) {
+                gp_debug_printf(GP_DEBUG_LOW,"canon","psa50_get_owner_name: msg error");
 		psa50_error_type(camera);
 		return 0;
 	}
+	gp_debug_printf(GP_DEBUG_LOW,"canon","psa50_get_owner_name: msg received");
+    
 	/* Store these values in our "camera" structure: */
 	memcpy(cs->firmwrev,(char *) msg+8,4);
 	strncpy(cs->ident,(char *) msg+12,30);
@@ -1012,7 +1015,8 @@ int psa50_ready(Camera *camera)
     int try,len,speed,good_ack,res;
 //    int cts;
 
-	
+    gp_debug_printf(GP_DEBUG_LOW,"canon","psa50_ready()");
+
     switch (canon_comm_method) {
 	 case CANON_USB:
 		psa50_get_owner_name(camera);
@@ -1029,6 +1033,12 @@ int psa50_ready(Camera *camera)
 			A5 = 0;
 			return 1;
 		}
+		else if (!strcmp("Canon PowerShot G1",cs->ident)) {
+			gp_frontend_status(camera, "Detected a Powershot G1");
+			cs->model = CANON_PS_G1;
+			A5 = 0;
+			return 1;
+		}
 		else if ((!strcmp("Canon DIGITAL IXUS",cs->ident))
 				 || (!strcmp("Canon PowerShot S100",cs->ident))) {
 			gp_frontend_status(camera, "Detected a Digital IXUS / Powershot S100");
@@ -1036,7 +1046,7 @@ int psa50_ready(Camera *camera)
 			A5=0;
 			return 1;
 		} else {
-			printf ("Unknown camera!\n");
+			printf ("Unknown camera! (%s)\n", cs->ident);
 			return 0;
 		}
 		break;
@@ -1152,6 +1162,10 @@ int psa50_ready(Camera *camera)
 		} else if (!strcmp("Canon PowerShot S20",psa50_id)) {
 			gp_frontend_status(camera, "Detected a Powershot S20");
 			cs->model = CANON_PS_S20;
+			A5 = 0;
+		} else if (!strcmp("Canon PowerShot G1",psa50_id)) {
+			gp_frontend_status(camera, "Detected a Powershot G1");
+			cs->model = CANON_PS_G1;
 			A5 = 0;
         } else if ((!strcmp("Canon DIGITAL IXUS",psa50_id))
 				   || (!strcmp("Canon PowerShot S100",psa50_id)))
@@ -1445,7 +1459,7 @@ unsigned char *psa50_get_file_serial(Camera *camera, const char *name,int *lengt
         }
         if (!file) {
             total = get_int(msg+4);
-                if(cs->model == CANON_PS_S20) {
+                if(cs->model == CANON_PS_S20 || cs->model==CANON_PS_G1) {
                         maxfilesize=3000000;
                 }
                 else {
@@ -1523,7 +1537,7 @@ unsigned char *psa50_get_file_usb(Camera *camera, const char *name,int *length)
 
       if (!file) {
         total=len;
-        if(cs->model == CANON_PS_S20) {
+        if(cs->model == CANON_PS_S20 || cs->model == CANON_PS_G1) {
           maxfilesize=3000000;
         }
         else {
