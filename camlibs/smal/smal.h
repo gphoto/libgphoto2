@@ -23,5 +23,23 @@
 
 #define USB_VENDOR_ID_SMAL        0x0dca
 #define USB_DEVICE_ID_ULTRAPOCKET 0x0002
+#define USB_DEVICE_ID_FLATFOTO    0x0004
+
+#define USB_VENDOR_ID_LOGITECH    0x046d
+#define USB_DEVICE_ID_POCKETDIGITAL 0x0950
+
+typedef enum ultrapocket_BADGE_TYPE {
+    BADGE_UNKNOWN = 0,
+    BADGE_GENERIC,    /* could be axia/ultrapocket */
+    BADGE_ULTRAPOCKET,
+    BADGE_AXIA,
+    BADGE_FLATFOTO,
+    BADGE_LOGITECH_PD /* pocket digital */
+} up_badge_type;
+
+struct _CameraPrivateLibrary {
+    up_badge_type up_type;
+};
+
 
 #endif

@@ -22,10 +22,12 @@ TODO:
 - Current resolution information
 - Determine what (if anything) the camera passes as image 
 modification parameters (Gamma, etc).
+- At the moment, the Logitech driver stores images as .VGA and .XGA
+not .PPM
 ___________________________________________________________________
 
 Author: Lee Benfield (lee@benf.org)
-Thanks: Vasileios Zografos, Dave Scott 
+Thanks: Vasileios Zografos, Dave Scott, Matthias Scherrer
 
 This code borrows heavily from the sipix web2 driver available with
 gphoto.  Thanks, guys ;)

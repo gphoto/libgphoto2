@@ -47,10 +47,10 @@ typedef enum ultrapocket_IMG_TYPE {
    TYPE_VGA_BH  = 3
 } smal_img_type;
 
-int ultrapocket_getpicsoverview(GPPort **pport, GPContext *context,int *numpics, CameraList *list);
+int ultrapocket_getpicsoverview(Camera *camera, GPContext *context,int *numpics, CameraList *list);
 int ultrapocket_exit(GPPort *port, GPContext *context);
-int ultrapocket_getpicture(GPPort *port, GPContext *context, unsigned char **pdata, int *size, const char *filename);
-int ultrapocket_deletefile(GPPort *port, const char *filename);
-int ultrapocket_deleteall(GPPort **pport);
+int ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata, int *size, const char *filename);
+int ultrapocket_deletefile(Camera *camera, const char *filename);
+int ultrapocket_deleteall(Camera *camera);
 
 #endif

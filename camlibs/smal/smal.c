@@ -27,8 +27,8 @@
 #include <bayer.h>
 #include <gamma.h>
 
-#include "ultrapocket.h"
 #include "smal.h"
+#include "ultrapocket.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -57,10 +57,11 @@ struct smal_cameras {
 	unsigned short idVendor;
 	unsigned short idProduct;
 } smal_cameras [] = {
-	{ "Fuji:Axia Slimshot", USB_VENDOR_ID_SMAL, USB_DEVICE_ID_ULTRAPOCKET },
-	{ "Fuji:Axia Eyeplate", USB_VENDOR_ID_SMAL, USB_DEVICE_ID_ULTRAPOCKET },
-	{ "Logitech:Pocket Digital",USB_VENDOR_ID_SMAL, USB_DEVICE_ID_ULTRAPOCKET },
-	{ "SMaL:Ultra-Pocket",USB_VENDOR_ID_SMAL, USB_DEVICE_ID_ULTRAPOCKET },
+	{ "Fuji:Axia Slimshot",      USB_VENDOR_ID_SMAL,     USB_DEVICE_ID_ULTRAPOCKET },
+	{ "Fuji:Axia Eyeplate",      USB_VENDOR_ID_SMAL,     USB_DEVICE_ID_ULTRAPOCKET },
+	{ "Logitech:Pocket Digital", USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_POCKETDIGITAL },
+	{ "SMaL:Ultra-Pocket",       USB_VENDOR_ID_SMAL,     USB_DEVICE_ID_ULTRAPOCKET },
+        { "Radioshack:Flatfoto",     USB_VENDOR_ID_SMAL,     USB_DEVICE_ID_FLATFOTO },
 	{ NULL, 0, 0 }
 };
 
@@ -89,7 +90,11 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_exit (Camera *camera, GPContext *context) 
 {
-   return ultrapocket_exit(camera->port, context);
+    if (camera->pl) {
+	free(camera->pl);
+	camera->pl = NULL;
+    }
+    return ultrapocket_exit(camera->port, context);
 }
 
 static int
@@ -109,7 +114,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
    switch (type) {
     case GP_FILE_TYPE_NORMAL:
-      result = ultrapocket_getpicture(camera->port,context,&data,&size,filename);
+      result = ultrapocket_getpicture(camera,context,&data,&size,filename);
       gp_file_set_mime_type (file, GP_MIME_PPM);
       break;
     case GP_FILE_TYPE_RAW:
@@ -142,7 +147,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
    if (image_no < GP_OK)
      return image_no;
 
-   CHECK_RESULT(ultrapocket_deletefile(camera->port, filename));
+   CHECK_RESULT(ultrapocket_deletefile(camera, filename));
    
    return (GP_OK);
 }
@@ -154,7 +159,7 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
    Camera *camera = data;
    if (strcmp (folder, "/"))
      return (GP_ERROR_DIRECTORY_NOT_FOUND);
-   return ultrapocket_deleteall(&camera->port);
+   return ultrapocket_deleteall(camera);
 }
 
 static int
@@ -174,7 +179,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
    Camera *camera = data;
    int count, result;
    
-   result =  ultrapocket_getpicsoverview(&camera->port, context, &count, list);
+   result =  ultrapocket_getpicsoverview(camera, context, &count, list);
    if (result != GP_OK)
      return result;
    
@@ -184,12 +189,54 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-   camera->functions->exit                 = camera_exit;
-   camera->functions->about                = camera_about;
-   gp_filesystem_set_list_funcs (camera->fs, file_list_func,NULL, camera);
-   gp_filesystem_set_file_funcs (camera->fs, get_file_func,delete_file_func, camera);
-   gp_filesystem_set_folder_funcs (camera->fs,NULL,delete_all_func, NULL,NULL,camera);
-   
-   /* don't need to do any exciting init stuff until we get pic numbers */
-   return GP_OK;
+    CameraAbilities cab;
+    up_badge_type badge;
+    
+    camera->functions->exit                 = camera_exit;
+    camera->functions->about                = camera_about;
+    gp_filesystem_set_list_funcs (camera->fs, file_list_func,NULL, camera);
+    gp_filesystem_set_file_funcs (camera->fs, get_file_func,delete_file_func, camera);
+    gp_filesystem_set_folder_funcs (camera->fs,NULL,delete_all_func, NULL,NULL,camera);
+    
+    badge = BADGE_UNKNOWN;
+    gp_camera_get_abilities(camera, &cab);
+    switch (cab.usb_vendor) {
+     case USB_VENDOR_ID_SMAL:
+	switch (cab.usb_product) {
+	 case USB_DEVICE_ID_ULTRAPOCKET:
+	    /* could be an axia eyeplate or a slimshot 
+	     * figure it out later, when we get the image 
+	     * catalogue.
+	     */
+	    badge = BADGE_GENERIC;
+	    break;
+	 case USB_DEVICE_ID_FLATFOTO:
+	    badge = BADGE_FLATFOTO;
+	    break;
+	 default:
+	    break;
+	}
+	break;
+     case USB_VENDOR_ID_LOGITECH:
+	switch (cab.usb_product) {
+	 case USB_DEVICE_ID_POCKETDIGITAL:
+	    badge = BADGE_LOGITECH_PD;
+	    break;
+	 default:
+	    break;
+	}
+	break;
+     default:
+	break;
+    }
+    
+    if (badge == BADGE_UNKNOWN) {
+	/* can't happen.  Otherwise, how'd we get to camera_init, neh? */
+	return GP_ERROR;
+    }
+    
+    camera->pl = malloc (sizeof (CameraPrivateLibrary));
+    camera->pl->up_type = badge;
+    /* don't need to do any exciting init stuff until we get pic numbers */
+    return GP_OK;
 }
