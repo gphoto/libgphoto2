@@ -78,35 +78,6 @@
 
 #define GP_MODULE "sierra"
 
-/**
- * sierra_valid_type:
- * @b : first byte of the packet to be checked
- *
- * Check if the type of the received packet is known.
- * Method: check if the byte is one of NUL, ENQ, ACK, DC1, NAK, TRM,
- * TYPE_COMMAND, TYPE_DATA, TYPE_DATA_END.
- *
- * Returns: GP_OK if the byte is known, GP_ERROR_CORRUPTED_DATA otherwise
- */
-static int sierra_valid_type (char b) 
-{
-	unsigned char byte = (unsigned char) b;
-	int ret_status = GP_ERROR_CORRUPTED_DATA;
-
-	if ((byte == NUL) ||
-	    (byte == ENQ) ||
-	    (byte == ACK) ||
-	    (byte == DC1) ||
-	    (byte == NAK) ||
-	    (byte == TRM) ||
-	    (byte == TYPE_COMMAND) ||
-	    (byte == TYPE_DATA) ||
-	    (byte == TYPE_DATA_END))
-		ret_status = GP_OK;
-
-	return ret_status;
-}
-
 int sierra_change_folder (Camera *camera, const char *folder, GPContext *context)
 {	
 	int st = 0,i = 1;
@@ -475,7 +446,26 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 		 * If the first read byte is not known, 
 		 * report an error and exit the processing.
 		 */
-		if (sierra_valid_type (packet[0]) != GP_OK ) {
+		switch ((unsigned char) packet[0]) {
+		case NUL:
+		case ENQ:
+		case ACK:
+		case DC1:
+		case NAK:
+		case TRM:
+		case TYPE_COMMAND:
+
+			/* Those are all single byte packets. */
+			if (camera->port->type == GP_PORT_USB &&
+			    !camera->pl->usb_wrap)
+				gp_port_usb_clear_halt (camera->port,
+						GP_PORT_USB_ENDPOINT_IN);
+			return (GP_OK);
+
+		case TYPE_DATA:
+		case TYPE_DATA_END:
+			break;
+		default:
 			if (camera->port->type == GP_PORT_USB &&
 			    !camera->pl->usb_wrap)
 				gp_port_usb_clear_halt (camera->port,
@@ -483,16 +473,6 @@ sierra_read_packet (Camera *camera, char *packet, GPContext *context)
 			gp_context_error (context, _("The first byte "
 				"received (0x%x) is not valid."), packet[0]);
 			return (GP_ERROR_CORRUPTED_DATA);
-		}
-
-		/* For single byte data packets, the work is done... */
-		if (!((packet[0] == TYPE_DATA) ||
-		      (packet[0] == TYPE_DATA_END))) {
-			if (camera->port->type == GP_PORT_USB &&
-			    !camera->pl->usb_wrap)
-				gp_port_usb_clear_halt (camera->port,
-						GP_PORT_USB_ENDPOINT_IN);
-			return (GP_OK);
 		}
 
 		/*

@@ -140,6 +140,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Olympus C-3030Z", 	SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0},
 	{"Panasonic Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Polaroid PDC 2300Z",	SIERRA_MODEL_DEFAULT,   0, 0, 0 },
 	{"Sanyo DSC-X300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Sanyo DSC-X350", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Sanyo VPC-G200", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },

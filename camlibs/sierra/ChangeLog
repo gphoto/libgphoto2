@@ -1,3 +1,18 @@
+2002-01-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	William Bader <william@nscs.fast.net> reported (partial) success
+	with his Polaroid PDC2300Z.
+
+	* sierra.c: New model.
+	* library.c: Clean-up.
+
+2002-01-22  Lutz Müller <lutz@users.sourceforge.net>
+
+	William Bader <william@nscs.fast.net> reported (partial) success
+	with his Polaroid PDC2300Z.
+
+	* sierra.c: New model.
+
 2002-01-19  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: I messed up the logic: TYPE_DATA and TYPE_DATA_END 
