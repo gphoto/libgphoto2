@@ -263,8 +263,6 @@ canon_usb_lock_keys (Camera *camera)
 
 	switch (camera->pl->md->model) {
 		case CANON_PS_G1:
-			GP_DEBUG ("canon_usb_lock_keys: Your camera model does not have the keylock feature.");
-			break;
 		case CANON_PS_S100:
 			GP_DEBUG ("canon_usb_lock_keys: Your camera model does not need the keylock.");
 			break;
