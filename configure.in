@@ -67,7 +67,10 @@ AC_SUBST(CFLAGS)
 AC_SUBST(LIBS)
 
 dnl Find out which drivers to compile
-camlibs='barbie canon directory sierra konica panasonic digita sonydscf1'
+
+dnl Add the sonydscf1 back in!
+
+camlibs='barbie canon directory sierra konica panasonic digita'
 AC_SUBST(SUBDIRS_CAMLIBS)
 for i in $camlibs; do
   d=`echo $i | $TR a-z A-Z`
@@ -80,7 +83,7 @@ AC_ARG_WITH(drivers,
   [                            'all' compiles all drivers; ]
   [                            possible drivers are: ]
   [                            barbie, canon, digita, directory, ]
-  [                            sierra, konica, panasonic, sonydscf1 ],
+  [                            konica, panasonic, sierra sonydscf1 ],
   drivers="$withval", drivers="all")
 if test "$drivers" = "all"; then
   for i in $camlibs; do
