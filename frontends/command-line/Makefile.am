@@ -6,8 +6,7 @@ CFLAGS = @CFLAGS@ -g
 
 INCLUDES =						\
 	-DGPHOTO2_LOCALEDIR=\""$(datadir)/locale"\"	\
-	-I$(top_srcdir)/include 			\
-	-I../libgphoto2_frontend
+	-I$(top_srcdir)/include 
 
 LDFLAGS = @LDFLAGS@ -g 
 gphoto2_SOURCES = 		\
@@ -23,5 +22,4 @@ gphoto2_SOURCES = 		\
 
 gphoto2_LDFLAGS = -export-dynamic
 
-gphoto2_LDADD = ../../libgphoto2/libgphoto2.la \
-		../libgphoto2_frontend/libgphoto2_frontend.la
+gphoto2_LDADD = ../../libgphoto2/libgphoto2.la

@@ -1,5 +1,10 @@
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* frontends/command-line/Makefile.am: Remove reference to
+	libgphoto2_frontend.la which wasn't needed anyways.
+
+2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* frontents/libgphoto2_frontend/*: Removed. Those files were mainly
 	empty functions and nowhere needed.
 
