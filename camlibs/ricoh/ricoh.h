@@ -73,16 +73,11 @@ int ricoh_set_mode  (Camera *camera, GPContext *context, RicohMode  mode);
 
 int ricoh_get_num   (Camera *camera, GPContext *context, unsigned int *n);
 
-int ricoh_get_pic_size  (Camera *camera, GPContext *context, unsigned int n,
-		         unsigned long *size);
-int ricoh_get_pic_date  (Camera *camera, GPContext *context, unsigned int n,
-		         time_t *date);
-int ricoh_get_pic_name  (Camera *camera, GPContext *context, unsigned int n,
-			 const char **name);
-int ricoh_get_pic_memo  (Camera *camera, GPContext *context, unsigned int n,
-			 const char **memo);
-
-int ricoh_del_pic   (Camera *camera, GPContext *context, unsigned int n);
+int ricoh_get_pic_size  (Camera *, GPContext *, unsigned int, unsigned long *);
+int ricoh_get_pic_date  (Camera *, GPContext *, unsigned int, time_t *);
+int ricoh_get_pic_name  (Camera *, GPContext *, unsigned int, const char **);
+int ricoh_get_pic_memo  (Camera *, GPContext *, unsigned int, const char **);
+int ricoh_del_pic       (Camera *, GPContext *, unsigned int);
 
 typedef enum _RicohFileType RicohFileType;
 enum _RicohFileType {
@@ -112,10 +107,8 @@ enum _RicohResolution {
 	RICOH_RESOLUTION_1280_960 = 0x04
 };
 
-int ricoh_get_resolution (Camera *camera, GPContext *context,
-			  RicohResolution *resolution);
-int ricoh_set_resolution (Camera *camera, GPContext *context,
-			  RicohResolution resolution);
+int ricoh_get_resolution (Camera *, GPContext *, RicohResolution *);
+int ricoh_set_resolution (Camera *, GPContext *, RicohResolution);
 
 typedef enum _RicohExposure RicohExposure;
 enum _RicohExposure {
@@ -131,9 +124,78 @@ enum _RicohExposure {
 	RICOH_EXPOSURE_AUTO = 0xff
 };
 
-int ricoh_get_exposure (Camera *camera, GPContext *context,
-			RicohExposure *exposure);
-int ricoh_set_exposure (Camera *camera, GPContext *context,
-			RicohExposure exposure);
+int ricoh_get_exposure (Camera *, GPContext *, RicohExposure *);
+int ricoh_set_exposure (Camera *, GPContext *, RicohExposure);
+
+typedef enum _RicohWhiteLevel RicohWhiteLevel;
+enum _RicohWhiteLevel {
+	RICOH_WHITE_LEVEL_AUTO		= 0x00,
+	RICOH_WHITE_LEVEL_OUTDOOR	= 0x01,
+	RICOH_WHITE_LEVEL_FLUORESCENT	= 0x02,
+	RICOH_WHITE_LEVEL_INCANDESCENT	= 0x03,
+	RICOH_WHITE_LEVEL_BLACK_WHITE	= 0x04,
+	RICOH_WHITE_LEVEL_SEPIA		= 0x05
+};
+
+int ricoh_get_white_level (Camera *, GPContext *, RicohWhiteLevel *);
+int ricoh_set_white_level (Camera *, GPContext *, RicohWhiteLevel);
+
+typedef enum _RicohMacro RicohMacro;
+enum _RicohMacro {
+	RICOH_MACRO_OFF = 0x00,
+	RICOH_MACRO_ON  = 0x01
+};
+
+int ricoh_get_macro (Camera *, GPContext *, RicohMacro *);
+int ricoh_set_macro (Camera *, GPContext *, RicohMacro);
+
+typedef enum _RicohZoom RicohZoom;
+enum _RicohZoom {
+	RICOH_ZOOM_OFF = 0x00,
+	RICOH_ZOOM_1   = 0x01,
+	RICOH_ZOOM_2   = 0x02,
+	RICOH_ZOOM_3   = 0x03,
+	RICOH_ZOOM_4   = 0x04,
+	RICOH_ZOOM_5   = 0x05,
+	RICOH_ZOOM_6   = 0x06,
+	RICOH_ZOOM_7   = 0x07,
+	RICOH_ZOOM_8   = 0x08
+};
+
+int ricoh_get_zoom (Camera *, GPContext *, RicohZoom *);
+int ricoh_set_zoom (Camera *, GPContext *, RicohZoom);
+
+typedef enum _RicohFlash RicohFlash;
+enum _RicohFlash {
+	RICOH_FLASH_AUTO = 0x00,
+	RICOH_FLASH_OFF  = 0x01,
+	RICOH_FLASH_ON   = 0x02
+};
+
+int ricoh_get_flash (Camera *, GPContext *, RicohFlash *);
+int ricoh_set_flash (Camera *, GPContext *, RicohFlash);
+
+typedef enum _RicohRecMode RicohRecMode;
+enum _RicohRecMode {
+	RICOH_REC_MODE_IMAGE           = 0x00,
+	RICOH_REC_MODE_CHARACTER       = 0x01,
+	RICOH_REC_MODE_SOUND           = 0x03,
+	RICOH_REC_MODE_IMAGE_SOUND     = 0x04,
+	RICOH_REC_MODE_CHARACTER_SOUND = 0x06
+};
+
+int ricoh_get_rec_mode (Camera *, GPContext *, RicohRecMode *);
+int ricoh_set_rec_mode (Camera *, GPContext *, RicohRecMode);
+
+typedef enum _RicohCompression RicohCompression;
+enum _RicohCompression {
+	RICOH_COMPRESSION_NONE = 0x00,
+	RICOH_COMPRESSION_MAX  = 0x01,
+	RICOH_COMPRESSION_NORM = 0x02,
+	RICOH_COMPRESSION_MIN  = 0x03
+};
+
+int ricoh_get_compression (Camera *, GPContext *, RicohCompression *);
+int ricoh_set_compression (Camera *, GPContext *, RicohCompression);
 
 #endif /* __RICOH_H__ */

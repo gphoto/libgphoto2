@@ -736,63 +736,41 @@ ricoh_get_cam_amem (Camera *camera, GPContext *context, int *size)
 	return (GP_OK);
 }
 
-int
-ricoh_get_resolution (Camera *camera, GPContext *context,
-		      RicohResolution *resolution)
-{
-	unsigned char p[1], buf[0xff], len;
-
-	p[0] = 0x09;
-	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));
-	C_LEN (context, len, 1);
-
-	if (resolution)
-		*resolution = buf[0];
-
-	return (GP_OK);
+#define RICOH_GET_SET_VALUE(name,type,code)				\
+int									\
+ricoh_get_##name (Camera *camera, GPContext *context,			\
+		  type *value)						\
+{									\
+	unsigned char p[1], buf[0xff], len;				\
+									\
+	p[0] = (code);							\
+	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));	\
+	if (value)							\
+		*value = buf[0];					\
+	return (GP_OK);							\
+}									\
+									\
+int									\
+ricoh_set_##name (Camera *camera, GPContext *context,			\
+		  type value)						\
+{									\
+	unsigned char p[2], buf[0xff], len;				\
+									\
+	p[0] = (code);							\
+	p[1] = (unsigned char) value;					\
+	CR (ricoh_transmit (camera, context, 0x50, p, 2, buf, &len));	\
+									\
+	return (GP_OK);							\
 }
 
-int
-ricoh_get_exposure (Camera *camera, GPContext *context,
-		    RicohExposure *exposure)
-{
-	unsigned char p[1], buf[0xff], len;
-
-	p[0] = 0x03;
-	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));
-	C_LEN (context, len, 1);
-
-	if (exposure)
-		*exposure = buf[0];
-
-	return (GP_OK);
-}
-
-int
-ricoh_set_resolution (Camera *camera, GPContext *context,
-		      RicohResolution resolution)
-{
-	unsigned char p[2], buf[0xff], len;
-
-	p[0] = 0x09;
-	p[1] = (unsigned char) resolution;
-	CR (ricoh_transmit (camera, context, 0x50, p, 2, buf, &len));
-
-	return (GP_OK);
-}
-
-int
-ricoh_set_exposure (Camera *camera, GPContext *context,
-		    RicohExposure exposure)
-{
-	unsigned char p[2], buf[0xff], len;
-
-	p[0] = 0x03;
-	p[1] = (unsigned char) exposure;
-	CR (ricoh_transmit (camera, context, 0x50, p, 2, buf, &len));
-
-	return (GP_OK);
-}
+RICOH_GET_SET_VALUE(exposure,   RicohExposure,   0x03)
+RICOH_GET_SET_VALUE(white_level,RicohWhiteLevel, 0x04)
+RICOH_GET_SET_VALUE(zoom,       RicohZoom,       0x05)
+RICOH_GET_SET_VALUE(flash,      RicohFlash,      0x06)
+RICOH_GET_SET_VALUE(rec_mode,   RicohRecMode,    0x07)
+RICOH_GET_SET_VALUE(compression,RicohCompression,0x08)
+RICOH_GET_SET_VALUE(resolution, RicohResolution, 0x09)
+RICOH_GET_SET_VALUE(macro,      RicohMacro,      0x16)
 
 int
 ricoh_get_copyright (Camera *camera, GPContext *context, const char **copyright)

@@ -248,176 +248,208 @@ camera_capture (Camera *camera, CameraCaptureType type,
 	return (GP_OK);
 }
 
+#undef N_ELEMENTS
+#define N_ELEMENTS(v) (sizeof(v)/sizeof(v[0]))
+
+static struct {
+	RicohExposure exposure;
+	const char *name;
+} ricoh_exposures[] = {
+	{RICOH_EXPOSURE_M20,  N_("-2.0")},
+	{RICOH_EXPOSURE_M15,  N_("-1.5")},
+	{RICOH_EXPOSURE_M10,  N_("-1.0")},
+	{RICOH_EXPOSURE_M05,  N_("-0.5")},
+	{RICOH_EXPOSURE_00,   N_("0.0")},
+	{RICOH_EXPOSURE_05,   N_("0.5")},
+	{RICOH_EXPOSURE_10,   N_("1.0")},
+	{RICOH_EXPOSURE_15,   N_("1.5")},
+	{RICOH_EXPOSURE_20,   N_("2.0")},
+	{RICOH_EXPOSURE_AUTO, N_("Auto")}
+};
+
+static struct {
+	RicohResolution resolution;
+	const char *name;
+} ricoh_resolutions[] = {
+	{RICOH_RESOLUTION_640_480,  N_("640 x 480")},
+	{RICOH_RESOLUTION_1280_960, N_("1280 x 960")}
+};
+
+static struct {
+	RicohWhiteLevel white_level;
+	const char *name;
+} ricoh_white_levels[] = {
+	{RICOH_WHITE_LEVEL_AUTO,		N_("Auto")},
+	{RICOH_WHITE_LEVEL_OUTDOOR,		N_("Outdoor")},
+	{RICOH_WHITE_LEVEL_FLUORESCENT,		N_("Fluorescent")},
+	{RICOH_WHITE_LEVEL_INCANDESCENT,	N_("Incandescent")},
+	{RICOH_WHITE_LEVEL_BLACK_WHITE,		N_("Black & White")},
+	{RICOH_WHITE_LEVEL_SEPIA,		N_("Sepia")}
+};
+
+static struct {
+	RicohMacro macro;
+	const char *name;
+} ricoh_macros[] = {
+	{RICOH_MACRO_ON, N_("On")},
+	{RICOH_MACRO_OFF, N_("Off")}
+};
+
+static struct {
+	RicohCompression compression;
+	const char *name;
+} ricoh_compressions[] = {
+	{RICOH_COMPRESSION_NONE, N_("None")},
+	{RICOH_COMPRESSION_MAX,  N_("Maximal")},
+	{RICOH_COMPRESSION_NORM, N_("Normal")},
+	{RICOH_COMPRESSION_MIN,  N_("Minimal")}
+};
+
+static struct {
+	RicohRecMode rec_mode;
+	const char *name;
+} ricoh_rec_modes[] = {
+	{RICOH_REC_MODE_IMAGE,           N_("Image")},
+	{RICOH_REC_MODE_CHARACTER,       N_("Character")},
+	{RICOH_REC_MODE_SOUND,           N_("Sound")},
+	{RICOH_REC_MODE_IMAGE_SOUND,     N_("Image & Sound")},
+	{RICOH_REC_MODE_CHARACTER_SOUND, N_("Character & Sound")}
+};
+
+static struct {
+	RicohFlash flash;
+	const char *name;
+} ricoh_flashs[] = {
+	{RICOH_FLASH_AUTO, N_("Auto")},
+	{RICOH_FLASH_OFF,  N_("Off")},
+	{RICOH_FLASH_ON,   N_("On")}
+};
+
+static struct {
+	RicohZoom zoom;
+	const char *name;
+} ricoh_zooms[] = {
+	{RICOH_ZOOM_OFF, N_("Off")},
+	{RICOH_ZOOM_1,   N_("2x")},
+	{RICOH_ZOOM_2,   N_("3x")},
+	{RICOH_ZOOM_3,   N_("4x")},
+	{RICOH_ZOOM_4,   N_("5x")},
+	{RICOH_ZOOM_5,   N_("6x")},
+	{RICOH_ZOOM_6,   N_("7x")},
+	{RICOH_ZOOM_7,   N_("8x")},
+	{RICOH_ZOOM_8,   N_("9x")}
+};
+
+#undef R_ADD_RADIO
+#define R_ADD_RADIO(ca,co,s,type,n,Name)				\
+{									\
+	CameraWidget *w;						\
+	type v;								\
+	unsigned int i;							\
+									\
+	CR (gp_widget_new (GP_WIDGET_RADIO, _(Name), &w));		\
+	CR (gp_widget_set_name (w, (Name)));				\
+	CR (gp_widget_append ((s), w));					\
+	CR (ricoh_get_##n ((ca), (co), &v));				\
+	for (i = 0; i < N_ELEMENTS (ricoh_##n##s); i++) {		\
+		CR (gp_widget_add_choice (w, _(ricoh_##n##s[i].name)));	\
+		if (v == ricoh_##n##s[i].n)				\
+			CR (gp_widget_set_value (w,			\
+				_(ricoh_##n##s[i].name)));		\
+	}								\
+}
+
+#undef R_CHECK_RADIO
+#define R_CHECK_RADIO(c,co,wi,n,Name)					\
+{									\
+	CameraWidget *w;						\
+	const char *v;							\
+	unsigned int i;							\
+									\
+        CR (gp_widget_get_child_by_name (w, Name, &w));			\
+	if (gp_widget_changed (w)) {					\
+		CR (gp_widget_get_value (w, &v));			\
+		for (i = 0; i < N_ELEMENTS (ricoh_##n##s); i++)		\
+			if (!strcmp (v_char, _(ricoh_##n##s[i].name)))	\
+				break;					\
+		CR (ricoh_set_##n (c, co, ricoh_##n##s[i].n));	\
+	}								\
+}
+
 static int
-camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
+camera_get_config (Camera *c, CameraWidget **window, GPContext *co)
 {
-	CameraWidget *section, *widget;
+	CameraWidget *s, *w;
 	const char *copyright;
 	time_t time;
-	RicohResolution resolution;
-	RicohExposure exposure;
 
 	CR (gp_widget_new (GP_WIDGET_WINDOW, _("Configuration"), window));
 
 	/* General settings */
-	CR (gp_widget_new (GP_WIDGET_SECTION, _("General"), &section));
-	CR (gp_widget_append (*window, section));
+	CR (gp_widget_new (GP_WIDGET_SECTION, _("General"), &s));
+	CR (gp_widget_append (*window, s));
 
 	/* Copyright */
-	CR (gp_widget_new (GP_WIDGET_TEXT, _("Copyright"), &widget));
-	CR (gp_widget_set_name (widget, "copyright"));
-	CR (gp_widget_set_info (widget, _("Copyright (max. 20 characters")));
-	CR (gp_widget_append (section, widget));
-	CR (ricoh_get_copyright (camera, context, &copyright));
-	CR (gp_widget_set_value (widget, (void *) copyright));
+	CR (gp_widget_new (GP_WIDGET_TEXT, _("Copyright"), &w));
+	CR (gp_widget_set_name (w, "copyright"));
+	CR (gp_widget_set_info (w, _("Copyright (max. 20 characters")));
+	CR (gp_widget_append (s, w));
+	CR (ricoh_get_copyright (c, co, &copyright));
+	CR (gp_widget_set_value (w, (void *) copyright));
 
 	/* Date */
-	CR (gp_widget_new (GP_WIDGET_DATE, _("Date & Time"), &widget));
-	CR (gp_widget_set_name (widget, "date"));
-	CR (gp_widget_set_info (widget, _("Date & Time")));
-	CR (gp_widget_append (section, widget));
-	CR (ricoh_get_date (camera, context, &time));
-	CR (gp_widget_set_value (widget, &time));
+	CR (gp_widget_new (GP_WIDGET_DATE, _("Date & Time"), &w));
+	CR (gp_widget_set_name (w, "date"));
+	CR (gp_widget_set_info (w, _("Date & Time")));
+	CR (gp_widget_append (s, w));
+	CR (ricoh_get_date (c, co, &time));
+	CR (gp_widget_set_value (w, &time));
 
 	/* Picture related settings */
-	CR (gp_widget_new (GP_WIDGET_SECTION, _("Pictures"), &section));
-	CR (gp_widget_append (*window, section));
+	CR (gp_widget_new (GP_WIDGET_SECTION, _("Pictures"), &s));
+	CR (gp_widget_append (*window, s));
 
-	/* Resolution */
-	CR (gp_widget_new (GP_WIDGET_RADIO, _("Resolution"), &widget));
-	CR (gp_widget_set_name (widget, "resolution"));
-	CR (gp_widget_set_info (widget, _("Resolution")));
-	CR (gp_widget_append (section, widget));
-	CR (gp_widget_add_choice (widget, "640x480"));
-	CR (gp_widget_add_choice (widget, "1280x960"));
-	CR (ricoh_get_resolution (camera, context, &resolution));
-	switch (resolution) {
-	case RICOH_RESOLUTION_640_480:
-		CR (gp_widget_set_value (widget, "640x480"));
-		break;
-	case RICOH_RESOLUTION_1280_960:
-		CR (gp_widget_set_value (widget, "1280x960"));
-		break;
-	default:
-		CR (gp_widget_set_value (widget, "unknown"));
-		break;
-	}
-
-	/* Exposure */
-	CR (gp_widget_new (GP_WIDGET_RADIO, _("Exposure"), &widget));
-	CR (gp_widget_set_name (widget, "exposure"));
-	CR (gp_widget_set_info (widget, _("Exposure")));
-	CR (gp_widget_append (section, widget));
-	CR (gp_widget_add_choice (widget, "-2.0"));
-	CR (gp_widget_add_choice (widget, "-1.5"));
-	CR (gp_widget_add_choice (widget, "0.0"));
-	CR (gp_widget_add_choice (widget, "+1.5"));
-	CR (gp_widget_add_choice (widget, "+2.0"));
-	CR (gp_widget_add_choice (widget, _("Auto")));
-	CR (ricoh_get_exposure (camera, context, &exposure));
-	switch (exposure) {
-	case RICOH_EXPOSURE_M20:
-		CR (gp_widget_set_value (widget, "-2.0"));
-		break;
-	case RICOH_EXPOSURE_M15:
-		CR (gp_widget_set_value (widget, "-1.5"));
-		break;
-	case RICOH_EXPOSURE_M10:
-		CR (gp_widget_set_value (widget, "-1.0"));
-		break;
-	case RICOH_EXPOSURE_M05:
-		CR (gp_widget_set_value (widget, "-0.5"));
-		break;
-	case RICOH_EXPOSURE_00:
-		CR (gp_widget_set_value (widget, "0.0"));
-		break;
-	case RICOH_EXPOSURE_05:
-		CR (gp_widget_set_value (widget, "+0.5"));
-		break;
-	case RICOH_EXPOSURE_10:
-		CR (gp_widget_set_value (widget, "+1.0"));
-		break;
-	case RICOH_EXPOSURE_15:
-		CR (gp_widget_set_value (widget, "+1.5"));
-		break;
-	case RICOH_EXPOSURE_20:
-		CR (gp_widget_set_value (widget, "+2.0"));
-		break;
-	case RICOH_EXPOSURE_AUTO:
-		CR (gp_widget_set_value (widget, _("Auto")));
-		break;
-	default:
-		CR (gp_widget_set_value (widget, _("unknown")));
-		break;
-	}
+	R_ADD_RADIO (c, co, s, RicohResolution,  resolution,  "Resolution")
+	R_ADD_RADIO (c, co, s, RicohExposure,    exposure,    "Exposure")
+	R_ADD_RADIO (c, co, s, RicohMacro,       macro,       "Macro")
+	R_ADD_RADIO (c, co, s, RicohFlash,       flash,       "Flash")
+	R_ADD_RADIO (c, co, s, RicohZoom,        zoom,        "Zoom")
+	R_ADD_RADIO (c, co, s, RicohCompression, compression, "Compression")
+	R_ADD_RADIO (c, co, s, RicohWhiteLevel,  white_level, "White Level")
+	R_ADD_RADIO (c, co, s, RicohRecMode,     rec_mode,    "Record Mode")
 
 	return (GP_OK);
 }
 
 static int
-camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
+camera_set_config (Camera *c, CameraWidget *window, GPContext *co)
 {
-	CameraWidget *widget;
+	CameraWidget *w;
 	const char *v_char;
 	time_t time;
-	RicohResolution resolution;
-	RicohExposure exposure;
 
 	/* Copyright */
-	CR (gp_widget_get_child_by_name (window, "copyright", &widget));
-	if (gp_widget_changed (widget)) {
-		CR (gp_widget_get_value (widget, &v_char));
-		CR (ricoh_set_copyright (camera, context, v_char));
+	CR (gp_widget_get_child_by_name (window, "copyright", &w));
+	if (gp_widget_changed (w)) {
+		CR (gp_widget_get_value (w, &v_char));
+		CR (ricoh_set_copyright (c, co, v_char));
 	}
 
 	/* Date */
-	CR (gp_widget_get_child_by_name (window, "date", &widget));
-	if (gp_widget_changed (widget)) {
-		CR (gp_widget_get_value (widget, &time));
-		CR (ricoh_set_date (camera, context, time));
+	CR (gp_widget_get_child_by_name (window, "date", &w));
+	if (gp_widget_changed (w)) {
+		CR (gp_widget_get_value (w, &time));
+		CR (ricoh_set_date (c, co, time));
 	}
 
-	/* Resolution */
-	CR (gp_widget_get_child_by_name (window, "resolution", &widget));
-	if (gp_widget_changed (widget)) {
-		CR (gp_widget_get_value (widget, &v_char));
-		if (!strcmp (v_char, "640x480"))
-			resolution = RICOH_RESOLUTION_640_480;
-		else if (!strcmp (v_char, "1280x960"))
-			resolution = RICOH_RESOLUTION_1280_960;
-		else 
-			resolution = 0;
-		CR (ricoh_set_resolution (camera, context, resolution));
-	}
-
-	/* Exposure */
-	CR (gp_widget_get_child_by_name (window, "exposure", &widget));
-	if (gp_widget_changed (widget)) {
-		CR (gp_widget_get_value (widget, &v_char));
-		if (!strcmp (v_char, "-2.0"))
-			exposure = RICOH_EXPOSURE_M20;
-		else if (!strcmp (v_char, "-1.5"))
-			exposure = RICOH_EXPOSURE_M15;
-		else if (!strcmp (v_char, "-1.0"))
-			exposure = RICOH_EXPOSURE_M10;
-		else if (!strcmp (v_char, "-0.5"))
-			exposure = RICOH_EXPOSURE_M05;
-		else if (!strcmp (v_char, "0.0"))
-			exposure = RICOH_EXPOSURE_00;
-		else if (!strcmp (v_char, "+0.5"))
-			exposure = RICOH_EXPOSURE_05;
-		else if (!strcmp (v_char, "+1.0"))
-			exposure = RICOH_EXPOSURE_10;
-		else if (!strcmp (v_char, "+1.5"))
-			exposure = RICOH_EXPOSURE_15;
-		else if (!strcmp (v_char, "+2.0"))
-			exposure = RICOH_EXPOSURE_20;
-		else if (!strcmp (v_char, _("Auto")))
-			exposure = RICOH_EXPOSURE_AUTO;
-		else
-			exposure = 0;
-		CR (ricoh_set_exposure (camera, context, exposure));
-	}
+	R_CHECK_RADIO (c, co, window, resolution,  N_("Resolution"))
+	R_CHECK_RADIO (c, co, window, exposure,    N_("Exposure"))
+	R_CHECK_RADIO (c, co, window, white_level, N_("White level"))
+	R_CHECK_RADIO (c, co, window, macro,       N_("Macro"))
+	R_CHECK_RADIO (c, co, window, zoom,        N_("Zoom"))
+	R_CHECK_RADIO (c, co, window, flash,       N_("Flash"))
+	R_CHECK_RADIO (c, co, window, rec_mode,    N_("Record Mode"))
+	R_CHECK_RADIO (c, co, window, compression, N_("Compression"))
 
 	return (GP_OK);
 }
