@@ -323,7 +323,9 @@ post_func (Camera *camera, GPContext *context)
 {
 	GP_DEBUG ("Terminating connection...");
 
+	/* Reset the camera and put it back to 9600 bps. */
 	CR (fuji_reset (camera, context));
+	CR (fuji_set_speed (camera, FUJI_SPEED_9600, context));
 
 	return (GP_OK);
 }

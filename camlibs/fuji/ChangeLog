@@ -1,3 +1,7 @@
+2002-04-21  Lutz Müller <lutz@users.sourceforge.net>
+
+	* library.c: A fuji_reset doesn't seem to reset the speed to 9600.
+
 2002-04-19  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: Don't make the check for supported commands fatal.
