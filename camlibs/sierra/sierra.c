@@ -39,69 +39,8 @@
 #include <gphoto2-library.h>
 #include <gphoto2-port-log.h>
 
+#include "sierra-desc.h"
 #include "library.h"
-
-#define GP_MODULE "sierra"
-
-#define TIMEOUT	   2000
-
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
-
-#define CHECK_STOP(camera,result)				\
-{								\
-	int res = (result);					\
-								\
-	if (res < 0) {						\
-		GP_DEBUG ("Operation failed (%i)!", res);	\
-		camera_stop (camera, context);			\
-		return (res);					\
-	}							\
-}
-
-#define CHECK_STOP_FREE(camera,result)				\
-{								\
-	int res = (result);					\
-								\
-	if (res < 0) {						\
-		GP_DEBUG ("Operation failed (%i)!", res);	\
-		camera_stop (camera, context);			\
-		free (camera->pl);				\
-		camera->pl = NULL;				\
-		return (res);					\
-	}							\
-}
-
-#define CHECK_FREE(camera,result)				\
-{								\
-	int res = (result);					\
-								\
-	if (res < 0) {						\
-		GP_DEBUG ("Operation failed (%i)!", res);	\
-		free (camera->pl);				\
-		camera->pl = NULL;				\
-		return (res);					\
-	}							\
-}
-
-static int camera_start (Camera *camera, GPContext *context);
-static int camera_stop  (Camera *camera, GPContext *context);
 
 int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_size);
 
@@ -131,7 +70,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Nikon CoolPix 300", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 700", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 800", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
-        {"Nikon CoolPix 880",	SIERRA_MODEL_DEFAULT,	0x04b0, 0x0103, 0},
+        {"Nikon CoolPix 880",	SIERRA_MODEL_CAM_DESC,	0x04b0, 0x0103, 0, cp880_desc},
         {"Nikon CoolPix 900", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 900S", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Nikon CoolPix 910", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
@@ -374,7 +313,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	return (camera_stop (camera, context));
 }
 
-static int
+int
 camera_start (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
@@ -414,7 +353,7 @@ camera_start (Camera *camera, GPContext *context)
 	return (GP_OK);
 }
 
-static int
+int
 camera_stop (Camera *camera, GPContext *context) 
 {
 	GP_DEBUG ("Closing connection...");
@@ -705,6 +644,7 @@ put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, voi
 	return (camera_stop (camera, context));
 }
 
+#ifdef UNUSED_CODE
 // FIXME: Is this function still usefull ?
 static void dump_register (Camera *camera, GPContext *context)
 {
@@ -787,6 +727,7 @@ static void dump_register (Camera *camera, GPContext *context)
 					 description [i]);
 	}
 }
+#endif
 
 static int
 camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *context)
@@ -1973,6 +1914,7 @@ camera_init (Camera *camera, GPContext *context)
         int vendor=0, product=0, usb_wrap=0;
 	GPPortSettings s;
 	CameraAbilities a;
+	const CameraRegisterSetType *cam_desc = NULL;
 
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
@@ -1997,6 +1939,7 @@ camera_init (Camera *camera, GPContext *context)
 			camera->pl->model = sierra_cameras[x].sierra_model;
 			vendor = sierra_cameras[x].usb_product;
                         usb_wrap = sierra_cameras[x].usb_wrap;
+                        cam_desc = sierra_cameras[x].cam_desc;
                }
 	}
 
@@ -2009,12 +1952,20 @@ camera_init (Camera *camera, GPContext *context)
 		camera->functions->get_config = camera_get_config_olympus;
 		camera->functions->set_config = camera_set_config_olympus;
 		break;
+	case SIERRA_MODEL_CAM_DESC:
+		if (cam_desc == NULL) {
+			GP_DEBUG ("*** cam_desc NULL");
+                        return (GP_ERROR_MODEL_NOT_FOUND);
+		}
+		camera->pl->cam_desc = cam_desc;
+		camera->functions->get_config = camera_get_config_cam_desc;
+		camera->functions->set_config = camera_set_config_cam_desc;
+		break;
 	default:
 		camera->functions->get_config = camera_get_config_default;
 		camera->functions->set_config = camera_set_config_default;
 		break;
 	}
-	
 	CHECK_FREE (camera, gp_port_get_settings (camera->port, &s));
         switch (camera->port->type) {
         case GP_PORT_SERIAL:

@@ -59,37 +59,6 @@ enum _SierraPacket {
 
 #define		QUICKSLEEP	5
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
-
-#define GP_MODULE "sierra"
-
-typedef enum _SierraAction SierraAction;
-enum _SierraAction {
-	SIERRA_ACTION_DELETE_ALL = 0x01,
-	SIERRA_ACTION_CAPTURE    = 0x02,
-	SIERRA_ACTION_END        = 0x04,
-	SIERRA_ACTION_PREVIEW    = 0x05,
-	SIERRA_ACTION_DELETE     = 0x07,
-	SIERRA_ACTION_UPLOAD     = 0x0b
-};
-
 int sierra_change_folder (Camera *camera, const char *folder, GPContext *context)
 {	
 	int st = 0, i;
@@ -962,8 +931,8 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 	return GP_OK;
 }
 
-static int
-sierra_action (Camera *camera, SierraAction action, GPContext *context)
+int sierra_sub_action (Camera *camera, SierraAction action, int sub_action,
+		       GPContext *context)
 {
 	char buf[4096];
 
@@ -971,7 +940,7 @@ sierra_action (Camera *camera, SierraAction action, GPContext *context)
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 3, buf));
 	buf[4] = 0x02;
 	buf[5] = action;
-	buf[6] = 0x00;
+	buf[6] = sub_action;
 
 	GP_DEBUG ("Telling camera to execute action...");
 	CHECK (sierra_transmit_ack (camera, buf, context));
@@ -989,6 +958,12 @@ sierra_action (Camera *camera, SierraAction action, GPContext *context)
 	} 
 
 	return GP_OK;
+}
+
+static int
+sierra_action (Camera *camera, SierraAction action, GPContext *context)
+{
+	return(sierra_sub_action (camera, action, 0, context));
 }
 
 int

@@ -2,7 +2,8 @@
 typedef enum {
 	SIERRA_MODEL_DEFAULT,   
 	SIERRA_MODEL_EPSON,
-	SIERRA_MODEL_OLYMPUS
+	SIERRA_MODEL_OLYMPUS,
+	SIERRA_MODEL_CAM_DESC,
 } SierraModel;
 
 struct _CameraPrivateLibrary {
@@ -11,8 +12,11 @@ struct _CameraPrivateLibrary {
 	int speed;
 	int first_packet;
 	int usb_wrap;  /* 0: packets sent "raw", 1: see sierra-usbwrap.h */
+	struct CameraRegisterSet const *cam_desc;
 	char folder[128];
 };
+
+struct CameraDescriptor;
 
 typedef struct {
 	char model[64];
@@ -20,6 +24,7 @@ typedef struct {
 	int  usb_vendor;
 	int  usb_product;
 	int  usb_wrap;
+	struct CameraRegisterSet const *cam_desc;
 } SierraCamera;
 
 #define CHECK(result)					\
@@ -32,4 +37,3 @@ typedef struct {
 		return (res);				\
 	}						\
 }
-

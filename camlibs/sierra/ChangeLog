@@ -1,3 +1,9 @@
+2002-05-29  Patrick Mansfield <patmans@users.sourceforge.net>
+
+	* library.[hc], sierra.[hc], sierra-desc.[ch], nikon-desc.c: 
+	  Add camera description table for camera configuration settings.
+	  Add support for nikon coolpix 880 using the description table.
+
 2002-05-26  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c: Handle the error where the camera sends strange bytes.
