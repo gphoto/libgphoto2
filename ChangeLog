@@ -1,6 +1,11 @@
+2002-02-12  Fredrik <fredrik@krixor.xy.org>
+
+	* libgphoto2/gphoto2-filesys.c: Fix month off-by-one bug in
+	  Lutz's fix of get_exif_mtime.
+
 2002-02-12  Lutz Müller <lutz@users.sourceforge.net>
 
-	* libgphoto2/gphoto-filesys.c: Fix (get_exif_mtime).
+	* libgphoto2/gphoto2-filesys.c: Fix (get_exif_mtime).
 
 2002-02-12  Tim Waugh <twaugh@redhat.com>
 
