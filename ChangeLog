@@ -1,5 +1,10 @@
 2001-08-18  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
+	* include/gphoto2-widget.h:
+	* libgphoto2/widget.c (gp_widget_get_parent): New function
+
+2001-08-18  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
+
 	* include/Makefile.am: Oops, add gphoto2-result.h.
 
 2001-08-18  Lutz Müller  <urc8@rz.uni-karlsruhe.de>

@@ -53,7 +53,7 @@ int 	gp_widget_count_children     (CameraWidget *parent);
 int	gp_widget_get_child	     (CameraWidget *parent, int child_number, 
 				      CameraWidget **child);
 
-/* Retrieve Widgets from a parent widget */
+/* Retrieve Widgets */
 int	gp_widget_get_child_by_label (CameraWidget *parent,
 				      const char *child_label,
 				      CameraWidget **child);
@@ -64,6 +64,8 @@ int	gp_widget_get_child_by_name  (CameraWidget *parent,
 				      CameraWidget **child);
 int	gp_widget_get_root           (CameraWidget *widget,
                                       CameraWidget **root);
+int     gp_widget_get_parent         (CameraWidget *widget,
+				      CameraWidget **parent);
 
 int	gp_widget_set_value     (CameraWidget *widget, void *value);
 int	gp_widget_get_value     (CameraWidget *widget, void *value);
