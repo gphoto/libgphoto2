@@ -7,7 +7,7 @@ VERSION_FLAGS = -DLIBGPPORT_VERSION=\"@LIBGPPORT_VERSION@\" -DHAVE_TERMIOS_H
 ## Executable files
 bin_SCRIPTS = gphoto2-port-config
 
-SUBDIRS = po intl libgphoto2_port test @IOLIB_SUBDIRS@ doc m4
+SUBDIRS = po libgphoto2_port test @IOLIB_SUBDIRS@ doc m4
 
 EXTRA_DIST = 		\
 	AUTHORS \
