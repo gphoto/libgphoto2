@@ -331,7 +331,7 @@ dnl Configure libgphoto2-port
 dnl ---------------------------------------------------------------------------
 AC_CONFIG_SUBDIRS(libgphoto2_port)
 
-AC_OUTPUT([  intl/Makefile po/Makefile.in 
+AC_OUTPUT([
 Makefile
 camlibs/Makefile
 camlibs/barbie/Makefile
