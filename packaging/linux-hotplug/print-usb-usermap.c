@@ -39,6 +39,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
+#include <string.h>
 
 #include <gphoto2-camera.h>
 #include <gphoto2-port-log.h>
