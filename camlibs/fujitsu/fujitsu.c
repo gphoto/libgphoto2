@@ -24,67 +24,68 @@ int camera_id (CameraText *id) {
 	return (GP_OK);
 }
 
-FujitsuCamera *cameras = {
-	{"Agfa ePhoto 307", 0, 0 },
-	{"Agfa ePhoto 780", 0, 0 },
-	{"Agfa ePhoto 780C", 0, 0 },
-	{"Agfa ePhoto 1280", 0, 0 },
-	{"Agfa ePhoto 1680", 0, 0 },
-	{"Apple QuickTake 150", 0, 0 },
-	{"Apple QuickTake 200", 0, 0 },
-	{"Chinon ES-1000", 0, 0 },
-	{"Epson PhotoPC 500", 0, 0 },
-	{"Epson PhotoPC 550", 0, 0 },
-	{"Epson PhotoPC 600", 0, 0 },
-	{"Epson PhotoPC 700", 0, 0 },
-	{"Epson PhotoPC 800", 0, 0 },
-	{"Nikon CoolPix 100", 0, 0 },
-	{"Nikon CoolPix 300", 0, 0 },
-	{"Nikon CoolPix 700", 0, 0 },
-	{"Nikon CoolPix 800", 0, 0 },
-	{"Nikon CoolPix 900", 0, 0 },
-	{"Nikon CoolPix 900S", 0, 0 },
-	{"Nikon CoolPix 950", 0, 0 },
-	{"Nikon CoolPix 950S", 0, 0 },
-	{"Olympus D-100Z", 0, 0 },
-	{"Olympus D-200L", 0, 0 },
-	{"Olympus D-220L", 0, 0 },
-	{"Olympus D-300L", 0, 0 },
-	{"Olympus D-320L", 0, 0 },
-	{"Olympus D-330R", 0, 0 },
-	{"Olympus D-340L", 0, 0 },
-	{"Olympus D-340R", 0, 0 },
-	{"Olympus D-360L", 0, 0 },
-	{"Olympus D-400L Zoom", 0, 0 },
-	{"Olympus D-450Z", 0, 0 },
-	{"Olympus D-460Z", 0, 0 },
-	{"Olympus D-500L", 0, 0 },
-	{"Olympus D-600L", 0, 0 },
-	{"Olympus D-620L", 0, 0 },
-	{"Olympus C-400L", 0, 0 },
-	{"Olympus C-410L", 0, 0 },
-	{"Olympus C-800L", 0, 0 },
-	{"Olympus C-820L", 0, 0 },
-	{"Olympus C-830L", 0, 0 },
-	{"Olympus C-840L", 0, 0 },
-	{"Olympus C-900 Zoom", 0, 0 },
-	{"Olympus C-900L Zoom", 0, 0 },
-	{"Olympus C-1000L", 0, 0 },
-	{"Olympus C-1400L", 0, 0 },
-	{"Olympus C-2000Z", 0, 0 },
-	{"Olympus C-2500Z", 0, 0 },
-	{"Olympus C-3030Z", 0, 0 },
-	{"Panasonic Coolshot KXl-600A", 0, 0 },
-	{"Panasonic Coolshot NV-DCF5E", 0, 0 },
-	{"Polaroid PDC 640", 0, 0 },
-	{"Sanyo DSC-X300", 0, 0 },
-	{"Sanyo DSC-X350", 0, 0 },
-	{"Sanyo VPC-G200", 0, 0 },
-	{"Sanyo VPC-G200EX", 0, 0 },
-	{"Sanyo VPC-G210", 0, 0 },
-	{"Sanyo VPC-G250", 0, 0 },
-	{"Sierra Imaging SD640", 0, 0 },
-	NULL
+FujitsuCamera fujitsu_cameras[] = {
+	/* Camera Model       vendor id, product id, in endpoint, out endpoint */ 
+	{"Agfa ePhoto 307", 	0, 0, 0, 0 },
+	{"Agfa ePhoto 780", 	0, 0, 0, 0 },
+	{"Agfa ePhoto 780C", 	0, 0, 0, 0 },
+	{"Agfa ePhoto 1280", 	0, 0, 0, 0 },
+	{"Agfa ePhoto 1680", 	0, 0, 0, 0 },
+	{"Apple QuickTake 150", 0, 0, 0, 0 },
+	{"Apple QuickTake 200", 0, 0, 0, 0 },
+	{"Chinon ES-1000", 	0, 0, 0, 0 },
+	{"Epson PhotoPC 500", 	0, 0, 0, 0 },
+	{"Epson PhotoPC 550", 	0, 0, 0, 0 },
+	{"Epson PhotoPC 600", 	0, 0, 0, 0 },
+	{"Epson PhotoPC 700", 	0, 0, 0, 0 },
+	{"Epson PhotoPC 800", 	0, 0, 0, 0 },
+	{"Nikon CoolPix 100", 	0, 0, 0, 0 },
+	{"Nikon CoolPix 300", 	0, 0, 0, 0 },
+	{"Nikon CoolPix 700", 	0, 0, 0, 0 },
+	{"Nikon CoolPix 800", 	0, 0, 0, 0 },
+	{"Nikon CoolPix 900", 	0, 0, 0, 0 },
+	{"Nikon CoolPix 900S", 	0, 0, 0, 0 },
+	{"Nikon CoolPix 950", 	0, 0, 0, 0 },
+	{"Nikon CoolPix 950S", 	0, 0, 0, 0 },
+	{"Olympus D-100Z", 	0, 0, 0, 0 },
+	{"Olympus D-200L", 	0, 0, 0, 0 },
+	{"Olympus D-220L", 	0, 0, 0, 0 },
+	{"Olympus D-300L", 	0, 0, 0, 0 },
+	{"Olympus D-320L", 	0, 0, 0, 0 },
+	{"Olympus D-330R", 	0, 0, 0, 0 },
+	{"Olympus D-340L", 	0, 0, 0, 0 },
+	{"Olympus D-340R", 	0, 0, 0, 0 },
+	{"Olympus D-360L", 	0, 0, 0, 0 },
+	{"Olympus D-400L Zoom", 0, 0, 0, 0 },
+	{"Olympus D-450Z", 	0, 0, 0, 0 },
+	{"Olympus D-460Z", 	0, 0, 0, 0 },
+	{"Olympus D-500L", 	0, 0, 0, 0 },
+	{"Olympus D-600L", 	0, 0, 0, 0 },
+	{"Olympus D-620L", 	0, 0, 0, 0 },
+	{"Olympus C-400L", 	0, 0, 0, 0 },
+	{"Olympus C-410L", 	0, 0, 0, 0 },
+	{"Olympus C-800L", 	0, 0, 0, 0 },
+	{"Olympus C-820L", 	0, 0, 0, 0 },
+	{"Olympus C-830L", 	0, 0, 0, 0 },
+	{"Olympus C-840L", 	0, 0, 0, 0 },
+	{"Olympus C-900 Zoom", 	0, 0, 0, 0 },
+	{"Olympus C-900L Zoom", 0, 0, 0, 0 },
+	{"Olympus C-1000L", 	0, 0, 0, 0 },
+	{"Olympus C-1400L", 	0, 0, 0, 0 },
+	{"Olympus C-2000Z", 	0, 0, 0, 0 },
+	{"Olympus C-2500Z", 	0, 0, 0, 0 },
+	{"Olympus C-3030Z", 	0x07b4, 0x100, 0x83, 0x04},
+	{"Panasonic Coolshot KXl-600A", 0, 0, 0, 0 },
+	{"Panasonic Coolshot NV-DCF5E", 0, 0, 0, 0 },
+	{"Polaroid PDC 640", 	0, 0, 0, 0 },
+	{"Sanyo DSC-X300", 	0, 0, 0, 0 },
+	{"Sanyo DSC-X350", 	0, 0, 0, 0 },
+	{"Sanyo VPC-G200", 	0, 0, 0, 0 },
+	{"Sanyo VPC-G200EX", 	0, 0, 0, 0 },
+	{"Sanyo VPC-G210", 	0, 0, 0, 0 },
+	{"Sanyo VPC-G250", 	0, 0, 0, 0 },
+	{"Sierra Imaging SD640",0, 0, 0, 0 },
+	{"", 0, 0}
 };
 
 int camera_abilities (CameraAbilitiesList *list) {
@@ -92,10 +93,13 @@ int camera_abilities (CameraAbilitiesList *list) {
 	int x=0;
 	CameraAbilities *a;
 
-	while (cameras[x]) {
+	while (strlen(fujitsu_cameras[x].model)>0) {
 		a = gp_abilities_new();
-		strcpy(a->model, cameras[x]->model);
-		a->port     = GP_PORT_SERIAL | GP_PORT_USB;
+		strcpy(a->model, fujitsu_cameras[x].model);
+		a->port     = GP_PORT_SERIAL;
+		if ((fujitsu_cameras[x].usb_vendor  > 0) &&
+		    (fujitsu_cameras[x].usb_product > 0))
+			a->port |= GP_PORT_USB;
 		a->speed[0] = 9600;
 		a->speed[1] = 19200;
 		a->speed[2] = 38400;
@@ -107,8 +111,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 		a->file_delete  = 1;
 		a->file_preview = 1;
 		a->file_put = 0;
-		a->usb_product = cameras[x]->usb_product;
-		a->usb_vendor  = cameras[x]->usb_vendor;
+		a->usb_vendor  = fujitsu_cameras[x].usb_vendor;
+		a->usb_product = fujitsu_cameras[x].usb_product;
 		gp_abilities_list_append(list, a);
 
 		x++;
@@ -120,7 +124,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 int camera_init (Camera *camera, CameraInit *init) {
 
 	char *p;
-	int l, value=0;
+	int l, value=0, x=0, vendor, product, inep, outep;
 	gpio_device_settings settings;
 	FujitsuData *fd;
 
@@ -166,19 +170,34 @@ int camera_init (Camera *camera, CameraInit *init) {
 			break;
 		case GP_PORT_USB:
 #ifdef GPIO_USB
+			/* lookup the USB information */
+			while (strlen(fujitsu_cameras[x].model)>0) {			
+				if (strcmp(fujitsu_cameras[x].model, init->model)==0) {
+					vendor = fujitsu_cameras[x].usb_vendor;
+					product = fujitsu_cameras[x].usb_product;
+					inep = fujitsu_cameras[x].usb_inep;
+					outep = fujitsu_cameras[x].usb_outep;
+				}
+				x++;
+			}
+
+			/* Couldn't find the usb information */
+			if ((vendor == 0) && (product == 0))
+				return (GP_ERROR);
+
 			fujitsu_debug_print(fd, "USB Device");
 			fd->dev = gpio_new(GPIO_DEVICE_USB);
 
-		        if (gpio_usb_find_device(fd->dev, 0x07b4, 0x0100) == GPIO_ERROR) {
+		        if (gpio_usb_find_device(fd->dev, vendor, product) == GPIO_ERROR) {
 				gp_camera_message(camera, "Could not find camera on USB");
 				free (fd);
 		                return (GP_ERROR);
 			}
 		        gpio_set_timeout (fd->dev, 5000);
-        		settings.usb.inep = 0x83;
-        		settings.usb.outep = 0x04;
-        		settings.usb.config = 1;
-        		settings.usb.interface = 0;
+        		settings.usb.inep 	= inep;
+        		settings.usb.outep 	= outep;
+        		settings.usb.config 	= 1;
+        		settings.usb.interface 	= 0;
         		settings.usb.altsetting = 0;
 			break;
 #endif

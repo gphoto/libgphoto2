@@ -13,6 +13,8 @@ typedef struct {
 	char model[64];
 	int  usb_vendor;
 	int  usb_product;
+	int  usb_inep;
+	int  usb_outep;
 } FujitsuCamera;
 
 void fujitsu_debug_print(FujitsuData *fd, char *message);
