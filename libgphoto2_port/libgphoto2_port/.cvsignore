@@ -4,3 +4,7 @@ Makefile
 .libs
 *.lo
 libgphoto2_port.la
+config.h.in
+config.h
+stamp.h.in
+stamp.h

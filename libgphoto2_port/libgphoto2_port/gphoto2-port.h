@@ -23,17 +23,12 @@
 
 #include <gphoto2-port-info-list.h>
 
+/* For portability */
+#include <gphoto2-port-portability.h>
 #ifdef OS2
-#include <gphoto2_port-portability-os2.h>
+#include <gphoto2-port-portability-os2.h>
 #include <os2.h>
 #endif
-
-/* Include the portability layer */
-#include "gphoto2-portability.h"
-
-/* Include the various headers for other devices */
-#include "gphoto2-port-serial.h"
-#include "gphoto2-port-usb.h"
 
 #ifndef TRUE
 #define TRUE (0==0)
@@ -45,11 +40,26 @@
 
 #define GP_PORT_MAX_BUF_LEN 4096             /* max length of receive buffer */
 
-/* Put the settings together in a union */
-typedef union {
-        gp_port_serial_settings         serial;
-        gp_port_usb_settings            usb;
-} GPPortSettings;
+typedef struct _GPPortSettingsSerial GPPortSettingsSerial;
+struct _GPPortSettingsSerial {
+	char port[128];
+	int speed;
+	int bits, parity, stopbits;
+};
+
+typedef struct _GPPortSettingsUSB GPPortSettingsUSB;
+struct _GPPortSettingsUSB {
+	int inep, outep;
+	int config;
+	int interface;
+	int altsetting;
+};
+
+typedef union _GPPortSettings GPPortSettings;
+union _GPPortSettings {
+	GPPortSettingsSerial serial;
+	GPPortSettingsUSB usb;
+};
 
 enum {
         GP_PORT_USB_ENDPOINT_IN,
@@ -95,6 +105,13 @@ int gp_port_settings_get (GPPort *dev, GPPortSettings *settings);
 
 int gp_port_write                (GPPort *dev, char *bytes, int size);
 int gp_port_read         (GPPort *dev, char *bytes, int size);
+
+#define PIN_RTS 0
+#define PIN_DTR 1
+#define PIN_CTS 2
+#define PIN_DSR 3
+#define PIN_CD  4
+#define PIN_RING 5
 
 int gp_port_pin_get   (GPPort *dev, int pin, int *level);
 int gp_port_pin_set   (GPPort *dev, int pin, int level);

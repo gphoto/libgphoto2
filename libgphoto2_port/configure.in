@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT(libgphoto2_port/gphoto2-port.c)
-AM_CONFIG_HEADER(include/config.h)
+AM_CONFIG_HEADER(libgphoto2_port/config.h)
 
 LIBGPPORT_MAJOR_VERSION=0
 LIBGPPORT_MINOR_VERSION=0
@@ -211,7 +211,6 @@ Makefile
 libgphoto2_port/Makefile
 serial/Makefile
 usb/Makefile
-include/Makefile
 gphoto2-port-config
 intl/Makefile
 po/Makefile.in

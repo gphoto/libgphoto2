@@ -28,6 +28,7 @@
  */
 
 #include <config.h>
+#include <gphoto2-port-library.h>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -61,11 +62,9 @@
 #  include <lockdev.h>
 #endif
 
-#include <gphoto2-port-serial.h>
 #include <gphoto2-port-result.h>
 #include <gphoto2-port-log.h>
 #include <gphoto2-port.h>
-#include <gphoto2-port-library.h>
 
 #ifdef HAVE_TERMIOS_H
 static struct termios term_old;
@@ -93,6 +92,66 @@ static struct sgttyb term_old;
 #endif
 
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
+
+/* Linux */
+#ifdef __linux
+/* devfs is accounted for in the implementation */
+#define GP_PORT_SERIAL_PREFIX   "/dev/ttyS%i"
+#define GP_PORT_SERIAL_RANGE_LOW        0
+#define GP_PORT_SERIAL_RANGE_HIGH       32
+#endif
+
+/* BSD */
+#if defined(__FreeBSD__) || defined(__NetBSD__)
+#define GP_PORT_SERIAL_PREFIX   "/dev/tty0%i"
+#define GP_PORT_SERIAL_RANGE_LOW        0
+#define GP_PORT_SERIAL_RANGE_HIGH       32
+#endif
+
+/* Darwin */
+#if defined(__APPLE__)
+/* Does this many any sense on a Mac??? */
+#define GP_PORT_SERIAL_PREFIX   "/dev/tty.modem"
+#define GP_PORT_SERIAL_RANGE_LOW        0
+#define GP_PORT_SERIAL_RANGE_HIGH       0
+#endif
+
+/* Solaris */
+#ifdef sun
+#define GP_PORT_SERIAL_PREFIX "/dev/tty%c"
+#define GP_PORT_SERIAL_RANGE_LOW        'a'
+#define GP_PORT_SERIAL_RANGE_HIGH       'z'
+#endif
+
+/* BeOS */
+#ifdef beos
+/* ????????????? */
+#define GP_PORT_SERIAL_PREFIX NULL
+#define GP_PORT_SERIAL_RANGE_LOW        0
+#define GP_PORT_SERIAL_RANGE_HIGH       0
+#endif
+
+/* Windows */
+#ifdef WIN32
+#define GP_PORT_SERIAL_PREFIX   "COM%i:"
+#define GP_PORT_SERIAL_RANGE_LOW        1
+#define GP_PORT_SERIAL_RANGE_HIGH       4
+#endif
+
+#ifdef OS2
+#define GP_PORT_SERIAL_PREFIX   "COM%i"
+#define GP_PORT_SERIAL_RANGE_LOW   1
+#define GP_PORT_SERIAL_RANGE_HIGH  4
+#endif
+
+/* Others? */
+
+/* Default */
+#ifndef GP_PORT_SERIAL_PREFIX
+#define GP_PORT_SERIAL_PREFIX   "/dev/cua%i"
+#define GP_PORT_SERIAL_RANGE_LOW        0
+#define GP_PORT_SERIAL_RANGE_HIGH       0
+#endif
 
 struct _GPPortPrivateLibrary {
 	int fd; 			/* Device handle */

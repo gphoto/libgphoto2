@@ -1,5 +1,10 @@
 2001-10-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* include: Move everything from here to ...
+	* libgphoto2_port: ... here.
+
+2001-10-26  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in: Give users the possibility _not_ to compile in USB
 	  support. Same with SERIAL.
 
