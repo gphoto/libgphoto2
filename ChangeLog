@@ -1,3 +1,19 @@
+2002-03-23  Lutz Müller <lutz@users.sourceforge.net>
+
+	Patch by Cliff Wright <cliff@snipe444.org> (comments quoted from 
+	the e-mails):
+
+	* frontends/command-line/main.c: The command line program does not
+	  allow one to have a combination of --config, and --capture-image
+	  where the config will occur first, and then the capture. Since some
+	  cameras do not retain all config info between connections This is a
+	  feature I wanted, so the below patch fixes this by moving config in
+	  front of capture.
+	* frontends/command-line/gphoto2-cmd-config.c: Unless cdk has changed
+	  the way they handle month's for the config calendar display, their
+	  is a bug in the command line configure in file gphoto2-cmd-config.c.
+	  The patch below fixed this for me.
+
 2002-03-22  Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 	* packaging/usbcam*: moved to packaging/linux-hotplug/*

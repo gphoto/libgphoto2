@@ -162,8 +162,10 @@ show_date (CmdConfig *cmd_config, CameraWidget *date)
 
 	gp_widget_get_value (date, &time);
 	date_info = localtime ((time_t *) &time);
+
+	/* Month in CDK starts with 1 */
 	day = date_info->tm_mday;
-	month = date_info->tm_mon;
+	month = date_info->tm_mon + 1;
 	year = date_info->tm_year + 1900;
 
 	gp_widget_get_label (date, &label);
@@ -184,9 +186,12 @@ show_date (CmdConfig *cmd_config, CameraWidget *date)
 
 	if (calendar->exitType == vNORMAL) {
 		date_info = localtime ((time_t *) &time);
+
+		/* Month in CDK starts with 1 */
 		date_info->tm_mday = calendar->day;
-		date_info->tm_mon = calendar->month;
+		date_info->tm_mon = calendar->month - 1;
 		date_info->tm_year = calendar->year - 1900;
+
 		time = mktime (date_info);
 		gp_widget_set_value (date, &time);
 		set_config (cmd_config);

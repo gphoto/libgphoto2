@@ -227,13 +227,13 @@ Option option[] = {
 {"d", "delete-file", "range",  N_("Delete files given in range"), delete_file, 0},
 {"D", "delete-all-files","",     N_("Delete all files in folder"), delete_all_files,0},
 {"u", "upload-file", "filename", N_("Upload a file to camera"),    upload_file, 0},
+#ifdef HAVE_CDK
+{"" , "config",         "",  N_("Configure"),               config,          0},
+#endif
 {"" , "capture-preview", "", N_("Capture a quick preview"), capture_preview, 0},
 {"" , "capture-image",  "",  N_("Capture an image"),        capture_image,   0},
 {"" , "capture-movie",  "",  N_("Capture a movie "),        capture_movie,   0},
 {"" , "capture-sound",  "",  N_("Capture an audio clip"),   capture_sound,   0},
-#ifdef HAVE_CDK
-{"" , "config",		"",  N_("Configure"),               config,          0},
-#endif
 #ifdef HAVE_EXIF
 {"", "show-exif", "range",   N_("Show EXIF information"), show_exif, 0},
 #endif
