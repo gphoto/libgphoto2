@@ -285,7 +285,6 @@ int sierra_set_speed (Camera *camera, int speed)
 {
 	gp_port_settings settings;
 	SierraData *fd = (SierraData*)camera->camlib_data;
-	int ret;
 
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_set_speed");
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* speed: %i", speed);
@@ -325,13 +324,9 @@ int sierra_set_speed (Camera *camera, int speed)
 			return (GP_ERROR_IO_SERIAL_SPEED);
 	}
 
-	ret = sierra_set_int_register (camera, 17, speed);
-	if (ret != GP_OK)
-		return (ret);
+	CHECK (sierra_set_int_register (camera, 17, speed));
 
-	ret = gp_port_settings_set (fd->dev, settings);
-	if (ret != GP_OK)
-		return (ret);
+	CHECK (gp_port_settings_set (fd->dev, settings));
 
 	GP_SYSTEM_SLEEP(10);
 	return (GP_OK);
@@ -348,10 +343,11 @@ int sierra_set_int_register (Camera *camera, int reg, int value)
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* value:    %i", value);
 
-	if (value < 0)
-		sierra_build_packet (camera, TYPE_COMMAND, 0, 2, p);
-	   else
-		sierra_build_packet (camera, TYPE_COMMAND, 0, 6, p);
+	if (value < 0) {
+		CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 2, p));
+	} else {
+		CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 6, p));
+	}
 
         /* Fill in the data */
         p[4] = 0x00;
@@ -365,9 +361,7 @@ int sierra_set_int_register (Camera *camera, int reg, int value)
 
 	for (r = 0; r < RETRIES; r++) {
 
-		ret = sierra_write_packet (camera, p);
-		if (ret != GP_OK)
-			return (ret);
+		CHECK (sierra_write_packet (camera, p));
 
 		ret = sierra_read_packet (camera, buf);
 		if (ret == GP_ERROR_IO_TIMEOUT)
@@ -390,7 +384,7 @@ int sierra_set_int_register (Camera *camera, int reg, int value)
 
 int sierra_get_int_register (Camera *camera, int reg, int *value) 
 {
-	int r=0, write_nak=0;
+	int r = 0, write_nak = 0;
 	char packet[4096];
 	char buf[4096];
 	int ret;
@@ -398,9 +392,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value)
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_get_int_register");
 	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* register: %i", reg);
 
-	ret = sierra_build_packet (camera, TYPE_COMMAND, 0, 2, packet);
-	if (ret != GP_OK)
-		return (ret);
+	CHECK (sierra_build_packet (camera, TYPE_COMMAND, 0, 2, packet));
 
         /* Fill in the data */
 	packet[4] = 0x01;
@@ -720,7 +712,8 @@ static int do_capture (Camera *camera, char *packet)
 			return (ret);
 
 		c = (unsigned char)buf[0];
-		if (c == TRM)
+//		if (c == TRM)
+		if (c == ACK)
 			return (GP_OK);
 
 		done = (c == NAK)? 0 : 1;
@@ -765,6 +758,8 @@ int sierra_capture_preview (Camera *camera, CameraFile *file)
 	int ret;
 	char packet[4096];
 
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_capture_preview");
+
 	if (file == NULL)
 		return (GP_ERROR_BAD_PARAMETERS);
 	
@@ -782,17 +777,23 @@ int sierra_capture_preview (Camera *camera, CameraFile *file)
 		return (ret);
 
 	/* Retrieve the quick preview */
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* get preview...");
 	ret = sierra_get_string_register (camera, 14, 0, file, NULL, NULL);
 	if (ret != GP_OK)
 		return (ret);
+
+	strcpy (file->type, "image/jpeg");
 
 	return (GP_OK);
 }
 
 int sierra_capture (Camera *camera, int capture_type, CameraFilePath *filepath)
 {
-	int ret, picnum;
+	int ret, picnum, length;
 	char packet[4096];
+	char buf[128];
+
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* sierra_capture");
 
 	if (filepath == NULL) 
 		return (GP_ERROR_BAD_PARAMETERS);
@@ -812,11 +813,26 @@ int sierra_capture (Camera *camera, int capture_type, CameraFilePath *filepath)
 		return (ret);
 
 	/* After picture is taken, register 4 is set to current picture */
-	ret = sierra_get_int_register (camera, 4, &picnum);
-	if (ret != GP_OK)
-		return (ret);
+	gp_debug_printf (GP_DEBUG_HIGH, "sierra", "* get picture number...");
+	CHECK (sierra_get_int_register (camera, 4, &picnum));
 
-	//FIXME: Where is the picture stored?!?
+	//FIXME: In which folder???
+
+	/* Get the picture filename */
+	gp_debug_printf (GP_DEBUG_LOW, "sierra",
+			 "*** getting filename of picture %i...", picnum);
+	CHECK (sierra_get_string_register (camera, 79, 0, NULL, buf, &length));
+
+	if (length > 0) {
+		
+		/* Filename supported. Use the camera filename */
+		strcpy (filepath->name, buf);
+	
+	} else {
+
+		/* Filename not supported. */
+		//FIXME: Which filename???
+	}
 
 	return (GP_OK);
 }

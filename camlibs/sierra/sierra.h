@@ -16,3 +16,5 @@ typedef struct {
 	int  usb_outep;
 } SierraCamera;
 
+#define CHECK(result) {int res; res = result; if (res != GP_OK) return (res);}
+

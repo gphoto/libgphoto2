@@ -8,8 +8,7 @@
 
 #define TIMEOUT	   2000
 
-#define CHECK(result) {int res; res = result; if (res != GP_OK) return (res);}
-#define CHECK_STOP(camera,result) {int res; res = result; if (res != GP_OK) {camera_stop (camera); return (res);}}
+#define CHECK_STOP(camera,result) {int res; res = result; if (res != GP_OK) {gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** operation failed!"); camera_stop (camera); return (res);}}
 
 int camera_start(Camera *camera);
 int camera_stop(Camera *camera);
@@ -504,7 +503,7 @@ int sierra_folder_set (Camera *camera, const char *folder)
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
 	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** sierra_folder_set");
-	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s");
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** folder: %s", folder);
 
 	if (!fd->folders) {
 		if (strcmp ("/", folder) != 0)
@@ -599,6 +598,8 @@ int camera_file_delete (Camera *camera, const char *folder,
 
 int camera_capture (Camera *camera, int capture_type, CameraFilePath *path) 
 {
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_capture");
+
 	CHECK (camera_start (camera));
 
 	CHECK_STOP (camera, sierra_capture (camera, capture_type, path));
@@ -608,6 +609,8 @@ int camera_capture (Camera *camera, int capture_type, CameraFilePath *path)
 
 int camera_capture_preview (Camera *camera, CameraFile *file)
 {
+	gp_debug_printf (GP_DEBUG_LOW, "sierra", "*** camera_capture_preview");
+
 	CHECK (camera_start (camera));
 	
 	CHECK_STOP (camera, sierra_capture_preview (camera, file));
@@ -1111,7 +1114,7 @@ int camera_manual (Camera *camera, CameraText *manual)
 
 	strcpy (manual->text, "Some notes:\n"
 		"(1) Camera Configuration:\n"
-		"    A value of 0 will take the default one (auto).\n"
+		"    A value of 0 will take the default one (auto).\n");
 	return (GP_OK);
 }
 
