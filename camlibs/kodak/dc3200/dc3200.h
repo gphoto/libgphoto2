@@ -11,12 +11,7 @@
 
 #ifndef DC3200_H_INCLUDED
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <gphoto2.h>
-#include <gphoto2-port.h>
+#include <gphoto2-camera.h>
 
 #define CMD_LIST_FILES		0
 #define CMD_GET_PREVIEW		1

@@ -11,7 +11,7 @@
 
 #ifndef LIBRARY_H_INCLUDED
 
-#include "dc3200.h"
+#include <gphoto2-camera.h>
 
 /* retries */
 #define READ_RETRIES 2

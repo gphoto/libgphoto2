@@ -8,6 +8,17 @@
  * version: 1.5                                     *
  *                                                  *
  ****************************************************/
+#include <config.h>
+#include "dc3200.h"
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
+#include <gphoto2-library.h>
+
+#include "library.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -16,16 +27,12 @@
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
-#    define _(String) (String)
 #    define N_(String) (String)
 #  endif
 #else
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
-
-#include "dc3200.h"
-#include "library.h"
 
 int camera_id (CameraText *id) 
 {

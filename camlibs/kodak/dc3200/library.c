@@ -9,6 +9,9 @@
  *                                                  *
  ****************************************************/
 
+#include <config.h>
+#include "library.h"
+
 #ifndef LIBRARY_H_INCLUDED
 
 #include <sys/types.h>
@@ -21,7 +24,20 @@
 #include <errno.h>
 
 #include "dc3200.h"
-#include "library.h"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 
 //#define DEBUG
