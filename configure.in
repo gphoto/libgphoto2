@@ -275,12 +275,27 @@ AM_CONDITIONAL(HAVE_EXIF, $have_exif)
 AC_SUBST(EXIF_CFLAGS)
 AC_SUBST(EXIF_LIBS)
 
+
+
+dnl ---------------------------------------------------------------------------
+dnl /proc/meminfo: If the meminfo /proc entry is available, we use it
+dnl to limit the libgphoto2 filesystem cache size.
+dnl ---------------------------------------------------------------------------
+AC_CHECK_FILE(/proc/meminfo, [
+	proc_meminfo_msg="available";
+	proc_meminfo=true;
+	AC_DEFINE(HAVE_PROCMEMINFO,,[whether we get memory info from /proc/meminfo])
+], [
+	proc_meminfo_msg="not available";
+	proc_meminfo=false;
+])
+
 dnl ---------------------------------------------------------------------------
 dnl Configure libgphoto2-port
 dnl ---------------------------------------------------------------------------
 AC_CONFIG_SUBDIRS(libgphoto2_port)
 
-AC_OUTPUT([
+AC_OUTPUT([ intl/Makefile po/Makefile.in  intl/Makefile po/Makefile.in  intl/Makefile po/Makefile.in  intl/Makefile po/Makefile.in  intl/Makefile po/Makefile.in  intl/Makefile po/Makefile.in  intl/Makefile po/Makefile.in  intl/Makefile po/Makefile.in  intl/Makefile po/Makefile.in 
 Makefile
 camlibs/Makefile
 camlibs/barbie/Makefile
@@ -353,6 +368,7 @@ Configuration (libgphoto2):
 	pkg-config:                $pkgconfig_msg
 	EXIF support:              $exif_msg
 	Use ltdl.h:                $ltdl_msg
+	/proc/meminfo:             $proc_meminfo_msg
 "
 #	Build User's Manual:       $manual_msg
 

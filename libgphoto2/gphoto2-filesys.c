@@ -32,9 +32,10 @@
 #include "gphoto2-file.h"
 #include "gphoto2-port-log.h"
 
-/* to get the free memory out of /proc/meminfo */
-#include <unistd.h>
-#include <fcntl.h>
+#ifdef HAVE_PROCMEMINFO
+#  include <unistd.h>
+#  include <fcntl.h>
+#endif
 
 #ifdef HAVE_EXIF
 #  include <libexif/exif-data.h>
@@ -1823,6 +1824,7 @@ gp_filesystem_lru_free (CameraFilesystem *fs)
 
 }
 
+#ifdef HAVE_PROCMEMINFO
 /* free is a number of free kB (free memory + free swap) */
 static int
 gp_get_free_memory (GPContext *context, unsigned *free)
@@ -1865,6 +1867,7 @@ gp_get_free_memory (GPContext *context, unsigned *free)
 
 	return (GP_OK);
 }
+#endif
 
 static int
 gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
@@ -1897,6 +1900,7 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 	}
 #endif
 
+#ifdef HAVE_PROCMEMINFO
 	CR (gp_get_free_memory (context, &free));
 	while (free < (size/1024 + 1024)) {
 		GP_DEBUG ("Freeing cached data before adding new data (cache=%ldB, new=%ldB, free=%dkB)",
@@ -1904,6 +1908,7 @@ gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
 		CR (gp_filesystem_lru_free (fs));
 		CR (gp_get_free_memory (context, &free));
 	}
+#endif
 
 	GP_DEBUG ("Adding file '%s' from folder '%s' to the fscache LRU list (type %i)...",
 		  filename, folder, type);
