@@ -22,5 +22,14 @@ typedef struct {
 	int  usb_wrap;
 } SierraCamera;
 
-#define CHECK(result) {int res = (result); if (res < 0) return (res);}
+#define CHECK(result)					\
+{							\
+	int res = (result);				\
+							\
+	if (res < 0) {					\
+		gp_log (GP_LOG_DEBUG, "sierra",		\
+			"Operation failed (%i)!", res);	\
+		return (res);				\
+	}						\
+}
 

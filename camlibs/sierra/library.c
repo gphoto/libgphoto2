@@ -138,6 +138,8 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	int count, i, len = 0;
 	char filename[1024];
 
+	GP_DEBUG ("Listing files in folder '%s'...", folder);
+
 	/* We need to change to the folder first */
 	CHECK (sierra_change_folder (camera, folder, context));
 
@@ -583,6 +585,8 @@ sierra_read_packet_wait (Camera *camera, char *buf, GPContext *context)
 		}
 
 		CHECK (result);
+
+		GP_DEBUG ("Packet successfully read.");
 		return (GP_OK);
 	}
 }
@@ -661,13 +665,16 @@ sierra_write_ack (Camera *camera)
 	char buf[4096];
 	int ret;
 
-	GP_DEBUG ("* sierra_write_ack");
+	GP_DEBUG ("Writing acknowledgement...");
 	
 	buf[0] = ACK;
 	ret = sierra_write_packet (camera, buf);
 	if (camera->port->type == GP_PORT_USB && !camera->pl->usb_wrap)
 		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
-	return (ret);
+	CHECK (ret);
+
+	GP_DEBUG ("Successfully wrote acknowledgement.");
+	return (GP_OK);
 }
 
 int sierra_ping (Camera *camera, GPContext *context) 
@@ -821,6 +828,8 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			CHECK (sierra_write_packet (camera, packet));
 
 		CHECK (sierra_read_packet_wait (camera, buf, context));
+		GP_DEBUG ("Successfully read packet. Interpreting result "
+			  "(0x%x)...", buf[0]);
 		switch (buf[0]) {
 		case DC1:
 			gp_context_error (context, _("Could not get "
@@ -833,7 +842,10 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			    ((unsigned char) buf[6] * 65536) +
 			    ((unsigned char) buf[7] * 16777216);
 			*value = r;
+			GP_DEBUG ("Value of register 0x%x: 0x%x. ", reg, r);
 			CHECK (sierra_write_ack (camera));
+			GP_DEBUG ("Read value of register 0x%x and wrote "
+				  "acknowledgement. Returning...", reg);
 			return GP_OK;
 		case ENQ:
 			return GP_OK;

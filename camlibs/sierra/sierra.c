@@ -54,11 +54,41 @@
 #  define N_(String) (String)
 #endif
 
-#define CHECK_STOP(camera,result) {int res; res = result; if (res < 0) {camera_stop (camera, context); gp_log (GP_LOG_DEBUG, "sierra", "Operation failed!"); return (res);}}
+#define CHECK_STOP(camera,result)				\
+{								\
+	int res = (result);					\
+								\
+	if (res < 0) {						\
+		GP_DEBUG ("Operation failed (%i)!", res);	\
+		camera_stop (camera, context);			\
+		return (res);					\
+	}							\
+}
 
-#define CHECK_STOP_FREE(camera,result) {int res; res = result; if (res < 0) {camera_stop (camera, context); free (camera->pl); camera->pl = NULL; return (res);}}
+#define CHECK_STOP_FREE(camera,result)				\
+{								\
+	int res = (result);					\
+								\
+	if (res < 0) {						\
+		GP_DEBUG ("Operation failed (%i)!", res);	\
+		camera_stop (camera, context);			\
+		free (camera->pl);				\
+		camera->pl = NULL;				\
+		return (res);					\
+	}							\
+}
 
-#define CHECK_FREE(camera,result) {int res; res = result; if (res < 0) {free (camera->pl); camera->pl = NULL; return (res);}}
+#define CHECK_FREE(camera,result)				\
+{								\
+	int res = (result);					\
+								\
+	if (res < 0) {						\
+		GP_DEBUG ("Operation failed (%i)!", res);	\
+		free (camera->pl);				\
+		camera->pl = NULL;				\
+		return (res);					\
+	}							\
+}
 
 int camera_start(Camera *camera, GPContext *context);
 int camera_stop(Camera *camera, GPContext *context);

@@ -1,5 +1,9 @@
 2002-02-06  Lutz Müller <lutz@users.sourceforge.net>
 
+	* sierra.[c,h]: Lots of additional debugging output.
+
+2002-02-06  Lutz Müller <lutz@users.sourceforge.net>
+
 	* sierra.c (sierra_read_packet_wait): {int res=(res);... 
 	  just cannot work. Read the macro definitions...
 
