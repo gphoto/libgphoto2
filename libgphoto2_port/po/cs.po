@@ -1,0 +1,324 @@
+# Czech translation of libgphoto2_port
+# Copyright (C) 2003 Miloslav Trmac
+# This file is distributed under the same license as the libgphoto2_port package.
+# Miloslav Trmac <mitr@volny.cz>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgphoto2_port VERSION\n"
+"POT-Creation-Date: 2003-07-12 18:49+0200\n"
+"PO-Revision-Date: 2003-07-12 15:08+0200\n"
+"Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
+"Language-Team: Czech <cs@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:268
+#, c-format
+msgid "Could not load any io-library because '%s' could not be opened (%m)"
+msgstr "Nemohu načíst io-knihovnu, protože nelze otevřít '%s' (%m)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:462
+msgid "Generic Port"
+msgstr "Obecný port"
+
+#: libgphoto2_port/gphoto2-port-result.c:58
+msgid "No error"
+msgstr "Žádná chyba"
+
+#: libgphoto2_port/gphoto2-port-result.c:60
+msgid "Unspecified error"
+msgstr "Neurčená chyba"
+
+#: libgphoto2_port/gphoto2-port-result.c:62
+msgid "I/O problem"
+msgstr "Problém I/O"
+
+#: libgphoto2_port/gphoto2-port-result.c:64
+msgid "Bad parameters"
+msgstr "Špatné parametry"
+
+#: libgphoto2_port/gphoto2-port-result.c:66
+msgid "Unsupported operation"
+msgstr "Nepodporovaná operace"
+
+#: libgphoto2_port/gphoto2-port-result.c:68
+msgid "Timeout reading from or writing to the port"
+msgstr "Čas vypršel při čtení nebo zápisu na port"
+
+#: libgphoto2_port/gphoto2-port-result.c:70
+msgid "Serial port not supported"
+msgstr "Sériový port není podporován"
+
+#: libgphoto2_port/gphoto2-port-result.c:72
+msgid "USB port not supported"
+msgstr "Port USB není podporován"
+
+#: libgphoto2_port/gphoto2-port-result.c:74
+msgid "Unknown port"
+msgstr "Neznámý port"
+
+#: libgphoto2_port/gphoto2-port-result.c:76
+msgid "Out of memory"
+msgstr "Nedostatek paměti"
+
+#: libgphoto2_port/gphoto2-port-result.c:78
+msgid "Error loading a library"
+msgstr "Chyba při načítání knihovny"
+
+#: libgphoto2_port/gphoto2-port-result.c:80
+msgid "Error initializing the port"
+msgstr "Chyba při inicializaci porty"
+
+#: libgphoto2_port/gphoto2-port-result.c:82
+msgid "Error reading from the port"
+msgstr "Chyba při čtení z portu"
+
+#: libgphoto2_port/gphoto2-port-result.c:84
+msgid "Error writing to the port"
+msgstr "Chyba při zápisu na port"
+
+#: libgphoto2_port/gphoto2-port-result.c:86
+msgid "Error updating the port settings"
+msgstr "Chyba při aktualizaci nastavení portu"
+
+#: libgphoto2_port/gphoto2-port-result.c:88
+msgid "Error setting the serial port speed"
+msgstr "Chyba při nastavování rychlosti sériového portu"
+
+#: libgphoto2_port/gphoto2-port-result.c:90
+msgid "Error clearing a halt condition on the USB port"
+msgstr "Chyba při nulování stavu halt na portu USB"
+
+#: libgphoto2_port/gphoto2-port-result.c:92
+msgid "Could not find the requested device on the USB port"
+msgstr "Nemohu na portu USB najít požadované zařízení"
+
+#: libgphoto2_port/gphoto2-port-result.c:94
+msgid "Could not claim the USB device"
+msgstr "Nemohu alokovat USB zařízení"
+
+#: libgphoto2_port/gphoto2-port-result.c:96
+msgid "Could not lock the device"
+msgstr "Nemohu zamknout zařízení"
+
+#: libgphoto2_port/gphoto2-port-result.c:98
+msgid "Unknown error"
+msgstr "Neznámá chyba"
+
+#: libgphoto2_port/gphoto2-port.c:56
+#, c-format
+msgid "The operation '%s' is not supported by this device"
+msgstr "Operace '%s' není tímto zařízením podporována"
+
+#: libgphoto2_port/gphoto2-port.c:57
+msgid "The port has not yet been initialized"
+msgstr "Port ještě nebyl inicializován"
+
+#: libgphoto2_port/gphoto2-port.c:278
+msgid "open"
+msgstr "open"
+
+#: libgphoto2_port/gphoto2-port.c:301
+msgid "close"
+msgstr "close"
+
+#: libgphoto2_port/gphoto2-port.c:376
+msgid "write"
+msgstr "write"
+
+#: libgphoto2_port/gphoto2-port.c:408
+msgid "read"
+msgstr "read"
+
+#: libgphoto2_port/gphoto2-port.c:444 libgphoto2_port/gphoto2-port.c:478
+msgid "check_int"
+msgstr "check_int"
+
+#: libgphoto2_port/gphoto2-port.c:595
+msgid "update"
+msgstr "update"
+
+#: libgphoto2_port/gphoto2-port.c:641
+msgid "get_pin"
+msgstr "get_pin"
+
+#: libgphoto2_port/gphoto2-port.c:693
+msgid "set_pin"
+msgstr "set_pin"
+
+#: libgphoto2_port/gphoto2-port.c:708
+msgid "send_break"
+msgstr "send_break"
+
+#: libgphoto2_port/gphoto2-port.c:721
+msgid "flush"
+msgstr "flush"
+
+#: libgphoto2_port/gphoto2-port.c:737
+msgid "find_device"
+msgstr "find_device"
+
+#: libgphoto2_port/gphoto2-port.c:749
+msgid "find_device_by_class"
+msgstr "find_device_by_class"
+
+#: libgphoto2_port/gphoto2-port.c:763
+msgid "clear_halt"
+msgstr "clear_halt"
+
+#: libgphoto2_port/gphoto2-port.c:783
+msgid "msg_write"
+msgstr "msg_write"
+
+#: libgphoto2_port/gphoto2-port.c:803
+msgid "msg_read"
+msgstr "msg_read"
+
+#: libgphoto2_port/gphoto2-port.c:863
+msgid "No error description available"
+msgstr "Není k dispozici popis chyby"
+
+#: serial/unix.c:226
+#, c-format
+msgid "Could not lock device '%s'"
+msgstr "Nemohu zamknout zařízení '%s'"
+
+#: serial/unix.c:236
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr "Zařízení '%s' je zamčeno pid %d"
+
+#: serial/unix.c:239
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr "Zařízení '%s' nemohlo být zamčeno (dev_lock vrátilo %d)"
+
+#: serial/unix.c:273
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr "Zařízení '%s' nemohlo být odemčeno."
+
+#: serial/unix.c:285
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr "Zařízení '%s' nemohlo být odemčeno, protože je zamčeno pid %d."
+
+#: serial/unix.c:289
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr "Zařízení '%s' nemohlo být odemčeno (dev_unlock vrátilo %d)"
+
+#: serial/unix.c:365
+#, c-format
+msgid "Serial Port %i"
+msgstr "Sériový port %i"
+
+#: serial/unix.c:456
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr "Nemohu otevřít '%s' (%m)."
+
+#: serial/unix.c:474
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "Nemohu zavřít '%s' (%m)"
+
+#: serial/unix.c:527
+#, c-format
+msgid "Could not write to port (%m)"
+msgstr "Nemohu zapisovat na port (%m)"
+
+#: serial/unix.c:599
+msgid "Parity error."
+msgstr "Chyba parity."
+
+#: serial/unix.c:603
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr "Neočekávaná sekvence odpovědi na paritu 0xff 0x%02x."
+
+#: serial/unix.c:646
+#, c-format
+msgid "Unknown pin %i."
+msgstr "Neznámý vývod %i."
+
+#: serial/unix.c:668
+#, c-format
+msgid "Could not get level of pin %i (%m)."
+msgstr "Nemohu získat úroveň vývodu %i (%m)."
+
+#: serial/unix.c:703
+#, c-format
+msgid "Could not set level of pin %i to %i (%m)."
+msgstr "Nemohu nastavit úroveň vývodu %i na %i (%m)."
+
+#: serial/unix.c:728
+#, c-format
+msgid "Could not flush '%s' (%m)."
+msgstr "Nemohu vyprázdnit '%s' (%m)."
+
+#: serial/unix.c:841
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr "Nemohu nastavit rychlost přenosu na %d"
+
+#: usb/libusb.c:131
+#, c-format
+msgid "Could not open USB device (%m)."
+msgstr "Nemohu otevřít USB zařízení (%m)."
+
+#: usb/libusb.c:138
+#, c-format
+msgid ""
+"Could not claim interface %d (%m). Make sure no other program or kernel "
+"module (e.g. dc2xx or stv680) is using the device and you have read/write "
+"access to the device."
+msgstr ""
+"Nemohu alokovat rozhraní %d (%m). Zkontrolujte, že žádný jiný program nebo "
+"modul jádra (např. dc2xx nebo stv680) nepoužívá zařízení a že máte k "
+"zařízení přístup pro čtení a zápis."
+
+#: usb/libusb.c:157
+#, c-format
+msgid "Could not release interface %d (%m)."
+msgstr "Nemohu uvolnit rozhraní %d (%m)."
+
+#: usb/libusb.c:164
+#, c-format
+msgid "Could not close USB port (%m)."
+msgstr "Nemohu zavřít port USB (%m)."
+
+#: usb/libusb.c:294
+#, c-format
+msgid "Could not set config %d/%d (%m)"
+msgstr "Nemohu nastavit config %d/%d (%m)"
+
+#: usb/libusb.c:316
+#, c-format
+msgid "Could not set altsetting %d/%d (%m)"
+msgstr "Nemohu nastavit altsetting %d/%d (%m)"
+
+#: usb/libusb.c:391
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "Dodané ID dodavatele nebo produktu (0x%x,0x%x) není platné."
+
+#: usb/libusb.c:439
+#, c-format
+msgid ""
+"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
+"is connected to the computer."
+msgstr ""
+"Nemohu najít USB zařízení (dodavatel 0x%x, produkt 0x%x). Zkontrolujte, že "
+"je toto zařízení připojeno k počítači."
+
+#: usb/libusb.c:547
+#, c-format
+msgid ""
+"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
+"sure this device is connected to the computer."
+msgstr ""
+"Nemohu najít USB zařízení (třída 0x%x, podtřída 0x%x, protokol 0x%x). "
+"Zkontrolujte, že je toto zařízení připojeno k počítači."

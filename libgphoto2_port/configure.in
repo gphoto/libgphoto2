@@ -60,7 +60,7 @@ fi
 dnl ---------------------------------------------------------------------------
 dnl i18n support
 dnl ---------------------------------------------------------------------------
-ALL_LINGUAS="da de fr es it ja no pt_BR ru sl sv uk zh_CN"
+ALL_LINGUAS="cs da de fr es it ja no pt_BR ru sl sv uk zh_CN"
 # EVIL HACKS
 AC_MSG_CHECKING([for po/Makevars requiring evil hack])
 GETTEXT_PACKAGE="${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT}"
