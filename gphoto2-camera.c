@@ -55,6 +55,24 @@
 #define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
 
+/*
+ * HAVE_MULTI
+ * ----------
+ *
+ * The problem: Several different programs (gtkam, gphoto2, gimp) accessing
+ * 		one camera.
+ * The solutions:
+ *  (1) gp_port_open before each operation, gp_port_close after. This has
+ *      shown to not work with some drivers (digita/dc240) for serial ports,
+ *      because the camera will notice that (how? Please tell us!),
+ *      reset itself and will therefore need to be reinitialized. If you want
+ *      this behaviour, #define HAVE_MULTI.
+ *  (2) Leave it up to the frontend to release the camera by calling
+ *      gp_camera_exit after camera operations. This is what is implemented
+ *      right now. The drawback is that re-initialization takes more time than
+ *      just reopening the port. However, it works for all camera drivers.
+ */
+
 #ifdef HAVE_MULTI
 #define CHECK_OPEN(c)							\
 {									\
