@@ -42,6 +42,20 @@
 
 #define CHECK_RESULT(result) {int r = result; if (r < 0) return (r);}
 
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
 static int
 SDSC_send (GPPort *port, unsigned char command)
 {
@@ -161,6 +175,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char buffer[SDSC_BLOCKSIZE];
 	long int size;
 	unsigned char *data;
+	unsigned int pid;
 
 	if (type != GP_FILE_TYPE_NORMAL)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -191,6 +206,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK_RESULT (SDSC_send (camera->port, SDSC_BINARY));
 	CHECK_RESULT (SDSC_send (camera->port, SDSC_START));
 
+	pid = gp_context_progress_start(context,size,_("Downloading image..."));
+
 	/* Read data */
 	for (i = 0; ; i++) {
 		/* Read data and check for EOF */
@@ -201,11 +218,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			free (data);
 			return (result);
 		}
-
+	        gp_context_progress_update(context, pid, i*SDSC_BLOCKSIZE);
+		if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+		    free(data);
+		    return GP_ERROR_CANCEL;
+		}
 		/* Copy the data */
 		memcpy (data + (i * SDSC_BLOCKSIZE), buffer, SDSC_BLOCKSIZE);
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_BINARY));
 	}
+	gp_context_progress_stop(context, pid);
 	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
 	CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG));
 	return (GP_OK);
@@ -214,12 +236,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) 
 {
-	strcpy (about->text, "The Samsung digimax 800k driver has "
+	strcpy (about->text, _("The Samsung digimax 800k driver has "
 		"been written by James Mckenzie "
 		"<james@fishsoup.dhs.org> for gphoto. "
 		"Lutz Müller <urc8@rz.uni-karlsruhe.de> ported it to "
 		"gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed "
-		"and enhanced the port."
+		"and enhanced the port.")
 		);
 
 	return (GP_OK);
