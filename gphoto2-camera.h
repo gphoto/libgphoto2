@@ -136,7 +136,6 @@ struct _Camera {
 
 	/* Don't use */
 	void            *camlib_data;
-	void            *frontend_data;
 
 	/* Those should be accessed only by the camera driver */
 	GPPort           *port;
