@@ -18,6 +18,8 @@ doc_DATA = AUTHORS COPYING README CHANGES NEWS
 #
 #   Use it to get rid of existing patterns and make sure they aren't
 #   reintroduced later.
+#
+#   The output is meant to be read and interpreted by human programmers.
 
 .PHONY: source-code-check
 source-code-check:
