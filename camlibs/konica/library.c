@@ -1255,7 +1255,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 		if (strcmp (c, "Auto") == 0) focus_self_timer = 2;
 		else if (strcmp (c, "Fixed") == 0) focus_self_timer = 0;
 		else g_assert_not_reached ();
-		gp_widget_value_get (widget_self_timer, c);
+		gp_widget_value_get (widget_self_timer, &c);
 		if (strcmp (c, "Self Timer (only next picture)") == 0) focus_self_timer++;
 		else if (strcmp (c, "Normal") == 0);
 		else g_assert_not_reached ();
