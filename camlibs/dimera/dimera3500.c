@@ -21,6 +21,9 @@
  *
  * History:
  * $Log$
+ * Revision 1.30  2001/11/16 02:26:32  dfandrich
+ * Propagating more error codes to the caller.
+ *
  * Revision 1.29  2001/11/08 08:09:22  lutz
  * Small compile fix (you don't set permissions on thumbnails).
  *
@@ -1046,7 +1049,7 @@ int camera_init (Camera *camera) {
 
 
         debuglog("Checking for modem");
-        switch ( mesa_modem_check(camera->port) )
+        switch ( ret = mesa_modem_check(camera->port) )
         {
         case GP_ERROR_IO:
         case GP_ERROR_TIMEOUT:
@@ -1063,6 +1066,9 @@ int camera_init (Camera *camera) {
                 return GP_ERROR_MODEL_NOT_FOUND;
         case GP_OK:
                 break;
+	default:
+		/* Hopefully, gp_camera_set_error was called for this error */
+		return ret;
         }
 
 	/* Tell the filesystem where to get listings and info from */
