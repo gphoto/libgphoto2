@@ -172,6 +172,7 @@ static int
 gp_port_usb_open (GPPort *port)
 {
 	int ret;
+	char name[64];
 
 	if (!port || !port->pl->d)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -185,6 +186,30 @@ gp_port_usb_open (GPPort *port)
 		gp_port_set_error (port, _("Could not open USB device (%m)."));
 		return GP_ERROR_IO;
 	}
+#if defined(LIBUSB_HAS_GET_DRIVER_NP) && defined(LIBUSB_HAS_DETACH_KERNEL_DRIVER_NP)
+	memset(name,0,sizeof(name));
+	ret = usb_get_driver_np (port->pl->dh, port->settings.usb.interface,
+		name, sizeof(name)
+	);
+	if (strstr(name,"usbfs")) {
+		/* other gphoto instance most likely */
+		gp_port_set_error (port, _("Camera is already in use."));
+		return GP_ERROR_IO_LOCK;
+	}
+	if (strstr(name,"storage")) {
+		/* other gphoto instance most likely */
+		gp_port_set_error (port, _("Camera is supported by USB Storage driver."));
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+	if (ret >= 0) {
+		gp_log (GP_LOG_DEBUG,"libusb",_("Device has driver '%s' attached, detaching it now."), name);
+		ret = usb_detach_kernel_driver_np (port->pl->dh, port->settings.usb.interface);
+		if (ret < 0)
+			gp_port_set_error (port, _("Could not detach kernel driver '%s' of camera device."),name);
+	} else {
+		gp_port_set_error (port, _("Could not query kernel driver of device."));
+	}
+#endif
 
 	ret = usb_claim_interface (port->pl->dh,
 				   port->settings.usb.interface);
@@ -697,4 +722,3 @@ gp_port_library_operations (void)
 
 	return (ops);
 }
-
