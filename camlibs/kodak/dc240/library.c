@@ -63,18 +63,18 @@ int dc240_packet_write (DC240Data *dd, char *packet, int size, int read_response
 write_again:
     /* If retry, give camera some recup time */
     if (x > 0)
-        GPIO_SLEEP(SLEEP_TIMEOUT);
+        GP_SYSTEM_SLEEP(SLEEP_TIMEOUT);
 
     /* Return error if too many retries */
     if (x++ > RETRIES)
         return (GP_ERROR);
 
-    if (gpio_write(dd->dev, packet, size) < 0)
+    if (gp_port_write(dd->dev, packet, size) < 0)
         goto write_again;
 
     /* Read in the response from the camera if requested */
     if (read_response) {
-        if (gpio_read(dd->dev, in, 1) < 0)
+        if (gp_port_read(dd->dev, in, 1) < 0)
             /* On error, write again */
             goto write_again;
     }
@@ -84,7 +84,7 @@ write_again:
 
 int dc240_packet_read (DC240Data *dd, char *packet, int size) {
 
-    return (gpio_read(dd->dev, packet, size));
+    return (gp_port_read(dd->dev, packet, size));
 }
 
 int dc240_packet_write_ack (DC240Data *dd) {
@@ -92,7 +92,7 @@ int dc240_packet_write_ack (DC240Data *dd) {
     char p[2];
 
     p[0] = PACK1;
-    if (gpio_write(dd->dev, p, 1) < 0)
+    if (gp_port_write(dd->dev, p, 1) < 0)
         return GP_ERROR;
     return GP_OK;
 
@@ -103,7 +103,7 @@ int dc240_packet_write_nak (DC240Data *dd) {
     char p[2];
 
     p[0] = PACK0;
-    if (gpio_write(dd->dev, p, 1) < 0)
+    if (gp_port_write(dd->dev, p, 1) < 0)
         return GP_ERROR;
     return GP_OK;
 }
@@ -118,10 +118,10 @@ int dc240_wait_for_completion (DC240Data *dd) {
     while ((x++ < 25)&&(!done)) {
             retval = dc240_packet_read(dd, p, 1);
             switch (retval) {
-               case GPIO_ERROR: 
+               case GP_ERROR: 
                     return (GP_ERROR); 
                     break;
-               case GPIO_TIMEOUT: 
+               case GP_ERROR_TIMEOUT: 
                     break;
                default:
                     done = 1;
@@ -132,7 +132,7 @@ int dc240_wait_for_completion (DC240Data *dd) {
     if (x==25)
             return (GP_ERROR);
 
-//    GPIO_SLEEP(500);
+//    GP_PORT_SLEEP(500);
     return (GP_OK);
 
 }
@@ -175,7 +175,7 @@ read_data_read_again:
 
         /* Read the response/data */
         retval = dc240_packet_read(dd, packet, block_size+2);
-        if ((retval ==  GPIO_ERROR) || (retval == GPIO_TIMEOUT)) {
+        if ((retval ==  GP_ERROR) || (retval == GP_ERROR_TIMEOUT)) {
             /* ERROR reading response/data */
             if (retries++ > RETRIES)
                 return (GP_ERROR);
@@ -290,9 +290,9 @@ int dc240_get_file_size (DC240Data *dd, char *folder, char *filename, int thumb)
 int dc240_set_speed (DC240Data *dd, int speed) {
 
     char *p = dc240_packet_new(0x41);
-    gpio_device_settings settings;
+    gp_port_settings settings;
 
-    gpio_get_settings(dd->dev, &settings);
+    gp_port_get_settings(dd->dev, &settings);
 
     switch (speed) {
     case 9600:
@@ -335,12 +335,12 @@ int dc240_set_speed (DC240Data *dd, int speed) {
     if (dc240_packet_write(dd, p, 8, 1) == GP_ERROR)
         return (GP_ERROR);
 
-    if (gpio_set_settings (dd->dev, settings) == GP_ERROR)	
+    if (gp_port_set_settings (dd->dev, settings) == GP_ERROR)	
         return (GP_ERROR);
 
     free (p);
 
-    GPIO_SLEEP(300);
+    GP_SYSTEM_SLEEP(300);
     if (dc240_wait_for_completion(dd) == GP_ERROR)
         return (GP_ERROR);
 

@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gphoto2.h>
-#include <gpio.h>
 #include "barbie.h"
 
 /* packet headers/footers */
@@ -42,8 +41,8 @@ int barbie_write_command(BarbieStruct *b, char *command, int size) {
 	int x;
 
 	barbie_packet_dump(b, 1, command, size);
-	x=gpio_write(b->dev, command, size);
-	return (x == GPIO_OK);
+	x=gp_port_write(b->dev, command, size);
+	return (x == GP_OK);
 }
 
 int barbie_read_response(BarbieStruct *b, char *response, int size) {
@@ -52,7 +51,7 @@ int barbie_read_response(BarbieStruct *b, char *response, int size) {
 	char ack = 0;
 
 	/* Read the ACK */
-	x=gpio_read(b->dev, &ack, 1);
+	x=gp_port_read(b->dev, &ack, 1);
 	barbie_packet_dump(b, 0, &ack, 1);
 
 	if ((ack != ACK)||(x<0))
@@ -60,7 +59,7 @@ int barbie_read_response(BarbieStruct *b, char *response, int size) {
 
 	/* Read the Response */
 	memset(response, 0, size);
-	x=gpio_read(b->dev,response, size);
+	x=gp_port_read(b->dev,response, size);
 	barbie_packet_dump(b, 0, response, x);
 	return (x > 0);
 }
@@ -78,7 +77,7 @@ int barbie_exchange (BarbieStruct *b, char *cmd, int cmd_size, char *resp, int r
 		if (resp[RESPONSE_BYTE] != '!')
 			return (1);
 		/* if busy, sleep 2 seconds */
-		GPIO_SLEEP(2000);
+		GP_SYSTEM_SLEEP(2000);
 	}
 
 	return (0);
@@ -173,7 +172,7 @@ char *barbie_read_data (BarbieStruct *bs, char *cmd, int cmd_size, int data_type
 			s = (char *)malloc(sizeof(char)*(*size));
 			memset(s, 0, *size);
 			s[0] = resp[3];
-			if (gpio_read(bs->dev, &s[1], (*size)-1) < 0) {
+			if (gp_port_read(bs->dev, &s[1], (*size)-1) < 0) {
 				free(s);
 				return (NULL);
 			}
@@ -183,10 +182,10 @@ char *barbie_read_data (BarbieStruct *bs, char *cmd, int cmd_size, int data_type
 			/* we're getting a picture */
 			n1 = (unsigned char)resp[2];
 			n2 = (unsigned char)resp[3];
-			if (gpio_read(bs->dev, &c, 1) < 0)
+			if (gp_port_read(bs->dev, &c, 1) < 0)
 				return (NULL);
 			n3 = (unsigned char)c;
-			if (gpio_read(bs->dev, &c, 1) < 0)
+			if (gp_port_read(bs->dev, &c, 1) < 0)
 				return (NULL);
 			n4 = (unsigned char)c;
 			*size = PICTURE_SIZE(n1, n2, n3, n4);
@@ -198,7 +197,7 @@ printf("\tn1=%i n2=%i n3=%i n4=%i size=%i\n", n1, n2 ,n3, n4, *size);
 			memset(us, 0, *size);
 			memset(rg, 0, *size);
 			memset(s , 0, *size+strlen(ppmhead));
-			if (gpio_read(bs->dev, us, *size)<0) {
+			if (gp_port_read(bs->dev, us, *size)<0) {
 				free(us);
 				free(rg);
 				free(s);
@@ -238,7 +237,7 @@ printf("\tn1=%i n2=%i n3=%i n4=%i size=%i\n", n1, n2 ,n3, n4, *size);
 			break;
 	}
 	/* read the footer */
-	if (gpio_read(bs->dev, &c, 1) < 0) {
+	if (gp_port_read(bs->dev, &c, 1) < 0) {
 		free(us);
 		free(rg);
 		free(s);

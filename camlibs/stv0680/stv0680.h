@@ -21,7 +21,7 @@
 #define STV0680_H
 
 struct stv0680_s {
-	gpio_device *gpiod;
+	gp_port *gpiod;
 	CameraFilesystem *fs;
 };
 

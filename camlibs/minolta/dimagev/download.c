@@ -54,10 +54,10 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		return GP_ERROR;
 	}
 
-	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to send set_data packet");
 		return GP_ERROR;
-	} else if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::no response from camera");
 		return GP_ERROR;
 	}
@@ -110,7 +110,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	for ( i = 0 ; i < ( total_packets -1 ) ; i++ ) {
 
 		char_buffer=DIMAGEV_ACK;
-		if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+		if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to send ACK");
 			return GP_ERROR;
 		}
@@ -136,12 +136,12 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	file->size++;
 
 	char_buffer=DIMAGEV_EOT;
-	if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to send ACK");
 		return GP_ERROR;
 	}
 
-	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::no response from camera");
 		return GP_ERROR;
 	}
@@ -202,10 +202,10 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		return GP_ERROR;
 	}
 
-	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to send set_data packet");
 		return GP_ERROR;
-	} else if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::no response from camera");
 		return GP_ERROR;
 	}
@@ -257,7 +257,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 	while ( file->size < 9599 ) {
 
 		char_buffer=DIMAGEV_ACK;
-		if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+		if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to send ACK");
 			return GP_ERROR;
 		}
@@ -285,12 +285,12 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 	file->size++;
 
 	char_buffer=DIMAGEV_EOT;
-	if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to send ACK");
 		return GP_ERROR;
 	}
 
-	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::no response from camera");
 		return GP_ERROR;
 	}

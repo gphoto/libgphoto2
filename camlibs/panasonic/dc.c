@@ -57,7 +57,7 @@ int dsc1_sendcmd(dsc_t *dsc, u_int8_t cmd, void *data, int size) {
         if (data && 0 < size)
                 memcpy(&dsc->buf[DSC1_BUF_DATA], data, size);
 
-        return gpio_write(dsc->dev, dsc->buf, 17 + size);
+        return gp_port_write(dsc->dev, dsc->buf, 17 + size);
 }
 
 int dsc1_retrcmd(dsc_t *dsc) {
@@ -65,7 +65,7 @@ int dsc1_retrcmd(dsc_t *dsc) {
         int     result = GP_ERROR;
         int     s;
 
-        if ((s = gpio_read(dsc->dev, dsc->buf, 17)) == GP_ERROR)
+        if ((s = gp_port_read(dsc->dev, dsc->buf, 17)) == GP_ERROR)
                 return GP_ERROR;
 
         if (0 < s)
@@ -88,7 +88,7 @@ int dsc1_retrcmd(dsc_t *dsc) {
                 /* overflow */
         }
 
-        if (gpio_read(dsc->dev, dsc->buf, dsc->size) != dsc->size)
+        if (gp_port_read(dsc->dev, dsc->buf, dsc->size) != dsc->size)
                 return GP_ERROR;
 
         DEBUG_PRINT(("Retrieved command: %i.", result));
@@ -138,7 +138,7 @@ int dsc1_setbaudrate(dsc_t *dsc, int speed) {
         sleep(DSC_PAUSE/2);
 
         dsc->settings.serial.speed = speed;
-        if (gpio_set_settings(dsc->dev, dsc->settings) != GP_OK)
+        if (gp_port_set_settings(dsc->dev, dsc->settings) != GP_OK)
                 return GP_ERROR;
 
         DEBUG_PRINT(("Baudrate set to: %i.", speed));

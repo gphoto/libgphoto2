@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
-#include <gpio.h>
+#include <gphoto2-port.h>
 
 #include "dc240.h"
 #include "library.h"
@@ -43,7 +43,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 int camera_init (Camera *camera) {
 
-    gpio_device_settings settings;
+    gp_port_settings settings;
     DC240Data *dd;
 
     if (!camera)
@@ -72,7 +72,7 @@ int camera_init (Camera *camera) {
 
     switch (camera->port->type) {
     case GP_PORT_SERIAL:
-        dd->dev = gpio_new(GPIO_DEVICE_SERIAL);
+        dd->dev = gp_port_new(GP_PORT_SERIAL);
         if (!dd->dev) {
             free(dd);
             return (GP_ERROR);
@@ -83,15 +83,14 @@ int camera_init (Camera *camera) {
         settings.serial.parity   = 0;
         settings.serial.stopbits = 1;
         break;
-#ifdef GPIO_USB
     case GP_PORT_USB:
-        dd->dev = gpio_new(GPIO_DEVICE_USB);
+        dd->dev = gp_port_new(GP_PORT_USB);
         if (!dd->dev) {
             free(dd);
             return (GP_ERROR);
         }
-        if (gpio_usb_find_device(dd->dev, 0x040A, 0x0120) == GPIO_ERROR) {
-            gpio_free(dd->dev);
+        if (gp_port_usb_find_device(dd->dev, 0x040A, 0x0120) == GP_ERROR) {
+            gp_port_free(dd->dev);
             free (dd);
             return (GP_ERROR);
         }
@@ -101,35 +100,34 @@ int camera_init (Camera *camera) {
         settings.usb.interface  = 0;
         settings.usb.altsetting = 0;
         break;
-#endif
     default:
         return (GP_ERROR);
     }
 
-    if (gpio_set_settings(dd->dev, settings) == GPIO_ERROR) {
-        gpio_free(dd->dev);
+    if (gp_port_set_settings(dd->dev, settings) == GP_ERROR) {
+        gp_port_free(dd->dev);
         free(dd);
         return (GP_ERROR);
     }
 
-    if (gpio_open(dd->dev) == GPIO_ERROR) {
-        gpio_free(dd->dev);
+    if (gp_port_open(dd->dev) == GP_ERROR) {
+        gp_port_free(dd->dev);
         free(dd);
         return (GP_ERROR);
     }
 
-    gpio_set_timeout(dd->dev, TIMEOUT);
+    gp_port_set_timeout(dd->dev, TIMEOUT);
 
     if (camera->port->type == GP_PORT_SERIAL) {
         /* Reset the camera to 9600 */
-        gpio_send_break(dd->dev, 1);
+        gp_port_send_break(dd->dev, 1);
 
         /* Wait for it to reset */
-        GPIO_SLEEP(1500);
+        GP_SYSTEM_SLEEP(1500);
 
         if (dc240_set_speed(dd, camera->port->speed) == GP_ERROR) {
-            gpio_close(dd->dev);
-            gpio_free(dd->dev);
+            gp_port_close(dd->dev);
+            gp_port_free(dd->dev);
             free(dd);
             return (GP_ERROR);
         }
@@ -137,15 +135,15 @@ int camera_init (Camera *camera) {
 
     /* Open the CF card */
     if (dc240_open(dd) == GP_ERROR) {
-        gpio_close(dd->dev);
-        gpio_free(dd->dev);
+        gp_port_close(dd->dev);
+        gp_port_free(dd->dev);
         free(dd);
         return (GP_ERROR);
     }
 
     if (dc240_packet_set_size(dd, HPBS+2) == GP_ERROR) {
-        gpio_close(dd->dev);
-        gpio_free(dd->dev);
+        gp_port_close(dd->dev);
+        gp_port_free(dd->dev);
         free(dd);
         return (GP_ERROR);
     }
@@ -165,9 +163,9 @@ int camera_exit (Camera *camera) {
     dc240_close(dd);
 
     if (dd->dev) {
-        if (gpio_close(dd->dev) == GPIO_ERROR)
+        if (gp_port_close(dd->dev) == GP_ERROR)
                 { /* camera did a bad, bad thing */ }
-        gpio_free(dd->dev);
+        gp_port_free(dd->dev);
     }
     free(dd);
  

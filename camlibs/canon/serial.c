@@ -28,7 +28,7 @@
 
 
 /****  new stuff ********/
-#include <gpio.h>
+#include <gphoto2-port.h>
 struct camera_to_usb {
 	  char *name;
 	  unsigned short idVendor;
@@ -49,15 +49,15 @@ struct camera_to_usb {
  *
  ****************************************************************************/
 
-// gpio_device *gdev;
-gpio_device_settings settings;
+// gp_port *gdev;
+gp_port_settings settings;
 
 
-void serial_flush_input(gpio_device *gdev)
+void serial_flush_input(gp_port *gdev)
 {
 }
 
-void serial_flush_output(gpio_device *gdev)
+void serial_flush_output(gp_port *gdev)
 {
 }
 
@@ -74,12 +74,12 @@ void serial_flush_output(gpio_device *gdev)
  *
  ****************************************************************************/
 
-int canon_serial_change_speed(gpio_device *gdev, int speed)
+int canon_serial_change_speed(gp_port *gdev, int speed)
 {
          /* set speed */
-	gpio_get_settings(gdev, &settings);
+	gp_port_get_settings(gdev, &settings);
 	settings.serial.speed = speed;
-	gpio_set_settings(gdev, settings);
+	gp_port_set_settings(gdev, settings);
 	
 	usleep(70000);
 	
@@ -99,9 +99,9 @@ int canon_serial_change_speed(gpio_device *gdev, int speed)
  * Returns 0 on CTS low.
  *
  ****************************************************************************/
-int canon_serial_get_cts(gpio_device *gdev)
+int canon_serial_get_cts(gp_port *gdev)
 {
-        return gpio_get_pin(gdev,PIN_CTS);
+        return gp_port_get_pin(gdev,PIN_CTS);
 }
 
 /*****************************************************************************
@@ -112,20 +112,20 @@ int canon_serial_get_cts(gpio_device *gdev)
  * 
  * looks for USB cameras
  * 
- * gdev a valid gpio_device
+ * gdev a valid gp_port
  * i    an entry of camera_to_usb
  * 
  * return 1 on success, 0 on failure
  ****************************************************************************/
-#ifdef GPIO_USB
-int canon_usb_probe(gpio_device *gdev, int i)
+#ifdef GP_PORT_USB
+int canon_usb_probe(gp_port *gdev, int i)
 {
 	
 	if (i >= sizeof(camera_to_usb) / sizeof(struct camera_to_usb))
 	  goto err;
 
-	if (gpio_usb_find_device(gdev, camera_to_usb[i].idVendor,
-							 camera_to_usb[i].idProduct) == GPIO_OK) {
+	if (gp_port_usb_find_device(gdev, camera_to_usb[i].idVendor,
+							 camera_to_usb[i].idProduct) == GP_OK) {
 		printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
 			   gdev->usb_device->bus->dirname, gdev->usb_device->filename);
 		return 1;
@@ -154,22 +154,22 @@ err:
 int canon_serial_init(Camera *camera, const char *devname)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
 	int i;
     char msg[65536];
 //    char mem;
     char buffer[65536];
 #endif
-    gpio_device_settings settings;
+    gp_port_settings settings;
 
 	gp_debug_printf(GP_DEBUG_LOW,"canon","Initializing the camera.\n");
 	
-//	gpio_init();
+//	gp_port_init();
 	
 	switch (canon_comm_method) {
 	 case CANON_USB:
-#ifdef GPIO_USB
-		cs->gdev = gpio_new(GPIO_DEVICE_USB);
+#ifdef GP_PORT_USB
+		cs->gdev = gp_port_new(GP_PORT_USB);
 		if (!cs->gdev) {
 			return -1;
 		}
@@ -194,21 +194,21 @@ int canon_serial_init(Camera *camera, const char *devname)
         /*      canon_send = canon_usb_send;
 		 canon_read = canon_usb_read; */
 		
-		gpio_set_settings(cs->gdev, settings);
-		if (gpio_open(cs->gdev) < 0) {
+		gp_port_set_settings(cs->gdev, settings);
+		if (gp_port_open(cs->gdev) < 0) {
 			fprintf(stderr,"Camera used by other USB device!\n");
 			//exit(1);
 			return -1;
         }
 		
-        gpio_usb_msg_read(cs->gdev,0x55,msg,1);
+        gp_port_usb_msg_read(cs->gdev,0x55,msg,1);
         //      fprintf(stderr,"%c\n",msg[0]);
-        gpio_usb_msg_read(cs->gdev,0x1,msg,0x58);
-        gpio_usb_msg_write(cs->gdev,0x11,msg+0x48,0x10);
-        gpio_read(cs->gdev, buffer, 0x44);
+        gp_port_usb_msg_read(cs->gdev,0x1,msg,0x58);
+        gp_port_usb_msg_write(cs->gdev,0x11,msg+0x48,0x10);
+        gp_port_read(cs->gdev, buffer, 0x44);
         //      fprintf(stderr,"Antal b: %x\n",buffer[0]);
         if (buffer[0]==0x54)
-		    gpio_read(cs->gdev, buffer, 0x40);
+		    gp_port_read(cs->gdev, buffer, 0x40);
         return 0;
         /* #else
 		 return -1;*/
@@ -228,7 +228,7 @@ int canon_serial_init(Camera *camera, const char *devname)
 		
 		gp_debug_printf(GP_DEBUG_LOW,"canon","canon_init_serial(): Using serial port on %s\n", devname);
 		
-		cs->gdev = gpio_new(GPIO_DEVICE_SERIAL);
+		cs->gdev = gp_port_new(GP_PORT_SERIAL);
 		
 		if (!cs->gdev) {
 			return -1;
@@ -239,8 +239,8 @@ int canon_serial_init(Camera *camera, const char *devname)
 		settings.serial.parity = 0;
 		settings.serial.stopbits = 1;
 		
-		gpio_set_settings(cs->gdev, settings); /* Sets the serial device name */
-		if ( gpio_open(cs->gdev) == GPIO_ERROR) {      /* open the device */
+		gp_port_set_settings(cs->gdev, settings); /* Sets the serial device name */
+		if ( gp_port_open(cs->gdev) == GP_ERROR) {      /* open the device */
 			perror("Unable to open the serial port");
 			return -1;
 		}
@@ -257,10 +257,10 @@ int canon_serial_init(Camera *camera, const char *devname)
  *
  *
  ****************************************************************************/
-int canon_serial_close(gpio_device *gdev)
+int canon_serial_close(gp_port *gdev)
 {
-       gpio_close(gdev);
-       gpio_free(gdev);
+       gp_port_close(gdev);
+       gp_port_free(gdev);
 
        return 0;
 }
@@ -280,7 +280,7 @@ int canon_serial_restore(Camera *camera)
 {
 	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	
-    gpio_close(cs->gdev);
+    gp_port_close(cs->gdev);
 
     return 0;
 }
@@ -311,12 +311,12 @@ int canon_serial_send(Camera *camera, const unsigned char *buf, int len, int sle
          * The S10 and S20 do not have this problem */
     if (sleep>0 && cs->slow_send == 1) {
 		for(i=0;i<len;i++) {
-			gpio_write(cs->gdev,(char*)buf,1);
+			gp_port_write(cs->gdev,(char*)buf,1);
 			buf++;
 			usleep(sleep);
 		}
     } else {
-		gpio_write(cs->gdev,(char*)buf,len);
+		gp_port_write(cs->gdev,(char*)buf,len);
     }
 	
     return 0;
@@ -326,11 +326,11 @@ int canon_serial_send(Camera *camera, const unsigned char *buf, int len, int sle
 /**
  * Sets the timeout, in miliseconds.
  */
-void serial_set_timeout(gpio_device *gdev, int to)
+void serial_set_timeout(gp_port *gdev, int to)
 {
 //	struct canon_info *cs = (struct canon_info*)camera->camlib_data;
 	
-	gpio_set_timeout(gdev,to);
+	gp_port_set_timeout(gdev,to);
 }
 
 /*****************************************************************************
@@ -344,7 +344,7 @@ void serial_set_timeout(gpio_device *gdev, int to)
  * Returns the byte on success, -1 on error.
  *
  ****************************************************************************/
-int canon_serial_get_byte(gpio_device *gdev)
+int canon_serial_get_byte(gp_port *gdev)
 {
     static unsigned char cache[512];
     static unsigned char *cachep = cache;
@@ -358,8 +358,8 @@ int canon_serial_get_byte(gpio_device *gdev)
     }
 
 
-    recv = gpio_read(gdev, cache, 1);
-    if (recv == GPIO_ERROR || recv == GPIO_TIMEOUT)
+    recv = gp_port_read(gdev, cache, 1);
+    if (recv == GP_ERROR || recv == GP_ERROR_TIMEOUT)
         return -1;
         cachep = cache;
         cachee = cache + recv;

@@ -29,7 +29,6 @@
 #include <ctype.h>
 
 #include <gphoto2.h>
-#include <gpio.h>
 
 #include "util.h"
 #include "serial.h"

@@ -50,18 +50,19 @@ AC_TYPE_SIZE_T
 dnl Checks for library functions.
 AC_CHECK_FUNCS(mkdir strdup strncpy strcpy snprintf sprintf)
 
-AC_PATH_PROG(LIBGPIO_CONFIG,gpio-config)
-if test -n "${LIBGPIO_CONFIG}"; then
-  CFLAGS="$CFLAGS `$LIBGPIO_CONFIG --cflags`"
-  LIBS="$LIBS `$LIBGPIO_CONFIG --libs`"
-else
+AC_PATH_PROG(LIBGPPORT_CONFIG,gphoto2-port-config)
+if test -n "${LIBGPPORT_CONFIG}"; then
+  CFLAGS="$CFLAGS `$LIBGPPORT_CONFIG --cflags`"
+  LIBS="$LIBS `$LIBGPPORT_CONFIG --libs`"
+ else
   AC_MSG_ERROR([
-***
-*** libgpio is required. Available from gPhoto's SourceForge CVS.
-*** Check http://www.gphoto.net/download.html for details.
-***])
-  exit 1
+   ***
+   *** libgphoto2-port is not installed properly. 
+   *** Type "cd libgphoto2_port; make; make install" to see what is wrong
+   ***])
+   exit 1
 fi
+
 
 LIBGPHOTO2_INCLUDEDIR='-I${includedir}'
 LIBGPHOTO2_LIBDIR='-L${libdir}'

@@ -3,7 +3,7 @@ typedef struct {
 	int speed;
 	int first_packet;
 	int type;
-	gpio_device* dev;
+	gp_port* dev;
 	char folder[128];
 	CameraFilesystem *fs;
 } SierraData;

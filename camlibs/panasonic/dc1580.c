@@ -75,7 +75,7 @@ int dsc2_sendcmd(dsc_t *dsc, u_int8_t cmd, long int data, u_int8_t sequence) {
 
         dsc->buf[14] = dsc2_checksum(dsc->buf, 16);
 
-        return gpio_write(dsc->dev, dsc->buf, 16);
+        return gp_port_write(dsc->dev, dsc->buf, 16);
 }
 
 /* dsc2_retrcmd - retrieve command and its data from DSC */
@@ -85,7 +85,7 @@ int dsc2_retrcmd(dsc_t *dsc) {
         int     result = GP_ERROR;
         int     s;
 
-        if ((s = gpio_read(dsc->dev, dsc->buf, 16)) == GP_ERROR)
+        if ((s = gp_port_read(dsc->dev, dsc->buf, 16)) == GP_ERROR)
                 return GP_ERROR;
 
         if (0 < s)
@@ -230,7 +230,7 @@ int dsc2_selectimage(dsc_t *dsc, int index, int thumbnail)
         return size;
 }
 
-/* gpio_readimageblock - read #block block (1024 bytes) of an image into buf */
+/* gp_port_readimageblock - read #block block (1024 bytes) of an image into buf */
 
 int dsc2_readimageblock(dsc_t *dsc, int block, char *buffer) {
 
@@ -239,7 +239,7 @@ int dsc2_readimageblock(dsc_t *dsc, int block, char *buffer) {
         if (dsc2_sendcmd(dsc, DSC2_CMD_GET_DATA, block, block) != GP_OK)
                 return GP_ERROR;
 
-        if (gpio_read(dsc->dev, dsc->buf, DSC_BUFSIZE) != DSC_BUFSIZE)
+        if (gp_port_read(dsc->dev, dsc->buf, DSC_BUFSIZE) != DSC_BUFSIZE)
                 RETURN_ERROR(EDSCBADRSP, dsc2_readimageblock);
                 /* bad response */
 
@@ -315,7 +315,7 @@ int dsc2_setimagesize(dsc_t *dsc, int size) {
         return GP_OK;
 }
 
-/* gpio_writeimageblock - write size bytes from buffer rounded to 1024 bytes to camera */
+/* gp_port_writeimageblock - write size bytes from buffer rounded to 1024 bytes to camera */
 
 int dsc2_writeimageblock(dsc_t *dsc, int block, char *buffer, int size) {
 
@@ -335,7 +335,7 @@ int dsc2_writeimageblock(dsc_t *dsc, int block, char *buffer, int size) {
 
         dsc->buf[DSC_BUFSIZE - 2] = dsc2_checksum(dsc->buf, DSC_BUFSIZE);
 
-        if (gpio_write(dsc->dev, dsc->buf, DSC_BUFSIZE) != GP_OK)
+        if (gp_port_write(dsc->dev, dsc->buf, DSC_BUFSIZE) != GP_OK)
                 return GP_ERROR;
 
         if (dsc2_retrcmd(dsc) != DSC2_RSP_OK)
@@ -460,8 +460,8 @@ int camera_init (Camera *camera) {
         camera->functions->about                = camera_about;
 
         if (dsc && dsc->dev) {
-                gpio_close(dsc->dev);
-                gpio_free(dsc->dev);
+                gp_port_close(dsc->dev);
+                gp_port_free(dsc->dev);
         }
         free(dsc);
 
@@ -473,18 +473,18 @@ int camera_init (Camera *camera) {
 
         camera->camlib_data = dsc;
 
-        dsc->dev = gpio_new(GPIO_DEVICE_SERIAL);
+        dsc->dev = gp_port_new(GP_PORT_SERIAL);
 
-        gpio_set_timeout(dsc->dev, 5000);
+        gp_port_set_timeout(dsc->dev, 5000);
         strcpy(dsc->settings.serial.port, camera->port->path);
         dsc->settings.serial.speed      = 9600; /* hand shake speed */
         dsc->settings.serial.bits       = 8;
         dsc->settings.serial.parity     = 0;
         dsc->settings.serial.stopbits   = 1;
 
-        gpio_set_settings(dsc->dev, dsc->settings);
+        gp_port_set_settings(dsc->dev, dsc->settings);
 
-        gpio_open(dsc->dev);
+        gp_port_open(dsc->dev);
 
         /* allocate memory for a dsc read/write buffer */
         if ((dsc->buf = (char *)malloc(sizeof(char)*(DSC_BUFSIZE))) == NULL) {
@@ -513,8 +513,8 @@ int camera_exit (Camera *camera) {
         dsc2_disconnect(dsc);
 
         if (dsc->dev) {
-                gpio_close(dsc->dev);
-                gpio_free(dsc->dev);
+                gp_port_close(dsc->dev);
+                gp_port_free(dsc->dev);
         }
         if (dsc->fs)
                 gp_filesystem_free(dsc->fs);

@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gphoto2.h>
-#include <gpio.h>
 #include "barbie.h"
 
 extern char packet_1[];
@@ -54,7 +53,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 int camera_init(Camera *camera) {
 
-	gpio_device_settings settings;
+	gp_port_settings settings;
 	BarbieStruct *b;
 
 	/* First, set up all the function pointers */
@@ -75,8 +74,8 @@ int camera_init(Camera *camera) {
 	b = (BarbieStruct*)malloc(sizeof(BarbieStruct));
 	camera->camlib_data = b;
 
-	b->dev = gpio_new(GPIO_DEVICE_SERIAL);
-	gpio_set_timeout(b->dev, 5000);
+	b->dev = gp_port_new(GP_PORT_SERIAL);
+	gp_port_set_timeout(b->dev, 5000);
 	strcpy(settings.serial.port, camera->port->path);
 
 	settings.serial.speed	= 57600;
@@ -84,8 +83,8 @@ int camera_init(Camera *camera) {
 	settings.serial.parity	= 0;
 	settings.serial.stopbits= 1;
 
-	gpio_set_settings(b->dev, settings);
-	gpio_open(b->dev);
+	gp_port_set_settings(b->dev, settings);
+	gp_port_open(b->dev);
 
 	/* Create the filesystem */
 	b->fs = gp_filesystem_new();
@@ -97,7 +96,7 @@ int camera_exit(Camera *camera) {
 
 	BarbieStruct *b = (BarbieStruct*)camera->camlib_data;
 
-	gpio_close(b->dev);
+	gp_port_close(b->dev);
 	gp_filesystem_free(b->fs);
 
 	return GP_OK;

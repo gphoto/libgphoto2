@@ -101,21 +101,21 @@ GP_RESULT (guchar byte1, guchar byte2)
 
 
 gint 
-k_init (gpio_device* device)
+k_init (gp_port* device)
 {
 	return (l_init (device));
 }
 
 
 gint 
-k_exit (gpio_device* device) 
+k_exit (gp_port* device) 
 {
 	return (l_exit (device));
 }
 
 
 gint 
-k_erase_image (gpio_device* device, gboolean image_id_long, gulong image_id)
+k_erase_image (gp_port* device, gboolean image_id_long, gulong image_id)
 {
 	/************************************************/
 	/* Command to erase one image.		 	*/
@@ -163,7 +163,7 @@ k_erase_image (gpio_device* device, gboolean image_id_long, gulong image_id)
 
 
 gint 
-k_format_memory_card (gpio_device* device)
+k_format_memory_card (gp_port* device)
 {
 	/************************************************/
 	/* Command to format the memory card.		*/
@@ -195,7 +195,7 @@ k_format_memory_card (gpio_device* device)
 }
 
 
-gint k_erase_all (gpio_device* device, guint* number_of_images_not_erased)
+gint k_erase_all (gp_port* device, guint* number_of_images_not_erased)
 {
 	/************************************************/
 	/* Command to erase all images in the camera, 	*/
@@ -236,7 +236,7 @@ gint k_erase_all (gpio_device* device, guint* number_of_images_not_erased)
 }
 
 
-gint k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected)
+gint k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image_id, gboolean protected)
 {
 	/************************************************/
 	/* Command to set the protect status of one 	*/
@@ -292,7 +292,7 @@ gint k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong i
 
 gint 
 k_get_image (
-	gpio_device*	device, 
+	gp_port*	device, 
 	gboolean 	image_id_long,
 	gulong 		image_id, 
 	k_image_type_t 	image_type, 
@@ -370,7 +370,7 @@ k_get_image (
 
 gint 
 k_get_image_information (
-	gpio_device* 	device,
+	gp_port* 	device,
 	gboolean 	image_id_long,
 	gulong 		image_number,
 	gulong*		image_id, 
@@ -461,7 +461,7 @@ k_get_image_information (
 
 
 gint 
-k_get_preview (gpio_device* device, gboolean thumbnail, guchar** image_buffer, guint* image_buffer_size)
+k_get_preview (gp_port* device, gboolean thumbnail, guchar** image_buffer, guint* image_buffer_size)
 {
 	/************************************************/
 	/* Command to get the preview from the camera.	*/
@@ -502,7 +502,7 @@ k_get_preview (gpio_device* device, gboolean thumbnail, guchar** image_buffer, g
 
 
 gint k_get_io_capability (
-	gpio_device* 	device,
+	gp_port* 	device,
 	gboolean* 	bit_rate_300,
 	gboolean* 	bit_rate_600,
 	gboolean* 	bit_rate_1200,
@@ -588,7 +588,7 @@ gint k_get_io_capability (
 
 gint 
 k_get_information (
-	gpio_device* 	device,
+	gp_port* 	device,
 	gchar**		model, 
 	gchar**		serial_number,
 	guchar*		hardware_version_major, 
@@ -764,7 +764,7 @@ k_get_information (
 
 gint 
 k_get_status (
-	gpio_device*		device,
+	gp_port*		device,
 	guint*			self_test_result, 
 	k_power_level_t*	power_level,
 	k_power_source_t*	power_source,
@@ -954,7 +954,7 @@ k_get_status (
 
 gint 
 k_get_date_and_time (
-	gpio_device*	device,
+	gp_port*	device,
 	guchar*		year, 
 	guchar*		month, 
 	guchar*		day, 
@@ -1015,7 +1015,7 @@ k_get_date_and_time (
 
 gint 
 k_get_preferences (
-	gpio_device*	device,
+	gp_port*	device,
 	guint*		shutoff_time, 
 	guint*		self_timer_time, 
 	guint*		beep, 
@@ -1072,7 +1072,7 @@ k_get_preferences (
 
 gint 
 k_set_io_capability (
-	gpio_device*	device,
+	gp_port*	device,
 	guint 		bit_rate, 
 	gboolean 	bit_flag_7_or_8_bits,
 	gboolean 	bit_flag_stop_2_bits,
@@ -1148,7 +1148,7 @@ k_set_io_capability (
 
 
 gint 
-k_set_date_and_time (gpio_device* device, guchar year, guchar month, guchar day, guchar hour, guchar minute, guchar second)
+k_set_date_and_time (gp_port* device, guchar year, guchar month, guchar day, guchar hour, guchar minute, guchar second)
 {
 	/************************************************/
 	/* Command to set date and time of the camera.	*/
@@ -1189,7 +1189,7 @@ k_set_date_and_time (gpio_device* device, guchar year, guchar month, guchar day,
 
 
 gint 
-k_set_preference (gpio_device* device, k_preference_t preference, guint value)
+k_set_preference (gp_port* device, k_preference_t preference, guint value)
 {
 	/************************************************/
 	/* Command to set a preference of the camera.	*/
@@ -1255,7 +1255,7 @@ k_set_preference (gpio_device* device, k_preference_t preference, guint value)
 
 
 gint 
-k_reset_preferences (gpio_device* device)
+k_reset_preferences (gp_port* device)
 {
 	/************************************************/
 	/* Command to reset the preferences of the	*/
@@ -1286,7 +1286,7 @@ k_reset_preferences (gpio_device* device)
 
 gint 
 k_take_picture (
-	gpio_device*	device,
+	gp_port*	device,
 	gboolean 	image_id_long,
 	gulong*		image_id, 
 	guint*		exif_size, 
@@ -1357,7 +1357,7 @@ k_take_picture (
 
 
 gint 
-k_localization_tv_output_format_set (gpio_device* device, k_tv_output_format_t tv_output_format)
+k_localization_tv_output_format_set (gp_port* device, k_tv_output_format_t tv_output_format)
 {
         /************************************************/
         /* Command for various localization issues.     */
@@ -1412,7 +1412,7 @@ k_localization_tv_output_format_set (gpio_device* device, k_tv_output_format_t t
 
 
 gint 
-k_localization_date_format_set (gpio_device* device, k_date_format_t date_format)
+k_localization_date_format_set (gp_port* device, k_date_format_t date_format)
 {
         /************************************************/
         /* Command for various localization issues.     */
@@ -1467,7 +1467,7 @@ k_localization_date_format_set (gpio_device* device, k_date_format_t date_format
 
 
 gint 
-k_localization_data_put (gpio_device* device, guchar* data, gulong data_size)
+k_localization_data_put (gp_port* device, guchar* data, gulong data_size)
 {
 	/************************************************/
         /* Command for various localization issues.     */
@@ -1575,7 +1575,7 @@ k_localization_data_put (gpio_device* device, guchar* data, gulong data_size)
 
 
 gint 
-k_cancel (gpio_device* device, k_command_t* command)
+k_cancel (gp_port* device, k_command_t* command)
 {
 	/************************************************/
 	/* Command to cancel a command.			*/

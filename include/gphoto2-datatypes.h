@@ -5,7 +5,7 @@
 	This library is covered by the LGPL.
 */
 
-/* Constants 
+/* Constants
    ---------------------------------------------------------------- */
 
 /* Return values. 
@@ -14,26 +14,18 @@
    
    Don't forget to add the corresponding error descriptions in 
    libgphoto2/core.c. */ 
-#define GP_OK			  0
-#define GP_ERROR		 -1	/* generic			*/
-#define GP_ERROR_NONCRITICAL	 -2	/* deprecated	 		*/
-#define GP_ERROR_BAD_PARAMETERS	 -3	/* for checking function-param.	*/
-#define GP_ERROR_IO		 -4	/* IO problem			*/
-#define GP_ERROR_CORRUPTED_DATA	 -5	/* Corrupted data		*/
-#define GP_ERROR_FILE_EXISTS	 -6	/* File exists			*/
-#define GP_ERROR_NO_MEMORY	 -7	/* Insufficient memory		*/
-#define GP_ERROR_MODEL_NOT_FOUND -8	/* Model not found		*/
-#define GP_ERROR_NOT_SUPPORTED	 -9	/* Some op. is unsupported	*/
-#define GP_ERROR_DIRECTORY_NOT_FOUND -10/* Directory not found		*/
-#define GP_ERROR_FILE_NOT_FOUND	-11	/* File not found		*/
 
-#define GP_NUM_ERRORS	12
+#define GP_ERROR_BAD_PARAMETERS	     -100 /* for checking function-param. */
+#define GP_ERROR_IO		     -101 /* IO problem			*/
+#define GP_ERROR_CORRUPTED_DATA	     -102 /* Corrupted data		*/
+#define GP_ERROR_FILE_EXISTS	     -103 /* File exists		*/
+#define GP_ERROR_NO_MEMORY	     -104 /* Insufficient memory	*/
+#define GP_ERROR_MODEL_NOT_FOUND     -105 /* Model not found		*/
+#define GP_ERROR_NOT_SUPPORTED	     -106 /* Some op. is unsupported	*/
+#define GP_ERROR_DIRECTORY_NOT_FOUND -107 /* Directory not found	*/
+#define GP_ERROR_FILE_NOT_FOUND	     -108 /* File not found		*/
 
-/* Debugging levels for gp_init */
-#define GP_DEBUG_NONE			0
-#define GP_DEBUG_LOW			1
-#define	GP_DEBUG_MEDIUM			2
-#define GP_DEBUG_HIGH			3
+/* #define GP_NUM_ERRORS	12 */
 
 
 /* Macros
@@ -51,14 +43,9 @@
    ---------------------------------------------------------------- */
 
 /* Physical Connection Types */
-typedef enum {
-	GP_PORT_NONE		= 0,
-	GP_PORT_SERIAL		= 1 << 0,
-	GP_PORT_PARALLEL	= 1 << 1,
-	GP_PORT_USB		= 1 << 2,
-	GP_PORT_IEEE1394	= 1 << 3,
-	GP_PORT_NETWORK		= 1 << 4
-} CameraPortType;
+typedef gp_port_type CameraPortType;
+        /* GP_PORT_SERIAL, GP_PORT_USB, GP_PORT_PARALLEL,
+           GP_PORT_IEEE1394, GP_PORT_NETWORK */
 
 /* Capture Type */
 typedef enum {
@@ -110,44 +97,6 @@ typedef enum {
 #define WIDGET_CHOICE_MAX	32
 
 struct Camera;
-struct CameraWidget;
-
-/* CameraWidget structure */
-typedef struct CameraWidget {
-	CameraWidgetType type;
-	char    label[32];
-	
-	/* Current value of the widget */
-        char   *value_string;
-        int     value_int;
-        float   value_float;
-
-	/* For Radio and Menu */
-	char 	choice[WIDGET_CHOICE_MAX][64];
-	int	choice_count;
-
-	/* For Range */
-	float	min;
-	float 	max;
-	float	increment;
-
-	/* Child info */
-	struct CameraWidget	*children[64];
-	int 	         	 children_count;
-
-	/* Widget was changed */
-	int 	changed;
-
-        /* Reference count */
-        int     ref_count;
-
-	/* Unique identifier */
-	int	id;
-
-	/* Callback */
-	int (*callback)(struct Camera*, struct CameraWidget*);
-
-} CameraWidget;
 
 /* Capture information structure */
 typedef struct {
@@ -157,7 +106,7 @@ typedef struct {
 
 /* Port information/settings */
 typedef struct {
-	CameraPortType type;	
+	CameraPortType type;
 	char name[128];
 	char path[128];
 		/* path to serial port device 			 */
@@ -165,14 +114,8 @@ typedef struct {
 		/* For parallel port, "/dev/lpt0" or variants	 */
 		/* For usb, "usb"				 */
 		/* For ieee1394, "ieee1394"			 */
-		/* For network, "network"  			 */
-
-	/* Serial-specific members */
+                /* For network, "IP:PORT"  			 */
 	int speed;
-
-	/* Network-specific members */
-	char host[128];
-	int  host_port;
 } CameraPortInfo;
 
 /* Functions supported by the cameras */
@@ -269,6 +212,45 @@ typedef struct {
 typedef struct {
 	char text[32*1024];
 } CameraText;
+
+/* CameraWidget structure */
+struct CameraWidget;
+typedef struct CameraWidget {
+	CameraWidgetType type;
+	char    label[32];
+	
+	/* Current value of the widget */
+        char   *value_string;
+        int     value_int;
+        float   value_float;
+
+	/* For Radio and Menu */
+	char 	choice[WIDGET_CHOICE_MAX][64];
+	int	choice_count;
+
+	/* For Range */
+	float	min;
+	float 	max;
+	float	increment;
+
+	/* Child info */
+	struct CameraWidget	*children[64];
+	int 	         	 children_count;
+
+	/* Widget was changed */
+	int 	changed;
+
+        /* Reference count */
+        int     ref_count;
+
+	/* Unique identifier */
+	int	id;
+
+	/* Callback */
+	int (*callback)(struct Camera*, struct CameraWidget*);
+
+} CameraWidget;
+
 
 struct Camera;
 

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
-#include <gpio.h>
+#include <gphoto2-port.h>
 
 #include "dc120.h"
 #include "library.h"
@@ -44,7 +44,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 int camera_init (Camera *camera) {
 
-	gpio_device_settings settings;
+	gp_port_settings settings;
 	DC120Data *dd;
 
 	if (!camera)
@@ -71,7 +71,7 @@ int camera_init (Camera *camera) {
 	camera->functions->manual 	= camera_manual;
 	camera->functions->about 	= camera_about;
 
-	dd->dev = gpio_new(GPIO_DEVICE_SERIAL);
+	dd->dev = gp_port_new(GP_PORT_SERIAL);
 	if (!dd->dev) {
 		free(dd);
 		return (GP_ERROR);
@@ -83,37 +83,37 @@ int camera_init (Camera *camera) {
 	settings.serial.parity   = 0;
 	settings.serial.stopbits = 1;
 
-	if (gpio_set_settings(dd->dev, settings) == GPIO_ERROR) {
-		gpio_free(dd->dev);
+	if (gp_port_set_settings(dd->dev, settings) == GP_ERROR) {
+		gp_port_free(dd->dev);
 		free(dd);
 		return (GP_ERROR);
 	}
 
-	if (gpio_open(dd->dev) == GPIO_ERROR) {
-		gpio_free(dd->dev);
+	if (gp_port_open(dd->dev) == GP_ERROR) {
+		gp_port_free(dd->dev);
 		free(dd);
 		return (GP_ERROR);
 	}
 
-	gpio_set_timeout(dd->dev, TIMEOUT);
+	gp_port_set_timeout(dd->dev, TIMEOUT);
 
 	/* Reset the camera to 9600 */
-	gpio_send_break(dd->dev, 2);
+	gp_port_send_break(dd->dev, 2);
 
 	/* Wait for it to update */
-	GPIO_SLEEP(1500);
+	GP_SYSTEM_SLEEP(1500);
 
 	if (dc120_set_speed(dd, camera->port->speed) == GP_ERROR) {
-		gpio_close(dd->dev);
-		gpio_free(dd->dev);
+		gp_port_close(dd->dev);
+		gp_port_free(dd->dev);
 		free(dd);
 		return (GP_ERROR);
 	}
 
 	/* Try to talk after speed change */
 	if (dc120_get_status(dd) == GP_ERROR) {
-		gpio_close(dd->dev);
-		gpio_free(dd->dev);
+		gp_port_close(dd->dev);
+		gp_port_free(dd->dev);
 		free(dd);
 		return (GP_ERROR);
 	}
@@ -135,9 +135,9 @@ int camera_exit (Camera *camera) {
 	gp_filesystem_free(dd->fs);
 
 	if (dd->dev) {
-		if (gpio_close(dd->dev) == GPIO_ERROR)
+		if (gp_port_close(dd->dev) == GP_ERROR)
 			{ /* camera did a bad, bad thing */ }
-		gpio_free(dd->dev);
+		gp_port_free(dd->dev);
 	}
 	free(dd);
 

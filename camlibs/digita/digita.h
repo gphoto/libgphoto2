@@ -3,7 +3,7 @@
 
 #include <gphoto2.h>
 
-#include <gpio.h>
+#include <gphoto2-port.h>
 
 #define DIGITA_GET_PRODUCT_INFO         0x01
 #define DIGITA_GET_IMAGE_SPECS          0x02
@@ -111,7 +111,7 @@ struct erase_file {
 };
 
 struct digita_device {
-	gpio_device *gpdev;
+	gp_port *gpdev;
 
 	int num_pictures;
 	struct file_item *file_list;

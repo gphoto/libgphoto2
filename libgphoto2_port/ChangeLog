@@ -1,0 +1,23 @@
+2000-07-15  Fabrice Bellet  <Fabrice.Bellet@creatis.insa-lyon.fr>
+
+	* gpio-usb.c : removed useless call to usb_release_interface()
+	  because the usbdev close ioctl already does the job for us.
+	  Compilation warning fix.
+
+2000-07-09  Fabrice Bellet  <Fabrice.Bellet@creatis.insa-lyon.fr>
+
+	* Makefile.am : fixed typo.
+	* gpio-usb.c : cosmetic namespace changes.
+	* gpio.c : fixed compilation warnings.
+
+2000-01-07  Ole Aamot  <oka@ifi.uio.no>
+
+	* Added USB patch from Johannes Erdfelt <jerdfelt@valinux.com> 
+
+1999-12-28  Ole Aamot  <oka@ifi.uio.no>
+
+	* libgpio.spec.in: added
+
+1999-12-27  Ole Aamot  <oka@ifi.uio.no>
+
+	* Added auto* build scripts.

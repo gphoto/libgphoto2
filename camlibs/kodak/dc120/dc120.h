@@ -97,7 +97,7 @@
 #define RETRIES		5
 
 typedef struct {
-	gpio_device *dev;
+	gp_port *dev;
 	CameraFilesystem *fs;
 	/* anything else? :P */
 } DC120Data;

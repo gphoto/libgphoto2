@@ -29,10 +29,10 @@
 /****************************************************************/
 /* Prototypes							*/
 /****************************************************************/
-gint l_init (gpio_device* device);
+gint l_init (gp_port* device);
 
 
-gint l_exit (gpio_device* device);
+gint l_exit (gp_port* device);
 
 
 /****************************************************************/
@@ -55,7 +55,7 @@ gint l_exit (gpio_device* device);
 /*			status, other bytes will follow.	*/
 /****************************************************************/
 gint l_send_receive (
-	gpio_device*	device,
+	gp_port*	device,
 	guchar*		send_buffer,
 	guint 		send_buffer_size,
         guchar**	receive_buffer, 
@@ -63,7 +63,7 @@ gint l_send_receive (
 
 
 gint l_send_receive_receive (
-	gpio_device*	device,
+	gp_port*	device,
 	guchar*		send_buffer,
 	guint 		send_buffer_size,
         guchar**	image_buffer, 

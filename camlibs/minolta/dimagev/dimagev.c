@@ -87,12 +87,12 @@ int camera_init (Camera *camera) {
 	camera->camlib_data = dimagev;
 
 	/* Now open a port. */
-	if ( ( dimagev->dev = gpio_new(GPIO_DEVICE_SERIAL) ) == NULL ) {
-		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate gpio_dev");
+	if ( ( dimagev->dev = gp_port_new(GP_PORT_SERIAL) ) == NULL ) {
+		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to allocate gp_port_dev");
 		return GP_ERROR;
 	}
 
-	gpio_set_timeout(dimagev->dev, 5000);
+	gp_port_set_timeout(dimagev->dev, 5000);
 
 #if defined HAVE_STRNCPY
 	strncpy(dimagev->settings.serial.port, camera->port->path, sizeof(dimagev->settings.serial.port));
@@ -109,8 +109,8 @@ int camera_init (Camera *camera) {
 		return GP_ERROR;
 	}
 
-	gpio_set_settings(dimagev->dev, dimagev->settings);
-	gpio_open(dimagev->dev);
+	gp_port_set_settings(dimagev->dev, dimagev->settings);
+	gp_port_open(dimagev->dev);
 
 	if  ( dimagev_get_camera_data(dimagev) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_init::unable to get current camera data");
@@ -150,8 +150,8 @@ int camera_exit (Camera *camera) {
 	}
 
 	if ( dimagev->dev != NULL ) {
-		gpio_close(dimagev->dev);
-		gpio_free(dimagev->dev);
+		gp_port_close(dimagev->dev);
+		gp_port_free(dimagev->dev);
 	}
 
 	if ( dimagev->fs != NULL ) {
@@ -338,7 +338,7 @@ int camera_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 	if ( dimagev_delete_picture(dimagev, dimagev->status->number_images ) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "camera_capture::unable to delete new image");
 		gp_debug_printf(GP_DEBUG_NONE, "dimagev", "Unable to delete image. Please delete image %d\n", dimagev->status->number_images);
-		return GP_ERROR_NONCRITICAL;
+		return GP_ERROR;
 	}
 
 	return GP_OK;

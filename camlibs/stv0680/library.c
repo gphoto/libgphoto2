@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <gphoto2.h>
-#include <gpio.h>
+#include <gphoto2-port.h>
 
 #include "stv0680.h"
 #include "library.h"
@@ -43,14 +43,14 @@
 #define CMD_IO_TIMEOUT		0x02
 #define CMD_BAD_RESPONSE	0x03
 
-int stv0680_remap_gpio_error(int error)
+int stv0680_remap_gp_port_error(int error)
 {
 	switch(error) {
-	case GPIO_TIMEOUT:
-		printf("Remapping GPIO_TIMEOUT->CMD_IO_TIMEOUT\n");
+	case GP_ERROR_TIMEOUT:
+		printf("Remapping GP_ERROR_TIMEOUT->CMD_IO_TIMEOUT\n");
 		return CMD_IO_TIMEOUT;
-	case GPIO_ERROR:
-		printf("Remapping GPIO_ERROR->CMD_IO_ERROR\n");
+	case GP_ERROR:
+		printf("Remapping GP_ERROR->CMD_IO_ERROR\n");
 	default:
 		printf("(generic error %d actually)\n", error);
 		return CMD_IO_ERROR;
@@ -90,18 +90,18 @@ int stv0680_cmd(struct stv0680_s *device, unsigned char cmd,
 
 	// write to device
 	printf("Writing packet to device\n");
-	if((ret = gpio_write(device->gpiod, packet, 8)) != GPIO_OK)
-		return stv0680_remap_gpio_error(ret);
+	if((ret = gp_port_write(device->gpiod, packet, 8)) != GP_OK)
+		return stv0680_remap_gp_port_error(ret);
 
 	printf("Reading response header\n");
 	// read response header
-	if((ret = gpio_read(device->gpiod, rhdr, 6)) != 6)
-		return stv0680_remap_gpio_error(ret);
+	if((ret = gp_port_read(device->gpiod, rhdr, 6)) != 6)
+		return stv0680_remap_gp_port_error(ret);
 
 	printf("Read response\n");
 	// read response
-	if((ret = gpio_read(device->gpiod, response, response_len)) != response_len)
-		return stv0680_remap_gpio_error(ret);
+	if((ret = gp_port_read(device->gpiod, response, response_len)) != response_len)
+		return stv0680_remap_gp_port_error(ret);
 
 	printf("Validating packet [0x%X,0x%X,0x%X,0x%X,0x%X,0x%X]\n",
 rhdr[0], rhdr[1], rhdr[2], rhdr[3], rhdr[4], rhdr[5]);
@@ -209,10 +209,10 @@ int stv0680_get_image(struct stv0680_s *device, int image_no,
 
 	raw = malloc(*size);
 
-	switch(gpio_read(device->gpiod, raw, *size)) {
-	case GPIO_TIMEOUT:
+	switch(gp_port_read(device->gpiod, raw, *size)) {
+	case GP_ERROR_TIMEOUT:
 		printf("read timeout\n"); break;
-	case GPIO_ERROR:
+	case GP_ERROR:
 		printf("IO error\n"); break;
 	default:
 		printf("Read bytes!\n"); break;
@@ -260,10 +260,10 @@ int stv0680_get_image_preview(struct stv0680_s *device, int image_no,
 
 	raw = malloc(*size);
 
-	switch(gpio_read(device->gpiod, raw, *size)) {
-	case GPIO_TIMEOUT:
+	switch(gp_port_read(device->gpiod, raw, *size)) {
+	case GP_ERROR_TIMEOUT:
 		printf("read timeout\n"); break;
-	case GPIO_ERROR:
+	case GP_ERROR:
 		printf("IO error\n"); break;
 	default:
 		printf("Read bytes!\n"); break;

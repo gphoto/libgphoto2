@@ -52,7 +52,7 @@ typedef enum {
 typedef struct canon_info
 {
 	canonCamModel model;
-	gpio_device *gdev;
+	gp_port *gdev;
 	int speed;        /* The speed we're using for this camera */
 	char ident[32];   /* Model ID string given by the camera */
 	char owner[32];   /* Owner name */

@@ -1,0 +1,66 @@
+%define ver      @VERSION@
+%define rel      1
+%define prefix   /usr
+
+Summary: Portable I/O library
+Name: libgphoto2-port
+Version: %ver
+Release: %rel
+Copyright: LGPL
+Group: System Environment/Libraries
+Source: http://www.gphoto.net/dist/libgphoto2-port-%{ver}.tar.gz
+BuildRoot: /var/tmp/libgphoto2-port-%{PACKAGE_VERSION}-root
+URL: http://www.gphoto.net/
+Docdir: %{prefix}/doc
+Requires: libusb
+
+%description
+The benefit to using this library would be that all communications can be
+done quickly and without worry for device specific functions; all devices 
+are abstracted to a point, allowing you to read/write to a device using
+the same interface. For example, you can set all the options on the serial
+port easily, and then read/write to that device. Additionally, you could
+easily switch over to a USB device, and read/write without having to learn
+the USB internals.
+
+%package devel
+Summary: Libraries, includes, etc to develop applications using libgpio
+Group: System Environment/Libraries
+Requires: libgphoto2-port
+
+%description devel
+Libraries, include files, etc you need to develop applications with libgphoto2-port
+
+%prep
+%setup
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%prefix
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+make prefix=$RPM_BUILD_ROOT%{prefix} install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%files
+%defattr(-, root, root)
+
+%doc AUTHORS ChangeLog NEWS README COPYING COPYING.LIB TODO
+%{prefix}/lib/lib*.so.*
+%{prefix}/bin/gpio-config
+
+%files devel
+%defattr(-, root, root)
+
+%{prefix}/lib/lib*.so
+%{prefix}/lib/*a
+%{prefix}/lib/*.sh
+%{prefix}/include/*

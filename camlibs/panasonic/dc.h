@@ -41,8 +41,8 @@ typedef enum {
 } dsc_quality_t;
 	
 typedef struct {
-	gpio_device		*dev;
-	gpio_device_settings 	settings;
+	gp_port		*dev;
+	gp_port_settings 	settings;
 	CameraFilesystem	*fs;
 	char			*buf;
 	int			size;	

@@ -16,8 +16,8 @@
 
 #include "digita.h"
 
-#include <gpio.h>
-int gpio_serial_set_baudrate(gpio_device * dev);
+#include <gphoto2-port.h>
+int gp_port_serial_set_baudrate(gp_port * dev);
 
 struct beacon {
 	unsigned short intro;
@@ -70,7 +70,7 @@ static unsigned int checksum(const unsigned char *buffer, int len)
 	return sum & 0xff;
 }
 
-static int poll_and_wait(gpio_device *dev, int length, int bob, int eob)
+static int poll_and_wait(gp_port *dev, int length, int bob, int eob)
 {
         unsigned short s, poll, poll_reply;
 
@@ -79,9 +79,9 @@ static int poll_and_wait(gpio_device *dev, int length, int bob, int eob)
                         (bob ? POLL_BOB : 0) | (eob ? POLL_EOB : 0);
 
                 s = htons(poll);
-                if (gpio_write(dev, (void *)&s, sizeof(s)) < 0)
+                if (gp_port_write(dev, (void *)&s, sizeof(s)) < 0)
                         return -1;
-                if (gpio_read(dev, (void *)&s, sizeof(s)) < 0)
+                if (gp_port_read(dev, (void *)&s, sizeof(s)) < 0)
                         return -1;
                 poll_reply = ntohs(s);
 if (poll_reply & POLL_ACK)
@@ -107,24 +107,24 @@ static int digita_serial_send(struct digita_device *dev, void *_buffer, int len)
 
                 poll_and_wait(dev->gpdev, size, sent == 0, (size + sent) == len);
 
-                if (gpio_write(dev->gpdev, buffer + sent, size) < 0)
+                if (gp_port_write(dev->gpdev, buffer + sent, size) < 0)
                         return -1;
 
                 sent += size;
         }
 
         s = 0;
-        if (gpio_write(dev->gpdev, (void *)&s, sizeof(s)) < 0)
+        if (gp_port_write(dev->gpdev, (void *)&s, sizeof(s)) < 0)
                 return -1;
 
         return len;
 }
 
-static int poll_and_reply(gpio_device *dev, int *length, int *eob, int nak)
+static int poll_and_reply(gp_port *dev, int *length, int *eob, int nak)
 {
         unsigned short s, poll, poll_reply;
 
-        if (gpio_read(dev, (void *)&s, sizeof(s)) < 0)
+        if (gp_port_read(dev, (void *)&s, sizeof(s)) < 0)
                 return -1;
 
         poll = ntohs(s);
@@ -139,7 +139,7 @@ static int poll_and_reply(gpio_device *dev, int *length, int *eob, int nak)
                 poll_reply = POLL_ACK;
 
         s = htons(poll_reply);
-        if (gpio_write(dev, (void *)&s, sizeof(s)) < 0)
+        if (gp_port_write(dev, (void *)&s, sizeof(s)) < 0)
                 return -1;
 
         return 0;
@@ -154,7 +154,7 @@ static int digita_serial_read(struct digita_device *dev, void *_buffer, int len)
         while (received < len) {
                 poll_and_reply(dev->gpdev, &size, &eob, 0);
 
-                if (gpio_read(dev->gpdev, buffer + received, size) < 0)
+                if (gp_port_read(dev->gpdev, buffer + received, size) < 0)
                         return -1;
 
                 received += size;
@@ -162,7 +162,7 @@ static int digita_serial_read(struct digita_device *dev, void *_buffer, int len)
                         break;
         }
 
-        if (gpio_read(dev->gpdev, (void *)&s, sizeof(s)) < 0)
+        if (gp_port_read(dev->gpdev, (void *)&s, sizeof(s)) < 0)
                 return -1;
 
         return received;
@@ -170,12 +170,12 @@ static int digita_serial_read(struct digita_device *dev, void *_buffer, int len)
 
 int digita_serial_open(struct digita_device *dev, Camera *camera)
 {
-	gpio_device_settings settings;
+	gp_port_settings settings;
 	struct beacon beacon;
 	struct beacon_ack beacon_ack;
 	struct beacon_comp beacon_comp;
 
-	dev->gpdev = gpio_new(GPIO_DEVICE_SERIAL);
+	dev->gpdev = gp_port_new(GP_PORT_SERIAL);
 	if (!dev->gpdev)
 		return -1;
 
@@ -189,8 +189,8 @@ int digita_serial_open(struct digita_device *dev, Camera *camera)
 	digita_send = digita_serial_send;
 	digita_read = digita_serial_read;
 
-	gpio_set_settings(dev->gpdev, settings);
-	if (gpio_open(dev->gpdev) < 0) {
+	gp_port_set_settings(dev->gpdev, settings);
+	if (gp_port_open(dev->gpdev) < 0) {
 		fprintf(stderr, "error opening device\n");
 		return 0;
 	}
@@ -198,17 +198,17 @@ int digita_serial_open(struct digita_device *dev, Camera *camera)
 	tcsendbreak(dev->gpdev->device_fd, 4);
 
 	dev->gpdev->settings.serial.speed = 0;
-	gpio_serial_set_baudrate(dev->gpdev);
+	gp_port_serial_set_baudrate(dev->gpdev);
 
 	usleep(50);
 
 	dev->gpdev->settings.serial.speed = camera->port->speed;
-	gpio_serial_set_baudrate(dev->gpdev);
+	gp_port_serial_set_baudrate(dev->gpdev);
 
 	usleep(2000);
 
 	memset((void *)&beacon, 0, sizeof(beacon));
-	if (gpio_read(dev->gpdev, (void *)&beacon, sizeof(beacon)) < 0) {
+	if (gp_port_read(dev->gpdev, (void *)&beacon, sizeof(beacon)) < 0) {
 		perror("reading beacon");
 		return 0;
 	}
@@ -228,12 +228,12 @@ printf("%04X %04X %04X %02X\n",
 	beacon_ack.checksum = 0;
 	beacon_ack.checksum = checksum((void *)&beacon_ack, sizeof(beacon_ack));
 
-	if (gpio_write(dev->gpdev, (void *)&beacon_ack, sizeof(beacon_ack)) < 0) {
+	if (gp_port_write(dev->gpdev, (void *)&beacon_ack, sizeof(beacon_ack)) < 0) {
 		perror("writing beacon_ack");
 		return -1;
 	}
 
-	if (gpio_read(dev->gpdev, (void *)&beacon_comp, sizeof(beacon_comp)) < 0) {
+	if (gp_port_read(dev->gpdev, (void *)&beacon_comp, sizeof(beacon_comp)) < 0) {
 		perror("reading beacon_comp");
 		return -1;
 	}
@@ -244,7 +244,7 @@ printf("%d\n", ntohl(beacon_comp.dataspeed));
 	dev->deviceframesize = ntohs(beacon_comp.deviceframesize);
 
 	dev->gpdev->settings.serial.speed = ntohl(beacon_comp.dataspeed);
-	gpio_serial_set_baudrate(dev->gpdev);
+	gp_port_serial_set_baudrate(dev->gpdev);
 
 usleep(100000);
 

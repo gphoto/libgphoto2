@@ -45,7 +45,7 @@
 
 /* These better be around. */
 #include <gphoto2.h>
-#include <gpio.h>
+#include <gphoto2-port.h>
 
 /* There should be a better way to do this. */
 #include "../../../libgphoto2/exif.h"
@@ -197,8 +197,8 @@ typedef struct {
 /* This struct is used as the camera->camlib_data value in this library. */
 typedef struct {
         int size;
-        gpio_device *dev;
-        gpio_device_settings settings;
+        gp_port *dev;
+        gp_port_settings settings;
         dimagev_data_t *data;
         dimagev_status_t *status;
         dimagev_info_t *info;

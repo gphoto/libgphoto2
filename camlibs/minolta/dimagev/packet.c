@@ -104,14 +104,14 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 		return NULL;
 	}
 
-	if ( gpio_read(dimagev->dev, p->buffer, 4) == GPIO_ERROR ) {
+	if ( gp_port_read(dimagev->dev, p->buffer, 4) == GP_ERROR ) {
 		perror("dimagev_read_packet::unable to read packet header");
 		return NULL;
 	}
 
 	p->length = ( p->buffer[2] * 256 ) + ( p->buffer[3] );
 
-	if ( gpio_read(dimagev->dev, &(p->buffer[4]), ( p->length - 4)) == GPIO_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &(p->buffer[4]), ( p->length - 4)) == GP_ERROR ) {
 		perror("dimagev_read_packet::unable to read packet body");
 		return NULL;
 	}
@@ -124,7 +124,7 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 		
 		/* Send a NAK */
 		char_buffer = DIMAGEV_NAK;
-		if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+		if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		perror("dimagev_read_packet::unable to send NAK");
 		return NULL;
 	}

@@ -14,7 +14,7 @@
 
 #include "digita.h"
 
-#include <gpio.h>
+#include <gphoto2-port.h>
 
 void build_command(struct digita_command *cmd, int length, short command)
 {

@@ -65,14 +65,14 @@ int dimagev_shutter(dimagev_t *dimagev) {
 		return GP_ERROR;
 	}
 
-	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to write packet");
 		return GP_ERROR;
 	}
 
 	sleep(1);
 	
-	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::no response from camera");
 		return GP_ERROR;
 	}
@@ -120,12 +120,12 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	sleep(1);
 
 	char_buffer = DIMAGEV_EOT;
-	if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::unable to send EOT");
 		return GP_ERROR;
 	}
 		
-	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_shutter::no response from camera");
 		return GP_ERROR;
 	}

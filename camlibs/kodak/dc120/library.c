@@ -29,18 +29,18 @@ int dc120_packet_write (DC120Data *dd, char *packet, int size, int read_response
 write_again:
 	/* If retry, give camera some recup time */
 	if (x > 0)
-		GPIO_SLEEP(SLEEP_TIMEOUT);
+		GP_PORT_SLEEP(SLEEP_TIMEOUT);
 
 	/* Return error if too many retries */
 	if (x++ > RETRIES) 
 		return (GP_ERROR);
 
-	if (gpio_write(dd->dev, packet, size) < 0)
+	if (gp_port_write(dd->dev, packet, size) < 0)
 		goto write_again;
 
 	/* Read in the response from the camera if requested */
 	if (read_response) {
-		if (gpio_read(dd->dev, in, 1) < 0)
+		if (gp_port_read(dd->dev, in, 1) < 0)
 			/* On error, write again */
 			goto write_again;
 
@@ -58,7 +58,7 @@ write_again:
 
 int dc120_packet_read (DC120Data *dd, char *packet, int size) {
 
-	return (gpio_read(dd->dev, packet, size));
+	return (gp_port_read(dd->dev, packet, size));
 }
 
 int dc120_packet_read_data (DC120Data *dd, CameraFile *file, char *cmd_packet, int *size, int block_size) {
@@ -88,8 +88,8 @@ read_data_write_again:
 	while (x < num_packets) {
 		retval = dc120_packet_read(dd, packet, block_size+1);
 		switch (retval) {
-		  case GPIO_ERROR:
-		  case GPIO_TIMEOUT:
+		  case GP_ERROR:
+		  case GP_ERROR_TIMEOUT:
 			/* Write that packet was bad and resend */
 			if (retries++ > RETRIES)
 				return (GP_ERROR);
@@ -159,9 +159,9 @@ read_data_write_again:
 int dc120_set_speed (DC120Data *dd, int speed) {
 
 	char *p = dc120_packet_new(0x41);
-	gpio_device_settings settings;
+	gp_port_settings settings;
 
-	gpio_get_settings(dd->dev, &settings);
+	gp_port_get_settings(dd->dev, &settings);
 
 	switch (speed) {
 		case 9600:
@@ -204,12 +204,12 @@ int dc120_set_speed (DC120Data *dd, int speed) {
 	if (dc120_packet_write(dd, p, 8, 1) == GP_ERROR)
 		return (GP_ERROR);
 
-	if (gpio_set_settings (dd->dev, settings) == GP_ERROR)	
+	if (gp_port_set_settings (dd->dev, settings) == GP_ERROR)	
 		return (GP_ERROR);
 
 	free (p);
 
-	GPIO_SLEEP(300);
+	GP_PORT_SLEEP(300);
 
 	/* Speed change went OK. */
 	return (GP_OK);
@@ -322,7 +322,7 @@ int dc120_get_file_preview (DC120Data *dd, CameraFile *file, int file_number, ch
 		gp_file_append(file, buf, strlen(buf));
 	}
 
-	GPIO_SLEEP(1000);
+	GP_PORT_SLEEP(1000);
 	return (GP_OK);
 }
 
@@ -364,10 +364,10 @@ int dc120_wait_for_completion (DC120Data *dd) {
 	while ((x++ < 25)&&(!done)) {
 		retval = dc120_packet_read(dd, p, 1);
 		switch (retval) {
-		   case GPIO_ERROR: 
+		   case GP_ERROR: 
 			return (GP_ERROR); 
 			break;
-		   case GPIO_TIMEOUT: 
+		   case GP_ERROR_TIMEOUT: 
 			break;
 		   default:
 			done = 1;

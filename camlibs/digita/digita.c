@@ -16,7 +16,7 @@
 
 #include "digita.h"
 
-#include <gpio.h>
+#include <gphoto2-port.h>
 
 int (*digita_send)(struct digita_device *dev, void *buffer, int buflen) = NULL;
 int (*digita_read)(struct digita_device *dev, void *buffer, int buflen) = NULL;

@@ -13,24 +13,22 @@ extern "C" {
 #endif
 
 #ifdef OS2
-#include <gphotoos2.h>
+#include <gphoto2-portability-os2.h>
 #endif
 
 #ifdef WIN32
 #define CAMLIBS "."
 #endif
 
-#include <gpio.h>
+#include <gphoto2-port.h>
 #include <gphoto2-datatypes.h>
 #include <gphoto2-camera.h>
 #include <gphoto2-core.h>
-/* #include <gphoto2-dynamic.h> Not Yet   -Scott */
 #include <gphoto2-file.h>
 #include <gphoto2-filesys.h>
 #include <gphoto2-frontend.h>
 #include <gphoto2-library.h>
 #include <gphoto2-lists.h>
-#include <gphoto2-port.h>
 #include <gphoto2-settings.h>
 #include <gphoto2-widget.h>
 

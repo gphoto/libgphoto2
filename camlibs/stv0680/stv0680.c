@@ -18,7 +18,7 @@
  */
 #include <string.h>
 #include <gphoto2.h>
-#include <gpio.h>
+#include <gphoto2-port.h>
 
 #include "stv0680.h"
 #include "library.h"
@@ -53,7 +53,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 
 int camera_init (Camera *camera) {
 
-	gpio_device_settings gpiod_settings;
+	gp_port_settings gpiod_settings;
 	struct stv0680_s *device;
 
 	/* First, set up all the function pointers */
@@ -81,8 +81,8 @@ int camera_init (Camera *camera) {
 	camera->camlib_data = device;
 
 	/* open and configure serial port */
-	device->gpiod = gpio_new(GPIO_DEVICE_SERIAL);
-	gpio_set_timeout(device->gpiod, 1000);
+	device->gpiod = gp_port_new(GP_PORT_SERIAL);
+	gp_port_set_timeout(device->gpiod, 1000);
 
 	strcpy(gpiod_settings.serial.port, camera->port->path);
 	gpiod_settings.serial.speed = camera->port->speed;
@@ -90,8 +90,8 @@ int camera_init (Camera *camera) {
 	gpiod_settings.serial.parity = 0;
 	gpiod_settings.serial.stopbits = 1;
 
-	gpio_set_settings(device->gpiod, gpiod_settings);
-	gpio_open(device->gpiod);
+	gp_port_set_settings(device->gpiod, gpiod_settings);
+	gp_port_open(device->gpiod);
 
 	/* create camera filesystem */
 	device->fs = gp_filesystem_new();
@@ -105,7 +105,7 @@ int camera_exit (Camera *camera) {
 	struct stv0680_s *device = camera->camlib_data;
 
 	/* close serial port */
-	gpio_close(device->gpiod);
+	gp_port_close(device->gpiod);
 
 	/* free camera filesystem */
 	gp_filesystem_free(device->fs);

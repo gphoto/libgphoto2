@@ -1,4 +1,3 @@
-#include <gpio.h>
 #include <gphoto2.h>
 
 #ifdef HAVE_CONFIG_H

@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
-#include <gpio.h>
 
 #include "library.h"
 #include "sierra.h"
@@ -135,11 +134,10 @@ int camera_abilities (CameraAbilitiesList *list) {
 int camera_init (Camera *camera) {
 
 	int value=0, count;
-#ifdef GPIO_USB
 	int x=0;
 	int vendor=0, product=0, inep=0, outep=0;
-#endif
-	gpio_device_settings settings;
+
+        gp_port_settings settings;
 	SierraData *fd;
 
 	if (!camera)
@@ -170,9 +168,9 @@ int camera_init (Camera *camera) {
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
 			sierra_debug_print(fd, "Serial Device");
-			fd->dev = gpio_new(GPIO_DEVICE_SERIAL);
+			fd->dev = gp_port_new(GP_PORT_SERIAL);
 			if (!fd->dev) {
-				gpio_free(fd->dev);
+				gp_port_free(fd->dev);
 				free(fd);
 				return (GP_ERROR);
 			}
@@ -182,7 +180,6 @@ int camera_init (Camera *camera) {
 			settings.serial.parity 	 = 0;
 			settings.serial.stopbits = 1;
 			break;
-#ifdef GPIO_USB
 		case GP_PORT_USB:
 			/* lookup the USB information */
 			while (strlen(sierra_cameras[x].model)>0) {			
@@ -200,44 +197,43 @@ int camera_init (Camera *camera) {
 				return (GP_ERROR);
 
 			sierra_debug_print(fd, "USB Device");
-			fd->dev = gpio_new(GPIO_DEVICE_USB);
+			fd->dev = gp_port_new(GP_PORT_USB);
 
 			if (!fd->dev) {
-				gpio_free(fd->dev);
+				gp_port_free(fd->dev);
 				free(fd);
 				return (GP_ERROR);
 			}
 
-		        if (gpio_usb_find_device(fd->dev, vendor, product) == GPIO_ERROR) {
-				gpio_free(fd->dev);
+		        if (gp_port_usb_find_device(fd->dev, vendor, product) == GP_ERROR) {
+				gp_port_free(fd->dev);
 				free (fd);
 		                return (GP_ERROR);
 			}
-		        gpio_set_timeout (fd->dev, 5000);
+		        gp_port_set_timeout (fd->dev, 5000);
         		settings.usb.inep 	= inep;
         		settings.usb.outep 	= outep;
         		settings.usb.config 	= 1;
         		settings.usb.interface 	= 0;
         		settings.usb.altsetting = 0;
 			break;
-#endif
 		default:
 			sierra_debug_print(fd, "Invalid Device");
 			free (fd);
 	                return (GP_ERROR);
 	}
 
-	if (gpio_set_settings(fd->dev, settings) == GPIO_ERROR) {
-		gpio_free(fd->dev);
+	if (gp_port_set_settings(fd->dev, settings) == GP_ERROR) {
+		gp_port_free(fd->dev);
 		free (fd);
                 return (GP_ERROR);
 	}
 
-	gpio_set_timeout(fd->dev, TIMEOUT);
+	gp_port_set_timeout(fd->dev, TIMEOUT);
 	fd->type = camera->port->type;
 
-	if (gpio_open(fd->dev)==GPIO_ERROR) {
-		gpio_free(fd->dev);
+	if (gp_port_open(fd->dev)==GP_ERROR) {
+		gp_port_free(fd->dev);
 		free (fd);
 		return (GP_ERROR);
 	}
@@ -245,36 +241,34 @@ int camera_init (Camera *camera) {
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
 			if (sierra_ping(camera)==GP_ERROR) {
-				gpio_free(fd->dev);
+				gp_port_free(fd->dev);
 				free (fd);
 				return (GP_ERROR);
 			}
 
 			if (sierra_set_speed(camera, camera->port->speed)==GP_ERROR) {
-				gpio_free(fd->dev);
+				gp_port_free(fd->dev);
 				free (fd);
 				return (GP_ERROR);
 			}
 			fd->speed = camera->port->speed;
 			break;
-#ifdef GPIO_USB
 		case GP_PORT_USB:
-			gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
+			gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
 			break;
-#endif
 		default:
 			break;
 	}
 
 	if (sierra_get_int_register(camera, 1, &value)==GP_ERROR) {
-		gpio_free(fd->dev);
+		gp_port_free(fd->dev);
 		free (fd);
 		return (GP_ERROR);
 	}
 
 	sierra_set_int_register(camera, 83, -1);
 
-	gpio_set_timeout(fd->dev, 50);
+	gp_port_set_timeout(fd->dev, 50);
 	if (sierra_set_string_register(camera, 84, "\\", 1)==GP_ERROR)
 		fd->folders = 0;
 	   else
@@ -292,7 +286,7 @@ int camera_init (Camera *camera) {
 
 	strcpy(fd->folder, "/");
 
-	gpio_set_timeout(fd->dev, TIMEOUT);
+	gp_port_set_timeout(fd->dev, TIMEOUT);
 
 	camera_stop(camera);
 	return (GP_OK);
@@ -372,8 +366,8 @@ int camera_exit (Camera *camera) {
 
 	sierra_debug_print(fd, "Exiting camera");
 
-	gpio_close(fd->dev);
-	gpio_free(fd->dev);
+	gp_port_close(fd->dev);
+	gp_port_free(fd->dev);
 	free(fd);
 
 	return (GP_OK);
@@ -581,7 +575,7 @@ return (GP_ERROR);
 	sierra_debug_print(fd, buf);
 
 	ret = sierra_delete(camera, file_number+1);
-	if (ret == GPIO_OK)
+	if (ret == GP_OK)
 		gp_filesystem_delete(fd->fs, folder, filename);
 
 if (camera_stop(camera)==GP_ERROR)

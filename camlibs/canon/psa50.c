@@ -37,9 +37,9 @@
 #include "canon.h"
 
 /************ new stuff ********/
-#include <gpio.h>
-gpio_device *gdev;
-gpio_device_settings settings;
+
+gp_port *gdev;
+gp_port_settings settings;
 /************ new stuff ********/
 
 #define MAX_TRIES 10
@@ -623,7 +623,7 @@ void intatpos(unsigned char *block, int pos, int integer )
  */
 static unsigned char *psa50_usb_dialogue(Camera *camera,char cmd1, char cmd2, int cmd3, int *retlen, const char *payload, int pay_length)
 {
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
         struct canon_info *cs = (struct canon_info*)camera->camlib_data;
         int msgsize;
         char packet[0x3000];
@@ -649,23 +649,23 @@ static unsigned char *psa50_usb_dialogue(Camera *camera,char cmd1, char cmd2, in
      * }
      */
 
-    gpio_usb_msg_write(cs->gdev,0x10,packet,msgsize);
+    gp_port_usb_msg_write(cs->gdev,0x10,packet,msgsize);
     if (cmd3==0x202)
       {
-        gpio_read(cs->gdev, buffer, 0x40);
+        gp_port_read(cs->gdev, buffer, 0x40);
         lonlen=*(unsigned *)(buffer+0x6);
         //fprintf(stderr,"Internal lonlen: %x\n",lonlen);
         if (lonlen>0x3000)
-          gpio_read(cs->gdev,buffer,0x2000);
+          gp_port_read(cs->gdev,buffer,0x2000);
         else
-          gpio_read(cs->gdev,buffer,lonlen);
+          gp_port_read(cs->gdev,buffer,lonlen);
         *retlen=lonlen;
         return buffer;
       }
     else
       {
         //fprintf(stderr,"Internal retlen: %x\n",*retlen);
-        gpio_read(cs->gdev, buffer, *retlen+0x50);
+        gp_port_read(cs->gdev, buffer, *retlen+0x50);
         return buffer+0x50;
       }
 
@@ -1502,7 +1502,7 @@ unsigned char *psa50_get_file_serial(Camera *camera, const char *name,int *lengt
 
 unsigned char *psa50_get_file_usb(Camera *camera, const char *name,int *length)
 {
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
         struct canon_info *cs = (struct canon_info*)camera->camlib_data;
     unsigned char *file = NULL;
     unsigned char msg[0x3000];
@@ -1573,8 +1573,8 @@ unsigned char *psa50_get_file_usb(Camera *camera, const char *name,int *length)
       else
         size=0x2000;
 
-                /* FIXME: (pm) a direct call to gpio_read here ??????? */
-                gpio_read(cs->gdev,msg,size);
+                /* FIXME: (pm) a direct call to gp_port_read here ??????? */
+                gp_port_read(cs->gdev,msg,size);
     }
     free(file);
     return NULL;

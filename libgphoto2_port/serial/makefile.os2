@@ -1,0 +1,36 @@
+CCFLAGS=-O2 -c -I.. -I..\..\include -I..\..\libgpio\include -Zmtd -Zcrtdll -Zbin-files -D__ST_MT_ERRNO_ -I. -DOS2 -DHAVE_TERMIOS_H  -DEBUG
+CC=gcc
+
+all: start \
+  dll \
+  lib \
+  end
+
+start:
+  @echo ****
+  @echo   Entering:      $(MAKEDIR)
+  @echo   using CCFLAGS: $(CCFLAGS)
+  @echo ****
+
+end:
+  @echo ****
+  @echo   Done: $(MAKEDIR)
+  @echo ****
+
+dll: ..\giserial.dll
+
+..\obj\serial.o : unix.c
+   @$(CC) -o $@ $** $(CCFLAGS)
+
+lib: ..\..\lib\giserial.a
+
+..\..\lib\giserial.a:
+   @implib giserial.lib ..\giserial.dll
+   @emximp -o ..\..\lib\giserial.a giserial.lib
+
+serial.def: ..\obj\serial.o
+   @copy serial.df serial.def
+   @emxexp $** >> serial.def
+
+..\giserial.dll: ..\obj\serial.o serial.def
+   @$(CC) -Wall -Zdll -Zcrtdll -o $@ $** -lwrap -lgcc -L..\..\lib -llibgphoto2 -llibgpio -ldllib

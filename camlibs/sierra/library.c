@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2.h>
-#include <gpio.h>
 #include <time.h>
 #include "sierra.h"
 #include "library.h"
@@ -139,22 +138,22 @@ int sierra_write_packet (Camera *camera, char *packet) {
 
 	/* For USB support */
 	if (fd->type == GP_PORT_USB) {
-		return (gpio_write(fd->dev, packet, length));
+		return (gp_port_write(fd->dev, packet, length));
 	}
 
 	r=0;
 	x=0;
 	while (x<length) {
-	        ret = gpio_write(fd->dev, &packet[x], 1);
+	        ret = gp_port_write(fd->dev, &packet[x], 1);
 
-		if (ret != GPIO_OK) {
-			if (ret == GPIO_TIMEOUT) {
+		if (ret != GP_OK) {
+			if (ret == GP_ERROR_TIMEOUT) {
 				sierra_debug_print(fd, " write timed out. trying again.");
 				if (r++ > RETRIES) {
 					sierra_debug_print(fd, " write failed (too many retries)");
 					return (GP_ERROR);
 				}
-			} else 	if (ret == GPIO_ERROR) {
+			} else 	if (ret == GP_ERROR) {
 				sierra_debug_print(fd, " write failed");
 		                return (GP_ERROR);
 			} else  {
@@ -185,9 +184,9 @@ read_packet_again:
 //	usleep(QUICKSLEEP);
 
 	done = 0;
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
 	if (fd->type == GP_PORT_USB)
-		gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
+		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
 #endif
 	while (!done && (r++<RETRIES)) {
 
@@ -201,10 +200,10 @@ read_packet_again:
 		   default:
 			return (GP_ERROR);
 		}
-		bytes_read = gpio_read(fd->dev, packet, blocksize);
+		bytes_read = gp_port_read(fd->dev, packet, blocksize);
 
 
-		if (bytes_read == GPIO_ERROR) {
+		if (bytes_read == GP_ERROR) {
 			sierra_debug_print(fd, "  read error (packet type)");
 			return (GP_ERROR);
 		}
@@ -221,8 +220,8 @@ read_packet_again:
 		    (packet[0] == TYPE_DATA_END)) {
 			/* It's a response/command packet */
 			if (fd->type == GP_PORT_SERIAL) {
-				bytes_read = gpio_read(fd->dev, &packet[1], 3);
-				if (bytes_read == GPIO_ERROR) {
+				bytes_read = gp_port_read(fd->dev, &packet[1], 3);
+				if (bytes_read == GP_ERROR) {
 					sierra_debug_print(fd, "  read error (header)");
 					return (GP_ERROR);
 				}
@@ -235,28 +234,28 @@ read_packet_again:
 		} else {
 			/* It's a single byte response. dump and validate */
 			sierra_dump_packet(camera, packet);
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
 			if (fd->type == GP_PORT_USB)
-				gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
+				gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
 #endif
 			return (sierra_valid_packet(camera, packet));
 		}
 		for (y=bytes_read; y < length; y+=blocksize) {
-			ret = gpio_read(fd->dev, &packet[y], blocksize);
-			if (ret == GPIO_TIMEOUT) {
+			ret = gp_port_read(fd->dev, &packet[y], blocksize);
+			if (ret == GP_ERROR_TIMEOUT) {
 				sierra_write_nak(camera);
 				goto read_packet_again;
 			}
 
-			if (ret ==GPIO_ERROR)
+			if (ret ==GP_ERROR)
 				return (GP_ERROR);
 		}
 	}
 
 	sierra_dump_packet(camera, packet);
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
 	if (fd->type == GP_PORT_USB)
-		gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
+		gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
 #endif
 	return (GP_OK);
 
@@ -321,16 +320,16 @@ int sierra_write_ack(Camera *camera) {
 
 	buf[0] = ACK;
 	if (sierra_write_packet(camera, buf)==GP_OK) {
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
 		if (fd->type == GP_PORT_USB)
-	                gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
+	                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
 #endif
 		return (GP_OK);
 	}
 	sierra_debug_print(fd, "Could not write ACK");
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
 	if (fd->type == GP_PORT_USB)
-                gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
+                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
 #endif
 	return (GP_ERROR);
 }
@@ -344,17 +343,17 @@ int sierra_write_nak(Camera *camera) {
 
 	buf[0] = NAK;
 	if (sierra_write_packet(camera, buf)==GP_OK) {
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
 		if (fd->type == GP_PORT_USB)
-	                gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
+	                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
 #endif
 		return (GP_OK);
 	}
 
 	sierra_debug_print(fd, "Could not write NAK");
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
 	if (fd->type == GP_PORT_USB)
-                gpio_usb_clear_halt(fd->dev, GPIO_USB_IN_ENDPOINT);
+                gp_port_usb_clear_halt(fd->dev, GP_PORT_USB_IN_ENDPOINT);
 #endif
 	return (GP_ERROR);
 }
@@ -386,7 +385,7 @@ int sierra_ping(Camera *camera) {
 
 int sierra_set_speed (Camera *camera, int speed) {
 
-	gpio_device_settings settings;
+	gp_port_settings settings;
 	char buf[1024];
 	SierraData *fd = (SierraData*)camera->camlib_data;
 
@@ -395,7 +394,7 @@ int sierra_set_speed (Camera *camera, int speed) {
 
 	fd->first_packet = 1;
 
-	gpio_get_settings(fd->dev, &settings);
+	gp_port_get_settings(fd->dev, &settings);
 
 	switch (speed) {
 		case 9600:
@@ -430,10 +429,10 @@ int sierra_set_speed (Camera *camera, int speed) {
 
 	if (sierra_set_int_register(camera, 17, speed)==GP_ERROR)
 		return (GP_ERROR);
-	if (gpio_set_settings(fd->dev, settings)==GPIO_ERROR)
+	if (gp_port_set_settings(fd->dev, settings)==GP_ERROR)
 		return (GP_ERROR);
 
-	GPIO_SLEEP(10);
+	GP_SYSTEM_SLEEP(10);
 	return (GP_OK);
 }
 
@@ -719,7 +718,7 @@ int sierra_delete(Camera *camera, int picture_number) {
 		return (GP_ERROR);
 	}
 
-	GPIO_SLEEP(QUICKSLEEP);
+	GP_SYSTEM_SLEEP(QUICKSLEEP);
 
 	return (GP_OK);
 }
@@ -837,12 +836,12 @@ int sierra_capture (Camera *camera, CameraFile *file, CameraCaptureInfo *info) {
 	r = 0;done=0;
 	while ((!done)&&(r++<RETRIES)) {
 		/* read in the ENQ */
-		retval = gpio_read(fd->dev, buf, 1);
+		retval = gp_port_read(fd->dev, buf, 1);
 		switch(retval) {
-		   case GPIO_ERROR:
+		   case GP_ERROR:
 			return (GP_ERROR);
 			break;
-		   case GPIO_TIMEOUT:
+		   case GP_ERROR_TIMEOUT:
 			break;
 		   default:
 			done = 1;

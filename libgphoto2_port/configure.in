@@ -1,0 +1,120 @@
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(libgphoto2_port/gp_port.c)
+AM_CONFIG_HEADER(config.h)
+
+LIBGPPORT_MAJOR_VERSION=0
+LIBGPPORT_MINOR_VERSION=0
+LIBGPPORT_MICRO_VERSION=3
+LIBGPPORT_VERSION=$LIBGPPORT_MAJOR_VERSION.$LIBGPPORT_MINOR_VERSION.$LIBGPPORT_MICRO_VERSION
+LIBGPPORT_VERSION_INFO=`expr $LIBGPPORT_MAJOR_VERSION + $LIBGPPORT_MINOR_VERSION`:$LIBGPPORT_MICRO_VERSION:$LIBGPPORT_MINOR_VERSION
+
+AC_SUBST(LIBGPPORT_MAJOR_VERSION)
+AC_SUBST(LIBGPPORT_MINOR_VERSION)
+AC_SUBST(LIBGPPORT_MICRO_VERSION)
+AC_SUBST(LIBGPPORT_VERSION)
+AC_SUBST(LIBGPPORT_VERSION_INFO)
+
+VERSION=$LIBGPPORT_VERSION
+
+AM_INIT_AUTOMAKE(libgphoto2_port, $VERSION)
+AM_MAINTAINER_MODE
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CPP
+AM_PROG_LIBTOOL
+
+dnl Turn on debugging and catch GNU features incompatible with ANSI C.
+CFLAGS="$CFLAGS -g -Wall -ansi"
+LDFLAGS="$LDFLAGS -g -Wall -ansi"
+
+dnl Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+
+AC_CHECK_HEADERS(stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h)
+AC_CHECK_HEADERS(sys/param.h termios.h sgetty.h ttold.h ioctl-types.h \
+	fcntl.h sgtty.h sys/ioctl.h sys/time.h termio.h unistd.h \
+	endian.h byteswap.h asm/io.h)
+
+dnl Checks for library functions.
+AC_FUNC_STRFTIME
+AC_CHECK_FUNCS(strdup strndup strerror snprintf)
+AC_CHECK_FUNCS(strftime localtime)
+
+dnl Check if TIOCM_RTS is included in one of several possible files
+AC_TRY_COMPILE([#include <termios.h>], [int foo = TIOCM_RTS;],
+			AC_DEFINE(HAVE_RTS_IOCTL))
+AC_TRY_COMPILE([#include <termio.h>], [int foo = TIOCM_RTS;],
+			AC_DEFINE(HAVE_RTS_IOCTL))
+AC_TRY_COMPILE([#include <ioctl-types.h>], [int foo = TIOCM_RTS;],
+			AC_DEFINE(HAVE_RTS_IOCTL))
+AC_TRY_COMPILE([#include <sys/ioctl.h>], [int foo = TIOCM_RTS;],
+			AC_DEFINE(HAVE_RTS_IOCTL))
+
+GPPORT_LIBDIR='-L${libdir}'
+GPPORT_INCLUDEDIR='-I${includedir}'
+GPPORT_LIBS="-lgphoto2_port"
+
+dnl Compile in serial support
+IOLIB_SUBDIRS="serial"
+IOLIB_LDFLAGS="-Lserial -lgphoto2_port_serial"
+IOLIB_CFLAGS="-DGP_PORT_SUPPORTED_SERIAL"
+
+dnl Compile in usb support
+AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
+if test -n "${LIBUSB_CONFIG}"; then
+  IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
+  IOLIB_LDFLAGS="$IOLIB_LDFLAGS `libusb-config --libs` -lgphoto2_port_usb"
+  IOLIB_CFLAGS="$IOLIB_CFLAGS -DGP_PORT_SUPPORTED_USB `libusb-config --cflags`"
+else
+  AC_MSG_WARN([
+
+*** You need Johannes Erdfelt's libusb library for USB support
+*** http://download.sourceforge.net/libusb/libusb-0.1.2.tar.gz
+])
+fi
+
+dnl Compile in parallel support 
+GP_PORT_PARALLEL=0
+if test "$GPPORT_PARALLEL" = "1"; then
+	IOLIB_SUBDIRS="$IOLIB_SUBDIRS parallel"
+	IOLIB_CFLAGS="$IOLIB_CFLAGS -DGP_PORT_SUPPORTED_PARALLEL"
+	IOLIB_LDFLAGS="$IOLIB_LDFLAGS -Lparallel -lgphoto2_port_parallel"
+fi
+
+dnl Compile in network support 
+GP_PORT_NETWORK=0
+if test "$GPPORT_NETWORK" = "1"; then
+	IOLIB_SUBDIRS="$IOLIB_SUBDIRS network"
+	IOLIB_CFLAGS="$IOLIB_CFLAGS -DGP_PORT_SUPPORTED_NETWORK"
+	IOLIB_LDFLAGS="$IOLIB_LDFLAGS -Lnetwork -lgphoto2_port_network"
+fi
+
+dnl Compile in firewire (oops, i said the word) support 
+GP_PORT_IEEE1394=0
+if test "$GPPORT_IEEE1394" = "1"; then
+	IOLIB_SUBDIRS="$IOLIB_SUBDIRS ieee1394"
+	IOLIB_CFLAGS="$IOLIB_CFLAGS -DGP_PORT_SUPPORTED_IEEE1394"
+	IOLIB_LDFLAGS="$IOLIB_LDFLAGS -Lieee1394 -lgphoto2_port_ieee1394"
+fi
+
+AC_SUBST(GPPORT_LIBDIR)
+AC_SUBST(GPPORT_LIBS)
+AC_SUBST(GPPORT_INCLUDEDIR)
+AC_SUBST(IOLIB_SUBDIRS)
+AC_SUBST(IOLIB_LDFLAGS)
+AC_SUBST(IOLIB_CFLAGS)
+
+AC_OUTPUT( \
+libgphoto2_port.spec \
+Makefile \
+libgphoto2_port/Makefile \
+serial/Makefile \
+parallel/Makefile \
+usb/Makefile \
+ieee1394/Makefile \
+network/Makefile \
+include/Makefile \
+gphoto2-port-config)

@@ -293,10 +293,10 @@ OPTION_CALLBACK(list_cameras) {
 
 OPTION_CALLBACK(list_ports) {
 
-        CameraPortInfo info;
+        gp_port_info info;
         int x, count;
 
-        if ((count = gp_port_count()) < 0) {
+        if ((count = gp_port_get_count()) < 0) {
                 cli_error_print("Could not get number of ports");
                 return (count);
         }
@@ -307,7 +307,7 @@ OPTION_CALLBACK(list_ports) {
         } else
           printf("%i\n", count);
         for(x=0; x<count; x++) {
-                gp_port_info(x, &info);
+                gp_port_get_info(x, &info);
                 printf("%-32s %-32s\n",info.path,info.name);
         }
 
@@ -507,7 +507,7 @@ int save_picture_to_file(char *folder, char *filename, int thumbnail) {
                 sprintf(buf, "%s%s", out_folder, out_filename);
 
         if (!glob_quiet) {
-                while (GPIO_IS_FILE(buf)) {
+                while (GP_SYSTEM_IS_FILE(buf)) {
                         sprintf(msg, "File %s exists. Overwrite?", buf);
                         resp1 = gp_frontend_confirm(glob_camera, msg);
                         if ((resp1==GP_CONFIRM_NO)||(resp1==GP_CONFIRM_NOTOALL)) {

@@ -252,14 +252,14 @@ typedef enum {
 /* for image IDs (qm100, unsigned int), the other one uses four */
 /* (qm200, unsigned long).                                      */
 /****************************************************************/
-gint k_init (gpio_device *device);
+gint k_init (gp_port *device);
 
 
-gint k_exit (gpio_device *device);
+gint k_exit (gp_port *device);
 
 
 gint k_get_io_capability (
-	gpio_device *device,
+	gp_port *device,
 	gboolean *bit_rate_300,
 	gboolean *bit_rate_600,
 	gboolean *bit_rate_1200,
@@ -278,7 +278,7 @@ gint k_get_io_capability (
 
 
 gint k_set_io_capability (
-	gpio_device *device,
+	gp_port *device,
 	guint bit_rate,
 	gboolean bit_flag_7_or_8_bits,
 	gboolean bit_flag_stop_2_bits,
@@ -287,14 +287,14 @@ gint k_set_io_capability (
 	gboolean bit_flag_use_hw_flow_control);
 
 
-gint k_erase_all (gpio_device *device, guint *number_of_images_not_erased);
+gint k_erase_all (gp_port *device, guint *number_of_images_not_erased);
 
 
-gint k_format_memory_card (gpio_device *device);
+gint k_format_memory_card (gp_port *device);
 
 
 gint k_take_picture (
-	gpio_device *device,
+	gp_port *device,
 	gboolean image_id_long,
 	gulong *image_id, 
 	guint *exif_size,
@@ -303,23 +303,23 @@ gint k_take_picture (
 	gboolean *protected);
 
 
-gint k_get_preview (gpio_device *device, gboolean thumbnail, guchar **image_buffer, guint *image_buffer_size);
+gint k_get_preview (gp_port *device, gboolean thumbnail, guchar **image_buffer, guint *image_buffer_size);
 
 
-gint k_set_preference (gpio_device *device, k_preference_t preference, guint value);
+gint k_set_preference (gp_port *device, k_preference_t preference, guint value);
 
 
-gint k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected);
+gint k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image_id, gboolean protected);
 
 
-gint k_erase_image (gpio_device *device, gboolean image_id_long, gulong image_id);
+gint k_erase_image (gp_port *device, gboolean image_id_long, gulong image_id);
 
 
-gint k_reset_preferences (gpio_device *device);
+gint k_reset_preferences (gp_port *device);
 
 
 gint k_get_date_and_time (
-        gpio_device *device,
+        gp_port *device,
 	guchar *year, 
 	guchar *month, 
 	guchar *day, 
@@ -329,7 +329,7 @@ gint k_get_date_and_time (
 
 
 gint k_set_date_and_time (
-	gpio_device *device,
+	gp_port *device,
 	guchar year, 
 	guchar month, 
 	guchar day, 
@@ -339,7 +339,7 @@ gint k_set_date_and_time (
 
 
 gint k_get_preferences (
-	gpio_device *device,
+	gp_port *device,
 	guint *shutoff_time, 
 	guint *self_timer_time, 
 	guint *beep, 
@@ -347,7 +347,7 @@ gint k_get_preferences (
 
 
 gint k_get_status (
-	gpio_device *device,
+	gp_port *device,
 	guint *self_test_result, 
 	k_power_level_t	*power_level,
 	k_power_source_t *power_source,
@@ -373,7 +373,7 @@ gint k_get_status (
 
 
 gint k_get_information (
-	gpio_device *device,
+	gp_port *device,
 	gchar **model,
 	gchar **serial_number,
 	guchar *hardware_version_major,
@@ -387,7 +387,7 @@ gint k_get_information (
 
 
 gint k_get_image_information (
-	gpio_device *device,
+	gp_port *device,
 	gboolean image_id_long,
 	gulong image_number,
 	gulong *image_id, 
@@ -398,7 +398,7 @@ gint k_get_image_information (
 
 
 gint k_get_image (
-	gpio_device *device,
+	gp_port *device,
 	gboolean image_id_long,
 	gulong image_id, 
 	k_image_type_t image_type, 
@@ -406,17 +406,17 @@ gint k_get_image (
 	guint *image_buffer_size);
 
 
-gint k_set_protect_status (gpio_device *device, gboolean image_id_long, gulong image_id, gboolean protected);
+gint k_set_protect_status (gp_port *device, gboolean image_id_long, gulong image_id, gboolean protected);
 
 
-gint k_localization_tv_output_format_set (gpio_device *device, k_tv_output_format_t tv_output_format);
+gint k_localization_tv_output_format_set (gp_port *device, k_tv_output_format_t tv_output_format);
 
 
-gint k_localization_date_format_set (gpio_device *device, k_date_format_t date_format);
+gint k_localization_date_format_set (gp_port *device, k_date_format_t date_format);
 
 
-gint k_localization_data_put (gpio_device *device, guchar *data, gulong data_size);
+gint k_localization_data_put (gp_port *device, guchar *data, gulong data_size);
 
 
-gint k_cancel (gpio_device *device, k_command_t *command);
+gint k_cancel (gp_port *device, k_command_t *command);
 

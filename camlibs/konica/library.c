@@ -159,8 +159,8 @@ camera_init (Camera* camera)
 	gint			result;
 	guint 			speed;
 	konica_data_t*		konica_data;
-	gpio_device_settings 	device_settings;
-	gpio_device*		device;
+	gp_port_settings 	device_settings;
+	gp_port*		device;
 
 	g_return_val_if_fail (camera, 	GP_ERROR_BAD_PARAMETERS);
 
@@ -188,7 +188,7 @@ camera_init (Camera* camera)
 	camera->functions->result_as_string	= camera_result_as_string;
 
         /* Create device. */
-        device = gpio_new (GPIO_DEVICE_SERIAL);
+        device = gp_port_new (GP_PORT_SERIAL);
 
 	/* Store some data we constantly need. */
 	konica_data = g_new (konica_data_t, 1);
@@ -225,7 +225,7 @@ camera_init (Camera* camera)
 	if (camera->port->speed != 0) {
 		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Quick test for given speed %i.\n", camera->port->speed);
 		device_settings.serial.speed = camera->port->speed;
-		gpio_set_settings (device, device_settings);
+		gp_port_set_settings (device, device_settings);
 		if (k_init (device) == GP_OK) return (GP_OK);
 	}
 
@@ -235,7 +235,7 @@ camera_init (Camera* camera)
 	for (i = 0; i < 10; i++) {
 		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Testing speed %i.\n", test_bit_rate[i]);
 		device_settings.serial.speed = test_bit_rate[i];
-		gpio_set_settings (device, device_settings); 
+		gp_port_set_settings (device, device_settings); 
 		if (k_init (device) == GP_OK) break; 
 	}
 	if ((i == 1) && (camera->port->speed == 0)) {
@@ -246,7 +246,7 @@ camera_init (Camera* camera)
 
 	}
 	if (i == 10) {
-		gpio_free (device);
+		gp_port_free (device);
 		return (GP_ERROR_IO);
 	}
 
@@ -270,7 +270,7 @@ camera_init (Camera* camera)
 		&bit_flag_parity_odd,
 		&bit_flag_use_hw_flow_control);
 	if (result != GP_OK) {
-		gpio_free (device);
+		gp_port_free (device);
 		return (result);
 	}
 	if (camera->port->speed == 0) {
@@ -278,22 +278,22 @@ camera_init (Camera* camera)
 		/* We are given 0. Set the highest speed. */
 		for (i = 9; i >= 0; i--) if (bit_rate_supported[i]) break;
 		if (i < 0) {
-			gpio_free (device);
+			gp_port_free (device);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
 		gp_debug_printf (GP_DEBUG_LOW, "konica", "-> Setting speed to %i.\n", bit_rate[i]);
 		if ((result = k_set_io_capability (device, bit_rate[i], TRUE, FALSE, FALSE, FALSE, FALSE)) != GP_OK) {
-			gpio_free (device);
+			gp_port_free (device);
 			return (result);
 		}
 		if ((result = k_exit (device)) != GP_OK) {
-			gpio_free (device);
+			gp_port_free (device);
 			return (result);
 		}
                 device_settings.serial.speed = bit_rate[i];
-                gpio_set_settings (device, device_settings);
+                gp_port_set_settings (device, device_settings);
                 if ((result = k_init (device)) != GP_OK) {
-			gpio_free (device);
+			gp_port_free (device);
 			return (result);
 		}
 
@@ -323,20 +323,20 @@ camera_init (Camera* camera)
 			 (speed !=  38400) &&
 			 (speed !=  57600) &&
 			 (speed != 115200))) {
-			gpio_free (device);
+			gp_port_free (device);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
 		/* Now we can set the given speed. */
 		if ((result = k_set_io_capability (device, camera->port->speed, TRUE, FALSE, FALSE, FALSE, FALSE)) != GP_OK) {
-			gpio_free (device);
+			gp_port_free (device);
 			return (result);
 		}
 		if ((result = k_exit (device)) != GP_OK) {
-			gpio_free (device);
+			gp_port_free (device);
 			return (result);
 		}
 		if ((result = k_init (device)) != GP_OK) {
-			gpio_free (device);
+			gp_port_free (device);
 			return (result);
 		}
 
@@ -357,7 +357,7 @@ camera_exit (Camera* camera)
 	
 	if ((result = k_exit (konica_data->device)) != GP_OK) return (result);
 	if ((result = gp_filesystem_free (konica_data->filesystem)) != GP_OK) return (result);
-        if ((result = gpio_free (konica_data->device)) != GPIO_OK) return (GP_ERROR);
+        if ((result = gp_port_free (konica_data->device)) != GP_OK) return (GP_ERROR);
 	return (GP_OK);
 }
 

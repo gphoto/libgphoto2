@@ -1,8 +1,8 @@
 camlibdir = $(prefix)/lib/gphoto2
 camlib_LTLIBRARIES = libgphoto2_canon.la
 
-CFLAGS = @CFLAGS@ `gpio-config --cflags` -g -Wall
-LDFLAGS = @LDFLAGS@ -g `gpio-config --libs`
+CFLAGS = @CFLAGS@ -g -Wall
+LDFLAGS = @LDFLAGS@ -g
 INCLUDES = -I$(top_srcdir)/include
 
 libgphoto2_canon_la_SOURCES =\

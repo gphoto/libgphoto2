@@ -13,23 +13,23 @@
 
 #include "digita.h"
 
-#include <gpio.h>
+#include <gphoto2-port.h>
 
 static int digita_usb_read(struct digita_device *dev, void *buffer, int len)
 {
-#ifdef GPIO_USB
-	return gpio_read(dev->gpdev, buffer, len);
+#ifdef GP_PORT_USB
+	return gp_port_read(dev->gpdev, buffer, len);
 #else
-	return GPIO_ERROR;
+	return GP_ERROR;
 #endif
 }
 
 static int digita_usb_send(struct digita_device *dev, void *buffer, int len)
 {
-#ifdef GPIO_USB
-	return gpio_write(dev->gpdev, buffer, len);
+#ifdef GP_PORT_USB
+	return gp_port_write(dev->gpdev, buffer, len);
 #else
-	return GPIO_ERROR;
+	return GP_ERROR;
 #endif
 }
 
@@ -44,14 +44,14 @@ struct camera_to_usb {
 	{ "Kodak DC290", 0x040A, 0x0112 },
 };
 
-#ifdef GPIO_USB
+#ifdef GP_PORT_USB
 int digita_usb_probe(struct digita_device *dev, int i)
 {
 	if (i >= sizeof(camera_to_usb) / sizeof(struct camera_to_usb))
 		goto err;
 
-	if (gpio_usb_find_device(dev->gpdev, camera_to_usb[i].idVendor,
-				camera_to_usb[i].idProduct) == GPIO_OK) {
+	if (gp_port_usb_find_device(dev->gpdev, camera_to_usb[i].idVendor,
+				camera_to_usb[i].idProduct) == GP_OK) {
 		printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
 			dev->gpdev->usb_device->bus->dirname, 
 			dev->gpdev->usb_device->filename);
@@ -67,13 +67,13 @@ err:
 
 int digita_usb_open(struct digita_device *dev, Camera *camera)
 {
-#ifdef GPIO_USB
-	gpio_device_settings settings;
+#ifdef GP_PORT_USB
+	gp_port_settings settings;
 	int i;
 
 	fprintf(stderr, "digita: user selected %s\n", camera->model);
 
-	dev->gpdev = gpio_new(GPIO_DEVICE_USB);
+	dev->gpdev = gp_port_new(GP_PORT_USB);
 	if (!dev->gpdev)
 		return -1;
 
@@ -96,8 +96,8 @@ int digita_usb_open(struct digita_device *dev, Camera *camera)
 	digita_send = digita_usb_send;
 	digita_read = digita_usb_read;
 
-	gpio_set_settings(dev->gpdev, settings);
-	if (gpio_open(dev->gpdev) < 0) {
+	gp_port_set_settings(dev->gpdev, settings);
+	if (gp_port_open(dev->gpdev) < 0) {
 		fprintf(stderr, "error opening device\n");
 		return -1;
 	}

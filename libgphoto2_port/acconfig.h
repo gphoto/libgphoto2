@@ -1,0 +1,5 @@
+#undef HAVE_TERMIOS_H
+#undef HAVE_STRFTIME
+#undef HAVE_LOCALTIME
+#undef HAVE_FCNTL_H
+#undef HAVE_RTS_IOCTL

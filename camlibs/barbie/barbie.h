@@ -108,8 +108,8 @@
 #define PICTURE_SIZE(n1, n2, n3, n4)	(n1*(n2+n3)+n4)
 
 typedef struct {
-        gpio_device *dev;
-        gpio_device_settings settings;
+        gp_port *dev;
+        gp_port_settings settings;
 	CameraFilesystem *fs;
 } BarbieStruct;
 

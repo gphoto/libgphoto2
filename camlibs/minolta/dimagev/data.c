@@ -43,10 +43,10 @@ int dimagev_get_camera_data(dimagev_t *dimagev) {
 		return GP_ERROR;
 	}
 
-	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::unable to write packet");
 		return GP_ERROR;
-	} else if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::no response from camera");
 		return GP_ERROR;
 	}
@@ -76,12 +76,12 @@ int dimagev_get_camera_data(dimagev_t *dimagev) {
 	}
 
 	char_buffer = DIMAGEV_EOT;
-	if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::unable to send EOT");
 		return GP_ERROR;
 	}
 		
-	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_camera_data::no response from camera");
 		return GP_ERROR;
 	}
@@ -146,10 +146,10 @@ int dimagev_send_data(dimagev_t *dimagev) {
 		return GP_ERROR;
 	}
 
-	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_send_data::unable to send set_data packet");
 		return GP_ERROR;
-	} else if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	} else if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_send_data::no response from camera");
 		return GP_ERROR;
 	}
@@ -178,12 +178,12 @@ int dimagev_send_data(dimagev_t *dimagev) {
 		return GP_ERROR;
 	}
 
-	if ( gpio_write(dimagev->dev, p->buffer, p->length) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, p->buffer, p->length) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_send_data::unable to send data packet");
 		return GP_ERROR;
 	}
 		
-	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_send_data::no response from camera");
 		return GP_ERROR;
 	}
@@ -207,12 +207,12 @@ int dimagev_send_data(dimagev_t *dimagev) {
 
 
 	char_buffer = DIMAGEV_EOT;
-	if ( gpio_write(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_write(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_send_data::unable to send EOT");
 		return GP_ERROR;
 	}
 		
-	if ( gpio_read(dimagev->dev, &char_buffer, 1) == GPIO_ERROR ) {
+	if ( gp_port_read(dimagev->dev, &char_buffer, 1) == GP_ERROR ) {
 		gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_send_data::no response from camera");
 		return GP_ERROR;
 	}
