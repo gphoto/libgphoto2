@@ -24,9 +24,37 @@
 #include <gphoto2-abilities-list.h>
 #include <gphoto2-camera.h>
 
-typedef int (* CameraLibraryIdFunc)        (CameraText *);
-typedef int (* CameraLibraryAbilitiesFunc) (CameraAbilitiesList *);
-typedef int (* CameraLibraryInitFunc)      (Camera *);
+/**
+ * CameraLibraryIdFunc:
+ * @id: a #CameraText
+ *
+ * Returns a unique @id for the camera driver.
+ *
+ * Return value: a gphoto2 error code
+ **/
+typedef int (* CameraLibraryIdFunc)        (CameraText *id);
+
+/**
+ * CameraLibraryAbilitiesFunc:
+ * @list: a #CameraAbilitiesList
+ *
+ * Adds the abilities of the supported models to the supplied @list.
+ *
+ * Return value: a gphoto2 error code
+ **/
+typedef int (* CameraLibraryAbilitiesFunc) (CameraAbilitiesList *list);
+
+/**
+ * CameraLibraryInitFunc:
+ * @camera: a #Camera
+ *
+ * Initializes the camera. The camera driver will establish a first connection
+ * to the camera and configure the @camera variable (i.e. using 
+ * #gp_filesystem_set_list_funcs or #gp_port_get_settings).
+ *
+ * Return value: a gphoto2 error code
+ **/
+typedef int (* CameraLibraryInitFunc)      (Camera *camera);
 
 /*
  * If you want to write a camera library, you need to implement 

@@ -58,7 +58,6 @@ gp_result_as_string (int result)
 	if (result <= -1000)
 		return (N_("Unknown camera library error")); 
 
-	GP_ERR_RES (GP_ERROR_IO, N_("I/O problem"));
 	GP_ERR_RES (GP_ERROR_CORRUPTED_DATA, N_("Corrupted data"));
 	GP_ERR_RES (GP_ERROR_FILE_EXISTS, N_("File exists"));
 	GP_ERR_RES (GP_ERROR_MODEL_NOT_FOUND, N_("Unknown model"));
