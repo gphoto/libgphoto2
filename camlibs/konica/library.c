@@ -875,7 +875,7 @@ camera_config_get (Camera* camera, CameraWidget** window)
         gp_widget_append (*window, section);
 
 	/* Date */
-	widget = gp_widget_new (GP_WIDGET_DATE, "Date & Time");
+	widget = gp_widget_new (GP_WIDGET_DATE, "Date and Time");
 	gp_widget_append (section, widget);
 	if (year > 80) year_4_digits = year + 1900;
 	else year_4_digits = year + 2000;
@@ -1074,7 +1074,7 @@ int camera_config_set (Camera *camera, CameraWidget *window)
 	g_assert ((section = gp_widget_child_by_label (window, "Persistent Settings")) != NULL);
 
 	/* Date & Time */
-	g_assert ((widget = gp_widget_child_by_label (section, "Date & Time")) != NULL);
+	g_assert ((widget = gp_widget_child_by_label (section, "Date and Time")) != NULL);
 	if (gp_widget_changed (widget)) {
 		gp_widget_value_get (widget, &i);
 		tm_struct = localtime ((time_t*) &i);
