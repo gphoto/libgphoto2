@@ -199,18 +199,6 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 			break;
 	}
 
-	/* Now set the camera back into local mode. */
-	dimagev->data->host_mode = 0;
-
-	if ( dimagev_send_data(dimagev) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_picture::unable to set host mode");
-		}
-		return GP_ERROR;
-	}
-
-	sleep(3);
-
 #ifdef _gphoto_exif_
 	exifdat.header = file->data;
 	exifdat.data = file->data + 12 ;
@@ -222,7 +210,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		return GP_OK;
 	}
 
-	gpe_dump_exif(&exifdat);
+/*	gpe_dump_exif(&exifdat);*/
 
 #endif
 
@@ -399,18 +387,6 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 			return GP_ERROR;
 			break;
 	}
-
-	/* Now set the camera back into local mode. */
-	dimagev->data->host_mode = 0;
-
-	if ( dimagev_send_data(dimagev) == GP_ERROR ) {
-		if ( dimagev->debug != 0 ) {
-			gp_debug_printf(GP_DEBUG_HIGH, "dimagev", "dimagev_get_thumbnail::unable to set host mode");
-		}
-		return GP_ERROR;
-	}
-
-	sleep(3);
 
 	file->data = dimagev_ycbcr_to_ppm(ycrcb_data);
 	file->size = 14413;
