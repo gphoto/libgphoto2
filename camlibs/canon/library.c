@@ -1150,11 +1150,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (t, &camera->pl->list_all_files);
 	gp_widget_append (section, t);
 
-#ifdef CANON_EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_UPLOAD
 	gp_widget_new (GP_WIDGET_TOGGLE, _("Keep filename on upload"), &t);
 	gp_widget_set_value (t, &camera->pl->upload_keep_filename);
 	gp_widget_append (section, t);
-#endif /* CANON_EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_UPLOAD */
 
 	return GP_OK;
 }
@@ -1201,13 +1201,13 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		GP_DEBUG ("New config value for tmb: %i", &camera->pl->list_all_files);
 	}
 	
-#ifdef CANON_EXPERIMENTAL_CAPTURE
+#ifdef CANON_EXPERIMENTAL_UPLOAD
 	gp_widget_get_child_by_label (window, _("Keep filename on upload"), &w);
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &camera->pl->upload_keep_filename);
 		GP_DEBUG ("New config value for tmb: %i", &camera->pl->upload_keep_filename);
 	}
-#endif /* CANON_EXPERIMENTAL_CAPTURE */
+#endif /* CANON_EXPERIMENTAL_UPLOAD */
 
 	GP_DEBUG ("done configuring camera.");
 
