@@ -27,7 +27,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 #include <gphoto2-port-library.h>
 
 #include <stdlib.h>
@@ -59,6 +59,10 @@
 #  endif
 #else
 #  include <sgtty.h>
+#endif
+
+#ifdef HAVE_RESMGR
+#  include <resmgr.h>
 #endif
 
 #ifdef HAVE_BAUDBOY
@@ -208,6 +212,14 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
 		"Trying to lock '%s'...", path);
 
+#ifdef HAVE_RESMGR
+	if (!rsm_lock_device(path)) {
+		return GP_OK;
+	}
+	/* fallthrough */
+#define __HAVE_LOCKING	
+#endif
+
 #if defined(HAVE_TTYLOCK) || defined(HAVE_BAUDBOY)
 	if (ttylock ((char*) path)) {
 		if (dev)
@@ -215,6 +227,7 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 						  "'%s'"), path);
 		return (GP_ERROR_IO_LOCK);
 	}
+#define __HAVE_LOCKING	
 #elif defined(HAVE_LOCKDEV)
 	pid = dev_lock (path);
 	if (pid) {
@@ -229,7 +242,10 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 		}
 		return (GP_ERROR_IO_LOCK);
 	}
-#else
+#define __HAVE_LOCKING	
+#endif
+
+#ifndef __HAVE_LOCKING
 #warning No locking library found. 
 #warning You will run into problems if you use
 #warning gphoto2 with a serial (RS232) camera in 
@@ -243,6 +259,12 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 static int
 gp_port_serial_unlock (GPPort *dev, const char *path)
 {
+#ifdef HAVE_RESMGR
+	if (!rsm_unlock_device(path))
+		return GP_OK;
+	/* fallback through other unlock styles */
+#endif
+
 #if defined(HAVE_TTYLOCK) || defined(HAVE_BAUDBOY)
 	if (ttyunlock ((char*) path)) {
 		if (dev)
@@ -313,7 +335,14 @@ gp_port_library_list (GPPortInfoList *list)
 			continue;
 			
 		/* Device locked. Try to open the device. */
+#ifdef HAVE_RESMGR
+		/* resmgr has its own API, which calls to a server and
+		 * communicates over UNIX domain sockets.
+		 */
+		fd = rsm_open_device(path, O_RDONLY | O_NDELAY);
+#else
 		fd = open (path, O_RDONLY | O_NDELAY);
+#endif
 		if (fd < 0) {
 			gp_port_serial_unlock (NULL, path);
 			continue;
@@ -403,6 +432,7 @@ gp_port_serial_open (GPPort *dev)
 		}
 		CHECK (result);
 	}
+	dev->pl->fd = -1;
 
 #if defined(__FreeBSD__) || defined(__APPLE__)
         dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_NONBLOCK);
@@ -411,7 +441,12 @@ gp_port_serial_open (GPPort *dev)
 	dev->pl->fd = open (port, O_RDWR | O_BINARY);
         close(fd);
 #else
-        dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
+# ifdef HAVE_RESMGR
+        dev->pl->fd = rsm_open_device (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
+	/* fall back trying old style open if not possible */
+# endif
+	if (dev->pl->fd == -1)
+		dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif
         if (dev->pl->fd == -1) {
 		gp_port_set_error (dev, _("Failed to open '%s' (%m)."), port);
