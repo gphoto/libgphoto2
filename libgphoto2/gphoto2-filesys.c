@@ -221,6 +221,16 @@ struct _CameraFilesystem {
 #define CR(result)           {int r = (result); if (r < 0) return (r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
+#define CL(result,list)			\
+{					\
+	int r = (result);		\
+					\
+	 if (r < 0) {			\
+		gp_list_free (list);	\
+		return (r);		\
+	}				\
+}
+
 #define CU(result,file)			\
 {					\
 	int r = (result);		\
@@ -512,7 +522,7 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder,
 {
 	int x, y, len;
 	char buf[128];
-	CameraList list;
+	CameraList *list;
 
 	CHECK_NULL (fs && folder);
 	CC (context);
@@ -562,8 +572,9 @@ gp_filesystem_folder_number (CameraFilesystem *fs, const char *folder,
 	 */
 	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Folder %s is dirty. "
 		"Listing file in there to make folder clean...", buf);
-	CR (gp_filesystem_list_folders (fs, buf, &list, context));
-
+	CR (gp_list_new (&list));
+	CL (gp_filesystem_list_folders (fs, buf, list, context), list);
+	gp_list_free (list);
 	return (gp_filesystem_folder_number (fs, folder, context));
 }
 
@@ -705,17 +716,18 @@ static int
 gp_filesystem_delete_all_one_by_one (CameraFilesystem *fs, const char *folder,
 				     GPContext *context)
 {
-	CameraList list;
+	CameraList *list;
 	int count, x;
 	const char *name;
 
-	CR (gp_filesystem_list_files (fs, folder, &list, context));
-	CR (count = gp_list_count (&list));
-	for (x = count - 1; x >= 0; x--) {
-		CR (gp_list_get_name (&list, x, &name));
-		CR (gp_filesystem_delete_file (fs, folder, name, context));
+	CR (gp_list_new (&list));
+	CL (gp_filesystem_list_files (fs, folder, list, context), list);
+	CL (count = gp_list_count (list), list);
+	for (x = count ; x--; ) {
+		CL (gp_list_get_name (list, x, &name), list);
+		CL (gp_filesystem_delete_file (fs, folder, name, context),list);
 	}
-
+	gp_list_free(list);
 	return (GP_OK);
 }
 
@@ -1072,15 +1084,17 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 {
 	int x;
 	char path[2048];
-	CameraList list;
+	CameraList *list;
 
 	CHECK_NULL (fs && folder && name);
 	CC (context);
 	CA (folder, context);
 
+
 	if (!fs->remove_dir_func)
 		return (GP_ERROR_NOT_SUPPORTED);
 
+	CR (gp_list_new (&list));
 	/*
 	 * Make sure there are neither files nor folders in the folder
 	 * that is to be removed.
@@ -1089,18 +1103,21 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 	if (path[strlen (path) - 1] != '/')
 		strncat (path, "/", sizeof (path));
 	strncat (path, name, sizeof (path));
-	CR (gp_filesystem_list_folders (fs, path, &list, context));
-	if (gp_list_count (&list)) {
-		gp_context_error (context, _("There are still files in "
-			"folder '%s' that you are trying to remove."), path);
-		return (GP_ERROR_DIRECTORY_EXISTS);
-	}
-	CR (gp_filesystem_list_files (fs, path, &list, context));
-	if (gp_list_count (&list)) {
+	CL (gp_filesystem_list_folders (fs, path, list, context), list);
+	if (gp_list_count (list)) {
 		gp_context_error (context, _("There are still subfolders in "
 			"folder '%s' that you are trying to remove."), path);
+		gp_list_free (list);
+		return (GP_ERROR_DIRECTORY_EXISTS);
+	}
+	CL (gp_filesystem_list_files (fs, path, list, context), list);
+	if (gp_list_count (list)) {
+		gp_context_error (context, _("There are still files in "
+			"folder '%s' that you are trying to remove."), path);
+		gp_list_free(list);
 		return (GP_ERROR_FILE_EXISTS);
 	}
+	gp_list_free(list);
 
 	/* Search the folder */
 	CR (x = gp_filesystem_folder_number (fs, path, context));
@@ -1204,29 +1221,34 @@ int
 gp_filesystem_number (CameraFilesystem *fs, const char *folder, 
 		      const char *filename, GPContext *context)
 {
-	CameraList list;
+	CameraList *list;
         int x, y;
 
 	CHECK_NULL (fs && folder && filename);
 	CC (context);
 	CA (folder, context);
 
-	CR (x = gp_filesystem_folder_number (fs, folder, context));
+	CR (gp_list_new(&list));
+
+	CL (x = gp_filesystem_folder_number (fs, folder, context), list);
 
 	for (y = 0; y < fs->folder[x].count; y++)
-		if (!strcmp (fs->folder[x].file[y].name, filename))
+		if (!strcmp (fs->folder[x].file[y].name, filename)) {
+			gp_list_free (list);
 			return (y);
+		}
 
 	/* Ok, we didn't find the file. Is the folder dirty? */
 	if (!fs->folder[x].files_dirty) {
 		gp_context_error (context, _("File '%s' could not be found "
 			"in folder '%s'."), filename, folder);
+		gp_list_free (list);
 		return (GP_ERROR_FILE_NOT_FOUND);
 	}
 
 	/* The folder is dirty. List all files to make it clean */
-	CR (gp_filesystem_list_files (fs, folder, &list, context));
-
+	CL (gp_filesystem_list_files (fs, folder, list, context), list);
+	gp_list_free(list);
         return (gp_filesystem_number (fs, folder, filename, context));
 }
 
@@ -1235,7 +1257,7 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 		    const char *filename, GPContext *context)
 {
 	int count, x;
-	CameraList list;
+	CameraList *list;
 	const char *name;
 	char path[128];
 
@@ -1246,25 +1268,28 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 	CC (context);
 	CA (folder, context);
 
-	CR (gp_filesystem_list_files (fs, folder, &list, context));
-	CR (count = gp_list_count (&list));
+	CR (gp_list_new (&list));
+	CL (gp_filesystem_list_files (fs, folder, list, context), list);
+	CL (count = gp_list_count (list), list);
 	for (x = 0; x < count; x++) {
-		CR (gp_list_get_name (&list, x, &name));
-		if (!strcmp (filename, name))
+		CL (gp_list_get_name (list, x, &name), list);
+		if (!strcmp (filename, name)) {
+			gp_list_free (list);
 			return (GP_OK);
+		}
 	}
 
-	CR (gp_filesystem_list_folders (fs, folder, &list, context));
-	CR (count = gp_list_count (&list));
+	CL (gp_filesystem_list_folders (fs, folder, list, context), list);
+	CL (count = gp_list_count (list), list);
 	for (x = 0; x < count; x++) {
-		CR (gp_list_get_name (&list, x, &name));
+		CL (gp_list_get_name (list, x, &name), list);
 		strncpy (path, folder, sizeof (path));
 		if (path[strlen (path) - 1] != '/')
 			strncat (path, "/", sizeof (path));
 		strncat (path, name, sizeof (path));
-		CR (gp_filesystem_scan (fs, path, filename, context));
+		CL (gp_filesystem_scan (fs, path, filename, context), list);
 	}
-
+	gp_list_free (list);
 	return (GP_OK);
 }
 
