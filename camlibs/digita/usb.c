@@ -47,21 +47,21 @@ struct camera_to_usb {
 int digita_usb_probe(struct digita_device *dev, int i)
 {
 
-        if (i >= sizeof(camera_to_usb) / sizeof(struct camera_to_usb))
-                goto err;
+	if (i >= sizeof(camera_to_usb) / sizeof(struct camera_to_usb))
+		goto err;
 
-        if (gpio_usb_find_device(dev->gpdev, camera_to_usb[i].idVendor,
-                                camera_to_usb[i].idProduct) == GPIO_OK) {
-                printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
-                        dev->gpdev->usb_device->bus->dirname, 
-                        dev->gpdev->usb_device->filename);
-                return 1;
-        }
+	if (gpio_usb_find_device(dev->gpdev, camera_to_usb[i].idVendor,
+				camera_to_usb[i].idProduct) == GPIO_OK) {
+		printf("found '%s' @ %s/%s\n", camera_to_usb[i].name,
+			dev->gpdev->usb_device->bus->dirname, 
+			dev->gpdev->usb_device->filename);
+		return 1;
+	}
 
 err:
-        fprintf(stderr, "unable to find any compatible USB cameras\n");
+	fprintf(stderr, "unable to find any compatible USB cameras\n");
 
-        return 0;
+	return 0;
 }
 #endif
 
