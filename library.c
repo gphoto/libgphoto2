@@ -128,12 +128,16 @@ int load_camera_list (char *library_filename) {
 	
 	dlclose(lh);
 
+
 	return (x);
 }
 
 int load_cameras() {
 
         DIR *d;
+	CameraChoice t;
+	
+	int x, y, z;
         struct dirent *de;
 
 	glob_camera_id_count = 0;
@@ -157,6 +161,19 @@ int load_cameras() {
                 }
            }
         } while (de);
+
+	/* Sort the camera list */
+	for (x=0; x<glob_camera_count-1; x++) {
+		for (y=x+1; y<glob_camera_count; y++) {
+			z = strcmp(glob_camera[x].name, glob_camera[y].name);
+			if (z > 0) {
+				memcpy(&t, &glob_camera[x], sizeof(t));
+				memcpy(&glob_camera[x], &glob_camera[y], sizeof(t));
+				memcpy(&glob_camera[y], &t, sizeof(t));
+			}
+		}
+	}
+
 	return (GP_OK);
 }
 
