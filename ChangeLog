@@ -1,3 +1,8 @@
+2001-09-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2/core.c: Use "... == GP_OK" instead of "!...". That should
+	prevent that every USB camera shows up on gp_autodetect...
+
 2001-09-07  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* libgphoto2_port/usb/libusb.c (gp_port_usb_close): Fixed a

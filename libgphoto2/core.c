@@ -243,7 +243,7 @@ gp_autodetect (CameraList *list)
         int x, count;
         int vendor, product;
         gp_port *dev;
-        const char *model;
+        const char *m;
 
         CHECK_NULL (list);
         CHECK_INIT;
@@ -258,11 +258,11 @@ gp_autodetect (CameraList *list)
 
         /* GP_OK == 0 */
         for (x = 0; x < count; x++)
-        if ((!gp_abilities_list_get_vendor_and_product (glob_abilities_list,
-                                                x, &vendor, &product)) &&
-            (!gp_port_usb_find_device (dev, vendor, product))  &&
-            (!gp_abilities_list_get_model (glob_abilities_list, x, &model)))
-                gp_list_append (list, model, "usb:");
+        if ((gp_abilities_list_get_vendor_and_product (glob_abilities_list,
+					x, &vendor, &product) == GP_OK) &&
+	    (gp_port_usb_find_device (dev, vendor, product) == GP_OK)  &&
+	    (gp_abilities_list_get_model (glob_abilities_list, x, &m) == GP_OK))
+                gp_list_append (list, m, "usb:");
 
         gp_port_free (dev);
 
