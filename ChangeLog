@@ -1,5 +1,9 @@
 2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
+	* camlibs/polaroid/pdc700.c: New
+
+2001-08-31  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
 	* configure.in: Added polaroid.
 	* camlibs/samsung/samsung.c: Added GP_DRIVER_STATUS_EXPERIMENTAL;
 	* frontends/command-line/main.c: print the EXPERIMENTAL/TESTING flag
