@@ -735,20 +735,14 @@ camera_summary (Camera* camera, CameraText* summary)
 gint
 camera_capture_preview (Camera* camera, CameraFile* file)
 {
-	KonicaData*	kd;
-	char *data;
+	KonicaData *kd = camera->camlib_data;
+	unsigned char *data = NULL;
 	long int size;
 
-	gp_debug_printf (GP_DEBUG_LOW, "konica",
-			 "*** Entering camera_capture_preview ***");
-	g_return_val_if_fail (camera,   GP_ERROR_BAD_PARAMETERS);
-	g_return_val_if_fail (file,     GP_ERROR_BAD_PARAMETERS);
+	CHECK (k_get_preview (kd->device, TRUE, &data, (guint*) &size));
+	CHECK (gp_file_set_data_and_size (file, data, size));
+	CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
-	kd = (KonicaData *) camera->camlib_data;
-	CHECK (k_get_preview (kd->device, TRUE, (guchar**) &data,
-			      (guint*) &size));
-	gp_file_set_data_and_size (file, data, size);
-	gp_file_set_mime_type (file, "image/jpeg");
 	return (GP_OK);
 }
 
