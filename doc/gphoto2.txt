@@ -112,10 +112,11 @@ usbcam script you are going to use.
    a) The most simple solution is using usbcam.console. This
       changes the permissions so that the user owning /dev/console can
       access the camera. This works if you're logging in with
-      pam_console, i.e. e.g. using gdm on Redhat Linux. You may want
-      to check with "ls -l /dev/console" whether this usbcam.console
-      will work for you. /dev/console must belong to the user you are
-      logged in as.
+      pam_console, i.e. e.g. using gdm on Redhat Linux.
+
+      You may want to check with "ls -l /dev/console" whether this
+      usbcam.console script will work for you: /dev/console must
+      belong to the user you want to run the gphoto2 frontend as.
 
    b) If you want only one user to have access to the camera, use
       usbcam.user and change it accordingly.
@@ -127,8 +128,16 @@ usbcam script you are going to use.
 
    Don't forget to make the script /etc/hotplug/usb/usbcam executable.
 
-4. Plug in the camera and switch it on - your /var/log/messages 
-   will now display some messages.
+4. Plug in the camera and switch it on. The kernel will notice that
+   and, finding no kernel driver for the device, will ask hotplug to
+   do something about it.
+
+   Hotplug will then look into /etc/hotplug/usb.usermap and find that
+   the "usbcam" script is to be called for the newly attached
+   device. Thus /etc/hotplug/usb/usbcam is executed, hopefully setting
+   the device permissions correctly. 
+
+   Your /var/log/messages will contain some messages to that effect.
 
 5. Run gphoto2 or any other libgphoto2 frontend and enjoy :-)
 
