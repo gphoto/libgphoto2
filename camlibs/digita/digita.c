@@ -66,7 +66,7 @@ int camera_abilities(CameraAbilitiesList *list)
 	int i;
 	CameraAbilities a;
 
-	for (i = 0; sizeof(models) / sizeof(models[0]); i++) {
+	for (i = 0; i < sizeof(models) / sizeof(models[0]); i++) {
 		strcpy(a.model, models[i].model);
 		a.status	= GP_DRIVER_STATUS_PRODUCTION;
 		a.port		= GP_PORT_SERIAL | GP_PORT_USB;
@@ -85,6 +85,13 @@ int camera_abilities(CameraAbilitiesList *list)
 
 		gp_abilities_list_append(list, a);
 	}
+
+	return GP_OK;
+}
+
+int camera_id(CameraText *id)
+{
+	strcpy(id->text, "digita");
 
 	return GP_OK;
 }
