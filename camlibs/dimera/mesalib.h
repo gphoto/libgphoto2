@@ -8,6 +8,12 @@
  * provided the above notices are retained, intact.
  *
  * $Id$
+ *
+ * History:
+ * $Log$
+ * Revision 1.2  2001/08/29 21:57:28  dfandrich
+ * Changed port parameter to mesa_port_open
+ *
  */
 
 #ifndef MESALIB_H
@@ -114,7 +120,7 @@ mesa_read( gp_port *port, u_int8_t *b, int s, int timeout2, int timeout1 );
 int
 mesa_send_command( gp_port *port, u_int8_t *cmd, int n, int ackTimeout );
 int
-mesa_port_open( gp_port **dev, char const *device );
+mesa_port_open( gp_port *port, char const *device );
 int
 mesa_port_close( gp_port *port );
 int
