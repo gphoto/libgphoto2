@@ -1264,6 +1264,8 @@ k_localization_date_format_set (GPPort *device, KDateFormat date_format)
         return (GP_OK);
 }
 
+#define PACKET_SIZE 1024
+
 int
 k_localization_data_put (GPPort *device,
 			 unsigned char *data, unsigned long data_size)
@@ -1310,8 +1312,7 @@ k_localization_data_put (GPPort *device,
         unsigned char *rb = NULL;
         unsigned int rbs;
         unsigned long i, j;
-        static unsigned int packet_size = 1024;
-        unsigned char sb[16 + packet_size];
+        unsigned char sb[16 + PACKET_SIZE];
 
 	gp_log (GP_LOG_DEBUG, "konica", "Uploading %i bytes localization "
 		"data...", data_size);
@@ -1328,8 +1329,8 @@ k_localization_data_put (GPPort *device,
         sb[5] = 0x00;
         sb[6] = 0x00;
         sb[7] = 0x00;
-        sb[8] = packet_size;
-        sb[9] = packet_size >> 8;
+        sb[8] = (unsigned char) (PACKET_SIZE >> 0);
+        sb[9] = (unsigned char) (PACKET_SIZE >> 8);
         sb[10] = 0x00;
         sb[11] = 0x00;
         sb[12] = 0x00;
@@ -1344,7 +1345,7 @@ k_localization_data_put (GPPort *device,
                 sb[11] = i >> 24;
                 sb[12] = i;
                 sb[13] = i >> 8;
-                for (j = 0; j < packet_size; j++) {
+                for (j = 0; j < PACKET_SIZE; j++) {
                         if ((i + j) < data_size) sb[16 + j] = data[i + j];
                         else sb[16 + j] = 0xFF;
                 }
@@ -1358,9 +1359,9 @@ k_localization_data_put (GPPort *device,
 		 * transmission time. We can't do that before or the
 		 * camera reports K_ERROR_LOCALIZATION_DATA_CORRUPT.
 		 */
-		if (i + packet_size > 65536)
+		if (i + PACKET_SIZE > 65536)
 			sb[14] = 0x01;
-                result = l_send_receive (device, sb, packet_size + 16,
+                result = l_send_receive (device, sb, PACKET_SIZE + 16,
 					 &rb, &rbs, 0, NULL, NULL);
                 if (result == GP_OK) {
 			if ((rb[3] == 0x0b) && (rb[2] == 0x00)) {
@@ -1383,7 +1384,7 @@ k_localization_data_put (GPPort *device,
 		}
 		CHECK_RESULT (result, rb);
                 free (rb);
-                i += packet_size;
+                i += PACKET_SIZE;
         }
 }
 
