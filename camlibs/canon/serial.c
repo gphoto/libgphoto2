@@ -215,7 +215,7 @@ canon_serial_get_byte (GPPort *gdev)
 	}
 
 	recv = gp_port_read (gdev, cache, 1);
-	if (recv == GP_ERROR || recv == GP_ERROR_TIMEOUT)
+	if(recv<0) /* an error occurred */
 		return -1;
 
 	cachep = cache;
