@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-01-19 16:03+0100\n"
-"PO-Revision-Date: 2002-01-19 16:26+0100\n"
+"POT-Creation-Date: 2002-01-21 21:46+0100\n"
+"PO-Revision-Date: 2002-01-21 23:10+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -417,25 +417,25 @@ msgstr "Mit Kamera verbunden"
 msgid "Getting thumbnail..."
 msgstr "Hole Vorschaubild..."
 
-#: camlibs/canon/usb.c:217
+#: camlibs/canon/usb.c:212
 msgid "Could not apply USB settings"
 msgstr "Konnte USB-Einstellungen nicht setzen"
 
-#: camlibs/canon/usb.c:227
-#, c-format
-msgid "Camera not ready, identify camera request failed: %s"
-msgstr "Kamera nicht bereit, Kameraidentifizierung fehlgeschlagen: %s"
-
 #: camlibs/canon/usb.c:235
+#, c-format
+msgid "Camera not ready, multiple identify camera requests failed: %s"
+msgstr "Kamera nicht bereit, mehrere »identify camera«-Anfragen fehlgeschlagen: %s"
+
+#: camlibs/canon/usb.c:243
 #, c-format
 msgid "Camera not ready, could not lock camera keys: %s"
 msgstr "Kamera nicht bereit, konnte Kameratasten nicht sperren: %s"
 
-#: camlibs/canon/usb.c:569
+#: camlibs/canon/usb.c:580
 msgid "Receiving data..."
 msgstr "Empfange Daten..."
 
-#: camlibs/canon/usb.c:806
+#: camlibs/canon/usb.c:817
 #, c-format
 msgid "Detected a '%s'."
 msgstr "Erkannte eine »%s«."
@@ -647,8 +647,8 @@ msgstr "Problem beim Herunterladen des Bildes"
 msgid "User cancelled download"
 msgstr "Benutzerabbruch beim Herunterladen"
 
-#: camlibs/dimera/dimera3500.c:735 camlibs/kodak/dc3200/library.c:385
-#: camlibs/panasonic/coolshot/library.c:375 camlibs/samsung/samsung.c:211
+#: camlibs/dimera/dimera3500.c:735 camlibs/panasonic/coolshot/library.c:375
+#: camlibs/samsung/samsung.c:211
 msgid "Downloading image..."
 msgstr "Lade Bild herunter..."
 
@@ -943,36 +943,33 @@ msgstr "Karte ist nicht formatiert"
 msgid "No card"
 msgstr "Keine Karte vorhanden"
 
+#: camlibs/kodak/dc3200/dc3200.c:38
+msgid ""
+"There is currently an operation in progress. This camera only supports one "
+"operation at a time. Please wait until the current operation has finished."
+msgstr "Im Moment wird eine Operation ausgeführt. Diese Kamera unterstützt nur eine laufende Operation. Bitte warten Sie, bis die aktuelle Operation beendet ist."
+
 #. we have to re-init the camera
-#: camlibs/kodak/dc3200/dc3200.c:131
+#: camlibs/kodak/dc3200/dc3200.c:142
 msgid "camera inactive for > 9 seconds, re-initing.\n"
 msgstr "Kamera inaktiv für > 9 Sekunden, initialisiere neu.\n"
 
-#: camlibs/kodak/dc3200/dc3200.c:370
+#: camlibs/kodak/dc3200/dc3200.c:431
 msgid ""
 "Known problems:\n"
 "\n"
 "1. If the Kodak DC3200 does not receive a command at least every 10 seconds, "
 "it will time out, and will have to be re-initialized. If you notice the "
 "camera does not respond, simply re-select the camera. This will cause it to "
-"reinitialize.\n"
-"\n"
-"2. If you cancel a picture transfer, the driver will be left in an unknown "
-"state, and will most likely need to be re-initialized."
+"reinitialize."
 msgstr ""
 "Bekannte Probleme:\n"
 "\n"
-"1. Wenn die Kodak DC3200 nicht wenigstens alle 10 Sekunden einen Befehl "
-"erhält, \n"
+"1. Wenn die Kodak DC3200 nicht wenigstens alle 10 Sekunden einen Befehl erhält, \n"
 "dann muss sie neu initialisiert werden. Wenn die Kamera nicht reagiert, \n"
-"dann wählen Sie die Kamera erneut an. Dies initialisiert die Kamera neu.\n"
-"\n"
-"2. Wenn Sie eine Bildübertragung abbrechen, dann wird der Treiber in einem \n"
-"unbekannten Status zurückgelassen, und Sie werden wahrscheinlich die "
-"Kamera \n"
-"neu initialisieren müssen."
+"dann wählen Sie die Kamera erneut an. Dies initialisiert die Kamera neu."
 
-#: camlibs/kodak/dc3200/dc3200.c:387
+#: camlibs/kodak/dc3200/dc3200.c:444
 msgid ""
 "Kodak DC3200 Driver\n"
 "Donn Morrison <dmorriso@gulf.uvic.ca>\n"
@@ -983,6 +980,11 @@ msgstr ""
 "Donn Morrison <dmorriso@gulf.uvic.ca>\n"
 "\n"
 "Fragen und Kommentare werden geschätzt."
+
+#: camlibs/kodak/dc3200/library.c:386
+#, c-format
+msgid "%s"
+msgstr "%s"
 
 #: camlibs/konica/library.c:62
 msgid "Focusing error"
@@ -1786,7 +1788,7 @@ msgstr "Prüfsummenfehler"
 msgid "The camera did not accept the command."
 msgstr "Die Kamera hat das Kommando nicht akzeptiert."
 
-#: camlibs/polaroid/pdc700.c:301 camlibs/sierra/library.c:973
+#: camlibs/polaroid/pdc700.c:301 camlibs/sierra/library.c:972
 msgid "Downloading..."
 msgstr "Lade herunter..."
 
@@ -2363,13 +2365,8 @@ msgstr "Kann verbleibenden Speicherplatz nicht abfragen"
 msgid "The first byte received (0x%x) is not valid."
 msgstr "Das erste empfangene Byte (0x%x) ist nicht gültig."
 
-#: camlibs/sierra/library.c:670
-#, c-format
-msgid "Setting speed to %i baud..."
-msgstr "Setze Datenrate auf %i Baud..."
-
 #. Unable to execute the command
-#: camlibs/sierra/library.c:722
+#: camlibs/sierra/library.c:721
 msgid ""
 "The camera is not able to execute this command. Please report this error to "
 "<gphoto-devel@gphoto.org>."
@@ -2377,11 +2374,11 @@ msgstr ""
 "Die Kamera kann diesen Befehl nicht ausführen. \n"
 "Bitte melden Sie diesen Fehler (auf Englisch) an <gphoto-devel@gphoto.org>."
 
-#: camlibs/sierra/library.c:760
+#: camlibs/sierra/library.c:759
 msgid "Transmitting data..."
 msgstr "Übertrage Daten..."
 
-#: camlibs/sierra/library.c:783
+#: camlibs/sierra/library.c:782
 #, c-format
 msgid ""
 "Could not set int register %i. Please contact <gphoto-devel@gphoto.org>."
@@ -2389,18 +2386,18 @@ msgstr ""
 "Konnte Integer-Register %i nicht setzen. \n"
 "Bitte kontaktieren Sie <gphoto-devel@gphoto.org> (auf Englisch)."
 
-#: camlibs/sierra/library.c:835
+#: camlibs/sierra/library.c:834
 #, c-format
 msgid "Could not get register %i. Please contact <gphoto-devel@gphoto.org>."
 msgstr ""
 "Konnte Register %i nicht lesen. \n"
 "Bitte kontaktieren Sie <gphoto-devel@gphoto.org> (auf Englisch)."
 
-#: camlibs/sierra/library.c:877
+#: camlibs/sierra/library.c:876
 msgid "Sending data..."
 msgstr "Sende Daten..."
 
-#: camlibs/sierra/library.c:923
+#: camlibs/sierra/library.c:922
 #, c-format
 msgid ""
 "Could not set string register %i. Please contact <gphoto-devel@gphoto.org>."
@@ -2408,7 +2405,7 @@ msgstr ""
 "Konnte String-Register %i nicht setzen. \n"
 "Bitte kontaktieren Sie <gphoto-devel@gphoto.org> (auf Englisch)."
 
-#: camlibs/sierra/library.c:982
+#: camlibs/sierra/library.c:981
 #, c-format
 msgid ""
 "Could not get string register %i. Please contact <gphoto-devel@gphoto.org>."
@@ -2416,7 +2413,7 @@ msgstr ""
 "Konnte String-Register %i nicht lesen. \n"
 "Bitte kontaktieren Sie <gphoto-devel@gphoto.org> (auf Englisch)."
 
-#: camlibs/sierra/library.c:1248
+#: camlibs/sierra/library.c:1247
 msgid "Not implemented!"
 msgstr "Nicht implementiert!"
 
@@ -2733,24 +2730,29 @@ msgstr "Datei »%s« konnte nicht im Verzeichnis »%s« gefunden werden."
 msgid "Could not find file '%s'."
 msgstr "Konnte Datei »%s« nicht finden."
 
-#: libgphoto2/gphoto2-filesys.c:1313
+#: libgphoto2/gphoto2-filesys.c:1316
 msgid "The filesystem doesn't support getting files"
 msgstr "Das Dateisystem unterstützt kein Holen von Dateien."
 
-#: libgphoto2/gphoto2-filesys.c:1348 libgphoto2/gphoto2-filesys.c:1637
+#: libgphoto2/gphoto2-filesys.c:1351 libgphoto2/gphoto2-filesys.c:1655
 #, c-format
 msgid "Unknown file type %i."
 msgstr "Unbekannter Dateityp %i."
 
-#: libgphoto2/gphoto2-filesys.c:1541
+#: libgphoto2/gphoto2-filesys.c:1355
+#, c-format
+msgid "Downloading '%s' from folder '%s'..."
+msgstr "Lade »%s« aus Verzeichnis »%s«..."
+
+#: libgphoto2/gphoto2-filesys.c:1556
 msgid "The filesystem doesn't support getting file information"
 msgstr "Das Dateisystem unterstützt das Holen von Dateiinformationen nicht"
 
-#: libgphoto2/gphoto2-filesys.c:1699
+#: libgphoto2/gphoto2-filesys.c:1717
 msgid "The filesystem doesn't support setting file information"
 msgstr "Das Dateisystem unterstützt das Setzen von Dateiinformationen nicht"
 
-#: libgphoto2/gphoto2-filesys.c:1722
+#: libgphoto2/gphoto2-filesys.c:1740
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr ""
 "\"Nur-Lesen\"-Dateiattribute wie Höhe und Breite können nicht geändert "
@@ -3183,12 +3185,12 @@ msgstr "Speichere Datei als %s\n"
 msgid "Can not save file as %s"
 msgstr "Kann Datei nicht als %s speichern"
 
-#: frontends/command-line/main.c:971
+#: frontends/command-line/main.c:983
 #, c-format
 msgid "New file is in location %s%s%s on the camera\n"
 msgstr "Neue Datei ist in %s%s%s auf der Kamera\n"
 
-#: frontends/command-line/main.c:1029
+#: frontends/command-line/main.c:1041
 #, c-format
 msgid ""
 "Camera Summary:\n"
@@ -3197,7 +3199,7 @@ msgstr ""
 "Kamerazusammenfassung:\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1041
+#: frontends/command-line/main.c:1053
 #, c-format
 msgid ""
 "Camera Manual:\n"
@@ -3206,7 +3208,7 @@ msgstr ""
 "Kameraanleitung:\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1053
+#: frontends/command-line/main.c:1065
 #, c-format
 msgid ""
 "About the library:\n"
@@ -3215,11 +3217,11 @@ msgstr ""
 "Über die Bibliothek:\n"
 "%s\n"
 
-#: frontends/command-line/main.c:1110
+#: frontends/command-line/main.c:1122
 msgid "Please specify a model."
 msgstr "Bitte geben Sie ein Modell an."
 
-#: frontends/command-line/main.c:1138
+#: frontends/command-line/main.c:1150
 #, c-format
 msgid ""
 "The port you specified ('%s') can not be found. Please specify one of the "
@@ -3231,23 +3233,23 @@ msgstr ""
 "der von »gphoto2 --list-ports« gelisteten Ports an und stellen Sie sicher, \n"
 "daß die Schreibweise korrekt ist (mit Präfix »serial:« oder »usb:«)."
 
-#: frontends/command-line/main.c:1155
+#: frontends/command-line/main.c:1167
 msgid "Please specify a port."
 msgstr "Bitte geben Sie einen Port an."
 
-#: frontends/command-line/main.c:1198
+#: frontends/command-line/main.c:1210
 msgid "*** Error ***              \n"
 msgstr "*** Fehler ***             \n"
 
-#: frontends/command-line/main.c:1256
+#: frontends/command-line/main.c:1268
 msgid "Press any key to continue.\n"
 msgstr "Bitten drücken Sie eine beliebige Taste, um fortzufahren.\n"
 
-#: frontends/command-line/main.c:1318
+#: frontends/command-line/main.c:1330
 msgid "ERROR: "
 msgstr "FEHLER: "
 
-#: frontends/command-line/main.c:1331
+#: frontends/command-line/main.c:1343
 msgid ""
 "\n"
 "Aborting...\n"
@@ -3255,11 +3257,11 @@ msgstr ""
 "\n"
 "Harter Abbruch...\n"
 
-#: frontends/command-line/main.c:1337
+#: frontends/command-line/main.c:1349
 msgid "Aborted.\n"
 msgstr "Abgebrochen.\n"
 
-#: frontends/command-line/main.c:1342
+#: frontends/command-line/main.c:1354
 msgid ""
 "\n"
 "Cancelling...\n"
@@ -3267,7 +3269,7 @@ msgstr ""
 "\n"
 "Abbruch...\n"
 
-#: frontends/command-line/main.c:1389
+#: frontends/command-line/main.c:1401
 msgid ""
 "gPhoto2 for OS/2 requires you to set the enviroment value CAMLIBS to the "
 "location of the camera libraries. e.g. SET CAMLIBS=C:\\GPHOTO2\\CAM\n"
@@ -3275,7 +3277,7 @@ msgstr ""
 "gPhoto2 für OS/2 erfordert, daß die Umgebungsvariable CAMLIBS auf den Ort "
 "der Kamerabibliotheken zeigt, z.B. mit SET CAMLIBS=C:\\GPHOTO2\\CAM\n"
 
-#: frontends/command-line/main.c:1399
+#: frontends/command-line/main.c:1411
 msgid ""
 "gPhoto2 for OS/2 requires you to set the enviroment value IOLIBS to the "
 "location of the io libraries. e.g. SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"
@@ -3283,11 +3285,11 @@ msgstr ""
 "gPhoto2 für OS/2 erfordert, daß die Umgebungsvariable IOLIBS auf den Ort der "
 "I/O-Bibliotheken zeigt, z.B. mit SET IOLIBS=C:\\GPHOTO2\\IOLIB\n"
 
-#: frontends/command-line/main.c:1417
+#: frontends/command-line/main.c:1429
 msgid "Operation cancelled.\n"
 msgstr "Operation abgebrochen.\n"
 
-#: frontends/command-line/main.c:1420
+#: frontends/command-line/main.c:1432
 #, c-format
 msgid ""
 "*** Error ('%s') ***       \n"
@@ -3296,7 +3298,7 @@ msgstr ""
 "*** Fehler ('%s') ***      \n"
 "\n"
 
-#: frontends/command-line/main.c:1426
+#: frontends/command-line/main.c:1438
 msgid ""
 "For debugging messages, please use the --debug option.\n"
 "Debugging messages may help finding a solution to your problem.\n"
@@ -3347,7 +3349,7 @@ msgstr "Zeit: "
 msgid "Value: "
 msgstr "Wert: "
 
-#: frontends/command-line/options.c:175
+#: frontends/command-line/options.c:174
 #, c-format
 msgid ""
 "gPhoto (v%s) - Cross-platform digital camera library.\n"
@@ -3358,16 +3360,16 @@ msgstr ""
 "Copyright (C) 2000,2001 Scott Fritzinger und andere\n"
 "%sLizensiert unter der Library GNU Public License (LGPL).\n"
 
-#: frontends/command-line/options.c:181
+#: frontends/command-line/options.c:180
 msgid "OS/2 port by Bart van Leeuwen\n"
 msgstr "OS/2-Portierung von Bart van Leeuwen\n"
 
-#: frontends/command-line/options.c:196
+#: frontends/command-line/options.c:195
 msgid "Usage:\n"
 msgstr "Verwendung:\n"
 
 #. Make this 79 characters long. Some languages need the space.
-#: frontends/command-line/options.c:199
+#: frontends/command-line/options.c:198
 msgid ""
 "Short/long options (& argument)        Description\n"
 "--------------------------------------------------------------------------------\n"
@@ -3379,13 +3381,13 @@ msgstr ""
 #. languages can make the table a bit tighter. Make
 #. sure you only use 79 characters (since #80 is
 #. needed for the line break).
-#: frontends/command-line/options.c:224
+#: frontends/command-line/options.c:223
 #, c-format
 msgid "%-38s %s\n"
 msgstr "%-34s %s\n"
 
 #. Make this 79 characters long. Some languages need the space.
-#: frontends/command-line/options.c:229
+#: frontends/command-line/options.c:228
 msgid ""
 "--------------------------------------------------------------------------------\n"
 "[Use double-quotes around arguments]        [Picture numbers begin with one "
@@ -3394,6 +3396,63 @@ msgstr ""
 "--------------------------------------------------------------------------------\n"
 "[Doppelte Anführungszeichen um Argumente]            [Bildzählung beginnt "
 "mit 1]\n"
+
+#: frontends/command-line/range.c:122 frontends/command-line/range.c:176
+#, c-format
+msgid ""
+"%s\n"
+"Image IDs must be a number greater than zero."
+msgstr ""
+"%s\n"
+"Bilder-IDs müssen größer als Null sein."
+
+#: frontends/command-line/range.c:128 frontends/command-line/range.c:182
+#, c-format
+msgid ""
+"%s\n"
+"Image ID %i too high."
+msgstr ""
+"%s\n"
+"Bild-ID %i zu groß."
+
+#: frontends/command-line/range.c:144
+#, c-format
+msgid ""
+"%s\n"
+"Ranges must be separated by ','."
+msgstr ""
+"%s\n"
+"Bereiche müssen mittels »,« getrennt werden."
+
+#: frontends/command-line/range.c:158
+#, c-format
+msgid ""
+"%s\n"
+"Ranges need to start with a number."
+msgstr ""
+"%s\n"
+"Bereiche müssen mit einer Zahl beginnen."
+
+#: frontends/command-line/range.c:198
+#, c-format
+msgid ""
+"%s\n"
+"Unexpected character '%c'."
+msgstr ""
+"%s\n"
+"Unerwartetes Zeichen »%c«."
+
+#: frontends/command-line/range.c:221
+#, c-format
+msgid ""
+"%s\n"
+"Decreasing ranges are not allowed. You specified a range from %i to %i."
+msgstr ""
+"%s Absteigende Bereiche sind nicht erlaubt. Sie müssen einen Bereich\n"
+"von %i bis %i angeben."
+
+#~ msgid "Setting speed to %i baud..."
+#~ msgstr "Setze Datenrate auf %i Baud..."
 
 #~ msgid "Name too long, max is 30 characters!"
 #~ msgstr "Name zu lang, maximal 30 Zeichen!"
@@ -3469,9 +3528,6 @@ msgstr ""
 
 #~ msgid "Getting '%s' from folder '%s'..."
 #~ msgstr "Hole Information für »%s« aus Verzeichnis »%s«..."
-
-#~ msgid "Deleting '%s' from folder '%s'..."
-#~ msgstr "Lösche »%s« aus Verzeichnis »%s«..."
 
 #~ msgid "Creating folder '%s' in folder '%s'..."
 #~ msgstr "Lege Verzeichnis »%s« im Verzeichnis »%s« an..."
