@@ -1,3 +1,8 @@
+2002-09-28  Marcus Meissner <marcus@jet.franken.de>
+        
+        * Imported SiPix StyleCam Blink driver from 
+          Vincent Sanders <vince@kyllikki.org>
+
 2002-09-12  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 
 	* configure.in: 2.1.1dev6
