@@ -430,26 +430,3 @@ ptp_ek_sendfileobject (PTPParams* params, PTPReq* object, uint32_t size)
 		PTP_DP_SENDDATA, size, object);
 }
 
-/*
-void
-ptp_getobjectfilename (PTPObjectInfo* objectinfo, char* filename) {
-	int i;
-
-	memset (filename, 0, MAXFILENAMELEN);
-
-	for (i=0;i<objectinfo->filenamelen&&i<MAXFILENAMELEN;i++) {
-		filename[i]=objectinfo->data[i*2];
-	}
-}
-
-void
-ptp_setobjectfilename (PTPObjectInfo* objectinfo, char* filename) {
-	int i;
-
-	 for (i=0;i<strlen(filename)&&i<MAXFILENAMELEN;i++) {
-		 objectinfo->data[i*2]=filename[i];
-	 }
-	 objectinfo->filenamelen=(uint8_t)strlen(filename)+1;
-}
-
-*/

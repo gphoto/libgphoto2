@@ -115,7 +115,7 @@ ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 	oi->Filename=malloc(filenamelen);
 	memset(oi->Filename, 0, filenamelen);
 	for (i=0;i<filenamelen && i< MAXFILENAMELEN; i++) {
-		oi->Filename[i]=req->data[PTP_oi_Filename+i*2];
+		oi->Filename[i]=(char)dtoh16a(&req->data[PTP_oi_Filename+i*2]);
 	}
 	// be paranoid! :)
 	oi->Filename[filenamelen]=0;
@@ -125,7 +125,7 @@ ptp_unpack_OI (PTPParams *params, PTPReq *req, PTPObjectInfo *oi)
 	capture_date=malloc(capturedatelen);
 	memset(capture_date, 0, capturedatelen);
 	for (i=0;i<capturedatelen && i< MAXFILENAMELEN; i++ ) {
-		capture_date[i]=req->data[PTP_oi_Filename+(i+filenamelen)*2+1];
+		capture_date[i]=(char)dtoh16a(&req->data[PTP_oi_Filename+(i+filenamelen)*2+1]);
 	}
 
 	// subset of ISO 8601, without '.s' tenths of second and
