@@ -37,30 +37,8 @@ typedef enum {
 	GP_FILE_TYPE_RAW
 } CameraFileType;
 
-typedef enum {
-	GP_FILE_CONVERSION_METHOD_CHUCK,
-	GP_FILE_CONVERSION_METHOD_JOHANNES
-} CameraFileConversionMethod;
-
+/* Internals are private */
 typedef struct _CameraFile CameraFile;
-
-/* Don't use this - it'll disappear soon... */
-struct _CameraFile {
-	CameraFileType type;
-	char mime_type [64];
-	char name [64];
-	long int size;
-	unsigned char *data;
-	int bytes_read;
-	int session;
-	int ref_count;
-
-	unsigned char *red_table, *blue_table, *green_table;
-	int red_size, blue_size, green_size;
-	char header [128];
-	int width, height;
-	CameraFileConversionMethod method;
-}; 
 
 int gp_file_new            (CameraFile **file);
 int gp_file_ref            (CameraFile *file);
@@ -102,6 +80,11 @@ int gp_file_copy           (CameraFile *destination, CameraFile *source);
  * If you like to do some work on conversion raw -> image/ *, please
  * step forward and write to gphoto-devel@gphoto.org.
  */
+typedef enum {
+	GP_FILE_CONVERSION_METHOD_CHUCK,
+	GP_FILE_CONVERSION_METHOD_JOHANNES
+} CameraFileConversionMethod;
+
 int gp_file_set_color_table  (CameraFile *file,
 			      const unsigned char *red_table,   int red_size,
 			      const unsigned char *green_table, int green_size,

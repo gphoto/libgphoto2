@@ -329,6 +329,8 @@ static int dc240_get_file_size (Camera *camera, const char *folder, const char *
     CameraFile *f;
     char *p1, *p2;
     int size = 256, offset;
+    long int fsize;
+    const char *fdata;
 
     offset = (thumb? 92:104);
 
@@ -337,11 +339,13 @@ static int dc240_get_file_size (Camera *camera, const char *folder, const char *
     p2 = dc240_packet_new_path(folder, filename);
     if (dc240_packet_exchange(camera, f, p1, p2, &size, 256) < 0)
         size = 0;
-    else
-        size = ((unsigned char)f->data[offset]   << 24) |
-               ((unsigned char)f->data[offset+1] << 16) |
-               ((unsigned char)f->data[offset+2] << 8 ) |
-               ((unsigned char)f->data[offset+3]);
+    else {
+	gp_file_get_data_and_size (f, &fdata, &fsize);
+        size = ((unsigned char)fdata[offset]   << 24) |
+               ((unsigned char)fdata[offset+1] << 16) |
+               ((unsigned char)fdata[offset+2] << 8 ) |
+               ((unsigned char)fdata[offset+3]);
+    }
 
     gp_file_free(f);
     free(p1);
@@ -438,6 +442,8 @@ static int dc240_get_directory_list (Camera *camera, CameraList *list, const cha
     char buf[64];
     char *p1 = dc240_packet_new(0x99);
     char *p2 = dc240_packet_new_path(folder, NULL);
+    const char *fdata;
+    long int fsize;
 
     gp_file_new(&file);
     if (dc240_packet_exchange(camera, file, p1, p2, &size, 256) < 0)
@@ -448,18 +454,19 @@ static int dc240_get_directory_list (Camera *camera, CameraList *list, const cha
     /* since directory entries are 20 bytes, it is possible that */
     /* we find some garbage. Ignore it. TODO: check that there is */
     /* not another bug involving reading this info */
-    while ((x < file->size) && (file->size - x >= 20)) {
-        if ((file->data[x] != '.') &&
-            (attrib == (unsigned char)file->data[x+11]))  {
+    gp_file_get_data_and_size (file, &fdata, &fsize);
+    while ((x < fsize) && (fsize - x >= 20)) {
+        if ((fdata[x] != '.') &&
+            (attrib == (unsigned char)fdata[x+11]))  {
             /* Files have attrib 0x00, Folders have attrib 0x10 */
             if (attrib == 0x00) {
-                strncpy(buf, &file->data[x], 8);    /* Copy over filename */
+                strncpy(buf, &fdata[x], 8);    /* Copy over filename */
                 buf[8] = 0;                         /* NULL terminate */
                 strcat(buf, ".");                   /* Append dot */
-                strcat(buf, &file->data[x+8]);      /* Append extension */
+                strcat(buf, &fdata[x+8]);      /* Append extension */
                 // size = dc240_get_file_size(camera, folder, buf, 0);
             } else {
-                strncpy(buf, &file->data[x], 8);    /* Copy over folder name */
+                strncpy(buf, &fdata[x], 8);    /* Copy over folder name */
                 z=0;
                 while ((buf[z] != 0x20)&&(z<8))     /* Chop trailing spaces */
                     z++;
@@ -539,6 +546,8 @@ int dc240_capture (Camera *camera, CameraFilePath *path)
     int size = 256;
     int ret = GP_OK;
     char *p = dc240_packet_new(0x7C);
+    const char *fdata;
+    long int fsize;
 
     /* Take the picture to Flash memory */
     ret = dc240_packet_write(camera, p, 8, 1);
@@ -576,11 +585,12 @@ int dc240_capture (Camera *camera, CameraFilePath *path)
 	/* this part assumes that the response is of fixed size */
 	/* according to the specs, this is the case since only the */
 	/* numbering changes */
-	strncpy (path->folder, file->data, 14);
+	gp_file_get_data_and_size (file, &fdata, &fsize);
+	strncpy (path->folder, fdata, 14);
 	path->folder [14] = 0;
 	path->folder [0] = '/';
 	path->folder [5] = '/';
-	strncpy (path->name, &(file->data[15]), 13);
+	strncpy (path->name, &(fdata[15]), 13);
 	path->name[13] = 0;
     }
     free (file);
