@@ -17,6 +17,13 @@ status_func (Camera *camera, const char *status, void *data)
 	if (*status) {
 		printf ("Status: %s\r", status);
 		fflush(stdout);
+	} else {
+
+		/*
+		 * This is not very clever - if you know any better,
+		 * step forward.
+		 */
+		printf ("                                               \r");
 	}
 }
 
