@@ -323,11 +323,12 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	/*
-	 * NULL idvendor and idproduct is not valid.
+	 * NULL idvendor is not valid.
+	 * NULL idproduct is ok.
 	 * Should the USB layer report that ? I don't know.
 	 * Better to check here.
 	 */
-	if (!idvendor || !idproduct) {
+	if (!idvendor) {
 		gp_port_set_error (port, _("The supplied vendor or product "
 			"id (%i,%i) is not valid."));
 		return GP_ERROR_BAD_PARAMETERS;
@@ -353,6 +354,52 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 	return GP_ERROR_IO_USB_FIND;
 }
 
+static int
+gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int protocol)
+{
+	struct usb_bus *bus;
+	struct usb_device *dev;
+
+	if (!port)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	/*
+	 * NULL class is not valid.
+	 * NULL subclass and protocol is ok.
+	 * Should the USB layer report that ? I don't know.
+	 * Better to check here.
+	 */
+	if (!class)
+		return GP_ERROR_BAD_PARAMETERS;
+
+	for (bus = usb_busses; bus; bus = bus->next) {
+		for (dev = bus->devices; dev; dev = dev->next) {
+			if (dev->descriptor.bDeviceClass != class)
+				continue;
+
+			if (subclass != -1 &&
+			    dev->descriptor.bDeviceSubClass != subclass)
+				continue;
+
+			if (protocol != -1 &&
+			    dev->descriptor.bDeviceProtocol != protocol)
+				continue;
+
+			port->pl->d = dev;
+			gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+				"Looking for USB device "
+				"(class 0x%x, subclass, 0x%x, protocol 0x%x)... found.", 
+				class, subclass, protocol);
+			return GP_OK;
+		}
+	}
+
+	gp_port_set_error (port, _("Could not find USB device "
+		"(class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device "
+		"is connected to the computer."), class, subclass, protocol);
+	return GP_ERROR_IO_USB_FIND;
+}
+
 GPPortOperations *
 gp_port_library_operations (void)
 {
@@ -374,6 +421,7 @@ gp_port_library_operations (void)
 	ops->msg_write  = gp_port_usb_msg_write_lib;
 	ops->msg_read   = gp_port_usb_msg_read_lib;
 	ops->find_device = gp_port_usb_find_device_lib;
+	ops->find_device_by_class = gp_port_usb_find_device_by_class_lib;
 
 	return (ops);
 }

@@ -45,6 +45,7 @@ struct _GPPortOperations {
 
         /* for USB devices */
         int (*find_device)(GPPort * dev, int idvendor, int idproduct);
+        int (*find_device_by_class)(GPPort * dev, int class, int subclass, int protocol);
         int (*clear_halt) (GPPort * dev, int ep);
         int (*msg_write)  (GPPort * dev, int request, int value, int index,
                                 char *bytes, int size);

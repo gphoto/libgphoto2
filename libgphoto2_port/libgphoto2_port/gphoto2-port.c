@@ -616,6 +616,18 @@ gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct)
 }
 
 int
+gp_port_usb_find_device_by_class (GPPort *port, int class, int subclass, int protocol)
+{
+	CHECK_NULL (port);
+	CHECK_INIT (port);
+
+	CHECK_SUPP (port, _("find_device_by_class"), port->pc->ops->find_device_by_class);
+	CHECK_RESULT (port->pc->ops->find_device_by_class (port, class, subclass, protocol));
+
+        return (GP_OK);
+}
+
+int
 gp_port_usb_clear_halt (GPPort *port, int ep)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Clear halt...");
