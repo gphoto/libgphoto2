@@ -10,12 +10,15 @@ drivers (camlibs):
    * Canon driver: 
      - added support for capturing on consumer class cameras, tested on
        Canon PowerShot S45, Canon PowerShot G2
+     - G2 works again running from AC adapter
 
    * PTP driver:
      - fixed some bugs
 
    * PTP2 driver:
-     - next generation PTP driver added, but not yet in build system
+     - next generation PTP driver added
+     - FIXME: Which one is being used if both are built? 
+
 
 ----------------------------------------------------------------------------
 libgphoto2 2.1.1
