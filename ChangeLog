@@ -1,5 +1,7 @@
 2002-11-06  Hans Ulrich Niedermann  <gp@n-dimensional.de>
 	
+	* camlibs/*/Makefile.am:
+	* libgphoto2/Makefile.am:
 	* configure.in: made camlibdir settable by cmdline option
 
 2002-11-01  Hans Ulrich Niedermann  <gp@n-dimensional.de>
