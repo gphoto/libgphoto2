@@ -1,3 +1,8 @@
+2004-06-23  Hubert Figuiere  <hfiguiere@teaser.fr>
+
+	* library.c: Added Kodak LS-473
+	Close RFE #977619 <http://www.gphoto.org/rfe/?id=977619>
+
 2004-06-13  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Canon PowerShot S1 IS.
