@@ -70,7 +70,21 @@ AC_ARG_WITH(fig2dev, [  --without-fig2dev         Don't use fig2dev],[
 		try_fig2dev=false
 	fi])
 if $try_fig2dev; then
-	AC_CHECK_PROG(have_fig2dev,fig2dev,true,false)
+        fig2dev -L ps > /dev/null <<EOF
+#FIG 3.2
+Landscape
+Center
+Inches
+Letter  
+100.00
+Single
+-2
+1200 2
+1 3 0 1 0 7 50 0 -1 0.000 1 0.0000 3000 3750 270 270 3000 3750 3150 3975
+EOF
+        if test $? = 0; then
+                have_fig2dev=true
+        fi
 fi
 AM_CONDITIONAL(ENABLE_FIGURES, $have_fig2dev)
 
@@ -119,17 +133,34 @@ dnl ------------------------------------------------------------------------
 AC_MSG_CHECKING([for xmlto])
 AM_CONDITIONAL(XMLTOHTML, xmlto --help | grep html > /dev/null 2>&1)
 AM_CONDITIONAL(XMLTOMAN, xmlto --help | grep man > /dev/null 2>&1)
-AM_CONDITIONAL(XMLTOPDF, xmlto --help | grep pdf > /dev/null 2>&1)
+
+dnl hack for xmlto pdf not working yet
+dnl AM_CONDITIONAL(XMLTOPDF, xmlto --help | grep pdf > /dev/null 2>&1)
+dnl AM_CONDITIONAL(XMLTOPS, xmlto --help | grep ps > /dev/null 2>&1)
+AM_CONDITIONAL(XMLTOPDF, false)
+AM_CONDITIONAL(XMLTOPS, false)
+
+# create list of supported formats
 xxx=""
-if test "x$XMLTOHTML_FALSE" = "x#"; then xxx="html "; fi
-if test "x$XMLTOMAN_FALSE" = "x#"; then xxx="man "; fi
-if test "x$XMLTOPDF_FALSE" = "x#"; then xxx="pdf "; fi
+if test "x$XMLTOHTML_FALSE" = "x#"; then xxx="${xxx} html"; fi
+if test "x$XMLTOMAN_FALSE" = "x#"; then xxx="${xxx} man"; fi
+if test "x$XMLTOPDF_FALSE" = "x#"; then xxx="${xxx} pdf"; fi
+if test "x$XMLTOPS_FALSE" = "x#"; then xxx="${xxx} ps"; fi
+
 if test "x$xxx" != "x"
 then
-        AC_MSG_RESULT([support for  ${xxx} found])
+        if $have_fig2dev; then
+                fig_out=""
+        else
+                fig_out="out"
+        fi
+        manual_msg="in (${xxx} ) format with${fig_out} figures"
+        AC_MSG_RESULT([support for {${xxx} } found])
 else
+        manual_msg="no (http://cyberelk.net/tim/xmlto/)"
         AC_MSG_RESULT([no])
 fi
+
 AM_CONDITIONAL(XMLTO, test "x$xxx" != "x")
 
 ])dnl
