@@ -7,28 +7,42 @@
 #include <gphoto2.h>
 #include "util.h"
 
-void hide_dialog (GtkWidget *dialog, gpointer data) {
+void ok_click (GtkWidget *dialog) {
 
-	gtk_widget_hide(dialog);
+        gtk_object_set_data(GTK_OBJECT(dialog), "button", "OK");
+        gtk_widget_hide(dialog);
 }
-
-int wait_for_hide (GtkWidget *dialog) {
-
-	int done=0;
-	gtk_signal_connect(GTK_OBJECT(dialog), "delete_event",
-		GTK_SIGNAL_FUNC(hide_dialog), NULL);
-
-	gtk_widget_show(dialog);
-	while (!done) {
+ 
+int wait_for_hide (GtkWidget *dialog, 
+		   GtkWidget *ok_button,
+                   GtkWidget *cancel_button) {
+                   
+	int cont=1;
+	
+        gtk_object_set_data(GTK_OBJECT(dialog), "button", "CANCEL");
+        gtk_signal_connect_object(
+                        GTK_OBJECT(ok_button), "clicked",
+                        GTK_SIGNAL_FUNC(ok_click),
+                        GTK_OBJECT(dialog));
+	if (cancel_button)
+	        gtk_signal_connect_object(GTK_OBJECT(cancel_button),
+	                        "clicked",
+	                        GTK_SIGNAL_FUNC(gtk_widget_hide),
+	                        GTK_OBJECT(dialog));
+        gtk_widget_show(dialog);
+        while (cont) {
+		/* because the window manager could destroy the window */
 		if(!GTK_IS_OBJECT(dialog))
-			/* the window manager could destroy the window */
 			return 0;
 		if (GTK_WIDGET_VISIBLE(dialog))
 			gtk_main_iteration();
 		else
-			done=1;
+			cont = 0;
 	}
-	return 1;
+        if (strcmp("CANCEL",
+           (char*)gtk_object_get_data(GTK_OBJECT(dialog), "button"))==0)
+                return 0;
+        return 1;
 }
 
 void gtk_directory_selection_update(GtkWidget *entry, GtkWidget *dirsel) {

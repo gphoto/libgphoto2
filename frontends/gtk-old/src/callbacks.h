@@ -2,6 +2,53 @@
 
 int main_quit(GtkWidget *widget, gpointer data);
 
+/* General callbacks */
+/* ------------------------------------------------------*/
+/* File operations */
+void open_photo();
+void open_directory();
+void save_opened_photo();
+void save_selected_photo();
+void export_gallery();
+void print_photo();
+void close_photo();
+
+/* Editing operations */
+void flip_horizontal();
+void flip_vertical();
+void rotate_90();
+void rotate_180();
+void rotate_270();
+void size_scale();
+void size_half();
+void size_double();
+
+/* Selection operations */
+void select_all();
+void select_inverse();
+void select_none();
+
+/* Camera operations */
+void camera_select();
+void camera_index_thumbnails();
+void camera_index_no_thumbnails();
+void camera_download_thumbnails();
+void camera_download_photos();
+void camera_download_both();
+void camera_delete_selected();
+void camera_delete_all();
+void camera_configure();
+void camera_show_information();
+void camera_show_manual();
+void camera_show_about();
+
+/* Help operations */
+void help_about();
+void help_authors();
+void help_license();
+void help_manual();
+
+
 
 /* Menu callbacks */
 void on_open_photo_activate (GtkMenuItem *menuitem, gpointer user_data);

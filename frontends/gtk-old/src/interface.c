@@ -1311,6 +1311,7 @@ create_main_window (void)
 GtkWidget*
 create_message_window_long (void)
 {
+  /* widget labels:  "close" */
   GtkWidget *message_window_long;
   GtkWidget *vbox3;
   GtkWidget *scrolledwindow4;
@@ -1356,7 +1357,7 @@ create_message_window_long (void)
 
   message_window_close = gtk_button_new_with_label (_("    Close    "));
   gtk_widget_ref (message_window_close);
-  gtk_object_set_data_full (GTK_OBJECT (message_window_long), "message_window_close", message_window_close,
+  gtk_object_set_data_full (GTK_OBJECT (message_window_long), "close", message_window_close,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (message_window_close);
   gtk_box_pack_start (GTK_BOX (hbox1), message_window_close, FALSE, FALSE, 0);
@@ -1367,6 +1368,8 @@ create_message_window_long (void)
 GtkWidget*
 create_confirm_window (void)
 {
+  /* widget labels: "yes" "no" */
+
   GtkWidget *confirm_window;
   GtkWidget *vbox4;
   GtkWidget *confirm_label;
@@ -1405,14 +1408,14 @@ create_confirm_window (void)
 
   button19 = gtk_button_new_with_label (_("Yes"));
   gtk_widget_ref (button19);
-  gtk_object_set_data_full (GTK_OBJECT (confirm_window), "button19", button19,
+  gtk_object_set_data_full (GTK_OBJECT (confirm_window), "yes", button19,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (button19);
   gtk_box_pack_start (GTK_BOX (hbox2), button19, FALSE, TRUE, 0);
 
   button20 = gtk_button_new_with_label (_("No"));
   gtk_widget_ref (button20);
-  gtk_object_set_data_full (GTK_OBJECT (confirm_window), "button20", button20,
+  gtk_object_set_data_full (GTK_OBJECT (confirm_window), "no", button20,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (button20);
   gtk_box_pack_start (GTK_BOX (hbox2), button20, FALSE, TRUE, 0);
@@ -1423,6 +1426,7 @@ create_confirm_window (void)
 GtkWidget*
 create_message_window (void)
 {
+  /* widget labels:  "close" */
   GtkWidget *message_window;
   GtkWidget *vbox5;
   GtkWidget *label8;
@@ -1460,7 +1464,7 @@ create_message_window (void)
 
   button21 = gtk_button_new_with_label (_("    Close    "));
   gtk_widget_ref (button21);
-  gtk_object_set_data_full (GTK_OBJECT (message_window), "button21", button21,
+  gtk_object_set_data_full (GTK_OBJECT (message_window), "close", button21,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (button21);
   gtk_box_pack_start (GTK_BOX (hbox3), button21, FALSE, FALSE, 0);
@@ -1471,6 +1475,8 @@ create_message_window (void)
 GtkWidget*
 create_select_camera_window (void)
 {
+  /* widget labels:   "ok" "cancel" "camera" "port" */
+
   GtkWidget *select_camera_window;
   GtkWidget *vbox6;
   GtkWidget *hbox5;
@@ -1524,7 +1530,7 @@ create_select_camera_window (void)
 
   camera_combo = gtk_combo_new ();
   gtk_widget_ref (camera_combo);
-  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "camera_combo", camera_combo,
+  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "camera", camera_combo,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (camera_combo);
   gtk_box_pack_start (GTK_BOX (vbox7), camera_combo, FALSE, FALSE, 0);
@@ -1552,7 +1558,7 @@ create_select_camera_window (void)
 
   port_combo = gtk_combo_new ();
   gtk_widget_ref (port_combo);
-  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "port_combo", port_combo,
+  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "port", port_combo,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (port_combo);
   gtk_box_pack_start (GTK_BOX (vbox8), port_combo, FALSE, FALSE, 0);
@@ -1572,14 +1578,14 @@ create_select_camera_window (void)
 
   button23 = gtk_button_new_with_label (_("OK"));
   gtk_widget_ref (button23);
-  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "button23", button23,
+  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "ok", button23,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (button23);
   gtk_box_pack_start (GTK_BOX (hbox4), button23, FALSE, TRUE, 0);
 
   button24 = gtk_button_new_with_label (_("Cancel"));
   gtk_widget_ref (button24);
-  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "button24", button24,
+  gtk_object_set_data_full (GTK_OBJECT (select_camera_window), "cancel", button24,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (button24);
   gtk_box_pack_start (GTK_BOX (hbox4), button24, FALSE, TRUE, 0);

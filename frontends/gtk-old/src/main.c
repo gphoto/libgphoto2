@@ -15,6 +15,7 @@
 #include "support.h"
 
 GtkWidget *main_window;
+int	   gp_gtk_debug=1;
 
 int
 main (int argc, char *argv[])
@@ -38,6 +39,7 @@ main (int argc, char *argv[])
 	 * the project. Delete any components that you don't want shown initially.
 	 */
 	main_window = create_main_window ();
+	
 	gtk_widget_show (main_window);
 	gtk_signal_connect (GTK_OBJECT(main_window), "delete_event",
 		GTK_SIGNAL_FUNC(main_quit), NULL);
