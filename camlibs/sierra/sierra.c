@@ -71,7 +71,8 @@ static struct {
 } sierra_cameras[] = {
 	/* Camera Model, Sierra Model, USB(vendor id, product id,
 	   USB wrapper protocol) */ 
-	{"Agfa", "ePhoto 307", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0 },
+	{"Agfa", "ePhoto 307", 	SIERRA_MODEL_DEFAULT, 	0, 0,
+					SIERRA_NO_51 },
 	{"Agfa", "ePhoto 780", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0 },
 	{"Agfa", "ePhoto 780C",	SIERRA_MODEL_DEFAULT,	0, 0,
 					SIERRA_NO_51 | SIERRA_LOW_SPEED },

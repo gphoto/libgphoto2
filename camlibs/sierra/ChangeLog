@@ -1,16 +1,21 @@
-2002-01-14  Marcus Meissner <marcus@jet.franken.de>
+2003-01-29  Lutz Mueller <lutz@users.sourceforge.net>
+
+	* sierra.c: It seems the "Agfa ePhoto307" does not support the 
+	  register 51. Reported by Ullrich Maenz <ullrich@familie-maenz.de>.
+
+2003-01-14  Marcus Meissner <marcus@jet.franken.de>
 	
 	* *.c: enabled more translations, added some missing _().
 
-2002-01-14  Lutz Müller <lutz@users.sourceforge.net>
+2003-01-14  Lutz Müller <lutz@users.sourceforge.net>
 
 	* sierra.c: Split the model string into manufacturer and model.
 
-2002-01-03  Marcus Meissner <marcus@jet.franken.de>
+2003-01-03  Marcus Meissner <marcus@jet.franken.de>
 	
 	* sierra.c: Epson PhotoPC 650 at least partially working.
 
-2002-01-03  Marcus Meissner <marcus@jet.franken.de>
+2003-01-03  Marcus Meissner <marcus@jet.franken.de>
 	
 	* library.c: Replaced stack allocated CameraList by dynamic 
 	  allocated one, since this struct is huge.
