@@ -75,7 +75,7 @@ static struct {
 	{ "Canon IXY DIGITAL", 		0x04A9, 0x3046, 0 },
 	{ "Canon Digital IXUS", 	0x04A9, 0x3047, 0 },
 	{ "Canon PowerShot G1", 	0x04A9, 0x3048, 1 },
-	{ "Canon PowerShot Pro90 SI", 	0x04A9, 0x3049, 1 },
+	{ "Canon PowerShot Pro90 IS", 	0x04A9, 0x3049, 1 },
 	{ "Canon IXY DIGITAL 300", 	0x04A9, 0x304B, 0 },
 	{ "Canon PowerShot S300", 	0x04A9, 0x304C, 0 },
 	{ "Canon Digital IXUS 300", 	0x04A9, 0x304D, 0 },
