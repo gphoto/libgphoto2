@@ -1,5 +1,5 @@
 /****************************************************************/
-/* library.c - Gphoto2 library for the Mustek gSmart mini 2     */
+/* gsmart.c - Gphoto2 library for the Mustek gSmart mini 2      */
 /*                                                              */
 /* Copyright (C) 2002 Till Adam                                 */
 /*                                                              */
@@ -54,19 +54,21 @@
 #endif
 
 #define GP_MODULE
-
+static int gsmart_mode_set_idle (CameraPrivateLibrary * lib);
+static int gsmart_is_idle (CameraPrivateLibrary * lib);
+static int gsmart_mode_set_download (CameraPrivateLibrary * lib);
+static int gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start, 
+                          unsigned int size, u_int8_t * buf);
+static int gsmart_get_FATs (CameraPrivateLibrary * lib);
 static int yuv2rgb (int y, int u, int v, int *r, int *g, int *b);
 
 int
 gsmart_get_file_count (CameraPrivateLibrary * lib)
 {
-	GP_DEBUG ("* gsmart_get_file_count");
 	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x5, 0, 0, NULL, 0));
 	sleep (1);
 	CHECK (gp_port_usb_msg_read
 	       (lib->gpdev, 0, 0, 0xe15, (u_int8_t *) & lib->num_files, 1));
-
-	GP_DEBUG ("gSmart file count: %d\n", lib->num_files);
 
 	return (GP_OK);
 }
@@ -77,7 +79,6 @@ gsmart_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 	struct GsmartFile *g_file;
 	u_int16_t fat_index;
 
-	GP_DEBUG ("* gsmart_delete_file");
 	CHECK (gsmart_get_file_info (lib, index, &g_file));
 
 	fat_index = 0xD8000 - g_file->fat_start - 1;
@@ -93,8 +94,6 @@ gsmart_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 int
 gsmart_delete_all (CameraPrivateLibrary * lib)
 {
-	GP_DEBUG ("* gsmart_delete_all");
-
 	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x0000, 0x0005, NULL, 0));
 	sleep (3);
 
@@ -114,8 +113,6 @@ gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	u_int8_t *mybuf;
 	int size, o_size, i, file_size;
 	int f_counter = 0;
-
-	GP_DEBUG ("* gsmart_request_file");
 
 	CHECK (gsmart_get_file_info (lib, number, &g_file));
 	/* FIXME implement avi downloading */
@@ -207,8 +204,6 @@ gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 	u_int8_t *rgb_p;
 	unsigned char pbm_header[16];
 
-	GP_DEBUG ("* gsmart_request_thumbnail number: %d", number);
-
 	CHECK (gsmart_get_file_info (lib, number, &g_file));
 
 	/* FIXME implement avi downloading */
@@ -271,6 +266,158 @@ gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf,
 
 
 int
+gsmart_get_info (CameraPrivateLibrary * lib)
+{
+	unsigned int index;
+	u_int8_t *p;
+	u_int32_t start_page, end_page;
+	u_int8_t file_type;
+
+	GP_DEBUG ("* gsmart_get_info");
+	CHECK (gsmart_get_file_count (lib));
+	if (lib->num_files > 0) {
+		CHECK (gsmart_get_FATs (lib));
+
+		index = lib->files[lib->num_files - 1].fat_end;
+		p = lib->fats + FLASH_PAGE_SIZE * index;
+		/* p now points to the fat of the last image of the last file */
+
+		file_type = p[0];
+		start_page = ((p[2] & 0xFF) << 8) | (p[1] & 0xFF);
+		end_page = start_page + (((p[6] & 0xFF) << 8) | (p[5] & 0xFF));
+		if (file_type == FILE_TYPE_IMAGE)
+			end_page = end_page + 0xA0;
+
+		lib->size_used = (end_page - 0x2800) * FLASH_PAGE_SIZE;
+	} else
+		lib->size_used = 0;
+
+	lib->size_free = 16 * 1024 * 1024 - 0x2800 * FLASH_PAGE_SIZE - lib->size_used;
+	lib->dirty = 0;
+
+	return GP_OK;
+}
+
+int
+gsmart_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
+		      struct GsmartFile **g_file)
+{
+	struct GsmartFile *file;
+	u_int8_t *p;
+
+	if (lib->dirty)
+		CHECK (gsmart_get_info (lib));
+
+	file = &(lib->files[index]);
+	p = file->fat;
+
+	file->width = (p[8] & 0xFF) * 16;
+	file->height = (p[9] & 0xFF) * 16;
+	*g_file = file;
+
+	return GP_OK;
+}
+
+int
+gsmart_reset (CameraPrivateLibrary * lib)
+{
+	GP_DEBUG ("* gsmart_reset");
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x0000, 0x0003, NULL, 0));
+	sleep (1);
+	return GP_OK;
+}
+
+int
+gsmart_capture (CameraPrivateLibrary * lib)
+{
+	sleep (2);
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x06, 0x0000, 0x0003, NULL, 0));
+	sleep (3);
+	return GP_OK;
+}
+
+static int
+gsmart_mode_set_idle (CameraPrivateLibrary * lib)
+{
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0, GSMART_CamMode_Idle, GSMART_REG_CamMode, NULL, 0));
+	return GP_OK;
+}
+
+static int
+gsmart_is_idle (CameraPrivateLibrary * lib)
+{
+	int mode;
+
+	CHECK (gp_port_usb_msg_read
+	       (lib->gpdev, 0, 0, GSMART_REG_CamMode, (u_int8_t *) & mode, 1));
+
+	return mode == GSMART_CamMode_Idle ? 1 : 0;
+}
+
+static int
+gsmart_mode_set_download (CameraPrivateLibrary * lib)
+{
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0, GSMART_CamMode_Upload, GSMART_REG_CamMode, NULL, 0));
+	return GP_OK;
+}
+
+static int
+gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start, unsigned int size,
+		      u_int8_t * buf)
+{
+
+	u_int8_t foo;
+	u_int8_t vlcAddressL, vlcAddressM, vlcAddressH;
+
+	if (!gsmart_is_idle (lib))
+		gsmart_mode_set_idle (lib);
+
+	gsmart_mode_set_download (lib);
+
+	foo = size & 0xFF;
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_SdramSizeL, NULL, 0));
+	foo = (size >> 8) & 0xFF;
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_SdramSizeM, NULL, 0));
+	foo = (size >> 16) & 0xFF;
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_SdramSizeH, NULL, 0));
+
+	CHECK (gp_port_usb_msg_read
+	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressL, (u_int8_t *) & vlcAddressL, 1));
+	CHECK (gp_port_usb_msg_read
+	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressM, (u_int8_t *) & vlcAddressM, 1));
+	CHECK (gp_port_usb_msg_read
+	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressH, (u_int8_t *) & vlcAddressH, 1));
+
+	foo = start & 0xFF;
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_VlcAddressL, NULL, 0));
+	foo = (start >> 8) & 0xFF;
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_VlcAddressM, NULL, 0));
+	foo = (start >> 16) & 0xFF;
+	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_VlcAddressH, NULL, 0));
+
+	/* Set mode to ram -> usb */
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0, GSMART_DramUsb, GSMART_REG_PbSrc, NULL, 0));
+	/* and pull the trigger */
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0, GSMART_TrigDramFifo, GSMART_REG_Trigger, NULL, 0));
+
+	CHECK (gp_port_read (lib->gpdev, buf, size));
+
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0, vlcAddressL, GSMART_REG_VlcAddressL, NULL, 0));
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0, vlcAddressM, GSMART_REG_VlcAddressM, NULL, 0));
+	CHECK (gp_port_usb_msg_write
+	       (lib->gpdev, 0, vlcAddressH, GSMART_REG_VlcAddressH, NULL, 0));
+
+	gsmart_mode_set_idle (lib);
+	return GP_OK;
+}
+
+static int
 gsmart_get_FATs (CameraPrivateLibrary * lib)
 {
 	u_int8_t dramtype, type;
@@ -298,6 +445,10 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 	if (lib->fats)
 		free (lib->fats);
 	lib->fats = malloc (fatscount * FLASH_PAGE_SIZE);
+
+	if (lib->files)
+		free (lib->files);
+	lib->files = malloc (lib->num_files * sizeof(struct GsmartFile));
 
 	if (!gsmart_is_idle (lib))
 		gsmart_mode_set_idle (lib);
@@ -349,167 +500,6 @@ gsmart_get_FATs (CameraPrivateLibrary * lib)
 		index++;
 	}
 
-	return GP_OK;
-}
-
-int
-gsmart_get_info (CameraPrivateLibrary * lib)
-{
-	unsigned int index;
-	u_int8_t *p;
-	u_int32_t start_page, end_page;
-	u_int8_t file_type;
-
-	GP_DEBUG ("* gsmart_get_info");
-	CHECK (gsmart_get_file_count (lib));
-	if (lib->num_files > 0) {
-		CHECK (gsmart_get_FATs (lib));
-
-		index = lib->files[lib->num_files - 1].fat_end;
-		p = lib->fats + FLASH_PAGE_SIZE * index;
-		/* p now points to the fat of the last image of the last file */
-
-		file_type = p[0];
-		start_page = ((p[2] & 0xFF) << 8) | (p[1] & 0xFF);
-		end_page = start_page + (((p[6] & 0xFF) << 8) | (p[5] & 0xFF));
-		if (file_type == FILE_TYPE_IMAGE)
-			end_page = end_page + 0xA0;
-
-		lib->size_used = (end_page - 0x2800) * FLASH_PAGE_SIZE;
-	} else
-		lib->size_used = 0;
-
-	lib->size_free = 16 * 1024 * 1024 - 0x2800 * FLASH_PAGE_SIZE - lib->size_used;
-	lib->dirty = 0;
-
-	return GP_OK;
-}
-
-int
-gsmart_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
-		      struct GsmartFile **g_file)
-{
-	struct GsmartFile *file;
-	u_int8_t *p;
-
-	GP_DEBUG ("* gsmart_get_file_info");
-
-	if (lib->dirty)
-		CHECK (gsmart_get_info (lib));
-
-	file = &(lib->files[index]);
-	p = file->fat;
-
-	file->width = (p[8] & 0xFF) * 16;
-	file->height = (p[9] & 0xFF) * 16;
-	*g_file = file;
-
-	return GP_OK;
-}
-
-int
-gsmart_reset (CameraPrivateLibrary * lib)
-{
-	GP_DEBUG ("* gsmart_reset");
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x0000, 0x0003, NULL, 0));
-	sleep (1);
-	return GP_OK;
-}
-
-int
-gsmart_capture (CameraPrivateLibrary * lib)
-{
-	GP_DEBUG ("* gsmart_capture");
-	sleep (2);
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x06, 0x0000, 0x0003, NULL, 0));
-	sleep (3);
-	return GP_OK;
-}
-
-int
-gsmart_mode_set_idle (CameraPrivateLibrary * lib)
-{
-	GP_DEBUG ("* gsmart_mode_set_idle");
-	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0, GSMART_CamMode_Idle, GSMART_REG_CamMode, NULL, 0));
-	return GP_OK;
-}
-
-int
-gsmart_is_idle (CameraPrivateLibrary * lib)
-{
-	int mode;
-
-	GP_DEBUG ("* gsmart_is_idle");
-
-	CHECK (gp_port_usb_msg_read
-	       (lib->gpdev, 0, 0, GSMART_REG_CamMode, (u_int8_t *) & mode, 1));
-
-	return mode == GSMART_CamMode_Idle ? 1 : 0;
-}
-
-int
-gsmart_mode_set_download (CameraPrivateLibrary * lib)
-{
-	GP_DEBUG ("* gsmart_mode_set_download");
-	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0, GSMART_CamMode_Upload, GSMART_REG_CamMode, NULL, 0));
-	return GP_OK;
-}
-
-int
-gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start, unsigned int size,
-		      u_int8_t * buf)
-{
-
-	u_int8_t foo;
-	u_int8_t vlcAddressL, vlcAddressM, vlcAddressH;
-
-	GP_DEBUG ("* gsmart_download_data");
-
-	if (!gsmart_is_idle (lib))
-		gsmart_mode_set_idle (lib);
-
-	gsmart_mode_set_download (lib);
-
-	foo = size & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_SdramSizeL, NULL, 0));
-	foo = (size >> 8) & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_SdramSizeM, NULL, 0));
-	foo = (size >> 16) & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_SdramSizeH, NULL, 0));
-
-	CHECK (gp_port_usb_msg_read
-	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressL, (u_int8_t *) & vlcAddressL, 1));
-	CHECK (gp_port_usb_msg_read
-	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressM, (u_int8_t *) & vlcAddressM, 1));
-	CHECK (gp_port_usb_msg_read
-	       (lib->gpdev, 0, 0, GSMART_REG_VlcAddressH, (u_int8_t *) & vlcAddressH, 1));
-
-	foo = start & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_VlcAddressL, NULL, 0));
-	foo = (start >> 8) & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_VlcAddressM, NULL, 0));
-	foo = (start >> 16) & 0xFF;
-	CHECK (gp_port_usb_msg_write (lib->gpdev, 0, foo, GSMART_REG_VlcAddressH, NULL, 0));
-
-	/* Set mode to ram -> usb */
-	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0, GSMART_DramUsb, GSMART_REG_PbSrc, NULL, 0));
-	/* and pull the trigger */
-	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0, GSMART_TrigDramFifo, GSMART_REG_Trigger, NULL, 0));
-
-	CHECK (gp_port_read (lib->gpdev, buf, size));
-
-	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0, vlcAddressL, GSMART_REG_VlcAddressL, NULL, 0));
-	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0, vlcAddressM, GSMART_REG_VlcAddressM, NULL, 0));
-	CHECK (gp_port_usb_msg_write
-	       (lib->gpdev, 0, vlcAddressH, GSMART_REG_VlcAddressH, NULL, 0));
-
-	gsmart_mode_set_idle (lib);
 	return GP_OK;
 }
 

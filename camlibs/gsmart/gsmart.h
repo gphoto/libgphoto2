@@ -54,30 +54,21 @@ struct _CameraPrivateLibrary
 	int size_used;
 	int size_free;
 	u_int8_t *fats;
-	struct GsmartFile files[250];
+	struct GsmartFile *files;
 };
 
 int gsmart_reset (CameraPrivateLibrary * lib);
 int gsmart_capture (CameraPrivateLibrary * lib);
-int gsmart_mode_set_idle (CameraPrivateLibrary * lib);
-int gsmart_is_idle (CameraPrivateLibrary * lib);
-int gsmart_mode_set_download (CameraPrivateLibrary * lib);
-
-int gsmart_download_data (CameraPrivateLibrary * lib, u_int32_t start, unsigned int size,
-			  u_int8_t * buf);
-
-int gsmart_get_FATs (CameraPrivateLibrary * lib);
 int gsmart_get_file_count (CameraPrivateLibrary * lib);
 int gsmart_get_info (CameraPrivateLibrary * lib);
 int gsmart_delete_file (CameraPrivateLibrary * lib, unsigned int index);
 int gsmart_delete_all (CameraPrivateLibrary * lib);
 int gsmart_get_file_info (CameraPrivateLibrary * lib, unsigned int index,
 			  struct GsmartFile **file);
-
-int gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf, unsigned int *len,
-			 unsigned int number);
-int gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf, unsigned int *len,
-			      unsigned int number);
+int gsmart_request_file (CameraPrivateLibrary * lib, u_int8_t ** buf, 
+                         unsigned int *len, unsigned int number);
+int gsmart_request_thumbnail (CameraPrivateLibrary * lib, u_int8_t ** buf, 
+                              unsigned int *len, unsigned int number);
 
 
 #endif /* __GSMART_H__ */

@@ -50,8 +50,8 @@
 #define GP_MODULE "gsmartmini2"
 #define TIMEOUT	      5000
 
-#define GSMART_VERSION "0.1"
-#define GSMART_LAST_MOD "08/07/02 - 17:21:11"
+#define GSMART_VERSION "0.2"
+#define GSMART_LAST_MOD "08/09/02 - 23:14:11"
 
 /* forward declarations */
 static int file_list_func (CameraFilesystem *fs, const char *folder,
@@ -86,10 +86,7 @@ models[] =
 int
 camera_id (CameraText *id)
 {
-	GP_DEBUG ("* camera_id");
-
 	strcpy (id->text, "gsmartmini2");
-
 	return (GP_OK);
 }
 
@@ -99,8 +96,6 @@ camera_abilities (CameraAbilitiesList *list)
 	int x = 0;
 	char *ptr;
 	CameraAbilities a;
-
-	GP_DEBUG ("* camera_abilities");
 
 	ptr = models[x].model;
 	while (ptr) {
@@ -132,11 +127,8 @@ camera_capture (Camera *camera, CameraCaptureType type,
 {
 	struct GsmartFile *file;
 
-	GP_DEBUG ("* camera_capture");
-
 	CHECK (gsmart_capture (camera->pl));
 	CHECK (gsmart_get_info (camera->pl));
-
 	CHECK (gsmart_get_file_info (camera->pl, camera->pl->num_files - 1, &file));
 
 	/* Now tell the frontend where to look for the image */
@@ -154,13 +146,16 @@ camera_capture (Camera *camera, CameraCaptureType type,
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
-	GP_DEBUG ("* camera_exit");
-
 	if (camera->pl) {
 		if (camera->pl->fats) {
 			free (camera->pl->fats);
 			camera->pl->fats = NULL;
 		}
+		if (camera->pl->files) {
+			free (camera->pl->files);
+			camera->pl->files = NULL;
+		}
+
 		free (camera->pl);
 		camera->pl = NULL;
 	}
@@ -171,8 +166,6 @@ static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	char tmp[1024];
-
-	GP_DEBUG ("* camera_summary");
 
 	/* possibly get # pics, mem free, etc. if needed */
 	if (camera->pl->dirty)
@@ -190,8 +183,6 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	GP_DEBUG ("* camera_about");
-
 	strcpy (about->text,
 		_("gsmart library v" GSMART_VERSION
 		  " " GSMART_LAST_MOD "\n"
@@ -208,10 +199,6 @@ camera_init (Camera *camera, GPContext *context)
 {
 	int ret;
 	GPPortSettings settings;
-
-	GP_DEBUG ("* camera_init");
-	GP_DEBUG ("   * gsmart library for Gphoto2 by Till Adam <till@adam-lilienthal.de>");
-	GP_DEBUG ("   * gsmart library v%s, %s", GSMART_VERSION, GSMART_LAST_MOD);
 
 	/* First, set up all the function pointers */
 	camera->functions->exit = camera_exit;
@@ -266,8 +253,6 @@ camera_init (Camera *camera, GPContext *context)
 	CHECK (gp_filesystem_set_folder_funcs (camera->fs,
 					       NULL, delete_all_func, NULL, NULL, camera));
 
-	CHECK (gsmart_mode_set_idle (camera->pl));
-
 	return (GP_OK);
 }
 
@@ -280,8 +265,6 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	int i;
 	char temp_file[14];
-
-	GP_DEBUG ("camera_file_list %s\n", folder);
 
 	if (camera->pl->dirty)
 		CHECK (gsmart_get_info (camera->pl));
@@ -305,10 +288,6 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = user_data;
 	unsigned char *data = NULL;
 	int size, number;
-
-	GP_DEBUG ("* get_file_func");
-	GP_DEBUG ("*** folder: %s", folder);
-	GP_DEBUG ("*** filename: %s", filename);
 
 	CHECK (number = gp_filesystem_number (camera->fs, folder, filename, context));
 
@@ -341,10 +320,6 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	int n;
 	struct GsmartFile *file;
 
-	GP_DEBUG ("* get_info_func");
-	GP_DEBUG ("*** folder: %s", folder);
-	GP_DEBUG ("*** filename: %s", filename);
-
 	/* Get the file number from the CameraFileSystem */
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
 
@@ -373,8 +348,6 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	int index;
 
-	GP_DEBUG ("Deleting '%s' in '%s'...", filename, folder);
-
 	/* Get the file number from the CameraFileSystem */
 	CHECK (index = gp_filesystem_number (camera->fs, folder, filename, context));
 	CHECK (gsmart_delete_file (camera->pl, index));
@@ -386,8 +359,6 @@ static int
 delete_all_func (CameraFilesystem *fs, const char *folder, void *data, GPContext *context)
 {
 	Camera *camera = data;
-
-	GP_DEBUG ("Deleting all in '%s'...", folder);
 
 	CHECK (gsmart_delete_all (camera->pl));
 	return GP_OK;

@@ -1,3 +1,10 @@
+Sat Aug 10 19:03:31 2002  Till Adam  <till@adam-lilienthal.de>
+  
+ * remove debugging calls
+ * allocate space for GsmartFile structures dynamically
+ * sprintf -> snprintf, strcpy -> strncpy, fprintf -> gp_context_error
+ * make internally used functions static and remove them from gsmart.h
+ 
 Mon Aug 05 00:01:06 2002  Till Adam  <till@adam-lilienthal.de>
  
  * initial release of the module

@@ -10,9 +10,14 @@ If you want to hack on this module, or have questions or suggestions,
 don't hesitate to email me:
 
 	Till Adam <till@adam-lilienthal.de>
+---------------------------------------------------------------
+NOTE
+----
+The camera always deletes the last file on it, no matter what file number is
+passed to it for deletion. It is impossible to delete a specific image or
+movie on the camera. 
 
 ----------------------------------------------------------------
-
 TODO List
 ---------
 	- implement thumbnails for avi files
@@ -29,4 +34,3 @@ Also thanks to the following people for testing and feedback:
 
 Torfinn Ingolfsen <torfinn.ingolfsen@broadpark.no>
 Mikael Nilsson <mini@nada.kth.se>
-
