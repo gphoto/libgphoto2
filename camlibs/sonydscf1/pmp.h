@@ -1,0 +1,24 @@
+#define PMP_RESOLUTION 0x1d
+#define PMP_FIN 0x33
+#define PMP_STD 0x17
+#define PMP_ECM 0x08
+
+#define PMP_COMMENT 0x34
+
+#define PMP_TAKE_YEAR 0x4c
+#define PMP_TAKE_MONTH 0x4d
+#define PMP_TAKE_DATE 0x4e
+#define PMP_TAKE_HOUR 0x4f
+#define PMP_TAKE_MINUTE 0x50
+#define PMP_TAKE_SECOND 0x51
+
+#define PMP_EDIT_YEAR 0x54
+#define PMP_EDIT_MONTH 0x55
+#define PMP_EDIT_DATE 0x56
+#define PMP_EDIT_HOUR 0x57
+#define PMP_EDIT_MINUTE 0x58
+#define PMP_EDIT_SECOND 0x59
+
+#define PMP_SPEED 0x66
+
+#define PMP_FLASH 0x76
