@@ -180,29 +180,9 @@ gp_port_serial_lock (gp_port *dev)
 
 #else /* !HAVE_LOCKDEV */
 	DeviceHandle *handle = dev->device_handle;
-
-#ifdef LOCKLIB
-	int result;
-	
-	result = mklock (port, (void *) 0);
-	if (result == 0) {
-		strlcpy (handle->lock_file, sizeof (lock_file), port);
-		return (GP_OK);
-	} else if (result > 0) {
-		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
-				      "Port '%s' is locked by pid %d!",
-				      port, result);
-		return (GP_ERROR_IO_LOCK);
-	} else {
-		gp_port_debug_printf (GP_DEBUG_LOW, dev->debug_level,
-				      "Cannot create lock file for '%s'!",
-				      handle->lock_file);
-		return (GP_ERROR_IO_LOCK);
-	}
-
-#else /* !LOCKLIB */
 	char lock_buffer[12];
-	int fd, pid, n; 
+	int fd, pid, n;
+
 #ifdef SVR4
 	struct stat sbuf;
 	
@@ -307,8 +287,6 @@ gp_port_serial_lock (gp_port *dev)
 #endif /* !LOCK_BINARY */
 	close (fd);
 	
-#endif /* !LOCKLIB */
-
 	return (GP_OK);
 
 #endif /* !HAVE_LOCKDEV */
@@ -358,15 +336,12 @@ gp_port_serial_unlock (gp_port *dev)
 	DeviceHandle *handle = dev->device_handle;
 
 	if (handle->lock_file[0]) {
-#ifdef LOCKLIB
-		rmlock (handle->lock_file, NULL);
-#else
 		unlink (handle->lock_file);
-#endif
 		handle->lock_file[0] = 0;
 	}
 
 	return (GP_OK);
+
 #endif /* !HAVE_LOCKDEV */
 }
 
