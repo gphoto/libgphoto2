@@ -18,13 +18,13 @@ status_func (Camera *camera, const char *status, void *data)
 		printf ("Status: %s\n", status);
 }
 
-int gp_interface_message (Camera *camera, char *message) {
-
+void
+message_func (Camera *camera, const char *message, void *data)
+{
 	if (glob_quiet)
-		return (GP_OK);
+		return;
 
-	printf("Message: %s\n", message);
-	return (GP_OK);
+	printf ("Message: %s\n", message);
 }
 
 int gp_interface_confirm (Camera *camera, char *message) {
