@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
-"POT-Creation-Date: 2001-12-05 22:24+0100\n"
+"POT-Creation-Date: 2001-12-13 22:25+0100\n"
 "PO-Revision-Date: 2001-11-17 04:54+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -15,89 +15,89 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port.c:52
+#: libgphoto2_port/gphoto2-port.c:56
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "Die Funktion »%s« wird von diesem Gerät nicht unterstützt."
 
-#: libgphoto2_port/gphoto2-port.c:53
+#: libgphoto2_port/gphoto2-port.c:57
 msgid "The port has not yet been initialized"
 msgstr "Der Port wurde noch nicht initialisiert."
 
-#: libgphoto2_port/gphoto2-port.c:240
+#: libgphoto2_port/gphoto2-port.c:272
 msgid "open"
 msgstr " öffnen"
 
-#: libgphoto2_port/gphoto2-port.c:263
+#: libgphoto2_port/gphoto2-port.c:295
 msgid "close"
 msgstr "schließen"
 
 #. Check if we wrote all bytes
-#: libgphoto2_port/gphoto2-port.c:333
+#: libgphoto2_port/gphoto2-port.c:373
 msgid "write"
 msgstr "schreiben"
 
 #. Check if we read as many bytes as expected
-#: libgphoto2_port/gphoto2-port.c:365
+#: libgphoto2_port/gphoto2-port.c:405
 msgid "read"
 msgstr "lesen"
 
-#: libgphoto2_port/gphoto2-port.c:464
+#: libgphoto2_port/gphoto2-port.c:504
 msgid "update"
 msgstr "auffrischen"
 
-#: libgphoto2_port/gphoto2-port.c:510
+#: libgphoto2_port/gphoto2-port.c:550
 #, fuzzy
 msgid "get_pin"
 msgstr "get_pin"
 
-#: libgphoto2_port/gphoto2-port.c:528
+#: libgphoto2_port/gphoto2-port.c:568
 #, fuzzy
 msgid "set_pin"
 msgstr "set_pin"
 
-#: libgphoto2_port/gphoto2-port.c:543
+#: libgphoto2_port/gphoto2-port.c:583
 #, fuzzy
 msgid "send_break"
 msgstr "send_break"
 
-#: libgphoto2_port/gphoto2-port.c:556
+#: libgphoto2_port/gphoto2-port.c:596
 #, fuzzy
 msgid "flush"
 msgstr "flush"
 
-#: libgphoto2_port/gphoto2-port.c:572
+#: libgphoto2_port/gphoto2-port.c:612
 #, fuzzy
 msgid "find_device"
 msgstr "find_device"
 
-#: libgphoto2_port/gphoto2-port.c:586
+#: libgphoto2_port/gphoto2-port.c:626
 #, fuzzy
 msgid "clear_halt"
 msgstr "clear_halt"
 
-#: libgphoto2_port/gphoto2-port.c:606
+#: libgphoto2_port/gphoto2-port.c:646
 #, fuzzy
 msgid "msg_write"
 msgstr "msg_write"
 
-#: libgphoto2_port/gphoto2-port.c:626
+#: libgphoto2_port/gphoto2-port.c:666
 #, fuzzy
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:686
+#: libgphoto2_port/gphoto2-port.c:726
 msgid "No error description available"
 msgstr "Keine Fehlerbeschreibung verfügbar."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:179
+#: libgphoto2_port/gphoto2-port-info-list.c:279
 #, c-format
 msgid "Could not load any io-library because '%s' could not be opened (%m)"
 msgstr ""
 "Konnte keinerlei I/O-Bibliothek laden weil »%s« nicht geöffnet werden konnte "
 "(%m)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:372
+#: libgphoto2_port/gphoto2-port-info-list.c:473
 msgid "Generic Port"
 msgstr ""
 
@@ -123,7 +123,6 @@ msgid "Unsupported operation"
 msgstr "Nicht unterstützte Funktion"
 
 #: libgphoto2_port/gphoto2-port-result.c:63
-#: libgphoto2_port/gphoto2-port-result.c:73
 msgid "Timeout reading from or writing to the port"
 msgstr ""
 
@@ -153,65 +152,46 @@ msgid "Error initializing the port"
 msgstr ""
 
 #: libgphoto2_port/gphoto2-port-result.c:72
-msgid "Error opening the port"
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port-result.c:75
 msgid "Error reading from the port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:76
+#: libgphoto2_port/gphoto2-port-result.c:73
 msgid "Error writing to the port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:77
-msgid "Error closing the port"
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port-result.c:78
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Error updating the port settings"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:79
-msgid "Error with the port"
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port-result.c:80
+#: libgphoto2_port/gphoto2-port-result.c:75
 msgid "Error setting the serial port speed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:82
-msgid "Error sending a break to the serial port"
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port-result.c:84
-msgid "Error flushing the serial line"
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port-result.c:86
+#: libgphoto2_port/gphoto2-port-result.c:77
 msgid "Error clearing a halt condition on the USB port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:88
+#: libgphoto2_port/gphoto2-port-result.c:79
 msgid "Could not find the requested device on the USB port"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-result.c:90
+#: libgphoto2_port/gphoto2-port-result.c:81
 #, fuzzy
 msgid "Could not claim the USB device"
 msgstr "Konnte USB-Gerät nicht öffnen"
 
-#: libgphoto2_port/gphoto2-port-result.c:92
+#: libgphoto2_port/gphoto2-port-result.c:83
 #, fuzzy
 msgid "Could not lock the device"
 msgstr "Konnte Gerät »%s« nicht reservieren"
 
-#: libgphoto2_port/gphoto2-port-result.c:94
+#: libgphoto2_port/gphoto2-port-result.c:85
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
 
 #: usb/libusb.c:125
-msgid "Could not open USB device"
+#, fuzzy, c-format
+msgid "Could not open USB device (%m)."
 msgstr "Konnte USB-Gerät nicht öffnen"
 
 #: usb/libusb.c:132
@@ -227,13 +207,13 @@ msgstr ""
 "Lese- und Schreibrechte für das Gerät haben."
 
 #: usb/libusb.c:151
-#, c-format
-msgid "Could not release interface %d (%m)"
+#, fuzzy, c-format
+msgid "Could not release interface %d (%m)."
 msgstr "Konnte Schnittstelle %d nicht freigeben (%m)"
 
 #: usb/libusb.c:158
-#, c-format
-msgid "Could not close USB port (%m)"
+#, fuzzy, c-format
+msgid "Could not close USB port (%m)."
 msgstr "Konnte USB-Port nicht schließen"
 
 #: usb/libusb.c:274
@@ -300,22 +280,45 @@ msgstr ""
 msgid "Serial Port %i"
 msgstr ""
 
-#: serial/unix.c:376
-#, c-format
-msgid "Failed to open '%s' (%m)"
+#: serial/unix.c:375
+#, fuzzy, c-format
+msgid "Failed to open '%s' (%m)."
 msgstr "Konnte »%s« nicht öffnen (%m)"
 
-#: serial/unix.c:395
-#, c-format
-msgid "Could not close device (%s)"
-msgstr "Konnte Gerät nicht schließen (%s)"
+#: serial/unix.c:393
+#, fuzzy, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "Konnte USB-Port nicht schließen"
 
-#: serial/unix.c:442
+#: serial/unix.c:438
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Konnte nicht auf Port schreiben (%m)"
 
-#: serial/unix.c:713
+#: serial/unix.c:525
+#, fuzzy, c-format
+msgid "Unknown pin %i."
+msgstr "Unbekannter Fehler"
+
+#: serial/unix.c:547
+#, fuzzy, c-format
+msgid "Could not get level of pin %i (%m)."
+msgstr "Konnte Konfiguration %d/%d nicht setzen (%m)"
+
+#: serial/unix.c:580
+#, fuzzy, c-format
+msgid "Could not set level of pin %i to %i (%m)."
+msgstr "Konnte Konfiguration %d/%d nicht setzen (%m)"
+
+#: serial/unix.c:603
+#, fuzzy, c-format
+msgid "Could not flush '%s' (%m)."
+msgstr "Konnte USB-Port nicht schließen"
+
+#: serial/unix.c:712
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
+
+#~ msgid "Could not close device (%s)"
+#~ msgstr "Konnte Gerät nicht schließen (%s)"

@@ -1,3 +1,10 @@
+2002-01-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+
+	* libgphoto2_port/Makefile.am:
+	* usb/Makefile.am:
+	* serial/Makefile.am: Install io-drivers into versioned
+	  subdirectories.
+
 2001-12-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	Patch from Tim Waugh <twaugh@redhat.com>:

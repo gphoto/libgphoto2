@@ -1,6 +1,6 @@
-INCLUDES = 					\
-	-I$(top_srcdir)				\
-	-DIOLIBS=\"$(libdir)/gphoto2_port\"
+INCLUDES = 						\
+	-I$(top_srcdir)					\
+	-DIOLIBS=\"$(libdir)/gphoto2_port/$(VERSION)\"
 
 ## What is this for?
 CFLAGS = @CFLAGS@ -g
