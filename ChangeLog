@@ -1,3 +1,20 @@
+2001-09-18  Chris Pinkham <cpinkham@infi.net>
+
+	* camlibs/canon/psa50.c
+	  camlibs/canon/serial.c
+	  libgphoto2_port/include/gphoto2-port.h
+	  libgphoto2_port/libgphoto2_port/gp_port.c
+	  libgphoto2_port/usb/libusb.c: changed *usb_msg_read* and
+	  *usb_msg_write* functions to allow passing in of request and
+	  index values.
+
+	* MAINTAINERS
+	  configure.in
+	  camlibs/jamcam/Makefile.am
+	  camlibs/jamcam/jamcam.c
+	  camlibs/jamcam/library.c
+	  camlibs/jamcam/library.h: added camera library for KBGear JamCam v3.0
+
 2001-09-12  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* libgphoto2/core.c: Add some CHECK_INITs.

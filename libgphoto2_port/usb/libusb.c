@@ -44,8 +44,10 @@ int gp_port_usb_read(gp_port * dev, char *bytes, int size);
 int gp_port_usb_update(gp_port * dev);
 
 int gp_port_usb_clear_halt_lib(gp_port * dev, int ep);
-int gp_port_usb_msg_read_lib(gp_port * dev, int value, char *bytes, int size);
-int gp_port_usb_msg_write_lib(gp_port * dev, int value, char *bytes, int size);
+int gp_port_usb_msg_read_lib(gp_port * dev, int request, int value, int index,
+	char *bytes, int size);
+int gp_port_usb_msg_write_lib(gp_port * dev, int request, int value, int index,
+	char *bytes, int size);
 int gp_port_usb_find_device_lib(gp_port *dev, int idvendor, int idproduct);
 
 /* Dynamic library functions
@@ -231,18 +233,20 @@ int gp_port_usb_read(gp_port * dev, char *bytes, int size)
         return ret;
 }
 
-int gp_port_usb_msg_write_lib(gp_port * dev, int value, char *bytes, int size)
+int gp_port_usb_msg_write_lib(gp_port * dev, int request, int value, int index,
+	char *bytes, int size)
 {
 	return usb_control_msg(dev->device_handle,
 		USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-		size > 1 ? 0x04 : 0x0c, value, 0, bytes, size, dev->timeout);
+		request, value, index, bytes, size, dev->timeout);
 }
 
-int gp_port_usb_msg_read_lib(gp_port * dev, int value, char *bytes, int size)
+int gp_port_usb_msg_read_lib(gp_port * dev, int request, int value, int index,
+	char *bytes, int size)
 {
 	return usb_control_msg(dev->device_handle,
 		USB_TYPE_VENDOR | USB_RECIP_DEVICE | 0x80,
-		size > 1 ? 0x04 : 0x0c, value, 0, bytes, size, dev->timeout);
+		request, value, index, bytes, size, dev->timeout);
 }
 
 /*

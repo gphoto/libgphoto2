@@ -513,7 +513,8 @@ int gp_port_usb_clear_halt (gp_port * dev, int ep)
         return (retval);
 }
 
-int gp_port_usb_msg_write (gp_port * dev, int value, char *bytes, int size)
+int gp_port_usb_msg_write (gp_port * dev, int request, int value, int index,
+	char *bytes, int size)
 {
         int retval;
 
@@ -523,13 +524,14 @@ int gp_port_usb_msg_write (gp_port * dev, int value, char *bytes, int size)
                 return (GP_ERROR);
         }
 
-        retval = dev->ops->msg_write(dev, value, bytes, size);
+        retval = dev->ops->msg_write(dev, request, value, index, bytes, size);
         gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
                 "gp_port_usb_msg_write: msg_write %s", retval < 0? "error":"ok");
         return (retval);
 }
 
-int gp_port_usb_msg_read (gp_port * dev, int value, char *bytes, int size)
+int gp_port_usb_msg_read (gp_port * dev, int request, int value, int index,
+	char *bytes, int size)
 {
         int retval;
 
@@ -539,7 +541,7 @@ int gp_port_usb_msg_read (gp_port * dev, int value, char *bytes, int size)
                 return (GP_ERROR);
         }
 
-        retval = dev->ops->msg_read(dev, value, bytes, size);
+        retval = dev->ops->msg_read(dev, request, value, index, bytes, size);
         gp_port_debug_printf(GP_DEBUG_LOW, dev->debug_level,
                 "gp_port_usb_msg_read: msg_read %s", retval < 0? "error":"ok");
         return (retval);

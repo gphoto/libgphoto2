@@ -134,8 +134,10 @@ struct gp_port_operations {
         /* for USB devices */
         int (*find_device)(gp_port * dev, int idvendor, int idproduct);
         int (*clear_halt) (gp_port * dev, int ep);
-        int (*msg_write)  (gp_port * dev, int value, char *bytes, int size);
-        int (*msg_read)   (gp_port * dev, int value, char *bytes, int size);
+        int (*msg_write)  (gp_port * dev, int request, int value, int index,
+				char *bytes, int size);
+        int (*msg_read)   (gp_port * dev, int request, int value, int index,
+				char *bytes, int size);
 
 };
 
@@ -317,8 +319,10 @@ struct gp_port {
         /* must port libusb to other platforms for this to drop-in */
         int gp_port_usb_find_device (gp_port * dev, int idvendor, int idproduct);
         int gp_port_usb_clear_halt  (gp_port * dev, int ep);
-        int gp_port_usb_msg_write   (gp_port * dev, int value, char *bytes, int size);
-        int gp_port_usb_msg_read    (gp_port * dev, int value, char *bytes, int size);
+        int gp_port_usb_msg_write   (gp_port * dev, int request, int value,
+		int index, char *bytes, int size);
+        int gp_port_usb_msg_read    (gp_port * dev, int request, int value,
+		int index, char *bytes, int size);
 
 
 

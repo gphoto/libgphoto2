@@ -665,7 +665,7 @@ static unsigned char *psa50_usb_dialogue(Camera *camera,char cmd1, char cmd2, in
    * }
    */
   
-  gp_port_usb_msg_write(camera->port,0x10,packet,msgsize);
+  gp_port_usb_msg_write(camera->port,msgsize > 1 ? 0x04 : 0x0c,0x10,0,packet,msgsize);
   if (cmd3==0x202) {
     gp_port_read(camera->port, buffer, 0x40);
     lonlen=*(unsigned *)(buffer+0x6);

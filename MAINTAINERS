@@ -23,6 +23,9 @@ camlibs/digita:
 camlibs/dimera:
 	Dan Fandrich <dan@coneharvesters.com>
 
+camlibs/jamcam:
+	Chris Pinkham <cpinkham@infi.net>
+
 camlibs/konica:
 	Lutz Müller <urc8@rz.uni-karlsruhe.de>
 

@@ -128,10 +128,10 @@ int canon_serial_init(Camera *camera, const char *devname)
     
     gp_port_settings_set(camera->port, settings);
  
-    gp_port_usb_msg_read(camera->port,0x55,msg,1);
+    gp_port_usb_msg_read(camera->port,0x0c,0x55,0,msg,1);
     //      fprintf(stderr,"%c\n",msg[0]);
-    gp_port_usb_msg_read(camera->port,0x1,msg,0x58);
-    gp_port_usb_msg_write(camera->port,0x11,msg+0x48,0x10);
+    gp_port_usb_msg_read(camera->port,0x04,0x1,0,msg,0x58);
+    gp_port_usb_msg_write(camera->port,0x04,0x11,0,msg+0x48,0x10);
     gp_port_read(camera->port, buffer, 0x44);
     //      fprintf(stderr,"Antal b: %x\n",buffer[0]);
     if (buffer[0]==0x54)
