@@ -333,6 +333,6 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 		negotiated = 1;
 	}
 
-	return 0;
+	return negotiated ? 0 : -1;
 }
 
