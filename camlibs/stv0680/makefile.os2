@@ -1,0 +1,25 @@
+BASEPATH=..\..
+
+all: start \
+  dll \
+  end
+
+!include $(BASEPATH)\os2mak.inc
+
+dll: $(CAMLIBS)\gpstv680.dll
+
+OBJS=bayer.o \
+     library.o \
+     pattrec.o \
+     stv0680.o
+
+
+.c.o:
+   @$(CC) -o $@ $< $(CCFLAGS)
+
+stv0680.def: stv0680.o
+   @$(MAKEDEF)
+
+$(CAMLIBS)\gpstv680.dll: $(OBJS) stv0680.def
+   $(LINK) $(DLLLINKFLAGS) -o $@ $** $(LIBS)
+
