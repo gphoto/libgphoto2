@@ -337,7 +337,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		return GP_ERROR;
 	}
 
-	sleep(1);
+	sleep(2);
 
 	return GP_OK;
 }
